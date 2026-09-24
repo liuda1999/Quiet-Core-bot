@@ -1,0 +1,40 @@
+# OpenClaw · docker-compose override TEMPLATE
+#
+# Copy to `docker-compose.override.yml` (same directory as docker-compose.yml) and
+# edit only what you need — Compose auto-loads that filename, so the base file
+# stays untouched and upstream-upgradable.
+#
+#   cp docker-compose.override.example.yml docker-compose.override.yml
+#
+# All values below are EXAMPLES. Do not commit a real override with secrets; keep
+# secrets in `.env` (git-ignored) instead.
+
+services:
+  openclaw-gateway:
+    # Restrict the published gateway port to the host loopback instead of all
+    # interfaces (the base file publishes on 0.0.0.0 via ${OPENCLAW_GATEWAY_PORT}).
+    # ports:
+    #   - "127.0.0.1:18789:18789"
+
+    # Give the agent container a writable workspace that lives outside the state
+    # volume, e.g. to bind-mount a project directory the agent should edit.
+    # volumes:
+    #   - "/absolute/host/path/to/workspace:/home/node/workspace"
+
+    # Resource caps for a small single-user box.
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: "4"
+    #       memory: 8g
+
+    # Extra environment for local model providers on the Docker host
+    # (host.docker.internal is already mapped by extra_hosts in the base file).
+    # environment:
+    #   OLLAMA_HOST: "http://host.docker.internal:11434"
+
+  openclaw-cli:
+    # The CLI service shares the gateway network namespace; no extra config is
+    # normally needed. Example: raise the Node heap for large transcripts.
+    # environment:
+    #   NODE_OPTIONS: "--max-old-space-size=4096"
