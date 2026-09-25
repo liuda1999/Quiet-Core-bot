@@ -1,4 +1,4 @@
-// Package OpenClaw For Docker tests cover QA Lab package artifact evidence.
+// Package Quiet Core bot For Docker tests cover QA Lab package artifact evidence.
 import { spawn } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
@@ -252,7 +252,7 @@ describe("package-openclaw-for-docker", () => {
           restoreChangelog: async () => {},
           runCaptureImpl: async () => `${filename}\n`,
         }),
-      ).rejects.toThrow("npm pack reported unsafe OpenClaw tarball filename");
+      ).rejects.toThrow("npm pack reported unsafe Quiet Core bot tarball filename");
     }
   });
 
@@ -267,7 +267,7 @@ describe("package-openclaw-for-docker", () => {
           restoreChangelog: async () => {},
           runCaptureImpl: async () => "npm notice\n",
         }),
-      ).rejects.toThrow("missing packed OpenClaw tarball");
+      ).rejects.toThrow("missing packed Quiet Core bot tarball");
 
       await expect(
         packOpenClawPackageForDocker("/repo", outputDir, {

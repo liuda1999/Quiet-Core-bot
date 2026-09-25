@@ -460,7 +460,7 @@ export async function saveSkillApiKey(state: SkillsState, skillKey: string) {
       await client.request("skills.update", { skillKey, apiKey });
       return {
         kind: "success",
-        message: `API key saved — stored in openclaw.json (skills.entries.${skillKey})`,
+        message: `API key saved — stored in quiet-core-bot.json (skills.entries.${skillKey})`,
       };
     },
     { refreshCurrentScopeOnStaleSuccess: true },

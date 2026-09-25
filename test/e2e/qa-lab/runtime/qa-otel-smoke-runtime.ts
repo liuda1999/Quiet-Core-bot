@@ -1,4 +1,4 @@
-// QA OTEL Smoke runtime supports OpenClaw repository automation.
+// QA OTEL Smoke runtime supports Quiet Core bot repository automation.
 
 import { spawn, spawnSync, type ChildProcess } from "node:child_process";
 import { randomUUID } from "node:crypto";
@@ -1323,7 +1323,7 @@ async function waitForChild(
     terminateChildTree(child, "SIGKILL", cleanupPids);
     await waitForProcessTreeExit(child, 1000, cleanupPids);
   }
-  throw new Error(`openclaw qa suite timed out after ${resolvedTimeoutMs}ms`);
+  throw new Error(`quiet-core-bot qa suite timed out after ${resolvedTimeoutMs}ms`);
 }
 
 function collectChildProcessTreePids(child: ChildProcess): number[] {

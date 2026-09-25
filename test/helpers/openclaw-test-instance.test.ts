@@ -1,4 +1,4 @@
-// OpenClaw test instance tests cover spawned test instance lifecycle.
+// Quiet Core bot test instance tests cover spawned test instance lifecycle.
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
@@ -14,7 +14,7 @@ async function expectPathMissing(targetPath: string): Promise<void> {
   throw new Error(`Expected missing path: ${targetPath}`);
 }
 
-describe("openclaw test instance", () => {
+describe("quiet-core-bot test instance", () => {
   it("keeps only bounded child output tails in helper logs", () => {
     const stdout = testing.createBoundedStringLog();
     const stderr = testing.createBoundedStringLog();

@@ -105,9 +105,13 @@ describe("real-behavior-proof-policy", () => {
     "![after](https://github.com/user-attachments/assets/abc123)",
     "Linked artifact: https://github.com/openclaw/openclaw/actions/runs/123456789/artifacts/987654321",
     "Redacted runtime log: gateway connected Discord channel and delivered the reply.",
-    ["Terminal transcript:", "```text", "$ openclaw gateway status", "discord ready", "```"].join(
-      "\n",
-    ),
+    [
+      "Terminal transcript:",
+      "```text",
+      "$ quiet-core-bot gateway status",
+      "discord ready",
+      "```",
+    ].join("\n"),
   ])("passes external PRs with evidence: %s", (evidence) => {
     const evaluation = evaluatePullRequestContext({
       pullRequest: externalPr(proofBody(evidence)),
@@ -226,8 +230,8 @@ describe("real-behavior-proof-policy", () => {
           "## Real behavior proof",
           "",
           "- Behavior addressed: The gateway dropped the configured Discord channel during startup.",
-          "- Real environment tested: macOS 15.4, Node 24, local OpenClaw gateway.",
-          "- Exact steps or command run after this patch: pnpm openclaw gateway restart",
+          "- Real environment tested: macOS 15.4, Node 24, local Quiet Core bot gateway.",
+          "- Exact steps or command run after this patch: pnpm quiet-core-bot gateway restart",
           "- Evidence after fix: ![after](https://github.com/user-attachments/assets/gateway-ready)",
           "- Observed result after fix: The gateway stayed connected and Discord reported ready.",
           "- What was not tested: No known gaps.",
@@ -253,7 +257,7 @@ describe("real-behavior-proof-policy", () => {
         "Observed result: not tested",
         "What was not tested: copied template text",
         "not tested",
-        "openclaw gateway status",
+        "quiet-core-bot gateway status",
         "discord ready",
         "```",
       ].join("\n"),
@@ -271,7 +275,7 @@ describe("real-behavior-proof-policy", () => {
       [
         "Terminal transcript:",
         "```text",
-        "$ openclaw doctor --non-interactive",
+        "$ quiet-core-bot doctor --non-interactive",
         "Discord external plugin is installed without explicit trust.",
         "Add plugins.entries.discord.enabled=true to trust it.",
         "```",
@@ -315,7 +319,7 @@ describe("real-behavior-proof-policy", () => {
       "  - `levels: off, minimal, low, medium, adaptive, high`",
       "  - `lowSupported: true`",
       "  - `fallbackFromLow: low`",
-      "  - `local command version: OpenClaw 2026.5.21`",
+      "  - `local command version: Quiet Core bot 2026.5.21`",
       "",
       "## Out-of-scope Follow-ups",
       "- No live systemd cron schedule was tested.",
@@ -337,7 +341,7 @@ describe("real-behavior-proof-policy", () => {
       "",
       "## Evidence",
       "",
-      "- Real environment tested: Local macOS source checkout, Node v24.8.0, OpenClaw 2026.5.21 (c8a35c4), local `openclaw` shim pointed at the freshly built checkout. No channel credentials or provider API keys were used.",
+      "- Real environment tested: Local macOS source checkout, Node v24.8.0, Quiet Core bot 2026.5.21 (c8a35c4), local `quiet-core-bot` shim pointed at the freshly built checkout. No channel credentials or provider API keys were used.",
       "- Exact steps or command run after this patch:",
       "  1. Built the local checkout with `node scripts/build-all.mjs`.",
       "  2. Updated `/Users/example/.local/bin/openclaw` to run this checkout's `quiet-core-bot.mjs` and verified `/Users/example/.local/bin/openclaw --version`.",
@@ -347,7 +351,7 @@ describe("real-behavior-proof-policy", () => {
       "  - `levels: off, minimal, low, medium, adaptive, high`",
       "  - `lowSupported: true`",
       "  - `fallbackFromLow: low`",
-      "  - `local command version: OpenClaw 2026.5.21 (c8a35c4)`",
+      "  - `local command version: Quiet Core bot 2026.5.21 (c8a35c4)`",
       "",
       "## Out-of-scope Follow-ups",
       "- No live systemd cron schedule is added in this PR.",
@@ -491,7 +495,7 @@ describe("real-behavior-proof-policy", () => {
     expect(evaluateClawSweeperExactHeadProof({ pullRequest, comments }).passed).toBe(true);
   });
 
-  it("accepts exact OpenClaw ClawSweeper bot pass verdict markers when GitHub omits the app source", () => {
+  it("accepts exact Quiet Core bot ClawSweeper bot pass verdict markers when GitHub omits the app source", () => {
     const pullRequest = {
       number: 83581,
       head: {

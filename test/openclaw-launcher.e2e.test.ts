@@ -1,4 +1,4 @@
-// OpenClaw launcher E2E tests validate launcher process behavior.
+// Quiet Core bot launcher E2E tests validate launcher process behavior.
 import { spawn, spawnSync } from "node:child_process";
 import { once } from "node:events";
 import fs from "node:fs/promises";
@@ -27,7 +27,7 @@ async function makeLauncherProbeFixture(
   const bootstrapStart = "\nif (!waitingForCompileCacheRespawn) {";
   const bootstrapIndex = launcher.indexOf(bootstrapStart);
   if (bootstrapIndex < 0) {
-    throw new Error("openclaw launcher bootstrap block was not found");
+    throw new Error("quiet-core-bot launcher bootstrap block was not found");
   }
   await fs.writeFile(
     launcherPath,
@@ -156,7 +156,7 @@ function hasBunRuntime(): boolean {
   );
 }
 
-describe("openclaw launcher", () => {
+describe("quiet-core-bot launcher", () => {
   const fixtureRoots: string[] = [];
 
   afterEach(async () => {

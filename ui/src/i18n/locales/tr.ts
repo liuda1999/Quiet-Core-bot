@@ -838,7 +838,7 @@ export const tr: TranslationMap = {
       metadataUpgradeSummary:
         "Bu cihaz zaten eşleştirilmiş, ancak meta veri değişikliği onay bekliyor.",
       mobileHint:
-        "Mobilde misiniz? Masaüstünüzde openclaw dashboard --no-open komutundan tam URL'yi (#token=... dahil) kopyalayın.",
+        "Mobilde misiniz? Masaüstünüzde quiet-core-bot dashboard --no-open komutundan tam URL'yi (#token=... dahil) kopyalayın.",
       docsTitle: "Cihaz eşleştirme belgeleri (yeni sekmede açılır)",
       docsLink: "Belgeler: Cihaz eşleştirme",
     },
@@ -878,7 +878,7 @@ export const tr: TranslationMap = {
       modelAuthAttentionExpiredTitle: "Model kimlik doğrulamasının süresi doldu",
       modelAuthAttentionExpiringTitle: "Model kimlik doğrulamasının süresi yakında dolacak",
       modelAuthAttentionExpiredDesc:
-        "{providers} — openclaw models auth ile yeniden kimlik doğrulayın",
+        "{providers} — quiet-core-bot models auth ile yeniden kimlik doğrulayın",
       modelAuthAttentionExpiringEntry: "{provider} ({when})",
     },
     attention: {
@@ -1303,9 +1303,9 @@ export const tr: TranslationMap = {
         summary:
           "Gateway erişilebilir, ancak bu tarayıcı bağlanmadan önce eşleşen bir token veya parola gerekir.",
         stepPaste:
-          "openclaw dashboard --no-open çıktısındaki tokenı yapıştırın veya yapılandırılmış parolayı girin.",
+          "quiet-core-bot dashboard --no-open çıktısındaki tokenı yapıştırın veya yapılandırılmış parolayı girin.",
         stepGenerate:
-          "Token yapılandırılmamışsa Gateway ana makinesinde openclaw doctor --generate-gateway-token çalıştırın.",
+          "Token yapılandırılmamışsa Gateway ana makinesinde quiet-core-bot doctor --generate-gateway-token çalıştırın.",
         stepConnect: "Kimlik bilgisini güncelledikten sonra Connect düğmesine tekrar tıklayın.",
       },
       authFailed: {
@@ -1313,7 +1313,7 @@ export const tr: TranslationMap = {
         summary:
           "Sağlanan kimlik bilgisi reddedildi. En yaygın neden eski bir token veya başka bir Gateway URL’sinden kopyalanmış tokendır.",
         stepDashboard:
-          "openclaw dashboard --no-open çalıştırın ve yeni URL’yi açın veya tokenını yapıştırın.",
+          "quiet-core-bot dashboard --no-open çalıştırın ve yeni URL’yi açın veya tokenını yapıştırın.",
         stepReplace:
           "Eski token/parola değerlerini değiştirin; başka bir Gateway URL’sinden tokenı yeniden kullanmayın.",
         stepMode:
@@ -1337,8 +1337,8 @@ export const tr: TranslationMap = {
           "Bu tarayıcının Control UI kullanabilmesi için Gateway hostundan tek seferlik onay gerekir.",
         upgradeSummary:
           "Bu tarayıcı zaten biliniyor, ancak istenen erişim değişti ve yeni onay gerekiyor.",
-        stepList: "Gateway hostunda openclaw devices list çalıştırın.",
-        stepApproveId: "Bu isteği onaylayın: openclaw devices approve {requestId}.",
+        stepList: "Gateway hostunda quiet-core-bot devices list çalıştırın.",
+        stepApproveId: "Bu isteği onaylayın: quiet-core-bot devices approve {requestId}.",
         stepApprove: "Bu listedeki bekleyen tarayıcı/cihaz isteğini onaylayın.",
         stepReconnect: "Onay tamamlandıktan sonra yeniden bağlanın.",
       },
@@ -1366,22 +1366,22 @@ export const tr: TranslationMap = {
         summary:
           "Sunulan Control UI ile çalışan Gateway desteklenen bağlantı protokolü konusunda uyuşmuyor.",
         stepDashboard:
-          "UI ve Gateway aynı kurulumdan gelsin diye sunulan dashboardı openclaw dashboard ile yeniden açın.",
+          "UI ve Gateway aynı kurulumdan gelsin diye sunulan dashboardı quiet-core-bot dashboard ile yeniden açın.",
         stepDevUi:
           "pnpm ui:dev kullanıyorsanız geliştirme UI’sini mevcut checkouta göre yeniden derleyin veya yeniden başlatın.",
         stepRestart:
-          "OpenClaw güncellemesinden sonra Gateway’i yeniden başlatın, böylece güncel protokolü sunsun.",
+          "Quiet Core bot güncellemesinden sonra Gateway’i yeniden başlatın, böylece güncel protokolü sunsun.",
       },
       network: {
         title: "Bağlanılamadı",
         summary:
           "Tarayıcı Gateway bağlantısını tamamlayamadı. Kimlik bilgilerini yeniden denemeden önce hedefi ve taşıma yolunu kontrol edin.",
         stepGateway:
-          "openclaw status veya openclaw gateway run ile Gateway’in çalıştığını doğrulayın.",
+          "quiet-core-bot status veya quiet-core-bot gateway run ile Gateway’in çalıştığını doğrulayın.",
         stepUrl:
           "WebSocket URL’sini kontrol edin ve Gateway HTTPS/Tailscale Serve arkasındaysa wss:// kullanın.",
         stepDashboard:
-          "Geçerli URL ve auth ayrıntılarını yeniden kopyalamak için dashboardı openclaw dashboard --no-open ile yeniden açın.",
+          "Geçerli URL ve auth ayrıntılarını yeniden kopyalamak için dashboardı quiet-core-bot dashboard --no-open ile yeniden açın.",
       },
     },
   },

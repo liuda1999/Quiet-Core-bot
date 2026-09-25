@@ -1,4 +1,4 @@
-// OpenClaw test instance helper spawns isolated OpenClaw processes.
+// Quiet Core bot test instance helper spawns isolated Quiet Core bot processes.
 import { type ChildProcessWithoutNullStreams, spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";

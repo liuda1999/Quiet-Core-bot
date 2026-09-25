@@ -1,4 +1,4 @@
-// OpenClaw npm release check tests validate package release checks.
+// Quiet Core bot npm release check tests validate package release checks.
 import { execFileSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -368,7 +368,7 @@ describe("resolveNpmCommandInvocation", () => {
     expect(
       resolveNpmCommandInvocation({
         comSpec: "C:\\Windows\\System32\\cmd.exe",
-        npmArgs: ["install", "-g", "C:\\tmp\\openclaw package.tgz"],
+        npmArgs: ["install", "-g", "C:\\tmp\\quiet-core-bot package.tgz"],
         npmExecPath: "C:\\Program Files\\nodejs\\npm.cmd",
         nodeExecPath: "C:\\Program Files\\nodejs\\node.exe",
         platform: "win32",
@@ -379,7 +379,7 @@ describe("resolveNpmCommandInvocation", () => {
         "/d",
         "/s",
         "/c",
-        '""C:\\Program Files\\nodejs\\npm.cmd" install -g "C:\\tmp\\openclaw package.tgz""',
+        '""C:\\Program Files\\nodejs\\npm.cmd" install -g "C:\\tmp\\quiet-core-bot package.tgz""',
       ],
       windowsVerbatimArguments: true,
     });

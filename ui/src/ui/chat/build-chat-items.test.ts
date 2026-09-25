@@ -194,7 +194,7 @@ describe("buildChatItems", () => {
     expect(messageRecord(groups[0]).content).toStrictEqual([{ type: "text", text: "Found it." }]);
   });
 
-  it("deduplicates relay-labeled assistant copies by OpenClaw transcript metadata id", () => {
+  it("deduplicates relay-labeled assistant copies by Quiet Core bot transcript metadata id", () => {
     const groups = messageGroups({
       messages: [
         {
@@ -219,7 +219,7 @@ describe("buildChatItems", () => {
     expect(messageRecord(groups[0]).content).toStrictEqual([{ type: "text", text: "On it." }]);
   });
 
-  it("deduplicates relay-labeled assistant copies by OpenClaw metadata before surface ids", () => {
+  it("deduplicates relay-labeled assistant copies by Quiet Core bot metadata before surface ids", () => {
     const groups = messageGroups({
       messages: [
         {

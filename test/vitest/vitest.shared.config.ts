@@ -574,7 +574,7 @@ export const sharedVitestConfig = {
       "apps/macos/.build/**",
       "**/node_modules/**",
       "**/vendor/**",
-      "dist/OpenClaw.app/**",
+      "dist/Quiet Core bot.app/**",
       "**/._*",
       "**/*.live.test.ts",
       "**/*.e2e.test.ts",

@@ -117,7 +117,7 @@ describe("collectClawHubPublishablePluginPackages", () => {
   });
 });
 
-describe("OpenClaw dual-published plugin metadata", () => {
+describe("Quiet Core bot dual-published plugin metadata", () => {
   const dualPublishedPlugins = [
     {
       extensionId: "cohere",
@@ -872,7 +872,7 @@ describe("collectPluginClawHubReleasePlan", () => {
   });
 });
 
-describe("buildOpenClawReleaseClawHubPlan", () => {
+describe("buildQuiet Core botReleaseClawHubPlan", () => {
   it("emits a dispatch plan that keeps ClawHub children on the release tag", async () => {
     const repoDir = createTempPluginRepo({
       extraExtensionIds: ["demo-two", "demo-three"],
@@ -1053,7 +1053,7 @@ describe("buildOpenClawReleaseClawHubPlan", () => {
   });
 });
 
-describe("buildOpenClawReleaseClawHubRuntimeState", () => {
+describe("buildQuiet Core botReleaseClawHubRuntimeState", () => {
   it("includes the normal ClawHub run in verifier args when the release waits for it", () => {
     const state = buildOpenClawReleaseClawHubRuntimeState({
       repository: "openclaw/openclaw",

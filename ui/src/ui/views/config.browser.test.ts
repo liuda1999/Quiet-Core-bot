@@ -61,7 +61,7 @@ describe("config view", () => {
     textScale: 100,
     setTextScale: vi.fn(),
     gatewayUrl: "",
-    assistantName: "OpenClaw",
+    assistantName: "Quiet Core bot",
   });
 
   function findActionButtons(container: HTMLElement): {

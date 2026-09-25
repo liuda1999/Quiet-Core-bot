@@ -195,7 +195,7 @@ function normalizeScenario(
   const sessionKey = scenario.sessionKey?.trim() || "main";
   return {
     assistantAgentId: scenario.assistantAgentId?.trim() || defaultAgentId,
-    assistantName: scenario.assistantName?.trim() || "OpenClaw",
+    assistantName: scenario.assistantName?.trim() || "Quiet Core bot",
     defaultAgentId,
     deferredMethods: scenario.deferredMethods ?? [],
     historyMessages: scenario.historyMessages ?? [],

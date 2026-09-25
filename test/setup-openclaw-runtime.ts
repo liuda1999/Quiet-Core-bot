@@ -1,4 +1,4 @@
-// OpenClaw runtime test setup installs runtime mocks and cleanup.
+// Quiet Core bot runtime test setup installs runtime mocks and cleanup.
 import { afterAll, afterEach, beforeAll, vi } from "vitest";
 import type {
   ChannelId,

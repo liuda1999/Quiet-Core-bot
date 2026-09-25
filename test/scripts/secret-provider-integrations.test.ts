@@ -103,7 +103,7 @@ function writeStallingOpenClaw(
       "  await delay(60_000);",
       "  process.exit(0);",
       "}",
-      "console.error(`unexpected fake openclaw args: ${args.join(' ')}`);",
+      "console.error(`unexpected fake quiet-core-bot args: ${args.join(' ')}`);",
       "process.exit(2);",
       "",
     ].join("\n"),
@@ -201,7 +201,7 @@ afterEach(() => {
 });
 
 describe("secret provider integration proof harness", () => {
-  it("runs pnpm-backed OpenClaw commands through the repo pnpm runner", async () => {
+  it("runs pnpm-backed Quiet Core bot commands through the repo pnpm runner", async () => {
     const root = makeTempDir();
     const fakePnpm = path.join(root, "pnpm.cjs");
     fs.writeFileSync(fakePnpm, "#!/usr/bin/env node\n", { mode: 0o755 });

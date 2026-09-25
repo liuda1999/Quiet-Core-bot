@@ -224,9 +224,9 @@ function runUiTask<Args extends unknown[]>(
   };
 }
 
-const SKILL_WORKSHOP_MODE_KEY = "openclaw:control-ui:skill-workshop-mode:v1";
+const SKILL_WORKSHOP_MODE_KEY = "quiet-core-bot:control-ui:skill-workshop-mode:v1";
 const SKILL_WORKSHOP_CURRENT_CHAT_REVISIONS_KEY =
-  "openclaw:control-ui:skill-workshop-current-chat-revisions:v1";
+  "quiet-core-bot:control-ui:skill-workshop-current-chat-revisions:v1";
 
 export function loadSkillWorkshopMode(): "board" | "today" {
   try {
@@ -692,7 +692,7 @@ function resolveDreamingNextCycle(
 
 let clawhubSearchTimer: ReturnType<typeof setTimeout> | null = null;
 
-const UPDATE_BANNER_DISMISS_KEY = "openclaw:control-ui:update-banner-dismissed:v1";
+const UPDATE_BANNER_DISMISS_KEY = "quiet-core-bot:control-ui:update-banner-dismissed:v1";
 const CRON_THINKING_SUGGESTIONS = ["off", "minimal", "low", "medium", "high"];
 const CRON_TIMEZONE_SUGGESTIONS = [
   "UTC",

@@ -1,4 +1,4 @@
-// Openclaw Cross Os Release Checks tests cover openclaw cross os release checks script behavior.
+// Openclaw Cross Os Release Checks tests cover quiet-core-bot cross os release checks script behavior.
 import { spawn } from "node:child_process";
 import {
   existsSync,
@@ -194,8 +194,8 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
 
   it("requires dashboard root markers and same-origin asset URLs", () => {
     const html = [
-      "<title>OpenClaw Control</title>",
-      "<openclaw-app></openclaw-app>",
+      "<title>Quiet Core bot Control</title>",
+      "<quiet-core-bot-app></quiet-core-bot-app>",
       '<link rel="stylesheet" href="/assets/index.css">',
       '<script type="module" src="assets/index.js"></script>',
       '<script type="module" src="https://example.com/assets/ignored.js"></script>',
@@ -243,7 +243,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
       "--timeout",
       String(CROSS_OS_GATEWAY_STATUS_RPC_TIMEOUT_MS),
     ]);
-    expect(buildGatewayStatusArgsFromHelpText("Usage: openclaw gateway status")).toEqual([
+    expect(buildGatewayStatusArgsFromHelpText("Usage: quiet-core-bot gateway status")).toEqual([
       "gateway",
       "status",
     ]);
@@ -254,7 +254,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
     ).toEqual(["gateway", "status"]);
   });
 
-  it("gives the Windows packaged updater wrapper enough headroom for OpenClaw timeout output", () => {
+  it("gives the Windows packaged updater wrapper enough headroom for Quiet Core bot timeout output", () => {
     expect(CROSS_OS_WINDOWS_PACKAGED_UPGRADE_STEP_TIMEOUT_SECONDS).toBeLessThanOrEqual(10 * 60);
     expect(CROSS_OS_WINDOWS_PACKAGED_UPGRADE_WRAPPER_TIMEOUT_MS).toBeGreaterThan(
       CROSS_OS_WINDOWS_PACKAGED_UPGRADE_STEP_TIMEOUT_SECONDS * 1000,
@@ -880,7 +880,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
     expect(script).toContain("Get-Command npm.cmd -ErrorAction SilentlyContinue");
     expect(script).toContain('$env:Path = "$npmPrefix;$env:Path"');
     expect(script).toContain("(Join-Path $npmPrefix 'openclaw.cmd')");
-    expect(script).toContain("$cmd = Get-Command openclaw -ErrorAction Stop");
+    expect(script).toContain("$cmd = Get-Command quiet-core-bot -ErrorAction Stop");
   });
 
   it("keeps Windows dev-update toolchain checks compatible with setup-node PATH shims", () => {
@@ -1190,7 +1190,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   it("wraps installed Windows CLI cmd fallbacks without Node shell argv", () => {
     expect(
       resolveInstalledCliInvocation(
-        win32.join(String.raw`C:\OpenClaw Prefix`, "openclaw.cmd"),
+        win32.join(String.raw`C:\Quiet Core bot Prefix`, "openclaw.cmd"),
         ["gateway", "run", "--port", "1234"],
         {
           comSpec: String.raw`C:\Windows\System32\cmd.exe`,
@@ -1203,7 +1203,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
         "/d",
         "/s",
         "/c",
-        String.raw`""C:\OpenClaw Prefix\openclaw.cmd" gateway run --port 1234"`,
+        String.raw`""C:\Quiet Core bot Prefix\openclaw.cmd" gateway run --port 1234"`,
       ],
       shell: false,
       windowsVerbatimArguments: true,
@@ -1859,11 +1859,25 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
     const packageRoot = mkdtempSync(join(tmpdir(), "openclaw-cross-os-stage-debris-"));
     try {
       mkdirSync(
-        join(packageRoot, "dist", "Extensions", "demo", ".OpenClaw-Install-Stage", "node_modules"),
+        join(
+          packageRoot,
+          "dist",
+          "Extensions",
+          "demo",
+          ".Quiet Core bot-Install-Stage",
+          "node_modules",
+        ),
         { recursive: true },
       );
       writeFileSync(
-        join(packageRoot, "dist", "Extensions", "demo", ".OpenClaw-Install-Stage", "package.json"),
+        join(
+          packageRoot,
+          "dist",
+          "Extensions",
+          "demo",
+          ".Quiet Core bot-Install-Stage",
+          "package.json",
+        ),
         "{}\n",
         "utf8",
       );

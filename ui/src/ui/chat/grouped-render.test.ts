@@ -193,7 +193,7 @@ function renderAssistantMessages(
     renderMessageGroup(group, {
       showReasoning: true,
       showToolCalls: true,
-      assistantName: "OpenClaw",
+      assistantName: "Quiet Core bot",
       assistantAvatar: null,
       ...opts,
     }),
@@ -218,7 +218,7 @@ function renderAssistantMessageEntries(
     renderMessageGroup(group, {
       showReasoning: true,
       showToolCalls: true,
-      assistantName: "OpenClaw",
+      assistantName: "Quiet Core bot",
       assistantAvatar: null,
       ...opts,
     }),
@@ -250,7 +250,7 @@ function renderGroupedMessage(
     renderMessageGroup(group, {
       showReasoning: true,
       showToolCalls: true,
-      assistantName: "OpenClaw",
+      assistantName: "Quiet Core bot",
       assistantAvatar: null,
       ...opts,
     }),
@@ -323,7 +323,7 @@ function renderMessageGroups(
       renderMessageGroup(group, {
         showReasoning: true,
         showToolCalls: true,
-        assistantName: "OpenClaw",
+        assistantName: "Quiet Core bot",
         assistantAvatar: null,
         ...opts,
       }),
@@ -957,7 +957,7 @@ describe("grouped chat rendering", () => {
       renderMessageGroup(group, {
         showReasoning: true,
         showToolCalls: true,
-        assistantName: "OpenClaw",
+        assistantName: "Quiet Core bot",
         assistantAvatar: null,
       }),
       container,

@@ -179,7 +179,7 @@ function createHost(): TestGatewayHost {
     agentsList: null,
     agentsError: null,
     debugHealth: null,
-    assistantName: "OpenClaw",
+    assistantName: "Quiet Core bot",
     assistantAvatar: null,
     assistantAgentId: null,
     localMediaPreviewRoots: [],

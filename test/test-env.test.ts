@@ -75,7 +75,7 @@ describe("installTestEnv", () => {
     const priorIsolatedHome = createTempHome();
     writeFile(path.join(realHome, ".profile"), "export TEST_PROFILE_ONLY=from-profile\n");
     writeFile(
-      path.join(realHome, "custom-openclaw.json5"),
+      path.join(realHome, "custom-quiet-core-bot.json5"),
       `{
         // Preserve provider config, strip host-bound paths.
         agents: {
@@ -137,7 +137,7 @@ describe("installTestEnv", () => {
     process.env.USERPROFILE = realHome;
     process.env.OPENCLAW_LIVE_TEST = "1";
     process.env.OPENCLAW_LIVE_TEST_QUIET = "1";
-    process.env.OPENCLAW_CONFIG_PATH = "~/custom-openclaw.json5";
+    process.env.OPENCLAW_CONFIG_PATH = "~/custom-quiet-core-bot.json5";
     process.env.OPENCLAW_TEST_HOME = priorIsolatedHome;
     process.env.OPENCLAW_STATE_DIR = path.join(priorIsolatedHome, ".openclaw");
 

@@ -63,7 +63,7 @@ async function waitForChatScrollIdle(page: Page): Promise<void> {
     .poll(
       () =>
         page.evaluate(() => {
-          const app = document.querySelector("openclaw-app") as
+          const app = document.querySelector("quiet-core-bot-app") as
             | (Element & {
                 chatIsProgrammaticScroll?: boolean;
                 chatScrollFrame?: number | null;
@@ -141,7 +141,7 @@ async function controlUiEventPayloads(
   event: string,
 ): Promise<Array<Record<string, unknown>>> {
   return page.evaluate((eventName) => {
-    const app = document.querySelector("openclaw-app") as
+    const app = document.querySelector("quiet-core-bot-app") as
       | (Element & { eventLogBuffer?: unknown[] })
       | null;
     return (app?.eventLogBuffer ?? [])
@@ -163,7 +163,7 @@ async function waitForControlUiChatSendPhases(
 ): Promise<void> {
   await page.waitForFunction(
     ({ expectedPhases, expectedRunId }) => {
-      const app = document.querySelector("openclaw-app") as
+      const app = document.querySelector("quiet-core-bot-app") as
         | (Element & { eventLogBuffer?: unknown[] })
         | null;
       const observedPhases = new Set(
@@ -520,7 +520,7 @@ describeControlUiE2e("Control UI mocked Gateway E2E", () => {
 
       await gateway.resolveDeferred("chat.send", { runId, status: "started" });
       await page.waitForFunction(() => {
-        const app = document.querySelector("openclaw-app") as
+        const app = document.querySelector("quiet-core-bot-app") as
           | (Element & { chatSending?: unknown })
           | null;
         return app?.chatSending === false;
@@ -728,7 +728,7 @@ describeControlUiE2e("Control UI mocked Gateway E2E", () => {
       expect(firstVisibleTiming?.requestToFirstAssistantEventMs).toEqual(expect.any(Number));
       await gateway.resolveDeferred("chat.startup", {
         agentsList: {
-          agents: [{ id: "ops", name: "OpenClaw" }],
+          agents: [{ id: "ops", name: "Quiet Core bot" }],
           defaultId: "ops",
           mainKey: "main",
           scope: "agent",

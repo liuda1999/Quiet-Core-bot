@@ -227,7 +227,7 @@ function packageEntrypoint(prefix: string) {
       return candidate;
     }
   }
-  throw new Error(`OpenClaw package entrypoint not found under ${packageRoot}/dist/`);
+  throw new Error(`Quiet Core bot package entrypoint not found under ${packageRoot}/dist/`);
 }
 
 async function runCommand(command: string, args: readonly string[], options: CommandOptions = {}) {
@@ -374,7 +374,7 @@ async function installOpenClawPackage(prefix: string, env: MatrixEnv) {
   const packageTgz = env.OPENCLAW_CURRENT_PACKAGE_TGZ;
   assertProbe(packageTgz, "OPENCLAW_CURRENT_PACKAGE_TGZ is required");
   const installLog = "/tmp/openclaw-plugin-lifecycle-install.log";
-  process.stdout.write("Installing mounted OpenClaw package...\n");
+  process.stdout.write("Installing mounted Quiet Core bot package...\n");
   await runCommand(
     "npm",
     ["install", "-g", "--prefix", prefix, packageTgz, "--no-fund", "--no-audit"],

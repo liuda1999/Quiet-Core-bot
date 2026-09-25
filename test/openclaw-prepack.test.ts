@@ -1,4 +1,4 @@
-// OpenClaw prepack tests validate package prepack output.
+// Quiet Core bot prepack tests validate package prepack output.
 import { describe, expect, it } from "vitest";
 import {
   collectPreparedPrepackErrors,

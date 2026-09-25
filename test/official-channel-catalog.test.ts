@@ -75,7 +75,7 @@ describe("buildOfficialChannelCatalog", () => {
     writeJson(path.join(repoRoot, "extensions", "whatsapp", "package.json"), {
       name: "@openclaw/whatsapp",
       version: "2026.3.23",
-      description: "OpenClaw WhatsApp channel plugin",
+      description: "Quiet Core bot WhatsApp channel plugin",
       openclaw: {
         channel: {
           id: "whatsapp",
@@ -123,7 +123,7 @@ describe("buildOfficialChannelCatalog", () => {
       ),
     ).toEqual({
       name: "@wecom/wecom-openclaw-plugin",
-      description: "OpenClaw WeCom channel plugin by the Tencent WeCom team.",
+      description: "Quiet Core bot WeCom channel plugin by the Tencent WeCom team.",
       source: "external",
       plugin: {
         id: "wecom-openclaw-plugin",
@@ -153,7 +153,7 @@ describe("buildOfficialChannelCatalog", () => {
       ),
     ).toEqual({
       name: "openclaw-plugin-yuanbao",
-      description: "OpenClaw Yuanbao channel plugin by the Tencent Yuanbao team.",
+      description: "Quiet Core bot Yuanbao channel plugin by the Tencent Yuanbao team.",
       source: "external",
       plugin: {
         id: "openclaw-plugin-yuanbao",
@@ -183,7 +183,7 @@ describe("buildOfficialChannelCatalog", () => {
       ),
     ).toEqual({
       name: "@openclaw/whatsapp",
-      description: "OpenClaw WhatsApp channel plugin",
+      description: "Quiet Core bot WhatsApp channel plugin",
       source: "official",
       plugin: undefined,
       channel: {
@@ -219,7 +219,7 @@ describe("buildOfficialChannelCatalog", () => {
     }
   });
 
-  it("allows official OpenClaw channel npm specs without integrity during launch", () => {
+  it("allows official Quiet Core bot channel npm specs without integrity during launch", () => {
     const repoRoot = makeRepoRoot("openclaw-official-channel-catalog-openclaw-policy-");
     const twitch = buildOfficialChannelCatalog({ repoRoot }).entries.find(
       (entry) => entry.openclaw?.channel?.id === "twitch",
@@ -314,7 +314,7 @@ describe("buildOfficialChannelCatalog", () => {
     );
     expect(summarizeCatalogEntry(whatsappEntry)).toEqual({
       name: "@openclaw/whatsapp",
-      description: "OpenClaw WhatsApp channel plugin",
+      description: "Quiet Core bot WhatsApp channel plugin",
       source: "official",
       plugin: undefined,
       channel: {

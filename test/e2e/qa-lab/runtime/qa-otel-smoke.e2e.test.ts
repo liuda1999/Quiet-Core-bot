@@ -678,7 +678,7 @@ describe("qa-otel-smoke receiver bounds", () => {
       );
 
       await expect(testing.waitForChild(child, 100, 100)).rejects.toThrow(
-        "openclaw qa suite timed out after 100ms",
+        "quiet-core-bot qa suite timed out after 100ms",
       );
       const sizeAfterReturn = existsSync(markerPath) ? statSync(markerPath).size : 0;
       await new Promise((resolve) => {

@@ -1,5 +1,5 @@
 import { generateKeyPairSync, sign } from "node:crypto";
-// OpenClaw npm postpublish tests validate postpublish verification behavior.
+// Quiet Core bot npm postpublish tests validate postpublish verification behavior.
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
@@ -26,7 +26,7 @@ import {
 
 const INSTALLED_ROOT_DIST_JS_FILE_SCAN_LIMIT = 10_000;
 
-describe("parseOpenClawNpmPostpublishVerifyArgs", () => {
+describe("parseQuiet Core botNpmPostpublishVerifyArgs", () => {
   it("supports help and package-manager separators", () => {
     expect(parseOpenClawNpmPostpublishVerifyArgs(["--help"])).toEqual({
       help: true,
@@ -43,10 +43,10 @@ describe("parseOpenClawNpmPostpublishVerifyArgs", () => {
       openClawNpmPostpublishVerifyUsage(),
     );
     expect(() => parseOpenClawNpmPostpublishVerifyArgs(["--tag"])).toThrow(
-      "Unknown openclaw npm postpublish verifier option: --tag",
+      "Unknown quiet-core-bot npm postpublish verifier option: --tag",
     );
     expect(() => parseOpenClawNpmPostpublishVerifyArgs(["2026.3.23", "extra"])).toThrow(
-      "Unexpected openclaw npm postpublish verifier argument: extra",
+      "Unexpected quiet-core-bot npm postpublish verifier argument: extra",
     );
   });
 });
@@ -292,7 +292,9 @@ describe("npm registry provenance verification", () => {
           verificationCalls += 1;
         },
       }),
-    ).rejects.toThrow("does not bind 2026.3.23 to the trusted OpenClaw GitHub release workflow");
+    ).rejects.toThrow(
+      "does not bind 2026.3.23 to the trusted Quiet Core bot GitHub release workflow",
+    );
     expect(verificationCalls).toBe(0);
   });
 
@@ -576,11 +578,11 @@ describe("collectInstalledPluginSdkZodArtifactErrors", () => {
 
 describe("normalizeInstalledBinaryVersion", () => {
   it("accepts decorated CLI version output", () => {
-    expect(normalizeInstalledBinaryVersion("OpenClaw 2026.4.8 (9ece252)")).toBe("2026.4.8");
-    expect(normalizeInstalledBinaryVersion("OpenClaw 2026.4.8-beta.1 (9ece252)")).toBe(
+    expect(normalizeInstalledBinaryVersion("Quiet Core bot 2026.4.8 (9ece252)")).toBe("2026.4.8");
+    expect(normalizeInstalledBinaryVersion("Quiet Core bot 2026.4.8-beta.1 (9ece252)")).toBe(
       "2026.4.8-beta.1",
     );
-    expect(normalizeInstalledBinaryVersion("OpenClaw 2026.4.8-alpha.1 (9ece252)")).toBe(
+    expect(normalizeInstalledBinaryVersion("Quiet Core bot 2026.4.8-alpha.1 (9ece252)")).toBe(
       "2026.4.8-alpha.1",
     );
   });
@@ -628,7 +630,7 @@ describe("resolveInstalledBinaryCommandInvocation", () => {
         "/d",
         "/s",
         "/c",
-        '""C:\\openclaw prefix\\openclaw.cmd" agent --message "hello world""',
+        '""C:\\quiet-core-bot prefix\\openclaw.cmd" agent --message "hello world""',
       ],
       windowsVerbatimArguments: true,
     });

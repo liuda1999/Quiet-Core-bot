@@ -194,7 +194,7 @@ function sidebarSessionPickerHtml(opts: { sidebarOpen?: boolean; workspaceRail?:
                   </div>
                   <div class="agent-chat__input">
                     <div class="agent-chat__composer-combobox">
-                      <textarea placeholder="Message OpenClaw"></textarea>
+                      <textarea placeholder="Message Quiet Core bot"></textarea>
                     </div>
                     <div class="agent-chat__toolbar">
                       <div class="agent-chat__toolbar-left">

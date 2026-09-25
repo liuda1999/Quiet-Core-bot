@@ -172,7 +172,7 @@ describe("plugin npm package manifest staging", () => {
         existsSync: () => false,
         platform: "win32",
       }),
-    ).toThrow("OpenClaw refuses to shell out to bare npm on Windows");
+    ).toThrow("Quiet Core bot refuses to shell out to bare npm on Windows");
   });
 
   it("overlays generated channel configs while packing and restores source manifest", () => {

@@ -8,7 +8,7 @@ const { realtimeTalkCtor, startMock, stopMock } = vi.hoisted(() => ({
   stopMock: vi.fn(),
 }));
 
-describe("OpenClawApp Talk controls", () => {
+describe("Quiet Core botApp Talk controls", () => {
   beforeEach(() => {
     vi.resetModules();
     vi.doMock("./chat/realtime-talk.ts", () => ({
@@ -190,7 +190,7 @@ describe("OpenClawApp Talk controls", () => {
 
   it("keeps the Talk options toggle inside the open-panel click guard", async () => {
     await import("./app.ts");
-    const app = document.createElement("openclaw-app");
+    const app = document.createElement("quiet-core-bot-app");
     const guardHost = app as unknown as {
       chatMobileControlsPointerdownHandler: (event: Event) => void;
       realtimeTalkOptionsOpen: boolean;

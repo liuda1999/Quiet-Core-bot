@@ -498,7 +498,7 @@ describe("scoped vitest configs", () => {
     expectForkedIsolatedRunner(defaultInfraConfig);
   });
 
-  it("keeps the process lane off the openclaw runtime setup", () => {
+  it("keeps the process lane off the quiet-core-bot runtime setup", () => {
     expect(normalizeConfigPaths(requireTestConfig(defaultProcessConfig).setupFiles)).toEqual([
       "test/setup.ts",
     ]);
@@ -525,7 +525,7 @@ describe("scoped vitest configs", () => {
     );
   });
 
-  it("keeps selected plugin-sdk and commands light lanes off the openclaw runtime setup", () => {
+  it("keeps selected plugin-sdk and commands light lanes off the quiet-core-bot runtime setup", () => {
     expect(normalizeConfigPaths(requireTestConfig(defaultPluginSdkLightConfig).setupFiles)).toEqual(
       ["test/setup.ts"],
     );
@@ -534,7 +534,7 @@ describe("scoped vitest configs", () => {
     ]);
   });
 
-  it("keeps the ui lane off both the openclaw runtime setup and unit-fast excludes", () => {
+  it("keeps the ui lane off both the quiet-core-bot runtime setup and unit-fast excludes", () => {
     const testConfig = requireTestConfig(defaultUiConfig);
     expect(normalizeConfigPaths(testConfig.setupFiles)).toEqual([
       "test/setup.ts",

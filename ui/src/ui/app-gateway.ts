@@ -302,7 +302,7 @@ function resolvePendingUpdateHandoffTimeoutBanner(): {
 } {
   return {
     tone: "danger",
-    text: "Update handoff started, but completion was not reported after reconnect. Run `openclaw update status` for the final result.",
+    text: "Update handoff started, but completion was not reported after reconnect. Run `quiet-core-bot update status` for the final result.",
   };
 }
 
