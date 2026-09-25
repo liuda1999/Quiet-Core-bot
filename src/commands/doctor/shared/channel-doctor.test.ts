@@ -223,7 +223,7 @@ describe("channel doctor compatibility mutations", () => {
 
     const result = await collectChannelDoctorPreviewWarnings({
       cfg: cfg as never,
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     expect(result).toEqual([

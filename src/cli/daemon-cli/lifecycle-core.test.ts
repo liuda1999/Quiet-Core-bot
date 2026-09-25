@@ -1,8 +1,8 @@
 // Daemon lifecycle core tests cover service lifecycle transitions and platform adapters.
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../../config/config.js";
-import type { GatewayService } from "../../daemon/service.js";
 import type { GatewayServiceControlArgs } from "../../daemon/service-types.js";
+import type { GatewayService } from "../../daemon/service.js";
 import {
   defaultRuntime,
   resetLifecycleRuntimeLogs,
@@ -144,7 +144,7 @@ describe("runServiceRestart token drift", () => {
         runServiceStart({
           serviceNoun: "Gateway",
           service: unsupportedService,
-          renderStartHints: () => ["openclaw gateway install"],
+          renderStartHints: () => ["quiet-core-bot gateway install"],
           opts: { json: true },
           onNotLoaded,
         }),
@@ -188,7 +188,7 @@ describe("runServiceRestart token drift", () => {
         runServiceRestart({
           serviceNoun: "Gateway",
           service: unsupportedService,
-          renderStartHints: () => ["openclaw gateway install"],
+          renderStartHints: () => ["quiet-core-bot gateway install"],
           opts: { json: true },
           onNotLoaded,
           postRestartCheck,
@@ -210,7 +210,7 @@ describe("runServiceRestart token drift", () => {
       service,
       renderStartHints: () => [
         "Restart the container or the service that manages it for openclaw-demo-container.",
-        "openclaw gateway install",
+        "quiet-core-bot gateway install",
       ],
       opts: { json: false },
     });
@@ -556,7 +556,7 @@ describe("runServiceRestart token drift", () => {
       return {
         result: "started" as const,
         message: "Gateway service definition repaired and started.",
-        warnings: ["service was installed by OpenClaw 2026.4.24, current CLI is 2026.5.2"],
+        warnings: ["service was installed by Quiet Core bot 2026.4.24, current CLI is 2026.5.2"],
         loaded: true,
       };
     });
@@ -581,7 +581,7 @@ describe("runServiceRestart token drift", () => {
     expect(payload.message).toBe("Gateway service definition repaired and started.");
     expect(payload.warnings).toEqual(
       expect.arrayContaining([
-        expect.stringContaining("service was installed by OpenClaw"),
+        expect.stringContaining("service was installed by Quiet Core bot"),
         expect.stringContaining("custom behavior and will be overwritten"),
       ]),
     );
@@ -599,7 +599,7 @@ describe("runServiceRestart token drift", () => {
     const payload = readJsonLog<{ ok?: boolean; error?: string; hints?: string[] }>();
     expect(payload.ok).toBe(false);
     expect(payload.error).toContain("service needs repair");
-    expect(payload.hints).toEqual(["openclaw gateway install --force"]);
+    expect(payload.hints).toEqual(["quiet-core-bot gateway install --force"]);
     expect(service.restart).not.toHaveBeenCalled();
   });
 
@@ -621,7 +621,7 @@ describe("runServiceRestart token drift", () => {
     await runServiceStart({
       serviceNoun: "Gateway",
       service,
-      renderStartHints: () => ["openclaw gateway install"],
+      renderStartHints: () => ["quiet-core-bot gateway install"],
       opts: { json: true },
     });
 
@@ -633,10 +633,10 @@ describe("runServiceRestart token drift", () => {
     }>();
     expect(payload.ok).toBe(true);
     expect(payload.result).toBe("not-loaded");
-    expect(payload.hints?.includes("openclaw gateway install")).toBe(true);
+    expect(payload.hints?.includes("quiet-core-bot gateway install")).toBe(true);
     expect(
       payload.hintItems?.some(
-        (item) => item.kind === "install" && item.text === "openclaw gateway install",
+        (item) => item.kind === "install" && item.text === "quiet-core-bot gateway install",
       ),
     ).toBe(true);
     expect(service.restart).not.toHaveBeenCalled();

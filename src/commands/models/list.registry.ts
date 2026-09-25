@@ -1,4 +1,4 @@
-/** Model registry access helpers for `openclaw models list`. */
+/** Model registry access helpers for `quiet-core-bot models list`. */
 import { loadAgentModelRegistry } from "../../agents/model-registry-loader.js";
 import {
   shouldSuppressBuiltInModel,

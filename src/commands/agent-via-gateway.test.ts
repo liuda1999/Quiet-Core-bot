@@ -1384,7 +1384,7 @@ describe("agentCliCommand", () => {
         "Blocked on 1 pending exec approval(s) for agent:main:main: 54d8b109",
       );
       expect(runtime.error).toHaveBeenCalledWith(
-        "List with: openclaw approvals pending   Resolve with: openclaw approvals approve <id> | openclaw approvals deny <id>",
+        "List with: quiet-core-bot approvals pending   Resolve with: quiet-core-bot approvals approve <id> | quiet-core-bot approvals deny <id>",
       );
     });
   });
@@ -2055,7 +2055,7 @@ describe("agentCliCommand", () => {
       expect(agentCommand).not.toHaveBeenCalled();
       expect(runtime.exit).toHaveBeenCalledWith(1);
       const errorMessages = mockMessages(runtime.error);
-      expect(errorMessages.some((m) => m.includes("openclaw sessions compact"))).toBe(true);
+      expect(errorMessages.some((m) => m.includes("quiet-core-bot sessions compact"))).toBe(true);
       expect(errorMessages.some((m) => m.includes("EMBEDDED FALLBACK"))).toBe(false);
     });
   }
@@ -2076,7 +2076,7 @@ describe("agentCliCommand", () => {
     expect(agentCommand).not.toHaveBeenCalled();
     expect(runtime.exit).toHaveBeenCalledWith(1);
     const errorMessages = mockMessages(runtime.error);
-    expect(errorMessages.some((m) => m.includes("openclaw sessions compact"))).toBe(true);
+    expect(errorMessages.some((m) => m.includes("quiet-core-bot sessions compact"))).toBe(true);
     expect(errorMessages.some((m) => m.includes("EMBEDDED FALLBACK"))).toBe(false);
   });
 

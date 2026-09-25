@@ -186,7 +186,7 @@ const POST_INSTALL_DOCTOR_SERVICE_ENV_KEYS = [
   "OPENCLAW_PROFILE",
 ] as const;
 const POST_UPDATE_PLUGIN_REPAIR_GUIDANCE =
-  "Run openclaw update repair to retry post-update plugin repair.";
+  "Run quiet-core-bot update repair to retry post-update plugin repair.";
 const JSON_MODE_SERVICE_STDOUT = new Writable({
   write(_chunk, _encoding, callback) {
     callback();
@@ -530,7 +530,7 @@ function formatMissingPluginPayloadReason(entry: MissingPluginInstallPayload): s
 }
 
 function formatPostUpdatePluginInspectGuidance(pluginId: string): string {
-  return `Run openclaw plugins inspect ${pluginId} --runtime --json for details.`;
+  return `Run quiet-core-bot plugins inspect ${pluginId} --runtime --json for details.`;
 }
 
 function createPostUpdatePluginWarning(params: {
@@ -606,8 +606,8 @@ export function buildInvalidConfigPostCoreUpdateResult(): {
   result: PostCorePluginUpdateResult;
 } {
   const guidance = [
-    "Run `openclaw doctor` to inspect the config validation errors.",
-    "Once the config parses, rerun `openclaw update repair`.",
+    "Run `quiet-core-bot doctor` to inspect the config validation errors.",
+    "Once the config parses, rerun `quiet-core-bot update repair`.",
   ];
   const message =
     "Plugin post-update convergence skipped because the config is invalid; refusing to restart the gateway with an unverified plugin set.";
@@ -752,13 +752,16 @@ export async function recoverLaunchAgentAndRecheckGatewayHealth(params: {
 }
 
 function formatPostUpdateGatewayRecoveryLine(platform: NodeJS.Platform): string {
-  const restartCommand = replaceCliName(formatCliCommand("openclaw gateway restart"), CLI_NAME);
+  const restartCommand = replaceCliName(
+    formatCliCommand("quiet-core-bot gateway restart"),
+    CLI_NAME,
+  );
   const installCommand = replaceCliName(
-    formatCliCommand("openclaw gateway install --force"),
+    formatCliCommand("quiet-core-bot gateway install --force"),
     CLI_NAME,
   );
   const statusCommand = replaceCliName(
-    formatCliCommand("openclaw gateway status --deep"),
+    formatCliCommand("quiet-core-bot gateway status --deep"),
     CLI_NAME,
   );
   if (platform === "darwin") {
@@ -781,7 +784,7 @@ export function formatPostUpdateGatewayRecoveryInstructions(
   const beforeVersion = normalizeOptionalString(result.before?.version);
   if (isPackageManagerUpdateMode(result.mode) && beforeVersion) {
     lines.push(
-      `Rollback: reinstall OpenClaw ${beforeVersion} with the same package manager, then rerun \`${replaceCliName(formatCliCommand("openclaw gateway install --force"), CLI_NAME)}\`.`,
+      `Rollback: reinstall Quiet Core bot ${beforeVersion} with the same package manager, then rerun \`${replaceCliName(formatCliCommand("quiet-core-bot gateway install --force"), CLI_NAME)}\`.`,
     );
   }
   return lines;
@@ -810,9 +813,9 @@ type ManagedServiceRootRedirect = {
 };
 
 function formatGatewayAncestryBlockMessage(pid: number): string {
-  return `openclaw update detected it is running inside the gateway process tree.
+  return `quiet-core-bot update detected it is running inside the gateway process tree.
 Gateway PID ${pid} is an ancestor of this process, so this updater cannot safely stop or restart the gateway that owns it.
-Run \`${replaceCliName(formatCliCommand("openclaw update"), CLI_NAME)}\` from a shell outside the gateway service, or stop the gateway service first and then update.`;
+Run \`${replaceCliName(formatCliCommand("quiet-core-bot update"), CLI_NAME)}\` from a shell outside the gateway service, or stop the gateway service first and then update.`;
 }
 
 function parsePositivePid(value: unknown): number | null {
@@ -942,7 +945,7 @@ async function maybeStopManagedServiceBeforeMutableUpdate(params: {
     if (!params.jsonMode) {
       defaultRuntime.log(
         theme.muted(
-          "Managed gateway service points at a different OpenClaw root; leaving it running during this git update.",
+          "Managed gateway service points at a different Quiet Core bot root; leaving it running during this git update.",
         ),
       );
     }
@@ -1089,9 +1092,9 @@ async function resolvePackageRuntimePreflightError(params: {
     `${runtimeLabel} is too old for openclaw@${targetLabel}.`,
     `The requested package requires ${status.nodeEngine}.`,
     runtime.nodeRunner
-      ? "Upgrade the Node runtime that owns the managed Gateway service, then rerun `openclaw update`."
-      : "Upgrade Node to 22.19+ or Node 24, then rerun `openclaw update`.",
-    "Bare `npm i -g openclaw` can silently install an older compatible release.",
+      ? "Upgrade the Node runtime that owns the managed Gateway service, then rerun `quiet-core-bot update`."
+      : "Upgrade Node to 22.19+ or Node 24, then rerun `quiet-core-bot update`.",
+    "Bare `npm i -g quiet-core-bot` can silently install an older compatible release.",
     "After upgrading Node, use `npm i -g openclaw@latest`.",
   ].join("\n");
 }
@@ -1372,7 +1375,7 @@ async function tryInstallShellCompletion(opts: {
       if (!opts.skipPrompt) {
         defaultRuntime.log(
           theme.muted(
-            `Skipped. Run \`${replaceCliName(formatCliCommand("openclaw completion --install"), CLI_NAME)}\` later to enable.`,
+            `Skipped. Run \`${replaceCliName(formatCliCommand("quiet-core-bot completion --install"), CLI_NAME)}\` later to enable.`,
           ),
         );
       }
@@ -2192,7 +2195,7 @@ async function maybeRestartService(params: {
           ]
         : []),
       `Restart log: ${resolveGatewayRestartLogPath(params.serviceEnv ?? process.env)}`,
-      `Run \`${replaceCliName(formatCliCommand("openclaw gateway status --deep"), CLI_NAME)}\` for details.`,
+      `Run \`${replaceCliName(formatCliCommand("quiet-core-bot gateway status --deep"), CLI_NAME)}\` for details.`,
       ...formatPostUpdateGatewayRecoveryInstructions(params.result),
     ];
     if (params.opts.json) {
@@ -2360,7 +2363,7 @@ async function maybeRestartService(params: {
         defaultRuntime.log(theme.warn(`Gateway: restart failed: ${String(err)}`));
         defaultRuntime.log(
           theme.muted(
-            `You may need to restart the service manually: ${replaceCliName(formatCliCommand("openclaw gateway restart"), CLI_NAME)}`,
+            `You may need to restart the service manually: ${replaceCliName(formatCliCommand("quiet-core-bot gateway restart"), CLI_NAME)}`,
           ),
         );
       }
@@ -2380,13 +2383,13 @@ async function maybeRestartService(params: {
     if (params.result.mode === "npm" || params.result.mode === "pnpm") {
       defaultRuntime.log(
         theme.muted(
-          `Tip: Run \`${replaceCliName(formatCliCommand("openclaw doctor"), CLI_NAME)}\`, then \`${replaceCliName(formatCliCommand("openclaw gateway restart"), CLI_NAME)}\` to apply updates to a running gateway.`,
+          `Tip: Run \`${replaceCliName(formatCliCommand("quiet-core-bot doctor"), CLI_NAME)}\`, then \`${replaceCliName(formatCliCommand("quiet-core-bot gateway restart"), CLI_NAME)}\` to apply updates to a running gateway.`,
         ),
       );
     } else {
       defaultRuntime.log(
         theme.muted(
-          `Tip: Run \`${replaceCliName(formatCliCommand("openclaw gateway restart"), CLI_NAME)}\` to apply updates to a running gateway.`,
+          `Tip: Run \`${replaceCliName(formatCliCommand("quiet-core-bot gateway restart"), CLI_NAME)}\` to apply updates to a running gateway.`,
         ),
       );
     }
@@ -3349,7 +3352,7 @@ async function updateCommandInternal(opts: UpdateCommandOptions): Promise<void> 
         );
         defaultRuntime.log(
           theme.warn(
-            `Shell OpenClaw root differs from the managed gateway service root: ${managedServiceRootRedirect.previousRoot}`,
+            `Shell Quiet Core bot root differs from the managed gateway service root: ${managedServiceRootRedirect.previousRoot}`,
           ),
         );
         defaultRuntime.log(
@@ -3579,7 +3582,7 @@ async function updateCommandInternal(opts: UpdateCommandOptions): Promise<void> 
 
   const showProgress = !opts.json && process.stdout.isTTY;
   if (!opts.json) {
-    defaultRuntime.log(theme.heading("Updating OpenClaw..."));
+    defaultRuntime.log(theme.heading("Updating Quiet Core bot..."));
     defaultRuntime.log("");
   }
 
@@ -3636,8 +3639,8 @@ async function updateCommandInternal(opts: UpdateCommandOptions): Promise<void> 
       defaultRuntime.error(
         [
           `${updateLabel} cannot run from inside the gateway service process.`,
-          "That path replaces the active OpenClaw dist tree while the live gateway may still lazy-load old chunks.",
-          `Run \`${replaceCliName(formatCliCommand("openclaw update"), CLI_NAME)}\` from a shell outside the gateway service, or stop the gateway service first and then update.`,
+          "That path replaces the active Quiet Core bot dist tree while the live gateway may still lazy-load old chunks.",
+          `Run \`${replaceCliName(formatCliCommand("quiet-core-bot update"), CLI_NAME)}\` from a shell outside the gateway service, or stop the gateway service first and then update.`,
         ].join("\n"),
       );
       defaultRuntime.exit(1);
@@ -3743,13 +3746,15 @@ async function updateCommandInternal(opts: UpdateCommandOptions): Promise<void> 
         ),
       );
       defaultRuntime.log(
-        theme.muted("Commit, stash, or discard the local changes, then rerun `openclaw update`."),
+        theme.muted(
+          "Commit, stash, or discard the local changes, then rerun `quiet-core-bot update`.",
+        ),
       );
     }
     if (result.reason === "not-git-install") {
       defaultRuntime.log(
         theme.warn(
-          `Skipped: this OpenClaw install isn't a git checkout, and the package manager couldn't be detected. Update via your package manager, then run \`${replaceCliName(formatCliCommand("openclaw doctor"), CLI_NAME)}\` and \`${replaceCliName(formatCliCommand("openclaw gateway restart"), CLI_NAME)}\`.`,
+          `Skipped: this Quiet Core bot install isn't a git checkout, and the package manager couldn't be detected. Update via your package manager, then run \`${replaceCliName(formatCliCommand("quiet-core-bot doctor"), CLI_NAME)}\` and \`${replaceCliName(formatCliCommand("quiet-core-bot gateway restart"), CLI_NAME)}\`.`,
         ),
       );
       defaultRuntime.log(

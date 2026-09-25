@@ -4,7 +4,7 @@ import { normalizeProfileName } from "./profile-utils.js";
 
 // Matches both the current and the pre-rebrand binary name so legacy example
 // strings are still recognized and rewritten to the active CLI name.
-const CLI_COMMAND_NAME_RE = "(?:quiet-core-bot|openclaw)";
+const CLI_COMMAND_NAME_RE = "(?:quiet-core-bot|quiet-core-bot)";
 const CLI_PREFIX_RE = new RegExp(
   `^(?:pnpm|npm|bunx|npx)\\s+${CLI_COMMAND_NAME_RE}\\b|^${CLI_COMMAND_NAME_RE}\\b`,
 );

@@ -47,7 +47,7 @@ describe("exportTrajectoryCommand", () => {
     await exportTrajectoryCommand({}, runtime);
 
     expect(runtime.error).toHaveBeenCalledWith(
-      "--session-key is required. Run openclaw sessions to choose a session.",
+      "--session-key is required. Run quiet-core-bot sessions to choose a session.",
     );
     expect(runtime.exit).toHaveBeenCalledWith(1);
   });
@@ -91,7 +91,7 @@ describe("exportTrajectoryCommand", () => {
       storePath: "/tmp/direct-store.json",
     });
     expect(runtime.error).toHaveBeenCalledWith(
-      "Session not found: agent:main:telegram:direct:123. Run openclaw sessions to see available sessions.",
+      "Session not found: agent:main:telegram:direct:123. Run quiet-core-bot sessions to see available sessions.",
     );
     expect(runtime.exit).toHaveBeenCalledWith(1);
   });
@@ -122,7 +122,7 @@ describe("exportTrajectoryCommand", () => {
         storePath: resolvedStore,
       });
       expect(runtime.error).toHaveBeenCalledWith(
-        "Session not found: agent:work:telegram:direct:123. Run openclaw sessions to see available sessions.",
+        "Session not found: agent:work:telegram:direct:123. Run quiet-core-bot sessions to see available sessions.",
       );
       expect(runtime.exit).toHaveBeenCalledWith(1);
     },
@@ -147,7 +147,7 @@ describe("exportTrajectoryCommand", () => {
       storePath: "/tmp/openclaw/agents/work/sessions/sessions.json",
     });
     expect(runtime.error).toHaveBeenCalledWith(
-      "Session not found: agent:work:telegram:direct:123. Run openclaw sessions to see available sessions.",
+      "Session not found: agent:work:telegram:direct:123. Run quiet-core-bot sessions to see available sessions.",
     );
     expect(runtime.exit).toHaveBeenCalledWith(1);
   });
@@ -164,7 +164,7 @@ describe("exportTrajectoryCommand", () => {
       storePath: "/tmp/openclaw/sessions.json",
     });
     expect(runtime.error).toHaveBeenCalledWith(
-      "Session not found: agent:main:telegram:direct:123. Run openclaw sessions to see available sessions.",
+      "Session not found: agent:main:telegram:direct:123. Run quiet-core-bot sessions to see available sessions.",
     );
     expect(runtime.exit).toHaveBeenCalledWith(1);
   });
@@ -182,7 +182,7 @@ describe("exportTrajectoryCommand", () => {
       storePath: "/tmp/openclaw/sessions.json",
     });
     expect(runtime.error).toHaveBeenCalledWith(
-      "Session not found: agent:main:telegram:direct:123. Run openclaw sessions to see available sessions.",
+      "Session not found: agent:main:telegram:direct:123. Run quiet-core-bot sessions to see available sessions.",
     );
     expect(runtime.exit).toHaveBeenCalledWith(1);
   });

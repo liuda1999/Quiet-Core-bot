@@ -1,4 +1,4 @@
-// `openclaw plugins update` command implementation for tracked npm plugins and hook packs.
+// `quiet-core-bot plugins update` command implementation for tracked npm plugins and hook packs.
 import { theme } from "../../packages/terminal-core/src/theme.js";
 import {
   assertConfigWriteAllowedInCurrentMode,

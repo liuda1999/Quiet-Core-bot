@@ -165,7 +165,7 @@ export function registerDnsCli(program: Command) {
       defaultRuntime.log("");
       defaultRuntime.log(
         theme.heading(
-          "Recommended config ($OPENCLAW_CONFIG_PATH, default ~/.openclaw/openclaw.json):",
+          "Recommended config ($OPENCLAW_CONFIG_PATH, default ~/.quiet-core-bot/quiet-core-bot.json):",
         ),
       );
       defaultRuntime.writeJson({
@@ -239,7 +239,7 @@ export function registerDnsCli(program: Command) {
         const serial = `${y}${m}${d}01`;
 
         const zoneLines = [
-          `; created by openclaw dns setup (will be overwritten by the gateway when wide-area discovery is enabled)`,
+          `; created by quiet-core-bot dns setup (will be overwritten by the gateway when wide-area discovery is enabled)`,
           `$ORIGIN ${wideAreaDomain}`,
           `$TTL 60`,
           `@ IN SOA ns1 hostmaster ${serial} 7200 3600 1209600 60`,
@@ -262,7 +262,7 @@ export function registerDnsCli(program: Command) {
         defaultRuntime.log("");
         defaultRuntime.log(
           theme.muted(
-            "Note: enable discovery.wideArea.enabled in the active OpenClaw config ($OPENCLAW_CONFIG_PATH, default ~/.openclaw/openclaw.json) on the gateway and restart the gateway so it writes the DNS-SD zone.",
+            "Note: enable discovery.wideArea.enabled in the active Quiet Core bot config ($OPENCLAW_CONFIG_PATH, default ~/.quiet-core-bot/quiet-core-bot.json) on the gateway and restart the gateway so it writes the DNS-SD zone.",
           ),
         );
       }

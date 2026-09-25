@@ -160,7 +160,7 @@ export async function runPostUpgradeProbes(params: {
       level: "error",
       code: "plugin.index_unavailable",
       message:
-        "Installed plugin index is missing, unreadable, or malformed. Run `openclaw plugins registry --refresh` to rebuild it before post-upgrade validation.",
+        "Installed plugin index is missing, unreadable, or malformed. Run `quiet-core-bot plugins registry --refresh` to rebuild it before post-upgrade validation.",
     });
     return buildReport(findings);
   }
@@ -210,7 +210,7 @@ export async function runPostUpgradeProbes(params: {
         findings.push({
           level: "warn",
           code: "plugin.manifest_drift",
-          message: `Plugin ${record.pluginId} manifest hash drifted from installs.json snapshot. Run \`openclaw plugins registry --refresh\` to re-sync.`,
+          message: `Plugin ${record.pluginId} manifest hash drifted from installs.json snapshot. Run \`quiet-core-bot plugins registry --refresh\` to re-sync.`,
           plugin: record.pluginId,
         });
       }

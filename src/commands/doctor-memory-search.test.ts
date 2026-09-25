@@ -203,7 +203,7 @@ describe("noteMemorySearchHealth", () => {
     expect(note).toHaveBeenCalledTimes(1);
     const message = firstNoteMessage();
     expect(message).toContain('Memory search provider is set to "local"');
-    expect(message).toContain("openclaw plugins install @openclaw/llama-cpp-provider");
+    expect(message).toContain("quiet-core-bot plugins install @openclaw/llama-cpp-provider");
   });
 
   it("warns when local provider with default model but gateway probe reports not ready", async () => {
@@ -249,7 +249,7 @@ describe("noteMemorySearchHealth", () => {
         checked: false,
         ready: false,
         error:
-          "memory embedding readiness not checked; run `openclaw memory status --deep` to probe",
+          "memory embedding readiness not checked; run `quiet-core-bot memory status --deep` to probe",
         skipped: true,
       },
     });
@@ -269,7 +269,7 @@ describe("noteMemorySearchHealth", () => {
         checked: false,
         ready: false,
         error:
-          "memory embedding readiness not checked; run `openclaw memory status --deep` to probe",
+          "memory embedding readiness not checked; run `quiet-core-bot memory status --deep` to probe",
         skipped: true,
       },
     });
@@ -714,7 +714,7 @@ describe("noteMemorySearchHealth", () => {
   });
 
   it("does not warn when key-optional provider (lmstudio) probe was skipped (skipped: true)", async () => {
-    // When `openclaw doctor` runs without --deep, the probe is skipped and returns
+    // When `quiet-core-bot doctor` runs without --deep, the probe is skipped and returns
     // { checked: false, ready: false, skipped: true }. This must NOT produce a
     // false-positive warning — it means readiness was never checked, not that
     // embeddings are unavailable.
@@ -777,7 +777,7 @@ describe("noteMemorySearchHealth", () => {
     const message = firstNoteMessage();
     expect(message).toContain('provider is set to "openai-compatible"');
     expect(message).toContain("remote.baseUrl");
-    expect(message).toContain("openclaw config set");
+    expect(message).toContain("quiet-core-bot config set");
     expect(resolveApiKeyForProvider).not.toHaveBeenCalled();
   });
 
@@ -796,7 +796,7 @@ describe("noteMemorySearchHealth", () => {
     const message = firstNoteMessage();
     expect(message).toContain('provider is set to "openai-compatible"');
     expect(message).toContain("memorySearch.model");
-    expect(message).toContain("openclaw config set");
+    expect(message).toContain("quiet-core-bot config set");
     expect(resolveApiKeyForProvider).not.toHaveBeenCalled();
   });
 
@@ -913,8 +913,8 @@ describe("noteMemorySearchHealth", () => {
 
     const message = firstNoteMessage();
     expect(message).toContain("Gateway memory probe for default agent is not ready");
-    expect(message).toContain("openclaw configure --section model");
-    expect(message).not.toContain("openclaw auth add --provider");
+    expect(message).toContain("quiet-core-bot configure --section model");
+    expect(message).not.toContain("quiet-core-bot auth add --provider");
   });
 
   it("resolves legacy auto mode to the local ollama provider without an API key", async () => {

@@ -30,6 +30,6 @@ export function rejectAgentScopedModelWrite(
     return;
   }
   throw new Error(
-    `openclaw models ${commandName} does not support --agent; it only updates global model defaults. Remove --agent, or run ${formatCliCommand("openclaw agents list")} and set the per-agent model in agent config.`,
+    `quiet-core-bot models ${commandName} does not support --agent; it only updates global model defaults. Remove --agent, or run ${formatCliCommand("quiet-core-bot agents list")} and set the per-agent model in agent config.`,
   );
 }

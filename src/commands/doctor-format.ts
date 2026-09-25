@@ -70,10 +70,12 @@ export function buildGatewayRuntimeHints(
     hints.push(
       `LaunchAgent label cached but plist missing. Clear with: launchctl bootout gui/$UID/${label}`,
     );
-    hints.push(`Then reinstall: ${formatCliCommand("openclaw gateway install", env)}`);
+    hints.push(`Then reinstall: ${formatCliCommand("quiet-core-bot gateway install", env)}`);
   }
   if (runtime.missingUnit) {
-    hints.push(`Service not installed. Run: ${formatCliCommand("openclaw gateway install", env)}`);
+    hints.push(
+      `Service not installed. Run: ${formatCliCommand("quiet-core-bot gateway install", env)}`,
+    );
     if (fileLog) {
       hints.push(`File logs: ${fileLog}`);
     }
@@ -84,7 +86,7 @@ export function buildGatewayRuntimeHints(
       "LaunchAgent requires a logged-in macOS GUI session; SSH/headless/sudo shells cannot bootstrap gui/$UID.",
     );
     hints.push(
-      `Sign in to the macOS desktop as this user, then run: ${formatCliCommand("openclaw gateway restart", env)}`,
+      `Sign in to the macOS desktop as this user, then run: ${formatCliCommand("quiet-core-bot gateway restart", env)}`,
     );
     hints.push(
       "For headless VM setups, enable auto-login for the target user or use a custom LaunchDaemon (not shipped).",
@@ -96,7 +98,7 @@ export function buildGatewayRuntimeHints(
   }
   if (runtime.missingSupervision && platform === "darwin") {
     hints.push(
-      `LaunchAgent installed but not loaded. Run: ${formatCliCommand("openclaw gateway restart", env)}`,
+      `LaunchAgent installed but not loaded. Run: ${formatCliCommand("quiet-core-bot gateway restart", env)}`,
     );
     if (fileLog) {
       hints.push(`File logs: ${fileLog}`);
@@ -127,7 +129,7 @@ export function buildGatewayRuntimeHints(
         "This usually means old helper or browser processes may still be attached to the gateway service.",
         `Run: systemctl --user show ${unit} -p KillMode -p TasksCurrent -p MemoryCurrent -p MainPID`,
         `Run: systemd-cgls --user-unit ${unit}`,
-        `After reviewing service settings, run: ${formatCliCommand("openclaw gateway restart", env)}`,
+        `After reviewing service settings, run: ${formatCliCommand("quiet-core-bot gateway restart", env)}`,
       );
     }
   }

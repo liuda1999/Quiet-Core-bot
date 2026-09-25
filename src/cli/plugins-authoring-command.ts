@@ -223,7 +223,9 @@ export function validateToolPluginProject(params: {
     existingManifest: params.manifest,
   });
   if (JSON.stringify(params.manifest) !== JSON.stringify(expectedManifest)) {
-    errors.push("openclaw.plugin.json generated metadata is stale. Run openclaw plugins build.");
+    errors.push(
+      "openclaw.plugin.json generated metadata is stale. Run quiet-core-bot plugins build.",
+    );
   }
   if (params.manifest.id !== params.metadata.id) {
     errors.push(
@@ -288,7 +290,9 @@ export async function runPluginsBuildCommand(opts: PluginsBuildOptions): Promise
       JSON.stringify(currentManifest) !== JSON.stringify(manifest) ||
       JSON.stringify(currentPackage) !== JSON.stringify(nextPackageManifest)
     ) {
-      defaultRuntime.error("Generated plugin metadata is out of date. Run openclaw plugins build.");
+      defaultRuntime.error(
+        "Generated plugin metadata is out of date. Run quiet-core-bot plugins build.",
+      );
       return defaultRuntime.exit(1);
     }
     defaultRuntime.log("Plugin metadata is up to date.");
@@ -358,8 +362,8 @@ export async function runPluginsInitCommand(id: string, opts: PluginsInitOptions
     private: true,
     scripts: {
       build: "tsc -p tsconfig.json",
-      "plugin:build": "npm run build && openclaw plugins build --entry ./dist/index.js",
-      "plugin:validate": "npm run build && openclaw plugins validate --entry ./dist/index.js",
+      "plugin:build": "npm run build && quiet-core-bot plugins build --entry ./dist/index.js",
+      "plugin:validate": "npm run build && quiet-core-bot plugins validate --entry ./dist/index.js",
       test: "vitest run",
     },
     files: ["dist", "openclaw.plugin.json", "README.md"],
@@ -380,7 +384,7 @@ export async function runPluginsInitCommand(id: string, opts: PluginsInitOptions
   };
   const idLiteral = jsStringLiteral(id);
   const nameLiteral = jsStringLiteral(name);
-  const descriptionLiteral = jsStringLiteral(`Add ${name} tools to OpenClaw.`);
+  const descriptionLiteral = jsStringLiteral(`Add ${name} tools to Quiet Core bot.`);
   const indexSource = `import { Type } from "typebox";
 import { defineToolPlugin } from "openclaw/plugin-sdk/tool-plugin";
 
@@ -412,7 +416,7 @@ describe(${idLiteral}, () => {
 `;
   const readmeSource = `# ${name}
 
-Simple OpenClaw tool plugin.
+Simple Quiet Core bot tool plugin.
 
 ## Build
 
@@ -444,7 +448,7 @@ npm test
   writeJsonFile(path.join(rootDir, PLUGIN_MANIFEST_FILENAME), {
     id,
     name,
-    description: `Add ${name} tools to OpenClaw.`,
+    description: `Add ${name} tools to Quiet Core bot.`,
     version: packageManifest.version,
     configSchema: {
       type: "object",

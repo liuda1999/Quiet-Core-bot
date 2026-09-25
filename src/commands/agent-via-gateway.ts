@@ -290,7 +290,7 @@ function protectJsonStdout(opts: Pick<AgentCliOpts, "json">): void {
 
 function missingAgentMessageError(): Error {
   return new Error(
-    `Missing message. Use ${formatCliCommand('openclaw agent --message "..." --agent <id>')} or ${formatCliCommand("openclaw agent --message-file <path> --agent <id>")}.`,
+    `Missing message. Use ${formatCliCommand('quiet-core-bot agent --message "..." --agent <id>')} or ${formatCliCommand("quiet-core-bot agent --message-file <path> --agent <id>")}.`,
   );
 }
 
@@ -829,7 +829,7 @@ async function reportPendingExecApprovalHint(params: {
       `Blocked on ${pending.length} pending exec approval(s) for ${sessionKey}: ${ids}`,
     );
     params.runtime.error?.(
-      "List with: openclaw approvals pending   Resolve with: openclaw approvals approve <id> | openclaw approvals deny <id>",
+      "List with: quiet-core-bot approvals pending   Resolve with: quiet-core-bot approvals approve <id> | quiet-core-bot approvals deny <id>",
     );
   } catch {
     // Advisory only: never fail a turn because the pending-approval lookup failed.
@@ -881,7 +881,7 @@ function startPendingExecApprovalWatch(params: {
           `Still blocked on ${pending.length} pending exec approval(s) for ${sessionKey}: ${ids}`,
         );
         params.runtime.error?.(
-          "List with: openclaw approvals pending   Resolve with: openclaw approvals approve <id> | openclaw approvals deny <id>",
+          "List with: quiet-core-bot approvals pending   Resolve with: quiet-core-bot approvals approve <id> | quiet-core-bot approvals deny <id>",
         );
       } catch {
         // Advisory only: a pending-approval lookup must never fail a live turn.
@@ -907,7 +907,7 @@ async function agentViaGatewayCommand(
   }
   if (!opts.to && !opts.sessionId && !opts.agent && !explicitSessionKey) {
     throw new Error(
-      `No target session selected. Use --agent <id>, --session-key <key>, --session-id <id>, or --to <E.164>. Run ${formatCliCommand("openclaw agents list")} to see agents.`,
+      `No target session selected. Use --agent <id>, --session-key <key>, --session-id <id>, or --to <E.164>. Run ${formatCliCommand("quiet-core-bot agents list")} to see agents.`,
     );
   }
 
@@ -918,7 +918,7 @@ async function agentViaGatewayCommand(
     const knownAgents = listAgentIds(cfg);
     if (!knownAgents.includes(agentId)) {
       throw new Error(
-        `Unknown agent id "${agentIdRaw}". Use "${formatCliCommand("openclaw agents list")}" to see configured agents.`,
+        `Unknown agent id "${agentIdRaw}". Use "${formatCliCommand("quiet-core-bot agents list")}" to see configured agents.`,
       );
     }
   }
@@ -1131,7 +1131,7 @@ export async function agentCliCommand(
   // Fail loudly and point at the first-class command instead of no-opping.
   if (isCompactControlCommand(messageOpts.message)) {
     runtime.error?.(
-      "Slash commands cannot be executed via --message from the CLI. Use: openclaw sessions compact <key>",
+      "Slash commands cannot be executed via --message from the CLI. Use: quiet-core-bot sessions compact <key>",
     );
     runtime.exit(1);
     return undefined;

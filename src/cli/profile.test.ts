@@ -329,97 +329,99 @@ describe("formatCliCommand", () => {
   it.each([
     {
       name: "no profile is set",
-      cmd: "openclaw doctor --fix",
+      cmd: "quiet-core-bot doctor --fix",
       env: {},
-      expected: "openclaw doctor --fix",
+      expected: "quiet-core-bot doctor --fix",
     },
     {
       name: "profile is default",
-      cmd: "openclaw doctor --fix",
+      cmd: "quiet-core-bot doctor --fix",
       env: { OPENCLAW_PROFILE: "default" },
-      expected: "openclaw doctor --fix",
+      expected: "quiet-core-bot doctor --fix",
     },
     {
       name: "profile is Default (case-insensitive)",
-      cmd: "openclaw doctor --fix",
+      cmd: "quiet-core-bot doctor --fix",
       env: { OPENCLAW_PROFILE: "Default" },
-      expected: "openclaw doctor --fix",
+      expected: "quiet-core-bot doctor --fix",
     },
     {
       name: "profile is invalid",
-      cmd: "openclaw doctor --fix",
+      cmd: "quiet-core-bot doctor --fix",
       env: { OPENCLAW_PROFILE: "bad profile" },
-      expected: "openclaw doctor --fix",
+      expected: "quiet-core-bot doctor --fix",
     },
     {
       name: "--profile is already present",
-      cmd: "openclaw --profile work doctor --fix",
+      cmd: "quiet-core-bot --profile work doctor --fix",
       env: { OPENCLAW_PROFILE: "work" },
-      expected: "openclaw --profile work doctor --fix",
+      expected: "quiet-core-bot --profile work doctor --fix",
     },
     {
       name: "--dev is already present",
-      cmd: "openclaw --dev doctor",
+      cmd: "quiet-core-bot --dev doctor",
       env: { OPENCLAW_PROFILE: "dev" },
-      expected: "openclaw --dev doctor",
+      expected: "quiet-core-bot --dev doctor",
     },
   ])("returns command unchanged when $name", ({ cmd, env, expected }) => {
     expect(formatCliCommand(cmd, env)).toBe(expected);
   });
 
   it("inserts --profile flag when profile is set", () => {
-    expect(formatCliCommand("openclaw doctor --fix", { OPENCLAW_PROFILE: "work" })).toBe(
-      "openclaw --profile work doctor --fix",
+    expect(formatCliCommand("quiet-core-bot doctor --fix", { OPENCLAW_PROFILE: "work" })).toBe(
+      "quiet-core-bot --profile work doctor --fix",
     );
   });
 
   it("trims whitespace from profile", () => {
-    expect(formatCliCommand("openclaw doctor --fix", { OPENCLAW_PROFILE: "  jbopenclaw  " })).toBe(
-      "openclaw --profile jbopenclaw doctor --fix",
-    );
+    expect(
+      formatCliCommand("quiet-core-bot doctor --fix", { OPENCLAW_PROFILE: "  jbopenclaw  " }),
+    ).toBe("quiet-core-bot --profile jbopenclaw doctor --fix");
   });
 
   it("handles command with no args after openclaw", () => {
     expect(formatCliCommand("openclaw", { OPENCLAW_PROFILE: "test" })).toBe(
-      "openclaw --profile test",
+      "quiet-core-bot --profile test",
     );
   });
 
   it("handles pnpm wrapper", () => {
-    expect(formatCliCommand("pnpm openclaw doctor", { OPENCLAW_PROFILE: "work" })).toBe(
-      "pnpm openclaw --profile work doctor",
+    expect(formatCliCommand("pnpm quiet-core-bot doctor", { OPENCLAW_PROFILE: "work" })).toBe(
+      "pnpm quiet-core-bot --profile work doctor",
     );
   });
 
   it("inserts --container when a container hint is set", () => {
     expect(
-      formatCliCommand("openclaw gateway status --deep", { OPENCLAW_CONTAINER_HINT: "demo" }),
-    ).toBe("openclaw --container demo gateway status --deep");
+      formatCliCommand("quiet-core-bot gateway status --deep", { OPENCLAW_CONTAINER_HINT: "demo" }),
+    ).toBe("quiet-core-bot --container demo gateway status --deep");
   });
 
   it("ignores unsafe container hints", () => {
     expect(
-      formatCliCommand("openclaw gateway status --deep", {
+      formatCliCommand("quiet-core-bot gateway status --deep", {
         OPENCLAW_CONTAINER_HINT: "demo; rm -rf /",
       }),
-    ).toBe("openclaw gateway status --deep");
+    ).toBe("quiet-core-bot gateway status --deep");
   });
 
   it("preserves both --container and --profile hints", () => {
     expect(
-      formatCliCommand("openclaw doctor", {
+      formatCliCommand("quiet-core-bot doctor", {
         OPENCLAW_CONTAINER_HINT: "demo",
         OPENCLAW_PROFILE: "work",
       }),
-    ).toBe("openclaw --container demo doctor");
+    ).toBe("quiet-core-bot --container demo doctor");
   });
 
   it("does not prepend --container for update commands", () => {
-    expect(formatCliCommand("openclaw update", { OPENCLAW_CONTAINER_HINT: "demo" })).toBe(
-      "openclaw update",
+    expect(formatCliCommand("quiet-core-bot update", { OPENCLAW_CONTAINER_HINT: "demo" })).toBe(
+      "quiet-core-bot update",
     );
     expect(
-      formatCliCommand("pnpm openclaw update --channel beta", { OPENCLAW_CONTAINER_HINT: "demo" }),
-    ).toBe("pnpm openclaw update --channel beta");
+      formatCliCommand("pnpm quiet-core-bot update --channel beta", {
+        OPENCLAW_CONTAINER_HINT: "demo",
+      }),
+    ).toBe("pnpm quiet-core-bot update --channel beta");
   });
 });

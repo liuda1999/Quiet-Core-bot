@@ -121,7 +121,7 @@ describe("detectLinuxVolatileStateDir", () => {
 
 describe("formatLinuxVolatileStateDirWarning", () => {
   it("covers all SQLite state and sidecar files under the volatile state directory", () => {
-    const warning = formatLinuxVolatileStateDirWarning("~/.openclaw", {
+    const warning = formatLinuxVolatileStateDirWarning("~/.quiet-core-bot", {
       path: "/home/user/.openclaw",
       mountPoint: "/home/user/.openclaw",
       fsType: "tmpfs",

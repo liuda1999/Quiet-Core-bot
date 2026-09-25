@@ -5,13 +5,13 @@ import type { OpenClawConfig } from "../config/types.openclaw.js";
 import { parseAgentSessionKey } from "../routing/session-key.js";
 
 /**
- * Catalog #18 — `openclaw sessions --json` reports `agentRuntime.id: "openclaw"` for
+ * Catalog #18 — `quiet-core-bot sessions --json` reports `agentRuntime.id: "openclaw"` for
  * ACP sessions because the old metadata resolver only consulted agent-config
  * policies (env / agent / defaults / implicit fallback to "openclaw"). The session
  * key clearly carries the ACP runtime indicator (the `:acp:` segment), but
  * `sessions.ts:294` used to ignore it.
  *
- * Empirical observation from a deployed openclaw container against a copilot
+ * Empirical observation from a deployed quiet-core-bot container against a copilot
  * agent that has no explicit `agentRuntime.id` policy:
  *
  *   {
@@ -46,7 +46,7 @@ const ACP_SESSION_KEY = "agent:copilot:acp:86b7b5af-3773-4a56-b244-069d6c5d3db9"
 const NON_ACP_SESSION_KEY = "agent:main:main";
 
 /**
- * Build a minimal `OpenClawConfig` that mirrors the deployed scenario:
+ * Build a minimal `Quiet Core botConfig` that mirrors the deployed scenario:
  * - a copilot agent exists in the agents.list
  * - it has NO explicit `agentRuntime.id` policy
  * - no top-level `agents.defaults.agentRuntime` either

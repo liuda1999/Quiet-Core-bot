@@ -38,7 +38,7 @@ async function detectOpenClawGitCheckout(root: string): Promise<"git" | "not-git
     : "not-git";
 }
 
-/** Offers to update OpenClaw before doctor when running interactively from an updatable install. */
+/** Offers to update Quiet Core bot before doctor when running interactively from an updatable install. */
 export async function maybeOfferUpdateBeforeDoctor(params: {
   runtime: RuntimeEnv;
   options: DoctorOptions;
@@ -47,7 +47,7 @@ export async function maybeOfferUpdateBeforeDoctor(params: {
   outro: (message: string) => void;
 }) {
   // Independent distributions do not participate in upstream updates: never offer an
-  // update prompt (and never print an `openclaw update` command) that the update guard
+  // update prompt (and never print an `quiet-core-bot update` command) that the update guard
   // would refuse. `OPENCLAW_INDEPENDENT_BUILD=0` restores the upstream behavior.
   if (isIndependentBuild()) {
     return { updated: false };
@@ -66,7 +66,7 @@ export async function maybeOfferUpdateBeforeDoctor(params: {
   const git = await detectOpenClawGitCheckout(params.root);
   if (git === "git") {
     const shouldUpdate = await params.confirm({
-      message: "Update OpenClaw from git before running doctor?",
+      message: "Update Quiet Core bot from git before running doctor?",
       initialValue: true,
     });
     if (!shouldUpdate) {
@@ -106,7 +106,7 @@ export async function maybeOfferUpdateBeforeDoctor(params: {
     note(
       [
         "This install is not a git checkout.",
-        `Run \`${formatCliCommand("openclaw update")}\` to update via your package manager (npm/pnpm), then rerun doctor.`,
+        `Run \`${formatCliCommand("quiet-core-bot update")}\` to update via your package manager (npm/pnpm), then rerun doctor.`,
       ].join("\n"),
       "Update",
     );

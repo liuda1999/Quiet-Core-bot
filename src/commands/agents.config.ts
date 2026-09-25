@@ -1,4 +1,4 @@
-// Agent config mutation and summary builders used by `openclaw agents` commands.
+// Agent config mutation and summary builders used by `quiet-core-bot agents` commands.
 import {
   normalizeOptionalString,
   resolvePrimaryStringValue,

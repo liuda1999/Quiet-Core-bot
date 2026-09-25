@@ -400,7 +400,7 @@ describe("exec-policy CLI", () => {
       },
     });
     mocks.readConfigFileSnapshot.mockImplementationOnce(async () => ({
-      path: "/tmp/openclaw.json\u001B[2J\nforged",
+      path: "/tmp/quiet-core-bot.json\u001B[2J\nforged",
       hash: "config-hash-1",
       config: mocks.getConfig(),
     }));
@@ -438,7 +438,7 @@ describe("exec-policy CLI", () => {
     expect(output).toContain("tools.exec.");
     expect(output).toContain("host)");
     expect(output).toContain("\\nforged");
-    expect(output).not.toContain("/tmp/openclaw.json\nforged");
+    expect(output).not.toContain("/tmp/quiet-core-bot.json\nforged");
     expect(output).not.toContain("\u001B[2J");
     expect(output).not.toContain("\u0007");
   });

@@ -15,8 +15,8 @@ describe("formatCliFailureLines", () => {
       "[openclaw] Could not start the CLI.",
       "[openclaw] Reason: config file is invalid",
       "[openclaw] Debug: set OPENCLAW_DEBUG=1 to include the stack trace.",
-      "[openclaw] Try: openclaw doctor",
-      "[openclaw] Help: openclaw --help",
+      "[openclaw] Try: quiet-core-bot doctor",
+      "[openclaw] Help: quiet-core-bot --help",
     ]);
   });
 

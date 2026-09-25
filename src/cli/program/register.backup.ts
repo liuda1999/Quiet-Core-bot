@@ -12,7 +12,7 @@ import { formatHelpExamples } from "../help-format.js";
 export function registerBackupCommand(program: Command) {
   const backup = program
     .command("backup")
-    .description("Create and verify local backup archives for OpenClaw state")
+    .description("Create and verify local backup archives for Quiet Core bot state")
     .addHelpText(
       "after",
       () =>
@@ -32,24 +32,27 @@ export function registerBackupCommand(program: Command) {
       "after",
       () =>
         `\n${theme.heading("Examples:")}\n${formatHelpExamples([
-          ["openclaw backup create", "Create a timestamped backup in the current directory."],
+          ["quiet-core-bot backup create", "Create a timestamped backup in the current directory."],
           [
-            "openclaw backup create --output ~/Backups",
+            "quiet-core-bot backup create --output ~/Backups",
             "Write the archive into an existing backup directory.",
           ],
           [
-            "openclaw backup create --dry-run --json",
+            "quiet-core-bot backup create --dry-run --json",
             "Preview the archive plan without writing any files.",
           ],
           [
-            "openclaw backup create --verify",
+            "quiet-core-bot backup create --verify",
             "Create the archive and immediately validate its manifest and payload layout.",
           ],
           [
-            "openclaw backup create --no-include-workspace",
+            "quiet-core-bot backup create --no-include-workspace",
             "Back up state/config without agent workspace files.",
           ],
-          ["openclaw backup create --only-config", "Back up only the active JSON config file."],
+          [
+            "quiet-core-bot backup create --only-config",
+            "Back up only the active JSON config file.",
+          ],
         ])}`,
     )
     .action(async (opts) => {
@@ -74,11 +77,11 @@ export function registerBackupCommand(program: Command) {
       () =>
         `\n${theme.heading("Examples:")}\n${formatHelpExamples([
           [
-            "openclaw backup verify ./2026-03-09T08-00-00.000+08-00-openclaw-backup.tar.gz",
+            "quiet-core-bot backup verify ./2026-03-09T08-00-00.000+08-00-openclaw-backup.tar.gz",
             "Check that the archive structure and manifest are intact.",
           ],
           [
-            "openclaw backup verify ~/Backups/latest.tar.gz --json",
+            "quiet-core-bot backup verify ~/Backups/latest.tar.gz --json",
             "Emit machine-readable verification output.",
           ],
         ])}`,

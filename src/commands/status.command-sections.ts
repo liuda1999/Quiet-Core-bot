@@ -257,10 +257,12 @@ export function buildStatusSecurityAuditLines(params: {
     }
   }
   lines.push(
-    params.theme.muted(`Full report: ${params.formatCliCommand("openclaw security audit")}`),
+    params.theme.muted(`Full report: ${params.formatCliCommand("quiet-core-bot security audit")}`),
   );
   lines.push(
-    params.theme.muted(`Deep probe: ${params.formatCliCommand("openclaw security audit --deep")}`),
+    params.theme.muted(
+      `Deep probe: ${params.formatCliCommand("quiet-core-bot security audit --deep")}`,
+    ),
   );
   return lines;
 }
@@ -419,13 +421,13 @@ export function buildStatusFooterLines(params: {
     "Troubleshooting: https://docs.openclaw.ai/troubleshooting",
     ...(params.updateHint ? ["", params.warn(params.updateHint)] : []),
     "Next steps:",
-    `  Need to share?      ${params.formatCliCommand("openclaw status --all")}`,
-    `  Need to debug live? ${params.formatCliCommand("openclaw logs --follow")}`,
+    `  Need to share?      ${params.formatCliCommand("quiet-core-bot status --all")}`,
+    `  Need to debug live? ${params.formatCliCommand("quiet-core-bot logs --follow")}`,
     params.nodeOnlyGateway
-      ? `  Need node service?  ${params.formatCliCommand("openclaw node status")}`
+      ? `  Need node service?  ${params.formatCliCommand("quiet-core-bot node status")}`
       : params.gatewayReachable
-        ? `  Need to test channels? ${params.formatCliCommand("openclaw status --deep")}`
-        : `  Fix reachability first: ${params.formatCliCommand("openclaw gateway probe")}`,
+        ? `  Need to test channels? ${params.formatCliCommand("quiet-core-bot status --deep")}`
+        : `  Fix reachability first: ${params.formatCliCommand("quiet-core-bot gateway probe")}`,
   ];
 }
 
@@ -479,12 +481,12 @@ export function buildStatusPairingRecoveryLines(params: {
     ...(params.pairingRecovery.requestId
       ? [
           params.muted(
-            `Recovery: ${params.formatCliCommand(`openclaw devices approve ${params.pairingRecovery.requestId}`)}`,
+            `Recovery: ${params.formatCliCommand(`quiet-core-bot devices approve ${params.pairingRecovery.requestId}`)}`,
           ),
         ]
       : []),
-    params.muted(`Fallback: ${params.formatCliCommand("openclaw devices approve --latest")}`),
-    params.muted(`Inspect: ${params.formatCliCommand("openclaw devices list")}`),
+    params.muted(`Fallback: ${params.formatCliCommand("quiet-core-bot devices approve --latest")}`),
+    params.muted(`Inspect: ${params.formatCliCommand("quiet-core-bot devices list")}`),
   ];
 }
 

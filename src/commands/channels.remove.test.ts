@@ -137,7 +137,7 @@ describe("channelsRemoveCommand", () => {
     expect(loadChannelSetupPluginRegistrySnapshotForChannel).toHaveBeenCalledTimes(1);
     expect(configMocks.writeConfigFile).not.toHaveBeenCalled();
     expect(runtime.error).toHaveBeenCalledWith(
-      'Channel plugin "external-chat" is not installed. Run openclaw channels add --channel external-chat first.',
+      'Channel plugin "external-chat" is not installed. Run quiet-core-bot channels add --channel external-chat first.',
     );
     expect(runtime.exit).toHaveBeenCalledWith(1);
   });

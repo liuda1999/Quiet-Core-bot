@@ -22,8 +22,8 @@ type DefaultsFallbackKey = "model" | "imageModel";
 
 function listCommandForFallbackKey(key: DefaultsFallbackKey): string {
   return key === "imageModel"
-    ? "openclaw models image-fallbacks list"
-    : "openclaw models fallbacks list";
+    ? "quiet-core-bot models image-fallbacks list"
+    : "quiet-core-bot models fallbacks list";
 }
 
 function getFallbacks(cfg: OpenClawConfig, key: DefaultsFallbackKey): string[] {

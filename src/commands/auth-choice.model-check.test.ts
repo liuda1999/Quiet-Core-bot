@@ -50,7 +50,7 @@ describe("warnIfModelConfigLooksOff", () => {
     expect(listProfilesForProvider).toHaveBeenCalledOnce();
     expect(listProfilesForProvider).toHaveBeenCalledWith({ version: 1, profiles: {} }, "openai");
     expect(note).toHaveBeenCalledWith(
-      'No auth configured for provider "openai". The agent may fail until credentials are added. Run `openclaw models auth login --provider openai`, `openclaw configure`, or set an API key env var.',
+      'No auth configured for provider "openai". The agent may fail until credentials are added. Run `quiet-core-bot models auth login --provider openai`, `quiet-core-bot configure`, or set an API key env var.',
       "Model check",
     );
   });

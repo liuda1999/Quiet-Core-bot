@@ -29,7 +29,7 @@ function parseChannel(raw: unknown, channels: PairingChannel[]): PairingChannel 
   const value = normalizeLowercaseStringOrEmpty(normalizeStringifiedOptionalString(raw) ?? "");
   if (!value) {
     throw new Error(
-      `Missing channel. Use ${formatCliCommand("openclaw pairing list --channel <channel>")}.`,
+      `Missing channel. Use ${formatCliCommand("quiet-core-bot pairing list --channel <channel>")}.`,
     );
   }
 
@@ -172,12 +172,12 @@ export function registerPairingCli(program: Command) {
           : codeOrChannel;
       if (!channelRaw || !resolvedCode) {
         throw new Error(
-          `Usage: ${formatCliCommand("openclaw pairing approve <channel> <code>")} (or: ${formatCliCommand("openclaw pairing approve --channel <channel> <code>")})`,
+          `Usage: ${formatCliCommand("quiet-core-bot pairing approve <channel> <code>")} (or: ${formatCliCommand("quiet-core-bot pairing approve --channel <channel> <code>")})`,
         );
       }
       if (opts.channel && code != null) {
         throw new Error(
-          `Too many arguments. Use: ${formatCliCommand("openclaw pairing approve --channel <channel> <code>")}`,
+          `Too many arguments. Use: ${formatCliCommand("quiet-core-bot pairing approve --channel <channel> <code>")}`,
         );
       }
       const channel = parseChannel(channelRaw, channels);
@@ -194,7 +194,7 @@ export function registerPairingCli(program: Command) {
           });
       if (!approved) {
         throw new Error(
-          `No pending pairing request found for code "${String(resolvedCode)}". Run ${formatCliCommand(`openclaw pairing list --channel ${channel}`)} to list pending requests.`,
+          `No pending pairing request found for code "${String(resolvedCode)}". Run ${formatCliCommand(`quiet-core-bot pairing list --channel ${channel}`)} to list pending requests.`,
         );
       }
 

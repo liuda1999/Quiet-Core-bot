@@ -9,16 +9,16 @@ import { runConfigureWizard } from "./configure.wizard.js";
 
 /**
  * Non-interactive config subcommands surfaced when the wizard cannot run.
- * Mirrors the real `openclaw config <sub>` surface so the message only ever
+ * Mirrors the real `quiet-core-bot config <sub>` surface so the message only ever
  * points users at commands that exist (see `src/cli/config-cli.ts`).
  */
 const CONFIGURE_NON_TTY_HINT = [
   "Interactive configuration requires an interactive terminal (TTY).",
   "For non-interactive setup, use these subcommands instead:",
-  `  ${formatCliCommand("openclaw config set <path> <value>")}  write a config entry`,
-  `  ${formatCliCommand("openclaw config get <path>")}          read a config entry`,
-  `  ${formatCliCommand("openclaw config patch")}              apply a JSON patch`,
-  `  ${formatCliCommand("openclaw config validate")}           validate configuration`,
+  `  ${formatCliCommand("quiet-core-bot config set <path> <value>")}  write a config entry`,
+  `  ${formatCliCommand("quiet-core-bot config get <path>")}          read a config entry`,
+  `  ${formatCliCommand("quiet-core-bot config patch")}              apply a JSON patch`,
+  `  ${formatCliCommand("quiet-core-bot config validate")}           validate configuration`,
 ].join("\n");
 
 /**
@@ -33,10 +33,7 @@ const CONFIGURE_NON_TTY_HINT = [
  *
  * Returns true when the wizard may proceed.
  */
-function assertInteractiveConfigureTerminal(
-  runtime: RuntimeEnv,
-  interactive?: boolean,
-): boolean {
+function assertInteractiveConfigureTerminal(runtime: RuntimeEnv, interactive?: boolean): boolean {
   const interactiveTerminal = interactive ?? (process.stdin.isTTY && process.stdout.isTTY);
   if (interactiveTerminal) {
     return true;
@@ -63,8 +60,8 @@ export async function configureCommandFromSectionsArg(
   runtime: RuntimeEnv = defaultRuntime,
   options?: { interactive?: boolean },
 ): Promise<void> {
-  // Fail closed once at the shared entry: both `openclaw configure` and the
-  // no-subcommand `openclaw config` route here, so a single guard keeps them
+  // Fail closed once at the shared entry: both `quiet-core-bot configure` and the
+  // no-subcommand `quiet-core-bot config` route here, so a single guard keeps them
   // consistent instead of partially entering the wizard on a non-TTY pipe.
   // `options.interactive` lets tests drive the fail-closed path directly
   // instead of mutating global `process` streams.
@@ -80,7 +77,7 @@ export async function configureCommandFromSectionsArg(
 
   if (invalid.length > 0) {
     runtime.error(
-      `Invalid --section: ${invalid.join(", ")}. Expected one of: ${CONFIGURE_WIZARD_SECTIONS.join(", ")}. Run ${formatCliCommand("openclaw configure")} without --section to use the full wizard.`,
+      `Invalid --section: ${invalid.join(", ")}. Expected one of: ${CONFIGURE_WIZARD_SECTIONS.join(", ")}. Run ${formatCliCommand("quiet-core-bot configure")} without --section to use the full wizard.`,
     );
     runtime.exit(1);
     return;

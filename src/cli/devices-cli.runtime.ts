@@ -675,7 +675,7 @@ function resolveRequiredDeviceRole(
     return { deviceId, role };
   }
   defaultRuntime.error(
-    `--device and --role are required. Run ${formatCliCommand("openclaw devices list")} to choose a paired device.`,
+    `--device and --role are required. Run ${formatCliCommand("quiet-core-bot devices list")} to choose a paired device.`,
   );
   defaultRuntime.exit(1);
   return null;
@@ -775,7 +775,7 @@ export async function runDevicesRemoveCommand(
   const trimmed = deviceId.trim();
   if (!trimmed) {
     defaultRuntime.error(
-      `deviceId is required. Run ${formatCliCommand("openclaw devices list")} to choose a paired device.`,
+      `deviceId is required. Run ${formatCliCommand("quiet-core-bot devices list")} to choose a paired device.`,
     );
     defaultRuntime.exit(1);
     return;
@@ -903,7 +903,7 @@ export async function runDevicesApproveCommand(
         break;
       case "re-approval":
         defaultRuntime.log(
-          "  Note:   Already paired. Approval-bound device details changed, so OpenClaw created a fresh request instead of silently reusing the old approval.",
+          "  Note:   Already paired. Approval-bound device details changed, so Quiet Core bot created a fresh request instead of silently reusing the old approval.",
         );
         break;
       case "new-pairing":

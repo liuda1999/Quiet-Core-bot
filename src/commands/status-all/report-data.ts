@@ -1,4 +1,4 @@
-// Collects raw data needed to render `openclaw status --all`.
+// Collects raw data needed to render `quiet-core-bot status --all`.
 // This file performs local read-only probes; formatting stays in report-line builders.
 
 import { canExecRequestNode } from "../../agents/exec-defaults.js";

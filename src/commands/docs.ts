@@ -1,4 +1,4 @@
-// Implements docs link/search output for `openclaw docs`.
+// Implements docs link/search output for `quiet-core-bot docs`.
 import { formatDocsLink } from "../../packages/terminal-core/src/links.js";
 import { isRich, theme } from "../../packages/terminal-core/src/theme.js";
 import { formatCliCommand } from "../cli/command-format.js";
@@ -112,10 +112,12 @@ export async function docsSearchCommand(queryParts: string[], runtime: RuntimeEn
     const docs = formatDocsLink("/", "docs.openclaw.ai");
     if (isRich()) {
       runtime.log(`${theme.muted("Docs:")} ${docs}`);
-      runtime.log(`${theme.muted("Search:")} ${formatCliCommand('openclaw docs "your query"')}`);
+      runtime.log(
+        `${theme.muted("Search:")} ${formatCliCommand('quiet-core-bot docs "your query"')}`,
+      );
     } else {
       runtime.log("Docs: https://docs.openclaw.ai/");
-      runtime.log(`Search: ${formatCliCommand('openclaw docs "your query"')}`);
+      runtime.log(`Search: ${formatCliCommand('quiet-core-bot docs "your query"')}`);
     }
     return;
   }

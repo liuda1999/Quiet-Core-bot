@@ -50,11 +50,11 @@ function noteCliGatewayVersionSkew(status: StatusSummary | undefined): void {
   }
   note(
     [
-      `This command is OpenClaw ${VERSION}; the running Gateway is OpenClaw ${gatewayVersion}.`,
-      "Check `openclaw --version`, `which openclaw`, and `openclaw gateway status --deep`.",
-      "If this mismatch is unexpected, update PATH so `openclaw` points to the version you want, or reinstall the Gateway service from that same OpenClaw install.",
+      `This command is Quiet Core bot ${VERSION}; the running Gateway is Quiet Core bot ${gatewayVersion}.`,
+      "Check `quiet-core-bot --version`, `which quiet-core-bot`, and `quiet-core-bot gateway status --deep`.",
+      "If this mismatch is unexpected, update PATH so `quiet-core-bot` points to the version you want, or reinstall the Gateway service from that same Quiet Core bot install.",
     ].join("\n"),
-    "OpenClaw version mismatch",
+    "Quiet Core bot version mismatch",
   );
 }
 

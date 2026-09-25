@@ -212,7 +212,7 @@ describe("sessionsCommand model/modelProvider display for ACP sessions (catalog 
     // AND persisted ACP metadata exists, overlay `{ provider: "acpx", model: "<agentId>-acp" }`.
     // This trades model-name accuracy for "this is ACP control-plane, not the
     // agent default" clarity. Plumbing the actual copilot-side model selection
-    // into the openclaw record would require capturing ACP `session.model_change`
+    // into the quiet-core-bot record would require capturing ACP `session.model_change`
     // events (catalog notes this as deferrable).
     useTempStateDir();
     writeAcpRuntimeMeta(ACP_SESSION_KEY);

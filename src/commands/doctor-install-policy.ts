@@ -42,7 +42,7 @@ export async function collectInstallPolicyHealthLines(
 
   if (!options.deep) {
     lines.push(
-      `- Static checks passed. Run ${formatCliCommand("openclaw doctor --deep")} to execute a synthetic policy probe.`,
+      `- Static checks passed. Run ${formatCliCommand("quiet-core-bot doctor --deep")} to execute a synthetic policy probe.`,
     );
     return lines;
   }

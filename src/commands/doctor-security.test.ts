@@ -173,7 +173,7 @@ describe("noteSecurityWarnings gateway exposure", () => {
     const message = lastMessage();
     expect(message).toContain("OPENCLAW_GATEWAY_TOKEN conflicts with gateway.auth.token");
     expect(message).toContain("Direct local Gateway clients commonly prefer the env token");
-    expect(message).toContain("~/.openclaw/.env");
+    expect(message).toContain("~/.quiet-core-bot/.env");
   });
 
   it("does not warn when only env token is set without config token", async () => {
@@ -293,7 +293,7 @@ describe("noteSecurityWarnings gateway exposure", () => {
     const message = lastMessage();
     expect(message).toContain("disables approval forwarding only");
     expect(message).toContain("exec-approvals.json");
-    expect(message).toContain("openclaw approvals get --gateway");
+    expect(message).toContain("quiet-core-bot approvals get --gateway");
   });
 
   it("warns when filesystem tools are disabled but exec remains available", async () => {
@@ -347,7 +347,7 @@ describe("noteSecurityWarnings gateway exposure", () => {
     const message = lastMessage();
     expect(message).toContain("plaintext secret-bearing config fields");
     expect(message).toContain("models.providers.openai.apiKey");
-    expect(message).toContain("openclaw secrets audit --check");
+    expect(message).toContain("quiet-core-bot secrets audit --check");
   });
 
   it("warns when sensitive model provider headers are stored as plaintext in config", async () => {
@@ -478,7 +478,7 @@ describe("noteSecurityWarnings gateway exposure", () => {
     expect(message).toContain("tools.exec is broader than the host exec policy");
     expect(message).toContain('tools.exec.mode="full"');
     expect(message).toContain('defaults.security="allowlist"');
-    expect(message).not.toContain("OpenClaw default");
+    expect(message).not.toContain("Quiet Core bot default");
   });
 
   it("attributes broader host policy warnings to wildcard agent entries", async () => {
@@ -701,7 +701,7 @@ describe("noteSecurityWarnings gateway exposure", () => {
     const message = lastMessage();
     expect(message).toContain("[secrets]");
     expect(message).toContain("failed to resolve account");
-    expect(message).toContain("Run: openclaw security audit --deep");
+    expect(message).toContain("Run: quiet-core-bot security audit --deep");
   });
 
   it("skips heartbeat directPolicy warning when delivery is internal-only or explicit", async () => {

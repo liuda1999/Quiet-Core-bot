@@ -445,8 +445,8 @@ describe("skills cli commands", () => {
 
     expect(help).toContain("<skill-ref>");
     expect(help).toContain("@owner/slug");
-    expect(help).toContain("openclaw skills install @owner/weather");
-    expect(help).not.toContain("openclaw skills install weather");
+    expect(help).toContain("quiet-core-bot skills install @owner/weather");
+    expect(help).not.toContain("quiet-core-bot skills install weather");
   });
 
   it("documents owner-qualified ClawHub verify refs in command help", () => {
@@ -463,8 +463,8 @@ describe("skills cli commands", () => {
 
     expect(help).toContain("<skill-ref>");
     expect(help).toContain("@owner/slug");
-    expect(help).toContain("openclaw skills verify @owner/weather");
-    expect(help).not.toContain("openclaw skills verify weather");
+    expect(help).toContain("quiet-core-bot skills verify @owner/weather");
+    expect(help).not.toContain("quiet-core-bot skills verify weather");
   });
 
   it("installs a skill from a git source into the active workspace", async () => {
@@ -1372,6 +1372,6 @@ describe("skills cli commands", () => {
     expect(defaultRuntime.log).not.toHaveBeenCalled();
     expect(runtimeErrors).toStrictEqual([]);
     expect(runtimeStdout.at(-1)).toContain("calendar");
-    expect(runtimeStdout.at(-1)).toContain("openclaw skills search");
+    expect(runtimeStdout.at(-1)).toContain("quiet-core-bot skills search");
   });
 });

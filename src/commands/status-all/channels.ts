@@ -1,4 +1,4 @@
-// Builds channel status rows and account details for `openclaw status --all`.
+// Builds channel status rows and account details for `quiet-core-bot status --all`.
 // This layer stays plugin-generic: channel-specific auth rules live in plugin config/status hooks.
 
 import fs from "node:fs";
@@ -218,7 +218,7 @@ function formatLoadFailureDetail(message: string): string {
   const reason = isLikelyDependencyTreeCorruption(message)
     ? "dependency tree corrupted"
     : "registration failed";
-  return `plugin load failed: ${reason}; run openclaw doctor --fix`;
+  return `plugin load failed: ${reason}; run quiet-core-bot doctor --fix`;
 }
 
 /** Builds the `status --all` channel summary and per-account detail tables. */

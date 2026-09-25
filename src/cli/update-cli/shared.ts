@@ -169,7 +169,7 @@ export function resolveNodeRunner(): string {
   return "node";
 }
 
-/** Locate the installed OpenClaw package root that should receive update operations. */
+/** Locate the installed Quiet Core bot package root that should receive update operations. */
 export async function resolveUpdateRoot(): Promise<string> {
   return (
     (await resolveOpenClawPackageRoot({
@@ -233,7 +233,7 @@ export async function runUpdateStep(params: {
   };
 }
 
-/** Ensure the configured source-update directory exists and points at an OpenClaw checkout. */
+/** Ensure the configured source-update directory exists and points at an Quiet Core bot checkout. */
 export async function ensureGitCheckout(params: {
   dir: string;
   timeoutMs: number;
@@ -257,7 +257,7 @@ export async function ensureGitCheckout(params: {
     const empty = await isEmptyDir(params.dir);
     if (!empty) {
       throw new Error(
-        `OPENCLAW_GIT_DIR points at a non-git directory: ${params.dir}. Set OPENCLAW_GIT_DIR to an empty folder or an openclaw checkout.`,
+        `OPENCLAW_GIT_DIR points at a non-git directory: ${params.dir}. Set OPENCLAW_GIT_DIR to an empty folder or an quiet-core-bot checkout.`,
       );
     }
 
@@ -278,7 +278,7 @@ export async function ensureGitCheckout(params: {
   return null;
 }
 
-/** Detect the package manager that owns a global/package OpenClaw install. */
+/** Detect the package manager that owns a global/package Quiet Core bot install. */
 export async function resolveGlobalManager(params: {
   root: string;
   installKind: "git" | "package" | "unknown";
@@ -303,7 +303,7 @@ export async function resolveGlobalManager(params: {
 
 const COMPLETION_CACHE_WRITE_TIMEOUT_MS = 30_000;
 const COMPLETION_CACHE_MANUAL_REFRESH_HINT =
-  "Shell tab-completion may be stale; refresh manually with: openclaw completion --write-state";
+  "Shell tab-completion may be stale; refresh manually with: quiet-core-bot completion --write-state";
 
 /** Best-effort refresh of shell completion state after a successful update. */
 export async function tryWriteCompletionCache(root: string, jsonMode: boolean): Promise<void> {

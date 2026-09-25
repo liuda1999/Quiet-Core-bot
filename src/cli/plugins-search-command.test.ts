@@ -99,7 +99,7 @@ describe("plugins search command", () => {
     });
     expect(mocks.logs.join("\n")).toContain("openclaw-calendar");
     expect(mocks.logs.join("\n")).toContain(
-      "Install: openclaw plugins install clawhub:openclaw-calendar",
+      "Install: quiet-core-bot plugins install clawhub:openclaw-calendar",
     );
   });
 

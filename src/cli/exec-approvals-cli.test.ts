@@ -501,7 +501,7 @@ describe("exec approvals CLI", () => {
       "tools.exec askFallback",
       {
         effective: "deny",
-        source: "OpenClaw default (deny)",
+        source: "Quiet Core bot default (deny)",
       },
     );
 
@@ -518,7 +518,7 @@ describe("exec approvals CLI", () => {
     });
     expectFields(requireRecord(agentScope.askFallback, "agent askFallback"), "agent askFallback", {
       effective: "deny",
-      source: "OpenClaw default (deny)",
+      source: "Quiet Core bot default (deny)",
     });
   });
 
@@ -606,7 +606,7 @@ describe("exec approvals CLI", () => {
     const logged = defaultRuntime.log.mock.calls.map((call) => String(call[0])).join("\n");
     expect(logged).toContain("aaaa1111");
     expect(logged).not.toContain("bbbb2222");
-    expect(logged).toContain("openclaw approvals approve <id>");
+    expect(logged).toContain("quiet-core-bot approvals approve <id>");
     expect(runtimeErrors).toHaveLength(0);
   });
 

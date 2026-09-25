@@ -1,8 +1,8 @@
 // Register agent tests cover agent command registration and option wiring.
 import { Command } from "commander";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { registerAgentsCommands } from "./register.agent.js";
 import { registerAgentTurnCommand } from "./register.agent-turn.js";
+import { registerAgentsCommands } from "./register.agent.js";
 
 const mocks = vi.hoisted(() => ({
   agentCliCommandMock: vi.fn(),
@@ -274,7 +274,7 @@ describe("agent command registration", () => {
       "/tmp/ws/IDENTITY.md",
       "--from-identity",
       "--name",
-      "OpenClaw",
+      "Quiet Core bot",
       "--theme",
       "ops",
       "--emoji",
@@ -289,7 +289,7 @@ describe("agent command registration", () => {
         workspace: "/tmp/ws",
         identityFile: "/tmp/ws/IDENTITY.md",
         fromIdentity: true,
-        name: "OpenClaw",
+        name: "Quiet Core bot",
         theme: "ops",
         emoji: ":lobster:",
         avatar: "https://example.com/openclaw.png",

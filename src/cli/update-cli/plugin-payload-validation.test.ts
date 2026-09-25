@@ -114,7 +114,7 @@ describe("runPluginPayloadSmokeCheck", () => {
     ]);
   });
 
-  it("accepts a manifest with no main field (OpenClaw plugins commonly use `exports` or `openclaw.extensions`)", async () => {
+  it("accepts a manifest with no main field (Quiet Core bot plugins commonly use `exports` or `openclaw.extensions`)", async () => {
     const dir = path.join(tmpRoot, "matrix");
     await writePackage(dir, { name: "@openclaw/plugin-matrix" });
     const result = await runPluginPayloadSmokeCheck({

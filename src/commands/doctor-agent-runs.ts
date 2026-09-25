@@ -35,7 +35,7 @@ export async function noteAgentRunLedgerHealth(params?: {
     [
       "- Runs interrupted by a gateway restart were found in the persisted run ledger:",
       ...interrupted.map(formatAgentRunLine),
-      `- Use ${formatCliCommand("openclaw gateway restart --safe")} for later restarts so active runs drain before the gateway stops.`,
+      `- Use ${formatCliCommand("quiet-core-bot gateway restart --safe")} for later restarts so active runs drain before the gateway stops.`,
     ].join("\n"),
     "Agent runs",
   );

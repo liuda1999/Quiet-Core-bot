@@ -1,4 +1,4 @@
-// Provider/account summary helpers for `openclaw agents list`.
+// Provider/account summary helpers for `quiet-core-bot agents list`.
 import { isChannelVisibleInConfiguredLists } from "../channels/plugins/exposure.js";
 import { resolveChannelDefaultAccountId } from "../channels/plugins/helpers.js";
 import { normalizeChannelId } from "../channels/plugins/index.js";

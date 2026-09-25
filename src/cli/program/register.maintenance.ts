@@ -5,7 +5,7 @@ import { theme } from "../../../packages/terminal-core/src/theme.js";
 import { defaultRuntime } from "../../runtime.js";
 import { runCommandWithRuntime } from "../cli-utils.js";
 
-/** Register maintenance commands that inspect or mutate local OpenClaw state. */
+/** Register maintenance commands that inspect or mutate local Quiet Core bot state. */
 export function registerMaintenanceCommands(program: Command) {
   program
     .command("doctor")
@@ -76,7 +76,7 @@ export function registerMaintenanceCommands(program: Command) {
       }
       if (hasLintOnlyDoctorOptions(opts)) {
         defaultRuntime.error(
-          "doctor lint options require --lint. Use `openclaw doctor --lint ...`.",
+          "doctor lint options require --lint. Use `quiet-core-bot doctor --lint ...`.",
         );
         defaultRuntime.exit(2);
         return;

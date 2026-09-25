@@ -81,7 +81,7 @@ function optionLabels(options: Array<{ value: unknown; label: string }> | undefi
 function expectUnknownChannelRemovalPrompt(unsafeChannel: string, label: string) {
   expectOption(selectArg().options, channelChoice(unsafeChannel), label);
   expect(confirmArg().message).toBe(
-    `Delete ${label} configuration from ~/.openclaw/openclaw.json?`,
+    `Delete ${label} configuration from ~/.quiet-core-bot/quiet-core-bot.json?`,
   );
   expect(note).toHaveBeenCalledWith(
     `${label} removed from config.\nNote: credentials/sessions on disk are unchanged.`,
@@ -99,7 +99,7 @@ describe("removeChannelConfigWizard", () => {
     confirm.mockResolvedValue(true);
   });
 
-  it("lists configured channels from openclaw.json even when no plugins are loaded", async () => {
+  it("lists configured channels from quiet-core-bot.json even when no plugins are loaded", async () => {
     select.mockResolvedValue(doneChoice);
 
     await removeChannelConfigWizard(
@@ -139,7 +139,7 @@ describe("removeChannelConfigWizard", () => {
     );
 
     expect(confirmArg().message).toBe(
-      "Delete Telegram configuration from ~/.openclaw/openclaw.json?",
+      "Delete Telegram configuration from ~/.quiet-core-bot/quiet-core-bot.json?",
     );
     expect(next.channels).toEqual({ twitch: { token: "secret" } });
     expect(note).toHaveBeenCalledWith(
@@ -161,7 +161,9 @@ describe("removeChannelConfigWizard", () => {
       {} as never,
     );
 
-    expect(confirmArg().message).toBe("Delete done configuration from ~/.openclaw/openclaw.json?");
+    expect(confirmArg().message).toBe(
+      "Delete done configuration from ~/.quiet-core-bot/quiet-core-bot.json?",
+    );
     expect(next.channels).toEqual({ telegram: { token: "secret" } });
     expect(note).toHaveBeenCalledWith(
       "done removed from config.\nNote: credentials/sessions on disk are unchanged.",
@@ -228,7 +230,7 @@ describe("removeChannelConfigWizard", () => {
 
     expectOption(selectArg().options, channelChoice("telegram"), "Telegram\\nBot");
     expect(confirmArg().message).toBe(
-      "Delete Telegram\\nBot configuration from ~/.openclaw/openclaw.json?",
+      "Delete Telegram\\nBot configuration from ~/.quiet-core-bot/quiet-core-bot.json?",
     );
     expect(note).toHaveBeenCalledWith(
       "Telegram\\nBot removed from config.\nNote: credentials/sessions on disk are unchanged.",

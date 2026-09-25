@@ -128,7 +128,7 @@ export async function commitmentsListCommand(
   }
   if (commitments.length === 0) {
     runtime.log(
-      `No commitments found. Run ${formatCliCommand("openclaw commitments --all")} to include dismissed and expired commitments.`,
+      `No commitments found. Run ${formatCliCommand("quiet-core-bot commitments --all")} to include dismissed and expired commitments.`,
     );
     return;
   }
@@ -145,7 +145,7 @@ export async function commitmentsDismissCommand(
   const ids = normalizeStringEntries(opts.ids);
   if (ids.length === 0) {
     runtime.error(
-      `At least one commitment id is required. Run ${formatCliCommand("openclaw commitments list")} to choose one.`,
+      `At least one commitment id is required. Run ${formatCliCommand("quiet-core-bot commitments list")} to choose one.`,
     );
     runtime.exit(1);
     return;

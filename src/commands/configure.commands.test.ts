@@ -42,8 +42,8 @@ describe("configureCommandFromSectionsArg", () => {
     // The hint must point at real subcommands, not the wizard itself.
     const message = runtime.error.mock.calls[0]?.[0] as string;
     expect(message).toContain("requires an interactive terminal (TTY)");
-    expect(message).toContain(formatCliCommand("openclaw config set"));
-    expect(message).toContain(formatCliCommand("openclaw config validate"));
+    expect(message).toContain(formatCliCommand("quiet-core-bot config set"));
+    expect(message).toContain(formatCliCommand("quiet-core-bot config validate"));
     // The wizard must never start on a non-TTY.
     expect(runConfigureWizardMock).not.toHaveBeenCalled();
   });

@@ -41,7 +41,7 @@ describe("mapFailoverReasonToProbeStatus", () => {
 });
 
 describe("runAuthProbes", () => {
-  it("runs Codex auth probes through raw OpenClaw model-run mode", async () => {
+  it("runs Codex auth probes through raw Quiet Core bot model-run mode", async () => {
     const runEmbeddedAgent = vi.fn(async () => ({ text: "OK" }));
     vi.doMock("../../agents/embedded-agent.js", () => ({ runEmbeddedAgent }));
     vi.doMock("../../agents/auth-profiles.js", () => ({

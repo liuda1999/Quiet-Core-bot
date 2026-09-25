@@ -43,9 +43,9 @@ export type PostCoreConvergenceResult = {
   installRecords: Record<string, PluginInstallRecord>;
 };
 
-const REPAIR_GUIDANCE = "Run `openclaw update repair` to retry plugin repair.";
+const REPAIR_GUIDANCE = "Run `quiet-core-bot update repair` to retry plugin repair.";
 const inspectGuidance = (pluginId: string) =>
-  `Run \`openclaw plugins inspect ${pluginId} --runtime --json\` for details.`;
+  `Run \`quiet-core-bot plugins inspect ${pluginId} --runtime --json\` for details.`;
 
 async function repairManagedNpmOpenClawPeerLinks(params: {
   env: NodeJS.ProcessEnv;
@@ -64,12 +64,14 @@ async function repairManagedNpmOpenClawPeerLinks(params: {
     return {
       changes:
         repaired > 0
-          ? [`Repaired OpenClaw host peer link(s) for ${repaired} managed npm plugin package(s).`]
+          ? [
+              `Repaired Quiet Core bot host peer link(s) for ${repaired} managed npm plugin package(s).`,
+            ]
           : [],
       warnings: [],
     };
   } catch (err) {
-    const message = `Failed to repair managed npm OpenClaw host peer links: ${err instanceof Error ? err.message : String(err)}`;
+    const message = `Failed to repair managed npm Quiet Core bot host peer links: ${err instanceof Error ? err.message : String(err)}`;
     return {
       changes: [],
       warnings: [

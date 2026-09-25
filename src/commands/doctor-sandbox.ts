@@ -157,8 +157,8 @@ async function noteCodexBwrapNamespaceWarning(cfg: OpenClawConfig): Promise<void
     `Probe command: ${probe.command}`,
     `Probe result: ${probe.reason}`,
     "",
-    "Fix the host namespace policy for the OpenClaw service user, then restart the gateway.",
-    "Prefer an AppArmor profile that grants the required namespaces to the OpenClaw service process.",
+    "Fix the host namespace policy for the Quiet Core bot service user, then restart the gateway.",
+    "Prefer an AppArmor profile that grants the required namespaces to the Quiet Core bot service process.",
     "`kernel.apparmor_restrict_unprivileged_userns=0` is a host-wide fallback with security tradeoffs; use it only when that host posture is acceptable.",
     "Do not add broad Docker container privileges just to satisfy nested bwrap; that weakens the outer sandbox.",
   ];
@@ -306,7 +306,7 @@ export async function maybeRepairSandboxImages(
       "",
       "Options:",
       "- Install Docker and restart the gateway",
-      "- Disable sandbox mode: openclaw config set agents.defaults.sandbox.mode off",
+      "- Disable sandbox mode: quiet-core-bot config set agents.defaults.sandbox.mode off",
     ];
     note(lines.join("\n"), "Sandbox");
     return cfg;
@@ -400,7 +400,7 @@ export function legacySandboxRegistryInspectionToHealthFinding(
     message: `Legacy sandbox registry file detected.
 ${formatLegacyRegistryInspectionLine(file)}`,
     path: legacySandboxRegistryInspectionSourcePath(file),
-    fixHint: `Run ${formatCliCommand("openclaw doctor --fix")} to migrate valid entries to SQLite.`,
+    fixHint: `Run ${formatCliCommand("quiet-core-bot doctor --fix")} to migrate valid entries to SQLite.`,
   };
 }
 
@@ -432,7 +432,7 @@ export async function maybeRepairSandboxRegistryFiles(prompter: DoctorPrompter):
       [
         "Legacy sandbox registry files detected.",
         ...legacyFiles.map(formatLegacyRegistryInspectionLine),
-        `Run ${formatCliCommand("openclaw doctor --fix")} to migrate them to SQLite.`,
+        `Run ${formatCliCommand("quiet-core-bot doctor --fix")} to migrate them to SQLite.`,
       ].join("\n"),
       "Sandbox",
     );

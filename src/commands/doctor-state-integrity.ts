@@ -739,8 +739,8 @@ export async function noteStateIntegrity(
       [
         `- State directory is under macOS cloud-synced storage (${displayStateDir}; ${cloudSyncedStateDir.storage}).`,
         "- This can cause slow I/O and sync/lock races for sessions and credentials.",
-        "- Prefer a local non-synced state dir (for example: ~/.openclaw).",
-        `  Set locally: OPENCLAW_STATE_DIR=~/.openclaw ${formatCliCommand("openclaw doctor")}`,
+        "- Prefer a local non-synced state dir (for example: ~/.quiet-core-bot).",
+        `  Set locally: OPENCLAW_STATE_DIR=~/.quiet-core-bot ${formatCliCommand("quiet-core-bot doctor")}`,
       ].join("\n"),
     );
   }
@@ -979,9 +979,9 @@ export async function noteStateIntegrity(
       warnings.push(
         [
           `- ${missing.length}/${recentTranscriptCandidates.length} recent sessions are missing transcripts.`,
-          `  Verify sessions in store: ${formatCliCommand(`openclaw sessions --store "${absoluteStorePath}"`)}`,
-          `  Preview cleanup impact: ${formatCliCommand(`openclaw sessions cleanup --store "${absoluteStorePath}" --dry-run`)}`,
-          `  Prune missing entries: ${formatCliCommand(`openclaw sessions cleanup --store "${absoluteStorePath}" --enforce --fix-missing`)}`,
+          `  Verify sessions in store: ${formatCliCommand(`quiet-core-bot sessions --store "${absoluteStorePath}"`)}`,
+          `  Preview cleanup impact: ${formatCliCommand(`quiet-core-bot sessions cleanup --store "${absoluteStorePath}" --dry-run`)}`,
+          `  Prune missing entries: ${formatCliCommand(`quiet-core-bot sessions cleanup --store "${absoluteStorePath}" --enforce --fix-missing`)}`,
         ].join("\n"),
       );
     }
@@ -994,12 +994,12 @@ export async function noteStateIntegrity(
       warnings.push(
         [
           `- Found ${wedgedCount} with automatic restart recovery tombstoned.`,
-          "  OpenClaw will not auto-resume these child sessions on restart; reconcile their task records instead.",
+          "  Quiet Core bot will not auto-resume these child sessions on restart; reconcile their task records instead.",
           `  Examples: ${wedgedSubagentSessions
             .slice(0, 3)
             .map(([key]) => key)
             .join(", ")}`,
-          `  Fix: ${formatCliCommand("openclaw tasks maintenance --apply")}`,
+          `  Fix: ${formatCliCommand("quiet-core-bot tasks maintenance --apply")}`,
         ].join("\n"),
       );
       const repairWedged = await prompter.confirmRuntimeRepair({
@@ -1166,7 +1166,7 @@ export function collectWorkspaceBackupTip(workspaceDir: string): string | null {
   }
   return [
     "- Tip: back up the workspace in a private git repo (GitHub or GitLab).",
-    "- Keep ~/.openclaw out of git; it contains credentials and session history.",
+    "- Keep ~/.quiet-core-bot out of git; it contains credentials and session history.",
     "- Details: /concepts/agent-workspace#git-backup-recommended",
   ].join("\n");
 }

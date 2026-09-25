@@ -453,7 +453,7 @@ describe("persistPluginInstall", () => {
     expect(runtimeLogs.join("\n")).toContain(
       "installed npm source: /tmp/openclaw/npm/node_modules/@openclaw/discord/index.ts",
     );
-    expect(runtimeLogs.join("\n")).toContain("openclaw plugins doctor");
+    expect(runtimeLogs.join("\n")).toContain("quiet-core-bot plugins doctor");
   });
 
   it("does not warn when the config-selected source is inside the npm install path", async () => {

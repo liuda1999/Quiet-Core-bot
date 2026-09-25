@@ -436,7 +436,7 @@ describe("runCli exit behavior", () => {
     await runCli(["node", "openclaw", "config"]);
 
     expect(createCliProgressMock).toHaveBeenCalledWith({
-      label: "Loading OpenClaw CLI…",
+      label: "Loading Quiet Core bot CLI…",
       indeterminate: true,
       delayMs: 0,
     });
@@ -454,7 +454,7 @@ describe("runCli exit behavior", () => {
     await runCli(["node", "openclaw", "sessions", "--json", "--limit", "all"]);
 
     expect(createCliProgressMock).toHaveBeenCalledWith({
-      label: "Loading OpenClaw CLI…",
+      label: "Loading Quiet Core bot CLI…",
       indeterminate: true,
       delayMs: 0,
       enabled: false,
@@ -2163,7 +2163,7 @@ describe("runCli exit behavior", () => {
 
   it("suggests close known commands for unowned command roots before proxy startup", async () => {
     await expect(runCli(["node", "openclaw", "upate"])).rejects.toThrow(
-      "Did you mean this?\n  openclaw update",
+      "Did you mean this?\n  quiet-core-bot update",
     );
 
     expect(startProxyMock).not.toHaveBeenCalled();
@@ -2567,7 +2567,7 @@ describe("runCli exit behavior", () => {
 
       expect(process.exitCode).toBe(1);
       expect(errorSpy).toHaveBeenCalledWith(
-        "Onboarding needs an interactive TTY. Use `openclaw onboard --non-interactive --accept-risk ...` for automation.",
+        "Onboarding needs an interactive TTY. Use `quiet-core-bot onboard --non-interactive --accept-risk ...` for automation.",
       );
       expect(setupWizardCommandMock).not.toHaveBeenCalled();
       expect(runCrestodianMock).not.toHaveBeenCalled();
@@ -2760,7 +2760,7 @@ describe("runCli exit behavior", () => {
     try {
       expect(() => handler(new Error("boom"))).toThrow("process.exit(1)");
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "[openclaw] OpenClaw hit an unexpected runtime error.",
+        "[openclaw] Quiet Core bot hit an unexpected runtime error.",
       );
       expect(consoleErrorSpy).toHaveBeenCalledWith("[openclaw] Reason: boom");
       expect(restoreTerminalStateMock).toHaveBeenCalledWith("uncaught exception", {

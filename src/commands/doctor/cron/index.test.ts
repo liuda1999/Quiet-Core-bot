@@ -662,7 +662,7 @@ describe("maybeRepairLegacyCronStore", () => {
     expectNoteContaining("Shell prompt job 1", "Cron");
     expectNoteContaining("Shell prompt job 2", "Cron");
     expectNoteContaining("Shell prompt job 3", "Cron");
-    expectNoNoteContaining("openclaw doctor --fix", "Cron");
+    expectNoNoteContaining("quiet-core-bot doctor --fix", "Cron");
     expectNoNoteContaining("jobs.json", "Cron");
     expect(prompter.confirm).not.toHaveBeenCalled();
 
@@ -728,7 +728,7 @@ describe("maybeRepairLegacyCronStore", () => {
     expectNoteContaining("Recreate the job as a command cron job", "Cron");
     expectNoNoteContaining("informational only", "Cron");
     expectNoNoteContaining("keep running as-is", "Cron");
-    expectNoNoteContaining("openclaw doctor --fix", "Cron");
+    expectNoNoteContaining("quiet-core-bot doctor --fix", "Cron");
     expect(prompter.confirm).not.toHaveBeenCalled();
 
     const job = requirePersistedJob(await readPersistedJobs(storePath), 0);
@@ -1189,7 +1189,7 @@ describe("legacy WhatsApp crontab health check", () => {
       readCrontab: async () => ({
         stdout: [
           "# keep comments ignored",
-          "*/5 * * * * ~/.openclaw/bin/ensure-whatsapp.sh >> ~/.openclaw/logs/whatsapp-health.log 2>&1",
+          "*/5 * * * * ~/.quiet-core-bot/bin/ensure-whatsapp.sh >> ~/.quiet-core-bot/logs/whatsapp-health.log 2>&1",
           "0 9 * * * /usr/bin/true",
           "",
         ].join("\n"),
@@ -1207,7 +1207,7 @@ describe("legacy WhatsApp crontab health check", () => {
       readCrontab: async () => ({
         stdout: [
           "# keep comments ignored",
-          "*/5 * * * * ~/.openclaw/bin/ensure-whatsapp.sh >> ~/.openclaw/logs/whatsapp-health.log 2>&1",
+          "*/5 * * * * ~/.quiet-core-bot/bin/ensure-whatsapp.sh >> ~/.quiet-core-bot/logs/whatsapp-health.log 2>&1",
           "0 9 * * * /usr/bin/true",
           "",
         ].join("\n"),
@@ -1257,7 +1257,7 @@ describe("legacy WhatsApp crontab health check", () => {
       noteLegacyWhatsAppCrontabHealthCheck({
         platform: "linux",
         readCrontab: async () => ({
-          stdout: { lines: ["*/5 * * * * ~/.openclaw/bin/ensure-whatsapp.sh"] },
+          stdout: { lines: ["*/5 * * * * ~/.quiet-core-bot/bin/ensure-whatsapp.sh"] },
         }),
       }),
     ).resolves.toBeUndefined();

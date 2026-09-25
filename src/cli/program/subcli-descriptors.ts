@@ -10,7 +10,7 @@ const subCliCommandCatalog = defineCommandDescriptorCatalog([
   { name: "acp", description: "Run and manage ACP-backed coding agents", hasSubcommands: true },
   {
     name: "gateway",
-    description: "Run, inspect, and query the OpenClaw Gateway",
+    description: "Run, inspect, and query the Quiet Core bot Gateway",
     hasSubcommands: true,
   },
   {
@@ -99,7 +99,7 @@ const subCliCommandCatalog = defineCommandDescriptorCatalog([
   },
   {
     name: "docs",
-    description: "Search the live OpenClaw docs",
+    description: "Search the live Quiet Core bot docs",
     hasSubcommands: false,
   },
   {
@@ -109,7 +109,7 @@ const subCliCommandCatalog = defineCommandDescriptorCatalog([
   },
   {
     name: "proxy",
-    description: "Run the OpenClaw debug proxy and inspect captured traffic",
+    description: "Run the Quiet Core bot debug proxy and inspect captured traffic",
     hasSubcommands: true,
   },
   {
@@ -171,7 +171,7 @@ const subCliCommandCatalog = defineCommandDescriptorCatalog([
   },
   {
     name: "update",
-    description: "Update OpenClaw and inspect update channel status",
+    description: "Update Quiet Core bot and inspect update channel status",
     hasSubcommands: true,
   },
   {

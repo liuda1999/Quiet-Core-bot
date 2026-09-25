@@ -91,8 +91,8 @@ function execAskRank(value: ExecAsk): number {
 function collectExecPolicyConflictWarnings(cfg: OpenClawConfig): string[] {
   const warnings: string[] = [];
   const approvals = loadExecApprovals();
-  const defaultRequestedSecuritySource = "OpenClaw default (full)";
-  const defaultRequestedAskSource = "OpenClaw default (off)";
+  const defaultRequestedSecuritySource = "Quiet Core bot default (full)";
+  const defaultRequestedAskSource = "Quiet Core bot default (off)";
 
   const maybeWarn = (params: {
     scopeLabel: string;
@@ -152,7 +152,7 @@ function collectExecPolicyConflictWarnings(cfg: OpenClawConfig): string[] {
         `  Host: ${hostParts.join(", ")}`,
         `  Effective host exec stays security="${snapshot.security.effective}" ask="${snapshot.ask.effective}" because the stricter side wins.`,
         "  Headless runs like isolated cron cannot answer approval prompts; align both files or enable Web UI, terminal UI, or chat exec approvals.",
-        `  Inspect with: ${formatCliCommand("openclaw approvals get --gateway")}`,
+        `  Inspect with: ${formatCliCommand("quiet-core-bot approvals get --gateway")}`,
       ].join("\n"),
     );
   };
@@ -230,10 +230,10 @@ function collectPlaintextConfigSecretWarnings(cfg: OpenClawConfig): string[] {
     extraCount > 0 ? `${samplePaths.join(", ")} (+${extraCount} more)` : samplePaths.join(", ");
 
   return [
-    "- WARNING: openclaw.json contains plaintext secret-bearing config fields.",
+    "- WARNING: quiet-core-bot.json contains plaintext secret-bearing config fields.",
     `  Paths: ${pathLine}`,
     "  Agents or workspace tools that can read config files may see these API keys/tokens.",
-    `  Migrate them to SecretRefs with ${formatCliCommand("openclaw secrets configure")} or ${formatCliCommand("openclaw secrets apply")}, then verify with ${formatCliCommand("openclaw secrets audit --check")}.`,
+    `  Migrate them to SecretRefs with ${formatCliCommand("quiet-core-bot secrets configure")} or ${formatCliCommand("quiet-core-bot secrets apply")}, then verify with ${formatCliCommand("quiet-core-bot secrets audit --check")}.`,
   ];
 }
 
@@ -248,7 +248,7 @@ export async function collectSecurityWarnings(
     warnings.push(
       "- Note: approvals.exec.enabled=false disables approval forwarding only.",
       `  Host exec gating still comes from ${resolveExecApprovalsDisplayPath()}.`,
-      `  Check local policy with: ${formatCliCommand("openclaw approvals get --gateway")}`,
+      `  Check local policy with: ${formatCliCommand("quiet-core-bot approvals get --gateway")}`,
     );
   }
 
@@ -299,19 +299,19 @@ export async function collectSecurityWarnings(
       const authFixLines =
         resolvedAuth.mode === "password"
           ? [
-              `  Fix: ${formatCliCommand("openclaw configure")} to set a password`,
-              `  Or switch to token: ${formatCliCommand("openclaw config set gateway.auth.mode token")}`,
+              `  Fix: ${formatCliCommand("quiet-core-bot configure")} to set a password`,
+              `  Or switch to token: ${formatCliCommand("quiet-core-bot config set gateway.auth.mode token")}`,
             ]
           : [
-              `  Fix: ${formatCliCommand("openclaw doctor --fix")} to generate a token`,
+              `  Fix: ${formatCliCommand("quiet-core-bot doctor --fix")} to generate a token`,
               `  Or set token directly: ${formatCliCommand(
-                "openclaw config set gateway.auth.mode token",
+                "quiet-core-bot config set gateway.auth.mode token",
               )}`,
             ];
       warnings.push(
         `- CRITICAL: Gateway bound to ${bindDescriptor} without authentication.`,
         `  Anyone on your network (or internet if port-forwarded) can fully control your agent.`,
-        `  Fix: ${formatCliCommand("openclaw config set gateway.bind loopback")}`,
+        `  Fix: ${formatCliCommand("quiet-core-bot config set gateway.bind loopback")}`,
         ...saferRemoteAccessLines,
         ...authFixLines,
       );
@@ -377,7 +377,7 @@ export async function collectSecurityWarnings(
     if (dmScope === "main" && isMultiUserDm) {
       warnings.push(
         `- ${params.label} DMs: multiple senders share the main session; run: ` +
-          formatCliCommand('openclaw config set session.dmScope "per-channel-peer"') +
+          formatCliCommand('quiet-core-bot config set session.dmScope "per-channel-peer"') +
           ' (or "per-account-channel-peer" for multi-account channels) to isolate sessions.',
       );
     }
@@ -439,7 +439,7 @@ export async function collectSecurityWarnings(
 /** Emits security warnings plus the deep audit follow-up command. */
 export async function noteSecurityWarnings(cfg: OpenClawConfig) {
   const warnings = await collectSecurityWarnings(cfg);
-  const auditHint = `- Run: ${formatCliCommand("openclaw security audit --deep")}`;
+  const auditHint = `- Run: ${formatCliCommand("quiet-core-bot security audit --deep")}`;
 
   const lines = warnings.length > 0 ? warnings : ["- No channel security warnings detected."];
   lines.push(auditHint);

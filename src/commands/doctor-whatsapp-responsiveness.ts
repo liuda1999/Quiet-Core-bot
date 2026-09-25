@@ -52,7 +52,7 @@ function parsePsPidLine(line: string): LocalTuiProcess | null {
   return { pid, command };
 }
 
-/** Lists local OpenClaw TUI processes that can contend with gateway responsiveness. */
+/** Lists local Quiet Core bot TUI processes that can contend with gateway responsiveness. */
 export function listLocalTuiProcesses(): LocalTuiProcess[] {
   if (process.platform === "win32") {
     return [];
@@ -189,7 +189,7 @@ export async function noteWhatsappResponsivenessHealth(params: {
       }
     } else {
       warnings.push(
-        `Fix: close those TUI sessions, or run ${formatCliCommand("openclaw doctor --fix")}.`,
+        `Fix: close those TUI sessions, or run ${formatCliCommand("quiet-core-bot doctor --fix")}.`,
       );
     }
   }

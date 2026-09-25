@@ -53,13 +53,13 @@ describe("doctor exec safe bin helpers", () => {
             "jq supports broad jq programs and builtins (for example `env`), so prefer explicit allowlist entries or approval-gated runs instead of safeBins.",
         },
       ],
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     expect(warnings).toEqual([
       "- tools.exec.safeBins includes interpreter/runtime 'node' without profile.",
       "- agents.list.runner.tools.exec.safeBins includes 'jq': jq supports broad jq programs and builtins (for example `env`), so prefer explicit allowlist entries or approval-gated runs instead of safeBins.",
-      '- Run "openclaw doctor --fix" to scaffold missing custom safeBinProfiles entries.',
+      '- Run "quiet-core-bot doctor --fix" to scaffold missing custom safeBinProfiles entries.',
     ]);
   });
 

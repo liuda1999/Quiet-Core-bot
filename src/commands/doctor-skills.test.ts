@@ -88,7 +88,7 @@ describe("doctor skills", () => {
 
     expect(lines.join("\n")).toContain("places: bins: goplaces; env: GOOGLE_MAPS_API_KEY");
     expect(lines.join("\n")).toContain("install option: Install goplaces (brew)");
-    expect(lines.join("\n")).toContain("openclaw doctor --fix");
+    expect(lines.join("\n")).toContain("quiet-core-bot doctor --fix");
   });
 
   it("disables unavailable skills through skills.entries without dropping existing config", () => {

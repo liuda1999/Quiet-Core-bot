@@ -281,7 +281,7 @@ describe("plugin authoring commands", () => {
         packageManifest: { openclaw: { extensions: ["./src/index.ts"] } },
       }),
     ).toEqual([
-      "openclaw.plugin.json generated metadata is stale. Run openclaw plugins build.",
+      "openclaw.plugin.json generated metadata is stale. Run quiet-core-bot plugins build.",
       "openclaw.plugin.json contracts.tools is missing: demo_echo",
       "openclaw.plugin.json contracts.tools has no matching defineToolPlugin tool: other_tool",
     ]);
@@ -295,7 +295,7 @@ describe("plugin authoring commands", () => {
     ).rejects.toThrow("plugin entry not found: ./dist/index.js");
   });
 
-  it("loads source entries that import the OpenClaw plugin SDK package subpath", async () => {
+  it("loads source entries that import the Quiet Core bot plugin SDK package subpath", async () => {
     const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-source-"));
     const entryPath = writeSourceToolPluginProject({
       tmpDir,
@@ -340,8 +340,9 @@ describe("plugin authoring commands", () => {
         vitest: "^3.2.0",
       },
       scripts: {
-        "plugin:build": "npm run build && openclaw plugins build --entry ./dist/index.js",
-        "plugin:validate": "npm run build && openclaw plugins validate --entry ./dist/index.js",
+        "plugin:build": "npm run build && quiet-core-bot plugins build --entry ./dist/index.js",
+        "plugin:validate":
+          "npm run build && quiet-core-bot plugins validate --entry ./dist/index.js",
       },
       openclaw: {
         extensions: ["./dist/index.js"],

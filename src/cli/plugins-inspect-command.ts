@@ -1,4 +1,4 @@
-// `openclaw plugins inspect`: renders plugin registry shape, capabilities, policy, diagnostics, and install records.
+// `quiet-core-bot plugins inspect`: renders plugin registry shape, capabilities, policy, diagnostics, and install records.
 import { getTerminalTableWidth, renderTable } from "../../packages/terminal-core/src/table.js";
 import { theme } from "../../packages/terminal-core/src/theme.js";
 import { getRuntimeConfig } from "../config/config.js";
@@ -12,7 +12,7 @@ import { shortenHomeInString, shortenHomePath } from "../utils.js";
 import { formatMissingPluginMessage } from "./error-format.js";
 import { quietPluginJsonLogger } from "./plugins-json-logger.js";
 
-/** Options accepted by `openclaw plugins inspect`. */
+/** Options accepted by `quiet-core-bot plugins inspect`. */
 export type PluginInspectOptions = {
   json?: boolean;
   all?: boolean;
@@ -259,7 +259,7 @@ export async function runPluginsInspectCommand(
   });
   if (!inspect) {
     defaultRuntime.error(
-      formatMissingPluginMessage({ id, listCommand: "openclaw plugins list --json" }),
+      formatMissingPluginMessage({ id, listCommand: "quiet-core-bot plugins list --json" }),
     );
     return defaultRuntime.exit(1);
   }

@@ -91,7 +91,7 @@ function addUniquePathDir(dirs: string[], dir: string | undefined): void {
   dirs.push(dir);
 }
 
-/** Resolve the OpenClaw CLI binary directory from argv/PATH for daemon PATH. */
+/** Resolve the Quiet Core bot CLI binary directory from argv/PATH for daemon PATH. */
 export function resolveDaemonOpenClawBinDir(
   params: {
     argv?: string[];
@@ -139,7 +139,7 @@ export function resolveDaemonOpenClawBinDir(
   return dirs.length > 0 ? dirs : undefined;
 }
 
-/** Merge Node and OpenClaw binary directories for the daemon service PATH. */
+/** Merge Node and Quiet Core bot binary directories for the daemon service PATH. */
 export function resolveDaemonServicePathDirs(params: {
   nodePath?: string;
   argv?: string[];

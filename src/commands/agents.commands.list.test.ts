@@ -127,14 +127,14 @@ describe("agentsListCommand", () => {
         [
           "Agents:",
           "- main (default)",
-          "  Workspace: ~/.openclaw/workspace",
-          "  Agent dir: ~/.openclaw/agents/main/agent",
+          "  Workspace: ~/.quiet-core-bot/workspace",
+          "  Agent dir: ~/.quiet-core-bot/agents/main/agent",
           "  Routing rules: 1",
           "  Routing: Telegram default",
           "  Providers:",
           "    - Telegram default: configured",
           "Routing rules map channel/account/peer to an agent. Use --bindings for full rules.",
-          "Channel status reflects local config/creds. For live health: openclaw channels status --probe.",
+          "Channel status reflects local config/creds. For live health: quiet-core-bot channels status --probe.",
         ].join("\n"),
       ],
     ]);

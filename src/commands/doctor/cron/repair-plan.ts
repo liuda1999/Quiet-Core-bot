@@ -30,7 +30,7 @@ export function formatUnresolvedCommandPromptAdvisory(names: string[]): string |
   return [
     `${pluralize(names.length, "isolated cron job")} ${describeVerb} a shell command in the agent prompt but ${accessVerb} shell/process tool access${formatJobNameList(names)}.`,
     "- This is not the supported shell-tool prompt shape, so doctor cannot prove the job will execute the requested command.",
-    '- Recreate the job as a command cron job (`openclaw cron add ... --command "<shell>"`) or grant explicit shell/process tool access before relying on it.',
+    '- Recreate the job as a command cron job (`quiet-core-bot cron add ... --command "<shell>"`) or grant explicit shell/process tool access before relying on it.',
   ].join("\n");
 }
 
@@ -48,7 +48,7 @@ export function formatUnresolvedShellPromptAdvisory(names: string[]): string | n
   return [
     `${pluralize(names.length, "isolated cron job")} ${verb} shell/process tools from the agent prompt and ${keepVerb} running as-is${formatJobNameList(names)}.`,
     "- This is a supported shape, not a legacy store row, so the doctor fix path cannot convert it and the finding is informational only.",
-    '- For a deterministic run, recreate the job as a command cron job (`openclaw cron add ... --command "<shell>"`).',
+    '- For a deterministic run, recreate the job as a command cron job (`quiet-core-bot cron add ... --command "<shell>"`).',
   ].join("\n");
 }
 

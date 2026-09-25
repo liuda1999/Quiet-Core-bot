@@ -1,4 +1,4 @@
-// Implements `openclaw channels capabilities` account capability/probe reporting.
+// Implements `quiet-core-bot channels capabilities` account capability/probe reporting.
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
@@ -317,7 +317,7 @@ export async function channelsCapabilitiesCommand(
   if (opts.account && (!rawChannel || rawChannel === "all")) {
     runtime.error(
       danger(
-        `--account requires a specific --channel. Run ${formatCliCommand("openclaw channels list")} to choose one.`,
+        `--account requires a specific --channel. Run ${formatCliCommand("quiet-core-bot channels list")} to choose one.`,
       ),
     );
     runtime.exit(1);
@@ -326,7 +326,7 @@ export async function channelsCapabilitiesCommand(
   if (rawTarget && (!rawChannel || rawChannel === "all")) {
     runtime.error(
       danger(
-        `--target requires a specific --channel. Run ${formatCliCommand("openclaw channels list")} to choose one.`,
+        `--target requires a specific --channel. Run ${formatCliCommand("quiet-core-bot channels list")} to choose one.`,
       ),
     );
     runtime.exit(1);
@@ -365,7 +365,7 @@ export async function channelsCapabilitiesCommand(
       runtime.log(
         theme.muted(
           `No configured channel capabilities found. Run ${formatCliCommand(
-            "openclaw channels list --all",
+            "quiet-core-bot channels list --all",
           )} to see available channels.`,
         ),
       );

@@ -101,7 +101,7 @@ function formatWorkspaceHealthLine(
     return `- ${label}: ${display} (writable).`;
   }
   if (health === "missing") {
-    return `- ${label}: ${display} (missing; OpenClaw will create it on first run).`;
+    return `- ${label}: ${display} (missing; Quiet Core bot will create it on first run).`;
   }
   if (health === "not_directory") {
     return `- ${label}: ${display} exists but is not a directory.`;
@@ -257,30 +257,32 @@ export function noteClaudeCliHealth(
     lines.push("- Headless Claude auth: unavailable without interactive prompting.");
     fixHints.push(
       `- Fix: run ${formatCliCommand("claude auth login")}, then ${formatCliCommand(
-        "openclaw models auth login --provider anthropic --method cli --set-default",
+        "quiet-core-bot models auth login --provider anthropic --method cli --set-default",
       )}.`,
     );
   }
 
   if (!storedProfile) {
-    lines.push(`- OpenClaw auth profile: missing (${CLAUDE_CLI_PROFILE_ID}) in ${authStorePath}.`);
+    lines.push(
+      `- Quiet Core bot auth profile: missing (${CLAUDE_CLI_PROFILE_ID}) in ${authStorePath}.`,
+    );
     fixHints.push(
       `- Fix: run ${formatCliCommand(
-        "openclaw models auth login --provider anthropic --method cli --set-default",
+        "quiet-core-bot models auth login --provider anthropic --method cli --set-default",
       )}.`,
     );
   } else if (storedProfile.provider !== CLAUDE_CLI_PROVIDER) {
     lines.push(
-      `- OpenClaw auth profile: ${CLAUDE_CLI_PROFILE_ID} is wired to provider "${storedProfile.provider}" instead of "${CLAUDE_CLI_PROVIDER}".`,
+      `- Quiet Core bot auth profile: ${CLAUDE_CLI_PROFILE_ID} is wired to provider "${storedProfile.provider}" instead of "${CLAUDE_CLI_PROVIDER}".`,
     );
     fixHints.push(
       `- Fix: rerun ${formatCliCommand(
-        "openclaw models auth login --provider anthropic --method cli --set-default",
+        "quiet-core-bot models auth login --provider anthropic --method cli --set-default",
       )} to rewrite the profile cleanly.`,
     );
   } else {
     lines.push(
-      `- OpenClaw auth profile: ${CLAUDE_CLI_PROFILE_ID} (provider ${CLAUDE_CLI_PROVIDER}).`,
+      `- Quiet Core bot auth profile: ${CLAUDE_CLI_PROFILE_ID} (provider ${CLAUDE_CLI_PROVIDER}).`,
     );
   }
 

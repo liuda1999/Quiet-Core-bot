@@ -284,8 +284,8 @@ describe("setupSkills", () => {
     expect(prompter.multiselect).not.toHaveBeenCalled();
     const emptyStateNote = notes.find((n) => n.title === "All skills ready");
     expect(emptyStateNote?.message).toContain("No missing skill dependencies to install");
-    expect(emptyStateNote?.message).toContain("openclaw skills list --verbose");
-    expect(emptyStateNote?.message).toContain("openclaw skills check");
+    expect(emptyStateNote?.message).toContain("quiet-core-bot skills list --verbose");
+    expect(emptyStateNote?.message).toContain("quiet-core-bot skills check");
   });
 
   it("does not recommend Homebrew on FreeBSD", async () => {

@@ -35,13 +35,13 @@ export function registerNodeCli(program: Command) {
       () =>
         `\n${theme.heading("Examples:")}\n${formatHelpExamples([
           [
-            "openclaw node run --host 127.0.0.1 --port 18789",
+            "quiet-core-bot node run --host 127.0.0.1 --port 18789",
             "Run the node host in the foreground.",
           ],
-          ["openclaw node status", "Check node host service status."],
-          ["openclaw node install", "Install the node host service."],
-          ["openclaw node start", "Start the installed node host service."],
-          ["openclaw node restart", "Restart the installed node host service."],
+          ["quiet-core-bot node status", "Check node host service status."],
+          ["quiet-core-bot node install", "Install the node host service."],
+          ["quiet-core-bot node start", "Start the installed node host service."],
+          ["quiet-core-bot node restart", "Restart the installed node host service."],
         ])}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/node", "docs.openclaw.ai/cli/node")}\n`,
     );
 

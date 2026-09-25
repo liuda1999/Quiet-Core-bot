@@ -284,7 +284,7 @@ export async function ensureConfigReady(params: {
   const heading = (value: string) => colorize(rich, theme.heading, value);
   const commandText = (value: string) => colorize(rich, theme.command, value);
 
-  params.runtime.error(heading("OpenClaw config is invalid"));
+  params.runtime.error(heading("Quiet Core bot config is invalid"));
   params.runtime.error(`${muted("File:")} ${muted(shortenHomePath(snapshot.path))}`);
   if (issues.length > 0) {
     params.runtime.error(muted("Problem:"));
@@ -297,10 +297,10 @@ export async function ensureConfigReady(params: {
   params.runtime.error("");
   const fixHint = isPluginPackagingRuntimeOutputInvalidConfigSnapshot(snapshot)
     ? formatPluginPackagingRuntimeOutputRecoveryHint()
-    : commandText(formatCliCommand("openclaw doctor --fix"));
+    : commandText(formatCliCommand("quiet-core-bot doctor --fix"));
   params.runtime.error(`${muted("Fix:")} ${fixHint}`);
   params.runtime.error(
-    `${muted("Inspect:")} ${commandText(formatCliCommand("openclaw config validate"))}`,
+    `${muted("Inspect:")} ${commandText(formatCliCommand("quiet-core-bot config validate"))}`,
   );
   params.runtime.error(
     muted(

@@ -584,7 +584,7 @@ async function resolveUnownedCliPrimaryMessage(params: {
   }
   const suggestion = formatCliCommandSuggestions(params.primary);
   return [
-    `Unknown command: openclaw ${params.primary}. No built-in command or plugin CLI metadata owns "${params.primary}".`,
+    `Unknown command: quiet-core-bot ${params.primary}. No built-in command or plugin CLI metadata owns "${params.primary}".`,
     suggestion,
   ]
     .filter(Boolean)
@@ -829,8 +829,8 @@ export async function runCli(argv: string[] = process.argv) {
     }
 
     // Reject unowned command roots before help/version routing, so that
-    // `openclaw <typo> --help` surfaces the same Unknown command error as
-    // `openclaw <typo>` instead of silently showing generic top-level help.
+    // `quiet-core-bot <typo> --help` surfaces the same Unknown command error as
+    // `quiet-core-bot <typo>` instead of silently showing generic top-level help.
     // Runs after legitimate precomputed help fast paths so known help commands
     // still dispatch normally. See #81077.
     {
@@ -856,7 +856,7 @@ export async function runCli(argv: string[] = process.argv) {
       if (await shouldStartOnboardingForFreshInstall(normalizedArgv)) {
         if (!process.stdin.isTTY || !process.stdout.isTTY) {
           console.error(
-            "Onboarding needs an interactive TTY. Use `openclaw onboard --non-interactive --accept-risk ...` for automation.",
+            "Onboarding needs an interactive TTY. Use `quiet-core-bot onboard --non-interactive --accept-risk ...` for automation.",
           );
           process.exitCode = 1;
           return;
@@ -867,7 +867,7 @@ export async function runCli(argv: string[] = process.argv) {
       }
       if (!process.stdin.isTTY || !process.stdout.isTTY) {
         console.error(
-          'Crestodian needs an interactive TTY. Use `openclaw crestodian --message "status"` for one command.',
+          'Crestodian needs an interactive TTY. Use `quiet-core-bot crestodian --message "status"` for one command.',
         );
         process.exitCode = 1;
         return;
@@ -941,7 +941,7 @@ export async function runCli(argv: string[] = process.argv) {
     const suppressStartupProgress = hasJsonOutputFlag(parseArgv);
     const { createCliProgress } = await loadProgressModule();
     const startupProgress = createCliProgress({
-      label: "Loading OpenClaw CLI…",
+      label: "Loading Quiet Core bot CLI…",
       indeterminate: true,
       delayMs: 0,
       ...(suppressStartupProgress ? { enabled: false } : {}),
@@ -999,7 +999,7 @@ export async function runCli(argv: string[] = process.argv) {
           return;
         }
         for (const line of formatCliFailureLines({
-          title: "OpenClaw hit an unexpected runtime error.",
+          title: "Quiet Core bot hit an unexpected runtime error.",
           error,
           argv: normalizedArgv,
         })) {

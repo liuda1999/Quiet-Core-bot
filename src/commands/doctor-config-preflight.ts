@@ -159,13 +159,16 @@ export async function runDoctorConfigPreflight(
   let snapshot = addDoctorLegacyIssues(await readConfigFileSnapshot(readOptions));
   if (options.repairPrefixedConfig === true && snapshot.exists && !snapshot.valid) {
     if (await recoverConfigFromJsonRootSuffix(snapshot)) {
-      note("Removed non-JSON prefix from openclaw.json; original saved as .clobbered.*.", "Config");
+      note(
+        "Removed non-JSON prefix from quiet-core-bot.json; original saved as .clobbered.*.",
+        "Config",
+      );
       snapshot = addDoctorLegacyIssues(await readConfigFileSnapshot(readOptions));
     } else if (
       await recoverConfigFromLastKnownGood({ snapshot, reason: "doctor-invalid-config" })
     ) {
       note(
-        "Restored openclaw.json from last-known-good; original saved as .clobbered.*.",
+        "Restored quiet-core-bot.json from last-known-good; original saved as .clobbered.*.",
         "Config",
       );
       snapshot = addDoctorLegacyIssues(await readConfigFileSnapshot(readOptions));

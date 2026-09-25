@@ -3,7 +3,7 @@ import path from "node:path";
 
 const DEFAULT_CLI_NAME = "quiet-core-bot";
 
-// `openclaw` is matched only so legacy example strings written before the rebrand
+// `quiet-core-bot` is matched only so legacy example strings written before the rebrand
 // are still normalized to the current binary name; the binary itself is renamed.
 const LEGACY_CLI_NAME = "openclaw";
 

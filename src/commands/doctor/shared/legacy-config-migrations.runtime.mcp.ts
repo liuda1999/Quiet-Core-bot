@@ -13,7 +13,7 @@ import { isRecord } from "./legacy-config-record-shared.js";
 const MCP_SERVER_TYPE_RULE: LegacyConfigRule = {
   path: ["mcp", "servers"],
   message:
-    'mcp.servers entries use OpenClaw transport names; CLI-native type aliases are legacy here. Run "openclaw doctor --fix".',
+    'mcp.servers entries use Quiet Core bot transport names; CLI-native type aliases are legacy here. Run "quiet-core-bot doctor --fix".',
   match: (value) =>
     isRecord(value) &&
     Object.values(value).some((server) => isRecord(server) && isKnownCliMcpTypeAlias(server.type)),
@@ -23,7 +23,7 @@ const MCP_SERVER_TYPE_RULE: LegacyConfigRule = {
 export const LEGACY_CONFIG_MIGRATIONS_RUNTIME_MCP: LegacyConfigMigrationSpec[] = [
   defineLegacyConfigMigration({
     id: "mcp.servers.type->transport",
-    describe: "Move CLI-native MCP server type aliases to OpenClaw transport",
+    describe: "Move CLI-native MCP server type aliases to Quiet Core bot transport",
     legacyRules: [MCP_SERVER_TYPE_RULE],
     apply: (raw, changes) => {
       const mcp = isRecord(raw.mcp) ? raw.mcp : undefined;

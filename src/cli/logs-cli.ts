@@ -421,7 +421,7 @@ function createLogWriters() {
     onBrokenPipe: (err, stream) => {
       const code = err.code ?? "EPIPE";
       const target = stream === process.stdout ? "stdout" : "stderr";
-      const message = `openclaw logs: output ${target} closed (${code}). Stopping tail.`;
+      const message = `quiet-core-bot logs: output ${target} closed (${code}). Stopping tail.`;
       try {
         clearActiveProgressLine();
         process.stderr.write(`${message}\n`);
@@ -448,7 +448,7 @@ async function emitGatewayError(
   errorLine: (text: string) => boolean,
 ) {
   const message = "Gateway not reachable. Is it running and accessible?";
-  const hint = `Hint: run \`${formatCliCommand("openclaw doctor")}\`.`;
+  const hint = `Hint: run \`${formatCliCommand("quiet-core-bot doctor")}\`.`;
   const errorText = formatErrorMessage(err);
 
   const details = buildGatewayConnectionDetails({ url: opts.url });

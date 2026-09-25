@@ -356,7 +356,7 @@ describe("doctor preview warnings", () => {
           },
         },
       } as unknown as OpenClawConfig,
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
       env: { CODEX_HOME: codexHome, HOME: root },
     });
 
@@ -376,7 +376,7 @@ describe("doctor preview warnings", () => {
           },
         },
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     expect(
@@ -416,7 +416,7 @@ describe("doctor preview warnings", () => {
       await import("../../../cli/command-secret-gateway.js");
     const notes = await collectDoctorPreviewNotes({
       cfg: rawConfig,
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
       env: {},
     });
 
@@ -450,7 +450,7 @@ describe("doctor preview warnings", () => {
           },
         },
       } as unknown as OpenClawConfig,
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
       env: {},
       allowExec: true,
     });
@@ -482,7 +482,7 @@ describe("doctor preview warnings", () => {
           },
         },
       } as unknown as OpenClawConfig,
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     const warning = expectSingleWarningContaining(
@@ -506,7 +506,7 @@ describe("doctor preview warnings", () => {
           },
         },
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     const warning = expectSingleWarningContaining(
@@ -520,7 +520,7 @@ describe("doctor preview warnings", () => {
   it("includes stale plugin config warnings", async () => {
     const warnings = await collectDoctorPreviewWarnings({
       cfg: stalePluginConfig(),
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     const warning = expectSingleWarningContaining(
@@ -528,7 +528,7 @@ describe("doctor preview warnings", () => {
       'plugins.allow: stale plugin reference "acpx"',
     );
     expect(warning).toContain("plugins.entries.acpx");
-    expect(warning).toContain('Run "openclaw doctor --fix"');
+    expect(warning).toContain('Run "quiet-core-bot doctor --fix"');
     expect(warning).not.toContain("Auto-removal is paused");
   });
 
@@ -541,7 +541,7 @@ describe("doctor preview warnings", () => {
           },
         },
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     expectSingleWarningContaining(warnings, "channels.openclaw-weixin: dangling channel config");
@@ -560,24 +560,24 @@ describe("doctor preview warnings", () => {
           },
         },
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     const warning = expectSingleWarningContaining(
       warnings,
       `plugins.load.paths: legacy bundled plugin path "${legacyPath}"`,
     );
-    expect(warning).toContain('Run "openclaw doctor --fix"');
+    expect(warning).toContain('Run "quiet-core-bot doctor --fix"');
   });
 
   it("includes stale OAuth profile shadow warnings", async () => {
     staleOAuthShadowState.warnings = [
-      '- ~/.openclaw/agents/telegram/agent/auth-profiles.json has stale OAuth auth profile openai-codex:default. Run "openclaw doctor --fix".',
+      '- ~/.quiet-core-bot/agents/telegram/agent/auth-profiles.json has stale OAuth auth profile openai-codex:default. Run "quiet-core-bot doctor --fix".',
     ];
 
     const warnings = await collectDoctorPreviewWarnings({
       cfg: {},
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     expectSingleWarningContaining(warnings, "stale OAuth auth profile openai-codex:default");
@@ -590,7 +590,7 @@ describe("doctor preview warnings", () => {
 
     const warnings = await collectDoctorPreviewWarnings({
       cfg: { tools: { allow: ["fuzzplugin_move_angles"] } },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     expect(
@@ -606,7 +606,7 @@ describe("doctor preview warnings", () => {
 
     const warnings = await collectDoctorPreviewWarnings({
       cfg: stalePluginConfig(),
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     const warning = expectSingleWarningContaining(
@@ -614,7 +614,7 @@ describe("doctor preview warnings", () => {
       'plugins.allow: stale plugin reference "acpx"',
     );
     expect(warning).toContain("Auto-removal is paused");
-    expect(warning).toContain('rerun "openclaw doctor --fix"');
+    expect(warning).toContain('rerun "quiet-core-bot doctor --fix"');
   });
 
   it("warns when a configured channel plugin is disabled explicitly", async () => {
@@ -636,7 +636,7 @@ describe("doctor preview warnings", () => {
           },
         },
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     const warning = expectSingleWarningContaining(
@@ -662,7 +662,7 @@ describe("doctor preview warnings", () => {
           },
         },
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     const warning = expectSingleWarningContaining(
@@ -688,7 +688,7 @@ describe("doctor preview warnings", () => {
           },
         },
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     expect(warnings.join("\n")).toContain(
@@ -711,7 +711,7 @@ describe("doctor preview warnings", () => {
         },
       },
       activationSourceConfig: {},
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
       env: {
         DISCORD_BOT_TOKEN: "configured",
       } as NodeJS.ProcessEnv,
@@ -746,7 +746,7 @@ describe("doctor preview warnings", () => {
           },
         },
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     const warning = expectSingleWarningContaining(
@@ -772,7 +772,7 @@ describe("doctor preview warnings", () => {
           enabled: false,
         },
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     const warning = expectSingleWarningContaining(
@@ -801,7 +801,7 @@ describe("doctor preview warnings", () => {
           },
         },
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     expectSingleWarningContaining(
@@ -821,7 +821,7 @@ describe("doctor preview warnings", () => {
           },
         },
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     const warning = expectSingleWarningContaining(warnings, 'tools.profile is "messaging"');

@@ -631,7 +631,7 @@ export async function buildGatewayInstallPlan(params: {
     isSameServicePath(wrapperInput, resolveGatewayTaskScriptPath(params.env), platform);
   if (wrapperPointsAtWindowsTaskScript) {
     params.warn?.(
-      `Ignoring ${OPENCLAW_WRAPPER_ENV_KEY} because it points to the Windows task script; using the OpenClaw gateway entrypoint directly to avoid a recursive gateway.cmd wrapper.`,
+      `Ignoring ${OPENCLAW_WRAPPER_ENV_KEY} because it points to the Windows task script; using the Quiet Core bot gateway entrypoint directly to avoid a recursive gateway.cmd wrapper.`,
     );
   }
   const wrapperPath = wrapperPointsAtWindowsTaskScript
@@ -729,5 +729,5 @@ function omitEnvKey(
 export function gatewayInstallErrorHint(platform = process.platform): string {
   return platform === "win32"
     ? "Tip: native Windows now falls back to a per-user Startup-folder login item when Scheduled Task creation is denied; if install still fails, rerun from an elevated PowerShell or skip service install."
-    : `Tip: rerun \`${formatCliCommand("openclaw gateway install")}\` after fixing the error.`;
+    : `Tip: rerun \`${formatCliCommand("quiet-core-bot gateway install")}\` after fixing the error.`;
 }

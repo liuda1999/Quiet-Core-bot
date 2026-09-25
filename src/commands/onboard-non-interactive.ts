@@ -28,7 +28,7 @@ async function runNonInteractiveMigrationImport(params: {
     // Migration import cannot safely prompt in non-interactive mode; require the
     // provider id so the import path is deterministic.
     params.runtime.error(
-      `--import-from is required for non-interactive migration import. Run ${formatCliCommand("openclaw migrate list")} to choose a provider.`,
+      `--import-from is required for non-interactive migration import. Run ${formatCliCommand("quiet-core-bot migrate list")} to choose a provider.`,
     );
     params.runtime.exit(1);
     return;
@@ -71,7 +71,7 @@ export async function runNonInteractiveSetup(
     // Avoid rewriting an invalid config snapshot; doctor owns recovery so setup
     // does not erase malformed user state.
     runtime.error(
-      `Config invalid. Run \`${formatCliCommand("openclaw doctor")}\` to repair it, then re-run setup.`,
+      `Config invalid. Run \`${formatCliCommand("quiet-core-bot doctor")}\` to repair it, then re-run setup.`,
     );
     runtime.exit(1);
     return;
@@ -85,7 +85,7 @@ export async function runNonInteractiveSetup(
   const mode = opts.mode ?? "local";
   if (mode !== "local" && mode !== "remote") {
     runtime.error(
-      `Invalid --mode "${String(mode)}". Use "local" or "remote", or run ${formatCliCommand("openclaw onboard")} for interactive setup.`,
+      `Invalid --mode "${String(mode)}". Use "local" or "remote", or run ${formatCliCommand("quiet-core-bot onboard")} for interactive setup.`,
     );
     runtime.exit(1);
     return;

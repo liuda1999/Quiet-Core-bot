@@ -9,7 +9,7 @@ describe("formatCliParseErrorOutput", () => {
     });
 
     expect(output).toBe(
-      'OpenClaw does not know the command "wat".\nTry: openclaw --help\nPlugin command? openclaw plugins list\nDocs: https://docs.openclaw.ai/cli\n',
+      'Quiet Core bot does not know the command "wat".\nTry: quiet-core-bot --help\nPlugin command? quiet-core-bot plugins list\nDocs: https://docs.openclaw.ai/cli\n',
     );
   });
 
@@ -19,7 +19,7 @@ describe("formatCliParseErrorOutput", () => {
     });
 
     expect(output).toBe(
-      'OpenClaw does not know the command "upate".\nDid you mean this?\n  openclaw update\nTry: openclaw --help\nPlugin command? openclaw plugins list\nDocs: https://docs.openclaw.ai/cli\n',
+      'Quiet Core bot does not know the command "upate".\nDid you mean this?\n  quiet-core-bot update\nTry: quiet-core-bot --help\nPlugin command? quiet-core-bot plugins list\nDocs: https://docs.openclaw.ai/cli\n',
     );
   });
 
@@ -28,7 +28,7 @@ describe("formatCliParseErrorOutput", () => {
       argv: ["node", "openclaw", "upgrade"],
     });
 
-    expect(output).toContain("Did you mean this?\n  openclaw update\n");
+    expect(output).toContain("Did you mean this?\n  quiet-core-bot update\n");
   });
 
   it("preserves active profile context in command suggestions", () => {
@@ -39,7 +39,7 @@ describe("formatCliParseErrorOutput", () => {
         argv: ["node", "openclaw", "doctr"],
       });
 
-      expect(output).toContain("Did you mean this?\n  openclaw --profile work doctor\n");
+      expect(output).toContain("Did you mean this?\n  quiet-core-bot --profile work doctor\n");
     } finally {
       if (originalProfile === undefined) {
         delete process.env.OPENCLAW_PROFILE;
@@ -55,7 +55,7 @@ describe("formatCliParseErrorOutput", () => {
     });
 
     expect(output).toBe(
-      'OpenClaw does not recognize option "--wat".\nTry: openclaw channels status --help\n',
+      'Quiet Core bot does not recognize option "--wat".\nTry: quiet-core-bot channels status --help\n',
     );
   });
 
@@ -65,7 +65,7 @@ describe("formatCliParseErrorOutput", () => {
     });
 
     expect(output).toBe(
-      'Missing required argument "name".\nTry: openclaw plugins install --help\n',
+      'Missing required argument "name".\nTry: quiet-core-bot plugins install --help\n',
     );
   });
 });

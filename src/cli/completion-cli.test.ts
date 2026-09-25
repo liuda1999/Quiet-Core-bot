@@ -117,7 +117,7 @@ describe("completion-cli", () => {
 
     expect(script).toContain("if ($commandPath -eq 'gateway') {");
     expect(script).toContain("if ($commandPath -eq 'gateway status') {");
-    expect(script).not.toContain("if ($commandPath -eq 'openclaw gateway') {");
+    expect(script).not.toContain("if ($commandPath -eq 'quiet-core-bot gateway') {");
     expect(script).toContain("$completions = @('status','restart','--force','--token')");
     expect(script).not.toContain("'-t,'");
   });
@@ -137,16 +137,16 @@ describe("completion-cli", () => {
     const script = getCompletionScript("fish", createCompletionProgram());
 
     expect(script).toContain(
-      'complete -c openclaw -n "__fish_use_subcommand" -a "gateway" -d \'Gateway commands\'',
+      'complete -c quiet-core-bot -n "__fish_use_subcommand" -a "gateway" -d \'Gateway commands\'',
     );
     expect(script).toContain(
-      'complete -c openclaw -n "__openclaw_command_path_matches gateway -- -t --token" -a "status" -d \'Show gateway status\'',
+      'complete -c quiet-core-bot -n "__openclaw_command_path_matches gateway -- -t --token" -a "status" -d \'Show gateway status\'',
     );
     expect(script).toContain(
-      "complete -c openclaw -n \"__openclaw_command_path_matches gateway -- -t --token\" -l force -d 'Force the action'",
+      "complete -c quiet-core-bot -n \"__openclaw_command_path_matches gateway -- -t --token\" -l force -d 'Force the action'",
     );
     expect(script).toContain(
-      "complete -c openclaw -n \"__openclaw_command_path_matches gateway status -- -t --token\" -l json -d 'JSON output'",
+      "complete -c quiet-core-bot -n \"__openclaw_command_path_matches gateway status -- -t --token\" -l json -d 'JSON output'",
     );
     expect(script).toContain("__openclaw_command_path_matches gateway -- -t --token");
     expect(script).toContain("if contains -- $flag $value_options");
@@ -159,7 +159,7 @@ describe("completion-cli", () => {
     expect(script).toContain("__openclaw_command_path_matches sessions cleanup --");
     expect(script).not.toContain("__openclaw_command_path_matches sessions cleanup -- --verbose");
     expect(script).toContain(
-      "complete -c openclaw -n \"__openclaw_command_path_matches sessions cleanup --\" -l dry-run -d 'Preview cleanup'",
+      "complete -c quiet-core-bot -n \"__openclaw_command_path_matches sessions cleanup --\" -l dry-run -d 'Preview cleanup'",
     );
   });
 

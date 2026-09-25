@@ -101,7 +101,7 @@ describe("status-all diagnosis port checks", () => {
     gatewayMocks.summarizeLogTail.mockImplementation((lines: string[]) => lines);
   });
 
-  it("labels OpenClaw Tailscale exposure separately from daemon state", async () => {
+  it("labels Quiet Core bot Tailscale exposure separately from daemon state", async () => {
     const params = createBaseParams([]);
     params.tailscale.backendState = "Running";
     params.tailscale.dnsName = "box.tail.ts.net";
@@ -136,7 +136,7 @@ describe("status-all diagnosis port checks", () => {
 
     const output = params.lines.join("\n");
     expect(output).toContain("✓ Port 18789");
-    expect(output).toContain("Detected OpenClaw Gateway listener on the configured port.");
+    expect(output).toContain("Detected Quiet Core bot Gateway listener on the configured port.");
     expect(output).not.toContain("Port 18789 is already in use.");
   });
 
@@ -150,7 +150,9 @@ describe("status-all diagnosis port checks", () => {
 
     const output = params.lines.join("\n");
     expect(output).toContain("! Port 18789");
-    expect(output).toContain("2 OpenClaw gateway processes appear to be listening on port 18789");
+    expect(output).toContain(
+      "2 Quiet Core bot gateway processes appear to be listening on port 18789",
+    );
     expect(output).toContain("Port 18789 is already in use.");
   });
 
@@ -173,11 +175,11 @@ describe("status-all diagnosis port checks", () => {
 
     const output = params.lines.join("\n");
     expect(output).toContain(
-      "Update restart: failed · managed-service-handoff-failed · run openclaw gateway status --deep",
+      "Update restart: failed · managed-service-handoff-failed · run quiet-core-bot gateway status --deep",
     );
-    expect(output).toContain("Update restart failed; run openclaw gateway status --deep.");
+    expect(output).toContain("Update restart failed; run quiet-core-bot gateway status --deep.");
     expect(output).toContain(
-      "If the service is down, run openclaw gateway restart or openclaw gateway install --force.",
+      "If the service is down, run quiet-core-bot gateway restart or quiet-core-bot gateway install --force.",
     );
   });
 
@@ -200,10 +202,10 @@ describe("status-all diagnosis port checks", () => {
 
     const output = params.lines.join("\n");
     expect(output).toContain(
-      "Update restart: restart pending health verification · run openclaw gateway status --deep",
+      "Update restart: restart pending health verification · run quiet-core-bot gateway status --deep",
     );
     expect(output).toContain(
-      "Update restart is still pending; run openclaw update status --json for handoff state.",
+      "Update restart is still pending; run quiet-core-bot update status --json for handoff state.",
     );
   });
 

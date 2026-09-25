@@ -109,10 +109,10 @@ vi.mock("../config/config.js", () => ({
     if (process.env.OPENCLAW_NIX_MODE === "1") {
       throw new Error(
         [
-          "Config is managed by Nix (`OPENCLAW_NIX_MODE=1`), so OpenClaw treats openclaw.json as immutable.",
-          "Do not run setup, onboarding, openclaw update, plugin install/update/uninstall/enable, doctor repair/token-generation, or config set against this file.",
+          "Config is managed by Nix (`OPENCLAW_NIX_MODE=1`), so Quiet Core bot treats quiet-core-bot.json as immutable.",
+          "Do not run setup, onboarding, quiet-core-bot update, plugin install/update/uninstall/enable, doctor repair/token-generation, or config set against this file.",
           "Agent-first Nix setup: https://github.com/openclaw/nix-openclaw#quick-start",
-          "OpenClaw Nix overview: https://docs.openclaw.ai/install/nix",
+          "Quiet Core bot Nix overview: https://docs.openclaw.ai/install/nix",
         ].join("\n"),
       );
     }
@@ -925,7 +925,11 @@ describe("update-cli", () => {
 
     const call = spawnSyncCall();
     expect(typeof call?.[0]).toBe("string");
-    expect(call?.[1]).toEqual([path.join(root, "quiet-core-bot.mjs"), "completion", "--write-state"]);
+    expect(call?.[1]).toEqual([
+      path.join(root, "quiet-core-bot.mjs"),
+      "completion",
+      "--write-state",
+    ]);
     expect(call?.[2]?.env?.OPENCLAW_COMPLETION_SKIP_PLUGIN_COMMANDS).toBe("1");
     expect(call?.[2]?.timeout).toBe(30_000);
   });
@@ -965,7 +969,7 @@ describe("update-cli", () => {
       .mock.calls.map((call) => String(call[0]))
       .join("\n");
     expect(logOutput).toContain("timed out after 30s");
-    expect(logOutput).toContain("openclaw completion --write-state");
+    expect(logOutput).toContain("quiet-core-bot completion --write-state");
     expect(logOutput).not.toContain("Error: spawnSync");
   });
 
@@ -1065,7 +1069,7 @@ describe("update-cli", () => {
                 reason: "missing-extension-entry: ./dist/index.js",
                 message:
                   'Plugin "demo" failed post-core payload smoke check (missing-extension-entry): ./dist/index.js',
-                guidance: ["Run openclaw update repair to retry post-update plugin repair."],
+                guidance: ["Run quiet-core-bot update repair to retry post-update plugin repair."],
               },
             ],
             sync: {
@@ -1764,16 +1768,16 @@ describe("update-cli", () => {
     expect(jsonOutput?.postUpdate?.plugins?.status).toBe("warning");
     expect(pluginWarning(jsonOutput)?.pluginId).toBe("demo");
     expect(pluginWarning(jsonOutput)?.guidance).toEqual([
-      "Run openclaw update repair to retry post-update plugin repair.",
-      "Run openclaw plugins inspect demo --runtime --json for details.",
+      "Run quiet-core-bot update repair to retry post-update plugin repair.",
+      "Run quiet-core-bot plugins inspect demo --runtime --json for details.",
     ]);
     expect(pluginWarning(jsonOutput)?.reason).toContain("npm package integrity drift");
     expect(jsonOutput?.postUpdate?.plugins?.npm.outcomes[0]?.status).toBe("error");
     expect(jsonOutput?.postUpdate?.plugins?.npm.outcomes[0]?.message).toContain(
-      "Run openclaw update repair to retry post-update plugin repair.",
+      "Run quiet-core-bot update repair to retry post-update plugin repair.",
     );
     expect(jsonOutput?.postUpdate?.plugins?.npm.outcomes[0]?.message).toContain(
-      "Run openclaw plugins inspect demo --runtime --json for details.",
+      "Run quiet-core-bot plugins inspect demo --runtime --json for details.",
     );
   });
 
@@ -1858,8 +1862,8 @@ describe("update-cli", () => {
       .mock.calls.map((call) => String(call[0]))
       .join("\n");
     expect(logs).toContain("Failed to update demo: registry timeout");
-    expect(logs).toContain("Run openclaw update repair to retry post-update plugin repair.");
-    expect(logs).toContain("Run openclaw plugins inspect demo --runtime --json for details.");
+    expect(logs).toContain("Run quiet-core-bot update repair to retry post-update plugin repair.");
+    expect(logs).toContain("Run quiet-core-bot plugins inspect demo --runtime --json for details.");
   });
 
   it("marks disabled-after-failure plugin skips as post-update warnings", async () => {
@@ -1871,7 +1875,7 @@ describe("update-cli", () => {
           pluginId: "demo",
           status: "skipped",
           message:
-            'Disabled "demo" after plugin update failure; OpenClaw will continue without it. Failed to update demo: registry timeout',
+            'Disabled "demo" after plugin update failure; Quiet Core bot will continue without it. Failed to update demo: registry timeout',
         },
       ],
     });
@@ -1883,8 +1887,8 @@ describe("update-cli", () => {
     expect(jsonOutput?.postUpdate?.plugins?.status).toBe("warning");
     expect(pluginWarning(jsonOutput)?.pluginId).toBe("demo");
     expect(pluginWarning(jsonOutput)?.guidance).toEqual([
-      "Run openclaw update repair to retry post-update plugin repair.",
-      "Run openclaw plugins inspect demo --runtime --json for details.",
+      "Run quiet-core-bot update repair to retry post-update plugin repair.",
+      "Run quiet-core-bot plugins inspect demo --runtime --json for details.",
     ]);
     expect(pluginOutcome(jsonOutput)?.pluginId).toBe("demo");
     expect(pluginOutcome(jsonOutput)?.status).toBe("skipped");
@@ -1927,10 +1931,10 @@ describe("update-cli", () => {
                     pluginId: "demo",
                     reason: "Failed to update demo: registry timeout",
                     message:
-                      'Plugin "demo" could not be processed after the core update: Failed to update demo: registry timeout Run openclaw update repair to retry post-update plugin repair. Run openclaw plugins inspect demo --runtime --json for details.',
+                      'Plugin "demo" could not be processed after the core update: Failed to update demo: registry timeout Run quiet-core-bot update repair to retry post-update plugin repair. Run quiet-core-bot plugins inspect demo --runtime --json for details.',
                     guidance: [
-                      "Run openclaw update repair to retry post-update plugin repair.",
-                      "Run openclaw plugins inspect demo --runtime --json for details.",
+                      "Run quiet-core-bot update repair to retry post-update plugin repair.",
+                      "Run quiet-core-bot plugins inspect demo --runtime --json for details.",
                     ],
                   },
                 ],
@@ -1970,7 +1974,7 @@ describe("update-cli", () => {
     expect(jsonOutput?.status).toBe("ok");
     expect(jsonOutput?.reason).toBeUndefined();
     expect(jsonOutput?.postUpdate?.plugins?.warnings?.[0]?.guidance).toContain(
-      "Run openclaw update repair to retry post-update plugin repair.",
+      "Run quiet-core-bot update repair to retry post-update plugin repair.",
     );
     expect(jsonOutput?.postUpdate?.plugins?.npm.outcomes[0]?.message).toContain("registry timeout");
   });
@@ -2024,7 +2028,7 @@ describe("update-cli", () => {
       },
       assert: () => {
         const logs = vi.mocked(defaultRuntime.log).mock.calls.map((call) => call[0]);
-        expect(logs.join("\n")).toContain("OpenClaw update status");
+        expect(logs.join("\n")).toContain("Quiet Core bot update status");
       },
     },
     {
@@ -2277,8 +2281,8 @@ describe("update-cli", () => {
     expect(defaultRuntime.error).not.toHaveBeenCalledWith(
       [
         "Package updates cannot run from inside the gateway service process.",
-        "That path replaces the active OpenClaw dist tree while the live gateway may still lazy-load old chunks.",
-        "Run `openclaw update` from a shell outside the gateway service, or stop the gateway service first and then update.",
+        "That path replaces the active Quiet Core bot dist tree while the live gateway may still lazy-load old chunks.",
+        "Run `quiet-core-bot update` from a shell outside the gateway service, or stop the gateway service first and then update.",
       ].join("\n"),
     );
     expectPackageInstallSpec("openclaw@latest");
@@ -2308,8 +2312,8 @@ describe("update-cli", () => {
     expect(defaultRuntime.error).toHaveBeenCalledWith(
       [
         "Package updates cannot run from inside the gateway service process.",
-        "That path replaces the active OpenClaw dist tree while the live gateway may still lazy-load old chunks.",
-        "Run `openclaw update` from a shell outside the gateway service, or stop the gateway service first and then update.",
+        "That path replaces the active Quiet Core bot dist tree while the live gateway may still lazy-load old chunks.",
+        "Run `quiet-core-bot update` from a shell outside the gateway service, or stop the gateway service first and then update.",
       ].join("\n"),
     );
     expect(defaultRuntime.exit).toHaveBeenCalledWith(1);
@@ -2354,8 +2358,8 @@ describe("update-cli", () => {
       expect(defaultRuntime.error).toHaveBeenCalledWith(
         [
           "Package updates cannot run from inside the gateway service process.",
-          "That path replaces the active OpenClaw dist tree while the live gateway may still lazy-load old chunks.",
-          "Run `openclaw update` from a shell outside the gateway service, or stop the gateway service first and then update.",
+          "That path replaces the active Quiet Core bot dist tree while the live gateway may still lazy-load old chunks.",
+          "Run `quiet-core-bot update` from a shell outside the gateway service, or stop the gateway service first and then update.",
         ].join("\n"),
       );
       expect(defaultRuntime.exit).toHaveBeenCalledWith(1);
@@ -2387,8 +2391,8 @@ describe("update-cli", () => {
     expect(defaultRuntime.error).toHaveBeenCalledWith(
       [
         "Package updates cannot run from inside the gateway service process.",
-        "That path replaces the active OpenClaw dist tree while the live gateway may still lazy-load old chunks.",
-        "Run `openclaw update` from a shell outside the gateway service, or stop the gateway service first and then update.",
+        "That path replaces the active Quiet Core bot dist tree while the live gateway may still lazy-load old chunks.",
+        "Run `quiet-core-bot update` from a shell outside the gateway service, or stop the gateway service first and then update.",
       ].join("\n"),
     );
     expect(defaultRuntime.exit).toHaveBeenCalledWith(1);
@@ -2406,7 +2410,7 @@ describe("update-cli", () => {
 
     const errors = vi.mocked(defaultRuntime.error).mock.calls.map((call) => String(call[0]));
     expect(errors.join("\n")).toContain(
-      "openclaw update detected it is running inside the gateway process tree.",
+      "quiet-core-bot update detected it is running inside the gateway process tree.",
     );
     expect(errors.join("\n")).toContain("Gateway PID 4242 is an ancestor");
     expect(defaultRuntime.exit).toHaveBeenCalledWith(1);
@@ -2437,7 +2441,7 @@ describe("update-cli", () => {
 
     const errors = vi.mocked(defaultRuntime.error).mock.calls.map((call) => String(call[0]));
     expect(errors.join("\n")).toContain(
-      "openclaw update detected it is running inside the gateway process tree.",
+      "quiet-core-bot update detected it is running inside the gateway process tree.",
     );
     expect(errors.join("\n")).toContain("Gateway PID 4242 is an ancestor");
     expect(defaultRuntime.exit).toHaveBeenCalledWith(1);
@@ -2462,7 +2466,7 @@ describe("update-cli", () => {
     const errors = vi.mocked(defaultRuntime.error).mock.calls.map((call) => String(call[0]));
     expect(errors.join("\n")).toContain("Node ");
     expect(errors.join("\n")).toContain(
-      "Bare `npm i -g openclaw` can silently install an older compatible release.",
+      "Bare `npm i -g quiet-core-bot` can silently install an older compatible release.",
     );
   });
 
@@ -2495,9 +2499,9 @@ describe("update-cli", () => {
       name: "aliased git package spec",
       run: async () => {
         mockPackageInstallStatus(createCaseDir("openclaw-update"));
-        await updateCommand({ yes: true, tag: "OpenClaw@github:openclaw/openclaw#main" });
+        await updateCommand({ yes: true, tag: "Quiet Core bot@github:openclaw/openclaw#main" });
       },
-      expectedSpec: "OpenClaw@github:openclaw/openclaw#main",
+      expectedSpec: "Quiet Core bot@github:openclaw/openclaw#main",
     },
     {
       name: "full git URL package spec",
@@ -2826,7 +2830,7 @@ describe("update-cli", () => {
     expect(updateNpmInstalledPlugins).not.toHaveBeenCalled();
     expect(defaultRuntime.exit).not.toHaveBeenCalledWith(1);
     const jsonOutput = lastWriteJsonCall() as UpdateRunResult | undefined;
-    const doctorStep = jsonOutput?.steps.find((step) => step.name === "openclaw doctor");
+    const doctorStep = jsonOutput?.steps.find((step) => step.name === "quiet-core-bot doctor");
     expect(jsonOutput?.status).toBe("ok");
     expect(doctorStep?.exitCode).toBe(UPDATE_POST_INSTALL_DOCTOR_ADVISORY_EXIT_CODE);
     expect(doctorStep?.advisory).toEqual({
@@ -2898,7 +2902,7 @@ describe("update-cli", () => {
     expect(spawn).not.toHaveBeenCalled();
     expect(defaultRuntime.exit).toHaveBeenCalledWith(1);
     const jsonOutput = lastWriteJsonCall() as UpdateRunResult | undefined;
-    const doctorStep = jsonOutput?.steps.find((step) => step.name === "openclaw doctor");
+    const doctorStep = jsonOutput?.steps.find((step) => step.name === "quiet-core-bot doctor");
     expect(doctorStep?.exitCode).toBe(124);
     expect(doctorStep?.advisory).toBeUndefined();
     expect(doctorStep?.termination).toBe("timeout");
@@ -3768,7 +3772,7 @@ describe("update-cli", () => {
     const localAppData = createCaseDir("openclaw-localappdata");
     const portableGitMingw = path.join(
       localAppData,
-      "OpenClaw",
+      "Quiet Core bot",
       "deps",
       "portable-git",
       "mingw64",
@@ -3776,7 +3780,7 @@ describe("update-cli", () => {
     );
     const portableGitUsr = path.join(
       localAppData,
-      "OpenClaw",
+      "Quiet Core bot",
       "deps",
       "portable-git",
       "usr",
@@ -3901,9 +3905,11 @@ describe("update-cli", () => {
       .join("\n");
     expect(logs).toContain(`Targeting managed gateway service package root: ${serviceRoot}`);
     expect(logs).toContain(
-      `Shell OpenClaw root differs from the managed gateway service root: ${shellRoot}`,
+      `Shell Quiet Core bot root differs from the managed gateway service root: ${shellRoot}`,
     );
-    expect(logs).toContain("make sure `openclaw` on PATH resolves to the managed service root");
+    expect(logs).toContain(
+      "make sure `quiet-core-bot` on PATH resolves to the managed service root",
+    );
     expect(logs).toContain(`Managed gateway service Node: ${serviceNode}`);
   });
 
@@ -5422,7 +5428,7 @@ describe("update-cli", () => {
       "Git-based updates need a clean working tree before they can switch commits, fetch, or rebase.",
     );
     expect(logs.join("\n")).toContain(
-      "Commit, stash, or discard the local changes, then rerun `openclaw update`.",
+      "Commit, stash, or discard the local changes, then rerun `quiet-core-bot update`.",
     );
     expect(serviceStop).not.toHaveBeenCalled();
     expect(defaultRuntime.exit).toHaveBeenCalledWith(0);
@@ -6454,7 +6460,7 @@ describe("update-cli", () => {
       run: async () => await updateWizardCommand({}),
       requireTty: false,
       expectedError:
-        "Update wizard requires a TTY. Use `openclaw update --channel <stable|beta|dev>` instead.",
+        "Update wizard requires a TTY. Use `quiet-core-bot update --channel <stable|beta|dev>` instead.",
     },
   ] as const)(
     "validates update command invocation errors: $name",

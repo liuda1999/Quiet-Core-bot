@@ -1,7 +1,7 @@
 // CLI tagline selection helpers, including deterministic random/default/holiday modes.
 import { parseStrictNonNegativeInteger } from "../infra/parse-finite-number.js";
 
-const DEFAULT_TAGLINE = "All your chats, one OpenClaw.";
+const DEFAULT_TAGLINE = "All your chats, one Quiet Core bot.";
 export type TaglineMode = "random" | "default" | "off";
 
 const HOLIDAY_TAGLINES = {
@@ -102,7 +102,7 @@ const TAGLINES: string[] = [
   "Alexa, but with taste.",
   "I'm not AI-powered, I'm AI-possessed. Big difference.",
   "Deployed locally, trusted globally, debugged eternally.",
-  "You had me at 'openclaw gateway start.'",
+  "You had me at 'quiet-core-bot gateway start.'",
   HOLIDAY_TAGLINES.newYear,
   HOLIDAY_TAGLINES.lunarNewYear,
   HOLIDAY_TAGLINES.christmas,

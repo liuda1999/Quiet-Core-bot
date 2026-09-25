@@ -249,7 +249,7 @@ function filterLegacyStaleRootCandidates(
     }
     if (!cleanupRootPaths.some((rootPath) => isPathInsideRoot(targetPath, rootPath))) {
       warnings.push(
-        `Skipped legacy plugin dependency state ${targetPath}: outside OpenClaw cleanup roots`,
+        `Skipped legacy plugin dependency state ${targetPath}: outside Quiet Core bot cleanup roots`,
       );
       continue;
     }
@@ -291,7 +291,7 @@ async function resolveSafeRemovalTarget(
   }
   if (!cleanupRoots.some((root) => isPathInsideRoot(realPath, root.realPath))) {
     return {
-      warning: `Skipped legacy plugin dependency state ${targetPath}: resolved outside OpenClaw cleanup roots`,
+      warning: `Skipped legacy plugin dependency state ${targetPath}: resolved outside Quiet Core bot cleanup roots`,
     };
   }
   return { target: targetPath };
@@ -385,7 +385,7 @@ async function collectLegacyPluginDependencyTargets(
   );
 }
 
-/** Remove legacy plugin dependency state under trusted OpenClaw cleanup roots. */
+/** Remove legacy plugin dependency state under trusted Quiet Core bot cleanup roots. */
 export async function cleanupLegacyPluginDependencyState(params: {
   env?: NodeJS.ProcessEnv;
   packageRoot?: string | null;

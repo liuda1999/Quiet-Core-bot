@@ -101,7 +101,7 @@ export function formatCompletionReloadCommand(shell: CompletionShell, profilePat
 }
 
 function isCompletionProfileHeader(line: string): boolean {
-  return line.trim() === "# OpenClaw Completion";
+  return line.trim() === "# Quiet Core bot Completion";
 }
 
 function isCompletionProfileLine(line: string, binName: string, cachePath: string | null): boolean {
@@ -148,12 +148,12 @@ function updateCompletionProfile(
   }
 
   const trimmed = filtered.join("\n").trimEnd();
-  const block = `# OpenClaw Completion\n${sourceLine}`;
+  const block = `# Quiet Core bot Completion\n${sourceLine}`;
   const next = trimmed ? `${trimmed}\n\n${block}\n` : `${block}\n`;
   return { next, changed: next !== content, hadExisting };
 }
 
-/** Resolves the shell startup profile path that should contain the OpenClaw completion block. */
+/** Resolves the shell startup profile path that should contain the Quiet Core bot completion block. */
 export function resolveCompletionProfilePath(
   shell: CompletionShell,
   options: {
@@ -189,7 +189,7 @@ export function resolveCompletionProfilePath(
   return path.join(home, ".config", "powershell", "Microsoft.PowerShell_profile.ps1");
 }
 
-/** Returns whether a shell profile already contains an OpenClaw completion block or source line. */
+/** Returns whether a shell profile already contains an Quiet Core bot completion block or source line. */
 export async function isCompletionInstalled(
   shell: CompletionShell,
   binName = "openclaw",
@@ -210,7 +210,7 @@ export async function isCompletionInstalled(
 
 /**
  * Check if the profile uses the slow dynamic completion pattern.
- * Returns true if profile has `source <(openclaw completion ...)` instead of cached file.
+ * Returns true if profile has `source <(quiet-core-bot completion ...)` instead of cached file.
  */
 export async function usesSlowDynamicCompletion(
   shell: CompletionShell,

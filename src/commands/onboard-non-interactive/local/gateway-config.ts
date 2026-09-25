@@ -101,7 +101,7 @@ export function applyNonInteractiveGatewayConfig(params: {
       const resolvedFromEnv = process.env[gatewayTokenRefEnv]?.trim();
       if (!resolvedFromEnv) {
         runtime.error(
-          `Environment variable "${gatewayTokenRefEnv}" is missing or empty. Export it first, then rerun ${formatCliCommand("openclaw onboard --non-interactive")}.`,
+          `Environment variable "${gatewayTokenRefEnv}" is missing or empty. Export it first, then rerun ${formatCliCommand("quiet-core-bot onboard --non-interactive")}.`,
         );
         runtime.exit(1);
         return null;

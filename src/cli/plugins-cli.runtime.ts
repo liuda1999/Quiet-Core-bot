@@ -1,4 +1,4 @@
-// Runtime implementations for `openclaw plugins` subcommands. Heavy plugin modules stay
+// Runtime implementations for `quiet-core-bot plugins` subcommands. Heavy plugin modules stay
 // lazy-loaded so the base CLI can start without activating the plugin registry.
 import { formatDocsLink } from "../../packages/terminal-core/src/links.js";
 import { theme } from "../../packages/terminal-core/src/theme.js";
@@ -173,7 +173,7 @@ function collectConfiguredRuntimePluginWarnings(params: {
     }
     const installSpec = formatConfiguredRuntimePluginInstallSpec(candidate);
     return [
-      `- Configured runtime "${runtimeId}" requires the ${candidate.label} plugin, but no enabled "${runtimeId}" plugin was found. Run "openclaw doctor --fix" to install ${installSpec}, or install it manually with "openclaw plugins install ${installSpec}".`,
+      `- Configured runtime "${runtimeId}" requires the ${candidate.label} plugin, but no enabled "${runtimeId}" plugin was found. Run "quiet-core-bot doctor --fix" to install ${installSpec}, or install it manually with "quiet-core-bot plugins install ${installSpec}".`,
     ];
   });
 }
@@ -321,7 +321,9 @@ export async function runPluginsRegistryCommand(opts: PluginRegistryOptions): Pr
   ];
   if (inspection.refreshReasons.length > 0) {
     lines.push(`${theme.muted("Refresh reasons:")} ${inspection.refreshReasons.join(", ")}`);
-    lines.push(`${theme.muted("Repair:")} ${theme.command("openclaw plugins registry --refresh")}`);
+    lines.push(
+      `${theme.muted("Repair:")} ${theme.command("quiet-core-bot plugins registry --refresh")}`,
+    );
   }
   defaultRuntime.log(lines.join("\n"));
 }
@@ -353,7 +355,7 @@ export async function runPluginsDoctorCommand(): Promise<void> {
   const stalePluginConfigHits = scanStalePluginConfig(sourceCfg ?? cfg, process.env);
   const stalePluginConfigWarnings = collectStalePluginConfigWarnings({
     hits: stalePluginConfigHits,
-    doctorFixCommand: "openclaw doctor --fix",
+    doctorFixCommand: "quiet-core-bot doctor --fix",
     autoRepairBlocked: isStalePluginAutoRepairBlocked(sourceCfg ?? cfg, process.env),
   });
   const configuredRuntimePluginWarnings = collectConfiguredRuntimePluginWarnings({
@@ -407,10 +409,10 @@ export async function runPluginsDoctorCommand(): Promise<void> {
         lines.push(`  shadowed: ${shortenHomeInString(diag.source)}`);
       }
       lines.push("  repair:");
-      lines.push("    openclaw plugins inspect " + (diag.pluginId ?? "<plugin-id>"));
+      lines.push("    quiet-core-bot plugins inspect " + (diag.pluginId ?? "<plugin-id>"));
       lines.push("    edit or remove the config-selected plugin source");
-      lines.push("    openclaw plugins registry --refresh");
-      lines.push("    openclaw gateway restart --force");
+      lines.push("    quiet-core-bot plugins registry --refresh");
+      lines.push("    quiet-core-bot gateway restart --force");
     }
   }
   if (compatibility.length > 0) {

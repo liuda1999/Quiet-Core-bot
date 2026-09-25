@@ -280,7 +280,7 @@ export function maybeRunCliInContainer(
   }
   if (isBlockedContainerCommand(parsed.argv.slice(2))) {
     throw new Error(
-      "openclaw update is not supported with --container; rebuild or restart the container image instead.",
+      "quiet-core-bot update is not supported with --container; rebuild or restart the container image instead.",
     );
   }
 

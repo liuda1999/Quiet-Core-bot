@@ -105,7 +105,7 @@ describe("noteSessionLockHealth", () => {
     await expect(fs.access(freshLock)).resolves.toBeUndefined();
   });
 
-  it("uses configured stale threshold without removing live OpenClaw lock files", async () => {
+  it("uses configured stale threshold without removing live Quiet Core bot lock files", async () => {
     const sessionsDir = state.sessionsDir();
     await fs.mkdir(sessionsDir, { recursive: true });
 
@@ -129,7 +129,7 @@ describe("noteSessionLockHealth", () => {
     await expect(fs.access(configuredStaleLock)).resolves.toBeUndefined();
   });
 
-  it("removes fresh live locks when the owner is not an OpenClaw process", async () => {
+  it("removes fresh live locks when the owner is not an Quiet Core bot process", async () => {
     const sessionsDir = state.sessionsDir();
     await fs.mkdir(sessionsDir, { recursive: true });
 

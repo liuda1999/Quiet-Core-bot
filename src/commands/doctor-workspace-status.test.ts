@@ -196,10 +196,10 @@ describe("noteWorkspaceStatus", () => {
       const driftCalls = noteSpy.mock.calls.filter(([, title]) => title === "Plugin version drift");
       expect(driftCalls).toHaveLength(1);
       const [[body]] = driftCalls;
-      expect(body).toContain("1 active official plugin not on OpenClaw 2026.6.1");
+      expect(body).toContain("1 active official plugin not on Quiet Core bot 2026.6.1");
       expect(body).toContain("codex: 2026.5.30-beta.1 (npm) -> expected 2026.6.1");
-      expect(body).toContain("openclaw plugins update codex");
-      expect(body).toContain("openclaw gateway restart");
+      expect(body).toContain("quiet-core-bot plugins update codex");
+      expect(body).toContain("quiet-core-bot gateway restart");
     } finally {
       noteSpy.mockRestore();
     }
@@ -245,9 +245,11 @@ describe("noteWorkspaceStatus", () => {
       const driftCalls = noteSpy.mock.calls.filter(([, title]) => title === "Plugin version drift");
       expect(driftCalls).toHaveLength(1);
       const [[body]] = driftCalls;
-      expect(body).toContain("openclaw plugins update @openclaw/brave-plugin@2026.6.10-beta.1");
-      expect(body).not.toContain("openclaw plugins update brave");
-      expect(body).toContain("openclaw gateway restart");
+      expect(body).toContain(
+        "quiet-core-bot plugins update @openclaw/brave-plugin@2026.6.10-beta.1",
+      );
+      expect(body).not.toContain("quiet-core-bot plugins update brave");
+      expect(body).toContain("quiet-core-bot gateway restart");
     } finally {
       noteSpy.mockRestore();
     }
@@ -366,7 +368,7 @@ describe("noteWorkspaceStatus", () => {
       expect(recoveryCalls).toHaveLength(1);
       const [[body]] = recoveryCalls;
       expect(body).toContain("flow-123");
-      expect(body).toContain("openclaw tasks flow show <flow-id>");
+      expect(body).toContain("quiet-core-bot tasks flow show <flow-id>");
     } finally {
       noteSpy.mockRestore();
     }

@@ -150,7 +150,7 @@ export async function resolveNonInteractiveApiKey(params: {
   const profileHint =
     params.allowProfile === false ? "" : `, or existing ${params.provider} API-key profile`;
   params.runtime.error(
-    `Missing ${params.flagName} (or ${params.envVar} in env${profileHint}). Export ${params.envVar}, pass ${params.flagName}, or run ${formatCliCommand("openclaw onboard")} for interactive setup.`,
+    `Missing ${params.flagName} (or ${params.envVar} in env${profileHint}). Export ${params.envVar}, pass ${params.flagName}, or run ${formatCliCommand("quiet-core-bot onboard")} for interactive setup.`,
   );
   params.runtime.exit(1);
   return null;

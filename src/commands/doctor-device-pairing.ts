@@ -481,7 +481,7 @@ function collectLocalDeviceAuthIssues(snapshot: DoctorPairingSnapshot): string[]
 
 function formatPairingStoreReadIssue(error: JsonFileReadError): string {
   const problem = error.reason === "parse" ? "contains invalid JSON" : "could not be read";
-  return `- Device pairing store ${error.filePath} ${problem}. OpenClaw refused to treat it as empty to avoid overwriting approved pairings. Fix the JSON or file permissions, or move it aside and re-pair devices.`;
+  return `- Device pairing store ${error.filePath} ${problem}. Quiet Core bot refused to treat it as empty to avoid overwriting approved pairings. Fix the JSON or file permissions, or move it aside and re-pair devices.`;
 }
 
 /**

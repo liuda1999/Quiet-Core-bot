@@ -138,7 +138,7 @@ describe("printDaemonStatus", () => {
     );
 
     expectMockLineContains(runtime.error, "Gateway runtime PID does not own the listening port");
-    expectMockLineContains(runtime.error, formatCliCommand("openclaw gateway restart"));
+    expectMockLineContains(runtime.error, formatCliCommand("quiet-core-bot gateway restart"));
   });
 
   it("prints established gateway client guidance gathered by deep status", () => {
@@ -259,11 +259,11 @@ describe("printDaemonStatus", () => {
       { json: false },
     );
 
-    expectMockLineContains(runtime.error, "Stale OpenClaw updater launchd job(s) detected.");
+    expectMockLineContains(runtime.error, "Stale Quiet Core bot updater launchd job(s) detected.");
     expectMockLineContains(runtime.error, "ai.openclaw.update.2026.5.12");
     expectMockLineContains(runtime.error, "ai.openclaw.manual-update.1717168800");
     expectMockLineContains(runtime.error, "launchctl remove <label>");
-    expectMockLineContains(runtime.error, formatCliCommand("openclaw gateway restart"));
+    expectMockLineContains(runtime.error, formatCliCommand("quiet-core-bot gateway restart"));
   });
 
   it("prints macOS launchd stdout and suppressed stderr when gateway is not listening", () => {
@@ -398,10 +398,10 @@ describe("printDaemonStatus", () => {
 
     expectMockLineContains(runtime.log, "CLI version: 2026.4.23 (/usr/local/bin/openclaw)");
     expectMockLineContains(runtime.log, "Gateway version: 2026.5.6");
-    expectMockLineContains(runtime.error, "this OpenClaw command is version 2026.4.23");
+    expectMockLineContains(runtime.error, "this Quiet Core bot command is version 2026.4.23");
     expectMockLineContains(
       runtime.error,
-      "if this mismatch is unexpected, update PATH so `openclaw` points to the version you want",
+      "if this mismatch is unexpected, update PATH so `quiet-core-bot` points to the version you want",
     );
   });
 
@@ -440,7 +440,7 @@ describe("printDaemonStatus", () => {
     );
 
     expectMockLineContains(runtime.log, "Gateway version: 2026.5.7");
-    expectMockLineContains(runtime.error, "this OpenClaw command is version 2026.4.23");
+    expectMockLineContains(runtime.error, "this Quiet Core bot command is version 2026.4.23");
   });
 
   it("prints restart handoff diagnostics when deep status gathered one", () => {
@@ -618,7 +618,7 @@ describe("printDaemonStatus", () => {
     );
 
     expectMockLineContains(runtime.log, "Plugin version drift: 1 active official plugin");
-    expectMockLineContains(runtime.log, "openclaw gateway status --deep");
+    expectMockLineContains(runtime.log, "quiet-core-bot gateway status --deep");
     expect(runtime.log.mock.calls.map(([line]) => line).join("\n")).not.toContain("whatsapp:");
   });
 
@@ -649,8 +649,8 @@ describe("printDaemonStatus", () => {
     );
 
     expectMockLineContains(runtime.log, "- whatsapp: 2026.5.3 (clawhub)");
-    expectMockLineContains(runtime.log, "openclaw plugins update whatsapp");
-    expectMockLineContains(runtime.log, "openclaw gateway restart");
+    expectMockLineContains(runtime.log, "quiet-core-bot plugins update whatsapp");
+    expectMockLineContains(runtime.log, "quiet-core-bot gateway restart");
   });
 
   it("prints exact package update commands for pinned npm plugin drift in deep mode", () => {
@@ -684,9 +684,9 @@ describe("printDaemonStatus", () => {
     expectMockLineContains(runtime.log, "- brave: 2026.6.9 (npm)");
     expectMockLineContains(
       runtime.log,
-      "openclaw plugins update @openclaw/brave-plugin@2026.6.10-beta.1",
+      "quiet-core-bot plugins update @openclaw/brave-plugin@2026.6.10-beta.1",
     );
-    expectMockLineContains(runtime.log, "openclaw gateway restart");
+    expectMockLineContains(runtime.log, "quiet-core-bot gateway restart");
   });
 
   it("does not print systemd user-service hints when a gateway responds", () => {

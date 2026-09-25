@@ -1,4 +1,4 @@
-/** Row builders used by `openclaw models list` source orchestration. */
+/** Row builders used by `quiet-core-bot models list` source orchestration. */
 import type { NormalizedModelCatalogRow } from "@openclaw/model-catalog-core/model-catalog-types";
 import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
 import { DEFAULT_CONTEXT_TOKENS } from "../../agents/defaults.js";

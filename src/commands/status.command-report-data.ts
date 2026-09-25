@@ -1,4 +1,4 @@
-// Builds the data model for the standard `openclaw status` text report.
+// Builds the data model for the standard `quiet-core-bot status` text report.
 // It converts scan/runtime state into table rows and section lines before rendering.
 
 import { timestampMsToIsoString } from "@openclaw/normalization-core/number-coercion";
@@ -140,9 +140,11 @@ export async function buildStatusCommandReportData(
       })
     : [
         params.theme.muted(
-          `Skipped in fast status. Full report: ${params.formatCliCommand("openclaw security audit")}`,
+          `Skipped in fast status. Full report: ${params.formatCliCommand("quiet-core-bot security audit")}`,
         ),
-        params.theme.muted(`Deep probe: ${params.formatCliCommand("openclaw status --deep")}`),
+        params.theme.muted(
+          `Deep probe: ${params.formatCliCommand("quiet-core-bot status --deep")}`,
+        ),
       ];
   const retainedLost = params.summary.taskAuditRetainedLost;
   // Lost task retention is operational noise unless the user requested deep/verbose status.
@@ -160,7 +162,7 @@ export async function buildStatusCommandReportData(
     width: params.tableWidth,
     overviewRows,
     showTaskMaintenanceHint: params.summary.taskAudit.errors > 0,
-    taskMaintenanceHint: `Task maintenance: ${params.formatCliCommand("openclaw tasks maintenance --apply")}`,
+    taskMaintenanceHint: `Task maintenance: ${params.formatCliCommand("quiet-core-bot tasks maintenance --apply")}`,
     retainedLostTaskLine: retainedLostLine,
     pluginCompatibilityLines: buildStatusPluginCompatibilityLines({
       notices: params.pluginCompatibility,

@@ -198,7 +198,7 @@ async function promptChannelMode(runtime: RuntimeEnv): Promise<ChannelsWizardMod
         {
           value: "remove",
           label: "Remove channel config",
-          hint: "Delete channel tokens/settings from openclaw.json",
+          hint: "Delete channel tokens/settings from quiet-core-bot.json",
         },
       ],
       initialValue: "configure",
@@ -306,7 +306,7 @@ export async function runConfigureWizard(
   runtime: RuntimeEnv = defaultRuntime,
 ) {
   try {
-    intro(opts.command === "update" ? "OpenClaw update wizard" : "OpenClaw configure");
+    intro(opts.command === "update" ? "Quiet Core bot update wizard" : "Quiet Core bot configure");
     const prompter = createClackPrompter();
 
     const prepared = await readConfigFileSnapshotForWrite();
@@ -346,7 +346,7 @@ export async function runConfigureWizard(
       }
       if (!snapshot.valid) {
         outro(
-          `Config invalid. Run \`${formatCliCommand("openclaw doctor")}\` to repair it, then re-run configure.`,
+          `Config invalid. Run \`${formatCliCommand("quiet-core-bot doctor")}\` to repair it, then re-run configure.`,
         );
         runtime.exit(1);
         return;

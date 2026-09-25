@@ -346,13 +346,13 @@ describe("ensureConfigReady", () => {
     const runtime = await runEnsureConfigReady(["message"]);
 
     expect(plainErrorCalls(runtime)).toEqual([
-      "OpenClaw config is invalid",
+      "Quiet Core bot config is invalid",
       "File: /tmp/openclaw.json",
       "Problem:",
       "  - channels.quietchat: invalid",
       "",
-      `Fix: ${formatCliCommand("openclaw doctor --fix")}`,
-      `Inspect: ${formatCliCommand("openclaw config validate")}`,
+      `Fix: ${formatCliCommand("quiet-core-bot doctor --fix")}`,
+      `Inspect: ${formatCliCommand("quiet-core-bot config validate")}`,
       "Status, health, logs, tasks list/audit, and doctor commands still run with invalid config.",
     ]);
     expect(runtime.exit).toHaveBeenCalledWith(1);
@@ -378,7 +378,7 @@ describe("ensureConfigReady", () => {
     const calls = plainErrorCalls(runtime);
 
     expect(calls).toContain(`Fix: ${pluginPackagingRecoveryHint}`);
-    expect(calls).not.toContain(`Fix: ${formatCliCommand("openclaw doctor --fix")}`);
+    expect(calls).not.toContain(`Fix: ${formatCliCommand("quiet-core-bot doctor --fix")}`);
     expect(runtime.exit).toHaveBeenCalledWith(1);
   });
 

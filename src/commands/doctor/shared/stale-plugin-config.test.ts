@@ -165,12 +165,12 @@ describe("doctor stale plugin config helpers", () => {
           surface: "allow",
         },
       ],
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     expect(warnings).toEqual([
       '- plugins.allow: stale plugin reference "acpx" was found.',
-      '- Run "openclaw doctor --fix" to remove stale plugin ids and dangling channel references.',
+      '- Run "quiet-core-bot doctor --fix" to remove stale plugin ids and dangling channel references.',
     ]);
   });
 
@@ -375,7 +375,7 @@ describe("doctor stale plugin config helpers", () => {
 
     const warnings = collectStalePluginConfigWarnings({
       hits,
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
       autoRepairBlocked: true,
     });
     expect(warnings[2]).toContain("Auto-removal is paused");

@@ -1,4 +1,4 @@
-// Resolves cleanup inputs from current OpenClaw config and state paths.
+// Resolves cleanup inputs from current Quiet Core bot config and state paths.
 import {
   getRuntimeConfig,
   resolveConfigPath,

@@ -33,7 +33,7 @@ type ResolvedNonInteractiveApiKey = NonNullable<
   Awaited<ReturnType<typeof resolveNonInteractiveApiKey>>
 >;
 
-/** Applies a local non-interactive auth choice to the pending OpenClaw config. */
+/** Applies a local non-interactive auth choice to the pending Quiet Core bot config. */
 export async function applyNonInteractiveAuthChoice(params: {
   nextConfig: OpenClawConfig;
   authChoice: AuthChoice;
@@ -52,7 +52,7 @@ export async function applyNonInteractiveAuthChoice(params: {
   const requestedSecretInputMode = normalizeSecretInputModeInput(opts.secretInputMode);
   if (opts.secretInputMode && !requestedSecretInputMode) {
     runtime.error(
-      `Invalid --secret-input-mode. Use "plaintext" or "ref", or run ${formatCliCommand("openclaw onboard")} for interactive setup.`,
+      `Invalid --secret-input-mode. Use "plaintext" or "ref", or run ${formatCliCommand("quiet-core-bot onboard")} for interactive setup.`,
     );
     runtime.exit(1);
     return null;

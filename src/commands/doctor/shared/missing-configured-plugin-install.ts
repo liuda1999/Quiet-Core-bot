@@ -11,10 +11,7 @@ import { listRawChannelPluginCatalogEntries } from "../../../channels/plugins/ca
 import type { OpenClawConfig } from "../../../config/types.openclaw.js";
 import type { PluginInstallRecord } from "../../../config/types.plugins.js";
 import { parseClawHubPluginSpec } from "../../../infra/clawhub-spec.js";
-import {
-  isOpenClawOrgNpmSpec,
-  parseRegistryNpmSpec,
-} from "../../../infra/npm-registry-spec.js";
+import { isOpenClawOrgNpmSpec, parseRegistryNpmSpec } from "../../../infra/npm-registry-spec.js";
 import {
   normalizeUpdateChannel,
   resolveRegistryUpdateChannel,
@@ -1166,7 +1163,7 @@ export type RepairMissingPluginInstallsResult = {
   records: Record<string, PluginInstallRecord>;
 };
 
-/** Repair missing installs inferred from the current OpenClaw config. */
+/** Repair missing installs inferred from the current Quiet Core bot config. */
 export async function repairMissingConfiguredPluginInstalls(params: {
   cfg: OpenClawConfig;
   env?: NodeJS.ProcessEnv;
@@ -1325,7 +1322,7 @@ async function repairMissingPluginInstalls(params: {
       if (!record || !isInstalledRecordMissingOnDisk(record, env)) {
         continue;
       }
-      const detail = `Skipped package-manager repair for configured plugin "${pluginId}" during package update; rerun "openclaw doctor --fix" after the update completes.`;
+      const detail = `Skipped package-manager repair for configured plugin "${pluginId}" during package update; rerun "quiet-core-bot doctor --fix" after the update completes.`;
       changes.push(detail);
       deferredRepairDetails.push(detail);
     }

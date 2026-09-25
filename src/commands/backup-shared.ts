@@ -270,7 +270,7 @@ async function canonicalizeExistingPath(targetPath: string): Promise<string> {
   }
 }
 
-/** Resolve the backup plan from the current OpenClaw state/config/workspace paths on disk. */
+/** Resolve the backup plan from the current Quiet Core bot state/config/workspace paths on disk. */
 export async function resolveBackupPlanFromDisk(
   params: {
     includeWorkspace?: boolean;
@@ -287,7 +287,7 @@ export async function resolveBackupPlanFromDisk(
   const configSnapshot = await readConfigFileSnapshot();
   if (includeWorkspace && configSnapshot.exists && !configSnapshot.valid) {
     throw new Error(
-      `Config invalid at ${shortenHomePath(configSnapshot.path)}. OpenClaw cannot reliably discover custom workspaces for backup. Fix the config or rerun with --no-include-workspace for a partial backup.`,
+      `Config invalid at ${shortenHomePath(configSnapshot.path)}. Quiet Core bot cannot reliably discover custom workspaces for backup. Fix the config or rerun with --no-include-workspace for a partial backup.`,
     );
   }
   const cleanupPlan = buildCleanupPlan({

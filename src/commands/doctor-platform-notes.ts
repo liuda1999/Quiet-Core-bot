@@ -52,7 +52,7 @@ export async function noteMacLaunchAgentOverrides() {
   }
 }
 
-/** Returns a warning for stale OpenClaw updater launchd jobs left after interrupted updates. */
+/** Returns a warning for stale Quiet Core bot updater launchd jobs left after interrupted updates. */
 export async function collectMacStaleOpenClawUpdateLaunchdJobsWarning(deps?: {
   platform?: NodeJS.Platform;
   findJobs?: typeof findStaleOpenClawUpdateLaunchdJobs;
@@ -71,7 +71,7 @@ export async function collectMacStaleOpenClawUpdateLaunchdJobsWarning(deps?: {
   }
 
   return [
-    "- Stale OpenClaw updater launchd job(s) detected.",
+    "- Stale Quiet Core bot updater launchd job(s) detected.",
     ...jobs.map((job) => {
       const exitStatus =
         job.lastExitStatus !== undefined ? `, last exit ${job.lastExitStatus}` : "";
@@ -80,7 +80,7 @@ export async function collectMacStaleOpenClawUpdateLaunchdJobsWarning(deps?: {
     }),
     "- Fix after confirming no update is running:",
     "  launchctl remove <label>",
-    `  ${formatCliCommand("openclaw gateway restart")}`,
+    `  ${formatCliCommand("quiet-core-bot gateway restart")}`,
   ].join("\n");
 }
 

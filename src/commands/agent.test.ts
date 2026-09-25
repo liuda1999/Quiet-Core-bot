@@ -413,7 +413,7 @@ describe("agentCommand", () => {
     });
   });
 
-  it("does not enable Codex for one-shot OpenAI overrides when the provider forces OpenClaw", async () => {
+  it("does not enable Codex for one-shot OpenAI overrides when the provider forces Quiet Core bot", async () => {
     await withTempHome(async (home) => {
       const storePath = path.join(home, "sessions.json");
       const cfg = mockConfig(home, storePath, { models: undefined });

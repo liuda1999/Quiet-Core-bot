@@ -1,4 +1,4 @@
-/** Doctor contribution for low disk space around the OpenClaw state directory. */
+/** Doctor contribution for low disk space around the Quiet Core bot state directory. */
 import os from "node:os";
 import { note } from "../../packages/terminal-core/src/note.js";
 import type { OpenClawConfig } from "../config/config.js";
@@ -69,7 +69,7 @@ export function buildDiskSpaceWarnings(params: {
  * Doctor health contribution: check free disk space on the partition that
  * holds the state directory and warn when it drops below safe thresholds.
  *
- * This catches a common operational failure mode where OpenClaw silently
+ * This catches a common operational failure mode where Quiet Core bot silently
  * fails to write config, sessions, or logs because the disk is full.
  *
  * Disk-space probing (statfs + nearest-existing-ancestor resolution) is

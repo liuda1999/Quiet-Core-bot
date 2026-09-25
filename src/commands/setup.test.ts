@@ -87,9 +87,9 @@ describe("setupCommand", () => {
       expect(runtime.log.mock.calls.map((call) => String(call[0])).slice(-5)).toStrictEqual([
         "",
         "Setup complete: config, workspace, and session directories are ready.",
-        "Next guided path: openclaw onboard.",
-        "Next targeted changes: openclaw configure for models, channels, Gateway, plugins, skills, and health checks.",
-        "Add a chat channel later: openclaw channels add.",
+        "Next guided path: quiet-core-bot onboard.",
+        "Next targeted changes: quiet-core-bot configure for models, channels, Gateway, plugins, skills, and health checks.",
+        "Add a chat channel later: quiet-core-bot channels add.",
       ]);
     });
   });

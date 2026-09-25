@@ -44,8 +44,8 @@ describe("resolveDaemonNodeBinDir", () => {
   });
 });
 
-describe("resolveDaemonOpenClawBinDir", () => {
-  it("uses the active openclaw command directory", () => {
+describe("resolveDaemonQuiet Core botBinDir", () => {
+  it("uses the active quiet-core-bot command directory", () => {
     expect(
       resolveDaemonOpenClawBinDir({
         argv: ["node", "/Users/testuser/.npm-global/bin/openclaw", "gateway", "install"],
@@ -80,7 +80,7 @@ describe("resolveDaemonOpenClawBinDir", () => {
     ).toEqual(["/Users/testuser/.npm-global/bin"]);
   });
 
-  it("ignores unrelated openclaw commands elsewhere on PATH", () => {
+  it("ignores unrelated quiet-core-bot commands elsewhere on PATH", () => {
     expect(
       resolveDaemonOpenClawBinDir({
         argv: ["node", "/opt/openclaw/quiet-core-bot.mjs", "gateway", "install"],
@@ -97,7 +97,7 @@ describe("resolveDaemonOpenClawBinDir", () => {
 });
 
 describe("resolveDaemonServicePathDirs", () => {
-  it("combines node and active openclaw command directories", () => {
+  it("combines node and active quiet-core-bot command directories", () => {
     expect(
       resolveDaemonServicePathDirs({
         nodePath: "/opt/homebrew/opt/node/bin/node",

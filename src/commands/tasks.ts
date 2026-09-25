@@ -60,7 +60,7 @@ function formatTaskLookupMiss(lookup: string): string {
   return formatLookupMiss({
     noun: "Task",
     value: lookup,
-    listCommand: "openclaw tasks list",
+    listCommand: "quiet-core-bot tasks list",
     valueLabel: "task id",
   });
 }
@@ -360,7 +360,7 @@ export async function tasksListCommand(
   }
   if (tasks.length === 0) {
     runtime.log(
-      `No background tasks found. Run ${formatCliCommand("openclaw tasks audit")} to check for stale task state.`,
+      `No background tasks found. Run ${formatCliCommand("quiet-core-bot tasks audit")} to check for stale task state.`,
     );
     return;
   }
@@ -635,6 +635,8 @@ export async function tasksMaintenanceCommand(
     );
   }
   if (!opts.apply) {
-    runtime.log("Dry run only. Re-run with `openclaw tasks maintenance --apply` to write changes.");
+    runtime.log(
+      "Dry run only. Re-run with `quiet-core-bot tasks maintenance --apply` to write changes.",
+    );
   }
 }

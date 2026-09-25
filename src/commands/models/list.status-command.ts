@@ -1,4 +1,4 @@
-/** Implementation of `openclaw models status`. */
+/** Implementation of `quiet-core-bot models status`. */
 import path from "node:path";
 import { findNormalizedProviderValue } from "@openclaw/model-catalog-core/provider-id";
 import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";

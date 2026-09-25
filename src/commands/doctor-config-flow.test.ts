@@ -354,14 +354,14 @@ vi.mock("../config/legacy.js", () => {
         addIssue(
           issues,
           ["heartbeat"],
-          'heartbeat is legacy; use agents.defaults.heartbeat and channels.defaults.heartbeat. Run "openclaw doctor --fix".',
+          'heartbeat is legacy; use agents.defaults.heartbeat and channels.defaults.heartbeat. Run "quiet-core-bot doctor --fix".',
         );
       }
       if ("memorySearch" in root) {
         addIssue(
           issues,
           ["memorySearch"],
-          'memorySearch is legacy; use agents.defaults.memorySearch. Run "openclaw doctor --fix".',
+          'memorySearch is legacy; use agents.defaults.memorySearch. Run "quiet-core-bot doctor --fix".',
         );
       }
       const gateway = asRecord(root.gateway);
@@ -369,7 +369,7 @@ vi.mock("../config/legacy.js", () => {
         addIssue(
           issues,
           ["gateway", "bind"],
-          'gateway.bind host aliases are legacy; use the canonical bind mode. Run "openclaw doctor --fix".',
+          'gateway.bind host aliases are legacy; use the canonical bind mode. Run "quiet-core-bot doctor --fix".',
         );
       }
       const sessionThreadBindings = asRecord(asRecord(root.session)?.threadBindings);
@@ -377,7 +377,7 @@ vi.mock("../config/legacy.js", () => {
         addIssue(
           issues,
           ["session", "threadBindings", "ttlHours"],
-          'session.threadBindings.ttlHours is legacy; use session.threadBindings.idleHours. Run "openclaw doctor --fix".',
+          'session.threadBindings.ttlHours is legacy; use session.threadBindings.idleHours. Run "quiet-core-bot doctor --fix".',
         );
       }
       const sessionMaintenance = asRecord(asRecord(root.session)?.maintenance);
@@ -385,7 +385,7 @@ vi.mock("../config/legacy.js", () => {
         addIssue(
           issues,
           ["session", "maintenance"],
-          'session.maintenance.rotateBytes is deprecated and ignored; run "openclaw doctor --fix" to remove it.',
+          'session.maintenance.rotateBytes is deprecated and ignored; run "quiet-core-bot doctor --fix" to remove it.',
         );
       }
       const xSearch = asRecord(asRecord(asRecord(root.tools)?.web)?.x_search);
@@ -393,7 +393,7 @@ vi.mock("../config/legacy.js", () => {
         addIssue(
           issues,
           ["tools", "web", "x_search", "apiKey"],
-          'tools.web.x_search.apiKey is legacy; use plugins.entries.xai.config.webSearch.apiKey. Run "openclaw doctor --fix".',
+          'tools.web.x_search.apiKey is legacy; use plugins.entries.xai.config.webSearch.apiKey. Run "quiet-core-bot doctor --fix".',
         );
       }
       const sandbox = asRecord(asRecord(asRecord(root.agents)?.defaults)?.sandbox);
@@ -401,7 +401,7 @@ vi.mock("../config/legacy.js", () => {
         addIssue(
           issues,
           ["agents", "defaults", "sandbox"],
-          'agents.defaults.sandbox.perSession is legacy; use agents.defaults.sandbox.scope. Run "openclaw doctor --fix".',
+          'agents.defaults.sandbox.perSession is legacy; use agents.defaults.sandbox.scope. Run "quiet-core-bot doctor --fix".',
         );
       }
 
@@ -419,8 +419,8 @@ vi.mock("../config/legacy.js", () => {
             issues,
             ["channels", channelId],
             channelId === "googlechat"
-              ? `channels.${channelId}.streamMode is legacy and no longer used. Run "openclaw doctor --fix".`
-              : `channels.${channelId}.streamMode, channels.${channelId}.streaming aliases are legacy. Run "openclaw doctor --fix".`,
+              ? `channels.${channelId}.streamMode is legacy and no longer used. Run "quiet-core-bot doctor --fix".`
+              : `channels.${channelId}.streamMode, channels.${channelId}.streaming aliases are legacy. Run "quiet-core-bot doctor --fix".`,
           );
         }
         const threadBindings = asRecord(channel.threadBindings);
@@ -428,7 +428,7 @@ vi.mock("../config/legacy.js", () => {
           addIssue(
             issues,
             ["channels", channelId, "threadBindings", "ttlHours"],
-            'channels.<id>.threadBindings.ttlHours is legacy; use channels.<id>.threadBindings.idleHours. Run "openclaw doctor --fix".',
+            'channels.<id>.threadBindings.ttlHours is legacy; use channels.<id>.threadBindings.idleHours. Run "quiet-core-bot doctor --fix".',
           );
         }
         if (channelId === "slack") {
@@ -437,7 +437,7 @@ vi.mock("../config/legacy.js", () => {
               addIssue(
                 issues,
                 ["channels", "slack"],
-                'channels.slack.channels.<id>.allow is legacy; use enabled. Run "openclaw doctor --fix".',
+                'channels.slack.channels.<id>.allow is legacy; use enabled. Run "quiet-core-bot doctor --fix".',
               );
             }
           }
@@ -448,7 +448,7 @@ vi.mock("../config/legacy.js", () => {
               addIssue(
                 issues,
                 ["channels", "googlechat"],
-                'channels.googlechat.groups.<id>.allow is legacy; use enabled. Run "openclaw doctor --fix".',
+                'channels.googlechat.groups.<id>.allow is legacy; use enabled. Run "quiet-core-bot doctor --fix".',
               );
             }
           }
@@ -461,7 +461,7 @@ vi.mock("../config/legacy.js", () => {
                 addIssue(
                   issues,
                   ["channels", "discord"],
-                  'channels.discord.guilds.<id>.channels.<id>.allow is legacy; use enabled. Run "openclaw doctor --fix".',
+                  'channels.discord.guilds.<id>.channels.<id>.allow is legacy; use enabled. Run "quiet-core-bot doctor --fix".',
                 );
               }
             }
@@ -474,7 +474,7 @@ vi.mock("../config/legacy.js", () => {
             addIssue(
               issues,
               ["channels", channelId, "accounts", accountId, "threadBindings", "ttlHours"],
-              'channels.<id>.threadBindings.ttlHours is legacy; use channels.<id>.threadBindings.idleHours. Run "openclaw doctor --fix".',
+              'channels.<id>.threadBindings.ttlHours is legacy; use channels.<id>.threadBindings.idleHours. Run "quiet-core-bot doctor --fix".',
             );
           }
         }
@@ -909,12 +909,12 @@ vi.mock("../plugins/doctor-contract-registry.js", () => {
       {
         path: ["channels", "telegram", "groupMentionsOnly"],
         message:
-          'channels.telegram.groupMentionsOnly was removed; use channels.telegram.groups."*".requireMention instead. Run "openclaw doctor --fix".',
+          'channels.telegram.groupMentionsOnly was removed; use channels.telegram.groups."*".requireMention instead. Run "quiet-core-bot doctor --fix".',
       },
       {
         path: ["talk"],
         message:
-          "talk.voiceId/talk.voiceAliases/talk.modelId/talk.outputFormat/talk.apiKey are legacy; use talk.providers.<provider> and run openclaw doctor --fix.",
+          "talk.voiceId/talk.voiceAliases/talk.modelId/talk.outputFormat/talk.apiKey are legacy; use talk.providers.<provider> and run quiet-core-bot doctor --fix.",
         match: hasLegacyTalkFields,
       },
     ],
@@ -1645,7 +1645,7 @@ describe("doctor config flow", () => {
       previewNotes.mock.calls.some(
         ([message, title]) =>
           title === "Doctor" &&
-          message.includes("openclaw doctor --fix") &&
+          message.includes("quiet-core-bot doctor --fix") &&
           message.includes("rotate hooks.token"),
       ),
     ).toBe(true);
@@ -2881,7 +2881,7 @@ describe("doctor config flow", () => {
         noteSpy.mock.calls.some(
           ([message, title]) =>
             title === "Doctor" &&
-            message.includes('Run "openclaw doctor --fix" to migrate legacy config keys.'),
+            message.includes('Run "quiet-core-bot doctor --fix" to migrate legacy config keys.'),
         ),
       ).toBe(true);
     } finally {

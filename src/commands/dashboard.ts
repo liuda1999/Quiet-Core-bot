@@ -1,4 +1,4 @@
-// Implements `openclaw dashboard` URL resolution, readiness check, clipboard, and browser launch.
+// Implements `quiet-core-bot dashboard` URL resolution, readiness check, clipboard, and browser launch.
 import { readConfigFileSnapshot, resolveGatewayPort } from "../config/config.js";
 import { resolveGatewayAuthToken } from "../gateway/auth-token-resolution.js";
 import { copyToClipboard } from "../infra/clipboard.js";
@@ -90,7 +90,7 @@ export async function dashboardCommand(
   if (resolvedToken.unresolvedRefReason) {
     runtime.log(`Token auto-auth unavailable: ${resolvedToken.unresolvedRefReason}`);
     runtime.log(
-      "Set OPENCLAW_GATEWAY_TOKEN in this shell or resolve your secret provider, then rerun `openclaw dashboard`.",
+      "Set OPENCLAW_GATEWAY_TOKEN in this shell or resolve your secret provider, then rerun `quiet-core-bot dashboard`.",
     );
   }
 
@@ -121,7 +121,7 @@ export async function dashboardCommand(
   const suppressNoOpenHint = options.noOpen === true && fallbackToManualAuth;
 
   if (opened) {
-    runtime.log("Opened in your browser. Keep that tab to control OpenClaw.");
+    runtime.log("Opened in your browser. Keep that tab to control Quiet Core bot.");
   } else if (hint && !suppressNoOpenHint) {
     runtime.log(hint);
   }

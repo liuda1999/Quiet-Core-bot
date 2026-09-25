@@ -123,7 +123,7 @@ describe("noteMacLaunchctlGatewayEnvOverrides", () => {
   });
 });
 
-describe("noteMacStaleOpenClawUpdateLaunchdJobs", () => {
+describe("noteMacStaleQuiet Core botUpdateLaunchdJobs", () => {
   it("collects stale updater job cleanup guidance on macOS", async () => {
     const findJobs = vi.fn(async () => [
       {
@@ -146,11 +146,11 @@ describe("noteMacStaleOpenClawUpdateLaunchdJobs", () => {
     });
 
     expect(findJobs).toHaveBeenCalledWith(env);
-    expect(warning).toContain("Stale OpenClaw updater launchd job(s) detected");
+    expect(warning).toContain("Stale Quiet Core bot updater launchd job(s) detected");
     expect(warning).toContain("ai.openclaw.update.2026.5.12");
     expect(warning).toContain("ai.openclaw.manual-update.1717168800");
     expect(warning).toContain("launchctl remove <label>");
-    expect(warning).toContain("openclaw gateway restart");
+    expect(warning).toContain("quiet-core-bot gateway restart");
   });
 
   it("uses service env for gateway platform stale updater warnings", async () => {
@@ -235,11 +235,11 @@ describe("noteMacStaleOpenClawUpdateLaunchdJobs", () => {
     expect(findJobs).toHaveBeenCalledTimes(1);
     const [message, title] = requireNoteCall(noteFn);
     expect(title).toBe("Gateway (macOS)");
-    expect(message).toContain("Stale OpenClaw updater launchd job(s) detected");
+    expect(message).toContain("Stale Quiet Core bot updater launchd job(s) detected");
     expect(message).toContain("ai.openclaw.update.2026.5.12");
     expect(message).toContain("ai.openclaw.manual-update.1717168800");
     expect(message).toContain("launchctl remove <label>");
-    expect(message).toContain("openclaw gateway restart");
+    expect(message).toContain("quiet-core-bot gateway restart");
   });
 
   it("does nothing when no stale updater jobs exist", async () => {

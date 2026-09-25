@@ -1,4 +1,4 @@
-// Input-mode parsing helpers for `openclaw config set` values, refs, providers, and batches.
+// Input-mode parsing helpers for `quiet-core-bot config set` values, refs, providers, and batches.
 import fs from "node:fs";
 import {
   normalizeOptionalString,

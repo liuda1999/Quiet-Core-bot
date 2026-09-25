@@ -35,7 +35,7 @@ export function formatUnknownChannelMessage(params: {
   purpose?: string;
 }): string {
   const purpose = params.purpose ? ` for ${params.purpose}` : "";
-  const listCommand = params.listCommand ?? "openclaw channels list --all";
+  const listCommand = params.listCommand ?? "quiet-core-bot channels list --all";
   return `Unknown channel "${params.channel}"${purpose}. Run ${formatInlineCliCommand(
     listCommand,
   )} to see configured and installable channels.`;
@@ -48,7 +48,7 @@ export function formatUnsupportedChannelActionMessage(params: {
   inspectCommand?: string;
 }): string {
   const inspectCommand =
-    params.inspectCommand ?? `openclaw channels capabilities --channel ${params.channel}`;
+    params.inspectCommand ?? `quiet-core-bot channels capabilities --channel ${params.channel}`;
   return `Channel "${params.channel}" does not support ${params.action}. Run ${formatInlineCliCommand(
     inspectCommand,
   )} to inspect supported actions.`;
@@ -64,7 +64,7 @@ export function formatStrictJsonParseFailure(params: { value: string; cause: unk
     `Could not parse ${JSON.stringify(preview)} as JSON for --strict-json.`,
     `${cause}.`,
     `Use valid JSON, for example ${formatInlineCliCommand(
-      "openclaw config set gateway.port 18789 --strict-json",
+      "quiet-core-bot config set gateway.port 18789 --strict-json",
     )}.`,
     "For plain strings, omit --strict-json.",
   ].join(" ");
@@ -83,7 +83,7 @@ export function formatGatewayCommandFailure(params: {
     .replace(/\s+/g, " ")
     .trim()
     .replace(/[.。]+$/u, "");
-  const inspectCommand = params.inspectCommand ?? "openclaw gateway status --deep";
+  const inspectCommand = params.inspectCommand ?? "quiet-core-bot gateway status --deep";
   const detail = message ? `: ${message}` : "";
   return `Could not ${params.action} because the Gateway did not respond${detail}. Run ${formatInlineCliCommand(
     inspectCommand,
@@ -109,9 +109,9 @@ export function formatMissingPluginMessage(params: {
   listCommand?: string;
   includeSearch?: boolean;
 }): string {
-  const listCommand = params.listCommand ?? "openclaw plugins list";
+  const listCommand = params.listCommand ?? "quiet-core-bot plugins list";
   const searchHint = params.includeSearch
-    ? `, or ${formatInlineCliCommand("openclaw plugins search " + params.id)} to look for installable plugins`
+    ? `, or ${formatInlineCliCommand("quiet-core-bot plugins search " + params.id)} to look for installable plugins`
     : "";
   return `Plugin not found: ${params.id}. Run ${formatInlineCliCommand(
     listCommand,

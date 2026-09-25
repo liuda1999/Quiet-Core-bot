@@ -23,23 +23,35 @@ const ROOT_COMMANDS_HINT =
   "Hint: commands suffixed with * have subcommands. Run <command> --help for details.";
 
 const EXAMPLES = [
-  ["openclaw onboard", "Run guided setup for a local Gateway, workspace, auth, and channels."],
-  ["openclaw setup", "Create the baseline config, workspace, and session folders."],
-  ["openclaw configure", "Change models, Gateway, channels, plugins, skills, and health checks."],
-  ["openclaw status", "Check Gateway, channel, model, and recent-session status."],
-  ["openclaw doctor --fix", "Repair common config, service, plugin, and channel problems."],
-  ["openclaw channels add", "Add or update a chat channel account with guided prompts."],
-  ["openclaw channels status", "See connected messaging accounts and login state."],
-  ["openclaw --dev gateway", "Run a dev Gateway (isolated state/config) on ws://127.0.0.1:19001."],
-  ["openclaw gateway run --force", "Start the Gateway and replace anything bound to its port."],
-  ["openclaw models status", "Show model/provider auth health before running agents."],
-  ["openclaw plugins list", "Inspect enabled, disabled, and installed plugins."],
   [
-    'openclaw agent --to +15555550123 --message "Run summary" --deliver',
+    "quiet-core-bot onboard",
+    "Run guided setup for a local Gateway, workspace, auth, and channels.",
+  ],
+  ["quiet-core-bot setup", "Create the baseline config, workspace, and session folders."],
+  [
+    "quiet-core-bot configure",
+    "Change models, Gateway, channels, plugins, skills, and health checks.",
+  ],
+  ["quiet-core-bot status", "Check Gateway, channel, model, and recent-session status."],
+  ["quiet-core-bot doctor --fix", "Repair common config, service, plugin, and channel problems."],
+  ["quiet-core-bot channels add", "Add or update a chat channel account with guided prompts."],
+  ["quiet-core-bot channels status", "See connected messaging accounts and login state."],
+  [
+    "quiet-core-bot --dev gateway",
+    "Run a dev Gateway (isolated state/config) on ws://127.0.0.1:19001.",
+  ],
+  [
+    "quiet-core-bot gateway run --force",
+    "Start the Gateway and replace anything bound to its port.",
+  ],
+  ["quiet-core-bot models status", "Show model/provider auth health before running agents."],
+  ["quiet-core-bot plugins list", "Inspect enabled, disabled, and installed plugins."],
+  [
+    'quiet-core-bot agent --to +15555550123 --message "Run summary" --deliver',
     "Run one agent turn through the Gateway and optionally deliver the reply.",
   ],
   [
-    'openclaw message send --channel telegram --target @mychat --message "Hi"',
+    'quiet-core-bot message send --channel telegram --target @mychat --message "Hi"',
     "Send via your Telegram bot.",
   ],
 ] as const;
@@ -64,11 +76,11 @@ export function configureProgramHelp(
     )
     .option(
       "--dev",
-      "Dev profile: isolate state under ~/.openclaw-dev, default gateway port 19001, and shift derived ports (browser/canvas)",
+      "Dev profile: isolate state under ~/.quiet-core-bot-dev, default gateway port 19001, and shift derived ports (browser/canvas)",
     )
     .option(
       "--profile <name>",
-      "Use a named profile (isolates OPENCLAW_STATE_DIR/OPENCLAW_CONFIG_PATH under ~/.openclaw-<name>)",
+      "Use a named profile (isolates OPENCLAW_STATE_DIR/OPENCLAW_CONFIG_PATH under ~/.quiet-core-bot-<name>)",
     )
     .option(
       "--log-level <level>",
@@ -122,7 +134,9 @@ export function configureProgramHelp(
   if (isRootVersionInvocation(process.argv)) {
     const commit = resolveCommitHash({ moduleUrl: import.meta.url });
     console.log(
-      commit ? `OpenClaw ${ctx.programVersion} (${commit})` : `OpenClaw ${ctx.programVersion}`,
+      commit
+        ? `Quiet Core bot ${ctx.programVersion} (${commit})`
+        : `Quiet Core bot ${ctx.programVersion}`,
     );
     process.exit(0);
   }

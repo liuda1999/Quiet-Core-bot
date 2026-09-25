@@ -51,8 +51,8 @@ function noteFlowRecoveryHints() {
     [
       ...suspicious.slice(0, 5),
       suspicious.length > 5 ? `...and ${suspicious.length - 5} more.` : null,
-      `Inspect: ${formatCliCommand("openclaw tasks flow show <flow-id>")}`,
-      `Cancel: ${formatCliCommand("openclaw tasks flow cancel <flow-id>")}`,
+      `Inspect: ${formatCliCommand("quiet-core-bot tasks flow show <flow-id>")}`,
+      `Cancel: ${formatCliCommand("quiet-core-bot tasks flow cancel <flow-id>")}`,
     ]
       .filter((line): line is string => Boolean(line))
       .join("\n"),
@@ -71,17 +71,17 @@ function notePluginVersionDrift(drift: PluginVersionDriftReport | undefined) {
   const lines = [
     `${drift.drifts.length} active official plugin${
       drift.drifts.length === 1 ? "" : "s"
-    } not on OpenClaw ${drift.gatewayVersion}`,
+    } not on Quiet Core bot ${drift.gatewayVersion}`,
     ...drift.drifts.map((entry) => {
       const sourceLabel = entry.source === "clawhub" ? "clawhub" : "npm";
       return `- ${entry.pluginId}: ${entry.installedVersion} (${sourceLabel}) -> expected ${drift.gatewayVersion}`;
     }),
     singleDrift
-      ? `Fix: ${updateCommands[0]} && ${formatCliCommand("openclaw gateway restart")}.`
+      ? `Fix: ${updateCommands[0]} && ${formatCliCommand("quiet-core-bot gateway restart")}.`
       : [
           "Fix each drifted plugin:",
           ...updateCommands.map((command) => `- ${command}`),
-          `Then run ${formatCliCommand("openclaw gateway restart")}.`,
+          `Then run ${formatCliCommand("quiet-core-bot gateway restart")}.`,
         ].join("\n"),
   ];
   note(lines.join("\n"), "Plugin version drift");

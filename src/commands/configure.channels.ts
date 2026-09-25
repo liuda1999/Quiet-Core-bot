@@ -4,8 +4,8 @@ import { sanitizeTerminalText } from "../../packages/terminal-core/src/safe-text
 import { listChatChannels } from "../channels/chat-meta.js";
 import { formatCliCommand } from "../cli/command-format.js";
 import { CONFIG_PATH } from "../config/config.js";
-import { isBlockedObjectKey } from "../infra/prototype-keys.js";
 import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { isBlockedObjectKey } from "../infra/prototype-keys.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { shortenHomePath } from "../utils.js";
 import { confirm, select } from "./configure.shared.js";
@@ -67,7 +67,7 @@ function compareChannelRemovalChoices(
   );
 }
 
-/** Prompt for configured channel sections to remove from openclaw.json. */
+/** Prompt for configured channel sections to remove from quiet-core-bot.json. */
 export async function removeChannelConfigWizard(
   cfg: OpenClawConfig,
   runtime: RuntimeEnv,
@@ -79,8 +79,8 @@ export async function removeChannelConfigWizard(
     if (configured.length === 0) {
       note(
         [
-          "No channel config found in openclaw.json.",
-          `Tip: \`${formatCliCommand("openclaw channels status")}\` shows what is configured and enabled.`,
+          "No channel config found in quiet-core-bot.json.",
+          `Tip: \`${formatCliCommand("quiet-core-bot channels status")}\` shows what is configured and enabled.`,
         ].join("\n"),
         "Remove channel",
       );

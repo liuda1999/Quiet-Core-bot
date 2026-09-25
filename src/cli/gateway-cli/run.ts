@@ -226,7 +226,7 @@ function getGatewayStartGuardErrors(params: {
   }
   if (!params.configExists) {
     return [
-      `Missing config. Run \`${formatCliCommand("openclaw setup")}\` or set gateway.mode=local (or pass --allow-unconfigured).`,
+      `Missing config. Run \`${formatCliCommand("quiet-core-bot setup")}\` or set gateway.mode=local (or pass --allow-unconfigured).`,
     ];
   }
   if (params.mode === undefined) {
@@ -234,7 +234,7 @@ function getGatewayStartGuardErrors(params: {
       [
         "Gateway start blocked: existing config is missing gateway.mode.",
         "Treat this as suspicious or clobbered config.",
-        `Re-run \`${formatCliCommand("openclaw onboard --mode local")}\` or \`${formatCliCommand("openclaw setup")}\`, set gateway.mode=local manually, or pass --allow-unconfigured.`,
+        `Re-run \`${formatCliCommand("quiet-core-bot onboard --mode local")}\` or \`${formatCliCommand("quiet-core-bot setup")}\`, set gateway.mode=local manually, or pass --allow-unconfigured.`,
       ].join(" "),
       `Config write audit: ${params.configAuditPath}`,
     ];
@@ -773,7 +773,7 @@ export async function runGatewayCommand(opts: GatewayRunOpts, hooks: GatewayRunR
       }
     } catch (err) {
       defaultRuntime.error(
-        `Could not free port ${port}: ${formatErrorMessage(err)}. Run ${formatCliCommand("openclaw gateway status --deep")} to inspect the listener.`,
+        `Could not free port ${port}: ${formatErrorMessage(err)}. Run ${formatCliCommand("quiet-core-bot gateway status --deep")} to inspect the listener.`,
       );
       defaultRuntime.exit(1);
       return;
@@ -982,7 +982,7 @@ export async function runGatewayCommand(opts: GatewayRunOpts, hooks: GatewayRunR
     if (isGatewayLockError(err)) {
       const errMessage = formatErrorMessage(err);
       defaultRuntime.error(
-        `Gateway failed to start: ${errMessage}\nIf the gateway is supervised, stop it with: ${formatCliCommand("openclaw gateway stop")}`,
+        `Gateway failed to start: ${errMessage}\nIf the gateway is supervised, stop it with: ${formatCliCommand("quiet-core-bot gateway stop")}`,
       );
       try {
         const { formatPortDiagnostics, inspectPortUsage } = await import("../../infra/ports.js");
@@ -1002,7 +1002,7 @@ export async function runGatewayCommand(opts: GatewayRunOpts, hooks: GatewayRunR
     }
     await maybeWriteGatewayStartupFailureBundle(err);
     defaultRuntime.error(
-      `Gateway failed to start: ${formatErrorMessage(err)}. Run ${formatCliCommand("openclaw gateway status --deep")} for diagnostics.`,
+      `Gateway failed to start: ${formatErrorMessage(err)}. Run ${formatCliCommand("quiet-core-bot gateway status --deep")} for diagnostics.`,
     );
     defaultRuntime.exit(1);
   }

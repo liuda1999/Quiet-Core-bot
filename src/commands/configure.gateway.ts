@@ -230,7 +230,10 @@ export async function promptGatewayConfig(
         }),
         id: envVarName,
       };
-      note(`Validated ${envVarName}. OpenClaw will store a token SecretRef.`, "Gateway token");
+      note(
+        `Validated ${envVarName}. Quiet Core bot will store a token SecretRef.`,
+        "Gateway token",
+      );
     } else {
       const tokenInput = guardCancel(
         await password({
@@ -257,7 +260,7 @@ export async function promptGatewayConfig(
   if (authMode === "trusted-proxy") {
     note(
       [
-        "Trusted proxy mode: OpenClaw trusts user identity from a reverse proxy.",
+        "Trusted proxy mode: Quiet Core bot trusts user identity from a reverse proxy.",
         "The proxy must authenticate users and pass identity via headers.",
         "Only requests from specified proxy IPs will be trusted.",
         "",

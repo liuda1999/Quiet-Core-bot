@@ -131,7 +131,7 @@ describe("installGatewayDaemonNonInteractive", () => {
       });
       expect(runtime.log.mock.calls).toEqual([
         [
-          "Systemd user services are unavailable; skipping service install. Use a direct shell run (`openclaw gateway run`) or rerun without --install-daemon on this session.",
+          "Systemd user services are unavailable; skipping service install. Use a direct shell run (`quiet-core-bot gateway run`) or rerun without --install-daemon on this session.",
         ],
       ]);
       expect(buildGatewayInstallPlan).not.toHaveBeenCalled();

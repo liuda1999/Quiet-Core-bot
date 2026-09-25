@@ -1275,7 +1275,7 @@ describe("modelsAuthLoginCommand", () => {
     const runtime = createRuntime();
 
     await expect(modelsAuthLoginCommand({ provider: "anthropic" }, runtime)).rejects.toThrow(
-      'Unknown provider "anthropic". Loaded providers: openai. Verify plugins via `openclaw plugins list --json`.',
+      'Unknown provider "anthropic". Loaded providers: openai. Verify plugins via `quiet-core-bot plugins list --json`.',
     );
   });
 
@@ -1334,13 +1334,13 @@ describe("modelsAuthLoginCommand", () => {
       agentDir: "/tmp/openclaw/agents/main",
     });
     expect(runtime.log).toHaveBeenCalledWith(
-      "Anthropic setup-token auth is supported in OpenClaw.",
+      "Anthropic setup-token auth is supported in Quiet Core bot.",
     );
     expect(runtime.log).toHaveBeenCalledWith(
-      "OpenClaw prefers Claude CLI reuse when it is available on the host.",
+      "Quiet Core bot prefers Claude CLI reuse when it is available on the host.",
     );
     expect(runtime.log).toHaveBeenCalledWith(
-      "Anthropic staff told us this OpenClaw path is allowed again.",
+      "Anthropic staff told us this Quiet Core bot path is allowed again.",
     );
   });
 
@@ -1398,7 +1398,7 @@ describe("modelsAuthLoginCommand", () => {
     );
 
     expect(validateMessages).toEqual([
-      "That looks like an OpenAI API key. Use openclaw models auth paste-api-key --provider openai for API-key auth.",
+      "That looks like an OpenAI API key. Use quiet-core-bot models auth paste-api-key --provider openai for API-key auth.",
     ]);
     expect(mocks.upsertAuthProfileWithLock).not.toHaveBeenCalled();
     expect(mocks.updateConfig).not.toHaveBeenCalled();
@@ -1522,7 +1522,7 @@ describe("modelsAuthLoginCommand", () => {
     );
 
     expect(validateMessages).toEqual([
-      "That looks like token or OAuth material, not an OpenAI API key. Use openclaw models auth paste-token --provider openai for token auth material.",
+      "That looks like token or OAuth material, not an OpenAI API key. Use quiet-core-bot models auth paste-token --provider openai for token auth material.",
     ]);
     expect(mocks.upsertAuthProfileWithLock).not.toHaveBeenCalled();
     expect(mocks.updateConfig).not.toHaveBeenCalled();
@@ -1535,7 +1535,7 @@ describe("modelsAuthLoginCommand", () => {
     await expect(
       modelsAuthPasteTokenCommand({ provider: "openai", agent: "missing" }, runtime),
     ).rejects.toThrow(
-      'Unknown agent id "missing". Use "openclaw agents list" to see configured agents.',
+      'Unknown agent id "missing". Use "quiet-core-bot agents list" to see configured agents.',
     );
 
     expect(mocks.clackPassword).not.toHaveBeenCalled();

@@ -326,7 +326,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     expect(result.state.pendingChanges).toBe(true);
@@ -378,7 +378,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     expect(events).toEqual(["bundled-shadow-cleanup", "openclaw-peer-links", "missing-installs"]);
@@ -427,7 +427,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     expect(events).toEqual(["sidecar-oauth", "stale-oauth-shadows", "sqlite-migration"]);
@@ -460,7 +460,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     expect(result.changeNotes).toEqual([
@@ -489,7 +489,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     expect(result.changeNotes).toStrictEqual([]);
@@ -516,7 +516,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     expect(result.changeNotes).toStrictEqual([]);
@@ -564,7 +564,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     expect(result.state.pendingChanges).toBe(true);
@@ -605,7 +605,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     expect(mocks.materializePluginAutoEnableCandidates).toHaveBeenCalledWith({
@@ -651,7 +651,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
       env: {},
     });
 
@@ -705,7 +705,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
       env: {},
     });
 
@@ -786,7 +786,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     expect(events).toEqual(["open-policy", "group-fallback"]);
@@ -800,7 +800,7 @@ describe("doctor repair sequencing", () => {
   it("does not remove deferred configured plugins during the package update doctor pass", async () => {
     mocks.repairMissingConfiguredPluginInstalls.mockResolvedValueOnce({
       changes: [
-        'Skipped package-manager repair for configured plugin "brave" during package update; rerun "openclaw doctor --fix" after the update completes.',
+        'Skipped package-manager repair for configured plugin "brave" during package update; rerun "quiet-core-bot doctor --fix" after the update completes.',
       ],
       warnings: [],
     });
@@ -847,7 +847,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
       env: {
         OPENCLAW_UPDATE_IN_PROGRESS: "1",
       },
@@ -857,7 +857,7 @@ describe("doctor repair sequencing", () => {
     expect(result.state.candidate.plugins?.allow).toEqual(["brave"]);
     expect(result.state.candidate.plugins?.entries?.brave?.enabled).toBe(true);
     expect(result.changeNotes).toStrictEqual([
-      'Skipped package-manager repair for configured plugin "brave" during package update; rerun "openclaw doctor --fix" after the update completes.',
+      'Skipped package-manager repair for configured plugin "brave" during package update; rerun "quiet-core-bot doctor --fix" after the update completes.',
     ]);
   });
 
@@ -941,7 +941,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     expect(result.state.candidate.plugins?.allow).toEqual(["brave"]);
@@ -997,7 +997,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
     expect(mocks.maybeRepairStalePluginConfig).toHaveBeenCalledOnce();

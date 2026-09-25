@@ -682,7 +682,7 @@ export async function getHealthSnapshot(params?: {
   return summary;
 }
 
-/** Runs the `openclaw health` command against the gateway and renders JSON or text. */
+/** Runs the `quiet-core-bot health` command against the gateway and renders JSON or text. */
 export async function healthCommand(
   opts: {
     json?: boolean;
