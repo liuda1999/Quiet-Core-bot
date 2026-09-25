@@ -28,11 +28,11 @@ Use this page for day-1 startup and day-2 operations of the Gateway service.
   <Step title="Start the Gateway">
 
 ```bash
-openclaw gateway --port 18789
+quiet-core-bot gateway --port 18789
 # debug/trace mirrored to stdio
-openclaw gateway --port 18789 --verbose
+quiet-core-bot gateway --port 18789 --verbose
 # force-kill listener on selected port, then start
-openclaw gateway --force
+quiet-core-bot gateway --force
 ```
 
   </Step>
@@ -40,19 +40,19 @@ openclaw gateway --force
   <Step title="Verify service health">
 
 ```bash
-openclaw gateway status
-openclaw status
-openclaw logs --follow
+quiet-core-bot gateway status
+quiet-core-bot status
+quiet-core-bot logs --follow
 ```
 
-Healthy baseline: `Runtime: running`, `Connectivity probe: ok`, and `Capability: ...` that matches what you expect. Use `openclaw gateway status --require-rpc` when you need read-scope RPC proof, not just reachability.
+Healthy baseline: `Runtime: running`, `Connectivity probe: ok`, and `Capability: ...` that matches what you expect. Use `quiet-core-bot gateway status --require-rpc` when you need read-scope RPC proof, not just reachability.
 
   </Step>
 
   <Step title="Validate channel readiness">
 
 ```bash
-openclaw channels status --probe
+quiet-core-bot channels status --probe
 ```
 
 With a reachable gateway this runs live per-account channel probes and optional audits.
@@ -84,7 +84,7 @@ After the first successful load, the running process serves the active in-memory
 
 ## OpenAI-compatible endpoints
 
-OpenClaw's highest-leverage compatibility surface is now:
+Quiet Core bot's highest-leverage compatibility surface is now:
 
 - `GET /v1/models`
 - `GET /v1/models/{id}`
@@ -115,7 +115,7 @@ Admin HTTP RPC (`POST /api/v1/admin/rpc`) is a separate, default-off plugin rout
 | Gateway port | `--port` → `OPENCLAW_GATEWAY_PORT` → `gateway.port` → `18789` |
 | Bind mode    | CLI/override → `gateway.bind` → `loopback`                    |
 
-Installed gateway services record the resolved `--port` in supervisor metadata. After changing `gateway.port`, run `openclaw doctor --fix` or `openclaw gateway install --force` so launchd/systemd/schtasks starts the process on the new port.
+Installed gateway services record the resolved `--port` in supervisor metadata. After changing `gateway.port`, run `quiet-core-bot doctor --fix` or `quiet-core-bot gateway install --force` so launchd/systemd/schtasks starts the process on the new port.
 
 Gateway startup uses the same effective port and bind when it seeds local
 Control UI origins for non-loopback binds. For example, `--bind lan --port 3000`
@@ -135,25 +135,25 @@ validation runs. Add any remote browser origins, such as HTTPS proxy URLs, to
 ## Operator command set
 
 ```bash
-openclaw gateway status
-openclaw gateway status --deep   # adds a system-level service scan
-openclaw gateway status --json
-openclaw gateway install
-openclaw gateway restart
-openclaw gateway restart --safe   # drain active work before restarting
-openclaw gateway stop
-openclaw secrets reload
-openclaw logs --follow
-openclaw doctor
+quiet-core-bot gateway status
+quiet-core-bot gateway status --deep   # adds a system-level service scan
+quiet-core-bot gateway status --json
+quiet-core-bot gateway install
+quiet-core-bot gateway restart
+quiet-core-bot gateway restart --safe   # drain active work before restarting
+quiet-core-bot gateway stop
+quiet-core-bot secrets reload
+quiet-core-bot logs --follow
+quiet-core-bot doctor
 ```
 
 `gateway status --deep` is for extra service discovery (LaunchDaemons/systemd system
 units/schtasks), not a deeper RPC health probe.
 
-Use `openclaw gateway restart --safe` for routine restarts: it asks the running gateway to
-preflight active OpenClaw work, reports the blockers, coalesces duplicate requests, and restarts
+Use `quiet-core-bot gateway restart --safe` for routine restarts: it asks the running gateway to
+preflight active Quiet Core bot work, reports the blockers, coalesces duplicate requests, and restarts
 once queued operations, reply delivery, embedded runs, and task runs have drained. Plain
-`openclaw gateway restart` keeps the service-manager behavior for compatibility, and `--force`
+`quiet-core-bot gateway restart` keeps the service-manager behavior for compatibility, and `--force`
 skips the drain entirely.
 
 ## Multiple gateways (same host)
@@ -166,8 +166,8 @@ You only need multiple gateways when you intentionally want isolation or a rescu
 Useful checks:
 
 ```bash
-openclaw gateway status --deep
-openclaw gateway probe
+quiet-core-bot gateway status --deep
+quiet-core-bot gateway probe
 ```
 
 What to expect:
@@ -175,7 +175,7 @@ What to expect:
 - `gateway status --deep` can report `Other gateway-like services detected (best effort)`
   and print cleanup hints when stale launchd/systemd/schtasks installs are still around.
 - `gateway probe` can warn about `multiple reachable gateway identities` when distinct
-  gateways answer, or when OpenClaw cannot prove reachable targets are the same gateway.
+  gateways answer, or when Quiet Core bot cannot prove reachable targets are the same gateway.
   An SSH tunnel, proxy URL, or configured remote URL to the same gateway is one
   gateway with multiple transports, even when transport ports differ.
 - If that is intentional, isolate ports, config/state, and workspace roots per gateway.
@@ -190,8 +190,8 @@ Checklist per instance:
 Example:
 
 ```bash
-OPENCLAW_CONFIG_PATH=~/.openclaw/a.json OPENCLAW_STATE_DIR=~/.openclaw-a openclaw gateway --port 19001
-OPENCLAW_CONFIG_PATH=~/.openclaw/b.json OPENCLAW_STATE_DIR=~/.openclaw-b openclaw gateway --port 19002
+OPENCLAW_CONFIG_PATH=~/.quiet-core-bot/a.json OPENCLAW_STATE_DIR=~/.quiet-core-bot-a quiet-core-bot gateway --port 19001
+OPENCLAW_CONFIG_PATH=~/.quiet-core-bot/b.json OPENCLAW_STATE_DIR=~/.quiet-core-bot-b quiet-core-bot gateway --port 19002
 ```
 
 Detailed setup: [/gateway/multiple-gateways](/gateway/multiple-gateways).
@@ -223,28 +223,28 @@ Use supervised runs for production-like reliability.
   <Tab title="macOS (launchd)">
 
 ```bash
-openclaw gateway install
-openclaw gateway status
-openclaw gateway restart
-openclaw gateway stop
+quiet-core-bot gateway install
+quiet-core-bot gateway status
+quiet-core-bot gateway restart
+quiet-core-bot gateway stop
 ```
 
-Use `openclaw gateway restart` for restarts. Do not chain `openclaw gateway stop` and `openclaw gateway start` as a restart substitute.
+Use `quiet-core-bot gateway restart` for restarts. Do not chain `quiet-core-bot gateway stop` and `quiet-core-bot gateway start` as a restart substitute.
 
-When the gateway may be mid-work (queued operations, reply delivery, embedded runs, task runs), prefer `openclaw gateway restart --safe`. The gateway then drains that work before it stops, instead of interrupting in-flight runs; use plain `gateway restart` only when the service manager's immediate behavior is what you want.
+When the gateway may be mid-work (queued operations, reply delivery, embedded runs, task runs), prefer `quiet-core-bot gateway restart --safe`. The gateway then drains that work before it stops, instead of interrupting in-flight runs; use plain `gateway restart` only when the service manager's immediate behavior is what you want.
 
-On macOS, `gateway stop` uses `launchctl bootout` by default — this removes the LaunchAgent from the current boot session without persisting a disable, so KeepAlive auto-recovery still works after unexpected crashes and `gateway start` re-enables cleanly. To persistently suppress auto-respawn across reboots, pass `--disable`: `openclaw gateway stop --disable`.
+On macOS, `gateway stop` uses `launchctl bootout` by default — this removes the LaunchAgent from the current boot session without persisting a disable, so KeepAlive auto-recovery still works after unexpected crashes and `gateway start` re-enables cleanly. To persistently suppress auto-respawn across reboots, pass `--disable`: `quiet-core-bot gateway stop --disable`.
 
-LaunchAgent labels are `ai.openclaw.gateway` (default) or `ai.openclaw.<profile>` (named profile). `openclaw doctor` audits and repairs service config drift.
+LaunchAgent labels are `ai.openclaw.gateway` (default) or `ai.openclaw.<profile>` (named profile). `quiet-core-bot doctor` audits and repairs service config drift.
 
   </Tab>
 
   <Tab title="Linux (systemd user)">
 
 ```bash
-openclaw gateway install
+quiet-core-bot gateway install
 systemctl --user enable --now openclaw-gateway[-<profile>].service
-openclaw gateway status
+quiet-core-bot gateway status
 ```
 
 For persistence after logout, enable lingering:
@@ -257,7 +257,7 @@ Manual user-unit example when you need a custom install path:
 
 ```ini
 [Unit]
-Description=OpenClaw Gateway
+Description=Quiet Core bot Gateway
 After=network-online.target
 Wants=network-online.target
 
@@ -280,15 +280,15 @@ WantedBy=default.target
   <Tab title="Windows (native)">
 
 ```powershell
-openclaw gateway install
-openclaw gateway status --json
-openclaw gateway restart
-openclaw gateway stop
+quiet-core-bot gateway install
+quiet-core-bot gateway status --json
+quiet-core-bot gateway restart
+quiet-core-bot gateway stop
 ```
 
-Native Windows managed startup uses a Scheduled Task named `OpenClaw Gateway`
-(or `OpenClaw Gateway (<profile>)` for named profiles). If Scheduled Task
-creation is denied, OpenClaw falls back to a per-user Startup-folder launcher
+Native Windows managed startup uses a Scheduled Task named `Quiet Core bot Gateway`
+(or `Quiet Core bot Gateway (<profile>)` for named profiles). If Scheduled Task
+creation is denied, Quiet Core bot falls back to a per-user Startup-folder launcher
 that points at `gateway.cmd` inside the state directory.
 
   </Tab>
@@ -306,7 +306,7 @@ Use the same service body as the user unit, but install it under
 `/etc/systemd/system/openclaw-gateway[-<profile>].service` and adjust
 `ExecStart=` if your `openclaw` binary lives elsewhere.
 
-Do not also let `openclaw doctor --fix` install a user-level gateway service for the same profile/port. Doctor refuses that automatic install when it finds a system-level OpenClaw gateway service; use `OPENCLAW_SERVICE_REPAIR_POLICY=external` when the system unit owns the lifecycle.
+Do not also let `quiet-core-bot doctor --fix` install a user-level gateway service for the same profile/port. Doctor refuses that automatic install when it finds a system-level Quiet Core bot gateway service; use `OPENCLAW_SERVICE_REPAIR_POLICY=external` when the system unit owns the lifecycle.
 
   </Tab>
 </Tabs>
@@ -325,7 +325,7 @@ Do not also let `openclaw doctor --fix` install a user-level gateway service for
 >   completed side effects — when the gateway is interrupted mid-turn (the CLI's
 >   embedded-fallback path, see below).
 
-OpenClaw has **two different layers** here, and they do not make the same promise.
+Quiet Core bot has **two different layers** here, and they do not make the same promise.
 State this distinction explicitly in any delivery claim (A4 / R8-B2):
 
 | Layer                                                | What it guarantees                                                                                                                                                                                                                       |
@@ -446,9 +446,9 @@ agent run ledger end write compensated after <n> attempt(s): runId=<runId> statu
 ## Dev profile quick path
 
 ```bash
-openclaw --dev setup
-openclaw --dev gateway --allow-unconfigured
-openclaw --dev status
+quiet-core-bot --dev setup
+quiet-core-bot --dev gateway --allow-unconfigured
+quiet-core-bot --dev status
 ```
 
 Defaults include isolated state/config and base gateway port `19001`.
@@ -508,9 +508,9 @@ use that knob, including ones whose bottleneck is neither the transport nor a lo
 ### Readiness
 
 ```bash
-openclaw gateway status
-openclaw channels status --probe
-openclaw health
+quiet-core-bot gateway status
+quiet-core-bot channels status --probe
+quiet-core-bot health
 ```
 
 ### Event-loop degradation is a capacity signal, not a readiness failure
@@ -533,9 +533,9 @@ Read it as a capacity signal, not as a liveness/readiness failure:
 | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
 | Gateway log (stderr / log file), subsystem `event-loop` | `event-loop degraded (capacity signal only; /readyz readiness is unaffected): reasons=… p99Ms=… maxMs=… utilization=… cpuCoreRatio=… intervalMs=…`, and `event-loop recovered (capacity signal cleared): …` when it clears | any log collector           |
 | `GET /readyz`                                           | `{ ready, failing, uptimeMs, eventLoop }` for loopback direct callers or callers that prove gateway auth; `{ ready }` only for unauthenticated remote probes                                                               | operator / authorized probe |
-| `openclaw status`                                       | `Gateway event loop` row: `OK` / `WARN` plus reasons, `max`, `p99`, `util`, `cpu`                                                                                                                                          | local operator              |
-| `openclaw channels status`                              | `Gateway event loop degraded: reasons=… eventLoopDelayMaxMs=… eventLoopUtilization=… cpuCoreRatio=…`                                                                                                                       | local operator              |
-| `health` RPC / `openclaw health`                        | `eventLoop` object in the health summary                                                                                                                                                                                   | local operator              |
+| `quiet-core-bot status`                                 | `Gateway event loop` row: `OK` / `WARN` plus reasons, `max`, `p99`, `util`, `cpu`                                                                                                                                          | local operator              |
+| `quiet-core-bot channels status`                        | `Gateway event loop degraded: reasons=… eventLoopDelayMaxMs=… eventLoopUtilization=… cpuCoreRatio=…`                                                                                                                       | local operator              |
+| `health` RPC / `quiet-core-bot health`                  | `eventLoop` object in the health summary                                                                                                                                                                                   | local operator              |
 
 Suggested orchestration split:
 

@@ -6,18 +6,18 @@ read_when:
 title: "Tailscale"
 ---
 
-OpenClaw can auto-configure Tailscale **Serve** (tailnet) or **Funnel** (public) for the
+Quiet Core bot can auto-configure Tailscale **Serve** (tailnet) or **Funnel** (public) for the
 Gateway dashboard and WebSocket port. This keeps the Gateway bound to loopback while
 Tailscale provides HTTPS, routing, and (for Serve) identity headers.
 
 ## Modes
 
 - `serve`: Tailnet-only Serve via `tailscale serve`. The gateway stays on `127.0.0.1`.
-- `funnel`: Public HTTPS via `tailscale funnel`. OpenClaw requires a shared password.
+- `funnel`: Public HTTPS via `tailscale funnel`. Quiet Core bot requires a shared password.
 - `off`: Default (no Tailscale automation).
 
-Status and audit output use **Tailscale exposure** for this OpenClaw Serve/Funnel
-mode. `off` means OpenClaw is not managing Serve or Funnel; it does not mean the
+Status and audit output use **Tailscale exposure** for this Quiet Core bot Serve/Funnel
+mode. `off` means Quiet Core bot is not managing Serve or Funnel; it does not mean the
 local Tailscale daemon is stopped or logged out.
 
 ## Auth
@@ -31,10 +31,10 @@ Set `gateway.auth.mode` to control the handshake:
 
 When `tailscale.mode = "serve"` and `gateway.auth.allowTailscale` is `true`,
 Control UI/WebSocket auth can use Tailscale identity headers
-(`tailscale-user-login`) without supplying a token/password. OpenClaw verifies
+(`tailscale-user-login`) without supplying a token/password. Quiet Core bot verifies
 the identity by resolving the `x-forwarded-for` address via the local Tailscale
 daemon (`tailscale whois`) and matching it to the header before accepting it.
-OpenClaw only treats a request as Serve when it arrives from loopback with
+Quiet Core bot only treats a request as Serve when it arrives from loopback with
 Tailscale's `x-forwarded-for`, `x-forwarded-proto`, and `x-forwarded-host`
 headers.
 For Control UI operator sessions that include browser device identity, this
@@ -125,8 +125,8 @@ Prefer `OPENCLAW_GATEWAY_PASSWORD` over committing a password to disk.
 ## CLI examples
 
 ```bash
-openclaw gateway --tailscale serve
-openclaw gateway --tailscale funnel --auth password
+quiet-core-bot gateway --tailscale serve
+quiet-core-bot gateway --tailscale funnel --auth password
 ```
 
 ## Notes
@@ -138,13 +138,13 @@ openclaw gateway --tailscale funnel --auth password
   `svc:<dns-label>` Service name format, for example `svc:openclaw`.
   Tailscale requires Service hosts to be tagged nodes, and the Service may need
   approval in the admin console before Serve can publish it.
-- Set `gateway.tailscale.resetOnExit` if you want OpenClaw to undo `tailscale serve`
+- Set `gateway.tailscale.resetOnExit` if you want Quiet Core bot to undo `tailscale serve`
   or `tailscale funnel` configuration on shutdown.
 - Set `gateway.tailscale.preserveFunnel: true` to keep an externally configured
   `tailscale funnel` route alive across gateway restarts. When enabled and the
-  gateway runs in `mode: "serve"`, OpenClaw checks `tailscale funnel status`
+  gateway runs in `mode: "serve"`, Quiet Core bot checks `tailscale funnel status`
   before re-applying Serve and skips it when a Funnel route already covers the
-  gateway port. The OpenClaw-managed Funnel password-only policy is unchanged.
+  gateway port. The Quiet Core bot-managed Funnel password-only policy is unchanged.
 - `gateway.bind: "tailnet"` is a direct Tailnet bind (no HTTPS, no Serve/Funnel).
 - `gateway.bind: "auto"` prefers loopback; use `tailnet` if you want Tailnet-only.
 - Serve/Funnel only expose the **Gateway control UI + WS**. Nodes connect over

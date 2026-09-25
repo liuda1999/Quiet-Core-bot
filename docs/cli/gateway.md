@@ -1,5 +1,5 @@
 ---
-summary: "OpenClaw Gateway CLI (`openclaw gateway`) — run, query, and discover gateways"
+summary: "Quiet Core bot Gateway CLI (`quiet-core-bot gateway`) — run, query, and discover gateways"
 read_when:
   - Running the Gateway from the CLI (dev or servers)
   - Debugging Gateway auth, bind modes, and connectivity
@@ -8,14 +8,14 @@ title: "Gateway"
 sidebarTitle: "Gateway"
 ---
 
-The Gateway is OpenClaw's WebSocket server (channels, nodes, sessions, hooks). Subcommands in this page live under `openclaw gateway …`.
+The Gateway is Quiet Core bot's WebSocket server (channels, nodes, sessions, hooks). Subcommands in this page live under `quiet-core-bot gateway …`.
 
 <CardGroup cols={3}>
   <Card title="Bonjour discovery" href="/gateway/bonjour">
     Local mDNS + wide-area DNS-SD setup.
   </Card>
   <Card title="Discovery overview" href="/gateway/discovery">
-    How OpenClaw advertises and finds gateways.
+    How Quiet Core bot advertises and finds gateways.
   </Card>
   <Card title="Configuration" href="/gateway/configuration">
     Top-level gateway config keys.
@@ -27,19 +27,19 @@ The Gateway is OpenClaw's WebSocket server (channels, nodes, sessions, hooks). S
 Run a local Gateway process:
 
 ```bash
-openclaw gateway
+quiet-core-bot gateway
 ```
 
 Foreground alias:
 
 ```bash
-openclaw gateway run
+quiet-core-bot gateway run
 ```
 
 <AccordionGroup>
   <Accordion title="Startup behavior">
-    - By default, the Gateway refuses to start unless `gateway.mode=local` is set in `~/.openclaw/openclaw.json`. Use `--allow-unconfigured` for ad-hoc/dev runs.
-    - `openclaw onboard --mode local` and `openclaw setup` are expected to write `gateway.mode=local`. If the file exists but `gateway.mode` is missing, treat that as a broken or clobbered config and repair it instead of assuming local mode implicitly.
+    - By default, the Gateway refuses to start unless `gateway.mode=local` is set in `~/.quiet-core-bot/quiet-core-bot.json`. Use `--allow-unconfigured` for ad-hoc/dev runs.
+    - `quiet-core-bot onboard --mode local` and `quiet-core-bot setup` are expected to write `gateway.mode=local`. If the file exists but `gateway.mode` is missing, treat that as a broken or clobbered config and repair it instead of assuming local mode implicitly.
     - If the file exists and `gateway.mode` is missing, the Gateway treats that as suspicious config damage and refuses to "guess local" for you.
     - Binding beyond loopback without auth is blocked (safety guardrail).
     - `lan`, `tailnet`, and `custom` currently resolve over IPv4-only BYOH paths.
@@ -77,7 +77,7 @@ openclaw gateway run
   Reset Tailscale serve/funnel config on shutdown.
 </ParamField>
 <ParamField path="--bind custom + gateway.customBindHost" type="string">
-  Expects an IPv4 address today. For IPv6-only BYOH, place an IPv4 sidecar or proxy in front of the Gateway and point OpenClaw at that IPv4 endpoint.
+  Expects an IPv4 address today. For IPv6-only BYOH, place an IPv4 sidecar or proxy in front of the Gateway and point Quiet Core bot at that IPv4 endpoint.
 </ParamField>
 <ParamField path="--allow-unconfigured" type="boolean">
   Allow gateway start without `gateway.mode=local` in config. Bypasses the startup guard for ad-hoc/dev bootstrap only; does not write or repair the config file.
@@ -113,15 +113,15 @@ openclaw gateway run
 ## Restart the Gateway
 
 ```bash
-openclaw gateway restart
-openclaw gateway restart --safe
-openclaw gateway restart --safe --skip-deferral
-openclaw gateway restart --force
+quiet-core-bot gateway restart
+quiet-core-bot gateway restart --safe
+quiet-core-bot gateway restart --safe --skip-deferral
+quiet-core-bot gateway restart --force
 ```
 
-`openclaw gateway restart --safe` asks the running Gateway to preflight active OpenClaw work before restarting. If queued operations, reply delivery, embedded runs, or task runs are active, the Gateway reports the blockers, coalesces duplicate safe restart requests, and restarts once the active work drains. Plain `restart` keeps the existing service-manager behavior for compatibility. Use `--force` only when you explicitly want the immediate override path.
+`quiet-core-bot gateway restart --safe` asks the running Gateway to preflight active Quiet Core bot work before restarting. If queued operations, reply delivery, embedded runs, or task runs are active, the Gateway reports the blockers, coalesces duplicate safe restart requests, and restarts once the active work drains. Plain `restart` keeps the existing service-manager behavior for compatibility. Use `--force` only when you explicitly want the immediate override path.
 
-`openclaw gateway restart --safe --skip-deferral` runs the same OpenClaw-aware coordinated restart as `--safe`, but bypasses the active-work deferral gate so the Gateway emits the restart immediately even when blockers are reported. Use it as the operator escape hatch when a deferral has been pinned by a stuck task run and `--safe` alone would wait indefinitely. `--skip-deferral` requires `--safe`.
+`quiet-core-bot gateway restart --safe --skip-deferral` runs the same Quiet Core bot-aware coordinated restart as `--safe`, but bypasses the active-work deferral gate so the Gateway emits the restart immediately even when blockers are reported. Use it as the operator escape hatch when a deferral has been pinned by a stuck task run and `--safe` alone would wait indefinitely. `--skip-deferral` requires `--safe`.
 
 <Warning>
 Inline `--password` can be exposed in local process listings. Prefer `--password-file`, env, or a SecretRef-backed `gateway.auth.password`.
@@ -164,8 +164,8 @@ When you set `--url`, the CLI does not fall back to config or environment creden
 ### `gateway health`
 
 ```bash
-openclaw gateway health --url ws://127.0.0.1:18789
-openclaw gateway health --port 18789
+quiet-core-bot gateway health --url ws://127.0.0.1:18789
+quiet-core-bot gateway health --port 18789
 ```
 
 The HTTP `/healthz` endpoint is a liveness probe: it returns once the server can answer HTTP. The HTTP `/readyz` endpoint is stricter and stays red while startup plugin sidecars, channels, or configured hooks are still settling. Local or authenticated detailed readiness responses include an `eventLoop` diagnostic block with event-loop delay, event-loop utilization, CPU core ratio, and a `degraded` flag.
@@ -179,11 +179,11 @@ The HTTP `/healthz` endpoint is a liveness probe: it returns once the server can
 Fetch usage-cost summaries from session logs.
 
 ```bash
-openclaw gateway usage-cost
-openclaw gateway usage-cost --days 7
-openclaw gateway usage-cost --agent work --json
-openclaw gateway usage-cost --all-agents
-openclaw gateway usage-cost --json
+quiet-core-bot gateway usage-cost
+quiet-core-bot gateway usage-cost --days 7
+quiet-core-bot gateway usage-cost --agent work --json
+quiet-core-bot gateway usage-cost --all-agents
+quiet-core-bot gateway usage-cost --json
 ```
 
 <ParamField path="--days <days>" type="number" default="30">
@@ -201,11 +201,11 @@ openclaw gateway usage-cost --json
 Fetch the recent diagnostic stability recorder from a running Gateway.
 
 ```bash
-openclaw gateway stability
-openclaw gateway stability --type payload.large
-openclaw gateway stability --bundle latest
-openclaw gateway stability --bundle latest --export
-openclaw gateway stability --json
+quiet-core-bot gateway stability
+quiet-core-bot gateway stability --type payload.large
+quiet-core-bot gateway stability --bundle latest
+quiet-core-bot gateway stability --bundle latest --export
+quiet-core-bot gateway stability --json
 ```
 
 <ParamField path="--limit <limit>" type="number" default="25">
@@ -230,7 +230,7 @@ openclaw gateway stability --json
 <AccordionGroup>
   <Accordion title="Privacy and bundle behavior">
     - Records keep operational metadata: event names, counts, byte sizes, memory readings, queue/session state, channel/plugin names, and redacted session summaries. They do not keep chat text, webhook bodies, tool outputs, raw request or response bodies, tokens, cookies, secret values, hostnames, or raw session ids. Set `diagnostics.enabled: false` to disable the recorder entirely.
-    - On fatal Gateway exits, shutdown timeouts, and restart startup failures, OpenClaw writes the same diagnostic snapshot to `~/.openclaw/logs/stability/openclaw-stability-*.json` when the recorder has events. Inspect the newest bundle with `openclaw gateway stability --bundle latest`; `--limit`, `--type`, and `--since-seq` also apply to bundle output.
+    - On fatal Gateway exits, shutdown timeouts, and restart startup failures, Quiet Core bot writes the same diagnostic snapshot to `~/.quiet-core-bot/logs/stability/openclaw-stability-*.json` when the recorder has events. Inspect the newest bundle with `quiet-core-bot gateway stability --bundle latest`; `--limit`, `--type`, and `--since-seq` also apply to bundle output.
 
   </Accordion>
 </AccordionGroup>
@@ -240,9 +240,9 @@ openclaw gateway stability --json
 Write a local diagnostics zip that is designed to attach to bug reports. For the privacy model and bundle contents, see [Diagnostics Export](/gateway/diagnostics).
 
 ```bash
-openclaw gateway diagnostics export
-openclaw gateway diagnostics export --output openclaw-diagnostics.zip
-openclaw gateway diagnostics export --json
+quiet-core-bot gateway diagnostics export
+quiet-core-bot gateway diagnostics export --output openclaw-diagnostics.zip
+quiet-core-bot gateway diagnostics export --json
 ```
 
 <ParamField path="--output <path>" type="string">
@@ -275,16 +275,16 @@ openclaw gateway diagnostics export --json
 
 The export contains a manifest, a Markdown summary, config shape, sanitized config details, sanitized log summaries, sanitized Gateway status/health snapshots, and the newest stability bundle when one exists.
 
-It is meant to be shared. It keeps operational details that help debugging, such as safe OpenClaw log fields, subsystem names, status codes, durations, configured modes, ports, plugin ids, provider ids, non-secret feature settings, and redacted operational log messages. It omits or redacts chat text, webhook bodies, tool outputs, credentials, cookies, account/message identifiers, prompt/instruction text, hostnames, and secret values. When a LogTape-style message looks like user/chat/tool payload text, the export keeps only that a message was omitted plus its byte count.
+It is meant to be shared. It keeps operational details that help debugging, such as safe Quiet Core bot log fields, subsystem names, status codes, durations, configured modes, ports, plugin ids, provider ids, non-secret feature settings, and redacted operational log messages. It omits or redacts chat text, webhook bodies, tool outputs, credentials, cookies, account/message identifiers, prompt/instruction text, hostnames, and secret values. When a LogTape-style message looks like user/chat/tool payload text, the export keeps only that a message was omitted plus its byte count.
 
 ### `gateway status`
 
 `gateway status` shows the Gateway service (launchd/systemd/schtasks) plus an optional probe of connectivity/auth capability.
 
 ```bash
-openclaw gateway status
-openclaw gateway status --json
-openclaw gateway status --require-rpc
+quiet-core-bot gateway status
+quiet-core-bot gateway status --json
+quiet-core-bot gateway status --require-rpc
 ```
 
 <ParamField path="--url <url>" type="string">
@@ -351,9 +351,9 @@ If multiple probe targets are reachable, it prints all of them. An SSH tunnel, T
 </Note>
 
 ```bash
-openclaw gateway probe
-openclaw gateway probe --json
-openclaw gateway probe --port 18789
+quiet-core-bot gateway probe
+quiet-core-bot gateway probe --json
+quiet-core-bot gateway probe --port 18789
 ```
 
 <ParamField path="--port <port>" type="number">
@@ -397,7 +397,7 @@ openclaw gateway probe --port 18789
   </Accordion>
   <Accordion title="Common warning codes">
     - `ssh_tunnel_failed`: SSH tunnel setup failed; the command fell back to direct probes.
-    - `multiple_gateways`: distinct gateway identities were reachable, or OpenClaw could not prove reachable targets are the same gateway. An SSH tunnel, proxy URL, or configured remote URL to the same gateway does not trigger this warning.
+    - `multiple_gateways`: distinct gateway identities were reachable, or Quiet Core bot could not prove reachable targets are the same gateway. An SSH tunnel, proxy URL, or configured remote URL to the same gateway does not trigger this warning.
     - `auth_secretref_unresolved`: a configured auth SecretRef could not be resolved for a failed target.
     - `probe_scope_limited`: WebSocket connect succeeded, but the read probe was limited by missing `operator.read`.
 
@@ -411,7 +411,7 @@ The macOS app "Remote over SSH" mode uses a local port-forward so the remote gat
 CLI equivalent:
 
 ```bash
-openclaw gateway probe --ssh user@gateway-host
+quiet-core-bot gateway probe --ssh user@gateway-host
 ```
 
 <ParamField path="--ssh <target>" type="string">
@@ -434,8 +434,8 @@ Config (optional, used as defaults):
 Low-level RPC helper.
 
 ```bash
-openclaw gateway call status
-openclaw gateway call logs.tail --params '{"sinceMs": 60000}'
+quiet-core-bot gateway call status
+quiet-core-bot gateway call logs.tail --params '{"sinceMs": 60000}'
 ```
 
 <ParamField path="--params <json>" type="string" default="{}">
@@ -467,11 +467,11 @@ openclaw gateway call logs.tail --params '{"sinceMs": 60000}'
 ## Manage the Gateway service
 
 ```bash
-openclaw gateway install
-openclaw gateway start
-openclaw gateway stop
-openclaw gateway restart
-openclaw gateway uninstall
+quiet-core-bot gateway install
+quiet-core-bot gateway start
+quiet-core-bot gateway stop
+quiet-core-bot gateway restart
+quiet-core-bot gateway uninstall
 ```
 
 ### Install with a wrapper
@@ -488,8 +488,8 @@ exec doppler run --project my-project --config production -- openclaw "$@"
 EOF
 chmod +x ~/.local/bin/openclaw-doppler
 
-openclaw gateway install --wrapper ~/.local/bin/openclaw-doppler --force
-openclaw gateway restart
+quiet-core-bot gateway install --wrapper ~/.local/bin/openclaw-doppler --force
+quiet-core-bot gateway restart
 ```
 
 You can also set the wrapper through the environment. `gateway install` validates that the path is
@@ -498,15 +498,15 @@ an executable file, writes the wrapper into service `ProgramArguments`, and pers
 repairs.
 
 ```bash
-OPENCLAW_WRAPPER="$HOME/.local/bin/openclaw-doppler" openclaw gateway install --force
-openclaw doctor
+OPENCLAW_WRAPPER="$HOME/.local/bin/openclaw-doppler" quiet-core-bot gateway install --force
+quiet-core-bot doctor
 ```
 
 To remove a persisted wrapper, clear `OPENCLAW_WRAPPER` while reinstalling:
 
 ```bash
-OPENCLAW_WRAPPER= openclaw gateway install --force
-openclaw gateway restart
+OPENCLAW_WRAPPER= quiet-core-bot gateway install --force
+quiet-core-bot gateway restart
 ```
 
 <AccordionGroup>
@@ -521,9 +521,9 @@ openclaw gateway restart
   <Accordion title="Lifecycle behavior">
     - Use `gateway restart` to restart a managed service. Do not chain `gateway stop` and `gateway start` as a restart substitute.
     - On macOS, `gateway stop` uses `launchctl bootout` by default, which removes the LaunchAgent from the current boot session without persisting a disable — KeepAlive auto-recovery remains active for future crashes and `gateway start` re-enables cleanly without a manual `launchctl enable`. Pass `--disable` to persistently suppress KeepAlive and RunAtLoad so the gateway does not respawn until the next explicit `gateway start`; use this when a manual stop should survive reboots or system restarts.
-    - `gateway restart --safe` asks the running Gateway to preflight active OpenClaw work and defer the restart until reply delivery, embedded runs, and task runs drain. `--safe` cannot be combined with `--force` or `--wait`.
+    - `gateway restart --safe` asks the running Gateway to preflight active Quiet Core bot work and defer the restart until reply delivery, embedded runs, and task runs drain. `--safe` cannot be combined with `--force` or `--wait`.
     - `gateway restart --wait 30s` overrides the configured restart drain budget for that restart. Bare numbers are milliseconds; units such as `s`, `m`, and `h` are accepted. `--wait 0` waits indefinitely.
-    - `gateway restart --safe --skip-deferral` runs the OpenClaw-aware safe restart but bypasses the deferral gate so the Gateway emits the restart immediately even when blockers are reported. Operator escape hatch for stuck-task-run deferrals; requires `--safe`.
+    - `gateway restart --safe --skip-deferral` runs the Quiet Core bot-aware safe restart but bypasses the deferral gate so the Gateway emits the restart immediately even when blockers are reported. Operator escape hatch for stuck-task-run deferrals; requires `--safe`.
     - `gateway restart --force` skips the active-work drain and restarts immediately. Use it when an operator has already inspected the listed task blockers and wants the gateway back now.
     - Lifecycle commands accept `--json` for scripting.
 
@@ -560,7 +560,7 @@ Wide-area discovery records can include these TXT hints:
 ### `gateway discover`
 
 ```bash
-openclaw gateway discover
+quiet-core-bot gateway discover
 ```
 
 <ParamField path="--timeout <ms>" type="number" default="2000">
@@ -573,8 +573,8 @@ openclaw gateway discover
 Examples:
 
 ```bash
-openclaw gateway discover --timeout 4000
-openclaw gateway discover --json | jq '.beacons[].wsUrl'
+quiet-core-bot gateway discover --timeout 4000
+quiet-core-bot gateway discover --json | jq '.beacons[].wsUrl'
 ```
 
 <Note>

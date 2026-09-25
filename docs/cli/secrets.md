@@ -1,5 +1,5 @@
 ---
-summary: "CLI reference for `openclaw secrets` (reload, audit, configure, apply)"
+summary: "CLI reference for `quiet-core-bot secrets` (reload, audit, configure, apply)"
 read_when:
   - Re-resolving secret refs at runtime
   - Auditing plaintext residues and unresolved refs
@@ -7,9 +7,9 @@ read_when:
 title: "Secrets"
 ---
 
-# `openclaw secrets`
+# `quiet-core-bot secrets`
 
-Use `openclaw secrets` to manage SecretRefs and keep the active runtime snapshot healthy.
+Use `quiet-core-bot secrets` to manage SecretRefs and keep the active runtime snapshot healthy.
 
 Command roles:
 
@@ -21,12 +21,12 @@ Command roles:
 Recommended operator loop:
 
 ```bash
-openclaw secrets audit --check
-openclaw secrets configure
-openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run
-openclaw secrets apply --from /tmp/openclaw-secrets-plan.json
-openclaw secrets audit --check
-openclaw secrets reload
+quiet-core-bot secrets audit --check
+quiet-core-bot secrets configure
+quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run
+quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json
+quiet-core-bot secrets audit --check
+quiet-core-bot secrets reload
 ```
 
 If your plan includes `exec` SecretRefs/providers, pass `--allow-exec` on both dry-run and write apply commands.
@@ -47,9 +47,9 @@ Related:
 Re-resolve secret refs and atomically swap runtime snapshot.
 
 ```bash
-openclaw secrets reload
-openclaw secrets reload --json
-openclaw secrets reload --url ws://127.0.0.1:18789 --token <token>
+quiet-core-bot secrets reload
+quiet-core-bot secrets reload --json
+quiet-core-bot secrets reload --url ws://127.0.0.1:18789 --token <token>
 ```
 
 Notes:
@@ -67,11 +67,11 @@ Options:
 
 ## Audit
 
-Scan OpenClaw state for:
+Scan Quiet Core bot state for:
 
 - plaintext secret storage
 - unresolved refs
-- precedence drift (`auth-profiles.json` credentials shadowing `openclaw.json` refs)
+- precedence drift (`auth-profiles.json` credentials shadowing `quiet-core-bot.json` refs)
 - generated `agents/*/agent/models.json` residues (provider `apiKey` values and sensitive provider headers)
 - legacy residues (legacy auth store entries, OAuth reminders)
 
@@ -80,10 +80,10 @@ Header residue note:
 - Sensitive provider header detection is name-heuristic based (common auth/credential header names and fragments such as `authorization`, `x-api-key`, `token`, `secret`, `password`, and `credential`).
 
 ```bash
-openclaw secrets audit
-openclaw secrets audit --check
-openclaw secrets audit --json
-openclaw secrets audit --allow-exec
+quiet-core-bot secrets audit
+quiet-core-bot secrets audit --check
+quiet-core-bot secrets audit --json
+quiet-core-bot secrets audit --allow-exec
 ```
 
 Exit behavior:
@@ -107,13 +107,13 @@ Report shape highlights:
 Build provider and SecretRef changes interactively, run preflight, and optionally apply:
 
 ```bash
-openclaw secrets configure
-openclaw secrets configure --plan-out /tmp/openclaw-secrets-plan.json
-openclaw secrets configure --apply --yes
-openclaw secrets configure --providers-only
-openclaw secrets configure --skip-provider-setup
-openclaw secrets configure --agent ops
-openclaw secrets configure --json
+quiet-core-bot secrets configure
+quiet-core-bot secrets configure --plan-out /tmp/openclaw-secrets-plan.json
+quiet-core-bot secrets configure --apply --yes
+quiet-core-bot secrets configure --providers-only
+quiet-core-bot secrets configure --skip-provider-setup
+quiet-core-bot secrets configure --agent ops
+quiet-core-bot secrets configure --json
 ```
 
 Flow:
@@ -133,7 +133,7 @@ Notes:
 
 - Requires an interactive TTY.
 - You cannot combine `--providers-only` with `--skip-provider-setup`.
-- `configure` targets secret-bearing fields in `openclaw.json` plus `auth-profiles.json` for the selected agent scope.
+- `configure` targets secret-bearing fields in `quiet-core-bot.json` plus `auth-profiles.json` for the selected agent scope.
 - `configure` supports creating new `auth-profiles.json` mappings directly in the picker flow.
 - Canonical supported surface: [SecretRef Credential Surface](/reference/secretref-credential-surface).
 - It performs preflight resolution before apply.
@@ -148,18 +148,18 @@ Exec provider safety note:
 
 - Homebrew installs often expose symlinked binaries under `/opt/homebrew/bin/*`.
 - Set `allowSymlinkCommand: true` only when needed for trusted package-manager paths, and pair it with `trustedDirs` (for example `["/opt/homebrew"]`).
-- On Windows, if ACL verification is unavailable for a provider path, OpenClaw fails closed. For trusted paths only, set `allowInsecurePath: true` on that provider to bypass path security checks.
+- On Windows, if ACL verification is unavailable for a provider path, Quiet Core bot fails closed. For trusted paths only, set `allowInsecurePath: true` on that provider to bypass path security checks.
 
 ## Apply a saved plan
 
 Apply or preflight a plan generated previously:
 
 ```bash
-openclaw secrets apply --from /tmp/openclaw-secrets-plan.json
-openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --allow-exec
-openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run
-openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run --allow-exec
-openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --json
+quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json
+quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json --allow-exec
+quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run
+quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run --allow-exec
+quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json --json
 ```
 
 Exec behavior:
@@ -175,10 +175,10 @@ Plan contract details (allowed target paths, validation rules, and failure seman
 
 What `apply` may update:
 
-- `openclaw.json` (SecretRef targets + provider upserts/deletes)
+- `quiet-core-bot.json` (SecretRef targets + provider upserts/deletes)
 - `auth-profiles.json` (provider-target scrubbing)
 - legacy `auth.json` residues
-- `~/.openclaw/.env` known secret keys whose values were migrated
+- `~/.quiet-core-bot/.env` known secret keys whose values were migrated
 
 ## Why no rollback backups
 
@@ -189,9 +189,9 @@ Safety comes from strict preflight + atomic-ish apply with best-effort in-memory
 ## Example
 
 ```bash
-openclaw secrets audit --check
-openclaw secrets configure
-openclaw secrets audit --check
+quiet-core-bot secrets audit --check
+quiet-core-bot secrets configure
+quiet-core-bot secrets audit --check
 ```
 
 If `audit --check` still reports plaintext findings, update the remaining reported target paths and rerun audit.

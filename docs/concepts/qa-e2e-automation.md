@@ -8,7 +8,7 @@ read_when:
 title: "QA overview"
 ---
 
-The private QA stack is meant to exercise OpenClaw in a more realistic,
+The private QA stack is meant to exercise Quiet Core bot in a more realistic,
 channel-shaped way than a single unit test can.
 
 Current pieces:
@@ -26,15 +26,15 @@ Current pieces:
 
 ## Command surface
 
-Every QA flow runs under `pnpm openclaw qa <subcommand>`. Many have `pnpm qa:*`
+Every QA flow runs under `pnpm quiet-core-bot qa <subcommand>`. Many have `pnpm qa:*`
 script aliases; both forms are supported.
 
 | Command                                             | Purpose                                                                                                                                                                                                                                                                 |
 | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `qa run`                                            | Bundled QA self-check without `--qa-profile`; taxonomy-backed maturity profile runner with `--qa-profile smoke-ci`, `--qa-profile release`, or `--qa-profile all`.                                                                                                      |
-| `qa suite`                                          | Run repo-backed scenarios against the QA gateway lane. Aliases: `pnpm openclaw qa suite --runner multipass` for a disposable Linux VM.                                                                                                                                  |
+| `qa suite`                                          | Run repo-backed scenarios against the QA gateway lane. Aliases: `pnpm quiet-core-bot qa suite --runner multipass` for a disposable Linux VM.                                                                                                                            |
 | `qa coverage`                                       | Print the YAML scenario-coverage inventory (`--json` for machine output).                                                                                                                                                                                               |
-| `qa parity-report`                                  | Compare two `qa-suite-summary.json` files and write the agentic parity report, or use `--runtime-axis --token-efficiency` to write Codex-vs-OpenClaw runtime parity and token-efficiency reports from one runtime-pair summary.                                         |
+| `qa parity-report`                                  | Compare two `qa-suite-summary.json` files and write the agentic parity report, or use `--runtime-axis --token-efficiency` to write Codex-vs-Quiet Core bot runtime parity and token-efficiency reports from one runtime-pair summary.                                   |
 | `qa character-eval`                                 | Run the character QA scenario across multiple live models with a judged report. See [Reporting](#reporting).                                                                                                                                                            |
 | `qa manual`                                         | Run a one-off prompt against the selected provider/model lane.                                                                                                                                                                                                          |
 | `qa ui`                                             | Start the QA debugger UI and local QA bus (alias: `pnpm qa:lab:ui`).                                                                                                                                                                                                    |
@@ -66,7 +66,7 @@ Slim evidence omits per-entry `execution` and sets `evidenceMode: "slim"`;
 `smoke-ci` defaults to slim, and `--evidence-mode full` restores full entries:
 
 ```bash
-pnpm openclaw qa run \
+pnpm quiet-core-bot qa run \
   --qa-profile smoke-ci \
   --category agent-runtime-and-provider-execution.agent-turn-execution \
   --provider-mode mock-openai \
@@ -77,11 +77,11 @@ Use `smoke-ci` for deterministic profile proof with mock model providers and
 Crabline fake provider servers. Use `release` for Stable/LTS proof against live
 channels. Use `all` only for explicit full-taxonomy evidence runs; it selects
 every active maturity category and can be dispatched through the `QA Profile
-Evidence` workflow with `qa_profile=all`. When a command also needs an OpenClaw
+Evidence` workflow with `qa_profile=all`. When a command also needs an Quiet Core bot
 root profile, put the root profile before the QA command:
 
 ```bash
-pnpm openclaw --profile work qa run --qa-profile smoke-ci
+pnpm quiet-core-bot --profile work qa run --qa-profile smoke-ci
 ```
 
 ## Operator flow
@@ -106,7 +106,7 @@ For faster QA Lab UI iteration without rebuilding the Docker image each time,
 start the stack with a bind-mounted QA Lab bundle:
 
 ```bash
-pnpm openclaw qa docker-build-image
+pnpm quiet-core-bot qa docker-build-image
 pnpm qa:lab:build
 pnpm qa:lab:up:fast
 pnpm qa:lab:watch
@@ -181,7 +181,7 @@ diagnostics instrumentation.
 For a transport-real Matrix smoke lane, run:
 
 ```bash
-pnpm openclaw qa matrix --profile fast --fail-fast
+pnpm quiet-core-bot qa matrix --profile fast --fail-fast
 ```
 
 The full CLI reference, profile/scenario catalog, env vars, and artifact layout for this lane live in [Matrix QA](/concepts/qa-matrix). At a glance: it provisions a disposable Tuwunel homeserver in Docker, registers temporary driver/SUT/observer users, runs the real Matrix plugin inside a child QA gateway scoped to that transport (no `qa-channel`), then writes a Markdown report, JSON summary, observed-events artifact, and combined output log under `.artifacts/qa-e2e/matrix-<timestamp>/`.
@@ -208,10 +208,10 @@ Manual `matrix_profile=all` fans out into the five profile shards.
 For transport-real Telegram, Discord, Slack, and WhatsApp smoke lanes:
 
 ```bash
-pnpm openclaw qa telegram
-pnpm openclaw qa discord
-pnpm openclaw qa slack
-pnpm openclaw qa whatsapp
+pnpm quiet-core-bot qa telegram
+pnpm quiet-core-bot qa discord
+pnpm quiet-core-bot qa slack
+pnpm quiet-core-bot qa whatsapp
 ```
 
 They target a pre-existing real channel with two bots or accounts (driver + SUT). Required env vars, scenario lists, output artifacts, and the Convex credential pool are documented in [Telegram, Discord, Slack, and WhatsApp QA reference](#telegram-discord-slack-and-whatsapp-qa-reference) below.
@@ -219,7 +219,7 @@ They target a pre-existing real channel with two bots or accounts (driver + SUT)
 For a full Slack desktop VM run with VNC rescue, run:
 
 ```bash
-pnpm openclaw qa mantis slack-desktop-smoke \
+pnpm quiet-core-bot qa mantis slack-desktop-smoke \
   --gateway-setup \
   --scenario slack-canary \
   --keep-lease
@@ -238,7 +238,7 @@ reused leases also keep Crabbox's pnpm store cache warm. The default
 inside the VM. Use `--hydrate-mode prehydrated` only when the reused remote
 workspace already has `node_modules` and a built `dist/`; that mode skips the
 expensive install/build step and fails closed when the workspace is not ready.
-With `--gateway-setup`, Mantis leaves a persistent OpenClaw Slack gateway
+With `--gateway-setup`, Mantis leaves a persistent Quiet Core bot Slack gateway
 running inside the VM on port `38973`; without it, the command runs the normal
 bot-to-bot Slack QA lane and exits after artifact capture.
 
@@ -246,7 +246,7 @@ To prove native Slack approval UI with desktop evidence, run the Mantis approval
 checkpoint mode:
 
 ```bash
-pnpm openclaw qa mantis slack-desktop-smoke \
+pnpm quiet-core-bot qa mantis slack-desktop-smoke \
   --approval-checkpoints \
   --credential-source convex \
   --credential-role maintainer
@@ -268,7 +268,7 @@ handling steps live in [Mantis Slack Desktop Runbook](/concepts/mantis-slack-des
 For an agent/CV style desktop task, run:
 
 ```bash
-pnpm openclaw qa mantis visual-task \
+pnpm quiet-core-bot qa mantis visual-task \
   --browser-url https://example.net \
   --expect-text "Example Domain" \
   --vision-model openai/gpt-5.5
@@ -293,7 +293,7 @@ passed and `--keep-lease` was not set.
 Before using pooled live credentials, run:
 
 ```bash
-pnpm openclaw qa credentials doctor
+pnpm quiet-core-bot qa credentials doctor
 ```
 
 The doctor checks Convex broker env, validates endpoint settings, and verifies admin/list reachability when the maintainer secret is present. It reports only set/missing status for secrets.
@@ -320,10 +320,10 @@ Telegram, and other live transports share one explicit transport-contract checkl
 For a disposable Linux VM lane without bringing Docker into the QA path, run:
 
 ```bash
-pnpm openclaw qa suite --runner multipass --scenario channel-chat-baseline
+pnpm quiet-core-bot qa suite --runner multipass --scenario channel-chat-baseline
 ```
 
-This boots a fresh Multipass guest, installs dependencies, builds OpenClaw
+This boots a fresh Multipass guest, installs dependencies, builds Quiet Core bot
 inside the guest, runs `qa suite`, then copies the normal QA report and
 summary back into `.artifacts/qa-e2e/...` on the host.
 It reuses the same scenario-selection behavior as `qa suite` on the host.
@@ -369,7 +369,7 @@ Each lane exits non-zero on any failed scenario. `--allow-failures` writes artif
 ### Telegram QA
 
 ```bash
-pnpm openclaw qa telegram
+pnpm quiet-core-bot qa telegram
 ```
 
 Targets one real private Telegram group with two distinct bots (driver + SUT). The SUT bot must have a Telegram username; bot-to-bot observation works best when both bots have **Bot-to-Bot Communication Mode** enabled in `@BotFather`.
@@ -399,7 +399,7 @@ Scenarios (`extensions/qa-lab/src/live-transports/telegram/telegram-live.runtime
 - `telegram-long-final-reuses-preview`
 - `telegram-long-final-three-chunks`
 
-The implicit default set always covers canary, mention gating, native command replies, command addressing, and bot-to-bot group replies. `mock-openai` defaults also include deterministic reply-chain and final-message streaming checks. `telegram-current-session-status-tool` remains opt-in because it is only stable when threaded directly after canary, not after arbitrary native command replies. Use `pnpm openclaw qa telegram --list-scenarios --provider-mode mock-openai` to print the current default/optional split with regression refs.
+The implicit default set always covers canary, mention gating, native command replies, command addressing, and bot-to-bot group replies. `mock-openai` defaults also include deterministic reply-chain and final-message streaming checks. `telegram-current-session-status-tool` remains opt-in because it is only stable when threaded directly after canary, not after arbitrary native command replies. Use `pnpm quiet-core-bot qa telegram --list-scenarios --provider-mode mock-openai` to print the current default/optional split with regression refs.
 
 Output artifacts:
 
@@ -409,10 +409,10 @@ Output artifacts:
 ### Discord QA
 
 ```bash
-pnpm openclaw qa discord
+pnpm quiet-core-bot qa discord
 ```
 
-Targets one real private Discord guild channel with two bots: a driver bot controlled by the harness and a SUT bot started by the child OpenClaw gateway through the bundled Discord plugin. Verifies channel mention handling, that the SUT bot has registered the native `/help` command with Discord, and opt-in Mantis evidence scenarios.
+Targets one real private Discord guild channel with two bots: a driver bot controlled by the harness and a SUT bot started by the child Quiet Core bot gateway through the bundled Discord plugin. Verifies channel mention handling, that the SUT bot has registered the native `/help` command with Discord, and opt-in Mantis evidence scenarios.
 
 Required env when `--credential-source env`:
 
@@ -438,7 +438,7 @@ Scenarios (`extensions/qa-lab/src/live-transports/discord/discord-live.runtime.t
 Run the Discord voice auto-join scenario explicitly:
 
 ```bash
-pnpm openclaw qa discord \
+pnpm quiet-core-bot qa discord \
   --scenario discord-voice-autojoin \
   --provider-mode mock-openai
 ```
@@ -446,7 +446,7 @@ pnpm openclaw qa discord \
 Run the Mantis status-reaction scenario explicitly:
 
 ```bash
-pnpm openclaw qa discord \
+pnpm quiet-core-bot qa discord \
   --scenario discord-status-reactions-tool-only \
   --provider-mode live-frontier \
   --model openai/gpt-5.5 \
@@ -464,10 +464,10 @@ Output artifacts:
 ### Slack QA
 
 ```bash
-pnpm openclaw qa slack
+pnpm quiet-core-bot qa slack
 ```
 
-Targets one real private Slack channel with two distinct bots: a driver bot controlled by the harness and a SUT bot started by the child OpenClaw gateway through the bundled Slack plugin.
+Targets one real private Slack channel with two distinct bots: a driver bot controlled by the harness and a SUT bot started by the child Quiet Core bot gateway through the bundled Slack plugin.
 
 Required env when `--credential-source env`:
 
@@ -531,12 +531,12 @@ Go to [api.slack.com/apps](https://api.slack.com/apps) → _Create New App_ → 
 ```json
 {
   "display_information": {
-    "name": "OpenClaw QA Driver",
-    "description": "Test driver bot for OpenClaw QA Slack live lane"
+    "name": "Quiet Core bot QA Driver",
+    "description": "Test driver bot for Quiet Core bot QA Slack live lane"
   },
   "features": {
     "bot_user": {
-      "display_name": "OpenClaw QA Driver",
+      "display_name": "Quiet Core bot QA Driver",
       "always_online": true
     }
   },
@@ -560,12 +560,12 @@ Repeat _Create New App → From a manifest_ in the same workspace. This QA app i
 ```json
 {
   "display_information": {
-    "name": "OpenClaw QA SUT",
-    "description": "OpenClaw QA SUT connector for OpenClaw"
+    "name": "Quiet Core bot QA SUT",
+    "description": "Quiet Core bot QA SUT connector for Quiet Core bot"
   },
   "features": {
     "bot_user": {
-      "display_name": "OpenClaw QA SUT",
+      "display_name": "Quiet Core bot QA SUT",
       "always_online": true
     },
     "app_home": {
@@ -634,8 +634,8 @@ Verify the two bots have distinct user ids by calling `auth.test` on each token.
 In the QA workspace, create a channel (e.g. `#openclaw-qa`) and invite both bots from inside the channel:
 
 ```
-/invite @OpenClaw QA Driver
-/invite @OpenClaw QA SUT
+/invite @Quiet Core bot QA Driver
+/invite @Quiet Core bot QA SUT
 ```
 
 Copy the `Cxxxxxxxxxx` id from _channel info → About → Channel ID_ - that becomes `channelId`. A public channel works; if you use a private channel both apps already have `groups:history` so the harness's history reads will still succeed.
@@ -658,12 +658,12 @@ For the Convex pool, write the four fields to a JSON file:
 With `OPENCLAW_QA_CONVEX_SITE_URL` and `OPENCLAW_QA_CONVEX_SECRET_MAINTAINER` exported in your shell, register and verify:
 
 ```bash
-pnpm openclaw qa credentials add \
+pnpm quiet-core-bot qa credentials add \
   --kind slack \
   --payload-file slack-creds.json \
   --note "QA Slack pool seed"
 
-pnpm openclaw qa credentials list --kind slack --status all --json
+pnpm quiet-core-bot qa credentials list --kind slack --status all --json
 ```
 
 Expect `count: 1`, `status: "active"`, no `lease` field.
@@ -673,7 +673,7 @@ Expect `count: 1`, `status: "active"`, no `lease` field.
 Run the lane locally to confirm both bots can talk to each other through the broker:
 
 ```bash
-pnpm openclaw qa slack \
+pnpm quiet-core-bot qa slack \
   --credential-source convex \
   --credential-role maintainer \
   --output-dir .artifacts/qa-e2e/slack-local
@@ -684,11 +684,11 @@ A green run completes in well under 30 seconds and `slack-qa-report.md` shows bo
 ### WhatsApp QA
 
 ```bash
-pnpm openclaw qa whatsapp
+pnpm quiet-core-bot qa whatsapp
 ```
 
 Targets two dedicated WhatsApp Web accounts: a driver account controlled by
-the harness and a SUT account started by the child OpenClaw gateway through the
+the harness and a SUT account started by the child Quiet Core bot gateway through the
 bundled WhatsApp plugin.
 
 Required env when `--credential-source env`:
@@ -827,7 +827,7 @@ The baseline list should stay broad enough to cover:
 
 `qa suite` has two local provider mock lanes:
 
-- `mock-openai` is the scenario-aware OpenClaw mock. It remains the default
+- `mock-openai` is the scenario-aware Quiet Core bot mock. It remains the default
   deterministic mock lane for repo-backed QA and parity gates.
 - `aimock` starts an AIMock-backed provider server for experimental protocol,
   fixture, record/replay, and chaos coverage. It is additive and does not
@@ -843,7 +843,7 @@ provider names.
 
 `qa-lab` owns a generic transport seam for YAML QA scenarios. `qa-channel` is
 the synthetic default. `crabline` starts local provider-shaped servers and runs
-OpenClaw's normal channel plugins against them. `live` is reserved for real
+Quiet Core bot's normal channel plugins against them. `live` is reserved for real
 provider credentials and external channels.
 
 At the architecture level, the split is:
@@ -863,7 +863,7 @@ Do not add a new top-level QA command root when the shared `qa-lab` host can own
 
 `qa-lab` owns the shared host mechanics:
 
-- the `openclaw qa` command root
+- the `quiet-core-bot qa` command root
 - suite startup and teardown
 - worker concurrency
 - artifact writing
@@ -873,7 +873,7 @@ Do not add a new top-level QA command root when the shared `qa-lab` host can own
 
 Runner plugins own the transport contract:
 
-- how `openclaw qa <runner>` is mounted beneath the shared `qa` root
+- how `quiet-core-bot qa <runner>` is mounted beneath the shared `qa` root
 - how the gateway is configured for that transport
 - how readiness is checked
 - how inbound events are injected
@@ -887,7 +887,7 @@ The minimum adoption bar for a new channel:
 1. Keep `qa-lab` as the owner of the shared `qa` root.
 2. Implement the transport runner on the shared `qa-lab` host seam.
 3. Keep transport-specific mechanics inside the runner plugin or channel harness.
-4. Mount the runner as `openclaw qa <runner>` instead of registering a competing root command. Runner plugins should declare `qaRunners` in `openclaw.plugin.json` and export a matching `qaRunnerCliRegistrations` array from `runtime-api.ts`. Keep `runtime-api.ts` light; lazy CLI and runner execution should stay behind separate entrypoints.
+4. Mount the runner as `quiet-core-bot qa <runner>` instead of registering a competing root command. Runner plugins should declare `qaRunners` in `openclaw.plugin.json` and export a matching `qaRunnerCliRegistrations` array from `runtime-api.ts`. Keep `runtime-api.ts` light; lazy CLI and runner execution should stay behind separate entrypoints.
 5. Author or adapt YAML scenarios under the themed `qa/scenarios/` directories.
 6. Use the generic scenario helpers for new scenarios.
 7. Keep existing compatibility aliases working unless the repo is doing an intentional migration.
@@ -928,8 +928,8 @@ The report should answer:
 - What stayed blocked
 - What follow-up scenarios are worth adding
 
-For the inventory of available scenarios - useful when sizing follow-up work or wiring a new transport - run `pnpm openclaw qa coverage` (add `--json` for machine-readable output).
-When choosing focused proof for a touched behavior or file path, run `pnpm openclaw qa coverage --match <query>`.
+For the inventory of available scenarios - useful when sizing follow-up work or wiring a new transport - run `pnpm quiet-core-bot qa coverage` (add `--json` for machine-readable output).
+When choosing focused proof for a touched behavior or file path, run `pnpm quiet-core-bot qa coverage --match <query>`.
 The match report searches scenario metadata, docs refs, code refs, coverage IDs, plugins, and provider requirements, then prints matching `qa suite --scenario ...` targets.
 Every `qa suite` run writes top-level `qa-evidence.json`,
 `qa-suite-summary.json`, and `qa-suite-report.md` artifacts for the selected
@@ -949,7 +949,7 @@ For character and style checks, run the same scenario across multiple live model
 refs and write a judged Markdown report:
 
 ```bash
-pnpm openclaw qa character-eval \
+pnpm quiet-core-bot qa character-eval \
   --model openai/gpt-5.5,thinking=medium,fast \
   --model openai/gpt-5.2,thinking=xhigh \
   --model openai/gpt-5,thinking=xhigh \

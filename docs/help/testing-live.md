@@ -22,7 +22,7 @@ Safe media smoke:
 
 ```bash
 pnpm openclaw infer tts convert --local --json \
-  --text "OpenClaw live smoke." \
+  --text "Quiet Core bot live smoke." \
   --output /tmp/openclaw-live-smoke.mp3
 ```
 
@@ -130,8 +130,8 @@ Live tests are split into two layers so we can isolate failures:
 To see what you can test on your machine (and the exact `provider/model` ids), run:
 
 ```bash
-openclaw models list
-openclaw models list --json
+quiet-core-bot models list
+quiet-core-bot models list --json
 ```
 
 </Tip>
@@ -174,7 +174,7 @@ OPENCLAW_LIVE_TEST=1 \
 ```
 
 This does not ask Gemini to generate a response. It writes the same system
-settings OpenClaw gives Gemini, then runs `gemini --debug mcp list` to prove a
+settings Quiet Core bot gives Gemini, then runs `gemini --debug mcp list` to prove a
 saved `transport: "streamable-http"` server is normalized to Gemini's HTTP MCP
 shape and can connect to a local streamable-HTTP MCP server.
 
@@ -276,7 +276,7 @@ Docker notes:
 - It stages the matching CLI auth material into the container, then installs the requested live CLI (`@anthropic-ai/claude-code`, `@openai/codex`, Factory Droid via `https://app.factory.ai/cli`, `@google/gemini-cli`, or `opencode-ai`) if missing. The ACP backend itself is the embedded `acpx/runtime` package from the official `acpx` plugin.
 - The Droid Docker variant stages `~/.factory` for settings, forwards `FACTORY_API_KEY`, and requires that API key because local Factory OAuth/keyring auth is not portable into the container. It uses ACPX's built-in `droid exec --output-format acp` registry entry.
 - The OpenCode Docker variant is a strict single-agent regression lane. It writes a temporary `OPENCODE_CONFIG_CONTENT` default model from `OPENCLAW_LIVE_ACP_BIND_OPENCODE_MODEL` (default `opencode/kimi-k2.6`), and `pnpm test:docker:live-acp-bind:opencode` requires a bound assistant transcript instead of accepting the generic post-bind skip.
-- Direct `acpx` CLI calls are only a manual/workaround path for comparing behavior outside the Gateway. The Docker ACP bind smoke exercises OpenClaw's embedded `acpx` runtime backend.
+- Direct `acpx` CLI calls are only a manual/workaround path for comparing behavior outside the Gateway. The Docker ACP bind smoke exercises Quiet Core bot's embedded `acpx` runtime backend.
 
 ## Live: Codex app-server harness smoke
 
@@ -285,7 +285,7 @@ Docker notes:
   - load the bundled `codex` plugin
   - select `openai/gpt-5.5`, which routes OpenAI agent turns through Codex by default
   - send a first gateway agent turn to `openai/gpt-5.5` with the Codex harness selected
-  - send a second turn to the same OpenClaw session and verify the app-server
+  - send a second turn to the same Quiet Core bot session and verify the app-server
     thread can resume
   - run `/codex status` and `/codex models` through the same gateway command
     path
@@ -299,7 +299,7 @@ Docker notes:
 - Optional MCP/tool probe: `OPENCLAW_LIVE_CODEX_HARNESS_MCP_PROBE=1`
 - Optional Guardian probe: `OPENCLAW_LIVE_CODEX_HARNESS_GUARDIAN_PROBE=1`
 - The smoke forces provider/model `agentRuntime.id: "codex"` so a broken Codex
-  harness cannot pass by silently falling back to OpenClaw.
+  harness cannot pass by silently falling back to Quiet Core bot.
 - Auth: Codex app-server auth from the local Codex subscription login. Docker
   smokes can also provide `OPENAI_API_KEY` for non-Codex probes when applicable,
   plus optional copied `~/.codex/auth.json` and `~/.codex/config.toml`.
@@ -332,7 +332,7 @@ Docker notes:
   `OPENCLAW_LIVE_CODEX_HARNESS_MCP_PROBE=0` or
   `OPENCLAW_LIVE_CODEX_HARNESS_GUARDIAN_PROBE=0` when you need a narrower debug
   run.
-- Docker uses the same explicit Codex runtime config, so legacy aliases or OpenClaw
+- Docker uses the same explicit Codex runtime config, so legacy aliases or Quiet Core bot
   fallback cannot hide a Codex harness regression.
 
 ### Recommended live recipes
@@ -365,8 +365,8 @@ Narrow, explicit allowlists are fastest and least flaky:
   - Antigravity (OAuth): `OPENCLAW_LIVE_GATEWAY_MODELS="google-antigravity/claude-opus-4-6-thinking,google-antigravity/gemini-3-pro-high" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
 
 - Google adaptive thinking smoke:
-  - Gemini 3 dynamic default: `pnpm openclaw qa manual --provider-mode live-frontier --model google/gemini-3.1-pro-preview --alt-model google/gemini-3.1-pro-preview --message '/think adaptive Reply exactly: GEMINI_ADAPTIVE_OK' --timeout-ms 180000`
-  - Gemini 2.5 dynamic budget: `pnpm openclaw qa manual --provider-mode live-frontier --model google/gemini-2.5-flash --alt-model google/gemini-2.5-flash --message '/think adaptive Reply exactly: GEMINI25_ADAPTIVE_OK' --timeout-ms 180000`
+  - Gemini 3 dynamic default: `pnpm quiet-core-bot qa manual --provider-mode live-frontier --model google/gemini-3.1-pro-preview --alt-model google/gemini-3.1-pro-preview --message '/think adaptive Reply exactly: GEMINI_ADAPTIVE_OK' --timeout-ms 180000`
+  - Gemini 2.5 dynamic budget: `pnpm quiet-core-bot qa manual --provider-mode live-frontier --model google/gemini-2.5-flash --alt-model google/gemini-2.5-flash --message '/think adaptive Reply exactly: GEMINI25_ADAPTIVE_OK' --timeout-ms 180000`
 
 Notes:
 
@@ -374,8 +374,8 @@ Notes:
 - `google-antigravity/...` uses the Antigravity OAuth bridge (Cloud Code Assist-style agent endpoint).
 - `google-gemini-cli/...` uses the local Gemini CLI on your machine (separate auth + tooling quirks).
 - Gemini API vs Gemini CLI:
-  - API: OpenClaw calls Google's hosted Gemini API over HTTP (API key / profile auth); this is what most users mean by "Gemini".
-  - CLI: OpenClaw shells out to a local `gemini` binary; it has its own auth and can behave differently (streaming/tool support/version skew).
+  - API: Quiet Core bot calls Google's hosted Gemini API over HTTP (API key / profile auth); this is what most users mean by "Gemini".
+  - CLI: Quiet Core bot shells out to a local `gemini` binary; it has its own auth and can behave differently (streaming/tool support/version skew).
 
 ## Live: model matrix (what we cover)
 
@@ -423,7 +423,7 @@ Include at least one image-capable model in `OPENCLAW_LIVE_GATEWAY_MODELS` (Clau
 
 If you have keys enabled, we also support testing via:
 
-- OpenRouter: `openrouter/...` (hundreds of models; use `openclaw models scan` to find tool+image capable candidates)
+- OpenRouter: `openrouter/...` (hundreds of models; use `quiet-core-bot models scan` to find tool+image capable candidates)
 - OpenCode: `opencode/...` for Zen and `opencode-go/...` for Go (auth via `OPENCODE_API_KEY` / `OPENCODE_ZEN_API_KEY`)
 
 More providers you can include in the live matrix (if you have creds/config):
@@ -440,11 +440,11 @@ Do not hardcode "all models" in docs. The authoritative list is whatever `discov
 Live tests discover credentials the same way the CLI does. Practical implications:
 
 - If the CLI works, live tests should find the same keys.
-- If a live test says "no creds", debug the same way you'd debug `openclaw models list` / model selection.
+- If a live test says "no creds", debug the same way you'd debug `quiet-core-bot models list` / model selection.
 
-- Per-agent auth profiles: `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` (this is what "profile keys" means in the live tests)
-- Config: `~/.openclaw/openclaw.json` (or `OPENCLAW_CONFIG_PATH`)
-- Legacy state dir: `~/.openclaw/credentials/` (copied into the staged live home when present, but not the main profile-key store)
+- Per-agent auth profiles: `~/.quiet-core-bot/agents/<agentId>/agent/auth-profiles.json` (this is what "profile keys" means in the live tests)
+- Config: `~/.quiet-core-bot/quiet-core-bot.json` (or `OPENCLAW_CONFIG_PATH`)
+- Legacy state dir: `~/.quiet-core-bot/credentials/` (copied into the staged live home when present, but not the main profile-key store)
 - Live local runs copy the active config, per-agent `auth-profiles.json` files, legacy `credentials/`, and supported external CLI auth dirs into a temp test home by default; staged live homes skip `workspace/` and `sandboxes/`, and `agents.*.workspace` / `agentDir` path overrides are stripped so probes stay off your real host workspace.
 
 If you want to rely on env keys, export them before local tests or use the

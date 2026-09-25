@@ -1,5 +1,5 @@
 ---
-summary: "Install OpenClaw declaratively with Nix"
+summary: "Install Quiet Core bot declaratively with Nix"
 read_when:
   - You want reproducible, rollback-able installs
   - You're already using Nix/NixOS/Home Manager
@@ -7,7 +7,7 @@ read_when:
 title: "Nix"
 ---
 
-Install OpenClaw declaratively with **[nix-openclaw](https://github.com/openclaw/nix-openclaw)** - the first-party, batteries-included Home Manager module.
+Install Quiet Core bot declaratively with **[nix-openclaw](https://github.com/openclaw/nix-openclaw)** - the first-party, batteries-included Home Manager module.
 
 <Info>
 The [nix-openclaw](https://github.com/openclaw/nix-openclaw) repo is the source of truth for Nix installation. This page is a quick overview.
@@ -50,7 +50,7 @@ See the [nix-openclaw README](https://github.com/openclaw/nix-openclaw) for full
 
 ## Nix-mode runtime behavior
 
-When `OPENCLAW_NIX_MODE=1` is set (automatic with nix-openclaw), OpenClaw enters a deterministic mode for Nix-managed installs. Other Nix packages can set the same mode; nix-openclaw is the first-party reference.
+When `OPENCLAW_NIX_MODE=1` is set (automatic with nix-openclaw), Quiet Core bot enters a deterministic mode for Nix-managed installs. Other Nix packages can set the same mode; nix-openclaw is the first-party reference.
 
 You can also set it manually:
 
@@ -67,20 +67,20 @@ defaults write ai.openclaw.mac openclaw.nixMode -bool true
 ### What changes in Nix mode
 
 - Auto-install and self-mutation flows are disabled
-- `openclaw.json` is treated as immutable. Startup-derived defaults stay runtime-only, and config writers such as setup, onboarding, mutating `openclaw update`, plugin install/update/uninstall/enable, `doctor --fix`, `doctor --generate-gateway-token`, and `openclaw config set` refuse to edit the file.
+- `quiet-core-bot.json` is treated as immutable. Startup-derived defaults stay runtime-only, and config writers such as setup, onboarding, mutating `quiet-core-bot update`, plugin install/update/uninstall/enable, `doctor --fix`, `doctor --generate-gateway-token`, and `quiet-core-bot config set` refuse to edit the file.
 - Agents should edit the Nix source instead. For nix-openclaw, use the agent-first [Quick Start](https://github.com/openclaw/nix-openclaw#quick-start) and set config under `programs.openclaw.config` or `instances.<name>.config`.
 - Missing dependencies surface Nix-specific remediation messages
 - UI surfaces a read-only Nix mode banner
 
 ### Config and state paths
 
-OpenClaw reads JSON5 config from `OPENCLAW_CONFIG_PATH` and stores mutable data in `OPENCLAW_STATE_DIR`. When running under Nix, set these explicitly to Nix-managed locations so runtime state and config stay out of the immutable store.
+Quiet Core bot reads JSON5 config from `OPENCLAW_CONFIG_PATH` and stores mutable data in `OPENCLAW_STATE_DIR`. When running under Nix, set these explicitly to Nix-managed locations so runtime state and config stay out of the immutable store.
 
-| Variable               | Default                                 |
-| ---------------------- | --------------------------------------- |
-| `OPENCLAW_HOME`        | `HOME` / `USERPROFILE` / `os.homedir()` |
-| `OPENCLAW_STATE_DIR`   | `~/.openclaw`                           |
-| `OPENCLAW_CONFIG_PATH` | `$OPENCLAW_STATE_DIR/openclaw.json`     |
+| Variable               | Default                                                 |
+| ---------------------- | ------------------------------------------------------- |
+| `OPENCLAW_HOME`        | `HOME` / `USERPROFILE` / `os.homedir()`                 |
+| `OPENCLAW_STATE_DIR`   | `~/.quiet-core-bot`                                     |
+| `OPENCLAW_CONFIG_PATH` | `$github.com/openclaw/nix-openclaw/quiet-core-bot.json` |
 
 ### Service PATH discovery
 

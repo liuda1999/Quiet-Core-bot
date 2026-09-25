@@ -1,5 +1,5 @@
 ---
-summary: "Pre-flight and rollback checklist before exposing an OpenClaw Gateway beyond loopback"
+summary: "Pre-flight and rollback checklist before exposing an Quiet Core bot Gateway beyond loopback"
 title: "Gateway exposure runbook"
 sidebarTitle: "Exposure runbook"
 read_when:
@@ -44,7 +44,7 @@ Record these before changing bind, proxy, Tailscale, or channel policy:
 - Agents reachable from non-local senders.
 - Tool profile, sandbox mode, and elevated tool policy for each reachable agent.
 - External credentials available to those agents.
-- Backup location for `~/.openclaw/openclaw.json` and credentials.
+- Backup location for `~/.quiet-core-bot/quiet-core-bot.json` and credentials.
 
 If more than one person can message the bot, treat this as shared delegated tool
 authority, not as per-user host isolation.
@@ -54,10 +54,10 @@ authority, not as per-user host isolation.
 Run these before opening access:
 
 ```bash
-openclaw doctor
+quiet-core-bot doctor
 openclaw security audit
 openclaw security audit --deep
-openclaw health
+quiet-core-bot health
 ```
 
 Resolve critical findings first. Warnings may be acceptable only when they are
@@ -66,7 +66,7 @@ intentional and documented for the deployment.
 For remote CLI validation, pass credentials explicitly:
 
 ```bash
-openclaw gateway probe --url ws://127.0.0.1:18789 --token "$OPENCLAW_GATEWAY_TOKEN"
+quiet-core-bot gateway probe --url ws://127.0.0.1:18789 --token "$OPENCLAW_GATEWAY_TOKEN"
 ```
 
 Do not assume local config credentials apply to an explicit remote URL.

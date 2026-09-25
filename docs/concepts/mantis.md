@@ -1,14 +1,14 @@
 ---
-summary: "Mantis is the visual end-to-end verification system for reproducing OpenClaw bugs on live transports, capturing before and after evidence, and attaching artifacts to PRs."
+summary: "Mantis is the visual end-to-end verification system for reproducing Quiet Core bot bugs on live transports, capturing before and after evidence, and attaching artifacts to PRs."
 title: "Mantis"
 read_when:
-  - Building or running live visual QA for OpenClaw bugs
+  - Building or running live visual QA for Quiet Core bot bugs
   - Adding before and after verification for a pull request
   - Adding Discord, Slack, WhatsApp, or other live transport scenarios
   - Debugging QA runs that need screenshots, browser automation, or VNC access
 ---
 
-Mantis is the OpenClaw end-to-end verification system for bugs that need a real
+Mantis is the Quiet Core bot end-to-end verification system for bugs that need a real
 runtime, a real transport, and visible proof. It runs a scenario against a known
 bad ref, captures evidence, runs the same scenario against a candidate ref, and
 publishes the comparison as artifacts that a maintainer can inspect from a PR or
@@ -46,20 +46,20 @@ browser UI where humans can visually confirm what the transport showed.
 
 ## Ownership
 
-Mantis lives in the OpenClaw QA stack.
+Mantis lives in the Quiet Core bot QA stack.
 
-- OpenClaw owns the scenario runtime, transport adapters, evidence schema, and
-  local CLI under `pnpm openclaw qa mantis`.
+- Quiet Core bot owns the scenario runtime, transport adapters, evidence schema, and
+  local CLI under `pnpm quiet-core-bot qa mantis`.
 - QA Lab owns the live transport harness pieces, browser capture helpers, and
   artifact writers.
 - Crabbox owns warmed Linux machines when a remote VM is needed.
 - GitHub Actions owns the remote workflow entrypoint and artifact retention.
 - ClawSweeper owns GitHub comment routing: parsing maintainer commands,
   dispatching the workflow, and posting the final PR comment.
-- OpenClaw agents drive Mantis through Codex when a scenario needs agentic setup,
+- Quiet Core bot agents drive Mantis through Codex when a scenario needs agentic setup,
   debugging, or stuck-state reporting.
 
-This boundary keeps transport knowledge in OpenClaw, machine scheduling in
+This boundary keeps transport knowledge in Quiet Core bot, machine scheduling in
 Crabbox, and maintainer workflow glue in ClawSweeper.
 
 ## Command shape
@@ -68,14 +68,14 @@ The first local command verifies the Discord bot, guild, channel, message send,
 reaction send, and artifact path:
 
 ```bash
-pnpm openclaw qa mantis discord-smoke \
+pnpm quiet-core-bot qa mantis discord-smoke \
   --output-dir .artifacts/qa-e2e/mantis/discord-smoke
 ```
 
 The local before and after runner accepts this shape:
 
 ```bash
-pnpm openclaw qa mantis run \
+pnpm quiet-core-bot qa mantis run \
   --transport discord \
   --scenario discord-status-reactions-tool-only \
   --baseline origin/main \
@@ -92,7 +92,7 @@ means baseline status is `fail` and candidate status is `pass`.
 The second Discord before/after probe targets thread attachments:
 
 ```bash
-pnpm openclaw qa mantis run \
+pnpm quiet-core-bot qa mantis run \
   --transport discord \
   --scenario discord-thread-reply-filepath-attachment \
   --baseline <bug-ref> \
@@ -101,7 +101,7 @@ pnpm openclaw qa mantis run \
 ```
 
 That scenario posts a parent message with the driver bot, creates a real Discord
-thread, calls OpenClaw's `message.thread-reply` action with a repo-local
+thread, calls Quiet Core bot's `message.thread-reply` action with a repo-local
 `filePath`, then polls the thread for the SUT reply and attachment filename. The
 baseline screenshot shows the reply with no attachment; the candidate screenshot
 shows the expected `mantis-thread-report.md` attachment.
@@ -109,7 +109,7 @@ shows the expected `mantis-thread-report.md` attachment.
 The first VM/browser primitive is the desktop smoke:
 
 ```bash
-pnpm openclaw qa mantis desktop-browser-smoke \
+pnpm quiet-core-bot qa mantis desktop-browser-smoke \
   --output-dir .artifacts/qa-e2e/mantis/desktop-browser
 ```
 
@@ -153,7 +153,7 @@ was skipped.
 The first full desktop transport primitive is the Slack desktop smoke:
 
 ```bash
-pnpm openclaw qa mantis slack-desktop-smoke \
+pnpm quiet-core-bot qa mantis slack-desktop-smoke \
   --output-dir .artifacts/qa-e2e/mantis/slack-desktop \
   --gateway-setup \
   --scenario slack-canary \
@@ -161,15 +161,15 @@ pnpm openclaw qa mantis slack-desktop-smoke \
 ```
 
 It leases or reuses a Crabbox desktop machine, syncs the current checkout into
-the VM, runs `pnpm openclaw qa slack` inside that VM, opens Slack Web in the VNC
+the VM, runs `pnpm quiet-core-bot qa slack` inside that VM, opens Slack Web in the VNC
 browser, captures the visible desktop, and copies both the Slack QA artifacts and
 the VNC screenshot back to the local output directory. This is the first Mantis
-shape where the SUT OpenClaw gateway and the browser both live inside the same
+shape where the SUT Quiet Core bot gateway and the browser both live inside the same
 Linux desktop VM.
 
-With `--gateway-setup`, the command prepares a persistent disposable OpenClaw
+With `--gateway-setup`, the command prepares a persistent disposable Quiet Core bot
 home at `$HOME/.openclaw-mantis/slack-openclaw`, patches Slack Socket Mode
-configuration for the selected channel, starts `openclaw gateway run` on port
+configuration for the selected channel, starts `quiet-core-bot gateway run` on port
 `38973`, and keeps Chrome running in the VNC session. This is the "leave me a
 Linux desktop with Slack and a claw running" mode; the bot-to-bot Slack QA lane
 remains the default when `--gateway-setup` is omitted.
@@ -194,7 +194,7 @@ the Convex broker secret, not raw Slack bot or app tokens.
 Useful Slack desktop flags:
 
 - `--lease-id <cbx_...>` reruns against a machine where an operator already logged in to Slack Web through VNC.
-- `--gateway-setup` starts a persistent OpenClaw Slack gateway in the VM instead of only running the bot-to-bot QA lane.
+- `--gateway-setup` starts a persistent Quiet Core bot Slack gateway in the VM instead of only running the bot-to-bot QA lane.
 - `--keep-lease` keeps the gateway VM open for VNC inspection after success; `--no-keep-lease` stops it after collecting artifacts.
 - `--slack-url <url>` opens a specific Slack Web URL. Without it, Mantis derives `https://app.slack.com/client/<team>/<channel>` from Slack `auth.test` when the SUT bot token is available.
 - `--slack-channel-id <id>` controls the Slack channel allowlist used by gateway setup.
@@ -234,7 +234,7 @@ expected oracle, and artifact manifest.
 
 `Mantis Slack Desktop Smoke` is the first Slack VM workflow. It checks out the
 trusted candidate ref in a separate worktree, leases a Crabbox Linux desktop,
-runs `pnpm openclaw qa mantis slack-desktop-smoke --gateway-setup` against that
+runs `pnpm quiet-core-bot qa mantis slack-desktop-smoke --gateway-setup` against that
 candidate, opens Slack Web in the VNC browser, records the desktop, generates a
 motion-trimmed preview with `crabbox media preview`, uploads the full artifact
 directory, and optionally posts the inline evidence comment on the target PR.
@@ -245,7 +245,7 @@ of only a bot-to-bot Slack transcript.
 
 `Mantis Telegram Live` wraps the existing Telegram live QA lane in the same PR
 evidence pipeline. It checks out the trusted candidate ref in a separate
-worktree, runs `pnpm openclaw qa telegram --credential-source convex
+worktree, runs `pnpm quiet-core-bot qa telegram --credential-source convex
 --credential-role ci`, writes a `mantis-evidence.json` manifest from the
 Telegram QA summary, `qa-evidence.json`, and report artifacts, renders the
 redacted evidence HTML through a Crabbox desktop browser, generates a
@@ -269,7 +269,7 @@ posts a 2-column PR evidence table when a PR number is available.
 For human-in-the-loop Telegram desktop setup, use the scenario builder:
 
 ```bash
-pnpm openclaw qa mantis telegram-desktop-builder \
+pnpm quiet-core-bot qa mantis telegram-desktop-builder \
   --credential-source convex \
   --credential-role maintainer \
   --keep-lease
@@ -277,10 +277,10 @@ pnpm openclaw qa mantis telegram-desktop-builder \
 
 The builder leases or reuses a Crabbox desktop, installs the native Linux
 Telegram Desktop binary, optionally restores a user-session archive, configures
-OpenClaw with the leased Telegram SUT bot token, starts `openclaw gateway run`
+Quiet Core bot with the leased Telegram SUT bot token, starts `quiet-core-bot gateway run`
 on port `38974`, posts a driver-bot readiness message to the leased private
 group, then captures a screenshot and MP4 from the visible VNC desktop. A bot
-token never logs Telegram Desktop in; it only configures OpenClaw. The desktop
+token never logs Telegram Desktop in; it only configures Quiet Core bot. The desktop
 viewer is a separate Telegram user session restored from
 `--telegram-profile-archive-env <name>` or created manually through VNC and kept
 alive with `--keep-lease`.
@@ -290,7 +290,7 @@ Useful Telegram desktop builder flags:
 - `--lease-id <cbx_...>` reruns against a VM where an operator already logged in to Telegram Desktop.
 - `--telegram-profile-archive-env <name>` reads a base64 `.tgz` Telegram Desktop profile archive from that env var and restores it before launch.
 - `--telegram-profile-dir <remote-path>` controls the remote Telegram Desktop profile directory. The default is `$HOME/.local/share/TelegramDesktop`.
-- `--no-gateway-setup` installs and opens Telegram Desktop without configuring OpenClaw.
+- `--no-gateway-setup` installs and opens Telegram Desktop without configuring Quiet Core bot.
 - `--credential-source convex --credential-role ci` uses the shared credential broker instead of direct Telegram env tokens.
 
 Every PR-publishing scenario writes `mantis-evidence.json` next to its report.
@@ -400,7 +400,7 @@ ClawSweeper review findings.
 3. Prepare the desktop/browser profile when the scenario needs UI evidence.
 4. Prepare a clean checkout for the baseline ref.
 5. Install dependencies and build only what the scenario needs.
-6. Start a child OpenClaw Gateway with an isolated state directory.
+6. Start a child Quiet Core bot Gateway with an isolated state directory.
 7. Configure the live transport, provider, model, and browser profile.
 8. Run the scenario and capture baseline evidence.
 9. Stop the gateway and preserve logs.
@@ -429,7 +429,7 @@ Why it is a good Mantis seed:
 
 - It is visible in Discord as reactions on the triggering message.
 - It has a strong REST oracle through Discord message reaction state.
-- It exercises a real OpenClaw Gateway, Discord bot auth, message dispatch,
+- It exercises a real Quiet Core bot Gateway, Discord bot auth, message dispatch,
   source reply delivery mode, status reaction state, and model turn lifecycle.
 - It is narrow enough to keep the first implementation honest.
 
@@ -472,7 +472,7 @@ true.
 The executable first slice is the opt-in Discord live QA scenario:
 
 ```bash
-pnpm openclaw qa discord \
+pnpm quiet-core-bot qa discord \
   --scenario discord-status-reactions-tool-only \
   --provider-mode live-frontier \
   --model openai/gpt-5.4 \
@@ -493,7 +493,7 @@ polls the real Discord triggering message and expects the observed sequence
 Mantis should build on the existing private QA stack instead of starting from
 zero:
 
-- `pnpm openclaw qa discord` already runs a live Discord lane with driver and
+- `pnpm quiet-core-bot qa discord` already runs a live Discord lane with driver and
   SUT bots.
 - The live transport runner already writes reports, QA evidence, and
   transport-specific artifacts under `.artifacts/qa-e2e/`.
@@ -554,7 +554,7 @@ is stronger.
 The browser lane has two modes:
 
 - **Headless automation**: default for CI. Chrome runs with CDP enabled, and
-  Playwright or OpenClaw browser control captures screenshots.
+  Playwright or Quiet Core bot browser control captures screenshots.
 - **VNC rescue**: enabled on the same VM when login, MFA, Discord anti-automation,
   or visual debugging needs a human.
 
@@ -587,9 +587,9 @@ Minimum VM requirements:
 - CDP access for browser automation
 - VNC or noVNC for rescue
 - Node 22 and pnpm
-- OpenClaw checkout and dependency cache
+- Quiet Core bot checkout and dependency cache
 - Playwright Chromium browser cache when Playwright is used
-- enough CPU and memory for one OpenClaw Gateway, one browser, and one model run
+- enough CPU and memory for one Quiet Core bot Gateway, one browser, and one model run
 - outbound access to Discord, GitHub, model providers, and the credential broker
 
 The VM should not keep long-lived raw secrets outside the expected credential or
@@ -699,7 +699,7 @@ A Mantis scenario should declare:
 - required credentials
 - baseline ref policy
 - candidate ref policy
-- OpenClaw config patch
+- Quiet Core bot config patch
 - setup steps
 - stimulus
 - expected baseline oracle

@@ -1,12 +1,12 @@
 ---
-summary: "Host OpenClaw on Upstash Box with keep-alive and SSH tunnel access"
+summary: "Host Quiet Core bot on Upstash Box with keep-alive and SSH tunnel access"
 read_when:
-  - Deploying OpenClaw to Upstash Box
-  - You want a managed Linux environment for OpenClaw with SSH-tunneled dashboard access
+  - Deploying Quiet Core bot to Upstash Box
+  - You want a managed Linux environment for Quiet Core bot with SSH-tunneled dashboard access
 title: "Upstash Box"
 ---
 
-Run a persistent OpenClaw Gateway on Upstash Box, a managed Linux environment
+Run a persistent Quiet Core bot Gateway on Upstash Box, a managed Linux environment
 with keep-alive lifecycle support.
 
 Use an SSH tunnel for dashboard access. Do not expose the Gateway port directly
@@ -23,12 +23,12 @@ to the public internet.
 Create a keep-alive Box in the Upstash Console. Note the Box ID, such as
 `right-flamingo-14486`, and your Box API key.
 
-Upstash maintains its current OpenClaw Box walkthrough at
-[OpenClaw Setup](https://upstash.com/docs/box/guides/openclaw-setup).
+Upstash maintains its current Quiet Core bot Box walkthrough at
+[Quiet Core bot Setup](https://upstash.com/docs/box/guides/openclaw-setup).
 
 ## Connect with an SSH tunnel
 
-Forward the OpenClaw dashboard port to your local machine. Use your Box API key
+Forward the Quiet Core bot dashboard port to your local machine. Use your Box API key
 as the SSH password when prompted:
 
 ```bash
@@ -37,7 +37,7 @@ ssh -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -L 18789:127.0.0.1:18789 
 
 The keepalive options reduce idle tunnel drops during onboarding.
 
-## Install OpenClaw
+## Install Quiet Core bot
 
 Inside the Box:
 
@@ -48,7 +48,7 @@ sudo npm install -g openclaw
 ## Run onboarding
 
 ```bash
-openclaw onboard --install-daemon
+quiet-core-bot onboard --install-daemon
 ```
 
 Follow the prompts. Copy the dashboard URL and token when onboarding finishes.
@@ -58,8 +58,8 @@ Follow the prompts. Copy the dashboard URL and token when onboarding finishes.
 Configure the Gateway for the Box network and start it in the background:
 
 ```bash
-openclaw config set gateway.bind lan
-nohup openclaw gateway > gateway.log 2>&1 &
+quiet-core-bot config set gateway.bind lan
+nohup quiet-core-bot gateway > gateway.log 2>&1 &
 ```
 
 With the SSH tunnel active, open the dashboard URL locally:
@@ -74,7 +74,7 @@ Set this command as the Box init script so the Gateway restarts when the Box
 starts:
 
 ```bash
-nohup openclaw gateway > gateway.log 2>&1 &
+nohup quiet-core-bot gateway > gateway.log 2>&1 &
 ```
 
 ## Troubleshooting
@@ -93,4 +93,4 @@ through idle network periods.
 
 - [Remote access](/gateway/remote)
 - [Gateway security](/gateway/security)
-- [Updating OpenClaw](/install/updating)
+- [Updating Quiet Core bot](/install/updating)

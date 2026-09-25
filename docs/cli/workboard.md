@@ -15,8 +15,8 @@ subagent worker runs.
 Enable the plugin before using the command:
 
 ```bash
-openclaw plugins enable workboard
-openclaw gateway restart
+quiet-core-bot plugins enable workboard
+quiet-core-bot gateway restart
 ```
 
 ## Usage
@@ -184,7 +184,7 @@ The CLI dispatch path calls Gateway RPC with `operator.read` and
 `operator.write` scopes. A read-only Gateway token can inspect Workboard data
 through read methods, but it cannot create cards or dispatch workers.
 
-Local `list`, `create`, and `show` commands operate on the local OpenClaw state
+Local `list`, `create`, and `show` commands operate on the local Quiet Core bot state
 directory used by the current profile. Use `--dev` or `--profile <name>` on the
 top-level `openclaw` command when you need a different state root.
 
@@ -195,7 +195,7 @@ top-level `openclaw` command when you need a different state root.
 Confirm the plugin is enabled for the same profile and state root:
 
 ```bash
-openclaw plugins inspect workboard --runtime --json
+quiet-core-bot plugins inspect workboard --runtime --json
 ```
 
 If the dashboard shows cards but the CLI does not, check that both commands use
@@ -206,8 +206,8 @@ the same `--dev` or `--profile` setting.
 Start or restart the Gateway:
 
 ```bash
-openclaw gateway restart
-openclaw gateway status --deep
+quiet-core-bot gateway restart
+quiet-core-bot gateway status --deep
 ```
 
 Then retry `openclaw workboard dispatch`. Data-only fallback is useful for local

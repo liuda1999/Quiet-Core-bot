@@ -1,5 +1,5 @@
 ---
-summary: "CLI reference for `openclaw memory` (status/index/search/promote/promote-explain/rem-harness)"
+summary: "CLI reference for `quiet-core-bot memory` (status/index/search/promote/promote-explain/rem-harness)"
 read_when:
   - You want to index or search semantic memory
   - You're debugging memory availability or indexing
@@ -7,7 +7,7 @@ read_when:
 title: "Memory"
 ---
 
-# `openclaw memory`
+# `quiet-core-bot memory`
 
 Manage semantic memory indexing and search.
 Provided by the bundled `memory-core` plugin. The command is available when
@@ -24,24 +24,24 @@ Related:
 ## Examples
 
 ```bash
-openclaw memory status
-openclaw memory status --deep
-openclaw memory status --fix
-openclaw memory index --force
-openclaw memory search "meeting notes"
-openclaw memory search --query "deployment" --max-results 20
-openclaw memory promote --limit 10 --min-score 0.75
-openclaw memory promote --apply
-openclaw memory promote --json --min-recall-count 0 --min-unique-queries 0
-openclaw memory promote-explain "router vlan"
-openclaw memory promote-explain "router vlan" --json
-openclaw memory rem-harness
-openclaw memory rem-harness --json
-openclaw memory status --json
-openclaw memory status --deep --index
-openclaw memory status --deep --index --verbose
-openclaw memory status --agent main
-openclaw memory index --agent main --verbose
+quiet-core-bot memory status
+quiet-core-bot memory status --deep
+quiet-core-bot memory status --fix
+quiet-core-bot memory index --force
+quiet-core-bot memory search "meeting notes"
+quiet-core-bot memory search --query "deployment" --max-results 20
+quiet-core-bot memory promote --limit 10 --min-score 0.75
+quiet-core-bot memory promote --apply
+quiet-core-bot memory promote --json --min-recall-count 0 --min-unique-queries 0
+quiet-core-bot memory promote-explain "router vlan"
+quiet-core-bot memory promote-explain "router vlan" --json
+quiet-core-bot memory rem-harness
+quiet-core-bot memory rem-harness --json
+quiet-core-bot memory status --json
+quiet-core-bot memory status --deep --index
+quiet-core-bot memory status --deep --index --verbose
+quiet-core-bot memory status --agent main
+quiet-core-bot memory index --agent main --verbose
 ```
 
 ## Options
@@ -79,7 +79,7 @@ If `memory status` shows `Dreaming status: blocked`, the managed dreaming cron i
 Preview and apply short-term memory promotions.
 
 ```bash
-openclaw memory promote [--apply] [--limit <n>] [--include-promoted]
+quiet-core-bot memory promote [--apply] [--limit <n>] [--include-promoted]
 ```
 
 - `--apply` -- write promotions to `MEMORY.md` (default: preview only).
@@ -90,7 +90,7 @@ Full options:
 
 - Ranks short-term candidates from `memory/YYYY-MM-DD.md` using weighted promotion signals (`frequency`, `relevance`, `query diversity`, `recency`, `consolidation`, `conceptual richness`).
 - Uses short-term signals from both memory recalls and daily-ingestion passes, plus light/REM phase reinforcement signals.
-- When dreaming is enabled, `memory-core` auto-manages one cron job that runs a full sweep (`light -> REM -> deep`) in the background (no manual `openclaw cron add` required).
+- When dreaming is enabled, `memory-core` auto-manages one cron job that runs a full sweep (`light -> REM -> deep`) in the background (no manual `quiet-core-bot cron add` required).
 - `--agent <id>`: scope to a single agent (default: the default agent).
 - `--limit <n>`: max candidates to return/apply.
 - `--min-score <n>`: minimum weighted promotion score.
@@ -105,7 +105,7 @@ Full options:
 Explain a specific promotion candidate and its score breakdown.
 
 ```bash
-openclaw memory promote-explain <selector> [--agent <id>] [--include-promoted] [--json]
+quiet-core-bot memory promote-explain <selector> [--agent <id>] [--include-promoted] [--json]
 ```
 
 - `<selector>`: candidate key, path fragment, or snippet fragment to look up.
@@ -118,7 +118,7 @@ openclaw memory promote-explain <selector> [--agent <id>] [--include-promoted] [
 Preview REM reflections, candidate truths, and deep promotion output without writing anything.
 
 ```bash
-openclaw memory rem-harness [--agent <id>] [--include-promoted] [--json]
+quiet-core-bot memory rem-harness [--agent <id>] [--include-promoted] [--json]
 ```
 
 - `--agent <id>`: scope to a single agent (default: the default agent).

@@ -13,7 +13,7 @@ Debugging helpers for streaming output, especially when a provider mixes reasoni
 
 Use `/debug` in chat to set **runtime-only** config overrides (memory, not disk).
 `/debug` is disabled by default; enable with `commands.debug: true`.
-This is handy when you need to toggle obscure settings without editing `openclaw.json`.
+This is handy when you need to toggle obscure settings without editing `quiet-core-bot.json`.
 
 Examples:
 
@@ -53,7 +53,7 @@ to stderr, so JSON command output remains parseable.
 Example:
 
 ```bash
-OPENCLAW_PLUGIN_LIFECYCLE_TRACE=1 openclaw plugins install tokenjuice --force
+OPENCLAW_PLUGIN_LIFECYCLE_TRACE=1 quiet-core-bot plugins install tokenjuice --force
 ```
 
 Example output:
@@ -83,7 +83,7 @@ For one-off profiling through the normal source runner, set
 `OPENCLAW_RUN_NODE_CPU_PROF_DIR`:
 
 ```bash
-OPENCLAW_RUN_NODE_CPU_PROF_DIR=.artifacts/cli-cpu pnpm openclaw status
+OPENCLAW_RUN_NODE_CPU_PROF_DIR=.artifacts/cli-cpu pnpm quiet-core-bot status
 ```
 
 The source runner adds Node CPU profile flags and writes a `.cpuprofile` for the
@@ -93,7 +93,7 @@ For startup stalls that look like synchronous filesystem or module-loader work,
 add Node's sync I/O trace flag through the source runner:
 
 ```bash
-OPENCLAW_TRACE_SYNC_IO=1 pnpm openclaw gateway --force
+OPENCLAW_TRACE_SYNC_IO=1 pnpm quiet-core-bot gateway --force
 ```
 
 `pnpm gateway:watch` leaves this flag disabled by default for the watched
@@ -169,7 +169,7 @@ The tmux wrapper carries common non-secret runtime selectors such as
 provider credentials in your normal profile/config, or use raw foreground mode
 for one-off ephemeral secrets.
 If the watched Gateway exits during startup, the watcher runs
-`openclaw doctor --fix --non-interactive` once and restarts the Gateway child.
+`quiet-core-bot doctor --fix --non-interactive` once and restarts the Gateway child.
 Use `OPENCLAW_GATEWAY_WATCH_AUTO_DOCTOR=0` when you want the original startup
 failure without the dev-only repair pass.
 The managed tmux pane also defaults to colored Gateway logs for readability;
@@ -191,7 +191,7 @@ are replaced instead of piling up.
 Use the dev profile to isolate state and spin up a safe, disposable setup for
 debugging. There are **two** `--dev` flags:
 
-- **Global `--dev` (profile):** isolates state under `~/.openclaw-dev` and
+- **Global `--dev` (profile):** isolates state under `~/.quiet-core-bot-dev` and
   defaults the gateway port to `19001` (derived ports shift with it).
 - **`gateway --dev`: tells the Gateway to auto-create a default config +
   workspace** when missing (and skip BOOTSTRAP.md).
@@ -200,7 +200,7 @@ Recommended flow (dev profile + dev bootstrap):
 
 ```bash
 pnpm gateway:dev
-OPENCLAW_PROFILE=dev openclaw tui
+OPENCLAW_PROFILE=dev quiet-core-bot tui
 ```
 
 If you don't have a global install yet, run the CLI via `pnpm openclaw ...`.
@@ -209,8 +209,8 @@ What this does:
 
 1. **Profile isolation** (global `--dev`)
    - `OPENCLAW_PROFILE=dev`
-   - `OPENCLAW_STATE_DIR=~/.openclaw-dev`
-   - `OPENCLAW_CONFIG_PATH=~/.openclaw-dev/openclaw.json`
+   - `OPENCLAW_STATE_DIR=~/.quiet-core-bot-dev`
+   - `OPENCLAW_CONFIG_PATH=~/./quiet-core-bot.json`
    - `OPENCLAW_GATEWAY_PORT=19001` (browser/canvas shift accordingly)
 
 2. **Dev bootstrap** (`gateway --dev`)
@@ -232,7 +232,7 @@ pnpm gateway:dev:reset
 `--dev` is a **global** profile flag and gets eaten by some runners. If you need to spell it out, use the env var form:
 
 ```bash
-OPENCLAW_PROFILE=dev openclaw gateway --dev --reset
+OPENCLAW_PROFILE=dev quiet-core-bot gateway --dev --reset
 ```
 
 </Note>
@@ -244,14 +244,14 @@ OPENCLAW_PROFILE=dev openclaw gateway --dev --reset
 If a non-dev gateway is already running (launchd or systemd), stop it first:
 
 ```bash
-openclaw gateway stop
+quiet-core-bot gateway stop
 ```
 
 </Tip>
 
-## Raw stream logging (OpenClaw)
+## Raw stream logging (Quiet Core bot)
 
-OpenClaw can log the **raw assistant stream** before any filtering/formatting.
+Quiet Core bot can log the **raw assistant stream** before any filtering/formatting.
 This is the best way to see whether reasoning is arriving as plain text deltas
 (or as separate thinking blocks).
 
@@ -264,19 +264,19 @@ pnpm gateway:watch --raw-stream
 Optional path override:
 
 ```bash
-pnpm gateway:watch --raw-stream --raw-stream-path ~/.openclaw/logs/raw-stream.jsonl
+pnpm gateway:watch --raw-stream --raw-stream-path ~/.quiet-core-bot/logs/raw-stream.jsonl
 ```
 
 Equivalent env vars:
 
 ```bash
 OPENCLAW_RAW_STREAM=1
-OPENCLAW_RAW_STREAM_PATH=~/.openclaw/logs/raw-stream.jsonl
+OPENCLAW_RAW_STREAM_PATH=~/.quiet-core-bot/logs/raw-stream.jsonl
 ```
 
 Default file:
 
-`~/.openclaw/logs/raw-stream.jsonl`
+`~/.quiet-core-bot/logs/raw-stream.jsonl`
 
 ## Raw OpenAI-compatible chunk logging
 
@@ -290,12 +290,12 @@ OPENCLAW_RAW_STREAM=1
 Optional path:
 
 ```bash
-OPENCLAW_RAW_STREAM_PATH=~/.openclaw/logs/raw-openai-completions.jsonl
+OPENCLAW_RAW_STREAM_PATH=~/.quiet-core-bot/logs/raw-openai-completions.jsonl
 ```
 
 Default file:
 
-`~/.openclaw/logs/raw-openai-completions.jsonl`
+`~/.quiet-core-bot/logs/raw-openai-completions.jsonl`
 
 ## Temporary loopback relay capture (diagnostics only)
 
@@ -304,7 +304,7 @@ Default file:
 > operator tool. There is no production flag behind it. Do not leave a relay running
 > or a `baseUrl` repointed after you finish.
 
-When you need to record the exact bytes OpenClaw sends to a model endpoint and the
+When you need to record the exact bytes Quiet Core bot sends to a model endpoint and the
 exact response it gets back (for example, to confirm which upstream the transport
 bound to, or to capture a raw request body / token counts), you can run a small
 loopback relay in front of the real upstream and temporarily point the provider's
@@ -389,7 +389,7 @@ You can now set breakpoints in your TypeScript source files (`src/` directory) a
 - If using the **"Rebuild and Debug Gateway"** option - each time the debugger is launched it will completely delete the `/dist` folder and run a full `pnpm build` with source maps enabled before starting the Gateway
 - If using the **"Debug Gateway"** option - debug sessions can be started and stopped at any time without affecting the `/dist` folder, but you must use a separate terminal process to both enable debugging and manage the build cycle
 - Modify the `launch.json` settings for `args` to debug other sections of the project
-- If you need to use the built OpenClaw CLI for other tasks (i.e. `dashboard --no-open` if your debug session spawns a new auth token), you can execute it in another terminal as `node ./openclaw.mjs` or create a shell alias like `alias openclaw-build="node $(pwd)/openclaw.mjs"`
+- If you need to use the built Quiet Core bot CLI for other tasks (i.e. `dashboard --no-open` if your debug session spawns a new auth token), you can execute it in another terminal as `node ./quiet-core-bot.mjs` or create a shell alias like `alias openclaw-build="node $(pwd)/quiet-core-bot.mjs"`
 
 ## Related
 

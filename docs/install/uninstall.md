@@ -1,7 +1,7 @@
 ---
-summary: "Uninstall OpenClaw completely (CLI, service, state, workspace)"
+summary: "Uninstall Quiet Core bot completely (CLI, service, state, workspace)"
 read_when:
-  - You want to remove OpenClaw from a machine
+  - You want to remove Quiet Core bot from a machine
   - The gateway service is still running after uninstall
 title: "Uninstall"
 ---
@@ -16,7 +16,7 @@ Two paths:
 Recommended: use the built-in uninstaller:
 
 ```bash
-openclaw uninstall
+quiet-core-bot uninstall
 ```
 
 When using the CLI, state removal preserves configured workspace directories unless you also select `--workspace`.
@@ -24,14 +24,14 @@ When using the CLI, state removal preserves configured workspace directories unl
 Preview what will be removed (safe):
 
 ```bash
-openclaw uninstall --dry-run --all
+quiet-core-bot uninstall --dry-run --all
 ```
 
 Non-interactive (automation / npx). Use with caution and only after confirming scopes:
 
 ```bash
-openclaw uninstall --all --yes --non-interactive
-npx -y openclaw uninstall --all --yes --non-interactive
+quiet-core-bot uninstall --all --yes --non-interactive
+npx -y quiet-core-bot uninstall --all --yes --non-interactive
 ```
 
 Manual steps (same result):
@@ -39,13 +39,13 @@ Manual steps (same result):
 1. Stop the gateway service:
 
 ```bash
-openclaw gateway stop
+quiet-core-bot gateway stop
 ```
 
 2. Uninstall the gateway service (launchd/systemd/schtasks):
 
 ```bash
-openclaw gateway uninstall
+quiet-core-bot gateway uninstall
 ```
 
 3. Delete state + config:
@@ -55,12 +55,12 @@ rm -rf "${OPENCLAW_STATE_DIR:-$HOME/.openclaw}"
 ```
 
 If you set `OPENCLAW_CONFIG_PATH` to a custom location outside the state dir, delete that file too.
-If you want to keep a workspace inside the state dir, such as `~/.openclaw/workspace`, move it aside before running `rm -rf` or delete state contents selectively.
+If you want to keep a workspace inside the state dir, such as `~/.quiet-core-bot/workspace`, move it aside before running `rm -rf` or delete state contents selectively.
 
 4. Delete your workspace (optional, removes agent files):
 
 ```bash
-rm -rf ~/.openclaw/workspace
+rm -rf ~/.quiet-core-bot/workspace
 ```
 
 5. Remove the CLI install (pick the one you used):
@@ -74,12 +74,12 @@ bun remove -g openclaw
 6. If you installed the macOS app:
 
 ```bash
-rm -rf /Applications/OpenClaw.app
+rm -rf /Applications/Quiet Core bot.app
 ```
 
 Notes:
 
-- If you used profiles (`--profile` / `OPENCLAW_PROFILE`), repeat step 3 for each state dir (defaults are `~/.openclaw-<profile>`).
+- If you used profiles (`--profile` / `OPENCLAW_PROFILE`), repeat step 3 for each state dir (defaults are `~/.quiet-core-bot-<profile>`).
 - In remote mode, the state dir lives on the **gateway host**, so run steps 1-4 there too.
 
 ## Manual service removal (CLI not installed)
@@ -109,13 +109,13 @@ systemctl --user daemon-reload
 
 ### Windows (Scheduled Task)
 
-Default task name is `OpenClaw Gateway` (or `OpenClaw Gateway (<profile>)`).
+Default task name is `Quiet Core bot Gateway` (or `Quiet Core bot Gateway (<profile>)`).
 The task script lives under your state dir as `gateway.cmd`; current installs may
 also create a windowless `gateway.vbs` launcher that Task Scheduler runs instead
 of opening `gateway.cmd` directly.
 
 ```powershell
-schtasks /Delete /F /TN "OpenClaw Gateway"
+schtasks /Delete /F /TN "Quiet Core bot Gateway"
 Remove-Item -Force "$env:USERPROFILE\.openclaw\gateway.cmd" -ErrorAction SilentlyContinue
 Remove-Item -Force "$env:USERPROFILE\.openclaw\gateway.vbs" -ErrorAction SilentlyContinue
 ```

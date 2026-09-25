@@ -15,13 +15,13 @@ troubleshooting, see the main [FAQ](/help/faq).
 
 <AccordionGroup>
   <Accordion title='What is the "default model"?'>
-    OpenClaw's default model is whatever you set as:
+    Quiet Core bot's default model is whatever you set as:
 
     ```
     agents.defaults.model.primary
     ```
 
-    Models are referenced as `provider/model` (example: `openai/gpt-5.5` or `anthropic/claude-sonnet-4-6`). If you omit the provider, OpenClaw first tries an alias, then a unique configured-provider match for that exact model id, and only then falls back to the configured default provider as a deprecated compatibility path. If that provider no longer exposes the configured default model, OpenClaw falls back to the first configured provider/model instead of surfacing a stale removed-provider default. You should still **explicitly** set `provider/model`.
+    Models are referenced as `provider/model` (example: `openai/gpt-5.5` or `anthropic/claude-sonnet-4-6`). If you omit the provider, Quiet Core bot first tries an alias, then a unique configured-provider match for that exact model id, and only then falls back to the configured default provider as a deprecated compatibility path. If that provider no longer exposes the configured default model, Quiet Core bot falls back to the first configured provider/model instead of surfacing a stale removed-provider default. You should still **explicitly** set `provider/model`.
 
   </Accordion>
 
@@ -51,14 +51,14 @@ troubleshooting, see the main [FAQ](/help/faq).
     Safe options:
 
     - `/model` in chat (quick, per-session)
-    - `openclaw models set ...` (updates just model config)
-    - `openclaw configure --section model` (interactive)
-    - edit `agents.defaults.model` in `~/.openclaw/openclaw.json`
+    - `quiet-core-bot models set ...` (updates just model config)
+    - `quiet-core-bot configure --section model` (interactive)
+    - edit `agents.defaults.model` in `~/.quiet-core-bot/quiet-core-bot.json`
 
     Avoid `config.apply` with a partial object unless you intend to replace the whole config.
     For RPC edits, inspect with `config.schema.lookup` first and prefer `config.patch`. The lookup payload gives you the normalized path, shallow schema docs/constraints, and immediate child summaries.
     for partial updates.
-    If you did overwrite config, restore from backup or re-run `openclaw doctor` to repair.
+    If you did overwrite config, restore from backup or re-run `quiet-core-bot doctor` to repair.
 
     Docs: [Models](/concepts/models), [Configure](/cli/configure), [Config](/cli/config), [Doctor](/gateway/doctor).
 
@@ -71,13 +71,13 @@ troubleshooting, see the main [FAQ](/help/faq).
 
     1. Install Ollama from `https://ollama.com/download`
     2. Pull a local model such as `ollama pull gemma4`
-    3. Run `openclaw onboard` and choose `Ollama`
+    3. Run `quiet-core-bot onboard` and choose `Ollama`
     4. Confirm the Ollama base URL and pick from the discovered local models
 
     Notes:
 
     - setup discovers the models already available on your Ollama host
-    - for manual switching, use `openclaw models list` and `openclaw models set ollama/<model>`
+    - for manual switching, use `quiet-core-bot models list` and `quiet-core-bot models set ollama/<model>`
 
     Security note: smaller or heavily quantized models are more vulnerable to prompt
     injection. We strongly recommend **large models** for any bot that can use tools.
@@ -89,9 +89,9 @@ troubleshooting, see the main [FAQ](/help/faq).
 
   </Accordion>
 
-  <Accordion title="What do OpenClaw, Flawd, and Krill use for models?">
+  <Accordion title="What do Quiet Core bot, Flawd, and Krill use for models?">
     - These deployments can differ and may change over time; there is no fixed provider recommendation.
-    - Check the current runtime setting on each gateway with `openclaw models status`.
+    - Check the current runtime setting on each gateway with `quiet-core-bot models status`.
     - For security-sensitive/tool-enabled agents, use the strongest latest-generation model available.
 
   </Accordion>
@@ -145,11 +145,11 @@ troubleshooting, see the main [FAQ](/help/faq).
   <Accordion title="If two providers expose the same model id, which one does /model use?">
     `/model provider/model` selects that exact provider route for the session.
 
-    For example, `qianfan/deepseek-v4-flash` and `deepseek/deepseek-v4-flash` are different model refs even though both contain `deepseek-v4-flash`. OpenClaw should not silently switch from one provider to the other just because the bare model id matches.
+    For example, `qianfan/deepseek-v4-flash` and `deepseek/deepseek-v4-flash` are different model refs even though both contain `deepseek-v4-flash`. Quiet Core bot should not silently switch from one provider to the other just because the bare model id matches.
 
     A user-selected `/model` ref is also strict for fallback policy. If that selected provider/model is unavailable, the reply fails visibly instead of answering from `agents.defaults.model.fallbacks`. Configured fallback chains still apply to configured defaults, cron job primaries, and auto-selected fallback state.
 
-    If a run that started from a non-session override is allowed to use fallback, OpenClaw tries the requested provider/model first, then configured fallbacks, and only then the configured primary. That prevents duplicate bare model ids from jumping directly back to the default provider.
+    If a run that started from a non-session override is allowed to use fallback, Quiet Core bot tries the requested provider/model first, then configured fallbacks, and only then the configured primary. That prevents duplicate bare model ids from jumping directly back to the default provider.
 
     See [Models](/concepts/models) and [Model failover](/concepts/model-failover).
 
@@ -158,7 +158,7 @@ troubleshooting, see the main [FAQ](/help/faq).
   <Accordion title="Can I use GPT 5.5 for daily tasks and Codex 5.5 for coding?">
     Yes. Treat model choice and runtime choice separately:
 
-    - **Native Codex coding agent:** set `agents.defaults.model.primary` to `openai/gpt-5.5`. Sign in with `openclaw models auth login --provider openai` when you want ChatGPT/Codex subscription auth.
+    - **Native Codex coding agent:** set `agents.defaults.model.primary` to `openai/gpt-5.5`. Sign in with `quiet-core-bot models auth login --provider openai` when you want ChatGPT/Codex subscription auth.
     - **Direct OpenAI API tasks outside the agent loop:** configure `OPENAI_API_KEY` for images, embeddings, speech, realtime, and other non-agent OpenAI API surfaces.
     - **OpenAI agent API-key auth:** use `/model openai/gpt-5.5` with an ordered `openai` API-key profile.
     - **Sub-agents:** route coding tasks to a Codex-focused agent with its own `openai/gpt-5.5` model.
@@ -193,7 +193,7 @@ troubleshooting, see the main [FAQ](/help/faq).
     }
     ```
 
-    For OpenAI, fast mode maps to `service_tier = "priority"` on supported native Responses requests. Session `/fast` overrides beat config defaults. Codex app-server turns can only receive the tier at turn start, so `auto` applies on the next OpenClaw-started model turn rather than inside one already-running app-server turn.
+    For OpenAI, fast mode maps to `service_tier = "priority"` on supported native Responses requests. Session `/fast` overrides beat config defaults. Codex app-server turns can only receive the tier at turn start, so `auto` applies on the next Quiet Core bot-started model turn rather than inside one already-running app-server turn.
 
     See [Thinking and fast mode](/tools/thinking) and [OpenAI fast mode](/providers/openai#fast-mode).
 
@@ -205,7 +205,7 @@ troubleshooting, see the main [FAQ](/help/faq).
 
     ```
     Model "provider/model" is not allowed. Use /models to list providers, or /models <provider> to list models.
-    Add it with: openclaw config set agents.defaults.models '{"provider/model":{}}' --strict-json --merge
+    Add it with: quiet-core-bot config set agents.defaults.models '{"provider/model":{}}' --strict-json --merge
     ```
 
     That error is returned **instead of** a normal reply. Fix: add the exact model to
@@ -221,7 +221,7 @@ troubleshooting, see the main [FAQ](/help/faq).
 
     Fix checklist:
 
-    1. Upgrade to a current OpenClaw release (or run from source `main`), then restart the gateway.
+    1. Upgrade to a current Quiet Core bot release (or run from source `main`), then restart the gateway.
     2. Make sure MiniMax is configured (wizard or JSON), or that MiniMax auth
        exists in env/auth profiles so the matching provider can be injected
        (`MINIMAX_API_KEY` for `minimax`, `MINIMAX_OAUTH_TOKEN` or stored MiniMax
@@ -234,7 +234,7 @@ troubleshooting, see the main [FAQ](/help/faq).
     4. Run:
 
        ```bash
-       openclaw models list
+       quiet-core-bot models list
        ```
 
        and pick from the list (or `/model list` in chat).
@@ -281,7 +281,7 @@ troubleshooting, see the main [FAQ](/help/faq).
   </Accordion>
 
   <Accordion title="Are opus / sonnet / gpt built-in shortcuts?">
-    Yes. OpenClaw ships a few default shorthands (only applied when the model exists in `agents.defaults.models`):
+    Yes. Quiet Core bot ships a few default shorthands (only applied when the model exists in `agents.defaults.models`):
 
     - `opus` → `anthropic/claude-opus-4-8`
     - `sonnet` → `anthropic/claude-sonnet-4-6`
@@ -354,14 +354,14 @@ troubleshooting, see the main [FAQ](/help/faq).
     stored in:
 
     ```
-    ~/.openclaw/agents/<agentId>/agent/auth-profiles.json
+    ~/.quiet-core-bot/agents/<agentId>/agent/auth-profiles.json
     ```
 
     Fix options:
 
-    - Run `openclaw agents add <id>` and configure auth during the wizard.
+    - Run `quiet-core-bot agents add <id>` and configure auth during the wizard.
     - Or copy only portable static `api_key` / `token` profiles from the main agent's auth store into the new agent's auth store.
-    - For OAuth profiles, sign in from the new agent when it needs its own account; otherwise OpenClaw can read through to the default/main agent without cloning refresh tokens.
+    - For OAuth profiles, sign in from the new agent when it needs its own account; otherwise Quiet Core bot can read through to the default/main agent without cloning refresh tokens.
 
     Do **not** reuse `agentDir` across agents; it causes auth/session collisions.
 
@@ -377,9 +377,9 @@ troubleshooting, see the main [FAQ](/help/faq).
     1. **Auth profile rotation** within the same provider.
     2. **Model fallback** to the next model in `agents.defaults.model.fallbacks`.
 
-    Cooldowns apply to failing profiles (exponential backoff), so OpenClaw can keep responding even when a provider is rate-limited or temporarily failing.
+    Cooldowns apply to failing profiles (exponential backoff), so Quiet Core bot can keep responding even when a provider is rate-limited or temporarily failing.
 
-    The rate-limit bucket includes more than plain `429` responses. OpenClaw
+    The rate-limit bucket includes more than plain `429` responses. Quiet Core bot
     also treats messages like `Too many concurrent requests`,
     `ThrottlingException`, `concurrency limit reached`,
     `workers_ai ... quota limit exceeded`, `resource exhausted`, and periodic
@@ -388,12 +388,12 @@ troubleshooting, see the main [FAQ](/help/faq).
 
     Some billing-looking responses are not `402`, and some HTTP `402`
     responses also stay in that transient bucket. If a provider returns
-    explicit billing text on `401` or `403`, OpenClaw can still keep that in
+    explicit billing text on `401` or `403`, Quiet Core bot can still keep that in
     the billing lane, but provider-specific text matchers stay scoped to the
     provider that owns them (for example OpenRouter `Key limit exceeded`). If a `402`
     message instead looks like a retryable usage-window or
     organization/workspace spend limit (`daily limit reached, resets tomorrow`,
-    `organization spending limit exceeded`), OpenClaw treats it as
+    `organization spending limit exceeded`), Quiet Core bot treats it as
     `rate_limit`, not a long billing disable.
 
     Context-overflow errors are different: signatures such as
@@ -404,7 +404,7 @@ troubleshooting, see the main [FAQ](/help/faq).
     fallback.
 
     Generic server-error text is intentionally narrower than "anything with
-    unknown/error in it". OpenClaw does treat provider-scoped transient shapes
+    unknown/error in it". Quiet Core bot does treat provider-scoped transient shapes
     such as Anthropic bare `An unknown error occurred`, OpenRouter bare
     `Provider returned error`, stop-reason errors like `Unhandled stop reason:
     error`, JSON `api_error` payloads with transient server text
@@ -423,14 +423,14 @@ troubleshooting, see the main [FAQ](/help/faq).
     **Fix checklist:**
 
     - **Confirm where auth profiles live** (new vs legacy paths)
-      - Current: `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
-      - Legacy: `~/.openclaw/agent/*` (migrated by `openclaw doctor`)
+      - Current: `~/.quiet-core-bot/agents/<agentId>/agent/auth-profiles.json`
+      - Legacy: `~/.quiet-core-bot/agent/*` (migrated by `quiet-core-bot doctor`)
     - **Confirm your env var is loaded by the Gateway**
-      - If you set `ANTHROPIC_API_KEY` in your shell but run the Gateway via systemd/launchd, it may not inherit it. Put it in `~/.openclaw/.env` or enable `env.shellEnv`.
+      - If you set `ANTHROPIC_API_KEY` in your shell but run the Gateway via systemd/launchd, it may not inherit it. Put it in `~/.quiet-core-bot/.env` or enable `env.shellEnv`.
     - **Make sure you're editing the correct agent**
       - Multi-agent setups mean there can be multiple `auth-profiles.json` files.
     - **Sanity-check model/auth status**
-      - Use `openclaw models status` to see configured models and whether providers are authenticated.
+      - Use `quiet-core-bot models status` to see configured models and whether providers are authenticated.
 
     **Fix checklist for "No credentials found for profile anthropic"**
 
@@ -438,13 +438,13 @@ troubleshooting, see the main [FAQ](/help/faq).
     can't find it in its auth store.
 
     - **Use Claude CLI**
-      - Run `openclaw models auth login --provider anthropic --method cli --set-default` on the gateway host.
+      - Run `quiet-core-bot models auth login --provider anthropic --method cli --set-default` on the gateway host.
     - **If you want to use an API key instead**
-      - Put `ANTHROPIC_API_KEY` in `~/.openclaw/.env` on the **gateway host**.
+      - Put `ANTHROPIC_API_KEY` in `~/.quiet-core-bot/.env` on the **gateway host**.
       - Clear any pinned order that forces a missing profile:
 
         ```bash
-        openclaw models auth order clear --provider anthropic
+        quiet-core-bot models auth order clear --provider anthropic
         ```
 
     - **Confirm you're running commands on the gateway host**
@@ -453,7 +453,7 @@ troubleshooting, see the main [FAQ](/help/faq).
   </Accordion>
 
   <Accordion title="Why did it also try Google Gemini and fail?">
-    If your model config includes Google Gemini as a fallback (or you switched to a Gemini shorthand), OpenClaw will try it during model fallback. If you haven't configured Google credentials, you'll see `No API key found for provider "google"`.
+    If your model config includes Google Gemini as a fallback (or you switched to a Gemini shorthand), Quiet Core bot will try it during model fallback. If you haven't configured Google credentials, you'll see `No API key found for provider "google"`.
 
     Fix: either provide Google auth, or remove/avoid Google models in `agents.defaults.model.fallbacks` / aliases so fallback doesn't route there.
 
@@ -462,7 +462,7 @@ troubleshooting, see the main [FAQ](/help/faq).
     Cause: the session history contains **thinking blocks without signatures** (often from
     an aborted/partial stream). Google Antigravity requires signatures for thinking blocks.
 
-    Fix: OpenClaw now strips unsigned thinking blocks for Google Antigravity Claude. If it still appears, start a **new session** or set `/thinking off` for that agent.
+    Fix: Quiet Core bot now strips unsigned thinking blocks for Google Antigravity Claude. If it still appears, start a **new session** or set `/thinking off` for that agent.
 
   </Accordion>
 </AccordionGroup>
@@ -476,15 +476,15 @@ Related: [/concepts/oauth](/concepts/oauth) (OAuth flows, token storage, multi-a
     An auth profile is a named credential record (OAuth or API key) tied to a provider. Profiles live in:
 
     ```
-    ~/.openclaw/agents/<agentId>/agent/auth-profiles.json
+    ~/.quiet-core-bot/agents/<agentId>/agent/auth-profiles.json
     ```
 
-    To inspect saved profiles without dumping secrets, run `openclaw models auth list` (optionally `--provider <id>` or `--json`). See [Models CLI](/cli/models#auth-profiles) for details.
+    To inspect saved profiles without dumping secrets, run `quiet-core-bot models auth list` (optionally `--provider <id>` or `--json`). See [Models CLI](/cli/models#auth-profiles) for details.
 
   </Accordion>
 
   <Accordion title="What are typical profile IDs?">
-    OpenClaw uses provider-prefixed IDs like:
+    Quiet Core bot uses provider-prefixed IDs like:
 
     - `anthropic:default` (common when no email identity exists)
     - `anthropic:<email>` for OAuth identities
@@ -495,7 +495,7 @@ Related: [/concepts/oauth](/concepts/oauth) (OAuth flows, token storage, multi-a
   <Accordion title="Can I control which auth profile is tried first?">
     Yes. Config supports optional metadata for profiles and an ordering per provider (`auth.order.<provider>`). This does **not** store secrets; it maps IDs to provider/mode and sets rotation order.
 
-    OpenClaw may temporarily skip a profile if it's in a short **cooldown** (rate limits/timeouts/auth failures) or a longer **disabled** state (billing/insufficient credits). To inspect this, run `openclaw models status --json` and check `auth.unusableProfiles`. Tuning: `auth.cooldowns.billingBackoffHours*`.
+    Quiet Core bot may temporarily skip a profile if it's in a short **cooldown** (rate limits/timeouts/auth failures) or a longer **disabled** state (billing/insufficient credits). To inspect this, run `quiet-core-bot models status --json` and check `auth.unusableProfiles`. Tuning: `auth.cooldowns.billingBackoffHours*`.
 
     Rate-limit cooldowns can be model-scoped. A profile that is cooling down
     for one model can still be usable for a sibling model on the same provider,
@@ -505,28 +505,28 @@ Related: [/concepts/oauth](/concepts/oauth) (OAuth flows, token storage, multi-a
 
     ```bash
     # Defaults to the configured default agent (omit --agent)
-    openclaw models auth order get --provider anthropic
+    quiet-core-bot models auth order get --provider anthropic
 
     # Lock rotation to a single profile (only try this one)
-    openclaw models auth order set --provider anthropic anthropic:default
+    quiet-core-bot models auth order set --provider anthropic anthropic:default
 
     # Or set an explicit order (fallback within provider)
-    openclaw models auth order set --provider anthropic anthropic:work anthropic:default
+    quiet-core-bot models auth order set --provider anthropic anthropic:work anthropic:default
 
     # Clear override (fall back to config auth.order / round-robin)
-    openclaw models auth order clear --provider anthropic
+    quiet-core-bot models auth order clear --provider anthropic
     ```
 
     To target a specific agent:
 
     ```bash
-    openclaw models auth order set --provider anthropic --agent main anthropic:default
+    quiet-core-bot models auth order set --provider anthropic --agent main anthropic:default
     ```
 
     To verify what will actually be tried, use:
 
     ```bash
-    openclaw models status --probe
+    quiet-core-bot models status --probe
     ```
 
     If a stored profile is omitted from the explicit order, probe reports
@@ -535,10 +535,10 @@ Related: [/concepts/oauth](/concepts/oauth) (OAuth flows, token storage, multi-a
   </Accordion>
 
   <Accordion title="OAuth vs API key - what is the difference?">
-    OpenClaw supports both:
+    Quiet Core bot supports both:
 
     - **OAuth / CLI login** often leverages subscription access where the
-      provider supports it. For Anthropic, OpenClaw's Claude CLI backend uses
+      provider supports it. For Anthropic, Quiet Core bot's Claude CLI backend uses
       Claude Code `claude -p`; Anthropic currently treats that as Agent
       SDK/programmatic usage, with a separate monthly Agent SDK credit starting
       June 15, 2026.

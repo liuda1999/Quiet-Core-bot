@@ -1,5 +1,5 @@
 ---
-summary: "OpenClaw CLI index: command list, global flags, and links to per-command pages"
+summary: "Quiet Core bot CLI index: command list, global flags, and links to per-command pages"
 read_when:
   - Finding the right `openclaw` subcommand
   - Looking up global flags or output styling rules
@@ -13,10 +13,10 @@ apply across the CLI.
 
 Use the setup commands by intent:
 
-- `openclaw setup` creates the baseline config and workspace without walking the full guided onboarding flow.
-- `openclaw onboard` is the full guided first-run path for gateway, model auth, workspace, channels, skills, and health.
-- `openclaw configure` changes targeted parts of an existing setup, such as model auth, gateway, channels, plugins, or skills.
-- `openclaw channels add` configures channel accounts after the baseline exists; run it without flags for guided channel setup or with channel-specific flags for scripts.
+- `quiet-core-bot setup` creates the baseline config and workspace without walking the full guided onboarding flow.
+- `quiet-core-bot onboard` is the full guided first-run path for gateway, model auth, workspace, channels, skills, and health.
+- `quiet-core-bot configure` changes targeted parts of an existing setup, such as model auth, gateway, channels, plugins, or skills.
+- `quiet-core-bot channels add` configures channel accounts after the baseline exists; run it without flags for guided channel setup or with channel-specific flags for scripts.
 
 ## Command pages
 
@@ -39,14 +39,14 @@ Use the setup commands by intent:
 
 ## Global flags
 
-| Flag                    | Purpose                                                               |
-| ----------------------- | --------------------------------------------------------------------- |
-| `--dev`                 | Isolate state under `~/.openclaw-dev` and shift default ports         |
-| `--profile <name>`      | Isolate state under `~/.openclaw-<name>`                              |
-| `--container <name>`    | Target a named container for execution                                |
-| `--no-color`            | Disable ANSI colors (`NO_COLOR=1` is also respected)                  |
-| `--update`              | Shorthand for [`openclaw update`](/cli/update) (source installs only) |
-| `-V`, `--version`, `-v` | Print version and exit                                                |
+| Flag                    | Purpose                                                                     |
+| ----------------------- | --------------------------------------------------------------------------- |
+| `--dev`                 | Isolate state under `~/.quiet-core-bot-dev` and shift default ports         |
+| `--profile <name>`      | Isolate state under `~/.quiet-core-bot-<name>`                              |
+| `--container <name>`    | Target a named container for execution                                      |
+| `--no-color`            | Disable ANSI colors (`NO_COLOR=1` is also respected)                        |
+| `--update`              | Shorthand for [`quiet-core-bot update`](/cli/update) (source installs only) |
+| `-V`, `--version`, `-v` | Print version and exit                                                      |
 
 ## Output modes
 
@@ -414,7 +414,7 @@ Highlights:
 
 ## Usage tracking
 
-`openclaw status --usage` and the Control UI surface provider usage/quota when
+`quiet-core-bot status --usage` and the Control UI surface provider usage/quota when
 OAuth/API credentials are available. Data comes directly from provider usage
 endpoints and is normalized to `X% left`. Providers with current usage
 windows: Anthropic, GitHub Copilot, Gemini CLI, OpenAI Codex, MiniMax,

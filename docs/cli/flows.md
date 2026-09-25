@@ -1,21 +1,21 @@
 ---
-summary: "Redirect: flow commands live under `openclaw tasks flow`"
+summary: "Redirect: flow commands live under `quiet-core-bot tasks flow`"
 read_when:
   - You encounter `openclaw flows` in older docs or release notes
   - You want a quick TaskFlow inspection reference
 title: "Flows (redirect)"
 ---
 
-# `openclaw tasks flow`
+# `quiet-core-bot tasks flow`
 
-There is no top-level `openclaw flows` command. Durable TaskFlow inspection lives under `openclaw tasks flow`.
+There is no top-level `openclaw flows` command. Durable TaskFlow inspection lives under `quiet-core-bot tasks flow`.
 
 ## Subcommands
 
 ```bash
-openclaw tasks flow list   [--json] [--status <name>]
-openclaw tasks flow show   <lookup> [--json]
-openclaw tasks flow cancel <lookup>
+quiet-core-bot tasks flow list   [--json] [--status <name>]
+quiet-core-bot tasks flow show   <lookup> [--json]
+quiet-core-bot tasks flow cancel <lookup>
 ```
 
 | Subcommand | Description                | Arguments / options                                                                   |
@@ -35,12 +35,12 @@ openclaw tasks flow cancel <lookup>
 ## Examples
 
 ```bash
-openclaw tasks flow list
-openclaw tasks flow list --status running
-openclaw tasks flow list --json
-openclaw tasks flow show flow_abc123
-openclaw tasks flow show flow_abc123 --json
-openclaw tasks flow cancel flow_abc123
+quiet-core-bot tasks flow list
+quiet-core-bot tasks flow list --status running
+quiet-core-bot tasks flow list --json
+quiet-core-bot tasks flow show flow_abc123
+quiet-core-bot tasks flow show flow_abc123 --json
+quiet-core-bot tasks flow cancel flow_abc123
 ```
 
 For full TaskFlow concepts and authoring see [TaskFlow](/automation/taskflow). For the parent `tasks` command see [tasks CLI reference](/cli/tasks).

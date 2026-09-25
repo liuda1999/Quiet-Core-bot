@@ -6,7 +6,7 @@ read_when:
   - You want AI-powered recall and user modeling
 ---
 
-[Honcho](https://honcho.dev) adds AI-native memory to OpenClaw. It persists
+[Honcho](https://honcho.dev) adds AI-native memory to Quiet Core bot. It persists
 conversations to a dedicated service and builds user and agent models over time,
 giving your agent cross-session context that goes beyond workspace Markdown
 files.
@@ -47,9 +47,9 @@ Honcho registers tools that the agent can use during conversation:
 Install the plugin and run setup:
 
 ```bash
-openclaw plugins install @honcho-ai/openclaw-honcho
+quiet-core-bot plugins install @honcho-ai/openclaw-honcho
 openclaw honcho setup
-openclaw gateway --force
+quiet-core-bot gateway --force
 ```
 
 The setup command prompts for your API credentials, writes the config, and
@@ -133,8 +133,8 @@ openclaw honcho search <query> [-k N] [-d D] # Semantic search over memory
 
 - [Plugin source code](https://github.com/plastic-labs/openclaw-honcho)
 - [Honcho documentation](https://docs.honcho.dev)
-- [Honcho OpenClaw integration guide](https://docs.honcho.dev/v3/guides/integrations/openclaw)
-- [Memory](/concepts/memory) -- OpenClaw memory overview
+- [Honcho Quiet Core bot integration guide](https://docs.honcho.dev/v3/guides/integrations/openclaw)
+- [Memory](/concepts/memory) -- Quiet Core bot memory overview
 - [Context Engines](/concepts/context-engine) -- how plugin context engines work
 
 ## Related

@@ -1,5 +1,5 @@
 ---
-summary: "Where OpenClaw loads environment variables and the precedence order"
+summary: "Where Quiet Core bot loads environment variables and the precedence order"
 read_when:
   - You need to know which env vars are loaded, and in what order
   - You are debugging missing API keys in the Gateway
@@ -7,30 +7,30 @@ read_when:
 title: "Environment variables"
 ---
 
-OpenClaw pulls environment variables from multiple sources. The rule is **never override existing values**.
-Workspace `.env` files are a lower-trust source: OpenClaw ignores provider credentials and protected runtime controls from workspace `.env` before applying precedence.
+Quiet Core bot pulls environment variables from multiple sources. The rule is **never override existing values**.
+Workspace `.env` files are a lower-trust source: Quiet Core bot ignores provider credentials and protected runtime controls from workspace `.env` before applying precedence.
 
 ## Precedence (highest → lowest)
 
 1. **Process environment** (what the Gateway process already has from the parent shell/daemon).
 2. **`.env` in the current working directory** (dotenv default; does not override; provider credentials and protected runtime controls are ignored).
-3. **Global `.env`** at `~/.openclaw/.env` (aka `$OPENCLAW_STATE_DIR/.env`; recommended for provider API keys; does not override).
-4. **Config `env` block** in `~/.openclaw/openclaw.json` (applied only if missing).
+3. **Global `.env`** at `~/.quiet-core-bot/.env` (aka `$OPENCLAW_STATE_DIR/.env`; recommended for provider API keys; does not override).
+4. **Config `env` block** in `~/.quiet-core-bot/quiet-core-bot.json` (applied only if missing).
 5. **Optional login-shell import** (`env.shellEnv.enabled` or `OPENCLAW_LOAD_SHELL_ENV=1`), applied only for missing expected keys.
 
-On Ubuntu fresh installs that use the default state dir, OpenClaw also treats `~/.config/openclaw/gateway.env` as a compatibility fallback after the global `.env`. If both files exist and disagree, OpenClaw keeps `~/.openclaw/.env` and prints a warning.
+On Ubuntu fresh installs that use the default state dir, Quiet Core bot also treats `~/.config/openclaw/gateway.env` as a compatibility fallback after the global `.env`. If both files exist and disagree, Quiet Core bot keeps `~/.quiet-core-bot/.env` and prints a warning.
 
 If the config file is missing entirely, step 4 is skipped; shell import still runs if enabled.
 
 ## Provider credentials and workspace `.env`
 
-Do not keep provider API keys only in a workspace `.env`. OpenClaw ignores provider credential environment variables from workspace `.env` files, including common keys such as `GEMINI_API_KEY`, `GOOGLE_API_KEY`, `XAI_API_KEY`, `MISTRAL_API_KEY`, `GROQ_API_KEY`, `DEEPSEEK_API_KEY`, `PERPLEXITY_API_KEY`, `BRAVE_API_KEY`, `TAVILY_API_KEY`, `EXA_API_KEY`, and `FIRECRAWL_API_KEY`.
+Do not keep provider API keys only in a workspace `.env`. Quiet Core bot ignores provider credential environment variables from workspace `.env` files, including common keys such as `GEMINI_API_KEY`, `GOOGLE_API_KEY`, `XAI_API_KEY`, `MISTRAL_API_KEY`, `GROQ_API_KEY`, `DEEPSEEK_API_KEY`, `PERPLEXITY_API_KEY`, `BRAVE_API_KEY`, `TAVILY_API_KEY`, `EXA_API_KEY`, and `FIRECRAWL_API_KEY`.
 
 Use one of these trusted sources for provider credentials:
 
 - The Gateway process environment, such as a shell, launchd/systemd unit, container secret, or CI secret.
-- The global runtime dotenv file at `~/.openclaw/.env` or `$OPENCLAW_STATE_DIR/.env`.
-- The config `env` block in `~/.openclaw/openclaw.json`.
+- The global runtime dotenv file at `~/.quiet-core-bot/.env` or `$OPENCLAW_STATE_DIR/.env`.
+- The config `env` block in `~/.quiet-core-bot/quiet-core-bot.json`.
 - Optional login-shell import when `env.shellEnv.enabled` or `OPENCLAW_LOAD_SHELL_ENV=1` is enabled.
 
 If you previously stored provider keys only in a workspace `.env`, move them to one of the trusted sources above. Workspace `.env` can still provide ordinary project variables that are not credentials, endpoint redirects, host overrides, or `OPENCLAW_*` runtime controls.
@@ -65,7 +65,7 @@ supports it:
     providers: {
       xai_key_file: {
         source: "file",
-        path: "~/.openclaw/secrets/xai-api-key.txt",
+        path: "~/.quiet-core-bot/secrets/xai-api-key.txt",
         mode: "singleValue",
       },
     },
@@ -113,12 +113,12 @@ snapshots or redirect the snapshot cache.
 
 ## Distribution and provider attribution
 
-- `OPENCLAW_INDEPENDENT_BUILD`: marks this install as an independent distribution that does not participate in upstream OpenClaw updates. **On unless switched off**; set it to `0`, `false`, `off`, or `no` (an empty value also keeps it on) to restore the upstream update commands. While on, the refusal happens inside the update executor, so it covers the mutating `openclaw update` / `update repair` / `update finalize` / `update wizard` commands, the `update.run` Gateway RPC, and the pre-doctor update prompt. Read-only `openclaw update status` stays available. See [`openclaw update`](/cli/update).
+- `OPENCLAW_INDEPENDENT_BUILD`: marks this install as an independent distribution that does not participate in upstream Quiet Core bot updates. **On unless switched off**; set it to `0`, `false`, `off`, or `no` (an empty value also keeps it on) to restore the upstream update commands. While on, the refusal happens inside the update executor, so it covers the mutating `quiet-core-bot update` / `update repair` / `update finalize` / `update wizard` commands, the `update.run` Gateway RPC, and the pre-doctor update prompt. Read-only `quiet-core-bot update status` stays available. See [`quiet-core-bot update`](/cli/update).
 - `OPENCLAW_PROVIDER_ATTRIBUTION`: opts in to provider attribution headers. Off unless set to a truthy value. When on, headers are added only for providers with a built-in attribution policy and only on verified native endpoints: OpenRouter (`HTTP-Referer`, `X-OpenRouter-Title`, `X-OpenRouter-Categories`), NVIDIA NIM (`X-BILLING-INVOKE-ORIGIN`), and OpenAI/xAI (`originator`, `version`, `User-Agent`). Custom proxy base URLs and endpoints without a provider manifest stay unattributed.
 
 ## Runtime-injected env vars
 
-OpenClaw also injects context markers into spawned child processes:
+Quiet Core bot also injects context markers into spawned child processes:
 
 - `OPENCLAW_SHELL=exec`: set for commands run through the `exec` tool.
 - `OPENCLAW_SHELL=acp`: set for ACP runtime backend process spawns (for example `acpx`).
@@ -133,7 +133,7 @@ to apply context-specific rules.
 
 - `OPENCLAW_THEME=light`: force the light TUI palette when your terminal has a light background.
 - `OPENCLAW_THEME=dark`: force the dark TUI palette.
-- `COLORFGBG`: if your terminal exports it, OpenClaw uses the background color hint to auto-pick the TUI palette.
+- `COLORFGBG`: if your terminal exports it, Quiet Core bot uses the background color hint to auto-pick the TUI palette.
 
 ## Env var substitution in config
 
@@ -155,7 +155,7 @@ See [Configuration: Env var substitution](/gateway/configuration-reference#env-v
 
 ## Secret refs vs `${ENV}` strings
 
-OpenClaw supports two env-driven patterns:
+Quiet Core bot supports two env-driven patterns:
 
 - `${VAR}` string substitution in config values.
 - SecretRef objects (`{ source: "env", provider: "default", id: "VAR" }`) for fields that support secrets references.
@@ -166,12 +166,12 @@ shorthand values.
 
 ## Path-related env vars
 
-| Variable                 | Purpose                                                                                                                                                                                                                                 |
-| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OPENCLAW_HOME`          | Override the home directory used for internal OpenClaw path defaults (`~/.openclaw/`, agent dirs, sessions, credentials, installer onboarding, and the default dev checkout). Useful when running OpenClaw as a dedicated service user. |
-| `OPENCLAW_STATE_DIR`     | Override the state directory (default `~/.openclaw`).                                                                                                                                                                                   |
-| `OPENCLAW_CONFIG_PATH`   | Override the config file path (default `~/.openclaw/openclaw.json`).                                                                                                                                                                    |
-| `OPENCLAW_INCLUDE_ROOTS` | Path-list of directories where `$include` directives may resolve files outside the config directory (default: none — `$include` is confined to the config dir). Tilde-expanded.                                                         |
+| Variable                 | Purpose                                                                                                                                                                                                                                                   |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `OPENCLAW_HOME`          | Override the home directory used for internal Quiet Core bot path defaults (`~/.quiet-core-bot/`, agent dirs, sessions, credentials, installer onboarding, and the default dev checkout). Useful when running Quiet Core bot as a dedicated service user. |
+| `OPENCLAW_STATE_DIR`     | Override the state directory (default `~/.quiet-core-bot`).                                                                                                                                                                                               |
+| `OPENCLAW_CONFIG_PATH`   | Override the config file path (default `~/.quiet-core-bot/quiet-core-bot.json`).                                                                                                                                                                          |
+| `OPENCLAW_INCLUDE_ROOTS` | Path-list of directories where `$include` directives may resolve files outside the config directory (default: none — `$include` is confined to the config dir). Tilde-expanded.                                                                           |
 
 ## Logging
 
@@ -185,7 +185,7 @@ shorthand values.
 
 ### `OPENCLAW_HOME`
 
-When set, `OPENCLAW_HOME` replaces the system home directory (`$HOME` / `os.homedir()`) for internal OpenClaw path defaults. This includes the default state directory, config path, agent directories, credentials, installer onboarding workspace, and the default dev checkout used by `openclaw update --channel dev`.
+When set, `OPENCLAW_HOME` replaces the system home directory (`$HOME` / `os.homedir()`) for internal Quiet Core bot path defaults. This includes the default state directory, config path, agent directories, credentials, installer onboarding workspace, and the default dev checkout used by `quiet-core-bot update --channel dev`.
 
 **Precedence:** `OPENCLAW_HOME` > `$HOME` > `USERPROFILE` > Termux `PREFIX` home fallback on Android > `os.homedir()`
 
@@ -209,30 +209,30 @@ If Node.js was installed via **nvm** (not the system package manager), the built
 nvm's bundled CA store, which may be missing modern root CAs (ISRG Root X1/X2 for Let's Encrypt,
 DigiCert Global Root G2, etc.). This causes `web_fetch` to fail with `"fetch failed"` on most HTTPS sites.
 
-On Linux, OpenClaw automatically detects nvm and applies the fix in the actual startup environment:
+On Linux, Quiet Core bot automatically detects nvm and applies the fix in the actual startup environment:
 
-- `openclaw gateway install` writes `NODE_EXTRA_CA_CERTS` into the systemd service environment
+- `quiet-core-bot gateway install` writes `NODE_EXTRA_CA_CERTS` into the systemd service environment
 - the `openclaw` CLI entrypoint re-execs itself with `NODE_EXTRA_CA_CERTS` set before Node startup
 
 **Manual fix (for older versions or direct `node ...` launches):**
 
-Export the variable before starting OpenClaw:
+Export the variable before starting Quiet Core bot:
 
 ```bash
 export NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
-openclaw gateway run
+quiet-core-bot gateway run
 ```
 
-Do not rely on writing only to `~/.openclaw/.env` for this variable; Node reads
+Do not rely on writing only to `~/.quiet-core-bot/.env` for this variable; Node reads
 `NODE_EXTRA_CA_CERTS` at process startup.
 
 ## Legacy environment variables
 
-OpenClaw only reads `OPENCLAW_*` environment variables. The legacy
+Quiet Core bot only reads `OPENCLAW_*` environment variables. The legacy
 `CLAWDBOT_*` and `MOLTBOT_*` prefixes from earlier releases are silently
 ignored.
 
-If any are still set on the Gateway process at startup, OpenClaw emits a
+If any are still set on the Gateway process at startup, Quiet Core bot emits a
 single Node deprecation warning (`OPENCLAW_LEGACY_ENV_VARS`) listing the
 detected prefixes and the total count. Rename each value by replacing the
 legacy prefix with `OPENCLAW_` (for example `CLAWDBOT_GATEWAY_TOKEN` →

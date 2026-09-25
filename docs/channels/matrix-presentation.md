@@ -1,14 +1,14 @@
 ---
-summary: "Matrix MessagePresentation metadata for OpenClaw-aware clients"
+summary: "Matrix MessagePresentation metadata for Quiet Core bot-aware clients"
 read_when:
-  - Building Matrix clients that render OpenClaw rich responses
+  - Building Matrix clients that render Quiet Core bot rich responses
   - Debugging com.openclaw.presentation event content
 title: "Matrix presentation metadata"
 ---
 
-OpenClaw can attach normalized `MessagePresentation` metadata to outbound Matrix `m.room.message` events under `com.openclaw.presentation`.
+Quiet Core bot can attach normalized `MessagePresentation` metadata to outbound Matrix `m.room.message` events under `com.openclaw.presentation`.
 
-Stock Matrix clients continue to render the plain text `body`. OpenClaw-aware clients can read the structured metadata and render native UI such as buttons, selects, context rows, and dividers.
+Stock Matrix clients continue to render the plain text `body`. Quiet Core bot-aware clients can read the structured metadata and render native UI such as buttons, selects, context rows, and dividers.
 
 ## Event content
 
@@ -39,13 +39,13 @@ The metadata is stored in Matrix event content:
 }
 ```
 
-`version` is the Matrix presentation metadata schema version. `type` is a stable discriminator for OpenClaw-aware clients. Clients should ignore unknown `type` values, unknown versions they cannot safely interpret, and unknown block types.
+`version` is the Matrix presentation metadata schema version. `type` is a stable discriminator for Quiet Core bot-aware clients. Clients should ignore unknown `type` values, unknown versions they cannot safely interpret, and unknown block types.
 
 ## Fallback behavior
 
-OpenClaw always renders a readable plain text fallback into `body`. The structured metadata is additive and must not be required for basic Matrix interoperability.
+Quiet Core bot always renders a readable plain text fallback into `body`. The structured metadata is additive and must not be required for basic Matrix interoperability.
 
-Unsupported clients should continue to show the fallback text. OpenClaw-aware clients may prefer the structured metadata for display while preserving the fallback text for copy, search, notifications, and accessibility.
+Unsupported clients should continue to show the fallback text. Quiet Core bot-aware clients may prefer the structured metadata for display while preserving the fallback text for copy, search, notifications, and accessibility.
 
 ## Supported blocks
 
@@ -72,6 +72,6 @@ Approval prompts use the dedicated `com.openclaw.approval` metadata because appr
 
 ## Media messages
 
-When a reply contains multiple media URLs, OpenClaw sends one Matrix event per media URL. Presentation metadata is attached only to the first media event so clients have one stable structured payload and duplicate renderers are avoided.
+When a reply contains multiple media URLs, Quiet Core bot sends one Matrix event per media URL. Presentation metadata is attached only to the first media event so clients have one stable structured payload and duplicate renderers are avoided.
 
 Keep presentation metadata compact. Large user-visible text should stay in `body` and use the normal Matrix text chunking path.

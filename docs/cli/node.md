@@ -1,12 +1,12 @@
 ---
-summary: "CLI reference for `openclaw node` (headless node host)"
+summary: "CLI reference for `quiet-core-bot node` (headless node host)"
 read_when:
   - Running the headless node host
   - Pairing a non-macOS node for system.run
 title: "Node"
 ---
 
-# `openclaw node`
+# `quiet-core-bot node`
 
 Run a **headless node host** that connects to the Gateway WebSocket and exposes
 `system.run` / `system.which` on this machine.
@@ -51,7 +51,7 @@ Disable it on the node if needed:
 ## Run (foreground)
 
 ```bash
-openclaw node run --host <gateway-host> --port 18789
+quiet-core-bot node run --host <gateway-host> --port 18789
 ```
 
 Options:
@@ -65,7 +65,7 @@ Options:
 
 ## Gateway auth for node host
 
-`openclaw node run` and `openclaw node install` resolve gateway auth from config/env (no `--token`/`--password` flags on node commands):
+`quiet-core-bot node run` and `quiet-core-bot node install` resolve gateway auth from config/env (no `--token`/`--password` flags on node commands):
 
 - `OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD` are checked first.
 - Then local config fallback: `gateway.auth.token` / `gateway.auth.password`.
@@ -78,9 +78,9 @@ For a node connecting to a plaintext `ws://` Gateway, loopback, private IP
 literals, `.local`, and Tailnet `*.ts.net` hosts are accepted. For other
 trusted private-DNS names, set `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1`; without
 it, node startup fails closed and asks you to use `wss://`, an SSH tunnel, or
-Tailscale. This is a process-environment opt-in, not an `openclaw.json` config
+Tailscale. This is a process-environment opt-in, not an `quiet-core-bot.json` config
 key.
-`openclaw node install` persists it into the supervised node service when it is
+`quiet-core-bot node install` persists it into the supervised node service when it is
 present in the install command environment.
 
 ## Service (background)
@@ -88,7 +88,7 @@ present in the install command environment.
 Install a headless node host as a user service.
 
 ```bash
-openclaw node install --host <gateway-host> --port 18789
+quiet-core-bot node install --host <gateway-host> --port 18789
 ```
 
 Options:
@@ -105,14 +105,14 @@ Options:
 Manage the service:
 
 ```bash
-openclaw node status
-openclaw node start
-openclaw node stop
-openclaw node restart
-openclaw node uninstall
+quiet-core-bot node status
+quiet-core-bot node start
+quiet-core-bot node stop
+quiet-core-bot node restart
+quiet-core-bot node uninstall
 ```
 
-Use `openclaw node run` for a foreground node host (no service).
+Use `quiet-core-bot node run` for a foreground node host (no service).
 
 Service commands accept `--json` for machine-readable output.
 
@@ -128,8 +128,8 @@ The first connection creates a pending device pairing request (`role: node`) on 
 Approve it via:
 
 ```bash
-openclaw devices list
-openclaw devices approve <requestId>
+quiet-core-bot devices list
+quiet-core-bot devices approve <requestId>
 ```
 
 On tightly controlled node networks, the Gateway operator can explicitly opt in
@@ -153,21 +153,21 @@ scope, metadata, or public-key upgrades still require manual approval.
 
 If the node retries pairing with changed auth details (role/scopes/public key),
 the previous pending request is superseded and a new `requestId` is created.
-Run `openclaw devices list` again before approval.
+Run `quiet-core-bot devices list` again before approval.
 
 The node host stores its node id, token, display name, and gateway connection info in
-`~/.openclaw/node.json`.
+`~/.quiet-core-bot/node.json`.
 
 ## Exec approvals
 
 `system.run` is gated by local exec approvals:
 
 - `$OPENCLAW_STATE_DIR/exec-approvals.json`, or
-  `~/.openclaw/exec-approvals.json` when the variable is unset
+  `~/.quiet-core-bot/exec-approvals.json` when the variable is unset
 - [Exec approvals](/tools/exec-approvals)
-- `openclaw approvals --node <id|name|ip>` (edit from the Gateway)
+- `quiet-core-bot approvals --node <id|name|ip>` (edit from the Gateway)
 
-For approved async node exec, OpenClaw prepares a canonical `systemRunPlan`
+For approved async node exec, Quiet Core bot prepares a canonical `systemRunPlan`
 before prompting. The later approved `system.run` forward reuses that stored
 plan, so edits to command/cwd/session fields after the approval request was
 created are rejected instead of changing what the node executes.

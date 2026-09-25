@@ -1,5 +1,5 @@
 ---
-summary: "Automated, hardened OpenClaw installation with Ansible, Tailscale VPN, and firewall isolation"
+summary: "Automated, hardened Quiet Core bot installation with Ansible, Tailscale VPN, and firewall isolation"
 read_when:
   - You want automated server deployment with security hardening
   - You need firewall-isolated setup with VPN access
@@ -7,7 +7,7 @@ read_when:
 title: "Ansible"
 ---
 
-Deploy OpenClaw to production servers with **[openclaw-ansible](https://github.com/openclaw/openclaw-ansible)** -- an automated installer with security-first architecture.
+Deploy Quiet Core bot to production servers with **[openclaw-ansible](https://github.com/openclaw/openclaw-ansible)** -- an automated installer with security-first architecture.
 
 <Info>
 The [openclaw-ansible](https://github.com/openclaw/openclaw-ansible) repo is the source of truth for Ansible deployment. This page is a quick overview.
@@ -47,7 +47,7 @@ The Ansible playbook installs and configures:
 2. **UFW firewall** -- SSH + Tailscale ports only
 3. **Docker CE + Compose V2** -- for the default agent sandbox backend
 4. **Node.js 24 + pnpm** -- runtime dependencies (Node 22 LTS, currently `22.19+`, remains supported)
-5. **OpenClaw** -- host-based, not containerized
+5. **Quiet Core bot** -- host-based, not containerized
 6. **Systemd service** -- auto-start with security hardening
 
 <Note>
@@ -65,12 +65,12 @@ backend. See [Sandboxing](/gateway/sandboxing) for details and other backends.
     ```
   </Step>
   <Step title="Run the onboarding wizard">
-    The post-install script guides you through configuring OpenClaw settings.
+    The post-install script guides you through configuring Quiet Core bot settings.
   </Step>
   <Step title="Connect messaging providers">
     Log in to WhatsApp, Telegram, Discord, or Signal:
     ```bash
-    openclaw channels login
+    quiet-core-bot channels login
     ```
   </Step>
   <Step title="Verify the installation">
@@ -98,7 +98,7 @@ sudo systemctl restart openclaw
 
 # Provider login (run as openclaw user)
 sudo -i -u openclaw
-openclaw channels login
+quiet-core-bot channels login
 ```
 
 ## Security architecture
@@ -157,7 +157,7 @@ If you prefer manual control over the automation:
 
 ## Updating
 
-The Ansible installer sets up OpenClaw for manual updates. See [Updating](/install/updating) for the standard update flow.
+The Ansible installer sets up Quiet Core bot for manual updates. See [Updating](/install/updating) for the standard update flow.
 
 To re-run the Ansible playbook (for example, for configuration changes):
 
@@ -188,7 +188,7 @@ This is idempotent and safe to run multiple times.
     # Test manual start
     sudo -i -u openclaw
     cd ~/openclaw
-    openclaw gateway run
+    quiet-core-bot gateway run
     ```
 
   </Accordion>
@@ -212,7 +212,7 @@ This is idempotent and safe to run multiple times.
     Make sure you are running as the `openclaw` user:
     ```bash
     sudo -i -u openclaw
-    openclaw channels login
+    quiet-core-bot channels login
     ```
   </Accordion>
 </AccordionGroup>

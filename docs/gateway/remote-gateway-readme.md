@@ -1,14 +1,14 @@
 ---
-summary: "SSH tunnel setup for OpenClaw.app connecting to a remote gateway"
+summary: "SSH tunnel setup for Quiet Core bot.app connecting to a remote gateway"
 read_when: "Connecting the macOS app to a remote gateway over SSH"
 title: "Remote gateway setup"
 ---
 
 > This content has been merged into [Remote Access](/gateway/remote#macos-persistent-ssh-tunnel-via-launchagent). See that page for the current guide.
 
-# Running OpenClaw.app with a Remote Gateway
+# Running Quiet Core bot.app with a Remote Gateway
 
-OpenClaw.app uses SSH tunneling to connect to a remote gateway. This guide shows you how to set it up.
+Quiet Core bot.app uses SSH tunneling to connect to a remote gateway. This guide shows you how to set it up.
 
 ## Overview
 
@@ -16,7 +16,7 @@ OpenClaw.app uses SSH tunneling to connect to a remote gateway. This guide shows
 flowchart TB
     subgraph Client["Client Machine"]
         direction TB
-        A["OpenClaw.app"]
+        A["Quiet Core bot.app"]
         B["ws://127.0.0.1:18789\n(local port)"]
         T["SSH Tunnel"]
 
@@ -60,7 +60,7 @@ ssh-copy-id -i ~/.ssh/id_rsa <REMOTE_USER>@<REMOTE_IP>
 ### Step 3: Configure Remote Gateway Auth
 
 ```bash
-openclaw config set gateway.remote.token "<your-token>"
+quiet-core-bot config set gateway.remote.token "<your-token>"
 ```
 
 Use `gateway.remote.password` instead if your remote gateway uses password auth.
@@ -73,11 +73,11 @@ remote-client setup is `gateway.remote.token` / `gateway.remote.password`.
 ssh -N remote-gateway &
 ```
 
-### Step 5: Restart OpenClaw.app
+### Step 5: Restart Quiet Core bot.app
 
 ```bash
-# Quit OpenClaw.app (⌘Q), then reopen:
-open /path/to/OpenClaw.app
+# Quit Quiet Core bot.app (⌘Q), then reopen:
+open /path/to/Quiet Core bot.app
 ```
 
 The app will now connect to the remote gateway through the SSH tunnel.
@@ -161,7 +161,7 @@ launchctl bootout gui/$UID/ai.openclaw.ssh-tunnel
 | `KeepAlive`                          | Automatically restarts tunnel if it crashes                  |
 | `RunAtLoad`                          | Starts tunnel when the agent loads                           |
 
-OpenClaw.app connects to `ws://127.0.0.1:18789` on your client machine. The SSH tunnel forwards that connection to port 18789 on the remote machine where the Gateway is running.
+Quiet Core bot.app connects to `ws://127.0.0.1:18789` on your client machine. The SSH tunnel forwards that connection to port 18789 on the remote machine where the Gateway is running.
 
 ## Related
 

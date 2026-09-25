@@ -43,7 +43,7 @@ To force local GGUF embeddings, install the official llama.cpp provider plugin,
 then point `local.modelPath` at a GGUF file:
 
 ```bash
-openclaw plugins install @openclaw/llama-cpp-provider
+quiet-core-bot plugins install @openclaw/llama-cpp-provider
 ```
 
 ```json5
@@ -81,17 +81,17 @@ Set `memorySearch.provider` to switch away from OpenAI.
 
 ## How indexing works
 
-OpenClaw indexes `MEMORY.md` and `memory/*.md` into chunks (~400 tokens with
+Quiet Core bot indexes `MEMORY.md` and `memory/*.md` into chunks (~400 tokens with
 80-token overlap) and stores them in a per-agent SQLite database.
 
 - **Index location:** the owning agent database at
-  `~/.openclaw/agents/<agentId>/agent/openclaw-agent.sqlite`
+  `~/.quiet-core-bot/agents/<agentId>/agent/openclaw-agent.sqlite`
 - **Storage maintenance:** SQLite WAL sidecars are bounded with periodic and
   shutdown checkpoints.
 - **File watching:** changes to memory files trigger a debounced reindex (1.5s).
 - **Auto-reindex:** when the embedding provider, model, or chunking config
   changes, the entire index is rebuilt automatically.
-- **Reindex on demand:** `openclaw memory index --force`
+- **Reindex on demand:** `quiet-core-bot memory index --force`
 
 <Info>
 You can also index Markdown files outside the workspace with
@@ -116,24 +116,24 @@ automatic user modeling.
 
 ## Troubleshooting
 
-**Memory search disabled?** Check `openclaw memory status`. If no provider is
+**Memory search disabled?** Check `quiet-core-bot memory status`. If no provider is
 detected, set one explicitly or add an API key.
 
 **Local provider not detected?** Confirm the local path exists and run:
 
 ```bash
-openclaw memory status --deep --agent main
-openclaw memory index --force --agent main
+quiet-core-bot memory status --deep --agent main
+quiet-core-bot memory index --force --agent main
 ```
 
 Both standalone CLI commands and the Gateway use the same `local` provider id.
 Set `memorySearch.provider: "local"` when you want local embeddings.
 
-**Stale results?** Run `openclaw memory index --force` to rebuild. The watcher
+**Stale results?** Run `quiet-core-bot memory index --force` to rebuild. The watcher
 may miss changes in rare edge cases.
 
-**sqlite-vec not loading?** OpenClaw falls back to in-process cosine similarity
-automatically. `openclaw memory status --deep` reports the local vector store
+**sqlite-vec not loading?** Quiet Core bot falls back to in-process cosine similarity
+automatically. `quiet-core-bot memory status --deep` reports the local vector store
 separately from the embedding provider, so `Vector store: unavailable` points
 at sqlite-vec loading while `Embeddings: unavailable` points at provider/auth
 or model readiness. Check logs for the specific load error.

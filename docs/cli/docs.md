@@ -1,20 +1,20 @@
 ---
-summary: "CLI reference for `openclaw docs` (search the live docs index)"
+summary: "CLI reference for `quiet-core-bot docs` (search the live docs index)"
 read_when:
-  - You want to search the live OpenClaw docs from the terminal
+  - You want to search the live Quiet Core bot docs from the terminal
   - You need to know which hosted search API the docs CLI calls
 title: "Docs"
 ---
 
-# `openclaw docs`
+# `quiet-core-bot docs`
 
-Search the live OpenClaw docs index from the terminal. The command calls OpenClaw's Cloudflare-hosted docs search API and renders the results in your terminal.
+Search the live Quiet Core bot docs index from the terminal. The command calls Quiet Core bot's Cloudflare-hosted docs search API and renders the results in your terminal.
 
 ## Usage
 
 ```bash
-openclaw docs                       # print docs entrypoint and example search
-openclaw docs <query...>            # search the live docs index
+quiet-core-bot docs                       # print docs entrypoint and example search
+quiet-core-bot docs <query...>            # search the live docs index
 ```
 
 Arguments:
@@ -26,16 +26,16 @@ Arguments:
 ## Examples
 
 ```bash
-openclaw docs browser existing-session
-openclaw docs sandbox allowHostControl
-openclaw docs gateway token secretref
+quiet-core-bot docs browser existing-session
+quiet-core-bot docs sandbox allowHostControl
+quiet-core-bot docs gateway token secretref
 ```
 
-With no query, `openclaw docs` prints the docs entrypoint URL plus a sample search command instead of running a search.
+With no query, `quiet-core-bot docs` prints the docs entrypoint URL plus a sample search command instead of running a search.
 
 ## How it works
 
-`openclaw docs` calls `https://docs.openclaw.ai/api/search` and renders the JSON results. The search call uses a fixed 30 second timeout.
+`quiet-core-bot docs` calls `https://docs.openclaw.ai/api/search` and renders the JSON results. The search call uses a fixed 30 second timeout.
 
 ## Output
 

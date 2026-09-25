@@ -1,35 +1,35 @@
 ---
-summary: "ClawHub CLI entry points for discovering, installing, publishing, and verifying OpenClaw skills and plugins."
+summary: "ClawHub CLI entry points for discovering, installing, publishing, and verifying Quiet Core bot skills and plugins."
 read_when:
   - You want to use ClawHub from the command line
-  - You want to install ClawHub skills or plugins through OpenClaw
+  - You want to install ClawHub skills or plugins through Quiet Core bot
   - You want to publish ClawHub packages
 title: "ClawHub CLI"
 ---
 
 # ClawHub CLI
 
-OpenClaw has two command-line entry points for ClawHub:
+Quiet Core bot has two command-line entry points for ClawHub:
 
-- `openclaw skills` and `openclaw plugins` install and manage ClawHub packages
-  inside OpenClaw.
+- `quiet-core-bot skills` and `quiet-core-bot plugins` install and manage ClawHub packages
+  inside Quiet Core bot.
 - The standalone `clawhub` CLI handles publisher workflows such as login,
   publish, transfer, and sync.
 
 ## Discover and install
 
-Use OpenClaw commands when you want to install or update packages for a local
-OpenClaw agent or Gateway.
+Use Quiet Core bot commands when you want to install or update packages for a local
+Quiet Core bot agent or Gateway.
 
 ```bash
-openclaw skills search "calendar"
-openclaw skills install @owner/<slug>
-openclaw skills update @owner/<slug>
-openclaw skills verify @owner/<slug>
+quiet-core-bot skills search "calendar"
+quiet-core-bot skills install @owner/<slug>
+quiet-core-bot skills update @owner/<slug>
+quiet-core-bot skills verify @owner/<slug>
 
-openclaw plugins search "calendar"
-openclaw plugins install clawhub:<package>
-openclaw plugins update <id-or-npm-spec>
+quiet-core-bot plugins search "calendar"
+quiet-core-bot plugins install clawhub:<package>
+quiet-core-bot plugins update <id-or-npm-spec>
 ```
 
 Skill installs target the active workspace `skills/` directory by default. Add
@@ -72,9 +72,9 @@ clawhub package transfer @old-owner/package --to new-owner
 
 ## Related
 
-- [`openclaw skills`](/cli/skills) - local skill search, install, update, and
+- [`quiet-core-bot skills`](/cli/skills) - local skill search, install, update, and
   verification
-- [`openclaw plugins`](/cli/plugins) - plugin search, install, update, and
+- [`quiet-core-bot plugins`](/cli/plugins) - plugin search, install, update, and
   inspection
 - [ClawHub publishing](/clawhub/publishing) - owner scope, release validation,
   and review flow

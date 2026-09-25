@@ -27,12 +27,12 @@ The CLI mirrors the substrate's public verbs:
 first use:
 
 ```bash
-openclaw plugins enable oc-path
+quiet-core-bot plugins enable oc-path
 ```
 
 ## Why use it
 
-OpenClaw state is spread across human-edited markdown, commented JSONC config,
+Quiet Core bot state is spread across human-edited markdown, commented JSONC config,
 append-only JSONL logs, and YAML workflow/spec files. Shell scripts, hooks,
 and agents often need one small value from those files: a frontmatter key, a
 plugin setting, a log record field, a YAML step, or a bullet item under a named
@@ -249,10 +249,10 @@ More grammar examples:
 openclaw path resolve 'oc://config.jsonc/agents.defaults.models/"anthropic/claude-opus-4-7"/alias'
 
 # Deep JSON/JSONC paths can use slash segments; they normalize to dotted subsegments
-openclaw path set 'oc://openclaw.json/agents/list/0/tools/exec/security' 'allowlist' --dry-run
+openclaw path set 'oc://quiet-core-bot.json/agents/list/0/tools/exec/security' 'allowlist' --dry-run
 
 # Replace a JSONC leaf with a parsed object
-openclaw path set 'oc://openclaw.json/gateway/auth/token' '{"source":"file","provider":"secrets","id":"/test"}' --value-json --dry-run
+openclaw path set 'oc://quiet-core-bot.json/gateway/auth/token' '{"source":"file","provider":"secrets","id":"/test"}' --value-json --dry-run
 
 # Predicate search over JSONC children
 openclaw path find 'oc://config.jsonc/plugins/[enabled=true]/id'

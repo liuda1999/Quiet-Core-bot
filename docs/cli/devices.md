@@ -1,31 +1,31 @@
 ---
-summary: "CLI reference for `openclaw devices` (device pairing + token rotation/revocation)"
+summary: "CLI reference for `quiet-core-bot devices` (device pairing + token rotation/revocation)"
 read_when:
   - You are approving device pairing requests
   - You need to rotate or revoke device tokens
 title: "Devices"
 ---
 
-# `openclaw devices`
+# `quiet-core-bot devices`
 
 Manage device pairing requests and device-scoped tokens.
 
 ## Commands
 
-### `openclaw devices list`
+### `quiet-core-bot devices list`
 
 List pending pairing requests and paired devices.
 
 ```
-openclaw devices list
-openclaw devices list --json
+quiet-core-bot devices list
+quiet-core-bot devices list --json
 ```
 
 Pending request output shows the requested access next to the device's current
 approved access when the device is already paired. This makes scope/role
 upgrades explicit instead of looking like the pairing was lost.
 
-### `openclaw devices remove <deviceId>`
+### `quiet-core-bot devices remove <deviceId>`
 
 Remove one paired device entry.
 
@@ -34,35 +34,35 @@ remove only **their own** device entry. Removing some other device requires
 `operator.admin`.
 
 ```
-openclaw devices remove <deviceId>
-openclaw devices remove <deviceId> --json
+quiet-core-bot devices remove <deviceId>
+quiet-core-bot devices remove <deviceId> --json
 ```
 
-### `openclaw devices clear --yes [--pending]`
+### `quiet-core-bot devices clear --yes [--pending]`
 
 Clear paired devices in bulk.
 
 ```
-openclaw devices clear --yes
-openclaw devices clear --yes --pending
-openclaw devices clear --yes --pending --json
+quiet-core-bot devices clear --yes
+quiet-core-bot devices clear --yes --pending
+quiet-core-bot devices clear --yes --pending --json
 ```
 
-### `openclaw devices approve [requestId] [--latest]`
+### `quiet-core-bot devices approve [requestId] [--latest]`
 
 Approve a pending device pairing request by exact `requestId`. If `requestId`
-is omitted or `--latest` is passed, OpenClaw only prints the selected pending
+is omitted or `--latest` is passed, Quiet Core bot only prints the selected pending
 request and exits; rerun approval with the exact request ID after verifying
 the details.
 
 <Note>
-If a device retries pairing with changed auth details (role, scopes, or public key), OpenClaw supersedes the previous pending entry and issues a new `requestId`. Run `openclaw devices list` right before approval to use the current ID.
+If a device retries pairing with changed auth details (role, scopes, or public key), Quiet Core bot supersedes the previous pending entry and issues a new `requestId`. Run `quiet-core-bot devices list` right before approval to use the current ID.
 </Note>
 
 If the device is already paired and asks for broader scopes or a broader role,
-OpenClaw keeps the existing approval in place and creates a new pending upgrade
-request. Review the `Requested` vs `Approved` columns in `openclaw devices list`
-or use `openclaw devices approve --latest` to preview the exact upgrade before
+Quiet Core bot keeps the existing approval in place and creates a new pending upgrade
+request. Review the `Requested` vs `Approved` columns in `quiet-core-bot devices list`
+or use `quiet-core-bot devices approve --latest` to preview the exact upgrade before
 approving it.
 
 If the Gateway is explicitly configured with
@@ -77,9 +77,9 @@ requested operator scopes stay within the caller's own scopes. See
 [Operator scopes](/gateway/operator-scopes) for the approval-time checks.
 
 ```
-openclaw devices approve
-openclaw devices approve <requestId>
-openclaw devices approve --latest
+quiet-core-bot devices approve
+quiet-core-bot devices approve <requestId>
+quiet-core-bot devices approve --latest
 ```
 
 ## Paperclip / `openclaw_gateway` first-run approval
@@ -89,15 +89,15 @@ When a new Paperclip agent connects through the `openclaw_gateway` adapter for t
 For local gateways, preview the latest pending request:
 
 ```bash
-openclaw devices approve --latest
+quiet-core-bot devices approve --latest
 ```
 
-The preview prints the exact `openclaw devices approve <requestId>` command. Verify the request details, then rerun that command with the request ID to approve it.
+The preview prints the exact `quiet-core-bot devices approve <requestId>` command. Verify the request details, then rerun that command with the request ID to approve it.
 
 For remote gateways or explicit credentials, pass the same options while previewing and approving:
 
 ```bash
-openclaw devices approve --latest --url <gateway-ws-url> --token <gateway-token>
+quiet-core-bot devices approve --latest --url <gateway-ws-url> --token <gateway-token>
 ```
 
 To avoid re-approving after restarts, keep a persistent device key in the Paperclip adapter config instead of generating a new ephemeral identity each run:
@@ -110,17 +110,17 @@ To avoid re-approving after restarts, keep a persistent device key in the Paperc
 }
 ```
 
-If approval keeps failing, run `openclaw devices list` first to confirm a pending request exists.
+If approval keeps failing, run `quiet-core-bot devices list` first to confirm a pending request exists.
 
-### `openclaw devices reject <requestId>`
+### `quiet-core-bot devices reject <requestId>`
 
 Reject a pending device pairing request.
 
 ```
-openclaw devices reject <requestId>
+quiet-core-bot devices reject <requestId>
 ```
 
-### `openclaw devices rotate --device <id> --role <role> [--scope <scope...>]`
+### `quiet-core-bot devices rotate --device <id> --role <role> [--scope <scope...>]`
 
 Rotate a device token for a specific role (optionally updating scopes).
 The target role must already exist in that device's approved pairing contract;
@@ -134,7 +134,7 @@ scopes; rotation cannot mint or preserve a broader operator token than the
 caller already has.
 
 ```
-openclaw devices rotate --device <deviceId> --role operator --scope operator.read --scope operator.write
+quiet-core-bot devices rotate --device <deviceId> --role operator --scope operator.read --scope operator.write
 ```
 
 Returns rotation metadata as JSON. If the caller is rotating its own token while
@@ -142,7 +142,7 @@ authenticated with that device token, the response also includes the replacement
 token so the client can persist it before reconnecting. Shared/admin rotations
 do not echo the bearer token.
 
-### `openclaw devices revoke --device <id> --role <role>`
+### `quiet-core-bot devices revoke --device <id> --role <role>`
 
 Revoke a device token for a specific role.
 
@@ -152,7 +152,7 @@ The target token scope set must also fit within the caller session's own
 operator scopes; pairing-only callers cannot revoke admin/write operator tokens.
 
 ```
-openclaw devices revoke --device <deviceId> --role node
+quiet-core-bot devices revoke --device <deviceId> --role node
 ```
 
 Returns the revoke result as JSON.
@@ -198,27 +198,27 @@ Use this when Control UI or other clients keep failing with `AUTH_TOKEN_MISMATCH
 1. Confirm current gateway token source:
 
 ```bash
-openclaw config get gateway.auth.token
+quiet-core-bot config get gateway.auth.token
 ```
 
 2. List paired devices and identify the affected device id:
 
 ```bash
-openclaw devices list
+quiet-core-bot devices list
 ```
 
 3. Rotate operator token for the affected device:
 
 ```bash
-openclaw devices rotate --device <deviceId> --role operator
+quiet-core-bot devices rotate --device <deviceId> --role operator
 ```
 
 4. If rotation is not enough, remove stale pairing and approve again:
 
 ```bash
-openclaw devices remove <deviceId>
-openclaw devices list
-openclaw devices approve <requestId>
+quiet-core-bot devices remove <deviceId>
+quiet-core-bot devices list
+quiet-core-bot devices approve <requestId>
 ```
 
 5. Retry client connection with the current shared token/password.

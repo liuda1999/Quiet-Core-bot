@@ -166,7 +166,7 @@ Behavior depends on config:
   `raw-claim`
 
 Use `wiki search` when you want wiki-specific ranking or provenance details.
-For one broad shared recall pass, prefer `openclaw memory search` when the
+For one broad shared recall pass, prefer `quiet-core-bot memory search` when the
 active memory plugin exposes shared search.
 
 Search modes help the agent choose the right surface:

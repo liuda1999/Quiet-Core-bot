@@ -34,7 +34,7 @@ Ideal when your laptop sleeps often but you want the agent always-on.
 
 The laptop does **not** run the agent. It connects remotely:
 
-- Use the macOS app's remote mode (Settings → General → OpenClaw runs).
+- Use the macOS app's remote mode (Settings → General → Quiet Core bot runs).
 - The app connects directly when the gateway is reachable on LAN/Tailnet, or opens and manages an SSH tunnel when you choose SSH.
 
 Runbook: [macOS remote access](/platforms/mac/remote).
@@ -74,8 +74,8 @@ ssh -N -L 18789:127.0.0.1:18789 user@host
 
 With the tunnel up:
 
-- `openclaw health` and `openclaw status --deep` now reach the remote gateway via `ws://127.0.0.1:18789`.
-- `openclaw gateway status`, `openclaw gateway health`, `openclaw gateway probe`, and `openclaw gateway call` can also target the forwarded URL via `--url` when needed.
+- `quiet-core-bot health` and `quiet-core-bot status --deep` now reach the remote gateway via `ws://127.0.0.1:18789`.
+- `quiet-core-bot gateway status`, `quiet-core-bot gateway health`, `quiet-core-bot gateway probe`, and `quiet-core-bot gateway call` can also target the forwarded URL via `--url` when needed.
 
 <Note>
 Replace `18789` with your configured `gateway.port` (or `--port` or `OPENCLAW_GATEWAY_PORT`).
@@ -205,7 +205,7 @@ ssh-copy-id -i ~/.ssh/id_rsa <REMOTE_USER>@<REMOTE_IP>
 Store the token in config so it persists across restarts:
 
 ```bash
-openclaw config set gateway.remote.token "<your-token>"
+quiet-core-bot config set gateway.remote.token "<your-token>"
 ```
 
 #### Step 4: create the LaunchAgent

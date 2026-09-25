@@ -1,21 +1,21 @@
 ---
-summary: "CLI reference for `openclaw config` (get/set/patch/unset/file/schema/validate)"
+summary: "CLI reference for `quiet-core-bot config` (get/set/patch/unset/file/schema/validate)"
 read_when:
   - You want to read or edit config non-interactively
 title: "Config"
 sidebarTitle: "Config"
 ---
 
-Config helpers for non-interactive edits in `openclaw.json`: get/set/patch/unset/file/schema/validate values by path and print the active config file. Run without a subcommand to open the configure wizard (same as `openclaw configure`).
+Config helpers for non-interactive edits in `quiet-core-bot.json`: get/set/patch/unset/file/schema/validate values by path and print the active config file. Run without a subcommand to open the configure wizard (same as `quiet-core-bot configure`).
 
 <Note>
-When `OPENCLAW_NIX_MODE=1`, OpenClaw treats `openclaw.json` as immutable. Read-only commands such as `config get`, `config file`, `config schema`, and `config validate` still work, but config writers refuse. Agents should edit the Nix source for the install instead; for the first-party nix-openclaw distribution, use [nix-openclaw Quick Start](https://github.com/openclaw/nix-openclaw#quick-start) and set values under `programs.openclaw.config` or `instances.<name>.config`.
+When `OPENCLAW_NIX_MODE=1`, Quiet Core bot treats `quiet-core-bot.json` as immutable. Read-only commands such as `config get`, `config file`, `config schema`, and `config validate` still work, but config writers refuse. Agents should edit the Nix source for the install instead; for the first-party nix-openclaw distribution, use [nix-openclaw Quick Start](https://github.com/openclaw/nix-openclaw#quick-start) and set values under `programs.openclaw.config` or `instances.<name>.config`.
 </Note>
 
 ## Root options
 
 <ParamField path="--section <section>" type="string">
-  Repeatable guided-setup section filter when you run `openclaw config` without a subcommand.
+  Repeatable guided-setup section filter when you run `quiet-core-bot config` without a subcommand.
 </ParamField>
 
 Supported guided sections: `workspace`, `model`, `web`, `gateway`, `daemon`, `channels`, `plugins`, `skills`, `health`.
@@ -23,28 +23,28 @@ Supported guided sections: `workspace`, `model`, `web`, `gateway`, `daemon`, `ch
 ## Examples
 
 ```bash
-openclaw config file
-openclaw config --section model
-openclaw config --section gateway --section daemon
-openclaw config schema
-openclaw config get browser.executablePath
-openclaw config set browser.executablePath "/usr/bin/google-chrome"
-openclaw config set browser.profiles.work.executablePath "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-openclaw config set agents.defaults.heartbeat.every "2h"
-openclaw config set 'agents.list[0].tools.exec.node' "node-id-or-name"
-openclaw config set agents.defaults.models '{"openai/gpt-5.4":{}}' --strict-json --merge
-openclaw config set channels.discord.token --ref-provider default --ref-source env --ref-id DISCORD_BOT_TOKEN
-openclaw config set secrets.providers.vaultfile --provider-source file --provider-path /etc/openclaw/secrets.json --provider-mode json
-openclaw config patch --file ./openclaw.patch.json5 --dry-run
-openclaw config unset plugins.entries.brave.config.webSearch.apiKey
-openclaw config set channels.discord.token --ref-provider default --ref-source env --ref-id DISCORD_BOT_TOKEN --dry-run
-openclaw config validate
-openclaw config validate --json
+quiet-core-bot config file
+quiet-core-bot config --section model
+quiet-core-bot config --section gateway --section daemon
+quiet-core-bot config schema
+quiet-core-bot config get browser.executablePath
+quiet-core-bot config set browser.executablePath "/usr/bin/google-chrome"
+quiet-core-bot config set browser.profiles.work.executablePath "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+quiet-core-bot config set agents.defaults.heartbeat.every "2h"
+quiet-core-bot config set 'agents.list[0].tools.exec.node' "node-id-or-name"
+quiet-core-bot config set agents.defaults.models '{"openai/gpt-5.4":{}}' --strict-json --merge
+quiet-core-bot config set channels.discord.token --ref-provider default --ref-source env --ref-id DISCORD_BOT_TOKEN
+quiet-core-bot config set secrets.providers.vaultfile --provider-source file --provider-path /etc/openclaw/secrets.json --provider-mode json
+quiet-core-bot config patch --file ./openclaw.patch.json5 --dry-run
+quiet-core-bot config unset plugins.entries.brave.config.webSearch.apiKey
+quiet-core-bot config set channels.discord.token --ref-provider default --ref-source env --ref-id DISCORD_BOT_TOKEN --dry-run
+quiet-core-bot config validate
+quiet-core-bot config validate --json
 ```
 
 ### `config schema`
 
-Print the generated JSON schema for `openclaw.json` to stdout as JSON.
+Print the generated JSON schema for `quiet-core-bot.json` to stdout as JSON.
 
 <AccordionGroup>
   <Accordion title="What it includes">
@@ -62,29 +62,29 @@ Print the generated JSON schema for `openclaw.json` to stdout as JSON.
 </AccordionGroup>
 
 ```bash
-openclaw config schema
+quiet-core-bot config schema
 ```
 
 Pipe it into a file when you want to inspect or validate it with other tools:
 
 ```bash
-openclaw config schema > openclaw.schema.json
+quiet-core-bot config schema > openclaw.schema.json
 ```
 
 ### Paths
 
-Paths use dot or bracket notation. Quote bracket-notation paths in shell examples so shells such as zsh do not expand `[0]` as a glob before OpenClaw receives the path:
+Paths use dot or bracket notation. Quote bracket-notation paths in shell examples so shells such as zsh do not expand `[0]` as a glob before Quiet Core bot receives the path:
 
 ```bash
-openclaw config get agents.defaults.workspace
-openclaw config get 'agents.list[0].id'
+quiet-core-bot config get agents.defaults.workspace
+quiet-core-bot config get 'agents.list[0].id'
 ```
 
 Use the agent list index to target a specific agent:
 
 ```bash
-openclaw config get agents.list
-openclaw config set 'agents.list[1].tools.exec.node' "node-id-or-name"
+quiet-core-bot config get agents.list
+quiet-core-bot config set 'agents.list[1].tools.exec.node' "node-id-or-name"
 ```
 
 ## Values
@@ -92,9 +92,9 @@ openclaw config set 'agents.list[1].tools.exec.node' "node-id-or-name"
 Values are parsed as JSON5 when possible; otherwise they are treated as strings. Use `--strict-json` to require JSON5 parsing. `--json` remains supported as a legacy alias.
 
 ```bash
-openclaw config set agents.defaults.heartbeat.every "0m"
-openclaw config set gateway.port 19001 --strict-json
-openclaw config set channels.whatsapp.groups '["*"]' --strict-json
+quiet-core-bot config set agents.defaults.heartbeat.every "0m"
+quiet-core-bot config set gateway.port 19001 --strict-json
+quiet-core-bot config set channels.whatsapp.groups '["*"]' --strict-json
 ```
 
 `config get <path> --json` prints the raw value as JSON instead of terminal-formatted text.
@@ -106,25 +106,25 @@ Object assignment replaces the target path by default. Protected map/list paths 
 Use `--merge` when adding entries to those maps:
 
 ```bash
-openclaw config set agents.defaults.models '{"openai/gpt-5.4":{}}' --strict-json --merge
-openclaw config set models.providers.ollama.models '[{"id":"llama3.2","name":"Llama 3.2"}]' --strict-json --merge
+quiet-core-bot config set agents.defaults.models '{"openai/gpt-5.4":{}}' --strict-json --merge
+quiet-core-bot config set models.providers.ollama.models '[{"id":"llama3.2","name":"Llama 3.2"}]' --strict-json --merge
 ```
 
 Use `--replace` only when you intentionally want the provided value to become the complete target value.
 
 ## `config set` modes
 
-`openclaw config set` supports four assignment styles:
+`quiet-core-bot config set` supports four assignment styles:
 
 <Tabs>
   <Tab title="Value mode">
     ```bash
-    openclaw config set <path> <value>
+    quiet-core-bot config set <path> <value>
     ```
   </Tab>
   <Tab title="SecretRef builder mode">
     ```bash
-    openclaw config set channels.discord.token \
+    quiet-core-bot config set channels.discord.token \
       --ref-provider default \
       --ref-source env \
       --ref-id DISCORD_BOT_TOKEN
@@ -134,7 +134,7 @@ Use `--replace` only when you intentionally want the provided value to become th
     Provider builder mode targets `secrets.providers.<alias>` paths only:
 
     ```bash
-    openclaw config set secrets.providers.vault \
+    quiet-core-bot config set secrets.providers.vault \
       --provider-source exec \
       --provider-command /usr/local/bin/openclaw-vault \
       --provider-arg read \
@@ -145,7 +145,7 @@ Use `--replace` only when you intentionally want the provided value to become th
   </Tab>
   <Tab title="Batch mode">
     ```bash
-    openclaw config set --batch-json '[
+    quiet-core-bot config set --batch-json '[
       {
         "path": "secrets.providers.default",
         "provider": { "source": "env" }
@@ -158,7 +158,7 @@ Use `--replace` only when you intentionally want the provided value to become th
     ```
 
     ```bash
-    openclaw config set --batch-file ./config-set.batch.json --dry-run
+    quiet-core-bot config set --batch-file ./config-set.batch.json --dry-run
     ```
 
   </Tab>
@@ -175,15 +175,15 @@ Batch parsing always uses the batch payload (`--batch-json`/`--batch-file`) as t
 Use `config patch` when you want to paste or pipe a config-shaped patch instead of running many path-based `config set` commands. The input is a JSON5 object. Objects merge recursively, arrays and scalar values replace the target value, and `null` deletes the target path.
 
 ```bash
-openclaw config patch --file ./openclaw.patch.json5 --dry-run
-openclaw config patch --file ./openclaw.patch.json5
+quiet-core-bot config patch --file ./openclaw.patch.json5 --dry-run
+quiet-core-bot config patch --file ./openclaw.patch.json5
 ```
 
 You can also pipe a patch over stdin, which is useful for remote setup scripts:
 
 ```bash
-ssh openclaw-host 'openclaw config patch --stdin --dry-run' < ./openclaw.patch.json5
-ssh openclaw-host 'openclaw config patch --stdin' < ./openclaw.patch.json5
+ssh openclaw-host 'quiet-core-bot config patch --stdin --dry-run' < ./openclaw.patch.json5
+ssh openclaw-host 'quiet-core-bot config patch --stdin' < ./openclaw.patch.json5
 ```
 
 Example patch:
@@ -221,7 +221,7 @@ Example patch:
 Use `--replace-path <path>` when one object or array must become exactly the provided value instead of being recursively patched:
 
 ```bash
-openclaw config patch --file ./discord.patch.json5 --replace-path 'channels.discord.guilds["123"].channels'
+quiet-core-bot config patch --file ./discord.patch.json5 --replace-path 'channels.discord.guilds["123"].channels'
 ```
 
 `--dry-run` runs schema and SecretRef resolvability checks without writing. Exec-backed SecretRefs are skipped by default during dry-run; add `--allow-exec` when you intentionally want dry-run to execute provider commands.
@@ -229,11 +229,11 @@ openclaw config patch --file ./discord.patch.json5 --replace-path 'channels.disc
 JSON path/value mode remains supported for both SecretRefs and providers:
 
 ```bash
-openclaw config set channels.discord.token \
+quiet-core-bot config set channels.discord.token \
   '{"source":"env","provider":"default","id":"DISCORD_BOT_TOKEN"}' \
   --strict-json
 
-openclaw config set secrets.providers.vaultfile \
+quiet-core-bot config set secrets.providers.vaultfile \
   '{"source":"file","path":"/etc/openclaw/secrets.json","mode":"json"}' \
   --strict-json
 ```
@@ -277,7 +277,7 @@ Provider builder targets must use `secrets.providers.<alias>` as the path.
 Hardened exec provider example:
 
 ```bash
-openclaw config set secrets.providers.vault \
+quiet-core-bot config set secrets.providers.vault \
   --provider-source exec \
   --provider-command /usr/local/bin/openclaw-vault \
   --provider-arg read \
@@ -290,23 +290,23 @@ openclaw config set secrets.providers.vault \
 
 ## Dry run
 
-Use `--dry-run` to validate changes without writing `openclaw.json`.
+Use `--dry-run` to validate changes without writing `quiet-core-bot.json`.
 
 ```bash
-openclaw config set channels.discord.token \
+quiet-core-bot config set channels.discord.token \
   --ref-provider default \
   --ref-source env \
   --ref-id DISCORD_BOT_TOKEN \
   --dry-run
 
-openclaw config set channels.discord.token \
+quiet-core-bot config set channels.discord.token \
   --ref-provider default \
   --ref-source env \
   --ref-id DISCORD_BOT_TOKEN \
   --dry-run \
   --json
 
-openclaw config set channels.discord.token \
+quiet-core-bot config set channels.discord.token \
   --ref-provider vault \
   --ref-source exec \
   --ref-id discord/token \
@@ -370,7 +370,7 @@ openclaw config set channels.discord.token \
     {
       "ok": true,
       "operations": 1,
-      "configPath": "~/.openclaw/openclaw.json",
+      "configPath": "~/.quiet-core-bot/quiet-core-bot.json",
       "inputModes": ["builder"],
       "checks": {
         "schema": false,
@@ -387,7 +387,7 @@ openclaw config set channels.discord.token \
     {
       "ok": false,
       "operations": 1,
-      "configPath": "~/.openclaw/openclaw.json",
+      "configPath": "~/.quiet-core-bot/quiet-core-bot.json",
       "inputModes": ["builder"],
       "checks": {
         "schema": false,
@@ -421,29 +421,29 @@ openclaw config set channels.discord.token \
 
 ## Write safety
 
-`openclaw config set` and other OpenClaw-owned config writers validate the full post-change config before committing it to disk. If the new payload fails schema validation or looks like a destructive clobber, the active config is left alone and the rejected payload is saved beside it as `openclaw.json.rejected.*`.
+`quiet-core-bot config set` and other Quiet Core bot-owned config writers validate the full post-change config before committing it to disk. If the new payload fails schema validation or looks like a destructive clobber, the active config is left alone and the rejected payload is saved beside it as `quiet-core-bot.json.rejected.*`.
 
 <Warning>
-The active config path must be a regular file. Symlinked `openclaw.json` layouts are unsupported for writes; use `OPENCLAW_CONFIG_PATH` to point directly at the real file instead.
+The active config path must be a regular file. Symlinked `quiet-core-bot.json` layouts are unsupported for writes; use `OPENCLAW_CONFIG_PATH` to point directly at the real file instead.
 </Warning>
 
 Prefer CLI writes for small edits:
 
 ```bash
-openclaw config set gateway.reload.mode hybrid --dry-run
-openclaw config set gateway.reload.mode hybrid
-openclaw config validate
+quiet-core-bot config set gateway.reload.mode hybrid --dry-run
+quiet-core-bot config set gateway.reload.mode hybrid
+quiet-core-bot config validate
 ```
 
 If a write is rejected, inspect the saved payload and fix the full config shape:
 
 ```bash
-CONFIG="$(openclaw config file)"
+CONFIG="$(quiet-core-bot config file)"
 ls -lt "$CONFIG".rejected.* 2>/dev/null | head
-openclaw config validate
+quiet-core-bot config validate
 ```
 
-Direct editor writes are still allowed, but the running Gateway treats them as untrusted until they validate. Invalid direct edits fail startup or are skipped by hot reload; Gateway does not rewrite `openclaw.json`. Run `openclaw doctor --fix` to repair prefixed/clobbered config or restore the last-known-good copy. See [Gateway troubleshooting](/gateway/troubleshooting#gateway-rejected-invalid-config).
+Direct editor writes are still allowed, but the running Gateway treats them as untrusted until they validate. Invalid direct edits fail startup or are skipped by hot reload; Gateway does not rewrite `quiet-core-bot.json`. Run `quiet-core-bot doctor --fix` to repair prefixed/clobbered config or restore the last-known-good copy. See [Gateway troubleshooting](/gateway/troubleshooting#gateway-rejected-invalid-config).
 
 Whole-file recovery is reserved for doctor repair. Plugin schema changes or `minHostVersion` skew stay loud instead of rolling back unrelated user settings such as models, providers, auth profiles, channels, gateway exposure, tools, memory, browser, or cron config.
 
@@ -458,14 +458,14 @@ Restart the gateway after edits.
 Validate the current config against the active schema without starting the gateway.
 
 ```bash
-openclaw config validate
-openclaw config validate --json
+quiet-core-bot config validate
+quiet-core-bot config validate --json
 ```
 
-After `openclaw config validate` is passing, you can use the local TUI to have an embedded agent compare the active config against the docs while you validate each change from the same terminal:
+After `quiet-core-bot config validate` is passing, you can use the local TUI to have an embedded agent compare the active config against the docs while you validate each change from the same terminal:
 
 <Note>
-If validation is already failing, start with `openclaw configure` or `openclaw doctor --fix`. `openclaw chat` does not bypass the invalid-config guard.
+If validation is already failing, start with `quiet-core-bot configure` or `quiet-core-bot doctor --fix`. `openclaw chat` does not bypass the invalid-config guard.
 </Note>
 
 ```bash
@@ -475,10 +475,10 @@ openclaw chat
 Then inside the TUI:
 
 ```text
-!openclaw config file
-!openclaw docs gateway auth token secretref
-!openclaw config validate
-!openclaw doctor
+!quiet-core-bot config file
+!quiet-core-bot docs gateway auth token secretref
+!quiet-core-bot config validate
+!quiet-core-bot doctor
 ```
 
 Typical repair loop:
@@ -488,13 +488,13 @@ Typical repair loop:
     Ask the agent to compare your current config with the relevant docs page and suggest the smallest fix.
   </Step>
   <Step title="Apply targeted edits">
-    Apply targeted edits with `openclaw config set` or `openclaw configure`.
+    Apply targeted edits with `quiet-core-bot config set` or `quiet-core-bot configure`.
   </Step>
   <Step title="Re-validate">
-    Rerun `openclaw config validate` after each change.
+    Rerun `quiet-core-bot config validate` after each change.
   </Step>
   <Step title="Doctor for runtime issues">
-    If validation passes but the runtime is still unhealthy, run `openclaw doctor` or `openclaw doctor --fix` for migration and repair help.
+    If validation passes but the runtime is still unhealthy, run `quiet-core-bot doctor` or `quiet-core-bot doctor --fix` for migration and repair help.
   </Step>
 </Steps>
 

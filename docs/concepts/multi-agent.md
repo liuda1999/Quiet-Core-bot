@@ -8,7 +8,7 @@ status: active
 
 Run multiple _isolated_ agents — each with its own workspace, state directory (`agentDir`), and session history — plus multiple channel accounts (e.g. two WhatsApps) in one running Gateway. Inbound messages are routed to the right agent through bindings.
 
-An **agent** here is the full per-persona scope: workspace files, auth profiles, model registry, and session store. `agentDir` is the on-disk state directory that holds this per-agent config at `~/.openclaw/agents/<agentId>/`. A **binding** maps a channel account (e.g. a Slack workspace or a WhatsApp number) to one of those agents.
+An **agent** here is the full per-persona scope: workspace files, auth profiles, model registry, and session store. `agentDir` is the on-disk state directory that holds this per-agent config at `~/.quiet-core-bot/agents/<agentId>/`. A **binding** maps a channel account (e.g. a Slack workspace or a WhatsApp number) to one of those agents.
 
 ## What is "one agent"?
 
@@ -16,12 +16,12 @@ An **agent** is a fully scoped brain with its own:
 
 - **Workspace** (files, AGENTS.md/SOUL.md/USER.md, local notes, persona rules).
 - **State directory** (`agentDir`) for auth profiles, model registry, and per-agent config.
-- **Session store** (chat history + routing state) under `~/.openclaw/agents/<agentId>/sessions`.
+- **Session store** (chat history + routing state) under `~/.quiet-core-bot/agents/<agentId>/sessions`.
 
 Auth profiles are **per-agent**. Each agent reads from its own:
 
 ```text
-~/.openclaw/agents/<agentId>/agent/auth-profiles.json
+~/.quiet-core-bot/agents/<agentId>/agent/auth-profiles.json
 ```
 
 <Note>
@@ -31,13 +31,13 @@ Auth profiles are **per-agent**. Each agent reads from its own:
 <Warning>
 Never reuse `agentDir` across agents (it causes auth/session collisions). Agents
 can read through to the default/main agent's auth profiles when they do not have
-a local profile, but OpenClaw does not clone OAuth refresh tokens into the
+a local profile, but Quiet Core bot does not clone OAuth refresh tokens into the
 secondary agent store. If you want an independent OAuth account, sign in from
 that agent; if you copy credentials manually, copy only portable static
 `api_key` or `token` profiles.
 </Warning>
 
-Skills are loaded from each agent workspace plus shared roots such as `~/.openclaw/skills`, then filtered by the effective agent skill allowlist when configured. Use `agents.defaults.skills` for a shared baseline and `agents.list[].skills` for per-agent replacement. See [Skills: per-agent vs shared](/tools/skills#per-agent-vs-shared-skills) and [Skills: agent skill allowlists](/tools/skills#agent-allowlists).
+Skills are loaded from each agent workspace plus shared roots such as `~/.quiet-core-bot/skills`, then filtered by the effective agent skill allowlist when configured. Use `agents.defaults.skills` for a shared baseline and `agents.list[].skills` for per-agent replacement. See [Skills: per-agent vs shared](/tools/skills#per-agent-vs-shared-skills) and [Skills: agent skill allowlists](/tools/skills#agent-allowlists).
 
 The Gateway can host **one agent** (default) or **many agents** side-by-side.
 
@@ -47,27 +47,27 @@ The Gateway can host **one agent** (default) or **many agents** side-by-side.
 
 ## Paths (quick map)
 
-- Config: `~/.openclaw/openclaw.json` (or `OPENCLAW_CONFIG_PATH`)
-- State dir: `~/.openclaw` (or `OPENCLAW_STATE_DIR`)
-- Workspace: `~/.openclaw/workspace` (or `~/.openclaw/workspace-<agentId>`)
-- Agent dir: `~/.openclaw/agents/<agentId>/agent` (or `agents.list[].agentDir`)
-- Sessions: `~/.openclaw/agents/<agentId>/sessions`
+- Config: `~/.quiet-core-bot/quiet-core-bot.json` (or `OPENCLAW_CONFIG_PATH`)
+- State dir: `~/.quiet-core-bot` (or `OPENCLAW_STATE_DIR`)
+- Workspace: `~/.quiet-core-bot/workspace` (or `~/.quiet-core-bot/workspace-<agentId>`)
+- Agent dir: `~/.quiet-core-bot/agents/<agentId>/agent` (or `agents.list[].agentDir`)
+- Sessions: `~/.quiet-core-bot/agents/<agentId>/sessions`
 
 ### Single-agent mode (default)
 
-If you do nothing, OpenClaw runs a single agent:
+If you do nothing, Quiet Core bot runs a single agent:
 
 - `agentId` defaults to **`main`**.
 - Sessions are keyed as `agent:main:<mainKey>`.
-- Workspace defaults to `~/.openclaw/workspace` (or `~/.openclaw/workspace-<profile>` when `OPENCLAW_PROFILE` is set).
-- State defaults to `~/.openclaw/agents/main/agent`.
+- Workspace defaults to `~/.quiet-core-bot/workspace` (or `~/.quiet-core-bot/workspace-<profile>` when `OPENCLAW_PROFILE` is set).
+- State defaults to `~/.quiet-core-bot/agents/main/agent`.
 
 ## Agent helper
 
 Use the agent wizard to add a new isolated agent:
 
 ```bash
-openclaw agents add work
+quiet-core-bot agents add work
 ```
 
 Then add `bindings` (or let the wizard do it) to route inbound messages.
@@ -75,7 +75,7 @@ Then add `bindings` (or let the wizard do it) to route inbound messages.
 Verify with:
 
 ```bash
-openclaw agents list --bindings
+quiet-core-bot agents list --bindings
 ```
 
 ## Quick start
@@ -85,11 +85,11 @@ openclaw agents list --bindings
     Use the wizard or create workspaces manually:
 
     ```bash
-    openclaw agents add coding
-    openclaw agents add social
+    quiet-core-bot agents add coding
+    quiet-core-bot agents add social
     ```
 
-    Each agent gets its own workspace with `SOUL.md`, `AGENTS.md`, and optional `USER.md`, plus a dedicated `agentDir` and session store under `~/.openclaw/agents/<agentId>`.
+    Each agent gets its own workspace with `SOUL.md`, `AGENTS.md`, and optional `USER.md`, plus a dedicated `agentDir` and session store under `~/.quiet-core-bot/agents/<agentId>`.
 
   </Step>
   <Step title="Create channel accounts">
@@ -100,7 +100,7 @@ openclaw agents list --bindings
     - WhatsApp: link each phone number per account.
 
     ```bash
-    openclaw channels login --channel whatsapp --account work
+    quiet-core-bot channels login --channel whatsapp --account work
     ```
 
     See channel guides: [Discord](/channels/discord), [Telegram](/channels/telegram), [WhatsApp](/channels/whatsapp).
@@ -111,9 +111,9 @@ openclaw agents list --bindings
   </Step>
   <Step title="Restart and verify">
     ```bash
-    openclaw gateway restart
-    openclaw agents list --bindings
-    openclaw channels status --probe
+    quiet-core-bot gateway restart
+    quiet-core-bot agents list --bindings
+    quiet-core-bot channels status --probe
     ```
   </Step>
 </Steps>
@@ -179,8 +179,8 @@ Example:
 {
   agents: {
     list: [
-      { id: "alex", workspace: "~/.openclaw/workspace-alex" },
-      { id: "mia", workspace: "~/.openclaw/workspace-mia" },
+      { id: "alex", workspace: "~/.quiet-core-bot/workspace-alex" },
+      { id: "mia", workspace: "~/.quiet-core-bot/workspace-mia" },
     ],
   },
   bindings: [
@@ -248,7 +248,7 @@ Bindings are **deterministic** and **most-specific wins**:
     - A binding that omits `accountId` matches the default account only. It does not match all accounts.
     - Use `accountId: "*"` for a channel-wide fallback across all accounts.
     - Use `accountId: "<name>"` to match one account.
-    - If you later add the same binding for the same agent with an explicit account id, OpenClaw upgrades the existing channel-only binding to account-scoped instead of duplicating it.
+    - If you later add the same binding for the same agent with an explicit account id, Quiet Core bot upgrades the existing channel-only binding to account-scoped instead of duplicating it.
 
   </Accordion>
 </AccordionGroup>
@@ -257,7 +257,7 @@ Bindings are **deterministic** and **most-specific wins**:
 
 Channels that support **multiple accounts** (e.g. WhatsApp) use `accountId` to identify each login. Each `accountId` can be routed to a different agent, so one server can host multiple phone numbers without mixing sessions.
 
-If you want a channel-wide default account when `accountId` is omitted, set `channels.<channel>.defaultAccount` (optional). When unset, OpenClaw falls back to `default` if present, otherwise the first configured account id (sorted).
+If you want a channel-wide default account when `accountId` is omitted, set `channels.<channel>.defaultAccount` (optional). When unset, Quiet Core bot falls back to `default` if present, otherwise the first configured account id (sorted).
 
 Common channels supporting this pattern include:
 
@@ -282,8 +282,8 @@ Common channels supporting this pattern include:
     {
       agents: {
         list: [
-          { id: "main", workspace: "~/.openclaw/workspace-main" },
-          { id: "coding", workspace: "~/.openclaw/workspace-coding" },
+          { id: "main", workspace: "~/.quiet-core-bot/workspace-main" },
+          { id: "coding", workspace: "~/.quiet-core-bot/workspace-coding" },
         ],
       },
       bindings: [
@@ -329,8 +329,8 @@ Common channels supporting this pattern include:
     {
       agents: {
         list: [
-          { id: "main", workspace: "~/.openclaw/workspace-main" },
-          { id: "alerts", workspace: "~/.openclaw/workspace-alerts" },
+          { id: "main", workspace: "~/.quiet-core-bot/workspace-main" },
+          { id: "alerts", workspace: "~/.quiet-core-bot/workspace-alerts" },
         ],
       },
       bindings: [
@@ -368,11 +368,11 @@ Common channels supporting this pattern include:
     Link each account before starting the gateway:
 
     ```bash
-    openclaw channels login --channel whatsapp --account personal
-    openclaw channels login --channel whatsapp --account biz
+    quiet-core-bot channels login --channel whatsapp --account personal
+    quiet-core-bot channels login --channel whatsapp --account biz
     ```
 
-    `~/.openclaw/openclaw.json` (JSON5):
+    `~/.quiet-core-bot/quiet-core-bot.json` (JSON5):
 
     ```js
     {
@@ -382,14 +382,14 @@ Common channels supporting this pattern include:
             id: "home",
             default: true,
             name: "Home",
-            workspace: "~/.openclaw/workspace-home",
-            agentDir: "~/.openclaw/agents/home/agent",
+            workspace: "~/.quiet-core-bot/workspace-home",
+            agentDir: "~/.quiet-core-bot/agents/home/agent",
           },
           {
             id: "work",
             name: "Work",
-            workspace: "~/.openclaw/workspace-work",
-            agentDir: "~/.openclaw/agents/work/agent",
+            workspace: "~/.quiet-core-bot/workspace-work",
+            agentDir: "~/.quiet-core-bot/agents/work/agent",
           },
         ],
       },
@@ -422,12 +422,12 @@ Common channels supporting this pattern include:
         whatsapp: {
           accounts: {
             personal: {
-              // Optional override. Default: ~/.openclaw/credentials/whatsapp/personal
-              // authDir: "~/.openclaw/credentials/whatsapp/personal",
+              // Optional override. Default: ~/.quiet-core-bot/credentials/whatsapp/personal
+              // authDir: "~/.quiet-core-bot/credentials/whatsapp/personal",
             },
             biz: {
-              // Optional override. Default: ~/.openclaw/credentials/whatsapp/biz
-              // authDir: "~/.openclaw/credentials/whatsapp/biz",
+              // Optional override. Default: ~/.quiet-core-bot/credentials/whatsapp/biz
+              // authDir: "~/.quiet-core-bot/credentials/whatsapp/biz",
             },
           },
         },
@@ -451,13 +451,13 @@ Common channels supporting this pattern include:
           {
             id: "chat",
             name: "Everyday",
-            workspace: "~/.openclaw/workspace-chat",
+            workspace: "~/.quiet-core-bot/workspace-chat",
             model: "anthropic/claude-sonnet-4-6",
           },
           {
             id: "opus",
             name: "Deep Work",
-            workspace: "~/.openclaw/workspace-opus",
+            workspace: "~/.quiet-core-bot/workspace-opus",
             model: "anthropic/claude-opus-4-6",
           },
         ],
@@ -485,13 +485,13 @@ Common channels supporting this pattern include:
           {
             id: "chat",
             name: "Everyday",
-            workspace: "~/.openclaw/workspace-chat",
+            workspace: "~/.quiet-core-bot/workspace-chat",
             model: "anthropic/claude-sonnet-4-6",
           },
           {
             id: "opus",
             name: "Deep Work",
-            workspace: "~/.openclaw/workspace-opus",
+            workspace: "~/.quiet-core-bot/workspace-opus",
             model: "anthropic/claude-opus-4-6",
           },
         ],
@@ -519,7 +519,7 @@ Common channels supporting this pattern include:
           {
             id: "family",
             name: "Family",
-            workspace: "~/.openclaw/workspace-family",
+            workspace: "~/.quiet-core-bot/workspace-family",
             identity: { name: "Family Bot" },
             groupChat: {
               mentionPatterns: ["@family", "@familybot", "@Family Bot"],
@@ -573,7 +573,7 @@ Each agent can have its own sandbox and tool restrictions:
     list: [
       {
         id: "personal",
-        workspace: "~/.openclaw/workspace-personal",
+        workspace: "~/.quiet-core-bot/workspace-personal",
         sandbox: {
           mode: "off",  // No sandbox for personal agent
         },
@@ -581,7 +581,7 @@ Each agent can have its own sandbox and tool restrictions:
       },
       {
         id: "family",
-        workspace: "~/.openclaw/workspace-family",
+        workspace: "~/.quiet-core-bot/workspace-family",
         sandbox: {
           mode: "all",     // Always sandboxed
           scope: "agent",  // One container per agent

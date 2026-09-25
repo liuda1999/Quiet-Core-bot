@@ -2,11 +2,11 @@
 summary: "IRC plugin setup, access controls, and troubleshooting"
 title: IRC
 read_when:
-  - You want to connect OpenClaw to IRC channels or DMs
+  - You want to connect Quiet Core bot to IRC channels or DMs
   - You are configuring IRC allowlists, group policy, or mention gating
 ---
 
-Use IRC when you want OpenClaw in classic channels (`#room`) and direct messages.
+Use IRC when you want Quiet Core bot in classic channels (`#room`) and direct messages.
 Install the official IRC plugin, then configure it under `channels.irc`.
 
 ## Quick start
@@ -14,10 +14,10 @@ Install the official IRC plugin, then configure it under `channels.irc`.
 1. Install the plugin:
 
 ```bash
-openclaw plugins install @openclaw/irc
+quiet-core-bot plugins install @openclaw/irc
 ```
 
-2. Enable IRC config in `~/.openclaw/openclaw.json`.
+2. Enable IRC config in `~/.quiet-core-bot/quiet-core-bot.json`.
 3. Set at least:
 
 ```json5
@@ -40,12 +40,12 @@ Prefer a private IRC server for bot coordination. If you intentionally use a pub
 4. Start/restart gateway:
 
 ```bash
-openclaw gateway run
+quiet-core-bot gateway run
 ```
 
 ## Security defaults
 
-- IRC uses raw TCP/TLS sockets outside OpenClaw operator-managed forward proxy routing. In deployments that require all egress through that forward proxy, set `channels.irc.enabled=false` unless direct IRC egress is explicitly approved.
+- IRC uses raw TCP/TLS sockets outside Quiet Core bot operator-managed forward proxy routing. In deployments that require all egress through that forward proxy, set `channels.irc.enabled=false` unless direct IRC egress is explicitly approved.
 - `channels.irc.dmPolicy` defaults to `"pairing"`.
 - `channels.irc.groupPolicy` defaults to `"allowlist"`.
 - With `groupPolicy="allowlist"`, set `channels.irc.groups` to define allowed channels.
@@ -96,7 +96,7 @@ Example (allow anyone in `#tuirc-dev` to talk to the bot):
 
 ## Reply triggering (mentions)
 
-Even if a channel is allowed (via `groupPolicy` + `groups`) and the sender is allowed, OpenClaw defaults to **mention-gating** in group contexts.
+Even if a channel is allowed (via `groupPolicy` + `groups`) and the sender is allowed, Quiet Core bot defaults to **mention-gating** in group contexts.
 
 That means you may see logs like `drop channel … (missing-mention)` unless the message includes a mention pattern that matches the bot.
 

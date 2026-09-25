@@ -8,7 +8,7 @@ title: "Secrets management"
 sidebarTitle: "Secrets management"
 ---
 
-OpenClaw supports additive SecretRefs so supported credentials do not need to be stored as plaintext in configuration.
+Quiet Core bot supports additive SecretRefs so supported credentials do not need to be stored as plaintext in configuration.
 
 <Note>
 Plaintext still works. SecretRefs are opt-in per credential.
@@ -16,10 +16,10 @@ Plaintext still works. SecretRefs are opt-in per credential.
 
 <Warning>
 Plaintext credentials remain agent-readable if they are stored in files the
-agent can inspect, including `openclaw.json`, `auth-profiles.json`, `.env`, or
+agent can inspect, including `quiet-core-bot.json`, `auth-profiles.json`, `.env`, or
 generated `agents/*/agent/models.json` files. SecretRefs reduce that local blast
 radius only after every supported credential has been migrated and
-`openclaw secrets audit --check` reports no plaintext secret residue.
+`quiet-core-bot secrets audit --check` reports no plaintext secret residue.
 </Warning>
 
 ## Goals and runtime model
@@ -47,9 +47,9 @@ For production deployments where agent-accessible files are in scope, treat
 SecretRef migration as complete only when all of these are true:
 
 - supported credentials use SecretRefs instead of plaintext values
-- legacy plaintext residue has been scrubbed from `openclaw.json`,
+- legacy plaintext residue has been scrubbed from `quiet-core-bot.json`,
   `auth-profiles.json`, `.env`, and generated `models.json` files
-- `openclaw secrets audit --check` is clean after the migration
+- `quiet-core-bot secrets audit --check` is clean after the migration
 - any remaining unsupported or rotating credentials are protected by operating
   system isolation, container isolation, or an external credential proxy
 
@@ -101,7 +101,7 @@ These entries are logged with `SECRETS_GATEWAY_AUTH_SURFACE` and include the rea
 
 ## Onboarding reference preflight
 
-When onboarding runs in interactive mode and you choose SecretRef storage, OpenClaw runs preflight validation before saving:
+When onboarding runs in interactive mode and you choose SecretRef storage, Quiet Core bot runs preflight validation before saving:
 
 - Env refs: validates env var name and confirms a non-empty value is visible during setup.
 - Provider refs (`file` or `exec`): validates provider selection, resolves `id`, and checks resolved value type.
@@ -173,7 +173,7 @@ Define providers under `secrets.providers`:
       default: { source: "env" },
       filemain: {
         source: "file",
-        path: "~/.openclaw/secrets.json",
+        path: "~/.quiet-core-bot/secrets.json",
         mode: "json", // or "singleValue"
       },
       vault: {
@@ -222,12 +222,12 @@ Define providers under `secrets.providers`:
   <Accordion title="Exec provider">
     - Runs configured absolute binary path, no shell.
     - By default, `command` must point to a regular file (not a symlink).
-    - Set `allowSymlinkCommand: true` to allow symlink command paths (for example Homebrew shims). OpenClaw validates the resolved target path.
+    - Set `allowSymlinkCommand: true` to allow symlink command paths (for example Homebrew shims). Quiet Core bot validates the resolved target path.
     - Pair `allowSymlinkCommand` with `trustedDirs` for package-manager paths (for example `["/opt/homebrew"]`).
     - Supports timeout, no-output timeout, output byte limits, env allowlist, and trusted dirs.
     - Windows fail-closed note: if ACL verification is unavailable for the command path, resolution fails. For trusted paths only, set `allowInsecurePath: true` on that provider to bypass path security checks.
     - Plugin-managed exec providers can use `pluginIntegration` instead of
-      copied `command`/`args`. OpenClaw resolves the current command details
+      copied `command`/`args`. Quiet Core bot resolves the current command details
       from the installed plugin manifest during startup/reload. If the plugin is
       disabled, removed, untrusted, or no longer declares the integration,
       active SecretRefs using that provider fail closed.
@@ -270,7 +270,7 @@ Use a file SecretRef on a supported credential field instead:
     providers: {
       xai_key_file: {
         source: "file",
-        path: "~/.openclaw/secrets/xai-api-key.txt",
+        path: "~/.quiet-core-bot/secrets/xai-api-key.txt",
         mode: "singleValue",
       },
     },
@@ -305,7 +305,7 @@ the config fields that accept SecretRefs.
             command: "/opt/homebrew/bin/op",
             allowSymlinkCommand: true, // required for Homebrew symlinked binaries
             trustedDirs: ["/opt/homebrew"],
-            args: ["read", "op://Personal/OpenClaw QA API Key/password"],
+            args: ["read", "op://Personal/Quiet Core bot QA API Key/password"],
             passEnv: ["HOME"],
             jsonOnly: false,
           },
@@ -375,7 +375,7 @@ the config fields that accept SecretRefs.
     verify the resolver path:
 
     ```bash
-    openclaw secrets audit --allow-exec
+    quiet-core-bot secrets audit --allow-exec
     ```
 
   </Accordion>
@@ -490,8 +490,8 @@ the config fields that accept SecretRefs.
     updating config, verify both the static audit and the exec resolver path:
 
     ```bash
-    openclaw secrets audit --check
-    openclaw secrets audit --allow-exec
+    quiet-core-bot secrets audit --check
+    quiet-core-bot secrets audit --allow-exec
     ```
 
   </Accordion>
@@ -583,7 +583,7 @@ The core `ssh` sandbox backend also supports SecretRefs for SSH auth material:
 
 Runtime behavior:
 
-- OpenClaw resolves these refs during sandbox activation, not lazily during each SSH call.
+- Quiet Core bot resolves these refs during sandbox activation, not lazily during each SSH call.
 - Resolved values are written to temp files with restrictive permissions and used in generated SSH config.
 - If the effective sandbox backend is not `ssh`, these refs stay inactive and do not block startup.
 
@@ -607,7 +607,7 @@ Runtime-minted or rotating credentials and OAuth refresh material are intentiona
 Warning and audit signals:
 
 - `SECRETS_REF_OVERRIDES_PLAINTEXT` (runtime warning)
-- `REF_SHADOWED` (audit finding when `auth-profiles.json` credentials take precedence over `openclaw.json` refs)
+- `REF_SHADOWED` (audit finding when `auth-profiles.json` credentials take precedence over `quiet-core-bot.json` refs)
 
 Google Chat compatibility behavior:
 
@@ -634,7 +634,7 @@ Activation contract:
 
 ## Degraded and recovered signals
 
-When reload-time activation fails after a healthy state, OpenClaw enters degraded secrets state.
+When reload-time activation fails after a healthy state, Quiet Core bot enters degraded secrets state.
 
 One-shot system event and log codes:
 
@@ -656,10 +656,10 @@ There are two broad behaviors:
 
 <Tabs>
   <Tab title="Strict command paths">
-    For example `openclaw memory` remote-memory paths and `openclaw qr --remote` when it needs remote shared-secret refs. They read from the active snapshot and fail fast when a required SecretRef is unavailable.
+    For example `quiet-core-bot memory` remote-memory paths and `openclaw qr --remote` when it needs remote shared-secret refs. They read from the active snapshot and fail fast when a required SecretRef is unavailable.
   </Tab>
   <Tab title="Read-only command paths">
-    For example `openclaw status`, `openclaw status --all`, `openclaw channels status`, `openclaw channels resolve`, `openclaw security audit`, and read-only doctor/config repair flows. They also prefer the active snapshot, but degrade instead of aborting when a targeted SecretRef is unavailable in that command path.
+    For example `quiet-core-bot status`, `quiet-core-bot status --all`, `quiet-core-bot channels status`, `quiet-core-bot channels resolve`, `openclaw security audit`, and read-only doctor/config repair flows. They also prefer the active snapshot, but degrade instead of aborting when a targeted SecretRef is unavailable in that command path.
 
     Read-only behavior:
 
@@ -673,7 +673,7 @@ There are two broad behaviors:
 
 Other notes:
 
-- Snapshot refresh after backend secret rotation is handled by `openclaw secrets reload`.
+- Snapshot refresh after backend secret rotation is handled by `quiet-core-bot secrets reload`.
 - Gateway RPC method used by these command paths: `secrets.resolve`.
 
 ## Audit and configure workflow
@@ -683,17 +683,17 @@ Default operator flow:
 <Steps>
   <Step title="Audit current state">
     ```bash
-    openclaw secrets audit --check
+    quiet-core-bot secrets audit --check
     ```
   </Step>
   <Step title="Configure and apply SecretRefs">
     ```bash
-    openclaw secrets configure --apply
+    quiet-core-bot secrets configure --apply
     ```
   </Step>
   <Step title="Re-audit">
     ```bash
-    openclaw secrets audit --check
+    quiet-core-bot secrets audit --check
     ```
   </Step>
 </Steps>
@@ -703,22 +703,22 @@ still reports plaintext values at rest, the agent-access risk is still present
 even when runtime APIs return redacted values.
 
 If you save a plan instead of applying during `configure`, apply that saved plan
-with `openclaw secrets apply --from <plan-path>` before the re-audit.
+with `quiet-core-bot secrets apply --from <plan-path>` before the re-audit.
 
 <AccordionGroup>
   <Accordion title="secrets audit">
     Findings include:
 
-    - plaintext values at rest (`openclaw.json`, `auth-profiles.json`, `.env`, and generated `agents/*/agent/models.json`)
+    - plaintext values at rest (`quiet-core-bot.json`, `auth-profiles.json`, `.env`, and generated `agents/*/agent/models.json`)
     - plaintext sensitive provider header residues in generated `models.json` entries
     - unresolved refs
-    - precedence shadowing (`auth-profiles.json` taking priority over `openclaw.json` refs)
+    - precedence shadowing (`auth-profiles.json` taking priority over `quiet-core-bot.json` refs)
     - legacy residues (`auth.json`, OAuth reminders)
 
     Exec note:
 
     - By default, audit skips exec SecretRef resolvability checks to avoid command side effects.
-    - Use `openclaw secrets audit --allow-exec` to execute exec providers during audit.
+    - Use `quiet-core-bot secrets audit --allow-exec` to execute exec providers during audit.
 
     Header residue note:
 
@@ -729,7 +729,7 @@ with `openclaw secrets apply --from <plan-path>` before the re-audit.
     Interactive helper that:
 
     - configures `secrets.providers` first (`env`/`file`/`exec`, add/edit/remove)
-    - lets you select supported secret-bearing fields in `openclaw.json` plus `auth-profiles.json` for one agent scope
+    - lets you select supported secret-bearing fields in `quiet-core-bot.json` plus `auth-profiles.json` for one agent scope
     - can create a new `auth-profiles.json` mapping directly in the target picker
     - captures SecretRef details (`source`, `provider`, `id`)
     - runs preflight resolution
@@ -742,9 +742,9 @@ with `openclaw secrets apply --from <plan-path>` before the re-audit.
 
     Helpful modes:
 
-    - `openclaw secrets configure --providers-only`
-    - `openclaw secrets configure --skip-provider-setup`
-    - `openclaw secrets configure --agent <id>`
+    - `quiet-core-bot secrets configure --providers-only`
+    - `quiet-core-bot secrets configure --skip-provider-setup`
+    - `quiet-core-bot secrets configure --agent <id>`
 
     `configure` apply defaults:
 
@@ -757,10 +757,10 @@ with `openclaw secrets apply --from <plan-path>` before the re-audit.
     Apply a saved plan:
 
     ```bash
-    openclaw secrets apply --from /tmp/openclaw-secrets-plan.json
-    openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --allow-exec
-    openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run
-    openclaw secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run --allow-exec
+    quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json
+    quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json --allow-exec
+    quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run
+    quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run --allow-exec
     ```
 
     Exec note:
@@ -776,7 +776,7 @@ with `openclaw secrets apply --from <plan-path>` before the re-audit.
 ## One-way safety policy
 
 <Warning>
-OpenClaw intentionally does not write rollback backups containing historical plaintext secret values.
+Quiet Core bot intentionally does not write rollback backups containing historical plaintext secret values.
 </Warning>
 
 Safety model:

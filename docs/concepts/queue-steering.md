@@ -7,33 +7,33 @@ read_when:
 title: "Steering queue"
 ---
 
-When a normal prompt arrives while a session run is already streaming, OpenClaw
+When a normal prompt arrives while a session run is already streaming, Quiet Core bot
 tries to send that prompt into the active runtime by default when the queue mode
 is `steer`. No config entry and no queue directive are required for that default
-behavior. OpenClaw and the native Codex app-server harness implement the delivery
+behavior. Quiet Core bot and the native Codex app-server harness implement the delivery
 details differently.
 
 ## Runtime boundary
 
-Steering does not interrupt a tool call that is already running. OpenClaw checks for
+Steering does not interrupt a tool call that is already running. Quiet Core bot checks for
 queued steering messages at model boundaries:
 
 1. The assistant asks for tool calls.
-2. OpenClaw executes the current assistant message's tool-call batch.
-3. OpenClaw emits the turn end event.
-4. OpenClaw drains queued steering messages.
-5. OpenClaw appends those messages as user messages before the next LLM call.
+2. Quiet Core bot executes the current assistant message's tool-call batch.
+3. Quiet Core bot emits the turn end event.
+4. Quiet Core bot drains queued steering messages.
+5. Quiet Core bot appends those messages as user messages before the next LLM call.
 
 This keeps tool results paired with the assistant message that requested them,
 then lets the next model call see the latest user input.
 
-The native Codex app-server harness exposes `turn/steer` instead of OpenClaw runtime's
-internal steering queue. OpenClaw batches queued prompts for the configured
+The native Codex app-server harness exposes `turn/steer` instead of Quiet Core bot runtime's
+internal steering queue. Quiet Core bot batches queued prompts for the configured
 quiet window, then sends a single `turn/steer` request with all collected user
 input in arrival order.
 
 Codex review and manual compaction turns reject same-turn steering. When a
-runtime cannot accept steering in `steer` mode, OpenClaw waits for the active
+runtime cannot accept steering in `steer` mode, Quiet Core bot waits for the active
 run to finish before starting the prompt.
 
 This page explains queue-mode steering for normal inbound messages when the mode
@@ -55,12 +55,12 @@ this steering path; they wait until the active run finishes. For the explicit
 If four users send messages while the agent is executing a tool call:
 
 - With default behavior, the active runtime receives all four messages in
-  arrival order before its next model decision. OpenClaw drains them at the next model
+  arrival order before its next model decision. Quiet Core bot drains them at the next model
   boundary; Codex receives them as one batched `turn/steer`.
-- With `/queue collect`, OpenClaw does not steer. It waits until the active run
+- With `/queue collect`, Quiet Core bot does not steer. It waits until the active run
   ends, then creates a followup turn with compatible queued messages after the
   debounce window.
-- With `/queue interrupt`, OpenClaw aborts the active run and starts the newest
+- With `/queue interrupt`, Quiet Core bot aborts the active run and starts the newest
   message instead of steering.
 
 ## Scope
@@ -78,8 +78,8 @@ replace the active run.
 
 `messages.queue.debounceMs` applies to queued `followup` and `collect` delivery.
 In `steer` mode with the native Codex harness, it also sets the quiet window
-before sending batched `turn/steer`. For OpenClaw, active steering itself does not use
-the debounce timer because OpenClaw naturally batches messages until the next model
+before sending batched `turn/steer`. For Quiet Core bot, active steering itself does not use
+the debounce timer because Quiet Core bot naturally batches messages until the next model
 boundary.
 
 ## Related

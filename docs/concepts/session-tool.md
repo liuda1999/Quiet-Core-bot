@@ -7,7 +7,7 @@ read_when:
 title: "Session tools"
 ---
 
-OpenClaw gives agents tools to work across sessions, inspect status, and
+Quiet Core bot gives agents tools to work across sessions, inspect status, and
 orchestrate sub-agents.
 
 ## Available tools
@@ -105,7 +105,7 @@ receiving prompt (`[Inter-session message ... isUser=false]`) and in transcript
 provenance. The receiving agent should treat them as tool-routed data, not as a
 direct end-user-authored instruction.
 
-After the target responds, OpenClaw can run a **reply-back loop** where the
+After the target responds, Quiet Core bot can run a **reply-back loop** where the
 agents alternate messages (up to `session.agentToAgent.maxPingPongTurns`, range
 0-20, default 5). The target agent can reply
 `REPLY_SKIP` to stop early.
@@ -130,7 +130,7 @@ the live run:
 - `active` is the current live-run route. It is only reported for the live or
   current session being handled now.
 - `deliveryContext` is the persisted delivery route stored on the session,
-  which OpenClaw can reuse for later delivery even when the active surface
+  which Quiet Core bot can reuse for later delivery even when the active surface
   differs.
 
 `sessions_yield` intentionally ends the current turn so the next message can be
@@ -138,7 +138,7 @@ the follow-up event you are waiting for. Use it after spawning sub-agents when
 you want completion results to arrive as the next message instead of building
 poll loops.
 
-`subagents` is the visibility helper for already spawned OpenClaw
+`subagents` is the visibility helper for already spawned Quiet Core bot
 sub-agents. It supports `action: "list"` to inspect active/recent runs.
 
 ## Spawning sub-agents
@@ -168,7 +168,7 @@ orchestration tools.
 
 After completion, an announce step posts the result to the requester's channel.
 Completion delivery preserves bound thread/topic routing when available, and if
-the completion origin only identifies a channel OpenClaw can still reuse the
+the completion origin only identifies a channel Quiet Core bot can still reuse the
 requester session's stored route (`lastChannel` / `lastTo`) for direct
 delivery.
 

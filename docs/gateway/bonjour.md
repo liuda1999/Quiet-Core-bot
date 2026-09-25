@@ -6,7 +6,7 @@ read_when:
 title: "Bonjour discovery"
 ---
 
-OpenClaw can use Bonjour (mDNS / DNS-SD) to discover an active Gateway (WebSocket endpoint).
+Quiet Core bot can use Bonjour (mDNS / DNS-SD) to discover an active Gateway (WebSocket endpoint).
 Multicast `local.` browsing is a **LAN-only convenience**. The bundled `bonjour`
 plugin owns LAN advertising. It auto-starts on macOS hosts and is opt-in on
 Linux, Windows, and containerized Gateway deployments. For cross-network discovery, the same
@@ -27,7 +27,7 @@ High-level steps:
 3. Configure Tailscale **split DNS** so your chosen domain resolves via that
    DNS server for clients (including iOS).
 
-OpenClaw supports any discovery domain; `openclaw.internal.` is just an example.
+Quiet Core bot supports any discovery domain; `openclaw.internal.` is just an example.
 iOS/Android nodes browse both `local.` and your configured wide-area domain.
 
 ### Gateway config (recommended)
@@ -42,13 +42,13 @@ iOS/Android nodes browse both `local.` and your configured wide-area domain.
 ### One-time DNS server setup (gateway host)
 
 ```bash
-openclaw dns setup --apply
+quiet-core-bot dns setup --apply
 ```
 
 This installs CoreDNS and configures it to:
 
 - listen on port 53 only on the gateway's Tailscale interfaces
-- serve your chosen domain (example: `openclaw.internal.`) from `~/.openclaw/dns/<domain>.db`
+- serve your chosen domain (example: `openclaw.internal.`) from `~/.quiet-core-bot/dns/<domain>.db`
 
 Validate from a tailnet-connected machine:
 
@@ -74,7 +74,7 @@ access, bind explicitly and keep auth enabled.
 
 For tailnet-only setups:
 
-- Set `gateway.bind: "tailnet"` in `~/.openclaw/openclaw.json`.
+- Set `gateway.bind: "tailnet"` in `~/.quiet-core-bot/quiet-core-bot.json`.
 - Restart the Gateway (or restart the macOS menubar app).
 
 ## What advertises
@@ -142,13 +142,13 @@ The Gateway writes a rolling log file (printed on startup as
 - `bonjour: disabling advertiser after ... failed restarts ...`
 
 The watchdog treats active `probing`, `announcing`, and fresh conflict-renames as
-in-progress states. If the service never reaches `announced`, OpenClaw eventually
+in-progress states. If the service never reaches `announced`, Quiet Core bot eventually
 recreates the advertiser and, after repeated failures, disables Bonjour for that
 Gateway process instead of re-advertising forever.
 
 Bonjour uses the system hostname for the advertised `.local` host when it is a
 valid DNS label. If the system hostname contains spaces, underscores, or another
-invalid DNS-label character, OpenClaw falls back to `openclaw.local`. Set
+invalid DNS-label character, Quiet Core bot falls back to `openclaw.local`. Set
 `OPENCLAW_MDNS_HOSTNAME=<name>` before starting the Gateway when you need an
 explicit host label.
 
@@ -172,7 +172,7 @@ Enable Bonjour explicitly when same-LAN auto-discovery is useful on Linux,
 Windows, or another non-macOS host:
 
 ```bash
-openclaw plugins enable bonjour
+quiet-core-bot plugins enable bonjour
 ```
 
 When enabled, Bonjour uses `discovery.mdns.mode` to decide how much TXT metadata
@@ -201,10 +201,10 @@ It is safe for Docker images, service files, launch scripts, and one-off
 debugging because the setting disappears when the environment does.
 
 Use plugin configuration when you intentionally want to turn off the bundled LAN
-discovery plugin for that OpenClaw config:
+discovery plugin for that Quiet Core bot config:
 
 ```bash
-openclaw plugins disable bonjour
+quiet-core-bot plugins disable bonjour
 ```
 
 ## Docker gotchas
@@ -266,7 +266,7 @@ If a node no longer auto-discovers the Gateway after Docker setup:
 - **Multicast blocked**: some Wi-Fi networks disable mDNS.
 - **Advertiser stuck in probing/announcing**: hosts with blocked multicast,
   container bridges, WSL, or interface churn can leave the ciao advertiser in a
-  non-announced state. OpenClaw retries a few times and then disables Bonjour
+  non-announced state. Quiet Core bot retries a few times and then disables Bonjour
   for the current Gateway process instead of restarting the advertiser forever.
 - **Docker bridge networking**: Bonjour auto-disables in detected containers.
   Set `OPENCLAW_DISABLE_BONJOUR=0` only for host, macvlan, or another
@@ -287,12 +287,12 @@ sequences (e.g. spaces become `\032`).
 ## Enabling / disabling / configuration
 
 - macOS hosts auto-start the bundled LAN discovery plugin by default.
-- `openclaw plugins enable bonjour` enables the bundled LAN discovery plugin on hosts where it is not default-enabled.
-- `openclaw plugins disable bonjour` disables LAN multicast advertising by disabling the bundled plugin.
+- `quiet-core-bot plugins enable bonjour` enables the bundled LAN discovery plugin on hosts where it is not default-enabled.
+- `quiet-core-bot plugins disable bonjour` disables LAN multicast advertising by disabling the bundled plugin.
 - `OPENCLAW_DISABLE_BONJOUR=1` disables LAN multicast advertising without changing plugin config; accepted truthy values are `1`, `true`, `yes`, and `on` (legacy: `OPENCLAW_DISABLE_BONJOUR`).
 - `OPENCLAW_DISABLE_BONJOUR=0` forces LAN multicast advertising on, including inside detected containers; accepted falsy values are `0`, `false`, `no`, and `off`.
 - When the Bonjour plugin is enabled and `OPENCLAW_DISABLE_BONJOUR` is unset, Bonjour advertises on normal hosts and auto-disables inside detected containers.
-- `gateway.bind` in `~/.openclaw/openclaw.json` controls the Gateway bind mode.
+- `gateway.bind` in `~/.quiet-core-bot/quiet-core-bot.json` controls the Gateway bind mode.
 - `OPENCLAW_SSH_PORT` overrides the SSH port when `sshPort` is advertised (legacy: `OPENCLAW_SSH_PORT`).
 - `OPENCLAW_TAILNET_DNS` publishes a MagicDNS hint in TXT when mDNS full mode is enabled (legacy: `OPENCLAW_TAILNET_DNS`).
 - `OPENCLAW_CLI_PATH` overrides the advertised CLI path (legacy: `OPENCLAW_CLI_PATH`).

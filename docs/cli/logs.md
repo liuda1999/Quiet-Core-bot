@@ -1,12 +1,12 @@
 ---
-summary: "CLI reference for `openclaw logs` (tail gateway logs via RPC)"
+summary: "CLI reference for `quiet-core-bot logs` (tail gateway logs via RPC)"
 read_when:
   - You need to tail Gateway logs remotely (without SSH)
   - You want JSON log lines for tooling
 title: "Logs"
 ---
 
-# `openclaw logs`
+# `quiet-core-bot logs`
 
 Tail Gateway file logs over RPC (works in remote mode).
 
@@ -29,7 +29,7 @@ Related:
 
 ## Shared Gateway RPC options
 
-`openclaw logs` also accepts the standard Gateway client flags:
+`quiet-core-bot logs` also accepts the standard Gateway client flags:
 
 - `--url <url>`: Gateway WebSocket URL
 - `--token <token>`: Gateway token
@@ -41,25 +41,25 @@ When you pass `--url`, the CLI does not auto-apply config or environment credent
 ## Examples
 
 ```bash
-openclaw logs
-openclaw logs --follow
-openclaw logs --follow --interval 2000
-openclaw logs --limit 500 --max-bytes 500000
-openclaw logs --json
-openclaw logs --plain
-openclaw logs --no-color
-openclaw logs --limit 500
-openclaw logs --local-time
-openclaw logs --utc
-openclaw logs --follow --local-time
-openclaw logs --url ws://127.0.0.1:18789 --token "$OPENCLAW_GATEWAY_TOKEN"
+quiet-core-bot logs
+quiet-core-bot logs --follow
+quiet-core-bot logs --follow --interval 2000
+quiet-core-bot logs --limit 500 --max-bytes 500000
+quiet-core-bot logs --json
+quiet-core-bot logs --plain
+quiet-core-bot logs --no-color
+quiet-core-bot logs --limit 500
+quiet-core-bot logs --local-time
+quiet-core-bot logs --utc
+quiet-core-bot logs --follow --local-time
+quiet-core-bot logs --url ws://127.0.0.1:18789 --token "$OPENCLAW_GATEWAY_TOKEN"
 ```
 
 ## Notes
 
 - Timestamps render in your local timezone by default. Use `--utc` for UTC output.
-- If the implicit local loopback Gateway asks for pairing, closes during connect, or times out before `logs.tail` answers, `openclaw logs` falls back to the configured Gateway file log automatically. Explicit `--url` targets do not use this fallback.
-- `openclaw logs --follow` does not follow configured-file fallbacks after implicit local Gateway RPC failures. On Linux, it uses the active user-systemd Gateway journal by PID when available and prints the selected log source; otherwise it keeps retrying the live Gateway instead of tailing a potentially stale side-by-side file.
+- If the implicit local loopback Gateway asks for pairing, closes during connect, or times out before `logs.tail` answers, `quiet-core-bot logs` falls back to the configured Gateway file log automatically. Explicit `--url` targets do not use this fallback.
+- `quiet-core-bot logs --follow` does not follow configured-file fallbacks after implicit local Gateway RPC failures. On Linux, it uses the active user-systemd Gateway journal by PID when available and prints the selected log source; otherwise it keeps retrying the live Gateway instead of tailing a potentially stale side-by-side file.
 - When using `--follow`, transient gateway disconnects (WebSocket close, timeout, connection drop) trigger automatic reconnection with exponential backoff (up to 8 retries, capped at 30 s between attempts). A warning is printed to stderr on each retry, and a `[logs] gateway reconnected` notice is printed once a poll succeeds. In `--json` mode both the retry warning and the reconnect transition are emitted as `{"type":"notice"}` records on stderr. Non-recoverable errors (auth failure, bad configuration) still exit immediately.
 
 ## Related

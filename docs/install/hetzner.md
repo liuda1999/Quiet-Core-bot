@@ -1,18 +1,18 @@
 ---
-summary: "Run OpenClaw Gateway 24/7 on a cheap Hetzner VPS (Docker) with durable state and baked-in binaries"
+summary: "Run Quiet Core bot Gateway 24/7 on a cheap Hetzner VPS (Docker) with durable state and baked-in binaries"
 read_when:
-  - You want OpenClaw running 24/7 on a cloud VPS (not your laptop)
+  - You want Quiet Core bot running 24/7 on a cloud VPS (not your laptop)
   - You want a production-grade, always-on Gateway on your own VPS
   - You want full control over persistence, binaries, and restart behavior
-  - You are running OpenClaw in Docker on Hetzner or a similar provider
+  - You are running Quiet Core bot in Docker on Hetzner or a similar provider
 title: "Hetzner"
 ---
 
 ## Goal
 
-Run a persistent OpenClaw Gateway on a Hetzner VPS using Docker, with durable state, baked-in binaries, and safe restart behavior.
+Run a persistent Quiet Core bot Gateway on a Hetzner VPS using Docker, with durable state, baked-in binaries, and safe restart behavior.
 
-If you want "OpenClaw 24/7 for ~$5", this is the simplest reliable setup.
+If you want "Quiet Core bot 24/7 for ~$5", this is the simplest reliable setup.
 Hetzner pricing changes; pick the smallest Debian/Ubuntu VPS and scale up if you hit OOMs.
 
 Security model reminder:
@@ -27,11 +27,11 @@ See [Security](/gateway/security) and [VPS hosting](/vps).
 
 - Rent a small Linux server (Hetzner VPS)
 - Install Docker (isolated app runtime)
-- Start the OpenClaw Gateway in Docker
-- Persist `~/.openclaw` + `~/.openclaw/workspace` on the host (survives restarts/rebuilds)
+- Start the Quiet Core bot Gateway in Docker
+- Persist `~/.quiet-core-bot` + `~/.quiet-core-bot/workspace` on the host (survives restarts/rebuilds)
 - Access the Control UI from your laptop via an SSH tunnel
 
-That mounted `~/.openclaw` state includes `openclaw.json`, per-agent
+That mounted `~/.quiet-core-bot` state includes `quiet-core-bot.json`, per-agent
 `agents/<agentId>/agent/auth-profiles.json`, and `.env`.
 
 The Gateway can be accessed via:
@@ -49,7 +49,7 @@ For the generic Docker flow, see [Docker](/install/docker).
 
 1. Provision Hetzner VPS
 2. Install Docker
-3. Clone OpenClaw repository
+3. Clone Quiet Core bot repository
 4. Create persistent host directories
 5. Configure `.env` and `docker-compose.yml`
 6. Bake required binaries into the image
@@ -104,7 +104,7 @@ For the generic Docker flow, see [Docker](/install/docker).
 
   </Step>
 
-  <Step title="Clone the OpenClaw repository">
+  <Step title="Clone the Quiet Core bot repository">
     ```bash
     git clone https://github.com/openclaw/openclaw.git
     cd openclaw
@@ -145,7 +145,7 @@ For the generic Docker flow, see [Docker](/install/docker).
 
     Set `OPENCLAW_GATEWAY_TOKEN` when you want to manage the stable gateway
     token through `.env`; otherwise configure `gateway.auth.token` before
-    relying on clients across restarts. If neither source exists, OpenClaw uses
+    relying on clients across restarts. If neither source exists, Quiet Core bot uses
     a runtime-only token for that startup. Generate a keyring password and paste
     it into `GOG_KEYRING_PASSWORD`:
 
@@ -157,7 +157,7 @@ For the generic Docker flow, see [Docker](/install/docker).
 
     This `.env` file is for container/runtime env such as `OPENCLAW_GATEWAY_TOKEN`.
     Stored provider OAuth/API-key auth lives in the mounted
-    `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`.
+    `~/.quiet-core-bot/agents/<agentId>/agent/auth-profiles.json`.
 
   </Step>
 
@@ -275,7 +275,7 @@ Community-maintained. For issues or contributions, see the repository links abov
 
 - Set up messaging channels: [Channels](/channels)
 - Configure the Gateway: [Gateway configuration](/gateway/configuration)
-- Keep OpenClaw up to date: [Updating](/install/updating)
+- Keep Quiet Core bot up to date: [Updating](/install/updating)
 
 ## Related
 

@@ -9,7 +9,7 @@ title: "Transcripts CLI"
 
 # `openclaw transcripts`
 
-Inspect transcripts written by OpenClaw's core `transcripts` tool. This CLI is
+Inspect transcripts written by Quiet Core bot's core `transcripts` tool. This CLI is
 read-only; capture, import, and summarization are owned by the agent tool and
 configured auto-start sources.
 
@@ -17,7 +17,7 @@ Use the CLI when you want to find yesterday's notes, open the Markdown file in
 an editor, feed a transcript to another tool, or debug where a session landed on
 disk. It does not start or stop capture.
 
-Artifacts live under the OpenClaw state directory:
+Artifacts live under the Quiet Core bot state directory:
 
 ```text
 $OPENCLAW_STATE_DIR/transcripts/YYYY-MM-DD/<session>/
@@ -27,7 +27,7 @@ $OPENCLAW_STATE_DIR/transcripts/YYYY-MM-DD/<session>/
   summary.md
 ```
 
-The default state directory is `~/.openclaw`; set `OPENCLAW_STATE_DIR` to use a
+The default state directory is `~/.quiet-core-bot`; set `OPENCLAW_STATE_DIR` to use a
 different one. The date directory comes from the session start time, and the
 session directory is a safe filesystem segment derived from the session id.
 
@@ -94,7 +94,7 @@ Transcripts groups sessions by date, then by session id. Ten meetings on one
 day become ten sibling folders:
 
 ```text
-~/.openclaw/transcripts/2026-05-22/
+~/.quiet-core-bot/transcripts/2026-05-22/
   transcript-2026-05-22T09-00-00-000Z-a1b2c3d4/
   transcript-2026-05-22T10-30-00-000Z-b2c3d4e5/
   standup/
@@ -127,7 +127,7 @@ audio. Enable the tool with top-level `transcripts.enabled`:
 }
 ```
 
-Configure auto-start sources with `transcripts.autoStart` in `openclaw.json`.
+Configure auto-start sources with `transcripts.autoStart` in `quiet-core-bot.json`.
 Each entry is enabled by being present; omit an entry to disable that source.
 
 ```json

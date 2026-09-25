@@ -9,31 +9,31 @@ sidebarTitle: "Agent workspace"
 
 The workspace is the agent's home. It is the only working directory used for file tools and for workspace context. Keep it private and treat it as memory.
 
-This is separate from `~/.openclaw/`, which stores config, credentials, and sessions.
+This is separate from `~/.quiet-core-bot/`, which stores config, credentials, and sessions.
 
 <Warning>
 The workspace is the **default cwd**, not a hard sandbox. Tools resolve relative paths against the workspace, but absolute paths can still reach elsewhere on the host unless sandboxing is enabled. If you need isolation, use [`agents.defaults.sandbox`](/gateway/sandboxing) (and/or per-agent sandbox config).
 
-When sandboxing is enabled and `workspaceAccess` is not `"rw"`, tools operate inside a sandbox workspace under `~/.openclaw/sandboxes`, not your host workspace.
+When sandboxing is enabled and `workspaceAccess` is not `"rw"`, tools operate inside a sandbox workspace under `~/.quiet-core-bot/sandboxes`, not your host workspace.
 </Warning>
 
 ## Default location
 
-- Default: `~/.openclaw/workspace`
-- If `OPENCLAW_PROFILE` is set and not `"default"`, the default becomes `~/.openclaw/workspace-<profile>`.
-- Override in `~/.openclaw/openclaw.json`:
+- Default: `~/.quiet-core-bot/workspace`
+- If `OPENCLAW_PROFILE` is set and not `"default"`, the default becomes `~/.quiet-core-bot/workspace-<profile>`.
+- Override in `~/.quiet-core-bot/quiet-core-bot.json`:
 
 ```json5
 {
   agents: {
     defaults: {
-      workspace: "~/.openclaw/workspace",
+      workspace: "~/.quiet-core-bot/workspace",
     },
   },
 }
 ```
 
-`openclaw onboard`, `openclaw configure`, or `openclaw setup` will create the workspace and seed the bootstrap files if they are missing.
+`quiet-core-bot onboard`, `quiet-core-bot configure`, or `quiet-core-bot setup` will create the workspace and seed the bootstrap files if they are missing.
 
 <Note>
 Sandbox seed copies only accept regular in-workspace files; symlink/hardlink aliases that resolve outside the source workspace are ignored.
@@ -52,12 +52,12 @@ Older installs may have created `~/openclaw`. Keeping multiple workspace directo
 <Note>
 **Recommendation:** keep a single active workspace. If you no longer use the extra folders, archive or move them to Trash (for example `trash ~/openclaw`). If you intentionally keep multiple workspaces, make sure `agents.defaults.workspace` points to the active one.
 
-`openclaw doctor` warns when it detects extra workspace directories.
+`quiet-core-bot doctor` warns when it detects extra workspace directories.
 </Note>
 
 ## Workspace file map
 
-These are the standard files OpenClaw expects inside the workspace:
+These are the standard files Quiet Core bot expects inside the workspace:
 
 <AccordionGroup>
   <Accordion title="AGENTS.md - operating instructions">
@@ -99,19 +99,19 @@ These are the standard files OpenClaw expects inside the workspace:
 </AccordionGroup>
 
 <Note>
-If any bootstrap file is missing, OpenClaw injects a "missing file" marker into the session and continues. Large bootstrap files are truncated when injected; adjust limits with `agents.defaults.bootstrapMaxChars` (default: 20000) and `agents.defaults.bootstrapTotalMaxChars` (default: 60000). `openclaw setup` can recreate missing defaults without overwriting existing files.
+If any bootstrap file is missing, Quiet Core bot injects a "missing file" marker into the session and continues. Large bootstrap files are truncated when injected; adjust limits with `agents.defaults.bootstrapMaxChars` (default: 20000) and `agents.defaults.bootstrapTotalMaxChars` (default: 60000). `quiet-core-bot setup` can recreate missing defaults without overwriting existing files.
 </Note>
 
 ## What is NOT in the workspace
 
-These live under `~/.openclaw/` and should NOT be committed to the workspace repo:
+These live under `~/.quiet-core-bot/` and should NOT be committed to the workspace repo:
 
-- `~/.openclaw/openclaw.json` (config)
-- `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` (model auth profiles: OAuth + API keys)
-- `~/.openclaw/agents/<agentId>/agent/codex-home/` (per-agent Codex runtime account, config, skills, plugins, and native thread state)
-- `~/.openclaw/credentials/` (channel/provider state plus legacy OAuth import data)
-- `~/.openclaw/agents/<agentId>/sessions/` (session transcripts + metadata)
-- `~/.openclaw/skills/` (managed skills)
+- `~/.quiet-core-bot/quiet-core-bot.json` (config)
+- `~/.quiet-core-bot/agents/<agentId>/agent/auth-profiles.json` (model auth profiles: OAuth + API keys)
+- `~/.quiet-core-bot/agents/<agentId>/agent/codex-home/` (per-agent Codex runtime account, config, skills, plugins, and native thread state)
+- `~/.quiet-core-bot/credentials/` (channel/provider state plus legacy OAuth import data)
+- `~/.quiet-core-bot/agents/<agentId>/sessions/` (session transcripts + metadata)
+- `~/.quiet-core-bot/skills/` (managed skills)
 
 If you need to migrate sessions or config, copy them separately and keep them out of version control.
 
@@ -126,7 +126,7 @@ Run these steps on the machine where the Gateway runs (that is where the workspa
     If git is installed, brand-new workspaces are initialized automatically. If this workspace is not already a repo, run:
 
     ```bash
-    cd ~/.openclaw/workspace
+    cd ~/.quiet-core-bot/workspace
     git init
     git add AGENTS.md SOUL.md TOOLS.md IDENTITY.md USER.md HEARTBEAT.md memory/
     git commit -m "Add agent workspace"
@@ -184,10 +184,10 @@ Run these steps on the machine where the Gateway runs (that is where the workspa
 Even in a private repo, avoid storing secrets in the workspace:
 
 - API keys, OAuth tokens, passwords, or private credentials.
-- Anything under `~/.openclaw/`.
+- Anything under `~/.quiet-core-bot/`.
 - Raw dumps of chats or sensitive attachments.
 
-If you must store sensitive references, use placeholders and keep the real secret elsewhere (password manager, environment variables, or `~/.openclaw/`).
+If you must store sensitive references, use placeholders and keep the real secret elsewhere (password manager, environment variables, or `~/.quiet-core-bot/`).
 </Warning>
 
 Suggested `.gitignore` starter:
@@ -204,16 +204,16 @@ Suggested `.gitignore` starter:
 
 <Steps>
   <Step title="Clone the repo">
-    Clone the repo to the desired path (default `~/.openclaw/workspace`).
+    Clone the repo to the desired path (default `~/.quiet-core-bot/workspace`).
   </Step>
   <Step title="Update config">
-    Set `agents.defaults.workspace` to that path in `~/.openclaw/openclaw.json`.
+    Set `agents.defaults.workspace` to that path in `~/.quiet-core-bot/quiet-core-bot.json`.
   </Step>
   <Step title="Seed missing files">
-    Run `openclaw setup --workspace <path>` to seed any missing files.
+    Run `quiet-core-bot setup --workspace <path>` to seed any missing files.
   </Step>
   <Step title="Copy sessions (optional)">
-    If you need sessions, copy `~/.openclaw/agents/<agentId>/sessions/` from the old machine separately.
+    If you need sessions, copy `~/.quiet-core-bot/agents/<agentId>/sessions/` from the old machine separately.
   </Step>
 </Steps>
 

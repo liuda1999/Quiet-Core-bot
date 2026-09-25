@@ -1,5 +1,5 @@
 ---
-summary: "CLI reference for `openclaw skills` (search/install/update/verify/list/info/check/workshop)"
+summary: "CLI reference for `quiet-core-bot skills` (search/install/update/verify/list/info/check/workshop)"
 read_when:
   - You want to see which skills are available and ready to run
   - You want to search ClawHub or install skills from ClawHub, Git, or local directories
@@ -8,7 +8,7 @@ read_when:
 title: "Skills"
 ---
 
-# `openclaw skills`
+# `quiet-core-bot skills`
 
 Inspect local skills, search ClawHub, install skills from ClawHub/Git/local
 directories, verify ClawHub skills, and update ClawHub-tracked installs.
@@ -23,45 +23,45 @@ Related:
 ## Commands
 
 ```bash
-openclaw skills search "calendar"
-openclaw skills search --limit 20 --json
-openclaw skills install @owner/<slug>
-openclaw skills install @owner/<slug> --version <version>
-openclaw skills install git:owner/repo
-openclaw skills install git:owner/repo@main
-openclaw skills install ./path/to/skill --as custom-name
-openclaw skills install @owner/<slug> --force
-openclaw skills install @owner/<slug> --agent <id>
-openclaw skills install @owner/<slug> --global
-openclaw skills update @owner/<slug>
-openclaw skills update @owner/<slug> --global
-openclaw skills update --all
-openclaw skills update --all --agent <id>
-openclaw skills update --all --global
-openclaw skills verify @owner/<slug>
-openclaw skills verify @owner/<slug> --version <version>
-openclaw skills verify @owner/<slug> --tag <tag>
-openclaw skills verify @owner/<slug> --card
-openclaw skills verify @owner/<slug> --global
-openclaw skills list
-openclaw skills list --eligible
-openclaw skills list --json
-openclaw skills list --verbose
-openclaw skills list --agent <id>
-openclaw skills info <name>
-openclaw skills info <name> --json
-openclaw skills info <name> --agent <id>
-openclaw skills check
-openclaw skills check --agent <id>
-openclaw skills check --json
-openclaw skills workshop propose-create --name "qa-check" --description "QA checklist" --proposal ./PROPOSAL.md
-openclaw skills workshop propose-update qa-check --proposal ./PROPOSAL.md
-openclaw skills workshop list
-openclaw skills workshop inspect <proposal-id>
-openclaw skills workshop revise <proposal-id> --proposal ./PROPOSAL.md
-openclaw skills workshop apply <proposal-id>
-openclaw skills workshop reject <proposal-id> --reason "Not reusable"
-openclaw skills workshop quarantine <proposal-id> --reason "Needs security review"
+quiet-core-bot skills search "calendar"
+quiet-core-bot skills search --limit 20 --json
+quiet-core-bot skills install @owner/<slug>
+quiet-core-bot skills install @owner/<slug> --version <version>
+quiet-core-bot skills install git:owner/repo
+quiet-core-bot skills install git:owner/repo@main
+quiet-core-bot skills install ./path/to/skill --as custom-name
+quiet-core-bot skills install @owner/<slug> --force
+quiet-core-bot skills install @owner/<slug> --agent <id>
+quiet-core-bot skills install @owner/<slug> --global
+quiet-core-bot skills update @owner/<slug>
+quiet-core-bot skills update @owner/<slug> --global
+quiet-core-bot skills update --all
+quiet-core-bot skills update --all --agent <id>
+quiet-core-bot skills update --all --global
+quiet-core-bot skills verify @owner/<slug>
+quiet-core-bot skills verify @owner/<slug> --version <version>
+quiet-core-bot skills verify @owner/<slug> --tag <tag>
+quiet-core-bot skills verify @owner/<slug> --card
+quiet-core-bot skills verify @owner/<slug> --global
+quiet-core-bot skills list
+quiet-core-bot skills list --eligible
+quiet-core-bot skills list --json
+quiet-core-bot skills list --verbose
+quiet-core-bot skills list --agent <id>
+quiet-core-bot skills info <name>
+quiet-core-bot skills info <name> --json
+quiet-core-bot skills info <name> --agent <id>
+quiet-core-bot skills check
+quiet-core-bot skills check --agent <id>
+quiet-core-bot skills check --json
+quiet-core-bot skills workshop propose-create --name "qa-check" --description "QA checklist" --proposal ./PROPOSAL.md
+quiet-core-bot skills workshop propose-update qa-check --proposal ./PROPOSAL.md
+quiet-core-bot skills workshop list
+quiet-core-bot skills workshop inspect <proposal-id>
+quiet-core-bot skills workshop revise <proposal-id> --proposal ./PROPOSAL.md
+quiet-core-bot skills workshop apply <proposal-id>
+quiet-core-bot skills workshop reject <proposal-id> --reason "Not reusable"
+quiet-core-bot skills workshop quarantine <proposal-id> --reason "Needs security review"
 ```
 
 `search`, `update`, and `verify` use ClawHub directly. `install @owner/<slug>`
@@ -78,7 +78,7 @@ Git and local directory installs expect `SKILL.md` at the source root. The
 install slug comes from `SKILL.md` frontmatter `name` when it is valid, then the
 source directory or repository name; use `--as <slug>` to override it. `--version`
 is ClawHub-only. Skill installs do not support npm package specs or zip/archive
-paths, and `openclaw skills update` updates ClawHub-tracked installs only.
+paths, and `quiet-core-bot skills update` updates ClawHub-tracked installs only.
 
 Gateway-backed skill dependency installs triggered from onboarding or Skills
 settings use the separate `skills.install` request path instead.
@@ -121,7 +121,7 @@ Notes:
 - `verify --card` prints the generated Skill Card Markdown instead of JSON. The
   command exits non-zero when ClawHub returns `ok: false` or `decision: "fail"`;
   unsigned signatures are informational unless ClawHub policy changes.
-- Installed ClawHub bundles can include a generated `skill-card.md`. OpenClaw
+- Installed ClawHub bundles can include a generated `skill-card.md`. Quiet Core bot
   treats verification as a ClawHub server decision and does not reject an
   installed skill just because that generated card changes the bundle
   fingerprint.
@@ -134,27 +134,27 @@ Notes:
 
 ## Skill Workshop
 
-`openclaw skills workshop` manages pending skill proposals in the selected
+`quiet-core-bot skills workshop` manages pending skill proposals in the selected
 workspace. Proposals are not active skills until applied. For proposal storage,
 support-file safeguards, Gateway methods, and approval policy, see
 [Skill Workshop](/tools/skill-workshop).
 
 ```bash
-openclaw skills workshop propose-create \
+quiet-core-bot skills workshop propose-create \
   --name "qa-check" \
   --description "Repeatable QA checklist" \
   --proposal ./PROPOSAL.md
-openclaw skills workshop propose-create \
+quiet-core-bot skills workshop propose-create \
   --name "qa-check" \
   --description "Repeatable QA checklist" \
   --proposal-dir ./qa-check-proposal
-openclaw skills workshop propose-update qa-check --proposal ./PROPOSAL.md
-openclaw skills workshop list
-openclaw skills workshop inspect <proposal-id>
-openclaw skills workshop revise <proposal-id> --proposal ./PROPOSAL.md
-openclaw skills workshop apply <proposal-id>
-openclaw skills workshop reject <proposal-id> --reason "Duplicate"
-openclaw skills workshop quarantine <proposal-id> --reason "Needs security review"
+quiet-core-bot skills workshop propose-update qa-check --proposal ./PROPOSAL.md
+quiet-core-bot skills workshop list
+quiet-core-bot skills workshop inspect <proposal-id>
+quiet-core-bot skills workshop revise <proposal-id> --proposal ./PROPOSAL.md
+quiet-core-bot skills workshop apply <proposal-id>
+quiet-core-bot skills workshop reject <proposal-id> --reason "Duplicate"
+quiet-core-bot skills workshop quarantine <proposal-id> --reason "Needs security review"
 ```
 
 ## Related

@@ -1,15 +1,15 @@
 ---
-summary: "CLI reference for `openclaw browser` (lifecycle, profiles, tabs, actions, state, and debugging)"
+summary: "CLI reference for `quiet-core-bot browser` (lifecycle, profiles, tabs, actions, state, and debugging)"
 read_when:
-  - You use `openclaw browser` and want examples for common tasks
+  - You use `quiet-core-bot browser` and want examples for common tasks
   - You want to control a browser running on another machine via a node host
   - You want to attach to your local signed-in Chrome via Chrome MCP
 title: "Browser"
 ---
 
-# `openclaw browser`
+# `quiet-core-bot browser`
 
-Manage OpenClaw's browser control surface and run browser actions (lifecycle, profiles, tabs, snapshots, screenshots, navigation, input, state emulation, and debugging).
+Manage Quiet Core bot's browser control surface and run browser actions (lifecycle, profiles, tabs, snapshots, screenshots, navigation, input, state emulation, and debugging).
 
 Related:
 
@@ -27,10 +27,10 @@ Related:
 ## Quick start (local)
 
 ```bash
-openclaw browser profiles
-openclaw browser --browser-profile openclaw start
-openclaw browser --browser-profile openclaw open https://example.com
-openclaw browser --browser-profile openclaw snapshot
+quiet-core-bot browser profiles
+quiet-core-bot browser --browser-profile openclaw start
+quiet-core-bot browser --browser-profile openclaw open https://example.com
+quiet-core-bot browser --browser-profile openclaw snapshot
 ```
 
 Agents can run the same readiness check with `browser({ action: "doctor" })`.
@@ -42,10 +42,10 @@ If `start` fails with `not reachable after start`, troubleshoot CDP readiness fi
 Minimal sequence:
 
 ```bash
-openclaw browser --browser-profile openclaw doctor
-openclaw browser --browser-profile openclaw start
-openclaw browser --browser-profile openclaw tabs
-openclaw browser --browser-profile openclaw open https://example.com
+quiet-core-bot browser --browser-profile quiet-core-bot doctor
+quiet-core-bot browser --browser-profile openclaw start
+quiet-core-bot browser --browser-profile openclaw tabs
+quiet-core-bot browser --browser-profile openclaw open https://example.com
 ```
 
 Detailed guidance: [Browser troubleshooting](/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
@@ -53,26 +53,26 @@ Detailed guidance: [Browser troubleshooting](/tools/browser#cdp-startup-failure-
 ## Lifecycle
 
 ```bash
-openclaw browser status
-openclaw browser doctor
-openclaw browser doctor --deep
-openclaw browser start
-openclaw browser start --headless
-openclaw browser stop
-openclaw browser --browser-profile openclaw reset-profile
+quiet-core-bot browser status
+quiet-core-bot browser doctor
+quiet-core-bot browser doctor --deep
+quiet-core-bot browser start
+quiet-core-bot browser start --headless
+quiet-core-bot browser stop
+quiet-core-bot browser --browser-profile quiet-core-bot reset-profile
 ```
 
 Notes:
 
 - `doctor --deep` adds a live snapshot probe. It is useful when basic CDP
   readiness is green but you want proof that the current tab can be inspected.
-- For `attachOnly` and remote CDP profiles, `openclaw browser stop` closes the
+- For `attachOnly` and remote CDP profiles, `quiet-core-bot browser stop` closes the
   active control session and clears temporary emulation overrides even when
-  OpenClaw did not launch the browser process itself.
-- For local managed profiles, `openclaw browser stop` stops the spawned browser
+  Quiet Core bot did not launch the browser process itself.
+- For local managed profiles, `quiet-core-bot browser stop` stops the spawned browser
   process.
-- `openclaw browser start --headless` applies only to that start request and
-  only when OpenClaw launches a local managed browser. It does not rewrite
+- `quiet-core-bot browser start --headless` applies only to that start request and
+  only when Quiet Core bot launches a local managed browser. It does not rewrite
   `browser.headless` or profile config, and it is a no-op for an already-running
   browser.
 - On Linux hosts without `DISPLAY` or `WAYLAND_DISPLAY`, local managed profiles
@@ -82,8 +82,8 @@ Notes:
 
 ## If the command is missing
 
-If `openclaw browser` is an unknown command, check `plugins.allow` in
-`~/.openclaw/openclaw.json`.
+If `quiet-core-bot browser` is an unknown command, check `plugins.allow` in
+`~/.quiet-core-bot/quiet-core-bot.json`.
 
 When `plugins.allow` is present, list the bundled browser plugin explicitly
 unless the config already has a root `browser` block:
@@ -106,35 +106,35 @@ Related: [Browser tool](/tools/browser#missing-browser-command-or-tool)
 
 Profiles are named browser routing configs. In practice:
 
-- `openclaw`: launches or attaches to a dedicated OpenClaw-managed Chrome instance (isolated user data dir).
+- `openclaw`: launches or attaches to a dedicated Quiet Core bot-managed Chrome instance (isolated user data dir).
 - `user`: controls your existing signed-in Chrome session via Chrome DevTools MCP.
 - custom CDP profiles: point at a local or remote CDP endpoint.
 
 ```bash
-openclaw browser profiles
-openclaw browser create-profile --name work --color "#FF5A36"
-openclaw browser create-profile --name chrome-live --driver existing-session
-openclaw browser create-profile --name remote --cdp-url https://browser-host.example.com
-openclaw browser delete-profile --name work
+quiet-core-bot browser profiles
+quiet-core-bot browser create-profile --name work --color "#FF5A36"
+quiet-core-bot browser create-profile --name chrome-live --driver existing-session
+quiet-core-bot browser create-profile --name remote --cdp-url https://browser-host.example.com
+quiet-core-bot browser delete-profile --name work
 ```
 
 Use a specific profile:
 
 ```bash
-openclaw browser --browser-profile work tabs
+quiet-core-bot browser --browser-profile work tabs
 ```
 
 ## Tabs
 
 ```bash
-openclaw browser tabs
-openclaw browser tab new --label docs
-openclaw browser tab label t1 docs
-openclaw browser tab select 2
-openclaw browser tab close 2
-openclaw browser open https://docs.openclaw.ai --label docs
-openclaw browser focus docs
-openclaw browser close t1
+quiet-core-bot browser tabs
+quiet-core-bot browser tab new --label docs
+quiet-core-bot browser tab label t1 docs
+quiet-core-bot browser tab select 2
+quiet-core-bot browser tab close 2
+quiet-core-bot browser open https://docs.openclaw.ai --label docs
+quiet-core-bot browser focus docs
+quiet-core-bot browser close t1
 ```
 
 `tabs` returns `suggestedTargetId` first, then the stable `tabId` such as `t1`,
@@ -146,7 +146,7 @@ The request field is still named `targetId` for compatibility, but it accepts
 these tab references. Treat raw target ids as diagnostic handles, not durable
 agent memory.
 When Chromium replaces the underlying raw target during a navigation or form
-submit, OpenClaw keeps the stable `tabId`/label attached to the replacement tab
+submit, Quiet Core bot keeps the stable `tabId`/label attached to the replacement tab
 when it can prove the match. Raw target ids remain volatile; prefer
 `suggestedTargetId`.
 
@@ -155,17 +155,17 @@ when it can prove the match. Raw target ids remain volatile; prefer
 Snapshot:
 
 ```bash
-openclaw browser snapshot
-openclaw browser snapshot --urls
+quiet-core-bot browser snapshot
+quiet-core-bot browser snapshot --urls
 ```
 
 Screenshot:
 
 ```bash
-openclaw browser screenshot
-openclaw browser screenshot --full-page
-openclaw browser screenshot --ref e12
-openclaw browser screenshot --labels
+quiet-core-bot browser screenshot
+quiet-core-bot browser screenshot --full-page
+quiet-core-bot browser screenshot --ref e12
+quiet-core-bot browser screenshot --labels
 ```
 
 Notes:
@@ -197,20 +197,20 @@ Notes:
 Navigate/click/type (ref-based UI automation):
 
 ```bash
-openclaw browser navigate https://example.com
-openclaw browser click <ref>
-openclaw browser click-coords 120 340
-openclaw browser type <ref> "hello"
-openclaw browser press Enter
-openclaw browser hover <ref>
-openclaw browser scrollintoview <ref>
-openclaw browser drag <startRef> <endRef>
-openclaw browser select <ref> OptionA OptionB
-openclaw browser fill --fields '[{"ref":"1","value":"Ada"}]'
-openclaw browser wait --text "Done"
-openclaw browser evaluate --fn '(el) => el.textContent' --ref <ref>
-openclaw browser evaluate --fn 'const title = document.title; return title;'
-openclaw browser evaluate --timeout-ms 30000 --fn 'async () => { await window.ready; return true; }'
+quiet-core-bot browser navigate https://example.com
+quiet-core-bot browser click <ref>
+quiet-core-bot browser click-coords 120 340
+quiet-core-bot browser type <ref> "hello"
+quiet-core-bot browser press Enter
+quiet-core-bot browser hover <ref>
+quiet-core-bot browser scrollintoview <ref>
+quiet-core-bot browser drag <startRef> <endRef>
+quiet-core-bot browser select <ref> OptionA OptionB
+quiet-core-bot browser fill --fields '[{"ref":"1","value":"Ada"}]'
+quiet-core-bot browser wait --text "Done"
+quiet-core-bot browser evaluate --fn '(el) => el.textContent' --ref <ref>
+quiet-core-bot browser evaluate --fn 'const title = document.title; return title;'
+quiet-core-bot browser evaluate --timeout-ms 30000 --fn 'async () => { await window.ready; return true; }'
 ```
 
 `evaluate --fn` accepts a function source, an expression, or a statement body.
@@ -219,31 +219,31 @@ you want back. Use `evaluate --timeout-ms <ms>` when the page-side function may
 need longer than the default evaluate timeout.
 
 Action responses return the current raw `targetId` after action-triggered page
-replacement when OpenClaw can prove the replacement tab. Scripts should still
+replacement when Quiet Core bot can prove the replacement tab. Scripts should still
 store and pass `suggestedTargetId`/labels for long-lived workflows.
 
 File + dialog helpers:
 
 ```bash
-openclaw browser upload /tmp/openclaw/uploads/file.pdf --ref <ref>
-openclaw browser upload media://inbound/file.pdf --ref <ref>
-openclaw browser waitfordownload
-openclaw browser download <ref> report.pdf
-openclaw browser dialog --accept
-openclaw browser dialog --dismiss --dialog-id d1
+quiet-core-bot browser upload /tmp/openclaw/uploads/file.pdf --ref <ref>
+quiet-core-bot browser upload media://inbound/file.pdf --ref <ref>
+quiet-core-bot browser waitfordownload
+quiet-core-bot browser download <ref> report.pdf
+quiet-core-bot browser dialog --accept
+quiet-core-bot browser dialog --dismiss --dialog-id d1
 ```
 
-Managed Chrome profiles save ordinary click-triggered downloads into the OpenClaw
+Managed Chrome profiles save ordinary click-triggered downloads into the Quiet Core bot
 downloads directory (`/tmp/openclaw/downloads` by default, or the configured temp
 root). Use `waitfordownload` or `download` when the agent needs to wait for a
 specific file and return its path; those explicit waiters own the next download.
-Uploads accept files from the OpenClaw temp uploads root and OpenClaw-managed
+Uploads accept files from the Quiet Core bot temp uploads root and Quiet Core bot-managed
 inbound media, including `media://inbound/<id>` and sandbox-relative
 `media/inbound/<id>` references. Nested media refs, traversal, and arbitrary
 local paths remain rejected.
 When an action opens a modal dialog, the action response returns
 `blockedByDialog` with `browserState.dialogs.pending`; pass `--dialog-id` to
-answer it directly. Dialogs handled outside OpenClaw appear under
+answer it directly. Dialogs handled outside Quiet Core bot appear under
 `browserState.dialogs.recent`.
 
 ## State and storage
@@ -251,40 +251,40 @@ answer it directly. Dialogs handled outside OpenClaw appear under
 Viewport + emulation:
 
 ```bash
-openclaw browser resize 1280 720
-openclaw browser set viewport 1280 720
-openclaw browser set offline on
-openclaw browser set media dark
-openclaw browser set timezone Europe/London
-openclaw browser set locale en-GB
-openclaw browser set geo 51.5074 -0.1278 --accuracy 25
-openclaw browser set device "iPhone 14"
-openclaw browser set headers '{"x-test":"1"}'
-openclaw browser set credentials myuser mypass
+quiet-core-bot browser resize 1280 720
+quiet-core-bot browser set viewport 1280 720
+quiet-core-bot browser set offline on
+quiet-core-bot browser set media dark
+quiet-core-bot browser set timezone Europe/London
+quiet-core-bot browser set locale en-GB
+quiet-core-bot browser set geo 51.5074 -0.1278 --accuracy 25
+quiet-core-bot browser set device "iPhone 14"
+quiet-core-bot browser set headers '{"x-test":"1"}'
+quiet-core-bot browser set credentials myuser mypass
 ```
 
 Cookies + storage:
 
 ```bash
-openclaw browser cookies
-openclaw browser cookies set session abc123 --url https://example.com
-openclaw browser cookies clear
-openclaw browser storage local get
-openclaw browser storage local set token abc123
-openclaw browser storage session clear
+quiet-core-bot browser cookies
+quiet-core-bot browser cookies set session abc123 --url https://example.com
+quiet-core-bot browser cookies clear
+quiet-core-bot browser storage local get
+quiet-core-bot browser storage local set token abc123
+quiet-core-bot browser storage session clear
 ```
 
 ## Debugging
 
 ```bash
-openclaw browser console --level error
-openclaw browser pdf
-openclaw browser responsebody "**/api"
-openclaw browser highlight <ref>
-openclaw browser errors --clear
-openclaw browser requests --filter api
-openclaw browser trace start
-openclaw browser trace stop --out trace.zip
+quiet-core-bot browser console --level error
+quiet-core-bot browser pdf
+quiet-core-bot browser responsebody "**/api"
+quiet-core-bot browser highlight <ref>
+quiet-core-bot browser errors --clear
+quiet-core-bot browser requests --filter api
+quiet-core-bot browser trace start
+quiet-core-bot browser trace stop --out trace.zip
 ```
 
 ## Existing Chrome via MCP
@@ -292,11 +292,11 @@ openclaw browser trace stop --out trace.zip
 Use the built-in `user` profile, or create your own `existing-session` profile:
 
 ```bash
-openclaw browser --browser-profile user tabs
-openclaw browser create-profile --name chrome-live --driver existing-session
-openclaw browser create-profile --name brave-live --driver existing-session --user-data-dir "~/Library/Application Support/BraveSoftware/Brave-Browser"
-openclaw browser create-profile --name chrome-port --driver existing-session --cdp-url http://127.0.0.1:9222
-openclaw browser --browser-profile chrome-live tabs
+quiet-core-bot browser --browser-profile user tabs
+quiet-core-bot browser create-profile --name chrome-live --driver existing-session
+quiet-core-bot browser create-profile --name brave-live --driver existing-session --user-data-dir "~/Library/Application Support/BraveSoftware/Brave-Browser"
+quiet-core-bot browser create-profile --name chrome-port --driver existing-session --cdp-url http://127.0.0.1:9222
+quiet-core-bot browser --browser-profile chrome-live tabs
 ```
 
 The default existing-session path is host-only Chrome MCP auto-connect. If the browser is already

@@ -2,14 +2,14 @@
 summary: "CLI reference and security model for Crestodian, the configless-safe setup and repair helper"
 read_when:
   - You run openclaw with no command after setup and want to understand Crestodian
-  - You need a configless-safe way to inspect or repair OpenClaw
+  - You need a configless-safe way to inspect or repair Quiet Core bot
   - You are designing or enabling message-channel rescue mode
 title: "Crestodian"
 ---
 
 # `openclaw crestodian`
 
-Crestodian is OpenClaw's local setup, repair, and configuration helper. It is
+Crestodian is Quiet Core bot's local setup, repair, and configuration helper. It is
 designed to stay reachable when the normal agent path is broken.
 
 Running `openclaw` with no command starts classic onboarding first when the
@@ -21,7 +21,7 @@ with no command starts Crestodian in an interactive terminal. Running
 ## What Crestodian shows
 
 On startup, interactive Crestodian opens the same TUI shell used by
-`openclaw tui`, with a Crestodian chat backend. The chat log starts with a short
+`quiet-core-bot tui`, with a Crestodian chat backend. The chat log starts with a short
 greeting:
 
 - when to start Crestodian
@@ -37,7 +37,7 @@ and editor controls.
 Use `status` for the detailed inventory with config path, docs/source paths,
 local CLI probes, API-key presence, agents, model, and Gateway details.
 
-Crestodian uses the same OpenClaw reference discovery as regular agents. In a Git checkout,
+Crestodian uses the same Quiet Core bot reference discovery as regular agents. In a Git checkout,
 it points itself at local `docs/` and the local source tree. In an npm package install, it
 uses the bundled package docs and links to
 [https://github.com/openclaw/openclaw](https://github.com/openclaw/openclaw), with explicit
@@ -53,7 +53,7 @@ openclaw crestodian --message "models"
 openclaw crestodian --message "validate config"
 openclaw crestodian --message "setup workspace ~/Projects/work model openai/gpt-5.5" --yes
 openclaw crestodian --message "set default model openai/gpt-5.5" --yes
-openclaw onboard --modern
+quiet-core-bot onboard --modern
 ```
 
 Inside the Crestodian TUI:
@@ -88,13 +88,13 @@ quit
 
 Crestodian's startup path is deliberately small. It can run when:
 
-- `openclaw.json` is missing
-- `openclaw.json` is invalid
+- `quiet-core-bot.json` is missing
+- `quiet-core-bot.json` is invalid
 - the Gateway is down
 - plugin command registration is unavailable
 - no agent has been configured yet
 
-`openclaw --help` and `openclaw --version` still use the normal fast paths.
+`quiet-core-bot --help` and `quiet-core-bot --version` still use the normal fast paths.
 Noninteractive bare `openclaw` exits with a short message instead of printing
 root help. On a fresh install, the message points to non-interactive onboarding;
 after setup, it points to one-shot Crestodian commands.
@@ -133,13 +133,13 @@ you pass `--yes` for a direct command:
 Applied writes are recorded in:
 
 ```text
-~/.openclaw/audit/crestodian.jsonl
+~/.quiet-core-bot/audit/crestodian.jsonl
 ```
 
 Discovery is not audited. Only applied operations and writes are logged.
 
-`openclaw onboard --modern` starts Crestodian as the modern onboarding preview.
-Plain `openclaw onboard` still runs classic onboarding.
+`quiet-core-bot onboard --modern` starts Crestodian as the modern onboarding preview.
+Plain `quiet-core-bot onboard` still runs classic onboarding.
 
 ## Setup bootstrap
 
@@ -169,8 +169,8 @@ model unset. Install or log into Codex/Claude Code, or expose
 
 Crestodian always starts in deterministic mode. For fuzzy commands that the
 deterministic parser does not understand, local Crestodian can make one bounded
-planner turn through OpenClaw's normal runtime paths. It first uses the
-configured OpenClaw model. If no configured model is usable yet, it can fall
+planner turn through Quiet Core bot's normal runtime paths. It first uses the
+configured Quiet Core bot model. If no configured model is usable yet, it can fall
 back to local runtimes already present on the machine:
 
 - Claude Code CLI: `claude-cli/claude-opus-4-8`
@@ -197,7 +197,7 @@ talk to work agent
 switch to main agent
 ```
 
-`openclaw tui`, `openclaw chat`, and `openclaw terminal` still open the normal
+`quiet-core-bot tui`, `openclaw chat`, and `openclaw terminal` still open the normal
 agent TUI directly. They do not start Crestodian.
 
 After switching into the normal TUI, use `/crestodian` to return to Crestodian.
@@ -224,11 +224,11 @@ Operator flow:
 
 ```text
 You, in a trusted owner DM: /crestodian status
-OpenClaw: Crestodian rescue mode. Gateway reachable: no. Config valid: no.
+Quiet Core bot: Crestodian rescue mode. Gateway reachable: no. Config valid: no.
 You: /crestodian restart gateway
-OpenClaw: Plan: restart the Gateway. Reply /crestodian yes to apply.
+Quiet Core bot: Plan: restart the Gateway. Reply /crestodian yes to apply.
 You: /crestodian yes
-OpenClaw: Applied. Audit entry written.
+Quiet Core bot: Applied. Audit entry written.
 ```
 
 Agent creation can also be queued from the local prompt or rescue mode:
@@ -325,7 +325,7 @@ checks the audit log. QA Lab also has a repo-backed scenario for the same Ring 0
 flow:
 
 ```bash
-pnpm openclaw qa suite --scenario crestodian-ring-zero-setup
+pnpm quiet-core-bot qa suite --scenario crestodian-ring-zero-setup
 ```
 
 ## Related

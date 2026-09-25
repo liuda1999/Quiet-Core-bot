@@ -1,14 +1,14 @@
 ---
 summary: "Raft External Agent support through the Raft CLI wake bridge"
 read_when:
-  - You want to connect OpenClaw to a Raft workspace
+  - You want to connect Quiet Core bot to a Raft workspace
   - You are configuring a Raft External Agent
   - You are debugging Raft wake delivery
 title: "Raft"
 sidebarTitle: "Raft"
 ---
 
-Raft support connects an OpenClaw agent to a Raft External Agent through the local
+Raft support connects an Quiet Core bot agent to a Raft External Agent through the local
 Raft CLI. Raft sends authenticated wake hints to the Gateway. The agent then uses
 the Raft CLI to check and send messages.
 
@@ -17,8 +17,8 @@ the Raft CLI to check and send messages.
 Raft is an official external plugin. Install it on the Gateway host:
 
 ```bash
-openclaw plugins install @openclaw/raft
-openclaw gateway restart
+quiet-core-bot plugins install @openclaw/raft
+quiet-core-bot gateway restart
 ```
 
 Details: [Plugins](/tools/plugin)
@@ -26,7 +26,7 @@ Details: [Plugins](/tools/plugin)
 ## Prerequisites
 
 - A Raft workspace with an External Agent.
-- The Raft CLI installed on the same host as the OpenClaw Gateway.
+- The Raft CLI installed on the same host as the Quiet Core bot Gateway.
 - A Raft CLI profile that is already signed in and associated with that External Agent.
 
 The plugin does not store Raft credentials. The Raft CLI keeps that authentication
@@ -76,7 +76,7 @@ Use a named account when one Gateway connects to more than one Raft External Age
 The interactive setup flow records the same profile:
 
 ```bash
-openclaw channels setup raft
+quiet-core-bot channels setup raft
 ```
 
 ## How It Works
@@ -90,30 +90,30 @@ When the Gateway starts, the plugin:
 4. Requires one of `eventId`, `attemptId`, `messageId`, `delivery_id`, `wake_id`, or `id`.
 5. Deduplicates recent retried wake deliveries by bridge event id, including across Gateway restarts.
 6. Returns a stable runtime session for the current bridge and an empty activity-drain batch for the Raft CLI protocol.
-7. Starts one serialized OpenClaw agent turn for each accepted wake.
+7. Starts one serialized Quiet Core bot agent turn for each accepted wake.
 
-The bridge owns Raft delivery retries and reconnects. The OpenClaw turn receives
+The bridge owns Raft delivery retries and reconnects. The Quiet Core bot turn receives
 only a wake notice, not a copied Raft message body. It uses the CLI to read
 pending messages and to send its response:
 
 ```bash
-raft --profile openclaw message check
-raft --profile openclaw message send
+raft --profile quiet-core-bot message check
+raft --profile quiet-core-bot message send
 ```
 
 <Note>
-Raft is not a normal push-message transport. OpenClaw does not automatically
+Raft is not a normal push-message transport. Quiet Core bot does not automatically
 send the model's final text back through the bridge, so the agent must use the
 Raft CLI after processing a wake.
 </Note>
 
 ## Verify
 
-Check that OpenClaw can find the CLI and has a configured profile:
+Check that Quiet Core bot can find the CLI and has a configured profile:
 
 ```bash
-openclaw channels status --probe
-openclaw plugins inspect raft --runtime --json
+quiet-core-bot channels status --probe
+quiet-core-bot plugins inspect raft --runtime --json
 ```
 
 Then send a message to the Raft External Agent. The Gateway log should show the

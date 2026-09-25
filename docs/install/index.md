@@ -1,5 +1,5 @@
 ---
-summary: "Install OpenClaw - installer script, npm/pnpm/bun, from source, Docker, and more"
+summary: "Install Quiet Core bot - installer script, npm/pnpm/bun, from source, Docker, and more"
 read_when:
   - You need an install method other than the Getting Started quickstart
   - You want to deploy to a cloud platform
@@ -15,7 +15,7 @@ title: "Install"
 
 ## Recommended: installer script
 
-The fastest way to install. It detects your OS, installs Node if needed, installs OpenClaw, and launches onboarding.
+The fastest way to install. It detects your OS, installs Node if needed, installs Quiet Core bot, and launches onboarding.
 
 <Note>
 Windows desktop users can also install the native [Windows Hub](/platforms/windows#recommended-windows-hub) companion app, which includes setup, tray status, chat, node mode, and local MCP mode.
@@ -55,8 +55,8 @@ For all flags and CI/automation options, see [Installer internals](/install/inst
 
 ### Local prefix installer (`install-cli.sh`)
 
-Use this when you want OpenClaw and Node kept under a local prefix such as
-`~/.openclaw`, without depending on a system-wide Node install:
+Use this when you want Quiet Core bot and Node kept under a local prefix such as
+`~/.quiet-core-bot`, without depending on a system-wide Node install:
 
 ```bash
 curl -fsSL https://openclaw.ai/install-cli.sh | bash
@@ -66,7 +66,7 @@ It supports npm installs by default, plus git-checkout installs under the same
 prefix flow. Full reference: [Installer internals](/install/installer#install-clish).
 
 Already installed? Switch between package and git installs with
-`openclaw update --channel dev` and `openclaw update --channel stable`. See
+`quiet-core-bot update --channel dev` and `quiet-core-bot update --channel stable`. See
 [Updating](/install/updating#switch-between-npm-and-git-installs).
 
 ### npm, pnpm, or bun
@@ -77,12 +77,12 @@ If you already manage Node yourself:
   <Tab title="npm">
     ```bash
     npm install -g openclaw@latest
-    openclaw onboard --install-daemon
+    quiet-core-bot onboard --install-daemon
     ```
 
     <Note>
     The hosted installer clears npm freshness filters such as `min-release-age`
-    for the OpenClaw package install. If you install manually with npm, your own
+    for the Quiet Core bot package install. If you install manually with npm, your own
     npm policy still applies.
     </Note>
 
@@ -91,7 +91,7 @@ If you already manage Node yourself:
     ```bash
     pnpm add -g openclaw@latest
     pnpm approve-builds -g
-    openclaw onboard --install-daemon
+    quiet-core-bot onboard --install-daemon
     ```
 
     <Note>
@@ -102,7 +102,7 @@ If you already manage Node yourself:
   <Tab title="bun">
     ```bash
     bun add -g openclaw@latest
-    openclaw onboard --install-daemon
+    quiet-core-bot onboard --install-daemon
     ```
 
     <Note>
@@ -121,7 +121,7 @@ git clone https://github.com/openclaw/openclaw.git
 cd openclaw
 pnpm install && pnpm build && pnpm ui:build
 pnpm link --global
-openclaw onboard --install-daemon
+quiet-core-bot onboard --install-daemon
 ```
 
 Or skip the link and use `pnpm openclaw ...` from inside the repo. See [Setup](/start/setup) for full development workflows.
@@ -155,20 +155,20 @@ curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -
 ## Verify the install
 
 ```bash
-openclaw --version      # confirm the CLI is available
-openclaw doctor         # check for config issues
-openclaw gateway status # verify the Gateway is running
+quiet-core-bot --version      # confirm the CLI is available
+quiet-core-bot doctor         # check for config issues
+quiet-core-bot gateway status # verify the Gateway is running
 ```
 
 If you want managed startup after install:
 
-- macOS: LaunchAgent via `openclaw onboard --install-daemon` or `openclaw gateway install`
+- macOS: LaunchAgent via `quiet-core-bot onboard --install-daemon` or `quiet-core-bot gateway install`
 - Linux/WSL2: systemd user service via the same commands
 - Native Windows: Scheduled Task first, with a per-user Startup-folder login item fallback if task creation is denied
 
 ## Hosting and deployment
 
-Deploy OpenClaw on a cloud server or VPS:
+Deploy Quiet Core bot on a cloud server or VPS:
 
 <CardGroup cols={3}>
   <Card title="VPS" href="/vps">
@@ -207,13 +207,13 @@ Deploy OpenClaw on a cloud server or VPS:
 
 <CardGroup cols={3}>
   <Card title="Updating" href="/install/updating" icon="refresh-cw">
-    Keep OpenClaw up to date.
+    Keep Quiet Core bot up to date.
   </Card>
   <Card title="Migrating" href="/install/migrating" icon="arrow-right">
     Move to a new machine.
   </Card>
   <Card title="Uninstall" href="/install/uninstall" icon="trash-2">
-    Remove OpenClaw completely.
+    Remove Quiet Core bot completely.
   </Card>
 </CardGroup>
 

@@ -61,19 +61,19 @@ levels. They are disabled by default.
 Enable all profiler-gated spans for one gateway run:
 
 ```bash
-OPENCLAW_DIAGNOSTICS=profiler openclaw gateway run
+OPENCLAW_DIAGNOSTICS=profiler quiet-core-bot gateway run
 ```
 
 Enable only reply-dispatch profiler spans:
 
 ```bash
-OPENCLAW_DIAGNOSTICS=reply.profiler openclaw gateway run
+OPENCLAW_DIAGNOSTICS=reply.profiler quiet-core-bot gateway run
 ```
 
 Enable only Codex app-server startup/tool/thread profiler spans:
 
 ```bash
-OPENCLAW_DIAGNOSTICS=codex.profiler openclaw gateway run
+OPENCLAW_DIAGNOSTICS=codex.profiler quiet-core-bot gateway run
 ```
 
 Enable profiler flags from config:
@@ -91,7 +91,7 @@ remove it from `diagnostics.flags` and restart. To temporarily disable every
 diagnostics flag even when config enables profiler flags, start the process with:
 
 ```bash
-OPENCLAW_DIAGNOSTICS=0 openclaw gateway run
+OPENCLAW_DIAGNOSTICS=0 quiet-core-bot gateway run
 ```
 
 ## Timeline artifacts
@@ -102,7 +102,7 @@ external QA harnesses:
 ```bash
 OPENCLAW_DIAGNOSTICS=timeline \
 OPENCLAW_DIAGNOSTICS_TIMELINE_PATH=/tmp/openclaw-timeline.jsonl \
-openclaw gateway run
+quiet-core-bot gateway run
 ```
 
 You can also enable it in config:
@@ -117,7 +117,7 @@ You can also enable it in config:
 
 The timeline file path still comes from
 `OPENCLAW_DIAGNOSTICS_TIMELINE_PATH`. When `timeline` is enabled only from
-config, the earliest config-loading spans are not emitted because OpenClaw has
+config, the earliest config-loading spans are not emitted because Quiet Core bot has
 not read config yet; subsequent startup spans use the config flag.
 
 `OPENCLAW_DIAGNOSTICS=1`, `OPENCLAW_DIAGNOSTICS=all`, and
@@ -167,7 +167,7 @@ Or tail while reproducing:
 tail -f /tmp/openclaw/openclaw-$(date +%F).log | rg "telegram http error"
 ```
 
-For remote gateways, you can also use `openclaw logs --follow` (see [/cli/logs](/cli/logs)).
+For remote gateways, you can also use `quiet-core-bot logs --follow` (see [/cli/logs](/cli/logs)).
 
 ## Notes
 

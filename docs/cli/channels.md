@@ -1,12 +1,12 @@
 ---
-summary: "CLI reference for `openclaw channels` (accounts, status, login/logout, logs)"
+summary: "CLI reference for `quiet-core-bot channels` (accounts, status, login/logout, logs)"
 read_when:
   - You want to add/remove channel accounts (WhatsApp/Telegram/Discord/Google Chat/Slack/Mattermost (plugin)/Signal/iMessage/Matrix)
   - You want to check channel status or tail channel logs
 title: "Channels"
 ---
 
-# `openclaw channels`
+# `quiet-core-bot channels`
 
 Manage chat channel accounts and their runtime status on the Gateway.
 
@@ -18,17 +18,17 @@ Related docs:
 ## Common commands
 
 ```bash
-openclaw channels list
-openclaw channels list --all
-openclaw channels status
-openclaw channels capabilities
-openclaw channels capabilities --channel discord --target channel:123
-openclaw channels capabilities --channel discord --target channel:<voice-channel-id>
-openclaw channels resolve --channel slack "#general" "@jane"
-openclaw channels logs --channel all
+quiet-core-bot channels list
+quiet-core-bot channels list --all
+quiet-core-bot channels status
+quiet-core-bot channels capabilities
+quiet-core-bot channels capabilities --channel discord --target channel:123
+quiet-core-bot channels capabilities --channel discord --target channel:<voice-channel-id>
+quiet-core-bot channels resolve --channel slack "#general" "@jane"
+quiet-core-bot channels logs --channel all
 ```
 
-`channels list` shows chat channels only: configured accounts by default, with `installed`, `configured`, and `enabled` status tags per account. Pass `--all` to also surface bundled channels that have no configured account yet and installable catalog channels that are not yet on disk. Auth providers (OAuth + API keys) and model-provider usage/quota snapshots are no longer printed here; use `openclaw models auth list` for provider auth profiles and `openclaw status` or `openclaw models list` for usage.
+`channels list` shows chat channels only: configured accounts by default, with `installed`, `configured`, and `enabled` status tags per account. Pass `--all` to also surface bundled channels that have no configured account yet and installable catalog channels that are not yet on disk. Auth providers (OAuth + API keys) and model-provider usage/quota snapshots are no longer printed here; use `quiet-core-bot models auth list` for provider auth profiles and `quiet-core-bot status` or `quiet-core-bot models list` for usage.
 
 ## Status / capabilities / resolve / logs
 
@@ -43,7 +43,7 @@ state plus probe results such as `works`, `probe failed`, `audit ok`, or `audit 
 If the gateway is unreachable, `channels status` falls back to config-only summaries
 instead of live probe output.
 
-Do not use `openclaw sessions`, Gateway `sessions.list`, or the agent
+Do not use `quiet-core-bot sessions`, Gateway `sessions.list`, or the agent
 `sessions_list` tool as a channel socket-health signal. Those surfaces report
 stored conversation rows, not provider runtime state. After a Discord provider
 restart, a connected but quiet account may be healthy while no Discord session
@@ -52,13 +52,13 @@ row appears until the next inbound or outbound conversation event.
 ## Add / remove accounts
 
 ```bash
-openclaw channels add --channel telegram --token <bot-token>
-openclaw channels add --channel nostr --private-key "$NOSTR_PRIVATE_KEY"
-openclaw channels remove --channel telegram --delete
+quiet-core-bot channels add --channel telegram --token <bot-token>
+quiet-core-bot channels add --channel nostr --private-key "$NOSTR_PRIVATE_KEY"
+quiet-core-bot channels remove --channel telegram --delete
 ```
 
 <Tip>
-`openclaw channels add --help` shows per-channel flags (token, private key, app token, signal-cli paths, etc).
+`quiet-core-bot channels add --help` shows per-channel flags (token, private key, app token, signal-cli paths, etc).
 </Tip>
 
 `channels remove` only operates on installed/configured channel plugins. Use `channels add` first for installable catalog channels.
@@ -74,9 +74,9 @@ Common non-interactive add surfaces include:
 - Tlon fields: `--ship`, `--url`, `--code`, `--group-channels`, `--dm-allowlist`, `--auto-discover-channels`
 - `--use-env` for default-account env-backed auth where supported
 
-If a channel plugin needs to be installed during a flag-driven add command, OpenClaw uses the channel's default install source without opening the interactive plugin install prompt.
+If a channel plugin needs to be installed during a flag-driven add command, Quiet Core bot uses the channel's default install source without opening the interactive plugin install prompt.
 
-When you run `openclaw channels add` without flags, the interactive wizard can prompt:
+When you run `quiet-core-bot channels add` without flags, the interactive wizard can prompt:
 
 - account ids per selected channel
 - optional display names for those accounts
@@ -84,9 +84,9 @@ When you run `openclaw channels add` without flags, the interactive wizard can p
 
 If you confirm bind now, the wizard asks which agent should own each configured channel account and writes account-scoped routing bindings.
 
-You can also manage the same routing rules later with `openclaw agents bindings`, `openclaw agents bind`, and `openclaw agents unbind` (see [agents](/cli/agents)).
+You can also manage the same routing rules later with `quiet-core-bot agents bindings`, `quiet-core-bot agents bind`, and `quiet-core-bot agents unbind` (see [agents](/cli/agents)).
 
-When you add a non-default account to a channel that is still using single-account top-level settings, OpenClaw promotes account-scoped top-level values into the channel's account map before writing the new account. Most channels land those values in `channels.<channel>.accounts.default`, but bundled channels can preserve an existing matching promoted account instead. Matrix is the current example: if one named account already exists, or `defaultAccount` points at an existing named account, promotion preserves that account instead of creating a new `accounts.default`.
+When you add a non-default account to a channel that is still using single-account top-level settings, Quiet Core bot promotes account-scoped top-level values into the channel's account map before writing the new account. Most channels land those values in `channels.<channel>.accounts.default`, but bundled channels can preserve an existing matching promoted account instead. Matrix is the current example: if one named account already exists, or `defaultAccount` points at an existing named account, promotion preserves that account instead of creating a new `accounts.default`.
 
 Routing behavior stays consistent:
 
@@ -94,13 +94,13 @@ Routing behavior stays consistent:
 - `channels add` does not auto-create or rewrite bindings in non-interactive mode.
 - Interactive setup can optionally add account-scoped bindings.
 
-If your config was already in a mixed state (named accounts present and top-level single-account values still set), run `openclaw doctor --fix` to move account-scoped values into the promoted account chosen for that channel. Most channels promote into `accounts.default`; Matrix can preserve an existing named/default target instead.
+If your config was already in a mixed state (named accounts present and top-level single-account values still set), run `quiet-core-bot doctor --fix` to move account-scoped values into the promoted account chosen for that channel. Most channels promote into `accounts.default`; Matrix can preserve an existing named/default target instead.
 
 ## Login and logout (interactive)
 
 ```bash
-openclaw channels login --channel whatsapp
-openclaw channels logout --channel whatsapp
+quiet-core-bot channels login --channel whatsapp
+quiet-core-bot channels logout --channel whatsapp
 ```
 
 - `channels login` supports `--verbose`.
@@ -110,18 +110,18 @@ openclaw channels logout --channel whatsapp
 
 ## Troubleshooting
 
-- Run `openclaw status --deep` for a broad probe.
-- Use `openclaw doctor` for guided fixes.
-- `openclaw channels list` no longer prints model provider usage/quota snapshots. For those, use `openclaw status` (overview) or `openclaw models list` (per-provider).
-- `openclaw channels status` falls back to config-only summaries when the gateway is unreachable. If a supported channel credential is configured via SecretRef but unavailable in the current command path, it reports that account as configured with degraded notes instead of showing it as not configured.
+- Run `quiet-core-bot status --deep` for a broad probe.
+- Use `quiet-core-bot doctor` for guided fixes.
+- `quiet-core-bot channels list` no longer prints model provider usage/quota snapshots. For those, use `quiet-core-bot status` (overview) or `quiet-core-bot models list` (per-provider).
+- `quiet-core-bot channels status` falls back to config-only summaries when the gateway is unreachable. If a supported channel credential is configured via SecretRef but unavailable in the current command path, it reports that account as configured with degraded notes instead of showing it as not configured.
 
 ## Capabilities probe
 
 Fetch provider capability hints (intents/scopes where available) plus static feature support:
 
 ```bash
-openclaw channels capabilities
-openclaw channels capabilities --channel discord --target channel:123
+quiet-core-bot channels capabilities
+quiet-core-bot channels capabilities --channel discord --target channel:123
 ```
 
 Notes:
@@ -136,9 +136,9 @@ Notes:
 Resolve channel/user names to IDs using the provider directory:
 
 ```bash
-openclaw channels resolve --channel slack "#general" "@jane"
-openclaw channels resolve --channel discord "My Server/#support" "@someone"
-openclaw channels resolve --channel matrix "Project Room"
+quiet-core-bot channels resolve --channel slack "#general" "@jane"
+quiet-core-bot channels resolve --channel discord "My Server/#support" "@someone"
+quiet-core-bot channels resolve --channel matrix "Project Room"
 ```
 
 Notes:
