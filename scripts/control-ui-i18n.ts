@@ -1222,13 +1222,15 @@ export async function runProcess(
 }
 
 async function formatGeneratedTypeScript(filePath: string, source: string): Promise<string> {
-  const directFormatterPath = path.join(ROOT, "node_modules", ".bin", "oxfmt");
-  const formatterCommand =
-    process.platform !== "win32" && existsSync(directFormatterPath) ? directFormatterPath : "pnpm";
-  const formatterArgs =
-    formatterCommand === directFormatterPath
-      ? ["--stdin-filepath", path.relative(ROOT, filePath)]
-      : ["exec", "oxfmt", "--stdin-filepath", path.relative(ROOT, filePath)];
+  // Prefer running the locally installed oxfmt shim directly. Windows cannot
+  // resolve a bare `pnpm` through spawn (no PATHEXT lookup, and `.cmd` shims are
+  // not executable without a shell), which used to break `check`/`sync` there.
+  const directFormatterPath = path.join(ROOT, "node_modules", "oxfmt", "bin", "oxfmt");
+  const useDirectFormatter = existsSync(directFormatterPath);
+  const formatterCommand = useDirectFormatter ? process.execPath : "pnpm";
+  const formatterArgs = useDirectFormatter
+    ? [directFormatterPath, "--stdin-filepath", path.relative(ROOT, filePath)]
+    : ["exec", "oxfmt", "--stdin-filepath", path.relative(ROOT, filePath)];
   const result = await runProcess(formatterCommand, formatterArgs, {
     input: source,
     rejectOnFailure: true,

@@ -45,10 +45,12 @@ describe("Control UI Vite config", () => {
     );
     const netPolicyWildcardIndex = aliases.findIndex(
       (alias) =>
-        alias.find instanceof RegExp && alias.replacement.includes("packages/net-policy/src/$1"),
+        alias.find instanceof RegExp &&
+        alias.replacement.includes(path.join("packages", "net-policy", "src", "$1")),
     );
     const broadOpenClawWildcardIndex = aliases.findIndex(
-      (alias) => alias.find instanceof RegExp && alias.replacement.includes("extensions/$1"),
+      (alias) =>
+        alias.find instanceof RegExp && alias.replacement.includes(path.join("extensions", "$1")),
     );
 
     expect(netPolicyIpIndex).toBeGreaterThanOrEqual(0);

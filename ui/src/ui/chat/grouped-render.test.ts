@@ -1,7 +1,8 @@
 /* @vitest-environment jsdom */
 
 import { html, render } from "lit";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { i18n } from "../../i18n/index.ts";
 import { setUiTimeFormatPreference } from "../format.ts";
 import type { MessageGroup } from "../types/chat-types.ts";
 import {
@@ -2533,19 +2534,38 @@ describe("grouped chat rendering", () => {
 describe("formatChatTimestampForDisplay time format", () => {
   const timestamp = Date.UTC(2026, 0, 15, 19, 30);
 
+  // Label text falls back to `t(...)` strings; pin the UI locale so rendering is
+  // deterministic regardless of the host locale the suite runs on.
+  beforeEach(async () => {
+    await i18n.setLocale("en");
+  });
+
   afterEach(() => {
     setUiTimeFormatPreference("auto");
   });
 
-  it("renders an AM/PM clock when preference is 12", () => {
+  it("renders a 12-hour clock with the runtime day period when preference is 12", () => {
     setUiTimeFormatPreference("12");
     const display = formatChatTimestampForDisplay(timestamp);
-    expect(display.label).toMatch(/AM|PM/i);
+    // The day-period marker is locale-specific ("PM", "下午", …); derive the
+    // expected token from the runtime locale so this holds on non-English hosts.
+    const dayPeriod = new Intl.DateTimeFormat([], { hour: "numeric", hour12: true })
+      .formatToParts(new Date(timestamp))
+      .find((part) => part.type === "dayPeriod")?.value;
+    if (!dayPeriod) {
+      throw new Error("runtime locale did not produce a day period");
+    }
+    expect(display.label.toLowerCase()).toContain(dayPeriod.toLowerCase());
   });
 
   it("renders a 24-hour clock with no AM/PM when preference is 24", () => {
     setUiTimeFormatPreference("24");
     const display = formatChatTimestampForDisplay(timestamp);
-    expect(display.label).not.toMatch(/AM|PM/i);
+    const dayPeriod = new Intl.DateTimeFormat([], { hour: "numeric", hour12: true })
+      .formatToParts(new Date(timestamp))
+      .find((part) => part.type === "dayPeriod")?.value;
+    if (dayPeriod) {
+      expect(display.label.toLowerCase()).not.toContain(dayPeriod.toLowerCase());
+    }
   });
 });

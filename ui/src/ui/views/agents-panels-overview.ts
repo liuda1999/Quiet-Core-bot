@@ -218,12 +218,12 @@ export function renderAgentOverview(params: {
           </div>
         </div>
         <div class="agent-custom-model" style="margin-top: 12px;">
-          <div class="label">${t("agents.addLocalCustomModel", { defaultValue: "Add local custom model" })}</div>
+          <div class="label">${t("agents.addLocalCustomModel")}</div>
           <input
             class="agent-custom-model__input"
             type="text"
             ?disabled=${disabled}
-            placeholder="provider/model  (e.g. qwen/my-model)"
+            placeholder=${t("agents.customModelPlaceholder")}
             @keydown=${(e: KeyboardEvent) => {
               if (e.key !== "Enter") {
                 return;

@@ -130,6 +130,9 @@ export const en: TranslationMap = {
       wizard: "Setup Wizard",
     },
   },
+  brand: {
+    appName: "Quiet Core bot",
+  },
   channels: {
     health: {
       title: "Channel health",
@@ -297,6 +300,7 @@ export const en: TranslationMap = {
     noAgents: "No agents",
     copyId: "Copy ID",
     addLocalCustomModel: "Add local custom model",
+    customModelPlaceholder: "provider/model (e.g. qwen/my-model)",
     copyIdTitle: "Copy agent ID to clipboard",
     default: "Default",
     setDefault: "Set Default",

@@ -2464,11 +2464,11 @@ export function renderApp(state: AppViewState) {
                       <img
                         class="sidebar-brand__logo"
                         src="${agentLogoUrl(basePath)}"
-                        alt="Quiet Core bot"
+                        alt=${t("brand.appName")}
                       />
                       <span class="sidebar-brand__copy">
                         <span class="sidebar-brand__eyebrow">${t("nav.control")}</span>
-                        <span class="sidebar-brand__title">Quiet Core bot</span>
+                        <span class="sidebar-brand__title">${t("brand.appName")}</span>
                       </span>
                     `}
               </div>

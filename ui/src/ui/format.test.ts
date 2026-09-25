@@ -1,5 +1,6 @@
 // Control UI tests cover format behavior.
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { i18n } from "../i18n/index.ts";
 import {
   formatDateTimeMs,
   formatDateMs,
@@ -11,6 +12,12 @@ import {
   setUiTimeFormatPreference,
   stripThinkingTags,
 } from "./format.ts";
+
+// Formatters fall back to `t(...)` strings; pin the UI locale so that output is
+// deterministic regardless of the host locale the suite runs on.
+beforeEach(async () => {
+  await i18n.setLocale("en");
+});
 
 describe("formatAgo", () => {
   it("returns 'in <1m' for timestamps less than 60s in the future", () => {
@@ -71,6 +78,21 @@ describe("agents.defaults.timeFormat preference", () => {
     timeZone: "UTC",
   };
 
+  // `toLocaleTimeString([])` uses the runtime locale, so the 12-hour day-period
+  // marker is locale-specific ("PM", "下午", …). Derive the expected marker from
+  // the same runtime locale instead of hardcoding English, which made this suite
+  // fail on non-English hosts.
+  function runtimeDayPeriod(): string {
+    const parts = new Intl.DateTimeFormat([], { ...opts, hour12: true }).formatToParts(
+      new Date(ts),
+    );
+    const period = parts.find((part) => part.type === "dayPeriod")?.value;
+    if (!period) {
+      throw new Error("runtime locale did not produce a day period");
+    }
+    return period;
+  }
+
   afterEach(() => {
     setUiTimeFormatPreference("auto");
   });
@@ -84,12 +106,13 @@ describe("agents.defaults.timeFormat preference", () => {
     setUiTimeFormatPreference("12");
     const formatted = formatTimeMs(ts, opts, "");
     expect(formatted).toContain("7:30");
-    expect(formatted).toMatch(/PM/i);
+    expect(formatted.toLowerCase()).toContain(runtimeDayPeriod().toLowerCase());
   });
 
   it("lets the caller override the resolved hour cycle", () => {
     setUiTimeFormatPreference("24");
-    expect(formatTimeMs(ts, { ...opts, hour12: true }, "")).toMatch(/PM/i);
+    const formatted = formatTimeMs(ts, { ...opts, hour12: true }, "");
+    expect(formatted.toLowerCase()).toContain(runtimeDayPeriod().toLowerCase());
   });
 
   it("leaves rendering to the browser locale default for auto", () => {

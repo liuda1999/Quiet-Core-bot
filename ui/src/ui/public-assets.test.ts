@@ -16,13 +16,13 @@ describe("controlUiPublicAssetPath", () => {
 
 describe("inferControlUiPublicAssetPath", () => {
   it("uses the root for known nested routes without a configured base path", () => {
-    expect(
-      inferControlUiPublicAssetPath("manifest.webmanifest", { pathname: "/skills/workshop" }),
-    ).toBe("/manifest.webmanifest");
+    expect(inferControlUiPublicAssetPath("manifest.webmanifest", { pathname: "/agents" })).toBe(
+      "/manifest.webmanifest",
+    );
   });
 
   it("infers base-mounted assets from nested routes", () => {
-    expect(inferControlUiPublicAssetPath("sw.js", { pathname: "/openclaw/skills/workshop" })).toBe(
+    expect(inferControlUiPublicAssetPath("sw.js", { pathname: "/openclaw/agents" })).toBe(
       "/openclaw/sw.js",
     );
   });
@@ -31,7 +31,7 @@ describe("inferControlUiPublicAssetPath", () => {
     expect(
       inferControlUiPublicAssetPath("apple-touch-icon.png", {
         basePath: "/control/",
-        pathname: "/skills/workshop",
+        pathname: "/agents",
       }),
     ).toBe("/control/apple-touch-icon.png");
   });

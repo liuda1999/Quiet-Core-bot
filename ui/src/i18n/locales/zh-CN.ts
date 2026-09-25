@@ -131,6 +131,9 @@ export const zh_CN: TranslationMap = {
       wizard: "设置向导",
     },
   },
+  brand: {
+    appName: "Quiet Core bot",
+  },
   channels: {
     health: {
       title: "频道健康状态",
@@ -297,6 +300,7 @@ export const zh_CN: TranslationMap = {
     noAgents: "无代理",
     copyId: "复制 ID",
     addLocalCustomModel: "添加本地自定义模型",
+    customModelPlaceholder: "provider/model (e.g. qwen/my-model)",
     copyIdTitle: "将代理 ID 复制到剪贴板",
     default: "默认",
     setDefault: "设为默认",

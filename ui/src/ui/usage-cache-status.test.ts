@@ -1,6 +1,13 @@
 // @vitest-environment node
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
+import { i18n } from "../i18n/index.ts";
 import { getUsageCacheRefreshTitle } from "./usage-cache-status.ts";
+
+// The badge title is localized; the active locale comes from the host locale via
+// `navigator.language`. Pin it so the expectation is machine-independent.
+beforeEach(async () => {
+  await i18n.setLocale("en");
+});
 
 describe("getUsageCacheRefreshTitle", () => {
   it("formats non-fresh cache states for the Usage loading badge", () => {
