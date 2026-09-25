@@ -9,7 +9,7 @@ read_when:
 ---
 
 Most skills configuration lives under `skills` in
-`~/.openclaw/openclaw.json`. Agent-specific visibility lives under
+`~/.quiet-core-bot/quiet-core-bot.json`. Agent-specific visibility lives under
 `agents.defaults.skills` and `agents.list[].skills`.
 
 ```json5
@@ -86,7 +86,7 @@ Most skills configuration lives under `skills` in
 <ParamField path="skills.install.nodeManager" type='"npm" | "pnpm" | "yarn" | "bun"' default='"npm"'>
   Node package manager preference for skill installs. This only affects skill
   installs — the Gateway runtime should still use Node (Bun is not recommended
-  for WhatsApp/Telegram). Use `openclaw setup --node-manager` for npm, pnpm,
+  for WhatsApp/Telegram). Use `quiet-core-bot setup --node-manager` for npm, pnpm,
   or bun; set `"yarn"` manually for Yarn-backed skill installs.
 </ParamField>
 
@@ -100,7 +100,7 @@ Most skills configuration lives under `skills` in
 
 Use `security.installPolicy` when operators need a trusted local command to
 approve or block skill and plugin installs with host-specific policy. The policy
-runs after OpenClaw has staged source material and before the install or update
+runs after Quiet Core bot has staged source material and before the install or update
 continues. It applies to ClawHub skills, uploaded skills, Git/local skills,
 skill dependency installers, and plugin install/update sources.
 
@@ -138,7 +138,7 @@ skill dependency installers, and plugin install/update sources.
 </ParamField>
 
 <ParamField path="security.installPolicy.exec.command" type="string">
-  Absolute path to the trusted policy executable. OpenClaw runs it without a
+  Absolute path to the trusted policy executable. Quiet Core bot runs it without a
   shell and validates the path before use.
 </ParamField>
 
@@ -163,7 +163,7 @@ skill dependency installers, and plugin install/update sources.
 </ParamField>
 
 <ParamField path="security.installPolicy.exec.passEnv" type="string[]">
-  Environment variable names copied from the OpenClaw process into the policy
+  Environment variable names copied from the Quiet Core bot process into the policy
   process. Only named variables are passed.
 </ParamField>
 
@@ -190,9 +190,9 @@ one JSON object on stdout: `{ "protocolVersion": 1, "decision": "allow" }` or
 exit, timeout, malformed JSON, missing fields, or unsupported protocol versions
 fail closed.
 
-OpenClaw does not execute install policy during normal Gateway startup. Installs
-and updates fail closed when policy is enabled but unavailable. `openclaw doctor`
-performs static validation, and `openclaw doctor --deep` executes a synthetic
+Quiet Core bot does not execute install policy during normal Gateway startup. Installs
+and updates fail closed when policy is enabled but unavailable. `quiet-core-bot doctor`
+performs static validation, and `quiet-core-bot doctor --deep` executes a synthetic
 install probe against the configured command.
 
 Bulk updates apply policy per target: a blocked skill or plugin update fails
@@ -390,7 +390,7 @@ separately:
 }
 ```
 
-Managed `~/.openclaw/skills` and personal `~/.agents/skills` directories
+Managed `~/.quiet-core-bot/skills` and personal `~/.agents/skills` directories
 already accept skill-directory symlinks (per-skill `SKILL.md` containment still
 applies).
 
@@ -431,7 +431,7 @@ Pass secrets into a Docker sandbox with:
 workspace/skills      (highest)
 workspace/.agents/skills
 ~/.agents/skills
-~/.openclaw/skills
+~/.quiet-core-bot/skills
 bundled skills
 skills.load.extraDirs (lowest)
 ```

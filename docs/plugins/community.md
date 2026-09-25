@@ -1,13 +1,13 @@
 ---
-summary: "Find and publish community-maintained OpenClaw plugins"
+summary: "Find and publish community-maintained Quiet Core bot plugins"
 read_when:
-  - You want to find third-party OpenClaw plugins
+  - You want to find third-party Quiet Core bot plugins
   - You want to publish or list your own plugin on ClawHub
 title: "Community plugins"
 doc-schema-version: 1
 ---
 
-Community plugins are third-party packages that extend OpenClaw with channels,
+Community plugins are third-party packages that extend Quiet Core bot with channels,
 tools, providers, hooks, or other capabilities. Use [ClawHub](/clawhub) as the
 primary discovery surface for public community plugins.
 
@@ -16,28 +16,28 @@ primary discovery surface for public community plugins.
 Search ClawHub from the CLI:
 
 ```bash
-openclaw plugins search "calendar"
+quiet-core-bot plugins search "calendar"
 ```
 
 Install a ClawHub plugin with an explicit source prefix:
 
 ```bash
-openclaw plugins install clawhub:<package-name>
+quiet-core-bot plugins install clawhub:<package-name>
 ```
 
 npm remains a supported direct-install path during the launch cutover:
 
 ```bash
-openclaw plugins install npm:<package-name>
+quiet-core-bot plugins install npm:<package-name>
 ```
 
 Use [Manage plugins](/plugins/manage-plugins) for common install, update,
-inspect, and uninstall examples. Use [`openclaw plugins`](/cli/plugins) for the
+inspect, and uninstall examples. Use [`quiet-core-bot plugins`](/cli/plugins) for the
 full command reference and source-selection rules.
 
 ## Publish plugins
 
-Publish public community plugins on ClawHub when you want OpenClaw users to
+Publish public community plugins on ClawHub when you want Quiet Core bot users to
 discover and install them. ClawHub owns the live package listing, release
 history, scan status, and install hints; the docs do not maintain a static
 third-party plugin catalog.
@@ -55,12 +55,12 @@ surfaces until review and verification finish.
 
 Use this checklist before you publish:
 
-| Requirement          | Why                                                 |
-| -------------------- | --------------------------------------------------- |
-| Published on ClawHub | Users need `openclaw plugins install` hints to work |
-| Public GitHub repo   | Source review, issue tracking, transparency         |
-| Setup and usage docs | Users need to know how to configure it              |
-| Active maintenance   | Recent updates or responsive issue handling         |
+| Requirement          | Why                                                       |
+| -------------------- | --------------------------------------------------------- |
+| Published on ClawHub | Users need `quiet-core-bot plugins install` hints to work |
+| Public GitHub repo   | Source review, issue tracking, transparency               |
+| Setup and usage docs | Users need to know how to configure it                    |
+| Active maintenance   | Recent updates or responsive issue handling               |
 
 Use these pages for the full publishing contract:
 

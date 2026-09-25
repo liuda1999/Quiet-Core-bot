@@ -1,5 +1,5 @@
 ---
-summary: "Quick examples for listing, installing, updating, inspecting, and uninstalling OpenClaw plugins"
+summary: "Quick examples for listing, installing, updating, inspecting, and uninstalling Quiet Core bot plugins"
 read_when:
   - You want quick plugin list, install, update, inspect, or uninstall examples
   - You want to choose a plugin install source
@@ -11,7 +11,7 @@ doc-schema-version: 1
 
 Use this page for common plugin management commands. For the exhaustive command
 contract, flags, source-selection rules, and edge cases, see
-[`openclaw plugins`](/cli/plugins).
+[`quiet-core-bot plugins`](/cli/plugins).
 
 Most install workflows are:
 
@@ -23,62 +23,62 @@ Most install workflows are:
 ## List and search plugins
 
 ```bash
-openclaw plugins list
-openclaw plugins list --enabled
-openclaw plugins list --verbose
-openclaw plugins list --json
-openclaw plugins search "calendar"
+quiet-core-bot plugins list
+quiet-core-bot plugins list --enabled
+quiet-core-bot plugins list --verbose
+quiet-core-bot plugins list --json
+quiet-core-bot plugins search "calendar"
 ```
 
 Use `--json` for scripts:
 
 ```bash
-openclaw plugins list --json \
+quiet-core-bot plugins list --json \
   | jq '.plugins[] | {id, enabled, format, source, dependencyStatus}'
 ```
 
-`plugins list` is a cold inventory check. It shows what OpenClaw can discover
+`plugins list` is a cold inventory check. It shows what Quiet Core bot can discover
 from config, manifests, and the plugin registry; it does not prove that an
 already-running Gateway imported the plugin runtime. The JSON output includes
 registry diagnostics and each plugin's static `dependencyStatus` when the
 plugin package declares `dependencies` or `optionalDependencies`.
 
 `plugins search` queries ClawHub for installable plugin packages and prints
-install hints such as `openclaw plugins install clawhub:<package>`.
+install hints such as `quiet-core-bot plugins install clawhub:<package>`.
 
 ## Install plugins
 
 ```bash
 # Search ClawHub for plugin packages.
-openclaw plugins search "calendar"
+quiet-core-bot plugins search "calendar"
 
 # Install from ClawHub.
-openclaw plugins install clawhub:<package>
-openclaw plugins install clawhub:<package>@1.2.3
-openclaw plugins install clawhub:<package>@beta
+quiet-core-bot plugins install clawhub:<package>
+quiet-core-bot plugins install clawhub:<package>@1.2.3
+quiet-core-bot plugins install clawhub:<package>@beta
 
 # Install from npm.
-openclaw plugins install npm:<package>
-openclaw plugins install npm:@scope/openclaw-plugin@1.2.3
-openclaw plugins install npm:@openclaw/codex
+quiet-core-bot plugins install npm:<package>
+quiet-core-bot plugins install npm:@scope/openclaw-plugin@1.2.3
+quiet-core-bot plugins install npm:@openclaw/codex
 
 # Install from a local npm pack artifact.
-openclaw plugins install npm-pack:<path.tgz>
+quiet-core-bot plugins install npm-pack:<path.tgz>
 
 # Install from git or a local development checkout.
-openclaw plugins install git:github.com/acme/openclaw-plugin@v1.0.0
-openclaw plugins install ./my-plugin
-openclaw plugins install --link ./my-plugin
+quiet-core-bot plugins install git:github.com/acme/openclaw-plugin@v1.0.0
+quiet-core-bot plugins install ./my-plugin
+quiet-core-bot plugins install --link ./my-plugin
 ```
 
 Bare package specs install from npm during the launch cutover. Use `clawhub:`,
 `npm:`, `git:`, or `npm-pack:` when you need deterministic source selection.
-If the bare name matches an official plugin id, OpenClaw can install the
+If the bare name matches an official plugin id, Quiet Core bot can install the
 catalog entry directly.
 
 Use `--force` only when you intentionally want to overwrite an existing install
 target. For routine upgrades of tracked npm, ClawHub, or hook-pack installs, use
-`openclaw plugins update`.
+`quiet-core-bot plugins update`.
 
 ## Restart and inspect
 
@@ -88,8 +88,8 @@ managed or reload is disabled, restart it yourself before checking live runtime
 surfaces:
 
 ```bash
-openclaw gateway restart
-openclaw plugins inspect <plugin-id> --runtime --json
+quiet-core-bot gateway restart
+quiet-core-bot plugins inspect <plugin-id> --runtime --json
 ```
 
 Use `inspect --runtime` when you need proof that the plugin registered runtime
@@ -100,13 +100,13 @@ config, and registry checks.
 ## Update plugins
 
 ```bash
-openclaw plugins update <plugin-id>
-openclaw plugins update <npm-package-or-spec>
-openclaw plugins update --all
-openclaw plugins update <plugin-id> --dry-run
+quiet-core-bot plugins update <plugin-id>
+quiet-core-bot plugins update <npm-package-or-spec>
+quiet-core-bot plugins update --all
+quiet-core-bot plugins update <plugin-id> --dry-run
 ```
 
-When you pass a plugin id, OpenClaw reuses the tracked install spec. Stored
+When you pass a plugin id, Quiet Core bot reuses the tracked install spec. Stored
 dist-tags such as `@beta` and exact pinned versions continue to be used on
 later `update <plugin-id>` runs.
 
@@ -114,23 +114,23 @@ For npm installs, you can pass an explicit package spec to switch the tracked
 record:
 
 ```bash
-openclaw plugins update @scope/openclaw-plugin@beta
-openclaw plugins update @scope/openclaw-plugin
+quiet-core-bot plugins update @scope/openclaw-plugin@beta
+quiet-core-bot plugins update @scope/openclaw-plugin
 ```
 
 The second command moves a plugin back to the registry's default release line
 when it was previously pinned to an exact version or tag.
 
-When `openclaw update` runs on the beta channel, plugin records can prefer
+When `quiet-core-bot update` runs on the beta channel, plugin records can prefer
 matching `@beta` releases. For the exact fallback and pinning rules, see
-[`openclaw plugins`](/cli/plugins#update).
+[`quiet-core-bot plugins`](/cli/plugins#update).
 
 ## Uninstall plugins
 
 ```bash
-openclaw plugins uninstall <plugin-id> --dry-run
-openclaw plugins uninstall <plugin-id>
-openclaw plugins uninstall <plugin-id> --keep-files
+quiet-core-bot plugins uninstall <plugin-id> --dry-run
+quiet-core-bot plugins uninstall <plugin-id>
+quiet-core-bot plugins uninstall <plugin-id> --keep-files
 ```
 
 Uninstall removes the plugin's config entry, persisted plugin index record,
@@ -144,14 +144,14 @@ the install instead.
 
 ## Choose a source
 
-| Source      | Use when                                                                    | Example                                                        |
-| ----------- | --------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| ClawHub     | You want OpenClaw-native discovery, scan summaries, versions, and hints     | `openclaw plugins install clawhub:<package>`                   |
-| npmjs.com   | You already ship JavaScript packages or need npm dist-tags/private registry | `openclaw plugins install npm:@acme/openclaw-plugin`           |
-| git         | You want a branch, tag, or commit from a repository                         | `openclaw plugins install git:github.com/<owner>/<repo>@<ref>` |
-| local path  | You are developing or testing a plugin on the same machine                  | `openclaw plugins install --link ./my-plugin`                  |
-| npm pack    | You are proving a local package artifact through npm install semantics      | `openclaw plugins install npm-pack:<path.tgz>`                 |
-| marketplace | You are installing a Claude-compatible marketplace plugin                   | `openclaw plugins install <plugin> --marketplace <source>`     |
+| Source      | Use when                                                                      | Example                                                              |
+| ----------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| ClawHub     | You want Quiet Core bot-native discovery, scan summaries, versions, and hints | `quiet-core-bot plugins install clawhub:<package>`                   |
+| npmjs.com   | You already ship JavaScript packages or need npm dist-tags/private registry   | `quiet-core-bot plugins install npm:@acme/openclaw-plugin`           |
+| git         | You want a branch, tag, or commit from a repository                           | `quiet-core-bot plugins install git:github.com/<owner>/<repo>@<ref>` |
+| local path  | You are developing or testing a plugin on the same machine                    | `quiet-core-bot plugins install --link ./my-plugin`                  |
+| npm pack    | You are proving a local package artifact through npm install semantics        | `quiet-core-bot plugins install npm-pack:<path.tgz>`                 |
+| marketplace | You are installing a Claude-compatible marketplace plugin                     | `quiet-core-bot plugins install <plugin> --marketplace <source>`     |
 
 Managed local path installs must be plugin directories or archives. Put
 standalone plugin files in `plugins.load.paths` instead of installing them with
@@ -159,7 +159,7 @@ standalone plugin files in `plugins.load.paths` instead of installing them with
 
 ## Publish plugins
 
-ClawHub is the primary public discovery surface for OpenClaw plugins. Publish
+ClawHub is the primary public discovery surface for Quiet Core bot plugins. Publish
 there when you want users to find plugin metadata, version history, registry
 scan results, and install hints before they install.
 
@@ -187,9 +187,9 @@ publishing:
 
 ```bash
 npm publish --access public
-openclaw plugins install npm:@acme/openclaw-plugin
-openclaw plugins install npm:@acme/openclaw-plugin@beta
-openclaw plugins install npm:@acme/openclaw-plugin@1.0.0
+quiet-core-bot plugins install npm:@acme/openclaw-plugin
+quiet-core-bot plugins install npm:@acme/openclaw-plugin@beta
+quiet-core-bot plugins install npm:@acme/openclaw-plugin@1.0.0
 ```
 
 Use these pages for the full publishing contract instead of treating this page
@@ -207,7 +207,7 @@ If the same package is available on both ClawHub and npm, use the explicit
 ## Related
 
 - [Plugins](/tools/plugin) - install, configure, restart, and troubleshoot
-- [`openclaw plugins`](/cli/plugins) - full CLI reference
+- [`quiet-core-bot plugins`](/cli/plugins) - full CLI reference
 - [Community plugins](/plugins/community) - public discovery and ClawHub publishing
 - [ClawHub](/clawhub/cli) - registry CLI operations
 - [Building plugins](/plugins/building-plugins) - create a plugin package

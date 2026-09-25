@@ -1,42 +1,42 @@
 ---
-summary: "Set up Codex Computer Use for Codex-mode OpenClaw agents"
+summary: "Set up Codex Computer Use for Codex-mode Quiet Core bot agents"
 title: "Codex Computer Use"
 read_when:
-  - You want Codex-mode OpenClaw agents to use Codex Computer Use
+  - You want Codex-mode Quiet Core bot agents to use Codex Computer Use
   - You are deciding between Codex Computer Use, PeekabooBridge, and direct cua-driver MCP
   - You are deciding between Codex Computer Use and a direct cua-driver MCP setup
   - You are configuring computerUse for the bundled Codex plugin
   - You are troubleshooting /codex computer-use status or install
 ---
 
-Computer Use is a Codex-native MCP plugin for local desktop control. OpenClaw
+Computer Use is a Codex-native MCP plugin for local desktop control. Quiet Core bot
 does not vendor the desktop app, execute desktop actions itself, or bypass
 Codex permissions. The bundled `codex` plugin only prepares Codex app-server:
 it enables Codex plugin support, finds or installs the configured Codex
 Computer Use plugin, checks that the `computer-use` MCP server is available, and
 then lets Codex own the native MCP tool calls during Codex-mode turns.
 
-Use this page when OpenClaw is already using the native Codex harness. For the
+Use this page when Quiet Core bot is already using the native Codex harness. For the
 runtime setup itself, see [Codex harness](/plugins/codex-harness).
 
-## OpenClaw.app and Peekaboo
+## Quiet Core bot.app and Peekaboo
 
-OpenClaw.app's Peekaboo integration is separate from Codex Computer Use. The
+Quiet Core bot.app's Peekaboo integration is separate from Codex Computer Use. The
 macOS app can host a PeekabooBridge socket so the `peekaboo` CLI can reuse the
 app's local Accessibility and Screen Recording grants for Peekaboo's own
 automation tools. That bridge does not install or proxy Codex Computer Use, and
 Codex Computer Use does not call through the PeekabooBridge socket.
 
-Use [Peekaboo bridge](/platforms/mac/peekaboo) when you want OpenClaw.app to be
+Use [Peekaboo bridge](/platforms/mac/peekaboo) when you want Quiet Core bot.app to be
 a permission-aware host for Peekaboo CLI automation. Use this page when a
-Codex-mode OpenClaw agent should have Codex's native `computer-use` MCP plugin
+Codex-mode Quiet Core bot agent should have Codex's native `computer-use` MCP plugin
 available before the turn starts.
 
 ## iOS app
 
 The iOS app is separate from Codex Computer Use. It does not install or proxy
 the Codex `computer-use` MCP server and it is not a desktop-control backend.
-Instead, the iOS app connects as an OpenClaw node and exposes mobile
+Instead, the iOS app connects as an Quiet Core bot node and exposes mobile
 capabilities through node commands such as `canvas.*`, `camera.*`, `screen.*`,
 `location.*`, and `talk.*`.
 
@@ -47,11 +47,11 @@ macOS desktop through Codex's native Computer Use plugin.
 ## Direct cua-driver MCP
 
 Codex Computer Use is not the only way to expose desktop control. If you want
-OpenClaw-managed runtimes to call TryCua's driver directly, use the upstream
-`cua-driver mcp` server through OpenClaw's MCP registry instead of the
+Quiet Core bot-managed runtimes to call TryCua's driver directly, use the upstream
+`cua-driver mcp` server through Quiet Core bot's MCP registry instead of the
 Codex-specific marketplace flow.
 
-After installing `cua-driver`, either ask it for the OpenClaw command:
+After installing `cua-driver`, either ask it for the Quiet Core bot command:
 
 ```bash
 cua-driver mcp-config --client openclaw
@@ -60,17 +60,17 @@ cua-driver mcp-config --client openclaw
 or register the stdio server yourself:
 
 ```bash
-openclaw mcp set cua-driver '{"command":"cua-driver","args":["mcp"]}'
+quiet-core-bot mcp set cua-driver '{"command":"cua-driver","args":["mcp"]}'
 ```
 
 That path keeps the upstream MCP tool surface intact, including the driver
 schemas and structured MCP responses. Use it when you want the CUA driver
-available as a normal OpenClaw MCP server. Use the Codex Computer Use setup on
+available as a normal Quiet Core bot MCP server. Use the Codex Computer Use setup on
 this page when Codex app-server should own plugin installation, MCP reloads,
 and native tool calls inside Codex-mode turns.
 
 CUA's driver is macOS-specific and still requires the local macOS permissions
-that its app prompts for, such as Accessibility and Screen Recording. OpenClaw
+that its app prompts for, such as Accessibility and Screen Recording. Quiet Core bot
 does not install `cua-driver`, grant those permissions, or bypass the upstream
 driver's safety model.
 
@@ -78,7 +78,7 @@ driver's safety model.
 
 Set `plugins.entries.codex.config.computerUse` when Codex-mode turns must have
 Computer Use available before a thread starts. `autoInstall: true` opts
-Computer Use in and lets OpenClaw install or re-enable it before the turn:
+Computer Use in and lets Quiet Core bot install or re-enable it before the turn:
 
 ```json5
 {
@@ -102,11 +102,11 @@ Computer Use in and lets OpenClaw install or re-enable it before the turn:
 }
 ```
 
-With this config, OpenClaw checks Codex app-server before each Codex-mode turn.
+With this config, Quiet Core bot checks Codex app-server before each Codex-mode turn.
 If Computer Use is missing but Codex app-server has already discovered an
-installable marketplace, OpenClaw asks Codex app-server to install or re-enable
+installable marketplace, Quiet Core bot asks Codex app-server to install or re-enable
 the plugin and reload MCP servers. On macOS, when no matching marketplace is
-registered and the standard Codex app bundle exists, OpenClaw also tries to
+registered and the standard Codex app bundle exists, Quiet Core bot also tries to
 register the bundled Codex marketplace from
 `/Applications/Codex.app/Contents/Resources/plugins/openai-bundled` before it
 fails. If setup still cannot make the MCP server available, the turn fails
@@ -118,7 +118,7 @@ before testing if an existing Codex thread has already started.
 ## Commands
 
 Use the `/codex computer-use` commands from any chat surface where the `codex`
-plugin command surface is available. These are OpenClaw chat/runtime commands,
+plugin command surface is available. These are Quiet Core bot chat/runtime commands,
 not `openclaw codex ...` CLI subcommands:
 
 ```text
@@ -139,7 +139,7 @@ app-server, reloads MCP servers, and verifies that the MCP server exposes tools.
 
 ## Marketplace choices
 
-OpenClaw uses the same app-server API that Codex itself exposes. The
+Quiet Core bot uses the same app-server API that Codex itself exposes. The
 marketplace fields choose where Codex should find `computer-use`.
 
 | Field                | Use when                                                        | Install support                                          |
@@ -150,10 +150,10 @@ marketplace fields choose where Codex should find `computer-use`.
 | `marketplaceName`    | You want to select one already registered marketplace by name.  | Yes only when the selected marketplace has a local path. |
 
 Fresh Codex homes may need a short moment to seed their official marketplaces.
-During install, OpenClaw polls `plugin/list` for up to
+During install, Quiet Core bot polls `plugin/list` for up to
 `marketplaceDiscoveryTimeoutMs` milliseconds. The default is 60 seconds.
 
-If multiple known marketplaces contain Computer Use, OpenClaw prefers
+If multiple known marketplaces contain Computer Use, Quiet Core bot prefers
 `openai-bundled`, then `openai-curated`, then `local`. Unknown ambiguous matches
 fail closed and ask you to set `marketplaceName` or `marketplacePath`.
 
@@ -166,7 +166,7 @@ Recent Codex desktop builds bundle Computer Use here:
 ```
 
 When `computerUse.autoInstall` is true and no marketplace containing
-`computer-use` is registered, OpenClaw tries to add the standard bundled
+`computer-use` is registered, Quiet Core bot tries to add the standard bundled
 marketplace root automatically:
 
 ```text
@@ -219,9 +219,9 @@ values. Adding a new source is an explicit setup operation, so use
 Turn-start auto-install can use a configured `marketplacePath`, because that is
 already a local path on the host.
 
-## What OpenClaw checks
+## What Quiet Core bot checks
 
-OpenClaw reports a stable setup reason internally and formats the user-facing
+Quiet Core bot reports a stable setup reason internally and formats the user-facing
 status for chat:
 
 | Reason                       | Meaning                                                | Next step                                     |
@@ -242,7 +242,7 @@ when available, and the specific message for the failing setup step.
 ## macOS permissions
 
 Computer Use is macOS-specific. The Codex-owned MCP server may need local OS
-permissions before it can inspect or control apps. If OpenClaw says Computer Use
+permissions before it can inspect or control apps. If Quiet Core bot says Computer Use
 is installed but the MCP server is unavailable, verify the Codex-side Computer
 Use setup first:
 
@@ -253,7 +253,7 @@ Use setup first:
 - macOS has granted the required permissions for the desktop-control app.
 - The current host session can access the desktop being controlled.
 
-OpenClaw intentionally fails closed when `computerUse.enabled` is true. A
+Quiet Core bot intentionally fails closed when `computerUse.enabled` is true. A
 Codex-mode turn should not silently proceed without the native desktop tools
 that the config required.
 
@@ -276,13 +276,13 @@ Codex app-server MCP status, or macOS permissions.
 **Status or a probe times out on `computer-use.list_apps`.** The plugin and MCP
 server are present, but the local Computer Use bridge did not answer. Quit or
 restart Codex Computer Use, relaunch Codex Desktop if needed, then retry in a
-fresh OpenClaw session.
+fresh Quiet Core bot session.
 
 **A Computer Use tool says `Native hook relay unavailable`.** The Codex-native
-tool hook could not reach an active OpenClaw relay through the local bridge or
-Gateway fallback. Start a fresh OpenClaw session with `/new` or `/reset`. If it
+tool hook could not reach an active Quiet Core bot relay through the local bridge or
+Gateway fallback. Start a fresh Quiet Core bot session with `/new` or `/reset`. If it
 works once and then fails again on a later tool call, `/new` is only clearing the
-current attempt; restart the Codex app-server or OpenClaw Gateway so old threads
+current attempt; restart the Codex app-server or Quiet Core bot Gateway so old threads
 and hook registrations are dropped, then retry in a fresh session.
 
 **Turn-start auto-install refuses a source.** This is intentional. Add the

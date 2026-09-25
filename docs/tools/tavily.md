@@ -8,7 +8,7 @@ read_when:
 title: "Tavily"
 ---
 
-[Tavily](https://tavily.com) is a search API designed for AI applications. OpenClaw exposes it in two ways:
+[Tavily](https://tavily.com) is a search API designed for AI applications. Quiet Core bot exposes it in two ways:
 
 - as the `web_search` provider for the generic search tool
 - as explicit plugin tools: `tavily_search` and `tavily_extract`
@@ -28,7 +28,7 @@ Tavily returns structured results optimized for LLM consumption with configurabl
 <Steps>
   <Step title="Install the plugin">
     ```bash
-    openclaw plugins install @openclaw/tavily-plugin
+    quiet-core-bot plugins install @openclaw/tavily-plugin
     ```
   </Step>
   <Step title="Get an API key">
@@ -66,7 +66,7 @@ Tavily returns structured results optimized for LLM consumption with configurabl
 </Steps>
 
 <Tip>
-Choosing Tavily in onboarding or `openclaw configure --section web` installs and enables the official Tavily plugin when needed.
+Choosing Tavily in onboarding or `quiet-core-bot configure --section web` installs and enables the official Tavily plugin when needed.
 </Tip>
 
 ## Tool reference

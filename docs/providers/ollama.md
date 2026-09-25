@@ -1,33 +1,33 @@
 ---
-summary: "Run OpenClaw with Ollama local models"
+summary: "Run Quiet Core bot with Ollama local models"
 read_when:
-  - You want to run OpenClaw with local models via Ollama
+  - You want to run Quiet Core bot with local models via Ollama
   - You need Ollama setup and configuration guidance
   - You want Ollama vision models for image understanding
 title: "Ollama"
 ---
 
-OpenClaw integrates with Ollama's native API (`/api/chat`) for local and self-hosted Ollama servers. Setup targets a reachable Ollama host: install Ollama, pull a model, and point the `ollama` provider at your daemon.
+Quiet Core bot integrates with Ollama's native API (`/api/chat`) for local and self-hosted Ollama servers. Setup targets a reachable Ollama host: install Ollama, pull a model, and point the `ollama` provider at your daemon.
 
 ```bash
 ollama serve
 ollama pull gemma4
 export OLLAMA_API_KEY="ollama-local"
-openclaw models list --provider ollama
-openclaw models set ollama/gemma4
+quiet-core-bot models list --provider ollama
+quiet-core-bot models set ollama/gemma4
 ```
 
 <Warning>
-**Remote Ollama users**: Do not use the `/v1` OpenAI-compatible URL (`http://host:11434/v1`) with OpenClaw. This breaks tool calling and models may output raw tool JSON as plain text. Use the native Ollama API URL instead: `baseUrl: "http://host:11434"` (no `/v1`).
+**Remote Ollama users**: Do not use the `/v1` OpenAI-compatible URL (`http://host:11434/v1`) with Quiet Core bot. This breaks tool calling and models may output raw tool JSON as plain text. Use the native Ollama API URL instead: `baseUrl: "http://host:11434"` (no `/v1`).
 </Warning>
 
-Ollama provider config uses `baseUrl` as the canonical key. OpenClaw also accepts `baseURL` for compatibility with OpenAI SDK-style examples, but new config should prefer `baseUrl`.
+Ollama provider config uses `baseUrl` as the canonical key. Quiet Core bot also accepts `baseURL` for compatibility with OpenAI SDK-style examples, but new config should prefer `baseUrl`.
 
 ## Auth rules
 
 <AccordionGroup>
   <Accordion title="Local and LAN hosts">
-    Local and LAN Ollama hosts do not need a real bearer token. OpenClaw uses the local `ollama-local` marker only for loopback, private-network, `.local`, and bare-hostname Ollama base URLs.
+    Local and LAN Ollama hosts do not need a real bearer token. Quiet Core bot uses the local `ollama-local` marker only for loopback, private-network, `.local`, and bare-hostname Ollama base URLs.
   </Accordion>
   <Accordion title="Remote and Ollama Cloud hosts">
     Remote public hosts and Ollama Cloud (`https://ollama.com`) require a real credential through `OLLAMA_API_KEY`, an auth profile, or the provider's `apiKey`. Set those endpoints on the `ollama` provider or on a custom provider id with `api: "ollama"`.
@@ -36,7 +36,7 @@ Ollama provider config uses `baseUrl` as the canonical key. OpenClaw also accept
     Custom provider ids that set `api: "ollama"` follow the same rules. For example, an `ollama-remote` provider that points at a private LAN Ollama host can use `apiKey: "ollama-local"` and sub-agents will resolve that marker through the Ollama provider hook instead of treating it as a missing credential. Memory search can also set `agents.defaults.memorySearch.provider` to that custom provider id so embeddings use the matching Ollama endpoint.
   </Accordion>
   <Accordion title="Auth profiles">
-    `auth-profiles.json` stores the credential for a provider id. Put endpoint settings (`baseUrl`, `api`, model ids, headers, timeouts) in `models.providers.<id>`. Older flat auth-profile files such as `{ "ollama-windows": { "apiKey": "ollama-local" } }` are not a runtime format; run `openclaw doctor --fix` to rewrite them to the canonical `ollama-windows:default` API-key profile with a backup. `baseUrl` in that file is compatibility noise and should be moved to provider config.
+    `auth-profiles.json` stores the credential for a provider id. Put endpoint settings (`baseUrl`, `api`, model ids, headers, timeouts) in `models.providers.<id>`. Older flat auth-profile files such as `{ "ollama-windows": { "apiKey": "ollama-local" } }` are not a runtime format; run `quiet-core-bot doctor --fix` to rewrite them to the canonical `ollama-windows:default` API-key profile with a backup. `baseUrl` in that file is compatibility noise and should be moved to provider config.
   </Accordion>
   <Accordion title="Memory embedding scope">
     When Ollama is used for memory embeddings, bearer auth is scoped to the host where it was declared:
@@ -59,7 +59,7 @@ Choose your preferred setup method and mode.
     <Steps>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard
+        quiet-core-bot onboard
         ```
 
         Select **Ollama** from the provider list.
@@ -69,7 +69,7 @@ Choose your preferred setup method and mode.
       </Step>
       <Step title="Verify the model is available">
         ```bash
-        openclaw models list --provider ollama
+        quiet-core-bot models list --provider ollama
         ```
       </Step>
     </Steps>
@@ -77,7 +77,7 @@ Choose your preferred setup method and mode.
     ### Non-interactive mode
 
     ```bash
-    openclaw onboard --non-interactive \
+    quiet-core-bot onboard --non-interactive \
       --auth-choice ollama \
       --accept-risk
     ```
@@ -85,7 +85,7 @@ Choose your preferred setup method and mode.
     Optionally specify a custom base URL or model:
 
     ```bash
-    openclaw onboard --non-interactive \
+    quiet-core-bot onboard --non-interactive \
       --auth-choice ollama \
       --custom-base-url "http://ollama-host:11434" \
       --custom-model-id "qwen3.5:27b" \
@@ -111,7 +111,7 @@ Choose your preferred setup method and mode.
         ollama pull llama3.3
         ```
       </Step>
-      <Step title="Enable Ollama for OpenClaw">
+      <Step title="Enable Ollama for Quiet Core bot">
         For host-backed setups, any placeholder value works:
 
         ```bash
@@ -119,13 +119,13 @@ Choose your preferred setup method and mode.
         export OLLAMA_API_KEY="ollama-local"
 
         # Or configure in your config file
-        openclaw config set models.providers.ollama.apiKey "OLLAMA_API_KEY"
+        quiet-core-bot config set models.providers.ollama.apiKey "OLLAMA_API_KEY"
         ```
       </Step>
       <Step title="Inspect and set your model">
         ```bash
-        openclaw models list
-        openclaw models set ollama/gemma4
+        quiet-core-bot models list
+        quiet-core-bot models set ollama/gemma4
         ```
 
         Or set the default in config:
@@ -147,33 +147,33 @@ Choose your preferred setup method and mode.
 
 ## Local models
 
-OpenClaw discovers models from the configured Ollama instance. This path is for local or self-hosted Ollama servers, and OpenClaw currently suggests `gemma4` as the local default.
+Quiet Core bot discovers models from the configured Ollama instance. This path is for local or self-hosted Ollama servers, and Quiet Core bot currently suggests `gemma4` as the local default.
 
 ## Model discovery (implicit provider)
 
-When you set `OLLAMA_API_KEY` (or an auth profile) and **do not** define `models.providers.ollama` or another custom remote provider with `api: "ollama"`, OpenClaw discovers models from the local Ollama instance at `http://127.0.0.1:11434`.
+When you set `OLLAMA_API_KEY` (or an auth profile) and **do not** define `models.providers.ollama` or another custom remote provider with `api: "ollama"`, Quiet Core bot discovers models from the local Ollama instance at `http://127.0.0.1:11434`.
 
-| Behavior             | Detail                                                                                                                                                               |
-| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Catalog query        | Queries `/api/tags`                                                                                                                                                  |
-| Capability detection | Uses best-effort `/api/show` lookups to read `contextWindow`, expanded `num_ctx` Modelfile parameters, and capabilities including vision/tools                       |
-| Vision models        | Models with a `vision` capability reported by `/api/show` are marked as image-capable (`input: ["text", "image"]`), so OpenClaw auto-injects images into the prompt  |
-| Reasoning detection  | Uses `/api/show` capabilities when available, including `thinking`; falls back to a model-name heuristic (`r1`, `reasoning`, `think`) when Ollama omits capabilities |
-| Token limits         | Sets `maxTokens` to the default Ollama max-token cap used by OpenClaw                                                                                                |
-| Costs                | Sets all costs to `0`                                                                                                                                                |
+| Behavior             | Detail                                                                                                                                                                    |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Catalog query        | Queries `/api/tags`                                                                                                                                                       |
+| Capability detection | Uses best-effort `/api/show` lookups to read `contextWindow`, expanded `num_ctx` Modelfile parameters, and capabilities including vision/tools                            |
+| Vision models        | Models with a `vision` capability reported by `/api/show` are marked as image-capable (`input: ["text", "image"]`), so Quiet Core bot auto-injects images into the prompt |
+| Reasoning detection  | Uses `/api/show` capabilities when available, including `thinking`; falls back to a model-name heuristic (`r1`, `reasoning`, `think`) when Ollama omits capabilities      |
+| Token limits         | Sets `maxTokens` to the default Ollama max-token cap used by Quiet Core bot                                                                                               |
+| Costs                | Sets all costs to `0`                                                                                                                                                     |
 
-This avoids manual model entries while keeping the catalog aligned with the local Ollama instance. You can use a full ref such as `ollama/<pulled-model>:latest` in local `infer model run`; OpenClaw resolves that installed model from Ollama's live catalog without requiring a hand-written `models.json` entry.
+This avoids manual model entries while keeping the catalog aligned with the local Ollama instance. You can use a full ref such as `ollama/<pulled-model>:latest` in local `infer model run`; Quiet Core bot resolves that installed model from Ollama's live catalog without requiring a hand-written `models.json` entry.
 
 For signed-in Ollama hosts, some `:cloud` models may be usable through `/api/chat`
 and `/api/show` before they appear in `/api/tags`. When you explicitly select a
-full `ollama/<model>:cloud` ref, OpenClaw validates that exact missing model with
+full `ollama/<model>:cloud` ref, Quiet Core bot validates that exact missing model with
 `/api/show` and adds it to the runtime catalog only if Ollama confirms model
 metadata. Typos still fail as unknown models instead of being auto-created.
 
 ```bash
 # See what models are available
 ollama list
-openclaw models list
+quiet-core-bot models list
 ```
 
 For a narrow text-generation smoke test that avoids the full agent tool surface,
@@ -188,7 +188,7 @@ OLLAMA_API_KEY=ollama-local \
     --json
 ```
 
-That path still uses OpenClaw's configured provider, auth, and native Ollama
+That path still uses Quiet Core bot's configured provider, auth, and native Ollama
 transport, but it does not start a chat-agent turn or load MCP/tool context. If
 this succeeds while normal agent replies fail, troubleshoot the model's agent
 prompt/tool capacity next.
@@ -212,14 +212,14 @@ OLLAMA_API_KEY=ollama-local \
 JPEG, and WebP inputs. Non-image files are rejected before Ollama is called.
 For speech recognition, use `openclaw infer audio transcribe` instead.
 
-When you switch a conversation with `/model ollama/<model>`, OpenClaw treats
+When you switch a conversation with `/model ollama/<model>`, Quiet Core bot treats
 that as an exact user selection. If the configured Ollama `baseUrl` is
 unreachable, the next reply fails with the provider error instead of silently
 answering from another configured fallback model.
 
 Isolated cron jobs do one extra local safety check before they start the agent
 turn. If the selected model resolves to a local, private-network, or `.local`
-Ollama provider and `/api/tags` is unreachable, OpenClaw records that cron run
+Ollama provider and `/api/tags` is unreachable, Quiet Core bot records that cron run
 as `skipped` with the selected `ollama/<model>` in the error text. The endpoint
 preflight is cached for 5 minutes, so multiple cron jobs pointed at the same
 stopped Ollama daemon do not all launch failing model requests.
@@ -246,7 +246,7 @@ If you set `models.providers.ollama` explicitly, or configure a custom remote pr
 
 ## Vision and image description
 
-The bundled Ollama plugin registers Ollama as an image-capable media-understanding provider. This lets OpenClaw route explicit image-description requests and configured image-model defaults through local or hosted Ollama vision models.
+The bundled Ollama plugin registers Ollama as an image-capable media-understanding provider. This lets Quiet Core bot route explicit image-description requests and configured image-model defaults through local or hosted Ollama vision models.
 
 For local vision, pull a model that supports images:
 
@@ -266,7 +266,7 @@ openclaw infer image describe \
 
 `--model` must be a full `<provider/model>` ref. When it is set, `openclaw infer image describe` runs that model directly instead of skipping description because the model supports native vision.
 
-Use `infer image describe` when you want OpenClaw's image-understanding provider flow, configured `agents.defaults.imageModel`, and image-description output shape. Use `infer model run --file` when you want a raw multimodal model probe with a custom prompt and one or more images.
+Use `infer image describe` when you want Quiet Core bot's image-understanding provider flow, configured `agents.defaults.imageModel`, and image-description output shape. Use `infer model run --file` when you want a raw multimodal model probe with a custom prompt and one or more images.
 
 To make Ollama the default image-understanding model for inbound media, configure `agents.defaults.imageModel`:
 
@@ -282,7 +282,7 @@ To make Ollama the default image-understanding model for inbound media, configur
 }
 ```
 
-Prefer the full `ollama/<model>` ref. If the same model is listed under `models.providers.ollama.models` with `input: ["text", "image"]` and no other configured image provider exposes that bare model ID, OpenClaw also normalizes a bare `imageModel` ref such as `qwen2.5vl:7b` to `ollama/qwen2.5vl:7b`. If more than one configured image provider has the same bare ID, use the provider prefix explicitly.
+Prefer the full `ollama/<model>` ref. If the same model is listed under `models.providers.ollama.models` with `input: ["text", "image"]` and no other configured image provider exposes that bare model ID, Quiet Core bot also normalizes a bare `imageModel` ref such as `qwen2.5vl:7b` to `ollama/qwen2.5vl:7b`. If more than one configured image provider has the same bare ID, use the provider prefix explicitly.
 
 Slow local vision models can need a longer image-understanding timeout than cloud models. They can also crash or stop when Ollama tries to allocate the full advertised vision context on constrained hardware. Set a capability timeout, and cap `num_ctx` on the model entry when you only need a normal image-description turn:
 
@@ -334,7 +334,7 @@ If you define `models.providers.ollama.models` manually, mark vision models with
 }
 ```
 
-OpenClaw rejects image-description requests for models that are not marked image-capable. With implicit discovery, OpenClaw reads this from Ollama when `/api/show` reports a vision capability.
+Quiet Core bot rejects image-description requests for models that are not marked image-capable. With implicit discovery, Quiet Core bot reads this from Ollama when `/api/show` reports a vision capability.
 
 ## Configuration
 
@@ -347,7 +347,7 @@ OpenClaw rejects image-description requests for models that are not marked image
     ```
 
     <Tip>
-    If `OLLAMA_API_KEY` is set, you can omit `apiKey` in the provider entry and OpenClaw will fill it for availability checks.
+    If `OLLAMA_API_KEY` is set, you can omit `apiKey` in the provider entry and Quiet Core bot will fill it for availability checks.
     </Tip>
 
   </Tab>
@@ -447,7 +447,7 @@ the wire is an explicit model/provider `params.num_ctx`:
 Notes:
 
 - Write both keys. Setting `params.num_ctx` without `contextWindow` (or the
-  reverse) leaves the declaration and the real window disagreeing; OpenClaw warns
+  reverse) leaves the declaration and the real window disagreeing; Quiet Core bot warns
   with `[context-window-mismatch]` and the runtime reports the real value from
   `/api/ps` (`context_length`).
 - `models.providers.<id>.injectNumCtxForOpenAICompat` (default `true`) only
@@ -463,18 +463,18 @@ Notes:
 
 ## Common recipes
 
-Use these as starting points and replace model IDs with the exact names from `ollama list` or `openclaw models list --provider ollama`.
+Use these as starting points and replace model IDs with the exact names from `ollama list` or `quiet-core-bot models list --provider ollama`.
 
 <AccordionGroup>
   <Accordion title="Local model with auto-discovery">
-    Use this when Ollama runs on the same machine as the Gateway and you want OpenClaw to discover the installed models automatically.
+    Use this when Ollama runs on the same machine as the Gateway and you want Quiet Core bot to discover the installed models automatically.
 
     ```bash
     ollama serve
     ollama pull gemma4
     export OLLAMA_API_KEY="ollama-local"
-    openclaw models list --provider ollama
-    openclaw models set ollama/gemma4
+    quiet-core-bot models list --provider ollama
+    quiet-core-bot models set ollama/gemma4
     ```
 
     This path keeps config minimal. Do not add a `models.providers.ollama` block unless you want to define models manually.
@@ -519,7 +519,7 @@ Use these as starting points and replace model IDs with the exact names from `ol
     }
     ```
 
-    `contextWindow` is the OpenClaw-side context budget. `params.num_ctx` is sent to Ollama for the request. Keep them aligned when your hardware cannot run the model's full advertised context.
+    `contextWindow` is the Quiet Core bot-side context budget. `params.num_ctx` is sent to Ollama for the request. Keep them aligned when your hardware cannot run the model's full advertised context.
 
   </Accordion>
 
@@ -559,7 +559,7 @@ Use these as starting points and replace model IDs with the exact names from `ol
     }
     ```
 
-    When OpenClaw sends the request, the active provider prefix is stripped so `ollama-large/qwen3.5:27b` reaches Ollama as `qwen3.5:27b`.
+    When Quiet Core bot sends the request, the active provider prefix is stripped so `ollama-large/qwen3.5:27b` reaches Ollama as `qwen3.5:27b`.
 
   </Accordion>
 
@@ -625,7 +625,7 @@ Once configured, all your Ollama models are available:
 ```
 
 Custom Ollama provider ids are also supported. When a model ref uses the active
-provider prefix, such as `ollama-spark/qwen3:32b`, OpenClaw strips only that
+provider prefix, such as `ollama-spark/qwen3:32b`, Quiet Core bot strips only that
 prefix before calling Ollama so the server receives `qwen3:32b`.
 
 For slow local models, prefer provider-scoped request tuning before raising the
@@ -661,9 +661,9 @@ set it per model when first-turn load time is the bottleneck.
 # Ollama daemon visible to this machine
 curl http://127.0.0.1:11434/api/tags
 
-# OpenClaw catalog and selected model
-openclaw models list --provider ollama
-openclaw models status
+# Quiet Core bot catalog and selected model
+quiet-core-bot models list --provider ollama
+quiet-core-bot models status
 
 # Direct model smoke
 openclaw infer model run \
@@ -671,11 +671,11 @@ openclaw infer model run \
   --prompt "Reply with exactly: ok"
 ```
 
-For remote hosts, replace `127.0.0.1` with the host used in `baseUrl`. If `curl` works but OpenClaw does not, check whether the Gateway runs on a different machine, container, or service account.
+For remote hosts, replace `127.0.0.1` with the host used in `baseUrl`. If `curl` works but Quiet Core bot does not, check whether the Gateway runs on a different machine, container, or service account.
 
 ## Ollama Web Search
 
-OpenClaw supports **Ollama Web Search** as a bundled `web_search` provider.
+Quiet Core bot supports **Ollama Web Search** as a bundled `web_search` provider.
 
 | Property    | Detail                                                                                                                                                               |
 | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -683,7 +683,7 @@ OpenClaw supports **Ollama Web Search** as a bundled `web_search` provider.
 | Auth        | Key-free for signed-in local Ollama hosts; `OLLAMA_API_KEY` or configured provider auth for direct `https://ollama.com` search or auth-protected hosts               |
 | Requirement | Local/self-hosted hosts must be running and signed in with `ollama signin`; direct hosted search requires `baseUrl: "https://ollama.com"` plus a real Ollama API key |
 
-Choose **Ollama Web Search** during `openclaw onboard` or `openclaw configure --section web`, or set:
+Choose **Ollama Web Search** during `quiet-core-bot onboard` or `quiet-core-bot configure --section web`, or set:
 
 ```json5
 {
@@ -719,7 +719,7 @@ For direct hosted search through Ollama Cloud:
 }
 ```
 
-For a signed-in local daemon, OpenClaw uses the daemon's `/api/experimental/web_search` proxy. For `https://ollama.com`, it calls the hosted `/api/web_search` endpoint directly.
+For a signed-in local daemon, Quiet Core bot uses the daemon's `/api/experimental/web_search` proxy. For `https://ollama.com`, it calls the hosted `/api/web_search` endpoint directly.
 
 <Note>
 For the full setup and behavior details, see [Ollama Web Search](/tools/ollama-search).
@@ -753,7 +753,7 @@ For the full setup and behavior details, see [Ollama Web Search](/tools/ollama-s
 
     This mode may not support streaming and tool calling simultaneously. You may need to disable streaming with `params: { streaming: false }` in model config.
 
-    When `api: "openai-completions"` is used with Ollama, OpenClaw injects `options.num_ctx` by default so Ollama does not silently fall back to a 4096 context window. If your proxy/upstream rejects unknown `options` fields, disable this behavior:
+    When `api: "openai-completions"` is used with Ollama, Quiet Core bot injects `options.num_ctx` by default so Ollama does not silently fall back to a 4096 context window. If your proxy/upstream rejects unknown `options` fields, disable this behavior:
 
     ```json5
     {
@@ -774,11 +774,11 @@ For the full setup and behavior details, see [Ollama Web Search](/tools/ollama-s
   </Accordion>
 
   <Accordion title="Context windows">
-    For auto-discovered models, OpenClaw uses the context window reported by Ollama when available, including larger `PARAMETER num_ctx` values from custom Modelfiles. Otherwise it falls back to the default Ollama context window used by OpenClaw.
+    For auto-discovered models, Quiet Core bot uses the context window reported by Ollama when available, including larger `PARAMETER num_ctx` values from custom Modelfiles. Otherwise it falls back to the default Ollama context window used by Quiet Core bot.
 
-    You can set provider-level `contextWindow`, `contextTokens`, and `maxTokens` defaults for every model under that Ollama provider, then override them per model when needed. `contextWindow` is OpenClaw's prompt and compaction budget. Native Ollama requests leave `options.num_ctx` unset unless you explicitly configure `params.num_ctx`, so Ollama can apply its own model, `OLLAMA_CONTEXT_LENGTH`, or VRAM-based default. To cap or force Ollama's per-request runtime context without rebuilding a Modelfile, set `params.num_ctx`; invalid, zero, negative, and non-finite values are ignored. If you upgraded an older config that used only `contextWindow` or `maxTokens` to force a native Ollama request context, run `openclaw doctor --fix` to copy those explicit provider or model budgets into `params.num_ctx`. The OpenAI-compatible Ollama adapter still injects `options.num_ctx` by default from the configured `params.num_ctx` or `contextWindow`; disable that with `injectNumCtxForOpenAICompat: false` if your upstream rejects `options`.
+    You can set provider-level `contextWindow`, `contextTokens`, and `maxTokens` defaults for every model under that Ollama provider, then override them per model when needed. `contextWindow` is Quiet Core bot's prompt and compaction budget. Native Ollama requests leave `options.num_ctx` unset unless you explicitly configure `params.num_ctx`, so Ollama can apply its own model, `OLLAMA_CONTEXT_LENGTH`, or VRAM-based default. To cap or force Ollama's per-request runtime context without rebuilding a Modelfile, set `params.num_ctx`; invalid, zero, negative, and non-finite values are ignored. If you upgraded an older config that used only `contextWindow` or `maxTokens` to force a native Ollama request context, run `quiet-core-bot doctor --fix` to copy those explicit provider or model budgets into `params.num_ctx`. The OpenAI-compatible Ollama adapter still injects `options.num_ctx` by default from the configured `params.num_ctx` or `contextWindow`; disable that with `injectNumCtxForOpenAICompat: false` if your upstream rejects `options`.
 
-    Native Ollama model entries also accept the common Ollama runtime options under `params`, including `temperature`, `top_p`, `top_k`, `min_p`, `num_predict`, `stop`, `repeat_penalty`, `num_batch`, `num_thread`, and `use_mmap`. OpenClaw forwards only Ollama request keys, so OpenClaw runtime params such as `streaming` are not leaked to Ollama. Use `params.think` or `params.thinking` to send top-level Ollama `think`; `false` disables API-level thinking for Qwen-style thinking models.
+    Native Ollama model entries also accept the common Ollama runtime options under `params`, including `temperature`, `top_p`, `top_k`, `min_p`, `num_predict`, `stop`, `repeat_penalty`, `num_batch`, `num_thread`, and `use_mmap`. Quiet Core bot forwards only Ollama request keys, so Quiet Core bot runtime params such as `streaming` are not leaked to Ollama. Use `params.think` or `params.thinking` to send top-level Ollama `think`; `false` disables API-level thinking for Qwen-style thinking models.
 
     ```json5
     {
@@ -810,7 +810,7 @@ For the full setup and behavior details, see [Ollama Web Search](/tools/ollama-s
   </Accordion>
 
   <Accordion title="Thinking control">
-    For native Ollama models, OpenClaw forwards thinking control as Ollama expects it: top-level `think`, not `options.think`. Auto-discovered models whose `/api/show` response includes the `thinking` capability expose `/think low`, `/think medium`, `/think high`, and `/think max`; non-thinking models expose only `/think off`.
+    For native Ollama models, Quiet Core bot forwards thinking control as Ollama expects it: top-level `think`, not `options.think`. Auto-discovered models whose `/api/show` response includes the `thinking` capability expose `/think low`, `/think medium`, `/think high`, and `/think max`; non-thinking models expose only `/think off`.
 
     ```bash
     openclaw agent --model ollama/gemma4 --thinking off
@@ -833,18 +833,18 @@ For the full setup and behavior details, see [Ollama Web Search](/tools/ollama-s
     }
     ```
 
-    Per-model `params.think` or `params.thinking` can disable or force Ollama API thinking for a specific configured model. OpenClaw preserves those explicit model params when the active run only has the implicit default `off`; non-off runtime commands such as `/think medium` still override the active run.
+    Per-model `params.think` or `params.thinking` can disable or force Ollama API thinking for a specific configured model. Quiet Core bot preserves those explicit model params when the active run only has the implicit default `off`; non-off runtime commands such as `/think medium` still override the active run.
 
   </Accordion>
 
   <Accordion title="Reasoning models">
-    OpenClaw treats models with names such as `deepseek-r1`, `reasoning`, or `think` as reasoning-capable by default.
+    Quiet Core bot treats models with names such as `deepseek-r1`, `reasoning`, or `think` as reasoning-capable by default.
 
     ```bash
     ollama pull deepseek-r1:32b
     ```
 
-    No additional configuration is needed. OpenClaw marks them automatically.
+    No additional configuration is needed. Quiet Core bot marks them automatically.
 
   </Accordion>
 
@@ -860,7 +860,7 @@ For the full setup and behavior details, see [Ollama Web Search](/tools/ollama-s
 
     When `proxy.enabled=true`, Ollama memory embedding requests to the exact
     host-local loopback origin derived from the configured `baseUrl` use
-    OpenClaw's guarded direct path instead of the managed forward proxy. The
+    Quiet Core bot's guarded direct path instead of the managed forward proxy. The
     configured hostname must itself be `localhost` or a loopback IP literal;
     DNS names that merely resolve to loopback still use the managed proxy path.
     LAN, tailnet, private-network, and public Ollama hosts also stay on the
@@ -919,9 +919,9 @@ For the full setup and behavior details, see [Ollama Web Search](/tools/ollama-s
   </Accordion>
 
   <Accordion title="Streaming configuration">
-    OpenClaw's Ollama integration uses the **native Ollama API** (`/api/chat`) by default, which fully supports streaming and tool calling simultaneously. No special configuration is needed.
+    Quiet Core bot's Ollama integration uses the **native Ollama API** (`/api/chat`) by default, which fully supports streaming and tool calling simultaneously. No special configuration is needed.
 
-    For native `/api/chat` requests, OpenClaw also forwards thinking control directly to Ollama: `/think off` and `openclaw agent --thinking off` send top-level `think: false` unless an explicit model `params.think`/`params.thinking` value is configured, while `/think low|medium|high` send the matching top-level `think` effort string. `/think max` maps to Ollama's highest native effort, `think: "high"`.
+    For native `/api/chat` requests, Quiet Core bot also forwards thinking control directly to Ollama: `/think off` and `openclaw agent --thinking off` send top-level `think: false` unless an explicit model `params.think`/`params.thinking` value is configured, while `/think low|medium|high` send the matching top-level `think` effort string. `/think max` maps to Ollama's highest native effort, `think: "high"`.
 
     <Tip>
     If you need to use the OpenAI-compatible endpoint, see the "Legacy OpenAI-compatible mode" section above. Streaming and tool calling may not work simultaneously in that mode.
@@ -942,7 +942,7 @@ For the full setup and behavior details, see [Ollama Web Search](/tools/ollama-s
     - high CPU in `app.slice` or `ollama.service` shortly after WSL2 startup
     - SIGTERM from systemd rather than a Linux OOM-killer event
 
-    OpenClaw logs a startup warning when it detects WSL2, `ollama.service` enabled with `Restart=always`, and visible CUDA markers.
+    Quiet Core bot logs a startup warning when it detects WSL2, `ollama.service` enabled with `Restart=always`, and visible CUDA markers.
 
     Mitigation:
 
@@ -1008,11 +1008,11 @@ For the full setup and behavior details, see [Ollama Web Search](/tools/ollama-s
 
   </Accordion>
 
-  <Accordion title="Remote host works with curl but not OpenClaw">
+  <Accordion title="Remote host works with curl but not Quiet Core bot">
     Verify from the same machine and runtime that runs the Gateway:
 
     ```bash
-    openclaw gateway status --deep
+    quiet-core-bot gateway status --deep
     curl http://ollama-host:11434/api/tags
     ```
 
@@ -1054,7 +1054,7 @@ For the full setup and behavior details, see [Ollama Web Search](/tools/ollama-s
 
     ```bash
     openclaw infer model run --model ollama/kimi-k2.5:cloud --prompt "Reply with exactly: ok" --json
-    openclaw models set ollama/gemma4
+    quiet-core-bot models set ollama/gemma4
     ```
 
   </Accordion>
@@ -1086,7 +1086,7 @@ For the full setup and behavior details, see [Ollama Web Search](/tools/ollama-s
   </Accordion>
 
   <Accordion title="Large-context model is too slow or runs out of memory">
-    Many Ollama models advertise contexts that are larger than your hardware can run comfortably. Native Ollama uses Ollama's own runtime context default unless you set `params.num_ctx`. Cap both OpenClaw's budget and Ollama's request context when you want predictable first-token latency:
+    Many Ollama models advertise contexts that are larger than your hardware can run comfortably. Native Ollama uses Ollama's own runtime context default unless you set `params.num_ctx`. Cap both Quiet Core bot's budget and Ollama's request context when you want predictable first-token latency:
 
     ```json5
     {
@@ -1108,7 +1108,7 @@ For the full setup and behavior details, see [Ollama Web Search](/tools/ollama-s
     }
     ```
 
-    Lower `contextWindow` first if OpenClaw is sending too much prompt. Lower `params.num_ctx` if Ollama is loading a runtime context that is too large for the machine. Lower `maxTokens` if generation runs too long.
+    Lower `contextWindow` first if Quiet Core bot is sending too much prompt. Lower `params.num_ctx` if Ollama is loading a runtime context that is too large for the machine. Lower `maxTokens` if generation runs too long.
 
   </Accordion>
 </AccordionGroup>

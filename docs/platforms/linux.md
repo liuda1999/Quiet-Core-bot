@@ -16,7 +16,7 @@ Native Linux companion apps are planned. Contributions are welcome if you want t
 
 1. Install Node 24 (recommended; Node 22 LTS, currently `22.19+`, still works for compatibility)
 2. `npm i -g openclaw@latest`
-3. `openclaw onboard --install-daemon`
+3. `quiet-core-bot onboard --install-daemon`
 4. From your laptop: `ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
 5. Open `http://127.0.0.1:18789/` and authenticate with the configured shared secret (token by default; password if you set `gateway.auth.mode: "password"`)
 
@@ -38,19 +38,19 @@ Full Linux server guide: [Linux Server](/vps). Step-by-step VPS example: [exe.de
 Use one of these:
 
 ```
-openclaw onboard --install-daemon
+quiet-core-bot onboard --install-daemon
 ```
 
 Or:
 
 ```
-openclaw gateway install
+quiet-core-bot gateway install
 ```
 
 Or:
 
 ```
-openclaw configure
+quiet-core-bot configure
 ```
 
 Select **Gateway service** when prompted.
@@ -58,14 +58,14 @@ Select **Gateway service** when prompted.
 Repair/migrate:
 
 ```
-openclaw doctor
+quiet-core-bot doctor
 ```
 
 ## System control (systemd user unit)
 
-OpenClaw installs a systemd **user** service by default. Use a **system**
-service for shared or always-on servers. `openclaw gateway install` and
-`openclaw onboard --install-daemon` already render the current canonical unit
+Quiet Core bot installs a systemd **user** service by default. Use a **system**
+service for shared or always-on servers. `quiet-core-bot gateway install` and
+`quiet-core-bot onboard --install-daemon` already render the current canonical unit
 for you; write one by hand only when you need a custom system/service-manager
 setup. The full service guidance lives in the [Gateway runbook](/gateway).
 
@@ -75,7 +75,7 @@ Create `~/.config/systemd/user/openclaw-gateway[-<profile>].service`:
 
 ```
 [Unit]
-Description=OpenClaw Gateway (profile: <profile>, v<version>)
+Description=Quiet Core bot Gateway (profile: <profile>, v<version>)
 After=network-online.target
 Wants=network-online.target
 
@@ -103,10 +103,10 @@ systemctl --user enable --now openclaw-gateway[-<profile>].service
 
 On Linux, the kernel chooses an OOM victim when a host, VM, or container cgroup
 runs out of memory. The Gateway can be a poor victim because it owns long-lived
-sessions and channel connections. OpenClaw therefore biases transient child
+sessions and channel connections. Quiet Core bot therefore biases transient child
 processes to be killed before the Gateway when possible.
 
-For eligible Linux child spawns, OpenClaw starts the child through a short
+For eligible Linux child spawns, Quiet Core bot starts the child through a short
 `/bin/sh` wrapper that raises the child's own `oom_score_adj` to `1000`, then
 `exec`s the real command. This is an unprivileged operation because the child is
 only increasing its own OOM kill likelihood.
@@ -116,7 +116,7 @@ Covered child process surfaces include:
 - supervisor-managed command children,
 - PTY shell children,
 - MCP stdio server children,
-- OpenClaw-launched browser/Chrome processes.
+- Quiet Core bot-launched browser/Chrome processes.
 
 The wrapper is Linux-only and is skipped when `/bin/sh` is unavailable. It is
 also skipped if the child env sets `OPENCLAW_CHILD_OOM_SCORE_ADJ=0`, `false`,

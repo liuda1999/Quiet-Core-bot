@@ -38,7 +38,7 @@ Think of the split like this:
 | Active memory plugin (`memory-core`, QMD, Honcho, etc.) | Recall, semantic search, promotion, dreaming, memory runtime                               |
 | `memory-wiki`                                           | Compiled wiki pages, provenance-rich syntheses, dashboards, wiki-specific search/get/apply |
 
-If the active memory plugin exposes shared recall artifacts, OpenClaw can search
+If the active memory plugin exposes shared recall artifacts, Quiet Core bot can search
 both layers in one pass with `memory_search corpus=all`.
 
 When you need wiki-specific ranking, provenance, or direct page access, use the
@@ -146,7 +146,7 @@ openclaw wiki okf import ./bundles/ga4
 
 This is the cleanest fit when a data catalog, documentation crawler, or
 enrichment agent already produces OKF: keep OKF as the portable exchange
-artifact, then let `memory-wiki` turn it into OpenClaw-native concept pages and
+artifact, then let `memory-wiki` turn it into Quiet Core bot-native concept pages and
 compiled digests.
 
 The importer follows the OKF v0.1 shape:
@@ -408,13 +408,13 @@ Put config under `plugins.entries.memory-wiki.config`:
         config: {
           vaultMode: "isolated",
           vault: {
-            path: "~/.openclaw/wiki/main",
+            path: "~/.quiet-core-bot/wiki/main",
             renderMode: "obsidian",
           },
           obsidian: {
             enabled: true,
             useOfficialCli: true,
-            vaultName: "OpenClaw Wiki",
+            vaultName: "Quiet Core bot Wiki",
             openAfterWrites: false,
           },
           bridge: {

@@ -1,13 +1,13 @@
 ---
 summary: "Windows support: Windows Hub, native CLI and Gateway, WSL2 gateway setup, node mode, and troubleshooting"
 read_when:
-  - Installing OpenClaw on Windows
+  - Installing Quiet Core bot on Windows
   - Choosing between Windows Hub, native Windows, and WSL2
   - Setting up the Windows companion app or Windows node mode
 title: "Windows"
 ---
 
-OpenClaw ships a native **Windows Hub** companion app plus Windows CLI support.
+Quiet Core bot ships a native **Windows Hub** companion app plus Windows CLI support.
 Use Windows Hub when you want a desktop app with setup, tray status, chat,
 Command Center diagnostics, and Windows node capabilities. Use the PowerShell
 installer when you want the CLI/Gateway directly. Use WSL2 when you want the
@@ -16,9 +16,9 @@ most Linux-compatible Gateway runtime.
 ## Recommended: Windows Hub
 
 Windows Hub is the native WinUI companion app for Windows 10 20H2+ and Windows 11. It installs without administrator privileges and is published with signed
-x64 and ARM64 installers on OpenClaw releases.
+x64 and ARM64 installers on Quiet Core bot releases.
 
-Download the latest stable installer from the [OpenClaw releases page](https://github.com/openclaw/openclaw/releases):
+Download the latest stable installer from the [Quiet Core bot releases page](https://github.com/openclaw/openclaw/releases):
 
 - [OpenClawCompanion-Setup-x64.exe](https://github.com/openclaw/openclaw/releases/download/v2026.6.5/OpenClawCompanion-Setup-x64.exe)
 - [OpenClawCompanion-Setup-arm64.exe](https://github.com/openclaw/openclaw/releases/download/v2026.6.5/OpenClawCompanion-Setup-arm64.exe)
@@ -26,7 +26,7 @@ Download the latest stable installer from the [OpenClaw releases page](https://g
 
 If a download link above returns a 404, visit the [releases page](https://github.com/openclaw/openclaw/releases) and look for the `OpenClawCompanion-Setup-*` assets on the latest release.
 
-After install, launch **OpenClaw Companion** from the Start menu or the system
+After install, launch **Quiet Core bot Companion** from the Start menu or the system
 tray. The installer also adds shortcuts for Gateway Setup, Chat, Settings,
 Check for Updates, and uninstall.
 
@@ -63,7 +63,7 @@ tray to confirm connection, pairing, node status, and channel health.
 
 ## Windows node mode
 
-Windows Hub can register as a first-class OpenClaw node. The agent can then use
+Windows Hub can register as a first-class Quiet Core bot node. The agent can then use
 declared Windows-native capabilities through the Gateway.
 
 Common commands include:
@@ -80,9 +80,9 @@ Node mode requires Gateway pairing. If the app shows a pairing request, approve
 it from the Gateway host:
 
 ```powershell
-openclaw devices list
-openclaw devices approve <request-id>
-openclaw nodes status
+quiet-core-bot devices list
+quiet-core-bot devices approve <request-id>
+quiet-core-bot nodes status
 ```
 
 The Gateway only forwards commands that the node declares and server policy
@@ -93,7 +93,7 @@ allows. Privacy-sensitive commands such as `screen.record`, `camera.snap`, and
 
 Windows Hub can expose the same Windows-native capability registry as a local
 MCP server on loopback. This is useful when you want local MCP clients to drive
-Windows capabilities without a running OpenClaw Gateway.
+Windows capabilities without a running Quiet Core bot Gateway.
 
 Enable it in Windows Hub Settings under the developer/advanced section. The app
 shows the loopback endpoint and bearer token after the server is enabled.
@@ -109,7 +109,7 @@ Mode matrix:
 
 ## Native Windows CLI and Gateway
 
-For terminal-first use, install OpenClaw from PowerShell:
+For terminal-first use, install Quiet Core bot from PowerShell:
 
 ```powershell
 iwr -useb https://openclaw.ai/install.ps1 | iex
@@ -118,30 +118,30 @@ iwr -useb https://openclaw.ai/install.ps1 | iex
 Verify:
 
 ```powershell
-openclaw --version
-openclaw doctor
-openclaw gateway status --json
+quiet-core-bot --version
+quiet-core-bot doctor
+quiet-core-bot gateway status --json
 ```
 
 Native Windows CLI and Gateway flows are supported and continue to improve.
 Managed startup uses Windows Scheduled Tasks when available. The task keeps the
-readable `gateway.cmd` script in the OpenClaw state dir, but launches it through
+readable `gateway.cmd` script in the Quiet Core bot state dir, but launches it through
 a generated `gateway.vbs` WScript wrapper so the background Gateway does not open
-a visible console window. If task creation is denied, OpenClaw falls back to a
+a visible console window. If task creation is denied, Quiet Core bot falls back to a
 per-user Startup-folder login item.
 
 To install the Gateway service:
 
 ```powershell
-openclaw gateway install
-openclaw gateway status --json
+quiet-core-bot gateway install
+quiet-core-bot gateway status --json
 ```
 
 If you only want CLI use without a managed Gateway service:
 
 ```powershell
-openclaw onboard --non-interactive --skip-health
-openclaw gateway run
+quiet-core-bot onboard --non-interactive --skip-health
+quiet-core-bot gateway run
 ```
 
 ## WSL2 Gateway
@@ -174,11 +174,11 @@ Restart WSL from PowerShell:
 wsl --shutdown
 ```
 
-Then install OpenClaw inside WSL with the Linux quickstart:
+Then install Quiet Core bot inside WSL with the Linux quickstart:
 
 ```bash
 curl -fsSL https://openclaw.ai/install.sh | bash
-openclaw gateway status
+quiet-core-bot gateway status
 ```
 
 ## Gateway auto-start before Windows login
@@ -191,7 +191,7 @@ Inside WSL:
 ```bash
 sudo apt-get install -y dbus-x11
 sudo loginctl enable-linger "$(whoami)"
-openclaw gateway install
+quiet-core-bot gateway install
 ```
 
 In PowerShell as Administrator:
@@ -253,8 +253,8 @@ Notes:
 
 ### The tray icon does not appear
 
-Check Task Manager for `OpenClaw.Tray.WinUI.exe`. If it is running, open the
-hidden tray-icons area and pin it. If it is not running, launch **OpenClaw
+Check Task Manager for `Quiet Core bot.Tray.WinUI.exe`. If it is running, open the
+hidden tray-icons area and pin it. If it is not running, launch **Quiet Core bot
 Companion** from the Start menu.
 
 ### Local setup fails
@@ -273,8 +273,8 @@ state, or a network failure while installing the Gateway package.
 Approve the operator or node request from the Gateway:
 
 ```powershell
-openclaw devices list
-openclaw devices approve <request-id>
+quiet-core-bot devices list
+quiet-core-bot devices approve <request-id>
 ```
 
 If the device already had a token, reconnect from the Connections tab after

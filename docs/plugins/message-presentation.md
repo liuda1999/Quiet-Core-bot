@@ -8,7 +8,7 @@ read_when:
   - Debugging provider-specific card/block/component rendering regressions
 ---
 
-Message presentation is OpenClaw's shared contract for rich outbound chat UI.
+Message presentation is Quiet Core bot's shared contract for rich outbound chat UI.
 It lets agents, CLI commands, approval flows, and plugins describe the message
 intent once, while each channel plugin renders the best native shape it can.
 
@@ -195,7 +195,7 @@ Select menu:
 CLI send:
 
 ```bash
-openclaw message send --channel slack \
+quiet-core-bot message send --channel slack \
   --target channel:C123 \
   --message "Deploy approval" \
   --presentation '{"title":"Deploy approval","tone":"warning","blocks":[{"type":"text","text":"Canary is ready."},{"type":"buttons","buttons":[{"label":"Approve","value":"deploy:approve","style":"success"},{"label":"Decline","value":"deploy:decline","style":"danger"}]}]}'
@@ -204,7 +204,7 @@ openclaw message send --channel slack \
 Pinned delivery:
 
 ```bash
-openclaw message send --channel telegram \
+quiet-core-bot message send --channel telegram \
   --target -1001234567890 \
   --message "Topic opened" \
   --pin

@@ -1,5 +1,5 @@
 ---
-summary: "Run OpenClaw embedded agent turns through the external GitHub Copilot SDK harness"
+summary: "Run Quiet Core bot embedded agent turns through the external GitHub Copilot SDK harness"
 title: "Copilot SDK harness"
 read_when:
   - You want to use the GitHub Copilot SDK harness for an agent
@@ -7,24 +7,24 @@ read_when:
   - You are wiring an agent to subscription Copilot (github / openclaw / copilot) and want it to run through the Copilot CLI
 ---
 
-The external `@openclaw/copilot` plugin lets OpenClaw run embedded subscription
+The external `@openclaw/copilot` plugin lets Quiet Core bot run embedded subscription
 Copilot agent turns through the GitHub Copilot CLI (`@github/copilot-sdk`)
 instead of the built-in PI harness.
 
 Use the Copilot SDK harness when you want the Copilot CLI session to own the
 low-level agent loop: native tool execution, native compaction
 (`infiniteSessions`), and CLI-managed thread state under `copilotHome`.
-OpenClaw still owns chat channels, session files, model selection, OpenClaw
+Quiet Core bot still owns chat channels, session files, model selection, Quiet Core bot
 dynamic tools (bridged), approvals, media delivery, the visible transcript
 mirror, `/btw` side questions (handled by the in-tree PI fallback — see
-[Side questions (`/btw`)](#side-questions-btw)), and `openclaw doctor`.
+[Side questions (`/btw`)](#side-questions-btw)), and `quiet-core-bot doctor`.
 
 For the broader model/provider/runtime split, start with
 [Agent runtimes](/concepts/agent-runtimes).
 
 ## Requirements
 
-- OpenClaw with the `@openclaw/copilot` plugin installed.
+- Quiet Core bot with the `@openclaw/copilot` plugin installed.
 - If your config uses `plugins.allow`, include `copilot` (the manifest
   id declared by the plugin). A restrictive
   allowlist that uses the npm-style `@openclaw/copilot` package name
@@ -33,10 +33,10 @@ For the broader model/provider/runtime split, start with
 - A GitHub Copilot subscription that can drive the Copilot CLI (or a
   `gitHubToken` env / auth-profile entry for headless / cron runs).
 - A writable `copilotHome` directory. The harness defaults to
-  `<agentDir>/copilot` when OpenClaw provides an agent directory, otherwise
-  `~/.openclaw/agents/<agentId>/copilot` for full per-agent isolation.
+  `<agentDir>/copilot` when Quiet Core bot provides an agent directory, otherwise
+  `~/.quiet-core-bot/agents/<agentId>/copilot` for full per-agent isolation.
 
-`openclaw doctor` runs the plugin
+`quiet-core-bot doctor` runs the plugin
 [doctor contract](#doctor) for declarative session-state ownership and future
 compatibility migrations. It does not run Copilot CLI environment probes.
 
@@ -48,7 +48,7 @@ not carry the `@github/copilot-sdk` dependency or its platform-specific
 260 MB, so install them only for agents that opt into this runtime:
 
 ```bash
-openclaw plugins install @openclaw/copilot
+quiet-core-bot plugins install @openclaw/copilot
 ```
 
 The wizard installs the plugin the first time you select a
@@ -62,7 +62,7 @@ The runtime resolves the SDK in this order:
 
 1. `import("@github/copilot-sdk")` from the installed `@openclaw/copilot`
    package.
-2. The well-known fallback dir `~/.openclaw/npm-runtime/copilot/` (the
+2. The well-known fallback dir `~/.quiet-core-bot/npm-runtime/copilot/` (the
    legacy on-demand install target).
 
 A missing SDK surfaces a single error with code `COPILOT_SDK_MISSING`
@@ -128,7 +128,7 @@ Per-agent precedence, applied during `runCopilotAttempt`:
    (`extensions/github-copilot/auth.ts`) and the documented Copilot SDK
    setup:
    1. `OPENCLAW_GITHUB_TOKEN` -- harness-specific override; set this
-      to pin a token for the OpenClaw harness without disturbing
+      to pin a token for the Quiet Core bot harness without disturbing
       system-wide `gh` / Copilot CLI config.
    2. `COPILOT_GITHUB_TOKEN` -- standard Copilot SDK / CLI env var.
    3. `GH_TOKEN` -- standard `gh` CLI env var (matches the existing
@@ -145,8 +145,8 @@ Per-agent precedence, applied during `runCopilotAttempt`:
 Each agent gets a dedicated `copilotHome` so Copilot CLI tokens, sessions, and
 config do not leak between agents on the same machine. The default is
 `<agentDir>/copilot` when the host hands the harness an agent directory
-(isolating SDK state from OpenClaw's `models.json` / `auth-profiles.json` in
-the same directory), or `~/.openclaw/agents/<agentId>/copilot` otherwise.
+(isolating SDK state from Quiet Core bot's `models.json` / `auth-profiles.json` in
+the same directory), or `~/.quiet-core-bot/agents/<agentId>/copilot` otherwise.
 Override with `copilotHome: <path>` on the attempt input when you need a
 custom location (for example, a shared mount for migration).
 
@@ -163,37 +163,37 @@ The harness reads its config from per-attempt input
 `extensions/copilot/src/`:
 
 - `copilotHome` — per-agent CLI state directory (defaults documented above).
-- `model` — string or `{ provider, id, api? }`. When omitted, OpenClaw uses
+- `model` — string or `{ provider, id, api? }`. When omitted, Quiet Core bot uses
   the agent's normal model selection and the harness verifies the resolved
   provider is in the supported set.
 - `reasoningEffort` — `"low" | "medium" | "high" | "xhigh"`. Maps from
-  OpenClaw's `ThinkLevel` / `ReasoningLevel` resolution in
+  Quiet Core bot's `ThinkLevel` / `ReasoningLevel` resolution in
   `auto-reply/thinking.ts`.
 - `infiniteSessionConfig` — optional override for the SDK
   `infiniteSessions` block driven by `harness.compact`. Defaults are safe to
   leave as-is.
 - `hooksConfig` — optional native Copilot SDK `SessionHooks` compatibility
   config for tool/MCP, user-prompt, session, and error callbacks.
-  It is separate from OpenClaw's portable lifecycle hooks.
+  It is separate from Quiet Core bot's portable lifecycle hooks.
 - `permissionPolicy` — optional override for the SDK's
   `onPermissionRequest` handler used for built-in SDK tool kinds
   (`shell`, `write`, `read`, `url`, `mcp`, `memory`, `hook`). Defaults
   to `rejectAllPolicy` as a safety net; in practice the SDK never
-  invokes any of those kinds because every bridged OpenClaw tool is
+  invokes any of those kinds because every bridged Quiet Core bot tool is
   registered with `overridesBuiltInTool: true` and
-  `skipPermission: true` so 100% of tool calls flow through OpenClaw's
+  `skipPermission: true` so 100% of tool calls flow through Quiet Core bot's
   wrapped `execute()`. See [Permissions and ask_user](#permissions-and-ask_user).
 - `enableSessionTelemetry` — optional SDK session telemetry flag.
 
-OpenClaw plugin hooks do not need Copilot-specific attempt configuration. The
+Quiet Core bot plugin hooks do not need Copilot-specific attempt configuration. The
 harness runs `before_prompt_build` (and the legacy `before_agent_start`
 compatibility hook), `llm_input`, `llm_output`, and `agent_end` through the
 standard harness helpers. Successful SDK compactions also run
-`before_compaction` and `after_compaction`. Bridged OpenClaw tools continue to
+`before_compaction` and `after_compaction`. Bridged Quiet Core bot tools continue to
 run `before_tool_call` and report `after_tool_call`; `hooksConfig` remains for
 native SDK-only callbacks that have no portable equivalent.
 
-Nothing in the rest of OpenClaw needs to know about these fields. Other
+Nothing in the rest of Quiet Core bot needs to know about these fields. Other
 plugins, channels, and core code only see the standard
 `AgentHarnessAttemptParams` / `AgentHarnessAttemptResult` shape.
 
@@ -206,13 +206,13 @@ When `harness.compact` runs, the Copilot SDK harness:
 3. Returns the SDK compaction outcome without writing compatibility marker
    files under the workspace.
 
-The OpenClaw side transcript mirror (see below) continues to receive the
+The Quiet Core bot side transcript mirror (see below) continues to receive the
 post-compaction messages, so user-facing chat history stays consistent.
 
 ## Transcript mirroring
 
 `runCopilotAttempt` dual-writes each turn's mirrorable messages into the
-OpenClaw audit transcript via
+Quiet Core bot audit transcript via
 `extensions/copilot/src/dual-write-transcripts.ts`. The mirror is
 per-session scoped (`copilot:${sessionId}`) and uses a per-message
 identity (`${role}:${sha256_16(role,content)}`) so re-emits of prior-turn
@@ -226,7 +226,7 @@ not surfaced.
 ## Side questions (`/btw`)
 
 `/btw` is **not** native on this harness. `createCopilotAgentHarness()`
-deliberately leaves `harness.runSideQuestion` undefined, so OpenClaw's `/btw`
+deliberately leaves `harness.runSideQuestion` undefined, so Quiet Core bot's `/btw`
 dispatcher (`src/agents/btw.ts`) falls through to the same in-tree PI fallback
 path it uses for every non-Codex runtime: the configured model provider is
 called directly with a short side-question prompt and streamed back via
@@ -259,14 +259,14 @@ under `describe("runSideQuestion")`.
   fallback for whatever runtimes do not have a peer surface.
 - PI session state is not migrated when an agent switches to `copilot`.
   Selection is per attempt; existing PI sessions remain valid.
-- `ask_user` uses the same OpenClaw prompt-and-reply path as the Codex
-  harness. When the Copilot SDK asks for user input, OpenClaw posts a
+- `ask_user` uses the same Quiet Core bot prompt-and-reply path as the Codex
+  harness. When the Copilot SDK asks for user input, Quiet Core bot posts a
   blocking prompt to the active channel/TUI and the next queued user
   message resolves the SDK request.
 
 ## Permissions and ask_user
 
-Permission enforcement for bridged OpenClaw tools happens **inside the
+Permission enforcement for bridged Quiet Core bot tools happens **inside the
 tool wrapper**, not via the SDK's `onPermissionRequest` callback. The
 same `wrapToolWithBeforeToolCallHook` that PI uses
 (`src/agents/pi-tools.before-tool-call.ts`) is applied by
@@ -280,15 +280,15 @@ To let that wrapper own the decision, the SDK Tool returned by
 
 - `overridesBuiltInTool: true` — replaces the Copilot CLI's built-in
   tool of the same name (edit, read, write, bash, …) so every tool
-  invocation routes back to OpenClaw.
+  invocation routes back to Quiet Core bot.
 - `skipPermission: true` — tells the SDK not to fire
   `onPermissionRequest({kind: "custom-tool"})` before invoking the tool.
-  The wrapped `execute()` performs the richer OpenClaw policy check
-  internally; an SDK-level prompt would either short-circuit OpenClaw's
+  The wrapped `execute()` performs the richer Quiet Core bot policy check
+  internally; an SDK-level prompt would either short-circuit Quiet Core bot's
   enforcement (if we allow-all) or block every tool call (if we
   reject-all) — neither matches PI parity.
 
-The in-tree codex harness uses the same split: bridged OpenClaw tools
+The in-tree codex harness uses the same split: bridged Quiet Core bot tools
 are wrapped (`extensions/codex/src/app-server/dynamic-tools.ts`) and
 the codex-app-server's _own_ native approval kinds
 (`item/commandExecution/requestApproval`,
@@ -327,7 +327,7 @@ runtime tool allowlist, and `toolConstructionPlan`.
 The bridge also uses the shared harness tool-surface helper from
 `openclaw/plugin-sdk/agent-harness-tool-runtime` for PI parity. When
 tool-search is enabled, the SDK sees compact control tools plus a hidden
-catalog executor instead of every OpenClaw tool schema. When code mode is
+catalog executor instead of every Quiet Core bot tool schema. When code mode is
 enabled, the helper builds the same code-mode control surface and catalog
 lifecycle used by other agent harnesses. Local-model lean defaults,
 runtime-compatible schema filtering, directory hydration, and catalog
@@ -352,7 +352,7 @@ identity.
 `ask_user` uses `SessionConfig.onUserInputRequest`. The bridge accepts
 choice indexes or labels for fixed-choice requests, accepts free-form
 answers when the SDK request allows them, and cancels a pending request
-when the OpenClaw attempt is aborted.
+when the Quiet Core bot attempt is aborted.
 
 ## Related
 

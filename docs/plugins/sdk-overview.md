@@ -13,7 +13,7 @@ reference for **what to import** and **what you can register**.
 
 <Note>
   This page is for plugin authors using `openclaw/plugin-sdk/*` inside
-  OpenClaw. For external apps, scripts, dashboards, CI jobs, and IDE extensions
+  Quiet Core bot. For external apps, scripts, dashboards, CI jobs, and IDE extensions
   that want to run agents through the Gateway, use
   [Gateway integrations for external apps](/gateway/external-apps) instead.
 </Note>
@@ -39,7 +39,7 @@ the broader umbrella surface and shared helpers such as
 
 For channel config, publish the channel-owned JSON Schema through
 `openclaw.plugin.json#channelConfigs`. The `plugin-sdk/channel-config-schema`
-subpath is for shared schema primitives and the generic builder. OpenClaw's
+subpath is for shared schema primitives and the generic builder. Quiet Core bot's
 bundled plugins use `plugin-sdk/bundled-channel-config-schema` for retained
 bundled-channel schemas. Deprecated compatibility exports remain on
 `plugin-sdk/channel-config-schema-legacy`; neither bundled schema subpath is a
@@ -139,7 +139,7 @@ structured entries:
 ```ts
 agentPromptGuidance: [
   "Global command hint.",
-  { text: "Only show this in the main OpenClaw prompt.", surfaces: ["openclaw_main"] },
+  { text: "Only show this in the main Quiet Core bot prompt.", surfaces: ["openclaw_main"] },
 ];
 ```
 
@@ -156,19 +156,19 @@ guidance remain available to non-Codex prompt surfaces for compatibility.
 
 ### Infrastructure
 
-| Method                                         | What it registers                       |
-| ---------------------------------------------- | --------------------------------------- |
-| `api.registerHook(events, handler, opts?)`     | Event hook                              |
-| `api.registerHttpRoute(params)`                | Gateway HTTP endpoint                   |
-| `api.registerGatewayMethod(name, handler)`     | Gateway RPC method                      |
-| `api.registerGatewayDiscoveryService(service)` | Local Gateway discovery advertiser      |
-| `api.registerCli(registrar, opts?)`            | CLI subcommand                          |
-| `api.registerNodeCliFeature(registrar, opts?)` | Node feature CLI under `openclaw nodes` |
-| `api.registerService(service)`                 | Background service                      |
-| `api.registerInteractiveHandler(registration)` | Interactive handler                     |
-| `api.registerAgentToolResultMiddleware(...)`   | Runtime tool-result middleware          |
-| `api.registerMemoryPromptSupplement(builder)`  | Additive memory-adjacent prompt section |
-| `api.registerMemoryCorpusSupplement(adapter)`  | Additive memory search/read corpus      |
+| Method                                         | What it registers                             |
+| ---------------------------------------------- | --------------------------------------------- |
+| `api.registerHook(events, handler, opts?)`     | Event hook                                    |
+| `api.registerHttpRoute(params)`                | Gateway HTTP endpoint                         |
+| `api.registerGatewayMethod(name, handler)`     | Gateway RPC method                            |
+| `api.registerGatewayDiscoveryService(service)` | Local Gateway discovery advertiser            |
+| `api.registerCli(registrar, opts?)`            | CLI subcommand                                |
+| `api.registerNodeCliFeature(registrar, opts?)` | Node feature CLI under `quiet-core-bot nodes` |
+| `api.registerService(service)`                 | Background service                            |
+| `api.registerInteractiveHandler(registration)` | Interactive handler                           |
+| `api.registerAgentToolResultMiddleware(...)`   | Runtime tool-result middleware                |
+| `api.registerMemoryPromptSupplement(builder)`  | Additive memory-adjacent prompt section       |
+| `api.registerMemoryCorpusSupplement(adapter)`  | Additive memory search/read corpus            |
 
 ### Host hooks for workflow plugins
 
@@ -267,7 +267,7 @@ Examples of non-Plan consumers:
 Plugins must declare `contracts.agentToolResultMiddleware` for each targeted
 runtime, for example `["openclaw", "codex"]`. Installed plugins without that
 contract, or without explicit enablement, cannot register this middleware; keep
-normal OpenClaw plugin hooks for work that does not need pre-model tool-result
+normal Quiet Core bot plugin hooks for work that does not need pre-model tool-result
 timing. The old
 embedded-runner-only extension factory registration path has been removed.
 </Accordion>
@@ -275,7 +275,7 @@ embedded-runner-only extension factory registration path has been removed.
 ### Gateway discovery registration
 
 `api.registerGatewayDiscoveryService(...)` lets a plugin advertise the active
-Gateway on a local discovery transport such as mDNS/Bonjour. OpenClaw calls the
+Gateway on a local discovery transport such as mDNS/Bonjour. Quiet Core bot calls the
 service during Gateway startup when local discovery is enabled, passes the
 current Gateway ports and non-secret TXT hint data, and calls the returned
 `stop` handler during Gateway shutdown.
@@ -311,7 +311,7 @@ own trust.
 For paired-node features, prefer
 `api.registerNodeCliFeature(registrar, opts?)`. It is a small wrapper around
 `api.registerCli(..., { parentPath: ["nodes"] })` and makes commands such as
-`openclaw nodes canvas` explicit plugin-owned node features.
+`quiet-core-bot nodes canvas` explicit plugin-owned node features.
 
 If you want a plugin command to stay lazy-loaded in the normal root CLI path,
 provide `descriptors` that cover every top-level command root exposed by that
@@ -367,12 +367,12 @@ AI CLI backend such as `claude-cli` or `my-cli`.
 
 - The backend `id` becomes the provider prefix in model refs like `my-cli/gpt-5`.
 - The backend `config` uses the same shape as `agents.defaults.cliBackends.<id>`.
-- User config still wins. OpenClaw merges `agents.defaults.cliBackends.<id>` over the
+- User config still wins. Quiet Core bot merges `agents.defaults.cliBackends.<id>` over the
   plugin default before running the CLI.
 - Use `normalizeConfig` when a backend needs compatibility rewrites after merge
   (for example normalizing old flag shapes).
 - Use `resolveExecutionArgs` for request-scoped argv rewrites that belong to
-  the CLI dialect, such as mapping OpenClaw thinking levels to a native effort
+  the CLI dialect, such as mapping Quiet Core bot thinking levels to a native effort
   flag. The hook receives `ctx.executionMode`; use `"side-question"` to add
   backend-native isolation flags for ephemeral `/btw` calls. If those flags
   reliably disable native tools for an otherwise always-on CLI, declare
@@ -440,7 +440,7 @@ cover CLI and Gateway-backed install or update paths.
 - `message_received`: use the typed `threadId` field when you need inbound thread/topic routing. Keep `metadata` for channel-specific extras.
 - `message_sending`: use typed `replyToId` / `threadId` routing fields before falling back to channel-specific `metadata`.
 - `gateway_start`: use `ctx.config`, `ctx.workspaceDir`, and `ctx.getCron?.()` for gateway-owned startup state instead of relying on internal `gateway:startup` hooks.
-- `cron_changed`: observe gateway-owned cron lifecycle changes. Use `event.job?.state?.nextRunAtMs` and `ctx.getCron?.()` when syncing external wake schedulers, and keep OpenClaw as the source of truth for due checks and execution.
+- `cron_changed`: observe gateway-owned cron lifecycle changes. Use `event.job?.state?.nextRunAtMs` and `ctx.getCron?.()` when syncing external wake schedulers, and keep Quiet Core bot as the source of truth for due checks and execution.
 
 ### API object fields
 
@@ -479,9 +479,9 @@ my-plugin/
 
 Facade-loaded bundled plugin public surfaces (`api.ts`, `runtime-api.ts`,
 `index.ts`, `setup-entry.ts`, and similar public entry files) prefer the
-active runtime config snapshot when OpenClaw is already running. If no runtime
+active runtime config snapshot when Quiet Core bot is already running. If no runtime
 snapshot exists yet, they fall back to the resolved config file on disk.
-Packaged bundled plugin facades should be loaded through OpenClaw's plugin
+Packaged bundled plugin facades should be loaded through Quiet Core bot's plugin
 facade loaders; direct imports from `dist/extensions/...` bypass the manifest
 and runtime sidecar checks that packaged installs use for plugin-owned code.
 

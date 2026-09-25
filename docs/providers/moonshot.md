@@ -37,9 +37,9 @@ $0.95/MTok input, and $4.00/MTok output; Kimi K2.5 is $0.10/MTok cache hit,
 $0.60/MTok input, and $3.00/MTok output. Other legacy catalog entries keep
 zero-cost placeholders unless you override them in config.
 
-Kimi K2.7 Code always uses native thinking. OpenClaw exposes only the `on`
+Kimi K2.7 Code always uses native thinking. Quiet Core bot exposes only the `on`
 thinking state for this model and omits outbound `thinking` and
-`reasoning_effort` controls, as required by Moonshot. OpenClaw also omits
+`reasoning_effort` controls, as required by Moonshot. Quiet Core bot also omits
 sampling overrides that K2.7 fixes to provider defaults. Kimi K2.6 remains the
 onboarding default.
 
@@ -60,13 +60,13 @@ Choose your provider and follow the setup steps.
       </Step>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard --auth-choice moonshot-api-key
+        quiet-core-bot onboard --auth-choice moonshot-api-key
         ```
 
         Or for the China endpoint:
 
         ```bash
-        openclaw onboard --auth-choice moonshot-api-key-cn
+        quiet-core-bot onboard --auth-choice moonshot-api-key-cn
         ```
       </Step>
       <Step title="Set a default model">
@@ -82,7 +82,7 @@ Choose your provider and follow the setup steps.
       </Step>
       <Step title="Verify models are available">
         ```bash
-        openclaw models list --provider moonshot
+        quiet-core-bot models list --provider moonshot
         ```
       </Step>
       <Step title="Run a live smoke test">
@@ -90,7 +90,7 @@ Choose your provider and follow the setup steps.
         tracking without touching your normal sessions:
 
         ```bash
-        OPENCLAW_CONFIG_PATH=/tmp/openclaw-kimi/openclaw.json \
+        OPENCLAW_CONFIG_PATH=/tmp/openclaw-kimi/quiet-core-bot.json \
         OPENCLAW_STATE_DIR=/tmp/openclaw-kimi \
         openclaw agent --local \
           --session-id live-kimi-cost \
@@ -203,8 +203,8 @@ Choose your provider and follow the setup steps.
     Install the official plugin, then restart Gateway:
 
     ```bash
-    openclaw plugins install @openclaw/kimi-provider
-    openclaw gateway restart
+    quiet-core-bot plugins install @openclaw/kimi-provider
+    quiet-core-bot gateway restart
     ```
     **Best for:** code-focused tasks via the Kimi Coding endpoint.
 
@@ -215,12 +215,12 @@ Choose your provider and follow the setup steps.
     <Steps>
       <Step title="Install the plugin">
         ```bash
-        openclaw plugins install @openclaw/kimi-provider
+        quiet-core-bot plugins install @openclaw/kimi-provider
         ```
       </Step>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard --auth-choice kimi-code-api-key
+        quiet-core-bot onboard --auth-choice kimi-code-api-key
         ```
       </Step>
       <Step title="Set a default model">
@@ -236,7 +236,7 @@ Choose your provider and follow the setup steps.
       </Step>
       <Step title="Verify the model is available">
         ```bash
-        openclaw models list --provider kimi
+        quiet-core-bot models list --provider kimi
         ```
       </Step>
     </Steps>
@@ -267,7 +267,7 @@ The Moonshot plugin also registers **Kimi** as a `web_search` provider, backed b
 <Steps>
   <Step title="Run interactive web search setup">
     ```bash
-    openclaw configure --section web
+    quiet-core-bot configure --section web
     ```
 
     Choose **Kimi** in the web-search section to store
@@ -317,9 +317,9 @@ Config lives under `plugins.entries.moonshot.config.webSearch`:
 <AccordionGroup>
   <Accordion title="Native thinking mode">
     Kimi K2.7 Code always uses native thinking. Moonshot requires clients to
-    omit the `thinking` field for this model, so OpenClaw exposes only `on` and
+    omit the `thinking` field for this model, so Quiet Core bot exposes only `on` and
     ignores stale `off` settings. K2.7 also fixes `temperature`, `top_p`, `n`,
-    `presence_penalty`, and `frequency_penalty`; OpenClaw omits configured
+    `presence_penalty`, and `frequency_penalty`; Quiet Core bot omits configured
     overrides for those fields.
 
     Other Moonshot Kimi models support binary native thinking:
@@ -345,7 +345,7 @@ Config lives under `plugins.entries.moonshot.config.webSearch`:
     }
     ```
 
-    OpenClaw maps runtime `/think` levels for those models:
+    Quiet Core bot maps runtime `/think` levels for those models:
 
     | `/think` level       | Moonshot behavior          |
     | -------------------- | -------------------------- |
@@ -353,15 +353,15 @@ Config lives under `plugins.entries.moonshot.config.webSearch`:
     | Any non-off level    | `thinking.type=enabled`    |
 
     <Warning>
-    When Moonshot thinking is enabled, `tool_choice` must be `auto` or `none`. OpenClaw normalizes incompatible values to `auto`. This includes Kimi K2.7 Code, whose thinking mode cannot be disabled to preserve a pinned tool choice.
+    When Moonshot thinking is enabled, `tool_choice` must be `auto` or `none`. Quiet Core bot normalizes incompatible values to `auto`. This includes Kimi K2.7 Code, whose thinking mode cannot be disabled to preserve a pinned tool choice.
     </Warning>
 
     Kimi K2.6 also accepts an optional `thinking.keep` field that controls
     multi-turn retention of `reasoning_content`. Set it to `"all"` to keep full
     reasoning across turns; omit it (or leave it `null`) to use the server
-    default strategy. OpenClaw only forwards `thinking.keep` for
+    default strategy. Quiet Core bot only forwards `thinking.keep` for
     `moonshot/kimi-k2.6` and strips it from other models. Kimi K2.7 Code
-    preserves full reasoning history by default while OpenClaw omits the entire
+    preserves full reasoning history by default while Quiet Core bot omits the entire
     `thinking` field.
 
     ```json5
@@ -383,7 +383,7 @@ Config lives under `plugins.entries.moonshot.config.webSearch`:
   </Accordion>
 
   <Accordion title="Tool call id sanitization">
-    Moonshot Kimi serves native tool_call ids shaped like `functions.<name>:<index>`. For the OpenAI-completions transport, OpenClaw preserves the first occurrence of each native Kimi id and rewrites later duplicates to deterministic OpenAI-style `call_*` ids. Matching tool results are remapped with the same id so replay remains unique without stripping Kimi's first native id.
+    Moonshot Kimi serves native tool_call ids shaped like `functions.<name>:<index>`. For the OpenAI-completions transport, Quiet Core bot preserves the first occurrence of each native Kimi id and rewrites later duplicates to deterministic OpenAI-style `call_*` ids. Matching tool results are remapped with the same id so replay remains unique without stripping Kimi's first native id.
 
     To force strict sanitization on a custom OpenAI-compatible provider, set `sanitizeToolCallIds: true`:
 
@@ -405,7 +405,7 @@ Config lives under `plugins.entries.moonshot.config.webSearch`:
   <Accordion title="Streaming usage compatibility">
     Native Moonshot endpoints (`https://api.moonshot.ai/v1` and
     `https://api.moonshot.cn/v1`) advertise streaming usage compatibility on the
-    shared `openai-completions` transport. OpenClaw keys that off endpoint
+    shared `openai-completions` transport. Quiet Core bot keys that off endpoint
     capabilities, so compatible custom provider ids targeting the same native
     Moonshot hosts inherit the same streaming-usage behavior.
 

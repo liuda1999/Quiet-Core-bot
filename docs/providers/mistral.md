@@ -1,13 +1,13 @@
 ---
-summary: "Use Mistral models and Voxtral transcription with OpenClaw"
+summary: "Use Mistral models and Voxtral transcription with Quiet Core bot"
 read_when:
-  - You want to use Mistral models in OpenClaw
+  - You want to use Mistral models in Quiet Core bot
   - You want Voxtral realtime transcription for Voice Call
   - You need Mistral API key onboarding and model refs
 title: "Mistral"
 ---
 
-OpenClaw includes a bundled Mistral plugin that registers four contracts: chat completions, media understanding (Voxtral batch transcription), realtime STT for Voice Call (Voxtral Realtime), and memory embeddings (`mistral-embed`).
+Quiet Core bot includes a bundled Mistral plugin that registers four contracts: chat completions, media understanding (Voxtral batch transcription), realtime STT for Voice Call (Voxtral Realtime), and memory embeddings (`mistral-embed`).
 
 | Property         | Value                                       |
 | ---------------- | ------------------------------------------- |
@@ -31,13 +31,13 @@ OpenClaw includes a bundled Mistral plugin that registers four contracts: chat c
   </Step>
   <Step title="Run onboarding">
     ```bash
-    openclaw onboard --auth-choice mistral-api-key
+    quiet-core-bot onboard --auth-choice mistral-api-key
     ```
 
     Or pass the key directly:
 
     ```bash
-    openclaw onboard --mistral-api-key "$MISTRAL_API_KEY"
+    quiet-core-bot onboard --mistral-api-key "$MISTRAL_API_KEY"
     ```
 
   </Step>
@@ -51,7 +51,7 @@ OpenClaw includes a bundled Mistral plugin that registers four contracts: chat c
   </Step>
   <Step title="Verify the model is available">
     ```bash
-    openclaw models list --provider mistral
+    quiet-core-bot models list --provider mistral
     ```
   </Step>
 </Steps>
@@ -65,7 +65,7 @@ and adjustable reasoning through the Chat Completions API. Use
 `mistral/mistral-medium-3-5` when you want Mistral's newer unified
 agentic/coding model instead of the default `mistral/mistral-large-latest`.
 
-OpenClaw currently ships this bundled Mistral catalog:
+Quiet Core bot currently ships this bundled Mistral catalog:
 
 | Model ref                        | Input       | Context | Max output | Notes                                                            |
 | -------------------------------- | ----------- | ------- | ---------- | ---------------------------------------------------------------- |
@@ -90,7 +90,7 @@ openclaw infer model run --local \
 To browse the bundled catalog row before changing config:
 
 ```bash
-openclaw models list --all --provider mistral --plain
+quiet-core-bot models list --all --provider mistral --plain
 ```
 
 ## Audio transcription (Voxtral)
@@ -152,7 +152,7 @@ streaming STT provider.
 ```
 
 <Note>
-OpenClaw defaults Mistral realtime STT to `pcm_mulaw` at 8 kHz so Voice Call
+Quiet Core bot defaults Mistral realtime STT to `pcm_mulaw` at 8 kHz so Voice Call
 can forward Twilio media frames directly. Use `encoding: "pcm_s16le"` and a
 matching `sampleRate` only if your upstream stream is already raw PCM.
 </Note>
@@ -163,9 +163,9 @@ matching `sampleRate` only if your upstream stream is already raw PCM.
   <Accordion title="Adjustable reasoning">
     `mistral/mistral-small-latest` (Mistral Small 4) and `mistral/mistral-medium-3-5` support [adjustable reasoning](https://docs.mistral.ai/studio-api/conversations/reasoning/adjustable) on the Chat Completions API via `reasoning_effort` (`none` minimizes extra thinking in the output; `high` surfaces full thinking traces before the final answer). Mistral recommends `reasoning_effort="high"` for Medium 3.5 agentic and code use cases.
 
-    OpenClaw maps the session **thinking** level to Mistral's API:
+    Quiet Core bot maps the session **thinking** level to Mistral's API:
 
-    | OpenClaw thinking level                          | Mistral `reasoning_effort` |
+    | Quiet Core bot thinking level                          | Mistral `reasoning_effort` |
     | ------------------------------------------------ | -------------------------- |
     | **off** / **minimal**                            | `none`                     |
     | **low** / **medium** / **high** / **xhigh** / **adaptive** / **max** | `high`     |
@@ -176,7 +176,7 @@ matching `sampleRate` only if your upstream stream is already raw PCM.
     response. Leave temperature unset so Mistral uses its default, or follow
     the [Medium 3.5 recommended settings](https://huggingface.co/mistralai/Mistral-Medium-3.5-128B)
     and use `temperature: 0.7` for high reasoning. For deterministic direct
-    answers, turn thinking off/minimal so OpenClaw sends
+    answers, turn thinking off/minimal so Quiet Core bot sends
     `reasoning_effort: "none"` before you lower temperature.
     </Warning>
 

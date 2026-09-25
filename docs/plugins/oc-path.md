@@ -8,7 +8,7 @@ title: "OC Path plugin"
 ---
 
 The bundled `oc-path` plugin adds the [`openclaw path`](/cli/path) CLI for the
-`oc://` workspace-file addressing scheme. It ships in the OpenClaw repo under
+`oc://` workspace-file addressing scheme. It ships in the Quiet Core bot repo under
 `extensions/oc-path/` but is opt-in — install/build leaves it dormant until you
 enable it.
 
@@ -99,7 +99,7 @@ The plugin metadata lives in `extensions/oc-path/openclaw.plugin.json`:
 ## Enable
 
 ```bash
-openclaw plugins enable oc-path
+quiet-core-bot plugins enable oc-path
 ```
 
 Restart the Gateway (if you run one) so the manifest snapshot picks up the new
@@ -109,7 +109,7 @@ the CLI loads the plugin on demand.
 Disable with:
 
 ```bash
-openclaw plugins disable oc-path
+quiet-core-bot plugins disable oc-path
 ```
 
 ## Dependencies

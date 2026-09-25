@@ -1,12 +1,12 @@
 ---
-summary: "Developer workflow for OpenClaw agent runtime: build, test, and live validation"
-title: "OpenClaw agent runtime workflow"
+summary: "Developer workflow for Quiet Core bot agent runtime: build, test, and live validation"
+title: "Quiet Core bot agent runtime workflow"
 read_when:
-  - Working on OpenClaw agent runtime code or tests
+  - Working on Quiet Core bot agent runtime code or tests
   - Running agent-runtime lint, typecheck, and live test flows
 ---
 
-A sane workflow for working on the OpenClaw agent runtime in OpenClaw.
+A sane workflow for working on the Quiet Core bot agent runtime in Quiet Core bot.
 
 ## Type checking and linting
 
@@ -58,11 +58,11 @@ For tool call behavior, prompt for a `read` or `exec` action so you can see tool
 
 ## Clean slate reset
 
-State lives under the OpenClaw state directory. Default is `~/.openclaw`. If `OPENCLAW_STATE_DIR` is set, use that directory instead.
+State lives under the Quiet Core bot state directory. Default is `~/.quiet-core-bot`. If `OPENCLAW_STATE_DIR` is set, use that directory instead.
 
 To reset everything:
 
-- `openclaw.json` for config
+- `quiet-core-bot.json` for config
 - `agents/<agentId>/agent/auth-profiles.json` for model auth profiles (API keys + OAuth)
 - `credentials/` for provider/channel state that still lives outside the auth profile store
 - `agents/<agentId>/sessions/` for agent session history
@@ -79,4 +79,4 @@ If you only want to reset sessions, delete `agents/<agentId>/sessions/` for that
 
 ## Related
 
-- [OpenClaw agent runtime architecture](/agent-runtime-architecture)
+- [Quiet Core bot agent runtime architecture](/agent-runtime-architecture)

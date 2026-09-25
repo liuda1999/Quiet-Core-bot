@@ -7,7 +7,7 @@ read_when:
   - Looking for version naming and cadence
 ---
 
-OpenClaw has three public release lanes:
+Quiet Core bot has three public release lanes:
 
 - stable: tagged releases that publish to npm `beta` by default, or to npm `latest` when explicitly requested
 - beta: prerelease tags that publish to npm `beta`
@@ -44,7 +44,7 @@ OpenClaw has three public release lanes:
 - `latest` means the current promoted stable npm release
 - `beta` means the current beta install target
 - Stable and stable correction releases publish to npm `beta` by default; release operators can target `latest` explicitly, or promote a vetted beta build later
-- Every stable OpenClaw release ships the npm package and the signed
+- Every stable Quiet Core bot release ships the npm package and the signed
   Windows Hub installers together; beta releases normally validate and publish
   the npm/package path first, with native app build/sign/notarize/promote
   reserved for stable unless explicitly requested
@@ -87,7 +87,7 @@ the maintainer-only release runbook.
    drift before tagging. Then run the local deterministic preflight:
    `pnpm check:test-types`, `pnpm check:architecture`,
    `pnpm build && pnpm ui:build`, and `pnpm release:check`.
-6. Run `OpenClaw NPM Release` with `preflight_only=true`. Before a tag exists,
+6. Run `Quiet Core bot NPM Release` with `preflight_only=true`. Before a tag exists,
    a full 40-character release-branch SHA is allowed for validation-only
    preflight. The preflight generates dependency release evidence for the
    exact checked-out dependency graph and stores it in the npm preflight
@@ -108,12 +108,12 @@ the maintainer-only release runbook.
    the full release validation and npm preflight evidence, runs Parallels
    fresh/update proof against the exact prepared tarball plus Telegram package
    proof, records plugin npm and ClawHub plans, and prints the exact
-   `OpenClaw Release Publish` command only after the evidence bundle is green.
-   `OpenClaw Release Publish` dispatches the selected or all-publishable plugin
+   `Quiet Core bot Release Publish` command only after the evidence bundle is green.
+   `Quiet Core bot Release Publish` dispatches the selected or all-publishable plugin
    packages to npm and the same set to ClawHub in parallel, and then promotes the
-   prepared OpenClaw npm preflight artifact with the matching dist-tag as soon as
+   prepared Quiet Core bot npm preflight artifact with the matching dist-tag as soon as
    plugin npm publish succeeds.
-   After the OpenClaw npm publish child succeeds, it creates or updates the
+   After the Quiet Core bot npm publish child succeeds, it creates or updates the
    matching GitHub release/prerelease page from the complete matching
    `CHANGELOG.md` section. Stable releases published to npm `latest` become the
    GitHub latest release; stable maintenance releases kept on npm `beta` are
@@ -123,8 +123,8 @@ the maintainer-only release runbook.
    response. The publish workflow prints child run IDs immediately, auto-approves
    release environment gates the workflow token is allowed to approve, summarizes
    failed child jobs with log tails, closes out the GitHub release and dependency
-   evidence as soon as OpenClaw npm publish succeeds, waits for ClawHub whenever
-   OpenClaw npm is being published, then runs `pnpm release:verify-beta` and
+   evidence as soon as Quiet Core bot npm publish succeeds, waits for ClawHub whenever
+   Quiet Core bot npm is being published, then runs `pnpm release:verify-beta` and
    uploads postpublish evidence for the GitHub release, npm package, selected
    plugin npm packages, selected ClawHub packages, child workflow run IDs, and
    optional NPM Telegram run ID. The ClawHub path retries transient CLI
@@ -138,14 +138,14 @@ the maintainer-only release runbook.
    prerelease.
 10. For stable, continue only after the vetted beta or release candidate has the
     required validation evidence. Stable npm publish also goes through
-    `OpenClaw Release Publish`, reusing the successful preflight artifact via
+    `Quiet Core bot Release Publish`, reusing the successful preflight artifact via
     `preflight_run_id`. Stable Windows Hub
     readiness requires the signed `OpenClawCompanion-Setup-x64.exe`,
     `OpenClawCompanion-Setup-arm64.exe`, and
-    `OpenClawCompanion-SHA256SUMS.txt` assets on the OpenClaw GitHub release.
+    `OpenClawCompanion-SHA256SUMS.txt` assets on the Quiet Core bot GitHub release.
     Pass the exact signed `openclaw/openclaw-windows-node` release tag as
     `windows_node_tag` and its candidate-approved installer digest map as
-    `windows_node_installer_digests`; `OpenClaw Release Publish` keeps the
+    `windows_node_installer_digests`; `Quiet Core bot Release Publish` keeps the
     release draft, dispatches `Windows Node Release`, and verifies all three
     assets before publication.
 11. After publish, run the npm post-publish verifier, optional standalone
@@ -175,7 +175,7 @@ release state.
    done.
 6. Keep the repository variables `RELEASE_ROLLBACK_DRILL_ID` and
    `RELEASE_ROLLBACK_DRILL_DATE` current after each private rollback drill.
-   `OpenClaw Stable Main Closeout` starts from the `main` push that carries the
+   `Quiet Core bot Stable Main Closeout` starts from the `main` push that carries the
    shipped version and changelog after stable publication. It reads
    immutable postpublish evidence to bind the shipped tag to its Full Release
    Validation and Publish runs, then verifies the stable main state, release,
@@ -213,15 +213,15 @@ release state.
   guards in check mode and reports every generated drift failure it finds in one
   pass before running package release checks.
 - Plugin version sync updates official plugin package versions and existing
-  `openclaw.compat.pluginApi` floors to the OpenClaw release version by
+  `openclaw.compat.pluginApi` floors to the Quiet Core bot release version by
   default. Treat that field as the plugin SDK/runtime API floor, not just a copy
   of the package version: for plugin-only releases that intentionally remain
-  compatible with older OpenClaw hosts, keep the floor at the oldest supported
+  compatible with older Quiet Core bot hosts, keep the floor at the oldest supported
   host API and document that choice in the plugin release proof.
 - Run the manual `Full Release Validation` workflow before release approval to
   kick off all pre-release test boxes from one entrypoint. It accepts a branch,
   tag, or full commit SHA, dispatches manual `CI`, and dispatches
-  `OpenClaw Release Checks` for install smoke, package acceptance, cross-OS
+  `Quiet Core bot Release Checks` for install smoke, package acceptance, cross-OS
   package checks, QA Lab parity, Matrix, and Telegram lanes. Stable and full
   runs always include exhaustive live/E2E and Docker release-path soak;
   `run_release_soak=true` is retained for an explicit beta soak. Package
@@ -283,7 +283,7 @@ release state.
 - Run `pnpm qa:observability:smoke` when you want the source-checkout
   OpenTelemetry and Prometheus smoke lanes back to back.
 - Run `pnpm release:check` before every tagged release
-- `OpenClaw NPM Release` preflight generates dependency release evidence before
+- `Quiet Core bot NPM Release` preflight generates dependency release evidence before
   it packs the npm tarball. The npm advisory vulnerability gate is
   release-blocking. The transitive manifest risk, dependency ownership/install
   surface, and dependency change reports are release evidence only. The
@@ -294,48 +294,48 @@ release state.
   `dependency-evidence/` inside the prepared npm preflight artifact. The real
   publish path reuses that preflight artifact, then attaches the same evidence
   to the GitHub release as `openclaw-<version>-dependency-evidence.zip`.
-- Run `OpenClaw Release Publish` for the mutating publish sequence after the
+- Run `Quiet Core bot Release Publish` for the mutating publish sequence after the
   tag exists. Dispatch it from `release/YYYY.M.PATCH` (or `main` when publishing a
-  main-reachable tag), pass the release tag, successful OpenClaw npm
+  main-reachable tag), pass the release tag, successful Quiet Core bot npm
   `preflight_run_id`, and successful `full_release_validation_run_id`, and keep
   the default plugin publish scope `all-publishable` unless you are deliberately
   running a focused repair. The workflow serializes plugin npm publish, plugin
-  ClawHub publish, and OpenClaw npm publish so the core package is not published
+  ClawHub publish, and Quiet Core bot npm publish so the core package is not published
   before its externalized plugins.
-- Stable `OpenClaw Release Publish` requires an exact `windows_node_tag` after
+- Stable `Quiet Core bot Release Publish` requires an exact `windows_node_tag` after
   the matching non-prerelease `openclaw/openclaw-windows-node` release exists.
   It also requires the candidate-approved `windows_node_installer_digests` map.
   Before dispatching any publish child, it verifies that source release is
   published, non-prerelease, contains the required x64/ARM64 installers, and
   still matches that approved map. It then dispatches `Windows Node Release`
-  while the OpenClaw release is still a draft, carrying the pinned installer
+  while the Quiet Core bot release is still a draft, carrying the pinned installer
   digest map unchanged. The child
   workflow downloads the signed Windows Hub installers from that exact tag,
   matches them against the pinned digests, verifies their Authenticode
-  signatures use the expected OpenClaw Foundation signer on a Windows runner,
+  signatures use the expected Quiet Core bot Foundation signer on a Windows runner,
   writes a SHA-256 manifest, and uploads the installers plus manifest onto the
-  canonical OpenClaw GitHub release, then re-downloads the promoted assets and
+  canonical Quiet Core bot GitHub release, then re-downloads the promoted assets and
   verifies the manifest membership and hashes. The parent verifies the current
   x64, ARM64, and checksum asset contract before publication. Direct recovery
   rejects unexpected `OpenClawCompanion-*` asset names before replacing the
   expected contract assets with the pinned source bytes. Manually dispatch
   `Windows Node Release` only for recovery, and always pass an exact tag, never
   `latest`, plus the explicit `expected_installer_digests` JSON map from the
-  approved source release. Website download links should target exact OpenClaw
+  approved source release. Website download links should target exact Quiet Core bot
   release asset URLs for the current stable release, or
   `releases/latest/download/...` only after verifying GitHub's latest redirect
   points at that same release; do not link only to the companion repo release
   page.
 - Release checks now run in a separate manual workflow:
-  `OpenClaw Release Checks`
-- `OpenClaw Release Checks` also runs the QA Lab mock parity lane plus the fast
+  `Quiet Core bot Release Checks`
+- `Quiet Core bot Release Checks` also runs the QA Lab mock parity lane plus the fast
   live Matrix profile and Telegram QA lane before release approval. The live
   lanes use the `qa-live-shared` environment; Telegram also uses Convex CI
   credential leases. Run the manual `QA-Lab - All Lanes` workflow with
   `matrix_profile=all` and `matrix_shards=true` when you want full Matrix
   transport, media, and E2EE inventory in parallel.
 - Cross-OS install and upgrade runtime validation is part of public
-  `OpenClaw Release Checks` and `Full Release Validation`, which call the
+  `Quiet Core bot Release Checks` and `Full Release Validation`, which call the
   reusable workflow
   `.github/workflows/openclaw-cross-os-release-checks-reusable.yml` directly
 - This split is intentional: keep the real npm release path short,
@@ -344,9 +344,9 @@ release state.
 - Secret-bearing release checks should be dispatched through `Full Release
 Validation` or from the `main`/release workflow ref so workflow logic and
   secrets stay controlled
-- `OpenClaw Release Checks` accepts a branch, tag, or full commit SHA as long
-  as the resolved commit is reachable from an OpenClaw branch or release tag
-- `OpenClaw NPM Release` validation-only preflight also accepts the current
+- `Quiet Core bot Release Checks` accepts a branch, tag, or full commit SHA as long
+  as the resolved commit is reachable from an Quiet Core bot branch or release tag
+- `Quiet Core bot NPM Release` validation-only preflight also accepts the current
   full 40-character workflow-branch commit SHA without requiring a pushed tag
 - That SHA path is validation-only and cannot be promoted into a real publish
 - In SHA mode the workflow synthesizes `v<package.json version>` only for the
@@ -431,8 +431,8 @@ gh workflow run full-release-validation.yml \
 ```
 
 The workflow resolves the target ref, dispatches manual `CI` with
-`target_ref=<release-ref>`, then dispatches `OpenClaw Release Checks`.
-`OpenClaw Release Checks` fans out install smoke, cross-OS release checks,
+`target_ref=<release-ref>`, then dispatches `Quiet Core bot Release Checks`.
+`Quiet Core bot Release Checks` fans out install smoke, cross-OS release checks,
 live/E2E Docker release-path coverage when soak is enabled, Package Acceptance
 with the canonical Telegram package E2E, QA Lab parity, live Matrix, and live
 Telegram. A full/all run is only acceptable when the `Full Release Validation`
@@ -467,7 +467,7 @@ the latest four stable packages plus pinned `2026.4.23` and `2026.5.2`
 baselines plus older `2026.4.15` coverage, with duplicate baselines removed and
 each baseline sharded into its own Docker runner job.
 
-`OpenClaw Release Checks` uses the trusted workflow ref to resolve the target
+`Quiet Core bot Release Checks` uses the trusted workflow ref to resolve the target
 ref once as `release-package-under-test` and reuses that artifact in cross-OS,
 Package Acceptance, and release-path Docker checks when soak runs. This keeps
 all package-facing boxes on the same bytes and avoids repeated package builds.
@@ -529,7 +529,7 @@ Focused `npm-telegram` reruns require `release_package_spec` or
 E2E inside Package Acceptance. Focused
 cross-OS reruns can add `cross_os_suite_filter=windows/packaged-upgrade` or
 another OS/suite filter. QA release-check failures block normal release
-validation, including required OpenClaw dynamic tool drift in the standard tier.
+validation, including required Quiet Core bot dynamic tool drift in the standard tier.
 Tideclaw alpha runs may still treat non-package-safety release-check lanes as
 advisory. When `live_suite_filter` explicitly requests a gated QA live lane such
 as Discord, WhatsApp, or Slack, the matching
@@ -563,7 +563,7 @@ gh workflow run ci.yml --ref main -f target_ref=release/YYYY.M.PATCH
 
 ### Docker
 
-The Docker box lives in `OpenClaw Release Checks` through
+The Docker box lives in `Quiet Core bot Release Checks` through
 `openclaw-live-and-e2e-checks-reusable.yml`, plus the release-mode
 `install-smoke` workflow. It validates the release candidate through packaged
 Docker environments instead of only source-level tests.
@@ -599,7 +599,7 @@ failed lane can reuse the same tarball and GHCR images.
 
 ### QA Lab
 
-The QA Lab box is also part of `OpenClaw Release Checks`. It is the agentic
+The QA Lab box is also part of `Quiet Core bot Release Checks`. It is the agentic
 behavior and channel-level release gate, separate from Vitest and Docker
 package mechanics.
 
@@ -630,7 +630,7 @@ workflow harness ref separate from the package source ref.
 
 Supported candidate sources:
 
-- `source=npm`: `openclaw@beta`, `openclaw@latest`, or an exact OpenClaw release
+- `source=npm`: `openclaw@beta`, `openclaw@latest`, or an exact Quiet Core bot release
   version
 - `source=ref`: pack a trusted `package_ref` branch, tag, or full commit SHA
   with the selected `workflow_ref` harness
@@ -644,7 +644,7 @@ Supported candidate sources:
   input-level private-network bypass to `source=url`
 - `source=artifact`: reuse a `.tgz` uploaded by another GitHub Actions run
 
-`OpenClaw Release Checks` runs Package Acceptance with `source=artifact`, the
+`Quiet Core bot Release Checks` runs Package Acceptance with `source=artifact`, the
 prepared release package artifact, `suite_profile=custom`,
 `docker_lanes=doctor-switch update-channel-switch skill-install update-corrupt-plugin upgrade-survivor published-upgrade-survivor update-restart-auth plugins-offline plugin-update`,
 `telegram_mode=mock-openai`. Package Acceptance keeps migration, update,
@@ -713,7 +713,7 @@ Telegram workflow still accepts a published npm spec for post-publish checks.
 
 ## Release publish automation
 
-`OpenClaw Release Publish` is the normal mutating publish entrypoint. It
+`Quiet Core bot Release Publish` is the normal mutating publish entrypoint. It
 orchestrates the trusted-publisher workflows in the order the release needs:
 
 1. Check out the release tag and resolve its commit SHA.
@@ -722,7 +722,7 @@ orchestrates the trusted-publisher workflows in the order the release needs:
 4. Dispatch `Plugin NPM Release` with `publish_scope=all-publishable` and
    `ref=<release-sha>`.
 5. Dispatch `Plugin ClawHub Release` with the same scope and SHA.
-6. Dispatch `OpenClaw NPM Release` with the release tag, npm dist-tag, and
+6. Dispatch `Quiet Core bot NPM Release` with the release tag, npm dist-tag, and
    saved `preflight_run_id` after verifying the saved
    `full_release_validation_run_id`.
 7. For stable releases, create or update the GitHub release as a draft, dispatch
@@ -768,7 +768,7 @@ gh workflow run openclaw-release-publish.yml \
 ```
 
 Use the lower-level `Plugin NPM Release` and `Plugin ClawHub Release` workflows
-only for focused repair or republish work. `OpenClaw Release Publish` rejects
+only for focused repair or republish work. `Quiet Core bot Release Publish` rejects
 `plugin_publish_scope=selected` when `publish_openclaw_npm=true` so the core
 package cannot ship without every publishable official plugin, including
 `@openclaw/diffs-language-pack`. For a selected plugin repair, set
@@ -777,7 +777,7 @@ package cannot ship without every publishable official plugin, including
 
 ## NPM workflow inputs
 
-`OpenClaw NPM Release` accepts these operator-controlled inputs:
+`Quiet Core bot NPM Release` accepts these operator-controlled inputs:
 
 - `tag`: required release tag such as `v2026.4.2`, `v2026.4.2-1`, or
   `v2026.4.2-beta.1`; when `preflight_only=true`, it may also be the current
@@ -788,19 +788,19 @@ package cannot ship without every publishable official plugin, including
   the prepared tarball from the successful preflight run
 - `npm_dist_tag`: npm target tag for the publish path; defaults to `beta`
 
-`OpenClaw Release Publish` accepts these operator-controlled inputs:
+`Quiet Core bot Release Publish` accepts these operator-controlled inputs:
 
 - `tag`: required release tag; must already exist
-- `preflight_run_id`: successful `OpenClaw NPM Release` preflight run id;
+- `preflight_run_id`: successful `Quiet Core bot NPM Release` preflight run id;
   required when `publish_openclaw_npm=true`
 - `full_release_validation_run_id`: successful `Full Release Validation` run
   id; required when `publish_openclaw_npm=true`
 - `windows_node_tag`: exact non-prerelease `openclaw/openclaw-windows-node`
-  release tag; required for stable OpenClaw publish
+  release tag; required for stable Quiet Core bot publish
 - `windows_node_installer_digests`: candidate-approved compact JSON map of the
   current Windows installer names to their pinned `sha256:` digests; required
-  for stable OpenClaw publish
-- `npm_dist_tag`: npm target tag for the OpenClaw package
+  for stable Quiet Core bot publish
+- `npm_dist_tag`: npm target tag for the Quiet Core bot package
 - `plugin_publish_scope`: defaults to `all-publishable`; use `selected` only
   for focused plugin-only repair work with `publish_openclaw_npm=false`
 - `plugins`: comma-separated `@openclaw/*` package names when
@@ -811,10 +811,10 @@ package cannot ship without every publishable official plugin, including
   the ClawHub sidecar; set `true` only when workflow completion must include
   ClawHub completion
 
-`OpenClaw Release Checks` accepts these operator-controlled inputs:
+`Quiet Core bot Release Checks` accepts these operator-controlled inputs:
 
 - `ref`: branch, tag, or full commit SHA to validate. Secret-bearing checks
-  require the resolved commit to be reachable from an OpenClaw branch or
+  require the resolved commit to be reachable from an Quiet Core bot branch or
   release tag.
 - `run_release_soak`: opt into exhaustive live/E2E, Docker release-path, and
   all-since upgrade-survivor soak for beta release checks. It is forced on by
@@ -824,9 +824,9 @@ Rules:
 
 - Stable and correction tags may publish to either `beta` or `latest`
 - Beta prerelease tags may publish only to `beta`
-- For `OpenClaw NPM Release`, full commit SHA input is allowed only when
+- For `Quiet Core bot NPM Release`, full commit SHA input is allowed only when
   `preflight_only=true`
-- `OpenClaw Release Checks` and `Full Release Validation` are always
+- `Quiet Core bot Release Checks` and `Full Release Validation` are always
   validation-only
 - The real publish path must use the same `npm_dist_tag` used during preflight;
   the workflow verifies that metadata before publish continues
@@ -835,7 +835,7 @@ Rules:
 
 When cutting a stable npm release:
 
-1. Run `OpenClaw NPM Release` with `preflight_only=true`
+1. Run `Quiet Core bot NPM Release` with `preflight_only=true`
    - Before a tag exists, you may use the current full workflow-branch commit
      SHA for a validation-only dry run of the preflight workflow
 2. Choose `npm_dist_tag=beta` for the normal beta-first flow, or `latest` only
@@ -851,11 +851,11 @@ When cutting a stable npm release:
    `windows_node_installer_digests`. The release-candidate helper records both
    and includes them in its generated publish command.
 6. Save the successful `preflight_run_id` and `full_release_validation_run_id`
-7. Run `OpenClaw Release Publish` with the same `tag`, the same `npm_dist_tag`,
+7. Run `Quiet Core bot Release Publish` with the same `tag`, the same `npm_dist_tag`,
    the selected `windows_node_tag`, its saved `windows_node_installer_digests`,
    the saved `preflight_run_id`, and the saved `full_release_validation_run_id`;
    it publishes externalized plugins to npm and ClawHub before promoting the
-   OpenClaw npm package
+   Quiet Core bot npm package
 8. If the release landed on `beta`, use the
    `openclaw/releases/.github/workflows/openclaw-npm-dist-tags.yml`
    workflow to promote that stable version from `beta` to `latest`

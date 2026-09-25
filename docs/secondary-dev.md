@@ -1,9 +1,9 @@
-# OpenClaw 二次开发技术文档
+# Quiet Core bot 二次开发技术文档
 
-> 版本 2026.6.11 · 文档生成日期 2026-08-03 · 基于 OpenClaw 源码 v2026.6.11（MIT, TypeScript ESM, Node 22.19+/24, pnpm 11.2.2, SQLite/Kysely, Lit/Vite UI）
+> 版本 2026.6.11 · 文档生成日期 2026-08-03 · 基于 Quiet Core bot 源码 v2026.6.11（MIT, TypeScript ESM, Node 22.19+/24, pnpm 11.2.2, SQLite/Kysely, Lit/Vite UI）
 > 深度审计补充：本文档经 6 类审计（功能/内部节点/配置/数据/执行流程/UI）补充，增补内容已作为"补遗"小节分散并入对应正文章节。
 > 结构复核修订 2026-09-19：对照源码逐目录核验后更新——3.1 顶层概览补入 `.agents/`、`deploy/`、`packages/`；3.2 src/ 目录树补全至实际 67 个子目录；3.3 extensions/ 由 10 个更正为 139 个（按 manifest 分六类）；3.4 ui/ 补入 config/docs/test-helpers/types 与规模数据；3.5 apps/ 补入 `shared/`、`macos-mlx-tts/`；3.6 docs/ 补全至 30 个子目录；3.7 scripts/ 补全 18 个子目录；3.8 skills/ 由 12 个更正为 52 个；3.10/3.11 同步更新；补遗 4.5 新增 14 个原未记录模块并修正文件计数；补遗 7.7 更正 C.1 误报（realtime-talk.ts 等文件实际存在）并更新各规模计数。
-> 二次开发能力增补 2026-09-21：新增 exec 审批 CLI（`openclaw approvals pending|approve|deny`）与 CLI 轮次挂起正反馈、托管出网代理不可达的可操作文案、独立发行版更新守卫（`OPENCLAW_INDEPENDENT_BUILD`）、provider 归属头改为 opt-in（`OPENCLAW_PROVIDER_ATTRIBUTION`）、`tools.loopDetection` 默认开启、`config set|unset` 放行 size-drop 守卫。相应修订 §2.6、§3.2、§3.11、§4.4、§5.4.2、§5.9.2、§6.5、§8.8、§8.9、§8.11。
+> 二次开发能力增补 2026-09-21：新增 exec 审批 CLI（`quiet-core-bot approvals pending|approve|deny`）与 CLI 轮次挂起正反馈、托管出网代理不可达的可操作文案、独立发行版更新守卫（`OPENCLAW_INDEPENDENT_BUILD`）、provider 归属头改为 opt-in（`OPENCLAW_PROVIDER_ATTRIBUTION`）、`tools.loopDetection` 默认开启、`config set|unset` 放行 size-drop 守卫。相应修订 §2.6、§3.2、§3.11、§4.4、§5.4.2、§5.9.2、§6.5、§8.8、§8.9、§8.11。
 
 ## 目录
 
@@ -84,7 +84,7 @@
   - [8.8 补遗：特性开关与实验功能](#88-补遗特性开关与实验功能)
   - [8.9 补遗：运行时 OPENCLAW\_\* 环境变量](#89-补遗运行时-openclaw_*-环境变量)
   - [8.10 补遗：工作区 .env 安全黑名单](#810-补遗工作区-env-安全黑名单)
-  - [8.11 补遗：openclaw.json 配置 schema 索引](#811-补遗openclawjson-配置-schema-索引)
+  - [8.11 补遗：quiet-core-bot.json 配置 schema 索引](#811-补遗openclawjson-配置-schema-索引)
   - [8.12 补遗：config env 注入管线](#812-补遗config-env-注入管线)
 - [9. 开发者指南](#9-开发者指南)
   - [9.1 二次开发切入点](#91-二次开发切入点)
@@ -98,7 +98,7 @@
 
 ### 1.1 简介与核心定位
 
-**OpenClaw** 是一个**多渠道 AI 网关型个人助手**（Multi-channel AI gateway with extensible messaging integrations）。它运行在你自己的设备上，在你已经使用的渠道上回答你，能在 macOS/iOS/Android 上听说，并可以渲染你可控制的实时 Canvas。Gateway 只是控制平面，真正的产品是这个助手本身。
+**Quiet Core bot** 是一个**多渠道 AI 网关型个人助手**（Multi-channel AI gateway with extensible messaging integrations）。它运行在你自己的设备上，在你已经使用的渠道上回答你，能在 macOS/iOS/Android 上听说，并可以渲染你可控制的实时 Canvas。Gateway 只是控制平面，真正的产品是这个助手本身。
 
 如果你想要一个个人单用户助手，感觉本地、快速且始终在线，这就是它。
 
@@ -107,14 +107,14 @@
 - 仓库：<https://github.com/openclaw/openclaw>
 - Discord：<https://discord.gg/clawd>
 - 当前版本：**2026.6.11**
-- 许可证：**MIT**（Copyright (c) 2026 OpenClaw Foundation）
+- 许可证：**MIT**（Copyright (c) 2026 Quiet Core bot Foundation）
 
 #### 1.1.1 本仓库定位：裁剪版独立发行版
 
-本仓库是 OpenClaw 的**裁剪版、本地维护发行版**，不参与上游 OpenClaw 的发布节奏。以下三点是本发行版与上游最显著的差别，二次开发时需先知道：
+本仓库是 Quiet Core bot 的**裁剪版、本地维护发行版**，不参与上游 Quiet Core bot 的发布节奏。以下三点是本发行版与上游最显著的差别，二次开发时需先知道：
 
-- **更新被默认拒绝**：`OPENCLAW_INDEPENDENT_BUILD` 未设置即视为开启，`openclaw update` / `update repair` / `update finalize` / `update wizard` 与 `update.run` 网关 RPC 均被拒绝，只读的 `openclaw update status` 保持可用。详见 §8.8.6。
-- **出网被强制托管代理接管**：`proxy.enabled=true` 时所有 provider 请求先连代理；代理不可达时会直接给出 `openclaw proxy start …` 的可操作提示，而不是笼统报"provider 端点连接被拒"。详见 §8.8.5。
+- **更新被默认拒绝**：`OPENCLAW_INDEPENDENT_BUILD` 未设置即视为开启，`quiet-core-bot update` / `update repair` / `update finalize` / `update wizard` 与 `update.run` 网关 RPC 均被拒绝，只读的 `quiet-core-bot update status` 保持可用。详见 §8.8.6。
+- **出网被强制托管代理接管**：`proxy.enabled=true` 时所有 provider 请求先连代理；代理不可达时会直接给出 `quiet-core-bot proxy start …` 的可操作提示，而不是笼统报"provider 端点连接被拒"。详见 §8.8.5。
 - **provider 归属头默认关闭**：attribution 改为 opt-in，且只对内置 canonical 端点表内的 provider 生效。详见 §8.8.6。
 
 另有 `tools.loopDetection`（工具调用循环检测）默认开启（详见 §8.8.4），`config set` 与 `config unset` 都放行 size-drop 守卫（`allowConfigSizeDrop: true`，见 `src/cli/config-cli.ts`）。
@@ -135,21 +135,21 @@
 
 ### 1.2 项目类型
 
-OpenClaw 是一个**混合形态**的开源项目，同时提供以下交付物：
+Quiet Core bot 是一个**混合形态**的开源项目，同时提供以下交付物：
 
 | 形态              | 说明                                                                 | 入口/产物                                                                 |
 | ----------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| **CLI 工具**      | 全局命令 `openclaw`，提供 onboard、gateway、agent、doctor 等子命令   | `openclaw.mjs`（`bin` 字段）                                              |
+| **CLI 工具**      | 全局命令 `openclaw`，提供 onboard、gateway、agent、doctor 等子命令   | `quiet-core-bot.mjs`（`bin` 字段）                                        |
 | **库（Library）** | 可被外部程序 `import` 的 Node.js ESM 库，导出核心运行时与 Plugin SDK | `dist/index.js`（`main` 字段），以及 `./plugin-sdk/*` 等子路径导出        |
 | **Web 服务**      | Gateway HTTP/WebSocket 服务器 + Control UI 控制面板                  | Gateway 监听 18789 等端口；UI 由 `ui/index.html` 构建到 `dist/control-ui` |
 | **原生 App**      | macOS 菜单栏应用、iOS 节点、Android 节点、Windows Hub 配套应用       | `apps/macos`、`apps/ios`、`apps/android` 等                               |
 
 ### 1.3 技术栈概览
 
-OpenClaw 主要是一个编排系统：提示词、工具、协议和集成。选择 TypeScript 是为了让项目默认可改（hackable）——它广为人知、迭代快、易读易改易扩展。
+Quiet Core bot 主要是一个编排系统：提示词、工具、协议和集成。选择 TypeScript 是为了让项目默认可改（hackable）——它广为人知、迭代快、易读易改易扩展。
 
 - **语言**：TypeScript（ESM、`strict: true`、`module: NodeNext`、`target: es2023`、`verbatimModuleSyntax`、`isolatedModules`）
-- **运行时**：Node.js 22.19+（推荐 Node 24）；CLI 启动器 `openclaw.mjs` 会强制校验版本并退出
+- **运行时**：Node.js 22.19+（推荐 Node 24）；CLI 启动器 `quiet-core-bot.mjs` 会强制校验版本并退出
 - **包管理器**：pnpm 11.2.2（通过 `packageManager` 字段锁定，使用 Corepack 激活）
 - **工作区**：pnpm workspace，包含 `.`、`ui`、`packages/*`、`extensions/*`；`nodeLinker: hoisted`
 - **数据存储**：SQLite（本地状态）+ sqlite-vec（可选向量检索）
@@ -167,15 +167,15 @@ OpenClaw 主要是一个编排系统：提示词、工具、协议和集成。�
 
 ### 1.4 浏览器/环境兼容性
 
-OpenClaw 的 CLI/Gateway 在主流桌面操作系统上运行，并通过原生 App 扩展到移动平台：
+Quiet Core bot 的 CLI/Gateway 在主流桌面操作系统上运行，并通过原生 App 扩展到移动平台：
 
-| 平台        | 支持       | 说明                                                            |
-| ----------- | ---------- | --------------------------------------------------------------- |
-| **macOS**   | ✅         | 一等公民，含菜单栏 App（OpenClaw.app）、Voice Wake、Live Canvas |
-| **Linux**   | ✅         | 通过 systemd 用户服务运行守护进程                               |
-| **Windows** | ✅         | 通过 Windows Hub 配套应用或 CLI 运行                            |
-| **iOS**     | ✅（节点） | 作为 Gateway 的 WS 节点配对，提供语音触发转发与 Canvas          |
-| **Android** | ✅（节点） | 作为 WS 节点配对，提供 Connect/Chat/Voice/Camera/Canvas         |
+| 平台        | 支持       | 说明                                                                  |
+| ----------- | ---------- | --------------------------------------------------------------------- |
+| **macOS**   | ✅         | 一等公民，含菜单栏 App（Quiet Core bot.app）、Voice Wake、Live Canvas |
+| **Linux**   | ✅         | 通过 systemd 用户服务运行守护进程                                     |
+| **Windows** | ✅         | 通过 Windows Hub 配套应用或 CLI 运行                                  |
+| **iOS**     | ✅（节点） | 作为 Gateway 的 WS 节点配对，提供语音触发转发与 Canvas                |
+| **Android** | ✅（节点） | 作为 WS 节点配对，提供 Connect/Chat/Voice/Camera/Canvas               |
 
 容器化部署支持 Docker、Docker Compose、Fly.io、Render 等平台。Docker 镜像基于 `node:24-bookworm-slim`，多阶段构建，以非 root 用户运行。
 
@@ -183,14 +183,14 @@ OpenClaw 的 CLI/Gateway 在主流桌面操作系统上运行，并通过原生 
 
 | 入口                | 路径                       | 用途                                                                                                 |
 | ------------------- | -------------------------- | ---------------------------------------------------------------------------------------------------- |
-| **CLI 入口**        | `openclaw.mjs`             | npm `bin` 字段指向的全局命令；负责 Node 版本校验、编译缓存、帮助文本快路径，最终加载 `dist/entry.js` |
+| **CLI 入口**        | `quiet-core-bot.mjs`       | npm `bin` 字段指向的全局命令；负责 Node 版本校验、编译缓存、帮助文本快路径，最终加载 `dist/entry.js` |
 | **库入口**          | `dist/index.js`            | `package.json` 的 `main` 与 `exports["."]`，外部程序通过 `import` 使用核心运行时                     |
 | **Plugin SDK 入口** | `dist/plugin-sdk/index.js` | 通过 `openclaw/plugin-sdk` 及大量子路径导出，供插件作者扩展                                          |
 | **UI 入口**         | `ui/index.html`            | Control UI 的 HTML 入口，由 Vite 构建为静态资源输出到 `dist/control-ui`                              |
 
 ### 1.6 许可证与仓库
 
-- **许可证**：MIT（见 `LICENSE`，Copyright (c) 2026 OpenClaw Foundation）。第三方代码的致谢与说明记录在 `THIRD_PARTY_NOTICES.md`。
+- **许可证**：MIT（见 `LICENSE`，Copyright (c) 2026 Quiet Core bot Foundation）。第三方代码的致谢与说明记录在 `THIRD_PARTY_NOTICES.md`。
 - **仓库地址**：<https://github.com/openclaw/openclaw>
 - **Issue 反馈**：<https://github.com/openclaw/openclaw/issues>
 - **贡献指南**：见 `CONTRIBUTING.md`
@@ -209,7 +209,7 @@ OpenClaw 的 CLI/Gateway 在主流桌面操作系统上运行，并通过原生 
 | **pnpm**     | 11.2.2                  | 11.2.2   | 由 `packageManager` 字段锁定，通过 `corepack enable` 激活 |
 | **操作系统** | macOS / Linux / Windows | —        | 桌面三平台支持；iOS/Android 通过节点 App 接入             |
 
-> 说明：仓库是 pnpm workspace，源码检出**必须**使用 `pnpm install`。在仓库根目录直接运行 `npm install` 不是受支持的源码开发方式（`preinstall` 脚本会发出警告）。OpenClaw 也兼容 npm、pnpm、bun 进行全局安装运行。
+> 说明：仓库是 pnpm workspace，源码检出**必须**使用 `pnpm install`。在仓库根目录直接运行 `npm install` 不是受支持的源码开发方式（`preinstall` 脚本会发出警告）。Quiet Core bot 也兼容 npm、pnpm、bun 进行全局安装运行。
 
 ### 2.2 安装与依赖安装
 
@@ -223,7 +223,7 @@ npm install -g openclaw@latest
 pnpm add -g openclaw@latest
 
 # 引导式安装并注册守护进程（launchd / systemd 用户服务）
-openclaw onboard --install-daemon
+quiet-core-bot onboard --install-daemon
 ```
 
 #### 2.2.2 源码开发安装
@@ -236,7 +236,7 @@ cd openclaw
 pnpm install
 
 # 首次运行或重置本地配置/工作区后执行
-pnpm openclaw setup
+pnpm quiet-core-bot setup
 
 # 可选：首次启动前预构建 Control UI
 pnpm ui:build
@@ -246,16 +246,16 @@ pnpm ui:build
 
 ### 2.3 环境变量配置
 
-OpenClaw 通过 `.env` 文件加载环境变量。将仓库根目录的 `.env.example` 复制为 `.env`（本地运行）或 `~/.openclaw/.env`（守护进程），只填写你实际使用的值。
+Quiet Core bot 通过 `.env` 文件加载环境变量。将仓库根目录的 `.env.example` 复制为 `.env`（本地运行）或 `~/.quiet-core-bot/.env`（守护进程），只填写你实际使用的值。
 
 **环境变量加载优先级**（从高到低）：
 
 1. `process.env`（已存在的非空变量不会被覆盖）
 2. `./.env`（仓库根目录）
-3. `~/.openclaw/.env`
-4. `openclaw.json` 的 `env` 块
+3. `~/.quiet-core-bot/.env`
+4. `quiet-core-bot.json` 的 `env` 块
 
-> 注意：`openclaw.json` 中的直接配置键（如 `gateway.auth.token` 或渠道 token）与 env 加载是分开解析的，通常优先于 env 回退。
+> 注意：`quiet-core-bot.json` 中的直接配置键（如 `gateway.auth.token` 或渠道 token）与 env 加载是分开解析的，通常优先于 env 回退。
 
 #### 关键环境变量（摘自 `.env.example`）
 
@@ -263,8 +263,8 @@ OpenClaw 通过 `.env` 文件加载环境变量。将仓库根目录的 `.env.ex
 | ---------------- | ------------------------------------- | -------------------------------------------------------------------------------------------- |
 | **Gateway 鉴权** | `OPENCLAW_GATEWAY_TOKEN`              | Gateway 绑定到 loopback 之外时必填；留空则首次启动自动生成；可用 `openssl rand -hex 32` 生成 |
 | **Gateway 鉴权** | `OPENCLAW_GATEWAY_PASSWORD`           | 可选的密码鉴权模式（与 token 二选一）                                                        |
-| **路径覆盖**     | `OPENCLAW_STATE_DIR`                  | 状态目录，默认 `~/.openclaw`                                                                 |
-| **路径覆盖**     | `OPENCLAW_CONFIG_PATH`                | 配置文件路径，默认 `~/.openclaw/openclaw.json`                                               |
+| **路径覆盖**     | `OPENCLAW_STATE_DIR`                  | 状态目录，默认 `~/.quiet-core-bot`                                                           |
+| **路径覆盖**     | `OPENCLAW_CONFIG_PATH`                | 配置文件路径，默认 `~/.quiet-core-bot/quiet-core-bot.json`                                   |
 | **路径覆盖**     | `OPENCLAW_HOME`                       | Home 基准目录，默认 `~`                                                                      |
 | **模型 API Key** | `OPENAI_API_KEY`                      | OpenAI                                                                                       |
 | **模型 API Key** | `ANTHROPIC_API_KEY`                   | Anthropic                                                                                    |
@@ -284,15 +284,15 @@ OpenClaw 通过 `.env` 文件加载环境变量。将仓库根目录的 `.env.ex
 
 ```bash
 # 推荐守护进程模式：onboard 安装 launchd/systemd 用户服务，保持常驻
-openclaw onboard --install-daemon
-openclaw gateway status
+quiet-core-bot onboard --install-daemon
+quiet-core-bot gateway status
 
 # 前台调试模式
-openclaw gateway stop
-openclaw gateway --port 18789 --verbose
+quiet-core-bot gateway stop
+quiet-core-bot gateway --port 18789 --verbose
 
 # 发送测试消息
-openclaw message send --target +1234567890 --message "Hello from OpenClaw"
+quiet-core-bot message send --target +1234567890 --message "Hello from Quiet Core bot"
 
 # 与助手对话（可投递到任意已连接渠道）
 openclaw agent --message "Ship checklist" --thinking high
@@ -355,37 +355,37 @@ docker build \
 docker compose up
 ```
 
-Docker 镜像默认以非 root 用户 `node` 运行，内置 `/healthz`（liveness）与 `/readyz`（readiness）探针，入口为 `tini -- node openclaw.mjs gateway`。
+Docker 镜像默认以非 root 用户 `node` 运行，内置 `/healthz`（liveness）与 `/readyz`（readiness）探针，入口为 `tini -- node quiet-core-bot.mjs gateway`。
 
 ### 2.6 命令速查表
 
-| 用途                     | 命令                                                                      | 说明                                                                                              |
-| ------------------------ | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| 全局安装                 | `npm install -g openclaw@latest`                                          | 安装最新发布版本                                                                                  |
-| 引导安装                 | `openclaw onboard --install-daemon`                                       | 交互式引导并安装守护进程                                                                          |
-| 网关状态                 | `openclaw gateway status`                                                 | 查看网关运行状态                                                                                  |
-| 前台调试                 | `openclaw gateway --port 18789 --verbose`                                 | 前台运行并输出详细日志                                                                            |
-| 源码依赖安装             | `pnpm install`                                                            | 安装工作区全部依赖                                                                                |
-| 首次设置                 | `pnpm openclaw setup`                                                     | 写入本地配置与工作区                                                                              |
-| 开发循环                 | `pnpm gateway:watch`                                                      | 源码改动自动重载（tmux）                                                                          |
-| 开发运行                 | `pnpm dev`                                                                | 通过 tsx 直接运行 TS                                                                              |
-| Gateway 开发             | `pnpm gateway:dev`                                                        | 跳过渠道连接的 Gateway 开发模式                                                                   |
-| UI 开发服务器            | `pnpm ui:dev`                                                             | Vite 开发服务器（端口 5173）                                                                      |
-| 构建                     | `pnpm build`                                                              | 产出 `dist/`                                                                                      |
-| UI 构建                  | `pnpm ui:build`                                                           | 构建 Control UI 到 `dist/control-ui`                                                              |
-| Docker 构建              | `pnpm build:docker`                                                       | 构建 Docker 镜像所需的全部产物                                                                    |
-| 检查                     | `pnpm check`                                                              | 运行代码检查与架构校验                                                                            |
-| Lint                     | `pnpm lint`                                                               | 运行 oxlint（分片）                                                                               |
-| 格式化                   | `pnpm format`                                                             | 运行 oxfmt 格式化                                                                                 |
-| 测试                     | `pnpm test`                                                               | 运行测试套件                                                                                      |
-| 健康诊断                 | `openclaw doctor`                                                         | 诊断并修复配置/迁移问题                                                                           |
-| 发送消息                 | `openclaw message send --target <num> --message "..."`                    | 发送测试消息                                                                                      |
-| 调用助手                 | `openclaw agent --message "..." --thinking high`                          | 与助手对话                                                                                        |
-| 列出待审批               | `openclaw approvals pending [--session <key>] [--json]`                   | 列出等待决策的 exec 审批请求（网关 RPC `exec.approval.list`）                                     |
-| 批准审批                 | `openclaw approvals approve <id> [--always]`                              | 批准待处理 exec 审批（默认 allow-once，`--always` 为 allow-always）；`<id>` 支持 8 位短前缀       |
-| 拒绝审批                 | `openclaw approvals deny <id>`                                            | 拒绝待处理 exec 审批（网关 RPC `exec.approval.resolve`，scope `operator.approvals`）              |
-| 更新状态（只读）         | `openclaw update status`                                                  | 查看当前更新渠道与版本来源；独立发行版下仍可用                                                    |
-| 上游更新（本发行版禁用） | `openclaw update` / `update repair` / `update finalize` / `update wizard` | 本仓库为独立发行版，默认拒绝上游更新与 `update.run` RPC；设 `OPENCLAW_INDEPENDENT_BUILD=0` 才恢复 |
+| 用途                     | 命令                                                                            | 说明                                                                                              |
+| ------------------------ | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| 全局安装                 | `npm install -g openclaw@latest`                                                | 安装最新发布版本                                                                                  |
+| 引导安装                 | `quiet-core-bot onboard --install-daemon`                                       | 交互式引导并安装守护进程                                                                          |
+| 网关状态                 | `quiet-core-bot gateway status`                                                 | 查看网关运行状态                                                                                  |
+| 前台调试                 | `quiet-core-bot gateway --port 18789 --verbose`                                 | 前台运行并输出详细日志                                                                            |
+| 源码依赖安装             | `pnpm install`                                                                  | 安装工作区全部依赖                                                                                |
+| 首次设置                 | `pnpm quiet-core-bot setup`                                                     | 写入本地配置与工作区                                                                              |
+| 开发循环                 | `pnpm gateway:watch`                                                            | 源码改动自动重载（tmux）                                                                          |
+| 开发运行                 | `pnpm dev`                                                                      | 通过 tsx 直接运行 TS                                                                              |
+| Gateway 开发             | `pnpm gateway:dev`                                                              | 跳过渠道连接的 Gateway 开发模式                                                                   |
+| UI 开发服务器            | `pnpm ui:dev`                                                                   | Vite 开发服务器（端口 5173）                                                                      |
+| 构建                     | `pnpm build`                                                                    | 产出 `dist/`                                                                                      |
+| UI 构建                  | `pnpm ui:build`                                                                 | 构建 Control UI 到 `dist/control-ui`                                                              |
+| Docker 构建              | `pnpm build:docker`                                                             | 构建 Docker 镜像所需的全部产物                                                                    |
+| 检查                     | `pnpm check`                                                                    | 运行代码检查与架构校验                                                                            |
+| Lint                     | `pnpm lint`                                                                     | 运行 oxlint（分片）                                                                               |
+| 格式化                   | `pnpm format`                                                                   | 运行 oxfmt 格式化                                                                                 |
+| 测试                     | `pnpm test`                                                                     | 运行测试套件                                                                                      |
+| 健康诊断                 | `quiet-core-bot doctor`                                                         | 诊断并修复配置/迁移问题                                                                           |
+| 发送消息                 | `quiet-core-bot message send --target <num> --message "..."`                    | 发送测试消息                                                                                      |
+| 调用助手                 | `openclaw agent --message "..." --thinking high`                                | 与助手对话                                                                                        |
+| 列出待审批               | `quiet-core-bot approvals pending [--session <key>] [--json]`                   | 列出等待决策的 exec 审批请求（网关 RPC `exec.approval.list`）                                     |
+| 批准审批                 | `quiet-core-bot approvals approve <id> [--always]`                              | 批准待处理 exec 审批（默认 allow-once，`--always` 为 allow-always）；`<id>` 支持 8 位短前缀       |
+| 拒绝审批                 | `quiet-core-bot approvals deny <id>`                                            | 拒绝待处理 exec 审批（网关 RPC `exec.approval.resolve`，scope `operator.approvals`）              |
+| 更新状态（只读）         | `quiet-core-bot update status`                                                  | 查看当前更新渠道与版本来源；独立发行版下仍可用                                                    |
+| 上游更新（本发行版禁用） | `quiet-core-bot update` / `update repair` / `update finalize` / `update wizard` | 本仓库为独立发行版，默认拒绝上游更新与 `update.run` RPC；设 `OPENCLAW_INDEPENDENT_BUILD=0` 才恢复 |
 
 ### 2.7 技术栈清单表
 
@@ -427,7 +427,7 @@ Docker 镜像默认以非 root 用户 `node` 运行，内置 `/healthz`（livene
 
 ## 3. 项目目录结构
 
-本章对 OpenClaw（v2026.6.11）源码树进行递归遍历，产出带中文职责注解的二级目录树。遍历范围为 `src/`、`extensions/`、`ui/`、`apps/`、`docs/`、`scripts/`、`skills/`、`config/`、`patches/`、`qa/`、`security/`、`git-hooks/`、`.github/`、`.vscode/` 等一级目录；已排除 `node_modules`、`dist`、`.git`、`pnpm-lock.yaml`、`npm-shrinkwrap.json`。
+本章对 Quiet Core bot（v2026.6.11）源码树进行递归遍历，产出带中文职责注解的二级目录树。遍历范围为 `src/`、`extensions/`、`ui/`、`apps/`、`docs/`、`scripts/`、`skills/`、`config/`、`patches/`、`qa/`、`security/`、`git-hooks/`、`.github/`、`.vscode/` 等一级目录；已排除 `node_modules`、`dist`、`.git`、`pnpm-lock.yaml`、`npm-shrinkwrap.json`。
 
 ### 3.1 顶层目录概览
 
@@ -451,7 +451,7 @@ openclaw-2026.6.11/
 ├── .agents/                      # 维护者笔记与 agent 技能（maintainer-notes、claw-score、autoreview 等 SKILL）
 ├── .github/                      # GitHub 仓库配置（actions / workflows / codeql / codex / instructions / ISSUE_TEMPLATE）
 ├── .vscode/                      # VSCode 编辑器配置（launch、tasks）
-├── openclaw.mjs                  # CLI 入口可执行脚本（#!/usr/bin/env node）
+├── quiet-core-bot.mjs                  # CLI 入口可执行脚本（#!/usr/bin/env node）
 ├── package.json                  # 根包定义（pnpm workspace 根）
 ├── pnpm-workspace.yaml           # pnpm workspace 声明
 ├── pnpm-lock.yaml / npm-shrinkwrap.json  # 锁文件（pnpm 开发锁 + npm 发布 shrinkwrap）
@@ -651,8 +651,8 @@ ui/
 
 ```
 apps/
-├── macos/                        # macOS 原生应用（OpenClaw.app，SwiftUI + SPM）
-│   ├── Sources/                  # Swift 源码（OpenClaw/，257 个 .swift 文件）
+├── macos/                        # macOS 原生应用（Quiet Core bot.app，SwiftUI + SPM）
+│   ├── Sources/                  # Swift 源码（Quiet Core bot/，257 个 .swift 文件）
 │   ├── Tests/                    # Swift 测试
 │   ├── Packaging/                # 打包资源
 │   ├── Package.swift / Package.resolved  # Swift Package Manager 定义
@@ -670,7 +670,7 @@ apps/
 │   └── Package.swift / Package.resolved
 ├── shared/                       # 跨平台共享 Swift 库
 │   └── OpenClawKit/              # macOS/iOS 共享组件（聊天/Talk/Canvas 视图）
-└── swabble/                      # Swabble 子项目（仅含 MIT 许可证，OpenClaw Foundation）
+└── swabble/                      # Swabble 子项目（仅含 MIT 许可证，Quiet Core bot Foundation）
     └── LICENSE
 ```
 
@@ -887,13 +887,13 @@ packages/                         # workspace 共享库包（21 个）
 
 ## 4. 技术架构
 
-本章基于对 OpenClaw 源码树 `src/` 核心模块与 `ui/` Lit 组件的实际分析，梳理系统分层、模块间依赖关系、UI 组件树，以及各模块的职责边界，为二次开发者提供整体架构地图。
+本章基于对 Quiet Core bot 源码树 `src/` 核心模块与 `ui/` Lit 组件的实际分析，梳理系统分层、模块间依赖关系、UI 组件树，以及各模块的职责边界，为二次开发者提供整体架构地图。
 
-OpenClaw 是一个以 **Gateway 服务器** 为中枢的 Agent 运行时平台：CLI、Web UI、移动端 App 等客户端通过 WebSocket/HTTP 与 Gateway 通信，Gateway 再调度 Agent Runtime、Channel Router、Plugin Loader、Cron Scheduler 等核心服务，并对外对接模型提供商与消息渠道。源码入口 `src/entry.ts` 仅做进程引导，实际能力由 `src/library.ts`（公共库门面）与 `src/gateway/server.impl.ts`（Gateway 服务实现）承载。
+Quiet Core bot 是一个以 **Gateway 服务器** 为中枢的 Agent 运行时平台：CLI、Web UI、移动端 App 等客户端通过 WebSocket/HTTP 与 Gateway 通信，Gateway 再调度 Agent Runtime、Channel Router、Plugin Loader、Cron Scheduler 等核心服务，并对外对接模型提供商与消息渠道。源码入口 `src/entry.ts` 仅做进程引导，实际能力由 `src/library.ts`（公共库门面）与 `src/gateway/server.impl.ts`（Gateway 服务实现）承载。
 
 ### 4.1 架构分层图
 
-下图展示 OpenClaw 自上而下的五层架构。客户端层包含多种入口形态；网关层是所有客户端的统一汇聚点；核心服务层在 Gateway 进程内运行，处理 Agent、渠道、插件、定时任务与工具协议；数据层落盘于 SQLite、配置文件与凭据存储；外部集成层对接模型提供商与消息渠道。
+下图展示 Quiet Core bot 自上而下的五层架构。客户端层包含多种入口形态；网关层是所有客户端的统一汇聚点；核心服务层在 Gateway 进程内运行，处理 Agent、渠道、插件、定时任务与工具协议；数据层落盘于 SQLite、配置文件与凭据存储；外部集成层对接模型提供商与消息渠道。
 
 ```mermaid
 flowchart TB
@@ -933,7 +933,7 @@ flowchart TB
     end
     subgraph "数据层"
         SQLite[(SQLite State<br/>auth-profiles · acp ledger)]
-        ConfigFiles[Config Files<br/>openclaw.json5]
+        ConfigFiles[Config Files<br/>quiet-core-bot.json5]
         SecretsStore[Credentials Store<br/>auth store · env files]
         Logs[Log Files<br/>tmp/openclaw]
     end
@@ -1332,7 +1332,7 @@ flowchart TB
 | media-understanding    | `src/media-understanding/`    | `runner.ts`、`attachments.cache.ts`→`MediaAttachmentCache`、`provider-registry.ts`、`provider-capability-registry.ts`、`image.ts`、`image-runtime.ts`、`audio-transcription-runner.ts`、`openai-compatible-audio.ts`、`openai-compatible-video.ts`、`apply.ts`、`resolve.ts` | 媒体理解：图片/音频/视频附件的归一化、provider 注册与能力发现、附件缓存（MediaAttachmentCache）、运行器（runner）、Deepgram/OpenAI 兼容音频转写、OpenAI 兼容视频、应用与解析。规模约 67 个文件                                                                                                              |
 | transcripts            | `src/transcripts/`            | `store.ts`→`TranscriptsStore`、`provider-registry.ts`、`provider-types.ts`、`summary.ts`、`config.ts`、`manual-source.ts`                                                                                                                                                    | 转写存储：TranscriptsStore、provider 注册表、摘要生成、手动来源、配置                                                                                                                                                                                                                                       |
 | plugin-state           | `src/plugin-state/`           | `plugin-state-store.sqlite.ts`、`plugin-state-store.types.ts`、`runtime-health-store.ts`                                                                                                                                                                                     | 插件状态存储：SQLite KV 存储（MAX_PLUGIN_STATE_VALUE_BYTES=65536 / MAX_PLUGIN_STATE_ENTRIES_PER_PLUGIN=50000）、PluginStateStoreError、运行时健康记录信封                                                                                                                                                   |
-| model-catalog          | `src/model-catalog/`          | `provider-index/openclaw-provider-index.ts`→`OPENCLAW_PROVIDER_INDEX`、`provider-index/types.ts`、`manifest-planner.ts`                                                                                                                                                      | 模型目录：OpenClaw provider 索引、provider 索引插件安装/认证选择类型、manifest 模型目录抑制条目                                                                                                                                                                                                             |
+| model-catalog          | `src/model-catalog/`          | `provider-index/openclaw-provider-index.ts`→`OPENCLAW_PROVIDER_INDEX`、`provider-index/types.ts`、`manifest-planner.ts`                                                                                                                                                      | 模型目录：Quiet Core bot provider 索引、provider 索引插件安装/认证选择类型、manifest 模型目录抑制条目                                                                                                                                                                                                       |
 | image-generation       | `src/image-generation/`       | `runtime.ts`、`types.ts`、`runtime-types.ts`、`openai-compatible-image-provider.ts`、`image-assets.ts`                                                                                                                                                                       | 图像生成：ImageGenerationProvider 契约、运行时 deps、OpenAI 兼容图像 provider（generate/edit）、生成结果资产解析                                                                                                                                                                                            |
 | music-generation       | `src/music-generation/`       | `runtime.ts`、`types.ts`、`runtime-types.ts`、`provider-assets.ts`                                                                                                                                                                                                           | 音乐生成：MusicGenerationProvider 契约、generate/edit 模式、能力声明、生成资产候选                                                                                                                                                                                                                          |
 | video-generation       | `src/video-generation/`       | `runtime.ts`、`provider-registry.ts`、`types.ts`、`capabilities.ts`、`capability-overlays.ts`、`dashscope-compatible.ts`、`duration-support.ts`、`normalization.ts`                                                                                                          | 视频生成：provider 注册表、能力覆盖、DashScope 兼容、时长支持、归一化                                                                                                                                                                                                                                       |
@@ -1343,7 +1343,7 @@ flowchart TB
 | crestodian             | `src/crestodian/`             | `crestodian.ts`、`tui-backend.ts`、`rescue-policy.ts`、`rescue-message.ts`、`probes.ts`、`dialogue.ts`、`overview.ts`、`operations.ts`、`audit.ts`、`assistant.ts`、`assistant-prompts.ts`、`assistant-backends.ts`                                                          | Crestodian 救援助手：rescue 策略与消息、探针、对话、概览、操作、审计、助手提示与后端、TUI 后端（CrestodianTuiBackend）。环境变量 `OPENCLAW_LIVE_CRESTODIAN_RESCUE_CHANNEL` 控制实时渠道                                                                                                                     |
 | realtime-transcription | `src/realtime-transcription/` | `websocket-session.ts`                                                                                                                                                                                                                                                       | 实时转录 WebSocket 会话：resolveConnection 处理连接建立                                                                                                                                                                                                                                                     |
 | interactive            | `src/interactive/`            | `payload.ts`                                                                                                                                                                                                                                                                 | 交互式回复/展示载荷：MessagePresentation / InteractiveReply 类型族、normalizeInteractiveReply、presentationToInteractiveReply、renderMessagePresentationFallbackText                                                                                                                                        |
-| mcp                    | `src/mcp/`                    | `channel-bridge.ts`→`OpenClawChannelBridge`、`channel-server.ts`、`channel-tools.ts`、`channel-shared.ts`、`openclaw-tools-serve.ts`、`plugin-tools-serve.ts`、`plugin-tools-handlers.ts`、`tools-stdio-server.ts`                                                           | MCP 桥接与服务：OpenClawChannelBridge（Gateway↔MCP 通道桥）、channel-server（MCP 渠道服务端）、openclaw-tools-serve（OpenClaw 工具暴露为 MCP）、plugin-tools-serve（插件工具 MCP 服务）、stdio 工具服务端                                                                                                   |
+| mcp                    | `src/mcp/`                    | `channel-bridge.ts`→`OpenClawChannelBridge`、`channel-server.ts`、`channel-tools.ts`、`channel-shared.ts`、`openclaw-tools-serve.ts`、`plugin-tools-serve.ts`、`plugin-tools-handlers.ts`、`tools-stdio-server.ts`                                                           | MCP 桥接与服务：OpenClawChannelBridge（Gateway↔MCP 通道桥）、channel-server（MCP 渠道服务端）、openclaw-tools-serve（Quiet Core bot 工具暴露为 MCP）、plugin-tools-serve（插件工具 MCP 服务）、stdio 工具服务端                                                                                             |
 | security               | `src/security/`               | `audit.ts`、`fix.ts`、`test-temp-cases.ts`→`AsyncTempCaseFactory`                                                                                                                                                                                                            | 安全审计与修复、测试用例工厂                                                                                                                                                                                                                                                                                |
 | chat                   | `src/chat/`                   | `canvas-render.ts`、`tool-content.ts`                                                                                                                                                                                                                                        | Canvas 渲染、工具内容呈现                                                                                                                                                                                                                                                                                   |
 | compat                 | `src/compat/`                 | `legacy-names.ts`                                                                                                                                                                                                                                                            | 遗留命名兼容                                                                                                                                                                                                                                                                                                |
@@ -1356,7 +1356,7 @@ flowchart TB
 | memory-host-sdk        | `src/memory-host-sdk/`        | `dreaming.ts`、`engine-qmd.ts`、`engine-storage.ts`、`events.ts`、`multimodal.ts`、`query.ts`、`secret.ts`、`status.ts`、`host/backend-config.ts`、`host/types.ts`                                                                                                           | 记忆宿主 SDK：梦境（dreaming）、QMD 引擎、存储、事件、多模态、查询、密钥、状态；宿主后端配置与类型（与 `packages/memory-host-sdk` 呼应）                                                                                                                                                                    |
 | pairing                | `src/pairing/`                | `pairing-store.ts`、`pairing-challenge.ts`、`setup-code.ts`、`allow-from-store-file.ts`、`pairing-messages.ts`、`pairing-labels.ts`                                                                                                                                          | 配对子系统：配对存储、挑战握手、setup code 生成、allow-from 文件存储、配对消息与标签                                                                                                                                                                                                                        |
 | provider-runtime       | `src/provider-runtime/`       | `operation-retry.ts`                                                                                                                                                                                                                                                         | provider 操作重试（provider 调用的操作级重试策略）                                                                                                                                                                                                                                                          |
-| proxy-capture          | `src/proxy-capture/`          | `proxy-server.ts`、`ca.ts`、`coverage.ts`、`runtime.ts`、`store.sqlite.ts`、`env.ts`、`paths.ts`                                                                                                                                                                             | 代理抓包：MITM 代理服务器、CA 证书管理、覆盖率、SQLite 存储（对应 `openclaw proxy` CLI）                                                                                                                                                                                                                    |
+| proxy-capture          | `src/proxy-capture/`          | `proxy-server.ts`、`ca.ts`、`coverage.ts`、`runtime.ts`、`store.sqlite.ts`、`env.ts`、`paths.ts`                                                                                                                                                                             | 代理抓包：MITM 代理服务器、CA 证书管理、覆盖率、SQLite 存储（对应 `quiet-core-bot proxy` CLI）                                                                                                                                                                                                              |
 | routing                | `src/routing/`                | `account-id.ts`、`account-lookup.ts`、`bindings.ts`、`binding-scope.ts`、`channel-route-targets.ts`、`bound-account-read.ts`、`peer-kind-match.ts`、`default-account-warnings.ts`                                                                                            | 路由核心：账户 ID/查找、绑定作用域、渠道路由目标、绑定账户读取、对端类型匹配                                                                                                                                                                                                                                |
 | scripts                | `src/scripts/`                | `ci-changed-scope.test.ts`、`control-ui-i18n.test.ts`、`docs-link-audit.test.ts`、`sync-plugin-versions.test.ts`、`test-live-media.test.ts` 等                                                                                                                               | 源码侧脚本：CI 变更范围、Control UI i18n 报告、文档链接审计、插件版本同步、live 媒体测试（被根 `scripts/` 调用的 TS 逻辑载体）                                                                                                                                                                              |
 | sessions               | `src/sessions/`               | `classify-session-kind.ts`、`input-provenance.ts`、`model-overrides.ts`、`send-policy.ts`、`session-id-resolution.ts`、`session-chat-type.ts`、`level-overrides.ts`                                                                                                          | 会话策略（独立于 `agents/sessions` 与 `config/sessions`）：会话类型分类、输入来源、模型覆盖、发送策略、会话 ID 解析                                                                                                                                                                                         |
@@ -1516,22 +1516,22 @@ flowchart TB
 
 ## 5. 核心功能与业务流程
 
-本章基于 OpenClaw 源码（`src/entry.ts`、`src/cli/run-main.ts`、`src/gateway/server.impl.ts`、`src/agents/agent-command.ts`、`src/cron/service.ts`、`src/plugins/loader.ts`、`src/tui/tui.ts` 等）梳理出 8 条核心调用链，给出功能列表与关键时序图，帮助二次开发者在改动前建立"入口 → 模块 → 流程"的全景映射。
+本章基于 Quiet Core bot 源码（`src/entry.ts`、`src/cli/run-main.ts`、`src/gateway/server.impl.ts`、`src/agents/agent-command.ts`、`src/cron/service.ts`、`src/plugins/loader.ts`、`src/tui/tui.ts` 等）梳理出 8 条核心调用链，给出功能列表与关键时序图，帮助二次开发者在改动前建立"入口 → 模块 → 流程"的全景映射。
 
 调用链标注约定：`文件路径` 中出现的函数名为真实符号；`→` 表示同步或异步调用转发；`@gateway` / `@cli` / `@agent` 标注运行域。
 
 ### 5.1 核心功能列表
 
-| 功能名          | 触发入口                                        | 涉及模块                                                                                                                                                        | 流程简述                                                                                                                                                                                                                                                                                                                                                                                               |
-| --------------- | ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Onboarding 引导 | `openclaw onboard` / 裸 `openclaw` 首次运行     | `src/entry.ts`、`src/cli/run-main.ts`、`src/commands/onboard.ts`、`src/wizard/setup.ts`、`src/commands/configure.daemon.ts`                                     | `entry.ts` 守卫主模块后调用 `runCli`；`run-main.ts` 通过 `shouldStartCrestodianForBareRoot` + `shouldStartOnboardingForFreshInstall` 判定首次安装，再调用 `setupWizardCommand` → `runSetupWizard`，经 `WizardPrompter` 收集 provider/auth/bind 选择，`writeWizardConfigFile` → `replaceConfigFile` 写入配置，最后由 `configure.daemon.ts` 的 `buildGatewayInstallPlan` 安装守护进程。                  |
-| Gateway 启动    | `openclaw gateway run` / `openclaw gateway`     | `src/cli/gateway-cli/run.ts`、`src/gateway/server.ts`、`src/gateway/server.impl.ts`、`src/gateway/boot.ts`                                                      | `run-main.ts` 命中 `isGatewayRunFastPathArgv` 走 `tryRunGatewayRunFastPath` → `runGatewayCommand` 动态 `import("../../gateway/server.js")` 得到 `startGatewayServer`；`server.impl.ts` 依次执行 `loadGatewayStartupConfigSnapshot` → `prepareGatewayStartupConfig`（auth/TLS）→ 加载插件/渠道 → 监听 WS/HTTP；`boot.ts` 的 `runBootOnce` 在工作区存在 `BOOT.md` 时通过 `agentCommand` 跑一次启动检查。 |
-| 入站消息处理    | 渠道插件收到消息 / OpenAI 兼容 HTTP / Node 事件 | `src/gateway/server-node-events.ts`、`src/gateway/openai-http.ts`、`src/gateway/openresponses-http.ts`、`src/agents/agent-command.ts`、`src/auto-reply/reply/*` | 渠道或节点事件经 `dispatchNodeAgentCommand`（或 OpenAI/OpenResponses HTTP 适配）调用 `agentCommandFromIngress` → `agentCommandInternal`，完成 session 解析、模型选择、回复投递上下文（`resolveCurrentRunDeliveryContext`）后进入 `runAgentAttempt`。                                                                                                                                                   |
-| Agent 执行      | `openclaw agent --message` / 内部调用           | `src/commands/agent.ts`（barrel）、`src/agents/agent-command.ts`、`src/agents/command/attempt-execution.ts`、`src/agents/sandbox.ts`、`src/tools/index.ts`      | `agentCommand` 是"可信操作者"入口，`agentCommandFromIngress` 是网络入口；二者都进入 `agentCommandInternal` → `prepareAgentCommandExecution` 解析 session/工作区/模型 → `runWithModelFallback` 包裹 `runAgentAttempt`，由后者驱动 LLM 流式响应与工具调用，沙箱由 `agents/sandbox.ts` 提供。                                                                                                             |
-| 多渠道路由      | 渠道配置 / 入站消息                             | `src/channels/ids.ts`、`src/channels/allow-from.ts`、`src/channels/session.ts`、`src/channels/registry.ts`、`src/agents/agent-scope.ts`                         | `normalizeChatChannelId` 归一化渠道；`mergeDmAllowFromSources` / `isSenderIdAllowed` 执行 allowFrom 与配对策略；`recordInboundSession` 写入 session store 并更新最近路由；`resolveSessionAgentId` / `resolveDefaultAgentId` 绑定 Agent。                                                                                                                                                               |
-| Cron 调度       | `CronService.start` / 定时器触发                | `src/cron/service.ts`、`src/cron/service/ops.ts`、`src/cron/service/timer.ts`、`src/cron/schedule.ts`                                                           | `CronService` 门面委托 `service/ops.ts`；`run`/`enqueueRun` → `executeJobCoreWithTimeout` → `executeJobCore` 按 `sessionTarget` 分流到 `executeMainSessionCronJob` 或 `executeDetachedCronJob`，最终调用 `agentCommand`；`armTimer` 基于 `computeJobNextRunAtMs` 重排下一次唤醒。                                                                                                                      |
-| TUI 交互        | `openclaw tui`                                  | `src/tui/tui.ts`、`src/tui/tui-backend.ts`、`src/tui/tui-command-handlers.ts`、`src/tui/tui-event-handlers.ts`                                                  | `runTui` 读取 `getRuntimeConfig`，按 `opts.local`/`opts.backend` 选择本地运行或 Gateway RPC 后端；用户输入经 `createEditorSubmitHandler` 提交，事件处理器把 Agent 事件投影到 `ChatLog`/`CustomEditor` 组件，断线由 `resolveGatewayDisconnectState` 处理。                                                                                                                                              |
-| 插件加载        | Gateway/CLI 启动 / `loadOpenClawPlugins`        | `src/plugins/loader.ts`、`src/plugins/discovery.ts`、`src/plugins/manifest-registry.ts`、`src/plugins/api-builder.ts`、`src/plugins/api-facades.ts`             | `loadOpenClawPlugins` 解析 `PluginLoadOptions` → `resolvePluginLoadCacheContext` 命中缓存或新建 → `discoverOpenClawPlugins` 发现候选 → `loadPluginManifestRegistry` 读取 manifest → `createPluginModuleLoader` 加载运行时模块 → `buildPluginApi` + `attachPluginApiFacades` 注入 SDK → `activatePluginRegistry` 注册命令/钩子/渠道。                                                                   |
+| 功能名          | 触发入口                                                | 涉及模块                                                                                                                                                        | 流程简述                                                                                                                                                                                                                                                                                                                                                                                               |
+| --------------- | ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Onboarding 引导 | `quiet-core-bot onboard` / 裸 `openclaw` 首次运行       | `src/entry.ts`、`src/cli/run-main.ts`、`src/commands/onboard.ts`、`src/wizard/setup.ts`、`src/commands/configure.daemon.ts`                                     | `entry.ts` 守卫主模块后调用 `runCli`；`run-main.ts` 通过 `shouldStartCrestodianForBareRoot` + `shouldStartOnboardingForFreshInstall` 判定首次安装，再调用 `setupWizardCommand` → `runSetupWizard`，经 `WizardPrompter` 收集 provider/auth/bind 选择，`writeWizardConfigFile` → `replaceConfigFile` 写入配置，最后由 `configure.daemon.ts` 的 `buildGatewayInstallPlan` 安装守护进程。                  |
+| Gateway 启动    | `quiet-core-bot gateway run` / `quiet-core-bot gateway` | `src/cli/gateway-cli/run.ts`、`src/gateway/server.ts`、`src/gateway/server.impl.ts`、`src/gateway/boot.ts`                                                      | `run-main.ts` 命中 `isGatewayRunFastPathArgv` 走 `tryRunGatewayRunFastPath` → `runGatewayCommand` 动态 `import("../../gateway/server.js")` 得到 `startGatewayServer`；`server.impl.ts` 依次执行 `loadGatewayStartupConfigSnapshot` → `prepareGatewayStartupConfig`（auth/TLS）→ 加载插件/渠道 → 监听 WS/HTTP；`boot.ts` 的 `runBootOnce` 在工作区存在 `BOOT.md` 时通过 `agentCommand` 跑一次启动检查。 |
+| 入站消息处理    | 渠道插件收到消息 / OpenAI 兼容 HTTP / Node 事件         | `src/gateway/server-node-events.ts`、`src/gateway/openai-http.ts`、`src/gateway/openresponses-http.ts`、`src/agents/agent-command.ts`、`src/auto-reply/reply/*` | 渠道或节点事件经 `dispatchNodeAgentCommand`（或 OpenAI/OpenResponses HTTP 适配）调用 `agentCommandFromIngress` → `agentCommandInternal`，完成 session 解析、模型选择、回复投递上下文（`resolveCurrentRunDeliveryContext`）后进入 `runAgentAttempt`。                                                                                                                                                   |
+| Agent 执行      | `openclaw agent --message` / 内部调用                   | `src/commands/agent.ts`（barrel）、`src/agents/agent-command.ts`、`src/agents/command/attempt-execution.ts`、`src/agents/sandbox.ts`、`src/tools/index.ts`      | `agentCommand` 是"可信操作者"入口，`agentCommandFromIngress` 是网络入口；二者都进入 `agentCommandInternal` → `prepareAgentCommandExecution` 解析 session/工作区/模型 → `runWithModelFallback` 包裹 `runAgentAttempt`，由后者驱动 LLM 流式响应与工具调用，沙箱由 `agents/sandbox.ts` 提供。                                                                                                             |
+| 多渠道路由      | 渠道配置 / 入站消息                                     | `src/channels/ids.ts`、`src/channels/allow-from.ts`、`src/channels/session.ts`、`src/channels/registry.ts`、`src/agents/agent-scope.ts`                         | `normalizeChatChannelId` 归一化渠道；`mergeDmAllowFromSources` / `isSenderIdAllowed` 执行 allowFrom 与配对策略；`recordInboundSession` 写入 session store 并更新最近路由；`resolveSessionAgentId` / `resolveDefaultAgentId` 绑定 Agent。                                                                                                                                                               |
+| Cron 调度       | `CronService.start` / 定时器触发                        | `src/cron/service.ts`、`src/cron/service/ops.ts`、`src/cron/service/timer.ts`、`src/cron/schedule.ts`                                                           | `CronService` 门面委托 `service/ops.ts`；`run`/`enqueueRun` → `executeJobCoreWithTimeout` → `executeJobCore` 按 `sessionTarget` 分流到 `executeMainSessionCronJob` 或 `executeDetachedCronJob`，最终调用 `agentCommand`；`armTimer` 基于 `computeJobNextRunAtMs` 重排下一次唤醒。                                                                                                                      |
+| TUI 交互        | `quiet-core-bot tui`                                    | `src/tui/tui.ts`、`src/tui/tui-backend.ts`、`src/tui/tui-command-handlers.ts`、`src/tui/tui-event-handlers.ts`                                                  | `runTui` 读取 `getRuntimeConfig`，按 `opts.local`/`opts.backend` 选择本地运行或 Gateway RPC 后端；用户输入经 `createEditorSubmitHandler` 提交，事件处理器把 Agent 事件投影到 `ChatLog`/`CustomEditor` 组件，断线由 `resolveGatewayDisconnectState` 处理。                                                                                                                                              |
+| 插件加载        | Gateway/CLI 启动 / `loadOpenClawPlugins`                | `src/plugins/loader.ts`、`src/plugins/discovery.ts`、`src/plugins/manifest-registry.ts`、`src/plugins/api-builder.ts`、`src/plugins/api-facades.ts`             | `loadOpenClawPlugins` 解析 `PluginLoadOptions` → `resolvePluginLoadCacheContext` 命中缓存或新建 → `discoverOpenClawPlugins` 发现候选 → `loadPluginManifestRegistry` 读取 manifest → `createPluginModuleLoader` 加载运行时模块 → `buildPluginApi` + `attachPluginApiFacades` 注入 SDK → `activatePluginRegistry` 注册命令/钩子/渠道。                                                                   |
 
 > 上述 8 条链路在源码中通过 `createLazyImportLoader`、动态 `import()` 与 `startupTrace.measure` 串接，二次开发时建议沿着 `createGatewayStartupTrace` 的 `mark`/`measure` 标注定位耗时阶段。
 
@@ -1626,7 +1626,7 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-    participant CLI as openclaw gateway run
+    participant CLI as quiet-core-bot gateway run
     participant RGC as runGatewayCommand
     participant SRV as startGatewayServer
     participant CFG as StartupConfig
@@ -1731,7 +1731,7 @@ sequenceDiagram
 | `setup`                                                    | `register.setup.ts`                  | 写入本地配置与工作区初始化                                          | ✅ 2.6 提及          |
 | `onboard`                                                  | `register.onboard.ts`                | 引导式 onboarding（provider/auth/daemon 安装）                      | ✅ 5.1 覆盖          |
 | `configure`                                                | `register.configure.ts`              | 重新配置 daemon/gateway/channel                                     | ❌ 未覆盖            |
-| `config`                                                   | `config-cli.ts`                      | 读写 `openclaw.json` 配置键                                         | ❌ 未覆盖            |
+| `config`                                                   | `config-cli.ts`                      | 读写 `quiet-core-bot.json` 配置键                                   | ❌ 未覆盖            |
 | `backup`                                                   | `register.backup.ts`                 | 备份状态库与配置                                                    | ❌ 未覆盖            |
 | `migrate`                                                  | `register.migrate.ts`                | 状态迁移（legacy store → SQLite）                                   | ❌ 未覆盖            |
 | `doctor` / `dashboard` / `reset` / `uninstall`             | `register.maintenance.ts`            | 诊断/仪表板/重置/卸载                                               | ⚠️ 8.5.1 提及 doctor |
@@ -1869,11 +1869,11 @@ sequenceDiagram
 | ----------------------- | ------------------------------ | --------------------------------------------- | -------------------------------------------------------- |
 | `session-memory`        | `command:new`、`command:reset` | 会话结束自动存档到 memory                     | `<workspace>/memory/YYYY-MM-DD-slug.md`（LLM 生成 slug） |
 | `bootstrap-extra-files` | `agent:bootstrap`              | 注入额外引导文件（如 `AGENTS.md`/`TOOLS.md`） | 内存上下文修改，无文件写入                               |
-| `command-logger`        | `command`（全部）              | 命令审计日志                                  | `~/.openclaw/logs/commands.log`（JSONL）                 |
+| `command-logger`        | `command`（全部）              | 命令审计日志                                  | `~/.quiet-core-bot/logs/commands.log`（JSONL）           |
 | `boot-md`               | `gateway:startup`              | 执行工作区 `BOOT.md` 启动检查                 | 由指令决定（可发消息）                                   |
 | `compaction-notifier`   | `session:compact:*`            | 会话压缩通知                                  | 通知投递                                                 |
 
-> 启用方式：`openclaw hooks enable <name>`；配置：`openclaw.json` 的 `hooks.internal.enabled` + `hooks.internal.entries.<name>.enabled`。Hook 发现优先级：workspace hooks（`<workspace>/hooks/`）> managed hooks（`~/.openclaw/hooks/`）> bundled hooks。
+> 启用方式：`quiet-core-bot hooks enable <name>`；配置：`quiet-core-bot.json` 的 `hooks.internal.enabled` + `hooks.internal.entries.<name>.enabled`。Hook 发现优先级：workspace hooks（`<workspace>/hooks/`）> managed hooks（`~/.quiet-core-bot/hooks/`）> bundled hooks。
 
 #### 5.6.3 Hook 加载与触发链路
 
@@ -1906,18 +1906,18 @@ sequenceDiagram
 
 #### 5.7.1 Webhook 入口点
 
-| 入口                 | 命令/路径                       | 处理模块                                     | 用途                                           |
-| -------------------- | ------------------------------- | -------------------------------------------- | ---------------------------------------------- |
-| Gmail Pub/Sub setup  | `openclaw webhooks gmail setup` | `src/hooks/gmail-ops.ts` → `runGmailSetup`   | 配置 Gmail watch + GCP Pub/Sub + OpenClaw hook |
-| Gmail Pub/Sub run    | `openclaw webhooks gmail run`   | `src/hooks/gmail-ops.ts` → `runGmailService` | 运行 gog watch serve（接收 Pub/Sub push）      |
-| 插件 Webhook ingress | 插件注册 `webhook-ingress`      | `src/plugin-sdk/webhook-ingress`             | 插件自定义 webhook 端点                        |
+| 入口                 | 命令/路径                             | 处理模块                                     | 用途                                                 |
+| -------------------- | ------------------------------------- | -------------------------------------------- | ---------------------------------------------------- |
+| Gmail Pub/Sub setup  | `quiet-core-bot webhooks gmail setup` | `src/hooks/gmail-ops.ts` → `runGmailSetup`   | 配置 Gmail watch + GCP Pub/Sub + Quiet Core bot hook |
+| Gmail Pub/Sub run    | `quiet-core-bot webhooks gmail run`   | `src/hooks/gmail-ops.ts` → `runGmailService` | 运行 gog watch serve（接收 Pub/Sub push）            |
+| 插件 Webhook ingress | 插件注册 `webhook-ingress`            | `src/plugin-sdk/webhook-ingress`             | 插件自定义 webhook 端点                              |
 
 #### 5.7.2 Gmail Pub/Sub 链路
 
 ```mermaid
 sequenceDiagram
     participant U as 用户
-    participant CLI as openclaw webhooks gmail
+    participant CLI as quiet-core-bot webhooks gmail
     participant GS as runGmailSetup
     participant GR as runGmailService
     participant GCP as GCP Pub/Sub
@@ -1967,7 +1967,7 @@ sequenceDiagram
     participant CD as configure.daemon.ts
     participant DR as doctor
 
-    U->>E: openclaw onboard [--install-daemon]
+    U->>E: quiet-core-bot onboard [--install-daemon]
     E->>RM: runCli(argv)
     RM->>RM: shouldStartOnboardingForFreshInstall?
     RM->>OB: setupWizardCommand(opts)
@@ -2012,7 +2012,7 @@ sequenceDiagram
 #### 5.8.2 Wizard 流程分支要点
 
 - **flow 选择**：`quickstart`（快速）vs `advanced`（高级），由 `WizardFlow` 类型定义（`src/wizard/setup.types.ts`）。
-- **迁移导入**：`detectSetupMigrationSources` 检测已有配置（如 `.openclaw.json`、环境变量），`runSetupMigrationImport` 导入。
+- **迁移导入**：`detectSetupMigrationSources` 检测已有配置（如 `.quiet-core-bot.json`、环境变量），`runSetupMigrationImport` 导入。
 - **provider/auth 选择**：`resolveAuthChoiceModelSelectionPolicy` 解析 provider 与认证方式的组合策略，`resolveManifestProviderAuthChoice` 查插件 manifest 提供的 auth choice。
 - **gateway 设置**：`QuickstartGatewayDefaults` 含 `port`、`bind`（loopback/lan/auto/custom/tailnet）、`authMode`、`tailscaleMode`（off/serve/funnel）、`token`/`password`。
 - **配置写入**：`writeWizardConfigFile` → `commitConfigWriteWithPendingPluginInstalls` → `replaceConfigFile`，支持 `allowConfigSizeDrop`（迁移时允许丢弃待安装插件记录）。
@@ -2066,7 +2066,7 @@ sequenceDiagram
     alt 需要审批
         EA->>C: resolveChannelApprovalAdapter
         C->>U: 发送审批提示 (native surface)
-        U->>AP: openclaw approvals approve <id>
+        U->>AP: quiet-core-bot approvals approve <id>
         AP->>EA: 审批结果
         alt approved
             EA->>T: 放行执行
@@ -2078,9 +2078,9 @@ sequenceDiagram
     end
 ```
 
-> `ChannelApprovalKind` 支持 `exec` 与 `plugin` 两类审批。`approvalCapability`（`src/channels/plugins/approvals.ts`）由渠道插件声明，`resolveChannelApprovalAdapter` 投影为运行时适配器。审批状态查询：`openclaw approvals pending [--session <key>]`；批准/拒绝：`openclaw approvals approve <id> [--always]` 与 `openclaw approvals deny <id>`（`<id>` 支持 8 位短前缀）。
+> `ChannelApprovalKind` 支持 `exec` 与 `plugin` 两类审批。`approvalCapability`（`src/channels/plugins/approvals.ts`）由渠道插件声明，`resolveChannelApprovalAdapter` 投影为运行时适配器。审批状态查询：`quiet-core-bot approvals pending [--session <key>]`；批准/拒绝：`quiet-core-bot approvals approve <id> [--always]` 与 `quiet-core-bot approvals deny <id>`（`<id>` 支持 8 位短前缀）。
 >
-> **无 UI 场景（纯 CLI / 无人值守）**：网关侧 exec 工具登记审批请求后，非 headless 轮次会挂起等待，超时上限 30 分钟（`DEFAULT_EXEC_APPROVAL_TIMEOUT_MS`），超时后按 `askFallback` 收敛（默认 `deny`）。CLI 轮次若在审批仍挂起时结束，`openclaw agent` 会打印 `Blocked on N pending exec approval(s) for <sessionKey>: <短id>` 与 `List with: openclaw approvals pending   Resolve with: openclaw approvals approve <id> | openclaw approvals deny <id>`，把"静默挂起"变成可操作提示。实现：`src/commands/agent-via-gateway.ts` 的 `reportPendingExecApprovalHint`（对网关 `exec.approval.list` 做 500ms/1.5s/3s 有界重试，避免请求登记晚于轮次结束时漏报；查询失败被吞掉，不影响轮次结果）。挂起期间可直接用 CLI 决策：`openclaw approvals pending` → `approve <短id>`，审批通过后网关会真正执行该命令并把工具结果写回会话。
+> **无 UI 场景（纯 CLI / 无人值守）**：网关侧 exec 工具登记审批请求后，非 headless 轮次会挂起等待，超时上限 30 分钟（`DEFAULT_EXEC_APPROVAL_TIMEOUT_MS`），超时后按 `askFallback` 收敛（默认 `deny`）。CLI 轮次若在审批仍挂起时结束，`openclaw agent` 会打印 `Blocked on N pending exec approval(s) for <sessionKey>: <短id>` 与 `List with: quiet-core-bot approvals pending   Resolve with: quiet-core-bot approvals approve <id> | quiet-core-bot approvals deny <id>`，把"静默挂起"变成可操作提示。实现：`src/commands/agent-via-gateway.ts` 的 `reportPendingExecApprovalHint`（对网关 `exec.approval.list` 做 500ms/1.5s/3s 有界重试，避免请求登记晚于轮次结束时漏报；查询失败被吞掉，不影响轮次结果）。挂起期间可直接用 CLI 决策：`quiet-core-bot approvals pending` → `approve <短id>`，审批通过后网关会真正执行该命令并把工具结果写回会话。
 
 #### 5.9.3 入站去抖（Inbound Debounce）分支
 
@@ -2303,18 +2303,18 @@ stateDiagram-v2
 
 ## 6. 数据模型与接口
 
-本章基于 OpenClaw 源码中 SQLite schema 定义（`src/state/openclaw-state-schema.sql`、`src/state/openclaw-agent-schema.sql`）、Gateway 方法描述符（`src/gateway/methods/core-descriptors.ts`）以及 `package.json` 的 `exports` 字段，梳理系统的数据实体、实体关系、Gateway WebSocket RPC 方法清单与 Plugin SDK 主要导出分类，为二次开发者提供数据落点与接口契约的完整地图。
+本章基于 Quiet Core bot 源码中 SQLite schema 定义（`src/state/openclaw-state-schema.sql`、`src/state/openclaw-agent-schema.sql`）、Gateway 方法描述符（`src/gateway/methods/core-descriptors.ts`）以及 `package.json` 的 `exports` 字段，梳理系统的数据实体、实体关系、Gateway WebSocket RPC 方法清单与 Plugin SDK 主要导出分类，为二次开发者提供数据落点与接口契约的完整地图。
 
-OpenClaw 的持久化以 **SQLite** 为核心，分为两套库：由 Kysely 管理的共享状态库（`state/openclaw.sqlite`，承载网关级配对、诊断、定时任务、投递队列、ACP 账本、插件状态等）与每个 Agent 独立的 agent 库（`agents/<id>/agent/openclaw-agent.sqlite`，承载该 Agent 的缓存、认证档案、记忆索引与向量嵌入）。对外接口分两层：**Gateway WebSocket RPC**（客户端与网关交互的统一协议）与 **Plugin SDK**（外部插件作者通过 `openclaw/plugin-sdk/*` 子路径导入的稳定契约层）。
+Quiet Core bot 的持久化以 **SQLite** 为核心，分为两套库：由 Kysely 管理的共享状态库（`state/openclaw.sqlite`，承载网关级配对、诊断、定时任务、投递队列、ACP 账本、插件状态等）与每个 Agent 独立的 agent 库（`agents/<id>/agent/openclaw-agent.sqlite`，承载该 Agent 的缓存、认证档案、记忆索引与向量嵌入）。对外接口分两层：**Gateway WebSocket RPC**（客户端与网关交互的统一协议）与 **Plugin SDK**（外部插件作者通过 `openclaw/plugin-sdk/*` 子路径导入的稳定契约层）。
 
 ### 6.1 数据存储概览
 
-| 库         | 文件路径（默认）                                                | Schema 来源                                            | 管理工具                                     | 角色                                                                                       |
-| ---------- | --------------------------------------------------------------- | ------------------------------------------------------ | -------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| 共享状态库 | `~/.openclaw/openclaw.sqlite`（`OPENCLAW_STATE_DIR` 可覆盖）    | `src/state/openclaw-state-schema.sql`                  | Kysely + `scripts/generate-kysely-types.mjs` | 网关级单例状态：配对、诊断、定时任务、投递队列、ACP 账本、插件 KV、媒体 blob、沙箱注册表等 |
-| Agent 库   | `~/.openclaw/agents/<agentId>/agent/openclaw-agent.sqlite`      | `src/state/openclaw-agent-schema.sql`                  | Kysely                                       | 单 Agent 私有状态：缓存、认证档案、记忆索引/分块/嵌入缓存                                  |
-| 配置文件   | `~/.openclaw/openclaw.json`（`OPENCLAW_CONFIG_PATH` 可覆盖）    | `src/config/schema.ts`、`src/config/types.openclaw.ts` | JSON5 读写 + 热重载                          | 运行时配置快照（agents/channels/gateway/auth/bindings/plugins 等）                         |
-| 凭据存储   | `~/.openclaw/credentials/`、`~/.openclaw-auth-profile-secrets/` | `src/secrets/`、`src/agents/auth-profiles/`            | SecretRef + auth profile store               | API key、APNs `.p8`、设备身份密钥                                                          |
+| 库         | 文件路径（默认）                                                            | Schema 来源                                            | 管理工具                                     | 角色                                                                                       |
+| ---------- | --------------------------------------------------------------------------- | ------------------------------------------------------ | -------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| 共享状态库 | `~/.quiet-core-bot/openclaw.sqlite`（`OPENCLAW_STATE_DIR` 可覆盖）          | `src/state/openclaw-state-schema.sql`                  | Kysely + `scripts/generate-kysely-types.mjs` | 网关级单例状态：配对、诊断、定时任务、投递队列、ACP 账本、插件 KV、媒体 blob、沙箱注册表等 |
+| Agent 库   | `~/.quiet-core-bot/agents/<agentId>/agent/openclaw-agent.sqlite`            | `src/state/openclaw-agent-schema.sql`                  | Kysely                                       | 单 Agent 私有状态：缓存、认证档案、记忆索引/分块/嵌入缓存                                  |
+| 配置文件   | `~/.quiet-core-bot/quiet-core-bot.json`（`OPENCLAW_CONFIG_PATH` 可覆盖）    | `src/config/schema.ts`、`src/config/types.openclaw.ts` | JSON5 读写 + 热重载                          | 运行时配置快照（agents/channels/gateway/auth/bindings/plugins 等）                         |
+| 凭据存储   | `~/.quiet-core-bot/credentials/`、`~/.quiet-core-bot-auth-profile-secrets/` | `src/secrets/`、`src/agents/auth-profiles/`            | SecretRef + auth profile store               | API key、APNs `.p8`、设备身份密钥                                                          |
 
 两套 SQLite 库均通过 Kysely（`kysely@0.29.2`）声明表结构与行类型，并由 `scripts/generate-kysely-types.mjs` 生成类型基线（`pnpm db:kysely:gen` / `pnpm db:kysely:check` 守卫）。架构守卫脚本 `pnpm check:database-first-legacy-stores` 与 `pnpm lint:kysely` 强制所有持久化走 Kysely 优先路径，禁止遗留 store 绕过 schema。
 
@@ -2746,7 +2746,7 @@ Gateway 通过单一多路复用端口对外暴露 WebSocket RPC。所有核心�
 
 ### 6.6 Plugin SDK 主要导出分类
 
-Plugin SDK 是外部插件作者与 OpenClaw 交互的唯一稳定契约层，通过 `package.json` 的 `exports` 字段以子路径形式暴露（`openclaw/plugin-sdk/*`）。`src/plugin-sdk/core.ts` 聚合渠道/插件/agent/runtime/媒体/provider/审批/memory 等核心类型作为主入口。SDK 子路径数量超过 300 个，按下表分类列出主要子路径及其用途。
+Plugin SDK 是外部插件作者与 Quiet Core bot 交互的唯一稳定契约层，通过 `package.json` 的 `exports` 字段以子路径形式暴露（`openclaw/plugin-sdk/*`）。`src/plugin-sdk/core.ts` 聚合渠道/插件/agent/runtime/媒体/provider/审批/memory 等核心类型作为主入口。SDK 子路径数量超过 300 个，按下表分类列出主要子路径及其用途。
 
 | 分类                   | 代表子路径                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | 用途                                                                                              |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
@@ -2830,9 +2830,9 @@ Plugin SDK 是外部插件作者与 OpenClaw 交互的唯一稳定契约层，�
 文档第 6.1 节提到 `schema_meta` 表与 Kysely 类型生成，但未说明版本控制与迁移机制：
 
 - **版本戳**：`OPENCLAW_STATE_SCHEMA_VERSION = 1`，写入 `PRAGMA user_version`；`assertSupportedSchemaVersion` 拒绝读取比当前构建更新的 schema（`openclaw-state-db.ts:62-69`）
-- **加法迁移**：`ensureColumn()` 用 `ALTER TABLE ADD COLUMN` 做加法列补充；**破坏性/形状变更修复属于 `openclaw doctor --fix`**，不在运行时执行（`openclaw-state-db.ts:138-139` 注释）
+- **加法迁移**：`ensureColumn()` 用 `ALTER TABLE ADD COLUMN` 做加法列补充；**破坏性/形状变更修复属于 `quiet-core-bot doctor --fix`**，不在运行时执行（`openclaw-state-db.ts:138-139` 注释）
 - **数据修复**：`repairLegacyTaskAgentAttribution()`（`openclaw-state-db.ts:143-193`）修复历史 `task_runs` 的 `requester_agent_id`/`agent_id` 归属
-- **主键迁移**：`repairAgentDatabasesCompositePrimaryKey()`（`openclaw-state-db.ts:211-246`）将 `agent_databases` 从 `PRIMARY KEY(agent_id)` 迁移到 `PRIMARY KEY(agent_id, path)`，通过建新表+`INSERT OR REPLACE`+`DROP`+`RENAME` 完成；`assertCanonicalStateSchemaShape` 检测未迁移的旧库并要求 `openclaw doctor --fix`
+- **主键迁移**：`repairAgentDatabasesCompositePrimaryKey()`（`openclaw-state-db.ts:211-246`）将 `agent_databases` 从 `PRIMARY KEY(agent_id)` 迁移到 `PRIMARY KEY(agent_id, path)`，通过建新表+`INSERT OR REPLACE`+`DROP`+`RENAME` 完成；`assertCanonicalStateSchemaShape` 检测未迁移的旧库并要求 `quiet-core-bot doctor --fix`
 - **schema_meta 角色**：`role`/`schema_version`/`agent_id`/`app_version` 四字段记录 schema 来源与写入版本
 
 **补充到第 6.1 节**：新增"Schema 版本与迁移策略"小节，说明加法迁移 vs doctor 修复的边界、`user_version` 守卫、`agent_databases` 主键迁移案例。
@@ -2862,9 +2862,9 @@ Plugin SDK 是外部插件作者与 OpenClaw 交互的唯一稳定契约层，�
 
 ## 7. 界面与交互说明
 
-本章基于 `ui/`（Web Control UI）、`src/tui/`（终端 UI）与 `apps/`（macOS/iOS/Android 原生 App）源码及官方文档，梳理 OpenClaw 的页面/视图清单、UI 组件目录、页面-组件映射关系与主题样式定制入口，为二次开发者提供界面扩展的定位地图。
+本章基于 `ui/`（Web Control UI）、`src/tui/`（终端 UI）与 `apps/`（macOS/iOS/Android 原生 App）源码及官方文档，梳理 Quiet Core bot 的页面/视图清单、UI 组件目录、页面-组件映射关系与主题样式定制入口，为二次开发者提供界面扩展的定位地图。
 
-OpenClaw 的客户端形态分为四类：① **Web Control UI**（`ui/`，基于 Lit 的浏览器单页应用，由 Gateway 在 `/` 提供）；② **TUI**（`src/tui/`，基于 `@earendil-works/pi-tui` 的终端交互界面）；③ **原生 App**（`apps/macos` SwiftUI、`apps/ios` SwiftUI、`apps/android` Kotlin/Compose）；④ **ACP 客户端**（通过 `src/acp/server.ts` 桥接到 Gateway 的 stdio 协议客户端，如 Claude Code、Codex）。所有客户端共享同一套 Gateway WebSocket 协议，差异在于能力表面与平台特性。
+Quiet Core bot 的客户端形态分为四类：① **Web Control UI**（`ui/`，基于 Lit 的浏览器单页应用，由 Gateway 在 `/` 提供）；② **TUI**（`src/tui/`，基于 `@earendil-works/pi-tui` 的终端交互界面）；③ **原生 App**（`apps/macos` SwiftUI、`apps/ios` SwiftUI、`apps/android` Kotlin/Compose）；④ **ACP 客户端**（通过 `src/acp/server.ts` 桥接到 Gateway 的 stdio 协议客户端，如 Claude Code、Codex）。所有客户端共享同一套 Gateway WebSocket 协议，差异在于能力表面与平台特性。
 
 ### 7.1 界面总览
 
@@ -2883,12 +2883,12 @@ flowchart TB
     end
 
     subgraph Mac["macOS App（apps/macos · SwiftUI）"]
-        MacApp[OpenClaw.app]
+        MacApp[Quiet Core bot.app]
         MacApp --> MacViews["Chat/Talk/Canvas/<br/>Settings/MenuBar"]
     end
 
     subgraph IOS["iOS App（apps/ios · SwiftUI）"]
-        IosApp[OpenClaw]
+        IosApp[Quiet Core bot]
         IosApp --> IosViews["Onboarding/Chat/<br/>Voice/Canvas/Settings"]
     end
 
@@ -2939,7 +2939,7 @@ Web Control UI 由根组件 `OpenClawApp`（`ui/src/ui/app.ts`）通过 `app-ren
 
 #### 7.2.2 TUI 视图
 
-TUI（`openclaw tui`）支持 Gateway 模式（连接远端 `--url ws://<host>:<port> --token <token>`）与本地模式（`openclaw chat` / `openclaw tui --local`，使用嵌入式 Agent 运行时）。界面区域固定，通过斜杠命令与快捷键交互。
+TUI（`quiet-core-bot tui`）支持 Gateway 模式（连接远端 `--url ws://<host>:<port> --token <token>`）与本地模式（`openclaw chat` / `quiet-core-bot tui --local`，使用嵌入式 Agent 运行时）。界面区域固定，通过斜杠命令与快捷键交互。
 
 | 视图区域       | 实现文件              | 说明                                                                                                           |
 | -------------- | --------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -3085,7 +3085,7 @@ TUI 无独立组件文件，所有交互通过 `src/tui/tui.ts`（主循环）�
 
 TUI 通过配置项与斜杠命令定制显示：
 
-- `tui.footer.showRemoteHost`（`openclaw config set tui.footer.showRemoteHost true`）：非本地连接显示远程主机（loopback 与嵌入式本地连接不显示）。
+- `tui.footer.showRemoteHost`（`quiet-core-bot config set tui.footer.showRemoteHost true`）：非本地连接显示远程主机（loopback 与嵌入式本地连接不显示）。
 - 斜杠命令：`/think`、`/fast`、`/verbose`、`/trace`、`/reasoning`、`/usage` 控制思考/快速/详细/追踪/推理/用量显示。
 - `/deliver on|off`：切换消息投递到 provider。
 
@@ -3483,9 +3483,9 @@ TUI 通过配置项与斜杠命令定制显示：
 | Agent Pro Nodes Destination    | `Design/AgentProNodesDestination.swift`                                                                                | 节点目标                      |
 | Agent Pro Dreaming Destination | `Design/AgentProDreamingDestination.swift`                                                                             | 梦境目标                      |
 | Settings Channels Destination  | `Design/SettingsChannelsDestination.swift`                                                                             | 渠道目标                      |
-| OpenClaw Docs Screen           | `Design/OpenClawDocsScreen.swift`                                                                                      | 文档屏幕                      |
-| OpenClaw Pro Components        | `Design/OpenClawProComponents.swift`                                                                                   | Pro 组件                      |
-| OpenClaw Brand                 | `Design/OpenClawBrand.swift`                                                                                           | 品牌                          |
+| Quiet Core bot Docs Screen     | `Design/OpenClawDocsScreen.swift`                                                                                      | 文档屏幕                      |
+| Quiet Core bot Pro Components  | `Design/OpenClawProComponents.swift`                                                                                   | Pro 组件                      |
+| Quiet Core bot Brand           | `Design/OpenClawBrand.swift`                                                                                           | 品牌                          |
 | Command Center Support         | `Design/CommandCenterSupport.swift`                                                                                    | 命令中心支持                  |
 
 ###### G.2 iPad 屏幕(文档完全未列 iPad 专属屏幕)
@@ -3566,18 +3566,18 @@ TUI 通过配置项与斜杠命令定制显示：
 
 ###### G.7 Live Activity(文档完全未列)
 
-| 组件                            | 文件                                                | 用途          |
-| ------------------------------- | --------------------------------------------------- | ------------- |
-| OpenClaw Live Activity          | `ActivityWidget/OpenClawLiveActivity.swift`         | Live Activity |
-| OpenClaw Activity Widget Bundle | `ActivityWidget/OpenClawActivityWidgetBundle.swift` | Widget Bundle |
-| Live Activity Manager           | `LiveActivity/LiveActivityManager.swift`            | 管理器        |
-| OpenClaw Activity Attributes    | `LiveActivity/OpenClawActivityAttributes.swift`     | 属性          |
+| 组件                                  | 文件                                                | 用途          |
+| ------------------------------------- | --------------------------------------------------- | ------------- |
+| Quiet Core bot Live Activity          | `ActivityWidget/OpenClawLiveActivity.swift`         | Live Activity |
+| Quiet Core bot Activity Widget Bundle | `ActivityWidget/OpenClawActivityWidgetBundle.swift` | Widget Bundle |
+| Live Activity Manager                 | `LiveActivity/LiveActivityManager.swift`            | 管理器        |
+| Quiet Core bot Activity Attributes    | `LiveActivity/OpenClawActivityAttributes.swift`     | 属性          |
 
 ###### G.8 Apple Watch(文档完全未列)
 
 | 组件                          | 文件                                               | 用途             |
 | ----------------------------- | -------------------------------------------------- | ---------------- |
-| OpenClaw Watch App            | `WatchApp/Sources/OpenClawWatchApp.swift`          | Watch 应用入口   |
+| Quiet Core bot Watch App      | `WatchApp/Sources/OpenClawWatchApp.swift`          | Watch 应用入口   |
 | Watch Inbox View              | `WatchApp/Sources/WatchInboxView.swift`            | Watch 收件箱     |
 | Watch Inbox Store             | `WatchApp/Sources/WatchInboxStore.swift`           | Watch 收件箱存储 |
 | Watch Connectivity Receiver   | `WatchApp/Sources/WatchConnectivityReceiver.swift` | Watch 连接接收器 |
@@ -3704,7 +3704,7 @@ TUI 通过配置项与斜杠命令定制显示：
 | Claw Preview          | `ui/design/ClawPreview.kt`    | 预览            |
 | Claw Navigation       | `ui/design/ClawNavigation.kt` | 导航            |
 | Claw Components       | `ui/design/ClawComponents.kt` | 组件            |
-| OpenClaw Theme        | `ui/OpenClawTheme.kt`         | 主题            |
+| Quiet Core bot Theme  | `ui/OpenClawTheme.kt`         | 主题            |
 | Mobile UI Tokens      | `ui/MobileUiTokens.kt`        | 移动端 UI Token |
 | Appearance Theme Mode | `AppearanceThemeMode.kt`      | 外观模式        |
 
@@ -3985,7 +3985,7 @@ TUI 通过配置项与斜杠命令定制显示：
 - **默认值**:`TalkDefaults`
 - **聊天事件**:`ChatEventText`
 - **模式枚举**:`VoiceCaptureMode`(`Off`/`VoiceWake`/`TalkMode`)
-- **前台服务**:`NodeForegroundService`(`Service`,Talk Mode 激活时显示 "OpenClaw Node · Talk" 通知)
+- **前台服务**:`NodeForegroundService`(`Service`,Talk Mode 激活时显示 "Quiet Core bot Node · Talk" 通知)
 - **Talk 浮球**:`TalkOrbOverlay`
 - **Talk 子屏幕**:`DictationScreen`、`TalkSessionScreen`
 - **Relay 关闭**:`finishTalkModeAfterRelayClose()`、`onStoppedByRelay`
@@ -4038,33 +4038,33 @@ TUI 通过配置项与斜杠命令定制显示：
 
 ## 8. 配置与部署
 
-本章基于 `.env.example`、`Dockerfile`、`docker-compose.yml`、`fly.toml`、`render.yaml`、`scripts/k8s/deploy.sh`、`docs/install/` 与 `docs/gateway/index.md`，梳理 OpenClaw 的环境变量、外部服务依赖、本地开发启动指南、各平台部署流程与常见问题排错。
+本章基于 `.env.example`、`Dockerfile`、`docker-compose.yml`、`fly.toml`、`render.yaml`、`scripts/k8s/deploy.sh`、`docs/install/` 与 `docs/gateway/index.md`，梳理 Quiet Core bot 的环境变量、外部服务依赖、本地开发启动指南、各平台部署流程与常见问题排错。
 
 ### 8.1 环境变量说明
 
-环境变量加载优先级（从高到低）：进程环境变量 → `./.env` → `~/.openclaw/.env` → `openclaw.json` 的 `env` 块。已存在的非空进程环境变量不被 dotenv 覆盖。直接配置键（如 `gateway.auth.token` 或 `openclaw.json` 中的渠道令牌）独立于 env 加载解析，通常优先于 env 回退。
+环境变量加载优先级（从高到低）：进程环境变量 → `./.env` → `~/.quiet-core-bot/.env` → `quiet-core-bot.json` 的 `env` 块。已存在的非空进程环境变量不被 dotenv 覆盖。直接配置键（如 `gateway.auth.token` 或 `quiet-core-bot.json` 中的渠道令牌）独立于 env 加载解析，通常优先于 env 回退。
 
 #### 8.1.1 网关认证与路径
 
-| 变量名                               | 含义                                                                                     | 默认值                           | 必填                |
-| ------------------------------------ | ---------------------------------------------------------------------------------------- | -------------------------------- | ------------------- |
-| `OPENCLAW_GATEWAY_TOKEN`             | 网关共享密钥令牌（非环回绑定必填；留空则首启自动生成；可用 `openssl rand -hex 32` 生成） | 自动生成                         | 非环回绑定时必填    |
-| `OPENCLAW_GATEWAY_PASSWORD`          | 网关共享密钥密码（与 token 二选一）                                                      | 空                               | 否                  |
-| `OPENCLAW_GATEWAY_PORT`              | 网关端口                                                                                 | `18789`（配置键 `gateway.port`） | 否                  |
-| `OPENCLAW_STATE_DIR`                 | 状态目录（SQLite、凭据、工作区）                                                         | `~/.openclaw`                    | 否                  |
-| `OPENCLAW_CONFIG_PATH`               | 配置文件路径                                                                             | `~/.openclaw/openclaw.json`      | 否                  |
-| `OPENCLAW_CONFIG_DIR`                | 配置目录                                                                                 | `~/.openclaw`                    | 否                  |
-| `OPENCLAW_HOME`                      | 主目录                                                                                   | `~`                              | 否                  |
-| `OPENCLAW_WORKSPACE_DIR`             | 工作区目录                                                                               | `~/.openclaw/workspace`          | 否                  |
-| `OPENCLAW_AUTH_PROFILE_SECRET_DIR`   | 认证档案加密密钥目录（Docker 场景将宿主目录挂载进容器）                                  | 空                               | Docker 部署推荐     |
-| `OPENCLAW_INCLUDE_ROOTS`             | `$include` 指令允许的额外目录清单（POSIX `:` / Windows `;` 分隔，支持 `~` 展开）         | 配置文件所在目录                 | 否                  |
-| `OPENCLAW_LOAD_SHELL_ENV`            | 是否从登录 shell profile 导入缺失 key                                                    | `0`                              | 否                  |
-| `OPENCLAW_SHELL_ENV_TIMEOUT_MS`      | shell 环境导入超时                                                                       | `15000`                          | 否                  |
-| `OPENCLAW_DISABLE_BONJOUR`           | 禁用 Bonjour/mDNS（容器内默认自动禁用；`0` 强制开启，`1` 强制关闭）                      | 自动                             | 否                  |
-| `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS` | 允许不安全的私有 WebSocket                                                               | 空                               | 否                  |
-| `OPENCLAW_SERVICE_REPAIR_POLICY`     | 服务修复策略（`external` 表示系统级服务单元拥有生命周期，doctor 不自动安装用户级服务）   | 空                               | 系统级 systemd 部署 |
-| `OPENCLAW_PREFER_PNPM`               | UI 构建优先使用 pnpm（Bun 在 ARM/Synology 可能失败）                                     | 空                               | Docker 构建推荐     |
-| `OPENCLAW_SKIP_CHANNELS`             | 启动时跳过渠道（`gateway:dev` 脚本设为 1）                                               | 空                               | 否                  |
+| 变量名                               | 含义                                                                                     | 默认值                                  | 必填                |
+| ------------------------------------ | ---------------------------------------------------------------------------------------- | --------------------------------------- | ------------------- |
+| `OPENCLAW_GATEWAY_TOKEN`             | 网关共享密钥令牌（非环回绑定必填；留空则首启自动生成；可用 `openssl rand -hex 32` 生成） | 自动生成                                | 非环回绑定时必填    |
+| `OPENCLAW_GATEWAY_PASSWORD`          | 网关共享密钥密码（与 token 二选一）                                                      | 空                                      | 否                  |
+| `OPENCLAW_GATEWAY_PORT`              | 网关端口                                                                                 | `18789`（配置键 `gateway.port`）        | 否                  |
+| `OPENCLAW_STATE_DIR`                 | 状态目录（SQLite、凭据、工作区）                                                         | `~/.quiet-core-bot`                     | 否                  |
+| `OPENCLAW_CONFIG_PATH`               | 配置文件路径                                                                             | `~/.quiet-core-bot/quiet-core-bot.json` | 否                  |
+| `OPENCLAW_CONFIG_DIR`                | 配置目录                                                                                 | `~/.quiet-core-bot`                     | 否                  |
+| `OPENCLAW_HOME`                      | 主目录                                                                                   | `~`                                     | 否                  |
+| `OPENCLAW_WORKSPACE_DIR`             | 工作区目录                                                                               | `~/.quiet-core-bot/workspace`           | 否                  |
+| `OPENCLAW_AUTH_PROFILE_SECRET_DIR`   | 认证档案加密密钥目录（Docker 场景将宿主目录挂载进容器）                                  | 空                                      | Docker 部署推荐     |
+| `OPENCLAW_INCLUDE_ROOTS`             | `$include` 指令允许的额外目录清单（POSIX `:` / Windows `;` 分隔，支持 `~` 展开）         | 配置文件所在目录                        | 否                  |
+| `OPENCLAW_LOAD_SHELL_ENV`            | 是否从登录 shell profile 导入缺失 key                                                    | `0`                                     | 否                  |
+| `OPENCLAW_SHELL_ENV_TIMEOUT_MS`      | shell 环境导入超时                                                                       | `15000`                                 | 否                  |
+| `OPENCLAW_DISABLE_BONJOUR`           | 禁用 Bonjour/mDNS（容器内默认自动禁用；`0` 强制开启，`1` 强制关闭）                      | 自动                                    | 否                  |
+| `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS` | 允许不安全的私有 WebSocket                                                               | 空                                      | 否                  |
+| `OPENCLAW_SERVICE_REPAIR_POLICY`     | 服务修复策略（`external` 表示系统级服务单元拥有生命周期，doctor 不自动安装用户级服务）   | 空                                      | 系统级 systemd 部署 |
+| `OPENCLAW_PREFER_PNPM`               | UI 构建优先使用 pnpm（Bun 在 ARM/Synology 可能失败）                                     | 空                                      | Docker 构建推荐     |
+| `OPENCLAW_SKIP_CHANNELS`             | 启动时跳过渠道（`gateway:dev` 脚本设为 1）                                               | 空                                      | 否                  |
 
 #### 8.1.2 模型 Provider API Key
 
@@ -4104,12 +4104,12 @@ TUI 通过配置项与斜杠命令定制显示：
 
 #### 8.1.5 APNs（iOS 推送，网关侧）
 
-| 变量名                                                            | 含义                                                                               | 必填             |
-| ----------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------- |
-| `OPENCLAW_APNS_TEAM_ID`                                           | APNs Team ID                                                                       | iOS 推送时       |
-| `OPENCLAW_APNS_KEY_ID`                                            | APNs Key ID                                                                        | 同上             |
-| `OPENCLAW_APNS_PRIVATE_KEY_P8` / `OPENCLAW_APNS_PRIVATE_KEY_PATH` | APNs `.p8` 私钥（推荐路径 `~/.openclaw/credentials/apns/AuthKey_<KEYID>.p8`）      | 同上             |
-| `OPENCLAW_APNS_RELAY_BASE_URL`                                    | 托管 Relay 基础 URL（临时 env 覆盖；正式配置走 `gateway.push.apns.relay.baseUrl`） | App Store 构建时 |
+| 变量名                                                            | 含义                                                                                | 必填             |
+| ----------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ---------------- |
+| `OPENCLAW_APNS_TEAM_ID`                                           | APNs Team ID                                                                        | iOS 推送时       |
+| `OPENCLAW_APNS_KEY_ID`                                            | APNs Key ID                                                                         | 同上             |
+| `OPENCLAW_APNS_PRIVATE_KEY_P8` / `OPENCLAW_APNS_PRIVATE_KEY_PATH` | APNs `.p8` 私钥（推荐路径 `~/.quiet-core-bot/credentials/apns/AuthKey_<KEYID>.p8`） | 同上             |
+| `OPENCLAW_APNS_RELAY_BASE_URL`                                    | 托管 Relay 基础 URL（临时 env 覆盖；正式配置走 `gateway.push.apns.relay.baseUrl`）  | App Store 构建时 |
 
 #### 8.1.6 可观测性（OpenTelemetry）
 
@@ -4155,7 +4155,7 @@ cp .env.example .env
 # 非环回绑定时填入 OPENCLAW_GATEWAY_TOKEN=$(openssl rand -hex 32)
 
 # 4. 首次设置（onboarding 向导）
-pnpm openclaw setup
+pnpm quiet-core-bot setup
 
 # 5. 构建
 pnpm build
@@ -4175,7 +4175,7 @@ pnpm ui:dev
 # 8. 打开 Control UI
 open http://127.0.0.1:18789/
 # 或用 CLI 自动打开
-pnpm openclaw dashboard
+pnpm quiet-core-bot dashboard
 
 # 9. 启动 TUI（连接本地网关）
 pnpm tui
@@ -4183,9 +4183,9 @@ pnpm tui
 pnpm openclaw chat
 
 # 10. 验证健康
-pnpm openclaw gateway status
-pnpm openclaw status
-pnpm openclaw channels status --probe
+pnpm quiet-core-bot gateway status
+pnpm quiet-core-bot status
+pnpm quiet-core-bot channels status --probe
 
 # 11. 运行测试
 pnpm test          # 单元测试
@@ -4197,23 +4197,23 @@ pnpm check         # 架构检查
 **Dev profile 快速路径**（隔离状态/配置，基础端口 19001）：
 
 ```bash
-pnpm openclaw --dev setup
-pnpm openclaw --dev gateway --allow-unconfigured
-pnpm openclaw --dev status
+pnpm quiet-core-bot --dev setup
+pnpm quiet-core-bot --dev gateway --allow-unconfigured
+pnpm quiet-core-bot --dev status
 ```
 
 **多网关同主机**（每实例需唯一 `gateway.port`、`OPENCLAW_CONFIG_PATH`、`OPENCLAW_STATE_DIR`、`agents.defaults.workspace`）：
 
 ```bash
-OPENCLAW_CONFIG_PATH=~/.openclaw/a.json OPENCLAW_STATE_DIR=~/.openclaw-a openclaw gateway --port 19001
-OPENCLAW_CONFIG_PATH=~/.openclaw/b.json OPENCLAW_STATE_DIR=~/.openclaw-b openclaw gateway --port 19002
+OPENCLAW_CONFIG_PATH=~/.quiet-core-bot/a.json OPENCLAW_STATE_DIR=~/.quiet-core-bot-a quiet-core-bot gateway --port 19001
+OPENCLAW_CONFIG_PATH=~/.quiet-core-bot/b.json OPENCLAW_STATE_DIR=~/.quiet-core-bot-b quiet-core-bot gateway --port 19002
 ```
 
 ### 8.4 部署流程
 
 #### 8.4.1 Docker
 
-OpenClaw 提供多阶段 `Dockerfile`，产出最小运行时镜像（基于 `node:24-bookworm-slim`，无构建工具/源码/Bun）。基础镜像以 SHA256 摘要固定以保证可复现构建，入口为 `tini`。
+Quiet Core bot 提供多阶段 `Dockerfile`，产出最小运行时镜像（基于 `node:24-bookworm-slim`，无构建工具/源码/Bun）。基础镜像以 SHA256 摘要固定以保证可复现构建，入口为 `tini`。
 
 ```bash
 # 构建本地镜像（可选捆绑扩展）
@@ -4241,7 +4241,7 @@ docker compose run --rm openclaw-cli
 
 - 两个服务：`openclaw-gateway`（主服务，`--bind lan --port 18789`）与 `openclaw-cli`（共享网络，交互式）。
 - 端口映射：`18789`（网关）、`18790`（bridge）、`3978`（MS Teams）。
-- 卷挂载：`~/.openclaw`（状态/配置）、`~/.openclaw/workspace`（工作区）、`~/.openclaw-auth-profile-secrets`（认证密钥）。
+- 卷挂载：`~/.quiet-core-bot`（状态/配置）、`~/.quiet-core-bot/workspace`（工作区）、`~/.quiet-core-bot-auth-profile-secrets`（认证密钥）。
 - 安全加固：`cap_drop: [NET_RAW, NET_ADMIN]`、`security_opt: [no-new-privileges:true]`、`extra_hosts: host.docker.internal:host-gateway`（本地模型 provider 访问）。
 - 健康检查：`GET /healthz`，间隔 30s。
 - 容器内路径固定：`OPENCLAW_STATE_DIR=/home/node/.openclaw` 等，避免宿主路径泄漏（#77436）。
@@ -4280,7 +4280,7 @@ fly logs
 
 # 8. 创建配置文件（SSH 进机器）
 fly ssh console
-# 在容器内创建 /data/openclaw.json（OPENCLAW_STATE_DIR=/data）
+# 在容器内创建 /data/quiet-core-bot.json（OPENCLAW_STATE_DIR=/data）
 
 # 9. 重启生效
 exit
@@ -4352,31 +4352,31 @@ open http://localhost:18789
 
 ### 8.5 常见问题排错
 
-#### 8.5.1 `openclaw doctor` 诊断
+#### 8.5.1 `quiet-core-bot doctor` 诊断
 
 ```bash
-openclaw doctor              # 全面诊断
-openclaw doctor --fix        # 自动修复（服务配置漂移、遗留配置项等）
-openclaw doctor --generate-gateway-token  # 无共享密钥时生成
+quiet-core-bot doctor              # 全面诊断
+quiet-core-bot doctor --fix        # 自动修复（服务配置漂移、遗留配置项等）
+quiet-core-bot doctor --generate-gateway-token  # 无共享密钥时生成
 ```
 
-`doctor` 审计并修复服务配置漂移（launchd/systemd/schtasks）。当检测到系统级 OpenClaw 网关服务时，doctor 拒绝自动安装同 profile/端口的用户级服务（设 `OPENCLAW_SERVICE_REPAIR_POLICY=external` 表示系统单元拥有生命周期）。修改 `gateway.port` 后需 `openclaw doctor --fix` 或 `openclaw gateway install --force` 让 supervisor 元数据同步新端口。
+`doctor` 审计并修复服务配置漂移（launchd/systemd/schtasks）。当检测到系统级 Quiet Core bot 网关服务时，doctor 拒绝自动安装同 profile/端口的用户级服务（设 `OPENCLAW_SERVICE_REPAIR_POLICY=external` 表示系统单元拥有生命周期）。修改 `gateway.port` 后需 `quiet-core-bot doctor --fix` 或 `quiet-core-bot gateway install --force` 让 supervisor 元数据同步新端口。
 
 #### 8.5.2 日志路径
 
 ```bash
-openclaw logs --follow       # 实时日志
-openclaw logs --no-tail      # 最近日志
+quiet-core-bot logs --follow       # 实时日志
+quiet-core-bot logs --no-tail      # 最近日志
 ```
 
-日志写入系统临时目录（`tmp/openclaw`），基于 tslog 结构化输出，含密钥脱敏。Gateway 调试/跟踪可镜像到 stdio：`openclaw gateway --port 18789 --verbose`。
+日志写入系统临时目录（`tmp/openclaw`），基于 tslog 结构化输出，含密钥脱敏。Gateway 调试/跟踪可镜像到 stdio：`quiet-core-bot gateway --port 18789 --verbose`。
 
 #### 8.5.3 端口与绑定问题
 
 | 签名                                                                   | 原因                                    | 修复                                                                                                               |
 | ---------------------------------------------------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | `refusing to bind gateway ... without auth`                            | 非环回绑定但无有效认证                  | 设置 `OPENCLAW_GATEWAY_TOKEN` 或 `gateway.auth.password` 或 `trusted-proxy`                                        |
-| `another gateway instance is already listening` / `EADDRINUSE`         | 端口冲突                                | `openclaw gateway --force`（强制杀死监听者）或换端口                                                               |
+| `another gateway instance is already listening` / `EADDRINUSE`         | 端口冲突                                | `quiet-core-bot gateway --force`（强制杀死监听者）或换端口                                                         |
 | `Gateway start blocked: set gateway.mode=local`                        | 配置为 remote 模式或 local 模式戳记缺失 | 配置 `gateway.mode="local"`                                                                                        |
 | `unauthorized` / 1008                                                  | 客户端与网关认证不匹配                  | 检查 token/password；`AUTH_TOKEN_MISMATCH` 可能缓存设备 token 重试；`AUTH_SCOPE_MISMATCH` 需重新配对而非轮换 token |
 | Fly `App is not listening on expected address`                         | 网关绑定 `127.0.0.1`                    | `fly.toml` 的 processes 加 `--bind lan`                                                                            |
@@ -4393,7 +4393,7 @@ openclaw logs --no-tail      # 最近日志
 
 - 发起：`/pair qr` 或 `/pair`（TUI/CLI），或设备端 App 扫码/输入 setup code。
 - 审批：`/pair approve`（在已认证渠道如 Telegram 中执行），对应 RPC `device.pair.approve` / `node.pair.approve`。
-- 状态：`openclaw devices list`、`openclaw nodes list`。
+- 状态：`quiet-core-bot devices list`、`quiet-core-bot nodes list`。
 - 令牌漂移修复：`AUTH_TOKEN_MISMATCH` 时客户端可能用缓存设备 token 重试一次；仍失败按 Token drift recovery checklist（`/cli/devices#token-drift-recovery-checklist`）处理，必要时 `device.token.rotate` / `device.token.revoke`。
 - 配对错误会故意暂停重连循环，直到人工修复认证/配对状态（iOS）。
 
@@ -4409,12 +4409,12 @@ openclaw logs --no-tail      # 最近日志
 
 #### 8.5.6 服务守护（生产可靠性）
 
-| 平台                    | 安装/管理命令                                                                                                                                         |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| macOS（launchd）        | `openclaw gateway install` / `openclaw gateway restart` / `openclaw gateway stop`（`--disable` 持久抑制自启）；LaunchAgent 标签 `ai.openclaw.gateway` |
-| Linux（systemd user）   | `openclaw gateway install` → `systemctl --user enable --now openclaw-gateway.service`；`sudo loginctl enable-linger <user>` 持久化                    |
-| Linux（system service） | 安装到 `/etc/systemd/system/openclaw-gateway.service`，`sudo systemctl enable --now`；设 `OPENCLAW_SERVICE_REPAIR_POLICY=external`                    |
-| Windows（schtasks）     | `openclaw gateway install`；计划任务名 `OpenClaw Gateway`；权限不足时回退到 Startup 文件夹启动器                                                      |
+| 平台                    | 安装/管理命令                                                                                                                                                           |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| macOS（launchd）        | `quiet-core-bot gateway install` / `quiet-core-bot gateway restart` / `quiet-core-bot gateway stop`（`--disable` 持久抑制自启）；LaunchAgent 标签 `ai.openclaw.gateway` |
+| Linux（systemd user）   | `quiet-core-bot gateway install` → `systemctl --user enable --now openclaw-gateway.service`；`sudo loginctl enable-linger <user>` 持久化                                |
+| Linux（system service） | 安装到 `/etc/systemd/system/openclaw-gateway.service`，`sudo systemctl enable --now`；设 `OPENCLAW_SERVICE_REPAIR_POLICY=external`                                      |
+| Windows（schtasks）     | `quiet-core-bot gateway install`；计划任务名 `Quiet Core bot Gateway`；权限不足时回退到 Startup 文件夹启动器                                                            |
 
 #### 8.5.7 热重载模式
 
@@ -4516,7 +4516,7 @@ Gateway 同端口提供 OpenAI 兼容 HTTP API（`GET /v1/models`、`GET /v1/mod
 | `running` | 守护进程运行中（含 `pid`） |
 | `stopped` | 守护进程已停止             |
 
-> `openclaw gateway status` / `openclaw daemon status` 读取此状态。`restart-health.ts` 在 restart 后轮询健康。
+> `quiet-core-bot gateway status` / `openclaw daemon status` 读取此状态。`restart-health.ts` 在 restart 后轮询健康。
 
 ---
 
@@ -4539,18 +4539,18 @@ Gateway 同端口提供 OpenAI 兼容 HTTP API（`GET /v1/models`、`GET /v1/mod
 
 #### 8.8.2 运行时调试开关
 
-| 环境变量                                        | 用途                                                 | 源码                                 |
-| ----------------------------------------------- | ---------------------------------------------------- | ------------------------------------ |
-| `OPENCLAW_GATEWAY_STARTUP_TRACE=1`              | 输出 Gateway 启动阶段耗时 trace                      | `src/gateway/server.ts` 第 11 行     |
-| `OPENCLAW_SKIP_CHANNELS=1`                      | Gateway 开发模式跳过渠道连接                         | `package.json` scripts `gateway:dev` |
-| `OPENCLAW_AUTH_STORE_READONLY=1`                | secrets audit 时强制只读 auth store                  | `src/entry.ts` 第 81-83 行           |
-| `OPENCLAW_DISABLE_CLI_STARTUP_HELP_FAST_PATH=1` | 禁用 CLI 启动帮助快路径                              | `src/entry.ts` 第 222 行             |
-| `OPENCLAW_LOAD_SHELL_ENV=1`                     | 从登录 shell profile 导入缺失环境变量                | `.env.example` 第 42 行              |
-| `OPENCLAW_SERVICE_REPAIR_POLICY=external`       | 标记系统级服务拥有生命周期，doctor 不干预            | `docs/cli/doctor.md`                 |
-| `OPENCLAW_STATE_DIR`                            | 覆盖状态库目录（默认 `~/.openclaw`）                 | `.env.example` 第 28 行              |
-| `OPENCLAW_CONFIG_PATH`                          | 覆盖配置文件路径（默认 `~/.openclaw/openclaw.json`） | `.env.example` 第 29 行              |
-| `OPENCLAW_AUTH_PROFILE_SECRET_DIR`              | auth profile 加密密钥目录（Docker 部署）             | `.env.example` 第 33 行              |
-| `OPENCLAW_INCLUDE_ROOTS`                        | `$include` 允许的额外根目录列表                      | `.env.example` 第 39 行              |
+| 环境变量                                        | 用途                                                             | 源码                                 |
+| ----------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------ |
+| `OPENCLAW_GATEWAY_STARTUP_TRACE=1`              | 输出 Gateway 启动阶段耗时 trace                                  | `src/gateway/server.ts` 第 11 行     |
+| `OPENCLAW_SKIP_CHANNELS=1`                      | Gateway 开发模式跳过渠道连接                                     | `package.json` scripts `gateway:dev` |
+| `OPENCLAW_AUTH_STORE_READONLY=1`                | secrets audit 时强制只读 auth store                              | `src/entry.ts` 第 81-83 行           |
+| `OPENCLAW_DISABLE_CLI_STARTUP_HELP_FAST_PATH=1` | 禁用 CLI 启动帮助快路径                                          | `src/entry.ts` 第 222 行             |
+| `OPENCLAW_LOAD_SHELL_ENV=1`                     | 从登录 shell profile 导入缺失环境变量                            | `.env.example` 第 42 行              |
+| `OPENCLAW_SERVICE_REPAIR_POLICY=external`       | 标记系统级服务拥有生命周期，doctor 不干预                        | `docs/cli/doctor.md`                 |
+| `OPENCLAW_STATE_DIR`                            | 覆盖状态库目录（默认 `~/.quiet-core-bot`）                       | `.env.example` 第 28 行              |
+| `OPENCLAW_CONFIG_PATH`                          | 覆盖配置文件路径（默认 `~/.quiet-core-bot/quiet-core-bot.json`） | `.env.example` 第 29 行              |
+| `OPENCLAW_AUTH_PROFILE_SECRET_DIR`              | auth profile 加密密钥目录（Docker 部署）                         | `.env.example` 第 33 行              |
+| `OPENCLAW_INCLUDE_ROOTS`                        | `$include` 允许的额外根目录列表                                  | `.env.example` 第 39 行              |
 
 #### 8.8.3 Gateway 热重载模式（补充）
 
@@ -4591,14 +4591,14 @@ Gateway 同端口提供 OpenAI 兼容 HTTP API（`GET /v1/models`、`GET /v1/mod
 
 ```
 LLM request failed: the local egress proxy http://127.0.0.1:18888 is not reachable.
-Start it with: openclaw proxy start --host 127.0.0.1 --port 18888
+Start it with: quiet-core-bot proxy start --host 127.0.0.1 --port 18888
 ```
 
 **不会误报**的依据：真正的远端网络故障不会产生 loopback 拒绝；而当代理在监听、只是上游不通时，代理会返回 HTTP 错误（实测 `curl -x http://127.0.0.1:18888 http://127.0.0.1:11435/` → `502`），该响应会按原样上报，不会触发代理提示。未启用托管代理或代理端点非 loopback 时，原"connection refused by the provider endpoint."文案保持不变。
 
 #### 8.8.6 独立发行版与 provider 归属头
 
-- **独立发行版守卫**：`OPENCLAW_INDEPENDENT_BUILD` 未设置即视为开启（只有 `0`/`false`/`off`/`no` 才关闭）。开启时 `openclaw update`、`update repair`、`update finalize`、`update wizard` 以及 `update.run` 网关 RPC、doctor 前置更新提示全部被拒绝，只读的 `openclaw update status` 保持可用。实现：`src/config/independent-build-guard.ts`（`isIndependentBuild` / `assertUpstreamUpdateAllowed` / `formatIndependentBuildUpdateMessage`），守卫下沉在 `src/infra/update-runner.ts`，因此 CLI、RPC、doctor 三条入口一致。
+- **独立发行版守卫**：`OPENCLAW_INDEPENDENT_BUILD` 未设置即视为开启（只有 `0`/`false`/`off`/`no` 才关闭）。开启时 `quiet-core-bot update`、`update repair`、`update finalize`、`update wizard` 以及 `update.run` 网关 RPC、doctor 前置更新提示全部被拒绝，只读的 `quiet-core-bot update status` 保持可用。实现：`src/config/independent-build-guard.ts`（`isIndependentBuild` / `assertUpstreamUpdateAllowed` / `formatIndependentBuildUpdateMessage`），守卫下沉在 `src/infra/update-runner.ts`，因此 CLI、RPC、doctor 三条入口一致。
 - **provider 归属头（attribution）为 opt-in**：默认关闭，只有把 `OPENCLAW_PROVIDER_ATTRIBUTION` 设为真值才发头；且仅对**内置 canonical 端点表**内的 provider、并命中已验证原生端点时才生效（OpenRouter：`HTTP-Referer`/`X-OpenRouter-Title`/`X-OpenRouter-Categories`；NVIDIA NIM：`X-BILLING-INVOKE-ORIGIN`；OpenAI/xAI：`originator`/`version`/`User-Agent`）。自定义代理 baseUrl 与无 provider manifest 的端点不发头。实现：`src/agents/provider-attribution.ts`。
 
 ---
@@ -4668,7 +4668,7 @@ Start it with: openclaw proxy start --host 127.0.0.1 --port 18888
 | `OPENCLAW_LIVE_ANDROID_NODE` / `OPENCLAW_ANDROID_GATEWAY_URL` / `OPENCLAW_ANDROID_GATEWAY_TOKEN` / `OPENCLAW_ANDROID_GATEWAY_PASSWORD` / `OPENCLAW_ANDROID_NODE_ID` / `OPENCLAW_ANDROID_NODE_NAME` | Android 节点 live 测试连接参数                                     | `src/gateway/android-node.capabilities.live.test.ts`                                                                                                                         |
 | `OPENCLAW_SKIP_GMAIL_WATCHER`                                                                                                                                                                      | 测试期跳过 Gmail watcher                                           | `src/agents/bash-tools.exec-gateway-approval.e2e.test.ts:31`                                                                                                                 |
 
-> 命名空间提示（来自 `src/infra/dotenv.ts:176-187`）：工作区 `.env` 对以下前缀**默认 fail-closed 拒绝**——`OPENCLAW_`、`OPENCLAW_DISABLE_`、`OPENCLAW_SKIP_`、`OPENCLAW_UPDATE_`、`OPENCLAW_CLAWHUB_`，以及后缀 `_API_HOST`、`_BASE_URL`、`_HOMESERVER`。新增 `OPENCLAW_*` 变量时需意识到工作区 `.env` 不会加载它们，只能走全局 `~/.openclaw/.env` 或进程 env。
+> 命名空间提示（来自 `src/infra/dotenv.ts:176-187`）：工作区 `.env` 对以下前缀**默认 fail-closed 拒绝**——`OPENCLAW_`、`OPENCLAW_DISABLE_`、`OPENCLAW_SKIP_`、`OPENCLAW_UPDATE_`、`OPENCLAW_CLAWHUB_`，以及后缀 `_API_HOST`、`_BASE_URL`、`_HOMESERVER`。新增 `OPENCLAW_*` 变量时需意识到工作区 `.env` 不会加载它们，只能走全局 `~/.quiet-core-bot/.env` 或进程 env。
 
 ### 8.10 补遗：工作区 .env 安全黑名单
 
@@ -4680,9 +4680,9 @@ Start it with: openclaw proxy start --host 127.0.0.1 --port 18888
 - ClawHub：`CLAWHUB_AUTH_TOKEN`、`CLAWHUB_TOKEN`、`CLAWHUB_URL`、`CLAWHUB_CONFIG_PATH`
 - 渠道主机类后缀：`_API_HOST`、`_BASE_URL`、`_HOMESERVER`
 
-**补充到第 8.1 节**：新增"工作区 `.env` 安全模型"小节，说明：可信顺序为 `~/.openclaw/.env`（全局）> `./.env`（工作区，受限）；工作区 `.env` 仅用于非敏感业务变量，敏感/路径/代理变量被显式拒绝并记录。
+**补充到第 8.1 节**：新增"工作区 `.env` 安全模型"小节，说明：可信顺序为 `~/.quiet-core-bot/.env`（全局）> `./.env`（工作区，受限）；工作区 `.env` 仅用于非敏感业务变量，敏感/路径/代理变量被显式拒绝并记录。
 
-### 8.11 补遗：openclaw.json 配置 schema 索引
+### 8.11 补遗：quiet-core-bot.json 配置 schema 索引
 
 文档第 6.1 节仅列出 `agents/channels/gateway/auth/bindings/plugins` 等高层 key，第 8.5.7 节提到 `gateway.reload.mode`，但缺少完整的「配置 key → 类型 → 默认值 → 重载行为（hot/restart/none）」参考表。实际 schema 分布在：
 
@@ -4691,7 +4691,7 @@ Start it with: openclaw proxy start --host 127.0.0.1 --port 18888
 - `src/config/schema.ts`（`ConfigSchemaReloadKind = "restart" | "hot" | "none"`，`ConfigSchemaReloadMetadata`）
 - `src/config/schema.help.ts`、`schema.hints.ts`、`schema.labels.ts`、`schema.tags.ts`（UI 提示/标签元数据）
 
-**补充到第 8 章**：新增"8.1.7 `openclaw.json` 配置 schema 索引"小节，列出顶层 key（`agents`、`channels`、`gateway`、`bindings`、`plugins`、`hooks`、`memory`、`talk`、`cron`、`approvals`、`sandbox`、`logging`、`push`、`webSearch`、`tts`、`mcp`、`proxy`、`tools`、`meta`）→ 对应 zod schema 文件 → 重载行为。重载行为分类（来自 `ConfigSchemaReloadKind`）：
+**补充到第 8 章**：新增"8.1.7 `quiet-core-bot.json` 配置 schema 索引"小节，列出顶层 key（`agents`、`channels`、`gateway`、`bindings`、`plugins`、`hooks`、`memory`、`talk`、`cron`、`approvals`、`sandbox`、`logging`、`push`、`webSearch`、`tts`、`mcp`、`proxy`、`tools`、`meta`）→ 对应 zod schema 文件 → 重载行为。重载行为分类（来自 `ConfigSchemaReloadKind`）：
 
 - `hot`：热安全变更（如部分渠道参数），运行进程原子交换内存快照
 - `restart`：需重启网关（如 `gateway.port`、`gateway.bind`）
@@ -4717,7 +4717,7 @@ Start it with: openclaw proxy start --host 127.0.0.1 --port 18888
 
 ### 9.1 二次开发切入点
 
-OpenClaw 的扩展性几乎完全通过 **Plugin SDK**（`openclaw/plugin-sdk/*` 子路径导出）实现。官方明确：绝大多数新功能不应修改核心，而应以第三方插件形式发布到 [ClawHub](https://clawhub.ai)。`CONTRIBUTING.md` 指出"Most features are not accepted and should be third party plugins instead using our plugin SDK"。下表列出常见扩展场景及其切入点。
+Quiet Core bot 的扩展性几乎完全通过 **Plugin SDK**（`openclaw/plugin-sdk/*` 子路径导出）实现。官方明确：绝大多数新功能不应修改核心，而应以第三方插件形式发布到 [ClawHub](https://clawhub.ai)。`CONTRIBUTING.md` 指出"Most features are not accepted and should be third party plugins instead using our plugin SDK"。下表列出常见扩展场景及其切入点。
 
 | 扩展场景                                               | 扩展位置 / 契约                                                             | 入口 API / SDK 子路径                                                                                  | 最小示例骨架      |
 | ------------------------------------------------------ | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ----------------- |
@@ -4756,7 +4756,7 @@ import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
 export default definePluginEntry({
   id: "my-plugin",
   name: "My Plugin",
-  description: "Adds a custom tool to OpenClaw",
+  description: "Adds a custom tool to Quiet Core bot",
   register(api) {
     api.registerTool({
       name: "my_tool",
@@ -4835,8 +4835,8 @@ flowchart LR
    - 扩展单测：`pnpm test:extension <my-channel>` 或 `pnpm test -- extensions/my-channel/`；`pnpm test:extension --list` 查看合法 extension id。
    - 共享 surface 变更：`pnpm test:contracts`（channels + plugins）。
    - 更广运行时行为：`pnpm test:extensions`、`pnpm test:channels` 或 `pnpm test`。
-7. **本地验证**：`pnpm check`（typecheck/lint/guard，不含 Vitest）+ `pnpm test`。用 `openclaw plugins inspect my-channel --runtime --json` 检查已加载运行时；如有 CLI 命令则执行证明（如 `openclaw demo-plugin ping`）。
-8. **发布**：`clawhub package publish your-org/your-channel --dry-run` 预校验，再正式 `clawhub package publish your-org/your-channel`；用户通过 `openclaw plugins install clawhub:your-channel` 安装。
+7. **本地验证**：`pnpm check`（typecheck/lint/guard，不含 Vitest）+ `pnpm test`。用 `quiet-core-bot plugins inspect my-channel --runtime --json` 检查已加载运行时；如有 CLI 命令则执行证明（如 `openclaw demo-plugin ping`）。
+8. **发布**：`clawhub package publish your-org/your-channel --dry-run` 预校验，再正式 `clawhub package publish your-org/your-channel`；用户通过 `quiet-core-bot plugins install clawhub:your-channel` 安装。
 
 #### 9.2.1 内置插件额外要求
 
@@ -4968,13 +4968,13 @@ Live 测试需要真实凭据，通过环境变量门控（未设置则跳过）
 | `OPENCLAW_TEST_CHANGED_BROAD=1`                                      | `test:changed` broad fallback                                                                                 |
 | `OPENCLAW_SKIP_CHANNELS=1`                                           | 启动时跳过 channel 加载（gateway 开发）                                                                       |
 
-#### 9.4.4 `openclaw doctor` 调试
+#### 9.4.4 `quiet-core-bot doctor` 调试
 
-`openclaw doctor`（见 `docs/cli/doctor.md`、`docs/gateway/doctor.md`）是运行时自检命令，诊断安装、Gateway、channel、provider、secrets、sandbox 等健康状态并给出修复建议。相关 SDK 子路径：`openclaw/plugin-sdk/runtime-doctor`、`runtime-env`、`health`、`diagnostic-runtime`。
+`quiet-core-bot doctor`（见 `docs/cli/doctor.md`、`docs/gateway/doctor.md`）是运行时自检命令，诊断安装、Gateway、channel、provider、secrets、sandbox 等健康状态并给出修复建议。相关 SDK 子路径：`openclaw/plugin-sdk/runtime-doctor`、`runtime-env`、`health`、`diagnostic-runtime`。
 
 #### 9.4.5 `--verbose` 日志与诊断
 
-- `openclaw --verbose`：开启详细日志。
+- `quiet-core-bot --verbose`：开启详细日志。
 - 诊断标志：`docs/diagnostics/flags.md`、`docs/gateway/diagnostics.md`。
 - 日志体系：`openclaw/plugin-sdk/logging-core`、`runtime-logger`；底层日志库 `tslog`。
 - 可观测性扩展：`extensions/diagnostics-otel`（OpenTelemetry）、`extensions/diagnostics-prometheus`（Prometheus）。
@@ -4982,7 +4982,7 @@ Live 测试需要真实凭据，通过环境变量门控（未设置则跳过）
 
 #### 9.4.6 TUI 调试
 
-- `pnpm tui` / `openclaw tui`：启动终端 UI（基于 `@earendil-works/pi-tui`）。
+- `pnpm tui` / `quiet-core-bot tui`：启动终端 UI（基于 `@earendil-works/pi-tui`）。
 - `pnpm tui:dev`：开发模式（`OPENCLAW_PROFILE=dev`）。
 - PTY 测试 watch：`pnpm tui:pty:test:watch`（all/fake/local 三种模式，`scripts/dev/tui-pty-test-watch.ts`）。
 
@@ -5017,32 +5017,32 @@ pnpm test:docker:timings <summary.json>          # 排名慢 lane
 
 ## 附录 A：关键术语表
 
-| 术语       | 英文/全称              | 释义                                                                                                                                                                             |
-| ---------- | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ACP        | Agent Client Protocol  | Agent 客户端协议，OpenClaw 与外部 agent 运行时（claude-cli/codex/gemini-cli 等）通信的开放协议，由 `@agentclientprotocol/sdk` 实现，SDK 子路径 `openclaw/plugin-sdk/acp-runtime` |
-| ACPX       | ACP eXtension          | OpenClaw 内置的 ACP 扩展插件（`extensions/acpx`），提供 ACP bind / harness 增强能力                                                                                              |
-| ClawHub    | —                      | OpenClaw 社区插件与技能市场（clawhub.ai），插件通过 `openclaw plugins install clawhub:<pkg>` 安装、`clawhub package publish` 发布                                                |
-| Soul       | —                      | OpenClaw 助手的"灵魂"层，即系统提示词、人格、长期记忆的统称（见 `docs/concepts/soul.md`、`docs/concepts/system-prompt.md`）                                                      |
-| Agent Run  | —                      | 一次 agent 执行回合（turn），从模型调用到工具执行再到产出结果的完整循环（见 `docs/concepts/agent-loop.md`）                                                                      |
-| Session    | —                      | 会话，一个 channel 与 agent 之间的连续对话上下文单元，含 transcript、绑定、状态（见 `docs/concepts/session.md`）                                                                 |
-| Channel    | —                      | 渠道，OpenClaw 连接的外部消息平台（Discord/Telegram/Slack/WhatsApp/Feishu 等），通过 channel 插件接入                                                                            |
-| Provider   | —                      | 模型/媒体/搜索/fetch/speech/realtime 提供方插件，向 OpenClaw 提供 LLM 或其他能力后端                                                                                             |
-| Plugin     | —                      | 插件，OpenClaw 的扩展单元，可新增 channel/provider/tool/hook/memory 等能力而不改核心                                                                                             |
-| Skill      | —                      | 技能，声明式能力包（含 `SKILL.md`），可发布到 ClawHub；与 tool 相比更偏高层工作流                                                                                                |
-| Canvas     | —                      | 画布，OpenClaw 实时渲染的可控 UI 面（a2ui），在 macOS/iOS/Android/WebChat 上呈现                                                                                                 |
-| Node       | —                      | 节点，连接 Gateway 的 WS 客户端，含 macOS/iOS/Android 原生 App 节点，提供 voice/camera/canvas 等能力                                                                             |
-| Gateway    | —                      | 网关，OpenClaw 的控制平面 HTTP/WS 服务器（默认端口 18789），编排 channel、agent、provider、session                                                                               |
-| DM Pairing | Direct Message Pairing | 直接消息配对，将一个外部账号与 OpenClaw 助手一对一绑定的流程（见 `docs/channels/pairing.md`）                                                                                    |
-| Sandbox    | —                      | 沙箱，agent 工具执行的安全隔离环境（见 `docs/gateway/sandboxing.md`、`openclaw/plugin-sdk/sandbox`）                                                                             |
-| Onboarding | —                      | 引导配置流程，`openclaw onboard` 引导用户完成 provider/channel/agent 初始设置                                                                                                    |
-| TUI        | Terminal UI            | 终端用户界面，`openclaw tui` 提供的终端交互面板（基于 `@earendil-works/pi-tui`）                                                                                                 |
-| WebChat    | —                      | Web 聊天界面，Control UI 内置的网页聊天，用于直接与助手对话测试                                                                                                                  |
+| 术语       | 英文/全称              | 释义                                                                                                                                                                                   |
+| ---------- | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ACP        | Agent Client Protocol  | Agent 客户端协议，Quiet Core bot 与外部 agent 运行时（claude-cli/codex/gemini-cli 等）通信的开放协议，由 `@agentclientprotocol/sdk` 实现，SDK 子路径 `openclaw/plugin-sdk/acp-runtime` |
+| ACPX       | ACP eXtension          | Quiet Core bot 内置的 ACP 扩展插件（`extensions/acpx`），提供 ACP bind / harness 增强能力                                                                                              |
+| ClawHub    | —                      | Quiet Core bot 社区插件与技能市场（clawhub.ai），插件通过 `quiet-core-bot plugins install clawhub:<pkg>` 安装、`clawhub package publish` 发布                                          |
+| Soul       | —                      | Quiet Core bot 助手的"灵魂"层，即系统提示词、人格、长期记忆的统称（见 `docs/concepts/soul.md`、`docs/concepts/system-prompt.md`）                                                      |
+| Agent Run  | —                      | 一次 agent 执行回合（turn），从模型调用到工具执行再到产出结果的完整循环（见 `docs/concepts/agent-loop.md`）                                                                            |
+| Session    | —                      | 会话，一个 channel 与 agent 之间的连续对话上下文单元，含 transcript、绑定、状态（见 `docs/concepts/session.md`）                                                                       |
+| Channel    | —                      | 渠道，Quiet Core bot 连接的外部消息平台（Discord/Telegram/Slack/WhatsApp/Feishu 等），通过 channel 插件接入                                                                            |
+| Provider   | —                      | 模型/媒体/搜索/fetch/speech/realtime 提供方插件，向 Quiet Core bot 提供 LLM 或其他能力后端                                                                                             |
+| Plugin     | —                      | 插件，Quiet Core bot 的扩展单元，可新增 channel/provider/tool/hook/memory 等能力而不改核心                                                                                             |
+| Skill      | —                      | 技能，声明式能力包（含 `SKILL.md`），可发布到 ClawHub；与 tool 相比更偏高层工作流                                                                                                      |
+| Canvas     | —                      | 画布，Quiet Core bot 实时渲染的可控 UI 面（a2ui），在 macOS/iOS/Android/WebChat 上呈现                                                                                                 |
+| Node       | —                      | 节点，连接 Gateway 的 WS 客户端，含 macOS/iOS/Android 原生 App 节点，提供 voice/camera/canvas 等能力                                                                                   |
+| Gateway    | —                      | 网关，Quiet Core bot 的控制平面 HTTP/WS 服务器（默认端口 18789），编排 channel、agent、provider、session                                                                               |
+| DM Pairing | Direct Message Pairing | 直接消息配对，将一个外部账号与 Quiet Core bot 助手一对一绑定的流程（见 `docs/channels/pairing.md`）                                                                                    |
+| Sandbox    | —                      | 沙箱，agent 工具执行的安全隔离环境（见 `docs/gateway/sandboxing.md`、`openclaw/plugin-sdk/sandbox`）                                                                                   |
+| Onboarding | —                      | 引导配置流程，`quiet-core-bot onboard` 引导用户完成 provider/channel/agent 初始设置                                                                                                    |
+| TUI        | Terminal UI            | 终端用户界面，`quiet-core-bot tui` 提供的终端交互面板（基于 `@earendil-works/pi-tui`）                                                                                                 |
+| WebChat    | —                      | Web 聊天界面，Control UI 内置的网页聊天，用于直接与助手对话测试                                                                                                                        |
 
 ## 附录 B：参考链接
 
 | 类别     | 名称                 | 链接                                     |
 | -------- | -------------------- | ---------------------------------------- |
-| 官方文档 | OpenClaw Docs        | <https://docs.openclaw.ai>               |
+| 官方文档 | Quiet Core bot Docs  | <https://docs.openclaw.ai>               |
 | 仓库     | GitHub               | <https://github.com/openclaw/openclaw>   |
 | 社区     | Discord              | <https://discord.gg/clawd>               |
 | 社区     | X/Twitter @openclaw  | <https://x.com/openclaw>                 |

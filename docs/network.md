@@ -7,12 +7,12 @@ read_when:
 title: "Network"
 ---
 
-This hub links the core docs for how OpenClaw connects, pairs, and secures
+This hub links the core docs for how Quiet Core bot connects, pairs, and secures
 devices across localhost, LAN, and tailnet.
 
 ## Core model
 
-Most operations flow through the Gateway (`openclaw gateway`), a single long-running process that owns channel connections and the WebSocket control plane.
+Most operations flow through the Gateway (`quiet-core-bot gateway`), a single long-running process that owns channel connections and the WebSocket control plane.
 
 - **Loopback first**: the Gateway WS defaults to `ws://127.0.0.1:18789`.
   Non-loopback binds require a valid gateway auth path: shared-secret
@@ -40,7 +40,7 @@ Local trust:
 
 - Direct local loopback connects can be auto-approved for pairing to keep
   same-host UX smooth.
-- OpenClaw also has a narrow backend/container-local self-connect path for
+- Quiet Core bot also has a narrow backend/container-local self-connect path for
   trusted shared-secret helper flows.
 - Tailnet and LAN clients, including same-host tailnet binds, still require
   explicit pairing approval.

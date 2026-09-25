@@ -1,14 +1,14 @@
 ---
 summary: "Place outbound and accept inbound voice calls via Twilio, Telnyx, or Plivo, with optional realtime voice and streaming transcription"
 read_when:
-  - You want to place an outbound voice call from OpenClaw
+  - You want to place an outbound voice call from Quiet Core bot
   - You are configuring or developing the voice-call plugin
   - You need realtime voice or streaming transcription on telephony
 title: "Voice call plugin"
 sidebarTitle: "Voice call"
 ---
 
-Voice calls for OpenClaw via a plugin. Supports outbound notifications,
+Voice calls for Quiet Core bot via a plugin. Supports outbound notifications,
 multi-turn conversations, full-duplex realtime voice, streaming
 transcription, and inbound calls with allowlist policies.
 
@@ -29,13 +29,13 @@ the Gateway, then restart the Gateway to load it.
     <Tabs>
       <Tab title="From npm">
         ```bash
-        openclaw plugins install @openclaw/voice-call
+        quiet-core-bot plugins install @openclaw/voice-call
         ```
       </Tab>
       <Tab title="From a local folder (dev)">
         ```bash
         PLUGIN_SRC=./path/to/local/voice-call-plugin
-        openclaw plugins install "$PLUGIN_SRC"
+        quiet-core-bot plugins install "$PLUGIN_SRC"
         cd "$PLUGIN_SRC" && pnpm install
         ```
       </Tab>
@@ -187,9 +187,9 @@ Voice-call credentials accept SecretRefs. `plugins.entries.voice-call.config.twi
   </Accordion>
   <Accordion title="Legacy config migrations">
     Older configs using `provider: "log"`, `twilio.from`, or legacy
-    `streaming.*` OpenAI keys are rewritten by `openclaw doctor --fix`.
+    `streaming.*` OpenAI keys are rewritten by `quiet-core-bot doctor --fix`.
     Runtime fallback still accepts the old voice-call keys for now, but
-    the rewrite path is `openclaw doctor --fix` and the compat shim is
+    the rewrite path is `quiet-core-bot doctor --fix` and the compat shim is
     temporary.
 
     Auto-migrated streaming keys:
@@ -228,7 +228,7 @@ Current runtime behaviour:
 - `realtime.provider` is optional. If unset, Voice Call uses the first registered realtime voice provider.
 - Bundled realtime voice providers: Google Gemini Live (`google`) and OpenAI (`openai`), registered by their provider plugins.
 - Provider-owned raw config lives under `realtime.providers.<providerId>`.
-- Voice Call exposes the shared `openclaw_agent_consult` realtime tool by default. The realtime model can call it when the caller asks for deeper reasoning, current information, or normal OpenClaw tools.
+- Voice Call exposes the shared `openclaw_agent_consult` realtime tool by default. The realtime model can call it when the caller asks for deeper reasoning, current information, or normal Quiet Core bot tools.
 - `realtime.consultPolicy` optionally adds guidance for when the realtime model should call `openclaw_agent_consult`.
 - `realtime.agentContext.enabled` is default-off. When enabled, Voice Call injects a bounded agent identity and selected workspace-file capsule into the realtime provider instructions at session setup.
 - `realtime.fastContext.enabled` is default-off. When enabled, Voice Call first searches indexed memory/session context for the consult question and returns those snippets to the realtime model within `realtime.fastContext.timeoutMs` before falling back to the full consult agent only if `realtime.fastContext.fallbackToConsult` is true.
@@ -256,10 +256,10 @@ Current runtime behaviour:
 ### Agent voice context
 
 Enable `realtime.agentContext` when the voice bridge should sound like the
-configured OpenClaw agent without paying a full agent-consult round trip on
+configured Quiet Core bot agent without paying a full agent-consult round trip on
 ordinary turns. The context capsule is added once when the realtime session is
 created, so it does not add per-turn latency. Calls to
-`openclaw_agent_consult` still run the full OpenClaw agent and should be used
+`openclaw_agent_consult` still run the full Quiet Core bot agent and should be used
 for tool work, current information, memory lookups, or workspace state.
 
 ```json5
@@ -470,7 +470,7 @@ the current Microsoft transport does not expose telephony PCM output.
 
 Behavior notes:
 
-- Legacy `tts.<provider>` keys inside plugin config (`openai`, `elevenlabs`, `microsoft`, `edge`) are repaired by `openclaw doctor --fix`; committed config should use `tts.providers.<provider>`.
+- Legacy `tts.<provider>` keys inside plugin config (`openai`, `elevenlabs`, `microsoft`, `edge`) are repaired by `quiet-core-bot doctor --fix`; committed config should use `tts.providers.<provider>`.
 - Core TTS is used when Twilio media streaming is enabled; otherwise calls fall back to provider-native voices.
 - If a Twilio media stream is already active, Voice Call does not fall back to TwiML `<Say>`. If telephony TTS is unavailable in that state, the playback request fails instead of mixing two playback paths.
 - When telephony TTS falls back to a secondary provider, Voice Call logs a warning with the provider chain (`from`, `to`, `attempts`) for debugging.
@@ -724,7 +724,7 @@ Example with a stable public host:
 ## CLI
 
 ```bash
-openclaw voicecall call --to "+15555550123" --message "Hello from OpenClaw"
+openclaw voicecall call --to "+15555550123" --message "Hello from Quiet Core bot"
 openclaw voicecall start --to "+15555550123"   # alias for call
 openclaw voicecall continue --call-id <id> --message "Any questions?"
 openclaw voicecall speak --call-id <id> --message "One moment"
@@ -855,7 +855,7 @@ Then inspect runtime state:
 ```bash
 openclaw voicecall status --call-id <id>
 openclaw voicecall tail
-openclaw logs --follow
+quiet-core-bot logs --follow
 ```
 
 Common causes:
@@ -874,7 +874,7 @@ your control.
 
 ### Signature verification fails
 
-Provider signatures are checked against the public URL OpenClaw reconstructs
+Provider signatures are checked against the public URL Quiet Core bot reconstructs
 from the incoming request. If signatures fail:
 
 - Confirm the provider webhook URL exactly matches `publicUrl`, including
@@ -909,7 +909,7 @@ pre-connect DTMF sequence. PIN-derived sequences include the Google Meet plugin'
 because Meet dial-in prompts can arrive late. Voice Call then redirects back to
 realtime handling before the intro greeting is requested.
 
-Use `openclaw logs --follow` for the live phase trace. A healthy Twilio Meet
+Use `quiet-core-bot logs --follow` for the live phase trace. A healthy Twilio Meet
 join logs this order:
 
 - Google Meet delegates the Twilio join to Voice Call.
@@ -932,7 +932,7 @@ For realtime Twilio calls, also verify:
 - A realtime provider plugin is loaded and registered.
 - `realtime.provider` is unset or names a registered provider.
 - The provider API key is available to the Gateway process.
-- `openclaw logs --follow` shows realtime TwiML served, the realtime bridge
+- `quiet-core-bot logs --follow` shows realtime TwiML served, the realtime bridge
   started, and the initial greeting queued.
 
 ## Related

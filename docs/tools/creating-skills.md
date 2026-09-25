@@ -1,7 +1,7 @@
 ---
 title: "Creating skills"
 sidebarTitle: "Creating skills"
-summary: "Build, test, and publish custom SKILL.md workspace skills for your OpenClaw agents."
+summary: "Build, test, and publish custom SKILL.md workspace skills for your Quiet Core bot agents."
 read_when:
   - You are creating a new custom skill
   - You need a quick starter workflow for SKILL.md-based skills
@@ -10,7 +10,7 @@ read_when:
 
 Skills teach the agent how and when to use tools. Each skill is a directory
 containing a `SKILL.md` file with YAML frontmatter and markdown instructions.
-OpenClaw loads skills from several roots in a defined [precedence order](/tools/skills#loading-order).
+Quiet Core bot loads skills from several roots in a defined [precedence order](/tools/skills#loading-order).
 
 ## Create your first skill
 
@@ -20,14 +20,14 @@ OpenClaw loads skills from several roots in a defined [precedence order](/tools/
     new skill:
 
     ```bash
-    mkdir -p ~/.openclaw/workspace/skills/hello-world
+    mkdir -p ~/.quiet-core-bot/workspace/skills/hello-world
     ```
 
     You can group skills in subfolders for organization — the skill is still
     named by the `SKILL.md` frontmatter, not the folder path:
 
     ```bash
-    mkdir -p ~/.openclaw/workspace/skills/personal/hello-world
+    mkdir -p ~/.quiet-core-bot/workspace/skills/personal/hello-world
     # skill name is still "hello-world", invoked as /hello-world
     ```
 
@@ -62,10 +62,10 @@ OpenClaw loads skills from several roots in a defined [precedence order](/tools/
 
   <Step title="Verify the skill loaded">
     ```bash
-    openclaw skills list
+    quiet-core-bot skills list
     ```
 
-    OpenClaw watches `SKILL.md` files under skills roots by default. If the
+    Quiet Core bot watches `SKILL.md` files under skills roots by default. If the
     watcher is disabled or you are continuing an existing session, start a new
     one so the agent receives the refreshed list:
 
@@ -74,7 +74,7 @@ OpenClaw loads skills from several roots in a defined [precedence order](/tools/
     /new
 
     # Or restart the gateway
-    openclaw gateway restart
+    quiet-core-bot gateway restart
     ```
 
   </Step>
@@ -143,7 +143,7 @@ metadata: { "openclaw": { "requires": { "bins": ["gemini"] }, "primaryEnv": "GEM
     | `requires.bins` | All binaries must exist on `PATH` |
     | `requires.anyBins` | At least one binary must exist on `PATH` |
     | `requires.env` | Each env var must exist in the process or config |
-    | `requires.config` | Each `openclaw.json` path must be truthy |
+    | `requires.config` | Each `quiet-core-bot.json` path must be truthy |
     | `os` | Platform filter: `["darwin"]`, `["linux"]`, `["win32"]` |
     | `always` | Set `true` to skip all gates and always include the skill |
 
@@ -151,7 +151,7 @@ metadata: { "openclaw": { "requires": { "bins": ["gemini"] }, "primaryEnv": "GEM
 
   </Accordion>
   <Accordion title="Environment and API keys">
-    Wire an API key to a skill entry in `openclaw.json`:
+    Wire an API key to a skill entry in `quiet-core-bot.json`:
 
     ```json5
     {
@@ -181,13 +181,13 @@ live, use [Skill Workshop](/tools/skill-workshop) proposals instead of writing
 
 ```bash
 # Propose a brand-new skill
-openclaw skills workshop propose-create \
+quiet-core-bot skills workshop propose-create \
   --name "hello-world" \
   --description "A simple skill that prints a greeting." \
   --proposal ./PROPOSAL.md
 
 # Propose an update to an existing skill
-openclaw skills workshop propose-update hello-world \
+quiet-core-bot skills workshop propose-update hello-world \
   --proposal ./PROPOSAL.md \
   --description "Updated greeting skill"
 ```
@@ -195,7 +195,7 @@ openclaw skills workshop propose-update hello-world \
 Use `--proposal-dir` when the proposal includes support files:
 
 ```bash
-openclaw skills workshop propose-create \
+quiet-core-bot skills workshop propose-create \
   --name "hello-world" \
   --description "A simple skill that prints a greeting." \
   --proposal-dir ./hello-world-proposal/
@@ -207,8 +207,8 @@ The directory must contain `PROPOSAL.md`. Support files can go in `assets/`,
 After review:
 
 ```bash
-openclaw skills workshop inspect <proposal-id>
-openclaw skills workshop apply <proposal-id>
+quiet-core-bot skills workshop inspect <proposal-id>
+quiet-core-bot skills workshop apply <proposal-id>
 ```
 
 See [Skill Workshop](/tools/skill-workshop) for the full proposal lifecycle.
@@ -225,7 +225,7 @@ See [Skill Workshop](/tools/skill-workshop) for the full proposal lifecycle.
     metadata:
 
     ```bash
-    openclaw skills install @openclaw/clawhub-publish
+    quiet-core-bot skills install @openclaw/clawhub-publish
     ```
 
   </Step>

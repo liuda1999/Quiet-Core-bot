@@ -47,12 +47,12 @@ Done:
 - Added generic plugin WebSocket upgrade dispatch for plugin-owned HTTP routes.
 - Replaced Canvas-specific gateway host URL and node capability auth with generic hosted plugin surface and node capability helpers.
 - Added plugin-owned hosted media resolvers so Canvas document URLs resolve through the Canvas plugin instead of core importing Canvas document internals.
-- Added `api.registerNodeCliFeature(...)` so Canvas can declare `openclaw nodes canvas` as a plugin-owned node feature without manually spelling the parent command path.
+- Added `api.registerNodeCliFeature(...)` so Canvas can declare `quiet-core-bot nodes canvas` as a plugin-owned node feature without manually spelling the parent command path.
 - Removed production `src/**` imports of `extensions/canvas/runtime-api.js`.
 - Moved the A2UI bundle source from `apps/shared/OpenClawKit/Tools/CanvasA2UI` to `extensions/canvas/src/host/a2ui-app`.
 - Moved A2UI build/copy implementation under `extensions/canvas/scripts` and replaced root build wiring with generic bundled-plugin asset hooks.
 - Removed the runtime legacy top-level `canvasHost` config alias.
-- Kept the Canvas doctor migration so `openclaw doctor --fix` rewrites old `canvasHost` configs into `plugins.entries.canvas.config.host`.
+- Kept the Canvas doctor migration so `quiet-core-bot doctor --fix` rewrites old `canvasHost` configs into `plugins.entries.canvas.config.host`.
 - Removed old-agent Canvas protocol compatibility behind gateway protocol v4. Native clients and gateways now use only `pluginSurfaceUrls.canvas` plus `node.pluginSurface.refresh`; the deprecated `canvasHostUrl`, `canvasCapability`, and `node.canvas.capability.refresh` path is intentionally unsupported in this experimental refactor.
 - Updated generated plugin inventory to include Canvas.
 - Added plugin reference docs at `docs/plugins/reference/canvas.md`.
@@ -105,7 +105,7 @@ Before calling the refactor complete:
 - `rg "canvas.present|canvas.snapshot|canvas.a2ui" src/gateway` finds no hardcoded allowlist defaults outside generic plugin policy tests.
 - `rg "extensions/canvas/runtime-api" src --glob '!**/*.test.ts'` is empty.
 - `rg "canvas-documents" src` is empty.
-- `rg "registerNodesCanvasCommands|nodes-canvas" src` is empty; the Canvas plugin registers `openclaw nodes canvas` through nested plugin CLI metadata.
+- `rg "registerNodesCanvasCommands|nodes-canvas" src` is empty; the Canvas plugin registers `quiet-core-bot nodes canvas` through nested plugin CLI metadata.
 - `rg "createCanvasHostHandler|handleA2uiHttpRequest" src/gateway` returns no gateway runtime ownership.
 - `rg "apps/shared/OpenClawKit/Tools/CanvasA2UI|canvas-a2ui-copy|extensions/canvas/src/host/a2ui" scripts .github package.json` finds only compatibility wrappers or plugin-owned paths.
 - `pnpm plugins:inventory:check` passes.

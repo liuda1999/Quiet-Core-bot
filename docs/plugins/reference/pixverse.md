@@ -1,5 +1,5 @@
 ---
-summary: "OpenClaw PixVerse video generation provider plugin."
+summary: "Quiet Core bot PixVerse video generation provider plugin."
 read_when:
   - You are installing, configuring, or auditing the pixverse plugin
 title: "PixVerse plugin"
@@ -7,7 +7,7 @@ title: "PixVerse plugin"
 
 # PixVerse plugin
 
-OpenClaw PixVerse video generation provider plugin.
+Quiet Core bot PixVerse video generation provider plugin.
 
 ## Distribution
 

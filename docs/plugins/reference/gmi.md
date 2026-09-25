@@ -1,5 +1,5 @@
 ---
-summary: "OpenClaw GMI Cloud provider plugin."
+summary: "Quiet Core bot GMI Cloud provider plugin."
 read_when:
   - You are installing, configuring, or auditing the gmi plugin
 title: "Gmi plugin"
@@ -7,7 +7,7 @@ title: "Gmi plugin"
 
 # Gmi plugin
 
-OpenClaw GMI Cloud provider plugin.
+Quiet Core bot GMI Cloud provider plugin.
 
 ## Distribution
 

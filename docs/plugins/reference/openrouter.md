@@ -1,5 +1,5 @@
 ---
-summary: "Adds OpenRouter model provider support to OpenClaw."
+summary: "Adds OpenRouter model provider support to Quiet Core bot."
 read_when:
   - You are installing, configuring, or auditing the openrouter plugin
 title: "OpenRouter plugin"
@@ -7,12 +7,12 @@ title: "OpenRouter plugin"
 
 # OpenRouter plugin
 
-Adds OpenRouter model provider support to OpenClaw.
+Adds OpenRouter model provider support to Quiet Core bot.
 
 ## Distribution
 
 - Package: `@openclaw/openrouter-provider`
-- Install route: included in OpenClaw
+- Install route: included in Quiet Core bot
 
 ## Surface
 

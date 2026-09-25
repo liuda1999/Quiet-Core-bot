@@ -1,12 +1,12 @@
 ---
 summary: "Zalo Personal plugin: QR login + messaging via native zca-js (plugin install + channel config + tool)"
 read_when:
-  - You want Zalo Personal (unofficial) support in OpenClaw
+  - You want Zalo Personal (unofficial) support in Quiet Core bot
   - You are configuring or developing the zalouser plugin
 title: "Zalo personal plugin"
 ---
 
-Zalo Personal support for OpenClaw via a plugin, using native `zca-js` to automate a normal Zalo user account.
+Zalo Personal support for Quiet Core bot via a plugin, using native `zca-js` to automate a normal Zalo user account.
 
 <Warning>
 Unofficial automation may lead to account suspension or ban. Use at your own risk.
@@ -29,7 +29,7 @@ No external `zca`/`openzca` CLI binary is required.
 ### Option A: install from npm
 
 ```bash
-openclaw plugins install @openclaw/zalouser
+quiet-core-bot plugins install @openclaw/zalouser
 ```
 
 Use the bare package to follow the current official release tag. Pin an exact
@@ -41,7 +41,7 @@ Restart the Gateway afterwards.
 
 ```bash
 PLUGIN_SRC=./path/to/local/zalouser-plugin
-openclaw plugins install "$PLUGIN_SRC"
+quiet-core-bot plugins install "$PLUGIN_SRC"
 cd "$PLUGIN_SRC" && pnpm install
 ```
 
@@ -65,10 +65,10 @@ Channel config lives under `channels.zalouser` (not `plugins.entries.*`):
 ## CLI
 
 ```bash
-openclaw channels login --channel zalouser
-openclaw channels logout --channel zalouser
-openclaw channels status --probe
-openclaw message send --channel zalouser --target <threadId> --message "Hello from OpenClaw"
+quiet-core-bot channels login --channel zalouser
+quiet-core-bot channels logout --channel zalouser
+quiet-core-bot channels status --probe
+quiet-core-bot message send --channel zalouser --target <threadId> --message "Hello from Quiet Core bot"
 openclaw directory peers list --channel zalouser --query "name"
 ```
 

@@ -1,7 +1,7 @@
 ---
-summary: "Use StepFun models with OpenClaw"
+summary: "Use StepFun models with Quiet Core bot"
 read_when:
-  - You want StepFun models in OpenClaw
+  - You want StepFun models in Quiet Core bot
   - You need StepFun setup guidance
 title: "StepFun"
 ---
@@ -20,8 +20,8 @@ Standard and Step Plan are **separate providers** with different endpoints and m
 Install the official plugin, then restart Gateway:
 
 ```bash
-openclaw plugins install @openclaw/stepfun-provider
-openclaw gateway restart
+quiet-core-bot plugins install @openclaw/stepfun-provider
+quiet-core-bot gateway restart
 ```
 
 ## Region and endpoint overview
@@ -65,24 +65,24 @@ Choose your provider surface and follow the setup steps.
       </Step>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard --auth-choice stepfun-standard-api-key-intl
+        quiet-core-bot onboard --auth-choice stepfun-standard-api-key-intl
         ```
 
         Or for the China endpoint:
 
         ```bash
-        openclaw onboard --auth-choice stepfun-standard-api-key-cn
+        quiet-core-bot onboard --auth-choice stepfun-standard-api-key-cn
         ```
       </Step>
       <Step title="Non-interactive alternative">
         ```bash
-        openclaw onboard --auth-choice stepfun-standard-api-key-intl \
+        quiet-core-bot onboard --auth-choice stepfun-standard-api-key-intl \
           --stepfun-api-key "$STEPFUN_API_KEY"
         ```
       </Step>
       <Step title="Verify models are available">
         ```bash
-        openclaw models list --provider stepfun
+        quiet-core-bot models list --provider stepfun
         ```
       </Step>
     </Steps>
@@ -105,24 +105,24 @@ Choose your provider surface and follow the setup steps.
       </Step>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard --auth-choice stepfun-plan-api-key-intl
+        quiet-core-bot onboard --auth-choice stepfun-plan-api-key-intl
         ```
 
         Or for the China endpoint:
 
         ```bash
-        openclaw onboard --auth-choice stepfun-plan-api-key-cn
+        quiet-core-bot onboard --auth-choice stepfun-plan-api-key-cn
         ```
       </Step>
       <Step title="Non-interactive alternative">
         ```bash
-        openclaw onboard --auth-choice stepfun-plan-api-key-intl \
+        quiet-core-bot onboard --auth-choice stepfun-plan-api-key-intl \
           --stepfun-api-key "$STEPFUN_API_KEY"
         ```
       </Step>
       <Step title="Verify models are available">
         ```bash
-        openclaw models list --provider stepfun-plan
+        quiet-core-bot models list --provider stepfun-plan
         ```
       </Step>
     </Steps>
@@ -211,7 +211,7 @@ Choose your provider surface and follow the setup steps.
     - The provider is an official external package; install it before setup.
     - `step-3.5-flash-2603` is currently exposed only on `stepfun-plan`.
     - A single auth flow writes region-matched profiles for both `stepfun` and `stepfun-plan`, so both surfaces can be discovered together.
-    - Use `openclaw models list` and `openclaw models set <provider/model>` to inspect or switch models.
+    - Use `quiet-core-bot models list` and `quiet-core-bot models set <provider/model>` to inspect or switch models.
 
   </Accordion>
 </AccordionGroup>

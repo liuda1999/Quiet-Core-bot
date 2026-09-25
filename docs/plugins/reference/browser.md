@@ -12,7 +12,7 @@ Adds agent-callable tools.
 ## Distribution
 
 - Package: `@openclaw/browser-plugin`
-- Install route: included in OpenClaw
+- Install route: included in Quiet Core bot
 
 ## Surface
 

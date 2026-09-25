@@ -8,7 +8,7 @@ title: "Android app"
 ---
 
 <Note>
-The official Android app is available on [Google Play](https://play.google.com/store/apps/details?id=ai.openclaw.app&hl=en_IN). It is a companion node and requires a running OpenClaw Gateway. The source code is also available in the [OpenClaw repository](https://github.com/openclaw/openclaw) under `apps/android`; see [apps/android/README.md](https://github.com/openclaw/openclaw/blob/main/apps/android/README.md) for build instructions.
+The official Android app is available on [Google Play](https://play.google.com/store/apps/details?id=ai.openclaw.app&hl=en_IN). It is a companion node and requires a running Quiet Core bot Gateway. The source code is also available in the [Quiet Core bot repository](https://github.com/openclaw/openclaw) under `apps/android`; see [apps/android/README.md](https://github.com/openclaw/openclaw/blob/main/apps/android/README.md) for build instructions.
 </Note>
 
 ## Support snapshot
@@ -48,7 +48,7 @@ For Tailscale or public hosts, Android requires a secure endpoint:
 ### 1) Start the Gateway
 
 ```bash
-openclaw gateway --port 18789 --verbose
+quiet-core-bot gateway --port 18789 --verbose
 ```
 
 Confirm in logs you see something like:
@@ -58,7 +58,7 @@ Confirm in logs you see something like:
 For remote Android access over Tailscale, prefer Serve/Funnel instead of a raw tailnet bind:
 
 ```bash
-openclaw gateway --tailscale serve
+quiet-core-bot gateway --tailscale serve
 ```
 
 This gives Android a secure `wss://` / `https://` endpoint. A plain `gateway.bind: "tailnet"` setup is not enough for first-time remote Android pairing unless you also terminate TLS separately.
@@ -76,7 +76,7 @@ More debugging notes: [Bonjour](/gateway/bonjour).
 If you also configured a wide-area discovery domain, compare against:
 
 ```bash
-openclaw gateway discover --json
+quiet-core-bot gateway discover --json
 ```
 
 That shows `local.` plus the configured wide-area domain in one pass and uses the resolved
@@ -123,9 +123,9 @@ compatible but does not count as a durable last-seen update.
 On the gateway machine:
 
 ```bash
-openclaw devices list
-openclaw devices approve <requestId>
-openclaw devices reject <requestId>
+quiet-core-bot devices list
+quiet-core-bot devices approve <requestId>
+quiet-core-bot devices reject <requestId>
 ```
 
 Pairing details: [Pairing](/channels/pairing).
@@ -154,13 +154,13 @@ public-key change still require manual approval.
 - Via nodes status:
 
   ```bash
-  openclaw nodes status
+  quiet-core-bot nodes status
   ```
 
 - Via Gateway:
 
   ```bash
-  openclaw gateway call node.list --params "{}"
+  quiet-core-bot gateway call node.list --params "{}"
   ```
 
 ### 6) Chat + history
@@ -187,12 +187,12 @@ If you want the node to show real HTML/CSS/JS that the agent can edit on disk, p
 Nodes load canvas from the Gateway HTTP server (same port as `gateway.port`, default `18789`).
 </Note>
 
-1. Create `~/.openclaw/workspace/canvas/index.html` on the gateway host.
+1. Create `~/.quiet-core-bot/workspace/canvas/index.html` on the gateway host.
 
 2. Navigate the node to it (LAN):
 
 ```bash
-openclaw nodes invoke --node "<Android Node>" --command canvas.navigate --params '{"url":"http://<gateway-hostname>.local:18789/__openclaw__/canvas/"}'
+quiet-core-bot nodes invoke --node "<Android Node>" --command canvas.navigate --params '{"url":"http://<gateway-hostname>.local:18789/__openclaw__/canvas/"}'
 ```
 
 Tailnet (optional): if both devices are on Tailscale, use a MagicDNS name or tailnet IP instead of `.local`, e.g. `http://<gateway-magicdns>:18789/__openclaw__/canvas/`.
@@ -232,9 +232,9 @@ See [Camera node](/nodes/camera) for parameters and CLI helpers.
 
 ## Assistant entrypoints
 
-Android supports launching OpenClaw from the system assistant trigger (Google
+Android supports launching Quiet Core bot from the system assistant trigger (Google
 Assistant). When configured, holding the home button or saying "Hey Google, ask
-OpenClaw..." opens the app and hands the prompt into the chat composer.
+Quiet Core bot..." opens the app and hands the prompt into the chat composer.
 
 This uses Android **App Actions** metadata declared in the app manifest. No
 extra configuration is needed on the gateway side -- the assistant intent is
@@ -242,7 +242,7 @@ handled entirely by the Android app and forwarded as a normal chat message.
 
 <Note>
 App Actions availability depends on the device, Google Play Services version,
-and whether the user has set OpenClaw as the default assistant app.
+and whether the user has set Quiet Core bot as the default assistant app.
 </Note>
 
 ## Notification forwarding

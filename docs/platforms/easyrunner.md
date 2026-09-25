@@ -1,20 +1,20 @@
 ---
-summary: "Run the OpenClaw Gateway on EasyRunner with Podman and Caddy"
+summary: "Run the Quiet Core bot Gateway on EasyRunner with Podman and Caddy"
 read_when:
-  - Deploying OpenClaw on EasyRunner
+  - Deploying Quiet Core bot on EasyRunner
   - Running the Gateway behind EasyRunner's Caddy proxy
   - Choosing persistent volumes and auth for a hosted Gateway
 title: "EasyRunner"
 ---
 
-EasyRunner can host the OpenClaw Gateway as a small containerized app behind its
+EasyRunner can host the Quiet Core bot Gateway as a small containerized app behind its
 Caddy proxy. This guide assumes an EasyRunner host that runs Podman-compatible
 Compose apps and exposes HTTPS through Caddy.
 
 ## Before you begin
 
 - An EasyRunner server with a domain routed to it.
-- A built or published OpenClaw container image.
+- A built or published Quiet Core bot container image.
 - A persistent config volume for `/home/node/.openclaw`.
 - A persistent workspace volume for `/workspace`.
 - A strong Gateway token or password.
@@ -36,7 +36,7 @@ services:
       OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN}
       OPENCLAW_HOME: /home/node
       OPENCLAW_STATE_DIR: /home/node/.openclaw
-      OPENCLAW_CONFIG_PATH: /home/node/.openclaw/openclaw.json
+      OPENCLAW_CONFIG_PATH: /home/node/.openclaw/quiet-core-bot.json
       OPENCLAW_WORKSPACE_DIR: /workspace
     volumes:
       - openclaw-config:/home/node/.openclaw
@@ -55,7 +55,7 @@ Replace `openclaw.example.com` with your Gateway hostname. Store
 `OPENCLAW_GATEWAY_TOKEN` in EasyRunner's secret/environment manager instead of
 committing it to the app definition.
 
-## Configure OpenClaw
+## Configure Quiet Core bot
 
 Inside the persistent config volume, keep the Gateway reachable only through
 the proxy and require auth:
@@ -81,8 +81,8 @@ the exact proxy path rather than disabling auth checks globally. See
 From your workstation:
 
 ```bash
-openclaw gateway probe --url https://openclaw.example.com --token <token>
-openclaw gateway status --url https://openclaw.example.com --token <token>
+quiet-core-bot gateway probe --url https://openclaw.example.com --token <token>
+quiet-core-bot gateway status --url https://openclaw.example.com --token <token>
 ```
 
 From the EasyRunner host, check the app logs for a listening Gateway and no
@@ -90,10 +90,10 @@ startup SecretRef, plugin, or channel auth failures.
 
 ## Updates and backups
 
-- Pull or build the new OpenClaw image, then redeploy the EasyRunner app.
+- Pull or build the new Quiet Core bot image, then redeploy the EasyRunner app.
 - Back up the `openclaw-config` volume before updates.
 - Back up `openclaw-workspace` if agents write durable project data there.
-- Run `openclaw doctor` after major updates to catch config migrations and
+- Run `quiet-core-bot doctor` after major updates to catch config migrations and
   service warnings.
 
 ## Troubleshooting

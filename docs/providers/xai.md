@@ -1,64 +1,64 @@
 ---
-summary: "Use xAI Grok models in OpenClaw"
+summary: "Use xAI Grok models in Quiet Core bot"
 read_when:
-  - You want to use Grok models in OpenClaw
+  - You want to use Grok models in Quiet Core bot
   - You are configuring xAI auth or model ids
 title: "xAI"
 ---
 
-OpenClaw ships a bundled `xai` provider plugin for Grok models. For most
+Quiet Core bot ships a bundled `xai` provider plugin for Grok models. For most
 users, the recommended path is Grok OAuth with an eligible SuperGrok or X Premium
-subscription. OpenClaw stays local-first: the Gateway, config, routing, and
+subscription. Quiet Core bot stays local-first: the Gateway, config, routing, and
 tools run on your machine, while Grok model requests authenticate through xAI
 and are sent to xAI's API.
 
 OAuth does not require an xAI API key, and it does not require the Grok Build
-app. xAI may still show Grok Build on the consent screen because OpenClaw uses
+app. xAI may still show Grok Build on the consent screen because Quiet Core bot uses
 xAI's shared OAuth client.
 
 ## Choose your setup path
 
-Use the path that matches your OpenClaw install state:
+Use the path that matches your Quiet Core bot install state:
 
 <Steps>
-  <Step title="New OpenClaw install">
+  <Step title="New Quiet Core bot install">
     Run onboarding with daemon install when you are setting up a new local
     Gateway, then choose the xAI/Grok OAuth option in the model/auth step:
 
     ```bash
-    openclaw onboard --install-daemon
+    quiet-core-bot onboard --install-daemon
     ```
 
     On a VPS or over SSH, use device-code during onboarding:
 
     ```bash
-    openclaw onboard --install-daemon --auth-choice xai-device-code
+    quiet-core-bot onboard --install-daemon --auth-choice xai-device-code
     ```
 
-    OAuth does not require an xAI API key. OpenClaw does not require the Grok
+    OAuth does not require an xAI API key. Quiet Core bot does not require the Grok
     Build app. xAI may still label the consent app as Grok Build because
-    OpenClaw uses xAI's shared OAuth client.
+    Quiet Core bot uses xAI's shared OAuth client.
 
   </Step>
-  <Step title="Existing OpenClaw install">
-    If OpenClaw is already configured, sign in to xAI only. Do not rerun full
+  <Step title="Existing Quiet Core bot install">
+    If Quiet Core bot is already configured, sign in to xAI only. Do not rerun full
     onboarding or reinstall the daemon just to connect Grok:
 
     ```bash
-    openclaw models auth login --provider xai --method oauth
+    quiet-core-bot models auth login --provider xai --method oauth
     ```
 
     Use the device-code flow instead when the Gateway runs over SSH, Docker, or
     a VPS and a localhost browser callback is awkward:
 
     ```bash
-    openclaw models auth login --provider xai --device-code
+    quiet-core-bot models auth login --provider xai --device-code
     ```
 
     To make Grok the default model after signing in, apply it separately:
 
     ```bash
-    openclaw models set xai/grok-4.3
+    quiet-core-bot models set xai/grok-4.3
     ```
 
     Rerun full onboarding only if you intentionally want to change Gateway,
@@ -70,7 +70,7 @@ Use the path that matches your OpenClaw install state:
     require key-backed provider config:
 
     ```bash
-    openclaw models auth login --provider xai --method api-key
+    quiet-core-bot models auth login --provider xai --method api-key
     export XAI_API_KEY=xai-...
     ```
 
@@ -85,10 +85,10 @@ Use the path that matches your OpenClaw install state:
 </Steps>
 
 <Note>
-OpenClaw uses the xAI Responses API as the bundled xAI transport. The same
-credential from `openclaw models auth login --provider xai --method oauth`,
-`openclaw models auth login --provider xai --device-code`, or
-`openclaw models auth login --provider xai --method api-key` can also power first-class
+Quiet Core bot uses the xAI Responses API as the bundled xAI transport. The same
+credential from `quiet-core-bot models auth login --provider xai --method oauth`,
+`quiet-core-bot models auth login --provider xai --device-code`, or
+`quiet-core-bot models auth login --provider xai --method api-key` can also power first-class
 `web_search`, `x_search`, remote `code_execution`, and xAI image/video generation.
 Speech and transcription currently require `XAI_API_KEY` or provider config.
 Grok-backed `web_search` prefers xAI OAuth and falls back to `XAI_API_KEY` or
@@ -103,28 +103,28 @@ and, by default, `x_search` through an operator xAI Responses proxy.
 ## OAuth troubleshooting
 
 - If browser OAuth cannot reach `127.0.0.1:56121`, use
-  `openclaw models auth login --provider xai --device-code`.
+  `quiet-core-bot models auth login --provider xai --device-code`.
 - If sign-in succeeds but Grok is not the default model, run
-  `openclaw models set xai/grok-4.3`.
+  `quiet-core-bot models set xai/grok-4.3`.
 - To inspect saved xAI auth profiles, run:
 
   ```bash
-  openclaw models auth list --provider xai
-  openclaw models status
+  quiet-core-bot models auth list --provider xai
+  quiet-core-bot models status
   ```
 
 - xAI decides which accounts can receive OAuth API tokens. If an account is not
   eligible, try the API-key path or check the subscription on xAI's side.
 
 <Tip>
-Use `xai-device-code` when signing in from SSH, Docker, or a VPS. OpenClaw
+Use `xai-device-code` when signing in from SSH, Docker, or a VPS. Quiet Core bot
 prints an xAI URL and short code; finish sign-in in any local browser while the
 remote process polls xAI for the completed token exchange.
 </Tip>
 
 ## Built-in catalog
 
-OpenClaw includes the current xAI chat models out of the box, ordered newest
+Quiet Core bot includes the current xAI chat models out of the box, ordered newest
 first in model pickers:
 
 | Family         | Model ids                                                                |
@@ -135,7 +135,7 @@ first in model pickers:
 
 The plugin still forward-resolves older Grok 3, Grok 4, Grok 4 Fast, Grok 4.1
 Fast, and Grok Code slugs for existing configs. Official Grok Code Fast aliases
-normalize to `grok-build-0.1`; OpenClaw no longer shows the other retired
+normalize to `grok-build-0.1`; Quiet Core bot no longer shows the other retired
 upstream slugs in the selectable catalog.
 
 <Tip>
@@ -143,33 +143,33 @@ Use `grok-4.3` for general chat and `grok-build-0.1` for build/coding-focused
 workloads unless you explicitly need a Grok 4.20 beta alias.
 </Tip>
 
-## OpenClaw feature coverage
+## Quiet Core bot feature coverage
 
-The bundled plugin maps xAI's current public API surface onto OpenClaw's shared
+The bundled plugin maps xAI's current public API surface onto Quiet Core bot's shared
 provider and tool contracts. Capabilities that don't fit the shared contract
 (for example streaming TTS and realtime voice) are not exposed - see the table
 below.
 
-| xAI capability             | OpenClaw surface                          | Status                                                              |
-| -------------------------- | ----------------------------------------- | ------------------------------------------------------------------- |
-| Chat / Responses           | `xai/<model>` model provider              | Yes                                                                 |
-| Server-side web search     | `web_search` provider `grok`              | Yes                                                                 |
-| Server-side X search       | `x_search` tool                           | Yes                                                                 |
-| Server-side code execution | `code_execution` tool                     | Yes                                                                 |
-| Images                     | `image_generate`                          | Yes                                                                 |
-| Videos                     | `video_generate`                          | Yes                                                                 |
-| Batch text-to-speech       | `messages.tts.provider: "xai"` / `tts`    | Yes                                                                 |
-| Streaming TTS              | -                                         | Not exposed; OpenClaw's TTS contract returns complete audio buffers |
-| Batch speech-to-text       | `tools.media.audio` / media understanding | Yes                                                                 |
-| Streaming speech-to-text   | Voice Call `streaming.provider: "xai"`    | Yes                                                                 |
-| Realtime voice             | -                                         | Not exposed yet; different session/WebSocket contract               |
-| Files / batches            | Generic model API compatibility only      | Not a first-class OpenClaw tool                                     |
+| xAI capability             | Quiet Core bot surface                    | Status                                                                    |
+| -------------------------- | ----------------------------------------- | ------------------------------------------------------------------------- |
+| Chat / Responses           | `xai/<model>` model provider              | Yes                                                                       |
+| Server-side web search     | `web_search` provider `grok`              | Yes                                                                       |
+| Server-side X search       | `x_search` tool                           | Yes                                                                       |
+| Server-side code execution | `code_execution` tool                     | Yes                                                                       |
+| Images                     | `image_generate`                          | Yes                                                                       |
+| Videos                     | `video_generate`                          | Yes                                                                       |
+| Batch text-to-speech       | `messages.tts.provider: "xai"` / `tts`    | Yes                                                                       |
+| Streaming TTS              | -                                         | Not exposed; Quiet Core bot's TTS contract returns complete audio buffers |
+| Batch speech-to-text       | `tools.media.audio` / media understanding | Yes                                                                       |
+| Streaming speech-to-text   | Voice Call `streaming.provider: "xai"`    | Yes                                                                       |
+| Realtime voice             | -                                         | Not exposed yet; different session/WebSocket contract                     |
+| Files / batches            | Generic model API compatibility only      | Not a first-class Quiet Core bot tool                                     |
 
 <Note>
-OpenClaw uses xAI's REST image/video/TTS/STT APIs for media generation,
+Quiet Core bot uses xAI's REST image/video/TTS/STT APIs for media generation,
 speech, and batch transcription, xAI's streaming STT WebSocket for live
 voice-call transcription, and the Responses API for model, search, and
-code-execution tools. Features that need different OpenClaw contracts, such as
+code-execution tools. Features that need different Quiet Core bot contracts, such as
 Realtime voice sessions, are documented here as upstream capabilities rather
 than hidden plugin behavior.
 </Note>
@@ -208,8 +208,8 @@ Legacy aliases still normalize to the canonical bundled ids:
     to `XAI_API_KEY` or a plugin web-search key:
 
     ```bash
-    openclaw models auth login --provider xai --method oauth
-    openclaw config set tools.web.search.provider grok
+    quiet-core-bot models auth login --provider xai --method oauth
+    quiet-core-bot config set tools.web.search.provider grok
     ```
 
   </Accordion>
@@ -233,7 +233,7 @@ Legacy aliases still normalize to the canonical bundled ids:
     <Warning>
     Local video buffers are not accepted. Use remote `http(s)` URLs for
     video edit/extend inputs. Image-to-video accepts local image buffers because
-    OpenClaw can encode those as data URLs for xAI.
+    Quiet Core bot can encode those as data URLs for xAI.
     </Warning>
 
     To use xAI as the default video provider:
@@ -271,7 +271,7 @@ Legacy aliases still normalize to the canonical bundled ids:
     - Default operation timeout: 600 seconds unless `image_generate.timeoutMs`
       or `agents.defaults.imageGenerationModel.timeoutMs` is set
 
-    OpenClaw asks xAI for `b64_json` image responses so generated media can be
+    Quiet Core bot asks xAI for `b64_json` image responses so generated media can be
     stored and delivered through the normal channel attachment path. Local
     reference images are converted to data URLs; remote `http(s)` references are
     passed through.
@@ -292,7 +292,7 @@ Legacy aliases still normalize to the canonical bundled ids:
 
     <Note>
     xAI also documents `quality`, `mask`, `user`, and additional native ratios
-    such as `1:2`, `2:1`, `9:20`, and `20:9`. OpenClaw forwards only the
+    such as `1:2`, `2:1`, `9:20`, and `20:9`. Quiet Core bot forwards only the
     shared cross-provider image controls today; unsupported native-only knobs
     are intentionally not exposed through `image_generate`.
     </Note>
@@ -328,21 +328,21 @@ Legacy aliases still normalize to the canonical bundled ids:
     ```
 
     <Note>
-    OpenClaw uses xAI's batch `/v1/tts` endpoint. xAI also offers streaming TTS
-    over WebSocket, but the OpenClaw speech provider contract currently expects
+    Quiet Core bot uses xAI's batch `/v1/tts` endpoint. xAI also offers streaming TTS
+    over WebSocket, but the Quiet Core bot speech provider contract currently expects
     a complete audio buffer before reply delivery.
     </Note>
 
   </Accordion>
 
   <Accordion title="Speech-to-text">
-    The bundled `xai` plugin registers batch speech-to-text through OpenClaw's
+    The bundled `xai` plugin registers batch speech-to-text through Quiet Core bot's
     media-understanding transcription surface.
 
     - Default model: `grok-stt`
     - Endpoint: xAI REST `/v1/stt`
     - Input path: multipart audio file upload
-    - Supported by OpenClaw wherever inbound audio transcription uses
+    - Supported by Quiet Core bot wherever inbound audio transcription uses
       `tools.media.audio`, including Discord voice-channel segments and
       channel audio attachments
 
@@ -367,7 +367,7 @@ Legacy aliases still normalize to the canonical bundled ids:
     ```
 
     Language can be supplied through the shared audio media config or per-call
-    transcription request. Prompt hints are accepted by the shared OpenClaw
+    transcription request. Prompt hints are accepted by the shared Quiet Core bot
     surface, but the xAI REST STT integration only forwards file, model, and
     language because those map cleanly to the current public xAI endpoint.
 
@@ -424,7 +424,7 @@ Legacy aliases still normalize to the canonical bundled ids:
   </Accordion>
 
   <Accordion title="x_search configuration">
-    The bundled xAI plugin exposes `x_search` as an OpenClaw tool for searching
+    The bundled xAI plugin exposes `x_search` as an Quiet Core bot tool for searching
     X (formerly Twitter) content via Grok.
 
     Config path: `plugins.entries.xai.config.xSearch`
@@ -461,7 +461,7 @@ Legacy aliases still normalize to the canonical bundled ids:
   </Accordion>
 
   <Accordion title="Code execution configuration">
-    The bundled xAI plugin exposes `code_execution` as an OpenClaw tool for
+    The bundled xAI plugin exposes `code_execution` as an Quiet Core bot tool for
     remote code execution in xAI's sandbox environment.
 
     Config path: `plugins.entries.xai.config.codeExecution`
@@ -502,13 +502,13 @@ Legacy aliases still normalize to the canonical bundled ids:
       OAuth uses a local callback on `127.0.0.1:56121`; for remote hosts, use
       `xai-device-code` unless you want to forward that port before opening the
       sign-in URL. xAI decides which accounts can receive OAuth API tokens, and
-      the consent page may show Grok Build even though OpenClaw does not require
+      the consent page may show Grok Build even though Quiet Core bot does not require
       the Grok Build app.
-    - OpenClaw does not currently expose the xAI multi-agent model family. xAI
+    - Quiet Core bot does not currently expose the xAI multi-agent model family. xAI
       serves these models through the Responses API, but they do not accept the
-      client-side or custom tools used by OpenClaw's shared agent loop. See the
+      client-side or custom tools used by Quiet Core bot's shared agent loop. See the
       [xAI multi-agent limitations](https://docs.x.ai/developers/model-capabilities/text/multi-agent#limitations).
-    - xAI Realtime voice is not registered as an OpenClaw provider yet. It
+    - xAI Realtime voice is not registered as an Quiet Core bot provider yet. It
       needs a different bidirectional voice session contract than batch STT or
       streaming transcription.
     - xAI image `quality`, image `mask`, and extra native-only aspect ratios are
@@ -517,7 +517,7 @@ Legacy aliases still normalize to the canonical bundled ids:
   </Accordion>
 
   <Accordion title="Advanced notes">
-    - OpenClaw applies xAI-specific tool-schema and tool-call compatibility fixes
+    - Quiet Core bot applies xAI-specific tool-schema and tool-call compatibility fixes
       automatically on the shared runner path.
     - Native xAI requests default `tool_stream: true`. Set
       `agents.defaults.models["xai/<model>"].params.tool_stream` to `false` to
@@ -528,8 +528,8 @@ Legacy aliases still normalize to the canonical bundled ids:
       other reasoning-capable xAI models still request
       `include: ["reasoning.encrypted_content"]` so prior encrypted reasoning
       can be replayed on follow-up turns.
-    - `web_search`, `x_search`, and `code_execution` are exposed as OpenClaw
-      tools. OpenClaw enables the specific xAI built-in it needs inside each tool
+    - `web_search`, `x_search`, and `code_execution` are exposed as Quiet Core bot
+      tools. Quiet Core bot enables the specific xAI built-in it needs inside each tool
       request instead of attaching all native tools to every chat turn.
     - Grok `web_search` reads `plugins.entries.xai.config.webSearch.baseUrl`.
       `x_search` reads `plugins.entries.xai.config.xSearch.baseUrl`, then
@@ -555,7 +555,7 @@ OPENCLAW_LIVE_TEST=1 OPENCLAW_LIVE_TEST_QUIET=1 OPENCLAW_LIVE_IMAGE_GENERATION_P
 The provider-specific live file synthesizes normal TTS, telephony-friendly PCM
 TTS, transcribes audio through xAI batch STT, streams the same PCM through xAI
 realtime STT, generates text-to-image output, and edits a reference image. The
-shared image live file verifies the same xAI provider through OpenClaw's
+shared image live file verifies the same xAI provider through Quiet Core bot's
 runtime selection, fallback, normalization, and media attachment path.
 
 ## Related

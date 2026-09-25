@@ -11,7 +11,7 @@ sidebarTitle: "Install overrides"
 Plugin install overrides let maintainers test setup-time plugin installs against
 a specific npm package or local npm-pack tarball. They are for E2E and package
 validation only. Normal users should install plugins with
-[`openclaw plugins install`](/cli/plugins).
+[`quiet-core-bot plugins install`](/cli/plugins).
 
 <Warning>
 Overrides execute plugin code from the source you provide. Use them only in an
@@ -40,7 +40,7 @@ Relative `npm-pack:` paths resolve from the current working directory.
 ## Behavior
 
 When a setup-time flow asks to install a plugin whose id appears in the map,
-OpenClaw uses the override source instead of the catalog, bundled, or default
+Quiet Core bot uses the override source instead of the catalog, bundled, or default
 npm source. This applies to onboarding and other flows that use the shared
 setup-time plugin installer.
 
@@ -48,16 +48,16 @@ Overrides still enforce the expected plugin id. A tarball mapped to `codex`
 must install a plugin whose manifest id is `codex`.
 
 Overrides do not inherit official trusted-source status. Even when the catalog
-entry normally represents an OpenClaw-owned package, an override is treated as
+entry normally represents an Quiet Core bot-owned package, an override is treated as
 operator-supplied test input.
 
 Workspace `.env` files cannot enable install overrides. Set these variables in
-the trusted shell, CI job, or remote test command that launches OpenClaw.
+the trusted shell, CI job, or remote test command that launches Quiet Core bot.
 
 ## Package E2E
 
 Use an isolated state directory so package installs and install records do not
-touch your normal OpenClaw state:
+touch your normal Quiet Core bot state:
 
 ```bash
 npm pack extensions/codex --pack-destination /tmp
@@ -65,7 +65,7 @@ npm pack extensions/codex --pack-destination /tmp
 OPENCLAW_STATE_DIR="$(mktemp -d)" \
 OPENCLAW_ALLOW_PLUGIN_INSTALL_OVERRIDES=1 \
 OPENCLAW_PLUGIN_INSTALL_OVERRIDES='{"codex":"npm-pack:/tmp/openclaw-codex-2026.5.8.tgz"}' \
-pnpm openclaw onboard --mode local
+pnpm quiet-core-bot onboard --mode local
 ```
 
 Verify the installed package under the state directory:

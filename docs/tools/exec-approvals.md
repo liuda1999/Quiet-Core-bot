@@ -29,11 +29,11 @@ prompting even if session or config defaults request `ask: "on-miss"`.
 
 ## Inspecting the effective policy
 
-| Command                                                          | What it shows                                                                          |
-| ---------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `openclaw approvals get` / `--gateway` / `--node <id\|name\|ip>` | Requested policy, host policy sources, and the effective result.                       |
-| `openclaw exec-policy show`                                      | Local-machine merged view.                                                             |
-| `openclaw exec-policy set` / `preset`                            | Synchronize the local requested policy with the local host approvals file in one step. |
+| Command                                                                | What it shows                                                                          |
+| ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| `quiet-core-bot approvals get` / `--gateway` / `--node <id\|name\|ip>` | Requested policy, host policy sources, and the effective result.                       |
+| `quiet-core-bot exec-policy show`                                      | Local-machine merged view.                                                             |
+| `quiet-core-bot exec-policy set` / `preset`                            | Synchronize the local requested policy with the local host approvals file in one step. |
 
 When a local scope requests `host=node`, `exec-policy show` reports that
 scope as node-managed at runtime instead of pretending the local
@@ -45,9 +45,9 @@ resolves through the **ask fallback** (default: `deny`). Hosts without a UI can
 decide it directly from the CLI instead of waiting:
 
 ```bash
-openclaw approvals pending
-openclaw approvals approve <id>     # or: --always
-openclaw approvals deny <id>
+quiet-core-bot approvals pending
+quiet-core-bot approvals approve <id>     # or: --always
+quiet-core-bot approvals deny <id>
 ```
 
 `openclaw agent` reports the block and these commands when a turn ends while a
@@ -74,7 +74,7 @@ Exec approvals are enforced locally on the execution host:
 - Exec approvals reduce accidental execution risk, but are **not** a per-user auth boundary or filesystem read-only policy.
 - Once approved, a command can mutate files according to the selected host or sandbox filesystem permissions.
 - Approved node-host runs bind canonical execution context: canonical cwd, exact argv, env binding when present, and pinned executable path when applicable.
-- For shell scripts and direct interpreter/runtime file invocations, OpenClaw also tries to bind one concrete local file operand. If that bound file changes after approval but before execution, the run is denied instead of executing drifted content.
+- For shell scripts and direct interpreter/runtime file invocations, Quiet Core bot also tries to bind one concrete local file operand. If that bound file changes after approval but before execution, the run is denied instead of executing drifted content.
 - File binding is intentionally best-effort, **not** a complete semantic model of every interpreter/runtime loader path. If approval mode cannot identify exactly one concrete local file to bind, it refuses to mint an approval-backed run instead of pretending full coverage.
 
 ### macOS split
@@ -86,17 +86,17 @@ Exec approvals are enforced locally on the execution host:
 
 Approvals live in a local JSON file on the execution host. When
 `OPENCLAW_STATE_DIR` is set, the file follows that state directory;
-otherwise it uses the default OpenClaw state directory:
+otherwise it uses the default Quiet Core bot state directory:
 
 ```text
 $OPENCLAW_STATE_DIR/exec-approvals.json
 # otherwise
-~/.openclaw/exec-approvals.json
+~/.quiet-core-bot/exec-approvals.json
 ```
 
 The default approval socket follows the same root:
 `$OPENCLAW_STATE_DIR/exec-approvals.sock`, or
-`~/.openclaw/exec-approvals.sock` when the variable is unset.
+`~/.quiet-core-bot/exec-approvals.sock` when the variable is unset.
 
 Example schema:
 
@@ -104,7 +104,7 @@ Example schema:
 {
   "version": 1,
   "socket": {
-    "path": "~/.openclaw/exec-approvals.sock",
+    "path": "~/.quiet-core-bot/exec-approvals.sock",
     "token": "base64url-token"
   },
   "defaults": {
@@ -145,7 +145,7 @@ Values are:
 - `deny` - block host exec.
 - `allowlist` - run only allowlisted commands without asking.
 - `ask` - use allowlist policy and ask on misses.
-- `auto` - use allowlist policy, run deterministic matches directly, and send approval misses through OpenClaw's native auto reviewer before falling back to a human approval route. The manual pending approval is registered **before** the reviewer runs, so an approval miss is always resolvable by a human even while the reviewer is still working: if the reviewer allows, that early pending is closed automatically; if the reviewer asks or times out, OpenClaw keeps the already-registered pending as the manual fallback and logs `[exec-approval] reviewer deferred or timed out (id=…); manual pending already registered`. A reviewer error logs `[exec-approval] reviewer failed (id=…) …` and leaves the pending to expire on its own timeout, so `auto` never sits in a window with neither a reviewer decision nor a visible pending.
+- `auto` - use allowlist policy, run deterministic matches directly, and send approval misses through Quiet Core bot's native auto reviewer before falling back to a human approval route. The manual pending approval is registered **before** the reviewer runs, so an approval miss is always resolvable by a human even while the reviewer is still working: if the reviewer allows, that early pending is closed automatically; if the reviewer asks or times out, Quiet Core bot keeps the already-registered pending as the manual fallback and logs `[exec-approval] reviewer deferred or timed out (id=…); manual pending already registered`. A reviewer error logs `[exec-approval] reviewer failed (id=…) …` and leaves the pending to expire on its own timeout, so `auto` never sits in a window with neither a reviewer decision nor a visible pending.
 - `full` - run host exec without approval prompts.
 
 Legacy `tools.exec.security` / `tools.exec.ask` remain supported and still win
@@ -179,7 +179,7 @@ when set at the narrower session or agent scope.
 
 <ParamField path="askFallback" type='"deny" | "allowlist" | "full"'>
   Resolution when a prompt is required but no UI is reachable. If this
-  field is omitted, OpenClaw defaults to `deny`.
+  field is omitted, Quiet Core bot defaults to `deny`.
 
 - `deny` - block.
 - `allowlist` - allow only if allowlist matches.
@@ -190,7 +190,7 @@ when set at the narrower session or agent scope.
 ### `tools.exec.strictInlineEval`
 
 <ParamField path="strictInlineEval" type="boolean">
-  When `true`, OpenClaw treats inline code-eval forms as approval-only
+  When `true`, Quiet Core bot treats inline code-eval forms as approval-only
   even if the interpreter binary itself is allowlisted. Defense-in-depth
   for interpreter loaders that do not map cleanly to one stable file
   operand.
@@ -214,7 +214,7 @@ automatically.
 
 <ParamField path="commandHighlighting" type="boolean" default="false">
   Controls only presentation in exec approval prompts. When enabled,
-  OpenClaw may attach parser-derived command spans so Web approval
+  Quiet Core bot may attach parser-derived command spans so Web approval
   prompts can highlight command tokens. Set it to `true` to enable
   command text highlighting.
 </ParamField>
@@ -227,11 +227,11 @@ agent under `agents.list[].tools.exec.commandHighlighting`.
 ## YOLO mode (no-approval)
 
 If you want host exec to run without approval prompts, you must open
-**both** policy layers - requested exec policy in OpenClaw config
+**both** policy layers - requested exec policy in Quiet Core bot config
 (`tools.exec.*`) **and** host-local approvals policy in
 the execution host approvals file.
 
-OpenClaw defaults omitted `askFallback` to `deny`. Set host
+Quiet Core bot defaults omitted `askFallback` to `deny`. Set host
 `askFallback` to `full` explicitly when a no-UI approval prompt should
 fall back to allow.
 
@@ -246,22 +246,22 @@ fall back to allow.
 
 - `tools.exec.host=auto` chooses **where** exec runs: sandbox when available, otherwise gateway.
 - YOLO chooses **how** host exec is approved: `security=full` plus `ask=off`.
-- In YOLO mode, OpenClaw does **not** add a separate heuristic command-obfuscation approval gate or script-preflight rejection layer on top of the configured host exec policy.
+- In YOLO mode, Quiet Core bot does **not** add a separate heuristic command-obfuscation approval gate or script-preflight rejection layer on top of the configured host exec policy.
 - `auto` does not make gateway routing a free override from a sandboxed session. A per-call `host=node` request is allowed from `auto`; `host=gateway` is only allowed from `auto` when no sandbox runtime is active. For a stable non-auto default, set `tools.exec.host` or use `/exec host=...` explicitly.
 
 </Warning>
 
 CLI-backed providers that expose their own noninteractive permission mode
 can follow this policy. Claude CLI adds
-`--permission-mode bypassPermissions` when OpenClaw's effective exec
-policy is YOLO. For OpenClaw-managed Claude live sessions, OpenClaw's
+`--permission-mode bypassPermissions` when Quiet Core bot's effective exec
+policy is YOLO. For Quiet Core bot-managed Claude live sessions, Quiet Core bot's
 effective exec policy is authoritative over Claude's native permission mode:
 YOLO normalizes live launches to `--permission-mode bypassPermissions`, and
 restrictive effective exec policy normalizes live launches to
 `--permission-mode default`, even if raw Claude backend args specify another
 mode.
 
-If you want a more conservative setup, tighten OpenClaw exec policy back to
+If you want a more conservative setup, tighten Quiet Core bot exec policy back to
 `allowlist` / `on-miss` or `deny`.
 
 ### Persistent gateway-host "never prompt" setup
@@ -269,15 +269,15 @@ If you want a more conservative setup, tighten OpenClaw exec policy back to
 <Steps>
   <Step title="Set the requested config policy">
     ```bash
-    openclaw config set tools.exec.host gateway
-    openclaw config set tools.exec.security full
-    openclaw config set tools.exec.ask off
-    openclaw gateway restart
+    quiet-core-bot config set tools.exec.host gateway
+    quiet-core-bot config set tools.exec.security full
+    quiet-core-bot config set tools.exec.ask off
+    quiet-core-bot gateway restart
     ```
   </Step>
   <Step title="Match the host approvals file">
     ```bash
-    openclaw approvals set --stdin <<'EOF'
+    quiet-core-bot approvals set --stdin <<'EOF'
     {
       version: 1,
       defaults: {
@@ -294,7 +294,7 @@ If you want a more conservative setup, tighten OpenClaw exec policy back to
 ### Local shortcut
 
 ```bash
-openclaw exec-policy preset yolo
+quiet-core-bot exec-policy preset yolo
 ```
 
 That local shortcut updates both:
@@ -303,15 +303,15 @@ That local shortcut updates both:
 - Local approvals file defaults, including `askFallback: "full"`.
 
 It is intentionally local-only. To change gateway-host or node-host
-approvals remotely, use `openclaw approvals set --gateway` or
-`openclaw approvals set --node <id|name|ip>`.
+approvals remotely, use `quiet-core-bot approvals set --gateway` or
+`quiet-core-bot approvals set --node <id|name|ip>`.
 
 ### Node host
 
 For a node host, apply the same approvals file on that node instead:
 
 ```bash
-openclaw approvals set --node <id|name|ip> --stdin <<'EOF'
+quiet-core-bot approvals set --node <id|name|ip> --stdin <<'EOF'
 {
   version: 1,
   defaults: {
@@ -326,9 +326,9 @@ EOF
 <Note>
 **Local-only limitations:**
 
-- `openclaw exec-policy` does not synchronize node approvals.
-- `openclaw exec-policy set --host node` is rejected.
-- Node exec approvals are fetched from the node at runtime, so node-targeted updates must use `openclaw approvals --node ...`.
+- `quiet-core-bot exec-policy` does not synchronize node approvals.
+- `quiet-core-bot exec-policy set --host node` is rejected.
+- Node exec approvals are fetched from the node at runtime, so node-targeted updates must use `quiet-core-bot approvals --node ...`.
 
 </Note>
 
@@ -368,7 +368,7 @@ Examples:
 ### Restricting arguments with argPattern
 
 Add `argPattern` when an allowlist entry should match a binary and a
-specific argument shape. OpenClaw evaluates the regular expression
+specific argument shape. Quiet Core bot evaluates the regular expression
 against the parsed command arguments, excluding the executable token
 (`argv[0]`). For hand-authored entries, arguments are joined with a
 single space, so anchor the pattern when you need an exact match.
@@ -396,7 +396,7 @@ entry when the goal is to restrict the binary to the declared arguments.
 
 Entries saved by approval flows can use an internal separator format for
 exact argv matching. Prefer the UI or approval flow to regenerate those
-entries instead of hand-editing the encoded value. If OpenClaw cannot
+entries instead of hand-editing the encoded value. If Quiet Core bot cannot
 parse argv for a command segment, entries with `argPattern` do not match.
 
 Each allowlist entry supports:
@@ -445,23 +445,23 @@ Nodes must advertise `system.execApprovals.get/set` (macOS app or
 headless node host). If a node does not advertise exec approvals yet,
 edit its local approvals file directly.
 
-CLI: `openclaw approvals` supports gateway or node editing - see
+CLI: `quiet-core-bot approvals` supports gateway or node editing - see
 [Approvals CLI](/cli/approvals).
 
 ## Approval flow
 
 When a prompt is required, the gateway broadcasts
 `exec.approval.requested` to operator clients. The Control UI, the macOS
-app, and the `openclaw approvals approve|deny` CLI resolve it via
+app, and the `quiet-core-bot approvals approve|deny` CLI resolve it via
 `exec.approval.resolve`, then the gateway forwards the
 approved request to the node host. Pending requests can be listed with
-`openclaw approvals pending` or the `exec.approval.list` RPC.
+`quiet-core-bot approvals pending` or the `exec.approval.list` RPC.
 
-If nothing resolves a pending approval, OpenClaw surfaces it as an actionable
+If nothing resolves a pending approval, Quiet Core bot surfaces it as an actionable
 diagnostic instead of a silent stall. Once the stall threshold passes, the gateway
 logs the approval id together with the command that clears it —
 `[diagnostic] session blocked on exec approval (approvalId=…, tool=exec); approve
-with: openclaw approvals approve <id> …` and
+with: quiet-core-bot approvals approve <id> …` and
 `suggestedAction=approve_pending_exec_approval`. It only fires when that session
 really has a live pending exec approval, so a merely slow command is never
 mislabeled. Unattended `agent` CLI runs additionally print a periodic
@@ -490,9 +490,9 @@ Exec lifecycle is surfaced as system messages:
 These are posted to the agent's session after the node reports the event.
 Denied exec approvals are terminal for the host command itself: the command
 does not run. For main-agent async approvals with an originating session,
-OpenClaw posts the denial back into that session as an internal followup so the
+Quiet Core bot posts the denial back into that session as an internal followup so the
 agent can stop waiting on the async command and avoid a missing-result repair.
-If there is no session or the session cannot be resumed, OpenClaw can still
+If there is no session or the session cannot be resumed, Quiet Core bot can still
 report a concise denial to the operator or direct chat route. Denials for
 subagent sessions are not posted back into the subagent.
 Gateway-host exec approvals emit the same lifecycle events when the
@@ -502,11 +502,11 @@ messages for easy correlation.
 
 ## Denied approval behavior
 
-When an async exec approval is denied, OpenClaw treats the host command as
+When an async exec approval is denied, Quiet Core bot treats the host command as
 terminal and fail-closed. For main-agent sessions, the denial is delivered as an
 internal session followup that tells the agent the async command did not run.
 That preserves transcript continuity without exposing stale command output. If
-session delivery is unavailable, OpenClaw falls back to a concise operator or
+session delivery is unavailable, Quiet Core bot falls back to a concise operator or
 direct-chat denial when a safe route exists.
 
 ## Implications

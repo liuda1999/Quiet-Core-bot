@@ -14,7 +14,7 @@ macOS treats the app as new and may drop or hide prompts.
 
 ## Requirements for stable permissions
 
-- Same path: run the app from a fixed location (for OpenClaw, `dist/OpenClaw.app`).
+- Same path: run the app from a fixed location (for Quiet Core bot, `dist/Quiet Core bot.app`).
 - Same bundle identifier: changing the bundle ID creates a new permission identity.
 - Signed app: unsigned or ad-hoc signed builds do not persist permissions.
 - Consistent signature: use a real Apple Development or Developer ID certificate
@@ -25,7 +25,7 @@ grants, and prompts can disappear entirely until the stale entries are cleared.
 
 ## Accessibility grants for Node and CLI runtimes
 
-Prefer granting Accessibility to OpenClaw.app, Peekaboo.app, or another signed
+Prefer granting Accessibility to Quiet Core bot.app, Peekaboo.app, or another signed
 helper with its own bundle identifier instead of a generic `node` binary.
 
 macOS TCC grants Accessibility to the code identity of the process it sees. If a
@@ -62,7 +62,7 @@ sudo tccutil reset AppleEvents
 
 macOS may also gate Desktop, Documents, and Downloads for terminal/background processes. If file reads or directory listings hang, grant access to the same process context that performs file operations (for example Terminal/iTerm, LaunchAgent-launched app, or SSH process).
 
-Workaround: move files into the OpenClaw workspace (`~/.openclaw/workspace`) if you want to avoid per-folder grants.
+Workaround: move files into the Quiet Core bot workspace (`~/.quiet-core-bot/workspace`) if you want to avoid per-folder grants.
 
 If you are testing permissions, always sign with a real certificate. Ad-hoc
 builds are only acceptable for quick local runs where permissions do not matter.

@@ -1,14 +1,14 @@
 ---
-summary: "Use Venice AI privacy-focused models in OpenClaw"
+summary: "Use Venice AI privacy-focused models in Quiet Core bot"
 read_when:
-  - You want privacy-focused inference in OpenClaw
+  - You want privacy-focused inference in Quiet Core bot
   - You want Venice AI setup guidance
 title: "Venice AI"
 ---
 
 Venice AI provides **privacy-focused AI inference** with support for uncensored models and access to major proprietary models through their anonymized proxy. All inference is private by default — no training on your data, no logging.
 
-## Why Venice in OpenClaw
+## Why Venice in Quiet Core bot
 
 - **Private inference** for open-source models (no logging).
 - **Uncensored models** when you need them.
@@ -44,7 +44,7 @@ Anonymized models are **not** fully private. Venice strips metadata before forwa
 <Steps>
   <Step title="Install the plugin">
     ```bash
-    openclaw plugins install @openclaw/venice-provider
+    quiet-core-bot plugins install @openclaw/venice-provider
     ```
   </Step>
   <Step title="Get your API key">
@@ -52,13 +52,13 @@ Anonymized models are **not** fully private. Venice strips metadata before forwa
     2. Go to **Settings > API Keys > Create new key**
     3. Copy your API key (format: `vapi_xxxxxxxxxxxx`)
   </Step>
-  <Step title="Configure OpenClaw">
+  <Step title="Configure Quiet Core bot">
     Choose your preferred setup method:
 
     <Tabs>
       <Tab title="Interactive (recommended)">
         ```bash
-        openclaw onboard --auth-choice venice-api-key
+        quiet-core-bot onboard --auth-choice venice-api-key
         ```
 
         This will:
@@ -74,7 +74,7 @@ Anonymized models are **not** fully private. Venice strips metadata before forwa
       </Tab>
       <Tab title="Non-interactive">
         ```bash
-        openclaw onboard --non-interactive \
+        quiet-core-bot onboard --non-interactive \
           --auth-choice venice-api-key \
           --venice-api-key "vapi_xxxxxxxxxxxx"
         ```
@@ -91,7 +91,7 @@ Anonymized models are **not** fully private. Venice strips metadata before forwa
 
 ## Model selection
 
-After setup, OpenClaw shows all available Venice models. Pick based on your needs:
+After setup, Quiet Core bot shows all available Venice models. Pick based on your needs:
 
 - **Default model**: `venice/kimi-k2-5` for strong private reasoning plus vision.
 - **High-capability option**: `venice/claude-opus-4-6` for the strongest anonymized Venice path.
@@ -101,17 +101,17 @@ After setup, OpenClaw shows all available Venice models. Pick based on your need
 Change your default model anytime:
 
 ```bash
-openclaw models set venice/kimi-k2-5
-openclaw models set venice/claude-opus-4-6
+quiet-core-bot models set venice/kimi-k2-5
+quiet-core-bot models set venice/claude-opus-4-6
 ```
 
 List all available models:
 
 ```bash
-openclaw models list --all --provider venice
+quiet-core-bot models list --all --provider venice
 ```
 
-You can also run `openclaw configure`, select **Model/auth**, and choose **Venice AI**.
+You can also run `quiet-core-bot configure`, select **Model/auth**, and choose **Venice AI**.
 
 <Tip>
 Use the table below to pick the right model for your use case.
@@ -131,10 +131,10 @@ Use the table below to pick the right model for your use case.
 ## DeepSeek V4 replay behavior
 
 If Venice exposes DeepSeek V4 models such as `venice/deepseek-v4-pro` or
-`venice/deepseek-v4-flash`, OpenClaw fills the required DeepSeek V4
+`venice/deepseek-v4-flash`, Quiet Core bot fills the required DeepSeek V4
 `reasoning_content` replay placeholder on assistant messages when the proxy
 omits it. Venice rejects DeepSeek's native top-level `thinking` control, so
-OpenClaw keeps that provider-specific replay fix separate from the native
+Quiet Core bot keeps that provider-specific replay fix separate from the native
 DeepSeek provider's thinking controls.
 
 ## Built-in catalog (41 total)
@@ -191,7 +191,7 @@ DeepSeek provider's thinking controls.
 
 ## Model discovery
 
-OpenClaw ships a manifest-backed Venice seed catalog for read-only model listing. Runtime refresh can still discover models from the Venice API, and falls back to the manifest catalog if the API is unreachable.
+Quiet Core bot ships a manifest-backed Venice seed catalog for read-only model listing. Runtime refresh can still discover models from the Venice API, and falls back to the manifest catalog if the API is unreachable.
 
 The `/models` endpoint is public (no auth needed for listing), but inference requires a valid API key.
 
@@ -245,7 +245,7 @@ openclaw agent --model venice/qwen3-coder-480b-a35b-instruct --message "Refactor
   <Accordion title="API key not recognized">
     ```bash
     echo $VENICE_API_KEY
-    openclaw models list | grep venice
+    quiet-core-bot models list | grep venice
     ```
 
     Ensure the key starts with `vapi_`.
@@ -253,7 +253,7 @@ openclaw agent --model venice/qwen3-coder-480b-a35b-instruct --message "Refactor
   </Accordion>
 
   <Accordion title="Model not available">
-    The Venice model catalog updates dynamically. Run `openclaw models list` to see currently available models. Some models may be temporarily offline.
+    The Venice model catalog updates dynamically. Run `quiet-core-bot models list` to see currently available models. Some models may be temporarily offline.
   </Accordion>
 
   <Accordion title="Connection issues">

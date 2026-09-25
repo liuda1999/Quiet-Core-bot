@@ -2,7 +2,7 @@
 summary: "Migration plan for making SQLite the primary durable state and cache layer while keeping config file-backed"
 title: "Database-first state refactor"
 read_when:
-  - Moving OpenClaw runtime data, cache, transcripts, task state, or scratch files into SQLite
+  - Moving Quiet Core bot runtime data, cache, transcripts, task state, or scratch files into SQLite
   - Designing doctor migrations from legacy JSON or JSONL files
   - Changing backup, restore, VFS, or worker storage behavior
   - Removing session locks, pruning, truncation, or JSON compatibility paths
@@ -14,12 +14,12 @@ read_when:
 
 Use a two-level SQLite layout:
 
-- Global database: `~/.openclaw/state/openclaw.sqlite`
+- Global database: `~/.quiet-core-bot/state/openclaw.sqlite`
 - Agent database: one SQLite database per agent for agent-owned workspace,
   transcript, VFS, artifact, and large per-agent runtime state
-- Configuration stays file-backed: `openclaw.json` remains outside the
+- Configuration stays file-backed: `quiet-core-bot.json` remains outside the
   database. Runtime auth profiles move to SQLite; external provider or CLI
-  credential files remain owner-managed outside OpenClaw's database.
+  credential files remain owner-managed outside Quiet Core bot's database.
 
 The global database is the control-plane database. It owns agent discovery,
 shared gateway state, pairing, device/node state, task and flow ledgers, plugin
@@ -80,7 +80,7 @@ This migration has one canonical runtime shape:
   artifacts from database rows without feeding file names back into runtime.
 - Raw stream logging uses `OPENCLAW_RAW_STREAM=1` plus SQLite diagnostics rows.
   The old pi-mono `PI_RAW_STREAM`, `PI_RAW_STREAM_PATH`, and
-  `raw-openai-completions.jsonl` file logger contract is not part of OpenClaw
+  `raw-openai-completions.jsonl` file logger contract is not part of Quiet Core bot
   runtime or tests.
 - QMD memory indexing must not export SQLite transcripts to markdown files.
   QMD indexes configured memory files only; session transcript search stays
@@ -104,7 +104,7 @@ without exceptions outside doctor/import/export/debug boundaries.
   `state/openclaw.sqlite`.
 - One per-agent SQLite database owns data-plane state:
   `agents/<agentId>/agent/openclaw-agent.sqlite`.
-- Config remains file-backed. `openclaw.json` is not part of this database
+- Config remains file-backed. `quiet-core-bot.json` is not part of this database
   refactor.
 - Legacy files are doctor migration inputs only.
 - Runtime never writes or reads session or transcript JSONL as active state.
@@ -206,8 +206,8 @@ proceed with these assumptions:
 - Runtime compatibility files are not required. Legacy JSON and JSONL files are
   migration inputs only. The branch-local SQLite sidecars never shipped and are
   deleted instead of imported.
-- `openclaw doctor --fix` owns the legacy file-to-database migration step.
-  Runtime startup and `openclaw migrate` should not carry legacy OpenClaw
+- `quiet-core-bot doctor --fix` owns the legacy file-to-database migration step.
+  Runtime startup and `openclaw migrate` should not carry legacy Quiet Core bot
   database-upgrade paths.
 - Credential compatibility follows the same rule: runtime credentials live in
   SQLite. Old `auth-profiles.json`, per-agent `auth.json`, and shared
@@ -233,7 +233,7 @@ proceed with these assumptions:
 - The old runtime-owned JSONL transcript streaming helper was deleted. Doctor
   import code owns explicit legacy file reads; runtime session history reads
   SQLite rows.
-- Codex app-server bindings use the OpenClaw `sessionId` as the canonical
+- Codex app-server bindings use the Quiet Core bot `sessionId` as the canonical
   key in the Codex plugin-state namespace. `sessionKey` is metadata for
   routing/display and must not replace the durable session id or resurrect
   transcript-file identity.
@@ -347,13 +347,13 @@ The branch already has a real shared SQLite base:
   schema-level representation of a session.
 - Per-agent external conversation identity is relational too:
   `conversations` stores normalized provider/account/conversation identity, and
-  `session_conversations` links one OpenClaw session to one or more external
+  `session_conversations` links one Quiet Core bot session to one or more external
   conversations. This covers shared-main DM sessions where multiple peers can
   intentionally map to one session without lying in `session_key`. SQLite also
   enforces uniqueness for the natural provider identity so the same
   channel/account/kind/peer/thread tuple cannot fork across conversation ids.
   Shared-main direct peers are linked with a `participant` role, so one
-  OpenClaw session can represent multiple external DM peers without demoting
+  Quiet Core bot session can represent multiple external DM peers without demoting
   older peers into vague related rows. `sessions.primary_conversation_id` still
   points at the current typed delivery target. Closed routing/status columns
   are enforced with SQLite `CHECK` constraints instead of relying only on
@@ -415,7 +415,7 @@ The branch already has a real shared SQLite base:
   input only; runtime no longer reads or writes TTS prefs JSON files, and the
   legacy path resolver lives in the doctor migration module.
 - Secret target metadata now talks about stores instead of pretending every
-  credential target is a config file. `openclaw.json` remains the config store;
+  credential target is a config file. `quiet-core-bot.json` remains the config store;
   auth-profile targets use typed SQLite `auth_profile_stores` rows with
   provider-shaped credentials kept as JSON payloads.
 - Secret audit no longer scans retired per-agent `auth.json` files. Doctor owns
@@ -443,7 +443,7 @@ The branch already has a real shared SQLite base:
   legacy workspace marker, and helper APIs no longer pass around a fake
   `.openclaw/setup-state` path just to derive storage identity.
 - Exec approvals now live in the typed shared SQLite `exec_approvals_config`
-  singleton row. Doctor imports legacy `~/.openclaw/exec-approvals.json`;
+  singleton row. Doctor imports legacy `~/.quiet-core-bot/exec-approvals.json`;
   runtime writes no longer create, rewrite, or report that file as its active
   store location. The macOS companion reads and writes the same
   `state/openclaw.sqlite` table row; it keeps only the Unix prompt socket on disk
@@ -460,7 +460,7 @@ The branch already has a real shared SQLite base:
   so it intentionally does not add a host schema table.
 - GitHub Copilot compaction no longer writes `openclaw-compaction-*.json`
   workspace sidecars. The harness calls the SDK history compaction RPC for the
-  tracked SDK session, and OpenClaw keeps durable session/transcript state in
+  tracked SDK session, and Quiet Core bot keeps durable session/transcript state in
   SQLite instead of compatibility marker files.
 - The shared Swift runtime (`OpenClawKit`) uses the same
   `state/openclaw.sqlite` rows for device identity and device auth. macOS app
@@ -499,7 +499,7 @@ The branch already has a real shared SQLite base:
   under
   `src/commands/doctor/legacy/oauth-profile-ids.ts`.
 - Non-doctor commands do not auto-run legacy config repair. For example,
-  `openclaw update --channel` now fails on invalid legacy config and asks the
+  `quiet-core-bot update --channel` now fails on invalid legacy config and asks the
   user to run doctor, rather than silently importing doctor migration code.
 - Web push, APNs, Voice Wake, update checks, and config health now use typed shared SQLite
   tables for subscriptions, VAPID keys, node registrations, trigger rows,
@@ -573,7 +573,7 @@ Completed consolidation/deletion highlights:
   with optimistic conflict retry.
 - Session target resolution now exposes per-agent database targets, not legacy
   `sessions.json` paths. Shared gateway, ACP metadata, doctor route repair, and
-  `openclaw sessions` enumerate `agent_databases` plus configured agents.
+  `quiet-core-bot sessions` enumerate `agent_databases` plus configured agents.
 - Gateway session routing now uses `resolveGatewaySessionDatabaseTarget`; the
   returned target carries `databasePath` and candidate SQLite row keys instead
   of a legacy session-store file path.
@@ -1031,7 +1031,7 @@ sessionId})`; create, branch, continue, list, and fork flows live in their
   of `logs/config-audit.jsonl`. Doctor imports the legacy JSONL audit log and
   removes it after successful import.
 - The macOS companion no longer writes app-local `logs/config-audit.jsonl` or
-  `logs/config-health.json` sidecars while editing `openclaw.json`. The config
+  `logs/config-health.json` sidecars while editing `quiet-core-bot.json`. The config
   file remains file-backed, recovery snapshots stay next to the config file,
   and durable config audit/health state belongs to the Gateway SQLite store.
 - Crestodian rescue pending approvals now use core SQLite plugin state instead
@@ -1046,7 +1046,7 @@ sessionId})`; create, branch, continue, list, and fork flows live in their
   SQLite reads. Its helper no longer accepts or derives transcript locators,
   legacy file reads, or file-rewrite options.
 - Codex app-server conversation bindings now key SQLite plugin state by
-  OpenClaw session key or explicit `{agentId, sessionId}` scope. They must not
+  Quiet Core bot session key or explicit `{agentId, sessionId}` scope. They must not
   preserve transcript-path fallback bindings.
 - Codex app-server mirrored-history reads use the SQLite transcript scope only;
   they must not recover identity from transcript file paths.
@@ -1157,7 +1157,7 @@ sessionId})`; create, branch, continue, list, and fork flows live in their
   state. Doctor imports the legacy `gateway-instance-id` file into plugin state
   and removes the source.
 - ACPX generated wrapper scripts and the isolated Codex home are temporary
-  materialization under the OpenClaw temp root, not durable OpenClaw state. The
+  materialization under the Quiet Core bot temp root, not durable Quiet Core bot state. The
   durable ACPX runtime records are the SQLite lease and gateway-instance rows;
   the old ACPX `stateDir` config surface is removed because no runtime state is
   written there anymore.
@@ -1234,7 +1234,7 @@ sessionId})`; create, branch, continue, list, and fork flows live in their
   that are removed after import.
 - Auth profile save/state tests now assert typed SQLite auth tables directly
   and only use legacy auth-profile filenames for doctor migration inputs.
-- `openclaw secrets apply` scrubs the config file, env file, and SQLite
+- `quiet-core-bot secrets apply` scrubs the config file, env file, and SQLite
   auth-profile store only. It no longer carries compatibility logic that edits
   retired per-agent `auth.json`; doctor owns importing and deleting that file.
 - Hermes secret migration plans and applies imported API-key profiles directly
@@ -1330,7 +1330,7 @@ sessionId})`; create, branch, continue, list, and fork flows live in their
   Each lease is stored as its own row, preserving startup stale-process reaping
   without a runtime JSON rewrite path.
 - ACPX wrapper scripts and the isolated Codex home are generated in the
-  OpenClaw temp root. They are recreated as needed and are not backup or
+  Quiet Core bot temp root. They are recreated as needed and are not backup or
   migration inputs.
 - Subagent run registry persistence uses typed shared `subagent_runs` rows. The
   old `subagents/runs.json` path is now only a doctor migration input, and
@@ -1340,10 +1340,10 @@ sessionId})`; create, branch, continue, list, and fork flows live in their
 - Backup stages the state directory before archiving, copies non-database files,
   snapshots `*.sqlite` databases with `VACUUM INTO`, omits live WAL/SHM
   sidecars, records snapshot metadata in the archive manifest, and records
-  completed backup runs in SQLite with the archive manifest. `openclaw backup
+  completed backup runs in SQLite with the archive manifest. `quiet-core-bot backup
 create` validates the written archive by default; `--no-verify` is the
   explicit fast path.
-- `openclaw backup restore` validates the archive before extraction, reuses the
+- `quiet-core-bot backup restore` validates the archive before extraction, reuses the
   verifier's normalized manifest, and restores verified manifest assets to their
   recorded source paths. It requires `--yes` for writes and supports `--dry-run`
   for a restore plan.
@@ -1359,7 +1359,7 @@ create` validates the written archive by default; `--no-verify` is the
   JSONL files.
 - Sandbox registry runtime names now describe SQLite registry kinds directly
   instead of carrying legacy JSON registry terminology through the active store.
-- `openclaw reset --scope config+creds+sessions` removes per-agent
+- `quiet-core-bot reset --scope config+creds+sessions` removes per-agent
   `openclaw-agent.sqlite` databases plus WAL/SHM sidecars, not only legacy
   `sessions/` directories.
 - Gateway aggregate session helpers now use entry-oriented names:
@@ -1399,9 +1399,9 @@ create` validates the written archive by default; `--no-verify` is the
   external callers until a major SDK cleanup can remove it.
 - QMD's own `index.sqlite` is now a temp runtime materialization backed by the
   main SQLite `plugin_blob_entries` table. Runtime no longer creates a durable
-  `~/.openclaw/agents/<agentId>/qmd` sidecar.
+  `~/.quiet-core-bot/agents/<agentId>/qmd` sidecar.
 - The optional `memory-lancedb` plugin no longer creates
-  `~/.openclaw/memory/lancedb` as an implicit OpenClaw-managed store. It is an
+  `~/.quiet-core-bot/memory/lancedb` as an implicit Quiet Core bot-managed store. It is an
   external LanceDB backend and stays disabled until the operator configures an
   explicit `dbPath`.
 - `check:database-first-legacy-stores` fails new runtime source that pairs
@@ -1513,7 +1513,7 @@ SQLite tooling.
 
 `agent_databases` is the canonical registry for this branch. Do not add an
 `agents` table until a real agent-record owner exists; agent config remains in
-`openclaw.json`.
+`quiet-core-bot.json`.
 
 ## Doctor Migration Shape
 
@@ -1521,12 +1521,12 @@ Doctor should call one explicit migration step that is reportable and safe to
 rerun:
 
 ```bash
-openclaw doctor --fix
+quiet-core-bot doctor --fix
 ```
 
-`openclaw doctor --fix` invokes the state migration implementation after
+`quiet-core-bot doctor --fix` invokes the state migration implementation after
 ordinary config preflight and creates a verified backup before import. Runtime
-startup and `openclaw migrate` must not import legacy OpenClaw state files.
+startup and `openclaw migrate` must not import legacy Quiet Core bot state files.
 
 Migration properties:
 
@@ -1680,7 +1680,7 @@ Move these into agent databases:
 
 Keep these file-backed for now:
 
-- `openclaw.json`
+- `quiet-core-bot.json`
 - provider or CLI credential files
 - plugin/package manifests
 - user workspaces and Git repositories when disk mode is selected
@@ -1695,7 +1695,7 @@ Make the durable-state boundary explicit before moving more rows:
 - Add a `migration_runs` table to the global database.
   Done for legacy-state migration execution reports.
 - Add a single doctor-owned state migration service for file-to-database import.
-  Done: `openclaw doctor --fix` uses the legacy-state migration implementation.
+  Done: `quiet-core-bot doctor --fix` uses the legacy-state migration implementation.
 - Make `plan` read-only and make `apply` create a backup, import, verify, and
   then delete or quarantine old files.
   Done: doctor creates a verified pre-migration backup, passes the backup path
@@ -1739,8 +1739,8 @@ setup, filesystem pruning, and compatibility writers from those subsystems.
 Create one database per agent and register it from the global DB:
 
 ```text
-~/.openclaw/state/openclaw.sqlite
-~/.openclaw/agents/<agentId>/agent/openclaw-agent.sqlite
+~/.quiet-core-bot/state/openclaw.sqlite
+~/.quiet-core-bot/agents/<agentId>/agent/openclaw-agent.sqlite
 ```
 
 The global `agent_databases` row stores the path, schema version, last-seen
@@ -1816,7 +1816,7 @@ Backups remain one archive file:
   workspace exports.
 - Omit raw live `*.sqlite-wal` and `*.sqlite-shm` files.
 - Verify by opening every DB snapshot and running `PRAGMA integrity_check`.
-  `openclaw backup create` does this archive verification by default;
+  `quiet-core-bot backup create` does this archive verification by default;
   `--no-verify` skips only the post-write archive pass, not the snapshot
   creation integrity check.
 - Restore copies snapshots back to their target paths. This branch resets the
@@ -1860,7 +1860,7 @@ SQLite-native:
    selected workspaces, and a manifest.
 5. Verify the archive by opening every included SQLite snapshot and running
    `PRAGMA integrity_check`.
-   `openclaw backup create` does this by default; `--no-verify` is only for
+   `quiet-core-bot backup create` does this by default; `--no-verify` is only for
    intentionally skipping the post-write archive pass.
 
 Do not rely on raw live `*.sqlite`, `*.sqlite-wal`, and `*.sqlite-shm` copies as
@@ -1930,7 +1930,7 @@ verified extracted payload.
   Done: `getSessionEntry`, `upsertSessionEntry`, `deleteSessionEntry`,
   `patchSessionEntry`, and `listSessionEntries` are SQLite-first APIs that do
   not require a session store path. Status summary, local agent status, health,
-  and the `openclaw sessions` listing command now read per-agent rows directly
+  and the `quiet-core-bot sessions` listing command now read per-agent rows directly
   and display per-agent SQLite database paths instead of `sessions.json` paths.
 - Replace whole-store delete/insert with `upsertSessionEntry`,
   `deleteSessionEntry`, `listSessionEntries`, and SQL cleanup queries.
@@ -1980,7 +1980,7 @@ verified extracted payload.
      backup creation and default archive verification integrity checks.
    - Record backup run metadata in SQLite. Done via the shared `backup_runs`
      table with archive path, status, and manifest JSON.
-   - Add restore from verified archive snapshots. Done: `openclaw backup
+   - Add restore from verified archive snapshots. Done: `quiet-core-bot backup
 restore` validates before extraction, uses the verifier's normalized
      manifest, supports `--dry-run`, and requires `--yes` before replacing
      recorded source paths.
@@ -2049,7 +2049,7 @@ restore` validates before extraction, uses the verifier's normalized
   fixtures or parsers; legacy SSO token parsing lives only in the plugin
   migration module. Telegram tests no longer seed fake `/tmp/*.json` store
   paths; they reset the SQLite-backed message cache directly. The generic
-  OpenClaw test-state helper no longer exposes a legacy `auth-profiles.json`
+  Quiet Core bot test-state helper no longer exposes a legacy `auth-profiles.json`
   writer; doctor auth migration tests own that fixture locally.
   Runtime tests for TUI last-session pointers, exec approvals, active-memory
   toggles, Matrix dedupe/startup verification, Memory Wiki source sync,

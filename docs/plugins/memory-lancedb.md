@@ -21,10 +21,10 @@ the default built-in memory store.
 Install `memory-lancedb` before setting `plugins.slots.memory = "memory-lancedb"`:
 
 ```bash
-openclaw plugins install @openclaw/memory-lancedb
+quiet-core-bot plugins install @openclaw/memory-lancedb
 ```
 
-The plugin is published to npm and is not bundled into the OpenClaw runtime image.
+The plugin is published to npm and is not bundled into the Quiet Core bot runtime image.
 The installer writes the plugin entry and switches the memory slot when no other
 plugin owns it.
 
@@ -62,13 +62,13 @@ slot with `plugins.slots.memory = "memory-lancedb"`. Companion plugins such as
 Restart the Gateway after changing plugin config:
 
 ```bash
-openclaw gateway restart
+quiet-core-bot gateway restart
 ```
 
 Then verify the plugin is loaded:
 
 ```bash
-openclaw plugins list
+quiet-core-bot plugins list
 ```
 
 ## Provider-backed embeddings
@@ -162,7 +162,7 @@ the Ollama provider documented in [Ollama](/providers/ollama).
 }
 ```
 
-Set `dimensions` for non-standard embedding models. OpenClaw knows the
+Set `dimensions` for non-standard embedding models. Quiet Core bot knows the
 dimensions for `text-embedding-3-small` and `text-embedding-3-large`; custom
 models need the value in config so LanceDB can create the vector column.
 
@@ -259,7 +259,7 @@ Agents also get LanceDB memory tools from the active memory plugin:
 
 ## Storage
 
-By default, LanceDB data lives under `~/.openclaw/memory/lancedb`. Override the
+By default, LanceDB data lives under `~/.quiet-core-bot/memory/lancedb`. Override the
 path with `dbPath`:
 
 ```json5
@@ -269,7 +269,7 @@ path with `dbPath`:
       "memory-lancedb": {
         enabled: true,
         config: {
-          dbPath: "~/.openclaw/memory/lancedb",
+          dbPath: "~/.quiet-core-bot/memory/lancedb",
           embedding: {
             apiKey: "${OPENAI_API_KEY}",
             model: "text-embedding-3-small",
@@ -311,12 +311,12 @@ supports `${ENV_VAR}` expansion:
 ## Runtime dependencies
 
 `memory-lancedb` depends on the native `@lancedb/lancedb` package. Packaged
-OpenClaw treats that package as part of the plugin package. Gateway startup
+Quiet Core bot treats that package as part of the plugin package. Gateway startup
 does not repair plugin dependencies; if the dependency is missing, reinstall or
 update the plugin package and restart the Gateway.
 
 If an older install logs a missing `dist/package.json` or missing
-`@lancedb/lancedb` error during plugin load, upgrade OpenClaw and restart the
+`@lancedb/lancedb` error during plugin load, upgrade Quiet Core bot and restart the
 Gateway.
 
 If the plugin logs that LanceDB is unavailable on `darwin-x64`, use the default

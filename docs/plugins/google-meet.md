@@ -1,19 +1,19 @@
 ---
 summary: "Google Meet plugin: join explicit Meet URLs through Chrome or Twilio with agent talk-back defaults"
 read_when:
-  - You want an OpenClaw agent to join a Google Meet call
-  - You want an OpenClaw agent to create a new Google Meet call
+  - You want an Quiet Core bot agent to join a Google Meet call
+  - You want an Quiet Core bot agent to create a new Google Meet call
   - You are configuring Chrome, Chrome node, or Twilio as a Google Meet transport
 title: "Google Meet plugin"
 ---
 
-Google Meet participant support for OpenClaw — the plugin is explicit by design:
+Google Meet participant support for Quiet Core bot — the plugin is explicit by design:
 
 - It only joins an explicit `https://meet.google.com/...` URL.
 - It can create a new Meet space through the Google Meet API, then join the
   returned URL.
 - `agent` is the default talk-back mode: realtime transcription listens, the
-  configured OpenClaw agent answers, and regular OpenClaw TTS speaks into Meet.
+  configured Quiet Core bot agent answers, and regular Quiet Core bot TTS speaks into Meet.
 - `bidi` remains available as the fallback direct realtime voice model mode.
 - Agents choose the join behavior with `mode`: use `agent` for live
   listen/talk-back, `bidi` for direct realtime voice fallback, or `transcribe`
@@ -30,7 +30,7 @@ Google Meet participant support for OpenClaw — the plugin is explicit by desig
 ## Quick start
 
 Install the local audio dependencies and configure a realtime transcription
-provider plus regular OpenClaw TTS. OpenAI is the default transcription
+provider plus regular Quiet Core bot TTS. OpenAI is the default transcription
 provider; Google Gemini Live also works as a separate `bidi` voice fallback with
 `realtime.voiceProvider: "google"`:
 
@@ -162,10 +162,10 @@ openclaw googlemeet create --no-join
 
 - API create: used when Google Meet OAuth credentials are configured. This is
   the most deterministic path and does not depend on browser UI state.
-- Browser fallback: used when OAuth credentials are absent. OpenClaw uses the
+- Browser fallback: used when OAuth credentials are absent. Quiet Core bot uses the
   pinned Chrome node, opens `https://meet.google.com/new`, waits for Google to
   redirect to a real meeting-code URL, then returns that URL. This path requires
-  the OpenClaw Chrome profile on the node to already be signed in to Google.
+  the Quiet Core bot Chrome profile on the node to already be signed in to Google.
   Browser automation handles Meet's own first-run microphone prompt; that prompt
   is not treated as a Google login failure.
   Join and create flows also try to reuse an existing Meet tab before opening a
@@ -193,7 +193,7 @@ and send me the link." The agent should call `google_meet` with
 For an observe-only/browser-control join, set `"mode": "transcribe"`. That does
 not start the duplex realtime voice bridge, does not require BlackHole or SoX,
 and will not talk back into the meeting. Chrome joins in this mode also avoid
-OpenClaw's microphone/camera permission grant and avoid the Meet **Use
+Quiet Core bot's microphone/camera permission grant and avoid the Meet **Use
 microphone** path. If Meet shows an audio-choice interstitial, automation tries
 the no-microphone path and otherwise reports a manual action instead of opening
 the local microphone. In transcribe mode, managed Chrome transports also install
@@ -218,23 +218,23 @@ test phrase after browser health reports `inCall: true`; otherwise status report
 `speechReady: false` and the speech attempt is blocked instead of pretending the
 agent spoke into the meeting.
 
-Local Chrome joins through the signed-in OpenClaw browser profile. Realtime mode
-requires `BlackHole 2ch` for the microphone/speaker path used by OpenClaw. For
+Local Chrome joins through the signed-in Quiet Core bot browser profile. Realtime mode
+requires `BlackHole 2ch` for the microphone/speaker path used by Quiet Core bot. For
 clean duplex audio, use separate virtual devices or a Loopback-style graph; a
 single BlackHole device is enough for a first smoke test but can echo.
 
 ### Local gateway + Parallels Chrome
 
-You do **not** need a full OpenClaw Gateway or model API key inside a macOS VM
+You do **not** need a full Quiet Core bot Gateway or model API key inside a macOS VM
 just to make the VM own Chrome. Run the Gateway and agent locally, then run a
 node host in the VM. Enable the bundled plugin on the VM once so the node
 advertises the Chrome command:
 
 What runs where:
 
-- Gateway host: OpenClaw Gateway, agent workspace, model/API keys, realtime
+- Gateway host: Quiet Core bot Gateway, agent workspace, model/API keys, realtime
   provider, and the Google Meet plugin config.
-- Parallels macOS VM: OpenClaw CLI/node host, Google Chrome, SoX, BlackHole 2ch,
+- Parallels macOS VM: Quiet Core bot CLI/node host, Google Chrome, SoX, BlackHole 2ch,
   and a Chrome profile signed in to Google.
 - Not needed in the VM: Gateway service, agent config, OpenAI/GPT key, or model
   provider setup.
@@ -258,16 +258,16 @@ system_profiler SPAudioDataType | grep -i BlackHole
 command -v sox
 ```
 
-Install or update OpenClaw in the VM, then enable the bundled plugin there:
+Install or update Quiet Core bot in the VM, then enable the bundled plugin there:
 
 ```bash
-openclaw plugins enable google-meet
+quiet-core-bot plugins enable google-meet
 ```
 
 Start the node host in the VM:
 
 ```bash
-openclaw node run --host <gateway-host> --port 18789 --display-name parallels-macos
+quiet-core-bot node run --host <gateway-host> --port 18789 --display-name parallels-macos
 ```
 
 If `<gateway-host>` is a LAN IP and you are not using TLS, the node refuses the
@@ -275,33 +275,33 @@ plaintext WebSocket unless you opt in for that trusted private network:
 
 ```bash
 OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1 \
-  openclaw node run --host <gateway-lan-ip> --port 18789 --display-name parallels-macos
+  quiet-core-bot node run --host <gateway-lan-ip> --port 18789 --display-name parallels-macos
 ```
 
 Use the same environment variable when installing the node as a LaunchAgent:
 
 ```bash
 OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1 \
-  openclaw node install --host <gateway-lan-ip> --port 18789 --display-name parallels-macos --force
-openclaw node restart
+  quiet-core-bot node install --host <gateway-lan-ip> --port 18789 --display-name parallels-macos --force
+quiet-core-bot node restart
 ```
 
 `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` is process environment, not an
-`openclaw.json` setting. `openclaw node install` stores it in the LaunchAgent
+`quiet-core-bot.json` setting. `quiet-core-bot node install` stores it in the LaunchAgent
 environment when it is present on the install command.
 
 Approve the node from the Gateway host:
 
 ```bash
-openclaw devices list
-openclaw devices approve <requestId>
+quiet-core-bot devices list
+quiet-core-bot devices approve <requestId>
 ```
 
 Confirm the Gateway sees the node and that it advertises both `googlemeet.chrome`
 and browser capability/`browser.proxy`:
 
 ```bash
-openclaw nodes status
+quiet-core-bot nodes status
 ```
 
 Route Meet through that node on the Gateway host:
@@ -320,7 +320,7 @@ Route Meet through that node on the Gateway host:
         config: {
           defaultTransport: "chrome-node",
           chrome: {
-            guestName: "OpenClaw Agent",
+            guestName: "Quiet Core bot Agent",
             autoJoin: true,
             reuseExistingTab: true,
           },
@@ -349,7 +349,7 @@ phrase, and prints session health:
 openclaw googlemeet test-speech https://meet.google.com/abc-defg-hij
 ```
 
-During realtime join, OpenClaw browser automation fills the guest name, clicks
+During realtime join, Quiet Core bot browser automation fills the guest name, clicks
 Join/Ask to join, and accepts Meet's first-run "Use microphone" choice when that
 prompt appears. During observe-only join or browser-only meeting creation, it
 continues past the same prompt without microphone when that choice is available.
@@ -361,7 +361,7 @@ on a prompt automation could not resolve, the join/test-speech result reports
 message plus the current `browserUrl`/`browserTitle`, and retry only after the
 manual browser action is complete.
 
-If `chromeNode.node` is omitted, OpenClaw auto-selects only when exactly one
+If `chromeNode.node` is omitted, Quiet Core bot auto-selects only when exactly one
 connected node advertises both `googlemeet.chrome` and browser control. If
 several capable nodes are connected, set `chromeNode.node` to the node id,
 display name, or remote IP.
@@ -372,9 +372,9 @@ Common failure checks:
   known to the Gateway but unavailable. Agents should treat that node as
   diagnostic state, not as a usable Chrome host, and report the setup blocker
   instead of falling back to another transport unless the user asked for that.
-- `No connected Google Meet-capable node`: start `openclaw node run` in the VM,
-  approve pairing, and make sure `openclaw plugins enable google-meet` and
-  `openclaw plugins enable browser` were run in the VM. Also confirm the
+- `No connected Google Meet-capable node`: start `quiet-core-bot node run` in the VM,
+  approve pairing, and make sure `quiet-core-bot plugins enable google-meet` and
+  `quiet-core-bot plugins enable browser` were run in the VM. Also confirm the
   Gateway host allows both node commands with
   `gateway.nodes.allowCommands: ["googlemeet.chrome", "browser.proxy"]`.
 - `BlackHole 2ch audio device not found`: install `blackhole-2ch` on the host
@@ -382,16 +382,16 @@ Common failure checks:
 - `BlackHole 2ch audio device not found on the node`: install `blackhole-2ch`
   in the VM and reboot the VM.
 - Chrome opens but cannot join: sign in to the browser profile inside the VM, or
-  keep `chrome.guestName` set for guest join. Guest auto-join uses OpenClaw
+  keep `chrome.guestName` set for guest join. Guest auto-join uses Quiet Core bot
   browser automation through the node browser proxy; make sure the node browser
   config points at the profile you want, for example
   `browser.defaultProfile: "user"` or a named existing-session profile.
-- Duplicate Meet tabs: leave `chrome.reuseExistingTab: true` enabled. OpenClaw
+- Duplicate Meet tabs: leave `chrome.reuseExistingTab: true` enabled. Quiet Core bot
   activates an existing tab for the same Meet URL before opening a new one, and
   browser meeting creation reuses an in-progress `https://meet.google.com/new`
   or Google account prompt tab before opening another one.
 - No audio: in Meet, route microphone/speaker through the virtual audio device
-  path used by OpenClaw; use separate virtual devices or Loopback-style routing
+  path used by Quiet Core bot; use separate virtual devices or Loopback-style routing
   for clean duplex audio.
 
 ## Install notes
@@ -403,18 +403,18 @@ The Chrome talk-back default uses two external tools:
 - `blackhole-2ch`: macOS virtual audio driver. It creates the `BlackHole 2ch`
   audio device that Chrome/Meet can route through.
 
-OpenClaw does not bundle or redistribute either package. The docs ask users to
+Quiet Core bot does not bundle or redistribute either package. The docs ask users to
 install them as host dependencies through Homebrew. SoX is licensed as
 `LGPL-2.0-only AND GPL-2.0-only`; BlackHole is GPL-3.0. If you build an
-installer or appliance that bundles BlackHole with OpenClaw, review BlackHole's
+installer or appliance that bundles BlackHole with Quiet Core bot, review BlackHole's
 upstream licensing terms or get a separate license from Existential Audio.
 
 ## Transports
 
 ### Chrome
 
-Chrome transport opens the Meet URL through OpenClaw browser control and joins
-as the signed-in OpenClaw browser profile. On macOS, the plugin checks for
+Chrome transport opens the Meet URL through Quiet Core bot browser control and joins
+as the signed-in Quiet Core bot browser profile. On macOS, the plugin checks for
 `BlackHole 2ch` before launch. If configured, it also runs an audio bridge
 health command and startup command before opening Chrome. Use `chrome` when
 Chrome/audio live on the Gateway host; use `chrome-node` when Chrome/audio live
@@ -427,7 +427,7 @@ openclaw googlemeet join https://meet.google.com/abc-defg-hij --transport chrome
 openclaw googlemeet join https://meet.google.com/abc-defg-hij --transport chrome-node
 ```
 
-Route Chrome microphone and speaker audio through the local OpenClaw audio
+Route Chrome microphone and speaker audio through the local Quiet Core bot audio
 bridge. If `BlackHole 2ch` is not installed, the join fails with a setup error
 instead of silently joining without an audio path.
 
@@ -438,7 +438,7 @@ does not parse Meet pages for phone numbers.
 
 Use this when Chrome participation is not available or you want a phone dial-in
 fallback. Google Meet must expose a phone dial-in number and PIN for the
-meeting; OpenClaw does not discover those from the Meet page.
+meeting; Quiet Core bot does not discover those from the Meet page.
 
 Enable the Voice Call plugin on the Gateway host, not on the Chrome node:
 
@@ -462,7 +462,7 @@ Enable the Voice Call plugin on the Gateway host, not on the Chrome node:
           realtime: {
             enabled: true,
             provider: "google",
-            instructions: "Join this Google Meet as an OpenClaw agent. Be brief.",
+            instructions: "Join this Google Meet as an Quiet Core bot agent. Be brief.",
             toolPolicy: "safe-read-only",
             providers: {
               google: {
@@ -482,7 +482,7 @@ Enable the Voice Call plugin on the Gateway host, not on the Chrome node:
 ```
 
 Provide Twilio credentials through environment or config. Environment keeps
-secrets out of `openclaw.json`:
+secrets out of `quiet-core-bot.json`:
 
 ```bash
 export TWILIO_ACCOUNT_SID=AC...
@@ -500,8 +500,8 @@ do not appear in an already running Gateway process until it reloads.
 Then verify:
 
 ```bash
-openclaw config validate
-openclaw plugins list | grep -E 'google-meet|voice-call'
+quiet-core-bot config validate
+quiet-core-bot plugins list | grep -E 'google-meet|voice-call'
 openclaw googlemeet setup
 ```
 
@@ -552,7 +552,7 @@ In Google Cloud Console:
    - **Internal** is simplest for a Google Workspace organization.
    - **External** works for personal/test setups; while the app is in Testing,
      add each Google account that will authorize the app as a test user.
-4. Add the scopes OpenClaw requests:
+4. Add the scopes Quiet Core bot requests:
    - `https://www.googleapis.com/auth/meetings.space.created`
    - `https://www.googleapis.com/auth/meetings.space.readonly`
    - `https://www.googleapis.com/auth/meetings.space.settings`
@@ -568,8 +568,8 @@ In Google Cloud Console:
 6. Copy the client ID and client secret.
 
 `meetings.space.created` is required by Google Meet `spaces.create`.
-`meetings.space.readonly` lets OpenClaw resolve Meet URLs/codes to spaces.
-`meetings.space.settings` lets OpenClaw pass `SpaceConfig` settings such as
+`meetings.space.readonly` lets Quiet Core bot resolve Meet URLs/codes to spaces.
+`meetings.space.settings` lets Quiet Core bot pass `SpaceConfig` settings such as
 `accessType` during API room creation.
 `meetings.conference.media.readonly` is for Meet Media API preflight and media
 work; Google may require Developer Preview enrollment for actual Media API use.
@@ -700,7 +700,7 @@ space. A refresh-token error means rerun `openclaw googlemeet auth login
 
 No OAuth credentials are needed for the browser fallback. In that mode, Google
 auth comes from the signed-in Chrome profile on the selected node, not from
-OpenClaw config.
+Quiet Core bot config.
 
 These environment variables are accepted as fallbacks:
 
@@ -771,9 +771,9 @@ openclaw googlemeet end-active-conference https://meet.google.com/abc-defg-hij
 
 This calls Google Meet `spaces.endActiveConference` and requires OAuth with the
 `meetings.space.created` scope for a space the authorized account can manage.
-OpenClaw accepts a Meet URL, meeting code, or `spaces/{id}` input and resolves it
+Quiet Core bot accepts a Meet URL, meeting code, or `spaces/{id}` input and resolves it
 to the API space resource before ending the active conference.
-It is separate from `googlemeet leave`: `leave` stops OpenClaw's local/session
+It is separate from `googlemeet leave`: `leave` stops Quiet Core bot's local/session
 participation, while `end-active-conference` asks Google Meet to end the active
 conference for the space.
 
@@ -941,10 +941,10 @@ can create the URL, the Gateway method returns a failed response and the
 ```json
 {
   "source": "browser",
-  "error": "google-login-required: Sign in to Google in the OpenClaw browser profile, then retry meeting creation.",
+  "error": "google-login-required: Sign in to Google in the Quiet Core bot browser profile, then retry meeting creation.",
   "manualActionRequired": true,
   "manualActionReason": "google-login-required",
-  "manualActionMessage": "Sign in to Google in the OpenClaw browser profile, then retry meeting creation.",
+  "manualActionMessage": "Sign in to Google in the Quiet Core bot browser profile, then retry meeting creation.",
   "browser": {
     "nodeId": "ba0f4e4bc...",
     "targetId": "tab-1",
@@ -981,7 +981,7 @@ Example JSON output from API create:
 
 Creating a Meet joins by default. The Chrome or Chrome-node transport still
 needs a signed-in Google Chrome profile to join through the browser. If the
-profile is signed out, OpenClaw reports `manualActionRequired: true` or a
+profile is signed out, Quiet Core bot reports `manualActionRequired: true` or a
 browser fallback error and asks the operator to finish Google login before
 retrying.
 
@@ -992,7 +992,7 @@ Workspace Developer Preview Program for Meet media APIs.
 ## Config
 
 The common Chrome agent path only needs the plugin enabled, BlackHole, SoX, a
-realtime transcription provider key, and a configured OpenClaw TTS provider.
+realtime transcription provider key, and a configured Quiet Core bot TTS provider.
 OpenAI is the default transcription provider; set `realtime.voiceProvider` to
 `"google"` and `realtime.model` to use Google Gemini Live for `bidi` mode
 without changing the default agent-mode transcription provider:
@@ -1026,10 +1026,10 @@ Defaults:
   compatibility alias for `"agent"`; new tool calls should say `"agent"`)
 - `chromeNode.node`: optional node id/name/IP for `chrome-node`
 - `chrome.audioBackend: "blackhole-2ch"`
-- `chrome.guestName: "OpenClaw Agent"`: name used on the signed-out Meet guest
+- `chrome.guestName: "Quiet Core bot Agent"`: name used on the signed-out Meet guest
   screen
 - `chrome.autoJoin: true`: best-effort guest-name fill and Join Now click
-  through OpenClaw browser automation on `chrome-node`
+  through Quiet Core bot browser automation on `chrome-node`
 - `chrome.reuseExistingTab: true`: activate an existing Meet tab instead of
   opening duplicates
 - `chrome.waitForInCallMs: 20000`: wait for the Meet tab to report in-call
@@ -1057,8 +1057,8 @@ Defaults:
   interruption clears
 - `mode: "agent"`: default talk-back mode. Participant speech is transcribed by
   the configured realtime transcription provider, sent to the configured
-  OpenClaw agent in a per-meeting sub-agent session, and spoken back through the
-  normal OpenClaw TTS runtime.
+  Quiet Core bot agent in a per-meeting sub-agent session, and spoken back through the
+  normal Quiet Core bot TTS runtime.
 - `mode: "bidi"`: fallback direct bidirectional realtime model mode. The
   realtime voice provider answers participant speech directly and may call
   `openclaw_agent_consult` for deeper/tool-backed answers.
@@ -1075,7 +1075,7 @@ Defaults:
   `openclaw_agent_consult` for deeper answers
 - `realtime.introMessage`: short spoken readiness check when the realtime bridge
   connects; set it to `""` to join silently
-- `realtime.agentId`: optional OpenClaw agent id for
+- `realtime.agentId`: optional Quiet Core bot agent id for
   `openclaw_agent_consult`; defaults to `main`
 
 Optional overrides:
@@ -1089,7 +1089,7 @@ Optional overrides:
     defaultProfile: "openclaw",
   },
   chrome: {
-    guestName: "OpenClaw Agent",
+    guestName: "Quiet Core bot Agent",
     waitForInCallMs: 30000,
     bargeInInputCommand: [
       "sox",
@@ -1214,8 +1214,8 @@ Use `transport: "chrome"` when Chrome runs on the Gateway host. Use
 `transport: "chrome-node"` when Chrome runs on a paired node such as a Parallels
 VM. In both cases the model providers and `openclaw_agent_consult` run on the
 Gateway host, so model credentials stay there. With the default `mode: "agent"`,
-the realtime transcription provider handles listening, the configured OpenClaw
-agent produces the answer, and regular OpenClaw TTS speaks it into Meet. Use
+the realtime transcription provider handles listening, the configured Quiet Core bot
+agent produces the answer, and regular Quiet Core bot TTS speaks it into Meet. Use
 `mode: "bidi"` when you want the realtime voice model to answer directly.
 Raw `mode: "realtime"` remains accepted as a legacy compatibility alias for
 `mode: "agent"`, but it is no longer advertised in the agent tool schema.
@@ -1242,7 +1242,7 @@ a session ended.
   browser profile needs manual login, Meet host admission, permissions, or
   browser-control repair before speech can work
 - `speechReady` / `speechBlockedReason` / `speechBlockedMessage`: whether
-  managed Chrome speech is allowed now. `speechReady: false` means OpenClaw did
+  managed Chrome speech is allowed now. `speechReady: false` means Quiet Core bot did
   not send the intro/test phrase into the audio bridge.
 - `providerConnected` / `realtimeReady`: realtime voice bridge state
 - `lastInputAt` / `lastOutputAt`: last audio seen from or sent to the bridge
@@ -1263,8 +1263,8 @@ a session ended.
 
 Chrome `agent` mode is optimized for "my agent is in the meeting" behavior. The
 realtime transcription provider hears the meeting audio, final participant
-transcripts are routed through the configured OpenClaw agent, and the answer is
-spoken through the normal OpenClaw TTS runtime. Set `mode: "bidi"` when you want
+transcripts are routed through the configured Quiet Core bot agent, and the answer is
+spoken through the normal Quiet Core bot TTS runtime. Set `mode: "bidi"` when you want
 the realtime voice model to answer directly.
 Nearby final transcript fragments are coalesced before the consult so one spoken
 turn does not produce several stale partial answers. Realtime input is also
@@ -1272,22 +1272,22 @@ suppressed while queued assistant audio is still playing,
 and recent assistant-like transcript echoes are ignored before the agent consult
 so BlackHole loopback does not make the agent answer its own speech.
 
-| Mode    | Who decides the answer        | Speech output path                     | Use when                                              |
-| ------- | ----------------------------- | -------------------------------------- | ----------------------------------------------------- |
-| `agent` | The configured OpenClaw agent | Normal OpenClaw TTS runtime            | You want "my agent is in the meeting" behavior        |
-| `bidi`  | The realtime voice model      | Realtime voice provider audio response | You want the lowest-latency conversational voice loop |
+| Mode    | Who decides the answer              | Speech output path                     | Use when                                              |
+| ------- | ----------------------------------- | -------------------------------------- | ----------------------------------------------------- |
+| `agent` | The configured Quiet Core bot agent | Normal Quiet Core bot TTS runtime      | You want "my agent is in the meeting" behavior        |
+| `bidi`  | The realtime voice model            | Realtime voice provider audio response | You want the lowest-latency conversational voice loop |
 
 In `bidi` mode, when the realtime model needs deeper reasoning, current
-information, or normal OpenClaw tools, it can call `openclaw_agent_consult`.
+information, or normal Quiet Core bot tools, it can call `openclaw_agent_consult`.
 
-The consult tool runs the regular OpenClaw agent behind the scenes with recent
+The consult tool runs the regular Quiet Core bot agent behind the scenes with recent
 meeting transcript context and returns a concise spoken answer. In `agent` mode,
-OpenClaw sends that answer directly to the TTS runtime; in `bidi` mode, the
+Quiet Core bot sends that answer directly to the TTS runtime; in `bidi` mode, the
 realtime voice model can speak the consult result back into the meeting. It uses
 the same shared consult machinery as Voice Call.
 
 By default, consults run against the `main` agent. Set `realtime.agentId` when a
-Meet lane should consult a dedicated OpenClaw agent workspace, model defaults,
+Meet lane should consult a dedicated Quiet Core bot agent workspace, model defaults,
 tool policy, memory, and session history.
 
 Agent-mode consults use a per-meeting `agent:<id>:subagent:google-meet:<session>`
@@ -1326,7 +1326,7 @@ Use this sequence before handing a meeting to an unattended agent:
 
 ```bash
 openclaw googlemeet setup
-openclaw nodes status
+quiet-core-bot nodes status
 openclaw googlemeet test-speech https://meet.google.com/abc-defg-hij \
   --transport chrome-node \
   --message "Say exactly: Google Meet speech test complete."
@@ -1347,8 +1347,8 @@ safe check after updating the Gateway or the VM:
 
 ```bash
 openclaw googlemeet setup
-openclaw nodes status --connected
-openclaw nodes invoke \
+quiet-core-bot nodes status --connected
+quiet-core-bot nodes invoke \
   --node parallels-macos \
   --command googlemeet.chrome \
   --params '{"action":"setup"}'
@@ -1374,7 +1374,7 @@ Expected Twilio state:
   `twilio-voice-call-credentials`, and `twilio-voice-call-webhook` checks.
 - `voicecall` is available in the CLI after Gateway reload.
 - The returned session has `transport: "twilio"` and a `twilio.voiceCallId`.
-- `openclaw logs --follow` shows DTMF TwiML served before realtime TwiML, then a
+- `quiet-core-bot logs --follow` shows DTMF TwiML served before realtime TwiML, then a
   realtime bridge with the initial greeting queued.
 - `googlemeet leave <sessionId>` hangs up the delegated voice call.
 
@@ -1385,7 +1385,7 @@ Expected Twilio state:
 Confirm the plugin is enabled in the Gateway config and reload the Gateway:
 
 ```bash
-openclaw plugins list | grep google-meet
+quiet-core-bot plugins list | grep google-meet
 openclaw googlemeet setup
 ```
 
@@ -1404,18 +1404,18 @@ Linux agents should use `mode: "transcribe"`, Twilio dial-in, or a macOS
 On the node host, run:
 
 ```bash
-openclaw plugins enable google-meet
-openclaw plugins enable browser
+quiet-core-bot plugins enable google-meet
+quiet-core-bot plugins enable browser
 OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1 \
-  openclaw node run --host <gateway-lan-ip> --port 18789 --display-name parallels-macos
+  quiet-core-bot node run --host <gateway-lan-ip> --port 18789 --display-name parallels-macos
 ```
 
 On the Gateway host, approve the node and verify commands:
 
 ```bash
-openclaw devices list
-openclaw devices approve <requestId>
-openclaw nodes status
+quiet-core-bot devices list
+quiet-core-bot devices approve <requestId>
+quiet-core-bot nodes status
 ```
 
 The node must be connected and list `googlemeet.chrome` plus `browser.proxy`.
@@ -1437,7 +1437,7 @@ token. For a LAN Gateway this usually means:
 
 ```bash
 OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1 \
-  openclaw node install \
+  quiet-core-bot node install \
   --host <gateway-lan-ip> \
   --port 18789 \
   --display-name parallels-macos \
@@ -1448,7 +1448,7 @@ Then reload the node service and re-run:
 
 ```bash
 openclaw googlemeet setup
-openclaw nodes status --connected
+quiet-core-bot nodes status --connected
 ```
 
 ### Browser opens but agent cannot join
@@ -1467,9 +1467,9 @@ Common manual actions:
 - Close or repair a stuck Meet permission dialog.
 
 Do not report "not signed in" just because Meet shows "Do you want people to
-hear you in the meeting?" That is Meet's audio-choice interstitial; OpenClaw
+hear you in the meeting?" That is Meet's audio-choice interstitial; Quiet Core bot
 clicks **Use microphone** through browser automation when available and keeps
-waiting for the real meeting state. For create-only browser fallback, OpenClaw
+waiting for the real meeting state. For create-only browser fallback, Quiet Core bot
 may click **Continue without microphone** because creating the URL does not need
 the realtime audio path.
 
@@ -1487,7 +1487,7 @@ to the pinned Chrome node browser. Confirm:
 - For browser fallback: `defaultTransport: "chrome-node"` and
   `chromeNode.node` point at a connected node with `browser.proxy` and
   `googlemeet.chrome`.
-- For browser fallback: the OpenClaw Chrome profile on that node is signed in
+- For browser fallback: the Quiet Core bot Chrome profile on that node is signed in
   to Google and can open `https://meet.google.com/new`.
 - For browser fallback: retries reuse an existing `https://meet.google.com/new`
   or Google account prompt tab before opening a new tab. If an agent times out,
@@ -1497,7 +1497,7 @@ to the pinned Chrome node browser. Confirm:
   `manualActionMessage` to guide the operator. Do not retry in a loop until that
   action is complete.
 - For browser fallback: if Meet shows "Do you want people to hear you in the
-  meeting?", leave the tab open. OpenClaw should click **Use microphone** or, for
+  meeting?", leave the tab open. Quiet Core bot should click **Use microphone** or, for
   create-only fallback, **Continue without microphone** through browser
   automation and continue waiting for the generated Meet URL. If it cannot, the
   error should mention `meet-audio-choice-required`, not `google-login-required`.
@@ -1511,7 +1511,7 @@ openclaw googlemeet setup
 openclaw googlemeet doctor
 ```
 
-Use `mode: "agent"` for the normal STT -> OpenClaw agent -> TTS talk-back path,
+Use `mode: "agent"` for the normal STT -> Quiet Core bot agent -> TTS talk-back path,
 or `mode: "bidi"` for the direct realtime voice fallback. `mode: "transcribe"`
 intentionally does not start the talk-back bridge. For observe-only debugging,
 run `openclaw googlemeet status --json <session-id>` after participants speak
@@ -1523,7 +1523,7 @@ captions are unavailable for the meeting language/account.
 `googlemeet test-speech` always checks the realtime path and reports whether
 bridge output bytes were observed for that invocation. If `speechOutputVerified` is false and
 `speechOutputTimedOut` is true, the realtime provider may have accepted the
-utterance but OpenClaw did not see new output bytes reach the Chrome audio
+utterance but Quiet Core bot did not see new output bytes reach the Chrome audio
 bridge.
 
 Also verify:
@@ -1533,7 +1533,7 @@ Also verify:
 - `BlackHole 2ch` is visible on the Chrome host.
 - `sox` exists on the Chrome host.
 - Meet microphone and speaker are routed through the virtual audio path used by
-  OpenClaw. `doctor` should show `meet output routed: yes` for local Chrome
+  Quiet Core bot. `doctor` should show `meet output routed: yes` for local Chrome
   realtime joins.
 
 `googlemeet doctor [session-id]` prints the session, node, in-call state,
@@ -1667,7 +1667,7 @@ participant:
   active.
 - Run `openclaw voicecall tail` and check that Twilio webhooks are arriving at
   the Gateway.
-- Run `openclaw logs --follow` and look for the Twilio Meet sequence: Google
+- Run `quiet-core-bot logs --follow` and look for the Twilio Meet sequence: Google
   Meet delegates the join, Voice Call stores and serves pre-connect DTMF TwiML,
   Voice Call serves realtime TwiML for the Twilio call, then Google Meet requests
   intro speech with `voicecall.speak`.
@@ -1679,7 +1679,7 @@ participant:
   slowly or the call transcript still shows the prompt asking for a PIN after
   pre-connect DTMF was sent.
 - If the participant joins but you do not hear the greeting, check
-  `openclaw logs --follow` for the post-DTMF `voicecall.speak` request and
+  `quiet-core-bot logs --follow` for the post-DTMF `voicecall.speak` request and
   either media-stream TTS playback or the Twilio `<Say>` fallback. If the call
   transcript still contains "enter the meeting PIN", the phone leg has not joined
   the Meet room yet, so meeting participants will not hear speech.
@@ -1697,7 +1697,7 @@ phone dial-in participation.
 
 Chrome talk-back modes need `BlackHole 2ch` plus either:
 
-- `chrome.audioInputCommand` plus `chrome.audioOutputCommand`: OpenClaw owns the
+- `chrome.audioInputCommand` plus `chrome.audioOutputCommand`: Quiet Core bot owns the
   bridge and pipes audio in `chrome.audioFormat` between those commands and the
   selected provider. Agent mode uses realtime transcription plus regular TTS;
   bidi mode uses the realtime voice provider. The default Chrome path is 24 kHz

@@ -6,7 +6,7 @@ read_when:
 title: "Voice wake"
 ---
 
-OpenClaw treats **wake words as a single global list** owned by the **Gateway**.
+Quiet Core bot treats **wake words as a single global list** owned by the **Gateway**.
 
 - There are **no per-node custom wake words**.
 - **Any node/app UI may edit** the list; changes are persisted by the Gateway and broadcast to everyone.
@@ -17,7 +17,7 @@ OpenClaw treats **wake words as a single global list** owned by the **Gateway**.
 
 Wake words and routing rules are stored in the gateway state database:
 
-- `~/.openclaw/state/openclaw.sqlite`
+- `~/.quiet-core-bot/state/openclaw.sqlite`
 
 The active tables are:
 

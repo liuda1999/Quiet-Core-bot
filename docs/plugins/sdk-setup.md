@@ -154,16 +154,16 @@ Example:
 
 `openclaw.install` is package metadata, not manifest metadata.
 
-| Field                        | Type                                | What it means                                                                     |
-| ---------------------------- | ----------------------------------- | --------------------------------------------------------------------------------- |
-| `clawhubSpec`                | `string`                            | Canonical ClawHub spec for install/update and onboarding install-on-demand flows. |
-| `npmSpec`                    | `string`                            | Canonical npm spec for install/update fallback flows.                             |
-| `localPath`                  | `string`                            | Local development or bundled install path.                                        |
-| `defaultChoice`              | `"clawhub"` \| `"npm"` \| `"local"` | Preferred install source when multiple sources are available.                     |
-| `minHostVersion`             | `string`                            | Minimum supported OpenClaw version in the form `>=x.y.z` or `>=x.y.z-prerelease`. |
-| `expectedIntegrity`          | `string`                            | Expected npm dist integrity string, usually `sha512-...`, for pinned installs.    |
-| `allowInvalidConfigRecovery` | `boolean`                           | Lets bundled-plugin reinstall flows recover from specific stale-config failures.  |
-| `requiredPlatformPackages`   | `string[]`                          | Required platform-specific npm aliases verified during npm install.               |
+| Field                        | Type                                | What it means                                                                           |
+| ---------------------------- | ----------------------------------- | --------------------------------------------------------------------------------------- |
+| `clawhubSpec`                | `string`                            | Canonical ClawHub spec for install/update and onboarding install-on-demand flows.       |
+| `npmSpec`                    | `string`                            | Canonical npm spec for install/update fallback flows.                                   |
+| `localPath`                  | `string`                            | Local development or bundled install path.                                              |
+| `defaultChoice`              | `"clawhub"` \| `"npm"` \| `"local"` | Preferred install source when multiple sources are available.                           |
+| `minHostVersion`             | `string`                            | Minimum supported Quiet Core bot version in the form `>=x.y.z` or `>=x.y.z-prerelease`. |
+| `expectedIntegrity`          | `string`                            | Expected npm dist integrity string, usually `sha512-...`, for pinned installs.          |
+| `allowInvalidConfigRecovery` | `boolean`                           | Lets bundled-plugin reinstall flows recover from specific stale-config failures.        |
+| `requiredPlatformPackages`   | `string[]`                          | Required platform-specific npm aliases verified during npm install.                     |
 
 <AccordionGroup>
   <Accordion title="Onboarding behavior">
@@ -189,7 +189,7 @@ Example:
 
   </Accordion>
   <Accordion title="allowInvalidConfigRecovery scope">
-    `allowInvalidConfigRecovery` is not a general bypass for broken configs. It is for narrow bundled-plugin recovery only, so reinstall/setup can repair known upgrade leftovers like a missing bundled plugin path or stale `channels.<id>` entry for that same plugin. If config is broken for unrelated reasons, install still fails closed and tells the operator to run `openclaw doctor --fix`.
+    `allowInvalidConfigRecovery` is not a general bypass for broken configs. It is for narrow bundled-plugin recovery only, so reinstall/setup can repair known upgrade leftovers like a missing bundled plugin path or stale `channels.<id>` entry for that same plugin. If config is broken for unrelated reasons, install still fails closed and tells the operator to run `quiet-core-bot doctor --fix`.
   </Accordion>
 </AccordionGroup>
 
@@ -209,7 +209,7 @@ Channel plugins can opt into deferred loading with:
 }
 ```
 
-When enabled, OpenClaw loads only `setupEntry` during the pre-listen startup phase, even for already-configured channels. The full entry loads after the gateway starts listening.
+When enabled, Quiet Core bot loads only `setupEntry` during the pre-listen startup phase, even for already-configured channels. The full entry loads after the gateway starts listening.
 
 <Warning>
 Only enable deferred loading when your `setupEntry` registers everything the gateway needs before it starts listening (channel registration, HTTP routes, gateway methods). If the full entry owns required startup capabilities, keep the default behavior.
@@ -219,13 +219,13 @@ If your setup/full entry registers gateway RPC methods, keep them on a plugin-sp
 
 ## Plugin manifest
 
-Every native plugin must ship an `openclaw.plugin.json` in the package root. OpenClaw uses this to validate config without executing plugin code.
+Every native plugin must ship an `openclaw.plugin.json` in the package root. Quiet Core bot uses this to validate config without executing plugin code.
 
 ```json
 {
   "id": "my-plugin",
   "name": "My Plugin",
-  "description": "Adds My Plugin capabilities to OpenClaw",
+  "description": "Adds My Plugin capabilities to Quiet Core bot",
   "configSchema": {
     "type": "object",
     "additionalProperties": false,
@@ -283,7 +283,7 @@ The legacy skill-only publish alias is for skills. Plugin packages should always
 
 ## Setup entry
 
-The `setup-entry.ts` file is a lightweight alternative to `index.ts` that OpenClaw loads when it only needs setup surfaces (onboarding, config repair, disabled channel inspection).
+The `setup-entry.ts` file is a lightweight alternative to `index.ts` that Quiet Core bot loads when it only needs setup surfaces (onboarding, config repair, disabled channel inspection).
 
 ```typescript
 // setup-entry.ts
@@ -298,7 +298,7 @@ This avoids loading heavy runtime code (crypto libraries, CLI registrations, bac
 Bundled workspace channels that keep setup-safe exports in sidecar modules can use `defineBundledChannelSetupEntry(...)` from `openclaw/plugin-sdk/channel-entry-contract` instead of `defineSetupPluginEntry(...)`. That bundled contract also supports an optional `runtime` export so setup-time runtime wiring can stay lightweight and explicit.
 
 <AccordionGroup>
-  <Accordion title="When OpenClaw uses setupEntry instead of the full entry">
+  <Accordion title="When Quiet Core bot uses setupEntry instead of the full entry">
     - The channel is disabled but needs setup/onboarding surfaces.
     - The channel is enabled but unconfigured.
     - Deferred loading is enabled (`deferConfiguredChannelFullLoadUntilAfterListen`).
@@ -406,7 +406,7 @@ const accountSchema = z.object({
 const configSchema = buildChannelConfigSchema(accountSchema);
 ```
 
-If you already author the contract as JSON Schema or TypeBox, use the direct helper so OpenClaw can skip Zod-to-JSON-Schema conversion on metadata paths:
+If you already author the contract as JSON Schema or TypeBox, use the direct helper so Quiet Core bot can skip Zod-to-JSON-Schema conversion on metadata paths:
 
 ```typescript
 import { Type } from "typebox";
@@ -424,7 +424,7 @@ For third-party plugins, the cold-path contract is still the plugin manifest: mi
 
 ## Setup wizards
 
-Channel plugins can provide interactive setup wizards for `openclaw onboard`. The wizard is a `ChannelSetupWizard` object on the `ChannelPlugin`:
+Channel plugins can provide interactive setup wizards for `quiet-core-bot onboard`. The wizard is a `ChannelSetupWizard` object on the `ChannelPlugin`:
 
 ```typescript
 import type { ChannelSetupWizard } from "openclaw/plugin-sdk/channel-setup";
@@ -504,7 +504,7 @@ The `ChannelSetupWizard` type supports `credentials`, `textInputs`, `dmPolicy`, 
 <Tabs>
   <Tab title="npm">
     ```bash
-    openclaw plugins install @myorg/openclaw-my-plugin
+    quiet-core-bot plugins install @myorg/openclaw-my-plugin
     ```
 
     Bare package specs install from npm during the launch cutover.
@@ -512,7 +512,7 @@ The `ChannelSetupWizard` type supports `credentials`, `textInputs`, `dmPolicy`, 
   </Tab>
   <Tab title="ClawHub only">
     ```bash
-    openclaw plugins install clawhub:@myorg/openclaw-my-plugin
+    quiet-core-bot plugins install clawhub:@myorg/openclaw-my-plugin
     ```
   </Tab>
   <Tab title="npm package spec">
@@ -520,7 +520,7 @@ The `ChannelSetupWizard` type supports `credentials`, `textInputs`, `dmPolicy`, 
     direct npm install path during migration:
 
     ```bash
-    openclaw plugins install npm:@myorg/openclaw-my-plugin
+    quiet-core-bot plugins install npm:@myorg/openclaw-my-plugin
     ```
 
   </Tab>
@@ -531,18 +531,18 @@ The `ChannelSetupWizard` type supports `credentials`, `textInputs`, `dmPolicy`, 
 **Users can install:**
 
 ```bash
-openclaw plugins install <package-name>
+quiet-core-bot plugins install <package-name>
 ```
 
 <Info>
-For npm-sourced installs, `openclaw plugins install` installs the package into a per-plugin project under `~/.openclaw/npm/projects` with lifecycle scripts disabled. Keep plugin dependency trees pure JS/TS and avoid packages that require `postinstall` builds.
+For npm-sourced installs, `quiet-core-bot plugins install` installs the package into a per-plugin project under `~/.quiet-core-bot/npm/projects` with lifecycle scripts disabled. Keep plugin dependency trees pure JS/TS and avoid packages that require `postinstall` builds.
 </Info>
 
 <Note>
 Gateway startup does not install plugin dependencies. npm/git/ClawHub install flows own dependency convergence; local plugins must already have their dependencies installed.
 </Note>
 
-Bundled package metadata is explicit, not inferred from built JavaScript at gateway startup. Runtime dependencies belong in the plugin package that owns them; packaged OpenClaw startup never repairs or mirrors plugin dependencies.
+Bundled package metadata is explicit, not inferred from built JavaScript at gateway startup. Runtime dependencies belong in the plugin package that owns them; packaged Quiet Core bot startup never repairs or mirrors plugin dependencies.
 
 ## Related
 

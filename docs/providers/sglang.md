@@ -1,12 +1,12 @@
 ---
-summary: "Run OpenClaw with SGLang (OpenAI-compatible self-hosted server)"
+summary: "Run Quiet Core bot with SGLang (OpenAI-compatible self-hosted server)"
 read_when:
-  - You want to run OpenClaw against a local SGLang server
+  - You want to run Quiet Core bot against a local SGLang server
   - You want OpenAI-compatible /v1 endpoints with your own models
 title: "SGLang"
 ---
 
-SGLang serves open-weight models via an OpenAI-compatible HTTP API. OpenClaw connects to SGLang using the `openai-completions` provider family with auto-discovery of available models.
+SGLang serves open-weight models via an OpenAI-compatible HTTP API. Quiet Core bot connects to SGLang using the `openai-completions` provider family with auto-discovery of available models.
 
 | Property                  | Value                                                        |
 | ------------------------- | ------------------------------------------------------------ |
@@ -20,7 +20,7 @@ SGLang serves open-weight models via an OpenAI-compatible HTTP API. OpenClaw con
 | Streaming usage           | Yes (`supportsStreamingUsage: true`)                         |
 | Pricing                   | Marked external-free (`modelPricing.external: false`)        |
 
-OpenClaw also **auto-discovers** available models from SGLang when you opt in with `SGLANG_API_KEY`. Use `sglang/*` in `agents.defaults.models` to keep discovery dynamic when you also configure a custom SGLang base URL. See [Model discovery (implicit provider)](#model-discovery-implicit-provider) below.
+Quiet Core bot also **auto-discovers** available models from SGLang when you opt in with `SGLANG_API_KEY`. Use `sglang/*` in `agents.defaults.models` to keep discovery dynamic when you also configure a custom SGLang base URL. See [Model discovery (implicit provider)](#model-discovery-implicit-provider) below.
 
 ## Getting started
 
@@ -43,7 +43,7 @@ OpenClaw also **auto-discovers** available models from SGLang when you opt in wi
   </Step>
   <Step title="Run onboarding or set a model directly">
     ```bash
-    openclaw onboard
+    quiet-core-bot onboard
     ```
 
     Or configure the model manually:
@@ -64,16 +64,16 @@ OpenClaw also **auto-discovers** available models from SGLang when you opt in wi
 ## Model discovery (implicit provider)
 
 When `SGLANG_API_KEY` is set (or an auth profile exists) and you **do not**
-define `models.providers.sglang`, OpenClaw will query:
+define `models.providers.sglang`, Quiet Core bot will query:
 
 - `GET http://127.0.0.1:30000/v1/models`
 
 and convert the returned IDs into model entries.
 
 <Note>
-If you set `models.providers.sglang` explicitly, OpenClaw uses your declared
+If you set `models.providers.sglang` explicitly, Quiet Core bot uses your declared
 models by default. Add `"sglang/*": {}` to `agents.defaults.models` when you
-want OpenClaw to query that configured provider's `/models` endpoint and include
+want Quiet Core bot to query that configured provider's `/models` endpoint and include
 all advertised SGLang models.
 </Note>
 

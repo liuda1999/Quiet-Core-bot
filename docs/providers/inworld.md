@@ -1,16 +1,16 @@
 ---
-summary: "Inworld streaming text-to-speech for OpenClaw replies"
+summary: "Inworld streaming text-to-speech for Quiet Core bot replies"
 read_when:
   - You want Inworld speech synthesis for outbound replies
   - You need PCM telephony or OGG_OPUS voice-note output from Inworld
 title: "Inworld"
 ---
 
-Inworld is a streaming text-to-speech (TTS) provider. In OpenClaw it
+Inworld is a streaming text-to-speech (TTS) provider. In Quiet Core bot it
 synthesizes outbound reply audio (MP3 by default, OGG_OPUS for voice notes)
 and PCM audio for telephony channels such as Voice Call.
 
-OpenClaw posts to Inworld's streaming TTS endpoint, concatenates the
+Quiet Core bot posts to Inworld's streaming TTS endpoint, concatenates the
 returned base64 audio chunks into a single buffer, and hands the result to
 the standard reply-audio pipeline.
 
@@ -32,8 +32,8 @@ the standard reply-audio pipeline.
 Install the official plugin, then restart Gateway:
 
 ```bash
-openclaw plugins install @openclaw/inworld-speech
-openclaw gateway restart
+quiet-core-bot plugins install @openclaw/inworld-speech
+quiet-core-bot gateway restart
 ```
 
 ## Getting started
@@ -69,7 +69,7 @@ openclaw gateway restart
     ```
   </Step>
   <Step title="Send a message">
-    Send a reply through any connected channel. OpenClaw synthesizes the
+    Send a reply through any connected channel. Quiet Core bot synthesizes the
     audio with Inworld and delivers it as MP3 (or OGG_OPUS when the channel
     expects a voice note).
   </Step>
@@ -101,7 +101,7 @@ openclaw gateway restart
   </Accordion>
   <Accordion title="Audio outputs">
     Replies use MP3 by default. When the channel target is `voice-note`
-    OpenClaw asks Inworld for `OGG_OPUS` so the audio plays as a native
+    Quiet Core bot asks Inworld for `OGG_OPUS` so the audio plays as a native
     voice bubble. Telephony synthesis uses raw `PCM` at 22050 Hz to feed
     the telephony bridge.
   </Accordion>
@@ -121,7 +121,7 @@ openclaw gateway restart
     Full config reference including `messages.tts` settings.
   </Card>
   <Card title="Providers" href="/providers" icon="grid">
-    All supported OpenClaw providers.
+    All supported Quiet Core bot providers.
   </Card>
   <Card title="Troubleshooting" href="/help/troubleshooting" icon="wrench">
     Common issues and debugging steps.

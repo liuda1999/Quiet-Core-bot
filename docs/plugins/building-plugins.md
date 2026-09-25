@@ -1,23 +1,23 @@
 ---
-summary: "Create your first OpenClaw plugin in minutes"
+summary: "Create your first Quiet Core bot plugin in minutes"
 title: "Building plugins"
 sidebarTitle: "Getting Started"
 doc-schema-version: 1
 read_when:
-  - You want to create a new OpenClaw plugin
+  - You want to create a new Quiet Core bot plugin
   - You need a quick-start for plugin development
   - You are choosing between channel, provider, CLI backend, tool, or hook docs
 ---
 
-Plugins extend OpenClaw without changing core. A plugin can add a messaging
+Plugins extend Quiet Core bot without changing core. A plugin can add a messaging
 channel, model provider, local CLI backend, agent tool, hook, media provider,
 or another plugin-owned capability.
 
-You do not need to add an external plugin to the OpenClaw repository. Publish
+You do not need to add an external plugin to the Quiet Core bot repository. Publish
 the package to [ClawHub](/clawhub) and users install it with:
 
 ```bash
-openclaw plugins install clawhub:<package-name>
+quiet-core-bot plugins install clawhub:<package-name>
 ```
 
 Bare package specs still install from npm during the launch cutover. Use the
@@ -28,20 +28,20 @@ Bare package specs still install from npm during the launch cutover. Use the
 - Use Node 22.19 or newer and a package manager such as `npm` or `pnpm`.
 - Be familiar with TypeScript ESM modules.
 - For in-repo bundled plugin work, clone the repository and run `pnpm install`.
-  Source-checkout plugin development is pnpm-only because OpenClaw loads bundled
+  Source-checkout plugin development is pnpm-only because Quiet Core bot loads bundled
   plugins from `extensions/*` workspace packages.
 
 ## Choose the plugin shape
 
 <CardGroup cols={2}>
   <Card title="Channel plugin" icon="messages-square" href="/plugins/sdk-channel-plugins">
-    Connect OpenClaw to a messaging platform.
+    Connect Quiet Core bot to a messaging platform.
   </Card>
   <Card title="Provider plugin" icon="cpu" href="/plugins/sdk-provider-plugins">
     Add a model, media, search, fetch, speech, or realtime provider.
   </Card>
   <Card title="CLI backend plugin" icon="terminal" href="/plugins/cli-backend-plugins">
-    Run a local AI CLI through OpenClaw model fallback.
+    Run a local AI CLI through Quiet Core bot model fallback.
   </Card>
   <Card title="Tool plugin" icon="wrench" href="/plugins/tool-plugins">
     Register agent tools.
@@ -81,7 +81,7 @@ local proof.
 {
   "id": "my-plugin",
   "name": "My Plugin",
-  "description": "Adds a custom tool to OpenClaw",
+  "description": "Adds a custom tool to Quiet Core bot",
   "contracts": {
     "tools": ["my_tool"]
   },
@@ -102,7 +102,7 @@ local proof.
     point contract.
 
     Every plugin needs a manifest, even when it has no config. Runtime tools
-    must appear in `contracts.tools` so OpenClaw can discover ownership without
+    must appear in `contracts.tools` so Quiet Core bot can discover ownership without
     eagerly loading every plugin runtime. Set `activation.onStartup`
     intentionally. This example starts on Gateway startup.
 
@@ -126,7 +126,7 @@ local proof.
     export default definePluginEntry({
       id: "my-plugin",
       name: "My Plugin",
-      description: "Adds a custom tool to OpenClaw",
+      description: "Adds a custom tool to Quiet Core bot",
       register(api) {
         api.registerTool({
           name: "my_tool",
@@ -151,14 +151,14 @@ local proof.
     For an installed or external plugin, inspect the loaded runtime:
 
     ```bash
-    openclaw plugins inspect my-plugin --runtime --json
+    quiet-core-bot plugins inspect my-plugin --runtime --json
     ```
 
     If the plugin registers a CLI command, run that command too. For example,
     a demo command should have an execution proof such as
     `openclaw demo-plugin ping`.
 
-    For a bundled plugin in this repository, OpenClaw discovers source-checkout
+    For a bundled plugin in this repository, Quiet Core bot discovers source-checkout
     plugin packages from the `extensions/*` workspace. Run the closest targeted
     test:
 
@@ -185,7 +185,7 @@ local proof.
     Install the published package through ClawHub:
 
     ```bash
-    openclaw plugins install clawhub:your-org/your-plugin
+    quiet-core-bot plugins install clawhub:your-org/your-plugin
     ```
 
   </Step>
@@ -254,13 +254,13 @@ Tool factories receive a runtime-supplied context object. Use `ctx.activeModel`
 when a tool needs to log, display, or adapt to the active model for the current
 turn. The object can include `provider`, `modelId`, and `modelRef`. Treat it as
 informational runtime metadata, not as a security boundary against the local
-operator, installed plugin code, or a modified OpenClaw runtime. Sensitive local
+operator, installed plugin code, or a modified Quiet Core bot runtime. Sensitive local
 tools should still require an explicit plugin or operator opt-in and fail closed
 when active-model metadata is missing or unsuitable.
 
 The manifest declares ownership and discovery; execution still calls the live
 registered tool implementation. Keep `toolMetadata.<tool>.optional: true`
-aligned with `api.registerTool(..., { optional: true })` so OpenClaw can avoid
+aligned with `api.registerTool(..., { optional: true })` so Quiet Core bot can avoid
 loading that plugin runtime until the tool is explicitly allowlisted.
 
 ## Import conventions
@@ -304,7 +304,7 @@ For the full import map, see [Plugin SDK overview](/plugins/sdk-overview).
 
 ## Test against beta releases
 
-1. Watch for GitHub release tags on [openclaw/openclaw](https://github.com/openclaw/openclaw/releases) and subscribe via `Watch` > `Releases`. Beta tags look like `v2026.3.N-beta.1`. You can also turn on notifications for the official OpenClaw X account [@openclaw](https://x.com/openclaw) for release announcements.
+1. Watch for GitHub release tags on [openclaw/openclaw](https://github.com/openclaw/openclaw/releases) and subscribe via `Watch` > `Releases`. Beta tags look like `v2026.3.N-beta.1`. You can also turn on notifications for the official Quiet Core bot X account [@openclaw](https://x.com/openclaw) for release announcements.
 2. Test your plugin against the beta tag as soon as it appears. The window before stable is typically only a few hours.
 3. Post in your plugin's thread in the `plugin-forum` Discord channel after testing with either `all good` or what broke. If you do not have a thread yet, create one.
 4. If something breaks, open or update an issue titled `Beta blocker: <plugin-name> - <summary>` and apply the `beta-blocker` label. Put the issue link in your thread.

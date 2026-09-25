@@ -8,7 +8,7 @@ title: "Skill Workshop"
 sidebarTitle: "Skill Workshop"
 ---
 
-Skill Workshop is OpenClaw's governed path for creating and updating workspace
+Skill Workshop is Quiet Core bot's governed path for creating and updating workspace
 skills.
 
 Agents and operators do not write active `SKILL.md` files directly through this
@@ -82,7 +82,7 @@ approval prompt before they run. Set `skills.workshop.approvalPolicy` to
 Create a new skill proposal:
 
 ```bash
-openclaw skills workshop propose-create \
+quiet-core-bot skills workshop propose-create \
   --name morning-catchup \
   --description "Daily inbox catch-up: triage, archive, surface, draft, plan" \
   --proposal ./PROPOSAL.md
@@ -91,28 +91,28 @@ openclaw skills workshop propose-create \
 Create an update proposal for an existing workspace skill:
 
 ```bash
-openclaw skills workshop propose-update trip-planning --proposal ./PROPOSAL.md
+quiet-core-bot skills workshop propose-update trip-planning --proposal ./PROPOSAL.md
 ```
 
 List and inspect:
 
 ```bash
-openclaw skills workshop list
-openclaw skills workshop inspect <proposal-id>
+quiet-core-bot skills workshop list
+quiet-core-bot skills workshop inspect <proposal-id>
 ```
 
 Revise before approval:
 
 ```bash
-openclaw skills workshop revise <proposal-id> --proposal ./PROPOSAL.md
+quiet-core-bot skills workshop revise <proposal-id> --proposal ./PROPOSAL.md
 ```
 
 Close out the proposal:
 
 ```bash
-openclaw skills workshop apply <proposal-id>
-openclaw skills workshop reject <proposal-id> --reason "Duplicate"
-openclaw skills workshop quarantine <proposal-id> --reason "Needs security review"
+quiet-core-bot skills workshop apply <proposal-id>
+quiet-core-bot skills workshop reject <proposal-id> --reason "Duplicate"
+quiet-core-bot skills workshop quarantine <proposal-id> --reason "Needs security review"
 ```
 
 ## Proposal content
@@ -138,7 +138,7 @@ fields: `status`, proposal `version`, and proposal `date`.
 Use `--proposal-dir` when the proposed skill needs files beside `PROPOSAL.md`:
 
 ```bash
-openclaw skills workshop propose-create \
+quiet-core-bot skills workshop propose-create \
   --name weekly-update \
   --description "Friday wrap-up: stats, highlights, next week's top three" \
   --proposal-dir ./weekly-update-proposal
@@ -199,7 +199,7 @@ agent session or the CLI.
 }
 ```
 
-- `autonomous.enabled`: allows OpenClaw to create pending proposals from durable
+- `autonomous.enabled`: allows Quiet Core bot to create pending proposals from durable
   conversation signals after successful turns. Default: `false`.
 - `allowSymlinkTargetWrites`: allows apply to write through workspace skill
   symlinks whose real target is listed in `skills.load.allowSymlinkTargets`.
@@ -245,7 +245,7 @@ Read-only methods require `operator.read`. Mutating methods require
     templates/
 ```
 
-Default state directory: `~/.openclaw`.
+Default state directory: `~/.quiet-core-bot`.
 
 - `proposal.json`: canonical proposal record.
 - `proposals.json`: fast listing index, rebuildable from proposal folders.
@@ -280,4 +280,4 @@ Default state directory: `~/.openclaw`.
 - [Creating skills](/tools/creating-skills) for hand-written `SKILL.md`
   basics
 - [Skills config](/tools/skills-config) for the full `skills.workshop` schema
-- [Skills CLI](/cli/skills) for `openclaw skills` commands
+- [Skills CLI](/cli/skills) for `quiet-core-bot skills` commands

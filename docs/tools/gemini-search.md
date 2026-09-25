@@ -7,7 +7,7 @@ read_when:
 title: "Gemini search"
 ---
 
-OpenClaw supports Gemini models with built-in
+Quiet Core bot supports Gemini models with built-in
 [Google Search grounding](https://ai.google.dev/gemini-api/docs/grounding),
 which returns AI-synthesized answers backed by live Google Search results with
 citations.
@@ -24,7 +24,7 @@ citations.
     `models.providers.google.apiKey`, or configure a dedicated web-search key via:
 
     ```bash
-    openclaw configure --section web
+    quiet-core-bot configure --section web
     ```
 
   </Step>
@@ -63,7 +63,7 @@ then `models.providers.google.apiKey`. For base URLs, the dedicated
 `plugins.entries.google.config.webSearch.baseUrl` wins before
 `models.providers.google.baseUrl`.
 
-For a gateway install, put env keys in `~/.openclaw/.env`.
+For a gateway install, put env keys in `~/.quiet-core-bot/.env`.
 
 ## How it works
 

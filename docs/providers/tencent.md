@@ -2,7 +2,7 @@
 summary: "Tencent Cloud TokenHub setup for Hy3 preview"
 title: "Tencent Cloud (TokenHub)"
 read_when:
-  - You want to use Tencent Hy3 preview with OpenClaw
+  - You want to use Tencent Hy3 preview with Quiet Core bot
   - You need the TokenHub API key setup
 ---
 
@@ -25,7 +25,7 @@ Install the official Tencent Cloud provider plugin to access Tencent Hy3 preview
 <Steps>
   <Step title="Install the plugin">
     ```bash
-    openclaw plugins install @openclaw/tencent-provider
+    quiet-core-bot plugins install @openclaw/tencent-provider
     ```
   </Step>
   <Step title="Create a TokenHub API key">
@@ -35,11 +35,11 @@ Install the official Tencent Cloud provider plugin to access Tencent Hy3 preview
     <CodeGroup>
 
 ```bash Onboarding
-openclaw onboard --auth-choice tokenhub-api-key
+quiet-core-bot onboard --auth-choice tokenhub-api-key
 ```
 
 ```bash Direct flag
-openclaw onboard --non-interactive \
+quiet-core-bot onboard --non-interactive \
   --auth-choice tokenhub-api-key \
   --tokenhub-api-key "$TOKENHUB_API_KEY"
 ```
@@ -53,7 +53,7 @@ export TOKENHUB_API_KEY=...
   </Step>
   <Step title="Verify the model">
     ```bash
-    openclaw models list --provider tencent-tokenhub
+    quiet-core-bot models list --provider tencent-tokenhub
     ```
   </Step>
 </Steps>
@@ -61,7 +61,7 @@ export TOKENHUB_API_KEY=...
 ## Non-interactive setup
 
 ```bash
-openclaw onboard --non-interactive \
+quiet-core-bot onboard --non-interactive \
   --mode local \
   --auth-choice tokenhub-api-key \
   --tokenhub-api-key "$TOKENHUB_API_KEY" \
@@ -78,7 +78,7 @@ openclaw onboard --non-interactive \
 Hy3 preview is Tencent Hunyuan's large MoE language model for reasoning, long-context instruction following, code, and agent workflows. Tencent's OpenAI-compatible examples use `hy3-preview` as the model id and support standard chat-completions tool calling plus `reasoning_effort`.
 
 <Tip>
-  The model id is `hy3-preview`. Do not confuse it with Tencent's `HY-3D-*` models, which are 3D generation APIs and are not the OpenClaw chat model configured by this provider.
+  The model id is `hy3-preview`. Do not confuse it with Tencent's `HY-3D-*` models, which are 3D generation APIs and are not the Quiet Core bot chat model configured by this provider.
 </Tip>
 
 ## Tiered pricing
@@ -97,10 +97,10 @@ Rates are per million tokens in USD as advertised by Tencent. Override pricing u
 
 <AccordionGroup>
   <Accordion title="Endpoint override">
-    OpenClaw defaults to Tencent Cloud's `https://tokenhub.tencentmaas.com/v1` endpoint. Tencent also documents an international TokenHub endpoint:
+    Quiet Core bot defaults to Tencent Cloud's `https://tokenhub.tencentmaas.com/v1` endpoint. Tencent also documents an international TokenHub endpoint:
 
     ```bash
-    openclaw config set models.providers.tencent-tokenhub.baseUrl "https://tokenhub-intl.tencentmaas.com/v1"
+    quiet-core-bot config set models.providers.tencent-tokenhub.baseUrl "https://tokenhub-intl.tencentmaas.com/v1"
     ```
 
     Only override the endpoint when your TokenHub account or region requires it.
@@ -108,7 +108,7 @@ Rates are per million tokens in USD as advertised by Tencent. Override pricing u
   </Accordion>
 
   <Accordion title="Environment availability for the daemon">
-    If the Gateway runs as a managed service (launchd, systemd, Docker), `TOKENHUB_API_KEY` must be visible to that process. Set it in `~/.openclaw/.env` or via `env.shellEnv` so launchd, systemd, or Docker exec environments can read it.
+    If the Gateway runs as a managed service (launchd, systemd, Docker), `TOKENHUB_API_KEY` must be visible to that process. Set it in `~/.quiet-core-bot/.env` or via `env.shellEnv` so launchd, systemd, or Docker exec environments can read it.
 
     <Warning>
       Keys exported only in an interactive shell are not visible to managed gateway processes. Use the env file or config seam for persistent availability.

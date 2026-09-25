@@ -1,15 +1,15 @@
 ---
 title: "OpenProse"
 sidebarTitle: "OpenProse"
-summary: "OpenProse is a markdown-first workflow format for multi-agent AI sessions. In OpenClaw it ships as a plugin with a /prose slash command and a skill pack."
+summary: "OpenProse is a markdown-first workflow format for multi-agent AI sessions. In Quiet Core bot it ships as a plugin with a /prose slash command and a skill pack."
 read_when:
   - You want to run or write .prose workflow files
   - You want to enable the OpenProse plugin
-  - You need to understand how OpenProse maps to OpenClaw primitives
+  - You need to understand how OpenProse maps to Quiet Core bot primitives
 ---
 
 OpenProse is a portable, markdown-first workflow format for orchestrating AI
-sessions. In OpenClaw it ships as a plugin that installs an OpenProse skill
+sessions. In Quiet Core bot it ships as a plugin that installs an OpenProse skill
 pack and a `/prose` slash command. Programs live in `.prose` files and can
 spawn multiple sub-agents with explicit control flow.
 
@@ -32,18 +32,18 @@ spawn multiple sub-agents with explicit control flow.
     Bundled plugins are disabled by default. Enable OpenProse:
 
     ```bash
-    openclaw plugins enable open-prose
+    quiet-core-bot plugins enable open-prose
     ```
 
   </Step>
   <Step title="Restart the Gateway">
     ```bash
-    openclaw gateway restart
+    quiet-core-bot gateway restart
     ```
   </Step>
   <Step title="Verify">
     ```bash
-    openclaw plugins list | grep prose
+    quiet-core-bot plugins list | grep prose
     ```
 
     You should see `open-prose` as enabled. The `/prose` skill command is now
@@ -52,7 +52,7 @@ spawn multiple sub-agents with explicit control flow.
   </Step>
 </Steps>
 
-For a local checkout: `openclaw plugins install ./path/to/local/open-prose-plugin`
+For a local checkout: `quiet-core-bot plugins install ./path/to/local/open-prose-plugin`
 
 ## Slash command
 
@@ -102,15 +102,15 @@ session "Merge the findings + draft into a final answer."
 context: { findings, draft }
 ```
 
-## OpenClaw runtime mapping
+## Quiet Core bot runtime mapping
 
-OpenProse programs map to OpenClaw primitives:
+OpenProse programs map to Quiet Core bot primitives:
 
-| OpenProse concept         | OpenClaw tool    |
-| ------------------------- | ---------------- |
-| Spawn session / Task tool | `sessions_spawn` |
-| File read / write         | `read` / `write` |
-| Web fetch                 | `web_fetch`      |
+| OpenProse concept         | Quiet Core bot tool |
+| ------------------------- | ------------------- |
+| Spawn session / Task tool | `sessions_spawn`    |
+| File read / write         | `read` / `write`    |
+| Web fetch                 | `web_fetch`         |
 
 <Warning>
   If your tool allowlist blocks `sessions_spawn`, `read`, `write`, or
@@ -167,7 +167,7 @@ User-level persistent agents live at:
 
 ## Security
 
-Treat `.prose` files like code. Review them before running. Use OpenClaw tool
+Treat `.prose` files like code. Review them before running. Use Quiet Core bot tool
 allowlists and approval gates to control side effects. For deterministic,
 approval-gated workflows, compare with [Lobster](/tools/lobster).
 
@@ -178,7 +178,7 @@ approval-gated workflows, compare with [Lobster](/tools/lobster).
     How OpenProse's skill pack loads and what gates apply.
   </Card>
   <Card title="Subagents" href="/tools/subagents" icon="users">
-    OpenClaw's native multi-agent coordination layer.
+    Quiet Core bot's native multi-agent coordination layer.
   </Card>
   <Card title="Text-to-speech" href="/tools/tts" icon="volume-high">
     Add audio output to your workflows.

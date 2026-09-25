@@ -6,7 +6,7 @@ read_when:
 title: "Skills (macOS)"
 ---
 
-The macOS app surfaces OpenClaw skills via the gateway; it does not parse skills locally.
+The macOS app surfaces Quiet Core bot skills via the gateway; it does not parse skills locally.
 
 ## Data source
 
@@ -32,7 +32,7 @@ The macOS app surfaces OpenClaw skills via the gateway; it does not parse skills
 
 ## Env/API keys
 
-- The app stores keys in `~/.openclaw/openclaw.json` under `skills.entries.<skillKey>`.
+- The app stores keys in `~/.quiet-core-bot/quiet-core-bot.json` under `skills.entries.<skillKey>`.
 - `skills.update` patches `enabled`, `apiKey`, and `env`.
 
 ## Remote mode

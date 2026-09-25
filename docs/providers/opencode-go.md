@@ -18,9 +18,9 @@ provider id `opencode-go` so upstream per-model routing stays correct.
 
 ## Built-in catalog
 
-OpenClaw sources most Go catalog rows from the bundled OpenClaw model registry and
+Quiet Core bot sources most Go catalog rows from the bundled Quiet Core bot model registry and
 supplements current upstream rows while the registry catches up. Run
-`openclaw models list --provider opencode-go` for the current model list.
+`quiet-core-bot models list --provider opencode-go` for the current model list.
 
 The provider includes:
 
@@ -50,17 +50,17 @@ GLM-5.2 uses a 1M-token context window and supports up to 131K output tokens.
     <Steps>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard --auth-choice opencode-go
+        quiet-core-bot onboard --auth-choice opencode-go
         ```
       </Step>
       <Step title="Set a Go model as default">
         ```bash
-        openclaw config set agents.defaults.model.primary "opencode-go/kimi-k2.6"
+        quiet-core-bot config set agents.defaults.model.primary "opencode-go/kimi-k2.6"
         ```
       </Step>
       <Step title="Verify models are available">
         ```bash
-        openclaw models list --provider opencode-go
+        quiet-core-bot models list --provider opencode-go
         ```
       </Step>
     </Steps>
@@ -70,12 +70,12 @@ GLM-5.2 uses a 1M-token context window and supports up to 131K output tokens.
     <Steps>
       <Step title="Pass the key directly">
         ```bash
-        openclaw onboard --opencode-go-api-key "$OPENCODE_API_KEY"
+        quiet-core-bot onboard --opencode-go-api-key "$OPENCODE_API_KEY"
         ```
       </Step>
       <Step title="Verify models are available">
         ```bash
-        openclaw models list --provider opencode-go
+        quiet-core-bot models list --provider opencode-go
         ```
       </Step>
     </Steps>
@@ -95,7 +95,7 @@ GLM-5.2 uses a 1M-token context window and supports up to 131K output tokens.
 
 <AccordionGroup>
   <Accordion title="Routing behavior">
-    OpenClaw handles per-model routing automatically when the model ref uses
+    Quiet Core bot handles per-model routing automatically when the model ref uses
     `opencode-go/...`. No additional provider config is required.
   </Accordion>
 

@@ -1,25 +1,25 @@
 ---
-summary: "Build simple typed agent tools with defineToolPlugin and openclaw plugins init/build/validate"
+summary: "Build simple typed agent tools with defineToolPlugin and quiet-core-bot plugins init/build/validate"
 title: "Tool plugins"
 sidebarTitle: "Tool Plugins"
 read_when:
-  - You want to build a simple OpenClaw plugin that only adds agent tools
+  - You want to build a simple Quiet Core bot plugin that only adds agent tools
   - You want to use defineToolPlugin instead of hand-writing plugin manifest metadata
   - You need to scaffold, generate, validate, test, or publish a tool-only plugin
 ---
 
-Tool plugins add agent-callable tools to OpenClaw without adding a channel,
+Tool plugins add agent-callable tools to Quiet Core bot without adding a channel,
 model provider, hook, service, or setup backend. Use `defineToolPlugin` when the
-plugin owns a fixed list of tools and you want OpenClaw to generate the manifest
+plugin owns a fixed list of tools and you want Quiet Core bot to generate the manifest
 metadata that keeps those tools discoverable without loading runtime code.
 
 The recommended flow is:
 
-1. Scaffold a package with `openclaw plugins init`.
+1. Scaffold a package with `quiet-core-bot plugins init`.
 2. Write tools with `defineToolPlugin`.
 3. Build JavaScript.
 4. Generate `openclaw.plugin.json` and `package.json` metadata with
-   `openclaw plugins build`.
+   `quiet-core-bot plugins build`.
 5. Validate the generated metadata before publishing or installing.
 
 For provider, channel, hook, service, or mixed-capability plugins, start with
@@ -31,7 +31,7 @@ or [Provider Plugins](/plugins/sdk-provider-plugins) instead.
 - Node >= 22.
 - TypeScript ESM package output.
 - `typebox` for config and tool parameter schemas.
-- `openclaw >=2026.5.17`, the first OpenClaw version that exports
+- `openclaw >=2026.5.17`, the first Quiet Core bot version that exports
   `openclaw/plugin-sdk/tool-plugin`.
 - A package root that can ship `dist/`, `openclaw.plugin.json`, and
   `package.json`.
@@ -44,7 +44,7 @@ The generated plugin imports `typebox` at runtime, so keep `typebox` in
 Create a new plugin package:
 
 ```bash
-openclaw plugins init stock-quotes --name "Stock Quotes"
+quiet-core-bot plugins init stock-quotes --name "Stock Quotes"
 cd stock-quotes
 npm install
 npm run plugin:build
@@ -124,8 +124,8 @@ tool({
 });
 ```
 
-`openclaw plugins build` writes the matching `toolMetadata.<tool>.optional`
-manifest entry, so OpenClaw can discover the tool without loading plugin
+`quiet-core-bot plugins build` writes the matching `toolMetadata.<tool>.optional`
+manifest entry, so Quiet Core bot can discover the tool without loading plugin
 runtime code.
 
 Use `factory` when a tool needs the runtime tool context before it can be
@@ -153,12 +153,12 @@ services, providers, commands, or other runtime surfaces.
 
 ## Return values
 
-`defineToolPlugin` wraps plain return values into the OpenClaw tool-result
+`defineToolPlugin` wraps plain return values into the Quiet Core bot tool-result
 format:
 
 - Return a string when the model should see that exact text.
 - Return a JSON-compatible value when you want the model to see formatted JSON
-  and OpenClaw to keep the original value in `details`.
+  and Quiet Core bot to keep the original value in `details`.
 
 ```typescript
 tool({
@@ -189,7 +189,7 @@ capabilities.
 
 ## Configuration
 
-`configSchema` is optional. If you omit it, OpenClaw uses a strict empty object
+`configSchema` is optional. If you omit it, Quiet Core bot uses a strict empty object
 schema and the generated manifest still includes `configSchema`.
 
 ```typescript
@@ -225,15 +225,15 @@ export default defineToolPlugin({
 });
 ```
 
-OpenClaw reads plugin config from the plugin entry in the Gateway config. Do not
+Quiet Core bot reads plugin config from the plugin entry in the Gateway config. Do not
 hard-code secrets in source or in docs examples. Use config, environment
 variables, or SecretRefs according to the plugin's security model.
 
 ## Generated metadata
 
-OpenClaw discovers installed plugins from cold metadata. It must be able to read
+Quiet Core bot discovers installed plugins from cold metadata. It must be able to read
 the plugin manifest before importing plugin runtime code. `defineToolPlugin`
-therefore exposes static metadata, and `openclaw plugins build` writes that
+therefore exposes static metadata, and `quiet-core-bot plugins build` writes that
 metadata into the package.
 
 Run the generator after changing plugin id, name, description, config schema,
@@ -241,7 +241,7 @@ activation, or tool names:
 
 ```bash
 npm run build
-openclaw plugins build --entry ./dist/index.js
+quiet-core-bot plugins build --entry ./dist/index.js
 ```
 
 For a one-tool plugin, the generated manifest looks like this:
@@ -266,14 +266,14 @@ For a one-tool plugin, the generated manifest looks like this:
 }
 ```
 
-`contracts.tools` is the important discovery contract. It tells OpenClaw which
+`contracts.tools` is the important discovery contract. It tells Quiet Core bot which
 plugin owns each tool without loading every installed plugin runtime. If the
 manifest is stale, the tool may be missing from discovery or the wrong plugin
 may be blamed for a registration error.
 
 ## Package metadata
 
-For the simple tool-plugin workflow, `openclaw plugins build` aligns
+For the simple tool-plugin workflow, `quiet-core-bot plugins build` aligns
 `package.json` to the selected single runtime entry:
 
 ```json
@@ -303,8 +303,8 @@ rewriting files:
 
 ```bash
 npm run build
-openclaw plugins build --entry ./dist/index.js --check
-openclaw plugins validate --entry ./dist/index.js
+quiet-core-bot plugins build --entry ./dist/index.js --check
+quiet-core-bot plugins validate --entry ./dist/index.js
 npm test
 ```
 
@@ -318,19 +318,19 @@ npm test
 
 ## Install and inspect locally
 
-From a separate OpenClaw checkout or installed CLI, install the package path:
+From a separate Quiet Core bot checkout or installed CLI, install the package path:
 
 ```bash
-openclaw plugins install ./stock-quotes
-openclaw plugins inspect stock-quotes --runtime
+quiet-core-bot plugins install ./stock-quotes
+quiet-core-bot plugins inspect stock-quotes --runtime
 ```
 
 For a packaged smoke, pack first and install the tarball:
 
 ```bash
 npm pack
-openclaw plugins install npm-pack:./openclaw-plugin-stock-quotes-0.1.0.tgz
-openclaw plugins inspect stock-quotes --runtime --json
+quiet-core-bot plugins install npm-pack:./openclaw-plugin-stock-quotes-0.1.0.tgz
+quiet-core-bot plugins inspect stock-quotes --runtime --json
 ```
 
 After installation, start or restart the Gateway and ask the agent to use the
@@ -349,19 +349,19 @@ clawhub package publish your-org/stock-quotes
 Install with an explicit ClawHub locator:
 
 ```bash
-openclaw plugins install clawhub:your-org/stock-quotes
+quiet-core-bot plugins install clawhub:your-org/stock-quotes
 ```
 
 Bare npm package specs remain supported during the launch cutover, but ClawHub
-is the preferred discovery and distribution surface for OpenClaw plugins.
+is the preferred discovery and distribution surface for Quiet Core bot plugins.
 
 ## Troubleshooting
 
 ### `plugin entry not found: ./dist/index.js`
 
 The selected entry file does not exist. Run `npm run build`, then rerun
-`openclaw plugins build --entry ./dist/index.js` or
-`openclaw plugins validate --entry ./dist/index.js`.
+`quiet-core-bot plugins build --entry ./dist/index.js` or
+`quiet-core-bot plugins validate --entry ./dist/index.js`.
 
 ### `plugin entry does not expose defineToolPlugin metadata`
 
@@ -375,7 +375,7 @@ The manifest no longer matches the entry metadata. Run:
 
 ```bash
 npm run build
-openclaw plugins build --entry ./dist/index.js
+quiet-core-bot plugins build --entry ./dist/index.js
 ```
 
 Commit both `openclaw.plugin.json` and `package.json` changes.
@@ -383,7 +383,7 @@ Commit both `openclaw.plugin.json` and `package.json` changes.
 ### `package.json openclaw.extensions must include ./dist/index.js`
 
 The package metadata points at a different runtime entry. Run
-`openclaw plugins build --entry ./dist/index.js` so the generator aligns the
+`quiet-core-bot plugins build --entry ./dist/index.js` so the generator aligns the
 package metadata with the entry you intend to ship.
 
 ### `Cannot find package 'typebox'`
@@ -395,8 +395,8 @@ The built plugin imports `typebox` at runtime. Keep `typebox` in
 
 Check these in order:
 
-1. `openclaw plugins inspect <plugin-id> --runtime`
-2. `openclaw plugins validate --root <plugin-root> --entry ./dist/index.js`
+1. `quiet-core-bot plugins inspect <plugin-id> --runtime`
+2. `quiet-core-bot plugins validate --root <plugin-root> --entry ./dist/index.js`
 3. `openclaw.plugin.json` has `contracts.tools` with the expected tool names.
 4. `package.json` has `openclaw.extensions: ["./dist/index.js"]`.
 5. The Gateway was restarted or reloaded after installing the plugin.
