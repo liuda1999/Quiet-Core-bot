@@ -1246,7 +1246,7 @@ describe("dispatchReplyFromConfig", () => {
         MessageThreadId: 3731,
         TransportThreadId: 3731,
         To: "telegram:-1003774691294:topic:3731",
-        BodyForAgent: "[OpenClaw heartbeat poll]",
+        BodyForAgent: "[Quiet Core bot heartbeat poll]",
       }),
       cfg: automaticGroupReplyConfig,
       dispatcher,
@@ -6171,7 +6171,7 @@ describe("dispatchReplyFromConfig", () => {
       metadata: {
         pluginBindingOwner: "plugin",
         pluginId: "openclaw-codex-app-server",
-        pluginRoot: "/Users/huntharo/github/openclaw-app-server",
+        pluginRoot: "/Users/huntharo/github/quiet-core-bot-app-server",
         data: {
           kind: "codex-app-server-session",
           version: 1,
@@ -6377,7 +6377,7 @@ describe("dispatchReplyFromConfig", () => {
       metadata: {
         pluginBindingOwner: "plugin",
         pluginId: "openclaw-codex-app-server",
-        pluginRoot: "/workspace/openclaw-app-server",
+        pluginRoot: "/workspace/quiet-core-bot-app-server",
         data: {
           kind: "codex-app-server-session",
           version: 1,
@@ -6462,7 +6462,7 @@ describe("dispatchReplyFromConfig", () => {
       metadata: {
         pluginBindingOwner: "plugin",
         pluginId: "openclaw-codex-app-server",
-        pluginRoot: "/Users/huntharo/github/openclaw-app-server",
+        pluginRoot: "/Users/huntharo/github/quiet-core-bot-app-server",
         detachHint: "/codex detach",
         data: {
           kind: "codex-app-server-session",
@@ -6529,7 +6529,7 @@ describe("dispatchReplyFromConfig", () => {
       metadata: {
         pluginBindingOwner: "plugin",
         pluginId: "openclaw-codex-app-server",
-        pluginRoot: "/Users/huntharo/github/openclaw-app-server",
+        pluginRoot: "/Users/huntharo/github/quiet-core-bot-app-server",
       },
     } satisfies SessionBindingRecord);
     const cfg = emptyConfig;
@@ -6594,7 +6594,7 @@ describe("dispatchReplyFromConfig", () => {
       metadata: {
         pluginBindingOwner: "plugin",
         pluginId: "openclaw-codex-app-server",
-        pluginRoot: "/Users/huntharo/github/openclaw-app-server",
+        pluginRoot: "/Users/huntharo/github/quiet-core-bot-app-server",
         detachHint: "/codex detach",
       },
     } satisfies SessionBindingRecord);
@@ -6722,7 +6722,7 @@ describe("dispatchReplyFromConfig", () => {
       metadata: {
         pluginBindingOwner: "plugin",
         pluginId: "openclaw-codex-app-server",
-        pluginRoot: "/Users/huntharo/github/openclaw-app-server",
+        pluginRoot: "/Users/huntharo/github/quiet-core-bot-app-server",
       },
     } satisfies SessionBindingRecord);
     const cfg = emptyConfig;
@@ -6771,7 +6771,7 @@ describe("dispatchReplyFromConfig", () => {
     expect(replyResolver).not.toHaveBeenCalled();
   });
 
-  it("falls back to OpenClaw once per startup when a bound plugin is missing", async () => {
+  it("falls back to Quiet Core bot once per startup when a bound plugin is missing", async () => {
     setNoAbort();
     hookMocks.runner.hasHooks.mockImplementation(
       ((hookName?: string) =>
@@ -6795,12 +6795,14 @@ describe("dispatchReplyFromConfig", () => {
         pluginBindingOwner: "plugin",
         pluginId: "openclaw-codex-app-server",
         pluginName: "Codex App Server",
-        pluginRoot: "/Users/huntharo/github/openclaw-app-server",
+        pluginRoot: "/Users/huntharo/github/quiet-core-bot-app-server",
         detachHint: "/codex_detach",
       },
     } satisfies SessionBindingRecord);
 
-    const replyResolver = vi.fn(async () => ({ text: "openclaw fallback" }) satisfies ReplyPayload);
+    const replyResolver = vi.fn(
+      async () => ({ text: "quiet-core-bot fallback" }) satisfies ReplyPayload,
+    );
 
     const firstDispatcher = createDispatcher();
     await dispatchReplyFromConfig({
@@ -6856,7 +6858,7 @@ describe("dispatchReplyFromConfig", () => {
     expect(hookMocks.runner.runInboundClaim).not.toHaveBeenCalled();
   });
 
-  it("falls back to OpenClaw when the bound plugin is loaded but has no inbound_claim handler", async () => {
+  it("falls back to Quiet Core bot when the bound plugin is loaded but has no inbound_claim handler", async () => {
     setNoAbort();
     hookMocks.runner.hasHooks.mockImplementation(
       ((hookName?: string) =>
@@ -6882,11 +6884,13 @@ describe("dispatchReplyFromConfig", () => {
         pluginBindingOwner: "plugin",
         pluginId: "openclaw-codex-app-server",
         pluginName: "Codex App Server",
-        pluginRoot: "/Users/huntharo/github/openclaw-app-server",
+        pluginRoot: "/Users/huntharo/github/quiet-core-bot-app-server",
       },
     } satisfies SessionBindingRecord);
     const dispatcher = createDispatcher();
-    const replyResolver = vi.fn(async () => ({ text: "openclaw fallback" }) satisfies ReplyPayload);
+    const replyResolver = vi.fn(
+      async () => ({ text: "quiet-core-bot fallback" }) satisfies ReplyPayload,
+    );
 
     await dispatchReplyFromConfig({
       ctx: buildTestCtx({
@@ -6941,7 +6945,7 @@ describe("dispatchReplyFromConfig", () => {
         pluginBindingOwner: "plugin",
         pluginId: "openclaw-codex-app-server",
         pluginName: "Codex App Server",
-        pluginRoot: "/Users/huntharo/github/openclaw-app-server",
+        pluginRoot: "/Users/huntharo/github/quiet-core-bot-app-server",
         detachHint: "/codex_detach",
       },
     } satisfies SessionBindingRecord);
@@ -7000,7 +7004,7 @@ describe("dispatchReplyFromConfig", () => {
         pluginBindingOwner: "plugin",
         pluginId: "openclaw-codex-app-server",
         pluginName: "Codex App Server",
-        pluginRoot: "/Users/huntharo/github/openclaw-app-server",
+        pluginRoot: "/Users/huntharo/github/quiet-core-bot-app-server",
       },
     } satisfies SessionBindingRecord);
     const dispatcher = createDispatcher();

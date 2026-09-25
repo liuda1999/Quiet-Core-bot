@@ -1,4 +1,4 @@
-// Shared registration assertions for optional media-generation OpenClaw tools.
+// Shared registration assertions for optional media-generation Quiet Core bot tools.
 import { describe, expect, it } from "vitest";
 import { collectPresentOpenClawTools } from "./openclaw-tools.registration.js";
 import { textResult, type AnyAgentTool } from "./tools/common.js";

@@ -301,7 +301,7 @@ describe("sandbox/tool-policy", () => {
     expect(message).not.toContain(`Session: ${sessionKey}`);
     expect(message).toContain("Session: agent:… -rf /");
     expect(message).toContain(
-      "openclaw sandbox explain --session 'agent:main:weird session;rm -rf /'",
+      "quiet-core-bot sandbox explain --session 'agent:main:weird session;rm -rf /'",
     );
   });
 
@@ -332,7 +332,7 @@ describe("sandbox/tool-policy", () => {
     expect(sessionLine).toBe("Session: agent:…\\n12345");
     expect(sessionLine).not.toContain(sessionKey);
     expect(sessionLine).toContain("\\n");
-    expect(message).toContain("openclaw sandbox explain --agent main");
+    expect(message).toContain("quiet-core-bot sandbox explain --agent main");
     expect(message).not.toContain("--session");
   });
 });

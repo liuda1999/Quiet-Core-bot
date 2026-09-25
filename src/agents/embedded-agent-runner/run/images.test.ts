@@ -86,7 +86,7 @@ describe("detectImageReferences", () => {
     });
   });
 
-  it("ignores OpenClaw CLI image cache paths from prior prompt transcripts", () => {
+  it("ignores Quiet Core bot CLI image cache paths from prior prompt transcripts", () => {
     // Cache paths from generated tool reminders are replay artifacts, not new
     // user attachments to hydrate again.
     const refs = detectImageReferences(
@@ -105,7 +105,7 @@ describe("detectImageReferences", () => {
     ]);
   });
 
-  it("ignores temporary OpenClaw CLI image cache paths", () => {
+  it("ignores temporary Quiet Core bot CLI image cache paths", () => {
     expectNoImageReferences(
       `Prior turn wrote ${path.join(resolvePreferredOpenClawTmpDir(), "openclaw-cli-images", "stale.jpg")}`,
     );
@@ -120,7 +120,7 @@ describe("detectImageReferences", () => {
     );
   });
 
-  it("ignores file URLs into the OpenClaw CLI image cache", () => {
+  it("ignores file URLs into the Quiet Core bot CLI image cache", () => {
     const stalePath = path.join(os.tmpdir(), "openclaw", "openclaw-cli-images", "stale.png");
 
     expectNoImageReferences(`Prior turn wrote ${pathToFileURL(stalePath).href}`);

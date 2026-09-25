@@ -499,7 +499,7 @@ describe("message tool secret scoping", () => {
     );
   });
 
-  it("forwards source reply delivery mode through createOpenClawTools", () => {
+  it("forwards source reply delivery mode through createQuiet Core botTools", () => {
     const tool = createOpenClawTools({
       config: {} as never,
       sourceReplyDeliveryMode: "message_tool_only",
@@ -1163,7 +1163,7 @@ describe("message tool agent routing", () => {
     expect(call?.toolContext?.replyToMode).toBe("off");
   });
 
-  it("forwards agentThreadId through createOpenClawTools to the message tool", async () => {
+  it("forwards agentThreadId through createQuiet Core botTools to the message tool", async () => {
     mockSendResult({ channel: "slack", to: "channel:C123" });
     const plugin = createChannelPlugin({
       id: "slack",
@@ -1197,7 +1197,7 @@ describe("message tool agent routing", () => {
     expect(call?.toolContext?.replyToMode).toBe("all");
   });
 
-  it("forwards the routable target through createOpenClawTools to the message tool", async () => {
+  it("forwards the routable target through createQuiet Core botTools to the message tool", async () => {
     mockSendResult({ channel: "slack", to: "user:U123" });
     const plugin = createChannelPlugin({
       id: "slack",

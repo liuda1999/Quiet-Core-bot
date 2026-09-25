@@ -1161,7 +1161,7 @@ describe("mention helpers", () => {
   });
 
   it("strips safe mention patterns and ignores unsafe ones", () => {
-    const stripped = stripMentions("openclaw " + "a".repeat(28) + "!", {} as MsgContext, {
+    const stripped = stripMentions("quiet-core-bot " + "a".repeat(28) + "!", {} as MsgContext, {
       messages: {
         groupChat: { mentionPatterns: ["\\bopenclaw\\b", "(a+)+$"] },
       },

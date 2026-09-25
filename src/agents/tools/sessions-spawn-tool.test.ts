@@ -691,7 +691,7 @@ describe("sessions_spawn tool", () => {
     expect(hoisted.spawnAcpDirectMock).not.toHaveBeenCalled();
   });
 
-  it("accepts ACP spawns when inherited allows include OpenClaw command tools", async () => {
+  it("accepts ACP spawns when inherited allows include Quiet Core bot command tools", async () => {
     registerAcpBackendForTest();
     const tool = createSessionsSpawnTool({
       agentSessionKey: "agent:main:main",

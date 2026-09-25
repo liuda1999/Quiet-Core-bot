@@ -201,7 +201,7 @@ describe("runEmbeddedAgent usage reporting", () => {
     expect(usage?.total).toBe(200);
   });
 
-  it("reports the resolved model provider when OpenClaw marks the assistant message as the native runtime", async () => {
+  it("reports the resolved model provider when Quiet Core bot marks the assistant message as the native runtime", async () => {
     mockedResolveModelAsync.mockResolvedValueOnce({
       model: {
         id: "openai/gpt-5.4",

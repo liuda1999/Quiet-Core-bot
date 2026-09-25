@@ -276,7 +276,7 @@ function summarizeKnownExec(words: string[]): string {
 
   if (bin === "openclaw") {
     const sub = firstPositional(words, 1);
-    return sub ? `run openclaw ${sub}` : "run openclaw";
+    return sub ? `run quiet-core-bot ${sub}` : "run openclaw";
   }
 
   const arg = firstPositional(words, 1);

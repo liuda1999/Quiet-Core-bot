@@ -1,4 +1,4 @@
-// Formats OpenClaw CLI command snippets for chat-facing command responses.
+// Formats Quiet Core bot CLI command snippets for chat-facing command responses.
 import fs from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
@@ -81,7 +81,7 @@ function resolveCurrentOpenClawCliArgvPrefix(): string[] {
   return entry && entry !== process.execPath ? [process.execPath, entry] : [process.execPath];
 }
 
-/** Reconstructs the current OpenClaw CLI invocation with extra args. */
+/** Reconstructs the current Quiet Core bot CLI invocation with extra args. */
 export function buildCurrentOpenClawCliArgv(args: string[]): string[] {
   return [...resolveCurrentOpenClawCliArgvPrefix(), ...args];
 }
@@ -99,7 +99,7 @@ export function buildCurrentOpenClawCliExecEnv(
   return Object.keys(overrides).length > 0 ? overrides : undefined;
 }
 
-/** Builds a shell-quoted command string for rerunning the current OpenClaw CLI. */
+/** Builds a shell-quoted command string for rerunning the current Quiet Core bot CLI. */
 export function buildCurrentOpenClawCliCommand(args: string[]): string {
   return buildCurrentOpenClawCliArgv(args).map(quoteShellArg).join(" ");
 }

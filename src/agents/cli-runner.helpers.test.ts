@@ -42,7 +42,7 @@ describe("loadPromptRefImages", () => {
     expect(sanitizeImageBlocksSpy).not.toHaveBeenCalled();
   });
 
-  it("does not reload OpenClaw CLI image cache paths from prior prompt text", async () => {
+  it("does not reload Quiet Core bot CLI image cache paths from prior prompt text", async () => {
     const loadImageFromRefSpy = vi.spyOn(promptImageUtils, "loadImageFromRef");
     const sanitizeImageBlocksSpy = vi.spyOn(toolImages, "sanitizeImageBlocks");
 

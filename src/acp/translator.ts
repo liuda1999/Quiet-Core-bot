@@ -246,7 +246,7 @@ function hasExplicitSessionRouting(
   );
 }
 
-/** ACP Agent implementation backed by the OpenClaw Gateway and replay ledger. */
+/** ACP Agent implementation backed by the Quiet Core bot Gateway and replay ledger. */
 export class AcpGatewayAgent implements Agent {
   private connection: AgentSideConnection;
   private gateway: GatewayClient;
@@ -801,8 +801,7 @@ export class AcpGatewayAgent implements Agent {
         const promptKey = this.pendingPromptKey(params.sessionId, runId);
         if (
           isGatewayCloseError(err) &&
-          (this.getPendingPrompt(params.sessionId, runId) ||
-            this.settlingPromptKeys.has(promptKey))
+          (this.getPendingPrompt(params.sessionId, runId) || this.settlingPromptKeys.has(promptKey))
         ) {
           return;
         }
@@ -1759,7 +1758,7 @@ export class AcpGatewayAgent implements Agent {
       return;
     }
     throw new Error(
-      "ACP bridge mode does not support per-session MCP servers. Configure MCP on the OpenClaw gateway or agent instead.",
+      "ACP bridge mode does not support per-session MCP servers. Configure MCP on the Quiet Core bot gateway or agent instead.",
     );
   }
 

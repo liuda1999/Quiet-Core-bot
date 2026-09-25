@@ -38,11 +38,11 @@ export type ApiKeyCredential = {
   metadata?: Record<string, string>;
 };
 
-/** Static token credential that OpenClaw does not refresh. */
+/** Static token credential that Quiet Core bot does not refresh. */
 export type TokenCredential = {
   /**
    * Static bearer-style token (often OAuth access token / PAT).
-   * Not refreshable by OpenClaw (unlike `type: "oauth"`).
+   * Not refreshable by Quiet Core bot (unlike `type: "oauth"`).
    */
   type: "token";
   provider: string;

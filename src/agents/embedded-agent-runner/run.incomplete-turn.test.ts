@@ -3384,7 +3384,7 @@ describe("runEmbeddedAgent incomplete-turn safety", () => {
     const result = await runEmbeddedAgent({
       ...overflowBaseRunParams,
       prompt:
-        "made a bunch of improvements to the student's source code (openclaw) this weekend, along with a few other maintainers. hopefully he will be more proactive now",
+        "made a bunch of improvements to the student's source code (quiet-core-bot) this weekend, along with a few other maintainers. hopefully he will be more proactive now",
       provider: "openai",
       model: "gpt-5.4",
       runId: "run-visible-prose-no-classifier",

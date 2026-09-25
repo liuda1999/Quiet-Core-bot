@@ -1,5 +1,5 @@
 /**
- * Runtime context resolver for OpenClaw plugin tools.
+ * Runtime context resolver for Quiet Core bot plugin tools.
  *
  * Normalizes workspace, delivery, browser, sandbox, and active-model inputs before plugin tool invocation.
  */
@@ -11,7 +11,7 @@ import { modelKey } from "./model-ref-shared.js";
 import type { ToolFsPolicy } from "./tool-fs-policy.js";
 import { resolveWorkspaceRoot } from "./workspace-dir.js";
 
-/** Options provided by agent runtime callers when invoking OpenClaw plugin tools. */
+/** Options provided by agent runtime callers when invoking Quiet Core bot plugin tools. */
 export type OpenClawPluginToolOptions = {
   agentSessionKey?: string;
   agentChannel?: GatewayMessageChannel;

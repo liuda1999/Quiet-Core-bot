@@ -759,7 +759,7 @@ describe("openai transport stream", () => {
     }
   });
 
-  it("enforces the code mode responses tool surface before requests leave OpenClaw", () => {
+  it("enforces the code mode responses tool surface before requests leave Quiet Core bot", () => {
     const payload = {
       tools: [
         { type: "function", name: "exec" },
@@ -811,7 +811,7 @@ describe("openai transport stream", () => {
     ).toThrow(/Code mode payload tool surface violation/);
   });
 
-  it("adds OpenClaw attribution to native OpenAI transport headers and protects it from provider overrides", () => {
+  it("adds Quiet Core bot attribution to native OpenAI transport headers and protects it from provider overrides", () => {
     vi.stubEnv("OPENCLAW_VERSION", "2026.3.22");
     const headers = testing.buildOpenAIClientHeaders(
       {
@@ -848,7 +848,7 @@ describe("openai transport stream", () => {
     });
   });
 
-  it("adds OpenClaw attribution to native OpenAI Codex transport headers", () => {
+  it("adds Quiet Core bot attribution to native OpenAI Codex transport headers", () => {
     vi.stubEnv("OPENCLAW_VERSION", "2026.3.22");
     const headers = testing.buildOpenAIClientHeaders(
       {
@@ -3624,7 +3624,7 @@ describe("openai transport stream", () => {
     expect(params).not.toHaveProperty("top_p");
   });
 
-  it("keeps Codex response shaping when simple completions use the OpenClaw transport alias", () => {
+  it("keeps Codex response shaping when simple completions use the Quiet Core bot transport alias", () => {
     const params = buildOpenAIResponsesParams(
       {
         id: "gpt-5.5",

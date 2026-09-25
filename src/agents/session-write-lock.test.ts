@@ -436,7 +436,7 @@ describe("acquireSessionWriteLock", () => {
     });
   });
 
-  it("reports live OpenClaw-owned stale locks without removing them", async () => {
+  it("reports live Quiet Core bot-owned stale locks without removing them", async () => {
     await withTempSessionLockFile(async ({ sessionFile, lockPath }) => {
       const owner = spawn(process.execPath, ["-e", "setInterval(() => {}, 1000)", "openclaw"], {
         stdio: "ignore",
@@ -816,7 +816,7 @@ describe("acquireSessionWriteLock", () => {
     }
   });
 
-  it("does not clean live OpenClaw locks just because holder max hold expired", async () => {
+  it("does not clean live Quiet Core bot locks just because holder max hold expired", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-lock-policy-"));
     const sessionsDir = path.join(root, "sessions");
     await fs.mkdir(sessionsDir, { recursive: true });
@@ -947,12 +947,12 @@ describe("acquireSessionWriteLock", () => {
     }
   });
 
-  it("cleans old live .jsonl lock files owned by non-OpenClaw processes", async () => {
+  it("cleans old live .jsonl lock files owned by non-Quiet Core bot processes", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-lock-"));
     const sessionsDir = path.join(root, "sessions");
     await fs.mkdir(sessionsDir, { recursive: true });
     const nowMs = Date.now();
-    const lockPath = path.join(sessionsDir, "old-non-openclaw.jsonl.lock");
+    const lockPath = path.join(sessionsDir, "old-non-quiet-core-bot.jsonl.lock");
 
     try {
       await fs.writeFile(
@@ -974,7 +974,7 @@ describe("acquireSessionWriteLock", () => {
 
       expect(lockCleanupRecords(result.cleaned)).toEqual([
         {
-          name: "old-non-openclaw.jsonl.lock",
+          name: "old-non-quiet-core-bot.jsonl.lock",
           removed: true,
           stale: true,
           staleReasons: ["too-old", "non-openclaw-owner"],
@@ -1018,7 +1018,7 @@ describe("acquireSessionWriteLock", () => {
     }
   });
 
-  it("cleans fresh live .jsonl lock files owned by a non-OpenClaw process", async () => {
+  it("cleans fresh live .jsonl lock files owned by a non-Quiet Core bot process", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-lock-"));
     const sessionsDir = path.join(root, "sessions");
     await fs.mkdir(sessionsDir, { recursive: true });
@@ -1066,7 +1066,7 @@ describe("acquireSessionWriteLock", () => {
     }
   });
 
-  it("cleans fresh live .jsonl lock files owned by generic non-OpenClaw entrypoints", async () => {
+  it("cleans fresh live .jsonl lock files owned by generic non-Quiet Core bot entrypoints", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-lock-"));
     const sessionsDir = path.join(root, "sessions");
     await fs.mkdir(sessionsDir, { recursive: true });
@@ -1178,7 +1178,7 @@ describe("acquireSessionWriteLock", () => {
     }
   });
 
-  it("keeps fresh live .jsonl lock files with OpenClaw or unknown owners", async () => {
+  it("keeps fresh live .jsonl lock files with Quiet Core bot or unknown owners", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-lock-"));
     const sessionsDir = path.join(root, "sessions");
     await fs.mkdir(sessionsDir, { recursive: true });

@@ -219,7 +219,7 @@ export class WorkspaceVanishedError extends Error {
 
   constructor(params: { workspaceDir: string; attestationPath: string }) {
     super(
-      `OpenClaw workspace appears to have disappeared after a recent initialization: ${params.workspaceDir}. ` +
+      `Quiet Core bot workspace appears to have disappeared after a recent initialization: ${params.workspaceDir}. ` +
         `Refusing to reseed BOOTSTRAP.md over a recently attested workspace. ` +
         `Restore the workspace or remove ${params.attestationPath} if this reset was intentional.`,
     );

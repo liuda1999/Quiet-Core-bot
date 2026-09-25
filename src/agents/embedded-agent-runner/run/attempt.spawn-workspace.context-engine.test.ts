@@ -264,7 +264,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
       toolSearchControlsCase = mockParams(
         hoisted.createOpenClawCodingToolsMock,
         0,
-        "createOpenClawCodingTools options",
+        "createQuiet Core botCodingTools options",
       );
     } finally {
       await cleanupTempPaths(setupTempPaths);
@@ -286,7 +286,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
     vi.restoreAllMocks();
   });
 
-  it("enables Tool Search controls for embedded OpenClaw runs when configured", async () => {
+  it("enables Tool Search controls for embedded Quiet Core bot runs when configured", async () => {
     expect(toolSearchControlsCase.includeToolSearchControls).toBe(true);
     expect(toolSearchControlsCase.toolSearchCatalogRef).toEqual({});
   });
@@ -352,13 +352,13 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
     const options = mockParams(
       hoisted.createOpenClawCodingToolsMock,
       0,
-      "createOpenClawCodingTools options",
+      "createQuiet Core botCodingTools options",
     );
     expect(options.includeToolSearchControls).toBe(true);
-    const optionsConfig = requireRecord(options.config, "createOpenClawCodingTools config");
+    const optionsConfig = requireRecord(options.config, "createQuiet Core botCodingTools config");
     const toolsConfig = requireRecord(
       optionsConfig.tools,
-      "createOpenClawCodingTools tools config",
+      "createQuiet Core botCodingTools tools config",
     );
     expect(toolsConfig.toolSearch).toEqual({
       enabled: true,
@@ -411,7 +411,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
     const options = mockParams(
       hoisted.createOpenClawCodingToolsMock,
       0,
-      "createOpenClawCodingTools options",
+      "createQuiet Core botCodingTools options",
     );
     expect(options.includeToolSearchControls).toBe(false);
     const sessionOptions = mockParams(
@@ -1136,7 +1136,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
       attemptOverrides: {
         skillsSnapshot: {
           prompt:
-            "<available_skills><skill><location>~/.openclaw/skills/smaug/SKILL.md</location></skill></available_skills>",
+            "<available_skills><skill><location>~/.quiet-core-bot/skills/smaug/SKILL.md</location></skill></available_skills>",
           skills: [{ name: "smaug" }],
           resolvedSkills: [
             {
@@ -1707,8 +1707,8 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
       },
     });
 
-    expect(seenPrompt).toBe("Continue the OpenClaw runtime event.");
-    expect(result.finalPromptText).toBe("Continue the OpenClaw runtime event.");
+    expect(seenPrompt).toBe("Continue the Quiet Core bot runtime event.");
+    expect(result.finalPromptText).toBe("Continue the Quiet Core bot runtime event.");
     expect(JSON.stringify(seenModelMessages)).toContain("dynamic hook context");
     expect(JSON.stringify(seenModelMessages)).toContain("internal heartbeat event");
     expect(JSON.stringify(seenModelMessages)).toContain("dynamic hook tail");
@@ -1818,7 +1818,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
 
     expect(seenPrompt).toContain("Reply target of current user message (untrusted, for context):");
     expect(seenPrompt).toContain("Hello from the replied message");
-    expect(seenPrompt).toContain("Continue the OpenClaw runtime event.");
+    expect(seenPrompt).toContain("Continue the Quiet Core bot runtime event.");
     expect(result.finalPromptText).toBe(seenPrompt);
     const trajectoryEvents = (
       await fs.readFile(path.join(tempPaths[0] ?? "", "session.trajectory.jsonl"), "utf8")
@@ -1850,12 +1850,12 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
       tempPaths,
       trajectory: true,
       attemptOverrides: {
-        prompt: "[OpenClaw room event]",
+        prompt: "[Quiet Core bot room event]",
         transcriptPrompt: "",
         currentInboundEventKind: "room_event",
         currentInboundContext: {
           text: [
-            "[OpenClaw room event]",
+            "[Quiet Core bot room event]",
             "inbound_event_kind: room_event",
             "visible_reply_contract: message_tool_only",
             "Room context:\n#2001 Alice: lunch at 2?\n#2002 Bob: works",
@@ -1882,12 +1882,12 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
       },
     });
 
-    expect(seenPrompt).toContain("[OpenClaw room event]");
+    expect(seenPrompt).toContain("[Quiet Core bot room event]");
     expect(seenPrompt).toContain("inbound_event_kind: room_event");
     expect(seenPrompt).toContain("visible_reply_contract: message_tool_only");
     expect(seenPrompt).toContain("Current event:\n#2003 Bob: hey claw summarize the plan");
-    expect(seenPrompt?.trim().endsWith("[OpenClaw room event]")).toBe(true);
-    expect(seenPrompt).not.toBe("Continue the OpenClaw runtime event.");
+    expect(seenPrompt?.trim().endsWith("[Quiet Core bot room event]")).toBe(true);
+    expect(seenPrompt).not.toBe("Continue the Quiet Core bot runtime event.");
     expect(seenPrompt).not.toContain("dynamic hook context");
     expect(seenPrompt).not.toContain("dynamic hook tail");
     expect(JSON.stringify(seenModelMessages)).toContain("dynamic hook context");
@@ -1901,7 +1901,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
       .map((line) => JSON.parse(line) as TrajectoryEvent);
     const contextCompiled = trajectoryEvents.find((event) => event.type === "context.compiled");
     expect(contextCompiled?.data?.prompt).toContain("visible_reply_contract: message_tool_only");
-    expect(contextCompiled?.data?.prompt).toContain("[OpenClaw room event]");
+    expect(contextCompiled?.data?.prompt).toContain("[Quiet Core bot room event]");
   });
 
   it("skips blank visible prompts with replay history before provider submission", async () => {

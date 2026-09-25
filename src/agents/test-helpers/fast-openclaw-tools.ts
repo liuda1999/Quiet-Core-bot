@@ -1,5 +1,5 @@
 /**
- * Fast OpenClaw tool-bundle mock.
+ * Fast Quiet Core bot tool-bundle mock.
  *
  * Provides lightweight built-in tool stubs for inventory-heavy tests.
  */

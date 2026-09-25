@@ -1,5 +1,5 @@
 /**
- * OpenClaw-owned agent runtime facade.
+ * Quiet Core bot-owned agent runtime facade.
  *
  * Wires agent-core to the plugin SDK LLM runtime and re-exports reusable runtime helpers.
  */
@@ -22,7 +22,7 @@ export class Agent extends CoreAgent {
   }
 }
 
-// OpenClaw-owned reusable agent core
+// Quiet Core bot-owned reusable agent core
 export * from "../../../packages/agent-core/src/index.js";
 // Proxy utilities
 export * from "./proxy.js";

@@ -10,7 +10,7 @@ import { applyFinalEffectiveToolPolicy } from "./embedded-agent-runner/effective
 import { splitSdkTools } from "./embedded-agent-runner/tool-split.js";
 
 // Regression coverage for #76063. The reporter's evidence was a captured
-// outbound provider request body that contained only built-in OpenClaw tools
+// outbound provider request body that contained only built-in Quiet Core bot tools
 // and no `server__*` MCP tool definitions, even though `cfg.mcp.servers`
 // declared healthy stdio servers. The materialize/policy/split units each
 // have their own focused tests, but ClawSweeper noted that the full request-

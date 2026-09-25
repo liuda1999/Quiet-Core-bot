@@ -390,7 +390,7 @@ describe("runCliAgent spawn path", () => {
     expect(allArgs).toContain("You are a helpful assistant.");
   });
 
-  it("includes the OpenClaw skills prompt in CLI system prompts", () => {
+  it("includes the Quiet Core bot skills prompt in CLI system prompts", () => {
     const systemPrompt = buildCliAgentSystemPrompt({
       workspaceDir: "/tmp",
       modelDisplay: "claude-cli/sonnet",
@@ -575,7 +575,7 @@ describe("runCliAgent spawn path", () => {
     );
   });
 
-  it("passes OpenClaw skills to Claude as a session plugin", async () => {
+  it("passes Quiet Core bot skills to Claude as a session plugin", async () => {
     const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-cli-skills-"));
     const skillDir = path.join(workspaceDir, "skills", "weather");
     await fs.mkdir(skillDir, { recursive: true });
@@ -2691,7 +2691,7 @@ ${JSON.stringify({
     );
   });
 
-  it("answers Claude live control_request can_use_tool with allow when OpenClaw exec is YOLO despite raw --permission-mode default", async () => {
+  it("answers Claude live control_request can_use_tool with allow when Quiet Core bot exec is YOLO despite raw --permission-mode default", async () => {
     let stdoutListener: ((chunk: string) => void) | undefined;
     const writes: string[] = [];
     const stdin = {
@@ -2740,7 +2740,7 @@ ${JSON.stringify({
     });
 
     // tools.exec resolves to full/off (would normally allow native Bash),
-    // and OpenClaw policy is authoritative over raw Claude permission-mode
+    // and Quiet Core bot policy is authoritative over raw Claude permission-mode
     // args. The live launch is normalized back to bypassPermissions.
     const result = await executePreparedCliRun(
       buildPreparedCliRunContext({

@@ -72,13 +72,13 @@ type AgentHarnessSelectionDecision = {
   selectedReason:
     | "forced_openclaw"
     | "forced_plugin"
-    // Implicit Codex preference found no registered Codex harness, so OpenClaw handled the run.
+    // Implicit Codex preference found no registered Codex harness, so Quiet Core bot handled the run.
     | "implicit_plugin_unavailable_openclaw"
     // Provider-owned CLI runtime aliases have no agent harness plugin counterpart.
     | "cli_runtime_passthrough_openclaw"
     // Auto mode chose a registered plugin harness that supports the provider/model.
     | "auto_plugin"
-    // Auto mode found no supporting plugin harness, so OpenClaw handled the run.
+    // Auto mode found no supporting plugin harness, so Quiet Core bot handled the run.
     | "auto_openclaw";
   candidates: AgentHarnessSelectionCandidate[];
 };
@@ -184,8 +184,8 @@ function selectAgentHarnessDecision(params: {
           runtimeSource: "model",
         } as AgentHarnessPolicy)
       : resolvedPolicy;
-  // OpenClaw's built-in harness is intentionally not part of the plugin candidate list. Explicit plugin
-  // runtimes fail closed; only `auto` may route an unmatched turn to OpenClaw.
+  // Quiet Core bot's built-in harness is intentionally not part of the plugin candidate list. Explicit plugin
+  // runtimes fail closed; only `auto` may route an unmatched turn to Quiet Core bot.
   const pluginHarnesses = listPluginAgentHarnesses();
   const openClawHarness = createOpenClawAgentHarness();
   const runtime = policy.runtime;
@@ -330,7 +330,7 @@ export async function runAgentHarnessAttempt(
   try {
     return await runWithDiagnosticTraceContext(harnessTrace, runAttempt);
   } catch (error) {
-    log.warn(`${harness.label} failed; not falling back to embedded OpenClaw backend`, {
+    log.warn(`${harness.label} failed; not falling back to embedded Quiet Core bot backend`, {
       harnessId: harness.id,
       provider: params.provider,
       modelId: params.modelId,

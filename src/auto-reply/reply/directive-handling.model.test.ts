@@ -888,7 +888,7 @@ describe("/model chat UX", () => {
     expect(reply?.text).not.toContain("via codex runtime");
   });
 
-  it("does not borrow Codex auth when OpenAI model policy pins OpenClaw runtime", async () => {
+  it("does not borrow Codex auth when OpenAI model policy pins Quiet Core bot runtime", async () => {
     setAuthProfiles({
       "openai:patrick@example.test": {
         type: "oauth",
@@ -1087,10 +1087,10 @@ describe("/model chat UX", () => {
     expect(resolved.modelSelection).toBeUndefined();
     expect(resolved.errorText).toContain('Model "openai/gpt-5.5" is not allowed.');
     expect(resolved.errorText).toContain(
-      `openclaw config set agents.defaults.models '{"openai/gpt-5.5":{}}' --strict-json --merge`,
+      `quiet-core-bot config set agents.defaults.models '{"openai/gpt-5.5":{}}' --strict-json --merge`,
     );
     expect(resolved.errorText).toContain("Then retry: /model openai/gpt-5.5 --runtime codex");
-    expect(resolved.errorText).toContain("openclaw plugins enable codex");
+    expect(resolved.errorText).toContain("quiet-core-bot plugins enable codex");
   });
 
   it("treats explicit default /model selection as resettable default", () => {

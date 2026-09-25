@@ -23,7 +23,7 @@ import type {
 /**
  * Delegates session compaction to the selected agent harness when that runtime owns compaction.
  *
- * CLI runtimes and OpenClaw-native compaction stay on the embedded runner path; plugin harnesses
+ * CLI runtimes and Quiet Core bot-native compaction stay on the embedded runner path; plugin harnesses
  * can opt in through their `compact` hook.
  */
 const log = createSubsystemLogger("agents/harness");
@@ -140,7 +140,7 @@ export async function maybeCompactAgentHarnessSession(
       const message = formatErrorMessage(err);
       if (message.includes("does not support")) {
         // Explicit runtime overrides can name a harness that cannot serve this model. Falling back
-        // to native compaction preserves existing OpenClaw behavior instead of failing rotation.
+        // to native compaction preserves existing Quiet Core bot behavior instead of failing rotation.
         return undefined;
       }
     }

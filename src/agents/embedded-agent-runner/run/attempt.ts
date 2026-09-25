@@ -2328,9 +2328,9 @@ export async function runEmbeddedAttempt(
         extensionFactories,
       });
       await resourceLoader.reload();
-      // DefaultResourceLoader.reload() rehydrates settings from disk and can drop OpenClaw
+      // DefaultResourceLoader.reload() rehydrates settings from disk and can drop Quiet Core bot
       // compaction overrides applied in createPreparedEmbeddedAgentSettingsManager — same
-      // rehydration also restores OpenClaw runtime's auto-compaction (openclaw#75799), so re-apply
+      // rehydration also restores Quiet Core bot runtime's auto-compaction (openclaw#75799), so re-apply
       // both guards.
       applyAgentCompactionSettingsFromConfig({
         settingsManager,
@@ -2493,7 +2493,7 @@ export async function runEmbeddedAttempt(
 
       const allCustomTools = [...customTools, ...clientToolDefs];
       // The session runtime treats `tools` as a name allowlist during session creation. Pass the
-      // exact OpenClaw-managed registrations so custom tools survive startup and
+      // exact Quiet Core bot-managed registrations so custom tools survive startup and
       // client-provided names do not broaden the prompt/runtime boundary.
       const sessionToolAllowlist = toSessionToolAllowlist(
         collectRegisteredToolNames(allCustomTools),
@@ -2570,7 +2570,7 @@ export async function runEmbeddedAttempt(
         // Raw model probes should measure exactly the requested prompt against
         // the selected provider/model. Reset clears restored transcript state
         // and queues; the empty system prompt prevents the runtime from rebuilding the
-        // normal OpenClaw agent/tool prompt when `session.prompt()` starts.
+        // normal Quiet Core bot agent/tool prompt when `session.prompt()` starts.
         activeSession.agent.reset();
         setActiveSessionSystemPrompt("");
       }
@@ -3270,7 +3270,7 @@ export async function runEmbeddedAttempt(
           }
 
           if (params.sessionKey && params.config && !isRawModelRun) {
-            // Capability guidance must include deferred OpenClaw tools without
+            // Capability guidance must include deferred Quiet Core bot tools without
             // interpreting arbitrary client tool names as native capabilities.
             const activeSubagentPromptAddition = buildActiveSubagentSystemPromptAddition({
               cfg: params.config,

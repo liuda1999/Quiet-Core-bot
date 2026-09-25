@@ -1,4 +1,4 @@
-// Verifies update_plan registration gates and base OpenClaw tool inclusion policy.
+// Verifies update_plan registration gates and base Quiet Core bot tool inclusion policy.
 import { afterEach, describe, expect, it } from "vitest";
 import type { OpenClawConfig } from "../config/config.js";
 import { setEmbeddedMode } from "../infra/embedded-mode.js";

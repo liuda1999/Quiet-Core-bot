@@ -1,5 +1,5 @@
 import { createRequire } from "node:module";
-// Verifies chat-facing CLI snippets execute the OpenClaw CLI even from harness-hosted gateways.
+// Verifies chat-facing CLI snippets execute the Quiet Core bot CLI even from harness-hosted gateways.
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
@@ -16,7 +16,7 @@ function setArgv1(value: string): void {
   process.argv.splice(0, process.argv.length, process.execPath, value);
 }
 
-describe("buildCurrentOpenClawCliArgv", () => {
+describe("buildCurrentQuiet Core botCliArgv", () => {
   afterEach(() => {
     process.argv.splice(0, process.argv.length, ...originalArgv);
   });
@@ -34,7 +34,7 @@ describe("buildCurrentOpenClawCliArgv", () => {
     ]);
   });
 
-  it("preserves a real OpenClaw launcher entry", () => {
+  it("preserves a real Quiet Core bot launcher entry", () => {
     setArgv1("/opt/openclaw/quiet-core-bot.mjs");
 
     expect(buildCurrentOpenClawCliArgv(["sessions", "export-trajectory"])).toEqual([
@@ -46,7 +46,7 @@ describe("buildCurrentOpenClawCliArgv", () => {
     ]);
   });
 
-  it("preserves OpenClaw dist entries from the package root", () => {
+  it("preserves Quiet Core bot dist entries from the package root", () => {
     const distEntry = path.join(process.cwd(), "dist", "entry.js");
     setArgv1(distEntry);
 
@@ -59,7 +59,7 @@ describe("buildCurrentOpenClawCliArgv", () => {
     ]);
   });
 
-  it("preserves OpenClaw source entries from the package root", () => {
+  it("preserves Quiet Core bot source entries from the package root", () => {
     const sourceEntry = path.join(process.cwd(), "src", "entry.ts");
     setArgv1(sourceEntry);
 
@@ -72,7 +72,7 @@ describe("buildCurrentOpenClawCliArgv", () => {
     ]);
   });
 
-  it("does not treat foreign dist entries as OpenClaw launchers", () => {
+  it("does not treat foreign dist entries as Quiet Core bot launchers", () => {
     setArgv1("/app/dist/index.js");
 
     expect(buildCurrentOpenClawCliArgv(["sessions", "export-trajectory"])).toEqual([

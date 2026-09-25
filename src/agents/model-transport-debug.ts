@@ -2,7 +2,7 @@
  * Environment-driven debug controls for model transport logging.
  *
  * Model adapters share these helpers so payload, SSE, and transport diagnostics
- * interpret OpenClaw debug environment variables consistently.
+ * interpret Quiet Core bot debug environment variables consistently.
  */
 import type { createSubsystemLogger } from "../logging/subsystem.js";
 

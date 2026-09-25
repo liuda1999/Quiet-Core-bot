@@ -829,7 +829,7 @@ describe("handleInlineActions", () => {
 
     expect(result).toEqual({ kind: "reply", reply: { text: "✅ Done." } });
     expect(
-      mockObjectArg(createOpenClawToolsMock, "createOpenClawTools").requesterAgentIdOverride,
+      mockObjectArg(createOpenClawToolsMock, "createQuiet Core botTools").requesterAgentIdOverride,
     ).toBe("named-worker");
     expect(toolExecute).toHaveBeenCalledTimes(1);
   });
@@ -885,7 +885,7 @@ describe("handleInlineActions", () => {
     );
 
     expect(result).toEqual({ kind: "reply", reply: { text: "✅ Done." } });
-    const toolsArgs = mockObjectArg(createOpenClawToolsMock, "createOpenClawTools");
+    const toolsArgs = mockObjectArg(createOpenClawToolsMock, "createQuiet Core botTools");
     expect(toolsArgs).not.toHaveProperty("senderIsOwner");
     expect(toolsArgs.beforeToolCallHookContext).toMatchObject({
       cwd: "/tmp",
@@ -987,7 +987,7 @@ describe("handleInlineActions", () => {
       kind: "reply",
       reply: { text: "❌ Tool call blocked: denied by policy" },
     });
-    const toolsArgs = mockObjectArg(createOpenClawToolsMock, "createOpenClawTools");
+    const toolsArgs = mockObjectArg(createOpenClawToolsMock, "createQuiet Core botTools");
     expect(toolsArgs.sessionId).toBe("target-session");
     expect(toolsArgs.currentChannelId).toBe("whatsapp");
     const blockedToolCall = mockCallArgs(toolExecute, "toolExecute");

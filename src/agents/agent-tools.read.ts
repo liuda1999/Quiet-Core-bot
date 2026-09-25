@@ -834,7 +834,7 @@ type SandboxToolParams = {
   imageSanitization?: ImageSanitizationLimits;
 };
 
-/** Create a sandbox-backed read tool with OpenClaw result normalization. */
+/** Create a sandbox-backed read tool with Quiet Core bot result normalization. */
 export function createSandboxedReadTool(params: SandboxToolParams) {
   const base = createReadTool(params.root, {
     operations: createSandboxReadOperations(params),
@@ -877,7 +877,7 @@ export function createHostWorkspaceEditTool(root: string, options?: { workspaceO
   return wrapToolParamValidation(base, REQUIRED_PARAM_GROUPS.edit);
 }
 
-/** Wrap the base read tool with OpenClaw paging, MIME, and image handling. */
+/** Wrap the base read tool with Quiet Core bot paging, MIME, and image handling. */
 export function createOpenClawReadTool(
   base: AnyAgentTool,
   options?: OpenClawReadToolOptions,

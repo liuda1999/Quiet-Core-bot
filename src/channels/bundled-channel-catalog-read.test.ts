@@ -23,7 +23,7 @@ vi.mock("../plugins/channel-catalog-registry.js", () => ({
 }));
 
 // The channel-catalog.json fallback still walks package roots via
-// resolveOpenClawPackageRootSync. Isolate from the real repo by mocking
+// resolveQuiet Core botPackageRootSync. Isolate from the real repo by mocking
 // moduleUrl/argv1 resolution to null and deriving only from the tmp cwd.
 vi.mock("../infra/openclaw-root.js", () => ({
   resolveOpenClawPackageRootSync: (opts: { cwd?: string; argv1?: string; moduleUrl?: string }) =>

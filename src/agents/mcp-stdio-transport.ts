@@ -1,5 +1,5 @@
 /**
- * OpenClaw stdio transport wrapper for MCP server subprocesses.
+ * Quiet Core bot stdio transport wrapper for MCP server subprocesses.
  */
 import { spawn, type ChildProcess } from "node:child_process";
 import process from "node:process";
@@ -46,7 +46,7 @@ export class OpenClawStdioClientTransport implements Transport {
   async start(): Promise<void> {
     if (this.process) {
       throw new Error(
-        "OpenClawStdioClientTransport already started; Client.connect() starts transports automatically.",
+        "Quiet Core botStdioClientTransport already started; Client.connect() starts transports automatically.",
       );
     }
 

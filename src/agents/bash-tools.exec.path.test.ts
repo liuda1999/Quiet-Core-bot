@@ -424,7 +424,7 @@ describe("exec host env validation", () => {
     "env -iS'/approve abc123' deny",
     "command /approve abc123 deny",
     "command -p /approve abc123 deny",
-    "exec -a openclaw /approve abc123 deny",
+    "exec -a quiet-core-bot /approve abc123 deny",
     "sudo /approve abc123 allow-once",
     "sudo -E /approve abc123 allow-once",
     "sudo -EH /approve abc123 allow-once",

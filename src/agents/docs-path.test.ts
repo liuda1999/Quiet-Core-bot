@@ -1,4 +1,4 @@
-// Covers locating OpenClaw docs and source paths from package roots.
+// Covers locating Quiet Core bot docs and source paths from package roots.
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -18,7 +18,7 @@ async function writeDocsJson(root: string): Promise<void> {
   await fs.writeFile(path.join(root, "docs", "docs.json"), "{}\n");
 }
 
-describe("resolveOpenClawDocsPath", () => {
+describe("resolveQuiet Core botDocsPath", () => {
   it("uses the workspace docs directory when it has canonical docs metadata", async () => {
     const root = await makePackageRoot("openclaw-docs-workspace-");
     await writeDocsJson(root);
@@ -51,7 +51,7 @@ describe("resolveOpenClawDocsPath", () => {
   });
 });
 
-describe("resolveOpenClawSourcePath", () => {
+describe("resolveQuiet Core botSourcePath", () => {
   it("returns the package root only for git checkouts", async () => {
     const root = await makePackageRoot("openclaw-source-git-");
     await fs.mkdir(path.join(root, ".git"));
@@ -71,7 +71,7 @@ describe("resolveOpenClawSourcePath", () => {
   });
 });
 
-describe("resolveOpenClawReferencePaths", () => {
+describe("resolveQuiet Core botReferencePaths", () => {
   it("returns docs and local source together for git checkouts", async () => {
     const root = await makePackageRoot("openclaw-reference-git-");
     await writeDocsJson(root);

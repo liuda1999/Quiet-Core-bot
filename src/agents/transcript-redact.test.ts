@@ -634,7 +634,7 @@ describe("redactTranscriptMessage", () => {
           id: "call_1",
           name: "shell",
           arguments: {
-            command: "OPENAI_API_KEY=sk-abcdef1234567890xyz openclaw health",
+            command: "OPENAI_API_KEY=sk-abcdef1234567890xyz quiet-core-bot health",
             env: { nested: ["token sk-abcdef1234567890xyz"] },
             count: 1,
           },
@@ -651,10 +651,10 @@ describe("redactTranscriptMessage", () => {
     };
     const serializedArguments = JSON.stringify(block.arguments);
     expect(serializedArguments).not.toContain("sk-abcdef1234567890xyz");
-    expect(argumentsValue.command).toBe("OPENAI_API_KEY=sk-abc…0xyz openclaw health");
+    expect(argumentsValue.command).toBe("OPENAI_API_KEY=sk-abc…0xyz quiet-core-bot health");
     expect(argumentsValue.env.nested[0]).toBe("token sk-abc…0xyz");
     expect(argumentsValue.count).toBe(1);
-    expect(serializedArguments).toContain("openclaw health");
+    expect(serializedArguments).toContain("quiet-core-bot health");
     expect(block.arguments).not.toBe(
       (msgContent(msg) as Array<{ arguments: unknown }>)[0].arguments,
     );
@@ -707,7 +707,7 @@ describe("redactTranscriptMessage", () => {
           input: {
             apiKey: "plainsecretvalue123",
             nested: { accessToken: ["nestedplainsecret123"] },
-            command: "OPENAI_API_KEY=sk-abcdef1234567890xyz openclaw health",
+            command: "OPENAI_API_KEY=sk-abcdef1234567890xyz quiet-core-bot health",
             safe: "visible",
           },
         },
@@ -728,7 +728,7 @@ describe("redactTranscriptMessage", () => {
     expect(serializedInput).not.toContain("sk-abcdef1234567890xyz");
     expect(inputValue.apiKey).toBe("plains…e123");
     expect(inputValue.nested.accessToken[0]).toBe("nested…t123");
-    expect(inputValue.command).toBe("OPENAI_API_KEY=sk-abc…0xyz openclaw health");
+    expect(inputValue.command).toBe("OPENAI_API_KEY=sk-abc…0xyz quiet-core-bot health");
     expect(serializedInput).toContain("visible");
   });
 
@@ -1035,7 +1035,7 @@ describe("redactTranscriptMessage", () => {
   it("redacts documented transcript text fields on content-less message types", () => {
     const msg = {
       role: "bashExecution",
-      command: "OPENAI_API_KEY=sk-abcdef1234567890xyz openclaw health",
+      command: "OPENAI_API_KEY=sk-abcdef1234567890xyz quiet-core-bot health",
       output: "failed with sk-abcdef1234567890xyz",
       exitCode: 1,
       cancelled: false,

@@ -1,7 +1,7 @@
 /**
  * Core tool catalog and profile defaults.
  * Drives built-in profile allowlists, group expansion, and UI section metadata
- * for OpenClaw-owned tools.
+ * for Quiet Core bot-owned tools.
  */
 import {
   CRON_TOOL_DISPLAY_SUMMARY,

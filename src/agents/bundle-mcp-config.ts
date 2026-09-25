@@ -27,10 +27,10 @@ const OPENCLAW_TRANSPORT_TO_CLI_BUNDLE_TYPE: Record<string, string> = {
 };
 
 /**
- * User config stores OpenClaw MCP transport names, while CLI backends such as
+ * User config stores Quiet Core bot MCP transport names, while CLI backends such as
  * Claude Code and Gemini expect a downstream `type` field. Keep this adapter
- * out of the generic merge path because embedded OpenClaw still consumes the raw
- * OpenClaw `transport` shape directly.
+ * out of the generic merge path because embedded Quiet Core bot still consumes the raw
+ * Quiet Core bot `transport` shape directly.
  */
 export function toCliBundleMcpServerConfig(server: BundleMcpServerConfig): BundleMcpServerConfig {
   const next = { ...server } as Record<string, unknown>;
@@ -78,7 +78,7 @@ export function loadMergedBundleMcpConfig(params: {
 
   return {
     config: {
-      // OpenClaw config is the owner-managed layer, so it overrides bundle defaults.
+      // Quiet Core bot config is the owner-managed layer, so it overrides bundle defaults.
       mcpServers: {
         ...enabledBundleMcp,
         ...Object.fromEntries(

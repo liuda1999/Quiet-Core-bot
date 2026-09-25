@@ -465,7 +465,7 @@ describe("buildEmbeddedRunPayloads tool-error warnings", () => {
     const payloads = buildPayloads({
       lastToolError: {
         toolName: "exec",
-        meta: "show last 20 lines of ~/.openclaw/workspace/memory/2026-06-04.md",
+        meta: "show last 20 lines of ~/.quiet-core-bot/workspace/memory/2026-06-04.md",
         error:
           "tail: cannot open '/home/user/.openclaw/workspace/memory/2026-06-04.md' for reading: No such file or directory",
       },

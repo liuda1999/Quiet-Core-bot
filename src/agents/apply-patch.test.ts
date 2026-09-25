@@ -225,7 +225,7 @@ describe("applyPatch", () => {
 
   it("rejects absolute paths outside cwd by default", async () => {
     await withTempDir(async (dir) => {
-      const escapedPath = path.join(os.tmpdir(), `openclaw-apply-patch-${Date.now()}.txt`);
+      const escapedPath = path.join(os.tmpdir(), `quiet-core-bot-apply-patch-${Date.now()}.txt`);
 
       try {
         await expectOutsideWriteRejected({

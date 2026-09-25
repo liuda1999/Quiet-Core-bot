@@ -1,5 +1,5 @@
 /**
- * OpenClaw built-in and plugin tool assembly.
+ * Quiet Core bot built-in and plugin tool assembly.
  *
  * Creates the per-run tool inventory from config, channel context, sandbox policy, auth stores, and plugin tools.
  */

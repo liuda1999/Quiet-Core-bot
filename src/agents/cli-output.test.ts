@@ -1225,7 +1225,7 @@ describe("createCliJsonlStreamingParser", () => {
       toolCallId: "srvtoolu_1",
       name: "web_search",
       input: { query: "openclaw" },
-      result: [{ type: "web_search_result", title: "OpenClaw", url: "https://example.com" }],
+      result: [{ type: "web_search_result", title: "Quiet Core bot", url: "https://example.com" }],
       isError: false,
     },
     {

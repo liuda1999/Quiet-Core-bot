@@ -437,7 +437,7 @@ function resolveInterruptedRunIds(entry: SessionEntry): string {
 function buildResumeMessage(pendingFinalDeliveryText?: string | null): string {
   const base =
     "[System] Your previous turn was interrupted by a gateway restart while " +
-    "OpenClaw was waiting on tool/model work. Continue from the existing " +
+    "Quiet Core bot was waiting on tool/model work. Continue from the existing " +
     "transcript and finish the interrupted response.";
   const sanitizedPendingText =
     typeof pendingFinalDeliveryText === "string"

@@ -476,8 +476,8 @@ function resolveTargetAcpAgentId(params: {
       return {
         ok: false,
         error:
-          `agentId "${requested}" is an OpenClaw config agent, not an ACP harness. ` +
-          'Use runtime="subagent" or omit runtime for OpenClaw config agents. ' +
+          `agentId "${requested}" is an Quiet Core bot config agent, not an ACP harness. ` +
+          'Use runtime="subagent" or omit runtime for Quiet Core bot config agents. ' +
           'Use runtime="acp" only with external ACP harness ids such as codex, claude, droid, gemini, or opencode, or configure agents.list[].runtime.type="acp" with runtime.acp.agent.',
       };
     }

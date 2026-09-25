@@ -1,5 +1,5 @@
 /**
- * Dispatches embedded attempts to native harness or OpenClaw backend execution.
+ * Dispatches embedded attempts to native harness or Quiet Core bot backend execution.
  */
 import { runAgentHarnessAttempt } from "../../harness/selection.js";
 import type { EmbeddedRunAttemptParams, EmbeddedRunAttemptResult } from "./types.js";

@@ -67,7 +67,7 @@ export type CompactEmbeddedAgentSessionParams = {
   contextEngineRuntimeContext?: ContextEngineRuntimeContext;
   /** Session-pinned embedded harness id. Prevents compaction hot-switching. */
   agentHarnessId?: string;
-  /** OpenClaw-owned runtime policy prepared for this compaction path. */
+  /** Quiet Core bot-owned runtime policy prepared for this compaction path. */
   runtimePlan?: AgentRuntimePlan;
   thinkLevel?: ThinkLevel;
   reasoningLevel?: ReasoningLevel;

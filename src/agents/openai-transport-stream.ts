@@ -2,7 +2,7 @@
  * OpenAI-compatible streaming transport.
  *
  * Handles Chat Completions, Responses, Azure variants, tool-call replay, reasoning events, and
- * provider-specific payload policy before converting SDK streams into OpenClaw assistant events.
+ * provider-specific payload policy before converting SDK streams into Quiet Core bot assistant events.
  */
 import { createHash, randomUUID } from "node:crypto";
 import { isRecord } from "@openclaw/normalization-core/record-coerce";
@@ -3502,7 +3502,7 @@ function getCompletionsContentDeltas(content: unknown): CompletionsReasoningDelt
   if (!text) {
     return [];
   }
-  // Preserve provider reasoning as OpenClaw thinking blocks so channel/UI
+  // Preserve provider reasoning as Quiet Core bot thinking blocks so channel/UI
   // surfaces can decide whether to show it instead of leaking it as answer text.
   if (type.includes("thinking") || type.includes("reasoning")) {
     return [{ kind: "thinking", signature: "content", text }];

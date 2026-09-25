@@ -1,5 +1,5 @@
 /**
- * Fast OpenClaw sessions-tool mocks.
+ * Fast Quiet Core bot sessions-tool mocks.
  *
  * Stubs unrelated tool factories so sessions/subagent registration tests import cheaply.
  */

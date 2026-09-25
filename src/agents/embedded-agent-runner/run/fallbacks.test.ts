@@ -16,7 +16,7 @@ describe("hasEmbeddedRunConfiguredModelFallbacks", () => {
 
   it("treats explicit empty modelFallbacksOverride as disabling fallbacks", () => {
     // An explicit empty override is a caller decision, not a request to fall
-    // back to defaults from the persisted OpenClaw config.
+    // back to defaults from the persisted Quiet Core bot config.
     const cfg: OpenClawConfig = {
       agents: {
         defaults: {

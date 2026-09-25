@@ -75,7 +75,7 @@ function projectThinkingCatalogCompat(compat: Model["compat"]) {
 export interface CreateAgentSessionOptions {
   /** Working directory for project-local discovery. Default: process.cwd() */
   cwd?: string;
-  /** Global config directory. Default: ~/.openclaw/agents/default */
+  /** Global config directory. Default: ~/.quiet-core-bot/agents/default */
   agentDir?: string;
 
   /** Auth storage for credentials. Default: AuthStorage.create(agentDir/auth.json) */
@@ -101,7 +101,7 @@ export interface CreateAgentSessionOptions {
   /**
    * Optional allowlist of tool names.
    *
-   * When omitted, OpenClaw enables the default built-in tools (read, bash, edit, write)
+   * When omitted, Quiet Core bot enables the default built-in tools (read, bash, edit, write)
    * and leaves extension/custom tools enabled unless `noTools` changes that default.
    * When provided, only the listed tool names are enabled.
    */
@@ -183,7 +183,7 @@ function getAttributionHeaders(
   if (model.provider === "openrouter" || baseUrl.includes("openrouter.ai")) {
     return {
       "HTTP-Referer": "https://openclaw.ai",
-      "X-OpenRouter-Title": "OpenClaw",
+      "X-OpenRouter-Title": "Quiet Core bot",
       "X-OpenRouter-Categories": "cli-agent",
     };
   }

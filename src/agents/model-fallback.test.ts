@@ -774,7 +774,7 @@ describe("runWithModelFallback", () => {
     expect(result.attempts[0].reason).toBe("overloaded");
   });
 
-  it("does not prepare agent harness plugins for forced OpenClaw candidates", async () => {
+  it("does not prepare agent harness plugins for forced Quiet Core bot candidates", async () => {
     const cfg = makeCfg({
       models: {
         providers: {
@@ -787,7 +787,7 @@ describe("runWithModelFallback", () => {
       },
     });
     const prepareAgentHarnessRuntime = vi.fn(() => {
-      throw new Error("OpenClaw candidates should not prepare plugin harnesses");
+      throw new Error("Quiet Core bot candidates should not prepare plugin harnesses");
     });
     const run = vi.fn().mockResolvedValueOnce("ok");
 
@@ -804,7 +804,7 @@ describe("runWithModelFallback", () => {
     expect(run).toHaveBeenCalledTimes(1);
   });
 
-  it("does not prepare agent harness plugins for forced OpenClaw runtime candidates", async () => {
+  it("does not prepare agent harness plugins for forced Quiet Core bot runtime candidates", async () => {
     const cfg = makeCfg({
       models: {
         providers: {
@@ -817,7 +817,7 @@ describe("runWithModelFallback", () => {
       },
     });
     const prepareAgentHarnessRuntime = vi.fn(() => {
-      throw new Error("OpenClaw candidates should not prepare plugin harnesses");
+      throw new Error("Quiet Core bot candidates should not prepare plugin harnesses");
     });
     const run = vi.fn().mockResolvedValueOnce("ok");
 

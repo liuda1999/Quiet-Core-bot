@@ -1,4 +1,4 @@
-// Verifies OpenAI model selections route between OpenClaw and Codex runtimes.
+// Verifies OpenAI model selections route between Quiet Core bot and Codex runtimes.
 import { describe, expect, it } from "vitest";
 import type { OpenClawConfig } from "../config/types.openclaw.js";
 import {
@@ -82,7 +82,7 @@ describe("OpenAI runtime routing policy", () => {
     ).toBe("openai");
   });
 
-  it("keeps explicit OpenClaw plus Codex auth profile under the unified OpenAI provider", () => {
+  it("keeps explicit Quiet Core bot plus Codex auth profile under the unified OpenAI provider", () => {
     // OpenAI auth now stays canonical even when the runtime is not Codex.
     expect(
       listOpenAIAuthProfileProvidersForAgentRuntime({
@@ -150,7 +150,7 @@ describe("OpenAI runtime routing policy", () => {
     ).toEqual(["openai"]);
   });
 
-  it("keeps explicit OpenAI OpenClaw API-key auth order ahead of Codex backups", () => {
+  it("keeps explicit OpenAI Quiet Core bot API-key auth order ahead of Codex backups", () => {
     const config = {
       auth: {
         order: {
@@ -175,7 +175,7 @@ describe("OpenAI runtime routing policy", () => {
     ).toBe("openai");
   });
 
-  it("does not route custom OpenAI-compatible OpenClaw configs through Codex auth order", () => {
+  it("does not route custom OpenAI-compatible Quiet Core bot configs through Codex auth order", () => {
     const config = {
       models: {
         providers: {

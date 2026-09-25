@@ -364,7 +364,7 @@ describe("formatAssistantErrorText", () => {
       const text = formatAssistantErrorText(makeAssistantError("Connection error."));
       expect(text).toContain("did not complete this request");
       expect(text).not.toContain("is not reachable");
-      expect(text).not.toContain("openclaw proxy start");
+      expect(text).not.toContain("quiet-core-bot proxy start");
     } finally {
       resetActiveManagedProxyStateForTests();
       resetManagedProxyLivenessForTests();
@@ -376,7 +376,7 @@ describe("formatAssistantErrorText", () => {
     recordManagedProxyLiveness("down");
     try {
       expect(formatAssistantErrorText(makeAssistantError("Connection error."))).toContain(
-        "openclaw proxy start --host 127.0.0.1 --port 18888",
+        "quiet-core-bot proxy start --host 127.0.0.1 --port 18888",
       );
     } finally {
       resetActiveManagedProxyStateForTests();
@@ -395,7 +395,7 @@ describe("formatAssistantErrorText", () => {
     (errorMessage) => {
       const msg = makeAssistantError(errorMessage);
       expect(formatAssistantErrorText(msg)).toBe(
-        "OpenClaw could not write local session data because the disk is full. Free some disk space and try again.",
+        "Quiet Core bot could not write local session data because the disk is full. Free some disk space and try again.",
       );
     },
   );

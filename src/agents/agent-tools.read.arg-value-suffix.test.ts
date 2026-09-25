@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from "vitest";
 import { createOpenClawReadTool } from "./agent-tools.read.js";
 import type { AnyAgentTool } from "./agent-tools.types.js";
 
-describe("createOpenClawReadTool malformed XML arg-value suffix handling", () => {
+describe("createQuiet Core botReadTool malformed XML arg-value suffix handling", () => {
   it("strips the suffix from read paths before invoking the base tool", async () => {
     const execute = vi.fn(async () => ({ content: [{ type: "text" as const, text: "ok" }] }));
     const base = {

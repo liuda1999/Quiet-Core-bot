@@ -32,7 +32,7 @@ function extractToolText(result: unknown): string {
   return textBlock?.text ?? "";
 }
 
-describe("createOpenClawCodingTools read behavior", () => {
+describe("createQuiet Core botCodingTools read behavior", () => {
   it("uses host decoding only for host-backed sandbox paths", async () => {
     const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-sbx-encoding-"));
     await fs.writeFile(path.join(tmpDir, "notes.txt"), "hello", "utf8");

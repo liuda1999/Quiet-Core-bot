@@ -490,7 +490,7 @@ describe("exec shell snapshots", () => {
     fs.writeFileSync(
       snapshotPath,
       [
-        "# OpenClaw exec shell snapshot. Generated; do not edit.",
+        "# Quiet Core bot exec shell snapshot. Generated; do not edit.",
         "unalias -a 2>/dev/null || true",
         "oc_broken_fn() {",
         "        --!(no-*)dir*",

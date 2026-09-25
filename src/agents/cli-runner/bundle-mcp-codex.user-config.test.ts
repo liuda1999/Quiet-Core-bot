@@ -1,4 +1,4 @@
-/** Tests projecting OpenClaw user MCP servers into Codex app-server config. */
+/** Tests projecting Quiet Core bot user MCP servers into Codex app-server config. */
 import { describe, expect, it } from "vitest";
 import type { OpenClawConfig } from "../../config/types.openclaw.js";
 import { buildCodexUserMcpServersThreadConfigPatch } from "./bundle-mcp-codex.js";
@@ -109,8 +109,8 @@ describe("buildCodexUserMcpServersThreadConfigPatch", () => {
     });
   });
 
-  it("filters Codex-scoped user MCP servers by OpenClaw agent id", () => {
-    // Agent-scoped MCP servers should follow the active OpenClaw agent, while
+  it("filters Codex-scoped user MCP servers by Quiet Core bot agent id", () => {
+    // Agent-scoped MCP servers should follow the active Quiet Core bot agent, while
     // unscoped servers remain global.
     const cfg = {
       mcp: {
@@ -252,7 +252,7 @@ describe("buildCodexUserMcpServersThreadConfigPatch", () => {
     });
   });
 
-  it("omits scoped Codex MCP servers when no OpenClaw agent id is available", () => {
+  it("omits scoped Codex MCP servers when no Quiet Core bot agent id is available", () => {
     const patch = buildCodexUserMcpServersThreadConfigPatch({
       mcp: {
         servers: {

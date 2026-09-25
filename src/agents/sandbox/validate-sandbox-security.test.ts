@@ -217,7 +217,7 @@ describe("validateBindMounts", () => {
 
   it("compares Windows allowed roots case-insensitively", () => {
     expect(
-      validateBindMounts(["d:/DATA/OpenClaw/src:/src:ro"], {
+      validateBindMounts(["d:/DATA/Quiet Core bot/src:/src:ro"], {
         allowedSourceRoots: ["D:/data/openclaw"],
       }),
     ).toBeUndefined();

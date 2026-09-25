@@ -234,7 +234,7 @@ async function runAuthContractAttempt(params: {
   };
 }
 
-describe("Auth profile runtime contract - embedded OpenClaw and CLI adapter", () => {
+describe("Auth profile runtime contract - embedded Quiet Core bot and CLI adapter", () => {
   let tmpDir: string;
   let storePath: string;
 
@@ -367,7 +367,7 @@ describe("Auth profile runtime contract - embedded OpenClaw and CLI adapter", ()
     expect(capturedCliRunParams().authProfileId).toBeUndefined();
   });
 
-  it("forwards a legacy OpenAI Codex auth profile through the embedded OpenClaw path", async () => {
+  it("forwards a legacy OpenAI Codex auth profile through the embedded Quiet Core bot path", async () => {
     await runAuthContractAttempt({
       tmpDir,
       storePath,
@@ -400,7 +400,7 @@ describe("Auth profile runtime contract - embedded OpenClaw and CLI adapter", ()
     );
   });
 
-  it("forwards an OpenAI auth profile through the explicit embedded OpenAI OpenClaw path", async () => {
+  it("forwards an OpenAI auth profile through the explicit embedded OpenAI Quiet Core bot path", async () => {
     await runAuthContractAttempt({
       tmpDir,
       storePath,
@@ -429,7 +429,7 @@ describe("Auth profile runtime contract - embedded OpenClaw and CLI adapter", ()
     );
   });
 
-  it("routes explicit OpenAI OpenClaw runs with legacy Codex OAuth through OpenAI transport", async () => {
+  it("routes explicit OpenAI Quiet Core bot runs with legacy Codex OAuth through OpenAI transport", async () => {
     await runAuthContractAttempt({
       tmpDir,
       storePath,

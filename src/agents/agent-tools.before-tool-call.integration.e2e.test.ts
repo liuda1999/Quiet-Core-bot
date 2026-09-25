@@ -351,7 +351,7 @@ describe("before_tool_call hook deduplication (#15502)", () => {
     expect(beforeToolCallHook).toHaveBeenCalledTimes(1);
   });
 
-  it("passes agent context to outer code-mode exec hooks through OpenClaw custom tools", async () => {
+  it("passes agent context to outer code-mode exec hooks through Quiet Core bot custom tools", async () => {
     beforeToolCallHook = installBeforeToolCallHook({
       runBeforeToolCallImpl: async () => ({
         block: true,

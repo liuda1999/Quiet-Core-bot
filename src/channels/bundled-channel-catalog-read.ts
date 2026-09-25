@@ -30,7 +30,7 @@ const officialCatalogFileCache = new Map<string, ChannelCatalogEntryLike[] | nul
 const bundledPackageCatalogCache = new Map<string, ChannelCatalogEntryLike[] | null>();
 
 function listPackageRoots(): string[] {
-  // Source checkouts and packaged installs can resolve OpenClaw from different roots; scan both
+  // Source checkouts and packaged installs can resolve Quiet Core bot from different roots; scan both
   // once so channel metadata works in dev, linked packages, and published CLI layouts.
   return uniqueStrings(
     [

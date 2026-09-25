@@ -1183,7 +1183,7 @@ async function runEmbeddedAgentInternal(
           params.config,
           {
             // Plugin dynamic model hooks can resolve explicit model refs without
-            // first generating OpenClaw models.json. This keeps one-shot model runs from
+            // first generating Quiet Core bot models.json. This keeps one-shot model runs from
             // blocking on unrelated provider discovery.
             skipAgentDiscovery: true,
             allowBundledStaticCatalogFallback: pluginHarnessOwnsTransport,
@@ -1642,7 +1642,7 @@ async function runEmbeddedAgentInternal(
           ? advancePluginHarnessAuthProfile
           : advanceAuthProfile;
 
-      // Plugin harnesses own their model transport/auth. Running OpenClaw's generic
+      // Plugin harnesses own their model transport/auth. Running Quiet Core bot's generic
       // auth bootstrap here can turn synthetic provider markers into real
       // vendor-token refresh attempts before the plugin gets control.
       if (!pluginHarnessOwnsTransport || pluginHarnessNeedsOpenClawAuthBootstrap) {
@@ -1862,7 +1862,7 @@ async function runEmbeddedAgentInternal(
         }
         if (pluginHarnessOwnsTransport && reason === "timeout") {
           // Harness-owned transport timeouts are lifecycle failures, not
-          // credential evidence. Do not poison OpenClaw auth cooldowns.
+          // credential evidence. Do not poison Quiet Core bot auth cooldowns.
           return;
         }
         await markAuthProfileFailure({
@@ -2256,8 +2256,8 @@ async function runEmbeddedAgentInternal(
             fallbackActive: modelId !== requestedModelId || Boolean(resolveRuntimeFallbackReason()),
             fallbackReason: resolveRuntimeFallbackReason(),
             // Use the harness selected before model/auth setup for the actual
-            // attempt too. Otherwise plugin-owned transports can skip OpenClaw auth
-            // bootstrap but drift back to OpenClaw when the attempt is created.
+            // attempt too. Otherwise plugin-owned transports can skip Quiet Core bot auth
+            // bootstrap but drift back to Quiet Core bot when the attempt is created.
             agentHarnessId: agentHarness.id,
             ...(params.sessionKey
               ? {

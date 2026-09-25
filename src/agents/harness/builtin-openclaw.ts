@@ -1,18 +1,18 @@
 /**
- * Built-in OpenClaw harness registration.
+ * Built-in Quiet Core bot harness registration.
  *
- * Harness selection uses this factory to expose the embedded OpenClaw runtime
+ * Harness selection uses this factory to expose the embedded Quiet Core bot runtime
  * through the same AgentHarness contract as external harness plugins.
  */
 import { OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST } from "../../context-engine/host-compat.js";
 import { runEmbeddedAttempt } from "../embedded-agent-runner/run/attempt.js";
 import type { AgentHarness } from "./types.js";
 
-/** Creates the built-in harness backed by the embedded OpenClaw agent runner. */
+/** Creates the built-in harness backed by the embedded Quiet Core bot agent runner. */
 export function createOpenClawAgentHarness(): AgentHarness {
   return {
     id: "openclaw",
-    label: "OpenClaw embedded agent",
+    label: "Quiet Core bot embedded agent",
     contextEngineHostCapabilities: OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST.capabilities,
     supports: () => ({ supported: true, priority: 0 }),
     runAttempt: runEmbeddedAttempt,

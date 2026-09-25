@@ -2,7 +2,7 @@
  * MCP client transport factory.
  *
  * This module turns normalized MCP server config into stdio, SSE, or
- * streamable-HTTP SDK transports with OpenClaw auth, redirect, and logging rules.
+ * streamable-HTTP SDK transports with Quiet Core bot auth, redirect, and logging rules.
  */
 import {
   SSEClientTransport,

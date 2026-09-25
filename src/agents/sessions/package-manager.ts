@@ -1428,7 +1428,7 @@ export class DefaultPackageManager implements PackageManager {
       projectBaseDir,
     );
 
-    // User extensions from ~/.openclaw/agent/
+    // User extensions from ~/.quiet-core-bot/agent/
     addResources(
       "extensions",
       collectAutoExtensionEntries(userDirs.extensions),
@@ -1437,7 +1437,7 @@ export class DefaultPackageManager implements PackageManager {
       globalBaseDir,
     );
 
-    // User skills from ~/.openclaw/agent/
+    // User skills from ~/.quiet-core-bot/agent/
     addResources(
       "skills",
       collectAutoSkillEntries(userDirs.skills, "openclaw"),

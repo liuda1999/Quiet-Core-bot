@@ -1,5 +1,5 @@
 /**
- * Claude CLI argument helpers for OpenClaw-managed bundle MCP config.
+ * Claude CLI argument helpers for Quiet Core bot-managed bundle MCP config.
  */
 import fs from "node:fs/promises";
 import { isRecord } from "@openclaw/normalization-core/record-coerce";
@@ -22,7 +22,7 @@ export function findClaudeMcpConfigPath(args?: string[]): string | undefined {
   return undefined;
 }
 
-/** Return Claude args with OpenClaw's strict MCP config path injected. */
+/** Return Claude args with Quiet Core bot's strict MCP config path injected. */
 export function injectClaudeMcpConfigArgs(
   args: string[] | undefined,
   mcpConfigPath: string,
@@ -46,7 +46,7 @@ export function injectClaudeMcpConfigArgs(
   return next;
 }
 
-/** Writes the active per-attempt capture token into OpenClaw's generated Claude MCP config. */
+/** Writes the active per-attempt capture token into Quiet Core bot's generated Claude MCP config. */
 export async function writeClaudeMcpCaptureConfig(params: {
   mcpConfigPath: string;
   captureKey: string;
@@ -58,7 +58,7 @@ export async function writeClaudeMcpCaptureConfig(params: {
   const mcpServers = isRecord(raw.mcpServers) ? raw.mcpServers : {};
   const openclaw = isRecord(mcpServers.openclaw) ? mcpServers.openclaw : undefined;
   if (!openclaw) {
-    throw new Error("Claude MCP capture requires an openclaw server config");
+    throw new Error("Claude MCP capture requires an quiet-core-bot server config");
   }
   const headers = isRecord(openclaw.headers) ? openclaw.headers : {};
   await fs.writeFile(

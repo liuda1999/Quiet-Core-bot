@@ -1236,7 +1236,7 @@ describe("processGatewayAllowlist", () => {
     });
 
     const result = await runGatewayAllowlist({
-      command: "openclaw config set security.audit.suppressions '[]'",
+      command: "quiet-core-bot config set security.audit.suppressions '[]'",
       security: "full",
       ask: "on-miss",
     });
@@ -1255,7 +1255,7 @@ describe("processGatewayAllowlist", () => {
     });
 
     const result = await runGatewayAllowlist({
-      command: "openclaw config set security.audit.suppressions '[]'",
+      command: "quiet-core-bot config set security.audit.suppressions '[]'",
       security: "full",
       ask: "on-miss",
       autoReview: true,
@@ -1277,7 +1277,7 @@ describe("processGatewayAllowlist", () => {
     });
 
     await runGatewayAllowlist({
-      command: "openclaw config set security.audit.suppressions '[]'",
+      command: "quiet-core-bot config set security.audit.suppressions '[]'",
       security: "full",
       ask: "off",
     });
@@ -1303,7 +1303,7 @@ describe("processGatewayAllowlist", () => {
     });
 
     await runGatewayAllowlist({
-      command: "openclaw config get security.audit.suppressions",
+      command: "quiet-core-bot config get security.audit.suppressions",
       security: "full",
       ask: "on-miss",
     });
@@ -1332,7 +1332,7 @@ describe("processGatewayAllowlist", () => {
     });
 
     await runGatewayAllowlist({
-      command: "openclaw --profile rescue config get security.audit.suppressions",
+      command: "quiet-core-bot --profile rescue config get security.audit.suppressions",
       security: "full",
       ask: "on-miss",
     });
@@ -1363,7 +1363,7 @@ describe("processGatewayAllowlist", () => {
 
     const result = await runGatewayAllowlist({
       command:
-        "openclaw config get security.audit.suppressions; openclaw config set security.audit.suppressions '[]'",
+        "quiet-core-bot config get security.audit.suppressions; quiet-core-bot config set security.audit.suppressions '[]'",
       security: "full",
       ask: "on-miss",
     });
@@ -1391,7 +1391,7 @@ describe("processGatewayAllowlist", () => {
 
     const result = await runGatewayAllowlist({
       command:
-        "openclaw config get security.audit.suppressions; openclaw config set security.audit.suppressions '[]'",
+        "quiet-core-bot config get security.audit.suppressions; quiet-core-bot config set security.audit.suppressions '[]'",
       security: "full",
       ask: "on-miss",
     });
@@ -1407,12 +1407,12 @@ describe("processGatewayAllowlist", () => {
       allowlistSatisfied: false,
       segments: [
         {
-          raw: "openclaw config get security.audit.suppressions",
+          raw: "quiet-core-bot config get security.audit.suppressions",
           resolution: null,
           argv: ["openclaw", "config", "get", "security.audit.suppressions"],
         },
         {
-          raw: "openclaw config patch --stdin <<'EOF'",
+          raw: "quiet-core-bot config patch --stdin <<'EOF'",
           resolution: null,
           argv: ["openclaw", "config", "patch", "--stdin"],
         },
@@ -1427,7 +1427,7 @@ describe("processGatewayAllowlist", () => {
     });
 
     const result = await runGatewayAllowlist({
-      command: `openclaw config get security.audit.suppressions; openclaw config patch --stdin <<'EOF'
+      command: `quiet-core-bot config get security.audit.suppressions; quiet-core-bot config patch --stdin <<'EOF'
 {"security":{"audit":{"suppressions":[]}}}
 EOF`,
       security: "full",
@@ -1529,13 +1529,13 @@ EOF`,
         "Codex diagnostics sent to OpenAI servers:",
         "Session 1",
         "Channel: telegram",
-        "OpenClaw session id: `session-1`",
+        "Quiet Core bot session id: `session-1`",
         "Codex thread id: `thread-1`",
       ].join("\n"),
     );
 
     const result = await runGatewayAllowlist({
-      command: "openclaw gateway diagnostics export --json",
+      command: "quiet-core-bot gateway diagnostics export --json",
       trigger: "diagnostics",
       approvalFollowupMode: "direct",
       approvalFollowup,
@@ -1590,7 +1590,7 @@ EOF`,
     });
 
     const result = await runGatewayAllowlist({
-      command: "openclaw sessions export-trajectory --json",
+      command: "quiet-core-bot sessions export-trajectory --json",
       approvalFollowupMode: "agent",
       sessionId: "approval-session",
       sessionStore: "/tmp/openclaw-sessions.json",

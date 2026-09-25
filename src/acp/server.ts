@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** ACP stdio server that bridges Agent Client Protocol clients to the OpenClaw Gateway. */
+/** ACP stdio server that bridges Agent Client Protocol clients to the Quiet Core bot Gateway. */
 import { Readable, Writable } from "node:stream";
 import { fileURLToPath } from "node:url";
 import {
@@ -295,7 +295,7 @@ function parseArgs(args: string[]): AcpServerOptions {
 }
 
 function printHelp(): void {
-  console.log(`Usage: openclaw acp [options]
+  console.log(`Usage: quiet-core-bot acp [options]
 
 Gateway-backed ACP server for IDE integration.
 

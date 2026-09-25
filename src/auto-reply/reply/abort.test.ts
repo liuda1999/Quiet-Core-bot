@@ -231,7 +231,7 @@ describe("abort detection", () => {
       "exit",
       "interrupt",
       "stop openclaw",
-      "openclaw stop",
+      "quiet-core-bot stop",
       "stop action",
       "stop current action",
       "stop run",
@@ -246,7 +246,7 @@ describe("abort detection", () => {
       "please stop",
       "stop please",
       "STOP OPENCLAW",
-      "stop openclaw!!!",
+      "stop quiet-core-bot!!!",
       "stop don’t do anything",
       "detente",
       "detén",
@@ -290,7 +290,7 @@ describe("abort detection", () => {
     expect(isAbortRequestText("Stop")).toBe(true);
     expect(isAbortRequestText("STOP")).toBe(true);
     expect(isAbortRequestText("stop action")).toBe(true);
-    expect(isAbortRequestText("stop openclaw!!!")).toBe(true);
+    expect(isAbortRequestText("stop quiet-core-bot!!!")).toBe(true);
     expect(isAbortRequestText("停下来")).toBe(true);
     expect(isAbortRequestText("暂停")).toBe(true);
     expect(isAbortRequestText("やめて")).toBe(true);

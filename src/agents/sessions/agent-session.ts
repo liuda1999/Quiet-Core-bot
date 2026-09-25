@@ -3224,13 +3224,13 @@ export class AgentSession {
   }
 
   /**
-   * @deprecated Use the OpenClaw session export command instead.
+   * @deprecated Use the Quiet Core bot session export command instead.
    * @param outputPath Optional output path (defaults to session directory)
    * @returns Path to exported file
    */
   async exportToHtml(_outputPath?: string): Promise<string> {
     throw new Error(
-      "AgentSession.exportToHtml is deprecated; use the OpenClaw session export command.",
+      "AgentSession.exportToHtml is deprecated; use the Quiet Core bot session export command.",
     );
   }
 

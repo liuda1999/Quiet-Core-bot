@@ -702,7 +702,7 @@ export async function discoverAndLoadExtensions(
   for (const p of configuredPaths) {
     const resolved = resolvePath(p, cwd);
     if (fs.existsSync(resolved) && fs.statSync(resolved).isDirectory()) {
-      // Check for package.json with OpenClaw manifest or index.ts
+      // Check for package.json with Quiet Core bot manifest or index.ts
       const entries = resolveExtensionEntries(resolved);
       if (entries) {
         addPaths(entries);

@@ -1,5 +1,5 @@
 /**
- * OpenClaw-owned tool registration filters.
+ * Quiet Core bot-owned tool registration filters.
  *
  * Keeps optional tool gating separate from tool construction so config and execution contracts decide exposure.
  */
@@ -10,7 +10,7 @@ import { isToolAllowedByPolicyName } from "./tool-policy-match.js";
 import type { AnyAgentTool } from "./tools/common.js";
 
 /**
- * Registration helpers for optional OpenClaw-owned tools.
+ * Registration helpers for optional Quiet Core bot-owned tools.
  *
  * This keeps model/runtime gating separate from tool construction so callers can
  * assemble candidate tools first, then filter by config and execution contract.
@@ -62,7 +62,7 @@ function isToolExplicitlyAllowedByOpenClawToolPolicy(params: {
   });
 }
 
-/** Decides whether update_plan should be included in the assembled OpenClaw tool set. */
+/** Decides whether update_plan should be included in the assembled Quiet Core bot tool set. */
 export function shouldIncludeUpdatePlanToolForOpenClawTools(params: {
   config?: OpenClawConfig;
   agentSessionKey?: string;

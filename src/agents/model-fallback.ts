@@ -540,7 +540,7 @@ async function resolveModelFallbackCandidateHarnessAuthPrecheck(
       ? "model"
       : harnessPolicy.runtimeSource;
   if (isCliAgentRuntime(agentRuntime, params.cfg)) {
-    // CLI runtimes own their transport/auth, so stale OpenClaw provider
+    // CLI runtimes own their transport/auth, so stale Quiet Core bot provider
     // profile state must not block the candidate before the CLI starts.
     return { skipsProviderAuthCooldown: true };
   }
@@ -558,7 +558,7 @@ async function resolveModelFallbackCandidateHarnessAuthPrecheck(
   if (!getRegisteredAgentHarness(agentRuntime)) {
     throw new MissingAgentHarnessError(agentRuntime);
   }
-  // Explicit non-Codex plugin harnesses own transport/auth; stale OpenClaw
+  // Explicit non-Codex plugin harnesses own transport/auth; stale Quiet Core bot
   // provider cooldowns must not block the harness before it starts.
   return { skipsProviderAuthCooldown: agentRuntime !== "codex" };
 }

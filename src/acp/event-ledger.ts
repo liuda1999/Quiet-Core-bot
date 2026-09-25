@@ -441,7 +441,7 @@ export function createInMemoryAcpEventLedger(options: LedgerOptions = {}): AcpEv
   });
 }
 
-/** Resolves the legacy file-backed ACP ledger path under the OpenClaw state directory. */
+/** Resolves the legacy file-backed ACP ledger path under the Quiet Core bot state directory. */
 export function resolveDefaultAcpEventLedgerPath(env: NodeJS.ProcessEnv = process.env): string {
   return path.join(resolveStateDir(env), "acp", "event-ledger.json");
 }

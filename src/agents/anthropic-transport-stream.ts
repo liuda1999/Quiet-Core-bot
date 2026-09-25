@@ -1,6 +1,6 @@
 /**
  * Native Anthropic Messages streaming transport.
- * Converts OpenClaw contexts/tools into Anthropic payloads, streams SSE events
+ * Converts Quiet Core bot contexts/tools into Anthropic payloads, streams SSE events
  * back into runtime output blocks, and applies provider request policy.
  */
 import { readResponseTextSnippet } from "@openclaw/media-core/read-response-with-limit";

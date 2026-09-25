@@ -202,9 +202,9 @@ export function formatSandboxToolPolicyBlockedMessage(params: {
   }
   const explainCommand = runtime.sessionKey
     ? hasUnsafeControlChars(runtime.sessionKey)
-      ? `openclaw sandbox explain --agent ${runtime.agentId}`
-      : `openclaw sandbox explain --session ${shellEscapeSingleArg(runtime.sessionKey)}`
-    : "openclaw sandbox explain";
+      ? `quiet-core-bot sandbox explain --agent ${runtime.agentId}`
+      : `quiet-core-bot sandbox explain --session ${shellEscapeSingleArg(runtime.sessionKey)}`
+    : "quiet-core-bot sandbox explain";
   lines.push(`- See: ${formatCliCommand(explainCommand)}`);
 
   return lines.join("\n");

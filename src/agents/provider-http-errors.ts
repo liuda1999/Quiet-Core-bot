@@ -2,7 +2,7 @@
  * Shared provider HTTP error normalization helpers.
  *
  * Transport adapters use this module to turn provider-specific response bodies,
- * request ids, and binary payload guardrails into stable OpenClaw error shapes.
+ * request ids, and binary payload guardrails into stable Quiet Core bot error shapes.
  */
 export { asFiniteNumber } from "../../packages/normalization-core/src/number-coercion.js";
 import { readResponseWithLimit } from "@openclaw/media-core/read-response-with-limit";

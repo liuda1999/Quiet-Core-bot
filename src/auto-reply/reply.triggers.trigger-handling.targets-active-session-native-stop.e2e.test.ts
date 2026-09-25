@@ -60,7 +60,7 @@ vi.mock("./reply/agent-runner.runtime.js", () => ({
         return "⚠️ Context overflow — prompt too large for this model. Try a shorter message or a larger-context model.";
       }
       const trimmed = message.replace(/\.\s*$/, "");
-      return `⚠️ Agent failed before reply: ${trimmed}.\nLogs: openclaw logs --follow`;
+      return `⚠️ Agent failed before reply: ${trimmed}.\nLogs: quiet-core-bot logs --follow`;
     };
     const stripHeartbeat = (text?: string) => {
       const trimmed = text?.trim();
@@ -256,7 +256,7 @@ async function expectNextRunUsesTargetSession(
   );
 
   expect(params.runEmbeddedAgentMock).toHaveBeenCalledOnce();
-  const runParams = firstMockCallArg(params.runEmbeddedAgentMock, "embedded OpenClaw agent");
+  const runParams = firstMockCallArg(params.runEmbeddedAgentMock, "embedded Quiet Core bot agent");
   for (const [key, value] of Object.entries(expected)) {
     expect(runParams[key]).toEqual(value);
   }
@@ -362,7 +362,7 @@ describe("trigger handling", () => {
     {
       error: "sandbox is not defined.",
       expected:
-        "⚠️ Agent failed before reply: sandbox is not defined.\nLogs: openclaw logs --follow",
+        "⚠️ Agent failed before reply: sandbox is not defined.\nLogs: quiet-core-bot logs --follow",
     },
     {
       error: "Context window exceeded",
@@ -492,7 +492,7 @@ describe("trigger handling", () => {
         expect(runEmbeddedAgentMock, testCase.label).toHaveBeenCalledOnce();
         if (testCase.assertPrompt) {
           const prompt =
-            firstMockCallArg(runEmbeddedAgentMock, "embedded OpenClaw agent").prompt ?? "";
+            firstMockCallArg(runEmbeddedAgentMock, "embedded Quiet Core bot agent").prompt ?? "";
           expect(prompt).toContain("Give me the status");
           expect(prompt).not.toContain("/thinking high");
           expect(prompt).not.toContain("/think high");
@@ -534,7 +534,7 @@ describe("trigger handling", () => {
         testCase.setup(cfg);
         await getReplyFromConfig(BASE_MESSAGE, { isHeartbeat: true }, cfg);
 
-        const call = firstMockCallArg(runEmbeddedAgentMock, "embedded OpenClaw agent");
+        const call = firstMockCallArg(runEmbeddedAgentMock, "embedded Quiet Core bot agent");
         expect(call?.provider).toBe(testCase.expected.provider);
         expect(call?.model).toBe(testCase.expected.model);
       }
@@ -593,7 +593,7 @@ describe("trigger handling", () => {
       expect(text?.startsWith("⚙️ Compacted")).toBe(true);
       expect(getCompactEmbeddedAgentSessionMock()).toHaveBeenCalledOnce();
       expect(
-        firstMockCallArg(getCompactEmbeddedAgentSessionMock(), "embedded OpenClaw compaction")
+        firstMockCallArg(getCompactEmbeddedAgentSessionMock(), "embedded Quiet Core bot compaction")
           .sessionFile,
       ).toContain(join("agents", "worker1", "sessions"));
     });

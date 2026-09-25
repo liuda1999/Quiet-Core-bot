@@ -443,7 +443,7 @@ export function buildHeadlessExecApprovalDeniedMessage(params: {
     '- align both files to security="full" and ask="off" for trusted local automation',
     "- keep allowlist mode and add an explicit allowlist entry for this command",
     "- enable Web UI, terminal UI, or chat exec approvals and rerun interactively",
-    'Tip: run "openclaw doctor" and "openclaw approvals get --gateway" to inspect the effective policy.',
+    'Tip: run "quiet-core-bot doctor" and "quiet-core-bot approvals get --gateway" to inspect the effective policy.',
   ].join("\n");
 }
 

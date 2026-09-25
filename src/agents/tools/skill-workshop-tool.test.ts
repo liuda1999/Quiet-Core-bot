@@ -29,7 +29,7 @@ afterEach(async () => {
 });
 
 describe("skill_workshop tool", () => {
-  it("is exposed in the OpenClaw tool set", async () => {
+  it("is exposed in the Quiet Core bot tool set", async () => {
     const workspaceDir = await tempDirs.make("openclaw-skill-workshop-tool-");
     const tools = createOpenClawTools({
       workspaceDir,
@@ -57,7 +57,7 @@ describe("skill_workshop tool", () => {
     expect(tools.some((tool) => tool.name === "skill_workshop")).toBe(true);
   });
 
-  it("is not exposed from sandboxed OpenClaw tool sets", async () => {
+  it("is not exposed from sandboxed Quiet Core bot tool sets", async () => {
     const workspaceDir = await tempDirs.make("openclaw-skill-workshop-tool-");
     const tools = createOpenClawTools({
       workspaceDir,

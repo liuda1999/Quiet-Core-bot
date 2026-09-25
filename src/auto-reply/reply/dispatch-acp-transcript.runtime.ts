@@ -1,4 +1,4 @@
-// Bridges ACP transcript events into persisted OpenClaw session transcripts.
+// Bridges ACP transcript events into persisted Quiet Core bot session transcripts.
 import { resolveAcpSessionCwd } from "@openclaw/acp-core/runtime/session-identifiers";
 import { resolveSessionAgentId } from "../../agents/agent-scope.js";
 import { persistAcpTurnTranscript } from "../../agents/command/attempt-execution.js";

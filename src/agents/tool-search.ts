@@ -1,7 +1,7 @@
 /**
  * Tool Search catalog compaction.
  *
- * Presents large OpenClaw/MCP/client tool inventories through search, describe, call, and optional code-mode tools.
+ * Presents large Quiet Core bot/MCP/client tool inventories through search, describe, call, and optional code-mode tools.
  */
 import { spawn } from "node:child_process";
 import os from "node:os";
@@ -249,7 +249,7 @@ function settleBridge(message) {
 }
 
 function buildModelScriptSource(code) {
-  return "(async (openclaw, console) => {\n" + code + "\n})(openclaw, console)";
+  return "(async (quiet-core-bot, console) => {\n" + code + "\n})(quiet-core-bot, console)";
 }
 
 function buildControllerSource() {
@@ -311,7 +311,7 @@ function buildControllerSource() {
     "  }),\n" +
     "});\n" +
     "return Object.freeze({\n" +
-    "  openclaw,\n" +
+    "  quiet-core-bot,\n" +
     "  console,\n" +
     "  isBridgeIdle,\n" +
     "  waitForBridgeIdle,\n" +
@@ -2308,7 +2308,7 @@ export function createToolSearchTools(ctx: ToolSearchToolContext): AnyAgentTool[
     {
       name: TOOL_CALL_RAW_TOOL_NAME,
       label: "Tool Call",
-      description: "Call a selected Tool Search catalog entry through OpenClaw.",
+      description: "Call a selected Tool Search catalog entry through Quiet Core bot.",
       parameters: Type.Object({
         id: Type.String({ description: "Tool search result id or tool name." }),
         args: Type.Optional(

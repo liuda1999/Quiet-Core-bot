@@ -402,7 +402,7 @@ describe("getReplyFromConfig fast test bootstrap", () => {
     if (!reply || Array.isArray(reply) || typeof reply.text !== "string") {
       throw new Error("expected status reply text");
     }
-    expect(reply.text.includes("OpenClaw")).toBe(true);
+    expect(reply.text.includes("Quiet Core bot")).toBe(true);
     expect(reply.text.includes("Think: medium")).toBe(true);
     expect(mocks.loadModelCatalog).toHaveBeenCalledWith({ config: cfg });
     expect(mocks.ensureAgentWorkspace).not.toHaveBeenCalled();

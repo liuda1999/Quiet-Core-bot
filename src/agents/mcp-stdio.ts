@@ -1,6 +1,6 @@
 /**
  * Stdio MCP launch config normalization.
- * Accepts OpenClaw and upstream MCP config field names, keeping only
+ * Accepts Quiet Core bot and upstream MCP config field names, keeping only
  * command/args/env/cwd needed to spawn a stdio server.
  */
 import { isMcpConfigRecord, toMcpEnvRecord, toMcpStringArray } from "./mcp-config-shared.js";

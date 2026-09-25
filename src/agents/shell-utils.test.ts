@@ -191,7 +191,7 @@ describe("getShellEnv", () => {
     envSnapshot.restore();
   });
 
-  it("returns an env object with the OpenClaw bin dir on PATH", () => {
+  it("returns an env object with the Quiet Core bot bin dir on PATH", () => {
     process.env.PATH = "/usr/bin";
     const env = getShellEnv();
 

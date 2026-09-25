@@ -8,7 +8,7 @@ import {
 setupCliBundleMcpTestHarness();
 
 describe("prepareCliBundleMcpConfig resume hash", () => {
-  it("stabilizes the resume hash when only the OpenClaw loopback port changes", async () => {
+  it("stabilizes the resume hash when only the Quiet Core bot loopback port changes", async () => {
     // Loopback ports are volatile per gateway run and should not force CLI
     // session abandonment when stable MCP semantics are unchanged.
     const first = await prepareBundleProbeCliConfig({

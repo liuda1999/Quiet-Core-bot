@@ -77,7 +77,7 @@ export function normalizeCodexMcpServerConfig(
   if (defaultToolsApprovalMode) {
     next.default_tools_approval_mode = defaultToolsApprovalMode;
   } else if (isOpenClawLoopbackMcpServer(name, server)) {
-    // OpenClaw's loopback MCP exposes local tools; Codex should ask for approval
+    // Quiet Core bot's loopback MCP exposes local tools; Codex should ask for approval
     // unless plugin metadata explicitly selected another approval mode.
     next.default_tools_approval_mode = "approve";
   }

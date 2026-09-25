@@ -16,7 +16,7 @@ const BASE_CODING_TOOL_FACTORY_NAMES = new Set(["edit", "read", "write"]);
 
 const SHELL_CODING_TOOL_FACTORY_NAMES = new Set(["apply_patch", "exec", "process"]);
 
-// Names here must be emitted directly by createOpenClawTools(). Catalog entries
+// Names here must be emitted directly by createQuiet Core botTools(). Catalog entries
 // backed by plugin registration, such as browser/x_search/code_execution, stay
 // out of this set so narrow allowlists still materialize plugin tools.
 const OPENCLAW_TOOL_FACTORY_NAMES = new Set([

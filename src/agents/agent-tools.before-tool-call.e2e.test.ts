@@ -684,7 +684,7 @@ describe("before_tool_call loop detection behavior", () => {
     await withDiagnosticEvents(async (emitted, flush) => {
       await tool.execute(
         "tool-call-home-skill",
-        { path: "~/.openclaw/skills/home-skill/SKILL.md" },
+        { path: "~/.quiet-core-bot/skills/home-skill/SKILL.md" },
         undefined,
         undefined,
       );

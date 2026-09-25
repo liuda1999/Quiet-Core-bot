@@ -256,7 +256,7 @@ function resolveApprovalRequesterDeviceIdentityForGatewayTool(params: {
     throw new Error(
       [
         "remote approval gateway calls require a stable device identity.",
-        "Fix the OpenClaw state directory permissions or use the local approval-runtime gateway.",
+        "Fix the Quiet Core bot state directory permissions or use the local approval-runtime gateway.",
       ].join(" "),
       { cause: error },
     );

@@ -51,7 +51,7 @@ describe("resolveDefaultAgentWorkspaceDir", () => {
       HOME: "/home/other",
     } as NodeJS.ProcessEnv);
 
-    expect(dir).toBe(path.join(path.resolve("/srv/openclaw-home"), ".openclaw", "workspace"));
+    expect(dir).toBe(path.join(path.resolve("/srv/openclaw-home"), ".quiet-core-bot", "workspace"));
   });
 
   it("prefers OPENCLAW_WORKSPACE_DIR for default workspace resolution", () => {
@@ -151,7 +151,7 @@ describe("ensureAgentWorkspace", () => {
   it("does not overwrite a foreign root workspace-state.json file", async () => {
     const tempDir = await makeTempWorkspace("openclaw-workspace-");
     const foreignStatePath = path.join(tempDir, "workspace-state.json");
-    const foreignState = "not openclaw state\n";
+    const foreignState = "not quiet-core-bot state\n";
     await fs.writeFile(foreignStatePath, foreignState);
 
     await ensureAgentWorkspace({ dir: tempDir, ensureBootstrapFiles: true });
@@ -381,7 +381,7 @@ describe("ensureAgentWorkspace", () => {
     await expectBootstrapSeeded(tempDir);
   });
 
-  it("does not overwrite a sibling file that is not an OpenClaw attestation marker", async () => {
+  it("does not overwrite a sibling file that is not an Quiet Core bot attestation marker", async () => {
     const tempDir = await makeTempWorkspace("openclaw-workspace-");
     const attestationPath = `${tempDir}.attested`;
     const siblingContent = "external attestation data\n";

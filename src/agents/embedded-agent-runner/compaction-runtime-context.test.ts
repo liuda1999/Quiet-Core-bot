@@ -289,7 +289,7 @@ describe("buildEmbeddedCompactionRuntimeContext", () => {
     expect(result.runtimeProvider).toBeUndefined();
   });
 
-  it("preserves direct OpenAI compaction for the OpenClaw runtime", () => {
+  it("preserves direct OpenAI compaction for the Quiet Core bot runtime", () => {
     const result = resolveEmbeddedCompactionTarget({
       config: {
         models: {

@@ -880,7 +880,7 @@ function handleClaudeLiveControlRequest(
         : {
             behavior: "deny",
             decisionClassification: "user_reject",
-            message: `OpenClaw exec policy denied Claude native tool use (security=${turn.execPermission.security}, ask=${turn.execPermission.ask}).`,
+            message: `Quiet Core bot exec policy denied Claude native tool use (security=${turn.execPermission.security}, ask=${turn.execPermission.ask}).`,
           },
     },
   });

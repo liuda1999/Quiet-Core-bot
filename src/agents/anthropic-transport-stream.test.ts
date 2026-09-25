@@ -672,7 +672,9 @@ describe("anthropic transport stream", () => {
     );
 
     expect(result.stopReason).toBe("error");
-    expect(result.errorMessage).toBe("OpenClaw transport error: malformed_streaming_fragment");
+    expect(result.errorMessage).toBe(
+      "Quiet Core bot transport error: malformed_streaming_fragment",
+    );
   });
 
   it.each(["anthropic", "anthropic-vertex"])(
@@ -1994,7 +1996,7 @@ describe("anthropic transport stream", () => {
     ]);
   });
 
-  it("backfills MiMo v2-flash tool-use replay when OpenClaw thinking is off", async () => {
+  it("backfills MiMo v2-flash tool-use replay when Quiet Core bot thinking is off", async () => {
     await runTransportStream(
       makeAnthropicTransportModel({
         id: "mimo-v2-flash",

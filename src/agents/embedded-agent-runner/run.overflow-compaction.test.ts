@@ -3388,7 +3388,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
     mockedResolveModelAsync.mockResolvedValue({
       model: null,
       error:
-        'Unknown model: ollama/huihui_ai/gemma-4-abliterated:12b. Ollama requires authentication to be registered as a provider. Set OLLAMA_API_KEY="ollama-local" (any value works) or run "openclaw configure".',
+        'Unknown model: ollama/huihui_ai/gemma-4-abliterated:12b. Ollama requires authentication to be registered as a provider. Set OLLAMA_API_KEY="ollama-local" (any value works) or run "quiet-core-bot configure".',
       authStorage: { setRuntimeApiKey: vi.fn() },
       modelRegistry: {},
     } as never);
@@ -3400,11 +3400,12 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
       // The original, misleading message is preserved for diagnosis.
       expect(message).toContain("Unknown model: ollama/huihui_ai/gemma-4-abliterated:12b");
       expect(message).toContain("Ollama requires authentication");
-      expect(message).toContain(`openclaw proxy start --host 127.0.0.1 --port ${closedPort}`);
+      expect(message).toContain(`quiet-core-bot proxy start --host 127.0.0.1 --port ${closedPort}`);
       const warnLines = mockedLog.warn.mock.calls.map((call) => String(call[0]));
       expect(
         warnLines.some(
-          (line) => line.includes("[model-resolution]") && line.includes("openclaw proxy start"),
+          (line) =>
+            line.includes("[model-resolution]") && line.includes("quiet-core-bot proxy start"),
         ),
       ).toBe(true);
     } finally {
@@ -3431,7 +3432,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
       expect(failure).toBeInstanceOf(Error);
       const message = (failure as Error).message;
       expect(message).toContain("Unknown model: ollama/huihui_ai/gemma-4-abliterated:12b");
-      expect(message).not.toContain("openclaw proxy start");
+      expect(message).not.toContain("quiet-core-bot proxy start");
     } finally {
       vi.unstubAllEnvs();
       await new Promise<void>((resolve) => server.close(() => resolve()));

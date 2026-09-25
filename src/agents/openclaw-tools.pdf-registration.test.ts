@@ -1,9 +1,9 @@
-// Verifies PDF tool factory output is included in OpenClaw tool registration.
+// Verifies PDF tool factory output is included in Quiet Core bot tool registration.
 import { describe, expect, it } from "vitest";
 import { collectPresentOpenClawTools } from "./openclaw-tools.registration.js";
 import { createPdfTool } from "./tools/pdf-tool.js";
 
-describe("createOpenClawTools PDF registration", () => {
+describe("createQuiet Core botTools PDF registration", () => {
   it("includes the pdf tool when the pdf factory returns a tool", () => {
     const pdfTool = createPdfTool({
       agentDir: "/tmp/openclaw-agent-main",

@@ -65,7 +65,7 @@ export function createPreparedEmbeddedAgentSettingsManager(params: {
     cfg: params.cfg,
     contextTokenBudget: params.contextTokenBudget,
   });
-  // Disable the session runtime auto-retry. OpenClaw has its own comprehensive
+  // Disable the session runtime auto-retry. Quiet Core bot has its own comprehensive
   // retry layer (failover rotation, auth profile rotation, empty-error retry,
   // thinking-level fallback) in run.ts. Having both layers active creates a
   // double-retry that can replay failed tool calls in an unbounded loop (#73781).

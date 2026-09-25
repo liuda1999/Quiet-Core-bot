@@ -8,7 +8,7 @@ import { resolveOpenClawPluginToolInputs } from "./openclaw-tools.plugin-context
 import { applyPluginToolDeliveryDefaults } from "./plugin-tool-delivery-defaults.js";
 import type { AnyAgentTool } from "./tools/common.js";
 
-describe("openclaw plugin tool context", () => {
+describe("quiet-core-bot plugin tool context", () => {
   it("forwards trusted requester sender identity", () => {
     const result = resolveOpenClawPluginToolInputs({
       options: {

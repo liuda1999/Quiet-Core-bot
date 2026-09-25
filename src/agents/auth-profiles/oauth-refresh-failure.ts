@@ -105,6 +105,6 @@ export function classifyOAuthRefreshFailureError(err: unknown): OAuthRefreshFail
 export function buildOAuthRefreshFailureLoginCommand(provider: string | null | undefined): string {
   const sanitizedProvider = sanitizeOAuthRefreshFailureProvider(provider);
   return sanitizedProvider
-    ? formatCliCommand(`openclaw models auth login --provider ${sanitizedProvider}`)
-    : formatCliCommand("openclaw models auth login");
+    ? formatCliCommand(`quiet-core-bot models auth login --provider ${sanitizedProvider}`)
+    : formatCliCommand("quiet-core-bot models auth login");
 }

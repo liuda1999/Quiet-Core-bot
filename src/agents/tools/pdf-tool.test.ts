@@ -147,7 +147,7 @@ async function stubPdfToolInfra(
           }) as never;
   vi.spyOn(modelDiscovery, "discoverModels").mockReturnValue({ find } as never);
 
-  vi.spyOn(modelsConfig, "ensureOpenClawModelsJson").mockResolvedValue({
+  vi.spyOn(modelsConfig, "ensureQuiet Core botModelsJson").mockResolvedValue({
     agentDir,
     wrote: false,
   });
@@ -510,7 +510,7 @@ describe("createPdfTool", () => {
       const ensureModelsJsonMock = vi.mocked(modelsConfig.ensureOpenClawModelsJson);
       const [modelsConfigArg, modelsAgentDir, modelsOptions] = firstMockCall(
         ensureModelsJsonMock,
-        "ensureOpenClawModelsJson",
+        "ensureQuiet Core botModelsJson",
       );
       expectFields(
         (modelsConfigArg as { agents?: { defaults?: unknown } } | undefined)?.agents?.defaults,

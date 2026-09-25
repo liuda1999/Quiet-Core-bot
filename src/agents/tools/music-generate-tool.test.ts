@@ -963,7 +963,7 @@ describe("createMusicGenerateTool", () => {
     }
 
     const result = await tool.execute("call-google-generate", {
-      prompt: "OpenClaw anthem",
+      prompt: "Quiet Core bot anthem",
       instrumental: true,
       durationSeconds: 30,
       format: "wav",

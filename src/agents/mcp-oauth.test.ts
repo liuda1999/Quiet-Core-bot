@@ -16,7 +16,7 @@ vi.mock("@modelcontextprotocol/sdk/client/auth.js", () => ({
 }));
 
 describe("MCP OAuth provider", () => {
-  it("stores token state under the OpenClaw state directory with restricted permissions", async () => {
+  it("stores token state under the Quiet Core bot state directory with restricted permissions", async () => {
     await withTempHome(
       async (home) => {
         const provider = createMcpOAuthClientProvider({
@@ -209,13 +209,15 @@ describe("MCP OAuth provider", () => {
           serverUrl: "https://mcp.example.com/mcp",
         });
 
-        await expect(provider.state?.()).rejects.toThrow("Run openclaw mcp login Remote Docs.");
+        await expect(provider.state?.()).rejects.toThrow(
+          "Run quiet-core-bot mcp login Remote Docs.",
+        );
         await expect(provider.saveCodeVerifier?.("verifier")).rejects.toThrow(
-          "Run openclaw mcp login Remote Docs.",
+          "Run quiet-core-bot mcp login Remote Docs.",
         );
         await expect(
           provider.redirectToAuthorization?.(new URL("https://auth.example.com/authorize")),
-        ).rejects.toThrow("Run openclaw mcp login Remote Docs.");
+        ).rejects.toThrow("Run quiet-core-bot mcp login Remote Docs.");
       },
       {
         prefix: "openclaw-mcp-oauth-noninteractive-",

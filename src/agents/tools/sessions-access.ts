@@ -1,7 +1,7 @@
 /**
  * Session visibility and access helpers for session tools.
  *
- * Adds OpenClaw session-key alias normalization and sandbox requester scoping over SDK visibility contracts.
+ * Adds Quiet Core bot session-key alias normalization and sandbox requester scoping over SDK visibility contracts.
  */
 import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
 import type { OpenClawConfig } from "../../config/types.openclaw.js";
