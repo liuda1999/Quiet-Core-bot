@@ -1,4 +1,4 @@
-// Setup wizard orchestrates onboarding prompts and generated OpenClaw config.
+// Setup wizard orchestrates onboarding prompts and generated Quiet Core bot config.
 import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
 import { formatCliCommand } from "../cli/command-format.js";
 import {
@@ -272,7 +272,7 @@ export async function runSetupWizard(
       );
     }
     await prompter.outro(
-      `Config invalid. Run \`${formatCliCommand("openclaw doctor")}\` to repair it, then re-run setup.`,
+      `Config invalid. Run \`${formatCliCommand("quiet-core-bot doctor")}\` to repair it, then re-run setup.`,
     );
     runtime.exit(1);
     return;
@@ -292,15 +292,15 @@ export async function runSetupWizard(
           ? [`- ... +${compatibilityNotices.length - 4} more`]
           : []),
         "",
-        `Review: ${formatCliCommand("openclaw doctor")}`,
-        `Inspect: ${formatCliCommand("openclaw plugins inspect --all")}`,
+        `Review: ${formatCliCommand("quiet-core-bot doctor")}`,
+        `Inspect: ${formatCliCommand("quiet-core-bot plugins inspect --all")}`,
       ].join("\n"),
       t("wizard.setup.pluginCompatibilityTitle"),
     );
   }
 
   const quickstartHint = t("wizard.setup.flowQuickstartHint", {
-    command: formatCliCommand("openclaw configure"),
+    command: formatCliCommand("quiet-core-bot configure"),
   });
   const manualHint = t("wizard.setup.flowAdvancedHint");
   const migrationDetections = await detectSetupMigrationSources({ config: baseConfig, runtime });
@@ -321,7 +321,7 @@ export async function runSetupWizard(
     normalizedExplicitFlow !== "import"
   ) {
     runtime.error(
-      "Invalid --flow. Use quickstart, manual, advanced, or import. Example: openclaw onboard --flow quickstart",
+      "Invalid --flow. Use quickstart, manual, advanced, or import. Example: quiet-core-bot onboard --flow quickstart",
     );
     runtime.exit(1);
     return;

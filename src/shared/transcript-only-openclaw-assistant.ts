@@ -1,4 +1,4 @@
-// Identifies OpenClaw-authored assistant rows that are transcript bookkeeping,
+// Identifies Quiet Core bot-authored assistant rows that are transcript bookkeeping,
 // not provider model output. Some history surfaces keep gateway-injected rows
 // visible, so use the narrower delivery-mirror predicate when visibility matters.
 const TRANSCRIPT_ONLY_OPENCLAW_ASSISTANT_MODELS = new Set<string>([

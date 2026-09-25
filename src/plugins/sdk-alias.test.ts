@@ -766,7 +766,7 @@ describe("plugin sdk alias helpers", () => {
 
   it.each([
     {
-      name: "does not derive plugin-sdk subpaths from cwd fallback when package root is not an OpenClaw root",
+      name: "does not derive plugin-sdk subpaths from cwd fallback when package root is not an Quiet Core bot root",
       fixture: () =>
         createPluginSdkAliasFixture({
           trustedRootIndicators: false,
@@ -1579,7 +1579,7 @@ describe("plugin sdk alias helpers", () => {
     });
   });
 
-  it("resolves plugin-sdk aliases for user-installed plugins via the running openclaw argv hint", () => {
+  it("resolves plugin-sdk aliases for user-installed plugins via the running quiet-core-bot argv hint", () => {
     const {
       externalPluginEntry,
       externalPluginRoot,
@@ -1591,7 +1591,10 @@ describe("plugin sdk alias helpers", () => {
 
     const aliases = withCwd(externalPluginRoot, () =>
       withEnv({ NODE_ENV: undefined }, () =>
-        buildPluginLoaderAliasMap(externalPluginEntry, path.join(fixture.root, "quiet-core-bot.mjs")),
+        buildPluginLoaderAliasMap(
+          externalPluginEntry,
+          path.join(fixture.root, "quiet-core-bot.mjs"),
+        ),
       ),
     );
 
@@ -1613,18 +1616,18 @@ describe("plugin sdk alias helpers", () => {
     } = createUserInstalledPluginSdkAliasFixture();
 
     // Simulate loader.ts passing its own import.meta.url as the moduleUrl hint.
-    // This covers installations where argv1 does not resolve to the openclaw root
+    // This covers installations where argv1 does not resolve to the quiet-core-bot root
     // (e.g. single-binary distributions or custom process launchers).
     // Use quiet-core-bot.mjs which is created by createPluginSdkAliasFixture (bin+marker mode).
     // Use fixture.root as cwd so process.cwd() fallback also resolves to fixture, not the
-    // real openclaw repo root in the test runner environment.
+    // real quiet-core-bot repo root in the test runner environment.
     const loaderModuleUrl = pathToFileURL(path.join(fixture.root, "quiet-core-bot.mjs")).href;
 
     // Use externalPluginRoot as cwd so process.cwd() fallback cannot accidentally
     // resolve to the fixture root — only the moduleUrl hint can bridge the gap.
     // Pass "" for argv1: undefined would trigger the STARTUP_ARGV1 default (the vitest
-    // runner binary, inside the openclaw repo), which resolves before moduleUrl is checked.
-    // An empty string is falsy so resolveTrustedOpenClawRootFromArgvHint returns null,
+    // runner binary, inside the quiet-core-bot repo), which resolves before moduleUrl is checked.
+    // An empty string is falsy so resolveTrustedQuiet Core botRootFromArgvHint returns null,
     // meaning only the moduleUrl hint can bridge the gap.
     const aliases = withCwd(externalPluginRoot, () =>
       withEnv({ NODE_ENV: undefined }, () =>
@@ -1645,7 +1648,7 @@ describe("plugin sdk alias helpers", () => {
 
   it.each([
     {
-      name: "does not resolve plugin-sdk alias files from cwd fallback when package root is not an OpenClaw root",
+      name: "does not resolve plugin-sdk alias files from cwd fallback when package root is not an Quiet Core bot root",
       fixture: () =>
         createPluginSdkAliasFixture({
           srcFile: "channel-runtime.ts",
@@ -2307,7 +2310,7 @@ describe("buildPluginLoaderAliasMap memoization", () => {
 });
 
 describe("buildPluginLoaderJitiOptions", () => {
-  it("scopes jiti fs cache by OpenClaw package version and install metadata", () => {
+  it("scopes jiti fs cache by Quiet Core bot package version and install metadata", () => {
     const root = createTrustedOpenClawPackageFixture("1.2.3-beta.4");
     const tmpDir = path.join(root, "tmp");
 

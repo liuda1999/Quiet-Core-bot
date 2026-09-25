@@ -245,7 +245,7 @@ function assertWritableInstalledPluginIndexStoreOptions(
 ): void {
   if (isExplicitLegacyJsonStorePath(options)) {
     throw new Error(
-      "Explicit JSON installed plugin index paths are retired. Use the shared SQLite state DB or run openclaw doctor --fix to migrate legacy plugins/installs.json.",
+      "Explicit JSON installed plugin index paths are retired. Use the shared SQLite state DB or run quiet-core-bot doctor --fix to migrate legacy plugins/installs.json.",
     );
   }
 }

@@ -75,7 +75,7 @@ describe("setupWizardShellCompletion", () => {
 
       expect(prompter.confirm).toHaveBeenCalledWith(
         expect.objectContaining({
-          message: "为 openclaw 启用 zsh shell completion？",
+          message: "为 quiet-core-bot 启用 zsh shell completion？",
         }),
       );
       expect(prompter.note).toHaveBeenCalledWith(

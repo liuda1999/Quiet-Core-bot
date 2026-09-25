@@ -454,7 +454,7 @@ describe("hardenApprovedExecutionPaths", () => {
   it.runIf(process.platform !== "win32")("handles approval hardening cases", () => {
     for (const testCase of cases) {
       runNamedCase(testCase.name, () => {
-        const tmp = createFixtureDir("openclaw-approval-hardening-");
+        const tmp = createFixtureDir("quiet-core-bot-approval-hardening-");
         let pathToken: PathTokenSetup | null = null;
 
         const checkCase = () => {
@@ -630,7 +630,7 @@ describe("hardenApprovedExecutionPaths", () => {
   ];
 
   it("captures mutable runtime operands in approval plans", () => {
-    const tmp = createFixtureDir("openclaw-approval-script-plan-");
+    const tmp = createFixtureDir("quiet-core-bot-approval-script-plan-");
     withFakeRuntimeBins({
       binNames: uniqueRuntimeBinNames(mutableOperandCases),
       run: () => {
@@ -657,7 +657,7 @@ describe("hardenApprovedExecutionPaths", () => {
   it("captures mutable shell script operands in approval plans", () => {
     withScriptOperandPlanFixture(
       {
-        tmpPrefix: "openclaw-approval-script-plan-",
+        tmpPrefix: "quiet-core-bot-approval-script-plan-",
       },
       (fixture, tmp) => {
         expectMutableFileOperandApprovalPlan(fixture, tmp);

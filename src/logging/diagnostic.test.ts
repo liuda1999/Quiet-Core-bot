@@ -690,8 +690,8 @@ describe("stuck session diagnostics threshold", () => {
     expect(hintLines[0]).toContain("approvalId=54d8b109-1111-2222-3333-444444444444");
     expect(hintLines[0]).toContain("tool=exec");
     expect(hintLines[0]).toContain('command="curl https://example.test"');
-    expect(hintLines[0]).toContain("approve with: openclaw approvals approve 54d8b109");
-    expect(hintLines[0]).toContain("list with: openclaw approvals pending");
+    expect(hintLines[0]).toContain("approve with: quiet-core-bot approvals approve 54d8b109");
+    expect(hintLines[0]).toContain("list with: quiet-core-bot approvals pending");
     expect(hintLines[0]).toContain("suggestedAction=approve_pending_exec_approval");
   });
 

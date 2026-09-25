@@ -11,7 +11,7 @@ import { createEmptyPluginRegistry, type PluginRecord, type PluginRegistry } fro
 import { buildPluginDependencyStatus } from "./status-dependencies-core.js";
 import type { PluginLogger } from "./types.js";
 
-/** Control-plane plugin status shape used by `openclaw plugins status` style surfaces. */
+/** Control-plane plugin status shape used by `quiet-core-bot plugins status` style surfaces. */
 export type PluginRegistryStatusReport = PluginRegistry & {
   workspaceDir?: string;
   registrySource: PluginRegistrySnapshotSource;

@@ -21,6 +21,7 @@ import {
   materializeGatewayAuthSecretRefs,
 } from "../gateway/auth-config-utils.js";
 import { isInterpreterLikeAllowlistPattern } from "../infra/command-analysis/inline-eval.js";
+import { emitTrustedSecurityEvent } from "../infra/diagnostic-events.js";
 import {
   type ExecApprovalsFile,
   loadExecApprovals,
@@ -34,7 +35,6 @@ import {
 } from "../infra/exec-safe-bin-runtime-policy.js";
 import { listRiskyConfiguredSafeBins } from "../infra/exec-safe-bin-semantics.js";
 import { normalizeTrustedSafeBinDirs } from "../infra/exec-safe-bin-trust.js";
-import { emitTrustedSecurityEvent } from "../infra/diagnostic-events.js";
 import { DEFAULT_AGENT_ID } from "../routing/session-key.js";
 import { collectDeepCodeSafetyFindings } from "./audit-deep-code-safety.js";
 import { collectDeepProbeFindings } from "./audit-deep-probe-findings.js";
@@ -390,7 +390,7 @@ export async function collectFilesystemFindings(params: {
         checkId: "fs.state_dir.perms_world_writable",
         severity: "critical",
         title: "State dir is world-writable",
-        detail: `${formatPermissionDetail(params.stateDir, stateDirPerms)}; other users can write into your OpenClaw state.`,
+        detail: `${formatPermissionDetail(params.stateDir, stateDirPerms)}; other users can write into your Quiet Core bot state.`,
         remediation: formatPermissionRemediation({
           targetPath: params.stateDir,
           perms: stateDirPerms,
@@ -404,7 +404,7 @@ export async function collectFilesystemFindings(params: {
         checkId: "fs.state_dir.perms_group_writable",
         severity: "warn",
         title: "State dir is group-writable",
-        detail: `${formatPermissionDetail(params.stateDir, stateDirPerms)}; group users can write into your OpenClaw state.`,
+        detail: `${formatPermissionDetail(params.stateDir, stateDirPerms)}; group users can write into your Quiet Core bot state.`,
         remediation: formatPermissionRemediation({
           targetPath: params.stateDir,
           perms: stateDirPerms,
@@ -860,9 +860,9 @@ export function collectExecRuntimeFindings(cfg: OpenClawConfig): SecurityAuditFi
       checkId: "agents.claude_cli.permission_mode_overridden_by_yolo",
       severity: "warn",
       title: "Claude permission mode is ignored under YOLO exec",
-      detail: `claude-cli sets ${claudePermissionModeHits.map((hit) => `${hit.argSet}=${hit.mode}`).join(", ")}, but OpenClaw exec is YOLO for: ${yoloExecScopeIds.join(", ")}. Managed Claude live sessions use --permission-mode bypassPermissions.`,
+      detail: `claude-cli sets ${claudePermissionModeHits.map((hit) => `${hit.argSet}=${hit.mode}`).join(", ")}, but Quiet Core bot exec is YOLO for: ${yoloExecScopeIds.join(", ")}. Managed Claude live sessions use --permission-mode bypassPermissions.`,
       remediation:
-        "Restrict OpenClaw tools.exec.security/tools.exec.ask, or remove the Claude --permission-mode override.",
+        "Restrict Quiet Core bot tools.exec.security/tools.exec.ask, or remove the Claude --permission-mode override.",
     });
   }
 

@@ -69,7 +69,7 @@ function matchesPathMatcher(matcher: PathMatcher, sourcePath: string): boolean {
 }
 
 function formatPluginInspectCommand(pluginId: string): string {
-  return `openclaw plugins inspect ${quoteCliArg(pluginId)}`;
+  return `quiet-core-bot plugins inspect ${quoteCliArg(pluginId)}`;
 }
 
 /** Builds provenance matchers from configured load paths and install records. */
@@ -256,12 +256,12 @@ export function warnWhenAllowlistIsOpen(params: {
     .join(", ");
   // Skip the snippet when truncated: a previewed-only allowlist would silently disable the rest
   const remediation = truncated
-    ? "Run 'openclaw plugins list --enabled --verbose' to enumerate every discovered plugin id, inspect trusted ids with 'openclaw plugins inspect <id>', and add the ones you trust to plugins.allow in openclaw.json."
-    : `To trust them explicitly, set plugins.allow in openclaw.json (e.g. "plugins": { "allow": [${autoDiscoverable
+    ? "Run 'quiet-core-bot plugins list --enabled --verbose' to enumerate every discovered plugin id, inspect trusted ids with 'quiet-core-bot plugins inspect <id>', and add the ones you trust to plugins.allow in quiet-core-bot.json."
+    : `To trust them explicitly, set plugins.allow in quiet-core-bot.json (e.g. "plugins": { "allow": [${autoDiscoverable
         .map((entry) => JSON.stringify(entry.id))
         .join(
           ", ",
-        )}] }). Run 'openclaw plugins list --enabled --verbose' or ${inspectCommands} to confirm plugin ids.`;
+        )}] }). Run 'quiet-core-bot plugins list --enabled --verbose' or ${inspectCommands} to confirm plugin ids.`;
   params.warningCache.recordOpenAllowlistWarning(params.warningCacheKey);
   if (!hasConfiguredAllowlist) {
     params.logger.warn(
@@ -308,7 +308,7 @@ export function warnAboutUntrackedLoadedPlugins(params: {
     ) {
       continue;
     }
-    const message = `loaded without install/load-path provenance; treat as untracked local code. Verify source with '${formatPluginInspectCommand(plugin.id)}', then pin trust via plugins.allow (e.g. "plugins": { "allow": [${JSON.stringify(plugin.id)}] }) or reinstall from a trusted source so OpenClaw records install provenance.`;
+    const message = `loaded without install/load-path provenance; treat as untracked local code. Verify source with '${formatPluginInspectCommand(plugin.id)}', then pin trust via plugins.allow (e.g. "plugins": { "allow": [${JSON.stringify(plugin.id)}] }) or reinstall from a trusted source so Quiet Core bot records install provenance.`;
     params.registry.diagnostics.push({
       level: "warn",
       pluginId: plugin.id,

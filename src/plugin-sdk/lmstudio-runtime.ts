@@ -34,7 +34,7 @@ export type LmstudioModelWire = {
   } | null>;
 };
 
-/** Normalized model metadata used by OpenClaw provider catalogs. */
+/** Normalized model metadata used by Quiet Core bot provider catalogs. */
 export type LmstudioModelBase = {
   id: string;
   displayName: string;
@@ -157,7 +157,7 @@ export const LMSTUDIO_DEFAULT_LOAD_CONTEXT_LENGTH: FacadeModule["LMSTUDIO_DEFAUL
 /** Default chat model id used when no local LM Studio model has been selected. */
 export const LMSTUDIO_DEFAULT_MODEL_ID: FacadeModule["LMSTUDIO_DEFAULT_MODEL_ID"] =
   "qwen/qwen3.5-9b";
-/** Stable provider id used in OpenClaw config and provider catalogs. */
+/** Stable provider id used in Quiet Core bot config and provider catalogs. */
 export const LMSTUDIO_PROVIDER_ID: FacadeModule["LMSTUDIO_PROVIDER_ID"] = "lmstudio";
 
 /** Resolve whether an LM Studio wire entry advertises reasoning support. */
@@ -178,10 +178,10 @@ export const normalizeLmstudioProviderConfig: FacadeModule["normalizeLmstudioPro
 /** Fetch raw LM Studio model entries with SSRF and timeout handling owned by the facade. */
 export const fetchLmstudioModels: FacadeModule["fetchLmstudioModels"] =
   createLazyFacadeRuntimeValue(loadFacadeModule, "fetchLmstudioModels");
-/** Map one raw LM Studio model entry into OpenClaw model metadata. */
+/** Map one raw LM Studio model entry into Quiet Core bot model metadata. */
 export const mapLmstudioWireEntry: FacadeModule["mapLmstudioWireEntry"] =
   createLazyFacadeRuntimeValue(loadFacadeModule, "mapLmstudioWireEntry");
-/** Discover OpenClaw model definitions from an LM Studio server. */
+/** Discover Quiet Core bot model definitions from an LM Studio server. */
 export const discoverLmstudioModels: FacadeModule["discoverLmstudioModels"] =
   createLazyFacadeRuntimeValue(loadFacadeModule, "discoverLmstudioModels");
 /** Ensure a specific LM Studio model is loaded before use. */

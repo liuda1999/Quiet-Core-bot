@@ -2102,7 +2102,7 @@ describe("installPluginFromNpmSpec", () => {
   });
 
   it.runIf(process.platform !== "win32")(
-    "repairs root openclaw materialized by npm peer handling",
+    "repairs root quiet-core-bot materialized by npm peer handling",
     async () => {
       const stateDir = suiteTempRootTracker.makeTempDir();
       const npmRoot = path.join(stateDir, "npm");
@@ -2232,7 +2232,7 @@ describe("installPluginFromNpmSpec", () => {
     expect(lockfile.dependencies?.openclaw).toBeUndefined();
   });
 
-  it("preserves the active host openclaw runtime package during npm plugin installs", async () => {
+  it("preserves the active host quiet-core-bot runtime package during npm plugin installs", async () => {
     const stateDir = suiteTempRootTracker.makeTempDir();
     const npmRoot = path.join(stateDir, "npm");
     const hostPackageRoot = path.join(npmRoot, "node_modules", "openclaw");
@@ -2889,7 +2889,7 @@ describe("installPluginFromNpmSpec", () => {
       expect(fs.existsSync(resolveTestPluginPackageDir(npmRoot, spec))).toBe(true);
       expect(
         warnings.some((warning) =>
-          warning.includes("allowed because it is an official OpenClaw package"),
+          warning.includes("allowed because it is an official Quiet Core bot package"),
         ),
       ).toBe(false);
     },

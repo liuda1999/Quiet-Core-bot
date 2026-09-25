@@ -514,7 +514,7 @@ export async function collectSandboxBrowserHashLabelFindings(params?: {
       detail:
         `Containers: ${missingHash.join(", ")}. ` +
         "These browser containers predate hash-based drift checks and may miss security remediations until recreated.",
-      remediation: `${formatCliCommand("openclaw sandbox recreate --browser --all")} (add --force to skip prompt).`,
+      remediation: `${formatCliCommand("quiet-core-bot sandbox recreate --browser --all")} (add --force to skip prompt).`,
     });
   }
 
@@ -526,7 +526,7 @@ export async function collectSandboxBrowserHashLabelFindings(params?: {
       detail:
         `Containers: ${staleEpoch.join(", ")}. ` +
         `Expected openclaw.browserConfigEpoch=${browserHashEpoch}.`,
-      remediation: `${formatCliCommand("openclaw sandbox recreate --browser --all")} (add --force to skip prompt).`,
+      remediation: `${formatCliCommand("quiet-core-bot sandbox recreate --browser --all")} (add --force to skip prompt).`,
     });
   }
 
@@ -539,7 +539,7 @@ export async function collectSandboxBrowserHashLabelFindings(params?: {
         `Containers: ${nonLoopbackPublished.join(", ")}. ` +
         "Sandbox browser observer/control ports should stay loopback-only to avoid unintended remote access.",
       remediation:
-        `${formatCliCommand("openclaw sandbox recreate --browser --all")} (add --force to skip prompt), ` +
+        `${formatCliCommand("quiet-core-bot sandbox recreate --browser --all")} (add --force to skip prompt), ` +
         "then verify published ports are bound to 127.0.0.1.",
     });
   }
@@ -558,7 +558,7 @@ function buildSandboxBrowserDockerProbeTimeoutFinding(timeoutMs: number): Securi
     title: "Sandbox browser Docker audit probe timed out",
     detail:
       `Docker did not answer within ${timeoutMs}ms while checking sandbox browser containers. ` +
-      "OpenClaw skipped any remaining sandbox browser container drift checks for this status run.",
+      "Quiet Core bot skipped any remaining sandbox browser container drift checks for this status run.",
     remediation:
       "Retry after Docker is responsive, or recreate sandbox browser containers if drift is suspected.",
   };
@@ -838,7 +838,7 @@ export async function collectPluginsCodeSafetyFindings(params: {
         title: "Plugin extensions directory scan failed",
         detail: `Static code scan could not list extensions directory: ${String(err)}`,
         remediation:
-          "Check file permissions and plugin layout, then rerun `openclaw security audit --deep`.",
+          "Check file permissions and plugin layout, then rerun `quiet-core-bot security audit --deep`.",
       });
     },
   });
@@ -860,7 +860,7 @@ export async function collectPluginsCodeSafetyFindings(params: {
           `Could not parse plugin manifest: ${String(manifestErr)}.\n` +
           "The extension entrypoint list is unavailable. Deep scan will cover the plugin directory but may miss entries declared via `openclaw.extensions`.",
         remediation:
-          "Inspect the plugin package.json for syntax errors. If the plugin is untrusted, remove it from your OpenClaw extensions state directory.",
+          "Inspect the plugin package.json for syntax errors. If the plugin is untrusted, remove it from your Quiet Core bot extensions state directory.",
       });
       // Continue — getCodeSafetySummary below still scans the plugin directory
     }
@@ -907,7 +907,7 @@ export async function collectPluginsCodeSafetyFindings(params: {
         title: `Plugin "${pluginName}" code scan failed`,
         detail: `Static code scan could not complete: ${String(err)}`,
         remediation:
-          "Check file permissions and plugin layout, then rerun `openclaw security audit --deep`.",
+          "Check file permissions and plugin layout, then rerun `quiet-core-bot security audit --deep`.",
       });
       return null;
     });
@@ -925,7 +925,7 @@ export async function collectPluginsCodeSafetyFindings(params: {
         title: `Plugin "${pluginName}" contains dangerous code patterns`,
         detail: `Found ${summary.critical} critical issue(s) in ${summary.scannedFiles} scanned file(s):\n${details}`,
         remediation:
-          "Review the plugin source code carefully before use. If untrusted, remove the plugin from your OpenClaw extensions state directory.",
+          "Review the plugin source code carefully before use. If untrusted, remove the plugin from your Quiet Core bot extensions state directory.",
       });
     } else if (summary.warn > 0) {
       const warnFindings = summary.findings.filter((f) => f.severity === "warn");
@@ -987,7 +987,7 @@ export async function collectInstalledSkillsCodeSafetyFindings(params: {
           title: `Skill "${skillName}" code scan failed`,
           detail: `Static code scan could not complete for ${skillDir}: ${String(err)}`,
           remediation:
-            "Check file permissions and skill layout, then rerun `openclaw security audit --deep`.",
+            "Check file permissions and skill layout, then rerun `quiet-core-bot security audit --deep`.",
         });
         return null;
       });

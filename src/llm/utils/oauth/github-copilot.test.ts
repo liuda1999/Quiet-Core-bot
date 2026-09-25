@@ -47,7 +47,7 @@ afterEach(() => {
 });
 
 describe("GitHub Copilot OAuth model policy", () => {
-  it("lists model ids from Copilot instead of the generated OpenClaw catalog", async () => {
+  it("lists model ids from Copilot instead of the generated Quiet Core bot catalog", async () => {
     const fetchMock = vi.fn(
       async () =>
         new Response(

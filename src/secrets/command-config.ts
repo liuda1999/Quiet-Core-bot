@@ -1,4 +1,4 @@
-/** Collects and analyzes command-scoped secret assignments from OpenClaw config. */
+/** Collects and analyzes command-scoped secret assignments from Quiet Core bot config. */
 import type { OpenClawConfig } from "../config/types.openclaw.js";
 import { coerceSecretRef, resolveSecretInputRef } from "../config/types.secrets.js";
 import { getPath } from "./path-utils.js";

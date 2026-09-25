@@ -790,7 +790,7 @@ describe("clearPluginLoaderCache", () => {
   });
 });
 
-describe("loadOpenClawPlugins active runtime clearing", () => {
+describe("loadQuiet Core botPlugins active runtime clearing", () => {
   it("clears plugin-owned global providers before activating a new registry", () => {
     registerEmbeddingProvider({
       id: "stale-embedding",

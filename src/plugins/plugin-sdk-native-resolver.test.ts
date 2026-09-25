@@ -110,7 +110,7 @@ function addFakePluginSdkDistExport(root: string, subpath: string): string {
   return distPath;
 }
 
-describe("installOpenClawPluginSdkNativeResolver", () => {
+describe("installQuiet Core botPluginSdkNativeResolver", () => {
   it("resolves installed plugin SDK imports to the dev source root", () => {
     const stableRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-sdk-native-stable-"));
     const devRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-sdk-native-dev-source-"));
@@ -242,7 +242,7 @@ describe("installOpenClawPluginSdkNativeResolver", () => {
     );
   });
 
-  it("lets built external plugins resolve OpenClaw SDK subpaths with createRequire", () => {
+  it("lets built external plugins resolve Quiet Core bot SDK subpaths with createRequire", () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-sdk-native-resolver-"));
     const { distRoot, loaderModulePath } = writeFakeOpenClawPackage(root);
     const externalPluginEntry = writeExternalPluginEntry(path.join(root, "external-plugin"));
@@ -290,7 +290,7 @@ describe("installOpenClawPluginSdkNativeResolver", () => {
         'import fs from "node:fs";',
         'import path from "node:path";',
         'import { pathToFileURL } from "node:url";',
-        `import { installOpenClawPluginSdkNativeResolver, resetOpenClawPluginSdkNativeResolverForTest } from ${JSON.stringify(resolverModuleUrl)};`,
+        `import { installQuiet Core botPluginSdkNativeResolver, resetQuiet Core botPluginSdkNativeResolverForTest } from ${JSON.stringify(resolverModuleUrl)};`,
         `const root = ${JSON.stringify(root)};`,
         "const writeJson = (targetPath, value) => {",
         "  fs.mkdirSync(path.dirname(targetPath), { recursive: true });",
@@ -327,14 +327,14 @@ describe("installOpenClawPluginSdkNativeResolver", () => {
         '  "import { defineChannelMessageAdapter } from \\"openclaw/plugin-sdk/channel-outbound\\"; export const lazy = defineChannelMessageAdapter();\\n",',
         '  "utf8",',
         ");",
-        "installOpenClawPluginSdkNativeResolver({",
+        "installQuiet Core botPluginSdkNativeResolver({",
         "  modulePath: loaderModulePath,",
         "  pluginModulePath: entryPath,",
         '  pluginSdkResolution: "dist",',
         "});",
         "const module = await import(pathToFileURL(entryPath).href);",
         "const lazy = await module.loadLazy();",
-        "resetOpenClawPluginSdkNativeResolverForTest();",
+        "resetQuiet Core botPluginSdkNativeResolverForTest();",
         "console.log(`${module.eager}:${lazy.lazy}`);",
         "",
       ].join("\n"),
@@ -380,7 +380,7 @@ describe("installOpenClawPluginSdkNativeResolver", () => {
     expect(() => requireFromOutside.resolve("openclaw/plugin-sdk/channel-outbound")).toThrow();
   });
 
-  it("resolves internal core packages only for OpenClaw-owned source parents", () => {
+  it("resolves internal core packages only for Quiet Core bot-owned source parents", () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-sdk-native-core-internal-"));
     const { loaderModulePath } = writeFakeOpenClawPackage(root);
     const normalizationSource = writeNormalizationCoreSource(root);

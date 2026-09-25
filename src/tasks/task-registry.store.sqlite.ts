@@ -1,4 +1,4 @@
-// Persists task registry records and events through the OpenClaw SQLite state database.
+// Persists task registry records and events through the Quiet Core bot SQLite state database.
 import type { DatabaseSync } from "node:sqlite";
 import type { Insertable, Selectable } from "kysely";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../infra/kysely-sync.js";

@@ -34,7 +34,7 @@ export function resolveNpmInstallRecordSpec(params: {
   return resolvedSpec;
 }
 
-/** Records or updates a plugin install record in OpenClaw config. */
+/** Records or updates a plugin install record in Quiet Core bot config. */
 export function recordPluginInstall(
   cfg: OpenClawConfig,
   update: PluginInstallUpdate,

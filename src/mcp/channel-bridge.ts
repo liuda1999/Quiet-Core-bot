@@ -26,7 +26,7 @@ import type {
 import { matchEventFilter, normalizeApprovalId, toConversation, toText } from "./channel-shared.js";
 
 /**
- * Runtime bridge between MCP tools and the OpenClaw Gateway channel APIs.
+ * Runtime bridge between MCP tools and the Quiet Core bot Gateway channel APIs.
  *
  * The bridge owns readiness, event cursoring, pending approval state, and the
  * narrow request methods that channel MCP tools expose to external clients.
@@ -148,7 +148,7 @@ export class OpenClawChannelBridge {
       password: bootstrap.auth.password,
       preauthHandshakeTimeoutMs: bootstrap.preauthHandshakeTimeoutMs,
       clientName: GATEWAY_CLIENT_NAMES.CLI,
-      clientDisplayName: "OpenClaw MCP",
+      clientDisplayName: "Quiet Core bot MCP",
       clientVersion: VERSION,
       mode: GATEWAY_CLIENT_MODES.CLI,
       scopes: [READ_SCOPE, WRITE_SCOPE, APPROVALS_SCOPE],
@@ -372,7 +372,7 @@ export class OpenClawChannelBridge {
       inputPreview: params.inputPreview,
     });
     if (this.verbose) {
-      process.stderr.write(`openclaw mcp: pending Claude permission ${params.requestId}\n`);
+      process.stderr.write(`quiet-core-bot mcp: pending Claude permission ${params.requestId}\n`);
     }
   }
 
@@ -398,10 +398,10 @@ export class OpenClawChannelBridge {
       }
       // Always surface a single low-noise record so swallowed delivery failures
       // remain observable; the spammy error detail stays behind --verbose.
-      process.stderr.write(`openclaw mcp: notification ${notification.method} failed\n`);
+      process.stderr.write(`quiet-core-bot mcp: notification ${notification.method} failed\n`);
       if (this.verbose) {
         process.stderr.write(
-          `openclaw mcp: notification ${notification.method} error: ${String(error)}\n`,
+          `quiet-core-bot mcp: notification ${notification.method} error: ${String(error)}\n`,
         );
       }
     }

@@ -1,4 +1,4 @@
-// OpenClaw-owned tool runtime contract helpers mock agent tool runtimes in SDK tests.
+// Quiet Core bot-owned tool runtime contract helpers mock agent tool runtimes in SDK tests.
 import { vi } from "vitest";
 import { resetAdjustedParamsByToolCallIdForTests } from "../../../agents/agent-tools.before-tool-call.state.js";
 import type { AgentToolResult } from "../../../agents/runtime/index.js";
@@ -84,7 +84,7 @@ export function installOpenClawOwnedToolHooks(params?: {
 
 /**
  * Installs only the Codex app-server `tool_result` middleware fixture.
- * Pair with `installOpenClawOwnedToolHooks()` when a test asserts before/after hook behavior.
+ * Pair with `installQuiet Core botOwnedToolHooks()` when a test asserts before/after hook behavior.
  */
 export function installCodexToolResultMiddleware(
   handler: (event: AgentToolResultMiddlewareEvent) => AgentToolResult<unknown>,

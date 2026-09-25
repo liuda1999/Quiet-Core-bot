@@ -670,7 +670,7 @@ describe("diagnostic support export", () => {
 
   it("redacts Windows USERPROFILE paths when HOME is unset", () => {
     const userProfile = "C:\\Users\\support-user";
-    const stateDir = `${userProfile}\\AppData\\Roaming\\openclaw`;
+    const stateDir = `${userProfile}\\AppData\\Roaming\\quiet-core-bot`;
     const redaction = {
       env: {
         USERPROFILE: userProfile,
@@ -700,7 +700,7 @@ describe("diagnostic support export", () => {
               "node",
               `${userProfile}\\openclaw\\dist\\index.js`,
               "--config",
-              `${stateDir}\\openclaw.json`,
+              `${stateDir}\\quiet-core-bot.json`,
             ],
             sourcePath: "c:\\users\\support-user\\AppData\\Local\\openclaw\\gateway-service.json",
           },

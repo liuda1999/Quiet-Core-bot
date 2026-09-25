@@ -303,7 +303,7 @@ async function writeTuiPtyFixtureScript(dir: string) {
           },
           deliver: false,
           historyLimit: 5,
-          title: "openclaw tui pty fixture",
+          title: "quiet-core-bot tui pty fixture",
         });
       }
 

@@ -17,7 +17,7 @@ function loadFacadeModule(): FacadeModule {
     artifactBasename: "api.js",
   });
 }
-/** Apply LiteLLM defaults to the full OpenClaw config. */
+/** Apply LiteLLM defaults to the full Quiet Core bot config. */
 export const applyLitellmConfig: FacadeModule["applyLitellmConfig"] = ((...args) =>
   loadFacadeModule()["applyLitellmConfig"](...args)) as FacadeModule["applyLitellmConfig"];
 /** Apply only LiteLLM provider config defaults. */

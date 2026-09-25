@@ -40,10 +40,10 @@ export function resolvePluginVersionDriftUpdateCommand(entry: PluginVersionDrift
   if (exactNpmPackageName) {
     const exactNpmTarget = `${exactNpmPackageName}@${entry.gatewayVersion}`;
     if (parseRegistryNpmSpec(exactNpmTarget)?.selectorKind === "exact-version") {
-      return `openclaw plugins update ${exactNpmTarget}`;
+      return `quiet-core-bot plugins update ${exactNpmTarget}`;
     }
   }
-  return `openclaw plugins update ${entry.pluginId}`;
+  return `quiet-core-bot plugins update ${entry.pluginId}`;
 }
 
 /**
@@ -93,7 +93,7 @@ function shouldCompareOfficialInstallToGateway(params: {
  *   `version` field of the installed openclaw package.json).
  * @param params.installRecords The full set of recorded plugin installs (as
  *   produced by `loadInstalledPluginIndexInstallRecords`).
- * @param params.config The merged daemon-side OpenClawConfig (optional).
+ * @param params.config The merged daemon-side Quiet Core botConfig (optional).
  *   Plugins inactive under the effective activation policy are skipped.
  *
  * The returned `drifts` list is sorted by `pluginId` for stable output.

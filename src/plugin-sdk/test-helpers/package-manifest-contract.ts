@@ -84,7 +84,7 @@ export function describePackageManifestContract(params: PackageManifestContractP
 
         expect(
           isAtLeast(minimum, baseline),
-          `${packagePath} should require at least OpenClaw ${minHostVersionBaseline}`,
+          `${packagePath} should require at least Quiet Core bot ${minHostVersionBaseline}`,
         ).toBe(true);
       });
     }

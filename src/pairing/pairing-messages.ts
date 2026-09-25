@@ -10,9 +10,9 @@ export function buildPairingReply(params: {
   code: string;
 }): string {
   const { channel, idLine, code } = params;
-  const approveCommand = formatCliCommand(`openclaw pairing approve ${channel} ${code}`);
+  const approveCommand = formatCliCommand(`quiet-core-bot pairing approve ${channel} ${code}`);
   return [
-    "OpenClaw: access not configured.",
+    "Quiet Core bot: access not configured.",
     "",
     idLine,
     "Pairing code:",

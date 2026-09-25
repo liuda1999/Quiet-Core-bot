@@ -23,7 +23,7 @@ describe("resolveSkillInvocationPolicy", () => {
   });
 });
 
-describe("resolveOpenClawMetadata install validation", () => {
+describe("resolveQuiet Core botMetadata install validation", () => {
   function resolveInstall(frontmatter: Record<string, string>) {
     return resolveOpenClawMetadata(frontmatter)?.install;
   }

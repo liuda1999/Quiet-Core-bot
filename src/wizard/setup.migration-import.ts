@@ -108,7 +108,7 @@ function assertFreshSetupMigrationTarget(freshness: {
   }
   throw new Error(
     [
-      "Migration import during onboarding requires a fresh OpenClaw setup.",
+      "Migration import during onboarding requires a fresh Quiet Core bot setup.",
       "Create a fresh setup or reset config, credentials, sessions, and workspace before importing.",
       "Backup plus overwrite/merge imports are feature-gated for now.",
       "Existing setup:",
@@ -325,7 +325,7 @@ export async function runSetupMigrationImport(params: {
   const reportDir = buildMigrationReportDir(providerId, stateDir);
   const backupPath = await createPreMigrationBackup({});
   // Commit base wizard metadata before applying migrations so generated reports
-  // can reference a concrete OpenClaw config target.
+  // can reference a concrete Quiet Core bot config target.
   targetConfig = onboardHelpers.applyWizardMetadata(targetConfig, {
     command: "onboard",
     mode: "local",

@@ -882,7 +882,9 @@ export async function runSecretsConfigureInteractive(
         value: configureCandidateKey(candidate),
         label: candidate.label,
         hint: [
-          candidate.configFile === "auth-profiles.json" ? "auth-profiles.json" : "openclaw.json",
+          candidate.configFile === "auth-profiles.json"
+            ? "auth-profiles.json"
+            : "quiet-core-bot.json",
           candidate.isDerived === true ? "derived" : undefined,
         ]
           .filter(Boolean)

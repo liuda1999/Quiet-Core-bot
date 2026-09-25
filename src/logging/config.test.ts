@@ -56,7 +56,7 @@ describe("readLoggingConfig", () => {
 
   it("supports JSON5 comments and trailing commas", () => {
     const configPath = writeConfig(`{
-      // users commonly keep comments in openclaw.json
+      // users commonly keep comments in quiet-core-bot.json
       logging: {
         consoleLevel: "warn",
       },

@@ -1,4 +1,4 @@
-// Creates isolated OpenClaw state directories for integration-style tests.
+// Creates isolated Quiet Core bot state directories for integration-style tests.
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -332,7 +332,7 @@ export async function createOpenClawTestState(
     applyEnv: () => {
       resetConfigRuntimeStateForTest();
       for (const [key, value] of Object.entries(envVars)) {
-        // Test fixtures apply a fixed OpenClaw env set, not plugin-provided host env.
+        // Test fixtures apply a fixed Quiet Core bot env set, not plugin-provided host env.
         if (value === undefined) {
           Reflect.deleteProperty(process.env, key);
         } else {

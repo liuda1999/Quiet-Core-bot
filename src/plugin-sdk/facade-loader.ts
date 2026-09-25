@@ -146,7 +146,7 @@ export function loadFacadeModuleAtLocationSync<T extends object>(params: {
     rootPath: location.boundaryRoot,
     boundaryLabel:
       location.boundaryRoot === getOpenClawPackageRoot()
-        ? "OpenClaw package root"
+        ? "Quiet Core bot package root"
         : (() => {
             const bundledDir = resolveBundledPluginsDir();
             return bundledDir && path.resolve(location.boundaryRoot) === path.resolve(bundledDir)
@@ -227,7 +227,7 @@ export async function loadBundledPluginPublicSurfaceModule<T extends object>(par
     rootPath: preparedLocation.boundaryRoot,
     boundaryLabel:
       preparedLocation.boundaryRoot === getOpenClawPackageRoot()
-        ? "OpenClaw package root"
+        ? "Quiet Core bot package root"
         : "plugin root",
     rejectHardlinks: false,
   });

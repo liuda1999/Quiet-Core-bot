@@ -325,7 +325,7 @@ function resolvePlanTargetAgainstEntries(
 }
 
 /**
- * Resolves an openclaw.json config path to the matching plan-capable secrets target.
+ * Resolves an quiet-core-bot.json config path to the matching plan-capable secrets target.
  */
 export function resolveConfigSecretTargetByPath(pathSegments: string[]): ResolvedPlanTarget | null {
   for (const entry of getCompiledCoreOpenClawTargetState().openClawCompiledSecretTargets) {
@@ -381,7 +381,7 @@ export function resolveConfigSecretTargetByPath(pathSegments: string[]): Resolve
 }
 
 /**
- * Discovers configured secret-bearing values in openclaw.json using the full registry.
+ * Discovers configured secret-bearing values in quiet-core-bot.json using the full registry.
  */
 export function discoverConfigSecretTargets(
   config: OpenClawConfig,
@@ -390,7 +390,7 @@ export function discoverConfigSecretTargets(
 }
 
 /**
- * Discovers configured openclaw.json targets, optionally limited to selected registry ids.
+ * Discovers configured quiet-core-bot.json targets, optionally limited to selected registry ids.
  */
 export function discoverConfigSecretTargetsByIds(
   config: OpenClawConfig,

@@ -120,9 +120,7 @@ describe("parseArgs", () => {
 
   it("rejects missing CI diff refs", () => {
     expect(() => parseArgs(["--base", "--head", "HEAD"])).toThrow("--base requires a value");
-    expect(() => parseArgs(["--base", "-h", "--head", "HEAD"])).toThrow(
-      "--base requires a value",
-    );
+    expect(() => parseArgs(["--base", "-h", "--head", "HEAD"])).toThrow("--base requires a value");
     expect(() => parseArgs(["--head"])).toThrow("--head requires a value");
     expect(() => parseArgs(["--head", "-h"])).toThrow("--head requires a value");
     expect(() => parseArgs(["--base", ""])).toThrow("--base requires a value");
@@ -181,7 +179,7 @@ describe("detectChangedScope", () => {
       runControlUiI18n: false,
     });
     expect(
-      detectChangedScope(["apps/macos-mlx-tts/Sources/OpenClawMLXTTSHelper/main.swift"]),
+      detectChangedScope(["apps/macos-mlx-tts/Sources/Quiet Core botMLXTTSHelper/main.swift"]),
     ).toEqual({
       runNode: false,
       runMacos: true,
@@ -202,7 +200,7 @@ describe("detectChangedScope", () => {
       runChangedSmoke: false,
       runControlUiI18n: false,
     });
-    expect(detectChangedScope(["apps/shared/OpenClawKit/Sources/Foo.swift"])).toEqual({
+    expect(detectChangedScope(["apps/shared/Quiet Core botKit/Sources/Foo.swift"])).toEqual({
       runNode: false,
       runMacos: true,
       runIosBuild: true,
@@ -257,7 +255,9 @@ describe("detectChangedScope", () => {
 
   it("runs the iOS build but not macOS for generated protocol model-only changes", () => {
     expect(
-      detectChangedScope(["apps/shared/OpenClawKit/Sources/OpenClawProtocol/GatewayModels.swift"]),
+      detectChangedScope([
+        "apps/shared/Quiet Core botKit/Sources/Quiet Core botProtocol/GatewayModels.swift",
+      ]),
     ).toEqual({
       runNode: false,
       runMacos: false,

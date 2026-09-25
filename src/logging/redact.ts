@@ -154,7 +154,7 @@ const DEFAULT_REDACT_PATTERNS: string[] = [
   String.raw`Authorization\s*[:=]\s*Bearer\s+([A-Za-z0-9._\-+=]+)`,
   String.raw`Authorization\s*[:=]\s*Basic\s+([A-Za-z0-9+/=]+)`,
   String.raw`Authorization\s*[:=]\s*Bot\s+([A-Za-z0-9._\-+=]{18,})`,
-  String.raw`(?:X-OpenClaw-Token|x-pomerium-jwt-assertion|X-Api-Key|X-Auth-Token)\s*[:=]\s*([^\s"',;]+)`,
+  String.raw`(?:X-Quiet Core bot-Token|x-pomerium-jwt-assertion|X-Api-Key|X-Auth-Token)\s*[:=]\s*([^\s"',;]+)`,
   String.raw`\bBearer\s+([A-Za-z0-9._\-+=]{18,})\b`,
   // URL userinfo and common connection-string password slots.
   String.raw`\b(?:https?|wss?|ftp):\/\/[^\/\s:@]*:([^\/\s@]+)@`,

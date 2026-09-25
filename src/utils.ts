@@ -2,6 +2,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { resolveStateDir } from "./config/paths.js";
 import { pathExists as fsSafePathExists } from "./infra/fs-safe.js";
 import {
   resolveEffectiveHomeDir,
@@ -116,7 +117,7 @@ export function truncateUtf16Safe(input: string, maxLen: number): string {
   return sliceUtf16Safe(input, 0, limit);
 }
 
-/** Resolves `~` and OpenClaw home-relative paths with injectable env/home sources. */
+/** Resolves `~` and Quiet Core bot home-relative paths with injectable env/home sources. */
 export function resolveUserPath(
   input: string,
   env: NodeJS.ProcessEnv = process.env,
@@ -128,7 +129,7 @@ export function resolveUserPath(
   return resolveHomeRelativePath(input, { env, homedir });
 }
 
-/** Resolves the OpenClaw config directory from state/config env overrides or home. */
+/** Resolves the Quiet Core bot config directory from state/config env overrides or home. */
 export function resolveConfigDir(
   env: NodeJS.ProcessEnv = process.env,
   homedir: () => string = os.homedir,
@@ -141,19 +142,12 @@ export function resolveConfigDir(
   if (configPath) {
     return path.dirname(resolveUserPath(configPath, env, homedir));
   }
-  const newDir = path.join(resolveRequiredHomeDir(env, homedir), ".openclaw");
-  try {
-    const hasNew = fs.existsSync(newDir);
-    if (hasNew) {
-      return newDir;
-    }
-  } catch {
-    // best-effort
-  }
-  return newDir;
+  // Reuse the state-dir resolver so the pre-rebrand directory keeps serving
+  // config-adjacent data until the new one is actually initialized.
+  return resolveStateDir(env, homedir);
 }
 
-/** Resolves the effective OpenClaw home directory, if one can be determined. */
+/** Resolves the effective Quiet Core bot home directory, if one can be determined. */
 export function resolveHomeDir(): string | undefined {
   return resolveEffectiveHomeDir(process.env, os.homedir);
 }

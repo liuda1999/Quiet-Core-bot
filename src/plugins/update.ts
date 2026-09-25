@@ -1267,7 +1267,7 @@ export async function updateNpmInstalledPlugins(params: {
   ) => {
     if (params.disableOnFailure && !params.dryRun) {
       const disabledMessage =
-        `Disabled "${pluginId}" after plugin update failure; OpenClaw will continue without it. ` +
+        `Disabled "${pluginId}" after plugin update failure; Quiet Core bot will continue without it. ` +
         message;
       logger.warn?.(disabledMessage);
       next = disablePluginConfigEntry(next, pluginId);

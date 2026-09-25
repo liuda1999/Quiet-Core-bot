@@ -26,7 +26,7 @@ const legacyRootExportNames = [
   "createTypingCallbacks",
   "createChannelReplyPipeline",
   "resolveChannelSourceReplyDeliveryMode",
-  "resolvePreferredOpenClawTmpDir",
+  "resolvePreferredQuiet Core botTmpDir",
 ] as const;
 
 type EmptySchema = {

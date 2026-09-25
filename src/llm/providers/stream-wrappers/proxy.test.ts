@@ -90,7 +90,7 @@ describe("proxy stream wrappers", () => {
       {
         headers: {
           "HTTP-Referer": "https://openclaw.ai",
-          "X-OpenRouter-Title": "OpenClaw",
+          "X-OpenRouter-Title": "Quiet Core bot",
           "X-OpenRouter-Categories":
             "cli-agent,cloud-agent,programming-app,creative-writing,writing-assistant,general-chat,personal-agent",
           "X-Custom": "1",

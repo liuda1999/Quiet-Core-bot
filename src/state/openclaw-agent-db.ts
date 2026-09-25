@@ -1,4 +1,4 @@
-// OpenClaw agent database stores agent-scoped persisted runtime state.
+// Quiet Core bot agent database stores agent-scoped persisted runtime state.
 import { chmodSync, existsSync, mkdirSync, statSync } from "node:fs";
 import path from "node:path";
 import type { DatabaseSync } from "node:sqlite";
@@ -32,7 +32,7 @@ export { resolveOpenClawAgentSqlitePath } from "./openclaw-agent-db.paths.js";
  *
  * Each opened agent database is schema-owned by one normalized agent id, cached
  * per pathname, protected with private file modes, and registered in the shared
- * OpenClaw state database for discovery and maintenance.
+ * Quiet Core bot state database for discovery and maintenance.
  */
 const OPENCLAW_AGENT_SCHEMA_VERSION = 1;
 const OPENCLAW_AGENT_DB_DIR_MODE = 0o700;
@@ -65,7 +65,7 @@ function assertSupportedAgentSchemaVersion(db: DatabaseSync, pathname: string): 
   const userVersion = readSqliteUserVersion(db);
   if (userVersion > OPENCLAW_AGENT_SCHEMA_VERSION) {
     throw new Error(
-      `OpenClaw agent database ${pathname} uses newer schema version ${userVersion}; this OpenClaw build supports ${OPENCLAW_AGENT_SCHEMA_VERSION}.`,
+      `Quiet Core bot agent database ${pathname} uses newer schema version ${userVersion}; this Quiet Core bot build supports ${OPENCLAW_AGENT_SCHEMA_VERSION}.`,
     );
   }
 }
@@ -123,15 +123,15 @@ function assertExistingSchemaOwner(
   // Agent DB files are not interchangeable; opening another role/id would corrupt ownership.
   if (existing.role !== "agent") {
     throw new Error(
-      `OpenClaw agent database ${pathname} has schema role ${existing.role ?? "unknown"}; expected agent.`,
+      `Quiet Core bot agent database ${pathname} has schema role ${existing.role ?? "unknown"}; expected agent.`,
     );
   }
   if (!existing.agentId) {
-    throw new Error(`OpenClaw agent database ${pathname} has no agent owner.`);
+    throw new Error(`Quiet Core bot agent database ${pathname} has no agent owner.`);
   }
   if (normalizeAgentId(existing.agentId) !== agentId) {
     throw new Error(
-      `OpenClaw agent database ${pathname} belongs to agent ${existing.agentId}; requested agent ${agentId}.`,
+      `Quiet Core bot agent database ${pathname} belongs to agent ${existing.agentId}; requested agent ${agentId}.`,
     );
   }
 }
@@ -234,7 +234,7 @@ export function openOpenClawAgentDatabase(
   if (cached?.db.isOpen) {
     if (cached.agentId !== agentId) {
       throw new Error(
-        `OpenClaw agent database ${pathname} is already open for agent ${cached.agentId}; requested agent ${agentId}.`,
+        `Quiet Core bot agent database ${pathname} is already open for agent ${cached.agentId}; requested agent ${agentId}.`,
       );
     }
     registerAgentDatabase({ agentId, path: pathname, env: options.env });

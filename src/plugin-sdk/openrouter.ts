@@ -15,7 +15,7 @@ function loadFacadeModule(): FacadeModule {
     artifactBasename: "api.js",
   });
 }
-/** Apply OpenRouter defaults to the full OpenClaw config. */
+/** Apply OpenRouter defaults to the full Quiet Core bot config. */
 export const applyOpenrouterConfig: FacadeModule["applyOpenrouterConfig"] = ((...args) =>
   loadFacadeModule()["applyOpenrouterConfig"](...args)) as FacadeModule["applyOpenrouterConfig"];
 /** Apply only OpenRouter provider config defaults. */

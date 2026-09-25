@@ -34,11 +34,11 @@ function requireFirstEmbeddedAgentRequest(): {
 } {
   const [call] = runEmbeddedAgentMock.mock.calls;
   if (!call) {
-    throw new Error("expected embedded OpenClaw agent extraction request");
+    throw new Error("expected embedded Quiet Core bot agent extraction request");
   }
   const [request] = call;
   if (!request || typeof request !== "object" || Array.isArray(request)) {
-    throw new Error("expected embedded OpenClaw agent extraction request");
+    throw new Error("expected embedded Quiet Core bot agent extraction request");
   }
   return request as { provider?: string; model?: string; disableTools?: boolean };
 }

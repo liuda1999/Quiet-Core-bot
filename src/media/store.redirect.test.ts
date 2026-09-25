@@ -194,7 +194,7 @@ describe("media store redirects", () => {
       Cookie: "session=abc",
       "X-Api-Key": "custom-secret",
       Accept: "text/plain",
-      "User-Agent": "OpenClaw-Test/1.0",
+      "User-Agent": "Quiet Core bot-Test/1.0",
     });
 
     expect(mockRequest).toHaveBeenCalledTimes(2);
@@ -203,7 +203,7 @@ describe("media store redirects", () => {
     expect(secondHeaders.get("cookie")).toBeNull();
     expect(secondHeaders.get("x-api-key")).toBeNull();
     expect(secondHeaders.get("accept")).toBe("text/plain");
-    expect(secondHeaders.get("user-agent")).toBe("OpenClaw-Test/1.0");
+    expect(secondHeaders.get("user-agent")).toBe("Quiet Core bot-Test/1.0");
   });
 
   it("keeps headers when a redirect stays on the same origin", async () => {

@@ -84,7 +84,7 @@ function orderedContractApiExtensions(): readonly string[] {
 function resolvePluginContractApiPath(rootDir: string): string | null {
   // Compiled npm-published plugins place their public artifacts under <rootDir>/dist/
   // (per package.json `openclaw.runtimeExtensions`), while flat-layout plugins keep
-  // them at <rootDir>/. Search both, preferring dist/ when running from built openclaw
+  // them at <rootDir>/. Search both, preferring dist/ when running from built quiet-core-bot
   // artifacts and rootDir/ when running from source.
   const searchDirs = RUNNING_FROM_BUILT_ARTIFACT
     ? [path.join(rootDir, "dist"), rootDir]

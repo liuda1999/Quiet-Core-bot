@@ -1,9 +1,9 @@
-// OpenClaw MCP tools tests cover core tool server startup and registration.
+// Quiet Core bot MCP tools tests cover core tool server startup and registration.
 import { describe, expect, it } from "vitest";
 import { resolveOpenClawToolsForMcp } from "./openclaw-tools-serve.js";
 import { createPluginToolsMcpHandlers } from "./plugin-tools-handlers.js";
 
-describe("OpenClaw tools MCP server", () => {
+describe("Quiet Core bot tools MCP server", () => {
   it("exposes cron", async () => {
     const handlers = createPluginToolsMcpHandlers(resolveOpenClawToolsForMcp());
 

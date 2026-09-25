@@ -44,12 +44,12 @@ export type SecretsPlanTarget = {
   authProfileProvider?: string;
 };
 
-/** Serialized plan produced by `openclaw secrets configure` or supplied manually. */
+/** Serialized plan produced by `quiet-core-bot secrets configure` or supplied manually. */
 export type SecretsApplyPlan = {
   version: 1;
   protocolVersion: 1;
   generatedAt: string;
-  generatedBy: "openclaw secrets configure" | "manual";
+  generatedBy: "quiet-core-bot secrets configure" | "manual";
   providerUpserts?: Record<string, SecretProviderConfig>;
   providerDeletes?: string[];
   targets: SecretsPlanTarget[];

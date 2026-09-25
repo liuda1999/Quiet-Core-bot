@@ -1,4 +1,4 @@
-// OpenClaw state database tests cover state DB migrations and persistence.
+// Quiet Core bot state database tests cover state DB migrations and persistence.
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
@@ -48,7 +48,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("openclaw state database", () => {
+describe("quiet-core-bot state database", () => {
   it("resolves under the shared state database directory", () => {
     const stateDir = createTempStateDir();
 
@@ -683,8 +683,8 @@ describe("openclaw state database", () => {
           import os from "node:os";
           import path from "node:path";
           import {
-            closeOpenClawStateDatabaseForTest,
-            openOpenClawStateDatabase,
+            closeQuiet Core botStateDatabaseForTest,
+            openQuiet Core botStateDatabase,
           } from ${JSON.stringify(moduleUrl)};
 
           const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-state-db-relative-"));
@@ -696,14 +696,14 @@ describe("openclaw state database", () => {
           try {
             process.chdir(firstDir);
             const firstPath = path.resolve("state.sqlite");
-            const first = openOpenClawStateDatabase({ path: "state.sqlite" });
+            const first = openQuiet Core botStateDatabase({ path: "state.sqlite" });
             first.db
               .prepare("INSERT INTO diagnostic_events (scope, event_key, payload_json, created_at) VALUES (?, ?, ?, ?)")
               .run("relative-path", "first", "{}", 1);
 
             process.chdir(secondDir);
             const secondPath = path.resolve("state.sqlite");
-            const second = openOpenClawStateDatabase({ path: "state.sqlite" });
+            const second = openQuiet Core botStateDatabase({ path: "state.sqlite" });
             second.db
               .prepare("INSERT INTO diagnostic_events (scope, event_key, payload_json, created_at) VALUES (?, ?, ?, ?)")
               .run("relative-path", "second", "{}", 2);
@@ -719,7 +719,7 @@ describe("openclaw state database", () => {
             }));
           } finally {
             process.chdir(previousCwd);
-            closeOpenClawStateDatabaseForTest();
+            closeQuiet Core botStateDatabaseForTest();
           }
         `,
       ],

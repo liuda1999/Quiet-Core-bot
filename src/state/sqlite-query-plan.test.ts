@@ -1,4 +1,4 @@
-// SQLite query-plan tests pin hot OpenClaw state indexes used by perf proof.
+// SQLite query-plan tests pin hot Quiet Core bot state indexes used by perf proof.
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";

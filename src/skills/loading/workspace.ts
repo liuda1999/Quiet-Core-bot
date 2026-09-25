@@ -64,8 +64,8 @@ function resolveNativeUserHomeDir(): string | undefined {
 }
 
 function resolveCompactHomePrefixes(): string[] {
-  const homes = [resolveUserHomeDir(), resolveNativeUserHomeDir()].filter(
-    (home): home is string => Boolean(home),
+  const homes = [resolveUserHomeDir(), resolveNativeUserHomeDir()].filter((home): home is string =>
+    Boolean(home),
   );
   const resolvedHomes = homes.map((home) => path.resolve(home));
   const realHomes = resolvedHomes
@@ -111,15 +111,15 @@ function resolvePromptTildeRoots(): string[] {
     return [];
   }
   const realNativeHome = tryRealpath(resolvedNativeHome);
-  return uniqueStrings([
-    resolvedNativeHome,
-    ...(realNativeHome ? [realNativeHome] : []),
-  ]);
+  return uniqueStrings([resolvedNativeHome, ...(realNativeHome ? [realNativeHome] : [])]);
 }
 
 function isContainerStateHomeWherePromptTildeEscapes(home: string): boolean {
   const configDir = path.resolve(resolveConfigDir());
-  return home === "/data" && (configDir === "/data/.openclaw" || isPathInside("/data/.openclaw", configDir));
+  return (
+    home === "/data" &&
+    (configDir === "/data/.openclaw" || isPathInside("/data/.openclaw", configDir))
+  );
 }
 
 function shouldPreservePromptSkillPath(
@@ -848,7 +848,7 @@ function loadGeneratedPluginSkillRecords(params: {
       continue;
     }
 
-    // Plugin skills live as symlinks under ~/.openclaw/plugin-skills/, so
+    // Plugin skills live as symlinks under ~/.quiet-core-bot/plugin-skills/, so
     // skillDir is the symlink path while skillDirRealPath is the real target.
     // We set syncSourceDir to the real path so syncSkillsToWorkspace can copy
     // the actual skill directory into the sandbox workspace, but we preserve
@@ -1318,10 +1318,10 @@ function buildSkillsLimitNote(params: {
   total: number;
 }): string {
   if (params.truncated) {
-    return `⚠️ Skills truncated: included ${params.included} of ${params.total}${params.compact ? " (compact format, descriptions omitted)" : ""}. Run \`openclaw skills check\` to audit.`;
+    return `⚠️ Skills truncated: included ${params.included} of ${params.total}${params.compact ? " (compact format, descriptions omitted)" : ""}. Run \`quiet-core-bot skills check\` to audit.`;
   }
   if (params.compact) {
-    return `⚠️ Skills catalog using compact format (descriptions omitted). Run \`openclaw skills check\` to audit.`;
+    return `⚠️ Skills catalog using compact format (descriptions omitted). Run \`quiet-core-bot skills check\` to audit.`;
   }
   return "";
 }

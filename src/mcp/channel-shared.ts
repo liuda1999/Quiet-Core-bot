@@ -146,7 +146,7 @@ export const ClaudePermissionRequestSchema = z.object({
 
 export { toText };
 
-/** Resolve the visible message id, including OpenClaw metadata attached to raw entries. */
+/** Resolve the visible message id, including Quiet Core bot metadata attached to raw entries. */
 export function resolveMessageId(entry: Record<string, unknown>): string | undefined {
   return (
     toText(entry.id) ??

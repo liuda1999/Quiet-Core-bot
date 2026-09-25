@@ -36,7 +36,7 @@ const PLUGIN_BINDING_CUSTOM_ID_PREFIX = "pluginbind";
 const PLUGIN_BINDING_OWNER = "plugin";
 const PLUGIN_BINDING_SESSION_PREFIX = "plugin-binding";
 const LEGACY_CODEX_PLUGIN_SESSION_PREFIXES = [
-  "openclaw-app-server:thread:",
+  "quiet-core-bot-app-server:thread:",
   "openclaw-codex-app-server:thread:",
 ] as const;
 
@@ -667,7 +667,7 @@ function buildDetachHintSuffix(detachHint?: string): string {
 }
 
 export function buildPluginBindingUnavailableText(binding: PluginConversationBinding): string {
-  return `The bound plugin ${resolvePluginBindingDisplayName(binding)} is not currently loaded. Routing this message to OpenClaw instead. If this started after an update, run "openclaw doctor --fix"; otherwise reinstall or enable the plugin.${buildDetachHintSuffix(binding.detachHint)}`;
+  return `The bound plugin ${resolvePluginBindingDisplayName(binding)} is not currently loaded. Routing this message to Quiet Core bot instead. If this started after an update, run "quiet-core-bot doctor --fix"; otherwise reinstall or enable the plugin.${buildDetachHintSuffix(binding.detachHint)}`;
 }
 
 export function buildPluginBindingDeclinedText(binding: PluginConversationBinding): string {

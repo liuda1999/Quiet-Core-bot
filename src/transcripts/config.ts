@@ -1,4 +1,4 @@
-// Resolves transcript source configuration from OpenClaw config.
+// Resolves transcript source configuration from Quiet Core bot config.
 import { normalizeOptionalString as readString } from "@openclaw/normalization-core/string-coerce";
 
 /**

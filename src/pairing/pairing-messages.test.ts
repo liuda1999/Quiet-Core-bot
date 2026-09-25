@@ -52,7 +52,7 @@ describe("buildPairingReply", () => {
 
   function expectPairingApproveCommand(text: string, testCase: (typeof pairingReplyCases)[number]) {
     const commandRe = new RegExp(
-      `(?:openclaw|openclaw) --profile isolated pairing approve ${testCase.channel} ${testCase.code}`,
+      `(?:openclaw|quiet-core-bot) --profile isolated pairing approve ${testCase.channel} ${testCase.code}`,
     );
     expect(text).toMatch(commandRe);
     expect(

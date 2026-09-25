@@ -1788,7 +1788,7 @@ describe("updateNpmInstalledPlugins", () => {
         config: createNpmInstallConfig({
           pluginId: "lossless-claw",
           spec: "@martian-engineering/lossless-claw",
-          installPath: "~/.openclaw/extensions/lossless-claw",
+          installPath: "~/.quiet-core-bot/extensions/lossless-claw",
           resolvedName: "@martian-engineering/lossless-claw",
           resolvedVersion: "0.9.0",
           resolvedSpec: "@martian-engineering/lossless-claw@0.9.0",
@@ -2449,7 +2449,7 @@ describe("updateNpmInstalledPlugins", () => {
     expect(npmInstallCall()?.spec).toBe("@acme/demo");
     expect(npmInstallCall()?.expectedPluginId).toBe("demo");
     const message =
-      'Disabled "demo" after plugin update failure; OpenClaw will continue without it. Failed to update demo: registry timeout';
+      'Disabled "demo" after plugin update failure; Quiet Core bot will continue without it. Failed to update demo: registry timeout';
     expect(warn).toHaveBeenCalledWith(message);
     expect(result.changed).toBe(true);
     expect(result.config.plugins?.entries?.demo).toEqual({
@@ -2502,7 +2502,7 @@ describe("updateNpmInstalledPlugins", () => {
     });
 
     const message =
-      'Disabled "demo" after plugin update failure; OpenClaw will continue without it. Failed to update demo: security scan blocked install';
+      'Disabled "demo" after plugin update failure; Quiet Core bot will continue without it. Failed to update demo: security scan blocked install';
     expect(warn).toHaveBeenCalledWith(message);
     expect(result.changed).toBe(true);
     expect(result.config.plugins?.entries?.demo).toEqual({
@@ -4268,7 +4268,7 @@ describe("syncPluginsForUpdateChannel", () => {
     });
   });
 
-  it("does not fall back from ClawHub to non-OpenClaw npm packages", async () => {
+  it("does not fall back from ClawHub to non-Quiet Core bot npm packages", async () => {
     resolveBundledPluginSourcesMock.mockReturnValue(new Map());
     installPluginFromClawHubMock.mockResolvedValue({
       ok: false,

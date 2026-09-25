@@ -1,4 +1,4 @@
-// Tests isolated OpenClaw test-state setup and cleanup behavior.
+// Tests isolated Quiet Core bot test-state setup and cleanup behavior.
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
@@ -16,7 +16,7 @@ async function expectPathMissing(targetPath: string): Promise<void> {
   throw new Error(`expected missing path: ${targetPath}`);
 }
 
-describe("openclaw test state", () => {
+describe("quiet-core-bot test state", () => {
   it("creates an isolated home layout with spawn env and restores process env", async () => {
     const previousHome = process.env.HOME;
     const previousOpenClawHome = process.env.OPENCLAW_HOME;

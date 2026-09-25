@@ -29,7 +29,7 @@ export type OpenClawPluginToolContext = {
   /**
    * Runtime-supplied active model metadata for informational use, diagnostics,
    * and plugin-owned policy decisions. This is not a security boundary against
-   * the local operator, installed plugin code, or a modified OpenClaw runtime.
+   * the local operator, installed plugin code, or a modified Quiet Core bot runtime.
    */
   activeModel?: OpenClawPluginActiveModelContext;
   browser?: {

@@ -43,7 +43,7 @@ import {
 } from "./storage-scan.js";
 import { discoverConfigSecretTargets } from "./target-registry.js";
 
-/** Stable finding codes emitted by `openclaw secrets audit`. */
+/** Stable finding codes emitted by `quiet-core-bot secrets audit`. */
 export type SecretsAuditCode =
   | "PLAINTEXT_FOUND"
   | "REF_UNRESOLVED"
@@ -590,7 +590,7 @@ function collectShadowingFindings(collector: AuditCollector): void {
       addFinding(collector, {
         code: "REF_SHADOWED",
         severity: "warn",
-        file: "openclaw.json",
+        file: "quiet-core-bot.json",
         jsonPath: configPath,
         message: `Auth profile credentials (${modeText}) take precedence for provider "${provider}", so this config ref may never be used.`,
         provider,

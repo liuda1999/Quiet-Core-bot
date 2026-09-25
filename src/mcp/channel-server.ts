@@ -8,7 +8,7 @@ import { ClaudePermissionRequestSchema, type ClaudeChannelMode } from "./channel
 import { getChannelMcpCapabilities, registerChannelMcpTools } from "./channel-tools.js";
 
 /**
- * MCP stdio server assembly for OpenClaw channel conversations.
+ * MCP stdio server assembly for Quiet Core bot channel conversations.
  *
  * This module wires config, the Gateway bridge, protocol notifications, and
  * registered tools into a lifecycle that callers can either embed or serve.

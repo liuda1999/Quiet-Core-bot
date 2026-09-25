@@ -1,4 +1,4 @@
-// OpenClaw state database manages shared persisted state and migrations.
+// Quiet Core bot state database manages shared persisted state and migrations.
 import { existsSync, mkdirSync } from "node:fs";
 import path from "node:path";
 import type { DatabaseSync } from "node:sqlite";
@@ -25,7 +25,7 @@ import {
 import { OPENCLAW_STATE_SCHEMA_SQL } from "./openclaw-state-schema.generated.js";
 
 /**
- * Shared OpenClaw SQLite state database lifecycle and metadata writers.
+ * Shared Quiet Core bot SQLite state database lifecycle and metadata writers.
  *
  * This module owns schema creation, additive migrations for released state
  * tables, private file permissions, cached handles, and audit rows for
@@ -63,7 +63,7 @@ function assertSupportedSchemaVersion(db: DatabaseSync, pathname: string): void 
   const userVersion = readSqliteUserVersion(db);
   if (userVersion > OPENCLAW_STATE_SCHEMA_VERSION) {
     throw new Error(
-      `OpenClaw state database ${pathname} uses newer schema version ${userVersion}; this OpenClaw build supports ${OPENCLAW_STATE_SCHEMA_VERSION}.`,
+      `Quiet Core bot state database ${pathname} uses newer schema version ${userVersion}; this Quiet Core bot build supports ${OPENCLAW_STATE_SCHEMA_VERSION}.`,
     );
   }
 }
@@ -92,7 +92,9 @@ function ensureOpenClawStatePermissions(pathname: string, env: NodeJS.ProcessEnv
   const isDefaultStateDatabase =
     path.resolve(pathname) === path.resolve(resolveOpenClawStateSqlitePath(env));
   if (isDefaultStateDatabase && dir !== defaultDir) {
-    throw new Error(`OpenClaw state database path resolved outside its state dir: ${pathname}`);
+    throw new Error(
+      `Quiet Core bot state database path resolved outside its state dir: ${pathname}`,
+    );
   }
   const dirExisted = existsSync(dir);
   mkdirSync(dir, { recursive: true, mode: OPENCLAW_STATE_DIR_MODE });
@@ -250,7 +252,7 @@ function assertCanonicalStateSchemaShape(db: DatabaseSync, pathname: string): vo
     return;
   }
   throw new Error(
-    `OpenClaw state database ${pathname} has a legacy agent database registry schema; run openclaw doctor --fix to migrate it.`,
+    `Quiet Core bot state database ${pathname} has a legacy agent database registry schema; run quiet-core-bot doctor --fix to migrate it.`,
   );
 }
 

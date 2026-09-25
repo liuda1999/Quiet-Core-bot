@@ -1,4 +1,4 @@
-/** Loads and normalizes OpenClaw plugin manifests, including contracts and config schemas. */
+/** Loads and normalizes Quiet Core bot plugin manifests, including contracts and config schemas. */
 import fs from "node:fs";
 import path from "node:path";
 import { normalizeModelCatalog } from "@openclaw/model-catalog-core/model-catalog-normalize";
@@ -237,7 +237,7 @@ export type PluginManifestSetup = {
 };
 
 export type PluginManifestQaRunner = {
-  /** Subcommand mounted beneath `openclaw qa`, for example `matrix`. */
+  /** Subcommand mounted beneath `quiet-core-bot qa`, for example `matrix`. */
   commandName: string;
   /** Optional user-facing help text for fallback host stubs. */
   description?: string;
@@ -2020,7 +2020,7 @@ export function resolvePackageExtensionEntries(
     return {
       status: "invalid",
       entries: [],
-      error: "package.json openclaw must be an object",
+      error: 'package.json "openclaw" field must be an object',
     };
   }
   const raw = rawOpenClaw.extensions;

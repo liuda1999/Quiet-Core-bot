@@ -314,7 +314,7 @@ export async function linkOpenClawPeerDependencies(params: {
   });
   if (!hostRoot) {
     params.logger.warn?.(
-      "Could not locate openclaw package root to symlink peerDependencies; plugin may fail to resolve openclaw at runtime.",
+      "Could not locate openclaw package root to symlink peerDependencies; plugin may fail to resolve quiet-core-bot at runtime.",
     );
     return { repaired: 0, skipped: peers.length };
   }

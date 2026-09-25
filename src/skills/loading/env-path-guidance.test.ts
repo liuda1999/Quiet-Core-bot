@@ -16,20 +16,20 @@ const CASES: GuidanceCase[] = [
     file: "skills/session-logs/SKILL.md",
     required: ["OPENCLAW_STATE_DIR"],
     forbidden: [
-      "for f in ~/.openclaw/agents/<agentId>/sessions/*.jsonl",
-      'rg -l "phrase" ~/.openclaw/agents/<agentId>/sessions/*.jsonl',
-      "~/.openclaw/agents/<agentId>/sessions/<id>.jsonl",
+      "for f in ~/.quiet-core-bot/agents/<agentId>/sessions/*.jsonl",
+      'rg -l "phrase" ~/.quiet-core-bot/agents/<agentId>/sessions/*.jsonl',
+      "~/.quiet-core-bot/agents/<agentId>/sessions/<id>.jsonl",
     ],
   },
   {
     file: "skills/gh-issues/SKILL.md",
     required: ["OPENCLAW_CONFIG_PATH"],
-    forbidden: ["cat ~/.openclaw/openclaw.json"],
+    forbidden: ["cat ~/.quiet-core-bot/openclaw.json"],
   },
   {
     file: "extensions/canvas/skills/canvas/SKILL.md",
     required: ["OPENCLAW_CONFIG_PATH"],
-    forbidden: ["cat ~/.openclaw/openclaw.json"],
+    forbidden: ["cat ~/.quiet-core-bot/openclaw.json"],
   },
   {
     file: "skills/openai-whisper-api/SKILL.md",
@@ -43,15 +43,15 @@ const CASES: GuidanceCase[] = [
       'STATE_DIR="${OPENCLAW_STATE_DIR:-$HOME/.openclaw}"',
     ],
     forbidden: [
-      'SHERPA_ONNX_RUNTIME_DIR: "~/.openclaw/tools/sherpa-onnx-tts/runtime"',
-      'SHERPA_ONNX_MODEL_DIR: "~/.openclaw/tools/sherpa-onnx-tts/models/vits-piper-en_US-lessac-high"',
+      'SHERPA_ONNX_RUNTIME_DIR: "~/.quiet-core-bot/tools/sherpa-onnx-tts/runtime"',
+      'SHERPA_ONNX_MODEL_DIR: "~/.quiet-core-bot/tools/sherpa-onnx-tts/models/vits-piper-en_US-lessac-high"',
       "<state-dir>",
     ],
   },
   {
     file: "skills/coding-agent/SKILL.md",
     required: ["OPENCLAW_STATE_DIR"],
-    forbidden: ["NEVER start Codex in ~/.openclaw/"],
+    forbidden: ["NEVER start Codex in ~/.quiet-core-bot/"],
   },
 ];
 

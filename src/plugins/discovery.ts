@@ -870,7 +870,7 @@ function addLegacyNpmDeclarationDiagnostic(params: {
     level: "warn",
     pluginId: declaration.pluginId,
     source: declaration.source,
-    message: `legacy npm plugin declaration ignored for "${declaration.pluginId}"; run "openclaw doctor --fix" to install ${declaration.npmSpec} into the managed plugin root`,
+    message: `legacy npm plugin declaration ignored for "${declaration.pluginId}"; run "quiet-core-bot doctor --fix" to install ${declaration.npmSpec} into the managed plugin root`,
   });
   return true;
 }
@@ -1464,7 +1464,7 @@ export function discoverOpenClawPlugins(params: {
           result.diagnostics.push({
             level: "warn",
             source: trimmed,
-            message: `ignored plugins.load.paths entry that points at OpenClaw's ${bundledAlias.kind} bundled plugin directory; remove this redundant path or run openclaw doctor --fix`,
+            message: `ignored plugins.load.paths entry that points at Quiet Core bot's ${bundledAlias.kind} bundled plugin directory; remove this redundant path or run quiet-core-bot doctor --fix`,
           });
           continue;
         }
@@ -1487,7 +1487,7 @@ export function discoverOpenClawPlugins(params: {
         realpathCache,
       );
       if (roots.workspace && workspaceRoot && !workspaceMatchesBundledRoot) {
-        // Keep workspace auto-discovery constrained to the OpenClaw extensions root.
+        // Keep workspace auto-discovery constrained to the Quiet Core bot extensions root.
         // Recursively scanning the full workspace treats arbitrary project folders as
         // plugin candidates and causes noisy "plugin manifest not found" validation failures.
         discoverInDirectory({

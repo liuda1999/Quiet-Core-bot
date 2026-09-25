@@ -1614,7 +1614,7 @@ export function resolveRuntimePluginRegistry(
     return compatible;
   }
   // Helper/runtime callers should not recurse into the same snapshot load while
-  // plugin registration is still in flight. Let direct loadOpenClawPlugins(...)
+  // plugin registration is still in flight. Let direct loadQuiet Core botPlugins(...)
   // callers surface the hard error instead.
   if (isPluginRegistryLoadInFlight(options)) {
     return undefined;
@@ -2319,7 +2319,7 @@ export function loadOpenClawPlugins(options: PluginLoadOptions = {}): PluginRegi
             level: "warn",
             pluginId: record.id,
             source: record.source,
-            message: `bundle capability detected but not wired into OpenClaw yet: ${capability}`,
+            message: `bundle capability detected but not wired into Quiet Core bot yet: ${capability}`,
           });
         }
         if (
@@ -2945,7 +2945,7 @@ export function loadOpenClawPlugins(options: PluginLoadOptions = {}): PluginRegi
         logger.warn(
           `[plugins] ${failedPlugins.length} plugin(s) failed to initialize (${formatPluginFailureSummary(
             failedPlugins,
-          )}). Run 'openclaw plugins inspect <id> --runtime --json' for runtime diagnostics, 'openclaw plugins list' for registry state, and restart the Gateway after plugin code or load-path changes.`,
+          )}). Run 'quiet-core-bot plugins inspect <id> --runtime --json' for runtime diagnostics, 'quiet-core-bot plugins list' for registry state, and restart the Gateway after plugin code or load-path changes.`,
         );
       }
     }

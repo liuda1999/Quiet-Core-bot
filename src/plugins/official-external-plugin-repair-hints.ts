@@ -40,8 +40,8 @@ export function resolveOfficialExternalPluginRepairHint(
   const pluginId = resolveOfficialExternalPluginId(entry) ?? pluginIdOrChannelId.trim();
   const channelId = manifest?.channel?.id?.trim();
   const label = resolveOfficialExternalPluginLabel(entry);
-  const installCommand = `openclaw plugins install ${installSpec}`;
-  const doctorFixCommand = "openclaw doctor --fix";
+  const installCommand = `quiet-core-bot plugins install ${installSpec}`;
+  const doctorFixCommand = "quiet-core-bot doctor --fix";
   return {
     pluginId,
     ...(channelId ? { channelId } : {}),

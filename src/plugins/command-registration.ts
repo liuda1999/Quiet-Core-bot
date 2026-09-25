@@ -83,7 +83,7 @@ export type CommandRegistrationResult = {
   error?: string;
 };
 
-/** Returns true when a command name is owned by built-in OpenClaw command handling. */
+/** Returns true when a command name is owned by built-in Quiet Core bot command handling. */
 export function isReservedCommandName(name: string): boolean {
   const trimmed = normalizeOptionalLowercaseString(name) ?? "";
   return Boolean(trimmed && getReservedCommands().has(trimmed));

@@ -57,7 +57,7 @@ describe("sleep", () => {
 });
 
 describe("resolveConfigDir", () => {
-  it("prefers ~/.openclaw when legacy dir is missing", async () => {
+  it("prefers ~/.quiet-core-bot when legacy dir is missing", async () => {
     await withTempDir({ prefix: "openclaw-config-dir-" }, async (root) => {
       const newDir = path.join(root, ".openclaw");
       await fs.promises.mkdir(newDir, { recursive: true });
@@ -115,9 +115,9 @@ describe("resolveHomeDir", () => {
 describe("shortenHomePath", () => {
   it("uses $OPENCLAW_HOME prefix when OPENCLAW_HOME is set", () => {
     withEnv({ OPENCLAW_HOME: "/srv/openclaw-home", HOME: "/home/other" }, () => {
-      expect(shortenHomePath(`${path.resolve("/srv/openclaw-home")}/.openclaw/openclaw.json`)).toBe(
-        "$OPENCLAW_HOME/.openclaw/openclaw.json",
-      );
+      expect(
+        shortenHomePath(`${path.resolve("/srv/openclaw-home")}/.openclaw/quiet-core-bot.json`),
+      ).toBe("$OPENCLAW_HOME/.openclaw/openclaw.json");
     });
   });
 });
@@ -127,7 +127,7 @@ describe("shortenHomeInString", () => {
     withEnv({ OPENCLAW_HOME: "/srv/openclaw-home", HOME: "/home/other" }, () => {
       expect(
         shortenHomeInString(
-          `config: ${path.resolve("/srv/openclaw-home")}/.openclaw/openclaw.json`,
+          `config: ${path.resolve("/srv/openclaw-home")}/.openclaw/quiet-core-bot.json`,
         ),
       ).toBe("config: $OPENCLAW_HOME/.openclaw/openclaw.json");
     });

@@ -3700,7 +3700,7 @@ describe("installPluginFromDir", () => {
       hostVersion: "2026.3.21",
       minHostVersion: ">=2026.3.22",
       expectedCode: PLUGIN_INSTALL_ERROR_CODE.INCOMPATIBLE_HOST_VERSION,
-      expectedMessageIncludes: ["requires OpenClaw >=2026.3.22, but this host is 2026.3.21"],
+      expectedMessageIncludes: ["requires Quiet Core bot >=2026.3.22, but this host is 2026.3.21"],
     },
     {
       name: "rejects plugins with invalid minHostVersion metadata",
@@ -4023,7 +4023,7 @@ describe("installPluginFromDir", () => {
   });
 });
 
-describe("linkOpenClawPeerDependencies (via installPluginFromDir)", () => {
+describe("linkQuiet Core botPeerDependencies (via installPluginFromDir)", () => {
   const resolveRootMock = vi.mocked(resolveOpenClawPackageRootSync);
 
   function writePluginWithPeerDeps(
@@ -4166,7 +4166,7 @@ describe("linkOpenClawPeerDependencies (via installPluginFromDir)", () => {
     expect(fs.lstatSync(symlinkPath).isSymbolicLink()).toBe(true);
   });
 
-  it("rejects when resolveOpenClawPackageRootSync returns null", async () => {
+  it("rejects when resolveQuiet Core botPackageRootSync returns null", async () => {
     const { pluginDir, extensionsDir } = setupPluginInstallDirs();
     resolveRootMock.mockReturnValue(null);
 

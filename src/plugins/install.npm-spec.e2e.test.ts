@@ -415,7 +415,7 @@ describe("installPluginFromNpmSpec e2e", () => {
     }
   });
 
-  it("scrubs root openclaw materialized by required npm peers", async () => {
+  it("scrubs root quiet-core-bot materialized by required npm peers", async () => {
     const rootDir = await makeTempDir("npm-plugin-required-peer-e2e");
     const npmRoot = path.join(rootDir, "managed-npm");
     const packageName = `required-peer-plugin-${crypto.randomUUID().replace(/-/g, "").slice(0, 12)}`;

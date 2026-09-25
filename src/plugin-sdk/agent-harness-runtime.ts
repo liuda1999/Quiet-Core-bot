@@ -364,7 +364,7 @@ export {
 } from "../agents/harness/native-hook-relay.js";
 
 /**
- * Derive the same compact user-facing tool detail that embedded OpenClaw uses for progress logs.
+ * Derive the same compact user-facing tool detail that embedded Quiet Core bot uses for progress logs.
  */
 export type ToolProgressDetailMode = "explain" | "raw";
 
@@ -416,7 +416,7 @@ export type AgentHarnessTerminalOutcomeClassification = NonNullable<
  * should advance fallback. Deliberate silent replies such as NO_REPLY count as
  * intentional output, while whitespace-only text remains fallback-eligible.
  * This is intentionally SDK-level so plugin harness adapters such as Codex
- * preserve the same OpenClaw-owned fallback signals as the built-in OpenClaw path
+ * preserve the same Quiet Core bot-owned fallback signals as the built-in Quiet Core bot path
  * without re-implementing terminal-result policy.
  */
 export function classifyAgentHarnessTerminalOutcome(

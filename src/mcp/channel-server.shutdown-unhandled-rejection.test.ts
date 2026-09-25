@@ -93,7 +93,7 @@ async function waitForTransport(): Promise<{ onclose?: (() => void) | undefined 
   return transportState.lastTransport;
 }
 
-describe("serveOpenClawChannelMcp shutdown", () => {
+describe("serveQuiet Core botChannelMcp shutdown", () => {
   const unhandledRejections: unknown[] = [];
   const onUnhandledRejection = (reason: unknown) => {
     unhandledRejections.push(reason);

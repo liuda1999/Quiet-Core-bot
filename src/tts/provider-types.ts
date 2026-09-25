@@ -133,7 +133,7 @@ export type SpeechListVoicesRequest = {
   baseUrl?: string;
 };
 
-/** Provider hook input for resolving normalized config from raw OpenClaw config. */
+/** Provider hook input for resolving normalized config from raw Quiet Core bot config. */
 export type SpeechProviderResolveConfigContext = {
   cfg: OpenClawConfig;
   rawConfig: Record<string, unknown>;

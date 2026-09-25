@@ -2,7 +2,7 @@
 import { describe, expect, it } from "vitest";
 import { loadOpenClawProviderIndex, normalizeOpenClawProviderIndex } from "./index.js";
 
-describe("OpenClaw provider index", () => {
+describe("Quiet Core bot provider index", () => {
   it("normalizes provider preview catalog rows through model catalog validation", () => {
     const index = normalizeOpenClawProviderIndex({
       version: 1,

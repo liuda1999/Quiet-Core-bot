@@ -45,7 +45,7 @@ const INDIRECT_RUNTIME_DEPENDENCIES = new Map<string, Set<string>>([
   ],
   [
     "extensions/memory-core",
-    // Packaged memory tools run through generated OpenClaw runtime chunks that parse JSON5 config.
+    // Packaged memory tools run through generated Quiet Core bot runtime chunks that parse JSON5 config.
     new Set(["json5"]),
   ],
   [

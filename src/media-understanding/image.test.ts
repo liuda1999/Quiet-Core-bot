@@ -235,7 +235,7 @@ describe("describeImageWithModel", () => {
       headers: {
         Authorization: "Bearer oauth-test",
         "Content-Type": "application/json",
-        "MM-API-Source": "OpenClaw",
+        "MM-API-Source": "Quiet Core bot",
       },
       body: JSON.stringify({
         prompt: "Describe the image.",

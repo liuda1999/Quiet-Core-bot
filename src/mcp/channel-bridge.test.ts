@@ -16,7 +16,10 @@ type BridgeInternals = {
   pendingClaudePermissions: Map<string, unknown>;
   pendingApprovals: Map<string, unknown>;
   pendingSweepInterval: NodeJS.Timeout | null;
-  pollEvents: (filter: WaitFilter, limit?: number) => {
+  pollEvents: (
+    filter: WaitFilter,
+    limit?: number,
+  ) => {
     events: QueueEvent[];
     nextCursor: number;
   };
@@ -44,7 +47,7 @@ function makeBridge(verbose = false): BridgeInternals {
   }) as unknown as BridgeInternals;
 }
 
-describe("OpenClawChannelBridge — pendingClaudePermissions / pendingApprovals memory bounds", () => {
+describe("Quiet Core botChannelBridge — pendingClaudePermissions / pendingApprovals memory bounds", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     vi.setSystemTime(0);
@@ -222,7 +225,7 @@ describe("OpenClawChannelBridge — pendingClaudePermissions / pendingApprovals 
       await bridge.sendNotification({ method: "channel/event" });
 
       expect(writes).toHaveLength(1);
-      expect(writes[0]).toBe("openclaw mcp: notification channel/event failed\n");
+      expect(writes[0]).toBe("quiet-core-bot mcp: notification channel/event failed\n");
       expect(writes[0]).not.toContain("transport closed");
     } finally {
       writeSpy.mockRestore();

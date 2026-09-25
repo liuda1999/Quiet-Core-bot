@@ -4,7 +4,7 @@ import path from "node:path";
 import { resolveUserPath } from "../utils.js";
 import { isPathInside, safeRealpathSync } from "./path-safety.js";
 
-/** Env var that points bundled-plugin lookup at an OpenClaw source checkout. */
+/** Env var that points bundled-plugin lookup at an Quiet Core bot source checkout. */
 export const OPENCLAW_DEV_SOURCE_ROOT_ENV = "OPENCLAW_DEV_SOURCE_ROOT";
 
 function readPackageName(packageJsonPath: string): string | null {
@@ -16,7 +16,7 @@ function readPackageName(packageJsonPath: string): string | null {
   }
 }
 
-/** Resolves and validates the configured OpenClaw development source root. */
+/** Resolves and validates the configured Quiet Core bot development source root. */
 export function resolveOpenClawDevSourceRoot(env: NodeJS.ProcessEnv = process.env): string | null {
   const rawRoot = env[OPENCLAW_DEV_SOURCE_ROOT_ENV]?.trim();
   if (!rawRoot) {

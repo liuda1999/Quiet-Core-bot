@@ -1041,7 +1041,7 @@ describe("plugin conversation binding approvals", () => {
       name: "migrates a legacy codex thread binding session key through the new approval flow",
       existingRecord: {
         bindingId: "binding-legacy-codex-thread",
-        targetSessionKey: "openclaw-app-server:thread:019ce411-6322-7db2-a821-1a61c530e7d9",
+        targetSessionKey: "quiet-core-bot-app-server:thread:019ce411-6322-7db2-a821-1a61c530e7d9",
         targetKind: "session" as const,
         conversation: {
           channel: "telegram",

@@ -1,4 +1,4 @@
-// State database path helpers resolve shared OpenClaw state DB paths.
+// State database path helpers resolve shared Quiet Core bot state DB paths.
 import os from "node:os";
 import path from "node:path";
 import { isMainThread, threadId } from "node:worker_threads";
@@ -6,7 +6,7 @@ import { resolveStateDir } from "../config/paths.js";
 import { parseStrictNonNegativeInteger } from "../infra/parse-finite-number.js";
 
 /**
- * Path helpers for the shared OpenClaw SQLite state database.
+ * Path helpers for the shared Quiet Core bot SQLite state database.
  *
  * Tests get worker-scoped temp state roots unless they explicitly provide
  * `OPENCLAW_STATE_DIR`, which prevents parallel Vitest workers from sharing WAL files.

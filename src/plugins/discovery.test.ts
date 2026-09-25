@@ -466,7 +466,7 @@ afterEach(() => {
   cleanupTrackedTempDirs(tempDirs);
 });
 
-describe("discoverOpenClawPlugins", () => {
+describe("discoverQuiet Core botPlugins", () => {
   it("discovers global and workspace extensions", async () => {
     const stateDir = makeTempDir();
     const workspaceDir = path.join(stateDir, "workspace");
@@ -1045,7 +1045,8 @@ describe("discoverOpenClawPlugins", () => {
     expect(
       result.diagnostics.some(
         (entry) =>
-          entry.pluginId === "source-only-pack" && entry.message.includes("openclaw doctor --fix"),
+          entry.pluginId === "source-only-pack" &&
+          entry.message.includes("quiet-core-bot doctor --fix"),
       ),
     ).toBe(false);
     expect(result.diagnostics).toHaveLength(1);
@@ -1169,7 +1170,7 @@ describe("discoverOpenClawPlugins", () => {
       level: "warn",
       pluginId: "guardrail-bridge",
       source: path.join(pluginDir, "openclaw.extension.json"),
-      messageIncludes: 'run "openclaw doctor --fix"',
+      messageIncludes: 'run "quiet-core-bot doctor --fix"',
     });
   });
 

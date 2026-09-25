@@ -10,7 +10,7 @@
 // false positive.
 import type { SessionAttentionClassification } from "./diagnostic-session-attention.js";
 
-/** The OpenClaw exec tool, whose approval gate can leave a session blocked. */
+/** The Quiet Core bot exec tool, whose approval gate can leave a session blocked. */
 const EXEC_TOOL_NAME = "exec";
 
 export const APPROVE_PENDING_EXEC_APPROVAL_SUGGESTED_ACTION =
@@ -119,7 +119,7 @@ export function formatBlockedExecApprovalHint(params: {
     text:
       `[diagnostic] session blocked on exec approval (${approvalLabel}, tool=${EXEC_TOOL_NAME}` +
       `${command ? `, command="${command.slice(0, 80)}"` : ""}); ` +
-      `approve with: openclaw approvals approve ${shortId} | list with: openclaw approvals pending`,
+      `approve with: quiet-core-bot approvals approve ${shortId} | list with: quiet-core-bot approvals pending`,
     suggestedAction: APPROVE_PENDING_EXEC_APPROVAL_SUGGESTED_ACTION,
   };
 }

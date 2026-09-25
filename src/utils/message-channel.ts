@@ -62,7 +62,7 @@ export function isBrowserOperatorUiClient(client?: GatewayClientInfoLike | null)
   return clientId === GATEWAY_CLIENT_NAMES.CONTROL_UI;
 }
 
-/** Return whether a raw channel id resolves to OpenClaw's internal channel. */
+/** Return whether a raw channel id resolves to Quiet Core bot's internal channel. */
 export function isInternalMessageChannel(
   raw?: string | null,
 ): raw is typeof INTERNAL_MESSAGE_CHANNEL {

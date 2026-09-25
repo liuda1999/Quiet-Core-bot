@@ -1,4 +1,4 @@
-// Generates setup codes used to pair external channels with OpenClaw.
+// Generates setup codes used to pair external channels with Quiet Core bot.
 import os from "node:os";
 import {
   isCarrierGradeNatIpv4Address,

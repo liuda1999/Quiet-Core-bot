@@ -1,4 +1,4 @@
-// OpenClaw agent database tests cover agent-scoped DB storage and migrations.
+// Quiet Core bot agent database tests cover agent-scoped DB storage and migrations.
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
@@ -55,7 +55,7 @@ afterEach(() => {
   closeOpenClawStateDatabaseForTest();
 });
 
-describe("openclaw agent database", () => {
+describe("quiet-core-bot agent database", () => {
   it("resolves under the per-agent state directory", () => {
     const stateDir = createTempStateDir();
 
@@ -206,12 +206,12 @@ describe("openclaw agent database", () => {
           import os from "node:os";
           import path from "node:path";
           import {
-            closeOpenClawAgentDatabasesForTest,
-            openOpenClawAgentDatabase,
+            closeQuiet Core botAgentDatabasesForTest,
+            openQuiet Core botAgentDatabase,
           } from ${JSON.stringify(agentModuleUrl)};
           import {
-            closeOpenClawStateDatabaseForTest,
-            openOpenClawStateDatabase,
+            closeQuiet Core botStateDatabaseForTest,
+            openQuiet Core botStateDatabase,
           } from ${JSON.stringify(stateModuleUrl)};
 
           const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-agent-db-state-"));
@@ -224,14 +224,14 @@ describe("openclaw agent database", () => {
           const previousCwd = process.cwd();
           try {
             process.chdir(firstDir);
-            const first = openOpenClawAgentDatabase({
+            const first = openQuiet Core botAgentDatabase({
               agentId: "worker-1",
               env,
               path: "agent.sqlite",
             });
 
             process.chdir(secondDir);
-            const second = openOpenClawAgentDatabase({
+            const second = openQuiet Core botAgentDatabase({
               agentId: "worker-1",
               env,
               path: "agent.sqlite",
@@ -241,7 +241,7 @@ describe("openclaw agent database", () => {
               sameHandle: first === second,
               firstFileExists: fs.existsSync(path.join(firstDir, "agent.sqlite")),
               secondFileExists: fs.existsSync(path.join(secondDir, "agent.sqlite")),
-              registeredPaths: openOpenClawStateDatabase({ env }).db
+              registeredPaths: openQuiet Core botStateDatabase({ env }).db
                 .prepare("SELECT path FROM agent_databases WHERE agent_id = ? ORDER BY path")
                 .all("worker-1")
                 .map((entry) => entry.path),
@@ -249,8 +249,8 @@ describe("openclaw agent database", () => {
             }));
           } finally {
             process.chdir(previousCwd);
-            closeOpenClawAgentDatabasesForTest();
-            closeOpenClawStateDatabaseForTest();
+            closeQuiet Core botAgentDatabasesForTest();
+            closeQuiet Core botStateDatabaseForTest();
           }
         `,
       ],

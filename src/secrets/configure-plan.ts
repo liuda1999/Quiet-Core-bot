@@ -1,4 +1,4 @@
-/** Builds the interactive `openclaw secrets configure` target list and apply plan. */
+/** Builds the interactive `quiet-core-bot secrets configure` target list and apply plan. */
 import { isDeepStrictEqual } from "node:util";
 import type { AuthProfileStore } from "../agents/auth-profiles/types.js";
 import type { OpenClawConfig } from "../config/types.openclaw.js";
@@ -15,7 +15,7 @@ import {
   discoverConfigSecretTargets,
 } from "./target-registry.js";
 
-/** Credential target shown by `openclaw secrets configure` before a SecretRef is selected. */
+/** Credential target shown by `quiet-core-bot secrets configure` before a SecretRef is selected. */
 export type ConfigureCandidate = {
   type: string;
   path: string;
@@ -49,7 +49,7 @@ function getSecretProviders(config: OpenClawConfig): Record<string, SecretProvid
   return config.secrets.providers;
 }
 
-/** Builds configure candidates for the current OpenClaw config only. */
+/** Builds configure candidates for the current Quiet Core bot config only. */
 export function buildConfigureCandidates(config: OpenClawConfig): ConfigureCandidate[] {
   return buildConfigureCandidatesForScope({ config });
 }
@@ -78,7 +78,7 @@ function resolveAuthProfileProvider(
   return provider.length > 0 ? provider : undefined;
 }
 
-/** Builds configure candidates for OpenClaw config plus an optional auth-profile scope. */
+/** Builds configure candidates for Quiet Core bot config plus an optional auth-profile scope. */
 export function buildConfigureCandidatesForScope(params: {
   config: OpenClawConfig;
   authoredOpenClawConfig?: OpenClawConfig;
@@ -112,7 +112,7 @@ export function buildConfigureCandidatesForScope(params: {
           path: entry.path,
           pathSegments: [...entry.pathSegments],
           label: entry.path,
-          configFile: `openclaw.json` as const,
+          configFile: `quiet-core-bot.json` as const,
           expectedResolvedValue: entry.entry.expectedResolvedValue,
         },
         resolved.ref ? { existingRef: resolved.ref } : {},
@@ -247,7 +247,7 @@ export function buildSecretsConfigurePlan(params: {
     version: 1,
     protocolVersion: 1,
     generatedAt: params.generatedAt ?? new Date().toISOString(),
-    generatedBy: "openclaw secrets configure",
+    generatedBy: "quiet-core-bot secrets configure",
     targets: [...params.selectedTargets.values()].map((entry) =>
       Object.assign(
         {

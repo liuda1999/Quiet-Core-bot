@@ -14,7 +14,7 @@ import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-openclaw-dir.js";
 
 export type { ImageMetadata, ImageProbe };
 
-/** OpenClaw-facing image backend availability error, preserving the failed operation and causes. */
+/** Quiet Core bot-facing image backend availability error, preserving the failed operation and causes. */
 export class ImageProcessorUnavailableError extends Error {
   readonly code = "IMAGE_PROCESSOR_UNAVAILABLE";
   readonly operation: string;
@@ -51,7 +51,7 @@ export const IMAGE_REDUCE_QUALITY_STEPS = [85, 75, 65, 55, 45, 35] as const;
 /** Shared input/output pixel cap for Rastermill-backed image operations. */
 export const MAX_IMAGE_INPUT_PIXELS = 25_000_000;
 
-/** Creates a Rastermill processor with OpenClaw temp-dir, pixel-limit, and command trust policy. */
+/** Creates a Rastermill processor with Quiet Core bot temp-dir, pixel-limit, and command trust policy. */
 export function createImageProcessor() {
   return createRastermill({
     execution: "auto",
@@ -68,7 +68,7 @@ export function createImageProcessor() {
   });
 }
 
-/** Detects either OpenClaw's wrapper error or Rastermill's native unavailable error. */
+/** Detects either Quiet Core bot's wrapper error or Rastermill's native unavailable error. */
 export function isImageProcessorUnavailableError(err: unknown): boolean {
   return err instanceof ImageProcessorUnavailableError || isRastermillUnavailableError(err);
 }

@@ -43,7 +43,7 @@ async function ensurePrefixRoot(prefix: string): Promise<string> {
   }
 }
 
-/** Creates a temporary OpenClaw home and process env override for stateful tests. */
+/** Creates a temporary Quiet Core bot home and process env override for stateful tests. */
 export async function createTempHomeEnv(prefix: string): Promise<TempHomeEnv> {
   const prefixRoot = await ensurePrefixRoot(prefix);
   const home = path.join(prefixRoot, `home-${String(nextHomeIndex)}`);

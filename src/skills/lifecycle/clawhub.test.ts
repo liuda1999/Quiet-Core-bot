@@ -386,7 +386,7 @@ describe("skills-clawhub", () => {
       throw new Error("expected ambiguous slug failure");
     }
     expect(result.error).toContain('Skill "weather" is ambiguous on ClawHub.');
-    expect(result.error).toContain("openclaw skills install @owner/weather");
+    expect(result.error).toContain("quiet-core-bot skills install @owner/weather");
     expect(result.error).toContain("Multiple ClawHub publishers provide weather.");
   });
 

@@ -134,7 +134,9 @@ export function loadBundledPluginPublicArtifactModuleSync<T extends object>(para
     absolutePath: location.modulePath,
     rootPath: location.boundaryRoot,
     boundaryLabel:
-      location.boundaryRoot === OPENCLAW_PACKAGE_ROOT ? "OpenClaw package root" : "plugin root",
+      location.boundaryRoot === OPENCLAW_PACKAGE_ROOT
+        ? "Quiet Core bot package root"
+        : "plugin root",
     rejectHardlinks: false,
   });
   if (!opened.ok) {

@@ -5,6 +5,7 @@ import {
   normalizeStringifiedOptionalString,
 } from "@openclaw/normalization-core/string-coerce";
 import { normalizeUniqueStringEntries } from "@openclaw/normalization-core/string-normalization";
+import { pickSandboxToolPolicy } from "../agents/sandbox-tool-policy.js";
 import { resolveSandboxConfigForAgent } from "../agents/sandbox/config.js";
 import { isDangerousNetworkMode, normalizeNetworkMode } from "../agents/sandbox/network-mode.js";
 import { resolveSandboxToolPolicyForAgent } from "../agents/sandbox/tool-policy.js";
@@ -24,7 +25,6 @@ import {
   resolveNodeCommandAllowlist,
 } from "../gateway/node-command-policy.js";
 import { collectAuditModelRefs } from "./audit-model-refs.js";
-import { pickSandboxToolPolicy } from "../agents/sandbox-tool-policy.js";
 
 /**
  * Synchronous security audit collector functions.
@@ -149,7 +149,7 @@ function formatHooksTokenReuseRemediation(reuse: GatewayAuthSharedSecretReuse): 
   if (reuse.source === "override") {
     return "Rotate hooks.token or the runtime Gateway shared-secret auth value used for this audit; doctor can only repair reuse that is present in persisted config or process env.";
   }
-  return `Run ${formatCliCommand("openclaw doctor --fix")} to rotate a persisted hooks.token, then update external hook senders to use the new hook token.`;
+  return `Run ${formatCliCommand("quiet-core-bot doctor --fix")} to rotate a persisted hooks.token, then update external hook senders to use the new hook token.`;
 }
 
 function hasResolvedGatewayHttpAuth(auth: ResolvedGatewayAuth): boolean {
@@ -570,7 +570,7 @@ export function collectSyncedFolderFindings(params: {
       severity: "warn",
       title: "State/config path looks like a synced folder",
       detail: `stateDir=${params.stateDir}, configPath=${params.configPath}. Synced folders (iCloud/Dropbox/OneDrive/Google Drive) can leak tokens and transcripts onto other devices.`,
-      remediation: `Keep OPENCLAW_STATE_DIR on a local-only volume and re-run "${formatCliCommand("openclaw security audit --fix")}".`,
+      remediation: `Keep OPENCLAW_STATE_DIR on a local-only volume and re-run "${formatCliCommand("quiet-core-bot security audit --fix")}".`,
     });
   }
   return findings;
@@ -1235,7 +1235,7 @@ export function collectLikelyMultiUserSetupFindings(cfg: OpenClawConfig): Securi
       "Heuristic signals indicate this gateway may be reachable by multiple users:\n" +
       signals.map((signal) => `- ${signal}`).join("\n") +
       `\n${impactLine}\n${riskyContextsDetail}\n` +
-      "OpenClaw's default security model is personal-assistant (one trusted operator boundary), not hostile multi-tenant isolation on one shared gateway.",
+      "Quiet Core bot's default security model is personal-assistant (one trusted operator boundary), not hostile multi-tenant isolation on one shared gateway.",
     remediation:
       'If users may be mutually untrusted, split trust boundaries (separate gateways + credentials, ideally separate OS users/hosts). If you intentionally run shared-user access, set agents.defaults.sandbox.mode="all", keep tools.fs.workspaceOnly=true, deny runtime/fs/web tools unless required, and keep personal/private identities + credentials off that runtime.',
   });

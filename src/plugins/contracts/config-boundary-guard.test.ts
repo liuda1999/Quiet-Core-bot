@@ -78,10 +78,10 @@ describe("config boundary guard", () => {
       repoRoot,
       "extensions/telegram/src/index.ts",
       [
-        'import type { OpenClawConfig } from "openclaw/plugin-sdk/config-runtime";',
+        'import type { Quiet Core botConfig } from "openclaw/plugin-sdk/config-runtime";',
         'import { requireRuntimeConfig } from "openclaw/plugin-sdk/config-runtime";',
         'type Loader = typeof import("openclaw/plugin-sdk/config-runtime").getRuntimeConfig;',
-        "export type Config = OpenClawConfig;",
+        "export type Config = Quiet Core botConfig;",
         "export const load: Loader = requireRuntimeConfig;",
       ].join("\n"),
     );
@@ -112,10 +112,10 @@ describe("config boundary guard", () => {
       repoRoot,
       "extensions/telegram/src/index.ts",
       [
-        'import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";',
+        'import type { Quiet Core botConfig } from "openclaw/plugin-sdk/config-contracts";',
         'import { requireRuntimeConfig } from "openclaw/plugin-sdk/plugin-config-runtime";',
         'type Loader = typeof import("openclaw/plugin-sdk/runtime-config-snapshot").getRuntimeConfig;',
-        'export const load = (cfg: OpenClawConfig) => requireRuntimeConfig(cfg, "telegram");',
+        'export const load = (cfg: Quiet Core botConfig) => requireRuntimeConfig(cfg, "telegram");',
       ].join("\n"),
     );
 

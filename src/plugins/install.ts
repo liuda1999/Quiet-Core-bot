@@ -107,7 +107,7 @@ type PackageManifest = PluginPackageManifest & {
 type PluginInstallRuntime = Awaited<ReturnType<typeof loadPluginInstallRuntime>>;
 
 function formatUnresolvedOpenClawPeerLinkError(packageName: string): string {
-  return `Installed plugin ${packageName} declares openclaw as a peer dependency, but OpenClaw could not create a plugin-local node_modules/openclaw link. Run from a packaged OpenClaw install or reinstall OpenClaw, then retry.`;
+  return `Installed plugin ${packageName} declares openclaw as a peer dependency, but Quiet Core bot could not create a plugin-local node_modules/openclaw link. Run from a packaged Quiet Core bot install or reinstall Quiet Core bot, then retry.`;
 }
 
 function isNpmAliasOverrideComparatorError(result: { stdout: string; stderr: string }): boolean {
@@ -184,7 +184,7 @@ function validateOpenClawPackageCompatibility(params: {
   if (pluginApiRange && !satisfiesPluginApiRange(params.currentHostVersion, pluginApiRange)) {
     return {
       ok: false,
-      error: `plugin "${params.pluginId}" requires plugin API ${pluginApiRange}, but this OpenClaw runtime exposes ${params.currentHostVersion}. Upgrade OpenClaw or install a compatible plugin version and retry.`,
+      error: `plugin "${params.pluginId}" requires plugin API ${pluginApiRange}, but this Quiet Core bot runtime exposes ${params.currentHostVersion}. Upgrade Quiet Core bot or install a compatible plugin version and retry.`,
       code: PLUGIN_INSTALL_ERROR_CODE.INCOMPATIBLE_PLUGIN_API,
     };
   }
@@ -213,13 +213,13 @@ function validateOpenClawPackageInstallCompatibility(params: {
     if (minHostVersionCheck.kind === "unknown_host_version") {
       return {
         ok: false,
-        error: `plugin "${params.pluginId}" requires OpenClaw >=${minHostVersionCheck.requirement.minimumLabel}, but this host version could not be determined. Re-run from a released build or set OPENCLAW_VERSION and retry.`,
+        error: `plugin "${params.pluginId}" requires Quiet Core bot >=${minHostVersionCheck.requirement.minimumLabel}, but this host version could not be determined. Re-run from a released build or set OPENCLAW_VERSION and retry.`,
         code: PLUGIN_INSTALL_ERROR_CODE.UNKNOWN_HOST_VERSION,
       };
     }
     return {
       ok: false,
-      error: `plugin "${params.pluginId}" requires OpenClaw >=${minHostVersionCheck.requirement.minimumLabel}, but this host is ${minHostVersionCheck.currentVersion}. Upgrade OpenClaw and retry.`,
+      error: `plugin "${params.pluginId}" requires Quiet Core bot >=${minHostVersionCheck.requirement.minimumLabel}, but this host is ${minHostVersionCheck.currentVersion}. Upgrade Quiet Core bot and retry.`,
       code: PLUGIN_INSTALL_ERROR_CODE.INCOMPATIBLE_HOST_VERSION,
     };
   }
@@ -386,12 +386,12 @@ async function resolveTrustedOfficialPrereleaseResolution(params: {
           return null;
         }
         params.logger.warn?.(
-          `Resolved ${params.spec.raw} to prerelease version ${params.resolvedPrereleaseVersion}; using newest prerelease ${prereleaseSpec} because this trusted official OpenClaw package has no stable npm versions yet.`,
+          `Resolved ${params.spec.raw} to prerelease version ${params.resolvedPrereleaseVersion}; using newest prerelease ${prereleaseSpec} because this trusted official Quiet Core bot package has no stable npm versions yet.`,
         );
         return { kind: "prerelease-only", resolution: metadataResult.metadata };
       }
       params.logger.warn?.(
-        `Resolved ${params.spec.raw} to prerelease version ${params.resolvedPrereleaseVersion}; allowing it because this trusted official OpenClaw package has no stable npm versions yet.`,
+        `Resolved ${params.spec.raw} to prerelease version ${params.resolvedPrereleaseVersion}; allowing it because this trusted official Quiet Core bot package has no stable npm versions yet.`,
       );
       return { kind: "allow-prerelease-only" };
     }
@@ -407,7 +407,7 @@ async function resolveTrustedOfficialPrereleaseResolution(params: {
     return null;
   }
   params.logger.warn?.(
-    `Resolved ${params.spec.raw} to prerelease version ${params.resolvedPrereleaseVersion}; falling back to stable ${stableSpec} for this trusted official OpenClaw install.`,
+    `Resolved ${params.spec.raw} to prerelease version ${params.resolvedPrereleaseVersion}; falling back to stable ${stableSpec} for this trusted official Quiet Core bot install.`,
   );
   return { kind: "stable", resolution: metadataResult.metadata };
 }
@@ -522,7 +522,7 @@ async function resolveLatestCompatibleNpmResolution(params: {
     });
     if (!compatibilityError) {
       params.logger.warn?.(
-        `Resolved ${params.parsedSpec.raw} to ${params.currentResolution.resolvedSpec ?? currentVersion}, but that version is incompatible with this OpenClaw runtime; using newest compatible ${metadataResult.metadata.resolvedSpec ?? spec}.`,
+        `Resolved ${params.parsedSpec.raw} to ${params.currentResolution.resolvedSpec ?? currentVersion}, but that version is incompatible with this Quiet Core bot runtime; using newest compatible ${metadataResult.metadata.resolvedSpec ?? spec}.`,
       );
       return metadataResult.metadata;
     }
@@ -1565,7 +1565,7 @@ async function installPluginFromManagedNpmRoot(
       } catch (error) {
         return await rollbackFailedManagedNpmInstall({
           ok: false,
-          error: `npm install failed with a managed npm project corruption signature, but OpenClaw could not quarantine ${npmRoot} for rebuild: ${String(error)}. Original npm error: ${originalError}`,
+          error: `npm install failed with a managed npm project corruption signature, but Quiet Core bot could not quarantine ${npmRoot} for rebuild: ${String(error)}. Original npm error: ${originalError}`,
         });
       }
       logger.warn?.(
@@ -2105,7 +2105,7 @@ async function runInstallSourceScan(params: {
     });
     return {
       ok: false,
-      error: `${params.subject} installation blocked: code safety scan failed (${String(err)}). Run "openclaw security audit --deep" for details.`,
+      error: `${params.subject} installation blocked: code safety scan failed (${String(err)}). Run "quiet-core-bot security audit --deep" for details.`,
       code: PLUGIN_INSTALL_ERROR_CODE.SECURITY_SCAN_FAILED,
     };
   }

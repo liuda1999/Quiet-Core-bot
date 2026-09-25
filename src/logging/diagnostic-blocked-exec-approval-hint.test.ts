@@ -38,8 +38,8 @@ describe("formatBlockedExecApprovalHint", () => {
     });
     expect(hint?.suggestedAction).toBe(APPROVE_PENDING_EXEC_APPROVAL_SUGGESTED_ACTION);
     expect(hint?.text).toContain("tool=exec");
-    expect(hint?.text).toContain("approve with: openclaw approvals approve 54d8b109");
-    expect(hint?.text).toContain("list with: openclaw approvals pending");
+    expect(hint?.text).toContain("approve with: quiet-core-bot approvals approve 54d8b109");
+    expect(hint?.text).toContain("list with: quiet-core-bot approvals pending");
   });
 
   it("stays silent for expired approvals so a resolved request is never re-offered", () => {

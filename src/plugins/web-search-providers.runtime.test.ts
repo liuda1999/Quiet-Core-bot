@@ -236,7 +236,7 @@ function requirePluginsConfig(params: Record<string, unknown>): Record<string, u
 function expectScopedWebSearchCandidates(pluginIds: readonly string[]) {
   expect(loadInstalledPluginManifestRegistryMock).toHaveBeenCalled();
   expect(
-    requireLastCallFirstArg(loadOpenClawPluginsMock, "loadOpenClawPlugins").onlyPluginIds,
+    requireLastCallFirstArg(loadOpenClawPluginsMock, "loadQuiet Core botPlugins").onlyPluginIds,
   ).toEqual([...pluginIds]);
 }
 
@@ -248,7 +248,10 @@ function expectAutoEnabledWebSearchLoad(params: {
     config: params.rawConfig,
     env: createWebSearchEnv(),
   });
-  const loaderParams = requireLastCallFirstArg(loadOpenClawPluginsMock, "loadOpenClawPlugins");
+  const loaderParams = requireLastCallFirstArg(
+    loadOpenClawPluginsMock,
+    "loadQuiet Core botPlugins",
+  );
   const plugins = requirePluginsConfig(loaderParams);
   expect(plugins.allow).toEqual([...params.expectedAllow]);
 }
@@ -439,7 +442,7 @@ describe("resolvePluginWebSearchProviders", () => {
     loadInstalledPluginManifestRegistryMock.mockReset();
     loadInstalledPluginManifestRegistryMock.mockReturnValue(createManifestRegistryFixture());
     loadOpenClawPluginsMock = vi
-      .spyOn(loaderModule, "loadOpenClawPlugins")
+      .spyOn(loaderModule, "loadQuiet Core botPlugins")
       .mockImplementation((params) => {
         const registry = createEmptyPluginRegistry();
         registry.webSearchProviders = buildMockedWebSearchProviders(params);
@@ -524,7 +527,10 @@ describe("resolvePluginWebSearchProviders", () => {
 
     expect(toRuntimeProviderKeys(providers)).toEqual(["brave:brave"]);
     expectScopedWebSearchCandidates(["brave"]);
-    const loaderParams = requireLastCallFirstArg(loadOpenClawPluginsMock, "loadOpenClawPlugins");
+    const loaderParams = requireLastCallFirstArg(
+      loadOpenClawPluginsMock,
+      "loadQuiet Core botPlugins",
+    );
     expect(requirePluginsConfig(loaderParams)).toEqual({
       allow: ["brave"],
       entries: { brave: { enabled: true } },
@@ -552,7 +558,10 @@ describe("resolvePluginWebSearchProviders", () => {
       "loadPluginManifestRegistryForInstalledIndex",
     );
     expect(manifestParams.workspaceDir).toBe("/tmp/runtime-workspace");
-    const loaderParams = requireLastCallFirstArg(loadOpenClawPluginsMock, "loadOpenClawPlugins");
+    const loaderParams = requireLastCallFirstArg(
+      loadOpenClawPluginsMock,
+      "loadQuiet Core botPlugins",
+    );
     expect(loaderParams.workspaceDir).toBe("/tmp/runtime-workspace");
     expect(loaderParams.onlyPluginIds).toEqual(["brave"]);
   });

@@ -241,9 +241,7 @@ describe("resolveTuiShutdownHardExitMs", () => {
 
   it("clamps oversized local run shutdown grace values", () => {
     withEnv({ OPENCLAW_TUI_LOCAL_RUN_SHUTDOWN_GRACE_MS: String(Number.MAX_SAFE_INTEGER) }, () => {
-      expect(resolveTuiShutdownHardExitMs({ localMode: true })).toBe(
-        MAX_TIMER_TIMEOUT_MS + 2000,
-      );
+      expect(resolveTuiShutdownHardExitMs({ localMode: true })).toBe(MAX_TIMER_TIMEOUT_MS + 2000);
     });
   });
 });
@@ -349,8 +347,8 @@ describe("resolveGatewayDisconnectState", () => {
   it("returns pairing recovery guidance when disconnect reason requires pairing", () => {
     const state = resolveGatewayDisconnectState("gateway closed (1008): pairing required");
     expect(state.connectionStatus).toContain("pairing required");
-    expect(state.activityStatus).toBe("pairing required: run openclaw devices list");
-    expect(state.pairingHint).toContain("openclaw devices list");
+    expect(state.activityStatus).toBe("pairing required: run quiet-core-bot devices list");
+    expect(state.pairingHint).toContain("quiet-core-bot devices list");
   });
 
   it("falls back to idle for generic disconnect reasons", () => {
@@ -594,7 +592,9 @@ describe("TUI shutdown safety", () => {
     expect(setTimeoutFn).toHaveBeenCalledOnce();
     expect(unref).toHaveBeenCalledOnce();
     callback?.();
-    expect(writeStderr).toHaveBeenCalledWith("openclaw tui forcing process exit after return\n");
+    expect(writeStderr).toHaveBeenCalledWith(
+      "quiet-core-bot tui forcing process exit after return\n",
+    );
     expect(exit).toHaveBeenCalledWith(0);
   });
 });

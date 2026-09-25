@@ -1071,7 +1071,7 @@ afterAll(() => {
   cachedBundledMemoryDir = "";
 });
 
-describe("loadOpenClawPlugins", () => {
+describe("loadQuiet Core botPlugins", () => {
   it("emits loader startup trace timings for normal plugin load and register", () => {
     useNoBundledPlugins();
     const plugin = writePlugin({
@@ -2668,7 +2668,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
 
     const discovery = await import("./discovery.js");
     const manifestRegistry = await import("./manifest-registry.js");
-    const discoverySpy = vi.spyOn(discovery, "discoverOpenClawPlugins");
+    const discoverySpy = vi.spyOn(discovery, "discoverQuiet Core botPlugins");
     const manifestSpy = vi.spyOn(manifestRegistry, "loadPluginManifestRegistry");
 
     const registry = loadOpenClawPlugins({
@@ -8748,8 +8748,10 @@ module.exports = {
     expect(openAllowWarning).toBeDefined();
     expect(openAllowWarning).toContain('"warn-open-allow-remediation"');
     expect(openAllowWarning).toContain('"plugins": { "allow": [');
-    expect(openAllowWarning).toContain("openclaw plugins list --enabled --verbose");
-    expect(openAllowWarning).toContain("openclaw plugins inspect warn-open-allow-remediation");
+    expect(openAllowWarning).toContain("quiet-core-bot plugins list --enabled --verbose");
+    expect(openAllowWarning).toContain(
+      "quiet-core-bot plugins inspect warn-open-allow-remediation",
+    );
   });
 
   it("includes actionable plugins.allow remediation hints in the untracked-provenance warning", () => {
@@ -8783,7 +8785,9 @@ module.exports = {
       );
       expect(untrackedWarning).toBeDefined();
       expect(untrackedWarning).toContain('"warn-untracked-remediation"');
-      expect(untrackedWarning).toContain("openclaw plugins inspect warn-untracked-remediation");
+      expect(untrackedWarning).toContain(
+        "quiet-core-bot plugins inspect warn-untracked-remediation",
+      );
       expect(untrackedWarning).toContain("reinstall from a trusted source");
 
       const diagnostic = registry.diagnostics.find(
@@ -8792,7 +8796,9 @@ module.exports = {
           entry.message.includes("loaded without install/load-path provenance"),
       );
       expect(diagnostic?.message).toContain('"warn-untracked-remediation"');
-      expect(diagnostic?.message).toContain("openclaw plugins inspect warn-untracked-remediation");
+      expect(diagnostic?.message).toContain(
+        "quiet-core-bot plugins inspect warn-untracked-remediation",
+      );
       expect(diagnostic?.message).toContain("reinstall from a trusted source");
     });
   });
@@ -8824,8 +8830,8 @@ module.exports = {
     expect(message).toContain("plugins.allow is empty");
     expect(message).toContain("(+2 more)");
     expect(message).not.toContain('"plugins": { "allow": [');
-    expect(message).toContain("openclaw plugins list --enabled --verbose");
-    expect(message).toContain("openclaw plugins inspect <id>");
+    expect(message).toContain("quiet-core-bot plugins list --enabled --verbose");
+    expect(message).toContain("quiet-core-bot plugins inspect <id>");
   });
 
   it("handles workspace-discovered plugins according to trust and precedence", () => {

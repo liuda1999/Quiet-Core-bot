@@ -625,7 +625,7 @@ describe("createOpenAIThinkingLevelWrapper", () => {
 });
 
 describe("createOpenAIAttributionHeadersWrapper", () => {
-  it("routes native Codex traffic through the OpenClaw transport so attribution survives OpenClaw defaults", () => {
+  it("routes native Codex traffic through the Quiet Core bot transport so attribution survives Quiet Core bot defaults", () => {
     let codexCalls = 0;
     let capturedHeaders: Record<string, string> | undefined;
     const codexTransport: StreamFn = (model, context, options) => {
