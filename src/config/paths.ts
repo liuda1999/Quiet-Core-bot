@@ -25,6 +25,29 @@ const NEW_STATE_DIRNAME = ".quiet-core-bot";
 const CONFIG_FILENAME = "quiet-core-bot.json";
 const LEGACY_CONFIG_FILENAMES = ["clawdbot.json", "openclaw.json"] as const;
 
+/** Home-relative name of the current state directory (`.quiet-core-bot`). */
+export const STATE_DIR_NAME = NEW_STATE_DIRNAME;
+/** File name of the current config inside the state directory. */
+export const CONFIG_FILE_NAME = CONFIG_FILENAME;
+/** Home-relative names of pre-rebrand state directories. */
+export const PREVIOUS_STATE_DIR_NAMES = LEGACY_STATE_DIRNAMES;
+/** File names of pre-rebrand config files inside a state directory. */
+export const PREVIOUS_CONFIG_FILE_NAMES = LEGACY_CONFIG_FILENAMES;
+
+/**
+ * Substantive subdirectories that mark a state directory as "actually used".
+ * A directory that only carries a config copy (for example the leftover of an
+ * aborted migration) is NOT initialized and must not take over from a live
+ * legacy state dir.
+ */
+export const STATE_DIR_SUBSTANTIVE_DIR_NAMES = [
+  "agents",
+  "workspace",
+  "state",
+  "identity",
+  "devices",
+] as const;
+
 function resolveDefaultHomeDir(): string {
   return resolveRequiredHomeDir(process.env, os.homedir);
 }
@@ -40,6 +63,37 @@ function legacyStateDirs(homedir: () => string = resolveDefaultHomeDir): string[
 
 function newStateDir(homedir: () => string = resolveDefaultHomeDir): string {
   return path.join(homedir(), NEW_STATE_DIRNAME);
+}
+
+function pathExists(target: string): boolean {
+  try {
+    return fs.existsSync(target);
+  } catch {
+    return false;
+  }
+}
+
+function pathIsDirectory(target: string): boolean {
+  try {
+    return fs.statSync(target).isDirectory();
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Whether `dir` is an initialized state directory rather than an empty shell.
+ *
+ * A directory only counts when it carries at least one substantive marker
+ * subdirectory. This prevents a stray directory (e.g. created by an aborted
+ * migration that only copied the config file) from being selected over a live
+ * legacy state dir, which would silently drop the workspace and sessions.
+ */
+export function isInitializedStateDir(dir: string): boolean {
+  if (!pathIsDirectory(dir)) {
+    return false;
+  }
+  return STATE_DIR_SUBSTANTIVE_DIR_NAMES.some((marker) => pathIsDirectory(path.join(dir, marker)));
 }
 
 export function resolveLegacyStateDirs(homedir: () => string = resolveDefaultHomeDir): string[] {
@@ -69,17 +123,12 @@ export function resolveStateDir(
     return newDir;
   }
   const legacyDirs = legacyStateDirs(effectiveHomedir);
-  const hasNew = fs.existsSync(newDir);
-  if (hasNew) {
+  const existingLegacy = legacyDirs.find((dir) => pathExists(dir));
+  // Only an initialized new dir takes over. An empty shell (e.g. an aborted
+  // migration that only copied the config) must fall back to a live legacy dir.
+  if (isInitializedStateDir(newDir)) {
     return newDir;
   }
-  const existingLegacy = legacyDirs.find((dir) => {
-    try {
-      return fs.existsSync(dir);
-    } catch {
-      return false;
-    }
-  });
   if (existingLegacy) {
     return existingLegacy;
   }

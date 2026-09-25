@@ -6,6 +6,7 @@ import { withTempDir } from "../test-helpers/temp-dir.js";
 import {
   CONFIG_PATH,
   DEFAULT_GATEWAY_PORT,
+  isInitializedStateDir,
   isNixMode,
   normalizeStateDirEnv,
   pinRuntimePaths,
@@ -250,6 +251,56 @@ describe("state + config path candidates", () => {
       await fs.mkdir(legacyDir, { recursive: true });
       const resolved = resolveStateDir({} as NodeJS.ProcessEnv, () => root);
       expect(resolved).toBe(legacyDir);
+    });
+  });
+
+  it("ignores an uninitialized new state dir while a legacy dir is live", async () => {
+    await withTempDir({ prefix: "openclaw-state-shell-" }, async (root) => {
+      const newDir = path.join(root, ".quiet-core-bot");
+      const legacyDir = path.join(root, ".openclaw");
+      // Reproduces the aborted-migration leftover: a config copy and nothing else.
+      await fs.mkdir(newDir, { recursive: true });
+      await fs.writeFile(path.join(newDir, "quiet-core-bot.json"), "{}", "utf-8");
+      await fs.mkdir(path.join(legacyDir, "agents"), { recursive: true });
+
+      const resolved = resolveStateDir({} as NodeJS.ProcessEnv, () => root);
+      expect(resolved).toBe(legacyDir);
+    });
+  });
+
+  it("adopts the new state dir once it carries substantive data", async () => {
+    await withTempDir({ prefix: "openclaw-state-init-" }, async (root) => {
+      const newDir = path.join(root, ".quiet-core-bot");
+      const legacyDir = path.join(root, ".openclaw");
+      await fs.mkdir(path.join(newDir, "agents"), { recursive: true });
+      await fs.mkdir(path.join(legacyDir, "agents"), { recursive: true });
+
+      const resolved = resolveStateDir({} as NodeJS.ProcessEnv, () => root);
+      expect(resolved).toBe(newDir);
+    });
+  });
+
+  it("uses the new state dir for a fresh install when nothing exists yet", async () => {
+    await withTempDir({ prefix: "openclaw-state-fresh-" }, async (root) => {
+      const resolved = resolveStateDir({} as NodeJS.ProcessEnv, () => root);
+      expect(resolved).toBe(path.join(root, ".quiet-core-bot"));
+    });
+  });
+
+  it("classifies state dir initialization by substantive marker dirs", async () => {
+    await withTempDir({ prefix: "openclaw-state-markers-" }, async (root) => {
+      const empty = path.join(root, "empty");
+      const configOnly = path.join(root, "config-only");
+      const withWorkspace = path.join(root, "with-workspace");
+      await fs.mkdir(empty, { recursive: true });
+      await fs.mkdir(configOnly, { recursive: true });
+      await fs.writeFile(path.join(configOnly, "quiet-core-bot.json"), "{}", "utf-8");
+      await fs.mkdir(path.join(withWorkspace, "workspace"), { recursive: true });
+
+      expect(isInitializedStateDir(empty)).toBe(false);
+      expect(isInitializedStateDir(configOnly)).toBe(false);
+      expect(isInitializedStateDir(withWorkspace)).toBe(true);
+      expect(isInitializedStateDir(path.join(root, "missing"))).toBe(false);
     });
   });
 
