@@ -1,4 +1,4 @@
-# OpenClaw App SDK Completeness
+# Quiet Core bot App SDK Completeness
 
 Use this rubric when assigning category Completeness scores for the
 `openclaw-app-sdk` surface.

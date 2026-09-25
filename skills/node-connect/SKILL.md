@@ -1,11 +1,11 @@
 ---
 name: node-connect
-description: "Diagnose OpenClaw Android, iOS, or macOS node pairing, QR/setup code, route, auth, and connection failures."
+description: "Diagnose Quiet Core bot Android, iOS, or macOS node pairing, QR/setup code, route, auth, and connection failures."
 ---
 
 # Node Connect
 
-Goal: find the one real route from node -> gateway, verify OpenClaw is advertising that route, then fix pairing/auth.
+Goal: find the one real route from node -> gateway, verify Quiet Core bot is advertising that route, then fix pairing/auth.
 
 ## Topology first
 
@@ -30,7 +30,7 @@ Ask for:
 - which route they intend: same machine, same LAN, Tailscale tailnet, or public URL
 - whether they used QR/setup code or manual host/port
 - the exact app text/status/error, quoted exactly if possible
-- whether `openclaw devices list` shows a pending pairing request
+- whether `quiet-core-bot devices list` shows a pending pairing request
 
 Do not guess from `can't connect`.
 
@@ -39,19 +39,19 @@ Do not guess from `can't connect`.
 Prefer `openclaw qr --json`. It uses the same setup-code payload Android scans.
 
 ```bash
-openclaw config get gateway.mode
-openclaw config get gateway.bind
-openclaw config get gateway.tailscale.mode
-openclaw config get gateway.remote.url
-openclaw config get gateway.auth.mode
-openclaw config get gateway.auth.allowTailscale
-openclaw config get plugins.entries.device-pair.config.publicUrl
+quiet-core-bot config get gateway.mode
+quiet-core-bot config get gateway.bind
+quiet-core-bot config get gateway.tailscale.mode
+quiet-core-bot config get gateway.remote.url
+quiet-core-bot config get gateway.auth.mode
+quiet-core-bot config get gateway.auth.allowTailscale
+quiet-core-bot config get plugins.entries.device-pair.config.publicUrl
 openclaw qr --json
-openclaw devices list
-openclaw nodes status
+quiet-core-bot devices list
+quiet-core-bot nodes status
 ```
 
-If this OpenClaw instance is pointed at a remote gateway, also run:
+If this Quiet Core bot instance is pointed at a remote gateway, also run:
 
 ```bash
 openclaw qr --remote --json
@@ -103,9 +103,9 @@ If the app says `pairing required`:
 - approve the pending device
 
 ```bash
-openclaw devices list
-openclaw devices approve --latest   # preview only; copy the requestId from output
-openclaw devices approve <requestId>
+quiet-core-bot devices list
+quiet-core-bot devices approve --latest   # preview only; copy the requestId from output
+quiet-core-bot devices approve <requestId>
 ```
 
 If the app says `bootstrap token invalid or expired`:
@@ -126,7 +126,7 @@ If the app says `unauthorized`:
 - Remote setup + setup/manual uses private LAN IP: wrong.
 - Tailnet setup + gateway advertises LAN IP instead of MagicDNS / tailnet route: wrong.
 - Public URL set but QR still advertises something else: inspect `urlSource`; config is not what you think.
-- `openclaw devices list` shows pending requests: stop changing network config and approve first.
+- `quiet-core-bot devices list` shows pending requests: stop changing network config and approve first.
 
 ## Fix style
 

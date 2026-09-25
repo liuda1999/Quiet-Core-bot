@@ -1,11 +1,11 @@
 ---
 name: clawdtributor
-description: "Use for OpenClaw clawtributors PR/issue triage: Discrawl discovery, live-open rechecks, deep review, topic grouping, and compact @handle/LOC/type/blast/verification summaries."
+description: "Use for Quiet Core bot clawtributors PR/issue triage: Discrawl discovery, live-open rechecks, deep review, topic grouping, and compact @handle/LOC/type/blast/verification summaries."
 ---
 
 # Clawdtributor
 
-Use for the `#clawtributors` queue: Discord-discovered OpenClaw PRs/issues that need live GitHub status plus maintainer-quality review.
+Use for the `#clawtributors` queue: Discord-discovered Quiet Core bot PRs/issues that need live GitHub status plus maintainer-quality review.
 
 ## Compose with other skills
 

@@ -1,11 +1,11 @@
 ---
 name: crabbox
-description: Use the Crabbox wrapper for OpenClaw remote validation across Linux, macOS, Windows, and WSL2, including delegated Blacksmith Testbox proof. Report the actual provider and id.
+description: Use the Crabbox wrapper for Quiet Core bot remote validation across Linux, macOS, Windows, and WSL2, including delegated Blacksmith Testbox proof. Report the actual provider and id.
 ---
 
 # Crabbox
 
-Use the Crabbox wrapper when OpenClaw needs remote Linux proof for broad tests,
+Use the Crabbox wrapper when Quiet Core bot needs remote Linux proof for broad tests,
 CI-parity checks, secrets, hosted services, Docker/E2E/package lanes, warmed
 reusable boxes, sync timing, logs/results, cache inspection, or lease cleanup.
 
@@ -16,7 +16,7 @@ Crabbox is the transport/orchestration surface. The actual backend can be:
 - Blacksmith Testbox through Crabbox: delegated provider,
   `provider=blacksmith-testbox`, ids like `tbx_...`, `syncDelegated=true`
 
-For OpenClaw maintainer broad `pnpm` gates, Blacksmith Testbox through the
+For Quiet Core bot maintainer broad `pnpm` gates, Blacksmith Testbox through the
 Crabbox wrapper is acceptable and often preferred when the standing Testbox
 rules apply. Do not describe those runs as "AWS Crabbox"; report them as
 Testbox-through-Crabbox with the `tbx_...` id and Actions run.
@@ -24,7 +24,7 @@ Testbox-through-Crabbox with the `tbx_...` id and Actions run.
 Use the repo `.crabbox.yaml` brokered AWS path when the task specifically needs
 direct AWS Crabbox behavior, persistent direct-provider leases, `--fresh-pr`,
 `--full-resync`, environment forwarding, capture/download support, or provider
-comparison. Use `--provider blacksmith-testbox` when the task needs OpenClaw
+comparison. Use `--provider blacksmith-testbox` when the task needs Quiet Core bot
 maintainer Testbox proof, prepared CI environment, broad/heavy pnpm gates, or
 the user asks for Testbox/Blacksmith.
 
@@ -41,7 +41,7 @@ pnpm crabbox:run -- --help | sed -n '1,120p'
 ../crabbox/bin/crabbox webvnc --help
 ```
 
-- OpenClaw scripts prefer `../crabbox/bin/crabbox` when present. The user PATH
+- Quiet Core bot scripts prefer `../crabbox/bin/crabbox` when present. The user PATH
   shim can be stale.
 - Check `.crabbox.yaml` for direct-provider defaults. Omitting `--provider`
   means brokered AWS for normal Linux/macOS paths; the wrapper selects Azure
@@ -50,8 +50,8 @@ pnpm crabbox:run -- --help | sed -n '1,120p'
 - The brokered AWS default is a Linux developer image in `eu-west-1`; the repo
   config pins hot `eu-west-1a/b/c` placement so Fast Snapshot Restore can apply.
   If warmup drifts well past the minute-scale path, verify image promotion,
-  region/AZ placement, and FSR state before blaming OpenClaw.
-- For broad OpenClaw maintainer `pnpm` gates, prefer the repo wrapper with
+  region/AZ placement, and FSR state before blaming Quiet Core bot.
+- For broad Quiet Core bot maintainer `pnpm` gates, prefer the repo wrapper with
   `--provider blacksmith-testbox` or the repo Testbox helpers when the standing
   Testbox policy applies.
 - Cold Testbox acquisition and hydration often take tens of seconds. When broad
@@ -87,7 +87,7 @@ pnpm crabbox:run -- --help | sed -n '1,120p'
 
 ## macOS And Windows Targets
 
-Use these only when the task needs an existing non-Linux host. OpenClaw broad
+Use these only when the task needs an existing non-Linux host. Quiet Core bot broad
 Linux validation uses the repo Crabbox config unless a provider is explicitly
 requested.
 
@@ -120,7 +120,7 @@ crabbox admin hosts allocate --provider aws --target macos --region eu-west-1 --
 CRABBOX_MACOS_TYPES=all scripts/macos-host-region-preflight.sh
 ```
 
-Do not silently substitute AWS macOS for normal OpenClaw Linux proof. Report
+Do not silently substitute AWS macOS for normal Quiet Core bot Linux proof. Report
 paid-host blockers as quota, IAM, coordinator deployment, or host availability
 instead of falling back to local macOS.
 
@@ -204,7 +204,7 @@ cleanup when a run fails, is interrupted, or the command output is unclear:
 
 ## Blacksmith Testbox Through Crabbox
 
-Use this for OpenClaw maintainer broad/heavy `pnpm` gates when the prepared CI
+Use this for Quiet Core bot maintainer broad/heavy `pnpm` gates when the prepared CI
 environment is the right proof surface:
 
 ```sh
@@ -339,7 +339,7 @@ opening a PR for a user-visible bug.
 
 When the user says "test in Crabbox", do not simply copy tests to the remote
 box and run them there. Crabbox is for remote real-scenario proof: copy or
-install OpenClaw as the user would, run the same setup/update/CLI/Gateway/API
+install Quiet Core bot as the user would, run the same setup/update/CLI/Gateway/API
 call that failed, and capture behavior from that entrypoint. For regressions or
 bug reports, prove the broken state first when feasible, then run the same
 scenario after the fix.
@@ -549,7 +549,7 @@ Common Crabbox-only failures:
 - Provider missing or old CLI: use `../crabbox/bin/crabbox` from the sibling
   repo, or update/install Crabbox before retrying.
 - Bad local config: inspect `.crabbox.yaml`, `crabbox config show`, and
-  `crabbox whoami`; normal OpenClaw proof should use brokered AWS without
+  `crabbox whoami`; normal Quiet Core bot proof should use brokered AWS without
   asking for cloud keys.
 - Slug/claim confusion: use the raw `cbx_...` / `tbx_...` id, or run one-shot
   without `--id`.
@@ -638,7 +638,7 @@ blacksmith auth login --non-interactive --organization openclaw
 
 ## Brokered AWS
 
-Use AWS for normal OpenClaw remote proof. The repo `.crabbox.yaml` already
+Use AWS for normal Quiet Core bot remote proof. The repo `.crabbox.yaml` already
 selects brokered AWS, so omit `--provider` unless you are testing a different
 provider deliberately.
 
@@ -666,11 +666,11 @@ crabbox whoami
 
 - If broker auth is missing, run `crabbox login --url https://crabbox.openclaw.ai --provider aws`.
 - If the CLI asks for `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, or AWS
-  profile setup during normal OpenClaw validation, assume the agent selected
+  profile setup during normal Quiet Core bot validation, assume the agent selected
   the wrong path. Use brokered `crabbox login` or an existing brokered lease
   before asking the user for cloud credentials.
 - Ask for AWS keys only for explicit direct-provider/account administration,
-  not for normal brokered OpenClaw proof.
+  not for normal brokered Quiet Core bot proof.
 - Trusted automation may still use
   `printf '%s' "$CRABBOX_COORDINATOR_TOKEN" | crabbox login --url https://crabbox.openclaw.ai --provider aws --token-stdin`.
 
@@ -681,7 +681,7 @@ macOS config lives at:
 ```
 
 It should include `broker.url`, `broker.token`, and usually `provider: aws`
-for OpenClaw lanes. Let that config drive normal validation.
+for Quiet Core bot lanes. Let that config drive normal validation.
 
 ### Interactive Desktop / WebVNC
 
@@ -735,6 +735,6 @@ Use `--market spot|on-demand` only on AWS warmup/one-shot runs.
 
 ## Boundary
 
-Do not add OpenClaw-specific setup to Crabbox itself. Put repo setup in the
+Do not add Quiet Core bot-specific setup to Crabbox itself. Put repo setup in the
 hydration workflow and keep Crabbox generic around lease, sync, command
 execution, logs/results, timing, and cleanup.

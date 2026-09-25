@@ -1,9 +1,9 @@
 ---
 name: openclaw-ghsa-maintainer
-description: "Inspect, patch, validate, publish, or confirm OpenClaw GHSA security advisories and private-fork state."
+description: "Inspect, patch, validate, publish, or confirm Quiet Core bot GHSA security advisories and private-fork state."
 ---
 
-# OpenClaw GHSA Maintainer
+# Quiet Core bot GHSA Maintainer
 
 Use this skill for repo security advisory workflow only. Keep general release work in `release-openclaw-maintainer`.
 
@@ -19,7 +19,7 @@ Fetch the current advisory and the latest published npm version:
 
 ```bash
 gh api /repos/openclaw/openclaw/security-advisories/<GHSA>
-npm view openclaw version --userconfig "$(mktemp)"
+npm view quiet-core-bot version --userconfig "$(mktemp)"
 ```
 
 Use the fetch output to confirm the advisory state, linked private fork, and vulnerability payload shape before patching.

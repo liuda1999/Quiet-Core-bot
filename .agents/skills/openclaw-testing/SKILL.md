@@ -1,9 +1,9 @@
 ---
 name: openclaw-testing
-description: Choose, run, rerun, or debug OpenClaw tests, CI checks, Docker E2E lanes, release validation, and the cheapest safe verification path.
+description: Choose, run, rerun, or debug Quiet Core bot tests, CI checks, Docker E2E lanes, release validation, and the cheapest safe verification path.
 ---
 
-# OpenClaw Testing
+# Quiet Core bot Testing
 
 Use this skill when deciding what to test, debugging failures, rerunning CI,
 or validating a change without wasting hours.
@@ -155,7 +155,7 @@ dispatches:
   `include_android=true`
 - `Plugin Prerelease` for release-only plugin static checks, extension shards,
   the release-only `agentic-plugins` shard, and plugin product Docker lanes
-- `OpenClaw Release Checks` for install smoke, cross-OS release checks, live and
+- `Quiet Core bot Release Checks` for install smoke, cross-OS release checks, live and
   E2E checks, Docker release-path suites, OpenWebUI, QA Lab, fast Matrix, and
   Telegram release lanes
 - optional post-publish Telegram E2E when a package spec is supplied
@@ -216,7 +216,7 @@ workflow only spends setup and queue time on that suite.
 
 After release-candidate validation or before a release decision, record the
 important run ids in the public `openclaw/releases` evidence ledger.
-Use the manual `OpenClaw Release Evidence`
+Use the manual `Quiet Core bot Release Evidence`
 (`openclaw-release-evidence.yml`) workflow there. It writes durable summaries
 under `evidence/<release-id>/` and commits:
 
@@ -240,7 +240,7 @@ config in git; raw logs stay in Actions artifacts.
 
 When `Full Release Validation` completes and `OPENCLAW_RELEASES_DISPATCH_TOKEN`
 is configured in the source repo, it requests the public
-`OpenClaw Release Evidence From Full Validation` workflow. That workflow reads
+`Quiet Core bot Release Evidence From Full Validation` workflow. That workflow reads
 the parent full-validation run, extracts the child CI/release-checks/Telegram
 run ids from the parent logs, and opens the evidence PR automatically. If the
 token is absent or the run predates this wiring, trigger that workflow manually
@@ -248,7 +248,7 @@ with the full-validation run id.
 
 ### Release Checks
 
-`OpenClaw Release Checks` (`openclaw-release-checks.yml`) is the release child
+`Quiet Core bot Release Checks` (`openclaw-release-checks.yml`) is the release child
 workflow. It is broader than normal CI but narrower than the umbrella because it
 does not dispatch the separate full normal CI child. It runs Package Acceptance
 with artifact-native delta lanes and `telegram_mode=mock-openai`, so the release
@@ -270,7 +270,7 @@ gh workflow run openclaw-release-checks.yml \
 
 Release-check rerun groups are `all`, `install-smoke`, `cross-os`, `live-e2e`,
 `package`, `qa`, `qa-parity`, and `qa-live`.
-`OpenClaw Release Checks` uses the trusted workflow ref to resolve the selected
+`Quiet Core bot Release Checks` uses the trusted workflow ref to resolve the selected
 ref once as `release-package-under-test` and passes that artifact into cross-OS
 release checks, release-path Docker live/E2E checks, and Package Acceptance.
 When `Full Release Validation` dispatches release checks, it passes the requested
@@ -299,13 +299,13 @@ aliases such as `plugins-runtime-core`, `plugins-runtime`, and
 
 The release QA parity box is internally split into candidate and baseline lane
 jobs, followed by a report job that downloads both artifacts and runs
-`pnpm openclaw qa parity-report`. For parity failures, inspect the failed lane
+`pnpm quiet-core-bot qa parity-report`. For parity failures, inspect the failed lane
 first; inspect the report job when both lane summaries exist but the comparison
 fails.
 
 ### QA Lab Matrix Profiles
 
-`pnpm openclaw qa matrix` defaults to `--profile all`. Do not assume the CLI
+`pnpm quiet-core-bot qa matrix` defaults to `--profile all`. Do not assume the CLI
 default is the fast release path. Use explicit profiles:
 
 - `--profile fast`: release-critical Matrix transport contract; add
@@ -317,13 +317,13 @@ default is the fast release path. Use explicit profiles:
 
 `QA-Lab - All Lanes` uses explicit fast Matrix on scheduled runs; manual
 dispatch keeps `matrix_profile=all` as the default and always shards that full
-Matrix selection. `OpenClaw Release Checks` uses explicit fast Matrix; run the
+Matrix selection. `Quiet Core bot Release Checks` uses explicit fast Matrix; run the
 all-lanes workflow when release investigation needs full Matrix media/E2EE
 inventory.
 
 ### Reusable Live/E2E Checks
 
-`OpenClaw Live And E2E Checks (Reusable)`
+`Quiet Core bot Live And E2E Checks (Reusable)`
 (`openclaw-live-and-e2e-checks-reusable.yml`) is the preferred entry point for
 targeted live, Docker, model, and E2E proof. Inputs let you turn off unrelated
 lanes:
@@ -510,13 +510,13 @@ Npm candidate selection:
   question is explicitly the current stable dist-tag; otherwise pin the exact
   version.
 - `source=npm` only accepts registry specs for `openclaw@beta`,
-  `openclaw@latest`, or exact OpenClaw release versions. Do not pass semver
+  `openclaw@latest`, or exact Quiet Core bot release versions. Do not pass semver
   ranges, git refs, file paths, tarball URLs, or plugin package names there.
 - If the candidate is a tarball URL, use `source=url` with `package_sha256`. If
   it is an Actions tarball artifact, use `source=artifact`. If it is an
   unpublished source candidate, use `source=ref` with a trusted ref or SHA.
 - Package acceptance tests exactly the selected package candidate. Do not apply
-  `openclaw update --channel beta` fallback semantics here; if `beta` is absent,
+  `quiet-core-bot update --channel beta` fallback semantics here; if `beta` is absent,
   stale, older than `latest`, or points at a broken tarball, report that tag
   state instead of silently testing `latest`.
 
@@ -548,7 +548,7 @@ Ref model:
 - `workflow_ref` is the trusted harness/script ref passed to reusable Docker
   E2E.
 - `package_ref` is the source ref to build when `source=ref`. It can be an
-  older branch/tag/SHA as long as it is reachable from an OpenClaw branch or
+  older branch/tag/SHA as long as it is reachable from an Quiet Core bot branch or
   release tag.
 
 Example: run latest package acceptance harness against an older trusted commit:
@@ -591,7 +591,7 @@ Skill install proof: use `pnpm test:docker:skill-install` or targeted
 `docker_lanes=skill-install` for live ClawHub skill-install validation. The
 lane installs the package tarball in a bare runner, keeps
 `skills.install.allowUploadedArchives=false`, resolves the current live slug
-from `openclaw skills search`, installs it, and verifies `.clawhub` origin/lock
+from `quiet-core-bot skills search`, installs it, and verifies `.clawhub` origin/lock
 metadata. Prefer this checked-in script over inline heredoc Testbox recipes.
 
 ## Cheap Docker Reruns

@@ -1,11 +1,11 @@
 ---
 name: security-triage
-description: "Triage OpenClaw security advisories, drafts, and GHSA reports with shipped-tag and trust-model proof."
+description: "Triage Quiet Core bot security advisories, drafts, and GHSA reports with shipped-tag and trust-model proof."
 ---
 
 # Security Triage
 
-Use when reviewing OpenClaw security advisories, drafts, or GHSA reports.
+Use when reviewing Quiet Core bot security advisories, drafts, or GHSA reports.
 
 Goal: high-confidence maintainers' triage without over-closing real issues or shipping unnecessary regressions.
 
@@ -29,7 +29,7 @@ Before answering:
 3. Inspect the exact implicated code paths.
 4. Verify shipped state:
    - `git tag --sort=-creatordate | head`
-   - `npm view openclaw version --userconfig "$(mktemp)"`
+   - `npm view quiet-core-bot version --userconfig "$(mktemp)"`
    - `git tag --contains <fix-commit>`
    - if needed: `git show <tag>:path/to/file`
 5. Search for canonical overlap:
@@ -131,7 +131,7 @@ Tell the user that the clipboard now contains the proposed response for that adv
 gh api /repos/openclaw/openclaw/security-advisories/<GHSA>
 gh api /repos/openclaw/openclaw/security-advisories --paginate
 git tag --sort=-creatordate | head -n 20
-npm view openclaw version --userconfig "$(mktemp)"
+npm view quiet-core-bot version --userconfig "$(mktemp)"
 git tag --contains <commit>
 git show <tag>:<path>
 gh search issues --repo openclaw/openclaw --match title,body,comments -- "<terms>"

@@ -1,9 +1,9 @@
 ---
 name: openclaw-secret-scanning-maintainer
-description: Triage, redact, clean up, and resolve OpenClaw GitHub Secret Scanning alerts in issues or PRs.
+description: Triage, redact, clean up, and resolve Quiet Core bot GitHub Secret Scanning alerts in issues or PRs.
 ---
 
-# OpenClaw Secret Scanning Maintainer
+# Quiet Core bot Secret Scanning Maintainer
 
 **Maintainer-only.** This skill requires repo admin / maintainer permissions to edit or delete other users' comments and resolve secret scanning alerts.
 

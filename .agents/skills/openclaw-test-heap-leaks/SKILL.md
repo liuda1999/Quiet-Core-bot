@@ -1,9 +1,9 @@
 ---
 name: openclaw-test-heap-leaks
-description: Investigate OpenClaw pnpm test memory growth, Vitest OOMs, RSS spikes, and heap snapshot deltas.
+description: Investigate Quiet Core bot pnpm test memory growth, Vitest OOMs, RSS spikes, and heap snapshot deltas.
 ---
 
-# OpenClaw Test Heap Leaks
+# Quiet Core bot Test Heap Leaks
 
 Use this skill for test-memory investigations. Do not guess from RSS alone when heap snapshots are available. Treat snapshot-name deltas as triage evidence, not proof, until retainers or dominators support the call.
 

@@ -1,6 +1,6 @@
 ---
 name: tag-duplicate-prs-issues
-description: Use gitcrawl to search duplicate OpenClaw PRs/issues, group related work in prtags, and sync duplicate state to GitHub.
+description: Use gitcrawl to search duplicate Quiet Core bot PRs/issues, group related work in prtags, and sync duplicate state to GitHub.
 ---
 
 # Tag Duplicate PRs and Issues
@@ -206,7 +206,7 @@ Record:
 
 ## Step 2: Search Broadly With Gitcrawl
 
-Use `gitcrawl` first because it is the local OpenClaw history and clustering source.
+Use `gitcrawl` first because it is the local Quiet Core bot history and clustering source.
 Do not switch to broad live GitHub search unless `gitcrawl` is missing data, stale, or failing.
 
 Start with the target and nearby threads:

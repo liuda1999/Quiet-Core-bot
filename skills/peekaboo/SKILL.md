@@ -31,19 +31,19 @@ cache and support `--json`/`-j` for scripting. Run `peekaboo` or
 `peekaboo <cmd> --help` for flags; `peekaboo --version` prints build metadata.
 Tip: run via `polter peekaboo` to ensure fresh builds.
 
-## OpenClaw Bridge
+## Quiet Core bot Bridge
 
-The OpenClaw macOS app hosts Peekaboo Bridge at
-`~/Library/Application Support/OpenClaw/bridge.sock`. Before running Peekaboo
-from OpenClaw, select that socket so the CLI uses the app's Screen Recording
+The Quiet Core bot macOS app hosts Peekaboo Bridge at
+`~/Library/Application Support/Quiet Core bot/bridge.sock`. Before running Peekaboo
+from Quiet Core bot, select that socket so the CLI uses the app's Screen Recording
 and Accessibility grants instead of starting its standalone daemon:
 
 ```bash
-export PEEKABOO_BRIDGE_SOCKET="${PEEKABOO_BRIDGE_SOCKET:-$HOME/Library/Application Support/OpenClaw/bridge.sock}"
+export PEEKABOO_BRIDGE_SOCKET="${PEEKABOO_BRIDGE_SOCKET:-$HOME/Library/Application Support/Quiet Core bot/bridge.sock}"
 ```
 
 Confirm routing with `peekaboo bridge status --json`; `hostKind` must be `gui`
-and the socket path must end in `OpenClaw/bridge.sock`.
+and the socket path must end in `Quiet Core bot/bridge.sock`.
 
 ## Features (all CLI capabilities, excluding agent/MCP)
 
@@ -201,7 +201,7 @@ peekaboo type "Line 1\nLine 2" --delay 10
 Notes
 
 - Requires Screen Recording + Accessibility permissions.
-- In OpenClaw subprocesses, set `PEEKABOO_BRIDGE_SOCKET` as shown above. Do not
+- In Quiet Core bot subprocesses, set `PEEKABOO_BRIDGE_SOCKET` as shown above. Do not
   pass `--no-remote` unless the calling process has its own Screen Recording
   grant.
 - Diagnose subprocess capture failures with `peekaboo bridge status --json`,

@@ -1,4 +1,4 @@
-# OpenClaw · docker-compose override TEMPLATE
+# Quiet Core bot · docker-compose override TEMPLATE
 #
 # Copy to `docker-compose.override.yml` (same directory as docker-compose.yml) and
 # edit only what you need — Compose auto-loads that filename, so the base file

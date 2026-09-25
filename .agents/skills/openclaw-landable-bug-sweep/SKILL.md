@@ -1,11 +1,11 @@
 ---
 name: openclaw-landable-bug-sweep
-description: "Find or repair small high-confidence non-SDK-boundary OpenClaw bugfix PRs until five are landable."
+description: "Find or repair small high-confidence non-SDK-boundary Quiet Core bot bugfix PRs until five are landable."
 ---
 
-# OpenClaw Landable Bug Sweep
+# Quiet Core bot Landable Bug Sweep
 
-Autonomous maintainer workflow for producing five landable OpenClaw bugfix PR URLs.
+Autonomous maintainer workflow for producing five landable Quiet Core bot bugfix PR URLs.
 Use for broad issue/PR sweeps where the bar is high and the output is PRs, not notes.
 Do not use for plugin SDK/API boundary work; those need separate architecture review.
 

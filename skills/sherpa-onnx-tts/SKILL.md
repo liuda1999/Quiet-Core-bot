@@ -63,8 +63,8 @@ Local TTS using the sherpa-onnx offline CLI.
 
 ## Install
 
-1. Download the runtime for your OS (extracts into `$OPENCLAW_STATE_DIR/tools/sherpa-onnx-tts/runtime`, default `~/.openclaw/tools/sherpa-onnx-tts/runtime`)
-2. Download a voice model (extracts into `$OPENCLAW_STATE_DIR/tools/sherpa-onnx-tts/models`, default `~/.openclaw/tools/sherpa-onnx-tts/models`)
+1. Download the runtime for your OS (extracts into `$OPENCLAW_STATE_DIR/tools/sherpa-onnx-tts/runtime`, default `~/.quiet-core-bot/tools/sherpa-onnx-tts/runtime`)
+2. Download a voice model (extracts into `$OPENCLAW_STATE_DIR/tools/sherpa-onnx-tts/models`, default `~/.quiet-core-bot/tools/sherpa-onnx-tts/models`)
 
 Resolve the active state directory first:
 
@@ -72,7 +72,7 @@ Resolve the active state directory first:
 STATE_DIR="${OPENCLAW_STATE_DIR:-$HOME/.openclaw}"
 ```
 
-Then write those resolved paths into the active OpenClaw config file (`$OPENCLAW_CONFIG_PATH`, default `~/.openclaw/openclaw.json`):
+Then write those resolved paths into the active Quiet Core bot config file (`$OPENCLAW_CONFIG_PATH`, default `~/.quiet-core-bot/quiet-core-bot.json`):
 
 ```json5
 {

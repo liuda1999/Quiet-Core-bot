@@ -39,7 +39,7 @@ Use this skill when the user asks about prior chats, parent conversations, or hi
 ## Location
 
 Session logs live under the active state directory:
-`$OPENCLAW_STATE_DIR/agents/<agentId>/sessions/` (default: `~/.openclaw/agents/<agentId>/sessions/`).
+`$OPENCLAW_STATE_DIR/agents/<agentId>/sessions/` (default: `~/.quiet-core-bot/agents/<agentId>/sessions/`).
 Use the `agent=<id>` value from the system prompt Runtime line.
 
 - **`sessions.json`** - Index mapping session keys to session IDs

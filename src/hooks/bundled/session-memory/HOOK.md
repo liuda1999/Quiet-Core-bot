@@ -9,7 +9,7 @@ metadata:
         "emoji": "💾",
         "events": ["command:new", "command:reset"],
         "requires": { "config": ["workspace.dir"] },
-        "install": [{ "id": "bundled", "kind": "bundled", "label": "Bundled with OpenClaw" }],
+        "install": [{ "id": "bundled", "kind": "bundled", "label": "Bundled with Quiet Core bot" }],
       },
   }
 ---
@@ -86,7 +86,7 @@ Example configuration:
 
 The hook automatically:
 
-- Uses your workspace directory (`~/.openclaw/workspace` by default)
+- Uses your workspace directory (`~/.quiet-core-bot/workspace` by default)
 - Uses timestamp slugs by default so `/new` and `/reset` stay fast on message channels
 - Runs memory capture in the background so reset acknowledgements can return immediately
 - Uses your configured LLM for slug generation only when `llmSlug` is `true`
@@ -97,7 +97,7 @@ The hook automatically:
 To disable this hook:
 
 ```bash
-openclaw hooks disable session-memory
+quiet-core-bot hooks disable session-memory
 ```
 
 Or remove it from your config:
