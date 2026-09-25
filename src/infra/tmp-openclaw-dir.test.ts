@@ -144,7 +144,7 @@ function resolveWithMocks(params: {
   return { resolved, accessSync, lstatSync: wrappedLstatSync, mkdirSync, tmpdir };
 }
 
-describe("resolvePreferredQuiet Core botTmpDir", () => {
+describe("resolvePreferredOpenClawTmpDir", () => {
   it("prefers /tmp/openclaw when it already exists and is writable", () => {
     const lstatSync: NonNullable<TmpDirOptions["lstatSync"]> = vi.fn(() => ({
       isDirectory: () => true,

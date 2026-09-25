@@ -196,7 +196,7 @@ describe("scripts/lib/plugin-prerelease-test-plan.mjs", () => {
     expect(walkScript).toContain("tts.providers");
     expect(walkScript).toContain("plugins.uiDescriptors");
     expect(walkScript).toContain("loadCallGatewayModule(options.runner)");
-    expect(walkScript).toContain("usesBuiltQuiet Core botEntry(runner)");
+    expect(walkScript).toContain("usesBuiltOpenClawEntry(runner)");
     expect(walkScript).toContain('"gateway"');
     expect(walkScript).toContain('"call"');
     expect(walkScript).not.toContain("src/gateway/call.ts");

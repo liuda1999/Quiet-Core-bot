@@ -4,7 +4,7 @@
 import { describe, expect, it } from "vitest";
 import { resolveOpenClawAgentDir } from "./agent-dir-compat.js";
 
-describe("resolveQuiet Core botAgentDir", () => {
+describe("resolveOpenClawAgentDir", () => {
   it("keeps the shipped Pi env alias for deprecated plugin SDK callers", () => {
     expect(
       resolveOpenClawAgentDir({

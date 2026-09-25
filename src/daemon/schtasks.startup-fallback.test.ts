@@ -78,7 +78,7 @@ const {
 } = await import("./schtasks.js");
 
 function resolveStartupEntryPath(env: Record<string, string>, extension = "cmd") {
-  const taskName = env.OPENCLAW_WINDOWS_TASK_NAME ?? "Quiet Core bot Gateway";
+  const taskName = env.OPENCLAW_WINDOWS_TASK_NAME ?? "Quiet Core Gateway";
   return path.join(
     env.APPDATA,
     "Microsoft",
@@ -223,7 +223,16 @@ function installNodeScheduledTask(env: Record<string, string>, stdout = new Pass
       OPENCLAW_WINDOWS_TASK_NAME: "Quiet Core bot Node",
     },
     stdout,
-    programArguments: ["node", "openclaw", "node", "run", "--host", "127.0.0.1", "--port", "18789"],
+    programArguments: [
+      "node",
+      "quiet-core-bot",
+      "node",
+      "run",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "18789",
+    ],
     environment: {
       OPENCLAW_SERVICE_KIND: "node",
       OPENCLAW_GATEWAY_PORT: "18789",

@@ -8,7 +8,7 @@ afterEach(() => {
   document.querySelector(".control-ui-floating-tooltip")?.remove();
 });
 
-describe("Quiet Core botApp tooltip lifecycle", () => {
+describe("OpenClawApp tooltip lifecycle", () => {
   it("clears the active floating tooltip when the app disconnects", async () => {
     const { OpenClawApp } = await import("./app.ts");
     const app = document.createElement("quiet-core-bot-app") as InstanceType<typeof OpenClawApp>;

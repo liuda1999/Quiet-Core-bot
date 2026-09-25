@@ -46,7 +46,7 @@ const ACP_SESSION_KEY = "agent:copilot:acp:86b7b5af-3773-4a56-b244-069d6c5d3db9"
 const NON_ACP_SESSION_KEY = "agent:main:main";
 
 /**
- * Build a minimal `Quiet Core botConfig` that mirrors the deployed scenario:
+ * Build a minimal `OpenClawConfig` that mirrors the deployed scenario:
  * - a copilot agent exists in the agents.list
  * - it has NO explicit `agentRuntime.id` policy
  * - no top-level `agents.defaults.agentRuntime` either

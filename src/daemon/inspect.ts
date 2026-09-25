@@ -209,7 +209,13 @@ function isOpenClawGatewayTaskName(name: string): boolean {
   // gateway task is not misidentified as an extra gateway service.
   const stripped = normalized.replace(/^\\+/, "");
   const defaultName = normalizeLowercaseStringOrEmpty(resolveGatewayWindowsTaskName());
-  return stripped === defaultName || /^openclaw gateway \(.+\)$/.test(stripped);
+  if (stripped === defaultName) {
+    return true;
+  }
+  // Historical task names must keep being recognized as managed gateway tasks,
+  // otherwise an installed pre-rebrand task (OpenClaw Gateway) or a
+  // profile-suffixed rebrand task would be reported as a competing extra service.
+  return /^(?:openclaw|quiet core(?: bot)?) gateway(?: \(.+\))?$/.test(stripped);
 }
 
 function tryExtractPlistLabel(contents: string): string | null {

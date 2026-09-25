@@ -110,7 +110,7 @@ function addFakePluginSdkDistExport(root: string, subpath: string): string {
   return distPath;
 }
 
-describe("installQuiet Core botPluginSdkNativeResolver", () => {
+describe("installOpenClawPluginSdkNativeResolver", () => {
   it("resolves installed plugin SDK imports to the dev source root", () => {
     const stableRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-sdk-native-stable-"));
     const devRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-sdk-native-dev-source-"));
@@ -290,7 +290,7 @@ describe("installQuiet Core botPluginSdkNativeResolver", () => {
         'import fs from "node:fs";',
         'import path from "node:path";',
         'import { pathToFileURL } from "node:url";',
-        `import { installQuiet Core botPluginSdkNativeResolver, resetQuiet Core botPluginSdkNativeResolverForTest } from ${JSON.stringify(resolverModuleUrl)};`,
+        `import { installOpenClawPluginSdkNativeResolver, resetOpenClawPluginSdkNativeResolverForTest } from ${JSON.stringify(resolverModuleUrl)};`,
         `const root = ${JSON.stringify(root)};`,
         "const writeJson = (targetPath, value) => {",
         "  fs.mkdirSync(path.dirname(targetPath), { recursive: true });",
@@ -327,14 +327,14 @@ describe("installQuiet Core botPluginSdkNativeResolver", () => {
         '  "import { defineChannelMessageAdapter } from \\"openclaw/plugin-sdk/channel-outbound\\"; export const lazy = defineChannelMessageAdapter();\\n",',
         '  "utf8",',
         ");",
-        "installQuiet Core botPluginSdkNativeResolver({",
+        "installOpenClawPluginSdkNativeResolver({",
         "  modulePath: loaderModulePath,",
         "  pluginModulePath: entryPath,",
         '  pluginSdkResolution: "dist",',
         "});",
         "const module = await import(pathToFileURL(entryPath).href);",
         "const lazy = await module.loadLazy();",
-        "resetQuiet Core botPluginSdkNativeResolverForTest();",
+        "resetOpenClawPluginSdkNativeResolverForTest();",
         "console.log(`${module.eager}:${lazy.lazy}`);",
         "",
       ].join("\n"),

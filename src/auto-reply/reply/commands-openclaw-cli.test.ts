@@ -16,7 +16,7 @@ function setArgv1(value: string): void {
   process.argv.splice(0, process.argv.length, process.execPath, value);
 }
 
-describe("buildCurrentQuiet Core botCliArgv", () => {
+describe("buildCurrentOpenClawCliArgv", () => {
   afterEach(() => {
     process.argv.splice(0, process.argv.length, ...originalArgv);
   });

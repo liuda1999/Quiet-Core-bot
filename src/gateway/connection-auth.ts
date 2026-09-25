@@ -4,7 +4,7 @@ import type { OpenClawConfig } from "../config/types.openclaw.js";
 import { resolveGatewayCredentialsWithSecretInputs } from "./credentials-secret-inputs.js";
 import type { resolveGatewayCredentialsFromConfig } from "./credentials.js";
 
-// Thin public bridge from Quiet Core botConfig-shaped callers to the lower-level
+// Thin public bridge from OpenClawConfig-shaped callers to the lower-level
 // credential resolver. Keep this file policy-free; precedence lives in
 // credentials-secret-inputs and credentials.
 type GatewayCredentialConfigOptions = Parameters<typeof resolveGatewayCredentialsFromConfig>[0];

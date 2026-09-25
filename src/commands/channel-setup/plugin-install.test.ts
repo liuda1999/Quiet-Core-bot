@@ -352,7 +352,7 @@ function requireOptionByValue(options: unknown[], value: string) {
 function expectLoadOpenClawPluginFields(expected: Record<string, unknown>, callIndex = 0) {
   expectRecordFields(
     requireMockCallArg(vi.mocked(loadOpenClawPlugins), callIndex),
-    "loadQuiet Core botPlugins args",
+    "loadOpenClawPlugins args",
     expected,
   );
 }

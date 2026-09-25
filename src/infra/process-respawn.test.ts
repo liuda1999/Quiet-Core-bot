@@ -120,11 +120,11 @@ describe("restartGatewayProcessWithFreshPid", () => {
     expectLaunchdSupervisedWithoutKickstart({ launchJobLabel: "ai.openclaw.gateway" });
   });
 
-  it("launchd supervisor never returns failed regardless of triggerQuiet Core botRestart outcome", () => {
+  it("launchd supervisor never returns failed regardless of triggerOpenClawRestart outcome", () => {
     clearSupervisorHints();
     setPlatform("darwin");
     process.env.OPENCLAW_LAUNCHD_LABEL = "ai.openclaw.gateway";
-    // Even if triggerQuiet Core botRestart *would* fail, launchd path must not call it.
+    // Even if triggerOpenClawRestart *would* fail, launchd path must not call it.
     triggerOpenClawRestartMock.mockReturnValue({
       ok: false,
       method: "launchctl",

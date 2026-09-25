@@ -19,7 +19,7 @@ function writeJson(filePath: string, value: unknown): void {
   fs.writeFileSync(filePath, JSON.stringify(value, null, 2), "utf8");
 }
 
-describe("listQuiet Core botPluginManifestMetadata", () => {
+describe("listOpenClawPluginManifestMetadata", () => {
   afterEach(() => {
     for (const root of tempRoots.splice(0)) {
       fs.rmSync(root, { recursive: true, force: true });

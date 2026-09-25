@@ -162,7 +162,7 @@ description: 'single-quoted'
   });
 });
 
-describe("resolveQuiet Core botMetadata", () => {
+describe("resolveOpenClawMetadata", () => {
   it("extracts quiet-core-bot metadata from parsed frontmatter", () => {
     const frontmatter = {
       name: "test-hook",

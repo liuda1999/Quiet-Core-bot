@@ -105,7 +105,7 @@ describe("relaunchGatewayScheduledTask", () => {
 
     expect(result.ok).toBe(true);
     expect(result.method).toBe("schtasks");
-    expect(result.tried).toContain('schtasks /Run /TN "Quiet Core bot Gateway (work)"');
+    expect(result.tried).toContain('schtasks /Run /TN "Quiet Core Gateway (work)"');
     expect(result.tried).toContain(`${cmdExePath} /d /s /c ${seenCommandArg}`);
     const spawnCall = requireFirstMockCall(spawnMock, "restart helper spawn");
     expect(spawnCall[0]).toBe(cmdExePath);
@@ -126,14 +126,14 @@ describe("relaunchGatewayScheduledTask", () => {
     expect(script).toContain("timeout /t 1 /nobreak >nul");
     expect(script).toContain("gateway-restart.log");
     expect(script).toContain(
-      'quiet-core-bot restart attempt source=windows-task-handoff target="Quiet Core bot Gateway (work)"',
+      'quiet-core-bot restart attempt source=windows-task-handoff target="Quiet Core Gateway (work)"',
     );
     expect(script).toContain(
-      `powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "(Get-ScheduledTask -TaskName 'Quiet Core bot Gateway (work)' -ErrorAction SilentlyContinue).State" 2>nul | findstr /I /C:"Running" >nul 2>&1`,
+      `powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "(Get-ScheduledTask -TaskName 'Quiet Core Gateway (work)' -ErrorAction SilentlyContinue).State" 2>nul | findstr /I /C:"Running" >nul 2>&1`,
     );
-    expect(script).toContain('schtasks /Run /TN "Quiet Core bot Gateway (work)" >>');
+    expect(script).toContain('schtasks /Run /TN "Quiet Core Gateway (work)" >>');
     expect(script.indexOf("powershell.exe -NoProfile")).toBeLessThan(
-      script.indexOf('schtasks /Run /TN "Quiet Core bot Gateway (work)"'),
+      script.indexOf('schtasks /Run /TN "Quiet Core Gateway (work)"'),
     );
     expect(script).toContain('del "%~f0" >nul 2>&1');
   });

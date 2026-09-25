@@ -134,7 +134,7 @@ describe("resolvePluginWebFetchProviders", () => {
         : never,
     );
     loadOpenClawPluginsMock = vi
-      .spyOn(loaderModule, "loadQuiet Core botPlugins")
+      .spyOn(loaderModule, "loadOpenClawPlugins")
       .mockImplementation(() => {
         const registry = createEmptyPluginRegistry();
         registry.webFetchProviders = [createRuntimeWebFetchProvider()];

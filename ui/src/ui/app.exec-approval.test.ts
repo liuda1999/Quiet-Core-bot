@@ -45,7 +45,7 @@ async function createApp(
   return app;
 }
 
-describe("Quiet Core botApp exec approval decisions", () => {
+describe("OpenClawApp exec approval decisions", () => {
   beforeEach(() => {
     vi.stubGlobal("localStorage", createStorageMock());
   });

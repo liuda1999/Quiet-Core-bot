@@ -29,7 +29,7 @@ class MockChildProcess extends EventEmitter {
   stderr = new PassThrough();
 }
 
-describe("Quiet Core botStdioClientTransport", () => {
+describe("OpenClawStdioClientTransport", () => {
   afterEach(() => {
     vi.useRealTimers();
     spawnMock.mockReset();

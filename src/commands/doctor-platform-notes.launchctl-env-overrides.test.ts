@@ -123,7 +123,7 @@ describe("noteMacLaunchctlGatewayEnvOverrides", () => {
   });
 });
 
-describe("noteMacStaleQuiet Core botUpdateLaunchdJobs", () => {
+describe("noteMacStaleOpenClawUpdateLaunchdJobs", () => {
   it("collects stale updater job cleanup guidance on macOS", async () => {
     const findJobs = vi.fn(async () => [
       {

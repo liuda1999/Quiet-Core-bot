@@ -1781,9 +1781,9 @@ describe("package artifact reuse", () => {
     expect(releaseWorkflow).toContain("missing prevalidated Windows installer digests");
     expect(releaseWorkflow).toContain("does not match its pinned digest");
     expect(releaseWorkflow).toContain(
-      "Stable release Quiet Core botCompanion asset names do not exactly match the current contract",
+      "Stable release OpenClawCompanion asset names do not exactly match the current contract",
     );
-    expect(releaseWorkflow).toContain('select(.name | startswith("Quiet Core botCompanion-"))');
+    expect(releaseWorkflow).toContain('select(.name | startswith("OpenClawCompanion-"))');
     expect(releaseWorkflow).toContain(
       "Windows checksum manifest does not exactly match the installer asset contract",
     );
@@ -1833,10 +1833,10 @@ describe("package artifact reuse", () => {
       "CN=Quiet Core bot Foundation, O=Quiet Core bot Foundation, L=Mill Valley, S=California, C=US",
     );
     expect(windowsWorkflow).toContain("has unexpected signer subject");
-    expect(windowsWorkflow).toContain("Quiet Core botCompanion-SHA256SUMS.txt");
+    expect(windowsWorkflow).toContain("OpenClawCompanion-SHA256SUMS.txt");
     expect(windowsWorkflow).toContain("Verify promoted release asset contract");
     expect(windowsWorkflow).toContain(
-      "Promoted Quiet Core botCompanion asset names do not exactly match the current contract",
+      "Promoted OpenClawCompanion asset names do not exactly match the current contract",
     );
     expect(windowsWorkflow).toContain(
       "$targetRelease = gh release view $env:RELEASE_TAG --repo $env:GITHUB_REPOSITORY --json assets",
@@ -1871,7 +1871,7 @@ describe("package artifact reuse", () => {
       "if ($stableRelease -and $sourceRelease.isPrerelease)",
     );
     const rejectUnexpectedTargetAssetsIndex = windowsWorkflow.indexOf(
-      "Target Quiet Core bot release contains unexpected Quiet Core botCompanion assets before upload",
+      "Target Quiet Core bot release contains unexpected OpenClawCompanion assets before upload",
     );
     const uploadAssetsIndex = windowsWorkflow.indexOf("gh release upload $env:RELEASE_TAG");
 

@@ -40,7 +40,7 @@ function firstOpenClawToolsOptions(): { cronSelfRemoveOnlyJobId?: string } | und
     | undefined;
 }
 
-describe("createQuiet Core botCodingTools cron scope", () => {
+describe("createOpenClawCodingTools cron scope", () => {
   beforeEach(() => {
     mocks.createOpenClawToolsOptions.mockClear();
   });

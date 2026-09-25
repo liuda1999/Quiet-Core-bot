@@ -1,6 +1,7 @@
 /** Resolves daemon state, home, and generated task-script paths. */
 import path from "node:path";
 import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { resolveStateDir } from "../config/paths.js";
 import { resolveGatewayProfileSuffix } from "./constants.js";
 
 const windowsAbsolutePath = /^[a-zA-Z]:[\\/]/;
@@ -41,11 +42,13 @@ export function resolveGatewayStateDir(env: Record<string, string | undefined>):
     const home = override.startsWith("~") ? resolveHomeDir(env) : undefined;
     return resolveUserPathWithHome(override, home);
   }
-  const home = resolveHomeDir(env);
+  // Follow the active state directory (`.quiet-core-bot` once it is initialized,
+  // legacy `.openclaw` fallback otherwise) so generated service scripts land in
+  // the same directory the gateway actually reads. Profile suffixes isolate
+  // managed service files without changing that choice.
+  const base = resolveStateDir(env as NodeJS.ProcessEnv);
   const suffix = resolveGatewayProfileSuffix(env.OPENCLAW_PROFILE);
-  // Profile suffixes isolate managed service files while preserving the default
-  // historical ~/.quiet-core-bot state path.
-  return path.join(home, `.openclaw${suffix}`);
+  return suffix ? `${base}${suffix}` : base;
 }
 
 export function resolveGatewayTaskScriptPath(env: Record<string, string | undefined>): string {

@@ -207,11 +207,11 @@ describe("Scheduled Task stop/restart cleanup", () => {
       expect(inspectPortUsage).toHaveBeenCalledTimes(2);
       expect(schtasksCalls).toEqual([
         ["/Query"],
-        ["/Query", "/TN", "Quiet Core bot Gateway"],
-        ["/End", "/TN", "Quiet Core bot Gateway"],
-        ["/Run", "/TN", "Quiet Core bot Gateway"],
+        ["/Query", "/TN", "Quiet Core Gateway"],
+        ["/End", "/TN", "Quiet Core Gateway"],
+        ["/Run", "/TN", "Quiet Core Gateway"],
         ["/Query"],
-        ["/Query", "/TN", "Quiet Core bot Gateway", "/V", "/FO", "LIST"],
+        ["/Query", "/TN", "Quiet Core Gateway", "/V", "/FO", "LIST"],
       ]);
     });
   });
@@ -254,7 +254,7 @@ describe("Scheduled Task stop/restart cleanup", () => {
       await expect(restartScheduledTask({ env, stdout })).rejects.toThrow(
         "schtasks run failed: ERROR: Access is denied.",
       );
-      expect(schtasksCalls.at(-1)).toEqual(["/Run", "/TN", "Quiet Core bot Gateway"]);
+      expect(schtasksCalls.at(-1)).toEqual(["/Run", "/TN", "Quiet Core Gateway"]);
     });
   });
 });

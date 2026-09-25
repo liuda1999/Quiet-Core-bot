@@ -601,7 +601,7 @@ describe("buildServiceEnvironment", () => {
     expect(env.OPENCLAW_SERVICE_KIND).toBe("gateway");
     expect(typeof env.OPENCLAW_SERVICE_VERSION).toBe("string");
     expect(env.OPENCLAW_SYSTEMD_UNIT).toBe("openclaw-gateway.service");
-    expect(env.OPENCLAW_WINDOWS_TASK_NAME).toBe("Quiet Core bot Gateway");
+    expect(env.OPENCLAW_WINDOWS_TASK_NAME).toBe("Quiet Core Gateway");
     expect(env.OPENCLAW_WINDOWS_TASK_HIDDEN_LAUNCHER).toBe("1");
     if (process.platform === "darwin") {
       expect(env.OPENCLAW_LAUNCHD_LABEL).toBe("ai.openclaw.gateway");
@@ -645,7 +645,7 @@ describe("buildServiceEnvironment", () => {
       port: 18789,
       platform: "darwin",
     });
-    expect(env.TMPDIR).toBe(path.join("/Users/user", ".openclaw", "tmp"));
+    expect(env.TMPDIR).toBe(path.resolve("/Users/user", ".quiet-core-bot", "tmp"));
   });
 
   it("uses a canonical system PATH for macOS LaunchAgents", () => {
@@ -681,7 +681,7 @@ describe("buildServiceEnvironment", () => {
       port: 18789,
     });
     expect(env.OPENCLAW_SYSTEMD_UNIT).toBe("openclaw-gateway-work.service");
-    expect(env.OPENCLAW_WINDOWS_TASK_NAME).toBe("Quiet Core bot Gateway (work)");
+    expect(env.OPENCLAW_WINDOWS_TASK_NAME).toBe("Quiet Core Gateway (work)");
     if (process.platform === "darwin") {
       expect(env.OPENCLAW_LAUNCHD_LABEL).toBe("ai.openclaw.work");
     }
@@ -767,7 +767,7 @@ describe("buildServiceEnvironment", () => {
     });
 
     expect(env).not.toHaveProperty("PATH");
-    expect(env.OPENCLAW_WINDOWS_TASK_NAME).toBe("Quiet Core bot Gateway");
+    expect(env.OPENCLAW_WINDOWS_TASK_NAME).toBe("Quiet Core Gateway");
   });
 
   it("prepends extra runtime directories to the gateway service PATH", () => {
@@ -875,7 +875,7 @@ describe("buildNodeServiceEnvironment", () => {
       env: { HOME: "/Users/user", TMPDIR: "/var/folders/xw/abc123/T/" },
       platform: "darwin",
     });
-    expect(env.TMPDIR).toBe(path.join("/Users/user", ".openclaw", "tmp"));
+    expect(env.TMPDIR).toBe(path.resolve("/Users/user", ".quiet-core-bot", "tmp"));
   });
 
   it("falls back to os.tmpdir for node services when TMPDIR is not set on Linux", () => {
@@ -904,7 +904,7 @@ describe("buildNodeServiceEnvironment", () => {
       platform: "win32",
     });
 
-    expect(env.OPENCLAW_WINDOWS_TASK_NAME).toBe("Quiet Core bot Node");
+    expect(env.OPENCLAW_WINDOWS_TASK_NAME).toBe("Quiet Core Node");
     expect(env.OPENCLAW_WINDOWS_TASK_HIDDEN_LAUNCHER).toBe("1");
     expect(env.OPENCLAW_TASK_SCRIPT_NAME).toBe("node.cmd");
   });
@@ -958,17 +958,17 @@ describe("shared Node TLS env defaults matrix", () => {
 describe("resolveGatewayStateDir", () => {
   it("uses the default state dir when no overrides are set", () => {
     const env = { HOME: "/Users/test" };
-    expect(resolveGatewayStateDir(env)).toBe(path.join("/Users/test", ".openclaw"));
+    expect(resolveGatewayStateDir(env)).toBe(path.resolve("/Users/test", ".quiet-core-bot"));
   });
 
   it("appends the profile suffix when set", () => {
     const env = { HOME: "/Users/test", OPENCLAW_PROFILE: "rescue" };
-    expect(resolveGatewayStateDir(env)).toBe(path.join("/Users/test", ".openclaw-rescue"));
+    expect(resolveGatewayStateDir(env)).toBe(path.resolve("/Users/test", ".quiet-core-bot-rescue"));
   });
 
   it("treats default profiles as the base state dir", () => {
     const env = { HOME: "/Users/test", OPENCLAW_PROFILE: "Default" };
-    expect(resolveGatewayStateDir(env)).toBe(path.join("/Users/test", ".openclaw"));
+    expect(resolveGatewayStateDir(env)).toBe(path.resolve("/Users/test", ".quiet-core-bot"));
   });
 
   it("uses OPENCLAW_STATE_DIR when provided", () => {

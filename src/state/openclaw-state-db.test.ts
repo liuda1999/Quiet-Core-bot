@@ -683,8 +683,8 @@ describe("quiet-core-bot state database", () => {
           import os from "node:os";
           import path from "node:path";
           import {
-            closeQuiet Core botStateDatabaseForTest,
-            openQuiet Core botStateDatabase,
+            closeOpenClawStateDatabaseForTest,
+            openOpenClawStateDatabase,
           } from ${JSON.stringify(moduleUrl)};
 
           const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-state-db-relative-"));
@@ -696,14 +696,14 @@ describe("quiet-core-bot state database", () => {
           try {
             process.chdir(firstDir);
             const firstPath = path.resolve("state.sqlite");
-            const first = openQuiet Core botStateDatabase({ path: "state.sqlite" });
+            const first = openOpenClawStateDatabase({ path: "state.sqlite" });
             first.db
               .prepare("INSERT INTO diagnostic_events (scope, event_key, payload_json, created_at) VALUES (?, ?, ?, ?)")
               .run("relative-path", "first", "{}", 1);
 
             process.chdir(secondDir);
             const secondPath = path.resolve("state.sqlite");
-            const second = openQuiet Core botStateDatabase({ path: "state.sqlite" });
+            const second = openOpenClawStateDatabase({ path: "state.sqlite" });
             second.db
               .prepare("INSERT INTO diagnostic_events (scope, event_key, payload_json, created_at) VALUES (?, ?, ?, ?)")
               .run("relative-path", "second", "{}", 2);
@@ -719,7 +719,7 @@ describe("quiet-core-bot state database", () => {
             }));
           } finally {
             process.chdir(previousCwd);
-            closeQuiet Core botStateDatabaseForTest();
+            closeOpenClawStateDatabaseForTest();
           }
         `,
       ],

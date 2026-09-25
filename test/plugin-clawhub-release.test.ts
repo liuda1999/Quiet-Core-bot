@@ -872,7 +872,7 @@ describe("collectPluginClawHubReleasePlan", () => {
   });
 });
 
-describe("buildQuiet Core botReleaseClawHubPlan", () => {
+describe("buildOpenClawReleaseClawHubPlan", () => {
   it("emits a dispatch plan that keeps ClawHub children on the release tag", async () => {
     const repoDir = createTempPluginRepo({
       extraExtensionIds: ["demo-two", "demo-three"],
@@ -1053,7 +1053,7 @@ describe("buildQuiet Core botReleaseClawHubPlan", () => {
   });
 });
 
-describe("buildQuiet Core botReleaseClawHubRuntimeState", () => {
+describe("buildOpenClawReleaseClawHubRuntimeState", () => {
   it("includes the normal ClawHub run in verifier args when the release waits for it", () => {
     const state = buildOpenClawReleaseClawHubRuntimeState({
       repository: "openclaw/openclaw",

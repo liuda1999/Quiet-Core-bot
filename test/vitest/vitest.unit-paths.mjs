@@ -79,7 +79,7 @@ const sharedBaseExcludePatterns = [
   "apps/macos/.build/**",
   "**/node_modules/**",
   "**/vendor/**",
-  "dist/Quiet Core bot.app/**",
+  "dist/OpenClaw.app/**",
   "**/*.live.test.ts",
   "**/*.e2e.test.ts",
 ];

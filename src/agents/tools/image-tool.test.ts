@@ -2271,7 +2271,7 @@ describe("image tool implicit imageModel config", () => {
     });
   });
 
-  it("allows workspace images via createQuiet Core botCodingTools when workspace root is explicit", async () => {
+  it("allows workspace images via createOpenClawCodingTools when workspace root is explicit", async () => {
     await withTempWorkspacePng(async ({ workspaceDir, imagePath }) => {
       const fetch = stubMinimaxOkFetch();
       await withTempAgentDir(async (agentDir) => {

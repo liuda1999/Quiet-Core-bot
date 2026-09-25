@@ -1,4 +1,4 @@
-// Verifies createQuiet Core botTools wires shared config and context into the TTS tool.
+// Verifies createOpenClawTools wires shared config and context into the TTS tool.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../config/types.openclaw.js";
 import { testing, createOpenClawTools } from "./openclaw-tools.js";
@@ -150,7 +150,7 @@ function getTextToSpeechParams() {
     | undefined;
 }
 
-describe("createQuiet Core botTools TTS config wiring", () => {
+describe("createOpenClawTools TTS config wiring", () => {
   beforeEach(() => {
     mocks.createCronToolOptions.mockClear();
     mocks.createImageGenerateToolOptions.mockClear();
@@ -288,7 +288,7 @@ describe("createQuiet Core botTools TTS config wiring", () => {
   });
 });
 
-describe("createQuiet Core botTools media generation session wiring", () => {
+describe("createOpenClawTools media generation session wiring", () => {
   beforeEach(() => {
     mocks.createImageGenerateToolOptions.mockClear();
     mocks.createMusicGenerateToolOptions.mockClear();
@@ -358,7 +358,7 @@ describe("createQuiet Core botTools media generation session wiring", () => {
   });
 });
 
-describe("createQuiet Core botTools session status route context wiring", () => {
+describe("createOpenClawTools session status route context wiring", () => {
   beforeEach(() => {
     mocks.createSessionStatusToolOptions.mockClear();
   });
@@ -392,7 +392,7 @@ describe("createQuiet Core botTools session status route context wiring", () => 
   });
 });
 
-describe("createQuiet Core botTools cron context wiring", () => {
+describe("createOpenClawTools cron context wiring", () => {
   beforeEach(() => {
     mocks.createCronToolOptions.mockClear();
   });

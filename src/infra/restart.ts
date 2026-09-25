@@ -373,7 +373,7 @@ export function emitGatewayRestart(
       process.emit("SIGUSR1");
     } else if (process.platform === "win32") {
       // On Windows with no SIGUSR1 listener, fall back to task-scheduler handoff.
-      // triggerQuiet Core botRestart() uses schtasks to restart the gateway.
+      // triggerOpenClawRestart() uses schtasks to restart the gateway.
       const result = triggerOpenClawRestart();
       if (!result.ok) {
         // Roll back the cycle marker so future restart requests can still proceed.

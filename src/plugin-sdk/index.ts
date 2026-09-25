@@ -97,9 +97,9 @@ export type {
   TaskRunView,
 } from "../plugins/runtime/task-domain-types.js";
 export type { OpenClawConfig } from "../config/config.js";
-/** @deprecated Use Quiet Core botConfig instead */
+/** @deprecated Use OpenClawConfig instead */
 export type { OpenClawConfig as ClawdbotConfig } from "../config/config.js";
-/** @deprecated Use Quiet Core botConfig instead */
+/** @deprecated Use OpenClawConfig instead */
 export type { OpenClawConfig as OpenClawSchemaType } from "../config/config.js";
 export type {
   MemoryPluginCapability,

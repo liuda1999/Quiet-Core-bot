@@ -264,7 +264,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
       toolSearchControlsCase = mockParams(
         hoisted.createOpenClawCodingToolsMock,
         0,
-        "createQuiet Core botCodingTools options",
+        "createOpenClawCodingTools options",
       );
     } finally {
       await cleanupTempPaths(setupTempPaths);
@@ -352,13 +352,13 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
     const options = mockParams(
       hoisted.createOpenClawCodingToolsMock,
       0,
-      "createQuiet Core botCodingTools options",
+      "createOpenClawCodingTools options",
     );
     expect(options.includeToolSearchControls).toBe(true);
-    const optionsConfig = requireRecord(options.config, "createQuiet Core botCodingTools config");
+    const optionsConfig = requireRecord(options.config, "createOpenClawCodingTools config");
     const toolsConfig = requireRecord(
       optionsConfig.tools,
-      "createQuiet Core botCodingTools tools config",
+      "createOpenClawCodingTools tools config",
     );
     expect(toolsConfig.toolSearch).toEqual({
       enabled: true,
@@ -411,7 +411,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
     const options = mockParams(
       hoisted.createOpenClawCodingToolsMock,
       0,
-      "createQuiet Core botCodingTools options",
+      "createOpenClawCodingTools options",
     );
     expect(options.includeToolSearchControls).toBe(false);
     const sessionOptions = mockParams(

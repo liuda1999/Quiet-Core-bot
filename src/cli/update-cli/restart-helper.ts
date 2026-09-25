@@ -11,6 +11,7 @@ import {
   resolveGatewaySystemdServiceName,
   resolveGatewayWindowsTaskName,
 } from "../../daemon/constants.js";
+import { resolveGatewayTaskScriptPath } from "../../daemon/paths.js";
 import {
   renderPosixRestartLogSetup,
   resolveGatewayRestartLogPath,
@@ -175,6 +176,11 @@ exit "$status"
       const restartLogPath = resolveGatewayRestartLogPath({ ...process.env, ...env });
       const quotedLogPath = powerShellSingleQuote(restartLogPath);
       const quotedTaskName = powerShellSingleQuote(taskName);
+      // The startup-folder fallback launches the installed task script; resolve
+      // it from the active state dir instead of a hardcoded legacy path.
+      const quotedLauncherPath = powerShellSingleQuote(
+        resolveGatewayTaskScriptPath({ ...process.env, ...env }),
+      );
       filename = `openclaw-restart-${timestamp}.cmd`;
       scriptContent = `@echo off
 REM Standalone restart script - survives parent process termination.
@@ -210,7 +216,7 @@ function Write-RestartLog {
   }
 }
 
-function Join-Quiet Core botProcessArguments {
+function Join-OpenClawProcessArguments {
   param([string[]]$Arguments)
   ($Arguments | ForEach-Object {
     if ($_ -match "\\s") {
@@ -221,7 +227,7 @@ function Join-Quiet Core botProcessArguments {
   }) -join " "
 }
 
-function Invoke-Quiet Core botSchtasksWithTimeout {
+function Invoke-OpenClawSchtasksWithTimeout {
   param(
     [string[]]$Arguments,
     [int]$TimeoutSeconds
@@ -230,7 +236,7 @@ function Invoke-Quiet Core botSchtasksWithTimeout {
   try {
     $startInfo = [System.Diagnostics.ProcessStartInfo]::new()
     $startInfo.FileName = "schtasks.exe"
-    $startInfo.Arguments = Join-Quiet Core botProcessArguments -Arguments $Arguments
+    $startInfo.Arguments = Join-OpenClawProcessArguments -Arguments $Arguments
     $startInfo.UseShellExecute = $false
     $startInfo.RedirectStandardOutput = $true
     $startInfo.RedirectStandardError = $true
@@ -258,7 +264,7 @@ function Invoke-Quiet Core botSchtasksWithTimeout {
   }
 }
 
-function Get-Quiet Core botScheduledTaskState {
+function Get-OpenClawScheduledTaskState {
   param([string]$TaskName)
   try {
     $task = Get-ScheduledTask -TaskName $TaskName -ErrorAction Stop
@@ -281,7 +287,7 @@ function Get-Quiet Core botScheduledTaskState {
   return "Unknown"
 }
 
-function Get-Quiet Core botListenerPids {
+function Get-OpenClawListenerPids {
   param([int]$Port)
   $listenerPids = @()
 
@@ -309,8 +315,8 @@ function Get-Quiet Core botListenerPids {
   $listenerPids | Sort-Object -Unique
 }
 
-function Invoke-Quiet Core botStartupLauncher {
-  $launcherPath = Join-Path $env:USERPROFILE ".openclaw\\gateway.cmd"
+function Invoke-OpenClawStartupLauncher {
+  $launcherPath = ${quotedLauncherPath}
   if (-not (Test-Path -LiteralPath $launcherPath)) {
     Write-RestartLog "quiet-core-bot restart startup launcher missing source=update path=$launcherPath"
     return 1
@@ -330,9 +336,9 @@ $taskName = ${quotedTaskName}
 $port = ${port}
 Write-RestartLog "quiet-core-bot restart attempt source=update target=$taskName"
 
-$taskState = Get-Quiet Core botScheduledTaskState -TaskName $taskName
+$taskState = Get-OpenClawScheduledTaskState -TaskName $taskName
 if ($taskState -eq "Running") {
-  $endStatus = Invoke-Quiet Core botSchtasksWithTimeout -Arguments @("/End", "/TN", $taskName) -TimeoutSeconds 10
+  $endStatus = Invoke-OpenClawSchtasksWithTimeout -Arguments @("/End", "/TN", $taskName) -TimeoutSeconds 10
   if ($endStatus -ne 0) {
     Write-RestartLog "quiet-core-bot restart schtasks end did not complete cleanly source=update status=$endStatus"
   }
@@ -341,7 +347,7 @@ if ($taskState -eq "Running") {
 }
 
 for ($attempt = 1; $attempt -le 10; $attempt++) {
-  $listeners = @(Get-Quiet Core botListenerPids -Port $port)
+  $listeners = @(Get-OpenClawListenerPids -Port $port)
   if ($listeners.Count -eq 0) {
     break
   }
@@ -361,9 +367,9 @@ for ($attempt = 1; $attempt -le 10; $attempt++) {
   Start-Sleep -Seconds 1
 }
 
-$status = Invoke-Quiet Core botSchtasksWithTimeout -Arguments @("/Run", "/TN", $taskName) -TimeoutSeconds 30
+$status = Invoke-OpenClawSchtasksWithTimeout -Arguments @("/Run", "/TN", $taskName) -TimeoutSeconds 30
 if ($status -ne 0) {
-  $status = Invoke-Quiet Core botStartupLauncher
+  $status = Invoke-OpenClawStartupLauncher
 }
 if ($status -eq 0) {
   Write-RestartLog "quiet-core-bot restart done source=update"

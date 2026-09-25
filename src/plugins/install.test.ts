@@ -4023,7 +4023,7 @@ describe("installPluginFromDir", () => {
   });
 });
 
-describe("linkQuiet Core botPeerDependencies (via installPluginFromDir)", () => {
+describe("linkOpenClawPeerDependencies (via installPluginFromDir)", () => {
   const resolveRootMock = vi.mocked(resolveOpenClawPackageRootSync);
 
   function writePluginWithPeerDeps(
@@ -4166,7 +4166,7 @@ describe("linkQuiet Core botPeerDependencies (via installPluginFromDir)", () => 
     expect(fs.lstatSync(symlinkPath).isSymbolicLink()).toBe(true);
   });
 
-  it("rejects when resolveQuiet Core botPackageRootSync returns null", async () => {
+  it("rejects when resolveOpenClawPackageRootSync returns null", async () => {
     const { pluginDir, extensionsDir } = setupPluginInstallDirs();
     resolveRootMock.mockReturnValue(null);
 

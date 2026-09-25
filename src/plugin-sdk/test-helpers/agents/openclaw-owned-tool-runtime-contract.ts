@@ -84,7 +84,7 @@ export function installOpenClawOwnedToolHooks(params?: {
 
 /**
  * Installs only the Codex app-server `tool_result` middleware fixture.
- * Pair with `installQuiet Core botOwnedToolHooks()` when a test asserts before/after hook behavior.
+ * Pair with `installOpenClawOwnedToolHooks()` when a test asserts before/after hook behavior.
  */
 export function installCodexToolResultMiddleware(
   handler: (event: AgentToolResultMiddlewareEvent) => AgentToolResult<unknown>,

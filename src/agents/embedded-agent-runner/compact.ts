@@ -942,7 +942,7 @@ async function compactEmbeddedAgentSessionDirectOnce(
       sandboxToolPolicy: sandbox?.tools,
       sessionKey: sandboxSessionKey,
       // Intentionally omit explicit agentId: the core tools just built with
-      // createQuiet Core botCodingTools(...) also omit it, so both paths resolve
+      // createOpenClawCodingTools(...) also omit it, so both paths resolve
       // agentId the same way via resolveAgentIdFromSessionKey(sessionKey).
       // Passing effectiveSkillAgentId here would diverge from the core-tool
       // policy for legacy/non-agent session keys where the two sources fall

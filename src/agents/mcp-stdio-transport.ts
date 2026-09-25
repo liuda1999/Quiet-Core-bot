@@ -46,7 +46,7 @@ export class OpenClawStdioClientTransport implements Transport {
   async start(): Promise<void> {
     if (this.process) {
       throw new Error(
-        "Quiet Core botStdioClientTransport already started; Client.connect() starts transports automatically.",
+        "OpenClawStdioClientTransport already started; Client.connect() starts transports automatically.",
       );
     }
 

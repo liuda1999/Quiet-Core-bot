@@ -100,7 +100,7 @@ export function injectTimestamp(message: string, opts?: TimestampInjectionOption
 }
 
 /**
- * Build TimestampInjectionOptions from an Quiet Core botConfig.
+ * Build TimestampInjectionOptions from an OpenClawConfig.
  */
 export function timestampOptsFromConfig(cfg: OpenClawConfig): TimestampInjectionOptions {
   return {

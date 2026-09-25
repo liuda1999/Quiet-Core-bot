@@ -1,5 +1,5 @@
 /**
- * Broad coverage for createQuiet Core botCodingTools.
+ * Broad coverage for createOpenClawCodingTools.
  * Verifies plugin tools, tool policy, schema cleanup, sandbox fs tools, and
  * assembled tool allowlist behavior.
  */
@@ -139,7 +139,7 @@ function latestCreateOpenClawToolsOptions(): OpenClawToolsOptions {
   const lastCall = calls.at(-1);
   const options = lastCall?.[0];
   if (!options) {
-    throw new Error("expected createQuiet Core botTools call");
+    throw new Error("expected createOpenClawTools call");
   }
   return options;
 }
@@ -162,7 +162,7 @@ function cronCreatorToolNames(
   return list?.map((entry) => (typeof entry === "string" ? entry : entry.name));
 }
 
-describe("createQuiet Core botCodingTools", () => {
+describe("createOpenClawCodingTools", () => {
   const testConfig: OpenClawConfig = {};
 
   afterEach(() => {
@@ -591,7 +591,7 @@ describe("createQuiet Core botCodingTools", () => {
     const createOpenClawToolsMock = vi.mocked(createOpenClawTools);
     createOpenClawToolsMock.mockClear();
     const resolvePluginToolsSpy = vi
-      .spyOn(openClawPluginTools, "resolveQuiet Core botPluginToolsForOptions")
+      .spyOn(openClawPluginTools, "resolveOpenClawPluginToolsForOptions")
       .mockReturnValue([]);
 
     try {
@@ -624,7 +624,7 @@ describe("createQuiet Core botCodingTools", () => {
     const createOpenClawToolsMock = vi.mocked(createOpenClawTools);
     createOpenClawToolsMock.mockClear();
     const resolvePluginToolsSpy = vi
-      .spyOn(openClawPluginTools, "resolveQuiet Core botPluginToolsForOptions")
+      .spyOn(openClawPluginTools, "resolveOpenClawPluginToolsForOptions")
       .mockReturnValue([]);
     const authProfileStore = {
       version: 1,

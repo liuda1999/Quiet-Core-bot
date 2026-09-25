@@ -8,7 +8,7 @@ const { realtimeTalkCtor, startMock, stopMock } = vi.hoisted(() => ({
   stopMock: vi.fn(),
 }));
 
-describe("Quiet Core botApp Talk controls", () => {
+describe("OpenClawApp Talk controls", () => {
   beforeEach(() => {
     vi.resetModules();
     vi.doMock("./chat/realtime-talk.ts", () => ({

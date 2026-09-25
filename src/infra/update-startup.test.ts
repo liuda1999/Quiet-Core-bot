@@ -117,7 +117,7 @@ describe("update-startup", () => {
   let tempDir: string;
   let testState: OpenClawTestState;
 
-  let resolveOpenClawPackageRoot: (typeof import("./openclaw-root.js"))["resolveQuiet Core botPackageRoot"];
+  let resolveOpenClawPackageRoot: (typeof import("./openclaw-root.js"))["resolveOpenClawPackageRoot"];
   let checkUpdateStatus: (typeof import("./update-check.js"))["checkUpdateStatus"];
   let resolveNpmChannelTag: (typeof import("./update-check.js"))["resolveNpmChannelTag"];
   let runCommandWithTimeout: (typeof import("../process/exec.js"))["runCommandWithTimeout"];

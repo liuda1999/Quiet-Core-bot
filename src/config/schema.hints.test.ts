@@ -183,7 +183,7 @@ describe("mapSensitivePaths", () => {
       target: "draft-07",
       unrepresentable: "any",
     });
-    schema.title = "Quiet Core botConfig";
+    schema.title = "OpenClawConfig";
     const hints = mapSensitivePaths(OpenClawSchema, "", {});
 
     expect(hints["agents.defaults.memorySearch.remote.apiKey"]?.sensitive).toBe(true);

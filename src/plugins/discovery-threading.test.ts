@@ -24,7 +24,7 @@ describe("discovery threading", () => {
     discoverOpenClawPluginsMock.mockReturnValue(emptyDiscovery);
   });
 
-  it("skips internal discoverQuiet Core botPlugins when discovery is supplied", () => {
+  it("skips internal discoverOpenClawPlugins when discovery is supplied", () => {
     loadPluginManifestRegistry({ discovery: emptyDiscovery });
     expect(discoverOpenClawPluginsMock).not.toHaveBeenCalled();
 
@@ -33,7 +33,7 @@ describe("discovery threading", () => {
     expect(discoverOpenClawPluginsMock).not.toHaveBeenCalled();
   });
 
-  it("calls discoverQuiet Core botPlugins when neither discovery nor candidates supplied", () => {
+  it("calls discoverOpenClawPlugins when neither discovery nor candidates supplied", () => {
     loadPluginManifestRegistry({});
     expect(discoverOpenClawPluginsMock).toHaveBeenCalledTimes(1);
 

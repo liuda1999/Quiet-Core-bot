@@ -82,17 +82,17 @@ exit 0
   }
 
   function expectWindowsRestartWaitOrdering(content: string, port = 18789) {
-    const stateCheck = "$taskState = Get-Quiet Core botScheduledTaskState -TaskName $taskName";
+    const stateCheck = "$taskState = Get-OpenClawScheduledTaskState -TaskName $taskName";
     const runningGuard = 'if ($taskState -eq "Running")';
     const endCommand =
-      'Invoke-Quiet Core botSchtasksWithTimeout -Arguments @("/End", "/TN", $taskName) -TimeoutSeconds 10';
+      'Invoke-OpenClawSchtasksWithTimeout -Arguments @("/End", "/TN", $taskName) -TimeoutSeconds 10';
     const skipEndLog = "quiet-core-bot restart skipped schtasks end";
     const pollLoop = "for ($attempt = 1; $attempt -le 10; $attempt++)";
-    const pollCall = `Get-Quiet Core botListenerPids -Port $port`;
+    const pollCall = `Get-OpenClawListenerPids -Port $port`;
     const forceKillBranch = "if ($attempt -eq 10)";
     const forceKillCommand = "Stop-Process -Id $listenerPid -Force";
     const runCommand =
-      'Invoke-Quiet Core botSchtasksWithTimeout -Arguments @("/Run", "/TN", $taskName) -TimeoutSeconds 30';
+      'Invoke-OpenClawSchtasksWithTimeout -Arguments @("/Run", "/TN", $taskName) -TimeoutSeconds 30';
     const portAssignment = `$port = ${port}`;
     const stateCheckIndex = content.indexOf(stateCheck);
     const runningGuardIndex = content.indexOf(runningGuard, stateCheckIndex);
@@ -431,19 +431,29 @@ exit 0
       expect(content).not.toContain("powershell -NoProfile -ExecutionPolicy Bypass -File");
       expect(content).toContain('$ErrorActionPreference = "Continue"');
       expect(content).toContain("gateway-restart.log");
-      expect(content).toContain("$taskName = 'Quiet Core bot Gateway'");
-      expect(content).toContain("function Invoke-Quiet Core botSchtasksWithTimeout");
-      expect(content).toContain("function Get-Quiet Core botScheduledTaskState");
-      expect(content).toContain("function Invoke-Quiet Core botStartupLauncher");
+      expect(content).toContain("$taskName = 'Quiet Core Gateway'");
+      expect(content).toContain("function Invoke-OpenClawSchtasksWithTimeout");
+      expect(content).toContain("function Get-OpenClawScheduledTaskState");
+      expect(content).toContain("function Invoke-OpenClawStartupLauncher");
       expect(content).toContain("Get-ScheduledTask -TaskName $TaskName");
       expect(content).toContain("quiet-core-bot restart skipped schtasks end");
-      expect(content).toContain(
-        '$launcherPath = Join-Path $env:USERPROFILE ".openclaw\\gateway.cmd"',
-      );
+      expect(content).toMatch(/^\s*\$launcherPath = '.+gateway\.cmd'\r?$/m);
       expect(content).toContain("quiet-core-bot restart launched startup fallback");
       expectWindowsRestartWaitOrdering(content);
       expect(content).toContain('del "%~f0" >nul 2>&1');
       expect(content).toContain('rmdir "%OPENCLAW_RESTART_SCRIPT_DIR%" >nul 2>&1');
+      await cleanupScript(scriptPath);
+    });
+
+    it("resolves the startup-fallback launcher inside the active state dir", async () => {
+      Object.defineProperty(process, "platform", { value: "win32" });
+      const stateDir = await makeTempDir("openclaw-state-");
+
+      const { scriptPath, content } = await prepareAndReadScript({
+        OPENCLAW_PROFILE: "default",
+        OPENCLAW_STATE_DIR: stateDir,
+      });
+      expect(content).toContain(`$launcherPath = '${path.join(stateDir, "gateway.cmd")}'`);
       await cleanupScript(scriptPath);
     });
 
@@ -455,11 +465,11 @@ exit 0
         OPENCLAW_WINDOWS_TASK_NAME: "Quiet Core bot Gateway (custom)",
       });
       expect(content).toContain("$taskName = 'Quiet Core bot Gateway (custom)'");
-      expect(content).toContain("Get-Quiet Core botScheduledTaskState -TaskName $taskName");
+      expect(content).toContain("Get-OpenClawScheduledTaskState -TaskName $taskName");
       expect(content).toContain(
-        'Invoke-Quiet Core botSchtasksWithTimeout -Arguments @("/End", "/TN", $taskName) -TimeoutSeconds 10',
+        'Invoke-OpenClawSchtasksWithTimeout -Arguments @("/End", "/TN", $taskName) -TimeoutSeconds 10',
       );
-      expect(content).toContain("$status = Invoke-Quiet Core botStartupLauncher");
+      expect(content).toContain("$status = Invoke-OpenClawStartupLauncher");
       expectWindowsRestartWaitOrdering(content);
       await cleanupScript(scriptPath);
     });
@@ -508,7 +518,7 @@ exit 0
       const { scriptPath, content } = await prepareAndReadScript({
         OPENCLAW_PROFILE: "production",
       });
-      expect(content).toContain("$taskName = 'Quiet Core bot Gateway (production)'");
+      expect(content).toContain("$taskName = 'Quiet Core Gateway (production)'");
       expectWindowsRestartWaitOrdering(content);
       await cleanupScript(scriptPath);
     });

@@ -90,7 +90,7 @@ function planParamsAt(callIndex: number): {
   providerDiscoveryTimeoutMs?: number;
   workspaceDir?: string;
 } {
-  // Planner call shape is the contract between ensureQuiet Core botModelsJson and planning.
+  // Planner call shape is the contract between ensureOpenClawModelsJson and planning.
   const call = planOpenClawModelsJsonMock.mock.calls[callIndex];
   if (!call) {
     throw new Error(`expected models planner call #${callIndex + 1}`);

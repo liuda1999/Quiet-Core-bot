@@ -106,7 +106,7 @@ vi.mock("./openclaw-root.fs.runtime.js", () => ({
   openClawRootFs: mockFsPromisesModule(),
 }));
 
-describe("resolveQuiet Core botPackageRoot", () => {
+describe("resolveOpenClawPackageRoot", () => {
   let resolveOpenClawPackageRoot: typeof import("./openclaw-root.js").resolveOpenClawPackageRoot;
   let resolveOpenClawPackageRootSync: typeof import("./openclaw-root.js").resolveOpenClawPackageRootSync;
   let clearOpenClawPackageRootCaches: typeof import("./openclaw-root.js").testing.clearOpenClawPackageRootCaches;

@@ -45,7 +45,7 @@ vi.mock("./env.js", () => ({
   isTruthyEnvValue: (value?: string) => value === "1" || value === "true",
 }));
 
-describe("ensureQuiet Core botCliOnPath", () => {
+describe("ensureOpenClawCliOnPath", () => {
   const envKeys = [
     "PATH",
     "OPENCLAW_PATH_BOOTSTRAPPED",

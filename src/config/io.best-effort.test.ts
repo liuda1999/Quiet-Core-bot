@@ -156,7 +156,7 @@ describe("readBestEffortConfig", () => {
 
   it("preserves Windows case-insensitive env lookup in isolated reads", async () => {
     await withTempHome(async (home) => {
-      const mixedCaseKey = "Quiet Core bot_Config_Path";
+      const mixedCaseKey = "OpenClaw_Config_Path";
       const customConfigPath = `${home}/custom-quiet-core-bot.json`;
       await withEnvAsync({ OPENCLAW_CONFIG_PATH: undefined }, async () => {
         await withEnvAsync({ [mixedCaseKey]: customConfigPath }, async () => {

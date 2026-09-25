@@ -199,7 +199,7 @@ describe.runIf(process.platform !== "win32")("cleanStaleGatewayProcessesSync", (
   });
 });
 
-describe("triggerQuiet Core botRestart", () => {
+describe("triggerOpenClawRestart", () => {
   it("does not kickstart after bootstrap registers an unloaded LaunchAgent", () => {
     setPlatform("darwin");
     withEnv(

@@ -3,7 +3,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type { SidebarContent } from "./sidebar-content.ts";
 
-describe("Quiet Core botApp full-message sidebar upgrade", () => {
+describe("OpenClawApp full-message sidebar upgrade", () => {
   async function createApp() {
     await import("./app.ts");
     return document.createElement("quiet-core-bot-app") as import("./app.ts").OpenClawApp;

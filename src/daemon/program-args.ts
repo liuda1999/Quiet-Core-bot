@@ -20,6 +20,8 @@ type GatewayRuntimePreference = "auto" | "node" | "bun";
 
 export const OPENCLAW_WRAPPER_ENV_KEY = "OPENCLAW_WRAPPER";
 
+const GATEWAY_LAUNCHER_BASENAMES = ["quiet-core-bot.mjs", "openclaw.mjs"] as const;
+
 async function resolveCliEntrypointPathForService(): Promise<string> {
   const argv1 = process.argv[1];
   if (!argv1) {
@@ -98,6 +100,8 @@ function buildDistCandidates(...inputs: string[]): string[] {
     const baseDir = path.dirname(inputPath);
     appendDistCandidates(candidates, seen, path.resolve(baseDir, ".."));
     appendDistCandidates(candidates, seen, baseDir);
+    appendLauncherCandidates(candidates, seen, baseDir);
+    appendLauncherCandidates(candidates, seen, path.resolve(baseDir, ".."));
     appendNodeModulesBinCandidates(candidates, seen, inputPath);
   }
 
@@ -118,6 +122,19 @@ function appendDistCandidates(candidates: string[], seen: Set<string>, baseDir: 
     }
     seen.add(entry);
     candidates.push(entry);
+  }
+}
+
+function appendLauncherCandidates(candidates: string[], seen: Set<string>, baseDir: string): void {
+  // Source checkouts without a build output install the package-root launcher,
+  // which resolves the built or source entrypoint at runtime.
+  for (const basename of GATEWAY_LAUNCHER_BASENAMES) {
+    const launcher = path.join(baseDir, basename);
+    if (seen.has(launcher)) {
+      continue;
+    }
+    seen.add(launcher);
+    candidates.push(launcher);
   }
 }
 

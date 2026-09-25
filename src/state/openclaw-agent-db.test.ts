@@ -188,7 +188,7 @@ describe("quiet-core-bot agent database", () => {
         agentId: "worker-1",
         env,
       }),
-    ).toThrow(/run openclaw doctor --fix/);
+    ).toThrow(/run quiet-core-bot doctor --fix/);
   });
 
   it("keys explicit relative paths by resolved database pathname", () => {
@@ -206,12 +206,12 @@ describe("quiet-core-bot agent database", () => {
           import os from "node:os";
           import path from "node:path";
           import {
-            closeQuiet Core botAgentDatabasesForTest,
-            openQuiet Core botAgentDatabase,
+            closeOpenClawAgentDatabasesForTest,
+            openOpenClawAgentDatabase,
           } from ${JSON.stringify(agentModuleUrl)};
           import {
-            closeQuiet Core botStateDatabaseForTest,
-            openQuiet Core botStateDatabase,
+            closeOpenClawStateDatabaseForTest,
+            openOpenClawStateDatabase,
           } from ${JSON.stringify(stateModuleUrl)};
 
           const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-agent-db-state-"));
@@ -224,14 +224,14 @@ describe("quiet-core-bot agent database", () => {
           const previousCwd = process.cwd();
           try {
             process.chdir(firstDir);
-            const first = openQuiet Core botAgentDatabase({
+            const first = openOpenClawAgentDatabase({
               agentId: "worker-1",
               env,
               path: "agent.sqlite",
             });
 
             process.chdir(secondDir);
-            const second = openQuiet Core botAgentDatabase({
+            const second = openOpenClawAgentDatabase({
               agentId: "worker-1",
               env,
               path: "agent.sqlite",
@@ -241,7 +241,7 @@ describe("quiet-core-bot agent database", () => {
               sameHandle: first === second,
               firstFileExists: fs.existsSync(path.join(firstDir, "agent.sqlite")),
               secondFileExists: fs.existsSync(path.join(secondDir, "agent.sqlite")),
-              registeredPaths: openQuiet Core botStateDatabase({ env }).db
+              registeredPaths: openOpenClawStateDatabase({ env }).db
                 .prepare("SELECT path FROM agent_databases WHERE agent_id = ? ORDER BY path")
                 .all("worker-1")
                 .map((entry) => entry.path),
@@ -249,8 +249,8 @@ describe("quiet-core-bot agent database", () => {
             }));
           } finally {
             process.chdir(previousCwd);
-            closeQuiet Core botAgentDatabasesForTest();
-            closeQuiet Core botStateDatabaseForTest();
+            closeOpenClawAgentDatabasesForTest();
+            closeOpenClawStateDatabaseForTest();
           }
         `,
       ],

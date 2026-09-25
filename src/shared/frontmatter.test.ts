@@ -40,7 +40,7 @@ describe("shared/frontmatter", () => {
     expect(parseFrontmatterBool("maybe", false)).toBe(false);
   });
 
-  test("resolveQuiet Core botManifestBlock reads current manifest keys and custom metadata fields", () => {
+  test("resolveOpenClawManifestBlock reads current manifest keys and custom metadata fields", () => {
     expect(
       resolveOpenClawManifestBlock({
         frontmatter: {
@@ -59,7 +59,7 @@ describe("shared/frontmatter", () => {
     ).toEqual({ foo: 2 });
   });
 
-  test("resolveQuiet Core botManifestBlock reads legacy manifest keys", () => {
+  test("resolveOpenClawManifestBlock reads legacy manifest keys", () => {
     expect(
       resolveOpenClawManifestBlock({
         frontmatter: {
@@ -69,7 +69,7 @@ describe("shared/frontmatter", () => {
     ).toEqual({ requires: { bins: ["op"] }, install: [] });
   });
 
-  test("resolveQuiet Core botManifestBlock prefers current manifest keys over legacy keys", () => {
+  test("resolveOpenClawManifestBlock prefers current manifest keys over legacy keys", () => {
     expect(
       resolveOpenClawManifestBlock({
         frontmatter: {
@@ -80,7 +80,7 @@ describe("shared/frontmatter", () => {
     ).toEqual({ requires: { bins: ["current"] } });
   });
 
-  test("resolveQuiet Core botManifestBlock returns undefined for invalid input", () => {
+  test("resolveOpenClawManifestBlock returns undefined for invalid input", () => {
     expect(resolveOpenClawManifestBlock({ frontmatter: {} })).toBeUndefined();
     expect(
       resolveOpenClawManifestBlock({ frontmatter: { metadata: "not-json5" } }),

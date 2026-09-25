@@ -1149,7 +1149,7 @@ describe("doctor health contributions", () => {
     await contribution.run(ctx);
 
     expect(ctx.runtime.log).toHaveBeenCalledWith(
-      "[warning] core/doctor/test-structured-findings quiet-core-bot.json:12 - structured finding needs attention",
+      "[warning] core/doctor/test-structured-findings openclaw.json:12 - structured finding needs attention",
     );
     expect(ctx.runtime.log).toHaveBeenCalledWith("  fix: run quiet-core-bot doctor --fix");
   });
@@ -1566,7 +1566,7 @@ describe("doctor health contributions", () => {
       await writeConfigContribution.run(ctx);
 
       expect(ctx.runtime.log).toHaveBeenCalledWith(
-        "Update changed config; pre-update backup: /tmp/fake-quiet-core-bot.json.pre-update",
+        "Update changed config; pre-update backup: /tmp/fake-openclaw.json.pre-update",
       );
     });
 

@@ -143,7 +143,7 @@ describe("config env vars", () => {
       );
 
       expect(merged.OPENCLAW_LOAD_SHELL_ENV).toBe("0");
-      expect(Object.keys(merged)).toEqual(["Quiet Core bot_Load_Shell_Env"]);
+      expect(Object.keys(merged)).toEqual(["OpenClaw_Load_Shell_Env"]);
     } finally {
       platformSpy.mockRestore();
     }

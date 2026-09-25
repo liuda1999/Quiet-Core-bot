@@ -93,7 +93,7 @@ function shouldCompareOfficialInstallToGateway(params: {
  *   `version` field of the installed openclaw package.json).
  * @param params.installRecords The full set of recorded plugin installs (as
  *   produced by `loadInstalledPluginIndexInstallRecords`).
- * @param params.config The merged daemon-side Quiet Core botConfig (optional).
+ * @param params.config The merged daemon-side OpenClawConfig (optional).
  *   Plugins inactive under the effective activation policy are skipped.
  *
  * The returned `drifts` list is sorted by `pluginId` for stable output.

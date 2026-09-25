@@ -26,7 +26,7 @@ import {
 
 const INSTALLED_ROOT_DIST_JS_FILE_SCAN_LIMIT = 10_000;
 
-describe("parseQuiet Core botNpmPostpublishVerifyArgs", () => {
+describe("parseOpenClawNpmPostpublishVerifyArgs", () => {
   it("supports help and package-manager separators", () => {
     expect(parseOpenClawNpmPostpublishVerifyArgs(["--help"])).toEqual({
       help: true,

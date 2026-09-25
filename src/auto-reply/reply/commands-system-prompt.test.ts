@@ -152,7 +152,7 @@ describe("resolveCommandsSystemPromptBundle", () => {
 
     const toolParams = requireFirstArg(
       vi.mocked(createOpenClawCodingTools),
-      "createQuiet Core botCodingTools",
+      "createOpenClawCodingTools",
     );
     expect(toolParams.allowGatewaySubagentBinding).toBe(true);
     expect(toolParams.sessionKey).toBe("agent:main:default");
@@ -190,7 +190,7 @@ describe("resolveCommandsSystemPromptBundle", () => {
 
     const toolParams = requireFirstArg(
       vi.mocked(createOpenClawCodingTools),
-      "createQuiet Core botCodingTools",
+      "createOpenClawCodingTools",
     );
     expect(toolParams.agentId).toBe("target");
     expect(toolParams.sessionKey).toBe("agent:target:telegram:direct:target-session");
@@ -242,7 +242,7 @@ describe("resolveCommandsSystemPromptBundle", () => {
     );
     const toolParams = requireFirstArg(
       vi.mocked(createOpenClawCodingTools),
-      "createQuiet Core botCodingTools",
+      "createOpenClawCodingTools",
     );
     expect(toolParams.groupId).toBe("target-group");
     expect(toolParams.groupChannel).toBe("#target");

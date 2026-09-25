@@ -7,7 +7,7 @@ import {
   shouldWarnOnTouchedVersion,
 } from "./version.js";
 
-describe("parseQuiet Core botVersion", () => {
+describe("parseOpenClawVersion", () => {
   it("parses stable, correction, and beta forms", () => {
     expect(parseOpenClawVersion("2026.3.23")).toEqual({
       major: 2026,
@@ -45,7 +45,7 @@ describe("parseQuiet Core botVersion", () => {
   });
 });
 
-describe("compareQuiet Core botVersions", () => {
+describe("compareOpenClawVersions", () => {
   it("treats correction publishes as newer than the base stable release", () => {
     expect(compareOpenClawVersions("2026.3.23", "2026.3.23-1")).toBe(-1);
     expect(compareOpenClawVersions("2026.3.23-1", "2026.3.23")).toBe(1);
@@ -59,7 +59,7 @@ describe("compareQuiet Core botVersions", () => {
   });
 });
 
-describe("isSameQuiet Core botStableFamily", () => {
+describe("isSameOpenClawStableFamily", () => {
   it("treats same-base stable and correction versions as one family", () => {
     expect(isSameOpenClawStableFamily("2026.3.23", "2026.3.23-1")).toBe(true);
     expect(isSameOpenClawStableFamily("2026.3.23-1", "2026.3.23-2")).toBe(true);

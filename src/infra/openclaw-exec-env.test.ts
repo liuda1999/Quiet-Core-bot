@@ -7,7 +7,7 @@ import {
   OPENCLAW_CLI_ENV_VAR,
 } from "./openclaw-exec-env.js";
 
-describe("markQuiet Core botExecEnv", () => {
+describe("markOpenClawExecEnv", () => {
   it("returns a cloned env object with the exec marker set", () => {
     const env = { PATH: "/usr/bin", OPENCLAW_CLI: "0" };
     const marked = markOpenClawExecEnv(env);
@@ -21,7 +21,7 @@ describe("markQuiet Core botExecEnv", () => {
   });
 });
 
-describe("ensureQuiet Core botExecMarkerOnProcess", () => {
+describe("ensureOpenClawExecMarkerOnProcess", () => {
   it.each([
     {
       name: "mutates and returns the provided process env",

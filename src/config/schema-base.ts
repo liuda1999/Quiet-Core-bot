@@ -235,7 +235,7 @@ function computeBaseConfigSchemaStablePayload(): BaseConfigSchemaStablePayload {
     target: "draft-07",
     unrepresentable: "any",
   });
-  schema.title = "Quiet Core botConfig";
+  schema.title = "OpenClawConfig";
   const schemaRoot = asJsonSchemaObject(schema);
   if (schemaRoot) {
     applyFieldDocumentation(schemaRoot, buildFieldDocumentation());

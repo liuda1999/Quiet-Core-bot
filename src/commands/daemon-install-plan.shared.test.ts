@@ -44,7 +44,7 @@ describe("resolveDaemonNodeBinDir", () => {
   });
 });
 
-describe("resolveDaemonQuiet Core botBinDir", () => {
+describe("resolveDaemonOpenClawBinDir", () => {
   it("uses the active quiet-core-bot command directory", () => {
     expect(
       resolveDaemonOpenClawBinDir({

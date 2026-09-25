@@ -248,7 +248,7 @@ async function withSafeBinsExecTool(
   }
 }
 
-describe("createQuiet Core botCodingTools safeBins", () => {
+describe("createOpenClawCodingTools safeBins", () => {
   it("threads tools.exec.safeBins into exec allowlist checks", async () => {
     await withSafeBinsExecTool(
       {

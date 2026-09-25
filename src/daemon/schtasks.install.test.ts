@@ -80,12 +80,12 @@ describe("installScheduledTask", () => {
     });
   }
 
-  function expectInitialTaskQueries(taskName = "Quiet Core bot Gateway"): void {
+  function expectInitialTaskQueries(taskName = "Quiet Core Gateway"): void {
     expect(schtasksCalls[0]).toEqual(["/Query"]);
     expect(schtasksCalls[1]).toEqual(["/Query", "/TN", taskName]);
   }
 
-  function expectTaskRunCall(index: number, taskName = "Quiet Core bot Gateway"): void {
+  function expectTaskRunCall(index: number, taskName = "Quiet Core Gateway"): void {
     expect(schtasksCalls[index]).toEqual(["/Run", "/TN", taskName]);
   }
 
@@ -159,17 +159,17 @@ describe("installScheduledTask", () => {
       });
 
       expect(schtasksCalls[0]).toEqual(["/Query"]);
-      expect(schtasksCalls[1]).toEqual(["/Query", "/TN", "Quiet Core bot Gateway"]);
+      expect(schtasksCalls[1]).toEqual(["/Query", "/TN", "Quiet Core Gateway"]);
       expect(schtasksCalls[2]?.[0]).toBe("/Change");
       // Battery-flag XML re-apply runs between /Change and /Run on upgrades.
       expect(schtasksCalls[3]?.slice(0, 5)).toEqual([
         "/Create",
         "/F",
         "/TN",
-        "Quiet Core bot Gateway",
+        "Quiet Core Gateway",
         "/XML",
       ]);
-      expect(schtasksCalls[4]).toEqual(["/Run", "/TN", "Quiet Core bot Gateway"]);
+      expect(schtasksCalls[4]).toEqual(["/Run", "/TN", "Quiet Core Gateway"]);
     });
   });
 
@@ -237,7 +237,7 @@ describe("installScheduledTask", () => {
         "/Create",
         "/F",
         "/TN",
-        "Quiet Core bot Gateway",
+        "Quiet Core Gateway",
         "/XML",
       ]);
       expect(schtasksCalls[2]?.slice(6)).toEqual(["/RU", "WORKSTATION\\alice", "/NP"]);
@@ -266,7 +266,7 @@ describe("installScheduledTask", () => {
 
       expect(callerEnv.OPENCLAW_WINDOWS_TASK_HIDDEN_LAUNCHER).toBeUndefined();
       expect(gatewayEnv.OPENCLAW_WINDOWS_TASK_HIDDEN_LAUNCHER).toBe("1");
-      expect(gatewayEnv.OPENCLAW_WINDOWS_TASK_NAME).toBe("Quiet Core bot Gateway");
+      expect(gatewayEnv.OPENCLAW_WINDOWS_TASK_NAME).toBe("Quiet Core Gateway");
 
       const { scriptPath } = await installScheduledTask({
         env: callerEnv,
@@ -371,7 +371,7 @@ describe("installScheduledTask", () => {
         "/Create",
         "/F",
         "/TN",
-        "Quiet Core bot Gateway",
+        "Quiet Core Gateway",
         "/XML",
       ]);
       expect(createCall).not.toContain("/RU");
@@ -401,7 +401,7 @@ describe("installScheduledTask", () => {
         "/Create",
         "/F",
         "/TN",
-        "Quiet Core bot Gateway",
+        "Quiet Core Gateway",
         "/XML",
       ]);
       const upgradeCapture = xmlPayloadCaptures.find((entry) => entry.index === 3);
@@ -438,7 +438,7 @@ describe("installScheduledTask", () => {
       expect(schtasksCalls[2]).toEqual([
         "/Change",
         "/TN",
-        "Quiet Core bot Gateway",
+        "Quiet Core Gateway",
         "/TR",
         expect.stringContaining("gateway.vbs"),
       ]);
@@ -448,7 +448,7 @@ describe("installScheduledTask", () => {
         "/Create",
         "/F",
         "/TN",
-        "Quiet Core bot Gateway",
+        "Quiet Core Gateway",
         "/XML",
       ]);
       expectTaskRunCall(4);

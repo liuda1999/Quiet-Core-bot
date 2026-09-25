@@ -1071,7 +1071,7 @@ afterAll(() => {
   cachedBundledMemoryDir = "";
 });
 
-describe("loadQuiet Core botPlugins", () => {
+describe("loadOpenClawPlugins", () => {
   it("emits loader startup trace timings for normal plugin load and register", () => {
     useNoBundledPlugins();
     const plugin = writePlugin({
@@ -2668,7 +2668,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
 
     const discovery = await import("./discovery.js");
     const manifestRegistry = await import("./manifest-registry.js");
-    const discoverySpy = vi.spyOn(discovery, "discoverQuiet Core botPlugins");
+    const discoverySpy = vi.spyOn(discovery, "discoverOpenClawPlugins");
     const manifestSpy = vi.spyOn(manifestRegistry, "loadPluginManifestRegistry");
 
     const registry = loadOpenClawPlugins({

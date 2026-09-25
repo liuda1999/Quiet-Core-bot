@@ -17,9 +17,7 @@ async function importBrowserSafeLogger(params?: {
   const resolvePreferredOpenClawTmpDir =
     params?.resolvePreferredOpenClawTmpDir ??
     vi.fn(() => {
-      throw new Error(
-        "resolvePreferredQuiet Core botTmpDir should not run during browser-safe import",
-      );
+      throw new Error("resolvePreferredOpenClawTmpDir should not run during browser-safe import");
     });
 
   vi.doMock("../infra/tmp-openclaw-dir.js", async () => {

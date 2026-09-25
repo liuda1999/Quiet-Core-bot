@@ -36,10 +36,10 @@ describe("tmp-openclaw-dir browser-safe import", () => {
       plugins: [nodeShimPlugin],
       stdin: {
         contents: `
-          import { POSIX_OPENCLAW_TMP_DIR, resolvePreferredQuiet Core botTmpDir } from "./src/infra/tmp-openclaw-dir.ts";
+          import { POSIX_OPENCLAW_TMP_DIR, resolvePreferredOpenClawTmpDir } from "./src/infra/tmp-openclaw-dir.ts";
           globalThis.${resultKey} = {
             posixTmpDir: POSIX_OPENCLAW_TMP_DIR,
-            resolverType: typeof resolvePreferredQuiet Core botTmpDir,
+            resolverType: typeof resolvePreferredOpenClawTmpDir,
           };
         `,
         loader: "ts",

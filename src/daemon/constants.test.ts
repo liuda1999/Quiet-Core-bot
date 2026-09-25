@@ -59,12 +59,12 @@ describe("resolveGatewayWindowsTaskName", () => {
   it("returns default task name when no profile is set", () => {
     const result = resolveGatewayWindowsTaskName();
     expect(result).toBe(GATEWAY_WINDOWS_TASK_NAME);
-    expect(result).toBe("Quiet Core bot Gateway");
+    expect(result).toBe("Quiet Core Gateway");
   });
 
   it("returns profile-specific task name when profile is set", () => {
     const result = resolveGatewayWindowsTaskName("dev");
-    expect(result).toBe("Quiet Core bot Gateway (dev)");
+    expect(result).toBe("Quiet Core Gateway (dev)");
   });
 });
 
@@ -89,24 +89,24 @@ describe("resolveGatewayProfileSuffix", () => {
 
 describe("formatGatewayServiceDescription", () => {
   it("returns default description when no profile/version", () => {
-    expect(formatGatewayServiceDescription()).toBe("Quiet Core bot Gateway");
+    expect(formatGatewayServiceDescription()).toBe("Quiet Core Gateway");
   });
 
   it("includes profile when set", () => {
     expect(formatGatewayServiceDescription({ profile: "work" })).toBe(
-      "Quiet Core bot Gateway (profile: work)",
+      "Quiet Core Gateway (profile: work)",
     );
   });
 
   it("includes version when set", () => {
     expect(formatGatewayServiceDescription({ version: "2026.1.10" })).toBe(
-      "Quiet Core bot Gateway (v2026.1.10)",
+      "Quiet Core Gateway (v2026.1.10)",
     );
   });
 
   it("includes profile and version when set", () => {
     expect(formatGatewayServiceDescription({ profile: "dev", version: "1.2.3" })).toBe(
-      "Quiet Core bot Gateway (profile: dev, v1.2.3)",
+      "Quiet Core Gateway (profile: dev, v1.2.3)",
     );
   });
 });
@@ -127,7 +127,7 @@ describe("resolveGatewayServiceDescription", () => {
         env: { OPENCLAW_PROFILE: "work", OPENCLAW_SERVICE_VERSION: "local" },
         environment: { OPENCLAW_SERVICE_VERSION: "remote" },
       }),
-    ).toBe("Quiet Core bot Gateway (profile: work, vremote)");
+    ).toBe("Quiet Core Gateway (profile: work, vremote)");
   });
 });
 

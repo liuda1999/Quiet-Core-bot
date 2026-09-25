@@ -190,7 +190,7 @@ describe("normalizePluginsConfig", () => {
   });
 
   it("normalizes unknown plugin ids without consulting discovery", async () => {
-    const discoverPlugins = vi.spyOn(discovery, "discoverQuiet Core botPlugins");
+    const discoverPlugins = vi.spyOn(discovery, "discoverOpenClawPlugins");
     discoverPlugins.mockClear();
 
     const result = normalizePluginsConfig({
@@ -210,7 +210,7 @@ describe("normalizePluginsConfig", () => {
   });
 
   it("does not consult discovery or manifests for alias lookup", async () => {
-    const discoverPlugins = vi.spyOn(discovery, "discoverQuiet Core botPlugins").mockReturnValue({
+    const discoverPlugins = vi.spyOn(discovery, "discoverOpenClawPlugins").mockReturnValue({
       candidates: [
         {
           idHint: "anthropic",

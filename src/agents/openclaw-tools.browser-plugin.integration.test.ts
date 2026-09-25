@@ -22,7 +22,7 @@ function firstResolvePluginToolsParams(): Record<string, unknown> {
   return call[0] as Record<string, unknown>;
 }
 
-describe("createQuiet Core botTools browser plugin integration", () => {
+describe("createOpenClawTools browser plugin integration", () => {
   afterEach(() => {
     hoisted.resolvePluginTools.mockReset();
     clearSecretsRuntimeSnapshot();

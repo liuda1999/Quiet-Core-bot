@@ -159,6 +159,28 @@ describe("resolveGatewayProgramArguments", () => {
     ]);
   });
 
+  it("falls back to the package-root launcher when no dist build exists", async () => {
+    const launcherPath = path.resolve("/opt/quiet-core-bot/quiet-core-bot.mjs");
+    process.argv = ["node", launcherPath];
+    fsMocks.realpath.mockResolvedValue(launcherPath);
+    fsMocks.access.mockImplementation(async (target: string) => {
+      if (target === launcherPath) {
+        return;
+      }
+      throw new Error("missing");
+    });
+
+    const result = await resolveGatewayProgramArguments({ port: 18789 });
+
+    expect(result.programArguments).toEqual([
+      process.execPath,
+      launcherPath,
+      "gateway",
+      "--port",
+      "18789",
+    ]);
+  });
+
   it("uses src/entry.ts for bun dev mode", async () => {
     const repoIndexPath = path.resolve("/repo/src/index.ts");
     const repoEntryPath = path.resolve("/repo/src/entry.ts");

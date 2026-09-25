@@ -49,7 +49,7 @@ describe("resolveGatewayScopedTools excludeToolNames", () => {
   } {
     const args = hoisted.createOpenClawToolsMock.mock.calls[0]?.[0];
     if (!args || typeof args !== "object") {
-      throw new Error("expected createQuiet Core botTools args");
+      throw new Error("expected createOpenClawTools args");
     }
     return args as {
       cronCreatorToolAllowlist?: Array<string | { name: string; pluginId?: string }>;
