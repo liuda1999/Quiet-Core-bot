@@ -307,7 +307,7 @@ const COMPLETION_CACHE_MANUAL_REFRESH_HINT =
 
 /** Best-effort refresh of shell completion state after a successful update. */
 export async function tryWriteCompletionCache(root: string, jsonMode: boolean): Promise<void> {
-  const binPath = path.join(root, "openclaw.mjs");
+  const binPath = path.join(root, "quiet-core-bot.mjs");
   if (!(await pathExists(binPath))) {
     return;
   }

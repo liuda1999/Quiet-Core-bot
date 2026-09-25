@@ -620,7 +620,7 @@ export async function runUxMatrixEvidenceProducer(options: ProducerOptions) {
     "logs.txt",
   );
   const cliResult = await runCommandForCell({
-    args: ["openclaw.mjs", "--help"],
+    args: ["quiet-core-bot.mjs", "--help"],
     artifactBase: options.artifactBase,
     command: process.execPath,
     cwd: options.repoRoot,

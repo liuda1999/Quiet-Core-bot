@@ -41,7 +41,7 @@ const ensureSupportedNodeVersion = () => {
   }
 
   process.stderr.write(
-    `openclaw: Node.js v${MIN_NODE_VERSION}+ is required (current: v${process.versions.node}).\n` +
+    `quiet-core-bot: Node.js v${MIN_NODE_VERSION}+ is required (current: v${process.versions.node}).\n` +
       "If you use nvm, run:\n" +
       `  nvm install ${MIN_NODE_MAJOR}\n` +
       `  nvm use ${MIN_NODE_MAJOR}\n` +
@@ -93,7 +93,7 @@ const resolvePackagedCompileCacheDirectory = () => {
     : path.join(os.tmpdir(), "node-compile-cache");
   return path.join(
     baseDirectory,
-    "openclaw",
+    "quiet-core-bot",
     version,
     sanitizeCompileCachePathSegment(installMarker),
   );
@@ -195,7 +195,7 @@ const runRespawnedChild = (command, args, env) => {
   child.once("error", (error) => {
     detach();
     process.stderr.write(
-      `[openclaw] Failed to respawn launcher: ${
+      `[quiet-core-bot] Failed to respawn launcher: ${
         error instanceof Error ? (error.stack ?? error.message) : String(error)
       }\n`,
     );
@@ -352,7 +352,7 @@ const exists = async (specifier) => {
 };
 
 const buildMissingEntryErrorMessage = async () => {
-  const lines = ["openclaw: missing dist/entry.(m)js (build output)."];
+  const lines = ["quiet-core-bot: missing dist/entry.(m)js (build output)."];
   if (!(await exists("./src/entry.ts"))) {
     return lines.join("\n");
   }
@@ -362,9 +362,9 @@ const buildMissingEntryErrorMessage = async () => {
     "Build locally with `pnpm install && pnpm build`, or install a built package instead.",
   );
   lines.push(
-    "For pinned GitHub installs, use `npm install -g github:openclaw/openclaw#<ref>` instead of a raw `/archive/<ref>.tar.gz` URL.",
+    "For pinned GitHub installs, use `npm install -g github:<owner>/<repo>#<ref>` instead of a raw `/archive/<ref>.tar.gz` URL.",
   );
-  lines.push("For releases, use `npm install -g openclaw@latest`.");
+  lines.push("For releases, use `npm install -g quiet-core-bot@latest`.");
   return lines.join("\n");
 };
 
@@ -517,6 +517,11 @@ const resolveLauncherUserPath = (input) => {
   return path.resolve(input);
 };
 
+// Mirrors `resolveDefaultConfigCandidates` in src/config/paths.ts: the current
+// state dir and config file name come first, then the pre-rebrand locations.
+const LAUNCHER_CONFIG_FILENAMES = ["quiet-core-bot.json", "openclaw.json", "clawdbot.json"];
+const LAUNCHER_STATE_DIR_NAMES = [".quiet-core-bot", ".clawdbot", ".openclaw"];
+
 const resolveLauncherConfigPaths = () => {
   const explicit = process.env.OPENCLAW_CONFIG_PATH?.trim();
   if (explicit) {
@@ -525,15 +530,12 @@ const resolveLauncherConfigPaths = () => {
   const stateOverride = process.env.OPENCLAW_STATE_DIR?.trim();
   if (stateOverride) {
     const stateDir = resolveLauncherUserPath(stateOverride);
-    return [path.join(stateDir, "openclaw.json"), path.join(stateDir, "clawdbot.json")];
+    return LAUNCHER_CONFIG_FILENAMES.map((name) => path.join(stateDir, name));
   }
   const homeDir = resolveLauncherHomeDir();
-  return [
-    path.join(homeDir, ".openclaw", "openclaw.json"),
-    path.join(homeDir, ".openclaw", "clawdbot.json"),
-    path.join(homeDir, ".clawdbot", "openclaw.json"),
-    path.join(homeDir, ".clawdbot", "clawdbot.json"),
-  ];
+  return LAUNCHER_STATE_DIR_NAMES.flatMap((dirName) =>
+    LAUNCHER_CONFIG_FILENAMES.map((fileName) => path.join(homeDir, dirName, fileName)),
+  );
 };
 
 const shouldDeferRootHelpToRuntimeEntry = () => {
@@ -575,7 +577,9 @@ function tryOutputLauncherVersion(argv) {
     }
     const version = resolveLauncherVersion();
     const commit = resolveLauncherCommit();
-    process.stdout.write(commit ? `OpenClaw ${version} (${commit})\n` : `OpenClaw ${version}\n`);
+    process.stdout.write(
+      commit ? `Quiet Core bot ${version} (${commit})\n` : `Quiet Core bot ${version}\n`,
+    );
     return true;
   } catch {
     return false;

@@ -1984,7 +1984,7 @@ describe("AcpxRuntime fresh reset wrapper", () => {
       mcpServers: [{ name: "tools", command: "mcp-tools" }] as never,
       agentRegistry: {
         resolve: (agentName: string) =>
-          agentName === "openclaw" ? "env OPENCLAW_HIDE_BANNER=1 node openclaw.mjs acp" : agentName,
+          agentName === "openclaw" ? "env OPENCLAW_HIDE_BANNER=1 node quiet-core-bot.mjs acp" : agentName,
         list: () => ["codex", "openclaw"],
       },
     });

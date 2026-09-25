@@ -185,7 +185,7 @@ describe("bench-cli-startup", () => {
       const outputPath = join(tmpDir, "nested", "comparison.json");
       const makeReport = (durationAvg: number, maxRssAvg: number) => ({
         primary: {
-          entry: "openclaw.mjs",
+          entry: "quiet-core-bot.mjs",
           cases: [
             {
               id: "version",
@@ -251,7 +251,7 @@ describe("bench-cli-startup", () => {
   it("fails reports with no measured samples", () => {
     expect(
       testing.collectFailedSamples({
-        entry: "openclaw.mjs",
+        entry: "quiet-core-bot.mjs",
         cases: [
           {
             id: "version",
@@ -269,7 +269,7 @@ describe("bench-cli-startup", () => {
           },
         ],
       }),
-    ).toEqual(["openclaw.mjs version: no measured samples"]);
+    ).toEqual(["quiet-core-bot.mjs version: no measured samples"]);
   });
 
   it("fails reports with nonzero or signaled CLI samples", () => {
@@ -316,7 +316,7 @@ describe("bench-cli-startup", () => {
   it("fails reports with samples that did not report RSS", () => {
     expect(
       testing.collectFailedSamples({
-        entry: "openclaw.mjs",
+        entry: "quiet-core-bot.mjs",
         cases: [
           {
             id: "version",
@@ -342,7 +342,7 @@ describe("bench-cli-startup", () => {
           },
         ],
       }),
-    ).toEqual(["openclaw.mjs version sample 1: did not report max RSS"]);
+    ).toEqual(["quiet-core-bot.mjs version sample 1: did not report max RSS"]);
   });
 
   it("allows declared nonzero exit codes for clean-state probes", () => {
@@ -357,7 +357,7 @@ describe("bench-cli-startup", () => {
 
     expect(
       testing.collectFailedSamples({
-        entry: "openclaw.mjs",
+        entry: "quiet-core-bot.mjs",
         cases: [
           {
             id: "health",
@@ -392,7 +392,7 @@ describe("bench-cli-startup", () => {
 
     expect(
       testing.collectFailedSamples({
-        entry: "openclaw.mjs",
+        entry: "quiet-core-bot.mjs",
         cases: [
           {
             id: "health",
@@ -413,7 +413,7 @@ describe("bench-cli-startup", () => {
         ],
       }),
     ).toEqual([
-      "openclaw.mjs health sample 1: exited with expected code 1 but output did not match expected clean-state markers (Gateway target:)",
+      "quiet-core-bot.mjs health sample 1: exited with expected code 1 but output did not match expected clean-state markers (Gateway target:)",
     ]);
   });
 

@@ -1,7 +1,7 @@
+import path from "node:path";
 // Gateway post-attach startup sidecars.
 // Schedules warmups, sentinels, update checks, memory backend, and plugin services.
 import { monitorEventLoopDelay, performance } from "node:perf_hooks";
-import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 import type { CliDeps } from "../cli/deps.types.js";
 import { resolveStateDir } from "../config/paths.js";
@@ -875,7 +875,7 @@ export async function startGatewaySidecars(params: {
       try {
         const [{ resolveAgentSessionDirs }, { refreshCostUsageCache }] = await Promise.all([
           import("../agents/session-dirs.js"),
-          import("../../infra/session-cost-usage.js"),
+          import("../infra/session-cost-usage.js"),
         ]);
         const stateDir = resolveStateDir(process.env);
         const sessionDirs = await resolveAgentSessionDirs(stateDir);

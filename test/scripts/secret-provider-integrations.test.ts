@@ -74,7 +74,7 @@ function writeStallingOpenClaw(
         )}, "x"), 20);`,
       ].join("\n")
     : "";
-  const scriptPath = path.join(root, "fake-openclaw.mjs");
+  const scriptPath = path.join(root, "fake-quiet-core-bot.mjs");
   fs.writeFileSync(
     scriptPath,
     [
@@ -113,7 +113,7 @@ function writeStallingOpenClaw(
 }
 
 function writeLeakingStartupOpenClaw(root: string): string {
-  const scriptPath = path.join(root, "fake-leaking-openclaw.mjs");
+  const scriptPath = path.join(root, "fake-leaking-quiet-core-bot.mjs");
   fs.writeFileSync(
     scriptPath,
     [
@@ -133,7 +133,7 @@ function writeLeakingStartupOpenClaw(root: string): string {
 }
 
 function writeSignaledStartupOpenClaw(root: string): string {
-  const scriptPath = path.join(root, "fake-signaled-openclaw.mjs");
+  const scriptPath = path.join(root, "fake-signaled-quiet-core-bot.mjs");
   fs.writeFileSync(
     scriptPath,
     [
@@ -156,7 +156,7 @@ function writeSignaledStartupOpenClaw(root: string): string {
 }
 
 function writeNoisySecretsConfigureOpenClaw(root: string): string {
-  const scriptPath = path.join(root, "fake-noisy-secrets-configure-openclaw.mjs");
+  const scriptPath = path.join(root, "fake-noisy-secrets-configure-quiet-core-bot.mjs");
   fs.writeFileSync(
     scriptPath,
     [

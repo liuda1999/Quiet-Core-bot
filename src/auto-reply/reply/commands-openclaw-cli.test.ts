@@ -35,12 +35,12 @@ describe("buildCurrentOpenClawCliArgv", () => {
   });
 
   it("preserves a real OpenClaw launcher entry", () => {
-    setArgv1("/opt/openclaw/openclaw.mjs");
+    setArgv1("/opt/openclaw/quiet-core-bot.mjs");
 
     expect(buildCurrentOpenClawCliArgv(["sessions", "export-trajectory"])).toEqual([
       process.execPath,
       ...process.execArgv,
-      "/opt/openclaw/openclaw.mjs",
+      "/opt/openclaw/quiet-core-bot.mjs",
       "sessions",
       "export-trajectory",
     ]);

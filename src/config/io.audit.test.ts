@@ -493,7 +493,7 @@ describe("config io audit helpers", () => {
       cwd: home,
       argv: [
         "/usr/bin/node",
-        "/usr/local/bin/openclaw.mjs",
+        "/usr/local/bin/quiet-core-bot.mjs",
         "config",
         "set",
         "channels.slack.botToken",
@@ -511,7 +511,7 @@ describe("config io audit helpers", () => {
       pid: 1,
       ppid: 1,
       cwd: home,
-      argv: ["/usr/bin/node", "/usr/local/bin/openclaw.mjs", "config", "set", "ui.theme", "dark"],
+      argv: ["/usr/bin/node", "/usr/local/bin/quiet-core-bot.mjs", "config", "set", "ui.theme", "dark"],
       execArgv: ["--disable-warning=ExperimentalWarning"],
       suspicious: [],
       result: "rename",
@@ -573,7 +573,7 @@ describe("config io audit helpers", () => {
     const malformed = "{this is not valid json";
     const validUnredacted = {
       ts: "2026-05-02T00:03:48.471Z",
-      argv: ["node", "openclaw.mjs", "config", "set", "x", "xoxb-bad-token-1234567890abcdef"],
+      argv: ["node", "quiet-core-bot.mjs", "config", "set", "x", "xoxb-bad-token-1234567890abcdef"],
     };
     fs.writeFileSync(auditPath, `${malformed}\n${JSON.stringify(validUnredacted)}\n`, {
       encoding: "utf-8",
@@ -600,7 +600,7 @@ describe("config io audit helpers", () => {
       ts: "2026-05-02T00:03:48.471Z",
       argv: [
         "node",
-        "openclaw.mjs",
+        "quiet-core-bot.mjs",
         "config",
         "set",
         "channels.slack.appToken",
@@ -632,7 +632,7 @@ describe("config io audit helpers", () => {
       ts: "2026-05-02T00:03:48.471Z",
       argv: [
         "node",
-        "openclaw.mjs",
+        "quiet-core-bot.mjs",
         "config",
         "set",
         "channels.slack.botToken",
@@ -681,7 +681,7 @@ describe("config io audit helpers", () => {
       ts: "2026-05-02T00:03:48.471Z",
       argv: [
         "node",
-        "openclaw.mjs",
+        "quiet-core-bot.mjs",
         "config",
         "set",
         "channels.slack.botToken",
@@ -691,7 +691,7 @@ describe("config io audit helpers", () => {
     };
     const appended = {
       ts: "2026-05-02T00:04:00.000Z",
-      argv: ["node", "openclaw.mjs", "config", "set", "theme", "dark"],
+      argv: ["node", "quiet-core-bot.mjs", "config", "set", "theme", "dark"],
       execArgv: [],
     };
     const original = `${JSON.stringify(unredacted)}\n`;

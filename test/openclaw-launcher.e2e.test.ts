@@ -10,8 +10,8 @@ import { cleanupTempDirs, makeTempDir } from "./helpers/temp-dir.js";
 async function makeLauncherFixture(fixtureRoots: string[]): Promise<string> {
   const fixtureRoot = makeTempDir(fixtureRoots, "openclaw-launcher-");
   await fs.copyFile(
-    path.resolve(process.cwd(), "openclaw.mjs"),
-    path.join(fixtureRoot, "openclaw.mjs"),
+    path.resolve(process.cwd(), "quiet-core-bot.mjs"),
+    path.join(fixtureRoot, "quiet-core-bot.mjs"),
   );
   await fs.mkdir(path.join(fixtureRoot, "dist"), { recursive: true });
   return fixtureRoot;
@@ -22,7 +22,7 @@ async function makeLauncherProbeFixture(
   probeSource: string,
 ): Promise<string> {
   const fixtureRoot = await makeLauncherFixture(fixtureRoots);
-  const launcherPath = path.join(fixtureRoot, "openclaw.mjs");
+  const launcherPath = path.join(fixtureRoot, "quiet-core-bot.mjs");
   const launcher = await fs.readFile(launcherPath, "utf8");
   const bootstrapStart = "\nif (!waitingForCompileCacheRespawn) {";
   const bootstrapIndex = launcher.indexOf(bootstrapStart);
@@ -165,7 +165,7 @@ describe("openclaw launcher", () => {
 
   it("keeps the bootstrap Node floor aligned with package and runtime guards", async () => {
     const [launcher, runtimeGuard, packageJsonRaw] = await Promise.all([
-      fs.readFile(path.resolve(process.cwd(), "openclaw.mjs"), "utf8"),
+      fs.readFile(path.resolve(process.cwd(), "quiet-core-bot.mjs"), "utf8"),
       fs.readFile(path.resolve(process.cwd(), "src/infra/runtime-guard.ts"), "utf8"),
       fs.readFile(path.resolve(process.cwd(), "package.json"), "utf8"),
     ]);
@@ -179,7 +179,7 @@ describe("openclaw launcher", () => {
     const engineMatch = packageJson.engines?.node?.match(/^>=(\d+)\.(\d+)\.(\d+)$/u);
 
     if (!launcherMatch) {
-      throw new Error("openclaw.mjs MIN_NODE_* constants were not found");
+      throw new Error("quiet-core-bot.mjs MIN_NODE_* constants were not found");
     }
     if (!runtimeMatch) {
       throw new Error("src/infra/runtime-guard.ts MIN_NODE constant was not found");
@@ -192,7 +192,7 @@ describe("openclaw launcher", () => {
 
     expect(
       [Number(launcherMatch[1]), Number(launcherMatch[2]), 0],
-      "openclaw.mjs MIN_NODE_* must match package.json engines.node",
+      "quiet-core-bot.mjs MIN_NODE_* must match package.json engines.node",
     ).toEqual([engineMajor, engineMinor, enginePatch]);
     expect(
       runtimeMatch.slice(1, 4).map(Number),
@@ -218,7 +218,7 @@ describe("openclaw launcher", () => {
       [
         "--import",
         pathToFileURL(mockNodeVersionPath).href,
-        path.join(fixtureRoot, "openclaw.mjs"),
+        path.join(fixtureRoot, "quiet-core-bot.mjs"),
         "--help",
       ],
       {
@@ -230,7 +230,7 @@ describe("openclaw launcher", () => {
 
     expect(result.status).toBe(1);
     expect(result.stderr).toContain(
-      `openclaw: Node.js v${launcherMinimumLabel}+ is required (current: v${mockedNodeVersion}).`,
+      `quiet-core-bot: Node.js v${launcherMinimumLabel}+ is required (current: v${mockedNodeVersion}).`,
     );
   });
 
@@ -242,11 +242,15 @@ describe("openclaw launcher", () => {
       "utf8",
     );
 
-    const result = spawnSync(process.execPath, [path.join(fixtureRoot, "openclaw.mjs"), "--help"], {
-      cwd: fixtureRoot,
-      env: launcherEnv(),
-      encoding: "utf8",
-    });
+    const result = spawnSync(
+      process.execPath,
+      [path.join(fixtureRoot, "quiet-core-bot.mjs"), "--help"],
+      {
+        cwd: fixtureRoot,
+        env: launcherEnv(),
+        encoding: "utf8",
+      },
+    );
 
     expect(result.status).not.toBe(0);
     expect(result.stderr).toContain("missing-openclaw-launcher-dep");
@@ -256,11 +260,15 @@ describe("openclaw launcher", () => {
   it("keeps the friendly launcher error for a truly missing entry build output", async () => {
     const fixtureRoot = await makeLauncherFixture(fixtureRoots);
 
-    const result = spawnSync(process.execPath, [path.join(fixtureRoot, "openclaw.mjs"), "--help"], {
-      cwd: fixtureRoot,
-      env: launcherEnv(),
-      encoding: "utf8",
-    });
+    const result = spawnSync(
+      process.execPath,
+      [path.join(fixtureRoot, "quiet-core-bot.mjs"), "--help"],
+      {
+        cwd: fixtureRoot,
+        env: launcherEnv(),
+        encoding: "utf8",
+      },
+    );
 
     expect(result.status).not.toBe(0);
     expect(result.stderr).toContain("missing dist/entry.(m)js");
@@ -285,7 +293,7 @@ describe("openclaw launcher", () => {
 
     const result = spawnSync(
       process.execPath,
-      [path.join(fixtureRoot, "openclaw.mjs"), "--version"],
+      [path.join(fixtureRoot, "quiet-core-bot.mjs"), "--version"],
       {
         cwd: fixtureRoot,
         env: launcherEnv(),
@@ -294,7 +302,7 @@ describe("openclaw launcher", () => {
     );
 
     expect(result.status).toBe(0);
-    expect(result.stdout).toBe("OpenClaw 1.2.3-test (abcdef0)\n");
+    expect(result.stdout).toBe("Quiet Core bot 1.2.3-test (abcdef0)\n");
     expect(result.stderr).toBe("");
   });
 
@@ -313,7 +321,7 @@ describe("openclaw launcher", () => {
 
     const result = spawnSync(
       process.execPath,
-      [path.join(fixtureRoot, "openclaw.mjs"), "--container", "demo", "--version"],
+      [path.join(fixtureRoot, "quiet-core-bot.mjs"), "--container", "demo", "--version"],
       {
         cwd: fixtureRoot,
         env: launcherEnv(),
@@ -326,7 +334,7 @@ describe("openclaw launcher", () => {
 
     const envResult = spawnSync(
       process.execPath,
-      [path.join(fixtureRoot, "openclaw.mjs"), "--version"],
+      [path.join(fixtureRoot, "quiet-core-bot.mjs"), "--version"],
       {
         cwd: fixtureRoot,
         env: launcherEnv({ OPENCLAW_CONTAINER: "demo" }),
@@ -372,7 +380,7 @@ describe("openclaw launcher", () => {
       ].join("\n"),
     );
 
-    const result = spawnSync(process.execPath, [path.join(fixtureRoot, "openclaw.mjs")], {
+    const result = spawnSync(process.execPath, [path.join(fixtureRoot, "quiet-core-bot.mjs")], {
       cwd: fixtureRoot,
       env: launcherEnv(),
       encoding: "utf8",
@@ -401,7 +409,7 @@ describe("openclaw launcher", () => {
 
       const result = spawnSync(
         process.env.BUN_BIN ?? "bun",
-        [path.join(fixtureRoot, "openclaw.mjs")],
+        [path.join(fixtureRoot, "quiet-core-bot.mjs")],
         {
           cwd: fixtureRoot,
           env: launcherEnv(),
@@ -431,7 +439,7 @@ describe("openclaw launcher", () => {
 
       const result = spawnSync(
         process.env.BUN_BIN ?? "bun",
-        [path.join(fixtureRoot, "openclaw.mjs"), "--help"],
+        [path.join(fixtureRoot, "quiet-core-bot.mjs"), "--help"],
         {
           cwd: fixtureRoot,
           env: launcherEnv(),
@@ -453,11 +461,15 @@ describe("openclaw launcher", () => {
       "utf8",
     );
 
-    const result = spawnSync(process.execPath, [path.join(fixtureRoot, "openclaw.mjs"), "--help"], {
-      cwd: fixtureRoot,
-      env: launcherEnv(),
-      encoding: "utf8",
-    });
+    const result = spawnSync(
+      process.execPath,
+      [path.join(fixtureRoot, "quiet-core-bot.mjs"), "--help"],
+      {
+        cwd: fixtureRoot,
+        env: launcherEnv(),
+        encoding: "utf8",
+      },
+    );
 
     expect(result.status).toBe(0);
     expect(result.stdout).toBe("PRECOMPUTED help\n");
@@ -477,7 +489,7 @@ describe("openclaw launcher", () => {
 
     const result = spawnSync(
       process.execPath,
-      [path.join(fixtureRoot, "openclaw.mjs"), params.command, "--help"],
+      [path.join(fixtureRoot, "quiet-core-bot.mjs"), params.command, "--help"],
       {
         cwd: fixtureRoot,
         env: launcherEnv(),
@@ -501,7 +513,7 @@ describe("openclaw launcher", () => {
 
       const result = spawnSync(
         process.execPath,
-        [path.join(fixtureRoot, "openclaw.mjs"), command, "--help"],
+        [path.join(fixtureRoot, "quiet-core-bot.mjs"), command, "--help"],
         {
           cwd: fixtureRoot,
           env: launcherEnv(),
@@ -524,7 +536,14 @@ describe("openclaw launcher", () => {
 
     const result = spawnSync(
       process.execPath,
-      [path.join(fixtureRoot, "openclaw.mjs"), "--profile", "work", "--no-color", "models", "-h"],
+      [
+        path.join(fixtureRoot, "quiet-core-bot.mjs"),
+        "--profile",
+        "work",
+        "--no-color",
+        "models",
+        "-h",
+      ],
       {
         cwd: fixtureRoot,
         env: launcherEnv(),
@@ -551,7 +570,7 @@ describe("openclaw launcher", () => {
 
     const result = spawnSync(
       process.execPath,
-      [path.join(fixtureRoot, "openclaw.mjs"), "models", "--help"],
+      [path.join(fixtureRoot, "quiet-core-bot.mjs"), "models", "--help"],
       {
         cwd: fixtureRoot,
         env: launcherEnv({ OPENCLAW_CONTAINER: "demo" }),
@@ -595,7 +614,7 @@ describe("openclaw launcher", () => {
 
     const result = spawnSync(
       process.execPath,
-      [path.join(fixtureRoot, "openclaw.mjs"), ...params.args],
+      [path.join(fixtureRoot, "quiet-core-bot.mjs"), ...params.args],
       {
         cwd: fixtureRoot,
         env: launcherEnv(params.env),
@@ -627,11 +646,15 @@ describe("openclaw launcher", () => {
       "utf8",
     );
 
-    const result = spawnSync(process.execPath, [path.join(fixtureRoot, "openclaw.mjs"), "--help"], {
-      cwd: fixtureRoot,
-      env: launcherEnv({ OPENCLAW_CONFIG_PATH: configPath }),
-      encoding: "utf8",
-    });
+    const result = spawnSync(
+      process.execPath,
+      [path.join(fixtureRoot, "quiet-core-bot.mjs"), "--help"],
+      {
+        cwd: fixtureRoot,
+        env: launcherEnv({ OPENCLAW_CONFIG_PATH: configPath }),
+        encoding: "utf8",
+      },
+    );
 
     expect(result.status).toBe(0);
     expect(result.stdout).toBe("RUNTIME ENTRY\n");
@@ -659,7 +682,7 @@ describe("openclaw launcher", () => {
 
     const result = spawnSync(
       process.execPath,
-      [path.join(fixtureRoot, "openclaw.mjs"), "nodes", "--help"],
+      [path.join(fixtureRoot, "quiet-core-bot.mjs"), "nodes", "--help"],
       {
         cwd: fixtureRoot,
         env: launcherEnv({ OPENCLAW_CONFIG_PATH: configPath }),
@@ -693,11 +716,15 @@ describe("openclaw launcher", () => {
       "utf8",
     );
 
-    const result = spawnSync(process.execPath, [path.join(fixtureRoot, "openclaw.mjs"), "--help"], {
-      cwd: fixtureRoot,
-      env: launcherEnv({ OPENCLAW_HOME: openclawHome }),
-      encoding: "utf8",
-    });
+    const result = spawnSync(
+      process.execPath,
+      [path.join(fixtureRoot, "quiet-core-bot.mjs"), "--help"],
+      {
+        cwd: fixtureRoot,
+        env: launcherEnv({ OPENCLAW_HOME: openclawHome }),
+        encoding: "utf8",
+      },
+    );
 
     expect(result.status).toBe(0);
     expect(result.stdout).toBe("RUNTIME ENTRY\n");
@@ -725,11 +752,15 @@ describe("openclaw launcher", () => {
       "utf8",
     );
 
-    const result = spawnSync(process.execPath, [path.join(fixtureRoot, "openclaw.mjs"), "--help"], {
-      cwd: fixtureRoot,
-      env: launcherEnv({ HOME: home, OPENCLAW_HOME: undefined }),
-      encoding: "utf8",
-    });
+    const result = spawnSync(
+      process.execPath,
+      [path.join(fixtureRoot, "quiet-core-bot.mjs"), "--help"],
+      {
+        cwd: fixtureRoot,
+        env: launcherEnv({ HOME: home, OPENCLAW_HOME: undefined }),
+        encoding: "utf8",
+      },
+    );
 
     expect(result.status).toBe(0);
     expect(result.stdout).toBe("RUNTIME ENTRY\n");
@@ -751,11 +782,15 @@ describe("openclaw launcher", () => {
     );
     await fs.writeFile(configPath, JSON.stringify({ $include: "memory.json" }), "utf8");
 
-    const result = spawnSync(process.execPath, [path.join(fixtureRoot, "openclaw.mjs"), "--help"], {
-      cwd: fixtureRoot,
-      env: launcherEnv({ OPENCLAW_CONFIG_PATH: configPath }),
-      encoding: "utf8",
-    });
+    const result = spawnSync(
+      process.execPath,
+      [path.join(fixtureRoot, "quiet-core-bot.mjs"), "--help"],
+      {
+        cwd: fixtureRoot,
+        env: launcherEnv({ OPENCLAW_CONFIG_PATH: configPath }),
+        encoding: "utf8",
+      },
+    );
 
     expect(result.status).toBe(0);
     expect(result.stdout).toBe("RUNTIME ENTRY\n");
@@ -766,17 +801,21 @@ describe("openclaw launcher", () => {
     const fixtureRoot = await makeLauncherFixture(fixtureRoots);
     await addSourceTreeMarker(fixtureRoot);
 
-    const result = spawnSync(process.execPath, [path.join(fixtureRoot, "openclaw.mjs"), "--help"], {
-      cwd: fixtureRoot,
-      env: launcherEnv(),
-      encoding: "utf8",
-    });
+    const result = spawnSync(
+      process.execPath,
+      [path.join(fixtureRoot, "quiet-core-bot.mjs"), "--help"],
+      {
+        cwd: fixtureRoot,
+        env: launcherEnv(),
+        encoding: "utf8",
+      },
+    );
 
     expect(result.status).not.toBe(0);
     expect(result.stderr).toContain("missing dist/entry.(m)js");
     expect(result.stderr).toContain("unbuilt source tree or GitHub source archive");
     expect(result.stderr).toContain("pnpm install && pnpm build");
-    expect(result.stderr).toContain("github:openclaw/openclaw#<ref>");
+    expect(result.stderr).toContain("github:<owner>/<repo>#<ref>");
   });
 
   it("keeps compile cache off for source-checkout launchers", async () => {
@@ -784,7 +823,7 @@ describe("openclaw launcher", () => {
     await addSourceTreeMarker(fixtureRoot);
     await addCompileCacheProbe(fixtureRoot);
 
-    const result = spawnSync(process.execPath, [path.join(fixtureRoot, "openclaw.mjs")], {
+    const result = spawnSync(process.execPath, [path.join(fixtureRoot, "quiet-core-bot.mjs")], {
       cwd: fixtureRoot,
       env: launcherEnv(),
       encoding: "utf8",
@@ -799,7 +838,7 @@ describe("openclaw launcher", () => {
     await addGitMarker(fixtureRoot);
     await addCompileCacheProbe(fixtureRoot);
 
-    const result = spawnSync(process.execPath, [path.join(fixtureRoot, "openclaw.mjs")], {
+    const result = spawnSync(process.execPath, [path.join(fixtureRoot, "quiet-core-bot.mjs")], {
       cwd: fixtureRoot,
       env: launcherEnv({
         NODE_COMPILE_CACHE: path.join(fixtureRoot, ".node-compile-cache"),
@@ -831,7 +870,7 @@ describe("openclaw launcher", () => {
         "utf8",
       );
 
-      const launcher = spawn(process.execPath, [path.join(fixtureRoot, "openclaw.mjs")], {
+      const launcher = spawn(process.execPath, [path.join(fixtureRoot, "quiet-core-bot.mjs")], {
         cwd: fixtureRoot,
         env: launcherEnv({
           NODE_COMPILE_CACHE: path.join(fixtureRoot, ".node-compile-cache"),
@@ -882,7 +921,7 @@ describe("openclaw launcher", () => {
         "utf8",
       );
 
-      const launcher = spawn(process.execPath, [path.join(fixtureRoot, "openclaw.mjs")], {
+      const launcher = spawn(process.execPath, [path.join(fixtureRoot, "quiet-core-bot.mjs")], {
         cwd: fixtureRoot,
         env: launcherEnv({
           NODE_COMPILE_CACHE: path.join(fixtureRoot, ".node-compile-cache"),
@@ -924,7 +963,7 @@ describe("openclaw launcher", () => {
       const linkedRoot = path.join(linkParent, "openclaw-linked");
       await fs.symlink(fixtureRoot, linkedRoot, "dir");
 
-      const result = spawnSync(process.execPath, [path.join(linkedRoot, "openclaw.mjs")], {
+      const result = spawnSync(process.execPath, [path.join(linkedRoot, "quiet-core-bot.mjs")], {
         cwd: linkParent,
         env: launcherEnv({
           NODE_COMPILE_CACHE: path.join(linkParent, ".node-compile-cache"),
@@ -941,7 +980,7 @@ describe("openclaw launcher", () => {
     const fixtureRoot = await makeLauncherFixture(fixtureRoots);
     await addCompileCacheProbe(fixtureRoot);
 
-    const result = spawnSync(process.execPath, [path.join(fixtureRoot, "openclaw.mjs")], {
+    const result = spawnSync(process.execPath, [path.join(fixtureRoot, "quiet-core-bot.mjs")], {
       cwd: fixtureRoot,
       env: launcherEnv({
         NODE_COMPILE_CACHE: path.join(fixtureRoot, ".node-compile-cache"),
@@ -965,7 +1004,7 @@ describe("openclaw launcher", () => {
       "utf8",
     );
 
-    const result = spawnSync(process.execPath, [path.join(fixtureRoot, "openclaw.mjs")], {
+    const result = spawnSync(process.execPath, [path.join(fixtureRoot, "quiet-core-bot.mjs")], {
       cwd: fixtureRoot,
       env: launcherEnv({
         NODE_COMPILE_CACHE: path.join(fixtureRoot, ".node-compile-cache"),
@@ -974,7 +1013,9 @@ describe("openclaw launcher", () => {
     });
 
     expect(result.status).toBe(0);
-    expect(result.stdout).toContain(path.join(".node-compile-cache", "openclaw", "2026.4.29"));
+    expect(result.stdout).toContain(
+      path.join(".node-compile-cache", "quiet-core-bot", "2026.4.29"),
+    );
   });
 
   it("falls back to the default packaged launcher compile cache when NODE_COMPILE_CACHE is empty", async () => {
@@ -991,7 +1032,7 @@ describe("openclaw launcher", () => {
       "utf8",
     );
 
-    const result = spawnSync(process.execPath, [path.join(fixtureRoot, "openclaw.mjs")], {
+    const result = spawnSync(process.execPath, [path.join(fixtureRoot, "quiet-core-bot.mjs")], {
       cwd: runCwd,
       env: launcherEnv({
         NODE_COMPILE_CACHE: "",
@@ -1003,7 +1044,7 @@ describe("openclaw launcher", () => {
     });
 
     expect(result.status).toBe(0);
-    expect(result.stdout).toContain(path.join("node-compile-cache", "openclaw", "2026.4.29"));
+    expect(result.stdout).toContain(path.join("node-compile-cache", "quiet-core-bot", "2026.4.29"));
     expect(result.stdout).not.toContain(path.join(runCwd, "openclaw"));
   });
 
@@ -1019,7 +1060,7 @@ describe("openclaw launcher", () => {
 
       const result = spawnSync(
         process.execPath,
-        ["--import", pathToFileURL(mockRuntime).href, path.join(fixtureRoot, "openclaw.mjs")],
+        ["--import", pathToFileURL(mockRuntime).href, path.join(fixtureRoot, "quiet-core-bot.mjs")],
         {
           cwd: fixtureRoot,
           env: launcherEnv({
@@ -1048,7 +1089,7 @@ describe("openclaw launcher", () => {
 
       const result = spawnSync(
         process.execPath,
-        ["--import", pathToFileURL(mockRuntime).href, path.join(fixtureRoot, "openclaw.mjs")],
+        ["--import", pathToFileURL(mockRuntime).href, path.join(fixtureRoot, "quiet-core-bot.mjs")],
         {
           cwd: fixtureRoot,
           env: launcherEnv({
@@ -1081,7 +1122,7 @@ describe("openclaw launcher", () => {
 
       const result = spawnSync(
         process.execPath,
-        ["--import", pathToFileURL(mockRuntime).href, path.join(fixtureRoot, "openclaw.mjs")],
+        ["--import", pathToFileURL(mockRuntime).href, path.join(fixtureRoot, "quiet-core-bot.mjs")],
         {
           cwd: fixtureRoot,
           env: launcherEnv({
@@ -1103,7 +1144,7 @@ describe("openclaw launcher", () => {
     const tmpRoot = makeTempDir(fixtureRoots, "openclaw-launcher-tmp-");
     await addCompileCacheProbe(fixtureRoot);
 
-    const result = spawnSync(process.execPath, [path.join(fixtureRoot, "openclaw.mjs")], {
+    const result = spawnSync(process.execPath, [path.join(fixtureRoot, "quiet-core-bot.mjs")], {
       cwd: fixtureRoot,
       env: launcherEnv({
         TMP: tmpRoot,

@@ -34,7 +34,7 @@ function rewritePnpmVersionedOpenClawEntryPath(entryPath: string): string {
   // Respawn through the stable OpenClaw package wrapper instead.
   return entryPath.replace(
     PNPM_VERSIONED_OPENCLAW_ENTRY_PATTERN,
-    "$1$2node_modules$2openclaw$2openclaw.mjs",
+    "$1$2node_modules$2openclaw$2quiet-core-bot.mjs",
   );
 }
 

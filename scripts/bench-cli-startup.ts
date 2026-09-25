@@ -107,7 +107,7 @@ const DEFAULT_WARMUP = 1;
 const DEFAULT_TIMEOUT_MS = 30_000;
 const TIMEOUT_KILL_GRACE_MS = 1_000;
 const PROCESS_GROUP_EXIT_POLL_MS = 25;
-const DEFAULT_ENTRY = "openclaw.mjs";
+const DEFAULT_ENTRY = "quiet-core-bot.mjs";
 const MAX_RSS_MARKER = "__OPENCLAW_MAX_RSS_KB__=";
 const VALUE_FLAGS = new Set([
   "--case",
@@ -1126,7 +1126,7 @@ Options:
   --preset <startup|real|response|all>
                                Command preset to run (default: startup)
   --case <id>                  Specific case id to run; repeatable
-  --entry <path>               Primary entry file (default: openclaw.mjs)
+  --entry <path>               Primary entry file (default: quiet-core-bot.mjs)
   --entry-secondary <path>     Secondary entry file for avg delta comparison
   --runs <n>                   Measured runs per case (default: ${DEFAULT_RUNS})
   --warmup <n>                 Warmup runs per case (default: ${DEFAULT_WARMUP})

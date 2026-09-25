@@ -2,11 +2,18 @@
 import { replaceCliName, resolveCliName } from "./cli-name.js";
 import { normalizeProfileName } from "./profile-utils.js";
 
-const CLI_PREFIX_RE = /^(?:pnpm|npm|bunx|npx)\s+openclaw\b|^openclaw\b/;
+// Matches both the current and the pre-rebrand binary name so legacy example
+// strings are still recognized and rewritten to the active CLI name.
+const CLI_COMMAND_NAME_RE = "(?:quiet-core-bot|openclaw)";
+const CLI_PREFIX_RE = new RegExp(
+  `^(?:pnpm|npm|bunx|npx)\\s+${CLI_COMMAND_NAME_RE}\\b|^${CLI_COMMAND_NAME_RE}\\b`,
+);
 const CONTAINER_FLAG_RE = /(?:^|\s)--container(?:\s|=|$)/;
 const PROFILE_FLAG_RE = /(?:^|\s)--profile(?:\s|=|$)/;
 const DEV_FLAG_RE = /(?:^|\s)--dev(?:\s|$)/;
-const UPDATE_COMMAND_RE = /^(?:(?:pnpm|npm|bunx|npx)\s+openclaw|openclaw)\b.*\supdate(?:\s|$)/;
+const UPDATE_COMMAND_RE = new RegExp(
+  `^(?:(?:pnpm|npm|bunx|npx)\\s+${CLI_COMMAND_NAME_RE}|${CLI_COMMAND_NAME_RE})\\b.*\\supdate(?:\\s|$)`,
+);
 const CONTAINER_HINT_RE = /^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,127}$/;
 
 /** Add active root options to a displayed command without duplicating explicit flags. */

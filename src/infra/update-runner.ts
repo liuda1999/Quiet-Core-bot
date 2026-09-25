@@ -1550,7 +1550,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
         return await buildGitErrorResultWithRollback("ui-build-failed");
       }
 
-      const doctorEntry = path.join(gitRoot, "openclaw.mjs");
+      const doctorEntry = path.join(gitRoot, "quiet-core-bot.mjs");
       const doctorEntryExists = await fs
         .stat(doctorEntry)
         .then(() => true)

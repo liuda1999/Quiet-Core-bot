@@ -14,7 +14,7 @@
     "url": "git+https://github.com/quiet-core/quiet-core-bot.git"
   },
   "bin": {
-    "quiet-core-bot": "openclaw.mjs"
+    "quiet-core-bot": "quiet-core-bot.mjs"
   },
   "directories": {
     "doc": "docs",
@@ -24,7 +24,7 @@
     "CHANGELOG.md",
     "LICENSE",
     "npm-shrinkwrap.json",
-    "openclaw.mjs",
+    "quiet-core-bot.mjs",
     "pnpm-workspace.yaml",
     "README.md",
     "THIRD_PARTY_NOTICES.md",
@@ -1401,7 +1401,7 @@
       "default": "./dist/plugin-sdk/llm.js"
     },
     "./extension-api": "./dist/extensionAPI.js",
-    "./cli-entry": "./openclaw.mjs"
+    "./cli-entry": "./quiet-core-bot.mjs"
   },
   "scripts": {
     "audit:seams": "node scripts/audit-seams.mjs",
@@ -1614,7 +1614,7 @@
     "release:prep": "node scripts/release-preflight.mjs --fix",
     "runtime-sidecars:check": "node --import tsx scripts/generate-runtime-sidecar-paths-baseline.ts --check",
     "runtime-sidecars:gen": "node --import tsx scripts/generate-runtime-sidecar-paths-baseline.ts --write",
-    "start": "node openclaw.mjs",
+    "start": "node quiet-core-bot.mjs",
     "test": "node scripts/test-projects.mjs",
     "test:all": "pnpm lint && pnpm build && pnpm test && pnpm test:e2e && pnpm test:live && pnpm test:docker:all",
     "test:auth:compat": "node scripts/run-vitest.mjs run --config test/vitest/vitest.gateway.config.ts src/gateway/server.auth.compat-baseline.test.ts src/gateway/client.test.ts src/gateway/reconnect-gating.test.ts && node scripts/run-vitest.mjs run packages/gateway-protocol/src/connect-error-details.test.ts",

@@ -40,7 +40,7 @@ echo "mode:      $MODE"
 echo
 
 echo "== repository sanity =="
-for f in package.json pnpm-lock.yaml pnpm-workspace.yaml openclaw.mjs Dockerfile docker-compose.yml .env.example HANDOVER.md; do
+for f in package.json pnpm-lock.yaml pnpm-workspace.yaml quiet-core-bot.mjs Dockerfile docker-compose.yml .env.example HANDOVER.md; do
   if [ -f "$ROOT_DIR/$f" ]; then ok "$f"; else warn "missing: $f (see HANDOVER.md)"; fi
 done
 echo

@@ -6,7 +6,7 @@ import { isBunRuntime } from "../../daemon/runtime-binary.js";
 import { resolveOpenClawPackageRootSync } from "../../infra/openclaw-root.js";
 
 const requireFromHere = createRequire(import.meta.url);
-const OPENCLAW_CLI_ENTRY_BASENAMES = new Set(["openclaw", "openclaw.mjs"]);
+const OPENCLAW_CLI_ENTRY_BASENAMES = new Set(["openclaw", "quiet-core-bot.mjs"]);
 const OPENCLAW_PACKAGE_ENTRY_PATHS = new Set([
   path.join("dist", "entry.js"),
   path.join("dist", "entry.mjs"),
@@ -48,9 +48,9 @@ function buildPackageRootCliArgvPrefix(packageRoot: string): string[] {
       ? [process.execPath, sourceEntry]
       : tsxLoader
         ? [process.execPath, "--import", tsxLoader, sourceEntry]
-        : [process.execPath, path.join(packageRoot, "openclaw.mjs")];
+        : [process.execPath, path.join(packageRoot, "quiet-core-bot.mjs")];
   }
-  return [process.execPath, path.join(packageRoot, "openclaw.mjs")];
+  return [process.execPath, path.join(packageRoot, "quiet-core-bot.mjs")];
 }
 
 function resolveTrustedTsxLoader(packageRoot: string): string | null {

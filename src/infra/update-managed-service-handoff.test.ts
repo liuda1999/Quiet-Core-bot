@@ -138,7 +138,7 @@ async function runHelperWithExistingSentinel(params: {
     restartDelayMs: 500,
     parentPid: process.pid,
     execPath: "/usr/local/bin/node",
-    argv1: "/opt/openclaw/openclaw.mjs",
+    argv1: "/opt/openclaw/quiet-core-bot.mjs",
     ...(params.handoffId ? { handoffId: params.handoffId } : {}),
     env: {},
     meta: {
@@ -247,7 +247,7 @@ async function runHelperWithCommand(params: {
     restartDelayMs: 0,
     parentPid: process.pid,
     execPath: "/usr/local/bin/node",
-    argv1: "/opt/openclaw/openclaw.mjs",
+    argv1: "/opt/openclaw/quiet-core-bot.mjs",
     env: {},
     meta: { sessionKey: "agent:test:webchat:dm:user-123" },
   });
@@ -362,7 +362,7 @@ describe("managed service update handoff", () => {
       restartDelayMs: 500,
       parentPid: 12345,
       execPath: "/usr/local/bin/node",
-      argv1: "/opt/openclaw/openclaw.mjs",
+      argv1: "/opt/openclaw/quiet-core-bot.mjs",
       env: {
         ...supervisorEnv,
         ...serviceIdentityEnv,
@@ -422,7 +422,7 @@ describe("managed service update handoff", () => {
       restartDelayMs: 500,
       parentPid: 12345,
       execPath: "/usr/local/bin/node",
-      argv1: "/opt/openclaw/openclaw.mjs",
+      argv1: "/opt/openclaw/quiet-core-bot.mjs",
       handoffId: "handoff-123",
       channel: "beta",
       supervisor: "systemd",
@@ -470,7 +470,7 @@ describe("managed service update handoff", () => {
     });
     expect(helperParams.commandArgv).toEqual([
       "/usr/local/bin/node",
-      "/opt/openclaw/openclaw.mjs",
+      "/opt/openclaw/quiet-core-bot.mjs",
       "update",
       "--yes",
       "--json",
@@ -566,7 +566,7 @@ describe("managed service update handoff", () => {
         restartDelayMs: 500,
         parentPid: 12345,
         execPath: "/usr/local/bin/node",
-        argv1: "/opt/openclaw/openclaw.mjs",
+        argv1: "/opt/openclaw/quiet-core-bot.mjs",
         supervisor: testCase.supervisor,
         env: testCase.env,
         meta: { sessionKey: "agent:test:webchat:dm:user-123" },

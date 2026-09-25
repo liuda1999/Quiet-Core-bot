@@ -295,7 +295,7 @@ function resolveOpenClawLaunchArgs(repoRoot, sourceEntryExists = existsSync) {
   if (sourceEntryExists(sourceEntry)) {
     return ["--import", "tsx", sourceEntry];
   }
-  return [path.join(repoRoot, "openclaw.mjs")];
+  return [path.join(repoRoot, "quiet-core-bot.mjs")];
 }
 
 /**

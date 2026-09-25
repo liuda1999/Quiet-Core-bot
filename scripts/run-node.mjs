@@ -1031,7 +1031,7 @@ const getInterruptedSpawnExitCode = (res) => {
 const runOpenClaw = async (deps) => {
   const diagnosticArgs = resolveRunNodeDiagnosticArgs(deps);
   const useProcessGroup = shouldUseRunNodeChildProcessGroup(deps);
-  const nodeProcess = deps.spawn(deps.execPath, [...diagnosticArgs, "openclaw.mjs", ...deps.args], {
+  const nodeProcess = deps.spawn(deps.execPath, [...diagnosticArgs, "quiet-core-bot.mjs", ...deps.args], {
     cwd: deps.cwd,
     detached: useProcessGroup,
     env: deps.env,

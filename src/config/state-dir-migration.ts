@@ -1,3 +1,4 @@
+import type { Dirent } from "node:fs";
 // Plans, applies, and verifies a one-off state directory relocation.
 //
 // Used by the rebrand migration (pre-rebrand `~/.openclaw` -> current
@@ -72,7 +73,7 @@ async function statOrNull(target: string): Promise<Awaited<ReturnType<typeof fs.
 }
 
 async function countFilesRecursive(dir: string): Promise<number> {
-  let entries: Awaited<ReturnType<typeof fs.readdir>>;
+  let entries: Dirent[];
   try {
     entries = await fs.readdir(dir, { withFileTypes: true });
   } catch {

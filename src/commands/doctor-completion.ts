@@ -53,7 +53,7 @@ async function generateCompletionCache(
     return false;
   }
 
-  const binPath = path.join(root, "openclaw.mjs");
+  const binPath = path.join(root, "quiet-core-bot.mjs");
   const args = [binPath, "completion", "--write-state"];
   if (options.shell) {
     args.push("--shell", options.shell);

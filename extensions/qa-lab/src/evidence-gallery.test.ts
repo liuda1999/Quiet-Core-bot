@@ -178,7 +178,7 @@ describe("evidence gallery", () => {
         status: "blocked",
         failure: {
           class: "blocked",
-          reason: `Command failed at ${repoRoot}/openclaw.mjs and file://${repoRoot}/trace.log`,
+          reason: `Command failed at ${repoRoot}/quiet-core-bot.mjs and file://${repoRoot}/trace.log`,
         },
       },
     };
@@ -190,7 +190,7 @@ describe("evidence gallery", () => {
     });
 
     expect(model.entries[0].failureReason).toBe(
-      "Command failed at <repo-root>/openclaw.mjs and file://<repo-root>/trace.log",
+      "Command failed at <repo-root>/quiet-core-bot.mjs and file://<repo-root>/trace.log",
     );
     expect(JSON.stringify(model)).not.toContain(repoRoot);
   });
@@ -352,7 +352,7 @@ describe("evidence gallery", () => {
           coverageIds: [`${repoRoot}/ui.control`],
           runner: {
             availability: "local",
-            command: `${repoRoot}/openclaw.mjs qa suite --scenario ux-matrix-evidence-dashboard`,
+            command: `${repoRoot}/quiet-core-bot.mjs qa suite --scenario ux-matrix-evidence-dashboard`,
             lane: "web-ui-playwright",
             workflow: `${repoRoot}/.github/workflows/ux-matrix-qa.yml#ux-matrix-local`,
           },
@@ -517,7 +517,7 @@ describe("evidence gallery", () => {
         coverageIds: ["<repo-root>/ui.control"],
         runner: {
           availability: "local",
-          command: "<repo-root>/openclaw.mjs qa suite --scenario ux-matrix-evidence-dashboard",
+          command: "<repo-root>/quiet-core-bot.mjs qa suite --scenario ux-matrix-evidence-dashboard",
           lane: "web-ui-playwright",
           workflow: "<repo-root>/.github/workflows/ux-matrix-qa.yml#ux-matrix-local",
         },

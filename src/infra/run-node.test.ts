@@ -177,11 +177,11 @@ function expectedBundledPluginAssetBuildSpawn() {
 }
 
 function statusCommandSpawn() {
-  return [process.execPath, "openclaw.mjs", "status"];
+  return [process.execPath, "quiet-core-bot.mjs", "status"];
 }
 
 function gatewayCallStatusCommandSpawn() {
-  return [process.execPath, "openclaw.mjs", "gateway", "call", "status", "--json"];
+  return [process.execPath, "quiet-core-bot.mjs", "gateway", "call", "status", "--json"];
 }
 
 function resolvePath(tmp: string, relativePath: string) {
@@ -428,7 +428,7 @@ describe("run-node script", () => {
         expect(nodeCalls).toEqual([
           [process.execPath, "scripts/bundled-plugin-assets.mjs", "--phase", "build"],
           [process.execPath, "scripts/tsdown-build.mjs", "--no-clean"],
-          [process.execPath, "openclaw.mjs", "--version"],
+          [process.execPath, "quiet-core-bot.mjs", "--version"],
         ]);
       });
     },
@@ -522,7 +522,7 @@ describe("run-node script", () => {
         "build",
       ]);
       expect(spawnCalls[1]?.args).toEqual(["scripts/tsdown-build.mjs", "--no-clean"]);
-      expect(spawnCalls[2]?.args).toEqual(["openclaw.mjs", "status"]);
+      expect(spawnCalls[2]?.args).toEqual(["quiet-core-bot.mjs", "status"]);
       expect(spawnCalls[0]?.env.OPENCLAW_RUN_NODE_SKIP_DTS_BUILD).toBeUndefined();
       expect(spawnCalls[1]?.env.OPENCLAW_RUN_NODE_SKIP_DTS_BUILD).toBe("1");
       expect(spawnCalls[2]?.env.OPENCLAW_RUN_NODE_SKIP_DTS_BUILD).toBeUndefined();
@@ -546,8 +546,8 @@ describe("run-node script", () => {
           stdio: opts?.stdio,
         });
         return createPipedExitedProcess({
-          stdout: args[0] === "openclaw.mjs" ? "child stdout\n" : "",
-          stderr: args[0] === "openclaw.mjs" ? "child stderr\n" : "",
+          stdout: args[0] === "quiet-core-bot.mjs" ? "child stdout\n" : "",
+          stderr: args[0] === "quiet-core-bot.mjs" ? "child stderr\n" : "",
         });
       };
       const mutedStream = {
@@ -575,7 +575,7 @@ describe("run-node script", () => {
       await expect(fs.readFile(outputPath, "utf-8")).resolves.toContain("child stdout\n");
       await expect(fs.readFile(outputPath, "utf-8")).resolves.toContain("child stderr\n");
       await expect(fs.readFile(outputPath, "utf-8")).resolves.toContain("[openclaw]");
-      expect(spawnCalls.at(-1)?.args).toEqual(["openclaw.mjs", "status"]);
+      expect(spawnCalls.at(-1)?.args).toEqual(["quiet-core-bot.mjs", "status"]);
       expect(spawnCalls.at(-1)?.env.OPENCLAW_RUN_NODE_OUTPUT_LOG).toBe(outputPath);
       expect(spawnCalls.at(-1)?.stdio).toEqual(["inherit", "pipe", "pipe"]);
     });
@@ -658,7 +658,7 @@ describe("run-node script", () => {
       ].join("");
       const spawn = (_cmd: string, args: string[]) =>
         createPipedExitedProcess({
-          stderr: args[0] === "openclaw.mjs" ? childStderr : "",
+          stderr: args[0] === "quiet-core-bot.mjs" ? childStderr : "",
         });
       const stderrChunks: string[] = [];
       const stderr = {
@@ -754,7 +754,7 @@ describe("run-node script", () => {
       expect(childArgs[2]).toMatch(
         /^--cpu-prof-name=openclaw-status-4242-\d{4}-\d{2}-\d{2}T.*\.cpuprofile$/,
       );
-      expect(childArgs.slice(3)).toEqual(["openclaw.mjs", "status"]);
+      expect(childArgs.slice(3)).toEqual(["quiet-core-bot.mjs", "status"]);
       expect(spawnCalls.at(-1)?.env.OPENCLAW_RUN_NODE_CPU_PROF_DIR).toBe(profileDir);
       expect(fsSync.existsSync(profileDir)).toBe(true);
     });
@@ -850,7 +850,7 @@ describe("run-node script", () => {
       });
 
       expect(exitCode).toBe(0);
-      expect(spawnCalls.at(-1)).toEqual(["--trace-sync-io", "openclaw.mjs", "gateway", "--force"]);
+      expect(spawnCalls.at(-1)).toEqual(["--trace-sync-io", "quiet-core-bot.mjs", "gateway", "--force"]);
     });
   });
 
@@ -919,7 +919,7 @@ describe("run-node script", () => {
 
       expect(exitCode).toBe(0);
       const childArgs = spawnCalls.at(-1)?.args ?? [];
-      expect(childArgs).toEqual(["openclaw.mjs", "qa", "matrix"]);
+      expect(childArgs).toEqual(["quiet-core-bot.mjs", "qa", "matrix"]);
       expect(spawnCalls.at(-1)?.env.OPENCLAW_RUN_NODE_OUTPUT_LOG).toBeUndefined();
     });
   });
@@ -983,7 +983,7 @@ describe("run-node script", () => {
       expect(spawnCalls).toEqual([
         [
           process.execPath,
-          "openclaw.mjs",
+          "quiet-core-bot.mjs",
           "qa",
           "suite",
           "--transport",
@@ -1023,7 +1023,7 @@ describe("run-node script", () => {
         expectedBuildSpawn(),
         [
           process.execPath,
-          "openclaw.mjs",
+          "quiet-core-bot.mjs",
           "qa",
           "suite",
           "--transport",
@@ -1586,7 +1586,7 @@ describe("run-node script", () => {
       expect(spawn).toHaveBeenCalledTimes(1);
       const spawnCall = firstMockCall(spawn) as [string, string[], { stdio?: unknown }] | undefined;
       expect(spawnCall?.[0]).toBe(process.execPath);
-      expect(spawnCall?.[1]).toEqual(["openclaw.mjs", "status"]);
+      expect(spawnCall?.[1]).toEqual(["quiet-core-bot.mjs", "status"]);
       expect(spawnCall?.[2].stdio).toBe("inherit");
       expect(spawnCall?.[2]).toMatchObject({ detached: false });
       expect(child.kill).toHaveBeenCalledWith("SIGTERM");
@@ -1669,7 +1669,7 @@ describe("run-node script", () => {
         const spawnCall = firstMockCall(spawn) as
           | [string, string[], { detached?: boolean; stdio?: unknown }]
           | undefined;
-        expect(spawnCall?.[1]).toEqual(["openclaw.mjs", "status"]);
+        expect(spawnCall?.[1]).toEqual(["quiet-core-bot.mjs", "status"]);
         expect(spawnCall?.[2]).toMatchObject({ detached: true, stdio: "inherit" });
         expect(groupSignals).toEqual([
           [-42_420, "SIGTERM"],

@@ -6,7 +6,7 @@
   "cpuProfDir": null,
   "heapProfDir": null,
   "primary": {
-    "entry": "openclaw.mjs",
+    "entry": "quiet-core-bot.mjs",
     "cases": [
       {
         "id": "version",

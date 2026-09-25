@@ -113,7 +113,7 @@ export function runInstalledWorkspaceBootstrapSmoke(params) {
       execFileSync(
         process.execPath,
         [
-          join(params.packageRoot, "openclaw.mjs"),
+          join(params.packageRoot, "quiet-core-bot.mjs"),
           "agent",
           "--message",
           "workspace bootstrap smoke",

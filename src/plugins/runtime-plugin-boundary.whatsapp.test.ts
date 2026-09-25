@@ -34,7 +34,7 @@ function createBundledWhatsAppRuntimeFixture() {
         name: "openclaw",
         type: "module",
         bin: {
-          openclaw: "openclaw.mjs",
+          openclaw: "quiet-core-bot.mjs",
         },
         exports: {
           "./plugin-sdk": {
@@ -45,7 +45,7 @@ function createBundledWhatsAppRuntimeFixture() {
       null,
       2,
     ),
-    "openclaw.mjs": "export {};\n",
+    "quiet-core-bot.mjs": "export {};\n",
     [bundledDistPluginFile("whatsapp", "index.js")]: "export default {};\n",
     [bundledDistPluginFile("whatsapp", "light-runtime-api.js")]:
       'export { getActiveWebListener } from "../../active-listener.js";\n',
