@@ -2,6 +2,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { pathExists } from "../infra/fs-safe.js";
+import { CORE_PACKAGE_NAMES } from "../infra/openclaw-root.js";
 import { readPackageName, readPackageVersion } from "../infra/package-json.js";
 import type { GatewayServiceCommandConfig } from "./service-types.js";
 
@@ -88,7 +89,7 @@ async function resolveOpenClawPackageRoot(entrypoint: string): Promise<string | 
     const packageJson = path.join(current, "package.json");
     if (await pathExists(packageJson)) {
       const name = await readPackageName(current);
-      if (name === "openclaw") {
+      if (name && CORE_PACKAGE_NAMES.has(name)) {
         return current;
       }
     }

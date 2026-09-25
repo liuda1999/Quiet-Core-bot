@@ -36,21 +36,26 @@ function normalizeCommandBaseName(token: string | undefined): string {
   return base.replace(/\.(?:cmd|exe)$/u, "");
 }
 
+function isOpenClawCliCommandName(token: string | undefined): boolean {
+  const name = normalizeCommandBaseName(token);
+  return name === "openclaw" || name === "quiet-core-bot";
+}
+
 function stripOpenClawPackageRunner(argv: string[]): string[] {
   const commandName = normalizeCommandBaseName(argv[0]);
-  if (commandName === "openclaw") {
+  if (isOpenClawCliCommandName(argv[0])) {
     return argv;
   }
   if (
     (commandName === "pnpm" || commandName === "npm" || commandName === "yarn") &&
-    normalizeCommandBaseName(argv[1]) === "openclaw"
+    isOpenClawCliCommandName(argv[1])
   ) {
     return argv.slice(1);
   }
   if (
     (commandName === "pnpm" || commandName === "npm" || commandName === "yarn") &&
     (argv[1] === "exec" || argv[1] === "dlx" || argv[1] === "run") &&
-    normalizeCommandBaseName(argv[2]) === "openclaw"
+    isOpenClawCliCommandName(argv[2])
   ) {
     return argv.slice(2);
   }
@@ -70,7 +75,7 @@ function stripOpenClawPackageRunner(argv: string[]): string[] {
         idx += 1;
       }
     }
-    if (normalizeCommandBaseName(argv[idx]) === "openclaw") {
+    if (isOpenClawCliCommandName(argv[idx])) {
       return argv.slice(idx);
     }
   }
@@ -84,7 +89,7 @@ export function parseOpenClawChannelsLoginShellCommand(raw: string): boolean {
   }
   const openclawArgv = stripOpenClawPackageRunner(argv);
   return (
-    normalizeCommandBaseName(openclawArgv[0]) === "openclaw" &&
+    isOpenClawCliCommandName(openclawArgv[0]) &&
     (openclawArgv[1] === "channels" || openclawArgv[1] === "channel") &&
     openclawArgv[2] === "login"
   );

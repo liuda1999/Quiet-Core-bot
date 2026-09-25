@@ -138,6 +138,16 @@ describe("resolveOpenClawPackageRoot", () => {
       },
     },
     {
+      name: "resolves the rebranded package root by its current name",
+      setup: () => {
+        const project = fx("rebranded-scenario");
+        const argv1 = path.join(project, "node_modules", ".bin", "quiet-core-bot");
+        const pkgRoot = path.join(project, "node_modules", "quiet-core-bot");
+        setPackageRoot(pkgRoot, "quiet-core-bot");
+        return { opts: { argv1 }, expected: pkgRoot };
+      },
+    },
+    {
       name: "resolves package root via symlinked argv1",
       setup: () => {
         const project = fx("symlink-scenario");

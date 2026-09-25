@@ -59,12 +59,17 @@ export function resolveDaemonNodeBinDir(nodePath?: string): string[] | undefined
 }
 
 function isOpenClawCommandBasename(basename: string, platform: NodeJS.Platform): boolean {
-  if (basename === "openclaw") {
+  if (basename === "openclaw" || basename === "quiet-core-bot") {
     return true;
   }
   if (platform === "win32") {
     return (
-      basename === "openclaw.cmd" || basename === "openclaw.ps1" || basename === "openclaw.exe"
+      basename === "openclaw.cmd" ||
+      basename === "openclaw.ps1" ||
+      basename === "openclaw.exe" ||
+      basename === "quiet-core-bot.cmd" ||
+      basename === "quiet-core-bot.ps1" ||
+      basename === "quiet-core-bot.exe"
     );
   }
   return false;

@@ -3,7 +3,10 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { openClawRootFs, openClawRootFsSync } from "./openclaw-root.fs.runtime.js";
 
-const CORE_PACKAGE_NAMES = new Set(["openclaw"]);
+// Package names that identify this project's own core package. The pre-rebrand
+// npm identity (`openclaw`) is kept for installed legacy layouts, and the
+// current product name is accepted because the repository/package was renamed.
+export const CORE_PACKAGE_NAMES = new Set(["openclaw", "quiet-core-bot"]);
 const packageNameCache = new Map<string, string | null>();
 const packageRootCache = new Map<string, string | null>();
 const argv1CandidateCache = new Map<string, string[]>();
