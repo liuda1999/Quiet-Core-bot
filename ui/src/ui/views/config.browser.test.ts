@@ -653,6 +653,37 @@ describe("config view", () => {
     ).toEqual(["Authentication", "Gateway"]);
   });
 
+  it("keeps curated labels for sections outside the translation map", () => {
+    const { container } = renderConfigView({
+      schema: {
+        type: "object",
+        properties: {
+          proxy: { type: "object", properties: {} },
+          auth: { type: "object", properties: {} },
+        },
+      },
+      formValue: { proxy: {}, auth: {} },
+      originalValue: { proxy: {}, auth: {} },
+    });
+
+    const tabLabels = Array.from(container.querySelectorAll(".config-top-tabs__tab")).map((tab) =>
+      tab.textContent?.trim(),
+    );
+    // `proxy` has no settingsLabels entry, so it must fall back to the curated
+    // label rather than leaking the raw i18n key.
+    expect(tabLabels).toContain("Proxy");
+    // `auth` is mapped and keeps its translation.
+    expect(tabLabels).toContain("Authentication");
+    expect(tabLabels.some((label) => label?.startsWith("settingsLabels."))).toBe(false);
+
+    const cardTitles = [...container.querySelectorAll(".config-section-card__title")].map((title) =>
+      title.textContent?.trim(),
+    );
+    expect(cardTitles).toContain("Proxy");
+    expect(cardTitles).toContain("Authentication");
+    expect(cardTitles.some((title) => title?.startsWith("settingsLabels."))).toBe(false);
+  });
+
   it("clears the active search query", () => {
     const container = document.createElement("div");
     const onSearchChange = vi.fn();

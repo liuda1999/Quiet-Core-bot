@@ -5,19 +5,53 @@ import {
   parseAgentSessionKey,
   resolveUiSelectedGlobalAgentId,
 } from "../session-key.ts";
-import type {
-  SkillWorkshopAction,
-  SkillWorkshopActionNotice,
-  SkillWorkshopMode,
-  SkillWorkshopProposal,
-  SkillWorkshopStatusFilter,
-} from "../views/skill-workshop.ts";
 
 const SKILL_WORKSHOP_NOTICE_MS = 2800;
 
 type SkillProposalStatus = "pending" | "applied" | "rejected" | "quarantined" | "stale";
 type SkillProposalKind = "create" | "update";
 type SkillProposalScanState = "pending" | "clean" | "failed" | "quarantined";
+
+// View-facing shapes. These used to live in `views/skill-workshop.ts`; the
+// workshop page was removed from the Control UI, so the controller now owns the
+// types it hands to its state and callers.
+type SkillWorkshopFile = {
+  path: string;
+  size: string;
+  contents: string;
+};
+
+export type SkillWorkshopProposal = {
+  key: string;
+  slug: string;
+  name: string;
+  oneLine: string;
+  body: string;
+  status: SkillProposalStatus;
+  origin?: {
+    agentId?: string;
+    sessionKey?: string;
+    runId?: string;
+    messageId?: string;
+  };
+  version: number;
+  createdAt: number;
+  updatedAt?: number;
+  recencyGroup: "today" | "yesterday" | "earlier";
+  ageLabel: string;
+  supportFiles: SkillWorkshopFile[];
+  isNew: boolean;
+};
+
+export type SkillWorkshopStatusFilter = "all" | SkillProposalStatus;
+export type SkillWorkshopAction = "apply" | "revise" | "reject";
+export type SkillWorkshopMode = "board" | "today";
+
+export type SkillWorkshopActionNotice = {
+  key: string;
+  label: string;
+  slug: string;
+};
 
 type SkillProposalManifestEntry = {
   id: string;

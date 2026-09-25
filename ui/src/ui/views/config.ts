@@ -488,12 +488,21 @@ const SECTION_CATEGORIES: SectionCategory[] = [
 // Flat lookup: all categorised keys
 const CATEGORISED_KEYS = new Set(SECTION_CATEGORIES.flatMap((c) => c.sections.map((s) => s.key)));
 
+// `t()` has no `defaultValue` support: unknown keys come back verbatim as the
+// key itself. Resolve that here so an unmapped section (for example a schema key
+// outside SECTION_CATEGORIES such as `proxy`) keeps its curated label instead of
+// rendering the raw i18n key.
+function translateOrFallback(i18nKey: string, fallback: string): string {
+  const translated = t(i18nKey);
+  return translated === i18nKey ? fallback : translated;
+}
+
 function translateCategoryLabel(id: string, fallback: string): string {
-  return t(`settingsLabels.categories.${id}`, { defaultValue: fallback });
+  return translateOrFallback(`settingsLabels.categories.${id}`, fallback);
 }
 
 function translateSectionLabel(key: string, fallback: string): string {
-  return t(`settingsLabels.sections.${key}`, { defaultValue: fallback });
+  return translateOrFallback(`settingsLabels.sections.${key}`, fallback);
 }
 
 function getSectionIcon(key: string) {
@@ -1304,7 +1313,9 @@ export function renderConfig(props: ConfigProps) {
     .map((k) => ({ key: k, label: k.charAt(0).toUpperCase() + k.slice(1) }));
 
   const otherCategory: SectionCategory | null =
-    extraSections.length > 0 ? { id: "other", label: t("settingsLabels.categories.other", { defaultValue: "Other" }), sections: extraSections } : null;
+    extraSections.length > 0
+      ? { id: "other", label: translateCategoryLabel("other", "Other"), sections: extraSections }
+      : null;
 
   const isVirtualSection =
     includeVirtualSections &&
