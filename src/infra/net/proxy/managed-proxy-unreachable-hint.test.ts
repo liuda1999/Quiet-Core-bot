@@ -44,7 +44,7 @@ describe("managed proxy unreachable hint", () => {
     registerActiveManagedProxyUrl(new URL("http://127.0.0.1:18888"));
     expect(formatManagedProxyUnreachableHint("connect ECONNREFUSED 127.0.0.1:18888")).toBe(
       "LLM request failed: the local egress proxy http://127.0.0.1:18888 is not reachable. " +
-        "Start it with: openclaw proxy start --host 127.0.0.1 --port 18888",
+        "Start it with: quiet-core-bot proxy start --host 127.0.0.1 --port 18888",
     );
   });
 
@@ -52,7 +52,7 @@ describe("managed proxy unreachable hint", () => {
     vi.stubEnv("OPENCLAW_PROXY_ACTIVE", "1");
     vi.stubEnv("HTTP_PROXY", "http://127.0.0.1:18888");
     expect(formatManagedProxyUnreachableHint("connection refused")).toContain(
-      "openclaw proxy start --host 127.0.0.1 --port 18888",
+      "quiet-core-bot proxy start --host 127.0.0.1 --port 18888",
     );
   });
 
@@ -63,7 +63,7 @@ describe("managed proxy unreachable hint", () => {
       const hint = formatManagedProxyConnectionFailureHint(raw);
       expect(hint).toContain("did not complete this request");
       expect(hint).not.toContain("is not reachable");
-      expect(hint).not.toContain("openclaw proxy start");
+      expect(hint).not.toContain("quiet-core-bot proxy start");
     },
   );
 
@@ -71,7 +71,7 @@ describe("managed proxy unreachable hint", () => {
     registerActiveManagedProxyUrl(new URL("http://127.0.0.1:18888"));
     expect(
       formatManagedProxyConnectionFailureHint("connect ECONNREFUSED 127.0.0.1:18888"),
-    ).toContain("openclaw proxy start --host 127.0.0.1 --port 18888");
+    ).toContain("quiet-core-bot proxy start --host 127.0.0.1 --port 18888");
   });
 
   it("reports transient while the endpoint answers and refuses once a probe finds it down", () => {
@@ -86,7 +86,7 @@ describe("managed proxy unreachable hint", () => {
 
     recordManagedProxyLiveness("down");
     expect(formatManagedProxyConnectionFailureHint("Connection error.")).toContain(
-      "openclaw proxy start --host 127.0.0.1 --port 18888",
+      "quiet-core-bot proxy start --host 127.0.0.1 --port 18888",
     );
   });
 
@@ -194,7 +194,7 @@ describe("managed proxy unreachable hint", () => {
 
     await expect(
       resolveManagedProxyUnreachableStartHint({ connect, attempts: 1, delayMs: 0 }),
-    ).resolves.toContain("openclaw proxy start --host 127.0.0.1 --port 18888");
+    ).resolves.toContain("quiet-core-bot proxy start --host 127.0.0.1 --port 18888");
     expect(connect).toHaveBeenCalledTimes(1);
   });
 

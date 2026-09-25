@@ -25,7 +25,7 @@ const STALE_SIGKILL_WAIT_MS = 400;
 /**
  * After SIGKILL, the kernel may not release the TCP port immediately.
  * Poll until the port is confirmed free (or until the budget expires) before
- * returning control to the caller (typically `triggerOpenClawRestart` →
+ * returning control to the caller (typically `triggerQuiet Core botRestart` →
  * `systemctl restart`). Without this wait the new process races the dying
  * process for the port and systemd enters an EADDRINUSE restart loop.
  *
@@ -293,7 +293,7 @@ function parsePidsFromLsofOutput(
 }
 
 /**
- * Windows: find listening PIDs on the port, then verify each is an openclaw
+ * Windows: find listening PIDs on the port, then verify each is an quiet-core-bot
  * gateway process via command-line inspection. Excludes the current process
  * and its ancestors (same invariant as the lsof path — see
  * `getSelfAndAncestorPidsSync`).
@@ -356,7 +356,7 @@ function findGatewayPidsOnPortWithProtectedPidSync(
 ): number[] {
   if (process.platform === "win32") {
     // Use the shared Windows port inspection (PowerShell / netstat) with
-    // command-line verification to find only openclaw gateway processes.
+    // command-line verification to find only quiet-core-bot gateway processes.
     return findVerifiedWindowsGatewayPidsOnPortSync(port, protectedPid);
   }
   const lsof = resolveLsofCommandSync();
@@ -389,7 +389,7 @@ function findGatewayPidsOnPortWithProtectedPidSync(
 
 /**
  * Find PIDs of gateway processes listening on the given port using synchronous lsof.
- * Returns only PIDs that belong to openclaw gateway processes (not the current process).
+ * Returns only PIDs that belong to quiet-core-bot gateway processes (not the current process).
  */
 export function findGatewayPidsOnPortSync(
   port: number,

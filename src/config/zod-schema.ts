@@ -1,4 +1,4 @@
-// Assembles the canonical Zod schema for OpenClaw config parsing.
+// Assembles the canonical Zod schema for Quiet Core bot config parsing.
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeStringifiedOptionalString,

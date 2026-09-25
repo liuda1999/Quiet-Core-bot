@@ -1,4 +1,4 @@
-// Wraps fs-safe JSON reads and atomic writes with OpenClaw defaults.
+// Wraps fs-safe JSON reads and atomic writes with Quiet Core bot defaults.
 import "./fs-safe-defaults.js";
 import {
   JsonFileReadError,

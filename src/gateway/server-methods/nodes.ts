@@ -805,8 +805,8 @@ export async function maybeSendNodeWakeNudge(
       result = await sendApnsAlert({
         registration,
         nodeId,
-        title: "OpenClaw needs a quick reopen",
-        body: "Tap to reopen OpenClaw and restore the node connection.",
+        title: "Quiet Core bot needs a quick reopen",
+        body: "Tap to reopen Quiet Core bot and restore the node connection.",
         relayConfig: relay.relayConfig,
       });
     } else {
@@ -822,8 +822,8 @@ export async function maybeSendNodeWakeNudge(
       result = await sendApnsAlert({
         registration,
         nodeId,
-        title: "OpenClaw needs a quick reopen",
-        body: "Tap to reopen OpenClaw and restore the node connection.",
+        title: "Quiet Core bot needs a quick reopen",
+        body: "Tap to reopen Quiet Core bot and restore the node connection.",
         auth: auth.auth,
       });
     }
@@ -1030,7 +1030,7 @@ export const nodeHandlers: GatewayRequestHandlers = {
       respond(true, rejected, undefined);
     });
   },
-  // Remove a node pairing (CLI: `openclaw nodes remove`). For a device-backed
+  // Remove a node pairing (CLI: `quiet-core-bot nodes remove`). For a device-backed
   // node this revokes the device's `node` role in devices/paired.json and
   // disconnects its node-role sessions: a mixed-role device keeps its row and
   // only loses the `node` role, a node-only device row is deleted. Any matching

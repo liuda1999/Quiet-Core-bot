@@ -28,7 +28,7 @@ describe("config secret refs schema", () => {
           default: { source: "env" },
           filemain: {
             source: "file",
-            path: "~/.openclaw/secrets.json",
+            path: "~/.quiet-core-bot/secrets.json",
             mode: "json",
             timeoutMs: 10_000,
             allowInsecurePath: true,
@@ -219,7 +219,7 @@ describe("config secret refs schema", () => {
         providers: {
           rawfile: {
             source: "file",
-            path: "~/.openclaw/token.txt",
+            path: "~/.quiet-core-bot/token.txt",
             mode: "singleValue",
           },
         },

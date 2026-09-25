@@ -375,7 +375,7 @@ export async function setupChannels(
         t("wizard.channels.disabledDuringSetup", {
           channel,
           hint: disabledHint,
-          command: formatCliCommand("openclaw channels add"),
+          command: formatCliCommand("quiet-core-bot channels add"),
         }),
         t("wizard.channels.setupTitle"),
       );
@@ -388,7 +388,7 @@ export async function setupChannels(
         t("wizard.channels.pluginEnableFailed", {
           channel,
           reason: result.reason ?? "plugin disabled",
-          command: formatCliCommand("openclaw plugins list"),
+          command: formatCliCommand("quiet-core-bot plugins list"),
         }),
         t("wizard.channels.setupTitle"),
       );
@@ -401,8 +401,8 @@ export async function setupChannels(
         await prompter.note(
           t("wizard.channels.pluginMissingRecoverable", {
             channel,
-            listCommand: formatCliCommand("openclaw plugins list"),
-            enableCommand: formatCliCommand("openclaw plugins enable " + channel),
+            listCommand: formatCliCommand("quiet-core-bot plugins list"),
+            enableCommand: formatCliCommand("quiet-core-bot plugins enable " + channel),
           }),
           t("wizard.channels.setupTitle"),
         );
@@ -462,7 +462,7 @@ export async function setupChannels(
       await prompter.note(
         t("wizard.channels.noInteractiveSetup", {
           channel,
-          command: formatCliCommand(`openclaw channels add --channel ${channel} --help`),
+          command: formatCliCommand(`quiet-core-bot channels add --channel ${channel} --help`),
         }),
         t("wizard.channels.setupTitle"),
       );
@@ -755,7 +755,7 @@ export async function setupChannels(
             value: "__skip__",
             label: t("common.skipForNow"),
             hint: t("wizard.channels.skipLaterHint", {
-              command: formatCliCommand("openclaw channels add"),
+              command: formatCliCommand("quiet-core-bot channels add"),
             }),
           },
         ],

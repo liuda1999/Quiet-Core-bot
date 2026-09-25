@@ -29,7 +29,7 @@ describe("config io invalid config formatting", () => {
 
   it("formats the logger message with the escaped newline separator", () => {
     expect(formatInvalidConfigLogMessage("/tmp/openclaw.json", "- gateway.port: bad")).toBe(
-      "Invalid config at /tmp/openclaw.json:\\n- gateway.port: bad",
+      "Invalid config at /tmp/quiet-core-bot.json:\\n- gateway.port: bad",
     );
   });
 
@@ -39,7 +39,7 @@ describe("config io invalid config formatting", () => {
       details?: string;
     };
 
-    expect(err.message).toBe("Invalid config at /tmp/openclaw.json:\n- gateway.port: bad");
+    expect(err.message).toBe("Invalid config at /tmp/quiet-core-bot.json:\n- gateway.port: bad");
     expect(err.code).toBe("INVALID_CONFIG");
     expect(err.details).toBe("- gateway.port: bad");
   });
@@ -63,7 +63,7 @@ describe("config io invalid config formatting", () => {
 
     expect(logger.error).toHaveBeenCalledOnce();
     expect(logger.error).toHaveBeenCalledWith(
-      "Invalid config at /tmp/openclaw.json:\\n- gateway.port: bad",
+      "Invalid config at /tmp/quiet-core-bot.json:\\n- gateway.port: bad",
     );
   });
 
@@ -77,7 +77,7 @@ describe("config io invalid config formatting", () => {
         logger,
         loggedConfigPaths: new Set<string>(),
       }),
-    ).toThrowError("Invalid config at /tmp/openclaw.json:\n- nope: Unknown key(s): nope");
+    ).toThrowError("Invalid config at /tmp/quiet-core-bot.json:\n- nope: Unknown key(s): nope");
     expect(logger.error).toHaveBeenCalledOnce();
   });
 });

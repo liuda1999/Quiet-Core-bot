@@ -621,7 +621,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
       expect(findGatewayPidsOnPortSync(18789)).toStrictEqual([]);
     });
 
-    it("parses multiple openclaw pids from a single lsof output block", () => {
+    it("parses multiple quiet-core-bot pids from a single lsof output block", () => {
       const pid1 = process.pid + 10;
       const pid2 = process.pid + 11;
       mockSpawnSync.mockReturnValue({
@@ -640,7 +640,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
 
     it("returns [] when status 0 but only non-openclaw pids present", () => {
       // Port may be bound by an unrelated process. findGatewayPidsOnPortSync
-      // only tracks openclaw processes — non-openclaw listeners are ignored.
+      // only tracks quiet-core-bot processes — non-openclaw listeners are ignored.
       const otherPid = process.pid + 50;
       mockSpawnSync.mockReturnValue({
         error: null,
@@ -717,14 +717,14 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
       expect(getCallCount()).toBe(3);
     });
 
-    it("lsof status 1 with non-empty openclaw stdout is treated as busy, not free (Linux container edge case)", () => {
+    it("lsof status 1 with non-empty quiet-core-bot stdout is treated as busy, not free (Linux container edge case)", () => {
       // On Linux containers with restricted /proc (AppArmor, seccomp, user namespaces),
       // lsof can exit 1 AND still emit output for processes it could read.
-      // status 1 + non-empty openclaw stdout must not be treated as port-free.
+      // status 1 + non-empty quiet-core-bot stdout must not be treated as port-free.
       const stalePid = process.pid + 601;
       const getCallCount = installInitialBusyPoll(stalePid, (call) => {
         if (call === 2) {
-          // status 1 + openclaw pid in stdout — container-restricted lsof reports partial results
+          // status 1 + quiet-core-bot pid in stdout — container-restricted lsof reports partial results
           return createOpenClawBusyResult(stalePid, {
             status: 1,
             stderr: "lsof: WARNING: can't stat() fuse",
@@ -1248,9 +1248,9 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
     it("skips a mid-loop entry when the command does not include 'openclaw'", () => {
       // Exercises the false branch of currentCmd.toLowerCase().includes("openclaw")
       // inside the mid-loop flush: a non-openclaw cmd between two entries must not
-      // be pushed, but the following openclaw entry still must be.
+      // be pushed, but the following quiet-core-bot entry still must be.
       const stalePid = process.pid + 700;
-      // Mixed output: non-openclaw entry first, then openclaw entry
+      // Mixed output: non-openclaw entry first, then quiet-core-bot entry
       const stdout = `p${process.pid + 699}\ncnginx\np${stalePid}\ncopenclaw-gateway\n`;
       mockSpawnSync.mockReturnValue({ error: null, status: 0, stdout, stderr: "" });
       const result = findGatewayPidsOnPortSync(18789);
@@ -1274,7 +1274,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
       // false branch: a malformed 'p' line (e.g. 'p0' or 'pNaN') must not corrupt
       // currentPid and must not end up in the returned pids array.
       const stalePid = process.pid + 703;
-      // p0 is invalid (not > 0); the following valid openclaw entry must still be found.
+      // p0 is invalid (not > 0); the following valid quiet-core-bot entry must still be found.
       const stdout = `p0\ncopenclaw-gateway\np${stalePid}\ncopenclaw-gateway\n`;
       mockSpawnSync.mockReturnValue({ error: null, status: 0, stdout, stderr: "" });
       const result = findGatewayPidsOnPortSync(18789);
@@ -1298,13 +1298,13 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
   });
 
   // -------------------------------------------------------------------------
-  // pollPortOnce branch — status 1 + non-empty stdout with zero openclaw pids
+  // pollPortOnce branch — status 1 + non-empty stdout with zero quiet-core-bot pids
   // -------------------------------------------------------------------------
   describe("pollPortOnce — status 1 + non-empty non-openclaw stdout (line 145)", () => {
-    it("treats status 1 + non-openclaw stdout as port-free (not an openclaw process)", () => {
-      // status 1 + non-empty stdout where no openclaw pids are present:
+    it("treats status 1 + non-openclaw stdout as port-free (not an quiet-core-bot process)", () => {
+      // status 1 + non-empty stdout where no quiet-core-bot pids are present:
       // the port may be held by an unrelated process. From our perspective
-      // (we only kill openclaw pids) it is effectively free.
+      // (we only kill quiet-core-bot pids) it is effectively free.
       const stalePid = process.pid + 800;
       const getCallCount = installInitialBusyPoll(stalePid, () => {
         // status 1 + non-openclaw output — should be treated as free:true for our purposes
@@ -1314,7 +1314,7 @@ describe.skipIf(isWindows)("restart-stale-pids", () => {
         });
       });
       vi.spyOn(process, "kill").mockReturnValue(true);
-      // No openclaw pids in status-1 output means the port is free for this cleanup.
+      // No quiet-core-bot pids in status-1 output means the port is free for this cleanup.
       expect(cleanStaleGatewayProcessesSync()).toContain(stalePid);
       // Completed with one initial lsof and one status-1 poll lsof. The
       // separate `ps` argv verification is intentionally not counted here.

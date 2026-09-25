@@ -1,4 +1,4 @@
-// Runs OpenClaw package update checks, package steps, and restart handoff.
+// Runs Quiet Core bot package update checks, package steps, and restart handoff.
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -689,7 +689,7 @@ function normalizeFallbackFailureReason(stepName: string): NonNullable<UpdateRun
     case "global install verify":
     case "global install swap":
       return "global-install-failed";
-    case "openclaw doctor":
+    case "quiet-core-bot doctor":
       return "doctor-failed";
     case "ui:build (post-doctor repair)":
       return "ui-build-failed";
@@ -773,7 +773,7 @@ export async function resolveUpdateInstallSurface(
 }
 
 export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<UpdateRunResult> {
-  // Independent distributions do not participate in upstream OpenClaw updates.
+  // Independent distributions do not participate in upstream Quiet Core bot updates.
   // Guarding the executor entry covers every caller (CLI, `update.run` RPC, doctor)
   // so no path can mutate the install from a remote or automated trigger.
   assertUpstreamUpdateAllowed();
@@ -1557,7 +1557,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
         .catch(() => false);
       if (!doctorEntryExists) {
         steps.push({
-          name: "openclaw doctor entry",
+          name: "quiet-core-bot doctor entry",
           command: `verify ${doctorEntry}`,
           cwd: gitRoot,
           durationMs: 0,
@@ -1572,7 +1572,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       const doctorNodePath = await resolveStableNodePath(process.execPath);
       const doctorArgv = [doctorNodePath, doctorEntry, "doctor", "--non-interactive", "--fix"];
       const doctorStep = await runStep(
-        step("openclaw doctor", doctorArgv, gitRoot, {
+        step("quiet-core-bot doctor", doctorArgv, gitRoot, {
           OPENCLAW_UPDATE_IN_PROGRESS: "1",
           ...(opts.deferConfiguredPluginInstallRepair
             ? { [UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR_ENV]: "1" }
@@ -1709,7 +1709,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
         const candidateHostVersion = await readPackageVersion(verifiedPackageRoot);
         return await runStep({
           runCommand,
-          name: "openclaw doctor",
+          name: "quiet-core-bot doctor",
           argv: [doctorNodePath, doctorEntry, "doctor", "--non-interactive", "--fix"],
           cwd: verifiedPackageRoot,
           timeoutMs,

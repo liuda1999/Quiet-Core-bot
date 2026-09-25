@@ -420,7 +420,7 @@ describe("package dist inventory", () => {
     ).toBe(true);
     expect(
       isLegacyPluginDependencyInstallStagePath(
-        "Dist/Extensions/browser/.OpenClaw-Install-Stage/package.json",
+        "Dist/Extensions/browser/.Quiet Core bot-Install-Stage/package.json",
       ),
     ).toBe(true);
     expect(
@@ -480,14 +480,14 @@ describe("package dist inventory", () => {
           "dist",
           "Extensions",
           "evil",
-          ".OpenClaw-Install-Stage",
+          ".Quiet Core bot-Install-Stage",
           "package.json",
         );
         await fs.mkdir(path.dirname(mixedCaseStage), { recursive: true });
         await fs.writeFile(mixedCaseStage, "{}", "utf8");
 
         await expect(collectLegacyPluginDependencyStagingDebrisPaths(packageRoot)).resolves.toEqual(
-          ["dist/Extensions/evil/.OpenClaw-Install-Stage"],
+          ["dist/Extensions/evil/.Quiet Core bot-Install-Stage"],
         );
         await expect(writePackageDistInventory(packageRoot)).rejects.toThrow(
           /unexpected legacy plugin dependency staging debris/,

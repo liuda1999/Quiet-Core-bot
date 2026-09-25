@@ -278,7 +278,7 @@ describe("restart sentinel", () => {
       status: "ok" as const,
       ts: Date.now(),
       message: "Run restart-gateway.ps1 to apply config changes.",
-      doctorHint: "Run openclaw doctor --non-interactive",
+      doctorHint: "Run quiet-core-bot doctor --non-interactive",
       stats: { mode: "config.patch", requiresRestart: true },
     };
 
@@ -286,7 +286,7 @@ describe("restart sentinel", () => {
       [
         "Gateway restart required (config.patch)",
         "Run restart-gateway.ps1 to apply config changes.",
-        "Run openclaw doctor --non-interactive",
+        "Run quiet-core-bot doctor --non-interactive",
       ].join("\n"),
     );
     expect(summarizeRestartSentinel(payload)).toBe("Gateway restart required (config.patch)");
@@ -320,7 +320,7 @@ describe("restart sentinel", () => {
       status: "error" as const,
       ts: Date.now(),
       message: "Patch failed",
-      doctorHint: "Run openclaw doctor",
+      doctorHint: "Run quiet-core-bot doctor",
       stats: { mode: "patch", reason: "validation failed" },
     };
 
@@ -329,7 +329,7 @@ describe("restart sentinel", () => {
         "Gateway restart config-patch error (patch)",
         "Patch failed",
         "Reason: validation failed",
-        "Run openclaw doctor",
+        "Run quiet-core-bot doctor",
       ].join("\n"),
     );
   });
@@ -554,7 +554,7 @@ describe("restart sentinel message dedup", () => {
 
   it("formats the non-interactive doctor command as actionability guidance", () => {
     expect(formatDoctorNonInteractiveHint({ PATH: "/usr/bin:/bin" })).toBe(
-      "Recommended follow-up: run openclaw doctor --non-interactive in a terminal or approvals-capable OpenClaw surface.",
+      "Recommended follow-up: run quiet-core-bot doctor --non-interactive in a terminal or approvals-capable Quiet Core bot surface.",
     );
   });
 
@@ -565,7 +565,7 @@ describe("restart sentinel message dedup", () => {
         PATH: "/usr/bin:/bin",
       }),
     ).toBe(
-      "Recommended follow-up: run openclaw --profile isolated doctor --non-interactive in a terminal or approvals-capable OpenClaw surface.",
+      "Recommended follow-up: run quiet-core-bot --profile isolated doctor --non-interactive in a terminal or approvals-capable Quiet Core bot surface.",
     );
   });
 });

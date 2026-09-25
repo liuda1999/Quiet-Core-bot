@@ -76,7 +76,7 @@ describe("resolveSessionStoreTargets", () => {
     await withTempHome(async () => {
       const cfg: OpenClawConfig = {
         session: {
-          store: "~/.openclaw/agents/{agentId}/sessions/sessions.json",
+          store: "~/.quiet-core-bot/agents/{agentId}/sessions/sessions.json",
         },
         agents: {
           list: [{ id: "main", default: true }, { id: "work" }],
@@ -102,7 +102,7 @@ describe("resolveSessionStoreTargets", () => {
     await withTempHome(async () => {
       const cfg: OpenClawConfig = {
         session: {
-          store: "~/.openclaw/agents/{agentId}/sessions/sessions.json",
+          store: "~/.quiet-core-bot/agents/{agentId}/sessions/sessions.json",
         },
         agents: {
           list: [

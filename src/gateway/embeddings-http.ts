@@ -1,5 +1,5 @@
 // OpenAI-compatible embeddings HTTP endpoint.
-// Bridges /v1/embeddings requests to configured OpenClaw memory providers.
+// Bridges /v1/embeddings requests to configured Quiet Core bot memory providers.
 import { Buffer } from "node:buffer";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import {
@@ -36,7 +36,7 @@ import {
   resolveOpenAiCompatibleHttpOperatorScopes,
 } from "./http-utils.js";
 
-// OpenAI-compatible `/v1/embeddings` bridge. It maps OpenClaw agent/model
+// OpenAI-compatible `/v1/embeddings` bridge. It maps Quiet Core bot agent/model
 // routing onto configured memory embedding providers while preserving the
 // response shape expected by OpenAI SDK clients.
 type OpenAiEmbeddingsHttpOptions = {
@@ -273,7 +273,7 @@ export async function handleOpenAiEmbeddingsHttpRequest(
   if (requestModel !== OPENCLAW_MODEL_ID && !resolveAgentIdFromModel(requestModel, cfg)) {
     sendJson(res, 400, {
       error: {
-        message: "Invalid `model`. Use `openclaw` or `openclaw/<agentId>`.",
+        message: "Invalid `model`. Use `quiet-core-bot` or `openclaw/<agentId>`.",
         type: "invalid_request_error",
       },
     });

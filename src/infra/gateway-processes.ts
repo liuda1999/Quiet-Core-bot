@@ -10,7 +10,7 @@ import {
 } from "./windows-port-pids.js";
 
 // Gateway process helpers verify argv before signaling or reporting listener
-// PIDs so stale port owners cannot be mistaken for OpenClaw.
+// PIDs so stale port owners cannot be mistaken for Quiet Core bot.
 /** Read command argv for a PID using the current platform's process APIs. */
 export function readGatewayProcessArgsSync(pid: number): string[] | null {
   if (process.platform === "linux") {

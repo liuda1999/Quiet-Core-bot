@@ -1,4 +1,4 @@
-// Tests OpenClaw execution environment construction.
+// Tests Quiet Core bot execution environment construction.
 import { describe, expect, it } from "vitest";
 import {
   ensureOpenClawExecMarkerOnProcess,
@@ -7,7 +7,7 @@ import {
   OPENCLAW_CLI_ENV_VAR,
 } from "./openclaw-exec-env.js";
 
-describe("markOpenClawExecEnv", () => {
+describe("markQuiet Core botExecEnv", () => {
   it("returns a cloned env object with the exec marker set", () => {
     const env = { PATH: "/usr/bin", OPENCLAW_CLI: "0" };
     const marked = markOpenClawExecEnv(env);
@@ -21,7 +21,7 @@ describe("markOpenClawExecEnv", () => {
   });
 });
 
-describe("ensureOpenClawExecMarkerOnProcess", () => {
+describe("ensureQuiet Core botExecMarkerOnProcess", () => {
   it.each([
     {
       name: "mutates and returns the provided process env",

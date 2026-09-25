@@ -1,4 +1,4 @@
-// Covers OpenClaw CLI PATH construction.
+// Covers Quiet Core bot CLI PATH construction.
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ensureOpenClawCliOnPath } from "./path-env.js";
@@ -45,7 +45,7 @@ vi.mock("./env.js", () => ({
   isTruthyEnvValue: (value?: string) => value === "1" || value === "true",
 }));
 
-describe("ensureOpenClawCliOnPath", () => {
+describe("ensureQuiet Core botCliOnPath", () => {
   const envKeys = [
     "PATH",
     "OPENCLAW_PATH_BOOTSTRAPPED",
@@ -119,7 +119,7 @@ describe("ensureOpenClawCliOnPath", () => {
     }
   }
 
-  it("prepends the bundled app bin dir when a sibling openclaw exists", () => {
+  it("prepends the bundled app bin dir when a sibling quiet-core-bot exists", () => {
     const { tmp, appBinDir, appCli } = setupAppCliRoot("case-bundled");
     resetBootstrapEnv();
 

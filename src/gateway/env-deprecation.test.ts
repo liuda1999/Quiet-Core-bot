@@ -7,7 +7,7 @@ import {
   warnLegacyOpenClawEnvVars,
 } from "./env-deprecation.js";
 
-describe("warnLegacyOpenClawEnvVars", () => {
+describe("warnLegacyQuiet Core botEnvVars", () => {
   let envSnapshot: ReturnType<typeof captureEnv>;
   let emitWarning: ReturnType<typeof vi.spyOn>;
 

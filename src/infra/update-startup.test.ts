@@ -30,7 +30,7 @@ const {
   startManagedServiceUpdateHandoffMock: vi.fn(async () => ({
     status: "started" as const,
     pid: 12345,
-    command: "openclaw update --yes --channel beta --timeout 2700",
+    command: "quiet-core-bot update --yes --channel beta --timeout 2700",
     logPath: "/tmp/openclaw-handoff.log",
   })),
 }));
@@ -117,7 +117,7 @@ describe("update-startup", () => {
   let tempDir: string;
   let testState: OpenClawTestState;
 
-  let resolveOpenClawPackageRoot: (typeof import("./openclaw-root.js"))["resolveOpenClawPackageRoot"];
+  let resolveOpenClawPackageRoot: (typeof import("./openclaw-root.js"))["resolveQuiet Core botPackageRoot"];
   let checkUpdateStatus: (typeof import("./update-check.js"))["checkUpdateStatus"];
   let resolveNpmChannelTag: (typeof import("./update-check.js"))["resolveNpmChannelTag"];
   let runCommandWithTimeout: (typeof import("../process/exec.js"))["runCommandWithTimeout"];
@@ -240,7 +240,7 @@ describe("update-startup", () => {
     startManagedServiceUpdateHandoffMock.mockResolvedValue({
       status: "started",
       pid: 12345,
-      command: "openclaw update --yes --channel beta --timeout 2700",
+      command: "quiet-core-bot update --yes --channel beta --timeout 2700",
       logPath: "/tmp/openclaw-handoff.log",
     });
     resetUpdateAvailableStateForTest();
@@ -365,7 +365,7 @@ describe("update-startup", () => {
     const { log, parsed } = await runUpdateCheckAndReadState(channel);
 
     expect(log.info).toHaveBeenCalledWith(
-      `update available (latest): v2.0.0 (current v1.0.0). Run: ${formatCliCommand("openclaw update")}`,
+      `update available (latest): v2.0.0 (current v1.0.0). Run: ${formatCliCommand("quiet-core-bot update")}`,
     );
     expect(parsed?.lastNotifiedVersion).toBe("2.0.0");
     expect(parsed?.lastAvailableVersion).toBe("2.0.0");
@@ -672,7 +672,7 @@ describe("update-startup", () => {
       channel: "beta",
       version: "2.0.0-beta.1",
       tag: "beta",
-      command: "openclaw update --yes --channel beta --timeout 2700",
+      command: "quiet-core-bot update --yes --channel beta --timeout 2700",
       logPath: "/tmp/openclaw-handoff.log",
     });
   });

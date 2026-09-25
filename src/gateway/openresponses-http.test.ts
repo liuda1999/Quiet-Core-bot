@@ -300,7 +300,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
       };
       expect(invalidModelJson.error?.type).toBe("invalid_request_error");
       expect(invalidModelJson.error?.message).toBe(
-        "Invalid `model`. Use `openclaw` or `openclaw/<agentId>`.",
+        "Invalid `model`. Use `quiet-core-bot` or `openclaw/<agentId>`.",
       );
       expect(agentCommand).toHaveBeenCalledTimes(0);
       await ensureResponseConsumed(resInvalidModel);

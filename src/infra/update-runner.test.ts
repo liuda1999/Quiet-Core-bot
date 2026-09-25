@@ -1313,9 +1313,10 @@ describe("runGatewayUpdate", () => {
       "pnpm install": { stdout: "" },
       "pnpm build": { stdout: "" },
       "pnpm ui:build": { stdout: "" },
-      [`${doctorNodePath} ${path.join(tempDir, "quiet-core-bot.mjs")} doctor --non-interactive --fix`]: {
-        stdout: "",
-      },
+      [`${doctorNodePath} ${path.join(tempDir, "quiet-core-bot.mjs")} doctor --non-interactive --fix`]:
+        {
+          stdout: "",
+        },
     });
 
     const result = await runWithRunner(runner, { channel: "beta" });
@@ -1337,9 +1338,10 @@ describe("runGatewayUpdate", () => {
       "pnpm install": { stdout: "" },
       "pnpm build": { stdout: "" },
       "pnpm ui:build": { stdout: "" },
-      [`${doctorNodePath} ${path.join(tempDir, "quiet-core-bot.mjs")} doctor --non-interactive --fix`]: {
-        stdout: "",
-      },
+      [`${doctorNodePath} ${path.join(tempDir, "quiet-core-bot.mjs")} doctor --non-interactive --fix`]:
+        {
+          stdout: "",
+        },
     });
 
     const result = await runWithRunner(runner, { channel: "stable" });
@@ -2596,7 +2598,7 @@ describe("runGatewayUpdate", () => {
 
     expect(result.status).toBe("ok");
     expect(calls).toContain(doctorCommand);
-    expect(result.steps.map((step) => step.name)).toContain("openclaw doctor");
+    expect(result.steps.map((step) => step.name)).toContain("quiet-core-bot doctor");
     expect(doctorEnv?.OPENCLAW_UPDATE_IN_PROGRESS).toBe("1");
     expect(doctorEnv?.OPENCLAW_UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE).toBe("1");
     expect(doctorEnv?.OPENCLAW_COMPATIBILITY_HOST_VERSION).toBe("2.0.0");
@@ -2637,7 +2639,7 @@ describe("runGatewayUpdate", () => {
     expect(result.reason).toBe("doctor-failed");
     expect(calls).toContain(doctorCommand);
     const lastStep = result.steps.at(-1);
-    expect(lastStep?.name).toBe("openclaw doctor");
+    expect(lastStep?.name).toBe("quiet-core-bot doctor");
     expect(lastStep?.exitCode).toBe(1);
     expect(lastStep?.stderrTail).toBe("doctor refused migration");
   });
@@ -2763,7 +2765,7 @@ describe("runGatewayUpdate", () => {
     const localAppData = path.join(tempDir, "local-app-data");
     const portableGitMingw = path.join(
       localAppData,
-      "OpenClaw",
+      "Quiet Core bot",
       "deps",
       "portable-git",
       "mingw64",
@@ -2771,7 +2773,7 @@ describe("runGatewayUpdate", () => {
     );
     const portableGitUsr = path.join(
       localAppData,
-      "OpenClaw",
+      "Quiet Core bot",
       "deps",
       "portable-git",
       "usr",
@@ -2925,7 +2927,7 @@ describe("runGatewayUpdate", () => {
     });
   });
 
-  it("rejects git roots that are not a openclaw checkout", async () => {
+  it("rejects git roots that are not a quiet-core-bot checkout", async () => {
     await fs.mkdir(path.join(tempDir, ".git"));
     const cwdSpy = vi.spyOn(process, "cwd").mockReturnValue(tempDir);
     const { runner, calls } = createRunner({
@@ -2957,7 +2959,7 @@ describe("runGatewayUpdate", () => {
 
     expect(result.status).toBe("error");
     expect(result.reason).toBe("doctor-entry-missing");
-    expect(result.steps.some((step) => step.name === "openclaw doctor entry")).toBe(true);
+    expect(result.steps.some((step) => step.name === "quiet-core-bot doctor entry")).toBe(true);
     expect(result.steps.at(-1)?.name).toMatch(/^git rollback/);
   });
 

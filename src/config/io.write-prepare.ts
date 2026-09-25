@@ -976,7 +976,7 @@ export function formatConfigValidationFailure(pathLabel: string, issueMessage: s
       `Config validation failed: ${pathLabel}: ${issueMessage}`,
       "",
       "The config file was left unchanged, so a running gateway keeps its current configuration.",
-      `Inspect the current value with \`openclaw config get ${pathLabel}\`, list the accepted keys with \`openclaw config schema\`, or repair the file with \`openclaw doctor --fix\`.`,
+      `Inspect the current value with \`quiet-core-bot config get ${pathLabel}\`, list the accepted keys with \`quiet-core-bot config schema\`, or repair the file with \`quiet-core-bot doctor --fix\`.`,
     ].join("\n");
   }
 
@@ -986,10 +986,10 @@ export function formatConfigValidationFailure(pathLabel: string, issueMessage: s
     `Configuration mismatch: ${policyPath} is "open", but ${allowPath} does not include "*".`,
     "",
     "Fix with:",
-    `  openclaw config set ${allowPath} '["*"]'`,
+    `  quiet-core-bot config set ${allowPath} '["*"]'`,
     "",
     "Or switch policy:",
-    `  openclaw config set ${policyPath} "pairing"`,
+    `  quiet-core-bot config set ${policyPath} "pairing"`,
   ].join("\n");
 }
 

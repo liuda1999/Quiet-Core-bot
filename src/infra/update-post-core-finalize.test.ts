@@ -133,7 +133,7 @@ describe("runPostCoreFinalizeAfterGatewayUpdate", () => {
     const call = spawnFinalize.mock.calls[0][0];
     // No configured channel → effective channel defaults to the git/dev channel
     // the core update ran on, carried via env (convergence-only, not persisted),
-    // never as `--channel` (which `update finalize` would persist to openclaw.json).
+    // never as `--channel` (which `update finalize` would persist to quiet-core-bot.json).
     expect(call.env.OPENCLAW_UPDATE_EFFECTIVE_CHANNEL).toBe("dev");
     expect(call.argv).not.toContain("--channel");
     expect(call.argv).not.toContain("--timeout");

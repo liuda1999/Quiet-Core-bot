@@ -1,5 +1,5 @@
 // Gateway chat display sanitizer.
-// Removes OpenClaw-only envelopes before messages are shown in UI/RPC results.
+// Removes Quiet Core bot-only envelopes before messages are shown in UI/RPC results.
 import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
 import {
   stripInternalMetadataForDisplay,
@@ -78,7 +78,7 @@ function stripEnvelopeFromContentWithRole(
   return { content: next, changed };
 }
 
-/** Strips OpenClaw envelope metadata from one display message without mutating it. */
+/** Strips Quiet Core bot envelope metadata from one display message without mutating it. */
 export function stripEnvelopeFromMessage(message: unknown): unknown {
   if (!message || typeof message !== "object") {
     return message;

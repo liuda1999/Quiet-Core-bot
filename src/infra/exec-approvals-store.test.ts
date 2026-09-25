@@ -129,7 +129,7 @@ describe("exec approvals store helpers", () => {
     expect(path.normalize(resolveExecApprovalsSocketPath())).toBe(
       path.normalize(path.join(dir, ".openclaw", "exec-approvals.sock")),
     );
-    expect(resolveExecApprovalsDisplayPath()).toBe("~/.openclaw/exec-approvals.json");
+    expect(resolveExecApprovalsDisplayPath()).toBe("~/.quiet-core-bot/exec-approvals.json");
   });
 
   it("uses OPENCLAW_STATE_DIR for default file and socket paths", () => {

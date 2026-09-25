@@ -106,7 +106,7 @@ describe("config io audit helpers", () => {
         changedPathCount: 3,
       }),
     ).toBe(
-      "Config overwrite: /tmp/openclaw.json (sha256 prev-hash -> next-hash, backup=/tmp/openclaw.json.bak, changedPaths=3)",
+      "Config overwrite: /tmp/quiet-core-bot.json (sha256 prev-hash -> next-hash, backup=/tmp/quiet-core-bot.json.bak, changedPaths=3)",
     );
   });
 
@@ -511,7 +511,14 @@ describe("config io audit helpers", () => {
       pid: 1,
       ppid: 1,
       cwd: home,
-      argv: ["/usr/bin/node", "/usr/local/bin/quiet-core-bot.mjs", "config", "set", "ui.theme", "dark"],
+      argv: [
+        "/usr/bin/node",
+        "/usr/local/bin/quiet-core-bot.mjs",
+        "config",
+        "set",
+        "ui.theme",
+        "dark",
+      ],
       execArgv: ["--disable-warning=ExperimentalWarning"],
       suspicious: [],
       result: "rename",

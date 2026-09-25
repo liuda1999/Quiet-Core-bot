@@ -9,7 +9,7 @@ const envSnapshot = captureEnv(["HOME", "OPENCLAW_HOME"]);
 const tempHomes: string[] = [];
 
 function useTempHome(): string {
-  const home = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-approval-runtime-"));
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-approval-runtime-"));
   tempHomes.push(home);
   setTestEnvValue("HOME", home);
   setTestEnvValue("OPENCLAW_HOME", home);
@@ -28,7 +28,7 @@ function writeExecApprovalsToken(home: string, token: string): void {
       {
         version: 1,
         socket: {
-          path: "~/.openclaw/exec-approvals.sock",
+          path: "~/.quiet-core-bot/exec-approvals.sock",
           token,
         },
         agents: {},

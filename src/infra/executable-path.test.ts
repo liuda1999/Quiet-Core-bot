@@ -114,12 +114,12 @@ describe("executable path helpers", () => {
 
     expect(
       resolveExecutablePath(String.raw`:\Users\demo\AI\system\openclaw\git.exe`, {
-        cwd: String.raw`C:\Users\demo\AI\system\openclaw`,
+        cwd: String.raw`C:\Users\demo\AI\system\quiet-core-bot`,
       }),
     ).toBeUndefined();
     expect(
       resolveExecutablePath(String.raw`:/Users/demo/AI/system/openclaw/git.exe`, {
-        cwd: String.raw`C:\Users\demo\AI\system\openclaw`,
+        cwd: String.raw`C:\Users\demo\AI\system\quiet-core-bot`,
       }),
     ).toBeUndefined();
   });

@@ -1,7 +1,7 @@
 import type { Dirent } from "node:fs";
 // Plans, applies, and verifies a one-off state directory relocation.
 //
-// Used by the rebrand migration (pre-rebrand `~/.openclaw` -> current
+// Used by the rebrand migration (pre-rebrand `~/.quiet-core-bot` -> current
 // `~/.quiet-core-bot`). Planning is side-effect free so callers can preview the
 // exactly work before touching the filesystem; applying never writes to the
 // source directory, and verification compares substantive subtrees so a partial

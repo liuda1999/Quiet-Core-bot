@@ -3480,7 +3480,7 @@ export const chatHandlers: GatewayRequestHandlers = {
               explicitOriginTargetsAcpSession(explicitOriginResult.value) ||
               explicitOriginTargetsPlugin;
             // Bound plugin sessions own the real recipient model, so keep image
-            // attachments even when the parent OpenClaw session model is text-only.
+            // attachments even when the parent Quiet Core bot session model is text-only.
             const supportsImages = supportsSessionModelImages || explicitOriginSupportsInlineImages;
             const routeImageOffloadsAsMediaPaths = !supportsImages;
             const parsed = await parseMessageWithAttachments(
@@ -4100,7 +4100,7 @@ export const chatHandlers: GatewayRequestHandlers = {
               }
               let broadcastedSourceReplyFinal = false;
               // WebChat persistence has two owners. Agent runs persist model-visible turns
-              // through OpenClaw runtime's SessionManager; this dispatcher only owns live delivery payloads.
+              // through Quiet Core bot runtime's SessionManager; this dispatcher only owns live delivery payloads.
               // Do not blindly mirror agent-run final payloads into JSONL or chat.history can
               // duplicate normal embedded-agent assistant turns. The non-agent branch below has no
               // runtime-owned assistant turn, so it appends a gateway-injected assistant entry before

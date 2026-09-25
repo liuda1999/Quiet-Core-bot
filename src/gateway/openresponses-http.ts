@@ -1,7 +1,7 @@
 /**
  * OpenResponses HTTP Handler
  *
- * Implements the OpenResponses `/v1/responses` endpoint for OpenClaw Gateway.
+ * Implements the OpenResponses `/v1/responses` endpoint for Quiet Core bot Gateway.
  *
  * @see https://www.open-responses.com/
  */
@@ -843,7 +843,7 @@ export async function handleOpenResponsesHttpRequest(
               .map((p) => (typeof p.text === "string" ? p.text : ""))
               .filter(Boolean)
               .join("\n\n")
-          : "No response from OpenClaw.";
+          : "No response from Quiet Core bot.";
 
       const response = createResponseResource({
         id: responseId,
@@ -1098,7 +1098,9 @@ export async function handleOpenResponsesHttpRequest(
       const phase = evt.data?.phase;
       if (phase === "end" || phase === "error") {
         const finalText =
-          accumulatedText || bufferedReplaceableAssistantContent || "No response from OpenClaw.";
+          accumulatedText ||
+          bufferedReplaceableAssistantContent ||
+          "No response from Quiet Core bot.";
         const finalStatus = phase === "error" ? "failed" : "completed";
         requestFinalize(finalStatus, finalText);
       }
@@ -1274,7 +1276,9 @@ export async function handleOpenResponsesHttpRequest(
       // Fallback: if no streaming deltas were received, send the full response as text
       if (!sawAssistantDelta) {
         const content =
-          resultPayloadText || bufferedReplaceableAssistantContent || "No response from OpenClaw.";
+          resultPayloadText ||
+          bufferedReplaceableAssistantContent ||
+          "No response from Quiet Core bot.";
 
         accumulatedText = content;
         sawAssistantDelta = true;

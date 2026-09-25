@@ -8,6 +8,7 @@ import {
   normalizeOptionalString,
   readStringValue,
 } from "@openclaw/normalization-core/string-coerce";
+import { resolveStateDir } from "../config/paths.js";
 import { DEFAULT_AGENT_ID } from "../routing/session-key.js";
 import type { CommandExplanationSummary } from "./command-analysis/explain.js";
 import {
@@ -297,7 +298,8 @@ const DEFAULT_SECURITY: ExecSecurity = "full";
 const DEFAULT_ASK: ExecAsk = "off";
 export const DEFAULT_EXEC_APPROVAL_ASK_FALLBACK: ExecSecurity = "deny";
 const DEFAULT_AUTO_ALLOW_SKILLS = false;
-const DEFAULT_EXEC_APPROVALS_STATE_DIR = "~/.openclaw";
+// Pre-rebrand state dir, kept as the fallback location for unmigrated hosts.
+const LEGACY_EXEC_APPROVALS_STATE_DIR = "~/.openclaw";
 const EXEC_APPROVALS_FILE = "exec-approvals.json";
 const EXEC_APPROVALS_SOCKET = "exec-approvals.sock";
 
@@ -320,10 +322,21 @@ function resolveExecApprovalsStateDir(env: NodeJS.ProcessEnv = process.env): {
       displayPath: resolved,
     };
   }
+  const resolved = resolveStateDir(env, () => resolveRequiredHomeDir(env));
   return {
-    path: expandHomePrefix(DEFAULT_EXEC_APPROVALS_STATE_DIR, { env }),
-    displayPath: DEFAULT_EXEC_APPROVALS_STATE_DIR,
+    path: resolved,
+    displayPath: shortenStateDirForDisplay(resolved, env),
   };
+}
+
+/** Render a state dir below the effective home as `~/<relative>` for operator output. */
+function shortenStateDirForDisplay(target: string, env: NodeJS.ProcessEnv): string {
+  const home = resolveRequiredHomeDir(env);
+  const relative = path.relative(home, target);
+  if (!relative || relative.startsWith("..") || path.isAbsolute(relative)) {
+    return target;
+  }
+  return `~/${relative.split(path.sep).join("/")}`;
 }
 
 export function resolveExecApprovalsPath(): string {
@@ -336,7 +349,7 @@ export function resolveExecApprovalsSocketPath(): string {
 
 export function resolveExecApprovalsDisplayPath(): string {
   const stateDir = resolveExecApprovalsStateDir().displayPath;
-  return stateDir === DEFAULT_EXEC_APPROVALS_STATE_DIR
+  return stateDir.startsWith("~/")
     ? `${stateDir}/${EXEC_APPROVALS_FILE}`
     : path.join(stateDir, EXEC_APPROVALS_FILE);
 }
@@ -344,11 +357,11 @@ export function resolveExecApprovalsDisplayPath(): string {
 export function resolveExecApprovalsTranscriptPath(): string {
   return process.env.OPENCLAW_STATE_DIR?.trim()
     ? `$OPENCLAW_STATE_DIR/${EXEC_APPROVALS_FILE}`
-    : `${DEFAULT_EXEC_APPROVALS_STATE_DIR}/${EXEC_APPROVALS_FILE}`;
+    : `${resolveExecApprovalsStateDir().displayPath}/${EXEC_APPROVALS_FILE}`;
 }
 
 function resolveLegacyExecApprovalsPath(): string {
-  return path.join(expandHomePrefix(DEFAULT_EXEC_APPROVALS_STATE_DIR), EXEC_APPROVALS_FILE);
+  return path.join(expandHomePrefix(LEGACY_EXEC_APPROVALS_STATE_DIR), EXEC_APPROVALS_FILE);
 }
 
 function hasUnmigratedLegacyExecApprovals(filePath: string): boolean {

@@ -43,7 +43,7 @@ function buildScheduledTaskRestartScript(params: {
     "@echo off",
     "setlocal",
     ...setupLines,
-    `>> ${quotedLogPath} 2>&1 echo [%DATE% %TIME%] openclaw restart attempt source=windows-task-handoff target=${quotedTaskName}`,
+    `>> ${quotedLogPath} 2>&1 echo [%DATE% %TIME%] quiet-core-bot restart attempt source=windows-task-handoff target=${quotedTaskName}`,
     `schtasks /Query /TN ${quotedTaskName} >> ${quotedLogPath} 2>&1`,
     "if errorlevel 1 goto fallback",
     "set /a attempts=0",
@@ -58,7 +58,7 @@ function buildScheduledTaskRestartScript(params: {
     `if %attempts% GEQ ${TASK_RESTART_RETRY_LIMIT} goto fallback`,
     "goto retry",
     ":fallback",
-    `>> ${quotedLogPath} 2>&1 echo [%DATE% %TIME%] openclaw restart fallback source=windows-task-handoff`,
+    `>> ${quotedLogPath} 2>&1 echo [%DATE% %TIME%] quiet-core-bot restart fallback source=windows-task-handoff`,
   ];
   if (taskScriptPath) {
     const quotedScript = quoteCmdScriptArg(taskScriptPath);
@@ -71,7 +71,7 @@ function buildScheduledTaskRestartScript(params: {
   }
   lines.push(
     ":cleanup",
-    `>> ${quotedLogPath} 2>&1 echo [%DATE% %TIME%] openclaw restart finished source=windows-task-handoff`,
+    `>> ${quotedLogPath} 2>&1 echo [%DATE% %TIME%] quiet-core-bot restart finished source=windows-task-handoff`,
     'del "%~f0" >nul 2>&1',
   );
   return lines.join("\r\n");

@@ -1,4 +1,4 @@
-/** Adapts the generic gateway service manager for OpenClaw node-host services. */
+/** Adapts the generic gateway service manager for Quiet Core bot node-host services. */
 import {
   NODE_SERVICE_KIND,
   NODE_SERVICE_MARKER,

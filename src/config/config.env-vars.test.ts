@@ -143,7 +143,7 @@ describe("config env vars", () => {
       );
 
       expect(merged.OPENCLAW_LOAD_SHELL_ENV).toBe("0");
-      expect(Object.keys(merged)).toEqual(["OpenClaw_Load_Shell_Env"]);
+      expect(Object.keys(merged)).toEqual(["Quiet Core bot_Load_Shell_Env"]);
     } finally {
       platformSpy.mockRestore();
     }
@@ -262,7 +262,7 @@ describe("config env vars", () => {
     expect(entries.BRAVE_API_KEY).toBe("config-key");
   });
 
-  it("loads ${VAR} substitutions from ~/.openclaw/.env on repeated runtime loads", async () => {
+  it("loads ${VAR} substitutions from ~/.quiet-core-bot/.env on repeated runtime loads", async () => {
     await withTempHome(async (_home) => {
       await withEnvOverride({ BRAVE_API_KEY: undefined }, async () => {
         const stateDir = process.env.OPENCLAW_STATE_DIR?.trim();

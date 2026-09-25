@@ -547,7 +547,7 @@ describeLive("android node capability integration (preconditioned)", () => {
         [
           `selected node is not ready (nodeId=${nodeId}, connected=${String(target.connected)}, paired=${String(target.paired)})`,
           pendingHint,
-          "precondition: open app, keep foreground, ensure pairing approved (`openclaw nodes pending` / `openclaw nodes approve <requestId>`)",
+          "precondition: open app, keep foreground, ensure pairing approved (`quiet-core-bot nodes pending` / `quiet-core-bot nodes approve <requestId>`)",
         ].join("\n"),
       );
     }

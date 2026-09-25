@@ -59,7 +59,7 @@ async function writeSystemdUnitForAudit(home: string, lines: string[]) {
     unitPath,
     [
       "[Unit]",
-      "Description=OpenClaw Gateway",
+      "Description=Quiet Core bot Gateway",
       "[Service]",
       ...lines,
       "ExecStart=/usr/bin/node gateway",
@@ -234,7 +234,7 @@ describe("auditGatewayServiceConfig", () => {
     expect(issue?.detail).toContain("/opt/pnpm/bin");
   });
 
-  it("accepts an expected active OpenClaw bin even when it looks package-managed", async () => {
+  it("accepts an expected active Quiet Core bot bin even when it looks package-managed", async () => {
     const expectedServicePath = [
       "/opt/homebrew/opt/node/bin",
       "/Users/testuser/Library/pnpm",
@@ -665,7 +665,7 @@ describe("checkTokenDrift", () => {
       code: SERVICE_AUDIT_CODES.gatewayTokenDrift,
       message:
         "Config token differs from service token. The daemon will use the old token after restart.",
-      detail: "Run `openclaw gateway install --force` to sync the token.",
+      detail: "Run `quiet-core-bot gateway install --force` to sync the token.",
       level: "recommended",
     });
   });

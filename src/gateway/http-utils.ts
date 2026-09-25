@@ -42,7 +42,7 @@ export {
 } from "./http-auth-utils.js";
 
 export const OPENCLAW_MODEL_ID = "openclaw";
-/** Default OpenAI-compatible model alias that targets the default OpenClaw agent. */
+/** Default OpenAI-compatible model alias that targets the default Quiet Core bot agent. */
 export const OPENCLAW_DEFAULT_MODEL_ID = "openclaw/default";
 
 export class UnknownGatewayAgentError extends Error {
@@ -122,7 +122,7 @@ export async function resolveOpenAiCompatModelOverride(params: {
   const requestModel = params.model?.trim();
   if (requestModel && !resolveAgentIdFromModel(requestModel)) {
     return {
-      errorMessage: "Invalid `model`. Use `openclaw` or `openclaw/<agentId>`.",
+      errorMessage: "Invalid `model`. Use `quiet-core-bot` or `openclaw/<agentId>`.",
     };
   }
 

@@ -261,11 +261,11 @@ async function runGatewayConfigHealth(ctx: DoctorHealthFlowContext): Promise<voi
   if (!ctx.cfg.gateway?.mode) {
     const lines = [
       "gateway.mode is unset; gateway start will be blocked.",
-      `Fix: run ${formatCliCommand("openclaw configure")} and set Gateway mode (local/remote).`,
-      `Or set directly: ${formatCliCommand("openclaw config set gateway.mode local")}`,
+      `Fix: run ${formatCliCommand("quiet-core-bot configure")} and set Gateway mode (local/remote).`,
+      `Or set directly: ${formatCliCommand("quiet-core-bot config set gateway.mode local")}`,
     ];
     if (!fs.existsSync(ctx.configPath)) {
-      lines.push(`Missing config: run ${formatCliCommand("openclaw setup")} first.`);
+      lines.push(`Missing config: run ${formatCliCommand("quiet-core-bot setup")} first.`);
     }
     note(lines.join("\n"), "Gateway");
   }
@@ -274,8 +274,8 @@ async function runGatewayConfigHealth(ctx: DoctorHealthFlowContext): Promise<voi
       [
         "gateway.auth.token and gateway.auth.password are both configured while gateway.auth.mode is unset.",
         "Set an explicit mode to avoid ambiguous auth selection and startup/runtime failures.",
-        `Set token mode: ${formatCliCommand("openclaw config set gateway.auth.mode token")}`,
-        `Set password mode: ${formatCliCommand("openclaw config set gateway.auth.mode password")}`,
+        `Set token mode: ${formatCliCommand("quiet-core-bot config set gateway.auth.mode token")}`,
+        `Set password mode: ${formatCliCommand("quiet-core-bot config set gateway.auth.mode password")}`,
       ].join("\n"),
       "Gateway auth",
     );
@@ -965,7 +965,7 @@ async function runGatewayHealthChecks(ctx: DoctorHealthFlowContext): Promise<voi
   const { note } = await loadNoteModule();
   if ((await hasActiveGatewayExecCredential(ctx)) && ctx.options.allowExec !== true) {
     note(
-      "Gateway health probes skipped because gateway credentials use an exec SecretRef. Run `openclaw doctor --allow-exec` to verify Gateway health with exec SecretRefs.",
+      "Gateway health probes skipped because gateway credentials use an exec SecretRef. Run `quiet-core-bot doctor --allow-exec` to verify Gateway health with exec SecretRefs.",
       "Gateway",
     );
     ctx.gatewayHealthSkipped = true;
@@ -1092,7 +1092,7 @@ async function runWriteConfigHealth(ctx: DoctorHealthFlowContext): Promise<void>
     return;
   }
   if (!ctx.prompter.shouldRepair) {
-    ctx.runtime.log(`Run "${formatCliCommand("openclaw doctor --fix")}" to apply changes.`);
+    ctx.runtime.log(`Run "${formatCliCommand("quiet-core-bot doctor --fix")}" to apply changes.`);
   }
 }
 

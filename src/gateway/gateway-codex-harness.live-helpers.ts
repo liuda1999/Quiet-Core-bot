@@ -78,7 +78,7 @@ export const EXPECTED_CODEX_MODELS_COMMAND_TEXT = [
   "Active model: `codex/",
   "Current active model is `openai/",
   "Current active model is `codex/",
-  "Current OpenClaw session status reports the active model as:",
+  "Current Quiet Core bot session status reports the active model as:",
 ] as const;
 
 const HEALTHY_CODEX_MODELS_COMMAND_TEXT = [
@@ -138,7 +138,7 @@ const HEALTHY_CODEX_MODELS_COMMAND_TEXT = [
   "Active model: `codex/",
   "Current active model is `openai/",
   "Current active model is `codex/",
-  "Current OpenClaw session status reports the active model as:",
+  "Current Quiet Core bot session status reports the active model as:",
 ] as const;
 
 /** Accepted `/codex status` response fragments for live harness probes. */
@@ -148,13 +148,13 @@ export const EXPECTED_CODEX_STATUS_COMMAND_TEXT = [
   "Model: codex/",
   "Session: `agent:dev:live-codex-harness`",
   "Session: agent:dev:live-codex-harness",
-  "OpenClaw `",
-  "OpenClaw status:",
+  "Quiet Core bot `",
+  "Quiet Core bot status:",
   "Status: running on",
   "model `codex/",
   "session `agent:dev:live-codex-harness`",
   "Model/status card shown above",
-  "OpenClaw status shown above.",
+  "Quiet Core bot status shown above.",
   "Status shown above.",
   "No active task is running.",
   "No active work is running.",
@@ -167,9 +167,9 @@ export const EXPECTED_CODEX_STATUS_COMMAND_TEXT = [
 export function isExpectedCodexStatusCommandText(text: string): boolean {
   const normalized = text.toLowerCase();
   const mentionsOpenClawStatus =
-    normalized.includes("openclaw is running on") ||
+    normalized.includes("quiet-core-bot is running on") ||
     /openclaw\s+\S+\s+is running on/u.test(normalized) ||
-    normalized.includes("openclaw status:") ||
+    normalized.includes("quiet-core-bot status:") ||
     normalized.includes("status: running on") ||
     normalized.includes("session status: running on");
   const mentionsHarnessSession =
@@ -277,7 +277,7 @@ export function isExpectedCodexModelsCommandText(text: string): boolean {
   const mentionsSessionModel =
     normalized.includes("current session is using") ||
     normalized.includes("current session model") ||
-    normalized.includes("current session model from openclaw status") ||
+    normalized.includes("current session model from quiet-core-bot status") ||
     normalized.includes("visible session model") ||
     normalized.includes("the current session is using");
   const mentionsConfigSummary =
@@ -286,7 +286,7 @@ export function isExpectedCodexModelsCommandText(text: string): boolean {
     normalized.includes("registered models") ||
     normalized.includes("only listed model") ||
     normalized.includes("single codex model") ||
-    normalized.includes("live openclaw config shows") ||
+    normalized.includes("live quiet-core-bot config shows") ||
     normalized.includes("current gateway config");
   const isSessionConfigFallback =
     mentionsModelIdentifier &&

@@ -341,7 +341,7 @@ describe("managed service update handoff", () => {
     const serviceIdentityEnv = {
       OPENCLAW_LAUNCHD_LABEL: "com.example.openclaw.test",
       OPENCLAW_SYSTEMD_UNIT: "openclaw-test.service",
-      OPENCLAW_WINDOWS_TASK_NAME: "OpenClaw Test Gateway",
+      OPENCLAW_WINDOWS_TASK_NAME: "Quiet Core bot Test Gateway",
     } satisfies NodeJS.ProcessEnv;
     const supervisorEnv = Object.fromEntries(
       SUPERVISOR_HINT_ENV_VARS.map((key) => [key, "supervised"]),
@@ -375,7 +375,7 @@ describe("managed service update handoff", () => {
     });
 
     expect(result.status).toBe("started");
-    expect(result.command).toBe("openclaw update --yes --timeout 1800");
+    expect(result.command).toBe("quiet-core-bot update --yes --timeout 1800");
     expect(spawnMock).toHaveBeenCalledTimes(1);
     const [execPath, args, options] = spawnMock.mock.calls[0] as unknown as [
       string,
@@ -554,8 +554,8 @@ describe("managed service update handoff", () => {
       },
       {
         supervisor: "schtasks" as const,
-        env: { OPENCLAW_WINDOWS_TASK_NAME: "OpenClaw Test Gateway" },
-        expected: { kind: "schtasks", taskName: "OpenClaw Test Gateway" },
+        env: { OPENCLAW_WINDOWS_TASK_NAME: "Quiet Core bot Test Gateway" },
+        expected: { kind: "schtasks", taskName: "Quiet Core bot Test Gateway" },
       },
     ];
 

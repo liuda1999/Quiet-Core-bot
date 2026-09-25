@@ -73,7 +73,7 @@ export type SkillsWorkshopConfig = {
   maxSkillBytes?: number;
 };
 
-/** Top-level skills config block in openclaw config. */
+/** Top-level skills config block in quiet-core-bot config. */
 export type SkillsConfig = {
   /** Optional bundled-skill allowlist (only affects bundled skills). */
   allowBundled?: string[];

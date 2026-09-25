@@ -1,4 +1,4 @@
-// Builds PATH values for OpenClaw child processes.
+// Builds PATH values for Quiet Core bot child processes.
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -88,7 +88,7 @@ function candidateBinDirs(
   const append: string[] = [];
 
   // Keep the active runtime directory ahead of PATH hardening so shebang-based
-  // subprocesses keep using the same Node/Bun the current OpenClaw process is on.
+  // subprocesses keep using the same Node/Bun the current Quiet Core bot process is on.
   try {
     const execDir = path.dirname(execPath);
     if (isExecutable(execPath)) {
@@ -98,7 +98,7 @@ function candidateBinDirs(
     // ignore
   }
 
-  // Bundled macOS app: `openclaw` lives next to the executable (process.execPath).
+  // Bundled macOS app: `quiet-core-bot` lives next to the executable (process.execPath).
   try {
     const execDir = path.dirname(execPath);
     const siblingCli = path.join(execDir, "openclaw");
@@ -127,7 +127,7 @@ function candidateBinDirs(
 
   // User-writable / package-manager directories are appended so they never
   // shadow trusted OS binaries.
-  // This includes Brew/Homebrew dirs, which are useful for finding `openclaw`
+  // This includes Brew/Homebrew dirs, which are useful for finding `quiet-core-bot`
   // in launchd/minimal environments but must not be treated as trusted.
   append.push(...resolvePathBootstrapBrewDirs({ homeDir, platform, existingPathParts }));
   const miseDataDir = process.env.MISE_DATA_DIR ?? path.join(homeDir, ".local", "share", "mise");
@@ -153,7 +153,7 @@ function candidateBinDirs(
 }
 
 /**
- * Best-effort PATH bootstrap so skills that require the `openclaw` CLI can run
+ * Best-effort PATH bootstrap so skills that require the `quiet-core-bot` CLI can run
  * under launchd/minimal environments (and inside the macOS app bundle).
  */
 export function ensureOpenClawCliOnPath(opts: EnsureOpenClawPathOpts = {}) {

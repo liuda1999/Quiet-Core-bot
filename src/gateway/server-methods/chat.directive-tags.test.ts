@@ -2364,7 +2364,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
         payload: {
           text: [
             "Trajectory exports can include prompts, model messages, tool schemas, tool results, runtime events, and local paths.",
-            "Trajectory bundle: requested `openclaw sessions export-trajectory` through exec approval. Approve once to create the bundle; do not use allow-all for trajectory exports.",
+            "Trajectory bundle: requested `quiet-core-bot sessions export-trajectory` through exec approval. Approve once to create the bundle; do not use allow-all for trajectory exports.",
           ].join("\n"),
         },
       },
@@ -3157,7 +3157,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   it("renders image reply payloads as assistant image content instead of MEDIA text", async () => {
     createTranscriptFixture("openclaw-chat-send-agent-image-");
     mockState.finalPayload = {
-      text: "Scan this QR code with the OpenClaw iOS app:",
+      text: "Scan this QR code with the Quiet Core bot iOS app:",
       mediaUrl: "data:image/png;base64,cG5n",
     };
     const respond = vi.fn();
@@ -3173,7 +3173,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     expect(getMessage(payload)?.role).toBe("assistant");
     expect(content[0]).toEqual({
       type: "text",
-      text: "Scan this QR code with the OpenClaw iOS app:",
+      text: "Scan this QR code with the Quiet Core bot iOS app:",
     });
     expect(content[1]).toEqual({ type: "input_image", image_url: "data:image/png;base64,cG5n" });
     expect(JSON.stringify(payload?.message)).not.toContain("MEDIA:data:image/png;base64,cG5n");
@@ -4838,7 +4838,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   it("does not persist sensitive image media into transcript updates", async () => {
     createTranscriptFixture("openclaw-chat-send-sensitive-media-final-");
     mockState.finalPayload = {
-      text: "Scan this QR code with the OpenClaw iOS app:",
+      text: "Scan this QR code with the Quiet Core bot iOS app:",
       mediaUrl: "data:image/png;base64,cG5n",
       sensitiveMedia: true,
     };
@@ -4855,7 +4855,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     expect(getMessage(payload)?.role).toBe("assistant");
     expect(content[0]).toEqual({
       type: "text",
-      text: "Scan this QR code with the OpenClaw iOS app:",
+      text: "Scan this QR code with the Quiet Core bot iOS app:",
     });
     expect(content[1]).toEqual({ type: "input_image", image_url: "data:image/png;base64,cG5n" });
     const transcriptUpdate = mockState.emittedTranscriptUpdates.find(
@@ -4868,7 +4868,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     expect(transcriptMessage?.role).toBe("assistant");
     expect(transcriptMessage?.content?.[0]).toEqual({
       type: "text",
-      text: "Scan this QR code with the OpenClaw iOS app:",
+      text: "Scan this QR code with the Quiet Core bot iOS app:",
     });
     expect(JSON.stringify(transcriptUpdate)).not.toContain("input_image");
     expect(JSON.stringify(transcriptUpdate)).not.toContain("data:image/png;base64,cG5n");

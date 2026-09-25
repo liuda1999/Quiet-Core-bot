@@ -84,7 +84,7 @@ function buildGenericNativeExecApprovalFallbackText(params?: { excludeChannel?: 
     excludeChannel: params?.excludeChannel,
   });
   return clients
-    ? `Approve it from the Web UI or terminal UI, or enable a native chat approval client such as ${clients}. If those accounts already know your owner ID via allowFrom or owner config, OpenClaw can often infer approvers automatically.`
+    ? `Approve it from the Web UI or terminal UI, or enable a native chat approval client such as ${clients}. If those accounts already know your owner ID via allowFrom or owner config, Quiet Core bot can often infer approvers automatically.`
     : "Approve it from the Web UI or terminal UI.";
 }
 

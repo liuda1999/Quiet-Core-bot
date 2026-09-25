@@ -47,7 +47,7 @@ function parseInstallSpec(input: unknown): HookInstallSpec | undefined {
   return spec;
 }
 
-/** Resolve OpenClaw hook metadata from the manifest block in HOOK.md frontmatter. */
+/** Resolve Quiet Core bot hook metadata from the manifest block in HOOK.md frontmatter. */
 export function resolveOpenClawMetadata(
   frontmatter: ParsedHookFrontmatter,
 ): OpenClawHookMetadata | undefined {

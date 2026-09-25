@@ -34,7 +34,7 @@ function isOpenAiCodexDefaultRuntimeSelection(params: {
     return false;
   }
   // "auto"/"default" only means Codex for the official OpenAI route.
-  // Custom OpenAI-compatible base URLs stay on the OpenClaw runtime path.
+  // Custom OpenAI-compatible base URLs stay on the Quiet Core bot runtime path.
   return openAIProviderUsesCodexRuntimeByDefault({
     provider: OPENAI_PROVIDER_ID,
     config: params.cfg,
@@ -106,7 +106,7 @@ function openAiHasCodexDefaultRuntimePolicy(cfg: OpenClawConfig): boolean {
     if (isCodexRuntimeSelection(providerConfig?.agentRuntime?.id)) {
       return true;
     }
-    // A model-scoped explicit "auto"/"default" overrides provider-wide PI/OpenClaw
+    // A model-scoped explicit "auto"/"default" overrides provider-wide PI/Quiet Core bot
     // policy and falls back to the official OpenAI Codex runtime default.
     if (
       providerConfig?.models?.some(
@@ -177,7 +177,7 @@ function openAiDefaultRouteKeepsCodexUnavailable(cfg: OpenClawConfig): boolean {
   const policy = openAiDefaultRouteRuntimePolicy(cfg);
   if (!policy?.id?.trim()) {
     // With no explicit runtime policy, the OpenAI route only needs Codex on the
-    // official OpenAI endpoint. OpenAI-compatible proxies stay on OpenClaw.
+    // official OpenAI endpoint. OpenAI-compatible proxies stay on Quiet Core bot.
     return !openAIProviderUsesCodexRuntimeByDefault({
       provider: OPENAI_PROVIDER_ID,
       config: cfg,
@@ -205,7 +205,7 @@ export function configExplicitlyKeepsCodexUnavailableForOpenAi(cfg: OpenClawConf
  * Suppresses missing Codex plugin diagnostics when config makes Codex optional.
  *
  * Explicitly enabled entries still warn so operator intent is honored even when
- * all default routes would otherwise stay on the OpenClaw runtime.
+ * all default routes would otherwise stay on the Quiet Core bot runtime.
  */
 export function shouldSuppressMissingCodexPluginDiagnostics(cfg: OpenClawConfig): boolean {
   const entryEnabled = codexPluginEntryEnabled(cfg);

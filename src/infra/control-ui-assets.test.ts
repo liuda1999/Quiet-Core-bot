@@ -134,7 +134,7 @@ describe("control UI assets helpers (fs-mocked)", () => {
     );
   });
 
-  it("uses resolveOpenClawPackageRoot when available", async () => {
+  it("uses resolveQuiet Core botPackageRoot when available", async () => {
     const pkgRoot = abs("fixtures/openclaw");
     (
       openclawRoot.resolveOpenClawPackageRoot as unknown as ReturnType<typeof vi.fn>
@@ -150,9 +150,9 @@ describe("control UI assets helpers (fs-mocked)", () => {
     setFile(path.join(root, "package.json"), JSON.stringify({ name: "openclaw" }));
     setFile(path.join(root, "dist", "control-ui", "index.html"), "<html></html>\n");
 
-    await expect(resolveControlUiDistIndexPath(path.join(root, "quiet-core-bot.mjs"))).resolves.toBe(
-      path.join(root, "dist", "control-ui", "index.html"),
-    );
+    await expect(
+      resolveControlUiDistIndexPath(path.join(root, "quiet-core-bot.mjs")),
+    ).resolves.toBe(path.join(root, "dist", "control-ui", "index.html"));
   });
 
   it("returns null when fallback package name does not match", async () => {
@@ -212,8 +212,8 @@ describe("control UI assets helpers (fs-mocked)", () => {
   });
 
   it("prefers packaged app Control UI assets in Contents/Resources", () => {
-    const execPath = abs("fixtures/OpenClaw.app/Contents/MacOS/OpenClaw");
-    const bundledUiDir = abs("fixtures/OpenClaw.app/Contents/Resources/control-ui");
+    const execPath = abs("fixtures/Quiet Core bot.app/Contents/MacOS/Quiet Core bot");
+    const bundledUiDir = abs("fixtures/Quiet Core bot.app/Contents/Resources/control-ui");
     setFile(path.join(bundledUiDir, "index.html"), "<html></html>\n");
 
     state.realpaths.set(execPath, execPath);

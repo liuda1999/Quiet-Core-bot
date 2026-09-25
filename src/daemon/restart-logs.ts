@@ -51,7 +51,7 @@ export function resolveGatewaySupervisorLogPaths(
   options?: { platform?: NodeJS.Platform },
 ): GatewayLogPaths {
   // launchd supervisors write to ~/Library/Logs; systemd and schtasks use the
-  // OpenClaw state dir so generated service users can create the directory.
+  // Quiet Core bot state dir so generated service users can create the directory.
   return (options?.platform ?? process.platform) === "darwin"
     ? resolveMacLaunchAgentLogPaths(env)
     : resolveGatewayLogPaths(env);
@@ -89,7 +89,7 @@ export function renderCmdRestartLogSetup(env: GatewayServiceEnv): {
     quotedLogPath,
     lines: [
       `if not exist ${quotedLogDir} mkdir ${quotedLogDir} >nul 2>&1`,
-      `>> ${quotedLogPath} 2>&1 echo [%DATE% %TIME%] openclaw restart log initialized`,
+      `>> ${quotedLogPath} 2>&1 echo [%DATE% %TIME%] quiet-core-bot restart log initialized`,
     ],
   };
 }

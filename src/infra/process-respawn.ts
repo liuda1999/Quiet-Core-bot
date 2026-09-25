@@ -31,7 +31,7 @@ const PNPM_VERSIONED_OPENCLAW_ENTRY_PATTERN =
 
 function rewritePnpmVersionedOpenClawEntryPath(entryPath: string): string {
   // pnpm can expose argv[1] as a versioned realpath that self-update removes.
-  // Respawn through the stable OpenClaw package wrapper instead.
+  // Respawn through the stable Quiet Core bot package wrapper instead.
   return entryPath.replace(
     PNPM_VERSIONED_OPENCLAW_ENTRY_PATTERN,
     "$1$2node_modules$2openclaw$2quiet-core-bot.mjs",

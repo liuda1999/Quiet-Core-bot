@@ -16,14 +16,14 @@ vi.mock("./schtasks-exec.js", () => ({
 // Real content from the openclaw-gateway.service unit file (the canonical gateway unit).
 const GATEWAY_SERVICE_CONTENTS = `\
 [Unit]
-Description=OpenClaw Gateway (v2026.3.8)
+Description=Quiet Core bot Gateway (v2026.3.8)
 After=network-online.target
 Wants=network-online.target
 
 [Service]
 ExecStart=/usr/bin/node /home/openclaw/.npm-global/lib/node_modules/openclaw/dist/entry.js gateway --port 18789
 Restart=always
-Environment=OPENCLAW_SERVICE_MARKER=openclaw
+Environment=OPENCLAW_SERVICE_MARKER=quiet-core-bot
 Environment=OPENCLAW_SERVICE_KIND=gateway
 Environment=OPENCLAW_SERVICE_VERSION=2026.3.8
 
@@ -31,10 +31,10 @@ Environment=OPENCLAW_SERVICE_VERSION=2026.3.8
 WantedBy=default.target
 `;
 
-// Real content from the openclaw-test.service unit file (a non-gateway openclaw service).
+// Real content from the openclaw-test.service unit file (a non-gateway quiet-core-bot service).
 const TEST_SERVICE_CONTENTS = `\
 [Unit]
-Description=OpenClaw test service
+Description=Quiet Core bot test service
 After=default.target
 
 [Service]
@@ -56,7 +56,7 @@ Environment=HOME=/home/clawdbot
 
 const COMPANION_SERVICE_CONTENTS = `\
 [Unit]
-Description=OpenClaw companion worker
+Description=Quiet Core bot companion worker
 After=openclaw-gateway.service
 Requires=openclaw-gateway.service
 
@@ -66,18 +66,18 @@ ExecStart=/usr/bin/node /opt/openclaw-worker/dist/index.js worker
 
 const CUSTOM_OPENCLAW_GATEWAY_CONTENTS = `\
 [Unit]
-Description=Custom OpenClaw gateway
+Description=Custom Quiet Core bot gateway
 
 [Service]
 ExecStart=/usr/bin/node /opt/openclaw/dist/entry.js gateway --port 18888
 `;
 
 describe("detectMarkerLineWithGateway", () => {
-  it("returns null for openclaw-test.service (openclaw only in description, no gateway on same line)", () => {
+  it("returns null for openclaw-test.service (quiet-core-bot only in description, no gateway on same line)", () => {
     expect(detectMarkerLineWithGateway(TEST_SERVICE_CONTENTS)).toBeNull();
   });
 
-  it("returns openclaw for the canonical gateway unit (ExecStart has both openclaw and gateway)", () => {
+  it("returns quiet-core-bot for the canonical gateway unit (ExecStart has both quiet-core-bot and gateway)", () => {
     expect(detectMarkerLineWithGateway(GATEWAY_SERVICE_CONTENTS)).toBe("openclaw");
   });
 
@@ -184,7 +184,7 @@ describe("findExtraGatewayServices (linux / scanSystemdDir) — real filesystem"
   );
 
   it.skipIf(!isLinux)(
-    "reports custom-named gateway units that execute openclaw gateway",
+    "reports custom-named gateway units that execute quiet-core-bot gateway",
     async () => {
       const tmpHome = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-test-"));
       const systemdDir = path.join(tmpHome, ".config", "systemd", "user");
@@ -289,7 +289,7 @@ describe("findExtraGatewayServices (darwin / scanLaunchdDir) — real filesystem
     }
   });
 
-  it("reports custom LaunchAgents that execute openclaw gateway", async () => {
+  it("reports custom LaunchAgents that execute quiet-core-bot gateway", async () => {
     const tmpHome = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-test-"));
     const launchdDir = path.join(tmpHome, "Library", "LaunchAgents");
     const plistPath = path.join(launchdDir, "com.example.openclaw-gateway.plist");
@@ -357,12 +357,12 @@ describe("findExtraGatewayServices (win32)", () => {
 
   it("collects only non-openclaw marker tasks from schtasks output", async () => {
     // Real schtasks /Query /FO LIST /V output prefixes root-folder task
-    // names with a backslash (e.g. TaskName:\OpenClaw Gateway).
+    // names with a backslash (e.g. TaskName:\Quiet Core bot Gateway).
     execSchtasksMock.mockResolvedValueOnce({
       code: 0,
       stdout: [
-        "TaskName:\\OpenClaw Gateway",
-        "Task To Run: C:\\Program Files\\OpenClaw\\openclaw.exe gateway run",
+        "TaskName:\\Quiet Core bot Gateway",
+        "Task To Run: C:\\Program Files\\Quiet Core bot\\openclaw.exe gateway run",
         "",
         "TaskName: Clawdbot Legacy",
         "Task To Run: C:\\clawdbot\\clawdbot.exe run",
@@ -375,7 +375,7 @@ describe("findExtraGatewayServices (win32)", () => {
     });
 
     const result = await findExtraGatewayServices({}, { deep: true });
-    // The \OpenClaw Gateway task is the live launcher — it must be skipped.
+    // The \Quiet Core bot Gateway task is the live launcher — it must be skipped.
     // Only the unrelated clawdbot task should be flagged.
     expect(result).toEqual([
       {
@@ -393,14 +393,14 @@ describe("findExtraGatewayServices (win32)", () => {
     execSchtasksMock.mockResolvedValueOnce({
       code: 0,
       stdout: [
-        "TaskName:\\OpenClaw Gateway",
-        "Task To Run: C:\\Program Files\\OpenClaw\\openclaw.exe gateway run",
+        "TaskName:\\Quiet Core bot Gateway",
+        "Task To Run: C:\\Program Files\\Quiet Core bot\\openclaw.exe gateway run",
         "",
-        "TaskName:\\OpenClaw Gateway (dev)",
-        "Task To Run: C:\\Program Files\\OpenClaw\\openclaw.exe gateway run --profile dev",
+        "TaskName:\\Quiet Core bot Gateway (dev)",
+        "Task To Run: C:\\Program Files\\Quiet Core bot\\openclaw.exe gateway run --profile dev",
         "",
-        "TaskName:\\OpenClaw Gateway Backup",
-        "Task To Run: C:\\Program Files\\OpenClaw\\openclaw.exe gateway run",
+        "TaskName:\\Quiet Core bot Gateway Backup",
+        "Task To Run: C:\\Program Files\\Quiet Core bot\\openclaw.exe gateway run",
         "",
       ].join("\n"),
       stderr: "",
@@ -410,9 +410,9 @@ describe("findExtraGatewayServices (win32)", () => {
     expect(result).toEqual([
       {
         platform: "win32",
-        label: "\\OpenClaw Gateway Backup",
+        label: "\\Quiet Core bot Gateway Backup",
         detail:
-          "task: \\OpenClaw Gateway Backup, run: C:\\Program Files\\OpenClaw\\openclaw.exe gateway run",
+          "task: \\Quiet Core bot Gateway Backup, run: C:\\Program Files\\Quiet Core bot\\openclaw.exe gateway run",
         scope: "system",
         marker: "openclaw",
         legacy: false,

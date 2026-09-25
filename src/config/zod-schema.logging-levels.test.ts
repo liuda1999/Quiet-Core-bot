@@ -2,7 +2,7 @@
 import { describe, expect, it } from "vitest";
 import { OpenClawSchema } from "./zod-schema.js";
 
-describe("OpenClawSchema logging levels", () => {
+describe("Quiet Core botSchema logging levels", () => {
   it("accepts valid logging level values for level and consoleLevel", () => {
     const result = OpenClawSchema.safeParse({
       logging: {

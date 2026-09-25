@@ -68,7 +68,9 @@ describe("operator approval gateway client runtime token source", () => {
     deleteTestEnvValue("OPENCLAW_GATEWAY_TOKEN");
     deleteTestEnvValue("OPENCLAW_GATEWAY_PASSWORD");
 
-    const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-approval-client-e2e-"));
+    const tempHome = await fs.mkdtemp(
+      path.join(os.tmpdir(), "quiet-core-bot-approval-client-e2e-"),
+    );
     cleanup.push(() => fs.rm(tempHome, { recursive: true, force: true, maxRetries: 5 }));
 
     const stateDir = path.join(tempHome, ".openclaw");

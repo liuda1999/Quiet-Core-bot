@@ -10,7 +10,7 @@ function hasExplicitGatewayConnectionAuth(auth?: ExplicitGatewayAuth): boolean {
   return Boolean(trimToUndefined(auth?.token) || trimToUndefined(auth?.password));
 }
 
-/** Returns true when url/auth flags are sufficient and loading OpenClaw config is unnecessary. */
+/** Returns true when url/auth flags are sufficient and loading Quiet Core bot config is unnecessary. */
 export function canSkipGatewayConfigLoad(params: {
   config?: OpenClawConfig;
   urlOverride?: string;

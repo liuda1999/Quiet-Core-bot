@@ -584,7 +584,7 @@ describe("CORE_HEALTH_CHECKS", () => {
         severity: "warning",
         message: expect.stringContaining("Gateway token SecretRef could not be resolved:"),
         fixHint:
-          "Run `openclaw doctor --allow-exec` to verify exec SecretRefs during doctor, or `openclaw secrets audit --allow-exec` to audit all exec SecretRefs.",
+          "Run `quiet-core-bot doctor --allow-exec` to verify exec SecretRefs during doctor, or `quiet-core-bot secrets audit --allow-exec` to audit all exec SecretRefs.",
       }),
     );
   });
@@ -597,7 +597,7 @@ describe("CORE_HEALTH_CHECKS", () => {
             return [
               [
                 "- Tip: back up the workspace in a private git repo (GitHub or GitLab).",
-                "- Keep ~/.openclaw out of git; it contains credentials and session history.",
+                "- Keep ~/.quiet-core-bot out of git; it contains credentials and session history.",
               ].join("\n"),
               "Memory system not found in workspace.",
             ];

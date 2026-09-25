@@ -27,8 +27,8 @@ describe("independent build update guard", () => {
     expect(() => assertUpstreamUpdateAllowed({})).toThrow(IndependentBuildUpdateError);
 
     const message = formatIndependentBuildUpdateMessage();
-    expect(message).toContain("does not participate in upstream OpenClaw updates");
-    expect(message).toContain("openclaw update status");
+    expect(message).toContain("does not participate in upstream Quiet Core bot updates");
+    expect(message).toContain("quiet-core-bot update status");
     expect(message).toContain(`${INDEPENDENT_BUILD_ENV_KEY}=0`);
   });
 

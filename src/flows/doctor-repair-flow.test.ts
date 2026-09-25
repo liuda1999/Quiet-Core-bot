@@ -207,7 +207,7 @@ describe("runDoctorHealthRepairs", () => {
               checkId: "test/not-fixed",
               severity: "warning",
               message: "still broken",
-              ocPath: "oc://openclaw.json/gateway.mode",
+              ocPath: "oc://quiet-core-bot.json/gateway.mode",
             },
           ];
         },
@@ -226,7 +226,7 @@ describe("runDoctorHealthRepairs", () => {
     expect(result.remainingFindings).toMatchObject([
       {
         checkId: "test/not-fixed",
-        ocPath: "oc://openclaw.json/gateway.mode",
+        ocPath: "oc://quiet-core-bot.json/gateway.mode",
       },
     ]);
     expect(result.warnings).toEqual(["test/not-fixed repair left 1 finding(s)"]);

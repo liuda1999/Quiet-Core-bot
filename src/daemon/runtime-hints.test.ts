@@ -13,7 +13,7 @@ describe("buildPlatformRuntimeLogHints", () => {
           OPENCLAW_LOG_PREFIX: "gateway",
         },
         systemdServiceName: "openclaw-gateway",
-        windowsTaskName: "OpenClaw Gateway",
+        windowsTaskName: "Quiet Core bot Gateway",
       }),
     ).toEqual([
       "Launchd stdout (if installed): /Users/test/Library/Logs/openclaw/gateway.log",
@@ -30,7 +30,7 @@ describe("buildPlatformRuntimeLogHints", () => {
           OPENCLAW_STATE_DIR: "/tmp/openclaw-state",
         },
         systemdServiceName: "openclaw-gateway",
-        windowsTaskName: "OpenClaw Gateway",
+        windowsTaskName: "Quiet Core bot Gateway",
       }),
     ).toEqual([
       "Logs: journalctl --user -u openclaw-gateway.service -n 200 --no-pager",
@@ -43,10 +43,10 @@ describe("buildPlatformRuntimeLogHints", () => {
           OPENCLAW_STATE_DIR: "/tmp/openclaw-state",
         },
         systemdServiceName: "openclaw-gateway",
-        windowsTaskName: "OpenClaw Gateway",
+        windowsTaskName: "Quiet Core bot Gateway",
       }),
     ).toEqual([
-      'Logs: schtasks /Query /TN "OpenClaw Gateway" /V /FO LIST',
+      'Logs: schtasks /Query /TN "Quiet Core bot Gateway" /V /FO LIST',
       "Restart attempts: /tmp/openclaw-state/logs/gateway-restart.log",
     ]);
   });
@@ -57,29 +57,29 @@ describe("buildPlatformServiceStartHints", () => {
     expect(
       buildPlatformServiceStartHints({
         platform: "darwin",
-        installCommand: "openclaw gateway install",
-        startCommand: "openclaw gateway",
+        installCommand: "quiet-core-bot gateway install",
+        startCommand: "quiet-core-bot gateway",
         launchAgentPlistPath: "~/Library/LaunchAgents/com.openclaw.gateway.plist",
         systemdServiceName: "openclaw-gateway",
-        windowsTaskName: "OpenClaw Gateway",
+        windowsTaskName: "Quiet Core bot Gateway",
       }),
     ).toEqual([
-      "openclaw gateway install",
-      "openclaw gateway",
+      "quiet-core-bot gateway install",
+      "quiet-core-bot gateway",
       "launchctl bootstrap gui/$UID ~/Library/LaunchAgents/com.openclaw.gateway.plist",
     ]);
     expect(
       buildPlatformServiceStartHints({
         platform: "linux",
-        installCommand: "openclaw gateway install",
-        startCommand: "openclaw gateway",
+        installCommand: "quiet-core-bot gateway install",
+        startCommand: "quiet-core-bot gateway",
         launchAgentPlistPath: "~/Library/LaunchAgents/com.openclaw.gateway.plist",
         systemdServiceName: "openclaw-gateway",
-        windowsTaskName: "OpenClaw Gateway",
+        windowsTaskName: "Quiet Core bot Gateway",
       }),
     ).toEqual([
-      "openclaw gateway install",
-      "openclaw gateway",
+      "quiet-core-bot gateway install",
+      "quiet-core-bot gateway",
       "systemctl --user start openclaw-gateway.service",
     ]);
   });

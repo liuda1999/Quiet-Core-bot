@@ -41,11 +41,11 @@ describe("host env security policy parity", () => {
     const policy = loadHostEnvSecurityPolicy(rawPolicy);
     const generatedSource = readRepoFile(
       repoRoot,
-      "apps/macos/Sources/OpenClaw/HostEnvSecurityPolicy.generated.swift",
+      "apps/macos/Sources/Quiet Core bot/HostEnvSecurityPolicy.generated.swift",
     );
     const sanitizerSource = readRepoFile(
       repoRoot,
-      "apps/macos/Sources/OpenClaw/HostEnvSanitizer.swift",
+      "apps/macos/Sources/Quiet Core bot/HostEnvSanitizer.swift",
     );
 
     const swiftBlockedKeys = parseSwiftStringArray(generatedSource, "static let blockedKeys");

@@ -12,7 +12,7 @@ const OPENCLAW_BETA_VERSION_RE =
   /^(?<year>\d{4})\.(?<month>[1-9]\d?)\.(?<patch>[1-9]\d*)-beta\.(?<beta>[1-9]\d*)$/;
 const DIST_TAG_RE = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
 
-/** Parsed monthly patch OpenClaw release version used for channel-aware ordering. */
+/** Parsed monthly patch Quiet Core bot release version used for channel-aware ordering. */
 type OpenClawReleaseVersion = {
   channel: "alpha" | "beta" | "stable";
   year: number;
@@ -129,7 +129,7 @@ export function parseRegistryNpmSpec(rawSpec: string): ParsedRegistryNpmSpec | n
   return parsed.ok ? parsed.parsed : null;
 }
 
-/** Returns whether a user-provided npm spec resolves to the official OpenClaw npm scope. */
+/** Returns whether a user-provided npm spec resolves to the official Quiet Core bot npm scope. */
 export function isOpenClawOrgNpmSpec(rawSpec: string | undefined): boolean {
   const parsed = rawSpec ? parseRegistryNpmSpec(rawSpec) : null;
   return parsed?.name.startsWith("@openclaw/") === true;
@@ -146,7 +146,7 @@ export function isExactSemverVersion(value: string): boolean {
   return EXACT_SEMVER_VERSION_RE.test(value.trim());
 }
 
-/** Parses OpenClaw's monthly patch stable/alpha/beta/correction version format. */
+/** Parses Quiet Core bot's monthly patch stable/alpha/beta/correction version format. */
 function parseOpenClawReleaseVersion(value: string): OpenClawReleaseVersion | null {
   const trimmed = value.trim();
   const candidates = [
@@ -200,13 +200,13 @@ function parseOpenClawReleaseVersion(value: string): OpenClawReleaseVersion | nu
   };
 }
 
-/** Returns whether a version is an OpenClaw monthly patch stable correction release. */
+/** Returns whether a version is an Quiet Core bot monthly patch stable correction release. */
 export function isOpenClawStableCorrectionVersion(value: string): boolean {
   const parsed = parseOpenClawReleaseVersion(value);
   return parsed?.channel === "stable" && parsed.correctionNumber !== undefined;
 }
 
-/** Compares OpenClaw monthly patch release versions across alpha, beta, stable, and corrections. */
+/** Compares Quiet Core bot monthly patch release versions across alpha, beta, stable, and corrections. */
 export function compareOpenClawReleaseVersions(left: string, right: string): number | null {
   const parsedLeft = parseOpenClawReleaseVersion(left);
   const parsedRight = parseOpenClawReleaseVersion(right);
@@ -245,7 +245,7 @@ export function isPrereleaseSemverVersion(value: string): boolean {
 /**
  * Enforces explicit opt-in before an npm spec may resolve to a prerelease.
  * Bare specs and `latest` stay on stable releases unless the resolved version
- * is an OpenClaw stable correction.
+ * is an Quiet Core bot stable correction.
  */
 export function isPrereleaseResolutionAllowed(params: {
   spec: ParsedRegistryNpmSpec;

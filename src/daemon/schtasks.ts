@@ -1068,7 +1068,7 @@ async function updateExistingScheduledTask(params: {
   // upgraders keep the prior buggy defaults rather than losing the task.
   const upgradeXmlPath = await writeTaskXmlTempFile(
     buildScheduledTaskXml({
-      taskDescription: params.description ?? "OpenClaw Gateway",
+      taskDescription: params.description ?? "Quiet Core bot Gateway",
       taskUser: resolveTaskUser(params.env),
       launchPath: params.taskLaunchPath,
     }),
@@ -1229,7 +1229,7 @@ async function activateScheduledTask(params: {
   taskLaunchPath: string;
   description?: string;
 }) {
-  const taskDescription = params.description ?? "OpenClaw Gateway";
+  const taskDescription = params.description ?? "Quiet Core bot Gateway";
 
   const taskName = resolveTaskName(params.env);
   const quotedLaunchPath = quoteSchtasksArg(params.taskLaunchPath);

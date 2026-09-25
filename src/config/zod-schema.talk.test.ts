@@ -2,7 +2,7 @@
 import { describe, expect, it } from "vitest";
 import { OpenClawSchema } from "./zod-schema.js";
 
-describe("OpenClawSchema talk validation", () => {
+describe("Quiet Core botSchema talk validation", () => {
   it("accepts a positive integer talk.silenceTimeoutMs", () => {
     const result = OpenClawSchema.safeParse({
       talk: {

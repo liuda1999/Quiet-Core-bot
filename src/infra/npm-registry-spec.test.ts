@@ -113,7 +113,7 @@ describe("npm registry spec parsing helpers", () => {
     { spec: "voice-call", expected: false },
     { spec: "npm:@openclaw/voice-call", expected: false },
     { spec: undefined, expected: false },
-  ])("detects OpenClaw-org npm specs for %s", ({ spec, expected }) => {
+  ])("detects Quiet Core bot-org npm specs for %s", ({ spec, expected }) => {
     expect(isOpenClawOrgNpmSpec(spec)).toBe(expected);
   });
 
@@ -141,7 +141,7 @@ describe("npm registry spec parsing helpers", () => {
     { value: "2026.5.3-beta.1", expected: false },
     { value: "1.2.3-1", expected: false },
     { value: "2026.2.30-1", expected: true },
-  ])("detects OpenClaw stable correction versions for %s", ({ value, expected }) => {
+  ])("detects Quiet Core bot stable correction versions for %s", ({ value, expected }) => {
     expect(isOpenClawStableCorrectionVersion(value)).toBe(expected);
   });
 
@@ -151,7 +151,7 @@ describe("npm registry spec parsing helpers", () => {
     { left: "2026.5.3", right: "2026.5.3-beta.3", expected: 1 },
     { left: "2026.5.3-beta.3", right: "2026.5.3-alpha.9", expected: 1 },
     { left: "1.2.3-1", right: "1.2.3", expected: null },
-  ])("compares OpenClaw release versions for %s and %s", ({ left, right, expected }) => {
+  ])("compares Quiet Core bot release versions for %s and %s", ({ left, right, expected }) => {
     expect(compareOpenClawReleaseVersions(left, right)).toBe(expected);
   });
 });

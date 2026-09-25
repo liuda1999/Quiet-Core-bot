@@ -25,7 +25,7 @@ beforeEach(() => {
 describe("schtasks runtime parsing", () => {
   it.each(["Ready", "Running"])("parses %s status", (status) => {
     const output = [
-      "TaskName: \\OpenClaw Gateway",
+      "TaskName: \\Quiet Core bot Gateway",
       `Status: ${status}`,
       "Last Run Time: 1/8/2026 1:23:45 AM",
       "Last Run Result: 0x0",
@@ -39,7 +39,7 @@ describe("schtasks runtime parsing", () => {
 
   it("parses 'Last Result' key variant (without 'Run') (#47726)", () => {
     const output = [
-      "TaskName: \\OpenClaw Gateway",
+      "TaskName: \\Quiet Core bot Gateway",
       "Status: Running",
       "Last Run Time: 2026/3/16 8:34:15",
       "Last Result: 267009",
@@ -66,7 +66,7 @@ describe("scheduled task runtime derivation", () => {
 
   function taskQueryOutput(lines: string[]): string {
     return [
-      "TaskName: \\OpenClaw Gateway",
+      "TaskName: \\Quiet Core bot Gateway",
       "Last Run Time: 1/8/2026 1:23:45 AM",
       ...lines,
       "",
@@ -259,7 +259,7 @@ describe("readScheduledTaskCommand", () => {
       {
         scriptLines: [
           "@echo off",
-          "rem OpenClaw Gateway",
+          "rem Quiet Core bot Gateway",
           "cd /d C:\\Projects\\openclaw",
           "set NODE_ENV=production",
           "set OPENCLAW_PORT=18789",
@@ -314,15 +314,15 @@ describe("readScheduledTaskCommand", () => {
       {
         scriptLines: [
           "@echo off",
-          '"\\\\fileserver\\OpenClaw Share\\node.exe" "\\\\fileserver\\OpenClaw Share\\dist\\index.js" gateway --port 18789',
+          '"\\\\fileserver\\Quiet Core bot Share\\node.exe" "\\\\fileserver\\Quiet Core bot Share\\dist\\index.js" gateway --port 18789',
         ],
       },
       async (env) => {
         const result = await readScheduledTaskCommand(env);
         expect(result).toEqual({
           programArguments: [
-            "\\\\fileserver\\OpenClaw Share\\node.exe",
-            "\\\\fileserver\\OpenClaw Share\\dist\\index.js",
+            "\\\\fileserver\\Quiet Core bot Share\\node.exe",
+            "\\\\fileserver\\Quiet Core bot Share\\dist\\index.js",
             "gateway",
             "--port",
             "18789",

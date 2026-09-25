@@ -1,5 +1,5 @@
 // Undici runtime helpers lazily load dispatcher constructors and enforce
-// OpenClaw HTTP/1, timeout, proxy TLS, and IP-safe proxy policies.
+// Quiet Core bot HTTP/1, timeout, proxy TLS, and IP-safe proxy policies.
 import { createRequire } from "node:module";
 import net from "node:net";
 import { isRecord as isObjectRecord } from "@openclaw/normalization-core/record-coerce";
@@ -215,7 +215,7 @@ function withHttp1OnlyDispatcherOptions<T extends object | undefined>(
   return base;
 }
 
-/** Creates a direct undici Agent with OpenClaw's HTTP/1-only dispatcher policy. */
+/** Creates a direct undici Agent with Quiet Core bot's HTTP/1-only dispatcher policy. */
 export function createHttp1Agent(
   options?: UndiciAgentOptions,
   timeoutMs?: number,
@@ -225,7 +225,7 @@ export function createHttp1Agent(
 }
 
 /**
- * Creates an EnvHttpProxyAgent with OpenClaw proxy TLS, IP-safe proxy pools,
+ * Creates an EnvHttpProxyAgent with Quiet Core bot proxy TLS, IP-safe proxy pools,
  * timeout propagation, and HTTP/1-only dispatch.
  */
 export function createHttp1EnvHttpProxyAgent(

@@ -1,5 +1,5 @@
 // Proxy environment helpers mirror undici EnvHttpProxyAgent selection while
-// adding OpenClaw NO_PROXY CIDR/wildcard bypass checks.
+// adding Quiet Core bot NO_PROXY CIDR/wildcard bypass checks.
 export const PROXY_ENV_KEYS = [
   "HTTP_PROXY",
   "HTTPS_PROXY",
@@ -139,7 +139,7 @@ export function shouldUseEnvHttpProxyForUrl(
  * - Subdomain suffix match (`openai.com` matches `api.openai.com`)
  * - Optional `:port` suffix; when present, must match target port
  * - IPv6 literals in bracketed (`[::1]`) or bare (`::1`) form
- * - OpenClaw extension: IPv4 CIDR and octet-wildcard entries
+ * - Quiet Core bot extension: IPv4 CIDR and octet-wildcard entries
  *   (`100.64.0.0/10`, `100.64.*`) bypass the trusted env proxy mode before
  *   undici's EnvHttpProxyAgent is selected.
  *

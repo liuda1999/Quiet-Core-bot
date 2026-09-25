@@ -69,7 +69,7 @@ export async function handlePortError(
       if (/openclaw|src\/index\.ts|dist\/index\.js/.test(details)) {
         runtime.error(
           warn(
-            "It looks like another OpenClaw instance is already running. Stop it or pick a different port.",
+            "It looks like another Quiet Core bot instance is already running. Stop it or pick a different port.",
           ),
         );
       }

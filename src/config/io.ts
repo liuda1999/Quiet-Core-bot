@@ -1,4 +1,4 @@
-// Loads, validates, migrates, snapshots, and writes OpenClaw config files.
+// Loads, validates, migrates, snapshots, and writes Quiet Core bot config files.
 import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
@@ -968,9 +968,9 @@ function warnIfConfigFromFuture(cfg: OpenClawConfig, logger: Pick<typeof console
     warnedFutureTouchedVersions.add(touched);
     logger.warn(
       [
-        `Your OpenClaw config was written by version ${touched}, but this command is running ${VERSION}.`,
-        "Check: `openclaw --version`, `which openclaw`, and `openclaw gateway status --deep`.",
-        "If unexpected, update PATH so `openclaw` points to the version you want, or reinstall the Gateway service from that same OpenClaw install.",
+        `Your Quiet Core bot config was written by version ${touched}, but this command is running ${VERSION}.`,
+        "Check: `quiet-core-bot --version`, `which quiet-core-bot`, and `quiet-core-bot gateway status --deep`.",
+        "If unexpected, update PATH so `quiet-core-bot` points to the version you want, or reinstall the Gateway service from that same Quiet Core bot install.",
       ].join("\n"),
     );
   }
@@ -1024,7 +1024,7 @@ export function parseConfigJson5(
     return { ok: true, parsed: JSON.parse(raw) };
   } catch {
     // Keep JSON5 compatibility for authored config, but avoid the slower parser
-    // on the JSON files OpenClaw writes itself.
+    // on the JSON files Quiet Core bot writes itself.
   }
   try {
     return { ok: true, parsed: json5.parse(raw) };
@@ -1603,7 +1603,7 @@ export function createConfigIO(
       };
     } catch (err) {
       throw new Error(
-        `Config write blocked: shipped plugins.installs records in ${configPath} could not be migrated into the plugin index. Fix state directory permissions or run openclaw plugins registry --refresh, then retry. ${formatErrorMessage(
+        `Config write blocked: shipped plugins.installs records in ${configPath} could not be migrated into the plugin index. Fix state directory permissions or run quiet-core-bot plugins registry --refresh, then retry. ${formatErrorMessage(
           err,
         )}`,
         { cause: err },
@@ -2702,7 +2702,7 @@ export function loadConfig(options?: {
   }
   // First successful load becomes the process snapshot. Long-lived runtimes
   // should swap this snapshot via explicit reload/watcher paths instead of
-  // reparsing openclaw.json on hot code paths.
+  // reparsing quiet-core-bot.json on hot code paths.
   return loadPinnedRuntimeConfig(loadFresh);
 }
 

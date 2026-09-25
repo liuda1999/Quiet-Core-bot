@@ -311,7 +311,7 @@ export const updateHandlers: GatewayRequestHandlers = {
             argv1: process.argv[1],
             channel: configChannel ?? undefined,
           });
-          // The CLI `openclaw update` resumes post-core plugin convergence after a
+          // The CLI `quiet-core-bot update` resumes post-core plugin convergence after a
           // git/source core update; the RPC path did not, leaving official managed
           // plugins stale on the new core. Run the finalizer here to match.
           const finalizeOutcome = await runPostCoreFinalizeAfterGatewayUpdate({

@@ -719,7 +719,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
     ]);
   });
 
-  it("skips transcript-only OpenClaw assistant entries when reading recent prompt context", async () => {
+  it("skips transcript-only Quiet Core bot assistant entries when reading recent prompt context", async () => {
     writeTranscriptStore();
     const sessionFile = resolveSessionTranscriptPathInDir(sessionId, fixture.sessionsDir());
 
@@ -835,7 +835,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
     }
   });
 
-  it("skips transcript-only OpenClaw assistant entries when reading latest assistant text", async () => {
+  it("skips transcript-only Quiet Core bot assistant entries when reading latest assistant text", async () => {
     writeTranscriptStore();
 
     const finalResult = await appendExactAssistantMessageToSessionTranscript({
@@ -870,7 +870,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
     expect(latestAssistantText?.text).toBe("Complete final answer");
   });
 
-  it("does not report transcript-only OpenClaw assistant entries as latest assistant text", async () => {
+  it("does not report transcript-only Quiet Core bot assistant entries as latest assistant text", async () => {
     writeTranscriptStore();
 
     const mirrorResult = await appendAssistantMessageToSessionTranscript({
@@ -889,7 +889,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
     expect(latestAssistantText).toBeUndefined();
   });
 
-  it("keeps transcript-only OpenClaw assistant entries available to the tail reader", async () => {
+  it("keeps transcript-only Quiet Core bot assistant entries available to the tail reader", async () => {
     writeTranscriptStore();
 
     const mirrorResult = await appendAssistantMessageToSessionTranscript({

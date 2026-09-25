@@ -222,7 +222,7 @@ export async function probeApnsHttp2ReachabilityViaProxy(
         }
         resolve({ status, body: body.text, responseHeaders });
       });
-      request.end(JSON.stringify({ aps: { alert: "OpenClaw APNs proxy validation" } }));
+      request.end(JSON.stringify({ aps: { alert: "Quiet Core bot APNs proxy validation" } }));
     });
   } finally {
     if (!session.closed && !session.destroyed) {

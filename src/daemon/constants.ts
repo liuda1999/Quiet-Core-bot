@@ -4,13 +4,13 @@ import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/st
 // Default service labels (canonical + legacy compatibility)
 export const GATEWAY_LAUNCH_AGENT_LABEL = "ai.openclaw.gateway";
 export const GATEWAY_SYSTEMD_SERVICE_NAME = "openclaw-gateway";
-export const GATEWAY_WINDOWS_TASK_NAME = "OpenClaw Gateway";
+export const GATEWAY_WINDOWS_TASK_NAME = "Quiet Core bot Gateway";
 export const GATEWAY_SERVICE_MARKER = "openclaw";
 export const GATEWAY_SERVICE_KIND = "gateway";
 export const GATEWAY_SERVICE_RUNTIME_PID_ENV = "OPENCLAW_GATEWAY_SERVICE_PID";
 const NODE_LAUNCH_AGENT_LABEL = "ai.openclaw.node";
 const NODE_SYSTEMD_SERVICE_NAME = "openclaw-node";
-const NODE_WINDOWS_TASK_NAME = "OpenClaw Node";
+const NODE_WINDOWS_TASK_NAME = "Quiet Core bot Node";
 export const NODE_SERVICE_MARKER = "openclaw";
 export const NODE_SERVICE_KIND = "node";
 export const NODE_WINDOWS_TASK_SCRIPT_NAME = "node.cmd";
@@ -56,7 +56,7 @@ export function resolveGatewayWindowsTaskName(profile?: string): string {
   if (!normalized) {
     return GATEWAY_WINDOWS_TASK_NAME;
   }
-  return `OpenClaw Gateway (${normalized})`;
+  return `Quiet Core bot Gateway (${normalized})`;
 }
 
 export function formatGatewayServiceDescription(params?: {
@@ -73,9 +73,9 @@ export function formatGatewayServiceDescription(params?: {
     parts.push(`v${version}`);
   }
   if (parts.length === 0) {
-    return "OpenClaw Gateway";
+    return "Quiet Core bot Gateway";
   }
-  return `OpenClaw Gateway (${parts.join(", ")})`;
+  return `Quiet Core bot Gateway (${parts.join(", ")})`;
 }
 
 export function resolveGatewayServiceDescription(params: {
@@ -107,7 +107,7 @@ export function resolveNodeWindowsTaskName(): string {
 export function formatNodeServiceDescription(params?: { version?: string }): string {
   const version = params?.version?.trim();
   if (!version) {
-    return "OpenClaw Node Host";
+    return "Quiet Core bot Node Host";
   }
-  return `OpenClaw Node Host (v${version})`;
+  return `Quiet Core bot Node Host (v${version})`;
 }

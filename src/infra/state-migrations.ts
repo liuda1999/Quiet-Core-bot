@@ -1,4 +1,4 @@
-// Applies persisted state migrations across OpenClaw config files.
+// Applies persisted state migrations across Quiet Core bot config files.
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -4290,7 +4290,7 @@ async function migrateLegacySessions(
       }
     } else {
       warnings.push(
-        `Target sessions store unreadable; left untouched to avoid overwriting at ${detected.sessions.targetStorePath}. Run openclaw doctor --fix to archive it and retry the legacy merge.`,
+        `Target sessions store unreadable; left untouched to avoid overwriting at ${detected.sessions.targetStorePath}. Run quiet-core-bot doctor --fix to archive it and retry the legacy merge.`,
       );
     }
   }

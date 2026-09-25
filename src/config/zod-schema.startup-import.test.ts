@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const providersWhatsappImportMock = vi.hoisted(() => vi.fn());
 const providersCoreImportMock = vi.hoisted(() => vi.fn());
 
-describe("OpenClawSchema startup imports", () => {
+describe("Quiet Core botSchema startup imports", () => {
   beforeEach(() => {
     providersWhatsappImportMock.mockClear();
     providersCoreImportMock.mockClear();

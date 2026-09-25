@@ -15,7 +15,7 @@ function normalizeMcpString(value: unknown): string {
   return typeof value === "string" ? value.trim().toLowerCase() : "";
 }
 
-/** Maps CLI-native MCP type aliases to OpenClaw HTTP transport names. */
+/** Maps CLI-native MCP type aliases to Quiet Core bot HTTP transport names. */
 export function resolveOpenClawMcpTransportAlias(
   value: unknown,
 ): OpenClawMcpHttpTransport | undefined {
@@ -23,7 +23,7 @@ export function resolveOpenClawMcpTransportAlias(
   return mapped === "sse" || mapped === "streamable-http" ? mapped : undefined;
 }
 
-/** Checks whether a raw MCP `type` value is a legacy CLI alias OpenClaw can rewrite. */
+/** Checks whether a raw MCP `type` value is a legacy CLI alias Quiet Core bot can rewrite. */
 export function isKnownCliMcpTypeAlias(value: unknown): boolean {
   return Object.hasOwn(CLI_MCP_TYPE_TO_OPENCLAW_TRANSPORT, normalizeMcpString(value));
 }
@@ -39,7 +39,7 @@ export function canonicalizeConfiguredMcpServer(
 ): Record<string, unknown> {
   const next = { ...server };
   const transportAlias = resolveOpenClawMcpTransportAlias(next.type);
-  // `transport` is OpenClaw's canonical field; legacy `type` only fills a gap.
+  // `transport` is Quiet Core bot's canonical field; legacy `type` only fills a gap.
   if (typeof next.transport !== "string" && transportAlias) {
     next.transport = transportAlias;
   }

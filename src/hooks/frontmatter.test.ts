@@ -16,7 +16,7 @@ function requireString(value: string | undefined, label: string): string {
 
 function requireOpenClawMetadata(metadata: OpenClawHookMetadata | undefined): OpenClawHookMetadata {
   if (!metadata) {
-    throw new Error("expected openclaw metadata");
+    throw new Error("expected quiet-core-bot metadata");
   }
   return metadata;
 }
@@ -162,8 +162,8 @@ description: 'single-quoted'
   });
 });
 
-describe("resolveOpenClawMetadata", () => {
-  it("extracts openclaw metadata from parsed frontmatter", () => {
+describe("resolveQuiet Core botMetadata", () => {
+  it("extracts quiet-core-bot metadata from parsed frontmatter", () => {
     const frontmatter = {
       name: "test-hook",
       metadata: JSON.stringify({
@@ -192,7 +192,7 @@ describe("resolveOpenClawMetadata", () => {
     expect(result).toBeUndefined();
   });
 
-  it("returns undefined when openclaw key is missing", () => {
+  it("returns undefined when quiet-core-bot key is missing", () => {
     const frontmatter = {
       metadata: JSON.stringify({ other: "data" }),
     };
@@ -214,7 +214,7 @@ describe("resolveOpenClawMetadata", () => {
         openclaw: {
           events: ["command"],
           install: [
-            { id: "bundled", kind: "bundled", label: "Bundled with OpenClaw" },
+            { id: "bundled", kind: "bundled", label: "Bundled with Quiet Core bot" },
             { id: "npm", kind: "npm", package: "@openclaw/hook" },
           ],
         },
@@ -255,7 +255,7 @@ metadata:
         "emoji": "💾",
         "events": ["command:new", "command:reset"],
         "requires": { "config": ["workspace.dir"] },
-        "install": [{ "id": "bundled", "kind": "bundled", "label": "Bundled with OpenClaw" }],
+        "install": [{ "id": "bundled", "kind": "bundled", "label": "Bundled with Quiet Core bot" }],
       },
   }
 ---

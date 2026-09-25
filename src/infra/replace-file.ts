@@ -1,4 +1,4 @@
-// Wraps fs-safe atomic replacement and move helpers for OpenClaw install flows.
+// Wraps fs-safe atomic replacement and move helpers for Quiet Core bot install flows.
 import "./fs-safe-defaults.js";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -27,7 +27,7 @@ export type MovePathWithCopyFallbackOptions = BaseMovePathWithCopyFallbackOption
 };
 
 /**
- * Moves a path using fs-safe's copy fallback, with an OpenClaw hardlink guard
+ * Moves a path using fs-safe's copy fallback, with an Quiet Core bot hardlink guard
  * for install/update flows that must not preserve package-manager links.
  */
 export async function movePathWithCopyFallback(

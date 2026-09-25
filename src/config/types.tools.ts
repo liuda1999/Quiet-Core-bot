@@ -243,7 +243,7 @@ export type ToolSearchConfig =
 export type CodeModeConfig =
   | boolean
   | {
-      /** Enable generic OpenClaw code mode. Default: false. */
+      /** Enable generic Quiet Core bot code mode. Default: false. */
       enabled?: boolean;
       /** Guest runtime. Only quickjs-wasi is supported. */
       runtime?: "quickjs-wasi";
@@ -747,7 +747,7 @@ export type ToolsConfig = {
   fs?: FsToolsConfig;
   /** Runtime loop detection for repetitive/ stuck tool-call patterns. */
   loopDetection?: ToolLoopDetectionConfig;
-  /** Compact large OpenClaw, MCP, and client tool catalogs behind search/call tools. */
+  /** Compact large Quiet Core bot, MCP, and client tool catalogs behind search/call tools. */
   toolSearch?: ToolSearchConfig;
   /** Generic code mode: expose exec/wait and hide normal tools behind a QuickJS catalog bridge. */
   codeMode?: CodeModeConfig;

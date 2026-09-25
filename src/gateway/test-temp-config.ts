@@ -32,7 +32,7 @@ function withStableOwnerDisplaySecretForTest(cfg: unknown): unknown {
   };
 }
 
-/** Writes a temp OpenClaw config, installs it as runtime state, then restores globals. */
+/** Writes a temp Quiet Core bot config, installs it as runtime state, then restores globals. */
 export async function withTempConfig(params: {
   cfg: unknown;
   run: () => Promise<void>;

@@ -463,7 +463,7 @@ describe("launchd runtime state", () => {
 });
 
 describe("launchctl list detection", () => {
-  it("parses stale OpenClaw updater jobs from launchctl list", () => {
+  it("parses stale Quiet Core bot updater jobs from launchctl list", () => {
     const jobs = parseLaunchctlListOpenClawUpdateJobs(
       [
         "123 0 ai.openclaw.gateway",
@@ -493,7 +493,7 @@ describe("launchctl list detection", () => {
   });
 
   it.runIf(process.platform === "darwin")(
-    "finds stale OpenClaw updater jobs via launchctl list",
+    "finds stale Quiet Core bot updater jobs via launchctl list",
     async () => {
       state.listOutput = "- 127 ai.openclaw.update.2026.5.12\n";
 
@@ -570,7 +570,7 @@ describe("launchctl list detection", () => {
   );
 
   it.runIf(process.platform === "darwin")(
-    "disables the current legacy updater launchd job from OpenClaw label env",
+    "disables the current legacy updater launchd job from Quiet Core bot label env",
     async () => {
       await expect(
         disableCurrentOpenClawUpdateLaunchdJob({
@@ -587,7 +587,7 @@ describe("launchctl list detection", () => {
   );
 
   it.runIf(process.platform === "darwin")(
-    "does not let non-update launchd markers mask the OpenClaw update label",
+    "does not let non-update launchd markers mask the Quiet Core bot update label",
     async () => {
       await expect(
         disableCurrentOpenClawUpdateLaunchdJob({
@@ -888,7 +888,7 @@ describe("launchd install", () => {
 
     expect(output).toContain("Warning:");
     expect(output).toContain("contains custom behavior and will be overwritten");
-    expect(output).toContain("openclaw gateway install --wrapper <path>");
+    expect(output).toContain("quiet-core-bot gateway install --wrapper <path>");
     expect(output).toContain("OPENCLAW_WRAPPER");
     expect(state.files.get(wrapperPath)).toBe(generatedWrapper);
   });
@@ -925,7 +925,7 @@ describe("launchd install", () => {
 
     expect(output).toContain("Warning:");
     expect(output).toContain("contains custom behavior and will be overwritten");
-    expect(output).toContain("openclaw gateway install --wrapper <path>");
+    expect(output).toContain("quiet-core-bot gateway install --wrapper <path>");
     expect(output).toContain("OPENCLAW_WRAPPER");
     expect(state.files.get(wrapperPath)).toBe(generatedWrapper);
   });

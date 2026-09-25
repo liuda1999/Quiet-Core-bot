@@ -220,15 +220,15 @@ describe("buildWebchatAssistantMessageFromReplyPayloads", () => {
   it("converts image data URLs into webchat image blocks", async () => {
     const message = await buildWebchatAssistantMessageFromReplyPayloads([
       {
-        text: "Scan this QR code with the OpenClaw iOS app:",
+        text: "Scan this QR code with the Quiet Core bot iOS app:",
         mediaUrl: "data:image/png;base64,cG5n",
       },
     ]);
 
     expect(message).toEqual({
-      transcriptText: "Scan this QR code with the OpenClaw iOS app:",
+      transcriptText: "Scan this QR code with the Quiet Core bot iOS app:",
       content: [
-        { type: "text", text: "Scan this QR code with the OpenClaw iOS app:" },
+        { type: "text", text: "Scan this QR code with the Quiet Core bot iOS app:" },
         { type: "input_image", image_url: "data:image/png;base64,cG5n" },
       ],
     });

@@ -87,7 +87,7 @@ describe("restartGatewayProcessWithFreshPid", () => {
     expect(spawnMock).not.toHaveBeenCalled();
   });
 
-  it("returns supervised when OpenClaw launchd markers are present on macOS (no kickstart)", () => {
+  it("returns supervised when Quiet Core bot launchd markers are present on macOS (no kickstart)", () => {
     clearSupervisorHints();
     expectLaunchdSupervisedWithoutKickstart({ launchJobLabel: "ai.openclaw.gateway" });
   });
@@ -120,11 +120,11 @@ describe("restartGatewayProcessWithFreshPid", () => {
     expectLaunchdSupervisedWithoutKickstart({ launchJobLabel: "ai.openclaw.gateway" });
   });
 
-  it("launchd supervisor never returns failed regardless of triggerOpenClawRestart outcome", () => {
+  it("launchd supervisor never returns failed regardless of triggerQuiet Core botRestart outcome", () => {
     clearSupervisorHints();
     setPlatform("darwin");
     process.env.OPENCLAW_LAUNCHD_LABEL = "ai.openclaw.gateway";
-    // Even if triggerOpenClawRestart *would* fail, launchd path must not call it.
+    // Even if triggerQuiet Core botRestart *would* fail, launchd path must not call it.
     triggerOpenClawRestartMock.mockReturnValue({
       ok: false,
       method: "launchctl",
@@ -195,7 +195,7 @@ describe("restartGatewayProcessWithFreshPid", () => {
     expect(spawnMock).not.toHaveBeenCalled();
   });
 
-  it("returns supervised when OpenClaw gateway task markers are set on Windows", () => {
+  it("returns supervised when Quiet Core bot gateway task markers are set on Windows", () => {
     clearSupervisorHints();
     setPlatform("win32");
     process.env.OPENCLAW_SERVICE_MARKER = "openclaw";
@@ -319,7 +319,7 @@ describe("respawnGatewayProcessForUpdate", () => {
     );
   });
 
-  it("rewrites a pnpm-versioned OpenClaw entry before detached update respawn", () => {
+  it("rewrites a pnpm-versioned Quiet Core bot entry before detached update respawn", () => {
     clearSupervisorHints();
     setPlatform("linux");
     process.execArgv = [];
@@ -386,7 +386,7 @@ describe("respawnGatewayProcessForUpdate", () => {
     );
   });
 
-  it("treats Linux OpenClaw gateway service markers as supervised for update restarts", () => {
+  it("treats Linux Quiet Core bot gateway service markers as supervised for update restarts", () => {
     clearSupervisorHints();
     setPlatform("linux");
     process.env.OPENCLAW_SERVICE_MARKER = "openclaw";

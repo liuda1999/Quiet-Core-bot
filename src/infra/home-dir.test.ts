@@ -1,4 +1,4 @@
-// Tests OpenClaw home directory resolution.
+// Tests Quiet Core bot home directory resolution.
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import {

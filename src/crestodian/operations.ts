@@ -383,7 +383,7 @@ function formatSetupPlanDescription(
 ): string {
   const workspace = shortenHomePath(resolveUserPath(operation.workspace ?? process.cwd()));
   const model = operation.model ? ` and default model ${operation.model}` : "";
-  return `bootstrap OpenClaw setup for workspace ${workspace}${model}`;
+  return `bootstrap Quiet Core bot setup for workspace ${workspace}${model}`;
 }
 
 function chooseSetupModel(

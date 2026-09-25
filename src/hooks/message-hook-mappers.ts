@@ -50,7 +50,7 @@ export type CanonicalInboundMessageHookContext = {
   surface?: string;
   threadId?: string | number;
   threadParentId?: string | number;
-  // `mediaPath(s)` are files OpenClaw has already staged locally. `mediaUrl(s)`
+  // `mediaPath(s)` are files Quiet Core bot has already staged locally. `mediaUrl(s)`
   // are provider/media-server references that may not exist on this host.
   mediaPath?: string;
   mediaUrl?: string;

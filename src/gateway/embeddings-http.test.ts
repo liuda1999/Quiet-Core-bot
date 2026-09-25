@@ -438,7 +438,7 @@ describe("OpenAI-compatible embeddings HTTP API (e2e)", () => {
     });
     await expectInvalidEmbeddingRequest(
       res,
-      "Invalid `model`. Use `openclaw` or `openclaw/<agentId>`.",
+      "Invalid `model`. Use `quiet-core-bot` or `openclaw/<agentId>`.",
     );
   });
 

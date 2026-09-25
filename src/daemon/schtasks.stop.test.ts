@@ -173,7 +173,7 @@ describe("Scheduled Task stop/restart cleanup", () => {
     await withPreparedGatewayTask(async ({ env, stdout }) => {
       pushSuccessfulSchtasksResponses(3);
       env.OPENCLAW_SERVICE_KIND = "node";
-      env.OPENCLAW_WINDOWS_TASK_NAME = "OpenClaw Node";
+      env.OPENCLAW_WINDOWS_TASK_NAME = "Quiet Core bot Node";
       findVerifiedGatewayListenerPidsOnPortSync.mockReturnValue([4242]);
       inspectPortUsage.mockResolvedValue(busyPortUsage(4242));
 
@@ -184,8 +184,8 @@ describe("Scheduled Task stop/restart cleanup", () => {
       expect(killProcessTree).not.toHaveBeenCalled();
       expect(schtasksCalls).toEqual([
         ["/Query"],
-        ["/Query", "/TN", "OpenClaw Node"],
-        ["/End", "/TN", "OpenClaw Node"],
+        ["/Query", "/TN", "Quiet Core bot Node"],
+        ["/End", "/TN", "Quiet Core bot Node"],
       ]);
     });
   });
@@ -207,11 +207,11 @@ describe("Scheduled Task stop/restart cleanup", () => {
       expect(inspectPortUsage).toHaveBeenCalledTimes(2);
       expect(schtasksCalls).toEqual([
         ["/Query"],
-        ["/Query", "/TN", "OpenClaw Gateway"],
-        ["/End", "/TN", "OpenClaw Gateway"],
-        ["/Run", "/TN", "OpenClaw Gateway"],
+        ["/Query", "/TN", "Quiet Core bot Gateway"],
+        ["/End", "/TN", "Quiet Core bot Gateway"],
+        ["/Run", "/TN", "Quiet Core bot Gateway"],
         ["/Query"],
-        ["/Query", "/TN", "OpenClaw Gateway", "/V", "/FO", "LIST"],
+        ["/Query", "/TN", "Quiet Core bot Gateway", "/V", "/FO", "LIST"],
       ]);
     });
   });
@@ -220,7 +220,7 @@ describe("Scheduled Task stop/restart cleanup", () => {
     await withPreparedGatewayTask(async ({ env, stdout }) => {
       pushSuccessfulSchtasksResponses(4);
       env.OPENCLAW_SERVICE_KIND = "node";
-      env.OPENCLAW_WINDOWS_TASK_NAME = "OpenClaw Node";
+      env.OPENCLAW_WINDOWS_TASK_NAME = "Quiet Core bot Node";
       findVerifiedGatewayListenerPidsOnPortSync.mockReturnValue([5151]);
       inspectPortUsage.mockResolvedValue(busyPortUsage(5151));
 
@@ -233,11 +233,11 @@ describe("Scheduled Task stop/restart cleanup", () => {
       expect(killProcessTree).not.toHaveBeenCalled();
       expect(schtasksCalls).toEqual([
         ["/Query"],
-        ["/Query", "/TN", "OpenClaw Node"],
-        ["/End", "/TN", "OpenClaw Node"],
-        ["/Run", "/TN", "OpenClaw Node"],
+        ["/Query", "/TN", "Quiet Core bot Node"],
+        ["/End", "/TN", "Quiet Core bot Node"],
+        ["/Run", "/TN", "Quiet Core bot Node"],
         ["/Query"],
-        ["/Query", "/TN", "OpenClaw Node", "/V", "/FO", "LIST"],
+        ["/Query", "/TN", "Quiet Core bot Node", "/V", "/FO", "LIST"],
       ]);
     });
   });
@@ -254,7 +254,7 @@ describe("Scheduled Task stop/restart cleanup", () => {
       await expect(restartScheduledTask({ env, stdout })).rejects.toThrow(
         "schtasks run failed: ERROR: Access is denied.",
       );
-      expect(schtasksCalls.at(-1)).toEqual(["/Run", "/TN", "OpenClaw Gateway"]);
+      expect(schtasksCalls.at(-1)).toEqual(["/Run", "/TN", "Quiet Core bot Gateway"]);
     });
   });
 });

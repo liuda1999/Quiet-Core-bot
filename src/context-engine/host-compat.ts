@@ -21,7 +21,7 @@ export const GENERIC_CLI_CONTEXT_ENGINE_HOST_CAPABILITIES = [
 
 export const OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST = {
   id: "openclaw-embedded",
-  label: "OpenClaw embedded runner",
+  label: "Quiet Core bot embedded runner",
   capabilities: [
     "bootstrap",
     "assemble-before-prompt",

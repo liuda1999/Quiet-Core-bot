@@ -10,23 +10,23 @@ describe("normalizeConfigPaths", () => {
       const cfg = normalizeConfigPaths({
         tools: { exec: { pathPrepend: ["~/bin"] } },
         plugins: { load: { paths: ["~/plugins/a"] } },
-        logging: { file: "~/.openclaw/logs/openclaw.log" },
+        logging: { file: "~/.quiet-core-bot/logs/openclaw.log" },
         hooks: {
-          path: "~/.openclaw/hooks.json5",
+          path: "~/.quiet-core-bot/hooks.json5",
           transformsDir: "~/hooks-xform",
         },
         channels: {
           telegram: {
             accounts: {
               personal: {
-                tokenFile: "~/.openclaw/telegram.token",
+                tokenFile: "~/.quiet-core-bot/telegram.token",
               },
             },
           },
           whatsapp: {
             accounts: {
               personal: {
-                authDir: "~/.openclaw/credentials/wa-personal",
+                authDir: "~/.quiet-core-bot/credentials/wa-personal",
               },
             },
           },
@@ -40,7 +40,7 @@ describe("normalizeConfigPaths", () => {
             {
               id: "main",
               workspace: "~/ws-agent",
-              agentDir: "~/.openclaw/agents/main",
+              agentDir: "~/.quiet-core-bot/agents/main",
               identity: {
                 name: "~not-a-path",
               },

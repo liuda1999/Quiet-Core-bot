@@ -1,4 +1,4 @@
-// Server chat agent-event tests protect event fanout, heartbeat visibility,
+﻿// Server chat agent-event tests protect event fanout, heartbeat visibility,
 // session lifecycle persistence, and subscriber registry behavior.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { formatChannelProgressDraftLine } from "../channels/streaming.js";
@@ -823,7 +823,7 @@ describe("agent event handler", () => {
         "Visible before.",
         "",
         "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
-        "OpenClaw runtime context (internal):",
+        "Quiet Core bot runtime context (internal):",
         "[Internal task completion event]",
         "secret child result",
         "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",

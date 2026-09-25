@@ -601,14 +601,14 @@ describe("buildServiceEnvironment", () => {
     expect(env.OPENCLAW_SERVICE_KIND).toBe("gateway");
     expect(typeof env.OPENCLAW_SERVICE_VERSION).toBe("string");
     expect(env.OPENCLAW_SYSTEMD_UNIT).toBe("openclaw-gateway.service");
-    expect(env.OPENCLAW_WINDOWS_TASK_NAME).toBe("OpenClaw Gateway");
+    expect(env.OPENCLAW_WINDOWS_TASK_NAME).toBe("Quiet Core bot Gateway");
     expect(env.OPENCLAW_WINDOWS_TASK_HIDDEN_LAUNCHER).toBe("1");
     if (process.platform === "darwin") {
       expect(env.OPENCLAW_LAUNCHD_LABEL).toBe("ai.openclaw.gateway");
     }
   });
 
-  it("sets the OpenClaw-owned launchd marker for macOS gateway services", () => {
+  it("sets the Quiet Core bot-owned launchd marker for macOS gateway services", () => {
     const env = buildServiceEnvironment({
       env: { HOME: "/Users/user" },
       port: 18789,
@@ -681,7 +681,7 @@ describe("buildServiceEnvironment", () => {
       port: 18789,
     });
     expect(env.OPENCLAW_SYSTEMD_UNIT).toBe("openclaw-gateway-work.service");
-    expect(env.OPENCLAW_WINDOWS_TASK_NAME).toBe("OpenClaw Gateway (work)");
+    expect(env.OPENCLAW_WINDOWS_TASK_NAME).toBe("Quiet Core bot Gateway (work)");
     if (process.platform === "darwin") {
       expect(env.OPENCLAW_LAUNCHD_LABEL).toBe("ai.openclaw.work");
     }
@@ -767,7 +767,7 @@ describe("buildServiceEnvironment", () => {
     });
 
     expect(env).not.toHaveProperty("PATH");
-    expect(env.OPENCLAW_WINDOWS_TASK_NAME).toBe("OpenClaw Gateway");
+    expect(env.OPENCLAW_WINDOWS_TASK_NAME).toBe("Quiet Core bot Gateway");
   });
 
   it("prepends extra runtime directories to the gateway service PATH", () => {
@@ -805,7 +805,7 @@ describe("buildNodeServiceEnvironment", () => {
     expect(env.HOME).toBe("/home/user");
   });
 
-  it("sets the OpenClaw-owned launchd marker for macOS node services", () => {
+  it("sets the Quiet Core bot-owned launchd marker for macOS node services", () => {
     const env = buildNodeServiceEnvironment({
       env: { HOME: "/Users/user" },
       platform: "darwin",
@@ -904,7 +904,7 @@ describe("buildNodeServiceEnvironment", () => {
       platform: "win32",
     });
 
-    expect(env.OPENCLAW_WINDOWS_TASK_NAME).toBe("OpenClaw Node");
+    expect(env.OPENCLAW_WINDOWS_TASK_NAME).toBe("Quiet Core bot Node");
     expect(env.OPENCLAW_WINDOWS_TASK_HIDDEN_LAUNCHER).toBe("1");
     expect(env.OPENCLAW_TASK_SCRIPT_NAME).toBe("node.cmd");
   });

@@ -1,4 +1,4 @@
-// Covers preferred OpenClaw temp directory resolution.
+// Covers preferred Quiet Core bot temp directory resolution.
 import { constants as fsConstants } from "node:fs";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
@@ -144,7 +144,7 @@ function resolveWithMocks(params: {
   return { resolved, accessSync, lstatSync: wrappedLstatSync, mkdirSync, tmpdir };
 }
 
-describe("resolvePreferredOpenClawTmpDir", () => {
+describe("resolvePreferredQuiet Core botTmpDir", () => {
   it("prefers /tmp/openclaw when it already exists and is writable", () => {
     const lstatSync: NonNullable<TmpDirOptions["lstatSync"]> = vi.fn(() => ({
       isDirectory: () => true,
@@ -528,7 +528,7 @@ describe("resolvePreferredOpenClawTmpDir", () => {
     // Node on Windows resolves the POSIX path `/tmp` to `C:\tmp` against the
     // current drive root. If `C:\tmp` happens to exist (Git, MSYS2, etc.
     // create it), the previous code path returned `/tmp/openclaw` and routed
-    // log files / TTS temp files there instead of `%TEMP%\openclaw`. The
+    // log files / TTS temp files there instead of `%TEMP%\quiet-core-bot`. The
     // platform: "win32" branch must skip the POSIX path entirely.
     const winFallback = path.win32.join("C:\\Users\\u\\AppData\\Local\\Temp", "openclaw-501");
     const accessSync = vi.fn();

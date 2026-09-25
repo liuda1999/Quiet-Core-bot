@@ -78,7 +78,7 @@ export type ModelCompatConfig = SupportedOpenAICompatFields &
     thinkingFormat?: SupportedThinkingFormat;
     /** Provider-accepted reasoning effort labels. */
     supportedReasoningEfforts?: string[];
-    /** Maps OpenClaw reasoning effort labels to provider-specific labels. */
+    /** Maps Quiet Core bot reasoning effort labels to provider-specific labels. */
     reasoningEffortMap?: Record<string, string>;
     /** Reasoning detail block types safe to expose in visible transcripts. */
     visibleReasoningDetailTypes?: string[];
@@ -184,7 +184,7 @@ export type ModelDefinitionConfig = {
   contextTokens?: number;
   /** Maximum completion/output token budget. */
   maxTokens: number;
-  /** Maps OpenClaw thinking levels to provider/model-specific values. */
+  /** Maps Quiet Core bot thinking levels to provider/model-specific values. */
   thinkingLevelMap?: ThinkingLevelMap;
   /** Provider-specific request/runtime parameters passed through to provider plugins. */
   params?: Record<string, unknown>;

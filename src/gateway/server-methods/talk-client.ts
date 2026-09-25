@@ -1,5 +1,5 @@
 // Talk client methods create browser-owned realtime voice sessions and route
-// client tool calls back into OpenClaw agent consult/control flows.
+// client tool calls back into Quiet Core bot agent consult/control flows.
 import {
   normalizeOptionalLowercaseString,
   normalizeOptionalString,
@@ -33,7 +33,7 @@ import type { GatewayRequestHandlers } from "./types.js";
  * Gateway methods for browser-owned realtime Talk sessions.
  *
  * These handlers create provider browser sessions and bridge client-owned tool
- * calls back into OpenClaw agent consult runs.
+ * calls back into Quiet Core bot agent consult runs.
  */
 export const talkClientHandlers: GatewayRequestHandlers = {
   "talk.client.create": async ({ params, respond, context }) => {

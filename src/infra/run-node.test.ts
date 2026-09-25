@@ -698,7 +698,7 @@ describe("run-node script", () => {
     });
   });
 
-  it("adds Node CPU profiling flags to the launched OpenClaw child when requested", async () => {
+  it("adds Node CPU profiling flags to the launched Quiet Core bot child when requested", async () => {
     await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
@@ -815,7 +815,7 @@ describe("run-node script", () => {
     });
   });
 
-  it("adds Node sync I/O tracing flag to the launched OpenClaw child when requested", async () => {
+  it("adds Node sync I/O tracing flag to the launched Quiet Core bot child when requested", async () => {
     await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
@@ -850,7 +850,12 @@ describe("run-node script", () => {
       });
 
       expect(exitCode).toBe(0);
-      expect(spawnCalls.at(-1)).toEqual(["--trace-sync-io", "quiet-core-bot.mjs", "gateway", "--force"]);
+      expect(spawnCalls.at(-1)).toEqual([
+        "--trace-sync-io",
+        "quiet-core-bot.mjs",
+        "gateway",
+        "--force",
+      ]);
     });
   });
 
@@ -1523,7 +1528,7 @@ describe("run-node script", () => {
     });
   });
 
-  it("forwards wrapper SIGTERM to the active openclaw child and returns 143", async () => {
+  it("forwards wrapper SIGTERM to the active quiet-core-bot child and returns 143", async () => {
     await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
@@ -1596,7 +1601,7 @@ describe("run-node script", () => {
   });
 
   it.runIf(process.platform !== "win32")(
-    "force-cleans the active openclaw child process group after forwarded SIGTERM",
+    "force-cleans the active quiet-core-bot child process group after forwarded SIGTERM",
     async () => {
       await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
         await setupTrackedProject(tmp, {
@@ -2226,7 +2231,7 @@ describe("run-node script", () => {
     });
   });
 
-  it("does not require OpenClaw SDK alias outputs when dist extensions are absent", async () => {
+  it("does not require Quiet Core bot SDK alias outputs when dist extensions are absent", async () => {
     await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
@@ -2267,7 +2272,7 @@ describe("run-node script", () => {
     });
   });
 
-  it("reports missing OpenClaw SDK alias outputs when runtime stamps match HEAD", async () => {
+  it("reports missing Quiet Core bot SDK alias outputs when runtime stamps match HEAD", async () => {
     await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
@@ -2305,7 +2310,7 @@ describe("run-node script", () => {
     });
   });
 
-  it("does not require private OpenClaw SDK dist files that package exports omit", async () => {
+  it("does not require private Quiet Core bot SDK dist files that package exports omit", async () => {
     await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {

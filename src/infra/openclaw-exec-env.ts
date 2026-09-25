@@ -1,10 +1,10 @@
-/** Process env key that marks child commands as launched by the OpenClaw CLI. */
+/** Process env key that marks child commands as launched by the Quiet Core bot CLI. */
 export const OPENCLAW_CLI_ENV_VAR = "OPENCLAW_CLI";
 
-/** Stable marker value used for OpenClaw-launched subprocess detection. */
+/** Stable marker value used for Quiet Core bot-launched subprocess detection. */
 export const OPENCLAW_CLI_ENV_VALUE = "1";
 
-/** Returns a cloned env object with the OpenClaw CLI marker set. */
+/** Returns a cloned env object with the Quiet Core bot CLI marker set. */
 export function markOpenClawExecEnv<T extends Record<string, string | undefined>>(
   /** Source environment to clone before adding the subprocess marker. */
   env: T,

@@ -1,5 +1,5 @@
-// OpenClaw Gateway client facade.
-// Wraps the shared gateway-client package with OpenClaw host dependencies.
+// Quiet Core bot Gateway client facade.
+// Wraps the shared gateway-client package with Quiet Core bot host dependencies.
 import {
   GatewayClient as BaseGatewayClient,
   GATEWAY_CLOSE_CODE_HINTS as BASE_GATEWAY_CLOSE_CODE_HINTS,
@@ -169,7 +169,7 @@ function createOpenClawGatewayClientHostDeps(
   overrides?: GatewayClientHostDeps,
 ): GatewayClientHostDeps {
   return {
-    // This wrapper is the only place the package reaches into OpenClaw runtime
+    // This wrapper is the only place the package reaches into Quiet Core bot runtime
     // state. Keep device identity, token storage, proxy, and redaction here.
     loadOrCreateDeviceIdentity,
     signDevicePayload,
@@ -201,7 +201,7 @@ export class GatewayClient {
 
   constructor(opts: GatewayClientOptions) {
     // Inject host deps here so the reusable package stays decoupled from
-    // OpenClaw device identity, token storage, proxy routing, and logging.
+    // Quiet Core bot device identity, token storage, proxy routing, and logging.
     this.#client = new BaseGatewayClient({
       ...opts,
       clientVersion: opts.clientVersion ?? VERSION,

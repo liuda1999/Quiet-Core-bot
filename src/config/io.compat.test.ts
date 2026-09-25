@@ -53,7 +53,7 @@ describe("config io paths", () => {
     whatsappSharedAccessDefaults = migrated.config.channels?.whatsapp?.accounts?.default;
   });
 
-  it("uses ~/.openclaw/openclaw.json when config exists", async () => {
+  it("uses ~/.quiet-core-bot/quiet-core-bot.json when config exists", async () => {
     await withTempHome(async (home) => {
       const configPath = await writeConfig(home, ".openclaw", 19001);
       const io = createIoForHome(home);
@@ -61,7 +61,7 @@ describe("config io paths", () => {
     });
   });
 
-  it("defaults to ~/.openclaw/openclaw.json when config is missing", async () => {
+  it("defaults to ~/.quiet-core-bot/quiet-core-bot.json when config is missing", async () => {
     await withTempHome(async (home) => {
       const io = createIoForHome(home);
       expect(io.configPath).toBe(path.join(home, ".openclaw", "openclaw.json"));
@@ -127,7 +127,7 @@ describe("config io paths", () => {
     });
   });
 
-  it("explains what to check when config was written by a newer OpenClaw", async () => {
+  it("explains what to check when config was written by a newer Quiet Core bot", async () => {
     await withTempHome(async (home) => {
       const configPath = path.join(home, ".openclaw", "openclaw.json");
       await fs.mkdir(path.dirname(configPath), { recursive: true });
@@ -157,9 +157,9 @@ describe("config io paths", () => {
 
       expect(logger.warn).toHaveBeenCalledWith(
         [
-          `Your OpenClaw config was written by version 9999.1.1, but this command is running ${VERSION}.`,
-          "Check: `openclaw --version`, `which openclaw`, and `openclaw gateway status --deep`.",
-          "If unexpected, update PATH so `openclaw` points to the version you want, or reinstall the Gateway service from that same OpenClaw install.",
+          `Your Quiet Core bot config was written by version 9999.1.1, but this command is running ${VERSION}.`,
+          "Check: `quiet-core-bot --version`, `which quiet-core-bot`, and `quiet-core-bot gateway status --deep`.",
+          "If unexpected, update PATH so `quiet-core-bot` points to the version you want, or reinstall the Gateway service from that same Quiet Core bot install.",
         ].join("\n"),
       );
     });

@@ -583,7 +583,7 @@ describe("validateConfigObjectRawWithPlugins channel metadata", () => {
           appId: "app-id",
           appSecret: "secret",
           replyMode: "thread",
-          footer: "OpenClaw",
+          footer: "Quiet Core bot",
         },
       },
     });
@@ -725,7 +725,7 @@ describe("validateConfigObjectRawWithPlugins channel metadata", () => {
         }),
       );
       expect(result.issues[0]?.message).not.toContain("Telegram groups");
-      expect(result.issues[0]?.message).not.toContain("openclaw doctor --fix");
+      expect(result.issues[0]?.message).not.toContain("quiet-core-bot doctor --fix");
     }
   });
 });

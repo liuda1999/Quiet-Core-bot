@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { ToolsSchema } from "./zod-schema.agent-runtime.js";
 import { OpenClawSchema } from "./zod-schema.js";
 
-describe("OpenClawSchema tools.loopDetection.postCompactionGuard validation", () => {
+describe("Quiet Core botSchema tools.loopDetection.postCompactionGuard validation", () => {
   it("accepts tools.loopDetection.postCompactionGuard configuration", () => {
     const result = OpenClawSchema.safeParse({
       tools: {
@@ -79,7 +79,7 @@ describe("OpenClawSchema tools.loopDetection.postCompactionGuard validation", ()
   });
 });
 
-describe("OpenClawSchema tools.loopDetection.singleStepConcurrent validation (A17/A23)", () => {
+describe("Quiet Core botSchema tools.loopDetection.singleStepConcurrent validation (A17/A23)", () => {
   it("accepts a valid singleStepConcurrent configuration", () => {
     const result = OpenClawSchema.safeParse({
       tools: {

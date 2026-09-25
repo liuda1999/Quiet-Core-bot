@@ -30,7 +30,7 @@ const readConfigFileSnapshotMock = vi.fn<() => Promise<ConfigFileSnapshot>>();
 const startManagedServiceUpdateHandoffMock = vi.fn(async () => ({
   status: "started" as const,
   pid: 12345,
-  command: "openclaw update --yes --timeout 1800",
+  command: "quiet-core-bot update --yes --timeout 1800",
   logPath: "/tmp/openclaw-update-run-handoff/handoff.log",
 }));
 
@@ -161,11 +161,11 @@ vi.mock("../../infra/update-managed-service-handoff.js", () => ({
     channel?: "stable" | "beta" | "dev";
   }) =>
     params?.timeoutMs
-      ? `openclaw update --yes --timeout ${Math.ceil(params.timeoutMs / 1000)}`
-      : "openclaw update --yes",
+      ? `quiet-core-bot update --yes --timeout ${Math.ceil(params.timeoutMs / 1000)}`
+      : "quiet-core-bot update --yes",
   buildManagedServiceHandoffUnavailableMessage: (command: string) =>
     [
-      "OpenClaw updates cannot safely run inside the live gateway process without a managed-service handoff.",
+      "Quiet Core bot updates cannot safely run inside the live gateway process without a managed-service handoff.",
       `Run \`${command}\` from a shell outside the gateway service, or restart/update from the host UI.`,
     ].join("\n"),
 }));
@@ -459,7 +459,7 @@ describe("update.run restart scheduling", () => {
     ).toEqual({
       status: "started",
       pid: 12345,
-      command: "openclaw update --yes --timeout 1800",
+      command: "quiet-core-bot update --yes --timeout 1800",
     });
     expect(payload?.sentinel?.persisted).toBe(true);
     const sentinel = readCapturedPayload();
@@ -555,7 +555,7 @@ describe("update.run restart scheduling", () => {
     expect(payload?.handoff).toEqual({
       status: "started",
       pid: 12345,
-      command: "openclaw update --yes --timeout 1800",
+      command: "quiet-core-bot update --yes --timeout 1800",
     });
     expect(readCapturedPayload().status).toBe("skipped");
   });
@@ -664,10 +664,10 @@ describe("update.run restart scheduling", () => {
     expect(payload?.result?.reason).toBe("managed-service-handoff-unavailable");
     expect(payload?.handoff).toEqual({
       status: "unavailable",
-      command: "openclaw update --yes --timeout 1800",
+      command: "quiet-core-bot update --yes --timeout 1800",
       message:
-        "OpenClaw updates cannot safely run inside the live gateway process without a managed-service handoff.\n" +
-        "Run `openclaw update --yes --timeout 1800` from a shell outside the gateway service, or restart/update from the host UI.",
+        "Quiet Core bot updates cannot safely run inside the live gateway process without a managed-service handoff.\n" +
+        "Run `quiet-core-bot update --yes --timeout 1800` from a shell outside the gateway service, or restart/update from the host UI.",
     });
   });
 

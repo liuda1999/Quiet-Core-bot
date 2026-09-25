@@ -1,9 +1,9 @@
-// Creates temporary OpenClaw directories for runtime scratch work.
+// Creates temporary Quiet Core bot directories for runtime scratch work.
 import fs from "node:fs";
 import { tmpdir as getOsTmpDir } from "node:os";
 import path from "node:path";
 
-/** Preferred shared OpenClaw temp root on POSIX systems when ownership and permissions are safe. */
+/** Preferred shared Quiet Core bot temp root on POSIX systems when ownership and permissions are safe. */
 export const POSIX_OPENCLAW_TMP_DIR = "/tmp/openclaw";
 
 type MaybeNodeError = { code?: string };
@@ -36,7 +36,7 @@ function isNodeErrorWithCode(err: unknown, code: string): err is MaybeNodeError 
   );
 }
 
-/** Resolves a safe OpenClaw temp root, falling back to user-scoped os.tmpdir paths when needed. */
+/** Resolves a safe Quiet Core bot temp root, falling back to user-scoped os.tmpdir paths when needed. */
 export function resolvePreferredOpenClawTmpDir(
   options: ResolvePreferredOpenClawTmpDirOptions = {},
 ): string {
@@ -137,16 +137,16 @@ export function resolvePreferredOpenClawTmpDir(
       }
       // Never continue with a symlinked, wrong-owner, or world-writable temp root;
       // callers create executable/media artifacts under this path.
-      throw new Error(`Unsafe fallback OpenClaw temp dir: ${fallbackPath}`);
+      throw new Error(`Unsafe fallback Quiet Core bot temp dir: ${fallbackPath}`);
     }
     try {
       mkdirSync(fallbackPath, { recursive: true, mode: 0o700 });
       chmodSync(fallbackPath, 0o700);
     } catch {
-      throw new Error(`Unable to create fallback OpenClaw temp dir: ${fallbackPath}`);
+      throw new Error(`Unable to create fallback Quiet Core bot temp dir: ${fallbackPath}`);
     }
     if (resolveDirState(fallbackPath) !== "available" && !tryRepairWritableBits(fallbackPath)) {
-      throw new Error(`Unsafe fallback OpenClaw temp dir: ${fallbackPath}`);
+      throw new Error(`Unsafe fallback Quiet Core bot temp dir: ${fallbackPath}`);
     }
     return fallbackPath;
   };

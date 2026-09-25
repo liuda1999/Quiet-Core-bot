@@ -131,7 +131,7 @@ export function configValidationIssuesToHealthFindings(
 const gatewayConfigCheck: HealthCheck = {
   id: "core/doctor/gateway-config",
   kind: "core",
-  description: "openclaw.jsonc gateway block is set and unambiguous.",
+  description: "quiet-core-bot.jsonc gateway block is set and unambiguous.",
   source: "doctor",
   async detect(ctx) {
     const findings: HealthFinding[] = [];
@@ -142,7 +142,7 @@ const gatewayConfigCheck: HealthCheck = {
         message: "gateway.mode is unset; gateway start will be blocked.",
         path: "gateway.mode",
         fixHint:
-          "Run `openclaw configure` and set Gateway mode (local/remote), or `openclaw config set gateway.mode local`.",
+          "Run `quiet-core-bot configure` and set Gateway mode (local/remote), or `quiet-core-bot config set gateway.mode local`.",
       });
     }
     if (ctx.cfg.gateway?.mode !== "remote" && hasAmbiguousGatewayAuthModeConfig(ctx.cfg)) {
@@ -153,7 +153,7 @@ const gatewayConfigCheck: HealthCheck = {
           "gateway.auth.token and gateway.auth.password are both configured while gateway.auth.mode is unset; auth selection is ambiguous.",
         path: "gateway.auth.mode",
         fixHint:
-          "Set an explicit mode: `openclaw config set gateway.auth.mode token` or `... password`.",
+          "Set an explicit mode: `quiet-core-bot config set gateway.auth.mode token` or `... password`.",
       });
     }
     return findings;
@@ -177,7 +177,7 @@ const commandOwnerCheck: HealthCheck = {
           "No command owner is configured. Owner-only commands (/diagnostics, /export-trajectory, /config, exec approvals) have no allowed sender.",
         path: "commands.ownerAllowFrom",
         fixHint:
-          "Set commands.ownerAllowFrom to your channel user id, e.g. `openclaw config set commands.ownerAllowFrom '[\"telegram:123456789\"]'`.",
+          "Set commands.ownerAllowFrom to your channel user id, e.g. `quiet-core-bot config set commands.ownerAllowFrom '[\"telegram:123456789\"]'`.",
       },
     ];
   },
@@ -207,7 +207,7 @@ export function buildGatewayTokenSecretRefUnavailableMessage(params: {
 
 export function buildGatewayTokenSecretRefFixHint(ref: SecretRef): string {
   if (ref.source === "exec") {
-    return "Run `openclaw doctor --allow-exec` to verify exec SecretRefs during doctor, or `openclaw secrets audit --allow-exec` to audit all exec SecretRefs.";
+    return "Run `quiet-core-bot doctor --allow-exec` to verify exec SecretRefs during doctor, or `quiet-core-bot secrets audit --allow-exec` to audit all exec SecretRefs.";
   }
   return "Resolve or rotate the external secret source, then rerun doctor.";
 }
@@ -290,7 +290,7 @@ const gatewayAuthCheck: HealthCheck = {
         severity: "warning",
         message: "Gateway auth is off or missing a token.",
         path: "gateway.auth",
-        fixHint: "Run `openclaw doctor --fix --generate-gateway-token` to generate a token.",
+        fixHint: "Run `quiet-core-bot doctor --fix --generate-gateway-token` to generate a token.",
       },
     ];
   },
@@ -373,7 +373,7 @@ const legacyStateCheck: HealthCheck = {
         severity: "warning",
         message: line.replace(/^- /, ""),
         path: detected.stateDir,
-        fixHint: "Run `openclaw doctor --fix` to migrate legacy state.",
+        fixHint: "Run `quiet-core-bot doctor --fix` to migrate legacy state.",
       }),
     );
   },
@@ -740,7 +740,7 @@ function unavailableSkillToFinding(skill: SkillStatusEntry): HealthFinding {
     message: `${skill.name} is allowed but unavailable: ${formatMissingSkillSummary(skill)}.`,
     path: skillReadinessPath(skill),
     fixHint:
-      "Install/configure the missing requirement, or run `openclaw doctor --fix` to disable unused unavailable skills.",
+      "Install/configure the missing requirement, or run `quiet-core-bot doctor --fix` to disable unused unavailable skills.",
   };
 }
 
@@ -773,7 +773,7 @@ function browserResidueFinding(residue: LegacyClawdBrowserProfileResidue): Healt
     path: residue.legacyProfileDir,
     ocPath: "oc://state/browser/clawd",
     fixHint:
-      "Run `openclaw doctor --fix` to archive the stale clawd profile safely instead of deleting it in place.",
+      "Run `quiet-core-bot doctor --fix` to archive the stale clawd profile safely instead of deleting it in place.",
   };
 }
 
@@ -789,7 +789,7 @@ const browserClawdProfileResidueCheck: HealthCheck = {
   id: BROWSER_CLAWD_PROFILE_RESIDUE_CHECK_ID,
   kind: "core",
   description:
-    "Legacy clawd managed browser profile residue has been archived after the OpenClaw rename.",
+    "Legacy clawd managed browser profile residue has been archived after the Quiet Core bot rename.",
   source: "doctor",
   async detect(ctx, scope) {
     const residue = await detectLegacyClawdBrowserProfileResidue(ctx.cfg, browserResidueDeps(ctx));
@@ -850,7 +850,7 @@ const browserClawdProfileResidueCheck: HealthCheck = {
 const finalConfigValidationCheck: HealthCheck = {
   id: FINAL_CONFIG_VALIDATION_CHECK_ID,
   kind: "core",
-  description: "Active openclaw.jsonc parses and conforms to the config schema.",
+  description: "Active quiet-core-bot.jsonc parses and conforms to the config schema.",
   source: "doctor",
   async detect() {
     const { readConfigFileSnapshot } = await import("../config/config.js");

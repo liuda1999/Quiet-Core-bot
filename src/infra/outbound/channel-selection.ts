@@ -56,7 +56,7 @@ function resolveAvailableKnownChannel(params: {
   }
   // Pass `allowBootstrap: true` so the in-agent message tool path can resolve
   // outbound channels in processes where external channel adapters have not
-  // been eagerly loaded (e.g. `openclaw agent --local`). Already-loaded and
+  // been eagerly loaded (e.g. `quiet-core-bot agent --local`). Already-loaded and
   // bundled plugins still resolve through side-effect-free fast paths first.
   // Without the bootstrap fallback, official external channels can surface as
   // the recurring "Channel is unavailable" error on `--local`-routed
@@ -115,14 +115,14 @@ function formatMissingOfficialExternalChannelsMessage(
   }
   const labels = hints.map((hint) => hint.label).join(", ");
   const installCommands = hints.map((hint) => hint.installCommand).join("; ");
-  return `Configured official external channels ${labels} are missing their plugins. Run: openclaw doctor --fix, or install individually: ${installCommands}.`;
+  return `Configured official external channels ${labels} are missing their plugins. Run: quiet-core-bot doctor --fix, or install individually: ${installCommands}.`;
 }
 
 function formatNoConfiguredChannelsMessage(): string {
   return [
     "Channel is required (no configured channels detected).",
-    "Run openclaw channels add to configure one, or pass --channel <channel> after enabling a channel.",
-    "Use openclaw channels list --all to see available channel ids.",
+    "Run quiet-core-bot channels add to configure one, or pass --channel <channel> after enabling a channel.",
+    "Use quiet-core-bot channels list --all to see available channel ids.",
   ].join(" ");
 }
 

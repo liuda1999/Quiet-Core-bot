@@ -1,4 +1,4 @@
-// Covers OpenClaw package root resolution.
+// Covers Quiet Core bot package root resolution.
 import actualFs from "node:fs";
 import actualFsPromises from "node:fs/promises";
 import path from "node:path";
@@ -106,7 +106,7 @@ vi.mock("./openclaw-root.fs.runtime.js", () => ({
   openClawRootFs: mockFsPromisesModule(),
 }));
 
-describe("resolveOpenClawPackageRoot", () => {
+describe("resolveQuiet Core botPackageRoot", () => {
   let resolveOpenClawPackageRoot: typeof import("./openclaw-root.js").resolveOpenClawPackageRoot;
   let resolveOpenClawPackageRootSync: typeof import("./openclaw-root.js").resolveOpenClawPackageRootSync;
   let clearOpenClawPackageRootCaches: typeof import("./openclaw-root.js").testing.clearOpenClawPackageRootCaches;

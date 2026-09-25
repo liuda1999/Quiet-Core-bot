@@ -14,7 +14,7 @@ type OpenClawVersion = {
 
 const VERSION_RE = /^v?(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?$/;
 
-/** Parses stable, prerelease, and legacy dot-beta OpenClaw versions. */
+/** Parses stable, prerelease, and legacy dot-beta Quiet Core bot versions. */
 export function parseOpenClawVersion(raw: string | null | undefined): OpenClawVersion | null {
   if (!raw) {
     return null;

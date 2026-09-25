@@ -1,9 +1,9 @@
 // Guards the command-level update paths that do not apply to independent builds.
 //
 // This repository is a stripped-down, locally maintained distribution that does not
-// participate in upstream OpenClaw releases, so the mutating update commands (`update`,
+// participate in upstream Quiet Core bot releases, so the mutating update commands (`update`,
 // `update repair`, `update finalize`, `update wizard`) are refused before any network call
-// or config write. Read-only status (`openclaw update status`) stays available.
+// or config write. Read-only status (`quiet-core-bot update status`) stays available.
 import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
 
 /** Environment switch that restores the upstream update flow (`0`/`false`/`off`/`no`). */
@@ -40,9 +40,9 @@ export function isIndependentBuild(env: NodeJS.ProcessEnv = process.env): boolea
 /** Operator-facing message shown when a mutating update command is refused. */
 export function formatIndependentBuildUpdateMessage(): string {
   return [
-    "This build does not participate in upstream OpenClaw updates.",
-    "`openclaw update`, `openclaw update repair`, `openclaw update finalize`, and `openclaw update wizard` are disabled for this independent distribution.",
-    "Read-only status is still available: `openclaw update status`.",
+    "This build does not participate in upstream Quiet Core bot updates.",
+    "`quiet-core-bot update`, `quiet-core-bot update repair`, `quiet-core-bot update finalize`, and `quiet-core-bot update wizard` are disabled for this independent distribution.",
+    "Read-only status is still available: `quiet-core-bot update status`.",
     `Set ${INDEPENDENT_BUILD_ENV_KEY}=0 to restore the upstream update commands.`,
   ].join("\n");
 }

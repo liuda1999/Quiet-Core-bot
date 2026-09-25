@@ -44,7 +44,7 @@ export function resolveGatewayStateDir(env: Record<string, string | undefined>):
   const home = resolveHomeDir(env);
   const suffix = resolveGatewayProfileSuffix(env.OPENCLAW_PROFILE);
   // Profile suffixes isolate managed service files while preserving the default
-  // historical ~/.openclaw state path.
+  // historical ~/.quiet-core-bot state path.
   return path.join(home, `.openclaw${suffix}`);
 }
 

@@ -67,7 +67,7 @@ export function resolveGatewayAuthTokenSourceConflict(params: {
     "prefers gateway.auth.token. If the values differ, CLI/RPC calls can fail to authenticate " +
     "with the running gateway.";
   const remediation =
-    `Remove ${GATEWAY_ENV_TOKEN} from the shell, ~/.openclaw/.env, or launchctl env if gateway.auth.token is intended, ` +
+    `Remove ${GATEWAY_ENV_TOKEN} from the shell, ~/.quiet-core-bot/.env, or launchctl env if gateway.auth.token is intended, ` +
     `or point gateway.auth.token at \${${GATEWAY_ENV_TOKEN}} if the env var should be canonical.`;
 
   return {

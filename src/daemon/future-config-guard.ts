@@ -1,4 +1,4 @@
-/** Prevents daemon write actions when the config belongs to a newer OpenClaw. */
+/** Prevents daemon write actions when the config belongs to a newer Quiet Core bot. */
 import { readConfigFileSnapshot } from "../config/config.js";
 import {
   formatFutureConfigActionBlock,
@@ -6,7 +6,7 @@ import {
   type FutureConfigActionBlock,
 } from "../config/future-version-guard.js";
 
-// Blocks daemon mutations when config was written by a newer OpenClaw.
+// Blocks daemon mutations when config was written by a newer Quiet Core bot.
 async function readFutureConfigActionBlock(
   action: string,
 ): Promise<FutureConfigActionBlock | null> {

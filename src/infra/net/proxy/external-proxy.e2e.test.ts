@@ -1,4 +1,4 @@
-// End-to-end proxy smoke tests run child OpenClaw modules through a local
+// End-to-end proxy smoke tests run child Quiet Core bot modules through a local
 // HTTP/HTTPS forward proxy, including Discord-style HTTP, TLS, and WebSocket paths.
 import { execFileSync, spawn } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
@@ -50,7 +50,7 @@ function createDiscordTlsFixture(dir: string): DiscordTlsFixture {
       "-days",
       "1",
       "-subj",
-      "/CN=OpenClaw Proxy Test CA",
+      "/CN=Quiet Core bot Proxy Test CA",
     ],
     { stdio: "ignore" },
   );

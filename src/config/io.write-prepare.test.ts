@@ -793,8 +793,8 @@ describe("config io write prepare", () => {
       'channels.telegram.dmPolicy = "open" requires channels.telegram.allowFrom to include "*"',
     );
 
-    expect(message).toContain("openclaw config set channels.telegram.allowFrom '[\"*\"]'");
-    expect(message).toContain('openclaw config set channels.telegram.dmPolicy "pairing"');
+    expect(message).toContain("quiet-core-bot config set channels.telegram.allowFrom '[\"*\"]'");
+    expect(message).toContain('quiet-core-bot config set channels.telegram.dmPolicy "pairing"');
   });
 
   it("states that a rejected write left the config file unchanged and how to inspect it", () => {
@@ -810,8 +810,8 @@ describe("config io write prepare", () => {
     expect(message).toContain(
       "The config file was left unchanged, so a running gateway keeps its current configuration.",
     );
-    expect(message).toContain("openclaw config get tools.loopDetection.singleStepConcurrent");
-    expect(message).toContain("openclaw doctor --fix");
+    expect(message).toContain("quiet-core-bot config get tools.loopDetection.singleStepConcurrent");
+    expect(message).toContain("quiet-core-bot doctor --fix");
   });
 
   it("A11: names the illegal key in the refusal instead of only its parent object", () => {
@@ -834,9 +834,9 @@ describe("config io write prepare", () => {
       "The config file was left unchanged, so a running gateway keeps its current configuration.",
     );
     expect(message).toContain(
-      "openclaw config get tools.loopDetection.singleStepConcurrent.warningThreshold",
+      "quiet-core-bot config get tools.loopDetection.singleStepConcurrent.warningThreshold",
     );
-    expect(message).toContain("openclaw doctor --fix");
+    expect(message).toContain("quiet-core-bot doctor --fix");
   });
 
   it("A11: keeps the parent path when the issue names several keys", () => {

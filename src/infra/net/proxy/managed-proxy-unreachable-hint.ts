@@ -1,5 +1,5 @@
 // Turns a failed provider connection into an actionable hint when the failure
-// came from the OpenClaw-managed egress proxy instead of the provider endpoint.
+// came from the Quiet Core bot-managed egress proxy instead of the provider endpoint.
 //
 // Under a managed proxy every provider request connects to the proxy first, so
 // a dead proxy process surfaces to the caller as a plain connection failure that
@@ -198,7 +198,7 @@ function formatManagedProxyTransientHint(proxyUrl: URL): string {
   return (
     `LLM request failed: the local egress proxy ${proxyUrl.protocol}//${proxyUrl.hostname}:${resolveProxyPort(proxyUrl)} ` +
     `did not complete this request (transient local failure, for example a busy or locked local resource). ` +
-    `The proxy endpoint itself still answers; retry, and run "openclaw proxy status" if it keeps failing`
+    `The proxy endpoint itself still answers; retry, and run "quiet-core-bot proxy status" if it keeps failing`
   );
 }
 
@@ -206,7 +206,7 @@ function formatManagedProxyTransientHint(proxyUrl: URL): string {
 function formatManagedProxyUnreachableCopy(proxyUrl: URL): string {
   return (
     `LLM request failed: the local egress proxy ${proxyUrl.protocol}//${proxyUrl.hostname}:${resolveProxyPort(proxyUrl)} ` +
-    `is not reachable. Start it with: openclaw proxy start --host ${proxyUrl.hostname} --port ${resolveProxyPort(proxyUrl)}`
+    `is not reachable. Start it with: quiet-core-bot proxy start --host ${proxyUrl.hostname} --port ${resolveProxyPort(proxyUrl)}`
   );
 }
 

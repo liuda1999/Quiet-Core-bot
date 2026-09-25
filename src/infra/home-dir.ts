@@ -1,4 +1,4 @@
-// Resolves OpenClaw home and platform-specific config directories.
+// Resolves Quiet Core bot home and platform-specific config directories.
 import os from "node:os";
 import path from "node:path";
 
@@ -52,7 +52,7 @@ function resolveRawHomeDir(env: NodeJS.ProcessEnv, homedir: () => string): strin
   return explicitHome;
 }
 
-/** Resolves OpenClaw's effective home, honoring OPENCLAW_HOME before OS homes. */
+/** Resolves Quiet Core bot's effective home, honoring OPENCLAW_HOME before OS homes. */
 export function resolveEffectiveHomeDir(
   env: NodeJS.ProcessEnv = process.env,
   homedir: () => string = os.homedir,

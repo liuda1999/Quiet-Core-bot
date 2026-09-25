@@ -16,7 +16,7 @@ describe("Crestodian audit log", () => {
     }
   });
 
-  it("writes jsonl records under the OpenClaw audit dir", async () => {
+  it("writes jsonl records under the Quiet Core bot audit dir", async () => {
     const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "crestodian-audit-"));
     vi.stubEnv("OPENCLAW_STATE_DIR", tempDir);
 

@@ -10,7 +10,7 @@ export type BrowserProfileConfig = {
   mcpCommand?: string;
   /** Extra Chrome MCP arguments for existing-session profiles. */
   mcpArgs?: string[];
-  /** Profile driver (default: openclaw). */
+  /** Profile driver (default: quiet-core-bot). */
   driver?: "openclaw" | "clawd" | "existing-session";
   /** If true, launch this profile in headless mode. Falls back to browser.headless. */
   headless?: boolean;
@@ -65,7 +65,7 @@ export type BrowserConfig = {
   localCdpReadyTimeoutMs?: number;
   /** Default browser act timeout (ms). Default: 60000. */
   actionTimeoutMs?: number;
-  /** Accent color for the openclaw browser profile (hex). Default: #FF4500 */
+  /** Accent color for the quiet-core-bot browser profile (hex). Default: #FF4500 */
   color?: string;
   /** Override the browser executable path (all platforms). */
   executablePath?: string;

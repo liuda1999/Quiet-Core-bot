@@ -521,7 +521,7 @@ describe("SessionHistorySseState", () => {
               type: "text",
               text: [
                 "[Inter-session message] sourceSession=agent:main:subagent:child sourceChannel=webchat sourceTool=subagent_announce isUser=false",
-                "This content was routed by OpenClaw from another session or internal tool.",
+                "This content was routed by Quiet Core bot from another session or internal tool.",
                 "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
                 "subagent completion payload",
                 "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
