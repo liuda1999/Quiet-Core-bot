@@ -93,6 +93,39 @@ describe("npm registry spec parsing helpers", () => {
       },
     },
     {
+      // F-13: an ordinary semver must be recognized as an exact version, not a tag.
+      spec: "@openclaw/voice-call@0.1.0",
+      expected: {
+        name: "@openclaw/voice-call",
+        raw: "@openclaw/voice-call@0.1.0",
+        selector: "0.1.0",
+        selectorKind: "exact-version",
+        selectorIsPrerelease: false,
+      },
+    },
+    {
+      spec: "@openclaw/voice-call@1.2.3",
+      expected: {
+        name: "@openclaw/voice-call",
+        raw: "@openclaw/voice-call@1.2.3",
+        selector: "1.2.3",
+        selectorKind: "exact-version",
+        selectorIsPrerelease: false,
+      },
+    },
+    {
+      // The year/month/patch monthly shape stays an exact version after the
+      // exact-semver check.
+      spec: "@openclaw/voice-call@2026.5.3",
+      expected: {
+        name: "@openclaw/voice-call",
+        raw: "@openclaw/voice-call@2026.5.3",
+        selector: "2026.5.3",
+        selectorKind: "exact-version",
+        selectorIsPrerelease: false,
+      },
+    },
+    {
       spec: "@openclaw/voice-call@1.2.3-beta.1",
       expected: {
         name: "@openclaw/voice-call",

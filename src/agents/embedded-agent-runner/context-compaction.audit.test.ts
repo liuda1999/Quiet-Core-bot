@@ -28,6 +28,7 @@ import { AuthStorage } from "../sessions/auth-storage.js";
 import { createExtensionRuntime } from "../sessions/extensions/loader.js";
 import type { LoadExtensionsResult } from "../sessions/extensions/types.js";
 import { ModelRegistry } from "../sessions/model-registry.js";
+import type { ResourceLoader } from "../sessions/resource-loader.js";
 import { createAgentSession } from "../sessions/sdk.js";
 import { parseSessionEntries, SessionManager } from "../sessions/session-manager.js";
 import { SettingsManager } from "../sessions/settings-manager.js";
@@ -69,7 +70,7 @@ function makeResourceLoader(): ReturnType<typeof createEmptyResourceLoader> {
   };
 }
 
-function createEmptyResourceLoader(): ReturnType<typeof makeResourceLoader> {
+function createEmptyResourceLoader(): ResourceLoader {
   return makeResourceLoader();
 }
 
@@ -147,11 +148,7 @@ async function buildSessionWithHistory(params: {
   });
   session.agent.state.messages = sessionManager
     .getEntries()
-    .flatMap((entry) =>
-      entry.type === "message"
-        ? [{ role: entry.message.role, content: entry.message.content }]
-        : [],
-    );
+    .flatMap((entry) => (entry.type === "message" ? [entry.message] : []));
   return { session, sessionManager, anchors };
 }
 

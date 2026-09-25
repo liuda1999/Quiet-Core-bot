@@ -67,6 +67,26 @@ function messageEntry(id: string, message: AgentMessage): SessionTreeEntry {
   return { type: "message", id, parentId: null, timestamp: "2026-01-01T00:00:00.000Z", message };
 }
 
+function assistantMessage(text: string, timestamp: number): AgentMessage {
+  return {
+    role: "assistant",
+    content: [{ type: "text", text }],
+    api: "ollama",
+    provider: "ollama",
+    model: "local-model",
+    usage: {
+      input: 0,
+      output: 0,
+      cacheRead: 0,
+      cacheWrite: 0,
+      totalTokens: 0,
+      cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 },
+    },
+    stopReason: "stop",
+    timestamp,
+  };
+}
+
 function testModel(): Model {
   return {
     id: "local-model",
@@ -92,7 +112,7 @@ describe("prepareCompaction summarizable-region guard", () => {
     // i.e. every boundary compaction burned a provider call and then failed.
     const entries: SessionTreeEntry[] = [
       messageEntry("e0", { role: "user", content: "hello", timestamp: 1 }),
-      messageEntry("e1", { role: "assistant", content: "hi", timestamp: 2 }),
+      messageEntry("e1", assistantMessage("hi", 2)),
     ];
 
     const result = prepareCompaction(entries, {
@@ -107,7 +127,7 @@ describe("prepareCompaction summarizable-region guard", () => {
   it("keeps a real conversation in messagesToSummarize for a droppable region", () => {
     const entries: SessionTreeEntry[] = [
       messageEntry("e0", { role: "user", content: "FACT KEYFACT-TEST-A", timestamp: 1 }),
-      messageEntry("e1", { role: "assistant", content: "ok", timestamp: 2 }),
+      messageEntry("e1", assistantMessage("ok", 2)),
       messageEntry("e2", { role: "user", content: "B".repeat(400), timestamp: 3 }),
     ];
 
@@ -127,7 +147,7 @@ describe("prepareCompaction summarizable-region guard", () => {
   it("issues a summarization request that carries the real conversation", async () => {
     const entries: SessionTreeEntry[] = [
       messageEntry("e0", { role: "user", content: "FACT KEYFACT-TEST-B", timestamp: 1 }),
-      messageEntry("e1", { role: "assistant", content: "ok", timestamp: 2 }),
+      messageEntry("e1", assistantMessage("ok", 2)),
       messageEntry("e2", { role: "user", content: "B".repeat(400), timestamp: 3 }),
     ];
     const preparation = prepareCompaction(entries, {

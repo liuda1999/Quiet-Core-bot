@@ -1138,8 +1138,8 @@ export async function agentCliCommand(
   }
   const dispatchOpts = await normalizeSessionKeyOptsForDispatch(messageOpts);
   validateExplicitSessionKeyForDispatch(dispatchOpts);
-  const gatewayDispatchOpts = dispatchOpts.runId
-    ? dispatchOpts
+  const gatewayDispatchOpts: AgentDispatchOpts & { runId: string } = dispatchOpts.runId
+    ? { ...dispatchOpts, runId: dispatchOpts.runId }
     : { ...dispatchOpts, runId: randomIdempotencyKey() };
   const signalBridge = createAgentCliSignalBridge(resolveAgentCliProcessLike(deps));
   const localOpts = {

@@ -10,8 +10,8 @@ import {
 } from "../embedded-agent-runner/compaction-summary-health.js";
 
 const streamMocks = vi.hoisted(() => ({
-  streamSimple: vi.fn(
-    (_model: Model, _context: Context, _options?: SimpleStreamOptions) => "stream",
+  streamSimple: vi.fn<(model: Model, context: Context, options?: SimpleStreamOptions) => unknown>(
+    () => "stream",
   ),
 }));
 vi.mock("../../llm/stream.js", () => ({
@@ -22,6 +22,7 @@ import { AuthStorage } from "./auth-storage.js";
 import { createExtensionRuntime } from "./extensions/loader.js";
 import type { LoadExtensionsResult, ToolDefinition } from "./extensions/types.js";
 import { ModelRegistry } from "./model-registry.js";
+import type { ResourceLoader } from "./resource-loader.js";
 import { createAgentSession } from "./sdk.js";
 import { SessionManager } from "./session-manager.js";
 import { SettingsManager } from "./settings-manager.js";
@@ -68,7 +69,7 @@ function makeResourceLoader(): ReturnType<typeof createEmptyResourceLoader> {
   };
 }
 
-function createEmptyResourceLoader(): ReturnType<typeof makeResourceLoader> {
+function createEmptyResourceLoader(): ResourceLoader {
   return makeResourceLoader();
 }
 
@@ -124,12 +125,9 @@ async function buildSessionWithHistory() {
   });
   // Mirror the persisted history into the live agent state so summarization has
   // a conversation to read.
-  session.agent.state.messages = sessionManager.getEntries().flatMap((entry) => {
-    if (entry.type !== "message") {
-      return [];
-    }
-    return [{ role: entry.message.role, content: entry.message.content }];
-  });
+  session.agent.state.messages = sessionManager
+    .getEntries()
+    .flatMap((entry) => (entry.type === "message" ? [entry.message] : []));
   return { session, sessionManager };
 }
 

@@ -496,7 +496,7 @@ export interface SessionStorage<TMetadata extends SessionMetadata = SessionMetad
   getEntries(): Promise<SessionTreeEntry[]>;
 }
 
-export type { Session } from "./session/session.js";
+export { Session } from "./session/session.js";
 
 export type AgentHarnessPhase = "idle" | "turn" | "compaction" | "branch_summary" | "retry";
 
