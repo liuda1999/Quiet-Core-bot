@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Regression coverage for compact tool display formatting.
  * Ensures tool names, actions, and details stay readable and redacted.
  */

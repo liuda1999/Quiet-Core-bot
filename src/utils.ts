@@ -4,11 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { resolveStateDir } from "./config/paths.js";
 import { pathExists as fsSafePathExists } from "./infra/fs-safe.js";
-import {
-  resolveEffectiveHomeDir,
-  resolveHomeRelativePath,
-  resolveRequiredHomeDir,
-} from "./infra/home-dir.js";
+import { resolveEffectiveHomeDir, resolveHomeRelativePath } from "./infra/home-dir.js";
 import { isPlainObject } from "./infra/plain-object.js";
 import { resolveTimerTimeoutMs } from "./shared/number-coercion.js";
 export { escapeRegExp } from "./shared/regexp.js";
