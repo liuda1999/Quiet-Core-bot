@@ -44,7 +44,7 @@ describe("Crestodian configured-model planner", () => {
             reachable: false,
           },
           references: {
-            docsUrl: "https://docs.openclaw.ai",
+            docsUrl: "https://github.com/liuda1999/Quiet-Core-bot",
             sourceUrl: "https://github.com/openclaw/openclaw",
           },
         },

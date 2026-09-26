@@ -530,7 +530,7 @@ export function registerPathCli(program: Command): void {
   const path = program
     .command("path")
     .description("Inspect and edit workspace files via the oc:// addressing scheme")
-    .addHelpText("after", "\nDocs: https://docs.openclaw.ai/cli/path\n");
+    .addHelpText("after", "\nDocs: https://github.com/liuda1999/Quiet-Core-bot/cli/path\n");
 
   withCommonOpts(
     path

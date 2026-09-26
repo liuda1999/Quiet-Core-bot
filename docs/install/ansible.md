@@ -204,7 +204,7 @@ This is idempotent and safe to run multiple times.
     cd /opt/openclaw/openclaw
     sudo -u openclaw ./scripts/sandbox-setup.sh
     # For npm installs without a source checkout, see
-    # https://docs.openclaw.ai/gateway/sandboxing#images-and-setup
+    # https://github.com/liuda1999/Quiet-Core-bot/gateway/sandboxing#images-and-setup
     ```
 
   </Accordion>

@@ -960,7 +960,7 @@ async function runDreamDiaryAction(
   if (
     method === "doctor.memory.repairDreamingArtifacts" &&
     !confirmDreamingAction(
-      "Repair Dream Cache? This archives derived dream cache files and rebuilds them from clean inputs. Your dream diary stays untouched.",
+      "Repair Consolidation Cache? This archives derived consolidation cache files and rebuilds them from clean inputs. Your consolidation diary stays untouched.",
     )
   ) {
     return false;
@@ -968,7 +968,7 @@ async function runDreamDiaryAction(
   if (
     method === "doctor.memory.dedupeDreamDiary" &&
     !confirmDreamingAction(
-      "Dedupe Dream Diary? This rewrites DREAMS.md and removes only exact duplicate diary entries.",
+      "Dedupe Consolidation Diary? This rewrites DREAMS.md and removes only exact duplicate diary entries.",
     )
   ) {
     return false;

@@ -595,7 +595,7 @@ export default definePluginEntry({
       buildUnknownModelHint: () =>
         "Ollama requires authentication to be registered as a provider. " +
         'Set OLLAMA_API_KEY="ollama-local" (any value works) or run "openclaw configure". ' +
-        "See: https://docs.openclaw.ai/providers/ollama",
+        "See: https://github.com/liuda1999/Quiet-Core-bot/providers/ollama",
     });
   },
 });

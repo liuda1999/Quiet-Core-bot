@@ -40,7 +40,7 @@ function formatHelpHint(argv: string[] | undefined, options?: { root?: boolean }
 }
 
 function formatDocsHint(): string {
-  return `${theme.muted("Docs:")} ${formatDocsLink("/cli", "docs.openclaw.ai/cli")}`;
+  return `${theme.muted("Docs:")} ${formatDocsLink("/cli", "github.com/liuda1999/Quiet-Core-bot/cli")}`;
 }
 
 /** Convert Commander parse errors into Quiet Core bot-specific help and docs guidance. */

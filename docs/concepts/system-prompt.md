@@ -309,7 +309,7 @@ as `memory_get`, live tool results, and post-compaction AGENTS.md refreshes.
 The system prompt includes a **Documentation** section. When local docs are available, it
 points to the local Quiet Core bot docs directory (`docs/` in a Git checkout or the bundled npm
 package docs). If local docs are unavailable, it falls back to
-[https://docs.openclaw.ai](https://docs.openclaw.ai).
+[https://github.com/liuda1999/Quiet-Core-bot](https://github.com/liuda1999/Quiet-Core-bot).
 
 The same section also includes the Quiet Core bot source location. Git checkouts expose the local
 source root so the agent can inspect code directly. Package installs include the GitHub

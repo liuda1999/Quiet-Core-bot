@@ -149,7 +149,7 @@ describe("buildExportTrajectoryCommandReply", () => {
     expect(reply.text).toContain(
       "Trajectory exports can include prompts, model messages, tool schemas",
     );
-    expect(reply.text).toContain("https://docs.openclaw.ai/tools/trajectory");
+    expect(reply.text).toContain("https://github.com/liuda1999/Quiet-Core-bot/tools/trajectory");
     expect(reply.text).toContain("do not use allow-all");
     expect(reply.text).toContain("Allowed decisions: allow-once, deny");
     expect(execCalls).toHaveLength(1);

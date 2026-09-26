@@ -10,4 +10,4 @@ openclaw plugins install @openclaw/mattermost
 
 ## Docs
 
-See `docs/channels/mattermost.md` in the OpenClaw repository, or the published docs at `https://docs.openclaw.ai/channels/mattermost`.
+See `docs/channels/mattermost.md` in the OpenClaw repository, or the published docs at `https://github.com/liuda1999/Quiet-Core-bot/channels/mattermost`.

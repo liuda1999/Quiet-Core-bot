@@ -138,6 +138,7 @@ function createProps(overrides: Partial<AgentsProps> = {}): AgentsProps {
     onAgentSkillToggle: () => undefined,
     onAgentSkillsClear: () => undefined,
     onAgentSkillsDisableAll: () => undefined,
+    onAgentSkillsEnableAll: () => undefined,
     onSetDefault: () => undefined,
     ...overrides,
   };

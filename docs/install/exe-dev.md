@@ -29,7 +29,7 @@ Shelley, [exe.dev](https://exe.dev)'s agent, can install Quiet Core bot instantl
 prompt. The prompt used is as below:
 
 ```
-Set up Quiet Core bot (https://docs.openclaw.ai/install) on this VM. Use the non-interactive and accept-risk flags for quiet-core-bot onboarding. Add the supplied auth or token as needed. Configure nginx to forward from the default port 18789 to the root location on the default enabled site config, making sure to enable Websocket support. Pairing is done by "quiet-core-bot devices list" and "quiet-core-bot devices approve <request id>". Make sure the dashboard shows that Quiet Core bot's health is OK. exe.dev handles forwarding from port 8000 to port 80/443 and HTTPS for us, so the final "reachable" should be <vm-name>.exe.xyz, without port specification.
+Set up Quiet Core bot (https://github.com/liuda1999/Quiet-Core-bot/install) on this VM. Use the non-interactive and accept-risk flags for quiet-core-bot onboarding. Add the supplied auth or token as needed. Configure nginx to forward from the default port 18789 to the root location on the default enabled site config, making sure to enable Websocket support. Pairing is done by "quiet-core-bot devices list" and "quiet-core-bot devices approve <request id>". Make sure the dashboard shows that Quiet Core bot's health is OK. exe.dev handles forwarding from port 8000 to port 80/443 and HTTPS for us, so the final "reachable" should be <vm-name>.exe.xyz, without port specification.
 ```
 
 ## Manual installation

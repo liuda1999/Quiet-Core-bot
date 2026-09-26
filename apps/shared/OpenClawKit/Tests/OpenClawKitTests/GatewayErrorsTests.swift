@@ -26,7 +26,7 @@ import Testing
             userMessageOverride: "Approve the requested permissions on the gateway, then reconnect.",
             actionLabel: "Approve on gateway",
             actionCommand: "openclaw devices approve req-123",
-            docsURLString: "https://docs.openclaw.ai/gateway/pairing",
+            docsURLString: "https://github.com/liuda1999/Quiet-Core-bot/gateway/pairing",
             retryableOverride: false,
             pauseReconnectOverride: true)
 
@@ -35,7 +35,7 @@ import Testing
         #expect(error.ownerRaw == "gateway")
         #expect(error.titleOverride == "Additional permissions required")
         #expect(error.actionCommand == "openclaw devices approve req-123")
-        #expect(error.docsURLString == "https://docs.openclaw.ai/gateway/pairing")
+        #expect(error.docsURLString == "https://github.com/liuda1999/Quiet-Core-bot/gateway/pairing")
         #expect(error.pauseReconnectOverride == true)
     }
 

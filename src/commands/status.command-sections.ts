@@ -399,7 +399,7 @@ export function buildStatusModelSelectionLines(params: {
       `  Session selected: ${selected}`,
       `  Reason: ${sess.modelSelectionReason ?? "session override"}`,
       "  Clear with: /model default",
-      "  Docs: https://docs.openclaw.ai/concepts/models#selection-source-and-fallback-behavior",
+      "  Docs: https://github.com/liuda1999/Quiet-Core-bot/concepts/models#selection-source-and-fallback-behavior",
     );
   }
   if (mismatches.length > limit) {
@@ -417,8 +417,8 @@ export function buildStatusFooterLines(params: {
   gatewayReachable: boolean;
 }) {
   return [
-    "FAQ: https://docs.openclaw.ai/faq",
-    "Troubleshooting: https://docs.openclaw.ai/troubleshooting",
+    "FAQ: https://github.com/liuda1999/Quiet-Core-bot/faq",
+    "Troubleshooting: https://github.com/liuda1999/Quiet-Core-bot/troubleshooting",
     ...(params.updateHint ? ["", params.warn(params.updateHint)] : []),
     "Next steps:",
     `  Need to share?      ${params.formatCliCommand("quiet-core-bot status --all")}`,

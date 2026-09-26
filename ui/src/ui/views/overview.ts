@@ -129,7 +129,7 @@ export function renderOverview(props: OverviewProps) {
         <div style="margin-top: 6px">
           <a
             class="session-link"
-            href="https://docs.openclaw.ai/web/control-ui#device-pairing-first-connection"
+            href="https://github.com/liuda1999/Quiet-Core-bot"
             target=${EXTERNAL_LINK_TARGET}
             rel=${buildExternalLinkRel()}
             title=${t("overview.pairing.docsTitle")}
@@ -162,7 +162,7 @@ export function renderOverview(props: OverviewProps) {
           <div style="margin-top: 6px">
             <a
               class="session-link"
-              href="https://docs.openclaw.ai/web/dashboard"
+              href="https://github.com/liuda1999/Quiet-Core-bot"
               target=${EXTERNAL_LINK_TARGET}
               rel=${buildExternalLinkRel()}
               title=${t("overview.connection.authDocsTitle")}
@@ -178,7 +178,7 @@ export function renderOverview(props: OverviewProps) {
         <div style="margin-top: 6px">
           <a
             class="session-link"
-            href="https://docs.openclaw.ai/web/dashboard"
+            href="https://github.com/liuda1999/Quiet-Core-bot"
             target=${EXTERNAL_LINK_TARGET}
             rel=${buildExternalLinkRel()}
             title=${t("overview.connection.authDocsTitle")}
@@ -211,7 +211,7 @@ export function renderOverview(props: OverviewProps) {
         <div style="margin-top: 6px">
           <a
             class="session-link"
-            href="https://docs.openclaw.ai/gateway/tailscale"
+            href="https://github.com/liuda1999/Quiet-Core-bot"
             target=${EXTERNAL_LINK_TARGET}
             rel=${buildExternalLinkRel()}
             title=${t("overview.connection.tailscaleDocsTitle")}
@@ -220,7 +220,7 @@ export function renderOverview(props: OverviewProps) {
           <span class="muted"> · </span>
           <a
             class="session-link"
-            href="https://docs.openclaw.ai/web/control-ui#insecure-http"
+            href="https://github.com/liuda1999/Quiet-Core-bot"
             target=${EXTERNAL_LINK_TARGET}
             rel=${buildExternalLinkRel()}
             title=${t("overview.connection.insecureHttpDocsTitle")}
@@ -403,7 +403,7 @@ export function renderOverview(props: OverviewProps) {
                   ${t("overview.connection.docsHint")}
                   <a
                     class="session-link"
-                    href="https://docs.openclaw.ai/web/dashboard"
+                    href="https://github.com/liuda1999/Quiet-Core-bot"
                     target="_blank"
                     rel="noreferrer"
                     >${t("overview.connection.docsLink")}</a

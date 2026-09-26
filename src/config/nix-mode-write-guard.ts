@@ -4,7 +4,7 @@ import { resolveIsNixMode } from "./paths.js";
 /** Agent-first Nix install docs shown when runtime config writes are blocked. */
 export const NIX_OPENCLAW_AGENT_FIRST_URL = "https://github.com/openclaw/nix-openclaw#quick-start";
 /** Public Quiet Core bot Nix overview shown with immutable-config errors. */
-export const OPENCLAW_NIX_OVERVIEW_URL = "https://docs.openclaw.ai/install/nix";
+export const OPENCLAW_NIX_OVERVIEW_URL = "https://github.com/liuda1999/Quiet-Core-bot/install/nix";
 
 /** Error thrown when a mutating config path is attempted while Nix owns config state. */
 export class NixModeConfigMutationError extends Error {

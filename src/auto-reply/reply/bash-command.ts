@@ -199,7 +199,7 @@ export async function handleBashChatCommand(params: {
     return buildDisabledCommandReply({
       label: "bash",
       configKey: "bash",
-      docsUrl: "https://docs.openclaw.ai/tools/slash-commands#config",
+      docsUrl: "https://github.com/liuda1999/Quiet-Core-bot/tools/slash-commands#config",
     });
   }
 

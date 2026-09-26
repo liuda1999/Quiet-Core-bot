@@ -521,5 +521,7 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean; d
   }
 
   defaultRuntime.log(`${label("Troubles:")} run ${formatCliCommand("quiet-core-bot status")}`);
-  defaultRuntime.log(`${label("Troubleshooting:")} https://docs.openclaw.ai/troubleshooting`);
+  defaultRuntime.log(
+    `${label("Troubleshooting:")} https://github.com/liuda1999/Quiet-Core-bot/troubleshooting`,
+  );
 }

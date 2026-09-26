@@ -259,7 +259,7 @@ export function registerBrowserCli(program: Command, argv: string[] = process.ar
           true,
         )}\n\n${theme.muted("Docs:")} ${formatDocsLink(
           "/cli/browser",
-          "docs.openclaw.ai/cli/browser",
+          "github.com/liuda1999/Quiet-Core-bot/cli/browser",
         )}\n`,
     )
     .action(() => {

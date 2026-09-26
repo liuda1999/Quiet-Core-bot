@@ -29,7 +29,7 @@ struct DashboardWindowSmokeTests {
             to: try #require(URL(string: "http://127.0.0.1:18789/control/chat")),
             dashboardURL: dashboard))
         #expect(!DashboardWindowController.shouldAllowNavigation(
-            to: try #require(URL(string: "https://docs.openclaw.ai/")),
+            to: try #require(URL(string: "https://github.com/liuda1999/Quiet-Core-bot/")),
             dashboardURL: dashboard))
     }
 

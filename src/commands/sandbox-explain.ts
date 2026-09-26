@@ -38,7 +38,7 @@ type SandboxExplainOptions = {
   json: boolean;
 };
 
-const SANDBOX_DOCS_URL = "https://docs.openclaw.ai/sandbox";
+const SANDBOX_DOCS_URL = "https://github.com/liuda1999/Quiet-Core-bot/sandbox";
 
 function normalizeExplainSessionKey(params: {
   cfg: OpenClawConfig;
@@ -356,7 +356,9 @@ export async function sandboxExplainCommand(
     lines.push(`  - ${keyLocal}`);
   }
   lines.push("");
-  lines.push(`${key("Docs:")} ${formatDocsLink("/sandbox", "docs.openclaw.ai/sandbox")}`);
+  lines.push(
+    `${key("Docs:")} ${formatDocsLink("/sandbox", "github.com/liuda1999/Quiet-Core-bot/sandbox")}`,
+  );
 
   runtime.log(`${lines.join("\n")}\n`);
 }

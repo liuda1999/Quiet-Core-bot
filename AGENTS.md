@@ -6,7 +6,7 @@ Skills own workflows; root owns hard policy and routing.
 ## Start
 
 - Repo: `https://github.com/openclaw/openclaw`
-- Replies: repo-root refs only: `extensions/telegram/src/index.ts:80`. No absolute paths, no `~/`.
+- Replies: repo-root refs only: `extensions/matrix/src/channel.ts:80`. No absolute paths, no `~/`.
 - Docs/user-visible work: `pnpm docs:list`, then read relevant docs only.
 - Existing-solutions preflight: before proposing or building a custom system, feature, workflow, tool, integration, or automation, do a lightweight check for open-source projects, maintained libraries, existing Quiet Core bot plugins, or free platforms that already solve it well enough. Prefer those when adequate. Build custom only when existing options are unsuitable, too expensive, unmaintained, unsafe, non-compliant, or the user explicitly asks for custom. Avoid paid-service recommendations unless the user explicitly approves spend. Keep this to a brief preflight gate, not a broad research assignment.
 - Fix/triage answers need source, tests, current/shipped behavior, and dependency contract proof.
@@ -35,8 +35,8 @@ Skills own workflows; root owns hard policy and routing.
 - Before a PR verdict, build a small evidence map: changed surface, entry point, owner boundary, at least one caller and callee, sibling surfaces that share the invariant, existing tests, and current `main` behavior. If any cell is missing, say the gap instead of concluding.
 - One-sided fixes need sibling-surface proof, an explanation for why siblings are unaffected, or explicit follow-up work.
 - Changelog findings: see Docs / Changelog.
-- Public ClawSweeper comments prefer `https://docs.openclaw.ai/...` when a public docs page exists; structured evidence still cites repo files, lines, SHAs.
-- Findings need current source, shipped/current behavior, tests/CI evidence, and dependency contract proof when dependency-backed behavior is involved. Validation is judged against touched and sibling surfaces plus this file's commands; clear evidence matters for user-visible changes, with Telegram/Desktop proof for Telegram-visible behavior when feasible.
+- Public ClawSweeper comments prefer `https://github.com/liuda1999/Quiet-Core-bot/...` when a public docs page exists; structured evidence still cites repo files, lines, SHAs.
+- Findings need current source, shipped/current behavior, tests/CI evidence, and dependency contract proof when dependency-backed behavior is involved. Validation is judged against touched and sibling surfaces plus this file's commands; clear evidence matters for user-visible changes, with channel/desktop proof for channel-visible behavior when feasible.
 - Prefer findings for concrete behavior regressions, missing changed-surface proof, owner-boundary violations, security/API contract issues, or docs/config mismatches.
 - Do not file findings for repo policy preference when changed code follows the relevant scoped guide and no user-visible, runtime, security, or maintainer-risk impact is shown.
 
@@ -48,7 +48,7 @@ Skills own workflows; root owns hard policy and routing.
 
 ## Docs
 
-- Source docs: `docs/**`; publish repo: `openclaw/docs`; host: `https://docs.openclaw.ai`.
+- Source docs: `docs/**`; publish repo: `openclaw/docs`; host: `https://github.com/liuda1999/Quiet-Core-bot`.
 - Flow: source -> `docs-sync-publish.yml` -> mirror build -> R2 -> Worker router.
 - Docs AI: `openclaw/ask-molty`; see its `AGENTS.md`.
 
@@ -226,8 +226,8 @@ Skills own workflows; root owns hard policy and routing.
 ## Docs / Changelog
 
 - Use `$technical-documentation` for docs writing/review. Docs change with behavior/API.
-- Codex harness upgrade (`extensions/codex/package.json` `@openai/codex`): refresh `docs/plugins/codex-harness.md` model snapshot from the new harness `model/list`.
-- Docs final answers: include relevant full `https://docs.openclaw.ai/...` URL(s). If issue/PR work too, GitHub URL last.
+- Codex harness upgrade: refresh `docs/plugins/codex-harness.md` model snapshot from the new harness `model/list`; the current bundled harness version lives in `docs/plugins/codex-harness-reference.md`.
+- Docs final answers: include relevant full `https://github.com/liuda1999/Quiet-Core-bot/...` URL(s). If issue/PR work too, GitHub URL last.
 - `CHANGELOG.md`: release-only. Do not edit for normal PRs, direct `main` fixes, or `ship it`; release generation owns it. Do not ask contributors/agents for changelog edits.
 - User-facing `fix`/`feat`/`perf`: put release-note context in PR body, squash message, or direct commit: behavior, surface, issue/PR refs, credited human author/reporter.
 - Release generation: derive `CHANGELOG.md` from merged PRs + all direct `main` commits. Entries: active `### Changes`/`### Fixes`, single-line, thank credited humans; never thank bots/forbidden handles: `@openclaw`, `@clawsweeper`, `@codex`, `@steipete`.

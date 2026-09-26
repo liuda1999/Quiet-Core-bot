@@ -88,7 +88,8 @@ const MARKDOWN_CACHE_MAX_CHARS = 50_000;
 const INLINE_DATA_IMAGE_RE = /^data:image\/[a-z0-9.+-]+;base64,/i;
 const HOST_LOCAL_FILE_HREF_RE =
   /^(?:~\/|\/(?:Users|home|tmp|private\/tmp|var\/folders|private\/var\/folders)\/|\/[A-Za-z]:\/|[A-Za-z]:[\\/])/;
-const DOCS_ORIGIN = "https://docs.openclaw.ai";
+const DOCS_BASE_URL = "https://github.com/liuda1999/Quiet-Core-bot";
+const DOCS_ORIGIN = new URL(DOCS_BASE_URL).origin;
 const DOCS_ROOT_SEGMENTS = new Set([
   "agent-runtime-architecture",
   "announcements",
@@ -443,7 +444,7 @@ function normalizeDocsRootHref(href: string): string {
     return href;
   }
   try {
-    const url = new URL(trimmed, DOCS_ORIGIN);
+    const url = new URL(trimmed, DOCS_BASE_URL);
     if (url.origin !== DOCS_ORIGIN) {
       return href;
     }
@@ -457,7 +458,7 @@ function normalizeDocsRootHref(href: string): string {
       return href;
     }
     if (isDocsRootPath(normalizedPath, segments)) {
-      return url.href;
+      return `${DOCS_BASE_URL}${url.pathname}${url.search}${url.hash}`;
     }
     return href;
   } catch {
@@ -847,8 +848,8 @@ md.core.ruler.after("linkify", "linkify-cjk-trim", (state) => {
         continue;
       }
       // Only trim linkify-generated autolinks, not explicit markdown links
-      // like [Quiet Core bot中文](https://docs.openclaw.ai) where CJK in display
-      // text is intentional and href must not be rewritten.
+      // like [Quiet Core bot中文](https://github.com/liuda1999/Quiet-Core-bot)
+      // where CJK in display text is intentional and href must not be rewritten.
       if (token.markup !== "linkify") {
         continue;
       }

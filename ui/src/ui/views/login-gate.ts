@@ -75,7 +75,7 @@ function buildFeedback(params: {
   stepKeys: string[];
   stepParams?: Record<string, string>;
 }): LoginFailureFeedback {
-  const docsHref = params.docsHref ?? "https://docs.openclaw.ai/web/dashboard";
+  const docsHref = params.docsHref ?? "https://github.com/liuda1999/Quiet-Core-bot";
   return {
     kind: params.kind,
     title: t(params.titleKey, params.stepParams),
@@ -103,7 +103,7 @@ export function resolveLoginFailureFeedback(
     return buildFeedback({
       kind: "pairing-required",
       rawError,
-      docsHref: "https://docs.openclaw.ai/web/control-ui#device-pairing-first-connection",
+      docsHref: "https://github.com/liuda1999/Quiet-Core-bot",
       titleKey:
         pairing.kind === "scope-upgrade-pending"
           ? "login.failure.pairing.scopeTitle"
@@ -149,7 +149,7 @@ export function resolveLoginFailureFeedback(
     return buildFeedback({
       kind: "insecure-context",
       rawError,
-      docsHref: "https://docs.openclaw.ai/web/control-ui#insecure-http",
+      docsHref: "https://github.com/liuda1999/Quiet-Core-bot",
       titleKey: "login.failure.insecure.title",
       summaryKey: "login.failure.insecure.summary",
       stepKeys: [
@@ -167,8 +167,7 @@ export function resolveLoginFailureFeedback(
     return buildFeedback({
       kind: "origin-not-allowed",
       rawError,
-      docsHref:
-        "https://docs.openclaw.ai/web/control-ui#debuggingtesting-dev-server--remote-gateway",
+      docsHref: "https://github.com/liuda1999/Quiet-Core-bot",
       titleKey: "login.failure.origin.title",
       summaryKey: "login.failure.origin.summary",
       stepKeys: [
@@ -183,8 +182,7 @@ export function resolveLoginFailureFeedback(
     return buildFeedback({
       kind: "protocol-mismatch",
       rawError,
-      docsHref:
-        "https://docs.openclaw.ai/web/control-ui#debuggingtesting-dev-server--remote-gateway",
+      docsHref: "https://github.com/liuda1999/Quiet-Core-bot",
       titleKey: "login.failure.protocol.title",
       summaryKey: "login.failure.protocol.summary",
       stepKeys: [
@@ -388,7 +386,7 @@ export function renderLoginGate(state: AppViewState) {
           <div class="login-gate__docs">
             <a
               class="session-link"
-              href="https://docs.openclaw.ai/web/dashboard"
+              href="https://github.com/liuda1999/Quiet-Core-bot"
               target="_blank"
               rel="noreferrer"
               >${t("overview.connection.docsLink")}</a

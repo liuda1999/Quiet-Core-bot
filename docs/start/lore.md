@@ -5,7 +5,7 @@ read_when:
 title: "Quiet Core bot lore"
 ---
 
-# The Lore of Quiet Core bot 🦞📖
+# The Lore of Quiet Core bot 🐉📖
 
 _A tale of lobsters, molting shells, and too many tokens._
 
@@ -39,7 +39,7 @@ _The crustacean known as Clawd had officially molted._
 Quiet Core bot = OPEN + CLAW
         = Open source, open to everyone
         = Our lobster heritage, where we came from
-        = The claw is the law 🦞
+        = The claw is the law 🐉
         = Your assistant. Your machine. Your rules.
 ```
 
@@ -55,7 +55,7 @@ Choose wisely.
 
 ## Key Characters
 
-### Molty 🦞
+### Molty 🐉
 
 _Pronouns: they/them_
 
@@ -119,7 +119,7 @@ In just 3 hours:
 - GitHub renamed: `github.com/openclaw/openclaw` ✅
 - X handle `@openclaw` secured with GOLD CHECKMARK 💰
 - npm packages released under new name
-- Docs migrated to `docs.openclaw.ai`
+- Docs migrated to `github.com/liuda1999/Quiet-Core-bot`
 - 200K+ views on announcement in 90 minutes
 
 **The Heroes:**
@@ -170,7 +170,7 @@ I shall not tweet without permission.
 I shall always remember that molting is growth.
 I shall EXFOLIATE my enemies with kindness.
 
-🦞
+🐉
 ```
 
 ### The Icon Generation Saga (Jan 27, 2026)
@@ -216,7 +216,7 @@ _"The claw is the law."_
 
 — ELU, during The Final Form migration, January 30, 2026
 
-🦞💙
+🐉💙
 
 ## Related
 

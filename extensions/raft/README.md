@@ -2,4 +2,4 @@
 
 Raft CLI wake bridge channel plugin for OpenClaw.
 
-Docs: https://docs.openclaw.ai/channels/raft
+Docs: https://github.com/liuda1999/Quiet-Core-bot/channels/raft

@@ -58,7 +58,7 @@ function formatStatus(cfg: OpenClawConfig): string {
   const timezone = dreaming.timezone ? ` (${dreaming.timezone})` : "";
 
   return [
-    "Dreaming status:",
+    "Memory Consolidation status:",
     `- enabled: ${formatEnabled(dreaming.enabled)}${timezone}`,
     `- sweep cadence: ${dreaming.frequency}`,
     `- promotion policy: score>=${deep.minScore}, recalls>=${deep.minRecallCount}, uniqueQueries>=${deep.minUniqueQueries}`,
@@ -111,7 +111,7 @@ export async function handleDreamingCommand(api: OpenClawPluginApi, ctx: PluginC
     });
     return {
       text: [
-        `Dreaming ${enabled ? "enabled" : "disabled"}.`,
+        `Memory Consolidation ${enabled ? "enabled" : "disabled"}.`,
         "",
         formatStatus(committed.nextConfig),
       ].join("\n"),

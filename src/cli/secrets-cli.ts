@@ -69,7 +69,7 @@ export function registerSecretsCli(program: Command): void {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/gateway/security", "docs.openclaw.ai/gateway/security")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/gateway/security", "github.com/liuda1999/Quiet-Core-bot/gateway/security")}\n`,
     );
 
   addGatewayClientOptions(

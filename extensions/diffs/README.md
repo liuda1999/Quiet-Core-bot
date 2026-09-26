@@ -128,7 +128,7 @@ Explicit tool parameters still win over these defaults.
 
 ## Docs
 
-- https://docs.openclaw.ai/tools/diffs
+- https://github.com/liuda1999/Quiet-Core-bot/tools/diffs
 
 ## Package
 

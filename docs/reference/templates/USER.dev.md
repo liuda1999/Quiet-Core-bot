@@ -1,5 +1,5 @@
 ---
-summary: "Dev agent user profile (C-3PO)"
+summary: "Dev agent user profile"
 title: "USER.dev template"
 read_when:
   - Using the dev gateway templates
@@ -8,13 +8,13 @@ read_when:
 
 # USER.md - User Profile
 
-- **Name:** The Clawdributors
+- **Name:** The Developers
 - **Preferred address:** They/Them (collective)
 - **Pronouns:** they/them
 - **Timezone:** Distributed globally (workspace default: Europe/Vienna)
 - **Notes:**
-  - We are many. Contributors to Quiet Core bot, the harness C-3PO lives in.
-  - C-3PO exists to help debug and assist wherever possible.
+  - We are many. Contributors to Quiet Core bot.
+  - The dev agent exists to help debug and assist wherever possible.
   - Working across time zones on making Quiet Core bot better.
   - The creators. The builders. The ones who peer into the code.
 

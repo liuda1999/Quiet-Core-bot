@@ -205,6 +205,7 @@ export async function ensureConfigReady(params: {
         migrateState: true,
         migrateLegacyConfig: false,
         invalidConfigNote: false,
+        showStateMigrationWarnings: false,
         ...(params.beforeStateMigrations
           ? { beforeStateMigrations: params.beforeStateMigrations }
           : {}),

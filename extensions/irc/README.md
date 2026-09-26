@@ -10,4 +10,4 @@ openclaw plugins install @openclaw/irc
 
 ## Docs
 
-See `docs/channels/irc.md` in the OpenClaw repository, or the published docs at `https://docs.openclaw.ai/channels/irc`.
+See `docs/channels/irc.md` in the OpenClaw repository, or the published docs at `https://github.com/liuda1999/Quiet-Core-bot/channels/irc`.

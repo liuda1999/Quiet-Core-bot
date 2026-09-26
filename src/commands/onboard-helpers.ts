@@ -162,7 +162,7 @@ export function validateGatewayPasswordInput(value: unknown): string | undefined
 /** Prints the onboarding banner. */
 export function printWizardHeader(runtime: RuntimeEnv) {
   const bannerWidth = 54;
-  const icon = decorativeEmoji("🦞");
+  const icon = decorativeEmoji("🐉");
   const title = supportsDecorativeEmoji() && icon ? `${icon} OPENCLAW ${icon}` : "OPENCLAW";
   const pad = Math.max(0, bannerWidth - visibleWidth(title));
   const titleLine = `${" ".repeat(Math.floor(pad / 2))}${title}${" ".repeat(Math.ceil(pad / 2))}`;
@@ -220,8 +220,8 @@ export function formatControlUiSshHint(params: {
     "BYOH note: lan, tailnet, and custom bind are currently IPv4-only.",
     "If your host is IPv6-only, use an IPv4 sidecar or proxy in front of the Gateway.",
     "Docs:",
-    "https://docs.openclaw.ai/gateway/remote",
-    "https://docs.openclaw.ai/web/control-ui",
+    "https://github.com/liuda1999/Quiet-Core-bot/gateway/remote",
+    "https://github.com/liuda1999/Quiet-Core-bot/web/control-ui",
   ]
     .filter(Boolean)
     .join("\n");

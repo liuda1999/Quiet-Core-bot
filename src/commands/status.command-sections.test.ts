@@ -168,7 +168,7 @@ describe("status.command-sections", () => {
       "  Session selected: deepseek/deepseek-v4-flash",
       "  Reason: session override",
       "  Clear with: /model default",
-      "  Docs: https://docs.openclaw.ai/concepts/models#selection-source-and-fallback-behavior",
+      "  Docs: https://github.com/liuda1999/Quiet-Core-bot/concepts/models#selection-source-and-fallback-behavior",
     ]);
   });
 
@@ -237,8 +237,8 @@ describe("status.command-sections", () => {
         gatewayReachable: false,
       }),
     ).toEqual([
-      "FAQ: https://docs.openclaw.ai/faq",
-      "Troubleshooting: https://docs.openclaw.ai/troubleshooting",
+      "FAQ: https://github.com/liuda1999/Quiet-Core-bot/faq",
+      "Troubleshooting: https://github.com/liuda1999/Quiet-Core-bot/troubleshooting",
       "",
       "warn(upgrade ready)",
       "Next steps:",

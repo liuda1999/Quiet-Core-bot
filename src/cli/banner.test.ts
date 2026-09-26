@@ -49,7 +49,7 @@ describe("formatCliBannerLine", () => {
       richTty: false,
     });
 
-    expect(line).toBe("🦞 Quiet Core bot 2026.3.7 (abc1234)");
+    expect(line).toBe("🐉 Quiet Core bot 2026.3.7 (abc1234)");
   });
 
   it("uses default tagline when cli.banner.taglineMode is default", () => {
@@ -63,7 +63,7 @@ describe("formatCliBannerLine", () => {
       richTty: false,
     });
 
-    expect(line).toBe("🦞 Quiet Core bot 2026.3.7 (abc1234) — All your chats, one Quiet Core bot.");
+    expect(line).toBe("🐉 Quiet Core bot 2026.3.7 (abc1234) — All your chats, one Quiet Core bot.");
   });
 
   it("prefers explicit tagline mode over config", () => {
@@ -78,7 +78,7 @@ describe("formatCliBannerLine", () => {
       mode: "default",
     });
 
-    expect(line).toBe("🦞 Quiet Core bot 2026.3.7 (abc1234) — All your chats, one Quiet Core bot.");
+    expect(line).toBe("🐉 Quiet Core bot 2026.3.7 (abc1234) — All your chats, one Quiet Core bot.");
   });
 
   it("drops decorative emoji for generic Linux terminals", () => {
@@ -129,7 +129,7 @@ describe("emitCliBanner", () => {
       richTty: false,
     });
 
-    expect(writeSpy).toHaveBeenCalledWith("\n🦞 Quiet Core bot 2026.3.7 (abc1234)\n\n");
+    expect(writeSpy).toHaveBeenCalledWith("\n🐉 Quiet Core bot 2026.3.7 (abc1234)\n\n");
     expect(hasEmittedCliBanner()).toBe(true);
   });
 

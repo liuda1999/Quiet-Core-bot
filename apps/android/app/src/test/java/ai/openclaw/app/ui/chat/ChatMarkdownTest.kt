@@ -23,14 +23,14 @@ class ChatMarkdownTest {
 
   @Test
   fun markdownLinksUseLabelTextAndDestinationUrl() {
-    val annotated = buildChatInlineMarkdown("Open [docs](https://docs.openclaw.ai/help/testing) now")
+    val annotated = buildChatInlineMarkdown("Open [docs](https://github.com/liuda1999/Quiet-Core-bot/help/testing) now")
 
     assertEquals("Open docs now", annotated.text)
     val links = annotated.getLinkAnnotations(0, annotated.length)
     assertEquals(1, links.size)
     assertEquals(5, links.single().start)
     assertEquals(9, links.single().end)
-    assertEquals("https://docs.openclaw.ai/help/testing", (links.single().item as LinkAnnotation.Url).url)
+    assertEquals("https://github.com/liuda1999/Quiet-Core-bot/help/testing", (links.single().item as LinkAnnotation.Url).url)
   }
 
   @Test

@@ -20,8 +20,8 @@ Install `@openclaw/diffs` first, then install this language pack. The language p
 
 ## Docs
 
-- https://docs.openclaw.ai/tools/diffs
-- https://docs.openclaw.ai/plugins/reference/diffs-language-pack
+- https://github.com/liuda1999/Quiet-Core-bot/tools/diffs
+- https://github.com/liuda1999/Quiet-Core-bot/plugins/reference/diffs-language-pack
 
 ## Package
 

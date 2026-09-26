@@ -44,10 +44,10 @@ describe("classifyControlUiRequest", () => {
         expected: { kind: "not-control-ui" as const },
       },
       {
-        name: "returns not-found for legacy ui routes",
+        name: "redirects legacy ui routes to root",
         pathname: "/ui/settings",
         method: "GET",
-        expected: { kind: "not-found" as const },
+        expected: { kind: "redirect" as const, location: "/" },
       },
       {
         name: "falls through non-read requests",

@@ -1,5 +1,6 @@
 // Control UI view renders config form.render screen content.
 import { html, nothing } from "lit";
+import { t } from "../../i18n/index.ts";
 import { icons } from "../icons.ts";
 import { normalizeLowercaseStringOrEmpty } from "../string-coerce.ts";
 import type { ConfigUiHints } from "../types.ts";
@@ -329,6 +330,33 @@ function getSectionIcon(key: string) {
   return sectionIcons[key as keyof typeof sectionIcons] ?? sectionIcons.default;
 }
 
+function translateOrFallback(i18nKey: string, fallback: string): string {
+  const translated = t(i18nKey);
+  return translated === i18nKey ? fallback : translated;
+}
+
+function translateSectionLabel(key: string, fallback: string): string {
+  return translateOrFallback(`settingsLabels.sections.${key}`, fallback);
+}
+
+function translateSectionDescription(key: string, fallback: string): string {
+  return translateOrFallback(`settingsLabels.sectionDescriptions.${key}`, fallback);
+}
+
+function getSectionMeta(key: string, schema?: JsonSchema): { label: string; description: string } {
+  const meta = SECTION_META[key];
+  if (meta) {
+    return {
+      label: translateSectionLabel(key, meta.label),
+      description: translateSectionDescription(key, meta.description),
+    };
+  }
+  return {
+    label: translateSectionLabel(key, schema?.title ?? humanize(key)),
+    description: schema?.description ?? "",
+  };
+}
+
 function matchesSearch(params: {
   key: string;
   schema: JsonSchema;
@@ -341,12 +369,12 @@ function matchesSearch(params: {
   }
   const criteria = parseConfigSearchQuery(params.query);
   const q = criteria.text;
-  const meta = SECTION_META[params.key];
+  const meta = getSectionMeta(params.key, params.schema);
   const sectionMetaMatches =
     q &&
     (normalizeLowercaseStringOrEmpty(params.key).includes(q) ||
-      (meta?.label ? normalizeLowercaseStringOrEmpty(meta.label).includes(q) : false) ||
-      (meta?.description ? normalizeLowercaseStringOrEmpty(meta.description).includes(q) : false));
+      (meta.label ? normalizeLowercaseStringOrEmpty(meta.label).includes(q) : false) ||
+      (meta.description ? normalizeLowercaseStringOrEmpty(meta.description).includes(q) : false));
 
   if (sectionMetaMatches && criteria.tags.length === 0) {
     return true;
@@ -363,12 +391,14 @@ function matchesSearch(params: {
 
 export function renderConfigForm(props: ConfigFormProps) {
   if (!props.schema) {
-    return html` <div class="muted">Schema unavailable.</div> `;
+    return html` <div class="muted">${t("settingsLabels.configActions.schemaUnavailable")}</div> `;
   }
   const schema = props.schema;
   const value = props.value ?? {};
   if (schemaType(schema) !== "object" || !schema.properties) {
-    return html` <div class="callout danger">Unsupported schema. Use Raw.</div> `;
+    return html`
+      <div class="callout danger">${t("settingsLabels.configActions.schemaUnsupported")}</div>
+    `;
   }
   const unsupported = new Set(props.unsupportedPaths ?? []);
   const properties = schema.properties;
@@ -503,10 +533,7 @@ export function renderConfigForm(props: ConfigFormProps) {
             });
           })()
         : filteredEntries.map(([key, node]) => {
-            const meta = SECTION_META[key] ?? {
-              label: key.charAt(0).toUpperCase() + key.slice(1),
-              description: node.description ?? "",
-            };
+            const meta = getSectionMeta(key, node);
 
             return renderSectionCard({
               id: `config-section-${key}`,

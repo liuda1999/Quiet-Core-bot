@@ -30,7 +30,7 @@ export async function registerNodesCli(program: Command, argv: readonly string[]
             "Invoke a node command directly.",
           ],
           ["quiet-core-bot nodes camera snap --node <id>", "Capture a photo from a node camera."],
-        ])}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/nodes", "docs.openclaw.ai/cli/nodes")}\n`,
+        ])}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/nodes", "github.com/liuda1999/Quiet-Core-bot/cli/nodes")}\n`,
     );
 
   registerNodesStatusCommands(nodes);

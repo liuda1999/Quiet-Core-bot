@@ -118,6 +118,7 @@ export type AgentsProps = {
   onAgentSkillToggle: (agentId: string, skillName: string, enabled: boolean) => void;
   onAgentSkillsClear: (agentId: string) => void;
   onAgentSkillsDisableAll: (agentId: string) => void;
+  onAgentSkillsEnableAll: (agentId: string) => void;
   onSetDefault: (agentId: string) => void;
 };
 
@@ -302,6 +303,7 @@ export function renderAgents(props: AgentsProps) {
                     onToggle: props.onAgentSkillToggle,
                     onClear: props.onAgentSkillsClear,
                     onDisableAll: props.onAgentSkillsDisableAll,
+                    onEnableAll: props.onAgentSkillsEnableAll,
                     onConfigReload: props.onConfigReload,
                     onConfigSave: props.onConfigSave,
                   })

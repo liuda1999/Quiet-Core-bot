@@ -34,7 +34,7 @@ function overview(overrides: Partial<CrestodianOverview["tools"]> = {}): Crestod
       reachable: false,
     },
     references: {
-      docsUrl: "https://docs.openclaw.ai",
+      docsUrl: "https://github.com/liuda1999/Quiet-Core-bot",
       sourceUrl: "https://github.com/openclaw/openclaw",
     },
   };
@@ -100,7 +100,7 @@ describe("Crestodian assistant", () => {
         defaultModel: "openai/gpt-5.5",
         references: {
           docsPath: "/tmp/openclaw/docs",
-          docsUrl: "https://docs.openclaw.ai",
+          docsUrl: "https://github.com/liuda1999/Quiet-Core-bot",
           sourcePath: "/tmp/openclaw",
           sourceUrl: "https://github.com/openclaw/openclaw",
         },

@@ -203,9 +203,9 @@ describe("renderQuickSettings", () => {
     browserInput?.dispatchEvent(new Event("change"));
     expect(onBrowserEnabledToggle).toHaveBeenCalledWith(true);
 
-    expectButtonByText(container, "full").click();
+    expectButtonByText(container, "Full").click();
     expect(onToolProfileChange).toHaveBeenCalledWith("full");
-    expect([...expectButtonByText(container, "messaging").classList]).toEqual([
+    expect([...expectButtonByText(container, "Messaging").classList]).toEqual([
       "qs-segmented__btn",
       "qs-segmented__btn--compact",
       "qs-segmented__btn--active",

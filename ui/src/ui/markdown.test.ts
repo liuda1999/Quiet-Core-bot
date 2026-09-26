@@ -266,9 +266,11 @@ describe("toSanitizedMarkdownHtml", () => {
     });
 
     it("does NOT rewrite explicit markdown links with CJK display text", () => {
-      const html = toSanitizedMarkdownHtml("[Quiet Core bot中文](https://docs.openclaw.ai)");
+      const html = toSanitizedMarkdownHtml(
+        "[Quiet Core bot中文](https://github.com/liuda1999/Quiet-Core-bot)",
+      );
       expect(html).toBe(
-        '<p><a href="https://docs.openclaw.ai" rel="noreferrer noopener" target="_blank">Quiet Core bot中文</a></p>\n',
+        '<p><a href="https://github.com/liuda1999/Quiet-Core-bot" rel="noreferrer noopener" target="_blank">Quiet Core bot中文</a></p>\n',
       );
     });
 
@@ -603,12 +605,12 @@ PY
       );
     });
 
-    it("rewrites docs-root links to the public docs host", () => {
+    it("rewrites docs-root links to the project repository host", () => {
       const html = toSanitizedMarkdownHtml(
         "[workspace](/concepts/agent-workspace) [hooks](/automation/hooks#session-memory) [telegram](/channels/telegram?tab=setup) [shortlink](/telegram) [openai](/openai) [images](/images) [groups](/groups) [camera](/nodes/camera) [macOS](/platforms/macos) [cliSessions](/cli/sessions) [toolSkills](/tools/skills) [pluginDocs](/plugins/reference/diffs) [prose](/prose) [refactor](/refactor/ingress-core)",
       );
       expect(html).toBe(
-        '<p><a href="https://docs.openclaw.ai/concepts/agent-workspace" rel="noreferrer noopener" target="_blank">workspace</a> <a href="https://docs.openclaw.ai/automation/hooks#session-memory" rel="noreferrer noopener" target="_blank">hooks</a> <a href="https://docs.openclaw.ai/channels/telegram?tab=setup" rel="noreferrer noopener" target="_blank">telegram</a> <a href="https://docs.openclaw.ai/telegram" rel="noreferrer noopener" target="_blank">shortlink</a> <a href="https://docs.openclaw.ai/openai" rel="noreferrer noopener" target="_blank">openai</a> <a href="https://docs.openclaw.ai/images" rel="noreferrer noopener" target="_blank">images</a> <a href="https://docs.openclaw.ai/groups" rel="noreferrer noopener" target="_blank">groups</a> <a href="https://docs.openclaw.ai/nodes/camera" rel="noreferrer noopener" target="_blank">camera</a> <a href="https://docs.openclaw.ai/platforms/macos" rel="noreferrer noopener" target="_blank">macOS</a> <a href="https://docs.openclaw.ai/cli/sessions" rel="noreferrer noopener" target="_blank">cliSessions</a> <a href="https://docs.openclaw.ai/tools/skills" rel="noreferrer noopener" target="_blank">toolSkills</a> <a href="https://docs.openclaw.ai/plugins/reference/diffs" rel="noreferrer noopener" target="_blank">pluginDocs</a> <a href="https://docs.openclaw.ai/prose" rel="noreferrer noopener" target="_blank">prose</a> <a href="https://docs.openclaw.ai/refactor/ingress-core" rel="noreferrer noopener" target="_blank">refactor</a></p>\n',
+        '<p><a href="https://github.com/liuda1999/Quiet-Core-bot/concepts/agent-workspace" rel="noreferrer noopener" target="_blank">workspace</a> <a href="https://github.com/liuda1999/Quiet-Core-bot/automation/hooks#session-memory" rel="noreferrer noopener" target="_blank">hooks</a> <a href="https://github.com/liuda1999/Quiet-Core-bot/channels/telegram?tab=setup" rel="noreferrer noopener" target="_blank">telegram</a> <a href="https://github.com/liuda1999/Quiet-Core-bot/telegram" rel="noreferrer noopener" target="_blank">shortlink</a> <a href="https://github.com/liuda1999/Quiet-Core-bot/openai" rel="noreferrer noopener" target="_blank">openai</a> <a href="https://github.com/liuda1999/Quiet-Core-bot/images" rel="noreferrer noopener" target="_blank">images</a> <a href="https://github.com/liuda1999/Quiet-Core-bot/groups" rel="noreferrer noopener" target="_blank">groups</a> <a href="https://github.com/liuda1999/Quiet-Core-bot/nodes/camera" rel="noreferrer noopener" target="_blank">camera</a> <a href="https://github.com/liuda1999/Quiet-Core-bot/platforms/macos" rel="noreferrer noopener" target="_blank">macOS</a> <a href="https://github.com/liuda1999/Quiet-Core-bot/cli/sessions" rel="noreferrer noopener" target="_blank">cliSessions</a> <a href="https://github.com/liuda1999/Quiet-Core-bot/tools/skills" rel="noreferrer noopener" target="_blank">toolSkills</a> <a href="https://github.com/liuda1999/Quiet-Core-bot/plugins/reference/diffs" rel="noreferrer noopener" target="_blank">pluginDocs</a> <a href="https://github.com/liuda1999/Quiet-Core-bot/prose" rel="noreferrer noopener" target="_blank">prose</a> <a href="https://github.com/liuda1999/Quiet-Core-bot/refactor/ingress-core" rel="noreferrer noopener" target="_blank">refactor</a></p>\n',
       );
     });
 

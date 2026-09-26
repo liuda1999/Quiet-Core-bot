@@ -511,7 +511,7 @@ export function registerGatewayCli(program: Command) {
             ["quiet-core-bot gateway discover", "Find local and wide-area gateway beacons."],
             ["quiet-core-bot gateway stability", "Show recent stability diagnostics."],
             ["quiet-core-bot gateway call health", "Call a gateway RPC method directly."],
-          ])}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/gateway", "docs.openclaw.ai/cli/gateway")}\n`,
+          ])}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/gateway", "github.com/liuda1999/Quiet-Core-bot/cli/gateway")}\n`,
       ),
   );
 

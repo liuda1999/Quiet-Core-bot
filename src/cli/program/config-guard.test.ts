@@ -176,6 +176,7 @@ describe("ensureConfigReady", () => {
         migrateState: true,
         migrateLegacyConfig: false,
         invalidConfigNote: false,
+        showStateMigrationWarnings: false,
       });
     }
   });
@@ -190,6 +191,7 @@ describe("ensureConfigReady", () => {
       migrateState: true,
       migrateLegacyConfig: false,
       invalidConfigNote: false,
+      showStateMigrationWarnings: false,
     });
   });
 
@@ -203,6 +205,7 @@ describe("ensureConfigReady", () => {
       migrateState: true,
       migrateLegacyConfig: false,
       invalidConfigNote: false,
+      showStateMigrationWarnings: false,
     });
   });
 
@@ -226,6 +229,7 @@ describe("ensureConfigReady", () => {
       migrateState: true,
       migrateLegacyConfig: false,
       invalidConfigNote: false,
+      showStateMigrationWarnings: false,
     });
   });
 
@@ -242,6 +246,7 @@ describe("ensureConfigReady", () => {
       migrateState: true,
       migrateLegacyConfig: false,
       invalidConfigNote: false,
+      showStateMigrationWarnings: false,
     });
   });
 

@@ -1,9 +1,9 @@
 import SwiftUI
 
 struct OpenClawDocsScreen: View {
-    private let docsURL = URL(string: "https://docs.openclaw.ai")!
-    private let gatewayURL = URL(string: "https://docs.openclaw.ai/gateway")!
-    private let pairingURL = URL(string: "https://docs.openclaw.ai/channels/pairing")!
+    private let docsURL = URL(string: "https://github.com/liuda1999/Quiet-Core-bot")!
+    private let gatewayURL = URL(string: "https://github.com/liuda1999/Quiet-Core-bot/gateway")!
+    private let pairingURL = URL(string: "https://github.com/liuda1999/Quiet-Core-bot/channels/pairing")!
     let headerLeadingAction: OpenClawSidebarHeaderAction?
     let gatewayAction: (() -> Void)?
 

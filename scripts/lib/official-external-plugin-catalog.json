@@ -124,7 +124,7 @@
             ],
             "placeholder": "fc-...",
             "signupUrl": "https://www.firecrawl.dev/",
-            "docsUrl": "https://docs.openclaw.ai/tools/firecrawl",
+            "docsUrl": "https://github.com/liuda1999/Quiet-Core-bot/tools/firecrawl",
             "credentialPath": "plugins.entries.firecrawl.config.webSearch.apiKey",
             "autoDetectOrder": 60
           }
@@ -223,7 +223,7 @@
             ],
             "placeholder": "http://localhost:8080",
             "signupUrl": "https://docs.searxng.org/",
-            "docsUrl": "https://docs.openclaw.ai/tools/searxng-search",
+            "docsUrl": "https://github.com/liuda1999/Quiet-Core-bot/tools/searxng-search",
             "credentialPath": "plugins.entries.searxng.config.webSearch.baseUrl",
             "autoDetectOrder": 200
           }

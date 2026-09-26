@@ -35,7 +35,7 @@ With no query, `quiet-core-bot docs` prints the docs entrypoint URL plus a sampl
 
 ## How it works
 
-`quiet-core-bot docs` calls `https://docs.openclaw.ai/api/search` and renders the JSON results. The search call uses a fixed 30 second timeout.
+`quiet-core-bot docs` calls `https://github.com/liuda1999/Quiet-Core-bot/api/search` and renders the JSON results. The search call uses a fixed 30 second timeout.
 
 ## Output
 
@@ -46,8 +46,8 @@ In non-rich output (piped, `--no-color`, scripts), the same data renders as Mark
 ```markdown
 # Docs search: <query>
 
-- [Title](https://docs.openclaw.ai/...) - snippet
-- [Title](https://docs.openclaw.ai/...) - snippet
+- [Title](https://github.com/liuda1999/Quiet-Core-bot/...) - snippet
+- [Title](https://github.com/liuda1999/Quiet-Core-bot/...) - snippet
 ```
 
 ## Exit codes
@@ -60,4 +60,4 @@ In non-rich output (piped, `--no-color`, scripts), the same data renders as Mark
 ## Related
 
 - [CLI reference](/cli)
-- [Live docs](https://docs.openclaw.ai)
+- [Live docs](https://github.com/liuda1999/Quiet-Core-bot)

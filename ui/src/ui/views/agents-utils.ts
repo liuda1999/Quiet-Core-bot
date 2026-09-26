@@ -5,6 +5,7 @@ import {
   normalizeToolName,
   resolveToolProfilePolicy,
 } from "../../../../src/agents/tool-policy-shared.js";
+import { t } from "../../i18n/index.ts";
 import { DEFAULT_ASSISTANT_AVATAR } from "../assistant-identity.ts";
 import { buildQualifiedChatModelValue } from "../chat-model-ref.ts";
 import { controlUiPublicAssetPath } from "../public-assets.ts";
@@ -36,96 +37,134 @@ export type AgentToolSection = {
   tools: AgentToolEntry[];
 };
 
-export const FALLBACK_TOOL_SECTIONS: AgentToolSection[] = [
-  {
-    id: "fs",
-    label: "Files",
-    tools: [
-      { id: "read", label: "read", description: "Read file contents" },
-      { id: "write", label: "write", description: "Create or overwrite files" },
-      { id: "edit", label: "edit", description: "Make precise edits" },
-      { id: "apply_patch", label: "apply_patch", description: "Patch files (OpenAI)" },
-    ],
-  },
-  {
-    id: "runtime",
-    label: "Runtime",
-    tools: [
-      { id: "exec", label: "exec", description: "Run shell commands" },
-      { id: "process", label: "process", description: "Manage background processes" },
-    ],
-  },
-  {
-    id: "web",
-    label: "Web",
-    tools: [
-      { id: "web_search", label: "web_search", description: "Search the web" },
-      { id: "web_fetch", label: "web_fetch", description: "Fetch web content" },
-    ],
-  },
-  {
-    id: "memory",
-    label: "Memory",
-    tools: [
-      { id: "memory_search", label: "memory_search", description: "Semantic search" },
-      { id: "memory_get", label: "memory_get", description: "Read memory files" },
-    ],
-  },
-  {
-    id: "sessions",
-    label: "Sessions",
-    tools: [
-      { id: "sessions_list", label: "sessions_list", description: "List sessions" },
-      { id: "sessions_history", label: "sessions_history", description: "Session history" },
-      { id: "sessions_send", label: "sessions_send", description: "Send to session" },
-      { id: "sessions_spawn", label: "sessions_spawn", description: "Spawn sub-agent" },
-      { id: "session_status", label: "session_status", description: "Session status" },
-    ],
-  },
-  {
-    id: "ui",
-    label: "UI",
-    tools: [
-      { id: "browser", label: "browser", description: "Control web browser" },
-      { id: "canvas", label: "canvas", description: "Control canvases" },
-    ],
-  },
-  {
-    id: "messaging",
-    label: "Messaging",
-    tools: [{ id: "message", label: "message", description: "Send messages" }],
-  },
-  {
-    id: "automation",
-    label: "Automation",
-    tools: [
-      { id: "cron", label: "cron", description: "Schedule tasks" },
-      { id: "gateway", label: "gateway", description: "Gateway control" },
-    ],
-  },
-  {
-    id: "nodes",
-    label: "Nodes",
-    tools: [{ id: "nodes", label: "nodes", description: "Nodes + devices" }],
-  },
-  {
-    id: "agents",
-    label: "Agents",
-    tools: [{ id: "agents_list", label: "agents_list", description: "List agents" }],
-  },
-  {
-    id: "media",
-    label: "Media",
-    tools: [{ id: "image", label: "image", description: "Image understanding" }],
-  },
-];
+export function buildFallbackToolSections(): AgentToolSection[] {
+  return [
+    {
+      id: "fs",
+      label: t("agents.fallbackSections.files"),
+      tools: [
+        { id: "read", label: "read", description: t("agents.fallbackTools.read") },
+        { id: "write", label: "write", description: t("agents.fallbackTools.write") },
+        { id: "edit", label: "edit", description: t("agents.fallbackTools.edit") },
+        {
+          id: "apply_patch",
+          label: "apply_patch",
+          description: t("agents.fallbackTools.applyPatch"),
+        },
+      ],
+    },
+    {
+      id: "runtime",
+      label: t("agents.fallbackSections.runtime"),
+      tools: [
+        { id: "exec", label: "exec", description: t("agents.fallbackTools.exec") },
+        { id: "process", label: "process", description: t("agents.fallbackTools.process") },
+      ],
+    },
+    {
+      id: "web",
+      label: t("agents.fallbackSections.web"),
+      tools: [
+        { id: "web_search", label: "web_search", description: t("agents.fallbackTools.webSearch") },
+        { id: "web_fetch", label: "web_fetch", description: t("agents.fallbackTools.webFetch") },
+      ],
+    },
+    {
+      id: "memory",
+      label: t("agents.fallbackSections.memory"),
+      tools: [
+        {
+          id: "memory_search",
+          label: "memory_search",
+          description: t("agents.fallbackTools.memorySearch"),
+        },
+        { id: "memory_get", label: "memory_get", description: t("agents.fallbackTools.memoryGet") },
+      ],
+    },
+    {
+      id: "sessions",
+      label: t("agents.fallbackSections.sessions"),
+      tools: [
+        {
+          id: "sessions_list",
+          label: "sessions_list",
+          description: t("agents.fallbackTools.sessionsList"),
+        },
+        {
+          id: "sessions_history",
+          label: "sessions_history",
+          description: t("agents.fallbackTools.sessionsHistory"),
+        },
+        {
+          id: "sessions_send",
+          label: "sessions_send",
+          description: t("agents.fallbackTools.sessionsSend"),
+        },
+        {
+          id: "sessions_spawn",
+          label: "sessions_spawn",
+          description: t("agents.fallbackTools.sessionsSpawn"),
+        },
+        {
+          id: "session_status",
+          label: "session_status",
+          description: t("agents.fallbackTools.sessionStatus"),
+        },
+      ],
+    },
+    {
+      id: "ui",
+      label: t("agents.fallbackSections.ui"),
+      tools: [
+        { id: "browser", label: "browser", description: t("agents.fallbackTools.browser") },
+        { id: "canvas", label: "canvas", description: t("agents.fallbackTools.canvas") },
+      ],
+    },
+    {
+      id: "messaging",
+      label: t("agents.fallbackSections.messaging"),
+      tools: [{ id: "message", label: "message", description: t("agents.fallbackTools.message") }],
+    },
+    {
+      id: "automation",
+      label: t("agents.fallbackSections.automation"),
+      tools: [
+        { id: "cron", label: "cron", description: t("agents.fallbackTools.cron") },
+        { id: "gateway", label: "gateway", description: t("agents.fallbackTools.gateway") },
+      ],
+    },
+    {
+      id: "nodes",
+      label: t("agents.fallbackSections.nodes"),
+      tools: [{ id: "nodes", label: "nodes", description: t("agents.fallbackTools.nodes") }],
+    },
+    {
+      id: "agents",
+      label: t("agents.fallbackSections.agents"),
+      tools: [
+        {
+          id: "agents_list",
+          label: "agents_list",
+          description: t("agents.fallbackTools.agentsList"),
+        },
+      ],
+    },
+    {
+      id: "media",
+      label: t("agents.fallbackSections.media"),
+      tools: [{ id: "image", label: "image", description: t("agents.fallbackTools.image") }],
+    },
+  ];
+}
 
-export const PROFILE_OPTIONS = [
-  { id: "minimal", label: "Minimal" },
-  { id: "coding", label: "Coding" },
-  { id: "messaging", label: "Messaging" },
-  { id: "full", label: "Full" },
-] as const;
+export function buildProfileOptions(): readonly ToolCatalogProfile[] {
+  return [
+    { id: "minimal", label: t("agents.profileOptions.minimal") },
+    { id: "coding", label: t("agents.profileOptions.coding") },
+    { id: "messaging", label: t("agents.profileOptions.messaging") },
+    { id: "full", label: t("agents.profileOptions.full") },
+  ];
+}
 
 export function resolveToolSections(
   toolsCatalogResult: ToolsCatalogResult | null,
@@ -147,16 +186,16 @@ export function resolveToolSections(
       })),
     }));
   }
-  return FALLBACK_TOOL_SECTIONS;
+  return buildFallbackToolSections();
 }
 
 export function resolveToolProfileOptions(
   toolsCatalogResult: ToolsCatalogResult | null,
-): readonly ToolCatalogProfile[] | typeof PROFILE_OPTIONS {
+): readonly ToolCatalogProfile[] {
   if (toolsCatalogResult?.profiles?.length) {
     return toolsCatalogResult.profiles;
   }
-  return PROFILE_OPTIONS;
+  return buildProfileOptions();
 }
 
 type ToolPolicy = {
@@ -299,7 +338,7 @@ function resolveAgentTextAvatar(
 }
 
 export function agentBadgeText(agentId: string, defaultId: string | null) {
-  return defaultId && agentId === defaultId ? "default" : null;
+  return defaultId && agentId === defaultId ? t("agents.defaultBadge") : null;
 }
 
 export function formatBytes(bytes?: number) {
@@ -379,7 +418,9 @@ export function buildAgentContext(
     runtime,
     identityName,
     identityAvatar,
-    skillsLabel: skillFilter ? `${skillCount} selected` : "all skills",
+    skillsLabel: skillFilter
+      ? t("agents.overview.skillsSelected", { count: `${skillCount}` })
+      : t("agents.overview.allSkills"),
     isDefault: Boolean(defaultId && agent.id === defaultId),
   };
 }
@@ -644,7 +685,10 @@ export function buildModelOptions(
   }
 
   if (current && !seen.has(normalizeLowercaseStringOrEmpty(current))) {
-    options.unshift({ value: current, label: `Current (${current})` });
+    options.unshift({
+      value: current,
+      label: t("agents.overview.currentModelOption", { model: current }),
+    });
   }
 
   if (options.length === 0) {

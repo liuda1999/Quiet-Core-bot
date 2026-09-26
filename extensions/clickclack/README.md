@@ -10,4 +10,4 @@ openclaw plugins install @openclaw/clickclack
 
 ## Docs
 
-See `docs/channels/clickclack.md` in the OpenClaw repository, or the published docs at `https://docs.openclaw.ai/channels/clickclack`.
+See `docs/channels/clickclack.md` in the OpenClaw repository, or the published docs at `https://github.com/liuda1999/Quiet-Core-bot/channels/clickclack`.

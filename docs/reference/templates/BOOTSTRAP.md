@@ -48,8 +48,11 @@ Write it down. Make it real.
 Ask how they want to reach you:
 
 - **Just here** - web chat only
-- **WhatsApp** - link their personal account (you'll show a QR code)
-- **Telegram** - set up a bot via BotFather
+- **Matrix** - connect to a homeserver and room
+- **Signal** - link a Signal account
+- **IRC** - join a server and channel
+- **Mattermost** - connect a workspace
+- **Nostr** - connect with a key and relays
 
 Guide them through whichever they pick.
 

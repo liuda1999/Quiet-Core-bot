@@ -25,6 +25,17 @@ import type {
 } from "../types.ts";
 import { resolveAgentRuntimeLabel } from "./agents-utils.ts";
 
+/**
+ * The gateway refuses to delete the default agent's main session
+ * (`Cannot delete the main session`). Keep it out of selection so the UI never
+ * offers an action the backend will reject.
+ */
+const MAIN_SESSION_KEY = "agent:main:main";
+
+export function isMainSessionKey(key: string): boolean {
+  return key.trim() === MAIN_SESSION_KEY;
+}
+
 export type SessionsProps = {
   loading: boolean;
   result: SessionsListResult | null;
@@ -497,6 +508,7 @@ export function renderSessions(props: SessionsProps) {
   const totalPages = Math.max(1, Math.ceil(totalRows / props.pageSize));
   const page = Math.min(props.page, totalPages - 1);
   const paginated = paginateRows(sorted, page, props.pageSize);
+  const selectablePageRows = paginated.filter((row) => !isMainSessionKey(row.key));
   const emptyBecauseFiltered =
     rawRows.length === 0 ? hasActiveFilters(props) : filtered.length === 0;
   const activeTooltip = t("sessionsView.activeTooltip", { count: props.activeMinutes.trim() });
@@ -697,19 +709,22 @@ export function renderSessions(props: SessionsProps) {
             <thead>
               <tr>
                 <th class="data-table-checkbox-col">
-                  ${paginated.length > 0
+                  ${selectablePageRows.length > 0
                     ? html`<input
                         type="checkbox"
-                        .checked=${paginated.length > 0 &&
-                        paginated.every((r) => props.selectedKeys.has(r.key))}
-                        .indeterminate=${paginated.some((r) => props.selectedKeys.has(r.key)) &&
-                        !paginated.every((r) => props.selectedKeys.has(r.key))}
+                        .checked=${selectablePageRows.length > 0 &&
+                        selectablePageRows.every((r) => props.selectedKeys.has(r.key))}
+                        .indeterminate=${selectablePageRows.some((r) =>
+                          props.selectedKeys.has(r.key),
+                        ) && !selectablePageRows.every((r) => props.selectedKeys.has(r.key))}
                         @change=${() => {
-                          const allSelected = paginated.every((r) => props.selectedKeys.has(r.key));
+                          const allSelected = selectablePageRows.every((r) =>
+                            props.selectedKeys.has(r.key),
+                          );
                           if (allSelected) {
-                            props.onDeselectPage(paginated.map((r) => r.key));
+                            props.onDeselectPage(selectablePageRows.map((r) => r.key));
                           } else {
-                            props.onSelectPage(paginated.map((r) => r.key));
+                            props.onSelectPage(selectablePageRows.map((r) => r.key));
                           }
                         }}
                         aria-label=${t("sessionsView.selectAllOnPage")}
@@ -894,6 +909,8 @@ function renderRows(row: GatewaySessionRow, props: SessionsProps) {
         <input
           type="checkbox"
           .checked=${props.selectedKeys.has(row.key)}
+          ?disabled=${isMainSessionKey(row.key)}
+          title=${isMainSessionKey(row.key) ? t("sessionsView.mainSessionUndeletable") : nothing}
           @change=${() => props.onToggleSelect(row.key)}
           aria-label=${t("sessionsView.selectSession")}
         />

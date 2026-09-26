@@ -19,7 +19,7 @@ code.
 ## Prerequisites
 
 - Node.js **>= 22**
-- [Quiet Core bot](https://docs.openclaw.ai/install) must be installed (`openclaw` CLI available).
+- [Quiet Core bot](https://github.com/liuda1999/Quiet-Core-bot/install) must be installed (`openclaw` CLI available).
 - A Zalo account on a mobile device to scan the login QR code.
 
 ## Install with onboard (recommended)

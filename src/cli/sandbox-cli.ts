@@ -72,7 +72,7 @@ export function registerSandboxCli(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/sandbox", "docs.openclaw.ai/cli/sandbox")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/sandbox", "github.com/liuda1999/Quiet-Core-bot/cli/sandbox")}\n`,
     )
     .action(() => {
       sandbox.help({ error: true });

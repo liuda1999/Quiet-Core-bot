@@ -87,6 +87,25 @@ function buildDiaryNavigation(entries: DiaryEntry[]): DiaryEntryNav[] {
   return reversed.map((entry, page) => Object.assign({}, entry, { page }));
 }
 
+// Derive the narration shown in the scene bubble from the most recent diary
+// entry. Returns null when no usable text is available so callers can fall
+// back to the rotating placeholder phrases.
+export function resolveDreamingOfText(dreamDiaryContent: string | null | undefined): string | null {
+  if (typeof dreamDiaryContent !== "string" || dreamDiaryContent.trim().length === 0) {
+    return null;
+  }
+  const entries = parseDiaryEntries(dreamDiaryContent);
+  if (entries.length === 0) {
+    return null;
+  }
+  const latest = buildDiaryNavigation(entries)[0];
+  const flat = flattenDiaryBody(latest.body).join(" ").replace(/\s+/g, " ").trim();
+  if (flat.length === 0) {
+    return null;
+  }
+  return flat.length > 240 ? `${flat.slice(0, 239).trimEnd()}…` : flat;
+}
+
 type DreamingPhaseInfo = {
   enabled: boolean;
   cron: string;
@@ -223,9 +242,14 @@ export function setDreamDiarySubTab(tab: DreamDiarySubTab): void {
 let diaryPage = 0;
 let diaryEntryCount = 0;
 
-/** Navigate to a specific diary page. Triggers a re-render via Lit's reactive cycle. */
-export function setDiaryPage(page: number): void {
-  diaryPage = Math.max(0, Math.min(page, Math.max(0, diaryEntryCount - 1)));
+/**
+ * Navigate to a specific diary page. Triggers a re-render via Lit's reactive cycle.
+ * Pass the active sub-tab's entry `total` so clamping is correct even when the
+ * shared `diaryEntryCount` was last written by a different sub-tab renderer.
+ */
+export function setDiaryPage(page: number, total: number = diaryEntryCount): void {
+  const bounded = Math.max(0, total);
+  diaryPage = Math.max(0, Math.min(page, Math.max(0, bounded - 1)));
 }
 
 function currentDreamPhrase(): string {
@@ -258,45 +282,65 @@ const STARS: {
   { top: 88, left: 18, size: 2, delay: 2.3, hue: "neutral" },
 ];
 
-const sleepingLobster = html`
+const sleepingDragon = html`
   <svg viewBox="0 0 120 120" fill="none">
     <defs>
-      <linearGradient id="dream-lob-g" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#ff4d4d" />
-        <stop offset="100%" stop-color="#991b1b" />
+      <linearGradient id="dream-drag-g" x1="8%" y1="0%" x2="92%" y2="100%">
+        <stop offset="0%" stop-color="#ff5a5a" />
+        <stop offset="55%" stop-color="#d92626" />
+        <stop offset="100%" stop-color="#8f1414" />
       </linearGradient>
+      <linearGradient id="dream-drag-fire" x1="0%" y1="100%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#6d28d9" />
+        <stop offset="55%" stop-color="#a855f7" />
+        <stop offset="100%" stop-color="#e9d5ff" />
+      </linearGradient>
+      <radialGradient id="dream-drag-glow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#c084fc" stop-opacity="0.8" />
+        <stop offset="100%" stop-color="#7c3aed" stop-opacity="0" />
+      </radialGradient>
     </defs>
     <path
-      d="M60 10C30 10 15 35 15 55C15 75 30 95 45 100L45 110L55 110L55 100C55 100 60 102 65 100L65 110L75 110L75 100C90 95 105 75 105 55C105 35 90 10 60 10Z"
-      fill="url(#dream-lob-g)"
-    />
-    <path d="M20 45C5 40 0 50 5 60C10 70 20 65 25 55C28 48 25 45 20 45Z" fill="url(#dream-lob-g)" />
-    <path
-      d="M100 45C115 40 120 50 115 60C110 70 100 65 95 55C92 48 95 45 100 45Z"
-      fill="url(#dream-lob-g)"
-    />
-    <path d="M45 15Q38 8 35 14" stroke="#ff4d4d" stroke-width="3" stroke-linecap="round" />
-    <path d="M75 15Q82 8 85 14" stroke="#ff4d4d" stroke-width="3" stroke-linecap="round" />
-    <path
-      d="M39 36Q45 32 51 36"
-      stroke="#050810"
-      stroke-width="2.5"
-      stroke-linecap="round"
-      fill="none"
+      d="M44 30C32 15 16 7 3 9C13 18 21 27 27 38C33 34 39 32 44 30Z"
+      fill="url(#dream-drag-g)"
     />
     <path
-      d="M69 36Q75 32 81 36"
-      stroke="#050810"
-      stroke-width="2.5"
-      stroke-linecap="round"
-      fill="none"
+      d="M60 22C55 10 43 2 28 2C37 10 43 19 47 30C51 27 55 24 60 22Z"
+      fill="url(#dream-drag-g)"
     />
+    <path
+      d="M36 32C44 18 60 12 74 17C88 22 98 34 108 48C114 56 111 66 101 67C95 68 89 64 85 59C81 72 71 83 56 89C42 95 28 89 25 75C21 60 27 44 36 32Z"
+      fill="url(#dream-drag-g)"
+    />
+    <path d="M85 61C81 73 71 84 55 90C68 92 80 86 88 73C92 67 90 62 85 61Z" fill="#6f0f0f" />
+    <path d="M99 62L109 57L104 66Z" fill="#fff5f5" />
+    <path d="M90 63L96 60L94 67Z" fill="#fff5f5" />
+    <circle cx="71" cy="42" r="13" fill="url(#dream-drag-glow)" />
+    <path
+      d="M71 33C66 24 73 18 79 9C77 20 84 25 81 34Z"
+      fill="url(#dream-drag-fire)"
+      opacity="0.85"
+    />
+    <path
+      d="M78 39C81 30 89 26 97 19C90 30 93 37 88 43Z"
+      fill="url(#dream-drag-fire)"
+      opacity="0.7"
+    />
+    <path
+      d="M64 36C58 29 58 20 56 12C65 19 69 24 71 32Z"
+      fill="url(#dream-drag-fire)"
+      opacity="0.6"
+    />
+    <circle cx="71" cy="42" r="7" fill="#170a2b" />
+    <circle cx="71" cy="42" r="3.6" fill="url(#dream-drag-fire)" />
+    <circle cx="69.4" cy="40.4" r="1.2" fill="#faf5ff" />
   </svg>
 `;
 
 export function renderDreaming(props: DreamingProps) {
   const idle = !props.active;
-  const dreamText = props.dreamingOf ?? currentDreamPhrase();
+  const dreamText =
+    props.dreamingOf ?? resolveDreamingOfText(props.dreamDiaryContent) ?? currentDreamPhrase();
 
   return html`
     <div class="dreams-page">
@@ -445,7 +489,7 @@ function renderScene(props: DreamingProps, idle: boolean, dreamText: string) {
         : nothing}
 
       <div class="dreams__glow"></div>
-      <div class="dreams__lobster">${sleepingLobster}</div>
+      <div class="dreams__dragon">${sleepingDragon}</div>
       <span class="dreams__z">z</span>
       <span class="dreams__z">z</span>
       <span class="dreams__z">Z</span>
@@ -658,6 +702,19 @@ function closeWikiPreview(requestUpdate?: () => void): void {
   wikiPreviewTruncated = false;
   wikiPreviewError = null;
   requestUpdate?.();
+}
+
+/**
+ * Clear per-agent transient view state (expanded cards, wiki preview, diary page).
+ * Call this when the selected agent changes so one agent's UI state does not leak
+ * into another's, since this module holds that state outside of Lit's reactivity.
+ */
+export function resetDreamingViewState(): void {
+  expandedInsightCards.clear();
+  expandedPalaceCards.clear();
+  diaryPage = 0;
+  diaryEntryCount = 0;
+  closeWikiPreview();
 }
 
 function renderWikiPreviewOverlay(props: DreamingProps) {
@@ -1056,7 +1113,7 @@ function renderDiaryImportsSection(props: DreamingProps) {
               ? "dreams-diary__day-chip--active"
               : ""}"
             @click=${() => {
-              setDiaryPage(index);
+              setDiaryPage(index, clusters.length);
               props.onRequestUpdate?.();
             }}
           >
@@ -1248,7 +1305,7 @@ function renderMemoryPalaceSection(props: DreamingProps) {
               ? "dreams-diary__day-chip--active"
               : ""}"
             @click=${() => {
-              setDiaryPage(index);
+              setDiaryPage(index, clusters.length);
               props.onRequestUpdate?.();
             }}
           >
@@ -1419,7 +1476,7 @@ function renderDreamDiaryEntries(props: DreamingProps) {
               ? "dreams-diary__day-chip--active"
               : ""}"
             @click=${() => {
-              setDiaryPage(e.page);
+              setDiaryPage(e.page, reversed.length);
               props.onRequestUpdate?.();
             }}
           >

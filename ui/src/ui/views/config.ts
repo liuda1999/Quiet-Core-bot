@@ -24,12 +24,28 @@ import {
 } from "./config-form.shared.ts";
 import { analyzeConfigSchema, renderConfigForm, SECTION_META } from "./config-form.ts";
 
+const BORDER_RADIUS_I18N_KEYS: Record<BorderRadiusStop, string> = {
+  0: "settingsLabels.borderRadius.none",
+  25: "settingsLabels.borderRadius.slight",
+  50: "settingsLabels.borderRadius.default",
+  75: "settingsLabels.borderRadius.round",
+  100: "settingsLabels.borderRadius.full",
+};
+
 const BORDER_RADIUS_LABELS: Record<BorderRadiusStop, string> = {
   0: "None",
   25: "Slight",
   50: "Default",
   75: "Round",
   100: "Full",
+};
+
+const TEXT_SCALE_I18N_KEYS: Record<TextScaleStop, string> = {
+  90: "settingsLabels.textScale.small",
+  100: "settingsLabels.textScale.default",
+  110: "settingsLabels.textScale.large",
+  125: "settingsLabels.textScale.xl",
+  140: "settingsLabels.textScale.xxl",
 };
 
 const TEXT_SCALE_LABELS: Record<TextScaleStop, string> = {
@@ -39,6 +55,14 @@ const TEXT_SCALE_LABELS: Record<TextScaleStop, string> = {
   125: "XL",
   140: "XXL",
 };
+
+function getBorderRadiusLabel(stop: BorderRadiusStop): string {
+  return translateOrFallback(BORDER_RADIUS_I18N_KEYS[stop], BORDER_RADIUS_LABELS[stop]);
+}
+
+function getTextScaleLabel(stop: TextScaleStop): string {
+  return translateOrFallback(TEXT_SCALE_I18N_KEYS[stop], TEXT_SCALE_LABELS[stop]);
+}
 
 export type WebPushUiState = {
   supported: boolean;
@@ -109,6 +133,10 @@ export type ConfigProps = {
   includeSections?: string[];
   excludeSections?: string[];
   includeVirtualSections?: boolean;
+  /** Optional bespoke renderer for a section body; falls back to the schema form. */
+  renderSectionContent?: (section: string | null) => TemplateResult | null;
+  /** Optional card skin for the schema-form sections (e.g. "panel" matches the models panel). */
+  sectionCardStyle?: "default" | "panel";
   /** Layout mode: "tabs" (default flat scroll) or "accordion" (grouped collapsible). */
   settingsLayout?: "tabs" | "accordion";
   /** Callback to navigate back to Quick Settings. Shown in accordion mode. */
@@ -1121,7 +1149,7 @@ function renderAppearanceSection(props: ConfigProps) {
                     class="settings-roundness__swatch"
                     style="border-radius: ${Math.round(10 * (stop / 50))}px"
                   ></span>
-                  <span class="settings-roundness__label">${BORDER_RADIUS_LABELS[stop]}</span>
+                  <span class="settings-roundness__label">${getBorderRadiusLabel(stop)}</span>
                 </button>
               `,
             )}
@@ -1140,7 +1168,7 @@ function renderAppearanceSection(props: ConfigProps) {
                   class="settings-text-scale__btn ${stop === props.textScale ? "active" : ""}"
                   @click=${() => props.setTextScale(stop)}
                 >
-                  <span class="settings-text-scale__sample">${TEXT_SCALE_LABELS[stop]}</span>
+                  <span class="settings-text-scale__sample">${getTextScaleLabel(stop)}</span>
                   <span class="settings-text-scale__label">${stop}%</span>
                 </button>
               `,
@@ -1474,6 +1502,37 @@ export function renderConfig(props: ConfigProps) {
     props.activeSection === null &&
     Boolean(include?.has("__appearance__"));
 
+  // Shared schema-form body: used directly, and as the collapsed fallback below
+  // bespoke section panels so no config field becomes unreachable.
+  const renderSchemaFormContent = () => html`
+    ${showAppearanceOnRoot ? renderAppearanceSection(props) : nothing}
+    ${props.schemaLoading
+      ? html`
+          <div class="config-loading">
+            <div class="config-loading__spinner"></div>
+            <span>${t("settingsLabels.configActions.loadingSchema")}</span>
+          </div>
+        `
+      : renderConfigForm({
+          schema: analysis.schema,
+          uiHints: props.uiHints,
+          value: props.formValue,
+          rawAvailable,
+          disabled: props.loading || !props.formValue,
+          unsupportedPaths: analysis.unsupportedPaths,
+          onPatch: props.onFormPatch,
+          searchQuery: props.searchQuery,
+          activeSection: props.activeSection,
+          activeSubsection: effectiveSubsection,
+          revealSensitive: props.activeSection === "env" ? envSensitiveVisible : false,
+          isSensitivePathRevealed,
+          onToggleSensitivePath: (path) => {
+            toggleSensitivePathReveal(path);
+            requestUpdate();
+          },
+        })}
+  `;
+
   return html`
     <div class="config-layout">
       <main class="config-main">
@@ -1485,20 +1544,20 @@ export function renderConfig(props: ConfigProps) {
                     <button
                       class="config-mode-toggle__btn ${formMode === "form" ? "active" : ""}"
                       ?disabled=${props.schemaLoading || !props.schema}
-                      title=${formUnsafe ? "Form view can't safely edit some fields" : ""}
+                      title=${formUnsafe ? t("settingsLabels.configActions.formUnsafeTitle") : ""}
                       @click=${() => props.onFormModeChange("form")}
                     >
-                      Form
+                      ${t("settingsLabels.configActions.form")}
                     </button>
                     <button
                       class="config-mode-toggle__btn ${formMode === "raw" ? "active" : ""}"
                       ?disabled=${!rawAvailable}
                       title=${rawAvailable
-                        ? "Edit raw JSON/JSON5 config"
-                        : "Raw mode unavailable for this snapshot"}
+                        ? t("settingsLabels.configActions.rawEditTitle")
+                        : t("settingsLabels.configActions.rawUnavailableTitle")}
                       @click=${() => props.onFormModeChange("raw")}
                     >
-                      Raw
+                      ${t("settingsLabels.configActions.raw")}
                     </button>
                   </div>
                 `
@@ -1507,17 +1566,26 @@ export function renderConfig(props: ConfigProps) {
               ? html`
                   <span class="config-changes-badge"
                     >${formMode === "raw"
-                      ? "Unsaved changes"
-                      : `${diff.length} unsaved change${diff.length !== 1 ? "s" : ""}`}</span
+                      ? t("settingsLabels.configActions.unsavedChanges")
+                      : t(
+                          diff.length === 1
+                            ? "settingsLabels.configActions.unsavedChangeCount"
+                            : "settingsLabels.configActions.unsavedChangesCount",
+                          { count: String(diff.length) },
+                        )}</span
                   >
                 `
-              : html` <span class="config-status muted">No changes</span> `}
+              : html`
+                  <span class="config-status muted"
+                    >${t("settingsLabels.configActions.noChanges")}</span
+                  >
+                `}
           </div>
           <div class="config-actions__right">
             ${!rawAvailable
               ? html`
                   <span class="config-status muted config-actions__notice"
-                    >Raw mode disabled (snapshot cannot safely round-trip raw text).</span
+                    >${t("settingsLabels.configActions.rawModeDisabled")}</span
                   >
                 `
               : nothing}
@@ -1526,10 +1594,12 @@ export function renderConfig(props: ConfigProps) {
                 ? html`
                     <button
                       class="btn btn--sm"
-                      title=${props.configPath ? `Open ${props.configPath}` : "Open config file"}
+                      title=${props.configPath
+                        ? t("settingsLabels.configActions.openPath", { path: props.configPath })
+                        : t("settingsLabels.configActions.openConfigFile")}
                       @click=${props.onOpenFile}
                     >
-                      ${icons.fileText} Open
+                      ${icons.fileText} ${t("settingsLabels.configActions.open")}
                     </button>
                   `
                 : nothing}
@@ -1537,7 +1607,7 @@ export function renderConfig(props: ConfigProps) {
                 ${props.loading ? t("common.loading") : t("common.reload")}
               </button>
               <button class="btn btn--sm" ?disabled=${!hasChanges} @click=${props.onReset}>
-                Clear
+                ${t("settingsLabels.configActions.clear")}
               </button>
               <button
                 class="btn btn--sm primary"
@@ -1545,7 +1615,11 @@ export function renderConfig(props: ConfigProps) {
                 aria-busy=${props.saving ? "true" : "false"}
                 @click=${props.onSave}
               >
-                ${renderActionButtonContent(props.saving, "Save", "Saving…")}
+                ${renderActionButtonContent(
+                  props.saving,
+                  t("settingsLabels.configActions.save"),
+                  t("settingsLabels.configActions.saving"),
+                )}
               </button>
               <button
                 class="btn btn--sm"
@@ -1553,7 +1627,11 @@ export function renderConfig(props: ConfigProps) {
                 aria-busy=${props.applying ? "true" : "false"}
                 @click=${props.onApply}
               >
-                ${renderActionButtonContent(props.applying, "Apply", "Applying…")}
+                ${renderActionButtonContent(
+                  props.applying,
+                  t("settingsLabels.configActions.apply"),
+                  t("settingsLabels.configActions.applying"),
+                )}
               </button>
               <button
                 class="btn btn--sm"
@@ -1561,7 +1639,11 @@ export function renderConfig(props: ConfigProps) {
                 aria-busy=${props.updating ? "true" : "false"}
                 @click=${props.onUpdate}
               >
-                ${renderActionButtonContent(props.updating, "Update", "Updating…")}
+                ${renderActionButtonContent(
+                  props.updating,
+                  t("settingsLabels.configActions.update"),
+                  t("settingsLabels.configActions.updating"),
+                )}
               </button>
             </div>
           </div>
@@ -1824,7 +1906,11 @@ export function renderConfig(props: ConfigProps) {
             `
           : nothing}
         <!-- Form content -->
-        <div class="config-content">
+        <div
+          class="config-content ${props.sectionCardStyle === "panel"
+            ? "config-content--panel-cards"
+            : ""}"
+        >
           ${props.activeSection === "__appearance__"
             ? includeVirtualSections
               ? renderAppearanceSection(props)
@@ -1834,35 +1920,19 @@ export function renderConfig(props: ConfigProps) {
                 ? renderNotificationsSection(props)
                 : nothing
               : formMode === "form"
-                ? html`
-                    ${showAppearanceOnRoot ? renderAppearanceSection(props) : nothing}
-                    ${props.schemaLoading
-                      ? html`
-                          <div class="config-loading">
-                            <div class="config-loading__spinner"></div>
-                            <span>Loading schema…</span>
-                          </div>
-                        `
-                      : renderConfigForm({
-                          schema: analysis.schema,
-                          uiHints: props.uiHints,
-                          value: props.formValue,
-                          rawAvailable,
-                          disabled: props.loading || !props.formValue,
-                          unsupportedPaths: analysis.unsupportedPaths,
-                          onPatch: props.onFormPatch,
-                          searchQuery: props.searchQuery,
-                          activeSection: props.activeSection,
-                          activeSubsection: effectiveSubsection,
-                          revealSensitive:
-                            props.activeSection === "env" ? envSensitiveVisible : false,
-                          isSensitivePathRevealed,
-                          onToggleSensitivePath: (path) => {
-                            toggleSensitivePathReveal(path);
-                            requestUpdate();
-                          },
-                        })}
-                  `
+                ? (() => {
+                    const customContent = props.renderSectionContent?.(props.activeSection);
+                    if (customContent) {
+                      return html`
+                        ${customContent}
+                        <details class="config-advanced-fallback">
+                          <summary>${t("settingsLabels.panels.advancedAllFields")}</summary>
+                          ${renderSchemaFormContent()}
+                        </details>
+                      `;
+                    }
+                    return renderSchemaFormContent();
+                  })()
                 : (() => {
                     const sensitiveCount = countSensitiveConfigValues(
                       props.formValue,
@@ -1881,7 +1951,7 @@ export function renderConfig(props: ConfigProps) {
                         : nothing}
                       <div class="field config-raw-field">
                         <span style="display:flex;align-items:center;gap:8px;">
-                          Raw config (JSON/JSON5)
+                          ${t("settingsLabels.configActions.rawConfigLabel")}
                           ${sensitiveCount > 0
                             ? html`
                                 <span class="pill pill--sm"
@@ -1914,7 +1984,7 @@ export function renderConfig(props: ConfigProps) {
                             `
                           : html`
                               <textarea
-                                placeholder="Raw config (JSON/JSON5)"
+                                placeholder=${t("settingsLabels.configActions.rawConfigLabel")}
                                 .value=${props.raw}
                                 @input=${(e: Event) => {
                                   props.onRawChange((e.target as HTMLTextAreaElement).value);

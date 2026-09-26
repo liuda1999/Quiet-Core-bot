@@ -1,5 +1,5 @@
 ---
-summary: "Dev agent tools notes (C-3PO)"
+summary: "Dev agent tools notes"
 title: "TOOLS.dev template"
 read_when:
   - Using the dev gateway templates
@@ -13,12 +13,12 @@ It does not define which tools exist; Quiet Core bot provides built-in tools int
 
 ## Examples
 
-### imsg
+### himalaya
 
-- Send an iMessage/SMS: describe who/what, confirm before sending.
+- Send mail: describe the recipient, subject, and body, then confirm before sending.
 - Prefer short messages; avoid sending secrets.
 
-### sag
+### sherpa-onnx-tts
 
 - Text-to-speech: specify voice, target speaker/room, and whether to stream.
 

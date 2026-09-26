@@ -195,7 +195,7 @@ struct RootTabsSourceGuardTests {
         #expect(source.contains("headerLeadingAction: self.phoneDetailBackAction"))
         #expect(source.contains("gatewayAction: { self.openRootDestination(.gateway) }"))
         #expect(!source.contains("Label(\"Docs\", systemImage: \"book\")"))
-        #expect(!source.contains("https://docs.openclaw.ai"))
+        #expect(!source.contains("https://github.com/liuda1999/Quiet-Core-bot"))
     }
 
     @Test func `root shell preview matrix covers phone and I pad states`() throws {

@@ -276,6 +276,25 @@ export async function readScheduledTaskCommand(
         workingDirectory = line.slice("cd /d ".length).trim().replace(/^"|"$/g, "");
         continue;
       }
+      // Generated cmd launchers wrap the entry command in a guard block such as
+      // `if not exist <entry> (` ... `)`. Skip cmd control-flow/`echo` lines so
+      // the parsed command line is the real executable invocation; otherwise the
+      // service audit reads the guard line and reports a missing gateway subcommand.
+      if (
+        lower.startsWith("if ") ||
+        lower.startsWith("echo ") ||
+        lower.startsWith("echo(") ||
+        lower.startsWith("exit ") ||
+        lower.startsWith("exit/") ||
+        lower.startsWith("goto ") ||
+        lower.startsWith("for ") ||
+        lower.startsWith("else") ||
+        lower.startsWith(":") ||
+        lower === "(" ||
+        lower === ")"
+      ) {
+        continue;
+      }
       commandLine = line;
       break;
     }
@@ -412,6 +431,20 @@ function buildTaskScript({
       }
       lines.push(renderCmdSetAssignment(key, value));
     }
+  }
+  // Guard against an empty build output directory. tsdown-build.mjs cleans dist/
+  // before compiling, so an interrupted build leaves dist/index.js missing and
+  // the service would otherwise fail with an opaque node error. Surface a clear
+  // message and exit non-zero so operators/build automation can react.
+  const entryArg = programArguments.find((arg) => /[\\/](?:dist|build)[\\/]index\.m?js$/.test(arg));
+  if (entryArg) {
+    lines.push(
+      `if not exist ${quoteCmdScriptArg(entryArg)} (`,
+      `  echo [quiet-core-bot] build artifact missing: ${entryArg} 1>&2`,
+      `  echo [quiet-core-bot] run "pnpm run build" before starting the gateway. 1>&2`,
+      `  exit /b 1`,
+      `)`,
+    );
   }
   const command = programArguments.map(quoteCmdScriptArg).join(" ");
   lines.push(command);

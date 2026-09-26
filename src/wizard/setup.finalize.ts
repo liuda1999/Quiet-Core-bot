@@ -367,8 +367,8 @@ export async function finalizeSetupWizard(
         await prompter.note(
           [
             t("common.docs"),
-            "https://docs.openclaw.ai/gateway/health",
-            "https://docs.openclaw.ai/gateway/troubleshooting",
+            "https://github.com/liuda1999/Quiet-Core-bot/gateway/health",
+            "https://github.com/liuda1999/Quiet-Core-bot/gateway/troubleshooting",
           ].join("\n"),
           t("wizard.finalize.healthCheckHelp"),
         );
@@ -384,8 +384,8 @@ export async function finalizeSetupWizard(
       await prompter.note(
         [
           t("common.docs"),
-          "https://docs.openclaw.ai/gateway/health",
-          "https://docs.openclaw.ai/gateway/troubleshooting",
+          "https://github.com/liuda1999/Quiet-Core-bot/gateway/health",
+          "https://github.com/liuda1999/Quiet-Core-bot/gateway/troubleshooting",
         ].join("\n"),
         t("wizard.finalize.healthCheckHelp"),
       );
@@ -673,7 +673,7 @@ export async function finalizeSetupWizard(
           `  ${formatCliCommand("quiet-core-bot configure --section web")}`,
           "",
           t("wizard.finalize.webSearchGetKey", {
-            url: entry?.signupUrl ?? "https://docs.openclaw.ai/tools/web",
+            url: entry?.signupUrl ?? "https://github.com/liuda1999/Quiet-Core-bot/tools/web",
           }),
           t("wizard.finalize.webDocs"),
         ].join("\n"),

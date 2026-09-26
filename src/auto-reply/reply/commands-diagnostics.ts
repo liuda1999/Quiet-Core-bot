@@ -21,7 +21,7 @@ import {
 import type { CommandHandler, HandleCommandsParams } from "./commands-types.js";
 
 const DIAGNOSTICS_COMMAND = "/diagnostics";
-const DIAGNOSTICS_DOCS_URL = "https://docs.openclaw.ai/gateway/diagnostics";
+const DIAGNOSTICS_DOCS_URL = "https://github.com/liuda1999/Quiet-Core-bot/gateway/diagnostics";
 const GATEWAY_DIAGNOSTICS_EXPORT_JSON_LABEL = "quiet-core-bot gateway diagnostics export --json";
 const DIAGNOSTICS_EXEC_SCOPE_KEY = "chat:diagnostics";
 const DIAGNOSTICS_PRIVATE_ROUTE_UNAVAILABLE =

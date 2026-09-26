@@ -99,7 +99,8 @@ export const en = {
       websocketUrl: "Gateway WebSocket URL",
     },
     gatewayTailscale: {
-      docsNote: "Docs:\nhttps://docs.openclaw.ai/gateway/tailscale\nhttps://docs.openclaw.ai/web",
+      docsNote:
+        "Docs:\nhttps://github.com/liuda1999/Quiet-Core-bot/gateway/tailscale\nhttps://github.com/liuda1999/Quiet-Core-bot/web",
       funnel: "Funnel",
       funnelHint: "Public HTTPS via Tailscale Funnel (internet)",
       missingBinNote:
@@ -318,7 +319,7 @@ export const en = {
       containerBrewManual:
         "Use a custom image with Homebrew preinstalled or install those dependencies manually.",
       containerInstallsTitle: "Container skill installs",
-      docsLine: "Docs: https://docs.openclaw.ai/skills",
+      docsLine: "Docs: https://github.com/liuda1999/Quiet-Core-bot/skills",
       enterEnv: "Enter {env}",
       homebrewCommand: "Show Homebrew install command?",
       homebrewInstallTitle: "Homebrew install",
@@ -918,7 +919,7 @@ export const en = {
       codexNativeSearchOnly: "Used only for Codex-capable models.",
       codexNativeSearchTitle: "Codex native search",
       controlUiTitle: "Control UI",
-      controlUiDocs: "Docs: https://docs.openclaw.ai/web/control-ui",
+      controlUiDocs: "Docs: https://github.com/liuda1999/Quiet-Core-bot/web/control-ui",
       dashboardCopyPaste:
         "Copy/paste this URL in a browser on this machine to control Quiet Core bot.",
       dashboardLinkWithToken: "Dashboard link (with token): {url}",
@@ -983,7 +984,7 @@ export const en = {
       rerunInstallDaemon: "Or rerun with: {command}",
       restart: "Restart",
       securityReminder:
-        "Running agents on your computer is risky — harden your setup: https://docs.openclaw.ai/security",
+        "Running agents on your computer is risky — harden your setup: https://github.com/liuda1999/Quiet-Core-bot/security",
       secretRefAuthFailed: "Could not resolve {field} SecretRef for setup auth.",
       skipHealthNextTime: "Or skip this probe next time: {command}",
       skipControlUi: "Skipping Control UI/TUI prompts.",
@@ -995,7 +996,7 @@ export const en = {
       systemdUnavailable:
         "Systemd user services are unavailable. Skipping lingering checks and service install.",
       terminalHatch: "Hatch in Terminal (recommended)",
-      webDocs: "Docs: https://docs.openclaw.ai/tools/web",
+      webDocs: "Docs: https://github.com/liuda1999/Quiet-Core-bot/tools/web",
       webSearchAutoDetected: "Web search is available via {provider} (auto-detected).",
       webSearchDisabled: "Web search ({provider}) is configured but disabled.",
       webSearchEnabled:
@@ -1022,7 +1023,7 @@ export const en = {
       whatNow: 'What now: https://openclaw.ai/showcase ("What People Are Building").',
       whatNowTitle: "What now",
       workspaceBackupTitle: "Workspace backup",
-      workspaceDocs: "Docs: https://docs.openclaw.ai/concepts/agent-workspace",
+      workspaceDocs: "Docs: https://github.com/liuda1999/Quiet-Core-bot/concepts/agent-workspace",
       workspaceReady: "Your workspace is ready.",
     },
     gatewayNotes: {

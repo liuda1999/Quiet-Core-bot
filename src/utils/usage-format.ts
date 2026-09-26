@@ -7,9 +7,12 @@ import { normalizeOptionalString } from "@openclaw/normalization-core/string-coe
 import { resolveDefaultAgentDir } from "../agents/agent-scope-config.js";
 import { modelKey, normalizeModelRef, normalizeProviderId } from "../agents/model-selection.js";
 import type { NormalizedUsage } from "../agents/usage.js";
-import type { ModelProviderConfig } from "../config/types.models.js";
+import type { ModelDefinitionConfig, ModelProviderConfig } from "../config/types.models.js";
 import type { OpenClawConfig } from "../config/types.openclaw.js";
-import { getGatewayModelPricingCacheFingerprint } from "../gateway/model-pricing-cache-state.js";
+import {
+  getGatewayModelPricingCacheFingerprint,
+  getGatewayModelPricingCacheMeta,
+} from "../gateway/model-pricing-cache-state.js";
 import { getCachedGatewayModelPricing } from "../gateway/model-pricing-cache.js";
 import { tryReadJsonSync } from "../infra/json-files.js";
 export { formatTokenCount } from "./token-format.js";
@@ -563,18 +566,80 @@ function serializeCostIndex(
 }
 
 /**
+ * Returns a shallow-normalized copy of model providers where every model that
+ * lacks an explicit `cost` object receives a zero-cost placeholder.
+ *
+ * `buildProviderCostIndexBundle` skips models without a `cost` field, so the
+ * fingerprint produced from a raw config (no `cost`) differs from the same
+ * config after normalization added zero-cost defaults. That mismatch makes the
+ * usage cost cache believe pricing changed on every request and forces an
+ * endless rebuild loop. Normalizing here keeps the fingerprint stable whether
+ * the caller passes a raw or already-normalized config.
+ */
+function withStableConfiguredCosts(
+  providers: Record<string, ModelProviderConfig> | undefined,
+): Record<string, ModelProviderConfig> | undefined {
+  if (!providers) {
+    return providers;
+  }
+  let changed = false;
+  const next: Record<string, ModelProviderConfig> = {};
+  for (const [key, provider] of Object.entries(providers)) {
+    const models = provider?.models;
+    if (!models || models.length === 0) {
+      next[key] = provider;
+      continue;
+    }
+    const needsCost = models.some((m) => !m || typeof m !== "object" || !("cost" in m));
+    if (!needsCost) {
+      next[key] = provider;
+      continue;
+    }
+    changed = true;
+    next[key] = {
+      ...provider,
+      models: models.map((model) => {
+        const candidate = model as unknown as Record<string, unknown> | null | undefined;
+        if (candidate && typeof candidate === "object" && "cost" in candidate) {
+          return model;
+        }
+        return {
+          ...(candidate ?? {}),
+          cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+        } as unknown as ModelDefinitionConfig;
+      }),
+    };
+  }
+  return changed ? next : providers;
+}
+
+/**
  * Fingerprints all model-pricing sources that can affect usage cost estimates.
  * Consumers cache this value to know when resolved cost entries need recomputation.
+ *
+ * `gatewayPricing` is intentionally excluded from the fingerprint. The gateway
+ * pricing cache is in-memory only, starts empty on every process restart, and
+ * refreshes periodically. Including it would invalidate every cached usage entry
+ * on each restart or pricing refresh, producing a perpetual "refreshing / stale"
+ * indicator. Token counts are stable; costs can be resolved at query time using
+ * the current gateway pricing, so cache freshness does not depend on it.
  */
 export function resolveModelCostConfigFingerprint(config?: OpenClawConfig): string {
+  const stableProviders = withStableConfiguredCosts(config?.models?.providers);
+  // Only include the gateway pricing cache when it is populated. The in-memory
+  // cache is empty immediately after a gateway restart; including an empty
+  // value would invalidate every durable cache entry on every restart and
+  // force a full rescan. Existing entries built while the cache was populated
+  // are matched by stripping the gatewayPricing field during comparison.
+  const gatewayPricingNonEmpty = getGatewayModelPricingCacheMeta().size > 0;
   return stableCostFingerprintValue({
     configuredRaw: serializeCostIndex(
-      getProviderCostIndex(config?.models?.providers, { allowPluginNormalization: false }),
+      getProviderCostIndex(stableProviders, { allowPluginNormalization: false }),
     ),
-    configuredNormalized: serializeCostIndex(getProviderCostIndex(config?.models?.providers)),
+    configuredNormalized: serializeCostIndex(getProviderCostIndex(stableProviders)),
     modelsJsonRaw: serializeCostIndex(loadModelsJsonCostIndex({ allowPluginNormalization: false })),
     modelsJsonNormalized: serializeCostIndex(loadModelsJsonCostIndex()),
-    gatewayPricing: getGatewayModelPricingCacheFingerprint(),
+    ...(gatewayPricingNonEmpty ? { gatewayPricing: getGatewayModelPricingCacheFingerprint() } : {}),
   });
 }
 

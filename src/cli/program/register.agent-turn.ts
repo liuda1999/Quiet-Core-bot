@@ -92,7 +92,7 @@ ${formatHelpExamples([
   ],
 ])}
 
-${theme.muted("Docs:")} ${formatDocsLink("/cli/agent", "docs.openclaw.ai/cli/agent")}`,
+${theme.muted("Docs:")} ${formatDocsLink("/cli/agent", "github.com/liuda1999/Quiet-Core-bot/cli/agent")}`,
     )
     .action(async (opts): Promise<void> => {
       const verboseLevel =

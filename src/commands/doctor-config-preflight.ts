@@ -38,8 +38,11 @@ async function maybeMigrateLegacyConfig(): Promise<string[]> {
     return changes;
   }
 
-  const targetDir = path.join(home, ".openclaw");
-  const targetPath = path.join(targetDir, "openclaw.json");
+  // Migrate to the current brand state directory. The openclaw→quiet-core-bot
+  // directory migration is handled separately by scripts/migrate-state-dir.ts;
+  // here we only seed a missing config from the oldest clawdbot legacy path.
+  const targetDir = path.join(home, ".quiet-core-bot");
+  const targetPath = path.join(targetDir, "quiet-core-bot.json");
   try {
     await fs.access(targetPath);
     return changes;
@@ -107,11 +110,14 @@ export function shouldSkipPluginValidationForDoctorConfigPreflight(
   return isTruthyEnvValue(env.OPENCLAW_UPDATE_IN_PROGRESS);
 }
 
-function noteStateMigrationResult(result: { changes: string[]; warnings: string[] }): void {
+function noteStateMigrationResult(
+  result: { changes: string[]; warnings: string[] },
+  options: { showWarnings?: boolean } = {},
+): void {
   if (result.changes.length > 0) {
     note(result.changes.map((entry) => `- ${entry}`).join("\n"), "Doctor changes");
   }
-  if (result.warnings.length > 0) {
+  if (options.showWarnings !== false && result.warnings.length > 0) {
     note(result.warnings.map((entry) => `- ${entry}`).join("\n"), "Doctor warnings");
   }
 }
@@ -130,6 +136,7 @@ export async function runDoctorConfigPreflight(
     recoverCorruptTargetStore?: boolean;
     invalidConfigNote?: string | false;
     beforeStateMigrations?: (snapshot?: ConfigFileSnapshot) => Promise<boolean>;
+    showStateMigrationWarnings?: boolean;
   } = {},
 ): Promise<DoctorConfigPreflightResult> {
   const stateMigrations =
@@ -143,7 +150,7 @@ export async function runDoctorConfigPreflight(
   if (stateMigrations && stateMigrationsAllowed) {
     const { autoMigrateLegacyStateDir } = stateMigrations;
     const stateDirResult = await autoMigrateLegacyStateDir({ env: process.env });
-    noteStateMigrationResult(stateDirResult);
+    noteStateMigrationResult(stateDirResult, { showWarnings: options.showStateMigrationWarnings });
   }
 
   if (options.migrateLegacyConfig !== false) {
@@ -202,16 +209,19 @@ export async function runDoctorConfigPreflight(
     if (snapshot.valid) {
       const { repairLegacyCronStoreWithoutPrompt } = await loadDoctorCron();
       const cronResult = await repairLegacyCronStoreWithoutPrompt({ cfg: baseConfig });
-      noteStateMigrationResult(cronResult);
+      noteStateMigrationResult(cronResult, { showWarnings: options.showStateMigrationWarnings });
       noteStateMigrationResult(
         await autoMigrateLegacyState({
           cfg: baseConfig,
           env: process.env,
           recoverCorruptTargetStore: options.recoverCorruptTargetStore,
         }),
+        { showWarnings: options.showStateMigrationWarnings },
       );
     } else {
-      noteStateMigrationResult(await autoMigrateLegacyTaskStateSidecars({ env: process.env }));
+      noteStateMigrationResult(await autoMigrateLegacyTaskStateSidecars({ env: process.env }), {
+        showWarnings: options.showStateMigrationWarnings,
+      });
     }
   }
 

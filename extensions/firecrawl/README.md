@@ -9,4 +9,4 @@ openclaw plugins install @openclaw/firecrawl-plugin
 openclaw gateway restart
 ```
 
-See <https://docs.openclaw.ai/tools/firecrawl> for setup and configuration.
+See <https://github.com/liuda1999/Quiet-Core-bot/tools/firecrawl> for setup and configuration.

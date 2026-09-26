@@ -39,7 +39,7 @@ mkdir -p ~/.clawdock && curl -sL https://raw.githubusercontent.com/openclaw/open
 echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
 ```
 
-Canonical docs page: https://docs.openclaw.ai/install/clawdock
+Canonical docs page: https://github.com/liuda1999/Quiet-Core-bot/install/clawdock
 
 If you previously installed ClawDock from `scripts/shell-helpers/clawdock-helpers.sh`, rerun the install command above. The old raw GitHub path has been removed.
 

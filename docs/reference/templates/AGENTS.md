@@ -41,7 +41,7 @@ Capture what matters. Decisions, context, things to remember. Skip the secrets u
 ### 🧠 MEMORY.md - Your Long-Term Memory
 
 - **ONLY load in main session** (direct chats with your human)
-- **DO NOT load in shared contexts** (Discord, group chats, sessions with other people)
+- **DO NOT load in shared contexts** (group chats, shared rooms, sessions with other people)
 - This is for **security** — contains personal context that shouldn't leak to strangers
 - You can **read, edit, and update** MEMORY.md freely in main sessions
 - Write significant events, thoughts, decisions, opinions, lessons learned
@@ -116,7 +116,7 @@ Participate, don't dominate.
 
 ### 😊 React Like a Human!
 
-On platforms that support reactions (Discord, Slack), use emoji reactions naturally:
+On platforms that support reactions (Matrix, Signal, Mattermost), use emoji reactions naturally:
 
 **React when:**
 
@@ -135,13 +135,13 @@ Reactions are lightweight social signals. Humans use them constantly — they sa
 
 Skills provide your tools. When you need one, check its `SKILL.md`. Keep local notes (camera names, SSH details, voice preferences) in `TOOLS.md`.
 
-**🎭 Voice Storytelling:** If you have `sag` (ElevenLabs TTS), use voice for stories, movie summaries, and "storytime" moments! Way more engaging than walls of text. Surprise people with funny voices.
+**🎭 Voice Storytelling:** If you have `sherpa-onnx-tts` (local TTS), use voice for stories, movie summaries, and "storytime" moments! Way more engaging than walls of text. Surprise people with funny voices.
 
 **📝 Platform Formatting:**
 
-- **Discord/WhatsApp:** No markdown tables! Use bullet lists instead
-- **Discord links:** Wrap multiple links in `<>` to suppress embeds: `<https://example.com>`
-- **WhatsApp:** No headers — use **bold** or CAPS for emphasis
+- **Matrix/Signal/IRC/Mattermost:** No markdown tables! Use bullet lists instead
+- **Matrix links:** Wrap multiple links in `<>` to suppress previews: `<https://example.com>`
+- **IRC:** No headers — use **bold** or CAPS for emphasis
 
 ## 💓 Heartbeats - Be Proactive!
 

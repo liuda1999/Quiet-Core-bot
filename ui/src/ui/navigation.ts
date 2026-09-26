@@ -9,7 +9,7 @@ export const TAB_GROUPS = [
     label: "control",
     tabs: ["overview", "activity", "instances", "sessions", "usage", "cron"],
   },
-  { label: "agent", tabs: ["agents", "skills", "nodes", "dreams"] },
+  { label: "agent", tabs: ["agents", "skills", "nodes"] },
   {
     label: "settings",
     tabs: ["config"],
@@ -150,7 +150,10 @@ export function tabFromPath(pathname: string, basePath = ""): Tab | null {
   if (normalized === "/") {
     return "chat";
   }
-  return PATH_TO_TAB.get(normalized) ?? null;
+  const tab = PATH_TO_TAB.get(normalized) ?? null;
+  // Memory consolidation ("Dreams") was removed from the Control UI; the tab
+  // and its /dreaming and /dreams routes no longer resolve here.
+  return tab === "dreams" ? null : tab;
 }
 
 export function inferBasePathFromPathname(pathname: string): string {

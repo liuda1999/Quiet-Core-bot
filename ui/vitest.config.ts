@@ -75,6 +75,12 @@ const systemChromiumExecutableCandidates = [
 ] as const;
 
 function canRunChromiumExecutable(executablePath: string): boolean {
+  // Windows GUI browsers (chrome.exe and friends) do not honor `--version` as a
+  // console probe: they launch a real browser instance (an empty tab plus helper
+  // processes) and never behave like a CLI. Existence is the only safe check there.
+  if (process.platform === "win32") {
+    return existsSync(executablePath);
+  }
   const result = spawnSync(executablePath, ["--version"], { stdio: "ignore" });
   return result.status === 0;
 }

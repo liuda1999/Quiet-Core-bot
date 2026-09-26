@@ -39,7 +39,6 @@ describe("iconForTab", () => {
       agents: "folder",
       skills: "zap",
       nodes: "monitor",
-      dreams: "moon",
       config: "settings",
       communications: "send",
       appearance: "spark",
@@ -73,7 +72,6 @@ describe("titleForTab", () => {
       agents: "Agents",
       skills: "Skills",
       nodes: "Nodes",
-      dreams: "Dreaming",
       config: "Settings",
       communications: "Communications",
       appearance: "Appearance",
@@ -101,7 +99,6 @@ describe("subtitleForTab", () => {
       agents: "Workspaces, tools, identities.",
       skills: "Skills and API keys.",
       nodes: "Paired devices and commands.",
-      dreams: "Memory dreaming, consolidation, and reflection.",
       config: "Edit quiet-core-bot.json.",
       communications: "Channels, messages, and audio settings.",
       appearance: "Theme, UI, and setup wizard settings.",
@@ -171,8 +168,9 @@ describe("tabFromPath", () => {
     expect(tabFromPath("/overview")).toBe("overview");
     expect(tabFromPath("/activity")).toBe("activity");
     expect(tabFromPath("/sessions")).toBe("sessions");
-    expect(tabFromPath("/dreaming")).toBe("dreams");
-    expect(tabFromPath("/dreams")).toBe("dreams");
+    // The Dreams / memory-consolidation tab was removed from the Control UI.
+    expect(tabFromPath("/dreaming")).toBeNull();
+    expect(tabFromPath("/dreams")).toBeNull();
   });
 
   it("returns chat for root path", () => {

@@ -1,7 +1,7 @@
 ---
 name: boot-md
 description: "Run BOOT.md on gateway startup"
-homepage: https://docs.openclaw.ai/automation/hooks#boot-md
+homepage: https://github.com/liuda1999/Quiet-Core-bot/automation/hooks#boot-md
 metadata:
   {
     "openclaw":

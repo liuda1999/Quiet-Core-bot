@@ -18,7 +18,7 @@ Enable the plugin and set the OTLP endpoint in `plugins.entries.diagnostics-otel
 
 The full config surface, metric names, span names, and collector examples live in the docs:
 
-- https://docs.openclaw.ai/gateway/opentelemetry
+- https://github.com/liuda1999/Quiet-Core-bot/gateway/opentelemetry
 
 ## Package
 

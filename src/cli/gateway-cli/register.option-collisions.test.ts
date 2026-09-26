@@ -94,7 +94,7 @@ vi.mock("../../../packages/terminal-core/src/health-style.js", () => ({
 }));
 
 vi.mock("../../../packages/terminal-core/src/links.js", () => ({
-  formatDocsLink: () => "docs.openclaw.ai/cli/gateway",
+  formatDocsLink: () => "github.com/liuda1999/Quiet-Core-bot/cli/gateway",
 }));
 
 vi.mock("../../../packages/terminal-core/src/theme.js", () => ({

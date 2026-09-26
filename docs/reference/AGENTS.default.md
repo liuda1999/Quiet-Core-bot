@@ -83,45 +83,57 @@ Before proposing or building a custom system, feature, workflow, tool, integrati
 
 ## Backup tip (recommended)
 
-If you treat this workspace as Clawd's "memory", make it a git repo (ideally private) so `AGENTS.md` and your memory files are backed up.
+If you treat this workspace as the agent's "memory", make it a git repo (ideally private) so `AGENTS.md` and your memory files are backed up.
 
 ```bash
 cd ~/.quiet-core-bot/workspace
 git init
 git add AGENTS.md
-git commit -m "Add Clawd workspace"
+git commit -m "Add agent workspace"
 # Optional: add a private remote + push
 ```
 
 ## What Quiet Core bot does
 
-- Runs WhatsApp gateway + embedded Quiet Core bot agent so the assistant can read/write chats, fetch context, and run skills via the host Mac.
-- macOS app manages permissions (screen recording, notifications, microphone) and exposes the `openclaw` CLI via its bundled binary.
+- Runs a local-first gateway plus an embedded agent so the assistant can read/write chats, fetch context, and run skills on your machine.
+- Ships channel plugins such as Matrix, Signal, IRC, Mattermost, Nextcloud Talk, Nostr, Raft, Synology Chat, and ClickClack; enable the ones you want in Settings → Channels.
+- Talks to models through local or self-hosted providers (Ollama, LM Studio, vLLM, SGLang, llama.cpp, LiteLLM).
 - Direct chats collapse into the agent's `main` session by default; groups stay isolated as `agent:<agentId>:<channel>:group:<id>` (rooms/channels: `agent:<agentId>:<channel>:channel:<id>`); heartbeats keep background tasks alive.
 
 ## Core skills (enable in Settings → Skills)
 
-- **mcporter** - Tool server runtime/CLI for managing external skill backends.
-- **Peekaboo** - Fast macOS screenshots with optional AI vision analysis.
-- **camsnap** - Capture frames, clips, or motion alerts from RTSP/ONVIF security cams.
-- **oracle** - OpenAI-ready agent CLI with session replay and browser control.
-- **eightctl** - Control your sleep, from the terminal.
-- **imsg** - Send, read, stream iMessage & SMS.
-- **wacli** - WhatsApp CLI: sync, search, send.
-- **discord** - Discord actions: react, stickers, polls. Use `user:<id>` or `channel:<id>` targets (bare numeric ids are ambiguous).
-- **gog** - Google Suite CLI: Gmail, Calendar, Drive, Contacts.
-- **spotify-player** - Terminal Spotify client to search/queue/control playback.
-- **sag** - ElevenLabs speech with mac-style say UX; streams to speakers by default.
-- **Sonos CLI** - Control Sonos speakers (discover/status/playback/volume/grouping) from scripts.
-- **blucli** - Play, group, and automate BluOS players from scripts.
-- **OpenHue CLI** - Philips Hue lighting control for scenes and automations.
-- **OpenAI Whisper** - Local speech-to-text for quick dictation and voicemail transcripts.
-- **Gemini CLI** - Google Gemini models from the terminal for fast Q&A.
-- **agent-tools** - Utility toolkit for automations and helper scripts.
+- **mcporter** - List, configure, authenticate, call, and inspect MCP servers/tools over HTTP or stdio.
+- **peekaboo** - Capture and automate macOS UI.
+- **camsnap** - Capture frames or clips from RTSP/ONVIF cameras.
+- **video-frames** - Extract frames or short clips from videos using ffmpeg.
+- **diagram-maker** - Create SVG/HTML or Excalidraw diagrams for concepts, architecture, and flows.
+- **meme-maker** - Search meme templates, suggest formats, and generate local or hosted image memes.
+- **songsee** - Generate spectrograms and feature-panel visualizations from audio.
+- **openai-whisper** - Local speech-to-text with the Whisper CLI (no API key).
+- **sherpa-onnx-tts** - Local text-to-speech via sherpa-onnx (offline, no cloud).
+- **weather** - Current weather and forecasts via `web_fetch` or wttr.in.
+- **blogwatcher** - Monitor blogs and RSS/Atom feeds for updates.
+- **himalaya** - IMAP/SMTP mail CLI: list, read, search, compose, reply, forward, copy, move, delete.
+- **obsidian** - Read, search, create, and edit notes in Obsidian vaults.
+- **bear-notes** - Create, search, and manage Bear notes.
+- **openhue** - Control Philips Hue lights and scenes.
+- **sonoscli** - Control Sonos speakers (discover/status/play/volume/group).
+- **blucli** - Play, group, and automate BluOS players.
+- **tmux** - Control tmux sessions/panes for interactive CLIs.
+- **session-logs** - Search and analyze your own session logs with jq.
+- **model-usage** - Summarize local CodexBar cost logs by model.
+- **taskflow** - Coordinate multi-step detached tasks as one durable TaskFlow job.
+- **taskflow-inbox-triage** - Example TaskFlow pattern for inbox triage and intent routing.
+- **spike** - Run throwaway prototypes to validate feasibility and compare approaches.
+- **skill-creator** - Create, edit, audit, validate, or restructure AgentSkills and `SKILL.md` files.
+- **healthcheck** - Audit and harden hosts: SSH, firewall, updates, exposure, backups, and encryption.
+- **node-connect** - Diagnose Android, iOS, or macOS node pairing and connection failures.
+- **node-inspect-debugger** - Debug Node.js with `node inspect`, breakpoints, CDP, and profiles.
+- **python-debugpy** - Debug Python with pdb, post-mortem inspection, and debugpy remote attach.
 
 ## Usage notes
 
-- Prefer the `openclaw` CLI for scripting; mac app handles permissions.
+- Prefer the `openclaw` CLI for scripting and automation.
 - Run installs from the Skills tab; it hides the button if a binary is already present.
 - Keep heartbeats enabled so the assistant can schedule reminders, monitor inboxes, and trigger camera captures.
 - Canvas UI runs full-screen with native overlays. Avoid placing critical controls in the top-left/top-right/bottom edges; add explicit gutters in the layout and don't rely on safe-area insets.

@@ -113,7 +113,7 @@ These are frequently reported but are typically closed with no code change:
 - Claims that Microsoft Teams `fileConsent/invoke` `uploadInfo.uploadUrl` is attacker-controlled without demonstrating one of: auth boundary bypass, a real authenticated Teams/Bot Framework event carrying attacker-chosen URL, or compromise of the Microsoft/Bot trust path.
 - Scanner-only claims against stale/nonexistent paths, or claims without a working repro.
 - Reports that restate an already-fixed issue against later released versions without showing the vulnerable path still exists in the shipped tag or published artifact for that later version.
-- SSRF reports against the operator-managed HTTP/WebSocket proxy-routing feature whose only claim is that ordinary process-local HTTP clients (`fetch`, `node:http`, `node:https`, WebSocket clients, axios/got/node-fetch-style clients) can reach an internal, metadata, private, or otherwise sensitive destination when proxy routing is disabled, missing, or the operator-managed proxy policy allows it. For this feature, Quiet Core bot provides fail-closed proxy routing when enabled; the external proxy's destination policy is operator infrastructure, not an Quiet Core bot-controlled security boundary. See [Network proxy](https://docs.openclaw.ai/security/network-proxy).
+- SSRF reports against the operator-managed HTTP/WebSocket proxy-routing feature whose only claim is that ordinary process-local HTTP clients (`fetch`, `node:http`, `node:https`, WebSocket clients, axios/got/node-fetch-style clients) can reach an internal, metadata, private, or otherwise sensitive destination when proxy routing is disabled, missing, or the operator-managed proxy policy allows it. For this feature, Quiet Core bot provides fail-closed proxy routing when enabled; the external proxy's destination policy is operator infrastructure, not an Quiet Core bot-controlled security boundary. See [Network proxy](https://github.com/liuda1999/Quiet-Core-bot/security/network-proxy).
 
 ### Maintainer GHSA Updates via CLI
 
@@ -177,7 +177,7 @@ Plugins/extensions are part of Quiet Core bot's trusted computing base for a gat
 - Exposed secrets that are third-party/user-controlled credentials (not Quiet Core bot-owned and not granting access to Quiet Core bot-operated infrastructure/services) without demonstrated Quiet Core bot impact
 - Reports whose only claim is host-side exec when sandbox runtime is disabled/unavailable (documented default behavior in the trusted-operator model), without a boundary bypass.
 - Reports whose only claim is that a platform-provided upload destination URL is untrusted (for example Microsoft Teams `fileConsent/invoke` `uploadInfo.uploadUrl`) without proving attacker control in an authenticated production flow.
-- SSRF reports limited to the operator-managed HTTP/WebSocket proxy-routing feature where the demonstrated mitigation is to enable/configure `proxy.enabled` with a filtering `proxy.proxyUrl`/`OPENCLAW_PROXY_URL`, or where impact depends on a permissive/misconfigured operator proxy. This only covers normal process-local HTTP(S)/WebSocket egress (`fetch`, Node HTTP(S), and similar JavaScript clients); non-HTTP egress and other features are assessed separately. See [Network proxy](https://docs.openclaw.ai/security/network-proxy).
+- SSRF reports limited to the operator-managed HTTP/WebSocket proxy-routing feature where the demonstrated mitigation is to enable/configure `proxy.enabled` with a filtering `proxy.proxyUrl`/`OPENCLAW_PROXY_URL`, or where impact depends on a permissive/misconfigured operator proxy. This only covers normal process-local HTTP(S)/WebSocket egress (`fetch`, Node HTTP(S), and similar JavaScript clients); non-HTTP egress and other features are assessed separately. See [Network proxy](https://github.com/liuda1999/Quiet-Core-bot/security/network-proxy).
 
 ### Deployment Assumptions
 
@@ -277,7 +277,7 @@ Security boundary notes:
 
 For threat model + hardening guidance (including `openclaw security audit --deep` and `--fix`), see:
 
-- `https://docs.openclaw.ai/gateway/security`
+- `https://github.com/liuda1999/Quiet-Core-bot/gateway/security`
 
 #### Tool Filesystem Hardening
 

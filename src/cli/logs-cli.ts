@@ -495,7 +495,7 @@ export function registerLogsCli(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/logs", "docs.openclaw.ai/cli/logs")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/logs", "github.com/liuda1999/Quiet-Core-bot/cli/logs")}\n`,
     );
 
   addGatewayClientOptions(logs);

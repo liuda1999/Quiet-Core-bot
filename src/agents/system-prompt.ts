@@ -586,8 +586,8 @@ function buildDocsSection(params: {
   }
   const lines = [
     "## Documentation",
-    docsPath ? `Docs: ${docsPath}` : "Docs: https://docs.openclaw.ai",
-    docsPath ? "Mirror: https://docs.openclaw.ai" : undefined,
+    docsPath ? `Docs: ${docsPath}` : "Docs: https://github.com/liuda1999/Quiet-Core-bot",
+    docsPath ? "Mirror: https://github.com/liuda1999/Quiet-Core-bot" : undefined,
     sourcePath ? `Source: ${sourcePath}` : "Source: https://github.com/openclaw/openclaw",
     docsPath
       ? `Docs are authoritative for Quiet Core bot self-knowledge: before understanding how Quiet Core bot works (memory/daily notes, sessions, tools, Gateway, config, commands, project context), use \`${params.readToolName}\` or search local docs first; treat AGENTS.md/project context, workspace/profile/memory notes, and \`memory_search\` as instruction context or user memory, not Quiet Core bot design/implementation knowledge.`

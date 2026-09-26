@@ -18,7 +18,7 @@ const report: HookStatusReport = {
       handlerPath: "/tmp/hooks/session-memory/handler.js",
       hookKey: "session-memory",
       emoji: "💾",
-      homepage: "https://docs.openclaw.ai/automation/hooks#session-memory",
+      homepage: "https://github.com/liuda1999/Quiet-Core-bot/automation/hooks#session-memory",
       events: ["command:new"],
       always: false,
       enabledByConfig: true,

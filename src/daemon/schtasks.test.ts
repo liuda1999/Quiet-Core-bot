@@ -237,6 +237,33 @@ describe("readScheduledTaskCommand", () => {
     );
   });
 
+  it("skips the guard block and parses the real entry command", async () => {
+    await withScheduledTaskScript(
+      {
+        scriptLines: [
+          "@echo off",
+          "rem Quiet Core bot Gateway (v0.1.0)",
+          "set OPENCLAW_GATEWAY_PORT=18789",
+          "if not exist C:/Projects/openclaw/dist/index.js (",
+          "  echo [quiet-core-bot] build artifact missing 1>&2",
+          "  exit /b 1",
+          ")",
+          '"C:/Program Files/Node/node.exe" C:/Projects/openclaw/dist/index.js gateway --port 18789',
+        ],
+      },
+      async (env) => {
+        const result = await readScheduledTaskCommand(env);
+        expect(result?.programArguments).toEqual([
+          "C:/Program Files/Node/node.exe",
+          "C:/Projects/openclaw/dist/index.js",
+          "gateway",
+          "--port",
+          "18789",
+        ]);
+      },
+    );
+  });
+
   it("returns null when script does not exist", async () => {
     await withScheduledTaskScript({}, async (env) => {
       const result = await readScheduledTaskCommand(env);

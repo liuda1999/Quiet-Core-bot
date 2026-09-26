@@ -224,7 +224,7 @@ quiet-core-bot agents set-identity --workspace ~/.quiet-core-bot/workspace --fro
 Override fields explicitly:
 
 ```bash
-quiet-core-bot agents set-identity --agent main --name "Quiet Core bot" --emoji "🦞" --avatar avatars/openclaw.png
+quiet-core-bot agents set-identity --agent main --name "Quiet Core bot" --emoji "🐉" --avatar avatars/openclaw.png
 ```
 
 Config sample:
@@ -238,7 +238,7 @@ Config sample:
         identity: {
           name: "Quiet Core bot",
           theme: "space lobster",
-          emoji: "🦞",
+          emoji: "🐉",
           avatar: "avatars/openclaw.png",
         },
       },

@@ -12,23 +12,16 @@
       "replaySafe": true
     }
   },
-  "commandAliases": [
-    {
-      "name": "dreaming",
-      "kind": "runtime-slash",
-      "cliCommand": "memory"
-    }
-  ],
   "uiHints": {
     "dreaming.frequency": {
-      "label": "Dreaming Frequency",
+      "label": "Consolidation Frequency",
       "placeholder": "0 3 * * *",
-      "help": "Optional cron cadence for the full dreaming sweep (light, REM, then deep)."
+      "help": "Optional cron cadence for the full consolidation sweep (light, REM, then deep)."
     },
     "dreaming.model": {
-      "label": "Dreaming Model",
+      "label": "Consolidation Model",
       "placeholder": "anthropic/claude-sonnet-4-6",
-      "help": "Optional provider/model override for Dream Diary narrative subagent runs. Requires plugins.entries.memory-core.subagent.allowModelOverride."
+      "help": "Optional provider/model override for consolidation diary narrative subagent runs. Requires plugins.entries.memory-core.subagent.allowModelOverride."
     }
   },
   "configSchema": {

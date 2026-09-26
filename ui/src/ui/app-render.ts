@@ -120,6 +120,8 @@ import {
   updateExecApprovalsFormValue,
 } from "./controllers/exec-approvals.ts";
 import { loadLogs } from "./controllers/logs.ts";
+import { loadModelAuthStatusState } from "./controllers/model-auth-status.ts";
+import { invalidateModelCatalog, loadAllModels, loadModels } from "./controllers/models.ts";
 import { loadNodes } from "./controllers/nodes.ts";
 import { loadPresence } from "./controllers/presence.ts";
 import {
@@ -205,12 +207,15 @@ import {
   draftToCronFormPatch,
 } from "./views/cron-quick-create.ts";
 import { renderDreamingRestartConfirmation } from "./views/dreaming-restart-confirmation.ts";
-import { renderDreaming } from "./views/dreaming.ts";
+import { renderDreaming, resetDreamingViewState, resolveDreamingOfText } from "./views/dreaming.ts";
 import { renderExecApprovalPrompt } from "./views/exec-approval.ts";
 import { renderGatewayUrlConfirmation } from "./views/gateway-url-confirmation.ts";
 import { renderLoginGate } from "./views/login-gate.ts";
 import { renderMcp } from "./views/mcp.ts";
+import { renderModelsPanel } from "./views/models-panel.ts";
 import { renderOverview } from "./views/overview.ts";
+import { buildSettingsPanelCards } from "./views/settings-panel.specs.ts";
+import { renderSettingsPanel } from "./views/settings-panel.ts";
 
 let pendingUpdate: (() => void) | undefined;
 
@@ -851,6 +856,8 @@ type ConfigTabOverrides = Pick<
       | "excludeSections"
       | "includeVirtualSections"
       | "settingsLayout"
+      | "renderSectionContent"
+      | "sectionCardStyle"
       | "onBackToQuick"
       | "webPush"
       | "onWebPushSubscribe"
@@ -1619,7 +1626,29 @@ export function renderApp(state: AppViewState) {
       updateConfigFormValue(state, path, value),
     onReload: () => void loadConfig(state, { discardPendingChanges: true }),
     onReset: () => resetConfigPendingChanges(state),
-    onSave: () => void saveConfig(state),
+    onSave: () => {
+      void saveConfig(state).then((ok) => {
+        if (ok) {
+          const client = state.client;
+          if (client) {
+            invalidateModelCatalog(client);
+            void loadAllModels(client)
+              .then((models) => {
+                state.modelsPanelCatalog = models;
+                requestHostUpdate?.();
+              })
+              .catch(() => undefined);
+            void loadModels(client)
+              .then((models) => {
+                state.chatModelCatalog = models;
+                requestHostUpdate?.();
+              })
+              .catch(() => undefined);
+          }
+        }
+        requestHostUpdate?.();
+      });
+    },
     onApply: () => void applyConfig(state),
     onUpdate: () => void runUpdate(state),
     onOpenFile: () => void openConfigFile(state),
@@ -2077,6 +2106,84 @@ export function renderApp(state: AppViewState) {
           onSubsectionChange: (section) => (state.aiAgentsActiveSubsection = section),
           navRootLabel: "AI & Agents",
           includeSections: [...AI_AGENTS_SECTION_KEYS],
+          sectionCardStyle: "panel",
+          renderSectionContent: (section) => {
+            if (state.aiAgentsFormMode === "form" && section && section !== "models") {
+              const cards = buildSettingsPanelCards(section);
+              if (cards) {
+                return renderSettingsPanel({
+                  cards,
+                  formValue: state.configForm,
+                  uiHints: state.configUiHints,
+                  disabled: !state.connected,
+                  revealedKeys: state.aiAgentsRevealedProviderKeys,
+                  onPatch: (path, value) => updateConfigFormValue(state, path, value),
+                  onRequestUpdate: () => requestHostUpdate?.(),
+                  onToggleReveal: (key) => {
+                    const next = new Set(state.aiAgentsRevealedProviderKeys);
+                    if (next.has(key)) {
+                      next.delete(key);
+                    } else {
+                      next.add(key);
+                    }
+                    state.aiAgentsRevealedProviderKeys = next;
+                    requestHostUpdate?.();
+                  },
+                });
+              }
+            }
+            return section === "models" && state.aiAgentsFormMode === "form"
+              ? renderModelsPanel({
+                  formValue: state.configForm,
+                  catalog:
+                    state.modelsPanelCatalog.length > 0
+                      ? state.modelsPanelCatalog
+                      : (state.chatModelCatalog ?? []),
+                  authStatus: state.modelAuthStatusResult
+                    ? {
+                        loading: state.modelAuthStatusLoading,
+                        error: state.modelAuthStatusError,
+                        providers: state.modelAuthStatusResult.providers,
+                        ts: state.modelAuthStatusResult.ts,
+                      }
+                    : state.modelAuthStatusLoading
+                      ? { loading: true, error: state.modelAuthStatusError, providers: [], ts: 0 }
+                      : null,
+                  disabled: !state.connected,
+                  probing: state.modelAuthStatusLoading,
+                  revealedKeys: state.aiAgentsRevealedProviderKeys,
+                  onPatch: (path, value) => updateConfigFormValue(state, path, value),
+                  onRequestUpdate: () => requestHostUpdate?.(),
+                  onRefreshModels: () => {
+                    const client = state.client;
+                    if (!client) {
+                      return;
+                    }
+                    invalidateModelCatalog(client);
+                    void loadAllModels(client)
+                      .then((models) => {
+                        state.modelsPanelCatalog = models;
+                        requestHostUpdate?.();
+                      })
+                      .catch(() => undefined);
+                  },
+                  onTestConnection: () =>
+                    void loadModelAuthStatusState(state, { refresh: true })
+                      .then(() => requestHostUpdate?.())
+                      .catch(() => undefined),
+                  onToggleReveal: (providerId) => {
+                    const next = new Set(state.aiAgentsRevealedProviderKeys);
+                    if (next.has(providerId)) {
+                      next.delete(providerId);
+                    } else {
+                      next.add(providerId);
+                    }
+                    state.aiAgentsRevealedProviderKeys = next;
+                    requestHostUpdate?.();
+                  },
+                })
+              : null;
+          },
         });
       default:
         return nothing;
@@ -2537,7 +2644,7 @@ export function renderApp(state: AppViewState) {
               <div class="sidebar-utility-group">
                 <a
                   class="nav-item nav-item--external sidebar-utility-link"
-                  href="https://docs.openclaw.ai"
+                  href="https://github.com/liuda1999/Quiet-Core-bot"
                   target=${EXTERNAL_LINK_TARGET}
                   rel=${buildExternalLinkRel()}
                   title=${t("chat.docsOpensInNewTab", { label: t("common.docs") })}
@@ -3272,6 +3379,16 @@ export function renderApp(state: AppViewState) {
                   }
                   updateConfigFormValue(state, ["agents", "list", index, "skills"], []);
                 },
+                onAgentSkillsEnableAll: (agentId) => {
+                  const index = ensureAgentIndex(agentId);
+                  if (index < 0) {
+                    return;
+                  }
+                  const allSkills =
+                    state.agentSkillsReport?.skills?.map((skill) => skill.name).filter(Boolean) ??
+                    [];
+                  updateConfigFormValue(state, ["agents", "list", index, "skills"], [...allSkills]);
+                },
                 onModelChange: (agentId, modelId) => {
                   const index = modelId ? ensureAgentIndex(agentId) : findAgentIndex(agentId);
                   if (index < 0) {
@@ -3747,7 +3864,7 @@ export function renderApp(state: AppViewState) {
               phases: state.dreamingStatus?.phases ?? undefined,
               shortTermEntries: state.dreamingStatus?.shortTermEntries ?? [],
               promotedEntries: state.dreamingStatus?.promotedEntries ?? [],
-              dreamingOf: null,
+              dreamingOf: resolveDreamingOfText(state.dreamDiaryContent),
               nextCycle: dreamingNextCycle,
               timezone: state.dreamingStatus?.timezone ?? null,
               statusLoading: state.dreamingStatusLoading,
@@ -3774,6 +3891,7 @@ export function renderApp(state: AppViewState) {
               onRefresh: refreshDreaming,
               onSelectAgent: (agentId: string) => {
                 state.selectedAgentId = agentId;
+                resetDreamingViewState();
                 switchChatSession(state, resolvePreferredSessionForAgent(state, agentId));
                 void loadDreamingStatus(state);
                 void loadDreamDiary(state);

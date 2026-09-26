@@ -232,7 +232,7 @@ describe("dreaming view", () => {
   it("renders the active dream scene chrome and status", () => {
     const container = renderInto(buildProps({ dreamingOf: "reindexing old chats\u2026" }));
 
-    expectElement(container, ".dreams__lobster svg");
+    expectElement(container, ".dreams__dragon svg");
 
     expect(textItems(container, ".dreams__z")).toEqual(["z", "z", "Z"]);
 
@@ -279,7 +279,7 @@ describe("dreaming view", () => {
     const text = container.querySelector(".dreams__bubble-text");
     expect(text?.textContent).toBe("reindexing old chats\u2026");
     const label = container.querySelector(".dreams__status-label");
-    expect(label?.textContent).toBe("Dreaming Active");
+    expect(label?.textContent).toBe("Consolidation Active");
     const detail = container.querySelector(".dreams__status-detail span");
     expect(detail?.textContent?.trim().replace(/\s+/g, " ")).toBe(
       "12 promoted · next sweep 4:00 AM · America/Los_Angeles",
@@ -291,7 +291,9 @@ describe("dreaming view", () => {
   it("renders idle and unavailable scene states", () => {
     const idleContainer = renderInto(buildProps({ active: false }));
     expect(idleContainer.querySelector(".dreams__bubble")).toBeNull();
-    expect(idleContainer.querySelector(".dreams__status-label")?.textContent).toBe("Dreaming Idle");
+    expect(idleContainer.querySelector(".dreams__status-label")?.textContent).toBe(
+      "Consolidation Idle",
+    );
     expectElement(idleContainer, ".dreams--idle");
 
     const unknownPhaseContainer = renderInto(buildProps({ phases: undefined }));
@@ -566,7 +568,7 @@ describe("dreaming view", () => {
     setDreamDiarySubTab("dreams");
     const container = renderInto(buildProps());
     const title = container.querySelector(".dreams-diary__title");
-    expect(title?.textContent).toBe("Dream Diary");
+    expect(title?.textContent).toBe("Consolidation Diary");
 
     expectElement(container, ".dreams-diary__entry");
     const date = container.querySelector(".dreams-diary__date");
@@ -696,10 +698,10 @@ describe("dreaming view", () => {
     const emptyContainer = renderInto(buildProps({ dreamDiaryContent: null }));
     expect(emptyContainer.querySelectorAll(".dreams-diary__empty")).toHaveLength(1);
     expect(emptyContainer.querySelector(".dreams-diary__empty-text")?.textContent).toBe(
-      "No dreams yet",
+      "No entries yet",
     );
     expect(emptyContainer.querySelector(".dreams-diary__empty-hint")?.textContent).toBe(
-      "Dreams will appear here after the first dreaming cycle runs.",
+      "Entries will appear here after the first consolidation cycle runs.",
     );
 
     const errorContainer = renderInto(buildProps({ dreamDiaryError: "read failed" }));
@@ -723,7 +725,7 @@ describe("dreaming view", () => {
     );
     expect(actionButtons).toEqual([
       "Dedupe Diary",
-      "Repair Dream Cache",
+      "Repair Consolidation Cache",
       "Backfill",
       "Reset",
       "Clear Replayed",

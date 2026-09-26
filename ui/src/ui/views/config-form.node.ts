@@ -1,5 +1,6 @@
 // Control UI view renders config form screen content.
 import { html, nothing, type TemplateResult } from "lit";
+import { t } from "../../i18n/index.ts";
 import { formatUnknownText } from "../format.ts";
 import { icons as sharedIcons } from "../icons.ts";
 import {
@@ -122,6 +123,21 @@ const icons = {
     >
       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
       <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+    </svg>
+  `,
+  server: html`
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <rect x="2" y="3" width="20" height="8" rx="2"></rect>
+      <rect x="2" y="13" width="20" height="8" rx="2"></rect>
+      <line x1="6" y1="7" x2="6.01" y2="7"></line>
+      <line x1="6" y1="17" x2="6.01" y2="17"></line>
     </svg>
   `,
 };
@@ -1220,35 +1236,44 @@ function renderMapField(params: {
         )
       : entries;
 
+  const isProvidersMap = path.length === 2 && path[0] === "models" && path[1] === "providers";
+  const mapHeaderLabel = isProvidersMap ? t("settingsLabels.providers.title") : "Custom entries";
+  const mapAddLabel = isProvidersMap ? t("settingsLabels.providers.add") : "Add Entry";
+  const mapEmptyLabel = isProvidersMap ? t("settingsLabels.providers.empty") : "No custom entries.";
+  const nextEntryKey = (existing: Record<string, unknown>) => {
+    const prefix = isProvidersMap ? "provider" : "custom";
+    let index = 1;
+    let key = `${prefix}-${index}`;
+    while (key in existing) {
+      index += 1;
+      key = `${prefix}-${index}`;
+    }
+    return key;
+  };
+
   return html`
-    <div class="cfg-map">
+    <div class="cfg-map ${isProvidersMap ? "cfg-map--providers" : ""}">
       <div class="cfg-map__header">
-        <span class="cfg-map__label">Custom entries</span>
+        <span class="cfg-map__label">${mapHeaderLabel}</span>
         <button
           type="button"
           class="cfg-map__add"
           ?disabled=${disabled}
           @click=${() => {
             const next = { ...value };
-            let index = 1;
-            let key = `custom-${index}`;
-            while (key in next) {
-              index += 1;
-              key = `custom-${index}`;
-            }
-            next[key] = anySchema ? {} : defaultValue(schema);
+            next[nextEntryKey(next)] = anySchema ? {} : defaultValue(schema);
             onPatch(path, next);
           }}
         >
           <span class="cfg-map__add-icon">${icons.plus}</span>
-          Add Entry
+          ${mapAddLabel}
         </button>
       </div>
 
       ${visibleEntries.length === 0
-        ? html` <div class="cfg-map__empty">No custom entries.</div> `
+        ? html` <div class="cfg-map__empty">${mapEmptyLabel}</div> `
         : html`
-            <div class="cfg-map__items">
+            <div class="cfg-map__items ${isProvidersMap ? "cfg-map__items--cards" : ""}">
               ${visibleEntries.map(([key, entryValue]) => {
                 const valuePath = [...path, key];
                 const fallback = jsonValue(entryValue);
@@ -1259,6 +1284,97 @@ function renderMapField(params: {
                   revealSensitive: revealSensitive ?? false,
                   isSensitivePathRevealed,
                 });
+                if (isProvidersMap && !anySchema) {
+                  const providerConfig = (entryValue ?? {}) as Record<string, unknown>;
+                  const apiId =
+                    typeof providerConfig.api === "string" && providerConfig.api.length > 0
+                      ? providerConfig.api
+                      : "";
+                  const providerModels = providerConfig.models;
+                  const modelCount = Array.isArray(providerModels) ? providerModels.length : 0;
+                  const hasAuth =
+                    Boolean(providerConfig.apiKey) ||
+                    (typeof providerConfig.auth === "string" && providerConfig.auth.length > 0);
+                  return html`
+                    <div class="cfg-provider-card">
+                      <div class="cfg-provider-card__header">
+                        <span class="cfg-provider-card__icon" aria-hidden="true"
+                          >${icons.server}</span
+                        >
+                        <div class="cfg-provider-card__identity">
+                          <input
+                            type="text"
+                            class="cfg-input cfg-input--sm cfg-provider-card__name"
+                            placeholder=${t("settingsLabels.providers.providerId")}
+                            .value=${key}
+                            ?disabled=${disabled}
+                            @change=${(e: Event) => {
+                              const nextKey = (e.target as HTMLInputElement).value.trim();
+                              if (!nextKey || nextKey === key) {
+                                return;
+                              }
+                              const next = { ...value };
+                              if (nextKey in next) {
+                                return;
+                              }
+                              next[nextKey] = next[key];
+                              delete next[key];
+                              onPatch(path, next);
+                            }}
+                          />
+                          <div class="cfg-provider-card__badges">
+                            <span class="cfg-provider-badge"
+                              >${apiId || t("settingsLabels.providers.noAdapter")}</span
+                            >
+                            <span class="cfg-provider-badge"
+                              >${t("settingsLabels.providers.modelCount", {
+                                count: String(modelCount),
+                              })}</span
+                            >
+                            <span
+                              class="cfg-provider-status ${hasAuth
+                                ? "cfg-provider-status--ok"
+                                : "cfg-provider-status--idle"}"
+                              >${hasAuth
+                                ? t("settingsLabels.providers.configured")
+                                : t("settingsLabels.providers.notConfigured")}</span
+                            >
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          class="cfg-provider-card__remove"
+                          title=${t("settingsLabels.providers.remove")}
+                          ?disabled=${disabled}
+                          @click=${() => {
+                            const next = { ...value };
+                            delete next[key];
+                            onPatch(path, next);
+                          }}
+                        >
+                          ${icons.trash}
+                        </button>
+                      </div>
+                      <div class="cfg-provider-card__body">
+                        ${renderNode({
+                          schema,
+                          value: entryValue,
+                          path: valuePath,
+                          hints,
+                          rawAvailable,
+                          unsupported,
+                          disabled,
+                          searchCriteria,
+                          showLabel: false,
+                          revealSensitive,
+                          isSensitivePathRevealed,
+                          onToggleSensitivePath,
+                          onPatch,
+                        })}
+                      </div>
+                    </div>
+                  `;
+                }
                 return html`
                   <div class="cfg-map__item">
                     <div class="cfg-map__item-header">

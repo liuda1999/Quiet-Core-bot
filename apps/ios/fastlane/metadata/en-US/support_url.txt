@@ -1,1 +1,1 @@
-https://docs.openclaw.ai/platforms/ios
+https://github.com/liuda1999/Quiet-Core-bot/platforms/ios

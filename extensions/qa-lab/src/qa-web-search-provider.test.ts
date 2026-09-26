@@ -35,12 +35,12 @@ describe("qa-lab web search provider", () => {
       query: "OpenClaw runtime parity fixed query",
       results: [
         {
-          url: "https://docs.openclaw.ai/qa-lab/search-fixture/1",
-          siteName: "docs.openclaw.ai",
+          url: "https://github.com/liuda1999/Quiet-Core-bot/qa-lab/search-fixture/1",
+          siteName: "github.com/liuda1999/Quiet-Core-bot",
         },
         {
-          url: "https://docs.openclaw.ai/qa-lab/search-fixture/2",
-          siteName: "docs.openclaw.ai",
+          url: "https://github.com/liuda1999/Quiet-Core-bot/qa-lab/search-fixture/2",
+          siteName: "github.com/liuda1999/Quiet-Core-bot",
         },
       ],
     });

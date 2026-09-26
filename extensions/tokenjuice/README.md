@@ -26,7 +26,7 @@ openclaw plugins enable tokenjuice
 
 ## Docs
 
-- https://docs.openclaw.ai/tools/tokenjuice
+- https://github.com/liuda1999/Quiet-Core-bot/tools/tokenjuice
 
 ## Package
 

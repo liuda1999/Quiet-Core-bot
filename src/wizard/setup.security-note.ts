@@ -39,6 +39,6 @@ export function getSecurityNoteMessage(): string {
     formatCliCommand("quiet-core-bot security audit --fix"),
     "",
     heading(t("wizard.security.learnMore")),
-    "- https://docs.openclaw.ai/gateway/security",
+    "- https://github.com/liuda1999/Quiet-Core-bot/gateway/security",
   ].join("\n");
 }

@@ -38,7 +38,7 @@ export function buildFirecrawlWebSearchProviderBase(): Omit<WebSearchProviderPlu
     envVars: ["FIRECRAWL_API_KEY"],
     placeholder: "fc-...",
     signupUrl: "https://www.firecrawl.dev/",
-    docsUrl: "https://docs.openclaw.ai/tools/firecrawl",
+    docsUrl: "https://github.com/liuda1999/Quiet-Core-bot/tools/firecrawl",
     autoDetectOrder: 60,
     credentialPath: FIRECRAWL_CREDENTIAL_PATH,
     ...contractFields,

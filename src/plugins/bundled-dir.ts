@@ -306,8 +306,19 @@ export function resolveBundledPluginsDir(env: NodeJS.ProcessEnv = process.env): 
     return bundledPluginsDirCache.get(cacheKey);
   }
   const resolved = resolveBundledPluginsDirUncached(env);
-  bundledPluginsDirCache.set(cacheKey, resolved);
-  return resolved;
+  // Symlinked installs (npm/pnpm link junctions) resolve argv1 to the link path while the
+  // plugin registry records realpaths, so a non-canonical dir makes bundled entry lookups miss.
+  const canonical = resolved ? (canonicalizePluginsDir(resolved) ?? resolved) : undefined;
+  bundledPluginsDirCache.set(cacheKey, canonical);
+  return canonical;
+}
+
+function canonicalizePluginsDir(pluginsDir: string): string | null {
+  try {
+    return fs.realpathSync(pluginsDir);
+  } catch {
+    return null;
+  }
 }
 
 export function setBundledPluginsDirOverrideForTest(dir: string | undefined): void {

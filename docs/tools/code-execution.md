@@ -144,7 +144,7 @@ When the tool runs without auth, it returns a structured `missing_xai_api_key` e
 {
   "error": "missing_xai_api_key",
   "message": "code_execution needs xAI credentials. Run `quiet-core-bot onboard --auth-choice xai-oauth` to sign in with Grok, run `quiet-core-bot onboard --auth-choice xai-api-key`, set `XAI_API_KEY` in the Gateway environment, or configure `plugins.entries.xai.config.webSearch.apiKey`.",
-  "docs": "https://docs.openclaw.ai/tools/code-execution"
+  "docs": "https://github.com/liuda1999/Quiet-Core-bot/tools/code-execution"
 }
 ```
 

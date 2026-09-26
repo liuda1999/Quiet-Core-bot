@@ -18,7 +18,7 @@ function changelog(strings: TemplateStringsArray, ...values: string[]) {
 
 const cumulativeChangelog = changelog`
 # Changelog
-Docs: https://docs.openclaw.ai
+Docs: https://github.com/liuda1999/Quiet-Core-bot
 ## Unreleased
 ### Fixes
 - Pending note.
@@ -54,7 +54,7 @@ describe("package-changelog", () => {
     expect(extractCurrentPackageChangelog(cumulativeChangelog, "2026.5.28-beta.1")).toBe(
       changelog`
 # Changelog
-Docs: https://docs.openclaw.ai
+Docs: https://github.com/liuda1999/Quiet-Core-bot
 
 ## 2026.5.28
 ### Highlights
@@ -139,7 +139,7 @@ ${"é".repeat(260_000)}
   it("fails closed when the extracted release section is effectively empty", () => {
     const source = changelog`
 # Changelog
-Docs: https://docs.openclaw.ai
+Docs: https://github.com/liuda1999/Quiet-Core-bot
 ## 2026.5.28
 ### Fixes
 ## 2026.5.27

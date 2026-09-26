@@ -3,15 +3,15 @@
   "version": "0.1.0",
   "description": "Quiet Core bot - a self-hosted AI agent gateway",
   "keywords": [],
-  "homepage": "https://github.com/quiet-core/quiet-core-bot#readme",
+  "homepage": "https://github.com/liuda1999/Quiet-Core-bot#readme",
   "bugs": {
-    "url": "https://github.com/quiet-core/quiet-core-bot/issues"
+    "url": "https://github.com/liuda1999/Quiet-Core-bot/issues"
   },
   "license": "MIT",
   "author": "",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/quiet-core/quiet-core-bot.git"
+    "url": "git+https://github.com/liuda1999/Quiet-Core-bot.git"
   },
   "bin": {
     "quiet-core-bot": "quiet-core-bot.mjs"

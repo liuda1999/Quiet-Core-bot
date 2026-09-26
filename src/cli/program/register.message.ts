@@ -48,7 +48,7 @@ ${formatHelpExamples([
   ],
 ])}
 
-${theme.muted("Docs:")} ${formatDocsLink("/cli/message", "docs.openclaw.ai/cli/message")}`,
+${theme.muted("Docs:")} ${formatDocsLink("/cli/message", "github.com/liuda1999/Quiet-Core-bot/cli/message")}`,
     )
     .action(() => {
       message.help({ error: true });

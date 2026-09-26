@@ -50,6 +50,7 @@ import {
   loadModelAuthStatusState,
   type ModelAuthStatusState,
 } from "./controllers/model-auth-status.ts";
+import { loadAllModels, loadModels } from "./controllers/models.ts";
 import { loadNodes, type NodesState } from "./controllers/nodes.ts";
 import { loadPresence, type PresenceState } from "./controllers/presence.ts";
 import { loadSessions, type SessionsState } from "./controllers/sessions.ts";
@@ -77,7 +78,7 @@ import {
 import { normalizeOptionalString } from "./string-coerce.ts";
 import { startThemeTransition, type ThemeTransitionContext } from "./theme-transition.ts";
 import { resolveTheme, type ResolvedTheme, type ThemeMode, type ThemeName } from "./theme.ts";
-import type { AgentsListResult, AttentionItem } from "./types.ts";
+import type { AgentsListResult, AttentionItem, ModelCatalogEntry } from "./types.ts";
 import { normalizeLocalUserIdentity } from "./user-identity.ts";
 import { resetChatViewState } from "./views/chat.ts";
 
@@ -108,6 +109,7 @@ type SettingsHost = {
   systemThemeCleanup?: (() => void) | null;
   pendingGatewayToken?: string | null;
   requestUpdate?: () => void;
+  modelsPanelCatalog?: ModelCatalogEntry[];
   updateComplete?: Promise<unknown>;
   controlUiRefreshSeq?: number;
   controlUiTabPaintSeq?: number;
@@ -422,10 +424,34 @@ export async function refreshActiveTab(host: SettingsHost, opts?: { chatStartup?
       case "automation":
       case "mcp":
       case "infrastructure":
+        {
+          const primaryRefresh = loadConfig(app);
+          loadConfigSchemaAfterPrimary(host, app, primaryRefresh);
+          await primaryRefresh;
+        }
+        break;
       case "aiAgents":
         {
           const primaryRefresh = loadConfig(app);
           loadConfigSchemaAfterPrimary(host, app, primaryRefresh);
+          void loadModelAuthStatusState(app)
+            .then(() => host.requestUpdate?.())
+            .catch(() => undefined);
+          const client = app.client;
+          if (client) {
+            void loadModels(client)
+              .then((models) => {
+                app.chatModelCatalog = models;
+                host.requestUpdate?.();
+              })
+              .catch(() => undefined);
+            void loadAllModels(client)
+              .then((models) => {
+                app.modelsPanelCatalog = models;
+                host.requestUpdate?.();
+              })
+              .catch(() => undefined);
+          }
           await primaryRefresh;
         }
         break;
@@ -879,7 +905,7 @@ function buildAttentionItems(host: SettingsAppHost) {
       title: "Missing operator.read scope",
       description:
         "This connection does not have the operator.read scope. Some features may be unavailable.",
-      href: "https://docs.openclaw.ai/web/dashboard",
+      href: "https://github.com/liuda1999/Quiet-Core-bot",
       external: true,
     });
   }

@@ -1,6 +1,6 @@
 # Contributing to Quiet Core bot
 
-Welcome to the lobster tank! 🦞
+Welcome to the lobster tank! 🐉
 
 ## Quick Links
 

@@ -10,4 +10,4 @@ openclaw plugins install @openclaw/searxng-plugin
 
 ## Docs
 
-See `docs/tools/searxng-search.md` in the OpenClaw repository, or the published docs at `https://docs.openclaw.ai/tools/searxng-search`.
+See `docs/tools/searxng-search.md` in the OpenClaw repository, or the published docs at `https://github.com/liuda1999/Quiet-Core-bot/tools/searxng-search`.

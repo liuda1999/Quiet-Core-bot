@@ -2109,7 +2109,7 @@ export function registerCapabilityCli(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/infer", "docs.openclaw.ai/cli/infer")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/infer", "github.com/liuda1999/Quiet-Core-bot/cli/infer")}\n`,
     );
 
   registerCapabilityListAndInspect(capability);

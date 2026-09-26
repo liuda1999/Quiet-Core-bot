@@ -631,7 +631,7 @@ bash scripts/handover/check-env.sh   # 环境自检（本包新增）
 - 用户/开发文档根：`docs/`（入口 `docs/start/getting-started.md`，文档目录 `docs/start/docs-directory.md`）
 - 网关 RPC 参考：`docs/reference/rpc.md`
 - HTTP 接口：`docs/gateway/openai-http-api.md`、`docs/gateway/openresponses-http-api.md`、`docs/gateway/tools-invoke-http-api.md`
-- 官方在线文档：https://docs.openclaw.ai
+- 官方在线文档：https://github.com/liuda1999/Quiet-Core-bot
 
 ### 12.2 主要接口
 

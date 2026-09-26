@@ -1,6 +1,6 @@
 # Changelog
 
-Docs: https://docs.openclaw.ai
+Docs: https://github.com/liuda1999/Quiet-Core-bot
 
 ## Independence note
 
@@ -3909,7 +3909,7 @@ This audited record covers the complete v2026.5.28..v2026.5.31-beta.4 history: 4
 - Runtime/Fly: detect Fly Machines as container environments from their runtime env vars, so gateway bind and Bonjour defaults match remote container launches. (#80209) Thanks @liorb-mountapps.
 - Providers/fal: route GPT Image 2 and Nano Banana 2 reference-image edit requests to `/edit` with `image_urls` array, enforce NB2 edit geometry using `aspect_ratio` and `resolution` params, lift Fal edit mode input-image caps to 10 for GPT Image 2 and 14 for Nano Banana 2, and allow aspect-ratio hints in edit mode. (#77295) Thanks @leoge007.
 - Control UI: show a plain HTML recovery panel when the app module never registers, giving blank dashboard pages a retry path and browser-extension troubleshooting link. Fixes #44107. Thanks @BunsDev.
-- Docs: rename the broad tools nav to Capabilities, keep automation and agent coordination as sections, and keep the tools overview focused on tools, skills, and plugins. https://docs.openclaw.ai/tools
+- Docs: rename the broad tools nav to Capabilities, keep automation and agent coordination as sections, and keep the tools overview focused on tools, skills, and plugins. https://github.com/liuda1999/Quiet-Core-bot/tools
 - Build: enable additional low-churn oxlint rules for promise, TypeScript, and runtime footgun checks.
 - Build: enable stricter Vitest lint rules for focused, disabled, conditional, hook, matcher, and expectation hazards.
 - Build: pin explicit oxfmt defaults in the shared formatter config to keep formatting behavior stable across upgrades.
@@ -8315,7 +8315,7 @@ This audited record covers the complete v2026.5.28..v2026.5.31-beta.4 history: 4
 ### Changes
 
 - QA/lab: add Convex-backed pooled Telegram credential leasing plus `quiet-core-bot qa credentials` admin commands and broker setup docs. (#65596) Thanks @joshavant.
-- Memory/Active Memory: add a new optional Active Memory plugin that gives Quiet Core bot a dedicated memory sub-agent right before the main reply, so ongoing chats can automatically pull in relevant preferences, context, and past details without making users remember to manually say "remember this" or "search memory" first. Includes configurable message/recent/full context modes, live `/verbose` inspection, advanced prompt/thinking overrides for tuning, and opt-in transcript persistence for debugging. Docs: https://docs.openclaw.ai/concepts/active-memory. (#63286) Thanks @Takhoffman.
+- Memory/Active Memory: add a new optional Active Memory plugin that gives Quiet Core bot a dedicated memory sub-agent right before the main reply, so ongoing chats can automatically pull in relevant preferences, context, and past details without making users remember to manually say "remember this" or "search memory" first. Includes configurable message/recent/full context modes, live `/verbose` inspection, advanced prompt/thinking overrides for tuning, and opt-in transcript persistence for debugging. Docs: https://github.com/liuda1999/Quiet-Core-bot/concepts/active-memory. (#63286) Thanks @Takhoffman.
 - macOS/Talk: add an experimental local MLX speech provider for Talk Mode, with explicit provider selection, local utterance playback, interruption handling, and system-voice fallback. (#63539) Thanks @ImLukeF.
 - CLI/exec policy: add a local `quiet-core-bot exec-policy` command with `show`, `preset`, and `set` subcommands for synchronizing requested `tools.exec.*` config with the local exec approvals file, plus follow-up hardening for node-host rejection, rollback safety, and sync conflict detection. (#64050) Thanks @rugvedS07.
 - Gateway: add a `commands.list` RPC so remote gateway clients can discover runtime-native, text, skill, and plugin commands with surface-aware naming and serialized argument metadata. (#62656) Thanks @samzong.
@@ -8435,7 +8435,7 @@ This audited record covers the complete v2026.5.28..v2026.5.31-beta.4 history: 4
 ### Changes
 
 - Models/Codex: add the bundled Codex provider and plugin-owned app-server harness so `codex/gpt-*` models use Codex-managed auth, native threads, model discovery, and compaction while `openai/gpt-*` stays on the normal OpenAI provider path. (#64298).
-- Memory/Active Memory: add a new optional Active Memory plugin that gives Quiet Core bot a dedicated memory sub-agent right before the main reply, so ongoing chats can automatically pull in relevant preferences, context, and past details without making users remember to manually say "remember this" or "search memory" first. Includes configurable message/recent/full context modes, live `/verbose` inspection, advanced prompt/thinking overrides for tuning, and opt-in transcript persistence for debugging. Docs: https://docs.openclaw.ai/concepts/active-memory. (#63286) Thanks @Takhoffman.
+- Memory/Active Memory: add a new optional Active Memory plugin that gives Quiet Core bot a dedicated memory sub-agent right before the main reply, so ongoing chats can automatically pull in relevant preferences, context, and past details without making users remember to manually say "remember this" or "search memory" first. Includes configurable message/recent/full context modes, live `/verbose` inspection, advanced prompt/thinking overrides for tuning, and opt-in transcript persistence for debugging. Docs: https://github.com/liuda1999/Quiet-Core-bot/concepts/active-memory. (#63286) Thanks @Takhoffman.
 - macOS/Talk: add an experimental local MLX speech provider for Talk Mode, with explicit provider selection, local utterance playback, interruption handling, and system-voice fallback. (#63539) Thanks @ImLukeF.
 - Tools/video generation: add Seedance 2.0 model refs to the bundled fal provider and submit the provider-specific duration, resolution, audio, and seed metadata fields needed for live Seedance 2.0 runs.
 - Microsoft Teams: add message actions for pin, unpin, read, react, and listing reactions. (#53432) Thanks @sudie-codes.
@@ -9777,15 +9777,15 @@ This audited record covers the complete v2026.5.28..v2026.5.31-beta.4 history: 4
 
 ### Breaking
 
-- Plugins/install: bare `quiet-core-bot plugins install <package>` now prefers ClawHub before npm for npm-safe names, and only falls back to npm when ClawHub does not have that package or version. Docs: https://docs.openclaw.ai/tools/clawhub.
-- Browser/Chrome MCP: remove the legacy Chrome extension relay path, bundled extension assets, `driver: "extension"`, and `browser.relayBindHost`. Run `quiet-core-bot doctor --fix` to migrate host-local browser config to `existing-session` / `user`; Docker, headless, sandbox, and remote browser flows still use raw CDP. Docs: https://docs.openclaw.ai/gateway/doctor and https://docs.openclaw.ai/tools/browser (#47893) Thanks @vincentkoc.
+- Plugins/install: bare `quiet-core-bot plugins install <package>` now prefers ClawHub before npm for npm-safe names, and only falls back to npm when ClawHub does not have that package or version. Docs: https://github.com/liuda1999/Quiet-Core-bot/tools/clawhub.
+- Browser/Chrome MCP: remove the legacy Chrome extension relay path, bundled extension assets, `driver: "extension"`, and `browser.relayBindHost`. Run `quiet-core-bot doctor --fix` to migrate host-local browser config to `existing-session` / `user`; Docker, headless, sandbox, and remote browser flows still use raw CDP. Docs: https://github.com/liuda1999/Quiet-Core-bot/gateway/doctor and https://github.com/liuda1999/Quiet-Core-bot/tools/browser (#47893) Thanks @vincentkoc.
 - Tools/image generation: standardize the stock image create/edit path on the core `image_generate` tool. The old `nano-banana-pro` docs/examples are gone; if you previously copied that sample-skill config, switch to `agents.defaults.imageGenerationModel` for built-in image generation or install a separate third-party skill explicitly.
 - Skills/image generation: remove the bundled `nano-banana-pro` skill wrapper. Use `agents.defaults.imageGenerationModel.primary: "google/gemini-3-pro-image-preview"` for the native Nano Banana-style path instead.
-- Plugins/SDK: the new public plugin SDK surface is `openclaw/plugin-sdk/*`; `openclaw/extension-api` is removed with no compatibility shim. Bundled plugins must use injected runtime for host-side operations (for example `api.runtime.agent.runEmbeddedPiAgent`) and any remaining direct imports must come from narrow `openclaw/plugin-sdk/*` subpaths instead of the monolithic SDK root. Docs: https://docs.openclaw.ai/plugins/sdk-migration and https://docs.openclaw.ai/plugins/sdk-overview.
+- Plugins/SDK: the new public plugin SDK surface is `openclaw/plugin-sdk/*`; `openclaw/extension-api` is removed with no compatibility shim. Bundled plugins must use injected runtime for host-side operations (for example `api.runtime.agent.runEmbeddedPiAgent`) and any remaining direct imports must come from narrow `openclaw/plugin-sdk/*` subpaths instead of the monolithic SDK root. Docs: https://github.com/liuda1999/Quiet-Core-bot/plugins/sdk-migration and https://github.com/liuda1999/Quiet-Core-bot/plugins/sdk-overview.
 - Plugins/message discovery: require `ChannelMessageActionAdapter.describeMessageTool(...)` for shared `message` tool discovery. The legacy `listActions`, `getCapabilities`, and `getToolSchema` adapter methods are removed. Plugin authors should migrate message discovery to `describeMessageTool(...)` and keep channel-specific action runtime code inside the owning plugin package. Thanks @gumadeiras.
-- Plugins/Matrix: add a new Matrix plugin backed by the official `matrix-js-sdk`. If you are upgrading from the previous public Matrix plugin, follow the migration guide: https://docs.openclaw.ai/install/migrating-matrix Thanks @gumadeiras.
+- Plugins/Matrix: add a new Matrix plugin backed by the official `matrix-js-sdk`. If you are upgrading from the previous public Matrix plugin, follow the migration guide: https://github.com/liuda1999/Quiet-Core-bot/install/migrating-matrix Thanks @gumadeiras.
 - Config/env: remove legacy `CLAWDBOT_*` and `MOLTBOT_*` compatibility env names across runtime, installers, and test tooling. Use the matching `OPENCLAW_*` env names instead.
-- Config/state: remove legacy `.moltbot` state-dir and `moltbot.json` auto-detection/migration fallback. If you still keep state under `~/.moltbot`, move it to `~/.quiet-core-bot` or set `OPENCLAW_STATE_DIR` / `OPENCLAW_CONFIG_PATH` explicitly. Docs: https://docs.openclaw.ai/install/migrating and https://docs.openclaw.ai/start/getting-started.
+- Config/state: remove legacy `.moltbot` state-dir and `moltbot.json` auto-detection/migration fallback. If you still keep state under `~/.moltbot`, move it to `~/.quiet-core-bot` or set `OPENCLAW_STATE_DIR` / `OPENCLAW_CONFIG_PATH` explicitly. Docs: https://github.com/liuda1999/Quiet-Core-bot/install/migrating and https://github.com/liuda1999/Quiet-Core-bot/start/getting-started.
 - Exec/env sandbox: block build-tool JVM injection (`MAVEN_OPTS`, `SBT_OPTS`, `GRADLE_OPTS`, `ANT_OPTS`), glibc tunable exploitation (`GLIBC_TUNABLES`), and .NET dependency resolution hijack (`DOTNET_ADDITIONAL_DEPS`) from the host exec environment, and restrict Gradle init script redirect (`GRADLE_USER_HOME`) as an override-only block so user-configured Gradle homes still propagate. (#49702).
 - Discord/commands: switch native command deployment to Carbon reconcile by default so Discord restarts stop churning slash commands through Quiet Core bot's local deploy path. (#46597) Thanks @huntharo and @thewilloftheshadow.
 - Security/exec approvals: treat `time` as a transparent dispatch wrapper during allowlist evaluation and allow-always persistence so approved `time ...` commands bind the inner executable instead of the wrapper path. Thanks @YLChen-007 for reporting.
@@ -11062,7 +11062,7 @@ This audited record covers the complete v2026.5.28..v2026.5.31-beta.4 history: 4
 ### Breaking
 
 - **BREAKING:** Onboarding now defaults `tools.profile` to `messaging` for new local installs (interactive + non-interactive). New setups no longer start with broad coding/system tools unless explicitly configured.
-- **BREAKING:** ACP dispatch now defaults to enabled unless explicitly disabled (`acp.dispatch.enabled=false`). If you need to pause ACP turn routing while keeping `/acp` controls, set `acp.dispatch.enabled=false`. Docs: https://docs.openclaw.ai/tools/acp-agents.
+- **BREAKING:** ACP dispatch now defaults to enabled unless explicitly disabled (`acp.dispatch.enabled=false`). If you need to pause ACP turn routing while keeping `/acp` controls, set `acp.dispatch.enabled=false`. Docs: https://github.com/liuda1999/Quiet-Core-bot/tools/acp-agents.
 - **BREAKING:** Plugin SDK removed `api.registerHttpHandler(...)`. Plugins must register explicit HTTP routes via `api.registerHttpRoute({ path, auth, match, handler })`, and dynamic webhook lifecycles should use `registerPluginHttpRoute(...)`.
 - **BREAKING:** Zalo Personal plugin (`@openclaw/zalouser`) no longer depends on external `zca`-compatible CLI binaries (`openzca`, `zca-cli`) for runtime send/listen/login; operators should use `quiet-core-bot channels login --channel zalouser` after upgrade to refresh sessions in the new JS-native path.
 
@@ -13291,28 +13291,28 @@ This audited record covers the complete v2026.5.28..v2026.5.31-beta.4 history: 4
 
 ### Highlights
 
-- Providers: Ollama discovery + docs; Venice guide upgrades + cross-links. (#1606) Thanks @abhaymundhara. https://docs.openclaw.ai/providers/ollama https://docs.openclaw.ai/providers/venice
+- Providers: Ollama discovery + docs; Venice guide upgrades + cross-links. (#1606) Thanks @abhaymundhara. https://github.com/liuda1999/Quiet-Core-bot/providers/ollama https://github.com/liuda1999/Quiet-Core-bot/providers/venice
 - Channels: LINE plugin (Messaging API) with rich replies + quick replies. (#1630) Thanks @plum-dawg.
-- TTS: Edge fallback (keyless) + `/tts` auto modes. (#1668, #1667) Thanks @sebslight. https://docs.openclaw.ai/tts
-- Exec approvals: approve in-chat via `/approve` across all channels (including plugins). (#1621) Thanks @czekaj. https://docs.openclaw.ai/tools/exec-approvals https://docs.openclaw.ai/tools/slash-commands
-- Telegram: DM topics as separate sessions + outbound link preview toggle. (#1597, #1700) Thanks @rohannagpal, @zerone0x. https://docs.openclaw.ai/channels/telegram
+- TTS: Edge fallback (keyless) + `/tts` auto modes. (#1668, #1667) Thanks @sebslight. https://github.com/liuda1999/Quiet-Core-bot/tts
+- Exec approvals: approve in-chat via `/approve` across all channels (including plugins). (#1621) Thanks @czekaj. https://github.com/liuda1999/Quiet-Core-bot/tools/exec-approvals https://github.com/liuda1999/Quiet-Core-bot/tools/slash-commands
+- Telegram: DM topics as separate sessions + outbound link preview toggle. (#1597, #1700) Thanks @rohannagpal, @zerone0x. https://github.com/liuda1999/Quiet-Core-bot/channels/telegram
 
 ### Changes
 
 - Channels: add LINE plugin (Messaging API) with rich replies, quick replies, and plugin HTTP registry. (#1630) Thanks @plum-dawg.
-- TTS: add Edge TTS provider fallback, defaulting to keyless Edge with MP3 retry on format failures. (#1668) https://docs.openclaw.ai/tts.
-- TTS: add auto mode enum (off/always/inbound/tagged) with per-session `/tts` override. (#1667) Thanks @sebslight. https://docs.openclaw.ai/tts
+- TTS: add Edge TTS provider fallback, defaulting to keyless Edge with MP3 retry on format failures. (#1668) https://github.com/liuda1999/Quiet-Core-bot/tts.
+- TTS: add auto mode enum (off/always/inbound/tagged) with per-session `/tts` override. (#1667) Thanks @sebslight. https://github.com/liuda1999/Quiet-Core-bot/tts
 - Telegram: treat DM topics as separate sessions and keep DM history limits stable with thread suffixes. (#1597) Thanks @rohannagpal.
-- Telegram: add `channels.telegram.linkPreview` to toggle outbound link previews. (#1700) Thanks @zerone0x. https://docs.openclaw.ai/channels/telegram
-- Web search: add Brave freshness filter parameter for time-scoped results. (#1688) Thanks @JonUleis. https://docs.openclaw.ai/tools/web
+- Telegram: add `channels.telegram.linkPreview` to toggle outbound link previews. (#1700) Thanks @zerone0x. https://github.com/liuda1999/Quiet-Core-bot/channels/telegram
+- Web search: add Brave freshness filter parameter for time-scoped results. (#1688) Thanks @JonUleis. https://github.com/liuda1999/Quiet-Core-bot/tools/web
 - UI: refresh Control UI dashboard design system (colors, icons, typography). (#1745, #1786) Thanks @EnzeD, @mousberg.
-- Exec approvals: forward approval prompts to chat with `/approve` for all channels (including plugins). (#1621) Thanks @czekaj. https://docs.openclaw.ai/tools/exec-approvals https://docs.openclaw.ai/tools/slash-commands
+- Exec approvals: forward approval prompts to chat with `/approve` for all channels (including plugins). (#1621) Thanks @czekaj. https://github.com/liuda1999/Quiet-Core-bot/tools/exec-approvals https://github.com/liuda1999/Quiet-Core-bot/tools/slash-commands
 - Gateway: expose config.patch in the gateway tool with safe partial updates + restart sentinel. (#1653).
-- Diagnostics: add diagnostic flags for targeted debug logs (config + env override). https://docs.openclaw.ai/diagnostics/flags.
+- Diagnostics: add diagnostic flags for targeted debug logs (config + env override). https://github.com/liuda1999/Quiet-Core-bot/diagnostics/flags.
 - Docs: expand FAQ (migration, scheduling, concurrency, model recommendations, OpenAI subscription auth, Pi sizing, hackable install, docs SSL workaround).
 - Docs: add verbose installer troubleshooting guidance.
 - Docs: add macOS VM guide with local/hosted options + VPS/nodes guidance. (#1693) Thanks @f-trycua.
-- Docs: add Bedrock EC2 instance role setup + IAM steps. (#1625) Thanks @sergical. https://docs.openclaw.ai/bedrock
+- Docs: add Bedrock EC2 instance role setup + IAM steps. (#1625) Thanks @sergical. https://github.com/liuda1999/Quiet-Core-bot/bedrock
 - Docs: update Fly.io guide notes.
 - Dev: add prek pre-commit hooks + dependabot config for weekly updates. (#1720) Thanks @dguido.
 
@@ -13324,11 +13324,11 @@ This audited record covers the complete v2026.5.28..v2026.5.31-beta.4 history: 4
 - Web UI: hide internal `message_id` hints in chat bubbles.
 - Gateway: allow Control UI token-only auth to skip device pairing even when device identity is present (`gateway.controlUi.allowInsecureAuth`). (#1679).
 - Matrix: decrypt E2EE media attachments with preflight size guard. (#1744) Thanks @araa47.
-- BlueBubbles: route phone-number targets to DMs, avoid leaking routing IDs, and auto-create missing DMs (Private API required). (#1751) Thanks @tyler6204. https://docs.openclaw.ai/channels/bluebubbles
+- BlueBubbles: route phone-number targets to DMs, avoid leaking routing IDs, and auto-create missing DMs (Private API required). (#1751) Thanks @tyler6204. https://github.com/liuda1999/Quiet-Core-bot/channels/bluebubbles
 - BlueBubbles: keep part-index GUIDs in reply tags when short IDs are missing.
 - iMessage: normalize chat_id/chat_guid/chat_identifier prefixes case-insensitively and keep service-prefixed handles stable. (#1708) Thanks @aaronn.
 - Signal: repair reaction sends (group/UUID targets + CLI author flags). (#1651) Thanks @vilkasdev.
-- Signal: add configurable signal-cli startup timeout + external daemon mode docs. (#1677) https://docs.openclaw.ai/channels/signal.
+- Signal: add configurable signal-cli startup timeout + external daemon mode docs. (#1677) https://github.com/liuda1999/Quiet-Core-bot/channels/signal.
 - Telegram: set fetch duplex="half" for uploads on Node 22 to avoid sendPhoto failures. (#1684) Thanks @commdata2338.
 - Telegram: use wrapped fetch for long-polling on Node to normalize AbortSignal handling. (#1639).
 - Telegram: honor per-account proxy for outbound API calls. (#1774) Thanks @radek-paclt.
@@ -13368,26 +13368,26 @@ This audited record covers the complete v2026.5.28..v2026.5.31-beta.4 history: 4
 
 ### Highlights
 
-- TTS: move Telegram TTS into core + enable model-driven TTS tags by default for expressive audio replies. (#1559) Thanks @Glucksberg. https://docs.openclaw.ai/tts
-- Gateway: add `/tools/invoke` HTTP endpoint for direct tool calls (auth + tool policy enforced). (#1575) Thanks @vignesh07. https://docs.openclaw.ai/gateway/tools-invoke-http-api
-- Heartbeat: per-channel visibility controls (OK/alerts/indicator). (#1452) Thanks @dlauer. https://docs.openclaw.ai/gateway/heartbeat
-- Deploy: add Fly.io deployment support + guide. (#1570) https://docs.openclaw.ai/platforms/fly.
-- Channels: add Tlon/Urbit channel plugin (DMs, group mentions, thread replies). (#1544) Thanks @wca4a. https://docs.openclaw.ai/channels/tlon
+- TTS: move Telegram TTS into core + enable model-driven TTS tags by default for expressive audio replies. (#1559) Thanks @Glucksberg. https://github.com/liuda1999/Quiet-Core-bot/tts
+- Gateway: add `/tools/invoke` HTTP endpoint for direct tool calls (auth + tool policy enforced). (#1575) Thanks @vignesh07. https://github.com/liuda1999/Quiet-Core-bot/gateway/tools-invoke-http-api
+- Heartbeat: per-channel visibility controls (OK/alerts/indicator). (#1452) Thanks @dlauer. https://github.com/liuda1999/Quiet-Core-bot/gateway/heartbeat
+- Deploy: add Fly.io deployment support + guide. (#1570) https://github.com/liuda1999/Quiet-Core-bot/platforms/fly.
+- Channels: add Tlon/Urbit channel plugin (DMs, group mentions, thread replies). (#1544) Thanks @wca4a. https://github.com/liuda1999/Quiet-Core-bot/channels/tlon
 
 ### Changes
 
-- Channels: allow per-group tool allow/deny policies across built-in + plugin channels. (#1546) Thanks @adam91holt. https://docs.openclaw.ai/multi-agent-sandbox-tools
-- Agents: add Bedrock auto-discovery defaults + config overrides. (#1553) Thanks @fal3. https://docs.openclaw.ai/bedrock
-- CLI: add `quiet-core-bot system` for system events + heartbeat controls; remove standalone `wake`. (commit 71203829d) https://docs.openclaw.ai/cli/system.
-- CLI: add live auth probes to `quiet-core-bot models status` for per-profile verification. (commit 40181afde) https://docs.openclaw.ai/cli/models.
+- Channels: allow per-group tool allow/deny policies across built-in + plugin channels. (#1546) Thanks @adam91holt. https://github.com/liuda1999/Quiet-Core-bot/multi-agent-sandbox-tools
+- Agents: add Bedrock auto-discovery defaults + config overrides. (#1553) Thanks @fal3. https://github.com/liuda1999/Quiet-Core-bot/bedrock
+- CLI: add `quiet-core-bot system` for system events + heartbeat controls; remove standalone `wake`. (commit 71203829d) https://github.com/liuda1999/Quiet-Core-bot/cli/system.
+- CLI: add live auth probes to `quiet-core-bot models status` for per-profile verification. (commit 40181afde) https://github.com/liuda1999/Quiet-Core-bot/cli/models.
 - CLI: restart the gateway by default after `quiet-core-bot update`; add `--no-restart` to skip it. (commit 2c85b1b40).
 - Browser: add node-host proxy auto-routing for remote gateways (configurable per gateway/node). (commit c3cb26f7c).
-- Plugins: add optional `llm-task` JSON-only tool for workflows. (#1498) Thanks @vignesh07. https://docs.openclaw.ai/tools/llm-task
+- Plugins: add optional `llm-task` JSON-only tool for workflows. (#1498) Thanks @vignesh07. https://github.com/liuda1999/Quiet-Core-bot/tools/llm-task
 - Markdown: add per-channel table conversion (bullets for Signal/WhatsApp, code blocks elsewhere). (#1495) Thanks @odysseus0.
 - Agents: keep system prompt time zone-only and move current time to `session_status` for better cache hits. (commit 66eec295b).
 - Agents: remove redundant bash tool alias from tool registration/display. (#1571) Thanks @Takhoffman.
-- Docs: add cron vs heartbeat decision guide (with Lobster workflow notes). (#1533) Thanks @JustYannicc. https://docs.openclaw.ai/automation/cron-vs-heartbeat
-- Docs: clarify HEARTBEAT.md empty file skips heartbeats, missing file still runs. (#1535) Thanks @JustYannicc. https://docs.openclaw.ai/gateway/heartbeat
+- Docs: add cron vs heartbeat decision guide (with Lobster workflow notes). (#1533) Thanks @JustYannicc. https://github.com/liuda1999/Quiet-Core-bot/automation/cron-vs-heartbeat
+- Docs: clarify HEARTBEAT.md empty file skips heartbeats, missing file still runs. (#1535) Thanks @JustYannicc. https://github.com/liuda1999/Quiet-Core-bot/gateway/heartbeat
 
 ### Fixes
 
@@ -13469,15 +13469,15 @@ This audited record covers the complete v2026.5.28..v2026.5.31-beta.4 history: 4
 
 ### Fixes
 
-- Control UI: ignore bootstrap identity placeholder text for avatar values and fall back to the default avatar. https://docs.openclaw.ai/cli/agents https://docs.openclaw.ai/web/control-ui.
+- Control UI: ignore bootstrap identity placeholder text for avatar values and fall back to the default avatar. https://github.com/liuda1999/Quiet-Core-bot/cli/agents https://github.com/liuda1999/Quiet-Core-bot/web/control-ui.
 - Slack: remove deprecated `filetype` field from `files.uploadV2` to eliminate API warnings. (#1447)
 
 ## 2026.1.21
 
 ### Changes
 
-- Highlight: Lobster optional plugin tool for typed workflows + approval gates. https://docs.openclaw.ai/tools/lobster.
-- Lobster: allow workflow file args via `argsJson` in the plugin tool. https://docs.openclaw.ai/tools/lobster.
+- Highlight: Lobster optional plugin tool for typed workflows + approval gates. https://github.com/liuda1999/Quiet-Core-bot/tools/lobster.
+- Lobster: allow workflow file args via `argsJson` in the plugin tool. https://github.com/liuda1999/Quiet-Core-bot/tools/lobster.
 - Heartbeat: allow running heartbeats in an explicit session key. (#1256) Thanks @zknicker.
 - CLI: default exec approvals to the local host, add gateway/node targeting flags, and show target details in allowlist output. Thanks @tobiasbischoff.
 - CLI: exec approvals mutations render tables instead of raw JSON. Thanks @tobiasbischoff.
@@ -13489,11 +13489,11 @@ This audited record covers the complete v2026.5.28..v2026.5.31-beta.4 history: 4
 - Sessions: add per-channel reset overrides via `session.resetByChannel`. (#1353) Thanks @cash-echo-bot.
 - Agents: add identity avatar config support and Control UI avatar rendering. (#1329, #1424) Thanks @dlauer.
 - UI: show per-session assistant identity in the Control UI. (#1420) Thanks @robbyczgw-cla.
-- CLI: add `quiet-core-bot update wizard` for interactive channel selection and restart prompts. https://docs.openclaw.ai/cli/update.
+- CLI: add `quiet-core-bot update wizard` for interactive channel selection and restart prompts. https://github.com/liuda1999/Quiet-Core-bot/cli/update.
 - Signal: add typing indicators and DM read receipts via signal-cli.
 - MSTeams: add file uploads, adaptive cards, and attachment handling improvements. (#1410) Thanks @Evizero.
 - Onboarding: remove the run setup-token auth option (paste setup-token or reuse CLI creds instead).
-- Docs: add troubleshooting entry for gateway.mode blocking gateway start. https://docs.openclaw.ai/gateway/troubleshooting.
+- Docs: add troubleshooting entry for gateway.mode blocking gateway start. https://github.com/liuda1999/Quiet-Core-bot/gateway/troubleshooting.
 - Docs: add /model allowlist troubleshooting note. (#1405).
 - Docs: add per-message Gmail search example for gog. (#1220) Thanks @mbelinky.
 
@@ -13521,75 +13521,75 @@ This audited record covers the complete v2026.5.28..v2026.5.31-beta.4 history: 4
 
 ### Breaking
 
-- **BREAKING:** Control UI now rejects insecure HTTP without device identity by default. Use HTTPS (Tailscale Serve) or set `gateway.controlUi.allowInsecureAuth: true` to allow token-only auth. https://docs.openclaw.ai/web/control-ui#insecure-http.
+- **BREAKING:** Control UI now rejects insecure HTTP without device identity by default. Use HTTPS (Tailscale Serve) or set `gateway.controlUi.allowInsecureAuth: true` to allow token-only auth. https://github.com/liuda1999/Quiet-Core-bot/web/control-ui#insecure-http.
 - **BREAKING:** Envelope and system event timestamps now default to host-local time (was UTC) so agents don't have to constantly convert (#57018). Thanks @hydro13.
 
 ## 2026.1.20
 
 ### Changes
 
-- Control UI: add copy-as-markdown with error feedback. (#1345) https://docs.openclaw.ai/web/control-ui.
-- Control UI: drop the legacy list view. (#1345) https://docs.openclaw.ai/web/control-ui.
-- TUI: add syntax highlighting for code blocks. (#1200) https://docs.openclaw.ai/tui.
-- TUI: session picker shows derived titles, fuzzy search, relative times, and last message preview. (#1271) https://docs.openclaw.ai/tui.
-- TUI: add a searchable model picker for quicker model selection. (#1198) https://docs.openclaw.ai/tui.
-- TUI: add input history (up/down) for submitted messages. (#1348) https://docs.openclaw.ai/tui.
-- ACP: add `openclaw acp` for IDE integrations. https://docs.openclaw.ai/cli/acp.
-- ACP: add `openclaw acp client` interactive harness for debugging. https://docs.openclaw.ai/cli/acp.
-- Skills: add download installs with OS-filtered options. https://docs.openclaw.ai/tools/skills.
-- Skills: add the local sherpa-onnx-tts skill. https://docs.openclaw.ai/tools/skills.
-- Memory: add hybrid BM25 + vector search (FTS5) with weighted merging and fallback. https://docs.openclaw.ai/concepts/memory.
-- Memory: add SQLite embedding cache to speed up reindexing and frequent updates. https://docs.openclaw.ai/concepts/memory.
-- Memory: add OpenAI batch indexing for embeddings when configured. https://docs.openclaw.ai/concepts/memory.
-- Memory: enable OpenAI batch indexing by default for OpenAI embeddings. https://docs.openclaw.ai/concepts/memory.
-- Memory: allow parallel OpenAI batch indexing jobs (default concurrency: 2). https://docs.openclaw.ai/concepts/memory.
-- Memory: render progress immediately, color batch statuses in verbose logs, and poll OpenAI batch status every 2s by default. https://docs.openclaw.ai/concepts/memory.
-- Memory: add `--verbose` logging for memory status + batch indexing details. https://docs.openclaw.ai/concepts/memory.
-- Memory: add native Gemini embeddings provider for memory search. (#1151) https://docs.openclaw.ai/concepts/memory.
-- Browser: allow config defaults for efficient snapshots in the tool/CLI. (#1336) https://docs.openclaw.ai/tools/browser.
-- Nostr: add the Nostr channel plugin with profile management + onboarding defaults. (#1323) https://docs.openclaw.ai/channels/nostr.
-- Matrix: migrate to matrix-bot-sdk with E2EE support, location handling, and group allowlist upgrades. (#1298) https://docs.openclaw.ai/channels/matrix.
-- Slack: add HTTP webhook mode via Bolt HTTP receiver. (#1143) https://docs.openclaw.ai/channels/slack.
-- Telegram: enrich forwarded-message context with normalized origin details + legacy fallback. (#1090) https://docs.openclaw.ai/channels/telegram.
+- Control UI: add copy-as-markdown with error feedback. (#1345) https://github.com/liuda1999/Quiet-Core-bot/web/control-ui.
+- Control UI: drop the legacy list view. (#1345) https://github.com/liuda1999/Quiet-Core-bot/web/control-ui.
+- TUI: add syntax highlighting for code blocks. (#1200) https://github.com/liuda1999/Quiet-Core-bot/tui.
+- TUI: session picker shows derived titles, fuzzy search, relative times, and last message preview. (#1271) https://github.com/liuda1999/Quiet-Core-bot/tui.
+- TUI: add a searchable model picker for quicker model selection. (#1198) https://github.com/liuda1999/Quiet-Core-bot/tui.
+- TUI: add input history (up/down) for submitted messages. (#1348) https://github.com/liuda1999/Quiet-Core-bot/tui.
+- ACP: add `openclaw acp` for IDE integrations. https://github.com/liuda1999/Quiet-Core-bot/cli/acp.
+- ACP: add `openclaw acp client` interactive harness for debugging. https://github.com/liuda1999/Quiet-Core-bot/cli/acp.
+- Skills: add download installs with OS-filtered options. https://github.com/liuda1999/Quiet-Core-bot/tools/skills.
+- Skills: add the local sherpa-onnx-tts skill. https://github.com/liuda1999/Quiet-Core-bot/tools/skills.
+- Memory: add hybrid BM25 + vector search (FTS5) with weighted merging and fallback. https://github.com/liuda1999/Quiet-Core-bot/concepts/memory.
+- Memory: add SQLite embedding cache to speed up reindexing and frequent updates. https://github.com/liuda1999/Quiet-Core-bot/concepts/memory.
+- Memory: add OpenAI batch indexing for embeddings when configured. https://github.com/liuda1999/Quiet-Core-bot/concepts/memory.
+- Memory: enable OpenAI batch indexing by default for OpenAI embeddings. https://github.com/liuda1999/Quiet-Core-bot/concepts/memory.
+- Memory: allow parallel OpenAI batch indexing jobs (default concurrency: 2). https://github.com/liuda1999/Quiet-Core-bot/concepts/memory.
+- Memory: render progress immediately, color batch statuses in verbose logs, and poll OpenAI batch status every 2s by default. https://github.com/liuda1999/Quiet-Core-bot/concepts/memory.
+- Memory: add `--verbose` logging for memory status + batch indexing details. https://github.com/liuda1999/Quiet-Core-bot/concepts/memory.
+- Memory: add native Gemini embeddings provider for memory search. (#1151) https://github.com/liuda1999/Quiet-Core-bot/concepts/memory.
+- Browser: allow config defaults for efficient snapshots in the tool/CLI. (#1336) https://github.com/liuda1999/Quiet-Core-bot/tools/browser.
+- Nostr: add the Nostr channel plugin with profile management + onboarding defaults. (#1323) https://github.com/liuda1999/Quiet-Core-bot/channels/nostr.
+- Matrix: migrate to matrix-bot-sdk with E2EE support, location handling, and group allowlist upgrades. (#1298) https://github.com/liuda1999/Quiet-Core-bot/channels/matrix.
+- Slack: add HTTP webhook mode via Bolt HTTP receiver. (#1143) https://github.com/liuda1999/Quiet-Core-bot/channels/slack.
+- Telegram: enrich forwarded-message context with normalized origin details + legacy fallback. (#1090) https://github.com/liuda1999/Quiet-Core-bot/channels/telegram.
 - Discord: fall back to `/skill` when native command limits are exceeded. (#1287).
 - Discord: expose `/skill` globally. (#1287).
-- Zalouser: add channel dock metadata, config schema, setup wiring, probe, and status issues. (#1219) https://docs.openclaw.ai/plugins/zalouser.
-- Plugins: require manifest-embedded config schemas with preflight validation warnings. (#1272) https://docs.openclaw.ai/plugins/manifest.
-- Plugins: move channel catalog metadata into plugin manifests. (#1290) https://docs.openclaw.ai/plugins/manifest.
-- Plugins: align Nextcloud Talk policy helpers with core patterns. (#1290) https://docs.openclaw.ai/plugins/manifest.
-- Plugins/UI: let channel plugin metadata drive UI labels/icons and cron channel options. (#1306) https://docs.openclaw.ai/web/control-ui.
-- Agents/UI: add agent avatar support in identity config, IDENTITY.md, and the Control UI. (#1329) https://docs.openclaw.ai/gateway/configuration.
-- Plugins: add plugin slots with a dedicated memory slot selector. https://docs.openclaw.ai/plugins/agent-tools.
-- Plugins: ship the bundled BlueBubbles channel plugin (disabled by default). https://docs.openclaw.ai/channels/bluebubbles.
+- Zalouser: add channel dock metadata, config schema, setup wiring, probe, and status issues. (#1219) https://github.com/liuda1999/Quiet-Core-bot/plugins/zalouser.
+- Plugins: require manifest-embedded config schemas with preflight validation warnings. (#1272) https://github.com/liuda1999/Quiet-Core-bot/plugins/manifest.
+- Plugins: move channel catalog metadata into plugin manifests. (#1290) https://github.com/liuda1999/Quiet-Core-bot/plugins/manifest.
+- Plugins: align Nextcloud Talk policy helpers with core patterns. (#1290) https://github.com/liuda1999/Quiet-Core-bot/plugins/manifest.
+- Plugins/UI: let channel plugin metadata drive UI labels/icons and cron channel options. (#1306) https://github.com/liuda1999/Quiet-Core-bot/web/control-ui.
+- Agents/UI: add agent avatar support in identity config, IDENTITY.md, and the Control UI. (#1329) https://github.com/liuda1999/Quiet-Core-bot/gateway/configuration.
+- Plugins: add plugin slots with a dedicated memory slot selector. https://github.com/liuda1999/Quiet-Core-bot/plugins/agent-tools.
+- Plugins: ship the bundled BlueBubbles channel plugin (disabled by default). https://github.com/liuda1999/Quiet-Core-bot/channels/bluebubbles.
 - Plugins: migrate bundled messaging extensions to the plugin SDK and resolve plugin-sdk imports in the loader.
-- Plugins: migrate the Zalo plugin to the shared plugin SDK runtime. https://docs.openclaw.ai/channels/zalo.
-- Plugins: migrate the Zalo Personal plugin to the shared plugin SDK runtime. https://docs.openclaw.ai/plugins/zalouser.
-- Plugins: allow optional agent tools with explicit allowlists and add the plugin tool authoring guide. https://docs.openclaw.ai/plugins/agent-tools.
+- Plugins: migrate the Zalo plugin to the shared plugin SDK runtime. https://github.com/liuda1999/Quiet-Core-bot/channels/zalo.
+- Plugins: migrate the Zalo Personal plugin to the shared plugin SDK runtime. https://github.com/liuda1999/Quiet-Core-bot/plugins/zalouser.
+- Plugins: allow optional agent tools with explicit allowlists and add the plugin tool authoring guide. https://github.com/liuda1999/Quiet-Core-bot/plugins/agent-tools.
 - Plugins: auto-enable bundled channel/provider plugins when configuration is present.
 - Plugins: sync plugin sources on channel switches and update npm-installed plugins during `quiet-core-bot update`.
 - Plugins: share npm plugin update logic between `quiet-core-bot update` and `quiet-core-bot plugins update`.
 
 - Gateway/API: add `/v1/responses` (OpenResponses) with item-based input + semantic streaming events. (#1229).
 - Gateway/API: expand `/v1/responses` to support file/image inputs, tool_choice, usage, and output limits. (#1229).
-- Usage: add `/usage cost` summaries and macOS menu cost charts. https://docs.openclaw.ai/reference/api-usage-costs.
-- Security: warn when <=300B models run without sandboxing while web tools are enabled. https://docs.openclaw.ai/cli/security.
-- Exec: add host/security/ask routing for gateway + node exec. https://docs.openclaw.ai/tools/exec.
-- Exec: add `/exec` directive for per-session exec defaults (host/security/ask/node). https://docs.openclaw.ai/tools/exec.
-- Exec approvals: migrate approvals to `~/.quiet-core-bot/exec-approvals.json` with per-agent allowlists + skill auto-allow toggle, and add approvals UI + node exec lifecycle events. https://docs.openclaw.ai/tools/exec-approvals.
-- Nodes: add headless node host (`quiet-core-bot node start`) for `system.run`/`system.which`. https://docs.openclaw.ai/cli/node.
-- Nodes: add node daemon service install/status/start/stop/restart. https://docs.openclaw.ai/cli/node.
+- Usage: add `/usage cost` summaries and macOS menu cost charts. https://github.com/liuda1999/Quiet-Core-bot/reference/api-usage-costs.
+- Security: warn when <=300B models run without sandboxing while web tools are enabled. https://github.com/liuda1999/Quiet-Core-bot/cli/security.
+- Exec: add host/security/ask routing for gateway + node exec. https://github.com/liuda1999/Quiet-Core-bot/tools/exec.
+- Exec: add `/exec` directive for per-session exec defaults (host/security/ask/node). https://github.com/liuda1999/Quiet-Core-bot/tools/exec.
+- Exec approvals: migrate approvals to `~/.quiet-core-bot/exec-approvals.json` with per-agent allowlists + skill auto-allow toggle, and add approvals UI + node exec lifecycle events. https://github.com/liuda1999/Quiet-Core-bot/tools/exec-approvals.
+- Nodes: add headless node host (`quiet-core-bot node start`) for `system.run`/`system.which`. https://github.com/liuda1999/Quiet-Core-bot/cli/node.
+- Nodes: add node daemon service install/status/start/stop/restart. https://github.com/liuda1999/Quiet-Core-bot/cli/node.
 - Bridge: add `skills.bins` RPC to support node host auto-allow skill bins.
-- Sessions: add daily reset policy with per-type overrides and idle windows (default 4am local), preserving legacy idle-only configs. (#1146) https://docs.openclaw.ai/concepts/session.
-- Sessions: allow `sessions_spawn` to override thinking level for sub-agent runs. https://docs.openclaw.ai/tools/subagents.
-- Channels: unify thread/topic allowlist matching + command/mention gating helpers across core providers. https://docs.openclaw.ai/concepts/groups.
-- Models: add Qwen Portal OAuth provider support. (#1120) https://docs.openclaw.ai/providers/qwen.
-- Onboarding: add allowlist prompts and username-to-id resolution across core and extension channels. https://docs.openclaw.ai/start/onboarding.
-- Docs: clarify allowlist input types and onboarding behavior for messaging channels. https://docs.openclaw.ai/start/onboarding.
-- Docs: refresh Android node discovery docs for the Gateway WS service type. https://docs.openclaw.ai/platforms/android.
-- Docs: surface Amazon Bedrock in provider lists and clarify Bedrock auth env vars. (#1289) https://docs.openclaw.ai/bedrock.
-- Docs: clarify WhatsApp voice notes. https://docs.openclaw.ai/channels/whatsapp.
-- Docs: clarify Windows WSL portproxy LAN access notes. https://docs.openclaw.ai/platforms/windows.
-- Docs: refresh bird skill install metadata and usage notes. (#1302) https://docs.openclaw.ai/tools/browser-login.
+- Sessions: add daily reset policy with per-type overrides and idle windows (default 4am local), preserving legacy idle-only configs. (#1146) https://github.com/liuda1999/Quiet-Core-bot/concepts/session.
+- Sessions: allow `sessions_spawn` to override thinking level for sub-agent runs. https://github.com/liuda1999/Quiet-Core-bot/tools/subagents.
+- Channels: unify thread/topic allowlist matching + command/mention gating helpers across core providers. https://github.com/liuda1999/Quiet-Core-bot/concepts/groups.
+- Models: add Qwen Portal OAuth provider support. (#1120) https://github.com/liuda1999/Quiet-Core-bot/providers/qwen.
+- Onboarding: add allowlist prompts and username-to-id resolution across core and extension channels. https://github.com/liuda1999/Quiet-Core-bot/start/onboarding.
+- Docs: clarify allowlist input types and onboarding behavior for messaging channels. https://github.com/liuda1999/Quiet-Core-bot/start/onboarding.
+- Docs: refresh Android node discovery docs for the Gateway WS service type. https://github.com/liuda1999/Quiet-Core-bot/platforms/android.
+- Docs: surface Amazon Bedrock in provider lists and clarify Bedrock auth env vars. (#1289) https://github.com/liuda1999/Quiet-Core-bot/bedrock.
+- Docs: clarify WhatsApp voice notes. https://github.com/liuda1999/Quiet-Core-bot/channels/whatsapp.
+- Docs: clarify Windows WSL portproxy LAN access notes. https://github.com/liuda1999/Quiet-Core-bot/platforms/windows.
+- Docs: refresh bird skill install metadata and usage notes. (#1302) https://github.com/liuda1999/Quiet-Core-bot/tools/browser-login.
 - Agents: add local docs path resolution and include docs/mirror/source/community pointers in the system prompt.
 - Agents: clarify node_modules read-only guidance in agent instructions.
 - Config: stamp last-touched metadata on write and warn if the config is newer than the running build.
@@ -13718,12 +13718,12 @@ Thanks @AlexMikhalev, @CoreyH, @John-Rood, @KrauseFx, @MaudeBot, @Nachx639, @Nic
 
 ### Highlights
 
-- Hooks: add hooks system with bundled hooks, CLI tooling, and docs. (#1028) - thanks @ThomsenDrake. https://docs.openclaw.ai/hooks
-- Media: add inbound media understanding (image/audio/video) with provider + CLI fallbacks. https://docs.openclaw.ai/nodes/media-understanding.
-- Plugins: add Zalo Personal plugin (`@openclaw/zalouser`) and unify channel directory for plugins. (#1032) - thanks @suminhthanh. https://docs.openclaw.ai/plugins/zalouser
-- Models: add Vercel AI Gateway auth choice + onboarding updates. (#1016) - thanks @timolins. https://docs.openclaw.ai/providers/vercel-ai-gateway
-- Sessions: add `session.identityLinks` for cross-platform DM session li nking. (#1033) - thanks @thewilloftheshadow. https://docs.openclaw.ai/concepts/session
-- Web search: add `country`/`language` parameters (schema + Brave API) and docs. (#1046) - thanks @YuriNachos. https://docs.openclaw.ai/tools/web
+- Hooks: add hooks system with bundled hooks, CLI tooling, and docs. (#1028) - thanks @ThomsenDrake. https://github.com/liuda1999/Quiet-Core-bot/hooks
+- Media: add inbound media understanding (image/audio/video) with provider + CLI fallbacks. https://github.com/liuda1999/Quiet-Core-bot/nodes/media-understanding.
+- Plugins: add Zalo Personal plugin (`@openclaw/zalouser`) and unify channel directory for plugins. (#1032) - thanks @suminhthanh. https://github.com/liuda1999/Quiet-Core-bot/plugins/zalouser
+- Models: add Vercel AI Gateway auth choice + onboarding updates. (#1016) - thanks @timolins. https://github.com/liuda1999/Quiet-Core-bot/providers/vercel-ai-gateway
+- Sessions: add `session.identityLinks` for cross-platform DM session li nking. (#1033) - thanks @thewilloftheshadow. https://github.com/liuda1999/Quiet-Core-bot/concepts/session
+- Web search: add `country`/`language` parameters (schema + Brave API) and docs. (#1046) - thanks @YuriNachos. https://github.com/liuda1999/Quiet-Core-bot/tools/web
 
 ### Changes
 
@@ -13734,7 +13734,7 @@ Thanks @AlexMikhalev, @CoreyH, @John-Rood, @KrauseFx, @MaudeBot, @Nachx639, @Nic
 - Tools: send Chrome-like headers by default for `web_fetch` to improve extraction on bot-sensitive sites.
 - Tools: Firecrawl fallback now uses bot-circumvention + cache by default; remove basic HTML fallback when extraction fails.
 - Tools: default `exec` exit notifications and auto-migrate legacy `tools.bash` to `tools.exec`.
-- Tools: add `exec` PTY support for interactive sessions. https://docs.openclaw.ai/tools/exec.
+- Tools: add `exec` PTY support for interactive sessions. https://github.com/liuda1999/Quiet-Core-bot/tools/exec.
 - Tools: add tmux-style `process send-keys` and bracketed paste helpers for PTY sessions.
 - Tools: add `process submit` helper to send CR for PTY sessions.
 - Tools: respond to PTY cursor position queries to unblock interactive TUIs.
@@ -13790,7 +13790,7 @@ Thanks @AlexMikhalev, @CoreyH, @John-Rood, @KrauseFx, @MaudeBot, @Nachx639, @Nic
 - Sessions: hard-stop `sessions.delete` cleanup.
 - Channels: treat replies to the bot as implicit mentions across supported channels.
 - Channels: normalize object-format capabilities in channel capability parsing.
-- Security: default-deny slash/control commands unless a channel computed `CommandAuthorized` (fixes accidental "open" behavior), and ensure WhatsApp + Zalo plugin channels gate inline `/...` tokens correctly. https://docs.openclaw.ai/gateway/security (#57018) Thanks @hydro13.
+- Security: default-deny slash/control commands unless a channel computed `CommandAuthorized` (fixes accidental "open" behavior), and ensure WhatsApp + Zalo plugin channels gate inline `/...` tokens correctly. https://github.com/liuda1999/Quiet-Core-bot/gateway/security (#57018) Thanks @hydro13.
 - Security: redact sensitive text in gateway WS logs.
 - Tools: cap pending `exec` process output to avoid unbounded buffers.
 - CLI: speed up `quiet-core-bot sandbox-explain` by avoiding heavy plugin imports when normalizing channel ids.
@@ -13822,7 +13822,7 @@ Thanks @AlexMikhalev, @CoreyH, @John-Rood, @KrauseFx, @MaudeBot, @Nachx639, @Nic
 - **BREAKING:** Channel auth now prefers config over env for Discord/Telegram/Matrix (env is fallback only). (#1040) - thanks @thewilloftheshadow.
 - **BREAKING:** Drop legacy `chatType: "room"` support; use `chatType: "channel"`.
 - **BREAKING:** remove legacy provider-specific target resolution fallbacks; target resolution is centralized with plugin hints + directory lookups.
-- **BREAKING:** `quiet-core-bot hooks` is now `quiet-core-bot webhooks`; hooks live under `quiet-core-bot hooks`. https://docs.openclaw.ai/cli/webhooks.
+- **BREAKING:** `quiet-core-bot hooks` is now `quiet-core-bot webhooks`; hooks live under `quiet-core-bot hooks`. https://github.com/liuda1999/Quiet-Core-bot/cli/webhooks.
 - **BREAKING:** `quiet-core-bot plugins install <path>` now copies into `~/.quiet-core-bot/extensions` (use `--link` to keep path-based loading).
 
 ## 2026.1.15

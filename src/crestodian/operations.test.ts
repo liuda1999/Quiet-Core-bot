@@ -154,7 +154,7 @@ vi.mock("./overview.js", () => ({
       error: "offline",
     },
     references: {
-      docsUrl: "https://docs.openclaw.ai",
+      docsUrl: "https://github.com/liuda1999/Quiet-Core-bot",
       sourceUrl: "https://github.com/openclaw/openclaw",
     },
   })),

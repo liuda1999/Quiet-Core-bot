@@ -11,7 +11,7 @@ import {
 const activePrLimit = 20;
 
 const thirdPartyExtensionMessage =
-  "Please publish this as a third-party plugin on [ClawHub](https://clawhub.ai) instead of adding it to the core repo. Docs: https://docs.openclaw.ai/plugin and https://docs.openclaw.ai/clawhub";
+  "Please publish this as a third-party plugin on [ClawHub](https://clawhub.ai) instead of adding it to the core repo. Docs: https://github.com/liuda1999/Quiet-Core-bot/plugin and https://github.com/liuda1999/Quiet-Core-bot/clawhub";
 
 const rules = [
   {
@@ -24,7 +24,7 @@ const rules = [
     label: "r: support",
     close: true,
     message:
-      "Please use [our support server](https://discord.gg/clawd) and ask in #help or #users-helping-users to resolve this, or follow the stuck FAQ at https://docs.openclaw.ai/help/faq#im-stuck-whats-the-fastest-way-to-get-unstuck.",
+      "Please use [our support server](https://discord.gg/clawd) and ask in #help or #users-helping-users to resolve this, or follow the stuck FAQ at https://github.com/liuda1999/Quiet-Core-bot/help/faq#im-stuck-whats-the-fastest-way-to-get-unstuck.",
   },
   {
     label: "r: false-positive",
@@ -63,7 +63,7 @@ const rules = [
     close: true,
     commentTriggers: ["bluebubbles", "blue bubbles"],
     message:
-      "BlueBubbles is deprecated and no longer ships as a bundled OpenClaw channel. Use iMessage via `imsg` instead: https://docs.openclaw.ai/channels/imessage. If this needs to stay BlueBubbles-backed, publish it as a third-party plugin on ClawHub instead of adding it back to core.",
+      "BlueBubbles is deprecated and no longer ships as a bundled OpenClaw channel. Use iMessage via `imsg` instead: https://github.com/liuda1999/Quiet-Core-bot/channels/imessage. If this needs to stay BlueBubbles-backed, publish it as a third-party plugin on ClawHub instead of adding it back to core.",
   },
   {
     label: "r: moltbook",

@@ -552,7 +552,7 @@ describe("buildAgentSystemPrompt", () => {
       workspaceDir: "/tmp/work",
     });
 
-    expect(prompt).toContain("Docs: https://docs.openclaw.ai");
+    expect(prompt).toContain("Docs: https://github.com/liuda1999/Quiet-Core-bot");
     expect(prompt).toContain("Source: https://github.com/openclaw/openclaw");
     expect(prompt).toContain(
       "Docs are authoritative for Quiet Core bot self-knowledge: before understanding how Quiet Core bot works (memory/daily notes, sessions, tools, Gateway, config, commands, project context), use the docs mirror first when web tooling is available; treat AGENTS.md/project context, workspace/profile/memory notes, and `memory_search` as instruction context or user memory, not Quiet Core bot design/implementation knowledge.",

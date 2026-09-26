@@ -494,7 +494,9 @@ describe("config mutate helpers", () => {
           draft.gateway = { ...draft.gateway, port: 19001 };
         },
       }),
-    ).rejects.toThrow("Quiet Core bot Nix overview: https://docs.openclaw.ai/install/nix");
+    ).rejects.toThrow(
+      "Quiet Core bot Nix overview: https://github.com/liuda1999/Quiet-Core-bot/install/nix",
+    );
 
     expect(ioMocks.writeConfigFile).not.toHaveBeenCalled();
   });

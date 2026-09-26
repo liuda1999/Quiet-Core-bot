@@ -2,7 +2,7 @@
 import { formatTerminalLink } from "./terminal-link.js";
 
 function resolveDocsRoot(): string {
-  return "https://docs.openclaw.ai";
+  return "https://github.com/liuda1999/Quiet-Core-bot";
 }
 
 export function formatDocsLink(

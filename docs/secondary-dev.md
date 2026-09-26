@@ -103,7 +103,7 @@
 如果你想要一个个人单用户助手，感觉本地、快速且始终在线，这就是它。
 
 - 官网：<https://openclaw.ai>
-- 文档：<https://docs.openclaw.ai>
+- 文档：<https://github.com/liuda1999/Quiet-Core-bot>
 - 仓库：<https://github.com/openclaw/openclaw>
 - Discord：<https://discord.gg/clawd>
 - 当前版本：**2026.6.11**
@@ -5040,16 +5040,16 @@ pnpm test:docker:timings <summary.json>          # 排名慢 lane
 
 ## 附录 B：参考链接
 
-| 类别     | 名称                 | 链接                                     |
-| -------- | -------------------- | ---------------------------------------- |
-| 官方文档 | Quiet Core bot Docs  | <https://docs.openclaw.ai>               |
-| 仓库     | GitHub               | <https://github.com/openclaw/openclaw>   |
-| 社区     | Discord              | <https://discord.gg/clawd>               |
-| 社区     | X/Twitter @openclaw  | <https://x.com/openclaw>                 |
-| 知识库   | DeepWiki             | <https://deepwiki.com/openclaw/openclaw> |
-| 插件市场 | ClawHub              | <https://clawhub.ai>                     |
-| 信任模型 | Trust & Threat Model | <https://github.com/openclaw/trust>      |
-| 贡献指南 | CONTRIBUTING.md      | 仓库根 `CONTRIBUTING.md`                 |
-| 愿景     | VISION.md            | 仓库根 `VISION.md`                       |
+| 类别     | 名称                 | 链接                                          |
+| -------- | -------------------- | --------------------------------------------- |
+| 官方文档 | Quiet Core bot Docs  | <https://github.com/liuda1999/Quiet-Core-bot> |
+| 仓库     | GitHub               | <https://github.com/openclaw/openclaw>        |
+| 社区     | Discord              | <https://discord.gg/clawd>                    |
+| 社区     | X/Twitter @openclaw  | <https://x.com/openclaw>                      |
+| 知识库   | DeepWiki             | <https://deepwiki.com/openclaw/openclaw>      |
+| 插件市场 | ClawHub              | <https://clawhub.ai>                          |
+| 信任模型 | Trust & Threat Model | <https://github.com/openclaw/trust>           |
+| 贡献指南 | CONTRIBUTING.md      | 仓库根 `CONTRIBUTING.md`                      |
+| 愿景     | VISION.md            | 仓库根 `VISION.md`                            |
 
 ---

@@ -103,7 +103,7 @@ export function registerSecurityCli(program: Command) {
             "Apply safe remediations and file-permission fixes.",
           ],
           ["quiet-core-bot security audit --json", "Output machine-readable JSON."],
-        ])}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/security", "docs.openclaw.ai/cli/security")}\n`,
+        ])}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/security", "github.com/liuda1999/Quiet-Core-bot/cli/security")}\n`,
     );
 
   security

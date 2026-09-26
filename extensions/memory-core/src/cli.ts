@@ -151,7 +151,7 @@ export function registerMemoryCli(program: Command) {
             "Also seed durable grounded candidates into the live short-term promotion store.",
           ],
           ["openclaw memory status --json", "Output machine-readable JSON (good for scripts)."],
-        ])}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/memory", "docs.openclaw.ai/cli/memory")}\n`,
+        ])}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/memory", "github.com/liuda1999/Quiet-Core-bot/cli/memory")}\n`,
     );
 
   memory

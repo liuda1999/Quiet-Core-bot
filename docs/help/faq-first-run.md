@@ -3,7 +3,7 @@ summary: "FAQ: quick-start and first-run setup — install, onboard, auth, subsc
 read_when:
   - New install, onboarding stuck, or first-run errors
   - Choosing auth and provider subscriptions
-  - Cannot access docs.openclaw.ai, cannot open dashboard, install stuck
+  - Cannot access github.com/liuda1999/Quiet-Core-bot, cannot open dashboard, install stuck
 title: "FAQ: first-run setup"
 sidebarTitle: "First-run FAQ"
 ---
@@ -242,9 +242,9 @@ and troubleshooting see the main [FAQ](/help/faq).
 
   </Accordion>
 
-  <Accordion title="Cannot access docs.openclaw.ai (SSL error)">
-    Some Comcast/Xfinity connections incorrectly block `docs.openclaw.ai` via Xfinity
-    Advanced Security. Disable it or allowlist `docs.openclaw.ai`, then retry.
+  <Accordion title="Cannot access github.com/liuda1999/Quiet-Core-bot (SSL error)">
+    Some Comcast/Xfinity connections incorrectly block `github.com/liuda1999/Quiet-Core-bot` via Xfinity
+    Advanced Security. Disable it or allowlist `github.com/liuda1999/Quiet-Core-bot`, then retry.
     Please help us unblock it by reporting here: [https://spa.xfinity.com/check_url_status](https://spa.xfinity.com/check_url_status).
 
     If you still can't reach the site, the docs are mirrored on GitHub:

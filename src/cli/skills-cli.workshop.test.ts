@@ -47,7 +47,7 @@ vi.mock("../runtime.js", () => ({
 }));
 
 vi.mock("../terminal/links.js", () => ({
-  formatDocsLink: () => "docs.openclaw.ai/cli/skills",
+  formatDocsLink: () => "github.com/liuda1999/Quiet-Core-bot/cli/skills",
 }));
 
 vi.mock("../terminal/theme.js", () => ({

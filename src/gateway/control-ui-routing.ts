@@ -19,7 +19,9 @@ export function classifyControlUiRequest(params: {
   const { basePath, pathname, search, method } = params;
   if (!basePath) {
     if (pathname === "/ui" || pathname.startsWith("/ui/")) {
-      return { kind: "not-found" };
+      // When the Control UI is root-mounted, `/ui` is a common user guess.
+      // Redirect to the root so the SPA loads instead of showing a 404.
+      return { kind: "redirect", location: `/${search}` };
     }
     // Keep core probe routes outside the root-mounted SPA catch-all so the
     // gateway probe handler can answer them even when the Control UI owns `/`.

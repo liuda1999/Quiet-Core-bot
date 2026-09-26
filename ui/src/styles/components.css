@@ -3850,6 +3850,140 @@ td.data-table-key-col {
 }
 
 /* ===========================================
+   Logs empty state — dragon emblem
+   =========================================== */
+
+.log-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 16px;
+  min-height: 220px;
+  text-align: center;
+}
+
+.log-empty__text {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.dragon-emblem {
+  width: 168px;
+  height: 134px;
+  overflow: visible;
+}
+
+.dragon-emblem__aura {
+  transform-origin: 100px 88px;
+  animation: dragon-aura 4.5s ease-in-out infinite;
+}
+
+.dragon-emblem__flames {
+  transform-origin: 118px 118px;
+}
+
+.dragon-emblem__flame {
+  transform-origin: center bottom;
+}
+
+.dragon-emblem__flame--1 {
+  animation: dragon-flame 1.6s ease-in-out infinite;
+}
+
+.dragon-emblem__flame--2 {
+  animation: dragon-flame 2.1s ease-in-out infinite 0.35s;
+}
+
+.dragon-emblem__flame--3 {
+  animation: dragon-flame 1.9s ease-in-out infinite 0.7s;
+}
+
+.dragon-emblem__head {
+  transform-origin: 100px 70px;
+  animation: dragon-breathe 5s ease-in-out infinite;
+}
+
+.dragon-emblem__horn--front {
+  transform-origin: 96px 30px;
+}
+
+.dragon-emblem__eye {
+  transform-origin: 99px 60px;
+  animation: dragon-blink 5.5s ease-in-out infinite;
+}
+
+.dragon-emblem__whiskers {
+  animation: dragon-whisker 3.2s ease-in-out infinite;
+}
+
+@keyframes dragon-flame {
+  0%,
+  100% {
+    transform: scaleY(1) scaleX(1) translateY(0);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scaleY(1.16) scaleX(0.94) translateY(-3px);
+    opacity: 1;
+  }
+}
+
+@keyframes dragon-aura {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.75;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 1;
+  }
+}
+
+@keyframes dragon-breathe {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-2px) rotate(-0.6deg);
+  }
+}
+
+@keyframes dragon-blink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.15);
+  }
+}
+
+@keyframes dragon-whisker {
+  0%,
+  100% {
+    transform: translateX(0) translateY(0);
+  }
+  50% {
+    transform: translateX(2px) translateY(-1.5px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dragon-emblem__aura,
+  .dragon-emblem__flame,
+  .dragon-emblem__head,
+  .dragon-emblem__eye,
+  .dragon-emblem__whiskers {
+    animation: none;
+  }
+}
+
+/* ===========================================
    Chat
    =========================================== */
 

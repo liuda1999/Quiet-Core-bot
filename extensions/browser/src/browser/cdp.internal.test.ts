@@ -560,7 +560,7 @@ describe("cdp internal", () => {
           socket.send(
             JSON.stringify({
               id: msg.id,
-              result: { result: { value: "https://docs.openclaw.ai/" } },
+              result: { result: { value: "https://github.com/liuda1999/Quiet-Core-bot/" } },
             }),
           );
         }
@@ -574,7 +574,9 @@ describe("cdp internal", () => {
       });
 
       expect(snap.snapshot).toContain('- button "Save" [ref=e1]');
-      expect(snap.snapshot).toContain('- link "Docs" [ref=e2] [url=https://docs.openclaw.ai/]');
+      expect(snap.snapshot).toContain(
+        '- link "Docs" [ref=e2] [url=https://github.com/liuda1999/Quiet-Core-bot/]',
+      );
       expect(snap.snapshot).toContain(
         '- generic "Clickable Card" [ref=e3] [cursor:pointer, onclick]',
       );

@@ -78,7 +78,7 @@ export function registerAgentsCommands(program: Command): void {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/agents", "docs.openclaw.ai/cli/agents")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/agents", "github.com/liuda1999/Quiet-Core-bot/cli/agents")}\n`,
     );
 
   agents
@@ -215,7 +215,7 @@ export function registerAgentsCommands(program: Command): void {
 ${theme.heading("Examples:")}
 ${formatHelpExamples([
   [
-    'quiet-core-bot agents set-identity --agent main --name "Quiet Core bot" --emoji "🦞"',
+    'quiet-core-bot agents set-identity --agent main --name "Quiet Core bot" --emoji "🐉"',
     "Set name + emoji.",
   ],
   [

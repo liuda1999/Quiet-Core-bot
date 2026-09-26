@@ -32,7 +32,7 @@ describe("shared/entry-status", () => {
       },
       frontmatter: {
         emoji: "🙂",
-        homepage: "https://docs.openclaw.ai",
+        homepage: "https://github.com/liuda1999/Quiet-Core-bot",
       },
       hasLocalBin: (bin) => bin === "bun",
       localPlatform: "linux",
@@ -94,7 +94,7 @@ describe("shared/entry-status", () => {
           },
         },
         frontmatter: {
-          website: " https://docs.openclaw.ai ",
+          website: " https://github.com/liuda1999/Quiet-Core-bot ",
           emoji: "🙂",
         },
       },
@@ -105,7 +105,7 @@ describe("shared/entry-status", () => {
 
     expect(result).toEqual({
       emoji: "🙂",
-      homepage: "https://docs.openclaw.ai",
+      homepage: "https://github.com/liuda1999/Quiet-Core-bot",
       required: {
         bins: ["missing-bin"],
         anyBins: [],

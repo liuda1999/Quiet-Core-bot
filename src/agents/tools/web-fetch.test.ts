@@ -4,7 +4,9 @@ import { createWebFetchTool, sanitizeWebFetchUrl } from "./web-fetch.js";
 
 describe("sanitizeWebFetchUrl", () => {
   it("removes whitespace between scheme and authority (reported bug)", () => {
-    expect(sanitizeWebFetchUrl("https:// docs.openclaw.ai")).toBe("https://docs.openclaw.ai");
+    expect(sanitizeWebFetchUrl("https:// github.com/liuda1999/Quiet-Core-bot")).toBe(
+      "https://github.com/liuda1999/Quiet-Core-bot",
+    );
   });
 
   it("trims leading and trailing whitespace", () => {
@@ -54,7 +56,9 @@ describe("sanitizeWebFetchUrl", () => {
   });
 
   it("does not modify already-valid URLs", () => {
-    expect(sanitizeWebFetchUrl("https://docs.openclaw.ai")).toBe("https://docs.openclaw.ai");
+    expect(sanitizeWebFetchUrl("https://github.com/liuda1999/Quiet-Core-bot")).toBe(
+      "https://github.com/liuda1999/Quiet-Core-bot",
+    );
   });
 
   it("handles https:// with tab after scheme", () => {

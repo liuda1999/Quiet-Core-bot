@@ -91,7 +91,7 @@ describe("memory-core /dreaming command", () => {
     const result = await runDreamingCommand(harness);
 
     expect(result.text).toContain("Usage: /dreaming status");
-    expect(result.text).toContain("Dreaming status:");
+    expect(result.text).toContain("Memory Consolidation status:");
     expect(result.text).toContain("- implementation detail: each sweep runs light -> REM -> deep.");
     expect(result.text).toContain(
       "- deep is the only stage that writes durable entries to MEMORY.md.",
@@ -124,7 +124,7 @@ describe("memory-core /dreaming command", () => {
     const storedDreaming = resolveStoredDreaming(harness.getRuntimeConfig());
     expect(storedDreaming.enabled).toBe(false);
     expect(storedDreaming.frequency).toBe("0 */6 * * *");
-    expect(result.text).toContain("Dreaming disabled.");
+    expect(result.text).toContain("Memory Consolidation disabled.");
   });
 
   it("blocks unscoped gateway callers from persisting dreaming config", async () => {
@@ -158,7 +158,7 @@ describe("memory-core /dreaming command", () => {
 
     expect(harness.runtime.config.mutateConfigFile).toHaveBeenCalledTimes(1);
     expect(resolveStoredDreaming(harness.getRuntimeConfig()).enabled).toBe(true);
-    expect(result.text).toContain("Dreaming enabled.");
+    expect(result.text).toContain("Memory Consolidation enabled.");
   });
 
   it("returns status without mutating config", async () => {
@@ -183,7 +183,7 @@ describe("memory-core /dreaming command", () => {
 
     const result = await runDreamingCommand(harness, "status");
 
-    expect(result.text).toContain("Dreaming status:");
+    expect(result.text).toContain("Memory Consolidation status:");
     expect(result.text).toContain("- enabled: off (America/Los_Angeles)");
     expect(result.text).toContain("- sweep cadence: 15 */8 * * *");
     expect(result.text).toContain("- promotion policy: score>=0.8, recalls>=3, uniqueQueries>=3");

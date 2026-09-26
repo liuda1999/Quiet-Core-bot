@@ -83,7 +83,7 @@ Notes:
 
 ## Docs
 
-- https://docs.openclaw.ai/tools/lobster
+- https://github.com/liuda1999/Quiet-Core-bot/tools/lobster
 
 ## Package
 

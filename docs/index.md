@@ -5,7 +5,7 @@ read_when:
 title: "Quiet Core bot"
 ---
 
-# Quiet Core bot 🦞
+# Quiet Core bot 🐉
 
 <p align="center">
     <img

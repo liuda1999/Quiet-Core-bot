@@ -132,7 +132,7 @@ quiet-core-bot browser tab new --label docs
 quiet-core-bot browser tab label t1 docs
 quiet-core-bot browser tab select 2
 quiet-core-bot browser tab close 2
-quiet-core-bot browser open https://docs.openclaw.ai --label docs
+quiet-core-bot browser open https://github.com/liuda1999/Quiet-Core-bot --label docs
 quiet-core-bot browser focus docs
 quiet-core-bot browser close t1
 ```

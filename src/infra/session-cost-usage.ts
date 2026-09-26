@@ -399,6 +399,44 @@ async function listUsageCountedTranscriptFiles(
   return await listUsageCountedTranscriptFileStats(agentId, params);
 }
 
+/**
+ * Strips the `gatewayPricing` field from a pricing fingerprint string.
+ *
+ * The fingerprint includes `gatewayPricing` only when the in-memory gateway
+ * pricing cache is populated. After a gateway restart the cache is empty, so
+ * the current fingerprint omits `gatewayPricing` while older cache entries
+ * still include it. Stripping the field from stored entries lets us match
+ * them against a post-restart fingerprint without forcing a full rescan.
+ */
+function stripGatewayPricingFromFingerprint(fingerprint: string): string {
+  if (!fingerprint.includes("gatewayPricing")) {
+    return fingerprint;
+  }
+  // stableCostFingerprintValue serializes as `{"key":value,...}` with sorted keys.
+  // The `gatewayPricing` value is a JSON-stringified array (quoted). Strip the
+  // field and its surrounding comma regardless of position.
+  return fingerprint
+    .replace(/,"gatewayPricing":"(?:[^"\\]|\\.)*"/, "")
+    .replace(/"gatewayPricing":"(?:[^"\\]|\\.)*",/, "");
+}
+
+/**
+ * Compares a stored cache-entry fingerprint against the current pricing
+ * fingerprint. When the current fingerprint omits `gatewayPricing` (gateway
+ * pricing cache is empty, e.g. right after a restart), the field is also
+ * stripped from the stored fingerprint so entries built while the cache was
+ * populated are not spuriously treated as stale.
+ */
+function pricingFingerprintsMatch(stored: string, current: string): boolean {
+  if (stored === current) {
+    return true;
+  }
+  if (!current.includes("gatewayPricing")) {
+    return stripGatewayPricingFromFingerprint(stored) === current;
+  }
+  return false;
+}
+
 function isUsageCostCacheEntryFresh(params: {
   entry: UsageCostCacheFileEntry | undefined;
   file: UsageCostTranscriptFile;
@@ -409,7 +447,7 @@ function isUsageCostCacheEntryFresh(params: {
     params.entry &&
     params.entry.size === params.file.size &&
     params.entry.mtimeMs === params.file.mtimeMs &&
-    params.entry.pricingFingerprint === params.pricingFingerprint &&
+    pricingFingerprintsMatch(params.entry.pricingFingerprint, params.pricingFingerprint) &&
     (!params.requireSessionSummary || params.entry.sessionSummary),
   );
 }
@@ -427,7 +465,7 @@ function canUseUsageCostCacheEntryForPartial(params: {
     params.entry &&
     params.entry.size <= params.file.size &&
     params.entry.mtimeMs <= params.file.mtimeMs &&
-    params.entry.pricingFingerprint === params.pricingFingerprint,
+    pricingFingerprintsMatch(params.entry.pricingFingerprint, params.pricingFingerprint),
   );
 }
 

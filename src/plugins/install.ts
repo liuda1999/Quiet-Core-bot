@@ -115,7 +115,7 @@ function isNpmAliasOverrideComparatorError(result: { stdout: string; stderr: str
 }
 
 const MISSING_EXTENSIONS_ERROR =
-  'package.json missing openclaw.extensions; update the plugin package to include openclaw.extensions (for example ["./dist/index.js"]). See https://docs.openclaw.ai/help/troubleshooting#plugin-install-fails-with-missing-openclaw-extensions';
+  'package.json missing openclaw.extensions; update the plugin package to include openclaw.extensions (for example ["./dist/index.js"]). See https://github.com/liuda1999/Quiet-Core-bot/help/troubleshooting#plugin-install-fails-with-missing-openclaw-extensions';
 const PLUGIN_ARCHIVE_ROOT_MARKERS = [
   "package.json",
   "openclaw.plugin.json",

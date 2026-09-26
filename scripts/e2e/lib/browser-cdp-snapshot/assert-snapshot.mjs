@@ -56,7 +56,7 @@ const snapshot = readBoundedSnapshot(snapshotPath, snapshotMaxBytes);
 for (const needle of [
   'button "Save"',
   'link "Docs"',
-  "https://docs.openclaw.ai/browser-cdp-live",
+  "https://github.com/liuda1999/Quiet-Core-bot/browser-cdp-live",
   'generic "Clickable Card"',
   "cursor:pointer",
   'Iframe "Child"',

@@ -205,16 +205,6 @@ export default definePluginEntry({
       names: ["memory_get"],
     });
 
-    api.registerCommand({
-      name: "dreaming",
-      description: "Enable or disable memory dreaming.",
-      acceptsArgs: true,
-      handler: async (ctx) => {
-        const { handleDreamingCommand } = await import("./src/dreaming-command.js");
-        return await handleDreamingCommand(api, ctx);
-      },
-    });
-
     api.registerCli(
       async ({ program }) => {
         const { registerMemoryCli } = await import("./cli.js");

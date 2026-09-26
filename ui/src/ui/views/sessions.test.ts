@@ -132,6 +132,50 @@ describe("sessions view", () => {
     });
   });
 
+  it("disables deletion of the main session", async () => {
+    const container = document.createElement("div");
+    const session = {
+      key: "agent:main:main",
+      kind: "direct",
+      updatedAt: Date.now(),
+    } as const;
+    render(renderSessions(buildProps(buildResult(session))), container);
+    await Promise.resolve();
+
+    const rowCheckbox = container.querySelector<HTMLInputElement>(
+      "tbody .data-table-checkbox-col input[type=checkbox]",
+    );
+    expect(rowCheckbox?.disabled).toBe(true);
+    expect(rowCheckbox?.getAttribute("title")).toBe("The main session can't be deleted.");
+
+    const selectAll = container.querySelector<HTMLInputElement>(
+      "thead .data-table-checkbox-col input[type=checkbox]",
+    );
+    expect(selectAll).toBeNull();
+  });
+
+  it("keeps non-main sessions selectable", async () => {
+    const container = document.createElement("div");
+    const session = {
+      key: "agent:main:dashboard:1",
+      kind: "direct",
+      updatedAt: Date.now(),
+    } as const;
+    render(renderSessions(buildProps(buildResult(session))), container);
+    await Promise.resolve();
+
+    const rowCheckbox = container.querySelector<HTMLInputElement>(
+      "tbody .data-table-checkbox-col input[type=checkbox]",
+    );
+    expect(rowCheckbox?.disabled).toBe(false);
+    expect(rowCheckbox?.getAttribute("title")).toBeNull();
+
+    const selectAll = container.querySelector<HTMLInputElement>(
+      "thead .data-table-checkbox-col input[type=checkbox]",
+    );
+    expect(selectAll).not.toBeNull();
+  });
+
   it("offers workboard capture for dashboard sessions", async () => {
     const container = document.createElement("div");
     const onAddToWorkboard = vi.fn();

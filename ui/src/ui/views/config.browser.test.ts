@@ -1,5 +1,5 @@
 // Control UI tests cover config behavior.
-import { render } from "lit";
+import { html, render } from "lit";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { ThemeMode, ThemeName } from "../theme.ts";
 import { renderConfig, resetConfigViewStateForTests, type ConfigProps } from "./config.ts";
@@ -150,6 +150,20 @@ describe("config view", () => {
 
   beforeEach(() => {
     resetConfigViewStateForTests();
+  });
+
+  it("renders bespoke section content when a renderer is provided", () => {
+    const container = document.createElement("div");
+    render(
+      renderConfig({
+        ...baseProps(),
+        formMode: "form",
+        activeSection: "models",
+        renderSectionContent: () => html`<div class="bespoke-section"></div>`,
+      }),
+      container,
+    );
+    expect(container.querySelector(".bespoke-section")).not.toBeNull();
   });
 
   it("updates save/apply disabled state from form safety and raw dirtiness", () => {

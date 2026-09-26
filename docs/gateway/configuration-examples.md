@@ -37,7 +37,7 @@ Save to `~/.quiet-core-bot/quiet-core-bot.json` and you can DM the bot from that
         identity: {
           name: "Clawd",
           theme: "helpful assistant",
-          emoji: "🦞",
+          emoji: "🐉",
         },
       },
     ],
