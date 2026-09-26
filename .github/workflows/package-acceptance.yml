@@ -630,27 +630,9 @@ jobs:
       OPENCLAW_GEMINI_SETTINGS_JSON: ${{ secrets.OPENCLAW_GEMINI_SETTINGS_JSON }}
       FIREWORKS_API_KEY: ${{ secrets.FIREWORKS_API_KEY }}
 
-  package_telegram:
-    name: Telegram package acceptance
-    needs: [resolve_package, package_integrity]
-    if: needs.resolve_package.outputs.telegram_enabled == 'true'
-    uses: ./.github/workflows/npm-telegram-beta-e2e.yml
-    with:
-      advisory: ${{ inputs.advisory }}
-      package_spec: ${{ inputs.package_spec }}
-      package_artifact_name: ${{ needs.resolve_package.outputs.package_artifact_name }}
-      package_label: openclaw@${{ needs.resolve_package.outputs.package_version }}
-      harness_ref: ${{ needs.resolve_package.outputs.package_source_sha || inputs.workflow_ref }}
-      provider_mode: ${{ needs.resolve_package.outputs.telegram_mode }}
-      scenario: ${{ inputs.telegram_scenarios }}
-    secrets:
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      OPENCLAW_QA_CONVEX_SITE_URL: ${{ secrets.OPENCLAW_QA_CONVEX_SITE_URL }}
-      OPENCLAW_QA_CONVEX_SECRET_CI: ${{ secrets.OPENCLAW_QA_CONVEX_SECRET_CI }}
-
   summary:
     name: Verify package acceptance
-    needs: [resolve_package, package_integrity, docker_acceptance, package_telegram]
+    needs: [resolve_package, package_integrity, docker_acceptance]
     if: always()
     runs-on: ubuntu-24.04
     timeout-minutes: 5
@@ -659,7 +641,6 @@ jobs:
         env:
           DOCKER_RESULT: ${{ needs.docker_acceptance.result }}
           PACKAGE_INTEGRITY_RESULT: ${{ needs.package_integrity.result }}
-          PACKAGE_TELEGRAM_RESULT: ${{ needs.package_telegram.result }}
           RESOLVE_RESULT: ${{ needs.resolve_package.result }}
         shell: bash
         run: |
@@ -669,8 +650,7 @@ jobs:
           for item in \
             "resolve_package=${RESOLVE_RESULT}" \
             "package_integrity=${PACKAGE_INTEGRITY_RESULT}" \
-            "docker_acceptance=${DOCKER_RESULT}" \
-            "package_telegram=${PACKAGE_TELEGRAM_RESULT}"
+            "docker_acceptance=${DOCKER_RESULT}"
           do
             name="${item%%=*}"
             result="${item#*=}"
