@@ -18,6 +18,11 @@ import {
   type ExecApprovalDecision,
   type ExecTarget,
 } from "../infra/exec-approvals.js";
+import {
+  POWERSHELL_WRAPPERS,
+  extractShellWrapperInlineCommand,
+} from "../infra/exec-wrapper-resolution.js";
+import { normalizeExecutableToken } from "../infra/exec-wrapper-tokens.js";
 import { requestHeartbeat } from "../infra/heartbeat-wake.js";
 import { findPathKey, mergePathPrepend, removePathPrepend } from "../infra/path-prepend.js";
 import { enqueueSystemEvent } from "../infra/system-events.js";
@@ -41,6 +46,7 @@ import {
   normalizeDeliveryContext,
   type DeliveryContext,
 } from "../utils/delivery-context.shared.js";
+import { splitShellArgs } from "../utils/shell-argv.js";
 import { resolveSafeTimeoutDelayMs } from "../utils/timer-delay.js";
 import {
   addSession,
@@ -571,6 +577,32 @@ function wrapPosixCommandWithPathPrepend(
   return `export PATH="\${OPENCLAW_PREPEND_PATH}\${PATH:+:$PATH}"; unset OPENCLAW_PREPEND_PATH; ${command}`;
 }
 
+/**
+ * Windows exec already runs the command through PowerShell, so a model-authored
+ * `powershell -Command "..."` wrapper is redundant and actively harmful: the
+ * outer shell expands `$…` inside the double-quoted payload before the nested
+ * process sees it, so `$_` and `$env:PATH` collapse to empty text and the inner
+ * command fails to parse. Return the inner payload so it runs directly.
+ */
+export function unwrapRedundantPowerShellWrapper(command: string): string | null {
+  if (process.platform !== "win32") {
+    return null;
+  }
+  const argv = splitShellArgs(command);
+  const executable = argv?.[0];
+  if (!argv || !executable || argv.length < 2) {
+    return null;
+  }
+  if (!POWERSHELL_WRAPPERS.has(normalizeExecutableToken(executable))) {
+    return null;
+  }
+  const payload = extractShellWrapperInlineCommand(argv)?.trim();
+  if (!payload || payload === command.trim()) {
+    return null;
+  }
+  return payload;
+}
+
 /** Starts a host or sandbox exec process and registers it for polling/backgrounding. */
 export async function runExecProcess(opts: {
   command: string;
@@ -607,7 +639,16 @@ export async function runExecProcess(opts: {
 }): Promise<ExecProcessHandle> {
   const startedAt = Date.now();
   const sessionId = createSessionSlug();
-  const execCommand = opts.execCommand ?? opts.command;
+  let execCommand = opts.execCommand ?? opts.command;
+  if (!opts.sandbox) {
+    const unwrapped = unwrapRedundantPowerShellWrapper(execCommand);
+    if (unwrapped) {
+      execCommand = unwrapped;
+      opts.warnings.push(
+        "Unwrapped a redundant PowerShell wrapper; the command runs directly in the exec shell.",
+      );
+    }
+  }
   const diagnosticTarget = opts.sandbox ? "sandbox" : "host";
   const supervisor = getProcessSupervisor();
   const shellRuntimeEnv: Record<string, string> = {

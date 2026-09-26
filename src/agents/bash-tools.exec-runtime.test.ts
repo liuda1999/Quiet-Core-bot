@@ -33,6 +33,7 @@ let formatExecFailureReason: typeof import("./bash-tools.exec-runtime.js").forma
 let renderExecUpdateText: typeof import("./bash-tools.exec-runtime.js").renderExecUpdateText;
 let resolveExecTarget: typeof import("./bash-tools.exec-runtime.js").resolveExecTarget;
 let runExecProcess: typeof import("./bash-tools.exec-runtime.js").runExecProcess;
+let unwrapRedundantPowerShellWrapper: typeof import("./bash-tools.exec-runtime.js").unwrapRedundantPowerShellWrapper;
 
 beforeAll(async () => {
   ({ markBackgrounded } = await import("./bash-process-registry.js"));
@@ -43,6 +44,7 @@ beforeAll(async () => {
     renderExecUpdateText,
     resolveExecTarget,
     runExecProcess,
+    unwrapRedundantPowerShellWrapper,
   } = await import("./bash-tools.exec-runtime.js"));
 });
 
@@ -50,6 +52,38 @@ beforeEach(() => {
   requestHeartbeatMock.mockClear();
   enqueueSystemEventMock.mockClear();
   supervisorMock.spawn.mockReset();
+});
+
+describe("unwrapRedundantPowerShellWrapper", () => {
+  const windowsOnly = it.runIf(process.platform === "win32");
+
+  windowsOnly("unwraps a nested PowerShell inline command", () => {
+    expect(
+      unwrapRedundantPowerShellWrapper('powershell -NoProfile -Command "Get-ChildItem $env:PATH"'),
+    ).toBe("Get-ChildItem $env:PATH");
+  });
+
+  windowsOnly("keeps the inner payload verbatim so $_ survives", () => {
+    const inner =
+      "Get-CimInstance Win32_LogicalDisk | Select-Object @{n='FreeGB';e={[math]::Round($_.SizeRemaining/1GB,1)}} | Format-Table";
+    expect(unwrapRedundantPowerShellWrapper(`powershell -NoProfile -Command "${inner}"`)).toBe(
+      inner,
+    );
+  });
+
+  windowsOnly("unwraps pwsh wrappers as well", () => {
+    expect(unwrapRedundantPowerShellWrapper('pwsh -NoProfile -Command "Get-Date"')).toBe(
+      "Get-Date",
+    );
+  });
+
+  windowsOnly("leaves POSIX shell wrappers alone", () => {
+    expect(unwrapRedundantPowerShellWrapper('bash -c "echo hi"')).toBeNull();
+  });
+
+  it("leaves plain commands untouched", () => {
+    expect(unwrapRedundantPowerShellWrapper("node -v")).toBeNull();
+  });
 });
 
 function expectExecTarget(
