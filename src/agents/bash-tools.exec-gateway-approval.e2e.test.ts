@@ -17,6 +17,7 @@ import {
   getFreeGatewayPort,
 } from "../gateway/test-helpers.e2e.js";
 import { captureEnv, setTestEnvValue } from "../test-utils/env.js";
+import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from "../utils/message-channel.js";
 import type { ExecApprovalFollowupOutcome } from "./bash-tools.exec-types.js";
 import { createExecTool } from "./bash-tools.exec.js";
@@ -73,8 +74,10 @@ describe("gateway-hosted exec approvals", () => {
       const envSnapshot = captureEnv(TEST_ENV_KEYS);
       cleanup.push(() => envSnapshot.restore());
 
-      const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-exec-approval-e2e-"));
-      cleanup.push(() => fs.rm(tempHome, { recursive: true, force: true, maxRetries: 5 }));
+      const tempHome = await fs.mkdtemp(
+        path.join(os.tmpdir(), "quiet-core-bot-exec-approval-e2e-"),
+      );
+      cleanup.push(() => removeTestTempPath(tempHome));
 
       const stateDir = path.join(tempHome, ".quiet-core-bot");
       const workspaceDir = path.join(tempHome, "workspace");

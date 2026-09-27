@@ -7,6 +7,7 @@ import { clearConfigCache, clearRuntimeConfigSnapshot } from "../config/config.j
 import { clearSessionStoreCacheForTest } from "../config/sessions/store.js";
 import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { captureEnv, deleteTestEnvValue, setTestEnvValue } from "../test-utils/env.js";
+import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import { ADMIN_SCOPE, APPROVALS_SCOPE } from "./method-scopes.js";
 import { withOperatorApprovalsGatewayClient } from "./operator-approvals-client.js";
 import { startGatewayServer } from "./server.js";
@@ -71,7 +72,7 @@ describe("operator approval gateway client runtime token source", () => {
     const tempHome = await fs.mkdtemp(
       path.join(os.tmpdir(), "quiet-core-bot-approval-client-e2e-"),
     );
-    cleanup.push(() => fs.rm(tempHome, { recursive: true, force: true, maxRetries: 5 }));
+    cleanup.push(() => removeTestTempPath(tempHome));
 
     const stateDir = path.join(tempHome, ".quiet-core-bot");
     await fs.mkdir(stateDir, { recursive: true });

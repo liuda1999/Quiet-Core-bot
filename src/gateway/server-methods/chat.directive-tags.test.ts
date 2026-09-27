@@ -2399,7 +2399,9 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("keeps slash-command block text when the final payload only adds media", async () => {
-    const transcriptDir = createTranscriptFixture("quiet-core-bot-chat-send-command-block-media-final-");
+    const transcriptDir = createTranscriptFixture(
+      "quiet-core-bot-chat-send-command-block-media-final-",
+    );
     const audioPath = path.join(transcriptDir, "tts.mp3");
     fs.writeFileSync(audioPath, Buffer.from([0xff, 0xfb, 0x90, 0x00]));
     mockState.config = {
@@ -2558,7 +2560,9 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("keeps media from duplicate slash-command finals without duplicating block text", async () => {
-    const transcriptDir = createTranscriptFixture("quiet-core-bot-chat-send-command-block-media-dupe-");
+    const transcriptDir = createTranscriptFixture(
+      "quiet-core-bot-chat-send-command-block-media-dupe-",
+    );
     const audioPath = path.join(transcriptDir, "tts.mp3");
     fs.writeFileSync(audioPath, Buffer.from([0xff, 0xfb, 0x90, 0x00]));
     mockState.config = {
@@ -2667,7 +2671,9 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("does not downgrade a voice-note block when a duplicate final has normalized false flags", async () => {
-    const transcriptDir = createTranscriptFixture("quiet-core-bot-chat-send-command-block-voice-sticky-");
+    const transcriptDir = createTranscriptFixture(
+      "quiet-core-bot-chat-send-command-block-voice-sticky-",
+    );
     const audioPath = path.join(transcriptDir, "voice.mp3");
     fs.writeFileSync(audioPath, Buffer.from([0xff, 0xfb, 0x90, 0x00]));
     mockState.config = {
@@ -4728,7 +4734,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     const respond = vi.fn();
     const context = createChatContext();
 
-    await runNonStreamingChatSend({
+    const sendPromise = runNonStreamingChatSend({
       context,
       respond,
       idempotencyKey: "idem-no-agent-images-order",
@@ -4746,8 +4752,14 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
       waitForCompletion: false,
     });
 
+    // chat.send awaits attachment persistence, so let it block on the controlled
+    // save and observe the pre-broadcast window before releasing the save.
+    await waitForAssertion(() => {
+      expect(mockState.activeSaveMediaCalls).toBe(1);
+    });
     expect((context.broadcast as unknown as ReturnType<typeof vi.fn>).mock.calls.length).toBe(0);
     releaseSave();
+    await sendPromise;
 
     await waitForAssertion(() => {
       expect((context.broadcast as unknown as ReturnType<typeof vi.fn>).mock.calls.length).toBe(1);
@@ -5173,7 +5185,10 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
       },
     ];
     mockState.savedMediaResults = [
-      { path: "/home/user/.quiet-core-bot/media/inbound/report.pdf", contentType: "application/pdf" },
+      {
+        path: "/home/user/.quiet-core-bot/media/inbound/report.pdf",
+        contentType: "application/pdf",
+      },
     ];
     const respond = vi.fn();
     const context = createChatContext();
@@ -5288,7 +5303,10 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
       },
     ];
     mockState.savedMediaResults = [
-      { path: "/home/user/.quiet-core-bot/media/inbound/report.pdf", contentType: "application/pdf" },
+      {
+        path: "/home/user/.quiet-core-bot/media/inbound/report.pdf",
+        contentType: "application/pdf",
+      },
     ];
     mockState.sandboxWorkspace = { workspaceDir: "/sandbox/workspace" };
     mockState.stagedRelativePaths = ["media/inbound/report.pdf"];
@@ -5343,7 +5361,10 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
       },
     });
     mockState.savedMediaResults = [
-      { path: "/home/user/.quiet-core-bot/media/inbound/report.pdf", contentType: "application/pdf" },
+      {
+        path: "/home/user/.quiet-core-bot/media/inbound/report.pdf",
+        contentType: "application/pdf",
+      },
       { path: "/home/user/.quiet-core-bot/media/inbound/screenshot.png", contentType: "image/png" },
     ];
     mockState.sandboxWorkspace = { workspaceDir: "/sandbox/workspace" };
@@ -5679,7 +5700,10 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
       },
     ];
     mockState.savedMediaResults = [
-      { path: "/home/user/.quiet-core-bot/media/inbound/report.pdf", contentType: "application/pdf" },
+      {
+        path: "/home/user/.quiet-core-bot/media/inbound/report.pdf",
+        contentType: "application/pdf",
+      },
     ];
     mockState.sandboxWorkspace = { workspaceDir: "/sandbox/workspace" };
     mockState.stageSandboxMediaError = Object.assign(new Error("ENOSPC: no space left on device"), {
@@ -5738,7 +5762,10 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
       },
     ];
     mockState.savedMediaResults = [
-      { path: "/home/user/.quiet-core-bot/media/inbound/report.pdf", contentType: "application/pdf" },
+      {
+        path: "/home/user/.quiet-core-bot/media/inbound/report.pdf",
+        contentType: "application/pdf",
+      },
     ];
     mockState.sandboxWorkspace = { workspaceDir: "/sandbox/workspace" };
     // No stagedRelativePaths → staged map is empty and ctx.MediaPaths keeps the
@@ -5791,7 +5818,10 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
       },
     ];
     mockState.savedMediaResults = [
-      { path: "/home/user/.quiet-core-bot/media/inbound/report.pdf", contentType: "application/pdf" },
+      {
+        path: "/home/user/.quiet-core-bot/media/inbound/report.pdf",
+        contentType: "application/pdf",
+      },
       {
         path: "/home/user/.quiet-core-bot/media/inbound/data.bin",
         contentType: "application/octet-stream",
@@ -6010,7 +6040,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     const respond = vi.fn();
     const context = createChatContext();
 
-    await runNonStreamingChatSend({
+    const sendPromise = runNonStreamingChatSend({
       context,
       respond,
       idempotencyKey: "idem-image-serial-save",
@@ -6033,10 +6063,15 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
       waitForCompletion: false,
     });
 
-    expect(mockState.activeSaveMediaCalls).toBe(1);
+    // chat.send awaits the serial attachment saves, so observe the single
+    // in-flight save before releasing it to finish both saves.
+    await waitForAssertion(() => {
+      expect(mockState.activeSaveMediaCalls).toBe(1);
+    });
     expect(mockState.maxActiveSaveMediaCalls).toBe(1);
     expect(mockState.savedMediaCalls).toHaveLength(0);
     releaseSave();
+    await sendPromise;
 
     await waitForAssertion(() => {
       expect(mockState.maxActiveSaveMediaCalls).toBe(1);
@@ -6226,7 +6261,9 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("emits a user transcript update when chat.send fails after agent start but before runtime persistence", async () => {
-    createTranscriptFixture("quiet-core-bot-chat-send-user-transcript-error-before-runtime-persist-");
+    createTranscriptFixture(
+      "quiet-core-bot-chat-send-user-transcript-error-before-runtime-persist-",
+    );
     mockState.triggerAgentRunStart = true;
     mockState.dispatchErrorAfterAgentRunStart = new Error("cli backend unavailable");
     const respond = vi.fn();
@@ -6309,7 +6346,9 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("emits a user transcript update when a started agent returns an error before runtime persistence", async () => {
-    createTranscriptFixture("quiet-core-bot-chat-send-user-transcript-agent-error-no-runtime-persist-");
+    createTranscriptFixture(
+      "quiet-core-bot-chat-send-user-transcript-agent-error-no-runtime-persist-",
+    );
     mockState.triggerAgentRunStart = true;
     mockState.finalPayload = { text: "agent failed before prompt append", isError: true };
     const respond = vi.fn();
@@ -6337,7 +6376,9 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("falls back to gateway user persistence when successful runtime persistence fails", async () => {
-    createTranscriptFixture("quiet-core-bot-chat-send-user-transcript-success-runtime-persist-failed-");
+    createTranscriptFixture(
+      "quiet-core-bot-chat-send-user-transcript-success-runtime-persist-failed-",
+    );
     mockState.triggerAgentRunStart = true;
     mockState.runtimeUserMessagePersistencePending = new Promise((_, reject) => {
       setTimeout(() => reject(new Error("runtime prompt mirror failed")), 0);

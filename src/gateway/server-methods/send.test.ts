@@ -9,6 +9,7 @@ import type { ChannelPlugin } from "../../channels/plugins/types.js";
 import { setActivePluginRegistry } from "../../plugins/runtime.js";
 import { createTestRegistry } from "../../test-utils/channel-plugins.js";
 import { captureEnv, setTestEnvValue } from "../../test-utils/env.js";
+import { removeTestTempPath } from "../../test-utils/session-state-cleanup.js";
 import type { GatewayRequestContext } from "./types.js";
 
 type ResolveOutboundTarget = typeof import("../../infra/outbound/targets.js").resolveOutboundTarget;
@@ -221,7 +222,9 @@ async function withTempOpenClawStateDir<T>(test: (stateDir: string) => Promise<T
     return await test(stateDir);
   } finally {
     envSnapshot.restore();
-    await fs.rm(stateDir, { recursive: true, force: true });
+    // Release cached state-database handles before deleting the temp state dir;
+    // a busy SQLite handle otherwise makes the recursive remove never settle.
+    await removeTestTempPath(stateDir);
   }
 }
 

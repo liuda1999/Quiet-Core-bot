@@ -18,7 +18,7 @@ import {
 } from "./guard-shared.mjs";
 
 /** Marker used to identify security-sensitive guard comments. */
-export const securitySensitiveGuardMarker = "<!-- openclaw:security-sensitive-guard -->";
+export const securitySensitiveGuardMarker = "<!-- quiet-core-bot:security-sensitive-guard -->";
 export const securitySensitiveChangedLabel = "security-sensitive-changed";
 export const allowSecuritySensitiveCommand = "/allow-security-sensitive-change";
 export {

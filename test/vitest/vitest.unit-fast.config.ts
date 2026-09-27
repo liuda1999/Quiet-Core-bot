@@ -21,7 +21,11 @@ export function createUnitFastVitestConfig(
       name: "unit-fast",
       isolate: false,
       runner: undefined,
-      setupFiles: [],
+      // Keep the shared isolated HOME/bootstrap even though the fast lane skips
+      // per-file module isolation. Without it these workers fall back to the
+      // developer's real HOME/state database and concurrent workers thrash the
+      // same state DB (which stalls whole shards on a populated machine).
+      setupFiles: sharedTest.setupFiles,
       include: includeFromEnv ?? cliInclude ?? unitFastTestFiles,
       exclude: sharedTest.exclude ?? [],
       passWithNoTests: true,

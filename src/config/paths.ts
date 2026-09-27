@@ -59,9 +59,9 @@ export function resolveStateDir(
 
 export function normalizeStateDirEnv(env: NodeJS.ProcessEnv = process.env): void {
   const effectiveHomedir = () => resolveRequiredHomeDir(env, envHomedir(env));
-  const openclawOverride = env.QUIET_CORE_STATE_DIR?.trim();
-  if (openclawOverride) {
-    env.QUIET_CORE_STATE_DIR = resolveUserPath(openclawOverride, env, effectiveHomedir);
+  const quietCoreBotOverride = env.QUIET_CORE_STATE_DIR?.trim();
+  if (quietCoreBotOverride) {
+    env.QUIET_CORE_STATE_DIR = resolveUserPath(quietCoreBotOverride, env, effectiveHomedir);
   }
 }
 
@@ -207,7 +207,9 @@ export function resolveDefaultConfigCandidates(
   const candidates: string[] = [];
   const stateDirOverride = env.QUIET_CORE_STATE_DIR?.trim();
   if (stateDirOverride) {
-    candidates.push(path.join(resolveUserPath(stateDirOverride, env, effectiveHomedir), CONFIG_FILENAME));
+    candidates.push(
+      path.join(resolveUserPath(stateDirOverride, env, effectiveHomedir), CONFIG_FILENAME),
+    );
   }
   candidates.push(path.join(newStateDir(effectiveHomedir), CONFIG_FILENAME));
   return candidates;

@@ -1,14 +1,15 @@
 /**
  * Shared test harness for plugin SDK contract tests that need temp fixtures.
  */
-import { mkdirSync, type RmOptions } from "node:fs";
-import { mkdir, mkdtemp, rm } from "node:fs/promises";
+import { mkdirSync } from "node:fs";
+import { mkdir, mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll } from "vitest";
+import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 
 /** Creates per-suite temp fixture helpers with automatic Vitest cleanup. */
-export function createPluginSdkTestHarness(options?: { cleanup?: RmOptions }) {
+export function createPluginSdkTestHarness() {
   let fixtureRoot = "";
   let caseId = 0;
 
@@ -20,11 +21,7 @@ export function createPluginSdkTestHarness(options?: { cleanup?: RmOptions }) {
     if (!fixtureRoot) {
       return;
     }
-    await rm(fixtureRoot, {
-      recursive: true,
-      force: true,
-      ...options?.cleanup,
-    });
+    await removeTestTempPath(fixtureRoot);
   });
 
   function nextTempDir(prefix: string): string {

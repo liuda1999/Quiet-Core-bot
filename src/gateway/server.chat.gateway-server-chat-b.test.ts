@@ -10,6 +10,7 @@ import { clearConfigCache } from "../config/config.js";
 import type { AgentModelConfig } from "../config/types.agents-shared.js";
 import { createDeferred } from "../test-utils/deferred.js";
 import { captureEnv, setTestEnvValue } from "../test-utils/env.js";
+import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from "../utils/message-channel.js";
 import { setMaxChatHistoryMessagesBytesForTest } from "./server-constants.js";
 import type { GatewayRequestContext, RespondFn } from "./server-methods/shared-types.js";
@@ -79,11 +80,7 @@ async function withGatewayChatHarness(
     clearConfigCache();
     testState.sessionStorePath = undefined;
     ws.close();
-    await Promise.all(
-      tempDirs.map((dir) =>
-        fs.rm(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 }),
-      ),
-    );
+    await Promise.all(tempDirs.map((dir) => removeTestTempPath(dir)));
   }
 }
 
@@ -126,7 +123,7 @@ async function writeMainSessionTranscript(
 }
 
 async function removeTempDir(dir: string): Promise<void> {
-  await fs.rm(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
+  await removeTestTempPath(dir);
 }
 
 async function readTimelineEvents(filePath: string): Promise<Array<Record<string, unknown>>> {

@@ -13,6 +13,7 @@ Alpha rules:
 
 from __future__ import annotations
 
+import argparse
 import base64
 import io
 import os
@@ -22,13 +23,37 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 ROOT = Path(__file__).resolve().parent.parent
-SOURCE = Path(r"C:\Users\15910\Downloads\logo (2).png")
+SOURCE_ENV_VAR = "QUIET_CORE_LOGO_SOURCE"
 THEME_BG = (10, 10, 10, 255)  # #0a0a0a
 WHITE = (255, 255, 255, 255)
 
 
-def build_transparent() -> Image.Image:
-    im = Image.open(SOURCE).convert("RGBA")
+def resolve_source_path(argv: list[str] | None = None) -> Path:
+    """Resolves the source image from a CLI argument or env var, with usage on miss."""
+    parser = argparse.ArgumentParser(
+        description="Generate Quiet Core bot logo assets from a single source image.",
+    )
+    parser.add_argument(
+        "source",
+        nargs="?",
+        help=(
+            "Path to the source image to derive every platform asset from. "
+            f"May also be provided via the {SOURCE_ENV_VAR} environment variable."
+        ),
+    )
+    args = parser.parse_args(argv)
+    raw = args.source or os.environ.get(SOURCE_ENV_VAR)
+    if not raw:
+        parser.error(
+            "a source image path is required: pass it as the first argument "
+            f"or set {SOURCE_ENV_VAR}. "
+            'Example: python scripts/make-logo.py "/path/to/logo.png"'
+        )
+    return Path(raw).expanduser().resolve()
+
+
+def build_transparent(source: Path) -> Image.Image:
+    im = Image.open(source).convert("RGBA")
     w, h = im.size
     # Flood-fill near-white background from the four corners, so whites that
     # are enclosed by the art (teeth, highlights) survive.
@@ -109,7 +134,8 @@ def svg_with(base: Image.Image, size: int = 256) -> str:
 
 
 def main() -> None:
-    base = build_transparent()
+    source = resolve_source_path()
+    base = build_transparent(source)
     print(f"master transparent art: {base.size[0]}x{base.size[1]}")
 
     # --- Web Control UI (transparent) ---

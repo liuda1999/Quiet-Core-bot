@@ -11,6 +11,7 @@ import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { emitAgentEvent } from "../infra/agent-events.js";
 import { createOutboundTestPlugin, createTestRegistry } from "../test-utils/channel-plugins.js";
 import { captureEnv } from "../test-utils/env.js";
+import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import {
   agentCommand,
   getFreePort,
@@ -288,7 +289,7 @@ describe("sessions_send gateway loopback", () => {
       } finally {
         agentStepTesting.setDepsForTest();
         testState.sessionStorePath = undefined;
-        await fs.rm(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
+        await removeTestTempPath(dir);
       }
     },
   );
@@ -439,7 +440,7 @@ describe("sessions_send agent targeting", () => {
       } finally {
         testState.agentsConfig = undefined;
         testState.sessionStorePath = undefined;
-        await fs.rm(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
+        await removeTestTempPath(dir);
       }
     },
   );

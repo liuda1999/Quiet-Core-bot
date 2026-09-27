@@ -24,6 +24,7 @@ import { readDiagnosticEvents } from "../state/diagnostic-events-store.js";
 import { closeOpenClawStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
 import { createChannelTestPluginBase, createTestRegistry } from "../test-utils/channel-plugins.js";
 import { withEnvAsync } from "../test-utils/env.js";
+import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import {
   buildAnnounceIdFromChildRun,
   buildAnnounceIdempotencyKey,
@@ -779,7 +780,7 @@ describe("subagent announce formatting", () => {
       });
     } finally {
       closeOpenClawStateDatabaseForTest();
-      await fs.rm(tempStateDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
+      await removeTestTempPath(tempStateDir);
     }
   });
 

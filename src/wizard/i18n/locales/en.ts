@@ -1020,7 +1020,7 @@ export const en = {
         "web_search will not work until the provider is re-enabled or a different provider is selected.",
       webUiUrl: "Web UI: {url}",
       webUiWithTokenUrl: "Web UI (with token): {url}",
-      whatNow: 'What now: https://openclaw.ai/showcase ("What People Are Building").',
+      whatNow: "What now: https://github.com/liuda1999/Quiet-Core-bot",
       whatNowTitle: "What now",
       workspaceBackupTitle: "Workspace backup",
       workspaceDocs: "Docs: https://github.com/liuda1999/Quiet-Core-bot/concepts/agent-workspace",

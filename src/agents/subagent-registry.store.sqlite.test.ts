@@ -9,6 +9,7 @@ import {
   openOpenClawStateDatabase,
 } from "../state/quiet-core-bot-state-db.js";
 import { withEnvAsync } from "../test-utils/env.js";
+import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import {
   loadSubagentRegistryFromSqlite,
   saveSubagentRegistryToSqlite,
@@ -65,7 +66,7 @@ describe("subagent registry sqlite store", () => {
   afterEach(async () => {
     closeOpenClawStateDatabaseForTest();
     if (tempStateDir) {
-      await fs.rm(tempStateDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
+      await removeTestTempPath(tempStateDir);
       tempStateDir = null;
     }
   });
@@ -94,7 +95,9 @@ describe("subagent registry sqlite store", () => {
         completion: run.completion,
         delivery: run.delivery,
       });
-      expect(await fs.stat(path.join(tempStateDir!, "state", "quiet-core-bot.sqlite"))).toBeTruthy();
+      expect(
+        await fs.stat(path.join(tempStateDir!, "state", "quiet-core-bot.sqlite")),
+      ).toBeTruthy();
       await expect(fs.stat(path.join(tempStateDir!, "subagents", "runs.json"))).rejects.toThrow();
     });
   });

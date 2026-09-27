@@ -40,6 +40,7 @@ import { resetTaskRegistryForTests } from "../tasks/runtime-internal.js";
 import { resetTaskFlowRegistryForTests } from "../tasks/task-flow-runtime-internal.js";
 import { captureEnv } from "../test-utils/env.js";
 import { getDeterministicFreePortBlock } from "../test-utils/ports.js";
+import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from "../utils/message-channel.js";
 import { buildDeviceAuthPayloadV3 } from "./device-auth.js";
 import type { GatewayServerOptions } from "./server.js";
@@ -266,43 +267,23 @@ async function resetGatewayTestState(options: { uniqueConfigRoot: boolean }) {
   resetTaskFlowRegistryForTests({ persist: false });
   const stateDir = process.env.QUIET_CORE_STATE_DIR;
   if (stateDir) {
-    await fs.rm(stateDir, {
-      recursive: true,
-      force: true,
-      maxRetries: 20,
-      retryDelay: 25,
-    });
+    await removeTestTempPath(stateDir);
     await fs.mkdir(stateDir, { recursive: true });
   }
   if (options.uniqueConfigRoot) {
     const suiteRoot = path.join(tempHome, ".quiet-core-bot-test-suite");
     await fs.mkdir(suiteRoot, { recursive: true });
     tempConfigRoot = path.join(suiteRoot, `case-${suiteConfigRootSeq++}`);
-    await fs.rm(tempConfigRoot, {
-      recursive: true,
-      force: true,
-      maxRetries: 20,
-      retryDelay: 25,
-    });
+    await removeTestTempPath(tempConfigRoot);
     await fs.mkdir(tempConfigRoot, { recursive: true });
   } else {
     tempConfigRoot = path.join(tempHome, ".quiet-core-bot-test");
-    await fs.rm(tempConfigRoot, {
-      recursive: true,
-      force: true,
-      maxRetries: 20,
-      retryDelay: 25,
-    });
+    await removeTestTempPath(tempConfigRoot);
     await fs.mkdir(tempConfigRoot, { recursive: true });
   }
   setTestConfigRoot(tempConfigRoot);
   tempControlUiRoot = path.join(tempHome, ".quiet-core-bot-test-control-ui");
-  await fs.rm(tempControlUiRoot, {
-    recursive: true,
-    force: true,
-    maxRetries: 20,
-    retryDelay: 25,
-  });
+  await removeTestTempPath(tempControlUiRoot);
   await fs.mkdir(tempControlUiRoot, { recursive: true });
   await fs.writeFile(
     path.join(tempControlUiRoot, "index.html"),
@@ -381,12 +362,7 @@ async function cleanupGatewayTestHome(options: { restoreEnv: boolean }) {
     gatewayEnvSnapshot = undefined;
   }
   if (options.restoreEnv && tempHome) {
-    await fs.rm(tempHome, {
-      recursive: true,
-      force: true,
-      maxRetries: 20,
-      retryDelay: 25,
-    });
+    await removeTestTempPath(tempHome);
     tempHome = undefined;
   }
   tempConfigRoot = undefined;

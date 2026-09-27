@@ -106,18 +106,24 @@ describe("findExtraGatewayServices (linux / scanSystemdDir) — real filesystem"
   // Only runs on Linux/macOS where the linux branch of findExtraGatewayServices is active.
   const isLinux = process.platform === "linux";
 
-  it.skipIf(!isLinux)("does not report quiet-core-bot-test.service as a gateway service", async () => {
-    const tmpHome = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-test-"));
-    const systemdDir = path.join(tmpHome, ".config", "systemd", "user");
-    try {
-      await fs.mkdir(systemdDir, { recursive: true });
-      await fs.writeFile(path.join(systemdDir, "quiet-core-bot-test.service"), TEST_SERVICE_CONTENTS);
-      const result = await findExtraGatewayServices({ HOME: tmpHome });
-      expect(result).toStrictEqual([]);
-    } finally {
-      await fs.rm(tmpHome, { recursive: true, force: true });
-    }
-  });
+  it.skipIf(!isLinux)(
+    "does not report quiet-core-bot-test.service as a gateway service",
+    async () => {
+      const tmpHome = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-test-"));
+      const systemdDir = path.join(tmpHome, ".config", "systemd", "user");
+      try {
+        await fs.mkdir(systemdDir, { recursive: true });
+        await fs.writeFile(
+          path.join(systemdDir, "quiet-core-bot-test.service"),
+          TEST_SERVICE_CONTENTS,
+        );
+        const result = await findExtraGatewayServices({ HOME: tmpHome });
+        expect(result).toStrictEqual([]);
+      } finally {
+        await fs.rm(tmpHome, { recursive: true, force: true });
+      }
+    },
+  );
 
   it.skipIf(!isLinux)(
     "does not report the canonical quiet-core-bot-gateway.service as an extra service",
@@ -300,7 +306,7 @@ describe("findExtraGatewayServices (darwin / scanLaunchdDir) — real filesystem
         `<?xml version="1.0" encoding="UTF-8"?>
 <plist version="1.0"><dict>
 <key>Label</key><string>com.example.quiet-core-bot-gateway</string>
-<key>ProgramArguments</key><array><string>/usr/local/bin/openclaw</string><string>gateway</string><string>--port</string><string>18888</string></array>
+<key>ProgramArguments</key><array><string>/usr/local/bin/quiet-core-bot</string><string>gateway</string><string>--port</string><string>18888</string></array>
 </dict></plist>`,
       );
       const result = await findExtraGatewayServices({ HOME: tmpHome });

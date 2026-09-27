@@ -6,6 +6,7 @@ import path from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import type { OpenClawConfig } from "../config/config.js";
 import { updateSessionStore } from "../config/sessions/store.js";
+import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import { buildSubagentList } from "./subagent-list.js";
 import {
   addSubagentRunForTests,
@@ -22,12 +23,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await fs.rm(testWorkspaceDir, {
-    recursive: true,
-    force: true,
-    maxRetries: 5,
-    retryDelay: 50,
-  });
+  await removeTestTempPath(testWorkspaceDir);
 });
 
 beforeEach(() => {

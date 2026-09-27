@@ -107,7 +107,7 @@ describe("resolveSafeInstallDir", () => {
       }),
     ).toEqual({
       ok: true,
-      path: path.join("/tmp/plugins", "@openclaw__matrix"),
+      path: path.join("/tmp/plugins", "@quiet-core__matrix"),
     });
   });
 
@@ -186,17 +186,20 @@ describe("assertCanonicalPathWithinBase", () => {
     "rejects symlinked candidate directories that escape the base",
     async () => {
       await withTempDir({ prefix: "quiet-core-bot-install-safe-" }, async (baseDir) => {
-        await withTempDir({ prefix: "quiet-core-bot-install-safe-outside-" }, async (outsideDir) => {
-          const linkDir = path.join(baseDir, "alias");
-          await fs.symlink(outsideDir, linkDir, directorySymlinkType);
-          await expect(
-            assertCanonicalPathWithinBase({
-              baseDir,
-              candidatePath: linkDir,
-              boundaryLabel: "install directory",
-            }),
-          ).rejects.toThrow(/must stay within install directory/i);
-        });
+        await withTempDir(
+          { prefix: "quiet-core-bot-install-safe-outside-" },
+          async (outsideDir) => {
+            const linkDir = path.join(baseDir, "alias");
+            await fs.symlink(outsideDir, linkDir, directorySymlinkType);
+            await expect(
+              assertCanonicalPathWithinBase({
+                baseDir,
+                candidatePath: linkDir,
+                boundaryLabel: "install directory",
+              }),
+            ).rejects.toThrow(/must stay within install directory/i);
+          },
+        );
       });
     },
   );

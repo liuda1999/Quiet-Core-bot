@@ -919,16 +919,44 @@ export function runOpenClawStateWriteTransaction<T>(
   return result;
 }
 
+function closeCachedStateDatabase(database: OpenClawStateDatabase): void {
+  database.walMaintenance.close();
+  clearNodeSqliteKyselyCacheForDatabase(database.db);
+  if (database.db.isOpen) {
+    database.db.close();
+  }
+}
+
+function isPathInsideDirectory(rootDir: string, candidatePath: string): boolean {
+  const relative = path.relative(rootDir, candidatePath);
+  return relative.length > 0 && !relative.startsWith("..") && !path.isAbsolute(relative);
+}
+
 /** Close all cached shared state database handles. */
 export function closeOpenClawStateDatabase(): void {
   for (const database of cachedDatabases.values()) {
-    database.walMaintenance.close();
-    clearNodeSqliteKyselyCacheForDatabase(database.db);
-    if (database.db.isOpen) {
-      database.db.close();
-    }
+    closeCachedStateDatabase(database);
   }
   cachedDatabases.clear();
+}
+
+/**
+ * Close cached state database handles whose file lives inside `rootDir`.
+ *
+ * Temp-home/temp-dir cleanup uses this before deleting a directory: an open
+ * handle keeps the .sqlite/-wal/-shm files locked, which on Windows makes the
+ * directory removal fail. Only handles inside the removed tree are released so
+ * unrelated callers keep working with their own handles.
+ */
+export function closeOpenClawStateDatabaseUnder(rootDir: string): void {
+  const resolvedRoot = path.resolve(rootDir);
+  for (const [pathname, database] of [...cachedDatabases]) {
+    if (!isPathInsideDirectory(resolvedRoot, path.resolve(pathname))) {
+      continue;
+    }
+    cachedDatabases.delete(pathname);
+    closeCachedStateDatabase(database);
+  }
 }
 
 /** Test whether any cached shared state database handle is still open. */

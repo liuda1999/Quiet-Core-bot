@@ -7,6 +7,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { readDiagnosticEvents } from "../state/diagnostic-events-store.js";
 import { closeOpenClawStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
 import { withEnv } from "../test-utils/env.js";
+import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import {
   buildAnnounceDropEventKey,
   mergeAnnounceDropReasons,
@@ -58,7 +59,7 @@ describe("writeAnnounceDropDiagnostic", () => {
   afterEach(async () => {
     closeOpenClawStateDatabaseForTest();
     if (tempStateDir) {
-      await fs.rm(tempStateDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
+      await removeTestTempPath(tempStateDir);
       tempStateDir = null;
     }
   });

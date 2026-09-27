@@ -10,6 +10,7 @@ import {
   drainSessionStoreWriterQueuesForTest,
 } from "../config/sessions/store.js";
 import { withEnvAsync } from "../test-utils/env.js";
+import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import {
   createSubagentRegistryTestDeps,
   writeSubagentSessionEntry,
@@ -131,7 +132,7 @@ describe("subagent registry persistence resume", () => {
     await drainSessionStoreWriterQueuesForTest();
     clearSessionStoreCacheForTest();
     if (tempStateDir) {
-      await fs.rm(tempStateDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
+      await removeTestTempPath(tempStateDir);
       tempStateDir = null;
     }
     hoisted.registryPath = undefined;

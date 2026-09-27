@@ -224,7 +224,7 @@ describe("dependency guard script", () => {
       headSha,
     });
 
-    expect(body).toContain("<!-- openclaw:dependency-graph-guard -->");
+    expect(body).toContain("<!-- quiet-core-bot:dependency-graph-guard -->");
     expect(body).toContain("Dependency graph changes noted");
     expect(body).toContain("informational");
     expect(body).toContain("@repo-admin");
@@ -319,20 +319,20 @@ describe("dependency guard script", () => {
     expect(
       isDependencyGuardMarkerComment(
         {
-          body: "<!-- openclaw:dependency-graph-guard -->",
+          body: "<!-- quiet-core-bot:dependency-graph-guard -->",
           user: { login: "quiet-core-bot-autoscrub[bot]" },
         },
-        "<!-- openclaw:dependency-graph-guard -->",
+        "<!-- quiet-core-bot:dependency-graph-guard -->",
         trustedAuthors,
       ),
     ).toBe(true);
     expect(
       isDependencyGuardMarkerComment(
         {
-          body: "<!-- openclaw:dependency-graph-guard -->",
+          body: "<!-- quiet-core-bot:dependency-graph-guard -->",
           user: { login: "contributor" },
         },
-        "<!-- openclaw:dependency-graph-guard -->",
+        "<!-- quiet-core-bot:dependency-graph-guard -->",
         trustedAuthors,
       ),
     ).toBe(false);
@@ -342,7 +342,7 @@ describe("dependency guard script", () => {
           body: "no marker",
           user: { login: "github-actions[bot]" },
         },
-        "<!-- openclaw:dependency-graph-guard -->",
+        "<!-- quiet-core-bot:dependency-graph-guard -->",
         trustedAuthors,
       ),
     ).toBe(false);
@@ -361,7 +361,7 @@ describe("dependency guard script", () => {
       ],
     });
 
-    expect(body).toContain("<!-- openclaw:dependency-graph-guard -->");
+    expect(body).toContain("<!-- quiet-core-bot:dependency-graph-guard -->");
     expect(body).toContain("Dependency graph changes are blocked");
     expect(body).toContain("`pnpm-lock.yaml` changed.");
     expect(body).toContain("`extensions/slack/npm-shrinkwrap.json` changed.");
@@ -482,7 +482,7 @@ describe("dependency guard script", () => {
       lockfileChanges: ["pnpm-lock.yaml", "extensions/slack/npm-shrinkwrap.json"],
     });
 
-    expect(body).toContain("<!-- openclaw:dependency-graph-guard -->");
+    expect(body).toContain("<!-- quiet-core-bot:dependency-graph-guard -->");
     expect(body).toContain("Dependency lockfile changes were removed");
     expect(body).toContain("did not change dependency graph fields in package manifests");
     expect(body).toContain("`pnpm-lock.yaml`");
@@ -603,7 +603,7 @@ describe("dependency guard script", () => {
   it("renders a cleared guard comment that preserves approval freshness", () => {
     const body = renderClearedDependencyGuardComment({ headSha });
 
-    expect(body).toContain("<!-- openclaw:dependency-graph-guard -->");
+    expect(body).toContain("<!-- quiet-core-bot:dependency-graph-guard -->");
     expect(body).toContain("Dependency graph guard cleared");
     expect(body).toContain(headSha);
     expect(body).toContain("requires a fresh `/allow-dependencies-change` comment");

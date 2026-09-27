@@ -7,18 +7,14 @@ import { describe, expect, it } from "vitest";
 import { createPluginSdkTestHarness } from "./test-helpers.js";
 import { materializeWindowsSpawnProgram, resolveWindowsSpawnProgram } from "./windows-spawn.js";
 
-const { createTempDir } = createPluginSdkTestHarness({
-  cleanup: {
-    maxRetries: 8,
-    retryDelay: 8,
-  },
-});
+const { createTempDir } = createPluginSdkTestHarness();
 
 describe("resolveWindowsSpawnProgram", () => {
   it("rejects node command strings that include inline entrypoint arguments on Windows", () => {
     expect(() =>
       resolveWindowsSpawnProgram({
-        command: "node C:\\Users\\me\\.quiet-core-bot\\npm\\node_modules\\@openai\\codex\\bin\\codex.js",
+        command:
+          "node C:\\Users\\me\\.quiet-core-bot\\npm\\node_modules\\@openai\\codex\\bin\\codex.js",
         platform: "win32",
         env: {},
         execPath: "C:\\node\\node.exe",

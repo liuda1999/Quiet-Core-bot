@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { removeTestTempPath } from "../../test-utils/session-state-cleanup.js";
 import {
   restoreMockSkillsHomeEnv,
   setMockSkillsHomeEnv,
@@ -50,13 +51,7 @@ describe("buildWorkspaceSkillsPrompt — .agents/skills/ directories", () => {
 
   afterEach(async () => {
     await restoreMockSkillsHomeEnv(envSnapshot, async () => {
-      await Promise.all(
-        tempDirs
-          .splice(0)
-          .map((dir) =>
-            fs.rm(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 20 }),
-          ),
-      );
+      await Promise.all(tempDirs.splice(0).map((dir) => removeTestTempPath(dir)));
     });
   });
 

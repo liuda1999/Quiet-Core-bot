@@ -8,6 +8,7 @@ import { WebSocket } from "ws";
 import { emitAgentEvent, registerAgentRunContext } from "../infra/agent-events.js";
 import { extractFirstTextBlock } from "../shared/chat-message-content.js";
 import { captureEnv, setTestEnvValue } from "../test-utils/env.js";
+import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from "../utils/message-channel.js";
 import {
   connectOk,
@@ -41,7 +42,7 @@ describe("gateway server chat", () => {
   });
 
   const removeTempDir = async (dir: string): Promise<void> => {
-    await fs.rm(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
+    await removeTestTempPath(dir);
   };
 
   const buildNoReplyHistoryFixture = (includeMixedAssistant = false) => [

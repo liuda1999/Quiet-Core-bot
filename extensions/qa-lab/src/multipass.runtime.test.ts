@@ -86,7 +86,9 @@ describe("qa multipass runtime", () => {
     expect(plan.outputDir).toBe(outputDir);
     expect(plan.scenarioIds).toStrictEqual([]);
     expect(plan.qaCommand).not.toContain("--scenario");
-    expect(plan.guestOutputDir).toBe("/workspace/quiet-core-bot-host/.artifacts/qa-e2e/multipass-test");
+    expect(plan.guestOutputDir).toBe(
+      "/workspace/quiet-core-bot-host/.artifacts/qa-e2e/multipass-test",
+    );
     expect(plan.reportPath).toBe(path.join(outputDir, "qa-suite-report.md"));
     expect(plan.summaryPath).toBe(path.join(outputDir, "qa-suite-summary.json"));
   });
@@ -103,7 +105,7 @@ describe("qa multipass runtime", () => {
     expect(script).toContain("pnpm install --frozen-lockfile");
     expect(script).toContain("pnpm build");
     expect(script).toContain(`corepack prepare '${readRootPackageManager()}' --activate`);
-    expect(script).toContain("'pnpm' 'openclaw' 'qa' 'suite' '--transport' 'qa-channel'");
+    expect(script).toContain("'pnpm' 'quiet-core-bot' 'qa' 'suite' '--transport' 'qa-channel'");
     expect(script).toContain("'--provider-mode' 'live-frontier'");
     expect(script).toContain("'--scenario' 'channel-chat-baseline'");
     expect(script).toContain("'--scenario' 'thread-follow-up'");
@@ -132,7 +134,7 @@ describe("qa multipass runtime", () => {
     expect(plan.qaCommand).toContain("--fast");
     expect(plan.forwardedEnv.OPENAI_API_KEY).toBe("test-openai-key");
     expect(script).toContain("OPENAI_API_KEY='test-openai-key'");
-    expect(script).toContain("'pnpm' 'openclaw' 'qa' 'suite' '--transport' 'qa-channel'");
+    expect(script).toContain("'pnpm' 'quiet-core-bot' 'qa' 'suite' '--transport' 'qa-channel'");
     expect(script).toContain("'--provider-mode' 'live-frontier'");
   });
 
@@ -155,7 +157,9 @@ describe("qa multipass runtime", () => {
       scenarioIds: ["channel-chat-baseline"],
     });
 
-    expect(plan.qaCommand).toEqual(expect.arrayContaining(["--runtime-pair", "quiet-core-bot,codex"]));
+    expect(plan.qaCommand).toEqual(
+      expect.arrayContaining(["--runtime-pair", "quiet-core-bot,codex"]),
+    );
   });
 
   it("forwards channel-driver suite selection into the guest qa suite command", () => {

@@ -7,6 +7,7 @@ import net from "node:net";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { removeTestTempPath } from "../../test-utils/session-state-cleanup.js";
 import { getAcpSessionManager } from "../acp/control-plane/manager.js";
 import { getAcpRuntimeBackend } from "../acp/runtime/registry.js";
 import { isSpawnAcpAcceptedResult, spawnAcpDirect } from "../agents/acp-spawn.js";
@@ -382,7 +383,7 @@ describeLive("gateway live (ACP spawn defaults)", () => {
           clearRuntimeConfigSnapshot();
           await server?.close();
         } finally {
-          await fs.rm(tempRoot, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
+          await removeTestTempPath(tempRoot);
           restoreLiveEnv(previousEnv);
         }
       }

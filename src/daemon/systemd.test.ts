@@ -182,7 +182,11 @@ function mockReadGatewayServiceFile(
 }
 
 async function expectExecStartWithoutEnvironment(envFileLine: string) {
-  mockReadGatewayServiceFile(["[Service]", "ExecStart=/usr/bin/quiet-core-bot gateway run", envFileLine]);
+  mockReadGatewayServiceFile([
+    "[Service]",
+    "ExecStart=/usr/bin/quiet-core-bot gateway run",
+    envFileLine,
+  ]);
 
   const command = await readSystemdServiceExecStart({ HOME: TEST_SERVICE_HOME });
   expect(command?.programArguments).toEqual(["/usr/bin/quiet-core-bot", "gateway", "run"]);
@@ -381,7 +385,9 @@ describe("isSystemdServiceEnabled", () => {
     err.code = "ENOENT";
     vi.spyOn(fs, "access").mockRejectedValueOnce(err);
 
-    const result = await isSystemdServiceEnabled({ env: { HOME: "/tmp/quiet-core-bot-test-home" } });
+    const result = await isSystemdServiceEnabled({
+      env: { HOME: "/tmp/quiet-core-bot-test-home" },
+    });
 
     expect(result).toBe(false);
     expect(execFileMock).not.toHaveBeenCalled();
@@ -514,7 +520,9 @@ describe("isSystemdServiceEnabled", () => {
       err.code = 4;
       cb(err, "not-found\n", "");
     });
-    const result = await isSystemdServiceEnabled({ env: { HOME: "/tmp/quiet-core-bot-test-home" } });
+    const result = await isSystemdServiceEnabled({
+      env: { HOME: "/tmp/quiet-core-bot-test-home" },
+    });
     expect(result).toBe(false);
   });
 });
@@ -935,13 +943,9 @@ describe("resolveSystemdUserUnitPath", () => {
 
 describe("splitArgsPreservingQuotes", () => {
   it("splits on whitespace outside quotes", () => {
-    expect(splitArgsPreservingQuotes('/usr/bin/quiet-core-bot gateway start --name "My Bot"')).toEqual([
-      "/usr/bin/quiet-core-bot",
-      "gateway",
-      "start",
-      "--name",
-      "My Bot",
-    ]);
+    expect(
+      splitArgsPreservingQuotes('/usr/bin/quiet-core-bot gateway start --name "My Bot"'),
+    ).toEqual(["/usr/bin/quiet-core-bot", "gateway", "start", "--name", "My Bot"]);
   });
 
   it("supports systemd-style backslash escaping", () => {
@@ -1005,8 +1009,14 @@ describe("readSystemdServiceExecStart", () => {
 
   it("loads QUIET_CORE_GATEWAY_TOKEN from EnvironmentFile", async () => {
     const readFileSpy = mockReadGatewayServiceFile(
-      ["[Service]", "ExecStart=/usr/bin/quiet-core-bot gateway run", "EnvironmentFile=%h/.quiet-core-bot/.env"],
-      { [`${TEST_SERVICE_HOME}/.quiet-core-bot/.env`]: "QUIET_CORE_GATEWAY_TOKEN=env-file-token\n" },
+      [
+        "[Service]",
+        "ExecStart=/usr/bin/quiet-core-bot gateway run",
+        "EnvironmentFile=%h/.quiet-core-bot/.env",
+      ],
+      {
+        [`${TEST_SERVICE_HOME}/.quiet-core-bot/.env`]: "QUIET_CORE_GATEWAY_TOKEN=env-file-token\n",
+      },
     );
 
     const command = await readSystemdServiceExecStart({ HOME: TEST_SERVICE_HOME });
@@ -1022,7 +1032,9 @@ describe("readSystemdServiceExecStart", () => {
         "EnvironmentFile=%h/.quiet-core-bot/.env",
         'Environment="QUIET_CORE_GATEWAY_TOKEN=inline-token"',
       ],
-      { [`${TEST_SERVICE_HOME}/.quiet-core-bot/.env`]: "QUIET_CORE_GATEWAY_TOKEN=env-file-token\n" },
+      {
+        [`${TEST_SERVICE_HOME}/.quiet-core-bot/.env`]: "QUIET_CORE_GATEWAY_TOKEN=env-file-token\n",
+      },
     );
 
     const command = await readSystemdServiceExecStart({ HOME: TEST_SERVICE_HOME });
@@ -1244,8 +1256,9 @@ describe("stageSystemdService", () => {
   it("migrates operator entries from the legacy gateway env file when writing node env files", async () => {
     await withStageFixture(async ({ env, unitPath, envFilePath, nodeEnvFilePath }) => {
       const legacyGatewayEnvFile =
-        ["QUIET_CORE_GATEWAY_TOKEN=legacy-node-token", "OPENROUTER_API_KEY=operator-key"].join("\n") +
-        "\n";
+        ["QUIET_CORE_GATEWAY_TOKEN=legacy-node-token", "OPENROUTER_API_KEY=operator-key"].join(
+          "\n",
+        ) + "\n";
       await fs.writeFile(envFilePath, legacyGatewayEnvFile, {
         encoding: "utf8",
         mode: 0o600,
@@ -1625,7 +1638,7 @@ describe("stageSystemdService", () => {
       await stageSystemdService({
         env,
         stdout: { write: vi.fn() } as unknown as NodeJS.WritableStream,
-        programArguments: ["/usr/bin/openclaw", "gateway", "run"],
+        programArguments: ["/usr/bin/quiet-core-bot", "gateway", "run"],
         workingDirectory: "/tmp",
         environment: { QUIET_CORE_GATEWAY_PORT: "18789" },
       });
@@ -1695,7 +1708,7 @@ describe("systemd service install and uninstall", () => {
       await installSystemdService({
         env,
         stdout: { write: vi.fn() } as unknown as NodeJS.WritableStream,
-        programArguments: ["/usr/bin/openclaw", "node", "run"],
+        programArguments: ["/usr/bin/quiet-core-bot", "node", "run"],
         workingDirectory: "/tmp",
         environment: {
           QUIET_CORE_SYSTEMD_UNIT: "quiet-core-bot-node",
@@ -1744,7 +1757,7 @@ describe("systemd service install and uninstall", () => {
       await installSystemdService({
         env,
         stdout: { write: vi.fn() } as unknown as NodeJS.WritableStream,
-        programArguments: ["/usr/bin/openclaw", "node", "run"],
+        programArguments: ["/usr/bin/quiet-core-bot", "node", "run"],
         workingDirectory: "/tmp",
         environment: {
           QUIET_CORE_SYSTEMD_UNIT: "quiet-core-bot-node",
@@ -1789,7 +1802,7 @@ describe("systemd service install and uninstall", () => {
       await installSystemdService({
         env: installEnv,
         stdout: { write: vi.fn() } as unknown as NodeJS.WritableStream,
-        programArguments: ["/usr/bin/openclaw", "node", "run"],
+        programArguments: ["/usr/bin/quiet-core-bot", "node", "run"],
         workingDirectory: "/tmp",
         environment: {
           QUIET_CORE_SYSTEMD_UNIT: "quiet-core-bot-node",
@@ -1835,7 +1848,7 @@ describe("systemd service install and uninstall", () => {
       await installSystemdService({
         env: installEnv,
         stdout: { write: vi.fn() } as unknown as NodeJS.WritableStream,
-        programArguments: ["/usr/bin/openclaw", "node", "run"],
+        programArguments: ["/usr/bin/quiet-core-bot", "node", "run"],
         workingDirectory: "/tmp",
         environment: {
           QUIET_CORE_SYSTEMD_UNIT: "quiet-core-bot-node",
@@ -1875,7 +1888,7 @@ describe("systemd service install and uninstall", () => {
         installSystemdService({
           env,
           stdout: { write: vi.fn() } as unknown as NodeJS.WritableStream,
-          programArguments: ["/usr/bin/openclaw", "node", "run"],
+          programArguments: ["/usr/bin/quiet-core-bot", "node", "run"],
           workingDirectory: "/tmp",
           environment: {
             QUIET_CORE_SYSTEMD_UNIT: "quiet-core-bot-node",

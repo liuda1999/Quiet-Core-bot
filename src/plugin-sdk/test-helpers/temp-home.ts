@@ -2,7 +2,10 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { cleanupSessionStateForTest } from "../../test-utils/session-state-cleanup.js";
+import {
+  cleanupSessionStateForTest,
+  removeTestTempPath,
+} from "../../test-utils/session-state-cleanup.js";
 
 type EnvValue = string | undefined | ((home: string) => string | undefined);
 
@@ -121,7 +124,9 @@ export async function withTempHome<T>(
   const envSnapshot = snapshotExtraEnv(envKeys);
 
   setTempHome(base);
-  await fs.mkdir(path.join(base, ".quiet-core-bot", "agents", "main", "sessions"), { recursive: true });
+  await fs.mkdir(path.join(base, ".quiet-core-bot", "agents", "main", "sessions"), {
+    recursive: true,
+  });
   if (opts.env) {
     for (const [key, raw] of Object.entries(opts.env)) {
       const value = typeof raw === "function" ? raw(base) : raw;
@@ -142,23 +147,10 @@ export async function withTempHome<T>(
     restoreExtraEnv(envSnapshot);
     restoreEnv(snapshot);
     if (!opts.skipHomeCleanup) {
-      try {
-        if (process.platform === "win32") {
-          await fs.rm(base, {
-            recursive: true,
-            force: true,
-            maxRetries: 10,
-            retryDelay: 50,
-          });
-        } else {
-          await fs.rm(base, {
-            recursive: true,
-            force: true,
-          });
-        }
-      } catch {
-        // ignore cleanup failures in tests
-      }
+      // removeTestTempPath releases cached state database handles and retries in
+      // a bounded loop, instead of Node's fs.rm maxRetries path which never
+      // settles on Windows while a temp home stays busy.
+      await removeTestTempPath(base).catch(() => undefined);
     }
   }
 }

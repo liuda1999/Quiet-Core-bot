@@ -980,7 +980,7 @@ export const zh_TW = {
         "重新啟用該 provider 或選擇其他 provider 前，web_search 無法運作。",
       webUiUrl: "Web UI：{url}",
       webUiWithTokenUrl: "Web UI（含權杖）：{url}",
-      whatNow: '下一步：https://openclaw.ai/showcase（"What People Are Building"）。',
+      whatNow: "下一步：https://github.com/liuda1999/Quiet-Core-bot",
       whatNowTitle: "下一步",
       workspaceBackupTitle: "工作區備份",
       workspaceDocs: "文件：https://github.com/liuda1999/Quiet-Core-bot/concepts/agent-workspace",

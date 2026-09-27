@@ -5,6 +5,7 @@ import net from "node:net";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { removeTestTempPath } from "../../test-utils/session-state-cleanup.js";
 import { renderCatFacePngBase64 } from "../../test/helpers/live-image-probe.js";
 import { getAcpRuntimeBackend } from "../acp/runtime/registry.js";
 import { isLiveTestEnabled } from "../agents/live-test-helpers.js";
@@ -196,7 +197,8 @@ function resolveModelObject(value: unknown): Record<string, unknown> {
 async function prepareCodexHomeForLiveBindTest(tempRoot: string): Promise<void> {
   const home = process.env.HOME?.trim();
   const sourceCodexHome = process.env.CODEX_HOME?.trim() || (home ? path.join(home, ".codex") : "");
-  const model = process.env.QUIET_CORE_LIVE_ACP_BIND_CODEX_MODEL?.trim() || DEFAULT_LIVE_CODEX_MODEL;
+  const model =
+    process.env.QUIET_CORE_LIVE_ACP_BIND_CODEX_MODEL?.trim() || DEFAULT_LIVE_CODEX_MODEL;
   const codexHome = path.join(tempRoot, "codex-home");
   await fs.mkdir(codexHome, { recursive: true });
   const targetAuthPath = path.join(codexHome, "auth.json");
@@ -1087,7 +1089,7 @@ describeLive("gateway live (ACP bind)", () => {
           await client?.stopAndWait({ timeoutMs: 2_000 }).catch(() => {});
           await server?.close();
         } finally {
-          await fs.rm(tempRoot, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
+          await removeTestTempPath(tempRoot);
           restoreLiveEnv(previousEnv);
         }
       }

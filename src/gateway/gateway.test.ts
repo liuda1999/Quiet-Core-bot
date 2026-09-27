@@ -10,6 +10,7 @@ import { clearSessionStoreCacheForTest } from "../config/sessions/store.js";
 import { resetAgentRunContextForTest } from "../infra/agent-events.js";
 import { clearGatewaySubagentRuntime } from "../plugins/runtime/index.js";
 import { captureEnv, deleteTestEnvValue, setTestEnvValue } from "../test-utils/env.js";
+import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import { startGatewayServer } from "./server.js";
 import {
   connectDeviceAuthReq,
@@ -56,12 +57,7 @@ async function createGatewayConfigPath(tempHome: string): Promise<string> {
 }
 
 async function removeGatewayTempHome(tempHome: string): Promise<void> {
-  await fs.rm(tempHome, {
-    recursive: true,
-    force: true,
-    maxRetries: 10,
-    retryDelay: 50,
-  });
+  await removeTestTempPath(tempHome);
 }
 
 async function startLoopbackTokenGateway(token: string) {
@@ -478,7 +474,9 @@ module.exports = {
         "DISCORD_BOT_TOKEN",
       ]);
 
-      const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-minimal-gateway-home-"));
+      const tempHome = await fs.mkdtemp(
+        path.join(os.tmpdir(), "quiet-core-bot-minimal-gateway-home-"),
+      );
       const configPath = await createGatewayConfigPath(tempHome);
       const bundledPluginsDir = path.join(tempHome, "quiet-core-bot-test-no-bundled-extensions");
       setTestEnvValue("HOME", tempHome);

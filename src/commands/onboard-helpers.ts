@@ -161,20 +161,24 @@ export function validateGatewayPasswordInput(value: unknown): string | undefined
 
 /** Prints the onboarding banner. */
 export function printWizardHeader(runtime: RuntimeEnv) {
-  const bannerWidth = 54;
   const icon = decorativeEmoji("🐉");
-  const title = supportsDecorativeEmoji() && icon ? `${icon} OPENCLAW ${icon}` : "OPENCLAW";
+  const title =
+    supportsDecorativeEmoji() && icon ? `${icon} QUIET CORE BOT ${icon}` : "QUIET CORE BOT";
+  // Block-letter art for "QUIET CORE BOT" (5 rows, trimmed). The frame and the
+  // centered title are sized from the art so the banner stays aligned.
+  const art = [
+    "████ █  █ ██ ████ ████    ████ ████ ████ ████    ████ ████ ████",
+    "█  █ █  █ ██ ██    ██     ██   █  █ █  █ ██      █  █ █  █  ██",
+    "█  █ █  █ ██ ███   ██     ██   █  █ ████ ███     ████ █  █  ██",
+    "█ ██ █  █ ██ ██    ██     ██   █  █ █ █  ██      █  █ █  █  ██",
+    "████ ████ ██ ████  ██     ████ ████ █  █ ████    ████ ████  ██",
+  ];
+  const bannerWidth = Math.max(visibleWidth(title), ...art.map((line) => visibleWidth(line)));
   const pad = Math.max(0, bannerWidth - visibleWidth(title));
   const titleLine = `${" ".repeat(Math.floor(pad / 2))}${title}${" ".repeat(Math.ceil(pad / 2))}`;
-  const header = [
-    "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄",
-    "██░▄▄▄░██░▄▄░██░▄▄▄██░▀██░██░▄▄▀██░████░▄▄▀██░███░██",
-    "██░███░██░▀▀░██░▄▄▄██░█░█░██░█████░████░▀▀░██░█░█░██",
-    "██░▀▀▀░██░█████░▀▀▀██░██▄░██░▀▀▄██░▀▀░█░██░██▄▀▄▀▄██",
-    "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀",
-    titleLine,
-    " ",
-  ].join("\n");
+  const header = ["▄".repeat(bannerWidth), ...art, "▀".repeat(bannerWidth), titleLine, " "].join(
+    "\n",
+  );
   runtime.log(header);
 }
 

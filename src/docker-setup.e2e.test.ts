@@ -252,7 +252,9 @@ function collectMatchingLines(lines: string[], predicate: (line: string) => bool
 }
 
 function isGatewayStartLine(line: string) {
-  return line.includes("compose") && line.includes(" up -d") && line.includes("quiet-core-bot-gateway");
+  return (
+    line.includes("compose") && line.includes(" up -d") && line.includes("quiet-core-bot-gateway")
+  );
 }
 
 function findGatewayStartLineIndex(lines: string[]) {
@@ -391,7 +393,9 @@ describe("scripts/docker/setup.sh", () => {
     expect(log).toContain(
       `run --rm --no-deps ${prestartContainerEnvFlags} --entrypoint node quiet-core-bot-gateway dist/index.js config set --batch-json [{"path":"gateway.mode","value":"local"},{"path":"gateway.bind","value":"lan"},{"path":"gateway.controlUi.allowedOrigins","value":["http://localhost:18789","http://127.0.0.1:18789"]}]`,
     );
-    expect(log).not.toContain("run --rm quiet-core-bot-cli onboard --mode local --no-install-daemon");
+    expect(log).not.toContain(
+      "run --rm quiet-core-bot-cli onboard --mode local --no-install-daemon",
+    );
   });
 
   it("allows ordinary spaces in host persistence paths and quotes generated mounts", async () => {
@@ -828,7 +832,9 @@ describe("scripts/docker/setup.sh", () => {
     const onboardIdx = log.indexOf("onboard");
     expect(chownIdx).toBeGreaterThanOrEqual(0);
     expect(onboardIdx).toBeGreaterThan(chownIdx);
-    expect(log).toContain("run --rm --no-deps --user root --entrypoint sh quiet-core-bot-gateway -c");
+    expect(log).toContain(
+      "run --rm --no-deps --user root --entrypoint sh quiet-core-bot-gateway -c",
+    );
     expect(log).toContain("chown node:node /home/node/.config");
   });
 
@@ -1123,9 +1129,9 @@ describe("scripts/docker/setup.sh", () => {
 
   it("keeps docker-compose gateway token env defaults aligned across services", async () => {
     const compose = await readFile(join(repoRoot, "docker-compose.yml"), "utf8");
-    expect(compose.match(/QUIET_CORE_GATEWAY_TOKEN: \$\{QUIET_CORE_GATEWAY_TOKEN:-\}/g)).toHaveLength(
-      2,
-    );
+    expect(
+      compose.match(/QUIET_CORE_GATEWAY_TOKEN: \$\{QUIET_CORE_GATEWAY_TOKEN:-\}/g),
+    ).toHaveLength(2);
   });
 
   it("keeps docker-compose auth profile secret key source durable outside state", async () => {
@@ -1153,11 +1159,17 @@ describe("scripts/docker/setup.sh", () => {
     // canonical container paths so host-style paths written to `.env` cannot
     // reach runtime code inside Linux Docker.
     expect(compose.match(/QUIET_CORE_HOME: \/home\/node$/gm)).toHaveLength(2);
-    expect(compose.match(/QUIET_CORE_STATE_DIR: \/home\/node\/\.openclaw$/gm)).toHaveLength(2);
+    expect(compose.match(/QUIET_CORE_STATE_DIR: \/home\/node\/\.quiet-core-bot$/gm)).toHaveLength(
+      2,
+    );
     expect(
-      compose.match(/QUIET_CORE_CONFIG_PATH: \/home\/node\/\.quiet-core-bot\/openclaw\.json$/gm),
+      compose.match(
+        /QUIET_CORE_CONFIG_PATH: \/home\/node\/\.quiet-core-bot\/quiet-core-bot\.json$/gm,
+      ),
     ).toHaveLength(2);
-    expect(compose.match(/QUIET_CORE_CONFIG_DIR: \/home\/node\/\.openclaw$/gm)).toHaveLength(2);
+    expect(compose.match(/QUIET_CORE_CONFIG_DIR: \/home\/node\/\.quiet-core-bot$/gm)).toHaveLength(
+      2,
+    );
     expect(
       compose.match(/QUIET_CORE_WORKSPACE_DIR: \/home\/node\/\.quiet-core-bot\/workspace$/gm),
     ).toHaveLength(2);

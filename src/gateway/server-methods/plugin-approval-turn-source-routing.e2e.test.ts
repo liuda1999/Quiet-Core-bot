@@ -15,6 +15,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { clearConfigCache, clearRuntimeConfigSnapshot } from "../../config/config.js";
 import { clearSessionStoreCacheForTest } from "../../config/sessions/store.js";
 import { captureEnv, deleteTestEnvValue, setTestEnvValue } from "../../test-utils/env.js";
+import { removeTestTempPath } from "../../test-utils/session-state-cleanup.js";
 import { APPROVALS_SCOPE } from "../method-scopes.js";
 import { startGatewayServer } from "../server.js";
 import {
@@ -80,7 +81,7 @@ describe("plugin.approval.request turn-source routing (real gateway)", () => {
   afterAll(async () => {
     await disconnectGatewayClient(requester).catch(() => undefined);
     await server?.close();
-    await fs.rm(tempHome, { recursive: true, force: true, maxRetries: 5 }).catch(() => undefined);
+    await removeTestTempPath(tempHome).catch(() => undefined);
     envSnapshot.restore();
     clearRuntimeConfigSnapshot();
     clearConfigCache();

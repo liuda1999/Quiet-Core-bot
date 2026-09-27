@@ -73,7 +73,7 @@ function normalizeNpmViewMetadata(value: unknown): NpmSpecResolution | null {
     integrity:
       normalizeOptionalString(rec["dist.integrity"]) ?? normalizeOptionalString(dist.integrity),
     shasum: normalizeOptionalString(rec["dist.shasum"]) ?? normalizeOptionalString(dist.shasum),
-    ...(isRecord(rec.openclaw) ? { packageOpenClaw: rec.openclaw } : {}),
+    ...(isRecord(rec["quiet-core-bot"]) ? { packageOpenClaw: rec["quiet-core-bot"] } : {}),
   };
 }
 

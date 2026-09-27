@@ -381,7 +381,7 @@ describe("OpenAI-compatible HTTP API (e2e)", () => {
         const json = (await res.json()) as { error?: { type?: string; message?: string } };
         expect(json.error?.type).toBe("invalid_request_error");
         expect(json.error?.message).toBe(
-          "Invalid `model`. Use `openclaw` or `openclaw/<agentId>`.",
+          "Invalid `model`. Use `quiet-core-bot` or `quiet-core-bot/<agentId>`.",
         );
         expect(agentCommand).toHaveBeenCalledTimes(0);
       }

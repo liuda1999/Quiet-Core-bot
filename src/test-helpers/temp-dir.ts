@@ -3,6 +3,7 @@ import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import { removeTestTempPath, removeTestTempPathSync } from "../test-utils/session-state-cleanup.js";
 
 // Temp-dir helpers share one mkdtemp root per suite prefix and hand out numbered
 // case dirs. That reduces filesystem churn while preserving per-test cleanup.
@@ -80,12 +81,7 @@ async function releaseAsyncPrefixRoot(options: {
     return;
   }
   asyncPrefixRoots.delete(key);
-  await fs.rm(state.path, {
-    recursive: true,
-    force: true,
-    maxRetries: 20,
-    retryDelay: 25,
-  });
+  await removeTestTempPath(state.path);
 }
 
 function releaseSyncPrefixRoot(options: { prefix: string; parentDir?: string }) {
@@ -99,12 +95,7 @@ function releaseSyncPrefixRoot(options: { prefix: string; parentDir?: string }) 
     return;
   }
   syncPrefixRoots.delete(key);
-  fsSync.rmSync(state.path, {
-    recursive: true,
-    force: true,
-    maxRetries: 20,
-    retryDelay: 25,
-  });
+  removeTestTempPathSync(state.path);
 }
 
 export async function withTempDir<T>(
@@ -126,12 +117,7 @@ export async function withTempDir<T>(
     }
     return await run(dir);
   } finally {
-    await fs.rm(base, {
-      recursive: true,
-      force: true,
-      maxRetries: 20,
-      retryDelay: 25,
-    });
+    await removeTestTempPath(base);
     await releaseAsyncPrefixRoot(options);
   }
 }
@@ -160,12 +146,7 @@ export function createSuiteTempRootTracker(options: { prefix: string; parentDir?
       const currentRoot = root;
       root = "";
       nextIndex = 0;
-      await fs.rm(currentRoot, {
-        recursive: true,
-        force: true,
-        maxRetries: 20,
-        retryDelay: 25,
-      });
+      await removeTestTempPath(currentRoot);
     },
   };
 }
@@ -189,12 +170,7 @@ export function withTempDirSync<T>(
     }
     return run(dir);
   } finally {
-    fsSync.rmSync(base, {
-      recursive: true,
-      force: true,
-      maxRetries: 20,
-      retryDelay: 25,
-    });
+    removeTestTempPathSync(base);
     releaseSyncPrefixRoot(options);
   }
 }

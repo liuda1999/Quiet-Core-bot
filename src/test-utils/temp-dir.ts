@@ -2,6 +2,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import { removeTestTempPath } from "./session-state-cleanup.js";
 
 /** Runs a test body in a temporary directory and removes it afterward. */
 export async function withTempDir<T>(prefix: string, run: (dir: string) => Promise<T>): Promise<T> {
@@ -9,6 +10,6 @@ export async function withTempDir<T>(prefix: string, run: (dir: string) => Promi
   try {
     return await run(dir);
   } finally {
-    await fs.rm(dir, { recursive: true, force: true });
+    await removeTestTempPath(dir);
   }
 }

@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
+import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import { CronService } from "./service.js";
 import { writeCronStoreSnapshot } from "./service.test-harness.js";
 
@@ -40,18 +41,10 @@ async function makeStorePath() {
   return {
     storePath: path.join(dir, "cron", "jobs.json"),
     cleanup: async () => {
-      // On macOS, teardown can race with trailing async fs writes and leave
-      // transient ENOTEMPTY/EBUSY errors; let fs.rm handle retries natively.
-      try {
-        await fs.rm(dir, {
-          recursive: true,
-          force: true,
-          maxRetries: 10,
-          retryDelay: 10,
-        });
-      } catch {
-        await fs.rm(dir, { recursive: true, force: true });
-      }
+      // Teardown can race with trailing async fs writes and leave transient
+      // ENOTEMPTY/EBUSY errors; removeTestTempPath retries in a bounded loop and
+      // releases cached state-database handles between attempts.
+      await removeTestTempPath(dir);
     },
   };
 }

@@ -8,6 +8,7 @@ import { resolveMainSessionKey } from "../config/sessions.js";
 import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { setActivePluginRegistry } from "../plugins/runtime.js";
 import { createTestRegistry } from "../test-utils/channel-plugins.js";
+import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import type { HeartbeatDeps } from "./heartbeat-runner.js";
 
 // Heartbeat test utilities seed session stores and temporary heartbeat prompts
@@ -102,7 +103,7 @@ export async function withTempHeartbeatSandbox<T>(
         process.env[envName] = previousValue;
       }
     }
-    await fs.rm(tmpDir, { recursive: true, force: true });
+    await removeTestTempPath(tmpDir);
   }
 }
 

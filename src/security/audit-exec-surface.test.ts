@@ -6,6 +6,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from
 import type { OpenClawConfig } from "../config/config.js";
 import { saveExecApprovals } from "../infra/exec-approvals.js";
 import { captureEnv } from "../test-utils/env.js";
+import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import { collectExecRuntimeFindings } from "./audit.js";
 
 function hasFinding(
@@ -67,7 +68,7 @@ describe("security audit exec surface findings", () => {
 
   afterAll(async () => {
     if (tempRoot) {
-      await fs.rm(tempRoot, { recursive: true, force: true, maxRetries: 5, retryDelay: 20 });
+      await removeTestTempPath(tempRoot);
     }
   });
 

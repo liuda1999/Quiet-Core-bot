@@ -683,7 +683,7 @@ describe("clawhub helpers", () => {
       },
     });
     expect(new URL(requestedUrl).pathname).toBe(
-      "/api/v1/packages/%40quiet-core-bot%2Fdiagnostics-otel/versions/2026.3.22/artifact",
+      "/api/v1/packages/%40quiet-core%2Fdiagnostics-otel/versions/2026.3.22/artifact",
     );
   });
 
@@ -767,7 +767,10 @@ describe("clawhub helpers", () => {
   });
 
   it("annotates 429 errors with the reset hint and a sign-in hint when unauthenticated", async () => {
-    process.env.QUIET_CORE_CLAWHUB_CONFIG_PATH = path.join(os.tmpdir(), "quiet-core-bot-no-clawhub-config");
+    process.env.QUIET_CORE_CLAWHUB_CONFIG_PATH = path.join(
+      os.tmpdir(),
+      "quiet-core-bot-no-clawhub-config",
+    );
     await expect(
       searchClawHubSkills({
         query: "calendar",
@@ -785,7 +788,10 @@ describe("clawhub helpers", () => {
   });
 
   it("degrades gracefully on 429 when the response carries no rate-limit headers", async () => {
-    process.env.QUIET_CORE_CLAWHUB_CONFIG_PATH = path.join(os.tmpdir(), "quiet-core-bot-no-clawhub-config");
+    process.env.QUIET_CORE_CLAWHUB_CONFIG_PATH = path.join(
+      os.tmpdir(),
+      "quiet-core-bot-no-clawhub-config",
+    );
     await expect(
       searchClawHubSkills({
         query: "calendar",

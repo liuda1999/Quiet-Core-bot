@@ -36,6 +36,7 @@ import {
   openOpenClawStateDatabase,
 } from "../state/quiet-core-bot-state-db.js";
 import { withEnvAsync } from "../test-utils/env.js";
+import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import {
   buildAnnounceDropEventKey,
   buildAnnounceIdempotencyKey,
@@ -155,7 +156,7 @@ describe("Task 3 · subagent context isolation and handoff", () => {
     // Release the sqlite handle before removing the temp state dir (Windows keeps
     // an open database file locked, which would hang the recursive removal).
     closeOpenClawStateDatabaseForTest();
-    await fs.rm(tempDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
+    await removeTestTempPath(tempDir);
   });
 
   it("keeps an isolated child free of parent history (task envelope only)", () => {

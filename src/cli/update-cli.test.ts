@@ -7,8 +7,8 @@ import path from "node:path";
 import { Command } from "commander";
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { TEST_BUNDLED_RUNTIME_SIDECAR_PATHS } from "../../test/helpers/bundled-runtime-sidecars.js";
-import type { OpenClawConfig, ConfigFileSnapshot } from "../config/types.quiet-core-bot.js";
 import type { PluginInstallRecord } from "../config/types.plugins.js";
+import type { OpenClawConfig, ConfigFileSnapshot } from "../config/types.quiet-core-bot.js";
 import { GATEWAY_SERVICE_RUNTIME_PID_ENV } from "../daemon/constants.js";
 import { writePackageDistInventory } from "../infra/package-dist-inventory.js";
 import { isBetaTag } from "../infra/update-channels.js";
@@ -794,7 +794,11 @@ describe("update-cli", () => {
       if (argv[0] === "npm" && argv[1] === "pack") {
         const destination = argv[argv.indexOf("--pack-destination") + 1];
         if (destination) {
-          await fs.writeFile(path.join(destination, "quiet-core-bot-9999.0.0.tgz"), "packed\n", "utf8");
+          await fs.writeFile(
+            path.join(destination, "quiet-core-bot-9999.0.0.tgz"),
+            "packed\n",
+            "utf8",
+          );
         }
       }
       return {
@@ -2499,7 +2503,10 @@ describe("update-cli", () => {
       name: "aliased git package spec",
       run: async () => {
         mockPackageInstallStatus(createCaseDir("quiet-core-bot-update"));
-        await updateCommand({ yes: true, tag: "Quiet Core bot@github:liuda1999/quiet-core-bot#main" });
+        await updateCommand({
+          yes: true,
+          tag: "Quiet Core bot@github:liuda1999/quiet-core-bot#main",
+        });
       },
       expectedSpec: "Quiet Core bot@github:liuda1999/quiet-core-bot#main",
     },
@@ -2507,7 +2514,10 @@ describe("update-cli", () => {
       name: "full git URL package spec",
       run: async () => {
         mockPackageInstallStatus(createCaseDir("quiet-core-bot-update"));
-        await updateCommand({ yes: true, tag: "https://github.com/liuda1999/Quiet-Core-bot.git#main" });
+        await updateCommand({
+          yes: true,
+          tag: "https://github.com/liuda1999/Quiet-Core-bot.git#main",
+        });
       },
       expectedSpec: "https://github.com/liuda1999/Quiet-Core-bot.git#main",
     },
@@ -3907,9 +3917,7 @@ describe("update-cli", () => {
     expect(logs).toContain(
       `Shell Quiet Core bot root differs from the managed gateway service root: ${shellRoot}`,
     );
-    expect(logs).toContain(
-      "make sure `openclaw` on PATH resolves to the managed service root",
-    );
+    expect(logs).toContain("make sure `openclaw` on PATH resolves to the managed service root");
     expect(logs).toContain(`Managed gateway service Node: ${serviceNode}`);
   });
 
@@ -5355,7 +5363,7 @@ describe("update-cli", () => {
 
   it("persists channel and runs post-update work after switching from package to git", async () => {
     const tempDir = createCaseDir("quiet-core-bot-update");
-    const gitRoot = path.join(tempDir, "..", "openclaw");
+    const gitRoot = path.join(tempDir, "..", "quiet-core-bot");
     const completionCacheSpy = vi
       .spyOn(updateCliShared, "tryWriteCompletionCache")
       .mockResolvedValue(undefined);
@@ -6216,7 +6224,9 @@ describe("update-cli", () => {
         expect(doctorEnv?.QUIET_CORE_UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR).toBe("1");
         expect(doctorEnv?.QUIET_CORE_UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE).toBe("1");
         expect(process.env.QUIET_CORE_UPDATE_IN_PROGRESS).toBeUndefined();
-        expect(process.env.QUIET_CORE_UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR).toBeUndefined();
+        expect(
+          process.env.QUIET_CORE_UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR,
+        ).toBeUndefined();
         expect(process.env.QUIET_CORE_UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE).toBeUndefined();
         expect(doctorCommand).toHaveBeenCalledWith(defaultRuntime, {
           nonInteractive: true,
@@ -6569,7 +6579,9 @@ describe("update-cli", () => {
       await withEnvAsync(
         { QUIET_CORE_GIT_DIR: undefined, QUIET_CORE_HOME: "/srv/quiet-core-bot-home" },
         async () => {
-          expect(resolveGitInstallDir()).toBe(path.posix.join("/srv/quiet-core-bot-home", "quiet-core-bot"));
+          expect(resolveGitInstallDir()).toBe(
+            path.posix.join("/srv/quiet-core-bot-home", "quiet-core-bot"),
+          );
         },
       );
     } finally {

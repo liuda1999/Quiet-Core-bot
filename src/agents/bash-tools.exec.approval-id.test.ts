@@ -10,6 +10,7 @@ import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { sendMessage } from "../infra/outbound/message.js";
 import { captureEnv, deleteTestEnvValue, setTestEnvValue } from "../test-utils/env.js";
+import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import { buildSystemRunPreparePayload } from "../test-utils/system-run-prepare-payload.js";
 import { createExecTool } from "./bash-tools.exec.js";
 import { callGatewayTool } from "./tools/gateway.js";
@@ -438,7 +439,7 @@ describe("exec approvals", () => {
 
   afterAll(async () => {
     if (tempRoot) {
-      await fs.rm(tempRoot, { recursive: true, force: true, maxRetries: 5, retryDelay: 20 });
+      await removeTestTempPath(tempRoot);
     }
   });
 
@@ -775,7 +776,11 @@ describe("exec approvals", () => {
     expect(calls).toContain("exec.approval.request");
     expect(calls).toContain("exec.approval.waitDecision");
 
-    const approvalsPath = path.join(process.env.HOME ?? "", ".quiet-core-bot", "exec-approvals.json");
+    const approvalsPath = path.join(
+      process.env.HOME ?? "",
+      ".quiet-core-bot",
+      "exec-approvals.json",
+    );
     await expect
       .poll(
         async () => {

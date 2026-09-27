@@ -17,6 +17,7 @@ import {
   createChannelTestPluginBase,
   createTestRegistry,
 } from "../../test-utils/channel-plugins.js";
+import { removeTestTempPath } from "../../test-utils/session-state-cleanup.js";
 import { handleAllowlistCommand } from "./commands-allowlist.js";
 import type { HandleCommandsParams } from "./commands-types.js";
 import type { ConfigSnapshotMock } from "./commands.test-harness.js";
@@ -266,7 +267,7 @@ async function withTempConfigPath<T>(
     } else {
       process.env.QUIET_CORE_CONFIG_PATH = previous;
     }
-    await fs.rm(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
+    await removeTestTempPath(dir);
   }
 }
 

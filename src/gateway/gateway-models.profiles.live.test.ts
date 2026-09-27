@@ -12,6 +12,7 @@ import {
   type ModelThinkingLevel,
 } from "quiet-core-bot/plugin-sdk/llm";
 import { afterEach, describe, expect, it } from "vitest";
+import { removeTestTempPath } from "../../test-utils/session-state-cleanup.js";
 import { renderCatNoncePngBase64 } from "../../test/helpers/live-image-probe.js";
 import { discoverAuthStorage, discoverModels } from "../agents/agent-model-discovery.js";
 import { resolveAgentWorkspaceDir, resolveDefaultAgentDir } from "../agents/agent-scope.js";
@@ -3624,12 +3625,12 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
     await fs.rm(toolProbePath, { force: true });
     // Give the filesystem a short retry window while agent/runtime teardown
     // releases handles inside these temporary live-test directories.
-    await fs.rm(tempDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
+    await removeTestTempPath(tempDir);
     if (tempAgentDir) {
-      await fs.rm(tempAgentDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
+      await removeTestTempPath(tempAgentDir);
     }
     if (tempStateDir) {
-      await fs.rm(tempStateDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
+      await removeTestTempPath(tempStateDir);
     }
 
     restoreOptionalEnv("QUIET_CORE_CONFIG_PATH", previous.configPath);

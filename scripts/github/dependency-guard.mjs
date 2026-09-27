@@ -18,8 +18,8 @@ import {
 } from "./guard-shared.mjs";
 
 /** Marker used to identify dependency guard comments. */
-export const dependencyChangeMarker = "<!-- openclaw:dependency-guard -->";
-export const dependencyGraphGuardMarker = "<!-- openclaw:dependency-graph-guard -->";
+export const dependencyChangeMarker = "<!-- quiet-core-bot:dependency-guard -->";
+export const dependencyGraphGuardMarker = "<!-- quiet-core-bot:dependency-graph-guard -->";
 export const dependencyChangedLabel = "dependencies-changed";
 export const allowDependenciesCommand = "/allow-dependencies-change";
 export {

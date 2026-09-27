@@ -4,6 +4,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { removeTestTempPath } from "../../test-utils/session-state-cleanup.js";
 import { renderCatFacePngBase64 } from "../../test/helpers/live-image-probe.js";
 import { isLiveTestEnabled } from "../agents/live-test-helpers.js";
 import type { ChannelOutboundContext } from "../channels/plugins/types.public.js";
@@ -630,7 +631,7 @@ describeLive("gateway live (native Codex conversation binding)", () => {
             await server?.close();
           }
         } finally {
-          await fs.rm(tempRoot, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
+          await removeTestTempPath(tempRoot);
           restoreEnvVar("CODEX_HOME", previous.codexHome);
           restoreEnvVar("QUIET_CORE_CONFIG_PATH", previous.configPath);
           restoreEnvVar("QUIET_CORE_GATEWAY_TOKEN", previous.gatewayToken);

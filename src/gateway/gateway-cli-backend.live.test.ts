@@ -4,6 +4,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { removeTestTempPath } from "../../test-utils/session-state-cleanup.js";
 import { resolveCliBackendConfig, resolveCliBackendLiveTest } from "../agents/cli-backends.js";
 import { isLiveTestEnabled } from "../agents/live-test-helpers.js";
 import { shouldSkipLiveProviderDrift } from "../agents/live-test-provider-drift.js";
@@ -325,7 +326,8 @@ describeLive("gateway live (cli backend)", () => {
       });
       const providerDefaults = backendResolved?.config;
 
-      const cliCommand = process.env.QUIET_CORE_LIVE_CLI_BACKEND_COMMAND ?? providerDefaults?.command;
+      const cliCommand =
+        process.env.QUIET_CORE_LIVE_CLI_BACKEND_COMMAND ?? providerDefaults?.command;
       if (!cliCommand) {
         throw new Error(
           `QUIET_CORE_LIVE_CLI_BACKEND_COMMAND is required for provider "${providerId}".`,
@@ -704,7 +706,7 @@ describeLive("gateway live (cli backend)", () => {
             await server?.close();
           }
         } finally {
-          await fs.rm(tempDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
+          await removeTestTempPath(tempDir);
           restoreCliBackendLiveEnv(previousEnv);
           logCliBackendLiveStep("cleanup:done");
         }

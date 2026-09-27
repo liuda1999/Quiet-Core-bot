@@ -2,6 +2,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { removeTestTempPathSync } from "../../src/test-utils/session-state-cleanup.js";
 
 // Synchronous temporary repository helpers for tests.
 
@@ -21,6 +22,6 @@ export function writeJsonFile(filePath: string, value: unknown): void {
 /** Remove all tracked temporary directories. */
 export function cleanupTempDirs(tempDirs: string[]): void {
   for (const dir of tempDirs.splice(0)) {
-    fs.rmSync(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 20 });
+    removeTestTempPathSync(dir);
   }
 }

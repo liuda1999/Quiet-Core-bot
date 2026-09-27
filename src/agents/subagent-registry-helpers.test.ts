@@ -15,6 +15,7 @@ import { defaultRuntime } from "../runtime.js";
 import { readDiagnosticEvents } from "../state/diagnostic-events-store.js";
 import { closeOpenClawStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
 import { withEnv, withEnvAsync } from "../test-utils/env.js";
+import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import {
   SUBAGENT_ANNOUNCE_DROP_SCOPE,
   writeAnnounceDropDiagnostic,
@@ -92,7 +93,7 @@ describe("logAnnounceGiveUp", () => {
     vi.useRealTimers();
     closeOpenClawStateDatabaseForTest();
     if (tempStateDir) {
-      await fs.rm(tempStateDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
+      await removeTestTempPath(tempStateDir);
       tempStateDir = null;
     }
   });
@@ -248,7 +249,7 @@ describe("undelivered completion fallback notice", () => {
   afterEach(async () => {
     closeOpenClawStateDatabaseForTest();
     if (tempStateDir) {
-      await fs.rm(tempStateDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
+      await removeTestTempPath(tempStateDir);
       tempStateDir = null;
     }
   });
@@ -381,7 +382,7 @@ describe("delivered completion receipt (F2/C-K2-3)", () => {
   afterEach(async () => {
     closeOpenClawStateDatabaseForTest();
     if (tempStateDir) {
-      await fs.rm(tempStateDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
+      await removeTestTempPath(tempStateDir);
       tempStateDir = null;
     }
   });

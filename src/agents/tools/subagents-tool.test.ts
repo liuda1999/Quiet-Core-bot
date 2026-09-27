@@ -7,6 +7,7 @@ import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { closeOpenClawStateDatabaseForTest } from "../../state/quiet-core-bot-state-db.js";
 import { withEnvAsync } from "../../test-utils/env.js";
+import { removeTestTempPath } from "../../test-utils/session-state-cleanup.js";
 import { testing as subagentAnnounceOutputTesting } from "../subagent-announce-output.js";
 import { saveSubagentRegistryToSqlite } from "../subagent-registry.store.sqlite.js";
 import type { SubagentRunRecord } from "../subagent-registry.types.js";
@@ -95,7 +96,7 @@ describe("subagents tool", () => {
       subagentAnnounceOutputTesting.setDepsForTest();
       closeOpenClawStateDatabaseForTest();
       if (tempStateDir) {
-        await fs.rm(tempStateDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
+        await removeTestTempPath(tempStateDir);
         tempStateDir = null;
       }
     });

@@ -59,21 +59,21 @@ describe("buildPlatformServiceStartHints", () => {
         platform: "darwin",
         installCommand: "quiet-core-bot gateway install",
         startCommand: "quiet-core-bot gateway",
-        launchAgentPlistPath: "~/Library/LaunchAgents/com.openclaw.gateway.plist",
+        launchAgentPlistPath: "~/Library/LaunchAgents/ai.quiet-core-bot.gateway.plist",
         systemdServiceName: "quiet-core-bot-gateway",
         windowsTaskName: "Quiet Core bot Gateway",
       }),
     ).toEqual([
       "quiet-core-bot gateway install",
       "quiet-core-bot gateway",
-      "launchctl bootstrap gui/$UID ~/Library/LaunchAgents/com.openclaw.gateway.plist",
+      "launchctl bootstrap gui/$UID ~/Library/LaunchAgents/ai.quiet-core-bot.gateway.plist",
     ]);
     expect(
       buildPlatformServiceStartHints({
         platform: "linux",
         installCommand: "quiet-core-bot gateway install",
         startCommand: "quiet-core-bot gateway",
-        launchAgentPlistPath: "~/Library/LaunchAgents/com.openclaw.gateway.plist",
+        launchAgentPlistPath: "~/Library/LaunchAgents/ai.quiet-core-bot.gateway.plist",
         systemdServiceName: "quiet-core-bot-gateway",
         windowsTaskName: "Quiet Core bot Gateway",
       }),

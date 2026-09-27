@@ -4,6 +4,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
+import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import { withTempDir, withTempDirSync } from "./temp-dir.js";
 
 const parentRoots: string[] = [];
@@ -15,16 +16,7 @@ async function makeParentRoot(): Promise<string> {
 }
 
 afterEach(async () => {
-  await Promise.all(
-    parentRoots.splice(0).map((root) =>
-      fs.rm(root, {
-        recursive: true,
-        force: true,
-        maxRetries: 20,
-        retryDelay: 25,
-      }),
-    ),
-  );
+  await Promise.all(parentRoots.splice(0).map((root) => removeTestTempPath(root)));
 });
 
 describe("withTempDir", () => {

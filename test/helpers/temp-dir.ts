@@ -2,6 +2,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { removeTestTempPathSync } from "../../src/test-utils/session-state-cleanup.js";
 
 // Synchronous temporary directory helpers for tests.
 
@@ -28,7 +29,7 @@ export function makeTempDir(tempDirs: TempDirCollection, prefix: string): string
 export function cleanupTempDirs(tempDirs: TempDirCollection): void {
   const dirs = Array.isArray(tempDirs) ? tempDirs.splice(0) : [...tempDirs];
   for (const dir of dirs) {
-    fs.rmSync(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 20 });
+    removeTestTempPathSync(dir);
   }
   if (!Array.isArray(tempDirs)) {
     tempDirs.clear();
