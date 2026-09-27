@@ -1878,7 +1878,7 @@
     "lit": "3.3.3",
     "oxfmt": "0.52.0",
     "oxlint": "1.67.0",
-    "oxlint-tsgolint": "0.23.0",
+    "oxlint-tsgolint": "7.0.2003",
     "shiki": "4.1.0",
     "signal-utils": "0.21.1",
     "sigstore": "4.1.1",
