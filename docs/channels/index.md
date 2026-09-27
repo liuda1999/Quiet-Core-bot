@@ -9,6 +9,13 @@ title: "Chat channels"
 Quiet Core bot can talk to you on any chat app you already use. Each channel connects via the Gateway.
 Text is supported everywhere; media and reactions vary by channel.
 
+> **Not available in this deployment.** The cloud/third-party channel integrations were
+> removed from this installation. Discord, Feishu, Google Chat, iMessage, LINE,
+> Microsoft Teams, QQ Bot, Slack, SMS, Telegram, Twitch, WeChat, WhatsApp, Yuanbao,
+> Zalo, ZaloClawBot, and Zalo User are **not installed and cannot be configured**.
+> Do not attempt to set them up; only the channels listed under "Supported channels"
+> below exist here.
+
 ## Delivery notes
 
 - Telegram replies that contain markdown image syntax, such as `![alt](url)`,
