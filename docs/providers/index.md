@@ -9,6 +9,13 @@ title: "Provider directory"
 Quiet Core bot can use many LLM providers. Pick a provider, authenticate, then set the
 default model as `provider/model`.
 
+> **Not available in this deployment.** The cloud model-provider integrations were removed
+> from this installation. Providers such as OpenAI, Anthropic, Google, xAI, DeepSeek,
+> Mistral, Groq, OpenRouter, Amazon Bedrock, Azure, and similar are **not installed and
+> cannot be authenticated here**. Do not attempt to configure them. Only providers whose
+> plugin is actually installed in this checkout can be used; local/self-hosted backends
+> (for example Ollama, LM Studio, vLLM, SGLang, llama.cpp) remain available.
+
 Looking for chat channel docs (WhatsApp/Telegram/Discord/Slack/Mattermost (plugin)/etc.)? See [Channels](/channels).
 
 ## Quick start
