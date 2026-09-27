@@ -1,11 +1,11 @@
 {
-  "name": "@openclaw/media-understanding-core",
+  "name": "@quiet-core/media-understanding-core",
   "version": "2026.6.11",
   "private": true,
   "description": "OpenClaw media understanding runtime package",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@quiet-core/plugin-sdk": "workspace:*"
   },
-  "openclaw": {}
+  "quiet-core-bot": {}
 }

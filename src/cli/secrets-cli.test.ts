@@ -92,7 +92,7 @@ function createConfigureInteractiveResult(options?: {
     preflight: {
       mode: "dry-run" as const,
       changed: options?.changed ?? false,
-      changedFiles: options?.changed ? ["/tmp/openclaw.json"] : [],
+      changedFiles: options?.changed ? ["/tmp/quiet-core-bot.json"] : [],
       checks: {
         resolvability: true,
         resolvabilityComplete: options?.resolvabilityComplete ?? true,
@@ -113,7 +113,7 @@ function createSecretsApplyResult(options?: {
   return {
     mode: options?.mode ?? "dry-run",
     changed: options?.changed ?? false,
-    changedFiles: options?.changed ? ["/tmp/openclaw.json"] : [],
+    changedFiles: options?.changed ? ["/tmp/quiet-core-bot.json"] : [],
     checks: {
       resolvability: true,
       resolvabilityComplete: options?.resolvabilityComplete ?? true,
@@ -128,7 +128,7 @@ function createSecretsApplyResult(options?: {
 async function withPlanFile(run: (planPath: string) => Promise<void>) {
   const planPath = path.join(
     os.tmpdir(),
-    `openclaw-secrets-cli-test-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
+    `quiet-core-bot-secrets-cli-test-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
   );
   await fs.writeFile(planPath, `${JSON.stringify(createManualSecretsPlan())}\n`, "utf8");
   try {

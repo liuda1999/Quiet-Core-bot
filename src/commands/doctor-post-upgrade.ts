@@ -180,7 +180,7 @@ export async function runPostUpgradeProbes(params: {
         );
         continue;
       }
-      const entries = pkg.openclaw?.extensions ?? [];
+      const entries = pkg["quiet-core-bot"]?.extensions ?? [];
       if (entries.length > 0) {
         // Delegate to the install-time resolver so the probe enforces the same
         // contract as plugin install/discovery: runtimeExtensions shape, plugin-root

@@ -1,15 +1,15 @@
 // Configure wizard Gateway port, bind, auth, and Tailscale prompts.
-import { validateIPv4AddressInput } from "@openclaw/net-policy/ipv4";
+import { validateIPv4AddressInput } from "@quiet-core/net-policy/ipv4";
 import {
   normalizeOptionalString,
   readStringValue,
-} from "@openclaw/normalization-core/string-coerce";
-import { normalizeStringEntries } from "@openclaw/normalization-core/string-normalization";
+} from "@quiet-core/normalization-core/string-coerce";
+import { normalizeStringEntries } from "@quiet-core/normalization-core/string-normalization";
 import { note } from "../../packages/terminal-core/src/note.js";
 import { formatPortRangeHint } from "../cli/error-format.js";
 import { parsePort } from "../cli/shared/parse-port.js";
 import { resolveGatewayPort } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { isValidEnvSecretRefId, type SecretInput } from "../config/types.secrets.js";
 import {
   maybeAddTailnetOriginToControlUiAllowedOrigins,
@@ -206,12 +206,12 @@ export async function promptGatewayConfig(
       const envVar = guardCancel(
         await text({
           message: "Gateway token env var",
-          initialValue: "OPENCLAW_GATEWAY_TOKEN",
-          placeholder: "OPENCLAW_GATEWAY_TOKEN",
+          initialValue: "QUIET_CORE_GATEWAY_TOKEN",
+          placeholder: "QUIET_CORE_GATEWAY_TOKEN",
           validate: (value) => {
             const candidate = normalizeOptionalString(value) ?? "";
             if (!isValidEnvSecretRefId(candidate)) {
-              return "Use an env var name like OPENCLAW_GATEWAY_TOKEN.";
+              return "Use an env var name like QUIET_CORE_GATEWAY_TOKEN.";
             }
             const resolved = process.env[candidate]?.trim();
             if (!resolved) {

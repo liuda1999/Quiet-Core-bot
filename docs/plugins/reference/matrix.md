@@ -11,8 +11,8 @@ Quiet Core bot Matrix channel plugin for rooms and direct messages.
 
 ## Distribution
 
-- Package: `@openclaw/matrix`
-- Install route: ClawHub: `clawhub:@openclaw/matrix`; npm
+- Package: `@quiet-core/matrix`
+- Install route: ClawHub: `clawhub:@quiet-core/matrix`; npm
 
 ## Surface
 

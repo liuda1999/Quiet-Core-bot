@@ -16,11 +16,11 @@ afterEach(() => {
 });
 
 function makeTempDir() {
-  return makeTrackedTempDir("openclaw-plugin-peer-link", tempDirs);
+  return makeTrackedTempDir("quiet-core-bot-plugin-peer-link", tempDirs);
 }
 
 describe("plugin peer links", () => {
-  it("relinks openclaw peers in the managed npm root", async () => {
+  it("relinks quiet-core-bot peers in the managed npm root", async () => {
     const npmRoot = makeTempDir();
     const packageDir = path.join(npmRoot, "node_modules", "peer-plugin");
     fs.mkdirSync(packageDir, { recursive: true });
@@ -30,7 +30,7 @@ describe("plugin peer links", () => {
         name: "peer-plugin",
         version: "1.0.0",
         peerDependencies: {
-          openclaw: ">=2026.0.0",
+          "quiet-core-bot": ">=2026.0.0",
         },
       }),
       "utf8",
@@ -45,14 +45,14 @@ describe("plugin peer links", () => {
       },
     });
 
-    const linkPath = path.join(packageDir, "node_modules", "openclaw");
+    const linkPath = path.join(packageDir, "node_modules", "quiet-core-bot");
     expect(result).toEqual({ checked: 1, attempted: 1, repaired: 1, skipped: 0 });
     expect(fs.lstatSync(linkPath).isSymbolicLink()).toBe(true);
     expect(fs.realpathSync(linkPath)).toBe(fs.realpathSync(process.cwd()));
-    expect(messages.join("\n")).toContain('Linked peerDependency "openclaw"');
+    expect(messages.join("\n")).toContain('Linked peerDependency "quiet-core-bot"');
   });
 
-  it("audits missing managed npm openclaw peer links without relinking", async () => {
+  it("audits missing managed npm quiet-core-bot peer links without relinking", async () => {
     const npmRoot = makeTempDir();
     const packageDir = path.join(npmRoot, "node_modules", "peer-plugin");
     fs.mkdirSync(packageDir, { recursive: true });
@@ -62,7 +62,7 @@ describe("plugin peer links", () => {
         name: "peer-plugin",
         version: "1.0.0",
         peerDependencies: {
-          openclaw: ">=2026.0.0",
+          "quiet-core-bot": ">=2026.0.0",
         },
       }),
       "utf8",
@@ -70,7 +70,7 @@ describe("plugin peer links", () => {
 
     const result = await auditOpenClawPeerDependenciesInManagedNpmRoot({ npmRoot });
 
-    const linkPath = path.join(packageDir, "node_modules", "openclaw");
+    const linkPath = path.join(packageDir, "node_modules", "quiet-core-bot");
     expect(result.checked).toBe(1);
     expect(result.broken).toBe(1);
     expect(result.issues[0]?.packageName).toBe("peer-plugin");
@@ -79,7 +79,7 @@ describe("plugin peer links", () => {
   });
 
   it.runIf(process.platform !== "win32")(
-    "does not follow a package-local node_modules symlink while linking openclaw peers",
+    "does not follow a package-local node_modules symlink while linking quiet-core-bot peers",
     async () => {
       const root = makeTempDir();
       const packageDir = path.join(root, "peer-plugin");
@@ -92,7 +92,7 @@ describe("plugin peer links", () => {
       const result = await linkOpenClawPeerDependencies({
         installedDir: packageDir,
         peerDependencies: {
-          openclaw: ">=2026.0.0",
+          "quiet-core-bot": ">=2026.0.0",
         },
         logger: {
           warn: (message) => warnings.push(message),
@@ -100,23 +100,23 @@ describe("plugin peer links", () => {
       });
 
       expect(result).toEqual({ repaired: 0, skipped: 1 });
-      expect(fs.existsSync(path.join(outsideDir, "openclaw"))).toBe(false);
+      expect(fs.existsSync(path.join(outsideDir, "quiet-core-bot"))).toBe(false);
       expect(warnings.join("\n")).toContain("is not a real directory");
     },
   );
 
-  it("replaces an existing real openclaw package directory", async () => {
+  it("replaces an existing real quiet-core-bot package directory", async () => {
     const root = makeTempDir();
     const packageDir = path.join(root, "peer-plugin");
-    const existingOpenClawDir = path.join(packageDir, "node_modules", "openclaw");
+    const existingOpenClawDir = path.join(packageDir, "node_modules", "quiet-core-bot");
     fs.mkdirSync(existingOpenClawDir, { recursive: true });
-    fs.writeFileSync(path.join(existingOpenClawDir, "package.json"), '{"name":"openclaw"}', "utf8");
+    fs.writeFileSync(path.join(existingOpenClawDir, "package.json"), '{"name":"quiet-core-bot"}', "utf8");
 
     const messages: string[] = [];
     const result = await linkOpenClawPeerDependencies({
       installedDir: packageDir,
       peerDependencies: {
-        openclaw: ">=2026.0.0",
+        "quiet-core-bot": ">=2026.0.0",
       },
       logger: {
         info: (message) => messages.push(message),
@@ -126,17 +126,17 @@ describe("plugin peer links", () => {
     expect(result).toEqual({ repaired: 1, skipped: 0 });
     expect(fs.lstatSync(existingOpenClawDir).isSymbolicLink()).toBe(true);
     expect(fs.realpathSync(existingOpenClawDir)).toBe(fs.realpathSync(process.cwd()));
-    expect(messages.join("\n")).toContain('Linked peerDependency "openclaw"');
+    expect(messages.join("\n")).toContain('Linked peerDependency "quiet-core-bot"');
   });
 
   it("does not delete an unrelated existing package directory", async () => {
     const root = makeTempDir();
     const packageDir = path.join(root, "peer-plugin");
-    const existingOpenClawDir = path.join(packageDir, "node_modules", "openclaw");
+    const existingOpenClawDir = path.join(packageDir, "node_modules", "quiet-core-bot");
     fs.mkdirSync(existingOpenClawDir, { recursive: true });
     fs.writeFileSync(
       path.join(existingOpenClawDir, "package.json"),
-      '{"name":"not-openclaw"}',
+      '{"name":"not-quiet-core-bot"}',
       "utf8",
     );
 
@@ -144,7 +144,7 @@ describe("plugin peer links", () => {
     const result = await linkOpenClawPeerDependencies({
       installedDir: packageDir,
       peerDependencies: {
-        openclaw: ">=2026.0.0",
+        "quiet-core-bot": ">=2026.0.0",
       },
       logger: {
         warn: (message) => warnings.push(message),

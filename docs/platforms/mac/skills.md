@@ -12,11 +12,11 @@ The macOS app surfaces Quiet Core bot skills via the gateway; it does not parse 
 
 - `skills.status` (gateway) returns all skills plus eligibility and missing requirements
   (including allowlist blocks for bundled skills).
-- Requirements are derived from `metadata.openclaw.requires` in each `SKILL.md`.
+- Requirements are derived from `metadata.quiet-core-bot.requires` in each `SKILL.md`.
 
 ## Install actions
 
-- `metadata.openclaw.install` defines install options (brew/node/go/uv).
+- `metadata.quiet-core-bot.install` defines install options (brew/node/go/uv).
 - The app calls `skills.install` to run installers on the gateway host.
 - Operator-owned `security.installPolicy` can block gateway-backed skill
   installs before installer metadata runs. Install-time built-in dangerous-code

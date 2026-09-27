@@ -1,6 +1,6 @@
 // Policy doctor strictness comparisons for scoped policy overlays.
-import { normalizeProviderId } from "openclaw/plugin-sdk/provider-model-shared";
-import { isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { normalizeProviderId } from "quiet-core-bot/plugin-sdk/provider-model-shared";
+import { isRecord } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { POLICY_TOOL_GROUPS } from "../tool-policy-conformance.js";
 import type { PolicyRuleMetadata } from "./metadata.js";
 

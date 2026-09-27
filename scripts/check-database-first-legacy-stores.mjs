@@ -88,7 +88,7 @@ const legacyStorePatterns = [
   /\b(?:reply-cache|sent-echoes|events|claims)\.jsonl\b/u,
   /\bplugin-state\/state\.sqlite\b/u,
   /\btasks\/(?:runs\.sqlite|flows\/registry\.sqlite)\b/u,
-  /\bopenclaw-state\.sqlite\b/u,
+  /\bquiet-core-bot-state\.sqlite\b/u,
 ];
 
 const allowedRuntimeMigrationPaths = [
@@ -293,8 +293,8 @@ function importSource(node) {
 
 function isHelperWriteModuleSource(source) {
   return (
-    source === "openclaw/plugin-sdk/file-access-runtime" ||
-    source === "openclaw/plugin-sdk/security-runtime" ||
+    source === "quiet-core-bot/plugin-sdk/file-access-runtime" ||
+    source === "quiet-core-bot/plugin-sdk/security-runtime" ||
     fsSafePackageModulePattern.test(source) ||
     helperWriteModulePattern.test(source)
   );
@@ -7747,7 +7747,7 @@ export function collectDatabaseFirstLegacyStoreViolations(
       }
       return property.value === explicitUndefinedLegacyObjectPropertyValue
         ? ts.factory.createIdentifier("undefined")
-        : ts.factory.createStringLiteral("state/openclaw.sqlite");
+        : ts.factory.createStringLiteral("state/quiet-core-bot.sqlite");
     }
     return lookupKnownLegacyObjectLiteral(unwrapped.text)
       ? ts.factory.createIdentifier("undefined")

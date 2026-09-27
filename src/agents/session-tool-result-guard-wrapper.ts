@@ -3,7 +3,7 @@
  *
  * Installs message-write hooks, input provenance handling, and pending tool-result flush behavior once per manager.
  */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { getGlobalHookRunner } from "../plugins/hook-runner-global.js";
 import {
   applyInputProvenanceToUserMessage,

@@ -1,4 +1,4 @@
-/** @deprecated Use `openclaw/plugin-sdk/channel-targets`. */
+/** @deprecated Use `quiet-core-bot/plugin-sdk/channel-targets`. */
 export {
   buildMessagingTarget,
   ensureTargetId,

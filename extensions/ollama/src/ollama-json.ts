@@ -2,4 +2,4 @@
 export {
   parseJsonObjectPreservingUnsafeIntegers,
   parseJsonPreservingUnsafeIntegers,
-} from "openclaw/plugin-sdk/json-unsafe-integers";
+} from "quiet-core-bot/plugin-sdk/json-unsafe-integers";

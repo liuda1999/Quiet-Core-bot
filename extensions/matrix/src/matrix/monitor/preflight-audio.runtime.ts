@@ -1,9 +1,9 @@
-import { sendDurableMessageBatch as sendDurableMessageBatchImpl } from "openclaw/plugin-sdk/channel-outbound";
-import { transcribeFirstAudio as transcribeFirstAudioImpl } from "openclaw/plugin-sdk/media-runtime";
+import { sendDurableMessageBatch as sendDurableMessageBatchImpl } from "quiet-core-bot/plugin-sdk/channel-outbound";
+import { transcribeFirstAudio as transcribeFirstAudioImpl } from "quiet-core-bot/plugin-sdk/media-runtime";
 
-type TranscribeFirstAudio = typeof import("openclaw/plugin-sdk/media-runtime").transcribeFirstAudio;
+type TranscribeFirstAudio = typeof import("quiet-core-bot/plugin-sdk/media-runtime").transcribeFirstAudio;
 type SendDurableMessageBatch =
-  typeof import("openclaw/plugin-sdk/channel-outbound").sendDurableMessageBatch;
+  typeof import("quiet-core-bot/plugin-sdk/channel-outbound").sendDurableMessageBatch;
 
 export async function transcribeFirstAudio(
   ...args: Parameters<TranscribeFirstAudio>

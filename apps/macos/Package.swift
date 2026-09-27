@@ -21,7 +21,7 @@ let package = Package(
         .package(url: "https://github.com/sparkle-project/Sparkle", from: "2.9.0"),
         .package(url: "https://github.com/steipete/Peekaboo.git", exact: "3.5.2"),
         .package(url: "https://github.com/pointfreeco/swift-concurrency-extras", from: "1.3.1"),
-        .package(path: "../shared/OpenClawKit"),
+        .package(path: "../shared/QuietCoreKit"),
         .package(path: "../swabble"),
     ],
     targets: [
@@ -34,7 +34,7 @@ let package = Package(
         .target(
             name: "OpenClawDiscovery",
             dependencies: [
-                .product(name: "OpenClawKit", package: "OpenClawKit"),
+                .product(name: "OpenClawKit", package: "QuietCoreKit"),
             ],
             path: "Sources/OpenClawDiscovery",
             swiftSettings: [
@@ -45,9 +45,9 @@ let package = Package(
             dependencies: [
                 "OpenClawIPC",
                 "OpenClawDiscovery",
-                .product(name: "OpenClawKit", package: "OpenClawKit"),
-                .product(name: "OpenClawChatUI", package: "OpenClawKit"),
-                .product(name: "OpenClawProtocol", package: "OpenClawKit"),
+                .product(name: "OpenClawKit", package: "QuietCoreKit"),
+                .product(name: "OpenClawChatUI", package: "QuietCoreKit"),
+                .product(name: "OpenClawProtocol", package: "QuietCoreKit"),
                 .product(name: "SwabbleKit", package: "swabble"),
                 .product(name: "MenuBarExtraAccess", package: "MenuBarExtraAccess"),
                 .product(name: "Subprocess", package: "swift-subprocess"),
@@ -71,8 +71,8 @@ let package = Package(
             name: "OpenClawMacCLI",
             dependencies: [
                 "OpenClawDiscovery",
-                .product(name: "OpenClawKit", package: "OpenClawKit"),
-                .product(name: "OpenClawProtocol", package: "OpenClawKit"),
+                .product(name: "OpenClawKit", package: "QuietCoreKit"),
+                .product(name: "OpenClawProtocol", package: "QuietCoreKit"),
             ],
             path: "Sources/OpenClawMacCLI",
             swiftSettings: [
@@ -85,7 +85,7 @@ let package = Package(
                 "OpenClaw",
                 "OpenClawMacCLI",
                 "OpenClawDiscovery",
-                .product(name: "OpenClawProtocol", package: "OpenClawKit"),
+                .product(name: "OpenClawProtocol", package: "QuietCoreKit"),
                 .product(name: "SwabbleKit", package: "swabble"),
             ],
             swiftSettings: [

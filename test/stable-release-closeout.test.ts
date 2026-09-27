@@ -75,11 +75,11 @@ describe("stable release closeout", () => {
         assets: [
           ...release.assets,
           {
-            name: "openclaw-2026.6.8-stable-main-closeout.json",
+            name: "quiet-core-bot-2026.6.8-stable-main-closeout.json",
             digest: `sha256:${"d".repeat(64)}`,
           },
           {
-            name: "openclaw-2026.6.8-stable-main-closeout.json.sha256",
+            name: "quiet-core-bot-2026.6.8-stable-main-closeout.json.sha256",
             digest: `sha256:${"e".repeat(64)}`,
           },
         ],
@@ -110,7 +110,7 @@ describe("stable release closeout", () => {
       ...validCloseoutParams,
       release: {
         ...release,
-        assets: [{ name: "openclaw-2026.6.8-dependency-evidence.zip" }],
+        assets: [{ name: "quiet-core-bot-2026.6.8-dependency-evidence.zip" }],
       },
       nowMs: Date.parse("2026-06-17T00:00:00Z"),
     });

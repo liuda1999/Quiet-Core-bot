@@ -36,7 +36,7 @@ export const isBunBinary =
  */
 function getPackageDir(): string {
   // Allow override via environment variable (useful for Nix/Guix where store paths tokenize poorly)
-  const envDir = process.env.OPENCLAW_PACKAGE_DIR;
+  const envDir = process.env.QUIET_CORE_PACKAGE_DIR;
   if (envDir) {
     if (envDir === "~") {
       return homedir();
@@ -118,8 +118,8 @@ interface PackageJson {
 const pkg = JSON.parse(readFileSync(getPackageJsonPath(), "utf-8")) as PackageJson;
 
 const openClawConfigName: string | undefined = pkg.openclawConfig?.name;
-export const APP_NAME: string = openClawConfigName || "openclaw";
-export const CONFIG_DIR_NAME: string = pkg.openclawConfig?.configDir || ".openclaw";
+export const APP_NAME: string = openClawConfigName || "quiet-core-bot";
+export const CONFIG_DIR_NAME: string = pkg.openclawConfig?.configDir || ".quiet-core-bot";
 export const VERSION: string = pkg.version || "0.0.0";
 
 const ENV_AGENT_DIR = `${APP_NAME.toUpperCase()}_AGENT_DIR`;

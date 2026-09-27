@@ -1,10 +1,10 @@
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../infra/kysely-sync.js";
 // Stores config health fingerprints in shared SQLite state.
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "../state/openclaw-state-db.js";
+} from "../state/quiet-core-bot-state-db.js";
 
 export type ConfigHealthFingerprint = {
   hash: string;
@@ -41,7 +41,7 @@ export type ConfigHealthStateDeps = {
 };
 
 function resolveConfigHealthStateEnv(deps: ConfigHealthStateDeps): NodeJS.ProcessEnv {
-  if (deps.env.OPENCLAW_HOME || deps.env.HOME || deps.env.USERPROFILE || deps.env.PREFIX) {
+  if (deps.env.QUIET_CORE_HOME || deps.env.HOME || deps.env.USERPROFILE || deps.env.PREFIX) {
     return deps.env;
   }
   return { ...deps.env, HOME: deps.homedir() };

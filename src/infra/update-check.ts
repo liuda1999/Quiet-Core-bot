@@ -103,7 +103,7 @@ function formatNpmViewError(res: { stdout: string; stderr: string }): string {
 
 function packageTargetSpec(params: { target: string; spec?: string }): string {
   const spec = params.spec?.trim();
-  return spec || `openclaw@${params.target.trim() || "latest"}`;
+  return spec || `quiet-core-bot@${params.target.trim() || "latest"}`;
 }
 
 async function fetchPublicNpmPackageTargetStatus(params: {
@@ -113,7 +113,7 @@ async function fetchPublicNpmPackageTargetStatus(params: {
   let res: Response | undefined;
   try {
     res = await fetchWithTimeout(
-      `https://registry.npmjs.org/openclaw/${encodeURIComponent(params.target)}`,
+      `https://registry.npmjs.org/quiet-core-bot/${encodeURIComponent(params.target)}`,
       {},
       Math.max(250, params.timeoutMs),
     );

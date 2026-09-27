@@ -4,7 +4,7 @@
  * Resolves model, thinking, and timeout choices before the sessions_spawn executor launches work.
  */
 import { formatThinkingLevels } from "../auto-reply/thinking.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   resolveDefaultModelForAgent,
   resolveSubagentConfiguredModelSelection,

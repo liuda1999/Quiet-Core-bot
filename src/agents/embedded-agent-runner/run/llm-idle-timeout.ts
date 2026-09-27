@@ -5,8 +5,8 @@ import {
   finiteSecondsToTimerSafeMilliseconds,
   clampTimerTimeoutMs,
   MAX_TIMER_TIMEOUT_MS,
-} from "@openclaw/normalization-core/number-coercion";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+} from "@quiet-core/normalization-core/number-coercion";
+import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
 import { toErrorObject } from "../../../infra/errors.js";
 import { onLlmRequestActivity } from "../../../shared/llm-request-activity.js";
 import type { StreamFn } from "../../runtime/index.js";

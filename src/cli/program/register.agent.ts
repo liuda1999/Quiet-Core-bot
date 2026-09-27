@@ -219,7 +219,7 @@ ${formatHelpExamples([
     "Set name + emoji.",
   ],
   [
-    "quiet-core-bot agents set-identity --agent main --avatar avatars/openclaw.png",
+    "quiet-core-bot agents set-identity --agent main --avatar avatars/quiet-core-bot.png",
     "Set avatar path.",
   ],
   [

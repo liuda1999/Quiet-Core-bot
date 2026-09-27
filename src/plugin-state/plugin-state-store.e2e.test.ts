@@ -1,6 +1,6 @@
 // Plugin state store E2E tests cover persisted plugin state across runtime calls.
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { withOpenClawTestState } from "../test-utils/openclaw-test-state.js";
+import { withOpenClawTestState } from "../test-utils/quiet-core-bot-test-state.js";
 import {
   closePluginStateDatabase,
   createPluginStateKeyedStore,
@@ -208,7 +208,7 @@ describe("failure safety", () => {
     await withOpenClawTestState({ label: "e2e-fail-probe" }, async () => {
       const result = probePluginStateStore();
       expect(result.ok).toBe(true);
-      expect(result.databasePath).toContain("openclaw.sqlite");
+      expect(result.databasePath).toContain("quiet-core-bot.sqlite");
       expect(result.steps.length).toBeGreaterThanOrEqual(4);
       const failedSteps = result.steps.filter((step) => !step.ok);
       expect(failedSteps).toEqual([]);

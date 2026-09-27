@@ -232,7 +232,7 @@ jobs:
         if: steps.plan.outputs.missing_trusted_publisher_count != '0'
         run: |
           echo "::error::One or more ClawHub packages exist but do not have trusted publishing configured. Configure trusted publishing before running the normal OIDC publish workflow."
-          jq -r '.missingTrustedPublisher[]? | "::error::Missing trusted publisher: \(.packageName)@\(.version). Configure trusted publishing for openclaw/openclaw, workflow plugin-clawhub-release.yml."' .local/plugin-clawhub-release-plan.json
+          jq -r '.missingTrustedPublisher[]? | "::error::Missing trusted publisher: \(.packageName)@\(.version). Configure trusted publishing for liuda1999/quiet-core-bot, workflow plugin-clawhub-release.yml."' .local/plugin-clawhub-release-plan.json
           exit 1
 
       - name: Fail normal publish when bootstrap is required
@@ -360,7 +360,7 @@ jobs:
           SOURCE_REF: ${{ github.ref }}
           PACKAGE_TAG: ${{ matrix.plugin.publishTag }}
           PACKAGE_DIR: ${{ matrix.plugin.packageDir }}
-          OPENCLAW_CLAWHUB_PACK_OUTPUT_DIR: ${{ runner.temp }}/clawhub-package-artifact
+          QUIET_CORE_CLAWHUB_PACK_OUTPUT_DIR: ${{ runner.temp }}/clawhub-package-artifact
         run: bash scripts/plugin-clawhub-publish.sh --pack "${PACKAGE_DIR}"
 
       - name: Upload ClawHub package artifact
@@ -387,7 +387,7 @@ jobs:
     needs:
       [preview_plugins_clawhub, pack_plugins_clawhub_artifacts, approve_plugins_clawhub_release]
     if: always() && github.event_name == 'workflow_dispatch' && needs.preview_plugins_clawhub.outputs.has_candidates == 'true' && needs.pack_plugins_clawhub_artifacts.result == 'success' && (inputs.dry_run == true || needs.approve_plugins_clawhub_release.result == 'success')
-    uses: openclaw/clawhub/.github/workflows/package-publish.yml@28409ee6ce9d088c9ddf0d6913cde6597f83f362
+    uses: quiet-core-bot/clawhub/.github/workflows/package-publish.yml@28409ee6ce9d088c9ddf0d6913cde6597f83f362
     permissions:
       actions: read
       contents: read

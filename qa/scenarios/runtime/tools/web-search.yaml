@@ -35,16 +35,16 @@ scenario:
       toolCoverage:
         family: web_search
         actualTool: web_search
-        bucket: openclaw-dynamic-integration
-        expectedLayer: openclaw-dynamic
-        capabilityLayer: openclaw-dynamic-direct
+        bucket: quiet-core-bot-dynamic-integration
+        expectedLayer: quiet-core-bot-dynamic
+        capabilityLayer: quiet-core-bot-dynamic-direct
         required: true
         codexDefaultImpact: P4
         qaImpact: P1
         action: hard gate in the standard direct-loading tier
         reason: web_search is an OpenClaw integration tool and must stay visible and callable under OpenClaw and Codex direct runtime parity.
       promptSnippet: "target=web_search"
-      failurePrompt: "tool search qa failure target=web_search. Call web_search exactly once with query OPENCLAW_QA_WEB_SEARCH_DENIED_INPUT and then summarize the failure."
+      failurePrompt: "tool search qa failure target=web_search. Call web_search exactly once with query QUIET_CORE_QA_WEB_SEARCH_DENIED_INPUT and then summarize the failure."
       failurePromptSnippet: "failure target=web_search"
 
 flow:

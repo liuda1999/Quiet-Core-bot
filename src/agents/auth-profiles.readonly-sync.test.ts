@@ -7,7 +7,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { closeOpenClawAgentDatabasesForTest } from "../state/openclaw-agent-db.js";
+import { closeOpenClawAgentDatabasesForTest } from "../state/quiet-core-bot-agent-db.js";
 import { AUTH_STORE_VERSION } from "./auth-profiles/constants.js";
 import { externalCliDiscoveryScoped } from "./auth-profiles/external-cli-discovery.js";
 import { loadPersistedAuthProfileStore } from "./auth-profiles/persisted.js";
@@ -63,7 +63,7 @@ describe("auth profiles read-only external auth overlay", () => {
   });
 
   it("overlays runtime-only external auth without writing auth-profiles.json in read-only mode", () => {
-    const agentDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-auth-readonly-sync-"));
+    const agentDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-auth-readonly-sync-"));
     try {
       const baseline: AuthProfileStore = {
         version: AUTH_STORE_VERSION,
@@ -123,7 +123,7 @@ describe("auth profiles read-only external auth overlay", () => {
   });
 
   it("passes scoped external auth config to provider hooks", () => {
-    const agentDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-auth-scoped-config-"));
+    const agentDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-auth-scoped-config-"));
     const profileId = "google-gemini-cli:user@example.test";
     const cfg = {
       auth: {

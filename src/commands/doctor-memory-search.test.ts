@@ -203,7 +203,7 @@ describe("noteMemorySearchHealth", () => {
     expect(note).toHaveBeenCalledTimes(1);
     const message = firstNoteMessage();
     expect(message).toContain('Memory search provider is set to "local"');
-    expect(message).toContain("quiet-core-bot plugins install @openclaw/llama-cpp-provider");
+    expect(message).toContain("quiet-core-bot plugins install @quiet-core/llama-cpp-provider");
   });
 
   it("warns when local provider with default model but gateway probe reports not ready", async () => {
@@ -260,7 +260,7 @@ describe("noteMemorySearchHealth", () => {
   it("warns when local provider skipped readiness but configured local model is missing", async () => {
     resolveMemorySearchConfig.mockReturnValue({
       provider: "local",
-      local: { modelPath: "/definitely/missing/openclaw-memory-model.gguf" },
+      local: { modelPath: "/definitely/missing/quiet-core-bot-memory-model.gguf" },
       remote: {},
     });
 
@@ -338,7 +338,7 @@ describe("noteMemorySearchHealth", () => {
     const cfgWithLancedb = {
       plugins: {
         slots: { memory: "memory-lancedb" },
-        entries: { "memory-lancedb": { enabled: true, config: { dbPath: ".openclaw/memory" } } },
+        entries: { "memory-lancedb": { enabled: true, config: { dbPath: ".quiet-core-bot/memory" } } },
       },
     } as unknown as OpenClawConfig;
 
@@ -718,7 +718,7 @@ describe("noteMemorySearchHealth", () => {
     // { checked: false, ready: false, skipped: true }. This must NOT produce a
     // false-positive warning — it means readiness was never checked, not that
     // embeddings are unavailable.
-    // Regression test for: https://github.com/openclaw/openclaw/issues/74608
+    // Regression test for: https://github.com/liuda1999/Quiet-Core-bot/issues/74608
     resolveMemorySearchConfig.mockReturnValue({
       provider: "lmstudio",
       local: {},
@@ -861,7 +861,7 @@ describe("noteMemorySearchHealth", () => {
   it("warns for key-optional provider (lmstudio) when gateway probe timed out", async () => {
     // A gateway timeout sets checked: false but skipped: false/absent. This is a
     // real diagnostic signal — embeddings may be unavailable — so we should warn.
-    // Regression guard: https://github.com/openclaw/openclaw/issues/74608
+    // Regression guard: https://github.com/liuda1999/Quiet-Core-bot/issues/74608
     resolveMemorySearchConfig.mockReturnValue({
       provider: "lmstudio",
       local: {},
@@ -1139,7 +1139,7 @@ describe("memory recall doctor integration", () => {
     });
     repairDreamingArtifacts.mockResolvedValueOnce({
       changed: true,
-      archiveDir: "/tmp/agent-default/workspace/.openclaw-repair/dreaming/2026-04-11T21-35-00-000Z",
+      archiveDir: "/tmp/agent-default/workspace/.quiet-core-bot-repair/dreaming/2026-04-11T21-35-00-000Z",
       archivedDreamsDiary: false,
       archivedSessionCorpus: true,
       archivedSessionIngestion: true,

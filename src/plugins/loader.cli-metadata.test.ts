@@ -106,7 +106,7 @@ describe("plugin loader CLI metadata", () => {
 
     const warnings: string[] = [];
     const registry = await loadOpenClawPluginCliRegistry({
-      env: { ...process.env, OPENCLAW_STATE_DIR: stateDir },
+      env: { ...process.env, QUIET_CORE_STATE_DIR: stateDir },
       logger: {
         info: () => {},
         warn: (msg: string) => warnings.push(msg),
@@ -148,7 +148,7 @@ describe("plugin loader CLI metadata", () => {
 };`,
     });
     fs.writeFileSync(
-      path.join(plugin.dir, "openclaw.plugin.json"),
+      path.join(plugin.dir, "quiet-core-bot.plugin.json"),
       JSON.stringify(
         {
           id: "config-cli",
@@ -198,8 +198,8 @@ describe("plugin loader CLI metadata", () => {
       path.join(pluginDir, "package.json"),
       JSON.stringify(
         {
-          name: "@openclaw/cli-metadata-channel",
-          openclaw: { extensions: ["./index.cjs"], setupEntry: "./setup-entry.cjs" },
+          name: "@quiet-core/cli-metadata-channel",
+          "quiet-core-bot": { extensions: ["./index.cjs"], setupEntry: "./setup-entry.cjs" },
         },
         null,
         2,
@@ -207,7 +207,7 @@ describe("plugin loader CLI metadata", () => {
       "utf-8",
     );
     fs.writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "quiet-core-bot.plugin.json"),
       JSON.stringify(
         {
           id: "cli-metadata-channel",
@@ -299,14 +299,14 @@ module.exports = {
     const fullMarker = path.join(pluginDir, "full-loaded.txt");
 
     fs.mkdirSync(pluginDir, { recursive: true });
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = bundledRoot;
+    process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR = bundledRoot;
 
     fs.writeFileSync(
       path.join(pluginDir, "package.json"),
       JSON.stringify(
         {
-          name: "@openclaw/bundled-skip-channel",
-          openclaw: { extensions: ["./index.cjs"] },
+          name: "@quiet-core/bundled-skip-channel",
+          "quiet-core-bot": { extensions: ["./index.cjs"] },
         },
         null,
         2,
@@ -314,7 +314,7 @@ module.exports = {
       "utf-8",
     );
     fs.writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "quiet-core-bot.plugin.json"),
       JSON.stringify(
         {
           id: "bundled-skip-channel",
@@ -367,14 +367,14 @@ module.exports = {
     const cliMarker = path.join(pluginDir, "cli-loaded.txt");
 
     fs.mkdirSync(pluginDir, { recursive: true });
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = bundledRoot;
+    process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR = bundledRoot;
 
     fs.writeFileSync(
       path.join(pluginDir, "package.json"),
       JSON.stringify(
         {
-          name: "@openclaw/bundled-cli-channel",
-          openclaw: { extensions: ["./index.cjs"] },
+          name: "@quiet-core/bundled-cli-channel",
+          "quiet-core-bot": { extensions: ["./index.cjs"] },
         },
         null,
         2,
@@ -382,7 +382,7 @@ module.exports = {
       "utf-8",
     );
     fs.writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "quiet-core-bot.plugin.json"),
       JSON.stringify(
         {
           id: "bundled-cli-channel",
@@ -451,14 +451,14 @@ module.exports = {
     const fullMarker = path.join(pluginDir, "full-loaded.txt");
 
     fs.mkdirSync(pluginDir, { recursive: true });
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = bundledRoot;
+    process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR = bundledRoot;
 
     fs.writeFileSync(
       path.join(pluginDir, "package.json"),
       JSON.stringify(
         {
-          name: "@openclaw/bundled-skip-provider",
-          openclaw: { extensions: ["./index.cjs"] },
+          name: "@quiet-core/bundled-skip-provider",
+          "quiet-core-bot": { extensions: ["./index.cjs"] },
         },
         null,
         2,
@@ -466,7 +466,7 @@ module.exports = {
       "utf-8",
     );
     fs.writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "quiet-core-bot.plugin.json"),
       JSON.stringify(
         {
           id: "bundled-skip-provider",
@@ -521,8 +521,8 @@ module.exports = {
       path.join(pluginDir, "package.json"),
       JSON.stringify(
         {
-          name: "@openclaw/full-cli-metadata-channel",
-          openclaw: { extensions: ["./index.cjs"] },
+          name: "@quiet-core/full-cli-metadata-channel",
+          "quiet-core-bot": { extensions: ["./index.cjs"] },
         },
         null,
         2,
@@ -530,7 +530,7 @@ module.exports = {
       "utf-8",
     );
     fs.writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "quiet-core-bot.plugin.json"),
       JSON.stringify(
         {
           id: "full-cli-metadata-channel",
@@ -618,8 +618,8 @@ module.exports = {
       path.join(pluginDir, "package.json"),
       JSON.stringify(
         {
-          name: "@openclaw/discovery-cli-metadata-channel",
-          openclaw: { extensions: ["./index.cjs"] },
+          name: "@quiet-core/discovery-cli-metadata-channel",
+          "quiet-core-bot": { extensions: ["./index.cjs"] },
         },
         null,
         2,
@@ -627,7 +627,7 @@ module.exports = {
       "utf-8",
     );
     fs.writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "quiet-core-bot.plugin.json"),
       JSON.stringify(
         {
           id: "discovery-cli-metadata-channel",
@@ -724,8 +724,8 @@ module.exports = {
       path.join(pluginDir, "package.json"),
       JSON.stringify(
         {
-          name: "@openclaw/force-runtime-cli-channel",
-          openclaw: { extensions: ["./index.cjs"], setupEntry: "./setup-entry.cjs" },
+          name: "@quiet-core/force-runtime-cli-channel",
+          "quiet-core-bot": { extensions: ["./index.cjs"], setupEntry: "./setup-entry.cjs" },
         },
         null,
         2,
@@ -733,7 +733,7 @@ module.exports = {
       "utf-8",
     );
     fs.writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "quiet-core-bot.plugin.json"),
       JSON.stringify(
         {
           id: "force-runtime-cli-channel",
@@ -1014,7 +1014,7 @@ module.exports = {
 };`,
     });
     fs.writeFileSync(
-      path.join(plugin.dir, "openclaw.plugin.json"),
+      path.join(plugin.dir, "quiet-core-bot.plugin.json"),
       JSON.stringify(
         {
           id: "memory-external",

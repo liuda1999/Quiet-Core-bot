@@ -8,7 +8,7 @@ const { dispatchGatewayMethod } = vi.hoisted(() => ({
   dispatchGatewayMethod: vi.fn(),
 }));
 
-vi.mock("openclaw/plugin-sdk/gateway-method-runtime", () => ({
+vi.mock("quiet-core-bot/plugin-sdk/gateway-method-runtime", () => ({
   dispatchGatewayMethod,
 }));
 

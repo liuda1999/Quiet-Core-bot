@@ -9,7 +9,7 @@ export const CODEX_PLUGIN_ID = "codex";
 
 export const CODEX_PLUGIN_LIFECYCLE_MESSAGES = Object.freeze({
   missingPlugin:
-    'Codex plugin is required for Codex runtime. Run "openclaw doctor --fix" to install @openclaw/codex, then retry.',
+    'Codex plugin is required for Codex runtime. Run "quiet-core-bot doctor --fix" to install @quiet-core/codex, then retry.',
 });
 
 export type CodexPluginFixtureVersion = "missing" | "current" | "head" | (string & {});
@@ -31,9 +31,9 @@ export type CodexPluginLifecycleResult = {
 };
 
 type CodexPluginPackageJson = {
-  name: "@openclaw/codex";
+  name: "@quiet-core/codex";
   version: string;
-  openclaw: {
+  "quiet-core-bot": {
     install: {
       minHostVersion: string;
     };
@@ -68,9 +68,9 @@ function resolveFixtureVersion(version: CodexPluginFixtureVersion): string {
 
 function buildPackageJson(version: string): CodexPluginPackageJson {
   return {
-    name: "@openclaw/codex",
+    name: "@quiet-core/codex",
     version,
-    openclaw: {
+    "quiet-core-bot": {
       install: {
         minHostVersion: `>=${version === CODEX_PLUGIN_HEAD_VERSION ? CODEX_PLUGIN_CURRENT_VERSION : version}`,
       },
@@ -112,7 +112,7 @@ function compareVersions(left: string | undefined, right: string): number {
 }
 
 function formatPinnedOldRemediation(pluginVersion: string, hostVersion: string) {
-  return `Codex plugin version ${pluginVersion} is older than OpenClaw ${hostVersion}. Run "openclaw plugins update codex" or unpin codex, then rerun "openclaw doctor --fix".`;
+  return `Codex plugin version ${pluginVersion} is older than OpenClaw ${hostVersion}. Run "quiet-core-bot plugins update codex" or unpin codex, then rerun "quiet-core-bot doctor --fix".`;
 }
 
 function formatPinnedNewRemediation(pluginVersion: string, hostVersion: string) {
@@ -131,7 +131,7 @@ function collectStaleLegacyRuntimePins(config: unknown): string[] {
   };
   const markers = new Set<string>();
   const collectRuntimePin = (value: unknown) => {
-    if (value === "openclaw") {
+    if (value === "quiet-core-bot") {
       markers.add(`agentRuntime.id=${value}`);
     }
   };
@@ -160,7 +160,7 @@ export async function seedCodexPluginAt(
     "utf8",
   );
   await fs.writeFile(
-    path.join(targetDir, "openclaw.plugin.json"),
+    path.join(targetDir, "quiet-core-bot.plugin.json"),
     `${JSON.stringify({ id: CODEX_PLUGIN_ID, name: "Codex" }, null, 2)}\n`,
     "utf8",
   );

@@ -5,7 +5,7 @@ import path from "node:path";
 import {
   appendMemoryHostEvent,
   resolveMemoryHostEventLogPath,
-} from "openclaw/plugin-sdk/memory-host-events";
+} from "quiet-core-bot/plugin-sdk/memory-host-events";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { OpenClawConfig } from "../api.js";
 import { listMemoryCorePublicArtifacts } from "./public-artifacts.js";

@@ -213,7 +213,7 @@ Common aliases such as `js`, `ts`, `bash`, `md`, `yml`, `c++`, `dockerfile`, `rb
 Install the Diff Viewer Language Pack plugin to highlight other languages:
 
 ```bash
-quiet-core-bot plugins install clawhub:@openclaw/diffs-language-pack
+quiet-core-bot plugins install clawhub:@quiet-core/diffs-language-pack
 ```
 
 With the language pack available, Quiet Core bot can highlight many more languages. If the pack is not installed, files outside the default list still render as readable plain text. Examples include Astro, Vue, Svelte, MDX, GraphQL, Terraform/HCL, Nix, Clojure, Elixir, Haskell, OCaml, Scala, Zig, Solidity, Verilog/VHDL, Fortran, MATLAB, LaTeX, Mermaid, Sass/Less/SCSS, Nginx, Apache, CSV, dotenv, INI, and diff files.
@@ -350,7 +350,7 @@ Explicit tool parameters override these defaults.
       diffs: {
         enabled: true,
         config: {
-          viewerBaseUrl: "https://gateway.example.com/openclaw",
+          viewerBaseUrl: "https://gateway.example.com/quiet-core-bot",
         },
       },
     },
@@ -383,7 +383,7 @@ Explicit tool parameters override these defaults.
 
 ## Artifact lifecycle and storage
 
-- Artifacts are stored under the temp subfolder: `$TMPDIR/openclaw-diffs`.
+- Artifacts are stored under the temp subfolder: `$TMPDIR/quiet-core-bot-diffs`.
 - Viewer artifact metadata contains:
   - random artifact ID (20 hex chars)
   - random token (48 hex chars)
@@ -456,7 +456,7 @@ Resolution order:
     `browser.executablePath` in Quiet Core bot config.
   </Step>
   <Step title="Environment variables">
-    - `OPENCLAW_BROWSER_EXECUTABLE_PATH`
+    - `QUIET_CORE_BROWSER_EXECUTABLE_PATH`
     - `BROWSER_EXECUTABLE_PATH`
     - `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`
 

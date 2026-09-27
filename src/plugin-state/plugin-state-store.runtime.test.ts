@@ -4,7 +4,7 @@ import { resolveStateDir } from "../config/paths.js";
 import type { PluginRecord } from "../plugins/registry-types.js";
 import { createPluginRegistry } from "../plugins/registry.js";
 import type { PluginRuntime } from "../plugins/runtime/types.js";
-import { withOpenClawTestState } from "../test-utils/openclaw-test-state.js";
+import { withOpenClawTestState } from "../test-utils/quiet-core-bot-test-state.js";
 import { resetPluginStateStoreForTests } from "./plugin-state-store.js";
 
 function createPluginRecord(

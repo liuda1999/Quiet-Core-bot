@@ -14,7 +14,7 @@ const resolveLsofCommandSyncMock = vi.hoisted(() => vi.fn());
 const resolveGatewayPortMock = vi.hoisted(() => vi.fn());
 
 vi.mock("node:child_process", async () => {
-  const { mockNodeBuiltinModule } = await import("openclaw/plugin-sdk/test-node-mocks");
+  const { mockNodeBuiltinModule } = await import("quiet-core-bot/plugin-sdk/test-node-mocks");
   return mockNodeBuiltinModule(
     () => vi.importActual<typeof import("node:child_process")>("node:child_process"),
     {
@@ -31,7 +31,7 @@ vi.mock("./ports-lsof.js", () => ({
 vi.mock("../config/paths.js", () => ({
   resolveGatewayPort: (...args: unknown[]) => resolveGatewayPortMock(...args),
   resolveStateDir: (env: NodeJS.ProcessEnv = process.env) =>
-    env.OPENCLAW_STATE_DIR ?? "/tmp/openclaw-state",
+    env.QUIET_CORE_STATE_DIR ?? "/tmp/quiet-core-bot-state",
 }));
 
 const { testing, cleanStaleGatewayProcessesSync, findGatewayPidsOnPortSync } =
@@ -76,7 +76,7 @@ function requireFirstSpawnSyncCall(): [unknown, unknown, unknown] {
 }
 
 describe.runIf(process.platform !== "win32")("findGatewayPidsOnPortSync", () => {
-  it("parses lsof output and filters non-openclaw/current processes", () => {
+  it("parses lsof output and filters non-quiet-core-bot/current processes", () => {
     const gatewayPidA = process.pid + 1000;
     const gatewayPidB = process.pid + 2000;
     const foreignPid = process.pid + 3000;
@@ -85,9 +85,9 @@ describe.runIf(process.platform !== "win32")("findGatewayPidsOnPortSync", () => 
       status: 0,
       stdout: [
         `p${process.pid}`,
-        "copenclaw",
+        "cquiet-core-bot",
         `p${gatewayPidA}`,
-        "copenclaw-gateway",
+        "cquiet-core-bot-gateway",
         `p${foreignPid}`,
         "cnode",
         `p${gatewayPidB}`,
@@ -133,7 +133,7 @@ describe.runIf(process.platform !== "win32")("cleanStaleGatewayProcessesSync", (
       .mockReturnValueOnce({
         error: undefined,
         status: 0,
-        stdout: [`p${stalePidA}`, "copenclaw", `p${stalePidB}`, "copenclaw-gateway"].join("\n"),
+        stdout: [`p${stalePidA}`, "cquiet-core-bot", `p${stalePidB}`, "cquiet-core-bot-gateway"].join("\n"),
       })
       .mockReturnValue({
         error: undefined,
@@ -158,7 +158,7 @@ describe.runIf(process.platform !== "win32")("cleanStaleGatewayProcessesSync", (
       .mockReturnValueOnce({
         error: undefined,
         status: 0,
-        stdout: [`p${stalePid}`, "copenclaw"].join("\n"),
+        stdout: [`p${stalePid}`, "cquiet-core-bot"].join("\n"),
       })
       .mockReturnValue({
         error: undefined,
@@ -203,7 +203,7 @@ describe("triggerOpenClawRestart", () => {
   it("does not kickstart after bootstrap registers an unloaded LaunchAgent", () => {
     setPlatform("darwin");
     withEnv(
-      { VITEST: undefined, NODE_ENV: undefined, HOME: "/Users/test", OPENCLAW_PROFILE: "default" },
+      { VITEST: undefined, NODE_ENV: undefined, HOME: "/Users/test", QUIET_CORE_PROFILE: "default" },
       () => {
         const uid = typeof process.getuid === "function" ? process.getuid() : 501;
         spawnSyncMock.mockImplementation((command: string, args: string[]) => {
@@ -225,8 +225,8 @@ describe("triggerOpenClawRestart", () => {
           ok: true,
           method: "launchctl",
           tried: [
-            `launchctl kickstart -k gui/${uid}/ai.openclaw.gateway`,
-            `launchctl bootstrap gui/${uid} /Users/test/Library/LaunchAgents/ai.openclaw.gateway.plist`,
+            `launchctl kickstart -k gui/${uid}/ai.quiet-core-bot.gateway`,
+            `launchctl bootstrap gui/${uid} /Users/test/Library/LaunchAgents/ai.quiet-core-bot.gateway.plist`,
           ],
         });
       },
@@ -236,7 +236,7 @@ describe("triggerOpenClawRestart", () => {
   it("continues when launchctl bootstrap reports the service is already loaded", () => {
     setPlatform("darwin");
     withEnv(
-      { VITEST: undefined, NODE_ENV: undefined, HOME: "/Users/test", OPENCLAW_PROFILE: "default" },
+      { VITEST: undefined, NODE_ENV: undefined, HOME: "/Users/test", QUIET_CORE_PROFILE: "default" },
       () => {
         const uid = typeof process.getuid === "function" ? process.getuid() : 501;
         spawnSyncMock.mockImplementation((command: string, args: string[]) => {
@@ -261,9 +261,9 @@ describe("triggerOpenClawRestart", () => {
           ok: true,
           method: "launchctl",
           tried: [
-            `launchctl kickstart -k gui/${uid}/ai.openclaw.gateway`,
-            `launchctl bootstrap gui/${uid} /Users/test/Library/LaunchAgents/ai.openclaw.gateway.plist`,
-            `launchctl kickstart gui/${uid}/ai.openclaw.gateway`,
+            `launchctl kickstart -k gui/${uid}/ai.quiet-core-bot.gateway`,
+            `launchctl bootstrap gui/${uid} /Users/test/Library/LaunchAgents/ai.quiet-core-bot.gateway.plist`,
+            `launchctl kickstart gui/${uid}/ai.quiet-core-bot.gateway`,
           ],
         });
       },

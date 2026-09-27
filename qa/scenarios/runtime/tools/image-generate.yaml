@@ -29,9 +29,9 @@ scenario:
       toolCoverage:
         family: image_generate
         actualTool: image_generate
-        bucket: openclaw-dynamic-integration
-        expectedLayer: openclaw-dynamic
-        capabilityLayer: openclaw-dynamic-direct
+        bucket: quiet-core-bot-dynamic-integration
+        expectedLayer: quiet-core-bot-dynamic
+        capabilityLayer: quiet-core-bot-dynamic-direct
         required: false
         codexDefaultImpact: P4
         qaImpact: P1

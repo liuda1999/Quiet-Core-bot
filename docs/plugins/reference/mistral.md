@@ -11,7 +11,7 @@ Adds Mistral model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/mistral-provider`
+- Package: `@quiet-core/mistral-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

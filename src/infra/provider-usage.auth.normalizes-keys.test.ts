@@ -264,7 +264,7 @@ let resolveProviderAuths: typeof import("./provider-usage.auth.js").resolveProvi
 let clearRuntimeAuthProfileStoreSnapshots: typeof import("../agents/auth-profiles.js").clearRuntimeAuthProfileStoreSnapshots;
 let clearConfigCache: typeof import("../config/config.js").clearConfigCache;
 let clearRuntimeConfigSnapshot: typeof import("../config/config.js").clearRuntimeConfigSnapshot;
-const suiteRootTracker = createSuiteTempRootTracker({ prefix: "openclaw-provider-auth-suite-" });
+const suiteRootTracker = createSuiteTempRootTracker({ prefix: "quiet-core-bot-provider-auth-suite-" });
 
 describe("resolveProviderAuths key normalization", () => {
   const EMPTY_PROVIDER_ENV = {
@@ -303,7 +303,7 @@ describe("resolveProviderAuths key normalization", () => {
 
   async function withSuiteHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
     const base = await suiteRootTracker.make("case");
-    const stateDir = path.join(base, ".openclaw");
+    const stateDir = path.join(base, ".quiet-core-bot");
     const agentDir = path.join(stateDir, "agents", "main", "agent");
     nodeFs.mkdirSync(path.join(stateDir, "agents", "main", "sessions"), { recursive: true });
     nodeFs.mkdirSync(agentDir, { recursive: true });
@@ -316,7 +316,7 @@ describe("resolveProviderAuths key normalization", () => {
   }
 
   function agentDirForHome(home: string): string {
-    return path.join(home, ".openclaw", "agents", "main", "agent");
+    return path.join(home, ".quiet-core-bot", "agents", "main", "agent");
   }
 
   function buildSuiteEnv(
@@ -327,7 +327,7 @@ describe("resolveProviderAuths key normalization", () => {
       ...EMPTY_PROVIDER_ENV,
       HOME: home,
       USERPROFILE: home,
-      OPENCLAW_STATE_DIR: path.join(home, ".openclaw"),
+      QUIET_CORE_STATE_DIR: path.join(home, ".quiet-core-bot"),
       ...env,
     };
     const match = home.match(/^([A-Za-z]:)(.*)$/);
@@ -349,10 +349,10 @@ describe("resolveProviderAuths key normalization", () => {
   }
 
   async function writeConfig(home: string, config: Record<string, unknown>) {
-    const stateDir = path.join(home, ".openclaw");
+    const stateDir = path.join(home, ".quiet-core-bot");
     await fs.mkdir(stateDir, { recursive: true });
     await fs.writeFile(
-      path.join(stateDir, "openclaw.json"),
+      path.join(stateDir, "quiet-core-bot.json"),
       `${JSON.stringify(config, null, 2)}\n`,
       "utf8",
     );

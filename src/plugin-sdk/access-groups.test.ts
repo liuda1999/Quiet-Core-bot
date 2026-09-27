@@ -2,7 +2,7 @@
  * Tests access group helper behavior exposed through the SDK.
  */
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   expandAllowFromWithAccessGroups,
   resolveAccessGroupAllowFromState,

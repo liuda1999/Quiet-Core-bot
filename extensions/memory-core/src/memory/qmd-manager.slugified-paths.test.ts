@@ -44,10 +44,10 @@ function emitAndClose(child: MockChild, stream: "stdout" | "stderr", data: strin
   });
 }
 
-vi.mock("openclaw/plugin-sdk/memory-core-host-engine-foundation", async () => {
+vi.mock("quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation", async () => {
   const actual = await vi.importActual<
-    typeof import("openclaw/plugin-sdk/memory-core-host-engine-foundation")
-  >("openclaw/plugin-sdk/memory-core-host-engine-foundation");
+    typeof import("quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation")
+  >("quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation");
   return {
     ...actual,
     createSubsystemLogger: () => {
@@ -71,8 +71,8 @@ vi.mock("node:child_process", async () => {
 });
 
 import { spawn as mockedSpawn } from "node:child_process";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
-import { resolveMemoryBackendConfig } from "openclaw/plugin-sdk/memory-core-host-engine-storage";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
+import { resolveMemoryBackendConfig } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-storage";
 import { QmdMemoryManager } from "./qmd-manager.js";
 
 const spawnMock = mockedSpawn as unknown as Mock;
@@ -168,11 +168,11 @@ describe("QmdMemoryManager slugified path resolution", () => {
     logDebugMock.mockClear();
     logInfoMock.mockClear();
 
-    tmpRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-qmd-slugified-"));
+    tmpRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-qmd-slugified-"));
     workspaceDir = path.join(tmpRoot, "workspace");
     stateDir = path.join(tmpRoot, "state");
     await fs.mkdir(workspaceDir, { recursive: true });
-    process.env.OPENCLAW_STATE_DIR = stateDir;
+    process.env.QUIET_CORE_STATE_DIR = stateDir;
 
     cfg = {
       agents: {
@@ -197,7 +197,7 @@ describe("QmdMemoryManager slugified path resolution", () => {
     );
     openManagers.clear();
     await fs.rm(tmpRoot, { recursive: true, force: true });
-    delete process.env.OPENCLAW_STATE_DIR;
+    delete process.env.QUIET_CORE_STATE_DIR;
   });
 
   it("maps slugified workspace qmd URIs back to the indexed filesystem path", async () => {

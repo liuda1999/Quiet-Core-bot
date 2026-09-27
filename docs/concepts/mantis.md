@@ -118,24 +118,24 @@ VNC session, captures the desktop, pulls artifacts back to the local output
 directory, and writes the reconnect command into the report. The command defaults
 to the Hetzner provider because it is the first provider with working desktop/VNC
 coverage in the Mantis lane. Override it with `--provider`, `--crabbox-bin`, or
-`OPENCLAW_MANTIS_CRABBOX_PROVIDER` when running against another Crabbox fleet.
+`QUIET_CORE_MANTIS_CRABBOX_PROVIDER` when running against another Crabbox fleet.
 
 Useful desktop smoke flags:
 
-- `--lease-id <cbx_...>` or `OPENCLAW_MANTIS_CRABBOX_LEASE_ID` reuses a warmed desktop.
+- `--lease-id <cbx_...>` or `QUIET_CORE_MANTIS_CRABBOX_LEASE_ID` reuses a warmed desktop.
 - `--browser-url <url>` changes the page opened in the visible browser.
 - `--html-file <path>` renders a repo-local HTML artifact in the visible browser. Mantis uses this to capture the generated Discord status-reaction timeline through a real Crabbox desktop.
 - `--browser-profile-dir <remote-path>` reuses a remote Chrome user-data-dir so a persistent Mantis desktop can stay logged in between runs. Use this for the long-lived Discord Web viewer profile.
-- `--browser-profile-archive-env <name>` restores a base64 `.tgz` Chrome user-data-dir archive from the named environment variable before launching the browser. Use this for logged-in witnesses such as Discord Web. The default env var is `OPENCLAW_MANTIS_BROWSER_PROFILE_TGZ_B64`.
+- `--browser-profile-archive-env <name>` restores a base64 `.tgz` Chrome user-data-dir archive from the named environment variable before launching the browser. Use this for logged-in witnesses such as Discord Web. The default env var is `QUIET_CORE_MANTIS_BROWSER_PROFILE_TGZ_B64`.
 - `--video-duration <seconds>` controls the MP4 capture length. Use a longer duration for slow logged-in web apps that need time to settle.
-- `--keep-lease` or `OPENCLAW_MANTIS_KEEP_VM=1` keeps a newly created passing lease open for VNC inspection. Failed runs keep the lease by default when one was created so an operator can reconnect.
+- `--keep-lease` or `QUIET_CORE_MANTIS_KEEP_VM=1` keeps a newly created passing lease open for VNC inspection. Failed runs keep the lease by default when one was created so an operator can reconnect.
 - `--class`, `--idle-timeout`, and `--ttl` tune machine size and lease lifetime.
 
 For Discord Web evidence, Mantis uses a dedicated viewer account instead of a
 bot token. The live Discord API scenario remains the oracle: it creates the real
 thread, sends the SUT `thread-reply`, and checks the attachment through Discord
-REST. When `OPENCLAW_QA_DISCORD_CAPTURE_UI_METADATA=1` is set, the scenario also
-writes a Discord Web URL artifact. When `OPENCLAW_QA_DISCORD_KEEP_THREADS=1` is
+REST. When `QUIET_CORE_QA_DISCORD_CAPTURE_UI_METADATA=1` is set, the scenario also
+writes a Discord Web URL artifact. When `QUIET_CORE_QA_DISCORD_KEEP_THREADS=1` is
 set, it leaves that thread available long enough for a logged-in browser to open
 and record it.
 
@@ -168,7 +168,7 @@ shape where the SUT Quiet Core bot gateway and the browser both live inside the 
 Linux desktop VM.
 
 With `--gateway-setup`, the command prepares a persistent disposable Quiet Core bot
-home at `$HOME/.openclaw-mantis/slack-openclaw`, patches Slack Socket Mode
+home at `$HOME/.quiet-core-bot-mantis/slack-quiet-core-bot`, patches Slack Socket Mode
 configuration for the selected channel, starts `quiet-core-bot gateway run` on port
 `38973`, and keeps Chrome running in the VNC session. This is the "leave me a
 Linux desktop with Slack and a claw running" mode; the bot-to-bot Slack QA lane
@@ -176,18 +176,18 @@ remains the default when `--gateway-setup` is omitted.
 
 Required inputs for `--credential-source env`:
 
-- `OPENCLAW_QA_SLACK_CHANNEL_ID`
-- `OPENCLAW_QA_SLACK_DRIVER_BOT_TOKEN`
-- `OPENCLAW_QA_SLACK_SUT_BOT_TOKEN`
-- `OPENCLAW_QA_SLACK_SUT_APP_TOKEN`
-- `OPENCLAW_LIVE_OPENAI_KEY` for the remote model lane. If only
-  `OPENAI_API_KEY` is set locally, Mantis maps it to `OPENCLAW_LIVE_OPENAI_KEY`
-  before invoking Crabbox so Crabbox's `OPENCLAW_*` env forwarding can carry it
+- `QUIET_CORE_QA_SLACK_CHANNEL_ID`
+- `QUIET_CORE_QA_SLACK_DRIVER_BOT_TOKEN`
+- `QUIET_CORE_QA_SLACK_SUT_BOT_TOKEN`
+- `QUIET_CORE_QA_SLACK_SUT_APP_TOKEN`
+- `QUIET_CORE_LIVE_OPENAI_KEY` for the remote model lane. If only
+  `OPENAI_API_KEY` is set locally, Mantis maps it to `QUIET_CORE_LIVE_OPENAI_KEY`
+  before invoking Crabbox so Crabbox's `QUIET_CORE_*` env forwarding can carry it
   into the VM.
 
 With `--gateway-setup --credential-source convex`, Mantis leases the Slack SUT
 credential from the shared pool before creating the VM and forwards the leased
-channel id, Socket Mode app token, and bot token as the `OPENCLAW_MANTIS_SLACK_*`
+channel id, Socket Mode app token, and bot token as the `QUIET_CORE_MANTIS_SLACK_*`
 runtime env inside the desktop. That keeps GitHub workflows thin: they only need
 the Convex broker secret, not raw Slack bot or app tokens.
 
@@ -198,7 +198,7 @@ Useful Slack desktop flags:
 - `--keep-lease` keeps the gateway VM open for VNC inspection after success; `--no-keep-lease` stops it after collecting artifacts.
 - `--slack-url <url>` opens a specific Slack Web URL. Without it, Mantis derives `https://app.slack.com/client/<team>/<channel>` from Slack `auth.test` when the SUT bot token is available.
 - `--slack-channel-id <id>` controls the Slack channel allowlist used by gateway setup.
-- `OPENCLAW_MANTIS_SLACK_BROWSER_PROFILE_DIR` controls the persistent Chrome profile inside the VM. The default is `$HOME/.config/openclaw-mantis/slack-chrome-profile`, so a manual Slack Web login survives reruns on the same lease.
+- `QUIET_CORE_MANTIS_SLACK_BROWSER_PROFILE_DIR` controls the persistent Chrome profile inside the VM. The default is `$HOME/.config/quiet-core-bot-mantis/slack-chrome-profile`, so a manual Slack Web login survives reruns on the same lease.
 - `--credential-source convex --credential-role ci` uses the shared credential pool instead of direct Slack env tokens.
 - `--provider-mode`, `--model`, `--alt-model`, and `--fast` pass through to the Slack live lane.
 
@@ -223,7 +223,7 @@ motion-trimmed GIF previews generated by `crabbox media preview`, links to the
 matching motion-trimmed MP4 clips, and keeps the full desktop MP4 files for deep
 inspection. Screenshots stay inline for quick review. The workflow builds the
 Crabbox CLI from
-`openclaw/crabbox` main so it can use the current desktop/browser lease flags
+`quiet-core-bot/crabbox` main so it can use the current desktop/browser lease flags
 before the next Crabbox binary release is cut.
 
 `Mantis Scenario` is the generic manual entrypoint. It takes a `scenario_id`,
@@ -257,7 +257,7 @@ automation.
 
 `Mantis Telegram Desktop Proof` is the agentic native Telegram Desktop
 before/after wrapper. A maintainer can trigger it from a PR comment with
-`@openclaw-mantis telegram desktop proof`, from the Actions UI with freeform
+`@quiet-core-bot-mantis telegram desktop proof`, from the Actions UI with freeform
 instructions, or through the generic `Mantis Scenario` dispatcher. The workflow
 hands the PR, baseline ref, candidate ref, and maintainer instructions to Codex.
 The agent reads the PR, decides what Telegram-visible behavior proves the
@@ -342,7 +342,7 @@ call it with the manifest, target PR, artifact target root, comment marker,
 Actions artifact URL, run URL, and request source. It uploads declared artifacts
 to the configured Mantis R2/S3 bucket, builds a summary-first PR comment with
 inline images/previews and linked videos, then updates the existing marker
-comment or creates one. The workflows publish to `openclaw-crabbox-artifacts`
+comment or creates one. The workflows publish to `quiet-core-bot-crabbox-artifacts`
 with public URLs under `https://artifacts.openclaw.ai`. They provide bucket,
 region, and public URL values directly. The reusable publisher requires:
 
@@ -356,7 +356,7 @@ region, and public URL values directly. The reusable publisher requires:
 You can also trigger the status-reactions run directly from a PR comment:
 
 ```text
-@openclaw-mantis discord status reactions
+@quiet-core-bot-mantis discord status reactions
 ```
 
 The comment trigger is intentionally narrow. It only runs on pull request
@@ -366,15 +366,15 @@ and the current PR head SHA as the candidate. Maintainers can override either
 ref:
 
 ```text
-@openclaw-mantis discord status reactions baseline=origin/main candidate=HEAD
+@quiet-core-bot-mantis discord status reactions baseline=origin/main candidate=HEAD
 ```
 
 Telegram live QA can also be triggered from a PR comment:
 
 ```text
-@openclaw-mantis telegram
-@openclaw-mantis telegram scenario=telegram-status-command
-@openclaw-mantis telegram scenarios=telegram-status-command,telegram-mentioned-message-reply
+@quiet-core-bot-mantis telegram
+@quiet-core-bot-mantis telegram scenario=telegram-status-command
+@quiet-core-bot-mantis telegram scenarios=telegram-status-command,telegram-mentioned-message-reply
 ```
 
 By default it uses the current PR head SHA as the candidate and runs
@@ -602,17 +602,17 @@ a local operator-controlled secret file for local runs.
 
 Recommended secret names:
 
-- `OPENCLAW_QA_DISCORD_MANTIS_BOT_TOKEN`
-- `OPENCLAW_QA_DISCORD_DRIVER_BOT_TOKEN`
-- `OPENCLAW_QA_DISCORD_SUT_BOT_TOKEN`
-- `OPENCLAW_QA_DISCORD_GUILD_ID`
-- `OPENCLAW_QA_DISCORD_CHANNEL_ID`
-- `OPENCLAW_QA_DISCORD_NOTIFY_CHANNEL_ID`
-- `OPENCLAW_QA_REDACT_PUBLIC_METADATA=1` for public GitHub artifact uploads
-- `OPENCLAW_QA_CONVEX_SITE_URL`
-- `OPENCLAW_QA_CONVEX_SECRET_CI`
-- `OPENCLAW_QA_MANTIS_CRABBOX_COORDINATOR`
-- `OPENCLAW_QA_MANTIS_CRABBOX_COORDINATOR_TOKEN`
+- `QUIET_CORE_QA_DISCORD_MANTIS_BOT_TOKEN`
+- `QUIET_CORE_QA_DISCORD_DRIVER_BOT_TOKEN`
+- `QUIET_CORE_QA_DISCORD_SUT_BOT_TOKEN`
+- `QUIET_CORE_QA_DISCORD_GUILD_ID`
+- `QUIET_CORE_QA_DISCORD_CHANNEL_ID`
+- `QUIET_CORE_QA_DISCORD_NOTIFY_CHANNEL_ID`
+- `QUIET_CORE_QA_REDACT_PUBLIC_METADATA=1` for public GitHub artifact uploads
+- `QUIET_CORE_QA_CONVEX_SITE_URL`
+- `QUIET_CORE_QA_CONVEX_SECRET_CI`
+- `QUIET_CORE_QA_MANTIS_CRABBOX_COORDINATOR`
+- `QUIET_CORE_QA_MANTIS_CRABBOX_COORDINATOR_TOKEN`
 
 Long term, the Convex credential pool should remain the normal source for live
 transport credentials. GitHub secrets bootstrap the broker and fallback lanes.
@@ -632,7 +632,7 @@ The Mantis runner must never print:
 
 Public artifact uploads should also redact Discord target metadata such as bot,
 guild, channel, and message ids. The GitHub smoke workflow enables
-`OPENCLAW_QA_REDACT_PUBLIC_METADATA=1` for this reason.
+`QUIET_CORE_QA_REDACT_PUBLIC_METADATA=1` for this reason.
 
 If a token is accidentally pasted into an issue, PR, chat, or log, rotate it
 after the new secret has been stored.

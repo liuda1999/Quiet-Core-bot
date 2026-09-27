@@ -38,7 +38,7 @@ describe("format-docs", () => {
   });
 
   it("batches oxfmt invocations when docs exceed the command line budget", () => {
-    const root = createTempDir("openclaw-format-docs-batch-");
+    const root = createTempDir("quiet-core-bot-format-docs-batch-");
     const calls: Array<{ args: string[]; command: string }> = [];
 
     runOxfmt(
@@ -66,7 +66,7 @@ describe("format-docs", () => {
   });
 
   it("reports git and oxfmt spawn diagnostics", () => {
-    const root = createTempDir("openclaw-format-docs-failures-");
+    const root = createTempDir("quiet-core-bot-format-docs-failures-");
 
     expect(() =>
       docsFiles(root, {
@@ -97,7 +97,7 @@ describe("format-docs", () => {
   });
 
   it("uses repository paths in write mode and temporary paths in check mode", () => {
-    const root = createTempDir("openclaw-format-docs-mode-");
+    const root = createTempDir("quiet-core-bot-format-docs-mode-");
     writeDocsFixture(root);
     const oxfmtFileArgs: string[][] = [];
 

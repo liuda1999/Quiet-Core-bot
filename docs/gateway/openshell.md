@@ -18,7 +18,7 @@ and an optional `mirror` workspace mode.
 
 ## Prerequisites
 
-- OpenShell plugin installed (`quiet-core-bot plugins install @openclaw/openshell-sandbox`)
+- OpenShell plugin installed (`quiet-core-bot plugins install @quiet-core/openshell-sandbox`)
 - The `openshell` CLI installed and on `PATH` (or set a custom path via
   `plugins.entries.openshell.config.command`)
 - An OpenShell account with sandbox access
@@ -29,7 +29,7 @@ and an optional `mirror` workspace mode.
 1. Install and enable the plugin, then set the sandbox backend:
 
 ```bash
-quiet-core-bot plugins install @openclaw/openshell-sandbox
+quiet-core-bot plugins install @quiet-core/openshell-sandbox
 ```
 
 ```json5
@@ -49,7 +49,7 @@ quiet-core-bot plugins install @openclaw/openshell-sandbox
       openshell: {
         enabled: true,
         config: {
-          from: "openclaw",
+          from: "quiet-core-bot",
           mode: "remote",
         },
       },
@@ -137,7 +137,7 @@ All OpenShell config lives under `plugins.entries.openshell.config`:
 | ------------------------- | ------------------------ | ------------- | ----------------------------------------------------- |
 | `mode`                    | `"mirror"` or `"remote"` | `"mirror"`    | Workspace sync mode                                   |
 | `command`                 | `string`                 | `"openshell"` | Path or name of the `openshell` CLI                   |
-| `from`                    | `string`                 | `"openclaw"`  | Sandbox source for first-time create                  |
+| `from`                    | `string`                 | `"quiet-core-bot"`  | Sandbox source for first-time create                  |
 | `gateway`                 | `string`                 | —             | OpenShell gateway name (`--gateway`)                  |
 | `gatewayEndpoint`         | `string`                 | —             | OpenShell gateway endpoint URL (`--gateway-endpoint`) |
 | `policy`                  | `string`                 | —             | OpenShell policy ID for sandbox creation              |
@@ -171,7 +171,7 @@ Sandbox-level settings (`mode`, `scope`, `workspaceAccess`) are configured under
       openshell: {
         enabled: true,
         config: {
-          from: "openclaw",
+          from: "quiet-core-bot",
           mode: "remote",
         },
       },
@@ -199,7 +199,7 @@ Sandbox-level settings (`mode`, `scope`, `workspaceAccess`) are configured under
       openshell: {
         enabled: true,
         config: {
-          from: "openclaw",
+          from: "quiet-core-bot",
           mode: "mirror",
           gpu: true,
           providers: ["openai"],
@@ -236,7 +236,7 @@ Sandbox-level settings (`mode`, `scope`, `workspaceAccess`) are configured under
       openshell: {
         enabled: true,
         config: {
-          from: "openclaw",
+          from: "quiet-core-bot",
           mode: "remote",
           gateway: "lab",
           gatewayEndpoint: "https://lab.example",

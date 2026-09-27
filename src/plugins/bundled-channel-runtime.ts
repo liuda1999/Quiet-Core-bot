@@ -48,8 +48,8 @@ function resolveBundledMetadataScope(params?: {
     kind: "env",
     env: {
       ...process.env,
-      OPENCLAW_BUNDLED_PLUGINS_DIR: overrideDir,
-      OPENCLAW_TEST_TRUST_BUNDLED_PLUGINS_DIR: "1",
+      QUIET_CORE_BUNDLED_PLUGINS_DIR: overrideDir,
+      QUIET_CORE_TEST_TRUST_BUNDLED_PLUGINS_DIR: "1",
     },
   };
 }

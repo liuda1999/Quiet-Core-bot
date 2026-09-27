@@ -227,7 +227,7 @@ describe("resolveMessagingTarget (directory fallback)", () => {
   it("defaults bare id-like targets to user for direct-only channel plugins", async () => {
     const directOnlyPlugin = {
       ...createChannelTestPluginBase({
-        id: "openclaw-weixin",
+        id: "quiet-core-bot-weixin",
         capabilities: { chatTypes: ["direct"] },
       }),
       messaging: {
@@ -239,7 +239,7 @@ describe("resolveMessagingTarget (directory fallback)", () => {
 
     const result = await expectOkResolution({
       cfg,
-      channel: "openclaw-weixin",
+      channel: "quiet-core-bot-weixin",
       input: "wxid_abc123@im.wechat",
       plugin: directOnlyPlugin,
     });

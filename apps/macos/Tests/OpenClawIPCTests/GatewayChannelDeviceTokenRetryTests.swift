@@ -100,13 +100,13 @@ struct GatewayChannelDeviceTokenRetryTests {
         let tempDir = FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString, isDirectory: true)
         try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
-        let previousStateDir = ProcessInfo.processInfo.environment["OPENCLAW_STATE_DIR"]
-        setenv("OPENCLAW_STATE_DIR", tempDir.path, 1)
+        let previousStateDir = ProcessInfo.processInfo.environment["QUIET_CORE_STATE_DIR"]
+        setenv("QUIET_CORE_STATE_DIR", tempDir.path, 1)
         defer {
             if let previousStateDir {
-                setenv("OPENCLAW_STATE_DIR", previousStateDir, 1)
+                setenv("QUIET_CORE_STATE_DIR", previousStateDir, 1)
             } else {
-                unsetenv("OPENCLAW_STATE_DIR")
+                unsetenv("QUIET_CORE_STATE_DIR")
             }
             try? FileManager.default.removeItem(at: tempDir)
         }

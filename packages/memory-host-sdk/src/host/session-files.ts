@@ -4,7 +4,7 @@ import path from "node:path";
 import { normalizeAgentId } from "./config-utils.js";
 import { readRegularFile, statRegularFile } from "./fs-utils.js";
 import { hashText } from "./hash.js";
-import { createSubsystemLogger, redactSensitiveText } from "./openclaw-runtime-io.js";
+import { createSubsystemLogger, redactSensitiveText } from "./quiet-core-bot-runtime-io.js";
 import {
   HEARTBEAT_PROMPT,
   HEARTBEAT_TOKEN,
@@ -20,7 +20,7 @@ import {
   resolveSessionTranscriptsDirForAgent,
   stripInboundMetadata,
   stripInternalRuntimeContext,
-} from "./openclaw-runtime-session.js";
+} from "./quiet-core-bot-runtime-session.js";
 import { retryTransientMemoryRead } from "./read-retry.js";
 import {
   listSessionTranscriptCorpusEntriesForAgent,
@@ -134,7 +134,7 @@ function isDreamingNarrativeBootstrapRecord(record: unknown): boolean {
   };
   if (
     candidate.type !== "custom" ||
-    candidate.customType !== "openclaw:bootstrap-context:full" ||
+    candidate.customType !== "quiet-core-bot:bootstrap-context:full" ||
     !candidate.data ||
     typeof candidate.data !== "object" ||
     Array.isArray(candidate.data)
@@ -642,7 +642,7 @@ function renderSessionExportLines(label: string, text: string): string[] {
  * `normalizeSessionText` collapses newlines into spaces, stripping is
  * impossible.
  *
- * See: https://github.com/openclaw/openclaw/issues/63921
+ * See: https://github.com/liuda1999/Quiet-Core-bot/issues/63921
  */
 function stripInboundMetadataForUserRole(text: string, role: "user" | "assistant"): string {
   if (role !== "user") {

@@ -11,10 +11,10 @@ describe("tool display details", () => {
   it("summarizes tool-search code targets from described tool ids", () => {
     expect(
       resolveToolSearchCodeDisplayTarget({
-        code: "const tool = await openclaw.tools.describe('openclaw:core:exec'); return await openclaw.tools.call(tool.id, { command: 'echo hi' });",
+        code: "const tool = await quiet-core-bot.tools.describe('quiet-core-bot:core:exec'); return await quiet-core-bot.tools.call(tool.id, { command: 'echo hi' });",
       }),
     ).toEqual({
-      toolName: "openclaw:core:exec",
+      toolName: "quiet-core-bot:core:exec",
       displayToolName: "exec",
       displayArgs: { command: "echo hi" },
       detail: "echo hi",
@@ -25,10 +25,10 @@ describe("tool display details", () => {
   it("normalizes direct tool-search catalog ids to native display names and args", () => {
     expect(
       resolveToolSearchCodeDisplayTarget({
-        code: 'return await openclaw.tools.call("openclaw:core:exec", { command: "echo hi" });',
+        code: 'return await quiet-core-bot.tools.call("quiet-core-bot:core:exec", { command: "echo hi" });',
       }),
     ).toEqual({
-      toolName: "openclaw:core:exec",
+      toolName: "quiet-core-bot:core:exec",
       displayToolName: "exec",
       displayArgs: { command: "echo hi" },
       detail: "echo hi",
@@ -39,7 +39,7 @@ describe("tool display details", () => {
   it("preserves JS numeric literals in tool-search call args", () => {
     expect(
       resolveToolSearchCodeDisplayTarget({
-        code: 'return await openclaw.tools.call("web_search", { query: "Quiet Core bot", count: 1e3, limit: +3, threshold: .5 });',
+        code: 'return await quiet-core-bot.tools.call("web_search", { query: "Quiet Core bot", count: 1e3, limit: +3, threshold: .5 });',
       })?.displayArgs,
     ).toEqual({
       query: "Quiet Core bot",
@@ -185,8 +185,8 @@ describe("tool display details", () => {
         name: "exec",
         args: {
           command:
-            "set -euo pipefail\ngit -C /Users/adityasingh/.openclaw/workspace status --short | head -n 3",
-          workdir: "/Users/adityasingh/.openclaw/workspace",
+            "set -euo pipefail\ngit -C /Users/adityasingh/.quiet-core-bot/workspace status --short | head -n 3",
+          workdir: "/Users/adityasingh/.quiet-core-bot/workspace",
         },
       }),
     );
@@ -235,7 +235,7 @@ describe("tool display details", () => {
       formatToolDetail(
         resolveToolDisplay({
           name: "bash",
-          args: { command: "git fetch", workdir: "/Users/peter/mantis-workspace/openclaw" },
+          args: { command: "git fetch", workdir: "/Users/peter/mantis-workspace/quiet-core-bot" },
           detailMode: "explain",
         }),
       ),
@@ -245,7 +245,7 @@ describe("tool display details", () => {
       formatToolDetail(
         resolveToolDisplay({
           name: "bash",
-          args: { command: "git status", workdir: "/Users/peter/Projects/openclaw" },
+          args: { command: "git status", workdir: "/Users/peter/Projects/quiet-core-bot" },
           detailMode: "explain",
         }),
       ),
@@ -257,7 +257,7 @@ describe("tool display details", () => {
           name: "bash",
           args: {
             command: "command -v discrawl",
-            workdir: "/root/.openclaw/sandboxes/agent-clawsweeper-sandbox-discor-766423d0",
+            workdir: "/root/.quiet-core-bot/sandboxes/agent-clawsweeper-sandbox-discor-766423d0",
           },
           detailMode: "explain",
         }),
@@ -270,7 +270,7 @@ describe("tool display details", () => {
       formatToolSummary(
         resolveToolDisplay({
           name: "bash",
-          args: { command: "git fetch", workdir: "/Users/peter/mantis-workspace/openclaw" },
+          args: { command: "git fetch", workdir: "/Users/peter/mantis-workspace/quiet-core-bot" },
           detailMode: "explain",
         }),
       ),
@@ -436,7 +436,7 @@ describe("tool display details", () => {
         name: "exec",
         args: {
           command: "python3 <<PY\nprint('x')\nPY",
-          workdir: "/Users/adityasingh/.openclaw/workspace",
+          workdir: "/Users/adityasingh/.quiet-core-bot/workspace",
         },
       }),
     );
@@ -445,7 +445,7 @@ describe("tool display details", () => {
         name: "exec",
         args: {
           command: "node --check /tmp/test.js",
-          workdir: "/Users/adityasingh/.openclaw/workspace",
+          workdir: "/Users/adityasingh/.quiet-core-bot/workspace",
         },
       }),
     );
@@ -454,7 +454,7 @@ describe("tool display details", () => {
         name: "exec",
         args: {
           command: "node -c /tmp/test.js",
-          workdir: "/Users/adityasingh/.openclaw/workspace",
+          workdir: "/Users/adityasingh/.quiet-core-bot/workspace",
         },
       }),
     );

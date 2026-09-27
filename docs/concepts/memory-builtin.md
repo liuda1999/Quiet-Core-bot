@@ -43,7 +43,7 @@ To force local GGUF embeddings, install the official llama.cpp provider plugin,
 then point `local.modelPath` at a GGUF file:
 
 ```bash
-quiet-core-bot plugins install @openclaw/llama-cpp-provider
+quiet-core-bot plugins install @quiet-core/llama-cpp-provider
 ```
 
 ```json5
@@ -70,7 +70,7 @@ quiet-core-bot plugins install @openclaw/llama-cpp-provider
 | DeepInfra         | `deepinfra`         | Default: `BAAI/bge-m3`              |
 | Gemini            | `gemini`            | Supports multimodal (image + audio) |
 | GitHub Copilot    | `github-copilot`    | Uses Copilot subscription           |
-| Local             | `local`             | `@openclaw/llama-cpp-provider`      |
+| Local             | `local`             | `@quiet-core/llama-cpp-provider`    |
 | Mistral           | `mistral`           |                                     |
 | Ollama            | `ollama`            | Local/self-hosted                   |
 | OpenAI            | `openai`            | Default: `text-embedding-3-small`   |
@@ -85,7 +85,7 @@ Quiet Core bot indexes `MEMORY.md` and `memory/*.md` into chunks (~400 tokens wi
 80-token overlap) and stores them in a per-agent SQLite database.
 
 - **Index location:** the owning agent database at
-  `~/.quiet-core-bot/agents/<agentId>/agent/openclaw-agent.sqlite`
+  `~/.quiet-core-bot/agents/<agentId>/agent/quiet-core-bot-agent.sqlite`
 - **Storage maintenance:** SQLite WAL sidecars are bounded with periodic and
   shutdown checkpoints.
 - **File watching:** changes to memory files trigger a debounced reindex (1.5s).

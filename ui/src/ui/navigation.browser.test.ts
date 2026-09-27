@@ -59,7 +59,7 @@ async function confirmPendingGatewayChange(app: ReturnType<typeof mountApp>) {
 }
 
 function expectConfirmedGatewayChange(app: ReturnType<typeof mountApp>) {
-  expect(app.settings.gatewayUrl).toBe("wss://other-gateway.example/openclaw");
+  expect(app.settings.gatewayUrl).toBe("wss://other-gateway.example/quiet-core-bot");
   expect(app.settings.token).toBe("abc123");
   expect(window.location.search).toBe("");
   expect(window.location.hash).toBe("");
@@ -539,7 +539,7 @@ describe("control UI routing", () => {
     await app.updateComplete;
 
     expect(app.settings.token).toBe("abc123");
-    expect(JSON.parse(localStorage.getItem("openclaw.control.settings.v1") ?? "{}").token).toBe(
+    expect(JSON.parse(localStorage.getItem("quiet-core-bot.control.settings.v1") ?? "{}").token).toBe(
       undefined,
     );
     expect(window.location.pathname).toBe("/ui/overview");
@@ -550,7 +550,7 @@ describe("control UI routing", () => {
     await refreshed.updateComplete;
 
     expect(refreshed.settings.token).toBe("abc123");
-    expect(JSON.parse(localStorage.getItem("openclaw.control.settings.v1") ?? "{}").token).toBe(
+    expect(JSON.parse(localStorage.getItem("quiet-core-bot.control.settings.v1") ?? "{}").token).toBe(
       undefined,
     );
 
@@ -568,32 +568,32 @@ describe("control UI routing", () => {
     expect(refreshed.settings.gatewayUrl).toBe(sameScopeUrl);
     expect(refreshed.settings.token).toBe("abc123");
 
-    gatewayUrlInput.value = "wss://missing-token.example/openclaw";
+    gatewayUrlInput.value = "wss://missing-token.example/quiet-core-bot";
     gatewayUrlInput.dispatchEvent(new Event("input", { bubbles: true }));
     await refreshed.updateComplete;
 
-    expect(refreshed.settings.gatewayUrl).toBe("wss://missing-token.example/openclaw");
+    expect(refreshed.settings.gatewayUrl).toBe("wss://missing-token.example/quiet-core-bot");
     expect(refreshed.settings.token).toBe("");
 
     sessionStorage.setItem(
-      "openclaw.control.token.v1:wss://other-gateway.example/openclaw",
+      "quiet-core-bot.control.token.v1:wss://other-gateway.example/quiet-core-bot",
       "other-token",
     );
-    gatewayUrlInput.value = "wss://other-gateway.example/openclaw";
+    gatewayUrlInput.value = "wss://other-gateway.example/quiet-core-bot";
     gatewayUrlInput.dispatchEvent(new Event("input", { bubbles: true }));
     await refreshed.updateComplete;
 
-    expect(refreshed.settings.gatewayUrl).toBe("wss://other-gateway.example/openclaw");
+    expect(refreshed.settings.gatewayUrl).toBe("wss://other-gateway.example/quiet-core-bot");
     expect(refreshed.settings.token).toBe("other-token");
   });
 
   it("keeps a hash token pending until the gateway URL change is confirmed", async () => {
     const app = mountApp(
-      "/ui/overview?gatewayUrl=wss://other-gateway.example/openclaw#token=abc123",
+      "/ui/overview?gatewayUrl=wss://other-gateway.example/quiet-core-bot#token=abc123",
     );
     await app.updateComplete;
 
-    expect(app.settings.gatewayUrl).not.toBe("wss://other-gateway.example/openclaw");
+    expect(app.settings.gatewayUrl).not.toBe("wss://other-gateway.example/quiet-core-bot");
     expect(app.settings.token).toBe("");
 
     await confirmPendingGatewayChange(app);

@@ -7,7 +7,7 @@
  * synthetic resume message to restart their work. Parent notification is handled
  * separately by completion delivery after the child reaches a terminal result.
  *
- * @see https://github.com/openclaw/openclaw/issues/47711
+ * @see https://github.com/liuda1999/Quiet-Core-bot/issues/47711
  */
 
 import crypto from "node:crypto";
@@ -197,7 +197,7 @@ export async function recoverOrphanedSubagentSessions(params: {
     failedRuns: [] as Array<{ runId: string; childSessionKey: string; error?: string }>,
   };
   const resumedSessionKeys = params.resumedSessionKeys ?? new Set<string>();
-  const configChangePattern = /openclaw\.json|openclaw gateway restart|config\.patch/i;
+  const configChangePattern = /quiet-core-bot\.json|quiet-core-bot gateway restart|config\.patch/i;
 
   try {
     const activeRuns = params.getActiveRuns();

@@ -1,7 +1,7 @@
 /**
  * @deprecated Broad compatibility barrel for older plugin tests.
  *
- * New tests should import focused `openclaw/plugin-sdk/*` test subpaths such as
+ * New tests should import focused `quiet-core-bot/plugin-sdk/*` test subpaths such as
  * `plugin-test-runtime`, `channel-test-helpers`, `test-env`, or `test-fixtures`.
  */
 

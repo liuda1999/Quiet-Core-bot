@@ -72,7 +72,7 @@ describe("bundled plugin build entries", () => {
     const entries = listBundledPluginBuildEntries({
       env: {
         ...process.env,
-        OPENCLAW_BUNDLED_PLUGIN_BUILD_IDS: "active-memory,acpx",
+        QUIET_CORE_BUNDLED_PLUGIN_BUILD_IDS: "active-memory,acpx",
       },
     });
     const entryKeys = Object.keys(entries);
@@ -88,11 +88,11 @@ describe("bundled plugin build entries", () => {
       listBundledPluginBuildEntries({
         env: {
           ...process.env,
-          OPENCLAW_BUNDLED_PLUGIN_BUILD_IDS: "missing-plugin",
+          QUIET_CORE_BUNDLED_PLUGIN_BUILD_IDS: "missing-plugin",
         },
       }),
     ).toThrow(
-      "OPENCLAW_BUNDLED_PLUGIN_BUILD_IDS references unknown bundled plugin id(s): missing-plugin",
+      "QUIET_CORE_BUNDLED_PLUGIN_BUILD_IDS references unknown bundled plugin id(s): missing-plugin",
     );
   });
 
@@ -136,10 +136,10 @@ describe("bundled plugin build entries", () => {
 
     expect(artifacts).toContain("dist/extensions/image-generation-core/package.json");
     expect(artifacts).toContain("dist/extensions/image-generation-core/runtime-api.js");
-    expect(artifacts).not.toContain("dist/extensions/image-generation-core/openclaw.plugin.json");
+    expect(artifacts).not.toContain("dist/extensions/image-generation-core/quiet-core-bot.plugin.json");
     expect(artifacts).toContain("dist/extensions/media-understanding-core/runtime-api.js");
     expect(artifacts).not.toContain(
-      "dist/extensions/media-understanding-core/openclaw.plugin.json",
+      "dist/extensions/media-understanding-core/quiet-core-bot.plugin.json",
     );
   });
 
@@ -195,7 +195,7 @@ describe("bundled plugin build entries", () => {
     const artifacts = listBundledPluginPackArtifacts();
 
     expect(artifacts).toContain("dist/extensions/cohere/index.js");
-    expect(artifacts).toContain("dist/extensions/cohere/openclaw.plugin.json");
+    expect(artifacts).toContain("dist/extensions/cohere/quiet-core-bot.plugin.json");
     expect(artifacts).toContain("dist/extensions/cohere/package.json");
   });
 

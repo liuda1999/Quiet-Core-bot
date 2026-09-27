@@ -3,8 +3,8 @@ import {
   AllowFromListSchema,
   DmPolicySchema,
   MarkdownConfigSchema,
-} from "openclaw/plugin-sdk/channel-config-primitives";
-import { buildSecretInputSchema } from "openclaw/plugin-sdk/secret-input";
+} from "quiet-core-bot/plugin-sdk/channel-config-primitives";
+import { buildSecretInputSchema } from "quiet-core-bot/plugin-sdk/secret-input";
 import { z } from "zod";
 
 /**

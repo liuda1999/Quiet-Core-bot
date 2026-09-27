@@ -3,14 +3,14 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 import {
-  OPENCLAW_CRABLINE_MANIFEST_PATH,
+  QUIET_CORE_CRABLINE_MANIFEST_PATH,
   startOpenClawCrablineAdapter,
   type OpenClawCrablineChannelDriverSelection,
   type StartedOpenClawCrablineAdapter,
 } from "@openclaw/crabline";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { fetchWithSsrFGuard } from "openclaw/plugin-sdk/ssrf-runtime";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
+import { fetchWithSsrFGuard } from "quiet-core-bot/plugin-sdk/ssrf-runtime";
 import { createQaBusState, type QaBusState } from "./bus-state.js";
 import { QaSuiteInfraError } from "./errors.js";
 import { QaStateBackedTransportAdapter } from "./qa-transport.js";
@@ -294,7 +294,7 @@ export async function createQaCrablineTransportAdapter(params: {
     recorderPath,
   });
   await fs.writeFile(
-    path.join(params.outputDir, OPENCLAW_CRABLINE_MANIFEST_PATH),
+    path.join(params.outputDir, QUIET_CORE_CRABLINE_MANIFEST_PATH),
     `${JSON.stringify(adapter.manifest, null, 2)}\n`,
     "utf8",
   );

@@ -21,7 +21,7 @@ vi.mock("../plugins/manifest-registry.js", () => ({
   loadPluginManifestRegistry,
 }));
 
-vi.mock("../infra/openclaw-root.js", () => ({
+vi.mock("../infra/quiet-core-bot-root.js", () => ({
   resolveOpenClawPackageRootSync,
 }));
 
@@ -49,8 +49,8 @@ function firstPublicSurfaceCall(): PublicSurfaceCall | undefined {
 
 describe("plugin-sdk qa-runner-runtime", () => {
   const tempDirs: string[] = [];
-  const originalPrivateQaCli = process.env.OPENCLAW_ENABLE_PRIVATE_QA_CLI;
-  const originalBundledPluginsDir = process.env.OPENCLAW_BUNDLED_PLUGINS_DIR;
+  const originalPrivateQaCli = process.env.QUIET_CORE_ENABLE_PRIVATE_QA_CLI;
+  const originalBundledPluginsDir = process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR;
 
   beforeEach(() => {
     vi.resetModules();
@@ -61,17 +61,17 @@ describe("plugin-sdk qa-runner-runtime", () => {
     loadBundledPluginPublicSurfaceModuleSync.mockReset();
     tryLoadActivatedBundledPluginPublicSurfaceModuleSync.mockReset();
     resolveOpenClawPackageRootSync.mockReset().mockReturnValue(null);
-    delete process.env.OPENCLAW_ENABLE_PRIVATE_QA_CLI;
-    delete process.env.OPENCLAW_BUNDLED_PLUGINS_DIR;
+    delete process.env.QUIET_CORE_ENABLE_PRIVATE_QA_CLI;
+    delete process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR;
   });
 
   afterEach(() => {
     cleanupTempDirs(tempDirs);
     restorePrivateQaCliEnv(originalPrivateQaCli);
     if (originalBundledPluginsDir === undefined) {
-      delete process.env.OPENCLAW_BUNDLED_PLUGINS_DIR;
+      delete process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR;
     } else {
-      process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = originalBundledPluginsDir;
+      process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR = originalBundledPluginsDir;
     }
   });
 
@@ -100,7 +100,7 @@ describe("plugin-sdk qa-runner-runtime", () => {
   });
 
   it("loads bundled plugin test APIs with the private QA source tree override", async () => {
-    const sourceRoot = makePrivateQaSourceRoot(tempDirs, "openclaw-qa-test-api-root-");
+    const sourceRoot = makePrivateQaSourceRoot(tempDirs, "quiet-core-bot-qa-test-api-root-");
     resolveOpenClawPackageRootSync.mockReturnValue(sourceRoot);
 
     const testApi = { marker: "matrix-test-api" };
@@ -112,8 +112,8 @@ describe("plugin-sdk qa-runner-runtime", () => {
     const testApiCall = firstPublicSurfaceCall();
     expect(testApiCall?.dirName).toBe("matrix");
     expect(testApiCall?.artifactBasename).toBe("test-api.js");
-    expect(testApiCall?.env?.OPENCLAW_ENABLE_PRIVATE_QA_CLI).toBe("1");
-    expect(testApiCall?.env?.OPENCLAW_BUNDLED_PLUGINS_DIR).toBe(
+    expect(testApiCall?.env?.QUIET_CORE_ENABLE_PRIVATE_QA_CLI).toBe("1");
+    expect(testApiCall?.env?.QUIET_CORE_BUNDLED_PLUGINS_DIR).toBe(
       path.join(sourceRoot, "extensions"),
     );
   });
@@ -196,7 +196,7 @@ describe("plugin-sdk qa-runner-runtime", () => {
   });
 
   it("prefers the source bundled tree for private qa discovery in repo checkouts", async () => {
-    const sourceRoot = makePrivateQaSourceRoot(tempDirs, "openclaw-qa-runner-root-");
+    const sourceRoot = makePrivateQaSourceRoot(tempDirs, "quiet-core-bot-qa-runner-root-");
     resolveOpenClawPackageRootSync.mockReturnValue(sourceRoot);
 
     const register = vi.fn((qa: Command) => qa);
@@ -229,16 +229,16 @@ describe("plugin-sdk qa-runner-runtime", () => {
       },
     ]);
     const manifestCall = firstManifestRegistryCall();
-    expect(manifestCall?.env?.OPENCLAW_ENABLE_PRIVATE_QA_CLI).toBe("1");
-    expect(manifestCall?.env?.OPENCLAW_BUNDLED_PLUGINS_DIR).toBe(
+    expect(manifestCall?.env?.QUIET_CORE_ENABLE_PRIVATE_QA_CLI).toBe("1");
+    expect(manifestCall?.env?.QUIET_CORE_BUNDLED_PLUGINS_DIR).toBe(
       path.join(sourceRoot, "extensions"),
     );
 
     const publicSurfaceCall = firstPublicSurfaceCall();
     expect(publicSurfaceCall?.dirName).toBe("qa-matrix");
     expect(publicSurfaceCall?.artifactBasename).toBe("runtime-api.js");
-    expect(publicSurfaceCall?.env?.OPENCLAW_ENABLE_PRIVATE_QA_CLI).toBe("1");
-    expect(publicSurfaceCall?.env?.OPENCLAW_BUNDLED_PLUGINS_DIR).toBe(
+    expect(publicSurfaceCall?.env?.QUIET_CORE_ENABLE_PRIVATE_QA_CLI).toBe("1");
+    expect(publicSurfaceCall?.env?.QUIET_CORE_BUNDLED_PLUGINS_DIR).toBe(
       path.join(sourceRoot, "extensions"),
     );
   });
@@ -292,7 +292,7 @@ describe("plugin-sdk qa-runner-runtime", () => {
     const module = await import("./qa-runner-runtime.js");
 
     expect(() => module.listQaRunnerCliContributions()).toThrow(
-      'QA runner plugin "qa-matrix" exported "extra" from runtime-api.js but did not declare it in openclaw.plugin.json',
+      'QA runner plugin "qa-matrix" exported "extra" from runtime-api.js but did not declare it in quiet-core-bot.plugin.json',
     );
   });
 });

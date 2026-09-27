@@ -20,7 +20,7 @@ Standard and Step Plan are **separate providers** with different endpoints and m
 Install the official plugin, then restart Gateway:
 
 ```bash
-quiet-core-bot plugins install @openclaw/stepfun-provider
+quiet-core-bot plugins install @quiet-core/stepfun-provider
 quiet-core-bot gateway restart
 ```
 

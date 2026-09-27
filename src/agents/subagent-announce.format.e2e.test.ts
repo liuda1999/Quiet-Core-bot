@@ -21,7 +21,7 @@ import * as hookRunnerGlobal from "../plugins/hook-runner-global.js";
 import type { HookRunner } from "../plugins/hooks.js";
 import { setActivePluginRegistry } from "../plugins/runtime.js";
 import { readDiagnosticEvents } from "../state/diagnostic-events-store.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
 import { createChannelTestPluginBase, createTestRegistry } from "../test-utils/channel-plugins.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import {
@@ -343,9 +343,9 @@ describe("subagent announce formatting", () => {
     // Set FAST_TEST_MODE before importing the module to ensure the module-level
     // constant picks it up. This fixes flaky Windows CI failures where the test
     // timeout budget is too tight without fast mode enabled.
-    // See: https://github.com/openclaw/openclaw/issues/31298
-    previousFastTestEnv = process.env.OPENCLAW_TEST_FAST;
-    process.env.OPENCLAW_TEST_FAST = "1";
+    // See: https://github.com/liuda1999/Quiet-Core-bot/issues/31298
+    previousFastTestEnv = process.env.QUIET_CORE_TEST_FAST;
+    process.env.QUIET_CORE_TEST_FAST = "1";
     ({ runSubagentAnnounceFlow, testing: subagentAnnounceTesting } =
       await import("./subagent-announce.js"));
   });
@@ -356,10 +356,10 @@ describe("subagent announce formatting", () => {
     subagentAnnounceDeliveryTesting.setDepsForTest();
     clearRuntimeConfigSnapshot();
     if (previousFastTestEnv === undefined) {
-      delete process.env.OPENCLAW_TEST_FAST;
+      delete process.env.QUIET_CORE_TEST_FAST;
       return;
     }
-    process.env.OPENCLAW_TEST_FAST = previousFastTestEnv;
+    process.env.QUIET_CORE_TEST_FAST = previousFastTestEnv;
   });
 
   afterEach(() => {
@@ -370,7 +370,7 @@ describe("subagent announce formatting", () => {
     vi.useRealTimers();
     // The delivery ledger is process-wide module state; keep cases independent.
     resetAnnounceDeliveryLedgerForTest();
-    // OPENCLAW_TEST_FAST is set in beforeAll before module import
+    // QUIET_CORE_TEST_FAST is set in beforeAll before module import
     // to ensure the module-level constant picks it up.
     agentSpy
       .mockClear()
@@ -740,9 +740,9 @@ describe("subagent announce formatting", () => {
   });
 
   it("records a diagnostic event when an abandoned requester drops the announce", async () => {
-    const tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-announce-drop-"));
+    const tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-announce-drop-"));
     try {
-      await withEnvAsync({ OPENCLAW_STATE_DIR: tempStateDir }, async () => {
+      await withEnvAsync({ QUIET_CORE_STATE_DIR: tempStateDir }, async () => {
         subagentAnnounceDeliveryTesting.setDepsForTest({
           isRequesterSessionAbandoned: () => true,
         });

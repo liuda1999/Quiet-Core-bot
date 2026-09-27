@@ -138,7 +138,7 @@ import {
   describeProviderRequestRoutingSummary,
 } from "./provider-attribution.js";
 
-const ATTRIBUTION_ENV_KEY = "OPENCLAW_PROVIDER_ATTRIBUTION";
+const ATTRIBUTION_ENV_KEY = "QUIET_CORE_PROVIDER_ATTRIBUTION";
 
 // Attribution headers identify this runtime to the vendor, so they are opt-in. The tests
 // below cover the opted-in payloads; the default-off contract is covered separately.
@@ -177,7 +177,7 @@ describe("provider attribution defaults", () => {
 describe("provider attribution", () => {
   it("resolves the canonical Quiet Core bot product and runtime version", () => {
     const identity = resolveProviderAttributionIdentity({
-      OPENCLAW_VERSION: "2026.3.99",
+      QUIET_CORE_VERSION: "2026.3.99",
     });
 
     expect(identity).toEqual({
@@ -188,7 +188,7 @@ describe("provider attribution", () => {
 
   it("returns a documented OpenRouter attribution policy", () => {
     const policy = resolveProviderAttributionPolicy("openrouter", {
-      OPENCLAW_VERSION: "2026.3.22",
+      QUIET_CORE_VERSION: "2026.3.22",
     });
 
     expect(policy).toEqual({
@@ -211,7 +211,7 @@ describe("provider attribution", () => {
 
   it("returns a documented NVIDIA attribution policy", () => {
     const policy = resolveProviderAttributionPolicy("nvidia", {
-      OPENCLAW_VERSION: "2026.3.22",
+      QUIET_CORE_VERSION: "2026.3.22",
     });
 
     expect(policy).toEqual({
@@ -232,7 +232,7 @@ describe("provider attribution", () => {
   it("normalizes aliases when resolving provider policy headers", () => {
     expect(
       resolveProviderAttributionPolicy("OpenRouter", {
-        OPENCLAW_VERSION: "2026.3.22",
+        QUIET_CORE_VERSION: "2026.3.22",
       })?.headers,
     ).toEqual({
       "HTTP-Referer": "https://openclaw.ai",
@@ -243,7 +243,7 @@ describe("provider attribution", () => {
   });
 
   it("returns a hidden-spec OpenAI attribution policy", () => {
-    expect(resolveProviderAttributionPolicy("openai", { OPENCLAW_VERSION: "2026.3.22" })).toEqual({
+    expect(resolveProviderAttributionPolicy("openai", { QUIET_CORE_VERSION: "2026.3.22" })).toEqual({
       provider: "openai",
       enabledByDefault: true,
       verification: "vendor-hidden-api-spec",
@@ -253,22 +253,22 @@ describe("provider attribution", () => {
       product: "Quiet Core bot",
       version: "2026.3.22",
       headers: {
-        originator: "openclaw",
+        originator: "quiet-core-bot",
         version: "2026.3.22",
-        "User-Agent": "openclaw/2026.3.22",
+        "User-Agent": "quiet-core-bot/2026.3.22",
       },
     });
     expect(
-      resolveProviderAttributionPolicy("openai", { OPENCLAW_VERSION: "2026.3.22" })?.headers,
+      resolveProviderAttributionPolicy("openai", { QUIET_CORE_VERSION: "2026.3.22" })?.headers,
     ).toEqual({
-      originator: "openclaw",
+      originator: "quiet-core-bot",
       version: "2026.3.22",
-      "User-Agent": "openclaw/2026.3.22",
+      "User-Agent": "quiet-core-bot/2026.3.22",
     });
   });
 
   it("maps legacy OpenAI Codex attribution to canonical OpenAI policy", () => {
-    expect(resolveProviderAttributionPolicy("openai", { OPENCLAW_VERSION: "2026.3.22" })).toEqual({
+    expect(resolveProviderAttributionPolicy("openai", { QUIET_CORE_VERSION: "2026.3.22" })).toEqual({
       provider: "openai",
       enabledByDefault: true,
       verification: "vendor-hidden-api-spec",
@@ -278,15 +278,15 @@ describe("provider attribution", () => {
       product: "Quiet Core bot",
       version: "2026.3.22",
       headers: {
-        originator: "openclaw",
+        originator: "quiet-core-bot",
         version: "2026.3.22",
-        "User-Agent": "openclaw/2026.3.22",
+        "User-Agent": "quiet-core-bot/2026.3.22",
       },
     });
   });
 
   it("returns a hidden-spec xAI attribution policy", () => {
-    expect(resolveProviderAttributionPolicy("xai", { OPENCLAW_VERSION: "2026.3.22" })).toEqual({
+    expect(resolveProviderAttributionPolicy("xai", { QUIET_CORE_VERSION: "2026.3.22" })).toEqual({
       provider: "xai",
       enabledByDefault: true,
       verification: "vendor-hidden-api-spec",
@@ -296,24 +296,24 @@ describe("provider attribution", () => {
       product: "Quiet Core bot",
       version: "2026.3.22",
       headers: {
-        originator: "openclaw",
+        originator: "quiet-core-bot",
         version: "2026.3.22",
-        "User-Agent": "openclaw/2026.3.22",
+        "User-Agent": "quiet-core-bot/2026.3.22",
       },
     });
     expect(
-      resolveProviderAttributionPolicy("xai", { OPENCLAW_VERSION: "2026.3.22" })?.headers,
+      resolveProviderAttributionPolicy("xai", { QUIET_CORE_VERSION: "2026.3.22" })?.headers,
     ).toEqual({
-      originator: "openclaw",
+      originator: "quiet-core-bot",
       version: "2026.3.22",
-      "User-Agent": "openclaw/2026.3.22",
+      "User-Agent": "quiet-core-bot/2026.3.22",
     });
   });
 
   it("lists the current attribution support matrix", () => {
     // Matrix order is user-facing evidence for docs/review summaries.
     expect(
-      listProviderAttributionPolicies({ OPENCLAW_VERSION: "2026.3.22" }).map((policy) => [
+      listProviderAttributionPolicies({ QUIET_CORE_VERSION: "2026.3.22" }).map((policy) => [
         policy.provider,
         policy.enabledByDefault,
         policy.verification,
@@ -342,7 +342,7 @@ describe("provider attribution", () => {
           transport: "stream",
           capability: "llm",
         },
-        { OPENCLAW_VERSION: "2026.3.22", OPENCLAW_PROVIDER_ATTRIBUTION: "1" },
+        { QUIET_CORE_VERSION: "2026.3.22", QUIET_CORE_PROVIDER_ATTRIBUTION: "1" },
       ),
       {
         endpointClass: "xai-native",
@@ -359,12 +359,12 @@ describe("provider attribution", () => {
           transport: "stream",
           capability: "llm",
         },
-        { OPENCLAW_VERSION: "2026.3.22", OPENCLAW_PROVIDER_ATTRIBUTION: "1" },
+        { QUIET_CORE_VERSION: "2026.3.22", QUIET_CORE_PROVIDER_ATTRIBUTION: "1" },
       ).attributionHeaders,
     ).toEqual({
-      originator: "openclaw",
+      originator: "quiet-core-bot",
       version: "2026.3.22",
-      "User-Agent": "openclaw/2026.3.22",
+      "User-Agent": "quiet-core-bot/2026.3.22",
     });
 
     expectRecordFields(
@@ -375,7 +375,7 @@ describe("provider attribution", () => {
           transport: "stream",
           capability: "llm",
         },
-        { OPENCLAW_VERSION: "2026.3.22" },
+        { QUIET_CORE_VERSION: "2026.3.22" },
       ),
       {
         endpointClass: "default",
@@ -393,7 +393,7 @@ describe("provider attribution", () => {
           transport: "stream",
           capability: "llm",
         },
-        { OPENCLAW_VERSION: "2026.3.22" },
+        { QUIET_CORE_VERSION: "2026.3.22" },
       ),
       {
         endpointClass: "custom",
@@ -413,7 +413,7 @@ describe("provider attribution", () => {
           transport: "stream",
           capability: "llm",
         },
-        { OPENCLAW_VERSION: "2026.3.22" },
+        { QUIET_CORE_VERSION: "2026.3.22" },
       ),
       {
         endpointClass: "openai-public",
@@ -434,7 +434,7 @@ describe("provider attribution", () => {
           transport: "stream",
           capability: "llm",
         },
-        { OPENCLAW_VERSION: "2026.3.22" },
+        { QUIET_CORE_VERSION: "2026.3.22" },
       ),
       {
         endpointClass: "custom",

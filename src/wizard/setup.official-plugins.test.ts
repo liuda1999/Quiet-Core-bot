@@ -45,7 +45,7 @@ describe("resolveOfficialPluginOnboardingInstallEntries", () => {
           installs: {
             "diagnostics-otel": {
               source: "npm",
-              spec: "@openclaw/diagnostics-otel",
+              spec: "@quiet-core/diagnostics-otel",
               installPath: "/tmp/diagnostics-otel",
             },
           },
@@ -64,8 +64,8 @@ describe("formatInstallHint", () => {
   it("describes dual-source npm-default installs as npm first", () => {
     expect(
       testing.formatInstallHint({
-        clawhubSpec: "clawhub:@openclaw/diagnostics-otel",
-        npmSpec: "@openclaw/diagnostics-otel",
+        clawhubSpec: "clawhub:@quiet-core/diagnostics-otel",
+        npmSpec: "@quiet-core/diagnostics-otel",
         defaultChoice: "npm",
       }),
     ).toBe("npm, with ClawHub fallback");
@@ -74,8 +74,8 @@ describe("formatInstallHint", () => {
   it("keeps dual-source clawhub-default installs ClawHub first", () => {
     expect(
       testing.formatInstallHint({
-        clawhubSpec: "clawhub:@openclaw/diagnostics-otel",
-        npmSpec: "@openclaw/diagnostics-otel",
+        clawhubSpec: "clawhub:@quiet-core/diagnostics-otel",
+        npmSpec: "@quiet-core/diagnostics-otel",
         defaultChoice: "clawhub",
       }),
     ).toBe("ClawHub, with npm fallback");
@@ -148,8 +148,8 @@ describe("setupOfficialPluginInstalls", () => {
         label: "Diagnostics OpenTelemetry",
         description: "Quiet Core bot diagnostics OpenTelemetry exporter",
         install: {
-          clawhubSpec: "clawhub:@openclaw/diagnostics-otel",
-          npmSpec: "@openclaw/diagnostics-otel",
+          clawhubSpec: "clawhub:@quiet-core/diagnostics-otel",
+          npmSpec: "@quiet-core/diagnostics-otel",
           defaultChoice: "npm",
           minHostVersion: ">=2026.4.25",
         },

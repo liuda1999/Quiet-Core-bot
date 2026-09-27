@@ -26,7 +26,7 @@ For Quiet Core bot releases, that means:
   publishing.
 
 Shrinkwrap is not a sandbox. It does not make a dependency safe by itself, and
-it does not replace host isolation, `openclaw security audit`, package
+it does not replace host isolation, `quiet-core-bot security audit`, package
 provenance, or install smoke tests.
 
 The short mental model:
@@ -56,7 +56,7 @@ with clear ownership.
 
 ## Technical details
 
-The root `openclaw` npm package and Quiet Core bot-owned npm plugin packages include
+The root `quiet-core-bot` npm package and Quiet Core bot-owned npm plugin packages include
 `npm-shrinkwrap.json` when they publish. Suitable Quiet Core bot-owned plugin
 packages can also publish with explicit `bundledDependencies`, so their runtime
 dependency files are carried in the plugin tarball instead of depending only on
@@ -96,16 +96,16 @@ validators reject `package-lock.json` for published Quiet Core bot packages.
 To inspect a published root package:
 
 ```bash
-npm pack openclaw@<version> --json --pack-destination /tmp/openclaw-pack
-tar -tf /tmp/openclaw-pack/openclaw-<version>.tgz | grep '^package/npm-shrinkwrap.json$'
+npm pack quiet-core-bot@<version> --json --pack-destination /tmp/quiet-core-bot-pack
+tar -tf /tmp/quiet-core-bot-pack/quiet-core-bot-<version>.tgz | grep '^package/npm-shrinkwrap.json$'
 ```
 
 To inspect an Quiet Core bot-owned plugin package:
 
 ```bash
-npm pack @openclaw/discord@<version> --json --pack-destination /tmp/openclaw-plugin-pack
-tar -tf /tmp/openclaw-plugin-pack/openclaw-discord-<version>.tgz | grep '^package/npm-shrinkwrap.json$'
-tar -tf /tmp/openclaw-plugin-pack/openclaw-discord-<version>.tgz | grep '^package/node_modules/'
+npm pack @quiet-core/discord@<version> --json --pack-destination /tmp/quiet-core-bot-plugin-pack
+tar -tf /tmp/quiet-core-bot-plugin-pack/quiet-core-bot-discord-<version>.tgz | grep '^package/npm-shrinkwrap.json$'
+tar -tf /tmp/quiet-core-bot-plugin-pack/quiet-core-bot-discord-<version>.tgz | grep '^package/node_modules/'
 ```
 
 Background: [npm-shrinkwrap.json](https://docs.npmjs.com/cli/v11/configuring-npm/npm-shrinkwrap-json).

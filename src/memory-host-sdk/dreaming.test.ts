@@ -236,11 +236,11 @@ describe("memory dreaming host helpers", () => {
       resolveMemoryDreamingPluginId({
         plugins: {
           slots: {
-            memory: "memos-local-openclaw-plugin",
+            memory: "memos-local-quiet-core-bot-plugin",
           },
         },
       } as OpenClawConfig),
-    ).toBe("memos-local-openclaw-plugin");
+    ).toBe("memos-local-quiet-core-bot-plugin");
   });
 
   it("reads dreaming config from the configured memory-slot owner", () => {
@@ -248,10 +248,10 @@ describe("memory dreaming host helpers", () => {
       resolveMemoryDreamingPluginConfig({
         plugins: {
           slots: {
-            memory: "memos-local-openclaw-plugin",
+            memory: "memos-local-quiet-core-bot-plugin",
           },
           entries: {
-            "memos-local-openclaw-plugin": {
+            "memos-local-quiet-core-bot-plugin": {
               config: {
                 dreaming: {
                   enabled: true,

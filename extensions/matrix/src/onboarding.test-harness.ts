@@ -1,6 +1,6 @@
 // Matrix setup module handles plugin onboarding behavior.
-import type { OutputRuntimeEnv } from "openclaw/plugin-sdk/runtime";
-import type { ChannelSetupWizardAdapter } from "openclaw/plugin-sdk/setup";
+import type { OutputRuntimeEnv } from "quiet-core-bot/plugin-sdk/runtime";
+import type { ChannelSetupWizardAdapter } from "quiet-core-bot/plugin-sdk/setup";
 import { afterEach, vi } from "vitest";
 import type { RuntimeEnv, WizardPrompter } from "../runtime-api.js";
 import type { CoreConfig } from "./types.js";

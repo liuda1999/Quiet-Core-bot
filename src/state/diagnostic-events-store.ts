@@ -6,11 +6,11 @@
  * diagnostics must never break the caller.
  */
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../infra/kysely-sync.js";
-import type { DB as OpenClawStateKyselyDatabase } from "./openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "./quiet-core-bot-state-db.generated.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "./openclaw-state-db.js";
+} from "./quiet-core-bot-state-db.js";
 
 type DiagnosticEventsDatabase = Pick<OpenClawStateKyselyDatabase, "diagnostic_events">;
 

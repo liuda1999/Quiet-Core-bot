@@ -602,10 +602,10 @@ describe("exec approvals policy helpers", () => {
     });
   });
 
-  it("uses OPENCLAW_STATE_DIR when reporting default host sources", () => {
-    const originalOpenClawStateDir = process.env.OPENCLAW_STATE_DIR;
-    const stateDir = path.join(process.cwd(), ".tmp-openclaw-state");
-    process.env.OPENCLAW_STATE_DIR = stateDir;
+  it("uses QUIET_CORE_STATE_DIR when reporting default host sources", () => {
+    const originalOpenClawStateDir = process.env.QUIET_CORE_STATE_DIR;
+    const stateDir = path.join(process.cwd(), ".tmp-quiet-core-bot-state");
+    process.env.QUIET_CORE_STATE_DIR = stateDir;
     try {
       const summary = summarizeExecPolicyScopeSnapshot({
         approvals: {
@@ -626,9 +626,9 @@ describe("exec approvals policy helpers", () => {
       );
     } finally {
       if (originalOpenClawStateDir === undefined) {
-        delete process.env.OPENCLAW_STATE_DIR;
+        delete process.env.QUIET_CORE_STATE_DIR;
       } else {
-        process.env.OPENCLAW_STATE_DIR = originalOpenClawStateDir;
+        process.env.QUIET_CORE_STATE_DIR = originalOpenClawStateDir;
       }
     }
   });

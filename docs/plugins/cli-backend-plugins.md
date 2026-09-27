@@ -33,7 +33,7 @@ A CLI backend plugin has three contracts:
 | Contract             | File                   | Purpose                                                   |
 | -------------------- | ---------------------- | --------------------------------------------------------- |
 | Package entry        | `package.json`         | Points Quiet Core bot at the plugin runtime module        |
-| Manifest ownership   | `openclaw.plugin.json` | Declares the backend id before runtime loads              |
+| Manifest ownership   | `quiet-core-bot.plugin.json` | Declares the backend id before runtime loads              |
 | Runtime registration | `index.ts`             | Calls `api.registerCliBackend(...)` with command defaults |
 
 The manifest is discovery metadata. It does not execute the CLI and does not
@@ -46,22 +46,22 @@ register runtime behavior. Runtime behavior starts when the plugin entry calls
   <Step title="Create package metadata">
     ```json package.json
     {
-      "name": "@acme/openclaw-acme-cli",
+      "name": "@acme/quiet-core-bot-acme-cli",
       "version": "1.0.0",
       "type": "module",
-      "openclaw": {
+      "quiet-core-bot": {
         "extensions": ["./index.ts"],
         "compat": {
           "pluginApi": ">=2026.3.24-beta.2",
           "minGatewayVersion": "2026.3.24-beta.2"
         },
         "build": {
-          "openclawVersion": "2026.3.24-beta.2",
+          "quiet-core-botVersion": "2026.3.24-beta.2",
           "pluginSdkVersion": "2026.3.24-beta.2"
         }
       },
       "dependencies": {
-        "openclaw": "^2026.3.24"
+        "quiet-core-bot": "^2026.3.24"
       },
       "devDependencies": {
         "typescript": "^5.9.0"
@@ -70,13 +70,13 @@ register runtime behavior. Runtime behavior starts when the plugin entry calls
     ```
 
     Published packages must ship built JavaScript runtime files. If your source
-    entry is `./src/index.ts`, add `openclaw.runtimeExtensions` that points at
+    entry is `./src/index.ts`, add `quiet-core-bot.runtimeExtensions` that points at
     the built JavaScript peer. See [Entry points](/plugins/sdk-entrypoints).
 
   </Step>
 
   <Step title="Declare backend ownership">
-    ```json openclaw.plugin.json
+    ```json quiet-core-bot.plugin.json
     {
       "id": "acme-cli",
       "name": "Acme CLI",
@@ -108,12 +108,12 @@ register runtime behavior. Runtime behavior starts when the plugin entry calls
 
   <Step title="Register the backend">
     ```typescript index.ts
-    import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
+    import { definePluginEntry } from "quiet-core-bot/plugin-sdk/plugin-entry";
     import {
       CLI_FRESH_WATCHDOG_DEFAULTS,
       CLI_RESUME_WATCHDOG_DEFAULTS,
       type CliBackendPlugin,
-    } from "openclaw/plugin-sdk/cli-backend";
+    } from "quiet-core-bot/plugin-sdk/cli-backend";
 
     function buildAcmeCliBackend(): CliBackendPlugin {
       return {
@@ -310,7 +310,7 @@ For local or installed plugins, verify discovery and one real model run:
 
 ```bash
 quiet-core-bot plugins inspect acme-cli --runtime --json
-openclaw agent --message "reply exactly: backend ok" --model acme-cli/acme-large
+quiet-core-bot agent --message "reply exactly: backend ok" --model acme-cli/acme-large
 ```
 
 If the backend supports images or MCP, add a live smoke that proves those paths
@@ -319,8 +319,8 @@ session-resume behavior.
 
 ## Checklist
 
-<Check>`package.json` has `openclaw.extensions` and built runtime entries for published packages</Check>
-<Check>`openclaw.plugin.json` declares `cliBackends` and intentional `activation.onStartup`</Check>
+<Check>`package.json` has `quiet-core-bot.extensions` and built runtime entries for published packages</Check>
+<Check>`quiet-core-bot.plugin.json` declares `cliBackends` and intentional `activation.onStartup`</Check>
 <Check>`setup.cliBackends` is present when setup/model discovery should see the backend cold</Check>
 <Check>`api.registerCliBackend(...)` uses the same backend id as the manifest</Check>
 <Check>User overrides under `agents.defaults.cliBackends.<id>` still win</Check>

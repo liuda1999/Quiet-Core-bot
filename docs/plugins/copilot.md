@@ -4,10 +4,10 @@ title: "Copilot SDK harness"
 read_when:
   - You want to use the GitHub Copilot SDK harness for an agent
   - You need configuration examples for the `copilot` runtime
-  - You are wiring an agent to subscription Copilot (github / openclaw / copilot) and want it to run through the Copilot CLI
+  - You are wiring an agent to subscription Copilot (github / quiet-core-bot / copilot) and want it to run through the Copilot CLI
 ---
 
-The external `@openclaw/copilot` plugin lets Quiet Core bot run embedded subscription
+The external `@quiet-core/copilot` plugin lets Quiet Core bot run embedded subscription
 Copilot agent turns through the GitHub Copilot CLI (`@github/copilot-sdk`)
 instead of the built-in PI harness.
 
@@ -24,10 +24,10 @@ For the broader model/provider/runtime split, start with
 
 ## Requirements
 
-- Quiet Core bot with the `@openclaw/copilot` plugin installed.
+- Quiet Core bot with the `@quiet-core/copilot` plugin installed.
 - If your config uses `plugins.allow`, include `copilot` (the manifest
   id declared by the plugin). A restrictive
-  allowlist that uses the npm-style `@openclaw/copilot` package name
+  allowlist that uses the npm-style `@quiet-core/copilot` package name
   will leave the plugin blocked and the runtime will not load
   even with `agentRuntime.id: "copilot"`.
 - A GitHub Copilot subscription that can drive the Copilot CLI (or a
@@ -42,25 +42,25 @@ compatibility migrations. It does not run Copilot CLI environment probes.
 
 ## Plugin install
 
-The Copilot runtime is an external plugin so the core `openclaw` package does
+The Copilot runtime is an external plugin so the core `quiet-core-bot` package does
 not carry the `@github/copilot-sdk` dependency or its platform-specific
 `@github/copilot-<platform>-<arch>` CLI binary. Together they add roughly
 260 MB, so install them only for agents that opt into this runtime:
 
 ```bash
-quiet-core-bot plugins install @openclaw/copilot
+quiet-core-bot plugins install @quiet-core/copilot
 ```
 
 The wizard installs the plugin the first time you select a
 `github-copilot/*` model **and** your config opts the model (or its
 provider) into the Copilot agent runtime via
 `agentRuntime: { id: "copilot" }` (see [Quickstart](#quickstart) below).
-Without the opt-in, openclaw uses its built-in GitHub Copilot provider
+Without the opt-in, quiet-core-bot uses its built-in GitHub Copilot provider
 and never installs the runtime plugin.
 
 The runtime resolves the SDK in this order:
 
-1. `import("@github/copilot-sdk")` from the installed `@openclaw/copilot`
+1. `import("@github/copilot-sdk")` from the installed `@quiet-core/copilot`
    package.
 2. The well-known fallback dir `~/.quiet-core-bot/npm-runtime/copilot/` (the
    legacy on-demand install target).
@@ -127,7 +127,7 @@ Per-agent precedence, applied during `runCopilotAttempt`:
    precedence order, mirroring the shipped `github-copilot` provider
    (`extensions/github-copilot/auth.ts`) and the documented Copilot SDK
    setup:
-   1. `OPENCLAW_GITHUB_TOKEN` -- harness-specific override; set this
+   1. `QUIET_CORE_GITHUB_TOKEN` -- harness-specific override; set this
       to pin a token for the Quiet Core bot harness without disturbing
       system-wide `gh` / Copilot CLI config.
    2. `COPILOT_GITHUB_TOKEN` -- standard Copilot SDK / CLI env var.
@@ -150,7 +150,7 @@ the same directory), or `~/.quiet-core-bot/agents/<agentId>/copilot` otherwise.
 Override with `copilotHome: <path>` on the attempt input when you need a
 custom location (for example, a shared mount for migration).
 
-Live harness tests use `OPENCLAW_COPILOT_AGENT_LIVE_TOKEN` when a direct token
+Live harness tests use `QUIET_CORE_COPILOT_AGENT_LIVE_TOKEN` when a direct token
 is needed. The shared live-test setup intentionally scrubs `COPILOT_GITHUB_TOKEN`,
 `GH_TOKEN`, and `GITHUB_TOKEN` after staging real auth profiles into the isolated
 test home, so passing a `gh auth token` value through the dedicated live-test
@@ -235,7 +235,7 @@ called directly with a short side-question prompt and streamed back via
 This keeps Copilot CLI sessions reserved for the agent's main turn loop, and
 keeps `/btw` behavior identical to other PI-backed runtimes. The contract is
 asserted in
-[`extensions/copilot/harness.test.ts`](https://github.com/openclaw/openclaw/blob/main/extensions/copilot/harness.test.ts)
+[`extensions/copilot/harness.test.ts`](https://github.com/liuda1999/Quiet-Core-bot/blob/main/extensions/copilot/harness.test.ts)
 under `describe("runSideQuestion")`.
 
 ## Doctor
@@ -325,7 +325,7 @@ controls it can enforce at the SDK boundary: `includeCoreTools`, the
 runtime tool allowlist, and `toolConstructionPlan`.
 
 The bridge also uses the shared harness tool-surface helper from
-`openclaw/plugin-sdk/agent-harness-tool-runtime` for PI parity. When
+`quiet-core-bot/plugin-sdk/agent-harness-tool-runtime` for PI parity. When
 tool-search is enabled, the SDK sees compact control tools plus a hidden
 catalog executor instead of every Quiet Core bot tool schema. When code mode is
 enabled, the helper builds the same code-mode control surface and catalog

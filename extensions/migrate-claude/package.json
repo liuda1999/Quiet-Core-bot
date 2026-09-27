@@ -1,22 +1,22 @@
 {
-  "name": "@openclaw/migrate-claude",
+  "name": "@quiet-core/migrate-claude",
   "version": "2026.6.11",
   "private": true,
   "description": "Claude to OpenClaw migration provider",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@quiet-core/plugin-sdk": "workspace:*",
+    "quiet-core-bot": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.6.11"
+    "quiet-core-bot": ">=2026.6.11"
   },
   "peerDependenciesMeta": {
-    "openclaw": {
+    "quiet-core-bot": {
       "optional": true
     }
   },
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": [
       "./index.ts"
     ]

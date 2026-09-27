@@ -71,7 +71,7 @@ Example: map input items into tool calls:
 
 ```bash
 gog.gmail.search --query 'newer_than:1d' \
-  | openclaw.invoke --tool message --action send --each --item-key message --args-json '{"provider":"telegram","to":"..."}'
+  | quiet-core-bot.invoke --tool message --action send --each --item-key message --args-json '{"provider":"telegram","to":"..."}'
 ```
 
 ## JSON-only LLM steps (llm-task)
@@ -100,22 +100,22 @@ Enable the tool:
 }
 ```
 
-### Important limitation: embedded Lobster vs `openclaw.invoke`
+### Important limitation: embedded Lobster vs `quiet-core-bot.invoke`
 
-The bundled Lobster plugin runs workflows **in-process** inside the gateway. In that embedded mode, `openclaw.invoke` does **not** automatically inherit a gateway URL/auth context for nested Quiet Core bot CLI tool calls.
+The bundled Lobster plugin runs workflows **in-process** inside the gateway. In that embedded mode, `quiet-core-bot.invoke` does **not** automatically inherit a gateway URL/auth context for nested Quiet Core bot CLI tool calls.
 
 That means this pattern is **not currently reliable in the embedded runner**:
 
 ```lobster
-openclaw.invoke --tool llm-task --action json --args-json '{ ... }'
+quiet-core-bot.invoke --tool llm-task --action json --args-json '{ ... }'
 ```
 
-Use the example below only when running the **standalone Lobster CLI** in an environment where `openclaw.invoke` is already configured with the correct gateway/auth context.
+Use the example below only when running the **standalone Lobster CLI** in an environment where `quiet-core-bot.invoke` is already configured with the correct gateway/auth context.
 
 Use it in a standalone Lobster CLI pipeline:
 
 ```lobster
-openclaw.invoke --tool llm-task --action json --args-json '{
+quiet-core-bot.invoke --tool llm-task --action json --args-json '{
   "prompt": "Given the input email, return intent and draft.",
   "thinking": "low",
   "input": { "subject": "Hello", "body": "Can you help?" },
@@ -134,7 +134,7 @@ openclaw.invoke --tool llm-task --action json --args-json '{
 If you are using the embedded Lobster plugin today, prefer either:
 
 - a direct `llm-task` tool call outside Lobster, or
-- non-`openclaw.invoke` steps inside the Lobster pipeline until a supported embedded bridge is added.
+- non-`quiet-core-bot.invoke` steps inside the Lobster pipeline until a supported embedded bridge is added.
 
 See [LLM Task](/tools/llm-task) for details and configuration options.
 
@@ -217,12 +217,12 @@ Without Lobster:
 
 ```
 User: "Check my email and draft replies"
-→ openclaw calls gmail.list
+→ quiet-core-bot calls gmail.list
 → LLM summarizes
 → User: "draft replies to #2 and #5"
 → LLM drafts
 → User: "send #2"
-→ openclaw calls gmail.send
+→ quiet-core-bot calls gmail.send
 (repeat daily, no memory of what was triaged)
 ```
 

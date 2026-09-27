@@ -4,22 +4,22 @@
 
 #include "Config/Version.xcconfig"
 
-OPENCLAW_CODE_SIGN_STYLE = Manual
-OPENCLAW_CODE_SIGN_IDENTITY = Apple Development
-OPENCLAW_CODE_SIGN_ENTITLEMENTS = Sources/OpenClaw.entitlements
-OPENCLAW_DEVELOPMENT_TEAM = FWJYW4S8P8
+QUIET_CORE_CODE_SIGN_STYLE = Manual
+QUIET_CORE_CODE_SIGN_IDENTITY = Apple Development
+QUIET_CORE_CODE_SIGN_ENTITLEMENTS = Sources/OpenClaw.entitlements
+QUIET_CORE_DEVELOPMENT_TEAM = FWJYW4S8P8
 
-OPENCLAW_APP_BUNDLE_ID = ai.openclawfoundation.app
-OPENCLAW_SHARE_BUNDLE_ID = ai.openclawfoundation.app.share
-OPENCLAW_APP_GROUP_ID = group.ai.openclawfoundation.app.shared
-OPENCLAW_WATCH_APP_BUNDLE_ID = ai.openclawfoundation.app.watchkitapp
-OPENCLAW_ACTIVITY_WIDGET_BUNDLE_ID = ai.openclawfoundation.app.activitywidget
-OPENCLAW_APNS_ENTITLEMENT_ENVIRONMENT = development
+QUIET_CORE_APP_BUNDLE_ID = ai.openclawfoundation.app
+QUIET_CORE_SHARE_BUNDLE_ID = ai.openclawfoundation.app.share
+QUIET_CORE_APP_GROUP_ID = group.ai.openclawfoundation.app.shared
+QUIET_CORE_WATCH_APP_BUNDLE_ID = ai.openclawfoundation.app.watchkitapp
+QUIET_CORE_ACTIVITY_WIDGET_BUNDLE_ID = ai.openclawfoundation.app.activitywidget
+QUIET_CORE_APNS_ENTITLEMENT_ENVIRONMENT = development
 
-OPENCLAW_APP_PROFILE = ai.openclawfoundation.app Development
-OPENCLAW_SHARE_PROFILE = ai.openclawfoundation.app.share Development
-OPENCLAW_ACTIVITY_WIDGET_PROFILE =
-OPENCLAW_WATCH_APP_PROFILE =
+QUIET_CORE_APP_PROFILE = ai.openclawfoundation.app Development
+QUIET_CORE_SHARE_PROFILE = ai.openclawfoundation.app.share Development
+QUIET_CORE_ACTIVITY_WIDGET_PROFILE =
+QUIET_CORE_WATCH_APP_PROFILE =
 
 // Keep local includes after defaults: xcconfig is evaluated top-to-bottom,
 // so later assignments in local files override the defaults above.

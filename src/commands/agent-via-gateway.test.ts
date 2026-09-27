@@ -2,13 +2,13 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@quiet-core/normalization-core/number-coercion";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../config/config.js";
 import { loggingState } from "../logging/state.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { readDiagnosticEvents } from "../state/diagnostic-events-store.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import {
   agentCliCommand,
@@ -83,7 +83,7 @@ async function withTempStore(
   fn: (ctx: { dir: string; store: string }) => Promise<void>,
   overrides?: Partial<OpenClawConfig>,
 ) {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-agent-cli-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-agent-cli-"));
   const store = path.join(dir, "sessions.json");
   mockConfig(store, overrides);
   try {
@@ -433,7 +433,7 @@ describe("agentCliCommand", () => {
 
   it("uses an agent-scoped --to value as the gateway session selector", async () => {
     await withTempStore(async () => {
-      const sessionKey = "agent:main:openclaw-weixin:direct:o9cq802hhmfc@im.wechat";
+      const sessionKey = "agent:main:quiet-core-bot-weixin:direct:o9cq802hhmfc@im.wechat";
       mockGatewaySuccessReply();
 
       await agentCliCommand({ message: "hi", to: sessionKey }, runtime);
@@ -2099,7 +2099,7 @@ describe("embedded fallback diagnostics", () => {
   let stateDir: string;
 
   beforeEach(() => {
-    stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-agent-fallback-state-"));
+    stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-agent-fallback-state-"));
   });
 
   afterEach(() => {
@@ -2113,7 +2113,7 @@ describe("embedded fallback diagnostics", () => {
     mockLocalAgentReply();
 
     await withTempStore(async () => {
-      await withEnvAsync({ OPENCLAW_STATE_DIR: stateDir }, async () => {
+      await withEnvAsync({ QUIET_CORE_STATE_DIR: stateDir }, async () => {
         await agentCliCommand(
           { message: "hi", to: "+1555", sessionKey: "agent:main:fallback", runId: "run-fb-1" },
           runtime,
@@ -2138,7 +2138,7 @@ describe("embedded fallback diagnostics", () => {
     mockLocalAgentReply();
 
     await withTempStore(async () => {
-      await withEnvAsync({ OPENCLAW_STATE_DIR: stateDir }, async () => {
+      await withEnvAsync({ QUIET_CORE_STATE_DIR: stateDir }, async () => {
         await agentCliCommand(
           { message: "hi", to: "+1555", sessionKey: "agent:main:t18", runId: "run-fb-2" },
           runtime,
@@ -2162,7 +2162,7 @@ describe("embedded fallback diagnostics", () => {
     mockGatewaySuccessReply();
 
     await withTempStore(async () => {
-      await withEnvAsync({ OPENCLAW_STATE_DIR: stateDir }, async () => {
+      await withEnvAsync({ QUIET_CORE_STATE_DIR: stateDir }, async () => {
         await agentCliCommand({ message: "hi", to: "+1555", runId: "run-fb-3" }, runtime);
 
         expect(readDiagnosticEvents({ scope: CLI_EMBEDDED_FALLBACK_SCOPE })).toHaveLength(0);

@@ -264,15 +264,15 @@ describe("loadModelCatalog", () => {
       readFile: readFileMock,
     }));
     prepareOpenClawModelsJsonSourceMock = vi.fn().mockResolvedValue({
-      agentDir: "/tmp/openclaw",
+      agentDir: "/tmp/quiet-core-bot",
       fingerprint: "source-fingerprint",
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
       wrote: false,
     });
     buildModelsJsonSourceFingerprintMock = vi.fn().mockResolvedValue({
-      agentDir: "/tmp/openclaw",
+      agentDir: "/tmp/quiet-core-bot",
       fingerprint: "source-fingerprint",
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
     });
     vi.doMock("./models-config.js", () => ({
       buildModelsJsonSourceFingerprint: buildModelsJsonSourceFingerprintMock,
@@ -292,9 +292,9 @@ describe("loadModelCatalog", () => {
     vi.doMock("./agent-scope.js", () => ({
       resolveAgentWorkspaceDir: (cfg: OpenClawConfig, agentId: string) => {
         const entry = cfg.agents?.list?.find((entryEntry) => entryEntry.id === agentId);
-        return entry?.workspace ?? cfg.agents?.defaults?.workspace ?? "/tmp/openclaw-workspace";
+        return entry?.workspace ?? cfg.agents?.defaults?.workspace ?? "/tmp/quiet-core-bot-workspace";
       },
-      resolveDefaultAgentDir: () => "/tmp/openclaw",
+      resolveDefaultAgentDir: () => "/tmp/quiet-core-bot",
       resolveDefaultAgentId: (cfg: OpenClawConfig) =>
         cfg.agents?.list?.find((entry) => entry.default)?.id ?? cfg.agents?.list?.[0]?.id ?? "main",
     }));
@@ -353,9 +353,9 @@ describe("loadModelCatalog", () => {
     );
     prepareOpenClawModelsJsonSourceMock.mockReset();
     prepareOpenClawModelsJsonSourceMock.mockResolvedValue({
-      agentDir: "/tmp/openclaw",
+      agentDir: "/tmp/quiet-core-bot",
       fingerprint: "source-fingerprint",
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
       wrote: false,
     });
     augmentCatalogMock.mockClear();
@@ -365,9 +365,9 @@ describe("loadModelCatalog", () => {
     loadPluginMetadataSnapshotMock.mockReturnValue(emptyPluginMetadataSnapshot());
     buildModelsJsonSourceFingerprintMock.mockClear();
     buildModelsJsonSourceFingerprintMock.mockResolvedValue({
-      agentDir: "/tmp/openclaw",
+      agentDir: "/tmp/quiet-core-bot",
       fingerprint: "source-fingerprint",
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
     });
     buildAgentModelCatalogCacheKeyMock.mockClear();
     readCachedAgentModelCatalogMock.mockReset();
@@ -439,7 +439,7 @@ describe("loadModelCatalog", () => {
 
     expect(discoverModels).toHaveBeenCalledWith(
       expect.anything(),
-      "/tmp/openclaw",
+      "/tmp/quiet-core-bot",
       expect.objectContaining({ workspaceDir: "/tmp/workspace-agent" }),
     );
   });
@@ -458,7 +458,7 @@ describe("loadModelCatalog", () => {
 
     expect(result).toEqual(cached);
     expect(readCachedAgentModelCatalogMock).toHaveBeenCalledWith({
-      agentDir: "/tmp/openclaw",
+      agentDir: "/tmp/quiet-core-bot",
       catalogKey: "test-cache-key:source-fingerprint",
     });
     expect(prepareOpenClawModelsJsonSourceMock).not.toHaveBeenCalled();
@@ -495,7 +495,7 @@ describe("loadModelCatalog", () => {
     expect(result).toEqual([{ id: "fresh-fast", name: "Fresh Fast", provider: "openai" }]);
     expect(readCachedAgentModelCatalogMock).not.toHaveBeenCalled();
     expect(writeCachedAgentModelCatalogMock).toHaveBeenCalledWith({
-      agentDir: "/tmp/openclaw",
+      agentDir: "/tmp/quiet-core-bot",
       catalogKey: "test-cache-key:source-fingerprint",
       entries: result,
     });
@@ -508,7 +508,7 @@ describe("loadModelCatalog", () => {
 
     expect(result).toEqual([{ id: "runtime-fast", name: "Runtime Fast", provider: "openai" }]);
     expect(writeCachedAgentModelCatalogMock).toHaveBeenCalledWith({
-      agentDir: "/tmp/openclaw",
+      agentDir: "/tmp/quiet-core-bot",
       catalogKey: "test-cache-key:source-fingerprint",
       entries: result,
     });
@@ -541,9 +541,9 @@ describe("loadModelCatalog", () => {
       releaseStaleFingerprint = resolve;
     });
     buildModelsJsonSourceFingerprintMock.mockReturnValueOnce(staleFingerprint).mockResolvedValue({
-      agentDir: "/tmp/openclaw",
+      agentDir: "/tmp/quiet-core-bot",
       fingerprint: "fresh-fingerprint",
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
     });
     const freshCatalog = [{ id: "fresh", name: "Fresh", provider: "ollama", reasoning: true }];
     const staleCatalog = [{ id: "stale", name: "Stale", provider: "ollama", reasoning: false }];
@@ -557,9 +557,9 @@ describe("loadModelCatalog", () => {
     await expect(loadModelCatalog({ cacheOnly: true })).resolves.toBe(freshCatalog);
 
     releaseStaleFingerprint?.({
-      agentDir: "/tmp/openclaw",
+      agentDir: "/tmp/quiet-core-bot",
       fingerprint: "stale-fingerprint",
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
     });
     await expect(staleLoad).resolves.toBe(staleCatalog);
     await expect(loadModelCatalog({ cacheOnly: true })).resolves.toBe(freshCatalog);
@@ -589,14 +589,14 @@ describe("loadModelCatalog", () => {
 
   it("writes runtime discovery results under the refreshed models.json fingerprint", async () => {
     buildModelsJsonSourceFingerprintMock.mockResolvedValue({
-      agentDir: "/tmp/openclaw",
+      agentDir: "/tmp/quiet-core-bot",
       fingerprint: "pre-refresh-source",
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
     });
     prepareOpenClawModelsJsonSourceMock.mockResolvedValue({
-      agentDir: "/tmp/openclaw",
+      agentDir: "/tmp/quiet-core-bot",
       fingerprint: "post-refresh-source",
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
       wrote: true,
     });
     mockAgentDiscoveryModels([{ id: "runtime-fast", name: "Runtime Fast", provider: "openai" }]);
@@ -605,15 +605,15 @@ describe("loadModelCatalog", () => {
 
     expect(result).toEqual([{ id: "runtime-fast", name: "Runtime Fast", provider: "openai" }]);
     expect(readCachedAgentModelCatalogMock).toHaveBeenNthCalledWith(1, {
-      agentDir: "/tmp/openclaw",
+      agentDir: "/tmp/quiet-core-bot",
       catalogKey: "test-cache-key:pre-refresh-source",
     });
     expect(readCachedAgentModelCatalogMock).toHaveBeenNthCalledWith(2, {
-      agentDir: "/tmp/openclaw",
+      agentDir: "/tmp/quiet-core-bot",
       catalogKey: "test-cache-key:post-refresh-source",
     });
     expect(writeCachedAgentModelCatalogMock).toHaveBeenCalledWith({
-      agentDir: "/tmp/openclaw",
+      agentDir: "/tmp/quiet-core-bot",
       catalogKey: "test-cache-key:post-refresh-source",
       entries: result,
     });
@@ -622,14 +622,14 @@ describe("loadModelCatalog", () => {
   it("uses a refreshed state cached catalog before runtime discovery", async () => {
     const cached = [{ id: "cached-fast", name: "Cached Fast", provider: "openai" }];
     buildModelsJsonSourceFingerprintMock.mockResolvedValue({
-      agentDir: "/tmp/openclaw",
+      agentDir: "/tmp/quiet-core-bot",
       fingerprint: "pre-refresh-source",
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
     });
     prepareOpenClawModelsJsonSourceMock.mockResolvedValue({
-      agentDir: "/tmp/openclaw",
+      agentDir: "/tmp/quiet-core-bot",
       fingerprint: "post-refresh-source",
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
       wrote: true,
     });
     readCachedAgentModelCatalogMock.mockImplementation(({ catalogKey }: { catalogKey: string }) =>
@@ -646,11 +646,11 @@ describe("loadModelCatalog", () => {
 
     expect(result).toEqual(cached);
     expect(readCachedAgentModelCatalogMock).toHaveBeenNthCalledWith(1, {
-      agentDir: "/tmp/openclaw",
+      agentDir: "/tmp/quiet-core-bot",
       catalogKey: "test-cache-key:pre-refresh-source",
     });
     expect(readCachedAgentModelCatalogMock).toHaveBeenNthCalledWith(2, {
-      agentDir: "/tmp/openclaw",
+      agentDir: "/tmp/quiet-core-bot",
       catalogKey: "test-cache-key:post-refresh-source",
     });
     expect(importAgentDiscoveryModule).not.toHaveBeenCalled();
@@ -660,14 +660,14 @@ describe("loadModelCatalog", () => {
   it("misses the state cached catalog when source freshness changes", async () => {
     buildModelsJsonSourceFingerprintMock
       .mockResolvedValueOnce({
-        agentDir: "/tmp/openclaw",
+        agentDir: "/tmp/quiet-core-bot",
         fingerprint: "old-source",
-        workspaceDir: "/tmp/openclaw-workspace",
+        workspaceDir: "/tmp/quiet-core-bot-workspace",
       })
       .mockResolvedValueOnce({
-        agentDir: "/tmp/openclaw",
+        agentDir: "/tmp/quiet-core-bot",
         fingerprint: "new-source",
-        workspaceDir: "/tmp/openclaw-workspace",
+        workspaceDir: "/tmp/quiet-core-bot-workspace",
       });
     readCachedAgentModelCatalogMock.mockImplementation(({ catalogKey }: { catalogKey: string }) =>
       catalogKey.endsWith("old-source")
@@ -686,11 +686,11 @@ describe("loadModelCatalog", () => {
     ]);
 
     expect(readCachedAgentModelCatalogMock).toHaveBeenNthCalledWith(1, {
-      agentDir: "/tmp/openclaw",
+      agentDir: "/tmp/quiet-core-bot",
       catalogKey: "test-cache-key:old-source",
     });
     expect(readCachedAgentModelCatalogMock).toHaveBeenNthCalledWith(2, {
-      agentDir: "/tmp/openclaw",
+      agentDir: "/tmp/quiet-core-bot",
       catalogKey: "test-cache-key:new-source",
     });
   });
@@ -875,8 +875,8 @@ describe("loadModelCatalog", () => {
   });
 
   it("loads generated plugin catalog rows in read-only mode", async () => {
-    const catalogPath = "/tmp/openclaw/plugins/read-only-shard/catalog.json";
-    mkdirSync("/tmp/openclaw/plugins/read-only-shard", { recursive: true });
+    const catalogPath = "/tmp/quiet-core-bot/plugins/read-only-shard/catalog.json";
+    mkdirSync("/tmp/quiet-core-bot/plugins/read-only-shard", { recursive: true });
     writeFileSync(catalogPath, "{}");
     try {
       readFileMock.mockImplementation(async (pathname: string) => {
@@ -943,7 +943,7 @@ describe("loadModelCatalog", () => {
         }),
       ).toBe(true);
     } finally {
-      rmSync("/tmp/openclaw/plugins/read-only-shard", { recursive: true, force: true });
+      rmSync("/tmp/quiet-core-bot/plugins/read-only-shard", { recursive: true, force: true });
     }
   });
 
@@ -1597,7 +1597,7 @@ describe("loadModelCatalog", () => {
   });
 
   it("passes explicit env when checking current manifest catalog snapshot compatibility", () => {
-    const env = { HOME: "/tmp/openclaw-model-catalog-env" } as NodeJS.ProcessEnv;
+    const env = { HOME: "/tmp/quiet-core-bot-model-catalog-env" } as NodeJS.ProcessEnv;
 
     loadManifestModelCatalog({
       config: {} as OpenClawConfig,

@@ -1,12 +1,10 @@
 /** Re-exports legacy state migration helpers used by doctor preflight. */
 export type { LegacyStateDetection } from "../infra/state-migrations.js";
 export {
-  autoMigrateLegacyStateDir,
   autoMigrateLegacyTaskStateSidecars,
   autoMigrateLegacyState,
   detectLegacyStateMigrations,
   migrateLegacyAgentDir,
-  resetAutoMigrateLegacyStateDirForTest,
   resetAutoMigrateLegacyTaskStateSidecarsForTest,
   resetAutoMigrateLegacyStateForTest,
   runLegacyStateMigrations,

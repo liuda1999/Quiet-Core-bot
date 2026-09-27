@@ -2,7 +2,7 @@
 import { expect } from "vitest";
 import { restoreRedactedValues as restoreRedactedValues_orig } from "./redact-snapshot.js";
 import type { ConfigUiHints } from "./schema.js";
-import type { ConfigFileSnapshot } from "./types.openclaw.js";
+import type { ConfigFileSnapshot } from "./types.quiet-core-bot.js";
 
 /** Complete snapshot shape used by redaction tests. */
 export type TestSnapshot<TConfig extends Record<string, unknown>> = ConfigFileSnapshot & {
@@ -18,7 +18,7 @@ export function makeSnapshot<TConfig extends Record<string, unknown>>(
   raw?: string,
 ): TestSnapshot<TConfig> {
   return {
-    path: "/home/user/.openclaw/config.json5",
+    path: "/home/user/.quiet-core-bot/config.json5",
     exists: true,
     raw: raw ?? JSON.stringify(config),
     parsed: config,

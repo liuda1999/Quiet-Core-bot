@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   createOpenClawTestState,
   type OpenClawTestState,
-} from "../test-utils/openclaw-test-state.js";
+} from "../test-utils/quiet-core-bot-test-state.js";
 
 const note = vi.hoisted(() => vi.fn());
 
@@ -39,7 +39,7 @@ describe("noteSessionLockHealth", () => {
     note.mockClear();
     state = await createOpenClawTestState({
       layout: "state-only",
-      prefix: "openclaw-doctor-locks-",
+      prefix: "quiet-core-bot-doctor-locks-",
     });
   });
 
@@ -60,7 +60,7 @@ describe("noteSessionLockHealth", () => {
     await noteSessionLockHealth({
       shouldRepair: false,
       staleMs: 60_000,
-      readOwnerProcessArgs: () => ["node", "/opt/openclaw/quiet-core-bot.mjs", "doctor"],
+      readOwnerProcessArgs: () => ["node", "/opt/quiet-core-bot/quiet-core-bot.mjs", "doctor"],
     });
 
     expect(note).toHaveBeenCalledTimes(1);
@@ -93,7 +93,7 @@ describe("noteSessionLockHealth", () => {
     await noteSessionLockHealth({
       shouldRepair: true,
       staleMs: 30_000,
-      readOwnerProcessArgs: () => ["node", "/opt/openclaw/quiet-core-bot.mjs", "doctor"],
+      readOwnerProcessArgs: () => ["node", "/opt/quiet-core-bot/quiet-core-bot.mjs", "doctor"],
     });
 
     expect(note).toHaveBeenCalledTimes(1);
@@ -119,7 +119,7 @@ describe("noteSessionLockHealth", () => {
     await noteSessionLockHealth({
       shouldRepair: true,
       config: { session: { writeLock: { staleMs: 30_000 } } },
-      readOwnerProcessArgs: () => ["node", "/opt/openclaw/quiet-core-bot.mjs", "doctor"],
+      readOwnerProcessArgs: () => ["node", "/opt/quiet-core-bot/quiet-core-bot.mjs", "doctor"],
     });
 
     expect(note).toHaveBeenCalledTimes(1);
@@ -148,7 +148,7 @@ describe("noteSessionLockHealth", () => {
 
     expect(note).toHaveBeenCalledTimes(1);
     const [message] = firstNoteCall();
-    expect(message).toContain("stale=yes (non-openclaw-owner)");
+    expect(message).toContain("stale=yes (non-quiet-core-bot-owner)");
     expect(message).toContain("[removed]");
     expect(message).toContain("Removed 1 stale session lock file");
     await expect(fs.access(falseLiveLock)).rejects.toThrow();

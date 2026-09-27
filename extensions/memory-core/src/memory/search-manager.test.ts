@@ -2,8 +2,8 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
-import type { checkQmdBinaryAvailability as checkQmdBinaryAvailabilityFn } from "openclaw/plugin-sdk/memory-core-host-engine-qmd";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
+import type { checkQmdBinaryAvailability as checkQmdBinaryAvailabilityFn } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-qmd";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 type CheckQmdBinaryAvailability = typeof checkQmdBinaryAvailabilityFn;
@@ -121,7 +121,7 @@ vi.mock("./qmd-manager.js", () => ({
   },
 }));
 
-vi.mock("openclaw/plugin-sdk/memory-core-host-engine-qmd", () => ({
+vi.mock("quiet-core-bot/plugin-sdk/memory-core-host-engine-qmd", () => ({
   checkQmdBinaryAvailability,
   resolveQmdBinaryUnavailableReason: (result: { reason?: string }) => result.reason ?? "binary",
 }));
@@ -300,7 +300,7 @@ describe("getMemorySearchManager caching", () => {
   it("repairs an invalid shared singleton cache shape before using qmd cache maps", async () => {
     await closeAllMemorySearchManagers();
     vi.resetModules();
-    const cacheKey = Symbol.for("openclaw.memorySearchManagerCache");
+    const cacheKey = Symbol.for("quiet-core-bot.memorySearchManagerCache");
     (globalThis as Record<PropertyKey, unknown>)[cacheKey] = {};
 
     const freshModule = await import("./search-manager.js");
@@ -516,7 +516,7 @@ describe("getMemorySearchManager caching", () => {
   });
 
   it("creates a missing agent workspace before probing qmd availability", async () => {
-    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-qmd-workspace-"));
+    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-qmd-workspace-"));
     const workspace = path.join(tempRoot, "missing", "workspace");
     const agentId = "missing-workspace";
     const cfg = {

@@ -1,12 +1,12 @@
 // Doctor WhatsApp responsiveness tests cover warning heuristics and note output for stale connections.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 
 const noteMock = vi.hoisted(() => vi.fn());
 const spawnSyncMock = vi.hoisted(() => vi.fn());
 
 vi.mock("node:child_process", async () => {
-  const { mockNodeChildProcessSpawnSync } = await import("openclaw/plugin-sdk/test-node-mocks");
+  const { mockNodeChildProcessSpawnSync } = await import("quiet-core-bot/plugin-sdk/test-node-mocks");
   return mockNodeChildProcessSpawnSync(spawnSyncMock, () =>
     vi.importActual<typeof import("node:child_process")>("node:child_process"),
   );
@@ -28,21 +28,21 @@ describe("doctor WhatsApp responsiveness", () => {
     spawnSyncMock.mockReturnValue({
       status: 0,
       stdout: [
-        " 101 openclaw-tui",
-        " 102 /usr/bin/node /usr/lib/node_modules/openclaw/dist/index.js gateway --port 18789",
+        " 101 quiet-core-bot-tui",
+        " 102 /usr/bin/node /usr/lib/node_modules/quiet-core-bot/dist/index.js gateway --port 18789",
         " 103 quiet-core-bot channels",
         " 104 quiet-core-bot tui --local",
-        " 105 /usr/bin/openclaw chat",
+        " 105 /usr/bin/quiet-core-bot chat",
         " 106 helper --note 'quiet-core-bot tui'",
-        " 107 openclaw-helper quiet-core-bot terminal",
+        " 107 quiet-core-bot-helper quiet-core-bot terminal",
         " 108 quiet-core-bot --flag tui",
       ].join("\n"),
     });
 
     expect(listLocalTuiProcesses()).toEqual([
-      { pid: 101, command: "openclaw-tui" },
+      { pid: 101, command: "quiet-core-bot-tui" },
       { pid: 104, command: "quiet-core-bot tui --local" },
-      { pid: 105, command: "/usr/bin/openclaw chat" },
+      { pid: 105, command: "/usr/bin/quiet-core-bot chat" },
     ]);
   });
 
@@ -68,7 +68,7 @@ describe("doctor WhatsApp responsiveness", () => {
 
     await expect(
       terminateLocalTuiProcesses({
-        processes: [{ pid: 101, command: "openclaw-tui" }],
+        processes: [{ pid: 101, command: "quiet-core-bot-tui" }],
         controller,
         graceMs: 0,
       }),
@@ -99,12 +99,12 @@ describe("doctor WhatsApp responsiveness", () => {
         },
       },
       shouldRepair: true,
-      listLocalTuiProcesses: () => [{ pid: 101, command: "openclaw-tui" }],
+      listLocalTuiProcesses: () => [{ pid: 101, command: "quiet-core-bot-tui" }],
       terminateLocalTuiProcesses: terminate,
     });
 
     expect(terminate).toHaveBeenCalledWith({
-      processes: [{ pid: 101, command: "openclaw-tui" }],
+      processes: [{ pid: 101, command: "quiet-core-bot-tui" }],
     });
     expect(noteMock).toHaveBeenCalledWith(
       [

@@ -33,7 +33,7 @@ Plugin authors import the public contract from:
 import type {
   MessagePresentation,
   ReplyPayloadDelivery,
-} from "openclaw/plugin-sdk/interactive-runtime";
+} from "quiet-core-bot/plugin-sdk/interactive-runtime";
 ```
 
 Shape:
@@ -390,7 +390,7 @@ helpers. It supports:
 - URL-only buttons
 - generic delivery metadata through `ReplyPayload.delivery`
 
-Use helpers from `openclaw/plugin-sdk/interactive-runtime` when bridging older
+Use helpers from `quiet-core-bot/plugin-sdk/interactive-runtime` when bridging older
 code:
 
 ```ts
@@ -403,7 +403,7 @@ import {
   presentationToInteractiveControlsReply,
   presentationToInteractiveReply,
   renderMessagePresentationFallbackText,
-} from "openclaw/plugin-sdk/interactive-runtime";
+} from "quiet-core-bot/plugin-sdk/interactive-runtime";
 ```
 
 New code should accept or produce `MessagePresentation` directly. Existing

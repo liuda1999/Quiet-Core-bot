@@ -88,7 +88,7 @@ describe("attempt execution prompt materialization", () => {
 
 describe("persistSessionEntry", () => {
   it("clears stale local entries when guarded persistence sees no persisted entry", async () => {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-session-store-"));
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-session-store-"));
     try {
       const storePath = path.join(dir, "sessions.json");
       const sessionStore = {

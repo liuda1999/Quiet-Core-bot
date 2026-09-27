@@ -1,7 +1,7 @@
 /**
  * Runs native harness tool-result middleware around tool execution results.
  */
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
+import { isRecord } from "@quiet-core/normalization-core/record-coerce";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
 import type {
   AgentToolResultMiddleware,

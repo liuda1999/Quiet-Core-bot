@@ -1,9 +1,9 @@
 // Tlon plugin module implements channel behavior.
 import crypto from "node:crypto";
-import type { ChannelAccountSnapshot } from "openclaw/plugin-sdk/channel-contract";
-import type { ChannelOutboundAdapter } from "openclaw/plugin-sdk/channel-send-result";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { ChannelPlugin } from "openclaw/plugin-sdk/core";
+import type { ChannelAccountSnapshot } from "quiet-core-bot/plugin-sdk/channel-contract";
+import type { ChannelOutboundAdapter } from "quiet-core-bot/plugin-sdk/channel-send-result";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { ChannelPlugin } from "quiet-core-bot/plugin-sdk/core";
 import { monitorTlonProvider } from "./monitor/index.js";
 import { tlonSetupWizard } from "./setup-surface.js";
 import {

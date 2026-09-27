@@ -32,7 +32,7 @@ the standard reply-audio pipeline.
 Install the official plugin, then restart Gateway:
 
 ```bash
-quiet-core-bot plugins install @openclaw/inworld-speech
+quiet-core-bot plugins install @quiet-core/inworld-speech
 quiet-core-bot gateway restart
 ```
 

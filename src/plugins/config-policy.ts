@@ -1,5 +1,5 @@
 // Evaluates plugin config policy without activating plugin runtime code.
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   resolveMemorySlotDecisionShared,
   resolvePluginActivationDecisionShared,

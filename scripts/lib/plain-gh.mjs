@@ -33,11 +33,11 @@ export function plainGhEnv(env = process.env) {
 }
 
 export function resolvePlainGhBin(env = process.env) {
-  if (env.OPENCLAW_GH_BIN) {
-    if (isExecutable(env.OPENCLAW_GH_BIN)) {
-      return env.OPENCLAW_GH_BIN;
+  if (env.QUIET_CORE_GH_BIN) {
+    if (isExecutable(env.QUIET_CORE_GH_BIN)) {
+      return env.QUIET_CORE_GH_BIN;
     }
-    throw new Error(`OPENCLAW_GH_BIN is not executable: ${env.OPENCLAW_GH_BIN}`);
+    throw new Error(`QUIET_CORE_GH_BIN is not executable: ${env.QUIET_CORE_GH_BIN}`);
   }
 
   for (const candidate of ["/opt/homebrew/bin/gh", "/usr/local/bin/gh"]) {

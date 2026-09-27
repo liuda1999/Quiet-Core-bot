@@ -8,7 +8,7 @@ import type { OpenClawConfig } from "../../config/config.js";
 import type { ModelDefinitionConfig } from "../../config/types.models.js";
 import type { ImageDescriptionRequest } from "../../plugin-sdk/media-understanding.js";
 import { getApiKeyForModel, hasUsableCustomProviderApiKey } from "../model-auth.js";
-import { resolveImageToolFactoryAvailable } from "../openclaw-tools.media-factory-plan.js";
+import { resolveImageToolFactoryAvailable } from "../quiet-core-bot-tools.media-factory-plan.js";
 import { createImageTool, resolveImageModelConfigForTool, testing } from "./image-tool.js";
 import { hasProviderAuthForTool } from "./model-config.helpers.js";
 
@@ -75,7 +75,7 @@ function createUserReportedConfig(params?: { includeApiKey?: boolean }): OpenCla
 }
 
 async function withEmptyAgentDir<T>(run: (agentDir: string) => Promise<T>): Promise<T> {
-  const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-image-auth-regression-"));
+  const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-image-auth-regression-"));
   try {
     return await run(agentDir);
   } finally {

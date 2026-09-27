@@ -3,9 +3,9 @@
  */
 import fs from "node:fs/promises";
 import os from "node:os";
-import { MAX_IMAGE_BYTES } from "@openclaw/media-core/constants";
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { MAX_IMAGE_BYTES } from "@quiet-core/media-core/constants";
+import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { isAcpRuntimeSpawnAvailable } from "../../../acp/runtime/availability.js";
 import { buildHierarchyReinforcementMessage } from "../../../auto-reply/handoff-summarizer.js";
 import { filterHeartbeatTranscriptArtifacts } from "../../../auto-reply/heartbeat-filter.js";
@@ -27,7 +27,7 @@ import {
 import type { SessionEntry } from "../../../config/sessions/types.js";
 import {
   assertContextEngineHostSupport,
-  OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST,
+  QUIET_CORE_EMBEDDED_CONTEXT_ENGINE_HOST,
 } from "../../../context-engine/host-compat.js";
 import { resolveContextEngineOwnerPluginId } from "../../../context-engine/registry.js";
 import { buildContextEngineRuntimeSettings } from "../../../context-engine/runtime-settings.js";
@@ -72,7 +72,7 @@ import {
 import { getPluginToolMeta } from "../../../plugins/tools.js";
 import { isSubagentSessionKey } from "../../../routing/session-key.js";
 import { annotateInterSessionPromptText } from "../../../sessions/input-provenance.js";
-import { isTranscriptOnlyOpenClawAssistantMessage } from "../../../shared/transcript-only-openclaw-assistant.js";
+import { isTranscriptOnlyOpenClawAssistantMessage } from "../../../shared/transcript-only-quiet-core-bot-assistant.js";
 import { resolveSkillsPromptForRun } from "../../../skills/loading/workspace.js";
 import { resolveEmbeddedRunSkillEntries } from "../../../skills/runtime/embedded-run-entries.js";
 import {
@@ -1173,7 +1173,7 @@ export async function runEmbeddedAttempt(
       assertContextEngineHostSupport({
         contextEngine: activeContextEngine,
         operation: "agent-run",
-        host: OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST,
+        host: QUIET_CORE_EMBEDDED_CONTEXT_ENGINE_HOST,
       });
     }
     const resolveActiveContextEnginePluginId = () =>
@@ -1383,7 +1383,7 @@ export async function runEmbeddedAttempt(
               abortSessionForYield?.();
             },
           });
-          corePluginToolStages.mark("attempt:create-openclaw-coding-tools");
+          corePluginToolStages.mark("attempt:create-quiet-core-bot-coding-tools");
           const filteredTools = applyEmbeddedAttemptToolsAllow(allTools, effectiveToolsAllow, {
             toolMeta: (tool) => getPluginToolMeta(tool),
           });
@@ -2261,7 +2261,7 @@ export async function runEmbeddedAttempt(
             activeAgentId: sessionAgentId,
             contextEnginePluginId: resolveActiveContextEnginePluginId(),
           }),
-          contextEngineHostSupport: OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST,
+          contextEngineHostSupport: QUIET_CORE_EMBEDDED_CONTEXT_ENGINE_HOST,
           providerId: params.provider,
           requestedModelId: params.requestedModelId,
           modelId: params.modelId,
@@ -2330,7 +2330,7 @@ export async function runEmbeddedAttempt(
       await resourceLoader.reload();
       // DefaultResourceLoader.reload() rehydrates settings from disk and can drop Quiet Core bot
       // compaction overrides applied in createPreparedEmbeddedAgentSettingsManager — same
-      // rehydration also restores Quiet Core bot runtime's auto-compaction (openclaw#75799), so re-apply
+      // rehydration also restores Quiet Core bot runtime's auto-compaction (quiet-core-bot#75799), so re-apply
       // both guards.
       applyAgentCompactionSettingsFromConfig({
         settingsManager,
@@ -2684,7 +2684,7 @@ export async function runEmbeddedAttempt(
       if (activeContextEngine?.info.ownsCompaction === true) {
         const selectedContextEngineId = activeContextEngine.info.id;
         const contextEngineLoopRuntimeSettings = buildContextEngineRuntimeSettings({
-          contextEngineHost: OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST,
+          contextEngineHost: QUIET_CORE_EMBEDDED_CONTEXT_ENGINE_HOST,
           provider: params.provider,
           requestedModel: params.requestedModelId,
           resolvedModel: params.modelId,
@@ -3328,7 +3328,7 @@ export async function runEmbeddedAttempt(
               availableTools: new Set(capabilityToolNames),
               citationsMode: params.config?.memory?.citations,
               modelId: params.modelId,
-              contextEngineHostSupport: OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST,
+              contextEngineHostSupport: QUIET_CORE_EMBEDDED_CONTEXT_ENGINE_HOST,
               providerId: params.provider,
               requestedModelId: params.requestedModelId,
               fallbackReason: params.fallbackReason,
@@ -3674,7 +3674,7 @@ export async function runEmbeddedAttempt(
       isCompactionInFlightForExternalSignal = () => activeSession.isCompacting;
       toolSearchCatalogExecutor = async (toolParams) => {
         try {
-          if (toolParams.source === "openclaw" && toolParams.sourceName === "core") {
+          if (toolParams.source === "quiet-core-bot" && toolParams.sourceName === "core") {
             recordStructuredReplayTrustForToolCall(
               toolParams.toolCallId,
               toolParams.tool as never,
@@ -5053,7 +5053,7 @@ export async function runEmbeddedAttempt(
           // Previously this was before the prompt, which caused a custom entry to be
           // inserted between compaction and the next prompt — breaking the
           // prepareCompaction() guard that checks the last entry type, leading to
-          // double-compaction. See: https://github.com/openclaw/openclaw/issues/9282
+          // double-compaction. See: https://github.com/liuda1999/Quiet-Core-bot/issues/9282
           // Skip when timed out during compaction — session state may be inconsistent.
           // Also skip when compaction ran this attempt — appending a custom entry
           // after compaction would break the guard again. See: #28491
@@ -5162,7 +5162,7 @@ export async function runEmbeddedAttempt(
 
           if (promptError && promptErrorSource === "prompt" && !compactionOccurredThisAttempt) {
             try {
-              activeSessionManager.appendCustomEntry("openclaw:prompt-error", {
+              activeSessionManager.appendCustomEntry("quiet-core-bot:prompt-error", {
                 timestamp: Date.now(),
                 runId: params.runId,
                 sessionId: params.sessionId,
@@ -5203,7 +5203,7 @@ export async function runEmbeddedAttempt(
             prePromptMessageCount: contextEngineAfterTurnCheckpoint ?? prePromptMessageCount,
             tokenBudget: params.contextTokenBudget,
             runtimeContext: afterTurnRuntimeContext,
-            contextEngineHostSupport: OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST,
+            contextEngineHostSupport: QUIET_CORE_EMBEDDED_CONTEXT_ENGINE_HOST,
             providerId: params.provider,
             requestedModelId: params.requestedModelId,
             modelId: params.modelId,
@@ -5775,7 +5775,7 @@ export async function runEmbeddedAttempt(
       // *before* tool execution completes in the retried agent loop. Without this wait,
       // flushPendingToolResults() fires while tools are still executing, inserting
       // synthetic "missing tool result" errors and causing silent agent failures.
-      // See: https://github.com/openclaw/openclaw/issues/8643
+      // See: https://github.com/liuda1999/Quiet-Core-bot/issues/8643
       let cleanupError: unknown;
       try {
         clearToolSearchCatalog({

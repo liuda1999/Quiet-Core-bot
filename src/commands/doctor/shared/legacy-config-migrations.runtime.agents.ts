@@ -1,6 +1,6 @@
 // Legacy runtime agent config migrations for memory, heartbeat, sandbox, and runtime policy keys.
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
+import { uniqueStrings } from "@quiet-core/normalization-core/string-normalization";
 import {
   isCanonicalToolProviderPolicyKey,
   normalizeToolProviderPolicyKey,
@@ -493,7 +493,7 @@ function resolveLegacyAgentRuntimeIntent(raw: unknown): LegacyAgentRuntimeIntent
     return undefined;
   }
   const runtime = typeof record.id === "string" ? record.id.trim().toLowerCase() : "";
-  if (!runtime || runtime === "auto" || runtime === "openclaw") {
+  if (!runtime || runtime === "auto" || runtime === "quiet-core-bot") {
     return undefined;
   }
   const alias = listLegacyRuntimeModelProviderAliases().find(

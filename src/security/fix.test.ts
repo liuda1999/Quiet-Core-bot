@@ -33,8 +33,8 @@ describe("security fix", () => {
 
   const createFixEnv = (stateDir: string, configPath: string) => ({
     ...process.env,
-    OPENCLAW_STATE_DIR: stateDir,
-    OPENCLAW_CONFIG_PATH: configPath,
+    QUIET_CORE_STATE_DIR: stateDir,
+    QUIET_CORE_CONFIG_PATH: configPath,
   });
 
   const createWhatsAppConfigFixTestPlugin = (storeAllowFrom: string[]): ChannelPlugin => ({
@@ -151,7 +151,7 @@ describe("security fix", () => {
   };
 
   beforeAll(async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-security-fix-suite-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-security-fix-suite-"));
   });
 
   afterAll(async () => {
@@ -227,7 +227,7 @@ describe("security fix", () => {
     const stateDir = await createStateDir("invalid-config");
     await fs.chmod(stateDir, 0o755);
 
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "quiet-core-bot.json");
     await fs.writeFile(configPath, "{ this is not json }\n", "utf-8");
     await fs.chmod(configPath, 0o644);
 
@@ -248,7 +248,7 @@ describe("security fix", () => {
     await fs.writeFile(includePath, "{ logging: { redactSensitive: 'off' } }\n", "utf-8");
     await fs.chmod(includePath, 0o644);
 
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "quiet-core-bot.json");
     await fs.writeFile(
       configPath,
       `{ "$include": "./includes/extra.json5", channels: { whatsapp: { groupPolicy: "open" } } }\n`,
@@ -268,7 +268,7 @@ describe("security fix", () => {
 
     const agentDir = path.join(stateDir, "agents", "main", "agent");
     await fs.mkdir(agentDir, { recursive: true });
-    const authDatabasePath = path.join(agentDir, "openclaw-agent.sqlite");
+    const authDatabasePath = path.join(agentDir, "quiet-core-bot-agent.sqlite");
     await fs.writeFile(authDatabasePath, "sqlite\n", "utf-8");
     await fs.writeFile(`${authDatabasePath}-wal`, "wal\n", "utf-8");
     await fs.writeFile(`${authDatabasePath}-shm`, "shm\n", "utf-8");

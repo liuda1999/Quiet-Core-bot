@@ -1,9 +1,9 @@
 // Gateway RPC call helper.
 // Builds a GatewayClient, resolves auth/scopes, and performs one request.
 import { randomUUID } from "node:crypto";
-import { isLoopbackIpAddress } from "@openclaw/net-policy/ip";
-import { redactSensitiveUrlLikeString } from "@openclaw/net-policy/redact-sensitive-url";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { isLoopbackIpAddress } from "@quiet-core/net-policy/ip";
+import { redactSensitiveUrlLikeString } from "@quiet-core/net-policy/redact-sensitive-url";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import {
   GATEWAY_CLIENT_MODES,
   GATEWAY_CLIENT_NAMES,
@@ -20,7 +20,7 @@ import {
   resolveGatewayPort as resolveGatewayPortFromPaths,
   resolveStateDir as resolveStateDirFromPaths,
 } from "../config/paths.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { loadDeviceAuthToken } from "../infra/device-auth-store.js";
 import { loadOrCreateDeviceIdentity, type DeviceIdentity } from "../infra/device-identity.js";
 import { loadGatewayTlsRuntime } from "../infra/tls/gateway.js";
@@ -100,7 +100,7 @@ type CallGatewayBaseOptions = {
   configPath?: string;
   /**
    * Explicit local gateway port for command-line overrides such as `gateway health --port`.
-   * Bypasses OPENCLAW_GATEWAY_URL and OPENCLAW_GATEWAY_PORT for this call only.
+   * Bypasses QUIET_CORE_GATEWAY_URL and QUIET_CORE_GATEWAY_PORT for this call only.
    */
   localPortOverride?: number;
 };
@@ -659,8 +659,8 @@ function resolveGatewayCallTimeout(
     Number.isFinite(configuredHandshakeTimeoutMs) &&
     configuredHandshakeTimeoutMs > 0;
   const hasEnvHandshakeTimeout =
-    Boolean(process.env.OPENCLAW_HANDSHAKE_TIMEOUT_MS) ||
-    Boolean(process.env.VITEST && process.env.OPENCLAW_TEST_HANDSHAKE_TIMEOUT_MS);
+    Boolean(process.env.QUIET_CORE_HANDSHAKE_TIMEOUT_MS) ||
+    Boolean(process.env.VITEST && process.env.QUIET_CORE_TEST_HANDSHAKE_TIMEOUT_MS);
   const resolvedHandshakeTimeoutMs =
     hasConfiguredHandshakeTimeout || hasEnvHandshakeTimeout
       ? resolvePreauthHandshakeTimeoutMs({ configuredTimeoutMs: configuredHandshakeTimeoutMs })
@@ -683,7 +683,7 @@ async function resolveGatewayCallContext(
   const envUrlOverride =
     cliUrlOverride || opts.localPortOverride !== undefined
       ? undefined
-      : trimToUndefined(process.env.OPENCLAW_GATEWAY_URL);
+      : trimToUndefined(process.env.QUIET_CORE_GATEWAY_URL);
   const urlOverride = cliUrlOverride ?? envUrlOverride;
   const urlOverrideSource = cliUrlOverride ? "cli" : envUrlOverride ? "env" : undefined;
   const canSkipConfigLoad = canSkipGatewayConfigLoad({

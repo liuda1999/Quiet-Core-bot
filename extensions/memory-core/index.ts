@@ -5,14 +5,14 @@ import {
   resolveSessionAgentIds,
   type MemoryPluginRuntime,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/memory-core-host-runtime-core";
-import { resolveMemoryBackendConfig } from "openclaw/plugin-sdk/memory-core-host-runtime-files";
+} from "quiet-core-bot/plugin-sdk/memory-core-host-runtime-core";
+import { resolveMemoryBackendConfig } from "quiet-core-bot/plugin-sdk/memory-core-host-runtime-files";
 import {
   definePluginEntry,
   type AnyAgentTool,
   type OpenClawPluginToolContext,
-} from "openclaw/plugin-sdk/plugin-entry";
-import type { OpenKeyedStoreOptions } from "openclaw/plugin-sdk/plugin-state-runtime";
+} from "quiet-core-bot/plugin-sdk/plugin-entry";
+import type { OpenKeyedStoreOptions } from "quiet-core-bot/plugin-sdk/plugin-state-runtime";
 import type { TSchema } from "typebox";
 import { configureMemoryCoreDreamingState } from "./src/dreaming-state.js";
 import { registerShortTermPromotionDreaming } from "./src/dreaming.js";

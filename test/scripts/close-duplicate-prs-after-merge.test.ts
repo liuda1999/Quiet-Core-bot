@@ -27,7 +27,7 @@ function pr(params: {
     number: params.number,
     state: params.state ?? "OPEN",
     title: params.title ?? `PR ${params.number}`,
-    url: `https://github.com/openclaw/openclaw/pull/${params.number}`,
+    url: `https://github.com/liuda1999/Quiet-Core-bot/pull/${params.number}`,
   };
 }
 
@@ -75,14 +75,14 @@ diff --git a/b.ts b/b.ts
       candidates: [candidate],
       diffs,
       landed,
-      repo: "openclaw/openclaw",
+      repo: "liuda1999/quiet-core-bot",
     });
 
     expect(plan).toStrictEqual([
       {
         action: "close",
         candidate,
-        comment: `Thanks for the fix. This is now covered by the landed #70532 / commit https://github.com/openclaw/openclaw/commit/6415e35.
+        comment: `Thanks for the fix. This is now covered by the landed #70532 / commit https://github.com/liuda1999/Quiet-Core-bot/commit/6415e35.
 
 Evidence: overlapping changed hunks; shared file(s): ui/src/ui/chat/grouped-render.ts.
 
@@ -122,13 +122,13 @@ Closing #70530 as a duplicate.`,
       candidates: [candidate],
       diffs,
       landed,
-      repo: "openclaw/openclaw",
+      repo: "liuda1999/quiet-core-bot",
     });
 
     expect(plan[0]).toStrictEqual({
       action: "close",
       candidate,
-      comment: `Thanks for the fix. This is now covered by the landed #70532 / commit https://github.com/openclaw/openclaw/commit/6415e35.
+      comment: `Thanks for the fix. This is now covered by the landed #70532 / commit https://github.com/liuda1999/Quiet-Core-bot/commit/6415e35.
 
 Evidence: shared issue(s): #70491; shared file(s): ui/src/ui/chat/grouped-render.ts.
 
@@ -160,7 +160,7 @@ Closing #70592 as a duplicate.`,
         candidates: [candidate],
         diffs,
         landed,
-        repo: "openclaw/openclaw",
+        repo: "liuda1999/quiet-core-bot",
       }),
     ).toThrow("Refusing to close #1");
   });
@@ -169,7 +169,7 @@ Closing #70592 as a duplicate.`,
     const calls: string[][] = [];
     const responses = new Map<string, string>([
       [
-        "pr view 70532 --repo openclaw/openclaw --json number,title,body,state,mergedAt,mergeCommit,closingIssuesReferences,files,url",
+        "pr view 70532 --repo liuda1999/quiet-core-bot --json number,title,body,state,mergedAt,mergeCommit,closingIssuesReferences,files,url",
         JSON.stringify(
           pr({
             body: "Fixes #70491",
@@ -181,15 +181,15 @@ Closing #70592 as a duplicate.`,
         ),
       ],
       [
-        "pr view 70592 --repo openclaw/openclaw --json number,title,body,state,mergedAt,mergeCommit,closingIssuesReferences,files,url",
+        "pr view 70592 --repo liuda1999/quiet-core-bot --json number,title,body,state,mergedAt,mergeCommit,closingIssuesReferences,files,url",
         JSON.stringify(pr({ body: "Closes #70491", number: 70592 })),
       ],
       [
-        "pr diff 70532 --repo openclaw/openclaw --color=never",
+        "pr diff 70532 --repo liuda1999/quiet-core-bot --color=never",
         "diff --git a/ui/src/ui/chat/grouped-render.ts b/ui/src/ui/chat/grouped-render.ts\n@@ -402,8 +402,11 @@",
       ],
       [
-        "pr diff 70592 --repo openclaw/openclaw --color=never",
+        "pr diff 70592 --repo liuda1999/quiet-core-bot --color=never",
         "diff --git a/ui/src/ui/chat/grouped-render.ts b/ui/src/ui/chat/grouped-render.ts\n@@ -286,8 +286,11 @@",
       ],
     ]);
@@ -204,7 +204,7 @@ Closing #70592 as a duplicate.`,
     };
 
     const args = parseArgs(["--landed-pr", "70532", "--duplicates", "70592"], {
-      GITHUB_REPOSITORY: "openclaw/openclaw",
+      GITHUB_REPOSITORY: "liuda1999/quiet-core-bot",
     });
     const plan = runDuplicateCloseWorkflow(args, runGh);
 
@@ -229,7 +229,7 @@ Closing #70592 as a duplicate.`,
           evidence: { overlappingHunks: false, sharedFiles: [], sharedIssues: [70491] },
         },
       ],
-      repo: "openclaw/openclaw",
+      repo: "liuda1999/quiet-core-bot",
       runGh: (args: string[]) => {
         calls.push(args);
         return "";
@@ -242,14 +242,14 @@ Closing #70592 as a duplicate.`,
         "edit",
         "70592",
         "--repo",
-        "openclaw/openclaw",
+        "liuda1999/quiet-core-bot",
         "--add-label",
         "duplicate",
         "--add-label",
         "close:duplicate",
       ],
-      ["pr", "comment", "70592", "--repo", "openclaw/openclaw", "--body", "closing"],
-      ["pr", "close", "70592", "--repo", "openclaw/openclaw"],
+      ["pr", "comment", "70592", "--repo", "liuda1999/quiet-core-bot", "--body", "closing"],
+      ["pr", "close", "70592", "--repo", "liuda1999/quiet-core-bot"],
     ]);
   });
 });

@@ -1,7 +1,7 @@
 // Registers plugin-related CLI commands.
 import type { Command } from "commander";
 import { getRuntimeConfig, readConfigFileSnapshot } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   createPluginCliLogger,
   loadPluginCliDescriptors,
@@ -22,7 +22,7 @@ type PluginCliRegistrationEntries = Awaited<
   ReturnType<typeof loadPluginCliRegistrationEntriesWithDefaults>
 >;
 
-const PLUGIN_CLI_ENTRIES_CACHE_KEY = Symbol.for("openclaw.plugin-cli-registration-entries-cache");
+const PLUGIN_CLI_ENTRIES_CACHE_KEY = Symbol.for("quiet-core-bot.plugin-cli-registration-entries-cache");
 
 interface ProgramWithEntriesCache {
   [PLUGIN_CLI_ENTRIES_CACHE_KEY]?: {

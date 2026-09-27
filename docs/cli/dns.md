@@ -2,7 +2,7 @@
 summary: "CLI reference for `quiet-core-bot dns` (wide-area discovery helpers)"
 read_when:
   - You want wide-area discovery (DNS-SD) via Tailscale + CoreDNS
-  - You're setting up split DNS for a custom discovery domain (example: openclaw.internal)
+  - You're setting up split DNS for a custom discovery domain (example: quiet-core-bot.internal)
 title: "DNS"
 ---
 
@@ -19,7 +19,7 @@ Related:
 
 ```bash
 quiet-core-bot dns setup
-quiet-core-bot dns setup --domain openclaw.internal
+quiet-core-bot dns setup --domain quiet-core-bot.internal
 quiet-core-bot dns setup --apply
 ```
 
@@ -29,7 +29,7 @@ Plan or apply CoreDNS setup for unicast DNS-SD discovery.
 
 Options:
 
-- `--domain <domain>`: wide-area discovery domain (for example `openclaw.internal`)
+- `--domain <domain>`: wide-area discovery domain (for example `quiet-core-bot.internal`)
 - `--apply`: install or update CoreDNS config and restart the service (requires sudo; macOS only)
 
 What it shows:

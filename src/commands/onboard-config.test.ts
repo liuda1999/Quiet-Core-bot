@@ -47,7 +47,7 @@ describe("applyLocalSetupWorkspaceConfig", () => {
     expect(result.tools?.profile).toBe("full");
   });
 
-  it("preserves agents.list and bindings on onboard rerun (openclaw#84692)", () => {
+  it("preserves agents.list and bindings on onboard rerun (quiet-core-bot#84692)", () => {
     const baseConfig: OpenClawConfig = {
       agents: {
         list: [

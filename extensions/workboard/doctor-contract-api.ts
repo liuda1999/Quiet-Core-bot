@@ -2,7 +2,7 @@
 import type {
   PluginDoctorStateMigration,
   PluginDoctorStateMigrationContext,
-} from "openclaw/plugin-sdk/runtime-doctor";
+} from "quiet-core-bot/plugin-sdk/runtime-doctor";
 import type {
   PersistedWorkboardAttachment,
   PersistedWorkboardBoard,
@@ -15,7 +15,7 @@ import { createWorkboardSqliteStores, resolveWorkboardSqlitePath } from "./src/s
 const MAX_CARDS = 2000;
 
 function migrationEnv(params: { env: NodeJS.ProcessEnv; stateDir: string }): NodeJS.ProcessEnv {
-  return { ...params.env, OPENCLAW_STATE_DIR: params.stateDir };
+  return { ...params.env, QUIET_CORE_STATE_DIR: params.stateDir };
 }
 
 function openLegacyStore<T>(params: {

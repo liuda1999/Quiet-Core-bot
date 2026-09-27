@@ -146,7 +146,7 @@ describe("install.ps1 failure handling", () => {
       'Invoke-CorepackCommand -Arguments @("prepare", $pnpmSpec, "--activate")',
     );
     expect(ensurePnpmBody).toContain('Invoke-NpmCommand -Arguments @("install", "-g", $pnpmSpec)');
-    expect(mainBody).toContain('Invoke-NpmCommand -Arguments @("uninstall", "-g", "openclaw")');
+    expect(mainBody).toContain('Invoke-NpmCommand -Arguments @("uninstall", "-g", "quiet-core-bot")');
     expect(mainBody).toContain(
       'Invoke-NpmCommand -Arguments @("list", "-g", "--depth", "0", "--json")',
     );
@@ -156,7 +156,7 @@ describe("install.ps1 failure handling", () => {
     const npmInstallBody = extractFunctionBody(source, "Install-OpenClaw");
     const sourceTargetBody = extractFunctionBody(source, "Test-OpenClawSourcePackageInstallSpec");
     expect(sourceTargetBody).toContain('$normalizedTag -eq "main"');
-    expect(sourceTargetBody).toContain("^github:openclaw/openclaw");
+    expect(sourceTargetBody).toContain("^github:liuda1999/quiet-core-bot");
     expect(npmInstallBody).toContain("Test-OpenClawSourcePackageInstallSpec -RequestedTag $Tag");
     expect(npmInstallBody).toContain("npm installs do not support OpenClaw GitHub source targets");
     expect(npmInstallBody).toContain("-InstallMethod git -Tag main");
@@ -273,7 +273,7 @@ describe("install.ps1 failure handling", () => {
   });
 
   runIfPowerShell("selects native ARM64 MinGit when the release publishes it", () => {
-    const tempDir = harness.createTempDir("openclaw-install-ps1-");
+    const tempDir = harness.createTempDir("quiet-core-bot-install-ps1-");
     const scriptPath = join(tempDir, "install.ps1");
     const scriptWithoutEntryPoint = source.replace(ENTRYPOINT_RE, "");
     writeFileSync(
@@ -315,7 +315,7 @@ describe("install.ps1 failure handling", () => {
   });
 
   runIfPowerShell("selects native ARM64 downloads when x64 PowerShell is emulated", () => {
-    const tempDir = harness.createTempDir("openclaw-install-ps1-");
+    const tempDir = harness.createTempDir("quiet-core-bot-install-ps1-");
     const scriptPath = join(tempDir, "install.ps1");
     const scriptWithoutEntryPoint = source.replace(ENTRYPOINT_RE, "");
     writeFileSync(
@@ -483,7 +483,7 @@ describe("install.ps1 failure handling", () => {
   });
 
   runIfPowerShell("fails install when interactive onboarding exits non-zero", () => {
-    const tempDir = harness.createTempDir("openclaw-install-ps1-");
+    const tempDir = harness.createTempDir("quiet-core-bot-install-ps1-");
     const scriptPath = join(tempDir, "install.ps1");
     const scriptWithoutEntryPoint = source.replace(ENTRYPOINT_RE, "");
     writeFileSync(
@@ -524,12 +524,12 @@ describe("install.ps1 failure handling", () => {
 
     expect(result.status).toBe(1);
     expect(`${result.stdout}\n${result.stderr}`).toContain(
-      "openclaw onboard failed with exit code 17",
+      "quiet-core-bot onboard failed with exit code 17",
     );
   });
 
   runIfPowerShell("exits non-zero when run as a script file", () => {
-    const tempDir = harness.createTempDir("openclaw-install-ps1-");
+    const tempDir = harness.createTempDir("quiet-core-bot-install-ps1-");
     const scriptPath = join(tempDir, "install.ps1");
     writeFileSync(scriptPath, createFailingNodeFixture(source));
     chmodSync(scriptPath, 0o755);
@@ -547,7 +547,7 @@ describe("install.ps1 failure handling", () => {
   });
 
   runIfPowerShell("throws without killing the caller when run as a scriptblock", () => {
-    const tempDir = harness.createTempDir("openclaw-install-ps1-");
+    const tempDir = harness.createTempDir("quiet-core-bot-install-ps1-");
     const scriptPath = join(tempDir, "install.ps1");
     writeFileSync(scriptPath, createFailingNodeFixture(source));
     chmodSync(scriptPath, 0o755);
@@ -568,7 +568,7 @@ describe("install.ps1 failure handling", () => {
   });
 
   runIfPowerShell("treats noisy Git install false as failure", () => {
-    const tempDir = harness.createTempDir("openclaw-install-ps1-");
+    const tempDir = harness.createTempDir("quiet-core-bot-install-ps1-");
     const scriptPath = join(tempDir, "install.ps1");
     const scriptWithoutEntryPoint = source.replace(ENTRYPOINT_RE, "");
     writeFileSync(
@@ -587,7 +587,7 @@ describe("install.ps1 failure handling", () => {
         "}",
         "function Ensure-OpenClawOnPath { throw 'should not continue after failed git install' }",
         "$InstallMethod = 'git'",
-        "$GitDir = 'C:\\\\openclaw-test'",
+        "$GitDir = 'C:\\\\quiet-core-bot-test'",
         "$NoOnboard = $true",
         "$result = Main",
         'if ($result -ne $false) { throw "Main returned $result" }',
@@ -609,7 +609,7 @@ describe("install.ps1 failure handling", () => {
   });
 
   runIfPowerShell("preserves larger old-space NODE_OPTIONS aliases", () => {
-    const tempDir = harness.createTempDir("openclaw-install-ps1-");
+    const tempDir = harness.createTempDir("quiet-core-bot-install-ps1-");
     const scriptPath = join(tempDir, "install.ps1");
     const scriptWithoutEntryPoint = source.replace(ENTRYPOINT_RE, "");
     writeFileSync(
@@ -644,7 +644,7 @@ describe("install.ps1 failure handling", () => {
   });
 
   runIfPowerShell("keeps npm chatter out of Main's success return value", () => {
-    const tempDir = harness.createTempDir("openclaw-install-ps1-");
+    const tempDir = harness.createTempDir("quiet-core-bot-install-ps1-");
     const scriptPath = join(tempDir, "install.ps1");
     const scriptWithoutEntryPoint = source.replace(ENTRYPOINT_RE, "");
     writeFileSync(
@@ -684,7 +684,7 @@ describe("install.ps1 failure handling", () => {
   });
 
   runIfPowerShell("uses Main's final boolean result when helper output precedes success", () => {
-    const tempDir = harness.createTempDir("openclaw-install-ps1-");
+    const tempDir = harness.createTempDir("quiet-core-bot-install-ps1-");
     const scriptPath = join(tempDir, "install.ps1");
     const scriptWithoutEntryPoint = source.replace(ENTRYPOINT_RE, "");
     writeFileSync(

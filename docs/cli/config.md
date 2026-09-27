@@ -9,7 +9,7 @@ sidebarTitle: "Config"
 Config helpers for non-interactive edits in `quiet-core-bot.json`: get/set/patch/unset/file/schema/validate values by path and print the active config file. Run without a subcommand to open the configure wizard (same as `quiet-core-bot configure`).
 
 <Note>
-When `OPENCLAW_NIX_MODE=1`, Quiet Core bot treats `quiet-core-bot.json` as immutable. Read-only commands such as `config get`, `config file`, `config schema`, and `config validate` still work, but config writers refuse. Agents should edit the Nix source for the install instead; for the first-party nix-openclaw distribution, use [nix-openclaw Quick Start](https://github.com/openclaw/nix-openclaw#quick-start) and set values under `programs.openclaw.config` or `instances.<name>.config`.
+When `QUIET_CORE_NIX_MODE=1`, Quiet Core bot treats `quiet-core-bot.json` as immutable. Read-only commands such as `config get`, `config file`, `config schema`, and `config validate` still work, but config writers refuse. Agents should edit the Nix source for the install instead; for the first-party nix-openclaw distribution, use [nix-openclaw Quick Start](https://github.com/openclaw/nix-openclaw#quick-start) and set values under `programs.quiet-core-bot.config` or `instances.<name>.config`.
 </Note>
 
 ## Root options
@@ -34,8 +34,8 @@ quiet-core-bot config set agents.defaults.heartbeat.every "2h"
 quiet-core-bot config set 'agents.list[0].tools.exec.node' "node-id-or-name"
 quiet-core-bot config set agents.defaults.models '{"openai/gpt-5.4":{}}' --strict-json --merge
 quiet-core-bot config set channels.discord.token --ref-provider default --ref-source env --ref-id DISCORD_BOT_TOKEN
-quiet-core-bot config set secrets.providers.vaultfile --provider-source file --provider-path /etc/openclaw/secrets.json --provider-mode json
-quiet-core-bot config patch --file ./openclaw.patch.json5 --dry-run
+quiet-core-bot config set secrets.providers.vaultfile --provider-source file --provider-path /etc/quiet-core-bot/secrets.json --provider-mode json
+quiet-core-bot config patch --file ./quiet-core-bot.patch.json5 --dry-run
 quiet-core-bot config unset plugins.entries.brave.config.webSearch.apiKey
 quiet-core-bot config set channels.discord.token --ref-provider default --ref-source env --ref-id DISCORD_BOT_TOKEN --dry-run
 quiet-core-bot config validate
@@ -68,7 +68,7 @@ quiet-core-bot config schema
 Pipe it into a file when you want to inspect or validate it with other tools:
 
 ```bash
-quiet-core-bot config schema > openclaw.schema.json
+quiet-core-bot config schema > quiet-core-bot.schema.json
 ```
 
 ### Paths
@@ -136,7 +136,7 @@ Use `--replace` only when you intentionally want the provided value to become th
     ```bash
     quiet-core-bot config set secrets.providers.vault \
       --provider-source exec \
-      --provider-command /usr/local/bin/openclaw-vault \
+      --provider-command /usr/local/bin/quiet-core-bot-vault \
       --provider-arg read \
       --provider-arg openai/api-key \
       --provider-timeout-ms 5000
@@ -175,15 +175,15 @@ Batch parsing always uses the batch payload (`--batch-json`/`--batch-file`) as t
 Use `config patch` when you want to paste or pipe a config-shaped patch instead of running many path-based `config set` commands. The input is a JSON5 object. Objects merge recursively, arrays and scalar values replace the target value, and `null` deletes the target path.
 
 ```bash
-quiet-core-bot config patch --file ./openclaw.patch.json5 --dry-run
-quiet-core-bot config patch --file ./openclaw.patch.json5
+quiet-core-bot config patch --file ./quiet-core-bot.patch.json5 --dry-run
+quiet-core-bot config patch --file ./quiet-core-bot.patch.json5
 ```
 
 You can also pipe a patch over stdin, which is useful for remote setup scripts:
 
 ```bash
-ssh openclaw-host 'quiet-core-bot config patch --stdin --dry-run' < ./openclaw.patch.json5
-ssh openclaw-host 'quiet-core-bot config patch --stdin' < ./openclaw.patch.json5
+ssh quiet-core-bot-host 'quiet-core-bot config patch --stdin --dry-run' < ./quiet-core-bot.patch.json5
+ssh quiet-core-bot-host 'quiet-core-bot config patch --stdin' < ./quiet-core-bot.patch.json5
 ```
 
 Example patch:
@@ -234,7 +234,7 @@ quiet-core-bot config set channels.discord.token \
   --strict-json
 
 quiet-core-bot config set secrets.providers.vaultfile \
-  '{"source":"file","path":"/etc/openclaw/secrets.json","mode":"json"}' \
+  '{"source":"file","path":"/etc/quiet-core-bot/secrets.json","mode":"json"}' \
   --strict-json
 ```
 
@@ -279,7 +279,7 @@ Hardened exec provider example:
 ```bash
 quiet-core-bot config set secrets.providers.vault \
   --provider-source exec \
-  --provider-command /usr/local/bin/openclaw-vault \
+  --provider-command /usr/local/bin/quiet-core-bot-vault \
   --provider-arg read \
   --provider-arg openai/api-key \
   --provider-json-only \
@@ -424,7 +424,7 @@ quiet-core-bot config set channels.discord.token \
 `quiet-core-bot config set` and other Quiet Core bot-owned config writers validate the full post-change config before committing it to disk. If the new payload fails schema validation or looks like a destructive clobber, the active config is left alone and the rejected payload is saved beside it as `quiet-core-bot.json.rejected.*`.
 
 <Warning>
-The active config path must be a regular file. Symlinked `quiet-core-bot.json` layouts are unsupported for writes; use `OPENCLAW_CONFIG_PATH` to point directly at the real file instead.
+The active config path must be a regular file. Symlinked `quiet-core-bot.json` layouts are unsupported for writes; use `QUIET_CORE_CONFIG_PATH` to point directly at the real file instead.
 </Warning>
 
 Prefer CLI writes for small edits:
@@ -449,7 +449,7 @@ Whole-file recovery is reserved for doctor repair. Plugin schema changes or `min
 
 ## Subcommands
 
-- `config file`: Print the active config file path (resolved from `OPENCLAW_CONFIG_PATH` or default location). The path should name a regular file, not a symlink.
+- `config file`: Print the active config file path (resolved from `QUIET_CORE_CONFIG_PATH` or default location). The path should name a regular file, not a symlink.
 
 Restart the gateway after edits.
 
@@ -465,11 +465,11 @@ quiet-core-bot config validate --json
 After `quiet-core-bot config validate` is passing, you can use the local TUI to have an embedded agent compare the active config against the docs while you validate each change from the same terminal:
 
 <Note>
-If validation is already failing, start with `quiet-core-bot configure` or `quiet-core-bot doctor --fix`. `openclaw chat` does not bypass the invalid-config guard.
+If validation is already failing, start with `quiet-core-bot configure` or `quiet-core-bot doctor --fix`. `quiet-core-bot chat` does not bypass the invalid-config guard.
 </Note>
 
 ```bash
-openclaw chat
+quiet-core-bot chat
 ```
 
 Then inside the TUI:

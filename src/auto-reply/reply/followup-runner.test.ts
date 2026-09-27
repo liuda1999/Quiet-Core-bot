@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { DELIVERY_NO_REPLY_RUNTIME_CONTRACT } from "openclaw/plugin-sdk/agent-runtime-test-contracts";
+import { DELIVERY_NO_REPLY_RUNTIME_CONTRACT } from "quiet-core-bot/plugin-sdk/agent-runtime-test-contracts";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { setCliSessionBinding } from "../../agents/cli-session.js";
 import type { OpenClawConfig } from "../../config/config.js";
@@ -44,7 +44,7 @@ let replyRunRegistryForTest: typeof import("./reply-run-registry.js").replyRunRe
 let replyRunTestingForTest: typeof import("./reply-run-registry.js").testing;
 let cliBackendsTestingForTest: typeof import("../../agents/cli-backends.js").testing;
 let setReplyPayloadMetadataForTest: typeof import("../reply-payload.js").setReplyPayloadMetadata;
-const FOLLOWUP_DEBUG = process.env.OPENCLAW_DEBUG_FOLLOWUP_RUNNER_TEST === "1";
+const FOLLOWUP_DEBUG = process.env.QUIET_CORE_DEBUG_FOLLOWUP_RUNNER_TEST === "1";
 const FOLLOWUP_TEST_QUEUES = new Map<
   string,
   {
@@ -1204,7 +1204,7 @@ describe("createFollowupRunner runtime config", () => {
         },
       },
     };
-    const storePath = "/tmp/openclaw-followup-room-event-cli.json";
+    const storePath = "/tmp/quiet-core-bot-followup-room-event-cli.json";
     const sessionEntry: SessionEntry = {
       sessionId: "session-cli-room-event",
       updatedAt: Date.now(),
@@ -2685,7 +2685,7 @@ describe("createFollowupRunner progress forwarding", () => {
 
   it("suppresses queued follow-up progress when verbose progress is disabled", async () => {
     const storePath = path.join(
-      await fs.mkdtemp(path.join(tmpdir(), "openclaw-followup-progress-off-")),
+      await fs.mkdtemp(path.join(tmpdir(), "quiet-core-bot-followup-progress-off-")),
       "sessions.json",
     );
     const sessionEntry: SessionEntry = {
@@ -3057,7 +3057,7 @@ describe("createFollowupRunner progress forwarding", () => {
 describe("createFollowupRunner compaction", () => {
   it("adds verbose auto-compaction notice and tracks count", async () => {
     const storePath = path.join(
-      await fs.mkdtemp(path.join(tmpdir(), "openclaw-compaction-")),
+      await fs.mkdtemp(path.join(tmpdir(), "quiet-core-bot-compaction-")),
       "sessions.json",
     );
     const sessionEntry: SessionEntry = {
@@ -3102,7 +3102,7 @@ describe("createFollowupRunner compaction", () => {
 
   it("suppresses queued auto-compaction notice when verbose is turned off", async () => {
     const storePath = path.join(
-      await fs.mkdtemp(path.join(tmpdir(), "openclaw-compaction-quiet-")),
+      await fs.mkdtemp(path.join(tmpdir(), "quiet-core-bot-compaction-quiet-")),
       "sessions.json",
     );
     const sessionEntry: SessionEntry = {
@@ -3147,7 +3147,7 @@ describe("createFollowupRunner compaction", () => {
 
   it("tracks auto-compaction from embedded result metadata even when no compaction event is emitted", async () => {
     const storePath = path.join(
-      await fs.mkdtemp(path.join(tmpdir(), "openclaw-compaction-meta-")),
+      await fs.mkdtemp(path.join(tmpdir(), "quiet-core-bot-compaction-meta-")),
       "sessions.json",
     );
     const sessionEntry: SessionEntry = {
@@ -3203,7 +3203,7 @@ describe("createFollowupRunner compaction", () => {
 
   it("refreshes queued followup runs to the rotated transcript", async () => {
     const storePath = path.join(
-      await fs.mkdtemp(path.join(tmpdir(), "openclaw-compaction-queue-")),
+      await fs.mkdtemp(path.join(tmpdir(), "quiet-core-bot-compaction-queue-")),
       "sessions.json",
     );
     const sessionEntry: SessionEntry = {
@@ -3266,7 +3266,7 @@ describe("createFollowupRunner compaction", () => {
 
   it("does not count failed compaction end events in followup runs", async () => {
     const storePath = path.join(
-      await fs.mkdtemp(path.join(tmpdir(), "openclaw-compaction-failed-")),
+      await fs.mkdtemp(path.join(tmpdir(), "quiet-core-bot-compaction-failed-")),
       "sessions.json",
     );
     const sessionEntry: SessionEntry = {
@@ -3321,7 +3321,7 @@ describe("createFollowupRunner compaction", () => {
   });
 
   it("injects the post-compaction refresh prompt before followup runs after preflight compaction", async () => {
-    const workspaceDir = await fs.mkdtemp(path.join(tmpdir(), "openclaw-preflight-followup-"));
+    const workspaceDir = await fs.mkdtemp(path.join(tmpdir(), "quiet-core-bot-preflight-followup-"));
     const storePath = path.join(workspaceDir, "sessions.json");
     const transcriptPath = path.join(workspaceDir, "session.jsonl");
     await fs.writeFile(
@@ -3706,7 +3706,7 @@ describe("createFollowupRunner messaging delivery and dedupe", () => {
   }
 
   it("persists usage even when replies are suppressed", async () => {
-    const storePath = "/tmp/openclaw-followup-usage.json";
+    const storePath = "/tmp/quiet-core-bot-followup-usage.json";
     const sessionKey = "main";
     const sessionEntry: SessionEntry = { sessionId: "session", updatedAt: Date.now() };
     const sessionStore: Record<string, SessionEntry> = { [sessionKey]: sessionEntry };
@@ -3763,7 +3763,7 @@ describe("createFollowupRunner messaging delivery and dedupe", () => {
   });
 
   it("passes queued config into usage persistence during drained followups", async () => {
-    const storePath = "/tmp/openclaw-followup-usage-cfg.json";
+    const storePath = "/tmp/quiet-core-bot-followup-usage-cfg.json";
     const sessionKey = "main";
     const sessionEntry: SessionEntry = { sessionId: "session", updatedAt: Date.now() };
     const sessionStore: Record<string, SessionEntry> = { [sessionKey]: sessionEntry };
@@ -3814,7 +3814,7 @@ describe("createFollowupRunner messaging delivery and dedupe", () => {
   });
 
   it("uses providerUsed for snapshot freshness when agent metadata overrides the run provider", async () => {
-    const storePath = "/tmp/openclaw-followup-usage-provider.json";
+    const storePath = "/tmp/quiet-core-bot-followup-usage-provider.json";
     const sessionKey = "main";
     const sessionEntry: SessionEntry = { sessionId: "session", updatedAt: Date.now() };
     const sessionStore: Record<string, SessionEntry> = { [sessionKey]: sessionEntry };
@@ -3867,7 +3867,7 @@ describe("createFollowupRunner messaging delivery and dedupe", () => {
   });
 
   it("preserves user-facing session model state for queued internal announce fallback", async () => {
-    const storePath = "/tmp/openclaw-followup-internal-announce-usage.json";
+    const storePath = "/tmp/quiet-core-bot-followup-internal-announce-usage.json";
     const sessionKey = "main";
     const sessionEntry: SessionEntry = {
       sessionId: "session",

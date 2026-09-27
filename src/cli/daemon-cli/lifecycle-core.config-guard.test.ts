@@ -13,7 +13,7 @@ const readConfigFileSnapshotMock = vi.fn();
 const loadConfig = vi.fn(() => ({}));
 const newerConfigHints = [
   "Run the newer quiet-core-bot binary on PATH, or reinstall the intended gateway service from the newer install.",
-  "Set OPENCLAW_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS=1 only for an intentional downgrade or recovery action.",
+  "Set QUIET_CORE_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS=1 only for an intentional downgrade or recovery action.",
 ];
 const newerConfigHintItems = newerConfigHints.map((text) => ({ kind: "generic", text }));
 const invalidConfigRecoveryHint = [

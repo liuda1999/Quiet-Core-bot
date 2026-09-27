@@ -227,7 +227,7 @@ and still be Quiet Core bot-originated operational output.
 ```typescript
 type MessageOrigin =
   | {
-      source: "openclaw";
+      source: "quiet-core-bot";
       schemaVersion: 1;
       kind: "gateway_failure";
       code: "agent_failed_before_reply" | "missing_api_key" | "model_login_expired";
@@ -351,7 +351,7 @@ function shouldDropOpenClawEcho(params: {
   return (
     params.isBotAuthor &&
     params.isRoomish &&
-    params.origin?.source === "openclaw" &&
+    params.origin?.source === "quiet-core-bot" &&
     params.origin.kind === "gateway_failure" &&
     params.origin.echoPolicy === "drop_bot_room_echo"
   );
@@ -557,7 +557,7 @@ This should cover current behavior:
 The public SDK target should be one subpath:
 
 ```typescript
-import { defineChannelMessageAdapter } from "openclaw/plugin-sdk/channel-outbound";
+import { defineChannelMessageAdapter } from "quiet-core-bot/plugin-sdk/channel-outbound";
 ```
 
 Target shape:
@@ -948,7 +948,7 @@ Core policy:
 
 ### Phase 6: Public SDK
 
-- Add `openclaw/plugin-sdk/channel-outbound`.
+- Add `quiet-core-bot/plugin-sdk/channel-outbound`.
 - Document it as the preferred channel plugin API.
 - Update package exports, entrypoint inventory, generated API baselines, and
   plugin SDK docs.

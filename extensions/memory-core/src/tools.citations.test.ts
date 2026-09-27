@@ -3,8 +3,8 @@ import fs from "node:fs/promises";
 import {
   clearMemoryPluginState,
   registerMemoryCorpusSupplement,
-} from "openclaw/plugin-sdk/memory-host-core";
-import { readMemoryHostEvents } from "openclaw/plugin-sdk/memory-host-events";
+} from "quiet-core-bot/plugin-sdk/memory-host-core";
+import { readMemoryHostEvents } from "quiet-core-bot/plugin-sdk/memory-host-events";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   getMemoryCloseMockCalls,

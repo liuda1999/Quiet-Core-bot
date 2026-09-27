@@ -14,7 +14,7 @@ This endpoint is **disabled by default**. Enable it in config first.
 - Same port as the Gateway (WS + HTTP multiplex): `http://<gateway-host>:<port>/v1/responses`
 
 Under the hood, requests are executed as a normal Gateway agent run (same codepath as
-`openclaw agent`), so routing/permissions/config match your Gateway.
+`quiet-core-bot agent`), so routing/permissions/config match your Gateway.
 
 ## Authentication, security, and routing
 
@@ -23,27 +23,27 @@ Operational behavior matches [OpenAI Chat Completions](/gateway/openai-http-api)
 - use the matching Gateway HTTP auth path:
   - shared-secret auth (`gateway.auth.mode="token"` or `"password"`): `Authorization: Bearer <token-or-password>`
   - trusted-proxy auth (`gateway.auth.mode="trusted-proxy"`): identity-aware proxy headers from a configured trusted proxy source; same-host loopback proxies require explicit `gateway.auth.trustedProxy.allowLoopback = true`
-  - trusted-proxy local direct fallback: same-host callers with no `Forwarded`, `X-Forwarded-*`, or `X-Real-IP` headers can use `gateway.auth.password` / `OPENCLAW_GATEWAY_PASSWORD`
+  - trusted-proxy local direct fallback: same-host callers with no `Forwarded`, `X-Forwarded-*`, or `X-Real-IP` headers can use `gateway.auth.password` / `QUIET_CORE_GATEWAY_PASSWORD`
   - private-ingress open auth (`gateway.auth.mode="none"`): no auth header
 - treat the endpoint as full operator access for the gateway instance
-- for shared-secret auth modes (`token` and `password`), ignore narrower bearer-declared `x-openclaw-scopes` values and restore the normal full operator defaults
-- for trusted identity-bearing HTTP modes (for example trusted proxy auth or `gateway.auth.mode="none"`), honor `x-openclaw-scopes` when present and otherwise fall back to the normal operator default scope set
-- select agents with `model: "openclaw"`, `model: "openclaw/default"`, `model: "openclaw/<agentId>"`, or `x-openclaw-agent-id`
-- use `x-openclaw-model` when you want to override the selected agent's backend model
-- use `x-openclaw-session-key` for explicit session routing
-- use `x-openclaw-message-channel` when you want a non-default synthetic ingress channel context
+- for shared-secret auth modes (`token` and `password`), ignore narrower bearer-declared `x-quiet-core-bot-scopes` values and restore the normal full operator defaults
+- for trusted identity-bearing HTTP modes (for example trusted proxy auth or `gateway.auth.mode="none"`), honor `x-quiet-core-bot-scopes` when present and otherwise fall back to the normal operator default scope set
+- select agents with `model: "quiet-core-bot"`, `model: "quiet-core-bot/default"`, `model: "quiet-core-bot/<agentId>"`, or `x-quiet-core-bot-agent-id`
+- use `x-quiet-core-bot-model` when you want to override the selected agent's backend model
+- use `x-quiet-core-bot-session-key` for explicit session routing
+- use `x-quiet-core-bot-message-channel` when you want a non-default synthetic ingress channel context
 
 Auth matrix:
 
 - `gateway.auth.mode="token"` or `"password"` + `Authorization: Bearer ...`
   - proves possession of the shared gateway operator secret
-  - ignores narrower `x-openclaw-scopes`
+  - ignores narrower `x-quiet-core-bot-scopes`
   - restores the full default operator scope set:
     `operator.admin`, `operator.approvals`, `operator.pairing`,
     `operator.read`, `operator.talk.secrets`, `operator.write`
   - treats chat turns on this endpoint as owner-sender turns
 - trusted identity-bearing HTTP modes (for example trusted proxy auth, or `gateway.auth.mode="none"` on private ingress)
-  - honor `x-openclaw-scopes` when the header is present
+  - honor `x-quiet-core-bot-scopes` when the header is present
   - fall back to the normal operator default scope set when the header is absent
   - only lose owner semantics when the caller explicitly narrows scopes and omits `operator.admin`
 
@@ -56,7 +56,7 @@ The same compatibility surface also includes:
 - `POST /v1/embeddings`
 - `POST /v1/chat/completions`
 
-For the canonical explanation of how agent-target models, `openclaw/default`, embeddings pass-through, and backend model overrides fit together, see [OpenAI Chat Completions](/gateway/openai-http-api#agent-first-model-contract) and [Model list and agent routing](/gateway/openai-http-api#model-list-and-agent-routing).
+For the canonical explanation of how agent-target models, `quiet-core-bot/default`, embeddings pass-through, and backend model overrides fit together, see [OpenAI Chat Completions](/gateway/openai-http-api#agent-first-model-contract) and [Model list and agent routing](/gateway/openai-http-api#model-list-and-agent-routing).
 
 ## Session behavior
 
@@ -322,9 +322,9 @@ Non-streaming:
 curl -sS http://127.0.0.1:18789/v1/responses \
   -H 'Authorization: Bearer YOUR_TOKEN' \
   -H 'Content-Type: application/json' \
-  -H 'x-openclaw-agent-id: main' \
+  -H 'x-quiet-core-bot-agent-id: main' \
   -d '{
-    "model": "openclaw",
+    "model": "quiet-core-bot",
     "input": "hi"
   }'
 ```
@@ -335,9 +335,9 @@ Streaming:
 curl -N http://127.0.0.1:18789/v1/responses \
   -H 'Authorization: Bearer YOUR_TOKEN' \
   -H 'Content-Type: application/json' \
-  -H 'x-openclaw-agent-id: main' \
+  -H 'x-quiet-core-bot-agent-id: main' \
   -d '{
-    "model": "openclaw",
+    "model": "quiet-core-bot",
     "stream": true,
     "input": "hi"
   }'

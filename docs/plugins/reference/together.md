@@ -11,7 +11,7 @@ Adds Together model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/together-provider`
+- Package: `@quiet-core/together-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

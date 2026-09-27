@@ -463,7 +463,7 @@ async function createVm(params: {
   } finally {
     hostRequest.dispose();
   }
-  vm.evalCode(CONTROLLER_SOURCE, "openclaw-code-mode:controller.js").dispose();
+  vm.evalCode(CONTROLLER_SOURCE, "quiet-core-bot-code-mode:controller.js").dispose();
   return { vm, didTimeout: () => timedOut || deadlineReached() };
 }
 
@@ -669,7 +669,7 @@ async function runExec(input: Extract<CodeModeWorkerInput, { kind: "exec" }>) {
     prepare: () => {
       vm.evalCode(
         buildUserSource(input.source),
-        "openclaw-code-mode:user.js",
+        "quiet-core-bot-code-mode:user.js",
         EvalFlags.ASYNC,
       ).dispose();
     },

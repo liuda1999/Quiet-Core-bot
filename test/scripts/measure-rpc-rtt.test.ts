@@ -261,7 +261,7 @@ describe("scripts/measure-rpc-rtt.mjs", () => {
           exists: true,
           issues: [],
           legacyIssues: [],
-          path: "/tmp/openclaw.json",
+          path: "/tmp/quiet-core-bot.json",
           resolved: {},
           runtimeConfig: {},
           sourceConfig: {},
@@ -304,7 +304,7 @@ describe("scripts/measure-rpc-rtt.mjs", () => {
 
     await expect(
       startGateway({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/quiet-core-bot.json",
         env: { PATH: "/bin" },
         openImpl,
         port: 23456,
@@ -339,9 +339,9 @@ describe("scripts/measure-rpc-rtt.mjs", () => {
         detached: process.platform !== "win32",
         env: expect.objectContaining({
           HOME: path.join(tempRoot, "home"),
-          OPENCLAW_CONFIG_PATH: "/tmp/openclaw.json",
-          OPENCLAW_GATEWAY_TOKEN: "secret-token",
-          OPENCLAW_STATE_DIR: path.join(tempRoot, "state"),
+          QUIET_CORE_CONFIG_PATH: "/tmp/quiet-core-bot.json",
+          QUIET_CORE_GATEWAY_TOKEN: "secret-token",
+          QUIET_CORE_STATE_DIR: path.join(tempRoot, "state"),
           PATH: "/bin",
         }),
         stdio: ["ignore", 41, 42],

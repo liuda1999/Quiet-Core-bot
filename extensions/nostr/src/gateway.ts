@@ -2,11 +2,11 @@
 import {
   resolveStableChannelMessageIngress,
   type StableChannelIngressIdentityParams,
-} from "openclaw/plugin-sdk/channel-ingress-runtime";
-import { createChannelPairingController } from "openclaw/plugin-sdk/channel-pairing";
-import { attachChannelToResult } from "openclaw/plugin-sdk/channel-send-result";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { runStoppablePassiveMonitor } from "openclaw/plugin-sdk/extension-shared";
+} from "quiet-core-bot/plugin-sdk/channel-ingress-runtime";
+import { createChannelPairingController } from "quiet-core-bot/plugin-sdk/channel-pairing";
+import { attachChannelToResult } from "quiet-core-bot/plugin-sdk/channel-send-result";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import { runStoppablePassiveMonitor } from "quiet-core-bot/plugin-sdk/extension-shared";
 import type { ChannelOutboundAdapter, ChannelPlugin } from "./channel-api.js";
 import type { MetricEvent, MetricsSnapshot } from "./metrics.js";
 import { startNostrBus, type NostrBusHandle } from "./nostr-bus.js";

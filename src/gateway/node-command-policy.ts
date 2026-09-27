@@ -1,8 +1,8 @@
 // Gateway node command policy.
 // Computes per-platform allowlists from built-in, plugin, runtime, and config inputs.
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
-import { normalizeUniqueStringEntries } from "@openclaw/normalization-core/string-normalization";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { normalizeOptionalLowercaseString } from "@quiet-core/normalization-core/string-coerce";
+import { normalizeUniqueStringEntries } from "@quiet-core/normalization-core/string-normalization";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   NODE_BROWSER_PROXY_COMMAND,
   NODE_SYSTEM_NOTIFY_COMMAND,

@@ -3,7 +3,7 @@
  * Parses provider/reason codes from refresh failures and formats safe login
  * commands without trusting raw provider text.
  */
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
+import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
 import { sanitizeForLog } from "../../../packages/terminal-core/src/ansi.js";
 import { formatCliCommand } from "../../cli/command-format.js";
 

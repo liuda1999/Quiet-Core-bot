@@ -27,7 +27,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   DOCKERHUB_REGISTRY: docker.io
-  DOCKERHUB_IMAGE_NAME: openclaw/openclaw
+  DOCKERHUB_IMAGE_NAME: liuda1999/quiet-core-bot
 
 jobs:
   validate_manual_backfill:
@@ -158,7 +158,7 @@ jobs:
           browser_tags=()
           images=("${GHCR_IMAGE}" "${DOCKERHUB_IMAGE}")
           browser_supported=0
-          if grep -q '^ARG OPENCLAW_INSTALL_BROWSER' Dockerfile; then
+          if grep -q '^ARG QUIET_CORE_INSTALL_BROWSER' Dockerfile; then
             browser_supported=1
           fi
           if [[ "${SOURCE_REF}" == refs/tags/v* ]]; then
@@ -218,7 +218,7 @@ jobs:
           cache-from: type=gha,scope=docker-release-amd64
           cache-to: type=gha,mode=max,scope=docker-release-amd64
           build-args: |
-            OPENCLAW_EXTENSIONS=diagnostics-otel,codex
+            QUIET_CORE_EXTENSIONS=diagnostics-otel,codex
           tags: ${{ steps.tags.outputs.value }}
           labels: ${{ steps.labels.outputs.value }}
           sbom: true
@@ -238,8 +238,8 @@ jobs:
             type=gha,scope=docker-release-browser-amd64
           cache-to: type=gha,mode=max,scope=docker-release-browser-amd64
           build-args: |
-            OPENCLAW_EXTENSIONS=diagnostics-otel,codex
-            OPENCLAW_INSTALL_BROWSER=1
+            QUIET_CORE_EXTENSIONS=diagnostics-otel,codex
+            QUIET_CORE_INSTALL_BROWSER=1
           tags: ${{ steps.tags.outputs.browser }}
           labels: ${{ steps.labels.outputs.value }}
           sbom: true
@@ -268,11 +268,11 @@ jobs:
             set +e
             HOME="${temp_root}/home" \
             USERPROFILE="${temp_root}/home" \
-            OPENCLAW_HOME="${temp_root}/home" \
-            OPENCLAW_NO_ONBOARD=1 \
-            OPENCLAW_SUPPRESS_NOTES=1 \
-            OPENCLAW_DISABLE_BUNDLED_PLUGINS=1 \
-            OPENCLAW_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK=1 \
+            QUIET_CORE_HOME="${temp_root}/home" \
+            QUIET_CORE_NO_ONBOARD=1 \
+            QUIET_CORE_SUPPRESS_NOTES=1 \
+            QUIET_CORE_DISABLE_BUNDLED_PLUGINS=1 \
+            QUIET_CORE_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK=1 \
             AWS_EC2_METADATA_DISABLED=true \
             AWS_SHARED_CREDENTIALS_FILE="${temp_root}/home/.aws/credentials" \
             AWS_CONFIG_FILE="${temp_root}/home/.aws/config" \
@@ -284,7 +284,7 @@ jobs:
               cat "${temp_root}/out.log"
               exit 1
             fi
-            test -f "${temp_root}/home/.openclaw/workspace/HEARTBEAT.md"
+            test -f "${temp_root}/home/.quiet-core-bot/workspace/HEARTBEAT.md"
             if [ "${status}" -ne 0 ]; then
               cat "${temp_root}/out.log"
             fi
@@ -379,7 +379,7 @@ jobs:
           browser_tags=()
           images=("${GHCR_IMAGE}" "${DOCKERHUB_IMAGE}")
           browser_supported=0
-          if grep -q '^ARG OPENCLAW_INSTALL_BROWSER' Dockerfile; then
+          if grep -q '^ARG QUIET_CORE_INSTALL_BROWSER' Dockerfile; then
             browser_supported=1
           fi
           if [[ "${SOURCE_REF}" == refs/tags/v* ]]; then
@@ -439,7 +439,7 @@ jobs:
           cache-from: type=gha,scope=docker-release-arm64
           cache-to: type=gha,mode=max,scope=docker-release-arm64
           build-args: |
-            OPENCLAW_EXTENSIONS=diagnostics-otel,codex
+            QUIET_CORE_EXTENSIONS=diagnostics-otel,codex
           tags: ${{ steps.tags.outputs.value }}
           labels: ${{ steps.labels.outputs.value }}
           sbom: true
@@ -459,8 +459,8 @@ jobs:
             type=gha,scope=docker-release-browser-arm64
           cache-to: type=gha,mode=max,scope=docker-release-browser-arm64
           build-args: |
-            OPENCLAW_EXTENSIONS=diagnostics-otel,codex
-            OPENCLAW_INSTALL_BROWSER=1
+            QUIET_CORE_EXTENSIONS=diagnostics-otel,codex
+            QUIET_CORE_INSTALL_BROWSER=1
           tags: ${{ steps.tags.outputs.browser }}
           labels: ${{ steps.labels.outputs.value }}
           sbom: true
@@ -489,11 +489,11 @@ jobs:
             set +e
             HOME="${temp_root}/home" \
             USERPROFILE="${temp_root}/home" \
-            OPENCLAW_HOME="${temp_root}/home" \
-            OPENCLAW_NO_ONBOARD=1 \
-            OPENCLAW_SUPPRESS_NOTES=1 \
-            OPENCLAW_DISABLE_BUNDLED_PLUGINS=1 \
-            OPENCLAW_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK=1 \
+            QUIET_CORE_HOME="${temp_root}/home" \
+            QUIET_CORE_NO_ONBOARD=1 \
+            QUIET_CORE_SUPPRESS_NOTES=1 \
+            QUIET_CORE_DISABLE_BUNDLED_PLUGINS=1 \
+            QUIET_CORE_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK=1 \
             AWS_EC2_METADATA_DISABLED=true \
             AWS_SHARED_CREDENTIALS_FILE="${temp_root}/home/.aws/credentials" \
             AWS_CONFIG_FILE="${temp_root}/home/.aws/config" \
@@ -505,7 +505,7 @@ jobs:
               cat "${temp_root}/out.log"
               exit 1
             fi
-            test -f "${temp_root}/home/.openclaw/workspace/HEARTBEAT.md"
+            test -f "${temp_root}/home/.quiet-core-bot/workspace/HEARTBEAT.md"
             if [ "${status}" -ne 0 ]; then
               cat "${temp_root}/out.log"
             fi
@@ -578,7 +578,7 @@ jobs:
           dockerhub_slim_tags=()
           dockerhub_browser_tags=()
           browser_supported=0
-          if grep -q '^ARG OPENCLAW_INSTALL_BROWSER' Dockerfile; then
+          if grep -q '^ARG QUIET_CORE_INSTALL_BROWSER' Dockerfile; then
             browser_supported=1
           fi
           if [[ "${SOURCE_REF}" == refs/tags/v* ]]; then
@@ -741,10 +741,10 @@ jobs:
           if [[ "${SOURCE_REF}" == refs/tags/v* ]]; then
             tag="${SOURCE_REF#refs/tags/}"
             git fetch --depth=1 origin "refs/tags/${tag}:refs/tags/${tag}"
-            if git show "${SOURCE_REF}:Dockerfile" | grep -q '^ARG OPENCLAW_INSTALL_BROWSER'; then
+            if git show "${SOURCE_REF}:Dockerfile" | grep -q '^ARG QUIET_CORE_INSTALL_BROWSER'; then
               browser_supported=1
             fi
-          elif grep -q '^ARG OPENCLAW_INSTALL_BROWSER' Dockerfile; then
+          elif grep -q '^ARG QUIET_CORE_INSTALL_BROWSER' Dockerfile; then
             browser_supported=1
           fi
           if [[ "${SOURCE_REF}" == refs/tags/v* ]]; then

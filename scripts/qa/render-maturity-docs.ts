@@ -801,7 +801,7 @@ function evidenceScorecardWarnings(
       .filter((item) => (item.profile === "all" || item.profile === "release") && !item.scorecard)
       .map(
         (item) =>
-          `${item.path}: ${item.profile} profile qa-evidence.json does not include a scorecard field; run pnpm openclaw qa run --qa-profile ${item.profile} to produce deterministic scorecard rows`,
+          `${item.path}: ${item.profile} profile qa-evidence.json does not include a scorecard field; run pnpm quiet-core-bot qa run --qa-profile ${item.profile} to produce deterministic scorecard rows`,
       ),
     ...coverage.warnings,
   ];

@@ -1,13 +1,13 @@
 ---
-summary: "Zalo ClawBot channel setup through the external openclaw-zaloclawbot plugin"
+summary: "Zalo ClawBot channel setup through the external quiet-core-bot-zaloclawbot plugin"
 read_when:
   - You want a personal Zalo assistant bot with QR-code login
-  - You are installing or troubleshooting the openclaw-zaloclawbot channel plugin
+  - You are installing or troubleshooting the quiet-core-bot-zaloclawbot channel plugin
 title: "Zalo ClawBot"
 ---
 
 Quiet Core bot connects to Zalo ClawBot through the catalog-listed external
-`@zalo-platforms/openclaw-zaloclawbot` plugin. Login uses a Zalo Mini App QR
+`@zalo-platforms/quiet-core-bot-zaloclawbot` plugin. Login uses a Zalo Mini App QR
 code.
 
 ## Compatibility
@@ -19,7 +19,7 @@ code.
 ## Prerequisites
 
 - Node.js **>= 22**
-- [Quiet Core bot](https://github.com/liuda1999/Quiet-Core-bot/install) must be installed (`openclaw` CLI available).
+- [Quiet Core bot](https://github.com/liuda1999/Quiet-Core-bot/install) must be installed (`quiet-core-bot` CLI available).
 - A Zalo account on a mobile device to scan the login QR code.
 
 ## Install with onboard (recommended)
@@ -39,7 +39,7 @@ To add the channel to an already-onboarded gateway, follow these steps:
 ### 1. Install the plugin
 
 ```bash
-quiet-core-bot plugins install "@zalo-platforms/openclaw-zaloclawbot@0.1.4"
+quiet-core-bot plugins install "@zalo-platforms/quiet-core-bot-zaloclawbot@0.1.4"
 ```
 
 Use the exact pinned version shown above (it matches the official catalog entry), so Quiet Core bot verifies the package against the catalog integrity hash during install.
@@ -47,13 +47,13 @@ Use the exact pinned version shown above (it matches the official catalog entry)
 ### 2. Enable the plugin in config
 
 ```bash
-quiet-core-bot config set plugins.entries.openclaw-zaloclawbot.enabled true
+quiet-core-bot config set plugins.entries.quiet-core-bot-zaloclawbot.enabled true
 ```
 
 ### 3. Generate QR code and log in
 
 ```bash
-quiet-core-bot channels login --channel openclaw-zaloclawbot
+quiet-core-bot channels login --channel quiet-core-bot-zaloclawbot
 ```
 
 Scan the terminal-rendered QR code using the Zalo mobile app, accept the Terms of Use inside the Zalo Mini App, and authorize the session.

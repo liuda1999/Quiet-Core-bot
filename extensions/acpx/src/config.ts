@@ -6,8 +6,8 @@ import fs from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { formatPluginConfigIssue } from "openclaw/plugin-sdk/extension-shared";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { formatPluginConfigIssue } from "quiet-core-bot/plugin-sdk/extension-shared";
+import { normalizeLowercaseStringOrEmpty } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { AcpxPluginConfigSchema, DEFAULT_ACPX_TIMEOUT_SECONDS } from "./config-schema.js";
 import type {
   AcpxPluginConfig,
@@ -19,13 +19,13 @@ import type {
 } from "./config-schema.js";
 export { type ResolvedAcpxPluginConfig } from "./config-schema.js";
 
-const ACPX_PLUGIN_TOOLS_MCP_SERVER_NAME = "openclaw-plugin-tools";
-const ACPX_OPENCLAW_TOOLS_MCP_SERVER_NAME = "openclaw-tools";
+const ACPX_PLUGIN_TOOLS_MCP_SERVER_NAME = "quiet-core-bot-plugin-tools";
+const ACPX_QUIET_CORE_TOOLS_MCP_SERVER_NAME = "quiet-core-bot-tools";
 const requireFromHere = createRequire(import.meta.url);
 
 function isAcpxPluginRoot(dir: string): boolean {
   return (
-    fs.existsSync(path.join(dir, "openclaw.plugin.json")) &&
+    fs.existsSync(path.join(dir, "quiet-core-bot.plugin.json")) &&
     fs.existsSync(path.join(dir, "package.json"))
   );
 }
@@ -171,14 +171,14 @@ function resolvePluginToolsMcpServerConfig(moduleUrl: string = import.meta.url):
 function resolveOpenClawToolsMcpServerConfig(moduleUrl: string = import.meta.url): McpServerConfig {
   const pluginRoot = resolveAcpxPluginRoot(moduleUrl);
   const openClawRoot = resolveOpenClawRoot(pluginRoot);
-  const distEntry = path.join(openClawRoot, "dist", "mcp", "openclaw-tools-serve.js");
+  const distEntry = path.join(openClawRoot, "dist", "mcp", "quiet-core-bot-tools-serve.js");
   if (fs.existsSync(distEntry)) {
     return {
       command: process.execPath,
       args: [distEntry],
     };
   }
-  const sourceEntry = path.join(openClawRoot, "src", "mcp", "openclaw-tools-serve.ts");
+  const sourceEntry = path.join(openClawRoot, "src", "mcp", "quiet-core-bot-tools-serve.ts");
   return {
     command: process.execPath,
     args: ["--import", resolveTsxImportSpecifier(), sourceEntry],
@@ -197,9 +197,9 @@ function resolveConfiguredMcpServers(params: {
       `mcpServers.${ACPX_PLUGIN_TOOLS_MCP_SERVER_NAME} is reserved when pluginToolsMcpBridge=true`,
     );
   }
-  if (params.openClawToolsMcpBridge && resolved[ACPX_OPENCLAW_TOOLS_MCP_SERVER_NAME]) {
+  if (params.openClawToolsMcpBridge && resolved[ACPX_QUIET_CORE_TOOLS_MCP_SERVER_NAME]) {
     throw new Error(
-      `mcpServers.${ACPX_OPENCLAW_TOOLS_MCP_SERVER_NAME} is reserved when openClawToolsMcpBridge=true`,
+      `mcpServers.${ACPX_QUIET_CORE_TOOLS_MCP_SERVER_NAME} is reserved when openClawToolsMcpBridge=true`,
     );
   }
   if (params.pluginToolsMcpBridge) {
@@ -208,7 +208,7 @@ function resolveConfiguredMcpServers(params: {
     );
   }
   if (params.openClawToolsMcpBridge) {
-    resolved[ACPX_OPENCLAW_TOOLS_MCP_SERVER_NAME] = resolveOpenClawToolsMcpServerConfig(
+    resolved[ACPX_QUIET_CORE_TOOLS_MCP_SERVER_NAME] = resolveOpenClawToolsMcpServerConfig(
       params.moduleUrl,
     );
   }

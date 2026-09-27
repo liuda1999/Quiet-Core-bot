@@ -11,7 +11,7 @@ Quiet Core bot Microsoft Teams channel plugin for bot conversations.
 
 ## Distribution
 
-- Package: `@openclaw/msteams`
+- Package: `@quiet-core/msteams`
 - Install route: npm; ClawHub
 
 ## Surface

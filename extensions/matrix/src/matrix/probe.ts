@@ -1,7 +1,7 @@
 // Matrix plugin module implements probe behavior.
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import type { PinnedDispatcherPolicy } from "openclaw/plugin-sdk/ssrf-dispatcher";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
+import type { PinnedDispatcherPolicy } from "quiet-core-bot/plugin-sdk/ssrf-dispatcher";
+import { normalizeOptionalString } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import type { SsrFPolicy } from "../runtime-api.js";
 import type { BaseProbeResult } from "../runtime-api.js";
 import { isBunRuntime } from "./client/runtime.js";

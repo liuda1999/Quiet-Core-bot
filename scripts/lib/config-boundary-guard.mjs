@@ -199,18 +199,18 @@ function pushDeprecatedRuntimeApiViolations(violations, files) {
 
 function pushBroadConfigRuntimeBarrelViolations(violations, files) {
   const staticImportPattern =
-    /\b(?:import|export)\s+(?:type\s+)?\{[\s\S]*?\}\s+from\s+["']openclaw\/plugin-sdk\/config-runtime["']/g;
+    /\b(?:import|export)\s+(?:type\s+)?\{[\s\S]*?\}\s+from\s+["']quiet-core-bot\/plugin-sdk\/config-runtime["']/g;
   const dynamicImportPattern =
-    /\b(?:const|let|var)\s+\{[\s\S]*?\}\s*=\s*(?:await\s+)?import\(["']openclaw\/plugin-sdk\/config-runtime["']\)/g;
+    /\b(?:const|let|var)\s+\{[\s\S]*?\}\s*=\s*(?:await\s+)?import\(["']quiet-core-bot\/plugin-sdk\/config-runtime["']\)/g;
   const typeQueryPattern =
-    /\b(?:typeof\s+)?import\(["']openclaw\/plugin-sdk\/config-runtime["']\)\.[A-Za-z_$][\w$]*/g;
+    /\b(?:typeof\s+)?import\(["']quiet-core-bot\/plugin-sdk\/config-runtime["']\)\.[A-Za-z_$][\w$]*/g;
 
   for (const { filePath, relPath } of files) {
     const source = readTypeScriptSource(filePath);
     for (const pattern of [staticImportPattern, dynamicImportPattern, typeQueryPattern]) {
       for (const line of findMatchLineNumbers(source, pattern)) {
         violations.push(
-          `${relPath}:${line} use narrow plugin-sdk config subpaths instead of openclaw/plugin-sdk/config-runtime`,
+          `${relPath}:${line} use narrow plugin-sdk config subpaths instead of quiet-core-bot/plugin-sdk/config-runtime`,
         );
       }
     }
@@ -218,13 +218,13 @@ function pushBroadConfigRuntimeBarrelViolations(violations, files) {
 }
 
 function pushBroadConfigRuntimeSpecifierViolations(violations, files) {
-  const moduleSpecifierPattern = /["']openclaw\/plugin-sdk\/config-runtime["']/g;
+  const moduleSpecifierPattern = /["']quiet-core-bot\/plugin-sdk\/config-runtime["']/g;
 
   for (const { filePath, relPath } of files) {
     const source = readTypeScriptSource(filePath);
     for (const line of findMatchLineNumbers(source, moduleSpecifierPattern)) {
       violations.push(
-        `${relPath}:${line} use narrow plugin-sdk config subpaths instead of openclaw/plugin-sdk/config-runtime`,
+        `${relPath}:${line} use narrow plugin-sdk config subpaths instead of quiet-core-bot/plugin-sdk/config-runtime`,
       );
     }
   }
@@ -260,7 +260,7 @@ export function collectDeprecatedInternalConfigApiViolations({
     const guards = [
       {
         pattern:
-          /\b(?:import|export)\s+(?:type\s+)?\{[^}]*\bloadConfig\b[^}]*\}\s+from\s+["']openclaw\/plugin-sdk\/(?:config-runtime|memory-core-host-runtime-core)["']/,
+          /\b(?:import|export)\s+(?:type\s+)?\{[^}]*\bloadConfig\b[^}]*\}\s+from\s+["']quiet-core-bot\/plugin-sdk\/(?:config-runtime|memory-core-host-runtime-core)["']/,
         replacement:
           "use getRuntimeConfig(), runtime.config.current(), or pass the already loaded config",
       },
@@ -316,13 +316,13 @@ export function collectDeprecatedInternalConfigApiViolations({
     const guards = [
       {
         pattern:
-          /\b(?:import|export)\s+(?:type\s+)?\{[\s\S]*?\b(?:loadConfig|writeConfigFile)\b[\s\S]*?\}\s+from\s+["']openclaw\/plugin-sdk\/(?:config-runtime|memory-core-host-runtime-core)["']/,
+          /\b(?:import|export)\s+(?:type\s+)?\{[\s\S]*?\b(?:loadConfig|writeConfigFile)\b[\s\S]*?\}\s+from\s+["']quiet-core-bot\/plugin-sdk\/(?:config-runtime|memory-core-host-runtime-core)["']/,
         replacement:
           "use getRuntimeConfig(), runtime.config.current(), or mutation helpers with afterWrite",
       },
       {
         pattern:
-          /ReturnType<typeof import\(["']openclaw\/plugin-sdk\/(?:config-runtime|memory-core-host-runtime-core)["']\)\.(?:loadConfig|writeConfigFile)>/,
+          /ReturnType<typeof import\(["']quiet-core-bot\/plugin-sdk\/(?:config-runtime|memory-core-host-runtime-core)["']\)\.(?:loadConfig|writeConfigFile)>/,
         replacement: "use OpenClawConfig or the explicit mutation helper type",
       },
     ];

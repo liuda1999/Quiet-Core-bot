@@ -110,7 +110,7 @@ unattended or scheduled runs, scripts). It is equivalent to
 `quiet-core-bot gateway call exec.approval.resolve '{"id":"…","decision":"allow-once"}'`
 without the JSON quoting, and to what the Control UI and macOS app do.
 
-When `openclaw agent` ends a turn while a request is still pending, the CLI reports
+When `quiet-core-bot agent` ends a turn while a request is still pending, the CLI reports
 the block and points at these commands, for example:
 
 ```
@@ -233,7 +233,7 @@ session key.
 - `--agent` defaults to `"*"`, which applies to all agents.
 - The node host must advertise `system.execApprovals.get/set` (macOS app or headless node host).
 - Approvals files are stored per host in the Quiet Core bot state dir
-  (`$OPENCLAW_STATE_DIR/exec-approvals.json`, or
+  (`$QUIET_CORE_STATE_DIR/exec-approvals.json`, or
   `~/.quiet-core-bot/exec-approvals.json` when the variable is unset).
 
 ## Related

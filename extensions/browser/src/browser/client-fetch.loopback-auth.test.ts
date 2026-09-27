@@ -1,5 +1,5 @@
 // Browser tests cover client fetch.loopback auth plugin behavior.
-import { MAX_TIMER_TIMEOUT_MS } from "openclaw/plugin-sdk/number-runtime";
+import { MAX_TIMER_TIMEOUT_MS } from "quiet-core-bot/plugin-sdk/number-runtime";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import "../test-support/browser-security.mock.js";
 import type { OpenClawConfig } from "../config/config.js";
@@ -10,9 +10,9 @@ type BridgeAuth = NonNullable<
   ReturnType<typeof import("./bridge-auth-registry.js").getBridgeAuthForPort>
 >;
 
-vi.mock("openclaw/plugin-sdk/ssrf-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/ssrf-runtime")>(
-    "openclaw/plugin-sdk/ssrf-runtime",
+vi.mock("quiet-core-bot/plugin-sdk/ssrf-runtime", async () => {
+  const actual = await vi.importActual<typeof import("quiet-core-bot/plugin-sdk/ssrf-runtime")>(
+    "quiet-core-bot/plugin-sdk/ssrf-runtime",
   );
   return {
     ...actual,
@@ -136,7 +136,7 @@ describe("fetchBrowserJson loopback auth", () => {
     ]) {
       vi.stubEnv(key, "");
     }
-    vi.stubEnv("OPENCLAW_GATEWAY_TOKEN", "loopback-token");
+    vi.stubEnv("QUIET_CORE_GATEWAY_TOKEN", "loopback-token");
     mocks.loadConfig.mockClear();
     mocks.loadConfig.mockReturnValue({
       gateway: {
@@ -328,7 +328,7 @@ describe("fetchBrowserJson loopback auth", () => {
   it("keeps restart-gateway guidance for managed local dispatcher timeouts", async () => {
     mocks.loadConfig.mockReturnValue({
       browser: {
-        defaultProfile: "openclaw",
+        defaultProfile: "quiet-core-bot",
         profiles: {
           openclaw: {
             cdpPort: 18800,
@@ -340,7 +340,7 @@ describe("fetchBrowserJson loopback auth", () => {
     mocks.dispatch.mockRejectedValueOnce(new Error("Chrome CDP handshake timeout"));
 
     await expectThrownBrowserFetchError(
-      () => fetchBrowserJson<{ ok: boolean }>("/tabs?profile=openclaw"),
+      () => fetchBrowserJson<{ ok: boolean }>("/tabs?profile=quiet-core-bot"),
       {
         contains: ["Chrome CDP handshake timeout", "Restart the OpenClaw gateway"],
         omits: ["browser profile is external to OpenClaw", "Do NOT retry the browser tool"],
@@ -366,7 +366,7 @@ describe("fetchBrowserJson loopback auth", () => {
   it("keeps restart-gateway guidance for unknown dispatcher profiles", async () => {
     mocks.loadConfig.mockReturnValue({
       browser: {
-        defaultProfile: "openclaw",
+        defaultProfile: "quiet-core-bot",
         profiles: {
           openclaw: {
             cdpPort: 18800,

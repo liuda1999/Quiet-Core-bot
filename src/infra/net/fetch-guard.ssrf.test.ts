@@ -283,9 +283,9 @@ describe("fetchWithSsrFGuard hardening", () => {
 
   function installManagedProxyRuntime(loopbackMode?: ManagedProxyLoopbackMode): void {
     clearProxyEnv();
-    vi.stubEnv("OPENCLAW_PROXY_ACTIVE", "1");
+    vi.stubEnv("QUIET_CORE_PROXY_ACTIVE", "1");
     if (loopbackMode) {
-      vi.stubEnv("OPENCLAW_PROXY_LOOPBACK_MODE", loopbackMode);
+      vi.stubEnv("QUIET_CORE_PROXY_LOOPBACK_MODE", loopbackMode);
     }
     vi.stubEnv("http_proxy", "http://127.0.0.1:7890");
     (globalThis as Record<string, unknown>)[TEST_UNDICI_RUNTIME_DEPS_KEY] = {
@@ -1407,7 +1407,7 @@ describe("fetchWithSsrFGuard hardening", () => {
   });
 
   it("uses the env proxy in strict mode when the SSRF proxy lifecycle is active", async () => {
-    vi.stubEnv("OPENCLAW_PROXY_ACTIVE", "1");
+    vi.stubEnv("QUIET_CORE_PROXY_ACTIVE", "1");
 
     await runProxyModeDispatcherExpectation({
       mode: GUARDED_FETCH_MODE.STRICT,

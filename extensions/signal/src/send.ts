@@ -4,13 +4,13 @@ import {
   type MessageReceipt,
   type MessageReceiptPartKind,
   type MessageReceiptSourceResult,
-} from "openclaw/plugin-sdk/channel-outbound";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { resolveMarkdownTableMode } from "openclaw/plugin-sdk/markdown-table-runtime";
-import { kindFromMime } from "openclaw/plugin-sdk/media-runtime";
-import { resolveOutboundAttachmentFromUrl } from "openclaw/plugin-sdk/media-runtime";
-import { requireRuntimeConfig } from "openclaw/plugin-sdk/plugin-config-runtime";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "quiet-core-bot/plugin-sdk/channel-outbound";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import { resolveMarkdownTableMode } from "quiet-core-bot/plugin-sdk/markdown-table-runtime";
+import { kindFromMime } from "quiet-core-bot/plugin-sdk/media-runtime";
+import { resolveOutboundAttachmentFromUrl } from "quiet-core-bot/plugin-sdk/media-runtime";
+import { requireRuntimeConfig } from "quiet-core-bot/plugin-sdk/plugin-config-runtime";
+import { normalizeLowercaseStringOrEmpty } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { resolveSignalAccount } from "./accounts.js";
 import {
   appendSignalApprovalReactionHintForOutboundMessage,

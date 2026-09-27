@@ -28,9 +28,9 @@ Related:
 
 ```bash
 quiet-core-bot browser profiles
-quiet-core-bot browser --browser-profile openclaw start
-quiet-core-bot browser --browser-profile openclaw open https://example.com
-quiet-core-bot browser --browser-profile openclaw snapshot
+quiet-core-bot browser --browser-profile quiet-core-bot start
+quiet-core-bot browser --browser-profile quiet-core-bot open https://example.com
+quiet-core-bot browser --browser-profile quiet-core-bot snapshot
 ```
 
 Agents can run the same readiness check with `browser({ action: "doctor" })`.
@@ -43,9 +43,9 @@ Minimal sequence:
 
 ```bash
 quiet-core-bot browser --browser-profile quiet-core-bot doctor
-quiet-core-bot browser --browser-profile openclaw start
-quiet-core-bot browser --browser-profile openclaw tabs
-quiet-core-bot browser --browser-profile openclaw open https://example.com
+quiet-core-bot browser --browser-profile quiet-core-bot start
+quiet-core-bot browser --browser-profile quiet-core-bot tabs
+quiet-core-bot browser --browser-profile quiet-core-bot open https://example.com
 ```
 
 Detailed guidance: [Browser troubleshooting](/tools/browser#cdp-startup-failure-vs-navigation-ssrf-block)
@@ -76,7 +76,7 @@ Notes:
   `browser.headless` or profile config, and it is a no-op for an already-running
   browser.
 - On Linux hosts without `DISPLAY` or `WAYLAND_DISPLAY`, local managed profiles
-  run headless automatically unless `OPENCLAW_BROWSER_HEADLESS=0`,
+  run headless automatically unless `QUIET_CORE_BROWSER_HEADLESS=0`,
   `browser.headless=false`, or `browser.profiles.<name>.headless=false`
   explicitly requests a visible browser.
 
@@ -106,7 +106,7 @@ Related: [Browser tool](/tools/browser#missing-browser-command-or-tool)
 
 Profiles are named browser routing configs. In practice:
 
-- `openclaw`: launches or attaches to a dedicated Quiet Core bot-managed Chrome instance (isolated user data dir).
+- `quiet-core-bot`: launches or attaches to a dedicated Quiet Core bot-managed Chrome instance (isolated user data dir).
 - `user`: controls your existing signed-in Chrome session via Chrome DevTools MCP.
 - custom CDP profiles: point at a local or remote CDP endpoint.
 
@@ -225,7 +225,7 @@ store and pass `suggestedTargetId`/labels for long-lived workflows.
 File + dialog helpers:
 
 ```bash
-quiet-core-bot browser upload /tmp/openclaw/uploads/file.pdf --ref <ref>
+quiet-core-bot browser upload /tmp/quiet-core-bot/uploads/file.pdf --ref <ref>
 quiet-core-bot browser upload media://inbound/file.pdf --ref <ref>
 quiet-core-bot browser waitfordownload
 quiet-core-bot browser download <ref> report.pdf
@@ -234,7 +234,7 @@ quiet-core-bot browser dialog --dismiss --dialog-id d1
 ```
 
 Managed Chrome profiles save ordinary click-triggered downloads into the Quiet Core bot
-downloads directory (`/tmp/openclaw/downloads` by default, or the configured temp
+downloads directory (`/tmp/quiet-core-bot/downloads` by default, or the configured temp
 root). Use `waitfordownload` or `download` when the agent needs to wait for a
 specific file and return its path; those explicit waiters own the next download.
 Uploads accept files from the Quiet Core bot temp uploads root and Quiet Core bot-managed

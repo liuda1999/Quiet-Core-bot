@@ -5,27 +5,27 @@ import { isCurrentProcessLaunchdServiceLabel } from "./launchd-current-service.j
 describe("isCurrentProcessLaunchdServiceLabel", () => {
   it("matches launchd-provided service labels", () => {
     expect(
-      isCurrentProcessLaunchdServiceLabel("ai.openclaw.gateway", {
-        LAUNCH_JOB_LABEL: "ai.openclaw.gateway",
+      isCurrentProcessLaunchdServiceLabel("ai.quiet-core-bot.gateway", {
+        LAUNCH_JOB_LABEL: "ai.quiet-core-bot.gateway",
       }),
     ).toBe(true);
   });
 
   it("falls back to Quiet Core bot service markers when XPC_SERVICE_NAME is inherited", () => {
     expect(
-      isCurrentProcessLaunchdServiceLabel("ai.openclaw.gateway", {
+      isCurrentProcessLaunchdServiceLabel("ai.quiet-core-bot.gateway", {
         XPC_SERVICE_NAME: "0",
-        OPENCLAW_SERVICE_MARKER: "openclaw",
-        OPENCLAW_SERVICE_KIND: "gateway",
-        OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.gateway",
+        QUIET_CORE_SERVICE_MARKER: "quiet-core-bot",
+        QUIET_CORE_SERVICE_KIND: "gateway",
+        QUIET_CORE_LAUNCHD_LABEL: "ai.quiet-core-bot.gateway",
       }),
     ).toBe(true);
   });
 
   it("preserves label-only fallback when launchd exposes no label variables", () => {
     expect(
-      isCurrentProcessLaunchdServiceLabel("ai.openclaw.gateway", {
-        OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.gateway",
+      isCurrentProcessLaunchdServiceLabel("ai.quiet-core-bot.gateway", {
+        QUIET_CORE_LAUNCHD_LABEL: "ai.quiet-core-bot.gateway",
       }),
     ).toBe(true);
   });
@@ -33,9 +33,9 @@ describe("isCurrentProcessLaunchdServiceLabel", () => {
   it("can require service markers for label-only fallback", () => {
     expect(
       isCurrentProcessLaunchdServiceLabel(
-        "ai.openclaw.gateway",
+        "ai.quiet-core-bot.gateway",
         {
-          OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.gateway",
+          QUIET_CORE_LAUNCHD_LABEL: "ai.quiet-core-bot.gateway",
         },
         { allowConfiguredLabelFallback: false },
       ),
@@ -44,9 +44,9 @@ describe("isCurrentProcessLaunchdServiceLabel", () => {
 
   it("does not treat unrelated inherited launchd labels as current services", () => {
     expect(
-      isCurrentProcessLaunchdServiceLabel("ai.openclaw.gateway", {
+      isCurrentProcessLaunchdServiceLabel("ai.quiet-core-bot.gateway", {
         XPC_SERVICE_NAME: "0",
-        OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.gateway",
+        QUIET_CORE_LAUNCHD_LABEL: "ai.quiet-core-bot.gateway",
       }),
     ).toBe(false);
   });

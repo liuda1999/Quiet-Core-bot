@@ -1,5 +1,5 @@
 // Matrix plugin module implements setup core behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import {
   DEFAULT_ACCOUNT_ID,
   type DmPolicy,
@@ -7,7 +7,7 @@ import {
   prepareScopedSetupConfig,
   type ChannelSetupAdapter,
   type ChannelSetupWizardAdapter,
-} from "openclaw/plugin-sdk/setup";
+} from "quiet-core-bot/plugin-sdk/setup";
 import { resolveDefaultMatrixAccountId, resolveMatrixAccountConfig } from "./matrix/accounts.js";
 import { resolveMatrixConfigFieldPath, updateMatrixAccountConfig } from "./matrix/config-update.js";
 import { applyMatrixSetupAccountConfig, validateMatrixSetupInput } from "./setup-config.js";

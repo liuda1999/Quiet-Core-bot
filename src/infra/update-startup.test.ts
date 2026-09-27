@@ -3,16 +3,16 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { formatCliCommand } from "../cli/command-format.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "../state/openclaw-state-db.js";
+} from "../state/quiet-core-bot-state-db.js";
 import {
   createOpenClawTestState,
   type OpenClawTestState,
-} from "../test-utils/openclaw-test-state.js";
+} from "../test-utils/quiet-core-bot-test-state.js";
 import {
   executeSqliteQuerySync,
   executeSqliteQueryTakeFirstSync,
@@ -31,12 +31,12 @@ const {
     status: "started" as const,
     pid: 12345,
     command: "quiet-core-bot update --yes --channel beta --timeout 2700",
-    logPath: "/tmp/openclaw-handoff.log",
+    logPath: "/tmp/quiet-core-bot-handoff.log",
   })),
 }));
 
-vi.mock("./openclaw-root.js", async () => {
-  const actual = await vi.importActual<typeof import("./openclaw-root.js")>("./openclaw-root.js");
+vi.mock("./quiet-core-bot-root.js", async () => {
+  const actual = await vi.importActual<typeof import("./quiet-core-bot-root.js")>("./quiet-core-bot-root.js");
   return {
     ...actual,
     resolveOpenClawPackageRoot: vi.fn(),
@@ -117,7 +117,7 @@ describe("update-startup", () => {
   let tempDir: string;
   let testState: OpenClawTestState;
 
-  let resolveOpenClawPackageRoot: (typeof import("./openclaw-root.js"))["resolveOpenClawPackageRoot"];
+  let resolveOpenClawPackageRoot: (typeof import("./quiet-core-bot-root.js"))["resolveOpenClawPackageRoot"];
   let checkUpdateStatus: (typeof import("./update-check.js"))["checkUpdateStatus"];
   let resolveNpmChannelTag: (typeof import("./update-check.js"))["resolveNpmChannelTag"];
   let runCommandWithTimeout: (typeof import("../process/exec.js"))["runCommandWithTimeout"];
@@ -200,15 +200,15 @@ describe("update-startup", () => {
     vi.setSystemTime(new Date("2026-01-17T10:00:00Z"));
     testState = await createOpenClawTestState({
       layout: "state-only",
-      prefix: "openclaw-update-check-suite-",
+      prefix: "quiet-core-bot-update-check-suite-",
       env: {
-        OPENCLAW_NO_AUTO_UPDATE: undefined,
-        OPENCLAW_SERVICE_KIND: undefined,
-        OPENCLAW_SERVICE_MARKER: undefined,
-        OPENCLAW_GATEWAY_SERVICE_PID: undefined,
-        OPENCLAW_LAUNCHD_LABEL: undefined,
-        OPENCLAW_SYSTEMD_UNIT: undefined,
-        OPENCLAW_WINDOWS_TASK_NAME: undefined,
+        QUIET_CORE_NO_AUTO_UPDATE: undefined,
+        QUIET_CORE_SERVICE_KIND: undefined,
+        QUIET_CORE_SERVICE_MARKER: undefined,
+        QUIET_CORE_GATEWAY_SERVICE_PID: undefined,
+        QUIET_CORE_LAUNCHD_LABEL: undefined,
+        QUIET_CORE_SYSTEMD_UNIT: undefined,
+        QUIET_CORE_WINDOWS_TASK_NAME: undefined,
         INVOCATION_ID: undefined,
         NODE_ENV: "test",
         VITEST: undefined,
@@ -218,7 +218,7 @@ describe("update-startup", () => {
 
     // Perf: load mocked modules once (after timers/env are set up).
     if (!loaded) {
-      ({ resolveOpenClawPackageRoot } = await import("./openclaw-root.js"));
+      ({ resolveOpenClawPackageRoot } = await import("./quiet-core-bot-root.js"));
       ({ checkUpdateStatus, resolveNpmChannelTag } = await import("./update-check.js"));
       ({ runCommandWithTimeout } = await import("../process/exec.js"));
       ({
@@ -241,7 +241,7 @@ describe("update-startup", () => {
       status: "started",
       pid: 12345,
       command: "quiet-core-bot update --yes --channel beta --timeout 2700",
-      logPath: "/tmp/openclaw-handoff.log",
+      logPath: "/tmp/quiet-core-bot-handoff.log",
     });
     resetUpdateAvailableStateForTest();
   });
@@ -259,9 +259,9 @@ describe("update-startup", () => {
   }
 
   function mockPackageInstallStatus() {
-    vi.mocked(resolveOpenClawPackageRoot).mockResolvedValue("/opt/openclaw");
+    vi.mocked(resolveOpenClawPackageRoot).mockResolvedValue("/opt/quiet-core-bot");
     vi.mocked(checkUpdateStatus).mockResolvedValue({
-      root: "/opt/openclaw",
+      root: "/opt/quiet-core-bot",
       installKind: "package",
       packageManager: "npm",
     } satisfies UpdateCheckResult);
@@ -518,7 +518,7 @@ describe("update-startup", () => {
     expect(runAutoUpdate).toHaveBeenCalledWith({
       channel: "stable",
       timeoutMs: 45 * 60 * 1000,
-      root: "/opt/openclaw",
+      root: "/opt/quiet-core-bot",
     });
   });
 
@@ -535,7 +535,7 @@ describe("update-startup", () => {
     expect(runAutoUpdate).toHaveBeenCalledWith({
       channel: "beta",
       timeoutMs: 45 * 60 * 1000,
-      root: "/opt/openclaw",
+      root: "/opt/quiet-core-bot",
     });
   });
 
@@ -551,9 +551,9 @@ describe("update-startup", () => {
     expect(runAutoUpdate).toHaveBeenCalledTimes(1);
   });
 
-  it("honors OPENCLAW_NO_AUTO_UPDATE for configured auto-updates", async () => {
+  it("honors QUIET_CORE_NO_AUTO_UPDATE for configured auto-updates", async () => {
     mockPackageUpdateStatus("beta", "2.0.0-beta.1");
-    process.env.OPENCLAW_NO_AUTO_UPDATE = "1";
+    process.env.QUIET_CORE_NO_AUTO_UPDATE = "1";
     const log = { info: vi.fn() };
     const runAutoUpdate = createAutoUpdateSuccessMock();
 
@@ -567,10 +567,10 @@ describe("update-startup", () => {
 
     expect(runAutoUpdate).not.toHaveBeenCalled();
     const disabledLogCall = log.info.mock.calls.find(
-      ([message]) => message === "auto-update disabled by OPENCLAW_NO_AUTO_UPDATE",
+      ([message]) => message === "auto-update disabled by QUIET_CORE_NO_AUTO_UPDATE",
     );
     expect(disabledLogCall).toEqual([
-      "auto-update disabled by OPENCLAW_NO_AUTO_UPDATE",
+      "auto-update disabled by QUIET_CORE_NO_AUTO_UPDATE",
       {
         version: "2.0.0-beta.1",
         tag: "beta",
@@ -591,7 +591,7 @@ describe("update-startup", () => {
     });
 
     const originalArgv = process.argv.slice();
-    process.argv = [process.execPath, "/opt/openclaw/dist/entry.js"];
+    process.argv = [process.execPath, "/opt/quiet-core-bot/dist/entry.js"];
     try {
       await runAutoUpdateCheckWithDefaults({
         cfg: createBetaAutoUpdateConfig(),
@@ -609,7 +609,7 @@ describe("update-startup", () => {
     const [argv, options] = requireFirstRunCommandCall();
     expect(argv).toEqual([
       process.execPath,
-      "/opt/openclaw/dist/entry.js",
+      "/opt/quiet-core-bot/dist/entry.js",
       "update",
       "--yes",
       "--channel",
@@ -621,7 +621,7 @@ describe("update-startup", () => {
       throw new Error("expected command options object");
     }
     expect(options.timeoutMs).toBe(45 * 60 * 1000);
-    expect(options.env).toEqual({ OPENCLAW_AUTO_UPDATE: "1" });
+    expect(options.env).toEqual({ QUIET_CORE_AUTO_UPDATE: "1" });
   });
 
   it("hands supervised auto-updates to a detached service handoff before restarting", async () => {
@@ -640,7 +640,7 @@ describe("update-startup", () => {
     expect(runCommandWithTimeout).not.toHaveBeenCalled();
     expect(startManagedServiceUpdateHandoffMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        root: "/opt/openclaw",
+        root: "/opt/quiet-core-bot",
         timeoutMs: 45 * 60 * 1000,
         channel: "beta",
         restartDelayMs: 0,
@@ -673,7 +673,7 @@ describe("update-startup", () => {
       version: "2.0.0-beta.1",
       tag: "beta",
       command: "quiet-core-bot update --yes --channel beta --timeout 2700",
-      logPath: "/tmp/openclaw-handoff.log",
+      logPath: "/tmp/quiet-core-bot-handoff.log",
     });
   });
 
@@ -692,7 +692,7 @@ describe("update-startup", () => {
     });
     expect(startManagedServiceUpdateHandoffMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        root: "/opt/openclaw",
+        root: "/opt/quiet-core-bot",
         timeoutMs: 45 * 60 * 1000,
         channel: "beta",
         restartDelayMs: 2000,

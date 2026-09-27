@@ -120,7 +120,7 @@ export function registerDnsCli(program: Command) {
     .description(
       "Set up CoreDNS to serve your discovery domain for unicast DNS-SD (Wide-Area Bonjour)",
     )
-    .option("--domain <domain>", "Wide-area discovery domain (e.g. openclaw.internal)")
+    .option("--domain <domain>", "Wide-area discovery domain (e.g. quiet-core-bot.internal)")
     .option(
       "--apply",
       "Install/update CoreDNS config and (re)start the service (requires sudo)",
@@ -166,7 +166,7 @@ export function registerDnsCli(program: Command) {
       defaultRuntime.log("");
       defaultRuntime.log(
         theme.heading(
-          "Recommended config ($OPENCLAW_CONFIG_PATH, default ~/.quiet-core-bot/quiet-core-bot.json):",
+          "Recommended config ($QUIET_CORE_CONFIG_PATH, default ~/.quiet-core-bot/quiet-core-bot.json):",
         ),
       );
       defaultRuntime.writeJson({
@@ -263,7 +263,7 @@ export function registerDnsCli(program: Command) {
         defaultRuntime.log("");
         defaultRuntime.log(
           theme.muted(
-            "Note: enable discovery.wideArea.enabled in the active Quiet Core bot config ($OPENCLAW_CONFIG_PATH, default ~/.quiet-core-bot/quiet-core-bot.json) on the gateway and restart the gateway so it writes the DNS-SD zone.",
+            "Note: enable discovery.wideArea.enabled in the active Quiet Core bot config ($QUIET_CORE_CONFIG_PATH, default ~/.quiet-core-bot/quiet-core-bot.json) on the gateway and restart the gateway so it writes the DNS-SD zone.",
           ),
         );
       }

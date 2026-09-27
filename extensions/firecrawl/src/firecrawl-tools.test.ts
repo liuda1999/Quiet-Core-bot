@@ -1,6 +1,6 @@
 // Firecrawl tests cover firecrawl tools plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { mockPinnedHostnameResolution } from "openclaw/plugin-sdk/test-env";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import { mockPinnedHostnameResolution } from "quiet-core-bot/plugin-sdk/test-env";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   DEFAULT_FIRECRAWL_BASE_URL,
@@ -219,7 +219,7 @@ describe("firecrawl tools", () => {
           url: "https://api.firecrawl.dev/v2/search",
           timeoutSeconds: 5,
           apiKey: "firecrawl-key",
-          body: { query: "openclaw" },
+          body: { query: "quiet-core-bot" },
           errorLabel: "Firecrawl search",
         },
         async () => "ok",
@@ -243,7 +243,7 @@ describe("firecrawl tools", () => {
         url: "https://api.firecrawl.dev/v2/search",
         timeoutSeconds: 5,
         apiKey: "firecrawl-test-\r\nkey",
-        body: { query: "openclaw" },
+        body: { query: "quiet-core-bot" },
         errorLabel: "Firecrawl search",
       },
       async () => "ok",
@@ -384,18 +384,18 @@ describe("firecrawl tools", () => {
     }
 
     const result = await tool.execute({
-      query: "openclaw docs",
+      query: "quiet-core-bot docs",
       count: 4,
     });
 
     expect(runFirecrawlSearch).toHaveBeenCalledWith({
       cfg: { test: true },
-      query: "openclaw docs",
+      query: "quiet-core-bot docs",
       count: 4,
     });
     expect(result).toEqual({
       cfg: { test: true },
-      query: "openclaw docs",
+      query: "quiet-core-bot docs",
       count: 4,
     });
   });
@@ -410,18 +410,18 @@ describe("firecrawl tools", () => {
     }
 
     await tool.execute({
-      query: "openclaw docs",
+      query: "quiet-core-bot docs",
       count: "4",
     });
 
     expect(runFirecrawlSearch).toHaveBeenCalledWith({
       cfg: { test: true },
-      query: "openclaw docs",
+      query: "quiet-core-bot docs",
       count: 4,
     });
     await expect(
       tool.execute({
-        query: "openclaw docs",
+        query: "quiet-core-bot docs",
         count: "4.5",
       }),
     ).rejects.toThrow("count must be an integer from 1 to 10");
@@ -926,7 +926,7 @@ describe("firecrawl tools", () => {
         url: "http://127.0.0.1:8787/v2/search",
         timeoutSeconds: 5,
         apiKey: "firecrawl-key",
-        body: { query: "openclaw" },
+        body: { query: "quiet-core-bot" },
         errorLabel: "Firecrawl Search",
       },
       async (response) => (await response.json()) as Record<string, unknown>,
@@ -961,7 +961,7 @@ describe("firecrawl tools", () => {
             },
           },
         } as OpenClawConfig,
-        query: "openclaw malformed search",
+        query: "quiet-core-bot malformed search",
       }),
     ).rejects.toThrow("Firecrawl Search API error: malformed JSON response");
   });

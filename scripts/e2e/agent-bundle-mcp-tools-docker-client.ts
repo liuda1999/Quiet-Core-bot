@@ -12,7 +12,7 @@ import {
 } from "../../dist/agents/agent-bundle-mcp-runtime.js";
 import { applyFinalEffectiveToolPolicy } from "../../dist/agents/embedded-agent-runner/effective-tool-policy.js";
 import { splitSdkTools } from "../../dist/agents/embedded-agent-runner/tool-split.js";
-import type { OpenClawConfig } from "../../dist/config/types.openclaw.js";
+import type { OpenClawConfig } from "../../dist/config/types.quiet-core-bot.js";
 import { getPluginToolMeta } from "../../dist/plugins/tools.js";
 import { createE2eStateDir } from "./lib/temp-state-dir.ts";
 
@@ -65,7 +65,7 @@ function applyPolicy(params: {
 }
 
 async function main() {
-  const tempState = await createE2eStateDir("openclaw-agent-bundle-mcp-");
+  const tempState = await createE2eStateDir("quiet-core-bot-agent-bundle-mcp-");
   tempState.registerExitCleanup();
   const stateDir = tempState.stateDir;
   const probeDir = path.join(stateDir, "agent-bundle-mcp-tools");

@@ -74,7 +74,7 @@ Legacy import-only file (still supported, but not the main store):
 
 - `~/.quiet-core-bot/credentials/oauth.json` (imported into `auth-profiles.json` on first use)
 
-All of the above also respect `$OPENCLAW_STATE_DIR` (state dir override). Full reference: [/gateway/configuration](/gateway/configuration-reference#auth-storage)
+All of the above also respect `$QUIET_CORE_STATE_DIR` (state dir override). Full reference: [/gateway/configuration](/gateway/configuration-reference#auth-storage)
 
 For static secret refs and runtime snapshot activation behavior, see [Secrets Management](/gateway/secrets).
 
@@ -115,7 +115,7 @@ Claude login on the host, onboarding/configure can reuse it directly.
 
 ## OAuth exchange (how login works)
 
-Quiet Core bot's interactive login flows are implemented in `openclaw/plugin-sdk/llm` and wired into the wizards/commands.
+Quiet Core bot's interactive login flows are implemented in `quiet-core-bot/plugin-sdk/llm` and wired into the wizards/commands.
 
 ### Anthropic setup-token
 

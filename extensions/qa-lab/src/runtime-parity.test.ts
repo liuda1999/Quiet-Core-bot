@@ -101,7 +101,7 @@ describe("runtime parity", () => {
             {
               tool: "web_search",
               argsHash: "same-args",
-              resultHash: runtime === "openclaw" ? "validation-error" : "provider-error",
+              resultHash: runtime === "quiet-core-bot" ? "validation-error" : "provider-error",
               errorClass: "tool-result-error",
             },
           ]),

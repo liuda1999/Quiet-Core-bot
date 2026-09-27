@@ -1,5 +1,5 @@
 // Qa Channel plugin module implements channel base behavior.
-import { getChatChannelMeta } from "openclaw/plugin-sdk/channel-plugin-common";
+import { getChatChannelMeta } from "quiet-core-bot/plugin-sdk/channel-plugin-common";
 import {
   listQaChannelAccountIds,
   resolveDefaultQaChannelAccountId,

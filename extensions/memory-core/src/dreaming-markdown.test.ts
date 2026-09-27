@@ -39,7 +39,7 @@ describe("dreaming markdown storage", () => {
   const timezone = "UTC";
 
   it("writes inline light dreaming output into the daily memory file", async () => {
-    const workspaceDir = await createTempWorkspace("openclaw-dreaming-markdown-");
+    const workspaceDir = await createTempWorkspace("quiet-core-bot-dreaming-markdown-");
 
     const result = await writeDailyDreamingPhaseBlock({
       workspaceDir,
@@ -62,7 +62,7 @@ describe("dreaming markdown storage", () => {
 
   it("falls back when the injected timestamp is outside Date range", async () => {
     vi.spyOn(Date, "now").mockReturnValue(Date.UTC(2026, 4, 30, 12, 0, 0));
-    const workspaceDir = await createTempWorkspace("openclaw-dreaming-markdown-");
+    const workspaceDir = await createTempWorkspace("quiet-core-bot-dreaming-markdown-");
 
     const result = await writeDailyDreamingPhaseBlock({
       workspaceDir,
@@ -80,7 +80,7 @@ describe("dreaming markdown storage", () => {
   });
 
   it("keeps multiple inline phases in the shared daily memory file", async () => {
-    const workspaceDir = await createTempWorkspace("openclaw-dreaming-markdown-");
+    const workspaceDir = await createTempWorkspace("quiet-core-bot-dreaming-markdown-");
 
     await writeDailyDreamingPhaseBlock({
       workspaceDir,
@@ -114,7 +114,7 @@ describe("dreaming markdown storage", () => {
   });
 
   it("keeps daily phase output separate from lowercase dreams.md diaries", async () => {
-    const workspaceDir = await createTempWorkspace("openclaw-dreaming-markdown-");
+    const workspaceDir = await createTempWorkspace("quiet-core-bot-dreaming-markdown-");
     const lowercasePath = path.join(workspaceDir, "dreams.md");
     await fs.writeFile(lowercasePath, "# Scratch\n\n", "utf-8");
 
@@ -139,7 +139,7 @@ describe("dreaming markdown storage", () => {
   });
 
   it("still writes deep reports to the per-phase report directory", async () => {
-    const workspaceDir = await createTempWorkspace("openclaw-dreaming-markdown-");
+    const workspaceDir = await createTempWorkspace("quiet-core-bot-dreaming-markdown-");
 
     const reportPath = await writeDeepDreamingReport({
       workspaceDir,
@@ -167,7 +167,7 @@ describe("dreaming markdown storage", () => {
   });
 
   it("writes the deep summary to DREAMS.md without a separate report in inline mode", async () => {
-    const workspaceDir = await createTempWorkspace("openclaw-dreaming-markdown-");
+    const workspaceDir = await createTempWorkspace("quiet-core-bot-dreaming-markdown-");
 
     const reportPath = await writeDeepDreamingReport({
       workspaceDir,
@@ -188,7 +188,7 @@ describe("dreaming markdown storage", () => {
   });
 
   it("replaces the managed deep summary while preserving the diary block", async () => {
-    const workspaceDir = await createTempWorkspace("openclaw-dreaming-markdown-");
+    const workspaceDir = await createTempWorkspace("quiet-core-bot-dreaming-markdown-");
     const dreamsPath = path.join(workspaceDir, "DREAMS.md");
     await fs.writeFile(
       dreamsPath,
@@ -232,7 +232,7 @@ describe("dreaming markdown storage", () => {
   });
 
   it("reuses existing lowercase dreams.md for deep summaries", async () => {
-    const workspaceDir = await createTempWorkspace("openclaw-dreaming-markdown-");
+    const workspaceDir = await createTempWorkspace("quiet-core-bot-dreaming-markdown-");
     const lowercasePath = path.join(workspaceDir, "dreams.md");
     await fs.writeFile(lowercasePath, "# Existing dreams\n", "utf-8");
 
@@ -253,7 +253,7 @@ describe("dreaming markdown storage", () => {
   });
 
   it("refuses to overwrite a symlinked DREAMS.md for deep summaries", async () => {
-    const workspaceDir = await createTempWorkspace("openclaw-dreaming-markdown-");
+    const workspaceDir = await createTempWorkspace("quiet-core-bot-dreaming-markdown-");
     const targetPath = path.join(workspaceDir, "outside.txt");
     const dreamsPath = path.join(workspaceDir, "DREAMS.md");
     await fs.writeFile(targetPath, "outside\n", "utf-8");

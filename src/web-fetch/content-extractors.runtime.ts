@@ -1,5 +1,5 @@
 /** Runtime bridge for plugin-provided readable-content extractors used by web fetch. */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { createConfigScopedPromiseLoader } from "../plugins/plugin-cache-primitives.js";
 import type {
   WebContentExtractionResult,

@@ -1,5 +1,5 @@
 // Memory Wiki plugin module implements time behavior.
-import { timestampMsToIsoString } from "openclaw/plugin-sdk/number-runtime";
+import { timestampMsToIsoString } from "quiet-core-bot/plugin-sdk/number-runtime";
 
 export function resolveMemoryWikiTimestamp(nowMs?: number): string {
   return (

@@ -22,7 +22,7 @@ function setupEnsureBrowserAvailableHarness() {
 
   const state = makeBrowserServerState();
   const ctx = createBrowserRouteContext({ getState: () => state });
-  const profile = ctx.forProfile("openclaw");
+  const profile = ctx.forProfile("quiet-core-bot");
 
   return { launchOpenClawChrome, stopOpenClawChrome, isChromeCdpReady, profile, state };
 }
@@ -36,7 +36,7 @@ function createAttachOnlyLoopbackProfile(cdpUrl: string) {
       cdpIsLoopback: true,
       cdpPort: 9222,
       color: "#00AA00",
-      driver: "openclaw",
+      driver: "quiet-core-bot",
       headless: false,
       attachOnly: true,
     },
@@ -139,8 +139,8 @@ describe("browser server-context ensureBrowserAvailable", () => {
 
     const firstCtx = createBrowserRouteContext({ getState: () => state });
     const secondCtx = createBrowserRouteContext({ getState: () => state });
-    const first = firstCtx.forProfile("openclaw").ensureBrowserAvailable();
-    const second = secondCtx.forProfile("openclaw").ensureBrowserAvailable();
+    const first = firstCtx.forProfile("quiet-core-bot").ensureBrowserAvailable();
+    const second = secondCtx.forProfile("quiet-core-bot").ensureBrowserAvailable();
     await vi.advanceTimersByTimeAsync(100);
     await expect(Promise.all([first, second])).resolves.toEqual([undefined, undefined]);
 
@@ -168,12 +168,12 @@ describe("browser server-context ensureBrowserAvailable", () => {
       setupEnsureBrowserAvailableHarness();
     const isChromeReachable = vi.mocked(chromeModule.isChromeReachable);
     const existingProc = new EventEmitter() as unknown as ChildProcessWithoutNullStreams;
-    state.profiles.set("openclaw", {
+    state.profiles.set("quiet-core-bot", {
       profile: profile.profile,
       running: {
         pid: 111,
         exe: { kind: "chromium", path: "/usr/bin/chromium" },
-        userDataDir: "/tmp/openclaw-test",
+        userDataDir: "/tmp/quiet-core-bot-test",
         cdpPort: 18800,
         startedAt: Date.now(),
         proc: existingProc,
@@ -238,16 +238,16 @@ describe("browser server-context ensureBrowserAvailable", () => {
 
     for (let attempt = 0; attempt < 3; attempt += 1) {
       const ctx = createBrowserRouteContext({ getState: () => state });
-      await expect(ctx.forProfile("openclaw").ensureBrowserAvailable()).rejects.toThrow(
+      await expect(ctx.forProfile("quiet-core-bot").ensureBrowserAvailable()).rejects.toThrow(
         "Failed to start Chrome CDP",
       );
     }
 
     const cooledDownCtx = createBrowserRouteContext({ getState: () => state });
-    await expect(cooledDownCtx.forProfile("openclaw").ensureBrowserAvailable()).rejects.toThrow(
-      'Browser launch for profile "openclaw" is cooling down after 3 consecutive managed Chrome launch failures.',
+    await expect(cooledDownCtx.forProfile("quiet-core-bot").ensureBrowserAvailable()).rejects.toThrow(
+      'Browser launch for profile "quiet-core-bot" is cooling down after 3 consecutive managed Chrome launch failures.',
     );
-    await expect(cooledDownCtx.forProfile("openclaw").ensureBrowserAvailable()).rejects.toThrow(
+    await expect(cooledDownCtx.forProfile("quiet-core-bot").ensureBrowserAvailable()).rejects.toThrow(
       "set browser.enabled=false if the browser tool is not needed",
     );
 
@@ -262,14 +262,14 @@ describe("browser server-context ensureBrowserAvailable", () => {
 
     for (let attempt = 0; attempt < 3; attempt += 1) {
       const ctx = createBrowserRouteContext({ getState: () => state });
-      await expect(ctx.forProfile("openclaw").ensureBrowserAvailable()).rejects.toThrow(
+      await expect(ctx.forProfile("quiet-core-bot").ensureBrowserAvailable()).rejects.toThrow(
         "Failed to start Chrome CDP",
       );
     }
 
     await vi.advanceTimersByTimeAsync(30_000);
     const retryCtx = createBrowserRouteContext({ getState: () => state });
-    await expect(retryCtx.forProfile("openclaw").ensureBrowserAvailable()).rejects.toThrow(
+    await expect(retryCtx.forProfile("quiet-core-bot").ensureBrowserAvailable()).rejects.toThrow(
       "Failed to start Chrome CDP",
     );
 
@@ -313,7 +313,7 @@ describe("browser server-context ensureBrowserAvailable", () => {
 
     const promise = profile.ensureBrowserAvailable();
     await expect(promise).rejects.toThrow(
-      'Port 18800 is in use for profile "openclaw" but not by openclaw.',
+      'Port 18800 is in use for profile "quiet-core-bot" but not by quiet-core-bot.',
     );
     await expect(promise).rejects.toThrow(
       "set browser.profiles.openclaw.attachOnly=true so OpenClaw attaches without trying to manage the local process",
@@ -337,7 +337,7 @@ describe("browser server-context ensureBrowserAvailable", () => {
       color: "#00AA00",
     };
     const ctx = createBrowserRouteContext({ getState: () => state });
-    const profile = ctx.forProfile("openclaw");
+    const profile = ctx.forProfile("quiet-core-bot");
     const expectedRemoteHttpTimeoutMs = state.resolved.remoteCdpTimeoutMs;
     const expectedRemoteWsTimeoutMs = state.resolved.remoteCdpHandshakeTimeoutMs;
 
@@ -447,7 +447,7 @@ describe("browser server-context ensureBrowserAvailable", () => {
         cdpIsLoopback: false,
         cdpPort: 443,
         color: "#00AA00",
-        driver: "openclaw",
+        driver: "quiet-core-bot",
         headless: false,
         attachOnly: false,
       },

@@ -3,7 +3,7 @@
  */
 import { stripInternalMetadataForDisplay } from "../../auto-reply/reply/display-text-sanitize.js";
 import { isSilentReplyPayloadText, SILENT_REPLY_TOKEN } from "../../auto-reply/tokens.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import type { ProviderRuntimeModel } from "../../plugins/provider-runtime-model.types.js";
 import {
   sanitizeProviderReplayHistoryWithPlugin,
@@ -21,7 +21,7 @@ import {
 import {
   isReplayVisibleDeliveryMirrorAssistantMessage,
   isTranscriptOnlyOpenClawAssistantMessage,
-} from "../../shared/transcript-only-openclaw-assistant.js";
+} from "../../shared/transcript-only-quiet-core-bot-assistant.js";
 import { stripStaleAssistantUsageBeforeLatestCompaction } from "../compaction-usage.js";
 import {
   downgradeOpenAIFunctionCallReasoningPairs,

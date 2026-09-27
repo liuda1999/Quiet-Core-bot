@@ -2,7 +2,7 @@
 import {
   normalizeOptionalLowercaseString,
   normalizeOptionalString as toText,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/normalization-core/string-coerce";
 import { z } from "zod";
 
 /**

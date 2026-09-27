@@ -14,11 +14,11 @@ function requirePluginEntries(config: { plugins?: { entries?: Record<string, unk
 
 describe("release-check", () => {
   it("seeds packaged activation smoke with an included channel plugin", () => {
-    const homeDir = mkdtempSync(join(tmpdir(), "openclaw-release-check-test-"));
+    const homeDir = mkdtempSync(join(tmpdir(), "quiet-core-bot-release-check-test-"));
     try {
       writePackedBundledPluginActivationConfig(homeDir);
       const config = JSON.parse(
-        readFileSync(join(homeDir, ".openclaw", "openclaw.json"), "utf8"),
+        readFileSync(join(homeDir, ".quiet-core-bot", "quiet-core-bot.json"), "utf8"),
       ) as {
         channels?: Record<string, unknown>;
         plugins?: { entries?: Record<string, unknown> };

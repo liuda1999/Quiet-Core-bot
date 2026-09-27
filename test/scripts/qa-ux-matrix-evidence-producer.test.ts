@@ -88,7 +88,7 @@ describe("QA UX Matrix evidence producer CLI", () => {
 
   it("reports short flag values without treating them as help", () => {
     const artifactBaseResult = runCli("--artifact-base", "-h");
-    const repoRootResult = runCli("--artifact-base", "/tmp/openclaw-ux-test", "--repo-root", "-h");
+    const repoRootResult = runCli("--artifact-base", "/tmp/quiet-core-bot-ux-test", "--repo-root", "-h");
 
     expect(artifactBaseResult.status).toBe(1);
     expect(artifactBaseResult.stdout).toBe("");
@@ -101,8 +101,8 @@ describe("QA UX Matrix evidence producer CLI", () => {
   });
 
   it("sanitizes local checkout paths from generated evidence artifacts", () => {
-    const artifactBase = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-ux-evidence-test-"));
-    const fakeRepoRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-ux-repo-test-"));
+    const artifactBase = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-ux-evidence-test-"));
+    const fakeRepoRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-ux-repo-test-"));
     try {
       const result = runCli(
         "--artifact-base",

@@ -31,7 +31,7 @@ describe("status daemon summary", () => {
       loadedText: "enabled",
       runtime: { status: "running", pid: 1234 },
       layout: {
-        execStart: "/usr/bin/node /opt/openclaw/dist/entry.js gateway",
+        execStart: "/usr/bin/node /opt/quiet-core-bot/dist/entry.js gateway",
         sourceScope: "system",
         entrypointSourceCheckout: false,
       },
@@ -39,7 +39,7 @@ describe("status daemon summary", () => {
 
     const summary = await getDaemonStatusSummary();
     expect(summary.runtimeShort).toBe("running (pid 1234)");
-    expect(summary.layout?.execStart).toBe("/usr/bin/node /opt/openclaw/dist/entry.js gateway");
+    expect(summary.layout?.execStart).toBe("/usr/bin/node /opt/quiet-core-bot/dist/entry.js gateway");
     expect(summary.layout?.sourceScope).toBe("system");
     expect(summary.layout?.entrypointSourceCheckout).toBe(false);
   });
@@ -56,7 +56,7 @@ describe("status daemon summary", () => {
         status: "running",
         pid: 1234,
         systemd: {
-          unit: "openclaw-gateway.service",
+          unit: "quiet-core-bot-gateway.service",
           killMode: "process",
           tasksCurrent: 807,
           memoryCurrent: 11_918_534_246,
@@ -69,7 +69,7 @@ describe("status daemon summary", () => {
       "running (pid 1234, cgroup hygiene: KillMode=process, tasks=807, memory=11.1GiB)",
     );
     expect(summary.runtime?.systemd).toEqual({
-      unit: "openclaw-gateway.service",
+      unit: "quiet-core-bot-gateway.service",
       killMode: "process",
       tasksCurrent: 807,
       memoryCurrent: 11_918_534_246,
@@ -88,7 +88,7 @@ describe("status daemon summary", () => {
         status: "running",
         pid: 1234,
         systemd: {
-          unit: "openclaw-gateway.service",
+          unit: "quiet-core-bot-gateway.service",
           killMode: "control-group",
           tasksCurrent: 7,
           memoryCurrent: 132_120_576,

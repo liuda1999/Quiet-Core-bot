@@ -153,7 +153,7 @@ export async function maybeCompactAgentHarnessSession(
     return undefined;
   }
   if (!options.nativeCompactionRequest && !harness.compact) {
-    if (harness.id !== "openclaw") {
+    if (harness.id !== "quiet-core-bot") {
       return {
         ok: false,
         compacted: false,

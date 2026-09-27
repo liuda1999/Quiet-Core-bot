@@ -300,7 +300,7 @@ describe("buildEmbeddedCompactionRuntimeContext", () => {
       } as unknown as OpenClawConfig,
       provider: "openai",
       modelId: "gpt-5.5",
-      harnessRuntime: "openclaw",
+      harnessRuntime: "quiet-core-bot",
       defaultProvider: "openai",
       defaultModel: "gpt-5.5",
     });

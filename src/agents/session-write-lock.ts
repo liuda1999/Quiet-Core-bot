@@ -7,7 +7,7 @@ import "../infra/fs-safe-defaults.js";
 import type fsSync from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@quiet-core/normalization-core/number-coercion";
 import { createFileLockManager } from "../infra/file-lock-manager.js";
 import { readGatewayProcessArgsSync as readProcessArgsSync } from "../infra/gateway-processes.js";
 import { getProcessStartTime, isPidAlive } from "../shared/pid-alive.js";
@@ -43,8 +43,8 @@ export type SessionLockOwnerProcessArgsReader = (pid: number) => string[] | null
 
 const CLEANUP_SIGNALS = ["SIGINT", "SIGTERM", "SIGQUIT", "SIGABRT"] as const;
 type CleanupSignal = (typeof CLEANUP_SIGNALS)[number];
-const CLEANUP_STATE_KEY = Symbol.for("openclaw.sessionWriteLockCleanupState");
-const WATCHDOG_STATE_KEY = Symbol.for("openclaw.sessionWriteLockWatchdogState");
+const CLEANUP_STATE_KEY = Symbol.for("quiet-core-bot.sessionWriteLockCleanupState");
+const WATCHDOG_STATE_KEY = Symbol.for("quiet-core-bot.sessionWriteLockWatchdogState");
 
 const DEFAULT_SESSION_WRITE_LOCK_STALE_MS = 30 * 60 * 1000;
 const DEFAULT_SESSION_WRITE_LOCK_MAX_HOLD_MS = 5 * 60 * 1000;
@@ -86,7 +86,7 @@ type LockInspectionDetails = Pick<
   "pid" | "pidAlive" | "createdAt" | "ageMs" | "stale" | "staleReasons"
 >;
 
-const SESSION_LOCKS = createFileLockManager("openclaw.session-write-lock");
+const SESSION_LOCKS = createFileLockManager("quiet-core-bot.session-write-lock");
 let resolveProcessStartTimeForLock = getProcessStartTime;
 
 function isFileLockError(error: unknown, code: string): boolean {
@@ -106,9 +106,9 @@ export type SessionWriteLockAcquireTimeoutConfig = {
 type SessionWriteLockMsKey = "acquireTimeoutMs" | "staleMs" | "maxHoldMs";
 
 const SESSION_WRITE_LOCK_ENV: Record<SessionWriteLockMsKey, string> = {
-  acquireTimeoutMs: "OPENCLAW_SESSION_WRITE_LOCK_ACQUIRE_TIMEOUT_MS",
-  staleMs: "OPENCLAW_SESSION_WRITE_LOCK_STALE_MS",
-  maxHoldMs: "OPENCLAW_SESSION_WRITE_LOCK_MAX_HOLD_MS",
+  acquireTimeoutMs: "QUIET_CORE_SESSION_WRITE_LOCK_ACQUIRE_TIMEOUT_MS",
+  staleMs: "QUIET_CORE_SESSION_WRITE_LOCK_STALE_MS",
+  maxHoldMs: "QUIET_CORE_SESSION_WRITE_LOCK_MAX_HOLD_MS",
 };
 
 function readPositiveMsEnv(
@@ -316,7 +316,7 @@ function stopWatchdogTimer(): void {
 }
 
 function shouldStartBackgroundWatchdog(): boolean {
-  return process.env.VITEST !== "true" || process.env.OPENCLAW_TEST_SESSION_LOCK_WATCHDOG === "1";
+  return process.env.VITEST !== "true" || process.env.QUIET_CORE_TEST_SESSION_LOCK_WATCHDOG === "1";
 }
 
 function ensureWatchdogStarted(intervalMs: number): void {
@@ -456,14 +456,14 @@ function isOpenClawSessionOwnerArgv(args: string[]): boolean {
     return false;
   }
   const exe = (normalized[0] ?? "").replace(/\.(bat|cmd|exe)$/i, "");
-  if (exe === "openclaw" || exe.endsWith("/openclaw") || exe.endsWith("/openclaw-gateway")) {
+  if (exe === "quiet-core-bot" || exe.endsWith("/quiet-core-bot") || exe.endsWith("/quiet-core-bot-gateway")) {
     return true;
   }
   if (
     normalized.some(
       (arg) =>
-        arg === "openclaw" ||
-        arg.endsWith("/openclaw") ||
+        arg === "quiet-core-bot" ||
+        arg.endsWith("/quiet-core-bot") ||
         arg === "quiet-core-bot.mjs" ||
         arg.endsWith("/quiet-core-bot.mjs"),
     )
@@ -783,7 +783,7 @@ function inspectLockPayloadForSession(params: {
     return {
       ...inspected,
       stale: true,
-      staleReasons: [...inspected.staleReasons, "non-openclaw-owner"],
+      staleReasons: [...inspected.staleReasons, "non-quiet-core-bot-owner"],
     };
   }
 

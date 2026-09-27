@@ -2,7 +2,7 @@
 import { spawn } from "node:child_process";
 import os from "node:os";
 import path from "node:path";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { sanitizeForLog } from "../../packages/terminal-core/src/ansi.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { sanitizeHostExecEnv } from "../infra/host-env-security.js";
@@ -31,8 +31,8 @@ const START_AFTER_EXIT_PRINT_RETRY_DELAY_SECONDS = 0.2;
 type LaunchdRestartLogEnv = {
   HOME?: string;
   USERPROFILE?: string;
-  OPENCLAW_STATE_DIR?: string;
-  OPENCLAW_PROFILE?: string;
+  QUIET_CORE_STATE_DIR?: string;
+  QUIET_CORE_PROFILE?: string;
 };
 
 function assertValidLaunchAgentLabel(label: string): string {
@@ -66,17 +66,17 @@ function collectRestartLogEnv(env?: Record<string, string | undefined>): Launchd
   return {
     HOME: source.HOME,
     USERPROFILE: source.USERPROFILE,
-    OPENCLAW_STATE_DIR: source.OPENCLAW_STATE_DIR,
-    OPENCLAW_PROFILE: source.OPENCLAW_PROFILE,
+    QUIET_CORE_STATE_DIR: source.QUIET_CORE_STATE_DIR,
+    QUIET_CORE_PROFILE: source.QUIET_CORE_PROFILE,
   };
 }
 
 function resolveLaunchAgentLabel(env?: Record<string, string | undefined>): string {
-  const envLabel = normalizeOptionalString(env?.OPENCLAW_LAUNCHD_LABEL);
+  const envLabel = normalizeOptionalString(env?.QUIET_CORE_LAUNCHD_LABEL);
   if (envLabel) {
     return assertValidLaunchAgentLabel(envLabel);
   }
-  return assertValidLaunchAgentLabel(resolveGatewayLaunchAgentLabel(env?.OPENCLAW_PROFILE));
+  return assertValidLaunchAgentLabel(resolveGatewayLaunchAgentLabel(env?.QUIET_CORE_PROFILE));
 }
 
 function resolveLaunchdRestartTarget(
@@ -235,7 +235,7 @@ export function scheduleDetachedLaunchdRestartHandoff(params: {
       [
         "-c",
         buildLaunchdRestartScript(params.mode, restartLogEnv),
-        "openclaw-launchd-restart-handoff",
+        "quiet-core-bot-launchd-restart-handoff",
         target.serviceTarget,
         target.domain,
         target.plistPath,

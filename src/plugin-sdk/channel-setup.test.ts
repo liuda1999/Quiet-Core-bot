@@ -1,5 +1,5 @@
 // Channel setup tests cover setup wizard finalize behavior and config write contracts.
-import { runSetupWizardFinalize } from "openclaw/plugin-sdk/plugin-test-runtime";
+import { runSetupWizardFinalize } from "quiet-core-bot/plugin-sdk/plugin-test-runtime";
 import { describe, expect, it } from "vitest";
 import { createOptionalChannelSetupSurface } from "./channel-setup.js";
 
@@ -8,7 +8,7 @@ describe("createOptionalChannelSetupSurface", () => {
     const setup = createOptionalChannelSetupSurface({
       channel: "example",
       label: "Example",
-      npmSpec: "@openclaw/example",
+      npmSpec: "@quiet-core/example",
       docsPath: "/channels/example",
     });
 
@@ -20,11 +20,11 @@ describe("createOptionalChannelSetupSurface", () => {
         input: {},
       }),
     ).toBe(
-      "Example setup requires @openclaw/example to be installed. Docs: https://github.com/liuda1999/Quiet-Core-bot/channels/example",
+      "Example setup requires @quiet-core/example to be installed. Docs: https://github.com/liuda1999/Quiet-Core-bot/channels/example",
     );
     expect(setup.setupWizard.channel).toBe("example");
     expect(setup.setupWizard.status.unconfiguredHint).toBe(
-      "Example setup requires @openclaw/example to be installed. Docs: https://github.com/liuda1999/Quiet-Core-bot/channels/example",
+      "Example setup requires @quiet-core/example to be installed. Docs: https://github.com/liuda1999/Quiet-Core-bot/channels/example",
     );
     await expect(
       runSetupWizardFinalize({
@@ -35,6 +35,6 @@ describe("createOptionalChannelSetupSurface", () => {
           exit: async () => {},
         },
       }),
-    ).rejects.toThrow("@openclaw/example");
+    ).rejects.toThrow("@quiet-core/example");
   });
 });

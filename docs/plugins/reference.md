@@ -9,7 +9,7 @@ title: "Plugin reference"
 # Plugin reference
 
 This page is generated from `extensions/*/package.json` and
-`openclaw.plugin.json`. Regenerate it with:
+`quiet-core-bot.plugin.json`. Regenerate it with:
 
 ```bash
 pnpm plugins:inventory:gen

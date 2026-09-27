@@ -18,7 +18,7 @@ install the npm package directly:
 Install via CLI (npm registry):
 
 ```bash
-quiet-core-bot plugins install @openclaw/nextcloud-talk
+quiet-core-bot plugins install @quiet-core/nextcloud-talk
 ```
 
 Use the bare package to follow the current official release tag. Pin an exact

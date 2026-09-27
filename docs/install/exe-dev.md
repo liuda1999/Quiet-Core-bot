@@ -12,7 +12,7 @@ This page assumes exe.dev's default **exeuntu** image. If you picked a different
 
 ## Beginner quick path
 
-1. [https://exe.new/openclaw](https://exe.new/openclaw)
+1. [https://exe.new/quiet-core-bot](https://exe.new/quiet-core-bot)
 2. Fill in your auth key/token as needed
 3. Click on "Agent" next to your VM and wait for Shelley to finish provisioning
 4. Open `https://<vm-name>.exe.xyz/` and authenticate with the configured shared secret (this guide uses token auth by default, but password auth works too if you switch `gateway.auth.mode`)
@@ -110,7 +110,7 @@ and append-style `X-Forwarded-For` chains are treated as a hardening risk.
 Access `https://<vm-name>.exe.xyz/` (see the Control UI output from onboarding). If it prompts for auth, paste the
 configured shared secret from the VM. This guide uses token auth, so retrieve `gateway.auth.token`
 with `quiet-core-bot config get gateway.auth.token` (or generate one with `quiet-core-bot doctor --generate-gateway-token`).
-If you changed the gateway to password auth, use `gateway.auth.password` / `OPENCLAW_GATEWAY_PASSWORD` instead.
+If you changed the gateway to password auth, use `gateway.auth.password` / `QUIET_CORE_GATEWAY_PASSWORD` instead.
 Approve devices with `quiet-core-bot devices list` and `quiet-core-bot devices approve <requestId>`. When in doubt, use Shelley from your browser!
 
 ## Remote channel setup
@@ -131,7 +131,7 @@ EOF
 From your local machine, create a patch file and pipe it to the VM:
 
 ```json5
-// openclaw.remote.patch.json5
+// quiet-core-bot.remote.patch.json5
 {
   secrets: {
     providers: {
@@ -167,8 +167,8 @@ From your local machine, create a patch file and pipe it to the VM:
 ```
 
 ```bash
-ssh <vm-name>.exe.xyz 'quiet-core-bot config patch --stdin --dry-run' < ./openclaw.remote.patch.json5
-ssh <vm-name>.exe.xyz 'quiet-core-bot config patch --stdin' < ./openclaw.remote.patch.json5
+ssh <vm-name>.exe.xyz 'quiet-core-bot config patch --stdin --dry-run' < ./quiet-core-bot.remote.patch.json5
+ssh <vm-name>.exe.xyz 'quiet-core-bot config patch --stdin' < ./quiet-core-bot.remote.patch.json5
 ssh <vm-name>.exe.xyz 'quiet-core-bot gateway restart && quiet-core-bot health'
 ```
 
@@ -187,7 +187,7 @@ with email auth.
 ## Updating
 
 ```bash
-npm i -g openclaw@latest
+npm i -g quiet-core-bot@latest
 quiet-core-bot doctor
 quiet-core-bot gateway restart
 quiet-core-bot health

@@ -1,7 +1,7 @@
 // Official channel catalog tests validate catalog metadata and entries.
 import fs from "node:fs";
 import path from "node:path";
-import { bundledPluginRoot } from "openclaw/plugin-sdk/test-fixtures";
+import { bundledPluginRoot } from "quiet-core-bot/plugin-sdk/test-fixtures";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   buildOfficialChannelCatalog,
@@ -17,7 +17,7 @@ type OfficialChannelCatalogEntry = ReturnType<
   typeof buildOfficialChannelCatalog
 >["entries"][number];
 type OfficialChannelInstall = NonNullable<
-  NonNullable<OfficialChannelCatalogEntry["openclaw"]>["install"]
+  NonNullable<OfficialChannelCatalogEntry["quiet-core-bot"]>["install"]
 >;
 
 function makeRepoRoot(prefix: string): string {
@@ -29,7 +29,7 @@ function writeJson(filePath: string, value: unknown): void {
 }
 
 function requireInstall(entry: OfficialChannelCatalogEntry | undefined): OfficialChannelInstall {
-  const install = entry?.openclaw?.install;
+  const install = entry?.["quiet-core-bot"]?.install;
   if (!install) {
     throw new Error("expected official channel install config");
   }
@@ -59,9 +59,9 @@ function summarizeCatalogEntry(entry: OfficialChannelCatalogEntry) {
     name: entry.name,
     description: entry.description,
     source: entry.source,
-    plugin: entry.openclaw?.plugin,
-    channel: entry.openclaw?.channel,
-    install: entry.openclaw?.install,
+    plugin: entry["quiet-core-bot"]?.plugin,
+    channel: entry["quiet-core-bot"]?.channel,
+    install: entry["quiet-core-bot"]?.install,
   };
 }
 
@@ -71,12 +71,12 @@ afterEach(() => {
 
 describe("buildOfficialChannelCatalog", () => {
   it("includes publishable official channel plugins and skips non-publishable entries", () => {
-    const repoRoot = makeRepoRoot("openclaw-official-channel-catalog-");
+    const repoRoot = makeRepoRoot("quiet-core-bot-official-channel-catalog-");
     writeJson(path.join(repoRoot, "extensions", "whatsapp", "package.json"), {
-      name: "@openclaw/whatsapp",
+      name: "@quiet-core/whatsapp",
       version: "2026.3.23",
       description: "Quiet Core bot WhatsApp channel plugin",
-      openclaw: {
+      "quiet-core-bot": {
         channel: {
           id: "whatsapp",
           label: "WhatsApp",
@@ -86,8 +86,8 @@ describe("buildOfficialChannelCatalog", () => {
           blurb: "works with your own number; recommend a separate phone + eSIM.",
         },
         install: {
-          clawhubSpec: "clawhub:@openclaw/whatsapp",
-          npmSpec: "@openclaw/whatsapp",
+          clawhubSpec: "clawhub:@quiet-core/whatsapp",
+          npmSpec: "@quiet-core/whatsapp",
           localPath: bundledPluginRoot("whatsapp"),
           defaultChoice: "clawhub",
         },
@@ -97,8 +97,8 @@ describe("buildOfficialChannelCatalog", () => {
       },
     });
     writeJson(path.join(repoRoot, "extensions", "local-only", "package.json"), {
-      name: "@openclaw/local-only",
-      openclaw: {
+      name: "@quiet-core/local-only",
+      "quiet-core-bot": {
         channel: {
           id: "local-only",
           label: "Local Only",
@@ -119,14 +119,14 @@ describe("buildOfficialChannelCatalog", () => {
 
     expect(
       summarizeCatalogEntry(
-        findCatalogEntry(entries, (entry) => entry.name === "@wecom/wecom-openclaw-plugin"),
+        findCatalogEntry(entries, (entry) => entry.name === "@wecom/wecom-quiet-core-bot-plugin"),
       ),
     ).toEqual({
-      name: "@wecom/wecom-openclaw-plugin",
+      name: "@wecom/wecom-quiet-core-bot-plugin",
       description: "Quiet Core bot WeCom channel plugin by the Tencent WeCom team.",
       source: "external",
       plugin: {
-        id: "wecom-openclaw-plugin",
+        id: "wecom-quiet-core-bot-plugin",
         label: "WeCom",
       },
       channel: {
@@ -141,7 +141,7 @@ describe("buildOfficialChannelCatalog", () => {
         aliases: ["qywx", "wework", "enterprise-wechat"],
       },
       install: {
-        npmSpec: "@wecom/wecom-openclaw-plugin@2026.5.7",
+        npmSpec: "@wecom/wecom-quiet-core-bot-plugin@2026.5.7",
         defaultChoice: "npm",
         expectedIntegrity:
           "sha512-TCkP9as00WfEhgFWG8YL/rcmaWGIshAki2HQh83nTRccGfVBCoGjrEboTTqq3yDmK9koWTV11zi8u8A4dNtvug==",
@@ -149,14 +149,14 @@ describe("buildOfficialChannelCatalog", () => {
     });
     expect(
       summarizeCatalogEntry(
-        findCatalogEntry(entries, (entry) => entry.name === "openclaw-plugin-yuanbao"),
+        findCatalogEntry(entries, (entry) => entry.name === "quiet-core-bot-plugin-yuanbao"),
       ),
     ).toEqual({
-      name: "openclaw-plugin-yuanbao",
+      name: "quiet-core-bot-plugin-yuanbao",
       description: "Quiet Core bot Yuanbao channel plugin by the Tencent Yuanbao team.",
       source: "external",
       plugin: {
-        id: "openclaw-plugin-yuanbao",
+        id: "quiet-core-bot-plugin-yuanbao",
         label: "Yuanbao",
       },
       channel: {
@@ -171,7 +171,7 @@ describe("buildOfficialChannelCatalog", () => {
         aliases: ["yuanbao", "yb", "tencent-yuanbao", "元宝"],
       },
       install: {
-        npmSpec: "openclaw-plugin-yuanbao@2.15.0",
+        npmSpec: "quiet-core-bot-plugin-yuanbao@2.15.0",
         defaultChoice: "npm",
         expectedIntegrity:
           "sha512-3GD+mf3EjTSUTOAREjTHAyp/deXdpgqB+q+xE0b19Qtat4ADhUV1mHDwFkVCRqTCBY5ATFKtKcipoDejqFj/+w==",
@@ -179,10 +179,10 @@ describe("buildOfficialChannelCatalog", () => {
     });
     expect(
       summarizeCatalogEntry(
-        findCatalogEntry(entries, (entry) => entry.name === "@openclaw/whatsapp"),
+        findCatalogEntry(entries, (entry) => entry.name === "@quiet-core/whatsapp"),
       ),
     ).toEqual({
-      name: "@openclaw/whatsapp",
+      name: "@quiet-core/whatsapp",
       description: "Quiet Core bot WhatsApp channel plugin",
       source: "official",
       plugin: undefined,
@@ -197,8 +197,8 @@ describe("buildOfficialChannelCatalog", () => {
         systemImage: "message",
       },
       install: {
-        clawhubSpec: "clawhub:@openclaw/whatsapp",
-        npmSpec: "@openclaw/whatsapp",
+        clawhubSpec: "clawhub:@quiet-core/whatsapp",
+        npmSpec: "@quiet-core/whatsapp",
         defaultChoice: "clawhub",
         minHostVersion: ">=2026.4.25",
       },
@@ -206,9 +206,9 @@ describe("buildOfficialChannelCatalog", () => {
   });
 
   it("keeps third-party official external catalog npm sources exactly pinned", () => {
-    const repoRoot = makeRepoRoot("openclaw-official-channel-catalog-policy-");
+    const repoRoot = makeRepoRoot("quiet-core-bot-official-channel-catalog-policy-");
     const entries = buildOfficialChannelCatalog({ repoRoot }).entries.filter(
-      (entry) => entry.source === "external" && !entry.name?.startsWith("@openclaw/"),
+      (entry) => entry.source === "external" && !entry.name?.startsWith("@quiet-core/"),
     );
 
     expect(entries.length).toBeGreaterThan(0);
@@ -220,18 +220,18 @@ describe("buildOfficialChannelCatalog", () => {
   });
 
   it("allows official Quiet Core bot channel npm specs without integrity during launch", () => {
-    const repoRoot = makeRepoRoot("openclaw-official-channel-catalog-openclaw-policy-");
+    const repoRoot = makeRepoRoot("quiet-core-bot-official-channel-catalog-quiet-core-bot-policy-");
     const twitch = buildOfficialChannelCatalog({ repoRoot }).entries.find(
-      (entry) => entry.openclaw?.channel?.id === "twitch",
+      (entry) => entry["quiet-core-bot"]?.channel?.id === "twitch",
     );
 
     expect({
       name: twitch?.name,
-      install: twitch?.openclaw?.install,
+      install: twitch?.["quiet-core-bot"]?.install,
     }).toEqual({
-      name: "@openclaw/twitch",
+      name: "@quiet-core/twitch",
       install: {
-        npmSpec: "@openclaw/twitch",
+        npmSpec: "@quiet-core/twitch",
         defaultChoice: "npm",
         minHostVersion: ">=2026.4.10",
       },
@@ -242,10 +242,10 @@ describe("buildOfficialChannelCatalog", () => {
   });
 
   it("preserves ClawHub specs when generating publishable channel catalog entries", () => {
-    const repoRoot = makeRepoRoot("openclaw-official-channel-catalog-clawhub-");
+    const repoRoot = makeRepoRoot("quiet-core-bot-official-channel-catalog-clawhub-");
     writeJson(path.join(repoRoot, "extensions", "storepack-chat", "package.json"), {
-      name: "@openclaw/storepack-chat",
-      openclaw: {
+      name: "@quiet-core/storepack-chat",
+      "quiet-core-bot": {
         channel: {
           id: "storepack-chat",
           label: "Storepack Chat",
@@ -254,8 +254,8 @@ describe("buildOfficialChannelCatalog", () => {
           blurb: "storepack-first channel",
         },
         install: {
-          clawhubSpec: "clawhub:@openclaw/storepack-chat",
-          npmSpec: "@openclaw/storepack-chat",
+          clawhubSpec: "clawhub:@quiet-core/storepack-chat",
+          npmSpec: "@quiet-core/storepack-chat",
           defaultChoice: "clawhub",
         },
         release: {
@@ -265,21 +265,21 @@ describe("buildOfficialChannelCatalog", () => {
     });
 
     const entry = buildOfficialChannelCatalog({ repoRoot }).entries.find(
-      (candidate) => candidate.openclaw?.channel?.id === "storepack-chat",
+      (candidate) => candidate["quiet-core-bot"]?.channel?.id === "storepack-chat",
     );
 
     expect(requireInstall(entry)).toEqual({
-      clawhubSpec: "clawhub:@openclaw/storepack-chat",
-      npmSpec: "@openclaw/storepack-chat",
+      clawhubSpec: "clawhub:@quiet-core/storepack-chat",
+      npmSpec: "@quiet-core/storepack-chat",
       defaultChoice: "clawhub",
     });
   });
 
   it("writes the official catalog under dist", () => {
-    const repoRoot = makeRepoRoot("openclaw-official-channel-catalog-write-");
+    const repoRoot = makeRepoRoot("quiet-core-bot-official-channel-catalog-write-");
     writeJson(path.join(repoRoot, "extensions", "whatsapp", "package.json"), {
-      name: "@openclaw/whatsapp",
-      openclaw: {
+      name: "@quiet-core/whatsapp",
+      "quiet-core-bot": {
         channel: {
           id: "whatsapp",
           label: "WhatsApp",
@@ -288,7 +288,7 @@ describe("buildOfficialChannelCatalog", () => {
           blurb: "wa",
         },
         install: {
-          npmSpec: "@openclaw/whatsapp",
+          npmSpec: "@quiet-core/whatsapp",
         },
         release: {
           publishToNpm: true,
@@ -302,18 +302,18 @@ describe("buildOfficialChannelCatalog", () => {
     expect(fs.existsSync(outputPath)).toBe(true);
     const entries = JSON.parse(fs.readFileSync(outputPath, "utf8")).entries;
     expect(entries.map((entry: { name?: string }) => entry.name)).toContain(
-      "@wecom/wecom-openclaw-plugin",
+      "@wecom/wecom-quiet-core-bot-plugin",
     );
     expect(entries.map((entry: { name?: string }) => entry.name)).toContain(
-      "openclaw-plugin-yuanbao",
+      "quiet-core-bot-plugin-yuanbao",
     );
     const whatsappEntry = findCatalogEntry(
       entries,
-      (entry: { openclaw?: { channel?: { id?: string } } }) =>
-        entry.openclaw?.channel?.id === "whatsapp",
+      (entry: { "quiet-core-bot"?: { channel?: { id?: string } } }) =>
+        entry["quiet-core-bot"]?.channel?.id === "whatsapp",
     );
     expect(summarizeCatalogEntry(whatsappEntry)).toEqual({
-      name: "@openclaw/whatsapp",
+      name: "@quiet-core/whatsapp",
       description: "Quiet Core bot WhatsApp channel plugin",
       source: "official",
       plugin: undefined,
@@ -328,15 +328,15 @@ describe("buildOfficialChannelCatalog", () => {
         systemImage: "message",
       },
       install: {
-        clawhubSpec: "clawhub:@openclaw/whatsapp",
-        npmSpec: "@openclaw/whatsapp",
+        clawhubSpec: "clawhub:@quiet-core/whatsapp",
+        npmSpec: "@quiet-core/whatsapp",
         defaultChoice: "clawhub",
         minHostVersion: ">=2026.4.25",
       },
     });
     const whatsappEntries = entries.filter(
-      (entry: { openclaw?: { channel?: { id?: string } } }) =>
-        entry.openclaw?.channel?.id === "whatsapp",
+      (entry: { "quiet-core-bot"?: { channel?: { id?: string } } }) =>
+        entry["quiet-core-bot"]?.channel?.id === "whatsapp",
     );
     expect(whatsappEntries).toHaveLength(1);
   });

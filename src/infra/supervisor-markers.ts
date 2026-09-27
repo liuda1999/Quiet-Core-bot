@@ -2,9 +2,9 @@
 import { GATEWAY_LAUNCH_AGENT_LABEL, resolveGatewayLaunchAgentLabel } from "../daemon/constants.js";
 
 const SUPERVISOR_HINTS = {
-  launchd: ["OPENCLAW_LAUNCHD_LABEL"],
-  systemd: ["OPENCLAW_SYSTEMD_UNIT", "INVOCATION_ID", "SYSTEMD_EXEC_PID", "JOURNAL_STREAM"],
-  schtasks: ["OPENCLAW_WINDOWS_TASK_NAME"],
+  launchd: ["QUIET_CORE_LAUNCHD_LABEL"],
+  systemd: ["QUIET_CORE_SYSTEMD_UNIT", "INVOCATION_ID", "SYSTEMD_EXEC_PID", "JOURNAL_STREAM"],
+  schtasks: ["QUIET_CORE_WINDOWS_TASK_NAME"],
 } as const;
 
 /** Environment keys that imply the gateway process is supervised by an external respawner. */
@@ -15,8 +15,8 @@ export const SUPERVISOR_HINT_ENV_VARS = [
   ...SUPERVISOR_HINTS.launchd,
   ...SUPERVISOR_HINTS.systemd,
   ...SUPERVISOR_HINTS.schtasks,
-  "OPENCLAW_SERVICE_MARKER",
-  "OPENCLAW_SERVICE_KIND",
+  "QUIET_CORE_SERVICE_MARKER",
+  "QUIET_CORE_SERVICE_KIND",
 ] as const;
 
 /** Supported supervisor families that can respawn the gateway after update/restart handoff. */
@@ -34,15 +34,15 @@ function hasAnyHint(env: NodeJS.ProcessEnv, keys: readonly string[]): boolean {
 }
 
 function hasOpenClawGatewayServiceMarker(env: NodeJS.ProcessEnv): boolean {
-  const marker = env.OPENCLAW_SERVICE_MARKER?.trim();
+  const marker = env.QUIET_CORE_SERVICE_MARKER?.trim();
   return (
-    (marker === "openclaw" || marker === "quiet-core-bot") &&
-    env.OPENCLAW_SERVICE_KIND?.trim() === "gateway"
+    (marker === "quiet-core-bot" || marker === "quiet-core-bot") &&
+    env.QUIET_CORE_SERVICE_KIND?.trim() === "gateway"
   );
 }
 
 function isCurrentGatewayLaunchdJob(env: NodeJS.ProcessEnv): boolean {
-  const expectedLabel = resolveGatewayLaunchAgentLabel(env.OPENCLAW_PROFILE);
+  const expectedLabel = resolveGatewayLaunchAgentLabel(env.QUIET_CORE_PROFILE);
   if (
     [env.LAUNCH_JOB_LABEL, env.LAUNCH_JOB_NAME].some((value) => value?.trim() === expectedLabel)
   ) {
@@ -73,8 +73,8 @@ export function detectRespawnSupervisor(
     if (hasAnyHint(env, SUPERVISOR_HINTS.schtasks)) {
       return "schtasks";
     }
-    const marker = env.OPENCLAW_SERVICE_MARKER?.trim();
-    const serviceKind = env.OPENCLAW_SERVICE_KIND?.trim();
+    const marker = env.QUIET_CORE_SERVICE_MARKER?.trim();
+    const serviceKind = env.QUIET_CORE_SERVICE_KIND?.trim();
     return marker && serviceKind === "gateway" ? "schtasks" : null;
   }
   return null;

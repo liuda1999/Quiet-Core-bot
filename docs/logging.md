@@ -19,13 +19,13 @@ logs live, how to read them, and how to configure log levels and formats.
 
 By default, the Gateway writes a rolling log file under:
 
-`/tmp/openclaw/openclaw-YYYY-MM-DD.log`
+`/tmp/quiet-core-bot/quiet-core-bot-YYYY-MM-DD.log`
 
 The date uses the gateway host's local timezone.
 
 Each file rotates when it reaches `logging.maxFileBytes` (default: 100 MB).
 Quiet Core bot keeps up to five numbered archives beside the active file, such as
-`openclaw-YYYY-MM-DD.1.log`, and keeps writing to a fresh active log instead of
+`quiet-core-bot-YYYY-MM-DD.1.log`, and keeps writing to a fresh active log instead of
 suppressing diagnostics.
 
 You can override this in `~/.quiet-core-bot/quiet-core-bot.json`:
@@ -33,7 +33,7 @@ You can override this in `~/.quiet-core-bot/quiet-core-bot.json`:
 ```json
 {
   "logging": {
-    "file": "/path/to/openclaw.log"
+    "file": "/path/to/quiet-core-bot.log"
   }
 }
 ```
@@ -158,7 +158,7 @@ All logging configuration lives under `logging` in `~/.quiet-core-bot/quiet-core
 {
   "logging": {
     "level": "info",
-    "file": "/tmp/openclaw/openclaw-YYYY-MM-DD.log",
+    "file": "/tmp/quiet-core-bot/quiet-core-bot-YYYY-MM-DD.log",
     "consoleLevel": "info",
     "consoleStyle": "pretty",
     "redactSensitive": "tools",
@@ -172,7 +172,7 @@ All logging configuration lives under `logging` in `~/.quiet-core-bot/quiet-core
 - `logging.level`: **file logs** (JSONL) level.
 - `logging.consoleLevel`: **console** verbosity level.
 
-You can override both via the **`OPENCLAW_LOG_LEVEL`** environment variable (e.g. `OPENCLAW_LOG_LEVEL=debug`). The env var takes precedence over the config file, so you can raise verbosity for a single run without editing `quiet-core-bot.json`. You can also pass the global CLI option **`--log-level <level>`** (for example, `quiet-core-bot --log-level debug gateway run`), which overrides the environment variable for that command.
+You can override both via the **`QUIET_CORE_LOG_LEVEL`** environment variable (e.g. `QUIET_CORE_LOG_LEVEL=debug`). The env var takes precedence over the config file, so you can raise verbosity for a single run without editing `quiet-core-bot.json`. You can also pass the global CLI option **`--log-level <level>`** (for example, `quiet-core-bot --log-level debug gateway run`), which overrides the environment variable for that command.
 
 `--verbose` only affects console output and WS log verbosity; it does not change
 file log levels.
@@ -183,26 +183,26 @@ When debugging provider calls, use targeted environment flags instead of raising
 all logs to `debug`:
 
 ```bash
-OPENCLAW_DEBUG_MODEL_TRANSPORT=1 quiet-core-bot gateway
-OPENCLAW_DEBUG_MODEL_PAYLOAD=tools OPENCLAW_DEBUG_SSE=events quiet-core-bot gateway
+QUIET_CORE_DEBUG_MODEL_TRANSPORT=1 quiet-core-bot gateway
+QUIET_CORE_DEBUG_MODEL_PAYLOAD=tools QUIET_CORE_DEBUG_SSE=events quiet-core-bot gateway
 ```
 
 Available flags:
 
-- `OPENCLAW_DEBUG_MODEL_TRANSPORT=1`: emit request start, fetch response, SDK
+- `QUIET_CORE_DEBUG_MODEL_TRANSPORT=1`: emit request start, fetch response, SDK
   headers, first streaming event, stream completion, and transport errors at
   `info` level.
-- `OPENCLAW_DEBUG_MODEL_PAYLOAD=summary`: include a bounded request payload
+- `QUIET_CORE_DEBUG_MODEL_PAYLOAD=summary`: include a bounded request payload
   summary in model request logs.
-- `OPENCLAW_DEBUG_MODEL_PAYLOAD=tools`: include all model-facing tool names in
+- `QUIET_CORE_DEBUG_MODEL_PAYLOAD=tools`: include all model-facing tool names in
   the payload summary.
-- `OPENCLAW_DEBUG_MODEL_PAYLOAD=full-redacted`: include a redacted, capped JSON
+- `QUIET_CORE_DEBUG_MODEL_PAYLOAD=full-redacted`: include a redacted, capped JSON
   payload snapshot. Use only while debugging; secrets are redacted but prompts
   and message text may still be present.
-- `OPENCLAW_DEBUG_SSE=events`: emit first-event and stream-completion timing.
-- `OPENCLAW_DEBUG_SSE=peek`: also emit the first five redacted SSE event
+- `QUIET_CORE_DEBUG_SSE=events`: emit first-event and stream-completion timing.
+- `QUIET_CORE_DEBUG_SSE=peek`: also emit the first five redacted SSE event
   payloads, capped per event.
-- `OPENCLAW_DEBUG_CODE_MODE=1`: emit code-mode model-surface diagnostics,
+- `QUIET_CORE_DEBUG_CODE_MODE=1`: emit code-mode model-surface diagnostics,
   including when native provider tools are hidden because code mode owns the
   tool surface.
 
@@ -213,7 +213,7 @@ remain available at `debug` level.
 `[model-fetch]` start and response metadata (provider, API, model, status,
 latency, and request fields such as method, URL, timeout, proxy, and policy)
 is always emitted at `info` level regardless of
-`OPENCLAW_DEBUG_MODEL_TRANSPORT`, so basic model transport hygiene is visible
+`QUIET_CORE_DEBUG_MODEL_TRANSPORT`, so basic model transport hygiene is visible
 without debug flags.
 
 ### Trace correlation
@@ -302,7 +302,7 @@ Two adjacent surfaces:
 - **Diagnostics flags** — targeted debug-log flags that route extra logs to
   `logging.file` without raising `logging.level`. Flags are case-insensitive
   and support wildcards (`telegram.*`, `*`). Configure under `diagnostics.flags`
-  or via the `OPENCLAW_DIAGNOSTICS=...` env override. Full guide:
+  or via the `QUIET_CORE_DIAGNOSTICS=...` env override. Full guide:
   [Diagnostics flags](/diagnostics/flags).
 
 To enable diagnostics events for plugins or custom sinks without OTLP export:

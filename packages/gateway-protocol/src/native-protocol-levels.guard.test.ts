@@ -101,7 +101,7 @@ describe("native Gateway protocol levels", () => {
     }
 
     const swiftGeneratedPath =
-      "apps/shared/OpenClawKit/Sources/OpenClawProtocol/GatewayModels.swift";
+      "apps/shared/QuietCoreKit/Sources/OpenClawProtocol/GatewayModels.swift";
     const swiftGenerated = await readRepoFile(swiftGeneratedPath);
     assertLevelsMatch(swiftGeneratedPath, {
       min: extractInteger(
@@ -138,7 +138,7 @@ describe("native Gateway protocol levels", () => {
 
   it("uses the min constant for native connect compatibility ranges", async () => {
     const swiftConnectFiles = [
-      "apps/shared/OpenClawKit/Sources/OpenClawKit/GatewayChannel.swift",
+      "apps/shared/QuietCoreKit/Sources/OpenClawKit/GatewayChannel.swift",
       "apps/macos/Sources/OpenClawMacCLI/WizardCommand.swift",
     ];
     for (const relativePath of swiftConnectFiles) {
@@ -206,7 +206,7 @@ describe("native Gateway protocol levels", () => {
 
   it("emits named string-literal unions as Swift enums", async () => {
     const swiftGeneratedPath =
-      "apps/shared/OpenClawKit/Sources/OpenClawProtocol/GatewayModels.swift";
+      "apps/shared/QuietCoreKit/Sources/OpenClawProtocol/GatewayModels.swift";
     const swiftGenerated = await readRepoFile(swiftGeneratedPath);
 
     for (const [name, schema] of Object.entries(ProtocolSchemas)) {

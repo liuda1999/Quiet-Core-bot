@@ -10,7 +10,7 @@ import {
   addTimerTimeoutGraceMs,
   clampTimerTimeoutMs,
   finiteSecondsToTimerSafeMilliseconds,
-} from "@openclaw/normalization-core/number-coercion";
+} from "@quiet-core/normalization-core/number-coercion";
 import {
   die,
   ensureValue,
@@ -139,13 +139,13 @@ function resolveSecondsTimerMs(timeoutSeconds: number): number {
   return finiteSecondsToTimerSafeMilliseconds(timeoutSeconds) ?? 1;
 }
 
-const updateTimeoutSeconds = readPositiveIntEnv("OPENCLAW_PARALLELS_NPM_UPDATE_TIMEOUT_S", 1200);
+const updateTimeoutSeconds = readPositiveIntEnv("QUIET_CORE_PARALLELS_NPM_UPDATE_TIMEOUT_S", 1200);
 const updateCleanupBackstopMs = 60_000;
 const updateTimeoutMs = resolveSecondsTimerMs(updateTimeoutSeconds);
 const updateWithCleanupTimeoutMs =
   addTimerTimeoutGraceMs(updateTimeoutMs, updateCleanupBackstopMs) ?? 1;
 const freshLaneTimeoutKillGraceMs = readPositiveIntEnv(
-  "OPENCLAW_PARALLELS_NPM_UPDATE_FRESH_TIMEOUT_KILL_GRACE_MS",
+  "QUIET_CORE_PARALLELS_NPM_UPDATE_FRESH_TIMEOUT_KILL_GRACE_MS",
   2_000,
 );
 const activeLoggedChildren = new Set<ReturnType<typeof spawn>>();
@@ -155,7 +155,7 @@ let loggedExitCleanupInstalled = false;
 export function freshLaneTimeoutMs(platform: Platform): number {
   const defaultSeconds = platform === "windows" ? 90 * 60 : 75 * 60;
   return resolveSecondsTimerMs(
-    readPositiveIntEnv("OPENCLAW_PARALLELS_NPM_UPDATE_FRESH_TIMEOUT_S", defaultSeconds),
+    readPositiveIntEnv("QUIET_CORE_PARALLELS_NPM_UPDATE_FRESH_TIMEOUT_S", defaultSeconds),
   );
 }
 
@@ -369,8 +369,8 @@ function usage(): string {
   return `Usage: bash scripts/e2e/parallels-npm-update-smoke.sh [options]
 
 Options:
-  --package-spec <npm-spec>  Baseline npm package spec. Default: openclaw@latest
-  --update-target <target>    Target passed to guest 'openclaw update --tag'.
+  --package-spec <npm-spec>  Baseline npm package spec. Default: quiet-core-bot@latest
+  --update-target <target>    Target passed to guest 'quiet-core-bot update --tag'.
                              Default: host-served tgz packed from current checkout.
   --target-tarball <path>     Host-serve this prepared tgz for update and fresh install.
   --fresh-target <npm-spec>   Also run fresh install smoke for this package after update lanes.
@@ -599,8 +599,8 @@ export class NpmUpdateSmoke {
 
   async run(): Promise<void> {
     this.startedAt = Date.now();
-    this.runDir = await this.makeRunTempDir("openclaw-parallels-npm-update.");
-    this.tgzDir = await this.makeRunTempDir("openclaw-parallels-npm-update-tgz.");
+    this.runDir = await this.makeRunTempDir("quiet-core-bot-parallels-npm-update.");
+    this.tgzDir = await this.makeRunTempDir("quiet-core-bot-parallels-npm-update-tgz.");
     try {
       await this.runSteps();
     } finally {
@@ -615,7 +615,7 @@ export class NpmUpdateSmoke {
 
   protected async runSteps(): Promise<void> {
     this.latestVersion = resolveLatestVersion();
-    this.packageSpec = this.options.packageSpec || `openclaw@${this.latestVersion}`;
+    this.packageSpec = this.options.packageSpec || `quiet-core-bot@${this.latestVersion}`;
     this.currentHead = run("git", ["rev-parse", "HEAD"], { quiet: true }).stdout.trim();
     this.currentHeadShort = run("git", ["rev-parse", "--short=7", "HEAD"], {
       quiet: true,
@@ -642,7 +642,7 @@ export class NpmUpdateSmoke {
     await this.runFreshBaselines();
 
     await this.prepareUpdateTarget();
-    say(`Run same-guest openclaw update to ${this.updateTargetEffective}`);
+    say(`Run same-guest quiet-core-bot update to ${this.updateTargetEffective}`);
     await this.runSameGuestUpdates();
 
     if (this.freshTargetSpec) {
@@ -670,7 +670,7 @@ export class NpmUpdateSmoke {
     if (this.options.platforms.has("linux")) {
       jobs.push(
         this.spawnFresh("Linux", "linux", ["--vm", this.linuxVm], {
-          OPENCLAW_PARALLELS_LINUX_DISABLE_BONJOUR: "1",
+          QUIET_CORE_PARALLELS_LINUX_DISABLE_BONJOUR: "1",
         }),
       );
     }
@@ -713,7 +713,7 @@ export class NpmUpdateSmoke {
           "linux",
           ["--vm", this.linuxVm],
           {
-            OPENCLAW_PARALLELS_LINUX_DISABLE_BONJOUR: "1",
+            QUIET_CORE_PARALLELS_LINUX_DISABLE_BONJOUR: "1",
           },
           this.freshTargetSpec,
           "fresh-target",
@@ -883,7 +883,7 @@ export class NpmUpdateSmoke {
     if (this.isExplicitPackageTarget(target)) {
       return { gitHead: "", tarball: "", version: "" };
     }
-    const spec = target.startsWith("openclaw@") ? target : `openclaw@${target}`;
+    const spec = target.startsWith("quiet-core-bot@") ? target : `quiet-core-bot@${target}`;
     const output = run("npm", ["view", spec, "version", "dist.tarball", "gitHead", "--json"], {
       check: false,
       quiet: true,
@@ -1043,7 +1043,7 @@ export class NpmUpdateSmoke {
     const scriptPath = this.writeGuestScript(
       this.macosVm,
       script,
-      "openclaw-parallels-npm-update-macos",
+      "quiet-core-bot-parallels-npm-update-macos",
     );
     const macosExecArgs = this.resolveMacosUpdateExecArgs(ctx);
     const sudoUserArgIndex = macosExecArgs.indexOf("-u");
@@ -1179,7 +1179,7 @@ export class NpmUpdateSmoke {
     const scriptPath = this.writeGuestScript(
       this.linuxVm,
       script,
-      "openclaw-parallels-npm-update-linux",
+      "quiet-core-bot-parallels-npm-update-linux",
     );
     try {
       const status = await this.runStreamingToJobLog(
@@ -1189,7 +1189,7 @@ export class NpmUpdateSmoke {
           this.linuxVm,
           "/usr/bin/env",
           "HOME=/root",
-          "OPENCLAW_ALLOW_ROOT=1",
+          "QUIET_CORE_ALLOW_ROOT=1",
           "PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/snap/bin",
           "bash",
           scriptPath,
@@ -1344,7 +1344,7 @@ export class NpmUpdateSmoke {
     const target = resolveOpenClawRegistryVersion(this.options.updateTarget);
     if (baseline && target && baseline === target) {
       die(
-        `--update-target ${this.options.updateTarget} resolves to openclaw@${target}, same as baseline ${this.packageSpec}; publish or choose a newer --update-target before running VM update coverage`,
+        `--update-target ${this.options.updateTarget} resolves to quiet-core-bot@${target}, same as baseline ${this.packageSpec}; publish or choose a newer --update-target before running VM update coverage`,
       );
     }
   }
@@ -1402,8 +1402,8 @@ export class NpmUpdateSmoke {
         die(`could not resolve beta validation target: ${this.options.betaValidation}`);
       }
       this.options.updateTarget = version;
-      this.options.freshTargetSpec = `openclaw@${version}`;
-      say(`Beta validation target: openclaw@${version}`);
+      this.options.freshTargetSpec = `quiet-core-bot@${version}`;
+      say(`Beta validation target: quiet-core-bot@${version}`);
     } else if (
       this.options.updateTarget &&
       this.options.updateTarget !== "local-main" &&
@@ -1417,12 +1417,12 @@ export class NpmUpdateSmoke {
 
     if (this.options.freshTargetSpec) {
       const version = resolveOpenClawRegistryVersion(this.options.freshTargetSpec);
-      this.freshTargetSpec = version ? `openclaw@${version}` : this.options.freshTargetSpec;
+      this.freshTargetSpec = version ? `quiet-core-bot@${version}` : this.options.freshTargetSpec;
     }
   }
 
   private assertPublishedTargetMatchesHarnessCheckout(): void {
-    if (process.env.OPENCLAW_PARALLELS_ALLOW_HARNESS_TARGET_MISMATCH === "1") {
+    if (process.env.QUIET_CORE_PARALLELS_ALLOW_HARNESS_TARGET_MISMATCH === "1") {
       return;
     }
     const candidateVersion =
@@ -1440,7 +1440,7 @@ export class NpmUpdateSmoke {
       return;
     }
     die(
-      `refusing to run Parallels ${candidateVersion} target with harness checkout ${this.harnessCheckoutVersion || "unknown"}; checkout the matching release branch or set OPENCLAW_PARALLELS_ALLOW_HARNESS_TARGET_MISMATCH=1 for an intentional cross-version harness run`,
+      `refusing to run Parallels ${candidateVersion} target with harness checkout ${this.harnessCheckoutVersion || "unknown"}; checkout the matching release branch or set QUIET_CORE_PARALLELS_ALLOW_HARNESS_TARGET_MISMATCH=1 for an intentional cross-version harness run`,
     );
   }
 

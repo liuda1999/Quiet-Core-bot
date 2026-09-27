@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/vllm-provider",
+  "name": "@quiet-core/vllm-provider",
   "version": "2026.6.11",
   "private": true,
   "description": "OpenClaw vLLM provider plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@quiet-core/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": [
       "./index.ts"
     ]

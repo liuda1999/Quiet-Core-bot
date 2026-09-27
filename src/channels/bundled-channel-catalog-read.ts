@@ -5,18 +5,22 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { normalizeOptionalLowercaseString } from "@quiet-core/normalization-core/string-coerce";
+import { uniqueStrings } from "@quiet-core/normalization-core/string-normalization";
+import { MANIFEST_KEY } from "../compat/legacy-names.js";
 import { tryReadJsonSync } from "../infra/json-files.js";
-import { resolveOpenClawPackageRootSync } from "../infra/openclaw-root.js";
+import { resolveOpenClawPackageRootSync } from "../infra/quiet-core-bot-root.js";
 import { resolveBundledPluginsDir } from "../plugins/bundled-dir.js";
 import type { PluginPackageChannel } from "../plugins/manifest.js";
 
-type ChannelCatalogEntryLike = {
-  openclaw?: {
-    channel?: PluginPackageChannel;
-  };
-};
+type ChannelCatalogEntryLike = Partial<
+  Record<
+    typeof MANIFEST_KEY,
+    {
+      channel?: PluginPackageChannel;
+    }
+  >
+>;
 
 type BundledChannelCatalogEntry = {
   id: string;
@@ -96,14 +100,14 @@ function readOfficialCatalogFileSync(): ChannelCatalogEntryLike[] {
 function isChannelCatalogEntryLike(
   entry: ChannelCatalogEntryLike | PluginPackageChannel,
 ): entry is ChannelCatalogEntryLike {
-  return "openclaw" in entry;
+  return MANIFEST_KEY in entry;
 }
 
 function toBundledChannelEntry(
   entry: ChannelCatalogEntryLike | PluginPackageChannel,
 ): BundledChannelCatalogEntry | null {
   const channel: PluginPackageChannel | undefined = isChannelCatalogEntryLike(entry)
-    ? entry.openclaw?.channel
+    ? entry[MANIFEST_KEY]?.channel
     : entry;
   const id = normalizeOptionalLowercaseString(channel?.id);
   if (!id || !channel) {

@@ -2,9 +2,9 @@
 import {
   describeImageWithModel,
   describeImagesWithModel,
-} from "openclaw/plugin-sdk/media-understanding";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
-import { clearLiveCatalogCacheForTests } from "openclaw/plugin-sdk/provider-catalog-shared";
+} from "quiet-core-bot/plugin-sdk/media-understanding";
+import { createTestPluginApi } from "quiet-core-bot/plugin-sdk/plugin-test-api";
+import { clearLiveCatalogCacheForTests } from "quiet-core-bot/plugin-sdk/provider-catalog-shared";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import plugin from "./index.js";
 

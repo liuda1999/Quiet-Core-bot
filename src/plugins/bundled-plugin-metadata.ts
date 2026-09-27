@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { uniqueStrings } from "@quiet-core/normalization-core/string-normalization";
 import { tryReadJsonSync } from "../infra/json-files.js";
 import { collectBundledChannelConfigs } from "./bundled-channel-config-metadata.js";
 import {
@@ -23,7 +23,7 @@ import {
 } from "./manifest.js";
 import { resolveLoaderPackageRoot } from "./sdk-alias.js";
 
-const OPENCLAW_PACKAGE_ROOT =
+const QUIET_CORE_PACKAGE_ROOT =
   resolveLoaderPackageRoot({
     modulePath: fileURLToPath(import.meta.url),
     moduleUrl: import.meta.url,
@@ -177,7 +177,7 @@ export function listBundledPluginMetadata(params?: {
   includeChannelConfigs?: boolean;
   includeSyntheticChannelConfigs?: boolean;
 }): readonly BundledPluginMetadata[] {
-  const rootDir = path.resolve(params?.rootDir ?? OPENCLAW_PACKAGE_ROOT);
+  const rootDir = path.resolve(params?.rootDir ?? QUIET_CORE_PACKAGE_ROOT);
   const scanDir = params?.scanDir ? path.resolve(params.scanDir) : undefined;
   const resolvedScanDir = resolveBundledPluginMetadataScanDir(rootDir, scanDir);
   const includeChannelConfigs = params?.includeChannelConfigs ?? !RUNNING_FROM_BUILT_ARTIFACT;

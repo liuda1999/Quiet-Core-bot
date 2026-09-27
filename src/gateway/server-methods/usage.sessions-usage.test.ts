@@ -4,7 +4,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { withEnvAsync } from "../../test-utils/env.js";
 
 vi.mock("../../config/config.js", () => {
@@ -185,7 +185,7 @@ function expectSuccessfulSessionsUsage(
 async function withUsageState(
   run: (writeSessionFile: (fileName: string) => string) => Promise<void>,
 ) {
-  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-usage-test-"));
+  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-usage-test-"));
   const agentSessionsDir = path.join(stateDir, "agents", "opus", "sessions");
   const writeSessionFile = (fileName: string) => {
     const sessionFile = path.join(agentSessionsDir, fileName);
@@ -194,7 +194,7 @@ async function withUsageState(
   };
 
   try {
-    await withEnvAsync({ OPENCLAW_STATE_DIR: stateDir }, async () => {
+    await withEnvAsync({ QUIET_CORE_STATE_DIR: stateDir }, async () => {
       fs.mkdirSync(agentSessionsDir, { recursive: true });
       await run(writeSessionFile);
     });

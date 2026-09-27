@@ -81,7 +81,7 @@ export function describeSessionsSpawnTool(options?: {
 export function describeSessionStatusTool(): string {
   return [
     "Show /status-like card for current/visible session: model, usage, time, cost, tasks.",
-    'Use `sessionKey="current"` for current session; UI labels like `openclaw-tui` are not keys.',
+    'Use `sessionKey="current"` for current session; UI labels like `quiet-core-bot-tui` are not keys.',
     "`model` sets session override; `model=default` resets.",
     "Use for active model/session config questions.",
   ].join(" ");

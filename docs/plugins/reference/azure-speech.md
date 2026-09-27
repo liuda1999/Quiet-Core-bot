@@ -11,7 +11,7 @@ Azure AI Speech text-to-speech (MP3, native Ogg/Opus voice notes, PCM telephony)
 
 ## Distribution
 
-- Package: `@openclaw/azure-speech`
+- Package: `@quiet-core/azure-speech`
 - Install route: included in Quiet Core bot
 
 ## Surface

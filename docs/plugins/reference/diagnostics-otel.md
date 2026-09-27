@@ -11,8 +11,8 @@ Quiet Core bot diagnostics OpenTelemetry exporter for metrics, traces, and logs.
 
 ## Distribution
 
-- Package: `@openclaw/diagnostics-otel`
-- Install route: npm; ClawHub: `clawhub:@openclaw/diagnostics-otel`
+- Package: `@quiet-core/diagnostics-otel`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/diagnostics-otel`
 
 ## Surface
 

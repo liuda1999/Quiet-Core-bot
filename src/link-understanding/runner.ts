@@ -1,8 +1,8 @@
 // Link-understanding runner fetches allowed URLs and invokes configured commands with bounded content.
-import { readResponseWithLimit } from "@openclaw/media-core/read-response-with-limit";
+import { readResponseWithLimit } from "@quiet-core/media-core/read-response-with-limit";
 import type { MsgContext } from "../auto-reply/templating.js";
 import { applyTemplate } from "../auto-reply/templating.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import type { LinkModelConfig, LinkToolsConfig } from "../config/types.tools.js";
 import { logVerbose, shouldLogVerbose } from "../globals.js";
 import { fetchWithSsrFGuard, GUARDED_FETCH_MODE } from "../infra/net/fetch-guard.js";
@@ -140,8 +140,8 @@ async function runCliEntry(params: {
     timeoutMs,
     input: params.content,
     env: {
-      OPENCLAW_LINK_FINAL_URL: params.finalUrl,
-      OPENCLAW_LINK_URL: params.url,
+      QUIET_CORE_LINK_FINAL_URL: params.finalUrl,
+      QUIET_CORE_LINK_URL: params.url,
     },
   });
   if (result.code !== 0) {

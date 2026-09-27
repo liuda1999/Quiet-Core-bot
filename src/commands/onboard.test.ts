@@ -118,7 +118,7 @@ describe("setupWizardCommand", () => {
       config: {
         agents: {
           defaults: {
-            workspace: "/tmp/openclaw-custom-workspace",
+            workspace: "/tmp/quiet-core-bot-custom-workspace",
           },
         },
       },
@@ -133,7 +133,7 @@ describe("setupWizardCommand", () => {
 
     expect(mocks.handleReset).toHaveBeenCalledWith(
       "config+creds+sessions",
-      path.resolve("/tmp/openclaw-custom-workspace"),
+      path.resolve("/tmp/quiet-core-bot-custom-workspace"),
       runtime,
     );
   });

@@ -1,7 +1,7 @@
 // Diffs tests cover tool render output plugin behavior.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+import { createTestPluginApi } from "quiet-core-bot/plugin-sdk/plugin-test-api";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawPluginApi } from "../api.js";
 import type { DiffScreenshotter } from "./browser.js";
@@ -33,7 +33,7 @@ describe("diffs tool rendered output guards", () => {
   beforeEach(async () => {
     renderDiffDocumentMock.mockReset();
     ({ store, cleanup: cleanupRootDir } = await createDiffStoreHarness(
-      "openclaw-diffs-tool-render-output-",
+      "quiet-core-bot-diffs-tool-render-output-",
     ));
   });
 

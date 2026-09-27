@@ -11,7 +11,7 @@ Install the official Tencent Cloud provider plugin to access Tencent Hy3 preview
 | Property         | Value                                                 |
 | ---------------- | ----------------------------------------------------- |
 | Provider id      | `tencent-tokenhub`                                    |
-| Package          | `@openclaw/tencent-provider`                          |
+| Package          | `@quiet-core/tencent-provider`                        |
 | Auth env var     | `TOKENHUB_API_KEY`                                    |
 | Onboarding flag  | `--auth-choice tokenhub-api-key`                      |
 | Direct CLI flag  | `--tokenhub-api-key <key>`                            |
@@ -25,7 +25,7 @@ Install the official Tencent Cloud provider plugin to access Tencent Hy3 preview
 <Steps>
   <Step title="Install the plugin">
     ```bash
-    quiet-core-bot plugins install @openclaw/tencent-provider
+    quiet-core-bot plugins install @quiet-core/tencent-provider
     ```
   </Step>
   <Step title="Create a TokenHub API key">

@@ -1,11 +1,11 @@
 // Coverage for normalizing assistant replay content before provider requests.
-import type { AgentMessage } from "openclaw/plugin-sdk/agent-core";
+import type { AgentMessage } from "quiet-core-bot/plugin-sdk/agent-core";
 import { describe, expect, it } from "vitest";
 import {
   INTERNAL_RUNTIME_CONTEXT_BEGIN,
   INTERNAL_RUNTIME_CONTEXT_END,
-  OPENCLAW_NEXT_TURN_RUNTIME_CONTEXT_HEADER,
-  OPENCLAW_RUNTIME_CONTEXT_NOTICE,
+  QUIET_CORE_NEXT_TURN_RUNTIME_CONTEXT_HEADER,
+  QUIET_CORE_RUNTIME_CONTEXT_NOTICE,
 } from "../internal-runtime-context.js";
 import { normalizeAssistantReplayContent } from "./replay-history.js";
 
@@ -51,7 +51,7 @@ function openclawTranscriptAssistant(model: "delivery-mirror" | "gateway-injecte
     role: "assistant",
     content: [{ type: "text", text: "channel mirror" }],
     api: "openai-responses",
-    provider: "openclaw",
+    provider: "quiet-core-bot",
     model,
     usage: {
       input: 0,
@@ -288,8 +288,8 @@ describe("normalizeAssistantReplayContent", () => {
             INTERNAL_RUNTIME_CONTEXT_BEGIN,
             "keep this internal",
             INTERNAL_RUNTIME_CONTEXT_END,
-            OPENCLAW_NEXT_TURN_RUNTIME_CONTEXT_HEADER,
-            OPENCLAW_RUNTIME_CONTEXT_NOTICE,
+            QUIET_CORE_NEXT_TURN_RUNTIME_CONTEXT_HEADER,
+            QUIET_CORE_RUNTIME_CONTEXT_NOTICE,
             "",
             "Visible after",
           ].join("\n"),

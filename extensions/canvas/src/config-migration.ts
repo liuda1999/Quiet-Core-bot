@@ -1,8 +1,8 @@
 /**
  * Canvas config migration from legacy root canvasHost config to plugin config.
  */
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { asOptionalRecord as readRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import { asOptionalRecord as readRecord } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 
 type MutableRecord = Record<string, unknown>;
 

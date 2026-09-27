@@ -32,8 +32,8 @@ describe("resolveActiveErrorContext", () => {
       provider: "openrouter",
       model: "openai/gpt-5.4",
       assistant: {
-        provider: "openclaw",
-        model: "openclaw",
+        provider: "quiet-core-bot",
+        model: "quiet-core-bot",
       },
     });
 

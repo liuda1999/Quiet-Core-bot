@@ -1,5 +1,5 @@
 /** Plugin node-host bridge for loading plugin registry commands and dispatching node capabilities. */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { getActivePluginRegistry } from "../plugins/runtime.js";
 
 /**

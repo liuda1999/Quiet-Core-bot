@@ -5,9 +5,9 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/scripts/lib/docker-e2e-image.sh"
-IMAGE_NAME="$(docker_e2e_resolve_image "openclaw-agent-bundle-mcp-tools-e2e" OPENCLAW_IMAGE)"
-CONTAINER_NAME="openclaw-agent-bundle-mcp-tools-e2e-$$"
-RUN_LOG="$(mktemp -t openclaw-agent-bundle-mcp-tools-log.XXXXXX)"
+IMAGE_NAME="$(docker_e2e_resolve_image "quiet-core-bot-agent-bundle-mcp-tools-e2e" QUIET_CORE_IMAGE)"
+CONTAINER_NAME="quiet-core-bot-agent-bundle-mcp-tools-e2e-$$"
+RUN_LOG="$(mktemp -t quiet-core-bot-agent-bundle-mcp-tools-log.XXXXXX)"
 
 cleanup() {
   docker_e2e_docker_cmd rm -f "$CONTAINER_NAME" >/dev/null 2>&1 || true
@@ -16,18 +16,18 @@ cleanup() {
 trap cleanup EXIT
 
 docker_e2e_build_or_reuse "$IMAGE_NAME" agent-bundle-mcp-tools
-OPENCLAW_TEST_STATE_SCRIPT_B64="$(docker_e2e_test_state_shell_b64 agent-bundle-mcp-tools empty)"
+QUIET_CORE_TEST_STATE_SCRIPT_B64="$(docker_e2e_test_state_shell_b64 agent-bundle-mcp-tools empty)"
 
 echo "Running in-container OpenClaw bundle MCP tool availability smoke..."
 # Harness files are mounted read-only; the app under test comes from /app/dist.
 set +e
 docker_e2e_run_with_harness \
   --name "$CONTAINER_NAME" \
-  -e "OPENCLAW_TEST_STATE_SCRIPT_B64=$OPENCLAW_TEST_STATE_SCRIPT_B64" \
+  -e "QUIET_CORE_TEST_STATE_SCRIPT_B64=$QUIET_CORE_TEST_STATE_SCRIPT_B64" \
   "$IMAGE_NAME" \
   bash -lc "set -euo pipefail
-    source scripts/lib/openclaw-e2e-instance.sh
-    openclaw_e2e_eval_test_state_from_b64 \"\${OPENCLAW_TEST_STATE_SCRIPT_B64:?missing OPENCLAW_TEST_STATE_SCRIPT_B64}\"
+    source scripts/lib/quiet-core-bot-e2e-instance.sh
+    quiet_core_bot_e2e_eval_test_state_from_b64 \"\${QUIET_CORE_TEST_STATE_SCRIPT_B64:?missing QUIET_CORE_TEST_STATE_SCRIPT_B64}\"
     tsx scripts/e2e/agent-bundle-mcp-tools-docker-client.ts
   " >"$RUN_LOG" 2>&1
 status=${PIPESTATUS[0]}

@@ -1,5 +1,5 @@
 // Doctor preview warning aggregation for config that can surprise users before repair.
-import { isRecord as hasRecord } from "@openclaw/normalization-core/record-coerce";
+import { isRecord as hasRecord } from "@quiet-core/normalization-core/record-coerce";
 import { resolveAgentConfig } from "../../../agents/agent-scope-config.js";
 import {
   normalizeToolProviderPolicyKey,
@@ -12,7 +12,7 @@ import {
   isToolAllowedByPolicyName,
 } from "../../../agents/tool-policy-match.js";
 import { mergeAlsoAllowPolicy, resolveToolProfilePolicy } from "../../../agents/tool-policy.js";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
 import type {
   AgentToolsConfig,
   ToolPolicyConfig,

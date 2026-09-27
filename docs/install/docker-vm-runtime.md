@@ -83,7 +83,7 @@ The URLs above are examples. For ARM-based VMs, choose the `arm64` assets. For r
 
 ```bash
 docker compose build
-docker compose up -d openclaw-gateway
+docker compose up -d quiet-core-bot-gateway
 ```
 
 If build fails with `Killed` or `exit code 137` during `pnpm install --frozen-lockfile`, the VM is out of memory.
@@ -92,9 +92,9 @@ Use a larger machine class before retrying.
 Verify binaries:
 
 ```bash
-docker compose exec openclaw-gateway which gog
-docker compose exec openclaw-gateway which goplaces
-docker compose exec openclaw-gateway which wacli
+docker compose exec quiet-core-bot-gateway which gog
+docker compose exec quiet-core-bot-gateway which goplaces
+docker compose exec quiet-core-bot-gateway which wacli
 ```
 
 Expected output:
@@ -108,7 +108,7 @@ Expected output:
 Verify Gateway:
 
 ```bash
-docker compose logs -f openclaw-gateway
+docker compose logs -f quiet-core-bot-gateway
 ```
 
 Expected output:
@@ -124,14 +124,14 @@ All long-lived state must survive restarts, rebuilds, and reboots.
 
 | Component           | Location                                               | Persistence mechanism  | Notes                                                         |
 | ------------------- | ------------------------------------------------------ | ---------------------- | ------------------------------------------------------------- |
-| Gateway config      | `/home/node/.openclaw/`                                | Host volume mount      | Includes `quiet-core-bot.json`, `.env`                        |
-| Model auth profiles | `/home/node/.openclaw/agents/`                         | Host volume mount      | `agents/<agentId>/agent/auth-profiles.json` (OAuth, API keys) |
-| Auth profile key    | `/home/node/.config/openclaw/`                         | Host volume mount      | Local encryption key for OAuth auth profile token material    |
-| Skill configs       | `/home/node/.openclaw/skills/`                         | Host volume mount      | Skill-level state                                             |
-| Agent workspace     | `/home/node/.openclaw/workspace/`                      | Host volume mount      | Code and agent artifacts                                      |
-| WhatsApp session    | `/home/node/.openclaw/`                                | Host volume mount      | Preserves QR login                                            |
-| Gmail keyring       | `/home/node/.openclaw/`                                | Host volume + password | Requires `GOG_KEYRING_PASSWORD`                               |
-| Plugin packages     | `/home/node/.openclaw/npm`, `/home/node/.openclaw/git` | Host volume mount      | Downloadable plugin package roots                             |
+| Gateway config      | `/home/node/.quiet-core-bot/`                                | Host volume mount      | Includes `quiet-core-bot.json`, `.env`                        |
+| Model auth profiles | `/home/node/.quiet-core-bot/agents/`                         | Host volume mount      | `agents/<agentId>/agent/auth-profiles.json` (OAuth, API keys) |
+| Auth profile key    | `/home/node/.config/quiet-core-bot/`                         | Host volume mount      | Local encryption key for OAuth auth profile token material    |
+| Skill configs       | `/home/node/.quiet-core-bot/skills/`                         | Host volume mount      | Skill-level state                                             |
+| Agent workspace     | `/home/node/.quiet-core-bot/workspace/`                      | Host volume mount      | Code and agent artifacts                                      |
+| WhatsApp session    | `/home/node/.quiet-core-bot/`                                | Host volume mount      | Preserves QR login                                            |
+| Gmail keyring       | `/home/node/.quiet-core-bot/`                                | Host volume + password | Requires `GOG_KEYRING_PASSWORD`                               |
+| Plugin packages     | `/home/node/.quiet-core-bot/npm`, `/home/node/.quiet-core-bot/git` | Host volume mount      | Downloadable plugin package roots                             |
 | External binaries   | `/usr/local/bin/`                                      | Docker image           | Must be baked at build time                                   |
 | Node runtime        | Container filesystem                                   | Docker image           | Rebuilt every image build                                     |
 | OS packages         | Container filesystem                                   | Docker image           | Do not install at runtime                                     |

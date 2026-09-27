@@ -11,7 +11,7 @@ Adds Ollama model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/ollama-provider`
+- Package: `@quiet-core/ollama-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

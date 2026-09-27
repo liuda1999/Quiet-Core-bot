@@ -49,11 +49,11 @@ describe("usage-format", () => {
   let stateDir: string;
 
   beforeEach(async () => {
-    envSnapshot = captureEnv(["OPENCLAW_AGENT_DIR", "OPENCLAW_STATE_DIR"]);
-    stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-usage-format-"));
+    envSnapshot = captureEnv(["QUIET_CORE_AGENT_DIR", "QUIET_CORE_STATE_DIR"]);
+    stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-usage-format-"));
     agentDir = path.join(stateDir, "agents", "main", "agent");
-    process.env.OPENCLAW_STATE_DIR = stateDir;
-    delete process.env.OPENCLAW_AGENT_DIR;
+    process.env.QUIET_CORE_STATE_DIR = stateDir;
+    delete process.env.QUIET_CORE_AGENT_DIR;
     await fs.mkdir(agentDir, { recursive: true });
     resetUsageFormatCachesForTest();
     resetGatewayModelPricingCacheForTest();

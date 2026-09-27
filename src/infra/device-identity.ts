@@ -89,7 +89,7 @@ function tryFingerprintPublicKey(publicKeyPem: string): string | null {
 
 function keyPairMatches(publicKeyPem: string, privateKeyPem: string): boolean {
   try {
-    const payload = Buffer.from("openclaw-device-identity-self-check", "utf8");
+    const payload = Buffer.from("quiet-core-bot-device-identity-self-check", "utf8");
     const signature = crypto.sign(null, payload, crypto.createPrivateKey(privateKeyPem));
     return crypto.verify(null, payload, crypto.createPublicKey(publicKeyPem), signature);
   } catch {

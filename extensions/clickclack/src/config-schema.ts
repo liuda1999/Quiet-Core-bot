@@ -1,8 +1,8 @@
 /**
  * Zod-backed config schema for ClickClack channel accounts.
  */
-import { buildChannelConfigSchema } from "openclaw/plugin-sdk/channel-config-schema";
-import { buildSecretInputSchema } from "openclaw/plugin-sdk/secret-input";
+import { buildChannelConfigSchema } from "quiet-core-bot/plugin-sdk/channel-config-schema";
+import { buildSecretInputSchema } from "quiet-core-bot/plugin-sdk/secret-input";
 import { z } from "zod";
 
 const ClickClackAccountConfigSchema = z
@@ -31,7 +31,7 @@ const ClickClackConfigSchema = ClickClackAccountConfigSchema.extend({
 }).strict();
 
 /**
- * Config schema exported to core so `openclaw doctor` and config validation
+ * Config schema exported to core so `quiet-core-bot doctor` and config validation
  * understand both default and named ClickClack accounts.
  */
 export const clickClackConfigSchema = buildChannelConfigSchema(ClickClackConfigSchema);

@@ -62,7 +62,7 @@ quiet-core-bot gateway run
   Auth mode override.
 </ParamField>
 <ParamField path="--token <token>" type="string">
-  Token override (also sets `OPENCLAW_GATEWAY_TOKEN` for the process).
+  Token override (also sets `QUIET_CORE_GATEWAY_TOKEN` for the process).
 </ParamField>
 <ParamField path="--password <password>" type="string">
   Password override.
@@ -129,9 +129,9 @@ Inline `--password` can be exposed in local process listings. Prefer `--password
 
 ### Gateway profiling
 
-- Set `OPENCLAW_GATEWAY_STARTUP_TRACE=1` to log phase timings during Gateway startup, including per-phase `eventLoopMax` delay and plugin lookup-table timings for installed-index, manifest registry, startup planning, and owner-map work.
-- Set `OPENCLAW_GATEWAY_RESTART_TRACE=1` to log restart-scoped `restart trace:` lines for restart signal handling, active-work drain, shutdown phases, next start, ready timing, and memory metrics.
-- Set `OPENCLAW_DIAGNOSTICS=timeline` with `OPENCLAW_DIAGNOSTICS_TIMELINE_PATH=<path>` to write a best-effort JSONL startup diagnostics timeline for external QA harnesses. You can also enable the flag with `diagnostics.flags: ["timeline"]` in config; the path is still env-provided. Add `OPENCLAW_DIAGNOSTICS_EVENT_LOOP=1` to include event-loop samples.
+- Set `QUIET_CORE_GATEWAY_STARTUP_TRACE=1` to log phase timings during Gateway startup, including per-phase `eventLoopMax` delay and plugin lookup-table timings for installed-index, manifest registry, startup planning, and owner-map work.
+- Set `QUIET_CORE_GATEWAY_RESTART_TRACE=1` to log restart-scoped `restart trace:` lines for restart signal handling, active-work drain, shutdown phases, next start, ready timing, and memory metrics.
+- Set `QUIET_CORE_DIAGNOSTICS=timeline` with `QUIET_CORE_DIAGNOSTICS_TIMELINE_PATH=<path>` to write a best-effort JSONL startup diagnostics timeline for external QA harnesses. You can also enable the flag with `diagnostics.flags: ["timeline"]` in config; the path is still env-provided. Add `QUIET_CORE_DIAGNOSTICS_EVENT_LOOP=1` to include event-loop samples.
 - Run `pnpm build` first, then `pnpm test:startup:gateway -- --runs 5 --warmup 1` to benchmark Gateway startup against the built CLI entry. The benchmark records first process output, `/healthz`, `/readyz`, startup trace timings, event-loop delay, and plugin lookup-table timing details.
 - Run `pnpm build` first, then `pnpm test:restart:gateway -- --case skipChannels --runs 1 --restarts 5` to benchmark in-process Gateway restart against the built CLI entry on macOS or Linux. The restart benchmark uses SIGUSR1, enables both startup and restart traces in the child process, and records next `/healthz`, next `/readyz`, downtime, ready timing, CPU, RSS, and restart trace metrics.
 - Treat `/healthz` as liveness and `/readyz` as usable readiness. Trace lines and benchmark output are for owner attribution; do not treat one trace span or one sample as a complete performance conclusion.
@@ -171,7 +171,7 @@ quiet-core-bot gateway health --port 18789
 The HTTP `/healthz` endpoint is a liveness probe: it returns once the server can answer HTTP. The HTTP `/readyz` endpoint is stricter and stays red while startup plugin sidecars, channels, or configured hooks are still settling. Local or authenticated detailed readiness responses include an `eventLoop` diagnostic block with event-loop delay, event-loop utilization, CPU core ratio, and a `degraded` flag.
 
 <ParamField path="--port <port>" type="number">
-  Target a local loopback Gateway on this port. This overrides `OPENCLAW_GATEWAY_URL` and `OPENCLAW_GATEWAY_PORT` for the health call.
+  Target a local loopback Gateway on this port. This overrides `QUIET_CORE_GATEWAY_URL` and `QUIET_CORE_GATEWAY_PORT` for the health call.
 </ParamField>
 
 ### `gateway usage-cost`
@@ -230,7 +230,7 @@ quiet-core-bot gateway stability --json
 <AccordionGroup>
   <Accordion title="Privacy and bundle behavior">
     - Records keep operational metadata: event names, counts, byte sizes, memory readings, queue/session state, channel/plugin names, and redacted session summaries. They do not keep chat text, webhook bodies, tool outputs, raw request or response bodies, tokens, cookies, secret values, hostnames, or raw session ids. Set `diagnostics.enabled: false` to disable the recorder entirely.
-    - On fatal Gateway exits, shutdown timeouts, and restart startup failures, Quiet Core bot writes the same diagnostic snapshot to `~/.quiet-core-bot/logs/stability/openclaw-stability-*.json` when the recorder has events. Inspect the newest bundle with `quiet-core-bot gateway stability --bundle latest`; `--limit`, `--type`, and `--since-seq` also apply to bundle output.
+    - On fatal Gateway exits, shutdown timeouts, and restart startup failures, Quiet Core bot writes the same diagnostic snapshot to `~/.quiet-core-bot/logs/stability/quiet-core-bot-stability-*.json` when the recorder has events. Inspect the newest bundle with `quiet-core-bot gateway stability --bundle latest`; `--limit`, `--type`, and `--since-seq` also apply to bundle output.
 
   </Accordion>
 </AccordionGroup>
@@ -241,7 +241,7 @@ Write a local diagnostics zip that is designed to attach to bug reports. For the
 
 ```bash
 quiet-core-bot gateway diagnostics export
-quiet-core-bot gateway diagnostics export --output openclaw-diagnostics.zip
+quiet-core-bot gateway diagnostics export --output quiet-core-bot-diagnostics.zip
 quiet-core-bot gateway diagnostics export --json
 ```
 
@@ -478,34 +478,34 @@ quiet-core-bot gateway uninstall
 
 Use `--wrapper` when the managed service must start through another executable, for example a
 secrets manager shim or a run-as helper. The wrapper receives the normal Gateway args and is
-responsible for eventually exec'ing `openclaw` or Node with those args.
+responsible for eventually exec'ing `quiet-core-bot` or Node with those args.
 
 ```bash
-cat > ~/.local/bin/openclaw-doppler <<'EOF'
+cat > ~/.local/bin/quiet-core-bot-doppler <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
-exec doppler run --project my-project --config production -- openclaw "$@"
+exec doppler run --project my-project --config production -- quiet-core-bot "$@"
 EOF
-chmod +x ~/.local/bin/openclaw-doppler
+chmod +x ~/.local/bin/quiet-core-bot-doppler
 
-quiet-core-bot gateway install --wrapper ~/.local/bin/openclaw-doppler --force
+quiet-core-bot gateway install --wrapper ~/.local/bin/quiet-core-bot-doppler --force
 quiet-core-bot gateway restart
 ```
 
 You can also set the wrapper through the environment. `gateway install` validates that the path is
 an executable file, writes the wrapper into service `ProgramArguments`, and persists
-`OPENCLAW_WRAPPER` in the service environment for later forced reinstalls, updates, and doctor
+`QUIET_CORE_WRAPPER` in the service environment for later forced reinstalls, updates, and doctor
 repairs.
 
 ```bash
-OPENCLAW_WRAPPER="$HOME/.local/bin/openclaw-doppler" quiet-core-bot gateway install --force
+QUIET_CORE_WRAPPER="$HOME/.local/bin/quiet-core-bot-doppler" quiet-core-bot gateway install --force
 quiet-core-bot doctor
 ```
 
-To remove a persisted wrapper, clear `OPENCLAW_WRAPPER` while reinstalling:
+To remove a persisted wrapper, clear `QUIET_CORE_WRAPPER` while reinstalling:
 
 ```bash
-OPENCLAW_WRAPPER= quiet-core-bot gateway install --force
+QUIET_CORE_WRAPPER= quiet-core-bot gateway install --force
 quiet-core-bot gateway restart
 ```
 
@@ -531,8 +531,8 @@ quiet-core-bot gateway restart
   <Accordion title="Auth and SecretRefs at install time">
     - When token auth requires a token and `gateway.auth.token` is SecretRef-managed, `gateway install` validates that the SecretRef is resolvable but does not persist the resolved token into service environment metadata.
     - If token auth requires a token and the configured token SecretRef is unresolved, install fails closed instead of persisting fallback plaintext.
-    - For password auth on `gateway run`, prefer `OPENCLAW_GATEWAY_PASSWORD`, `--password-file`, or a SecretRef-backed `gateway.auth.password` over inline `--password`.
-    - In inferred auth mode, shell-only `OPENCLAW_GATEWAY_PASSWORD` does not relax install token requirements; use durable config (`gateway.auth.password` or config `env`) when installing a managed service.
+    - For password auth on `gateway run`, prefer `QUIET_CORE_GATEWAY_PASSWORD`, `--password-file`, or a SecretRef-backed `gateway.auth.password` over inline `--password`.
+    - In inferred auth mode, shell-only `QUIET_CORE_GATEWAY_PASSWORD` does not relax install token requirements; use durable config (`gateway.auth.password` or config `env`) when installing a managed service.
     - If both `gateway.auth.token` and `gateway.auth.password` are configured and `gateway.auth.mode` is unset, install is blocked until mode is set explicitly.
 
   </Accordion>
@@ -543,7 +543,7 @@ quiet-core-bot gateway restart
 `gateway discover` scans for Gateway beacons (`_openclaw-gw._tcp`).
 
 - Multicast DNS-SD: `local.`
-- Unicast DNS-SD (Wide-Area Bonjour): choose a domain (example: `openclaw.internal.`) and set up split DNS + a DNS server; see [Bonjour](/gateway/bonjour).
+- Unicast DNS-SD (Wide-Area Bonjour): choose a domain (example: `quiet-core-bot.internal.`) and set up split DNS + a DNS server; see [Bonjour](/gateway/bonjour).
 
 Only gateways with Bonjour discovery enabled (default) advertise the beacon.
 

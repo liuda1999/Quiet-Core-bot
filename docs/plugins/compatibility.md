@@ -52,7 +52,7 @@ contracts.
 The day-one CLI should be:
 
 ```sh
-openclaw-plugin-inspector ./my-plugin
+quiet-core-bot-plugin-inspector ./my-plugin
 ```
 
 It should emit:
@@ -65,7 +65,7 @@ It should emit:
 
 Use `--json` for stable machine-readable output in CI annotations. Quiet Core bot
 core should expose contracts and fixtures the inspector can consume, but should
-not publish the inspector binary from the main `openclaw` package.
+not publish the inspector binary from the main `quiet-core-bot` package.
 
 ### Maintainer acceptance lane
 
@@ -74,9 +74,9 @@ lane when validating the external inspector against Quiet Core bot plugin packag
 Run it from a clean Quiet Core bot checkout after the package is built:
 
 ```sh
-pnpm crabbox:run -- --provider blacksmith-testbox --timing-json --shell -- "pnpm install && pnpm build && npm exec --yes @openclaw/plugin-inspector@0.1.0 -- ./extensions/telegram --json"
-pnpm crabbox:run -- --provider blacksmith-testbox --timing-json --shell -- "npm exec --yes @openclaw/plugin-inspector@0.1.0 -- ./extensions/discord --json"
-pnpm crabbox:run -- --provider blacksmith-testbox --timing-json --shell -- "npm exec --yes @openclaw/plugin-inspector@0.1.0 -- <clawhub-plugin-dir> --json"
+pnpm crabbox:run -- --provider blacksmith-testbox --timing-json --shell -- "pnpm install && pnpm build && npm exec --yes @quiet-core/plugin-inspector@0.1.0 -- ./extensions/telegram --json"
+pnpm crabbox:run -- --provider blacksmith-testbox --timing-json --shell -- "npm exec --yes @quiet-core/plugin-inspector@0.1.0 -- ./extensions/discord --json"
+pnpm crabbox:run -- --provider blacksmith-testbox --timing-json --shell -- "npm exec --yes @quiet-core/plugin-inspector@0.1.0 -- <clawhub-plugin-dir> --json"
 ```
 
 Keep this lane opt-in for maintainers because it installs an external npm
@@ -110,16 +110,16 @@ instead.
 
 Current compatibility records include:
 
-- legacy broad SDK imports such as `openclaw/plugin-sdk/compat`
+- legacy broad SDK imports such as `quiet-core-bot/plugin-sdk/compat`
 - legacy hook-only plugin shapes and `before_agent_start`
 - legacy `api.on("deactivate", ...)` cleanup hook names while plugins migrate to
   `gateway_stop`
 - legacy `activate(api)` plugin entrypoints while plugins migrate to
   `register(api)`
-- legacy SDK aliases such as `openclaw/extension-api`,
-  `openclaw/plugin-sdk/channel-runtime`, `openclaw/plugin-sdk/command-auth`
-  status builders, `openclaw/plugin-sdk/test-utils` (replaced by focused
-  `openclaw/plugin-sdk/*` test subpaths), and the `ClawdbotConfig` /
+- legacy SDK aliases such as `quiet-core-bot/extension-api`,
+  `quiet-core-bot/plugin-sdk/channel-runtime`, `quiet-core-bot/plugin-sdk/command-auth`
+  status builders, `quiet-core-bot/plugin-sdk/test-utils` (replaced by focused
+  `quiet-core-bot/plugin-sdk/*` test subpaths), and the `ClawdbotConfig` /
   `OpenClawSchemaType` type aliases
 - bundled plugin allowlist and enablement behavior
 - legacy provider/channel env-var manifest metadata
@@ -143,14 +143,14 @@ Current compatibility records include:
 - legacy channel SDK helpers for native message schemas, mention gating,
   inbound envelope formatting, and approval capability nesting
 - legacy channel route key and comparable-target helper aliases while plugins
-  move to `openclaw/plugin-sdk/channel-route`
+  move to `quiet-core-bot/plugin-sdk/channel-route`
 - activation hints that are being replaced by manifest contribution ownership
 - `setup-api` runtime fallback while setup descriptors move to cold
   `setup.requiresRuntime: false` metadata
 - provider `discovery` hooks while provider catalog hooks move to
   `catalog.run(...)`
 - channel `showConfigured` / `showInSetup` metadata while channel packages move
-  to `openclaw.channel.exposure`
+  to `quiet-core-bot.channel.exposure`
 - legacy runtime-policy config keys while doctor migrates operators to
   `agentRuntime`
 - generated bundled channel config metadata fallback while registry-first

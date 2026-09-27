@@ -73,7 +73,7 @@ Enable the plugin:
 Check setup:
 
 ```bash
-openclaw googlemeet setup
+quiet-core-bot googlemeet setup
 ```
 
 The setup output is meant to be agent-readable and mode-aware. It reports Chrome
@@ -83,13 +83,13 @@ transport with `--mode transcribe`; that mode skips realtime audio prerequisites
 because it does not listen through or speak through the bridge:
 
 ```bash
-openclaw googlemeet setup --transport chrome-node --mode transcribe
+quiet-core-bot googlemeet setup --transport chrome-node --mode transcribe
 ```
 
 When Twilio delegation is configured, setup also reports whether the
 `voice-call` plugin, Twilio credentials, and public webhook exposure are ready.
 Treat any `ok: false` check as a blocker for the checked transport and mode
-before asking an agent to join. Use `openclaw googlemeet setup --json` for
+before asking an agent to join. Use `quiet-core-bot googlemeet setup --json` for
 scripts or machine-readable output. Use `--transport chrome`,
 `--transport chrome-node`, or `--transport twilio` to preflight a specific
 transport before an agent tries it.
@@ -98,7 +98,7 @@ For Twilio, always preflight the transport explicitly when the default transport
 is Chrome:
 
 ```bash
-openclaw googlemeet setup --transport twilio
+quiet-core-bot googlemeet setup --transport twilio
 ```
 
 That catches missing `voice-call` wiring, Twilio credentials, or unreachable
@@ -107,7 +107,7 @@ webhook exposure before the agent tries to dial the meeting.
 Join a meeting:
 
 ```bash
-openclaw googlemeet join https://meet.google.com/abc-defg-hij
+quiet-core-bot googlemeet join https://meet.google.com/abc-defg-hij
 ```
 
 Or let an agent join through the `google_meet` tool:
@@ -131,7 +131,7 @@ participation.
 Create a new meeting and join it:
 
 ```bash
-openclaw googlemeet create --transport chrome-node --mode agent
+quiet-core-bot googlemeet create --transport chrome-node --mode agent
 ```
 
 For API-created rooms, use Google Meet `SpaceConfig.accessType` when you want
@@ -139,7 +139,7 @@ the room's no-knock policy to be explicit instead of inherited from the Google
 account defaults:
 
 ```bash
-openclaw googlemeet create --access-type OPEN --transport chrome-node --mode agent
+quiet-core-bot googlemeet create --access-type OPEN --transport chrome-node --mode agent
 ```
 
 `OPEN` lets anyone with the Meet URL join without knocking. `TRUSTED` lets the
@@ -149,13 +149,13 @@ settings only apply to the official Google Meet API creation path, so OAuth
 credentials must be configured.
 
 If you authenticated Google Meet before this option was available, rerun
-`openclaw googlemeet auth login --json` after adding the
+`quiet-core-bot googlemeet auth login --json` after adding the
 `meetings.space.settings` scope to your Google OAuth consent screen.
 
 Create only the URL without joining:
 
 ```bash
-openclaw googlemeet create --no-join
+quiet-core-bot googlemeet create --no-join
 ```
 
 `googlemeet create` has two paths:
@@ -202,7 +202,7 @@ a best-effort Meet caption observer. `googlemeet status --json` and
 `transcriptLines`, `lastCaptionAt`, `lastCaptionSpeaker`, `lastCaptionText`,
 and a short `recentTranscript` tail so operators can tell whether the browser
 joined the call and whether Meet captions are producing text.
-Use `openclaw googlemeet test-listen <meet-url> --transport chrome-node` when
+Use `quiet-core-bot googlemeet test-listen <meet-url> --transport chrome-node` when
 you need a yes/no probe: it joins in transcribe mode, waits for fresh caption or
 transcript movement, and returns `listenVerified`, `listenTimedOut`, manual
 action fields, and the latest caption health.
@@ -274,19 +274,19 @@ If `<gateway-host>` is a LAN IP and you are not using TLS, the node refuses the
 plaintext WebSocket unless you opt in for that trusted private network:
 
 ```bash
-OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1 \
+QUIET_CORE_ALLOW_INSECURE_PRIVATE_WS=1 \
   quiet-core-bot node run --host <gateway-lan-ip> --port 18789 --display-name parallels-macos
 ```
 
 Use the same environment variable when installing the node as a LaunchAgent:
 
 ```bash
-OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1 \
+QUIET_CORE_ALLOW_INSECURE_PRIVATE_WS=1 \
   quiet-core-bot node install --host <gateway-lan-ip> --port 18789 --display-name parallels-macos --force
 quiet-core-bot node restart
 ```
 
-`OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` is process environment, not an
+`QUIET_CORE_ALLOW_INSECURE_PRIVATE_WS=1` is process environment, not an
 `quiet-core-bot.json` setting. `quiet-core-bot node install` stores it in the LaunchAgent
 environment when it is present on the install command.
 
@@ -337,7 +337,7 @@ Route Meet through that node on the Gateway host:
 Now join normally from the Gateway host:
 
 ```bash
-openclaw googlemeet join https://meet.google.com/abc-defg-hij
+quiet-core-bot googlemeet join https://meet.google.com/abc-defg-hij
 ```
 
 or ask the agent to use the `google_meet` tool with `transport: "chrome-node"`.
@@ -346,7 +346,7 @@ For a one-command smoke test that creates or reuses a session, speaks a known
 phrase, and prints session health:
 
 ```bash
-openclaw googlemeet test-speech https://meet.google.com/abc-defg-hij
+quiet-core-bot googlemeet test-speech https://meet.google.com/abc-defg-hij
 ```
 
 During realtime join, Quiet Core bot browser automation fills the guest name, clicks
@@ -423,8 +423,8 @@ profile with `browser.defaultProfile`; `chrome.browserProfile` is passed to
 `chrome-node` hosts.
 
 ```bash
-openclaw googlemeet join https://meet.google.com/abc-defg-hij --transport chrome
-openclaw googlemeet join https://meet.google.com/abc-defg-hij --transport chrome-node
+quiet-core-bot googlemeet join https://meet.google.com/abc-defg-hij --transport chrome
+quiet-core-bot googlemeet join https://meet.google.com/abc-defg-hij --transport chrome-node
 ```
 
 Route Chrome microphone and speaker audio through the local Quiet Core bot audio
@@ -502,7 +502,7 @@ Then verify:
 ```bash
 quiet-core-bot config validate
 quiet-core-bot plugins list | grep -E 'google-meet|voice-call'
-openclaw googlemeet setup
+quiet-core-bot googlemeet setup
 ```
 
 When Twilio delegation is wired, `googlemeet setup` includes successful
@@ -510,7 +510,7 @@ When Twilio delegation is wired, `googlemeet setup` includes successful
 `twilio-voice-call-webhook` checks.
 
 ```bash
-openclaw googlemeet join https://meet.google.com/abc-defg-hij \
+quiet-core-bot googlemeet join https://meet.google.com/abc-defg-hij \
   --transport twilio \
   --dial-in-number +15551234567 \
   --pin 123456
@@ -519,7 +519,7 @@ openclaw googlemeet join https://meet.google.com/abc-defg-hij \
 Use `--dtmf-sequence` when the meeting needs a custom sequence:
 
 ```bash
-openclaw googlemeet join https://meet.google.com/abc-defg-hij \
+quiet-core-bot googlemeet join https://meet.google.com/abc-defg-hij \
   --transport twilio \
   --dial-in-number +15551234567 \
   --dtmf-sequence ww123456#
@@ -534,7 +534,7 @@ space resolution, or Meet Media API preflight checks.
 Google Meet API access uses user OAuth: create a Google Cloud OAuth client,
 request the required scopes, authorize a Google account, then store the
 resulting refresh token in the Google Meet plugin config or provide the
-`OPENCLAW_GOOGLE_MEET_*` environment variables.
+`QUIET_CORE_GOOGLE_MEET_*` environment variables.
 
 OAuth does not replace the Chrome join path. Chrome and Chrome-node transports
 still join through a signed-in Chrome profile, BlackHole/SoX, and a connected
@@ -581,7 +581,7 @@ Configure `oauth.clientId` and optionally `oauth.clientSecret`, or pass them as
 environment variables, then run:
 
 ```bash
-openclaw googlemeet auth login --json
+quiet-core-bot googlemeet auth login --json
 ```
 
 The command prints an `oauth` config block with a refresh token. It uses PKCE,
@@ -591,17 +591,17 @@ copy/paste flow with `--manual`.
 Examples:
 
 ```bash
-OPENCLAW_GOOGLE_MEET_CLIENT_ID="your-client-id" \
-OPENCLAW_GOOGLE_MEET_CLIENT_SECRET="your-client-secret" \
-openclaw googlemeet auth login --json
+QUIET_CORE_GOOGLE_MEET_CLIENT_ID="your-client-id" \
+QUIET_CORE_GOOGLE_MEET_CLIENT_SECRET="your-client-secret" \
+quiet-core-bot googlemeet auth login --json
 ```
 
 Use manual mode when the browser cannot reach the local callback:
 
 ```bash
-OPENCLAW_GOOGLE_MEET_CLIENT_ID="your-client-id" \
-OPENCLAW_GOOGLE_MEET_CLIENT_SECRET="your-client-secret" \
-openclaw googlemeet auth login --json --manual
+QUIET_CORE_GOOGLE_MEET_CLIENT_ID="your-client-id" \
+QUIET_CORE_GOOGLE_MEET_CLIENT_SECRET="your-client-secret" \
+quiet-core-bot googlemeet auth login --json --manual
 ```
 
 The JSON output includes:
@@ -646,7 +646,7 @@ first and then environment fallback.
 
 The OAuth consent includes Meet space creation, Meet space read access, and Meet
 conference media read access. If you authenticated before meeting creation
-support existed, rerun `openclaw googlemeet auth login --json` so the refresh
+support existed, rerun `quiet-core-bot googlemeet auth login --json` so the refresh
 token has the `meetings.space.created` scope.
 
 ### Verify OAuth with doctor
@@ -654,7 +654,7 @@ token has the `meetings.space.created` scope.
 Run the OAuth doctor when you want a fast, non-secret health check:
 
 ```bash
-openclaw googlemeet doctor --oauth --json
+quiet-core-bot googlemeet doctor --oauth --json
 ```
 
 This does not load the Chrome runtime or require a connected Chrome node. It
@@ -676,8 +676,8 @@ To prove Google Meet API enablement and `spaces.create` scope as well, run the
 side-effecting create check:
 
 ```bash
-openclaw googlemeet doctor --oauth --create-space --json
-openclaw googlemeet create --no-join --json
+quiet-core-bot googlemeet doctor --oauth --create-space --json
+quiet-core-bot googlemeet create --no-join --json
 ```
 
 `--create-space` creates a throwaway Meet URL. Use it when you need to confirm
@@ -687,15 +687,15 @@ account has the `meetings.space.created` scope.
 To prove read access for an existing meeting space:
 
 ```bash
-openclaw googlemeet doctor --oauth --meeting https://meet.google.com/abc-defg-hij --json
-openclaw googlemeet resolve-space --meeting https://meet.google.com/abc-defg-hij
+quiet-core-bot googlemeet doctor --oauth --meeting https://meet.google.com/abc-defg-hij --json
+quiet-core-bot googlemeet resolve-space --meeting https://meet.google.com/abc-defg-hij
 ```
 
 `doctor --oauth --meeting` and `resolve-space` prove read access to an existing
 space that the authorized Google account can access. A `403` from these checks
 usually means the Google Meet REST API is disabled, the consented refresh token
 is missing the required scope, or the Google account cannot access that Meet
-space. A refresh-token error means rerun `openclaw googlemeet auth login
+space. A refresh-token error means rerun `quiet-core-bot googlemeet auth login
 --json` and store the new `oauth` block.
 
 No OAuth credentials are needed for the browser fallback. In that mode, Google
@@ -704,33 +704,33 @@ Quiet Core bot config.
 
 These environment variables are accepted as fallbacks:
 
-- `OPENCLAW_GOOGLE_MEET_CLIENT_ID` or `GOOGLE_MEET_CLIENT_ID`
-- `OPENCLAW_GOOGLE_MEET_CLIENT_SECRET` or `GOOGLE_MEET_CLIENT_SECRET`
-- `OPENCLAW_GOOGLE_MEET_REFRESH_TOKEN` or `GOOGLE_MEET_REFRESH_TOKEN`
-- `OPENCLAW_GOOGLE_MEET_ACCESS_TOKEN` or `GOOGLE_MEET_ACCESS_TOKEN`
-- `OPENCLAW_GOOGLE_MEET_ACCESS_TOKEN_EXPIRES_AT` or
+- `QUIET_CORE_GOOGLE_MEET_CLIENT_ID` or `GOOGLE_MEET_CLIENT_ID`
+- `QUIET_CORE_GOOGLE_MEET_CLIENT_SECRET` or `GOOGLE_MEET_CLIENT_SECRET`
+- `QUIET_CORE_GOOGLE_MEET_REFRESH_TOKEN` or `GOOGLE_MEET_REFRESH_TOKEN`
+- `QUIET_CORE_GOOGLE_MEET_ACCESS_TOKEN` or `GOOGLE_MEET_ACCESS_TOKEN`
+- `QUIET_CORE_GOOGLE_MEET_ACCESS_TOKEN_EXPIRES_AT` or
   `GOOGLE_MEET_ACCESS_TOKEN_EXPIRES_AT`
-- `OPENCLAW_GOOGLE_MEET_DEFAULT_MEETING` or `GOOGLE_MEET_DEFAULT_MEETING`
-- `OPENCLAW_GOOGLE_MEET_PREVIEW_ACK` or `GOOGLE_MEET_PREVIEW_ACK`
+- `QUIET_CORE_GOOGLE_MEET_DEFAULT_MEETING` or `GOOGLE_MEET_DEFAULT_MEETING`
+- `QUIET_CORE_GOOGLE_MEET_PREVIEW_ACK` or `GOOGLE_MEET_PREVIEW_ACK`
 
 Resolve a Meet URL, code, or `spaces/{id}` through `spaces.get`:
 
 ```bash
-openclaw googlemeet resolve-space --meeting https://meet.google.com/abc-defg-hij
+quiet-core-bot googlemeet resolve-space --meeting https://meet.google.com/abc-defg-hij
 ```
 
 Run preflight before media work:
 
 ```bash
-openclaw googlemeet preflight --meeting https://meet.google.com/abc-defg-hij
+quiet-core-bot googlemeet preflight --meeting https://meet.google.com/abc-defg-hij
 ```
 
 List meeting artifacts and attendance after Meet has created conference records:
 
 ```bash
-openclaw googlemeet artifacts --meeting https://meet.google.com/abc-defg-hij
-openclaw googlemeet attendance --meeting https://meet.google.com/abc-defg-hij
-openclaw googlemeet export --meeting https://meet.google.com/abc-defg-hij --output ./meet-export
+quiet-core-bot googlemeet artifacts --meeting https://meet.google.com/abc-defg-hij
+quiet-core-bot googlemeet attendance --meeting https://meet.google.com/abc-defg-hij
+quiet-core-bot googlemeet export --meeting https://meet.google.com/abc-defg-hij --output ./meet-export
 ```
 
 With `--meeting`, `artifacts` and `attendance` use the latest conference record
@@ -741,10 +741,10 @@ Calendar lookup can resolve the meeting URL from Google Calendar before reading
 Meet artifacts:
 
 ```bash
-openclaw googlemeet latest --today
-openclaw googlemeet calendar-events --today --json
-openclaw googlemeet artifacts --event "Weekly sync"
-openclaw googlemeet attendance --today --format csv --output attendance.csv
+quiet-core-bot googlemeet latest --today
+quiet-core-bot googlemeet calendar-events --today --json
+quiet-core-bot googlemeet artifacts --event "Weekly sync"
+quiet-core-bot googlemeet attendance --today --format csv --output attendance.csv
 ```
 
 `--today` searches today's `primary` calendar for a Calendar event with a
@@ -757,16 +757,16 @@ OAuth login that includes the Calendar events readonly scope.
 If you already know the conference record id, address it directly:
 
 ```bash
-openclaw googlemeet latest --meeting https://meet.google.com/abc-defg-hij
-openclaw googlemeet artifacts --conference-record conferenceRecords/abc123 --json
-openclaw googlemeet attendance --conference-record conferenceRecords/abc123 --json
+quiet-core-bot googlemeet latest --meeting https://meet.google.com/abc-defg-hij
+quiet-core-bot googlemeet artifacts --conference-record conferenceRecords/abc123 --json
+quiet-core-bot googlemeet attendance --conference-record conferenceRecords/abc123 --json
 ```
 
 End an active conference for an API-created space when you want to close the
 room after the call:
 
 ```bash
-openclaw googlemeet end-active-conference https://meet.google.com/abc-defg-hij
+quiet-core-bot googlemeet end-active-conference https://meet.google.com/abc-defg-hij
 ```
 
 This calls Google Meet `spaces.endActiveConference` and requires OAuth with the
@@ -780,15 +780,15 @@ conference for the space.
 Write a readable report:
 
 ```bash
-openclaw googlemeet artifacts --conference-record conferenceRecords/abc123 \
+quiet-core-bot googlemeet artifacts --conference-record conferenceRecords/abc123 \
   --format markdown --output meet-artifacts.md
-openclaw googlemeet attendance --conference-record conferenceRecords/abc123 \
+quiet-core-bot googlemeet attendance --conference-record conferenceRecords/abc123 \
   --format markdown --output meet-attendance.md
-openclaw googlemeet attendance --conference-record conferenceRecords/abc123 \
+quiet-core-bot googlemeet attendance --conference-record conferenceRecords/abc123 \
   --format csv --output meet-attendance.csv
-openclaw googlemeet export --conference-record conferenceRecords/abc123 \
+quiet-core-bot googlemeet export --conference-record conferenceRecords/abc123 \
   --include-doc-bodies --zip --output meet-export
-openclaw googlemeet export --conference-record conferenceRecords/abc123 \
+quiet-core-bot googlemeet export --conference-record conferenceRecords/abc123 \
   --include-doc-bodies --dry-run
 ```
 
@@ -868,8 +868,8 @@ meeting is useful:
 Run the guarded live smoke against a real retained meeting:
 
 ```bash
-OPENCLAW_LIVE_TEST=1 \
-OPENCLAW_GOOGLE_MEET_LIVE_MEETING=https://meet.google.com/abc-defg-hij \
+QUIET_CORE_LIVE_TEST=1 \
+QUIET_CORE_GOOGLE_MEET_LIVE_MEETING=https://meet.google.com/abc-defg-hij \
 pnpm test:live -- extensions/google-meet/google-meet.live.test.ts
 ```
 
@@ -877,23 +877,23 @@ Run the live listen-first browser probe against a meeting where someone will
 speak with Meet captions available:
 
 ```bash
-openclaw googlemeet setup --transport chrome-node --mode transcribe
-openclaw googlemeet test-listen https://meet.google.com/abc-defg-hij --transport chrome-node --timeout-ms 30000
+quiet-core-bot googlemeet setup --transport chrome-node --mode transcribe
+quiet-core-bot googlemeet test-listen https://meet.google.com/abc-defg-hij --transport chrome-node --timeout-ms 30000
 ```
 
 Live smoke environment:
 
-- `OPENCLAW_LIVE_TEST=1` enables guarded live tests.
-- `OPENCLAW_GOOGLE_MEET_LIVE_MEETING` points at a retained Meet URL, code, or
+- `QUIET_CORE_LIVE_TEST=1` enables guarded live tests.
+- `QUIET_CORE_GOOGLE_MEET_LIVE_MEETING` points at a retained Meet URL, code, or
   `spaces/{id}`.
-- `OPENCLAW_GOOGLE_MEET_CLIENT_ID` or `GOOGLE_MEET_CLIENT_ID` provides the OAuth
+- `QUIET_CORE_GOOGLE_MEET_CLIENT_ID` or `GOOGLE_MEET_CLIENT_ID` provides the OAuth
   client id.
-- `OPENCLAW_GOOGLE_MEET_REFRESH_TOKEN` or `GOOGLE_MEET_REFRESH_TOKEN` provides
+- `QUIET_CORE_GOOGLE_MEET_REFRESH_TOKEN` or `GOOGLE_MEET_REFRESH_TOKEN` provides
   the refresh token.
-- Optional: `OPENCLAW_GOOGLE_MEET_CLIENT_SECRET`,
-  `OPENCLAW_GOOGLE_MEET_ACCESS_TOKEN`, and
-  `OPENCLAW_GOOGLE_MEET_ACCESS_TOKEN_EXPIRES_AT` use the same fallback names
-  without the `OPENCLAW_` prefix.
+- Optional: `QUIET_CORE_GOOGLE_MEET_CLIENT_SECRET`,
+  `QUIET_CORE_GOOGLE_MEET_ACCESS_TOKEN`, and
+  `QUIET_CORE_GOOGLE_MEET_ACCESS_TOKEN_EXPIRES_AT` use the same fallback names
+  without the `QUIET_CORE_` prefix.
 
 The base artifact/attendance live smoke needs
 `https://www.googleapis.com/auth/meetings.space.readonly` and
@@ -905,7 +905,7 @@ document-body export needs
 Create a fresh Meet space:
 
 ```bash
-openclaw googlemeet create
+quiet-core-bot googlemeet create
 ```
 
 The command prints the new `meeting uri`, source, and join session. With OAuth
@@ -1086,7 +1086,7 @@ Optional overrides:
     meeting: "https://meet.google.com/abc-defg-hij",
   },
   browser: {
-    defaultProfile: "openclaw",
+    defaultProfile: "quiet-core-bot",
   },
   chrome: {
     guestName: "Quiet Core bot Agent",
@@ -1309,13 +1309,13 @@ can reuse prior consult context during the same meeting.
 To force a spoken readiness check after Chrome has fully joined the call:
 
 ```bash
-openclaw googlemeet speak meet_... "Say exactly: I'm here and listening."
+quiet-core-bot googlemeet speak meet_... "Say exactly: I'm here and listening."
 ```
 
 For the full join-and-speak smoke:
 
 ```bash
-openclaw googlemeet test-speech https://meet.google.com/abc-defg-hij \
+quiet-core-bot googlemeet test-speech https://meet.google.com/abc-defg-hij \
   --transport chrome-node \
   --message "Say exactly: I'm here and listening."
 ```
@@ -1325,9 +1325,9 @@ openclaw googlemeet test-speech https://meet.google.com/abc-defg-hij \
 Use this sequence before handing a meeting to an unattended agent:
 
 ```bash
-openclaw googlemeet setup
+quiet-core-bot googlemeet setup
 quiet-core-bot nodes status
-openclaw googlemeet test-speech https://meet.google.com/abc-defg-hij \
+quiet-core-bot googlemeet test-speech https://meet.google.com/abc-defg-hij \
   --transport chrome-node \
   --message "Say exactly: Google Meet speech test complete."
 ```
@@ -1346,7 +1346,7 @@ For a remote Chrome host such as a Parallels macOS VM, this is the shortest
 safe check after updating the Gateway or the VM:
 
 ```bash
-openclaw googlemeet setup
+quiet-core-bot googlemeet setup
 quiet-core-bot nodes status --connected
 quiet-core-bot nodes invoke \
   --node parallels-macos \
@@ -1361,8 +1361,8 @@ real meeting tab.
 For a Twilio smoke, use a meeting that exposes phone dial-in details:
 
 ```bash
-openclaw googlemeet setup
-openclaw googlemeet join https://meet.google.com/abc-defg-hij \
+quiet-core-bot googlemeet setup
+quiet-core-bot googlemeet join https://meet.google.com/abc-defg-hij \
   --transport twilio \
   --dial-in-number +15551234567 \
   --pin 123456
@@ -1386,7 +1386,7 @@ Confirm the plugin is enabled in the Gateway config and reload the Gateway:
 
 ```bash
 quiet-core-bot plugins list | grep google-meet
-openclaw googlemeet setup
+quiet-core-bot googlemeet setup
 ```
 
 If you just edited `plugins.entries.google-meet`, restart or reload the Gateway.
@@ -1406,7 +1406,7 @@ On the node host, run:
 ```bash
 quiet-core-bot plugins enable google-meet
 quiet-core-bot plugins enable browser
-OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1 \
+QUIET_CORE_ALLOW_INSECURE_PRIVATE_WS=1 \
   quiet-core-bot node run --host <gateway-lan-ip> --port 18789 --display-name parallels-macos
 ```
 
@@ -1436,7 +1436,7 @@ If `googlemeet setup` fails `chrome-node-connected` or the Gateway log reports
 token. For a LAN Gateway this usually means:
 
 ```bash
-OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1 \
+QUIET_CORE_ALLOW_INSECURE_PRIVATE_WS=1 \
   quiet-core-bot node install \
   --host <gateway-lan-ip> \
   --port 18789 \
@@ -1447,7 +1447,7 @@ OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1 \
 Then reload the node service and re-run:
 
 ```bash
-openclaw googlemeet setup
+quiet-core-bot googlemeet setup
 quiet-core-bot nodes status --connected
 ```
 
@@ -1480,10 +1480,10 @@ when OAuth credentials are configured. Without OAuth credentials it falls back
 to the pinned Chrome node browser. Confirm:
 
 - For API creation: `oauth.clientId` and `oauth.refreshToken` are configured,
-  or matching `OPENCLAW_GOOGLE_MEET_*` environment variables are present.
+  or matching `QUIET_CORE_GOOGLE_MEET_*` environment variables are present.
 - For API creation: the refresh token was minted after create support was
   added. Older tokens may be missing the `meetings.space.created` scope; rerun
-  `openclaw googlemeet auth login --json` and update plugin config.
+  `quiet-core-bot googlemeet auth login --json` and update plugin config.
 - For browser fallback: `defaultTransport: "chrome-node"` and
   `chromeNode.node` point at a connected node with `browser.proxy` and
   `googlemeet.chrome`.
@@ -1507,14 +1507,14 @@ to the pinned Chrome node browser. Confirm:
 Check the realtime path:
 
 ```bash
-openclaw googlemeet setup
-openclaw googlemeet doctor
+quiet-core-bot googlemeet setup
+quiet-core-bot googlemeet doctor
 ```
 
 Use `mode: "agent"` for the normal STT -> Quiet Core bot agent -> TTS talk-back path,
 or `mode: "bidi"` for the direct realtime voice fallback. `mode: "transcribe"`
 intentionally does not start the talk-back bridge. For observe-only debugging,
-run `openclaw googlemeet status --json <session-id>` after participants speak
+run `quiet-core-bot googlemeet status --json <session-id>` after participants speak
 and check `captioning`, `transcriptLines`, and `lastCaptionText`. If `inCall` is
 true but `transcriptLines` stays at `0`, Meet captions may be disabled, no one
 has spoken since the observer was installed, the Meet UI changed, or live
@@ -1548,8 +1548,8 @@ If an agent timed out and you can see a Meet tab already open, inspect that tab
 without opening another one:
 
 ```bash
-openclaw googlemeet recover-tab
-openclaw googlemeet recover-tab https://meet.google.com/abc-defg-hij
+quiet-core-bot googlemeet recover-tab
+quiet-core-bot googlemeet recover-tab https://meet.google.com/abc-defg-hij
 ```
 
 The equivalent tool action is `recover_current_tab`. It focuses and inspects an
@@ -1625,22 +1625,22 @@ host URL:
 Then restart or reload the Gateway and run:
 
 ```bash
-openclaw googlemeet setup --transport twilio
-openclaw voicecall setup
-openclaw voicecall smoke
+quiet-core-bot googlemeet setup --transport twilio
+quiet-core-bot voicecall setup
+quiet-core-bot voicecall smoke
 ```
 
 `voicecall smoke` is readiness-only by default. To dry-run a specific number:
 
 ```bash
-openclaw voicecall smoke --to "+15555550123"
+quiet-core-bot voicecall smoke --to "+15555550123"
 ```
 
 Only add `--yes` when you intentionally want to place a live outbound notify
 call:
 
 ```bash
-openclaw voicecall smoke --to "+15555550123" --yes
+quiet-core-bot voicecall smoke --to "+15555550123" --yes
 ```
 
 ### Twilio call starts but never enters the meeting
@@ -1649,7 +1649,7 @@ Confirm the Meet event exposes phone dial-in details. Pass the exact dial-in
 number and PIN or a custom DTMF sequence:
 
 ```bash
-openclaw googlemeet join https://meet.google.com/abc-defg-hij \
+quiet-core-bot googlemeet join https://meet.google.com/abc-defg-hij \
   --transport twilio \
   --dial-in-number +15551234567 \
   --dtmf-sequence ww123456#
@@ -1661,17 +1661,17 @@ before entering the PIN.
 If the phone call is created but the Meet roster never shows the dial-in
 participant:
 
-- Run `openclaw googlemeet doctor <session-id>` to confirm the delegated Twilio
+- Run `quiet-core-bot googlemeet doctor <session-id>` to confirm the delegated Twilio
   call ID, whether DTMF was queued, and whether the intro greeting was requested.
-- Run `openclaw voicecall status --call-id <id>` and confirm the call is still
+- Run `quiet-core-bot voicecall status --call-id <id>` and confirm the call is still
   active.
-- Run `openclaw voicecall tail` and check that Twilio webhooks are arriving at
+- Run `quiet-core-bot voicecall tail` and check that Twilio webhooks are arriving at
   the Gateway.
 - Run `quiet-core-bot logs --follow` and look for the Twilio Meet sequence: Google
   Meet delegates the join, Voice Call stores and serves pre-connect DTMF TwiML,
   Voice Call serves realtime TwiML for the Twilio call, then Google Meet requests
   intro speech with `voicecall.speak`.
-- Re-run `openclaw googlemeet setup --transport twilio`; a green setup check is
+- Re-run `quiet-core-bot googlemeet setup --transport twilio`; a green setup check is
   required but does not prove the meeting PIN sequence is correct.
 - Confirm the dial-in number belongs to the same Meet invitation and region as
   the PIN.

@@ -81,7 +81,7 @@ Quiet Core bot currently ships this bundled Mistral catalog:
 After onboarding, smoke-test Medium 3.5 without starting the Gateway:
 
 ```bash
-openclaw infer model run --local \
+quiet-core-bot infer model run --local \
   --model mistral/mistral-medium-3-5 \
   --prompt "Reply with exactly: mistral-ok" \
   --json

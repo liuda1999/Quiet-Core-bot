@@ -48,7 +48,7 @@ function vitestArtifactEvidence(params: {
   artifact: { kind: string; path: string };
 }): QaEvidenceSummaryJson {
   return {
-    kind: "openclaw.qa.evidence-summary",
+    kind: "quiet-core-bot.qa.evidence-summary",
     schemaVersion: 2,
     generatedAt: "2026-06-17T12:00:00.000Z",
     evidenceMode: "full",
@@ -87,7 +87,7 @@ describe("evidence gallery", () => {
         { kind: "log", path: "runner/output.log" },
       ],
       env: {
-        OPENCLAW_QA_REF: "gallery-test",
+        QUIET_CORE_QA_REF: "gallery-test",
       } as NodeJS.ProcessEnv,
       generatedAt: "2026-06-17T12:00:00.000Z",
       primaryModel: "mock-openai/gpt-5.5",
@@ -364,7 +364,7 @@ describe("evidence gallery", () => {
           coverageIds: ["cli.entrypoint"],
           runner: {
             availability: "local",
-            command: "pnpm openclaw qa suite --scenario ux-matrix-evidence-dashboard",
+            command: "pnpm quiet-core-bot qa suite --scenario ux-matrix-evidence-dashboard",
             lane: "cli-status",
             workflow: ".github/workflows/ux-matrix-qa.yml#ux-matrix-local",
           },
@@ -393,7 +393,7 @@ describe("evidence gallery", () => {
     );
 
     await writeJson(path.join(suiteDir, QA_EVIDENCE_FILENAME), {
-      kind: "openclaw.qa.evidence-summary",
+      kind: "quiet-core-bot.qa.evidence-summary",
       schemaVersion: 2,
       generatedAt: "2026-06-17T12:00:00.000Z",
       evidenceMode: "full",
@@ -533,7 +533,7 @@ describe("evidence gallery", () => {
         coverageIds: ["cli.entrypoint"],
         runner: {
           availability: "local",
-          command: "pnpm openclaw qa suite --scenario ux-matrix-evidence-dashboard",
+          command: "pnpm quiet-core-bot qa suite --scenario ux-matrix-evidence-dashboard",
           lane: "cli-status",
           workflow: ".github/workflows/ux-matrix-qa.yml#ux-matrix-local",
         },
@@ -694,7 +694,7 @@ describe("evidence gallery", () => {
       }),
     ).rejects.toThrow("Evidence artifact not found.");
     await expect(
-      resolveQaEvidenceFile({ inputPath: "/tmp/not-openclaw-evidence.json", repoRoot }),
+      resolveQaEvidenceFile({ inputPath: "/tmp/not-quiet-core-bot-evidence.json", repoRoot }),
     ).rejects.toThrow("Evidence path not found.");
   });
 });

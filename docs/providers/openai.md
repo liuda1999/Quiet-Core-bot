@@ -36,9 +36,9 @@ changing config.
 | ------------------------------------------------------ | -------------------------------------------------------- | --------------------------------------------------------------------- |
 | ChatGPT/Codex subscription with native Codex runtime   | `openai/gpt-5.5`                                         | Default OpenAI agent setup. Sign in with Codex auth.                  |
 | Direct API-key billing for agent models                | `openai/gpt-5.5` plus a Codex-compatible API-key profile | Use `auth.order.openai` to place the backup after subscription auth.  |
-| Direct API-key billing through explicit Quiet Core bot | `openai/gpt-5.5` plus provider/model runtime `openclaw`  | Select a normal `openai` API-key profile.                             |
+| Direct API-key billing through explicit Quiet Core bot | `openai/gpt-5.5` plus provider/model runtime `quiet-core-bot`  | Select a normal `openai` API-key profile.                             |
 | Latest ChatGPT Instant API alias                       | `openai/chat-latest`                                     | Direct API-key only. Moving alias for experiments, not the default.   |
-| ChatGPT/Codex subscription auth through Quiet Core bot | `openai/gpt-5.5` plus provider/model runtime `openclaw`  | Select an `openai` OAuth profile for the compatibility route.         |
+| ChatGPT/Codex subscription auth through Quiet Core bot | `openai/gpt-5.5` plus provider/model runtime `quiet-core-bot`  | Select an `openai` OAuth profile for the compatibility route.         |
 | Image generation or editing                            | `openai/gpt-image-2`                                     | Works with either `OPENAI_API_KEY` or OpenAI Codex OAuth.             |
 | Transparent-background images                          | `openai/gpt-image-1.5`                                   | Use `outputFormat=png` or `webp` and `openai.background=transparent`. |
 
@@ -176,7 +176,7 @@ Choose your preferred auth method and follow the setup steps.
     | ---------------------- | -------------------------- | --------------------------- | ---------------- |
     | `openai/gpt-5.5`      | omitted / provider/model `agentRuntime.id: "codex"` | Codex app-server harness | Codex-compatible OpenAI profile |
     | `openai/gpt-5.4-mini` | omitted / provider/model `agentRuntime.id: "codex"` | Codex app-server harness | Codex-compatible OpenAI profile |
-    | `openai/gpt-5.5`      | provider/model `agentRuntime.id: "openclaw"`              | Quiet Core bot embedded runtime      | Selected `openai` profile |
+    | `openai/gpt-5.5`      | provider/model `agentRuntime.id: "quiet-core-bot"`              | Quiet Core bot embedded runtime      | Selected `openai` profile |
 
     <Note>
     `openai/*` agent models use the Codex app-server harness. To use API-key
@@ -263,7 +263,7 @@ Choose your preferred auth method and follow the setup steps.
     | Model ref | Runtime config | Route | Auth |
     |-----------|----------------|-------|------|
     | `openai/gpt-5.5` | omitted / provider/model `agentRuntime.id: "codex"` | Native Codex app-server harness | Codex sign-in or ordered `openai` auth profile |
-    | `openai/gpt-5.5` | provider/model `agentRuntime.id: "openclaw"` | Quiet Core bot embedded runtime with internal Codex-auth transport | Selected `openai` OAuth profile |
+    | `openai/gpt-5.5` | provider/model `agentRuntime.id: "quiet-core-bot"` | Quiet Core bot embedded runtime with internal Codex-auth transport | Selected `openai` OAuth profile |
     | legacy Codex GPT-5.5 ref | repaired by doctor | Legacy route rewritten to `openai/gpt-5.5` | Migrated OpenAI OAuth profile |
     | `codex-cli/gpt-5.5` | repaired by doctor | Legacy CLI route rewritten to `openai/gpt-5.5` | Codex app-server auth |
 
@@ -495,7 +495,7 @@ their configured deployment/model names.
 The same setting is exposed for headless CLI runs:
 
 ```bash
-openclaw infer image generate \
+quiet-core-bot infer image generate \
   --model openai/gpt-image-1.5 \
   --output-format png \
   --background transparent \
@@ -504,7 +504,7 @@ openclaw infer image generate \
 ```
 
 Use the same `--output-format` and `--background` flags with
-`openclaw infer image edit` when starting from an input file.
+`quiet-core-bot infer image edit` when starting from an input file.
 `--openai-background` remains available as an OpenAI-specific alias.
 Use `--quality low|medium|high|auto` when you need to control OpenAI Images
 quality and cost. Use `--openai-moderation low|auto` to pass OpenAI's

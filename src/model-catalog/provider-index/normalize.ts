@@ -1,7 +1,7 @@
 // Provider-index normalization validates generated discovery metadata and rejects unsafe provider entries.
-import { normalizeModelCatalog } from "@openclaw/model-catalog-core/model-catalog-normalize";
-import { normalizeModelCatalogProviderId } from "@openclaw/model-catalog-core/model-catalog-refs";
-import type { ModelCatalogProvider } from "@openclaw/model-catalog-core/model-catalog-types";
+import { normalizeModelCatalog } from "@quiet-core/model-catalog-core/model-catalog-normalize";
+import { normalizeModelCatalogProviderId } from "@quiet-core/model-catalog-core/model-catalog-refs";
+import type { ModelCatalogProvider } from "@quiet-core/model-catalog-core/model-catalog-types";
 import { asFiniteNumber } from "../../../packages/normalization-core/src/number-coercion.js";
 import { normalizeOptionalString } from "../../../packages/normalization-core/src/string-coerce.js";
 import { normalizeUniqueTrimmedStringList } from "../../../packages/normalization-core/src/string-normalization.js";
@@ -19,7 +19,7 @@ import type {
 
 // Provider-index normalization accepts generated discovery metadata from the
 // bundled index and rejects malformed or prototype-polluting entries.
-const OPENCLAW_PROVIDER_INDEX_VERSION = 1;
+const QUIET_CORE_PROVIDER_INDEX_VERSION = 1;
 
 function normalizeSafeKey(value: unknown): string {
   const key = normalizeOptionalString(value) ?? "";
@@ -214,7 +214,7 @@ function normalizeProvider(
 }
 
 export function normalizeOpenClawProviderIndex(value: unknown): OpenClawProviderIndex | undefined {
-  if (!isRecord(value) || value.version !== OPENCLAW_PROVIDER_INDEX_VERSION) {
+  if (!isRecord(value) || value.version !== QUIET_CORE_PROVIDER_INDEX_VERSION) {
     return undefined;
   }
   if (!isRecord(value.providers)) {
@@ -234,7 +234,7 @@ export function normalizeOpenClawProviderIndex(value: unknown): OpenClawProvider
     }
   }
   return {
-    version: OPENCLAW_PROVIDER_INDEX_VERSION,
+    version: QUIET_CORE_PROVIDER_INDEX_VERSION,
     providers: Object.fromEntries(
       Object.entries(providers).toSorted(([left], [right]) => left.localeCompare(right)),
     ),

@@ -3,8 +3,8 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { asFiniteNumber } from "@openclaw/normalization-core/number-coercion";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { asFiniteNumber } from "@quiet-core/normalization-core/number-coercion";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import {
   isToolCallBlock,
   isToolResultBlock,

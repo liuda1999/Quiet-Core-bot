@@ -1,11 +1,11 @@
 // Behavior coverage for replay-history sanitization across provider policies.
-import type { AgentMessage } from "openclaw/plugin-sdk/agent-core";
+import type { AgentMessage } from "quiet-core-bot/plugin-sdk/agent-core";
 import type {
   AssistantMessage,
   ThinkingContent,
   UserMessage,
   Usage,
-} from "openclaw/plugin-sdk/llm";
+} from "quiet-core-bot/plugin-sdk/llm";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   expectOpenAIResponsesStrictSanitizeCall,
@@ -903,7 +903,7 @@ describe("sanitizeSessionHistory", () => {
       ),
       castAgentMessage({
         role: "assistant",
-        provider: "openclaw",
+        provider: "quiet-core-bot",
         model: "delivery-mirror",
         api: "openai-responses",
         content: [{ type: "text", text: "visible reply" }],

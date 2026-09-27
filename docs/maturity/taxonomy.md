@@ -104,7 +104,7 @@ A surface is a product area such as Gateway runtime, Discord, or the macOS app. 
       <span className="maturity-surface-meta"><span className="maturity-level-pill maturity-level-alpha"><span className="maturity-level-code">M2</span><span>Alpha</span></span><span>4 areas - 62% complete</span></span>
     </a>
 
-    <a className="maturity-surface-link" href="#openclaw-app-sdk">
+    <a className="maturity-surface-link" href="#quiet-core-bot-app-sdk">
       <span className="maturity-surface-title">Quiet Core bot App SDK</span>
       <span className="maturity-surface-meta"><span className="maturity-level-pill maturity-level-alpha"><span className="maturity-level-code">M2</span><span>Alpha</span></span><span>6 areas - 53% complete</span></span>
     </a>
@@ -1476,9 +1476,9 @@ A surface is a product area such as Gateway runtime, Discord, or the macOS app. 
   </Accordion>
 
   <Accordion title="Quiet Core bot App SDK - M2 Alpha - 6 areas">
-    <a id="openclaw-app-sdk" />
+    <a id="quiet-core-bot-app-sdk" />
 
-    Quiet Core bot App SDK is a distinct external app contract separate from Gateway runtime and Plugin SDK. Current scoring shows a real `@openclaw/sdk` path with gaps around public packaging, auto-discovery, approvals, helpers, and compatibility.
+    Quiet Core bot App SDK is a distinct external app contract separate from Gateway runtime and Plugin SDK. Current scoring shows a real `@quiet-core/sdk` path with gaps around public packaging, auto-discovery, approvals, helpers, and compatibility.
 
     <div className="maturity-surface-rollup"><span>Coverage Experimental - 0%</span><span>Quality Alpha - 54%</span><span>Completeness Alpha - 53%</span><span><span className="maturity-lts maturity-lts-none">None</span></span></div>
 
@@ -2436,7 +2436,7 @@ A surface is a product area such as Gateway runtime, Discord, or the macOS app. 
         <div><span className="maturity-score maturity-score-experimental"><span className="maturity-score-label"><span className="maturity-level-pill maturity-level-experimental">Experimental</span><span>0%</span></span><span className="maturity-meter" aria-hidden="true"><span style={{ width: "0%" }} /></span></span></div>
         <div><span className="maturity-score maturity-score-experimental"><span className="maturity-score-label"><span className="maturity-level-pill maturity-level-experimental">Experimental</span><span>19%</span></span><span className="maturity-meter" aria-hidden="true"><span style={{ width: "19%" }} /></span></span></div>
         <div><span className="maturity-score maturity-score-experimental"><span className="maturity-score-label"><span className="maturity-level-pill maturity-level-experimental">Experimental</span><span>21%</span></span><span className="maturity-meter" aria-hidden="true"><span style={{ width: "21%" }} /></span></span></div>
-        <div className="maturity-category-docs">[Linux](/platforms/linux), [Openclaw](/start/openclaw), [Doctor](/gateway/doctor)</div>
+        <div className="maturity-category-docs">[Linux](/platforms/linux), [Openclaw](/start/quiet-core-bot), [Doctor](/gateway/doctor)</div>
       </div>
     </div>
 

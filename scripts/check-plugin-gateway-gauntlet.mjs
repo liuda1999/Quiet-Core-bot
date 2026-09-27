@@ -71,8 +71,8 @@ export function parseArgs(argv) {
       new Date().toISOString().replace(/[:.]/g, "-"),
     ),
     pluginIds: [],
-    shardTotal: readOptionalPositiveIntEnv("OPENCLAW_PLUGIN_GATEWAY_GAUNTLET_TOTAL") ?? 1,
-    shardIndex: readOptionalNonNegativeIntEnv("OPENCLAW_PLUGIN_GATEWAY_GAUNTLET_INDEX") ?? 0,
+    shardTotal: readOptionalPositiveIntEnv("QUIET_CORE_PLUGIN_GATEWAY_GAUNTLET_TOTAL") ?? 1,
+    shardIndex: readOptionalNonNegativeIntEnv("QUIET_CORE_PLUGIN_GATEWAY_GAUNTLET_INDEX") ?? 0,
     limit: undefined,
     skipPrebuild: false,
     skipLifecycle: false,
@@ -92,10 +92,10 @@ export function parseArgs(argv) {
     buildTimeoutMs: 600_000,
     qaTimeoutMs: 900_000,
     allowEmpty: false,
-    failOnObservation: process.env.OPENCLAW_PLUGIN_GATEWAY_GAUNTLET_FAIL_ON_OBSERVATION === "1",
-    keepRunRoot: process.env.OPENCLAW_PLUGIN_GATEWAY_GAUNTLET_KEEP_RUN_ROOT === "1",
+    failOnObservation: process.env.QUIET_CORE_PLUGIN_GATEWAY_GAUNTLET_FAIL_ON_OBSERVATION === "1",
+    keepRunRoot: process.env.QUIET_CORE_PLUGIN_GATEWAY_GAUNTLET_KEEP_RUN_ROOT === "1",
   };
-  const envIds = normalizeCsv(process.env.OPENCLAW_PLUGIN_GATEWAY_GAUNTLET_IDS);
+  const envIds = normalizeCsv(process.env.QUIET_CORE_PLUGIN_GATEWAY_GAUNTLET_IDS);
   options.pluginIds.push(...envIds);
   const seenSingleValueFlags = new Set();
   parseArgv: for (let index = 0; index < args.length; index += 1) {
@@ -253,12 +253,12 @@ Options:
   --keep-run-root               Preserve isolated HOME/state/log temp root after success
 
 Environment:
-  OPENCLAW_PLUGIN_GATEWAY_GAUNTLET_IDS   Comma-separated plugin ids to include
-  OPENCLAW_PLUGIN_GATEWAY_GAUNTLET_TOTAL Total plugin shards
-  OPENCLAW_PLUGIN_GATEWAY_GAUNTLET_INDEX Zero-based shard index
-  OPENCLAW_PLUGIN_GATEWAY_GAUNTLET_FAIL_ON_OBSERVATION=1
-  OPENCLAW_PLUGIN_GATEWAY_GAUNTLET_KEEP_RUN_ROOT=1
-  OPENCLAW_PLUGIN_GATEWAY_GAUNTLET_QA_SUMMARY_MAX_BYTES  QA summary read ceiling
+  QUIET_CORE_PLUGIN_GATEWAY_GAUNTLET_IDS   Comma-separated plugin ids to include
+  QUIET_CORE_PLUGIN_GATEWAY_GAUNTLET_TOTAL Total plugin shards
+  QUIET_CORE_PLUGIN_GATEWAY_GAUNTLET_INDEX Zero-based shard index
+  QUIET_CORE_PLUGIN_GATEWAY_GAUNTLET_FAIL_ON_OBSERVATION=1
+  QUIET_CORE_PLUGIN_GATEWAY_GAUNTLET_KEEP_RUN_ROOT=1
+  QUIET_CORE_PLUGIN_GATEWAY_GAUNTLET_QA_SUMMARY_MAX_BYTES  QA summary read ceiling
 `);
 }
 
@@ -397,10 +397,10 @@ function createIsolatedEnv(repoRoot, runRoot) {
     XDG_CONFIG_HOME: path.join(home, ".config"),
     XDG_CACHE_HOME: path.join(home, ".cache"),
     XDG_DATA_HOME: path.join(home, ".local", "share"),
-    OPENCLAW_STATE_DIR: stateDir,
-    OPENCLAW_CONFIG_PATH: path.join(stateDir, "openclaw.json"),
-    OPENCLAW_LOG_DIR: path.join(runRoot, "logs"),
-    OPENCLAW_QA_SUITE_PROGRESS: process.env.OPENCLAW_QA_SUITE_PROGRESS ?? "1",
+    QUIET_CORE_STATE_DIR: stateDir,
+    QUIET_CORE_CONFIG_PATH: path.join(stateDir, "quiet-core-bot.json"),
+    QUIET_CORE_LOG_DIR: path.join(runRoot, "logs"),
+    QUIET_CORE_QA_SUITE_PROGRESS: process.env.QUIET_CORE_QA_SUITE_PROGRESS ?? "1",
     PATH: process.env.PATH,
     PWD: repoRoot,
   };
@@ -1007,7 +1007,7 @@ async function main() {
   const repoRoot = path.resolve(options.repoRoot);
   validateOutputDir(options, repoRoot);
   fs.mkdirSync(options.outputDir, { recursive: true });
-  const runRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-gauntlet-"));
+  const runRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-plugin-gauntlet-"));
   let preserveRunRoot = options.keepRunRoot;
   const env = createIsolatedEnv(repoRoot, runRoot);
   try {

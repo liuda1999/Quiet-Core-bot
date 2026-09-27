@@ -2,7 +2,7 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
+import { isRecord } from "@quiet-core/normalization-core/record-coerce";
 import { note } from "../../packages/terminal-core/src/note.js";
 import { resolveStateDir } from "../config/paths.js";
 import {
@@ -11,7 +11,7 @@ import {
 } from "../config/sessions/skill-prompt-blobs.js";
 import { resolveAllAgentSessionStoreTargetsSync } from "../config/sessions/targets.js";
 import type { SessionEntry } from "../config/sessions/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { expandHomePrefix } from "../infra/home-dir.js";
 import { writeTextAtomic } from "../infra/json-files.js";
 import { resolveBundledSkillsDir } from "../skills/loading/bundled-dir.js";
@@ -130,7 +130,7 @@ function isWindowsAbsolutePath(value: string): boolean {
 }
 function isTempBackedOpenClawRoot(segments: readonly string[]): boolean {
   const lower = segments.map((segment) => segment.toLowerCase());
-  const openclawIndex = lower.lastIndexOf("openclaw");
+  const openclawIndex = lower.lastIndexOf("quiet-core-bot");
   if (openclawIndex < 1) {
     return false;
   }
@@ -143,7 +143,7 @@ function isBundledRuntimeSkillsPath(cachedPath: string, skillRootIndex: number):
   return (
     lower.some(
       (segment) =>
-        segment === "dist-runtime" || segment === "node_modules" || segment.startsWith("openclaw@"),
+        segment === "dist-runtime" || segment === "node_modules" || segment.startsWith("quiet-core-bot@"),
     ) || isTempBackedOpenClawRoot(beforeSkillRoot)
   );
 }

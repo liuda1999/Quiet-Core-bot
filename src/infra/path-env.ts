@@ -5,7 +5,7 @@ import path from "node:path";
 import {
   normalizeStringEntries,
   normalizeUniqueStringEntries,
-} from "@openclaw/normalization-core/string-normalization";
+} from "@quiet-core/normalization-core/string-normalization";
 import { resolveBrewPathDirs } from "./brew.js";
 import { isTruthyEnvValue } from "./env.js";
 
@@ -101,7 +101,7 @@ function candidateBinDirs(
   // Bundled macOS app: `quiet-core-bot` lives next to the executable (process.execPath).
   try {
     const execDir = path.dirname(execPath);
-    const siblingCli = path.join(execDir, "openclaw");
+    const siblingCli = path.join(execDir, "quiet-core-bot");
     if (isExecutable(siblingCli)) {
       prepend.push(execDir);
     }
@@ -113,10 +113,10 @@ function candidateBinDirs(
   // disabled by default; if an operator explicitly enables it, only append (never prepend).
   const allowProjectLocalBin =
     opts.allowProjectLocalBin === true ||
-    isTruthyEnvValue(process.env.OPENCLAW_ALLOW_PROJECT_LOCAL_BIN);
+    isTruthyEnvValue(process.env.QUIET_CORE_ALLOW_PROJECT_LOCAL_BIN);
   if (allowProjectLocalBin) {
     const localBinDir = path.join(cwd, "node_modules", ".bin");
-    if (isExecutable(path.join(localBinDir, "openclaw"))) {
+    if (isExecutable(path.join(localBinDir, "quiet-core-bot"))) {
       append.push(localBinDir);
     }
   }
@@ -157,12 +157,12 @@ function candidateBinDirs(
  * under launchd/minimal environments (and inside the macOS app bundle).
  */
 export function ensureOpenClawCliOnPath(opts: EnsureOpenClawPathOpts = {}) {
-  if (isTruthyEnvValue(process.env.OPENCLAW_PATH_BOOTSTRAPPED)) {
+  if (isTruthyEnvValue(process.env.QUIET_CORE_PATH_BOOTSTRAPPED)) {
     return;
   }
   // Mark before filesystem probing so repeated calls from nested bootstraps do
   // not keep reshuffling PATH.
-  process.env.OPENCLAW_PATH_BOOTSTRAPPED = "1";
+  process.env.QUIET_CORE_PATH_BOOTSTRAPPED = "1";
 
   const existing = opts.pathEnv ?? process.env.PATH ?? "";
   const existingPathParts = splitPathParts(existing);

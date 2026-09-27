@@ -24,7 +24,7 @@ read_when:
 1. Cohere is included in current Quiet Core bot packages. If it is unavailable, install the external package and restart the Gateway:
 
 ```bash
-quiet-core-bot plugins install @openclaw/cohere-provider
+quiet-core-bot plugins install @quiet-core/cohere-provider
 quiet-core-bot gateway restart
 ```
 

@@ -17,7 +17,7 @@ import {
   type SessionTranscriptDeliveryMirror,
   type SessionTranscriptUpdateMode,
 } from "../config/sessions/transcript.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { normalizeAgentId } from "../routing/session-key.js";
 import {
   formatSessionTranscriptMemoryHitKey,

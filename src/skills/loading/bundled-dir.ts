@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { resolveOpenClawPackageRootSync } from "../../infra/openclaw-root.js";
+import { resolveOpenClawPackageRootSync } from "../../infra/quiet-core-bot-root.js";
 
 function looksLikeSkillsDir(dir: string): boolean {
   try {
@@ -37,7 +37,7 @@ export type BundledSkillsResolveOptions = {
 export function resolveBundledSkillsDir(
   opts: BundledSkillsResolveOptions = {},
 ): string | undefined {
-  const override = process.env.OPENCLAW_BUNDLED_SKILLS_DIR?.trim();
+  const override = process.env.QUIET_CORE_BUNDLED_SKILLS_DIR?.trim();
   if (override) {
     return override;
   }

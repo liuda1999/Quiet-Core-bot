@@ -139,7 +139,7 @@ describe("web_search time filter parsing", () => {
 
 describe("web_search unsupported filter response", () => {
   it("returns undefined when no unsupported filter is set", () => {
-    expect(buildUnsupportedSearchFilterResponse({ query: "openclaw" }, "gemini")).toBeUndefined();
+    expect(buildUnsupportedSearchFilterResponse({ query: "quiet-core-bot" }, "gemini")).toBeUndefined();
   });
 
   it("maps non-date filters to provider-specific unsupported errors", () => {

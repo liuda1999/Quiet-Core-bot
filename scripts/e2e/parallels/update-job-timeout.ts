@@ -1,5 +1,5 @@
 // Update Job Timeout script supports OpenClaw repository automation.
-import { resolveTimerTimeoutMs } from "@openclaw/normalization-core/number-coercion";
+import { resolveTimerTimeoutMs } from "@quiet-core/normalization-core/number-coercion";
 
 interface TimedUpdateJobOptions {
   abortSettleMs?: number;

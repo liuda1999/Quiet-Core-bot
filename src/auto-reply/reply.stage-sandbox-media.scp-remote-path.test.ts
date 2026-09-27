@@ -55,9 +55,9 @@ function createRemoteStageParams(home: string): {
   ]);
   return {
     cfg: createSandboxMediaStageConfig(home),
-    workspaceDir: join(home, "openclaw"),
+    workspaceDir: join(home, "quiet-core-bot"),
     sessionKey,
-    remoteCacheDir: join(home, ".openclaw", "media", "remote-cache", slugifySessionKey(sessionKey)),
+    remoteCacheDir: join(home, ".quiet-core-bot", "media", "remote-cache", slugifySessionKey(sessionKey)),
   };
 }
 
@@ -98,7 +98,7 @@ describe("stageSandboxMedia scp remote paths", () => {
   });
 
   it("rejects remote attachment filenames with shell metacharacters before spawning scp", async () => {
-    await withSandboxMediaTempHome("openclaw-triggers-", async (home) => {
+    await withSandboxMediaTempHome("quiet-core-bot-triggers-", async (home) => {
       const { cfg, workspaceDir, sessionKey, remoteCacheDir } = createRemoteStageParams(home);
       const remotePath = "/Users/demo/Library/Messages/Attachments/ab/cd/evil$(touch pwned).jpg";
       const { ctx, sessionCtx } = createRemoteContexts(remotePath);
@@ -121,7 +121,7 @@ describe("stageSandboxMedia scp remote paths", () => {
   });
 
   it("uses a slugged remote cache directory for session keys with path separators", async () => {
-    await withSandboxMediaTempHome("openclaw-triggers-", async (home) => {
+    await withSandboxMediaTempHome("quiet-core-bot-triggers-", async (home) => {
       const { cfg, workspaceDir } = createRemoteStageParams(home);
       const sessionKey = "agent:main:explicit:../../escape";
       const remotePath = "/Users/demo/Library/Messages/Attachments/ab/cd/photo.jpg";

@@ -1,8 +1,8 @@
 /** Timeout and cleanup helpers for long-running ACP turns. */
-import type { AcpRuntimeSessionMode } from "@openclaw/acp-core/runtime/types";
-import { clampTimerTimeoutMs } from "@openclaw/normalization-core/number-coercion";
+import type { AcpRuntimeSessionMode } from "@quiet-core/acp-core/runtime/types";
+import { clampTimerTimeoutMs } from "@quiet-core/normalization-core/number-coercion";
 import { resolveAgentTimeoutMs } from "../../agents/timeout.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { logVerbose } from "../../globals.js";
 import { AcpRuntimeError } from "../runtime/errors.js";
 import type { ActiveTurnState, SessionAcpMeta } from "./manager.types.js";

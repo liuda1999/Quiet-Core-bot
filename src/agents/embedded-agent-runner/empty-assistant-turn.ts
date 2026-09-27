@@ -1,7 +1,7 @@
 /**
  * Detects provider stop turns that contain no assistant-visible content.
  */
-import { asFiniteNumber } from "@openclaw/normalization-core/number-coercion";
+import { asFiniteNumber } from "@quiet-core/normalization-core/number-coercion";
 
 type EmptyAssistantTurnLike = {
   content?: unknown;
@@ -20,7 +20,7 @@ type UsageFieldMap = {
 };
 
 // Upstream agent runtimes should normalize Anthropic zero-token empty `stop`
-// turns before Quiet Core bot sees them. Downstream: openclaw/openclaw#71880.
+// turns before Quiet Core bot sees them. Downstream: liuda1999/quiet-core-bot#71880.
 function readFiniteTokenCount(value: unknown): number | undefined {
   return asFiniteNumber(value);
 }

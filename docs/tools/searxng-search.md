@@ -22,7 +22,7 @@ Advantages:
 <Steps>
   <Step title="Install the plugin">
     ```bash
-    quiet-core-bot plugins install @openclaw/searxng-plugin
+    quiet-core-bot plugins install @quiet-core/searxng-plugin
     ```
   </Step>
   <Step title="Run a SearXNG instance">

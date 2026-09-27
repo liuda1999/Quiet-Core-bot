@@ -1,5 +1,5 @@
 // Browser control auth helpers resolve plugin browser credentials from Quiet Core bot config.
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { loadBundledPluginPublicSurfaceModuleSync } from "./facade-loader.js";
 
 /** Browser control credentials resolved from config, env, or generated setup state. */

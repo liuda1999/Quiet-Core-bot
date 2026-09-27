@@ -2,12 +2,12 @@
 # OpenClaw handover · health probe.
 #
 # Checks the liveness (/healthz) and readiness (/readyz) endpoints and, when a
-# local build/CLI is available, the richer `openclaw health` / `gateway status`
+# local build/CLI is available, the richer `quiet-core-bot health` / `gateway status`
 # reports. Read-only.
 #
 # Usage:
 #   bash scripts/handover/check-health.sh
-#   OPENCLAW_GATEWAY_PORT=18789 OPENCLAW_GATEWAY_TOKEN=... bash scripts/handover/check-health.sh
+#   QUIET_CORE_GATEWAY_PORT=18789 QUIET_CORE_GATEWAY_TOKEN=... bash scripts/handover/check-health.sh
 #
 # Note: /readyz returns the full object only for loopback callers or callers that
 # prove gateway auth; unauthenticated remote probes get `{ ready }` only.
@@ -17,9 +17,9 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
-HOST="${OPENCLAW_GATEWAY_HOST:-127.0.0.1}"
-PORT="${OPENCLAW_GATEWAY_PORT:-18789}"
-TOKEN="${OPENCLAW_GATEWAY_TOKEN:-}"
+HOST="${QUIET_CORE_GATEWAY_HOST:-127.0.0.1}"
+PORT="${QUIET_CORE_GATEWAY_PORT:-18789}"
+TOKEN="${QUIET_CORE_GATEWAY_TOKEN:-}"
 BASE="http://${HOST}:${PORT}"
 
 FETCH=""
@@ -63,13 +63,13 @@ done
 
 echo
 if [ -f dist/index.js ]; then
-  echo "== openclaw gateway status =="
+  echo "== quiet-core-bot gateway status =="
   node dist/index.js gateway status 2>&1 | head -n 25 || true
   echo
-  echo "== openclaw health =="
+  echo "== quiet-core-bot health =="
   node dist/index.js health 2>&1 | head -n 25 || true
 else
-  echo "== openclaw CLI checks skipped (dist/index.js not built; run: pnpm build) =="
+  echo "== quiet-core-bot CLI checks skipped (dist/index.js not built; run: pnpm build) =="
 fi
 
 exit "$fail"

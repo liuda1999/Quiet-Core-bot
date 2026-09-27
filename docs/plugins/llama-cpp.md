@@ -15,10 +15,10 @@ It owns the `node-llama-cpp` runtime dependency used by
 Install it before using local memory embeddings:
 
 ```bash
-quiet-core-bot plugins install @openclaw/llama-cpp-provider
+quiet-core-bot plugins install @quiet-core/llama-cpp-provider
 ```
 
-The main `openclaw` npm package does not include `node-llama-cpp`. Keeping the
+The main `quiet-core-bot` npm package does not include `node-llama-cpp`. Keeping the
 native dependency in this plugin prevents normal Quiet Core bot npm updates from
 deleting a manually installed runtime inside the Quiet Core bot package directory.
 

@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { onSessionTranscriptUpdate } from "../../sessions/transcript-events.js";
 import { resolveSessionTranscriptPathInDir } from "./paths.js";
 import { useTempSessionsFixture } from "./test-helpers.js";
@@ -390,7 +390,7 @@ describe("appendExactAssistantMessageToSessionTranscript - redaction", () => {
         role: "assistant",
         content: [{ type: "text", text: `Here is your key: ${fakeApiKey}` }],
         api: "openai-responses",
-        provider: "openclaw",
+        provider: "quiet-core-bot",
         model: "test-model",
         usage: {
           input: 0,
@@ -439,7 +439,7 @@ describe("appendExactAssistantMessageToSessionTranscript - redaction", () => {
           role: "assistant",
           content: [{ type: "text", text: `Here is your key: ${fakeApiKey}` }],
           api: "openai-responses",
-          provider: "openclaw",
+          provider: "quiet-core-bot",
           model: "test-model",
           usage: {
             input: 0,
@@ -528,7 +528,7 @@ describe("appendExactAssistantMessageToSessionTranscript - redaction", () => {
         role: "assistant",
         content: [{ type: "text", text: `Here is your key: ${fakeApiKey}` }],
         api: "openai-responses",
-        provider: "openclaw",
+        provider: "quiet-core-bot",
         model: "legacy-assistant",
         usage: {
           input: 0,

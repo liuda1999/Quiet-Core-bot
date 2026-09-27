@@ -11,7 +11,7 @@ Adds media understanding provider support. Adds realtime transcription provider 
 
 ## Distribution
 
-- Package: `@openclaw/elevenlabs-speech`
+- Package: `@quiet-core/elevenlabs-speech`
 - Install route: included in Quiet Core bot
 
 ## Surface

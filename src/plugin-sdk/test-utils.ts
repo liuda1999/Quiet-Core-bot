@@ -1,7 +1,7 @@
 /**
  * @deprecated Compatibility alias for the legacy `plugin-sdk/testing` barrel.
  *
- * Prefer focused `openclaw/plugin-sdk/*` test subpaths for public test helpers.
+ * Prefer focused `quiet-core-bot/plugin-sdk/*` test subpaths for public test helpers.
  */
 
 export * from "./testing.js";

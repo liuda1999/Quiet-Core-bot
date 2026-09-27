@@ -18,7 +18,7 @@ export function registerCrestodianCommand(program: Command) {
       "after",
       () =>
         `\n${theme.heading("Examples:")}\n${formatHelpExamples([
-          ["openclaw", "Start Crestodian."],
+          ["quiet-core-bot", "Start Crestodian."],
           ["quiet-core-bot crestodian", "Start Crestodian explicitly."],
           ['quiet-core-bot crestodian -m "status"', "Run one status request."],
           [

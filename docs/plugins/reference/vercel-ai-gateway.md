@@ -11,8 +11,8 @@ Adds Vercel AI Gateway model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/vercel-ai-gateway-provider`
-- Install route: npm; ClawHub: `clawhub:@openclaw/vercel-ai-gateway-provider`
+- Package: `@quiet-core/vercel-ai-gateway-provider`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/vercel-ai-gateway-provider`
 
 ## Surface
 

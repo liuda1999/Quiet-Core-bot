@@ -25,8 +25,8 @@ export type ExternalCodePluginValidationResult = {
 
 /** Required package.json field paths for external code plugin packages. */
 export const EXTERNAL_CODE_PLUGIN_REQUIRED_FIELD_PATHS = [
-  "openclaw.compat.pluginApi",
-  "openclaw.build.openclawVersion",
+  "quiet-core-bot.compat.pluginApi",
+  "quiet-core-bot.build.openclawVersion",
 ] as const;
 
 /** Narrow unknown values to plain records. */
@@ -46,7 +46,7 @@ function normalizeOptionalString(value: unknown): string | undefined {
 /** Read OpenClaw package.json blocks without trusting caller input shape. */
 function readOpenClawBlock(packageJson: unknown) {
   const root = isRecord(packageJson) ? packageJson : undefined;
-  const openclaw = isRecord(root?.openclaw) ? root.openclaw : undefined;
+  const openclaw = isRecord(root?.["quiet-core-bot"]) ? root["quiet-core-bot"] : undefined;
   const compat = isRecord(openclaw?.compat) ? openclaw.compat : undefined;
   const build = isRecord(openclaw?.build) ? openclaw.build : undefined;
   const install = isRecord(openclaw?.install) ? openclaw.install : undefined;
@@ -90,10 +90,10 @@ export function listMissingExternalCodePluginFieldPaths(packageJson: unknown): s
   const { compat, build } = readOpenClawBlock(packageJson);
   const missing: string[] = [];
   if (!normalizeOptionalString(compat?.pluginApi)) {
-    missing.push("openclaw.compat.pluginApi");
+    missing.push("quiet-core-bot.compat.pluginApi");
   }
   if (!normalizeOptionalString(build?.openclawVersion)) {
-    missing.push("openclaw.build.openclawVersion");
+    missing.push("quiet-core-bot.build.openclawVersion");
   }
   return missing;
 }

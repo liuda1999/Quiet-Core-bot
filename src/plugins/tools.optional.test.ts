@@ -1300,7 +1300,7 @@ describe("resolvePluginTools optional tools", () => {
         providers: {
           vault: {
             source: "file",
-            path: "/tmp/openclaw-secrets.json",
+            path: "/tmp/quiet-core-bot-secrets.json",
             mode: "json",
           },
         },
@@ -1879,11 +1879,11 @@ describe("resolvePluginTools optional tools", () => {
     {
       name: "uses loaded plugin tools with an explicit env",
       params: {
-        env: { OPENCLAW_HOME: "/srv/openclaw-home" } as NodeJS.ProcessEnv,
+        env: { QUIET_CORE_HOME: "/srv/quiet-core-bot-home" } as NodeJS.ProcessEnv,
         toolAllowlist: ["optional_tool"],
       },
       expectedLoaderCall: {
-        env: { OPENCLAW_HOME: "/srv/openclaw-home" },
+        env: { QUIET_CORE_HOME: "/srv/quiet-core-bot-home" },
       },
     },
     {

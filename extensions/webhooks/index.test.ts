@@ -1,5 +1,5 @@
 // Webhooks tests cover index plugin behavior.
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+import { createTestPluginApi } from "quiet-core-bot/plugin-sdk/plugin-test-api";
 import { describe, expect, it, vi } from "vitest";
 import type { OpenClawPluginApi } from "./api.js";
 import plugin from "./index.js";
@@ -54,7 +54,7 @@ describe("webhooks plugin registration", () => {
               secret: {
                 source: "env",
                 provider: "default",
-                id: "OPENCLAW_WEBHOOK_SECRET",
+                id: "QUIET_CORE_WEBHOOK_SECRET",
               },
             },
           },

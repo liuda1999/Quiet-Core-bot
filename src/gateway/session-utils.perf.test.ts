@@ -25,7 +25,7 @@ import { listSessionsFromStore } from "./session-utils.js";
  */
 describe("listSessionsFromStore resolver cache", () => {
   test("collapses non-lightweight per-row resolver work to O(unique provider/model tuples)", async () => {
-    await withStateDirEnv("openclaw-perf-", async ({ stateDir }) => {
+    await withStateDirEnv("quiet-core-bot-perf-", async ({ stateDir }) => {
       resetPluginRuntimeStateForTest();
       setActivePluginRegistry(createEmptyPluginRegistry());
       const cfg: OpenClawConfig = {

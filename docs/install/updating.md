@@ -35,7 +35,7 @@ the beta tag is missing or older than the latest stable release. Use `--tag beta
 if you want the raw npm beta dist-tag for a one-off package update.
 
 Use `--channel dev` for a persistent moving GitHub `main` checkout. For package
-updates, `--tag main` maps to `github:openclaw/openclaw#main` for one run, and
+updates, `--tag main` maps to `github:liuda1999/quiet-core-bot#main` for one run, and
 GitHub/git source specs are packed into a temporary tarball before the staged
 npm install.
 
@@ -72,7 +72,7 @@ gateway is already installed, `quiet-core-bot update` refreshes the service meta
 and restarts it unless you pass `--no-restart`.
 
 For package installs with a managed Gateway service, `quiet-core-bot update` targets
-the package root used by that service. If the shell `openclaw` command comes
+the package root used by that service. If the shell `quiet-core-bot` command comes
 from a different install, the updater prints both roots and the managed service
 Node path. The package update uses the package manager that owns the service
 root and checks the managed service Node against the target release engine
@@ -105,7 +105,7 @@ curl -fsSL https://openclaw.ai/install.sh | bash -s -- --install-method npm --ve
 ## Alternative: manual npm, pnpm, or bun
 
 ```bash
-npm i -g openclaw@latest
+npm i -g quiet-core-bot@latest
 ```
 
 Prefer `quiet-core-bot update` for supervised installs because it can coordinate the
@@ -118,13 +118,13 @@ the new install.
 
 For a root-owned Linux system-global install, if `quiet-core-bot update` fails with
 `EACCES` and you recover with system npm, keep the Gateway stopped through the
-manual package replacement. Use the same `openclaw` profile flags or environment
+manual package replacement. Use the same `quiet-core-bot` profile flags or environment
 you normally use for that Gateway. Replace `/usr/bin/npm` with the system npm
 that owns the root-owned global prefix on your host:
 
 ```bash
 quiet-core-bot gateway stop
-sudo /usr/bin/npm i -g openclaw@latest
+sudo /usr/bin/npm i -g quiet-core-bot@latest
 quiet-core-bot gateway install --force
 quiet-core-bot gateway restart
 ```
@@ -154,11 +154,11 @@ quarantine policies, but an explicit Quiet Core bot update means "install the se
 Quiet Core bot release now."
 
 ```bash
-pnpm add -g openclaw@latest
+pnpm add -g quiet-core-bot@latest
 ```
 
 ```bash
-bun add -g openclaw@latest
+bun add -g quiet-core-bot@latest
 ```
 
 ### Advanced npm install topics
@@ -167,14 +167,14 @@ bun add -g openclaw@latest
   <Accordion title="Read-only package tree">
     Quiet Core bot treats packaged global installs as read-only at runtime, even when the global package directory is writable by the current user. Plugin package installs live in Quiet Core bot-owned npm/git roots under the user config directory, and Gateway startup does not mutate the Quiet Core bot package tree.
 
-    Some Linux npm setups install global packages under root-owned directories such as `/usr/lib/node_modules/openclaw`. Quiet Core bot supports that layout because plugin install/update commands write outside that global package directory.
+    Some Linux npm setups install global packages under root-owned directories such as `/usr/lib/node_modules/quiet-core-bot`. Quiet Core bot supports that layout because plugin install/update commands write outside that global package directory.
 
   </Accordion>
   <Accordion title="Hardened systemd units">
     Give Quiet Core bot write access to its config/state roots so explicit plugin installs, plugin updates, and doctor cleanup can persist their changes:
 
     ```ini
-    ReadWritePaths=/var/lib/openclaw /home/openclaw/.openclaw /tmp
+    ReadWritePaths=/var/lib/quiet-core-bot /home/quiet-core-bot/.quiet-core-bot /tmp
     ```
 
   </Accordion>
@@ -208,7 +208,7 @@ The auto-updater is off by default. Enable it in `~/.quiet-core-bot/quiet-core-b
 | `dev`    | No automatic apply. Use `quiet-core-bot update` manually.                                                     |
 
 The gateway also logs an update hint on startup (disable with `update.checkOnStart: false`).
-For downgrade or incident recovery, set `OPENCLAW_NO_AUTO_UPDATE=1` in the gateway environment to block automatic applies even when `update.auto.enabled` is configured. Startup update hints can still run unless `update.checkOnStart` is also disabled.
+For downgrade or incident recovery, set `QUIET_CORE_NO_AUTO_UPDATE=1` in the gateway environment to block automatic applies even when `update.auto.enabled` is configured. Startup update hints can still run unless `update.checkOnStart` is also disabled.
 
 Package-manager updates requested through the live Gateway control-plane handler
 do not replace the package tree inside the running Gateway process. On managed
@@ -250,7 +250,7 @@ quiet-core-bot health
 ### Pin a version (npm)
 
 ```bash
-npm i -g openclaw@<version>
+npm i -g quiet-core-bot@<version>
 quiet-core-bot doctor
 quiet-core-bot gateway restart
 ```

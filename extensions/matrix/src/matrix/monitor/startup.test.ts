@@ -233,10 +233,10 @@ describe("runMatrixStartupMaintenance", () => {
     await runMatrixStartupMaintenance(params, deps);
 
     expect(params.logger.warn).toHaveBeenCalledWith(
-      "matrix: stale OpenClaw devices detected for @bot:example.org: DEV123. Run 'openclaw matrix devices prune-stale --account ops' to keep encrypted-room trust healthy.",
+      "matrix: stale OpenClaw devices detected for @bot:example.org: DEV123. Run 'quiet-core-bot matrix devices prune-stale --account ops' to keep encrypted-room trust healthy.",
     );
     expect(params.logger.info).toHaveBeenCalledWith(
-      "matrix: device not verified — run 'openclaw matrix verify device <key>' to enable E2EE",
+      "matrix: device not verified — run 'quiet-core-bot matrix verify device <key>' to enable E2EE",
     );
     expect(params.logger.info).toHaveBeenCalledWith(
       "matrix: startup verification request is already pending; finish it in another Matrix client",

@@ -1,12 +1,12 @@
 ---
 summary: "Quiet Core bot CLI index: command list, global flags, and links to per-command pages"
 read_when:
-  - Finding the right `openclaw` subcommand
+  - Finding the right `quiet-core-bot` subcommand
   - Looking up global flags or output styling rules
 title: "CLI reference"
 ---
 
-`openclaw` is the main CLI entry point. Each core command has either a
+`quiet-core-bot` is the main CLI entry point. Each core command has either a
 dedicated reference page or is documented with the command it aliases; this
 index lists the commands, the global flags, and the output styling rules that
 apply across the CLI.
@@ -82,7 +82,7 @@ shell parsing least reliably.
 <Accordion title="Full command tree">
 
 ```
-openclaw [--dev] [--profile <name>] <command>
+quiet-core-bot [--dev] [--profile <name>] <command>
   crestodian
   setup
   onboard
@@ -397,7 +397,7 @@ openclaw [--dev] [--profile <name>] <command>
 ```
 
 Plugins can add additional top-level commands, such as
-[`openclaw workboard`](/cli/workboard) or `openclaw voicecall`.
+[`quiet-core-bot workboard`](/cli/workboard) or `quiet-core-bot voicecall`.
 
 </Accordion>
 

@@ -25,13 +25,13 @@ Use `scripts/gh-read` when you want `gh` to use a GitHub App installation token 
 
 Required env:
 
-- `OPENCLAW_GH_READ_APP_ID`
-- `OPENCLAW_GH_READ_PRIVATE_KEY_FILE`
+- `QUIET_CORE_GH_READ_APP_ID`
+- `QUIET_CORE_GH_READ_PRIVATE_KEY_FILE`
 
 Optional env:
 
-- `OPENCLAW_GH_READ_INSTALLATION_ID` when you want to skip repo-based installation lookup
-- `OPENCLAW_GH_READ_PERMISSIONS` as a comma-separated override for the read permission subset to request
+- `QUIET_CORE_GH_READ_INSTALLATION_ID` when you want to skip repo-based installation lookup
+- `QUIET_CORE_GH_READ_PERMISSIONS` as a comma-separated override for the read permission subset to request
 
 Repo resolution order:
 
@@ -42,7 +42,7 @@ Repo resolution order:
 Examples:
 
 - `scripts/gh-read pr view 123`
-- `scripts/gh-read run list -R openclaw/openclaw`
+- `scripts/gh-read run list -R liuda1999/quiet-core-bot`
 - `scripts/gh-read api repos/openclaw/openclaw/pulls/123`
 
 ## When adding scripts

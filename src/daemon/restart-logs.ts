@@ -15,12 +15,12 @@ export type GatewayLogPaths = {
 
 // Restart logs capture supervisor handoff output when normal service logs are unavailable.
 function resolveGatewayLogPrefix(env: GatewayServiceEnv): string {
-  return env.OPENCLAW_LOG_PREFIX?.trim() || "gateway";
+  return env.QUIET_CORE_LOG_PREFIX?.trim() || "gateway";
 }
 
 function resolveMacLaunchAgentLogPrefix(env: GatewayServiceEnv): string {
   return (
-    env.OPENCLAW_LOG_PREFIX?.trim() || `gateway${resolveGatewayProfileSuffix(env.OPENCLAW_PROFILE)}`
+    env.QUIET_CORE_LOG_PREFIX?.trim() || `gateway${resolveGatewayProfileSuffix(env.QUIET_CORE_PROFILE)}`
   );
 }
 
@@ -37,7 +37,7 @@ export function resolveGatewayLogPaths(env: GatewayServiceEnv): GatewayLogPaths 
 
 export function resolveMacLaunchAgentLogPaths(env: GatewayServiceEnv): GatewayLogPaths {
   const home = resolveHomeDir(env).replaceAll("\\", "/");
-  const logDir = path.posix.join(home, "Library", "Logs", "openclaw");
+  const logDir = path.posix.join(home, "Library", "Logs", "quiet-core-bot");
   const prefix = resolveMacLaunchAgentLogPrefix(env);
   return {
     logDir,

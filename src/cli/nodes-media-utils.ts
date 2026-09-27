@@ -1,7 +1,7 @@
 // Media utility adapters for node CLI commands and temporary media outputs.
 import { randomUUID } from "node:crypto";
 import fs from "node:fs";
-import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-quiet-core-bot-dir.js";
 export { asFiniteNumber as asNumber } from "../../packages/normalization-core/src/number-coercion.js";
 import { readStringValue } from "../../packages/normalization-core/src/string-coerce.js";
 export { asRecord } from "../../packages/normalization-core/src/record-coerce.js";

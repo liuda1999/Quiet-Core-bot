@@ -2,8 +2,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { DatabaseSync, type SQLInputValue } from "node:sqlite";
-import { configureSqliteConnectionPragmas } from "openclaw/plugin-sdk/plugin-state-runtime";
-import { resolveStateDir } from "openclaw/plugin-sdk/state-paths";
+import { configureSqliteConnectionPragmas } from "quiet-core-bot/plugin-sdk/plugin-state-runtime";
+import { resolveStateDir } from "quiet-core-bot/plugin-sdk/state-paths";
 import type {
   PersistedWorkboardAttachment,
   PersistedWorkboardBoard,

@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/video-generation-core",
+  "name": "@quiet-core/video-generation-core",
   "version": "2026.6.11",
   "private": true,
   "description": "OpenClaw video generation runtime package",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@quiet-core/plugin-sdk": "workspace:*"
   }
 }

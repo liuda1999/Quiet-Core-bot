@@ -10,17 +10,17 @@ Upgrade from the previous public `matrix` plugin to the current implementation.
 
 For most users, the upgrade is in place:
 
-- the plugin stays `@openclaw/matrix`
+- the plugin stays `@quiet-core/matrix`
 - the channel stays `matrix`
 - your config stays under `channels.matrix`
 - cached credentials stay under `~/.quiet-core-bot/credentials/matrix/`
 - runtime state stays under `~/.quiet-core-bot/matrix/`
 
 You do not need to rename config keys or reinstall the plugin under a new name.
-The root `openclaw` package no longer bundles Matrix runtime code or Matrix SDK
+The root `quiet-core-bot` package no longer bundles Matrix runtime code or Matrix SDK
 dependencies. If `quiet-core-bot channels status` shows Matrix is configured but the
 plugin is missing after an update, run `quiet-core-bot doctor --fix` or
-`quiet-core-bot plugins install @openclaw/matrix`; do not install Matrix SDK packages
+`quiet-core-bot plugins install @quiet-core/matrix`; do not install Matrix SDK packages
 into the root Quiet Core bot package.
 
 ## What the migration does automatically
@@ -36,7 +36,7 @@ When you use `quiet-core-bot update`, the exact trigger depends on how Quiet Cor
 
 Automatic migration covers:
 
-- creating or reusing a pre-migration snapshot under `~/Backups/openclaw-migrations/`
+- creating or reusing a pre-migration snapshot under `~/Backups/quiet-core-bot-migrations/`
 - reusing your cached Matrix credentials
 - keeping the same account selection and `channels.matrix` config
 - moving the oldest flat Matrix sync store into the current account-scoped location
@@ -94,8 +94,8 @@ If your old installation had local-only encrypted history that was never backed 
 4. Check current verification and backup state:
 
    ```bash
-   openclaw matrix verify status
-   openclaw matrix verify backup status
+   quiet-core-bot matrix verify status
+   quiet-core-bot matrix verify backup status
    ```
 
 5. Put the recovery key for the Matrix account you are repairing in an account-specific environment variable. For a single default account, `MATRIX_RECOVERY_KEY` is fine. For multiple accounts, use one variable per account, for example `MATRIX_RECOVERY_KEY_ASSISTANT`, and add `--account assistant` to the command.
@@ -103,22 +103,22 @@ If your old installation had local-only encrypted history that was never backed 
 6. If Quiet Core bot tells you a recovery key is needed, run the command for the matching account:
 
    ```bash
-   printf '%s\n' "$MATRIX_RECOVERY_KEY" | openclaw matrix verify backup restore --recovery-key-stdin
-   printf '%s\n' "$MATRIX_RECOVERY_KEY_ASSISTANT" | openclaw matrix verify backup restore --recovery-key-stdin --account assistant
+   printf '%s\n' "$MATRIX_RECOVERY_KEY" | quiet-core-bot matrix verify backup restore --recovery-key-stdin
+   printf '%s\n' "$MATRIX_RECOVERY_KEY_ASSISTANT" | quiet-core-bot matrix verify backup restore --recovery-key-stdin --account assistant
    ```
 
 7. If this device is still unverified, run the command for the matching account:
 
    ```bash
-   printf '%s\n' "$MATRIX_RECOVERY_KEY" | openclaw matrix verify device --recovery-key-stdin
-   printf '%s\n' "$MATRIX_RECOVERY_KEY_ASSISTANT" | openclaw matrix verify device --recovery-key-stdin --account assistant
+   printf '%s\n' "$MATRIX_RECOVERY_KEY" | quiet-core-bot matrix verify device --recovery-key-stdin
+   printf '%s\n' "$MATRIX_RECOVERY_KEY_ASSISTANT" | quiet-core-bot matrix verify device --recovery-key-stdin --account assistant
    ```
 
    If the recovery key is accepted and backup is usable, but `Cross-signing verified`
    is still `no`, complete self-verification from another Matrix client:
 
    ```bash
-   openclaw matrix verify self
+   quiet-core-bot matrix verify self
    ```
 
    Accept the request in another Matrix client, compare the emoji or decimals,
@@ -128,13 +128,13 @@ If your old installation had local-only encrypted history that was never backed 
 8. If you are intentionally abandoning unrecoverable old history and want a fresh backup baseline for future messages, run:
 
    ```bash
-   openclaw matrix verify backup reset --yes
+   quiet-core-bot matrix verify backup reset --yes
    ```
 
 9. If no server-side key backup exists yet, create one for future recoveries:
 
    ```bash
-   openclaw matrix verify bootstrap
+   quiet-core-bot matrix verify bootstrap
    ```
 
 ## How encrypted migration works
@@ -212,12 +212,12 @@ If the old store reports room keys that were never backed up, Quiet Core bot war
 - Meaning: Quiet Core bot detected old Matrix state, but the migration is still blocked on missing identity or credential data.
 - What to do: finish Matrix login or config setup, then rerun `quiet-core-bot doctor --fix` or restart the gateway.
 
-`Legacy Matrix encrypted state was detected, but the Matrix plugin helper is unavailable. Install or repair @openclaw/matrix so Quiet Core bot can inspect the old rust crypto store before upgrading.`
+`Legacy Matrix encrypted state was detected, but the Matrix plugin helper is unavailable. Install or repair @quiet-core/matrix so Quiet Core bot can inspect the old rust crypto store before upgrading.`
 
 - Meaning: Quiet Core bot found old encrypted Matrix state, but it could not load the helper entrypoint from the Matrix plugin that normally inspects that store.
-- What to do: reinstall or repair the Matrix plugin (`quiet-core-bot plugins install @openclaw/matrix`, or `quiet-core-bot plugins install ./path/to/local/matrix-plugin` for a repo checkout), then rerun `quiet-core-bot doctor --fix` or restart the gateway.
+- What to do: reinstall or repair the Matrix plugin (`quiet-core-bot plugins install @quiet-core/matrix`, or `quiet-core-bot plugins install ./path/to/local/matrix-plugin` for a repo checkout), then rerun `quiet-core-bot doctor --fix` or restart the gateway.
 
-`Matrix plugin helper path is unsafe: ... Reinstall @openclaw/matrix and try again.`
+`Matrix plugin helper path is unsafe: ... Reinstall @quiet-core/matrix and try again.`
 
 - Meaning: Quiet Core bot found a helper file path that escapes the plugin root or fails plugin boundary checks, so it refused to import it.
 - What to do: reinstall the Matrix plugin from a trusted path, then rerun `quiet-core-bot doctor --fix` or restart the gateway.
@@ -237,7 +237,7 @@ If the old store reports room keys that were never backed up, Quiet Core bot war
 `Matrix is installed from a custom path: ...`
 
 - Meaning: Matrix is pinned to a path install, so mainline updates do not automatically replace it with the repo's standard Matrix package.
-- What to do: reinstall with `quiet-core-bot plugins install @openclaw/matrix` when you want to return to the default Matrix plugin.
+- What to do: reinstall with `quiet-core-bot plugins install @quiet-core/matrix` when you want to return to the default Matrix plugin.
 
 ### Encrypted-state recovery messages
 
@@ -251,15 +251,15 @@ If the old store reports room keys that were never backed up, Quiet Core bot war
 - Meaning: some old room keys existed only in the old local store and had never been uploaded to Matrix backup.
 - What to do: expect some old encrypted history to remain unavailable unless you can recover those keys manually from another verified client.
 
-`Legacy Matrix encrypted state for account "..." has backed-up room keys, but no local backup decryption key was found. Ask the operator to run "openclaw matrix verify backup restore --recovery-key-stdin" after upgrade if they have the recovery key.`
+`Legacy Matrix encrypted state for account "..." has backed-up room keys, but no local backup decryption key was found. Ask the operator to run "quiet-core-bot matrix verify backup restore --recovery-key-stdin" after upgrade if they have the recovery key.`
 
 - Meaning: backup exists, but Quiet Core bot could not recover the recovery key automatically.
-- What to do: run `printf '%s\n' "$MATRIX_RECOVERY_KEY" | openclaw matrix verify backup restore --recovery-key-stdin`.
+- What to do: run `printf '%s\n' "$MATRIX_RECOVERY_KEY" | quiet-core-bot matrix verify backup restore --recovery-key-stdin`.
 
 `Failed inspecting legacy Matrix encrypted state for account "..." (...): ...`
 
 - Meaning: Quiet Core bot found the old encrypted store, but it could not inspect it safely enough to prepare recovery.
-- What to do: rerun `quiet-core-bot doctor --fix`. If it repeats, keep the old state directory intact and recover using another verified Matrix client plus `printf '%s\n' "$MATRIX_RECOVERY_KEY" | openclaw matrix verify backup restore --recovery-key-stdin`.
+- What to do: rerun `quiet-core-bot doctor --fix`. If it repeats, keep the old state directory intact and recover using another verified Matrix client plus `printf '%s\n' "$MATRIX_RECOVERY_KEY" | quiet-core-bot matrix verify backup restore --recovery-key-stdin`.
 
 `Legacy Matrix backup key was found for account "...", but .../recovery-key.json already contains a different recovery key. Leaving the existing file unchanged.`
 
@@ -274,39 +274,39 @@ If the old store reports room keys that were never backed up, Quiet Core bot war
 `matrix: failed restoring room keys from legacy encrypted-state backup: ...`
 
 - Meaning: the new plugin attempted restore but Matrix returned an error.
-- What to do: run `openclaw matrix verify backup status`, then retry with `printf '%s\n' "$MATRIX_RECOVERY_KEY" | openclaw matrix verify backup restore --recovery-key-stdin` if needed.
+- What to do: run `quiet-core-bot matrix verify backup status`, then retry with `printf '%s\n' "$MATRIX_RECOVERY_KEY" | quiet-core-bot matrix verify backup restore --recovery-key-stdin` if needed.
 
 ### Manual recovery messages
 
-`Backup key is not loaded on this device. Run 'openclaw matrix verify backup restore' to load it and restore old room keys.`
+`Backup key is not loaded on this device. Run 'quiet-core-bot matrix verify backup restore' to load it and restore old room keys.`
 
 - Meaning: Quiet Core bot knows you should have a backup key, but it is not active on this device.
-- What to do: run `openclaw matrix verify backup restore`, or set `MATRIX_RECOVERY_KEY` and run `printf '%s\n' "$MATRIX_RECOVERY_KEY" | openclaw matrix verify backup restore --recovery-key-stdin` if needed.
+- What to do: run `quiet-core-bot matrix verify backup restore`, or set `MATRIX_RECOVERY_KEY` and run `printf '%s\n' "$MATRIX_RECOVERY_KEY" | quiet-core-bot matrix verify backup restore --recovery-key-stdin` if needed.
 
-`Store a recovery key with 'openclaw matrix verify device --recovery-key-stdin', then run 'openclaw matrix verify backup restore'.`
+`Store a recovery key with 'quiet-core-bot matrix verify device --recovery-key-stdin', then run 'quiet-core-bot matrix verify backup restore'.`
 
 - Meaning: this device does not currently have the recovery key stored.
-- What to do: set `MATRIX_RECOVERY_KEY`, run `printf '%s\n' "$MATRIX_RECOVERY_KEY" | openclaw matrix verify device --recovery-key-stdin`, then restore the backup.
+- What to do: set `MATRIX_RECOVERY_KEY`, run `printf '%s\n' "$MATRIX_RECOVERY_KEY" | quiet-core-bot matrix verify device --recovery-key-stdin`, then restore the backup.
 
-`Backup key mismatch on this device. Re-run 'openclaw matrix verify device --recovery-key-stdin' with the matching recovery key.`
+`Backup key mismatch on this device. Re-run 'quiet-core-bot matrix verify device --recovery-key-stdin' with the matching recovery key.`
 
 - Meaning: the stored key does not match the active Matrix backup.
-- What to do: set `MATRIX_RECOVERY_KEY` to the correct key and run `printf '%s\n' "$MATRIX_RECOVERY_KEY" | openclaw matrix verify device --recovery-key-stdin`.
+- What to do: set `MATRIX_RECOVERY_KEY` to the correct key and run `printf '%s\n' "$MATRIX_RECOVERY_KEY" | quiet-core-bot matrix verify device --recovery-key-stdin`.
 
 If you accept losing unrecoverable old encrypted history, you can instead reset the
-current backup baseline with `openclaw matrix verify backup reset --yes`. When the
+current backup baseline with `quiet-core-bot matrix verify backup reset --yes`. When the
 stored backup secret is broken, that reset may also recreate secret storage so the
 new backup key can load correctly after restart.
 
-`Backup trust chain is not verified on this device. Re-run 'openclaw matrix verify device --recovery-key-stdin'.`
+`Backup trust chain is not verified on this device. Re-run 'quiet-core-bot matrix verify device --recovery-key-stdin'.`
 
 - Meaning: the backup exists, but this device does not trust the cross-signing chain strongly enough yet.
-- What to do: set `MATRIX_RECOVERY_KEY` and run `printf '%s\n' "$MATRIX_RECOVERY_KEY" | openclaw matrix verify device --recovery-key-stdin`.
+- What to do: set `MATRIX_RECOVERY_KEY` and run `printf '%s\n' "$MATRIX_RECOVERY_KEY" | quiet-core-bot matrix verify device --recovery-key-stdin`.
 
 `Matrix recovery key is required`
 
 - Meaning: you tried a recovery step without supplying a recovery key when one was required.
-- What to do: rerun the command with `--recovery-key-stdin`, for example `printf '%s\n' "$MATRIX_RECOVERY_KEY" | openclaw matrix verify device --recovery-key-stdin`.
+- What to do: rerun the command with `--recovery-key-stdin`, for example `printf '%s\n' "$MATRIX_RECOVERY_KEY" | quiet-core-bot matrix verify device --recovery-key-stdin`.
 
 `Invalid Matrix recovery key: ...`
 
@@ -319,37 +319,37 @@ new backup key can load correctly after restart.
   established full cross-signing identity trust for this device. Check the
   command output for `Recovery key accepted`, `Backup usable`,
   `Cross-signing verified`, and `Device verified by owner`.
-- What to do: run `openclaw matrix verify self`, accept the request in another
+- What to do: run `quiet-core-bot matrix verify self`, accept the request in another
   Matrix client, compare the SAS, and type `yes` only when it matches. The
   command waits for full Matrix identity trust before reporting success. Use
-  `printf '%s\n' "$MATRIX_RECOVERY_KEY" | openclaw matrix verify bootstrap --recovery-key-stdin --force-reset-cross-signing`
+  `printf '%s\n' "$MATRIX_RECOVERY_KEY" | quiet-core-bot matrix verify bootstrap --recovery-key-stdin --force-reset-cross-signing`
   only when you intentionally want to replace the current cross-signing identity.
 
 `Matrix key backup is not active on this device after loading from secret storage.`
 
 - Meaning: secret storage did not produce an active backup session on this device.
-- What to do: verify the device first, then recheck with `openclaw matrix verify backup status`.
+- What to do: verify the device first, then recheck with `quiet-core-bot matrix verify backup status`.
 
-`Matrix crypto backend cannot load backup keys from secret storage. Verify this device with 'openclaw matrix verify device --recovery-key-stdin' first.`
+`Matrix crypto backend cannot load backup keys from secret storage. Verify this device with 'quiet-core-bot matrix verify device --recovery-key-stdin' first.`
 
 - Meaning: this device cannot restore from secret storage until device verification is complete.
-- What to do: run `printf '%s\n' "$MATRIX_RECOVERY_KEY" | openclaw matrix verify device --recovery-key-stdin` first.
+- What to do: run `printf '%s\n' "$MATRIX_RECOVERY_KEY" | quiet-core-bot matrix verify device --recovery-key-stdin` first.
 
 ### Custom plugin install messages
 
 `Matrix is installed from a custom path that no longer exists: ...`
 
 - Meaning: your plugin install record points at a local path that is gone.
-- What to do: reinstall with `quiet-core-bot plugins install @openclaw/matrix`, or if you are running from a repo checkout, `quiet-core-bot plugins install ./path/to/local/matrix-plugin`.
+- What to do: reinstall with `quiet-core-bot plugins install @quiet-core/matrix`, or if you are running from a repo checkout, `quiet-core-bot plugins install ./path/to/local/matrix-plugin`.
 
 ## If encrypted history still does not come back
 
 Run these checks in order:
 
 ```bash
-openclaw matrix verify status --verbose
-openclaw matrix verify backup status --verbose
-printf '%s\n' "$MATRIX_RECOVERY_KEY" | openclaw matrix verify backup restore --recovery-key-stdin --verbose
+quiet-core-bot matrix verify status --verbose
+quiet-core-bot matrix verify backup status --verbose
+printf '%s\n' "$MATRIX_RECOVERY_KEY" | quiet-core-bot matrix verify backup restore --recovery-key-stdin --verbose
 ```
 
 If the backup restores successfully but some old rooms are still missing history, those missing keys were probably never backed up by the previous plugin.
@@ -359,9 +359,9 @@ If the backup restores successfully but some old rooms are still missing history
 If you accept losing unrecoverable old encrypted history and only want a clean backup baseline going forward, run these commands in order:
 
 ```bash
-openclaw matrix verify backup reset --yes
-openclaw matrix verify backup status --verbose
-openclaw matrix verify status
+quiet-core-bot matrix verify backup reset --yes
+quiet-core-bot matrix verify backup status --verbose
+quiet-core-bot matrix verify status
 ```
 
 If the device is still unverified after that, finish verification from your Matrix client by comparing the SAS emoji or decimal codes and confirming that they match.

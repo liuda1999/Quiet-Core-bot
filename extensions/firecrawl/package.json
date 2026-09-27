@@ -1,25 +1,25 @@
 {
-  "name": "@openclaw/firecrawl-plugin",
+  "name": "@quiet-core/firecrawl-plugin",
   "version": "2026.6.11",
   "description": "OpenClaw Firecrawl plugin.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/liuda1999/Quiet-Core-bot"
   },
   "type": "module",
   "dependencies": {
     "typebox": "1.1.39"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@quiet-core/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "clawhubSpec": "clawhub:@openclaw/firecrawl-plugin",
-      "npmSpec": "@openclaw/firecrawl-plugin",
+      "clawhubSpec": "clawhub:@quiet-core/firecrawl-plugin",
+      "npmSpec": "@quiet-core/firecrawl-plugin",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.6.8"
     },

@@ -236,14 +236,14 @@ describe("resolveLoginFailureFeedback", () => {
     const feedback = resolveLoginFailureFeedback({
       connected: false,
       lastError:
-        "failed ws://host/openclaw#token=secret-token Authorization: Bearer secret-bearer token=inline-secret",
+        "failed ws://host/quiet-core-bot#token=secret-token Authorization: Bearer secret-bearer token=inline-secret",
       lastErrorCode: null,
       hasToken: false,
       hasPassword: false,
     });
 
     expect(feedback?.rawError).toBe(
-      "failed ws://host/openclaw#[redacted-credential] Authorization: Bearer [redacted] token=[redacted]",
+      "failed ws://host/quiet-core-bot#[redacted-credential] Authorization: Bearer [redacted] token=[redacted]",
     );
   });
 });

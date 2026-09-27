@@ -115,7 +115,7 @@ function createBraveAllowConfig() {
 
 function createWebSearchEnv(overrides?: Partial<NodeJS.ProcessEnv>) {
   return {
-    OPENCLAW_HOME: "/tmp/openclaw-home",
+    QUIET_CORE_HOME: "/tmp/quiet-core-bot-home",
     ...overrides,
   } as NodeJS.ProcessEnv;
 }
@@ -154,7 +154,7 @@ function createManifestRegistryFixture(): PluginManifestRegistry {
         origin: "bundled",
         rootDir: "/tmp/brave",
         source: "/tmp/brave/index.js",
-        manifestPath: "/tmp/brave/openclaw.plugin.json",
+        manifestPath: "/tmp/brave/quiet-core-bot.plugin.json",
         channels: [],
         providers: [],
         cliBackends: [],
@@ -169,7 +169,7 @@ function createManifestRegistryFixture(): PluginManifestRegistry {
         origin: "bundled",
         rootDir: "/tmp/noise",
         source: "/tmp/noise/index.js",
-        manifestPath: "/tmp/noise/openclaw.plugin.json",
+        manifestPath: "/tmp/noise/quiet-core-bot.plugin.json",
         channels: [],
         providers: [],
         cliBackends: [],
@@ -193,7 +193,7 @@ function createWebSearchManifestRecord(params: {
     origin: "bundled",
     rootDir: `/tmp/${params.id}`,
     source: `/tmp/${params.id}/index.js`,
-    manifestPath: `/tmp/${params.id}/openclaw.plugin.json`,
+    manifestPath: `/tmp/${params.id}/quiet-core-bot.plugin.json`,
     channels: [],
     providers: [],
     cliBackends: [],
@@ -605,7 +605,7 @@ describe("resolvePluginWebSearchProviders", () => {
 
   it("resolves current config contents when config changes in place", () => {
     const config = createBraveAllowConfig();
-    const env = createWebSearchEnv({ OPENCLAW_HOME: "/tmp/openclaw-home-a" });
+    const env = createWebSearchEnv({ QUIET_CORE_HOME: "/tmp/quiet-core-bot-home-a" });
 
     expectSnapshotLoaderCalls({
       config,
@@ -619,13 +619,13 @@ describe("resolvePluginWebSearchProviders", () => {
 
   it("resolves current env contents when env changes in place", () => {
     const config = createBraveAllowConfig();
-    const env = createWebSearchEnv({ OPENCLAW_HOME: "/tmp/openclaw-home-a" });
+    const env = createWebSearchEnv({ QUIET_CORE_HOME: "/tmp/quiet-core-bot-home-a" });
 
     expectSnapshotLoaderCalls({
       config,
       env,
       mutate: () => {
-        env.OPENCLAW_HOME = "/tmp/openclaw-home-b";
+        env.QUIET_CORE_HOME = "/tmp/quiet-core-bot-home-b";
       },
       expectedLoaderCalls: 2,
     });

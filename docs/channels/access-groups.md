@@ -132,7 +132,7 @@ Channel support depends on whether that channel is wired through the shared Quie
 Plugin authors can inspect structured access-group state without expanding it back into a flat allowlist:
 
 ```typescript
-import { resolveAccessGroupAllowFromState } from "openclaw/plugin-sdk/security-runtime";
+import { resolveAccessGroupAllowFromState } from "quiet-core-bot/plugin-sdk/security-runtime";
 
 const state = await resolveAccessGroupAllowFromState({
   accessGroups: cfg.accessGroups,

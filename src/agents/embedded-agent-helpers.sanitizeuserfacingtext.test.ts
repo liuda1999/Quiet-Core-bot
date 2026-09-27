@@ -329,8 +329,8 @@ describe("sanitizeUserFacingText", () => {
     const input = [
       "Visible intro.",
       "⚠️ 🛠️ `run quiet-core-bot definitely-not-a-real-subcommand (agent)` failed",
-      "⚠️ 🛠️ gh search issues --repo openclaw/openclaw --state open --no-search-pages.jsonl /tmp/openclaw_open_unlabeled_current.json (agent) failed",
-      "⚠️ 🛠️ gh search issues --repo openclaw/openclaw --state open (agent) failed: command timed out",
+      "⚠️ 🛠️ gh search issues --repo liuda1999/quiet-core-bot --state open --no-search-pages.jsonl /tmp/openclaw_open_unlabeled_current.json (agent) failed",
+      "⚠️ 🛠️ gh search issues --repo liuda1999/quiet-core-bot --state open (agent) failed: command timed out",
       "🛠️ run git status",
       "📖 Read: lines 1-40 from secret.md",
       "Visible outro.",
@@ -632,9 +632,9 @@ describe("sanitizeUserFacingText", () => {
       "Quiet Core bot runtime context for the immediately preceding user message.",
       "This context is runtime-generated, not user-authored. Keep internal details private.",
       "",
-      "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
+      "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>",
       "secret runtime context",
-      "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
+      "<<<END_QUIET_CORE_INTERNAL_CONTEXT>>>",
       "",
       "Visible reply.",
     ].join("\n");

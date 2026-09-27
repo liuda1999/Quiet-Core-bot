@@ -11,14 +11,14 @@ Quiet Core bot Anthropic Vertex provider plugin for Claude models on Google Vert
 
 ## Distribution
 
-- Package: `@openclaw/anthropic-vertex-provider`
+- Package: `@quiet-core/anthropic-vertex-provider`
 - Install route: npm; ClawHub
 
 ## Surface
 
 providers: anthropic-vertex
 
-<!-- openclaw-plugin-reference:manual-start -->
+<!-- quiet-core-bot-plugin-reference:manual-start -->
 
 ## Claude Fable 5
 
@@ -26,4 +26,4 @@ Use `anthropic-vertex/claude-fable-5` where the model is available in your Googl
 Fable 5 always uses adaptive thinking and defaults to `high` effort. `/think off` and
 `/think minimal` use `low` effort because the model does not support disabling thinking.
 
-<!-- openclaw-plugin-reference:manual-end -->
+<!-- quiet-core-bot-plugin-reference:manual-end -->

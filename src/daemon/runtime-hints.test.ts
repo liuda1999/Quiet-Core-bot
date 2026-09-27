@@ -9,16 +9,16 @@ describe("buildPlatformRuntimeLogHints", () => {
         platform: "darwin",
         env: {
           HOME: "/Users/test",
-          OPENCLAW_STATE_DIR: "/tmp/openclaw-state",
-          OPENCLAW_LOG_PREFIX: "gateway",
+          QUIET_CORE_STATE_DIR: "/tmp/quiet-core-bot-state",
+          QUIET_CORE_LOG_PREFIX: "gateway",
         },
-        systemdServiceName: "openclaw-gateway",
+        systemdServiceName: "quiet-core-bot-gateway",
         windowsTaskName: "Quiet Core bot Gateway",
       }),
     ).toEqual([
-      "Launchd stdout (if installed): /Users/test/Library/Logs/openclaw/gateway.log",
+      "Launchd stdout (if installed): /Users/test/Library/Logs/quiet-core-bot/gateway.log",
       "Launchd stderr (if installed): suppressed",
-      "Restart attempts: /tmp/openclaw-state/logs/gateway-restart.log",
+      "Restart attempts: /tmp/quiet-core-bot-state/logs/gateway-restart.log",
     ]);
   });
 
@@ -27,27 +27,27 @@ describe("buildPlatformRuntimeLogHints", () => {
       buildPlatformRuntimeLogHints({
         platform: "linux",
         env: {
-          OPENCLAW_STATE_DIR: "/tmp/openclaw-state",
+          QUIET_CORE_STATE_DIR: "/tmp/quiet-core-bot-state",
         },
-        systemdServiceName: "openclaw-gateway",
+        systemdServiceName: "quiet-core-bot-gateway",
         windowsTaskName: "Quiet Core bot Gateway",
       }),
     ).toEqual([
-      "Logs: journalctl --user -u openclaw-gateway.service -n 200 --no-pager",
-      "Restart attempts: /tmp/openclaw-state/logs/gateway-restart.log",
+      "Logs: journalctl --user -u quiet-core-bot-gateway.service -n 200 --no-pager",
+      "Restart attempts: /tmp/quiet-core-bot-state/logs/gateway-restart.log",
     ]);
     expect(
       buildPlatformRuntimeLogHints({
         platform: "win32",
         env: {
-          OPENCLAW_STATE_DIR: "/tmp/openclaw-state",
+          QUIET_CORE_STATE_DIR: "/tmp/quiet-core-bot-state",
         },
-        systemdServiceName: "openclaw-gateway",
+        systemdServiceName: "quiet-core-bot-gateway",
         windowsTaskName: "Quiet Core bot Gateway",
       }),
     ).toEqual([
       'Logs: schtasks /Query /TN "Quiet Core bot Gateway" /V /FO LIST',
-      "Restart attempts: /tmp/openclaw-state/logs/gateway-restart.log",
+      "Restart attempts: /tmp/quiet-core-bot-state/logs/gateway-restart.log",
     ]);
   });
 });
@@ -60,7 +60,7 @@ describe("buildPlatformServiceStartHints", () => {
         installCommand: "quiet-core-bot gateway install",
         startCommand: "quiet-core-bot gateway",
         launchAgentPlistPath: "~/Library/LaunchAgents/com.openclaw.gateway.plist",
-        systemdServiceName: "openclaw-gateway",
+        systemdServiceName: "quiet-core-bot-gateway",
         windowsTaskName: "Quiet Core bot Gateway",
       }),
     ).toEqual([
@@ -74,13 +74,13 @@ describe("buildPlatformServiceStartHints", () => {
         installCommand: "quiet-core-bot gateway install",
         startCommand: "quiet-core-bot gateway",
         launchAgentPlistPath: "~/Library/LaunchAgents/com.openclaw.gateway.plist",
-        systemdServiceName: "openclaw-gateway",
+        systemdServiceName: "quiet-core-bot-gateway",
         windowsTaskName: "Quiet Core bot Gateway",
       }),
     ).toEqual([
       "quiet-core-bot gateway install",
       "quiet-core-bot gateway",
-      "systemctl --user start openclaw-gateway.service",
+      "systemctl --user start quiet-core-bot-gateway.service",
     ]);
   });
 });

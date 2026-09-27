@@ -98,8 +98,8 @@ export class OpenClawModalDialog extends LitElement {
   }
 
   override render() {
-    const labelId = this.label ? "openclaw-modal-dialog-label" : "";
-    const descriptionId = this.description ? "openclaw-modal-dialog-description" : "";
+    const labelId = this.label ? "quiet-core-bot-modal-dialog-label" : "";
+    const descriptionId = this.description ? "quiet-core-bot-modal-dialog-description" : "";
     return html`
       <dialog
         role="dialog"
@@ -269,12 +269,12 @@ export class OpenClawModalDialog extends LitElement {
   }
 }
 
-if (!customElements.get("openclaw-modal-dialog")) {
-  customElements.define("openclaw-modal-dialog", OpenClawModalDialog);
+if (!customElements.get("quiet-core-bot-modal-dialog")) {
+  customElements.define("quiet-core-bot-modal-dialog", OpenClawModalDialog);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    "openclaw-modal-dialog": OpenClawModalDialog;
+    "quiet-core-bot-modal-dialog": OpenClawModalDialog;
   }
 }

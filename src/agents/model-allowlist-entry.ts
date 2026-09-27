@@ -2,7 +2,7 @@
  * Updates static model allowlist entries in agent defaults. Setup uses this
  * helper to keep both raw and canonical provider/model keys present.
  */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { DEFAULT_PROVIDER } from "./defaults.js";
 import { resolveStaticAllowlistModelKey } from "./model-ref-shared.js";
 

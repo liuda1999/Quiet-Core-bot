@@ -5,7 +5,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { handleCrestodianCommand } from "../../dist/auto-reply/reply/commands-crestodian.js";
 import { clearConfigCache } from "../../dist/config/config.js";
-import type { OpenClawConfig } from "../../dist/config/types.openclaw.js";
+import type { OpenClawConfig } from "../../dist/config/types.quiet-core-bot.js";
 import { runCrestodianRescueMessage } from "../../dist/crestodian/rescue-message.js";
 import { createE2eStateDir } from "./lib/temp-state-dir.ts";
 
@@ -51,12 +51,12 @@ async function invoke(commandBody: string, cfg: OpenClawConfig, isGroup = false)
 }
 
 async function main() {
-  const tempState = await createE2eStateDir("openclaw-crestodian-");
+  const tempState = await createE2eStateDir("quiet-core-bot-crestodian-");
   tempState.registerExitCleanup();
   const stateDir = tempState.stateDir;
-  const configPath = process.env.OPENCLAW_CONFIG_PATH ?? path.join(stateDir, "openclaw.json");
-  process.env.OPENCLAW_STATE_DIR = stateDir;
-  process.env.OPENCLAW_CONFIG_PATH = configPath;
+  const configPath = process.env.QUIET_CORE_CONFIG_PATH ?? path.join(stateDir, "quiet-core-bot.json");
+  process.env.QUIET_CORE_STATE_DIR = stateDir;
+  process.env.QUIET_CORE_CONFIG_PATH = configPath;
   await fs.mkdir(stateDir, { recursive: true });
   await fs.writeFile(
     configPath,
@@ -104,7 +104,7 @@ async function main() {
   assert(configSetApplied.includes("[crestodian] done: config.set"), "generic config set failed");
 
   const refPlan = await invoke(
-    "/crestodian config set-ref gateway.auth.token env OPENCLAW_GATEWAY_TOKEN",
+    "/crestodian config set-ref gateway.auth.token env QUIET_CORE_GATEWAY_TOKEN",
     cfg,
   );
   assert(
@@ -114,7 +114,7 @@ async function main() {
   const refApplied = await invoke("/crestodian yes", cfg);
   assert(refApplied.includes("[crestodian] done: config.setRef"), "SecretRef set failed");
 
-  const agentPlan = await invoke("/crestodian create agent work workspace /tmp/openclaw-work", cfg);
+  const agentPlan = await invoke("/crestodian create agent work workspace /tmp/quiet-core-bot-work", cfg);
   assert(
     agentPlan.includes("Reply /crestodian yes to apply"),
     "agent creation did not require approval",
@@ -123,7 +123,7 @@ async function main() {
   assert(agentApplied.includes("[crestodian] done: agents.create"), "agent creation did not apply");
 
   const setupPlan = await invoke(
-    "/crestodian setup workspace /tmp/openclaw-setup model openai/gpt-5.2",
+    "/crestodian setup workspace /tmp/quiet-core-bot-setup model openai/gpt-5.2",
     cfg,
   );
   assert(setupPlan.includes("Reply /crestodian yes to apply"), "setup did not require approval");
@@ -212,16 +212,16 @@ async function main() {
     updatedConfig.gateway?.auth?.token &&
       typeof updatedConfig.gateway.auth.token === "object" &&
       "id" in updatedConfig.gateway.auth.token &&
-      updatedConfig.gateway.auth.token.id === "OPENCLAW_GATEWAY_TOKEN",
+      updatedConfig.gateway.auth.token.id === "QUIET_CORE_GATEWAY_TOKEN",
     "SecretRef set did not update gateway.auth.token",
   );
   assert(
-    updatedConfig.agents?.defaults?.workspace === "/tmp/openclaw-setup",
+    updatedConfig.agents?.defaults?.workspace === "/tmp/quiet-core-bot-setup",
     "setup did not update default workspace",
   );
   assert(
     updatedConfig.agents?.list?.some(
-      (agent) => agent.id === "work" && agent.workspace === "/tmp/openclaw-work",
+      (agent) => agent.id === "work" && agent.workspace === "/tmp/quiet-core-bot-work",
     ),
     "agent config was not updated",
   );

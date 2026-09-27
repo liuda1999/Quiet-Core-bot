@@ -68,7 +68,7 @@ go to [/gateway/troubleshooting#anthropic-429-extra-usage-required-for-long-cont
 ## Local OpenAI-compatible backend works directly but fails in Quiet Core bot
 
 If your local or self-hosted `/v1` backend answers small direct
-`/v1/chat/completions` probes but fails on `openclaw infer model run` or normal
+`/v1/chat/completions` probes but fails on `quiet-core-bot infer model run` or normal
 agent turns:
 
 1. If the error mentions `messages[].content` expecting a string, set
@@ -80,14 +80,14 @@ agent turns:
    continue in the deep runbook:
    [/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail](/gateway/troubleshooting#local-openai-compatible-backend-passes-direct-probes-but-agent-runs-fail)
 
-## Plugin install fails with missing openclaw extensions
+## Plugin install fails with missing quiet-core-bot extensions
 
-If install fails with `package.json missing openclaw.extensions`, the plugin package
+If install fails with `package.json missing quiet-core-bot.extensions`, the plugin package
 is using an old shape that Quiet Core bot no longer accepts.
 
 Fix in the plugin package:
 
-1. Add `openclaw.extensions` to `package.json`.
+1. Add `quiet-core-bot.extensions` to `package.json`.
 2. Point entries at built runtime files (usually `./dist/index.js`).
 3. Republish the plugin and run `quiet-core-bot plugins install <package>` again.
 
@@ -95,9 +95,9 @@ Example:
 
 ```json
 {
-  "name": "@openclaw/my-plugin",
+  "name": "@quiet-core/my-plugin",
   "version": "1.2.3",
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": ["./dist/index.js"]
   }
 }
@@ -114,25 +114,25 @@ If an update finishes but plugins are stale, disabled, or show messages such as
 
 Install policy runs on plugin installs and updates. Quiet Core bot-owned plugin
 versions normally move with the Quiet Core bot release, so an Quiet Core bot update can
-also need matching `@openclaw/*` plugin updates during post-update sync.
+also need matching `@quiet-core/*` plugin updates during post-update sync.
 
 Avoid these broad policy shapes unless you also maintain the matching upgrade
 rule:
 
 - Freezing Quiet Core bot-owned plugins to one exact old version, such as allowing
-  only `@openclaw/*@2026.5.3`.
+  only `@quiet-core/*@2026.5.3`.
 - Blocking by source kind alone, such as every npm, network, or
   `request.mode: "update"` plugin request.
 - Treating the policy command as optional. When `security.installPolicy` is
   enabled, a missing, slow, unreadable, or permission-blocked policy executable
   fails closed.
 - Approving plugin versions without considering the policy request's
-  `openclawVersion` and the plugin candidate metadata.
+  `quiet-core-botVersion` and the plugin candidate metadata.
 
 Safer policy rules allow trusted Quiet Core bot-owned plugin updates when the
 candidate is compatible with the current Quiet Core bot host, instead of pinning a
 single release forever. If you block npm by default, make a narrow exception
-for the trusted `@openclaw/*` plugin packages or plugin ids you use. If you
+for the trusted `@quiet-core/*` plugin packages or plugin ids you use. If you
 differentiate install and update requests, apply the same trust rule to
 `request.mode: "update"`.
 
@@ -173,7 +173,7 @@ Docker installs normally run as `node` (uid `1000`). For the default Docker
 setup, repair the host bind mounts:
 
 ```bash
-sudo chown -R 1000:1000 /path/to/openclaw-config /path/to/openclaw-workspace
+sudo chown -R 1000:1000 /path/to/quiet-core-bot-config /path/to/quiet-core-bot-workspace
 quiet-core-bot doctor --fix
 ```
 
@@ -181,7 +181,7 @@ If you intentionally run Quiet Core bot as root, repair the managed plugin root 
 root ownership instead:
 
 ```bash
-sudo chown -R root:root /path/to/openclaw-config/npm
+sudo chown -R root:root /path/to/quiet-core-bot-config/npm
 quiet-core-bot doctor --fix
 ```
 
@@ -466,7 +466,7 @@ flowchart TD
     Good output looks like:
 
     - Browser status shows `running: true` and a chosen browser/profile.
-    - `openclaw` starts, or `user` can see local Chrome tabs.
+    - `quiet-core-bot` starts, or `user` can see local Chrome tabs.
 
     Common log signatures:
 

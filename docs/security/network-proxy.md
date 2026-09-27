@@ -25,7 +25,7 @@ Proxy routing is a process-level guardrail for normal HTTP and WebSocket egress.
 
 ## How Quiet Core bot routes traffic
 
-When `proxy.enabled=true` and a proxy URL is configured, protected runtime processes such as `quiet-core-bot gateway run`, `quiet-core-bot node run`, and `openclaw agent --local` route normal HTTP and WebSocket egress through the configured proxy:
+When `proxy.enabled=true` and a proxy URL is configured, protected runtime processes such as `quiet-core-bot gateway run`, `quiet-core-bot node run`, and `quiet-core-bot agent --local` route normal HTTP and WebSocket egress through the configured proxy:
 
 ```text
 Quiet Core bot process
@@ -38,7 +38,7 @@ The public contract is the routing behavior, not the internal Node hooks used to
 
 Internally, Quiet Core bot installs Proxyline as the process-level routing runtime for this feature. Proxyline covers `fetch`, undici-backed clients, Node core `node:http` / `node:https` callers, common WebSocket clients, and helper-created CONNECT tunnels. Managed proxy mode replaces caller-provided Node HTTP agents so explicit agents do not accidentally bypass the operator proxy.
 
-Some plugins own custom transports that need explicit proxy wiring even when process-level routing exists. For example, Telegram's Bot API transport uses its own HTTP/1 undici dispatcher and therefore honors process proxy env plus the managed `OPENCLAW_PROXY_URL` fallback in that owner-specific transport path.
+Some plugins own custom transports that need explicit proxy wiring even when process-level routing exists. For example, Telegram's Bot API transport uses its own HTTP/1 undici dispatcher and therefore honors process proxy env plus the managed `QUIET_CORE_PROXY_URL` fallback in that owner-specific transport path.
 
 The proxy URL itself can use either `http://` or `https://`. These schemes describe the connection from Quiet Core bot to the proxy endpoint:
 
@@ -74,16 +74,16 @@ proxy:
   enabled: true
   proxyUrl: https://proxy.corp.example:8443
   tls:
-    caFile: /etc/openclaw/proxy-ca.pem
+    caFile: /etc/quiet-core-bot/proxy-ca.pem
 ```
 
 You can also provide the URL through the environment, while keeping `proxy.enabled=true` in config:
 
 ```bash
-OPENCLAW_PROXY_URL=http://127.0.0.1:3128 quiet-core-bot gateway run
+QUIET_CORE_PROXY_URL=http://127.0.0.1:3128 quiet-core-bot gateway run
 ```
 
-`proxy.proxyUrl` takes precedence over `OPENCLAW_PROXY_URL`.
+`proxy.proxyUrl` takes precedence over `QUIET_CORE_PROXY_URL`.
 
 ### Gateway Loopback Mode
 
@@ -145,9 +145,9 @@ quiet-core-bot gateway install --force
 quiet-core-bot gateway start
 ```
 
-The environment fallback is best for foreground runs. If you use it with an installed service, put `OPENCLAW_PROXY_URL` in the service durable environment, such as `$OPENCLAW_STATE_DIR/.env` or `~/.quiet-core-bot/.env`, then reinstall the service so launchd, systemd, or Scheduled Tasks starts the gateway with that value.
+The environment fallback is best for foreground runs. If you use it with an installed service, put `QUIET_CORE_PROXY_URL` in the service durable environment, such as `$QUIET_CORE_STATE_DIR/.env` or `~/.quiet-core-bot/.env`, then reinstall the service so launchd, systemd, or Scheduled Tasks starts the gateway with that value.
 
-For `quiet-core-bot --container ...` commands, Quiet Core bot forwards `OPENCLAW_PROXY_URL` into the container-targeted child CLI when it is set. The URL must be reachable from inside the container; `127.0.0.1` refers to the container itself, not the host. Quiet Core bot rejects loopback proxy URLs for container-targeted commands unless you explicitly override that safety check.
+For `quiet-core-bot --container ...` commands, Quiet Core bot forwards `QUIET_CORE_PROXY_URL` into the container-targeted child CLI when it is set. The URL must be reachable from inside the container; `127.0.0.1` refers to the container itself, not the host. Quiet Core bot rejects loopback proxy URLs for container-targeted commands unless you explicitly override that safety check.
 
 ## Proxy Requirements
 
@@ -202,7 +202,7 @@ quiet-core-bot proxy validate --proxy-url http://127.0.0.1:3128
 For an HTTPS proxy endpoint signed by a private CA:
 
 ```bash
-quiet-core-bot proxy validate --proxy-url https://proxy.corp.example:8443 --proxy-ca-file /etc/openclaw/proxy-ca.pem
+quiet-core-bot proxy validate --proxy-url https://proxy.corp.example:8443 --proxy-ca-file /etc/quiet-core-bot/proxy-ca.pem
 ```
 
 By default, when no custom destinations are provided, the command checks that `https://example.com/` succeeds and starts a temporary loopback canary that the proxy must not reach. The default denied check passes when the proxy returns a non-2xx denial response or blocks the canary with a transport failure; it fails if a successful response reaches the canary. If no proxy is enabled and configured, validation reports a config problem; use `--proxy-url` for a one-off preflight before changing config. Use `--allowed-url` and `--denied-url` to test deployment-specific expectations. Add `--apns-reachable` to also verify direct APNs HTTP/2 delivery can open a CONNECT tunnel through the proxy and receive a sandbox APNs response; the probe uses an intentionally invalid provider token, so `403 InvalidProviderToken` is expected and counts as reachable. Custom denied destinations are fail-closed: any HTTP response means the destination was reachable through the proxy, and any transport error is reported as inconclusive because Quiet Core bot cannot prove the proxy blocked a reachable origin. On validation failure, the command exits with code 1.
@@ -254,7 +254,7 @@ proxy:
   enabled: true
   proxyUrl: https://proxy.corp.example:8443
   tls:
-    caFile: /etc/openclaw/proxy-ca.pem
+    caFile: /etc/quiet-core-bot/proxy-ca.pem
 ```
 
 That CA is used for TLS verification of the proxy endpoint. It is not a destination MITM trust setting, a client certificate, or a replacement for the proxy's destination policy.
@@ -266,7 +266,7 @@ Then enable Quiet Core bot proxy routing:
 ```bash
 quiet-core-bot config set proxy.enabled true
 quiet-core-bot config set proxy.proxyUrl https://proxy.corp.example:8443
-quiet-core-bot config set proxy.tls.caFile /etc/openclaw/proxy-ca.pem
+quiet-core-bot config set proxy.tls.caFile /etc/quiet-core-bot/proxy-ca.pem
 quiet-core-bot gateway run
 ```
 
@@ -277,7 +277,7 @@ proxy:
   enabled: true
   proxyUrl: https://proxy.corp.example:8443
   tls:
-    caFile: /etc/openclaw/proxy-ca.pem
+    caFile: /etc/quiet-core-bot/proxy-ca.pem
 ```
 
 ## Limits

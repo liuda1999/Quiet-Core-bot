@@ -1,5 +1,5 @@
 /**
- * Smoke tests for the `openclaw path` CLI handlers.
+ * Smoke tests for the `quiet-core-bot path` CLI handlers.
  *
  * Tests invoke each subcommand handler directly with a capturing
  * `OutputRuntimeEnv` — no commander wiring, no child process spawn.
@@ -49,7 +49,7 @@ function createTestRuntime(): TestRuntime {
 const stdoutText = (rt: TestRuntime): string => rt.stdout.join("\n");
 const stderrText = (rt: TestRuntime): string => rt.stderr.join("\n");
 
-describe("openclaw path CLI", () => {
+describe("quiet-core-bot path CLI", () => {
   let workspaceDir: string;
 
   beforeEach(() => {
@@ -256,7 +256,7 @@ describe("openclaw path CLI", () => {
     });
 
     it("CLI-S08 sets slash-deep JSONC paths and parsed JSON values", async () => {
-      const filePath = join(workspaceDir, "openclaw.json");
+      const filePath = join(workspaceDir, "quiet-core-bot.json");
       writeFileSync(
         filePath,
         '{ "agents": { "list": [{ "tools": { "exec": { "security": "deny" } } }] }, "gateway": { "auth": { "token": "${TOKEN}" } } }\n',
@@ -265,7 +265,7 @@ describe("openclaw path CLI", () => {
       const rt = createTestRuntime();
 
       await pathSetCommand(
-        "oc://openclaw.json/gateway/auth/token",
+        "oc://quiet-core-bot.json/gateway/auth/token",
         '{"source":"file","provider":"secrets","id":"/test"}',
         { cwd: workspaceDir, json: true, valueJson: true },
         rt,
@@ -280,7 +280,7 @@ describe("openclaw path CLI", () => {
 
       const rt2 = createTestRuntime();
       await pathSetCommand(
-        "oc://openclaw.json/agents/list/0/tools/exec/security",
+        "oc://quiet-core-bot.json/agents/list/0/tools/exec/security",
         "allowlist",
         { cwd: workspaceDir, json: true },
         rt2,
@@ -305,7 +305,7 @@ describe("openclaw path CLI", () => {
       // exit code 1, stable code OC_EMIT_SENTINEL, message scrubbed.
       await pathSetCommand(
         "oc://gateway.jsonc/token",
-        "__OPENCLAW_REDACTED__",
+        "__QUIET_CORE_REDACTED__",
         { cwd: workspaceDir, json: true },
         rt,
       );

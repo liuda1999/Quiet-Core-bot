@@ -1,5 +1,5 @@
 // Qa Lab plugin module implements bus waiters behavior.
-import { resolveTimerTimeoutMs } from "openclaw/plugin-sdk/number-runtime";
+import { resolveTimerTimeoutMs } from "quiet-core-bot/plugin-sdk/number-runtime";
 import type {
   QaBusEvent,
   QaBusMessage,

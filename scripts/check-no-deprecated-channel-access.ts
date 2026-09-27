@@ -47,7 +47,7 @@ const RULES: Rule[] = [
   },
   {
     label: "deprecated group access compatibility module",
-    pattern: /from\s+["']openclaw\/plugin-sdk\/group-access["']/u,
+    pattern: /from\s+["']quiet-core-bot\/plugin-sdk\/group-access["']/u,
   },
   {
     label: "deprecated command authorization helper",

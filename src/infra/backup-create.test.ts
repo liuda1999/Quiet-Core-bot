@@ -7,12 +7,12 @@ import { describe, expect, it, vi } from "vitest";
 import { saveAuthProfileStore } from "../agents/auth-profiles/store.js";
 import { backupVerifyCommand } from "../commands/backup-verify.js";
 import type { RuntimeEnv } from "../runtime.js";
-import { closeOpenClawAgentDatabasesForTest } from "../state/openclaw-agent-db.js";
+import { closeOpenClawAgentDatabasesForTest } from "../state/quiet-core-bot-agent-db.js";
 import {
   closeOpenClawStateDatabase,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
-import { withOpenClawTestState } from "../test-utils/openclaw-test-state.js";
+} from "../state/quiet-core-bot-state-db.js";
+import { withOpenClawTestState } from "../test-utils/quiet-core-bot-test-state.js";
 import {
   testApi as backupCreateInternals,
   buildExtensionsNodeModulesFilter,
@@ -25,8 +25,8 @@ import { requireNodeSqlite } from "./node-sqlite.js";
 function makeResult(overrides: Partial<BackupCreateResult> = {}): BackupCreateResult {
   return {
     createdAt: "2026-01-01T00:00:00.000Z",
-    archiveRoot: "openclaw-backup-2026-01-01",
-    archivePath: "/tmp/openclaw-backup.tar.gz",
+    archiveRoot: "quiet-core-bot-backup-2026-01-01",
+    archivePath: "/tmp/quiet-core-bot-backup.tar.gz",
     dryRun: false,
     includeWorkspace: true,
     onlyConfig: false,
@@ -71,7 +71,7 @@ async function listArchiveEntryDetails(
 }
 
 describe("formatBackupCreateSummary", () => {
-  const backupArchiveLine = "Backup archive: /tmp/openclaw-backup.tar.gz";
+  const backupArchiveLine = "Backup archive: /tmp/quiet-core-bot-backup.tar.gz";
 
   it.each([
     {
@@ -90,7 +90,7 @@ describe("formatBackupCreateSummary", () => {
           {
             kind: "workspace",
             sourcePath: "/workspace",
-            displayPath: "~/Projects/openclaw",
+            displayPath: "~/Projects/quiet-core-bot",
             reason: "covered",
             coveredBy: "~/.quiet-core-bot",
           },
@@ -101,8 +101,8 @@ describe("formatBackupCreateSummary", () => {
         "Included 1 path:",
         "- state: ~/.quiet-core-bot",
         "Skipped 1 path:",
-        "- workspace: ~/Projects/openclaw (covered by ~/.quiet-core-bot)",
-        "Created /tmp/openclaw-backup.tar.gz",
+        "- workspace: ~/Projects/quiet-core-bot (covered by ~/.quiet-core-bot)",
+        "Created /tmp/quiet-core-bot-backup.tar.gz",
         "Archive verification: passed",
       ],
     },
@@ -153,10 +153,10 @@ describe("formatBackupCreateSummary", () => {
         }),
       ),
     ).toEqual([
-      "Backup archive: /tmp/openclaw-backup.tar.gz",
+      "Backup archive: /tmp/quiet-core-bot-backup.tar.gz",
       "Included 1 path:",
       "- state: ~/.quiet-core-bot",
-      "Created /tmp/openclaw-backup.tar.gz",
+      "Created /tmp/quiet-core-bot-backup.tar.gz",
       "Skipped 3 volatile files (live sessions, cron logs, queues, sockets, pid/tmp).",
     ]);
   });
@@ -295,7 +295,7 @@ describe("buildExtensionsNodeModulesFilter", () => {
   it("excludes dependency trees only under state extensions", () => {
     const filter = buildExtensionsNodeModulesFilter("/state/");
 
-    expect(filter("/state/extensions/demo/openclaw.plugin.json")).toBe(true);
+    expect(filter("/state/extensions/demo/quiet-core-bot.plugin.json")).toBe(true);
     expect(filter("/state/extensions/demo/src/index.js")).toBe(true);
     expect(filter("/state/extensions/demo/node_modules/dep/index.js")).toBe(false);
     expect(filter("/state/extensions/demo/vendor/node_modules/dep/index.js")).toBe(false);
@@ -304,11 +304,11 @@ describe("buildExtensionsNodeModulesFilter", () => {
   });
 
   it("normalizes Windows path separators", () => {
-    const filter = buildExtensionsNodeModulesFilter("C:\\Users\\me\\.openclaw\\");
+    const filter = buildExtensionsNodeModulesFilter("C:\\Users\\me\\.quiet-core-bot\\");
 
-    expect(filter(String.raw`C:\Users\me\.openclaw\extensions\demo\index.js`)).toBe(true);
+    expect(filter(String.raw`C:\Users\me\.quiet-core-bot\extensions\demo\index.js`)).toBe(true);
     expect(
-      filter(String.raw`C:\Users\me\.openclaw\extensions\demo\node_modules\dep\index.js`),
+      filter(String.raw`C:\Users\me\.quiet-core-bot\extensions\demo\node_modules\dep\index.js`),
     ).toBe(false);
   });
 });
@@ -318,7 +318,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-invalid-now-",
+        prefix: "quiet-core-bot-backup-invalid-now-",
         scenario: "minimal",
       },
       async (state) => {
@@ -335,7 +335,7 @@ describe("createBackupArchive", () => {
           });
 
           expect(result.createdAt).toBe("2026-05-30T12:00:00.000Z");
-          expect(path.basename(result.archivePath)).toContain("openclaw-backup.tar.gz");
+          expect(path.basename(result.archivePath)).toContain("quiet-core-bot-backup.tar.gz");
           expect(path.basename(result.archivePath)).not.toContain("NaN");
         } finally {
           dateNowSpy.mockRestore();
@@ -348,7 +348,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-invalid-fallback-now-",
+        prefix: "quiet-core-bot-backup-invalid-fallback-now-",
         scenario: "minimal",
       },
       async (state) => {
@@ -365,7 +365,7 @@ describe("createBackupArchive", () => {
           });
 
           expect(result.createdAt).toBe("1970-01-01T00:00:00.000Z");
-          expect(path.basename(result.archivePath)).toContain("openclaw-backup.tar.gz");
+          expect(path.basename(result.archivePath)).toContain("quiet-core-bot-backup.tar.gz");
           expect(path.basename(result.archivePath)).not.toContain("NaN");
         } finally {
           dateNowSpy.mockRestore();
@@ -378,7 +378,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "split",
-        prefix: "openclaw-backup-volatile-",
+        prefix: "quiet-core-bot-backup-volatile-",
         scenario: "minimal",
       },
       async (state) => {
@@ -444,7 +444,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-sqlite-queue-",
+        prefix: "quiet-core-bot-backup-sqlite-queue-",
         scenario: "minimal",
       },
       async (state) => {
@@ -469,10 +469,10 @@ describe("createBackupArchive", () => {
           });
           const entries = await listArchiveEntries(result.archivePath);
           const archivedDbEntry = entries.find((entry) =>
-            entry.endsWith("/state/state/openclaw.sqlite"),
+            entry.endsWith("/state/state/quiet-core-bot.sqlite"),
           );
           expect(archivedDbEntry).toBeDefined();
-          expect(entries.some((entry) => entry.endsWith("/state/state/openclaw.sqlite-wal"))).toBe(
+          expect(entries.some((entry) => entry.endsWith("/state/state/quiet-core-bot.sqlite-wal"))).toBe(
             false,
           );
 
@@ -503,7 +503,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-agent-sqlite-",
+        prefix: "quiet-core-bot-backup-agent-sqlite-",
         scenario: "minimal",
       },
       async (state) => {
@@ -527,8 +527,8 @@ describe("createBackupArchive", () => {
         );
         closeOpenClawAgentDatabasesForTest();
         const sqlite = requireNodeSqlite();
-        const liveDbPath = path.join(state.agentDir(), "openclaw-agent.sqlite");
-        const deletedSecretMarker = "OPENCLAW_DELETED_SECRET_PAGE_MARKER";
+        const liveDbPath = path.join(state.agentDir(), "quiet-core-bot-agent.sqlite");
+        const deletedSecretMarker = "QUIET_CORE_DELETED_SECRET_PAGE_MARKER";
         const deletedSecret = `${deletedSecretMarker}-${"x".repeat(16_384)}`;
         const liveDb = new sqlite.DatabaseSync(liveDbPath);
         try {
@@ -553,12 +553,12 @@ describe("createBackupArchive", () => {
         });
         const entries = await listArchiveEntries(result.archivePath);
         const archivedDbEntry = entries.find((entry) =>
-          entry.endsWith("/state/agents/main/agent/openclaw-agent.sqlite"),
+          entry.endsWith("/state/agents/main/agent/quiet-core-bot-agent.sqlite"),
         );
         expect(archivedDbEntry).toBeDefined();
         expect(
           entries.some((entry) =>
-            entry.endsWith("/state/agents/main/agent/openclaw-agent.sqlite-wal"),
+            entry.endsWith("/state/agents/main/agent/quiet-core-bot-agent.sqlite-wal"),
           ),
         ).toBe(false);
 
@@ -591,7 +591,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-nested-sqlite-",
+        prefix: "quiet-core-bot-backup-nested-sqlite-",
         scenario: "minimal",
       },
       async (state) => {
@@ -684,7 +684,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-malformed-sqlite-",
+        prefix: "quiet-core-bot-backup-malformed-sqlite-",
         scenario: "minimal",
       },
       async (state) => {
@@ -711,7 +711,7 @@ describe("createBackupArchive", () => {
       await withOpenClawTestState(
         {
           layout: "state-only",
-          prefix: "openclaw-backup-late-sqlite-",
+          prefix: "quiet-core-bot-backup-late-sqlite-",
           scenario: "minimal",
         },
         async (state) => {
@@ -759,7 +759,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-orphan-sqlite-sidecars-",
+        prefix: "quiet-core-bot-backup-orphan-sqlite-sidecars-",
         scenario: "minimal",
       },
       async (state) => {
@@ -793,7 +793,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-memory-reindex-lock-",
+        prefix: "quiet-core-bot-backup-memory-reindex-lock-",
         scenario: "minimal",
       },
       async (state) => {
@@ -846,7 +846,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-symlinked-sqlite-",
+        prefix: "quiet-core-bot-backup-symlinked-sqlite-",
         scenario: "minimal",
       },
       async (state) => {
@@ -879,14 +879,14 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-global-sqlite-symlink-",
+        prefix: "quiet-core-bot-backup-global-sqlite-symlink-",
         scenario: "minimal",
       },
       async (state) => {
         const outputDir = state.path("backups");
         const extractDir = state.path("extract");
         const externalDbPath = path.join(state.workspaceDir, "external-global.sqlite");
-        const linkedDbPath = state.statePath("state", "openclaw.sqlite");
+        const linkedDbPath = state.statePath("state", "quiet-core-bot.sqlite");
         await state.writeConfig({
           agents: {
             list: [{ id: "main", default: true, workspace: state.workspaceDir }],
@@ -921,7 +921,7 @@ describe("createBackupArchive", () => {
           });
           const entries = await listArchiveEntryDetails(result.archivePath);
           const archivedDbEntries = entries.filter((entry) =>
-            entry.path.endsWith("/state/state/openclaw.sqlite"),
+            entry.path.endsWith("/state/state/quiet-core-bot.sqlite"),
           );
           expect(archivedDbEntries).toEqual([
             expect.objectContaining({
@@ -970,12 +970,12 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-global-sqlite-directory-",
+        prefix: "quiet-core-bot-backup-global-sqlite-directory-",
         scenario: "minimal",
       },
       async (state) => {
         const outputDir = state.path("backups");
-        const globalDbPath = state.statePath("state", "openclaw.sqlite");
+        const globalDbPath = state.statePath("state", "quiet-core-bot.sqlite");
         await fs.mkdir(globalDbPath, { recursive: true });
         await fs.mkdir(outputDir, { recursive: true });
 
@@ -995,7 +995,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-plugin-deps-",
+        prefix: "quiet-core-bot-backup-plugin-deps-",
         scenario: "minimal",
       },
       async (state) => {
@@ -1010,7 +1010,7 @@ describe("createBackupArchive", () => {
           recursive: true,
         });
         await fs.writeFile(
-          path.join(stateDir, "extensions", "demo", "openclaw.plugin.json"),
+          path.join(stateDir, "extensions", "demo", "quiet-core-bot.plugin.json"),
           '{"id":"demo"}\n',
           "utf8",
         );
@@ -1054,7 +1054,7 @@ describe("createBackupArchive", () => {
         const entries = await listArchiveEntries(result.archivePath);
 
         const entrySuffixes = entries.map((entry) => entry.replace(/^.*\/state\//, "/state/"));
-        expect(entrySuffixes).toContain("/state/extensions/demo/openclaw.plugin.json");
+        expect(entrySuffixes).toContain("/state/extensions/demo/quiet-core-bot.plugin.json");
         expect(entrySuffixes).toContain("/state/extensions/demo/src/index.js");
         expect(entrySuffixes).toContain("/state/node_modules/root-dep/index.js");
         expect(entrySuffixes).toContain("/state/node_modules/root-dep/fixture.sqlite");
@@ -1075,13 +1075,13 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-hardlink-",
+        prefix: "quiet-core-bot-backup-hardlink-",
         scenario: "minimal",
       },
       async (state) => {
         const stateDir = state.stateDir;
         const outputDir = state.path("backups");
-        const sourcePath = path.join(stateDir, "workspace-adx", "openclaw-src", "node_modules");
+        const sourcePath = path.join(stateDir, "workspace-adx", "quiet-core-bot-src", "node_modules");
         const targetPath = path.join(sourcePath, "esbuild", "bin", "esbuild");
         const hardlinkPath = path.join(sourcePath, "@esbuild", "darwin-arm64", "bin", "esbuild");
         await fs.mkdir(path.dirname(targetPath), { recursive: true });
@@ -1114,7 +1114,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-tmp-overlap-",
+        prefix: "quiet-core-bot-backup-tmp-overlap-",
         scenario: "minimal",
       },
       async (state) => {
@@ -1151,7 +1151,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-tmp-equals-state-",
+        prefix: "quiet-core-bot-backup-tmp-equals-state-",
         scenario: "minimal",
       },
       async (state) => {
@@ -1179,7 +1179,7 @@ describe("createBackupArchive", () => {
             entry.endsWith("/state/plugins/dedicated/empty.sqlite"),
           );
           expect(emptyDbEntries).toHaveLength(1);
-          expect(entries.some((entry) => entry.includes("/openclaw-state-db-"))).toBe(false);
+          expect(entries.some((entry) => entry.includes("/quiet-core-bot-state-db-"))).toBe(false);
 
           await tar.x({ file: result.archivePath, gzip: true, cwd: extractDir });
           const sqlite = requireNodeSqlite();

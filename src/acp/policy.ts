@@ -1,6 +1,6 @@
 /** Policy gates for ACP availability, dispatch, and allowed agent ids. */
-import { AcpRuntimeError } from "@openclaw/acp-core/runtime/errors";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { AcpRuntimeError } from "@quiet-core/acp-core/runtime/errors";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { normalizeAgentId } from "../routing/session-key.js";
 
 const ACP_DISABLED_MESSAGE = "ACP is disabled by policy (`acp.enabled=false`).";

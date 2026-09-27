@@ -24,7 +24,7 @@ This page is the Perplexity **provider** setup. For the Perplexity **tool** (how
 Install the official plugin, then restart Gateway:
 
 ```bash
-quiet-core-bot plugins install @openclaw/perplexity-plugin
+quiet-core-bot plugins install @quiet-core/perplexity-plugin
 quiet-core-bot gateway restart
 ```
 

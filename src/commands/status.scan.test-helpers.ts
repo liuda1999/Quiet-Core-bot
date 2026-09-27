@@ -27,7 +27,7 @@ type StatusScanSharedMocks = {
 
 export function createStatusScanSharedMocks(configPathLabel: string): StatusScanSharedMocks {
   return {
-    resolveConfigPath: vi.fn(() => `/tmp/openclaw-${configPathLabel}-missing-${process.pid}.json`),
+    resolveConfigPath: vi.fn(() => `/tmp/quiet-core-bot-${configPathLabel}-missing-${process.pid}.json`),
     hasConfiguredChannels: vi.fn(),
     hasConfiguredChannelsForReadOnlyScope: vi.fn(),
     readBestEffortConfig: vi.fn(),

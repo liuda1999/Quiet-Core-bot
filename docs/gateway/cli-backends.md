@@ -35,7 +35,7 @@ You can use Claude Code CLI **without any config** (the bundled Anthropic plugin
 registers a default backend):
 
 ```bash
-openclaw agent --agent main --message "hi" --model claude-cli/claude-sonnet-4-6
+quiet-core-bot agent --agent main --message "hi" --model claude-cli/claude-sonnet-4-6
 ```
 
 `main` is the default agent id when no explicit agent list is configured. If
@@ -423,7 +423,7 @@ Current bundled behavior:
 When bundle MCP is enabled, Quiet Core bot:
 
 - spawns a loopback HTTP MCP server that exposes gateway tools to the CLI process
-- authenticates the bridge with a per-session token (`OPENCLAW_MCP_TOKEN`)
+- authenticates the bridge with a per-session token (`QUIET_CORE_MCP_TOKEN`)
 - scopes tool access to the current session, account, and channel context
 - loads enabled bundle-MCP servers for the current workspace
 - merges them with any existing backend MCP config/settings shape

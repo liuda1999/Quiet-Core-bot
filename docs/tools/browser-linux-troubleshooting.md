@@ -9,7 +9,7 @@ title: "Browser troubleshooting"
 Quiet Core bot's browser control server fails to launch Chrome/Brave/Edge/Chromium with the error:
 
 ```
-{"error":"Error: Failed to start Chrome CDP on port 18800 for profile \"openclaw\"."}
+{"error":"Error: Failed to start Chrome CDP on port 18800 for profile \"quiet-core-bot\"."}
 ```
 
 ### Root cause
@@ -34,9 +34,9 @@ Other common Linux launch failures:
 - `Missing X server or $DISPLAY` means a visible browser was explicitly
   requested on a host without a desktop session. By default, local managed
   profiles now fall back to headless mode on Linux when `DISPLAY` and
-  `WAYLAND_DISPLAY` are both unset. If you set `OPENCLAW_BROWSER_HEADLESS=0`,
+  `WAYLAND_DISPLAY` are both unset. If you set `QUIET_CORE_BROWSER_HEADLESS=0`,
   `browser.headless: false`, or `browser.profiles.<name>.headless: false`,
-  remove that headed override, set `OPENCLAW_BROWSER_HEADLESS=1`, start `Xvfb`,
+  remove that headed override, set `QUIET_CORE_BROWSER_HEADLESS=1`, start `Xvfb`,
   run `quiet-core-bot browser start --headless` for a one-shot managed launch, or run
   Quiet Core bot in a real desktop session.
 
@@ -85,20 +85,20 @@ If you must use snap Chromium, configure Quiet Core bot to attach to a manually-
 ```bash
 chromium-browser --headless --no-sandbox --disable-gpu \
   --remote-debugging-port=18800 \
-  --user-data-dir=$HOME/.openclaw/browser/openclaw/user-data \
+  --user-data-dir=$HOME/.quiet-core-bot/browser/quiet-core-bot/user-data \
   about:blank &
 ```
 
 3. Optionally create a systemd user service to auto-start Chrome:
 
 ```ini
-# ~/.config/systemd/user/openclaw-browser.service
+# ~/.config/systemd/user/quiet-core-bot-browser.service
 [Unit]
 Description=Quiet Core bot Browser (Chrome CDP)
 After=network.target
 
 [Service]
-ExecStart=/snap/bin/chromium --headless --no-sandbox --disable-gpu --remote-debugging-port=18800 --user-data-dir=%h/.openclaw/browser/openclaw/user-data about:blank
+ExecStart=/snap/bin/chromium --headless --no-sandbox --disable-gpu --remote-debugging-port=18800 --user-data-dir=%h/.quiet-core-bot/browser/quiet-core-bot/user-data about:blank
 Restart=on-failure
 RestartSec=5
 
@@ -106,7 +106,7 @@ RestartSec=5
 WantedBy=default.target
 ```
 
-Enable with: `systemctl --user enable --now openclaw-browser.service`
+Enable with: `systemctl --user enable --now quiet-core-bot-browser.service`
 
 ### Verifying the Browser Works
 
@@ -130,7 +130,7 @@ curl -s http://127.0.0.1:18791/tabs
 | `browser.enabled`                | Enable browser control                                               | `true`                                                      |
 | `browser.executablePath`         | Path to a Chromium-based browser binary (Chrome/Brave/Edge/Chromium) | auto-detected (prefers default browser when Chromium-based) |
 | `browser.headless`               | Run without GUI                                                      | `false`                                                     |
-| `OPENCLAW_BROWSER_HEADLESS`      | Per-process override for local managed browser headless mode         | unset                                                       |
+| `QUIET_CORE_BROWSER_HEADLESS`      | Per-process override for local managed browser headless mode         | unset                                                       |
 | `browser.noSandbox`              | Add `--no-sandbox` flag (needed for some Linux setups)               | `false`                                                     |
 | `browser.attachOnly`             | Don't launch browser, only attach to existing                        | `false`                                                     |
 | `browser.cdpPort`                | Chrome DevTools Protocol port                                        | `18800`                                                     |
@@ -150,8 +150,8 @@ but there are no open tabs available to attach to.
 
 Fix options:
 
-1. **Use the managed browser:** `quiet-core-bot browser start --browser-profile openclaw`
-   (or set `browser.defaultProfile: "openclaw"`).
+1. **Use the managed browser:** `quiet-core-bot browser start --browser-profile quiet-core-bot`
+   (or set `browser.defaultProfile: "quiet-core-bot"`).
 2. **Use Chrome MCP:** make sure local Chrome is running with at least one open tab, then retry with `--browser-profile user`.
 
 Notes:
@@ -161,7 +161,7 @@ Notes:
   ref-driven actions, one-file upload hooks, no dialog timeout overrides, no
   `wait --load networkidle`, and no `responsebody`, PDF export, download
   interception, or batch actions.
-- Local `openclaw` profiles auto-assign `cdpPort`/`cdpUrl`; only set those for remote CDP.
+- Local `quiet-core-bot` profiles auto-assign `cdpPort`/`cdpUrl`; only set those for remote CDP.
 - Remote CDP profiles accept `http://`, `https://`, `ws://`, and `wss://`.
   Use HTTP(S) for `/json/version` discovery, or WS(S) when your browser
   service gives you a direct DevTools socket URL.

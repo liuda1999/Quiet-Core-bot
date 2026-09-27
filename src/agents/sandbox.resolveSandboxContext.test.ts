@@ -57,7 +57,7 @@ async function createSandboxFixtureDir(prefix: string): Promise<string> {
 }
 
 beforeAll(async () => {
-  sandboxFixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-sandbox-context-"));
+  sandboxFixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-sandbox-context-"));
 });
 
 afterAll(async () => {
@@ -78,7 +78,7 @@ describe("resolveSandboxContext", () => {
     const result = await resolveSandboxContext({
       config: cfg,
       sessionKey: "agent:main:main",
-      workspaceDir: "/tmp/openclaw-test",
+      workspaceDir: "/tmp/quiet-core-bot-test",
     });
 
     expect(result).toBeNull();
@@ -97,7 +97,7 @@ describe("resolveSandboxContext", () => {
     const result = await ensureSandboxWorkspaceForSession({
       config: cfg,
       sessionKey: "agent:main:main",
-      workspaceDir: "/tmp/openclaw-test",
+      workspaceDir: "/tmp/quiet-core-bot-test",
     });
 
     expect(result).toBeNull();
@@ -139,14 +139,14 @@ describe("resolveSandboxContext", () => {
         resolveSandboxContext({
           config: cfg,
           sessionKey: "agent:main:cron:job:run:uuid",
-          workspaceDir: "/tmp/openclaw-test",
+          workspaceDir: "/tmp/quiet-core-bot-test",
         }),
       ).resolves.toBeNull();
       await expect(
         resolveSandboxContext({
           config: cfg,
           sessionKey: "agent:main:subagent:child",
-          workspaceDir: "/tmp/openclaw-test",
+          workspaceDir: "/tmp/quiet-core-bot-test",
         }),
       ).resolves.toBeNull();
 
@@ -171,7 +171,7 @@ describe("resolveSandboxContext", () => {
       await resolveSandboxContext({
         config: cfg,
         sessionKey: "main",
-        workspaceDir: "/tmp/openclaw-test",
+        workspaceDir: "/tmp/quiet-core-bot-test",
       }),
     ).toBeNull();
 
@@ -179,7 +179,7 @@ describe("resolveSandboxContext", () => {
       await resolveSandboxContext({
         config: cfg,
         sessionKey: "agent:main:main",
-        workspaceDir: "/tmp/openclaw-test",
+        workspaceDir: "/tmp/quiet-core-bot-test",
       }),
     ).toBeNull();
 
@@ -187,7 +187,7 @@ describe("resolveSandboxContext", () => {
       await ensureSandboxWorkspaceForSession({
         config: cfg,
         sessionKey: "work",
-        workspaceDir: "/tmp/openclaw-test",
+        workspaceDir: "/tmp/quiet-core-bot-test",
       }),
     ).toBeNull();
 
@@ -195,7 +195,7 @@ describe("resolveSandboxContext", () => {
       await ensureSandboxWorkspaceForSession({
         config: cfg,
         sessionKey: "agent:main:main",
-        workspaceDir: "/tmp/openclaw-test",
+        workspaceDir: "/tmp/quiet-core-bot-test",
       }),
     ).toBeNull();
   }, 15_000);
@@ -238,7 +238,7 @@ describe("resolveSandboxContext", () => {
       const result = await resolveSandboxContext({
         config: cfg,
         sessionKey: "agent:worker:task",
-        workspaceDir: "/tmp/openclaw-test",
+        workspaceDir: "/tmp/quiet-core-bot-test",
       });
 
       expect(result?.backendId).toBe("test-backend");
@@ -249,7 +249,7 @@ describe("resolveSandboxContext", () => {
       const workspace = await ensureSandboxWorkspaceForSession({
         config: cfg,
         sessionKey: "agent:worker:task",
-        workspaceDir: "/tmp/openclaw-test",
+        workspaceDir: "/tmp/quiet-core-bot-test",
       });
       expect(workspace?.containerWorkdir).toBe("/runtime/workspace");
     } finally {
@@ -298,7 +298,7 @@ describe("resolveSandboxContext", () => {
       await resolveSandboxContext({
         config: cfg,
         sessionKey: "agent:worker:browser",
-        workspaceDir: "/tmp/openclaw-test",
+        workspaceDir: "/tmp/quiet-core-bot-test",
       });
 
       const browserCalls = ensureSandboxBrowserMock.mock.calls as unknown as Array<
@@ -363,7 +363,7 @@ describe("resolveSandboxContext", () => {
     const workspaceDir = await createSandboxFixtureDir("workspace");
     const userOwnedSandboxSkillsDir = path.join(
       workspaceDir,
-      ".openclaw",
+      ".quiet-core-bot",
       "sandbox-skills",
       "skills",
       "user-owned",
@@ -378,7 +378,7 @@ describe("resolveSandboxContext", () => {
             mode: "all",
             scope: "session",
             workspaceAccess: "rw",
-            workspaceRoot: path.join(workspaceDir, ".openclaw", "sandboxes"),
+            workspaceRoot: path.join(workspaceDir, ".quiet-core-bot", "sandboxes"),
           },
         },
       },
@@ -405,15 +405,15 @@ describe("resolveSandboxContext", () => {
     const [syncOptions] = syncCalls[0] ?? [];
     expect(syncOptions?.sourceWorkspaceDir).toBe(workspaceDir);
     expect(syncOptions?.targetWorkspaceDir).toContain(
-      path.join(".openclaw", "sandbox", "skills-workspaces"),
+      path.join(".quiet-core-bot", "sandbox", "skills-workspaces"),
     );
     expect(syncOptions?.targetWorkspaceDir).toMatch(
-      /[\\/]agent-main-main-[a-f0-9]{8}[\\/]\.openclaw[\\/]sandbox-skills$/,
+      /[\\/]agent-main-main-[a-f0-9]{8}[\\/]\.quiet-core-bot[\\/]sandbox-skills$/,
     );
     expect(syncOptions?.targetWorkspaceDir).not.toBe(
-      path.join(workspaceDir, ".openclaw", "sandbox-skills"),
+      path.join(workspaceDir, ".quiet-core-bot", "sandbox-skills"),
     );
-    expect(syncOptions?.targetWorkspaceDir?.startsWith(path.join(workspaceDir, ".openclaw"))).toBe(
+    expect(syncOptions?.targetWorkspaceDir?.startsWith(path.join(workspaceDir, ".quiet-core-bot"))).toBe(
       false,
     );
     expect(syncOptions?.config).toBe(cfg);
@@ -440,7 +440,7 @@ describe("resolveSandboxContext", () => {
             workspaceAccess: "rw",
             ssh: {
               target: "ssh.example.test",
-              workspaceRoot: "/remote/openclaw",
+              workspaceRoot: "/remote/quiet-core-bot",
             },
           },
         },
@@ -455,11 +455,11 @@ describe("resolveSandboxContext", () => {
 
     expect(result?.workspaceDir).toBe(workspaceDir);
     expect(result?.containerWorkdir).toMatch(
-      /^\/remote\/openclaw\/openclaw-ssh-agent-main-main-[a-f0-9]{8}\/workspace$/,
+      /^\/remote\/quiet-core-bot\/quiet-core-bot-ssh-agent-main-main-[a-f0-9]{8}\/workspace$/,
     );
     expect(result?.containerWorkdir).not.toBe("/workspace");
     expect(result?.skillsWorkspaceDir).toContain(
-      path.join(".openclaw", "sandbox", "skills-workspaces"),
+      path.join(".quiet-core-bot", "sandbox", "skills-workspaces"),
     );
   }, 15_000);
 
@@ -468,7 +468,7 @@ describe("resolveSandboxContext", () => {
     const workspaceDir = await createSandboxFixtureDir("shared-workspace");
     const userOwnedSandboxSkillsDir = path.join(
       workspaceDir,
-      ".openclaw",
+      ".quiet-core-bot",
       "sandbox-skills",
       "skills",
       "user-owned",
@@ -507,13 +507,13 @@ describe("resolveSandboxContext", () => {
     const [syncOptions] = syncCalls[0] ?? [];
     expect(syncOptions?.sourceWorkspaceDir).toBe(workspaceDir);
     expect(syncOptions?.targetWorkspaceDir).toContain(
-      path.join(".openclaw", "sandbox", "skills-workspaces"),
+      path.join(".quiet-core-bot", "sandbox", "skills-workspaces"),
     );
     expect(syncOptions?.targetWorkspaceDir).toMatch(
-      /[\\/]shared-[a-f0-9]{8}[\\/]\.openclaw[\\/]sandbox-skills$/,
+      /[\\/]shared-[a-f0-9]{8}[\\/]\.quiet-core-bot[\\/]sandbox-skills$/,
     );
     expect(syncOptions?.targetWorkspaceDir).not.toBe(
-      path.join(workspaceDir, ".openclaw", "sandbox-skills"),
+      path.join(workspaceDir, ".quiet-core-bot", "sandbox-skills"),
     );
     await expect(
       fs.readFile(path.join(userOwnedSandboxSkillsDir, "SKILL.md"), "utf8"),

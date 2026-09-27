@@ -34,7 +34,7 @@ function requireFinding(
 }
 
 describe("security audit exec surface findings", () => {
-  // Redirect the Quiet Core bot home (OPENCLAW_HOME wins over HOME/USERPROFILE in
+  // Redirect the Quiet Core bot home (QUIET_CORE_HOME wins over HOME/USERPROFILE in
   // `resolveRawHomeDir`) to a per-test tempdir so `saveExecApprovals` never
   // touches the real `~/.quiet-core-bot/exec-approvals.json` on the host running
   // the suite.
@@ -43,17 +43,17 @@ describe("security audit exec surface findings", () => {
   let tempCaseIndex = 0;
 
   beforeAll(async () => {
-    tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-exec-approvals-"));
+    tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-exec-approvals-"));
   });
 
   beforeEach(async () => {
-    envSnapshot = captureEnv(["OPENCLAW_HOME", "HOME", "USERPROFILE"]);
+    envSnapshot = captureEnv(["QUIET_CORE_HOME", "HOME", "USERPROFILE"]);
     const tempDir = path.join(tempRoot, `case-${++tempCaseIndex}`);
-    await fs.mkdir(path.join(tempDir, ".openclaw"), { recursive: true });
-    // OPENCLAW_HOME takes precedence over HOME/USERPROFILE in resolveRawHomeDir,
+    await fs.mkdir(path.join(tempDir, ".quiet-core-bot"), { recursive: true });
+    // QUIET_CORE_HOME takes precedence over HOME/USERPROFILE in resolveRawHomeDir,
     // so all three must point at the tempdir to neutralize whichever the host
     // happens to have set.
-    process.env.OPENCLAW_HOME = tempDir;
+    process.env.QUIET_CORE_HOME = tempDir;
     process.env.HOME = tempDir;
     // Windows uses USERPROFILE for os.homedir()
     process.env.USERPROFILE = tempDir;

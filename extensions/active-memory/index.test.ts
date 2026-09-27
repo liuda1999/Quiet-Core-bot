@@ -2,12 +2,12 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
-import type { OpenKeyedStoreOptions } from "openclaw/plugin-sdk/plugin-state-runtime";
+import type { OpenClawPluginApi } from "quiet-core-bot/plugin-sdk/plugin-entry";
+import type { OpenKeyedStoreOptions } from "quiet-core-bot/plugin-sdk/plugin-state-runtime";
 import {
   createPluginStateKeyedStoreForTests,
   resetPluginStateStoreForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
+} from "quiet-core-bot/plugin-sdk/plugin-state-test-runtime";
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import plugin, { testing } from "./index.js";
 
@@ -46,13 +46,13 @@ const hoisted = vi.hoisted(() => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/memory-host-search", () => ({
+vi.mock("quiet-core-bot/plugin-sdk/memory-host-search", () => ({
   closeActiveMemorySearchManager: hoisted.closeActiveMemorySearchManager,
 }));
 
-vi.mock("openclaw/plugin-sdk/session-store-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/session-store-runtime")>(
-    "openclaw/plugin-sdk/session-store-runtime",
+vi.mock("quiet-core-bot/plugin-sdk/session-store-runtime", async () => {
+  const actual = await vi.importActual<typeof import("quiet-core-bot/plugin-sdk/session-store-runtime")>(
+    "quiet-core-bot/plugin-sdk/session-store-runtime",
   );
   return {
     ...actual,
@@ -119,7 +119,7 @@ describe("active-memory plugin", () => {
       agent: {
         runEmbeddedAgent,
         session: {
-          resolveStorePath: vi.fn(() => "/tmp/openclaw-session-store.json"),
+          resolveStorePath: vi.fn(() => "/tmp/quiet-core-bot-session-store.json"),
           loadSessionStore: vi.fn(() => hoisted.sessionStore),
           saveSessionStore: vi.fn(async () => {}),
           getSessionEntry: vi.fn(
@@ -139,7 +139,7 @@ describe("active-memory plugin", () => {
             }) => {
               let result: Record<string, unknown> | null = null;
               await hoisted.updateSessionStore(
-                "/tmp/openclaw-session-store.json",
+                "/tmp/quiet-core-bot-session-store.json",
                 (store: Record<string, Record<string, unknown>>) => {
                   const existing = store[params.sessionKey] ?? params.fallbackEntry;
                   if (!existing) {
@@ -165,7 +165,7 @@ describe("active-memory plugin", () => {
         openKeyedStore: (options: OpenKeyedStoreOptions) =>
           createPluginStateKeyedStoreForTests("active-memory", {
             ...options,
-            env: { ...process.env, OPENCLAW_STATE_DIR: stateDir },
+            env: { ...process.env, QUIET_CORE_STATE_DIR: stateDir },
           }),
       },
       config: {
@@ -342,7 +342,7 @@ describe("active-memory plugin", () => {
     vi.clearAllMocks();
     resetPluginStateStoreForTests();
     runEmbeddedAgent.mockReset();
-    stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-active-memory-test-"));
+    stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-active-memory-test-"));
     configFile = {
       plugins: {
         entries: {
@@ -5372,7 +5372,7 @@ describe("active-memory plugin", () => {
 
     expect(mkdtempSpy).toHaveBeenCalled();
     const sessionFile = lastEmbeddedSessionFile();
-    expect(sessionFile).toMatch(/openclaw-active-memory-.*\/session\.jsonl$/);
+    expect(sessionFile).toMatch(/quiet-core-bot-active-memory-.*\/session\.jsonl$/);
     expect(rmSpy).toHaveBeenCalledWith(path.dirname(sessionFile), {
       recursive: true,
       force: true,

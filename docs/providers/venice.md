@@ -44,7 +44,7 @@ Anonymized models are **not** fully private. Venice strips metadata before forwa
 <Steps>
   <Step title="Install the plugin">
     ```bash
-    quiet-core-bot plugins install @openclaw/venice-provider
+    quiet-core-bot plugins install @quiet-core/venice-provider
     ```
   </Step>
   <Step title="Get your API key">
@@ -84,7 +84,7 @@ Anonymized models are **not** fully private. Venice strips metadata before forwa
   </Step>
   <Step title="Verify setup">
     ```bash
-    openclaw agent --model venice/kimi-k2-5 --message "Hello, are you working?"
+    quiet-core-bot agent --model venice/kimi-k2-5 --message "Hello, are you working?"
     ```
   </Step>
 </Steps>
@@ -224,19 +224,19 @@ Venice uses a credit-based system. Check [venice.ai/pricing](https://venice.ai/p
 
 ```bash
 # Use the default private model
-openclaw agent --model venice/kimi-k2-5 --message "Quick health check"
+quiet-core-bot agent --model venice/kimi-k2-5 --message "Quick health check"
 
 # Use Claude Opus via Venice (anonymized)
-openclaw agent --model venice/claude-opus-4-6 --message "Summarize this task"
+quiet-core-bot agent --model venice/claude-opus-4-6 --message "Summarize this task"
 
 # Use uncensored model
-openclaw agent --model venice/venice-uncensored --message "Draft options"
+quiet-core-bot agent --model venice/venice-uncensored --message "Draft options"
 
 # Use vision model with image
-openclaw agent --model venice/qwen3-vl-235b-a22b --message "Review attached image"
+quiet-core-bot agent --model venice/qwen3-vl-235b-a22b --message "Review attached image"
 
 # Use coding model
-openclaw agent --model venice/qwen3-coder-480b-a35b-instruct --message "Refactor this function"
+quiet-core-bot agent --model venice/qwen3-coder-480b-a35b-instruct --message "Refactor this function"
 ```
 
 ## Troubleshooting

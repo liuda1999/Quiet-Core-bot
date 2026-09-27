@@ -215,7 +215,7 @@ diagnostics.
 Ready-card worker starts can happen from:
 
 - the dashboard dispatch action
-- `openclaw workboard dispatch`
+- `quiet-core-bot workboard dispatch`
 - `/workboard dispatch` on a command-capable channel
 
 All three entry points use the Gateway subagent runtime when the Gateway is
@@ -236,13 +236,13 @@ Workboard tools.
 The plugin registers a root CLI command:
 
 ```bash
-openclaw workboard list
-openclaw workboard create "Fix stale card lifecycle" --priority high --labels bug,workboard
-openclaw workboard show <card-id>
-openclaw workboard dispatch
+quiet-core-bot workboard list
+quiet-core-bot workboard create "Fix stale card lifecycle" --priority high --labels bug,workboard
+quiet-core-bot workboard show <card-id>
+quiet-core-bot workboard dispatch
 ```
 
-`openclaw workboard dispatch` calls the running Gateway so worker starts use the
+`quiet-core-bot workboard dispatch` calls the running Gateway so worker starts use the
 same subagent runtime as the dashboard. If the Gateway is unavailable, it falls
 back to data-only dispatch so dependency promotion, stale-claim cleanup, and
 timeout blocking can still run. Auth, permission, and validation failures still
@@ -382,7 +382,7 @@ run state.
 Confirm there is at least one `ready` card without an active claim:
 
 ```bash
-openclaw workboard list --status ready
+quiet-core-bot workboard list --status ready
 ```
 
 If the CLI reports data-only dispatch, start or restart the Gateway and retry.

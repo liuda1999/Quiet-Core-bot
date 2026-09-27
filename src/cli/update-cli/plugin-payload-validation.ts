@@ -14,7 +14,7 @@ export type PluginPayloadSmokeFailureReason =
   | "invalid-package-json"
   | "missing-main-entry"
   | "missing-extension-entry"
-  | "missing-openclaw-peer-link";
+  | "missing-quiet-core-bot-peer-link";
 
 export type PluginPayloadSmokeFailure = {
   pluginId: string;
@@ -112,8 +112,8 @@ export async function runPluginPayloadSmokeCheck(params: {
         failures.push({
           pluginId,
           installPath,
-          reason: "missing-openclaw-peer-link",
-          detail: `Plugin declares peerDependency "openclaw" but peer link audit failed: ${peerIssue.reason}.`,
+          reason: "missing-quiet-core-bot-peer-link",
+          detail: `Plugin declares peerDependency "quiet-core-bot" but peer link audit failed: ${peerIssue.reason}.`,
         });
       }
     }
@@ -127,7 +127,7 @@ export async function runPluginPayloadSmokeCheck(params: {
         detail: `Plugin extension entry validation failed: ${
           extensionResolution.status === "invalid"
             ? extensionResolution.error
-            : "package.json openclaw.extensions is empty"
+            : "package.json quiet-core-bot.extensions is empty"
         }`,
       });
       continue;

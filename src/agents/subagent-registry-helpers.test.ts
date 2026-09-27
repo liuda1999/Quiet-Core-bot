@@ -13,7 +13,7 @@ import {
 } from "../config/sessions/transcript-write-context.js";
 import { defaultRuntime } from "../runtime.js";
 import { readDiagnosticEvents } from "../state/diagnostic-events-store.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
 import { withEnv, withEnvAsync } from "../test-utils/env.js";
 import {
   SUBAGENT_ANNOUNCE_DROP_SCOPE,
@@ -85,7 +85,7 @@ describe("logAnnounceGiveUp", () => {
   let tempStateDir: string | null = null;
 
   beforeEach(async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-announce-giveup-"));
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-announce-giveup-"));
   });
 
   afterEach(async () => {
@@ -102,7 +102,7 @@ describe("logAnnounceGiveUp", () => {
     if (!tempStateDir) {
       throw new Error("expected temp state dir");
     }
-    return withEnv({ OPENCLAW_STATE_DIR: tempStateDir }, fn);
+    return withEnv({ QUIET_CORE_STATE_DIR: tempStateDir }, fn);
   }
 
   it("includes the last delivery error in retry-limit warnings", () => {
@@ -242,7 +242,7 @@ describe("undelivered completion fallback notice", () => {
   let tempStateDir: string | null = null;
 
   beforeEach(async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-undelivered-notice-"));
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-undelivered-notice-"));
   });
 
   afterEach(async () => {
@@ -294,7 +294,7 @@ describe("undelivered completion fallback notice", () => {
     if (!tempStateDir) {
       throw new Error("expected temp state dir");
     }
-    await withEnvAsync({ OPENCLAW_STATE_DIR: tempStateDir }, async () => {
+    await withEnvAsync({ QUIET_CORE_STATE_DIR: tempStateDir }, async () => {
       const storePath = resolveStorePath(undefined, { agentId: "main" });
       writeSessionStoreForTest(storePath, {
         "agent:main:parent": { sessionId: "parent-session", chatType: "direct" },
@@ -319,7 +319,7 @@ describe("undelivered completion fallback notice", () => {
     if (!tempStateDir) {
       throw new Error("expected temp state dir");
     }
-    await withEnvAsync({ OPENCLAW_STATE_DIR: tempStateDir }, async () => {
+    await withEnvAsync({ QUIET_CORE_STATE_DIR: tempStateDir }, async () => {
       const storePath = resolveStorePath(undefined, { agentId: "main" });
       writeSessionStoreForTest(storePath, {
         "agent:main:parent": { sessionId: "parent-session", chatType: "direct" },
@@ -337,7 +337,7 @@ describe("undelivered completion fallback notice", () => {
         .find((parsed) =>
           JSON.stringify(parsed.message ?? {}).includes("[subagent completion not delivered]"),
         );
-      expect(row?.message?.provider).toBe("openclaw");
+      expect(row?.message?.provider).toBe("quiet-core-bot");
       expect(row?.message?.model).toBe("delivery-mirror");
       expect((row?.message?.openclawDeliveryMirror as { kind?: string } | undefined)?.kind).toBe(
         "subagent-completion-undelivered",
@@ -364,7 +364,7 @@ describe("undelivered completion fallback notice", () => {
     if (!tempStateDir) {
       throw new Error("expected temp state dir");
     }
-    await withEnvAsync({ OPENCLAW_STATE_DIR: tempStateDir }, async () => {
+    await withEnvAsync({ QUIET_CORE_STATE_DIR: tempStateDir }, async () => {
       const entry = createUndeliveredEntry({ requesterSessionKey: "agent:main:missing" });
       expect(await appendUndeliveredCompletionNotice({ entry, reason: "expiry" })).toBe(false);
     });
@@ -375,7 +375,7 @@ describe("delivered completion receipt (F2/C-K2-3)", () => {
   let tempStateDir: string | null = null;
 
   beforeEach(async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-delivered-receipt-"));
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-delivered-receipt-"));
   });
 
   afterEach(async () => {
@@ -431,7 +431,7 @@ describe("delivered completion receipt (F2/C-K2-3)", () => {
     if (!tempStateDir) {
       throw new Error("expected temp state dir");
     }
-    await withEnvAsync({ OPENCLAW_STATE_DIR: tempStateDir }, async () => {
+    await withEnvAsync({ QUIET_CORE_STATE_DIR: tempStateDir }, async () => {
       const storePath = resolveStorePath(undefined, { agentId: "main" });
       writeSessionStoreForTest(storePath, {
         "agent:main:parent": { sessionId: "parent-session", chatType: "direct" },
@@ -463,7 +463,7 @@ describe("delivered completion receipt (F2/C-K2-3)", () => {
     if (!tempStateDir) {
       throw new Error("expected temp state dir");
     }
-    await withEnvAsync({ OPENCLAW_STATE_DIR: tempStateDir }, async () => {
+    await withEnvAsync({ QUIET_CORE_STATE_DIR: tempStateDir }, async () => {
       const storePath = resolveStorePath(undefined, { agentId: "main" });
       writeSessionStoreForTest(storePath, {
         "agent:main:parent": { sessionId: "parent-session", chatType: "direct" },
@@ -480,7 +480,7 @@ describe("delivered completion receipt (F2/C-K2-3)", () => {
         .find((parsed) =>
           JSON.stringify(parsed.message ?? {}).includes("[subagent completion delivered]"),
         );
-      expect(row?.message?.provider).toBe("openclaw");
+      expect(row?.message?.provider).toBe("quiet-core-bot");
       expect(row?.message?.model).toBe("delivery-mirror");
       expect((row?.message?.openclawDeliveryMirror as { kind?: string } | undefined)?.kind).toBe(
         "subagent-completion-delivered",
@@ -500,7 +500,7 @@ describe("delivered completion receipt (F2/C-K2-3)", () => {
     if (!tempStateDir) {
       throw new Error("expected temp state dir");
     }
-    await withEnvAsync({ OPENCLAW_STATE_DIR: tempStateDir }, async () => {
+    await withEnvAsync({ QUIET_CORE_STATE_DIR: tempStateDir }, async () => {
       const storePath = resolveStorePath(undefined, { agentId: "main" });
       writeSessionStoreForTest(storePath, {});
       const logSpy = vi.spyOn(defaultRuntime, "log").mockImplementation(() => {});
@@ -531,7 +531,7 @@ describe("delivered completion receipt (F2/C-K2-3)", () => {
     if (!tempStateDir) {
       throw new Error("expected temp state dir");
     }
-    await withEnvAsync({ OPENCLAW_STATE_DIR: tempStateDir }, async () => {
+    await withEnvAsync({ QUIET_CORE_STATE_DIR: tempStateDir }, async () => {
       const storePath = resolveStorePath(undefined, { agentId: "main" });
       writeSessionStoreForTest(storePath, {
         "agent:main:parent": { sessionId: "parent-session", chatType: "direct" },
@@ -562,7 +562,7 @@ describe("delivered completion receipt (F2/C-K2-3)", () => {
   });
 
   it("detaches transcript writes from an inherited owned write context", async () => {
-    const sessionFile = path.join(os.tmpdir(), "openclaw-detach-probe.jsonl");
+    const sessionFile = path.join(os.tmpdir(), "quiet-core-bot-detach-probe.jsonl");
     const observed: boolean[] = [];
 
     await withOwnedSessionTranscriptWrites(

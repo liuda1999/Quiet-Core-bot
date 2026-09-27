@@ -181,7 +181,7 @@ use local `infer model run` with a full Ollama model ref:
 
 ```bash
 OLLAMA_API_KEY=ollama-local \
-  openclaw infer model run \
+  quiet-core-bot infer model run \
     --local \
     --model ollama/llama3.2:latest \
     --prompt "Reply with exactly: pong" \
@@ -200,7 +200,7 @@ session context:
 
 ```bash
 OLLAMA_API_KEY=ollama-local \
-  openclaw infer model run \
+  quiet-core-bot infer model run \
     --local \
     --model ollama/qwen2.5vl:7b \
     --prompt "Describe this image in one sentence." \
@@ -210,7 +210,7 @@ OLLAMA_API_KEY=ollama-local \
 
 `model run --file` accepts files detected as `image/*`, including common PNG,
 JPEG, and WebP inputs. Non-image files are rejected before Ollama is called.
-For speech recognition, use `openclaw infer audio transcribe` instead.
+For speech recognition, use `quiet-core-bot infer audio transcribe` instead.
 
 When you switch a conversation with `/model ollama/<model>`, Quiet Core bot treats
 that as an exact user selection. If the configured Ollama `baseUrl` is
@@ -228,7 +228,7 @@ Live-verify the local text path, native stream path, and embeddings against
 local Ollama with:
 
 ```bash
-OPENCLAW_LIVE_TEST=1 OPENCLAW_LIVE_OLLAMA=1 OPENCLAW_LIVE_OLLAMA_WEB_SEARCH=0 \
+QUIET_CORE_LIVE_TEST=1 QUIET_CORE_LIVE_OLLAMA=1 QUIET_CORE_LIVE_OLLAMA_WEB_SEARCH=0 \
   pnpm test:live -- extensions/ollama/ollama.live.test.ts
 ```
 
@@ -258,13 +258,13 @@ export OLLAMA_API_KEY="ollama-local"
 Then verify with the infer CLI:
 
 ```bash
-openclaw infer image describe \
+quiet-core-bot infer image describe \
   --file ./photo.jpg \
   --model ollama/qwen2.5vl:7b \
   --json
 ```
 
-`--model` must be a full `<provider/model>` ref. When it is set, `openclaw infer image describe` runs that model directly instead of skipping description because the model supports native vision.
+`--model` must be a full `<provider/model>` ref. When it is set, `quiet-core-bot infer image describe` runs that model directly instead of skipping description because the model supports native vision.
 
 Use `infer image describe` when you want Quiet Core bot's image-understanding provider flow, configured `agents.defaults.imageModel`, and image-description output shape. Use `infer model run --file` when you want a raw multimodal model probe with a custom prompt and one or more images.
 
@@ -318,7 +318,7 @@ This timeout applies to inbound image understanding and to the explicit `image` 
 Live-verify the explicit image tool against local Ollama with:
 
 ```bash
-OPENCLAW_LIVE_TEST=1 OPENCLAW_LIVE_OLLAMA_IMAGE=1 \
+QUIET_CORE_LIVE_TEST=1 QUIET_CORE_LIVE_OLLAMA_IMAGE=1 \
   pnpm test:live -- src/agents/tools/image-tool.ollama.live.test.ts
 ```
 
@@ -666,7 +666,7 @@ quiet-core-bot models list --provider ollama
 quiet-core-bot models status
 
 # Direct model smoke
-openclaw infer model run \
+quiet-core-bot infer model run \
   --model ollama/gemma4 \
   --prompt "Reply with exactly: ok"
 ```
@@ -813,8 +813,8 @@ For the full setup and behavior details, see [Ollama Web Search](/tools/ollama-s
     For native Ollama models, Quiet Core bot forwards thinking control as Ollama expects it: top-level `think`, not `options.think`. Auto-discovered models whose `/api/show` response includes the `thinking` capability expose `/think low`, `/think medium`, `/think high`, and `/think max`; non-thinking models expose only `/think off`.
 
     ```bash
-    openclaw agent --model ollama/gemma4 --thinking off
-    openclaw agent --model ollama/gemma4 --thinking low
+    quiet-core-bot agent --model ollama/gemma4 --thinking off
+    quiet-core-bot agent --model ollama/gemma4 --thinking low
     ```
 
     You can also set a model default:
@@ -921,7 +921,7 @@ For the full setup and behavior details, see [Ollama Web Search](/tools/ollama-s
   <Accordion title="Streaming configuration">
     Quiet Core bot's Ollama integration uses the **native Ollama API** (`/api/chat`) by default, which fully supports streaming and tool calling simultaneously. No special configuration is needed.
 
-    For native `/api/chat` requests, Quiet Core bot also forwards thinking control directly to Ollama: `/think off` and `openclaw agent --thinking off` send top-level `think: false` unless an explicit model `params.think`/`params.thinking` value is configured, while `/think low|medium|high` send the matching top-level `think` effort string. `/think max` maps to Ollama's highest native effort, `think: "high"`.
+    For native `/api/chat` requests, Quiet Core bot also forwards thinking control directly to Ollama: `/think off` and `quiet-core-bot agent --thinking off` send top-level `think: false` unless an explicit model `params.think`/`params.thinking` value is configured, while `/think low|medium|high` send the matching top-level `think` effort string. `/think max` maps to Ollama's highest native effort, `think: "high"`.
 
     <Tip>
     If you need to use the OpenAI-compatible endpoint, see the "Legacy OpenAI-compatible mode" section above. Streaming and tool calling may not work simultaneously in that mode.
@@ -1053,7 +1053,7 @@ For the full setup and behavior details, see [Ollama Web Search](/tools/ollama-s
     If it happens repeatedly, capture the raw model name and the current session file, then try a fresh session and a fallback model:
 
     ```bash
-    openclaw infer model run --model ollama/kimi-k2.5:cloud --prompt "Reply with exactly: ok" --json
+    quiet-core-bot infer model run --model ollama/kimi-k2.5:cloud --prompt "Reply with exactly: ok" --json
     quiet-core-bot models set ollama/gemma4
     ```
 

@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { pathExists } from "../infra/fs-safe.js";
-import { CORE_PACKAGE_NAMES } from "../infra/openclaw-root.js";
+import { CORE_PACKAGE_NAMES } from "../infra/quiet-core-bot-root.js";
 import { readPackageName, readPackageVersion } from "../infra/package-json.js";
 import type { GatewayServiceCommandConfig } from "./service-types.js";
 

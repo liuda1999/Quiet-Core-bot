@@ -39,7 +39,7 @@ describe("legacy config detection", () => {
         list: [
           {
             id: "work",
-            workspace: "~/openclaw-work",
+            workspace: "~/quiet-core-bot-work",
             tools: {
               elevated: {
                 enabled: false,

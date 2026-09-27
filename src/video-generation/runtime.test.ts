@@ -444,7 +444,7 @@ describe("video-generation runtime", () => {
         },
         async generateVideo(req) {
           seenSupportedDurationHint = (req as Record<symbol, readonly number[] | undefined>)[
-            Symbol.for("openclaw.videoGeneration.supportedDurations")
+            Symbol.for("quiet-core-bot.videoGeneration.supportedDurations")
           ];
           seenRequest = {
             durationSeconds: req.durationSeconds,

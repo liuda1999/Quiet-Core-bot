@@ -10,7 +10,7 @@ read_when:
 Quiet Core bot projects are not toy demos. People are shipping PR review loops, mobile apps, home automation, voice systems, devtools, and memory-heavy workflows from the channels they already use — chat-native builds on Telegram, WhatsApp, Discord, and terminals; real automation for booking, shopping, and support without waiting for an API; and physical-world integrations with printers, vacuums, cameras, and home systems.
 
 <Info>
-**Want to be featured?** Share your project in [#self-promotion on Discord](https://discord.gg/clawd) or [tag @openclaw on X](https://x.com/openclaw).
+**Want to be featured?** Share your project in [#self-promotion on Discord](https://discord.gg/clawd) or [tag @quiet-core-bot on X](https://x.com/quiet-core-bot).
 </Info>
 
 ## Fresh from Discord
@@ -30,7 +30,7 @@ OpenCode finishes the change, opens a PR, Quiet Core bot reviews the diff and re
 <Card title="Wine Cellar Skill in Minutes" icon="wine-glass" href="https://x.com/i/status/2010916352454791216">
   **@prades_maxime** • `skills` `local` `csv`
 
-Asked "Robby" (@openclaw) for a local wine cellar skill. It requests a sample CSV export and a store path, then builds and tests the skill (962 bottles in the example).
+Asked "Robby" (@quiet-core-bot) for a local wine cellar skill. It requests a sample CSV export and a store path, then builds and tests the skill (962 bottles in the example).
 
   <img src="/assets/showcase/wine-cellar-skill.jpg" alt="Quiet Core bot building a local wine cellar skill from CSV" />
 </Card>
@@ -283,13 +283,13 @@ Packaging, deployment, and integrations that make Quiet Core bot easier to run a
 
 <CardGroup cols={2}>
 
-<Card title="Home Assistant add-on" icon="home" href="https://github.com/ngutman/openclaw-ha-addon">
+<Card title="Home Assistant add-on" icon="home" href="https://github.com/ngutman/quiet-core-bot-ha-addon">
   **@ngutman** • `homeassistant` `docker` `raspberry-pi`
 
 Quiet Core bot gateway running on Home Assistant OS with SSH tunnel support and persistent state.
 </Card>
 
-<Card title="Home Assistant skill" icon="toggle-on" href="https://clawhub.ai/homeofe/skills/openclaw-homeassistant">
+<Card title="Home Assistant skill" icon="toggle-on" href="https://clawhub.ai/homeofe/skills/quiet-core-bot-homeassistant">
   **@homeofe** • `homeassistant` `skill` `automation`
 
 Control and automate Home Assistant devices via natural language.
@@ -298,7 +298,7 @@ Control and automate Home Assistant devices via natural language.
 </Card>
 
 <Card title="Nix packaging" icon="snowflake" href="https://github.com/openclaw/nix-openclaw">
-  **@openclaw** • `nix` `packaging` `deployment`
+  **@quiet-core-bot** • `nix` `packaging` `deployment`
 
 Batteries-included nixified Quiet Core bot configuration for reproducible deployments.
 </Card>
@@ -355,7 +355,7 @@ Full astronomy gear marketplace. Built with and around the Quiet Core bot ecosys
 
 <Steps>
   <Step title="Share it">
-    Post in [#self-promotion on Discord](https://discord.gg/clawd) or [tweet @openclaw](https://x.com/openclaw).
+    Post in [#self-promotion on Discord](https://discord.gg/clawd) or [tweet @quiet-core-bot](https://x.com/quiet-core-bot).
   </Step>
   <Step title="Include details">
     Tell us what it does, link to the repo or demo, and share a screenshot if you have one.
@@ -368,4 +368,4 @@ Full astronomy gear marketplace. Built with and around the Quiet Core bot ecosys
 ## Related
 
 - [Getting started](/start/getting-started)
-- [Quiet Core bot](/start/openclaw)
+- [Quiet Core bot](/start/quiet-core-bot)

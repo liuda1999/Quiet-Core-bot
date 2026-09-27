@@ -260,8 +260,8 @@ describe("maybeRepairSandboxRegistryFiles", () => {
     inspectLegacySandboxRegistryFiles.mockResolvedValue([
       {
         kind: "containers",
-        registryPath: "/tmp/openclaw/sandbox/containers.json",
-        shardedDir: "/tmp/openclaw/sandbox/containers",
+        registryPath: "/tmp/quiet-core-bot/sandbox/containers.json",
+        shardedDir: "/tmp/quiet-core-bot/sandbox/containers",
         source: "monolithic",
         exists: true,
         valid: true,
@@ -275,7 +275,7 @@ describe("maybeRepairSandboxRegistryFiles", () => {
     expect(note).toHaveBeenCalledWith(
       [
         "Legacy sandbox registry files detected.",
-        "- containers monolithic: /tmp/openclaw/sandbox/containers.json (2 entries)",
+        "- containers monolithic: /tmp/quiet-core-bot/sandbox/containers.json (2 entries)",
         "Run quiet-core-bot doctor --fix to migrate them to SQLite.",
       ].join("\n"),
       "Sandbox",
@@ -286,8 +286,8 @@ describe("maybeRepairSandboxRegistryFiles", () => {
     inspectLegacySandboxRegistryFiles.mockResolvedValue([
       {
         kind: "containers",
-        registryPath: "/tmp/openclaw/sandbox/containers.json",
-        shardedDir: "/tmp/openclaw/sandbox/containers",
+        registryPath: "/tmp/quiet-core-bot/sandbox/containers.json",
+        shardedDir: "/tmp/quiet-core-bot/sandbox/containers",
         source: "monolithic",
         exists: true,
         valid: true,
@@ -297,8 +297,8 @@ describe("maybeRepairSandboxRegistryFiles", () => {
     migrateLegacySandboxRegistryFiles.mockResolvedValue([
       {
         kind: "containers",
-        registryPath: "/tmp/openclaw/sandbox/containers.json",
-        shardedDir: "/tmp/openclaw/sandbox/containers",
+        registryPath: "/tmp/quiet-core-bot/sandbox/containers.json",
+        shardedDir: "/tmp/quiet-core-bot/sandbox/containers",
         status: "migrated",
         entries: 2,
       },
@@ -319,8 +319,8 @@ describe("maybeRepairSandboxRegistryFiles", () => {
   it("maps legacy registry files to structured findings and dry-run effects", () => {
     const monolithicFile = {
       kind: "containers",
-      registryPath: "/tmp/openclaw/sandbox/containers.json",
-      shardedDir: "/tmp/openclaw/sandbox/containers",
+      registryPath: "/tmp/quiet-core-bot/sandbox/containers.json",
+      shardedDir: "/tmp/quiet-core-bot/sandbox/containers",
       source: "monolithic",
       exists: true,
       valid: true,
@@ -335,27 +335,27 @@ describe("maybeRepairSandboxRegistryFiles", () => {
       expect.objectContaining({
         checkId: "core/doctor/sandbox/registry-files",
         severity: "warning",
-        path: "/tmp/openclaw/sandbox/containers.json",
+        path: "/tmp/quiet-core-bot/sandbox/containers.json",
         fixHint: expect.stringContaining("quiet-core-bot doctor --fix"),
       }),
     );
     expect(legacySandboxRegistryInspectionToRepairEffect(monolithicFile)).toEqual({
       kind: "state",
       action: "would-migrate-legacy-sandbox-registry",
-      target: "/tmp/openclaw/sandbox/containers.json",
+      target: "/tmp/quiet-core-bot/sandbox/containers.json",
       dryRunSafe: false,
     });
     expect(legacySandboxRegistryInspectionToHealthFinding(shardedFile)).toEqual(
       expect.objectContaining({
-        path: "/tmp/openclaw/sandbox/containers",
+        path: "/tmp/quiet-core-bot/sandbox/containers",
         message: expect.stringContaining(
-          "- containers sharded: /tmp/openclaw/sandbox/containers (2 entries)",
+          "- containers sharded: /tmp/quiet-core-bot/sandbox/containers (2 entries)",
         ),
       }),
     );
     expect(legacySandboxRegistryInspectionToRepairEffect(shardedFile)).toEqual(
       expect.objectContaining({
-        target: "/tmp/openclaw/sandbox/containers",
+        target: "/tmp/quiet-core-bot/sandbox/containers",
       }),
     );
   });
@@ -364,8 +364,8 @@ describe("maybeRepairSandboxRegistryFiles", () => {
     expect(
       legacySandboxRegistryInspectionToRepairEffect({
         kind: "browsers",
-        registryPath: "/tmp/openclaw/sandbox/browsers.json",
-        shardedDir: "/tmp/openclaw/sandbox/browsers",
+        registryPath: "/tmp/quiet-core-bot/sandbox/browsers.json",
+        shardedDir: "/tmp/quiet-core-bot/sandbox/browsers",
         source: "monolithic",
         exists: true,
         valid: false,
@@ -374,7 +374,7 @@ describe("maybeRepairSandboxRegistryFiles", () => {
     ).toEqual(
       expect.objectContaining({
         action: "would-quarantine-legacy-sandbox-registry",
-        target: "/tmp/openclaw/sandbox/browsers.json",
+        target: "/tmp/quiet-core-bot/sandbox/browsers.json",
       }),
     );
   });
@@ -383,8 +383,8 @@ describe("maybeRepairSandboxRegistryFiles", () => {
     expect(
       legacySandboxRegistryInspectionToRepairEffect({
         kind: "containers",
-        registryPath: "/tmp/openclaw/sandbox/containers.json",
-        shardedDir: "/tmp/openclaw/sandbox/containers",
+        registryPath: "/tmp/quiet-core-bot/sandbox/containers.json",
+        shardedDir: "/tmp/quiet-core-bot/sandbox/containers",
         source: "monolithic",
         exists: true,
         valid: true,
@@ -393,7 +393,7 @@ describe("maybeRepairSandboxRegistryFiles", () => {
     ).toEqual(
       expect.objectContaining({
         action: "would-remove-empty-legacy-sandbox-registry",
-        target: "/tmp/openclaw/sandbox/containers.json",
+        target: "/tmp/quiet-core-bot/sandbox/containers.json",
       }),
     );
   });

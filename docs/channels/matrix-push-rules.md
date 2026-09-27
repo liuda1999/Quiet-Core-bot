@@ -68,7 +68,7 @@ If no pushers come back, fix normal Matrix push delivery for this account before
 
 ```bash
 curl -sS -X PUT \
-  "https://matrix.example.org/_matrix/client/v3/pushrules/global/override/openclaw-finalized-preview-botname" \
+  "https://matrix.example.org/_matrix/client/v3/pushrules/global/override/quiet-core-bot-finalized-preview-botname" \
   -H "Authorization: Bearer $USER_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   --data '{
@@ -81,7 +81,7 @@ curl -sS -X PUT \
       },
       {
         "kind": "event_property_is",
-        "key": "content.com\\.openclaw\\.finalized_preview",
+        "key": "content.com\\.quiet-core-bot\\.finalized_preview",
         "value": true
       },
       { "kind": "event_match", "key": "sender", "pattern": "@bot:example.org" }
@@ -98,7 +98,7 @@ curl -sS -X PUT \
 
     - `https://matrix.example.org`: your homeserver base URL
     - `$USER_ACCESS_TOKEN`: the recipient user's access token
-    - `openclaw-finalized-preview-botname`: a rule ID unique per bot per recipient (pattern: `openclaw-finalized-preview-<botname>`)
+    - `quiet-core-bot-finalized-preview-botname`: a rule ID unique per bot per recipient (pattern: `quiet-core-bot-finalized-preview-<botname>`)
     - `@bot:example.org`: your Quiet Core bot bot MXID, not the recipient's
 
   </Step>
@@ -108,7 +108,7 @@ curl -sS -X PUT \
 ```bash
 curl -sS \
   -H "Authorization: Bearer $USER_ACCESS_TOKEN" \
-  "https://matrix.example.org/_matrix/client/v3/pushrules/global/override/openclaw-finalized-preview-botname"
+  "https://matrix.example.org/_matrix/client/v3/pushrules/global/override/quiet-core-bot-finalized-preview-botname"
 ```
 
 Then test a streamed reply. In quiet mode the room shows a quiet draft preview and notifies once the block or turn finishes.

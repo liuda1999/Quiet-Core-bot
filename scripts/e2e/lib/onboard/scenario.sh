@@ -2,37 +2,37 @@
 set -euo pipefail
 trap "" PIPE
 export TERM=xterm-256color
-source scripts/lib/openclaw-e2e-instance.sh
-OPENCLAW_ONBOARD_SCENARIO_SOURCE_ONLY="${OPENCLAW_ONBOARD_SCENARIO_SOURCE_ONLY:-0}"
-if [ "$OPENCLAW_ONBOARD_SCENARIO_SOURCE_ONLY" != "1" ]; then
-  openclaw_e2e_eval_test_state_from_b64 "${OPENCLAW_TEST_STATE_FUNCTION_B64:?missing OPENCLAW_TEST_STATE_FUNCTION_B64}"
+source scripts/lib/quiet-core-bot-e2e-instance.sh
+QUIET_CORE_ONBOARD_SCENARIO_SOURCE_ONLY="${QUIET_CORE_ONBOARD_SCENARIO_SOURCE_ONLY:-0}"
+if [ "$QUIET_CORE_ONBOARD_SCENARIO_SOURCE_ONLY" != "1" ]; then
+  quiet_core_bot_e2e_eval_test_state_from_b64 "${QUIET_CORE_TEST_STATE_FUNCTION_B64:?missing QUIET_CORE_TEST_STATE_FUNCTION_B64}"
 fi
 ONBOARD_FLAGS="${ONBOARD_FLAGS:---flow quickstart --auth-choice skip --skip-channels --skip-skills --skip-daemon --skip-ui}"
-if [ -z "${OPENCLAW_ENTRY:-}" ] && [ "$OPENCLAW_ONBOARD_SCENARIO_SOURCE_ONLY" != "1" ]; then
-  OPENCLAW_ENTRY="$(openclaw_e2e_resolve_entrypoint)"
+if [ -z "${QUIET_CORE_ENTRY:-}" ] && [ "$QUIET_CORE_ONBOARD_SCENARIO_SOURCE_ONLY" != "1" ]; then
+  QUIET_CORE_ENTRY="$(quiet_core_bot_e2e_resolve_entrypoint)"
 fi
-export OPENCLAW_ENTRY
-ONBOARD_TMP_ROOT="${OPENCLAW_ONBOARD_E2E_TMPDIR:-${TMPDIR:-/tmp}}"
+export QUIET_CORE_ENTRY
+ONBOARD_TMP_ROOT="${QUIET_CORE_ONBOARD_E2E_TMPDIR:-${TMPDIR:-/tmp}}"
 ONBOARD_TMP_ROOT="${ONBOARD_TMP_ROOT%/}"
 [ -n "$ONBOARD_TMP_ROOT" ] || ONBOARD_TMP_ROOT="/tmp"
 mkdir -p "$ONBOARD_TMP_ROOT"
-ONBOARD_TMP_DIR="$(mktemp -d "$ONBOARD_TMP_ROOT/openclaw-onboard.XXXXXX")"
-OPENCLAW_E2E_LOG_DIR="$ONBOARD_TMP_DIR/logs"
+ONBOARD_TMP_DIR="$(mktemp -d "$ONBOARD_TMP_ROOT/quiet-core-bot-onboard.XXXXXX")"
+QUIET_CORE_E2E_LOG_DIR="$ONBOARD_TMP_DIR/logs"
 GATEWAY_LOG_PATH="$ONBOARD_TMP_DIR/gateway-e2e.log"
-export OPENCLAW_E2E_LOG_DIR
+export QUIET_CORE_E2E_LOG_DIR
 export GATEWAY_LOG_PATH
-mkdir -p "$OPENCLAW_E2E_LOG_DIR"
+mkdir -p "$QUIET_CORE_E2E_LOG_DIR"
 cleanup_onboard_artifacts() {
-  openclaw_e2e_stop_process "${GATEWAY_PID:-}"
+  quiet_core_bot_e2e_stop_process "${GATEWAY_PID:-}"
   rm -rf "$ONBOARD_TMP_DIR"
 }
-if [ "$OPENCLAW_ONBOARD_SCENARIO_SOURCE_ONLY" != "1" ]; then
+if [ "$QUIET_CORE_ONBOARD_SCENARIO_SOURCE_ONLY" != "1" ]; then
   trap cleanup_onboard_artifacts EXIT
 fi
 
 # Provide a minimal trash shim to avoid noisy "missing trash" logs in containers.
-if [ "$OPENCLAW_ONBOARD_SCENARIO_SOURCE_ONLY" != "1" ]; then
-  openclaw_e2e_install_trash_shim
+if [ "$QUIET_CORE_ONBOARD_SCENARIO_SOURCE_ONLY" != "1" ]; then
+  quiet_core_bot_e2e_install_trash_shim
 fi
 
 send() {
@@ -73,16 +73,16 @@ wait_for_log() {
 }
 
 start_gateway() {
-  GATEWAY_PID="$(openclaw_e2e_start_gateway "$OPENCLAW_ENTRY" 18789 "$GATEWAY_LOG_PATH")"
+  GATEWAY_PID="$(quiet_core_bot_e2e_start_gateway "$QUIET_CORE_ENTRY" 18789 "$GATEWAY_LOG_PATH")"
 }
 
 wait_for_gateway() {
   local wait_attempts
-  wait_attempts="$(openclaw_e2e_read_positive_int_env OPENCLAW_ONBOARD_GATEWAY_WAIT_ATTEMPTS 20)" || return $?
-  local wait_interval_s="${OPENCLAW_ONBOARD_GATEWAY_WAIT_INTERVAL_S:-1}"
+  wait_attempts="$(quiet_core_bot_e2e_read_positive_int_env QUIET_CORE_ONBOARD_GATEWAY_WAIT_ATTEMPTS 20)" || return $?
+  local wait_interval_s="${QUIET_CORE_ONBOARD_GATEWAY_WAIT_INTERVAL_S:-1}"
   local saw_listening_log="false"
   for _ in $(seq 1 "$wait_attempts"); do
-    if openclaw_e2e_probe_tcp 127.0.0.1 18789 500 >/dev/null 2>&1; then
+    if quiet_core_bot_e2e_probe_tcp 127.0.0.1 18789 500 >/dev/null 2>&1; then
       return 0
     fi
     if [ -f "$GATEWAY_LOG_PATH" ] && grep -E -q "listening on ws://[^ ]+:18789" "$GATEWAY_LOG_PATH"; then
@@ -99,12 +99,12 @@ wait_for_gateway() {
 }
 
 stop_gateway() {
-  openclaw_e2e_stop_process "$1"
+  quiet_core_bot_e2e_stop_process "$1"
 }
 
 cleanup_wizard_case() {
   exec 3>&- 2>/dev/null || true
-  openclaw_e2e_stop_process "${wizard_pid:-}"
+  quiet_core_bot_e2e_stop_process "${wizard_pid:-}"
   stop_gateway "${gw_pid:-}"
   rm -rf "${input_fifo_dir:-}"
 }
@@ -123,7 +123,7 @@ run_wizard_cmd() {
   local wizard_status=0
 
   echo "== Wizard case: $case_name =="
-  set_isolated_openclaw_env "$state_ref"
+  set_isolated_quiet_core_bot_env "$state_ref"
 
   input_fifo_dir="$(mktemp -d "$ONBOARD_TMP_DIR/${case_name}.fifo.XXXXXX")"
   input_fifo="$input_fifo_dir/stdin.fifo"
@@ -131,11 +131,11 @@ run_wizard_cmd() {
     rm -rf "$input_fifo_dir"
     return 1
   fi
-  local log_path="$OPENCLAW_E2E_LOG_DIR/${case_name}.log"
+  local log_path="$QUIET_CORE_E2E_LOG_DIR/${case_name}.log"
   WIZARD_LOG_PATH="$log_path"
   export WIZARD_LOG_PATH
   # Run under script to keep an interactive TTY for clack prompts.
-  openclaw_e2e_run_script_with_pty "$command" "$log_path" <"$input_fifo" >/dev/null 2>&1 &
+  quiet_core_bot_e2e_run_script_with_pty "$command" "$log_path" <"$input_fifo" >/dev/null 2>&1 &
   wizard_pid=$!
   if ! exec 3>"$input_fifo"; then
     cleanup_wizard_case
@@ -180,13 +180,13 @@ run_wizard_cmd() {
 assert_onboard_config() {
   local scenario="$1"
   shift
-  openclaw_e2e_assert_file "$OPENCLAW_CONFIG_PATH"
-  node scripts/e2e/lib/onboard/assert-config.mjs "$scenario" "$OPENCLAW_CONFIG_PATH" "$@"
+  quiet_core_bot_e2e_assert_file "$QUIET_CORE_CONFIG_PATH"
+  node scripts/e2e/lib/onboard/assert-config.mjs "$scenario" "$QUIET_CORE_CONFIG_PATH" "$@"
 }
 
-set_isolated_openclaw_env() {
+set_isolated_quiet_core_bot_env() {
   local state_ref="$1"
-  openclaw_test_state_create "$state_ref" empty
+  quiet_core_bot_test_state_create "$state_ref" empty
 }
 
 send_channels_flow() {
@@ -208,8 +208,8 @@ send_skills_flow() {
 }
 
 run_case_local_basic() {
-  set_isolated_openclaw_env local-basic
-  openclaw_e2e_run_logged local-basic node "$OPENCLAW_ENTRY" onboard \
+  set_isolated_quiet_core_bot_env local-basic
+  quiet_core_bot_e2e_run_logged local-basic node "$QUIET_CORE_ENTRY" onboard \
     --non-interactive \
     --accept-risk \
     --flow quickstart \
@@ -220,15 +220,15 @@ run_case_local_basic() {
     --skip-ui \
     --skip-health
 
-  validate_local_basic_log "$OPENCLAW_E2E_LAST_LOG_PATH"
+  validate_local_basic_log "$QUIET_CORE_E2E_LAST_LOG_PATH"
 
   # Assert config + workspace scaffolding.
-  workspace_dir="$OPENCLAW_STATE_DIR/workspace"
-  sessions_dir="$OPENCLAW_STATE_DIR/agents/main/sessions"
+  workspace_dir="$QUIET_CORE_STATE_DIR/workspace"
+  sessions_dir="$QUIET_CORE_STATE_DIR/agents/main/sessions"
 
-  openclaw_e2e_assert_dir "$sessions_dir"
+  quiet_core_bot_e2e_assert_dir "$sessions_dir"
   for file in AGENTS.md BOOTSTRAP.md IDENTITY.md SOUL.md TOOLS.md USER.md; do
-    openclaw_e2e_assert_file "$workspace_dir/$file"
+    quiet_core_bot_e2e_assert_file "$workspace_dir/$file"
   done
 
   assert_onboard_config local-basic "$workspace_dir"
@@ -236,9 +236,9 @@ run_case_local_basic() {
 }
 
 run_case_remote_non_interactive() {
-  set_isolated_openclaw_env remote-non-interactive
+  set_isolated_quiet_core_bot_env remote-non-interactive
   # Smoke test non-interactive remote config write.
-  openclaw_e2e_run_logged remote-non-interactive node "$OPENCLAW_ENTRY" onboard --non-interactive --accept-risk \
+  quiet_core_bot_e2e_run_logged remote-non-interactive node "$QUIET_CORE_ENTRY" onboard --non-interactive --accept-risk \
     --mode remote \
     --remote-url ws://gateway.local:18789 \
     --remote-token remote-token \
@@ -249,10 +249,10 @@ run_case_remote_non_interactive() {
 }
 
 run_case_reset() {
-  set_isolated_openclaw_env reset-config
-  node scripts/e2e/lib/onboard/write-config.mjs reset "$OPENCLAW_CONFIG_PATH"
+  set_isolated_quiet_core_bot_env reset-config
+  node scripts/e2e/lib/onboard/write-config.mjs reset "$QUIET_CORE_CONFIG_PATH"
 
-  openclaw_e2e_run_logged reset-config node "$OPENCLAW_ENTRY" onboard \
+  quiet_core_bot_e2e_run_logged reset-config node "$QUIET_CORE_ENTRY" onboard \
     --non-interactive \
     --accept-risk \
     --flow quickstart \
@@ -269,28 +269,28 @@ run_case_reset() {
 
 run_case_channels() {
   # Channels-only configure flow.
-  run_wizard_cmd channels channels "node \"$OPENCLAW_ENTRY\" configure --section channels" send_channels_flow
+  run_wizard_cmd channels channels "node \"$QUIET_CORE_ENTRY\" configure --section channels" send_channels_flow
 
   assert_onboard_config channels
 }
 
 run_case_skills() {
   local home_dir
-  set_isolated_openclaw_env skills
+  set_isolated_quiet_core_bot_env skills
   home_dir="$HOME"
-  node scripts/e2e/lib/onboard/write-config.mjs skills "$OPENCLAW_CONFIG_PATH"
+  node scripts/e2e/lib/onboard/write-config.mjs skills "$QUIET_CORE_CONFIG_PATH"
 
-  run_wizard_cmd skills "$home_dir" "node \"$OPENCLAW_ENTRY\" configure --section skills" send_skills_flow
+  run_wizard_cmd skills "$home_dir" "node \"$QUIET_CORE_ENTRY\" configure --section skills" send_skills_flow
 
   assert_onboard_config skills
 }
 
 validate_local_basic_log() {
   local log_path="$1"
-  openclaw_e2e_assert_log_not_contains "$log_path" "systemctl --user unavailable"
+  quiet_core_bot_e2e_assert_log_not_contains "$log_path" "systemctl --user unavailable"
 }
 
-if [ "$OPENCLAW_ONBOARD_SCENARIO_SOURCE_ONLY" != "1" ]; then
+if [ "$QUIET_CORE_ONBOARD_SCENARIO_SOURCE_ONLY" != "1" ]; then
   run_case_local_basic
   run_case_remote_non_interactive
   run_case_reset

@@ -20,7 +20,7 @@ read_when:
 Install the official plugin, then restart Gateway:
 
 ```bash
-quiet-core-bot plugins install @openclaw/deepseek-provider
+quiet-core-bot plugins install @quiet-core/deepseek-provider
 quiet-core-bot gateway restart
 ```
 
@@ -122,8 +122,8 @@ The direct live model suite includes DeepSeek V4 in the modern model set. To
 run only the DeepSeek V4 direct-model checks:
 
 ```bash
-OPENCLAW_LIVE_PROVIDERS=deepseek \
-OPENCLAW_LIVE_MODELS="deepseek/deepseek-v4-flash,deepseek/deepseek-v4-pro" \
+QUIET_CORE_LIVE_PROVIDERS=deepseek \
+QUIET_CORE_LIVE_MODELS="deepseek/deepseek-v4-flash,deepseek/deepseek-v4-pro" \
 pnpm test:live src/agents/models.profiles.live.test.ts
 ```
 

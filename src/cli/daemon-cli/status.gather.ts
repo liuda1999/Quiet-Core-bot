@@ -1,6 +1,6 @@
 // Collects daemon status from service files, config snapshots, ports, probes, and plugin drift.
 import fs from "node:fs/promises";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { uniqueStrings } from "@quiet-core/normalization-core/string-normalization";
 import JSON5 from "json5";
 import {
   createConfigIO,
@@ -340,7 +340,7 @@ export type DaemonStatus = {
   /**
    * Plugin version drift report. Surfaces active official external plugins
    * whose installed version does not match the running gateway version, which
-   * can happen after `npm install -g openclaw@<v>` updates the gateway binary
+   * can happen after `npm install -g quiet-core-bot@<v>` updates the gateway binary
    * without a corresponding `quiet-core-bot plugins update`.
    */
   pluginVersionDrift?: PluginVersionDriftReport;

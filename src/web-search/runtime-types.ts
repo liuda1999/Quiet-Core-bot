@@ -1,5 +1,5 @@
 // Web search runtime types describe search provider factories and dependencies.
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import type {
   PluginWebSearchProviderEntry,
 } from "../plugins/web-provider-types.js";

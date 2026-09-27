@@ -1,12 +1,12 @@
 ---
-summary: "CLI reference for `openclaw directory` (self, peers, groups)"
+summary: "CLI reference for `quiet-core-bot directory` (self, peers, groups)"
 read_when:
   - You want to look up contacts/groups/self ids for a channel
   - You are developing a channel directory adapter
 title: "Directory"
 ---
 
-# `openclaw directory`
+# `quiet-core-bot directory`
 
 Directory lookups for channels that support it (contacts/peers, groups, and "me").
 
@@ -26,7 +26,7 @@ Directory lookups for channels that support it (contacts/peers, groups, and "me"
 ## Using results with `message send`
 
 ```bash
-openclaw directory peers list --channel slack --query "U0"
+quiet-core-bot directory peers list --channel slack --query "U0"
 quiet-core-bot message send --channel slack --target user:U012ABCDEF --message "hello"
 ```
 
@@ -44,23 +44,23 @@ quiet-core-bot message send --channel slack --target user:U012ABCDEF --message "
 ## Self ("me")
 
 ```bash
-openclaw directory self --channel zalouser
+quiet-core-bot directory self --channel zalouser
 ```
 
 ## Peers (contacts/users)
 
 ```bash
-openclaw directory peers list --channel zalouser
-openclaw directory peers list --channel zalouser --query "name"
-openclaw directory peers list --channel zalouser --limit 50
+quiet-core-bot directory peers list --channel zalouser
+quiet-core-bot directory peers list --channel zalouser --query "name"
+quiet-core-bot directory peers list --channel zalouser --limit 50
 ```
 
 ## Groups
 
 ```bash
-openclaw directory groups list --channel zalouser
-openclaw directory groups list --channel zalouser --query "work"
-openclaw directory groups members --channel zalouser --group-id <id>
+quiet-core-bot directory groups list --channel zalouser
+quiet-core-bot directory groups list --channel zalouser --query "work"
+quiet-core-bot directory groups members --channel zalouser --group-id <id>
 ```
 
 ## Related

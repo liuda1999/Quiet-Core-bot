@@ -35,10 +35,10 @@ describe("initializeMemoryWikiVault", () => {
     await expect(fs.readFile(path.join(rootDir, "WIKI.md"), "utf8")).resolves.toContain(
       "Render mode: `obsidian`",
     );
-    await expect(fs.access(path.join(rootDir, ".openclaw-wiki", "state.json"))).rejects.toThrow(
+    await expect(fs.access(path.join(rootDir, ".quiet-core-bot-wiki", "state.json"))).rejects.toThrow(
       /ENOENT/,
     );
-    await expect(fs.access(path.join(rootDir, ".openclaw-wiki", "locks"))).rejects.toThrow(
+    await expect(fs.access(path.join(rootDir, ".quiet-core-bot-wiki", "locks"))).rejects.toThrow(
       /ENOENT/,
     );
   });

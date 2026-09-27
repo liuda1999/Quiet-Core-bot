@@ -59,7 +59,7 @@ function runCommand(
 
 export function runPluginReleasePretagPackCheck(rootDir = resolve(".")) {
   const targets = collectPluginReleasePretagPackTargets(rootDir);
-  const tempRoot = mkdtempSync(join(tmpdir(), "openclaw-plugin-pretag-pack-"));
+  const tempRoot = mkdtempSync(join(tmpdir(), "quiet-core-bot-plugin-pretag-pack-"));
   const wrapperDir = join(tempRoot, "bin");
   mkdirSync(wrapperDir);
   const clawHubWrapper = join(wrapperDir, "clawhub");
@@ -93,7 +93,7 @@ export function runPluginReleasePretagPackCheck(rootDir = resolve(".")) {
     };
     const prebuiltPackEnv = {
       ...packEnv,
-      OPENCLAW_PLUGIN_NPM_RUNTIME_BUILD: "0",
+      QUIET_CORE_PLUGIN_NPM_RUNTIME_BUILD: "0",
     };
     for (const [index, target] of targets.entries()) {
       if (target.packNpm) {
@@ -111,7 +111,7 @@ export function runPluginReleasePretagPackCheck(rootDir = resolve(".")) {
           cwd: rootDir,
           env: {
             ...prebuiltPackEnv,
-            OPENCLAW_CLAWHUB_PACK_OUTPUT_DIR: outputDir,
+            QUIET_CORE_CLAWHUB_PACK_OUTPUT_DIR: outputDir,
           },
           quietStdout: true,
         });

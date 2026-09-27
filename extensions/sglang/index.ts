@@ -3,8 +3,8 @@ import {
   definePluginEntry,
   type OpenClawPluginApi,
   type ProviderAuthMethodNonInteractiveContext,
-} from "openclaw/plugin-sdk/plugin-entry";
-import { buildProviderReplayFamilyHooks } from "openclaw/plugin-sdk/provider-model-shared";
+} from "quiet-core-bot/plugin-sdk/plugin-entry";
+import { buildProviderReplayFamilyHooks } from "quiet-core-bot/plugin-sdk/provider-model-shared";
 import {
   SGLANG_DEFAULT_API_KEY_ENV_VAR,
   SGLANG_DEFAULT_BASE_URL,
@@ -16,7 +16,7 @@ import {
 const PROVIDER_ID = "sglang";
 
 async function loadProviderSetup() {
-  return await import("openclaw/plugin-sdk/provider-setup");
+  return await import("quiet-core-bot/plugin-sdk/provider-setup");
 }
 
 export default definePluginEntry({

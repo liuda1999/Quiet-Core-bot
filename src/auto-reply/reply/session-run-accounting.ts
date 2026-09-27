@@ -1,6 +1,6 @@
 // Tracks per-session run usage totals and last-run accounting facts.
 import { deriveSessionTotalTokens, type NormalizedUsage } from "../../agents/usage.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { incrementCompactionCount } from "./session-updates.js";
 import { persistSessionUsageUpdate } from "./session-usage.js";
 

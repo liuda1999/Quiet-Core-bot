@@ -1,5 +1,5 @@
 // Qa Lab plugin module implements cli behavior.
-import { listQaRunnerCliContributions } from "openclaw/plugin-sdk/qa-runner-runtime";
+import { listQaRunnerCliContributions } from "quiet-core-bot/plugin-sdk/qa-runner-runtime";
 import type { LiveTransportQaCliRegistration } from "./shared/live-transport-cli.js";
 
 function createBlockedQaRunnerCliRegistration(params: {

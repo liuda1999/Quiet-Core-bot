@@ -125,7 +125,7 @@ describe("removeChannelConfigWizard", () => {
     ]);
   });
 
-  it("deletes the selected channel block from openclaw.json", async () => {
+  it("deletes the selected channel block from quiet-core-bot.json", async () => {
     select.mockResolvedValueOnce(channelChoice("telegram")).mockResolvedValueOnce(doneChoice);
 
     const next = await removeChannelConfigWizard(

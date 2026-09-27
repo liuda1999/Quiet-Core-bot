@@ -19,13 +19,13 @@ Canvas state is stored under Application Support:
 
 The Canvas panel serves those files via a **custom URL scheme**:
 
-- `openclaw-canvas://<session>/<path>`
+- `quiet-core-bot-canvas://<session>/<path>`
 
 Examples:
 
-- `openclaw-canvas://main/` → `<canvasRoot>/main/index.html`
-- `openclaw-canvas://main/assets/app.css` → `<canvasRoot>/main/assets/app.css`
-- `openclaw-canvas://main/widgets/todo/` → `<canvasRoot>/main/widgets/todo/index.html`
+- `quiet-core-bot-canvas://main/` → `<canvasRoot>/main/index.html`
+- `quiet-core-bot-canvas://main/assets/app.css` → `<canvasRoot>/main/assets/app.css`
+- `quiet-core-bot-canvas://main/widgets/todo/` → `<canvasRoot>/main/widgets/todo/index.html`
 
 If no `index.html` exists at the root, the app shows a **built-in scaffold page**.
 
@@ -106,12 +106,12 @@ quiet-core-bot nodes canvas a2ui push --node <id> --text "Hello from A2UI"
 
 Canvas can trigger new agent runs via deep links:
 
-- `openclaw://agent?...`
+- `quiet-core-bot://agent?...`
 
 Example (in JS):
 
 ```js
-window.location.href = "openclaw://agent?message=Review%20this%20design";
+window.location.href = "quiet-core-bot://agent?message=Review%20this%20design";
 ```
 
 The app prompts for confirmation unless a valid key is provided.

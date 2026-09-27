@@ -7,7 +7,7 @@ import { promisify } from "node:util";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/normalization-core/string-coerce";
 import { note } from "../../packages/terminal-core/src/note.js";
 import { replaceConfigFile, type OpenClawConfig } from "../config/config.js";
 import { resolveGatewayPort, resolveIsNixMode } from "../config/paths.js";
@@ -17,7 +17,7 @@ import {
   renderGatewayServiceCleanupHints,
   type ExtraGatewayService,
 } from "../daemon/inspect.js";
-import { OPENCLAW_WRAPPER_ENV_KEY } from "../daemon/program-args.js";
+import { QUIET_CORE_WRAPPER_ENV_KEY } from "../daemon/program-args.js";
 import { renderSystemNodeWarning, resolveSystemNodeInfo } from "../daemon/runtime-paths.js";
 import {
   auditGatewayServiceConfig,
@@ -82,20 +82,20 @@ function findGatewayEntrypoint(programArguments?: string[]): string | null {
 function buildGatewayServiceRepairEnv(
   command: GatewayServiceCommandConfig | null,
 ): NodeJS.ProcessEnv {
-  const wrapperPath = command?.environment?.[OPENCLAW_WRAPPER_ENV_KEY]?.trim();
-  if (!wrapperPath || Object.hasOwn(process.env, OPENCLAW_WRAPPER_ENV_KEY)) {
+  const wrapperPath = command?.environment?.[QUIET_CORE_WRAPPER_ENV_KEY]?.trim();
+  if (!wrapperPath || Object.hasOwn(process.env, QUIET_CORE_WRAPPER_ENV_KEY)) {
     return process.env;
   }
   return {
     ...process.env,
-    [OPENCLAW_WRAPPER_ENV_KEY]: wrapperPath,
+    [QUIET_CORE_WRAPPER_ENV_KEY]: wrapperPath,
   };
 }
 
 function resolveGatewayServiceWrapperPath(
   command: GatewayServiceCommandConfig | null,
 ): string | null {
-  return normalizeOptionalString(command?.environment?.[OPENCLAW_WRAPPER_ENV_KEY]) ?? null;
+  return normalizeOptionalString(command?.environment?.[QUIET_CORE_WRAPPER_ENV_KEY]) ?? null;
 }
 
 async function buildExpectedGatewayServicePlan(params: {
@@ -170,7 +170,7 @@ function resolveSystemdScopeFromServicePath(sourcePath: string | undefined): Sys
 
 function resolveSystemdUnitNameFromServicePath(sourcePath: string | undefined): string {
   const base = sourcePath ? path.posix.basename(sourcePath.replaceAll("\\", "/")) : "";
-  return base.endsWith(".service") ? base : "openclaw-gateway.service";
+  return base.endsWith(".service") ? base : "quiet-core-bot-gateway.service";
 }
 
 function shouldDeferUpdateModeSystemdServiceRepair(params: {
@@ -427,7 +427,7 @@ export async function maybeRepairGatewayServiceConfig(
   const serviceInstallEnv = buildGatewayServiceRepairEnv(command);
   const serviceWrapperPath = resolveGatewayServiceWrapperPath(command);
   if (serviceWrapperPath) {
-    note(`Gateway service invokes ${OPENCLAW_WRAPPER_ENV_KEY}: ${serviceWrapperPath}`, "Gateway");
+    note(`Gateway service invokes ${QUIET_CORE_WRAPPER_ENV_KEY}: ${serviceWrapperPath}`, "Gateway");
   }
   const serviceLayout = await summarizeGatewayServiceLayout(command);
   const sourceCheckoutWarning = serviceLayout?.entrypointSourceCheckout
@@ -472,7 +472,7 @@ export async function maybeRepairGatewayServiceConfig(
     audit.issues.push({
       code: SERVICE_AUDIT_CODES.gatewayTokenMismatch,
       message:
-        "Gateway service OPENCLAW_GATEWAY_TOKEN should be unset when gateway.auth.token is SecretRef-managed",
+        "Gateway service QUIET_CORE_GATEWAY_TOKEN should be unset when gateway.auth.token is SecretRef-managed",
       detail: "service token is stale",
       level: "recommended",
     });

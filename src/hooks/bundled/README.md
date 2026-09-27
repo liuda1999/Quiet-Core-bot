@@ -83,7 +83,7 @@ name: my-hook
 description: "Short description"
 homepage: https://github.com/liuda1999/Quiet-Core-bot/automation/hooks#my-hook
 metadata:
-  { "openclaw": { "emoji": "🔗", "events": ["command:new"], "requires": { "bins": ["node"] } } }
+  { "quiet-core-bot": { "emoji": "🔗", "events": ["command:new"], "requires": { "bins": ["node"] } } }
 ---
 # Hook Title
 
@@ -215,7 +215,7 @@ export default myHandler;
 Test your hooks by:
 
 1. Place hook in workspace hooks directory
-2. Restart gateway: `pkill -9 -f 'openclaw.*gateway' && pnpm quiet-core-bot gateway`
+2. Restart gateway: `pkill -9 -f 'quiet-core-bot.*gateway' && pnpm quiet-core-bot gateway`
 3. Enable the hook: `quiet-core-bot hooks enable my-hook`
 4. Trigger the event (e.g., send `/new` command)
 5. Check gateway logs for hook execution

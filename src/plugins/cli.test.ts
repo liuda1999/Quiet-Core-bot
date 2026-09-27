@@ -190,7 +190,7 @@ describe("registerPluginCliCommands", () => {
   });
 
   it("forwards an explicit env to plugin loading", async () => {
-    const env = { OPENCLAW_HOME: "/srv/openclaw-home" } as NodeJS.ProcessEnv;
+    const env = { QUIET_CORE_HOME: "/srv/quiet-core-bot-home" } as NodeJS.ProcessEnv;
 
     await registerPluginCliCommands(createProgram(), {} as OpenClawConfig, env);
 
@@ -232,8 +232,8 @@ describe("registerPluginCliCommands", () => {
     const program = createProgram();
     const configA = {} as OpenClawConfig;
     const configB = { plugins: {} } as OpenClawConfig;
-    const envA = { OPENCLAW_HOME: "/tmp/a" } as NodeJS.ProcessEnv;
-    const envB = { OPENCLAW_HOME: "/tmp/b" } as NodeJS.ProcessEnv;
+    const envA = { QUIET_CORE_HOME: "/tmp/a" } as NodeJS.ProcessEnv;
+    const envB = { QUIET_CORE_HOME: "/tmp/b" } as NodeJS.ProcessEnv;
 
     await registerPluginCliCommands(program, configA, envA);
     await registerPluginCliCommands(program, configA, envB);

@@ -1,6 +1,6 @@
 // Skill tool dispatch tests cover policy-filtered tool surfaces.
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 
 type CreateOpenClawToolsArg = {
   cronCreatorToolAllowlist?: Array<string | { name: string; pluginId?: string }>;
@@ -24,7 +24,7 @@ const hoisted = vi.hoisted(() => {
   };
 });
 
-vi.mock("../../agents/openclaw-tools.runtime.js", () => ({
+vi.mock("../../agents/quiet-core-bot-tools.runtime.js", () => ({
   createOpenClawTools: (args: CreateOpenClawToolsArg) => hoisted.createOpenClawToolsMock(args),
 }));
 
@@ -39,7 +39,7 @@ describe("resolveSkillDispatchTools", () => {
       } as OpenClawConfig,
       agentId: "main",
       sessionKey: "agent:main:telegram:group:restricted-room",
-      workspaceDir: "/tmp/openclaw-skill-tool-dispatch-test",
+      workspaceDir: "/tmp/quiet-core-bot-skill-tool-dispatch-test",
       provider: "openai",
       model: "gpt-5.5",
     });

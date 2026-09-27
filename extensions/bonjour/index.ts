@@ -2,7 +2,7 @@
  * Bonjour gateway-discovery plugin entry. It advertises the local gateway over
  * mDNS and lazily loads the ciao-based advertiser.
  */
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
+import { definePluginEntry } from "quiet-core-bot/plugin-sdk/plugin-entry";
 
 function formatBonjourInstanceName(displayName: string) {
   const trimmed = displayName.trim();
@@ -29,7 +29,7 @@ export default definePluginEntry({
           { registerUncaughtExceptionHandler, registerUnhandledRejectionHandler },
         ] = await Promise.all([
           import("./src/advertiser.js"),
-          import("openclaw/plugin-sdk/runtime"),
+          import("quiet-core-bot/plugin-sdk/runtime"),
         ]);
         const advertiser = await startGatewayBonjourAdvertiser(
           {

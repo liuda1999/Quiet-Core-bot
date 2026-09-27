@@ -15,7 +15,7 @@ import {
   createChannelTestPluginBase,
   createTestRegistry,
 } from "../../test-utils/channel-plugins.js";
-import { resolvePreferredOpenClawTmpDir } from "../tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "../tmp-quiet-core-bot-dir.js";
 import { runMessageAction } from "./message-action-runner.js";
 
 const onePixelPng = Buffer.from(
@@ -91,16 +91,16 @@ async function withSandbox(test: (sandboxDir: string) => Promise<void>) {
 }
 
 async function withTempOpenClawStateDir<T>(test: (stateDir: string) => Promise<T>): Promise<T> {
-  const previous = process.env.OPENCLAW_STATE_DIR;
+  const previous = process.env.QUIET_CORE_STATE_DIR;
   const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "msg-runner-state-"));
-  process.env.OPENCLAW_STATE_DIR = stateDir;
+  process.env.QUIET_CORE_STATE_DIR = stateDir;
   try {
     return await test(stateDir);
   } finally {
     if (previous === undefined) {
-      delete process.env.OPENCLAW_STATE_DIR;
+      delete process.env.QUIET_CORE_STATE_DIR;
     } else {
-      process.env.OPENCLAW_STATE_DIR = previous;
+      process.env.QUIET_CORE_STATE_DIR = previous;
     }
     await fs.rm(stateDir, { recursive: true, force: true });
   }
@@ -864,7 +864,7 @@ describe("runMessageAction media behavior", () => {
 
   describe("reply hydration", () => {
     // The reply action accepts attachments via the same media/path/filePath
-    // params as send. Before openclaw#79864 the runner only hydrated
+    // params as send. Before quiet-core-bot#79864 the runner only hydrated
     // sendAttachment/setGroupIcon/upload-file, so a channel plugin's reply
     // handler saw the raw path and could forward it directly to its CLI —
     // bypassing localRoots, sandbox, and size checks. These tests pin the
@@ -1434,7 +1434,7 @@ describe("runMessageAction media behavior", () => {
           throw new Error("expected send result");
         }
         expect(result.sendResult?.mediaUrl).toBe(path.resolve(tmpFile));
-        const hostTmpOutsideOpenClaw = path.join(os.tmpdir(), "outside-openclaw", "test-media.png");
+        const hostTmpOutsideOpenClaw = path.join(os.tmpdir(), "outside-quiet-core-bot", "test-media.png");
         await expect(
           runMessageAction({
             cfg: workspaceConfig,

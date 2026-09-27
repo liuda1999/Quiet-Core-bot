@@ -17,14 +17,14 @@ fs.writeFileSync(
       name: "clickclack",
       version: "0.0.1",
       type: "module",
-      openclaw: { extensions: ["./index.mjs"] },
+      "quiet-core-bot": { extensions: ["./index.mjs"] },
     },
     null,
     2,
   )}\n`,
 );
 fs.writeFileSync(
-  path.join(pluginDir, "openclaw.plugin.json"),
+  path.join(pluginDir, "quiet-core-bot.plugin.json"),
   `${JSON.stringify(
     {
       id: "clickclack",

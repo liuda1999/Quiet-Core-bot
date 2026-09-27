@@ -1,6 +1,6 @@
 // Usage reporting tests cover run-level metadata attribution, runtime plugin
 // bootstrap inputs, and forwarding fields into embedded attempts.
-import type { AssistantMessage } from "openclaw/plugin-sdk/llm";
+import type { AssistantMessage } from "quiet-core-bot/plugin-sdk/llm";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { makeAttemptResult } from "./run.overflow-compaction.fixture.js";
 import {
@@ -219,8 +219,8 @@ describe("runEmbeddedAgent usage reporting", () => {
       makeAttemptResult({
         assistantTexts: ["Response 1"],
         lastAssistant: makeAssistantMessage({
-          provider: "openclaw",
-          model: "openclaw",
+          provider: "quiet-core-bot",
+          model: "quiet-core-bot",
           usage: { input: 100, output: 50, total: 150 } as unknown as AssistantMessage["usage"],
         }),
         attemptUsage: { input: 100, output: 50, total: 150 },

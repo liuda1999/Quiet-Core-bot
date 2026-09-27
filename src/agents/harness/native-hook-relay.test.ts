@@ -202,7 +202,7 @@ function getNativeHookRelaySharedStateForTests(): NativeHookRelaySharedStateForT
     globalThis as typeof globalThis & {
       [key: symbol]: NativeHookRelaySharedStateForTests | undefined;
     }
-  )[Symbol.for("openclaw.nativeHookRelay.state")];
+  )[Symbol.for("quiet-core-bot.nativeHookRelay.state")];
   if (!state) {
     throw new Error("Expected native hook relay shared state to be initialized");
   }
@@ -2060,7 +2060,7 @@ describe("native hook relay registry", () => {
   });
 
   it("passes config to trusted policies for native pre-tool session extension reads", async () => {
-    const stateDir = await fs.mkdtemp(path.join(tmpdir(), "openclaw-native-relay-policy-"));
+    const stateDir = await fs.mkdtemp(path.join(tmpdir(), "quiet-core-bot-native-relay-policy-"));
     const storePath = path.join(stateDir, "sessions.json");
     const config = { session: { store: storePath } };
     const seen: unknown[] = [];
@@ -2159,7 +2159,7 @@ describe("native hook relay registry", () => {
       sessionKey: "agent:main:session-1",
       runId: "run-1",
     });
-    const cwd = path.join("/tmp", "openclaw-native-hook-cwd");
+    const cwd = path.join("/tmp", "quiet-core-bot-native-hook-cwd");
     const patch = ["*** Begin Patch", "*** Add File: src/new.ts", "+x", "*** End Patch"].join("\n");
 
     const response = await invokeNativeHookRelay({
@@ -2366,7 +2366,7 @@ describe("native hook relay registry", () => {
         tool_name: "mcp__shell__run_command",
         tool_use_id: "mcp-call-security",
         tool_input: {
-          command: "rm -rf /tmp/openclaw-important-state",
+          command: "rm -rf /tmp/quiet-core-bot-important-state",
         },
       },
     });
@@ -2382,7 +2382,7 @@ describe("native hook relay registry", () => {
     expectRecordFields(event, {
       toolName: "mcp__shell__run_command",
       params: {
-        command: "rm -rf /tmp/openclaw-important-state",
+        command: "rm -rf /tmp/quiet-core-bot-important-state",
       },
       toolCallId: "mcp-call-security",
     });
@@ -2416,7 +2416,7 @@ describe("native hook relay registry", () => {
         tool_use_id: "mcp-call-2",
         tool_input: { path: "/repo/package.json" },
         tool_response: {
-          content: [{ type: "text", text: '{ "name": "openclaw" }' }],
+          content: [{ type: "text", text: '{ "name": "quiet-core-bot" }' }],
           structuredContent: { bytes: 22 },
         },
       },
@@ -2430,7 +2430,7 @@ describe("native hook relay registry", () => {
       runId: "run-1",
       toolCallId: "mcp-call-2",
       result: {
-        content: [{ type: "text", text: '{ "name": "openclaw" }' }],
+        content: [{ type: "text", text: '{ "name": "quiet-core-bot" }' }],
         structuredContent: { bytes: 22 },
       },
     });
@@ -2463,8 +2463,8 @@ describe("native hook relay registry", () => {
         tool_name: "mcp__github__create_issue",
         tool_use_id: "mcp-call-3",
         tool_input: {
-          owner: "openclaw",
-          repo: "openclaw",
+          owner: "quiet-core-bot",
+          repo: "quiet-core-bot",
           title: "Test issue",
         },
       },
@@ -2482,8 +2482,8 @@ describe("native hook relay registry", () => {
       toolName: "mcp__github__create_issue",
       toolCallId: "mcp-call-3",
       toolInput: {
-        owner: "openclaw",
-        repo: "openclaw",
+        owner: "quiet-core-bot",
+        repo: "quiet-core-bot",
         title: "Test issue",
       },
     });
@@ -2997,7 +2997,7 @@ describe("native hook relay registry", () => {
         hook_event_name: "PermissionRequest",
         tool_name: "Bash",
         tool_use_id: "reused-call-id",
-        tool_input: { command: "rm -rf /tmp/openclaw-important-state" },
+        tool_input: { command: "rm -rf /tmp/quiet-core-bot-important-state" },
       },
     });
 
@@ -3209,7 +3209,7 @@ describe("native hook relay command builder", () => {
         relayId: "relay-1",
         generation: "generation-1",
         event: "permission_request",
-        executable: "openclaw",
+        executable: "quiet-core-bot",
       }),
     ).toBe(
       "quiet-core-bot hooks relay --provider codex --relay-id relay-1 --generation generation-1 --event permission_request --timeout 5000",
@@ -3224,7 +3224,7 @@ describe("native hook relay command builder", () => {
         generation: "generation-1",
         event: "pre_tool_use",
         preToolUseUnavailable: "noop",
-        executable: "openclaw",
+        executable: "quiet-core-bot",
       }),
     ).toBe(
       "quiet-core-bot hooks relay --provider codex --relay-id relay-1 --generation generation-1 --event pre_tool_use --pre-tool-use-unavailable noop --timeout 5000",

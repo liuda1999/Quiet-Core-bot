@@ -15,7 +15,7 @@ import {
   type CompletionShell,
 } from "../cli/completion-runtime.js";
 import type { HealthFinding, HealthRepairEffect } from "../flows/health-checks.js";
-import { resolveOpenClawPackageRoot } from "../infra/openclaw-root.js";
+import { resolveOpenClawPackageRoot } from "../infra/quiet-core-bot-root.js";
 import type { RuntimeEnv } from "../runtime.js";
 import type { DoctorPrompter } from "./doctor-prompter.js";
 
@@ -79,7 +79,7 @@ export type ShellCompletionStatus = {
 
 /** Check the status of shell completion for the current shell. */
 export async function checkShellCompletionStatus(
-  binName = "openclaw",
+  binName = "quiet-core-bot",
   options: ShellCompletionStatusOptions = {},
 ): Promise<ShellCompletionStatus> {
   const shell = options.shell ?? resolveShellFromEnv();
@@ -245,7 +245,7 @@ export async function doctorShellCompletion(
 
 /** Ensures the shell completion cache exists without prompting during setup/update flows. */
 export async function ensureCompletionCacheExists(
-  binName = "openclaw",
+  binName = "quiet-core-bot",
   options: ShellCompletionStatusOptions = {},
 ): Promise<boolean> {
   const shell = options.shell ?? resolveShellFromEnv();

@@ -51,7 +51,7 @@ import {
   normalizeInstalledBinaryVersion,
   resolveInstalledBinaryCommandInvocation,
   resolveInstalledBinaryPath,
-} from "./openclaw-npm-postpublish-verify.ts";
+} from "./quiet-core-bot-npm-postpublish-verify.ts";
 import { listStaticExtensionAssetOutputs } from "./runtime-postbuild.mjs";
 import { buildCmdExeCommandLine } from "./windows-cmd-helpers.mjs";
 
@@ -143,11 +143,11 @@ const DEFAULT_RELEASE_CHECK_COMMAND_TIMEOUT_MS = 5 * 60 * 1000;
 const DEFAULT_RELEASE_CHECK_COMMAND_MAX_BUFFER_BYTES = 100 * 1024 * 1024;
 export const MAX_CRITICAL_PLUGIN_SDK_ENTRYPOINT_BYTES = 2 * 1024 * 1024;
 export const CRITICAL_PLUGIN_SDK_SIZE_CHECK_SPECIFIERS = [
-  "openclaw/plugin-sdk/core",
-  "openclaw/plugin-sdk/provider-entry",
-  "openclaw/plugin-sdk/runtime",
+  "quiet-core-bot/plugin-sdk/core",
+  "quiet-core-bot/plugin-sdk/provider-entry",
+  "quiet-core-bot/plugin-sdk/runtime",
 ] as const;
-export const CRITICAL_PLUGIN_SDK_IMPORT_SMOKE_SPECIFIERS = ["openclaw/plugin-sdk/core"] as const;
+export const CRITICAL_PLUGIN_SDK_IMPORT_SMOKE_SPECIFIERS = ["quiet-core-bot/plugin-sdk/core"] as const;
 export const PACKED_CLI_SMOKE_COMMANDS = [
   ["--help"],
   ["onboard", "--help"],
@@ -206,7 +206,7 @@ export function runReleaseCheckCommand(
     maxBuffer:
       options.maxBuffer ??
       positiveEnvInt(
-        "OPENCLAW_RELEASE_CHECK_COMMAND_MAX_BUFFER_BYTES",
+        "QUIET_CORE_RELEASE_CHECK_COMMAND_MAX_BUFFER_BYTES",
         DEFAULT_RELEASE_CHECK_COMMAND_MAX_BUFFER_BYTES,
       ),
     shell: invocation.shell ?? options.shell,
@@ -214,7 +214,7 @@ export function runReleaseCheckCommand(
     timeout:
       options.timeoutMs ??
       positiveEnvInt(
-        "OPENCLAW_RELEASE_CHECK_COMMAND_TIMEOUT_MS",
+        "QUIET_CORE_RELEASE_CHECK_COMMAND_TIMEOUT_MS",
         DEFAULT_RELEASE_CHECK_COMMAND_TIMEOUT_MS,
       ),
     windowsVerbatimArguments: invocation.windowsVerbatimArguments,
@@ -432,7 +432,7 @@ export function createPackedBundledPluginPostinstallEnv(
 ): NodeJS.ProcessEnv {
   return {
     ...env,
-    OPENCLAW_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK: "1",
+    QUIET_CORE_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK: "1",
   };
 }
 
@@ -475,10 +475,10 @@ export function createPackedCliSmokeEnv(
     AWS_EC2_METADATA_DISABLED: "true",
     AWS_SHARED_CREDENTIALS_FILE: homeDir ? join(homeDir, ".aws", "credentials") : undefined,
     AWS_CONFIG_FILE: homeDir ? join(homeDir, ".aws", "config") : undefined,
-    OPENCLAW_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK: "1",
-    OPENCLAW_NO_ONBOARD: "1",
-    OPENCLAW_SERVICE_REPAIR_POLICY: "external",
-    OPENCLAW_SUPPRESS_NOTES: "1",
+    QUIET_CORE_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK: "1",
+    QUIET_CORE_NO_ONBOARD: "1",
+    QUIET_CORE_SERVICE_REPAIR_POLICY: "external",
+    QUIET_CORE_SUPPRESS_NOTES: "1",
     ...overrides,
   };
 }
@@ -490,8 +490,8 @@ export function createPackedCompletionSmokeEnv(
   return {
     ...env,
     ...overrides,
-    OPENCLAW_SUPPRESS_NOTES: "1",
-    OPENCLAW_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK: "1",
+    QUIET_CORE_SUPPRESS_NOTES: "1",
+    QUIET_CORE_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK: "1",
     [COMPLETION_SKIP_PLUGIN_COMMANDS_ENV]: "1",
   };
 }
@@ -528,7 +528,7 @@ export function collectPackedInstalledPackageVerificationErrors(params: {
     normalizeInstalledBinaryVersion(params.installedBinaryVersion) !== params.expectedVersion
   ) {
     errors.push(
-      `installed openclaw binary version mismatch: expected ${params.expectedVersion}, found ${params.installedBinaryVersion || "<missing>"}.`,
+      `installed quiet-core-bot binary version mismatch: expected ${params.expectedVersion}, found ${params.installedBinaryVersion || "<missing>"}.`,
     );
   }
   const rootAliasPath = join(params.packageRoot, "dist", "plugin-sdk", "root-alias.cjs");
@@ -583,11 +583,11 @@ export function createPackedPluginSdkTypescriptSmokeProject(params: {
     join(params.consumerDir, "package.json"),
     `${JSON.stringify(
       {
-        name: "openclaw-plugin-sdk-type-smoke",
+        name: "quiet-core-bot-plugin-sdk-type-smoke",
         private: true,
         type: "module",
         dependencies: {
-          openclaw: params.packageSpec,
+          "quiet-core-bot": params.packageSpec,
         },
       },
       null,
@@ -632,7 +632,7 @@ function runPackedPluginSdkTypescriptSmoke(tarballPath: string, tmpRoot: string)
     stdio: "inherit",
   });
 
-  const installedOpenClawRoot = join(consumerDir, "node_modules", "openclaw");
+  const installedOpenClawRoot = join(consumerDir, "node_modules", "quiet-core-bot");
   const tscPath = [
     join(consumerDir, "node_modules", "typescript", "bin", "tsc"),
     join(installedOpenClawRoot, "node_modules", "typescript", "bin", "tsc"),
@@ -650,8 +650,8 @@ function runPackedPluginSdkTypescriptSmoke(tarballPath: string, tmpRoot: string)
 }
 
 export function writePackedBundledPluginActivationConfig(homeDir: string): void {
-  const configPath = join(homeDir, ".openclaw", "openclaw.json");
-  mkdirSync(join(homeDir, ".openclaw"), { recursive: true });
+  const configPath = join(homeDir, ".quiet-core-bot", "quiet-core-bot.json");
+  mkdirSync(join(homeDir, ".quiet-core-bot"), { recursive: true });
   writeFileSync(
     configPath,
     `${JSON.stringify(
@@ -669,7 +669,7 @@ export function writePackedBundledPluginActivationConfig(homeDir: string): void 
         models: {
           providers: {
             openai: {
-              apiKey: "sk-openclaw-release-check",
+              apiKey: "sk-quiet-core-bot-release-check",
               baseUrl: "https://api.openai.com/v1",
               models: [],
             },
@@ -696,7 +696,7 @@ function runPackedBundledPluginActivationSmoke(packageRoot: string, tmpRoot: str
   mkdirSync(homeDir, { recursive: true });
   const env = createPackedCliSmokeEnv(process.env, {
     HOME: homeDir,
-    OPENAI_API_KEY: "sk-openclaw-release-check",
+    OPENAI_API_KEY: "sk-quiet-core-bot-release-check",
   });
 
   writePackedBundledPluginActivationConfig(homeDir);
@@ -758,8 +758,8 @@ function runPackedCliSmoke(params: {
   const binaryPath = resolveInstalledBinaryPath(params.prefixDir);
   const env = createPackedCliSmokeEnv(process.env, {
     HOME: params.homeDir,
-    OPENCLAW_STATE_DIR: params.stateDir,
-    OPENAI_API_KEY: "sk-openclaw-release-check",
+    QUIET_CORE_STATE_DIR: params.stateDir,
+    OPENAI_API_KEY: "sk-quiet-core-bot-release-check",
   });
   const windowsRoot = env.SystemRoot ?? env.WINDIR ?? "C:\\Windows";
   const trustedCmdPath = join(windowsRoot, "System32", "cmd.exe");
@@ -793,7 +793,7 @@ function runPackedCliSmoke(params: {
 }
 
 function runPackedBundledChannelEntrySmoke(): void {
-  const tmpRoot = mkdtempSync(join(tmpdir(), "openclaw-release-pack-smoke-"));
+  const tmpRoot = mkdtempSync(join(tmpdir(), "quiet-core-bot-release-pack-smoke-"));
   try {
     const expectedVersion = (
       JSON.parse(readFileSync(resolve("package.json"), "utf8")) as {
@@ -811,7 +811,7 @@ function runPackedBundledChannelEntrySmoke(): void {
     const prefixDir = join(tmpRoot, "prefix");
     installPackedTarball(prefixDir, tarballPath, tmpRoot);
 
-    const packageRoot = join(resolveGlobalRoot(prefixDir, tmpRoot), "openclaw");
+    const packageRoot = join(resolveGlobalRoot(prefixDir, tmpRoot), "quiet-core-bot");
     verifyPackedInstalledPackage({
       expectedVersion,
       packageRoot,
@@ -844,7 +844,7 @@ function runPackedBundledChannelEntrySmoke(): void {
         stdio: "inherit",
         env: {
           ...process.env,
-          OPENCLAW_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK: "1",
+          QUIET_CORE_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK: "1",
         },
       },
     );
@@ -859,7 +859,7 @@ function runPackedBundledChannelEntrySmoke(): void {
         stdio: "inherit",
         env: createPackedCompletionSmokeEnv(process.env, {
           HOME: homeDir,
-          OPENCLAW_STATE_DIR: stateDir,
+          QUIET_CORE_STATE_DIR: stateDir,
         }),
       },
     );
@@ -916,8 +916,8 @@ export function collectForbiddenPackPaths(paths: Iterable<string>): string[] {
       (path) =>
         isLegacyPluginDependencyInstallStagePath(path) ||
         forbiddenPrefixes.some((prefix) => path.startsWith(prefix)) ||
-        /(^|\/)\.openclaw-runtime-deps-[^/]+(\/|$)/u.test(path) ||
-        path.endsWith("/.openclaw-runtime-deps-stamp.json") ||
+        /(^|\/)\.quiet-core-bot-runtime-deps-[^/]+(\/|$)/u.test(path) ||
+        path.endsWith("/.quiet-core-bot-runtime-deps-stamp.json") ||
         path.includes("node_modules/"),
     )
     .toSorted((left, right) => left.localeCompare(right));
@@ -952,7 +952,7 @@ export function collectForbiddenPackContentPaths(
 
 export { collectPackUnpackedSizeErrors } from "./lib/npm-pack-budget.mjs";
 
-// Critical functions that channel extension plugins import from openclaw/plugin-sdk.
+// Critical functions that channel extension plugins import from quiet-core-bot/plugin-sdk.
 // If any are missing from the compiled output, plugins crash at runtime (#27569).
 const requiredPluginSdkExports = [
   "isDangerousNameMatchingEnabled",
@@ -1033,7 +1033,7 @@ async function checkPluginSdkExports() {
 export function collectCriticalPluginSdkEntrypointSizeErrors(rootDir = process.cwd()): string[] {
   const errors: string[] = [];
   for (const specifier of CRITICAL_PLUGIN_SDK_SIZE_CHECK_SPECIFIERS) {
-    const subpath = specifier.slice("openclaw/plugin-sdk/".length);
+    const subpath = specifier.slice("quiet-core-bot/plugin-sdk/".length);
     const relativePath = `dist/plugin-sdk/${subpath}.js`;
     const filePath = resolve(rootDir, relativePath);
     if (!existsSync(filePath)) {

@@ -24,7 +24,7 @@ read_when:
 Install the official plugin, then restart Gateway:
 
 ```bash
-quiet-core-bot plugins install @openclaw/cerebras-provider
+quiet-core-bot plugins install @quiet-core/cerebras-provider
 quiet-core-bot gateway restart
 ```
 

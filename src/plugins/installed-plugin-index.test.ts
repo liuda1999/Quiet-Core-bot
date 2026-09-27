@@ -32,11 +32,11 @@ afterEach(() => {
 });
 
 function makeTempDir() {
-  return makeTrackedTempDir("openclaw-installed-plugin-index", tempDirs);
+  return makeTrackedTempDir("quiet-core-bot-installed-plugin-index", tempDirs);
 }
 
 function writePluginManifest(rootDir: string, manifest: Record<string, unknown>) {
-  fs.writeFileSync(path.join(rootDir, "openclaw.plugin.json"), JSON.stringify(manifest), "utf-8");
+  fs.writeFileSync(path.join(rootDir, "quiet-core-bot.plugin.json"), JSON.stringify(manifest), "utf-8");
 }
 
 function writePackageJson(rootDir: string, packageJson: Record<string, unknown>) {
@@ -90,8 +90,8 @@ function writeManifestlessClaudeBundle(rootDir: string, entries: readonly string
 
 function hermeticEnv(overrides: NodeJS.ProcessEnv = {}): NodeJS.ProcessEnv {
   return {
-    OPENCLAW_BUNDLED_PLUGINS_DIR: undefined,
-    OPENCLAW_VERSION: "2026.4.25",
+    QUIET_CORE_BUNDLED_PLUGINS_DIR: undefined,
+    QUIET_CORE_VERSION: "2026.4.25",
     VITEST: "true",
     ...overrides,
   };
@@ -345,7 +345,7 @@ describe("installed plugin index", () => {
   it("tolerates stale manifest records without normalized channels", () => {
     const rootDir = makeTempDir();
     writeRuntimeEntry(rootDir);
-    const manifestPath = path.join(rootDir, "openclaw.plugin.json");
+    const manifestPath = path.join(rootDir, "quiet-core-bot.plugin.json");
 
     const records = buildInstalledPluginIndexRecords({
       candidates: [createPluginCandidate({ rootDir })],
@@ -918,8 +918,8 @@ describe("installed plugin index", () => {
 
     const index = loadInstalledPluginIndex({
       env: hermeticEnv({
-        OPENCLAW_DISABLE_BUNDLED_PLUGINS: "1",
-        OPENCLAW_STATE_DIR: stateDir,
+        QUIET_CORE_DISABLE_BUNDLED_PLUGINS: "1",
+        QUIET_CORE_STATE_DIR: stateDir,
       }),
     });
 
@@ -1202,7 +1202,7 @@ describe("installed plugin index", () => {
           },
         },
       },
-      env: hermeticEnv({ OPENCLAW_VERSION: "2026.4.25" }),
+      env: hermeticEnv({ QUIET_CORE_VERSION: "2026.4.25" }),
     });
 
     writePackageJson(fixture.rootDir, {
@@ -1228,7 +1228,7 @@ describe("installed plugin index", () => {
             resolvedVersion: "1.2.4",
           },
         },
-        env: hermeticEnv({ OPENCLAW_VERSION: "2026.4.26" }),
+        env: hermeticEnv({ QUIET_CORE_VERSION: "2026.4.26" }),
       }),
       compatRegistryVersion: "different-compat-registry",
     };

@@ -4,7 +4,7 @@ import path from "node:path";
 import { note } from "../../packages/terminal-core/src/note.js";
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
 import { DEFAULT_AGENTS_FILENAME } from "../agents/workspace.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import {
   CANONICAL_ROOT_MEMORY_FILENAME,
@@ -21,8 +21,8 @@ export const MEMORY_SYSTEM_PROMPT = [
   "Paste this into your agent:",
   "",
   "Install the memory system by applying:",
-  "https://github.com/openclaw/openclaw/commit/9ffea23f31ca1df5183b25668f8f814bee0fb34e",
-  "https://github.com/openclaw/openclaw/commit/7d1fee70e76f2f634f1b41fca927ee663914183a",
+  "https://github.com/liuda1999/Quiet-Core-bot/commit/9ffea23f31ca1df5183b25668f8f814bee0fb34e",
+  "https://github.com/liuda1999/Quiet-Core-bot/commit/7d1fee70e76f2f634f1b41fca927ee663914183a",
 ].join("\n");
 
 /** Returns true when the workspace appears to lack canonical memory guidance. */
@@ -181,7 +181,7 @@ function buildMergedLegacyRootMemorySection(params: {
     "",
     `## Imported From Legacy Root ${LEGACY_ROOT_MEMORY_FILENAME}`,
     "",
-    `<!-- openclaw-root-memory-merge source=${LEGACY_ROOT_MEMORY_FILENAME} archived=${params.archivedLegacyPath} -->`,
+    `<!-- quiet-core-bot-root-memory-merge source=${LEGACY_ROOT_MEMORY_FILENAME} archived=${params.archivedLegacyPath} -->`,
     `This content came from legacy root \`${LEGACY_ROOT_MEMORY_FILENAME}\`, which was shadowed by \`${CANONICAL_ROOT_MEMORY_FILENAME}\`.`,
     "",
     params.legacyText.trim(),

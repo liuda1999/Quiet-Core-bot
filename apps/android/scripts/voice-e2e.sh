@@ -116,13 +116,13 @@ adb reverse "tcp:$PORT" "tcp:$PORT" >/dev/null
 
 if [[ "$START_GATEWAY" -eq 1 ]]; then
   if command -v bws_get_secret >/dev/null 2>&1; then
-    OPENCLAW_OPENAI_API_KEY="$(bws_get_secret OPENCLAW_OPENAI_API_KEY)"
+    QUIET_CORE_OPENAI_API_KEY="$(bws_get_secret QUIET_CORE_OPENAI_API_KEY)"
   else
-    OPENCLAW_OPENAI_API_KEY="$(zsh -ic 'bws_get_secret OPENCLAW_OPENAI_API_KEY')"
+    QUIET_CORE_OPENAI_API_KEY="$(zsh -ic 'bws_get_secret QUIET_CORE_OPENAI_API_KEY')"
   fi
   (
     cd "$ROOT_DIR"
-    OPENAI_API_KEY="$OPENCLAW_OPENAI_API_KEY" \
+    OPENAI_API_KEY="$QUIET_CORE_OPENAI_API_KEY" \
       pnpm openclaw gateway run \
         --port "$PORT" \
         --auth none \
@@ -137,7 +137,7 @@ if [[ "$START_GATEWAY" -eq 1 ]]; then
     cat "$ARTIFACT_DIR/gateway.log" >&2
     exit 1
   fi
-  unset OPENCLAW_OPENAI_API_KEY
+  unset QUIET_CORE_OPENAI_API_KEY
 fi
 
 if [[ "$INSTALL" -eq 1 ]]; then

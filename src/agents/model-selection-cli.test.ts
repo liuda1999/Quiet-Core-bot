@@ -27,7 +27,7 @@ function setCliBackendMetadataSnapshot(cliBackends: string[]) {
     plugins: [
       {
         pluginId: "anthropic",
-        manifestPath: "/tmp/anthropic/openclaw.plugin.json",
+        manifestPath: "/tmp/anthropic/quiet-core-bot.plugin.json",
         manifestHash: "test-manifest",
         source: "/tmp/anthropic/index.ts",
         rootDir: "/tmp/anthropic",

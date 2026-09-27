@@ -6,10 +6,10 @@ import {
   resolveSiteName,
   wrapWebContent,
   type WebSearchProviderPlugin,
-} from "openclaw/plugin-sdk/provider-web-search";
+} from "quiet-core-bot/plugin-sdk/provider-web-search";
 
 export const QA_LAB_WEB_SEARCH_PROVIDER_ID = "qa-lab-search";
-export const QA_LAB_WEB_SEARCH_DENIED_INPUT_QUERY = "OPENCLAW_QA_WEB_SEARCH_DENIED_INPUT";
+export const QA_LAB_WEB_SEARCH_DENIED_INPUT_QUERY = "QUIET_CORE_QA_WEB_SEARCH_DENIED_INPUT";
 
 const QaLabWebSearchSchema = {
   type: "object",

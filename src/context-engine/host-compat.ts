@@ -19,8 +19,8 @@ export const GENERIC_CLI_CONTEXT_ENGINE_HOST_CAPABILITIES = [
   "maintain",
 ] as const satisfies readonly ContextEngineHostCapability[];
 
-export const OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST = {
-  id: "openclaw-embedded",
+export const QUIET_CORE_EMBEDDED_CONTEXT_ENGINE_HOST = {
+  id: "quiet-core-bot-embedded",
   label: "Quiet Core bot embedded runner",
   capabilities: [
     "bootstrap",

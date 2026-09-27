@@ -14,7 +14,7 @@ import {
   buildOpenClawReleaseClawHubPlan,
   buildOpenClawReleaseClawHubRuntimeState,
   parseOpenClawReleaseClawHubPlanArgs,
-} from "../scripts/lib/openclaw-release-clawhub-plan.ts";
+} from "../scripts/lib/quiet-core-bot-release-clawhub-plan.ts";
 import {
   collectClawHubPublishablePluginPackages,
   collectClawHubVersionGateErrors,
@@ -26,7 +26,7 @@ import {
 } from "../scripts/lib/plugin-clawhub-release.ts";
 import {
   collectPublishablePluginPackages,
-  OPENCLAW_PLUGIN_NPM_REPOSITORY_URL,
+  QUIET_CORE_PLUGIN_NPM_REPOSITORY_URL,
 } from "../scripts/lib/plugin-npm-release.ts";
 import { cleanupTempDirs, makeTempRepoRoot } from "./helpers/temp-repo.js";
 
@@ -41,7 +41,7 @@ describe("resolveChangedClawHubPublishablePluginPackages", () => {
     {
       extensionId: "feishu",
       packageDir: "extensions/feishu",
-      packageName: "@openclaw/feishu",
+      packageName: "@quiet-core/feishu",
       version: "2026.4.1",
       channel: "stable",
       publishTag: "latest",
@@ -49,7 +49,7 @@ describe("resolveChangedClawHubPublishablePluginPackages", () => {
     {
       extensionId: "zalo",
       packageDir: "extensions/zalo",
-      packageName: "@openclaw/zalo",
+      packageName: "@quiet-core/zalo",
       version: "2026.4.1-beta.1",
       channel: "beta",
       publishTag: "beta",
@@ -73,7 +73,7 @@ describe("collectClawHubPublishablePluginPackages", () => {
     });
 
     expect(() => collectClawHubPublishablePluginPackages(repoDir)).toThrow(
-      "openclaw.compat.pluginApi is required for external code plugin packages.",
+      "quiet-core-bot.compat.pluginApi is required for external code plugin packages.",
     );
   });
 
@@ -95,9 +95,9 @@ describe("collectClawHubPublishablePluginPackages", () => {
       join(repoDir, "extensions", "broken-plugin", "package.json"),
       JSON.stringify(
         {
-          name: "@openclaw/broken-plugin",
+          name: "@quiet-core/broken-plugin",
           version: "2026.4.1",
-          openclaw: {
+          "quiet-core-bot": {
             extensions: ["./index.ts"],
             release: {
               publishToClawHub: true,
@@ -111,9 +111,9 @@ describe("collectClawHubPublishablePluginPackages", () => {
 
     expect(
       collectClawHubPublishablePluginPackages(repoDir, {
-        packageNames: ["@openclaw/demo-plugin"],
+        packageNames: ["@quiet-core/demo-plugin"],
       }).map((plugin) => plugin.packageName),
-    ).toEqual(["@openclaw/demo-plugin"]);
+    ).toEqual(["@quiet-core/demo-plugin"]);
   });
 });
 
@@ -121,42 +121,42 @@ describe("Quiet Core bot dual-published plugin metadata", () => {
   const dualPublishedPlugins = [
     {
       extensionId: "cohere",
-      packageName: "@openclaw/cohere-provider",
+      packageName: "@quiet-core/cohere-provider",
       install: {
-        clawhubSpec: "clawhub:@openclaw/cohere-provider",
+        clawhubSpec: "clawhub:@quiet-core/cohere-provider",
         defaultChoice: "npm",
         minHostVersion: ">=2026.6.8",
-        npmSpec: "@openclaw/cohere-provider",
+        npmSpec: "@quiet-core/cohere-provider",
       },
     },
     {
       extensionId: "diagnostics-otel",
-      packageName: "@openclaw/diagnostics-otel",
+      packageName: "@quiet-core/diagnostics-otel",
       install: {
-        clawhubSpec: "clawhub:@openclaw/diagnostics-otel",
+        clawhubSpec: "clawhub:@quiet-core/diagnostics-otel",
         defaultChoice: "npm",
         minHostVersion: ">=2026.4.25",
-        npmSpec: "@openclaw/diagnostics-otel",
+        npmSpec: "@quiet-core/diagnostics-otel",
       },
     },
     {
       extensionId: "diagnostics-prometheus",
-      packageName: "@openclaw/diagnostics-prometheus",
+      packageName: "@quiet-core/diagnostics-prometheus",
       install: {
-        clawhubSpec: "clawhub:@openclaw/diagnostics-prometheus",
+        clawhubSpec: "clawhub:@quiet-core/diagnostics-prometheus",
         defaultChoice: "npm",
         minHostVersion: ">=2026.4.25",
-        npmSpec: "@openclaw/diagnostics-prometheus",
+        npmSpec: "@quiet-core/diagnostics-prometheus",
       },
     },
     {
       extensionId: "gmi",
-      packageName: "@openclaw/gmi-provider",
+      packageName: "@quiet-core/gmi-provider",
       install: {
-        clawhubSpec: "clawhub:@openclaw/gmi-provider",
+        clawhubSpec: "clawhub:@quiet-core/gmi-provider",
         defaultChoice: "npm",
         minHostVersion: ">=2026.6.8",
-        npmSpec: "@openclaw/gmi-provider",
+        npmSpec: "@quiet-core/gmi-provider",
       },
     },
   ] as const;
@@ -176,8 +176,7 @@ describe("Quiet Core bot dual-published plugin metadata", () => {
     for (const plugin of dualPublishedPlugins) {
       const packageJson = JSON.parse(
         readFileSync(`extensions/${plugin.extensionId}/package.json`, "utf8"),
-      ) as {
-        openclaw?: {
+      ) as { "quiet-core-bot"?: {
           install?: {
             clawhubSpec?: string;
             defaultChoice?: string;
@@ -191,8 +190,8 @@ describe("Quiet Core bot dual-published plugin metadata", () => {
         };
       };
 
-      expect(packageJson.openclaw?.install).toEqual(plugin.install);
-      expect(packageJson.openclaw?.release).toEqual({
+      expect(packageJson["quiet-core-bot"]?.install).toEqual(plugin.install);
+      expect(packageJson["quiet-core-bot"]?.release).toEqual({
         publishToClawHub: true,
         publishToNpm: true,
       });
@@ -228,7 +227,7 @@ describe("collectClawHubVersionGateErrors", () => {
     });
 
     expect(errors).toEqual([
-      "@openclaw/demo-plugin@2026.4.1: changed publishable plugin still has the same version in package.json.",
+      "@quiet-core/demo-plugin@2026.4.1: changed publishable plugin still has the same version in package.json.",
     ]);
   });
 
@@ -242,20 +241,20 @@ describe("collectClawHubVersionGateErrors", () => {
       join(repoDir, "extensions", "demo-plugin", "package.json"),
       JSON.stringify(
         {
-          name: "@openclaw/demo-plugin",
+          name: "@quiet-core/demo-plugin",
           version: "2026.4.1",
           type: "module",
           repository: {
             type: "git",
-            url: OPENCLAW_PLUGIN_NPM_REPOSITORY_URL,
+            url: QUIET_CORE_PLUGIN_NPM_REPOSITORY_URL,
           },
-          openclaw: {
+          "quiet-core-bot": {
             extensions: ["./index.ts"],
             compat: {
               pluginApi: ">=2026.4.1",
             },
             install: {
-              npmSpec: "@openclaw/demo-plugin",
+              npmSpec: "@quiet-core/demo-plugin",
             },
             build: {
               openclawVersion: "2026.4.1",
@@ -358,7 +357,7 @@ describe("collectPluginClawHubReleasePlan", () => {
     const repoDir = createTempPluginRepo();
     const { fetchImpl, requests } = createClawHubPlanFetch({
       packages: {
-        "@openclaw/demo-plugin": {
+        "@quiet-core/demo-plugin": {
           status: 200,
           body: {
             package: {},
@@ -367,35 +366,35 @@ describe("collectPluginClawHubReleasePlan", () => {
         },
       },
       trustedPublishers: {
-        "@openclaw/demo-plugin": {
+        "@quiet-core/demo-plugin": {
           status: 200,
           body: {
             trustedPublisher: {
-              repository: "openclaw/openclaw",
+              repository: "liuda1999/quiet-core-bot",
               workflowFilename: "plugin-clawhub-release.yml",
             },
           },
         },
       },
       versions: {
-        "@openclaw/demo-plugin@2026.4.1": 404,
+        "@quiet-core/demo-plugin@2026.4.1": 404,
       },
     });
 
     const plan = await collectPluginClawHubReleasePlan({
       rootDir: repoDir,
-      selection: ["@openclaw/demo-plugin"],
+      selection: ["@quiet-core/demo-plugin"],
       fetchImpl,
       registryBaseUrl: "https://clawhub.ai",
     });
 
-    expect(plan.candidates.map((plugin) => plugin.packageName)).toEqual(["@openclaw/demo-plugin"]);
+    expect(plan.candidates.map((plugin) => plugin.packageName)).toEqual(["@quiet-core/demo-plugin"]);
     expect(plan.bootstrapCandidates).toStrictEqual([]);
     expect(plan.missingTrustedPublisher).toStrictEqual([]);
     expect(requests).toEqual([
-      "/api/v1/packages/%40openclaw%2Fdemo-plugin",
-      "/api/v1/packages/%40openclaw%2Fdemo-plugin/trusted-publisher",
-      "/api/v1/packages/%40openclaw%2Fdemo-plugin/versions/2026.4.1",
+      "/api/v1/packages/%40quiet-core-bot%2Fdemo-plugin",
+      "/api/v1/packages/%40quiet-core-bot%2Fdemo-plugin/trusted-publisher",
+      "/api/v1/packages/%40quiet-core-bot%2Fdemo-plugin/versions/2026.4.1",
     ]);
   });
 
@@ -407,7 +406,7 @@ describe("collectPluginClawHubReleasePlan", () => {
         typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
       const url = new URL(requestUrl);
 
-      if (url.pathname === "/api/v1/packages/%40openclaw%2Fdemo-plugin") {
+      if (url.pathname === "/api/v1/packages/%40quiet-core-bot%2Fdemo-plugin") {
         return new Response(
           new ReadableStream<Uint8Array>({
             cancel() {
@@ -417,18 +416,18 @@ describe("collectPluginClawHubReleasePlan", () => {
           { status: 200 },
         );
       }
-      if (url.pathname === "/api/v1/packages/%40openclaw%2Fdemo-plugin/trusted-publisher") {
+      if (url.pathname === "/api/v1/packages/%40quiet-core-bot%2Fdemo-plugin/trusted-publisher") {
         return new Response(
           JSON.stringify({
             trustedPublisher: {
-              repository: "openclaw/openclaw",
+              repository: "liuda1999/quiet-core-bot",
               workflowFilename: "plugin-clawhub-release.yml",
             },
           }),
           { status: 200 },
         );
       }
-      if (url.pathname === "/api/v1/packages/%40openclaw%2Fdemo-plugin/versions/2026.4.1") {
+      if (url.pathname === "/api/v1/packages/%40quiet-core-bot%2Fdemo-plugin/versions/2026.4.1") {
         return new Response(
           new ReadableStream<Uint8Array>({
             cancel() {
@@ -444,7 +443,7 @@ describe("collectPluginClawHubReleasePlan", () => {
 
     await collectPluginClawHubReleasePlan({
       rootDir: repoDir,
-      selection: ["@openclaw/demo-plugin"],
+      selection: ["@quiet-core/demo-plugin"],
       fetchImpl,
       registryBaseUrl: "https://clawhub.ai",
     });
@@ -462,10 +461,10 @@ describe("collectPluginClawHubReleasePlan", () => {
       const requestUrl =
         typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
       const pathname = new URL(requestUrl).pathname;
-      if (pathname === "/api/v1/packages/%40openclaw%2Fdemo-plugin") {
+      if (pathname === "/api/v1/packages/%40quiet-core-bot%2Fdemo-plugin") {
         return new Response("{}", { status: 200 });
       }
-      if (pathname === "/api/v1/packages/%40openclaw%2Fdemo-plugin/trusted-publisher") {
+      if (pathname === "/api/v1/packages/%40quiet-core-bot%2Fdemo-plugin/trusted-publisher") {
         trustedPublisherRequests += 1;
         if (trustedPublisherRequests === 1) {
           firstTrustedPublisherRequestAt = Date.now();
@@ -482,14 +481,14 @@ describe("collectPluginClawHubReleasePlan", () => {
         return new Response(
           JSON.stringify({
             trustedPublisher: {
-              repository: "openclaw/openclaw",
+              repository: "liuda1999/quiet-core-bot",
               workflowFilename: "plugin-clawhub-release.yml",
             },
           }),
           { status: 200 },
         );
       }
-      if (pathname === "/api/v1/packages/%40openclaw%2Fdemo-plugin/versions/2026.4.1") {
+      if (pathname === "/api/v1/packages/%40quiet-core-bot%2Fdemo-plugin/versions/2026.4.1") {
         return new Response("", { status: 404 });
       }
       throw new Error(`Unexpected ClawHub request to ${pathname}`);
@@ -497,7 +496,7 @@ describe("collectPluginClawHubReleasePlan", () => {
 
     const plan = await collectPluginClawHubReleasePlan({
       rootDir: repoDir,
-      selection: ["@openclaw/demo-plugin"],
+      selection: ["@quiet-core/demo-plugin"],
       fetchImpl,
       registryBaseUrl: "https://clawhub.ai",
     });
@@ -507,7 +506,7 @@ describe("collectPluginClawHubReleasePlan", () => {
     expect(retryTrustedPublisherRequestAt).toBeGreaterThanOrEqual(
       (firstTrustedPublisherRequestAt ?? Number.POSITIVE_INFINITY) + 900,
     );
-    expect(plan.candidates.map((plugin) => plugin.packageName)).toEqual(["@openclaw/demo-plugin"]);
+    expect(plan.candidates.map((plugin) => plugin.packageName)).toEqual(["@quiet-core/demo-plugin"]);
   });
 
   it("honors an HTTP-date Retry-After header", async () => {
@@ -521,10 +520,10 @@ describe("collectPluginClawHubReleasePlan", () => {
       const requestUrl =
         typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
       const pathname = new URL(requestUrl).pathname;
-      if (pathname === "/api/v1/packages/%40openclaw%2Fdemo-plugin") {
+      if (pathname === "/api/v1/packages/%40quiet-core-bot%2Fdemo-plugin") {
         return new Response("{}", { status: 200 });
       }
-      if (pathname === "/api/v1/packages/%40openclaw%2Fdemo-plugin/trusted-publisher") {
+      if (pathname === "/api/v1/packages/%40quiet-core-bot%2Fdemo-plugin/trusted-publisher") {
         trustedPublisherRequests += 1;
         if (trustedPublisherRequests === 1) {
           firstTrustedPublisherRequestAt = performance.now();
@@ -534,14 +533,14 @@ describe("collectPluginClawHubReleasePlan", () => {
         return new Response(
           JSON.stringify({
             trustedPublisher: {
-              repository: "openclaw/openclaw",
+              repository: "liuda1999/quiet-core-bot",
               workflowFilename: "plugin-clawhub-release.yml",
             },
           }),
           { status: 200 },
         );
       }
-      if (pathname === "/api/v1/packages/%40openclaw%2Fdemo-plugin/versions/2026.4.1") {
+      if (pathname === "/api/v1/packages/%40quiet-core-bot%2Fdemo-plugin/versions/2026.4.1") {
         return new Response("", { status: 404 });
       }
       throw new Error(`Unexpected ClawHub request to ${pathname}`);
@@ -550,7 +549,7 @@ describe("collectPluginClawHubReleasePlan", () => {
     try {
       await collectPluginClawHubReleasePlan({
         rootDir: repoDir,
-        selection: ["@openclaw/demo-plugin"],
+        selection: ["@quiet-core/demo-plugin"],
         fetchImpl,
         registryBaseUrl: "https://clawhub.ai",
       });
@@ -573,10 +572,10 @@ describe("collectPluginClawHubReleasePlan", () => {
       const requestUrl =
         typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
       const pathname = new URL(requestUrl).pathname;
-      if (pathname === "/api/v1/packages/%40openclaw%2Fdemo-plugin") {
+      if (pathname === "/api/v1/packages/%40quiet-core-bot%2Fdemo-plugin") {
         return new Response("{}", { status: 200 });
       }
-      if (pathname === "/api/v1/packages/%40openclaw%2Fdemo-plugin/trusted-publisher") {
+      if (pathname === "/api/v1/packages/%40quiet-core-bot%2Fdemo-plugin/trusted-publisher") {
         trustedPublisherRequests += 1;
         if (trustedPublisherRequests === 1) {
           firstTrustedPublisherRequestAt = Date.now();
@@ -586,14 +585,14 @@ describe("collectPluginClawHubReleasePlan", () => {
         return new Response(
           JSON.stringify({
             trustedPublisher: {
-              repository: "openclaw/openclaw",
+              repository: "liuda1999/quiet-core-bot",
               workflowFilename: "plugin-clawhub-release.yml",
             },
           }),
           { status: 200 },
         );
       }
-      if (pathname === "/api/v1/packages/%40openclaw%2Fdemo-plugin/versions/2026.4.1") {
+      if (pathname === "/api/v1/packages/%40quiet-core-bot%2Fdemo-plugin/versions/2026.4.1") {
         return new Response("", { status: 404 });
       }
       throw new Error(`Unexpected ClawHub request to ${pathname}`);
@@ -601,7 +600,7 @@ describe("collectPluginClawHubReleasePlan", () => {
 
     await collectPluginClawHubReleasePlan({
       rootDir: repoDir,
-      selection: ["@openclaw/demo-plugin"],
+      selection: ["@quiet-core/demo-plugin"],
       fetchImpl,
       registryBaseUrl: "https://clawhub.ai",
     });
@@ -616,7 +615,7 @@ describe("collectPluginClawHubReleasePlan", () => {
     const repoDir = createTempPluginRepo();
     const { fetchImpl } = createClawHubPlanFetch({
       packages: {
-        "@openclaw/demo-plugin": {
+        "@quiet-core/demo-plugin": {
           status: 404,
         },
       },
@@ -624,19 +623,19 @@ describe("collectPluginClawHubReleasePlan", () => {
 
     const plan = await collectPluginClawHubReleasePlan({
       rootDir: repoDir,
-      selection: ["@openclaw/demo-plugin"],
+      selection: ["@quiet-core/demo-plugin"],
       fetchImpl,
       registryBaseUrl: "https://clawhub.ai",
     });
 
     expect(plan.candidates).toStrictEqual([]);
     expect(plan.bootstrapCandidates.map((plugin) => plugin.packageName)).toEqual([
-      "@openclaw/demo-plugin",
+      "@quiet-core/demo-plugin",
     ]);
     expect(plan.bootstrapCandidates[0]).toMatchObject({
       alreadyPublished: false,
-      artifactName: "clawhub-package-openclaw-demo-plugin-2026.4.1",
-      packageName: "@openclaw/demo-plugin",
+      artifactName: "clawhub-package-quiet-core-bot-demo-plugin-2026.4.1",
+      packageName: "@quiet-core/demo-plugin",
       version: "2026.4.1",
     });
     expect(plan.missingTrustedPublisher).toStrictEqual([]);
@@ -646,7 +645,7 @@ describe("collectPluginClawHubReleasePlan", () => {
     const repoDir = createTempPluginRepo();
     const { fetchImpl } = createClawHubPlanFetch({
       packages: {
-        "@openclaw/demo-plugin": {
+        "@quiet-core/demo-plugin": {
           status: 200,
           body: {
             package: {},
@@ -655,7 +654,7 @@ describe("collectPluginClawHubReleasePlan", () => {
         },
       },
       trustedPublishers: {
-        "@openclaw/demo-plugin": {
+        "@quiet-core/demo-plugin": {
           status: 200,
           body: {
             trustedPublisher: null,
@@ -663,13 +662,13 @@ describe("collectPluginClawHubReleasePlan", () => {
         },
       },
       versions: {
-        "@openclaw/demo-plugin@2026.4.1": 404,
+        "@quiet-core/demo-plugin@2026.4.1": 404,
       },
     });
 
     const plan = await collectPluginClawHubReleasePlan({
       rootDir: repoDir,
-      selection: ["@openclaw/demo-plugin"],
+      selection: ["@quiet-core/demo-plugin"],
       fetchImpl,
       registryBaseUrl: "https://clawhub.ai",
     });
@@ -677,12 +676,12 @@ describe("collectPluginClawHubReleasePlan", () => {
     expect(plan.candidates).toStrictEqual([]);
     expect(plan.bootstrapCandidates).toStrictEqual([]);
     expect(plan.missingTrustedPublisher.map((plugin) => plugin.packageName)).toEqual([
-      "@openclaw/demo-plugin",
+      "@quiet-core/demo-plugin",
     ]);
     expect(plan.missingTrustedPublisher[0]).toMatchObject({
       alreadyPublished: false,
-      artifactName: "clawhub-package-openclaw-demo-plugin-2026.4.1",
-      packageName: "@openclaw/demo-plugin",
+      artifactName: "clawhub-package-quiet-core-bot-demo-plugin-2026.4.1",
+      packageName: "@quiet-core/demo-plugin",
       version: "2026.4.1",
     });
   });
@@ -693,10 +692,10 @@ describe("collectPluginClawHubReleasePlan", () => {
       const requestUrl =
         typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
       const url = new URL(requestUrl);
-      if (url.pathname === "/api/v1/packages/%40openclaw%2Fdemo-plugin") {
+      if (url.pathname === "/api/v1/packages/%40quiet-core-bot%2Fdemo-plugin") {
         return new Response("{}", { status: 200 });
       }
-      if (url.pathname === "/api/v1/packages/%40openclaw%2Fdemo-plugin/trusted-publisher") {
+      if (url.pathname === "/api/v1/packages/%40quiet-core-bot%2Fdemo-plugin/trusted-publisher") {
         return new Response(new ReadableStream<Uint8Array>({ start() {} }), { status: 200 });
       }
       throw new Error(`Unexpected ClawHub request to ${url.pathname}`);
@@ -705,7 +704,7 @@ describe("collectPluginClawHubReleasePlan", () => {
     await expect(
       collectPluginClawHubReleasePlan({
         rootDir: repoDir,
-        selection: ["@openclaw/demo-plugin"],
+        selection: ["@quiet-core/demo-plugin"],
         fetchImpl,
         registryBaseUrl: "https://clawhub.ai",
         requestTimeoutMs: 5,
@@ -717,7 +716,7 @@ describe("collectPluginClawHubReleasePlan", () => {
     const repoDir = createTempPluginRepo();
     const { fetchImpl } = createClawHubPlanFetch({
       packages: {
-        "@openclaw/demo-plugin": {
+        "@quiet-core/demo-plugin": {
           status: 200,
           body: {
             package: {},
@@ -726,11 +725,11 @@ describe("collectPluginClawHubReleasePlan", () => {
         },
       },
       trustedPublishers: {
-        "@openclaw/demo-plugin": {
+        "@quiet-core/demo-plugin": {
           status: 200,
           body: {
             trustedPublisher: {
-              repository: "openclaw/openclaw",
+              repository: "liuda1999/quiet-core-bot",
               workflowFilename: "plugin-clawhub-release.yml",
               environment: "clawhub-plugin-release",
             },
@@ -738,13 +737,13 @@ describe("collectPluginClawHubReleasePlan", () => {
         },
       },
       versions: {
-        "@openclaw/demo-plugin@2026.4.1": 404,
+        "@quiet-core/demo-plugin@2026.4.1": 404,
       },
     });
 
     const plan = await collectPluginClawHubReleasePlan({
       rootDir: repoDir,
-      selection: ["@openclaw/demo-plugin"],
+      selection: ["@quiet-core/demo-plugin"],
       fetchImpl,
       registryBaseUrl: "https://clawhub.ai",
     });
@@ -752,7 +751,7 @@ describe("collectPluginClawHubReleasePlan", () => {
     expect(plan.candidates).toStrictEqual([]);
     expect(plan.bootstrapCandidates).toStrictEqual([]);
     expect(plan.missingTrustedPublisher.map((plugin) => plugin.packageName)).toEqual([
-      "@openclaw/demo-plugin",
+      "@quiet-core/demo-plugin",
     ]);
   });
 
@@ -760,7 +759,7 @@ describe("collectPluginClawHubReleasePlan", () => {
     const repoDir = createTempPluginRepo();
     const { fetchImpl } = createClawHubPlanFetch({
       packages: {
-        "@openclaw/demo-plugin": {
+        "@quiet-core/demo-plugin": {
           status: 200,
           body: {
             package: {},
@@ -769,7 +768,7 @@ describe("collectPluginClawHubReleasePlan", () => {
         },
       },
       trustedPublishers: {
-        "@openclaw/demo-plugin": {
+        "@quiet-core/demo-plugin": {
           status: 200,
           body: {
             trustedPublisher: null,
@@ -777,13 +776,13 @@ describe("collectPluginClawHubReleasePlan", () => {
         },
       },
       versions: {
-        "@openclaw/demo-plugin@2026.4.1": 200,
+        "@quiet-core/demo-plugin@2026.4.1": 200,
       },
     });
 
     const plan = await collectPluginClawHubReleasePlan({
       rootDir: repoDir,
-      selection: ["@openclaw/demo-plugin"],
+      selection: ["@quiet-core/demo-plugin"],
       fetchImpl,
       registryBaseUrl: "https://clawhub.ai",
     });
@@ -791,22 +790,22 @@ describe("collectPluginClawHubReleasePlan", () => {
     expect(plan.candidates).toStrictEqual([]);
     expect(plan.bootstrapCandidates).toStrictEqual([]);
     expect(plan.missingTrustedPublisher.map((plugin) => plugin.packageName)).toEqual([
-      "@openclaw/demo-plugin",
+      "@quiet-core/demo-plugin",
     ]);
     expect(plan.missingTrustedPublisher[0]).toMatchObject({
       alreadyPublished: true,
-      artifactName: "clawhub-package-openclaw-demo-plugin-2026.4.1",
-      packageName: "@openclaw/demo-plugin",
+      artifactName: "clawhub-package-quiet-core-bot-demo-plugin-2026.4.1",
+      packageName: "@quiet-core/demo-plugin",
       version: "2026.4.1",
     });
     expect(plan.skippedPublished).toHaveLength(1);
     expect(plan.skippedPublished[0]).toEqual({
       alreadyPublished: true,
-      artifactName: "clawhub-package-openclaw-demo-plugin-2026.4.1",
+      artifactName: "clawhub-package-quiet-core-bot-demo-plugin-2026.4.1",
       channel: "stable",
       extensionId: "demo-plugin",
       packageDir: "extensions/demo-plugin",
-      packageName: "@openclaw/demo-plugin",
+      packageName: "@quiet-core/demo-plugin",
       publishTag: "latest",
       version: "2026.4.1",
     });
@@ -820,9 +819,9 @@ describe("collectPluginClawHubReleasePlan", () => {
       join(repoDir, "extensions", "broken-plugin", "package.json"),
       JSON.stringify(
         {
-          name: "@openclaw/broken-plugin",
+          name: "@quiet-core/broken-plugin",
           version: "2026.4.1",
-          openclaw: {
+          "quiet-core-bot": {
             extensions: ["./index.ts"],
             release: {
               publishToClawHub: true,
@@ -836,10 +835,10 @@ describe("collectPluginClawHubReleasePlan", () => {
 
     const plan = await collectPluginClawHubReleasePlan({
       rootDir: repoDir,
-      selection: ["@openclaw/demo-plugin"],
+      selection: ["@quiet-core/demo-plugin"],
       fetchImpl: createClawHubPlanFetch({
         packages: {
-          "@openclaw/demo-plugin": {
+          "@quiet-core/demo-plugin": {
             status: 200,
             body: {
               package: {},
@@ -848,26 +847,26 @@ describe("collectPluginClawHubReleasePlan", () => {
           },
         },
         trustedPublishers: {
-          "@openclaw/demo-plugin": {
+          "@quiet-core/demo-plugin": {
             status: 200,
             body: {
               trustedPublisher: {
-                repository: "openclaw/openclaw",
+                repository: "liuda1999/quiet-core-bot",
                 workflowFilename: "plugin-clawhub-release.yml",
               },
             },
           },
         },
         versions: {
-          "@openclaw/demo-plugin@2026.4.1": 404,
+          "@quiet-core/demo-plugin@2026.4.1": 404,
         },
       }).fetchImpl,
       registryBaseUrl: "https://clawhub.ai",
     });
 
-    expect(plan.candidates.map((plugin) => plugin.packageName)).toEqual(["@openclaw/demo-plugin"]);
+    expect(plan.candidates.map((plugin) => plugin.packageName)).toEqual(["@quiet-core/demo-plugin"]);
     expect(plan.candidates.map((plugin) => plugin.artifactName)).toEqual([
-      "clawhub-package-openclaw-demo-plugin-2026.4.1",
+      "clawhub-package-quiet-core-bot-demo-plugin-2026.4.1",
     ]);
   });
 });
@@ -879,17 +878,17 @@ describe("buildOpenClawReleaseClawHubPlan", () => {
     });
     const { fetchImpl } = createClawHubPlanFetch({
       packages: {
-        "@openclaw/demo-plugin": {
+        "@quiet-core/demo-plugin": {
           status: 200,
           body: {
             package: {},
             owner: {},
           },
         },
-        "@openclaw/demo-two": {
+        "@quiet-core/demo-two": {
           status: 404,
         },
-        "@openclaw/demo-three": {
+        "@quiet-core/demo-three": {
           status: 200,
           body: {
             package: {},
@@ -898,16 +897,16 @@ describe("buildOpenClawReleaseClawHubPlan", () => {
         },
       },
       trustedPublishers: {
-        "@openclaw/demo-plugin": {
+        "@quiet-core/demo-plugin": {
           status: 200,
           body: {
             trustedPublisher: {
-              repository: "openclaw/openclaw",
+              repository: "liuda1999/quiet-core-bot",
               workflowFilename: "plugin-clawhub-release.yml",
             },
           },
         },
-        "@openclaw/demo-three": {
+        "@quiet-core/demo-three": {
           status: 200,
           body: {
             trustedPublisher: null,
@@ -915,8 +914,8 @@ describe("buildOpenClawReleaseClawHubPlan", () => {
         },
       },
       versions: {
-        "@openclaw/demo-plugin@2026.4.1": 404,
-        "@openclaw/demo-three@2026.4.1": 404,
+        "@quiet-core/demo-plugin@2026.4.1": 404,
+        "@quiet-core/demo-three@2026.4.1": 404,
       },
     });
 
@@ -941,10 +940,10 @@ describe("buildOpenClawReleaseClawHubPlan", () => {
       workflow: "plugin-clawhub-release.yml",
       ref: "v2026.4.1-beta.1",
       shouldDispatch: true,
-      packages: ["@openclaw/demo-plugin"],
+      packages: ["@quiet-core/demo-plugin"],
       inputs: {
         publish_scope: "selected",
-        plugins: "@openclaw/demo-plugin",
+        plugins: "@quiet-core/demo-plugin",
         release_publish_run_id: "12345",
         release_publish_branch: "main",
       },
@@ -953,9 +952,9 @@ describe("buildOpenClawReleaseClawHubPlan", () => {
       workflow: "plugin-clawhub-new.yml",
       ref: "v2026.4.1-beta.1",
       shouldDispatch: true,
-      packages: ["@openclaw/demo-two", "@openclaw/demo-three"],
+      packages: ["@quiet-core/demo-two", "@quiet-core/demo-three"],
       inputs: {
-        plugins: "@openclaw/demo-two,@openclaw/demo-three",
+        plugins: "@quiet-core/demo-two,@quiet-core/demo-three",
         release_publish_run_id: "12345",
         release_publish_branch: "main",
       },
@@ -965,9 +964,9 @@ describe("buildOpenClawReleaseClawHubPlan", () => {
       normalCount: 1,
       bootstrapCount: 2,
       missingTrustedPublisherCount: 1,
-      normalPlugins: "@openclaw/demo-plugin",
-      bootstrapPlugins: "@openclaw/demo-two,@openclaw/demo-three",
-      missingTrustedPlugins: "@openclaw/demo-three",
+      normalPlugins: "@quiet-core/demo-plugin",
+      bootstrapPlugins: "@quiet-core/demo-two,@quiet-core/demo-three",
+      missingTrustedPlugins: "@quiet-core/demo-three",
     });
     expect(plan.verifier).toEqual({
       clawHubWorkflowRef: "v2026.4.1-beta.1",
@@ -978,7 +977,7 @@ describe("buildOpenClawReleaseClawHubPlan", () => {
     const repoDir = createTempPluginRepo();
     const { fetchImpl } = createClawHubPlanFetch({
       packages: {
-        "@openclaw/demo-plugin": {
+        "@quiet-core/demo-plugin": {
           status: 200,
           body: {
             package: {},
@@ -987,7 +986,7 @@ describe("buildOpenClawReleaseClawHubPlan", () => {
         },
       },
       trustedPublishers: {
-        "@openclaw/demo-plugin": {
+        "@quiet-core/demo-plugin": {
           status: 200,
           body: {
             trustedPublisher: null,
@@ -995,7 +994,7 @@ describe("buildOpenClawReleaseClawHubPlan", () => {
         },
       },
       versions: {
-        "@openclaw/demo-plugin@2026.4.1": 200,
+        "@quiet-core/demo-plugin@2026.4.1": 200,
       },
     });
 
@@ -1005,7 +1004,7 @@ describe("buildOpenClawReleaseClawHubPlan", () => {
         releasePublishBranch: "release/2026.4.1",
         releasePublishRunId: "12345",
         pluginPublishScope: "selected",
-        plugins: ["@openclaw/demo-plugin"],
+        plugins: ["@quiet-core/demo-plugin"],
       },
       {
         rootDir: repoDir,
@@ -1019,9 +1018,9 @@ describe("buildOpenClawReleaseClawHubPlan", () => {
       workflow: "plugin-clawhub-new.yml",
       ref: "v2026.4.1-beta.1",
       shouldDispatch: true,
-      packages: ["@openclaw/demo-plugin"],
+      packages: ["@quiet-core/demo-plugin"],
       inputs: {
-        plugins: "@openclaw/demo-plugin",
+        plugins: "@quiet-core/demo-plugin",
         release_publish_run_id: "12345",
         release_publish_branch: "release/2026.4.1",
       },
@@ -1030,8 +1029,8 @@ describe("buildOpenClawReleaseClawHubPlan", () => {
       normalCount: 0,
       bootstrapCount: 1,
       missingTrustedPublisherCount: 1,
-      bootstrapPlugins: "@openclaw/demo-plugin",
-      missingTrustedPlugins: "@openclaw/demo-plugin",
+      bootstrapPlugins: "@quiet-core/demo-plugin",
+      missingTrustedPlugins: "@quiet-core/demo-plugin",
     });
   });
 
@@ -1047,7 +1046,7 @@ describe("buildOpenClawReleaseClawHubPlan", () => {
         "--plugin-publish-scope",
         "all-publishable",
         "--plugins",
-        "@openclaw/demo-plugin",
+        "@quiet-core/demo-plugin",
       ]),
     ).toThrow("plugin-publish-scope=all-publishable must not be combined with --plugins.");
   });
@@ -1056,7 +1055,7 @@ describe("buildOpenClawReleaseClawHubPlan", () => {
 describe("buildOpenClawReleaseClawHubRuntimeState", () => {
   it("includes the normal ClawHub run in verifier args when the release waits for it", () => {
     const state = buildOpenClawReleaseClawHubRuntimeState({
-      repository: "openclaw/openclaw",
+      repository: "liuda1999/quiet-core-bot",
       waitForClawHub: true,
       forceSkipClawHub: false,
       normalRunId: "111",
@@ -1066,14 +1065,14 @@ describe("buildOpenClawReleaseClawHubRuntimeState", () => {
 
     expect(state.verifierArgs).toEqual(["--plugin-clawhub-run", "111"]);
     expect(state.proofLines.normal).toBe(
-      "- plugin ClawHub publish: https://github.com/openclaw/openclaw/actions/runs/111",
+      "- plugin ClawHub publish: https://github.com/liuda1999/Quiet-Core-bot/actions/runs/111",
     );
     expect(state.proofLines.bootstrap).toBe("- plugin ClawHub bootstrap: not needed");
   });
 
   it("includes a completed bootstrap run even when there is no normal ClawHub run", () => {
     const state = buildOpenClawReleaseClawHubRuntimeState({
-      repository: "openclaw/openclaw",
+      repository: "liuda1999/quiet-core-bot",
       waitForClawHub: false,
       forceSkipClawHub: false,
       normalRunId: "",
@@ -1084,13 +1083,13 @@ describe("buildOpenClawReleaseClawHubRuntimeState", () => {
     expect(state.verifierArgs).toEqual(["--plugin-clawhub-bootstrap-run", "222"]);
     expect(state.proofLines.normal).toBe("- plugin ClawHub publish: no normal OIDC candidates");
     expect(state.proofLines.bootstrap).toBe(
-      "- plugin ClawHub bootstrap: https://github.com/openclaw/openclaw/actions/runs/222",
+      "- plugin ClawHub bootstrap: https://github.com/liuda1999/Quiet-Core-bot/actions/runs/222",
     );
   });
 
   it("skips ClawHub verification for non-awaited incomplete runs while keeping proof links", () => {
     const state = buildOpenClawReleaseClawHubRuntimeState({
-      repository: "openclaw/openclaw",
+      repository: "liuda1999/quiet-core-bot",
       waitForClawHub: false,
       forceSkipClawHub: false,
       normalRunId: "111",
@@ -1100,16 +1099,16 @@ describe("buildOpenClawReleaseClawHubRuntimeState", () => {
 
     expect(state.verifierArgs).toEqual(["--skip-clawhub"]);
     expect(state.proofLines.normal).toBe(
-      "- plugin ClawHub publish: dispatched separately, not awaited by this proof: https://github.com/openclaw/openclaw/actions/runs/111",
+      "- plugin ClawHub publish: dispatched separately, not awaited by this proof: https://github.com/liuda1999/Quiet-Core-bot/actions/runs/111",
     );
     expect(state.proofLines.bootstrap).toBe(
-      "- plugin ClawHub bootstrap: dispatched separately, not awaited by this proof: https://github.com/openclaw/openclaw/actions/runs/222",
+      "- plugin ClawHub bootstrap: dispatched separately, not awaited by this proof: https://github.com/liuda1999/Quiet-Core-bot/actions/runs/222",
     );
   });
 
   it("keeps completed bootstrap run evidence when the normal ClawHub run is not awaited", () => {
     const state = buildOpenClawReleaseClawHubRuntimeState({
-      repository: "openclaw/openclaw",
+      repository: "liuda1999/quiet-core-bot",
       waitForClawHub: false,
       forceSkipClawHub: false,
       normalRunId: "111",
@@ -1119,16 +1118,16 @@ describe("buildOpenClawReleaseClawHubRuntimeState", () => {
 
     expect(state.verifierArgs).toEqual(["--skip-clawhub", "--plugin-clawhub-bootstrap-run", "222"]);
     expect(state.proofLines.normal).toBe(
-      "- plugin ClawHub publish: dispatched separately, not awaited by this proof: https://github.com/openclaw/openclaw/actions/runs/111",
+      "- plugin ClawHub publish: dispatched separately, not awaited by this proof: https://github.com/liuda1999/Quiet-Core-bot/actions/runs/111",
     );
     expect(state.proofLines.bootstrap).toBe(
-      "- plugin ClawHub bootstrap: https://github.com/openclaw/openclaw/actions/runs/222",
+      "- plugin ClawHub bootstrap: https://github.com/liuda1999/Quiet-Core-bot/actions/runs/222",
     );
   });
 
   it("forces skip-clawhub after a failed child run even if ClawHub runs completed", () => {
     const state = buildOpenClawReleaseClawHubRuntimeState({
-      repository: "openclaw/openclaw",
+      repository: "liuda1999/quiet-core-bot",
       waitForClawHub: true,
       forceSkipClawHub: true,
       normalRunId: "111",
@@ -1138,10 +1137,10 @@ describe("buildOpenClawReleaseClawHubRuntimeState", () => {
 
     expect(state.verifierArgs).toEqual(["--skip-clawhub"]);
     expect(state.proofLines.normal).toBe(
-      "- plugin ClawHub publish: https://github.com/openclaw/openclaw/actions/runs/111",
+      "- plugin ClawHub publish: https://github.com/liuda1999/Quiet-Core-bot/actions/runs/111",
     );
     expect(state.proofLines.bootstrap).toBe(
-      "- plugin ClawHub bootstrap: https://github.com/openclaw/openclaw/actions/runs/222",
+      "- plugin ClawHub bootstrap: https://github.com/liuda1999/Quiet-Core-bot/actions/runs/222",
     );
   });
 });
@@ -1218,9 +1217,9 @@ if [[ "\${1:-}" == "package" && "\${2:-}" == "pack" ]]; then
     esac
   done
   mkdir -p "$pack_destination"
-  pack_path="$pack_destination/openclaw-demo-plugin-2026.4.1.tgz"
+  pack_path="$pack_destination/quiet-core-bot-demo-plugin-2026.4.1.tgz"
   printf 'fake tgz\\n' > "$pack_path"
-  printf '{"path":"%s","name":"@openclaw/demo-plugin","version":"2026.4.1"}\\n' "$pack_path"
+  printf '{"path":"%s","name":"@quiet-core/demo-plugin","version":"2026.4.1"}\\n' "$pack_path"
 fi
 exit 0
 `,
@@ -1285,9 +1284,9 @@ if [[ "\${1:-}" == "package" && "\${2:-}" == "pack" ]]; then
     esac
   done
   mkdir -p "$pack_destination"
-  pack_path="$pack_destination/openclaw-demo-plugin-2026.4.1.tgz"
+  pack_path="$pack_destination/quiet-core-bot-demo-plugin-2026.4.1.tgz"
   printf 'fake tgz\\n' > "$pack_path"
-  printf '{"path":"%s","name":"@openclaw/demo-plugin","version":"2026.4.1"}\\n' "$pack_path"
+  printf '{"path":"%s","name":"@quiet-core/demo-plugin","version":"2026.4.1"}\\n' "$pack_path"
 fi
 exit 0
 `,
@@ -1306,7 +1305,7 @@ exit 0
         encoding: "utf8",
         env: {
           ...process.env,
-          OPENCLAW_CLAWHUB_MANUAL_OVERRIDE_REASON:
+          QUIET_CORE_CLAWHUB_MANUAL_OVERRIDE_REASON:
             "GitHub Actions trusted publisher repair before OIDC migration",
           PATH: `${binDir}${delimiter}${process.env.PATH ?? ""}`,
         },
@@ -1349,9 +1348,9 @@ if [[ "\${1:-}" == "package" && "\${2:-}" == "pack" ]]; then
     esac
   done
   mkdir -p "$pack_destination"
-  pack_path="$pack_destination/openclaw-demo-plugin-2026.4.1.tgz"
+  pack_path="$pack_destination/quiet-core-bot-demo-plugin-2026.4.1.tgz"
   printf 'fake tgz\\n' > "$pack_path"
-  printf '{"path":"%s","name":"@openclaw/demo-plugin","version":"2026.4.1"}\\n' "$pack_path"
+  printf '{"path":"%s","name":"@quiet-core/demo-plugin","version":"2026.4.1"}\\n' "$pack_path"
 fi
 exit 0
 `,
@@ -1370,14 +1369,14 @@ exit 0
         encoding: "utf8",
         env: {
           ...process.env,
-          OPENCLAW_CLAWHUB_PACK_OUTPUT_DIR: outputDir,
+          QUIET_CORE_CLAWHUB_PACK_OUTPUT_DIR: outputDir,
           PATH: `${binDir}${delimiter}${process.env.PATH ?? ""}`,
         },
       },
     );
 
     expect(output).toContain("Packed ClawPack:");
-    expect(existsSync(join(outputDir, "openclaw-demo-plugin-2026.4.1.tgz"))).toBe(true);
+    expect(existsSync(join(outputDir, "quiet-core-bot-demo-plugin-2026.4.1.tgz"))).toBe(true);
     const invocations = readFileSync(markerPath, "utf8");
     expect(invocations).toContain("package pack ");
     expect(invocations).not.toContain("package publish ");
@@ -1409,13 +1408,13 @@ function createTempPluginRepo(
     includeClawHubContract?: boolean;
   } = {},
 ) {
-  const repoDir = makeTempRepoRoot(tempDirs, "openclaw-clawhub-release-");
+  const repoDir = makeTempRepoRoot(tempDirs, "quiet-core-bot-clawhub-release-");
   const extensionId = options.extensionId ?? "demo-plugin";
   const extensionIds = [extensionId, ...(options.extraExtensionIds ?? [])];
 
   writeFileSync(
     join(repoDir, "package.json"),
-    JSON.stringify({ name: "openclaw-test-root", type: "module" }, null, 2),
+    JSON.stringify({ name: "quiet-core-bot-test-root", type: "module" }, null, 2),
   );
   writeFileSync(join(repoDir, "pnpm-lock.yaml"), "lockfileVersion: '9.0'\n");
   for (const currentExtensionId of extensionIds) {
@@ -1424,14 +1423,14 @@ function createTempPluginRepo(
       join(repoDir, "extensions", currentExtensionId, "package.json"),
       JSON.stringify(
         {
-          name: `@openclaw/${currentExtensionId}`,
+          name: `@quiet-core/${currentExtensionId}`,
           version: "2026.4.1",
           type: "module",
           repository: {
             type: "git",
-            url: OPENCLAW_PLUGIN_NPM_REPOSITORY_URL,
+            url: QUIET_CORE_PLUGIN_NPM_REPOSITORY_URL,
           },
-          openclaw: {
+          "quiet-core-bot": {
             extensions: ["./index.ts"],
             ...(options.includeClawHubContract === false
               ? {}
@@ -1444,7 +1443,7 @@ function createTempPluginRepo(
                   },
                 }),
             install: {
-              npmSpec: `@openclaw/${currentExtensionId}`,
+              npmSpec: `@quiet-core/${currentExtensionId}`,
             },
             release: {
               publishToClawHub: options.publishToClawHub ?? true,

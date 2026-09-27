@@ -123,7 +123,7 @@ struct AppStateRemoteConfigTests {
     func `app state init does not infer loopback host into remote target`() async {
         let configPath = TestIsolation.tempConfigPath()
         await TestIsolation.withIsolatedState(
-            env: ["OPENCLAW_CONFIG_PATH": configPath],
+            env: ["QUIET_CORE_CONFIG_PATH": configPath],
             defaults: [remoteTargetKey: nil])
         {
             OpenClawConfigFile.saveDict([
@@ -144,7 +144,7 @@ struct AppStateRemoteConfigTests {
     func `app state init preserves existing remote target when remote url is loopback`() async {
         let configPath = TestIsolation.tempConfigPath()
         await TestIsolation.withIsolatedState(
-            env: ["OPENCLAW_CONFIG_PATH": configPath],
+            env: ["QUIET_CORE_CONFIG_PATH": configPath],
             defaults: [remoteTargetKey: "alice@gateway.example"])
         {
             OpenClawConfigFile.saveDict([
@@ -165,7 +165,7 @@ struct AppStateRemoteConfigTests {
     func `app state init preserves legacy SSH tunnel config until transport is explicit`() async {
         let configPath = TestIsolation.tempConfigPath()
         await TestIsolation.withIsolatedState(
-            env: ["OPENCLAW_CONFIG_PATH": configPath],
+            env: ["QUIET_CORE_CONFIG_PATH": configPath],
             defaults: [remoteTargetKey: nil])
         {
             OpenClawConfigFile.saveDict([

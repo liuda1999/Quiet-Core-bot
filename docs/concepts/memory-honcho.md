@@ -47,8 +47,8 @@ Honcho registers tools that the agent can use during conversation:
 Install the plugin and run setup:
 
 ```bash
-quiet-core-bot plugins install @honcho-ai/openclaw-honcho
-openclaw honcho setup
+quiet-core-bot plugins install @honcho-ai/quiet-core-bot-honcho
+quiet-core-bot honcho setup
 quiet-core-bot gateway --force
 ```
 
@@ -63,16 +63,16 @@ option.
 
 ## Configuration
 
-Settings live under `plugins.entries["openclaw-honcho"].config`:
+Settings live under `plugins.entries["quiet-core-bot-honcho"].config`:
 
 ```json5
 {
   plugins: {
     entries: {
-      "openclaw-honcho": {
+      "quiet-core-bot-honcho": {
         config: {
           apiKey: "your-api-key", // omit for self-hosted
-          workspaceId: "openclaw", // memory isolation
+          workspaceId: "quiet-core-bot", // memory isolation
           baseUrl: "https://api.honcho.dev",
         },
       },
@@ -87,7 +87,7 @@ For self-hosted instances, point `baseUrl` to your local server (for example
 ## Migrating existing memory
 
 If you have existing workspace memory files (`USER.md`, `MEMORY.md`,
-`IDENTITY.md`, `memory/`, `canvas/`), `openclaw honcho setup` detects and
+`IDENTITY.md`, `memory/`, `canvas/`), `quiet-core-bot honcho setup` detects and
 offers to migrate them.
 
 <Info>
@@ -123,17 +123,17 @@ Honcho's cross-session memory.
 ## CLI commands
 
 ```bash
-openclaw honcho setup                        # Configure API key and migrate files
-openclaw honcho status                       # Check connection status
-openclaw honcho ask <question>               # Query Honcho about the user
-openclaw honcho search <query> [-k N] [-d D] # Semantic search over memory
+quiet-core-bot honcho setup                        # Configure API key and migrate files
+quiet-core-bot honcho status                       # Check connection status
+quiet-core-bot honcho ask <question>               # Query Honcho about the user
+quiet-core-bot honcho search <query> [-k N] [-d D] # Semantic search over memory
 ```
 
 ## Further reading
 
-- [Plugin source code](https://github.com/plastic-labs/openclaw-honcho)
+- [Plugin source code](https://github.com/plastic-labs/quiet-core-bot-honcho)
 - [Honcho documentation](https://docs.honcho.dev)
-- [Honcho Quiet Core bot integration guide](https://docs.honcho.dev/v3/guides/integrations/openclaw)
+- [Honcho Quiet Core bot integration guide](https://docs.honcho.dev/v3/guides/integrations/quiet-core-bot)
 - [Memory](/concepts/memory) -- Quiet Core bot memory overview
 - [Context Engines](/concepts/context-engine) -- how plugin context engines work
 

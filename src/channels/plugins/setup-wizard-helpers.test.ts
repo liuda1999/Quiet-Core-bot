@@ -2,7 +2,7 @@
 import {
   resolveSetupWizardAllowFromEntries,
   resolveSetupWizardGroupAllowlist,
-} from "openclaw/plugin-sdk/plugin-test-runtime";
+} from "quiet-core-bot/plugin-sdk/plugin-test-runtime";
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../../config/config.js";
 import { resetPluginRuntimeStateForTest, setActivePluginRegistry } from "../../plugins/runtime.js";
@@ -543,10 +543,10 @@ describe("promptSingleChannelSecretInput", () => {
   });
 
   it("returns ref + resolved value when external env ref is selected", async () => {
-    process.env.OPENCLAW_TEST_TOKEN = "secret-token";
+    process.env.QUIET_CORE_TEST_TOKEN = "secret-token";
     const prompter = createSecretInputPrompter({
       selects: ["ref", "env"],
-      texts: ["OPENCLAW_TEST_TOKEN"],
+      texts: ["QUIET_CORE_TEST_TOKEN"],
     });
 
     const result = await runPromptSingleChannelSecretInput({
@@ -556,7 +556,7 @@ describe("promptSingleChannelSecretInput", () => {
       accountConfigured: false,
       canUseEnv: false,
       hasConfigToken: false,
-      preferredEnvVar: "OPENCLAW_TEST_TOKEN",
+      preferredEnvVar: "QUIET_CORE_TEST_TOKEN",
     });
 
     expect(result).toEqual({
@@ -564,7 +564,7 @@ describe("promptSingleChannelSecretInput", () => {
       value: {
         source: "env",
         provider: "default",
-        id: "OPENCLAW_TEST_TOKEN",
+        id: "QUIET_CORE_TEST_TOKEN",
       },
       resolvedValue: "secret-token",
     });

@@ -193,9 +193,9 @@ describe("renderIosVersionXcconfig", () => {
     });
     const version = resolveIosVersion(rootDir);
 
-    expect(renderIosVersionXcconfig(version)).toContain("OPENCLAW_IOS_VERSION = 2026.4.8");
-    expect(renderIosVersionXcconfig(version)).toContain("OPENCLAW_MARKETING_VERSION = 2026.4.8");
-    expect(renderIosVersionXcconfig(version)).toContain("OPENCLAW_BUILD_VERSION = 1");
+    expect(renderIosVersionXcconfig(version)).toContain("QUIET_CORE_IOS_VERSION = 2026.4.8");
+    expect(renderIosVersionXcconfig(version)).toContain("QUIET_CORE_MARKETING_VERSION = 2026.4.8");
+    expect(renderIosVersionXcconfig(version)).toContain("QUIET_CORE_BUILD_VERSION = 1");
   });
 });
 

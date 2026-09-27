@@ -3,14 +3,14 @@ import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { MemoryEmbeddingProbeResult } from "openclaw/plugin-sdk/memory-core-host-engine-storage";
+import type { MemoryEmbeddingProbeResult } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-storage";
 import {
   resolveMemoryDreamingConfig,
   resolveMemoryLightDreamingConfig,
   resolveMemoryRemDreamingConfig,
-} from "openclaw/plugin-sdk/memory-core-host-status";
-import { buildAgentSessionKey } from "openclaw/plugin-sdk/routing";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+} from "quiet-core-bot/plugin-sdk/memory-core-host-status";
+import { buildAgentSessionKey } from "quiet-core-bot/plugin-sdk/routing";
+import { resolvePreferredOpenClawTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";
 import {
   colorize,
   defaultRuntime,
@@ -91,7 +91,7 @@ function formatMemoryIndexIdentityWarning(
   }
   return {
     reason,
-    fix: `Run: openclaw memory status --index --agent ${agentId}`,
+    fix: `Run: quiet-core-bot memory status --index --agent ${agentId}`,
   };
 }
 
@@ -195,7 +195,7 @@ async function createHistoricalRemHarnessWorkspace(params: {
 }> {
   const sourceFiles = await listHistoricalDailyFiles(params.inputPath);
   const workspaceDir = await fs.mkdtemp(
-    path.join(resolvePreferredOpenClawTmpDir(), "openclaw-rem-harness-"),
+    path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-rem-harness-"),
   );
   const memoryDir = path.join(workspaceDir, "memory");
   await fs.mkdir(memoryDir, { recursive: true });
@@ -1065,7 +1065,7 @@ export async function runMemoryStatus(opts: MemoryCommandOptions) {
         lines.push(`  ${issue.severity === "error" ? warn(issue.message) : muted(issue.message)}`);
       }
       if (!opts.fix) {
-        lines.push(`  ${muted(`Fix: openclaw memory status --fix --agent ${agentId}`)}`);
+        lines.push(`  ${muted(`Fix: quiet-core-bot memory status --fix --agent ${agentId}`)}`);
       }
     }
     if (dreamingAudit?.issues.length) {
@@ -1076,7 +1076,7 @@ export async function runMemoryStatus(opts: MemoryCommandOptions) {
         lines.push(`  ${issue.severity === "error" ? warn(issue.message) : muted(issue.message)}`);
       }
       if (!opts.fix) {
-        lines.push(`  ${muted(`Fix: openclaw memory status --fix --agent ${agentId}`)}`);
+        lines.push(`  ${muted(`Fix: quiet-core-bot memory status --fix --agent ${agentId}`)}`);
       }
     }
     defaultRuntime.log(lines.join("\n"));
@@ -1898,7 +1898,7 @@ export async function runMemoryRemBackfill(opts: MemoryRemBackfillOptions) {
       }
 
       const scratchDir = await fs.mkdtemp(
-        path.join(resolvePreferredOpenClawTmpDir(), "openclaw-rem-backfill-"),
+        path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-rem-backfill-"),
       );
       try {
         const sourceFiles = await listHistoricalDailyFiles(opts.path);

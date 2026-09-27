@@ -5,7 +5,7 @@
  */
 import os from "node:os";
 import path from "node:path";
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalLowercaseString } from "@quiet-core/normalization-core/string-coerce";
 import { resolveStateDir } from "../config/paths.js";
 
 /** Resolve the default agent workspace directory from env/profile/home state. */
@@ -13,7 +13,7 @@ export function resolveDefaultAgentWorkspaceDir(
   env: NodeJS.ProcessEnv = process.env,
   homedir: () => string = os.homedir,
 ): string {
-  const workspaceDir = env.OPENCLAW_WORKSPACE_DIR?.trim();
+  const workspaceDir = env.QUIET_CORE_WORKSPACE_DIR?.trim();
   if (workspaceDir) {
     return path.resolve(workspaceDir);
   }
@@ -21,7 +21,7 @@ export function resolveDefaultAgentWorkspaceDir(
   // pre-rebrand directory keeps its workspace instead of silently starting a
   // fresh one under the new name.
   const stateDir = resolveStateDir(env, homedir);
-  const profile = env.OPENCLAW_PROFILE?.trim();
+  const profile = env.QUIET_CORE_PROFILE?.trim();
   if (profile && normalizeOptionalLowercaseString(profile) !== "default") {
     return path.join(stateDir, `workspace-${profile}`);
   }

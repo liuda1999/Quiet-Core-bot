@@ -356,7 +356,7 @@ Replying to a bot message counts as an implicit mention when the channel support
       {
         id: "main",
         groupChat: {
-          mentionPatterns: ["@openclaw", "openclaw", "\\+15555550123"],
+          mentionPatterns: ["@quiet-core-bot", "quiet-core-bot", "\\+15555550123"],
           historyLimit: 50,
         },
       },
@@ -369,7 +369,7 @@ Replying to a bot message counts as an implicit mention when the channel support
 
 Configured `mentionPatterns` are regex fallback triggers. Use them when the
 platform does not expose a native bot mention, or when you want plain text such
-as `openclaw:` to count as a mention. Native platform mentions are separate:
+as `quiet-core-bot:` to count as a mention. Native platform mentions are separate:
 when Discord, Slack, Telegram, Matrix, or another channel can prove the message
 explicitly mentioned the bot, that native mention still triggers even if
 configured regex patterns are denied.
@@ -386,7 +386,7 @@ channel, then opt in specific rooms with `allowIn`:
 {
   messages: {
     groupChat: {
-      mentionPatterns: ["\\bopenclaw\\b", "\\bops bot\\b"],
+      mentionPatterns: ["\\bquiet-core-bot\\b", "\\bops bot\\b"],
     },
   },
   channels: {
@@ -407,7 +407,7 @@ should apply broadly, then turn them off in noisy rooms with `denyIn`:
 {
   messages: {
     groupChat: {
-      mentionPatterns: ["\\bopenclaw\\b"],
+      mentionPatterns: ["\\bquiet-core-bot\\b"],
     },
   },
   channels: {

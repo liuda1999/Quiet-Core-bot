@@ -6,11 +6,11 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { resolveStorePath } from "../../config/sessions/paths.js";
 import { loadSessionStore, upsertSessionEntry } from "../../config/sessions/store.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { createCreateGoalTool, createGetGoalTool } from "./goal-tools.js";
 
 async function createStoreConfig(): Promise<{ config: OpenClawConfig; template: string }> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-goal-tools-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-goal-tools-"));
   const template = path.join(dir, "{agentId}", "sessions.json");
   return {
     config: { session: { store: template } } as OpenClawConfig,

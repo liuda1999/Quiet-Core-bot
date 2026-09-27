@@ -11,7 +11,7 @@ Quiet Core bot Tlon/Urbit channel plugin for chat workflows.
 
 ## Distribution
 
-- Package: `@openclaw/tlon`
+- Package: `@quiet-core/tlon`
 - Install route: npm; ClawHub
 
 ## Surface

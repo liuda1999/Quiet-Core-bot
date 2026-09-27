@@ -234,7 +234,7 @@ function createModelNormalizerSnapshot(params: {
     plugins: [
       {
         pluginId: "fallback-normalizer",
-        manifestPath: `/tmp/fallback-normalizer-${params.manifestHash}/openclaw.plugin.json`,
+        manifestPath: `/tmp/fallback-normalizer-${params.manifestHash}/quiet-core-bot.plugin.json`,
         manifestHash: params.manifestHash,
         source: `/tmp/fallback-normalizer-${params.manifestHash}/index.ts`,
         rootDir: `/tmp/fallback-normalizer-${params.manifestHash}`,
@@ -359,7 +359,7 @@ async function withTempAuthStore<T>(
 }
 
 async function makeAuthTempDir(): Promise<string> {
-  authTempRoot ||= path.join("/tmp", "openclaw-auth-suite-mock");
+  authTempRoot ||= path.join("/tmp", "quiet-core-bot-auth-suite-mock");
   return path.join(authTempRoot, `case-${++authTempCounter}`);
 }
 
@@ -550,14 +550,14 @@ async function expectSkippedUnavailableProvider(params: {
 }
 
 // Issue-backed Anthropic/OpenAI-compatible insufficient_quota payload under HTTP 400:
-// https://github.com/openclaw/openclaw/issues/23440
+// https://github.com/liuda1999/Quiet-Core-bot/issues/23440
 const INSUFFICIENT_QUOTA_PAYLOAD =
   '{"type":"error","error":{"type":"insufficient_quota","message":"Your account has insufficient quota balance to run this request."}}';
 
 describe("runWithModelFallback", () => {
   it("uses the opt-in auth skip cache on the second turn for the same session", async () => {
-    const previous = process.env.OPENCLAW_FALLBACK_SKIP_TTL_MS;
-    process.env.OPENCLAW_FALLBACK_SKIP_TTL_MS = "60000";
+    const previous = process.env.QUIET_CORE_FALLBACK_SKIP_TTL_MS;
+    process.env.QUIET_CORE_FALLBACK_SKIP_TTL_MS = "60000";
     try {
       const cfg = makeCfg({
         agents: {
@@ -617,9 +617,9 @@ describe("runWithModelFallback", () => {
       );
     } finally {
       if (previous === undefined) {
-        delete process.env.OPENCLAW_FALLBACK_SKIP_TTL_MS;
+        delete process.env.QUIET_CORE_FALLBACK_SKIP_TTL_MS;
       } else {
-        process.env.OPENCLAW_FALLBACK_SKIP_TTL_MS = previous;
+        process.env.QUIET_CORE_FALLBACK_SKIP_TTL_MS = previous;
       }
     }
   });
@@ -632,13 +632,13 @@ describe("runWithModelFallback", () => {
       cfg: makeCfg(),
       provider: "openai",
       model: "gpt-4.1-mini",
-      agentDir: "/tmp/openclaw-no-auth-profiles",
+      agentDir: "/tmp/quiet-core-bot-no-auth-profiles",
       run,
     });
 
     expect(result.result).toBe("ok");
     expect(authSourceCheckMock.hasAnyAuthProfileStoreSource).toHaveBeenCalledWith(
-      "/tmp/openclaw-no-auth-profiles",
+      "/tmp/quiet-core-bot-no-auth-profiles",
     );
     expect(authRuntimeMock.runtime.ensureAuthProfileStore).not.toHaveBeenCalled();
     expect(run).toHaveBeenCalledWith("openai", "gpt-4.1-mini", {
@@ -780,7 +780,7 @@ describe("runWithModelFallback", () => {
         providers: {
           openai: {
             baseUrl: "https://api.openai.com/v1",
-            agentRuntime: { id: "openclaw" },
+            agentRuntime: { id: "quiet-core-bot" },
             models: [],
           },
         },
@@ -810,7 +810,7 @@ describe("runWithModelFallback", () => {
         providers: {
           openai: {
             baseUrl: "https://api.openai.com/v1",
-            agentRuntime: { id: "openclaw" },
+            agentRuntime: { id: "quiet-core-bot" },
             models: [],
           },
         },
@@ -1274,7 +1274,7 @@ describe("runWithModelFallback", () => {
     const lockError = new SessionWriteLockTimeoutError({
       timeoutMs: 10_000,
       owner: "pid=37121",
-      lockPath: "/tmp/openclaw/session.jsonl.lock",
+      lockPath: "/tmp/quiet-core-bot/session.jsonl.lock",
     });
     const run = vi.fn().mockRejectedValue(lockError);
 
@@ -1303,7 +1303,7 @@ describe("runWithModelFallback", () => {
     const lockError = new SessionWriteLockTimeoutError({
       timeoutMs: 10_000,
       owner: "pid=37121",
-      lockPath: "/tmp/openclaw/session.jsonl.lock",
+      lockPath: "/tmp/quiet-core-bot/session.jsonl.lock",
     });
     const providerError = {
       status: 429,
@@ -2257,7 +2257,7 @@ describe("runWithModelFallback", () => {
   });
 
   it("warns when falling back due to model_not_found", async () => {
-    const warnLogs = createWarnLogCapture("openclaw-model-fallback-test");
+    const warnLogs = createWarnLogCapture("quiet-core-bot-model-fallback-test");
     try {
       const cfg = makeCfg();
       const run = vi
@@ -2284,7 +2284,7 @@ describe("runWithModelFallback", () => {
   });
 
   it("sanitizes model identifiers in model_not_found warnings", async () => {
-    const warnLogs = createWarnLogCapture("openclaw-model-fallback-test");
+    const warnLogs = createWarnLogCapture("quiet-core-bot-model-fallback-test");
     try {
       const cfg = makeCfg();
       const run = vi

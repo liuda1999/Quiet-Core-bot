@@ -140,15 +140,15 @@ export async function resolveVapidKeys(baseDir?: string): Promise<VapidKeyPair> 
 }
 
 function resolveVapidSubjectFromEnv(): string {
-  return process.env.OPENCLAW_VAPID_SUBJECT || DEFAULT_VAPID_SUBJECT;
+  return process.env.QUIET_CORE_VAPID_SUBJECT || DEFAULT_VAPID_SUBJECT;
 }
 
 function resolveVapidPublicKeyFromEnv(): string | undefined {
-  return process.env.OPENCLAW_VAPID_PUBLIC_KEY || undefined;
+  return process.env.QUIET_CORE_VAPID_PUBLIC_KEY || undefined;
 }
 
 function resolveVapidPrivateKeyFromEnv(): string | undefined {
-  return process.env.OPENCLAW_VAPID_PRIVATE_KEY || undefined;
+  return process.env.QUIET_CORE_VAPID_PRIVATE_KEY || undefined;
 }
 
 // --- Subscription CRUD ---

@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 import {
   addTimerTimeoutGraceMs,
   clampTimerTimeoutMs,
-} from "@openclaw/normalization-core/number-coercion";
+} from "@quiet-core/normalization-core/number-coercion";
 import { resolveNpmRunner } from "../../npm-runner.mjs";
 import { resolvePnpmRunner } from "../../pnpm-runner.mjs";
 import { buildCmdExeCommandLine, resolveWindowsCmdExePath } from "../../windows-cmd-helpers.mjs";
@@ -22,9 +22,9 @@ const HOST_COMMAND_TIMEOUT_KILL_GRACE_MS = 100;
 const HOST_COMMAND_STREAMING_TIMEOUT_KILL_GRACE_MS = 2_000;
 const HOST_COMMAND_PROCESS_GROUP_EXIT_POLL_MS = 25;
 const HOST_COMMAND_POST_FORCE_KILL_WAIT_MS = 100;
-const HOST_COMMAND_CHILD_PID_PREFIX = "__OPENCLAW_HOST_COMMAND_CHILD_PID__";
-const HOST_COMMAND_SPAWN_ERROR_PREFIX = "__OPENCLAW_HOST_COMMAND_SPAWN_ERROR__";
-const HOST_COMMAND_TIMEOUT_PREFIX = "__OPENCLAW_HOST_COMMAND_TIMEOUT__";
+const HOST_COMMAND_CHILD_PID_PREFIX = "__QUIET_CORE_HOST_COMMAND_CHILD_PID__";
+const HOST_COMMAND_SPAWN_ERROR_PREFIX = "__QUIET_CORE_HOST_COMMAND_SPAWN_ERROR__";
+const HOST_COMMAND_TIMEOUT_PREFIX = "__QUIET_CORE_HOST_COMMAND_TIMEOUT__";
 let progressStderrDepth = 0;
 
 type HostCommandInvocation = {

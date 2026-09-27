@@ -7,7 +7,7 @@ import {
   getNodeSqliteKysely,
 } from "../../infra/kysely-sync.js";
 import { normalizeSqliteNumber } from "../../infra/sqlite-number.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../../state/quiet-core-bot-state-db.generated.js";
 import type { CronRunLogEntry } from "../run-log-types.js";
 import type { CronDeliveryStatus, CronRunStatus } from "../types.js";
 import { parseCronRunLogEntryObject } from "./entry-codec.js";

@@ -11,8 +11,8 @@ Adds Moonshot model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/moonshot-provider`
-- Install route: npm; ClawHub: `clawhub:@openclaw/moonshot-provider`
+- Package: `@quiet-core/moonshot-provider`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/moonshot-provider`
 
 ## Surface
 

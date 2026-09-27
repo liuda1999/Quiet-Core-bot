@@ -11,8 +11,8 @@ Adds Fireworks model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/fireworks-provider`
-- Install route: npm; ClawHub: `clawhub:@openclaw/fireworks-provider`
+- Package: `@quiet-core/fireworks-provider`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/fireworks-provider`
 
 ## Surface
 

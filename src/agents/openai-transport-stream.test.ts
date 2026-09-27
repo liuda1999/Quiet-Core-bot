@@ -1,7 +1,7 @@
 // Verifies OpenAI-compatible streaming payloads, failures, and transport wrapping.
 import { createServer } from "node:http";
 import OpenAI from "openai";
-import type { Api, Model } from "openclaw/plugin-sdk/llm";
+import type { Api, Model } from "quiet-core-bot/plugin-sdk/llm";
 import { describe, expect, it, vi } from "vitest";
 import {
   classifyAssistantFailoverReason,
@@ -686,8 +686,8 @@ describe("openai transport stream", () => {
   });
 
   it("summarizes model payload tools with full names when requested", () => {
-    const previous = process.env.OPENCLAW_DEBUG_MODEL_PAYLOAD;
-    process.env.OPENCLAW_DEBUG_MODEL_PAYLOAD = "tools";
+    const previous = process.env.QUIET_CORE_DEBUG_MODEL_PAYLOAD;
+    process.env.QUIET_CORE_DEBUG_MODEL_PAYLOAD = "tools";
     try {
       expect(
         testing.summarizeResponsesTools([
@@ -697,16 +697,16 @@ describe("openai transport stream", () => {
       ).toBe("count=2 names=exec,wait");
     } finally {
       if (previous === undefined) {
-        delete process.env.OPENCLAW_DEBUG_MODEL_PAYLOAD;
+        delete process.env.QUIET_CORE_DEBUG_MODEL_PAYLOAD;
       } else {
-        process.env.OPENCLAW_DEBUG_MODEL_PAYLOAD = previous;
+        process.env.QUIET_CORE_DEBUG_MODEL_PAYLOAD = previous;
       }
     }
   });
 
   it("skips unreadable model payload tool names in debug summaries", () => {
-    const previous = process.env.OPENCLAW_DEBUG_MODEL_PAYLOAD;
-    process.env.OPENCLAW_DEBUG_MODEL_PAYLOAD = "tools";
+    const previous = process.env.QUIET_CORE_DEBUG_MODEL_PAYLOAD;
+    process.env.QUIET_CORE_DEBUG_MODEL_PAYLOAD = "tools";
     try {
       expect(
         testing.summarizeResponsesTools([
@@ -729,16 +729,16 @@ describe("openai transport stream", () => {
       ).toBe("count=3 names=wait");
     } finally {
       if (previous === undefined) {
-        delete process.env.OPENCLAW_DEBUG_MODEL_PAYLOAD;
+        delete process.env.QUIET_CORE_DEBUG_MODEL_PAYLOAD;
       } else {
-        process.env.OPENCLAW_DEBUG_MODEL_PAYLOAD = previous;
+        process.env.QUIET_CORE_DEBUG_MODEL_PAYLOAD = previous;
       }
     }
   });
 
   it("redacts full model payload debug summaries", () => {
-    const previous = process.env.OPENCLAW_DEBUG_MODEL_PAYLOAD;
-    process.env.OPENCLAW_DEBUG_MODEL_PAYLOAD = "full-redacted";
+    const previous = process.env.QUIET_CORE_DEBUG_MODEL_PAYLOAD;
+    process.env.QUIET_CORE_DEBUG_MODEL_PAYLOAD = "full-redacted";
     try {
       const summary = testing.summarizeResponsesPayload({
         model: "gpt-5.5",
@@ -752,9 +752,9 @@ describe("openai transport stream", () => {
       expect(summary).not.toContain("sk-abcdefghijklmnopqrstuvwxyz");
     } finally {
       if (previous === undefined) {
-        delete process.env.OPENCLAW_DEBUG_MODEL_PAYLOAD;
+        delete process.env.QUIET_CORE_DEBUG_MODEL_PAYLOAD;
       } else {
-        process.env.OPENCLAW_DEBUG_MODEL_PAYLOAD = previous;
+        process.env.QUIET_CORE_DEBUG_MODEL_PAYLOAD = previous;
       }
     }
   });
@@ -812,7 +812,7 @@ describe("openai transport stream", () => {
   });
 
   it("adds Quiet Core bot attribution to native OpenAI transport headers and protects it from provider overrides", () => {
-    vi.stubEnv("OPENCLAW_VERSION", "2026.3.22");
+    vi.stubEnv("QUIET_CORE_VERSION", "2026.3.22");
     const headers = testing.buildOpenAIClientHeaders(
       {
         id: "gpt-5.4",
@@ -821,8 +821,8 @@ describe("openai transport stream", () => {
         provider: "openai",
         baseUrl: "https://api.openai.com/v1",
         headers: {
-          originator: "openclaw",
-          "User-Agent": "openclaw",
+          originator: "quiet-core-bot",
+          "User-Agent": "quiet-core-bot",
           "X-Provider": "model",
         },
         reasoning: true,
@@ -833,23 +833,23 @@ describe("openai transport stream", () => {
       } satisfies Model<"openai-responses">,
       { systemPrompt: "", messages: [] } as never,
       {
-        originator: "openclaw",
-        "User-Agent": "openclaw",
+        originator: "quiet-core-bot",
+        "User-Agent": "quiet-core-bot",
         "X-Caller": "request",
       },
     );
 
     expectRecordFields(headers, {
-      originator: "openclaw",
+      originator: "quiet-core-bot",
       version: "2026.3.22",
-      "User-Agent": "openclaw/2026.3.22",
+      "User-Agent": "quiet-core-bot/2026.3.22",
       "X-Provider": "model",
       "X-Caller": "request",
     });
   });
 
   it("adds Quiet Core bot attribution to native OpenAI Codex transport headers", () => {
-    vi.stubEnv("OPENCLAW_VERSION", "2026.3.22");
+    vi.stubEnv("QUIET_CORE_VERSION", "2026.3.22");
     const headers = testing.buildOpenAIClientHeaders(
       {
         id: "gpt-5.4-codex",
@@ -858,8 +858,8 @@ describe("openai transport stream", () => {
         provider: "openai",
         baseUrl: "https://chatgpt.com/backend-api",
         headers: {
-          originator: "openclaw",
-          "User-Agent": "openclaw",
+          originator: "quiet-core-bot",
+          "User-Agent": "quiet-core-bot",
         },
         reasoning: true,
         input: ["text"],
@@ -871,9 +871,9 @@ describe("openai transport stream", () => {
     );
 
     expectRecordFields(headers, {
-      originator: "openclaw",
+      originator: "quiet-core-bot",
       version: "2026.3.22",
-      "User-Agent": "openclaw/2026.3.22",
+      "User-Agent": "quiet-core-bot/2026.3.22",
     });
     expect(headers.Accept).toBeUndefined();
     expect(headers.accept).toBeUndefined();
@@ -894,7 +894,7 @@ describe("openai transport stream", () => {
     } satisfies Model<"openai-chatgpt-responses">;
     const transportAliasModel = {
       ...codexModel,
-      api: "openclaw-openai-responses-transport" as Api,
+      api: "quiet-core-bot-openai-responses-transport" as Api,
     } satisfies Model;
     const nonNativeChatGPTModel = {
       ...codexModel,
@@ -1081,9 +1081,9 @@ describe("openai transport stream", () => {
 
     const prepared = prepareTransportAwareSimpleModel(model);
 
-    expect(resolveTransportAwareSimpleApi(model.api)).toBe("openclaw-openai-responses-transport");
+    expect(resolveTransportAwareSimpleApi(model.api)).toBe("quiet-core-bot-openai-responses-transport");
     expectRecordFields(prepared, {
-      api: "openclaw-openai-responses-transport",
+      api: "quiet-core-bot-openai-responses-transport",
       provider: "openai",
       id: "gpt-5.4",
     });
@@ -1114,9 +1114,9 @@ describe("openai transport stream", () => {
 
     const prepared = prepareTransportAwareSimpleModel(model);
 
-    expect(resolveTransportAwareSimpleApi(model.api)).toBe("openclaw-openai-responses-transport");
+    expect(resolveTransportAwareSimpleApi(model.api)).toBe("quiet-core-bot-openai-responses-transport");
     expectRecordFields(prepared, {
-      api: "openclaw-openai-responses-transport",
+      api: "quiet-core-bot-openai-responses-transport",
       provider: "openai",
       id: "codex-mini-latest",
     });
@@ -1147,9 +1147,9 @@ describe("openai transport stream", () => {
 
     const prepared = prepareTransportAwareSimpleModel(model);
 
-    expect(resolveTransportAwareSimpleApi(model.api)).toBe("openclaw-anthropic-messages-transport");
+    expect(resolveTransportAwareSimpleApi(model.api)).toBe("quiet-core-bot-anthropic-messages-transport");
     expectRecordFields(prepared, {
-      api: "openclaw-anthropic-messages-transport",
+      api: "quiet-core-bot-anthropic-messages-transport",
       provider: "anthropic",
       id: "claude-sonnet-4-6",
     });
@@ -1179,7 +1179,7 @@ describe("openai transport stream", () => {
     );
 
     expect(resolveTransportAwareSimpleApi(model.api)).toBe(
-      "openclaw-google-generative-ai-transport",
+      "quiet-core-bot-google-generative-ai-transport",
     );
   });
 
@@ -1205,9 +1205,9 @@ describe("openai transport stream", () => {
       },
     );
 
-    expect(resolveTransportAwareSimpleApi(model.api)).toBe("openclaw-openai-responses-transport");
+    expect(resolveTransportAwareSimpleApi(model.api)).toBe("quiet-core-bot-openai-responses-transport");
     expectRecordFields(prepareTransportAwareSimpleModel(model), {
-      api: "openclaw-openai-responses-transport",
+      api: "quiet-core-bot-openai-responses-transport",
       provider: "github-copilot",
       id: "gpt-5.4",
     });
@@ -1236,9 +1236,9 @@ describe("openai transport stream", () => {
       },
     );
 
-    expect(resolveTransportAwareSimpleApi(model.api)).toBe("openclaw-anthropic-messages-transport");
+    expect(resolveTransportAwareSimpleApi(model.api)).toBe("quiet-core-bot-anthropic-messages-transport");
     expectRecordFields(prepareTransportAwareSimpleModel(model), {
-      api: "openclaw-anthropic-messages-transport",
+      api: "quiet-core-bot-anthropic-messages-transport",
       provider: "github-copilot",
       id: "claude-sonnet-4.6",
     });
@@ -3629,7 +3629,7 @@ describe("openai transport stream", () => {
       {
         id: "gpt-5.5",
         name: "GPT-5.5",
-        api: "openclaw-openai-responses-transport" as Api,
+        api: "quiet-core-bot-openai-responses-transport" as Api,
         provider: "openai",
         baseUrl: "https://chatgpt.com/backend-api/codex",
         reasoning: true,

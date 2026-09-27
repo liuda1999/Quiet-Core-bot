@@ -3,13 +3,13 @@
  * follow plugin ownership aliases so scoped live runs include equivalent
  * provider IDs.
  */
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import { normalizeGooglePreviewModelId } from "@openclaw/model-catalog-core/provider-model-id-normalize";
+import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
+import { normalizeGooglePreviewModelId } from "@quiet-core/model-catalog-core/provider-model-id-normalize";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalLowercaseString,
-} from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+} from "@quiet-core/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { liveProvidersShareOwningPlugin } from "./live-provider-owner.js";
 
 type ModelTarget = {

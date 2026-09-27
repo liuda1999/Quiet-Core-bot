@@ -3,7 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { captureEnv, deleteTestEnvValue, setTestEnvValue } from "../test-utils/env.js";
 import {
   clearCurrentPluginMetadataSnapshot,
@@ -22,10 +22,10 @@ import { resetPluginRuntimeStateForTest, setActivePluginRegistry } from "./runti
 
 const tempDirs: string[] = [];
 const testEnvSnapshot = captureEnv([
-  "OPENCLAW_STATE_DIR",
-  "OPENCLAW_HOME",
-  "OPENCLAW_DISABLE_BUNDLED_PLUGINS",
-  "OPENCLAW_BUNDLED_PLUGINS_DIR",
+  "QUIET_CORE_STATE_DIR",
+  "QUIET_CORE_HOME",
+  "QUIET_CORE_DISABLE_BUNDLED_PLUGINS",
+  "QUIET_CORE_BUNDLED_PLUGINS_DIR",
 ]);
 
 function restoreEnv(): void {
@@ -33,7 +33,7 @@ function restoreEnv(): void {
 }
 
 function makeTempDir(): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-model-id-normalization-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-model-id-normalization-"));
   tempDirs.push(dir);
   return dir;
 }
@@ -51,7 +51,7 @@ function writeInstallIndex(params: { stateDir: string; pluginDir: string }): voi
       plugins: [
         {
           pluginId: "normalizer",
-          manifestPath: path.join(params.pluginDir, "openclaw.plugin.json"),
+          manifestPath: path.join(params.pluginDir, "quiet-core-bot.plugin.json"),
           manifestHash: "normalizer-manifest",
           rootDir: params.pluginDir,
           origin: "global",
@@ -79,7 +79,7 @@ function writeNormalizerManifest(params: { pluginDir: string; prefix: string }):
     "utf-8",
   );
   fs.writeFileSync(
-    path.join(params.pluginDir, "openclaw.plugin.json"),
+    path.join(params.pluginDir, "quiet-core-bot.plugin.json"),
     JSON.stringify({
       id: "normalizer",
       configSchema: { type: "object" },
@@ -115,7 +115,7 @@ function createCurrentSnapshot(params: {
     plugins: [
       {
         pluginId: "normalizer",
-        manifestPath: `/tmp/normalizer-${params.manifestHash}/openclaw.plugin.json`,
+        manifestPath: `/tmp/normalizer-${params.manifestHash}/quiet-core-bot.plugin.json`,
         manifestHash: params.manifestHash,
         source: `/tmp/normalizer-${params.manifestHash}/index.ts`,
         rootDir: `/tmp/normalizer-${params.manifestHash}`,
@@ -289,10 +289,10 @@ describe("manifest model id normalization", () => {
 
     const env = {
       ...process.env,
-      OPENCLAW_STATE_DIR: stateDir,
-      OPENCLAW_HOME: undefined,
-      OPENCLAW_DISABLE_BUNDLED_PLUGINS: "1",
-      OPENCLAW_BUNDLED_PLUGINS_DIR: undefined,
+      QUIET_CORE_STATE_DIR: stateDir,
+      QUIET_CORE_HOME: undefined,
+      QUIET_CORE_DISABLE_BUNDLED_PLUGINS: "1",
+      QUIET_CORE_BUNDLED_PLUGINS_DIR: undefined,
     };
 
     expect(normalizeDemoModelWithEnv(env)).toBe("bravo/demo-model");
@@ -304,10 +304,10 @@ describe("manifest model id normalization", () => {
     writeInstallIndex({ stateDir: stateDirA, pluginDir: pluginDirA });
     writeNormalizerManifest({ pluginDir: pluginDirA, prefix: "alpha" });
 
-    setTestEnvValue("OPENCLAW_STATE_DIR", stateDirA);
-    deleteTestEnvValue("OPENCLAW_HOME");
-    setTestEnvValue("OPENCLAW_DISABLE_BUNDLED_PLUGINS", "1");
-    deleteTestEnvValue("OPENCLAW_BUNDLED_PLUGINS_DIR");
+    setTestEnvValue("QUIET_CORE_STATE_DIR", stateDirA);
+    deleteTestEnvValue("QUIET_CORE_HOME");
+    setTestEnvValue("QUIET_CORE_DISABLE_BUNDLED_PLUGINS", "1");
+    deleteTestEnvValue("QUIET_CORE_BUNDLED_PLUGINS_DIR");
 
     expect(normalizeDemoModel()).toBe("alpha/demo-model");
 
@@ -319,7 +319,7 @@ describe("manifest model id normalization", () => {
     writeInstallIndex({ stateDir: stateDirB, pluginDir: pluginDirB });
     writeNormalizerManifest({ pluginDir: pluginDirB, prefix: "charlie" });
 
-    setTestEnvValue("OPENCLAW_STATE_DIR", stateDirB);
+    setTestEnvValue("QUIET_CORE_STATE_DIR", stateDirB);
     clearPluginMetadataLifecycleCaches();
     expect(normalizeDemoModel()).toBe("charlie/demo-model");
   });
@@ -327,14 +327,14 @@ describe("manifest model id normalization", () => {
   it("reuses manifest metadata while file fingerprints are unchanged", () => {
     const stateDir = makeTempDir();
     const pluginDir = path.join(stateDir, "extensions", "normalizer");
-    const manifestPath = path.join(pluginDir, "openclaw.plugin.json");
+    const manifestPath = path.join(pluginDir, "quiet-core-bot.plugin.json");
     writeInstallIndex({ stateDir, pluginDir });
     writeNormalizerManifest({ pluginDir, prefix: "alpha" });
 
-    setTestEnvValue("OPENCLAW_STATE_DIR", stateDir);
-    deleteTestEnvValue("OPENCLAW_HOME");
-    setTestEnvValue("OPENCLAW_DISABLE_BUNDLED_PLUGINS", "1");
-    deleteTestEnvValue("OPENCLAW_BUNDLED_PLUGINS_DIR");
+    setTestEnvValue("QUIET_CORE_STATE_DIR", stateDir);
+    deleteTestEnvValue("QUIET_CORE_HOME");
+    setTestEnvValue("QUIET_CORE_DISABLE_BUNDLED_PLUGINS", "1");
+    deleteTestEnvValue("QUIET_CORE_BUNDLED_PLUGINS_DIR");
 
     const readFileSyncSpy = vi.spyOn(fs, "readFileSync");
 

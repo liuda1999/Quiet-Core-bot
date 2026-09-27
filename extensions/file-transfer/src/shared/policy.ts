@@ -1,7 +1,7 @@
 // Path policy for file-transfer node.invoke calls.
 //
 // Default behavior is DENY. The operator must explicitly opt in by adding
-// a config block to ~/.openclaw/openclaw.json under
+// a config block to ~/.quiet-core-bot/quiet-core-bot.json under
 // `plugins.entries.file-transfer.config.nodes`. Without a matching block,
 // every file operation is rejected before reaching the node.
 //
@@ -48,8 +48,8 @@
 import os from "node:os";
 import path from "node:path";
 import { minimatch } from "minimatch";
-import { mutateConfigFile } from "openclaw/plugin-sdk/config-mutation";
-import { getRuntimeConfig } from "openclaw/plugin-sdk/runtime-config-snapshot";
+import { mutateConfigFile } from "quiet-core-bot/plugin-sdk/config-mutation";
+import { getRuntimeConfig } from "quiet-core-bot/plugin-sdk/runtime-config-snapshot";
 
 export type FilePolicyKind = "read" | "write";
 export type FilePolicyAskMode = "off" | "on-miss" | "always";

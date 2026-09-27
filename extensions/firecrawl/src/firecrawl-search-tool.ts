@@ -1,11 +1,11 @@
 // Firecrawl plugin module implements firecrawl search tool behavior.
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-runtime";
+import type { OpenClawPluginApi } from "quiet-core-bot/plugin-sdk/plugin-runtime";
 import {
   jsonResult,
   readPositiveIntegerParam,
   readStringArrayParam,
   readStringParam,
-} from "openclaw/plugin-sdk/provider-web-search";
+} from "quiet-core-bot/plugin-sdk/provider-web-search";
 import { Type } from "typebox";
 import { runFirecrawlSearch } from "./firecrawl-client.js";
 

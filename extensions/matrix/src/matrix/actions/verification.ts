@@ -1,7 +1,7 @@
 // Matrix plugin module implements verification behavior.
 import { setTimeout as sleep } from "node:timers/promises";
-import { requireRuntimeConfig } from "openclaw/plugin-sdk/plugin-config-runtime";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { requireRuntimeConfig } from "quiet-core-bot/plugin-sdk/plugin-config-runtime";
+import { normalizeOptionalString } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import type { CoreConfig } from "../../types.js";
 import { formatMatrixEncryptionUnavailableError } from "../encryption-guidance.js";
 import type { MatrixDeviceVerificationStatus, MatrixOwnDeviceVerificationStatus } from "../sdk.js";

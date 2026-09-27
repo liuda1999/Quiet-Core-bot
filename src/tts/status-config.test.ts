@@ -11,7 +11,7 @@ let fixtureRoot = "";
 let fixtureId = 0;
 
 beforeAll(() => {
-  fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-tts-status-"));
+  fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-tts-status-"));
 });
 
 afterAll(() => {
@@ -27,8 +27,8 @@ async function withStatusTempHome(run: (home: string) => Promise<void>): Promise
     {
       HOME: home,
       USERPROFILE: home,
-      OPENCLAW_HOME: undefined,
-      OPENCLAW_STATE_DIR: path.join(home, ".openclaw"),
+      QUIET_CORE_HOME: undefined,
+      QUIET_CORE_STATE_DIR: path.join(home, ".quiet-core-bot"),
     },
     async () => await run(home),
   );
@@ -37,7 +37,7 @@ async function withStatusTempHome(run: (home: string) => Promise<void>): Promise
 describe("resolveStatusTtsSnapshot", () => {
   it("uses prefs overrides without loading speech providers", async () => {
     await withStatusTempHome(async (home) => {
-      const prefsPath = path.join(home, ".openclaw", "settings", "tts.json");
+      const prefsPath = path.join(home, ".quiet-core-bot", "settings", "tts.json");
       fs.mkdirSync(path.dirname(prefsPath), { recursive: true });
       fs.writeFileSync(
         prefsPath,
@@ -305,7 +305,7 @@ describe("resolveStatusTtsSnapshot", () => {
 
   it("uses provider metadata for local provider prefs overrides", async () => {
     await withStatusTempHome(async (home) => {
-      const prefsPath = path.join(home, ".openclaw", "settings", "tts.json");
+      const prefsPath = path.join(home, ".quiet-core-bot", "settings", "tts.json");
       fs.mkdirSync(path.dirname(prefsPath), { recursive: true });
       fs.writeFileSync(
         prefsPath,
@@ -347,9 +347,9 @@ describe("resolveStatusTtsSnapshot", () => {
     });
   });
 
-  it("derives the default prefs path from OPENCLAW_CONFIG_PATH when set", async () => {
+  it("derives the default prefs path from QUIET_CORE_CONFIG_PATH when set", async () => {
     await withStatusTempHome(async (home) => {
-      const stateDir = path.join(home, ".openclaw-dev");
+      const stateDir = path.join(home, ".quiet-core-bot-dev");
       const prefsPath = path.join(stateDir, "settings", "tts.json");
       fs.mkdirSync(path.dirname(prefsPath), { recursive: true });
       fs.writeFileSync(
@@ -364,8 +364,8 @@ describe("resolveStatusTtsSnapshot", () => {
 
       await withEnvAsync(
         {
-          OPENCLAW_STATE_DIR: undefined,
-          OPENCLAW_CONFIG_PATH: path.join(stateDir, "openclaw.json"),
+          QUIET_CORE_STATE_DIR: undefined,
+          QUIET_CORE_CONFIG_PATH: path.join(stateDir, "quiet-core-bot.json"),
         },
         async () => {
           expect(

@@ -11,8 +11,8 @@ Adds Chutes model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/chutes-provider`
-- Install route: npm; ClawHub: `clawhub:@openclaw/chutes-provider`
+- Package: `@quiet-core/chutes-provider`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/chutes-provider`
 
 ## Surface
 

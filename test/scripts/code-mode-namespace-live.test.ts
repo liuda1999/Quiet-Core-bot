@@ -16,8 +16,8 @@ describe("code-mode namespace live repro", () => {
   });
 
   it("reports the environment variable name for inherited task limits", () => {
-    expect(() => parseTaskLimit("1e3", "OPENCLAW_CODE_MODE_LIVE_TASKS")).toThrow(
-      "OPENCLAW_CODE_MODE_LIVE_TASKS must be a positive integer",
+    expect(() => parseTaskLimit("1e3", "QUIET_CORE_CODE_MODE_LIVE_TASKS")).toThrow(
+      "QUIET_CORE_CODE_MODE_LIVE_TASKS must be a positive integer",
     );
   });
 });

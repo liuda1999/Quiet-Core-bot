@@ -3,11 +3,11 @@ import { createHash, randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
-import { formatMemoryDreamingDay } from "openclaw/plugin-sdk/memory-core-host-status";
-import { resolveSessionTranscriptsDirForAgent } from "openclaw/plugin-sdk/memory-host-core";
-import { buildAgentSessionKey } from "openclaw/plugin-sdk/routing";
-import { createPluginStateSyncKeyedStore } from "openclaw/plugin-sdk/runtime-doctor";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { formatMemoryDreamingDay } from "quiet-core-bot/plugin-sdk/memory-core-host-status";
+import { resolveSessionTranscriptsDirForAgent } from "quiet-core-bot/plugin-sdk/memory-host-core";
+import { buildAgentSessionKey } from "quiet-core-bot/plugin-sdk/routing";
+import { createPluginStateSyncKeyedStore } from "quiet-core-bot/plugin-sdk/runtime-doctor";
+import { normalizeLowercaseStringOrEmpty } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import {
   callQaBrowserRequest,
   qaBrowserAct,
@@ -105,7 +105,7 @@ function setActiveMemorySessionDisabled(
     maxEntries: 10_000,
     env: {
       ...process.env,
-      OPENCLAW_STATE_DIR: path.join(env.gateway.tempRoot, "state"),
+      QUIET_CORE_STATE_DIR: path.join(env.gateway.tempRoot, "state"),
     },
   });
   const key = activeMemoryToggleKey(sessionKey);

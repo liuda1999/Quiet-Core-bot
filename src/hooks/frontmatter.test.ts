@@ -57,7 +57,7 @@ name: session-memory
 description: "Save session context"
 metadata:
   {
-    "openclaw": {
+    "quiet-core-bot": {
       "emoji": "💾",
       "events": ["command:new"]
     }
@@ -73,8 +73,8 @@ metadata:
 
     // Verify the metadata is valid JSON
     const parsed = JSON.parse(metadata);
-    expect(parsed.openclaw.emoji).toBe("💾");
-    expect(parsed.openclaw.events).toEqual(["command:new"]);
+    expect(parsed["quiet-core-bot"].emoji).toBe("💾");
+    expect(parsed["quiet-core-bot"].events).toEqual(["command:new"]);
   });
 
   it("parses multi-line metadata with complex nested structure", () => {
@@ -83,7 +83,7 @@ name: command-logger
 description: "Log all command events"
 metadata:
   {
-    "openclaw":
+    "quiet-core-bot":
       {
         "emoji": "📝",
         "events": ["command"],
@@ -97,21 +97,21 @@ metadata:
     expect(result.name).toBe("command-logger");
 
     const parsed = JSON.parse(requireString(result.metadata, "command-logger metadata"));
-    expect(parsed.openclaw.emoji).toBe("📝");
-    expect(parsed.openclaw.events).toEqual(["command"]);
-    expect(parsed.openclaw.requires.config).toEqual(["workspace.dir"]);
-    expect(parsed.openclaw.install[0].kind).toBe("bundled");
+    expect(parsed["quiet-core-bot"].emoji).toBe("📝");
+    expect(parsed["quiet-core-bot"].events).toEqual(["command"]);
+    expect(parsed["quiet-core-bot"].requires.config).toEqual(["workspace.dir"]);
+    expect(parsed["quiet-core-bot"].install[0].kind).toBe("bundled");
   });
 
   it("handles single-line metadata (inline JSON)", () => {
     const content = `---
 name: simple-hook
-metadata: {"openclaw": {"events": ["test"]}}
+metadata: {"quiet-core-bot": {"events": ["test"]}}
 ---
 `;
     const result = parseFrontmatter(content);
     expect(result.name).toBe("simple-hook");
-    expect(result.metadata).toBe('{"openclaw": {"events": ["test"]}}');
+    expect(result.metadata).toBe('{"quiet-core-bot": {"events": ["test"]}}');
   });
 
   it("handles mixed single-line and multi-line values", () => {
@@ -121,7 +121,7 @@ description: "A hook with mixed values"
 homepage: https://example.com
 metadata:
   {
-    "openclaw": {
+    "quiet-core-bot": {
       "events": ["command:new"]
     }
   }
@@ -167,7 +167,7 @@ describe("resolveOpenClawMetadata", () => {
     const frontmatter = {
       name: "test-hook",
       metadata: JSON.stringify({
-        openclaw: {
+        "quiet-core-bot": {
           emoji: "🔥",
           events: ["command:new", "command:reset"],
           requires: {
@@ -180,10 +180,10 @@ describe("resolveOpenClawMetadata", () => {
 
     const result = resolveOpenClawMetadata(frontmatter);
     const openclaw = requireOpenClawMetadata(result);
-    expect(openclaw.emoji).toBe("🔥");
-    expect(openclaw.events).toEqual(["command:new", "command:reset"]);
-    expect(openclaw.requires?.config).toEqual(["workspace.dir"]);
-    expect(openclaw.requires?.bins).toEqual(["git"]);
+    expect(quiet-core-bot.emoji).toBe("🔥");
+    expect(quiet-core-bot.events).toEqual(["command:new", "command:reset"]);
+    expect(quiet-core-bot.requires?.config).toEqual(["workspace.dir"]);
+    expect(quiet-core-bot.requires?.bins).toEqual(["git"]);
   });
 
   it("returns undefined when metadata is missing", () => {
@@ -211,11 +211,11 @@ describe("resolveOpenClawMetadata", () => {
   it("handles install specs", () => {
     const frontmatter = {
       metadata: JSON.stringify({
-        openclaw: {
+        "quiet-core-bot": {
           events: ["command"],
           install: [
             { id: "bundled", kind: "bundled", label: "Bundled with Quiet Core bot" },
-            { id: "npm", kind: "npm", package: "@openclaw/hook" },
+            { id: "npm", kind: "npm", package: "@quiet-core/hook" },
           ],
         },
       }),
@@ -225,13 +225,13 @@ describe("resolveOpenClawMetadata", () => {
     expect(result?.install).toHaveLength(2);
     expect(result?.install?.[0].kind).toBe("bundled");
     expect(result?.install?.[1].kind).toBe("npm");
-    expect(result?.install?.[1].package).toBe("@openclaw/hook");
+    expect(result?.install?.[1].package).toBe("@quiet-core/hook");
   });
 
   it("handles os restrictions", () => {
     const frontmatter = {
       metadata: JSON.stringify({
-        openclaw: {
+        "quiet-core-bot": {
           events: ["command"],
           os: ["darwin", "linux"],
         },
@@ -250,7 +250,7 @@ description: "Save session context to memory when /new or /reset command is issu
 homepage: https://github.com/liuda1999/Quiet-Core-bot/automation/hooks#session-memory
 metadata:
   {
-    "openclaw":
+    "quiet-core-bot":
       {
         "emoji": "💾",
         "events": ["command:new", "command:reset"],
@@ -270,10 +270,10 @@ metadata:
     );
 
     const openclaw = requireOpenClawMetadata(resolveOpenClawMetadata(frontmatter));
-    expect(openclaw.emoji).toBe("💾");
-    expect(openclaw.events).toEqual(["command:new", "command:reset"]);
-    expect(openclaw.requires?.config).toEqual(["workspace.dir"]);
-    expect(openclaw.install?.[0].kind).toBe("bundled");
+    expect(quiet-core-bot.emoji).toBe("💾");
+    expect(quiet-core-bot.events).toEqual(["command:new", "command:reset"]);
+    expect(quiet-core-bot.requires?.config).toEqual(["workspace.dir"]);
+    expect(quiet-core-bot.install?.[0].kind).toBe("bundled");
   });
 
   it("parses YAML metadata map", () => {
@@ -288,8 +288,8 @@ metadata:
 `;
     const frontmatter = parseFrontmatter(content);
     const openclaw = resolveOpenClawMetadata(frontmatter);
-    expect(openclaw?.emoji).toBe("disk");
-    expect(openclaw?.events).toEqual(["command:new"]);
+    expect(quiet-core-bot?.emoji).toBe("disk");
+    expect(quiet-core-bot?.events).toEqual(["command:new"]);
   });
 });
 

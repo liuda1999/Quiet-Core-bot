@@ -3,9 +3,9 @@
  */
 import { randomUUID } from "node:crypto";
 import path from "node:path";
-import { resolveTimestampMsToIsoString } from "@openclaw/normalization-core/number-coercion";
+import { resolveTimestampMsToIsoString } from "@quiet-core/normalization-core/number-coercion";
 import { CURRENT_SESSION_VERSION } from "../../config/sessions/version.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import type { CompactionEntry, SessionEntry, SessionHeader } from "../sessions/index.js";
 import { collectDuplicateUserMessageEntryIdsForCompaction } from "./compaction-duplicate-user-messages.js";
 import { stripThinkingSignaturesFromMessage } from "./thinking.js";

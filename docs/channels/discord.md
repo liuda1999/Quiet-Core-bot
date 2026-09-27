@@ -542,7 +542,7 @@ Example:
     - guild must match `channels.discord.guilds` (`id` preferred, slug accepted)
     - optional sender allowlists: `users` (stable IDs recommended) and `roles` (role IDs only); if either is configured, senders are allowed when they match `users` OR `roles`
     - direct name/tag matching is disabled by default; enable `channels.discord.dangerouslyAllowNameMatching: true` only as break-glass compatibility mode
-    - names/tags are supported for `users`, but IDs are safer; `openclaw security audit` warns when name/tag entries are used
+    - names/tags are supported for `users`, but IDs are safer; `quiet-core-bot security audit` warns when name/tag entries are used
     - if a guild has `channels` configured, non-listed channels are denied
     - if a guild has no `channels` block, all channels in that allowlisted guild are allowed
 
@@ -829,7 +829,7 @@ Default slash command settings:
             agent: "codex",
             backend: "acpx",
             mode: "persistent",
-            cwd: "/workspace/openclaw",
+            cwd: "/workspace/quiet-core-bot",
           },
         },
       },
@@ -1037,7 +1037,7 @@ Default slash command settings:
     discord: {
       activity: "Live coding",
       activityType: 1,
-      activityUrl: "https://twitch.tv/openclaw",
+      activityUrl: "https://twitch.tv/quiet-core-bot",
     },
   },
 }
@@ -1591,7 +1591,7 @@ quiet-core-bot logs --follow
 
     - single-account: `channels.discord.gatewayInfoTimeoutMs`
     - multi-account: `channels.discord.accounts.<accountId>.gatewayInfoTimeoutMs`
-    - env fallback when config is unset: `OPENCLAW_DISCORD_GATEWAY_INFO_TIMEOUT_MS`
+    - env fallback when config is unset: `QUIET_CORE_DISCORD_GATEWAY_INFO_TIMEOUT_MS`
     - default: `30000` (30 seconds), max: `120000`
 
   </Accordion>
@@ -1603,11 +1603,11 @@ quiet-core-bot logs --follow
 
     - startup single-account: `channels.discord.gatewayReadyTimeoutMs`
     - startup multi-account: `channels.discord.accounts.<accountId>.gatewayReadyTimeoutMs`
-    - startup env fallback when config is unset: `OPENCLAW_DISCORD_READY_TIMEOUT_MS`
+    - startup env fallback when config is unset: `QUIET_CORE_DISCORD_READY_TIMEOUT_MS`
     - startup default: `15000` (15 seconds), max: `120000`
     - runtime single-account: `channels.discord.gatewayRuntimeReadyTimeoutMs`
     - runtime multi-account: `channels.discord.accounts.<accountId>.gatewayRuntimeReadyTimeoutMs`
-    - runtime env fallback when config is unset: `OPENCLAW_DISCORD_RUNTIME_READY_TIMEOUT_MS`
+    - runtime env fallback when config is unset: `QUIET_CORE_DISCORD_RUNTIME_READY_TIMEOUT_MS`
     - runtime default: `30000` (30 seconds), max: `120000`
 
   </Accordion>

@@ -1,5 +1,5 @@
 // Tests shared channel draft chunking resolution exposed through plugin-sdk/channel-outbound.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { describe, expect, it } from "vitest";
 import { resolveChannelDraftStreamingChunking } from "./channel-outbound.js";
 

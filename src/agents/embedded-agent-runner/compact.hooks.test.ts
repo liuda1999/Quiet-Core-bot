@@ -1,5 +1,5 @@
 // Hook integration coverage for direct and queued embedded compaction.
-import type { AgentMessage } from "openclaw/plugin-sdk/agent-core";
+import type { AgentMessage } from "quiet-core-bot/plugin-sdk/agent-core";
 import { beforeAll, beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import {
   applyExtraParamsToAgentMock,
@@ -751,7 +751,7 @@ describe("compactEmbeddedAgentSessionDirect hooks", () => {
   });
 
   it("preserves direct OpenAI API-key compaction when Quiet Core bot runtime is active", async () => {
-    resolveAgentHarnessPolicyMock.mockReturnValue({ runtime: "openclaw" });
+    resolveAgentHarnessPolicyMock.mockReturnValue({ runtime: "quiet-core-bot" });
     resolveModelMock.mockImplementation((provider = "openai", modelId = "fake") => ({
       model: { provider, api: "responses", id: modelId, input: [] },
       error: null,
@@ -772,7 +772,7 @@ describe("compactEmbeddedAgentSessionDirect hooks", () => {
             openai: { models: [{ id: "gpt-5.5", contextWindow: 1_000_000 }] },
           },
         },
-        agents: { defaults: { embeddedHarness: { runtime: "openclaw" } } },
+        agents: { defaults: { embeddedHarness: { runtime: "quiet-core-bot" } } },
       } as never,
     });
 
@@ -825,7 +825,7 @@ describe("compactEmbeddedAgentSessionDirect hooks", () => {
   });
 
   it("uses Codex auth for runtime model loading while preserving OpenAI context config", async () => {
-    resolveAgentHarnessPolicyMock.mockReturnValue({ runtime: "openclaw" });
+    resolveAgentHarnessPolicyMock.mockReturnValue({ runtime: "quiet-core-bot" });
     resolveModelMock.mockImplementation((provider = "openai", modelId = "fake") => ({
       model: { provider, api: "responses", id: modelId, input: [], contextWindow: 1_000_000 },
       error: null,
@@ -1947,7 +1947,7 @@ describe("compactEmbeddedAgentSession hooks (ownsCompaction engine)", () => {
       wrappedCompactionArgs({
         provider: "openai",
         model: "gpt-5.5",
-        agentHarnessId: "openclaw",
+        agentHarnessId: "quiet-core-bot",
         config: {
           models: {
             providers: {

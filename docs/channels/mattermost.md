@@ -16,7 +16,7 @@ Install Mattermost before configuring the channel:
 <Tabs>
   <Tab title="npm registry">
     ```bash
-    quiet-core-bot plugins install @openclaw/mattermost
+    quiet-core-bot plugins install @quiet-core/mattermost
     ```
   </Tab>
   <Tab title="Local checkout">
@@ -32,7 +32,7 @@ Details: [Plugins](/tools/plugin)
 
 <Steps>
   <Step title="Ensure plugin is available">
-    Install `@openclaw/mattermost` with the command above, then restart the Gateway if it is already running.
+    Install `@quiet-core/mattermost` with the command above, then restart the Gateway if it is already running.
   </Step>
   <Step title="Create a Mattermost bot">
     Create a Mattermost bot account and copy the **bot token**.
@@ -435,7 +435,7 @@ The gateway verifies button clicks with HMAC-SHA256. External scripts must gener
 
 <Steps>
   <Step title="Derive the secret from the bot token">
-    `HMAC-SHA256(key="openclaw-mattermost-interactions", data=botToken)`
+    `HMAC-SHA256(key="quiet-core-bot-mattermost-interactions", data=botToken)`
   </Step>
   <Step title="Build the context object">
     Build the context object with all fields **except** `_token`.
@@ -457,7 +457,7 @@ Python example:
 import hmac, hashlib, json
 
 secret = hmac.new(
-    b"openclaw-mattermost-interactions",
+    b"quiet-core-bot-mattermost-interactions",
     bot_token.encode(), hashlib.sha256
 ).hexdigest()
 

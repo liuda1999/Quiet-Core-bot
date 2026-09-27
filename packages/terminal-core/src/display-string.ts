@@ -41,12 +41,12 @@ function resolveRawOsHomeDir(env: NodeJS.ProcessEnv, homedir: () => string): str
   );
 }
 
-/** Resolve raw home with OPENCLAW_HOME tilde expansion. */
+/** Resolve raw home with QUIET_CORE_HOME tilde expansion. */
 function resolveRawHomeDir(
   env: NodeJS.ProcessEnv = process.env,
   homedir: () => string = os.homedir,
 ): string | undefined {
-  const explicitHome = normalize(env.OPENCLAW_HOME);
+  const explicitHome = normalize(env.QUIET_CORE_HOME);
   if (explicitHome) {
     const fallbackHome = resolveRawOsHomeDir(env, homedir);
     return fallbackHome ? explicitHome.replace(/^~(?=$|[\\/])/, fallbackHome) : explicitHome;
@@ -69,11 +69,11 @@ function resolveHomeDisplayPrefix(): { home: string; prefix: string } | undefine
   if (!home) {
     return undefined;
   }
-  const explicitHome = process.env.OPENCLAW_HOME?.trim();
-  return explicitHome ? { home, prefix: "$OPENCLAW_HOME" } : { home, prefix: "~" };
+  const explicitHome = process.env.QUIET_CORE_HOME?.trim();
+  return explicitHome ? { home, prefix: "$QUIET_CORE_HOME" } : { home, prefix: "~" };
 }
 
-/** Replace the effective home path with "~" or "$OPENCLAW_HOME" for terminal display. */
+/** Replace the effective home path with "~" or "$QUIET_CORE_HOME" for terminal display. */
 export function displayString(input: string): string {
   if (!input) {
     return input;

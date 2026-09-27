@@ -1,5 +1,5 @@
 // Verifies transcript repair pairs tool calls/results and sanitizes tool inputs.
-import type { AgentMessage } from "openclaw/plugin-sdk/agent-core";
+import type { AgentMessage } from "quiet-core-bot/plugin-sdk/agent-core";
 import { describe, expect, it } from "vitest";
 import {
   sanitizeToolCallInputs,
@@ -10,7 +10,7 @@ import {
 import { castAgentMessage, castAgentMessages } from "./test-helpers/agent-message-fixtures.js";
 
 const DEFAULT_MISSING_TOOL_RESULT_TEXT =
-  "[openclaw] missing tool result in session history; inserted synthetic error result for transcript repair.";
+  "[quiet-core-bot] missing tool result in session history; inserted synthetic error result for transcript repair.";
 
 const TOOL_CALL_BLOCK_TYPES = new Set([
   "toolCall",

@@ -11,7 +11,7 @@ Adds fal model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/fal-provider`
+- Package: `@quiet-core/fal-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

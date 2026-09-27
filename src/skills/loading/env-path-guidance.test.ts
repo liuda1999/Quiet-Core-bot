@@ -14,7 +14,7 @@ type GuidanceCase = {
 const CASES: GuidanceCase[] = [
   {
     file: "skills/session-logs/SKILL.md",
-    required: ["OPENCLAW_STATE_DIR"],
+    required: ["QUIET_CORE_STATE_DIR"],
     forbidden: [
       "for f in ~/.quiet-core-bot/agents/<agentId>/sessions/*.jsonl",
       'rg -l "phrase" ~/.quiet-core-bot/agents/<agentId>/sessions/*.jsonl',
@@ -23,24 +23,24 @@ const CASES: GuidanceCase[] = [
   },
   {
     file: "skills/gh-issues/SKILL.md",
-    required: ["OPENCLAW_CONFIG_PATH"],
-    forbidden: ["cat ~/.quiet-core-bot/openclaw.json"],
+    required: ["QUIET_CORE_CONFIG_PATH"],
+    forbidden: ["cat ~/.quiet-core-bot/quiet-core-bot.json"],
   },
   {
     file: "extensions/canvas/skills/canvas/SKILL.md",
-    required: ["OPENCLAW_CONFIG_PATH"],
-    forbidden: ["cat ~/.quiet-core-bot/openclaw.json"],
+    required: ["QUIET_CORE_CONFIG_PATH"],
+    forbidden: ["cat ~/.quiet-core-bot/quiet-core-bot.json"],
   },
   {
     file: "skills/openai-whisper-api/SKILL.md",
-    required: ["OPENCLAW_CONFIG_PATH"],
+    required: ["QUIET_CORE_CONFIG_PATH"],
   },
   {
     file: "skills/sherpa-onnx-tts/SKILL.md",
     required: [
-      "OPENCLAW_STATE_DIR",
-      "OPENCLAW_CONFIG_PATH",
-      'STATE_DIR="${OPENCLAW_STATE_DIR:-$HOME/.openclaw}"',
+      "QUIET_CORE_STATE_DIR",
+      "QUIET_CORE_CONFIG_PATH",
+      'STATE_DIR="${QUIET_CORE_STATE_DIR:-$HOME/.quiet-core-bot}"',
     ],
     forbidden: [
       'SHERPA_ONNX_RUNTIME_DIR: "~/.quiet-core-bot/tools/sherpa-onnx-tts/runtime"',
@@ -50,7 +50,7 @@ const CASES: GuidanceCase[] = [
   },
   {
     file: "skills/coding-agent/SKILL.md",
-    required: ["OPENCLAW_STATE_DIR"],
+    required: ["QUIET_CORE_STATE_DIR"],
     forbidden: ["NEVER start Codex in ~/.quiet-core-bot/"],
   },
 ];

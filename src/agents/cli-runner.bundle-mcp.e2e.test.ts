@@ -65,16 +65,16 @@ async function createBundleMcpFixture(params: {
   const envSnapshot = captureEnv([
     "HOME",
     "USERPROFILE",
-    "OPENCLAW_HOME",
-    "OPENCLAW_STATE_DIR",
-    "OPENCLAW_DISABLE_PERSISTED_PLUGIN_REGISTRY",
+    "QUIET_CORE_HOME",
+    "QUIET_CORE_STATE_DIR",
+    "QUIET_CORE_DISABLE_PERSISTED_PLUGIN_REGISTRY",
   ]);
   const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), params.tempPrefix));
   setTestEnvValue("HOME", tempHome);
   setTestEnvValue("USERPROFILE", tempHome);
-  deleteTestEnvValue("OPENCLAW_HOME");
-  deleteTestEnvValue("OPENCLAW_STATE_DIR");
-  setTestEnvValue("OPENCLAW_DISABLE_PERSISTED_PLUGIN_REGISTRY", "1");
+  deleteTestEnvValue("QUIET_CORE_HOME");
+  deleteTestEnvValue("QUIET_CORE_STATE_DIR");
+  setTestEnvValue("QUIET_CORE_DISABLE_PERSISTED_PLUGIN_REGISTRY", "1");
 
   const workspaceDir = path.join(tempHome, "workspace");
   const sessionFile = path.join(tempHome, "session.jsonl");
@@ -87,7 +87,7 @@ async function createBundleMcpFixture(params: {
   const fakeClaudePidPath = params.liveSession
     ? path.join(tempHome, "fake-live-claude.pid")
     : undefined;
-  const pluginRoot = path.join(tempHome, ".openclaw", "extensions", "bundle-probe");
+  const pluginRoot = path.join(tempHome, ".quiet-core-bot", "extensions", "bundle-probe");
   await fs.mkdir(workspaceDir, { recursive: true });
   await writeBundleProbeMcpServer(serverScriptPath);
   if (params.liveSession) {
@@ -210,7 +210,7 @@ describe("CLI bundle MCP e2e", () => {
     async () => {
       const { executePreparedCliRun } = await import("./cli-runner/execute.js");
       const fixture = await createBundleMcpFixture({
-        tempPrefix: "openclaw-cli-bundle-mcp-",
+        tempPrefix: "quiet-core-bot-cli-bundle-mcp-",
       });
       const context = await prepareBundleMcpExecutionContext({
         backend: buildTestBackend({ commandPath: fixture.fakeClaudePath }),
@@ -243,7 +243,7 @@ describe("CLI bundle MCP e2e", () => {
         await import("./cli-runner/claude-live-session.js");
       const fixture = await createBundleMcpFixture({
         liveSession: true,
-        tempPrefix: "openclaw-cli-live-cleanup-",
+        tempPrefix: "quiet-core-bot-cli-live-cleanup-",
       });
       const context = await prepareBundleMcpExecutionContext({
         backend: buildTestBackend({

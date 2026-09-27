@@ -888,7 +888,7 @@ struct RootTabsSourceGuardTests {
             .deletingLastPathComponent()
             .deletingLastPathComponent()
             .deletingLastPathComponent()
-            .appendingPathComponent("shared/OpenClawKit/Sources/OpenClawChatUI/ChatView+Previews.swift")
+            .appendingPathComponent("shared/QuietCoreKit/Sources/OpenClawChatUI/ChatView+Previews.swift")
     }
 
     private static func xcodeProjectSourceURL() -> URL {

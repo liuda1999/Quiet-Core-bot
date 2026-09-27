@@ -23,7 +23,7 @@ inventory of bundled, official external, and source-only plugins, see
 
 Before installing a plugin, make sure you have:
 
-- an Quiet Core bot checkout or installation with the `openclaw` CLI available
+- an Quiet Core bot checkout or installation with the `quiet-core-bot` CLI available
 - network access to the selected source, such as ClawHub, npm, or a git host
 - any plugin-specific credentials, config keys, or operating-system tools named
   by that plugin's setup docs
@@ -41,7 +41,7 @@ Before installing a plugin, make sure you have:
 
     ClawHub is the primary discovery surface for community plugins. During the
     launch cutover, ordinary bare package specs still install from npm unless
-    they match an official plugin id. Raw `@openclaw/*` package specs that match
+    they match an official plugin id. Raw `@quiet-core/*` package specs that match
     bundled plugins use the bundled copy from the current Quiet Core bot build. Use an
     explicit prefix when you need one source.
 
@@ -129,8 +129,8 @@ Bare package specs have special compatibility behavior. If the bare name matches
 a bundled plugin id, Quiet Core bot uses that bundled source. If it matches an
 official external plugin id, Quiet Core bot uses the official package catalog. Other
 ordinary bare package specs install through npm during the launch cutover. Raw
-`@openclaw/*` package specs that match bundled plugins also resolve to the
-bundled copy before npm fallback. Use `npm:@openclaw/<plugin>@<version>` when
+`@quiet-core/*` package specs that match bundled plugins also resolve to the
+bundled copy before npm fallback. Use `npm:@quiet-core/<plugin>@<version>` when
 you deliberately want the external npm package instead of the image-owned
 bundled copy. Use `clawhub:`, `npm:`, `git:`, or `npm-pack:` when you need
 deterministic source selection. See [`quiet-core-bot plugins`](/cli/plugins#install)
@@ -138,8 +138,8 @@ for the full command contract.
 
 For npm installs, unpinned package specs and `@latest` choose the newest stable
 package that advertises compatibility with this Quiet Core bot build. If npm's
-current latest release declares a newer `openclaw.compat.pluginApi` or
-`openclaw.install.minHostVersion`, Quiet Core bot scans older stable package versions
+current latest release declares a newer `quiet-core-bot.compat.pluginApi` or
+`quiet-core-bot.install.minHostVersion`, Quiet Core bot scans older stable package versions
 and installs the newest one that fits. Exact versions and explicit channel tags
 such as `@beta` stay pinned to the selected package and fail when incompatible.
 
@@ -229,7 +229,7 @@ Quiet Core bot recognizes two plugin formats:
 
 | Format                       | How it loads                                                                       | Use when                                                                    |
 | ---------------------------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| Native Quiet Core bot plugin | `openclaw.plugin.json` plus a runtime module loaded in process                     | You are installing or building Quiet Core bot-specific runtime capabilities |
+| Native Quiet Core bot plugin | `quiet-core-bot.plugin.json` plus a runtime module loaded in process                     | You are installing or building Quiet Core bot-specific runtime capabilities |
 | Compatible bundle            | Codex, Claude, or Cursor plugin layout mapped into Quiet Core bot plugin inventory | You are reusing compatible skills, commands, hooks, or bundle metadata      |
 
 Both formats appear in `quiet-core-bot plugins list`, `quiet-core-bot plugins inspect`,
@@ -289,7 +289,7 @@ serves your channels, not only a wrapper or supervisor.
 | Config says a plugin is missing                                | Check [Plugin inventory](/plugins/plugin-inventory) for whether it is bundled, official external, or source-only                                 | Install the external package, enable the bundled plugin, or remove stale config                               |
 | Config is invalid during install                               | Read the validation message and run `quiet-core-bot doctor --fix` when it points to stale plugin state                                           | Doctor can quarantine invalid plugin config by disabling the entry and removing the invalid payload           |
 | Plugin path is blocked for suspicious ownership or permissions | Inspect the diagnostic before the config error                                                                                                   | Fix filesystem ownership/permissions, then run `quiet-core-bot plugins registry --refresh`                    |
-| `OPENCLAW_NIX_MODE=1` blocks lifecycle commands                | Confirm the install is managed by Nix                                                                                                            | Change plugin selection in the Nix source instead of using plugin mutator commands                            |
+| `QUIET_CORE_NIX_MODE=1` blocks lifecycle commands              | Confirm the install is managed by Nix                                                                                                            | Change plugin selection in the Nix source instead of using plugin mutator commands                            |
 | Dependency import fails at runtime                             | Check whether the plugin was installed through npm/git/ClawHub or loaded from a local path                                                       | Run `quiet-core-bot plugins update <id>`, reinstall the source, or install local plugin dependencies yourself |
 
 When stale plugin config still names a no-longer-discoverable channel plugin,
@@ -323,14 +323,14 @@ host bind-mounted Quiet Core bot config and workspace directories should normall
 owned by uid `1000`:
 
 ```bash
-sudo chown -R 1000:1000 /path/to/openclaw-config /path/to/openclaw-workspace
+sudo chown -R 1000:1000 /path/to/quiet-core-bot-config /path/to/quiet-core-bot-workspace
 ```
 
 If you intentionally run Quiet Core bot as root, repair the managed plugin root to
 root ownership instead:
 
 ```bash
-sudo chown -R root:root /path/to/openclaw-config/npm
+sudo chown -R root:root /path/to/quiet-core-bot-config/npm
 ```
 
 After fixing ownership, rerun `quiet-core-bot doctor --fix` or

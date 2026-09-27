@@ -1,4 +1,4 @@
-/** @deprecated Compatibility subpath. Use `openclaw/plugin-sdk/channel-outbound`. */
+/** @deprecated Compatibility subpath. Use `quiet-core-bot/plugin-sdk/channel-outbound`. */
 export {
   resolveLegacyOutboundSendDepKeys,
   resolveOutboundSendDep,

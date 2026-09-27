@@ -26,33 +26,33 @@ type HookResolutionCollision = {
 };
 
 const HOOK_SOURCE_POLICIES: Record<HookSource, HookSourcePolicy> = {
-  "openclaw-bundled": {
+  "quiet-core-bot-bundled": {
     precedence: 10,
     trustedLocalCode: true,
     defaultEnableMode: "default-on",
-    canOverride: ["openclaw-bundled"],
-    canBeOverriddenBy: ["openclaw-managed", "openclaw-plugin"],
+    canOverride: ["quiet-core-bot-bundled"],
+    canBeOverriddenBy: ["quiet-core-bot-managed", "quiet-core-bot-plugin"],
   },
-  "openclaw-plugin": {
+  "quiet-core-bot-plugin": {
     precedence: 20,
     trustedLocalCode: true,
     defaultEnableMode: "default-on",
-    canOverride: ["openclaw-bundled", "openclaw-plugin"],
-    canBeOverriddenBy: ["openclaw-managed"],
+    canOverride: ["quiet-core-bot-bundled", "quiet-core-bot-plugin"],
+    canBeOverriddenBy: ["quiet-core-bot-managed"],
   },
-  "openclaw-managed": {
+  "quiet-core-bot-managed": {
     precedence: 30,
     trustedLocalCode: true,
     defaultEnableMode: "default-on",
-    canOverride: ["openclaw-bundled", "openclaw-managed", "openclaw-plugin"],
-    canBeOverriddenBy: ["openclaw-managed"],
+    canOverride: ["quiet-core-bot-bundled", "quiet-core-bot-managed", "quiet-core-bot-plugin"],
+    canBeOverriddenBy: ["quiet-core-bot-managed"],
   },
-  "openclaw-workspace": {
+  "quiet-core-bot-workspace": {
     precedence: 40,
     trustedLocalCode: true,
     defaultEnableMode: "explicit-opt-in",
-    canOverride: ["openclaw-workspace"],
-    canBeOverriddenBy: ["openclaw-workspace"],
+    canOverride: ["quiet-core-bot-workspace"],
+    canBeOverriddenBy: ["quiet-core-bot-workspace"],
   },
 };
 
@@ -87,7 +87,7 @@ export function resolveHookEnableState(params: {
   const hookKey = resolveHookKey(entry.hook.name, entry);
   const hookConfig = params.hookConfig ?? resolveHookConfig(config, hookKey);
 
-  if (entry.hook.source === "openclaw-plugin") {
+  if (entry.hook.source === "quiet-core-bot-plugin") {
     return { enabled: true };
   }
   if (hookConfig?.enabled === false) {

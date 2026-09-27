@@ -60,7 +60,7 @@ another linked channel without starting a new session. See
 [Channel docking](/concepts/channel-docking) for examples, config, and
 troubleshooting.
 
-Verify your setup with `openclaw security audit`.
+Verify your setup with `quiet-core-bot security audit`.
 
 ## Session lifecycle
 

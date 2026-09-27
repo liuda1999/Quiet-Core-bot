@@ -1,5 +1,5 @@
 /** Type contracts for plugin-contributed embedding providers. */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import type { SecretInput } from "../config/types.secrets.js";
 
 /** Input accepted by embedding providers, including multimodal inline-data parts. */

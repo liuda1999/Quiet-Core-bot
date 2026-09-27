@@ -3,10 +3,10 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { CURRENT_SESSION_VERSION } from "openclaw/plugin-sdk/agent-sessions";
+import { CURRENT_SESSION_VERSION } from "quiet-core-bot/plugin-sdk/agent-sessions";
 import { Type } from "typebox";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { registerLegacyContextEngine } from "../../context-engine/legacy.registration.js";
 import {
   registerContextEngine,
@@ -110,21 +110,21 @@ function createTestMcpLoopbackServerConfig(port: number) {
         url: `http://127.0.0.1:${port}/mcp`,
         alwaysLoad: true,
         headers: {
-          Authorization: "Bearer ${OPENCLAW_MCP_TOKEN}",
-          "x-session-key": "${OPENCLAW_MCP_SESSION_KEY}",
-          "x-openclaw-session-id": "${OPENCLAW_MCP_SESSION_ID}",
-          "x-openclaw-agent-id": "${OPENCLAW_MCP_AGENT_ID}",
-          "x-openclaw-account-id": "${OPENCLAW_MCP_ACCOUNT_ID}",
-          "x-openclaw-message-channel": "${OPENCLAW_MCP_MESSAGE_CHANNEL}",
-          "x-openclaw-current-channel-id": "${OPENCLAW_MCP_CURRENT_CHANNEL_ID}",
-          "x-openclaw-current-thread-ts": "${OPENCLAW_MCP_CURRENT_THREAD_TS}",
-          "x-openclaw-current-message-id": "${OPENCLAW_MCP_CURRENT_MESSAGE_ID}",
-          "x-openclaw-current-inbound-audio": "${OPENCLAW_MCP_CURRENT_INBOUND_AUDIO}",
-          "x-openclaw-inbound-event-kind": "${OPENCLAW_MCP_INBOUND_EVENT_KIND}",
-          "x-openclaw-source-reply-delivery-mode": "${OPENCLAW_MCP_SOURCE_REPLY_DELIVERY_MODE}",
-          "x-openclaw-require-explicit-message-target":
-            "${OPENCLAW_MCP_REQUIRE_EXPLICIT_MESSAGE_TARGET}",
-          "x-openclaw-cli-capture-key": "${OPENCLAW_MCP_CLI_CAPTURE_KEY}",
+          Authorization: "Bearer ${QUIET_CORE_MCP_TOKEN}",
+          "x-session-key": "${QUIET_CORE_MCP_SESSION_KEY}",
+          "x-quiet-core-bot-session-id": "${QUIET_CORE_MCP_SESSION_ID}",
+          "x-quiet-core-bot-agent-id": "${QUIET_CORE_MCP_AGENT_ID}",
+          "x-quiet-core-bot-account-id": "${QUIET_CORE_MCP_ACCOUNT_ID}",
+          "x-quiet-core-bot-message-channel": "${QUIET_CORE_MCP_MESSAGE_CHANNEL}",
+          "x-quiet-core-bot-current-channel-id": "${QUIET_CORE_MCP_CURRENT_CHANNEL_ID}",
+          "x-quiet-core-bot-current-thread-ts": "${QUIET_CORE_MCP_CURRENT_THREAD_TS}",
+          "x-quiet-core-bot-current-message-id": "${QUIET_CORE_MCP_CURRENT_MESSAGE_ID}",
+          "x-quiet-core-bot-current-inbound-audio": "${QUIET_CORE_MCP_CURRENT_INBOUND_AUDIO}",
+          "x-quiet-core-bot-inbound-event-kind": "${QUIET_CORE_MCP_INBOUND_EVENT_KIND}",
+          "x-quiet-core-bot-source-reply-delivery-mode": "${QUIET_CORE_MCP_SOURCE_REPLY_DELIVERY_MODE}",
+          "x-quiet-core-bot-require-explicit-message-target":
+            "${QUIET_CORE_MCP_REQUIRE_EXPLICIT_MESSAGE_TARGET}",
+          "x-quiet-core-bot-cli-capture-key": "${QUIET_CORE_MCP_CLI_CAPTURE_KEY}",
         },
       },
     },
@@ -195,9 +195,9 @@ function setClaudeCliBackendForPrepareTest() {
 function createSessionFile() {
   // Prepare tests use canonical Quiet Core bot session paths because several cases
   // assert that external or stale transcript paths are ignored.
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-prepare-"));
-  sessionFileEnvSnapshot ??= captureEnv(["OPENCLAW_STATE_DIR"]);
-  setTestEnvValue("OPENCLAW_STATE_DIR", dir);
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-cli-prepare-"));
+  sessionFileEnvSnapshot ??= captureEnv(["QUIET_CORE_STATE_DIR"]);
+  setTestEnvValue("QUIET_CORE_STATE_DIR", dir);
   const sessionFile = path.join(dir, "agents", "main", "sessions", "session-test.jsonl");
   fs.mkdirSync(path.dirname(sessionFile), { recursive: true });
   fs.writeFileSync(
@@ -837,7 +837,7 @@ describe("shouldSkipLocalCliCredentialEpoch", () => {
         mcp?: { allowed?: string[] };
         mcpServers?: Record<string, { url?: string }>;
       };
-      expect(generatedSettings.mcp?.allowed).toEqual(["openclaw"]);
+      expect(generatedSettings.mcp?.allowed).toEqual(["quiet-core-bot"]);
       expect(generatedSettings.mcpServers?.openclaw?.url).toBe("http://127.0.0.1:31783/mcp");
       expect(context.preparedBackend.env?.GEMINI_CLI_SYSTEM_SETTINGS_PATH).toBe(
         profileSystemSettingsPath,
@@ -1753,7 +1753,7 @@ describe("shouldSkipLocalCliCredentialEpoch", () => {
 
   it("uses cwd for CLI system prompt workspace guidance", async () => {
     const { dir, sessionFile } = createSessionFile();
-    const taskDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-task-"));
+    const taskDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-cli-task-"));
     try {
       const context = await prepareCliRunContext({
         sessionId: "session-test",
@@ -2220,16 +2220,16 @@ describe("shouldSkipLocalCliCredentialEpoch", () => {
       });
 
       expect(context.preparedBackend.env).toMatchObject({
-        OPENCLAW_MCP_SESSION_ID: "session-test",
-        OPENCLAW_MCP_MESSAGE_CHANNEL: "telegram",
-        OPENCLAW_MCP_CURRENT_CHANNEL_ID: "telegram:-100123:topic:42",
-        OPENCLAW_MCP_CURRENT_THREAD_TS: "42",
-        OPENCLAW_MCP_CURRENT_MESSAGE_ID: "reply-message-1",
-        OPENCLAW_MCP_CURRENT_INBOUND_AUDIO: "true",
-        OPENCLAW_MCP_INBOUND_EVENT_KIND: "room_event",
-        OPENCLAW_MCP_SOURCE_REPLY_DELIVERY_MODE: "message_tool_only",
-        OPENCLAW_MCP_REQUIRE_EXPLICIT_MESSAGE_TARGET: "true",
-        OPENCLAW_MCP_CLI_CAPTURE_KEY: "",
+        QUIET_CORE_MCP_SESSION_ID: "session-test",
+        QUIET_CORE_MCP_MESSAGE_CHANNEL: "telegram",
+        QUIET_CORE_MCP_CURRENT_CHANNEL_ID: "telegram:-100123:topic:42",
+        QUIET_CORE_MCP_CURRENT_THREAD_TS: "42",
+        QUIET_CORE_MCP_CURRENT_MESSAGE_ID: "reply-message-1",
+        QUIET_CORE_MCP_CURRENT_INBOUND_AUDIO: "true",
+        QUIET_CORE_MCP_INBOUND_EVENT_KIND: "room_event",
+        QUIET_CORE_MCP_SOURCE_REPLY_DELIVERY_MODE: "message_tool_only",
+        QUIET_CORE_MCP_REQUIRE_EXPLICIT_MESSAGE_TARGET: "true",
+        QUIET_CORE_MCP_CLI_CAPTURE_KEY: "",
       });
       expect(context.mcpDeliveryCapture).toBe(true);
       expect(resolveMcpLoopbackScopedTools).toHaveBeenCalledWith(
@@ -2293,7 +2293,7 @@ describe("shouldSkipLocalCliCredentialEpoch", () => {
 
       expect(context.mcpDeliveryCapture).toBe(true);
       expect(context.preparedBackend.env).toMatchObject({
-        OPENCLAW_MCP_CLI_CAPTURE_KEY: "",
+        QUIET_CORE_MCP_CLI_CAPTURE_KEY: "",
       });
     } finally {
       fs.rmSync(dir, { recursive: true, force: true });
@@ -2606,7 +2606,7 @@ describe("shouldSkipLocalCliCredentialEpoch", () => {
 
   it("renders CLI skills from sandbox-readable paths instead of persisted host snapshots", async () => {
     const { dir, sessionFile } = createSessionFile();
-    const hostSkillDir = "/home/tzdai/.npm-global/lib/node_modules/openclaw/skills/gog";
+    const hostSkillDir = "/home/tzdai/.npm-global/lib/node_modules/quiet-core-bot/skills/gog";
     const hostSkillPath = `${hostSkillDir}/SKILL.md`;
     const materializedWorkspace = path.join(dir, "state", "sandbox-skills");
     const materializedSkillDir = path.join(materializedWorkspace, "skills", "gog");
@@ -2661,10 +2661,10 @@ describe("shouldSkipLocalCliCredentialEpoch", () => {
               description: "Read Gmail safely.",
               filePath: hostSkillPath,
               baseDir: hostSkillDir,
-              source: "openclaw-bundled",
+              source: "quiet-core-bot-bundled",
               sourceInfo: {
                 path: hostSkillPath,
-                source: "openclaw-bundled",
+                source: "quiet-core-bot-bundled",
                 scope: "project",
                 origin: "top-level",
                 baseDir: hostSkillDir,
@@ -2681,7 +2681,7 @@ describe("shouldSkipLocalCliCredentialEpoch", () => {
         workspaceDir: dir,
       });
       expect(context.systemPrompt).toContain(
-        "/workspace/.openclaw/sandbox-skills/skills/gog/SKILL.md",
+        "/workspace/.quiet-core-bot/sandbox-skills/skills/gog/SKILL.md",
       );
       expect(context.systemPrompt).not.toContain(hostSkillPath);
       expect(context.systemPromptReport.skills.promptChars).toBeGreaterThan(0);
@@ -2731,9 +2731,9 @@ describe("shouldSkipLocalCliCredentialEpoch", () => {
       });
       setCliRunnerPrepareTestDeps({
         prepareClaudeCliSkillsPlugin: vi.fn(async () => ({
-          args: ["--plugin-dir", path.join(dir, "openclaw-skills")],
+          args: ["--plugin-dir", path.join(dir, "quiet-core-bot-skills")],
           cleanup: vi.fn(async () => undefined),
-          pluginDir: path.join(dir, "openclaw-skills"),
+          pluginDir: path.join(dir, "quiet-core-bot-skills"),
         })),
       });
 
@@ -2783,7 +2783,7 @@ describe("shouldSkipLocalCliCredentialEpoch", () => {
       expect(context.systemPromptReport.skills.promptChars).toBe(0);
       expect(context.claudeSkillsPluginArgs).toEqual([
         "--plugin-dir",
-        path.join(dir, "openclaw-skills"),
+        path.join(dir, "quiet-core-bot-skills"),
       ]);
     } finally {
       fs.rmSync(dir, { recursive: true, force: true });

@@ -23,7 +23,7 @@ function shellQuote(value: string): string {
 }
 
 function runGatewayPortCheck(fakeLsof: string) {
-  const root = mkdtempSync(join(tmpdir(), "openclaw-restart-mac-test-"));
+  const root = mkdtempSync(join(tmpdir(), "quiet-core-bot-restart-mac-test-"));
   tempRoots.push(root);
 
   const binDir = join(root, "bin");
@@ -46,7 +46,7 @@ function runGatewayPortCheck(fakeLsof: string) {
 }
 
 function runCleanupFunction(fakePs: string) {
-  const root = mkdtempSync(join(tmpdir(), "openclaw-restart-mac-test-"));
+  const root = mkdtempSync(join(tmpdir(), "quiet-core-bot-restart-mac-test-"));
   tempRoots.push(root);
 
   const binDir = join(root, "bin");
@@ -63,7 +63,7 @@ function runCleanupFunction(fakePs: string) {
 
   const script = readFileSync(restartScriptPath, "utf8");
   const cleanupFunction = script.slice(
-    script.indexOf("kill_all_openclaw()"),
+    script.indexOf("kill_all_quiet-core-bot()"),
     script.indexOf("stop_launch_agent()"),
   );
   const harnessPath = join(root, "cleanup-harness.sh");
@@ -79,10 +79,10 @@ function runCleanupFunction(fakePs: string) {
       'LOCAL_PROCESS_PATTERN="/worktree/apps/macos/.build-local/debug/OpenClaw"',
       'RELEASE_PROCESS_PATTERN="/worktree/apps/macos/.build/release/OpenClaw"',
       "kill() {",
-      '  printf "%s\\n" "$*" >> "$OPENCLAW_TEST_KILL_CALLS"',
+      '  printf "%s\\n" "$*" >> "$QUIET_CORE_TEST_KILL_CALLS"',
       "  return 0",
       "}",
-      "kill_all_openclaw",
+      "kill_all_quiet-core-bot",
     ].join("\n"),
   );
   chmodSync(harnessPath, 0o755);
@@ -91,7 +91,7 @@ function runCleanupFunction(fakePs: string) {
     encoding: "utf8",
     env: {
       ...process.env,
-      OPENCLAW_TEST_KILL_CALLS: killCallsPath,
+      QUIET_CORE_TEST_KILL_CALLS: killCallsPath,
       PATH: `${binDir}:${process.env.PATH ?? ""}`,
     },
   });
@@ -100,7 +100,7 @@ function runCleanupFunction(fakePs: string) {
 }
 
 function runCanonicalizeAppBundle(appBundle: string) {
-  const root = mkdtempSync(join(tmpdir(), "openclaw-restart-mac-test-"));
+  const root = mkdtempSync(join(tmpdir(), "quiet-core-bot-restart-mac-test-"));
   tempRoots.push(root);
 
   const script = readFileSync(restartScriptPath, "utf8");
@@ -133,7 +133,7 @@ function runCanonicalizeAppBundle(appBundle: string) {
 }
 
 function runRestartArgParser(...args: string[]) {
-  const root = mkdtempSync(join(tmpdir(), "openclaw-restart-mac-test-"));
+  const root = mkdtempSync(join(tmpdir(), "quiet-core-bot-restart-mac-test-"));
   tempRoots.push(root);
 
   const script = readFileSync(restartScriptPath, "utf8");
@@ -164,7 +164,7 @@ function runRestartArgParser(...args: string[]) {
 }
 
 function runRestartLockHarness(lockDir: string) {
-  const root = mkdtempSync(join(tmpdir(), "openclaw-restart-mac-test-"));
+  const root = mkdtempSync(join(tmpdir(), "quiet-core-bot-restart-mac-test-"));
   tempRoots.push(root);
 
   const script = readFileSync(restartScriptPath, "utf8");
@@ -252,15 +252,15 @@ describe("scripts/restart-mac.sh", () => {
     const script = readFileSync(restartScriptPath, "utf8");
 
     expect(script).toContain(
-      'LOG_PATH="${OPENCLAW_RESTART_LOG:-${TMPDIR:-/tmp}/openclaw-restart-${LOCK_KEY}.log}"',
+      'LOG_PATH="${QUIET_CORE_RESTART_LOG:-${TMPDIR:-/tmp}/quiet-core-bot-restart-${LOCK_KEY}.log}"',
     );
-    expect(script).not.toContain('LOG_PATH="${OPENCLAW_RESTART_LOG:-/tmp/openclaw-restart.log}"');
+    expect(script).not.toContain('LOG_PATH="${QUIET_CORE_RESTART_LOG:-/tmp/quiet-core-bot-restart.log}"');
   });
 
   it("does not remove a live restart lock it did not acquire", () => {
-    const root = mkdtempSync(join(tmpdir(), "openclaw-restart-mac-test-"));
+    const root = mkdtempSync(join(tmpdir(), "quiet-core-bot-restart-mac-test-"));
     tempRoots.push(root);
-    const lockDir = join(root, "openclaw-restart-lock");
+    const lockDir = join(root, "quiet-core-bot-restart-lock");
     mkdirSync(lockDir);
     writeFileSync(join(lockDir, "pid"), String(process.pid), "utf8");
 
@@ -274,9 +274,9 @@ describe("scripts/restart-mac.sh", () => {
   });
 
   it("removes the restart lock it acquired", () => {
-    const root = mkdtempSync(join(tmpdir(), "openclaw-restart-mac-test-"));
+    const root = mkdtempSync(join(tmpdir(), "quiet-core-bot-restart-mac-test-"));
     tempRoots.push(root);
-    const lockDir = join(root, "openclaw-restart-lock");
+    const lockDir = join(root, "quiet-core-bot-restart-lock");
 
     const result = runRestartLockHarness(lockDir);
 
@@ -293,7 +293,7 @@ describe("scripts/restart-mac.sh", () => {
       script.indexOf("choose_app_bundle", script.indexOf("choose_app_bundle()") + 1),
     );
 
-    expect(script).toContain('fail "OPENCLAW_APP_BUNDLE does not exist: ${APP_BUNDLE}"');
+    expect(script).toContain('fail "QUIET_CORE_APP_BUNDLE does not exist: ${APP_BUNDLE}"');
     expect(chooseBlock).toContain("canonicalize_app_bundle");
     expect(chooseBlock.indexOf("${ROOT_DIR}/dist/OpenClaw.app")).toBeGreaterThan(-1);
     expect(chooseBlock.indexOf("/Applications/OpenClaw.app")).toBeGreaterThan(-1);
@@ -305,7 +305,7 @@ describe("scripts/restart-mac.sh", () => {
   it("keeps restart cleanup scoped to known OpenClaw app and build paths", () => {
     const script = readFileSync(restartScriptPath, "utf8");
     const cleanupBlock = script.slice(
-      script.indexOf("kill_all_openclaw()"),
+      script.indexOf("kill_all_quiet-core-bot()"),
       script.indexOf("stop_launch_agent()"),
     );
 
@@ -327,7 +327,7 @@ describe("scripts/restart-mac.sh", () => {
   it("stops launchd supervision before killing app processes", () => {
     const script = readFileSync(restartScriptPath, "utf8");
     const stopIndex = script.indexOf("stop_launch_agent\nlog");
-    const killIndex = script.indexOf("if ! kill_all_openclaw");
+    const killIndex = script.indexOf("if ! kill_all_quiet-core-bot");
 
     expect(stopIndex).toBeGreaterThan(-1);
     expect(killIndex).toBeGreaterThan(-1);
@@ -353,7 +353,7 @@ describe("scripts/restart-mac.sh", () => {
   });
 
   it("normalizes custom app bundle paths before process matching", () => {
-    const root = mkdtempSync(join(tmpdir(), "openclaw-restart-mac-test-"));
+    const root = mkdtempSync(join(tmpdir(), "quiet-core-bot-restart-mac-test-"));
     tempRoots.push(root);
     const appBundle = join(root, "dist", "OpenClaw.app");
     mkdirSync(appBundle, { recursive: true });
@@ -383,7 +383,7 @@ describe("scripts/restart-mac.sh", () => {
     const { killCalls, result } = runCleanupFunction(
       [
         "#!/usr/bin/env bash",
-        'kill_count="$(wc -l < "$OPENCLAW_TEST_KILL_CALLS" 2>/dev/null || echo 0)"',
+        'kill_count="$(wc -l < "$QUIET_CORE_TEST_KILL_CALLS" 2>/dev/null || echo 0)"',
         'if [[ "$kill_count" -lt 10 ]]; then',
         "  printf '%s\\n' '  321 /worktree/dist/OpenClaw.app/Contents/MacOS/OpenClaw --attach-only'",
         "fi",

@@ -6,7 +6,7 @@ import os from "node:os";
 import { isAcpRuntimeSpawnAvailable } from "../../acp/runtime/availability.js";
 import type { ThinkLevel } from "../../auto-reply/thinking.js";
 import { resolveAgentModelFallbackValues } from "../../config/model-input.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import {
   createFileBackedCompactionCheckpointStore,
   readSessionLeafStateFromTranscriptAsync,
@@ -1227,7 +1227,7 @@ async function compactEmbeddedAgentSessionDirectOnce(
       await resourceLoader.reload();
       // DefaultResourceLoader.reload() rehydrates settings from disk and can drop Quiet Core bot
       // compaction overrides applied in createPreparedEmbeddedAgentSettingsManager — same
-      // rehydration also restores Quiet Core bot runtime's auto-compaction (openclaw#75799), so re-apply
+      // rehydration also restores Quiet Core bot runtime's auto-compaction (quiet-core-bot#75799), so re-apply
       // both guards. effectiveModel.baseUrl matches the surrounding scope so
       // auth-profile-injected baseUrls reach the endpoint-class detector.
       applyAgentCompactionSettingsFromConfig({

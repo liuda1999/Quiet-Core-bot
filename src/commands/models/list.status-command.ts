@@ -1,7 +1,7 @@
 /** Implementation of `quiet-core-bot models status`. */
 import path from "node:path";
-import { findNormalizedProviderValue } from "@openclaw/model-catalog-core/provider-id";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { findNormalizedProviderValue } from "@quiet-core/model-catalog-core/provider-id";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { colorize, theme } from "../../../packages/terminal-core/src/theme.js";
 import {
   resolveAgentDir,
@@ -84,7 +84,7 @@ import {
 type ProgressRuntime = typeof import("../../cli/progress.js");
 
 function resolveEnvAgentDirOverride(env: NodeJS.ProcessEnv = process.env): string | undefined {
-  const override = env.OPENCLAW_AGENT_DIR?.trim() || env.PI_CODING_AGENT_DIR?.trim();
+  const override = env.QUIET_CORE_AGENT_DIR?.trim() || env.PI_CODING_AGENT_DIR?.trim();
   return override ? resolveUserPath(override, env) : undefined;
 }
 type TerminalTableRuntime = typeof import("../../../packages/terminal-core/src/table.js");

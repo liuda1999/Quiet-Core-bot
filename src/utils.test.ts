@@ -19,7 +19,7 @@ import {
 
 describe("ensureDir", () => {
   it("creates nested directory", async () => {
-    await withTempDir({ prefix: "openclaw-test-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-test-" }, async (tmp) => {
       const target = path.join(tmp, "nested", "dir");
       await ensureDir(target);
       expect(fs.existsSync(target)).toBe(true);
@@ -58,78 +58,78 @@ describe("sleep", () => {
 
 describe("resolveConfigDir", () => {
   it("prefers ~/.quiet-core-bot when legacy dir is missing", async () => {
-    await withTempDir({ prefix: "openclaw-config-dir-" }, async (root) => {
-      const newDir = path.join(root, ".openclaw");
+    await withTempDir({ prefix: "quiet-core-bot-config-dir-" }, async (root) => {
+      const newDir = path.join(root, ".quiet-core-bot");
       await fs.promises.mkdir(newDir, { recursive: true });
       const resolved = resolveConfigDir({} as NodeJS.ProcessEnv, () => root);
       expect(resolved).toBe(newDir);
     });
   });
 
-  it("expands OPENCLAW_STATE_DIR using the provided env", () => {
+  it("expands QUIET_CORE_STATE_DIR using the provided env", () => {
     const env = {
-      HOME: "/tmp/openclaw-home",
-      OPENCLAW_STATE_DIR: "~/state",
+      HOME: "/tmp/quiet-core-bot-home",
+      QUIET_CORE_STATE_DIR: "~/state",
     } as NodeJS.ProcessEnv;
 
-    expect(resolveConfigDir(env)).toBe(path.resolve("/tmp/openclaw-home", "state"));
+    expect(resolveConfigDir(env)).toBe(path.resolve("/tmp/quiet-core-bot-home", "state"));
   });
 
-  it("falls back to the config file directory when only OPENCLAW_CONFIG_PATH is set", () => {
+  it("falls back to the config file directory when only QUIET_CORE_CONFIG_PATH is set", () => {
     const env = {
-      HOME: "/tmp/openclaw-home",
-      OPENCLAW_CONFIG_PATH: "~/profiles/dev/openclaw.json",
+      HOME: "/tmp/quiet-core-bot-home",
+      QUIET_CORE_CONFIG_PATH: "~/profiles/dev/quiet-core-bot.json",
     } as NodeJS.ProcessEnv;
 
-    expect(resolveConfigDir(env)).toBe(path.resolve("/tmp/openclaw-home", "profiles", "dev"));
+    expect(resolveConfigDir(env)).toBe(path.resolve("/tmp/quiet-core-bot-home", "profiles", "dev"));
   });
 
   it("re-pins the exported configuration root after startup environment selection", () => {
     const originalConfigDir = CONFIG_DIR;
-    const selectedConfigDir = path.resolve("/tmp/openclaw-selected-config-root");
+    const selectedConfigDir = path.resolve("/tmp/quiet-core-bot-selected-config-root");
     try {
       expect(
         pinConfigDir({
-          OPENCLAW_STATE_DIR: selectedConfigDir,
-          OPENCLAW_TEST_FAST: "1",
+          QUIET_CORE_STATE_DIR: selectedConfigDir,
+          QUIET_CORE_TEST_FAST: "1",
         }),
       ).toBe(selectedConfigDir);
       expect(CONFIG_DIR).toBe(selectedConfigDir);
     } finally {
       pinConfigDir({
-        OPENCLAW_STATE_DIR: originalConfigDir,
-        OPENCLAW_TEST_FAST: "1",
+        QUIET_CORE_STATE_DIR: originalConfigDir,
+        QUIET_CORE_TEST_FAST: "1",
       });
     }
   });
 });
 
 describe("resolveHomeDir", () => {
-  it("prefers OPENCLAW_HOME over HOME", () => {
-    withEnv({ OPENCLAW_HOME: "/srv/openclaw-home", HOME: "/home/other" }, () => {
-      expect(resolveHomeDir()).toBe(path.resolve("/srv/openclaw-home"));
+  it("prefers QUIET_CORE_HOME over HOME", () => {
+    withEnv({ QUIET_CORE_HOME: "/srv/quiet-core-bot-home", HOME: "/home/other" }, () => {
+      expect(resolveHomeDir()).toBe(path.resolve("/srv/quiet-core-bot-home"));
     });
   });
 });
 
 describe("shortenHomePath", () => {
-  it("uses $OPENCLAW_HOME prefix when OPENCLAW_HOME is set", () => {
-    withEnv({ OPENCLAW_HOME: "/srv/openclaw-home", HOME: "/home/other" }, () => {
+  it("uses $QUIET_CORE_HOME prefix when QUIET_CORE_HOME is set", () => {
+    withEnv({ QUIET_CORE_HOME: "/srv/quiet-core-bot-home", HOME: "/home/other" }, () => {
       expect(
-        shortenHomePath(`${path.resolve("/srv/openclaw-home")}/.openclaw/quiet-core-bot.json`),
-      ).toBe("$OPENCLAW_HOME/.openclaw/openclaw.json");
+        shortenHomePath(`${path.resolve("/srv/quiet-core-bot-home")}/.quiet-core-bot/quiet-core-bot.json`),
+      ).toBe("$QUIET_CORE_HOME/.quiet-core-bot/quiet-core-bot.json");
     });
   });
 });
 
 describe("shortenHomeInString", () => {
-  it("uses $OPENCLAW_HOME replacement when OPENCLAW_HOME is set", () => {
-    withEnv({ OPENCLAW_HOME: "/srv/openclaw-home", HOME: "/home/other" }, () => {
+  it("uses $QUIET_CORE_HOME replacement when QUIET_CORE_HOME is set", () => {
+    withEnv({ QUIET_CORE_HOME: "/srv/quiet-core-bot-home", HOME: "/home/other" }, () => {
       expect(
         shortenHomeInString(
-          `config: ${path.resolve("/srv/openclaw-home")}/.openclaw/quiet-core-bot.json`,
+          `config: ${path.resolve("/srv/quiet-core-bot-home")}/.quiet-core-bot/quiet-core-bot.json`,
         ),
-      ).toBe("config: $OPENCLAW_HOME/.openclaw/openclaw.json");
+      ).toBe("config: $QUIET_CORE_HOME/.quiet-core-bot/quiet-core-bot.json");
     });
   });
 });
@@ -140,8 +140,8 @@ describe("resolveUserPath", () => {
   });
 
   it("expands ~/ to home dir", () => {
-    expect(resolveUserPath("~/openclaw", {}, () => "/Users/thoffman")).toBe(
-      path.resolve("/Users/thoffman", "openclaw"),
+    expect(resolveUserPath("~/quiet-core-bot", {}, () => "/Users/thoffman")).toBe(
+      path.resolve("/Users/thoffman", "quiet-core-bot"),
     );
   });
 
@@ -149,19 +149,19 @@ describe("resolveUserPath", () => {
     expect(resolveUserPath("tmp/dir")).toBe(path.resolve("tmp/dir"));
   });
 
-  it("prefers OPENCLAW_HOME for tilde expansion", () => {
-    withEnv({ OPENCLAW_HOME: "/srv/openclaw-home", HOME: "/home/other" }, () => {
-      expect(resolveUserPath("~/openclaw")).toBe(path.resolve("/srv/openclaw-home", "openclaw"));
+  it("prefers QUIET_CORE_HOME for tilde expansion", () => {
+    withEnv({ QUIET_CORE_HOME: "/srv/quiet-core-bot-home", HOME: "/home/other" }, () => {
+      expect(resolveUserPath("~/quiet-core-bot")).toBe(path.resolve("/srv/quiet-core-bot-home", "quiet-core-bot"));
     });
   });
 
   it("uses the provided env for tilde expansion", () => {
     const env = {
-      HOME: "/tmp/openclaw-home",
-      OPENCLAW_HOME: "/srv/openclaw-home",
+      HOME: "/tmp/quiet-core-bot-home",
+      QUIET_CORE_HOME: "/srv/quiet-core-bot-home",
     } as NodeJS.ProcessEnv;
 
-    expect(resolveUserPath("~/openclaw", env)).toBe(path.resolve("/srv/openclaw-home", "openclaw"));
+    expect(resolveUserPath("~/quiet-core-bot", env)).toBe(path.resolve("/srv/quiet-core-bot-home", "quiet-core-bot"));
   });
 
   it("keeps blank paths blank", () => {

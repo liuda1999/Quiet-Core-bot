@@ -17,7 +17,7 @@ describe("initSessionState - heartbeat should not trigger session reset", () => 
   let storePath: string;
 
   beforeEach(async () => {
-    tempDir = await fs.mkdtemp("/tmp/openclaw-test-");
+    tempDir = await fs.mkdtemp("/tmp/quiet-core-bot-test-");
     storePath = path.join(tempDir, "sessions.json");
   });
 

@@ -6,7 +6,7 @@ import type { RuntimeEnv } from "../runtime.js";
 import type { MockFn } from "../test-utils/vitest-mock-fn.js";
 
 export const baseConfigSnapshot = {
-  path: "/tmp/openclaw.json",
+  path: "/tmp/quiet-core-bot.json",
   exists: true,
   raw: "{}",
   parsed: {},

@@ -11,8 +11,8 @@ Adds Arcee model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/arcee-provider`
-- Install route: npm; ClawHub: `clawhub:@openclaw/arcee-provider`
+- Package: `@quiet-core/arcee-provider`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/arcee-provider`
 
 ## Surface
 

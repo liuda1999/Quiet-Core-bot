@@ -11,14 +11,14 @@ Adds policy-backed doctor checks for workspace conformance.
 
 ## Distribution
 
-- Package: `@openclaw/policy`
+- Package: `@quiet-core/policy`
 - Install route: included in Quiet Core bot
 
 ## Surface
 
 plugin
 
-<!-- openclaw-plugin-reference:manual-start -->
+<!-- quiet-core-bot-plugin-reference:manual-start -->
 
 ## Behavior
 
@@ -32,11 +32,11 @@ provider/auth profile posture.
 
 Policy stores authored requirements in `policy.jsonc`, observes existing
 Quiet Core bot settings and workspace declarations as evidence, and reports drift
-through `openclaw policy check` and `quiet-core-bot doctor --lint`. A clean policy
+through `quiet-core-bot policy check` and `quiet-core-bot doctor --lint`. A clean policy
 check emits policy, evidence, findings, and attestation hashes that operators
 can record for audit.
 
-`openclaw policy compare --baseline <file>` compares one policy file to another
+`quiet-core-bot policy compare --baseline <file>` compares one policy file to another
 policy file. It is config-level conformance only: it uses policy rule metadata
 to verify that the checked policy is not missing or weaker than the authored
 baseline, and it does not inspect runtime state, credentials, or secret values.
@@ -72,7 +72,7 @@ for its selector. Overlay rules are additional claims, so they do not weaken
 top-level policy and can produce their own findings when the same observed
 config violates both scopes.
 
-<!-- openclaw-plugin-reference:manual-end -->
+<!-- quiet-core-bot-plugin-reference:manual-end -->
 
 ## Related docs
 

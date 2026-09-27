@@ -1915,7 +1915,7 @@ describe("qa mock openai server", () => {
       body: JSON.stringify({
         stream: true,
         instructions:
-          "@openclaw Thread memory check: what is the hidden thread codename stored only in memory? Use memory tools first and reply only in this thread.",
+          "@quiet-core-bot Thread memory check: what is the hidden thread codename stored only in memory? Use memory tools first and reply only in this thread.",
         input: [
           {
             role: "user",
@@ -1942,7 +1942,7 @@ describe("qa mock openai server", () => {
       body: JSON.stringify({
         stream: false,
         instructions:
-          "@openclaw Thread memory check: what is the hidden thread codename stored only in memory? Use memory tools first and reply only in this thread.",
+          "@quiet-core-bot Thread memory check: what is the hidden thread codename stored only in memory? Use memory tools first and reply only in this thread.",
         input: [
           {
             type: "function_call_output",
@@ -1973,7 +1973,7 @@ describe("qa mock openai server", () => {
       body: JSON.stringify({
         stream: false,
         instructions:
-          "@openclaw Thread memory check: what is the hidden thread codename stored only in memory? Use memory tools first and reply only in this thread.",
+          "@quiet-core-bot Thread memory check: what is the hidden thread codename stored only in memory? Use memory tools first and reply only in this thread.",
         input: [
           {
             type: "function_call_output",
@@ -2010,7 +2010,7 @@ describe("qa mock openai server", () => {
               "Available tools include sessions_spawn.\n## /workspace/MEMORY.md\nThread-hidden codename: ORBIT-22.",
           },
           makeUserInput(
-            "@openclaw Thread memory check: what is the hidden thread codename stored only in memory? Use memory tools first and reply only in this thread.",
+            "@quiet-core-bot Thread memory check: what is the hidden thread codename stored only in memory? Use memory tools first and reply only in this thread.",
           ),
           {
             type: "function_call_output",
@@ -3319,7 +3319,7 @@ describe("qa mock openai server", () => {
             value: {
               tool: {
                 id: `openclaw:tool-search-e2e-fixture:${targetTool}`,
-                source: "openclaw",
+                source: "quiet-core-bot",
                 sourceName: "tool-search-e2e-fixture",
                 name: targetTool,
                 description: "x".repeat(260),
@@ -3358,7 +3358,7 @@ describe("qa mock openai server", () => {
     const toolPlanOutput = outputItem(await response.json());
     expect(toolPlanOutput.type).toBe("function_call");
     expect(toolPlanOutput.name).toBe("web_search");
-    expect(String(toolPlanOutput.arguments)).toContain("OPENCLAW_QA_WEB_SEARCH_DENIED_INPUT");
+    expect(String(toolPlanOutput.arguments)).toContain("QUIET_CORE_QA_WEB_SEARCH_DENIED_INPUT");
   });
 
   it("plans QA subagent handoff calls even when Codex dynamic tools are not in body.tools", async () => {
@@ -3918,7 +3918,7 @@ describe("qa mock openai server", () => {
 
     expect(triggered.status).toBe(200);
     await expect(triggered.json()).resolves.toEqual({
-      text: "openclawqa reply with only this exact marker after group audio preflight: WHATSAPP_QA_GROUP_AUDIO_TRANSCRIPT_OK",
+      text: "quiet-core-botqa reply with only this exact marker after group audio preflight: WHATSAPP_QA_GROUP_AUDIO_TRANSCRIPT_OK",
     });
     expect(quiet.status).toBe(200);
     await expect(quiet.json()).resolves.toEqual({

@@ -1,6 +1,6 @@
 // Structured heartbeat response tool payload helpers.
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
-import { normalizeOptionalString as readString } from "@openclaw/normalization-core/string-coerce";
+import { isRecord } from "@quiet-core/normalization-core/record-coerce";
+import { normalizeOptionalString as readString } from "@quiet-core/normalization-core/string-coerce";
 import type { ReplyPayload } from "./reply-payload.js";
 import { HEARTBEAT_TOKEN } from "./tokens.js";
 

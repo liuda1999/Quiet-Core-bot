@@ -23,7 +23,7 @@ describe("cleanupLegacyPluginDependencyState", () => {
   let tempDir: string;
 
   beforeEach(async () => {
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-plugin-deps-cleanup-"));
+    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-plugin-deps-cleanup-"));
   });
 
   afterEach(async () => {
@@ -32,7 +32,7 @@ describe("cleanupLegacyPluginDependencyState", () => {
 
   it("collects and removes legacy plugin dependency state roots", async () => {
     const stateDir = path.join(tempDir, "state");
-    const explicitStageDir = path.join(stateDir, ".openclaw-install-stage-explicit");
+    const explicitStageDir = path.join(stateDir, ".quiet-core-bot-install-stage-explicit");
     const stateDirectory = path.join(tempDir, "systemd-state");
     const packageRoot = path.join(tempDir, "package");
     const legacyRuntimeRoot = path.join(stateDir, "plugin-runtime-deps");
@@ -49,13 +49,13 @@ describe("cleanupLegacyPluginDependencyState", () => {
       "dist",
       "extensions",
       "demo",
-      ".openclaw-runtime-deps-stamp.json",
+      ".quiet-core-bot-runtime-deps-stamp.json",
     );
     const legacyManifest = path.join(
       packageRoot,
       "extensions",
       "demo",
-      ".openclaw-runtime-deps.json",
+      ".quiet-core-bot-runtime-deps.json",
     );
     const thirdPartyNodeModules = path.join(
       stateDir,
@@ -75,8 +75,8 @@ describe("cleanupLegacyPluginDependencyState", () => {
     await fs.mkdir(path.join(stateDirectory, "plugin-runtime-deps"), { recursive: true });
 
     const env = {
-      OPENCLAW_STATE_DIR: stateDir,
-      OPENCLAW_PLUGIN_STAGE_DIR: explicitStageDir,
+      QUIET_CORE_STATE_DIR: stateDir,
+      QUIET_CORE_PLUGIN_STAGE_DIR: explicitStageDir,
       STATE_DIRECTORY: stateDirectory,
     };
     const targets = await testing.collectLegacyPluginDependencyTargets(env, { packageRoot });
@@ -112,14 +112,14 @@ describe("cleanupLegacyPluginDependencyState", () => {
     await fs.mkdir(packageRoot, { recursive: true });
     await fs.mkdir(path.join(stageRoot, "node_modules", "ansi-escapes"), { recursive: true });
     await fs.writeFile(
-      path.join(stageRoot, "node_modules", "ansi-escapes", ".openclaw-rename-tmp"),
+      path.join(stageRoot, "node_modules", "ansi-escapes", ".quiet-core-bot-rename-tmp"),
       "corrupt rename residue\n",
     );
 
     const result = await cleanupLegacyPluginDependencyState({
       env: {
-        OPENCLAW_STATE_DIR: stateDir,
-        OPENCLAW_PLUGIN_STAGE_DIR: stageRoot,
+        QUIET_CORE_STATE_DIR: stateDir,
+        QUIET_CORE_PLUGIN_STAGE_DIR: stageRoot,
       },
       packageRoot,
     });
@@ -140,8 +140,8 @@ describe("cleanupLegacyPluginDependencyState", () => {
 
     const result = await cleanupLegacyPluginDependencyState({
       env: {
-        OPENCLAW_STATE_DIR: stateDir,
-        OPENCLAW_PLUGIN_STAGE_DIR: stageRoot,
+        QUIET_CORE_STATE_DIR: stateDir,
+        QUIET_CORE_PLUGIN_STAGE_DIR: stageRoot,
       },
       packageRoot,
     });
@@ -156,7 +156,7 @@ describe("cleanupLegacyPluginDependencyState", () => {
   it("refuses explicit plugin stage paths with parent segments", async () => {
     const stateDir = path.join(tempDir, "state");
     const packageRoot = path.join(tempDir, "package");
-    const dotDotStage = `${stateDir}${path.sep}..${path.sep}.openclaw-install-stage-dotdot`;
+    const dotDotStage = `${stateDir}${path.sep}..${path.sep}.quiet-core-bot-install-stage-dotdot`;
     const resolvedDotDotStage = path.resolve(dotDotStage);
 
     await fs.mkdir(stateDir, { recursive: true });
@@ -165,8 +165,8 @@ describe("cleanupLegacyPluginDependencyState", () => {
 
     const result = await cleanupLegacyPluginDependencyState({
       env: {
-        OPENCLAW_STATE_DIR: stateDir,
-        OPENCLAW_PLUGIN_STAGE_DIR: dotDotStage,
+        QUIET_CORE_STATE_DIR: stateDir,
+        QUIET_CORE_PLUGIN_STAGE_DIR: dotDotStage,
       },
       packageRoot,
     });
@@ -189,17 +189,17 @@ describe("cleanupLegacyPluginDependencyState", () => {
     await fs.mkdir(stateDir, { recursive: true });
     await fs.mkdir(extensionsRoot, { recursive: true });
     await fs.mkdir(externalNodeModules, { recursive: true });
-    await fs.writeFile(path.join(externalPlugin, ".openclaw-runtime-deps.json"), "{}");
+    await fs.writeFile(path.join(externalPlugin, ".quiet-core-bot-runtime-deps.json"), "{}");
     await fs.symlink(externalPlugin, linkedPlugin, "dir");
 
     const targets = await testing.collectLegacyPluginDependencyTargets(
-      { OPENCLAW_STATE_DIR: stateDir },
+      { QUIET_CORE_STATE_DIR: stateDir },
       { packageRoot },
     );
     expect(targets).not.toContain(path.join(linkedPlugin, "node_modules"));
 
     const result = await cleanupLegacyPluginDependencyState({
-      env: { OPENCLAW_STATE_DIR: stateDir },
+      env: { QUIET_CORE_STATE_DIR: stateDir },
       packageRoot,
     });
 
@@ -219,7 +219,7 @@ describe("cleanupLegacyPluginDependencyState", () => {
     await fs.symlink(externalRuntimeRoot, legacyRuntimeRoot, "dir");
 
     const result = await cleanupLegacyPluginDependencyState({
-      env: { OPENCLAW_STATE_DIR: stateDir },
+      env: { QUIET_CORE_STATE_DIR: stateDir },
       packageRoot,
     });
 
@@ -233,19 +233,19 @@ describe("cleanupLegacyPluginDependencyState", () => {
 
   it("does not unlink global runtime symlinks through unsafe cleanup roots", async () => {
     const stateDir = path.join(tempDir, "state");
-    const packageRoot = path.join(tempDir, "prefix", "lib", "node_modules", "openclaw");
+    const packageRoot = path.join(tempDir, "prefix", "lib", "node_modules", "quiet-core-bot");
     const nodeModulesRoot = path.dirname(packageRoot);
     const legacyRuntimeRoot = path.join(stateDir, "plugin-runtime-deps");
     const externalRuntimeRoot = path.join(tempDir, "external-runtime");
     const activeRuntimeTarget = path.join(
       externalRuntimeRoot,
-      "openclaw-external",
+      "quiet-core-bot-external",
       "node_modules",
       "left-pad",
     );
     const unsafeRuntimeTarget = path.join(
       legacyRuntimeRoot,
-      "openclaw-external",
+      "quiet-core-bot-external",
       "node_modules",
       "left-pad",
     );
@@ -258,7 +258,7 @@ describe("cleanupLegacyPluginDependencyState", () => {
     await fs.symlink(unsafeRuntimeTarget, leftPadLink, "dir");
 
     const result = await cleanupLegacyPluginDependencyState({
-      env: { OPENCLAW_STATE_DIR: stateDir },
+      env: { QUIET_CORE_STATE_DIR: stateDir },
       packageRoot,
     });
 
@@ -273,12 +273,12 @@ describe("cleanupLegacyPluginDependencyState", () => {
 
   it("removes dangling global plugin-runtime symlinks that point at legacy runtime deps", async () => {
     const stateDir = path.join(tempDir, "state");
-    const packageRoot = path.join(tempDir, "prefix", "lib", "node_modules", "openclaw");
+    const packageRoot = path.join(tempDir, "prefix", "lib", "node_modules", "quiet-core-bot");
     const nodeModulesRoot = path.dirname(packageRoot);
     const legacyRuntimeRoot = path.join(stateDir, "plugin-runtime-deps");
     const legacyTarget = path.join(
       legacyRuntimeRoot,
-      "openclaw-2026.4.29-slack",
+      "quiet-core-bot-2026.4.29-slack",
       "node_modules",
       "@slack",
       "web-api",
@@ -298,7 +298,7 @@ describe("cleanupLegacyPluginDependencyState", () => {
     await fs.symlink(liveTarget, liveLink, "dir");
 
     const result = await cleanupLegacyPluginDependencyState({
-      env: { OPENCLAW_STATE_DIR: stateDir },
+      env: { QUIET_CORE_STATE_DIR: stateDir },
       packageRoot,
     });
 

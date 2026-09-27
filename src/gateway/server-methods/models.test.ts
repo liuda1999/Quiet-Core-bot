@@ -2,10 +2,10 @@
 // validation errors, and protocol response shapes.
 import { describe, expect, it, vi } from "vitest";
 import { ErrorCodes } from "../../../packages/gateway-protocol/src/index.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { createDeferred } from "../../test-utils/deferred.js";
 import { withEnvAsync } from "../../test-utils/env.js";
-import { withOpenClawTestState } from "../../test-utils/openclaw-test-state.js";
+import { withOpenClawTestState } from "../../test-utils/quiet-core-bot-test-state.js";
 import { expectGatewayErrorResponse } from "./gateway-response.test-helpers.js";
 import { modelsHandlers } from "./models.js";
 import type { RespondFn } from "./types.js";
@@ -282,7 +282,7 @@ describe("models.list", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-models-list-codex-alias-",
+        prefix: "quiet-core-bot-models-list-codex-alias-",
         agentEnv: "main",
       },
       async (state) => {
@@ -416,7 +416,7 @@ describe("models.list", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-models-list-expired-profile-",
+        prefix: "quiet-core-bot-models-list-expired-profile-",
         agentEnv: "main",
       },
       async (state) => {
@@ -464,7 +464,7 @@ describe("models.list", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-models-list-env-profile-",
+        prefix: "quiet-core-bot-models-list-env-profile-",
         agentEnv: "main",
         env: {
           DEMO_PROVIDER_TOKEN: "test-token",
@@ -518,7 +518,7 @@ describe("models.list", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-models-list-file-profile-",
+        prefix: "quiet-core-bot-models-list-file-profile-",
         agentEnv: "main",
       },
       async (state) => {
@@ -580,10 +580,10 @@ describe("models.list", () => {
       await withOpenClawTestState(
         {
           layout: "state-only",
-          prefix: `openclaw-models-list-provider-${fixture.name}-profile-`,
+          prefix: `quiet-core-bot-models-list-provider-${fixture.name}-profile-`,
           agentEnv: "main",
           env: {
-            OPENCLAW_TEST_PROFILE_API_KEY: "test-token",
+            QUIET_CORE_TEST_PROFILE_API_KEY: "test-token",
             VLLM_API_KEY: undefined,
           },
         },
@@ -597,7 +597,7 @@ describe("models.list", () => {
                 keyRef: {
                   source: "env",
                   provider: "default",
-                  id: "OPENCLAW_TEST_PROFILE_API_KEY",
+                  id: "QUIET_CORE_TEST_PROFILE_API_KEY",
                 },
               },
             },

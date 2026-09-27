@@ -192,11 +192,11 @@ function ensureOpenClawExtensionAlias(params) {
     repoRoot: params.repoRoot,
     pluginSdkDir,
   });
-  const aliasDir = path.join(params.distExtensionsRoot, "node_modules", "openclaw");
+  const aliasDir = path.join(params.distExtensionsRoot, "node_modules", "quiet-core-bot");
   const pluginSdkAliasPath = path.join(aliasDir, "plugin-sdk");
   fs.mkdirSync(aliasDir, { recursive: true });
   writeJsonFile(path.join(aliasDir, "package.json"), {
-    name: "openclaw",
+    name: "quiet-core-bot",
     type: "module",
     exports: buildRuntimePluginSdkPackageExports(publicDistFileNames),
   });
@@ -232,7 +232,7 @@ function shouldCopyRuntimeFile(relativePath) {
   return (
     isBundledSkillRuntimePath(relativePath) ||
     isPathOrNestedPath(relativePath, "package.json") ||
-    isPathOrNestedPath(relativePath, "openclaw.plugin.json") ||
+    isPathOrNestedPath(relativePath, "quiet-core-bot.plugin.json") ||
     isPathOrNestedPath(relativePath, ".codex-plugin/plugin.json") ||
     isPathOrNestedPath(relativePath, ".claude-plugin/plugin.json") ||
     isPathOrNestedPath(relativePath, ".cursor-plugin/plugin.json") ||

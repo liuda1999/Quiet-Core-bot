@@ -1,6 +1,6 @@
 // Update command presentation helpers: spinner lifecycle, failure hints, and result summaries.
 import { spinner } from "@clack/prompts";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
 import { theme } from "../../../packages/terminal-core/src/theme.js";
 import { formatDurationPrecise } from "../../infra/format-time/format-duration.ts";
 import type {
@@ -95,9 +95,9 @@ export function inferUpdateFailureHints(result: UpdateRunResult): string[] {
     hints.push(
       "If you recover with sudo/manual package install on a managed Gateway, stop the Gateway first so it does not load files while the package tree is being replaced.",
     );
-    hints.push("Example: npm config set prefix ~/.local && npm i -g openclaw@latest");
+    hints.push("Example: npm config set prefix ~/.local && npm i -g quiet-core-bot@latest");
     hints.push(
-      "System install outline: quiet-core-bot gateway stop -> sudo <system-npm> i -g openclaw@latest -> quiet-core-bot gateway install --force -> quiet-core-bot gateway restart.",
+      "System install outline: quiet-core-bot gateway stop -> sudo <system-npm> i -g quiet-core-bot@latest -> quiet-core-bot gateway install --force -> quiet-core-bot gateway restart.",
     );
   }
 
@@ -108,7 +108,7 @@ export function inferUpdateFailureHints(result: UpdateRunResult): string[] {
     hints.push(
       "Detected native optional dependency build failure. The updater retries with --omit=optional automatically.",
     );
-    hints.push("If it still fails: npm i -g openclaw@latest --omit=optional");
+    hints.push("If it still fails: npm i -g quiet-core-bot@latest --omit=optional");
   }
 
   return hints;

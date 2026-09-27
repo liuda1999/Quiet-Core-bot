@@ -19,7 +19,7 @@ import type {
   SessionTranscriptUpdateTarget,
 } from "../../sessions/transcript-events.js";
 import { getRuntimeConfig } from "../io.js";
-import type { OpenClawConfig } from "../types.openclaw.js";
+import type { OpenClawConfig } from "../types.quiet-core-bot.js";
 import { formatSessionArchiveTimestamp } from "./artifacts.js";
 import { extractGeneratedTranscriptSessionId } from "./generated-transcript-session-id.js";
 import { resolveAgentMainSessionKey } from "./main-session.js";
@@ -1871,7 +1871,7 @@ function resolveManualCompactTranscriptCandidates(params: {
 
   const legacyDir = path.join(
     resolveRequiredHomeDir(process.env, os.homedir),
-    ".openclaw",
+    ".quiet-core-bot",
     "sessions",
   );
   pushCandidate(() => resolveSessionTranscriptPathInDir(params.sessionId, legacyDir));

@@ -95,7 +95,7 @@ Save to `~/.quiet-core-bot/quiet-core-bot.json` and you can DM the bot from that
   // Logging
   logging: {
     level: "info",
-    file: "/tmp/openclaw/openclaw.log",
+    file: "/tmp/quiet-core-bot/quiet-core-bot.log",
     consoleLevel: "info",
     consoleStyle: "pretty",
     redactSensitive: "tools",
@@ -103,7 +103,7 @@ Save to `~/.quiet-core-bot/quiet-core-bot.json` and you can DM the bot from that
 
   // Message formatting
   messages: {
-    messagePrefix: "[openclaw]",
+    messagePrefix: "[quiet-core-bot]",
     visibleReplies: "automatic",
     responsePrefix: ">",
     ackReaction: "👀",
@@ -205,7 +205,7 @@ Save to `~/.quiet-core-bot/quiet-core-bot.json` and you can DM the bot from that
       dm: { enabled: true, allowFrom: ["123456789012345678"] },
       guilds: {
         "123456789012345678": {
-          slug: "friends-of-openclaw",
+          slug: "friends-of-quiet-core-bot",
           requireMention: false,
           channels: {
             general: { allow: true },
@@ -225,7 +225,7 @@ Save to `~/.quiet-core-bot/quiet-core-bot.json` and you can DM the bot from that
       dm: { enabled: true, allowFrom: ["U123"] },
       slashCommand: {
         enabled: true,
-        name: "openclaw",
+        name: "quiet-core-bot",
         sessionPrefix: "slack:slash",
         ephemeral: true,
       },
@@ -294,7 +294,7 @@ Save to `~/.quiet-core-bot/quiet-core-bot.json` and you can DM the bot from that
         scope: "session", // preferred over legacy perSession: true
         workspaceRoot: "~/.quiet-core-bot/sandboxes",
         docker: {
-          image: "openclaw-sandbox:bookworm-slim",
+          image: "quiet-core-bot-sandbox:bookworm-slim",
           workdir: "/workspace",
           readOnlyRoot: true,
           tmpfs: ["/tmp", "/var/tmp", "/run"],
@@ -317,7 +317,7 @@ Save to `~/.quiet-core-bot/quiet-core-bot.json` and you can DM the bot from that
         },
         // inherits defaults.skills -> github, weather
         groupChat: {
-          mentionPatterns: ["@openclaw", "openclaw"],
+          mentionPatterns: ["@quiet-core-bot", "quiet-core-bot"],
         },
         thinkingDefault: "high", // per-agent thinking override
         reasoningDefault: "on", // per-agent reasoning visibility
@@ -421,7 +421,7 @@ Save to `~/.quiet-core-bot/quiet-core-bot.json` and you can DM the bot from that
       },
     ],
     gmail: {
-      account: "openclaw@gmail.com",
+      account: "quiet-core-bot@gmail.com",
       label: "INBOX",
       topic: "projects/<project-id>/topics/gog-gmail-watch",
       subscription: "gog-gmail-watch-push",
@@ -440,7 +440,7 @@ Save to `~/.quiet-core-bot/quiet-core-bot.json` and you can DM the bot from that
     mode: "local",
     port: 18789,
     bind: "loopback",
-    controlUi: { enabled: true, basePath: "/openclaw" },
+    controlUi: { enabled: true, basePath: "/quiet-core-bot" },
     auth: {
       mode: "token",
       token: "gateway-token",
@@ -633,7 +633,7 @@ Only enable direct mutable name/email/nick matching with each channel's `dangero
 {
   agents: {
     defaults: {
-      workspace: "~/work-openclaw",
+      workspace: "~/work-quiet-core-bot",
       elevatedDefault: "off",
     },
     list: [

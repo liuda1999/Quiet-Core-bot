@@ -11,7 +11,7 @@ Persistent wiki compiler and Obsidian-friendly knowledge vault for Quiet Core bo
 
 ## Distribution
 
-- Package: `@openclaw/memory-wiki`
+- Package: `@quiet-core/memory-wiki`
 - Install route: included in Quiet Core bot
 
 ## Surface

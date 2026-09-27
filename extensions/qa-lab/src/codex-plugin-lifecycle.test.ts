@@ -94,7 +94,7 @@ describe("codex plugin lifecycle: pinned-old codex plugin with new OpenClaw", ()
 
     expect(result.status).toBe("blocked");
     expect(result.remediation).toBe(
-      'Codex plugin version 2026.5.19 is older than OpenClaw 2026.5.21. Run "openclaw plugins update codex" or unpin codex, then rerun "openclaw doctor --fix".',
+      'Codex plugin version 2026.5.19 is older than OpenClaw 2026.5.21. Run "quiet-core-bot plugins update codex" or unpin codex, then rerun "quiet-core-bot doctor --fix".',
     );
   });
 });
@@ -158,14 +158,14 @@ describe("codex plugin lifecycle: doctor migration safety matrix", () => {
     {
       name: "mixed profile with defaults OpenClaw pin",
       profileShape: "mixed" as const,
-      config: { agents: { defaults: { agentRuntime: { id: "openclaw" } } } },
-      expectedRemovedRuntimePins: ["agentRuntime.id=openclaw"],
+      config: { agents: { defaults: { agentRuntime: { id: "quiet-core-bot" } } } },
+      expectedRemovedRuntimePins: ["agentRuntime.id=quiet-core-bot"],
     },
     {
       name: "mixed profile with main-agent OpenClaw pin",
       profileShape: "mixed" as const,
-      config: { agents: { list: { main: { agentRuntime: { id: "openclaw" } } } } },
-      expectedRemovedRuntimePins: ["agentRuntime.id=openclaw"],
+      config: { agents: { list: { main: { agentRuntime: { id: "quiet-core-bot" } } } } },
+      expectedRemovedRuntimePins: ["agentRuntime.id=quiet-core-bot"],
     },
   ])(
     "keeps codex auth and strips stale OpenClaw runtime pins for $name",

@@ -1,6 +1,6 @@
 // Resolves heartbeat visibility toggles across config precedence levels.
 import type { ChannelHeartbeatVisibilityConfig } from "../config/types.channels.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import type { GatewayMessageChannel } from "../utils/message-channel.js";
 
 /** Resolved heartbeat presentation toggles after defaults/channel/account precedence. */

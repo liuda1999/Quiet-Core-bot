@@ -1,7 +1,7 @@
 // FFmpeg exec helpers run ffmpeg and ffprobe with normalized errors.
 import { execFile, type ExecFileOptions } from "node:child_process";
 import { promisify } from "node:util";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
 import { toErrorObject } from "../infra/errors.js";
 import { resolveSystemBin } from "../infra/resolve-system-bin.js";
 import {

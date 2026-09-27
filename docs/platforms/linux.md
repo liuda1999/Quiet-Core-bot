@@ -15,7 +15,7 @@ Native Linux companion apps are planned. Contributions are welcome if you want t
 ## Beginner quick path (VPS)
 
 1. Install Node 24 (recommended; Node 22 LTS, currently `22.19+`, still works for compatibility)
-2. `npm i -g openclaw@latest`
+2. `npm i -g quiet-core-bot@latest`
 3. `quiet-core-bot onboard --install-daemon`
 4. From your laptop: `ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
 5. Open `http://127.0.0.1:18789/` and authenticate with the configured shared secret (token by default; password if you set `gateway.auth.mode: "password"`)
@@ -71,7 +71,7 @@ setup. The full service guidance lives in the [Gateway runbook](/gateway).
 
 Minimal setup:
 
-Create `~/.config/systemd/user/openclaw-gateway[-<profile>].service`:
+Create `~/.config/systemd/user/quiet-core-bot-gateway[-<profile>].service`:
 
 ```
 [Unit]
@@ -80,7 +80,7 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
-ExecStart=/usr/local/bin/openclaw gateway --port 18789
+ExecStart=/usr/local/bin/quiet-core-bot gateway --port 18789
 Restart=always
 RestartSec=5
 TimeoutStopSec=30
@@ -96,7 +96,7 @@ WantedBy=default.target
 Enable it:
 
 ```
-systemctl --user enable --now openclaw-gateway[-<profile>].service
+systemctl --user enable --now quiet-core-bot-gateway[-<profile>].service
 ```
 
 ## Memory pressure and OOM kills
@@ -119,7 +119,7 @@ Covered child process surfaces include:
 - Quiet Core bot-launched browser/Chrome processes.
 
 The wrapper is Linux-only and is skipped when `/bin/sh` is unavailable. It is
-also skipped if the child env sets `OPENCLAW_CHILD_OOM_SCORE_ADJ=0`, `false`,
+also skipped if the child env sets `QUIET_CORE_CHILD_OOM_SCORE_ADJ=0`, `false`,
 `no`, or `off`.
 
 To verify a child process:

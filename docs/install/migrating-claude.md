@@ -9,7 +9,7 @@ title: "Migrating from Claude"
 Quiet Core bot imports local Claude state through the bundled Claude migration provider. The provider previews every item before changing state, redacts secrets in plans and reports, and creates a verified backup before apply.
 
 <Note>
-Onboarding imports require a fresh Quiet Core bot setup. If you already have local Quiet Core bot state, reset config, credentials, sessions, and the workspace first, or use `openclaw migrate` directly with `--overwrite` after reviewing the plan.
+Onboarding imports require a fresh Quiet Core bot setup. If you already have local Quiet Core bot state, reset config, credentials, sessions, and the workspace first, or use `quiet-core-bot migrate` directly with `--overwrite` after reviewing the plan.
 </Note>
 
 ## Two ways to import
@@ -30,11 +30,11 @@ Onboarding imports require a fresh Quiet Core bot setup. If you already have loc
 
   </Tab>
   <Tab title="CLI">
-    Use `openclaw migrate` for scripted or repeatable runs. See [`openclaw migrate`](/cli/migrate) for the full reference.
+    Use `quiet-core-bot migrate` for scripted or repeatable runs. See [`quiet-core-bot migrate`](/cli/migrate) for the full reference.
 
     ```bash
-    openclaw migrate claude --dry-run
-    openclaw migrate apply claude --yes
+    quiet-core-bot migrate claude --dry-run
+    quiet-core-bot migrate apply claude --yes
     ```
 
     Add `--from <path>` to import a specific Claude Code home or project root.
@@ -86,7 +86,7 @@ When `--from` points at a project root, Quiet Core bot imports only that project
 <Steps>
   <Step title="Preview the plan">
     ```bash
-    openclaw migrate claude --dry-run
+    quiet-core-bot migrate claude --dry-run
     ```
 
     The plan lists everything that will change, including conflicts, skipped items, and sensitive values redacted from nested MCP `env` or `headers` fields.
@@ -94,7 +94,7 @@ When `--from` points at a project root, Quiet Core bot imports only that project
   </Step>
   <Step title="Apply with backup">
     ```bash
-    openclaw migrate apply claude --yes
+    quiet-core-bot migrate apply claude --yes
     ```
 
     Quiet Core bot creates and verifies a backup before applying.
@@ -132,8 +132,8 @@ For a fresh Quiet Core bot install, conflicts are unusual. They typically appear
 ## JSON output for automation
 
 ```bash
-openclaw migrate claude --dry-run --json
-openclaw migrate apply claude --json --yes
+quiet-core-bot migrate claude --dry-run --json
+quiet-core-bot migrate apply claude --json --yes
 ```
 
 With `--json` and no `--yes`, apply prints the plan and does not mutate state. This is the safest mode for CI and shared scripts.
@@ -145,7 +145,7 @@ With `--json` and no `--yes`, apply prints the plan and does not mutate state. T
     Pass `--from /actual/path` (CLI) or `--import-source /actual/path` (onboarding).
   </Accordion>
   <Accordion title="Onboarding refuses to import on an existing setup">
-    Onboarding imports require a fresh setup. Either reset state and re-onboard, or use `openclaw migrate apply claude` directly, which supports `--overwrite` and explicit backup control.
+    Onboarding imports require a fresh setup. Either reset state and re-onboard, or use `quiet-core-bot migrate apply claude` directly, which supports `--overwrite` and explicit backup control.
   </Accordion>
   <Accordion title="MCP servers from Claude Desktop did not import">
     Claude Desktop reads `claude_desktop_config.json` from a platform-specific path. Point `--from` at that file's directory if Quiet Core bot did not detect it automatically.
@@ -157,7 +157,7 @@ With `--json` and no `--yes`, apply prints the plan and does not mutate state. T
 
 ## Related
 
-- [`openclaw migrate`](/cli/migrate): full CLI reference, plugin contract, and JSON shapes.
+- [`quiet-core-bot migrate`](/cli/migrate): full CLI reference, plugin contract, and JSON shapes.
 - [Migration guide](/install/migrating): all migration paths.
 - [Migrating from Hermes](/install/migrating-hermes): the other cross-system import path.
 - [Onboarding](/cli/onboard): wizard flow and non-interactive flags.

@@ -1,5 +1,5 @@
 ---
-summary: "CLI reference for `openclaw transcripts` (list, show, and locate stored transcripts)"
+summary: "CLI reference for `quiet-core-bot transcripts` (list, show, and locate stored transcripts)"
 read_when:
   - You want to read stored transcript summaries from the terminal
   - You need the path to a transcripts markdown summary
@@ -7,7 +7,7 @@ read_when:
 title: "Transcripts CLI"
 ---
 
-# `openclaw transcripts`
+# `quiet-core-bot transcripts`
 
 Inspect transcripts written by Quiet Core bot's core `transcripts` tool. This CLI is
 read-only; capture, import, and summarization are owned by the agent tool and
@@ -20,31 +20,31 @@ disk. It does not start or stop capture.
 Artifacts live under the Quiet Core bot state directory:
 
 ```text
-$OPENCLAW_STATE_DIR/transcripts/YYYY-MM-DD/<session>/
+$QUIET_CORE_STATE_DIR/transcripts/YYYY-MM-DD/<session>/
   metadata.json
   transcript.jsonl
   summary.json
   summary.md
 ```
 
-The default state directory is `~/.quiet-core-bot`; set `OPENCLAW_STATE_DIR` to use a
+The default state directory is `~/.quiet-core-bot`; set `QUIET_CORE_STATE_DIR` to use a
 different one. The date directory comes from the session start time, and the
 session directory is a safe filesystem segment derived from the session id.
 
 ## Commands
 
 ```bash
-openclaw transcripts list
-openclaw transcripts show <session>
-openclaw transcripts show YYYY-MM-DD/<session>
-openclaw transcripts path <session>
-openclaw transcripts path YYYY-MM-DD/<session>
-openclaw transcripts path <session> --dir
-openclaw transcripts path <session> --metadata
-openclaw transcripts path <session> --transcript
-openclaw transcripts list --json
-openclaw transcripts show <session> --json
-openclaw transcripts path <session> --json
+quiet-core-bot transcripts list
+quiet-core-bot transcripts show <session>
+quiet-core-bot transcripts show YYYY-MM-DD/<session>
+quiet-core-bot transcripts path <session>
+quiet-core-bot transcripts path YYYY-MM-DD/<session>
+quiet-core-bot transcripts path <session> --dir
+quiet-core-bot transcripts path <session> --metadata
+quiet-core-bot transcripts path <session> --transcript
+quiet-core-bot transcripts list --json
+quiet-core-bot transcripts show <session> --json
+quiet-core-bot transcripts path <session> --json
 ```
 
 - `list`: list stored sessions, date-qualified selector, start time, title, and `summary.md` path.
@@ -56,7 +56,7 @@ openclaw transcripts path <session> --json
 - `--json`: print machine-readable output.
 
 When a human session id repeats across days, use the date-qualified selector
-from `list`, for example `openclaw transcripts show 2026-05-22/standup`.
+from `list`, for example `quiet-core-bot transcripts show 2026-05-22/standup`.
 Default session ids include a timestamp and random suffix; configure fixed
 session ids only when they are unique within the day.
 
@@ -65,7 +65,7 @@ session ids only when they are unique within the day.
 `list` prints one session per line:
 
 ```text
-2026-05-22/standup  2026-05-22T09:00:00.000Z  Weekly standup  /Users/alex/.openclaw/transcripts/2026-05-22/standup/summary.md
+2026-05-22/standup  2026-05-22T09:00:00.000Z  Weekly standup  /Users/alex/.quiet-core-bot/transcripts/2026-05-22/standup/summary.md
 ```
 
 The output is tab-separated. The columns are selector, start time, title, and

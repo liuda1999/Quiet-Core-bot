@@ -34,7 +34,7 @@ describe("handleBtwCommand", () => {
     runBtwSideQuestionMock.mockReset();
     resolveAgentDirMock.mockReset();
     resolveAgentDirMock.mockImplementation(
-      (_cfg: unknown, agentId: string) => `/tmp/workspace/.openclaw/agents/${agentId}/agent`,
+      (_cfg: unknown, agentId: string) => `/tmp/workspace/.quiet-core-bot/agents/${agentId}/agent`,
     );
     resolveSessionAgentIdMock.mockReset();
     resolveSessionAgentIdMock.mockReturnValue("main");

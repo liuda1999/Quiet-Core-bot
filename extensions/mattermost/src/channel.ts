@@ -6,33 +6,33 @@ import type {
   ChannelThreadingContext,
   ChannelThreadingToolContext,
   ChannelToolSend,
-} from "openclaw/plugin-sdk/channel-contract";
-import { createChatChannelPlugin } from "openclaw/plugin-sdk/channel-core";
-import { createChannelMessageAdapterFromOutbound } from "openclaw/plugin-sdk/channel-outbound";
-import { createLoggedPairingApprovalNotifier } from "openclaw/plugin-sdk/channel-pairing";
-import { createRestrictSendersChannelSecurity } from "openclaw/plugin-sdk/channel-policy";
+} from "quiet-core-bot/plugin-sdk/channel-contract";
+import { createChatChannelPlugin } from "quiet-core-bot/plugin-sdk/channel-core";
+import { createChannelMessageAdapterFromOutbound } from "quiet-core-bot/plugin-sdk/channel-outbound";
+import { createLoggedPairingApprovalNotifier } from "quiet-core-bot/plugin-sdk/channel-pairing";
+import { createRestrictSendersChannelSecurity } from "quiet-core-bot/plugin-sdk/channel-policy";
 import {
   attachChannelToResult,
   createAttachedChannelResultAdapter,
   type ChannelOutboundAdapter,
-} from "openclaw/plugin-sdk/channel-send-result";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { createChannelDirectoryAdapter } from "openclaw/plugin-sdk/directory-runtime";
-import { buildPassiveProbedChannelStatusSummary } from "openclaw/plugin-sdk/extension-shared";
+} from "quiet-core-bot/plugin-sdk/channel-send-result";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import { createChannelDirectoryAdapter } from "quiet-core-bot/plugin-sdk/directory-runtime";
+import { buildPassiveProbedChannelStatusSummary } from "quiet-core-bot/plugin-sdk/extension-shared";
 import {
   type MessagePresentation,
   normalizeMessagePresentation,
   renderMessagePresentationFallbackText,
   resolveMessagePresentationControlValue,
-} from "openclaw/plugin-sdk/interactive-runtime";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
-import { resolvePayloadMediaUrls, sendTextMediaPayload } from "openclaw/plugin-sdk/reply-payload";
-import { isPrivateNetworkOptInEnabled } from "openclaw/plugin-sdk/ssrf-runtime";
+} from "quiet-core-bot/plugin-sdk/interactive-runtime";
+import { createLazyRuntimeModule } from "quiet-core-bot/plugin-sdk/lazy-runtime";
+import { resolvePayloadMediaUrls, sendTextMediaPayload } from "quiet-core-bot/plugin-sdk/reply-payload";
+import { isPrivateNetworkOptInEnabled } from "quiet-core-bot/plugin-sdk/ssrf-runtime";
 import {
   createComputedAccountStatusAdapter,
   createDefaultChannelRuntimeState,
-} from "openclaw/plugin-sdk/status-helpers";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "quiet-core-bot/plugin-sdk/status-helpers";
+import { normalizeOptionalString } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { mattermostApprovalAuth } from "./approval-auth.js";
 import {
   chunkTextForOutbound,

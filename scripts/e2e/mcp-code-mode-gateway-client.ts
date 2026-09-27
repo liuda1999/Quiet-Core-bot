@@ -26,11 +26,11 @@ export function readMcpCodeModeClientFetchLimits(
 ): McpCodeModeClientFetchLimits {
   return {
     bodyMaxBytes: readPositiveIntEnv(
-      "OPENCLAW_MCP_CODE_MODE_CLIENT_BODY_MAX_BYTES",
+      "QUIET_CORE_MCP_CODE_MODE_CLIENT_BODY_MAX_BYTES",
       1024 * 1024,
       env,
     ),
-    timeoutMs: readPositiveIntEnv("OPENCLAW_MCP_CODE_MODE_CLIENT_TIMEOUT_MS", 300_000, env),
+    timeoutMs: readPositiveIntEnv("QUIET_CORE_MCP_CODE_MODE_CLIENT_TIMEOUT_MS", 300_000, env),
   };
 }
 
@@ -115,19 +115,19 @@ async function readSessionLogMentions(stateDir: string): Promise<Record<string, 
 async function main() {
   const gatewayUrl = process.env.GW_URL?.trim();
   const gatewayToken = process.env.GW_TOKEN?.trim();
-  const stateDir = process.env.OPENCLAW_STATE_DIR?.trim();
-  const model = process.env.OPENCLAW_MCP_CODE_MODE_MODEL?.trim() || "openclaw/main";
+  const stateDir = process.env.QUIET_CORE_STATE_DIR?.trim();
+  const model = process.env.QUIET_CORE_MCP_CODE_MODE_MODEL?.trim() || "quiet-core-bot/main";
   assert(gatewayUrl, "missing GW_URL");
   assert(gatewayToken, "missing GW_TOKEN");
-  assert(stateDir, "missing OPENCLAW_STATE_DIR");
+  assert(stateDir, "missing QUIET_CORE_STATE_DIR");
 
   const response = await fetchJson(`${gatewayUrl.replace(/\/$/, "")}/v1/responses`, {
     method: "POST",
     headers: {
       authorization: `Bearer ${gatewayToken}`,
       "content-type": "application/json",
-      "x-openclaw-agent": "main",
-      "x-openclaw-scopes": "operator.write",
+      "x-quiet-core-bot-agent": "main",
+      "x-quiet-core-bot-scopes": "operator.write",
     },
     body: JSON.stringify({
       model,

@@ -1,5 +1,5 @@
 // Signal plugin module implements approval reactions behavior.
-import { matchesApprovalRequestFilters } from "openclaw/plugin-sdk/approval-client-runtime";
+import { matchesApprovalRequestFilters } from "quiet-core-bot/plugin-sdk/approval-client-runtime";
 import {
   buildApprovalReactionHint,
   createApprovalReactionTargetStore,
@@ -7,15 +7,15 @@ import {
   resolveApprovalReactionTarget,
   type ApprovalReactionDecisionBinding,
   type ApprovalReactionTargetRecord,
-} from "openclaw/plugin-sdk/approval-reaction-runtime";
-import type { ExecApprovalReplyDecision } from "openclaw/plugin-sdk/approval-reply-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { normalizeAccountId } from "openclaw/plugin-sdk/routing";
+} from "quiet-core-bot/plugin-sdk/approval-reaction-runtime";
+import type { ExecApprovalReplyDecision } from "quiet-core-bot/plugin-sdk/approval-reply-runtime";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import { normalizeAccountId } from "quiet-core-bot/plugin-sdk/routing";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
-import { normalizeE164 } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
+import { normalizeE164 } from "quiet-core-bot/plugin-sdk/text-utility-runtime";
 import { getSignalApprovalApprovers, signalApprovalAuth } from "./approval-auth.js";
 import { looksLikeUuid } from "./identity.js";
 import { normalizeSignalMessagingTarget } from "./normalize.js";

@@ -1,6 +1,6 @@
 /** Tests command-turn context normalization and source/kind conversions. */
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   createCommandTurnContext,
   isAuthorizedTextSlashCommandTurn,
@@ -110,8 +110,8 @@ describe("resolveCommandTurnContext", () => {
             body: "/reset",
           },
           CommandAuthorized: true,
-          Body: "/reset@openclaw",
-          RawBody: "/reset@openclaw",
+          Body: "/reset@quiet-core-bot",
+          RawBody: "/reset@quiet-core-bot",
           CommandBody: "/reset",
         },
         emptyConfig,
@@ -127,13 +127,13 @@ describe("resolveCommandTurnContext", () => {
             kind: "normal",
             source: "message",
             authorized: false,
-            body: "/reset@openclaw",
+            body: "/reset@quiet-core-bot",
           },
           CommandAuthorized: true,
-          Body: "/reset@openclaw",
-          RawBody: "/reset@openclaw",
-          CommandBody: "/reset@openclaw",
-          BotUsername: "openclaw",
+          Body: "/reset@quiet-core-bot",
+          RawBody: "/reset@quiet-core-bot",
+          CommandBody: "/reset@quiet-core-bot",
+          BotUsername: "quiet-core-bot",
         },
         emptyConfig,
       ),

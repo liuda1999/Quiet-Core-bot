@@ -1,6 +1,6 @@
 // Stream resolution tests cover how embedded runs choose provider, boundary,
 // native Codex, or custom stream functions and pass auth/cache/signal options.
-import type { StreamFn } from "openclaw/plugin-sdk/agent-core";
+import type { StreamFn } from "quiet-core-bot/plugin-sdk/agent-core";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { getApiProvider } from "../../llm/api-registry.js";
 import { streamSimple } from "../../llm/stream.js";
@@ -92,7 +92,7 @@ describe("describeEmbeddedAgentStreamStrategy", () => {
           id: "codex-mini-latest",
         } as never,
       }),
-    ).toBe("openclaw-native-codex-responses");
+    ).toBe("quiet-core-bot-native-codex-responses");
   });
 
   it("keeps custom session streams labeled as custom", () => {

@@ -1,7 +1,7 @@
 // Migrate Hermes tests cover provider plugin behavior.
 import os from "node:os";
 import path from "node:path";
-import { createCapturedPluginRegistration } from "openclaw/plugin-sdk/plugin-test-runtime";
+import { createCapturedPluginRegistration } from "quiet-core-bot/plugin-sdk/plugin-test-runtime";
 import { afterEach, describe, expect, it } from "vitest";
 import { resolveHomePath } from "./helpers.js";
 import pluginEntry from "./index.js";
@@ -27,16 +27,16 @@ describe("Hermes migration provider", () => {
     expect(captured.migrationProviders.map((provider) => provider.id)).toEqual(["hermes"]);
   });
 
-  it("resolves tilde source paths against the OS home when OPENCLAW_HOME is set", () => {
-    const previous = process.env.OPENCLAW_HOME;
-    process.env.OPENCLAW_HOME = path.join(path.sep, "tmp", "openclaw-home");
+  it("resolves tilde source paths against the OS home when QUIET_CORE_HOME is set", () => {
+    const previous = process.env.QUIET_CORE_HOME;
+    process.env.QUIET_CORE_HOME = path.join(path.sep, "tmp", "quiet-core-bot-home");
     try {
       expect(resolveHomePath("~/.hermes")).toBe(path.join(os.homedir(), ".hermes"));
     } finally {
       if (previous === undefined) {
-        delete process.env.OPENCLAW_HOME;
+        delete process.env.QUIET_CORE_HOME;
       } else {
-        process.env.OPENCLAW_HOME = previous;
+        process.env.QUIET_CORE_HOME = previous;
       }
     }
   });

@@ -19,7 +19,7 @@ When the Gateway's OpenAI-compatible HTTP surface is enabled, it also serves:
 - `POST /v1/embeddings`
 - `POST /v1/responses`
 
-Under the hood, requests are executed as a normal Gateway agent run (same codepath as `openclaw agent`), so routing/permissions/config match your Gateway.
+Under the hood, requests are executed as a normal Gateway agent run (same codepath as `quiet-core-bot agent`), so routing/permissions/config match your Gateway.
 
 ## Authentication
 
@@ -37,13 +37,13 @@ Common HTTP auth paths:
 
 Notes:
 
-- When `gateway.auth.mode="token"`, use `gateway.auth.token` (or `OPENCLAW_GATEWAY_TOKEN`).
-- When `gateway.auth.mode="password"`, use `gateway.auth.password` (or `OPENCLAW_GATEWAY_PASSWORD`).
+- When `gateway.auth.mode="token"`, use `gateway.auth.token` (or `QUIET_CORE_GATEWAY_TOKEN`).
+- When `gateway.auth.mode="password"`, use `gateway.auth.password` (or `QUIET_CORE_GATEWAY_PASSWORD`).
 - When `gateway.auth.mode="trusted-proxy"`, the HTTP request must come from a
   configured trusted proxy source; same-host loopback proxies require explicit
   `gateway.auth.trustedProxy.allowLoopback = true`.
 - Internal same-host callers that bypass the proxy can use
-  `gateway.auth.password` / `OPENCLAW_GATEWAY_PASSWORD` as a local direct
+  `gateway.auth.password` / `QUIET_CORE_GATEWAY_PASSWORD` as a local direct
   fallback. Any `Forwarded`, `X-Forwarded-*`, or `X-Real-IP` header evidence
   keeps the request on the trusted-proxy path instead.
 - If `gateway.auth.rateLimit` is configured and too many auth failures occur, the endpoint returns `429` with `Retry-After`.
@@ -56,8 +56,8 @@ Treat this endpoint as a **full operator-access** surface for the gateway instan
 - A valid Gateway token/password for this endpoint should be treated like an owner/operator credential.
 - Requests run through the same control-plane agent path as trusted operator actions.
 - There is no separate non-owner/per-user tool boundary on this endpoint; once a caller passes Gateway auth here, Quiet Core bot treats that caller as a trusted operator for this gateway.
-- For shared-secret auth modes (`token` and `password`), the endpoint restores the normal full operator defaults even if the caller sends a narrower `x-openclaw-scopes` header.
-- Trusted identity-bearing HTTP modes (for example trusted proxy auth or `gateway.auth.mode="none"`) honor `x-openclaw-scopes` when present and otherwise fall back to the normal operator default scope set.
+- For shared-secret auth modes (`token` and `password`), the endpoint restores the normal full operator defaults even if the caller sends a narrower `x-quiet-core-bot-scopes` header.
+- Trusted identity-bearing HTTP modes (for example trusted proxy auth or `gateway.auth.mode="none"`) honor `x-quiet-core-bot-scopes` when present and otherwise fall back to the normal operator default scope set.
 - If the target agent policy allows sensitive tools, this endpoint can use them.
 - Keep this endpoint on loopback/tailnet/private ingress only; do not expose it directly to the public internet.
 
@@ -65,17 +65,17 @@ Auth matrix:
 
 - `gateway.auth.mode="token"` or `"password"` + `Authorization: Bearer ...`
   - proves possession of the shared gateway operator secret
-  - ignores narrower `x-openclaw-scopes`
+  - ignores narrower `x-quiet-core-bot-scopes`
   - restores the full default operator scope set:
     `operator.admin`, `operator.approvals`, `operator.pairing`,
     `operator.read`, `operator.talk.secrets`, `operator.write`
   - treats chat turns on this endpoint as owner-sender turns
 - trusted identity-bearing HTTP modes (for example trusted proxy auth, or `gateway.auth.mode="none"` on private ingress)
   - authenticate some outer trusted identity or deployment boundary
-  - honor `x-openclaw-scopes` when the header is present
+  - honor `x-quiet-core-bot-scopes` when the header is present
   - fall back to the normal operator default scope set when the header is absent
   - only lose owner semantics when the caller explicitly narrows scopes and omits `operator.admin`
-  - require `operator.admin` for owner-level request controls such as `x-openclaw-model`
+  - require `operator.admin` for owner-level request controls such as `x-quiet-core-bot-model`
 
 See [Security](/gateway/security) and [Remote access](/gateway/remote).
 
@@ -91,20 +91,20 @@ Use `/v1/chat/completions` when you are integrating tooling or a trusted app-sid
 
 Quiet Core bot treats the OpenAI `model` field as an **agent target**, not a raw provider model id.
 
-- `model: "openclaw"` routes to the configured default agent.
-- `model: "openclaw/default"` also routes to the configured default agent.
-- `model: "openclaw/<agentId>"` routes to a specific agent.
+- `model: "quiet-core-bot"` routes to the configured default agent.
+- `model: "quiet-core-bot/default"` also routes to the configured default agent.
+- `model: "quiet-core-bot/<agentId>"` routes to a specific agent.
 
 Optional request headers:
 
-- `x-openclaw-model: <provider/model-or-bare-id>` overrides the backend model for the selected agent. Shared-secret bearer callers can use this header. Identity-bearing callers, such as trusted-proxy or private no-auth ingress requests with `x-openclaw-scopes`, need `operator.admin`; write-only callers get `403 missing scope: operator.admin`.
-- `x-openclaw-agent-id: <agentId>` remains supported as a compatibility override.
-- `x-openclaw-session-key: <sessionKey>` explicitly controls session routing. The value must not use reserved internal session namespaces such as `subagent:`, `cron:`, or `acp:`; those requests are rejected with `400 invalid_request_error`.
-- `x-openclaw-message-channel: <channel>` sets the synthetic ingress channel context for channel-aware prompts and policies.
+- `x-quiet-core-bot-model: <provider/model-or-bare-id>` overrides the backend model for the selected agent. Shared-secret bearer callers can use this header. Identity-bearing callers, such as trusted-proxy or private no-auth ingress requests with `x-quiet-core-bot-scopes`, need `operator.admin`; write-only callers get `403 missing scope: operator.admin`.
+- `x-quiet-core-bot-agent-id: <agentId>` remains supported as a compatibility override.
+- `x-quiet-core-bot-session-key: <sessionKey>` explicitly controls session routing. The value must not use reserved internal session namespaces such as `subagent:`, `cron:`, or `acp:`; those requests are rejected with `400 invalid_request_error`.
+- `x-quiet-core-bot-message-channel: <channel>` sets the synthetic ingress channel context for channel-aware prompts and policies.
 
 Compatibility aliases still accepted:
 
-- `model: "openclaw:<agentId>"`
+- `model: "quiet-core-bot:<agentId>"`
 - `model: "agent:<agentId>"`
 
 ## Enabling the endpoint
@@ -145,7 +145,7 @@ By default the endpoint is **stateless per request** (a new session key is gener
 
 If the request includes an OpenAI `user` string, the Gateway derives a stable session key from it, so repeated calls can share an agent session.
 
-For custom apps, the safest default is to reuse the same `user` value per conversation thread. Avoid account-level identifiers unless you explicitly want multiple conversations or devices to share one Quiet Core bot session. Use `x-openclaw-session-key` only when you need explicit routing control across multiple clients or threads, and choose application-owned keys that do not start with reserved internal namespaces such as `subagent:`, `cron:`, or `acp:`.
+For custom apps, the safest default is to reuse the same `user` value per conversation thread. Avoid account-level identifiers unless you explicitly want multiple conversations or devices to share one Quiet Core bot session. Use `x-quiet-core-bot-session-key` only when you need explicit routing control across multiple clients or threads, and choose application-owned keys that do not start with reserved internal namespaces such as `subagent:`, `cron:`, or `acp:`.
 
 ## Why this surface matters
 
@@ -162,7 +162,7 @@ This is the highest-leverage compatibility set for self-hosted frontends and too
   <Accordion title="What does `/v1/models` return?">
     An Quiet Core bot agent-target list.
 
-    The returned ids are `openclaw`, `openclaw/default`, and `openclaw/<agentId>` entries.
+    The returned ids are `quiet-core-bot`, `quiet-core-bot/default`, and `quiet-core-bot/<agentId>` entries.
     Use them directly as OpenAI `model` values.
 
   </Accordion>
@@ -172,18 +172,18 @@ This is the highest-leverage compatibility set for self-hosted frontends and too
     Sub-agents remain internal execution topology. They do not appear as pseudo-models.
 
   </Accordion>
-  <Accordion title="Why is `openclaw/default` included?">
-    `openclaw/default` is the stable alias for the configured default agent.
+  <Accordion title="Why is `quiet-core-bot/default` included?">
+    `quiet-core-bot/default` is the stable alias for the configured default agent.
 
     That means clients can keep using one predictable id even if the real default agent id changes between environments.
 
   </Accordion>
   <Accordion title="How do I override the backend model?">
-    Use `x-openclaw-model`. This is an owner-level override: it works with the Gateway shared-secret bearer token/password path, and it requires `operator.admin` on identity-bearing HTTP paths such as trusted proxy auth.
+    Use `x-quiet-core-bot-model`. This is an owner-level override: it works with the Gateway shared-secret bearer token/password path, and it requires `operator.admin` on identity-bearing HTTP paths such as trusted proxy auth.
 
     Examples:
-    `x-openclaw-model: openai/gpt-5.4`
-    `x-openclaw-model: gpt-5.5`
+    `x-quiet-core-bot-model: openai/gpt-5.4`
+    `x-quiet-core-bot-model: gpt-5.5`
 
     If you omit it, the selected agent runs with its normal configured model choice.
 
@@ -191,8 +191,8 @@ This is the highest-leverage compatibility set for self-hosted frontends and too
   <Accordion title="How do embeddings fit this contract?">
     `/v1/embeddings` uses the same agent-target `model` ids.
 
-    Use `model: "openclaw/default"` or `model: "openclaw/<agentId>"`.
-    When you need a specific embedding model, send it in `x-openclaw-model` from a shared-secret caller or an identity-bearing caller with `operator.admin`.
+    Use `model: "quiet-core-bot/default"` or `model: "quiet-core-bot/<agentId>"`.
+    When you need a specific embedding model, send it in `x-quiet-core-bot-model` from a shared-secret caller or an identity-bearing caller with `operator.admin`.
     Without that header, the request passes through to the selected agent's normal embedding setup.
 
   </Accordion>
@@ -280,13 +280,13 @@ For a basic Open WebUI connection:
 - Base URL: `http://127.0.0.1:18789/v1`
 - Docker on macOS base URL: `http://host.docker.internal:18789/v1`
 - API key: your Gateway bearer token
-- Model: `openclaw/default`
+- Model: `quiet-core-bot/default`
 
 Expected behavior:
 
-- `GET /v1/models` should list `openclaw/default`
-- Open WebUI should use `openclaw/default` as the chat model id
-- If you want a specific backend provider/model for that agent, set the agent's normal default model or send `x-openclaw-model` from a shared-secret caller or an identity-bearing caller with `operator.admin`
+- `GET /v1/models` should list `quiet-core-bot/default`
+- Open WebUI should use `quiet-core-bot/default` as the chat model id
+- If you want a specific backend provider/model for that agent, set the agent's normal default model or send `x-quiet-core-bot-model` from a shared-secret caller or an identity-bearing caller with `operator.admin`
 
 Quick smoke:
 
@@ -295,7 +295,7 @@ curl -sS http://127.0.0.1:18789/v1/models \
   -H 'Authorization: Bearer YOUR_TOKEN'
 ```
 
-If that returns `openclaw/default`, most Open WebUI setups can connect with the same base URL and token.
+If that returns `quiet-core-bot/default`, most Open WebUI setups can connect with the same base URL and token.
 
 ## Examples
 
@@ -306,7 +306,7 @@ curl -sS http://127.0.0.1:18789/v1/chat/completions \
   -H 'Authorization: Bearer YOUR_TOKEN' \
   -H 'Content-Type: application/json' \
   -d '{
-    "model": "openclaw/default",
+    "model": "quiet-core-bot/default",
     "user": "conv:YOUR_CONVERSATION_ID",
     "messages": [{"role":"user","content":"Summarize my tasks for today"}]
   }'
@@ -321,7 +321,7 @@ curl -sS http://127.0.0.1:18789/v1/chat/completions \
   -H 'Authorization: Bearer YOUR_TOKEN' \
   -H 'Content-Type: application/json' \
   -d '{
-    "model": "openclaw/default",
+    "model": "quiet-core-bot/default",
     "messages": [{"role":"user","content":"hi"}]
   }'
 ```
@@ -332,9 +332,9 @@ Streaming:
 curl -N http://127.0.0.1:18789/v1/chat/completions \
   -H 'Authorization: Bearer YOUR_TOKEN' \
   -H 'Content-Type: application/json' \
-  -H 'x-openclaw-model: openai/gpt-5.4' \
+  -H 'x-quiet-core-bot-model: openai/gpt-5.4' \
   -d '{
-    "model": "openclaw/research",
+    "model": "quiet-core-bot/research",
     "stream": true,
     "messages": [{"role":"user","content":"hi"}]
   }'
@@ -350,7 +350,7 @@ curl -sS http://127.0.0.1:18789/v1/models \
 Fetch one model:
 
 ```bash
-curl -sS http://127.0.0.1:18789/v1/models/openclaw%2Fdefault \
+curl -sS http://127.0.0.1:18789/v1/models/quiet-core-bot%2Fdefault \
   -H 'Authorization: Bearer YOUR_TOKEN'
 ```
 
@@ -360,9 +360,9 @@ Create embeddings:
 curl -sS http://127.0.0.1:18789/v1/embeddings \
   -H 'Authorization: Bearer YOUR_TOKEN' \
   -H 'Content-Type: application/json' \
-  -H 'x-openclaw-model: openai/text-embedding-3-small' \
+  -H 'x-quiet-core-bot-model: openai/text-embedding-3-small' \
   -d '{
-    "model": "openclaw/default",
+    "model": "quiet-core-bot/default",
     "input": ["alpha", "beta"]
   }'
 ```
@@ -370,8 +370,8 @@ curl -sS http://127.0.0.1:18789/v1/embeddings \
 Notes:
 
 - `/v1/models` returns Quiet Core bot agent targets, not raw provider catalogs.
-- `openclaw/default` is always present so one stable id works across environments.
-- Backend provider/model overrides belong in `x-openclaw-model`, not the OpenAI `model` field. On identity-bearing HTTP auth paths, this header requires `operator.admin`.
+- `quiet-core-bot/default` is always present so one stable id works across environments.
+- Backend provider/model overrides belong in `x-quiet-core-bot-model`, not the OpenAI `model` field. On identity-bearing HTTP auth paths, this header requires `operator.admin`.
 - `/v1/embeddings` supports `input` as a string or array of strings.
 
 ## Related

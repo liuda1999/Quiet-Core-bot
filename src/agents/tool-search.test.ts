@@ -503,7 +503,7 @@ describe("Tool Search", () => {
     expect(
       resolveToolSearchCatalogTool(
         { sessionId: "session-directory-resolve", config },
-        "openclaw:fake-catalog:fake_exact_hidden",
+        "quiet-core-bot:fake-catalog:fake_exact_hidden",
       ),
     ).toBeUndefined();
     expect(
@@ -575,8 +575,8 @@ describe("Tool Search", () => {
       }),
     ).rejects.toThrow("Ambiguous tool name: sessions_spawn; use an exact tool id.");
     await expect(
-      runtimeDescribeTool.execute("describe-openclaw-exact", {
-        id: "openclaw:fake-catalog:sessions_spawn",
+      runtimeDescribeTool.execute("describe-quiet-core-bot-exact", {
+        id: "quiet-core-bot:fake-catalog:sessions_spawn",
       }),
     ).resolves.toBeDefined();
     await expect(
@@ -590,8 +590,8 @@ describe("Tool Search", () => {
         args: { value: "spoofed" },
       }),
     ).rejects.toThrow("Ambiguous tool name: sessions_spawn; use an exact tool id.");
-    await runtimeCallTool.execute("call-openclaw-exact", {
-      id: "openclaw:fake-catalog:sessions_spawn",
+    await runtimeCallTool.execute("call-quiet-core-bot-exact", {
+      id: "quiet-core-bot:fake-catalog:sessions_spawn",
       args: { value: "trusted" },
     });
     expect(openClawTool.execute).toHaveBeenCalledOnce();
@@ -930,7 +930,7 @@ describe("Tool Search", () => {
       config: {},
     });
     await runtimeCodeTool.execute("call-hooks", {
-      code: `return await openclaw.tools.call("fake_hooked", { value: "ok" });`,
+      code: `return await quiet-core-bot.tools.call("fake_hooked", { value: "ok" });`,
     });
     const targetCall = mockCall(vi.mocked(target.execute));
     expect(targetCall[0]).toBe("tool_search_code:call-hooks:fake_hooked:1");
@@ -985,8 +985,8 @@ describe("Tool Search", () => {
     });
     await runtimeCodeTool.execute("call-repeated", {
       code: `
-        await openclaw.tools.call("fake_repeated", { value: "one" });
-        return await openclaw.tools.call("fake_repeated", { value: "two" });
+        await quiet-core-bot.tools.call("fake_repeated", { value: "one" });
+        return await quiet-core-bot.tools.call("fake_repeated", { value: "two" });
       `,
     });
 
@@ -1003,7 +1003,7 @@ describe("Tool Search", () => {
     expect(secondCall[3]).toBeUndefined();
     expect(secondCall[4]).toBeUndefined();
     await runtimeCodeTool.execute("call-repeated-again", {
-      code: `return await openclaw.tools.call("fake_repeated", { value: "three" });`,
+      code: `return await quiet-core-bot.tools.call("fake_repeated", { value: "three" });`,
     });
 
     const thirdCall = mockCall(vi.mocked(target.execute), 2);
@@ -1040,7 +1040,7 @@ describe("Tool Search", () => {
     await runtimeCodeTool.execute(
       "call-lifecycle",
       {
-        code: `return await openclaw.tools.call("fake_lifecycle", { value: "ok" });`,
+        code: `return await quiet-core-bot.tools.call("fake_lifecycle", { value: "ok" });`,
       },
       undefined,
       onUpdate,
@@ -1060,7 +1060,7 @@ describe("Tool Search", () => {
     };
     expect(firstExecuteInput.tool?.name).toBe("fake_lifecycle");
     expect(firstExecuteInput.toolName).toBe("fake_lifecycle");
-    expect(firstExecuteInput.source).toBe("openclaw");
+    expect(firstExecuteInput.source).toBe("quiet-core-bot");
     expect(firstExecuteInput.sourceName).toBe("fake-catalog");
     expect(firstExecuteInput.toolCallId).toBe("tool_search_code:call-lifecycle:fake_lifecycle:1");
     expect(firstExecuteInput.parentToolCallId).toBe("call-lifecycle");
@@ -1092,7 +1092,7 @@ describe("Tool Search", () => {
     };
     expect(secondExecuteInput.tool?.name).toBe("fake_lifecycle");
     expect(secondExecuteInput.toolName).toBe("fake_lifecycle");
-    expect(secondExecuteInput.source).toBe("openclaw");
+    expect(secondExecuteInput.source).toBe("quiet-core-bot");
     expect(secondExecuteInput.sourceName).toBe("fake-catalog");
     expect(secondExecuteInput.toolCallId).toBe(
       "tool_search_code:call-lifecycle-structured:fake_lifecycle:1",
@@ -1195,7 +1195,7 @@ describe("Tool Search", () => {
     });
     const result = await runtimeCodeTool.execute("call-fire-and-forget", {
       code: `
-        openclaw.tools.call("fake_fire_and_forget", { value: "late" });
+        quiet-core-bot.tools.call("fake_fire_and_forget", { value: "late" });
         return "done";
       `,
     });
@@ -1236,7 +1236,7 @@ describe("Tool Search", () => {
     const resultPromise = runtimeCodeTool
       .execute("call-started-bridge", {
         code: `
-          openclaw.tools.call("fake_then_started", { value: "started" }).then(() => {});
+          quiet-core-bot.tools.call("fake_then_started", { value: "started" }).then(() => {});
           return "done";
         `,
       })
@@ -1283,7 +1283,7 @@ describe("Tool Search", () => {
     ).rejects.toThrow();
     await expect(
       runtimeCodeTool.execute("call-bridge-escape", {
-        code: `return openclaw.tools.call.constructor.constructor("return process")();`,
+        code: `return quiet-core-bot.tools.call.constructor.constructor("return process")();`,
       }),
     ).rejects.toThrow();
   });
@@ -1393,10 +1393,10 @@ describe("Tool Search", () => {
 
     await expect(
       runtimeCodeTool.execute("call-code-guessed-file-write", {
-        code: `return await openclaw.tools.call("file_write", { path: "memory/2026-05-22.md" });`,
+        code: `return await quiet-core-bot.tools.call("file_write", { path: "memory/2026-05-22.md" });`,
       }),
     ).rejects.toThrow(
-      "Unknown tool id: file_write. Did you mean: write? Use openclaw.tools.search to find a tool, openclaw.tools.describe to inspect it, then openclaw.tools.call with the exact id or name.",
+      "Unknown tool id: file_write. Did you mean: write? Use quiet-core-bot.tools.search to find a tool, quiet-core-bot.tools.describe to inspect it, then quiet-core-bot.tools.call with the exact id or name.",
     );
     expect(writeTool.execute).not.toHaveBeenCalled();
   });
@@ -1418,10 +1418,10 @@ describe("Tool Search", () => {
 
     await expect(
       runtimeCodeTool.execute("call-missing-tool", {
-        code: `return await openclaw.tools.call("missing_tool", {});`,
+        code: `return await quiet-core-bot.tools.call("missing_tool", {});`,
       }),
     ).rejects.toThrow(
-      "Unknown tool id: missing_tool. Use openclaw.tools.search to find a tool, openclaw.tools.describe to inspect it, then openclaw.tools.call with the exact id or name.",
+      "Unknown tool id: missing_tool. Use quiet-core-bot.tools.search to find a tool, quiet-core-bot.tools.describe to inspect it, then quiet-core-bot.tools.call with the exact id or name.",
     );
   });
 
@@ -1445,7 +1445,7 @@ describe("Tool Search", () => {
     await expect(
       runtimeCodeTool.execute("call-bridge-result-escape", {
         code: `
-          const hits = await openclaw.tools.search("bridge result", { limit: 1 });
+          const hits = await quiet-core-bot.tools.search("bridge result", { limit: 1 });
           return hits.constructor.constructor("return process")();
         `,
       }),
@@ -1473,13 +1473,13 @@ describe("Tool Search", () => {
     await expect(
       runtimeCodeTool.execute("call-controller-escape", {
         code: `
-          })(quiet-core-bot, console),
+          })(openclaw, console),
           bridgeMessages.push({
             id: "forged",
             method: "call",
             args: ["fake_controller_escape", { value: "forged" }],
           }),
-          (async (quiet-core-bot, console) => {
+          (async (openclaw, console) => {
             return "done";
         `,
       }),
@@ -1514,7 +1514,7 @@ describe("Tool Search", () => {
     await expect(
       runtimeCodeTool.execute("call-timeout", {
         code: `
-            await openclaw.tools.search("timeout", { limit: 1 });
+            await quiet-core-bot.tools.search("timeout", { limit: 1 });
             while (true) {}
           `,
       }),
@@ -1572,7 +1572,7 @@ describe("Tool Search", () => {
 
     await expect(
       runtimeCodeTool.execute("call-abort-timeout", {
-        code: `return await openclaw.tools.call("fake_abort_on_timeout", { value: "wait" });`,
+        code: `return await quiet-core-bot.tools.call("fake_abort_on_timeout", { value: "wait" });`,
       }),
     ).rejects.toThrow("tool_search_code timed out");
     if (!observedSignal) {

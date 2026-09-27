@@ -7,7 +7,7 @@ import { readStateDirDotEnvFromStateDir } from "./state-dir-dotenv.js";
 
 describe("readStateDirDotEnvFromStateDir", () => {
   async function withDotEnv<T>(content: string, run: (dir: string) => T | Promise<T>): Promise<T> {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-dotenv-test-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-dotenv-test-"));
     await fs.writeFile(path.join(dir, ".env"), content, "utf8");
     try {
       return await run(dir);
@@ -25,8 +25,8 @@ describe("readStateDirDotEnvFromStateDir", () => {
 
   it("skips values that are unresolved shell variable references", async () => {
     const content = [
-      'SUPERMEMORY_OPENCLAW_API_KEY="${SUPERMEMORY_OPENCLAW_KEY}"',
-      "QUOTED_SUPERMEMORY_OPENCLAW_API_KEY='\"$SUPERMEMORY_OPENCLAW_KEY\"'",
+      'SUPERMEMORY_QUIET_CORE_API_KEY="${SUPERMEMORY_QUIET_CORE_KEY}"',
+      "QUOTED_SUPERMEMORY_QUIET_CORE_API_KEY='\"$SUPERMEMORY_QUIET_CORE_KEY\"'",
       "QUOTED_CURLY_KEY=\"'${ANOTHER_VAR}'\"",
       "BRACE_DEFAULT_KEY=${ANOTHER_VAR:-fallback}",
       "QUOTED_BRACE_DEFAULT_KEY='\"${ANOTHER_VAR:-fallback}\"'",
@@ -41,8 +41,8 @@ describe("readStateDirDotEnvFromStateDir", () => {
 
     await withDotEnv(content, async (dir) => {
       const result = readStateDirDotEnvFromStateDir(dir).entries;
-      expect(Object.keys(result)).not.toContain("SUPERMEMORY_OPENCLAW_API_KEY");
-      expect(Object.keys(result)).not.toContain("QUOTED_SUPERMEMORY_OPENCLAW_API_KEY");
+      expect(Object.keys(result)).not.toContain("SUPERMEMORY_QUIET_CORE_API_KEY");
+      expect(Object.keys(result)).not.toContain("QUOTED_SUPERMEMORY_QUIET_CORE_API_KEY");
       expect(Object.keys(result)).not.toContain("QUOTED_CURLY_KEY");
       expect(Object.keys(result)).not.toContain("BRACE_DEFAULT_KEY");
       expect(Object.keys(result)).not.toContain("QUOTED_BRACE_DEFAULT_KEY");
@@ -84,7 +84,7 @@ describe("readStateDirDotEnvFromStateDir", () => {
   });
 
   it("returns empty object when .env is missing", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-dotenv-missing-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-dotenv-missing-"));
     try {
       expect(readStateDirDotEnvFromStateDir(dir).entries).toEqual({});
     } finally {

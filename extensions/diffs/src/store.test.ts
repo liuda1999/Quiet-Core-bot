@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import type { IncomingMessage } from "node:http";
 import path from "node:path";
-import { createMockServerResponse } from "openclaw/plugin-sdk/test-env";
+import { createMockServerResponse } from "quiet-core-bot/plugin-sdk/test-env";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { createDiffsHttpHandler } from "./http.js";
 import { DiffArtifactStore } from "./store.js";
@@ -22,7 +22,7 @@ describe("DiffArtifactStore", () => {
       rootDir,
       store,
       cleanup: cleanupRootDir,
-    } = await createDiffStoreHarness("openclaw-diffs-store-"));
+    } = await createDiffStoreHarness("quiet-core-bot-diffs-store-"));
   });
 
   afterEach(async () => {
@@ -265,7 +265,7 @@ describe("createDiffsHttpHandler", () => {
   }
 
   beforeEach(async () => {
-    ({ store, cleanup: cleanupRootDir } = await createDiffStoreHarness("openclaw-diffs-http-"));
+    ({ store, cleanup: cleanupRootDir } = await createDiffStoreHarness("quiet-core-bot-diffs-http-"));
   });
 
   afterEach(async () => {

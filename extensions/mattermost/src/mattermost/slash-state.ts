@@ -71,7 +71,7 @@ type SlashCommandAccountState = {
  * the module-level variable and the HTTP handler never sees the tokens
  * populated by the monitor.
  */
-const ACCOUNT_STATES_KEY = Symbol.for("openclaw.mattermost.slash-account-states");
+const ACCOUNT_STATES_KEY = Symbol.for("quiet-core-bot.mattermost.slash-account-states");
 
 function getSlashAccountStates(): Map<string, SlashCommandAccountState> {
   const globalStore = globalThis as Record<PropertyKey, unknown>;

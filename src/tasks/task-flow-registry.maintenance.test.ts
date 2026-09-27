@@ -1,7 +1,7 @@
 // Covers maintenance reconciliation for managed task-flow records.
 import { afterEach, describe, expect, it } from "vitest";
 import { captureEnv } from "../test-utils/env.js";
-import { withOpenClawTestState } from "../test-utils/openclaw-test-state.js";
+import { withOpenClawTestState } from "../test-utils/quiet-core-bot-test-state.js";
 import { createRunningTaskRun as createRunningTaskRunOrNull } from "./task-executor.js";
 import {
   createFlowRecord as createFlowRecordOrNull,
@@ -23,7 +23,7 @@ import {
 } from "./task-registry.js";
 import type { TaskRecord } from "./task-registry.types.js";
 
-const ORIGINAL_ENV = captureEnv(["OPENCLAW_STATE_DIR"]);
+const ORIGINAL_ENV = captureEnv(["QUIET_CORE_STATE_DIR"]);
 
 function createFlowRecord(params: Parameters<typeof createFlowRecordOrNull>[0]): TaskFlowRecord {
   const flow = createFlowRecordOrNull(params);
@@ -59,7 +59,7 @@ async function withTaskFlowMaintenanceStateDir(
   await withOpenClawTestState(
     {
       layout: "state-only",
-      prefix: "openclaw-task-flow-maintenance-",
+      prefix: "quiet-core-bot-task-flow-maintenance-",
     },
     async (state) => {
       resetTaskRegistryDeliveryRuntimeForTests();

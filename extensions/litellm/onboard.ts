@@ -3,7 +3,7 @@ import {
   createDefaultModelPresetAppliers,
   type ModelDefinitionConfig,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/provider-onboard";
+} from "quiet-core-bot/plugin-sdk/provider-onboard";
 
 export const LITELLM_BASE_URL = "http://localhost:4000";
 export const LITELLM_DEFAULT_MODEL_ID = "claude-opus-4-6";

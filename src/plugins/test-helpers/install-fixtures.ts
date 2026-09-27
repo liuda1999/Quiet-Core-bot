@@ -66,15 +66,15 @@ export function createDualFormatInstallFixtureFactory(makeTempDir: MakeTempDir) 
     fs.writeFileSync(
       path.join(pluginDir, "package.json"),
       JSON.stringify({
-        name: "@openclaw/native-dual",
+        name: "@quiet-core/native-dual",
         version: "0.0.1",
-        openclaw: { extensions: ["./dist/index.js"] },
+        "quiet-core-bot": { extensions: ["./dist/index.js"] },
         dependencies: { "left-pad": "1.3.0" },
       }),
       "utf-8",
     );
     fs.writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "quiet-core-bot.plugin.json"),
       JSON.stringify({
         id: "native-dual",
         configSchema: { type: "object", properties: {} },

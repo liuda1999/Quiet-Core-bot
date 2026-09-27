@@ -11,7 +11,7 @@ import type {
   PluginAutoEnableResult,
 } from "./plugin-auto-enable.types.js";
 import { hashRuntimeConfigValue } from "./runtime-snapshot.js";
-import type { OpenClawConfig } from "./types.openclaw.js";
+import type { OpenClawConfig } from "./types.quiet-core-bot.js";
 
 type PluginAutoEnableCacheEntry = {
   configFingerprint: string;

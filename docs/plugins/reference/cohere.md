@@ -11,8 +11,8 @@ Quiet Core bot Cohere provider plugin.
 
 ## Distribution
 
-- Package: `@openclaw/cohere-provider`
-- Install route: included in Quiet Core bot; npm; ClawHub: `clawhub:@openclaw/cohere-provider`
+- Package: `@quiet-core/cohere-provider`
+- Install route: included in Quiet Core bot; npm; ClawHub: `clawhub:@quiet-core/cohere-provider`
 
 ## Surface
 

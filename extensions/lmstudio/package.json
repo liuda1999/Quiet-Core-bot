@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/lmstudio-provider",
+  "name": "@quiet-core/lmstudio-provider",
   "version": "2026.6.11",
   "private": true,
   "description": "OpenClaw LM Studio provider plugin",
   "type": "module",
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": [
       "./index.ts"
     ]

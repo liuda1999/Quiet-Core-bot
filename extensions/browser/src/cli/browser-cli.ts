@@ -8,7 +8,7 @@ import {
   shouldEagerRegisterSubcommands,
   type CommandGroupEntry,
   type CommandGroupPlaceholder,
-} from "openclaw/plugin-sdk/cli-runtime";
+} from "quiet-core-bot/plugin-sdk/cli-runtime";
 import { browserActionExamples, browserCoreExamples } from "./browser-cli-examples.js";
 import type { BrowserParentOpts } from "./browser-cli-shared.js";
 import {
@@ -265,7 +265,7 @@ export function registerBrowserCli(program: Command, argv: string[] = process.ar
     .action(() => {
       browser.outputHelp();
       defaultRuntime.error(
-        danger(`Missing subcommand. Try: "${formatCliCommand("openclaw browser status")}"`),
+        danger(`Missing subcommand. Try: "${formatCliCommand("quiet-core-bot browser status")}"`),
       );
       defaultRuntime.exit(1);
     });

@@ -6,13 +6,13 @@ import type {
   HelloOk,
   RequestFrame,
   ResponseFrame,
-} from "@openclaw/gateway-protocol";
+} from "@quiet-core/gateway-protocol";
 import {
   GATEWAY_CLIENT_MODES,
   GATEWAY_CLIENT_NAMES,
   type GatewayClientMode,
   type GatewayClientName,
-} from "@openclaw/gateway-protocol/client-info";
+} from "@quiet-core/gateway-protocol/client-info";
 import {
   ConnectErrorDetailCodes,
   formatConnectErrorMessage,
@@ -20,9 +20,9 @@ import {
   readConnectErrorRecoveryAdvice,
   readPairingConnectErrorDetails,
   type ConnectErrorRecoveryAdvice,
-} from "@openclaw/gateway-protocol/connect-error-details";
-import { resolveGatewayStartupRetryAfterMs } from "@openclaw/gateway-protocol/startup-unavailable";
-import { MIN_CLIENT_PROTOCOL_VERSION, PROTOCOL_VERSION } from "@openclaw/gateway-protocol/version";
+} from "@quiet-core/gateway-protocol/connect-error-details";
+import { resolveGatewayStartupRetryAfterMs } from "@quiet-core/gateway-protocol/startup-unavailable";
+import { MIN_CLIENT_PROTOCOL_VERSION, PROTOCOL_VERSION } from "@quiet-core/gateway-protocol/version";
 import ipaddr from "ipaddr.js";
 import { WebSocket, type ClientOptions, type CertMeta } from "ws";
 import { buildDeviceAuthPayloadV3 } from "./device-auth.js";
@@ -606,7 +606,7 @@ export class GatewayClient {
     }
 
     const allowPrivateWs =
-      (this.opts.env ?? process.env).OPENCLAW_ALLOW_INSECURE_PRIVATE_WS === "1";
+      (this.opts.env ?? process.env).QUIET_CORE_ALLOW_INSECURE_PRIVATE_WS === "1";
     // Block plaintext before device-token lookup. Credentials may be loaded from
     // host storage later in sendConnect(), and chat payloads are sensitive too.
     if (!isSecureWebSocketUrl(url, { allowPrivateWs })) {
@@ -624,8 +624,8 @@ export class GatewayClient {
           "(ssh -N -L 18789:127.0.0.1:18789 user@gateway-host), or use Tailscale Serve/Funnel. " +
           (allowPrivateWs
             ? ""
-            : "Break-glass (trusted private networks only): set OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1. ") +
-          "Run `openclaw doctor --fix` for guidance.",
+            : "Break-glass (trusted private networks only): set QUIET_CORE_ALLOW_INSECURE_PRIVATE_WS=1. ") +
+          "Run `quiet-core-bot doctor --fix` for guidance.",
       );
       this.notifyConnectError(error);
       return;

@@ -207,7 +207,7 @@ describe("gateway session utils", () => {
       "agent:main:telegram:direct:42": {
         chatType: "direct",
         channel: "telegram",
-        origin: { label: "openclaw-tui" },
+        origin: { label: "quiet-core-bot-tui" },
         updatedAt: 2,
       } as SessionEntry,
       "agent:main:telegram:direct:99": {
@@ -222,13 +222,13 @@ describe("gateway session utils", () => {
       cfg,
       storePath: "",
       store,
-      opts: { search: "openclaw-tui" },
+      opts: { search: "quiet-core-bot-tui" },
     });
 
     expect(listed.sessions.map((session) => session.key)).toEqual([
       "agent:main:telegram:direct:42",
     ]);
-    expect(listed.sessions[0]?.displayName).toBe("openclaw-tui");
+    expect(listed.sessions[0]?.displayName).toBe("quiet-core-bot-tui");
   });
 
   test("session lists mark the final offset page without hasMore", () => {
@@ -589,7 +589,7 @@ describe("gateway session utils", () => {
       key: "agent:main:main",
       entry: {
         sessionId: "session-1",
-        sessionFile: "/tmp/openclaw/agents/main/sessions/session-1.jsonl",
+        sessionFile: "/tmp/quiet-core-bot/agents/main/sessions/session-1.jsonl",
         updatedAt: 1,
         contextBudgetStatus: {
           schemaVersion: 1,
@@ -760,7 +760,7 @@ describe("gateway session utils", () => {
     const entry = {
       chatType: "direct",
       channel: "telegram",
-      origin: { label: "openclaw-tui" },
+      origin: { label: "quiet-core-bot-tui" },
     } as SessionEntry;
     const row = buildGatewaySessionRow({
       cfg,
@@ -769,7 +769,7 @@ describe("gateway session utils", () => {
       key: "agent:main:telegram:direct:42",
       entry,
     });
-    expect(row.displayName).toBe("openclaw-tui");
+    expect(row.displayName).toBe("quiet-core-bot-tui");
   });
 
   test("buildGatewaySessionRow displayName uses group display name for group sessions", () => {
@@ -778,7 +778,7 @@ describe("gateway session utils", () => {
       chatType: "group",
       channel: "telegram",
       subject: "Engineering",
-      origin: { label: "openclaw-tui" },
+      origin: { label: "quiet-core-bot-tui" },
     } as SessionEntry;
     const row = buildGatewaySessionRow({
       cfg,
@@ -788,7 +788,7 @@ describe("gateway session utils", () => {
       entry,
     });
     expect(row.displayName).toMatch(/^telegram:/);
-    expect(row.displayName).not.toBe("openclaw-tui");
+    expect(row.displayName).not.toBe("quiet-core-bot-tui");
   });
 
   test("buildGatewaySessionRow prefers entry.label over origin.label for direct sessions", () => {
@@ -797,7 +797,7 @@ describe("gateway session utils", () => {
       chatType: "direct",
       channel: "telegram",
       label: "Alice",
-      origin: { label: "openclaw-tui" },
+      origin: { label: "quiet-core-bot-tui" },
     } as SessionEntry;
     const row = buildGatewaySessionRow({
       cfg,
@@ -1039,7 +1039,7 @@ describe("gateway session utils", () => {
   test("resolveGatewaySessionStoreTarget uses canonical key for main alias", () => {
     const storeTemplate = path.join(
       os.tmpdir(),
-      "openclaw-session-utils",
+      "quiet-core-bot-session-utils",
       "{agentId}",
       "sessions.json",
     );
@@ -1478,7 +1478,7 @@ describe("gateway session utils", () => {
   });
 
   test("listAgentsForGateway keeps explicit agents.list scope over disk-only agents (scope boundary)", async () => {
-    await withStateDirEnv("openclaw-agent-list-scope-", async ({ stateDir }) => {
+    await withStateDirEnv("quiet-core-bot-agent-list-scope-", async ({ stateDir }) => {
       fs.mkdirSync(path.join(stateDir, "agents", "main"), { recursive: true });
       fs.mkdirSync(path.join(stateDir, "agents", "codex"), { recursive: true });
 
@@ -1812,7 +1812,7 @@ describe("resolveSessionModelRef", () => {
 
 describe("listSessionsFromStore selected model display", () => {
   test("async list yields during bulk transcript title and last-message hydration", async () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-sessions-list-yield-"));
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-sessions-list-yield-"));
     try {
       const storePath = path.join(tmpDir, "sessions.json");
       const store: Record<string, SessionEntry> = {};
@@ -1877,7 +1877,7 @@ describe("listSessionsFromStore selected model display", () => {
   });
 
   test("caps transcript title and last-message hydration for bulk list responses", async () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-sessions-list-cap-"));
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-sessions-list-cap-"));
     try {
       const storePath = path.join(tmpDir, "sessions.json");
       const store: Record<string, SessionEntry> = {};

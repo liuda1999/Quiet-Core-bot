@@ -1,5 +1,5 @@
 // Gateway service installer: writes config defaults, resolves credentials, and installs service definitions.
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { resolveNodeStartupTlsEnvironment } from "../../bootstrap/node-startup-env.js";
 import { buildGatewayInstallPlan } from "../../commands/daemon-install-helpers.js";
 import {
@@ -13,7 +13,7 @@ import { readConfigFileSnapshotForWrite } from "../../config/io.js";
 import { replaceConfigFile } from "../../config/mutate.js";
 import { resolveGatewayPort } from "../../config/paths.js";
 import type { OpenClawConfig } from "../../config/types.js";
-import { OPENCLAW_WRAPPER_ENV_KEY, resolveOpenClawWrapperPath } from "../../daemon/program-args.js";
+import { QUIET_CORE_WRAPPER_ENV_KEY, resolveOpenClawWrapperPath } from "../../daemon/program-args.js";
 import { readEmbeddedGatewayToken } from "../../daemon/service-audit.js";
 import { resolveGatewayService } from "../../daemon/service.js";
 import type { GatewayServiceCommandConfig } from "../../daemon/service.js";
@@ -60,10 +60,10 @@ export function mergeInstallInvocationEnv(params: {
       continue;
     }
     const upper = key.toUpperCase();
-    if (upper === OPENCLAW_WRAPPER_ENV_KEY) {
+    if (upper === QUIET_CORE_WRAPPER_ENV_KEY) {
       const value = rawValue.trim();
       if (value) {
-        preservedServiceEnv[normalizeInstallEnvKey(OPENCLAW_WRAPPER_ENV_KEY)] = value;
+        preservedServiceEnv[normalizeInstallEnvKey(QUIET_CORE_WRAPPER_ENV_KEY)] = value;
       }
       continue;
     }
@@ -71,7 +71,7 @@ export function mergeInstallInvocationEnv(params: {
       upper === "HOME" ||
       upper === "PATH" ||
       upper === "TMPDIR" ||
-      upper.startsWith("OPENCLAW_")
+      upper.startsWith("QUIET_CORE_")
     ) {
       continue;
     }
@@ -189,9 +189,9 @@ export async function runDaemonInstall(opts: DaemonInstallOptions) {
   });
   if (!wrapperPath) {
     try {
-      wrapperPath = await resolveOpenClawWrapperPath(installEnv[OPENCLAW_WRAPPER_ENV_KEY]);
+      wrapperPath = await resolveOpenClawWrapperPath(installEnv[QUIET_CORE_WRAPPER_ENV_KEY]);
     } catch (err) {
-      fail(`Invalid ${OPENCLAW_WRAPPER_ENV_KEY}: ${String(err)}`);
+      fail(`Invalid ${QUIET_CORE_WRAPPER_ENV_KEY}: ${String(err)}`);
       return;
     }
   }
@@ -327,14 +327,14 @@ async function getGatewayServiceAutoRefreshMessage(params: {
         config: params.config,
       });
       const plannedEmbeddedToken = normalizeOptionalString(
-        plannedInstall.environment.OPENCLAW_GATEWAY_TOKEN,
+        plannedInstall.environment.QUIET_CORE_GATEWAY_TOKEN,
       );
       if (currentEmbeddedToken !== plannedEmbeddedToken) {
-        return "Gateway service OPENCLAW_GATEWAY_TOKEN differs from the current install plan; refreshing the install.";
+        return "Gateway service QUIET_CORE_GATEWAY_TOKEN differs from the current install plan; refreshing the install.";
       }
     }
     const wrapperRequested = Boolean(
-      params.wrapperPath || normalizeOptionalString(params.installEnv[OPENCLAW_WRAPPER_ENV_KEY]),
+      params.wrapperPath || normalizeOptionalString(params.installEnv[QUIET_CORE_WRAPPER_ENV_KEY]),
     );
     if (wrapperRequested) {
       const plannedInstall = await buildGatewayInstallPlan({
@@ -354,13 +354,13 @@ async function getGatewayServiceAutoRefreshMessage(params: {
         return "Gateway service command differs from the current wrapper install plan; refreshing the install.";
       }
       const plannedWrapperPath = normalizeOptionalString(
-        plannedInstall.environment[OPENCLAW_WRAPPER_ENV_KEY],
+        plannedInstall.environment[QUIET_CORE_WRAPPER_ENV_KEY],
       );
       const currentWrapperPath = normalizeOptionalString(
-        currentCommand.environment?.[OPENCLAW_WRAPPER_ENV_KEY],
+        currentCommand.environment?.[QUIET_CORE_WRAPPER_ENV_KEY],
       );
       if (plannedWrapperPath !== currentWrapperPath) {
-        return `Gateway service ${OPENCLAW_WRAPPER_ENV_KEY} differs from the current wrapper install plan; refreshing the install.`;
+        return `Gateway service ${QUIET_CORE_WRAPPER_ENV_KEY} differs from the current wrapper install plan; refreshing the install.`;
       }
     }
     const currentExecPath = currentCommand.programArguments[0]?.trim();

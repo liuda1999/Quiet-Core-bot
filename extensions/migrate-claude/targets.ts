@@ -4,8 +4,8 @@ import {
   resolveAgentConfig,
   resolveAgentWorkspaceDir,
   resolveDefaultAgentId,
-} from "openclaw/plugin-sdk/agent-runtime";
-import type { MigrationProviderContext } from "openclaw/plugin-sdk/plugin-entry";
+} from "quiet-core-bot/plugin-sdk/agent-runtime";
+import type { MigrationProviderContext } from "quiet-core-bot/plugin-sdk/plugin-entry";
 import { resolveHomePath } from "./helpers.js";
 
 export type PlannedTargets = {

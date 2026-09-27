@@ -76,7 +76,7 @@ If you already manage Node yourself:
 <Tabs>
   <Tab title="npm">
     ```bash
-    npm install -g openclaw@latest
+    npm install -g quiet-core-bot@latest
     quiet-core-bot onboard --install-daemon
     ```
 
@@ -89,7 +89,7 @@ If you already manage Node yourself:
   </Tab>
   <Tab title="pnpm">
     ```bash
-    pnpm add -g openclaw@latest
+    pnpm add -g quiet-core-bot@latest
     pnpm approve-builds -g
     quiet-core-bot onboard --install-daemon
     ```
@@ -101,7 +101,7 @@ If you already manage Node yourself:
   </Tab>
   <Tab title="bun">
     ```bash
-    bun add -g openclaw@latest
+    bun add -g quiet-core-bot@latest
     quiet-core-bot onboard --install-daemon
     ```
 
@@ -117,14 +117,14 @@ If you already manage Node yourself:
 For contributors or anyone who wants to run from a local checkout:
 
 ```bash
-git clone https://github.com/openclaw/openclaw.git
-cd openclaw
+git clone https://github.com/liuda1999/Quiet-Core-bot.git
+cd quiet-core-bot
 pnpm install && pnpm build && pnpm ui:build
 pnpm link --global
 quiet-core-bot onboard --install-daemon
 ```
 
-Or skip the link and use `pnpm openclaw ...` from inside the repo. See [Setup](/start/setup) for full development workflows.
+Or skip the link and use `pnpm quiet-core-bot ...` from inside the repo. See [Setup](/start/setup) for full development workflows.
 
 ### Install from the GitHub main checkout
 
@@ -217,9 +217,9 @@ Deploy Quiet Core bot on a cloud server or VPS:
   </Card>
 </CardGroup>
 
-## Troubleshooting: `openclaw` not found
+## Troubleshooting: `quiet-core-bot` not found
 
-If the install succeeded but `openclaw` is not found in your terminal:
+If the install succeeded but `quiet-core-bot` is not found in your terminal:
 
 ```bash
 node -v           # Node installed?

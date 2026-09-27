@@ -5,15 +5,15 @@ import path from "node:path";
 import {
   createPluginStateKeyedStoreForTests,
   resetPluginStateStoreForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
+} from "quiet-core-bot/plugin-sdk/plugin-state-test-runtime";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   createAcpxProcessLeaseStore,
   openAcpxProcessLeaseStateStore,
-  OPENCLAW_ACPX_LEASE_ID_ARG,
-  OPENCLAW_ACPX_LEASE_ID_ENV,
-  OPENCLAW_GATEWAY_INSTANCE_ID_ARG,
-  OPENCLAW_GATEWAY_INSTANCE_ID_ENV,
+  QUIET_CORE_ACPX_LEASE_ID_ARG,
+  QUIET_CORE_ACPX_LEASE_ID_ENV,
+  QUIET_CORE_GATEWAY_INSTANCE_ID_ARG,
+  QUIET_CORE_GATEWAY_INSTANCE_ID_ENV,
   withAcpxLeaseEnvironment,
   type AcpxProcessLease,
 } from "./process-lease.js";
@@ -23,8 +23,8 @@ function makeLease(index: number): AcpxProcessLease {
     leaseId: `lease-${index}`,
     gatewayInstanceId: "gateway-test",
     sessionKey: `agent:codex:acp:${index}`,
-    wrapperRoot: "/tmp/openclaw/acpx",
-    wrapperPath: "/tmp/openclaw/acpx/codex-acp-wrapper.mjs",
+    wrapperRoot: "/tmp/quiet-core-bot/acpx",
+    wrapperPath: "/tmp/quiet-core-bot/acpx/codex-acp-wrapper.mjs",
     rootPid: 1000 + index,
     commandHash: `hash-${index}`,
     startedAt: index,
@@ -38,8 +38,8 @@ describe("createAcpxProcessLeaseStore", () => {
 
   beforeEach(async () => {
     resetPluginStateStoreForTests();
-    stateDir = await mkdtemp(path.join(tmpdir(), "openclaw-acpx-leases-"));
-    env = { ...process.env, OPENCLAW_STATE_DIR: stateDir };
+    stateDir = await mkdtemp(path.join(tmpdir(), "quiet-core-bot-acpx-leases-"));
+    env = { ...process.env, QUIET_CORE_STATE_DIR: stateDir };
   });
 
   afterEach(async () => {
@@ -81,7 +81,7 @@ describe("createAcpxProcessLeaseStore", () => {
 describe("withAcpxLeaseEnvironment", () => {
   it("adds lease environment and wrapper args on POSIX", () => {
     const command = withAcpxLeaseEnvironment({
-      command: "node /tmp/openclaw/acpx/codex-acp-wrapper.mjs",
+      command: "node /tmp/quiet-core-bot/acpx/codex-acp-wrapper.mjs",
       leaseId: "lease-test",
       gatewayInstanceId: "gateway-test",
       platform: "darwin",
@@ -90,12 +90,12 @@ describe("withAcpxLeaseEnvironment", () => {
     expect(command).toBe(
       [
         "env",
-        `${OPENCLAW_ACPX_LEASE_ID_ENV}=lease-test`,
-        `${OPENCLAW_GATEWAY_INSTANCE_ID_ENV}=gateway-test`,
-        "node /tmp/openclaw/acpx/codex-acp-wrapper.mjs",
-        OPENCLAW_ACPX_LEASE_ID_ARG,
+        `${QUIET_CORE_ACPX_LEASE_ID_ENV}=lease-test`,
+        `${QUIET_CORE_GATEWAY_INSTANCE_ID_ENV}=gateway-test`,
+        "node /tmp/quiet-core-bot/acpx/codex-acp-wrapper.mjs",
+        QUIET_CORE_ACPX_LEASE_ID_ARG,
         "lease-test",
-        OPENCLAW_GATEWAY_INSTANCE_ID_ARG,
+        QUIET_CORE_GATEWAY_INSTANCE_ID_ARG,
         "gateway-test",
       ].join(" "),
     );
@@ -103,7 +103,7 @@ describe("withAcpxLeaseEnvironment", () => {
 
   it("keeps Windows logs keyed by lease id with wrapper args", () => {
     const command = withAcpxLeaseEnvironment({
-      command: "node C:/openclaw/acpx/codex-acp-wrapper.mjs",
+      command: "node C:/quiet-core-bot/acpx/codex-acp-wrapper.mjs",
       leaseId: "lease-test",
       gatewayInstanceId: "gateway-test",
       platform: "win32",
@@ -111,14 +111,14 @@ describe("withAcpxLeaseEnvironment", () => {
 
     expect(command).toBe(
       [
-        "node C:/openclaw/acpx/codex-acp-wrapper.mjs",
-        OPENCLAW_ACPX_LEASE_ID_ARG,
+        "node C:/quiet-core-bot/acpx/codex-acp-wrapper.mjs",
+        QUIET_CORE_ACPX_LEASE_ID_ARG,
         "lease-test",
-        OPENCLAW_GATEWAY_INSTANCE_ID_ARG,
+        QUIET_CORE_GATEWAY_INSTANCE_ID_ARG,
         "gateway-test",
       ].join(" "),
     );
-    expect(command).not.toContain(`${OPENCLAW_ACPX_LEASE_ID_ENV}=`);
-    expect(command).not.toContain(`${OPENCLAW_GATEWAY_INSTANCE_ID_ENV}=`);
+    expect(command).not.toContain(`${QUIET_CORE_ACPX_LEASE_ID_ENV}=`);
+    expect(command).not.toContain(`${QUIET_CORE_GATEWAY_INSTANCE_ID_ENV}=`);
   });
 });

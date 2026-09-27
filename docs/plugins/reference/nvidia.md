@@ -11,7 +11,7 @@ Adds NVIDIA model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/nvidia-provider`
+- Package: `@quiet-core/nvidia-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

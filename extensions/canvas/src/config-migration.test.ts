@@ -1,5 +1,5 @@
 // Canvas tests cover config migration plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { describe, expect, test } from "vitest";
 import { migrateLegacyCanvasHostConfig } from "./config-migration.js";
 

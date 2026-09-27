@@ -107,8 +107,8 @@ Run a persistent, always-on Quiet Core bot Gateway on a Raspberry Pi. Since the 
   <Step title="Verify">
     ```bash
     quiet-core-bot status
-    systemctl --user status openclaw-gateway.service
-    journalctl --user -u openclaw-gateway.service -f
+    systemctl --user status quiet-core-bot-gateway.service
+    journalctl --user -u quiet-core-bot-gateway.service -f
     ```
   </Step>
 
@@ -137,15 +137,15 @@ Run a persistent, always-on Quiet Core bot Gateway on a Raspberry Pi. Since the 
 **Enable module compile cache** -- Speeds up repeated CLI invocations on lower-power Pi hosts:
 
 ```bash
-grep -q 'NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache' ~/.bashrc || cat >> ~/.bashrc <<'EOF' # pragma: allowlist secret
-export NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache
-mkdir -p /var/tmp/openclaw-compile-cache
-export OPENCLAW_NO_RESPAWN=1
+grep -q 'NODE_COMPILE_CACHE=/var/tmp/quiet-core-bot-compile-cache' ~/.bashrc || cat >> ~/.bashrc <<'EOF' # pragma: allowlist secret
+export NODE_COMPILE_CACHE=/var/tmp/quiet-core-bot-compile-cache
+mkdir -p /var/tmp/quiet-core-bot-compile-cache
+export QUIET_CORE_NO_RESPAWN=1
 EOF
 source ~/.bashrc
 ```
 
-`OPENCLAW_NO_RESPAWN=1` keeps routine Gateway restarts in-process, which avoids extra process handoffs and keeps PID tracking simple on small hosts.
+`QUIET_CORE_NO_RESPAWN=1` keeps routine Gateway restarts in-process, which avoids extra process handoffs and keeps PID tracking simple on small hosts.
 
 **Reduce memory usage** -- For headless setups, free GPU memory and disable unused services:
 
@@ -157,19 +157,19 @@ sudo systemctl disable bluetooth
 **systemd drop-in for stable restarts** -- If this Pi is mostly running Quiet Core bot, add a service drop-in:
 
 ```bash
-systemctl --user edit openclaw-gateway.service
+systemctl --user edit quiet-core-bot-gateway.service
 ```
 
 ```ini
 [Service]
-Environment=OPENCLAW_NO_RESPAWN=1
-Environment=NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache
+Environment=QUIET_CORE_NO_RESPAWN=1
+Environment=NODE_COMPILE_CACHE=/var/tmp/quiet-core-bot-compile-cache
 Restart=always
 RestartSec=2
 TimeoutStartSec=90
 ```
 
-Then `systemctl --user daemon-reload && systemctl --user restart openclaw-gateway.service`. On a headless Pi, also enable lingering once so the user service survives logout: `sudo loginctl enable-linger "$(whoami)"`.
+Then `systemctl --user daemon-reload && systemctl --user restart quiet-core-bot-gateway.service`. On a headless Pi, also enable lingering once so the user service survives logout: `sudo loginctl enable-linger "$(whoami)"`.
 
 ## Recommended model setup
 
@@ -215,7 +215,7 @@ If you keep these on an SSD, both performance and longevity improve over the SD 
 
 **Slow performance** -- Use a USB SSD instead of an SD card. Check for CPU throttling with `vcgencmd get_throttled` (should return `0x0`).
 
-**Service will not start** -- Check logs with `journalctl --user -u openclaw-gateway.service --no-pager -n 100` and run `quiet-core-bot doctor --non-interactive`. If this is a headless Pi, also verify lingering is enabled: `sudo loginctl enable-linger "$(whoami)"`.
+**Service will not start** -- Check logs with `journalctl --user -u quiet-core-bot-gateway.service --no-pager -n 100` and run `quiet-core-bot doctor --non-interactive`. If this is a headless Pi, also verify lingering is enabled: `sudo loginctl enable-linger "$(whoami)"`.
 
 **ARM binary issues** -- If a skill fails with "exec format error", check whether the binary has an ARM64 build. Verify architecture with `uname -m` (should show `aarch64`).
 

@@ -28,7 +28,7 @@ default agent or model `fastMode` params.
 
 ## File-based logger
 
-- Default rolling log file is under `/tmp/openclaw/` (one file per day): `openclaw-YYYY-MM-DD.log`
+- Default rolling log file is under `/tmp/quiet-core-bot/` (one file per day): `quiet-core-bot-YYYY-MM-DD.log`
   - Date uses the gateway host's local timezone.
 - Active log files rotate at `logging.maxFileBytes` (default: 100 MB), keeping
   up to five numbered archives and continuing to write a fresh active file.

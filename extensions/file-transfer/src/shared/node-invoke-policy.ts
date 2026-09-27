@@ -1,11 +1,11 @@
 // File Transfer plugin module implements node invoke policy behavior.
 import { spawn } from "node:child_process";
-import { readPositiveIntegerParam } from "openclaw/plugin-sdk/param-readers";
+import { readPositiveIntegerParam } from "quiet-core-bot/plugin-sdk/param-readers";
 import type {
   OpenClawPluginNodeInvokePolicy,
   OpenClawPluginNodeInvokePolicyContext,
   OpenClawPluginNodeInvokePolicyResult,
-} from "openclaw/plugin-sdk/plugin-entry";
+} from "quiet-core-bot/plugin-sdk/plugin-entry";
 import { appendFileTransferAudit, type FileTransferAuditOp } from "./audit.js";
 import {
   FILE_TRANSFER_NODE_INVOKE_COMMANDS,

@@ -1,5 +1,5 @@
 // OC Path module implements cli registration behavior.
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
+import type { OpenClawPluginApi } from "quiet-core-bot/plugin-sdk/plugin-entry";
 
 export function registerOcPathCli(api: OpenClawPluginApi): void {
   api.registerCli(

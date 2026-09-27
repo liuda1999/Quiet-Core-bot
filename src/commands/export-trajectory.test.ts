@@ -37,7 +37,7 @@ describe("exportTrajectoryCommand", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.getRuntimeConfig.mockReturnValue({});
-    mocks.resolveStorePath.mockReturnValue("/tmp/openclaw/sessions.json");
+    mocks.resolveStorePath.mockReturnValue("/tmp/quiet-core-bot/sessions.json");
     mocks.loadSessionEntry.mockReturnValue(undefined);
   });
 
@@ -100,8 +100,8 @@ describe("exportTrajectoryCommand", () => {
     ["home-prefixed", "~/x/sessions.json", "/home/demo/x/sessions.json"],
     [
       "agent template",
-      "/tmp/openclaw/agents/{agentId}/sessions/sessions.json",
-      "/tmp/openclaw/agents/work/sessions/sessions.json",
+      "/tmp/quiet-core-bot/agents/{agentId}/sessions/sessions.json",
+      "/tmp/quiet-core-bot/agents/work/sessions/sessions.json",
     ],
   ])(
     "resolves explicit --store %s paths through the shared resolver",
@@ -131,20 +131,20 @@ describe("exportTrajectoryCommand", () => {
   it("uses configured session.store when no explicit store is provided", async () => {
     const runtime = createRuntime();
     mocks.getRuntimeConfig.mockReturnValue({
-      session: { store: "/tmp/openclaw/agents/{agentId}/sessions/sessions.json" },
+      session: { store: "/tmp/quiet-core-bot/agents/{agentId}/sessions/sessions.json" },
     });
-    mocks.resolveStorePath.mockReturnValue("/tmp/openclaw/agents/work/sessions/sessions.json");
+    mocks.resolveStorePath.mockReturnValue("/tmp/quiet-core-bot/agents/work/sessions/sessions.json");
 
     await exportTrajectoryCommand({ sessionKey: "agent:work:telegram:direct:123" }, runtime);
 
     expect(mocks.resolveStorePath).toHaveBeenCalledWith(
-      "/tmp/openclaw/agents/{agentId}/sessions/sessions.json",
+      "/tmp/quiet-core-bot/agents/{agentId}/sessions/sessions.json",
       { agentId: "work" },
     );
     expect(mocks.loadSessionEntry).toHaveBeenCalledWith({
       agentId: "work",
       sessionKey: "agent:work:telegram:direct:123",
-      storePath: "/tmp/openclaw/agents/work/sessions/sessions.json",
+      storePath: "/tmp/quiet-core-bot/agents/work/sessions/sessions.json",
     });
     expect(runtime.error).toHaveBeenCalledWith(
       "Session not found: agent:work:telegram:direct:123. Run quiet-core-bot sessions to see available sessions.",
@@ -161,7 +161,7 @@ describe("exportTrajectoryCommand", () => {
     expect(mocks.loadSessionEntry).toHaveBeenCalledWith({
       agentId: "main",
       sessionKey: "agent:main:telegram:direct:123",
-      storePath: "/tmp/openclaw/sessions.json",
+      storePath: "/tmp/quiet-core-bot/sessions.json",
     });
     expect(runtime.error).toHaveBeenCalledWith(
       "Session not found: agent:main:telegram:direct:123. Run quiet-core-bot sessions to see available sessions.",
@@ -179,7 +179,7 @@ describe("exportTrajectoryCommand", () => {
     expect(mocks.loadSessionEntry).toHaveBeenCalledWith({
       agentId: "main",
       sessionKey: "agent:main:telegram:direct:123",
-      storePath: "/tmp/openclaw/sessions.json",
+      storePath: "/tmp/quiet-core-bot/sessions.json",
     });
     expect(runtime.error).toHaveBeenCalledWith(
       "Session not found: agent:main:telegram:direct:123. Run quiet-core-bot sessions to see available sessions.",

@@ -1,6 +1,6 @@
 /** Tests projecting Quiet Core bot user MCP servers into Codex app-server config. */
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { buildCodexUserMcpServersThreadConfigPatch } from "./bundle-mcp-codex.js";
 
 describe("buildCodexUserMcpServersThreadConfigPatch", () => {

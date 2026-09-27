@@ -52,7 +52,7 @@ const bundledPluginIgnoredRuntimeDependencies = [
   "json5",
   "lit",
   "linkedom",
-  "openclaw",
+  "quiet-core-bot",
   "clawpdf",
 ] as const;
 
@@ -137,7 +137,7 @@ const config = {
     ".": {
       entry: rootEntries,
       ignoreDependencies: [
-        "@openclaw/*",
+        "@quiet-core/*",
         "cross-spawn",
         "file-type",
         "playwright-core",
@@ -203,7 +203,7 @@ const config = {
     "packages/speech-core": {
       entry: ["api.ts!", "runtime-api.ts!", "speaker.ts!", "voice-models.ts!"],
       project: ["**/*.ts!"],
-      ignoreDependencies: ["openclaw"],
+      ignoreDependencies: ["quiet-core-bot"],
     },
     "packages/*": {
       entry: ["index.js!", "scripts/postinstall.js!"],

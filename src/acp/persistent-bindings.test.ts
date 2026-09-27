@@ -384,7 +384,7 @@ describe("resolveConfiguredAcpBindingRecord", () => {
       createDiscordBinding({
         agentId: "codex",
         conversationId: defaultDiscordConversationId,
-        acp: { cwd: "/repo/openclaw" },
+        acp: { cwd: "/repo/quiet-core-bot" },
       }),
     ]);
     const resolved = resolveBindingRecord(cfg);
@@ -708,7 +708,7 @@ describe("resolveConfiguredAcpBindingRecord", () => {
       ],
       {
         agents: {
-          list: [{ id: "codex", workspace: "/workspace/openclaw" }, { id: "claude" }],
+          list: [{ id: "codex", workspace: "/workspace/quiet-core-bot" }, { id: "claude" }],
         },
       },
     );

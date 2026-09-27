@@ -6,7 +6,7 @@ import path from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { MsgContext } from "../auto-reply/templating.js";
 import type { OpenClawConfig } from "../config/types.js";
-import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-quiet-core-bot-dir.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import { CLI_OUTPUT_MAX_BUFFER } from "./defaults.constants.js";
 import { createSafeAudioFixtureBuffer } from "./runner.test-utils.js";
@@ -40,7 +40,7 @@ const mockedRunFfmpeg = runFfmpegMock;
 const mockedConvertHeicToJpeg = convertHeicToJpegMock;
 const mockedRunExec = runExecMock;
 
-const TEMP_MEDIA_PREFIX = "openclaw-media-";
+const TEMP_MEDIA_PREFIX = "quiet-core-bot-media-";
 let suiteTempMediaRootDir = "";
 let tempMediaDirCounter = 0;
 let sharedTempMediaCacheDir = "";
@@ -199,8 +199,8 @@ async function withMediaAutoDetectEnv<T>(
       GROQ_API_KEY: undefined,
       DEEPGRAM_API_KEY: undefined,
       GEMINI_API_KEY: undefined,
-      OPENCLAW_ANTIGRAVITY_CLI: undefined,
-      OPENCLAW_AGENT_DIR: undefined,
+      QUIET_CORE_ANTIGRAVITY_CLI: undefined,
+      QUIET_CORE_AGENT_DIR: undefined,
       ...env,
     },
     run,
@@ -543,7 +543,7 @@ describe("applyMediaUnderstanding", () => {
         kind: "audio.transcription",
         attachmentIndex: 0,
         text: "[Voice note could not be transcribed because the audio attachment was too small]",
-        provider: "openclaw",
+        provider: "quiet-core-bot",
         model: "synthetic-empty-audio",
       },
     ]);
@@ -589,7 +589,7 @@ describe("applyMediaUnderstanding", () => {
         kind: "audio.transcription",
         attachmentIndex: 0,
         text: "[Voice note could not be transcribed because the audio attachment was too small]",
-        provider: "openclaw",
+        provider: "quiet-core-bot",
         model: "synthetic-empty-audio",
       },
     ]);
@@ -937,7 +937,7 @@ describe("applyMediaUnderstanding", () => {
     await withMediaAutoDetectEnv(
       {
         PATH: emptyBinDir,
-        OPENCLAW_AGENT_DIR: isolatedAgentDir,
+        QUIET_CORE_AGENT_DIR: isolatedAgentDir,
       },
       async () => {
         const result = await applyMediaUnderstanding({ ctx, cfg });
@@ -969,7 +969,7 @@ describe("applyMediaUnderstanding", () => {
     await withMediaAutoDetectEnv(
       {
         PATH: binDir,
-        OPENCLAW_AGENT_DIR: isolatedAgentDir,
+        QUIET_CORE_AGENT_DIR: isolatedAgentDir,
       },
       async () => {
         const result = await applyMediaUnderstanding({ ctx, cfg });
@@ -1018,7 +1018,7 @@ describe("applyMediaUnderstanding", () => {
     const [_probeCommand, _probeArgs, probeOptions] = getRunExecCall(0);
     expect(probeOptions).toEqual({
       timeoutMs: 3000,
-      cwd: expect.stringContaining("openclaw-antigravity-probe-"),
+      cwd: expect.stringContaining("quiet-core-bot-antigravity-probe-"),
     });
     const [command, args, options] = getRunExecCall(1);
     expect(command).toBe(path.join(binDir, "agy"));
@@ -1149,8 +1149,8 @@ describe("applyMediaUnderstanding", () => {
     const result = await applyMediaUnderstanding({
       ctx,
       cfg,
-      agentDir: "/tmp/openclaw-agent",
-      workspaceDir: "/tmp/openclaw-workspace",
+      agentDir: "/tmp/quiet-core-bot-agent",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
       providers: {
         openai: {
           id: "openai",
@@ -1163,8 +1163,8 @@ describe("applyMediaUnderstanding", () => {
     expect(result.appliedImage).toBe(true);
     expect(describeImage).toHaveBeenCalledWith(
       expect.objectContaining({
-        agentDir: "/tmp/openclaw-agent",
-        workspaceDir: "/tmp/openclaw-workspace",
+        agentDir: "/tmp/quiet-core-bot-agent",
+        workspaceDir: "/tmp/quiet-core-bot-workspace",
         fileName: "workspace.jpg",
         provider: "openai",
         model: "gpt-5.4",
@@ -1197,7 +1197,7 @@ describe("applyMediaUnderstanding", () => {
     const result = await applyMediaUnderstanding({
       ctx,
       cfg,
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
       providers: {
         openai: {
           id: "openai",

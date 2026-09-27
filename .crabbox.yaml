@@ -1,4 +1,4 @@
-profile: openclaw-check
+profile: quiet-core-bot-check
 # Default OpenClaw runner spend to the Azure-backed Crabbox account.
 # Use `--provider aws` only for AWS-specific runner proof.
 provider: azure
@@ -20,11 +20,11 @@ actions:
   ref: main
   runnerLabels:
     - crabbox
-    - openclaw
+    - quiet-core-bot
   runnerVersion: latest
   ephemeral: true
 blacksmith:
-  org: openclaw
+  org: quiet-core-bot
   workflow: .github/workflows/ci-check-testbox.yml
   job: check
   ref: main
@@ -34,12 +34,12 @@ cache:
   git: true
   volumes:
     - name: pnpm
-      key: openclaw-linux-node24-pnpm
+      key: quiet-core-bot-linux-node24-pnpm
       path: /var/cache/crabbox/pnpm
       sizeGB: 80
       required: false
     - name: npm
-      key: openclaw-linux-node24-npm
+      key: quiet-core-bot-linux-node24-npm
       path: /var/cache/crabbox/npm
       sizeGB: 40
       required: false
@@ -68,7 +68,7 @@ env:
   allow:
     - CI
     - NODE_OPTIONS
-    - OPENCLAW_*
+    - QUIET_CORE_*
 ssh:
   user: crabbox
   # Azure coordinator leases expose SSH on 22. The run wrapper can fall back
@@ -115,7 +115,7 @@ jobs:
         git init -q
         git add -A
         if ! git diff --cached --quiet; then
-          git -c user.name=OpenClaw -c user.email=ci@openclaw.local commit -q --no-gpg-sign -m remote-check-tree
+          git -c user.name=OpenClaw -c user.email=ci@quiet-core-bot.local commit -q --no-gpg-sign -m remote-check-tree
         fi
       fi
       env CI=1 corepack pnpm check --timed
@@ -130,5 +130,5 @@ jobs:
       workflow: .github/workflows/ci-check-testbox.yml
       job: check
       ref: main
-    command: env OPENCLAW_CHECK_CHANGED_REMOTE_CHILD=1 OPENCLAW_CHANGED_LANES_RAW_SYNC=1 CI=1 corepack pnpm check:changed
+    command: env QUIET_CORE_CHECK_CHANGED_REMOTE_CHILD=1 QUIET_CORE_CHANGED_LANES_RAW_SYNC=1 CI=1 corepack pnpm check:changed
     stop: always

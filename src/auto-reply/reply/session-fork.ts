@@ -2,7 +2,7 @@ import path from "node:path";
 import { resolveStorePath } from "../../config/sessions/paths.js";
 import { updateSessionStore } from "../../config/sessions/store.js";
 import { mergeSessionEntry, type SessionEntry } from "../../config/sessions/types.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { createLazyImportLoader } from "../../shared/lazy-promise.js";
 
 /**

@@ -1,6 +1,6 @@
 // Memory Wiki plugin module: shared guarded write for vault pages.
-import { retryAsync } from "openclaw/plugin-sdk/retry-runtime";
-import { FsSafeError, root as fsRoot } from "openclaw/plugin-sdk/security-runtime";
+import { retryAsync } from "quiet-core-bot/plugin-sdk/retry-runtime";
+import { FsSafeError, root as fsRoot } from "quiet-core-bot/plugin-sdk/security-runtime";
 
 type VaultRoot = Awaited<ReturnType<typeof fsRoot>>;
 

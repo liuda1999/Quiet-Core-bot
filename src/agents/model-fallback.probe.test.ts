@@ -494,7 +494,7 @@ describe("runWithModelFallback – probe logic", () => {
     setLoggerOverride({
       level: "trace",
       consoleLevel: "silent",
-      file: path.join(os.tmpdir(), `openclaw-model-fallback-probe-${randomUUID()}.log`),
+      file: path.join(os.tmpdir(), `quiet-core-bot-model-fallback-probe-${randomUUID()}.log`),
     });
 
     const run = vi.fn().mockResolvedValue("probed-ok");

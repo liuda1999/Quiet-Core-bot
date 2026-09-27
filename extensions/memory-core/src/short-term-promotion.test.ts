@@ -2,11 +2,11 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { OpenKeyedStoreOptions } from "openclaw/plugin-sdk/plugin-state-runtime";
-import { createPluginStateKeyedStoreForTests } from "openclaw/plugin-sdk/plugin-state-test-runtime";
+import type { OpenKeyedStoreOptions } from "quiet-core-bot/plugin-sdk/plugin-state-runtime";
+import { createPluginStateKeyedStoreForTests } from "quiet-core-bot/plugin-sdk/plugin-state-test-runtime";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
-vi.mock("openclaw/plugin-sdk/memory-host-events", () => ({
+vi.mock("quiet-core-bot/plugin-sdk/memory-host-events", () => ({
   appendMemoryHostEvent: vi.fn(async () => {}),
 }));
 
@@ -1289,7 +1289,7 @@ describe("short-term promotion", () => {
       expect(secondApply.reconciledExisting).toBe(1);
 
       const memoryText = await fs.readFile(path.join(workspaceDir, "MEMORY.md"), "utf-8");
-      expect(memoryText.match(/openclaw-memory-promotion:/g)?.length).toBe(1);
+      expect(memoryText.match(/quiet-core-bot-memory-promotion:/g)?.length).toBe(1);
       expect(
         memoryText.match(/The gateway should stay loopback-only on port 18789\./g)?.length,
       ).toBe(1);
@@ -1356,9 +1356,9 @@ describe("short-term promotion", () => {
 
       const memoryText = await fs.readFile(path.join(workspaceDir, "MEMORY.md"), "utf-8");
       expect(memoryText).toContain(
-        "<!-- openclaw-memory-promotion:memory:memory/project alpha/2026-04-01.md:2:2 -->",
+        "<!-- quiet-core-bot-memory-promotion:memory:memory/project alpha/2026-04-01.md:2:2 -->",
       );
-      expect(memoryText.match(/openclaw-memory-promotion:/g)?.length).toBe(1);
+      expect(memoryText.match(/quiet-core-bot-memory-promotion:/g)?.length).toBe(1);
       expect(
         memoryText.match(/The project alpha gateway should stay loopback-only on port 18789\./g)
           ?.length,
@@ -1924,7 +1924,7 @@ describe("short-term promotion", () => {
       expect(promotedLine).toMatch(
         /\[score=0\.\d{3} recalls=1 avg=0\.\d{3} source=memory\/2026-04-01\.md:1-1\]/,
       );
-      expect(memoryText).toMatch(/<!-- openclaw-memory-promotion:[^\n]+ -->/);
+      expect(memoryText).toMatch(/<!-- quiet-core-bot-memory-promotion:[^\n]+ -->/);
     });
   });
 
@@ -3233,11 +3233,11 @@ describe("short-term promotion", () => {
           "# Long-Term Memory",
           "",
           "## Promoted From Short-Term Memory (2026-04-10)",
-          "<!-- openclaw-memory-promotion:legacy-old -->",
+          "<!-- quiet-core-bot-memory-promotion:legacy-old -->",
           `- ${filler}`,
           "",
           "## Promoted From Short-Term Memory (2026-04-20)",
-          "<!-- openclaw-memory-promotion:legacy-newer -->",
+          "<!-- quiet-core-bot-memory-promotion:legacy-newer -->",
           `- ${filler}`,
           "",
         ].join("\n");

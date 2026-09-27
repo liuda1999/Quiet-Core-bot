@@ -90,9 +90,9 @@ Choose your provider and follow the setup steps.
         tracking without touching your normal sessions:
 
         ```bash
-        OPENCLAW_CONFIG_PATH=/tmp/openclaw-kimi/quiet-core-bot.json \
-        OPENCLAW_STATE_DIR=/tmp/openclaw-kimi \
-        openclaw agent --local \
+        QUIET_CORE_CONFIG_PATH=/tmp/quiet-core-bot-kimi/quiet-core-bot.json \
+        QUIET_CORE_STATE_DIR=/tmp/quiet-core-bot-kimi \
+        quiet-core-bot agent --local \
           --session-id live-kimi-cost \
           --message 'Reply exactly: KIMI_LIVE_OK' \
           --thinking off \
@@ -203,7 +203,7 @@ Choose your provider and follow the setup steps.
     Install the official plugin, then restart Gateway:
 
     ```bash
-    quiet-core-bot plugins install @openclaw/kimi-provider
+    quiet-core-bot plugins install @quiet-core/kimi-provider
     quiet-core-bot gateway restart
     ```
     **Best for:** code-focused tasks via the Kimi Coding endpoint.
@@ -215,7 +215,7 @@ Choose your provider and follow the setup steps.
     <Steps>
       <Step title="Install the plugin">
         ```bash
-        quiet-core-bot plugins install @openclaw/kimi-provider
+        quiet-core-bot plugins install @quiet-core/kimi-provider
         ```
       </Step>
       <Step title="Run onboarding">

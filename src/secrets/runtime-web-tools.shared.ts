@@ -1,6 +1,6 @@
 /** Shared helpers for web-tool secret metadata resolution. */
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { normalizeOptionalLowercaseString } from "@quiet-core/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { resolveSecretInputRef } from "../config/types.secrets.js";
 import { createLazyRuntimeNamedExport } from "../shared/lazy-runtime.js";
 import { setPathExistingStrict } from "./path-utils.js";

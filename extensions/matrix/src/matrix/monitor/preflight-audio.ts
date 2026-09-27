@@ -1,5 +1,5 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import { logVerbose } from "quiet-core-bot/plugin-sdk/runtime-env";
 
 type MatrixPreflightAudioRuntime = typeof import("./preflight-audio.runtime.js");
 const MATRIX_DEFAULT_ECHO_TRANSCRIPT_FORMAT = '📝 "{transcript}"';

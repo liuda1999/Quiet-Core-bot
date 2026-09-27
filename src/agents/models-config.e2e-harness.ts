@@ -4,7 +4,7 @@
  */
 import { afterEach, beforeEach } from "vitest";
 import { clearConfigCache, clearRuntimeConfigSnapshot } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { withTempHome as withTempHomeBase } from "../plugin-sdk/test-helpers/temp-home.js";
 import { resetPluginLoaderTestStateForTest } from "../plugins/loader.test-fixtures.js";
 import { resetModelsJsonReadyCacheForTest } from "./models-config-state.js";
@@ -14,7 +14,7 @@ export function withModelsTempHome<T>(fn: (home: string) => Promise<T>): Promise
   // Models-config tests do not exercise session persistence; skip draining
   // unrelated session lock state during temp-home teardown.
   return withTempHomeBase(fn, {
-    prefix: "openclaw-models-",
+    prefix: "quiet-core-bot-models-",
     skipSessionCleanup: true,
   });
 }
@@ -31,8 +31,8 @@ export function installModelsConfigTestHooks(opts?: {
 
   beforeEach(() => {
     previousHome = process.env.HOME;
-    previousOpenClawAgentDir = process.env.OPENCLAW_AGENT_DIR;
-    delete process.env.OPENCLAW_AGENT_DIR;
+    previousOpenClawAgentDir = process.env.QUIET_CORE_AGENT_DIR;
+    delete process.env.QUIET_CORE_AGENT_DIR;
     clearRuntimeConfigSnapshot();
     clearConfigCache();
     if (shouldResetPluginLoaderState) {
@@ -44,9 +44,9 @@ export function installModelsConfigTestHooks(opts?: {
   afterEach(() => {
     process.env.HOME = previousHome;
     if (previousOpenClawAgentDir === undefined) {
-      delete process.env.OPENCLAW_AGENT_DIR;
+      delete process.env.QUIET_CORE_AGENT_DIR;
     } else {
-      process.env.OPENCLAW_AGENT_DIR = previousOpenClawAgentDir;
+      process.env.QUIET_CORE_AGENT_DIR = previousOpenClawAgentDir;
     }
     clearRuntimeConfigSnapshot();
     clearConfigCache();
@@ -90,7 +90,7 @@ export function unsetEnv(vars: string[]) {
 
 /** Ambient env vars cleared by implicit provider discovery tests. */
 export const MODELS_CONFIG_IMPLICIT_ENV_VARS = [
-  "OPENCLAW_TEST_ONLY_PROVIDER_PLUGIN_IDS",
+  "QUIET_CORE_TEST_ONLY_PROVIDER_PLUGIN_IDS",
   "VITEST",
   "NODE_ENV",
   "AI_GATEWAY_API_KEY",
@@ -106,10 +106,10 @@ export const MODELS_CONFIG_IMPLICIT_ENV_VARS = [
   "MOONSHOT_API_KEY",
   "NVIDIA_API_KEY",
   "OLLAMA_API_KEY",
-  "OPENCLAW_AGENT_DIR",
+  "QUIET_CORE_AGENT_DIR",
   "OPENAI_API_KEY",
   "OPENROUTER_API_KEY",
-  "OPENCLAW_AGENT_DIR",
+  "QUIET_CORE_AGENT_DIR",
   "QIANFAN_API_KEY",
   "QWEN_API_KEY",
   "MODELSTUDIO_API_KEY",
@@ -124,7 +124,7 @@ export const MODELS_CONFIG_IMPLICIT_ENV_VARS = [
   "KIMI_API_KEY",
   "KIMICODE_API_KEY",
   "GEMINI_API_KEY",
-  "OPENCLAW_BUNDLED_PLUGINS_DIR",
+  "QUIET_CORE_BUNDLED_PLUGINS_DIR",
   "GOOGLE_APPLICATION_CREDENTIALS",
   "GOOGLE_CLOUD_LOCATION",
   "GOOGLE_CLOUD_PROJECT",

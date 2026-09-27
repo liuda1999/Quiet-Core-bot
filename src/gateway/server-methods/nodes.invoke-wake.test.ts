@@ -1,6 +1,6 @@
 // Node invoke wake tests cover APNs wake attempts, reconnect waits, nudge
 // throttling, command policy, and foreground-restricted command handling.
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@quiet-core/normalization-core/number-coercion";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ErrorCodes } from "../../../packages/gateway-protocol/src/index.js";
 import { expectRecordFields, requireRecord } from "../test-helpers.assertions.js";
@@ -231,7 +231,7 @@ function directRegistration(nodeId: string) {
     nodeId,
     transport: "direct" as const,
     token: "abcd1234abcd1234abcd1234abcd1234",
-    topic: "ai.openclaw.ios",
+    topic: "ai.quiet-core-bot.ios",
     environment: "sandbox" as const,
     updatedAtMs: 1,
   };
@@ -244,7 +244,7 @@ function relayRegistration(nodeId: string) {
     relayHandle: "relay-handle-123",
     sendGrant: "send-grant-123",
     installationId: "install-123",
-    topic: "ai.openclaw.ios",
+    topic: "ai.quiet-core-bot.ios",
     environment: "production" as const,
     distribution: "official" as const,
     updatedAtMs: 1,
@@ -266,7 +266,7 @@ function mockDirectWakeConfig(nodeId: string, overrides: WakeResultOverrides = {
     ok: true,
     status: 200,
     tokenSuffix: "1234abcd",
-    topic: "ai.openclaw.ios",
+    topic: "ai.quiet-core-bot.ios",
     environment: "sandbox",
     transport: "direct",
     ...overrides,
@@ -292,7 +292,7 @@ function mockRelayWakeConfig(nodeId: string, overrides: WakeResultOverrides = {}
     ok: true,
     status: 200,
     tokenSuffix: "abcd1234",
-    topic: "ai.openclaw.ios",
+    topic: "ai.quiet-core-bot.ios",
     environment: "production",
     transport: "relay",
     ...overrides,
@@ -593,7 +593,7 @@ describe("node.invoke APNs wake path", () => {
       ok: true,
       status: 200,
       tokenSuffix: "1234abcd",
-      topic: "ai.openclaw.ios",
+      topic: "ai.quiet-core-bot.ios",
       environment: "sandbox",
       transport: "direct",
     });
@@ -781,7 +781,7 @@ describe("node.invoke APNs wake path", () => {
         status: 410,
         reason: "Unregistered",
         tokenSuffix: "abcd1234",
-        topic: "ai.openclaw.ios",
+        topic: "ai.quiet-core-bot.ios",
         environment: "production",
         transport: "relay",
       },

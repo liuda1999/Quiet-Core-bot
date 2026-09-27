@@ -602,16 +602,16 @@ describe("configured plugin install release step", () => {
       currentVersion: "2026.5.2-beta.1",
       touchedVersion: "2026.5.1",
       env: {
-        OPENCLAW_UPDATE_IN_PROGRESS: "1",
-        OPENCLAW_UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR: "1",
+        QUIET_CORE_UPDATE_IN_PROGRESS: "1",
+        QUIET_CORE_UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR: "1",
       },
     });
 
     const repairCall = readOnlyMissingPluginInstallRepairCall();
     expect(repairCall.pluginIds).toEqual(["codex"]);
     expect(repairCall.env).toEqual({
-      OPENCLAW_UPDATE_IN_PROGRESS: "1",
-      OPENCLAW_UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR: "1",
+      QUIET_CORE_UPDATE_IN_PROGRESS: "1",
+      QUIET_CORE_UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR: "1",
     });
     expect(result).toEqual({
       changes: [
@@ -652,8 +652,8 @@ describe("configured plugin install release step", () => {
       currentVersion: "2026.5.2-beta.1",
       touchedVersion: "2026.5.1",
       env: {
-        OPENCLAW_UPDATE_IN_PROGRESS: "1",
-        OPENCLAW_UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR: "1",
+        QUIET_CORE_UPDATE_IN_PROGRESS: "1",
+        QUIET_CORE_UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR: "1",
       },
     });
 
@@ -689,14 +689,14 @@ describe("configured plugin install release step", () => {
       currentVersion: "2026.5.2-beta.1",
       touchedVersion: "2026.5.1",
       env: {
-        OPENCLAW_UPDATE_IN_PROGRESS: "1",
-        OPENCLAW_UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE: "1",
+        QUIET_CORE_UPDATE_IN_PROGRESS: "1",
+        QUIET_CORE_UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE: "1",
       },
     });
 
     expect(readOnlyMissingPluginInstallRepairCall().env).toEqual({
-      OPENCLAW_UPDATE_IN_PROGRESS: "1",
-      OPENCLAW_UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE: "1",
+      QUIET_CORE_UPDATE_IN_PROGRESS: "1",
+      QUIET_CORE_UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE: "1",
     });
     expect(result).toEqual({
       changes: [
@@ -812,7 +812,7 @@ describe("configured plugin install release step", () => {
   it("includes allow-only official plugin ids in the repair set", async () => {
     mocks.getOfficialExternalPluginCatalogEntry.mockImplementation((pluginId: string) => {
       if (pluginId === "lobster") {
-        return { name: "@openclaw/lobster" };
+        return { name: "@quiet-core/lobster" };
       }
       return undefined;
     });
@@ -835,7 +835,7 @@ describe("configured plugin install release step", () => {
   it("skips allow-only plugin ids that already have material plugin entries", async () => {
     mocks.getOfficialExternalPluginCatalogEntry.mockImplementation((pluginId: string) => {
       if (pluginId === "lobster") {
-        return { name: "@openclaw/lobster" };
+        return { name: "@quiet-core/lobster" };
       }
       return undefined;
     });

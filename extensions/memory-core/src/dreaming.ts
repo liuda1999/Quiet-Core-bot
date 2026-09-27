@@ -1,5 +1,5 @@
 // Memory Core plugin module implements dreaming behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import {
   DEFAULT_MEMORY_DREAMING_FREQUENCY as DEFAULT_MEMORY_DREAMING_CRON_EXPR,
   DEFAULT_MEMORY_DEEP_DREAMING_LIMIT as DEFAULT_MEMORY_DREAMING_LIMIT,
@@ -20,13 +20,13 @@ import {
   resolveMemoryCorePluginConfig,
   resolveMemoryDeepDreamingConfig,
   resolveMemoryDreamingWorkspaces,
-} from "openclaw/plugin-sdk/memory-core-host-status";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
+} from "quiet-core-bot/plugin-sdk/memory-core-host-status";
+import type { OpenClawPluginApi } from "quiet-core-bot/plugin-sdk/plugin-entry";
 import {
   normalizeLowercaseStringOrEmpty,
   uniqueStrings,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
-import { peekSystemEventEntries } from "openclaw/plugin-sdk/system-event-runtime";
+} from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
+import { peekSystemEventEntries } from "quiet-core-bot/plugin-sdk/system-event-runtime";
 import type { NarrativePhaseData } from "./dreaming-narrative.js";
 import {
   formatErrorMessage,

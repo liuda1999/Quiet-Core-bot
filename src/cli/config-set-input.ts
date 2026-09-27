@@ -3,7 +3,7 @@ import fs from "node:fs";
 import {
   normalizeOptionalString,
   normalizeStringifiedOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/normalization-core/string-coerce";
 import JSON5 from "json5";
 
 export type ConfigSetOptions = {

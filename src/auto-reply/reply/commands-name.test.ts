@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { getSessionEntry, updateSessionStore, upsertSessionEntry } from "../../config/sessions.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { buildBuiltinChatCommands } from "../commands-registry.shared.js";
 import { takeCommandSessionMetadataChanges } from "./command-session-metadata.js";
 import { loadCommandHandlers } from "./commands-handlers.runtime.js";
@@ -19,7 +19,7 @@ afterEach(async () => {
 });
 
 async function createStorePath(): Promise<string> {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-name-command-"));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-name-command-"));
   tempRoots.push(root);
   return path.join(root, "sessions.json");
 }

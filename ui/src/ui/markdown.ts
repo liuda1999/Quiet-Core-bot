@@ -112,7 +112,7 @@ const DOCS_ROOT_SEGMENTS = new Set([
   "maturity-scorecard",
   "network",
   "nodes",
-  "openclaw-agent-runtime",
+  "quiet-core-bot-agent-runtime",
   "perplexity",
   "plan",
   "platforms",
@@ -392,7 +392,7 @@ function currentControlUiBasePath(): string {
   if (typeof window === "undefined") {
     return "";
   }
-  const configured = (window as WindowWithControlUiBasePath)["__OPENCLAW_CONTROL_UI_BASE_PATH__"];
+  const configured = (window as WindowWithControlUiBasePath)["__QUIET_CORE_CONTROL_UI_BASE_PATH__"];
   if (typeof configured === "string") {
     return normalizeBasePath(configured);
   }

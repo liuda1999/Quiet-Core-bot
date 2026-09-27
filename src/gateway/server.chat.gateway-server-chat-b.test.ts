@@ -73,8 +73,8 @@ async function withGatewayChatHarness(
     await run({ ws, createSessionDir });
   } finally {
     setMaxChatHistoryMessagesBytesForTest();
-    if (process.env.OPENCLAW_CONFIG_PATH) {
-      await fs.rm(process.env.OPENCLAW_CONFIG_PATH, { force: true });
+    if (process.env.QUIET_CORE_CONFIG_PATH) {
+      await fs.rm(process.env.QUIET_CORE_CONFIG_PATH, { force: true });
     }
     clearConfigCache();
     testState.sessionStorePath = undefined;
@@ -108,9 +108,9 @@ function futureFixtureUpdatedAt(): number {
 }
 
 async function writeGatewayConfig(config: Record<string, unknown>) {
-  const configPath = process.env.OPENCLAW_CONFIG_PATH;
+  const configPath = process.env.QUIET_CORE_CONFIG_PATH;
   if (!configPath) {
-    throw new Error("OPENCLAW_CONFIG_PATH missing in gateway test environment");
+    throw new Error("QUIET_CORE_CONFIG_PATH missing in gateway test environment");
   }
   await fs.mkdir(path.dirname(configPath), { recursive: true });
   await fs.writeFile(configPath, JSON.stringify(config, null, 2), "utf-8");
@@ -1671,7 +1671,7 @@ describe("gateway server chat", () => {
       expect(dispatchOptions[0]?.runId).toBe("idem-sequential-a");
       expect(dispatchOptions[1]?.runId).toBe("idem-sequential-b");
       expect(dispatchOptions[0]?.promptCacheKey).toEqual(
-        expect.stringMatching(/^openclaw-webchat-[a-f0-9]{32}$/u),
+        expect.stringMatching(/^quiet-core-bot-webchat-[a-f0-9]{32}$/u),
       );
       expect(dispatchOptions[1]?.promptCacheKey).toBe(dispatchOptions[0]?.promptCacheKey);
       expect(dispatchOptions[0]?.promptCacheKey).not.toContain("main");
@@ -2015,7 +2015,7 @@ describe("gateway server chat", () => {
             message: {
               role: "user",
               content:
-                'Sender (untrusted metadata):\n```json\n{"label":"openclaw-control-ui"}\n```\n\n[Thu 2026-03-26 16:29 GMT] hi',
+                'Sender (untrusted metadata):\n```json\n{"label":"quiet-core-bot-control-ui"}\n```\n\n[Thu 2026-03-26 16:29 GMT] hi',
             },
           }),
           JSON.stringify({
@@ -2291,12 +2291,12 @@ describe("gateway server chat", () => {
   });
 
   test("chat.send diagnostics timeline carries run correlation attributes", async () => {
-    const timelineDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-chat-timeline-"));
+    const timelineDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-chat-timeline-"));
     const timelinePath = path.join(timelineDir, "timeline.jsonl");
-    const previousDiagnostics = process.env.OPENCLAW_DIAGNOSTICS;
-    const previousTimelinePath = process.env.OPENCLAW_DIAGNOSTICS_TIMELINE_PATH;
-    process.env.OPENCLAW_DIAGNOSTICS = "timeline";
-    process.env.OPENCLAW_DIAGNOSTICS_TIMELINE_PATH = timelinePath;
+    const previousDiagnostics = process.env.QUIET_CORE_DIAGNOSTICS;
+    const previousTimelinePath = process.env.QUIET_CORE_DIAGNOSTICS_TIMELINE_PATH;
+    process.env.QUIET_CORE_DIAGNOSTICS = "timeline";
+    process.env.QUIET_CORE_DIAGNOSTICS_TIMELINE_PATH = timelinePath;
     try {
       await withGatewayChatHarness(
         async ({ ws, createSessionDir }) => {
@@ -2364,14 +2364,14 @@ describe("gateway server chat", () => {
       );
     } finally {
       if (previousDiagnostics === undefined) {
-        delete process.env.OPENCLAW_DIAGNOSTICS;
+        delete process.env.QUIET_CORE_DIAGNOSTICS;
       } else {
-        process.env.OPENCLAW_DIAGNOSTICS = previousDiagnostics;
+        process.env.QUIET_CORE_DIAGNOSTICS = previousDiagnostics;
       }
       if (previousTimelinePath === undefined) {
-        delete process.env.OPENCLAW_DIAGNOSTICS_TIMELINE_PATH;
+        delete process.env.QUIET_CORE_DIAGNOSTICS_TIMELINE_PATH;
       } else {
-        process.env.OPENCLAW_DIAGNOSTICS_TIMELINE_PATH = previousTimelinePath;
+        process.env.QUIET_CORE_DIAGNOSTICS_TIMELINE_PATH = previousTimelinePath;
       }
       await removeTempDir(timelineDir);
     }

@@ -18,15 +18,15 @@ function jsonResponse(body: unknown, init: ResponseInit = {}): Response {
 }
 
 async function withGithubApiTimeoutEnv<T>(value: string, fn: () => Promise<T>): Promise<T> {
-  const previous = process.env.OPENCLAW_RELEASE_CANDIDATE_GITHUB_API_TIMEOUT_MS;
-  process.env.OPENCLAW_RELEASE_CANDIDATE_GITHUB_API_TIMEOUT_MS = value;
+  const previous = process.env.QUIET_CORE_RELEASE_CANDIDATE_GITHUB_API_TIMEOUT_MS;
+  process.env.QUIET_CORE_RELEASE_CANDIDATE_GITHUB_API_TIMEOUT_MS = value;
   try {
     return await fn();
   } finally {
     if (previous === undefined) {
-      delete process.env.OPENCLAW_RELEASE_CANDIDATE_GITHUB_API_TIMEOUT_MS;
+      delete process.env.QUIET_CORE_RELEASE_CANDIDATE_GITHUB_API_TIMEOUT_MS;
     } else {
-      process.env.OPENCLAW_RELEASE_CANDIDATE_GITHUB_API_TIMEOUT_MS = previous;
+      process.env.QUIET_CORE_RELEASE_CANDIDATE_GITHUB_API_TIMEOUT_MS = previous;
     }
   }
 }
@@ -50,16 +50,16 @@ describe("release candidate checklist", () => {
   });
 
   it("runs Parallels against the exact prepared candidate tarball", () => {
-    expect(candidateParallelsArgs(".artifacts/preflight/openclaw.tgz")).toEqual([
+    expect(candidateParallelsArgs(".artifacts/preflight/quiet-core-bot.tgz")).toEqual([
       "test:parallels:npm-update",
       "--",
       "--target-tarball",
-      ".artifacts/preflight/openclaw.tgz",
+      ".artifacts/preflight/quiet-core-bot.tgz",
       "--json",
     ]);
     expect(
       candidateParallelsShellCommand(
-        ".artifacts/preflight/openclaw candidate.tgz",
+        ".artifacts/preflight/quiet-core-bot candidate.tgz",
         "/opt/homebrew/bin/gtimeout",
       ),
     ).toContain(
@@ -67,10 +67,10 @@ describe("release candidate checklist", () => {
     );
     expect(
       candidateParallelsShellCommand(
-        ".artifacts/preflight/openclaw candidate.tgz",
+        ".artifacts/preflight/quiet-core-bot candidate.tgz",
         "/opt/homebrew/bin/gtimeout",
       ),
-    ).toContain("'--target-tarball' '.artifacts/preflight/openclaw candidate.tgz'");
+    ).toContain("'--target-tarball' '.artifacts/preflight/quiet-core-bot candidate.tgz'");
   });
 
   it("requires run ids when dispatch is disabled", () => {
@@ -91,7 +91,7 @@ describe("release candidate checklist", () => {
     const duplicateCases = [
       duplicateOption("--tag", "v2026.5.14-beta.3", "v2026.5.14-beta.4", []),
       duplicateOption("--workflow-ref", "release/a", "release/b"),
-      duplicateOption("--repo", "openclaw/openclaw", "fork/openclaw"),
+      duplicateOption("--repo", "liuda1999/quiet-core-bot", "fork/quiet-core-bot"),
       duplicateOption("--full-release-run", "111", "222"),
       duplicateOption("--npm-preflight-run", "111", "222"),
       duplicateOption("--windows-node-tag", "v0.6.3", "v0.6.4"),
@@ -378,7 +378,7 @@ describe("release candidate checklist", () => {
         "--plugin-publish-scope",
         "selected",
         "--plugins",
-        "@openclaw/diffs",
+        "@quiet-core/diffs",
       ]),
     ).toThrow("release candidates publish OpenClaw with --plugin-publish-scope all-publishable");
   });
@@ -386,7 +386,7 @@ describe("release candidate checklist", () => {
   it("extracts a workflow run id from gh dispatch output", () => {
     expect(
       parseRunIdFromDispatchOutput(
-        "https://github.com/openclaw/openclaw/actions/runs/25922042055\n",
+        "https://github.com/liuda1999/Quiet-Core-bot/actions/runs/25922042055\n",
       ),
     ).toBe("25922042055");
   });
@@ -403,11 +403,11 @@ describe("release candidate checklist", () => {
   it("falls back to a single compatible artifact from the same run", () => {
     expect(
       resolveArtifactName(
-        [{ name: "openclaw-npm-preflight-dba00", expired: false }],
-        "openclaw-npm-preflight-v2026.5.16-beta.2",
-        "openclaw-npm-preflight-",
+        [{ name: "quiet-core-bot-npm-preflight-dba00", expired: false }],
+        "quiet-core-bot-npm-preflight-v2026.5.16-beta.2",
+        "quiet-core-bot-npm-preflight-",
       ),
-    ).toBe("openclaw-npm-preflight-dba00");
+    ).toBe("quiet-core-bot-npm-preflight-dba00");
   });
 
   it("bounds GitHub API requests with a timeout signal", async () => {
@@ -465,7 +465,7 @@ describe("release candidate checklist", () => {
             token: "test-token",
           }),
         ).rejects.toThrow(
-          "OPENCLAW_RELEASE_CANDIDATE_GITHUB_API_TIMEOUT_MS must be a positive integer",
+          "QUIET_CORE_RELEASE_CANDIDATE_GITHUB_API_TIMEOUT_MS must be a positive integer",
         );
       });
       expect(fetchImpl).not.toHaveBeenCalled();

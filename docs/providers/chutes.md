@@ -23,7 +23,7 @@ auth for the `chutes` provider.
 Install the official plugin, then restart Gateway:
 
 ```bash
-quiet-core-bot plugins install @openclaw/chutes-provider
+quiet-core-bot plugins install @quiet-core/chutes-provider
 quiet-core-bot gateway restart
 ```
 

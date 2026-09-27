@@ -1,5 +1,5 @@
 ---
-summary: "CLI reference for `openclaw workboard` cards, dispatch, and worker runs"
+summary: "CLI reference for `quiet-core-bot workboard` cards, dispatch, and worker runs"
 read_when:
   - You want to inspect or create Workboard cards from the terminal
   - You want to dispatch Workboard worker runs from the CLI
@@ -7,7 +7,7 @@ read_when:
 title: "Workboard CLI"
 ---
 
-`openclaw workboard` is the terminal surface for the bundled
+`quiet-core-bot workboard` is the terminal surface for the bundled
 [Workboard plugin](/plugins/workboard). It lets an operator list cards, create a
 card, inspect one card, and ask the running Gateway to dispatch ready work into
 subagent worker runs.
@@ -22,10 +22,10 @@ quiet-core-bot gateway restart
 ## Usage
 
 ```bash
-openclaw workboard list [--board <id>] [--status <status>] [--include-archived] [--json]
-openclaw workboard create <title...> [--notes <text>] [--status <status>] [--priority <priority>] [--agent <id>] [--board <id>] [--labels <items>] [--json]
-openclaw workboard show <id> [--json]
-openclaw workboard dispatch [--url <url>] [--token <token>] [--timeout <ms>] [--json]
+quiet-core-bot workboard list [--board <id>] [--status <status>] [--include-archived] [--json]
+quiet-core-bot workboard create <title...> [--notes <text>] [--status <status>] [--priority <priority>] [--agent <id>] [--board <id>] [--labels <items>] [--json]
+quiet-core-bot workboard show <id> [--json]
+quiet-core-bot workboard dispatch [--url <url>] [--token <token>] [--timeout <ms>] [--json]
 ```
 
 The command reads and writes the same plugin-owned SQLite database used by the
@@ -35,9 +35,9 @@ unambiguous prefix when a command accepts a card id.
 ## `list`
 
 ```bash
-openclaw workboard list
-openclaw workboard list --board default --status ready
-openclaw workboard list --json
+quiet-core-bot workboard list
+quiet-core-bot workboard list --board default --status ready
+quiet-core-bot workboard list --json
 ```
 
 Text output is compact:
@@ -64,8 +64,8 @@ keeps the full card list, including archived cards, for existing automation.
 ## `create`
 
 ```bash
-openclaw workboard create "Fix stale worker heartbeat" --priority high --labels bug,workboard
-openclaw workboard create "Write Workboard docs" --status ready --agent docs-agent --board docs --notes "Cover CLI, slash command, dispatch, and SQLite state."
+quiet-core-bot workboard create "Fix stale worker heartbeat" --priority high --labels bug,workboard
+quiet-core-bot workboard create "Write Workboard docs" --status ready --agent docs-agent --board docs --notes "Cover CLI, slash command, dispatch, and SQLite state."
 ```
 
 Flags:
@@ -86,8 +86,8 @@ visible in the Control UI Workboard tab and to Workboard tools.
 ## `show`
 
 ```bash
-openclaw workboard show 7f4a2c10
-openclaw workboard show 7f4a2c10 --json
+quiet-core-bot workboard show 7f4a2c10
+quiet-core-bot workboard show 7f4a2c10 --json
 ```
 
 Text output prints the compact card line and notes. JSON output returns the full
@@ -97,9 +97,9 @@ artifacts, worker logs, protocol state, diagnostics, and automation metadata.
 ## `dispatch`
 
 ```bash
-openclaw workboard dispatch
-openclaw workboard dispatch --json
-openclaw workboard dispatch --url http://127.0.0.1:18789 --token "$OPENCLAW_GATEWAY_TOKEN"
+quiet-core-bot workboard dispatch
+quiet-core-bot workboard dispatch --json
+quiet-core-bot workboard dispatch --url http://127.0.0.1:18789 --token "$QUIET_CORE_GATEWAY_TOKEN"
 ```
 
 `dispatch` first calls the running Gateway RPC method
@@ -186,7 +186,7 @@ through read methods, but it cannot create cards or dispatch workers.
 
 Local `list`, `create`, and `show` commands operate on the local Quiet Core bot state
 directory used by the current profile. Use `--dev` or `--profile <name>` on the
-top-level `openclaw` command when you need a different state root.
+top-level `quiet-core-bot` command when you need a different state root.
 
 ## Troubleshooting
 
@@ -210,7 +210,7 @@ quiet-core-bot gateway restart
 quiet-core-bot gateway status --deep
 ```
 
-Then retry `openclaw workboard dispatch`. Data-only fallback is useful for local
+Then retry `quiet-core-bot workboard dispatch`. Data-only fallback is useful for local
 state cleanup, but worker runs need a live Gateway.
 
 ### Dispatch Starts Nothing
@@ -218,7 +218,7 @@ state cleanup, but worker runs need a live Gateway.
 Check for at least one `ready` card without an active claim:
 
 ```bash
-openclaw workboard list --status ready
+quiet-core-bot workboard list --status ready
 ```
 
 Cards can also be skipped when the same owner already has running or review

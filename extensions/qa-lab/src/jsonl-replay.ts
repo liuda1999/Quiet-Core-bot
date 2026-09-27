@@ -11,7 +11,7 @@ import {
 
 export type JsonlReplayInput = {
   directory: string;
-  runtimePair: ["openclaw", "codex"];
+  runtimePair: ["quiet-core-bot", "codex"];
   providerMode: "mock-openai" | "live-frontier";
 };
 
@@ -167,7 +167,7 @@ function defaultRunCell(): Promise<RuntimeParityScenarioExecution> {
 }
 
 function assertSupportedRuntimePair(runtimePair: JsonlReplayInput["runtimePair"]) {
-  if (runtimePair[0] !== "openclaw" || runtimePair[1] !== "codex") {
+  if (runtimePair[0] !== "quiet-core-bot" || runtimePair[1] !== "codex") {
     throw new Error(`unsupported jsonl replay runtime pair: ${runtimePair.join(",")}`);
   }
 }

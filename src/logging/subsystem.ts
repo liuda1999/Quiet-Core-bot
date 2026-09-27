@@ -1,5 +1,5 @@
 // Subsystem logger helpers create scoped loggers with subsystem-specific filters.
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
 import { Chalk } from "chalk";
 import type { Logger as TsLogger } from "tslog";
 import { clearActiveProgressLine } from "../../packages/terminal-core/src/progress-line.js";
@@ -121,7 +121,7 @@ const CHANNEL_SUBSYSTEM_PREFIXES = new Set([
   "mattermost",
   "nextcloud-talk",
   "nostr",
-  "openclaw-weixin",
+  "quiet-core-bot-weixin",
   "signal",
   "synology-chat",
   "tlon",

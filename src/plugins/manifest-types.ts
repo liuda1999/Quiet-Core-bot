@@ -9,7 +9,7 @@ export type PluginConfigUiHint = {
 };
 
 /** Top-level plugin manifest format. */
-export type PluginFormat = "openclaw" | "bundle";
+export type PluginFormat = "quiet-core-bot" | "bundle";
 
 /** Supported external bundle manifest formats. */
 export type PluginBundleFormat = "codex" | "claude" | "cursor";

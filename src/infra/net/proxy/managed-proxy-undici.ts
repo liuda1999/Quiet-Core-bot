@@ -1,6 +1,6 @@
 // Bridges Quiet Core bot-managed proxy TLS trust into Undici EnvHttpProxyAgent and
 // explicit ProxyAgent options without changing unrelated operator proxies.
-import { isRecord as isProxyTlsRecord } from "@openclaw/normalization-core/record-coerce";
+import { isRecord as isProxyTlsRecord } from "@quiet-core/normalization-core/record-coerce";
 import type { EnvHttpProxyAgent } from "undici";
 import { resolveEnvHttpProxyAgentOptions, resolveEnvHttpProxyUrl } from "../proxy-env.js";
 import { getActiveManagedProxyTlsOptions, getActiveManagedProxyUrl } from "./active-proxy-state.js";
@@ -66,7 +66,7 @@ function resolveManagedProxyUrl(env: ManagedProxyTlsEnv = process.env): string |
   if (activeProxyUrl) {
     return activeProxyUrl.href;
   }
-  if (env["OPENCLAW_PROXY_ACTIVE"] !== "1") {
+  if (env["QUIET_CORE_PROXY_ACTIVE"] !== "1") {
     return undefined;
   }
   // Child processes inherit only env, so recover the managed proxy URL from
@@ -92,7 +92,7 @@ export function resolveActiveManagedProxyTlsOptions(
   }
   const proxyCaFile = resolveManagedProxyCaFileForUrl({
     proxyUrl: managedProxyUrl,
-    caFileOverride: env["OPENCLAW_PROXY_CA_FILE"],
+    caFileOverride: env["QUIET_CORE_PROXY_CA_FILE"],
   });
   try {
     return loadManagedProxyTlsOptionsSync(proxyCaFile);

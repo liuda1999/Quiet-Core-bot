@@ -2,7 +2,7 @@
  * Tests shared gateway auth behavior across config method updates.
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import type { RestartSentinelPayload } from "../../infra/restart-sentinel.js";
 import {
   createConfigHandlerHarness,
@@ -29,13 +29,13 @@ vi.mock("../../config/config.js", async () => {
     await vi.importActual<typeof import("../../config/config.js")>("../../config/config.js");
   return {
     ...actual,
-    createConfigIO: () => ({ configPath: "/tmp/openclaw.json" }),
+    createConfigIO: () => ({ configPath: "/tmp/quiet-core-bot.json" }),
     writeConfigFile: writeConfigFileMock,
     replaceConfigFile: async (params: { nextConfig: OpenClawConfig; writeOptions?: unknown }) => {
       await writeConfigFileMock(params.nextConfig, params.writeOptions);
       const persistedConfig = persistedConfigResultMock(params.nextConfig);
       return {
-        path: "/tmp/openclaw.json",
+        path: "/tmp/quiet-core-bot.json",
         previousHash: "base-hash",
         snapshot: createConfigWriteSnapshot(params.nextConfig),
         nextConfig: persistedConfig,
@@ -51,7 +51,7 @@ vi.mock("../../config/io.js", async () => {
   const actual = await vi.importActual<typeof import("../../config/io.js")>("../../config/io.js");
   return {
     ...actual,
-    createConfigIO: () => ({ configPath: "/tmp/openclaw.json" }),
+    createConfigIO: () => ({ configPath: "/tmp/quiet-core-bot.json" }),
     readConfigFileSnapshotForWrite: readConfigFileSnapshotForWriteMock,
   };
 });
@@ -226,7 +226,7 @@ describe("config shared auth disconnects", () => {
       true,
       {
         ok: true,
-        path: "/tmp/openclaw.json",
+        path: "/tmp/quiet-core-bot.json",
         config: persistedConfig,
       },
       undefined,

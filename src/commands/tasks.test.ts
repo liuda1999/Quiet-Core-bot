@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { resetConfigRuntimeState } from "../config/config.js";
 import { saveCronStore } from "../cron/store.js";
 import type { RuntimeEnv } from "../runtime.js";
-import { closeOpenClawAgentDatabasesForTest } from "../state/openclaw-agent-db.js";
+import { closeOpenClawAgentDatabasesForTest } from "../state/quiet-core-bot-agent-db.js";
 import { resetDetachedTaskLifecycleRuntimeForTests } from "../tasks/detached-task-runtime.js";
 import {
   createManagedTaskFlow as createManagedTaskFlowOrNull,
@@ -19,8 +19,8 @@ import {
 } from "../tasks/task-registry.js";
 import * as taskRegistryMaintenance from "../tasks/task-registry.maintenance.js";
 import type { TaskRecord } from "../tasks/task-registry.types.js";
-import { withOpenClawTestState } from "../test-utils/openclaw-test-state.js";
-import type { OpenClawTestState } from "../test-utils/openclaw-test-state.js";
+import { withOpenClawTestState } from "../test-utils/quiet-core-bot-test-state.js";
+import type { OpenClawTestState } from "../test-utils/quiet-core-bot-test-state.js";
 import {
   tasksAuditCommand,
   tasksCancelCommand,
@@ -86,7 +86,7 @@ async function withTaskCommandStateDir(
   run: (state: OpenClawTestState) => Promise<void>,
 ): Promise<void> {
   await withOpenClawTestState(
-    { layout: "state-only", prefix: "openclaw-tasks-command-" },
+    { layout: "state-only", prefix: "quiet-core-bot-tasks-command-" },
     async (state) => {
       taskRegistryMaintenance.stopTaskRegistryMaintenance();
       taskRegistryMaintenance.resetTaskRegistryMaintenanceRuntimeForTests();

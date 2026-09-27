@@ -1,7 +1,7 @@
 // Ollama plugin module implements stream behavior.
 import { randomUUID } from "node:crypto";
-import type { StreamFn } from "openclaw/plugin-sdk/agent-core";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import type { StreamFn } from "quiet-core-bot/plugin-sdk/agent-core";
+import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
 import type {
   AssistantMessage,
   StopReason,
@@ -10,32 +10,32 @@ import type {
   ToolCall,
   Tool,
   Usage,
-} from "openclaw/plugin-sdk/llm";
-import { createAssistantMessageEventStream, streamSimple } from "openclaw/plugin-sdk/llm";
+} from "quiet-core-bot/plugin-sdk/llm";
+import { createAssistantMessageEventStream, streamSimple } from "quiet-core-bot/plugin-sdk/llm";
 import type {
   OpenClawConfig,
   ProviderRuntimeModel,
   ProviderWrapStreamFnContext,
-} from "openclaw/plugin-sdk/plugin-entry";
-import { isNonSecretApiKeyMarker } from "openclaw/plugin-sdk/provider-auth";
-import { readResponseTextLimited } from "openclaw/plugin-sdk/provider-http";
+} from "quiet-core-bot/plugin-sdk/plugin-entry";
+import { isNonSecretApiKeyMarker } from "quiet-core-bot/plugin-sdk/provider-auth";
+import { readResponseTextLimited } from "quiet-core-bot/plugin-sdk/provider-http";
 import {
   DEFAULT_CONTEXT_TOKENS,
   normalizeProviderId,
-} from "openclaw/plugin-sdk/provider-model-shared";
+} from "quiet-core-bot/plugin-sdk/provider-model-shared";
 import {
   createMoonshotThinkingWrapper,
   createPlainTextToolCallCompatWrapper,
   resolveMoonshotThinkingType,
   streamWithPayloadPatch,
-} from "openclaw/plugin-sdk/provider-stream-shared";
-import { createSubsystemLogger } from "openclaw/plugin-sdk/runtime-env";
-import { fetchWithSsrFGuard } from "openclaw/plugin-sdk/ssrf-runtime";
+} from "quiet-core-bot/plugin-sdk/provider-stream-shared";
+import { createSubsystemLogger } from "quiet-core-bot/plugin-sdk/runtime-env";
+import { fetchWithSsrFGuard } from "quiet-core-bot/plugin-sdk/ssrf-runtime";
 import {
   isRecord,
   normalizeLowercaseStringOrEmpty,
   readStringValue,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { OLLAMA_DEFAULT_BASE_URL } from "./defaults.js";
 import { shouldWrapOllamaCompatMoonshotThinking } from "./model-behavior.js";
 import { normalizeOllamaWireModelId } from "./model-id.js";

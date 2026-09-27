@@ -85,7 +85,7 @@ SecretRefs are validated only on effectively active surfaces.
       - In local mode without those remote surfaces:
         - `gateway.remote.token` is active when token auth can win and no env/auth token is configured.
         - `gateway.remote.password` is active only when password auth can win and no env/auth password is configured.
-    - `gateway.auth.token` SecretRef is inactive for startup auth resolution when `OPENCLAW_GATEWAY_TOKEN` is set, because env token input wins for that runtime.
+    - `gateway.auth.token` SecretRef is inactive for startup auth resolution when `QUIET_CORE_GATEWAY_TOKEN` is set, because env token input wins for that runtime.
 
   </Accordion>
 </AccordionGroup>
@@ -178,7 +178,7 @@ Define providers under `secrets.providers`:
       },
       vault: {
         source: "exec",
-        command: "/usr/local/bin/openclaw-vault-resolver",
+        command: "/usr/local/bin/quiet-core-bot-vault-resolver",
         args: ["--profile", "prod"],
         passEnv: ["PATH", "VAULT_ADDR"],
         jsonOnly: true,
@@ -326,7 +326,7 @@ the config fields that accept SecretRefs.
   <Accordion title="Bitwarden Secrets Manager (`bws`)">
     Use a resolver wrapper when you want SecretRef ids to map to Bitwarden
     Secrets Manager item keys. The repository includes
-    `scripts/secrets/openclaw-bws-resolver.mjs`; install or copy it to an absolute
+    `scripts/secrets/quiet-core-bot-bws-resolver.mjs`; install or copy it to an absolute
     trusted path on the host that runs the Gateway.
 
     Requirements:
@@ -344,7 +344,7 @@ the config fields that accept SecretRefs.
         providers: {
           bws: {
             source: "exec",
-            command: "/usr/local/bin/openclaw-bws-resolver.mjs",
+            command: "/usr/local/bin/quiet-core-bot-bws-resolver.mjs",
             passEnv: ["BWS_ACCESS_TOKEN", "BWS_SERVER_URL", "PATH", "BWS_BIN"],
             jsonOnly: true,
           },
@@ -358,7 +358,7 @@ the config fields that accept SecretRefs.
             apiKey: {
               source: "exec",
               provider: "bws",
-              id: "openclaw/providers/openai/apiKey",
+              id: "quiet-core-bot/providers/openai/apiKey",
             },
           },
         },
@@ -368,7 +368,7 @@ the config fields that accept SecretRefs.
 
     The resolver batches requested ids, runs `bws secret list`, and returns
     values for matching secret `key` fields. Use keys that satisfy the exec
-    SecretRef id contract, such as `openclaw/providers/openai/apiKey`; env-var
+    SecretRef id contract, such as `quiet-core-bot/providers/openai/apiKey`; env-var
     style keys with underscores are rejected before the resolver runs. If more
     than one visible Bitwarden secret has the same requested key, the resolver
     fails that id as ambiguous instead of choosing one. After updating config,
@@ -389,7 +389,7 @@ the config fields that accept SecretRefs.
             command: "/opt/homebrew/bin/vault",
             allowSymlinkCommand: true, // required for Homebrew symlinked binaries
             trustedDirs: ["/opt/homebrew"],
-            args: ["kv", "get", "-field=OPENAI_API_KEY", "secret/openclaw"],
+            args: ["kv", "get", "-field=OPENAI_API_KEY", "secret/quiet-core-bot"],
             passEnv: ["VAULT_ADDR", "VAULT_TOKEN"],
             jsonOnly: false,
           },
@@ -411,7 +411,7 @@ the config fields that accept SecretRefs.
     Use a small resolver wrapper when you want SecretRef ids to map directly to
     `pass` entries. Save this as an executable in an absolute path that passes
     your exec-provider path checks, for example
-    `/usr/local/bin/openclaw-pass-resolver`. The `#!/usr/bin/env node` shebang
+    `/usr/local/bin/quiet-core-bot-pass-resolver`. The `#!/usr/bin/env node` shebang
     resolves `node` from the resolver process `PATH`, so include `PATH` in
     `passEnv`. If `pass` is not on that `PATH`, set `PASS_BIN` in the parent
     environment and include it in `passEnv` too:
@@ -463,7 +463,7 @@ the config fields that accept SecretRefs.
         providers: {
           pass_store: {
             source: "exec",
-            command: "/usr/local/bin/openclaw-pass-resolver",
+            command: "/usr/local/bin/quiet-core-bot-pass-resolver",
             passEnv: ["PATH", "HOME", "GNUPGHOME", "GPG_TTY", "PASSWORD_STORE_DIR", "PASS_BIN"],
             jsonOnly: true,
           },
@@ -477,7 +477,7 @@ the config fields that accept SecretRefs.
             apiKey: {
               source: "exec",
               provider: "pass_store",
-              id: "openclaw/providers/openai/apiKey",
+              id: "quiet-core-bot/providers/openai/apiKey",
             },
           },
         },
@@ -602,7 +602,7 @@ Runtime-minted or rotating credentials and OAuth refresh material are intentiona
 - Field without a ref: unchanged.
 - Field with a ref: required on active surfaces during activation.
 - If both plaintext and ref are present, ref takes precedence on supported precedence paths.
-- The redaction sentinel `__OPENCLAW_REDACTED__` is reserved for internal config redaction/restore and is rejected as literal submitted config data.
+- The redaction sentinel `__QUIET_CORE_REDACTED__` is reserved for internal config redaction/restore and is rejected as literal submitted config data.
 
 Warning and audit signals:
 
@@ -656,10 +656,10 @@ There are two broad behaviors:
 
 <Tabs>
   <Tab title="Strict command paths">
-    For example `quiet-core-bot memory` remote-memory paths and `openclaw qr --remote` when it needs remote shared-secret refs. They read from the active snapshot and fail fast when a required SecretRef is unavailable.
+    For example `quiet-core-bot memory` remote-memory paths and `quiet-core-bot qr --remote` when it needs remote shared-secret refs. They read from the active snapshot and fail fast when a required SecretRef is unavailable.
   </Tab>
   <Tab title="Read-only command paths">
-    For example `quiet-core-bot status`, `quiet-core-bot status --all`, `quiet-core-bot channels status`, `quiet-core-bot channels resolve`, `openclaw security audit`, and read-only doctor/config repair flows. They also prefer the active snapshot, but degrade instead of aborting when a targeted SecretRef is unavailable in that command path.
+    For example `quiet-core-bot status`, `quiet-core-bot status --all`, `quiet-core-bot channels status`, `quiet-core-bot channels resolve`, `quiet-core-bot security audit`, and read-only doctor/config repair flows. They also prefer the active snapshot, but degrade instead of aborting when a targeted SecretRef is unavailable in that command path.
 
     Read-only behavior:
 
@@ -757,10 +757,10 @@ with `quiet-core-bot secrets apply --from <plan-path>` before the re-audit.
     Apply a saved plan:
 
     ```bash
-    quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json
-    quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json --allow-exec
-    quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run
-    quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run --allow-exec
+    quiet-core-bot secrets apply --from /tmp/quiet-core-bot-secrets-plan.json
+    quiet-core-bot secrets apply --from /tmp/quiet-core-bot-secrets-plan.json --allow-exec
+    quiet-core-bot secrets apply --from /tmp/quiet-core-bot-secrets-plan.json --dry-run
+    quiet-core-bot secrets apply --from /tmp/quiet-core-bot-secrets-plan.json --dry-run --allow-exec
     ```
 
     Exec note:

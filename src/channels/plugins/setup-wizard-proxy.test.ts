@@ -5,7 +5,7 @@ import {
   resolveSetupWizardGroupAllowlist,
   runSetupWizardFinalize,
   runSetupWizardPrepare,
-} from "openclaw/plugin-sdk/plugin-test-runtime";
+} from "quiet-core-bot/plugin-sdk/plugin-test-runtime";
 import { describe, expect, it, vi } from "vitest";
 import {
   createAllowlistSetupWizardProxy,

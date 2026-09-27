@@ -11,7 +11,7 @@ Quiet Core bot sandbox backend for the NVIDIA OpenShell CLI with mirrored local 
 
 ## Distribution
 
-- Package: `@openclaw/openshell-sandbox`
+- Package: `@quiet-core/openshell-sandbox`
 - Install route: npm; ClawHub
 
 ## Surface

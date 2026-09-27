@@ -1,12 +1,12 @@
 // Nostr plugin module implements channel.setup behavior.
-import { describeAccountSnapshot } from "openclaw/plugin-sdk/account-helpers";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import { describeAccountSnapshot } from "quiet-core-bot/plugin-sdk/account-helpers";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import {
   createDelegatedSetupWizardProxy,
   createStandardChannelSetupStatus,
   DEFAULT_ACCOUNT_ID,
   createSetupTranslator,
-} from "openclaw/plugin-sdk/setup-runtime";
+} from "quiet-core-bot/plugin-sdk/setup-runtime";
 import { buildChannelConfigSchema, type ChannelPlugin } from "./channel-api.js";
 import { NostrConfigSchema } from "./config-schema.js";
 import { DEFAULT_RELAYS } from "./default-relays.js";

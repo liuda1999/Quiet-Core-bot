@@ -4,7 +4,7 @@ import type { IncomingMessage } from "node:http";
 import os from "node:os";
 import path from "node:path";
 import type { Duplex } from "node:stream";
-import { defaultRuntime } from "openclaw/plugin-sdk/runtime-env";
+import { defaultRuntime } from "quiet-core-bot/plugin-sdk/runtime-env";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   A2UI_PATH,
@@ -173,7 +173,7 @@ describe("canvas host", () => {
       serverModule.CANVAS_LIVE_RELOAD_MAX_INBOUND_MESSAGE_BYTES;
     const wsModule = await vi.importActual<typeof import("ws")>("ws");
     WebSocketServerClass = wsModule.WebSocketServer;
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-canvas-fixtures-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-canvas-fixtures-"));
   });
 
   beforeEach(() => {
@@ -451,7 +451,7 @@ describe("canvas host", () => {
     await fs.mkdir(nestedAssetDir, { recursive: true });
     await fs.writeFile(
       path.join(a2uiRoot, "index.html"),
-      `<openclaw-a2ui-host></openclaw-a2ui-host>
+      `<quiet-core-bot-a2ui-host></quiet-core-bot-a2ui-host>
 <script>openclawCanvasA2UIAction</script>`,
       "utf8",
     );
@@ -463,7 +463,7 @@ describe("canvas host", () => {
       const res = await captureA2uiFixtureResponse(a2uiRoot, `${A2UI_PATH}/`);
       const html = res.body;
       expect(res.status).toBe(200);
-      expect(html).toContain("openclaw-a2ui-host");
+      expect(html).toContain("quiet-core-bot-a2ui-host");
       expect(html).toContain("openclawCanvasA2UIAction");
 
       const bundleRes = await captureA2uiFixtureResponse(a2uiRoot, `${A2UI_PATH}/a2ui.bundle.js`);

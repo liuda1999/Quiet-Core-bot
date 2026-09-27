@@ -11,7 +11,7 @@ Adds Novita, Novita AI, Novitaai model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/novita-provider`
+- Package: `@quiet-core/novita-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

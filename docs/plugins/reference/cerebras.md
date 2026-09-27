@@ -11,8 +11,8 @@ Adds Cerebras model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/cerebras-provider`
-- Install route: npm; ClawHub: `clawhub:@openclaw/cerebras-provider`
+- Package: `@quiet-core/cerebras-provider`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/cerebras-provider`
 
 ## Surface
 

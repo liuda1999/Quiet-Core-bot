@@ -14,7 +14,7 @@ afterEach(() => {
 });
 
 function makeTempDir(): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-command-source-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-command-source-"));
   tempDirs.push(dir);
   return dir;
 }

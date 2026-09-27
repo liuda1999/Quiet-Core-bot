@@ -78,7 +78,7 @@ With the tunnel up:
 - `quiet-core-bot gateway status`, `quiet-core-bot gateway health`, `quiet-core-bot gateway probe`, and `quiet-core-bot gateway call` can also target the forwarded URL via `--url` when needed.
 
 <Note>
-Replace `18789` with your configured `gateway.port` (or `--port` or `OPENCLAW_GATEWAY_PORT`).
+Replace `18789` with your configured `gateway.port` (or `--port` or `QUIET_CORE_GATEWAY_PORT`).
 </Note>
 
 <Warning>
@@ -129,16 +129,16 @@ Gateway credential resolution follows one shared contract across call/probe/stat
 - Explicit credentials (`--token`, `--password`, or tool `gatewayToken`) always win on call paths that accept explicit auth.
 - URL override safety:
   - CLI URL overrides (`--url`) never reuse implicit config/env credentials.
-  - Env URL overrides (`OPENCLAW_GATEWAY_URL`) may use env credentials only (`OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`).
+  - Env URL overrides (`QUIET_CORE_GATEWAY_URL`) may use env credentials only (`QUIET_CORE_GATEWAY_TOKEN` / `QUIET_CORE_GATEWAY_PASSWORD`).
 - Local mode defaults:
-  - token: `OPENCLAW_GATEWAY_TOKEN` -> `gateway.auth.token` -> `gateway.remote.token` (remote fallback applies only when local auth token input is unset)
-  - password: `OPENCLAW_GATEWAY_PASSWORD` -> `gateway.auth.password` -> `gateway.remote.password` (remote fallback applies only when local auth password input is unset)
+  - token: `QUIET_CORE_GATEWAY_TOKEN` -> `gateway.auth.token` -> `gateway.remote.token` (remote fallback applies only when local auth token input is unset)
+  - password: `QUIET_CORE_GATEWAY_PASSWORD` -> `gateway.auth.password` -> `gateway.remote.password` (remote fallback applies only when local auth password input is unset)
 - Remote mode defaults:
-  - token: `gateway.remote.token` -> `OPENCLAW_GATEWAY_TOKEN` -> `gateway.auth.token`
-  - password: `OPENCLAW_GATEWAY_PASSWORD` -> `gateway.remote.password` -> `gateway.auth.password`
+  - token: `gateway.remote.token` -> `QUIET_CORE_GATEWAY_TOKEN` -> `gateway.auth.token`
+  - password: `QUIET_CORE_GATEWAY_PASSWORD` -> `gateway.remote.password` -> `gateway.auth.password`
 - Node-host local-mode exception: `gateway.remote.token` / `gateway.remote.password` are ignored.
 - Remote probe/status token checks are strict by default: they use `gateway.remote.token` only (no local token fallback) when targeting remote mode.
-- Gateway env overrides use `OPENCLAW_GATEWAY_*` only.
+- Gateway env overrides use `QUIET_CORE_GATEWAY_*` only.
 
 ## Chat UI remote access
 
@@ -210,7 +210,7 @@ quiet-core-bot config set gateway.remote.token "<your-token>"
 
 #### Step 4: create the LaunchAgent
 
-Save this as `~/Library/LaunchAgents/ai.openclaw.ssh-tunnel.plist`:
+Save this as `~/Library/LaunchAgents/ai.quiet-core-bot.ssh-tunnel.plist`:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -218,7 +218,7 @@ Save this as `~/Library/LaunchAgents/ai.openclaw.ssh-tunnel.plist`:
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>ai.openclaw.ssh-tunnel</string>
+    <string>ai.quiet-core-bot.ssh-tunnel</string>
     <key>ProgramArguments</key>
     <array>
         <string>/usr/bin/ssh</string>
@@ -236,7 +236,7 @@ Save this as `~/Library/LaunchAgents/ai.openclaw.ssh-tunnel.plist`:
 #### Step 5: load the LaunchAgent
 
 ```bash
-launchctl bootstrap gui/$UID ~/Library/LaunchAgents/ai.openclaw.ssh-tunnel.plist
+launchctl bootstrap gui/$UID ~/Library/LaunchAgents/ai.quiet-core-bot.ssh-tunnel.plist
 ```
 
 The tunnel will start automatically at login, restart on crash, and keep the forwarded port live.
@@ -257,13 +257,13 @@ lsof -i :18789
 Restart the tunnel:
 
 ```bash
-launchctl kickstart -k gui/$UID/ai.openclaw.ssh-tunnel
+launchctl kickstart -k gui/$UID/ai.quiet-core-bot.ssh-tunnel
 ```
 
 Stop the tunnel:
 
 ```bash
-launchctl bootout gui/$UID/ai.openclaw.ssh-tunnel
+launchctl bootout gui/$UID/ai.quiet-core-bot.ssh-tunnel
 ```
 
 | Config entry                         | What it does                                                 |

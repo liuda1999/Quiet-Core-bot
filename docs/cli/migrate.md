@@ -1,12 +1,12 @@
 ---
-summary: "CLI reference for `openclaw migrate` (import state from another agent system)"
+summary: "CLI reference for `quiet-core-bot migrate` (import state from another agent system)"
 read_when:
   - You want to migrate from Hermes or another agent system into Quiet Core bot
   - You are adding a plugin-owned migration provider
 title: "Migrate"
 ---
 
-# `openclaw migrate`
+# `quiet-core-bot migrate`
 
 Import state from another agent system through a plugin-owned migration provider. Bundled providers cover Codex CLI state, [Claude](/install/migrating-claude), and [Hermes](/install/migrating-hermes); third-party plugins can register additional providers.
 
@@ -17,27 +17,27 @@ For user-facing walkthroughs, see [Migrating from Claude](/install/migrating-cla
 ## Commands
 
 ```bash
-openclaw migrate list
-openclaw migrate claude --dry-run
-openclaw migrate codex --dry-run
-openclaw migrate codex --skill gog-vault77-google-workspace
-openclaw migrate codex --plugin google-calendar --dry-run
-openclaw migrate codex --plugin google-calendar --verify-plugin-apps --dry-run
-openclaw migrate hermes --dry-run
-openclaw migrate hermes
-openclaw migrate apply codex --yes --skill gog-vault77-google-workspace
-openclaw migrate apply codex --yes --plugin google-calendar
-openclaw migrate apply codex --yes
-openclaw migrate apply claude --yes
-openclaw migrate apply hermes --yes
-openclaw migrate apply hermes --include-secrets --yes
+quiet-core-bot migrate list
+quiet-core-bot migrate claude --dry-run
+quiet-core-bot migrate codex --dry-run
+quiet-core-bot migrate codex --skill gog-vault77-google-workspace
+quiet-core-bot migrate codex --plugin google-calendar --dry-run
+quiet-core-bot migrate codex --plugin google-calendar --verify-plugin-apps --dry-run
+quiet-core-bot migrate hermes --dry-run
+quiet-core-bot migrate hermes
+quiet-core-bot migrate apply codex --yes --skill gog-vault77-google-workspace
+quiet-core-bot migrate apply codex --yes --plugin google-calendar
+quiet-core-bot migrate apply codex --yes
+quiet-core-bot migrate apply claude --yes
+quiet-core-bot migrate apply hermes --yes
+quiet-core-bot migrate apply hermes --include-secrets --yes
 quiet-core-bot onboard --flow import
 quiet-core-bot onboard --import-from claude --import-source ~/.claude
 quiet-core-bot onboard --import-from hermes --import-source ~/.hermes
 ```
 
 <ParamField path="<provider>" type="string">
-  Name of a registered migration provider, for example `hermes`. Run `openclaw migrate list` to see installed providers.
+  Name of a registered migration provider, for example `hermes`. Run `quiet-core-bot migrate list` to see installed providers.
 </ParamField>
 <ParamField path="--dry-run" type="boolean">
   Build the plan and exit without changing state.
@@ -78,13 +78,13 @@ quiet-core-bot onboard --import-from hermes --import-source ~/.hermes
 
 ## Safety model
 
-`openclaw migrate` is preview-first.
+`quiet-core-bot migrate` is preview-first.
 
 <AccordionGroup>
   <Accordion title="Preview before apply">
     The provider returns an itemized plan before anything changes, including conflicts, skipped items, and sensitive items. JSON plans, apply output, and migration reports redact nested secret-looking keys such as API keys, tokens, authorization headers, cookies, and passwords.
 
-    `openclaw migrate apply <provider>` previews the plan and prompts before changing state unless `--yes` is set. In non-interactive mode, apply requires `--yes`.
+    `quiet-core-bot migrate apply <provider>` previews the plan and prompts before changing state unless `--yes` is set. In non-interactive mode, apply requires `--yes`.
 
   </Accordion>
   <Accordion title="Backups">
@@ -131,7 +131,7 @@ launches use a per-agent `CODEX_HOME`, so they do not read your personal
 can see shared `$HOME/.agents/*` skills/plugin marketplace entries and
 subprocesses can find user-home config and tokens.
 
-Running `openclaw migrate codex` in an interactive terminal previews the full
+Running `quiet-core-bot migrate codex` in an interactive terminal previews the full
 plan, then opens checkbox selectors before the final apply confirmation. Skill
 copy items are prompted first. Use `Toggle all on` or `Toggle all off` for bulk
 selection. Press Space to toggle rows, or press Enter to activate the highlighted
@@ -147,16 +147,16 @@ plugins in that run, or `Skip for now` to stop before applying. For scripted or
 exact runs, pass `--skill <name>` once per skill, for example:
 
 ```bash
-openclaw migrate codex --dry-run --skill gog-vault77-google-workspace
-openclaw migrate apply codex --yes --skill gog-vault77-google-workspace
+quiet-core-bot migrate codex --dry-run --skill gog-vault77-google-workspace
+quiet-core-bot migrate apply codex --yes --skill gog-vault77-google-workspace
 ```
 
 Use `--plugin <name>` to limit native Codex plugin migration non-interactively
 to one or more source-installed curated plugins:
 
 ```bash
-openclaw migrate codex --dry-run --plugin google-calendar
-openclaw migrate apply codex --yes --plugin google-calendar
+quiet-core-bot migrate codex --dry-run --plugin google-calendar
+quiet-core-bot migrate apply codex --yes --plugin google-calendar
 ```
 
 ### What Codex imports
@@ -303,7 +303,7 @@ quiet-core-bot doctor
 
 ## Plugin contract
 
-Migration sources are plugins. A plugin declares its provider ids in `openclaw.plugin.json`:
+Migration sources are plugins. A plugin declares its provider ids in `quiet-core-bot.plugin.json`:
 
 ```json
 {
@@ -315,7 +315,7 @@ Migration sources are plugins. A plugin declares its provider ids in `openclaw.p
 
 At runtime the plugin calls `api.registerMigrationProvider(...)`. The provider implements `detect`, `plan`, and `apply`. Core owns CLI orchestration, backup policy, prompts, JSON output, and conflict preflight. Core passes the reviewed plan into `apply(ctx, plan)`, and providers may rebuild the plan only when that argument is absent for compatibility.
 
-Provider plugins can use `openclaw/plugin-sdk/migration` for item construction and summary counts, plus `openclaw/plugin-sdk/migration-runtime` for conflict-aware file copies, archive-only report copies, cached config-runtime wrappers, and migration reports.
+Provider plugins can use `quiet-core-bot/plugin-sdk/migration` for item construction and summary counts, plus `quiet-core-bot/plugin-sdk/migration-runtime` for conflict-aware file copies, archive-only report copies, cached config-runtime wrappers, and migration reports.
 
 ## Onboarding integration
 

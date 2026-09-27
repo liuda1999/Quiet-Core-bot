@@ -3,13 +3,13 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { collectInstallPolicyHealthLines } from "./doctor-install-policy.js";
 
 const tempDirs: string[] = [];
 
 async function makeTempDir(): Promise<string> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-doctor-install-policy-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-doctor-install-policy-"));
   tempDirs.push(dir);
   return dir;
 }

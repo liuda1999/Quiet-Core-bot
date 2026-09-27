@@ -6,7 +6,6 @@ import { withTempDir } from "../test-helpers/temp-dir.js";
 import {
   CONFIG_PATH,
   DEFAULT_GATEWAY_PORT,
-  isInitializedStateDir,
   isNixMode,
   normalizeStateDirEnv,
   pinRuntimePaths,
@@ -26,10 +25,10 @@ function envWith(overrides: Record<string, string | undefined>): NodeJS.ProcessE
 }
 
 describe("oauth paths", () => {
-  it("prefers OPENCLAW_OAUTH_DIR over OPENCLAW_STATE_DIR", () => {
+  it("prefers QUIET_CORE_OAUTH_DIR over QUIET_CORE_STATE_DIR", () => {
     const env = {
-      OPENCLAW_OAUTH_DIR: "/custom/oauth",
-      OPENCLAW_STATE_DIR: "/custom/state",
+      QUIET_CORE_OAUTH_DIR: "/custom/oauth",
+      QUIET_CORE_STATE_DIR: "/custom/state",
     } as NodeJS.ProcessEnv;
 
     expect(resolveOAuthDir(env, "/custom/state")).toBe(path.resolve("/custom/oauth"));
@@ -38,9 +37,9 @@ describe("oauth paths", () => {
     );
   });
 
-  it("derives oauth path from OPENCLAW_STATE_DIR when unset", () => {
+  it("derives oauth path from QUIET_CORE_STATE_DIR when unset", () => {
     const env = {
-      OPENCLAW_STATE_DIR: "/custom/state",
+      QUIET_CORE_STATE_DIR: "/custom/state",
     } as NodeJS.ProcessEnv;
 
     expect(resolveOAuthDir(env, "/custom/state")).toBe(path.join("/custom/state", "credentials"));
@@ -53,7 +52,7 @@ describe("oauth paths", () => {
 describe("gateway port resolution", () => {
   it("prefers numeric env values over config", () => {
     expect(
-      resolveGatewayPort({ gateway: { port: 19002 } }, envWith({ OPENCLAW_GATEWAY_PORT: "19001" })),
+      resolveGatewayPort({ gateway: { port: 19002 } }, envWith({ QUIET_CORE_GATEWAY_PORT: "19001" })),
     ).toBe(19001);
   });
 
@@ -61,7 +60,7 @@ describe("gateway port resolution", () => {
     expect(
       resolveGatewayPort(
         { gateway: { port: 19002 } },
-        envWith({ OPENCLAW_GATEWAY_PORT: "127.0.0.1:18789" }),
+        envWith({ QUIET_CORE_GATEWAY_PORT: "127.0.0.1:18789" }),
       ),
     ).toBe(18789);
   });
@@ -70,7 +69,7 @@ describe("gateway port resolution", () => {
     expect(
       resolveGatewayPort(
         { gateway: { port: 19002 } },
-        envWith({ OPENCLAW_GATEWAY_PORT: "[::1]:28789" }),
+        envWith({ QUIET_CORE_GATEWAY_PORT: "[::1]:28789" }),
       ),
     ).toBe(28789);
   });
@@ -88,40 +87,40 @@ describe("gateway port resolution", () => {
     expect(
       resolveGatewayPort(
         { gateway: { port: 19003 } },
-        envWith({ OPENCLAW_GATEWAY_PORT: "127.0.0.1:not-a-port" }),
+        envWith({ QUIET_CORE_GATEWAY_PORT: "127.0.0.1:not-a-port" }),
       ),
     ).toBe(19003);
   });
 
   it("falls back to config when env ports exceed TCP bounds", () => {
     expect(
-      resolveGatewayPort({ gateway: { port: 19003 } }, envWith({ OPENCLAW_GATEWAY_PORT: "65536" })),
+      resolveGatewayPort({ gateway: { port: 19003 } }, envWith({ QUIET_CORE_GATEWAY_PORT: "65536" })),
     ).toBe(19003);
     expect(
       resolveGatewayPort(
         { gateway: { port: 19004 } },
-        envWith({ OPENCLAW_GATEWAY_PORT: "127.0.0.1:65536" }),
+        envWith({ QUIET_CORE_GATEWAY_PORT: "127.0.0.1:65536" }),
       ),
     ).toBe(19004);
     expect(
       resolveGatewayPort(
         { gateway: { port: 19005 } },
-        envWith({ OPENCLAW_GATEWAY_PORT: "[::1]:65536" }),
+        envWith({ QUIET_CORE_GATEWAY_PORT: "[::1]:65536" }),
       ),
     ).toBe(19005);
   });
 
   it("falls back when malformed IPv6 inputs do not provide an explicit port", () => {
     expect(
-      resolveGatewayPort({ gateway: { port: 19003 } }, envWith({ OPENCLAW_GATEWAY_PORT: "::1" })),
+      resolveGatewayPort({ gateway: { port: 19003 } }, envWith({ QUIET_CORE_GATEWAY_PORT: "::1" })),
     ).toBe(19003);
-    expect(resolveGatewayPort({}, envWith({ OPENCLAW_GATEWAY_PORT: "2001:db8::1" }))).toBe(
+    expect(resolveGatewayPort({}, envWith({ QUIET_CORE_GATEWAY_PORT: "2001:db8::1" }))).toBe(
       DEFAULT_GATEWAY_PORT,
     );
   });
 
   it("falls back to the default port when env is invalid and config is unset", () => {
-    expect(resolveGatewayPort({}, envWith({ OPENCLAW_GATEWAY_PORT: "127.0.0.1:not-a-port" }))).toBe(
+    expect(resolveGatewayPort({}, envWith({ QUIET_CORE_GATEWAY_PORT: "127.0.0.1:not-a-port" }))).toBe(
       DEFAULT_GATEWAY_PORT,
     );
   });
@@ -129,9 +128,9 @@ describe("gateway port resolution", () => {
 
 describe("state + config path candidates", () => {
   function expectOpenClawHomeDefaults(env: NodeJS.ProcessEnv): void {
-    const configuredHome = env.OPENCLAW_HOME;
+    const configuredHome = env.QUIET_CORE_HOME;
     if (!configuredHome) {
-      throw new Error("OPENCLAW_HOME must be set for this assertion helper");
+      throw new Error("QUIET_CORE_HOME must be set for this assertion helper");
     }
     const resolvedHome = path.resolve(configuredHome);
     expect(resolveStateDir(env)).toBe(path.join(resolvedHome, ".quiet-core-bot"));
@@ -140,33 +139,33 @@ describe("state + config path candidates", () => {
     expect(candidates[0]).toBe(path.join(resolvedHome, ".quiet-core-bot", "quiet-core-bot.json"));
   }
 
-  it("uses OPENCLAW_STATE_DIR when set", () => {
+  it("uses QUIET_CORE_STATE_DIR when set", () => {
     const env = {
-      OPENCLAW_STATE_DIR: "/new/state",
+      QUIET_CORE_STATE_DIR: "/new/state",
     } as NodeJS.ProcessEnv;
 
     expect(resolveStateDir(env, () => "/home/test")).toBe(path.resolve("/new/state"));
   });
 
-  it("normalizes relative OPENCLAW_STATE_DIR overrides to absolute paths", () => {
+  it("normalizes relative QUIET_CORE_STATE_DIR overrides to absolute paths", () => {
     const env = {
-      OPENCLAW_STATE_DIR: ".",
-      OPENCLAW_HOME: "/srv/openclaw-home",
+      QUIET_CORE_STATE_DIR: ".",
+      QUIET_CORE_HOME: "/srv/quiet-core-bot-home",
     } as NodeJS.ProcessEnv;
 
     normalizeStateDirEnv(env);
 
-    expect(env.OPENCLAW_STATE_DIR).toBe(path.resolve("."));
+    expect(env.QUIET_CORE_STATE_DIR).toBe(path.resolve("."));
   });
 
   it("pins a relative state-dir override before later resolution", () => {
     const env = {
-      OPENCLAW_STATE_DIR: "relative-state",
-      OPENCLAW_HOME: "/srv/openclaw-home",
+      QUIET_CORE_STATE_DIR: "relative-state",
+      QUIET_CORE_HOME: "/srv/quiet-core-bot-home",
     } as NodeJS.ProcessEnv;
 
     normalizeStateDirEnv(env);
-    const normalized = env.OPENCLAW_STATE_DIR;
+    const normalized = env.QUIET_CORE_STATE_DIR;
 
     expect(normalized).toBe(path.resolve("relative-state"));
     expect(resolveStateDir(env, () => "/srv/other-home")).toBe(normalized);
@@ -176,14 +175,14 @@ describe("state + config path candidates", () => {
     const originalConfigPath = CONFIG_PATH;
     const originalNixMode = isNixMode;
     const originalStateDir = STATE_DIR;
-    const selectedStateDir = path.resolve("/tmp/openclaw-selected-runtime-state");
+    const selectedStateDir = path.resolve("/tmp/quiet-core-bot-selected-runtime-state");
     const selectedConfigPath = path.join(selectedStateDir, "selected.json");
     try {
       const pinned = pinRuntimePaths({
-        OPENCLAW_CONFIG_PATH: selectedConfigPath,
-        OPENCLAW_NIX_MODE: "1",
-        OPENCLAW_STATE_DIR: selectedStateDir,
-        OPENCLAW_TEST_FAST: "1",
+        QUIET_CORE_CONFIG_PATH: selectedConfigPath,
+        QUIET_CORE_NIX_MODE: "1",
+        QUIET_CORE_STATE_DIR: selectedStateDir,
+        QUIET_CORE_TEST_FAST: "1",
       });
 
       expect(pinned).toEqual({
@@ -195,117 +194,56 @@ describe("state + config path candidates", () => {
       expect(STATE_DIR).toBe(selectedStateDir);
     } finally {
       pinRuntimePaths({
-        OPENCLAW_CONFIG_PATH: originalConfigPath,
-        OPENCLAW_NIX_MODE: originalNixMode ? "1" : undefined,
-        OPENCLAW_STATE_DIR: originalStateDir,
-        OPENCLAW_TEST_FAST: "1",
+        QUIET_CORE_CONFIG_PATH: originalConfigPath,
+        QUIET_CORE_NIX_MODE: originalNixMode ? "1" : undefined,
+        QUIET_CORE_STATE_DIR: originalStateDir,
+        QUIET_CORE_TEST_FAST: "1",
       });
     }
   });
 
-  it("uses OPENCLAW_HOME for default state/config locations", () => {
+  it("uses QUIET_CORE_HOME for default state/config locations", () => {
     const env = {
-      OPENCLAW_HOME: "/srv/openclaw-home",
+      QUIET_CORE_HOME: "/srv/quiet-core-bot-home",
     } as NodeJS.ProcessEnv;
     expectOpenClawHomeDefaults(env);
   });
 
-  it("prefers OPENCLAW_HOME over HOME for default state/config locations", () => {
+  it("prefers QUIET_CORE_HOME over HOME for default state/config locations", () => {
     const env = {
-      OPENCLAW_HOME: "/srv/openclaw-home",
+      QUIET_CORE_HOME: "/srv/quiet-core-bot-home",
       HOME: "/home/other",
     } as NodeJS.ProcessEnv;
     expectOpenClawHomeDefaults(env);
   });
 
-  it("orders default config candidates in a stable order", () => {
+  it("returns only the new-brand config candidate", () => {
     const home = "/home/test";
     const resolvedHome = path.resolve(home);
     const candidates = resolveDefaultConfigCandidates({} as NodeJS.ProcessEnv, () => home);
-    const expected = [
+    expect(candidates).toEqual([
       path.join(resolvedHome, ".quiet-core-bot", "quiet-core-bot.json"),
-      path.join(resolvedHome, ".quiet-core-bot", "clawdbot.json"),
-      path.join(resolvedHome, ".quiet-core-bot", "openclaw.json"),
-      path.join(resolvedHome, ".clawdbot", "quiet-core-bot.json"),
-      path.join(resolvedHome, ".clawdbot", "clawdbot.json"),
-      path.join(resolvedHome, ".clawdbot", "openclaw.json"),
-      path.join(resolvedHome, ".openclaw", "quiet-core-bot.json"),
-      path.join(resolvedHome, ".openclaw", "clawdbot.json"),
-      path.join(resolvedHome, ".openclaw", "openclaw.json"),
-    ];
-    expect(candidates).toEqual(expected);
+    ]);
   });
 
-  it("prefers ~/.quiet-core-bot when it exists and legacy dirs are missing", async () => {
-    await withTempDir({ prefix: "openclaw-state-" }, async (root) => {
+  it("prefers ~/.quiet-core-bot for the default state dir", async () => {
+    await withTempDir({ prefix: "quiet-core-bot-state-" }, async (root) => {
       const newDir = path.join(root, ".quiet-core-bot");
       await fs.mkdir(newDir, { recursive: true });
-      const resolved = resolveStateDir({} as NodeJS.ProcessEnv, () => root);
-      expect(resolved).toBe(newDir);
-    });
-  });
-
-  it("falls back to existing legacy state dir when ~/.quiet-core-bot is missing", async () => {
-    await withTempDir({ prefix: "openclaw-state-legacy-" }, async (root) => {
-      const legacyDir = path.join(root, ".clawdbot");
-      await fs.mkdir(legacyDir, { recursive: true });
-      const resolved = resolveStateDir({} as NodeJS.ProcessEnv, () => root);
-      expect(resolved).toBe(legacyDir);
-    });
-  });
-
-  it("ignores an uninitialized new state dir while a legacy dir is live", async () => {
-    await withTempDir({ prefix: "openclaw-state-shell-" }, async (root) => {
-      const newDir = path.join(root, ".quiet-core-bot");
-      const legacyDir = path.join(root, ".openclaw");
-      // Reproduces the aborted-migration leftover: a config copy and nothing else.
-      await fs.mkdir(newDir, { recursive: true });
-      await fs.writeFile(path.join(newDir, "quiet-core-bot.json"), "{}", "utf-8");
-      await fs.mkdir(path.join(legacyDir, "agents"), { recursive: true });
-
-      const resolved = resolveStateDir({} as NodeJS.ProcessEnv, () => root);
-      expect(resolved).toBe(legacyDir);
-    });
-  });
-
-  it("adopts the new state dir once it carries substantive data", async () => {
-    await withTempDir({ prefix: "openclaw-state-init-" }, async (root) => {
-      const newDir = path.join(root, ".quiet-core-bot");
-      const legacyDir = path.join(root, ".openclaw");
-      await fs.mkdir(path.join(newDir, "agents"), { recursive: true });
-      await fs.mkdir(path.join(legacyDir, "agents"), { recursive: true });
-
       const resolved = resolveStateDir({} as NodeJS.ProcessEnv, () => root);
       expect(resolved).toBe(newDir);
     });
   });
 
   it("uses the new state dir for a fresh install when nothing exists yet", async () => {
-    await withTempDir({ prefix: "openclaw-state-fresh-" }, async (root) => {
+    await withTempDir({ prefix: "quiet-core-bot-state-fresh-" }, async (root) => {
       const resolved = resolveStateDir({} as NodeJS.ProcessEnv, () => root);
       expect(resolved).toBe(path.join(root, ".quiet-core-bot"));
     });
   });
 
-  it("classifies state dir initialization by substantive marker dirs", async () => {
-    await withTempDir({ prefix: "openclaw-state-markers-" }, async (root) => {
-      const empty = path.join(root, "empty");
-      const configOnly = path.join(root, "config-only");
-      const withWorkspace = path.join(root, "with-workspace");
-      await fs.mkdir(empty, { recursive: true });
-      await fs.mkdir(configOnly, { recursive: true });
-      await fs.writeFile(path.join(configOnly, "quiet-core-bot.json"), "{}", "utf-8");
-      await fs.mkdir(path.join(withWorkspace, "workspace"), { recursive: true });
-
-      expect(isInitializedStateDir(empty)).toBe(false);
-      expect(isInitializedStateDir(configOnly)).toBe(false);
-      expect(isInitializedStateDir(withWorkspace)).toBe(true);
-      expect(isInitializedStateDir(path.join(root, "missing"))).toBe(false);
-    });
-  });
-
   it("CONFIG_PATH prefers existing config when present", async () => {
-    await withTempDir({ prefix: "openclaw-config-" }, async (root) => {
+    await withTempDir({ prefix: "quiet-core-bot-config-" }, async (root) => {
       const newDir = path.join(root, ".quiet-core-bot");
       await fs.mkdir(newDir, { recursive: true });
       const newPath = path.join(newDir, "quiet-core-bot.json");
@@ -317,14 +255,9 @@ describe("state + config path candidates", () => {
   });
 
   it("respects state dir overrides when config is missing", async () => {
-    await withTempDir({ prefix: "openclaw-config-override-" }, async (root) => {
-      const legacyDir = path.join(root, ".openclaw");
-      await fs.mkdir(legacyDir, { recursive: true });
-      const legacyConfig = path.join(legacyDir, "openclaw.json");
-      await fs.writeFile(legacyConfig, "{}", "utf-8");
-
+    await withTempDir({ prefix: "quiet-core-bot-config-override-" }, async (root) => {
       const overrideDir = path.join(root, "override");
-      const env = { OPENCLAW_STATE_DIR: overrideDir } as NodeJS.ProcessEnv;
+      const env = { QUIET_CORE_STATE_DIR: overrideDir } as NodeJS.ProcessEnv;
       const resolved = resolveConfigPath(env, overrideDir, () => root);
       expect(resolved).toBe(path.join(overrideDir, "quiet-core-bot.json"));
     });
@@ -334,32 +267,32 @@ describe("state + config path candidates", () => {
 describe("resolveIncludeRoots", () => {
   const HOME = path.parse(process.cwd()).root + "fakehome";
 
-  it("returns an empty list when OPENCLAW_INCLUDE_ROOTS is unset or blank", () => {
+  it("returns an empty list when QUIET_CORE_INCLUDE_ROOTS is unset or blank", () => {
     expect(resolveIncludeRoots(envWith({}), () => HOME)).toStrictEqual([]);
-    expect(resolveIncludeRoots(envWith({ OPENCLAW_INCLUDE_ROOTS: "" }), () => HOME)).toStrictEqual(
+    expect(resolveIncludeRoots(envWith({ QUIET_CORE_INCLUDE_ROOTS: "" }), () => HOME)).toStrictEqual(
       [],
     );
     expect(
-      resolveIncludeRoots(envWith({ OPENCLAW_INCLUDE_ROOTS: "   " }), () => HOME),
+      resolveIncludeRoots(envWith({ QUIET_CORE_INCLUDE_ROOTS: "   " }), () => HOME),
     ).toStrictEqual([]);
   });
 
   it("splits on the platform path delimiter and resolves each entry to an absolute path", () => {
     const a = path.resolve(path.parse(process.cwd()).root, "shared", "a");
     const b = path.resolve(path.parse(process.cwd()).root, "shared", "b");
-    const env = envWith({ OPENCLAW_INCLUDE_ROOTS: [a, b].join(path.delimiter) });
+    const env = envWith({ QUIET_CORE_INCLUDE_ROOTS: [a, b].join(path.delimiter) });
     expect(resolveIncludeRoots(env, () => HOME)).toEqual([a, b]);
   });
 
   it("expands a leading tilde in each entry using the resolved home dir", () => {
-    const env = envWith({ OPENCLAW_INCLUDE_ROOTS: "~/share/openclaw" });
-    expect(resolveIncludeRoots(env, () => HOME)).toEqual([path.join(HOME, "share", "openclaw")]);
+    const env = envWith({ QUIET_CORE_INCLUDE_ROOTS: "~/share/quiet-core-bot" });
+    expect(resolveIncludeRoots(env, () => HOME)).toEqual([path.join(HOME, "share", "quiet-core-bot")]);
   });
 
   it("drops empty entries and preserves de-duplicated order for repeated roots", () => {
     const a = path.resolve(path.parse(process.cwd()).root, "shared", "a");
     const env = envWith({
-      OPENCLAW_INCLUDE_ROOTS: ["", a, "  ", a].join(path.delimiter),
+      QUIET_CORE_INCLUDE_ROOTS: ["", a, "  ", a].join(path.delimiter),
     });
     expect(resolveIncludeRoots(env, () => HOME)).toEqual([a]);
   });

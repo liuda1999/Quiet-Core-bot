@@ -23,7 +23,7 @@ Use these hubs to discover every page, including deep dives and reference docs t
 - [Docs directory](/start/docs-directory)
 - [Configuration](/gateway/configuration)
 - [Configuration examples](/gateway/configuration-examples)
-- [Quiet Core bot assistant](/start/openclaw)
+- [Quiet Core bot assistant](/start/quiet-core-bot)
 - [Showcase](/start/showcase)
 - [Lore](/start/lore)
 

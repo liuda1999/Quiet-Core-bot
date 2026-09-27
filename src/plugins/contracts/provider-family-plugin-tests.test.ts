@@ -115,8 +115,8 @@ function listBundledPluginRoots() {
     workspaceDir: REPO_ROOT,
     env: {
       ...process.env,
-      OPENCLAW_BUNDLED_PLUGINS_DIR: BUNDLED_SOURCE_EXTENSIONS_ROOT,
-      OPENCLAW_TEST_TRUST_BUNDLED_PLUGINS_DIR: "1",
+      QUIET_CORE_BUNDLED_PLUGINS_DIR: BUNDLED_SOURCE_EXTENSIONS_ROOT,
+      QUIET_CORE_TEST_TRUST_BUNDLED_PLUGINS_DIR: "1",
     },
   })
     .plugins.filter((plugin) => plugin.origin === "bundled")

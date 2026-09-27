@@ -1,9 +1,9 @@
 // Builds CLI runtime dispatch inputs for agent runner executions.
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
+import { isRecord } from "@quiet-core/normalization-core/record-coerce";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/normalization-core/string-coerce";
 import { runCliAgent } from "../../agents/cli-runner.js";
 import type { RunCliAgentParams } from "../../agents/cli-runner/types.js";
 import { clearCliSession } from "../../agents/cli-session.js";

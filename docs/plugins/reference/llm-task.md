@@ -11,7 +11,7 @@ Generic JSON-only LLM tool for structured tasks callable from workflows.
 
 ## Distribution
 
-- Package: `@openclaw/llm-task`
+- Package: `@quiet-core/llm-task`
 - Install route: included in Quiet Core bot
 
 ## Surface

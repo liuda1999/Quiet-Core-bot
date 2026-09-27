@@ -2,13 +2,13 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { importFreshModule } from "openclaw/plugin-sdk/test-fixtures";
+import { importFreshModule } from "quiet-core-bot/plugin-sdk/test-fixtures";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 const tempDirs: string[] = [];
 
 function makeTempDir() {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-loader-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-plugin-loader-"));
   tempDirs.push(dir);
   return dir;
 }
@@ -16,7 +16,7 @@ function makeTempDir() {
 function writeBundledPluginFixture(id: string) {
   const pluginRoot = makeTempDir();
   fs.writeFileSync(
-    path.join(pluginRoot, "openclaw.plugin.json"),
+    path.join(pluginRoot, "quiet-core-bot.plugin.json"),
     JSON.stringify(
       {
         id,
@@ -47,7 +47,7 @@ function writePackagedPluginFixture(id: string) {
       {
         name: id,
         type: "commonjs",
-        openclaw: {
+        "quiet-core-bot": {
           extensions: ["./index.cjs"],
         },
       },
@@ -57,7 +57,7 @@ function writePackagedPluginFixture(id: string) {
     "utf-8",
   );
   fs.writeFileSync(
-    path.join(pluginRoot, "openclaw.plugin.json"),
+    path.join(pluginRoot, "quiet-core-bot.plugin.json"),
     JSON.stringify(
       {
         id,
@@ -83,7 +83,7 @@ function writePackagedPluginFixture(id: string) {
 afterEach(() => {
   vi.resetModules();
   vi.doUnmock("./plugin-module-loader-cache.js");
-  delete process.env.OPENCLAW_BUNDLED_PLUGINS_DIR;
+  delete process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR;
   for (const dir of tempDirs.splice(0)) {
     fs.rmSync(dir, { recursive: true, force: true });
   }
@@ -122,7 +122,7 @@ describe("createPluginModuleLoader", () => {
     );
 
     const pluginRoot = writeBundledPluginFixture("demo");
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = pluginRoot;
+    process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR = pluginRoot;
 
     loadOpenClawPlugins({
       cache: false,
@@ -152,7 +152,7 @@ describe("createPluginModuleLoader", () => {
     );
 
     const pluginRoot = writePackagedPluginFixture("npm-demo");
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = makeTempDir();
+    process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR = makeTempDir();
 
     const registry = loadOpenClawPlugins({
       cache: false,

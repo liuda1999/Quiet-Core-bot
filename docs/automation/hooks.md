@@ -82,7 +82,7 @@ my-hook/
 name: my-hook
 description: "Short description of what this hook does"
 metadata:
-  { "openclaw": { "emoji": "🔗", "events": ["command:new"], "requires": { "bins": ["node"] } } }
+  { "quiet-core-bot": { "emoji": "🔗", "events": ["command:new"], "requires": { "bins": ["node"] } } }
 ---
 
 # My Hook
@@ -90,7 +90,7 @@ metadata:
 Detailed documentation goes here.
 ```
 
-**Metadata fields** (`metadata.openclaw`):
+**Metadata fields** (`metadata.quiet-core-bot`):
 
 | Field      | Description                                          |
 | ---------- | ---------------------------------------------------- |
@@ -166,7 +166,7 @@ export default async function handler(event) {
   }
 
   const restartInSeconds = Math.ceil(event.context.restartExpectedMs / 1000);
-  await execFileAsync("openclaw", [
+  await execFileAsync("quiet-core-bot", [
     "system",
     "event",
     "--mode",
@@ -194,7 +194,7 @@ The Gateway skips internal hook discovery on startup until internal hooks are co
 
 ### Hook packs
 
-Hook packs are npm packages that export hooks via `openclaw.hooks` in `package.json`. Install with:
+Hook packs are npm packages that export hooks via `quiet-core-bot.hooks` in `package.json`. Install with:
 
 ```bash
 quiet-core-bot plugins install <path-or-spec>

@@ -38,7 +38,7 @@ describe("media-understanding CLI audio entry", () => {
   it("applies per-request prompt and language overrides to CLI transcription templating", async () => {
     let mediaPath = "";
 
-    await withAudioFixture("openclaw-cli-audio", async ({ ctx, cache }) => {
+    await withAudioFixture("quiet-core-bot-cli-audio", async ({ ctx, cache }) => {
       mediaPath = await fs.realpath(ctx.MediaPath);
 
       await runCliEntry({
@@ -91,7 +91,7 @@ describe("media-understanding CLI audio entry", () => {
       stderr: "",
     });
 
-    await withAudioFixture("openclaw-cli-audio-empty-sherpa", async ({ ctx, cache }) => {
+    await withAudioFixture("quiet-core-bot-cli-audio-empty-sherpa", async ({ ctx, cache }) => {
       const result = await runCliEntry({
         capability: "audio",
         entry: {
@@ -116,7 +116,7 @@ describe("media-understanding CLI audio entry", () => {
       stderr: "",
     });
 
-    await withAudioFixture("openclaw-cli-audio-sherpa-json", async ({ ctx, cache }) => {
+    await withAudioFixture("quiet-core-bot-cli-audio-sherpa-json", async ({ ctx, cache }) => {
       const result = await runCliEntry({
         capability: "audio",
         entry: {

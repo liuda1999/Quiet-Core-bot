@@ -61,7 +61,7 @@ Scope implications:
 
 Reverse-proxy scope capping:
 
-- If your proxy sends `x-openclaw-scopes` on the Control UI WebSocket upgrade request, Quiet Core bot caps the session scopes to the intersection of the requested scopes and the declared scopes. This header does not grant scopes; it only narrows what the session can hold.
+- If your proxy sends `x-quiet-core-bot-scopes` on the Control UI WebSocket upgrade request, Quiet Core bot caps the session scopes to the intersection of the requested scopes and the declared scopes. This header does not grant scopes; it only narrows what the session can hold.
 
 Implications:
 
@@ -108,7 +108,7 @@ Custom WebSocket clients are not Control UI sessions. `gateway.controlUi.dangero
 - Trusted-proxy auth rejects loopback-source requests (`127.0.0.1`, `::1`, loopback CIDRs) by default.
 - Same-host loopback reverse proxies do **not** satisfy trusted-proxy auth unless you explicitly set `gateway.auth.trustedProxy.allowLoopback = true` and include the loopback address in `gateway.trustedProxies`.
 - `allowLoopback` trusts local processes on the Gateway host to the same degree as the reverse proxy. Enable it only when the Gateway is still firewalled from direct remote access and the local proxy strips or overwrites client-supplied identity headers.
-- Internal Gateway clients that do not travel through the reverse proxy should use `gateway.auth.password` / `OPENCLAW_GATEWAY_PASSWORD`, not trusted-proxy identity headers.
+- Internal Gateway clients that do not travel through the reverse proxy should use `gateway.auth.password` / `QUIET_CORE_GATEWAY_PASSWORD`, not trusted-proxy identity headers.
 - Non-loopback Control UI deployments still need explicit `gateway.controlUi.allowedOrigins`.
 - **Forwarded-header evidence overrides loopback locality for local direct fallback.** If a request arrives on loopback but carries `Forwarded`, any `X-Forwarded-*`, or `X-Real-IP` header evidence, that evidence disqualifies local-direct password fallback and device-identity gating. With `allowLoopback: true`, trusted-proxy auth can still accept the request as a same-host proxy request, while `requiredHeaders` and `allowUsers` continue to apply.
 
@@ -213,8 +213,8 @@ Use one TLS termination point and apply HSTS there.
 
     ```yaml
     routes:
-      - from: https://openclaw.example.com
-        to: http://openclaw-gateway:18789
+      - from: https://quiet-core-bot.example.com
+        to: http://quiet-core-bot-gateway:18789
         policy:
           - allow:
               or:
@@ -245,11 +245,11 @@ Use one TLS termination point and apply HSTS there.
     Caddyfile snippet:
 
     ```
-    openclaw.example.com {
+    quiet-core-bot.example.com {
         authenticate with oauth2_provider
         authorize with policy1
 
-        reverse_proxy openclaw:18789 {
+        reverse_proxy quiet-core-bot:18789 {
             header_up X-Forwarded-User {http.auth.user.email}
         }
     }
@@ -281,7 +281,7 @@ Use one TLS termination point and apply HSTS there.
         auth_request /oauth2/auth;
         auth_request_set $user $upstream_http_x_auth_request_email;
 
-        proxy_pass http://openclaw:18789;
+        proxy_pass http://quiet-core-bot:18789;
         proxy_set_header X-Auth-Request-Email $user;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
@@ -310,37 +310,37 @@ Use one TLS termination point and apply HSTS there.
 
 ## Mixed token configuration
 
-Quiet Core bot rejects ambiguous configurations where both a `gateway.auth.token` (or `OPENCLAW_GATEWAY_TOKEN`) and `trusted-proxy` mode are active at the same time. Mixed token configs can cause loopback requests to silently authenticate on the wrong auth path.
+Quiet Core bot rejects ambiguous configurations where both a `gateway.auth.token` (or `QUIET_CORE_GATEWAY_TOKEN`) and `trusted-proxy` mode are active at the same time. Mixed token configs can cause loopback requests to silently authenticate on the wrong auth path.
 
 If you see a `mixed_trusted_proxy_token` error on startup:
 
 - Remove the shared token when using trusted-proxy mode, or
 - Switch `gateway.auth.mode` to `"token"` if you intend token-based auth.
 
-Loopback trusted-proxy identity headers still fail closed: same-host callers are not silently authenticated as proxy users. Internal Quiet Core bot callers that bypass the proxy may authenticate with `gateway.auth.password` / `OPENCLAW_GATEWAY_PASSWORD` instead. Token fallback remains intentionally unsupported in trusted-proxy mode.
+Loopback trusted-proxy identity headers still fail closed: same-host callers are not silently authenticated as proxy users. Internal Quiet Core bot callers that bypass the proxy may authenticate with `gateway.auth.password` / `QUIET_CORE_GATEWAY_PASSWORD` instead. Token fallback remains intentionally unsupported in trusted-proxy mode.
 
 ## Operator scopes header
 
-Trusted-proxy auth is an **identity-bearing** HTTP mode, so callers may optionally declare operator scopes with `x-openclaw-scopes` on HTTP API requests.
+Trusted-proxy auth is an **identity-bearing** HTTP mode, so callers may optionally declare operator scopes with `x-quiet-core-bot-scopes` on HTTP API requests.
 
-Note: WebSocket scopes are determined by the Gateway protocol handshake and device identity binding. On Control UI WebSocket upgrade requests, `x-openclaw-scopes` is only a cap on the negotiated session scopes, not a grant. For WebSocket scope behavior with trusted-proxy, see [Control UI pairing behavior](#control-ui-pairing-behavior).
+Note: WebSocket scopes are determined by the Gateway protocol handshake and device identity binding. On Control UI WebSocket upgrade requests, `x-quiet-core-bot-scopes` is only a cap on the negotiated session scopes, not a grant. For WebSocket scope behavior with trusted-proxy, see [Control UI pairing behavior](#control-ui-pairing-behavior).
 
 Examples:
 
-- `x-openclaw-scopes: operator.read`
-- `x-openclaw-scopes: operator.read,operator.write`
-- `x-openclaw-scopes: operator.admin,operator.write`
+- `x-quiet-core-bot-scopes: operator.read`
+- `x-quiet-core-bot-scopes: operator.read,operator.write`
+- `x-quiet-core-bot-scopes: operator.admin,operator.write`
 
 Behavior:
 
 - When the header is present, Quiet Core bot honors the declared scope set.
 - When the header is present but empty, the request declares **no** operator scopes.
 - When the header is absent, normal identity-bearing HTTP APIs fall back to the standard operator default scope set.
-- Gateway-auth **plugin HTTP routes** are narrower by default: when `x-openclaw-scopes` is absent, their runtime scope falls back to `operator.write`.
+- Gateway-auth **plugin HTTP routes** are narrower by default: when `x-quiet-core-bot-scopes` is absent, their runtime scope falls back to `operator.write`.
 - Browser-origin HTTP requests still have to pass `gateway.controlUi.allowedOrigins` (or deliberate Host-header fallback mode) even after trusted-proxy auth succeeds.
-- For Control UI WebSocket sessions, `x-openclaw-scopes` is a scope cap when present on the upgrade request. An empty value yields no scopes.
+- For Control UI WebSocket sessions, `x-quiet-core-bot-scopes` is a scope cap when present on the upgrade request. An empty value yields no scopes.
 
-Practical rule: send `x-openclaw-scopes` explicitly when you want a trusted-proxy request to be narrower than the defaults, or when a gateway-auth plugin route needs something stronger than write scope.
+Practical rule: send `x-quiet-core-bot-scopes` explicitly when you want a trusted-proxy request to be narrower than the defaults, or when a gateway-auth plugin route needs something stronger than write scope.
 
 ## Security checklist
 
@@ -358,7 +358,7 @@ Before enabling trusted-proxy auth, verify:
 
 ## Security audit
 
-`openclaw security audit` will flag trusted-proxy auth with a **critical** severity finding. This is intentional — it's a reminder that you're delegating security to your proxy setup.
+`quiet-core-bot security audit` will flag trusted-proxy auth with a **critical** severity finding. This is intentional — it's a reminder that you're delegating security to your proxy setup.
 
 The audit checks for:
 
@@ -431,7 +431,7 @@ The audit checks for:
 
     - Device-less Control UI session: trusted-proxy auth can admit the WebSocket connection without device identity, but Quiet Core bot clears scopes on device-less sessions by design.
     - Custom backend client: `gateway.controlUi.dangerouslyDisableDeviceAuth` is Control UI scoped and does not grant scopes to arbitrary backend or CLI-shaped WebSocket clients.
-    - Overly narrow `x-openclaw-scopes`: if your proxy injects this header on the Control UI WebSocket upgrade request, the session scopes are capped to that set. An empty header value yields no scopes.
+    - Overly narrow `x-quiet-core-bot-scopes`: if your proxy injects this header on the Control UI WebSocket upgrade request, the session scopes are capped to that set. An empty header value yields no scopes.
 
     Fix:
 
@@ -471,7 +471,7 @@ If you're moving from token auth to trusted-proxy:
     Test WebSocket connections from the Control UI.
   </Step>
   <Step title="Audit">
-    Run `openclaw security audit` and review findings.
+    Run `quiet-core-bot security audit` and review findings.
   </Step>
 </Steps>
 

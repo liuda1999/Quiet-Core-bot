@@ -2,16 +2,16 @@
 import { spawn } from "node:child_process";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { runFfmpeg } from "openclaw/plugin-sdk/media-runtime";
-import { createSubsystemLogger } from "openclaw/plugin-sdk/runtime-env";
-import { writeExternalFileWithinRoot } from "openclaw/plugin-sdk/security-runtime";
+import { runFfmpeg } from "quiet-core-bot/plugin-sdk/media-runtime";
+import { createSubsystemLogger } from "quiet-core-bot/plugin-sdk/runtime-env";
+import { writeExternalFileWithinRoot } from "quiet-core-bot/plugin-sdk/security-runtime";
 import type {
   SpeechProviderConfig,
   SpeechProviderPlugin,
   SpeechSynthesisRequest,
   SpeechTelephonySynthesisRequest,
-} from "openclaw/plugin-sdk/speech-core";
-import { tempWorkspace, resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+} from "quiet-core-bot/plugin-sdk/speech-core";
+import { tempWorkspace, resolvePreferredOpenClawTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";
 
 const log = createSubsystemLogger("tts-local-cli");
 
@@ -344,7 +344,7 @@ export function buildCliSpeechProvider(): SpeechProviderPlugin {
 
       const temp = await tempWorkspace({
         rootDir: resolvePreferredOpenClawTmpDir(),
-        prefix: "openclaw-cli-tts-",
+        prefix: "quiet-core-bot-cli-tts-",
       });
       const tempDir = temp.dir;
 
@@ -417,7 +417,7 @@ export function buildCliSpeechProvider(): SpeechProviderPlugin {
 
       const temp = await tempWorkspace({
         rootDir: resolvePreferredOpenClawTmpDir(),
-        prefix: "openclaw-cli-tts-",
+        prefix: "quiet-core-bot-cli-tts-",
       });
       const tempDir = temp.dir;
 

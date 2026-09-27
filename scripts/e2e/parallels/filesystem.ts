@@ -5,7 +5,7 @@ import path from "node:path";
 import { repoRoot } from "./host-command.ts";
 
 const DEFAULT_TEXT_FILE_TAIL_BYTES = 4 * 1024 * 1024;
-const OPENCLAW_VERSION_PATTERN = /OpenClaw\s+([0-9][^\s]*)/gi;
+const QUIET_CORE_VERSION_PATTERN = /OpenClaw\s+([0-9][^\s]*)/gi;
 
 export async function exists(filePath: string): Promise<boolean> {
   try {
@@ -45,7 +45,7 @@ export async function readTextFileTail(
 
 export async function extractLastOpenClawVersionFromLog(
   logPath: string,
-  pattern = OPENCLAW_VERSION_PATTERN,
+  pattern = QUIET_CORE_VERSION_PATTERN,
   maxBytes = DEFAULT_TEXT_FILE_TAIL_BYTES,
 ): Promise<string> {
   const text = await readTextFileTail(logPath, maxBytes);
@@ -61,7 +61,7 @@ export async function writeJson(filePath: string, value: unknown): Promise<void>
 
 export async function makeTempDir(prefix: string): Promise<string> {
   const root =
-    process.env.OPENCLAW_PARALLELS_ARTIFACT_ROOT || path.join(repoRoot, ".artifacts", "parallels");
+    process.env.QUIET_CORE_PARALLELS_ARTIFACT_ROOT || path.join(repoRoot, ".artifacts", "parallels");
   mkdirSync(root, { recursive: true });
   return mkdtempSync(path.join(root, prefix));
 }

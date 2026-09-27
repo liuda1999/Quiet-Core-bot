@@ -11,7 +11,7 @@ Adds xAI model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/xai-plugin`
+- Package: `@quiet-core/xai-plugin`
 - Install route: included in Quiet Core bot
 
 ## Surface

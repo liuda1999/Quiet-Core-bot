@@ -6,7 +6,7 @@ description: Audit or refresh Quiet Core bot maturity scorecard docs from root t
 # claw-score
 
 Use this skill when working on the Quiet Core bot maturity scorecard in this repo.
-This is the openclaw-local version of the maintainer `claw-score` workflow:
+This is the quiet-core-bot-local version of the maintainer `claw-score` workflow:
 it keeps the taxonomy and scorecard concepts, but excludes discrawl and the old
 committed `inventory/` report tree.
 
@@ -51,7 +51,7 @@ out of this repo. If a score needs private evidence, use the redacted
 
 ## Commands
 
-Run from the openclaw repo root.
+Run from the quiet-core-bot repo root.
 
 Validate taxonomy YAML structure and the maturity score schema after source
 edits:
@@ -181,6 +181,6 @@ Bands:
 ## Artifacts
 
 Do not add the maintainer repo's `docs/kevinslin/maturity-scorecard/inventory/`
-tree to openclaw. Evidence-enriched scorecard outputs belong in short-lived
+tree to quiet-core-bot. Evidence-enriched scorecard outputs belong in short-lived
 artifacts, not committed generated docs, unless this repo adds an explicit
 renderer/check workflow first.

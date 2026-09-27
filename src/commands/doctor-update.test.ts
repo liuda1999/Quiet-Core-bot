@@ -47,7 +47,7 @@ beforeEach(async () => {
   // These flows cover the upstream update path. Independent builds never offer the
   // pre-doctor update prompt, so the guard is explicitly opted out here; the refusal
   // itself is covered by src/config/independent-build-guard.test.ts.
-  process.env.OPENCLAW_INDEPENDENT_BUILD = "0";
+  process.env.QUIET_CORE_INDEPENDENT_BUILD = "0";
   mocks.createUpdateProgress.mockReset();
   mocks.createUpdateProgress.mockReturnValue({ progress: {}, stop: vi.fn() });
   mocks.note.mockReset();
@@ -64,7 +64,7 @@ beforeEach(async () => {
 });
 
 afterEach(() => {
-  delete process.env.OPENCLAW_INDEPENDENT_BUILD;
+  delete process.env.QUIET_CORE_INDEPENDENT_BUILD;
   vi.restoreAllMocks();
   if (originalStdinIsTtyDescriptor) {
     Object.defineProperty(process.stdin, "isTTY", originalStdinIsTtyDescriptor);
@@ -189,7 +189,7 @@ describe("maybeOfferUpdateBeforeDoctor", () => {
   });
 
   it("skips the update prompt and guidance on an independent build", async () => {
-    delete process.env.OPENCLAW_INDEPENDENT_BUILD;
+    delete process.env.QUIET_CORE_INDEPENDENT_BUILD;
     const confirm = vi.fn().mockResolvedValue(true);
 
     const result = await runOffer({ confirm });

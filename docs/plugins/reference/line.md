@@ -11,7 +11,7 @@ Quiet Core bot LINE channel plugin for LINE Bot API chats.
 
 ## Distribution
 
-- Package: `@openclaw/line`
+- Package: `@quiet-core/line`
 - Install route: npm; ClawHub
 
 ## Surface

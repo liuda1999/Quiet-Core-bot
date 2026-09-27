@@ -28,7 +28,7 @@ Options:
       Defaults to https://ios-push-relay-sandbox.openclaw.ai.
   --simulator-proof-secret-env <name>
       Environment variable that contains the simulator proof secret.
-      Defaults to OPENCLAW_SIMULATOR_PUSH_PROOF_SECRET.
+      Defaults to QUIET_CORE_SIMULATOR_PUSH_PROOF_SECRET.
   -h, --help
       Show this help.
 EOF
@@ -40,8 +40,8 @@ run_simctl() {
 }
 
 push_sandbox_simulator=0
-push_relay_base_url="${OPENCLAW_PUSH_SANDBOX_RELAY_BASE_URL:-https://ios-push-relay-sandbox.openclaw.ai}"
-simulator_proof_secret_env="${OPENCLAW_SIMULATOR_PUSH_PROOF_SECRET_ENV:-OPENCLAW_SIMULATOR_PUSH_PROOF_SECRET}"
+push_relay_base_url="${QUIET_CORE_PUSH_SANDBOX_RELAY_BASE_URL:-https://ios-push-relay-sandbox.openclaw.ai}"
+simulator_proof_secret_env="${QUIET_CORE_SIMULATOR_PUSH_PROOF_SECRET_ENV:-QUIET_CORE_SIMULATOR_PUSH_PROOF_SECRET}"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -97,15 +97,15 @@ if [[ "${push_sandbox_simulator}" == "1" ]]; then
   fi
 
   xcodebuild_overrides+=(
-    "OPENCLAW_PUSH_MODE=simulatorSandbox"
-    "OPENCLAW_PUSH_RELAY_BASE_URL=${push_relay_base_url}"
-    "OPENCLAW_APNS_ENTITLEMENT_ENVIRONMENT=development"
+    "QUIET_CORE_PUSH_MODE=simulatorSandbox"
+    "QUIET_CORE_PUSH_RELAY_BASE_URL=${push_relay_base_url}"
+    "QUIET_CORE_APNS_ENTITLEMENT_ENVIRONMENT=development"
   )
 fi
 
 unset "${simulator_proof_secret_env}"
-if [[ "${simulator_proof_secret_env}" != "OPENCLAW_SIMULATOR_PUSH_PROOF_SECRET" ]]; then
-  unset OPENCLAW_SIMULATOR_PUSH_PROOF_SECRET
+if [[ "${simulator_proof_secret_env}" != "QUIET_CORE_SIMULATOR_PUSH_PROOF_SECRET" ]]; then
+  unset QUIET_CORE_SIMULATOR_PUSH_PROOF_SECRET
 fi
 
 "${ROOT_DIR}/scripts/ios-configure-signing.sh"
@@ -155,7 +155,7 @@ fi
 run_simctl install "${SIMULATOR_TARGET}" "${app_path}"
 if [[ "${push_sandbox_simulator}" == "1" ]]; then
   # shellcheck disable=SC2086
-  SIMCTL_CHILD_OPENCLAW_SIMULATOR_PUSH_PROOF_SECRET="${simulator_proof_secret}" \
+  SIMCTL_CHILD_QUIET_CORE_SIMULATOR_PUSH_PROOF_SECRET="${simulator_proof_secret}" \
     ${SIMCTL_BIN} launch "${SIMULATOR_TARGET}" "${bundle_id}"
 else
   run_simctl launch "${SIMULATOR_TARGET}" "${bundle_id}"

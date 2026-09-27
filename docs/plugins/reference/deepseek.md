@@ -11,8 +11,8 @@ Adds DeepSeek model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/deepseek-provider`
-- Install route: npm; ClawHub: `clawhub:@openclaw/deepseek-provider`
+- Package: `@quiet-core/deepseek-provider`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/deepseek-provider`
 
 ## Surface
 

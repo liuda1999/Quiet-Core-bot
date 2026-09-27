@@ -1,6 +1,6 @@
 // Builds provider install catalog entries from plugin metadata.
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { isRecord } from "@quiet-core/normalization-core/record-coerce";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import {
   loadOpenClawProviderIndex,
   type OpenClawProviderIndexProvider,
@@ -35,7 +35,7 @@ export type ProviderInstallCatalogEntry = ProviderAuthChoiceMetadata & {
 };
 
 type ProviderInstallCatalogParams = {
-  config?: import("../config/types.openclaw.js").OpenClawConfig;
+  config?: import("../config/types.quiet-core-bot.js").OpenClawConfig;
   workspaceDir?: string;
   env?: NodeJS.ProcessEnv;
   includeUntrustedWorkspacePlugins?: boolean;

@@ -4,7 +4,7 @@ This file applies to work under `extensions/acpx/`.
 
 ## Purpose
 
-The ACPX extension is a thin OpenClaw wrapper around the published `acpx` package. Keep reusable ACP runtime logic in `openclaw/acpx`, not in this extension.
+The ACPX extension is a thin OpenClaw wrapper around the published `acpx` package. Keep reusable ACP runtime logic in `quiet-core-bot/acpx`, not in this extension.
 
 ## Default Version Policy
 
@@ -16,7 +16,7 @@ The ACPX extension is a thin OpenClaw wrapper around the published `acpx` packag
 
 Use this flow when OpenClaw needs unreleased ACPX changes before the ACPX version is published.
 
-1. Make the ACPX code change in the `openclaw/acpx` repo first.
+1. Make the ACPX code change in the `quiet-core-bot/acpx` repo first.
 2. In OpenClaw, temporarily point `extensions/acpx/package.json` at the ACPX GitHub commit you need.
 3. If pnpm blocks ACPX lifecycle/build scripts for that temporary GitHub-sourced package, temporarily add `acpx: true` to `allowBuilds` in `pnpm-workspace.yaml`.
 4. Refresh the root workspace lock:
@@ -51,4 +51,4 @@ When ACPX integration changes here, prefer this sequence:
 
 ## Boundary Rule
 
-If a change feels like shared ACP runtime behavior instead of OpenClaw-specific glue, move it to `openclaw/acpx` and consume it from here instead of re-implementing it inside `extensions/acpx`.
+If a change feels like shared ACP runtime behavior instead of OpenClaw-specific glue, move it to `quiet-core-bot/acpx` and consume it from here instead of re-implementing it inside `extensions/acpx`.

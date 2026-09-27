@@ -152,7 +152,7 @@ Docs: https://github.com/liuda1999/Quiet-Core-bot
   });
 
   it("prepares and restores the packaged changelog without changing the source permanently", async () => {
-    const root = mkdtempSync(path.join(os.tmpdir(), "openclaw-package-changelog-"));
+    const root = mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-package-changelog-"));
     try {
       writeFileSync(path.join(root, "package.json"), '{"version":"2026.5.28-beta.1"}\n', "utf8");
       writeFileSync(path.join(root, "CHANGELOG.md"), cumulativeChangelog, "utf8");
@@ -170,7 +170,7 @@ Docs: https://github.com/liuda1999/Quiet-Core-bot
   });
 
   it("refuses to restore stale backups over current changelog edits", async () => {
-    const root = mkdtempSync(path.join(os.tmpdir(), "openclaw-package-changelog-"));
+    const root = mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-package-changelog-"));
     const backupPath = path.join(
       root,
       ".artifacts",

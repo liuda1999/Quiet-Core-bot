@@ -18,12 +18,12 @@ const matrixPresenceOptions = {
   persistedAuthStateProbe: {
     listChannelIds: () => ["matrix"],
     hasState: ({ channelId, env }: { channelId: string; env?: NodeJS.ProcessEnv }) =>
-      channelId === "matrix" && Boolean(env?.OPENCLAW_STATE_DIR?.includes("persisted-matrix")),
+      channelId === "matrix" && Boolean(env?.QUIET_CORE_STATE_DIR?.includes("persisted-matrix")),
   },
 };
 
 function makeTempStateDir() {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-channel-config-presence-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-channel-config-presence-"));
   tempDirs.push(dir);
   return dir;
 }
@@ -121,12 +121,12 @@ describe("config presence", () => {
 
   it("detects persisted Matrix credentials without config or env", () => {
     const stateDir = makeTempStateDir().replace(
-      "openclaw-channel-config-presence-",
+      "quiet-core-bot-channel-config-presence-",
       "persisted-matrix-",
     );
     fs.mkdirSync(stateDir, { recursive: true });
     tempDirs.push(stateDir);
-    const env = { OPENCLAW_STATE_DIR: stateDir } as NodeJS.ProcessEnv;
+    const env = { QUIET_CORE_STATE_DIR: stateDir } as NodeJS.ProcessEnv;
 
     expectPotentialConfiguredChannelCase({
       cfg: {},

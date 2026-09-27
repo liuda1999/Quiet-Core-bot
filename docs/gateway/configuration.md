@@ -11,7 +11,7 @@ Quiet Core bot reads an optional <Tooltip tip="JSON5 supports comments and trail
 The active config path must be a regular file. Symlinked `quiet-core-bot.json`
 layouts are unsupported for Quiet Core bot-owned writes; an atomic write may replace
 the path instead of preserving the symlink. If you keep config outside the
-default state directory, point `OPENCLAW_CONFIG_PATH` directly at the real file.
+default state directory, point `QUIET_CORE_CONFIG_PATH` directly at the real file.
 
 If the file is missing, Quiet Core bot uses safe defaults. Common reasons to add a config:
 
@@ -206,7 +206,7 @@ the Control UI. If a hand-edited file already blocks startup, run
           {
             id: "main",
             groupChat: {
-              mentionPatterns: ["@openclaw", "openclaw"],
+              mentionPatterns: ["@quiet-core-bot", "quiet-core-bot"],
             },
           },
         ],
@@ -296,7 +296,7 @@ the Control UI. If a hand-edited file already blocks startup, run
     ```
 
     - Default is `15000` milliseconds.
-    - `OPENCLAW_HANDSHAKE_TIMEOUT_MS` still takes precedence for one-off service or shell overrides.
+    - `QUIET_CORE_HANDSHAKE_TIMEOUT_MS` still takes precedence for one-off service or shell overrides.
     - Prefer fixing startup/event-loop stalls first; this knob is for hosts that are healthy but slow during warmup.
 
   </Accordion>
@@ -401,9 +401,9 @@ the Control UI. If a hand-edited file already blocks startup, run
 
     Compatibility note:
 
-    - `OPENCLAW_APNS_RELAY_BASE_URL` and `OPENCLAW_APNS_RELAY_TIMEOUT_MS` still work as temporary env overrides.
+    - `QUIET_CORE_APNS_RELAY_BASE_URL` and `QUIET_CORE_APNS_RELAY_TIMEOUT_MS` still work as temporary env overrides.
     - Custom gateway relay URLs must match the relay base URL baked into the iOS build. The public App Store release lane rejects custom iOS relay URL overrides.
-    - `OPENCLAW_APNS_RELAY_ALLOW_HTTP=true` remains a loopback-only development escape hatch; do not persist HTTP relay URLs in config.
+    - `QUIET_CORE_APNS_RELAY_ALLOW_HTTP=true` remains a loopback-only development escape hatch; do not persist HTTP relay URLs in config.
 
     See [iOS App](/platforms/ios#relay-backed-push-for-official-builds) for the end-to-end flow and [Authentication and trust flow](/platforms/ios#authentication-and-trust-flow) for the relay security model.
 
@@ -477,8 +477,8 @@ the Control UI. If a hand-edited file already blocks startup, run
 
     Security note:
     - Treat all hook/webhook payload content as untrusted input.
-    - Use a dedicated `hooks.token`; do not reuse active Gateway auth secrets (`gateway.auth.token` / `OPENCLAW_GATEWAY_TOKEN` or `gateway.auth.password` / `OPENCLAW_GATEWAY_PASSWORD`).
-    - Hook auth is header-only (`Authorization: Bearer ...` or `x-openclaw-token`); query-string tokens are rejected.
+    - Use a dedicated `hooks.token`; do not reuse active Gateway auth secrets (`gateway.auth.token` / `QUIET_CORE_GATEWAY_TOKEN` or `gateway.auth.password` / `QUIET_CORE_GATEWAY_PASSWORD`).
+    - Hook auth is header-only (`Authorization: Bearer ...` or `x-quiet-core-bot-token`); query-string tokens are rejected.
     - `hooks.path` cannot be `/`; keep webhook ingress on a dedicated subpath such as `/hooks`.
     - Keep unsafe-content bypass flags disabled (`hooks.gmail.allowUnsafeExternalContent`, `hooks.mappings[].allowUnsafeExternalContent`) unless doing tightly scoped debugging.
     - If you enable `hooks.allowRequestSessionKey`, also set `hooks.allowedSessionKeyPrefixes` to bound caller-selected session keys.
@@ -538,7 +538,7 @@ the Control UI. If a hand-edited file already blocks startup, run
       flattening the config
     - **Confinement**: `$include` paths must resolve under the directory holding
       `quiet-core-bot.json`. To share a tree across machines or users, set
-      `OPENCLAW_INCLUDE_ROOTS` to a path-list (`:` on POSIX, `;` on Windows) of
+      `QUIET_CORE_INCLUDE_ROOTS` to a path-list (`:` on POSIX, `;` on Windows) of
       additional directories that includes may reference. Symlinks are resolved
       and re-checked, so a path that lexically lives in a config dir but whose
       real target escapes every allowed root is still rejected.
@@ -712,7 +712,7 @@ Neither file overrides existing env vars. You can also set inline env vars in co
 }
 ```
 
-Env var equivalent: `OPENCLAW_LOAD_SHELL_ENV=1`
+Env var equivalent: `QUIET_CORE_LOAD_SHELL_ENV=1`
 </Accordion>
 
 <Accordion title="Env var substitution in config values">
@@ -720,7 +720,7 @@ Env var equivalent: `OPENCLAW_LOAD_SHELL_ENV=1`
 
 ```json5
 {
-  gateway: { auth: { token: "${OPENCLAW_GATEWAY_TOKEN}" } },
+  gateway: { auth: { token: "${QUIET_CORE_GATEWAY_TOKEN}" } },
   models: { providers: { custom: { apiKey: "${CUSTOM_API_KEY}" } } },
 }
 ```

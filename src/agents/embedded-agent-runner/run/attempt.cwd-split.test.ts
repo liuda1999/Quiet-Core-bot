@@ -33,7 +33,7 @@ describe("runEmbeddedAttempt cwd/workspace split", () => {
     // Bootstrap still reads the agent workspace, while coding tools execute in
     // the task repo cwd when a subagent targets a separate checkout.
     const bootstrap = createContextEngineBootstrapAndAssemble();
-    const taskRepo = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-task-repo-"));
+    const taskRepo = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-task-repo-"));
     tempPaths.push(taskRepo);
 
     await createContextEngineAttemptRunner({
@@ -92,7 +92,7 @@ describe("runEmbeddedAttempt cwd/workspace split", () => {
     hoisted.resolveSandboxContextMock.mockResolvedValueOnce({
       enabled: true,
       workspaceAccess: "ro",
-      workspaceDir: "/tmp/openclaw-sandbox-copy",
+      workspaceDir: "/tmp/quiet-core-bot-sandbox-copy",
     });
 
     await expect(

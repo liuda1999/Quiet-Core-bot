@@ -3,7 +3,7 @@
  *
  * Renders sanitized runtime-owned subagent state into system prompt additions.
  */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { sanitizeForPromptLiteral } from "./sanitize-for-prompt.js";
 import { listControlledSubagentRuns } from "./subagent-control.js";
 import { buildSubagentList } from "./subagent-list.js";

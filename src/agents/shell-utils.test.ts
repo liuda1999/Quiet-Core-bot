@@ -21,7 +21,7 @@ function createTempCommandDir(
   files: Array<{ name: string; executable?: boolean }>,
 ): string {
   // Temporary PATH entries model available shell binaries and permissions.
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-shell-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-shell-"));
   tempDirs.push(dir);
   for (const file of files) {
     const filePath = path.join(dir, file.name);
@@ -118,7 +118,7 @@ describe("getShellConfig", () => {
   });
 
   it("rejects a missing explicit custom shell path", () => {
-    expect(() => getShellConfig(path.join(os.tmpdir(), "missing-openclaw-shell"))).toThrow(
+    expect(() => getShellConfig(path.join(os.tmpdir(), "missing-quiet-core-bot-shell"))).toThrow(
       "Custom shell path not found",
     );
   });
@@ -169,7 +169,7 @@ describe("resolveWindowsBashPath", () => {
   });
 
   it("finds Git Bash under ProgramFiles", () => {
-    const programFiles = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-git-bash-"));
+    const programFiles = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-git-bash-"));
     tempDirs.push(programFiles);
     const bashDir = path.join(programFiles, "Git", "bin");
     fs.mkdirSync(bashDir, { recursive: true });
@@ -196,7 +196,7 @@ describe("getShellEnv", () => {
     const env = getShellEnv();
 
     expect(env.PATH).toContain("/usr/bin");
-    expect(env.PATH).toContain(".openclaw");
+    expect(env.PATH).toContain(".quiet-core-bot");
   });
 });
 
@@ -232,7 +232,7 @@ describe("resolveShellFromPath", () => {
   });
 
   it("returns undefined when command does not exist", () => {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-shell-empty-"));
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-shell-empty-"));
     tempDirs.push(dir);
     process.env.PATH = dir;
     expect(resolveShellFromPath("bash")).toBeUndefined();
@@ -270,7 +270,7 @@ describe("detectRuntimeShell", () => {
 
   beforeEach(() => {
     envSnapshot = captureEnv([
-      "OPENCLAW_SHELL",
+      "QUIET_CORE_SHELL",
       "SHELL",
       "POWERSHELL_DISTRIBUTION_CHANNEL",
       "BASH_VERSION",
@@ -280,7 +280,7 @@ describe("detectRuntimeShell", () => {
       "NU_VERSION",
       "NUSHELL_VERSION",
     ]);
-    delete process.env.OPENCLAW_SHELL;
+    delete process.env.QUIET_CORE_SHELL;
     delete process.env.POWERSHELL_DISTRIBUTION_CHANNEL;
     delete process.env.BASH_VERSION;
     delete process.env.ZSH_VERSION;
@@ -327,7 +327,7 @@ describe("resolvePowerShellPath", () => {
   });
 
   it("prefers PowerShell 7 in ProgramFiles", () => {
-    const base = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-pfiles-"));
+    const base = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-pfiles-"));
     tempDirs.push(base);
     const pwsh7Dir = path.join(base, "PowerShell", "7");
     fs.mkdirSync(pwsh7Dir, { recursive: true });
@@ -344,8 +344,8 @@ describe("resolvePowerShellPath", () => {
   });
 
   it("prefers ProgramW6432 PowerShell 7 when ProgramFiles lacks pwsh", () => {
-    const programFiles = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-pfiles-"));
-    const programW6432 = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-pw6432-"));
+    const programFiles = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-pfiles-"));
+    const programW6432 = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-pw6432-"));
     tempDirs.push(programFiles, programW6432);
     const pwsh7Dir = path.join(programW6432, "PowerShell", "7");
     fs.mkdirSync(pwsh7Dir, { recursive: true });
@@ -362,8 +362,8 @@ describe("resolvePowerShellPath", () => {
   });
 
   it("finds pwsh on PATH when not in standard install locations", () => {
-    const programFiles = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-pfiles-"));
-    const binDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-bin-"));
+    const programFiles = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-pfiles-"));
+    const binDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-bin-"));
     tempDirs.push(programFiles, binDir);
     const pwshPath = path.join(binDir, "pwsh");
     fs.writeFileSync(pwshPath, "");
@@ -379,8 +379,8 @@ describe("resolvePowerShellPath", () => {
   });
 
   it("falls back to Windows PowerShell 5.1 path when pwsh is unavailable", () => {
-    const programFiles = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-pfiles-"));
-    const sysRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-sysroot-"));
+    const programFiles = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-pfiles-"));
+    const sysRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-sysroot-"));
     tempDirs.push(programFiles, sysRoot);
     const ps51Dir = path.join(sysRoot, "System32", "WindowsPowerShell", "v1.0");
     fs.mkdirSync(ps51Dir, { recursive: true });

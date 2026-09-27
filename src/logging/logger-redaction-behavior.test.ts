@@ -17,7 +17,7 @@ import { createDiagnosticLogRecordCapture } from "./test-helpers/diagnostic-log-
 const secret = "sk-testsecret1234567890abcd";
 const TRACE_ID = "4bf92f3577b34da6a3ce929d0e0e4736";
 const SPAN_ID = "00f067aa0ba902b7";
-const logPathTracker = createSuiteLogPathTracker("openclaw-log-redaction-");
+const logPathTracker = createSuiteLogPathTracker("quiet-core-bot-log-redaction-");
 
 beforeAll(async () => {
   await logPathTracker.setup();
@@ -97,7 +97,7 @@ describe("file log redaction", () => {
         },
       }),
     );
-    withEnv({ OPENCLAW_CONFIG_PATH: configPath }, () => {
+    withEnv({ QUIET_CORE_CONFIG_PATH: configPath }, () => {
       setLoggerOverride({ level: "info", file: logPath });
 
       getLogger().info({
@@ -127,7 +127,7 @@ describe("file log redaction", () => {
         },
       }),
     );
-    withEnv({ OPENCLAW_CONFIG_PATH: configPath, OPENCLAW_TEST_FILE_LOG: "1" }, () => {
+    withEnv({ QUIET_CORE_CONFIG_PATH: configPath, QUIET_CORE_TEST_FILE_LOG: "1" }, () => {
       getLogger().info({ message: "configured log path works" });
     });
 
@@ -139,8 +139,8 @@ describe("file log redaction", () => {
     const home = path.join(path.dirname(logPathTracker.nextPath()), "home");
 
     withEnv({ HOME: home }, () => {
-      expect(loggerTest.resolveActiveLogFile("~/custom-openclaw.log")).toBe(
-        path.join(home, "custom-openclaw.log"),
+      expect(loggerTest.resolveActiveLogFile("~/custom-quiet-core-bot.log")).toBe(
+        path.join(home, "custom-quiet-core-bot.log"),
       );
     });
   });

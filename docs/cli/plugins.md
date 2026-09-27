@@ -62,19 +62,19 @@ quiet-core-bot plugins validate --entry ./dist/index.js
 ```
 
 For slow install, inspect, uninstall, or registry-refresh investigation, run the
-command with `OPENCLAW_PLUGIN_LIFECYCLE_TRACE=1`. The trace writes phase timings
+command with `QUIET_CORE_PLUGIN_LIFECYCLE_TRACE=1`. The trace writes phase timings
 to stderr and keeps JSON output parseable. See [Debugging](/help/debugging#plugin-lifecycle-trace).
 
 <Note>
-In Nix mode (`OPENCLAW_NIX_MODE=1`), plugin lifecycle mutators are disabled. Use the Nix source for this install instead of `plugins install`, `plugins update`, `plugins uninstall`, `plugins enable`, or `plugins disable`; for nix-openclaw, use the agent-first [Quick Start](https://github.com/openclaw/nix-openclaw#quick-start).
+In Nix mode (`QUIET_CORE_NIX_MODE=1`), plugin lifecycle mutators are disabled. Use the Nix source for this install instead of `plugins install`, `plugins update`, `plugins uninstall`, `plugins enable`, or `plugins disable`; for nix-openclaw, use the agent-first [Quick Start](https://github.com/openclaw/nix-openclaw#quick-start).
 </Note>
 
 <Note>
 Bundled plugins ship with Quiet Core bot. Some are enabled by default (for example bundled model providers, bundled speech providers, and the bundled browser plugin); others require `plugins enable`.
 
-Native Quiet Core bot plugins must ship `openclaw.plugin.json` with an inline JSON Schema (`configSchema`, even if empty). Compatible bundles use their own bundle manifests instead.
+Native Quiet Core bot plugins must ship `quiet-core-bot.plugin.json` with an inline JSON Schema (`configSchema`, even if empty). Compatible bundles use their own bundle manifests instead.
 
-`plugins list` shows `Format: openclaw` or `Format: bundle`. Verbose list/info output also shows the bundle subtype (`codex`, `claude`, or `cursor`) plus detected bundle capabilities.
+`plugins list` shows `Format: quiet-core-bot` or `Format: bundle`. Verbose list/info output also shows the bundle subtype (`codex`, `claude`, or `cursor`) plus detected bundle capabilities.
 </Note>
 
 ### Author
@@ -88,8 +88,8 @@ npm run plugin:validate
 
 `plugins init` creates a minimal TypeScript tool plugin that uses
 `defineToolPlugin`. `plugins build` imports that entry, reads its static tool
-metadata, writes `openclaw.plugin.json`, and keeps `package.json`
-`openclaw.extensions` aligned. `plugins validate` checks that the generated
+metadata, writes `quiet-core-bot.plugin.json`, and keeps `package.json`
+`quiet-core-bot.extensions` aligned. `plugins validate` checks that the generated
 manifest, package metadata, and current entry export still agree. See
 [Tool Plugins](/plugins/tool-plugins) for the full authoring workflow.
 
@@ -123,7 +123,7 @@ sources with guarded environment variables. See
 [Plugin install overrides](/plugins/install-overrides).
 
 <Warning>
-Bare package names install from npm by default during the launch cutover, unless they match an official plugin id. Raw `@openclaw/*` package specs that match bundled plugins use the bundled copy that shipped with the current Quiet Core bot build. Use `npm:<package>` when you deliberately want an external npm package instead. Use `clawhub:<package>` for ClawHub. Treat plugin installs like running code. Prefer pinned versions.
+Bare package names install from npm by default during the launch cutover, unless they match an official plugin id. Raw `@quiet-core/*` package specs that match bundled plugins use the bundled copy that shipped with the current Quiet Core bot build. Use `npm:<package>` when you deliberately want an external npm package instead. Use `clawhub:<package>` for ClawHub. Treat plugin installs like running code. Prefer pinned versions.
 </Warning>
 
 `plugins search` queries ClawHub for installable plugin packages and prints
@@ -133,8 +133,8 @@ not skills. Use `quiet-core-bot skills search` for ClawHub skills.
 <Note>
 ClawHub is the primary distribution and discovery surface for most plugins. Npm
 remains a supported fallback and direct-install path. Quiet Core bot-owned
-`@openclaw/*` plugin packages are published on npm again; see the current list
-on [npmjs.com/org/openclaw](https://www.npmjs.com/org/openclaw) or the
+`@quiet-core/*` plugin packages are published on npm again; see the current list
+on [npmjs.com/org/quiet-core-bot](https://www.npmjs.com/org/quiet-core-bot) or the
 [plugin inventory](/plugins/plugin-inventory). Stable installs use `latest`.
 Beta-channel installs and updates prefer the npm `beta` dist-tag when that tag
 is available, then fall back to `latest`.
@@ -144,7 +144,7 @@ is available, then fall back to `latest`.
   <Accordion title="Config includes and invalid-config repair">
     If your `plugins` section is backed by a single-file `$include`, `plugins install/update/enable/disable/uninstall` write through to that included file and leave `quiet-core-bot.json` untouched. Root includes, include arrays, and includes with sibling overrides fail closed instead of flattening. See [Config includes](/gateway/configuration) for the supported shapes.
 
-    If config is invalid during install, `plugins install` normally fails closed and tells you to run `quiet-core-bot doctor --fix` first. During Gateway startup and hot reload, invalid plugin config fails closed like any other invalid config; `quiet-core-bot doctor --fix` can quarantine the invalid plugin entry. The only documented install-time exception is a narrow bundled-plugin recovery path for plugins that explicitly opt into `openclaw.install.allowInvalidConfigRecovery`.
+    If config is invalid during install, `plugins install` normally fails closed and tells you to run `quiet-core-bot doctor --fix` first. During Gateway startup and hot reload, invalid plugin config fails closed like any other invalid config; `quiet-core-bot doctor --fix` can quarantine the invalid plugin entry. The only documented install-time exception is a narrow bundled-plugin recovery path for plugins that explicitly opt into `quiet-core-bot.install.allowInvalidConfigRecovery`.
 
   </Accordion>
   <Accordion title="--force and reinstall vs update">
@@ -165,13 +165,13 @@ is available, then fall back to `latest`.
 
   </Accordion>
   <Accordion title="Hook packs and npm specs">
-    `plugins install` is also the install surface for hook packs that expose `openclaw.hooks` in `package.json`. Use `quiet-core-bot hooks` for filtered hook visibility and per-hook enablement, not package installation.
+    `plugins install` is also the install surface for hook packs that expose `quiet-core-bot.hooks` in `package.json`. Use `quiet-core-bot hooks` for filtered hook visibility and per-hook enablement, not package installation.
 
     Npm specs are **registry-only** (package name + optional **exact version** or **dist-tag**). Git/URL/file specs and semver ranges are rejected. Dependency installs run in one managed npm project per plugin with `--ignore-scripts` for safety, even when your shell has global npm install settings. Managed plugin npm projects inherit Quiet Core bot's package-level npm `overrides`, so host security pins apply to hoisted plugin dependencies too.
 
     Use `npm:<package>` when you want to make npm resolution explicit. Bare package specs also install directly from npm during the launch cutover unless they match an official plugin id.
 
-    Raw `@openclaw/*` package specs that match bundled plugins resolve to the image-owned bundled copy before npm fallback. For example, `quiet-core-bot plugins install @openclaw/discord@2026.5.20 --pin` uses the bundled Discord plugin from the current Quiet Core bot build instead of creating a managed npm override. To force the external npm package, use `quiet-core-bot plugins install npm:@openclaw/discord@2026.5.20 --pin`.
+    Raw `@quiet-core/*` package specs that match bundled plugins resolve to the image-owned bundled copy before npm fallback. For example, `quiet-core-bot plugins install @quiet-core/discord@2026.5.20 --pin` uses the bundled Discord plugin from the current Quiet Core bot build instead of creating a managed npm override. To force the external npm package, use `quiet-core-bot plugins install npm:@quiet-core/discord@2026.5.20 --pin`.
 
     Bare specs and `@latest` stay on the stable track. Quiet Core bot date-stamped correction versions such as `2026.5.3-1` are stable releases for this check. If npm resolves either of those to a prerelease, Quiet Core bot stops and asks you to opt in explicitly with a prerelease tag such as `@beta`/`@rc` or an exact prerelease version such as `@1.2.3-beta.4`.
 
@@ -185,11 +185,11 @@ is available, then fall back to `latest`.
 
     Git installs clone into a temporary directory, check out the requested ref when present, then use the normal plugin directory installer. That means manifest validation, operator install policy, package-manager install work, and install records behave like npm installs. Recorded git installs include the source URL/ref plus the resolved commit so `quiet-core-bot plugins update` can re-resolve the source later.
 
-    After installing from git, use `quiet-core-bot plugins inspect <id> --runtime --json` to verify runtime registrations such as gateway methods and CLI commands. If the plugin registered a CLI root with `api.registerCli`, execute that command directly through the Quiet Core bot root CLI, for example `openclaw demo-plugin ping`.
+    After installing from git, use `quiet-core-bot plugins inspect <id> --runtime --json` to verify runtime registrations such as gateway methods and CLI commands. If the plugin registered a CLI root with `api.registerCli`, execute that command directly through the Quiet Core bot root CLI, for example `quiet-core-bot demo-plugin ping`.
 
   </Accordion>
   <Accordion title="Archives">
-    Supported archives: `.zip`, `.tgz`, `.tar.gz`, `.tar`. Native Quiet Core bot plugin archives must contain a valid `openclaw.plugin.json` at the extracted plugin root; archives that only contain `package.json` are rejected before Quiet Core bot writes install records.
+    Supported archives: `.zip`, `.tgz`, `.tar.gz`, `.tar`. Native Quiet Core bot plugin archives must contain a valid `quiet-core-bot.plugin.json` at the extracted plugin root; archives that only contain `package.json` are rejected before Quiet Core bot writes install records.
 
     Use `npm-pack:<path.tgz>` when the file is an npm-pack tarball and you want
     to test the same per-plugin managed npm project path used by registry
@@ -205,21 +205,21 @@ is available, then fall back to `latest`.
 ClawHub installs use an explicit `clawhub:<package>` locator:
 
 ```bash
-quiet-core-bot plugins install clawhub:openclaw-codex-app-server
-quiet-core-bot plugins install clawhub:openclaw-codex-app-server@1.2.3
+quiet-core-bot plugins install clawhub:quiet-core-bot-codex-app-server
+quiet-core-bot plugins install clawhub:quiet-core-bot-codex-app-server@1.2.3
 ```
 
 Bare npm-safe plugin specs install from npm by default during the launch cutover unless they match an official plugin id:
 
 ```bash
-quiet-core-bot plugins install openclaw-codex-app-server
+quiet-core-bot plugins install quiet-core-bot-codex-app-server
 ```
 
 Use `npm:` to make npm-only resolution explicit:
 
 ```bash
-quiet-core-bot plugins install npm:openclaw-codex-app-server
-quiet-core-bot plugins install npm:@openclaw/discord@2026.5.20
+quiet-core-bot plugins install npm:quiet-core-bot-codex-app-server
+quiet-core-bot plugins install npm:@quiet-core/discord@2026.5.20
 quiet-core-bot plugins install npm:@scope/plugin-name@1.0.1
 ```
 
@@ -260,7 +260,7 @@ quiet-core-bot plugins install <plugin-name> --marketplace ./my-marketplace
 
 For local paths and archives, Quiet Core bot auto-detects:
 
-- native Quiet Core bot plugins (`openclaw.plugin.json`)
+- native Quiet Core bot plugins (`quiet-core-bot.plugin.json`)
 - Codex-compatible bundles (`.codex-plugin/plugin.json`)
 - Claude-compatible bundles (`.claude-plugin/plugin.json` or the default Claude component layout)
 - Cursor-compatible bundles (`.cursor-plugin/plugin.json`)
@@ -340,7 +340,7 @@ quiet-core-bot plugins install -l ./my-plugin
 
 Standalone plugin files must be listed in `plugins.load.paths` rather than
 installed with `plugins install` or placed directly in `~/.quiet-core-bot/extensions`
-or `<workspace>/.openclaw/extensions`. Those auto-discovered roots load plugin
+or `<workspace>/.quiet-core-bot/extensions`. Those auto-discovered roots load plugin
 package or bundle directories, while top-level script files are treated as local
 helpers and skipped.
 
@@ -389,8 +389,8 @@ quiet-core-bot plugins uninstall <id> --keep-files
 quiet-core-bot plugins update <id-or-npm-spec>
 quiet-core-bot plugins update --all
 quiet-core-bot plugins update <id-or-npm-spec> --dry-run
-quiet-core-bot plugins update @openclaw/voice-call
-quiet-core-bot plugins update openclaw-codex-app-server --dangerously-force-unsafe-install
+quiet-core-bot plugins update @quiet-core/voice-call
+quiet-core-bot plugins update quiet-core-bot-codex-app-server --dangerously-force-unsafe-install
 ```
 
 Updates apply to tracked plugin installs in the managed plugin index and tracked hook-pack installs in `hooks.internal.installs`.
@@ -429,7 +429,7 @@ quiet-core-bot plugins inspect <id> --json
 
 Inspect shows identity, load status, source, manifest capabilities, policy flags, diagnostics, install metadata, bundle capabilities, and any detected MCP or LSP server support without importing plugin runtime by default. JSON output includes the plugin manifest contracts, such as `contracts.agentToolResultMiddleware` and `contracts.trustedToolPolicies`, so operators can audit trusted-surface declarations before enabling or restarting a plugin. Add `--runtime` to load the plugin module and include registered hooks, tools, commands, services, gateway methods, and HTTP routes. Runtime inspection reports missing plugin dependencies directly; installs and repairs stay in `quiet-core-bot plugins install`, `quiet-core-bot plugins update`, and `quiet-core-bot doctor --fix`.
 
-Plugin-owned CLI commands are usually installed as root `openclaw` command groups, but plugins may also register nested commands under a core parent such as `quiet-core-bot nodes`. After `inspect --runtime` shows a command under `cliCommands`, run it at the listed path; for example a plugin that registers `demo-git` can be verified with `openclaw demo-git ping`.
+Plugin-owned CLI commands are usually installed as root `quiet-core-bot` command groups, but plugins may also register nested commands under a core parent such as `quiet-core-bot nodes`. After `inspect --runtime` shows a command under `cliCommands`, run it at the listed path; for example a plugin that registers `demo-git` can be verified with `quiet-core-bot demo-git ping`.
 
 Each plugin is classified by what it actually registers at runtime:
 
@@ -454,7 +454,7 @@ quiet-core-bot plugins doctor
 
 If a configured plugin is present on disk but blocked by the loader's path-safety checks, config validation keeps the plugin entry and reports it as `present but blocked`. Fix the preceding blocked-plugin diagnostic, such as path ownership or world-writable permissions, instead of removing the `plugins.entries.<id>` or `plugins.allow` config.
 
-For module-shape failures such as missing `register`/`activate` exports, rerun with `OPENCLAW_PLUGIN_LOAD_DEBUG=1` to include a compact export-shape summary in the diagnostic output.
+For module-shape failures such as missing `register`/`activate` exports, rerun with `QUIET_CORE_PLUGIN_LOAD_DEBUG=1` to include a compact export-shape summary in the diagnostic output.
 
 ### Registry
 
@@ -468,10 +468,10 @@ The local plugin registry is Quiet Core bot's persisted cold read model for inst
 
 Use `plugins registry` to inspect whether the persisted registry is present, current, or stale. Use `--refresh` to rebuild it from the persisted plugin index, config policy, and manifest/package metadata. This is a repair path, not a runtime activation path.
 
-`quiet-core-bot doctor --fix` also repairs registry-adjacent managed npm drift: if an orphaned or recovered `@openclaw/*` package under a managed plugin npm project or the legacy flat managed npm root shadows a bundled plugin, doctor removes that stale package and rebuilds the registry so startup validates against the bundled manifest. Doctor also relinks the host `openclaw` package into managed npm plugins that declare `peerDependencies.openclaw`, so package-local runtime imports such as `openclaw/plugin-sdk/*` resolve after updates or npm repairs.
+`quiet-core-bot doctor --fix` also repairs registry-adjacent managed npm drift: if an orphaned or recovered `@quiet-core/*` package under a managed plugin npm project or the legacy flat managed npm root shadows a bundled plugin, doctor removes that stale package and rebuilds the registry so startup validates against the bundled manifest. Doctor also relinks the host `quiet-core-bot` package into managed npm plugins that declare `peerDependencies.quiet-core-bot`, so package-local runtime imports such as `quiet-core-bot/plugin-sdk/*` resolve after updates or npm repairs.
 
 <Warning>
-`OPENCLAW_DISABLE_PERSISTED_PLUGIN_REGISTRY=1` is a deprecated break-glass compatibility switch for registry read failures. Prefer `plugins registry --refresh` or `quiet-core-bot doctor --fix`; the env fallback is only for emergency startup recovery while the migration rolls out.
+`QUIET_CORE_DISABLE_PERSISTED_PLUGIN_REGISTRY=1` is a deprecated break-glass compatibility switch for registry read failures. Prefer `plugins registry --refresh` or `quiet-core-bot doctor --fix`; the env fallback is only for emergency startup recovery while the migration rolls out.
 </Warning>
 
 ### Marketplace

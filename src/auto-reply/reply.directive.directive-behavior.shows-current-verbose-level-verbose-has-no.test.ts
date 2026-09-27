@@ -29,7 +29,7 @@ async function runDirectiveStatus(
     agents: {
       defaults: {
         model: "anthropic/claude-opus-4-6",
-        workspace: "/tmp/openclaw",
+        workspace: "/tmp/quiet-core-bot",
       },
     },
   } as OpenClawConfig;
@@ -78,7 +78,7 @@ describe("directive behavior", () => {
         agents: {
           defaults: {
             model: "anthropic/claude-opus-4-6",
-            workspace: "/tmp/openclaw",
+            workspace: "/tmp/quiet-core-bot",
             models: {
               "anthropic/claude-opus-4-6": {
                 params: { fastMode: "auto", fastAutoOnSeconds: 30 },
@@ -115,7 +115,7 @@ describe("directive behavior", () => {
         agents: {
           defaults: {
             model: "anthropic/claude-opus-4-6",
-            workspace: "/tmp/openclaw",
+            workspace: "/tmp/quiet-core-bot",
           },
         },
         tools: {
@@ -143,7 +143,7 @@ describe("directive behavior", () => {
         agents: {
           defaults: {
             model: "anthropic/claude-opus-4-6",
-            workspace: "/tmp/openclaw",
+            workspace: "/tmp/quiet-core-bot",
             models: {
               "anthropic/claude-opus-4-6": {
                 params: { fastMode: "auto", fastAutoOnSeconds: 30 },

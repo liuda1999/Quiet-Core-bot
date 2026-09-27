@@ -5,7 +5,7 @@ import path from "node:path";
 import type {
   OpenKeyedStoreOptions,
   PluginStateKeyedStore,
-} from "openclaw/plugin-sdk/plugin-state-runtime";
+} from "quiet-core-bot/plugin-sdk/plugin-state-runtime";
 
 export type ChatGptImportRunEntry = {
   path: string;
@@ -63,7 +63,7 @@ let configuredImportRunStore: MemoryWikiImportRunStateStore | undefined;
 const memoryImportRunsByVault = new Map<string, Map<string, ChatGptImportRunRecord>>();
 
 export function resolveMemoryWikiImportRunsDir(vaultRoot: string): string {
-  return path.join(vaultRoot, ".openclaw-wiki", "import-runs");
+  return path.join(vaultRoot, ".quiet-core-bot-wiki", "import-runs");
 }
 
 function resolveVaultRootKey(vaultRoot: string): string {

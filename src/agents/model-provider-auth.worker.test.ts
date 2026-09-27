@@ -3,7 +3,7 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import { clearRuntimeAuthProfileStoreSnapshots } from "./auth-profiles.js";
 import { clearCurrentProviderAuthState } from "./model-provider-auth.js";
@@ -23,13 +23,13 @@ describe("provider auth warm worker", () => {
   it("preserves runtime-only auth profile snapshots in the worker warm input", async () => {
     // Runtime-only profiles are not persisted to disk, so the worker input must
     // carry them explicitly or warming loses provider availability.
-    const root = mkdtempSync(path.join(tmpdir(), "openclaw-provider-auth-worker-"));
+    const root = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-provider-auth-worker-"));
     tempDirs.push(root);
 
     await withEnvAsync(
       {
-        OPENCLAW_DISABLE_PERSISTED_PLUGIN_REGISTRY: "1",
-        OPENCLAW_STATE_DIR: path.join(root, "state"),
+        QUIET_CORE_DISABLE_PERSISTED_PLUGIN_REGISTRY: "1",
+        QUIET_CORE_STATE_DIR: path.join(root, "state"),
       },
       async () => {
         const agentDir = path.join(root, "agent");

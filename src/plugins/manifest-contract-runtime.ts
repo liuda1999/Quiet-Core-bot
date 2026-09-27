@@ -1,6 +1,6 @@
 // Resolves manifest contracts into runtime-facing plugin capabilities.
-import { sortUniqueStrings } from "@openclaw/normalization-core/string-normalization";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { sortUniqueStrings } from "@quiet-core/normalization-core/string-normalization";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   hasManifestContractValue,
   listAvailableManifestContractPlugins,

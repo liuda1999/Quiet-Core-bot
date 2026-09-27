@@ -12,7 +12,7 @@ import {
   resolveCronQuarantinePath,
   saveCronStore,
 } from "../../../cron/store.js";
-import { runOpenClawStateWriteTransaction } from "../../../state/openclaw-state-db.js";
+import { runOpenClawStateWriteTransaction } from "../../../state/quiet-core-bot-state-db.js";
 import {
   collectLegacyWhatsAppCrontabHealthWarning,
   maybeRepairLegacyCronStore,
@@ -30,7 +30,7 @@ vi.mock("../../../../packages/terminal-core/src/note.js", () => ({
 let tempRoot: string | null = null;
 
 async function makeTempStorePath() {
-  tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-doctor-cron-"));
+  tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-doctor-cron-"));
   return path.join(tempRoot, "cron", "jobs.json");
 }
 
@@ -704,7 +704,7 @@ describe("maybeRepairLegacyCronStore", () => {
         message: [
           "Command to run:",
           "- command: python3 scripts/check_mail.py",
-          "- workdir: /home/openclaw/.razor/clawd",
+          "- workdir: /home/quiet-core-bot/.razor/clawd",
         ].join("\n"),
         toolsAllow: ["read", "message"],
       },

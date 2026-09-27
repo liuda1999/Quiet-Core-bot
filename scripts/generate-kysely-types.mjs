@@ -7,18 +7,18 @@ import { DatabaseSync } from "node:sqlite";
 
 const SCHEMAS = [
   {
-    name: "openclaw-state",
-    schema: "src/state/openclaw-state-schema.sql",
-    outFile: "src/state/openclaw-state-db.generated.d.ts",
-    schemaOutFile: "src/state/openclaw-state-schema.generated.ts",
-    schemaExport: "OPENCLAW_STATE_SCHEMA_SQL",
+    name: "quiet-core-bot-state",
+    schema: "src/state/quiet-core-bot-state-schema.sql",
+    outFile: "src/state/quiet-core-bot-state-db.generated.d.ts",
+    schemaOutFile: "src/state/quiet-core-bot-state-schema.generated.ts",
+    schemaExport: "QUIET_CORE_STATE_SCHEMA_SQL",
   },
   {
-    name: "openclaw-agent",
-    schema: "src/state/openclaw-agent-schema.sql",
-    outFile: "src/state/openclaw-agent-db.generated.d.ts",
-    schemaOutFile: "src/state/openclaw-agent-schema.generated.ts",
-    schemaExport: "OPENCLAW_AGENT_SCHEMA_SQL",
+    name: "quiet-core-bot-agent",
+    schema: "src/state/quiet-core-bot-agent-schema.sql",
+    outFile: "src/state/quiet-core-bot-agent-db.generated.d.ts",
+    schemaOutFile: "src/state/quiet-core-bot-agent-schema.generated.ts",
+    schemaExport: "QUIET_CORE_AGENT_SCHEMA_SQL",
   },
 ];
 

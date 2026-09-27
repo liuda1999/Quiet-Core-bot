@@ -5,9 +5,9 @@ import {
   createMigrationConfigPatchItem,
   createMigrationManualItem,
   hasMigrationConfigPatchConflict,
-} from "openclaw/plugin-sdk/migration";
-import type { MigrationItem, MigrationProviderContext } from "openclaw/plugin-sdk/plugin-entry";
-import { uniqueStrings } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "quiet-core-bot/plugin-sdk/migration";
+import type { MigrationItem, MigrationProviderContext } from "quiet-core-bot/plugin-sdk/plugin-entry";
+import { uniqueStrings } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { childRecord, isRecord, readString, readStringArray } from "./helpers.js";
 
 type HermesProviderConfig = {

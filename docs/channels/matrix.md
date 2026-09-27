@@ -14,10 +14,10 @@ It uses the official `matrix-js-sdk` and supports DMs, rooms, threads, media, re
 Install Matrix from ClawHub before configuring the channel:
 
 ```bash
-quiet-core-bot plugins install @openclaw/matrix
+quiet-core-bot plugins install @quiet-core/matrix
 ```
 
-Bare plugin specs try ClawHub first, then npm fallback. To force the registry source, use `quiet-core-bot plugins install clawhub:@openclaw/matrix` or `quiet-core-bot plugins install npm:@openclaw/matrix`.
+Bare plugin specs try ClawHub first, then npm fallback. To force the registry source, use `quiet-core-bot plugins install clawhub:@quiet-core/matrix` or `quiet-core-bot plugins install npm:@quiet-core/matrix`.
 
 From a local checkout:
 
@@ -43,7 +43,7 @@ quiet-core-bot configure --section channels
 
 The wizard asks for: homeserver URL, auth method (access token or password), user ID (password auth only), optional device name, whether to enable E2EE, and whether to configure room access and auto-join.
 
-If matching `MATRIX_*` env vars already exist and the selected account has no saved auth, the wizard offers an env-var shortcut. To resolve room names before saving an allowlist, run `quiet-core-bot channels resolve --channel matrix "Project Room"`. When E2EE is enabled, the wizard writes the config and runs the same bootstrap as [`openclaw matrix encryption setup`](#encryption-and-verification).
+If matching `MATRIX_*` env vars already exist and the selected account has no saved auth, the wizard offers an env-var shortcut. To resolve room names before saving an allowlist, run `quiet-core-bot channels resolve --channel matrix "Project Room"`. When E2EE is enabled, the wizard writes the config and runs the same bootstrap as [`quiet-core-bot matrix encryption setup`](#encryption-and-verification).
 
 ### Minimal config
 
@@ -290,12 +290,12 @@ Use strict room allowlists and mention requirements when enabling bot-to-bot tra
 
 In encrypted (E2EE) rooms, outbound image events use `thumbnail_file` so image previews are encrypted alongside the full attachment. Unencrypted rooms still use plain `thumbnail_url`. No configuration is needed - the plugin detects E2EE state automatically.
 
-All `openclaw matrix` commands accept `--verbose` (full diagnostics), `--json` (machine-readable output), and `--account <id>` (multi-account setups). Output is concise by default with quiet internal SDK logging. The examples below show the canonical form; add the flags as needed.
+All `quiet-core-bot matrix` commands accept `--verbose` (full diagnostics), `--json` (machine-readable output), and `--account <id>` (multi-account setups). Output is concise by default with quiet internal SDK logging. The examples below show the canonical form; add the flags as needed.
 
 ### Enable encryption
 
 ```bash
-openclaw matrix encryption setup
+quiet-core-bot matrix encryption setup
 ```
 
 Bootstraps secret storage and cross-signing, creates a room-key backup if needed, then prints status and next steps. Useful flags:
@@ -306,7 +306,7 @@ Bootstraps secret storage and cross-signing, creates a room-key backup if needed
 For a new account, enable E2EE at creation time:
 
 ```bash
-openclaw matrix account add \
+quiet-core-bot matrix account add \
   --homeserver https://matrix.example.org \
   --access-token syt_xxx \
   --enable-e2ee
@@ -333,8 +333,8 @@ Manual config equivalent:
 ### Status and trust signals
 
 ```bash
-openclaw matrix verify status
-openclaw matrix verify status --include-recovery-key --json
+quiet-core-bot matrix verify status
+quiet-core-bot matrix verify status --include-recovery-key --json
 ```
 
 `verify status` reports three independent trust signals (`--verbose` shows all of them):
@@ -352,7 +352,7 @@ openclaw matrix verify status --include-recovery-key --json
 The recovery key is sensitive - pipe it via stdin instead of passing it on the command line. Set `MATRIX_RECOVERY_KEY` (or `MATRIX_<ID>_RECOVERY_KEY` for a named account):
 
 ```bash
-printf '%s\n' "$MATRIX_RECOVERY_KEY" | openclaw matrix verify device --recovery-key-stdin
+printf '%s\n' "$MATRIX_RECOVERY_KEY" | quiet-core-bot matrix verify device --recovery-key-stdin
 ```
 
 The command reports three states:
@@ -364,17 +364,17 @@ The command reports three states:
 It exits non-zero when full identity trust is incomplete, even if the recovery key unlocked backup material. In that case, finish self-verification from another Matrix client:
 
 ```bash
-openclaw matrix verify self
+quiet-core-bot matrix verify self
 ```
 
 `verify self` waits for `Cross-signing verified: yes` before it exits successfully. Use `--timeout-ms <ms>` to tune the wait.
 
-The literal-key form `openclaw matrix verify device "<recovery-key>"` is also accepted, but the key ends up in your shell history.
+The literal-key form `quiet-core-bot matrix verify device "<recovery-key>"` is also accepted, but the key ends up in your shell history.
 
 ### Bootstrap or repair cross-signing
 
 ```bash
-openclaw matrix verify bootstrap
+quiet-core-bot matrix verify bootstrap
 ```
 
 `verify bootstrap` is the repair and setup command for encrypted accounts. In order, it:
@@ -394,8 +394,8 @@ Useful flags:
 ### Room-key backup
 
 ```bash
-openclaw matrix verify backup status
-printf '%s\n' "$MATRIX_RECOVERY_KEY" | openclaw matrix verify backup restore --recovery-key-stdin
+quiet-core-bot matrix verify backup status
+printf '%s\n' "$MATRIX_RECOVERY_KEY" | quiet-core-bot matrix verify backup restore --recovery-key-stdin
 ```
 
 `backup status` shows whether a server-side backup exists and whether this device can decrypt it. `backup restore` imports backed-up room keys into the local crypto store; if the recovery key is already on disk you can omit `--recovery-key-stdin`.
@@ -403,7 +403,7 @@ printf '%s\n' "$MATRIX_RECOVERY_KEY" | openclaw matrix verify backup restore --r
 To replace a broken backup with a fresh baseline (accepts losing unrecoverable old history; can also recreate secret storage if the current backup secret is unloadable):
 
 ```bash
-openclaw matrix verify backup reset --yes
+quiet-core-bot matrix verify backup reset --yes
 ```
 
 Add `--rotate-recovery-key` only when you intentionally want the previous recovery key to stop unlocking the fresh backup baseline.
@@ -411,14 +411,14 @@ Add `--rotate-recovery-key` only when you intentionally want the previous recove
 ### Listing, requesting, and responding to verifications
 
 ```bash
-openclaw matrix verify list
+quiet-core-bot matrix verify list
 ```
 
 Lists pending verification requests for the selected account.
 
 ```bash
-openclaw matrix verify request --own-user
-openclaw matrix verify request --user-id @ops:example.org --device-id ABCDEF
+quiet-core-bot matrix verify request --own-user
+quiet-core-bot matrix verify request --user-id @ops:example.org --device-id ABCDEF
 ```
 
 Sends a verification request from this Quiet Core bot account. `--own-user` requests self-verification (you accept the prompt in another Matrix client of the same user); `--user-id`/`--device-id`/`--room-id` target someone else. `--own-user` cannot be combined with the other targeting flags.
@@ -427,12 +427,12 @@ For lower-level lifecycle handling - typically while shadowing inbound requests 
 
 | Command                                    | Purpose                                                             |
 | ------------------------------------------ | ------------------------------------------------------------------- |
-| `openclaw matrix verify accept <id>`       | Accept an inbound request                                           |
-| `openclaw matrix verify start <id>`        | Start the SAS flow                                                  |
-| `openclaw matrix verify sas <id>`          | Print the SAS emoji or decimals                                     |
-| `openclaw matrix verify confirm-sas <id>`  | Confirm that the SAS matches what the other client shows            |
-| `openclaw matrix verify mismatch-sas <id>` | Reject the SAS when the emoji or decimals do not match              |
-| `openclaw matrix verify cancel <id>`       | Cancel; takes optional `--reason <text>` and `--code <matrix-code>` |
+| `quiet-core-bot matrix verify accept <id>`       | Accept an inbound request                                           |
+| `quiet-core-bot matrix verify start <id>`        | Start the SAS flow                                                  |
+| `quiet-core-bot matrix verify sas <id>`          | Print the SAS emoji or decimals                                     |
+| `quiet-core-bot matrix verify confirm-sas <id>`  | Confirm that the SAS matches what the other client shows            |
+| `quiet-core-bot matrix verify mismatch-sas <id>` | Reject the SAS when the emoji or decimals do not match              |
+| `quiet-core-bot matrix verify cancel <id>`       | Cancel; takes optional `--reason <text>` and `--code <matrix-code>` |
 
 `accept`, `start`, `sas`, `confirm-sas`, `mismatch-sas`, and `cancel` all accept `--user-id` and `--room-id` as DM follow-up hints when the verification is anchored to a specific direct-message room.
 
@@ -463,7 +463,7 @@ Without `--account <id>`, Matrix CLI commands use the implicit default account. 
     If `verify status` says the current device is no longer listed on the homeserver, create a new Quiet Core bot Matrix device. For password login:
 
 ```bash
-openclaw matrix account add \
+quiet-core-bot matrix account add \
   --account assistant \
   --homeserver https://matrix.example.org \
   --user-id '@assistant:example.org' \
@@ -474,7 +474,7 @@ openclaw matrix account add \
     For token auth, create a fresh access token in your Matrix client or admin UI, then update Quiet Core bot:
 
 ```bash
-openclaw matrix account add \
+quiet-core-bot matrix account add \
   --account assistant \
   --homeserver https://matrix.example.org \
   --access-token '<token>'
@@ -488,8 +488,8 @@ openclaw matrix account add \
     Old Quiet Core bot-managed devices can accumulate. List and prune:
 
 ```bash
-openclaw matrix devices list
-openclaw matrix devices prune-stale
+quiet-core-bot matrix devices list
+quiet-core-bot matrix devices prune-stale
 ```
 
   </Accordion>
@@ -507,8 +507,8 @@ openclaw matrix devices prune-stale
 Update the Matrix self-profile for the selected account:
 
 ```bash
-openclaw matrix profile set --name "Quiet Core bot Assistant"
-openclaw matrix profile set --avatar-url https://cdn.example.org/avatar.png
+quiet-core-bot matrix profile set --name "Quiet Core bot Assistant"
+quiet-core-bot matrix profile set --avatar-url https://cdn.example.org/avatar.png
 ```
 
 You can pass both options in one call. Matrix accepts `mxc://` avatar URLs directly; when you pass `http://` or `https://`, Quiet Core bot uploads the file first and stores the resolved `mxc://` URL into `channels.matrix.avatarUrl` (or the per-account override).
@@ -672,13 +672,13 @@ See [Pairing](/channels/pairing) for the shared DM pairing flow and storage layo
 If direct-message state drifts out of sync, Quiet Core bot can end up with stale `m.direct` mappings that point at old solo rooms instead of the live DM. Inspect the current mapping for a peer:
 
 ```bash
-openclaw matrix direct inspect --user-id @alice:example.org
+quiet-core-bot matrix direct inspect --user-id @alice:example.org
 ```
 
 Repair it:
 
 ```bash
-openclaw matrix direct repair --user-id @alice:example.org
+quiet-core-bot matrix direct repair --user-id @alice:example.org
 ```
 
 Both commands accept `--account <id>` for multi-account setups. The repair flow:
@@ -794,7 +794,7 @@ If your homeserver runs on localhost, a LAN/Tailscale IP, or an internal hostnam
 CLI setup example:
 
 ```bash
-openclaw matrix account add \
+quiet-core-bot matrix account add \
   --account ops \
   --homeserver http://matrix-synapse:8008 \
   --allow-private-network \

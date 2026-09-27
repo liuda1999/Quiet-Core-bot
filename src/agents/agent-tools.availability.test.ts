@@ -5,7 +5,7 @@
  */
 import { describe, expect, it, vi } from "vitest";
 import "./test-helpers/fast-coding-tools.js";
-import "./test-helpers/fast-openclaw-tools.js";
+import "./test-helpers/fast-quiet-core-bot-tools.js";
 import { createOpenClawCodingTools } from "./agent-tools.js";
 
 vi.mock("./channel-tools.js", () => {

@@ -1,7 +1,7 @@
 // Appends the read-only diagnosis section for `quiet-core-bot status --all`.
 // Every line that can include logs, config, or connection details is redacted before display.
 
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import type { ProgressReporter } from "../../cli/progress.js";
 import { formatConfigIssueLine } from "../../config/issue-format.js";
 import {

@@ -3,7 +3,7 @@
  *
  * Captures child output, applies wait outcomes, routes announcements, and performs cleanup decisions.
  */
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import {
   isSilentReplyText,
   SILENT_REPLY_TOKEN,
@@ -285,7 +285,7 @@ async function wakeSubagentRunAfterDescendants(params: {
 // for the in-flight requester run to drain within the announce delivery window
 // and retry, so a finished child keeps its parent-visible receipt.
 function resolveReceiptRetryDelaysMs(): readonly number[] {
-  return process.env.OPENCLAW_TEST_FAST === "1" ? [4, 8, 16] : [1_000, 5_000, 15_000];
+  return process.env.QUIET_CORE_TEST_FAST === "1" ? [4, 8, 16] : [1_000, 5_000, 15_000];
 }
 
 function sleepMs(ms: number): Promise<void> {

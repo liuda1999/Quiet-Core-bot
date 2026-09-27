@@ -58,10 +58,10 @@ describe("resolveGatewayService", () => {
   });
 
   it("guards mutating service adapters when config was written by a newer Quiet Core bot", async () => {
-    const tempHome = await makeTempWorkspace("openclaw-service-future-config-");
-    const stateDir = path.join(tempHome, ".openclaw");
-    const configPath = path.join(stateDir, "openclaw.json");
-    const envSnapshot = captureEnv(["HOME", "OPENCLAW_STATE_DIR", "OPENCLAW_CONFIG_PATH"]);
+    const tempHome = await makeTempWorkspace("quiet-core-bot-service-future-config-");
+    const stateDir = path.join(tempHome, ".quiet-core-bot");
+    const configPath = path.join(stateDir, "quiet-core-bot.json");
+    const envSnapshot = captureEnv(["HOME", "QUIET_CORE_STATE_DIR", "QUIET_CORE_CONFIG_PATH"]);
     try {
       await fs.mkdir(stateDir, { recursive: true });
       await fs.writeFile(
@@ -77,8 +77,8 @@ describe("resolveGatewayService", () => {
         ),
       );
       process.env.HOME = tempHome;
-      process.env.OPENCLAW_STATE_DIR = stateDir;
-      process.env.OPENCLAW_CONFIG_PATH = configPath;
+      process.env.QUIET_CORE_STATE_DIR = stateDir;
+      process.env.QUIET_CORE_CONFIG_PATH = configPath;
       clearConfigCache();
       clearRuntimeConfigSnapshot();
 
@@ -110,20 +110,20 @@ describe("readGatewayServiceState", () => {
     const service = createService({
       isLoaded: vi.fn(async () => true),
       readCommand: vi.fn(async () => ({
-        programArguments: ["openclaw", "gateway", "run"],
-        environment: { OPENCLAW_GATEWAY_PORT: "18789" },
+        programArguments: ["quiet-core-bot", "gateway", "run"],
+        environment: { QUIET_CORE_GATEWAY_PORT: "18789" },
       })),
       readRuntime: vi.fn(async () => ({ status: "running" })),
     });
 
     const state = await readGatewayServiceState(service, {
-      env: { OPENCLAW_GATEWAY_PORT: "1" },
+      env: { QUIET_CORE_GATEWAY_PORT: "1" },
     });
 
     expect(state.installed).toBe(true);
     expect(state.loaded).toBe(true);
     expect(state.running).toBe(true);
-    expect(state.env.OPENCLAW_GATEWAY_PORT).toBe("18789");
+    expect(state.env.QUIET_CORE_GATEWAY_PORT).toBe("18789");
   });
 
   it("keeps the caller-selected service identity when merging persisted env", async () => {
@@ -131,23 +131,23 @@ describe("readGatewayServiceState", () => {
     const service = createService({
       isLoaded: vi.fn(async () => true),
       readCommand: vi.fn(async () => ({
-        programArguments: ["openclaw", "gateway", "run"],
+        programArguments: ["quiet-core-bot", "gateway", "run"],
         environment: {
-          OPENCLAW_GATEWAY_PORT: "18789",
-          OPENCLAW_SYSTEMD_UNIT: "openclaw-gateway.service",
+          QUIET_CORE_GATEWAY_PORT: "18789",
+          QUIET_CORE_SYSTEMD_UNIT: "quiet-core-bot-gateway.service",
         },
       })),
       readRuntime,
     });
 
     const state = await readGatewayServiceState(service, {
-      env: { OPENCLAW_SYSTEMD_UNIT: "openclaw-gateway-maintenance.service" },
+      env: { QUIET_CORE_SYSTEMD_UNIT: "quiet-core-bot-gateway-maintenance.service" },
     });
 
-    expect(state.env.OPENCLAW_SYSTEMD_UNIT).toBe("openclaw-gateway-maintenance.service");
+    expect(state.env.QUIET_CORE_SYSTEMD_UNIT).toBe("quiet-core-bot-gateway-maintenance.service");
     expect(readRuntime).toHaveBeenCalledWith(
       expect.objectContaining({
-        OPENCLAW_SYSTEMD_UNIT: "openclaw-gateway-maintenance.service",
+        QUIET_CORE_SYSTEMD_UNIT: "quiet-core-bot-gateway-maintenance.service",
       }),
     );
   });
@@ -168,8 +168,8 @@ describe("startGatewayService", () => {
 
   it("restarts stopped installed services and returns post-start state", async () => {
     const readCommand = vi.fn(async () => ({
-      programArguments: ["openclaw", "gateway", "run"],
-      environment: { OPENCLAW_GATEWAY_PORT: "18789" },
+      programArguments: ["quiet-core-bot", "gateway", "run"],
+      environment: { QUIET_CORE_GATEWAY_PORT: "18789" },
     }));
     const isLoaded = vi
       .fn<GatewayService["isLoaded"]>()
@@ -200,8 +200,8 @@ describe("startGatewayService", () => {
   it("requests repair before start when the loaded service version is stale", async () => {
     const service = createService({
       readCommand: vi.fn(async () => ({
-        programArguments: ["openclaw", "gateway", "run"],
-        environment: { OPENCLAW_SERVICE_VERSION: "2026.4.24" },
+        programArguments: ["quiet-core-bot", "gateway", "run"],
+        environment: { QUIET_CORE_SERVICE_VERSION: "2026.4.24" },
       })),
       isLoaded: vi.fn(async () => true),
       readRuntime: vi.fn(async () => ({ status: "stopped" })),
@@ -225,8 +225,8 @@ describe("startGatewayService", () => {
     const service = createService({
       readCommand: vi.fn(async () => ({
         programArguments: [
-          "/private/tmp/openclaw-ai-install-cli-pr118/tools/node/bin/node",
-          "/tmp/openclaw-ai-install-cli-pr118/lib/node_modules/openclaw/dist/index.js",
+          "/private/tmp/quiet-core-bot-ai-install-cli-pr118/tools/node/bin/node",
+          "/tmp/quiet-core-bot-ai-install-cli-pr118/lib/node_modules/quiet-core-bot/dist/index.js",
           "gateway",
         ],
         environment: {},
@@ -250,7 +250,7 @@ describe("startGatewayService", () => {
     const readCommand = vi
       .fn<GatewayService["readCommand"]>()
       .mockResolvedValueOnce({
-        programArguments: ["openclaw", "gateway", "run"],
+        programArguments: ["quiet-core-bot", "gateway", "run"],
       })
       .mockResolvedValueOnce(null);
     const service = createService({

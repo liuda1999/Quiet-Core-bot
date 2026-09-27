@@ -1,7 +1,7 @@
 // Memory Core tests cover index plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { MemoryPluginRuntime } from "openclaw/plugin-sdk/memory-core-host-runtime-core";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { MemoryPluginRuntime } from "quiet-core-bot/plugin-sdk/memory-core-host-runtime-core";
+import { createTestPluginApi } from "quiet-core-bot/plugin-sdk/plugin-test-api";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   buildMemoryFlushPlan,

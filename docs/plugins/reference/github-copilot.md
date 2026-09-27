@@ -11,7 +11,7 @@ Adds GitHub Copilot model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/github-copilot-provider`
+- Package: `@quiet-core/github-copilot-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

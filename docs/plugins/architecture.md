@@ -119,7 +119,7 @@ Quiet Core bot's plugin system has four layers:
 
 <Steps>
   <Step title="Manifest + discovery">
-    Quiet Core bot finds candidate plugins from configured paths, workspace roots, global plugin roots, and bundled plugins. Discovery reads native `openclaw.plugin.json` manifests plus supported bundle manifests first.
+    Quiet Core bot finds candidate plugins from configured paths, workspace roots, global plugin roots, and bundled plugins. Discovery reads native `quiet-core-bot.plugin.json` manifests plus supported bundle manifests first.
   </Step>
   <Step title="Enablement + validation">
     Core decides whether a discovered plugin is enabled, disabled, blocked, or selected for an exclusive slot such as memory.
@@ -220,7 +220,7 @@ For channel-owned execution helpers, bundled plugins should keep the execution r
 
 The same boundary applies to provider-named SDK seams in general: core should not import channel-specific convenience barrels for Slack, Discord, Signal, WhatsApp, or similar extensions. If core needs a behavior, either consume the bundled plugin's own `api.ts` / `runtime-api.ts` barrel or promote the need into a narrow generic capability in the shared SDK.
 
-Bundled plugins follow the same rule. A bundled plugin's `runtime-api.ts` should not re-export its own branded `openclaw/plugin-sdk/<plugin-id>` facade. Those branded facades remain compatibility shims for external plugins and older consumers, but bundled plugins should use local exports plus narrow generic SDK subpaths such as `openclaw/plugin-sdk/channel-policy`, `openclaw/plugin-sdk/runtime-store`, or `openclaw/plugin-sdk/webhook-ingress`. New code should not add plugin-id-specific SDK facades unless the compatibility boundary for an existing external ecosystem requires it.
+Bundled plugins follow the same rule. A bundled plugin's `runtime-api.ts` should not re-export its own branded `quiet-core-bot/plugin-sdk/<plugin-id>` facade. Those branded facades remain compatibility shims for external plugins and older consumers, but bundled plugins should use local exports plus narrow generic SDK subpaths such as `quiet-core-bot/plugin-sdk/channel-policy`, `quiet-core-bot/plugin-sdk/runtime-store`, or `quiet-core-bot/plugin-sdk/webhook-ingress`. New code should not add plugin-id-specific SDK facades unless the compatibility boundary for an existing external ecosystem requires it.
 
 For polls specifically, there are two execution paths:
 
@@ -314,11 +314,11 @@ That same pattern should be preferred for future capabilities.
 A company plugin should feel cohesive from the outside. If Quiet Core bot has shared contracts for models, speech, realtime transcription, realtime voice, media understanding, image generation, video generation, web fetch, and web search, a vendor can own all of its surfaces in one place:
 
 ```ts
-import type { OpenClawPluginDefinition } from "openclaw/plugin-sdk/plugin-entry";
+import type { OpenClawPluginDefinition } from "quiet-core-bot/plugin-sdk/plugin-entry";
 import {
   describeImageWithModel,
   transcribeOpenAiCompatibleAudio,
-} from "openclaw/plugin-sdk/media-understanding";
+} from "quiet-core-bot/plugin-sdk/media-understanding";
 
 const plugin: OpenClawPluginDefinition = {
   id: "exampleai",
@@ -453,7 +453,7 @@ Compatible bundles are safer by default because Quiet Core bot currently treats 
 
 Use allowlists and explicit install/load paths for non-bundled plugins. Treat workspace plugins as development-time code, not production defaults.
 
-For bundled workspace package names, keep the plugin id anchored in the npm name: `@openclaw/<id>` by default, or an approved typed suffix such as `-provider`, `-plugin`, `-speech`, `-sandbox`, or `-media-understanding` when the package intentionally exposes a narrower plugin role.
+For bundled workspace package names, keep the plugin id anchored in the npm name: `@quiet-core/<id>` by default, or an approved typed suffix such as `-provider`, `-plugin`, `-speech`, `-sandbox`, or `-media-understanding` when the package intentionally exposes a narrower plugin role.
 
 <Note>
 **Trust note:** `plugins.allow` trusts **plugin ids**, not source provenance. A workspace plugin with the same id as a bundled plugin intentionally shadows the bundled copy when that workspace plugin is enabled/allowlisted. This is normal and useful for local development, patch testing, and hotfixes. Bundled-plugin trust is resolved from the source snapshot — the manifest and code on disk at load time — rather than from install metadata. A corrupted or substituted install record cannot silently widen a bundled plugin's trust surface beyond what the actual source claims.

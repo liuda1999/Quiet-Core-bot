@@ -21,7 +21,7 @@ type GatewayRunFutureConfigGuardParams = {
 };
 
 function resolveGatewayRunFutureConfigBlock(params: GatewayRunFutureConfigGuardParams) {
-  const processServiceMode = Boolean(process.env.OPENCLAW_SERVICE_MARKER?.trim());
+  const processServiceMode = Boolean(process.env.QUIET_CORE_SERVICE_MARKER?.trim());
   const candidateConfig =
     params.config ??
     (params.snapshot?.valid ? (params.snapshot.sourceConfig ?? params.snapshot.config) : undefined);
@@ -29,7 +29,7 @@ function resolveGatewayRunFutureConfigBlock(params: GatewayRunFutureConfigGuardP
     !params.opts.reset &&
     Boolean(
       candidateConfig
-        ? createConfigRuntimeEnv(candidateConfig, process.env).OPENCLAW_SERVICE_MARKER?.trim()
+        ? createConfigRuntimeEnv(candidateConfig, process.env).QUIET_CORE_SERVICE_MARKER?.trim()
         : undefined,
     );
   const serviceMode = processServiceMode || candidateServiceMode;

@@ -1,5 +1,5 @@
 /** Pure helpers for doctor skill readiness repairs. */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import type { SkillStatusEntry, SkillStatusReport } from "../skills/discovery/status.js";
 
 /** Returns allowed skills that are unusable in the current runtime environment. */

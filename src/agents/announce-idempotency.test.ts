@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { readDiagnosticEvents } from "../state/diagnostic-events-store.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
 import { withEnv } from "../test-utils/env.js";
 import {
   buildAnnounceDropEventKey,
@@ -52,7 +52,7 @@ describe("writeAnnounceDropDiagnostic", () => {
   let tempStateDir: string | null = null;
 
   beforeEach(async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-announce-drop-"));
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-announce-drop-"));
   });
 
   afterEach(async () => {
@@ -67,7 +67,7 @@ describe("writeAnnounceDropDiagnostic", () => {
     if (!tempStateDir) {
       throw new Error("expected temp state dir");
     }
-    return withEnv({ OPENCLAW_STATE_DIR: tempStateDir }, fn);
+    return withEnv({ QUIET_CORE_STATE_DIR: tempStateDir }, fn);
   }
 
   it("merges a second drop of the same run into one row with both reasons", () => {

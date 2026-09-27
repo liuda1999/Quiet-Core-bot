@@ -60,7 +60,7 @@ describe("scheduled task runtime derivation", () => {
     );
     return await readScheduledTaskRuntime({
       USERPROFILE: "C:\\Users\\test",
-      OPENCLAW_PROFILE: "default",
+      QUIET_CORE_PROFILE: "default",
     });
   }
 
@@ -141,34 +141,34 @@ describe("scheduled task runtime derivation", () => {
 describe("resolveTaskScriptPath", () => {
   it.each([
     {
-      name: "uses default path when OPENCLAW_PROFILE is unset",
+      name: "uses default path when QUIET_CORE_PROFILE is unset",
       env: { USERPROFILE: "C:\\Users\\test" },
       expected: path.join("C:\\Users\\test", ".quiet-core-bot", "gateway.cmd"),
     },
     {
-      name: "uses profile-specific path when OPENCLAW_PROFILE is set to a custom value",
-      env: { USERPROFILE: "C:\\Users\\test", OPENCLAW_PROFILE: "jbphoenix" },
+      name: "uses profile-specific path when QUIET_CORE_PROFILE is set to a custom value",
+      env: { USERPROFILE: "C:\\Users\\test", QUIET_CORE_PROFILE: "jbphoenix" },
       expected: path.join("C:\\Users\\test", ".quiet-core-bot-jbphoenix", "gateway.cmd"),
     },
     {
-      name: "prefers OPENCLAW_STATE_DIR over profile-derived defaults",
+      name: "prefers QUIET_CORE_STATE_DIR over profile-derived defaults",
       env: {
         USERPROFILE: "C:\\Users\\test",
-        OPENCLAW_PROFILE: "rescue",
-        OPENCLAW_STATE_DIR: "C:\\State\\openclaw",
+        QUIET_CORE_PROFILE: "rescue",
+        QUIET_CORE_STATE_DIR: "C:\\State\\quiet-core-bot",
       },
-      expected: path.join("C:\\State\\openclaw", "gateway.cmd"),
+      expected: path.join("C:\\State\\quiet-core-bot", "gateway.cmd"),
     },
     {
       name: "falls back to HOME when USERPROFILE is not set",
-      env: { HOME: "/home/test", OPENCLAW_PROFILE: "default" },
+      env: { HOME: "/home/test", QUIET_CORE_PROFILE: "default" },
       expected: path.resolve("/home/test", ".quiet-core-bot", "gateway.cmd"),
     },
     {
       name: "uses a custom task script file name inside the state directory",
       env: {
         USERPROFILE: "C:\\Users\\test",
-        OPENCLAW_TASK_SCRIPT_NAME: "gateway-node.cmd",
+        QUIET_CORE_TASK_SCRIPT_NAME: "gateway-node.cmd",
       },
       expected: path.join("C:\\Users\\test", ".quiet-core-bot", "gateway-node.cmd"),
     },
@@ -186,9 +186,9 @@ describe("resolveTaskScriptPath", () => {
     expect(() =>
       resolveTaskScriptPath({
         USERPROFILE: "C:\\Users\\test",
-        OPENCLAW_TASK_SCRIPT_NAME: scriptName,
+        QUIET_CORE_TASK_SCRIPT_NAME: scriptName,
       }),
-    ).toThrow("OPENCLAW_TASK_SCRIPT_NAME must be a file name only");
+    ).toThrow("QUIET_CORE_TASK_SCRIPT_NAME must be a file name only");
   });
 });
 
@@ -202,12 +202,12 @@ describe("readScheduledTaskCommand", () => {
     },
     run: (env: Record<string, string | undefined>) => Promise<void>,
   ) {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-schtasks-test-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-schtasks-test-"));
     try {
       const extraEnv = typeof options.env === "function" ? options.env(tmpDir) : options.env;
       const env = {
         USERPROFILE: tmpDir,
-        OPENCLAW_PROFILE: "default",
+        QUIET_CORE_PROFILE: "default",
         ...extraEnv,
       };
       if (options.scriptLines) {
@@ -243,19 +243,19 @@ describe("readScheduledTaskCommand", () => {
         scriptLines: [
           "@echo off",
           "rem Quiet Core bot Gateway (v0.1.0)",
-          "set OPENCLAW_GATEWAY_PORT=18789",
-          "if not exist C:/Projects/openclaw/dist/index.js (",
+          "set QUIET_CORE_GATEWAY_PORT=18789",
+          "if not exist C:/Projects/quiet-core-bot/dist/index.js (",
           "  echo [quiet-core-bot] build artifact missing 1>&2",
           "  exit /b 1",
           ")",
-          '"C:/Program Files/Node/node.exe" C:/Projects/openclaw/dist/index.js gateway --port 18789',
+          '"C:/Program Files/Node/node.exe" C:/Projects/quiet-core-bot/dist/index.js gateway --port 18789',
         ],
       },
       async (env) => {
         const result = await readScheduledTaskCommand(env);
         expect(result?.programArguments).toEqual([
           "C:/Program Files/Node/node.exe",
-          "C:/Projects/openclaw/dist/index.js",
+          "C:/Projects/quiet-core-bot/dist/index.js",
           "gateway",
           "--port",
           "18789",
@@ -287,9 +287,9 @@ describe("readScheduledTaskCommand", () => {
         scriptLines: [
           "@echo off",
           "rem Quiet Core bot Gateway",
-          "cd /d C:\\Projects\\openclaw",
+          "cd /d C:\\Projects\\quiet-core-bot",
           "set NODE_ENV=production",
-          "set OPENCLAW_PORT=18789",
+          "set QUIET_CORE_PORT=18789",
           "node gateway.js --verbose",
         ],
       },
@@ -297,14 +297,14 @@ describe("readScheduledTaskCommand", () => {
         const result = await readScheduledTaskCommand(env);
         expect(result).toEqual({
           programArguments: ["node", "gateway.js", "--verbose"],
-          workingDirectory: "C:\\Projects\\openclaw",
+          workingDirectory: "C:\\Projects\\quiet-core-bot",
           environment: {
             NODE_ENV: "production",
-            OPENCLAW_PORT: "18789",
+            QUIET_CORE_PORT: "18789",
           },
           environmentValueSources: {
             NODE_ENV: "inline",
-            OPENCLAW_PORT: "inline",
+            QUIET_CORE_PORT: "inline",
           },
           sourcePath: resolveTaskScriptPath(env),
         });
@@ -317,7 +317,7 @@ describe("readScheduledTaskCommand", () => {
       {
         scriptLines: [
           "@echo off",
-          '"C:\\Program Files\\nodejs\\node.exe" C:\\Users\\test\\AppData\\Roaming\\npm\\node_modules\\openclaw\\dist\\index.js gateway --port 18789',
+          '"C:\\Program Files\\nodejs\\node.exe" C:\\Users\\test\\AppData\\Roaming\\npm\\node_modules\\quiet-core-bot\\dist\\index.js gateway --port 18789',
         ],
       },
       async (env) => {
@@ -325,7 +325,7 @@ describe("readScheduledTaskCommand", () => {
         expect(result).toEqual({
           programArguments: [
             "C:\\Program Files\\nodejs\\node.exe",
-            "C:\\Users\\test\\AppData\\Roaming\\npm\\node_modules\\openclaw\\dist\\index.js",
+            "C:\\Users\\test\\AppData\\Roaming\\npm\\node_modules\\quiet-core-bot\\dist\\index.js",
             "gateway",
             "--port",
             "18789",
@@ -360,10 +360,10 @@ describe("readScheduledTaskCommand", () => {
     );
   });
 
-  it("reads script from OPENCLAW_STATE_DIR override", async () => {
+  it("reads script from QUIET_CORE_STATE_DIR override", async () => {
     await withScheduledTaskScript(
       {
-        env: (tmpDir) => ({ OPENCLAW_STATE_DIR: path.join(tmpDir, "custom-state") }),
+        env: (tmpDir) => ({ QUIET_CORE_STATE_DIR: path.join(tmpDir, "custom-state") }),
         scriptLines: ["@echo off", "node gateway.js --from-state-dir"],
       },
       async (env) => {

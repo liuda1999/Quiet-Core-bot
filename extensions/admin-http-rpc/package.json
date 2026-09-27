@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/admin-http-rpc",
+  "name": "@quiet-core/admin-http-rpc",
   "version": "2026.6.11",
   "private": true,
   "description": "OpenClaw admin HTTP RPC endpoint",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@quiet-core/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": [
       "./index.ts"
     ]

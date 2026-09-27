@@ -111,7 +111,7 @@ Notes:
   already installed or unambiguous, but owner-qualified refs avoid publisher
   ambiguity.
 - When ClawHub returns server-resolved source provenance, verify JSON also
-  includes a commit-pinned `openclaw.verifiedSourceUrl`. Unavailable or
+  includes a commit-pinned `quiet-core-bot.verifiedSourceUrl`. Unavailable or
   self-declared source URLs stay only in the raw provenance envelope and are not
   promoted.
 - `verify` uses `.clawhub/origin.json` for installed ClawHub skills, so it

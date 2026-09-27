@@ -1,6 +1,6 @@
 /** Human-readable formatter for `quiet-core-bot message` action results. */
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
-import { normalizeStringEntries } from "@openclaw/normalization-core/string-normalization";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
+import { normalizeStringEntries } from "@quiet-core/normalization-core/string-normalization";
 import { getTerminalTableWidth, renderTable } from "../../packages/terminal-core/src/table.js";
 import { isRich, theme } from "../../packages/terminal-core/src/theme.js";
 import { getLoadedChannelPlugin } from "../channels/plugins/index.js";

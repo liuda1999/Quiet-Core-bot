@@ -325,7 +325,7 @@ export function registerStatusHealthSessionsCommands(program: Command) {
     .command("export-trajectory")
     .description("Export a redacted trajectory bundle for a stored session")
     .option("--session-key <key>", "Session key to export")
-    .option("--output <path>", "Output directory name inside .openclaw/trajectory-exports")
+    .option("--output <path>", "Output directory name inside .quiet-core-bot/trajectory-exports")
     .option("--workspace <path>", "Workspace root for the export (default: current directory)")
     .option("--store <path>", "Path to session store (default: resolved from config)")
     .option("--agent <id>", "Agent id for resolving the default session store")

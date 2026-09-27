@@ -39,7 +39,7 @@ vi.mock("../plugins/plugin-metadata-snapshot.js", () => ({
   resolvePluginMetadataSnapshot: pluginRegistryMocks.resolvePluginMetadataSnapshot,
 }));
 vi.mock("./official-external-plugin-catalog.js", () => ({
-  getOfficialExternalPluginCatalogManifest: (entry: { openclaw?: unknown }) => entry.openclaw,
+  getOfficialExternalPluginCatalogManifest: (entry: { "quiet-core-bot"?: unknown }) => entry["quiet-core-bot"],
   listOfficialExternalProviderCatalogEntries:
     officialCatalogMocks.listOfficialExternalProviderCatalogEntries,
 }));
@@ -184,7 +184,7 @@ describe("provider auth choice manifest helpers", () => {
     ]);
     officialCatalogMocks.listOfficialExternalProviderCatalogEntries.mockReturnValue([
       {
-        openclaw: {
+        "quiet-core-bot": {
           plugin: { id: "cerebras" },
           providers: [
             {

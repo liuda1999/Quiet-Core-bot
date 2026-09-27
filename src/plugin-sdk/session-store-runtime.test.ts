@@ -22,7 +22,7 @@ describe("session-store-runtime compatibility surface", () => {
   let storePath: string;
 
   beforeEach(() => {
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-sdk-session-store-"));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-sdk-session-store-"));
     storePath = path.join(tempDir, "sessions.json");
   });
 

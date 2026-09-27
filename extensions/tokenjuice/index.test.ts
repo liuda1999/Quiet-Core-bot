@@ -1,6 +1,6 @@
 // Tokenjuice tests cover index plugin behavior.
 import fs from "node:fs";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+import { createTestPluginApi } from "quiet-core-bot/plugin-sdk/plugin-test-api";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const { tokenjuiceFactory, createTokenjuiceOpenClawEmbeddedExtension } = vi.hoisted(() => {
@@ -27,7 +27,7 @@ describe("tokenjuice plugin", () => {
 
   it("is opt-in by default", () => {
     const manifest = JSON.parse(
-      fs.readFileSync(new URL("./openclaw.plugin.json", import.meta.url), "utf8"),
+      fs.readFileSync(new URL("./quiet-core-bot.plugin.json", import.meta.url), "utf8"),
     ) as { enabledByDefault?: unknown };
 
     expect(manifest.enabledByDefault).toBeUndefined();
@@ -52,7 +52,7 @@ describe("tokenjuice plugin", () => {
     expect(tokenjuiceFactory).toHaveBeenCalledTimes(1);
     const registration = registerAgentToolResultMiddleware.mock.calls[0];
     expect(typeof registration?.[0]).toBe("function");
-    expect(registration?.[1]).toEqual({ runtimes: ["openclaw"] });
+    expect(registration?.[1]).toEqual({ runtimes: ["quiet-core-bot"] });
   });
 
   it("synthesises exec fields when bash provides metadata-only details (no status)", async () => {
@@ -74,7 +74,7 @@ describe("tokenjuice plugin", () => {
       {
         toolCallId: "tool-call-tokenjuice-bash-meta",
         toolName: "bash",
-        args: { command: "cat /tmp/out.txt", workdir: "/tmp/openclaw-tokenjuice-test" },
+        args: { command: "cat /tmp/out.txt", workdir: "/tmp/quiet-core-bot-tokenjuice-test" },
         result: {
           content: [{ type: "text", text: "file contents\n" }],
           details: {
@@ -84,7 +84,7 @@ describe("tokenjuice plugin", () => {
         },
         isError: false,
       },
-      { runtime: "openclaw" },
+      { runtime: "quiet-core-bot" },
     );
 
     expect(received?.details).toMatchObject({
@@ -129,7 +129,7 @@ describe("tokenjuice plugin", () => {
         },
         isError: false,
       },
-      { runtime: "openclaw" },
+      { runtime: "quiet-core-bot" },
     );
 
     expect(received?.details).toBe(existingDetails);
@@ -171,7 +171,7 @@ describe("tokenjuice plugin", () => {
           },
           isError: false,
         },
-        { runtime: "openclaw" },
+        { runtime: "quiet-core-bot" },
       );
 
       expect(received?.details).toMatchObject({
@@ -206,11 +206,11 @@ describe("tokenjuice plugin", () => {
       {
         toolCallId: "tool-call-tokenjuice-bash",
         toolName: "bash",
-        args: { command: "printf 'hello\\n'", workdir: "/tmp/openclaw-tokenjuice-test" },
+        args: { command: "printf 'hello\\n'", workdir: "/tmp/quiet-core-bot-tokenjuice-test" },
         result: { content: [{ type: "text", text: "hello\n" }], details: undefined },
         isError: false,
       },
-      { runtime: "openclaw" },
+      { runtime: "quiet-core-bot" },
     );
 
     expect(received?.toolName).toBe("bash");

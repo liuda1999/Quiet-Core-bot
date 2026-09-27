@@ -4,8 +4,8 @@ import {
   createPluginSetupWizardStatus,
   createTestWizardPrompter,
   runSetupWizardConfigure,
-} from "openclaw/plugin-sdk/plugin-test-runtime";
-import type { WizardPrompter } from "openclaw/plugin-sdk/plugin-test-runtime";
+} from "quiet-core-bot/plugin-sdk/plugin-test-runtime";
+import type { WizardPrompter } from "quiet-core-bot/plugin-sdk/plugin-test-runtime";
 import { describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../api.js";
 import { TlonAuthorizationSchema, TlonConfigSchema } from "./config-schema.js";

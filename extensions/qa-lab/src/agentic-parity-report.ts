@@ -272,7 +272,7 @@ function describeLiveUsageFailure(scenarioName: string, scenario: QaRuntimeParit
   const missing = [
     scenario.openclawTokens > 0
       ? undefined
-      : `${scenario.openclawStatus === "pass" ? "openclaw" : "openclaw failed"}=0`,
+      : `${scenario.openclawStatus === "pass" ? "quiet-core-bot" : "quiet-core-bot failed"}=0`,
     scenario.codexTokens > 0
       ? undefined
       : `${scenario.codexStatus === "pass" ? "codex" : "codex failed"}=0`,
@@ -289,7 +289,7 @@ function normalizeRuntimePair(
   if (pair?.[0] && pair?.[1]) {
     return pair;
   }
-  return ["openclaw", "codex"];
+  return ["quiet-core-bot", "codex"];
 }
 
 function requiredCoverageStatus(

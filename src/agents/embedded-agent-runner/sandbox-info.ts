@@ -1,7 +1,7 @@
 /**
  * Builds sandbox/full-access status metadata for embedded-agent run results.
  */
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import type { ExecElevatedDefaults, ExecToolDefaults } from "../bash-tools.js";
 import { resolveExecDefaults } from "../exec-defaults.js";
 import type { resolveSandboxContext } from "../sandbox.js";

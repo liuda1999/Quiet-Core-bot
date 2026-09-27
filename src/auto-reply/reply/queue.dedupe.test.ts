@@ -1,5 +1,5 @@
 // Tests follow-up queue message-id dedupe and drain scheduling behavior.
-import { importFreshModule } from "openclaw/plugin-sdk/test-fixtures";
+import { importFreshModule } from "quiet-core-bot/plugin-sdk/test-fixtures";
 import { beforeEach, describe, expect, it } from "vitest";
 import type { FollowupRun, QueueSettings } from "./queue.js";
 import {

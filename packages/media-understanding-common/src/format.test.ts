@@ -97,7 +97,7 @@ describe("formatMediaUnderstandingBody", () => {
           kind: "audio.transcription",
           attachmentIndex: 0,
           text: "first clip was silent",
-          provider: "openclaw",
+          provider: "quiet-core-bot",
         },
         {
           kind: "audio.transcription",

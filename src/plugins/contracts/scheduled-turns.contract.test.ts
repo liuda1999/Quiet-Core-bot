@@ -1,9 +1,9 @@
 // Scheduled turn contract tests cover plugin scheduled turn metadata and timestamp bounds.
-import { MAX_DATE_TIMESTAMP_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_DATE_TIMESTAMP_MS } from "@quiet-core/normalization-core/number-coercion";
 import {
   createPluginRegistryFixture,
   registerTestPlugin,
-} from "openclaw/plugin-sdk/plugin-test-contracts";
+} from "quiet-core-bot/plugin-sdk/plugin-test-contracts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { CronServiceContract } from "../../cron/service-contract.js";
 import type { CronJob, CronJobCreate } from "../../cron/types.js";
@@ -91,9 +91,9 @@ function createMockCronService(): CronServiceContract {
     stop: vi.fn(),
     status: vi.fn(async () => ({
       enabled: true,
-      storePath: "/tmp/openclaw-test-cron.json",
+      storePath: "/tmp/quiet-core-bot-test-cron.json",
       storage: "sqlite" as const,
-      sqlitePath: "/tmp/openclaw-test-state/state/openclaw.sqlite",
+      sqlitePath: "/tmp/quiet-core-bot-test-state/state/quiet-core-bot.sqlite",
       jobs: 0,
       nextWakeAtMs: null,
     })),
@@ -527,8 +527,8 @@ describe("plugin scheduled turns", () => {
 
     const registry = withEnv(
       {
-        OPENCLAW_BUNDLED_PLUGINS_DIR: bundledDir,
-        OPENCLAW_DISABLE_BUNDLED_PLUGINS: undefined,
+        QUIET_CORE_BUNDLED_PLUGINS_DIR: bundledDir,
+        QUIET_CORE_DISABLE_BUNDLED_PLUGINS: undefined,
       },
       () =>
         loadOpenClawPlugins({
@@ -664,8 +664,8 @@ describe("plugin scheduled turns", () => {
 
     const registry = withEnv(
       {
-        OPENCLAW_BUNDLED_PLUGINS_DIR: bundledDir,
-        OPENCLAW_DISABLE_BUNDLED_PLUGINS: undefined,
+        QUIET_CORE_BUNDLED_PLUGINS_DIR: bundledDir,
+        QUIET_CORE_DISABLE_BUNDLED_PLUGINS: undefined,
       },
       () =>
         loadOpenClawPlugins({

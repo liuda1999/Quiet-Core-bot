@@ -198,7 +198,7 @@ describe("security audit install metadata findings", () => {
       installRecords: records,
       plugins: Object.keys(records).map((pluginId) => ({
         pluginId,
-        manifestPath: path.join(stateDir, "extensions", pluginId, "openclaw.plugin.json"),
+        manifestPath: path.join(stateDir, "extensions", pluginId, "quiet-core-bot.plugin.json"),
         manifestHash: "manifest",
         rootDir: path.join(stateDir, "extensions", pluginId),
         origin: "global" as const,
@@ -217,7 +217,7 @@ describe("security audit install metadata findings", () => {
   };
 
   beforeAll(async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-security-install-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-security-install-"));
   });
 
   afterAll(async () => {
@@ -240,7 +240,7 @@ describe("security audit install metadata findings", () => {
           await writePluginIndexInstallRecords(stateDir, {
             "voice-call": {
               source: "npm",
-              spec: "@openclaw/voice-call",
+              spec: "@quiet-core/voice-call",
             },
           });
           return runInstallMetadataAudit(
@@ -250,7 +250,7 @@ describe("security audit install metadata findings", () => {
                   installs: {
                     "test-hooks": {
                       source: "npm",
-                      spec: "@openclaw/test-hooks",
+                      spec: "@quiet-core/test-hooks",
                     },
                   },
                 },
@@ -273,7 +273,7 @@ describe("security audit install metadata findings", () => {
           await writePluginIndexInstallRecords(stateDir, {
             "voice-call": {
               source: "npm",
-              spec: "@openclaw/voice-call@1.2.3",
+              spec: "@quiet-core/voice-call@1.2.3",
               integrity: "sha512-plugin",
             },
           });
@@ -284,7 +284,7 @@ describe("security audit install metadata findings", () => {
                   installs: {
                     "test-hooks": {
                       source: "npm",
-                      spec: "@openclaw/test-hooks@1.2.3",
+                      spec: "@quiet-core/test-hooks@1.2.3",
                       integrity: "sha512-hook",
                     },
                   },
@@ -308,8 +308,8 @@ describe("security audit install metadata findings", () => {
           await writePluginIndexInstallRecords(stateDir, {
             "voice-call": {
               source: "npm",
-              spec: "@openclaw/voice-call",
-              resolvedSpec: "@openclaw/voice-call@1.2.3",
+              spec: "@quiet-core/voice-call",
+              resolvedSpec: "@quiet-core/voice-call@1.2.3",
               integrity: "sha512-plugin",
             },
           });
@@ -320,8 +320,8 @@ describe("security audit install metadata findings", () => {
                   installs: {
                     "test-hooks": {
                       source: "npm",
-                      spec: "@openclaw/test-hooks",
-                      resolvedSpec: "@openclaw/test-hooks@1.2.3",
+                      spec: "@quiet-core/test-hooks",
+                      resolvedSpec: "@quiet-core/test-hooks@1.2.3",
                       integrity: "sha512-hook",
                     },
                   },
@@ -344,7 +344,7 @@ describe("security audit install metadata findings", () => {
           await writePluginIndexInstallRecords(stateDir, {
             "voice-call": {
               source: "npm",
-              spec: "@openclaw/voice-call@1.2.3",
+              spec: "@quiet-core/voice-call@1.2.3",
               integrity: "sha512-plugin",
               resolvedVersion: "1.2.3",
             },
@@ -356,7 +356,7 @@ describe("security audit install metadata findings", () => {
                   installs: {
                     "test-hooks": {
                       source: "npm",
-                      spec: "@openclaw/test-hooks@1.2.3",
+                      spec: "@quiet-core/test-hooks@1.2.3",
                       integrity: "sha512-hook",
                       resolvedVersion: "1.2.3",
                     },
@@ -425,7 +425,7 @@ describe("security audit install metadata findings", () => {
     const stateDir = await makeTmpDir("installed-plugin-debris");
     for (const name of [
       "live-plugin",
-      ".openclaw-install-backups",
+      ".quiet-core-bot-install-backups",
       "node_modules",
       "old-plugin.backup-20260502",
       "old-plugin.disabled.20260502",
@@ -447,7 +447,7 @@ describe("security audit install metadata findings", () => {
     );
     expect(toolsReachable.detail).toContain("Enabled extension plugins: live-plugin.");
     expect(findings.map((finding) => finding.detail).join("\n")).not.toContain(
-      ".openclaw-install-backups",
+      ".quiet-core-bot-install-backups",
     );
   });
 
@@ -491,9 +491,9 @@ describe("security audit extension tool reachability findings", () => {
     "USERPROFILE",
     "HOMEDRIVE",
     "HOMEPATH",
-    "OPENCLAW_HOME",
-    "OPENCLAW_STATE_DIR",
-    "OPENCLAW_BUNDLED_PLUGINS_DIR",
+    "QUIET_CORE_HOME",
+    "QUIET_CORE_STATE_DIR",
+    "QUIET_CORE_BUNDLED_PLUGINS_DIR",
   ] as const;
   let pathResolutionEnvSnapshot: ReturnType<typeof captureEnv> | undefined;
 
@@ -507,9 +507,9 @@ describe("security audit extension tool reachability findings", () => {
   beforeAll(async () => {
     const osModule = await import("node:os");
     const vitestModule = await import("vitest");
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-security-extensions-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-security-extensions-"));
     isolatedHome = path.join(fixtureRoot, "home");
-    const isolatedEnv = createPathResolutionEnv(isolatedHome, { OPENCLAW_HOME: isolatedHome });
+    const isolatedEnv = createPathResolutionEnv(isolatedHome, { QUIET_CORE_HOME: isolatedHome });
     pathResolutionEnvSnapshot = captureEnv([...pathResolutionEnvKeys]);
     for (const key of pathResolutionEnvKeys) {
       const value = isolatedEnv[key];

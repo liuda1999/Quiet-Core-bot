@@ -17,7 +17,7 @@ the Raft CLI to check and send messages.
 Raft is an official external plugin. Install it on the Gateway host:
 
 ```bash
-quiet-core-bot plugins install @openclaw/raft
+quiet-core-bot plugins install @quiet-core/raft
 quiet-core-bot gateway restart
 ```
 
@@ -41,7 +41,7 @@ Set the profile in config:
   channels: {
     raft: {
       enabled: true,
-      profile: "openclaw",
+      profile: "quiet-core-bot",
     },
   },
 }
@@ -51,7 +51,7 @@ For the default account, you can instead set `RAFT_PROFILE` in the Gateway
 environment:
 
 ```bash
-RAFT_PROFILE=openclaw
+RAFT_PROFILE=quiet-core-bot
 ```
 
 Use a named account when one Gateway connects to more than one Raft External Agent:

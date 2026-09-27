@@ -62,7 +62,7 @@ updates:
 
   # Swift Package Manager - shared kit
   - package-ecosystem: swift
-    directory: /apps/shared/OpenClawKit
+    directory: /apps/shared/QuietCoreKit
     schedule:
       interval: monthly
     cooldown:

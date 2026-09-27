@@ -2,7 +2,7 @@
 import {
   defineBundledChannelEntry,
   type OpenClawPluginApi,
-} from "openclaw/plugin-sdk/channel-entry-contract";
+} from "quiet-core-bot/plugin-sdk/channel-entry-contract";
 import { registerMatrixCliMetadata } from "./cli-metadata.js";
 import { registerMatrixSubagentHooks } from "./subagent-hooks-api.js";
 

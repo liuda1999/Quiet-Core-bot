@@ -110,7 +110,7 @@ const defaultOptions = (): WindowsOptions => ({
   modelId: undefined,
   provider: "openai",
   skipLatestRefCheck: false,
-  snapshotHint: "pre-openclaw-native-e2e-2026-03-12",
+  snapshotHint: "pre-quiet-core-bot-native-e2e-2026-03-12",
   targetPackageSpec: "",
   upgradeFromPackedMain: false,
   vmName: "Windows 11",
@@ -126,7 +126,7 @@ function usage(): string {
 Options:
   --vm <name>                Parallels VM name. Default: "Windows 11"
   --snapshot-hint <name>     Snapshot name substring/fuzzy match.
-                             Default: "pre-openclaw-native-e2e-2026-03-12"
+                             Default: "pre-quiet-core-bot-native-e2e-2026-03-12"
   --mode <fresh|upgrade|both>
   --provider <openai|anthropic|minimax>
   --model <provider/model>    Override the model used for the agent-turn smoke.
@@ -139,7 +139,7 @@ Options:
   --install-version <ver>    Pin site-installer version/dist-tag for the baseline lane.
   --upgrade-from-packed-main
                              Upgrade lane: install packed current-main npm tgz as baseline,
-                             then run openclaw update --channel dev.
+                             then run quiet-core-bot update --channel dev.
   --target-package-spec <npm-spec>
                              Install this npm package tarball instead of packing current main.
   --skip-latest-ref-check    Skip latest-release ref-mode precheck.
@@ -240,15 +240,15 @@ function stripLeadingPackageManagerSeparator(argv: string[]): string[] {
 class WindowsSmoke extends SmokeRunController<WindowsOptions> {
   private auth: ProviderAuth;
   private agentTimeoutSeconds = readPositiveIntEnv(
-    "OPENCLAW_PARALLELS_WINDOWS_AGENT_TIMEOUT_S",
+    "QUIET_CORE_PARALLELS_WINDOWS_AGENT_TIMEOUT_S",
     2700,
   );
   private updateTimeoutSeconds = readPositiveIntEnv(
-    "OPENCLAW_PARALLELS_WINDOWS_UPDATE_TIMEOUT_S",
+    "QUIET_CORE_PARALLELS_WINDOWS_UPDATE_TIMEOUT_S",
     1200,
   );
   private gatewayRecoveryAfterMs =
-    readPositiveIntEnv("OPENCLAW_PARALLELS_WINDOWS_GATEWAY_RECOVERY_AFTER_S", 180) * 1000;
+    readPositiveIntEnv("QUIET_CORE_PARALLELS_WINDOWS_GATEWAY_RECOVERY_AFTER_S", 180) * 1000;
   private artifact: PackageArtifact | null = null;
   private minGitZipPath = "";
   private latestVersion = "";
@@ -280,10 +280,10 @@ class WindowsSmoke extends SmokeRunController<WindowsOptions> {
   }
 
   async run(): Promise<void> {
-    this.runDir = await makeTempDir("openclaw-parallels-windows.");
+    this.runDir = await makeTempDir("quiet-core-bot-parallels-windows.");
     this.phases = new PhaseRunner(this.runDir);
     this.guest = new WindowsGuest(this.options.vmName, this.phases);
-    this.tgzDir = await makeTempDir("openclaw-parallels-windows-tgz.");
+    this.tgzDir = await makeTempDir("quiet-core-bot-parallels-windows-tgz.");
     try {
       validateSnapshotRestoreMode(this.options.mode, "Windows smoke");
       this.snapshot = shouldSkipSnapshotRestore()
@@ -366,7 +366,7 @@ class WindowsSmoke extends SmokeRunController<WindowsOptions> {
     );
     await this.phase("fresh.preflight", 120, () => this.logGuestPreflight(true));
     await this.phase("fresh.install-main", WINDOWS_PACKAGE_INSTALL_TIMEOUT_SECONDS, () =>
-      this.installMain("openclaw-main-fresh.tgz"),
+      this.installMain("quiet-core-bot-main-fresh.tgz"),
     );
     this.status.freshVersion = await this.extractLastVersion("fresh.install-main");
     await this.phase("fresh.verify-main-version", 120, () => this.verifyTargetVersion());
@@ -389,7 +389,7 @@ class WindowsSmoke extends SmokeRunController<WindowsOptions> {
       await this.phase(
         "upgrade.install-baseline-package",
         WINDOWS_PACKAGE_INSTALL_TIMEOUT_SECONDS,
-        () => this.installMain("openclaw-main-upgrade.tgz"),
+        () => this.installMain("quiet-core-bot-main-upgrade.tgz"),
       );
       this.status.latestInstalledVersion = await this.extractLastVersion(
         "upgrade.install-baseline-package",
@@ -534,7 +534,7 @@ class WindowsSmoke extends SmokeRunController<WindowsOptions> {
 
   private logGuestPreflight(cleanOpenClaw: boolean): void {
     const cleanScript = cleanOpenClaw
-      ? "npm.cmd uninstall -g openclaw --no-fund --no-audit --loglevel=error 2>$null; $global:LASTEXITCODE = 0"
+      ? "npm.cmd uninstall -g quiet-core-bot --no-fund --no-audit --loglevel=error 2>$null; $global:LASTEXITCODE = 0"
       : "";
     this.guestPowerShell(
       `$ErrorActionPreference = 'Continue'
@@ -556,7 +556,7 @@ $script = Invoke-RestMethod -Uri ${psSingleQuote(this.options.installUrl)} -Time
 & ([scriptblock]::Create($script))${versionArg} -NoOnboard
 if ($LASTEXITCODE -ne 0) { throw "installer failed with exit code $LASTEXITCODE" }
 Invoke-OpenClaw --version
-      if ($LASTEXITCODE -ne 0) { throw "openclaw --version failed with exit code $LASTEXITCODE" }`,
+      if ($LASTEXITCODE -ne 0) { throw "quiet-core-bot --version failed with exit code $LASTEXITCODE" }`,
       this.remainingPhaseTimeoutMs(WINDOWS_PACKAGE_INSTALL_TIMEOUT_MS) ??
         WINDOWS_PACKAGE_INSTALL_TIMEOUT_MS,
     );
@@ -575,7 +575,7 @@ curl.exe -fsSL --connect-timeout 10 --max-time 120 --retry 2 --retry-delay 2 ${p
 npm.cmd install -g $tgz --no-fund --no-audit --loglevel=error
 if ($LASTEXITCODE -ne 0) { throw "npm install failed with exit code $LASTEXITCODE" }
 Invoke-OpenClaw --version
-      if ($LASTEXITCODE -ne 0) { throw "openclaw --version failed with exit code $LASTEXITCODE" }`,
+      if ($LASTEXITCODE -ne 0) { throw "quiet-core-bot --version failed with exit code $LASTEXITCODE" }`,
       this.remainingPhaseTimeoutMs(WINDOWS_PACKAGE_INSTALL_TIMEOUT_MS) ??
         WINDOWS_PACKAGE_INSTALL_TIMEOUT_MS,
     );
@@ -614,7 +614,7 @@ Invoke-OpenClaw --version
 $PSNativeCommandUseErrorActionPreference = $false
 Set-Item -Path ('Env:' + ${psSingleQuote(this.auth.apiKeyEnv)}) -Value ${psSingleQuote(this.auth.apiKeyValue)}
 Invoke-OpenClaw onboard --non-interactive --mode local --auth-choice ${psSingleQuote(this.auth.authChoice)} --secret-input-mode ref --gateway-port 18789 --gateway-bind loopback --install-daemon --skip-skills --skip-health --accept-risk --json
-if ($LASTEXITCODE -ne 0) { throw "openclaw onboard failed with exit code $LASTEXITCODE" }
+if ($LASTEXITCODE -ne 0) { throw "quiet-core-bot onboard failed with exit code $LASTEXITCODE" }
 ${this.windowsPluginIsolationScript()}`,
       720_000,
     );
@@ -651,7 +651,7 @@ ${this.windowsPluginIsolationScript()}`,
     this.guestPowerShell(
       `$ErrorActionPreference = 'Stop'
 ${windowsPortableGitPathScript}
-$configPath = Join-Path $env:USERPROFILE '.openclaw\\openclaw.json'
+$configPath = Join-Path $env:USERPROFILE '.quiet-core-bot\\quiet-core-bot.json'
 $config = Get-Content $configPath -Raw | ConvertFrom-Json
 if ($null -eq $config.update) {
   $config | Add-Member -MemberType NoteProperty -Name update -Value ([pscustomobject]@{})
@@ -660,11 +660,11 @@ $config.update | Add-Member -Force -MemberType NoteProperty -Name channel -Value
 $config | ConvertTo-Json -Depth 100 | Set-Content -Path $configPath -Encoding utf8
 ${windowsScopedEnvFunction}
 $script:OpenClawUpdateExit = 0
-Invoke-WithScopedEnv @{ OPENCLAW_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS = '1'; OPENCLAW_DISABLE_BUNDLED_PLUGINS = '1' } {
+Invoke-WithScopedEnv @{ QUIET_CORE_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS = '1'; QUIET_CORE_DISABLE_BUNDLED_PLUGINS = '1' } {
   Invoke-OpenClaw update --channel dev --yes --json
   $script:OpenClawUpdateExit = $LASTEXITCODE
 }
-if ($script:OpenClawUpdateExit -ne 0) { throw "openclaw update failed with exit code $script:OpenClawUpdateExit" }
+if ($script:OpenClawUpdateExit -ne 0) { throw "quiet-core-bot update failed with exit code $script:OpenClawUpdateExit" }
 Invoke-OpenClaw --version
 Invoke-OpenClaw update status --json`,
       { timeoutMs: this.updateTimeoutSeconds * 1000 },
@@ -745,7 +745,7 @@ Set-Item -Path ('Env:' + ${psSingleQuote(this.auth.apiKeyEnv)}) -Value ${psSingl
 $agentOk = $false
 for ($attempt = 1; $attempt -le 2; $attempt++) {
   $sessionId = if ($attempt -eq 1) { 'parallels-windows-smoke' } else { "parallels-windows-smoke-retry-$attempt" }
-  $sessionsDir = Join-Path $env:USERPROFILE '.openclaw\\agents\\main\\sessions'
+  $sessionsDir = Join-Path $env:USERPROFILE '.quiet-core-bot\\agents\\main\\sessions'
   $sessionPath = Join-Path $sessionsDir "$sessionId.jsonl"
   Remove-Item $sessionPath -Force -ErrorAction SilentlyContinue
   $args = @(
@@ -783,7 +783,7 @@ for ($attempt = 1; $attempt -le 2; $attempt++) {
     throw "agent failed with exit code $agentExitCode"
   }
 }
-if (-not $agentOk) { throw 'openclaw agent finished without OK response' }`,
+if (-not $agentOk) { throw 'quiet-core-bot agent finished without OK response' }`,
       this.agentTimeoutSeconds * 1000,
     );
   }

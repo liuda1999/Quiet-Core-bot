@@ -1,7 +1,7 @@
 // Model auth-list tests cover provider auth listing and output formatting.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { AuthProfileStore } from "../../agents/auth-profiles.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import type { OutputRuntimeEnv } from "../../runtime.js";
 import { modelsAuthListCommand } from "./auth-list.js";
 
@@ -12,12 +12,12 @@ const mocks = vi.hoisted(() => ({
   resolveAuthProfileDisplayLabel: vi.fn(({ profileId }: { profileId: string }) => profileId),
   resolveModelsTargetAgent: vi.fn((_cfg: OpenClawConfig, rawAgentId?: string) => {
     const agentId = rawAgentId ?? "main";
-    return { agentDir: `/tmp/openclaw/agents/${agentId}`, agentId };
+    return { agentDir: `/tmp/quiet-core-bot/agents/${agentId}`, agentId };
   }),
 }));
 
 vi.mock("../../agents/agent-scope.js", () => ({
-  resolveAgentDir: (_cfg: OpenClawConfig, agentId: string) => `/tmp/openclaw/agents/${agentId}`,
+  resolveAgentDir: (_cfg: OpenClawConfig, agentId: string) => `/tmp/quiet-core-bot/agents/${agentId}`,
   resolveDefaultAgentId: () => "main",
 }));
 
@@ -25,7 +25,7 @@ vi.mock("../../agents/auth-profiles.js", () => ({
   ensureAuthProfileStore: mocks.ensureAuthProfileStore,
   externalCliDiscoveryForProviderAuth: mocks.externalCliDiscoveryForProviderAuth,
   resolveAuthProfileDisplayLabel: mocks.resolveAuthProfileDisplayLabel,
-  resolveAuthStatePathForDisplay: (agentDir: string) => `${agentDir}/openclaw-agent.sqlite`,
+  resolveAuthStatePathForDisplay: (agentDir: string) => `${agentDir}/quiet-core-bot-agent.sqlite`,
 }));
 
 vi.mock("./load-config.js", () => ({
@@ -100,9 +100,9 @@ describe("modelsAuthListCommand", () => {
     });
     expect(runtime.jsonPayloads).toStrictEqual([
       {
-        agentDir: "/tmp/openclaw/agents/coder",
+        agentDir: "/tmp/quiet-core-bot/agents/coder",
         agentId: "coder",
-        authStatePath: "/tmp/openclaw/agents/coder/openclaw-agent.sqlite",
+        authStatePath: "/tmp/quiet-core-bot/agents/coder/quiet-core-bot-agent.sqlite",
         profiles: [
           {
             cooldownUntil: "2027-01-15T08:00:10.000Z",
@@ -155,9 +155,9 @@ describe("modelsAuthListCommand", () => {
     });
     expect(runtime.jsonPayloads).toStrictEqual([
       {
-        agentDir: "/tmp/openclaw/agents/main",
+        agentDir: "/tmp/quiet-core-bot/agents/main",
         agentId: "main",
-        authStatePath: "/tmp/openclaw/agents/main/openclaw-agent.sqlite",
+        authStatePath: "/tmp/quiet-core-bot/agents/main/quiet-core-bot-agent.sqlite",
         profiles: [
           {
             id: "openai:api-key-backup",
@@ -188,7 +188,7 @@ describe("modelsAuthListCommand", () => {
 
     expect(runtime.logs).toEqual([
       "Agent: main",
-      "Auth state store: /tmp/openclaw/agents/main/openclaw-agent.sqlite",
+      "Auth state store: /tmp/quiet-core-bot/agents/main/quiet-core-bot-agent.sqlite",
       "Profiles: (none)",
     ]);
   });
@@ -219,9 +219,9 @@ describe("modelsAuthListCommand", () => {
 
     expect(runtime.jsonPayloads).toStrictEqual([
       {
-        agentDir: "/tmp/openclaw/agents/main",
+        agentDir: "/tmp/quiet-core-bot/agents/main",
         agentId: "main",
-        authStatePath: "/tmp/openclaw/agents/main/openclaw-agent.sqlite",
+        authStatePath: "/tmp/quiet-core-bot/agents/main/quiet-core-bot-agent.sqlite",
         profiles: [
           {
             email: "user@example.com",

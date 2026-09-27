@@ -1,7 +1,7 @@
 // Proxy stream wrapper tests cover wrapper selection and provider passthrough.
-import type { StreamFn } from "openclaw/plugin-sdk/agent-core";
-import type { Context, Model } from "openclaw/plugin-sdk/llm";
-import { createAssistantMessageEventStream } from "openclaw/plugin-sdk/llm";
+import type { StreamFn } from "quiet-core-bot/plugin-sdk/agent-core";
+import type { Context, Model } from "quiet-core-bot/plugin-sdk/llm";
+import { createAssistantMessageEventStream } from "quiet-core-bot/plugin-sdk/llm";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { createOpenRouterSystemCacheWrapper, createOpenRouterWrapper } from "./proxy.js";
 
@@ -29,7 +29,7 @@ function runSystemCacheWrapper(model: Partial<Model<"openai-completions">>) {
   return payload;
 }
 
-const ATTRIBUTION_ENV_KEY = "OPENCLAW_PROVIDER_ATTRIBUTION";
+const ATTRIBUTION_ENV_KEY = "QUIET_CORE_PROVIDER_ATTRIBUTION";
 
 // Attribution headers are opt-in. These tests cover the opted-in payloads; the default-off
 // contract has its own block below.

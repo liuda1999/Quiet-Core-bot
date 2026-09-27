@@ -6,11 +6,11 @@ import { applyConfigEnvVars } from "./config-env-vars.js";
 import { resolveConfigEnvVars } from "./env-substitution.js";
 import { readConfigIncludeFileWithGuards, resolveConfigIncludes } from "./includes.js";
 import { resolveConfigPath, resolveIncludeRoots } from "./paths.js";
-import type { OpenClawConfig } from "./types.openclaw.js";
+import type { OpenClawConfig } from "./types.quiet-core-bot.js";
 
 const GATEWAY_DISPATCH_SHELL_ENV_EXPECTED_KEYS = [
-  "OPENCLAW_GATEWAY_TOKEN",
-  "OPENCLAW_GATEWAY_PASSWORD",
+  "QUIET_CORE_GATEWAY_TOKEN",
+  "QUIET_CORE_GATEWAY_PASSWORD",
 ] as const;
 
 const GATEWAY_DISPATCH_TOP_LEVEL_KEYS = [

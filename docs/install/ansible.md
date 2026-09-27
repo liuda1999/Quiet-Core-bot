@@ -7,10 +7,10 @@ read_when:
 title: "Ansible"
 ---
 
-Deploy Quiet Core bot to production servers with **[openclaw-ansible](https://github.com/openclaw/openclaw-ansible)** -- an automated installer with security-first architecture.
+Deploy Quiet Core bot to production servers with **[quiet-core-bot-ansible](https://github.com/openclaw/openclaw-ansible)** -- an automated installer with security-first architecture.
 
 <Info>
-The [openclaw-ansible](https://github.com/openclaw/openclaw-ansible) repo is the source of truth for Ansible deployment. This page is a quick overview.
+The [quiet-core-bot-ansible](https://github.com/openclaw/openclaw-ansible) repo is the source of truth for Ansible deployment. This page is a quick overview.
 </Info>
 
 ## Prerequisites
@@ -59,9 +59,9 @@ backend. See [Sandboxing](/gateway/sandboxing) for details and other backends.
 ## Post-Install Setup
 
 <Steps>
-  <Step title="Switch to the openclaw user">
+  <Step title="Switch to the quiet-core-bot user">
     ```bash
-    sudo -i -u openclaw
+    sudo -i -u quiet-core-bot
     ```
   </Step>
   <Step title="Run the onboarding wizard">
@@ -75,8 +75,8 @@ backend. See [Sandboxing](/gateway/sandboxing) for details and other backends.
   </Step>
   <Step title="Verify the installation">
     ```bash
-    sudo systemctl status openclaw
-    sudo journalctl -u openclaw -f
+    sudo systemctl status quiet-core-bot
+    sudo journalctl -u quiet-core-bot -f
     ```
   </Step>
   <Step title="Connect to Tailscale">
@@ -88,16 +88,16 @@ backend. See [Sandboxing](/gateway/sandboxing) for details and other backends.
 
 ```bash
 # Check service status
-sudo systemctl status openclaw
+sudo systemctl status quiet-core-bot
 
 # View live logs
-sudo journalctl -u openclaw -f
+sudo journalctl -u quiet-core-bot -f
 
 # Restart gateway
-sudo systemctl restart openclaw
+sudo systemctl restart quiet-core-bot
 
-# Provider login (run as openclaw user)
-sudo -i -u openclaw
+# Provider login (run as quiet-core-bot user)
+sudo -i -u quiet-core-bot
 quiet-core-bot channels login
 ```
 
@@ -133,7 +133,7 @@ If you prefer manual control over the automation:
   <Step title="Clone the repository">
     ```bash
     git clone https://github.com/openclaw/openclaw-ansible.git
-    cd openclaw-ansible
+    cd quiet-core-bot-ansible
     ```
   </Step>
   <Step title="Install Ansible collections">
@@ -149,7 +149,7 @@ If you prefer manual control over the automation:
     Alternatively, run directly and then manually execute the setup script afterward:
     ```bash
     ansible-playbook playbook.yml --ask-become-pass
-    # Then run: /tmp/openclaw-setup.sh
+    # Then run: /tmp/quiet-core-bot-setup.sh
     ```
 
   </Step>
@@ -162,7 +162,7 @@ The Ansible installer sets up Quiet Core bot for manual updates. See [Updating](
 To re-run the Ansible playbook (for example, for configuration changes):
 
 ```bash
-cd openclaw-ansible
+cd quiet-core-bot-ansible
 ./run-playbook.sh
 ```
 
@@ -180,14 +180,14 @@ This is idempotent and safe to run multiple times.
   <Accordion title="Service will not start">
     ```bash
     # Check logs
-    sudo journalctl -u openclaw -n 100
+    sudo journalctl -u quiet-core-bot -n 100
 
     # Verify permissions
-    sudo ls -la /opt/openclaw
+    sudo ls -la /opt/quiet-core-bot
 
     # Test manual start
-    sudo -i -u openclaw
-    cd ~/openclaw
+    sudo -i -u quiet-core-bot
+    cd ~/quiet-core-bot
     quiet-core-bot gateway run
     ```
 
@@ -198,20 +198,20 @@ This is idempotent and safe to run multiple times.
     sudo systemctl status docker
 
     # Check sandbox image
-    sudo docker images | grep openclaw-sandbox
+    sudo docker images | grep quiet-core-bot-sandbox
 
     # Build sandbox image if missing (requires source checkout)
     cd /opt/openclaw/openclaw
-    sudo -u openclaw ./scripts/sandbox-setup.sh
+    sudo -u quiet-core-bot ./scripts/sandbox-setup.sh
     # For npm installs without a source checkout, see
     # https://github.com/liuda1999/Quiet-Core-bot/gateway/sandboxing#images-and-setup
     ```
 
   </Accordion>
   <Accordion title="Provider login fails">
-    Make sure you are running as the `openclaw` user:
+    Make sure you are running as the `quiet-core-bot` user:
     ```bash
-    sudo -i -u openclaw
+    sudo -i -u quiet-core-bot
     quiet-core-bot channels login
     ```
   </Accordion>
@@ -219,7 +219,7 @@ This is idempotent and safe to run multiple times.
 
 ## Advanced configuration
 
-For detailed security architecture and troubleshooting, see the openclaw-ansible repo:
+For detailed security architecture and troubleshooting, see the quiet-core-bot-ansible repo:
 
 - [Security Architecture](https://github.com/openclaw/openclaw-ansible/blob/main/docs/security.md)
 - [Technical Details](https://github.com/openclaw/openclaw-ansible/blob/main/docs/architecture.md)
@@ -227,7 +227,7 @@ For detailed security architecture and troubleshooting, see the openclaw-ansible
 
 ## Related
 
-- [openclaw-ansible](https://github.com/openclaw/openclaw-ansible) -- full deployment guide
+- [quiet-core-bot-ansible](https://github.com/openclaw/openclaw-ansible) -- full deployment guide
 - [Docker](/install/docker) -- containerized gateway setup
 - [Sandboxing](/gateway/sandboxing) -- agent sandbox configuration
 - [Multi-Agent Sandbox and Tools](/tools/multi-agent-sandbox-tools) -- per-agent isolation

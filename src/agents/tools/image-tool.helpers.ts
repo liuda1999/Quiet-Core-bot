@@ -3,9 +3,9 @@
  *
  * Handles model config, data URL decoding, provider lookup, and reasoning-only response validation.
  */
-import { estimateBase64DecodedBytes } from "@openclaw/media-core/base64";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import { estimateBase64DecodedBytes } from "@quiet-core/media-core/base64";
+import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import type { AssistantMessage } from "../../llm/types.js";
 import { extractAssistantText } from "../embedded-agent-utils.js";
 import { isMinimaxVlmProvider } from "../minimax-vlm.js";

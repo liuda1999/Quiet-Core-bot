@@ -11,7 +11,7 @@ Imports Hermes configuration, memories, skills, and supported credentials into Q
 
 ## Distribution
 
-- Package: `@openclaw/migrate-hermes`
+- Package: `@quiet-core/migrate-hermes`
 - Install route: included in Quiet Core bot
 
 ## Surface

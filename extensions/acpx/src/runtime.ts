@@ -24,9 +24,9 @@ import {
   type AcpRuntimeTurnResult,
   type SessionAgentOptions,
 } from "acpx/runtime";
-import { parseStrictPositiveInteger } from "openclaw/plugin-sdk/number-runtime";
-import { redactSensitiveText } from "openclaw/plugin-sdk/security-runtime";
-import { normalizeStringEntries } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { parseStrictPositiveInteger } from "quiet-core-bot/plugin-sdk/number-runtime";
+import { redactSensitiveText } from "quiet-core-bot/plugin-sdk/security-runtime";
+import { normalizeStringEntries } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { AcpRuntimeError, type AcpRuntime, type AcpRuntimeErrorCode } from "../runtime-api.js";
 import { splitCommandParts } from "./command-line.js";
 import {
@@ -326,11 +326,11 @@ function createResetAwareSessionStore(
   };
 }
 
-const OPENCLAW_BRIDGE_EXECUTABLE = "openclaw";
-const OPENCLAW_BRIDGE_SUBCOMMAND = "acp";
+const QUIET_CORE_BRIDGE_EXECUTABLE = "quiet-core-bot";
+const QUIET_CORE_BRIDGE_SUBCOMMAND = "acp";
 const CODEX_ACP_AGENT_ID = "codex";
-const CODEX_ACP_OPENCLAW_PREFIX = "openai/";
-const CLAUDE_ACP_OPENCLAW_PREFIX = "anthropic/";
+const CODEX_ACP_QUIET_CORE_PREFIX = "openai/";
+const CLAUDE_ACP_QUIET_CORE_PREFIX = "anthropic/";
 const CODEX_ACP_REASONING_EFFORTS = new Set(["low", "medium", "high", "xhigh"]);
 const CODEX_ACP_THINKING_ALIASES = new Map<string, string | undefined>([
   ["off", undefined],
@@ -447,14 +447,14 @@ function isOpenClawBridgeCommand(command: string | undefined): boolean {
     return false;
   }
   const parts = unwrapEnvCommand(splitCommandParts(command.trim()));
-  if (basename(parts[0] ?? "") === OPENCLAW_BRIDGE_EXECUTABLE) {
-    return parts[1] === OPENCLAW_BRIDGE_SUBCOMMAND;
+  if (basename(parts[0] ?? "") === QUIET_CORE_BRIDGE_EXECUTABLE) {
+    return parts[1] === QUIET_CORE_BRIDGE_SUBCOMMAND;
   }
   if (basename(parts[0] ?? "") !== "node") {
     return false;
   }
   const scriptName = basename(parts[1] ?? "");
-  return /^openclaw(?:\.[cm]?js)?$/i.test(scriptName) && parts[2] === OPENCLAW_BRIDGE_SUBCOMMAND;
+  return /^quiet-core-bot(?:\.[cm]?js)?$/i.test(scriptName) && parts[2] === QUIET_CORE_BRIDGE_SUBCOMMAND;
 }
 
 function isCodexAcpCommand(command: string | undefined): boolean {
@@ -482,7 +482,7 @@ function failUnsupportedCodexAcpModel(rawModel: string, detail?: string): never 
 // acpx's `decodeAcpxRuntimeHandleState` only accepts `persistent` and `oneshot`; any other
 // value silently round-trips through the encoded handle as `persistent` and later throws
 // `SessionResumeRequiredError` on agent restart. Fail fast at this boundary instead.
-// See openclaw/openclaw#73071.
+// See liuda1999/quiet-core-bot#73071.
 const SUPPORTED_RUNTIME_SESSION_MODES = new Set(["persistent", "oneshot"] as const);
 const WIRE_TIMEOUT_CONFIG_KEYS = new Set(["timeout", "timeout_seconds"]);
 
@@ -529,8 +529,8 @@ function normalizeCodexAcpModelOverride(
   }
 
   let value = raw;
-  if (value.toLowerCase().startsWith(CODEX_ACP_OPENCLAW_PREFIX)) {
-    value = value.slice(CODEX_ACP_OPENCLAW_PREFIX.length);
+  if (value.toLowerCase().startsWith(CODEX_ACP_QUIET_CORE_PREFIX)) {
+    value = value.slice(CODEX_ACP_QUIET_CORE_PREFIX.length);
   }
   const parts = value.split("/");
   if (parts.length > 2) {
@@ -571,10 +571,10 @@ function normalizeClaudeAcpModelOverride(rawModel: string | undefined): string |
   if (!raw) {
     return undefined;
   }
-  if (!raw.toLowerCase().startsWith(CLAUDE_ACP_OPENCLAW_PREFIX)) {
+  if (!raw.toLowerCase().startsWith(CLAUDE_ACP_QUIET_CORE_PREFIX)) {
     return raw;
   }
-  return raw.slice(CLAUDE_ACP_OPENCLAW_PREFIX.length).trim() || undefined;
+  return raw.slice(CLAUDE_ACP_QUIET_CORE_PREFIX.length).trim() || undefined;
 }
 
 function withAcpxSessionOptions(input: OpenClawRuntimeEnsureInput): AcpxDelegateEnsureInput {

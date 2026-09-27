@@ -327,7 +327,7 @@ export function formatSkillInfo(
       `  Save via CLI: ${formatCliCommand(`quiet-core-bot config set skills.entries.${safeSkillKey}.apiKey YOUR_KEY`)}`,
     );
     lines.push(
-      `  Stored in: ${theme.muted("$OPENCLAW_CONFIG_PATH")} ${theme.muted("(default: ~/.quiet-core-bot/quiet-core-bot.json)")}`,
+      `  Stored in: ${theme.muted("$QUIET_CORE_CONFIG_PATH")} ${theme.muted("(default: ~/.quiet-core-bot/quiet-core-bot.json)")}`,
     );
   }
 

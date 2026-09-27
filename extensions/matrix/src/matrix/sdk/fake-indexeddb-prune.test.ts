@@ -74,7 +74,7 @@ describe("Matrix fake-indexeddb transaction pruning", () => {
 
   it("prunes finished transactions for Matrix crypto databases", async () => {
     installFakeIndexedDbTransactionPruner();
-    const databaseName = `openclaw-matrix-prune-test-${Date.now()}::matrix-sdk-crypto`;
+    const databaseName = `quiet-core-bot-matrix-prune-test-${Date.now()}::matrix-sdk-crypto`;
     databaseNames.add(databaseName);
     const db = await openDatabase(databaseName);
 
@@ -88,7 +88,7 @@ describe("Matrix fake-indexeddb transaction pruning", () => {
 
   it("prunes finished transactions for Matrix crypto metadata databases", async () => {
     installFakeIndexedDbTransactionPruner();
-    const databaseName = `openclaw-matrix-meta-prune-test-${Date.now()}::matrix-sdk-crypto-meta`;
+    const databaseName = `quiet-core-bot-matrix-meta-prune-test-${Date.now()}::matrix-sdk-crypto-meta`;
     databaseNames.add(databaseName);
     const db = await openDatabase(databaseName);
 
@@ -102,7 +102,7 @@ describe("Matrix fake-indexeddb transaction pruning", () => {
 
   it("does not prune unrelated fake-indexeddb databases", async () => {
     installFakeIndexedDbTransactionPruner();
-    const databaseName = `openclaw-matrix-unrelated-prune-test-${Date.now()}`;
+    const databaseName = `quiet-core-bot-matrix-unrelated-prune-test-${Date.now()}`;
     databaseNames.add(databaseName);
     const db = await openDatabase(databaseName);
 
@@ -116,7 +116,7 @@ describe("Matrix fake-indexeddb transaction pruning", () => {
 
   it("keeps active transactions when pruning the raw transaction queue", () => {
     const rawDatabase = {
-      name: "openclaw-matrix-direct-prune-test::matrix-sdk-crypto",
+      name: "quiet-core-bot-matrix-direct-prune-test::matrix-sdk-crypto",
       transactions: [{ _state: "finished" }, { _state: "active" }, { _state: "inactive" }],
     };
 

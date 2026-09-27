@@ -11,8 +11,8 @@ Quiet Core bot GMI Cloud provider plugin.
 
 ## Distribution
 
-- Package: `@openclaw/gmi-provider`
-- Install route: npm; ClawHub: `clawhub:@openclaw/gmi-provider`
+- Package: `@quiet-core/gmi-provider`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/gmi-provider`
 
 ## Surface
 

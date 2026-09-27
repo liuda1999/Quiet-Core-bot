@@ -590,7 +590,7 @@ async function runOne(mode: Mode, task: Task, model: string, apiKey: string): Pr
     finalText,
     ...(lastAssistant?.stopReason ? { stopReason: lastAssistant.stopReason } : {}),
     ...(lastAssistant?.errorMessage ? { errorMessage: lastAssistant.errorMessage } : {}),
-    ...(process.env.OPENCLAW_CODE_MODE_LIVE_DEBUG === "1" ? { toolResults } : {}),
+    ...(process.env.QUIET_CORE_CODE_MODE_LIVE_DEBUG === "1" ? { toolResults } : {}),
   };
 }
 
@@ -613,13 +613,13 @@ export function parseTaskLimit(raw: string | undefined, label: string): number {
 }
 
 export async function main() {
-  const model = readArg("model") ?? process.env.OPENCLAW_CODE_MODE_LIVE_MODEL ?? "gpt-5.4-mini";
+  const model = readArg("model") ?? process.env.QUIET_CORE_CODE_MODE_LIVE_MODEL ?? "gpt-5.4-mini";
   const modeArg = readArg("modes");
   const modes = (modeArg ? modeArg.split(",") : ["regular", "code-namespace"]) as Mode[];
   const taskArg = readArg("tasks");
   const taskLimit = parseTaskLimit(
-    taskArg ?? process.env.OPENCLAW_CODE_MODE_LIVE_TASKS,
-    taskArg === undefined ? "OPENCLAW_CODE_MODE_LIVE_TASKS" : "--tasks",
+    taskArg ?? process.env.QUIET_CORE_CODE_MODE_LIVE_TASKS,
+    taskArg === undefined ? "QUIET_CORE_CODE_MODE_LIVE_TASKS" : "--tasks",
   );
   const apiKey = process.env.OPENAI_API_KEY?.trim();
   if (!apiKey) {

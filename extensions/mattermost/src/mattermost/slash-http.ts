@@ -9,9 +9,9 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import {
   asDateTimestampMs,
   resolveExpiresAtMsFromDurationMs,
-} from "openclaw/plugin-sdk/number-runtime";
-import { safeEqualSecret } from "openclaw/plugin-sdk/security-runtime";
-import { isPrivateNetworkOptInEnabled } from "openclaw/plugin-sdk/ssrf-runtime";
+} from "quiet-core-bot/plugin-sdk/number-runtime";
+import { safeEqualSecret } from "quiet-core-bot/plugin-sdk/security-runtime";
+import { isPrivateNetworkOptInEnabled } from "quiet-core-bot/plugin-sdk/ssrf-runtime";
 import type { ResolvedMattermostAccount } from "../mattermost/accounts.js";
 import { getMattermostRuntime } from "../runtime.js";
 import {

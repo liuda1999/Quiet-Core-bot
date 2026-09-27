@@ -74,8 +74,8 @@ struct ConfigStoreTests {
         defer { try? FileManager().removeItem(at: stateDir) }
 
         try await TestIsolation.withEnvValues([
-            "OPENCLAW_STATE_DIR": stateDir.path,
-            "OPENCLAW_CONFIG_PATH": configPath.path,
+            "QUIET_CORE_STATE_DIR": stateDir.path,
+            "QUIET_CORE_CONFIG_PATH": configPath.path,
         ]) {
             OpenClawConfigFile.saveDict([
                 "gateway": [
@@ -116,8 +116,8 @@ struct ConfigStoreTests {
         defer { try? FileManager().removeItem(at: stateDir) }
 
         try await TestIsolation.withEnvValues([
-            "OPENCLAW_STATE_DIR": stateDir.path,
-            "OPENCLAW_CONFIG_PATH": configPath.path,
+            "QUIET_CORE_STATE_DIR": stateDir.path,
+            "QUIET_CORE_CONFIG_PATH": configPath.path,
         ]) {
             await ConfigStore._testSetOverrides(.init(
                 isRemoteMode: { false },

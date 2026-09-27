@@ -126,7 +126,7 @@ function analyzeSourceModule(params: { filePath: string; source: string }): {
     }
     specifiers.add(specifier);
 
-    if (specifier === "openclaw/plugin-sdk/core" && importsDefinePluginEntry(importClause)) {
+    if (specifier === "quiet-core-bot/plugin-sdk/core" && importsDefinePluginEntry(importClause)) {
       importsDefinePluginEntryFromCore = true;
     }
   }
@@ -265,10 +265,9 @@ describe("plugin entry guardrails", () => {
     for (const plugin of listBundledPluginRoots()) {
       const packageJsonPath = resolve(plugin.rootDir, "package.json");
       try {
-        const pkg = JSON.parse(readFileSync(packageJsonPath, "utf8")) as {
-          openclaw?: { extensions?: unknown };
+        const pkg = JSON.parse(readFileSync(packageJsonPath, "utf8")) as { "quiet-core-bot"?: { extensions?: unknown };
         };
-        const extensions = Array.isArray(pkg.openclaw?.extensions) ? pkg.openclaw.extensions : [];
+        const extensions = Array.isArray(pkg["quiet-core-bot"]?.extensions) ? pkg["quiet-core-bot"].extensions : [];
         if (
           extensions.some(
             (candidate) => typeof candidate === "string" && RUNTIME_ENTRY_HELPER_RE.test(candidate),
@@ -305,7 +304,7 @@ describe("plugin entry guardrails", () => {
         import "./setup.js";
         export { x };
         export * from "./barrel.js";
-        import { y } from "openclaw/plugin-sdk/testing";
+        import { y } from "quiet-core-bot/plugin-sdk/testing";
       `,
       }).relativeSpecifiers.toSorted(),
     ).toEqual(["./barrel.js", "./safe.js", "./setup.js"]);
@@ -335,8 +334,8 @@ describe("plugin entry guardrails", () => {
       analyzeSourceModule({
         filePath: "aliased-plugin-entry.ts",
         source: `
-          import { definePluginEntry as dpe } from "openclaw/plugin-sdk/core";
-          import { somethingElse } from "openclaw/plugin-sdk/core";
+          import { definePluginEntry as dpe } from "quiet-core-bot/plugin-sdk/core";
+          import { somethingElse } from "quiet-core-bot/plugin-sdk/core";
         `,
       }).importsDefinePluginEntryFromCore,
     ).toBe(true);

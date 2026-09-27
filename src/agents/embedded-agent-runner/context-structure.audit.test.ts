@@ -3,8 +3,8 @@ import {
   InMemorySessionStorage,
   prepareCompaction,
   Session,
-} from "openclaw/plugin-sdk/agent-core";
-import type { AgentMessage, SessionTreeEntry } from "openclaw/plugin-sdk/agent-core";
+} from "quiet-core-bot/plugin-sdk/agent-core";
+import type { AgentMessage, SessionTreeEntry } from "quiet-core-bot/plugin-sdk/agent-core";
 // Batch K1 · Task 1 — structured input/output audit.
 //
 // Audits the *shape* of the agent context transcript (structured input/output):

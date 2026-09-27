@@ -1,13 +1,13 @@
 // Talk Voice plugin entrypoint registers its OpenClaw integration.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { parseStrictPositiveInteger } from "openclaw/plugin-sdk/number-runtime";
-import type { SpeechVoiceOption } from "openclaw/plugin-sdk/speech";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
+import { parseStrictPositiveInteger } from "quiet-core-bot/plugin-sdk/number-runtime";
+import type { SpeechVoiceOption } from "quiet-core-bot/plugin-sdk/speech";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalLowercaseString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
-import { resolveActiveTalkProviderConfig } from "openclaw/plugin-sdk/talk-config-runtime";
+} from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
+import { resolveActiveTalkProviderConfig } from "quiet-core-bot/plugin-sdk/talk-config-runtime";
 import { definePluginEntry, type OpenClawPluginApi } from "./api.js";
 
 function mask(s: string, keep = 6): string {

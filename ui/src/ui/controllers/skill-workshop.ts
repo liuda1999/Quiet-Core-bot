@@ -67,7 +67,7 @@ type SkillProposalManifestEntry = {
 };
 
 type SkillProposalManifest = {
-  schema: "openclaw.skill-workshop.proposals-manifest.v1";
+  schema: "quiet-core-bot.skill-workshop.proposals-manifest.v1";
   updatedAt: string;
   proposals: SkillProposalManifestEntry[];
 };

@@ -54,7 +54,7 @@ Codex-specific marketplace flow.
 After installing `cua-driver`, either ask it for the Quiet Core bot command:
 
 ```bash
-cua-driver mcp-config --client openclaw
+cua-driver mcp-config --client quiet-core-bot
 ```
 
 or register the stdio server yourself:
@@ -119,7 +119,7 @@ before testing if an existing Codex thread has already started.
 
 Use the `/codex computer-use` commands from any chat surface where the `codex`
 plugin command surface is available. These are Quiet Core bot chat/runtime commands,
-not `openclaw codex ...` CLI subcommands:
+not `quiet-core-bot codex ...` CLI subcommands:
 
 ```text
 /codex computer-use status

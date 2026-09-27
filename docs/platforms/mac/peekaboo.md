@@ -15,7 +15,7 @@ macOS app's TCC permissions.
 ## What this is (and is not)
 
 - **Host**: Quiet Core bot.app can act as a PeekabooBridge host.
-- **Client**: use the `peekaboo` CLI (no separate `openclaw ui ...` surface).
+- **Client**: use the `peekaboo` CLI (no separate `quiet-core-bot ui ...` surface).
 - **UI**: visual overlays stay in Peekaboo.app; Quiet Core bot is a thin broker host.
 
 ## Relationship to Computer Use

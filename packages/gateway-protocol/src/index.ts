@@ -1431,6 +1431,6 @@ type SessionsPatchResult = {
 
 type GatewayAgentRuntime = {
   id: string;
-  fallback?: "openclaw" | "none";
+  fallback?: "quiet-core-bot" | "none";
   source: "env" | "agent" | "defaults" | "model" | "provider" | "implicit" | "session-key";
 };

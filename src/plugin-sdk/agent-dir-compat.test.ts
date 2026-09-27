@@ -8,17 +8,17 @@ describe("resolveOpenClawAgentDir", () => {
   it("keeps the shipped Pi env alias for deprecated plugin SDK callers", () => {
     expect(
       resolveOpenClawAgentDir({
-        PI_CODING_AGENT_DIR: "/tmp/openclaw-legacy-agent",
+        PI_CODING_AGENT_DIR: "/tmp/quiet-core-bot-legacy-agent",
       }),
-    ).toBe("/tmp/openclaw-legacy-agent");
+    ).toBe("/tmp/quiet-core-bot-legacy-agent");
   });
 
   it("prefers the Quiet Core bot env override over the deprecated Pi alias", () => {
     expect(
       resolveOpenClawAgentDir({
-        OPENCLAW_AGENT_DIR: "/tmp/openclaw-agent",
-        PI_CODING_AGENT_DIR: "/tmp/openclaw-legacy-agent",
+        QUIET_CORE_AGENT_DIR: "/tmp/quiet-core-bot-agent",
+        PI_CODING_AGENT_DIR: "/tmp/quiet-core-bot-legacy-agent",
       }),
-    ).toBe("/tmp/openclaw-agent");
+    ).toBe("/tmp/quiet-core-bot-agent");
   });
 });

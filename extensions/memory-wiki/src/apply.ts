@@ -3,10 +3,10 @@ import path from "node:path";
 import {
   replaceManagedMarkdownBlock,
   withTrailingNewline,
-} from "openclaw/plugin-sdk/memory-host-markdown";
-import { readFiniteNumberParam } from "openclaw/plugin-sdk/param-readers";
-import { root as fsRoot } from "openclaw/plugin-sdk/security-runtime";
-import { normalizeStringEntries, uniqueStrings } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "quiet-core-bot/plugin-sdk/memory-host-markdown";
+import { readFiniteNumberParam } from "quiet-core-bot/plugin-sdk/param-readers";
+import { root as fsRoot } from "quiet-core-bot/plugin-sdk/security-runtime";
+import { normalizeStringEntries, uniqueStrings } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { compileMemoryWikiVault, type CompileMemoryWikiResult } from "./compile.js";
 import type { ResolvedMemoryWikiConfig } from "./config.js";
 import {

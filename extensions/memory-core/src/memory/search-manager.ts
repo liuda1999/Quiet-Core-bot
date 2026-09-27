@@ -1,6 +1,6 @@
 // Memory Core plugin module implements search manager behavior.
 import fs from "node:fs/promises";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
 import {
   createSubsystemLogger,
   resolveAgentContextLimits,
@@ -8,11 +8,11 @@ import {
   resolveGlobalSingleton,
   resolveMemorySearchSyncConfig,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
+} from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
 import {
   checkQmdBinaryAvailability,
   resolveQmdBinaryUnavailableReason,
-} from "openclaw/plugin-sdk/memory-core-host-engine-qmd";
+} from "quiet-core-bot/plugin-sdk/memory-core-host-engine-qmd";
 import {
   resolveMemoryBackendConfig,
   type MemoryEmbeddingProbeResult,
@@ -21,10 +21,10 @@ import {
   type MemorySource,
   type MemorySyncParams,
   type ResolvedQmdConfig,
-} from "openclaw/plugin-sdk/memory-core-host-engine-storage";
-import { normalizeAgentId } from "openclaw/plugin-sdk/routing";
+} from "quiet-core-bot/plugin-sdk/memory-core-host-engine-storage";
+import { normalizeAgentId } from "quiet-core-bot/plugin-sdk/routing";
 
-const MEMORY_SEARCH_MANAGER_CACHE_KEY = Symbol.for("openclaw.memorySearchManagerCache");
+const MEMORY_SEARCH_MANAGER_CACHE_KEY = Symbol.for("quiet-core-bot.memorySearchManagerCache");
 type Maybe<T> = T | null;
 type QmdManagerRuntimeConfig = {
   workspaceDir: string;

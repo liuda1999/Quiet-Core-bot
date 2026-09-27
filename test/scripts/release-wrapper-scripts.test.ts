@@ -2,7 +2,7 @@
 import { spawnSync } from "node:child_process";
 import { describe, expect, it } from "vitest";
 
-const UNKNOWN_PACKAGE = "@openclaw/not-a-real-release-wrapper-test-package";
+const UNKNOWN_PACKAGE = "@quiet-core/not-a-real-release-wrapper-test-package";
 
 function runTsxScript(scriptPath: string, args: string[]) {
   return spawnSync(process.execPath, ["--import", "tsx", scriptPath, ...args], {
@@ -30,7 +30,7 @@ describe("release wrapper scripts", () => {
   });
 
   it("loads the OpenClaw ClawHub plan CLI and validates required arguments before planning", () => {
-    const result = runTsxScript("scripts/openclaw-release-clawhub-plan.ts", [
+    const result = runTsxScript("scripts/quiet-core-bot-release-clawhub-plan.ts", [
       "--release-tag",
       "v2026.6.21-beta.1",
       "--release-publish-run-id",

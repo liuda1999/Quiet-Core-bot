@@ -4,8 +4,8 @@
 import { randomUUID } from "node:crypto";
 import fs from "node:fs";
 import * as path from "node:path";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/security-runtime";
-import { asRecord, readStringValue } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { resolvePreferredOpenClawTmpDir } from "quiet-core-bot/plugin-sdk/security-runtime";
+import { asRecord, readStringValue } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 
 type CanvasSnapshotPayload = {
   format: CanvasSnapshotFormat;
@@ -44,7 +44,7 @@ export function parseCanvasSnapshotPayload(value: unknown): CanvasSnapshotPayloa
 }
 
 function resolveCliName(): string {
-  return "openclaw";
+  return "quiet-core-bot";
 }
 
 function resolveCanvasSnapshotId(id: string): string {

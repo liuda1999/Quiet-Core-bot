@@ -2,7 +2,7 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { testing as cliBackendsTesting } from "../../agents/cli-backends.js";
 import type { ChannelPlugin } from "../../channels/plugins/types.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { setActivePluginRegistry } from "../../plugins/runtime.js";
 import {
   createChannelTestPluginBase,
@@ -619,7 +619,7 @@ describe("handleModelsCommand", () => {
       description: "Use the OpenAI Codex runtime selected by the effective harness policy.",
     });
     expect(data.runtimeChoicesByProvider?.get("openai")?.[1]).toEqual({
-      id: "openclaw",
+      id: "quiet-core-bot",
       label: "Quiet Core bot Default",
       description: "Use the built-in Quiet Core bot runtime.",
     });
@@ -643,7 +643,7 @@ describe("handleModelsCommand", () => {
     } as OpenClawConfig);
 
     expect(data.runtimeChoicesByProvider?.get("openai")?.[0]).toEqual({
-      id: "openclaw",
+      id: "quiet-core-bot",
       label: "Quiet Core bot Default",
       description: "Use the built-in Quiet Core bot runtime.",
     });
@@ -655,7 +655,7 @@ describe("handleModelsCommand", () => {
         providers: {
           openai: {
             baseUrl: "https://api.openai.com/v1",
-            agentRuntime: { id: "openclaw" },
+            agentRuntime: { id: "quiet-core-bot" },
             models: [],
           },
         },
@@ -676,7 +676,7 @@ describe("handleModelsCommand", () => {
       description: "Use the OpenAI Codex runtime selected by the effective harness policy.",
     });
     expect(data.runtimeChoicesByProvider?.get("openai")?.[1]).toEqual({
-      id: "openclaw",
+      id: "quiet-core-bot",
       label: "Quiet Core bot Default",
       description: "Use the built-in Quiet Core bot runtime.",
     });
@@ -701,7 +701,7 @@ describe("handleModelsCommand", () => {
     } as OpenClawConfig);
 
     expect(data.runtimeChoicesByProvider?.get("anthropic")?.[0]).toEqual({
-      id: "openclaw",
+      id: "quiet-core-bot",
       label: "Quiet Core bot Default",
       description: "Use the built-in Quiet Core bot runtime.",
     });
@@ -731,7 +731,7 @@ describe("handleModelsCommand", () => {
       description: "Use the Claude CLI runtime selected by the effective harness policy.",
     });
     expect(data.runtimeChoicesByProvider?.get("anthropic")?.[1]).toEqual({
-      id: "openclaw",
+      id: "quiet-core-bot",
       label: "Quiet Core bot Default",
       description: "Use the built-in Quiet Core bot runtime.",
     });

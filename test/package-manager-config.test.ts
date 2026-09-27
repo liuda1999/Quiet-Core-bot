@@ -247,9 +247,9 @@ describe("package manager build policy", () => {
       const packageJson = readJson(packageJsonPath) as {
         name?: string;
         version?: string;
-        openclaw?: { release?: { publishToNpm?: boolean } };
+        "quiet-core-bot"?: { release?: { publishToNpm?: boolean } };
       };
-      if (packageJson.openclaw?.release?.publishToNpm !== true) {
+      if (packageJson["quiet-core-bot"]?.release?.publishToNpm !== true) {
         continue;
       }
 

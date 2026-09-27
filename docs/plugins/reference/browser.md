@@ -11,7 +11,7 @@ Adds agent-callable tools.
 
 ## Distribution
 
-- Package: `@openclaw/browser-plugin`
+- Package: `@quiet-core/browser-plugin`
 - Install route: included in Quiet Core bot
 
 ## Surface

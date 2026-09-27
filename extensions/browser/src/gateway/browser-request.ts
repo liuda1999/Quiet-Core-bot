@@ -3,11 +3,11 @@
  * dispatch and local Browser control route dispatch.
  */
 import crypto from "node:crypto";
-import { clampTimerTimeoutMs } from "openclaw/plugin-sdk/number-runtime";
+import { clampTimerTimeoutMs } from "quiet-core-bot/plugin-sdk/number-runtime";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import {
   ErrorCodes,
   applyBrowserProxyPaths,

@@ -5,13 +5,13 @@ import path from "node:path";
 import {
   markMigrationItemError,
   MIGRATION_REASON_MISSING_SOURCE_OR_TARGET,
-} from "openclaw/plugin-sdk/migration";
-import type { MigrationItem } from "openclaw/plugin-sdk/plugin-entry";
-import { appendRegularFile, pathExists } from "openclaw/plugin-sdk/security-runtime";
+} from "quiet-core-bot/plugin-sdk/migration";
+import type { MigrationItem } from "quiet-core-bot/plugin-sdk/plugin-entry";
+import { appendRegularFile, pathExists } from "quiet-core-bot/plugin-sdk/security-runtime";
 import {
   isRecord as sharedIsRecord,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { parse as parseYaml } from "yaml";
 
 const HOME_SHORTHAND_RE = /^~(?=$|[\\/])/u;

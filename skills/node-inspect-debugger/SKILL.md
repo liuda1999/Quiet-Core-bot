@@ -1,7 +1,7 @@
 ---
 name: node-inspect-debugger
 description: Debug Node.js with node inspect, --inspect, breakpoints, CDP, heap, and CPU profiles.
-metadata: { "openclaw": { "emoji": "🪲", "requires": { "bins": ["node"] } } }
+metadata: { "quiet-core-bot": { "emoji": "🪲", "requires": { "bins": ["node"] } } }
 ---
 
 # Node Inspect Debugger
@@ -17,7 +17,7 @@ Quick start
 - Existing PID: `kill -SIGUSR1 <pid>` then `node inspect -p <pid>`
 - Inspect target list: `curl -s http://127.0.0.1:9229/json/list | jq`
 - Quiet Core bot CLI path: `node --inspect-brk quiet-core-bot.mjs ...`
-- Quiet Core bot test path: `OPENCLAW_VITEST_MAX_WORKERS=1 node --inspect-brk scripts/run-vitest.mjs <file>`
+- Quiet Core bot test path: `QUIET_CORE_VITEST_MAX_WORKERS=1 node --inspect-brk scripts/run-vitest.mjs <file>`
 
 Debugger REPL
 

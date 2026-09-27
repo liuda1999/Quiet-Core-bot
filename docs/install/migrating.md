@@ -22,7 +22,7 @@ Use the bundled migration providers to bring instructions, MCP servers, skills, 
   </Card>
 </CardGroup>
 
-The CLI entry point is [`openclaw migrate`](/cli/migrate). Onboarding can also offer migration when it detects a known source (`quiet-core-bot onboard --flow import`).
+The CLI entry point is [`quiet-core-bot migrate`](/cli/migrate). Onboarding can also offer migration when it detects a known source (`quiet-core-bot onboard --flow import`).
 
 ## Move Quiet Core bot to a new machine
 
@@ -35,7 +35,7 @@ Copy the **state directory** (`~/.quiet-core-bot/` by default) and your **worksp
 - **Workspace files** — `MEMORY.md`, `USER.md`, skills, and prompts.
 
 <Tip>
-Run `quiet-core-bot status` on the old machine to confirm your state directory path. Custom profiles use `~/.quiet-core-bot-<profile>/` or a path set via `OPENCLAW_STATE_DIR`.
+Run `quiet-core-bot status` on the old machine to confirm your state directory path. Custom profiles use `~/.quiet-core-bot-<profile>/` or a path set via `QUIET_CORE_STATE_DIR`.
 </Tip>
 
 ### Migration steps
@@ -47,7 +47,7 @@ Run `quiet-core-bot status` on the old machine to confirm your state directory p
     ```bash
     quiet-core-bot gateway stop
     cd ~
-    tar -czf openclaw-state.tgz .openclaw
+    tar -czf quiet-core-bot-state.tgz .quiet-core-bot
     ```
 
     If you use multiple profiles (for example `~/.quiet-core-bot-work`), archive each separately.
@@ -63,7 +63,7 @@ Run `quiet-core-bot status` on the old machine to confirm your state directory p
 
     ```bash
     cd ~
-    tar -xzf openclaw-state.tgz
+    tar -xzf quiet-core-bot-state.tgz
     ```
 
     Ensure hidden directories were included and file ownership matches the user that will run the gateway.
@@ -94,7 +94,7 @@ awk -F= '/^(TELEGRAM_BOT_TOKEN|DISCORD_BOT_TOKEN)=/ { print $1 "=present" }' ~/.
 
 <AccordionGroup>
   <Accordion title="Profile or state-dir mismatch">
-    If the old gateway used `--profile` or `OPENCLAW_STATE_DIR` and the new one does not, channels will appear logged out and sessions will be empty. Launch the gateway with the **same** profile or state-dir you migrated, then rerun `quiet-core-bot doctor`.
+    If the old gateway used `--profile` or `QUIET_CORE_STATE_DIR` and the new one does not, channels will appear logged out and sessions will be empty. Launch the gateway with the **same** profile or state-dir you migrated, then rerun `quiet-core-bot doctor`.
   </Accordion>
 
   <Accordion title="Copying only quiet-core-bot.json">
@@ -131,7 +131,7 @@ In-place plugin upgrades preserve the same plugin id and config keys but may mov
 
 ## Related
 
-- [`openclaw migrate`](/cli/migrate): CLI reference for cross-system imports.
+- [`quiet-core-bot migrate`](/cli/migrate): CLI reference for cross-system imports.
 - [Install overview](/install): all installation methods.
 - [Doctor](/gateway/doctor): post-migration health check.
 - [Uninstall](/install/uninstall): removing Quiet Core bot cleanly.

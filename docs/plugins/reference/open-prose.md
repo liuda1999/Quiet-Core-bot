@@ -11,7 +11,7 @@ OpenProse VM skill pack with a /prose slash command.
 
 ## Distribution
 
-- Package: `@openclaw/open-prose`
+- Package: `@quiet-core/open-prose`
 - Install route: included in Quiet Core bot
 
 ## Surface

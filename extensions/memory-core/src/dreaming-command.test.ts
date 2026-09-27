@@ -1,7 +1,7 @@
 // Memory Core tests cover dreaming command plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { PluginCommandContext } from "openclaw/plugin-sdk/core";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { PluginCommandContext } from "quiet-core-bot/plugin-sdk/core";
+import type { OpenClawPluginApi } from "quiet-core-bot/plugin-sdk/plugin-entry";
 import { describe, expect, it, vi } from "vitest";
 import { handleDreamingCommand } from "./dreaming-command.js";
 
@@ -30,7 +30,7 @@ function createHarness(initialConfig: OpenClawConfig = {}) {
         mutate(draft);
         runtimeConfig = draft;
         return {
-          path: "/tmp/openclaw.json",
+          path: "/tmp/quiet-core-bot.json",
           previousHash: null,
           persistedHash: null,
           snapshot: {},

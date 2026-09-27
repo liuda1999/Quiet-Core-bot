@@ -2,8 +2,8 @@
 import {
   defineBundledChannelEntry,
   loadBundledEntryExportSync,
-} from "openclaw/plugin-sdk/channel-entry-contract";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/channel-entry-contract";
+} from "quiet-core-bot/plugin-sdk/channel-entry-contract";
+import type { OpenClawPluginApi } from "quiet-core-bot/plugin-sdk/channel-entry-contract";
 
 function registerSlashCommandRoute(api: OpenClawPluginApi): void {
   const register = loadBundledEntryExportSync<(api: OpenClawPluginApi) => void>(import.meta.url, {

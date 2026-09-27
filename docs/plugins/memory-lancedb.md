@@ -21,7 +21,7 @@ the default built-in memory store.
 Install `memory-lancedb` before setting `plugins.slots.memory = "memory-lancedb"`:
 
 ```bash
-quiet-core-bot plugins install @openclaw/memory-lancedb
+quiet-core-bot plugins install @quiet-core/memory-lancedb
 ```
 
 The plugin is published to npm and is not bundled into the Quiet Core bot runtime image.
@@ -215,7 +215,7 @@ in. For example, ZhiPu `embedding-3` uses `2048` dimensions:
 | `customTriggers`  | `[]`    | 0-50      | literal phrases that make auto-capture consider a message |
 
 `recallMaxChars` controls auto-recall, the `memory_recall` tool, the
-`memory_forget` query path, and `openclaw ltm search`. Auto-recall prefers the
+`memory_forget` query path, and `quiet-core-bot ltm search`. Auto-recall prefers the
 latest user message from the turn and falls back to the full prompt only when no
 user message is available. This keeps channel metadata and large prompt blocks
 out of the embedding request.
@@ -233,17 +233,17 @@ When `memory-lancedb` is the active memory plugin, it registers the `ltm` CLI
 namespace:
 
 ```bash
-openclaw ltm list
-openclaw ltm search "project preferences"
-openclaw ltm stats
+quiet-core-bot ltm list
+quiet-core-bot ltm search "project preferences"
+quiet-core-bot ltm stats
 ```
 
 The `query` subcommand runs a non-vector query against the LanceDB table
 directly:
 
 ```bash
-openclaw ltm query --cols id,text,createdAt --limit 20
-openclaw ltm query --filter "category = 'preference'" --order-by createdAt:desc
+quiet-core-bot ltm query --cols id,text,createdAt --limit 20
+quiet-core-bot ltm query --filter "category = 'preference'" --order-by createdAt:desc
 ```
 
 - `--cols <columns>`: comma-separated column allowlist (defaults to `id`, `text`, `importance`, `category`, `createdAt`).
@@ -291,7 +291,7 @@ supports `${ENV_VAR}` expansion:
       "memory-lancedb": {
         enabled: true,
         config: {
-          dbPath: "s3://memory-bucket/openclaw",
+          dbPath: "s3://memory-bucket/quiet-core-bot",
           storageOptions: {
             access_key: "${AWS_ACCESS_KEY_ID}",
             secret_key: "${AWS_SECRET_ACCESS_KEY}",
@@ -368,8 +368,8 @@ size reported by that model.
 Check that `plugins.slots.memory` points at `memory-lancedb`, then run:
 
 ```bash
-openclaw ltm stats
-openclaw ltm search "recent preference"
+quiet-core-bot ltm stats
+quiet-core-bot ltm search "recent preference"
 ```
 
 If `autoCapture` is disabled, the plugin will recall existing memories but will

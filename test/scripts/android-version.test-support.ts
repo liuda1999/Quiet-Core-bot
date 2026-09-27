@@ -21,7 +21,7 @@ export function writeAndroidFixture(params: {
   versionProperties?: string;
   prefix?: string;
 }): string {
-  const rootDir = makeTempDir(tempDirs, params.prefix ?? "openclaw-android-version-");
+  const rootDir = makeTempDir(tempDirs, params.prefix ?? "quiet-core-bot-android-version-");
   fs.mkdirSync(path.join(rootDir, "apps", "android", "Config"), { recursive: true });
   fs.mkdirSync(path.join(rootDir, "apps", "android", "fastlane", "metadata", "android", "en-US"), {
     recursive: true,

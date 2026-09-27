@@ -1,5 +1,5 @@
 /** Runtime provider selection and tool construction for the `web_fetch` tool. */
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
 import {
   hasWebProviderEntryCredential,
   providerRequiresCredential,

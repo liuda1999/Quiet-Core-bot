@@ -1,6 +1,6 @@
 /** Tests plugin lookup table indexing for manifest-owned contribution ids. */
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { resolveInstalledPluginIndexPolicyHash } from "./installed-plugin-index-policy.js";
 import type { PluginManifestRecord, PluginManifestRegistry } from "./manifest-registry.js";
 import { clearLoadPluginMetadataSnapshotMemo } from "./plugin-metadata-snapshot.js";
@@ -48,7 +48,7 @@ function createManifestRecord(
     hooks: [],
     rootDir: `/plugins/${plugin.id}`,
     source: `/plugins/${plugin.id}/index.js`,
-    manifestPath: `/plugins/${plugin.id}/openclaw.plugin.json`,
+    manifestPath: `/plugins/${plugin.id}/quiet-core-bot.plugin.json`,
     ...plugin,
   };
 }
@@ -92,13 +92,13 @@ function createIndex(
 
 const indexDiagnostic = {
   level: "warn",
-  source: "/plugins/demo/openclaw.plugin.json",
+  source: "/plugins/demo/quiet-core-bot.plugin.json",
   message: "indexed warning",
 } as const;
 
 const manifestDiagnostic = {
   level: "warn",
-  source: "/plugins/demo/openclaw.plugin.json",
+  source: "/plugins/demo/quiet-core-bot.plugin.json",
   message: "manifest warning",
 } as const;
 
@@ -923,11 +923,11 @@ describe("loadPluginLookUpTable", () => {
     } as OpenClawConfig;
     const snapshotEnv = {
       HOME: "/home/snapshot",
-      OPENCLAW_HOME: undefined,
+      QUIET_CORE_HOME: undefined,
     } as NodeJS.ProcessEnv;
     const requestedEnv = {
       HOME: "/home/requested",
-      OPENCLAW_HOME: undefined,
+      QUIET_CORE_HOME: undefined,
     } as NodeJS.ProcessEnv;
     await expectStaleMetadataSnapshotRebuild({
       config,
@@ -948,11 +948,11 @@ describe("loadPluginLookUpTable", () => {
     const config = {} as OpenClawConfig;
     const snapshotEnv = {
       HOME: "/home/snapshot",
-      OPENCLAW_HOME: undefined,
+      QUIET_CORE_HOME: undefined,
     } as NodeJS.ProcessEnv;
     const requestedEnv = {
       HOME: "/home/requested",
-      OPENCLAW_HOME: undefined,
+      QUIET_CORE_HOME: undefined,
     } as NodeJS.ProcessEnv;
     await expectStaleMetadataSnapshotRebuild({
       config,
@@ -1011,7 +1011,7 @@ describe("loadPluginLookUpTable", () => {
         channels: ["telegram"],
         rootDir: "/plugins-moved/telegram",
         source: "/plugins-moved/telegram/index.js",
-        manifestPath: "/plugins-moved/telegram/openclaw.plugin.json",
+        manifestPath: "/plugins-moved/telegram/quiet-core-bot.plugin.json",
       }),
     ];
     const config = {

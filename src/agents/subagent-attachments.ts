@@ -6,8 +6,8 @@
 import crypto from "node:crypto";
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { privateFileStore } from "../infra/private-file-store.js";
 import { resolveAgentWorkspaceDir } from "./agent-scope.js";
 
@@ -305,8 +305,8 @@ export async function materializeSubagentAttachments(params: {
   const childWorkspaceDir =
     normalizeOptionalString(params.workspaceDir) ??
     resolveAgentWorkspaceDir(params.config, params.targetAgentId);
-  const absRootDir = path.join(childWorkspaceDir, ".openclaw", "attachments");
-  const relDir = path.posix.join(".openclaw", "attachments", attachmentId);
+  const absRootDir = path.join(childWorkspaceDir, ".quiet-core-bot", "attachments");
+  const relDir = path.posix.join(".quiet-core-bot", "attachments", attachmentId);
   const absDir = path.join(absRootDir, attachmentId);
 
   try {

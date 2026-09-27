@@ -1,4 +1,4 @@
-name: openclaw-codeql-provider-runtime-boundary-critical-quality
+name: quiet-core-bot-codeql-provider-runtime-boundary-critical-quality
 
 disable-default-queries: true
 

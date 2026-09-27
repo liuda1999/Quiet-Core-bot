@@ -11,7 +11,7 @@ Advertise the local Quiet Core bot gateway over Bonjour/mDNS.
 
 ## Distribution
 
-- Package: `@openclaw/bonjour`
+- Package: `@quiet-core/bonjour`
 - Install route: included in Quiet Core bot
 
 ## Surface

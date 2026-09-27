@@ -11,7 +11,7 @@ Adds media understanding provider support.
 
 ## Distribution
 
-- Package: `@openclaw/senseaudio-provider`
+- Package: `@quiet-core/senseaudio-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

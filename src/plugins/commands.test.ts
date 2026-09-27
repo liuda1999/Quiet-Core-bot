@@ -145,7 +145,7 @@ beforeEach(() => {
     selection: {
       provider: "openai",
       modelId: "gpt-5.5",
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
     },
     model: {
       provider: "openai",
@@ -173,7 +173,7 @@ beforeEach(() => {
   completionMocks.resolveSimpleCompletionSelectionForAgent.mockReturnValue({
     provider: "openai",
     modelId: "gpt-5.5",
-    agentDir: "/tmp/openclaw-agent",
+    agentDir: "/tmp/quiet-core-bot-agent",
   });
   setActivePluginRegistry(
     createTestRegistry([
@@ -547,8 +547,8 @@ describe("registerPluginCommand", () => {
     });
     const env = {
       ...process.env,
-      OPENCLAW_BUNDLED_PLUGINS_DIR: path.resolve("extensions"),
-      OPENCLAW_DISABLE_PERSISTED_PLUGIN_REGISTRY: "1",
+      QUIET_CORE_BUNDLED_PLUGINS_DIR: path.resolve("extensions"),
+      QUIET_CORE_DISABLE_PERSISTED_PLUGIN_REGISTRY: "1",
     };
 
     expect(getPluginCommandSpecs("discord", { env })).toStrictEqual([]);
@@ -1341,7 +1341,7 @@ describe("registerPluginCommand", () => {
       senderId: "U123",
       isAuthorizedSender: true,
       agentId: "codex",
-      sessionKey: "plugin-binding:openclaw-codex-app-server:dm",
+      sessionKey: "plugin-binding:quiet-core-bot-codex-app-server:dm",
       authProfileId: "openai:owner@example.com",
       commandBody: "/runtimecheck",
       config: {} as never,

@@ -4,7 +4,7 @@
  * Prefers plugin manifest login commands, then falls back to configure/env-var guidance.
  */
 import { formatCliCommand } from "../cli/command-format.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { resolveManifestProviderAuthChoices } from "../plugins/provider-auth-choices.js";
 import { normalizeProviderId } from "./model-selection.js";
 import { resolveProviderAuthAliasMap } from "./provider-auth-aliases.js";

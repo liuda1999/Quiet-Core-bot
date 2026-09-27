@@ -3,8 +3,8 @@
  * Kept for OpenAI/Codex provider-owned compatibility while prompt behavior
  * moves toward provider plugin ownership.
  */
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { normalizeOptionalLowercaseString } from "@quiet-core/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import type { ProviderSystemPromptContribution } from "./system-prompt-contribution.js";
 
 const GPT5_MODEL_ID_PATTERN = /(?:^|[/:])gpt-5(?:[.-]|$)/i;

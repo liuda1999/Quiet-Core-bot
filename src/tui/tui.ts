@@ -13,7 +13,7 @@ import {
   Text,
   TUI,
 } from "@earendil-works/pi-tui";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
 import type { CommandEntry } from "../../packages/gateway-protocol/src/index.js";
 import { resolveAgentIdByWorkspacePath, resolveDefaultAgentId } from "../agents/agent-scope.js";
 import { getRuntimeConfig, type OpenClawConfig } from "../config/config.js";
@@ -79,14 +79,14 @@ export {
   shouldEnableWindowsGitBashPasteFallback,
 } from "./tui-submit.js";
 
-const OPENCLAW_CLI_WRAPPER_PATH = fileURLToPath(
+const QUIET_CORE_CLI_WRAPPER_PATH = fileURLToPath(
   new URL("../../quiet-core-bot.mjs", import.meta.url),
 );
-const OPENCLAW_RUN_NODE_SCRIPT_PATH = fileURLToPath(
+const QUIET_CORE_RUN_NODE_SCRIPT_PATH = fileURLToPath(
   new URL("../../scripts/run-node.mjs", import.meta.url),
 );
-const OPENCLAW_DIST_ENTRY_JS_PATH = fileURLToPath(new URL("../../dist/entry.js", import.meta.url));
-const OPENCLAW_DIST_ENTRY_MJS_PATH = fileURLToPath(
+const QUIET_CORE_DIST_ENTRY_JS_PATH = fileURLToPath(new URL("../../dist/entry.js", import.meta.url));
+const QUIET_CORE_DIST_ENTRY_MJS_PATH = fileURLToPath(
   new URL("../../dist/entry.mjs", import.meta.url),
 );
 
@@ -120,11 +120,11 @@ export function resolveLocalAuthCliInvocation(params?: {
 }): { command: string; args: string[] } {
   const hasDistEntry =
     params?.hasDistEntry ??
-    (existsSync(OPENCLAW_DIST_ENTRY_JS_PATH) || existsSync(OPENCLAW_DIST_ENTRY_MJS_PATH));
-  const hasRunNodeScript = params?.hasRunNodeScript ?? existsSync(OPENCLAW_RUN_NODE_SCRIPT_PATH);
+    (existsSync(QUIET_CORE_DIST_ENTRY_JS_PATH) || existsSync(QUIET_CORE_DIST_ENTRY_MJS_PATH));
+  const hasRunNodeScript = params?.hasRunNodeScript ?? existsSync(QUIET_CORE_RUN_NODE_SCRIPT_PATH);
   const command = params?.execPath ?? process.execPath;
-  const wrapperPath = params?.wrapperPath ?? OPENCLAW_CLI_WRAPPER_PATH;
-  const runNodePath = params?.runNodePath ?? OPENCLAW_RUN_NODE_SCRIPT_PATH;
+  const wrapperPath = params?.wrapperPath ?? QUIET_CORE_CLI_WRAPPER_PATH;
+  const runNodePath = params?.runNodePath ?? QUIET_CORE_RUN_NODE_SCRIPT_PATH;
 
   // Prefer the packaged wrapper when build output exists, but keep source-tree
   // auth working in unbuilt checkouts that only have scripts/run-node.mjs.

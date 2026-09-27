@@ -1,6 +1,6 @@
 /**
- * @deprecated Use `openclaw/plugin-sdk/channel-inbound` for inbound runners and
- * dispatch predicates. Use `openclaw/plugin-sdk/channel-outbound` for message
+ * @deprecated Use `quiet-core-bot/plugin-sdk/channel-inbound` for inbound runners and
+ * dispatch predicates. Use `quiet-core-bot/plugin-sdk/channel-outbound` for message
  * delivery helpers.
  */
 

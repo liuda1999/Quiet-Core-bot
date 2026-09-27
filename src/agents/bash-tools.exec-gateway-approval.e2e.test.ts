@@ -23,17 +23,17 @@ import { createExecTool } from "./bash-tools.exec.js";
 
 const TEST_ENV_KEYS = [
   "HOME",
-  "OPENCLAW_STATE_DIR",
-  "OPENCLAW_CONFIG_PATH",
-  "OPENCLAW_GATEWAY_TOKEN",
-  "OPENCLAW_GATEWAY_PORT",
-  "OPENCLAW_SKIP_CHANNELS",
-  "OPENCLAW_SKIP_GMAIL_WATCHER",
-  "OPENCLAW_SKIP_CRON",
-  "OPENCLAW_SKIP_CANVAS_HOST",
-  "OPENCLAW_SKIP_BROWSER_CONTROL_SERVER",
-  "OPENCLAW_SKIP_PROVIDERS",
-  "OPENCLAW_TEST_MINIMAL_GATEWAY",
+  "QUIET_CORE_STATE_DIR",
+  "QUIET_CORE_CONFIG_PATH",
+  "QUIET_CORE_GATEWAY_TOKEN",
+  "QUIET_CORE_GATEWAY_PORT",
+  "QUIET_CORE_SKIP_CHANNELS",
+  "QUIET_CORE_SKIP_GMAIL_WATCHER",
+  "QUIET_CORE_SKIP_CRON",
+  "QUIET_CORE_SKIP_CANVAS_HOST",
+  "QUIET_CORE_SKIP_BROWSER_CONTROL_SERVER",
+  "QUIET_CORE_SKIP_PROVIDERS",
+  "QUIET_CORE_TEST_MINIMAL_GATEWAY",
 ];
 const GATEWAY_CONNECT_TIMEOUT_MS = 120_000;
 const EXEC_APPROVAL_E2E_TIMEOUT_MS = 180_000;
@@ -73,16 +73,16 @@ describe("gateway-hosted exec approvals", () => {
       const envSnapshot = captureEnv(TEST_ENV_KEYS);
       cleanup.push(() => envSnapshot.restore());
 
-      const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-exec-approval-e2e-"));
+      const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-exec-approval-e2e-"));
       cleanup.push(() => fs.rm(tempHome, { recursive: true, force: true, maxRetries: 5 }));
 
-      const stateDir = path.join(tempHome, ".openclaw");
+      const stateDir = path.join(tempHome, ".quiet-core-bot");
       const workspaceDir = path.join(tempHome, "workspace");
       await fs.mkdir(workspaceDir, { recursive: true });
 
       const port = await getFreeGatewayPort();
       const token = "exec-approval-e2e-token";
-      const configPath = path.join(stateDir, "openclaw.json");
+      const configPath = path.join(stateDir, "quiet-core-bot.json");
       await fs.mkdir(stateDir, { recursive: true });
       await fs.writeFile(
         configPath,
@@ -107,17 +107,17 @@ describe("gateway-hosted exec approvals", () => {
       );
 
       setTestEnvValue("HOME", tempHome);
-      setTestEnvValue("OPENCLAW_STATE_DIR", stateDir);
-      setTestEnvValue("OPENCLAW_CONFIG_PATH", configPath);
-      setTestEnvValue("OPENCLAW_GATEWAY_TOKEN", token);
-      setTestEnvValue("OPENCLAW_GATEWAY_PORT", String(port));
-      setTestEnvValue("OPENCLAW_SKIP_CHANNELS", "1");
-      setTestEnvValue("OPENCLAW_SKIP_GMAIL_WATCHER", "1");
-      setTestEnvValue("OPENCLAW_SKIP_CRON", "1");
-      setTestEnvValue("OPENCLAW_SKIP_CANVAS_HOST", "1");
-      setTestEnvValue("OPENCLAW_SKIP_BROWSER_CONTROL_SERVER", "1");
-      setTestEnvValue("OPENCLAW_SKIP_PROVIDERS", "1");
-      setTestEnvValue("OPENCLAW_TEST_MINIMAL_GATEWAY", "1");
+      setTestEnvValue("QUIET_CORE_STATE_DIR", stateDir);
+      setTestEnvValue("QUIET_CORE_CONFIG_PATH", configPath);
+      setTestEnvValue("QUIET_CORE_GATEWAY_TOKEN", token);
+      setTestEnvValue("QUIET_CORE_GATEWAY_PORT", String(port));
+      setTestEnvValue("QUIET_CORE_SKIP_CHANNELS", "1");
+      setTestEnvValue("QUIET_CORE_SKIP_GMAIL_WATCHER", "1");
+      setTestEnvValue("QUIET_CORE_SKIP_CRON", "1");
+      setTestEnvValue("QUIET_CORE_SKIP_CANVAS_HOST", "1");
+      setTestEnvValue("QUIET_CORE_SKIP_BROWSER_CONTROL_SERVER", "1");
+      setTestEnvValue("QUIET_CORE_SKIP_PROVIDERS", "1");
+      setTestEnvValue("QUIET_CORE_TEST_MINIMAL_GATEWAY", "1");
       clearRuntimeConfigSnapshot();
       clearConfigCache();
       clearSessionStoreCacheForTest();

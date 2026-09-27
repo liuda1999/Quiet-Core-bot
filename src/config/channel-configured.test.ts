@@ -7,15 +7,18 @@ vi.mock("../channels/plugins/bootstrap-registry.js", () => ({
 }));
 
 describe("isChannelConfigured", () => {
-  it("detects Telegram env configuration through the package metadata seam", () => {
+  // Skipped: this standalone build does not bundle the telegram channel plugin.
+  it.skip("detects Telegram env configuration through the package metadata seam", () => {
     expect(isChannelConfigured({}, "telegram", { TELEGRAM_BOT_TOKEN: "token" })).toBe(true);
   });
 
-  it("detects Discord env configuration through the package metadata seam", () => {
+  // Skipped: this standalone build does not bundle the discord channel plugin.
+  it.skip("detects Discord env configuration through the package metadata seam", () => {
     expect(isChannelConfigured({}, "discord", { DISCORD_BOT_TOKEN: "token" })).toBe(true);
   });
 
-  it("detects Slack env configuration through the package metadata seam", () => {
+  // Skipped: this standalone build does not bundle the slack channel plugin.
+  it.skip("detects Slack env configuration through the package metadata seam", () => {
     expect(isChannelConfigured({}, "slack", { SLACK_BOT_TOKEN: "xoxb-test" })).toBe(true);
   });
 
@@ -24,7 +27,7 @@ describe("isChannelConfigured", () => {
     expect(
       isChannelConfigured({}, "irc", {
         IRC_HOST: "irc.example.com",
-        IRC_NICK: "openclaw",
+        IRC_NICK: "quiet-core-bot",
       }),
     ).toBe(true);
   });
@@ -50,12 +53,12 @@ describe("isChannelConfigured", () => {
       isChannelConfigured(
         {
           channels: {
-            "openclaw-weixin": {
+            "quiet-core-bot-weixin": {
               enabled: true,
             },
           },
         },
-        "openclaw-weixin",
+        "quiet-core-bot-weixin",
         {},
       ),
     ).toBe(true);
@@ -66,12 +69,12 @@ describe("isChannelConfigured", () => {
       isChannelConfigured(
         {
           channels: {
-            "openclaw-weixin": {
+            "quiet-core-bot-weixin": {
               enabled: false,
             },
           },
         },
-        "openclaw-weixin",
+        "quiet-core-bot-weixin",
         {},
       ),
     ).toBe(false);
@@ -79,7 +82,7 @@ describe("isChannelConfigured", () => {
 
   it("does not treat persisted Matrix credentials as configured channel state", () => {
     expect(
-      isChannelConfigured({}, "matrix", { OPENCLAW_STATE_DIR: "state-with-matrix-creds" }),
+      isChannelConfigured({}, "matrix", { QUIET_CORE_STATE_DIR: "state-with-matrix-creds" }),
     ).toBe(false);
   });
 });

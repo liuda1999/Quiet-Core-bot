@@ -55,7 +55,7 @@ read_when:
         ```bash
         export LITELLM_API_KEY="your-litellm-key"
 
-        openclaw
+        quiet-core-bot
         ```
 
         That's it. Quiet Core bot now routes through LiteLLM.
@@ -155,7 +155,7 @@ will be sent to the configured proxy host.
       -H "Authorization: Bearer $LITELLM_MASTER_KEY" \
       -H "Content-Type: application/json" \
       -d '{
-        "key_alias": "openclaw",
+        "key_alias": "quiet-core-bot",
         "max_budget": 50.00,
         "budget_duration": "monthly"
       }'

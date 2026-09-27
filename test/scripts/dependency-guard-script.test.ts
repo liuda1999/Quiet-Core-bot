@@ -204,7 +204,7 @@ describe("dependency guard script", () => {
       findTrustedDependencyGuardActor({
         candidates: untrustedAuthorCandidate,
         isDependencyApprover: async (login) =>
-          login === "security-user" || login === "repo-admin" ? "openclaw-secops" : null,
+          login === "security-user" || login === "repo-admin" ? "quiet-core-bot-secops" : null,
       }),
     ).resolves.toBeNull();
     await expect(
@@ -313,14 +313,14 @@ describe("dependency guard script", () => {
 
   it("trusts only configured dependency guard marker comment authors", () => {
     const trustedAuthors = dependencyGuardCommentAuthors(
-      "github-actions[bot], openclaw-autoscrub[bot]",
+      "github-actions[bot], quiet-core-bot-autoscrub[bot]",
     );
 
     expect(
       isDependencyGuardMarkerComment(
         {
           body: "<!-- openclaw:dependency-graph-guard -->",
-          user: { login: "openclaw-autoscrub[bot]" },
+          user: { login: "quiet-core-bot-autoscrub[bot]" },
         },
         "<!-- openclaw:dependency-graph-guard -->",
         trustedAuthors,
@@ -432,14 +432,14 @@ describe("dependency guard script", () => {
     const sameRepoPullRequest = {
       head: {
         ref: "contributor/change",
-        repo: { full_name: "openclaw/openclaw" },
+        repo: { full_name: "liuda1999/quiet-core-bot" },
         sha: headSha,
       },
     };
     const forkPullRequest = {
       head: {
         ref: "contributor/change",
-        repo: { full_name: "external/openclaw" },
+        repo: { full_name: "external/quiet-core-bot" },
         sha: headSha,
       },
     };
@@ -447,29 +447,29 @@ describe("dependency guard script", () => {
       maintainer_can_modify: true,
       head: {
         ref: "contributor/change",
-        repo: { full_name: "external/openclaw" },
+        repo: { full_name: "external/quiet-core-bot" },
         sha: headSha,
       },
     };
 
     expect(
       canAutoscrubPullRequest({
-        owner: "openclaw",
-        repo: "openclaw",
+        owner: "quiet-core-bot",
+        repo: "quiet-core-bot",
         pullRequest: sameRepoPullRequest,
       }),
     ).toBe(true);
     expect(
       canAutoscrubPullRequest({
-        owner: "openclaw",
-        repo: "openclaw",
+        owner: "quiet-core-bot",
+        repo: "quiet-core-bot",
         pullRequest: forkPullRequest,
       }),
     ).toBe(false);
     expect(
       canAutoscrubPullRequest({
-        owner: "openclaw",
-        repo: "openclaw",
+        owner: "quiet-core-bot",
+        repo: "quiet-core-bot",
         pullRequest: editableForkPullRequest,
       }),
     ).toBe(true);
@@ -564,14 +564,14 @@ describe("dependency guard script", () => {
     const commit = await createAutoscrubCommit(
       { baseApi, writeApi },
       {
-        owner: "openclaw",
-        repo: "openclaw",
+        owner: "quiet-core-bot",
+        repo: "quiet-core-bot",
         pullRequest: {
           base: { sha: "base-sha" },
           head: { ref: "contributor/change", sha: headSha },
         },
         lockfileChanges: ["pnpm-lock.yaml"],
-        targetRepository: { owner: "contributor", repo: "openclaw" },
+        targetRepository: { owner: "contributor", repo: "quiet-core-bot" },
       },
     );
 
@@ -583,7 +583,7 @@ describe("dependency guard script", () => {
     expect(calls[1].variables).toMatchObject({
       input: {
         branch: {
-          repositoryNameWithOwner: "contributor/openclaw",
+          repositoryNameWithOwner: "contributor/quiet-core-bot",
           branchName: "contributor/change",
         },
         expectedHeadOid: headSha,
@@ -702,7 +702,7 @@ describe("dependency guard script", () => {
       }) as typeof fetch,
     }).request("/repos/openclaw/openclaw");
     const rejection = expect(request).rejects.toThrow(
-      /GitHub API GET \/repos\/openclaw\/openclaw exceeded timeout 5ms/u,
+      /GitHub API GET \/repos\/quiet-core-bot\/quiet-core-bot exceeded timeout 5ms/u,
     );
 
     await fetchStarted;
@@ -736,7 +736,7 @@ describe("dependency guard script", () => {
       }) as typeof fetch,
     }).request("/repos/openclaw/openclaw");
     const rejection = expect(request).rejects.toThrow(
-      /GitHub API GET \/repos\/openclaw\/openclaw exceeded timeout 5ms/u,
+      /GitHub API GET \/repos\/quiet-core-bot\/quiet-core-bot exceeded timeout 5ms/u,
     );
 
     await fetchStarted;

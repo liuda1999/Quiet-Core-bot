@@ -1,6 +1,6 @@
 /** Cancellation path for active ACP turns and idle runtime handles. */
-import type { AcpRuntime, AcpRuntimeHandle } from "@openclaw/acp-core/runtime/types";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { AcpRuntime, AcpRuntimeHandle } from "@quiet-core/acp-core/runtime/types";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import {
   type AcpRuntimeError,
   toAcpRuntimeError,

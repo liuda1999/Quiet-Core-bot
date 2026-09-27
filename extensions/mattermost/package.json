@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/mattermost",
+  "name": "@quiet-core/mattermost",
   "version": "2026.6.11",
   "description": "OpenClaw Mattermost channel plugin",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/liuda1999/Quiet-Core-bot"
   },
   "type": "module",
   "dependencies": {
@@ -12,18 +12,18 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@quiet-core/plugin-sdk": "workspace:*",
+    "quiet-core-bot": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.6.11"
+    "quiet-core-bot": ">=2026.6.11"
   },
   "peerDependenciesMeta": {
-    "openclaw": {
+    "quiet-core-bot": {
       "optional": true
     }
   },
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": [
       "./index.ts"
     ],
@@ -38,8 +38,8 @@
       "order": 65
     },
     "install": {
-      "clawhubSpec": "clawhub:@openclaw/mattermost",
-      "npmSpec": "@openclaw/mattermost",
+      "clawhubSpec": "clawhub:@quiet-core/mattermost",
+      "npmSpec": "@quiet-core/mattermost",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.6.9",
       "allowInvalidConfigRecovery": true

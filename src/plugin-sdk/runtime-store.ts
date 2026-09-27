@@ -1,7 +1,7 @@
 // Runtime store exports expose plugin runtime type contracts without loading runtime code.
 export type { PluginRuntime } from "../plugins/runtime/types.js";
 
-const pluginRuntimeStoreRegistryKey = Symbol.for("openclaw.plugin-sdk.runtime-store-registry");
+const pluginRuntimeStoreRegistryKey = Symbol.for("quiet-core-bot.plugin-sdk.runtime-store-registry");
 
 type PluginRuntimeStoreRegistry = Map<string, { runtime: unknown }>;
 type PluginRuntimeStoreKeyOptions = {

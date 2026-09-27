@@ -13,7 +13,7 @@ const NIX_STORE_ROOT = "/nix/store";
 //
 // Two roots are allowed:
 // - bundled: plugins shipped with Quiet Core bot itself, not user-installed code.
-// - /nix/store in OPENCLAW_NIX_MODE: immutable Nix package outputs, where
+// - /nix/store in QUIET_CORE_NIX_MODE: immutable Nix package outputs, where
 //   hardlinked files are normal package-store layout rather than user mutation.
 /** Returns true when a plugin root resolves inside the immutable Nix store. */
 export function isNixStorePluginRoot(

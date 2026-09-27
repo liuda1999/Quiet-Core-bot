@@ -1,5 +1,5 @@
 // Realtime transcription provider registry stores transcription provider factories.
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   resolvePluginCapabilityProvider,
   resolvePluginCapabilityProviders,

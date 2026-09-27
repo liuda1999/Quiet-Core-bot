@@ -11,7 +11,7 @@ Adds agent-callable tools.
 
 ## Distribution
 
-- Package: `@openclaw/memory-core`
+- Package: `@quiet-core/memory-core`
 - Install route: included in Quiet Core bot
 
 ## Surface

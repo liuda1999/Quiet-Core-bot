@@ -521,7 +521,7 @@ describe("normalizeMessagesForLlmBoundary", () => {
       },
       {
         role: "custom",
-        customType: "openclaw.runtime-context",
+        customType: "quiet-core-bot.runtime-context",
         content: "current secret runtime context",
         display: false,
         timestamp: 2,
@@ -533,7 +533,7 @@ describe("normalizeMessagesForLlmBoundary", () => {
       },
       {
         role: "custom",
-        customType: "openclaw.runtime-context",
+        customType: "quiet-core-bot.runtime-context",
         content: "post-user stale runtime context",
         display: false,
         timestamp: 4,
@@ -582,7 +582,7 @@ describe("normalizeMessagesForLlmBoundary", () => {
     ];
     const runtimeContext = {
       role: "custom",
-      customType: "openclaw.runtime-context",
+      customType: "quiet-core-bot.runtime-context",
       content: "retry runtime context",
       display: false,
       timestamp: 3,
@@ -605,7 +605,7 @@ describe("normalizeMessagesForLlmBoundary", () => {
       "user",
     ]);
     expect(retryInput[2]).toMatchObject({
-      customType: "openclaw.runtime-context",
+      customType: "quiet-core-bot.runtime-context",
       content: "retry runtime context",
     });
     // User messages are form-canonicalized from array to plain string.
@@ -627,7 +627,7 @@ describe("normalizeMessagesForLlmBoundary", () => {
       },
       {
         role: "custom",
-        customType: "openclaw.runtime-context",
+        customType: "quiet-core-bot.runtime-context",
         content: "current runtime context",
         display: false,
         timestamp: 2,
@@ -650,7 +650,7 @@ describe("normalizeMessagesForLlmBoundary", () => {
       "user",
     ]);
     expect(modelInput[2]).toMatchObject({
-      customType: "openclaw.runtime-context",
+      customType: "quiet-core-bot.runtime-context",
       content: "current runtime context",
     });
     // User messages are form-canonicalized from array to plain string.

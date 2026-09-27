@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
 import type {
   QaEvidenceArtifactView,
   QaEvidenceGalleryEntryView,

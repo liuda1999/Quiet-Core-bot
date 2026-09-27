@@ -595,7 +595,7 @@ describe("listSessionsFromStore search", () => {
 
   test("prefers persisted estimated session cost from the store", () => {
     withAnthropicTranscriptFixture({
-      prefix: "openclaw-session-utils-store-cost-",
+      prefix: "quiet-core-bot-session-utils-store-cost-",
       run: ({ storePath, now }) => {
         const result = listMainSession({
           cfg: baseCfg,
@@ -626,7 +626,7 @@ describe("listSessionsFromStore search", () => {
 
   test("falls back to transcript usage for totalTokens and zero estimatedCostUsd", () => {
     withFreeOpenAiTranscriptFixture({
-      prefix: "openclaw-session-utils-zero-cost-",
+      prefix: "quiet-core-bot-session-utils-zero-cost-",
       run: ({ storePath, now }) => {
         const result = listMainSession({
           cfg: baseCfg,
@@ -646,7 +646,7 @@ describe("listSessionsFromStore search", () => {
 
   test("falls back to transcript usage for totalTokens and estimatedCostUsd, and derives contextTokens from the resolved model", () => {
     withAnthropicTranscriptFixture({
-      prefix: "openclaw-session-utils-",
+      prefix: "quiet-core-bot-session-utils-",
       run: ({ storePath, now }) => {
         const result = listMainSession({
           cfg: createAnthropicContext1mConfig(),
@@ -664,7 +664,7 @@ describe("listSessionsFromStore search", () => {
 
   test("chat history session metadata keeps model-derived contextTokens without transcript usage", () => {
     withAnthropicTranscriptFixture({
-      prefix: "openclaw-session-info-context-",
+      prefix: "quiet-core-bot-session-info-context-",
       run: ({ storePath, now }) => {
         const row = buildGatewaySessionInfo({
           cfg: {
@@ -698,7 +698,7 @@ describe("listSessionsFromStore search", () => {
 
   test("uses subagent run model immediately for child sessions while transcript usage fills live totals", () => {
     withAnthropicTranscriptFixture({
-      prefix: "openclaw-session-utils-subagent-",
+      prefix: "quiet-core-bot-session-utils-subagent-",
       transcriptId: "sess-child",
       run: ({ storePath, now }) => {
         registerRunningSubagent({
@@ -728,7 +728,7 @@ describe("listSessionsFromStore search", () => {
 
   test("keeps a running subagent model when transcript fallback still reflects an older run", () => {
     withAnthropicTranscriptFixture({
-      prefix: "openclaw-session-utils-subagent-stale-model-",
+      prefix: "quiet-core-bot-session-utils-subagent-stale-model-",
       transcriptId: "sess-child-stale",
       run: ({ storePath, now }) => {
         registerRunningSubagent({
@@ -758,7 +758,7 @@ describe("listSessionsFromStore search", () => {
 
   test("keeps the selected override model when runtime identity was intentionally cleared", () => {
     withAnthropicTranscriptFixture({
-      prefix: "openclaw-session-utils-cleared-runtime-model-",
+      prefix: "quiet-core-bot-session-utils-cleared-runtime-model-",
       transcriptId: "sess-override",
       run: ({ storePath, now }) => {
         const result = listMainSession({
@@ -778,7 +778,7 @@ describe("listSessionsFromStore search", () => {
 
   test("does not replace the current runtime model when transcript fallback is only for missing pricing", () => {
     withAnthropicTranscriptFixture({
-      prefix: "openclaw-session-utils-pricing-",
+      prefix: "quiet-core-bot-session-utils-pricing-",
       transcriptId: "sess-pricing",
       run: ({ storePath, now }) => {
         const result = listMainSession({

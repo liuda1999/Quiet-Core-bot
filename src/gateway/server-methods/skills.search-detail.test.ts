@@ -166,7 +166,7 @@ describe("skills.detail handler", () => {
         createdAt: 1700000000,
       },
       owner: {
-        handle: "openclaw",
+        handle: "quiet-core-bot",
         displayName: "Quiet Core bot",
       },
     };

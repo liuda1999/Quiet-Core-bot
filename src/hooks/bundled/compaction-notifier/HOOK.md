@@ -3,7 +3,7 @@ name: compaction-notifier
 description: "Send visible chat notices when session compaction starts and finishes."
 metadata:
   {
-    "openclaw":
+    "quiet-core-bot":
       {
         "emoji": "🧹",
         "events": ["session:compact:before", "session:compact:after"],

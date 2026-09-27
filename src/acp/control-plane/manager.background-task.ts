@@ -1,5 +1,5 @@
 /** Mirrors child ACP turns into detached-task status for requester-facing progress. */
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { logVerbose } from "../../globals.js";
 import {
   createRunningTaskRun,

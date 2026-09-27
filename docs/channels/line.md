@@ -20,7 +20,7 @@ are not supported.
 Install LINE before configuring the channel:
 
 ```bash
-quiet-core-bot plugins install @openclaw/line
+quiet-core-bot plugins install @quiet-core/line
 ```
 
 Local checkout (when running from a git repo):

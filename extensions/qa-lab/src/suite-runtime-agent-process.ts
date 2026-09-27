@@ -3,8 +3,8 @@ import { spawn, spawnSync, type ChildProcessWithoutNullStreams } from "node:chil
 import { randomUUID } from "node:crypto";
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { resolveTimerTimeoutMs } from "openclaw/plugin-sdk/number-runtime";
+import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
+import { resolveTimerTimeoutMs } from "quiet-core-bot/plugin-sdk/number-runtime";
 import {
   appendQaChildOutput,
   appendQaChildOutputTail,

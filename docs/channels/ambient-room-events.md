@@ -164,7 +164,7 @@ Use an agent override when several agents share the same room but only one shoul
         id: "main",
         groupChat: {
           unmentionedInbound: "room_event",
-          mentionPatterns: ["@openclaw", "openclaw"],
+          mentionPatterns: ["@quiet-core-bot", "quiet-core-bot"],
         },
       },
     ],

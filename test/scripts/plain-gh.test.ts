@@ -52,13 +52,13 @@ process.stdout.write("x".repeat(bytes));
 }
 
 describe("plain gh helpers", () => {
-  it("prefers OPENCLAW_GH_BIN over PATH shims", () => {
+  it("prefers QUIET_CORE_GH_BIN over PATH shims", () => {
     const ghPath = makeFakeGh();
 
     expect(
       resolvePlainGhBin({
         HOME: path.dirname(path.dirname(ghPath)),
-        OPENCLAW_GH_BIN: ghPath,
+        QUIET_CORE_GH_BIN: ghPath,
         PATH: "",
       }),
     ).toBe(ghPath);
@@ -88,8 +88,8 @@ describe("plain gh helpers", () => {
     const script = [
       "set -euo pipefail",
       "source scripts/lib/plain-gh.sh",
-      `OPENCLAW_GH_BIN=${JSON.stringify(ghPath)}`,
-      "export OPENCLAW_GH_BIN",
+      `QUIET_CORE_GH_BIN=${JSON.stringify(ghPath)}`,
+      "export QUIET_CORE_GH_BIN",
       `gh_plain api rate_limit > ${JSON.stringify(outputPath)}`,
     ].join("\n");
 
@@ -122,7 +122,7 @@ describe("plain gh helpers", () => {
       encoding: "utf8",
       env: {
         ...process.env,
-        OPENCLAW_GH_BIN: ghPath,
+        QUIET_CORE_GH_BIN: ghPath,
         PLAIN_GH_FAKE_BYTES: String(bytes),
       },
     });

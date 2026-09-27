@@ -24,7 +24,7 @@ Create a keep-alive Box in the Upstash Console. Note the Box ID, such as
 `right-flamingo-14486`, and your Box API key.
 
 Upstash maintains its current Quiet Core bot Box walkthrough at
-[Quiet Core bot Setup](https://upstash.com/docs/box/guides/openclaw-setup).
+[Quiet Core bot Setup](https://upstash.com/docs/box/guides/quiet-core-bot-setup).
 
 ## Connect with an SSH tunnel
 
@@ -42,7 +42,7 @@ The keepalive options reduce idle tunnel drops during onboarding.
 Inside the Box:
 
 ```bash
-sudo npm install -g openclaw
+sudo npm install -g quiet-core-bot
 ```
 
 ## Run onboarding

@@ -70,7 +70,7 @@ quiet-core-bot sessions export-trajectory --session-key "agent:main:telegram:dir
 
 This is the command path used by the `/export-trajectory` slash command after
 the owner approves the exec request. The output directory is always resolved
-inside `.openclaw/trajectory-exports/` under the selected workspace.
+inside `.quiet-core-bot/trajectory-exports/` under the selected workspace.
 
 `quiet-core-bot sessions --all-agents` reads configured agent stores. Gateway and ACP
 session discovery are broader: they also include disk-only stores found under
@@ -86,8 +86,8 @@ JSON examples:
 {
   "path": null,
   "stores": [
-    { "agentId": "main", "path": "/home/user/.openclaw/agents/main/sessions/sessions.json" },
-    { "agentId": "work", "path": "/home/user/.openclaw/agents/work/sessions/sessions.json" }
+    { "agentId": "main", "path": "/home/user/.quiet-core-bot/agents/main/sessions/sessions.json" },
+    { "agentId": "work", "path": "/home/user/.quiet-core-bot/agents/work/sessions/sessions.json" }
   ],
   "allAgents": true,
   "count": 2,
@@ -146,7 +146,7 @@ traffic. Use `--store <path>` for explicit offline repair of a store file.
   "stores": [
     {
       "agentId": "main",
-      "storePath": "/home/user/.openclaw/agents/main/sessions/sessions.json",
+      "storePath": "/home/user/.quiet-core-bot/agents/main/sessions/sessions.json",
       "beforeCount": 120,
       "afterCount": 80,
       "missing": 0,
@@ -156,7 +156,7 @@ traffic. Use `--store <path>` for explicit offline repair of a store file.
     },
     {
       "agentId": "work",
-      "storePath": "/home/user/.openclaw/agents/work/sessions/sessions.json",
+      "storePath": "/home/user/.quiet-core-bot/agents/work/sessions/sessions.json",
       "beforeCount": 18,
       "afterCount": 18,
       "missing": 0,
@@ -187,7 +187,7 @@ quiet-core-bot sessions compact "agent:work:main" --agent work --json
 
 The command exits non-zero when the gateway reports a failed compaction or is unreachable, so crons and scripts never mistake a silent no-op for success.
 
-> Note: `openclaw agent --message '/compact ...'` is **not** a compaction path. Slash commands from the CLI are rejected by the authorized-sender check; that invocation exits non-zero with guidance pointing here instead of silently no-opping.
+> Note: `quiet-core-bot agent --message '/compact ...'` is **not** a compaction path. Slash commands from the CLI are rejected by the authorized-sender check; that invocation exits non-zero with guidance pointing here instead of silently no-opping.
 
 ### sessions.compact RPC
 
@@ -217,7 +217,7 @@ Example truncate response (`--max-lines 200`):
   "ok": true,
   "key": "agent:main:main",
   "compacted": true,
-  "archived": "/home/user/.openclaw/agents/main/sessions/transcripts/<id>.jsonl.bak",
+  "archived": "/home/user/.quiet-core-bot/agents/main/sessions/transcripts/<id>.jsonl.bak",
   "kept": 200
 }
 ```

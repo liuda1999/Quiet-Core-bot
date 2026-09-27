@@ -19,7 +19,7 @@ Examples:
 
 ```
 /debug show
-/debug set messages.responsePrefix="[openclaw]"
+/debug set messages.responsePrefix="[quiet-core-bot]"
 /debug unset messages.responsePrefix
 /debug reset
 ```
@@ -45,7 +45,7 @@ Keep using `/verbose` for normal verbose status/tool output, and keep using
 
 ## Plugin lifecycle trace
 
-Use `OPENCLAW_PLUGIN_LIFECYCLE_TRACE=1` when plugin lifecycle commands feel slow
+Use `QUIET_CORE_PLUGIN_LIFECYCLE_TRACE=1` when plugin lifecycle commands feel slow
 and you need a built-in phase breakdown for plugin metadata, discovery, registry,
 runtime mirror, config mutation, and refresh work. The trace is opt-in and writes
 to stderr, so JSON command output remains parseable.
@@ -53,7 +53,7 @@ to stderr, so JSON command output remains parseable.
 Example:
 
 ```bash
-OPENCLAW_PLUGIN_LIFECYCLE_TRACE=1 quiet-core-bot plugins install tokenjuice --force
+QUIET_CORE_PLUGIN_LIFECYCLE_TRACE=1 quiet-core-bot plugins install tokenjuice --force
 ```
 
 Example output:
@@ -66,7 +66,7 @@ Example output:
 
 Use this for plugin lifecycle investigation before reaching for a CPU profiler.
 If the command is running from a source checkout, prefer measuring the built
-runtime with `node dist/entry.js ...` after `pnpm build`; `pnpm openclaw ...`
+runtime with `node dist/entry.js ...` after `pnpm build`; `pnpm quiet-core-bot ...`
 also measures source-runner overhead.
 
 ## CLI startup and command profiling
@@ -80,10 +80,10 @@ pnpm tsx scripts/bench-cli-startup.ts --preset real --cpu-prof-dir .artifacts/cl
 ```
 
 For one-off profiling through the normal source runner, set
-`OPENCLAW_RUN_NODE_CPU_PROF_DIR`:
+`QUIET_CORE_RUN_NODE_CPU_PROF_DIR`:
 
 ```bash
-OPENCLAW_RUN_NODE_CPU_PROF_DIR=.artifacts/cli-cpu pnpm quiet-core-bot status
+QUIET_CORE_RUN_NODE_CPU_PROF_DIR=.artifacts/cli-cpu pnpm quiet-core-bot status
 ```
 
 The source runner adds Node CPU profile flags and writes a `.cpuprofile` for the
@@ -93,11 +93,11 @@ For startup stalls that look like synchronous filesystem or module-loader work,
 add Node's sync I/O trace flag through the source runner:
 
 ```bash
-OPENCLAW_TRACE_SYNC_IO=1 pnpm quiet-core-bot gateway --force
+QUIET_CORE_TRACE_SYNC_IO=1 pnpm quiet-core-bot gateway --force
 ```
 
 `pnpm gateway:watch` leaves this flag disabled by default for the watched
-Gateway child. Set `OPENCLAW_TRACE_SYNC_IO=1` when you explicitly want Node
+Gateway child. Set `QUIET_CORE_TRACE_SYNC_IO=1` when you explicitly want Node
 sync I/O trace output in watch mode.
 
 ## Gateway watch mode
@@ -109,13 +109,13 @@ pnpm gateway:watch
 ```
 
 By default, this starts or restarts a tmux session named
-`openclaw-gateway-watch-main` (or a profile/port-specific variant such as
-`openclaw-gateway-watch-dev-19001`) and auto-attaches from interactive terminals.
+`quiet-core-bot-gateway-watch-main` (or a profile/port-specific variant such as
+`quiet-core-bot-gateway-watch-dev-19001`) and auto-attaches from interactive terminals.
 Non-interactive shells, CI, and agent exec calls stay detached and print attach
 instructions instead. Attach manually when needed:
 
 ```bash
-tmux attach -t openclaw-gateway-watch-main
+tmux attach -t quiet-core-bot-gateway-watch-main
 ```
 
 The tmux pane runs the raw watcher:
@@ -129,13 +129,13 @@ Use foreground mode when tmux is not wanted:
 ```bash
 pnpm gateway:watch:raw
 # or
-OPENCLAW_GATEWAY_WATCH_TMUX=0 pnpm gateway:watch
+QUIET_CORE_GATEWAY_WATCH_TMUX=0 pnpm gateway:watch
 ```
 
 Disable auto-attach while keeping tmux management:
 
 ```bash
-OPENCLAW_GATEWAY_WATCH_ATTACH=0 pnpm gateway:watch
+QUIET_CORE_GATEWAY_WATCH_ATTACH=0 pnpm gateway:watch
 ```
 
 Profile watched Gateway CPU time when debugging startup/runtime hotspots:
@@ -158,25 +158,25 @@ Use `--benchmark-no-force` when you want the benchmarked child to skip the
 default `--force` port cleanup and fail fast if the Gateway port is already in
 use.
 Benchmark mode suppresses sync-I/O trace spam by default. Set
-`OPENCLAW_TRACE_SYNC_IO=1` with `--benchmark` when you explicitly want both CPU
+`QUIET_CORE_TRACE_SYNC_IO=1` with `--benchmark` when you explicitly want both CPU
 profiles and Node sync-I/O stack traces. In benchmark mode those trace blocks
 are written to `gateway-watch-output.log` under the benchmark directory and
 filtered from the terminal pane; normal Gateway logs remain visible.
 
 The tmux wrapper carries common non-secret runtime selectors such as
-`OPENCLAW_PROFILE`, `OPENCLAW_CONFIG_PATH`, `OPENCLAW_STATE_DIR`,
-`OPENCLAW_GATEWAY_PORT`, and `OPENCLAW_SKIP_CHANNELS` into the pane. Put
+`QUIET_CORE_PROFILE`, `QUIET_CORE_CONFIG_PATH`, `QUIET_CORE_STATE_DIR`,
+`QUIET_CORE_GATEWAY_PORT`, and `QUIET_CORE_SKIP_CHANNELS` into the pane. Put
 provider credentials in your normal profile/config, or use raw foreground mode
 for one-off ephemeral secrets.
 If the watched Gateway exits during startup, the watcher runs
 `quiet-core-bot doctor --fix --non-interactive` once and restarts the Gateway child.
-Use `OPENCLAW_GATEWAY_WATCH_AUTO_DOCTOR=0` when you want the original startup
+Use `QUIET_CORE_GATEWAY_WATCH_AUTO_DOCTOR=0` when you want the original startup
 failure without the dev-only repair pass.
 The managed tmux pane also defaults to colored Gateway logs for readability;
 set `FORCE_COLOR=0` when starting `pnpm gateway:watch` to disable ANSI output.
 
 The watcher restarts on build-relevant files under `src/`, extension source files,
-extension `package.json` and `openclaw.plugin.json` metadata, `tsconfig.json`,
+extension `package.json` and `quiet-core-bot.plugin.json` metadata, `tsconfig.json`,
 `package.json`, and `tsdown.config.ts`. Extension metadata changes restart the
 gateway without forcing a `tsdown` rebuild; source and config changes still
 rebuild `dist` first.
@@ -200,18 +200,18 @@ Recommended flow (dev profile + dev bootstrap):
 
 ```bash
 pnpm gateway:dev
-OPENCLAW_PROFILE=dev quiet-core-bot tui
+QUIET_CORE_PROFILE=dev quiet-core-bot tui
 ```
 
-If you don't have a global install yet, run the CLI via `pnpm openclaw ...`.
+If you don't have a global install yet, run the CLI via `pnpm quiet-core-bot ...`.
 
 What this does:
 
 1. **Profile isolation** (global `--dev`)
-   - `OPENCLAW_PROFILE=dev`
-   - `OPENCLAW_STATE_DIR=~/.quiet-core-bot-dev`
-   - `OPENCLAW_CONFIG_PATH=~/./quiet-core-bot.json`
-   - `OPENCLAW_GATEWAY_PORT=19001` (browser/canvas shift accordingly)
+   - `QUIET_CORE_PROFILE=dev`
+   - `QUIET_CORE_STATE_DIR=~/.quiet-core-bot-dev`
+   - `QUIET_CORE_CONFIG_PATH=~/./quiet-core-bot.json`
+   - `QUIET_CORE_GATEWAY_PORT=19001` (browser/canvas shift accordingly)
 
 2. **Dev bootstrap** (`gateway --dev`)
    - Writes a minimal config if missing (`gateway.mode=local`, bind loopback).
@@ -220,7 +220,7 @@ What this does:
    - Seeds the workspace files if missing:
      `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`.
    - Default identity: **C3-PO** (protocol droid).
-   - Skips channel providers in dev mode (`OPENCLAW_SKIP_CHANNELS=1`).
+   - Skips channel providers in dev mode (`QUIET_CORE_SKIP_CHANNELS=1`).
 
 Reset flow (fresh start):
 
@@ -232,7 +232,7 @@ pnpm gateway:dev:reset
 `--dev` is a **global** profile flag and gets eaten by some runners. If you need to spell it out, use the env var form:
 
 ```bash
-OPENCLAW_PROFILE=dev quiet-core-bot gateway --dev --reset
+QUIET_CORE_PROFILE=dev quiet-core-bot gateway --dev --reset
 ```
 
 </Note>
@@ -270,8 +270,8 @@ pnpm gateway:watch --raw-stream --raw-stream-path ~/.quiet-core-bot/logs/raw-str
 Equivalent env vars:
 
 ```bash
-OPENCLAW_RAW_STREAM=1
-OPENCLAW_RAW_STREAM_PATH=~/.quiet-core-bot/logs/raw-stream.jsonl
+QUIET_CORE_RAW_STREAM=1
+QUIET_CORE_RAW_STREAM_PATH=~/.quiet-core-bot/logs/raw-stream.jsonl
 ```
 
 Default file:
@@ -284,13 +284,13 @@ To capture **raw OpenAI-compat chunks** before they are parsed into blocks,
 enable the transport logger:
 
 ```bash
-OPENCLAW_RAW_STREAM=1
+QUIET_CORE_RAW_STREAM=1
 ```
 
 Optional path:
 
 ```bash
-OPENCLAW_RAW_STREAM_PATH=~/.quiet-core-bot/logs/raw-openai-completions.jsonl
+QUIET_CORE_RAW_STREAM_PATH=~/.quiet-core-bot/logs/raw-openai-completions.jsonl
 ```
 
 Default file:
@@ -389,7 +389,7 @@ You can now set breakpoints in your TypeScript source files (`src/` directory) a
 - If using the **"Rebuild and Debug Gateway"** option - each time the debugger is launched it will completely delete the `/dist` folder and run a full `pnpm build` with source maps enabled before starting the Gateway
 - If using the **"Debug Gateway"** option - debug sessions can be started and stopped at any time without affecting the `/dist` folder, but you must use a separate terminal process to both enable debugging and manage the build cycle
 - Modify the `launch.json` settings for `args` to debug other sections of the project
-- If you need to use the built Quiet Core bot CLI for other tasks (i.e. `dashboard --no-open` if your debug session spawns a new auth token), you can execute it in another terminal as `node ./quiet-core-bot.mjs` or create a shell alias like `alias openclaw-build="node $(pwd)/quiet-core-bot.mjs"`
+- If you need to use the built Quiet Core bot CLI for other tasks (i.e. `dashboard --no-open` if your debug session spawns a new auth token), you can execute it in another terminal as `node ./quiet-core-bot.mjs` or create a shell alias like `alias quiet-core-bot-build="node $(pwd)/quiet-core-bot.mjs"`
 
 ## Related
 

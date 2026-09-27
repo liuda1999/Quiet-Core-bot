@@ -6,12 +6,12 @@ import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { inspect } from "node:util";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { finiteSecondsToTimerSafeMilliseconds } from "openclaw/plugin-sdk/number-runtime";
+import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
+import { finiteSecondsToTimerSafeMilliseconds } from "quiet-core-bot/plugin-sdk/number-runtime";
 import type {
   OpenKeyedStoreOptions,
   PluginStateKeyedStore,
-} from "openclaw/plugin-sdk/plugin-state-runtime";
+} from "quiet-core-bot/plugin-sdk/plugin-state-runtime";
 import type {
   AcpRuntime,
   OpenClawPluginService,
@@ -54,8 +54,8 @@ type AcpxRuntimeLike = AcpRuntime & {
     details?: string[];
   }>;
 };
-const ENABLE_STARTUP_PROBE_ENV = "OPENCLAW_ACPX_RUNTIME_STARTUP_PROBE";
-const SKIP_RUNTIME_PROBE_ENV = "OPENCLAW_SKIP_ACPX_RUNTIME_PROBE";
+const ENABLE_STARTUP_PROBE_ENV = "QUIET_CORE_ACPX_RUNTIME_STARTUP_PROBE";
+const SKIP_RUNTIME_PROBE_ENV = "QUIET_CORE_SKIP_ACPX_RUNTIME_PROBE";
 const ACPX_BACKEND_ID = "acpx";
 
 type AcpxRuntimeModule = typeof import("./runtime.js");
@@ -335,8 +335,8 @@ export function createAcpxRuntimeService(
   return {
     id: "acpx-runtime",
     async start(ctx: OpenClawPluginServiceContext): Promise<void> {
-      if (process.env.OPENCLAW_SKIP_ACPX_RUNTIME === "1") {
-        ctx.logger.info("skipping embedded acpx runtime backend (OPENCLAW_SKIP_ACPX_RUNTIME=1)");
+      if (process.env.QUIET_CORE_SKIP_ACPX_RUNTIME === "1") {
+        ctx.logger.info("skipping embedded acpx runtime backend (QUIET_CORE_SKIP_ACPX_RUNTIME=1)");
         return;
       }
       const openKeyedStore = params.openKeyedStore;

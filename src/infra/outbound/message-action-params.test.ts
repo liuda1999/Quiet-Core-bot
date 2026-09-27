@@ -29,16 +29,16 @@ const maybeIt = process.platform === "win32" ? it.skip : it;
 const matrixMediaSourceParamKeys = ["avatarPath", "avatarUrl"] as const;
 
 async function withTempOpenClawStateDir<T>(test: (stateDir: string) => Promise<T>): Promise<T> {
-  const previous = process.env.OPENCLAW_STATE_DIR;
+  const previous = process.env.QUIET_CORE_STATE_DIR;
   const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "msg-params-state-"));
-  process.env.OPENCLAW_STATE_DIR = stateDir;
+  process.env.QUIET_CORE_STATE_DIR = stateDir;
   try {
     return await test(stateDir);
   } finally {
     if (previous === undefined) {
-      delete process.env.OPENCLAW_STATE_DIR;
+      delete process.env.QUIET_CORE_STATE_DIR;
     } else {
-      process.env.OPENCLAW_STATE_DIR = previous;
+      process.env.QUIET_CORE_STATE_DIR = previous;
     }
     await fs.rm(stateDir, { recursive: true, force: true });
   }

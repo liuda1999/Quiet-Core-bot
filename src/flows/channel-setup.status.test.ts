@@ -273,7 +273,7 @@ describe("resolveChannelSetupSelectionContributions", () => {
       }),
     );
 
-    await withEnvAsync({ OPENCLAW_LOCALE: "zh-CN" }, async () => {
+    await withEnvAsync({ QUIET_CORE_LOCALE: "zh-CN" }, async () => {
       const summary = await collectChannelStatus({
         cfg: {} as never,
         accountOverrides: {},
@@ -294,7 +294,7 @@ describe("resolveChannelSetupSelectionContributions", () => {
     listChatChannels.mockReturnValue([makeMeta("discord", "Discord")]);
     isChannelConfigured.mockReturnValue(true);
 
-    await withEnvAsync({ OPENCLAW_LOCALE: "zh-CN" }, async () => {
+    await withEnvAsync({ QUIET_CORE_LOCALE: "zh-CN" }, async () => {
       await noteChannelStatus({
         cfg: {} as never,
         prompter: { note } as never,
@@ -342,7 +342,7 @@ describe("resolveChannelSetupSelectionContributions", () => {
   it("localizes built-in channel primer copy", async () => {
     const note = vi.fn(async () => undefined);
 
-    await withEnvAsync({ OPENCLAW_LOCALE: "zh-CN" }, async () => {
+    await withEnvAsync({ QUIET_CORE_LOCALE: "zh-CN" }, async () => {
       await noteChannelPrimer(
         { note } as never,
         [
@@ -432,7 +432,7 @@ describe("resolveChannelSetupSelectionContributions", () => {
       }),
     );
 
-    withEnv({ OPENCLAW_LOCALE: "zh-CN" }, () => {
+    withEnv({ QUIET_CORE_LOCALE: "zh-CN" }, () => {
       const lines = resolveChannelSelectionNoteLines({
         cfg: {} as never,
         installedPlugins: [],

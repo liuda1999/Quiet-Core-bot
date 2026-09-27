@@ -1,7 +1,7 @@
 // Covers lazy outbound channel bootstrap, retry guards, auto-enable config, and
 // send-capable active registry short-circuiting.
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { createEmptyPluginRegistry } from "../../plugins/registry-empty.js";
 import {
   pinActivePluginChannelRegistry,

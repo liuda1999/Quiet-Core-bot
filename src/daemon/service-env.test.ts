@@ -595,16 +595,16 @@ describe("buildServiceEnvironment", () => {
     } else {
       expect(env.PATH).toContain("/usr/bin");
     }
-    expect(env.OPENCLAW_GATEWAY_PORT).toBe("18789");
-    expect(env.OPENCLAW_GATEWAY_TOKEN).toBeUndefined();
-    expect(env.OPENCLAW_SERVICE_MARKER).toBe("openclaw");
-    expect(env.OPENCLAW_SERVICE_KIND).toBe("gateway");
-    expect(typeof env.OPENCLAW_SERVICE_VERSION).toBe("string");
-    expect(env.OPENCLAW_SYSTEMD_UNIT).toBe("openclaw-gateway.service");
-    expect(env.OPENCLAW_WINDOWS_TASK_NAME).toBe("Quiet Core Gateway");
-    expect(env.OPENCLAW_WINDOWS_TASK_HIDDEN_LAUNCHER).toBe("1");
+    expect(env.QUIET_CORE_GATEWAY_PORT).toBe("18789");
+    expect(env.QUIET_CORE_GATEWAY_TOKEN).toBeUndefined();
+    expect(env.QUIET_CORE_SERVICE_MARKER).toBe("quiet-core-bot");
+    expect(env.QUIET_CORE_SERVICE_KIND).toBe("gateway");
+    expect(typeof env.QUIET_CORE_SERVICE_VERSION).toBe("string");
+    expect(env.QUIET_CORE_SYSTEMD_UNIT).toBe("quiet-core-bot-gateway.service");
+    expect(env.QUIET_CORE_WINDOWS_TASK_NAME).toBe("Quiet Core Gateway");
+    expect(env.QUIET_CORE_WINDOWS_TASK_HIDDEN_LAUNCHER).toBe("1");
     if (process.platform === "darwin") {
-      expect(env.OPENCLAW_LAUNCHD_LABEL).toBe("ai.openclaw.gateway");
+      expect(env.QUIET_CORE_LAUNCHD_LABEL).toBe("ai.quiet-core-bot.gateway");
     }
   });
 
@@ -615,19 +615,19 @@ describe("buildServiceEnvironment", () => {
       platform: "darwin",
     });
 
-    expect(env.OPENCLAW_LAUNCHD_LABEL).toBe("ai.openclaw.gateway");
+    expect(env.QUIET_CORE_LAUNCHD_LABEL).toBe("ai.quiet-core-bot.gateway");
   });
 
-  it("passes through OPENCLAW_WRAPPER for gateway services", () => {
+  it("passes through QUIET_CORE_WRAPPER for gateway services", () => {
     const env = buildServiceEnvironment({
       env: {
         HOME: "/home/user",
-        OPENCLAW_WRAPPER: " /usr/local/bin/openclaw-doppler ",
+        QUIET_CORE_WRAPPER: " /usr/local/bin/quiet-core-bot-doppler ",
       },
       port: 18789,
     });
 
-    expect(env.OPENCLAW_WRAPPER).toBe("/usr/local/bin/openclaw-doppler");
+    expect(env.QUIET_CORE_WRAPPER).toBe("/usr/local/bin/quiet-core-bot-doppler");
   });
 
   it("forwards TMPDIR from the host environment on Linux", () => {
@@ -677,13 +677,13 @@ describe("buildServiceEnvironment", () => {
 
   it("uses profile-specific unit and label", () => {
     const env = buildServiceEnvironment({
-      env: { HOME: "/home/user", OPENCLAW_PROFILE: "work" },
+      env: { HOME: "/home/user", QUIET_CORE_PROFILE: "work" },
       port: 18789,
     });
-    expect(env.OPENCLAW_SYSTEMD_UNIT).toBe("openclaw-gateway-work.service");
-    expect(env.OPENCLAW_WINDOWS_TASK_NAME).toBe("Quiet Core Gateway (work)");
+    expect(env.QUIET_CORE_SYSTEMD_UNIT).toBe("quiet-core-bot-gateway-work.service");
+    expect(env.QUIET_CORE_WINDOWS_TASK_NAME).toBe("Quiet Core Gateway (work)");
     if (process.platform === "darwin") {
-      expect(env.OPENCLAW_LAUNCHD_LABEL).toBe("ai.openclaw.work");
+      expect(env.QUIET_CORE_LAUNCHD_LABEL).toBe("ai.quiet-core-bot.work");
     }
   });
 
@@ -691,37 +691,37 @@ describe("buildServiceEnvironment", () => {
     const env = buildServiceEnvironment({
       env: {
         HOME: "/home/user",
-        OPENCLAW_PROFILE: "work",
-        OPENCLAW_SYSTEMD_UNIT: "openclaw-gateway-maintenance",
+        QUIET_CORE_PROFILE: "work",
+        QUIET_CORE_SYSTEMD_UNIT: "quiet-core-bot-gateway-maintenance",
       },
       port: 18789,
       platform: "linux",
     });
 
-    expect(env.OPENCLAW_SYSTEMD_UNIT).toBe("openclaw-gateway-maintenance.service");
+    expect(env.QUIET_CORE_SYSTEMD_UNIT).toBe("quiet-core-bot-gateway-maintenance.service");
   });
 
   it("preserves explicit systemd unit overrides with service suffix", () => {
     const env = buildServiceEnvironment({
       env: {
         HOME: "/home/user",
-        OPENCLAW_SYSTEMD_UNIT: "openclaw-gateway-maintenance.service",
+        QUIET_CORE_SYSTEMD_UNIT: "quiet-core-bot-gateway-maintenance.service",
       },
       port: 18789,
       platform: "linux",
     });
 
-    expect(env.OPENCLAW_SYSTEMD_UNIT).toBe("openclaw-gateway-maintenance.service");
+    expect(env.QUIET_CORE_SYSTEMD_UNIT).toBe("quiet-core-bot-gateway-maintenance.service");
   });
 
   it("sets a profile-specific launchd marker for macOS gateway services", () => {
     const env = buildServiceEnvironment({
-      env: { HOME: "/Users/user", OPENCLAW_PROFILE: "work" },
+      env: { HOME: "/Users/user", QUIET_CORE_PROFILE: "work" },
       port: 18789,
       platform: "darwin",
     });
 
-    expect(env.OPENCLAW_LAUNCHD_LABEL).toBe("ai.openclaw.work");
+    expect(env.QUIET_CORE_LAUNCHD_LABEL).toBe("ai.quiet-core-bot.work");
   });
 
   it("does not persist ambient proxy environment variables for launchd/systemd runtime", () => {
@@ -748,12 +748,12 @@ describe("buildServiceEnvironment", () => {
     const env = buildServiceEnvironment({
       env: {
         HOME: "/home/user",
-        OPENCLAW_PROXY_URL: " http://127.0.0.1:3128 ",
+        QUIET_CORE_PROXY_URL: " http://127.0.0.1:3128 ",
       },
       port: 18789,
     });
 
-    expect(env.OPENCLAW_PROXY_URL).toBe("http://127.0.0.1:3128");
+    expect(env.QUIET_CORE_PROXY_URL).toBe("http://127.0.0.1:3128");
   });
 
   it("omits PATH on Windows so Scheduled Tasks can inherit the current shell path", () => {
@@ -767,7 +767,7 @@ describe("buildServiceEnvironment", () => {
     });
 
     expect(env).not.toHaveProperty("PATH");
-    expect(env.OPENCLAW_WINDOWS_TASK_NAME).toBe("Quiet Core Gateway");
+    expect(env.QUIET_CORE_WINDOWS_TASK_NAME).toBe("Quiet Core Gateway");
   });
 
   it("prepends extra runtime directories to the gateway service PATH", () => {
@@ -811,31 +811,31 @@ describe("buildNodeServiceEnvironment", () => {
       platform: "darwin",
     });
 
-    expect(env.OPENCLAW_LAUNCHD_LABEL).toBe("ai.openclaw.node");
+    expect(env.QUIET_CORE_LAUNCHD_LABEL).toBe("ai.quiet-core-bot.node");
   });
 
-  it("passes through OPENCLAW_GATEWAY_TOKEN for node services", () => {
+  it("passes through QUIET_CORE_GATEWAY_TOKEN for node services", () => {
     const env = buildNodeServiceEnvironment({
-      env: { HOME: "/home/user", OPENCLAW_GATEWAY_TOKEN: " node-token " },
+      env: { HOME: "/home/user", QUIET_CORE_GATEWAY_TOKEN: " node-token " },
     });
-    expect(env.OPENCLAW_GATEWAY_TOKEN).toBe("node-token");
+    expect(env.QUIET_CORE_GATEWAY_TOKEN).toBe("node-token");
   });
 
-  it("passes through OPENCLAW_ALLOW_INSECURE_PRIVATE_WS for node services", () => {
+  it("passes through QUIET_CORE_ALLOW_INSECURE_PRIVATE_WS for node services", () => {
     const env = buildNodeServiceEnvironment({
-      env: { HOME: "/home/user", OPENCLAW_ALLOW_INSECURE_PRIVATE_WS: " 1 " },
+      env: { HOME: "/home/user", QUIET_CORE_ALLOW_INSECURE_PRIVATE_WS: " 1 " },
     });
-    expect(env.OPENCLAW_ALLOW_INSECURE_PRIVATE_WS).toBe("1");
+    expect(env.QUIET_CORE_ALLOW_INSECURE_PRIVATE_WS).toBe("1");
   });
 
-  it("omits OPENCLAW_GATEWAY_TOKEN when the env var is empty", () => {
+  it("omits QUIET_CORE_GATEWAY_TOKEN when the env var is empty", () => {
     const env = buildNodeServiceEnvironment({
       env: {
         HOME: "/home/user",
-        OPENCLAW_GATEWAY_TOKEN: "   ",
+        QUIET_CORE_GATEWAY_TOKEN: "   ",
       },
     });
-    expect(env.OPENCLAW_GATEWAY_TOKEN).toBeUndefined();
+    expect(env.QUIET_CORE_GATEWAY_TOKEN).toBeUndefined();
   });
 
   it("does not persist ambient proxy environment variables for node services", () => {
@@ -855,11 +855,11 @@ describe("buildNodeServiceEnvironment", () => {
     const env = buildNodeServiceEnvironment({
       env: {
         HOME: "/home/user",
-        OPENCLAW_PROXY_URL: " http://127.0.0.1:3128 ",
+        QUIET_CORE_PROXY_URL: " http://127.0.0.1:3128 ",
       },
     });
 
-    expect(env.OPENCLAW_PROXY_URL).toBe("http://127.0.0.1:3128");
+    expect(env.QUIET_CORE_PROXY_URL).toBe("http://127.0.0.1:3128");
   });
 
   it("forwards TMPDIR for node services on Linux", () => {
@@ -904,9 +904,9 @@ describe("buildNodeServiceEnvironment", () => {
       platform: "win32",
     });
 
-    expect(env.OPENCLAW_WINDOWS_TASK_NAME).toBe("Quiet Core Node");
-    expect(env.OPENCLAW_WINDOWS_TASK_HIDDEN_LAUNCHER).toBe("1");
-    expect(env.OPENCLAW_TASK_SCRIPT_NAME).toBe("node.cmd");
+    expect(env.QUIET_CORE_WINDOWS_TASK_NAME).toBe("Quiet Core Node");
+    expect(env.QUIET_CORE_WINDOWS_TASK_HIDDEN_LAUNCHER).toBe("1");
+    expect(env.QUIET_CORE_TASK_SCRIPT_NAME).toBe("node.cmd");
   });
 });
 
@@ -962,28 +962,28 @@ describe("resolveGatewayStateDir", () => {
   });
 
   it("appends the profile suffix when set", () => {
-    const env = { HOME: "/Users/test", OPENCLAW_PROFILE: "rescue" };
+    const env = { HOME: "/Users/test", QUIET_CORE_PROFILE: "rescue" };
     expect(resolveGatewayStateDir(env)).toBe(path.resolve("/Users/test", ".quiet-core-bot-rescue"));
   });
 
   it("treats default profiles as the base state dir", () => {
-    const env = { HOME: "/Users/test", OPENCLAW_PROFILE: "Default" };
+    const env = { HOME: "/Users/test", QUIET_CORE_PROFILE: "Default" };
     expect(resolveGatewayStateDir(env)).toBe(path.resolve("/Users/test", ".quiet-core-bot"));
   });
 
-  it("uses OPENCLAW_STATE_DIR when provided", () => {
-    const env = { HOME: "/Users/test", OPENCLAW_STATE_DIR: "/var/lib/openclaw" };
-    expect(resolveGatewayStateDir(env)).toBe(path.resolve("/var/lib/openclaw"));
+  it("uses QUIET_CORE_STATE_DIR when provided", () => {
+    const env = { HOME: "/Users/test", QUIET_CORE_STATE_DIR: "/var/lib/quiet-core-bot" };
+    expect(resolveGatewayStateDir(env)).toBe(path.resolve("/var/lib/quiet-core-bot"));
   });
 
-  it("expands ~ in OPENCLAW_STATE_DIR", () => {
-    const env = { HOME: "/Users/test", OPENCLAW_STATE_DIR: "~/openclaw-state" };
-    expect(resolveGatewayStateDir(env)).toBe(path.resolve("/Users/test/openclaw-state"));
+  it("expands ~ in QUIET_CORE_STATE_DIR", () => {
+    const env = { HOME: "/Users/test", QUIET_CORE_STATE_DIR: "~/quiet-core-bot-state" };
+    expect(resolveGatewayStateDir(env)).toBe(path.resolve("/Users/test/quiet-core-bot-state"));
   });
 
   it("preserves Windows absolute paths without HOME", () => {
-    const env = { OPENCLAW_STATE_DIR: "C:\\State\\openclaw" };
-    expect(resolveGatewayStateDir(env)).toBe("C:\\State\\openclaw");
+    const env = { QUIET_CORE_STATE_DIR: "C:\\State\\quiet-core-bot" };
+    expect(resolveGatewayStateDir(env)).toBe("C:\\State\\quiet-core-bot");
   });
 });
 

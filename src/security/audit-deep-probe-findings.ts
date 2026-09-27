@@ -27,7 +27,7 @@ export function collectDeepProbeFindings(params: {
       severity: "warn",
       title: "Gateway probe auth SecretRef is unavailable",
       detail: params.authWarning,
-      remediation: `Set OPENCLAW_GATEWAY_TOKEN/OPENCLAW_GATEWAY_PASSWORD in this shell or resolve the external secret provider, then re-run "${formatCliCommand("quiet-core-bot security audit --deep")}".`,
+      remediation: `Set QUIET_CORE_GATEWAY_TOKEN/QUIET_CORE_GATEWAY_PASSWORD in this shell or resolve the external secret provider, then re-run "${formatCliCommand("quiet-core-bot security audit --deep")}".`,
     });
   }
   return findings;

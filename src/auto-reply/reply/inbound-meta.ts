@@ -1,7 +1,7 @@
 // Normalizes inbound message metadata before it is exposed to reply prompts.
 import path from "node:path";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { isRecord } from "@quiet-core/normalization-core/record-coerce";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { normalizeChatType } from "../../channels/chat-type.js";
 import { getLoadedChannelPluginById } from "../../channels/plugins/registry-loaded.js";
 import type { ChannelPlugin } from "../../channels/plugins/types.plugin.js";
@@ -474,7 +474,7 @@ export function buildInboundMetaSystemPrompt(
   const channelValue = resolveInboundChannel(ctx);
 
   const payload = {
-    schema: "openclaw.inbound_meta.v2",
+    schema: "quiet-core-bot.inbound_meta.v2",
     account_id: normalizePromptMetadataString(ctx.AccountId),
     channel: channelValue,
     provider: normalizePromptMetadataString(ctx.Provider),

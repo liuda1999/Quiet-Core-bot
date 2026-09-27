@@ -98,8 +98,8 @@ describe("gateway auth", () => {
     const auth = resolveGatewayAuth({
       authConfig: {},
       env: {
-        OPENCLAW_GATEWAY_TOKEN: "env-token",
-        OPENCLAW_GATEWAY_PASSWORD: "env-password",
+        QUIET_CORE_GATEWAY_TOKEN: "env-token",
+        QUIET_CORE_GATEWAY_PASSWORD: "env-password",
       } as NodeJS.ProcessEnv,
     });
 
@@ -193,8 +193,8 @@ describe("gateway auth", () => {
         password: "config-password", // pragma: allowlist secret
       },
       env: {
-        OPENCLAW_GATEWAY_TOKEN: "env-token",
-        OPENCLAW_GATEWAY_PASSWORD: "env-password",
+        QUIET_CORE_GATEWAY_TOKEN: "env-token",
+        QUIET_CORE_GATEWAY_PASSWORD: "env-password",
       } as NodeJS.ProcessEnv,
     });
 
@@ -205,12 +205,12 @@ describe("gateway auth", () => {
   it("treats env-template auth secrets as SecretRefs instead of plaintext", () => {
     const auth = resolveGatewayAuth({
       authConfig: {
-        token: "${OPENCLAW_GATEWAY_TOKEN}",
-        password: "${OPENCLAW_GATEWAY_PASSWORD}",
+        token: "${QUIET_CORE_GATEWAY_TOKEN}",
+        password: "${QUIET_CORE_GATEWAY_PASSWORD}",
       },
       env: {
-        OPENCLAW_GATEWAY_TOKEN: "env-token",
-        OPENCLAW_GATEWAY_PASSWORD: "env-password",
+        QUIET_CORE_GATEWAY_TOKEN: "env-token",
+        QUIET_CORE_GATEWAY_PASSWORD: "env-password",
       } as NodeJS.ProcessEnv,
     });
 
@@ -533,7 +533,7 @@ describe("gateway auth", () => {
     ).toThrow(/provider reference object/);
   });
 
-  it("accepts password mode when env provides OPENCLAW_GATEWAY_PASSWORD", () => {
+  it("accepts password mode when env provides QUIET_CORE_GATEWAY_PASSWORD", () => {
     const rawPasswordRef = { source: "exec", provider: "op", id: "pw" } as never;
     const auth = resolveGatewayAuth({
       authConfig: {
@@ -541,7 +541,7 @@ describe("gateway auth", () => {
         password: rawPasswordRef,
       },
       env: {
-        OPENCLAW_GATEWAY_PASSWORD: "env-password",
+        QUIET_CORE_GATEWAY_PASSWORD: "env-password",
       } as NodeJS.ProcessEnv,
     });
 
@@ -636,7 +636,7 @@ describe("trusted-proxy auth", () => {
       headers: {
         "x-forwarded-user": "nick@example.com",
         "x-forwarded-proto": "https",
-        "x-openclaw-proxy-auth": "present",
+        "x-quiet-core-bot-proxy-auth": "present",
       },
     });
 
@@ -889,7 +889,7 @@ describe("trusted-proxy auth", () => {
         },
       },
       env: {
-        OPENCLAW_GATEWAY_TOKEN: "shared-secret",
+        QUIET_CORE_GATEWAY_TOKEN: "shared-secret",
       } as NodeJS.ProcessEnv,
     },
   ])("rejects trusted-proxy mode when shared token comes from $name", ({ authConfig, env }) => {

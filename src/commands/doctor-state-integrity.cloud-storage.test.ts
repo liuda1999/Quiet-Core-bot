@@ -14,7 +14,7 @@ describe("detectMacCloudSyncedStateDir", () => {
       "Mobile Documents",
       "com~apple~CloudDocs",
       "Quiet Core bot",
-      ".openclaw",
+      ".quiet-core-bot",
     );
 
     const result = detectMacCloudSyncedStateDir(stateDir, {
@@ -35,7 +35,7 @@ describe("detectMacCloudSyncedStateDir", () => {
       "CloudStorage",
       "Dropbox",
       "Quiet Core bot",
-      ".openclaw",
+      ".quiet-core-bot",
     );
 
     const result = detectMacCloudSyncedStateDir(stateDir, {
@@ -50,14 +50,14 @@ describe("detectMacCloudSyncedStateDir", () => {
   });
 
   it("detects cloud-synced target when state dir resolves via symlink", () => {
-    const symlinkPath = "/tmp/openclaw-state";
+    const symlinkPath = "/tmp/quiet-core-bot-state";
     const resolvedCloudPath = path.join(
       home,
       "Library",
       "CloudStorage",
       "OneDrive-Personal",
       "Quiet Core bot",
-      ".openclaw",
+      ".quiet-core-bot",
     );
 
     const result = detectMacCloudSyncedStateDir(symlinkPath, {
@@ -79,9 +79,9 @@ describe("detectMacCloudSyncedStateDir", () => {
       "CloudStorage",
       "OneDrive-Personal",
       "Quiet Core bot",
-      ".openclaw",
+      ".quiet-core-bot",
     );
-    const resolvedLocalPath = path.join(home, ".openclaw");
+    const resolvedLocalPath = path.join(home, ".quiet-core-bot");
 
     const result = detectMacCloudSyncedStateDir(symlinkPath, {
       platform: "darwin",
@@ -92,10 +92,10 @@ describe("detectMacCloudSyncedStateDir", () => {
     expect(result).toBeNull();
   });
 
-  it("anchors cloud detection to OS homedir when OPENCLAW_HOME is overridden", () => {
-    const stateDir = path.join(home, "Library", "CloudStorage", "iCloud Drive", ".openclaw");
-    const originalOpenClawHome = process.env.OPENCLAW_HOME;
-    process.env.OPENCLAW_HOME = "/tmp/openclaw-home-override";
+  it("anchors cloud detection to OS homedir when QUIET_CORE_HOME is overridden", () => {
+    const stateDir = path.join(home, "Library", "CloudStorage", "iCloud Drive", ".quiet-core-bot");
+    const originalOpenClawHome = process.env.QUIET_CORE_HOME;
+    process.env.QUIET_CORE_HOME = "/tmp/quiet-core-bot-home-override";
     const homedirSpy = vi.spyOn(os, "homedir").mockReturnValue(home);
     try {
       const result = detectMacCloudSyncedStateDir(stateDir, {
@@ -109,9 +109,9 @@ describe("detectMacCloudSyncedStateDir", () => {
     } finally {
       homedirSpy.mockRestore();
       if (originalOpenClawHome === undefined) {
-        delete process.env.OPENCLAW_HOME;
+        delete process.env.QUIET_CORE_HOME;
       } else {
-        process.env.OPENCLAW_HOME = originalOpenClawHome;
+        process.env.QUIET_CORE_HOME = originalOpenClawHome;
       }
     }
   });
@@ -123,7 +123,7 @@ describe("detectMacCloudSyncedStateDir", () => {
       "Mobile Documents",
       "com~apple~CloudDocs",
       "Quiet Core bot",
-      ".openclaw",
+      ".quiet-core-bot",
     );
 
     const result = detectMacCloudSyncedStateDir(stateDir, {

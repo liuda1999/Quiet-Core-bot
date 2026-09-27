@@ -25,7 +25,7 @@ export interface WindowsBackgroundPowerShellOptions {
 }
 
 function guestScriptName(extension: string): string {
-  return `openclaw-parallels-${randomUUID()}.${extension}`;
+  return `quiet-core-bot-parallels-${randomUUID()}.${extension}`;
 }
 
 function appendOutput(
@@ -92,13 +92,13 @@ export async function runWindowsBackgroundPowerShell(
   const runCommand = options.runCommand ?? run;
   const safeLabel = options.label.replaceAll(/[^A-Za-z0-9_-]/g, "-");
   const nonce = `${safeLabel}-${randomUUID()}`;
-  const guestRunDir = `openclaw-parallels\\${nonce}`;
+  const guestRunDir = `quiet-core-bot-parallels\\${nonce}`;
   const windowsDonePath = `%WINDIR%\\Temp\\${guestRunDir}\\done`;
   const windowsLogPath = `%WINDIR%\\Temp\\${guestRunDir}\\run.log`;
-  const backgroundExitPrefix = `__OPENCLAW_BACKGROUND_EXIT__:${nonce}:`;
-  const backgroundDoneMarker = `__OPENCLAW_BACKGROUND_DONE__:${nonce}`;
+  const backgroundExitPrefix = `__QUIET_CORE_BACKGROUND_EXIT__:${nonce}:`;
+  const backgroundDoneMarker = `__QUIET_CORE_BACKGROUND_DONE__:${nonce}`;
   const deadline = Date.now() + options.timeoutMs;
-  const pathsScript = `$runDir = Join-Path (Join-Path $env:WINDIR 'Temp\\openclaw-parallels') ${psSingleQuote(nonce)}
+  const pathsScript = `$runDir = Join-Path (Join-Path $env:WINDIR 'Temp\\quiet-core-bot-parallels') ${psSingleQuote(nonce)}
 $scriptPath = Join-Path $runDir 'run.ps1'
 $logPath = Join-Path $runDir 'run.log'
 $donePath = Join-Path $runDir 'done'
@@ -459,7 +459,7 @@ export class LinuxGuest {
   }
 
   private transportArgs(args: string[]): string[] {
-    return ["exec", this.vmName, "/usr/bin/env", "HOME=/root", "OPENCLAW_ALLOW_ROOT=1", ...args];
+    return ["exec", this.vmName, "/usr/bin/env", "HOME=/root", "QUIET_CORE_ALLOW_ROOT=1", ...args];
   }
 
   bash(script: string): string {

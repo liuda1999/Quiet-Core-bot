@@ -73,7 +73,7 @@ struct RemotePortTunnelTests {
 
     @Test @MainActor func `remote port override prefers explicit remote port`() async {
         let configPath = TestIsolation.tempConfigPath()
-        await TestIsolation.withIsolatedState(env: ["OPENCLAW_CONFIG_PATH": configPath]) {
+        await TestIsolation.withIsolatedState(env: ["QUIET_CORE_CONFIG_PATH": configPath]) {
             OpenClawConfigFile.saveDict([
                 "gateway": [
                     "remote": [
@@ -91,7 +91,7 @@ struct RemotePortTunnelTests {
 
     @Test @MainActor func `remote port override can read loopback url port`() async {
         let configPath = TestIsolation.tempConfigPath()
-        await TestIsolation.withIsolatedState(env: ["OPENCLAW_CONFIG_PATH": configPath]) {
+        await TestIsolation.withIsolatedState(env: ["QUIET_CORE_CONFIG_PATH": configPath]) {
             OpenClawConfigFile.saveDict([
                 "gateway": [
                     "remote": [

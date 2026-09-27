@@ -4,7 +4,7 @@ export type {
   MemoryEmbeddingProbeResult,
   MemorySearchManager,
   MemorySearchResult,
-} from "openclaw/plugin-sdk/memory-core-host-engine-storage";
+} from "quiet-core-bot/plugin-sdk/memory-core-host-engine-storage";
 export {
   closeAllMemorySearchManagers,
   closeMemorySearchManager,

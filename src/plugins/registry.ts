@@ -3,12 +3,12 @@ import path from "node:path";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
-import { uniqueValues } from "@openclaw/normalization-core/string-normalization";
+} from "@quiet-core/normalization-core/string-coerce";
+import { uniqueValues } from "@quiet-core/normalization-core/string-normalization";
 import {
   normalizeStringEntries,
   normalizeUniqueStringEntries,
-} from "@openclaw/normalization-core/string-normalization";
+} from "@quiet-core/normalization-core/string-normalization";
 import { clearCodeModeNamespacesForPlugin } from "../agents/code-mode-namespaces.js";
 import {
   getRegisteredAgentHarness,
@@ -22,7 +22,7 @@ import {
   normalizeCommandDescriptorName,
   sanitizeCommandDescriptorDescription,
 } from "../cli/program/command-descriptor-utils.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   clearContextEnginesForOwner,
   registerContextEngineForOwner,
@@ -338,14 +338,14 @@ function isOfficialCodexPluginRecord(
   if (record.origin !== "global") {
     return false;
   }
-  if (record.packageName === "@openclaw/codex") {
+  if (record.packageName === "@quiet-core/codex") {
     return true;
   }
   const sourcePath = path
     .normalize(record.rootDir ?? record.source)
     .split(path.sep)
     .join("/");
-  return sourcePath.includes("/node_modules/@openclaw/codex");
+  return sourcePath.includes("/node_modules/@quiet-core/codex");
 }
 
 function canClaimReservedCommandOwnership(
@@ -354,7 +354,7 @@ function canClaimReservedCommandOwnership(
   return record.origin === "bundled" || isOfficialCodexPluginRecord(record);
 }
 
-const ACTIVE_PLUGIN_HOOK_REGISTRATIONS_KEY = Symbol.for("openclaw.activePluginHookRegistrations");
+const ACTIVE_PLUGIN_HOOK_REGISTRATIONS_KEY = Symbol.for("quiet-core-bot.activePluginHookRegistrations");
 const activePluginHookRegistrations = resolveGlobalSingleton<
   Map<string, Array<{ event: string; handler: Parameters<typeof registerInternalHook>[1] }>>
 >(ACTIVE_PLUGIN_HOOK_REGISTRATIONS_KEY, () => new Map());
@@ -690,7 +690,7 @@ export function createPluginRegistry(registryParams: PluginRegistryParams) {
             ...entry.hook,
             name: hookName,
             description,
-            source: "openclaw-plugin",
+            source: "quiet-core-bot-plugin",
             pluginId: record.id,
           },
           metadata: {
@@ -702,7 +702,7 @@ export function createPluginRegistry(registryParams: PluginRegistryParams) {
           hook: {
             name: hookName,
             description,
-            source: "openclaw-plugin",
+            source: "quiet-core-bot-plugin",
             pluginId: record.id,
             filePath: record.source,
             baseDir: path.dirname(record.source),

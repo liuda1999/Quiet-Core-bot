@@ -5,8 +5,8 @@ import {
   resolveDefaultAgentId,
 } from "../agents/agent-scope.js";
 import {
-  OPENCLAW_DOCS_URL,
-  OPENCLAW_SOURCE_URL,
+  QUIET_CORE_DOCS_URL,
+  QUIET_CORE_SOURCE_URL,
   resolveOpenClawReferencePaths,
 } from "../agents/docs-path.js";
 import {
@@ -130,7 +130,7 @@ function buildAgentSummaries(cfg: OpenClawConfig): CrestodianAgentSummary[] {
 }
 
 function resolveFastTestReferences(env: NodeJS.ProcessEnv): OpenClawReferencePaths | undefined {
-  if (env.OPENCLAW_TEST_FAST !== "1") {
+  if (env.QUIET_CORE_TEST_FAST !== "1") {
     return undefined;
   }
   const sourcePath = process.cwd();
@@ -208,9 +208,9 @@ export async function loadCrestodianOverview(
     },
     references: {
       docsPath: references.docsPath ?? undefined,
-      docsUrl: OPENCLAW_DOCS_URL,
+      docsUrl: QUIET_CORE_DOCS_URL,
       sourcePath: references.sourcePath ?? undefined,
-      sourceUrl: OPENCLAW_SOURCE_URL,
+      sourceUrl: QUIET_CORE_SOURCE_URL,
     },
   };
 }

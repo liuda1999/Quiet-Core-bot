@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       windows_node_tag:
-        description: Exact openclaw-windows-node release tag to promote, for example v0.6.3
+        description: Exact quiet-core-bot-windows-node release tag to promote, for example v0.6.3
         required: true
         type: string
       expected_installer_digests:
@@ -45,7 +45,7 @@ jobs:
             $env:RELEASE_TAG.Contains("-beta.")
           )
           if ($env:WINDOWS_NODE_TAG -notmatch '^v[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z]+([.-][0-9A-Za-z]+)*)?$') {
-            throw "windows_node_tag must be an explicit openclaw-windows-node release tag, not latest: $env:WINDOWS_NODE_TAG"
+            throw "windows_node_tag must be an explicit quiet-core-bot-windows-node release tag, not latest: $env:WINDOWS_NODE_TAG"
           }
 
           try {
@@ -281,5 +281,5 @@ jobs:
           Get-ChildItem -LiteralPath dist -File |
             Sort-Object Name |
             ForEach-Object {
-              "- https://github.com/openclaw/openclaw/releases/download/$env:RELEASE_TAG/$($_.Name)"
+              "- https://github.com/liuda1999/Quiet-Core-bot/releases/download/$env:RELEASE_TAG/$($_.Name)"
             } >> $env:GITHUB_STEP_SUMMARY

@@ -1,5 +1,5 @@
 // Qa Lab plugin module implements bus queries behavior.
-import { normalizeOptionalLowercaseString } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { normalizeOptionalLowercaseString } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import type {
   QaBusAttachment,
   QaBusConversation,

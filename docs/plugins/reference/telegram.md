@@ -11,7 +11,7 @@ Adds the Telegram channel surface for sending and receiving Quiet Core bot messa
 
 ## Distribution
 
-- Package: `@openclaw/telegram`
+- Package: `@quiet-core/telegram`
 - Install route: included in Quiet Core bot
 
 ## Surface

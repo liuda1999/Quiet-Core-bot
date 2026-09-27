@@ -38,7 +38,7 @@ Ask once for permission to run read-only checks. Then run relevant commands.
 Common:
 
 ```bash
-openclaw security audit --deep
+quiet-core-bot security audit --deep
 quiet-core-bot gateway status --deep
 quiet-core-bot doctor
 ```
@@ -100,6 +100,6 @@ Offer only relevant items:
 - Enable disk encryption.
 - Verify backups and restore path.
 - Disable password SSH or require keys/MFA where appropriate.
-- Add scheduled `openclaw security audit --deep`.
+- Add scheduled `quiet-core-bot security audit --deep`.
 
 Confirm exact action before applying.

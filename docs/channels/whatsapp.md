@@ -14,7 +14,7 @@ Status: production-ready via WhatsApp Web (Baileys). Gateway owns linked session
 - `quiet-core-bot channels login --channel whatsapp` also offers the install flow when
   the plugin is not present yet.
 - Dev channel + git checkout: defaults to the local plugin path.
-- Stable/Beta: installs the official `@openclaw/whatsapp` plugin from ClawHub
+- Stable/Beta: installs the official `@quiet-core/whatsapp` plugin from ClawHub
   first, with npm as the fallback.
 - The WhatsApp runtime is distributed outside the core Quiet Core bot npm package so
   WhatsApp-specific runtime dependencies stay with the external plugin.
@@ -22,10 +22,10 @@ Status: production-ready via WhatsApp Web (Baileys). Gateway owns linked session
 Manual install stays available:
 
 ```bash
-quiet-core-bot plugins install clawhub:@openclaw/whatsapp
+quiet-core-bot plugins install clawhub:@quiet-core/whatsapp
 ```
 
-Use the bare npm package (`@openclaw/whatsapp`) only when you need the registry
+Use the bare npm package (`@quiet-core/whatsapp`) only when you need the registry
 fallback. Pin an exact version only when you need a reproducible install.
 
 <CardGroup cols={3}>
@@ -359,7 +359,7 @@ When the linked self number is also present in `allowFrom`, WhatsApp self-chat s
 
 - skip read receipts for self-chat turns
 - ignore mention-JID auto-trigger behavior that would otherwise ping yourself
-- if `messages.responsePrefix` is unset, self-chat replies default to `[{identity.name}]` or `[openclaw]`
+- if `messages.responsePrefix` is unset, self-chat replies default to `[{identity.name}]` or `[quiet-core-bot]`
 
 ## Message normalization and context
 

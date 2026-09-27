@@ -88,7 +88,7 @@ function listPluginManifestPaths(extensionsDir: string): string[] {
   return fs
     .readdirSync(extensionsDir, { withFileTypes: true })
     .filter((entry) => entry.isDirectory() && !entry.name.startsWith("."))
-    .map((entry) => path.join(extensionsDir, entry.name, "openclaw.plugin.json"))
+    .map((entry) => path.join(extensionsDir, entry.name, "quiet-core-bot.plugin.json"))
     .filter((manifestPath) => fs.existsSync(manifestPath));
 }
 

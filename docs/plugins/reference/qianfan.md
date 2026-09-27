@@ -11,8 +11,8 @@ Adds Qianfan model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/qianfan-provider`
-- Install route: npm; ClawHub: `clawhub:@openclaw/qianfan-provider`
+- Package: `@quiet-core/qianfan-provider`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/qianfan-provider`
 
 ## Surface
 

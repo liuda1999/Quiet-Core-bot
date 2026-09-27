@@ -30,15 +30,15 @@ import type {
   ToolCallLocation,
   ToolKind,
 } from "@agentclientprotocol/sdk";
-import { readBool, readNonNegativeInteger, readString } from "@openclaw/acp-core/meta";
-import { defaultAcpSessionStore, type AcpSessionStore } from "@openclaw/acp-core/session";
-import { toAcpSessionLineageMeta } from "@openclaw/acp-core/session-lineage-meta";
-import type { AcpServerOptions } from "@openclaw/acp-core/types";
-import { timestampMsToIsoString } from "@openclaw/normalization-core/number-coercion";
+import { readBool, readNonNegativeInteger, readString } from "@quiet-core/acp-core/meta";
+import { defaultAcpSessionStore, type AcpSessionStore } from "@quiet-core/acp-core/session";
+import { toAcpSessionLineageMeta } from "@quiet-core/acp-core/session-lineage-meta";
+import type { AcpServerOptions } from "@quiet-core/acp-core/types";
+import { timestampMsToIsoString } from "@quiet-core/normalization-core/number-coercion";
 import {
   normalizeFastMode,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/normalization-core/string-coerce";
 import type { EventFrame } from "../../packages/gateway-protocol/src/index.js";
 import type { GatewayClient } from "../gateway/client.js";
 import type { GatewaySessionRow, SessionsListResult } from "../gateway/session-utils.js";
@@ -227,7 +227,7 @@ function buildSystemProvenanceReceipt(params: {
 }) {
   return [
     "[Source Receipt]",
-    "bridge=openclaw-acp",
+    "bridge=quiet-core-bot-acp",
     `originHost=${os.hostname()}`,
     `originCwd=${shortenHomePath(params.cwd)}`,
     `acpSessionId=${params.sessionId}`,

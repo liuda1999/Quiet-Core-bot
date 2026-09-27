@@ -4,12 +4,12 @@ import fs from "node:fs";
 import path from "node:path";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../infra/kysely-sync.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
-import type { DB as OpenClawStateKyselyDatabase } from "./openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "./quiet-core-bot-state-db.generated.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "./openclaw-state-db.js";
-import { resolveOpenClawStateSqliteDir } from "./openclaw-state-db.paths.js";
+} from "./quiet-core-bot-state-db.js";
+import { resolveOpenClawStateSqliteDir } from "./quiet-core-bot-state-db.paths.js";
 
 /**
  * Durable run ledger (`agent_runs`).

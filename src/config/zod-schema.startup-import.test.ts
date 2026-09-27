@@ -1,5 +1,5 @@
 // Guards config schema startup imports against loading heavy runtime modules.
-import { importFreshModule } from "openclaw/plugin-sdk/test-fixtures";
+import { importFreshModule } from "quiet-core-bot/plugin-sdk/test-fixtures";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const providersWhatsappImportMock = vi.hoisted(() => vi.fn());

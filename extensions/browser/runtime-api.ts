@@ -46,8 +46,8 @@ export {
   createBrowserRuntimeState,
   DEFAULT_AI_SNAPSHOT_MAX_CHARS,
   DEFAULT_BROWSER_EVALUATE_ENABLED,
-  DEFAULT_OPENCLAW_BROWSER_COLOR,
-  DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME,
+  DEFAULT_QUIET_CORE_BROWSER_COLOR,
+  DEFAULT_QUIET_CORE_BROWSER_PROFILE_NAME,
   DEFAULT_UPLOAD_DIR,
   ensureBrowserControlAuth,
   getBrowserControlState,
@@ -92,4 +92,4 @@ export {
   type OpenClawPluginApi,
   type OpenClawPluginToolContext,
   type OpenClawPluginToolFactory,
-} from "openclaw/plugin-sdk/plugin-entry";
+} from "quiet-core-bot/plugin-sdk/plugin-entry";

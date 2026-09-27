@@ -11,7 +11,7 @@ Quiet Core bot Feishu/Lark channel plugin for chats and workplace tools (communi
 
 ## Distribution
 
-- Package: `@openclaw/feishu`
+- Package: `@quiet-core/feishu`
 - Install route: npm; ClawHub
 
 ## Surface

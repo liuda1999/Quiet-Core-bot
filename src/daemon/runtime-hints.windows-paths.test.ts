@@ -2,17 +2,17 @@
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
 const resolveGatewayLogPathsMock = vi.fn(() => ({
-  logDir: "C:\\tmp\\openclaw-state\\logs",
-  stdoutPath: "C:\\tmp\\openclaw-state\\logs\\gateway.log",
-  stderrPath: "C:\\tmp\\openclaw-state\\logs\\gateway.err.log",
+  logDir: "C:\\tmp\\quiet-core-bot-state\\logs",
+  stdoutPath: "C:\\tmp\\quiet-core-bot-state\\logs\\gateway.log",
+  stderrPath: "C:\\tmp\\quiet-core-bot-state\\logs\\gateway.err.log",
 }));
 const resolveGatewaySupervisorLogPathsMock = vi.fn(() => ({
-  logDir: "C:\\Users\\test\\Library\\Logs\\openclaw",
-  stdoutPath: "C:\\Users\\test\\Library\\Logs\\openclaw\\gateway.log",
-  stderrPath: "C:\\Users\\test\\Library\\Logs\\openclaw\\gateway.err.log",
+  logDir: "C:\\Users\\test\\Library\\Logs\\quiet-core-bot",
+  stdoutPath: "C:\\Users\\test\\Library\\Logs\\quiet-core-bot\\gateway.log",
+  stderrPath: "C:\\Users\\test\\Library\\Logs\\quiet-core-bot\\gateway.err.log",
 }));
 const resolveGatewayRestartLogPathMock = vi.fn(
-  () => "C:\\tmp\\openclaw-state\\logs\\gateway-restart.log",
+  () => "C:\\tmp\\quiet-core-bot-state\\logs\\gateway-restart.log",
 );
 
 vi.mock("./restart-logs.js", () => ({
@@ -32,13 +32,13 @@ describe("buildPlatformRuntimeLogHints", () => {
     expect(
       buildPlatformRuntimeLogHints({
         platform: "darwin",
-        systemdServiceName: "openclaw-gateway",
+        systemdServiceName: "quiet-core-bot-gateway",
         windowsTaskName: "Quiet Core bot Gateway",
       }),
     ).toEqual([
-      "Launchd stdout (if installed): /Users/test/Library/Logs/openclaw/gateway.log",
+      "Launchd stdout (if installed): /Users/test/Library/Logs/quiet-core-bot/gateway.log",
       "Launchd stderr (if installed): suppressed",
-      "Restart attempts: /tmp/openclaw-state/logs/gateway-restart.log",
+      "Restart attempts: /tmp/quiet-core-bot-state/logs/gateway-restart.log",
     ]);
   });
 });

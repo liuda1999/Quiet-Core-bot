@@ -1,5 +1,5 @@
 // Model list probe tests cover runtime probing while listing configured models.
-import { importFreshModule } from "openclaw/plugin-sdk/test-fixtures";
+import { importFreshModule } from "quiet-core-bot/plugin-sdk/test-fixtures";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
 let probeModule: typeof import("./list.probe.js");
@@ -79,8 +79,8 @@ describe("runAuthProbes", () => {
       const result = await module.runAuthProbes({
         cfg: {} as never,
         agentId: "probe-agent",
-        agentDir: "/tmp/openclaw-probe-agent",
-        workspaceDir: "/tmp/openclaw-probe-workspace",
+        agentDir: "/tmp/quiet-core-bot-probe-agent",
+        workspaceDir: "/tmp/quiet-core-bot-probe-workspace",
         providers: ["openai"],
         modelCandidates: ["openai/gpt-5.5"],
         options: {

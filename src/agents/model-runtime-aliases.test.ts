@@ -1,6 +1,6 @@
 // Verifies CLI runtime alias resolution and runtime model-ref equivalence.
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { testing as cliBackendsTesting } from "./cli-backends.js";
 import {
   createModelPickerVisibleProviderPredicate,
@@ -111,7 +111,7 @@ describe("resolveCliRuntimeExecutionProvider", () => {
         cfg: createAnthropicAuthConfig({
           order: ["anthropic:claude-cli"],
           models: {
-            "anthropic/opus-4.7": { agentRuntime: { id: "openclaw" } },
+            "anthropic/opus-4.7": { agentRuntime: { id: "quiet-core-bot" } },
           },
         }),
         provider: "anthropic",

@@ -1,5 +1,5 @@
 {
-  "name": "@openclaw/agent-core",
+  "name": "@quiet-core/agent-core",
   "version": "0.0.0-private",
   "private": true,
   "files": [
@@ -95,7 +95,7 @@
     }
   },
   "dependencies": {
-    "@openclaw/llm-core": "workspace:*",
+    "@quiet-core/llm-core": "workspace:*",
     "typebox": "1.1.39"
   }
 }

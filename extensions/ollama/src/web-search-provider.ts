@@ -1,10 +1,10 @@
 // Ollama provider module implements model/runtime integration.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import {
   isNonSecretApiKeyMarker,
   normalizeOptionalSecretInput,
-} from "openclaw/plugin-sdk/provider-auth";
-import { resolveEnvApiKey } from "openclaw/plugin-sdk/provider-auth-runtime";
+} from "quiet-core-bot/plugin-sdk/provider-auth";
+import { resolveEnvApiKey } from "quiet-core-bot/plugin-sdk/provider-auth-runtime";
 import {
   enablePluginInConfig,
   readPositiveIntegerParam,
@@ -16,9 +16,9 @@ import {
   truncateText,
   wrapWebContent,
   type WebSearchProviderPlugin,
-} from "openclaw/plugin-sdk/provider-web-search";
-import { fetchWithSsrFGuard } from "openclaw/plugin-sdk/ssrf-runtime";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "quiet-core-bot/plugin-sdk/provider-web-search";
+import { fetchWithSsrFGuard } from "quiet-core-bot/plugin-sdk/ssrf-runtime";
+import { normalizeOptionalString } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { Type } from "typebox";
 import { OLLAMA_DEFAULT_BASE_URL } from "./defaults.js";
 import { readProviderBaseUrl } from "./provider-base-url.js";

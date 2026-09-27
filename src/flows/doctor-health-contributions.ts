@@ -6,7 +6,7 @@ import {
   isLegacyParentWritableUpdateDoctorPass,
   UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE_ENV,
 } from "../commands/doctor/shared/update-phase.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import type { buildGatewayConnectionDetails } from "../gateway/call.js";
 import type { UpdatePostInstallDoctorResult } from "../infra/update-doctor-result.js";
 import type { RuntimeEnv } from "../runtime.js";
@@ -83,7 +83,7 @@ const loadOnboardHelpersModule = async () => await import("../commands/onboard-h
 const loadSecretTypesModule = async () => await import("../config/types.secrets.js");
 
 function isUpdateDoctorRun(env: NodeJS.ProcessEnv | Record<string, string | undefined>): boolean {
-  const value = env.OPENCLAW_UPDATE_IN_PROGRESS;
+  const value = env.QUIET_CORE_UPDATE_IN_PROGRESS;
   return value === "1" || value === "true";
 }
 
@@ -102,7 +102,7 @@ function isTruthyEnvValue(value: string | undefined): boolean {
 export function shouldSkipLegacyUpdateDoctorConfigWrite(params: {
   env: NodeJS.ProcessEnv;
 }): boolean {
-  if (!isTruthyEnvValue(params.env.OPENCLAW_UPDATE_IN_PROGRESS)) {
+  if (!isTruthyEnvValue(params.env.QUIET_CORE_UPDATE_IN_PROGRESS)) {
     return false;
   }
   if (isTruthyEnvValue(params.env[UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE_ENV])) {

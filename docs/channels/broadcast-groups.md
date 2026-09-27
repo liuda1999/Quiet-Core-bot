@@ -209,7 +209,7 @@ In group `120363403215116621@g.us` with agents `["alfred", "baerbel"]`:
     ```
     Session: agent:alfred:whatsapp:group:120363403215116621@g.us
     History: [user message, alfred's previous responses]
-    Workspace: /Users/user/openclaw-alfred/
+    Workspace: /Users/user/quiet-core-bot-alfred/
     Tools: read, write, exec
     ```
   </Tab>
@@ -217,7 +217,7 @@ In group `120363403215116621@g.us` with agents `["alfred", "baerbel"]`:
     ```
     Session: agent:baerbel:whatsapp:group:120363403215116621@g.us
     History: [user message, baerbel's previous responses]
-    Workspace: /Users/user/openclaw-baerbel/
+    Workspace: /Users/user/quiet-core-bot-baerbel/
     Tools: read only
     ```
   </Tab>

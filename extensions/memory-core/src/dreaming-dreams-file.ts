@@ -1,16 +1,16 @@
 // Memory Core helpers for safe managed DREAMS.md updates.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { createAsyncLock } from "openclaw/plugin-sdk/async-lock-runtime";
-import { extractErrorCode } from "openclaw/plugin-sdk/error-runtime";
-import { resolveGlobalMap } from "openclaw/plugin-sdk/global-singleton";
-import { replaceManagedMarkdownBlock } from "openclaw/plugin-sdk/memory-host-markdown";
-import { readRegularFile, replaceFileAtomic } from "openclaw/plugin-sdk/security-runtime";
+import { createAsyncLock } from "quiet-core-bot/plugin-sdk/async-lock-runtime";
+import { extractErrorCode } from "quiet-core-bot/plugin-sdk/error-runtime";
+import { resolveGlobalMap } from "quiet-core-bot/plugin-sdk/global-singleton";
+import { replaceManagedMarkdownBlock } from "quiet-core-bot/plugin-sdk/memory-host-markdown";
+import { readRegularFile, replaceFileAtomic } from "quiet-core-bot/plugin-sdk/security-runtime";
 
 const DREAMS_FILENAMES = ["DREAMS.md", "dreams.md"] as const;
 const DEEP_START_MARKER = "<!-- openclaw:dreaming:deep:start -->";
 const DEEP_END_MARKER = "<!-- openclaw:dreaming:deep:end -->";
-const DREAMS_FILE_LOCKS_KEY = Symbol.for("openclaw.memoryCore.dreamingNarrative.fileLocks");
+const DREAMS_FILE_LOCKS_KEY = Symbol.for("quiet-core-bot.memoryCore.dreamingNarrative.fileLocks");
 
 type DreamsFileLockEntry = {
   withLock: ReturnType<typeof createAsyncLock>;

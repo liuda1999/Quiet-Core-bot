@@ -60,7 +60,7 @@ describe("status-overview-rows", () => {
         gatewayConnection: { url: "wss://gateway.example.com", urlSource: "config" },
       },
       osLabel: "macOS",
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/quiet-core-bot.json",
       secretDiagnosticsCount: 2,
       updateRestartValue: "restart pending health verification",
       agentStatus: {
@@ -73,7 +73,7 @@ describe("status-overview-rows", () => {
 
     expect(findRowValue(rows, "Version")).toBe(VERSION);
     expect(findRowValue(rows, "OS")).toBe("macOS");
-    expect(findRowValue(rows, "Config")).toBe("/tmp/openclaw.json");
+    expect(findRowValue(rows, "Config")).toBe("/tmp/quiet-core-bot.json");
     expect(findRowValue(rows, "Update restart")).toBe("restart pending health verification");
     expect(findRowValue(rows, "Security")).toBe("Run: quiet-core-bot security audit --deep");
     expect(findRowValue(rows, "Secrets")).toBe("2 diagnostics");

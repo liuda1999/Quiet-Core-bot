@@ -4,8 +4,8 @@ import { constants as fsConstants, type Dirent } from "node:fs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { satisfiesPluginApiRange } from "../infra/clawhub.js";
 import { packageNameMatchesId } from "../infra/install-safe-path.js";
 import {
@@ -107,7 +107,7 @@ type PackageManifest = PluginPackageManifest & {
 type PluginInstallRuntime = Awaited<ReturnType<typeof loadPluginInstallRuntime>>;
 
 function formatUnresolvedOpenClawPeerLinkError(packageName: string): string {
-  return `Installed plugin ${packageName} declares openclaw as a peer dependency, but Quiet Core bot could not create a plugin-local node_modules/openclaw link. Run from a packaged Quiet Core bot install or reinstall Quiet Core bot, then retry.`;
+  return `Installed plugin ${packageName} declares quiet-core-bot as a peer dependency, but Quiet Core bot could not create a plugin-local node_modules/quiet-core-bot link. Run from a packaged Quiet Core bot install or reinstall Quiet Core bot, then retry.`;
 }
 
 function isNpmAliasOverrideComparatorError(result: { stdout: string; stderr: string }): boolean {
@@ -115,16 +115,16 @@ function isNpmAliasOverrideComparatorError(result: { stdout: string; stderr: str
 }
 
 const MISSING_EXTENSIONS_ERROR =
-  'package.json missing openclaw.extensions; update the plugin package to include openclaw.extensions (for example ["./dist/index.js"]). See https://github.com/liuda1999/Quiet-Core-bot/help/troubleshooting#plugin-install-fails-with-missing-openclaw-extensions';
+  'package.json missing quiet-core-bot.extensions; update the plugin package to include quiet-core-bot.extensions (for example ["./dist/index.js"]). See https://github.com/liuda1999/Quiet-Core-bot/help/troubleshooting#plugin-install-fails-with-missing-quiet-core-bot-extensions';
 const PLUGIN_ARCHIVE_ROOT_MARKERS = [
   "package.json",
-  "openclaw.plugin.json",
+  "quiet-core-bot.plugin.json",
   ".codex-plugin/plugin.json",
   ".claude-plugin/plugin.json",
   ".cursor-plugin/plugin.json",
 ];
-const MANAGED_NPM_PACK_ARCHIVE_DIR = "_openclaw-pack-archives";
-const MANAGED_NPM_PROJECT_QUARANTINE_DIR = "_openclaw-quarantined-npm-projects";
+const MANAGED_NPM_PACK_ARCHIVE_DIR = "_quiet-core-bot-pack-archives";
+const MANAGED_NPM_PROJECT_QUARANTINE_DIR = "_quiet-core-bot-quarantined-npm-projects";
 const MANAGED_NPM_PROJECT_REBUILD_ARTIFACTS = [
   "node_modules",
   "package-lock.json",
@@ -138,10 +138,10 @@ export const PLUGIN_INSTALL_ERROR_CODE = {
   INCOMPATIBLE_HOST_VERSION: "incompatible_host_version",
   INCOMPATIBLE_PLUGIN_API: "incompatible_plugin_api",
   INVALID_PLUGIN_API: "invalid_plugin_api",
-  MISSING_OPENCLAW_EXTENSIONS: "missing_openclaw_extensions",
+  MISSING_QUIET_CORE_EXTENSIONS: "missing_openclaw_extensions",
   MISSING_PLUGIN_MANIFEST: "missing_plugin_manifest",
-  EMPTY_OPENCLAW_EXTENSIONS: "empty_openclaw_extensions",
-  INVALID_OPENCLAW_EXTENSIONS: "invalid_openclaw_extensions",
+  EMPTY_QUIET_CORE_EXTENSIONS: "empty_openclaw_extensions",
+  INVALID_QUIET_CORE_EXTENSIONS: "invalid_openclaw_extensions",
   NPM_PACKAGE_NOT_FOUND: "npm_package_not_found",
   PLUGIN_ID_MISMATCH: "plugin_id_mismatch",
   SECURITY_SCAN_BLOCKED: "security_scan_blocked",
@@ -176,7 +176,7 @@ function validateOpenClawPackageCompatibility(params: {
   if (!pluginApiRangeCheck.ok) {
     return {
       ok: false,
-      error: `invalid package.json openclaw.compat.pluginApi: ${pluginApiRangeCheck.error}`,
+      error: `invalid package.json quiet-core-bot.compat.pluginApi: ${pluginApiRangeCheck.error}`,
       code: PLUGIN_INSTALL_ERROR_CODE.INVALID_PLUGIN_API,
     };
   }
@@ -206,14 +206,14 @@ function validateOpenClawPackageInstallCompatibility(params: {
     if (minHostVersionCheck.kind === "invalid") {
       return {
         ok: false,
-        error: `invalid package.json openclaw.install.minHostVersion: ${minHostVersionCheck.error}`,
+        error: `invalid package.json quiet-core-bot.install.minHostVersion: ${minHostVersionCheck.error}`,
         code: PLUGIN_INSTALL_ERROR_CODE.INVALID_MIN_HOST_VERSION,
       };
     }
     if (minHostVersionCheck.kind === "unknown_host_version") {
       return {
         ok: false,
-        error: `plugin "${params.pluginId}" requires Quiet Core bot >=${minHostVersionCheck.requirement.minimumLabel}, but this host version could not be determined. Re-run from a released build or set OPENCLAW_VERSION and retry.`,
+        error: `plugin "${params.pluginId}" requires Quiet Core bot >=${minHostVersionCheck.requirement.minimumLabel}, but this host version could not be determined. Re-run from a released build or set QUIET_CORE_VERSION and retry.`,
         code: PLUGIN_INSTALL_ERROR_CODE.UNKNOWN_HOST_VERSION,
       };
     }
@@ -280,21 +280,21 @@ function ensureOpenClawExtensions(params: { manifest: PackageManifest }):
     return {
       ok: false,
       error: MISSING_EXTENSIONS_ERROR,
-      code: PLUGIN_INSTALL_ERROR_CODE.MISSING_OPENCLAW_EXTENSIONS,
+      code: PLUGIN_INSTALL_ERROR_CODE.MISSING_QUIET_CORE_EXTENSIONS,
     };
   }
   if (resolved.status === "empty") {
     return {
       ok: false,
-      error: "package.json openclaw.extensions is empty",
-      code: PLUGIN_INSTALL_ERROR_CODE.EMPTY_OPENCLAW_EXTENSIONS,
+      error: "package.json quiet-core-bot.extensions is empty",
+      code: PLUGIN_INSTALL_ERROR_CODE.EMPTY_QUIET_CORE_EXTENSIONS,
     };
   }
   if (resolved.status === "invalid") {
     return {
       ok: false,
       error: resolved.error,
-      code: PLUGIN_INSTALL_ERROR_CODE.INVALID_OPENCLAW_EXTENSIONS,
+      code: PLUGIN_INSTALL_ERROR_CODE.INVALID_QUIET_CORE_EXTENSIONS,
     };
   }
   return {
@@ -356,7 +356,7 @@ async function resolveTrustedOfficialPrereleaseResolution(params: {
   timeoutMs: number;
   logger: PluginInstallLogger;
 }): Promise<TrustedOfficialPrereleaseResolution | null> {
-  if (!params.spec.name.startsWith("@openclaw/")) {
+  if (!params.spec.name.startsWith("@quiet-core/")) {
     return null;
   }
   const semverVersions = await loadNpmPackageVersions({
@@ -738,7 +738,7 @@ async function rollbackManagedNpmPluginInstall(params: {
       );
     }
   }
-  if (params.packageName !== "openclaw") {
+  if (params.packageName !== "quiet-core-bot") {
     try {
       await repairManagedNpmRootOpenClawPeer({
         npmRoot: params.npmRoot,
@@ -747,7 +747,7 @@ async function rollbackManagedNpmPluginInstall(params: {
       });
     } catch (error) {
       params.logger.warn?.(
-        `Failed to repair managed npm openclaw peer after rollback: ${String(error)}`,
+        `Failed to repair managed npm quiet-core-bot peer after rollback: ${String(error)}`,
       );
     }
   }
@@ -884,7 +884,7 @@ async function writeOrRemoveRollbackFile(filePath: string, contents: string | un
 async function createManagedNpmPluginInstallRollbackSnapshot(params: {
   npmRoot: string;
 }): Promise<ManagedNpmPluginInstallRollbackSnapshot> {
-  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-npm-plugin-rollback-"));
+  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-npm-plugin-rollback-"));
   let nodeModulesBackupDir: string | undefined;
   const nodeModulesDir = path.join(params.npmRoot, "node_modules");
   try {
@@ -935,11 +935,11 @@ async function shouldCopyManagedNpmRollbackSnapshotEntry(params: {
   const isPluginLocalOpenClawPeer =
     (relativeParts.length === 3 &&
       relativeParts[1] === "node_modules" &&
-      relativeParts[2] === "openclaw") ||
+      relativeParts[2] === "quiet-core-bot") ||
     (relativeParts.length === 4 &&
       relativeParts[0]?.startsWith("@") &&
       relativeParts[2] === "node_modules" &&
-      relativeParts[3] === "openclaw");
+      relativeParts[3] === "quiet-core-bot");
   if (!isPluginLocalOpenClawPeer) {
     return true;
   }
@@ -1068,7 +1068,7 @@ async function listManagedNpmRootPackageNames(npmRoot: string): Promise<Set<stri
 
   const packageNames = new Set<string>();
   for (const entry of entries.toSorted((left, right) => left.name.localeCompare(right.name))) {
-    if (entry.name === ".bin" || entry.name === "openclaw") {
+    if (entry.name === ".bin" || entry.name === "quiet-core-bot") {
       continue;
     }
     if (entry.name.startsWith("@")) {
@@ -1249,7 +1249,7 @@ function resolveRequiredPlatformPackageNames(
   if (!Array.isArray(raw)) {
     return {
       ok: false,
-      error: "package.json openclaw.install.requiredPlatformPackages must be an array",
+      error: "package.json quiet-core-bot.install.requiredPlatformPackages must be an array",
     };
   }
   const packageNames = new Set<string>();
@@ -1258,7 +1258,7 @@ function resolveRequiredPlatformPackageNames(
       return {
         ok: false,
         error:
-          "package.json openclaw.install.requiredPlatformPackages must contain only npm package names",
+          "package.json quiet-core-bot.install.requiredPlatformPackages must contain only npm package names",
       };
     }
     const specError = validateRegistryNpmSpec(value);
@@ -1266,7 +1266,7 @@ function resolveRequiredPlatformPackageNames(
     if (specError || !parsed || parsed.selectorKind !== "none") {
       return {
         ok: false,
-        error: `package.json openclaw.install.requiredPlatformPackages contains invalid package name: ${value}`,
+        error: `package.json quiet-core-bot.install.requiredPlatformPackages contains invalid package name: ${value}`,
       };
     }
     packageNames.add(parsed.name);
@@ -1429,14 +1429,14 @@ async function installPluginFromManagedNpmRoot(
     prepared: ManagedNpmRootPreparedDependency,
   ): Promise<InstallPluginResult> => {
     logger.info?.(`Installing ${params.displaySpec} into ${npmRoot}…`);
-    if (params.packageName !== "openclaw") {
+    if (params.packageName !== "quiet-core-bot") {
       const repairedOpenClawPeer = await repairManagedNpmRootOpenClawPeer({
         npmRoot,
         timeoutMs,
         logger,
       });
       if (repairedOpenClawPeer) {
-        logger.info?.(`Repaired stale openclaw peer dependency in ${npmRoot}`);
+        logger.info?.(`Repaired stale quiet-core-bot peer dependency in ${npmRoot}`);
       }
     }
     let preInstallRootPackageNames = await listManagedNpmRootPackageNames(npmRoot);
@@ -1669,7 +1669,7 @@ async function installPluginFromManagedNpmRoot(
       );
       let freshCacheDir: string | undefined;
       try {
-        freshCacheDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-npm-cache-"));
+        freshCacheDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-npm-cache-"));
         install = await runCommandWithTimeout(npmInstallArgs, {
           ...npmInstallOptions,
           env: {
@@ -1719,14 +1719,14 @@ async function installPluginFromManagedNpmRoot(
         });
       }
     }
-    if (params.packageName !== "openclaw") {
+    if (params.packageName !== "quiet-core-bot") {
       const repairedOpenClawPeer = await repairManagedNpmRootOpenClawPeer({
         npmRoot,
         timeoutMs,
         logger,
       });
       if (repairedOpenClawPeer) {
-        logger.info?.(`Repaired stale openclaw peer dependency in ${npmRoot} after npm install`);
+        logger.info?.(`Repaired stale quiet-core-bot peer dependency in ${npmRoot} after npm install`);
       }
     }
     try {
@@ -1737,7 +1737,7 @@ async function installPluginFromManagedNpmRoot(
     } catch (error) {
       return await rollbackFailedManagedNpmInstall({
         ok: false,
-        error: `Failed to repair openclaw peer links after npm install: ${String(error)}`,
+        error: `Failed to repair quiet-core-bot peer links after npm install: ${String(error)}`,
       });
     }
     if (installedPackageNeedsOpenClawPeerLinkRepair(installRoot)) {
@@ -1871,7 +1871,7 @@ async function stageNpmPackArchiveInManagedRoot(params: {
 
   try {
     await fs.access(stableArchivePath);
-    backupTempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-npm-pack-archive-"));
+    backupTempDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-npm-pack-archive-"));
     previousArchiveBackupPath = path.join(backupTempDir, archiveFileName);
     await fs.copyFile(stableArchivePath, previousArchiveBackupPath);
   } catch (error) {
@@ -2430,7 +2430,7 @@ async function validatePackagePluginInstallSource(params: {
   if (!ocManifestResult.ok && params.requirePluginManifest) {
     return {
       ok: false,
-      error: `package missing valid openclaw.plugin.json: ${ocManifestResult.error}`,
+      error: `package missing valid quiet-core-bot.plugin.json: ${ocManifestResult.error}`,
       code: PLUGIN_INSTALL_ERROR_CODE.MISSING_PLUGIN_MANIFEST,
     };
   }
@@ -2497,7 +2497,7 @@ async function validatePackagePluginInstallSource(params: {
     return {
       ok: false,
       error: extensionValidation.error,
-      code: PLUGIN_INSTALL_ERROR_CODE.INVALID_OPENCLAW_EXTENSIONS,
+      code: PLUGIN_INSTALL_ERROR_CODE.INVALID_QUIET_CORE_EXTENSIONS,
     };
   }
 
@@ -2808,7 +2808,7 @@ export async function installPluginFromArchive(
 
   const result = await runtime.withExtractedArchiveRoot({
     archivePath,
-    tempDirPrefix: "openclaw-plugin-",
+    tempDirPrefix: "quiet-core-bot-plugin-",
     timeoutMs,
     logger,
     rootMarkers: PLUGIN_ARCHIVE_ROOT_MARKERS,
@@ -3133,7 +3133,7 @@ export async function installPluginFromNpmSpec(
         ? "install"
         : targetMode;
 
-  const policyTempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-npm-policy-"));
+  const policyTempDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-npm-policy-"));
   try {
     const policyMetadataPath = path.join(policyTempDir, "npm-package-metadata.json");
     await fs.writeFile(
@@ -3374,6 +3374,6 @@ export async function installPluginFromPath(
     ok: false,
     code: PLUGIN_INSTALL_ERROR_CODE.UNSUPPORTED_PLAIN_FILE_PLUGIN,
     error:
-      "Plain file plugin installs are not supported. Install a plugin directory or archive that contains openclaw.plugin.json, or list standalone plugin files in plugins.load.paths.",
+      "Plain file plugin installs are not supported. Install a plugin directory or archive that contains quiet-core-bot.plugin.json, or list standalone plugin files in plugins.load.paths.",
   };
 }

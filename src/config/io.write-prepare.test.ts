@@ -53,11 +53,11 @@ describe("config io write prepare", () => {
           plugins: {
             entries: {},
             installs: {
-              "openclaw-web-search": {
+              "quiet-core-bot-web-search": {
                 source: "npm",
-                spec: "@ollama/openclaw-web-search",
-                installPath: "/tmp/openclaw-web-search",
-                resolvedName: "@ollama/openclaw-web-search",
+                spec: "@ollama/quiet-core-bot-web-search",
+                installPath: "/tmp/quiet-core-bot-web-search",
+                resolvedName: "@ollama/quiet-core-bot-web-search",
                 resolvedVersion: "0.2.2",
               },
             },
@@ -67,11 +67,11 @@ describe("config io write prepare", () => {
           plugins: {
             entries: {},
             installs: {
-              "openclaw-web-search": {
+              "quiet-core-bot-web-search": {
                 source: "npm",
-                spec: "@ollama/openclaw-web-search@0.2.2",
-                installPath: "/tmp/openclaw-web-search",
-                resolvedName: "@ollama/openclaw-web-search",
+                spec: "@ollama/quiet-core-bot-web-search@0.2.2",
+                installPath: "/tmp/quiet-core-bot-web-search",
+                resolvedName: "@ollama/quiet-core-bot-web-search",
                 resolvedVersion: "0.2.2",
               },
             },
@@ -1151,8 +1151,8 @@ describe("config io write prepare", () => {
     const snapshot = { OPENAI_API_KEY: "sk-secret" };
     expect(
       resolveWriteEnvSnapshotForPath({
-        actualConfigPath: "/tmp/openclaw.json",
-        expectedConfigPath: "/tmp/openclaw.json",
+        actualConfigPath: "/tmp/quiet-core-bot.json",
+        expectedConfigPath: "/tmp/quiet-core-bot.json",
         envSnapshotForRestore: snapshot,
       }),
     ).toBe(snapshot);
@@ -1161,7 +1161,7 @@ describe("config io write prepare", () => {
   it("drops the read-time env snapshot when writing a different config path", () => {
     expect(
       resolveWriteEnvSnapshotForPath({
-        actualConfigPath: "/tmp/openclaw.json",
+        actualConfigPath: "/tmp/quiet-core-bot.json",
         expectedConfigPath: "/tmp/other.json",
         envSnapshotForRestore: { OPENAI_API_KEY: "sk-secret" },
       }),

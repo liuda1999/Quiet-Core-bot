@@ -11,7 +11,7 @@ Adds BytePlus, BytePlus Plan model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/byteplus-provider`
+- Package: `@quiet-core/byteplus-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

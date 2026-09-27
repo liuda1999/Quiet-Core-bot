@@ -1,5 +1,5 @@
 {
-  "name": "@openclaw/qa-matrix",
+  "name": "@quiet-core/qa-matrix",
   "version": "2026.6.11",
   "private": true,
   "description": "OpenClaw Matrix QA runner plugin",
@@ -8,19 +8,19 @@
     "undici": "8.5.0"
   },
   "devDependencies": {
-    "@openclaw/matrix": "workspace:*",
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@quiet-core/matrix": "workspace:*",
+    "@quiet-core/plugin-sdk": "workspace:*",
+    "quiet-core-bot": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.6.11"
+    "quiet-core-bot": ">=2026.6.11"
   },
   "peerDependenciesMeta": {
-    "openclaw": {
+    "quiet-core-bot": {
       "optional": true
     }
   },
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": [
       "./index.ts"
     ],

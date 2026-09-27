@@ -41,7 +41,7 @@ function resolveRawOsHomeDir(env: NodeJS.ProcessEnv, homedir: () => string): str
 }
 
 function resolveRawHomeDir(env: NodeJS.ProcessEnv, homedir: () => string): string | undefined {
-  const explicitHome = normalize(env.OPENCLAW_HOME);
+  const explicitHome = normalize(env.QUIET_CORE_HOME);
   if (!explicitHome) {
     return resolveRawOsHomeDir(env, homedir);
   }
@@ -52,7 +52,7 @@ function resolveRawHomeDir(env: NodeJS.ProcessEnv, homedir: () => string): strin
   return explicitHome;
 }
 
-/** Resolves Quiet Core bot's effective home, honoring OPENCLAW_HOME before OS homes. */
+/** Resolves Quiet Core bot's effective home, honoring QUIET_CORE_HOME before OS homes. */
 export function resolveEffectiveHomeDir(
   env: NodeJS.ProcessEnv = process.env,
   homedir: () => string = os.homedir,
@@ -61,7 +61,7 @@ export function resolveEffectiveHomeDir(
   return raw ? path.resolve(raw) : undefined;
 }
 
-/** Resolves the underlying OS user home, ignoring OPENCLAW_HOME overrides. */
+/** Resolves the underlying OS user home, ignoring QUIET_CORE_HOME overrides. */
 export function resolveOsHomeDir(
   env: NodeJS.ProcessEnv = process.env,
   homedir: () => string = os.homedir,
@@ -143,7 +143,7 @@ export function resolveUserPath(
   return resolveHomeRelativePath(input, { env, homedir });
 }
 
-/** Resolves a user-supplied path against the OS home, ignoring OPENCLAW_HOME. */
+/** Resolves a user-supplied path against the OS home, ignoring QUIET_CORE_HOME. */
 export function resolveOsHomeRelativePath(
   input: string,
   opts?: {

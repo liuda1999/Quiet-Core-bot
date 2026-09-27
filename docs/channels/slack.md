@@ -77,7 +77,7 @@ it disconnects.
 Install Slack before configuring the channel:
 
 ```bash
-quiet-core-bot plugins install @openclaw/slack
+quiet-core-bot plugins install @quiet-core/slack
 ```
 
 `plugins install` registers and enables the plugin. The plugin still does nothing until you configure the Slack app and channel settings below. See [Plugins](/tools/plugin) for general plugin behavior and install rules.
@@ -118,7 +118,7 @@ quiet-core-bot plugins install @openclaw/slack
     },
     "slash_commands": [
       {
-        "command": "/openclaw",
+        "command": "/quiet-core-bot",
         "description": "Send a message to Quiet Core bot",
         "should_escape": false
       }
@@ -204,7 +204,7 @@ quiet-core-bot plugins install @openclaw/slack
     },
     "slash_commands": [
       {
-        "command": "/openclaw",
+        "command": "/quiet-core-bot",
         "description": "Send a message to Quiet Core bot",
         "should_escape": false
       }
@@ -334,7 +334,7 @@ quiet-core-bot gateway
     },
     "slash_commands": [
       {
-        "command": "/openclaw",
+        "command": "/quiet-core-bot",
         "description": "Send a message to Quiet Core bot",
         "should_escape": false,
         "url": "https://gateway-host.example.com/slack/events"
@@ -426,7 +426,7 @@ quiet-core-bot gateway
     },
     "slash_commands": [
       {
-        "command": "/openclaw",
+        "command": "/quiet-core-bot",
         "description": "Send a message to Quiet Core bot",
         "should_escape": false,
         "url": "https://gateway-host.example.com/slack/events"
@@ -594,7 +594,7 @@ Base manifest (Socket Mode default):
     },
     "slash_commands": [
       {
-        "command": "/openclaw",
+        "command": "/quiet-core-bot",
         "description": "Send a message to Quiet Core bot",
         "should_escape": false
       }
@@ -661,7 +661,7 @@ For **HTTP Request URLs mode**, replace `settings` with the HTTP variant and add
   "features": {
     "slash_commands": [
       {
-        "command": "/openclaw",
+        "command": "/quiet-core-bot",
         "description": "Send a message to Quiet Core bot",
         "should_escape": false,
         "url": "https://gateway-host.example.com/slack/events"
@@ -1251,12 +1251,12 @@ Notes:
 Slash commands appear in Slack as either a single configured command or multiple native commands. Configure `channels.slack.slashCommand` to change command defaults:
 
 - `enabled: false`
-- `name: "openclaw"`
+- `name: "quiet-core-bot"`
 - `sessionPrefix: "slack:slash"`
 - `ephemeral: true`
 
 ```txt
-/openclaw /help
+/quiet-core-bot /help
 ```
 
 Native commands require [additional manifest settings](#additional-manifest-settings) in your Slack app and are enabled with `channels.slack.commands.native: true` or `commands.native: true` in global configurations instead.
@@ -1353,7 +1353,7 @@ Slack plugins that register an interactive handler can also receive modal
 the payload for the agent-visible system event. Use one of these routing
 patterns when opening a Slack modal:
 
-- Set `callback_id` to `openclaw:<namespace>:<payload>`.
+- Set `callback_id` to `quiet-core-bot:<namespace>:<payload>`.
 - Or keep an existing `callback_id` and put `pluginInteractiveData:
 "<namespace>:<payload>"` in the modal `private_metadata`.
 
@@ -1631,9 +1631,9 @@ When a single Slack message contains multiple file attachments:
 
 - [Media understanding pipeline](/nodes/media-understanding)
 - [PDF tool](/tools/pdf)
-- Epic: [#51349](https://github.com/openclaw/openclaw/issues/51349) — Slack attachment vision enablement
-- Regression tests: [#51353](https://github.com/openclaw/openclaw/issues/51353)
-- Live verification: [#51354](https://github.com/openclaw/openclaw/issues/51354)
+- Epic: [#51349](https://github.com/liuda1999/Quiet-Core-bot/issues/51349) — Slack attachment vision enablement
+- Regression tests: [#51353](https://github.com/liuda1999/Quiet-Core-bot/issues/51353)
+- Live verification: [#51354](https://github.com/liuda1999/Quiet-Core-bot/issues/51354)
 
 ## Related
 

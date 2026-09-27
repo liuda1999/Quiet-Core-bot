@@ -1,7 +1,7 @@
 // Nostr tests cover channel.outbound plugin behavior.
-import { verifyChannelMessageAdapterCapabilityProofs } from "openclaw/plugin-sdk/channel-outbound";
-import { createStartAccountContext } from "openclaw/plugin-sdk/channel-test-helpers";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import { verifyChannelMessageAdapterCapabilityProofs } from "quiet-core-bot/plugin-sdk/channel-outbound";
+import { createStartAccountContext } from "quiet-core-bot/plugin-sdk/channel-test-helpers";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { PluginRuntime } from "../runtime-api.js";
 import { nostrPlugin } from "./channel.js";

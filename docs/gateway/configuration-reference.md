@@ -182,7 +182,7 @@ target server during config edits.
   prompts. Repeated tool-call failures pause the affected server briefly before
   another call is attempted.
 
-See [MCP](/cli/mcp#openclaw-as-an-mcp-client-registry) and
+See [MCP](/cli/mcp#quiet-core-bot-as-an-mcp-client-registry) and
 [CLI backends](/gateway/cli-backends#bundle-mcp-overlays) for runtime behavior.
 
 ## Skills
@@ -223,7 +223,7 @@ See [MCP](/cli/mcp#openclaw-as-an-mcp-client-registry) and
   through already-trusted symlink targets (default: false).
 - `install.preferBrew`: when true, prefer Homebrew installers when `brew` is
   available before falling back to other installer kinds.
-- `install.nodeManager`: node installer preference for `metadata.openclaw.install`
+- `install.nodeManager`: node installer preference for `metadata.quiet-core-bot.install`
   specs (`npm` | `pnpm` | `yarn` | `bun`).
 - `install.allowUploadedArchives`: allow trusted `operator.admin` Gateway
   clients to install private zip archives staged through `skills.upload.*`
@@ -258,7 +258,7 @@ See [MCP](/cli/mcp#openclaw-as-an-mcp-client-registry) and
 }
 ```
 
-- Loaded from package or bundle directories under `~/.quiet-core-bot/extensions` and `<workspace>/.openclaw/extensions`, plus files or directories listed in `plugins.load.paths`.
+- Loaded from package or bundle directories under `~/.quiet-core-bot/extensions` and `<workspace>/.quiet-core-bot/extensions`, plus files or directories listed in `plugins.load.paths`.
 - Put standalone plugin files in `plugins.load.paths`; auto-discovered extension roots ignore top-level `.js`, `.mjs`, and `.ts` files so helper scripts in those roots do not block startup.
 - Discovery accepts native Quiet Core bot plugins plus compatible Codex bundles and Claude bundles, including manifestless Claude default-layout bundles.
 - **Config changes require a gateway restart.**
@@ -399,7 +399,7 @@ See [Inferred commitments](/concepts/commitments).
       sweepMinutes: 5,
     },
     profiles: {
-      openclaw: { cdpPort: 18800, color: "#FF4500" },
+      quiet-core-bot: { cdpPort: 18800, color: "#FF4500" },
       work: {
         cdpPort: 18801,
         color: "#0066CC",
@@ -455,7 +455,7 @@ See [Inferred commitments](/concepts/commitments).
   snapshot/ref-driven actions instead of CSS-selector targeting, one-file upload
   hooks, no dialog timeout overrides, no `wait --load networkidle`, and no
   `responsebody`, PDF export, download interception, or batch actions.
-- Local managed `openclaw` profiles auto-assign `cdpPort` and `cdpUrl`; set
+- Local managed `quiet-core-bot` profiles auto-assign `cdpPort` and `cdpUrl`; set
   `cdpUrl` explicitly only for remote CDP profiles or existing-session endpoint
   attach.
 - Local managed profiles can set `executablePath` to override the global
@@ -506,7 +506,7 @@ See [Inferred commitments](/concepts/commitments).
     auth: {
       mode: "token", // none | token | password | trusted-proxy
       token: "your-token",
-      // password: "your-password", // or OPENCLAW_GATEWAY_PASSWORD
+      // password: "your-password", // or QUIET_CORE_GATEWAY_PASSWORD
       // trustedProxy: { userHeader: "x-forwarded-user" }, // for mode=trusted-proxy; see /gateway/trusted-proxy-auth
       allowTailscale: true,
       rateLimit: {
@@ -522,7 +522,7 @@ See [Inferred commitments](/concepts/commitments).
     },
     controlUi: {
       enabled: true,
-      basePath: "/openclaw",
+      basePath: "/quiet-core-bot",
       // root: "dist/control-ui",
       // embedSandbox: "scripts", // strict | scripts | trusted
       // allowExternalEmbedUrls: false, // dangerous: allow absolute external http(s) embed URLs
@@ -570,7 +570,7 @@ See [Inferred commitments](/concepts/commitments).
 <Accordion title="Gateway field details">
 
 - `mode`: `local` (run gateway) or `remote` (connect to remote gateway). Gateway refuses to start unless `local`.
-- `port`: single multiplexed port for WS + HTTP. Precedence: `--port` > `OPENCLAW_GATEWAY_PORT` > `gateway.port` > `18789`.
+- `port`: single multiplexed port for WS + HTTP. Precedence: `--port` > `QUIET_CORE_GATEWAY_PORT` > `gateway.port` > `18789`.
 - `bind`: `auto`, `loopback` (default), `lan` (`0.0.0.0`), `tailnet` (Tailscale IP only), or `custom`.
 - **Legacy bind aliases**: use bind mode values in `gateway.bind` (`auto`, `loopback`, `lan`, `tailnet`, `custom`), not host aliases (`0.0.0.0`, `127.0.0.1`, `localhost`, `::`, `::1`).
 - **Docker note**: the default `loopback` bind listens on `127.0.0.1` inside the container. With Docker bridge networking (`-p 18789:18789`), traffic arrives on `eth0`, so the gateway is unreachable. Use `--network host`, or set `bind: "lan"` (or `bind: "custom"` with `customBindHost: "0.0.0.0"`) to listen on all interfaces.
@@ -588,7 +588,7 @@ See [Inferred commitments](/concepts/commitments).
   lock out a different origin.
 - `tailscale.mode`: `serve` (tailnet only, loopback bind) or `funnel` (public, requires auth).
 - `tailscale.serviceName`: optional Tailscale Service name for Serve mode, such
-  as `svc:openclaw`. When set, Quiet Core bot passes it to `tailscale serve
+  as `svc:quiet-core-bot`. When set, Quiet Core bot passes it to `tailscale serve
 --service` so the Control UI can be exposed through a named Service instead
   of the device hostname. The value must use Tailscale's `svc:<dns-label>`
   Service name format; startup reports the derived Service URL.
@@ -605,9 +605,9 @@ See [Inferred commitments](/concepts/commitments).
 - `gateway.push.apns.relay.baseUrl`: base HTTPS URL for the external APNs relay used after relay-backed iOS builds publish registrations to the gateway. Public App Store/TestFlight builds use the hosted Quiet Core bot relay. Custom relay URLs must match a deliberately separate iOS build/deployment path whose relay URL points at that relay.
 - `gateway.push.apns.relay.timeoutMs`: gateway-to-relay send timeout in milliseconds. Defaults to `10000`.
 - Relay-backed registrations are delegated to a specific gateway identity. The paired iOS app fetches `gateway.identity.get`, includes that identity in the relay registration, and forwards a registration-scoped send grant to the gateway. Another gateway cannot reuse that stored registration.
-- `OPENCLAW_APNS_RELAY_BASE_URL` / `OPENCLAW_APNS_RELAY_TIMEOUT_MS`: temporary env overrides for the relay config above.
-- `OPENCLAW_APNS_RELAY_ALLOW_HTTP=true`: development-only escape hatch for loopback HTTP relay URLs. Production relay URLs should stay on HTTPS.
-- `gateway.handshakeTimeoutMs`: pre-auth Gateway WebSocket handshake timeout in milliseconds. Default: `15000`. `OPENCLAW_HANDSHAKE_TIMEOUT_MS` takes precedence when set. Increase this on loaded or low-powered hosts where local clients can connect while startup warmup is still settling.
+- `QUIET_CORE_APNS_RELAY_BASE_URL` / `QUIET_CORE_APNS_RELAY_TIMEOUT_MS`: temporary env overrides for the relay config above.
+- `QUIET_CORE_APNS_RELAY_ALLOW_HTTP=true`: development-only escape hatch for loopback HTTP relay URLs. Production relay URLs should stay on HTTPS.
+- `gateway.handshakeTimeoutMs`: pre-auth Gateway WebSocket handshake timeout in milliseconds. Default: `15000`. `QUIET_CORE_HANDSHAKE_TIMEOUT_MS` takes precedence when set. Increase this on loaded or low-powered hosts where local clients can connect while startup warmup is still settling.
 - `gateway.channelHealthCheckMinutes`: channel health-monitor interval in minutes. Set `0` to disable health-monitor restarts globally. Default: `5`.
 - `gateway.channelStaleEventThresholdMinutes`: stale-socket threshold in minutes. Keep this greater than or equal to `gateway.channelHealthCheckMinutes`. Default: `30`.
 - `gateway.channelMaxRestartsPerHour`: maximum health-monitor restarts per channel/account in a rolling hour. Default: `10`.
@@ -646,8 +646,8 @@ See [Inferred commitments](/concepts/commitments).
 Run multiple gateways on one host with unique ports and state dirs:
 
 ```bash
-OPENCLAW_CONFIG_PATH=~/.quiet-core-bot/a.json \
-OPENCLAW_STATE_DIR=~/.quiet-core-bot-a \
+QUIET_CORE_CONFIG_PATH=~/.quiet-core-bot/a.json \
+QUIET_CORE_STATE_DIR=~/.quiet-core-bot-a \
 quiet-core-bot gateway --port 19001
 ```
 
@@ -663,9 +663,9 @@ See [Multiple Gateways](/gateway/multiple-gateways).
     tls: {
       enabled: false,
       autoGenerate: false,
-      certPath: "/etc/openclaw/tls/server.crt",
-      keyPath: "/etc/openclaw/tls/server.key",
-      caPath: "/etc/openclaw/tls/ca-bundle.crt",
+      certPath: "/etc/quiet-core-bot/tls/server.crt",
+      keyPath: "/etc/quiet-core-bot/tls/server.key",
+      caPath: "/etc/quiet-core-bot/tls/ca-bundle.crt",
     },
   },
 }
@@ -734,14 +734,14 @@ See [Multiple Gateways](/gateway/multiple-gateways).
 }
 ```
 
-Auth: `Authorization: Bearer <token>` or `x-openclaw-token: <token>`.
+Auth: `Authorization: Bearer <token>` or `x-quiet-core-bot-token: <token>`.
 Query-string hook tokens are rejected.
 
 Validation and safety notes:
 
 - `hooks.enabled=true` requires a non-empty `hooks.token`.
-- `hooks.token` should be distinct from active Gateway shared-secret auth (`gateway.auth.token` / `OPENCLAW_GATEWAY_TOKEN` or `gateway.auth.password` / `OPENCLAW_GATEWAY_PASSWORD`); startup logs a non-fatal security warning when it detects reuse.
-- `openclaw security audit` flags hook/Gateway auth reuse as a critical finding, including Gateway password auth supplied only at audit time (`--auth password --password <password>`). Run `quiet-core-bot doctor --fix` to rotate a persisted reused `hooks.token`, then update external hook senders to use the new hook token.
+- `hooks.token` should be distinct from active Gateway shared-secret auth (`gateway.auth.token` / `QUIET_CORE_GATEWAY_TOKEN` or `gateway.auth.password` / `QUIET_CORE_GATEWAY_PASSWORD`); startup logs a non-fatal security warning when it detects reuse.
+- `quiet-core-bot security audit` flags hook/Gateway auth reuse as a critical finding, including Gateway password auth supplied only at audit time (`--auth password --password <password>`). Run `quiet-core-bot doctor --fix` to rotate a persisted reused `hooks.token`, then update external hook senders to use the new hook token.
 - `hooks.path` cannot be `/`; use a dedicated subpath such as `/hooks`.
 - If `hooks.allowRequestSessionKey=true`, constrain `hooks.allowedSessionKeyPrefixes` (for example `["hook:"]`).
 - If a mapping or preset uses a templated `sessionKey`, set `hooks.allowedSessionKeyPrefixes` and `hooks.allowRequestSessionKey=true`. Static mapping keys do not require that opt-in.
@@ -782,7 +782,7 @@ Validation and safety notes:
 {
   hooks: {
     gmail: {
-      account: "openclaw@gmail.com",
+      account: "quiet-core-bot@gmail.com",
       topic: "projects/<project-id>/topics/gog-gmail-watch",
       subscription: "gog-gmail-watch-push",
       pushToken: "shared-push-token",
@@ -799,7 +799,7 @@ Validation and safety notes:
 }
 ```
 
-- Gateway auto-starts `gog gmail watch serve` on boot when configured. Set `OPENCLAW_SKIP_GMAIL_WATCHER=1` to disable.
+- Gateway auto-starts `gog gmail watch serve` on boot when configured. Set `QUIET_CORE_SKIP_GMAIL_WATCHER=1` to disable.
 - Don't run a separate `gog gmail watch serve` alongside the Gateway.
 
 ---
@@ -815,7 +815,7 @@ Validation and safety notes:
           host: {
             root: "~/.quiet-core-bot/workspace/canvas",
             liveReload: true,
-            // enabled: false, // or OPENCLAW_SKIP_CANVAS_HOST=1
+            // enabled: false, // or QUIET_CORE_SKIP_CANVAS_HOST=1
           },
         },
       },
@@ -857,7 +857,7 @@ Validation and safety notes:
 - `full`: include `cliPath` + `sshPort`; LAN multicast advertising still requires the bundled `bonjour` plugin to be enabled.
 - `off`: suppress LAN multicast advertising without changing plugin enablement.
 - The bundled `bonjour` plugin auto-starts on macOS hosts and is opt-in on Linux, Windows, and containerized Gateway deployments.
-- Hostname defaults to the system hostname when it is a valid DNS label, falling back to `openclaw`. Override with `OPENCLAW_MDNS_HOSTNAME`.
+- Hostname defaults to the system hostname when it is a valid DNS label, falling back to `quiet-core-bot`. Override with `QUIET_CORE_MDNS_HOSTNAME`.
 
 ### Wide-area (DNS-SD)
 
@@ -906,7 +906,7 @@ Reference env vars in any config string with `${VAR_NAME}`:
 ```json5
 {
   gateway: {
-    auth: { token: "${OPENCLAW_GATEWAY_TOKEN}" },
+    auth: { token: "${QUIET_CORE_GATEWAY_TOKEN}" },
   },
 }
 ```
@@ -959,7 +959,7 @@ Validation:
       },
       vault: {
         source: "exec",
-        command: "/usr/local/bin/openclaw-vault-resolver",
+        command: "/usr/local/bin/quiet-core-bot-vault-resolver",
         passEnv: ["PATH", "VAULT_ADDR"],
       },
     },
@@ -1056,7 +1056,7 @@ Notes:
 {
   logging: {
     level: "info",
-    file: "/tmp/openclaw/openclaw.log",
+    file: "/tmp/quiet-core-bot/quiet-core-bot.log",
     consoleLevel: "info",
     consoleStyle: "pretty", // pretty | compact | json
     redactSensitive: "tools", // off | tools
@@ -1065,7 +1065,7 @@ Notes:
 }
 ```
 
-- Default log file: `/tmp/openclaw/openclaw-YYYY-MM-DD.log`.
+- Default log file: `/tmp/quiet-core-bot/quiet-core-bot-YYYY-MM-DD.log`.
 - Set `logging.file` for a stable path.
 - `consoleLevel` bumps to `debug` when `--verbose`.
 - `maxFileBytes`: maximum active log file size in bytes before rotation (positive integer; default: `104857600` = 100 MB). Quiet Core bot keeps up to five numbered archives beside the active file.
@@ -1093,7 +1093,7 @@ Notes:
       logsEndpoint: "https://logs.example.com/v1/logs",
       protocol: "http/protobuf", // http/protobuf | grpc
       headers: { "x-tenant-id": "my-org" },
-      serviceName: "openclaw-gateway",
+      serviceName: "quiet-core-bot-gateway",
       traces: true,
       metrics: true,
       logs: false,
@@ -1139,11 +1139,11 @@ Notes:
 - `otel.sampleRate`: trace sampling rate `0`-`1`.
 - `otel.flushIntervalMs`: periodic telemetry flush interval in ms.
 - `otel.captureContent`: opt-in raw content capture for OTEL span attributes. Defaults to off. Boolean `true` captures non-system message/tool content; the object form lets you enable `inputMessages`, `outputMessages`, `toolInputs`, `toolOutputs`, `systemPrompt`, and `toolDefinitions` explicitly.
-- `OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental`: environment toggle for latest experimental GenAI inference span shape, including `{gen_ai.operation.name} {gen_ai.request.model}` span names, `CLIENT` span kind, and `gen_ai.provider.name` instead of legacy `gen_ai.system`. By default spans keep `openclaw.model.call` and `gen_ai.system` for compatibility; GenAI metrics use bounded semantic attributes.
-- `OPENCLAW_OTEL_PRELOADED=1`: environment toggle for hosts that already registered a global OpenTelemetry SDK. Quiet Core bot then skips plugin-owned SDK startup/shutdown while keeping diagnostic listeners active.
+- `OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental`: environment toggle for latest experimental GenAI inference span shape, including `{gen_ai.operation.name} {gen_ai.request.model}` span names, `CLIENT` span kind, and `gen_ai.provider.name` instead of legacy `gen_ai.system`. By default spans keep `quiet-core-bot.model.call` and `gen_ai.system` for compatibility; GenAI metrics use bounded semantic attributes.
+- `QUIET_CORE_OTEL_PRELOADED=1`: environment toggle for hosts that already registered a global OpenTelemetry SDK. Quiet Core bot then skips plugin-owned SDK startup/shutdown while keeping diagnostic listeners active.
 - `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT`, `OTEL_EXPORTER_OTLP_METRICS_ENDPOINT`, and `OTEL_EXPORTER_OTLP_LOGS_ENDPOINT`: signal-specific endpoint env vars used when the matching config key is unset.
 - `cacheTrace.enabled`: log cache trace snapshots for embedded runs (default: `false`).
-- `cacheTrace.filePath`: output path for cache trace JSONL (default: `$OPENCLAW_STATE_DIR/logs/cache-trace.jsonl`).
+- `cacheTrace.filePath`: output path for cache trace JSONL (default: `$QUIET_CORE_STATE_DIR/logs/cache-trace.jsonl`).
 - `cacheTrace.includeMessages` / `includePrompt` / `includeSystem`: control what is included in cache trace output (all default: `true`).
 
 ---
@@ -1240,7 +1240,7 @@ Notes:
   - `"random"` (default): rotating funny/seasonal taglines.
   - `"default"`: fixed neutral tagline (`All your chats, one Quiet Core bot.`).
   - `"off"`: no tagline text (banner title/version still shown).
-- To hide the entire banner (not just taglines), set env `OPENCLAW_HIDE_BANNER=1`.
+- To hide the entire banner (not just taglines), set env `QUIET_CORE_HIDE_BANNER=1`.
 
 ---
 

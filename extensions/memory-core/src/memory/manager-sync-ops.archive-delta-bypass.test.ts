@@ -6,11 +6,11 @@ import type { DatabaseSync } from "node:sqlite";
 import type {
   OpenClawConfig,
   ResolvedMemorySearchConfig,
-} from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
+} from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
 import type {
   MemorySource,
   MemorySyncProgressUpdate,
-} from "openclaw/plugin-sdk/memory-core-host-engine-storage";
+} from "quiet-core-bot/plugin-sdk/memory-core-host-engine-storage";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { MemoryManagerSyncOps } from "./manager-sync-ops.js";
 
@@ -34,7 +34,7 @@ type SyncParams = {
 class SessionDeltaHarness extends MemoryManagerSyncOps {
   protected readonly cfg = {} as OpenClawConfig;
   protected readonly agentId = "main";
-  protected readonly workspaceDir = "/tmp/openclaw-test-workspace";
+  protected readonly workspaceDir = "/tmp/quiet-core-bot-test-workspace";
   protected readonly settings = {
     sync: {
       sessions: {
@@ -119,7 +119,7 @@ describe("session archive delta bypass", () => {
   let tmpDir = "";
 
   beforeEach(async () => {
-    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-archive-delta-"));
+    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-archive-delta-"));
   });
 
   afterEach(async () => {

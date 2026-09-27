@@ -1,8 +1,8 @@
 // Memory Wiki doctor contract migrates shipped source-sync state.
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/plugin-entry";
-import type { PluginDoctorStateMigration } from "openclaw/plugin-sdk/runtime-doctor";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/plugin-entry";
+import type { PluginDoctorStateMigration } from "quiet-core-bot/plugin-sdk/runtime-doctor";
 import { resolveMemoryWikiConfig, type MemoryWikiPluginConfig } from "./src/config.js";
 export { legacyConfigRules, normalizeCompatibilityConfig } from "./src/config-compat.js";
 import {

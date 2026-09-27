@@ -12,7 +12,7 @@ import {
   writeConfigFile,
 } from "./plugins-cli-test-helpers.js";
 
-const ORIGINAL_OPENCLAW_NIX_MODE = process.env.OPENCLAW_NIX_MODE;
+const ORIGINAL_QUIET_CORE_NIX_MODE = process.env.QUIET_CORE_NIX_MODE;
 
 describe("plugins cli policy mutations", () => {
   const compatibilityPluginIds = [
@@ -25,10 +25,10 @@ describe("plugins cli policy mutations", () => {
   });
 
   afterEach(() => {
-    if (ORIGINAL_OPENCLAW_NIX_MODE === undefined) {
-      delete process.env.OPENCLAW_NIX_MODE;
+    if (ORIGINAL_QUIET_CORE_NIX_MODE === undefined) {
+      delete process.env.QUIET_CORE_NIX_MODE;
     } else {
-      process.env.OPENCLAW_NIX_MODE = ORIGINAL_OPENCLAW_NIX_MODE;
+      process.env.QUIET_CORE_NIX_MODE = ORIGINAL_QUIET_CORE_NIX_MODE;
     }
   });
 
@@ -94,17 +94,17 @@ describe("plugins cli policy mutations", () => {
   });
 
   it("refuses plugin enablement in Nix mode before config mutation", async () => {
-    const previous = process.env.OPENCLAW_NIX_MODE;
-    process.env.OPENCLAW_NIX_MODE = "1";
+    const previous = process.env.QUIET_CORE_NIX_MODE;
+    process.env.QUIET_CORE_NIX_MODE = "1";
     try {
       await expect(runPluginsCommand(["plugins", "enable", "alpha"])).rejects.toThrow(
-        "OPENCLAW_NIX_MODE=1",
+        "QUIET_CORE_NIX_MODE=1",
       );
     } finally {
       if (previous === undefined) {
-        delete process.env.OPENCLAW_NIX_MODE;
+        delete process.env.QUIET_CORE_NIX_MODE;
       } else {
-        process.env.OPENCLAW_NIX_MODE = previous;
+        process.env.QUIET_CORE_NIX_MODE = previous;
       }
     }
 

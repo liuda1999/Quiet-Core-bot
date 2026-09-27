@@ -2,7 +2,7 @@
 import { spawn } from "node:child_process";
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { OpenClawConfig, SecurityConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig, SecurityConfig } from "../config/types.quiet-core-bot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import {
   forceKillChildProcessTree,
@@ -66,7 +66,7 @@ export type InstallPolicySource = {
     | "npm"
     | "upload"
     | "workspace";
-  authority: "openclaw" | "official" | "third-party" | "unknown" | "user";
+  authority: "quiet-core-bot" | "official" | "third-party" | "unknown" | "user";
   mutable: boolean;
   network: boolean;
 };

@@ -38,7 +38,7 @@ describe("iOS Fastlane release upload gates", () => {
   it("routes the package upload wrapper through the guarded Fastlane lane", () => {
     const script = readFileSync(uploadScriptPath, "utf8");
 
-    expect(script).toContain("OPENCLAW_IOS_RELEASE_WRAPPER=1");
+    expect(script).toContain("QUIET_CORE_IOS_RELEASE_WRAPPER=1");
     expect(script).toContain("DELIVER_NUMBER_OF_THREADS=1");
     expect(script).toContain("FL_MAX_NUMBER_OF_THREADS=1");
     expect(script).toContain("run_ios_fastlane ios release_upload");
@@ -58,7 +58,7 @@ describe("iOS Fastlane release upload gates", () => {
     const fastfile = readFastfile();
     const releaseUpload = laneBody(fastfile, "release_upload");
 
-    expect(releaseUpload).toContain('ENV["OPENCLAW_IOS_RELEASE_WRAPPER"] == "1"');
+    expect(releaseUpload).toContain('ENV["QUIET_CORE_IOS_RELEASE_WRAPPER"] == "1"');
     expect(releaseUpload).toContain("Use `pnpm ios:release:upload`");
     expect(releaseUpload.indexOf("UI.user_error!")).toBeLessThan(
       releaseUpload.indexOf("prepare_app_store_context"),

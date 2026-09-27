@@ -39,21 +39,21 @@ mktempfile() {
     echo "$f"
 }
 
-resolve_openclaw_effective_home() {
-    local openclaw_home="${OPENCLAW_HOME:-}"
-    if [[ -z "$openclaw_home" ]]; then
+resolve_quiet_core_bot_effective_home() {
+    local quiet_core_bot_home="${QUIET_CORE_HOME:-}"
+    if [[ -z "$quiet_core_bot_home" ]]; then
         echo "$HOME"
         return
     fi
-    if [[ "$openclaw_home" == "~" ]]; then
+    if [[ "$quiet_core_bot_home" == "~" ]]; then
         echo "$HOME"
         return
     fi
-    if [[ "$openclaw_home" == \~/* ]]; then
-        echo "${HOME}${openclaw_home:1}"
+    if [[ "$quiet_core_bot_home" == \~/* ]]; then
+        echo "${HOME}${quiet_core_bot_home:1}"
         return
     fi
-    echo "$openclaw_home"
+    echo "$quiet_core_bot_home"
 }
 
 DOWNLOADER=""
@@ -91,7 +91,7 @@ run_remote_bash() {
     /bin/bash "$tmp"
 }
 
-GUM_VERSION="${OPENCLAW_GUM_VERSION:-0.17.0}"
+GUM_VERSION="${QUIET_CORE_GUM_VERSION:-0.17.0}"
 GUM=""
 GUM_STATUS="skipped"
 GUM_REASON=""
@@ -391,7 +391,7 @@ show_install_plan() {
     ui_section "Install plan"
     ui_kv "OS" "$OS"
     ui_kv "Install method" "$INSTALL_METHOD"
-    ui_kv "Requested version" "$OPENCLAW_VERSION"
+    ui_kv "Requested version" "$QUIET_CORE_VERSION"
     if [[ "$USE_BETA" == "1" ]]; then
         ui_kv "Beta channel" "enabled"
     fi
@@ -542,16 +542,16 @@ cleanup_legacy_submodules() {
     fi
 }
 
-cleanup_npm_openclaw_paths() {
+cleanup_npm_quiet_core_bot_paths() {
     local npm_root=""
     npm_root="$(npm root -g 2>/dev/null || true)"
     if [[ -z "$npm_root" || "$npm_root" != *node_modules* ]]; then
         return 1
     fi
-    rm -rf "$npm_root"/.openclaw-* "$npm_root"/openclaw 2>/dev/null || true
+    rm -rf "$npm_root"/.quiet-core-bot-* "$npm_root"/quiet-core-bot 2>/dev/null || true
 }
 
-extract_openclaw_conflict_path() {
+extract_quiet_core_bot_conflict_path() {
     local log="$1"
     local path=""
     path="$(sed -n 's/.*File exists: //p' "$log" | head -n1)"
@@ -565,16 +565,16 @@ extract_openclaw_conflict_path() {
     return 1
 }
 
-cleanup_openclaw_bin_conflict() {
+cleanup_quiet_core_bot_bin_conflict() {
     local bin_path="$1"
     if [[ -z "$bin_path" || ( ! -e "$bin_path" && ! -L "$bin_path" ) ]]; then
         return 1
     fi
     local npm_bin=""
     npm_bin="$(npm_global_bin_dir 2>/dev/null || true)"
-    if [[ -n "$npm_bin" && "$bin_path" != "$npm_bin/openclaw" ]]; then
+    if [[ -n "$npm_bin" && "$bin_path" != "$npm_bin/quiet-core-bot" ]]; then
         case "$bin_path" in
-            "/opt/homebrew/bin/openclaw"|"/usr/local/bin/openclaw")
+            "/opt/homebrew/bin/quiet-core-bot"|"/usr/local/bin/quiet-core-bot")
                 ;;
             *)
                 return 1
@@ -584,9 +584,9 @@ cleanup_openclaw_bin_conflict() {
     if [[ -L "$bin_path" ]]; then
         local target=""
         target="$(readlink "$bin_path" 2>/dev/null || true)"
-        if [[ "$target" == *"/node_modules/openclaw/"* ]]; then
+        if [[ "$target" == *"/node_modules/quiet-core-bot/"* ]]; then
             rm -f "$bin_path"
-            ui_info "Removed stale openclaw symlink at ${bin_path}"
+            ui_info "Removed stale quiet-core-bot symlink at ${bin_path}"
             return 0
         fi
         return 1
@@ -594,7 +594,7 @@ cleanup_openclaw_bin_conflict() {
     local backup=""
     backup="${bin_path}.bak-$(date +%Y%m%d-%H%M%S)"
     if mv "$bin_path" "$backup"; then
-        ui_info "Moved existing openclaw binary to ${backup}"
+        ui_info "Moved existing quiet-core-bot binary to ${backup}"
         return 0
     fi
     return 1
@@ -972,7 +972,7 @@ print_npm_failure_diagnostics() {
     fi
 }
 
-install_openclaw_npm() {
+install_quiet_core_bot_npm() {
     local spec="$1"
     local log
     log="$(mktempfile)"
@@ -998,9 +998,9 @@ install_openclaw_npm() {
             tail -n 80 "$log" >&2 || true
         fi
 
-        if grep -q "ENOTEMPTY: directory not empty, rename .*openclaw" "$log"; then
+        if grep -q "ENOTEMPTY: directory not empty, rename .*quiet-core-bot" "$log"; then
             ui_warn "npm left stale directory; cleaning and retrying"
-            cleanup_npm_openclaw_paths
+            cleanup_npm_quiet_core_bot_paths
             if run_npm_global_install "$spec" "$log"; then
                 ui_success "OpenClaw npm package installed"
                 return 0
@@ -1009,15 +1009,15 @@ install_openclaw_npm() {
         fi
         if grep -q "EEXIST" "$log"; then
             local conflict=""
-            conflict="$(extract_openclaw_conflict_path "$log" || true)"
-            if [[ -n "$conflict" ]] && cleanup_openclaw_bin_conflict "$conflict"; then
+            conflict="$(extract_quiet_core_bot_conflict_path "$log" || true)"
+            if [[ -n "$conflict" ]] && cleanup_quiet_core_bot_bin_conflict "$conflict"; then
                 if run_npm_global_install "$spec" "$log"; then
                     ui_success "OpenClaw npm package installed"
                     return 0
                 fi
                 return 1
             fi
-            ui_error "npm failed because an openclaw binary already exists"
+            ui_error "npm failed because an quiet-core-bot binary already exists"
             if [[ -n "$conflict" ]]; then
                 ui_info "Remove or move ${conflict}, then retry"
             fi
@@ -1137,9 +1137,9 @@ pick_tagline() {
         echo "$DEFAULT_TAGLINE"
         return
     fi
-    if [[ -n "${OPENCLAW_TAGLINE_INDEX:-}" ]]; then
-        if [[ "${OPENCLAW_TAGLINE_INDEX}" =~ ^[0-9]+$ ]]; then
-            local idx=$((OPENCLAW_TAGLINE_INDEX % count))
+    if [[ -n "${QUIET_CORE_TAGLINE_INDEX:-}" ]]; then
+        if [[ "${QUIET_CORE_TAGLINE_INDEX}" =~ ^[0-9]+$ ]]; then
+            local idx=$((QUIET_CORE_TAGLINE_INDEX % count))
             echo "${TAGLINES[$idx]}"
             return
         fi
@@ -1150,20 +1150,20 @@ pick_tagline() {
 
 TAGLINE=$(pick_tagline)
 
-NO_ONBOARD=${OPENCLAW_NO_ONBOARD:-0}
-NO_PROMPT=${OPENCLAW_NO_PROMPT:-0}
-DRY_RUN=${OPENCLAW_DRY_RUN:-0}
-INSTALL_METHOD=${OPENCLAW_INSTALL_METHOD:-}
-OPENCLAW_VERSION=${OPENCLAW_VERSION:-latest}
-USE_BETA=${OPENCLAW_BETA:-0}
-GIT_DIR_DEFAULT="$(resolve_openclaw_effective_home)/openclaw"
-GIT_DIR=${OPENCLAW_GIT_DIR:-$GIT_DIR_DEFAULT}
-GIT_UPDATE=${OPENCLAW_GIT_UPDATE:-1}
-NPM_LOGLEVEL="${OPENCLAW_NPM_LOGLEVEL:-error}"
+NO_ONBOARD=${QUIET_CORE_NO_ONBOARD:-0}
+NO_PROMPT=${QUIET_CORE_NO_PROMPT:-0}
+DRY_RUN=${QUIET_CORE_DRY_RUN:-0}
+INSTALL_METHOD=${QUIET_CORE_INSTALL_METHOD:-}
+QUIET_CORE_VERSION=${QUIET_CORE_VERSION:-latest}
+USE_BETA=${QUIET_CORE_BETA:-0}
+GIT_DIR_DEFAULT="$(resolve_quiet_core_bot_effective_home)/quiet-core-bot"
+GIT_DIR=${QUIET_CORE_GIT_DIR:-$GIT_DIR_DEFAULT}
+GIT_UPDATE=${QUIET_CORE_GIT_UPDATE:-1}
+NPM_LOGLEVEL="${QUIET_CORE_NPM_LOGLEVEL:-error}"
 NPM_SILENT_FLAG="--silent"
-VERBOSE="${OPENCLAW_VERBOSE:-0}"
-VERIFY_INSTALL="${OPENCLAW_VERIFY_INSTALL:-0}"
-OPENCLAW_BIN=""
+VERBOSE="${QUIET_CORE_VERBOSE:-0}"
+VERIFY_INSTALL="${QUIET_CORE_VERIFY_INSTALL:-0}"
+QUIET_CORE_BIN=""
 PNPM_CMD=()
 HELP=0
 
@@ -1180,7 +1180,7 @@ Options:
   --git, --github                     Shortcut for --install-method git
   --version <version|dist-tag|spec>    npm install target (default: latest)
   --beta                               Use beta if available, else latest
-  --git-dir, --dir <path>             Checkout directory (default: ~/openclaw)
+  --git-dir, --dir <path>             Checkout directory (default: ~/quiet-core-bot)
   --no-git-update                      Skip git pull for existing checkout
   --no-onboard                          Skip onboarding (non-interactive)
   --no-prompt                           Disable prompts (required in CI/automation)
@@ -1190,17 +1190,17 @@ Options:
   --help, -h                            Show this help
 
 Environment variables:
-  OPENCLAW_INSTALL_METHOD=git|npm
-  OPENCLAW_VERSION=latest|next|<semver>|<spec>
-  OPENCLAW_BETA=0|1
-  OPENCLAW_GIT_DIR=...
-  OPENCLAW_GIT_UPDATE=0|1
-  OPENCLAW_NO_PROMPT=1
-  OPENCLAW_VERIFY_INSTALL=1
-  OPENCLAW_DRY_RUN=1
-  OPENCLAW_NO_ONBOARD=1
-  OPENCLAW_VERBOSE=1
-  OPENCLAW_NPM_LOGLEVEL=error|warn|notice  Default: error (hide npm deprecation noise)
+  QUIET_CORE_INSTALL_METHOD=git|npm
+  QUIET_CORE_VERSION=latest|next|<semver>|<spec>
+  QUIET_CORE_BETA=0|1
+  QUIET_CORE_GIT_DIR=...
+  QUIET_CORE_GIT_UPDATE=0|1
+  QUIET_CORE_NO_PROMPT=1
+  QUIET_CORE_VERIFY_INSTALL=1
+  QUIET_CORE_DRY_RUN=1
+  QUIET_CORE_NO_ONBOARD=1
+  QUIET_CORE_VERBOSE=1
+  QUIET_CORE_NPM_LOGLEVEL=error|warn|notice  Default: error (hide npm deprecation noise)
 Examples:
   curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash
   curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -- --no-onboard
@@ -1254,7 +1254,7 @@ parse_args() {
                     ui_error "Missing value for $1"
                     return 2
                 fi
-                OPENCLAW_VERSION="$2"
+                QUIET_CORE_VERSION="$2"
                 shift 2
                 ;;
             --beta)
@@ -1375,7 +1375,7 @@ EOF
     return 1
 }
 
-detect_openclaw_checkout() {
+detect_quiet_core_bot_checkout() {
     local dir="$1"
     if [[ ! -f "$dir/package.json" ]]; then
         return 1
@@ -1383,7 +1383,7 @@ detect_openclaw_checkout() {
     if [[ ! -f "$dir/pnpm-workspace.yaml" ]]; then
         return 1
     fi
-    if ! grep -q '"name"[[:space:]]*:[[:space:]]*"openclaw"' "$dir/package.json" 2>/dev/null; then
+    if ! grep -q '"name"[[:space:]]*:[[:space:]]*"quiet-core-bot"' "$dir/package.json" 2>/dev/null; then
         return 1
     fi
     echo "$dir"
@@ -1541,7 +1541,7 @@ persist_shell_path_prepend() {
     for rc in "$HOME/.bashrc" "$HOME/.zshrc"; do
         if [[ -f "$rc" ]]; then
             if [[ "$(sed -n '1p' "$rc")" != "$path_line" ]]; then
-                local tmp_rc="${rc}.openclaw-tmp"
+                local tmp_rc="${rc}.quiet-core-bot-tmp"
                 {
                     printf '%s\n' "$path_line"
                     grep -Fvx "$path_line" "$rc" || true
@@ -1967,7 +1967,7 @@ fix_npm_permissions() {
     ui_info "Configuring npm for user-local installs"
     mkdir -p "$HOME/.npm-global"
     npm config set prefix "$HOME/.npm-global"
-    ui_warn "Avoid sudo npm i -g for future OpenClaw updates; use npm i -g openclaw@latest so npm keeps using this user prefix instead of a different global prefix."
+    ui_warn "Avoid sudo npm i -g for future OpenClaw updates; use npm i -g quiet-core-bot@latest so npm keeps using this user prefix instead of a different global prefix."
 
     persist_shell_path_prepend "$HOME/.npm-global/bin" "\$HOME/.npm-global/bin" || true
 
@@ -1975,10 +1975,10 @@ fix_npm_permissions() {
     ui_success "npm configured for user installs"
 }
 
-ensure_openclaw_bin_link() {
+ensure_quiet_core_bot_bin_link() {
     local npm_root=""
     npm_root="$(npm root -g 2>/dev/null || true)"
-    if [[ -z "$npm_root" || ! -d "$npm_root/openclaw" ]]; then
+    if [[ -z "$npm_root" || ! -d "$npm_root/quiet-core-bot" ]]; then
         return 1
     fi
     local npm_bin=""
@@ -1987,16 +1987,16 @@ ensure_openclaw_bin_link() {
         return 1
     fi
     mkdir -p "$npm_bin"
-    if [[ ! -x "${npm_bin}/openclaw" ]]; then
-        ln -sf "$npm_root/openclaw/dist/entry.js" "${npm_bin}/openclaw"
-        ui_info "Created openclaw bin link at ${npm_bin}/openclaw"
+    if [[ ! -x "${npm_bin}/quiet-core-bot" ]]; then
+        ln -sf "$npm_root/quiet-core-bot/dist/entry.js" "${npm_bin}/quiet-core-bot"
+        ui_info "Created quiet-core-bot bin link at ${npm_bin}/quiet-core-bot"
     fi
     return 0
 }
 
 # Check for existing OpenClaw installation
-check_existing_openclaw() {
-    if [[ -n "$(type -P openclaw 2>/dev/null || true)" ]]; then
+check_existing_quiet-core-bot() {
+    if [[ -n "$(type -P quiet-core-bot 2>/dev/null || true)" ]]; then
         ui_info "Existing OpenClaw installation detected, upgrading"
         return 0
     fi
@@ -2126,13 +2126,13 @@ run_pnpm() {
     "${PNPM_CMD[@]}" "$@"
 }
 
-resolve_git_openclaw_ref() {
-    local requested="${OPENCLAW_VERSION:-latest}"
+resolve_git_quiet_core_bot_ref() {
+    local requested="${QUIET_CORE_VERSION:-latest}"
     local resolved_version=""
 
     case "$requested" in
         ""|latest)
-            resolved_version="$(npm view "openclaw" "dist-tags.${requested:-latest}" 2>/dev/null || true)"
+            resolved_version="$(npm view "quiet-core-bot" "dist-tags.${requested:-latest}" 2>/dev/null || true)"
             if [[ -n "$resolved_version" ]]; then
                 echo "v${resolved_version}"
                 return 0
@@ -2141,7 +2141,7 @@ resolve_git_openclaw_ref() {
             return 0
             ;;
         next|beta)
-            resolved_version="$(npm view "openclaw" "dist-tags.${requested:-latest}" 2>/dev/null || true)"
+            resolved_version="$(npm view "quiet-core-bot" "dist-tags.${requested:-latest}" 2>/dev/null || true)"
             if [[ -n "$resolved_version" ]]; then
                 echo "v${resolved_version}"
                 return 0
@@ -2168,7 +2168,7 @@ resolve_git_openclaw_ref() {
     esac
 }
 
-checkout_git_openclaw_ref() {
+checkout_git_quiet_core_bot_ref() {
     local repo_dir="$1"
     local ref="$2"
 
@@ -2304,7 +2304,7 @@ canonicalize_dir() {
     (cd "$dir" 2>/dev/null && pwd -P) || return 1
 }
 
-openclaw_package_version() {
+quiet_core_bot_package_version() {
     local package_json="$1"
     if [[ ! -f "$package_json" ]]; then
         echo "unknown"
@@ -2328,7 +2328,7 @@ emit_npm_root_candidate() {
     fi
 }
 
-collect_openclaw_npm_root_candidates() {
+collect_quiet_core_bot_npm_root_candidates() {
     local root=""
     root="$(npm root -g 2>/dev/null || true)"
     emit_npm_root_candidate "$root"
@@ -2343,7 +2343,7 @@ collect_openclaw_npm_root_candidates() {
     local extra_root=""
     local old_ifs="$IFS"
     IFS=":"
-    for extra_root in ${OPENCLAW_INSTALL_EXTRA_NPM_ROOTS:-}; do
+    for extra_root in ${QUIET_CORE_INSTALL_EXTRA_NPM_ROOTS:-}; do
         emit_npm_root_candidate "$extra_root"
     done
     IFS="$old_ifs"
@@ -2376,12 +2376,12 @@ collect_openclaw_npm_root_candidates() {
     done
 }
 
-find_openclaw_global_installs() {
+find_quiet_core_bot_global_installs() {
     local seen="|"
     local npm_root=""
     while IFS= read -r npm_root; do
         [[ -n "$npm_root" ]] || continue
-        local package_dir="${npm_root%/}/openclaw"
+        local package_dir="${npm_root%/}/quiet-core-bot"
         local package_json="${package_dir}/package.json"
         [[ -f "$package_json" ]] || continue
 
@@ -2394,17 +2394,17 @@ find_openclaw_global_installs() {
         seen="${seen}${real_package_dir}|"
 
         local version=""
-        version="$(openclaw_package_version "$package_json")"
+        version="$(quiet_core_bot_package_version "$package_json")"
         printf '%s\t%s\t%s\n' "$version" "$real_package_dir" "$npm_root"
-    done < <(collect_openclaw_npm_root_candidates)
+    done < <(collect_quiet_core_bot_npm_root_candidates)
 }
 
-warn_duplicate_openclaw_global_installs() {
+warn_duplicate_quiet_core_bot_global_installs() {
     local installs=()
     local line=""
     while IFS= read -r line; do
         [[ -n "$line" ]] && installs+=("$line")
-    done < <(find_openclaw_global_installs)
+    done < <(find_quiet_core_bot_global_installs)
 
     if [[ "${#installs[@]}" -le 1 ]]; then
         return 0
@@ -2413,16 +2413,16 @@ warn_duplicate_openclaw_global_installs() {
     ui_warn "Multiple OpenClaw global installs detected"
     echo "  Different Node/npm environments can run different OpenClaw versions."
 
-    local active_node active_npm active_openclaw
+    local active_node active_npm active_quiet-core-bot
     active_node="$(command -v node 2>/dev/null || true)"
     active_npm="$(command -v npm 2>/dev/null || true)"
-    active_openclaw="${OPENCLAW_BIN:-}"
-    if [[ -z "$active_openclaw" ]]; then
-        active_openclaw="$(type -P openclaw 2>/dev/null || true)"
+    active_quiet-core-bot="${QUIET_CORE_BIN:-}"
+    if [[ -z "$active_quiet-core-bot" ]]; then
+        active_quiet-core-bot="$(type -P quiet-core-bot 2>/dev/null || true)"
     fi
     echo -e "  Active node: ${INFO}${active_node:-none}${NC}"
     echo -e "  Active npm: ${INFO}${active_npm:-none}${NC}"
-    echo -e "  Active openclaw: ${INFO}${active_openclaw:-none}${NC}"
+    echo -e "  Active quiet-core-bot: ${INFO}${active_quiet-core-bot:-none}${NC}"
     echo ""
     echo "  Found installs:"
 
@@ -2435,7 +2435,7 @@ warn_duplicate_openclaw_global_installs() {
 
     echo ""
     echo "  Keep one install source, then remove stale installs with that environment's npm:"
-    echo "    npm uninstall -g openclaw"
+    echo "    npm uninstall -g quiet-core-bot"
 }
 
 refresh_shell_command_cache() {
@@ -2466,21 +2466,21 @@ warn_shell_path_missing_dir() {
 
     echo ""
     ui_warn "PATH missing ${label}: ${dir}"
-    echo "  This can make openclaw show as \"command not found\" in new terminals."
+    echo "  This can make quiet-core-bot show as \"command not found\" in new terminals."
     echo "  Fix (zsh: ~/.zshrc, bash: ~/.bashrc):"
     echo "    export PATH=\"${dir}:\$PATH\""
 }
 
-openclaw_command_for_user() {
+quiet_core_bot_command_for_user() {
     local claw="${1:-}"
     if [[ -z "$claw" ]]; then
-        echo "openclaw"
+        echo "quiet-core-bot"
         return 0
     fi
 
     local claw_dir="${claw%/*}"
     if [[ "$claw_dir" != "$claw" ]] && path_has_dir "$ORIGINAL_PATH" "$claw_dir"; then
-        echo "openclaw"
+        echo "quiet-core-bot"
         return 0
     fi
 
@@ -2506,7 +2506,7 @@ maybe_nodenv_rehash() {
 bounded_probe_output() {
     local label="$1"
     shift
-    local timeout_seconds="${OPENCLAW_INSTALL_PROBE_TIMEOUT_SECONDS:-5}"
+    local timeout_seconds="${QUIET_CORE_INSTALL_PROBE_TIMEOUT_SECONDS:-5}"
     local output_file status_file timeout_file pid watchdog status
     output_file="$(mktemp)"
     status_file="$(mktemp)"
@@ -2548,13 +2548,13 @@ bounded_probe_output() {
     return 1
 }
 
-warn_openclaw_not_found() {
-    ui_warn "Installed, but openclaw is not discoverable on PATH in this shell"
+warn_quiet_core_bot_not_found() {
+    ui_warn "Installed, but quiet-core-bot is not discoverable on PATH in this shell"
     echo "  Try: hash -r (bash) or rehash (zsh), then retry."
     local t=""
-    t="$(type -t openclaw 2>/dev/null || true)"
+    t="$(type -t quiet-core-bot 2>/dev/null || true)"
     if [[ "$t" == "alias" || "$t" == "function" ]]; then
-        ui_warn "Found a shell ${t} named openclaw; it may shadow the real binary"
+        ui_warn "Found a shell ${t} named quiet-core-bot; it may shadow the real binary"
     fi
     if command -v nodenv &> /dev/null; then
         echo -e "Using nodenv? Run: ${INFO}nodenv rehash${NC}"
@@ -2573,10 +2573,10 @@ warn_openclaw_not_found() {
     fi
 }
 
-resolve_openclaw_bin() {
+resolve_quiet_core_bot_bin() {
     refresh_shell_command_cache
     local resolved=""
-    resolved="$(type -P openclaw 2>/dev/null || true)"
+    resolved="$(type -P quiet-core-bot 2>/dev/null || true)"
     if [[ -n "$resolved" && -x "$resolved" ]]; then
         echo "$resolved"
         return 0
@@ -2584,7 +2584,7 @@ resolve_openclaw_bin() {
 
     ensure_npm_global_bin_on_path
     refresh_shell_command_cache
-    resolved="$(type -P openclaw 2>/dev/null || true)"
+    resolved="$(type -P quiet-core-bot 2>/dev/null || true)"
     if [[ -n "$resolved" && -x "$resolved" ]]; then
         echo "$resolved"
         return 0
@@ -2592,21 +2592,21 @@ resolve_openclaw_bin() {
 
     local npm_bin=""
     npm_bin="$(npm_global_bin_dir || true)"
-    if [[ -n "$npm_bin" && -x "${npm_bin}/openclaw" ]]; then
-        echo "${npm_bin}/openclaw"
+    if [[ -n "$npm_bin" && -x "${npm_bin}/quiet-core-bot" ]]; then
+        echo "${npm_bin}/quiet-core-bot"
         return 0
     fi
 
     maybe_nodenv_rehash
     refresh_shell_command_cache
-    resolved="$(type -P openclaw 2>/dev/null || true)"
+    resolved="$(type -P quiet-core-bot 2>/dev/null || true)"
     if [[ -n "$resolved" && -x "$resolved" ]]; then
         echo "$resolved"
         return 0
     fi
 
-    if [[ -n "$npm_bin" && -x "${npm_bin}/openclaw" ]]; then
-        echo "${npm_bin}/openclaw"
+    if [[ -n "$npm_bin" && -x "${npm_bin}/quiet-core-bot" ]]; then
+        echo "${npm_bin}/quiet-core-bot"
         return 0
     fi
 
@@ -2614,9 +2614,9 @@ resolve_openclaw_bin() {
     return 1
 }
 
-install_openclaw_from_git() {
+install_quiet_core_bot_from_git() {
     local repo_dir="$1"
-    local repo_url="https://github.com/openclaw/openclaw.git"
+    local repo_url="https://github.com/liuda1999/Quiet-Core-bot.git"
 
     if [[ -d "$repo_dir/.git" ]]; then
         ui_info "Installing OpenClaw from git checkout: ${repo_dir}"
@@ -2637,10 +2637,10 @@ install_openclaw_from_git() {
     fi
 
     local git_ref
-    git_ref="$(resolve_git_openclaw_ref)"
+    git_ref="$(resolve_git_quiet_core_bot_ref)"
     if [[ -z "$(git -C "$repo_dir" status --porcelain 2>/dev/null || true)" ]]; then
         ui_info "Using git ref: ${git_ref}"
-        checkout_git_openclaw_ref "$repo_dir" "$git_ref"
+        checkout_git_quiet_core_bot_ref "$repo_dir" "$git_ref"
     else
         ui_info "Repo has local changes; skipping git checkout/update"
     fi
@@ -2659,20 +2659,20 @@ install_openclaw_from_git() {
 
     ensure_user_local_bin_on_path
 
-    cat > "$HOME/.local/bin/openclaw" <<EOF
+    cat > "$HOME/.local/bin/quiet-core-bot" <<EOF
 #!/usr/bin/env bash
 set -euo pipefail
 exec node "${repo_dir}/dist/entry.js" "\$@"
 EOF
-    chmod +x "$HOME/.local/bin/openclaw"
-    ui_success "OpenClaw wrapper installed to \$HOME/.local/bin/openclaw"
+    chmod +x "$HOME/.local/bin/quiet-core-bot"
+    ui_success "OpenClaw wrapper installed to \$HOME/.local/bin/quiet-core-bot"
     ui_info "This checkout uses pnpm — run pnpm install (or corepack pnpm install) for deps"
 }
 
 # Install OpenClaw
 resolve_beta_version() {
     local beta=""
-    beta="$(npm view openclaw dist-tags.beta 2>/dev/null || true)"
+    beta="$(npm view quiet-core-bot dist-tags.beta 2>/dev/null || true)"
     if [[ -z "$beta" || "$beta" == "undefined" || "$beta" == "null" ]]; then
         return 1
     fi
@@ -2689,20 +2689,20 @@ is_explicit_package_install_spec() {
     [[ "$value" == *"://"* || "$value" == *"#"* || "$value" =~ ^(file|github|git\+ssh|git\+https|git\+http|git\+file|npm): ]]
 }
 
-is_openclaw_source_package_install_spec() {
+is_quiet_core_bot_source_package_install_spec() {
     local value="${1:-}"
     local normalized_value=""
     normalized_value="$(to_lowercase_ascii "$value")"
-    normalized_value="${normalized_value#openclaw@}"
+    normalized_value="${normalized_value#quiet-core-bot@}"
 
     [[ "$normalized_value" == "main" ]] && return 0
-    [[ "$normalized_value" =~ ^github:openclaw/openclaw($|[#/]) ]] && return 0
+    [[ "$normalized_value" =~ ^github:liuda1999/quiet-core-bot($|[#/]) ]] && return 0
 
     normalized_value="${normalized_value#git+}"
     [[ "$normalized_value" =~ ^https?://github\.com/openclaw/openclaw(\.git)?($|[?#]) ]] && return 0
-    [[ "$normalized_value" =~ ^ssh://git@github\.com[:/]openclaw/openclaw(\.git)?($|[?#]) ]] && return 0
+    [[ "$normalized_value" =~ ^ssh://git@github\.com[:/]liuda1999/quiet-core-bot(\.git)?($|[?#]) ]] && return 0
     [[ "$normalized_value" =~ ^git://github\.com/openclaw/openclaw(\.git)?($|[?#]) ]] && return 0
-    [[ "$normalized_value" =~ ^git@github\.com:openclaw/openclaw(\.git)?($|[?#]) ]] && return 0
+    [[ "$normalized_value" =~ ^git@github\.com:liuda1999/quiet-core-bot(\.git)?($|[?#]) ]] && return 0
     return 1
 }
 
@@ -2728,7 +2728,7 @@ resolve_package_install_spec() {
     local normalized_value=""
     normalized_value="$(to_lowercase_ascii "$value")"
     if [[ "$normalized_value" == "main" ]]; then
-        echo "github:openclaw/openclaw#main"
+        echo "github:liuda1999/quiet-core-bot#main"
         return 0
     fi
     if is_explicit_package_install_spec "$value"; then
@@ -2742,58 +2742,58 @@ resolve_package_install_spec() {
     echo "${package_name}@${value}"
 }
 
-install_openclaw() {
-    local package_name="openclaw"
+install_quiet-core-bot() {
+    local package_name="quiet-core-bot"
     if [[ "$USE_BETA" == "1" ]]; then
         local beta_version=""
         beta_version="$(resolve_beta_version || true)"
         if [[ -n "$beta_version" ]]; then
-            OPENCLAW_VERSION="$beta_version"
+            QUIET_CORE_VERSION="$beta_version"
             ui_info "Beta tag detected (${beta_version})"
-            package_name="openclaw"
+            package_name="quiet-core-bot"
         else
-            OPENCLAW_VERSION="latest"
+            QUIET_CORE_VERSION="latest"
             ui_info "No beta tag found; using latest"
         fi
     fi
 
-    if [[ -z "${OPENCLAW_VERSION}" ]]; then
-        OPENCLAW_VERSION="latest"
+    if [[ -z "${QUIET_CORE_VERSION}" ]]; then
+        QUIET_CORE_VERSION="latest"
     fi
 
-    if is_openclaw_source_package_install_spec "${OPENCLAW_VERSION}"; then
-        ui_error "npm installs do not support OpenClaw GitHub source targets like '${OPENCLAW_VERSION}'."
+    if is_quiet_core_bot_source_package_install_spec "${QUIET_CORE_VERSION}"; then
+        ui_error "npm installs do not support OpenClaw GitHub source targets like '${QUIET_CORE_VERSION}'."
         ui_info "Use --install-method git --version main for the moving main checkout, or use latest, beta, an exact version, or a built .tgz package."
         return 1
     fi
 
     local resolved_version=""
-    if can_resolve_registry_package_version "${OPENCLAW_VERSION}"; then
-        resolved_version="$(npm view "${package_name}@${OPENCLAW_VERSION}" version 2>/dev/null || true)"
+    if can_resolve_registry_package_version "${QUIET_CORE_VERSION}"; then
+        resolved_version="$(npm view "${package_name}@${QUIET_CORE_VERSION}" version 2>/dev/null || true)"
     fi
     if [[ -n "$resolved_version" ]]; then
         ui_info "Installing OpenClaw v${resolved_version}"
     else
-        ui_info "Installing OpenClaw (${OPENCLAW_VERSION})"
+        ui_info "Installing OpenClaw (${QUIET_CORE_VERSION})"
     fi
     local install_spec=""
-    install_spec="$(resolve_package_install_spec "${package_name}" "${OPENCLAW_VERSION}")"
+    install_spec="$(resolve_package_install_spec "${package_name}" "${QUIET_CORE_VERSION}")"
 
-    if ! install_openclaw_npm "${install_spec}"; then
+    if ! install_quiet_core_bot_npm "${install_spec}"; then
         ui_warn "npm install failed; retrying"
-        cleanup_npm_openclaw_paths
-        install_openclaw_npm "${install_spec}"
+        cleanup_npm_quiet_core_bot_paths
+        install_quiet_core_bot_npm "${install_spec}"
     fi
 
-    if [[ "${OPENCLAW_VERSION}" == "latest" && "${package_name}" == "openclaw" ]]; then
-        if ! resolve_openclaw_bin &> /dev/null; then
-            ui_warn "npm install openclaw@latest failed; retrying openclaw@next"
-            cleanup_npm_openclaw_paths
-            install_openclaw_npm "openclaw@next"
+    if [[ "${QUIET_CORE_VERSION}" == "latest" && "${package_name}" == "quiet-core-bot" ]]; then
+        if ! resolve_quiet_core_bot_bin &> /dev/null; then
+            ui_warn "npm install quiet-core-bot@latest failed; retrying quiet-core-bot@next"
+            cleanup_npm_quiet_core_bot_paths
+            install_quiet_core_bot_npm "quiet-core-bot@next"
         fi
     fi
 
-    ensure_openclaw_bin_link || true
+    ensure_quiet_core_bot_bin_link || true
 
     ui_success "OpenClaw installed"
 }
@@ -2801,13 +2801,13 @@ install_openclaw() {
 # Run doctor for migrations (safe, non-interactive)
 run_doctor() {
     ui_info "Running doctor to migrate settings"
-    local claw="${OPENCLAW_BIN:-}"
+    local claw="${QUIET_CORE_BIN:-}"
     if [[ -z "$claw" ]]; then
-        claw="$(resolve_openclaw_bin || true)"
+        claw="$(resolve_quiet_core_bot_bin || true)"
     fi
     if [[ -z "$claw" ]]; then
-        ui_info "Skipping doctor (openclaw not on PATH yet)"
-        warn_openclaw_not_found
+        ui_info "Skipping doctor (quiet-core-bot not on PATH yet)"
+        warn_quiet_core_bot_not_found
         return 0
     fi
     run_quiet_step "Running doctor" "$claw" doctor --non-interactive || true
@@ -2815,9 +2815,9 @@ run_doctor() {
 }
 
 maybe_open_dashboard() {
-    local claw="${OPENCLAW_BIN:-}"
+    local claw="${QUIET_CORE_BIN:-}"
     if [[ -z "$claw" ]]; then
-        claw="$(resolve_openclaw_bin || true)"
+        claw="$(resolve_quiet_core_bot_bin || true)"
     fi
     if [[ -z "$claw" ]]; then
         return 0
@@ -2829,13 +2829,13 @@ maybe_open_dashboard() {
 }
 
 resolve_workspace_dir() {
-    local profile="${OPENCLAW_PROFILE:-default}"
+    local profile="${QUIET_CORE_PROFILE:-default}"
     local effective_home
-    effective_home="$(resolve_openclaw_effective_home)"
+    effective_home="$(resolve_quiet_core_bot_effective_home)"
     if [[ "${profile}" != "default" ]]; then
-        echo "${effective_home}/.openclaw/workspace-${profile}"
+        echo "${effective_home}/.quiet-core-bot/workspace-${profile}"
     else
-        echo "${effective_home}/.openclaw/workspace"
+        echo "${effective_home}/.quiet-core-bot/workspace"
     fi
 }
 
@@ -2845,17 +2845,10 @@ run_bootstrap_onboarding_if_needed() {
     fi
 
     local effective_home
-    effective_home="$(resolve_openclaw_effective_home)"
-    local config_path="${OPENCLAW_CONFIG_PATH:-$effective_home/.openclaw/openclaw.json}"
-    local legacy_config_path="${HOME}/.openclaw/openclaw.json"
-    local legacy_clawdbot_path="${HOME}/.clawdbot/clawdbot.json"
-    if [[ -f "${config_path}" || -f "$effective_home/.clawdbot/clawdbot.json" ]]; then
+    effective_home="$(resolve_quiet_core_bot_effective_home)"
+    local config_path="${QUIET_CORE_CONFIG_PATH:-$effective_home/.quiet-core-bot/quiet-core-bot.json}"
+    if [[ -f "${config_path}" ]]; then
         return
-    fi
-    if [[ -z "${OPENCLAW_CONFIG_PATH:-}" && "${effective_home}" != "${HOME}" ]]; then
-        if [[ -f "$legacy_config_path" || -f "$legacy_clawdbot_path" ]]; then
-            return
-        fi
     fi
 
     local workspace
@@ -2868,25 +2861,25 @@ run_bootstrap_onboarding_if_needed() {
 
     if ! is_promptable; then
         local user_claw
-        user_claw="$(openclaw_command_for_user "${OPENCLAW_BIN:-}")"
+        user_claw="$(quiet_core_bot_command_for_user "${QUIET_CORE_BIN:-}")"
         ui_info "BOOTSTRAP.md found but no TTY; run ${user_claw} onboard to finish setup"
         return
     fi
 
     ui_info "BOOTSTRAP.md found; starting onboarding"
-    local claw="${OPENCLAW_BIN:-}"
+    local claw="${QUIET_CORE_BIN:-}"
     if [[ -z "$claw" ]]; then
-        claw="$(resolve_openclaw_bin || true)"
+        claw="$(resolve_quiet_core_bot_bin || true)"
     fi
     if [[ -z "$claw" ]]; then
-        ui_info "BOOTSTRAP.md found but openclaw not on PATH; skipping onboarding"
-        warn_openclaw_not_found
+        ui_info "BOOTSTRAP.md found but quiet-core-bot not on PATH; skipping onboarding"
+        warn_quiet_core_bot_not_found
         return
     fi
 
     "$claw" onboard || {
         local user_claw
-        user_claw="$(openclaw_command_for_user "$claw")"
+        user_claw="$(quiet_core_bot_command_for_user "$claw")"
         ui_error "Onboarding failed; run ${user_claw} onboard to retry"
         return
     }
@@ -2914,9 +2907,9 @@ load_install_version_helpers() {
 
 load_install_version_helpers
 
-if ! declare -F extract_openclaw_semver >/dev/null 2>&1; then
+if ! declare -F extract_quiet_core_bot_semver >/dev/null 2>&1; then
 # Inline fallback when version-parse.sh could not be sourced (for example, stdin install).
-extract_openclaw_semver() {
+extract_quiet_core_bot_semver() {
     local raw="${1:-}"
     raw="${raw//$'\r'/}"
     if [[ "$raw" =~ v?([0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z]+(\.[0-9A-Za-z]+)*)?(\+[0-9A-Za-z.-]+)?) ]]; then
@@ -2925,18 +2918,18 @@ extract_openclaw_semver() {
 }
 fi
 
-resolve_openclaw_version() {
+resolve_quiet_core_bot_version() {
     local version=""
     local raw_version_output=""
-    local claw="${OPENCLAW_BIN:-}"
-    if [[ -z "$claw" ]] && command -v openclaw &> /dev/null; then
-        claw="$(command -v openclaw)"
+    local claw="${QUIET_CORE_BIN:-}"
+    if [[ -z "$claw" ]] && command -v quiet-core-bot &> /dev/null; then
+        claw="$(command -v quiet-core-bot)"
     fi
     if [[ -n "$claw" ]]; then
         raw_version_output=$("$claw" --version 2>/dev/null || true)
         raw_version_output="${raw_version_output%%$'\n'*}"
         raw_version_output="${raw_version_output//$'\r'/}"
-        version="$(extract_openclaw_semver "$raw_version_output")"
+        version="$(extract_quiet_core_bot_semver "$raw_version_output")"
         if [[ -z "$version" ]]; then
             version="$raw_version_output"
         fi
@@ -2944,8 +2937,8 @@ resolve_openclaw_version() {
     if [[ -z "$version" ]]; then
         local npm_root=""
         npm_root=$(npm root -g 2>/dev/null || true)
-        if [[ -n "$npm_root" && -f "$npm_root/openclaw/package.json" ]]; then
-            version=$(node -e "console.log(require('${npm_root}/openclaw/package.json').version)" 2>/dev/null || true)
+        if [[ -n "$npm_root" && -f "$npm_root/quiet-core-bot/package.json" ]]; then
+            version=$(node -e "console.log(require('${npm_root}/quiet-core-bot/package.json').version)" 2>/dev/null || true)
         fi
     fi
     echo "$version"
@@ -2958,7 +2951,7 @@ is_gateway_daemon_loaded() {
     fi
 
     local status_json=""
-    status_json="$(bounded_probe_output "openclaw daemon status --json" "$claw" daemon status --json || true)"
+    status_json="$(bounded_probe_output "quiet-core-bot daemon status --json" "$claw" daemon status --json || true)"
     if [[ -z "$status_json" ]]; then
         return 1
     fi
@@ -2977,9 +2970,9 @@ try {
 }
 
 refresh_gateway_service_if_loaded() {
-    local claw="${OPENCLAW_BIN:-}"
+    local claw="${QUIET_CORE_BIN:-}"
     if [[ -z "$claw" ]]; then
-        claw="$(resolve_openclaw_bin || true)"
+        claw="$(resolve_quiet_core_bot_bin || true)"
     fi
     if [[ -z "$claw" ]]; then
         return 0
@@ -3013,13 +3006,13 @@ verify_installation() {
     fi
 
     ui_stage "Verifying installation"
-    local claw="${OPENCLAW_BIN:-}"
+    local claw="${QUIET_CORE_BIN:-}"
     if [[ -z "$claw" ]]; then
-        claw="$(resolve_openclaw_bin || true)"
+        claw="$(resolve_quiet_core_bot_bin || true)"
     fi
     if [[ -z "$claw" ]]; then
-        ui_error "Install verify failed: openclaw not on PATH yet"
-        warn_openclaw_not_found
+        ui_error "Install verify failed: quiet-core-bot not on PATH yet"
+        warn_quiet_core_bot_not_found
         return 1
     fi
 
@@ -3028,7 +3021,7 @@ verify_installation() {
     if is_gateway_daemon_loaded "$claw"; then
         run_quiet_step "Checking gateway service" "$claw" gateway status --deep || {
             ui_error "Install verify failed: gateway service unhealthy"
-            ui_info "Run: openclaw gateway status --deep"
+            ui_info "Run: quiet-core-bot gateway status --deep"
             return 1
         }
     else
@@ -3058,7 +3051,7 @@ main() {
     fi
 
     local detected_checkout=""
-    detected_checkout="$(detect_openclaw_checkout "$PWD" || true)"
+    detected_checkout="$(detect_quiet_core_bot_checkout "$PWD" || true)"
 
     if [[ -z "$INSTALL_METHOD" && -n "$detected_checkout" ]]; then
         if ! is_promptable; then
@@ -3073,7 +3066,7 @@ main() {
                     ;;
                 *)
                     ui_error "no install method selected"
-                    echo "Re-run with: --install-method git|npm (or set OPENCLAW_INSTALL_METHOD)."
+                    echo "Re-run with: --install-method git|npm (or set QUIET_CORE_INSTALL_METHOD)."
                     exit 2
                     ;;
             esac
@@ -3099,7 +3092,7 @@ main() {
 
     # Check for existing installation
     local is_upgrade=false
-    if check_existing_openclaw; then
+    if check_existing_quiet-core-bot; then
         is_upgrade=true
     fi
     local should_open_dashboard=false
@@ -3124,9 +3117,9 @@ main() {
     local final_git_dir=""
     if [[ "$INSTALL_METHOD" == "git" ]]; then
         # Clean up npm global install if switching to git
-        if npm list -g openclaw &>/dev/null; then
+        if npm list -g quiet-core-bot &>/dev/null; then
             ui_info "Removing npm global install (switching to git)"
-            npm uninstall -g openclaw 2>/dev/null || true
+            npm uninstall -g quiet-core-bot 2>/dev/null || true
             ui_success "npm global install removed"
         fi
 
@@ -3135,12 +3128,12 @@ main() {
             repo_dir="$detected_checkout"
         fi
         final_git_dir="$repo_dir"
-        install_openclaw_from_git "$repo_dir"
+        install_quiet_core_bot_from_git "$repo_dir"
     else
         # Clean up git wrapper if switching to npm
-        if [[ -x "$HOME/.local/bin/openclaw" ]]; then
+        if [[ -x "$HOME/.local/bin/quiet-core-bot" ]]; then
             ui_info "Removing git wrapper (switching to npm)"
-            rm -f "$HOME/.local/bin/openclaw"
+            rm -f "$HOME/.local/bin/quiet-core-bot"
             ui_success "git wrapper removed"
         fi
 
@@ -3153,13 +3146,13 @@ main() {
         fix_npm_permissions
 
         # Step 5: OpenClaw
-        install_openclaw
+        install_quiet-core-bot
     fi
 
     ui_stage "Finalizing setup"
 
-    OPENCLAW_BIN="$(resolve_openclaw_bin || true)"
-    warn_duplicate_openclaw_global_installs || true
+    QUIET_CORE_BIN="$(resolve_quiet_core_bot_bin || true)"
+    warn_duplicate_quiet_core_bot_global_installs || true
 
     # PATH warning: installs can succeed while the user's login shell still lacks npm's global bin dir.
     local npm_bin=""
@@ -3168,7 +3161,7 @@ main() {
         warn_shell_path_missing_dir "$npm_bin" "npm global bin dir"
     fi
     if [[ "$INSTALL_METHOD" == "git" ]]; then
-        if [[ -x "$HOME/.local/bin/openclaw" ]]; then
+        if [[ -x "$HOME/.local/bin/quiet-core-bot" ]]; then
             warn_shell_path_missing_dir "$HOME/.local/bin" "user-local bin dir (~/.local/bin)"
         fi
     fi
@@ -3189,7 +3182,7 @@ main() {
     run_bootstrap_onboarding_if_needed
 
     local installed_version
-    installed_version=$(resolve_openclaw_version)
+    installed_version=$(resolve_quiet_core_bot_version)
 
     echo ""
     if [[ -n "$installed_version" ]]; then
@@ -3245,53 +3238,53 @@ main() {
     if [[ "$INSTALL_METHOD" == "git" && -n "$final_git_dir" ]]; then
         ui_section "Source install details"
         ui_kv "Checkout" "$final_git_dir"
-        ui_kv "Wrapper" "$HOME/.local/bin/openclaw"
-        ui_kv "Update command" "openclaw update"
+        ui_kv "Wrapper" "$HOME/.local/bin/quiet-core-bot"
+        ui_kv "Update command" "quiet-core-bot update"
         ui_kv "Switch to npm" "curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -- --install-method npm"
     elif [[ "$is_upgrade" == "true" ]]; then
         ui_info "Upgrade complete"
         if has_controlling_tty || [[ "$NO_ONBOARD" == "1" || "$NO_PROMPT" == "1" ]]; then
-            local claw="${OPENCLAW_BIN:-}"
+            local claw="${QUIET_CORE_BIN:-}"
             if [[ -z "$claw" ]]; then
-                claw="$(resolve_openclaw_bin || true)"
+                claw="$(resolve_quiet_core_bot_bin || true)"
             fi
             if [[ -z "$claw" ]]; then
-                ui_info "Skipping doctor (openclaw not on PATH yet)"
-                warn_openclaw_not_found
+                ui_info "Skipping doctor (quiet-core-bot not on PATH yet)"
+                warn_quiet_core_bot_not_found
                 return 0
             fi
             local -a doctor_args=()
             if [[ "$NO_ONBOARD" == "1" || "$NO_PROMPT" == "1" ]]; then
                 doctor_args+=("--non-interactive")
             fi
-            ui_info "Running openclaw doctor"
+            ui_info "Running quiet-core-bot doctor"
             local doctor_ok=0
             if (( ${#doctor_args[@]} )); then
-                OPENCLAW_UPDATE_IN_PROGRESS=1 "$claw" doctor "${doctor_args[@]}" </dev/null && doctor_ok=1
+                QUIET_CORE_UPDATE_IN_PROGRESS=1 "$claw" doctor "${doctor_args[@]}" </dev/null && doctor_ok=1
             else
-                OPENCLAW_UPDATE_IN_PROGRESS=1 "$claw" doctor </dev/tty && doctor_ok=1
+                QUIET_CORE_UPDATE_IN_PROGRESS=1 "$claw" doctor </dev/tty && doctor_ok=1
             fi
             if (( doctor_ok )); then
                 ui_info "Updating plugins"
-                OPENCLAW_UPDATE_IN_PROGRESS=1 "$claw" plugins update --all || true
+                QUIET_CORE_UPDATE_IN_PROGRESS=1 "$claw" plugins update --all || true
             else
                 ui_warn "Doctor failed; skipping plugin updates"
             fi
         else
             local user_claw
-            user_claw="$(openclaw_command_for_user "${OPENCLAW_BIN:-}")"
+            user_claw="$(quiet_core_bot_command_for_user "${QUIET_CORE_BIN:-}")"
             ui_info "No TTY; run ${user_claw} doctor and ${user_claw} plugins update --all manually"
         fi
     else
         if [[ "$NO_ONBOARD" == "1" || "$skip_onboard" == "true" ]]; then
             local user_claw
-            user_claw="$(openclaw_command_for_user "${OPENCLAW_BIN:-}")"
+            user_claw="$(quiet_core_bot_command_for_user "${QUIET_CORE_BIN:-}")"
             ui_info "Skipping onboard (requested); run ${user_claw} onboard later"
         else
             local effective_home
-            effective_home="$(resolve_openclaw_effective_home)"
-            local config_path="${OPENCLAW_CONFIG_PATH:-$effective_home/.openclaw/openclaw.json}"
-            if [[ -f "${config_path}" || -f "$effective_home/.clawdbot/clawdbot.json" ]]; then
+            effective_home="$(resolve_quiet_core_bot_effective_home)"
+            local config_path="${QUIET_CORE_CONFIG_PATH:-$effective_home/.quiet-core-bot/quiet-core-bot.json}"
+            if [[ -f "${config_path}" ]]; then
                 ui_info "Config already present; running doctor"
                 run_doctor
                 should_open_dashboard=true
@@ -3301,39 +3294,39 @@ main() {
             ui_info "Starting setup"
             echo ""
             if is_promptable; then
-                local claw="${OPENCLAW_BIN:-}"
+                local claw="${QUIET_CORE_BIN:-}"
                 if [[ -z "$claw" ]]; then
-                    claw="$(resolve_openclaw_bin || true)"
+                    claw="$(resolve_quiet_core_bot_bin || true)"
                 fi
                 if [[ -z "$claw" ]]; then
-                    ui_info "Skipping onboarding (openclaw not on PATH yet)"
-                    warn_openclaw_not_found
+                    ui_info "Skipping onboarding (quiet-core-bot not on PATH yet)"
+                    warn_quiet_core_bot_not_found
                     return 0
                 fi
                 exec </dev/tty
                 exec "$claw" onboard
             fi
             local user_claw
-            user_claw="$(openclaw_command_for_user "${OPENCLAW_BIN:-}")"
+            user_claw="$(quiet_core_bot_command_for_user "${QUIET_CORE_BIN:-}")"
             ui_info "No TTY; run ${user_claw} onboard to finish setup"
             return 0
         fi
     fi
 
-    if command -v openclaw &> /dev/null; then
-        local claw="${OPENCLAW_BIN:-}"
+    if command -v quiet-core-bot &> /dev/null; then
+        local claw="${QUIET_CORE_BIN:-}"
         if [[ -z "$claw" ]]; then
-            claw="$(resolve_openclaw_bin || true)"
+            claw="$(resolve_quiet_core_bot_bin || true)"
         fi
         if [[ -n "$claw" ]] && is_gateway_daemon_loaded "$claw"; then
             if [[ "$DRY_RUN" == "1" ]]; then
-                ui_info "Gateway daemon detected; would restart (openclaw daemon restart)"
+                ui_info "Gateway daemon detected; would restart (quiet-core-bot daemon restart)"
             else
                 ui_info "Gateway daemon detected; restarting"
-                if OPENCLAW_UPDATE_IN_PROGRESS=1 "$claw" daemon restart >/dev/null 2>&1; then
+                if QUIET_CORE_UPDATE_IN_PROGRESS=1 "$claw" daemon restart >/dev/null 2>&1; then
                     ui_success "Gateway restarted"
                 else
-                    ui_warn "Gateway restart failed; try: openclaw daemon restart"
+                    ui_warn "Gateway restart failed; try: quiet-core-bot daemon restart"
                 fi
             fi
         fi
@@ -3350,7 +3343,7 @@ main() {
     show_footer_links
 }
 
-if [[ "${OPENCLAW_INSTALL_SH_NO_RUN:-0}" != "1" ]]; then
+if [[ "${QUIET_CORE_INSTALL_SH_NO_RUN:-0}" != "1" ]]; then
     parse_args "$@"
     configure_install_stage_total
     configure_verbose

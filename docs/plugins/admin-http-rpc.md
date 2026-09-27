@@ -104,8 +104,8 @@ Treat this plugin as a full Gateway operator surface.
 - Enabling the plugin intentionally offers access to the allowlisted admin RPC methods at `/api/v1/admin/rpc`.
 - The plugin declares the reserved `contracts.gatewayMethodDispatch: ["authenticated-request"]` manifest contract so its Gateway-authenticated HTTP route can dispatch control-plane methods in process.
 - Shared-secret bearer auth proves possession of the gateway operator secret.
-- For `token` and `password` auth, narrower `x-openclaw-scopes` headers are ignored and the normal full operator defaults are restored.
-- Trusted identity-bearing HTTP modes honor `x-openclaw-scopes` when present.
+- For `token` and `password` auth, narrower `x-quiet-core-bot-scopes` headers are ignored and the normal full operator defaults are restored.
+- Trusted identity-bearing HTTP modes honor `x-quiet-core-bot-scopes` when present.
 - `gateway.auth.mode="none"` means this route is unauthenticated if the plugin is enabled. Use that only behind a private ingress you fully trust.
 - Requests dispatch through the same Gateway method handlers and scope checks as WebSocket RPC after the plugin route auth passes.
 - Keep this route on loopback, tailnet, or a private trusted ingress. Do not expose it directly to the public internet.

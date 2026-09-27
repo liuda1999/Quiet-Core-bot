@@ -5,7 +5,7 @@
 import crypto from "node:crypto";
 import path from "node:path";
 import type { Page } from "playwright-core";
-import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-quiet-core-bot-dir.js";
 import { writeExternalFileWithinOutputRoot } from "./output-files.js";
 import { resolveStrictExistingUploadPaths } from "./paths.js";
 import {

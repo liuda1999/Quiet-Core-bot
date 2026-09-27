@@ -155,7 +155,7 @@ function resolveActiveManagedProxyUrl(): URL | undefined {
   if (inProcess) {
     return new URL(inProcess.href);
   }
-  if (process.env["OPENCLAW_PROXY_ACTIVE"] !== "1") {
+  if (process.env["QUIET_CORE_PROXY_ACTIVE"] !== "1") {
     return undefined;
   }
   // Child processes inherit only env, so recover the managed proxy URL the same

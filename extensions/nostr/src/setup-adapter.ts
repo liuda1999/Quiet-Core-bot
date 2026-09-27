@@ -1,9 +1,9 @@
 // Nostr plugin module implements setup adapter behavior.
-import type { ChannelSetupAdapter } from "openclaw/plugin-sdk/channel-setup";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { DEFAULT_ACCOUNT_ID } from "openclaw/plugin-sdk/routing";
-import { patchTopLevelChannelConfigSection, splitSetupEntries } from "openclaw/plugin-sdk/setup";
-import { uniqueStrings } from "openclaw/plugin-sdk/string-coerce-runtime";
+import type { ChannelSetupAdapter } from "quiet-core-bot/plugin-sdk/channel-setup";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import { DEFAULT_ACCOUNT_ID } from "quiet-core-bot/plugin-sdk/routing";
+import { patchTopLevelChannelConfigSection, splitSetupEntries } from "quiet-core-bot/plugin-sdk/setup";
+import { uniqueStrings } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 
 const channel = "nostr" as const;
 

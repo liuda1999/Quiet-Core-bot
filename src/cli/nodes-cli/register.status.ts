@@ -3,7 +3,7 @@ import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalLowercaseString,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/normalization-core/string-coerce";
 import type { Command } from "commander";
 import { sanitizeTerminalText } from "../../../packages/terminal-core/src/safe-text.js";
 import { getTerminalTableWidth, renderTable } from "../../../packages/terminal-core/src/table.js";
@@ -138,7 +138,7 @@ function formatPendingApprovalCommand(raw: unknown, opts: NodesRpcOpts): string 
   if (!requestId) {
     return null;
   }
-  const args = ["openclaw", "nodes", "approve", requestId];
+  const args = ["quiet-core-bot", "nodes", "approve", requestId];
   const timeout = normalizeOptionalString(opts.timeout);
   if (timeout && timeout !== String(DEFAULT_NODES_RPC_TIMEOUT_MS)) {
     args.push("--timeout", timeout);

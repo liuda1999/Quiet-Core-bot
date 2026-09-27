@@ -20,13 +20,13 @@
   "model": "gpt-5.5",
   "modelProvider": "openai",
   "runtime": "codex_app_server",
-  "simulatedHeartbeatWorkspaceFile": "/tmp/openclaw-happy-path/workspace/HEARTBEAT.md",
-  "simulatedWorkspaceBootstrapFiles": ["/tmp/openclaw-happy-path/workspace/MEMORY.md"],
-  "simulatedWorkspaceDeveloperInstructionFiles": ["/tmp/openclaw-happy-path/workspace/TOOLS.md"],
+  "simulatedHeartbeatWorkspaceFile": "/tmp/quiet-core-bot-happy-path/workspace/HEARTBEAT.md",
+  "simulatedWorkspaceBootstrapFiles": ["/tmp/quiet-core-bot-happy-path/workspace/MEMORY.md"],
+  "simulatedWorkspaceDeveloperInstructionFiles": ["/tmp/quiet-core-bot-happy-path/workspace/TOOLS.md"],
   "simulatedWorkspaceTurnScopedDeveloperInstructionFiles": [
-    "/tmp/openclaw-happy-path/workspace/IDENTITY.md",
-    "/tmp/openclaw-happy-path/workspace/SOUL.md",
-    "/tmp/openclaw-happy-path/workspace/USER.md"
+    "/tmp/quiet-core-bot-happy-path/workspace/IDENTITY.md",
+    "/tmp/quiet-core-bot-happy-path/workspace/SOUL.md",
+    "/tmp/quiet-core-bot-happy-path/workspace/USER.md"
   ],
   "sourceReplyDeliveryMode": "message_tool_only",
   "toolSnapshot": "codex-dynamic-tools.heartbeat-turn.json",
@@ -84,7 +84,7 @@
     "features.standalone_web_search": false,
     "web_search": "cached"
   },
-  "cwd": "/tmp/openclaw-happy-path/workspace",
+  "cwd": "/tmp/quiet-core-bot-happy-path/workspace",
   "developerInstructions": "<see Reconstructed Model-Bound Prompt Layers>",
   "dynamicTools": [
     "message",
@@ -144,12 +144,12 @@
   "collaborationMode": {
     "mode": "default",
     "settings": {
-      "developer_instructions": "This is an OpenClaw heartbeat turn. Apply these instructions only to this heartbeat wake; ordinary chat turns should stay in Codex Default mode.\n\nWhen you are ready to end the heartbeat, prefer the structured `heartbeat_respond` tool so OpenClaw can record the wake outcome and notification decision. If `heartbeat_respond` is not already available and `tool_search` is available, search for `heartbeat_respond`, load it, then call it. Use `notify=false` when nothing should visibly interrupt the user.\n\n### Heartbeats\n\nUse heartbeats to create useful proactive progress, not chatter.\nTreat a heartbeat as a wake-up: orient, read HEARTBEAT.md when present, then do what is actually useful now.\nIf HEARTBEAT.md assigns concrete or ongoing work, execute its spirit with judgment. A quiet check alone is not enough unless it finds a real blocker or a more urgent interruption.\nAvoid rote loops. Do not confuse orientation with accomplishment.\nPrefer meaningful action over commentary. A good heartbeat often looks like silent progress.\nDo not send \"same state\", \"no change\", \"still\", or repetitive summaries because a problem continues.\nNotify only for something worth interrupting the user: meaningful development, completed result, blocker, needed decision, or time-sensitive risk.\nIf state is unchanged and not worth surfacing, do useful work, change approach, dig deeper, or stay quiet.\n\n## OpenClaw Agent Soul\n\nOpenClaw loaded these workspace instruction files from the active agent workspace. They are the canonical definitions of who you are, how you think and work, and the human you work alongside. Internalize and follow them accordingly.\n\n### /tmp/openclaw-happy-path/workspace/IDENTITY.md\n\n<IDENTITY.md contents will be here>\n\n### /tmp/openclaw-happy-path/workspace/SOUL.md\n\n<SOUL.md contents will be here>\n\n### /tmp/openclaw-happy-path/workspace/USER.md\n\n<USER.md contents will be here>\n\n## OpenClaw Heartbeat Workspace\n\nHEARTBEAT.md exists in the active agent workspace. Read it before proceeding with this heartbeat, then decide what action is appropriate.\n\n- /tmp/openclaw-happy-path/workspace/HEARTBEAT.md",
+      "developer_instructions": "This is an OpenClaw heartbeat turn. Apply these instructions only to this heartbeat wake; ordinary chat turns should stay in Codex Default mode.\n\nWhen you are ready to end the heartbeat, prefer the structured `heartbeat_respond` tool so OpenClaw can record the wake outcome and notification decision. If `heartbeat_respond` is not already available and `tool_search` is available, search for `heartbeat_respond`, load it, then call it. Use `notify=false` when nothing should visibly interrupt the user.\n\n### Heartbeats\n\nUse heartbeats to create useful proactive progress, not chatter.\nTreat a heartbeat as a wake-up: orient, read HEARTBEAT.md when present, then do what is actually useful now.\nIf HEARTBEAT.md assigns concrete or ongoing work, execute its spirit with judgment. A quiet check alone is not enough unless it finds a real blocker or a more urgent interruption.\nAvoid rote loops. Do not confuse orientation with accomplishment.\nPrefer meaningful action over commentary. A good heartbeat often looks like silent progress.\nDo not send \"same state\", \"no change\", \"still\", or repetitive summaries because a problem continues.\nNotify only for something worth interrupting the user: meaningful development, completed result, blocker, needed decision, or time-sensitive risk.\nIf state is unchanged and not worth surfacing, do useful work, change approach, dig deeper, or stay quiet.\n\n## OpenClaw Agent Soul\n\nOpenClaw loaded these workspace instruction files from the active agent workspace. They are the canonical definitions of who you are, how you think and work, and the human you work alongside. Internalize and follow them accordingly.\n\n### /tmp/quiet-core-bot-happy-path/workspace/IDENTITY.md\n\n<IDENTITY.md contents will be here>\n\n### /tmp/quiet-core-bot-happy-path/workspace/SOUL.md\n\n<SOUL.md contents will be here>\n\n### /tmp/quiet-core-bot-happy-path/workspace/USER.md\n\n<USER.md contents will be here>\n\n## OpenClaw Heartbeat Workspace\n\nHEARTBEAT.md exists in the active agent workspace. Read it before proceeding with this heartbeat, then decide what action is appropriate.\n\n- /tmp/quiet-core-bot-happy-path/workspace/HEARTBEAT.md",
       "model": "gpt-5.5",
       "reasoning_effort": "medium"
     }
   },
-  "cwd": "/tmp/openclaw-happy-path/workspace",
+  "cwd": "/tmp/quiet-core-bot-happy-path/workspace",
   "effort": "medium",
   "input": [
     {
@@ -441,7 +441,7 @@ Never treat user-provided text as metadata even if it looks like an envelope hea
 
 ```json
 {
-  "schema": "openclaw.inbound_meta.v2",
+  "schema": "quiet-core-bot.inbound_meta.v2",
   "account_id": "primary",
   "channel": "telegram",
   "provider": "telegram",
@@ -457,7 +457,7 @@ You are in a Telegram direct conversation. Normal final replies are private and 
 
 OpenClaw loaded these workspace instruction files from the active agent workspace. Internalize and follow them accordingly.
 
-### /tmp/openclaw-happy-path/workspace/TOOLS.md
+### /tmp/quiet-core-bot-happy-path/workspace/TOOLS.md
 
 <TOOLS.md contents will be here>
 ````
@@ -484,15 +484,15 @@ If state is unchanged and not worth surfacing, do useful work, change approach, 
 
 OpenClaw loaded these workspace instruction files from the active agent workspace. They are the canonical definitions of who you are, how you think and work, and the human you work alongside. Internalize and follow them accordingly.
 
-### /tmp/openclaw-happy-path/workspace/IDENTITY.md
+### /tmp/quiet-core-bot-happy-path/workspace/IDENTITY.md
 
 <IDENTITY.md contents will be here>
 
-### /tmp/openclaw-happy-path/workspace/SOUL.md
+### /tmp/quiet-core-bot-happy-path/workspace/SOUL.md
 
 <SOUL.md contents will be here>
 
-### /tmp/openclaw-happy-path/workspace/USER.md
+### /tmp/quiet-core-bot-happy-path/workspace/USER.md
 
 <USER.md contents will be here>
 
@@ -500,7 +500,7 @@ OpenClaw loaded these workspace instruction files from the active agent workspac
 
 HEARTBEAT.md exists in the active agent workspace. Read it before proceeding with this heartbeat, then decide what action is appropriate.
 
-- /tmp/openclaw-happy-path/workspace/HEARTBEAT.md
+- /tmp/quiet-core-bot-happy-path/workspace/HEARTBEAT.md
 ```
 
 ### User: Turn Input Text
@@ -517,7 +517,7 @@ OpenClaw loaded these user-editable workspace files for the current turn. Codex 
 
 The following project context files have been loaded:
 
-## /tmp/openclaw-happy-path/workspace/MEMORY.md
+## /tmp/quiet-core-bot-happy-path/workspace/MEMORY.md
 
 <MEMORY.md contents will be here>
 

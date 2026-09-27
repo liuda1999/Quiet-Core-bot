@@ -1,5 +1,5 @@
 // Memory Wiki plugin module implements cli metadata behavior.
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
+import { definePluginEntry } from "quiet-core-bot/plugin-sdk/plugin-entry";
 
 export default definePluginEntry({
   id: "memory-wiki",

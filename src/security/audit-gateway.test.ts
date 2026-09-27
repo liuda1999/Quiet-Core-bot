@@ -21,8 +21,8 @@ describe("security audit gateway config findings", () => {
     await Promise.all([
       withEnvAsync(
         {
-          OPENCLAW_GATEWAY_TOKEN: undefined,
-          OPENCLAW_GATEWAY_PASSWORD: undefined,
+          QUIET_CORE_GATEWAY_TOKEN: undefined,
+          QUIET_CORE_GATEWAY_PASSWORD: undefined,
         },
         async () => {
           const findings = collectGatewayConfigFindings(
@@ -51,7 +51,7 @@ describe("security audit gateway config findings", () => {
               password: {
                 source: "env",
                 provider: "default",
-                id: "OPENCLAW_GATEWAY_PASSWORD",
+                id: "QUIET_CORE_GATEWAY_PASSWORD",
               },
             },
           },
@@ -67,7 +67,7 @@ describe("security audit gateway config findings", () => {
               token: {
                 source: "env",
                 provider: "default",
-                id: "OPENCLAW_GATEWAY_TOKEN",
+                id: "QUIET_CORE_GATEWAY_TOKEN",
               },
             },
           },
@@ -136,12 +136,12 @@ describe("security audit gateway config findings", () => {
     expect(hasFinding("gateway.bind_no_auth", findings)).toBe(false);
   });
 
-  it("warns when OPENCLAW_GATEWAY_TOKEN shadows a different configured token source", () => {
+  it("warns when QUIET_CORE_GATEWAY_TOKEN shadows a different configured token source", () => {
     const cfg: OpenClawConfig = {
       gateway: { auth: { token: "config-token" } },
     };
     const findings = collectGatewayConfigFindings(cfg, cfg, {
-      OPENCLAW_GATEWAY_TOKEN: "env-token",
+      QUIET_CORE_GATEWAY_TOKEN: "env-token",
     });
 
     expect(hasFinding("gateway.env_token_overrides_config", findings)).toBe(true);
@@ -152,20 +152,20 @@ describe("security audit gateway config findings", () => {
       gateway: { auth: { token: "config-token" } },
     };
     const findings = collectGatewayConfigFindings(cfg, cfg, {
-      OPENCLAW_GATEWAY_TOKEN: "env-token",
-      OPENCLAW_SERVICE_KIND: "gateway",
+      QUIET_CORE_GATEWAY_TOKEN: "env-token",
+      QUIET_CORE_SERVICE_KIND: "gateway",
     });
 
     expect(hasFinding("gateway.env_token_overrides_config", findings)).toBe(false);
   });
 
-  it("does not warn when gateway.auth.token resolves from OPENCLAW_GATEWAY_TOKEN", () => {
+  it("does not warn when gateway.auth.token resolves from QUIET_CORE_GATEWAY_TOKEN", () => {
     const cfg: OpenClawConfig = {
-      gateway: { auth: { token: "${OPENCLAW_GATEWAY_TOKEN}" } },
+      gateway: { auth: { token: "${QUIET_CORE_GATEWAY_TOKEN}" } },
       secrets: { providers: { default: { source: "env" } } },
     };
     const findings = collectGatewayConfigFindings(cfg, cfg, {
-      OPENCLAW_GATEWAY_TOKEN: "env-token",
+      QUIET_CORE_GATEWAY_TOKEN: "env-token",
     });
 
     expect(hasFinding("gateway.env_token_overrides_config", findings)).toBe(false);
@@ -180,7 +180,7 @@ describe("security audit gateway config findings", () => {
       },
     };
     const findings = collectGatewayConfigFindings(cfg, cfg, {
-      OPENCLAW_GATEWAY_TOKEN: "env-token",
+      QUIET_CORE_GATEWAY_TOKEN: "env-token",
     });
 
     expect(hasFinding("gateway.env_token_overrides_config", findings)).toBe(false);

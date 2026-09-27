@@ -54,7 +54,7 @@ type WorkflowRunSummary = {
   durationSeconds?: number;
 };
 
-const DEFAULT_REPO = "openclaw/openclaw";
+const DEFAULT_REPO = "liuda1999/quiet-core-bot";
 const DEFAULT_CLAWHUB_REGISTRY = "https://clawhub.ai";
 const CLAWHUB_REQUEST_TIMEOUT_MS = 20_000;
 const CLAWHUB_RESPONSE_BODY_MAX_BYTES = 1024 * 1024;
@@ -165,7 +165,7 @@ export function parseReleaseVerifyBetaArgs(argv: string[]): ReleaseVerifyBetaArg
   const version = values.shift();
   if (!version || version.startsWith("-")) {
     throw new Error(
-      "Usage: pnpm release:verify-beta -- <version> [--workflow-ref REF] [--clawhub-workflow-ref REF] [--full-release-validation-run ID] [--openclaw-npm-run ID] [--plugin-npm-run ID] [--plugin-clawhub-run ID] [--plugin-clawhub-bootstrap-run ID] [--npm-telegram-run ID] [--skip-github-release] [--skip-clawhub]",
+      "Usage: pnpm release:verify-beta -- <version> [--workflow-ref REF] [--clawhub-workflow-ref REF] [--full-release-validation-run ID] [--quiet-core-bot-npm-run ID] [--plugin-npm-run ID] [--plugin-clawhub-run ID] [--plugin-clawhub-bootstrap-run ID] [--npm-telegram-run ID] [--skip-github-release] [--skip-clawhub]",
     );
   }
 
@@ -228,7 +228,7 @@ export function parseReleaseVerifyBetaArgs(argv: string[]): ReleaseVerifyBetaArg
       case "--full-release-validation-run":
         parsed.workflowRuns.fullReleaseValidation = next();
         break;
-      case "--openclaw-npm-run":
+      case "--quiet-core-bot-npm-run":
         parsed.workflowRuns.openclawNpm = next();
         break;
       case "--plugin-npm-run":
@@ -567,17 +567,17 @@ export async function verifyBetaRelease(
     lines.push(`GitHub release OK: ${releaseUrl}`);
   }
 
-  const openclawNpm = await verifyNpmPackage("openclaw", args.version, args.distTag);
-  lines.push(`openclaw npm OK: ${args.version} (${args.distTag})`);
+  const openclawNpm = await verifyNpmPackage("quiet-core-bot", args.version, args.distTag);
+  lines.push(`quiet-core-bot npm OK: ${args.version} (${args.distTag})`);
 
   if (!args.skipPostpublish) {
     runCommandInherited("node", [
       "--import",
       "tsx",
-      "scripts/openclaw-npm-postpublish-verify.ts",
+      "scripts/quiet-core-bot-npm-postpublish-verify.ts",
       args.version,
     ]);
-    lines.push("openclaw postpublish verifier OK");
+    lines.push("quiet-core-bot postpublish verifier OK");
   }
 
   const npmPlugins = collectPublishablePluginPackages(rootDir, {

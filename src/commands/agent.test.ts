@@ -1,7 +1,7 @@
 // Agent command tests cover local agent runs, session routing, and command runtime behavior.
 import fs from "node:fs";
 import path from "node:path";
-import { withTempHome as withTempHomeBase } from "openclaw/plugin-sdk/test-env";
+import { withTempHome as withTempHomeBase } from "quiet-core-bot/plugin-sdk/test-env";
 import { beforeEach, describe, expect, it, type MockInstance, vi } from "vitest";
 import "./agent-command.test-mocks.js";
 import { testing as acpManagerTesting } from "../acp/control-plane/manager.js";
@@ -15,7 +15,7 @@ import { BASE_THINKING_LEVELS } from "../auto-reply/thinking.shared.js";
 import * as runtimeSnapshotModule from "../config/runtime-snapshot.js";
 import { loadSessionStore } from "../config/sessions/store-load.js";
 import { clearSessionStoreCacheForTest } from "../config/sessions/store.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   emitAgentEvent,
   onAgentEvent,
@@ -228,7 +228,7 @@ vi.mock("../config/sessions/transcript-resolve.runtime.js", () => {
     return normalizedParts.join(separator);
   };
   const resolveSessionFile = (sessionId: string, agentId: string, sessionsDir?: string): string =>
-    joinPath(sessionsDir ?? ".openclaw", "agents", agentId, "sessions", `${sessionId}.jsonl`);
+    joinPath(sessionsDir ?? ".quiet-core-bot", "agents", agentId, "sessions", `${sessionId}.jsonl`);
 
   return {
     resolveSessionTranscriptFile: vi.fn(
@@ -269,7 +269,7 @@ const runtime = createThrowingTestRuntime();
 
 async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
   return withTempHomeBase(fn, {
-    prefix: "openclaw-agent-",
+    prefix: "quiet-core-bot-agent-",
     skipHomeCleanup: true,
     skipSessionCleanup: true,
   });
@@ -287,7 +287,7 @@ function mockConfig(
       defaults: {
         model: { primary: "anthropic/claude-opus-4-6" },
         models: { "anthropic/claude-opus-4-6": {} },
-        workspace: path.join(home, "openclaw"),
+        workspace: path.join(home, "quiet-core-bot"),
         ...agentOverrides,
       },
       list: agentsList,
@@ -406,7 +406,7 @@ describe("agentCommand", () => {
         expect(registryLoad?.scope).toBe("all");
         expect(registryLoad?.config).toBeTypeOf("object");
         expect(registryLoad?.activationSourceConfig).toBeTypeOf("object");
-        expect(registryLoad?.workspaceDir).toBe(path.join(home, "openclaw"));
+        expect(registryLoad?.workspaceDir).toBe(path.join(home, "quiet-core-bot"));
         expect(registryLoad?.onlyPluginIds).toEqual(["codex", "openai", "memory-core"]);
       }
       expectLastRunProviderModel("openai", "gpt-5.2");
@@ -421,7 +421,7 @@ describe("agentCommand", () => {
         providers: {
           openai: {
             baseUrl: "https://api.openai.com/v1",
-            agentRuntime: { id: "openclaw" },
+            agentRuntime: { id: "quiet-core-bot" },
             models: [],
           },
         },
@@ -1295,7 +1295,7 @@ describe("agentCommand", () => {
   it("rejects agent-scoped to session selectors that conflict with the requested agent", async () => {
     await withTempHome(async (home) => {
       const store = path.join(home, "sessions.json");
-      const sessionKey = "agent:main:openclaw-weixin:direct:o9cq802hhmfc@im.wechat";
+      const sessionKey = "agent:main:quiet-core-bot-weixin:direct:o9cq802hhmfc@im.wechat";
       writeSessionStoreSeed(store, {
         [sessionKey]: { sessionId: "wechat-session", updatedAt: Date.now() },
       });
@@ -1311,7 +1311,7 @@ describe("agentCommand", () => {
   it("does not forward agent-scoped to session selectors as delivery targets", async () => {
     await withTempHome(async (home) => {
       const store = path.join(home, "sessions.json");
-      const sessionKey = "agent:main:openclaw-weixin:direct:o9cq802hhmfc@im.wechat";
+      const sessionKey = "agent:main:quiet-core-bot-weixin:direct:o9cq802hhmfc@im.wechat";
       writeSessionStoreSeed(store, {
         [sessionKey]: {
           sessionId: "wechat-session",

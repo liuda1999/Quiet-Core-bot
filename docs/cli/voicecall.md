@@ -1,12 +1,12 @@
 ---
-summary: "CLI reference for `openclaw voicecall` (voice-call plugin command surface)"
+summary: "CLI reference for `quiet-core-bot voicecall` (voice-call plugin command surface)"
 read_when:
   - You use the voice-call plugin and want every CLI entry point
   - You need flag tables and defaults for setup, smoke, call, continue, speak, dtmf, end, status, tail, latency, expose, and start
 title: "Voicecall"
 ---
 
-# `openclaw voicecall`
+# `quiet-core-bot voicecall`
 
 `voicecall` is a plugin-provided command. It only appears when the voice-call plugin is installed and enabled.
 
@@ -15,18 +15,18 @@ When the Gateway is running, operational commands (`call`, `start`, `continue`, 
 ## Subcommands
 
 ```bash
-openclaw voicecall setup    [--json]
-openclaw voicecall smoke    [-t <phone>] [--message <text>] [--mode <m>] [--yes] [--json]
-openclaw voicecall call     -m <text> [-t <phone>] [--mode <m>]
-openclaw voicecall start    --to <phone> [--message <text>] [--mode <m>]
-openclaw voicecall continue --call-id <id> --message <text>
-openclaw voicecall speak    --call-id <id> --message <text>
-openclaw voicecall dtmf     --call-id <id> --digits <digits>
-openclaw voicecall end      --call-id <id>
-openclaw voicecall status   [--call-id <id>] [--json]
-openclaw voicecall tail     [--file <path>] [--since <n>] [--poll <ms>]
-openclaw voicecall latency  [--file <path>] [--last <n>]
-openclaw voicecall expose   [--mode <m>] [--path <p>] [--port <port>] [--serve-path <p>]
+quiet-core-bot voicecall setup    [--json]
+quiet-core-bot voicecall smoke    [-t <phone>] [--message <text>] [--mode <m>] [--yes] [--json]
+quiet-core-bot voicecall call     -m <text> [-t <phone>] [--mode <m>]
+quiet-core-bot voicecall start    --to <phone> [--message <text>] [--mode <m>]
+quiet-core-bot voicecall continue --call-id <id> --message <text>
+quiet-core-bot voicecall speak    --call-id <id> --message <text>
+quiet-core-bot voicecall dtmf     --call-id <id> --digits <digits>
+quiet-core-bot voicecall end      --call-id <id>
+quiet-core-bot voicecall status   [--call-id <id>] [--json]
+quiet-core-bot voicecall tail     [--file <path>] [--since <n>] [--poll <ms>]
+quiet-core-bot voicecall latency  [--file <path>] [--last <n>]
+quiet-core-bot voicecall expose   [--mode <m>] [--path <p>] [--port <port>] [--serve-path <p>]
 ```
 
 | Subcommand | Description                                                     |
@@ -51,8 +51,8 @@ openclaw voicecall expose   [--mode <m>] [--path <p>] [--port <port>] [--serve-p
 Prints human-readable readiness checks by default. Pass `--json` for scripts.
 
 ```bash
-openclaw voicecall setup
-openclaw voicecall setup --json
+quiet-core-bot voicecall setup
+quiet-core-bot voicecall setup --json
 ```
 
 ### `smoke`
@@ -68,9 +68,9 @@ Runs the same readiness checks. It will not place a real phone call unless both 
 | `--json`           | `false`                                 | Print machine-readable JSON.            |
 
 ```bash
-openclaw voicecall smoke
-openclaw voicecall smoke --to "+15555550123"        # dry run
-openclaw voicecall smoke --to "+15555550123" --yes  # live notify call
+quiet-core-bot voicecall smoke
+quiet-core-bot voicecall smoke --to "+15555550123"        # dry run
+quiet-core-bot voicecall smoke --to "+15555550123" --yes  # live notify call
 ```
 
 <Note>
@@ -90,8 +90,8 @@ Initiate an outbound voice call.
 | `--mode <mode>`        | no       | `conversation`    | Call mode: `notify` (hang up after message) or `conversation` (stay open). |
 
 ```bash
-openclaw voicecall call --to "+15555550123" --message "Hello"
-openclaw voicecall call -m "Heads up" --mode notify
+quiet-core-bot voicecall call --to "+15555550123" --message "Hello"
+quiet-core-bot voicecall call -m "Heads up" --mode notify
 ```
 
 ### `start`
@@ -149,9 +149,9 @@ Inspect active calls.
 | `--json`         | `false` | Print machine-readable JSON. |
 
 ```bash
-openclaw voicecall status
-openclaw voicecall status --json
-openclaw voicecall status --call-id <id>
+quiet-core-bot voicecall status
+quiet-core-bot voicecall status --json
+quiet-core-bot voicecall status --call-id <id>
 ```
 
 ## Logs and metrics
@@ -189,9 +189,9 @@ Enable, disable, or change the Tailscale serve/funnel configuration for the voic
 | `--serve-path <path>` | config `serve.path` or `/voice/webhook`   | Local webhook path.                             |
 
 ```bash
-openclaw voicecall expose --mode serve
-openclaw voicecall expose --mode funnel
-openclaw voicecall expose --mode off
+quiet-core-bot voicecall expose --mode serve
+quiet-core-bot voicecall expose --mode funnel
+quiet-core-bot voicecall expose --mode off
 ```
 
 <Warning>

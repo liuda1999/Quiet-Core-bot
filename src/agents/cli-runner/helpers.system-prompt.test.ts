@@ -14,7 +14,7 @@ describe("buildCliAgentSystemPrompt", () => {
 
   it("uses config-backed sub-agent delegation mode", () => {
     const prompt = buildCliAgentSystemPrompt({
-      workspaceDir: "/tmp/openclaw",
+      workspaceDir: "/tmp/quiet-core-bot",
       config: {
         agents: {
           defaults: {
@@ -38,7 +38,7 @@ describe("buildCliAgentSystemPrompt", () => {
 
   it("uses CLI backend tool fallback instead of Quiet Core bot tool assumptions", () => {
     const prompt = buildCliAgentSystemPrompt({
-      workspaceDir: "/tmp/openclaw",
+      workspaceDir: "/tmp/quiet-core-bot",
       tools: [],
       modelDisplay: "test/model",
     });
@@ -53,14 +53,14 @@ describe("buildCliAgentSystemPrompt", () => {
 
   it("uses cwd, not bootstrap workspace, for CLI workspace guidance", () => {
     const prompt = buildCliAgentSystemPrompt({
-      workspaceDir: "/tmp/openclaw-agent",
+      workspaceDir: "/tmp/quiet-core-bot-agent",
       cwd: "/tmp/task-repo",
       tools: [],
       modelDisplay: "test/model",
     });
 
     expect(prompt).toContain("Your working directory is: /tmp/task-repo");
-    expect(prompt).not.toContain("Your working directory is: /tmp/openclaw-agent");
+    expect(prompt).not.toContain("Your working directory is: /tmp/quiet-core-bot-agent");
   });
 
   it("includes CLI-scoped plugin command guidance", () => {
@@ -83,7 +83,7 @@ describe("buildCliAgentSystemPrompt", () => {
     });
 
     const prompt = buildCliAgentSystemPrompt({
-      workspaceDir: "/tmp/openclaw",
+      workspaceDir: "/tmp/quiet-core-bot",
       tools: [{ name: "exec" } as never],
       modelDisplay: "test/model",
     });
@@ -94,7 +94,7 @@ describe("buildCliAgentSystemPrompt", () => {
 
   it("includes session identity in runtime when provided", () => {
     const prompt = buildCliAgentSystemPrompt({
-      workspaceDir: "/tmp/openclaw",
+      workspaceDir: "/tmp/quiet-core-bot",
       tools: [],
       modelDisplay: "test/model",
       agentId: "main",
@@ -109,7 +109,7 @@ describe("buildCliAgentSystemPrompt", () => {
 
   it("requires an explicit message target when the CLI turn policy requires one", () => {
     const prompt = buildCliAgentSystemPrompt({
-      workspaceDir: "/tmp/openclaw",
+      workspaceDir: "/tmp/quiet-core-bot",
       tools: [{ name: "message" } as never],
       modelDisplay: "test/model",
       sourceReplyDeliveryMode: "message_tool_only",

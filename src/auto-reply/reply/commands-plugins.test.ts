@@ -57,7 +57,7 @@ vi.mock("../../config/config.js", () => ({
     const afterWrite = params.afterWrite ?? { mode: "auto" };
     await replaceConfigFileMock({ nextConfig: transformed.nextConfig, afterWrite });
     return {
-      path: snapshot.path ?? "/tmp/openclaw.json",
+      path: snapshot.path ?? "/tmp/quiet-core-bot.json",
       previousHash,
       persistedHash: "persisted-hash",
       snapshot,
@@ -195,7 +195,7 @@ describe("handlePluginsCommand", () => {
     vi.clearAllMocks();
     readConfigFileSnapshotMock.mockResolvedValue({
       valid: true,
-      path: "/tmp/openclaw.json",
+      path: "/tmp/quiet-core-bot.json",
       sourceConfig: buildCfg(),
       resolved: buildCfg(),
       hash: "config-1",
@@ -212,7 +212,7 @@ describe("handlePluginsCommand", () => {
           id: "superpowers",
           name: "superpowers",
           status: "disabled",
-          format: "openclaw",
+          format: "quiet-core-bot",
           bundleFormat: "claude",
         },
       ],
@@ -224,7 +224,7 @@ describe("handlePluginsCommand", () => {
           id: "superpowers",
           name: "superpowers",
           status: "disabled",
-          format: "openclaw",
+          format: "quiet-core-bot",
           bundleFormat: "claude",
         },
       ],
@@ -346,8 +346,8 @@ describe("handlePluginsCommand", () => {
   });
 
   it("refuses plugin enablement in Nix mode before reading or replacing config", async () => {
-    const previousNixMode = process.env.OPENCLAW_NIX_MODE;
-    process.env.OPENCLAW_NIX_MODE = "1";
+    const previousNixMode = process.env.QUIET_CORE_NIX_MODE;
+    process.env.QUIET_CORE_NIX_MODE = "1";
     try {
       const params = buildPluginsParams("/plugins enable superpowers", buildCfg(), {
         gatewayClientScopes: WRITE_GATEWAY_SCOPES,
@@ -355,16 +355,16 @@ describe("handlePluginsCommand", () => {
       params.command.senderIsOwner = true;
 
       const result = await handlePluginsCommand(params, true);
-      expect(result?.reply?.text).toContain("OPENCLAW_NIX_MODE=1");
+      expect(result?.reply?.text).toContain("QUIET_CORE_NIX_MODE=1");
       expect(result?.reply?.text).toContain("nix-openclaw#quick-start");
       expect(readConfigFileSnapshotMock).not.toHaveBeenCalled();
       expect(replaceConfigFileMock).not.toHaveBeenCalled();
       expect(refreshPluginRegistryAfterConfigMutationMock).not.toHaveBeenCalled();
     } finally {
       if (previousNixMode === undefined) {
-        delete process.env.OPENCLAW_NIX_MODE;
+        delete process.env.QUIET_CORE_NIX_MODE;
       } else {
-        process.env.OPENCLAW_NIX_MODE = previousNixMode;
+        process.env.QUIET_CORE_NIX_MODE = previousNixMode;
       }
     }
   });

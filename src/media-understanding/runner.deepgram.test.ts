@@ -17,7 +17,7 @@ vi.mock("../plugins/capability-provider-runtime.js", async () => {
 
 describe("runCapability deepgram provider options", () => {
   it("merges provider options, headers, and baseUrl overrides", async () => {
-    await withAudioFixture("openclaw-deepgram", async ({ ctx, media, cache }) => {
+    await withAudioFixture("quiet-core-bot-deepgram", async ({ ctx, media, cache }) => {
       let seenQuery: Record<string, string | number | boolean> | undefined;
       let seenBaseUrl: string | undefined;
       let seenHeaders: Record<string, string> | undefined;

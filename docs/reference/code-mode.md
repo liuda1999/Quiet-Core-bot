@@ -129,15 +129,15 @@ To confirm the model payload shape while debugging, run the Gateway with
 targeted logging:
 
 ```bash
-OPENCLAW_DEBUG_CODE_MODE=1 \
-OPENCLAW_DEBUG_MODEL_TRANSPORT=1 \
-OPENCLAW_DEBUG_MODEL_PAYLOAD=tools \
+QUIET_CORE_DEBUG_CODE_MODE=1 \
+QUIET_CORE_DEBUG_MODEL_TRANSPORT=1 \
+QUIET_CORE_DEBUG_MODEL_PAYLOAD=tools \
 quiet-core-bot gateway
 ```
 
 With code mode active, the logged model-facing tool names should be `exec` and
 `wait`. If you need the redacted provider payload, add
-`OPENCLAW_DEBUG_MODEL_PAYLOAD=full-redacted` for a short debugging session.
+`QUIET_CORE_DEBUG_MODEL_PAYLOAD=full-redacted` for a short debugging session.
 
 ## Technical tour
 
@@ -409,7 +409,7 @@ type ToolCatalogEntry = {
   name: string;
   label?: string;
   description: string;
-  source: "openclaw" | "plugin" | "mcp" | "client";
+  source: "quiet-core-bot" | "plugin" | "mcp" | "client";
   sourceName?: string;
 };
 ```
@@ -455,8 +455,8 @@ const files = await API.list("mcp");
 const githubApi = await API.read("mcp/github.d.ts");
 
 const issue = await MCP.github.createIssue({
-  owner: "openclaw",
-  repo: "openclaw",
+  owner: "quiet-core-bot",
+  repo: "quiet-core-bot",
   title: "Investigate gateway logs",
 });
 
@@ -643,7 +643,7 @@ The serializer rejects:
   keys containing the internal path separator
 - `globalName` values that are not JavaScript identifiers
 - `globalName` collisions with built-in code-mode globals such as `tools`,
-  `namespaces`, `text`, `json`, `yield_control`, or `__openclaw*`
+  `namespaces`, `text`, `json`, `yield_control`, or `__quiet-core-bot*`
 
 Values that cannot be JSON-serialized are converted to JSON-safe fallback
 values before crossing the bridge. Binary data, handles, sockets, clients, and
@@ -746,7 +746,7 @@ Recommended id shape:
 Examples:
 
 ```text
-openclaw:core:message
+quiet-core-bot:core:message
 plugin:browser:browser_request
 mcp:github:create_issue
 client:app:select_file
@@ -799,7 +799,7 @@ other tool.
 
 Inside the guest runtime:
 
-- `tools.call("openclaw:core:exec", input)` can call the shell exec tool if
+- `tools.call("quiet-core-bot:core:exec", input)` can call the shell exec tool if
   policy allows it.
 - `tools.exec(...)` is installed only if the shell exec catalog entry has an
   unambiguous safe name.
@@ -956,18 +956,18 @@ Use targeted model transport logging when code mode behaves differently from a
 normal tool run:
 
 ```bash
-OPENCLAW_DEBUG_CODE_MODE=1 \
-OPENCLAW_DEBUG_MODEL_TRANSPORT=1 \
-OPENCLAW_DEBUG_MODEL_PAYLOAD=tools \
-OPENCLAW_DEBUG_SSE=events \
+QUIET_CORE_DEBUG_CODE_MODE=1 \
+QUIET_CORE_DEBUG_MODEL_TRANSPORT=1 \
+QUIET_CORE_DEBUG_MODEL_PAYLOAD=tools \
+QUIET_CORE_DEBUG_SSE=events \
 quiet-core-bot gateway
 ```
 
-For payload-shape debugging, use `OPENCLAW_DEBUG_MODEL_PAYLOAD=full-redacted`.
+For payload-shape debugging, use `QUIET_CORE_DEBUG_MODEL_PAYLOAD=full-redacted`.
 This logs a capped, redacted JSON snapshot of the model request; it should only
 be used while debugging because prompts and message text can still appear.
 
-For stream debugging, use `OPENCLAW_DEBUG_SSE=peek` to log the first five
+For stream debugging, use `QUIET_CORE_DEBUG_SSE=peek` to log the first five
 redacted SSE events. Code mode also fails closed if the final provider payload
 does not contain exactly `exec` and `wait` after the code-mode surface has
 activated.

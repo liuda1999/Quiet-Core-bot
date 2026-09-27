@@ -13,7 +13,7 @@ import {
   ensureDeviceToken,
   requestDevicePairing,
 } from "../infra/device-pairing.js";
-import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-quiet-core-bot-dir.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import type { ResolvedGatewayAuth } from "./auth.js";
 import { CONTROL_UI_BOOTSTRAP_CONFIG_PATH } from "./control-ui-contract.js";
@@ -30,7 +30,7 @@ describe("handleControlUiHttpRequest", () => {
     indexHtml?: string;
     fn: (tmp: string) => Promise<T>;
   }) {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-ui-"));
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-ui-"));
     try {
       await fs.writeFile(path.join(tmp, "index.html"), params.indexHtml ?? "<html></html>\n");
       return await params.fn(tmp);
@@ -276,7 +276,7 @@ describe("handleControlUiHttpRequest", () => {
     siblingDir: string;
     fn: (paths: { root: string; sibling: string }) => Promise<T>;
   }) {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-ui-root-"));
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-ui-root-"));
     try {
       const root = path.join(tmp, "ui");
       const sibling = path.join(tmp, params.siblingDir);
@@ -294,9 +294,9 @@ describe("handleControlUiHttpRequest", () => {
     browserMetadata?: boolean;
     fn: (token: string) => Promise<T>;
   }) {
-    const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-ui-device-token-"));
+    const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-ui-device-token-"));
     try {
-      return await withEnvAsync({ OPENCLAW_HOME: tempHome }, async () => {
+      return await withEnvAsync({ QUIET_CORE_HOME: tempHome }, async () => {
         const deviceId = "control-ui-device";
         const requested = await requestDevicePairing({
           deviceId,
@@ -305,7 +305,7 @@ describe("handleControlUiHttpRequest", () => {
           scopes: ["operator.read"],
           ...(params.browserMetadata
             ? {
-                clientId: "openclaw-control-ui",
+                clientId: "quiet-core-bot-control-ui",
                 clientMode: "webchat",
               }
             : {}),
@@ -428,7 +428,7 @@ describe("handleControlUiHttpRequest", () => {
   });
 
   it("rejects assistant local media outside allowed preview roots", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-ui-media-blocked-"));
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-ui-media-blocked-"));
     try {
       const filePath = path.join(tmp, "photo.png");
       await fs.writeFile(filePath, Buffer.from("not-a-real-png"));
@@ -717,7 +717,7 @@ describe("handleControlUiHttpRequest", () => {
         const { res, handled, end } = await runTrustedProxyAssistantMediaRequest({
           filePath,
           headers: {
-            "x-openclaw-scopes": "operator.approvals",
+            "x-quiet-core-bot-scopes": "operator.approvals",
           },
         });
         expectMissingOperatorReadResponse({ handled, res, end });
@@ -735,7 +735,7 @@ describe("handleControlUiHttpRequest", () => {
           filePath,
           meta: true,
           headers: {
-            "x-openclaw-scopes": "",
+            "x-quiet-core-bot-scopes": "",
           },
         });
         expectMissingOperatorReadResponse({ handled, res, end });
@@ -795,17 +795,17 @@ describe("handleControlUiHttpRequest", () => {
       fn: async (tmp) => {
         const { res, end } = makeMockHttpResponse();
         const handled = await handleControlUiHttpRequest(
-          { url: "/openclaw/chat", method: "GET" } as IncomingMessage,
+          { url: "/quiet-core-bot/chat", method: "GET" } as IncomingMessage,
           res,
           {
-            basePath: "/openclaw",
+            basePath: "/quiet-core-bot",
             root: { kind: "resolved", path: tmp },
           },
         );
         expect(handled).toBe(true);
         const body = String(end.mock.calls[0]?.[0] ?? "");
-        expect(body).toContain('href="/openclaw/manifest.webmanifest"');
-        expect(body).toContain('href="/openclaw/favicon.svg"');
+        expect(body).toContain('href="/quiet-core-bot/manifest.webmanifest"');
+        expect(body).toContain('href="/quiet-core-bot/favicon.svg"');
         expect(body).not.toContain('href="/manifest.webmanifest"');
       },
     });
@@ -899,10 +899,13 @@ describe("handleControlUiHttpRequest", () => {
       fn: async (tmp) => {
         const { res, end } = makeMockHttpResponse();
         const handled = await handleControlUiHttpRequest(
-          { url: `/openclaw${CONTROL_UI_BOOTSTRAP_CONFIG_PATH}`, method: "GET" } as IncomingMessage,
+          {
+            url: `/quiet-core-bot${CONTROL_UI_BOOTSTRAP_CONFIG_PATH}`,
+            method: "GET",
+          } as IncomingMessage,
           res,
           {
-            basePath: "/openclaw",
+            basePath: "/quiet-core-bot",
             root: { kind: "resolved", path: tmp },
             config: {
               agents: { defaults: { workspace: tmp } },
@@ -912,9 +915,9 @@ describe("handleControlUiHttpRequest", () => {
         );
         expect(handled).toBe(true);
         const parsed = parseBootstrapPayload(end);
-        expect(parsed.basePath).toBe("/openclaw");
+        expect(parsed.basePath).toBe("/quiet-core-bot");
         expect(parsed.assistantName).toBe("Ops");
-        expect(parsed.assistantAvatar).toBe("/openclaw/avatar/main");
+        expect(parsed.assistantAvatar).toBe("/quiet-core-bot/avatar/main");
         expect(parsed.assistantAgentId).toBe("main");
         expect(Array.isArray(parsed.localMediaPreviewRoots)).toBe(true);
       },
@@ -1085,7 +1088,7 @@ describe("handleControlUiHttpRequest", () => {
   });
 
   it("serves local avatar bytes through hardened avatar handler", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-avatar-http-"));
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-avatar-http-"));
     try {
       const avatarPath = path.join(tmp, "main.png");
       await fs.writeFile(avatarPath, "avatar-bytes\n");
@@ -1105,8 +1108,8 @@ describe("handleControlUiHttpRequest", () => {
   });
 
   it("rejects avatar symlink paths from resolver", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-avatar-http-link-"));
-    const outside = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-avatar-http-outside-"));
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-avatar-http-link-"));
+    const outside = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-avatar-http-outside-"));
     try {
       const outsideFile = path.join(outside, "secret.txt");
       await fs.writeFile(outsideFile, "outside-secret\n");
@@ -1127,7 +1130,7 @@ describe("handleControlUiHttpRequest", () => {
   });
 
   it("serves local avatar bytes when auth is enabled and the token is valid", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-avatar-auth-"));
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-avatar-auth-"));
     try {
       const avatarPath = path.join(tmp, "main.png");
       await fs.writeFile(avatarPath, "avatar-bytes\n");
@@ -1152,7 +1155,7 @@ describe("handleControlUiHttpRequest", () => {
   it("serves local avatar bytes when paired device-token auth is valid", async () => {
     await withPairedOperatorDeviceToken({
       fn: async (operatorToken) => {
-        const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-avatar-device-token-"));
+        const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-avatar-device-token-"));
         try {
           const avatarPath = path.join(tmp, "main.png");
           await fs.writeFile(avatarPath, "avatar-bytes\n");
@@ -1240,7 +1243,7 @@ describe("handleControlUiHttpRequest", () => {
     const { res, handled, end } = await runTrustedProxyAvatarRequest({
       meta: true,
       headers: {
-        "x-openclaw-scopes": "",
+        "x-quiet-core-bot-scopes": "",
       },
     });
 
@@ -1251,7 +1254,7 @@ describe("handleControlUiHttpRequest", () => {
     await withControlUiRoot({
       fn: async (tmp) => {
         const assetsDir = path.join(tmp, "assets");
-        const outsideDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-ui-outside-"));
+        const outsideDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-ui-outside-"));
         try {
           const outsideFile = path.join(outsideDir, "secret.txt");
           await fs.mkdir(assetsDir, { recursive: true });
@@ -1338,7 +1341,7 @@ describe("handleControlUiHttpRequest", () => {
   it("rejects symlinked SPA fallback index.html outside control-ui root", async () => {
     await withControlUiRoot({
       fn: async (tmp) => {
-        const outsideDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-ui-index-outside-"));
+        const outsideDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-ui-index-outside-"));
         try {
           const outsideIndex = path.join(outsideDir, "index.html");
           await fs.writeFile(outsideIndex, "<html>outside</html>\n");
@@ -1361,7 +1364,7 @@ describe("handleControlUiHttpRequest", () => {
   it("rejects hardlinked index.html for non-package control-ui roots", async () => {
     await withControlUiRoot({
       fn: async (tmp) => {
-        const outsideDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-ui-index-hardlink-"));
+        const outsideDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-ui-index-hardlink-"));
         try {
           const outsideIndex = path.join(outsideDir, "index.html");
           await fs.writeFile(outsideIndex, "<html>outside-hardlink</html>\n");
@@ -1472,7 +1475,7 @@ describe("handleControlUiHttpRequest", () => {
         const handled = await handleControlUiHttpRequest(
           { url: "/imessage-webhook", method: "POST" } as IncomingMessage,
           res,
-          { basePath: "/openclaw", root: { kind: "resolved", path: tmp } },
+          { basePath: "/quiet-core-bot", root: { kind: "resolved", path: tmp } },
         );
         expect(handled).toBe(false);
       },
@@ -1526,12 +1529,12 @@ describe("handleControlUiHttpRequest", () => {
   it("falls through POST requests under configured basePath (plugin webhook passthrough)", async () => {
     await withControlUiRoot({
       fn: async (tmp) => {
-        for (const route of ["/openclaw", "/openclaw/", "/openclaw/some-page"]) {
+        for (const route of ["/quiet-core-bot", "/quiet-core-bot/", "/quiet-core-bot/some-page"]) {
           const { handled, end } = await runControlUiRequest({
             url: route,
             method: "POST",
             rootPath: tmp,
-            basePath: "/openclaw",
+            basePath: "/quiet-core-bot",
           });
           expect(handled, `POST to ${route} should pass through to plugin handlers`).toBe(false);
           expect(end, `POST to ${route} should not write a response`).not.toHaveBeenCalled();
@@ -1550,10 +1553,10 @@ describe("handleControlUiHttpRequest", () => {
         const secretPathUrl = secretPath.split(path.sep).join("/");
         const absolutePathUrl = secretPathUrl.startsWith("/") ? secretPathUrl : `/${secretPathUrl}`;
         const { res, end, handled } = await runControlUiRequest({
-          url: `/openclaw/${absolutePathUrl}`,
+          url: `/quiet-core-bot/${absolutePathUrl}`,
           method: "GET",
           rootPath: root,
-          basePath: "/openclaw",
+          basePath: "/quiet-core-bot",
         });
         expectNotFoundResponse({ handled, res, end });
       },
@@ -1579,10 +1582,10 @@ describe("handleControlUiHttpRequest", () => {
         }
 
         const { res, end, handled } = await runControlUiRequest({
-          url: "/openclaw/assets/leak.txt",
+          url: "/quiet-core-bot/assets/leak.txt",
           method: "GET",
           rootPath: root,
-          basePath: "/openclaw",
+          basePath: "/quiet-core-bot",
         });
         expectNotFoundResponse({ handled, res, end });
       },

@@ -22,7 +22,7 @@ Arcee AI models can be accessed directly via the Arcee platform or through [Open
 Install the official plugin, then restart Gateway:
 
 ```bash
-quiet-core-bot plugins install @openclaw/arcee-provider
+quiet-core-bot plugins install @quiet-core/arcee-provider
 quiet-core-bot gateway restart
 ```
 

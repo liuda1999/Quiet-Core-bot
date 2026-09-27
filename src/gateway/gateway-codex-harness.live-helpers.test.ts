@@ -65,7 +65,7 @@ describe("gateway codex harness live helpers", () => {
     const text = [
       "Status: running on `openai/gpt-5.5` with low reasoning/text settings.",
       "",
-      "Session context is healthy: `22k/272k` tokens used, `0` compactions, `53%` cache hit. Current workspace is `/tmp/openclaw-live-codex-harness/workspace/dev`.",
+      "Session context is healthy: `22k/272k` tokens used, `0` compactions, `53%` cache hit. Current workspace is `/tmp/quiet-core-bot-live-codex-harness/workspace/dev`.",
     ].join("\n");
 
     expect(isExpectedCodexStatusCommandText(text)).toBe(true);
@@ -73,7 +73,7 @@ describe("gateway codex harness live helpers", () => {
 
   it("accepts current app-server status prose without the Quiet Core bot prefix", () => {
     const text = [
-      "Status: running on `openai/gpt-5.5` in `/tmp/openclaw-live-codex-harness/workspace/dev`.",
+      "Status: running on `openai/gpt-5.5` in `/tmp/quiet-core-bot-live-codex-harness/workspace/dev`.",
       "",
       "Context is at 22k / 272k tokens, with no compactions. There’s 1 active task: `/codex status`.",
     ].join("\n");
@@ -97,7 +97,7 @@ describe("gateway codex harness live helpers", () => {
 
   it("accepts workspace-only healthy status prose emitted by current codex", () => {
     const text =
-      "Working normally. Current workspace: `/tmp/openclaw-live-codex-harness/workspace/dev`.";
+      "Working normally. Current workspace: `/tmp/quiet-core-bot-live-codex-harness/workspace/dev`.";
 
     expect(
       EXPECTED_CODEX_STATUS_COMMAND_TEXT.some((expectedText) => text.includes(expectedText)),
@@ -188,7 +188,7 @@ describe("gateway codex harness live helpers", () => {
 
   it("accepts the online idle status emitted by current codex", () => {
     const text =
-      "I'm online in `/tmp/openclaw-live-codex-harness-KiaUQ4/workspace/dev`, with workspace-write access. No active task is running right now.";
+      "I'm online in `/tmp/quiet-core-bot-live-codex-harness-KiaUQ4/workspace/dev`, with workspace-write access. No active task is running right now.";
 
     expect(isExpectedCodexStatusCommandText(text)).toBe(true);
   });
@@ -203,7 +203,7 @@ describe("gateway codex harness live helpers", () => {
 
   it("accepts the normal-work status emitted by current codex", () => {
     const text =
-      "Working normally. Current cwd is `/tmp/openclaw-live-codex-harness/workspace/dev`, sandbox is workspace-write, network is restricted, and the current date is 2026-05-09 UTC.";
+      "Working normally. Current cwd is `/tmp/quiet-core-bot-live-codex-harness/workspace/dev`, sandbox is workspace-write, network is restricted, and the current date is 2026-05-09 UTC.";
 
     expect(
       EXPECTED_CODEX_STATUS_COMMAND_TEXT.some((expectedText) => text.includes(expectedText)),

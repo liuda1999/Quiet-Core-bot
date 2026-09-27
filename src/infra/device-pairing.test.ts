@@ -55,7 +55,7 @@ async function setupPairedBrowserOperatorDevice(baseDir: string) {
     {
       deviceId: "browser-device-1",
       publicKey: "public-key-browser-1",
-      clientId: "openclaw-control-ui",
+      clientId: "quiet-core-bot-control-ui",
       clientMode: "webchat",
       role: "operator",
       scopes: ["operator.read"],
@@ -176,7 +176,7 @@ async function clearPairedOperatorApprovalBaseline(baseDir: string) {
   });
 }
 
-const suiteRootTracker = createSuiteTempRootTracker({ prefix: "openclaw-device-pairing-" });
+const suiteRootTracker = createSuiteTempRootTracker({ prefix: "quiet-core-bot-device-pairing-" });
 
 async function makeDevicePairingDir(): Promise<string> {
   return await suiteRootTracker.make("case");

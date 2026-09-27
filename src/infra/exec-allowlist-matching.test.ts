@@ -31,12 +31,12 @@ describe("exec allowlist matching", () => {
   it("does not let bare command-name patterns match path-selected executables", () => {
     const relativeResolution = {
       rawExecutable: "./rg",
-      resolvedPath: "/tmp/openclaw-workspace/rg",
+      resolvedPath: "/tmp/quiet-core-bot-workspace/rg",
       executableName: "rg",
     };
     const absoluteResolution = {
-      rawExecutable: "/tmp/openclaw-workspace/rg",
-      resolvedPath: "/tmp/openclaw-workspace/rg",
+      rawExecutable: "/tmp/quiet-core-bot-workspace/rg",
+      resolvedPath: "/tmp/quiet-core-bot-workspace/rg",
       executableName: "rg",
     };
 

@@ -31,7 +31,7 @@ title: "Retry policy"
   `retry-after`. When that wait is longer than 60 seconds, Quiet Core bot injects
   `x-should-retry: false` so the SDK surfaces the error immediately and model
   failover can rotate to another auth profile or fallback model.
-- Override the cap with `OPENCLAW_SDK_RETRY_MAX_WAIT_SECONDS=<seconds>`.
+- Override the cap with `QUIET_CORE_SDK_RETRY_MAX_WAIT_SECONDS=<seconds>`.
   Set it to `0`, `false`, `off`, `none`, or `disabled` to let SDKs honor long
   `Retry-After` sleeps internally.
 

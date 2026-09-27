@@ -11,8 +11,8 @@ Twilio SMS channel plugin for Quiet Core bot text messages.
 
 ## Distribution
 
-- Package: `@openclaw/sms`
-- Install route: npm; ClawHub: `clawhub:@openclaw/sms`
+- Package: `@quiet-core/sms`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/sms`
 
 ## Surface
 

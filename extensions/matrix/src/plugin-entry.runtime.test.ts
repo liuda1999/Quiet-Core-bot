@@ -37,7 +37,7 @@ function writeOpenClawPackageFixture(fixtureRoot: string) {
     "package.json",
     JSON.stringify(
       {
-        name: "openclaw",
+        name: "quiet-core-bot",
         type: "module",
         exports: {
           "./plugin-sdk": "./dist/plugin-sdk/index.js",

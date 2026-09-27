@@ -18,7 +18,7 @@ vi.mock("../../packages/terminal-core/src/note.js", () => ({
 const tempDirs: string[] = [];
 
 async function makeTempRoot(): Promise<string> {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-heartbeat-template-"));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-heartbeat-template-"));
   tempDirs.push(root);
   return root;
 }

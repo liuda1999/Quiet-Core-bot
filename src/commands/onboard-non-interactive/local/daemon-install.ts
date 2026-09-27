@@ -4,7 +4,7 @@
  * It validates daemon runtime options, resolves gateway auth inputs, and then
  * delegates the platform-specific service install.
  */
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
 import { resolveGatewayService } from "../../../daemon/service.js";
 import { isSystemdUserServiceAvailable } from "../../../daemon/systemd.js";
 import { formatErrorMessage } from "../../../infra/errors.js";

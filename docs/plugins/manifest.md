@@ -18,14 +18,14 @@ Compatible bundle formats use different manifest files:
 - Cursor bundle: `.cursor-plugin/plugin.json`
 
 Quiet Core bot auto-detects those bundle layouts too, but they are not validated
-against the `openclaw.plugin.json` schema described here.
+against the `quiet-core-bot.plugin.json` schema described here.
 
 For compatible bundles, Quiet Core bot currently reads bundle metadata plus declared
 skill roots, Claude command roots, Claude bundle `settings.json` defaults,
 Claude bundle LSP defaults, and supported hook packs when the layout matches
 Quiet Core bot runtime expectations.
 
-Every native Quiet Core bot plugin **must** ship a `openclaw.plugin.json` file in the
+Every native Quiet Core bot plugin **must** ship a `quiet-core-bot.plugin.json` file in the
 **plugin root**. Quiet Core bot uses this manifest to validate configuration
 **without executing plugin code**. Missing or invalid manifests are treated as
 plugin errors and block config validation.
@@ -36,7 +36,7 @@ For the native capability model and current external-compatibility guidance:
 
 ## What this file does
 
-`openclaw.plugin.json` is the metadata Quiet Core bot reads **before it loads your
+`quiet-core-bot.plugin.json` is the metadata Quiet Core bot reads **before it loads your
 plugin code**. Everything below must be cheap enough to inspect without booting
 plugin runtime.
 
@@ -544,7 +544,7 @@ preferred for custom labels, CLI flags, onboarding scope, and assistant metadata
 
 Set `requiresRuntime: false` only when those descriptors are sufficient for the
 setup surface. Quiet Core bot treats explicit `false` as a descriptor-only contract
-and will not execute `setup-api` or `openclaw.setupEntry` for setup lookup. If
+and will not execute `setup-api` or `quiet-core-bot.setupEntry` for setup lookup. If
 a descriptor-only plugin still ships one of those setup runtime entries,
 Quiet Core bot reports an additive diagnostic and continues ignoring it. Omitted
 `requiresRuntime` keeps legacy fallback behavior so existing plugins that added
@@ -631,7 +631,7 @@ read without importing the plugin runtime.
 ```json
 {
   "contracts": {
-    "agentToolResultMiddleware": ["openclaw", "codex"],
+    "agentToolResultMiddleware": ["quiet-core-bot", "codex"],
     "trustedToolPolicies": ["workflow-budget"],
     "externalAuthProviders": ["acme-ai"],
     "embeddingProviders": ["openai-compatible"],
@@ -670,7 +670,7 @@ Each list is optional:
 | `videoGenerationProviders`       | `string[]` | Video-generation provider ids this plugin owns.                                                                                      |
 | `webFetchProviders`              | `string[]` | Web-fetch provider ids this plugin owns.                                                                                             |
 | `webSearchProviders`             | `string[]` | Web-search provider ids this plugin owns.                                                                                            |
-| `migrationProviders`             | `string[]` | Import provider ids this plugin owns for `openclaw migrate`.                                                                         |
+| `migrationProviders`             | `string[]` | Import provider ids this plugin owns for `quiet-core-bot migrate`.                                                                         |
 | `gatewayMethodDispatch`          | `string[]` | Reserved entitlement for authenticated plugin HTTP routes that dispatch Gateway methods in-process.                                  |
 | `tools`                          | `string[]` | Agent tool names this plugin owns.                                                                                                   |
 
@@ -772,7 +772,7 @@ channel-owned option shape until plugin runtime executes.
 `channelConfigs.<channel-id>.commands.nativeCommandsAutoEnabled` and
 `nativeSkillsAutoEnabled` can declare static `auto` defaults for command config
 checks that run before channel runtime loads. Bundled channels can also publish
-the same defaults through `package.json#openclaw.channel.commands` alongside
+the same defaults through `package.json#quiet-core-bot.channel.commands` alongside
 their other package-owned channel catalog metadata.
 
 ```json
@@ -1245,69 +1245,69 @@ The two files serve different jobs:
 
 | File                   | Use it for                                                                                                                       |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `openclaw.plugin.json` | Discovery, config validation, auth-choice metadata, and UI hints that must exist before plugin code runs                         |
-| `package.json`         | npm metadata, dependency installation, and the `openclaw` block used for entrypoints, install gating, setup, or catalog metadata |
+| `quiet-core-bot.plugin.json` | Discovery, config validation, auth-choice metadata, and UI hints that must exist before plugin code runs                         |
+| `package.json`         | npm metadata, dependency installation, and the `quiet-core-bot` block used for entrypoints, install gating, setup, or catalog metadata |
 
 If you are unsure where a piece of metadata belongs, use this rule:
 
-- if Quiet Core bot must know it before loading plugin code, put it in `openclaw.plugin.json`
+- if Quiet Core bot must know it before loading plugin code, put it in `quiet-core-bot.plugin.json`
 - if it is about packaging, entry files, or npm install behavior, put it in `package.json`
 
 ### package.json fields that affect discovery
 
 Some pre-runtime plugin metadata intentionally lives in `package.json` under the
-`openclaw` block instead of `openclaw.plugin.json`.
-`openclaw.bundle` and `openclaw.bundle.json` are not Quiet Core bot plugin contracts;
-native plugins must use `openclaw.plugin.json` plus the supported
-`package.json#openclaw` fields below.
+`quiet-core-bot` block instead of `quiet-core-bot.plugin.json`.
+`quiet-core-bot.bundle` and `quiet-core-bot.bundle.json` are not Quiet Core bot plugin contracts;
+native plugins must use `quiet-core-bot.plugin.json` plus the supported
+`package.json#quiet-core-bot` fields below.
 
 Important examples:
 
 | Field                                                                                      | What it means                                                                                                                                                                        |
 | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `openclaw.extensions`                                                                      | Declares native plugin entrypoints. Must stay inside the plugin package directory.                                                                                                   |
-| `openclaw.runtimeExtensions`                                                               | Declares built JavaScript runtime entrypoints for installed packages. Must stay inside the plugin package directory.                                                                 |
-| `openclaw.setupEntry`                                                                      | Lightweight setup-only entrypoint used during onboarding, deferred channel startup, and read-only channel status/SecretRef discovery. Must stay inside the plugin package directory. |
-| `openclaw.runtimeSetupEntry`                                                               | Declares the built JavaScript setup entrypoint for installed packages. Requires `setupEntry`, must exist, and must stay inside the plugin package directory.                         |
-| `openclaw.channel`                                                                         | Cheap channel catalog metadata like labels, docs paths, aliases, and selection copy.                                                                                                 |
-| `openclaw.channel.commands`                                                                | Static native command and native skill auto-default metadata used by config, audit, and command-list surfaces before channel runtime loads.                                          |
-| `openclaw.channel.configuredState`                                                         | Lightweight configured-state checker metadata that can answer "does env-only setup already exist?" without loading the full channel runtime.                                         |
-| `openclaw.channel.persistedAuthState`                                                      | Lightweight persisted-auth checker metadata that can answer "is anything already signed in?" without loading the full channel runtime.                                               |
-| `openclaw.install.clawhubSpec` / `openclaw.install.npmSpec` / `openclaw.install.localPath` | Install/update hints for bundled and externally published plugins.                                                                                                                   |
-| `openclaw.install.defaultChoice`                                                           | Preferred install path when multiple install sources are available.                                                                                                                  |
-| `openclaw.install.minHostVersion`                                                          | Minimum supported Quiet Core bot host version, using a semver floor like `>=2026.3.22` or `>=2026.5.1-beta.1`.                                                                       |
-| `openclaw.compat.pluginApi`                                                                | Minimum Quiet Core bot plugin API range required by this package, using a semver floor like `>=2026.5.27`.                                                                           |
-| `openclaw.install.expectedIntegrity`                                                       | Expected npm dist integrity string such as `sha512-...`; install and update flows verify the fetched artifact against it.                                                            |
-| `openclaw.install.allowInvalidConfigRecovery`                                              | Allows a narrow bundled-plugin reinstall recovery path when config is invalid.                                                                                                       |
-| `openclaw.install.requiredPlatformPackages`                                                | npm package aliases that must materialize when their lockfile platform constraints match the current host.                                                                           |
-| `openclaw.startup.deferConfiguredChannelFullLoadUntilAfterListen`                          | Lets setup-runtime channel surfaces load before listen, then defers the full configured channel plugin until post-listen activation.                                                 |
+| `quiet-core-bot.extensions`                                                                      | Declares native plugin entrypoints. Must stay inside the plugin package directory.                                                                                                   |
+| `quiet-core-bot.runtimeExtensions`                                                               | Declares built JavaScript runtime entrypoints for installed packages. Must stay inside the plugin package directory.                                                                 |
+| `quiet-core-bot.setupEntry`                                                                      | Lightweight setup-only entrypoint used during onboarding, deferred channel startup, and read-only channel status/SecretRef discovery. Must stay inside the plugin package directory. |
+| `quiet-core-bot.runtimeSetupEntry`                                                               | Declares the built JavaScript setup entrypoint for installed packages. Requires `setupEntry`, must exist, and must stay inside the plugin package directory.                         |
+| `quiet-core-bot.channel`                                                                         | Cheap channel catalog metadata like labels, docs paths, aliases, and selection copy.                                                                                                 |
+| `quiet-core-bot.channel.commands`                                                                | Static native command and native skill auto-default metadata used by config, audit, and command-list surfaces before channel runtime loads.                                          |
+| `quiet-core-bot.channel.configuredState`                                                         | Lightweight configured-state checker metadata that can answer "does env-only setup already exist?" without loading the full channel runtime.                                         |
+| `quiet-core-bot.channel.persistedAuthState`                                                      | Lightweight persisted-auth checker metadata that can answer "is anything already signed in?" without loading the full channel runtime.                                               |
+| `quiet-core-bot.install.clawhubSpec` / `quiet-core-bot.install.npmSpec` / `quiet-core-bot.install.localPath` | Install/update hints for bundled and externally published plugins.                                                                                                                   |
+| `quiet-core-bot.install.defaultChoice`                                                           | Preferred install path when multiple install sources are available.                                                                                                                  |
+| `quiet-core-bot.install.minHostVersion`                                                          | Minimum supported Quiet Core bot host version, using a semver floor like `>=2026.3.22` or `>=2026.5.1-beta.1`.                                                                       |
+| `quiet-core-bot.compat.pluginApi`                                                                | Minimum Quiet Core bot plugin API range required by this package, using a semver floor like `>=2026.5.27`.                                                                           |
+| `quiet-core-bot.install.expectedIntegrity`                                                       | Expected npm dist integrity string such as `sha512-...`; install and update flows verify the fetched artifact against it.                                                            |
+| `quiet-core-bot.install.allowInvalidConfigRecovery`                                              | Allows a narrow bundled-plugin reinstall recovery path when config is invalid.                                                                                                       |
+| `quiet-core-bot.install.requiredPlatformPackages`                                                | npm package aliases that must materialize when their lockfile platform constraints match the current host.                                                                           |
+| `quiet-core-bot.startup.deferConfiguredChannelFullLoadUntilAfterListen`                          | Lets setup-runtime channel surfaces load before listen, then defers the full configured channel plugin until post-listen activation.                                                 |
 
 Manifest metadata decides which provider/channel/setup choices appear in
-onboarding before runtime loads. `package.json#openclaw.install` tells
+onboarding before runtime loads. `package.json#quiet-core-bot.install` tells
 onboarding how to fetch or enable that plugin when the user picks one of those
-choices. Do not move install hints into `openclaw.plugin.json`.
+choices. Do not move install hints into `quiet-core-bot.plugin.json`.
 
-`openclaw.install.minHostVersion` is enforced during install and manifest
+`quiet-core-bot.install.minHostVersion` is enforced during install and manifest
 registry loading for non-bundled plugin sources. Invalid values are rejected;
 newer-but-valid values skip external plugins on older hosts. Bundled source
 plugins are assumed to be co-versioned with the host checkout.
 
-`openclaw.install.requiredPlatformPackages` is for npm packages that expose
+`quiet-core-bot.install.requiredPlatformPackages` is for npm packages that expose
 required native binaries through optional, platform-specific aliases. List the
 bare npm package name for every supported platform alias. During npm install,
 Quiet Core bot verifies only the declared alias whose lockfile constraints match the
 current host. If npm reports success but omits that alias, Quiet Core bot retries once
 with a fresh cache and rolls back the install if the alias is still missing.
 
-`openclaw.compat.pluginApi` is enforced during package install for non-bundled
+`quiet-core-bot.compat.pluginApi` is enforced during package install for non-bundled
 plugin sources. Use it for the Quiet Core bot plugin SDK/runtime API floor that the
 package was built against. It can be stricter than `minHostVersion` when a
 plugin package needs a newer API but still keeps a lower install hint for other
 flows. Official Quiet Core bot release sync bumps existing official plugin API floors
 to the Quiet Core bot release version by default, but plugin-only releases can keep a
 lower floor when the package intentionally supports older hosts. Do not use the
-package version alone as the compatibility contract. `peerDependencies.openclaw`
-remains npm package metadata; Quiet Core bot uses the `openclaw.compat.pluginApi`
+package version alone as the compatibility contract. `peerDependencies.quiet-core-bot`
+remains npm package metadata; Quiet Core bot uses the `quiet-core-bot.compat.pluginApi`
 contract for install compatibility decisions.
 
 Official install-on-demand metadata should use `clawhubSpec` when the plugin is
@@ -1316,7 +1316,7 @@ records ClawHub artifact facts after install. `npmSpec` remains the compatibilit
 fallback for packages that have not moved to ClawHub yet.
 
 Exact npm version pinning already lives in `npmSpec`, for example
-`"npmSpec": "@wecom/wecom-openclaw-plugin@1.2.3"`. Official external catalog
+`"npmSpec": "@wecom/wecom-quiet-core-bot-plugin@1.2.3"`. Official external catalog
 entries should pair exact specs with `expectedIntegrity` so update flows fail
 closed if the fetched npm artifact no longer matches the pinned release.
 Interactive onboarding still offers trusted registry npm specs, including bare
@@ -1328,29 +1328,29 @@ When `expectedIntegrity` is present,
 install/update flows enforce it; when it is omitted, the registry resolution is
 recorded without an integrity pin.
 
-Channel plugins should provide `openclaw.setupEntry` when status, channel list,
+Channel plugins should provide `quiet-core-bot.setupEntry` when status, channel list,
 or SecretRef scans need to identify configured accounts without loading the full
 runtime. The setup entry should expose channel metadata plus setup-safe config,
 status, and secrets adapters; keep network clients, gateway listeners, and
 transport runtimes in the main extension entrypoint.
 
 Runtime entrypoint fields do not override package-boundary checks for source
-entrypoint fields. For example, `openclaw.runtimeExtensions` cannot make an
-escaping `openclaw.extensions` path loadable.
+entrypoint fields. For example, `quiet-core-bot.runtimeExtensions` cannot make an
+escaping `quiet-core-bot.extensions` path loadable.
 
-`openclaw.install.allowInvalidConfigRecovery` is intentionally narrow. It does
+`quiet-core-bot.install.allowInvalidConfigRecovery` is intentionally narrow. It does
 not make arbitrary broken configs installable. Today it only allows install
 flows to recover from specific stale bundled-plugin upgrade failures, such as a
 missing bundled plugin path or a stale `channels.<id>` entry for that same
 bundled plugin. Unrelated config errors still block install and send operators
 to `quiet-core-bot doctor --fix`.
 
-`openclaw.channel.persistedAuthState` is package metadata for a tiny checker
+`quiet-core-bot.channel.persistedAuthState` is package metadata for a tiny checker
 module:
 
 ```json
 {
-  "openclaw": {
+  "quiet-core-bot": {
     "channel": {
       "id": "whatsapp",
       "persistedAuthState": {
@@ -1369,12 +1369,12 @@ repair runtime dependencies, or decide whether a channel runtime should load.
 The target export should be a small function that reads persisted state only; do
 not route it through the full channel runtime barrel.
 
-`openclaw.channel.configuredState` follows the same shape for cheap env-only
+`quiet-core-bot.channel.configuredState` follows the same shape for cheap env-only
 configured checks:
 
 ```json
 {
-  "openclaw": {
+  "quiet-core-bot": {
     "channel": {
       "id": "telegram",
       "configuredState": {
@@ -1418,7 +1418,7 @@ Implications:
 - **Every plugin must ship a JSON Schema**, even if it accepts no config.
 - An empty schema is acceptable (for example, `{ "type": "object", "additionalProperties": false }`).
 - Schemas are validated at config read/write time, not at runtime.
-- When extending or forking a bundled plugin with new config keys, update that plugin's `openclaw.plugin.json` `configSchema` at the same time. Bundled plugin schemas are strict, so adding `plugins.entries.<id>.config.myNewKey` in user config without adding `myNewKey` to `configSchema.properties` will be rejected before the plugin runtime loads.
+- When extending or forking a bundled plugin with new config keys, update that plugin's `quiet-core-bot.plugin.json` `configSchema` at the same time. Bundled plugin schemas are strict, so adding `plugins.entries.<id>.config.myNewKey` in user config without adding `myNewKey` to `configSchema.properties` will be rejected before the plugin runtime loads.
 
 Example schema extension:
 

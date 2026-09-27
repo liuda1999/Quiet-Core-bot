@@ -11,7 +11,7 @@ function gitOkResult(overrides: Partial<UpdateRunResult> = {}): UpdateRunResult 
   return {
     status: "ok",
     mode: "git",
-    root: "/srv/openclaw",
+    root: "/srv/quiet-core-bot",
     before: { sha: "aaa", version: "2026.5.3" },
     after: { sha: "bbb", version: "2026.6.1" },
     steps: [],
@@ -20,7 +20,7 @@ function gitOkResult(overrides: Partial<UpdateRunResult> = {}): UpdateRunResult 
   };
 }
 
-const ENTRYPOINT = "/srv/openclaw/dist/index.mjs";
+const ENTRYPOINT = "/srv/quiet-core-bot/dist/index.mjs";
 const resolveEntrypointOk = async () => ENTRYPOINT;
 
 describe("runPostCoreFinalizeAfterGatewayUpdate", () => {
@@ -95,9 +95,9 @@ describe("runPostCoreFinalizeAfterGatewayUpdate", () => {
     ]);
     expect(call.argv).not.toContain("--channel");
     // Configured channel is carried as the effective convergence channel via env.
-    expect(call.env.OPENCLAW_UPDATE_EFFECTIVE_CHANNEL).toBe("stable");
+    expect(call.env.QUIET_CORE_UPDATE_EFFECTIVE_CHANNEL).toBe("stable");
     // Host-compat resolution is pinned to the just-installed core version.
-    expect(call.env.OPENCLAW_COMPATIBILITY_HOST_VERSION).toBe("2026.6.1");
+    expect(call.env.QUIET_CORE_COMPATIBILITY_HOST_VERSION).toBe("2026.6.1");
     // Outer whole-process timeout is decoupled from the per-step --timeout (120s):
     // a generous floor so a valid multi-step finalize is not killed prematurely.
     expect(call.timeoutMs).toBe(30 * 60_000);
@@ -111,16 +111,16 @@ describe("runPostCoreFinalizeAfterGatewayUpdate", () => {
       spawnFinalize,
       env: {
         PATH: "/usr/bin",
-        OPENCLAW_SERVICE_MARKER: "openclaw",
-        OPENCLAW_SERVICE_KIND: "gateway",
-        OPENCLAW_GATEWAY_SERVICE_PID: "4242",
+        QUIET_CORE_SERVICE_MARKER: "quiet-core-bot",
+        QUIET_CORE_SERVICE_KIND: "gateway",
+        QUIET_CORE_GATEWAY_SERVICE_PID: "4242",
       },
     });
     const { env } = spawnFinalize.mock.calls[0][0];
     expect(env.PATH).toBe("/usr/bin");
-    expect(env.OPENCLAW_SERVICE_MARKER).toBeUndefined();
-    expect(env.OPENCLAW_SERVICE_KIND).toBeUndefined();
-    expect(env.OPENCLAW_GATEWAY_SERVICE_PID).toBeUndefined();
+    expect(env.QUIET_CORE_SERVICE_MARKER).toBeUndefined();
+    expect(env.QUIET_CORE_SERVICE_KIND).toBeUndefined();
+    expect(env.QUIET_CORE_GATEWAY_SERVICE_PID).toBeUndefined();
   });
 
   it("carries effective git/dev channel via env without --channel for a no-config update", async () => {
@@ -134,7 +134,7 @@ describe("runPostCoreFinalizeAfterGatewayUpdate", () => {
     // No configured channel → effective channel defaults to the git/dev channel
     // the core update ran on, carried via env (convergence-only, not persisted),
     // never as `--channel` (which `update finalize` would persist to quiet-core-bot.json).
-    expect(call.env.OPENCLAW_UPDATE_EFFECTIVE_CHANNEL).toBe("dev");
+    expect(call.env.QUIET_CORE_UPDATE_EFFECTIVE_CHANNEL).toBe("dev");
     expect(call.argv).not.toContain("--channel");
     expect(call.argv).not.toContain("--timeout");
     // No per-step timeout requested → outer backstop is the floor.
@@ -156,7 +156,7 @@ describe("runPostCoreFinalizeAfterGatewayUpdate", () => {
     };
     let sourceConfigPath: string | undefined;
     const spawnFinalize = vi.fn<PostCoreFinalizeSpawner>(async ({ env }) => {
-      sourceConfigPath = env.OPENCLAW_UPDATE_POST_CORE_SOURCE_CONFIG_PATH;
+      sourceConfigPath = env.QUIET_CORE_UPDATE_POST_CORE_SOURCE_CONFIG_PATH;
       expect(sourceConfigPath).toEqual(expect.any(String));
       await expect(fs.readFile(sourceConfigPath!, "utf-8")).resolves.toBe(
         `${JSON.stringify(preUpdateConfig)}\n`,

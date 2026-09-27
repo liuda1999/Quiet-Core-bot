@@ -1,7 +1,7 @@
 // Happy path prompt snapshot helper reads expected prompt snapshot files.
 import fs from "node:fs";
 import path from "node:path";
-import type { Model } from "openclaw/plugin-sdk/llm";
+import type { Model } from "quiet-core-bot/plugin-sdk/llm";
 import { resolveHeartbeatPromptForResponseTool } from "../../../src/auto-reply/heartbeat.js";
 import {
   buildDirectChatContext,
@@ -16,7 +16,7 @@ import { buildReplyPromptBodies } from "../../../src/auto-reply/reply/prompt-pre
 import type { TemplateContext } from "../../../src/auto-reply/templating.js";
 import { SILENT_REPLY_TOKEN } from "../../../src/auto-reply/tokens.js";
 import { normalizeChatType } from "../../../src/channels/chat-type.js";
-import type { OpenClawConfig } from "../../../src/config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../src/config/types.quiet-core-bot.js";
 import type {
   AnyAgentTool,
   EmbeddedRunAttemptParams,
@@ -33,9 +33,9 @@ import {
 
 export { CODEX_MODEL_PROMPT_FIXTURE_DIR, CODEX_RUNTIME_HAPPY_PATH_PROMPT_SNAPSHOT_DIR };
 
-const WORKSPACE_DIR = "/tmp/openclaw-happy-path/workspace";
-const AGENT_DIR = "/tmp/openclaw-happy-path/agent";
-const SESSION_FILE = "/tmp/openclaw-happy-path/session.jsonl";
+const WORKSPACE_DIR = "/tmp/quiet-core-bot-happy-path/workspace";
+const AGENT_DIR = "/tmp/quiet-core-bot-happy-path/agent";
+const SESSION_FILE = "/tmp/quiet-core-bot-happy-path/session.jsonl";
 const MODEL_ID = "gpt-5.5";
 const CODEX_PROMPT_PERSONALITY = "pragmatic";
 const CODEX_MODEL_PROMPT_FIXTURE_PATH = path.join(

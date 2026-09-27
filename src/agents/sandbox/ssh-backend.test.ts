@@ -7,7 +7,7 @@ import {
   createSandboxBrowserConfig,
   createSandboxPruneConfig,
   createSandboxSshConfig,
-} from "openclaw/plugin-sdk/test-fixtures";
+} from "quiet-core-bot/plugin-sdk/test-fixtures";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../../config/config.js";
 import { captureFullEnv } from "../../test-utils/env.js";
@@ -54,7 +54,7 @@ function createConfig(): OpenClawConfig {
           ssh: {
             target: "peter@example.com:2222",
             command: "ssh",
-            workspaceRoot: "/remote/openclaw",
+            workspaceRoot: "/remote/quiet-core-bot",
             strictHostKeyChecking: true,
             updateHostKeys: true,
           },
@@ -67,8 +67,8 @@ function createConfig(): OpenClawConfig {
 function createSession() {
   return {
     command: "ssh",
-    configPath: path.join(os.tmpdir(), "openclaw-test-ssh-config"),
-    host: "openclaw-sandbox",
+    configPath: path.join(os.tmpdir(), "quiet-core-bot-test-ssh-config"),
+    host: "quiet-core-bot-sandbox",
   };
 }
 
@@ -113,7 +113,7 @@ function createBackendSandboxConfig(params?: { binds?: string[]; target?: string
     },
     ssh: {
       ...createSandboxSshConfig(
-        "/remote/openclaw",
+        "/remote/quiet-core-bot",
         params?.target ? { target: params.target } : {},
       ),
     },
@@ -184,9 +184,9 @@ describe("ssh sandbox backend", () => {
   it("describes runtimes via the configured ssh target", async () => {
     const result = await sshSandboxBackendManager.describeRuntime({
       entry: {
-        containerName: "openclaw-ssh-worker-abcd1234",
+        containerName: "quiet-core-bot-ssh-worker-abcd1234",
         backendId: "ssh",
-        runtimeLabel: "openclaw-ssh-worker-abcd1234",
+        runtimeLabel: "quiet-core-bot-ssh-worker-abcd1234",
         sessionKey: "agent:worker",
         createdAtMs: 1,
         lastUsedAtMs: 1,
@@ -207,7 +207,7 @@ describe("ssh sandbox backend", () => {
       "ssh session settings",
     );
     expect(sessionSettings.target).toBe("peter@example.com:2222");
-    expect(sessionSettings.workspaceRoot).toBe("/remote/openclaw");
+    expect(sessionSettings.workspaceRoot).toBe("/remote/quiet-core-bot");
     const commandParams = requireSshRunCommandParams();
     expect(commandParams.remoteCommand).toContain("/remote/openclaw/openclaw-ssh-agent-worker");
   });
@@ -215,9 +215,9 @@ describe("ssh sandbox backend", () => {
   it("removes runtimes by deleting the remote scope root", async () => {
     await sshSandboxBackendManager.removeRuntime({
       entry: {
-        containerName: "openclaw-ssh-worker-abcd1234",
+        containerName: "quiet-core-bot-ssh-worker-abcd1234",
         backendId: "ssh",
-        runtimeLabel: "openclaw-ssh-worker-abcd1234",
+        runtimeLabel: "quiet-core-bot-ssh-worker-abcd1234",
         sessionKey: "agent:worker",
         createdAtMs: 1,
         lastUsedAtMs: 1,
@@ -249,7 +249,7 @@ describe("ssh sandbox backend", () => {
         stderr: Buffer.alloc(0),
         code: 0,
       });
-    const skillsWorkspaceDir = await createTempDir("openclaw-ssh-skills-");
+    const skillsWorkspaceDir = await createTempDir("quiet-core-bot-ssh-skills-");
     await fs.mkdir(path.join(skillsWorkspaceDir, "skills"), { recursive: true });
 
     const backend = await createSshSandboxBackend({
@@ -265,8 +265,8 @@ describe("ssh sandbox backend", () => {
         workspaceAccess: "rw",
         workspaceRoot: "~/.quiet-core-bot/sandboxes",
         docker: {
-          image: "openclaw-sandbox:bookworm-slim",
-          containerPrefix: "openclaw-sbx-",
+          image: "quiet-core-bot-sandbox:bookworm-slim",
+          containerPrefix: "quiet-core-bot-sbx-",
           workdir: "/workspace",
           readOnlyRoot: true,
           tmpfs: ["/tmp"],
@@ -277,14 +277,14 @@ describe("ssh sandbox backend", () => {
         ssh: {
           target: "peter@example.com:2222",
           command: "ssh",
-          workspaceRoot: "/remote/openclaw",
+          workspaceRoot: "/remote/quiet-core-bot",
           strictHostKeyChecking: true,
           updateHostKeys: true,
         },
         browser: {
           enabled: false,
-          image: "openclaw-browser",
-          containerPrefix: "openclaw-browser-",
+          image: "quiet-core-bot-browser",
+          containerPrefix: "quiet-core-bot-browser-",
           network: "bridge",
           cdpPort: 9222,
           vncPort: 5900,
@@ -329,7 +329,7 @@ describe("ssh sandbox backend", () => {
       "skills upload params",
     );
     expect(skillsUploadParams.localDir).toBe(skillsWorkspaceDir);
-    expect(skillsUploadParams.remoteDir).toContain("/workspace/.openclaw/sandbox-skills");
+    expect(skillsUploadParams.remoteDir).toContain("/workspace/.quiet-core-bot/sandbox-skills");
 
     await backend.finalizeExec?.({
       status: "completed",
@@ -342,7 +342,7 @@ describe("ssh sandbox backend", () => {
   });
 
   it("refreshes materialized skills before each exec and remote fs command", async () => {
-    const skillsWorkspaceDir = await createTempDir("openclaw-ssh-skills-");
+    const skillsWorkspaceDir = await createTempDir("quiet-core-bot-ssh-skills-");
     await fs.mkdir(path.join(skillsWorkspaceDir, "skills"), { recursive: true });
     const backend = await createSshSandboxBackend({
       sessionKey: "agent:worker:task",
@@ -372,7 +372,7 @@ describe("ssh sandbox backend", () => {
     expect(sshMocks.uploadDirectoryToSshTarget).toHaveBeenCalledTimes(3);
     const skillsUploadParams = requireSshUploadParams(0, "skills upload params");
     expect(skillsUploadParams.localDir).toBe(skillsWorkspaceDir);
-    expect(skillsUploadParams.remoteDir).toContain("/workspace/.openclaw/sandbox-skills");
+    expect(skillsUploadParams.remoteDir).toContain("/workspace/.quiet-core-bot/sandbox-skills");
     await backend.finalizeExec?.({
       status: "completed",
       exitCode: 0,
@@ -388,7 +388,7 @@ describe("ssh sandbox backend", () => {
   });
 
   it("clears stale remote materialized skills when the local copy is missing", async () => {
-    const tmpDir = await createTempDir("openclaw-ssh-skills-");
+    const tmpDir = await createTempDir("quiet-core-bot-ssh-skills-");
     const skillsWorkspaceDir = path.join(tmpDir, "missing");
     const backend = await createSshSandboxBackend({
       sessionKey: "agent:worker:task",
@@ -409,8 +409,8 @@ describe("ssh sandbox backend", () => {
 
     expect(sshMocks.uploadDirectoryToSshTarget).not.toHaveBeenCalled();
     const commandParams = requireSshRunCommandParams(1);
-    expect(commandParams.remoteCommand).toContain("openclaw-sandbox-clear");
-    expect(commandParams.remoteCommand).toContain("/workspace/.openclaw/sandbox-skills");
+    expect(commandParams.remoteCommand).toContain("quiet-core-bot-sandbox-clear");
+    expect(commandParams.remoteCommand).toContain("/workspace/.quiet-core-bot/sandbox-skills");
     await backend.finalizeExec?.({
       status: "completed",
       exitCode: 0,
@@ -420,7 +420,7 @@ describe("ssh sandbox backend", () => {
   });
 
   it("disposes the exec ssh session when materialized skills refresh fails", async () => {
-    const skillsWorkspaceDir = await createTempDir("openclaw-ssh-skills-");
+    const skillsWorkspaceDir = await createTempDir("quiet-core-bot-ssh-skills-");
     await fs.mkdir(path.join(skillsWorkspaceDir, "skills"), { recursive: true });
     const backend = await createSshSandboxBackend({
       sessionKey: "agent:worker:task",

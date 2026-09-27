@@ -1,4 +1,4 @@
-import { readResponseWithLimit } from "@openclaw/media-core/read-response-with-limit";
+import { readResponseWithLimit } from "@quiet-core/media-core/read-response-with-limit";
 import { isNonSecretApiKeyMarker } from "../agents/model-auth-markers.js";
 import {
   clearLiveCatalogCacheForTests,

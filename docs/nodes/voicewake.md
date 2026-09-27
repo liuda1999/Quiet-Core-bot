@@ -17,7 +17,7 @@ Quiet Core bot treats **wake words as a single global list** owned by the **Gate
 
 Wake words and routing rules are stored in the gateway state database:
 
-- `~/.quiet-core-bot/state/openclaw.sqlite`
+- `~/.quiet-core-bot/state/quiet-core-bot.sqlite`
 
 The active tables are:
 

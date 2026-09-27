@@ -93,12 +93,12 @@ describe("resolveAssistantIdentity avatar normalization", () => {
     const cfg: OpenClawConfig = {
       ui: {
         assistant: {
-          avatar: "avatars/openclaw.png",
+          avatar: "avatars/quiet-core-bot.png",
         },
       },
     };
 
-    expect(resolveAssistantIdentity({ cfg, workspaceDir: "" }).avatar).toBe("avatars/openclaw.png");
+    expect(resolveAssistantIdentity({ cfg, workspaceDir: "" }).avatar).toBe("avatars/quiet-core-bot.png");
   });
 
   it("preserves long image data URLs without truncating past 200 chars", () => {

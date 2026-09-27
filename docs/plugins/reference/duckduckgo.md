@@ -11,7 +11,7 @@ Adds web search provider support.
 
 ## Distribution
 
-- Package: `@openclaw/duckduckgo-plugin`
+- Package: `@quiet-core/duckduckgo-plugin`
 - Install route: included in Quiet Core bot
 
 ## Surface

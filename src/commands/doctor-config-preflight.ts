@@ -1,6 +1,4 @@
-/** Config preflight for doctor: legacy config/state migration, recovery, and snapshot loading. */
-import fs from "node:fs/promises";
-import path from "node:path";
+/** Config preflight for doctor: state migration, recovery, and snapshot loading. */
 import { note } from "../../packages/terminal-core/src/note.js";
 import {
   readConfigFileSnapshot,
@@ -9,9 +7,8 @@ import {
 } from "../config/io.js";
 import { formatConfigIssueLines } from "../config/issue-format.js";
 import type { ConfigFileSnapshot, LegacyConfigIssue } from "../config/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { isTruthyEnvValue } from "../infra/env.js";
-import { resolveHomeDir } from "../utils.js";
 import { noteIncludeConfinementWarning } from "./doctor-config-analysis.js";
 import { findDoctorLegacyConfigIssues } from "./doctor/shared/legacy-config-issues.js";
 
@@ -29,52 +26,6 @@ function loadDoctorStateMigrations(): Promise<DoctorStateMigrationsModule> {
 function loadDoctorCron(): Promise<DoctorCronModule> {
   doctorCronPromise ??= import("./doctor/cron/index.js");
   return doctorCronPromise;
-}
-
-async function maybeMigrateLegacyConfig(): Promise<string[]> {
-  const changes: string[] = [];
-  const home = resolveHomeDir();
-  if (!home) {
-    return changes;
-  }
-
-  // Migrate to the current brand state directory. The openclaw→quiet-core-bot
-  // directory migration is handled separately by scripts/migrate-state-dir.ts;
-  // here we only seed a missing config from the oldest clawdbot legacy path.
-  const targetDir = path.join(home, ".quiet-core-bot");
-  const targetPath = path.join(targetDir, "quiet-core-bot.json");
-  try {
-    await fs.access(targetPath);
-    return changes;
-  } catch {
-    // missing config
-  }
-
-  const legacyCandidates = [path.join(home, ".clawdbot", "clawdbot.json")];
-
-  let legacyPath: string | null = null;
-  for (const candidate of legacyCandidates) {
-    try {
-      await fs.access(candidate);
-      legacyPath = candidate;
-      break;
-    } catch {
-      // continue
-    }
-  }
-  if (!legacyPath) {
-    return changes;
-  }
-
-  await fs.mkdir(targetDir, { recursive: true });
-  try {
-    await fs.copyFile(legacyPath, targetPath, fs.constants.COPYFILE_EXCL);
-    changes.push(`Migrated legacy config: ${legacyPath} -> ${targetPath}`);
-  } catch {
-    // If it already exists, skip silently.
-  }
-
-  return changes;
 }
 
 export type DoctorConfigPreflightResult = {
@@ -107,7 +58,7 @@ function addDoctorLegacyIssues(
 export function shouldSkipPluginValidationForDoctorConfigPreflight(
   env: NodeJS.ProcessEnv = process.env,
 ): boolean {
-  return isTruthyEnvValue(env.OPENCLAW_UPDATE_IN_PROGRESS);
+  return isTruthyEnvValue(env.QUIET_CORE_UPDATE_IN_PROGRESS);
 }
 
 function noteStateMigrationResult(
@@ -147,18 +98,6 @@ export async function runDoctorConfigPreflight(
     stateMigrations === undefined ||
     options.beforeStateMigrations === undefined ||
     (await options.beforeStateMigrations());
-  if (stateMigrations && stateMigrationsAllowed) {
-    const { autoMigrateLegacyStateDir } = stateMigrations;
-    const stateDirResult = await autoMigrateLegacyStateDir({ env: process.env });
-    noteStateMigrationResult(stateDirResult, { showWarnings: options.showStateMigrationWarnings });
-  }
-
-  if (options.migrateLegacyConfig !== false) {
-    const legacyConfigChanges = await maybeMigrateLegacyConfig();
-    if (legacyConfigChanges.length > 0) {
-      note(legacyConfigChanges.map((entry) => `- ${entry}`).join("\n"), "Doctor changes");
-    }
-  }
 
   const readOptions = {
     skipPluginValidation: shouldSkipPluginValidationForDoctorConfigPreflight(),

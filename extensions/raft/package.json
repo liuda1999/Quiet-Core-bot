@@ -1,34 +1,34 @@
 {
-  "name": "@openclaw/raft",
+  "name": "@quiet-core/raft",
   "version": "2026.6.11",
   "description": "OpenClaw Raft channel plugin for Raft CLI wake bridges.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/liuda1999/Quiet-Core-bot"
   },
   "type": "module",
   "dependencies": {
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@quiet-core/plugin-sdk": "workspace:*",
+    "quiet-core-bot": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.6.11"
+    "quiet-core-bot": ">=2026.6.11"
   },
   "peerDependenciesMeta": {
-    "openclaw": {
+    "quiet-core-bot": {
       "optional": true
     }
   },
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": [
       "./index.ts"
     ],
     "setupEntry": "./setup-entry.ts",
     "install": {
-      "npmSpec": "@openclaw/raft",
+      "npmSpec": "@quiet-core/raft",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.6.8"
     },

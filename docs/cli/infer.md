@@ -1,12 +1,12 @@
 ---
 summary: "Infer-first CLI for provider-backed model, image, audio, TTS, video, web, and embedding workflows"
 read_when:
-  - Adding or modifying `openclaw infer` commands
+  - Adding or modifying `quiet-core-bot infer` commands
   - Designing stable headless capability automation
 title: "Inference CLI"
 ---
 
-`openclaw infer` is the canonical headless surface for provider-backed inference workflows.
+`quiet-core-bot infer` is the canonical headless surface for provider-backed inference workflows.
 
 It intentionally exposes capability families, not raw gateway RPC names and not raw agent tool ids.
 
@@ -15,7 +15,7 @@ It intentionally exposes capability families, not raw gateway RPC names and not 
 Copy and paste this to an agent:
 
 ```text
-Read https://github.com/liuda1999/Quiet-Core-bot/cli/infer, then create a skill that routes my common workflows to `openclaw infer`.
+Read https://github.com/liuda1999/Quiet-Core-bot/cli/infer, then create a skill that routes my common workflows to `quiet-core-bot infer`.
 Focus on model runs, image generation, video generation, audio transcription, TTS, web search, and embeddings.
 ```
 
@@ -23,21 +23,21 @@ A good infer-based skill should:
 
 - map common user intents to the correct infer subcommand
 - include a few canonical infer examples for the workflows it covers
-- prefer `openclaw infer ...` in examples and suggestions
+- prefer `quiet-core-bot infer ...` in examples and suggestions
 - avoid re-documenting the entire infer surface inside the skill body
 
 Typical infer-focused skill coverage:
 
-- `openclaw infer model run`
-- `openclaw infer image generate`
-- `openclaw infer audio transcribe`
-- `openclaw infer tts convert`
-- `openclaw infer web search`
-- `openclaw infer embedding create`
+- `quiet-core-bot infer model run`
+- `quiet-core-bot infer image generate`
+- `quiet-core-bot infer audio transcribe`
+- `quiet-core-bot infer tts convert`
+- `quiet-core-bot infer web search`
+- `quiet-core-bot infer embedding create`
 
 ## Why use infer
 
-`openclaw infer` provides one consistent CLI for provider-backed inference tasks inside Quiet Core bot.
+`quiet-core-bot infer` provides one consistent CLI for provider-backed inference tasks inside Quiet Core bot.
 
 Benefits:
 
@@ -47,7 +47,7 @@ Benefits:
 - Prefer a first-party Quiet Core bot surface when the task is fundamentally "run inference."
 - Use the normal local path without requiring the gateway for most infer commands.
 
-For end-to-end provider checks, prefer `openclaw infer ...` once lower-level
+For end-to-end provider checks, prefer `quiet-core-bot infer ...` once lower-level
 provider tests are green. It exercises the shipped CLI, config loading,
 default-agent resolution, bundled plugin activation, and the shared capability
 runtime before the provider request is made.
@@ -55,7 +55,7 @@ runtime before the provider request is made.
 ## Command tree
 
 ```text
- openclaw infer
+ quiet-core-bot infer
   list
   inspect
 
@@ -109,21 +109,21 @@ This table maps common inference tasks to the corresponding infer command.
 
 | Task                          | Command                                                                                       | Notes                                                 |
 | ----------------------------- | --------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| Run a text/model prompt       | `openclaw infer model run --prompt "..." --json`                                              | Uses the normal local path by default                 |
-| Run a model prompt on images  | `openclaw infer model run --prompt "Describe this" --file ./image.png --model provider/model` | Repeat `--file` for multiple image inputs             |
-| Generate an image             | `openclaw infer image generate --prompt "..." --json`                                         | Use `image edit` when starting from an existing file  |
-| Describe an image file or URL | `openclaw infer image describe --file ./image.png --prompt "..." --json`                      | `--model` must be an image-capable `<provider/model>` |
-| Transcribe audio              | `openclaw infer audio transcribe --file ./memo.m4a --json`                                    | `--model` must be `<provider/model>`                  |
-| Synthesize speech             | `openclaw infer tts convert --text "..." --output ./speech.mp3 --json`                        | `tts status` is gateway-oriented                      |
-| Generate a video              | `openclaw infer video generate --prompt "..." --json`                                         | Supports provider hints such as `--resolution`        |
-| Describe a video file         | `openclaw infer video describe --file ./clip.mp4 --json`                                      | `--model` must be `<provider/model>`                  |
-| Search the web                | `openclaw infer web search --query "..." --json`                                              |                                                       |
-| Fetch a web page              | `openclaw infer web fetch --url https://example.com --json`                                   |                                                       |
-| Create embeddings             | `openclaw infer embedding create --text "..." --json`                                         |                                                       |
+| Run a text/model prompt       | `quiet-core-bot infer model run --prompt "..." --json`                                              | Uses the normal local path by default                 |
+| Run a model prompt on images  | `quiet-core-bot infer model run --prompt "Describe this" --file ./image.png --model provider/model` | Repeat `--file` for multiple image inputs             |
+| Generate an image             | `quiet-core-bot infer image generate --prompt "..." --json`                                         | Use `image edit` when starting from an existing file  |
+| Describe an image file or URL | `quiet-core-bot infer image describe --file ./image.png --prompt "..." --json`                      | `--model` must be an image-capable `<provider/model>` |
+| Transcribe audio              | `quiet-core-bot infer audio transcribe --file ./memo.m4a --json`                                    | `--model` must be `<provider/model>`                  |
+| Synthesize speech             | `quiet-core-bot infer tts convert --text "..." --output ./speech.mp3 --json`                        | `tts status` is gateway-oriented                      |
+| Generate a video              | `quiet-core-bot infer video generate --prompt "..." --json`                                         | Supports provider hints such as `--resolution`        |
+| Describe a video file         | `quiet-core-bot infer video describe --file ./clip.mp4 --json`                                      | `--model` must be `<provider/model>`                  |
+| Search the web                | `quiet-core-bot infer web search --query "..." --json`                                              |                                                       |
+| Fetch a web page              | `quiet-core-bot infer web fetch --url https://example.com --json`                                   |                                                       |
+| Create embeddings             | `quiet-core-bot infer embedding create --text "..." --json`                                         |                                                       |
 
 ## Behavior
 
-- `openclaw infer ...` is the primary CLI surface for these workflows.
+- `quiet-core-bot infer ...` is the primary CLI surface for these workflows.
 - Use `--json` when the output will be consumed by another command or script.
 - Use `--provider` or `--model provider/model` when a specific backend is required.
 - Use `model run --thinking <level>` to pass a one-shot thinking/reasoning level (`off`, `minimal`, `low`, `medium`, `high`, `adaptive`, `xhigh`, or `max`) while keeping the run raw.
@@ -145,26 +145,26 @@ This table maps common inference tasks to the corresponding infer command.
 Use `model` for provider-backed text inference and model/provider inspection.
 
 ```bash
-openclaw infer model run --prompt "Reply with exactly: smoke-ok" --json
-openclaw infer model run --prompt "Summarize this changelog entry" --model openai/gpt-5.4 --json
-openclaw infer model run --prompt "Describe this image in one sentence" --file ./photo.jpg --model google/gemini-2.5-flash --json
-openclaw infer model run --prompt "Use more reasoning here" --thinking high --json
-openclaw infer model providers --json
-openclaw infer model inspect --name gpt-5.5 --json
+quiet-core-bot infer model run --prompt "Reply with exactly: smoke-ok" --json
+quiet-core-bot infer model run --prompt "Summarize this changelog entry" --model openai/gpt-5.4 --json
+quiet-core-bot infer model run --prompt "Describe this image in one sentence" --file ./photo.jpg --model google/gemini-2.5-flash --json
+quiet-core-bot infer model run --prompt "Use more reasoning here" --thinking high --json
+quiet-core-bot infer model providers --json
+quiet-core-bot infer model inspect --name gpt-5.5 --json
 ```
 
 Use full `<provider/model>` refs to smoke-test a specific provider without
 starting the Gateway or loading the full agent tool surface:
 
 ```bash
-openclaw infer model run --local --model anthropic/claude-sonnet-4-6 --prompt "Reply with exactly: pong" --json
-openclaw infer model run --local --model cerebras/zai-glm-4.7 --prompt "Reply with exactly: pong" --json
-openclaw infer model run --local --model google/gemini-2.5-flash --prompt "Reply with exactly: pong" --json
-openclaw infer model run --local --model groq/llama-3.1-8b-instant --prompt "Reply with exactly: pong" --json
-openclaw infer model run --local --model mistral/mistral-medium-3-5 --prompt "Reply with exactly: pong" --json
-openclaw infer model run --local --model mistral/mistral-small-latest --prompt "Reply with exactly: pong" --json
-openclaw infer model run --local --model openai/gpt-5.5 --prompt "Reply with exactly: pong" --json
-openclaw infer model run --local --model ollama/qwen2.5vl:7b --prompt "Describe this image." --file ./photo.jpg --json
+quiet-core-bot infer model run --local --model anthropic/claude-sonnet-4-6 --prompt "Reply with exactly: pong" --json
+quiet-core-bot infer model run --local --model cerebras/zai-glm-4.7 --prompt "Reply with exactly: pong" --json
+quiet-core-bot infer model run --local --model google/gemini-2.5-flash --prompt "Reply with exactly: pong" --json
+quiet-core-bot infer model run --local --model groq/llama-3.1-8b-instant --prompt "Reply with exactly: pong" --json
+quiet-core-bot infer model run --local --model mistral/mistral-medium-3-5 --prompt "Reply with exactly: pong" --json
+quiet-core-bot infer model run --local --model mistral/mistral-small-latest --prompt "Reply with exactly: pong" --json
+quiet-core-bot infer model run --local --model openai/gpt-5.5 --prompt "Reply with exactly: pong" --json
+quiet-core-bot infer model run --local --model ollama/qwen2.5vl:7b --prompt "Describe this image." --file ./photo.jpg --json
 ```
 
 Notes:
@@ -178,7 +178,7 @@ Notes:
 - The selected model must support image input; text-only models may reject the request at the provider layer.
 - `model run --prompt` must contain non-whitespace text; empty prompts are rejected before local providers or the Gateway are called.
 - Local `model run` exits non-zero when the provider returns no text output, so unreachable local providers and empty completions do not look like successful probes.
-- Use `model run --gateway` when you need to test Gateway routing, agent-runtime setup, or Gateway-managed provider state while keeping the model input raw. Use `openclaw agent` or chat surfaces when you want the full agent context, tools, memory, and session transcript.
+- Use `model run --gateway` when you need to test Gateway routing, agent-runtime setup, or Gateway-managed provider state while keeping the model input raw. Use `quiet-core-bot agent` or chat surfaces when you want the full agent context, tools, memory, and session transcript.
 - `model auth login`, `model auth logout`, and `model auth status` manage saved provider auth state.
 
 ## Image
@@ -186,19 +186,19 @@ Notes:
 Use `image` for generation, edit, and description.
 
 ```bash
-openclaw infer image generate --prompt "friendly lobster illustration" --json
-openclaw infer image generate --prompt "cinematic product photo of headphones" --json
-openclaw infer image generate --model openai/gpt-image-1.5 --output-format png --background transparent --prompt "simple red circle sticker on a transparent background" --json
-openclaw infer image generate --model openai/gpt-image-2 --quality low --openai-moderation low --prompt "low-cost draft poster" --json
-openclaw infer image generate --prompt "slow image backend" --timeout-ms 180000 --json
-openclaw infer image edit --file ./logo.png --model openai/gpt-image-1.5 --output-format png --background transparent --prompt "keep the logo, remove the background" --json
-openclaw infer image edit --file ./poster.png --prompt "make this a vertical story ad" --size 2160x3840 --aspect-ratio 9:16 --resolution 4K --json
-openclaw infer image describe --file ./photo.jpg --json
-openclaw infer image describe --file https://example.com/photo.png --json
-openclaw infer image describe --file ./receipt.jpg --prompt "Extract the merchant, date, and total" --json
-openclaw infer image describe-many --file ./before.png --file ./after.png --prompt "Compare the screenshots and list visible UI changes" --json
-openclaw infer image describe --file ./ui-screenshot.png --model openai/gpt-5.4-mini --json
-openclaw infer image describe --file ./photo.jpg --model ollama/qwen2.5vl:7b --prompt "Describe the image in one sentence" --timeout-ms 300000 --json
+quiet-core-bot infer image generate --prompt "friendly lobster illustration" --json
+quiet-core-bot infer image generate --prompt "cinematic product photo of headphones" --json
+quiet-core-bot infer image generate --model openai/gpt-image-1.5 --output-format png --background transparent --prompt "simple red circle sticker on a transparent background" --json
+quiet-core-bot infer image generate --model openai/gpt-image-2 --quality low --openai-moderation low --prompt "low-cost draft poster" --json
+quiet-core-bot infer image generate --prompt "slow image backend" --timeout-ms 180000 --json
+quiet-core-bot infer image edit --file ./logo.png --model openai/gpt-image-1.5 --output-format png --background transparent --prompt "keep the logo, remove the background" --json
+quiet-core-bot infer image edit --file ./poster.png --prompt "make this a vertical story ad" --size 2160x3840 --aspect-ratio 9:16 --resolution 4K --json
+quiet-core-bot infer image describe --file ./photo.jpg --json
+quiet-core-bot infer image describe --file https://example.com/photo.png --json
+quiet-core-bot infer image describe --file ./receipt.jpg --prompt "Extract the merchant, date, and total" --json
+quiet-core-bot infer image describe-many --file ./before.png --file ./after.png --prompt "Compare the screenshots and list visible UI changes" --json
+quiet-core-bot infer image describe --file ./ui-screenshot.png --model openai/gpt-5.4-mini --json
+quiet-core-bot infer image describe --file ./photo.jpg --model ollama/qwen2.5vl:7b --prompt "Describe the image in one sentence" --timeout-ms 300000 --json
 ```
 
 Notes:
@@ -220,11 +220,11 @@ Notes:
   CLI smoke for image generation changes. Example:
 
   ```bash
-  openclaw infer image providers --json
-  openclaw infer image generate \
+  quiet-core-bot infer image providers --json
+  quiet-core-bot infer image generate \
     --model google/gemini-3.1-flash-image-preview \
     --prompt "Minimal flat test image: one blue square on a white background, no text." \
-    --output ./openclaw-infer-image-smoke.png \
+    --output ./quiet-core-bot-infer-image-smoke.png \
     --json
   ```
 
@@ -242,9 +242,9 @@ Notes:
 Use `audio` for file transcription.
 
 ```bash
-openclaw infer audio transcribe --file ./memo.m4a --json
-openclaw infer audio transcribe --file ./team-sync.m4a --language en --prompt "Focus on names and action items" --json
-openclaw infer audio transcribe --file ./memo.m4a --model openai/whisper-1 --json
+quiet-core-bot infer audio transcribe --file ./memo.m4a --json
+quiet-core-bot infer audio transcribe --file ./team-sync.m4a --language en --prompt "Focus on names and action items" --json
+quiet-core-bot infer audio transcribe --file ./memo.m4a --model openai/whisper-1 --json
 ```
 
 Notes:
@@ -257,10 +257,10 @@ Notes:
 Use `tts` for speech synthesis and TTS provider state.
 
 ```bash
-openclaw infer tts convert --text "hello from openclaw" --output ./hello.mp3 --json
-openclaw infer tts convert --text "Your build is complete" --output ./build-complete.mp3 --json
-openclaw infer tts providers --json
-openclaw infer tts status --json
+quiet-core-bot infer tts convert --text "hello from quiet-core-bot" --output ./hello.mp3 --json
+quiet-core-bot infer tts convert --text "Your build is complete" --output ./build-complete.mp3 --json
+quiet-core-bot infer tts providers --json
+quiet-core-bot infer tts status --json
 ```
 
 Notes:
@@ -273,10 +273,10 @@ Notes:
 Use `video` for generation and description.
 
 ```bash
-openclaw infer video generate --prompt "cinematic sunset over the ocean" --json
-openclaw infer video generate --prompt "slow drone shot over a forest lake" --resolution 768P --duration 6 --json
-openclaw infer video describe --file ./clip.mp4 --json
-openclaw infer video describe --file ./clip.mp4 --model openai/gpt-5.4-mini --json
+quiet-core-bot infer video generate --prompt "cinematic sunset over the ocean" --json
+quiet-core-bot infer video generate --prompt "slow drone shot over a forest lake" --resolution 768P --duration 6 --json
+quiet-core-bot infer video describe --file ./clip.mp4 --json
+quiet-core-bot infer video describe --file ./clip.mp4 --model openai/gpt-5.4-mini --json
 ```
 
 Notes:
@@ -289,10 +289,10 @@ Notes:
 Use `web` for search and fetch workflows.
 
 ```bash
-openclaw infer web search --query "Quiet Core bot docs" --json
-openclaw infer web search --query "Quiet Core bot infer web providers" --json
-openclaw infer web fetch --url https://github.com/liuda1999/Quiet-Core-bot/cli/infer --json
-openclaw infer web providers --json
+quiet-core-bot infer web search --query "Quiet Core bot docs" --json
+quiet-core-bot infer web search --query "Quiet Core bot infer web providers" --json
+quiet-core-bot infer web fetch --url https://github.com/liuda1999/Quiet-Core-bot/cli/infer --json
+quiet-core-bot infer web providers --json
 ```
 
 Notes:
@@ -304,9 +304,9 @@ Notes:
 Use `embedding` for vector creation and embedding provider inspection.
 
 ```bash
-openclaw infer embedding create --text "friendly lobster" --json
-openclaw infer embedding create --text "customer support ticket: delayed shipment" --model openai/text-embedding-3-large --json
-openclaw infer embedding providers --json
+quiet-core-bot infer embedding create --text "friendly lobster" --json
+quiet-core-bot infer embedding create --text "customer support ticket: delayed shipment" --model openai/text-embedding-3-large --json
+quiet-core-bot infer embedding providers --json
 ```
 
 ## JSON output
@@ -344,23 +344,23 @@ for automation instead of parsing human-readable stdout.
 
 ```bash
 # Bad
-openclaw infer media image generate --prompt "friendly lobster"
+quiet-core-bot infer media image generate --prompt "friendly lobster"
 
 # Good
-openclaw infer image generate --prompt "friendly lobster"
+quiet-core-bot infer image generate --prompt "friendly lobster"
 ```
 
 ```bash
 # Bad
-openclaw infer audio transcribe --file ./memo.m4a --model whisper-1 --json
+quiet-core-bot infer audio transcribe --file ./memo.m4a --model whisper-1 --json
 
 # Good
-openclaw infer audio transcribe --file ./memo.m4a --model openai/whisper-1 --json
+quiet-core-bot infer audio transcribe --file ./memo.m4a --model openai/whisper-1 --json
 ```
 
 ## Notes
 
-- `openclaw capability ...` is an alias for `openclaw infer ...`.
+- `quiet-core-bot capability ...` is an alias for `quiet-core-bot infer ...`.
 
 ## Related
 

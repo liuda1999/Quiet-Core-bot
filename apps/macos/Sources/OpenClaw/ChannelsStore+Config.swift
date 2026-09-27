@@ -272,8 +272,8 @@ extension ChannelsStore {
             "cli:\(settings.cliPath)",
             "port:\(GatewayEnvironment.gatewayPort())",
             "gateway:\(Self.configFingerprint(root["gateway"]))",
-            "token:\(Self.configFingerprint(env["OPENCLAW_GATEWAY_TOKEN"]))",
-            "password:\(Self.configFingerprint(env["OPENCLAW_GATEWAY_PASSWORD"]))",
+            "token:\(Self.configFingerprint(env["QUIET_CORE_GATEWAY_TOKEN"]))",
+            "password:\(Self.configFingerprint(env["QUIET_CORE_GATEWAY_PASSWORD"]))",
         ].joined(separator: "|")
     }
 

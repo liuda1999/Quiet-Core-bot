@@ -1,6 +1,6 @@
 // Opens APNs HTTP/2 sessions with optional managed proxy tunneling.
 import http2 from "node:http2";
-import { resolveTimerTimeoutMs } from "@openclaw/normalization-core/number-coercion";
+import { resolveTimerTimeoutMs } from "@quiet-core/normalization-core/number-coercion";
 import { toErrorObject } from "./errors.js";
 import { openHttpConnectTunnel } from "./net/http-connect-tunnel.js";
 import {
@@ -189,8 +189,8 @@ export async function probeApnsHttp2ReachabilityViaProxy(
         ":path": `/3/device/${"0".repeat(64)}`,
         // APNs should reject this token with InvalidProviderToken. That failure
         // is the success signal that the proxy actually tunneled to Apple.
-        authorization: "bearer intentionally.invalid.openclaw.proxy.validation",
-        "apns-topic": "ai.openclaw.ios",
+        authorization: "bearer intentionally.invalid.quiet-core-bot.proxy.validation",
+        "apns-topic": "ai.quiet-core-bot.ios",
         "apns-push-type": "alert",
         "apns-priority": "10",
       });

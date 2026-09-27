@@ -6,9 +6,9 @@ import path from "node:path";
 import {
   findExistingAncestor,
   pathScope as sdkPathScope,
-} from "openclaw/plugin-sdk/security-runtime";
+} from "quiet-core-bot/plugin-sdk/security-runtime";
 
-export { createSubsystemLogger } from "openclaw/plugin-sdk/logging-core";
+export { createSubsystemLogger } from "quiet-core-bot/plugin-sdk/logging-core";
 export {
   ensurePortAvailable,
   extractErrorCode,
@@ -35,8 +35,8 @@ export {
   writeExternalFileWithinRoot,
   writeViaSiblingTempPath,
   wrapExternalContent,
-} from "openclaw/plugin-sdk/security-runtime";
-export type { LookupFn, SsrFPolicy } from "openclaw/plugin-sdk/security-runtime";
+} from "quiet-core-bot/plugin-sdk/security-runtime";
+export type { LookupFn, SsrFPolicy } from "quiet-core-bot/plugin-sdk/security-runtime";
 
 /** Ensures an absolute directory exists without escaping its nearest existing ancestor. */
 export async function ensureAbsoluteDirectory(

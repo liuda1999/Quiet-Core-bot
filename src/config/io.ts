@@ -3,7 +3,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { collectManifestModelIdNormalizationPolicies } from "@openclaw/model-catalog-core/provider-model-id-normalization";
+import { collectManifestModelIdNormalizationPolicies } from "@quiet-core/model-catalog-core/provider-model-id-normalization";
 import JSON5 from "json5";
 import { sanitizeTerminalText } from "../../packages/terminal-core/src/safe-text.js";
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope-config.js";
@@ -969,8 +969,8 @@ function warnIfConfigFromFuture(cfg: OpenClawConfig, logger: Pick<typeof console
     logger.warn(
       [
         `Your Quiet Core bot config was written by version ${touched}, but this command is running ${VERSION}.`,
-        "Check: `quiet-core-bot --version`, `which quiet-core-bot`, and `quiet-core-bot gateway status --deep`.",
-        "If unexpected, update PATH so `quiet-core-bot` points to the version you want, or reinstall the Gateway service from that same Quiet Core bot install.",
+        "Check: `quiet-core-bot --version`, `which openclaw`, and `quiet-core-bot gateway status --deep`.",
+        "If unexpected, update PATH so `openclaw` points to the version you want, or reinstall the Gateway service from that same Quiet Core bot install.",
       ].join("\n"),
     );
   }
@@ -978,8 +978,8 @@ function warnIfConfigFromFuture(cfg: OpenClawConfig, logger: Pick<typeof console
 
 function shouldSuppressFutureVersionWarningForEnv(env: NodeJS.ProcessEnv): boolean {
   return (
-    isTruthyEnvValue(env.OPENCLAW_UPDATE_IN_PROGRESS) ||
-    isTruthyEnvValue(env.OPENCLAW_UPDATE_POST_CORE)
+    isTruthyEnvValue(env.QUIET_CORE_UPDATE_IN_PROGRESS) ||
+    isTruthyEnvValue(env.QUIET_CORE_UPDATE_POST_CORE)
   );
 }
 
@@ -2471,11 +2471,11 @@ export function createConfigIO(
         return;
       }
       const isVitest = deps.env.VITEST === "true";
-      const shouldLogInVitest = deps.env.OPENCLAW_TEST_CONFIG_OVERWRITE_LOG === "1";
+      const shouldLogInVitest = deps.env.QUIET_CORE_TEST_CONFIG_OVERWRITE_LOG === "1";
       if (isVitest && !shouldLogInVitest) {
         return;
       }
-      if (!isVerbose() && deps.env.OPENCLAW_CONFIG_OVERWRITE_LOG !== "1" && !shouldLogInVitest) {
+      if (!isVerbose() && deps.env.QUIET_CORE_CONFIG_OVERWRITE_LOG !== "1" && !shouldLogInVitest) {
         return;
       }
       deps.logger.warn(
@@ -2496,12 +2496,12 @@ export function createConfigIO(
       }
       // Tests often write minimal configs (missing meta, etc); keep output quiet unless requested.
       const isVitest = deps.env.VITEST === "true";
-      const shouldLogInVitest = deps.env.OPENCLAW_TEST_CONFIG_WRITE_ANOMALY_LOG === "1";
+      const shouldLogInVitest = deps.env.QUIET_CORE_TEST_CONFIG_WRITE_ANOMALY_LOG === "1";
       if (isVitest && !shouldLogInVitest) {
         return;
       }
       const shouldLogBenignMissingMeta =
-        isVerbose() || deps.env.OPENCLAW_CONFIG_WRITE_ANOMALY_LOG === "1" || shouldLogInVitest;
+        isVerbose() || deps.env.QUIET_CORE_CONFIG_WRITE_ANOMALY_LOG === "1" || shouldLogInVitest;
       const visibleReasons = shouldLogBenignMissingMeta
         ? suspiciousReasons
         : suspiciousReasons.filter((reason) => reason !== "missing-meta-before-write");
@@ -2674,7 +2674,7 @@ export function createConfigIO(
 }
 
 // NOTE: These wrappers intentionally do *not* cache the resolved config path at
-// module scope. `OPENCLAW_CONFIG_PATH` (and friends) are expected to work even
+// module scope. `QUIET_CORE_CONFIG_PATH` (and friends) are expected to work even
 // when set after the module has been imported (tests, one-off scripts, etc.).
 const AUTO_OWNER_DISPLAY_SECRET_BY_PATH = new Map<string, string>();
 export function clearConfigCache(): void {

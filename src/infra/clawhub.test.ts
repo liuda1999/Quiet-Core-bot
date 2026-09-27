@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@quiet-core/normalization-core/number-coercion";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { withTempDir } from "../test-helpers/temp-dir.js";
 import { captureEnv, setTestEnvValue } from "../test-utils/env.js";
@@ -72,11 +72,11 @@ describe("clawhub helpers", () => {
   const originalEnv = captureEnv(["HOME", "XDG_CONFIG_HOME"]);
 
   afterEach(() => {
-    delete process.env.OPENCLAW_CLAWHUB_URL;
-    delete process.env.OPENCLAW_CLAWHUB_TOKEN;
+    delete process.env.QUIET_CORE_CLAWHUB_URL;
+    delete process.env.QUIET_CORE_CLAWHUB_TOKEN;
     delete process.env.CLAWHUB_TOKEN;
     delete process.env.CLAWHUB_AUTH_TOKEN;
-    delete process.env.OPENCLAW_CLAWHUB_CONFIG_PATH;
+    delete process.env.QUIET_CORE_CLAWHUB_CONFIG_PATH;
     delete process.env.CLAWHUB_CONFIG_PATH;
     delete process.env.CLAWDHUB_CONFIG_PATH;
     originalEnv.restore();
@@ -216,9 +216,9 @@ describe("clawhub helpers", () => {
   });
 
   it("resolves ClawHub auth token from config.json", async () => {
-    await withTempDir({ prefix: "openclaw-clawhub-config-" }, async (configRoot) => {
+    await withTempDir({ prefix: "quiet-core-bot-clawhub-config-" }, async (configRoot) => {
       const configPath = path.join(configRoot, "clawhub", "config.json");
-      process.env.OPENCLAW_CLAWHUB_CONFIG_PATH = configPath;
+      process.env.QUIET_CORE_CLAWHUB_CONFIG_PATH = configPath;
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(configPath, JSON.stringify({ auth: { token: "cfg-token-123" } }), "utf8");
 
@@ -227,7 +227,7 @@ describe("clawhub helpers", () => {
   });
 
   it("resolves ClawHub auth token from the legacy config path override", async () => {
-    await withTempDir({ prefix: "openclaw-clawdhub-config-" }, async (configRoot) => {
+    await withTempDir({ prefix: "quiet-core-bot-clawdhub-config-" }, async (configRoot) => {
       const configPath = path.join(configRoot, "config.json");
       process.env.CLAWDHUB_CONFIG_PATH = configPath;
       await fs.writeFile(configPath, JSON.stringify({ token: "legacy-token-123" }), "utf8");
@@ -239,7 +239,7 @@ describe("clawhub helpers", () => {
   it.runIf(process.platform === "darwin")(
     "resolves ClawHub auth token from the macOS Application Support path",
     async () => {
-      await withTempDir({ prefix: "openclaw-clawhub-home-" }, async (fakeHome) => {
+      await withTempDir({ prefix: "quiet-core-bot-clawhub-home-" }, async (fakeHome) => {
         const configPath = path.join(
           fakeHome,
           "Library",
@@ -263,8 +263,8 @@ describe("clawhub helpers", () => {
   it.runIf(process.platform === "darwin")(
     "falls back to XDG_CONFIG_HOME on macOS when Application Support has no config",
     async () => {
-      await withTempDir({ prefix: "openclaw-clawhub-home-" }, async (fakeHome) => {
-        await withTempDir({ prefix: "openclaw-clawhub-xdg-" }, async (xdgRoot) => {
+      await withTempDir({ prefix: "quiet-core-bot-clawhub-home-" }, async (fakeHome) => {
+        await withTempDir({ prefix: "quiet-core-bot-clawhub-xdg-" }, async (xdgRoot) => {
           const configPath = path.join(xdgRoot, "clawhub", "config.json");
           const homedirSpy = vi.spyOn(os, "homedir").mockReturnValue(fakeHome);
           setTestEnvValue("XDG_CONFIG_HOME", xdgRoot);
@@ -282,7 +282,7 @@ describe("clawhub helpers", () => {
   );
 
   it("injects resolved auth token into ClawHub requests", async () => {
-    process.env.OPENCLAW_CLAWHUB_TOKEN = "env-token-123";
+    process.env.QUIET_CORE_CLAWHUB_TOKEN = "env-token-123";
     const fetchImpl = async (input: string | URL | Request, init?: RequestInit) => {
       const url = input instanceof Request ? input.url : String(input);
       expect(url).toContain("/api/v1/search");
@@ -297,7 +297,7 @@ describe("clawhub helpers", () => {
   });
 
   it("preserves the configured ClawHub base URL path prefix", async () => {
-    process.env.OPENCLAW_CLAWHUB_URL = "https://internal.example.com/clawhub";
+    process.env.QUIET_CORE_CLAWHUB_URL = "https://internal.example.com/clawhub";
     let requestedUrl = "";
 
     await expect(
@@ -386,7 +386,7 @@ describe("clawhub helpers", () => {
       decision: "pass",
       reasons: [],
       skill: { slug: "agentreceipt", displayName: "Agent Receipt" },
-      publisher: { handle: "openclaw" },
+      publisher: { handle: "quiet-core-bot" },
       version: { version: "1.2.3", tag: "stable" },
       card: {
         available: true,
@@ -502,7 +502,7 @@ describe("clawhub helpers", () => {
   });
 
   it("can post bulk skill security verdict requests without resolved auth", async () => {
-    process.env.OPENCLAW_CLAWHUB_TOKEN = "env-token-123";
+    process.env.QUIET_CORE_CLAWHUB_TOKEN = "env-token-123";
     let requestedInit: RequestInit | undefined;
     const envelope = {
       schema: "clawhub.skill.security-verdicts.v1",
@@ -651,7 +651,7 @@ describe("clawhub helpers", () => {
     let requestedUrl = "";
     await expect(
       fetchClawHubPackageArtifact({
-        name: "@openclaw/diagnostics-otel",
+        name: "@quiet-core/diagnostics-otel",
         version: "2026.3.22",
         fetchImpl: async (input) => {
           requestedUrl = input instanceof Request ? input.url : String(input);
@@ -660,7 +660,7 @@ describe("clawhub helpers", () => {
               artifact: {
                 source: "clawhub",
                 artifactKind: "npm-pack",
-                packageName: "@openclaw/diagnostics-otel",
+                packageName: "@quiet-core/diagnostics-otel",
                 version: "2026.3.22",
                 downloadUrl: "https://clawhub.ai/api/v1/clawpacks/abc",
                 npmIntegrity: "sha512-demo",
@@ -675,7 +675,7 @@ describe("clawhub helpers", () => {
       artifact: {
         source: "clawhub",
         artifactKind: "npm-pack",
-        packageName: "@openclaw/diagnostics-otel",
+        packageName: "@quiet-core/diagnostics-otel",
         version: "2026.3.22",
         downloadUrl: "https://clawhub.ai/api/v1/clawpacks/abc",
         npmIntegrity: "sha512-demo",
@@ -683,7 +683,7 @@ describe("clawhub helpers", () => {
       },
     });
     expect(new URL(requestedUrl).pathname).toBe(
-      "/api/v1/packages/%40openclaw%2Fdiagnostics-otel/versions/2026.3.22/artifact",
+      "/api/v1/packages/%40quiet-core-bot%2Fdiagnostics-otel/versions/2026.3.22/artifact",
     );
   });
 
@@ -767,7 +767,7 @@ describe("clawhub helpers", () => {
   });
 
   it("annotates 429 errors with the reset hint and a sign-in hint when unauthenticated", async () => {
-    process.env.OPENCLAW_CLAWHUB_CONFIG_PATH = path.join(os.tmpdir(), "openclaw-no-clawhub-config");
+    process.env.QUIET_CORE_CLAWHUB_CONFIG_PATH = path.join(os.tmpdir(), "quiet-core-bot-no-clawhub-config");
     await expect(
       searchClawHubSkills({
         query: "calendar",
@@ -785,7 +785,7 @@ describe("clawhub helpers", () => {
   });
 
   it("degrades gracefully on 429 when the response carries no rate-limit headers", async () => {
-    process.env.OPENCLAW_CLAWHUB_CONFIG_PATH = path.join(os.tmpdir(), "openclaw-no-clawhub-config");
+    process.env.QUIET_CORE_CLAWHUB_CONFIG_PATH = path.join(os.tmpdir(), "quiet-core-bot-no-clawhub-config");
     await expect(
       searchClawHubSkills({
         query: "calendar",
@@ -933,7 +933,7 @@ describe("clawhub helpers", () => {
   });
 
   it("annotates 429 errors with the reset hint but no sign-in hint when authenticated", async () => {
-    process.env.OPENCLAW_CLAWHUB_TOKEN = "env-token-123";
+    process.env.QUIET_CORE_CLAWHUB_TOKEN = "env-token-123";
     await expect(
       searchClawHubSkills({
         query: "calendar",
@@ -951,7 +951,7 @@ describe("clawhub helpers", () => {
   });
 
   it("skips the reset suffix on 429 when Retry-After is an HTTP-date", async () => {
-    process.env.OPENCLAW_CLAWHUB_TOKEN = "env-token-123";
+    process.env.QUIET_CORE_CLAWHUB_TOKEN = "env-token-123";
     await expect(
       searchClawHubSkills({
         query: "calendar",
@@ -1069,7 +1069,7 @@ describe("clawhub helpers", () => {
   });
 
   it("does not send ambient ClawHub auth tokens to off-registry resolver archive URLs", async () => {
-    process.env.OPENCLAW_CLAWHUB_TOKEN = "env-token-123";
+    process.env.QUIET_CORE_CLAWHUB_TOKEN = "env-token-123";
     let requestedUrl = "";
     let requestedInit: RequestInit | undefined;
 

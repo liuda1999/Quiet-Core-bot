@@ -18,7 +18,7 @@ import type { SessionEntry } from "./types.js";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-const fixtureSuite = createFixtureSuite("openclaw-pruning-suite-");
+const fixtureSuite = createFixtureSuite("quiet-core-bot-pruning-suite-");
 
 beforeAll(async () => {
   await fixtureSuite.setup();
@@ -171,7 +171,7 @@ describe("applyFileBackedSessionStoreMaintenance", () => {
     let trajectoryCleanupReferencedIds: Set<string> | undefined;
 
     const result = await applyFileBackedSessionStoreMaintenance({
-      storePath: "/tmp/openclaw-sessions/sessions.json",
+      storePath: "/tmp/quiet-core-bot-sessions/sessions.json",
       store,
       activeSessionKey: "active",
       maintenanceConfig: {

@@ -223,7 +223,7 @@ vi.mock("../secrets/plan.js", () => {
 
 function makeProgram(): Command {
   const program = new Command();
-  program.name("openclaw");
+  program.name("quiet-core-bot");
   program.exitOverride();
   return program;
 }

@@ -1,23 +1,23 @@
 ---
-summary: "CLI reference for `openclaw qr` (generate mobile pairing QR + setup code)"
+summary: "CLI reference for `quiet-core-bot qr` (generate mobile pairing QR + setup code)"
 read_when:
   - You want to pair a mobile node app with a gateway quickly
   - You need setup-code output for remote/manual sharing
 title: "QR"
 ---
 
-# `openclaw qr`
+# `quiet-core-bot qr`
 
 Generate a mobile pairing QR and setup code from your current Gateway configuration.
 
 ## Usage
 
 ```bash
-openclaw qr
-openclaw qr --setup-code-only
-openclaw qr --json
-openclaw qr --remote
-openclaw qr --url wss://gateway.example/ws
+quiet-core-bot qr
+quiet-core-bot qr --setup-code-only
+quiet-core-bot qr --json
+quiet-core-bot qr --remote
+quiet-core-bot qr --url wss://gateway.example/ws
 ```
 
 ## Options

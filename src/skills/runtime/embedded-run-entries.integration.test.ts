@@ -8,14 +8,14 @@ import { writePluginWithSkill } from "../test-support/skill-plugin-fixtures.test
 import { resolveEmbeddedRunSkillEntries } from "./embedded-run-entries.js";
 
 const tempDirs: string[] = [];
-const originalBundledDir = process.env.OPENCLAW_BUNDLED_PLUGINS_DIR;
+const originalBundledDir = process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR;
 
 function restoreBundledPluginsDir() {
   if (originalBundledDir === undefined) {
-    delete process.env.OPENCLAW_BUNDLED_PLUGINS_DIR;
+    delete process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR;
     return;
   }
-  process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = originalBundledDir;
+  process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR = originalBundledDir;
 }
 
 async function createTempDir(prefix: string) {
@@ -25,8 +25,8 @@ async function createTempDir(prefix: string) {
 }
 
 async function setupBundledDiffsPlugin() {
-  const bundledPluginsDir = await createTempDir("openclaw-bundled-");
-  const workspaceDir = await createTempDir("openclaw-workspace-");
+  const bundledPluginsDir = await createTempDir("quiet-core-bot-bundled-");
+  const workspaceDir = await createTempDir("quiet-core-bot-workspace-");
   const pluginRoot = path.join(bundledPluginsDir, "diffs");
 
   await writePluginWithSkill({
@@ -41,7 +41,7 @@ async function setupBundledDiffsPlugin() {
 
 async function resolveBundledDiffsSkillEntries(config?: OpenClawConfig) {
   const { bundledPluginsDir, workspaceDir } = await setupBundledDiffsPlugin();
-  process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = bundledPluginsDir;
+  process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR = bundledPluginsDir;
 
   return resolveEmbeddedRunSkillEntries({ workspaceDir, ...(config ? { config } : {}) });
 }

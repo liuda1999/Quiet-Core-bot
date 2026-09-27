@@ -1,7 +1,7 @@
 // Memory Lancedb helper module supports test helpers behavior.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+import { resolvePreferredOpenClawTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";
 import { afterEach, beforeEach } from "vitest";
 
 export function installTmpDirHarness(params: { prefix: string }) {

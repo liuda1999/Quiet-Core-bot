@@ -1,11 +1,11 @@
 // Config CLI command implementation for get/set/unset/patch/validate and secret refs.
 import fs from "node:fs";
-import { isRecord as isPlainRecord } from "@openclaw/normalization-core/record-coerce";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { isRecord as isPlainRecord } from "@quiet-core/normalization-core/record-coerce";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import {
   normalizeStringEntries,
   uniqueValues,
-} from "@openclaw/normalization-core/string-normalization";
+} from "@quiet-core/normalization-core/string-normalization";
 import type { Command } from "commander";
 import JSON5 from "json5";
 import { formatDocsLink } from "../../packages/terminal-core/src/links.js";
@@ -26,7 +26,7 @@ import { CONFIG_PATH } from "../config/paths.js";
 import { isPluginPackagingRuntimeOutputInvalidConfigSnapshot } from "../config/recovery-policy.js";
 import { redactConfigObject } from "../config/redact-snapshot.js";
 import { readBestEffortRuntimeConfigSchema } from "../config/runtime-schema.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   coerceSecretRef,
   isValidEnvSecretRefId,
@@ -297,13 +297,13 @@ const CONFIG_SET_EXAMPLE_REF = formatCliCommand(
   "quiet-core-bot config set channels.discord.token --ref-provider default --ref-source env --ref-id DISCORD_BOT_TOKEN",
 );
 const CONFIG_SET_EXAMPLE_PROVIDER = formatCliCommand(
-  "quiet-core-bot config set secrets.providers.vault --provider-source file --provider-path /etc/openclaw/secrets.json --provider-mode json",
+  "quiet-core-bot config set secrets.providers.vault --provider-source file --provider-path /etc/quiet-core-bot/secrets.json --provider-mode json",
 );
 const CONFIG_SET_EXAMPLE_BATCH = formatCliCommand(
   "quiet-core-bot config set --batch-file ./config-set.batch.json --dry-run",
 );
 const CONFIG_PATCH_EXAMPLE_FILE = formatCliCommand(
-  "quiet-core-bot config patch --file ./openclaw.patch.json5 --dry-run",
+  "quiet-core-bot config patch --file ./quiet-core-bot.patch.json5 --dry-run",
 );
 const CONFIG_PATCH_EXAMPLE_STDIN = formatCliCommand("quiet-core-bot config patch --stdin");
 const CONFIG_SET_DESCRIPTION = [

@@ -5,12 +5,12 @@ import path from "node:path";
 import type {
   OpenKeyedStoreOptions,
   PluginStateKeyedStore,
-} from "openclaw/plugin-sdk/plugin-state-runtime";
+} from "quiet-core-bot/plugin-sdk/plugin-state-runtime";
 import {
   createPluginStateKeyedStoreForTests,
   resetPluginStateStoreForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+} from "quiet-core-bot/plugin-sdk/plugin-state-test-runtime";
+import { createTestPluginApi } from "quiet-core-bot/plugin-sdk/plugin-test-api";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import registerPhoneControl from "./index.js";
 import type {
@@ -20,7 +20,7 @@ import type {
   PluginCommandContext,
 } from "./runtime-api.js";
 
-const PHONE_CONTROL_STATE_PREFIX = "openclaw-phone-control-test-";
+const PHONE_CONTROL_STATE_PREFIX = "quiet-core-bot-phone-control-test-";
 const WRITE_COMMANDS = ["calendar.add", "contacts.add", "reminders.add", "sms.send"] as const;
 
 function createApi(params: {
@@ -45,7 +45,7 @@ function createApi(params: {
           ((options: OpenKeyedStoreOptions) =>
             createPluginStateKeyedStoreForTests("phone-control", {
               ...options,
-              env: { ...process.env, OPENCLAW_STATE_DIR: params.stateDir },
+              env: { ...process.env, QUIET_CORE_STATE_DIR: params.stateDir },
             })),
       },
       config: {
@@ -59,7 +59,7 @@ function createApi(params: {
           mutate(nextConfig);
           await params.writeConfig(nextConfig);
           return {
-            path: "/tmp/openclaw.json",
+            path: "/tmp/quiet-core-bot.json",
             previousHash: null,
             persistedHash: null,
             snapshot: {},

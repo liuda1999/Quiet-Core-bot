@@ -11,7 +11,7 @@ Adds LiteLLM model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/litellm-provider`
+- Package: `@quiet-core/litellm-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

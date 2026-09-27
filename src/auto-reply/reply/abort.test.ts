@@ -103,7 +103,7 @@ describe("abort detection", () => {
     sessionIdsByKey?: Record<string, string>;
     nowMs?: number;
   }) {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-abort-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-abort-"));
     const storePath = path.join(root, "sessions.json");
     const cfg = {
       session: { store: storePath },
@@ -230,7 +230,7 @@ describe("abort detection", () => {
       "wait",
       "exit",
       "interrupt",
-      "stop openclaw",
+      "stop quiet-core-bot",
       "quiet-core-bot stop",
       "stop action",
       "stop current action",

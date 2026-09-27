@@ -11,8 +11,8 @@ Adds StepFun, StepFun Plan model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/stepfun-provider`
-- Install route: npm; ClawHub: `clawhub:@openclaw/stepfun-provider`
+- Package: `@quiet-core/stepfun-provider`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/stepfun-provider`
 
 ## Surface
 

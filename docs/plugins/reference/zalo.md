@@ -11,7 +11,7 @@ Quiet Core bot Zalo channel plugin for bot and webhook chats.
 
 ## Distribution
 
-- Package: `@openclaw/zalo`
+- Package: `@quiet-core/zalo`
 - Install route: npm; ClawHub
 
 ## Surface

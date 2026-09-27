@@ -156,10 +156,10 @@ export function ensureOpenClawPluginSdkAlias(distRoot: string): void {
   }
 
   const publicDistFileNames = readPublicPluginSdkDistFileNames(distRoot);
-  const aliasDir = path.join(distRoot, "extensions", "node_modules", "openclaw");
+  const aliasDir = path.join(distRoot, "extensions", "node_modules", "quiet-core-bot");
   const pluginSdkAliasDir = path.join(aliasDir, "plugin-sdk");
   writeRuntimeJsonFile(path.join(aliasDir, "package.json"), {
-    name: "openclaw",
+    name: "quiet-core-bot",
     type: "module",
     exports: buildRuntimePluginSdkPackageExports(publicDistFileNames),
   });

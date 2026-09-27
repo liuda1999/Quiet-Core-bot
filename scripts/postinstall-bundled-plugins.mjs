@@ -21,8 +21,8 @@ import { expandPackageDistImportClosure } from "./lib/package-dist-imports.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const DEFAULT_PACKAGE_ROOT = join(scriptDir, "..");
-const DISABLE_POSTINSTALL_ENV = "OPENCLAW_DISABLE_BUNDLED_PLUGIN_POSTINSTALL";
-const DISABLE_PLUGIN_REGISTRY_MIGRATION_ENV = "OPENCLAW_DISABLE_PLUGIN_REGISTRY_MIGRATION";
+const DISABLE_POSTINSTALL_ENV = "QUIET_CORE_DISABLE_BUNDLED_PLUGIN_POSTINSTALL";
+const DISABLE_PLUGIN_REGISTRY_MIGRATION_ENV = "QUIET_CORE_DISABLE_PLUGIN_REGISTRY_MIGRATION";
 const DIST_INVENTORY_PATH = "dist/postinstall-inventory.json";
 export const MAX_INSTALLED_DIST_SCAN_ENTRIES = 25_000;
 const LEGACY_PLUGIN_RUNTIME_DEPS_DIR = "plugin-runtime-deps";
@@ -55,7 +55,7 @@ function resolvePostinstallTildePath(input, homeDir) {
 
 function resolvePostinstallOpenClawHomeDir(env, getHomedir = homedir) {
   const osHome = resolvePostinstallOsHomeDir(env, getHomedir);
-  const override = env?.OPENCLAW_HOME?.trim();
+  const override = env?.QUIET_CORE_HOME?.trim();
   return override ? pathResolve(resolvePostinstallTildePath(override, osHome)) : osHome;
 }
 
@@ -269,7 +269,7 @@ function pruneEmptyDistDirectories(params = {}) {
 }
 
 function isLegacyInstalledPluginDependencyDirName(name) {
-  return name === "node_modules" || /^\.openclaw-install-stage(?:-[^/]+)?$/iu.test(name);
+  return name === "node_modules" || /^\.quiet-core-bot-install-stage(?:-[^/]+)?$/iu.test(name);
 }
 
 function pruneLegacyInstalledPluginDependencyDirs(params) {
@@ -338,16 +338,15 @@ export function collectLegacyPluginRuntimeDepsStateRoots(params = {}) {
     }
   };
 
-  const stateOverride = env?.OPENCLAW_STATE_DIR?.trim();
+  const stateOverride = env?.QUIET_CORE_STATE_DIR?.trim();
   if (stateOverride) {
     addStateRoot(resolvePostinstallUserPath(stateOverride, openClawHome));
   }
-  const configPath = env?.OPENCLAW_CONFIG_PATH?.trim();
+  const configPath = env?.QUIET_CORE_CONFIG_PATH?.trim();
   if (configPath) {
     addStateRoot(dirname(resolvePostinstallUserPath(configPath, openClawHome)));
   }
-  addStateRoot(join(openClawHome, ".openclaw"));
-  addStateRoot(join(openClawHome, ".clawdbot"));
+  addStateRoot(join(openClawHome, ".quiet-core-bot"));
 
   for (const entry of splitPostinstallPathList(env?.STATE_DIRECTORY)) {
     addStateRoot(resolvePostinstallUserPath(entry, openClawHome));

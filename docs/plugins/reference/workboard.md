@@ -11,7 +11,7 @@ Dashboard workboard for agent-owned issues and sessions.
 
 ## Distribution
 
-- Package: `@openclaw/workboard`
+- Package: `@quiet-core/workboard`
 - Install route: included in Quiet Core bot
 
 ## Surface

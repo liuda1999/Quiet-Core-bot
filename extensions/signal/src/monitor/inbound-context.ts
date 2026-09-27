@@ -1,8 +1,8 @@
 // Signal plugin module implements inbound context behavior.
-import { filterChannelInboundQuoteContext } from "openclaw/plugin-sdk/channel-inbound";
-import { resolveChannelContextVisibilityMode } from "openclaw/plugin-sdk/context-visibility-runtime";
-import type { ContextVisibilityDecision } from "openclaw/plugin-sdk/security-runtime";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { filterChannelInboundQuoteContext } from "quiet-core-bot/plugin-sdk/channel-inbound";
+import { resolveChannelContextVisibilityMode } from "quiet-core-bot/plugin-sdk/context-visibility-runtime";
+import type { ContextVisibilityDecision } from "quiet-core-bot/plugin-sdk/security-runtime";
+import { normalizeOptionalString } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import {
   formatSignalSenderDisplay,
   isSignalSenderAllowed,

@@ -90,7 +90,7 @@ function shouldCompareOfficialInstallToGateway(params: {
  * version and return any mismatches.
  *
  * @param params.gatewayVersion The gateway version string (typically the
- *   `version` field of the installed openclaw package.json).
+ *   `version` field of the installed quiet-core-bot package.json).
  * @param params.installRecords The full set of recorded plugin installs (as
  *   produced by `loadInstalledPluginIndexInstallRecords`).
  * @param params.config The merged daemon-side OpenClawConfig (optional).

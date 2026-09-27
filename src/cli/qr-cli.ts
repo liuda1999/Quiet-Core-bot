@@ -3,7 +3,7 @@ import type { Command } from "commander";
 import { formatDocsLink } from "../../packages/terminal-core/src/links.js";
 import { theme } from "../../packages/terminal-core/src/theme.js";
 import { getRuntimeConfig } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { hasConfiguredSecretInput } from "../config/types.secrets.js";
 import { trimToUndefined } from "../gateway/credentials.js";
 import { resolveRequiredConfiguredSecretRefInputString } from "../gateway/resolve-configured-secret-input-string.js";
@@ -42,7 +42,7 @@ function shouldResolveLocalGatewayPasswordSecret(
   env: NodeJS.ProcessEnv,
 ): boolean {
   // Default/implicit password auth may require resolving a local SecretRef before encoding setup.
-  if (trimToUndefined(env.OPENCLAW_GATEWAY_PASSWORD)) {
+  if (trimToUndefined(env.QUIET_CORE_GATEWAY_PASSWORD)) {
     return false;
   }
   const authMode = cfg.gateway?.auth?.mode;
@@ -52,7 +52,7 @@ function shouldResolveLocalGatewayPasswordSecret(
   if (authMode === "token" || authMode === "none" || authMode === "trusted-proxy") {
     return false;
   }
-  const envToken = trimToUndefined(env.OPENCLAW_GATEWAY_TOKEN);
+  const envToken = trimToUndefined(env.QUIET_CORE_GATEWAY_TOKEN);
   const configTokenConfigured = hasConfiguredSecretInput(
     cfg.gateway?.auth?.token,
     cfg.secrets?.defaults,

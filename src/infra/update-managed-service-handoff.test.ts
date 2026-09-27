@@ -5,12 +5,12 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "../state/openclaw-state-db.paths.js";
+} from "../state/quiet-core-bot-state-db.js";
+import { resolveOpenClawStateSqlitePath } from "../state/quiet-core-bot-state-db.paths.js";
 import {
   executeSqliteQuerySync,
   executeSqliteQueryTakeFirstSync,
@@ -129,7 +129,7 @@ async function runHelperWithExistingSentinel(params: {
   const { execFile } =
     await vi.importActual<typeof import("node:child_process")>("node:child_process");
   const { startManagedServiceUpdateHandoff } = await import("./update-managed-service-handoff.js");
-  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-handoff-helper-test-"));
+  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-handoff-helper-test-"));
   tempDirs.add(tmpDir);
 
   await startManagedServiceUpdateHandoff({
@@ -138,7 +138,7 @@ async function runHelperWithExistingSentinel(params: {
     restartDelayMs: 500,
     parentPid: process.pid,
     execPath: "/usr/local/bin/node",
-    argv1: "/opt/openclaw/quiet-core-bot.mjs",
+    argv1: "/opt/quiet-core-bot/quiet-core-bot.mjs",
     ...(params.handoffId ? { handoffId: params.handoffId } : {}),
     env: {},
     meta: {
@@ -159,7 +159,7 @@ async function runHelperWithExistingSentinel(params: {
     string,
     unknown
   >;
-  const env = { OPENCLAW_STATE_DIR: tmpDir } as NodeJS.ProcessEnv;
+  const env = { QUIET_CORE_STATE_DIR: tmpDir } as NodeJS.ProcessEnv;
   await params.prepareStateDatabase?.(env);
   if (params.sentinel !== undefined) {
     writeRestartSentinelRow(env, params.sentinel);
@@ -238,7 +238,7 @@ async function runHelperWithCommand(params: {
   const { execFile } =
     await vi.importActual<typeof import("node:child_process")>("node:child_process");
   const { startManagedServiceUpdateHandoff } = await import("./update-managed-service-handoff.js");
-  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-handoff-recovery-test-"));
+  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-handoff-recovery-test-"));
   tempDirs.add(tmpDir);
 
   await startManagedServiceUpdateHandoff({
@@ -247,7 +247,7 @@ async function runHelperWithCommand(params: {
     restartDelayMs: 0,
     parentPid: process.pid,
     execPath: "/usr/local/bin/node",
-    argv1: "/opt/openclaw/quiet-core-bot.mjs",
+    argv1: "/opt/quiet-core-bot/quiet-core-bot.mjs",
     env: {},
     meta: { sessionKey: "agent:test:webchat:dm:user-123" },
   });
@@ -270,7 +270,7 @@ async function runHelperWithCommand(params: {
         parentExitTimeoutMs: 5000,
         cwd: tmpDir,
         commandArgv: params.commandArgv,
-        stateDatabasePath: resolveOpenClawStateSqlitePath({ OPENCLAW_STATE_DIR: tmpDir }),
+        stateDatabasePath: resolveOpenClawStateSqlitePath({ QUIET_CORE_STATE_DIR: tmpDir }),
         logPath: path.join(tmpDir, "handoff.log"),
         sensitivePaths: [],
         ...(params.serviceRecovery ? { serviceRecovery: params.serviceRecovery } : {}),
@@ -295,7 +295,7 @@ async function runHelperWithCommand(params: {
 }
 
 async function writeFakeSystemctl(): Promise<{ binDir: string; recordPath: string }> {
-  const binDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-recovery-bin-"));
+  const binDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-recovery-bin-"));
   tempDirs.add(binDir);
   const recordPath = path.join(binDir, "systemctl-calls.log");
   await fs.writeFile(
@@ -307,7 +307,7 @@ async function writeFakeSystemctl(): Promise<{ binDir: string; recordPath: strin
 }
 
 async function writeFakeLaunchctl(): Promise<{ binDir: string; recordPath: string }> {
-  const binDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-launchctl-bin-"));
+  const binDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-launchctl-bin-"));
   tempDirs.add(binDir);
   const recordPath = path.join(binDir, "launchctl-calls.log");
   const countPath = path.join(binDir, "launchctl-kickstart-count");
@@ -339,9 +339,9 @@ describe("managed service update handoff", () => {
     const { startManagedServiceUpdateHandoff, stripSupervisorHintEnv } =
       await import("./update-managed-service-handoff.js");
     const serviceIdentityEnv = {
-      OPENCLAW_LAUNCHD_LABEL: "com.example.openclaw.test",
-      OPENCLAW_SYSTEMD_UNIT: "openclaw-test.service",
-      OPENCLAW_WINDOWS_TASK_NAME: "Quiet Core bot Test Gateway",
+      QUIET_CORE_LAUNCHD_LABEL: "com.example.quiet-core-bot.test",
+      QUIET_CORE_SYSTEMD_UNIT: "quiet-core-bot-test.service",
+      QUIET_CORE_WINDOWS_TASK_NAME: "Quiet Core bot Test Gateway",
     } satisfies NodeJS.ProcessEnv;
     const supervisorEnv = Object.fromEntries(
       SUPERVISOR_HINT_ENV_VARS.map((key) => [key, "supervised"]),
@@ -357,12 +357,12 @@ describe("managed service update handoff", () => {
     });
 
     const result = await startManagedServiceUpdateHandoff({
-      root: "/tmp/openclaw",
+      root: "/tmp/quiet-core-bot",
       timeoutMs: 1_800_000,
       restartDelayMs: 500,
       parentPid: 12345,
       execPath: "/usr/local/bin/node",
-      argv1: "/opt/openclaw/quiet-core-bot.mjs",
+      argv1: "/opt/quiet-core-bot/quiet-core-bot.mjs",
       env: {
         ...supervisorEnv,
         ...serviceIdentityEnv,
@@ -391,7 +391,7 @@ describe("managed service update handoff", () => {
       stateDatabasePath?: string;
     };
     expect(helperParams.metaPath).toMatch(/sentinel-meta\.json$/u);
-    expect(helperParams.stateDatabasePath).toMatch(/openclaw\.sqlite$/u);
+    expect(helperParams.stateDatabasePath).toMatch(/quiet-core-bot\.sqlite$/u);
     expect(options.cwd).toBe(os.homedir());
     expect(helperParams.cwd).toBe(os.homedir());
     expect(options.detached).toBe(true);
@@ -404,31 +404,31 @@ describe("managed service update handoff", () => {
     )) {
       expect(options.env[key]).toBeUndefined();
     }
-    expect(options.env.OPENCLAW_UPDATE_RUN_HANDOFF).toBe("1");
+    expect(options.env.QUIET_CORE_UPDATE_RUN_HANDOFF).toBe("1");
     expect(options.env[CONTROL_PLANE_UPDATE_SENTINEL_META_ENV]).toMatch(/sentinel-meta\.json$/u);
   });
 
   it("launches systemd handoffs through a transient user scope", async () => {
     const { startManagedServiceUpdateHandoff } =
       await import("./update-managed-service-handoff.js");
-    const binDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-systemd-run-bin-"));
+    const binDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-systemd-run-bin-"));
     tempDirs.add(binDir);
     const systemdRunPath = path.join(binDir, "systemd-run");
     await fs.writeFile(systemdRunPath, "#!/bin/sh\nexit 0\n", { mode: 0o755 });
 
     const result = await startManagedServiceUpdateHandoff({
-      root: "/tmp/openclaw",
+      root: "/tmp/quiet-core-bot",
       timeoutMs: 1_800_000,
       restartDelayMs: 500,
       parentPid: 12345,
       execPath: "/usr/local/bin/node",
-      argv1: "/opt/openclaw/quiet-core-bot.mjs",
+      argv1: "/opt/quiet-core-bot/quiet-core-bot.mjs",
       handoffId: "handoff-123",
       channel: "beta",
       supervisor: "systemd",
       env: {
         PATH: binDir,
-        OPENCLAW_SYSTEMD_UNIT: "openclaw-gateway.service",
+        QUIET_CORE_SYSTEMD_UNIT: "quiet-core-bot-gateway.service",
         INVOCATION_ID: "gateway-invocation",
         KEEP_ME: "1",
       },
@@ -451,7 +451,7 @@ describe("managed service update handoff", () => {
       "--user",
       "--scope",
       "--collect",
-      "--unit=openclaw-update-handoff-123.scope",
+      "--unit=quiet-core-bot-update-handoff-123.scope",
     ]);
     expect(args.slice(4, 7)).toEqual([
       "/usr/local/bin/node",
@@ -466,11 +466,11 @@ describe("managed service update handoff", () => {
     };
     expect(helperParams.serviceRecovery).toEqual({
       kind: "systemd",
-      unit: "openclaw-gateway.service",
+      unit: "quiet-core-bot-gateway.service",
     });
     expect(helperParams.commandArgv).toEqual([
       "/usr/local/bin/node",
-      "/opt/openclaw/quiet-core-bot.mjs",
+      "/opt/quiet-core-bot/quiet-core-bot.mjs",
       "update",
       "--yes",
       "--json",
@@ -481,23 +481,23 @@ describe("managed service update handoff", () => {
     ]);
     expect(helperParams.handoffId).toBe("handoff-123");
     expect(options.detached).toBe(true);
-    expect(options.env.OPENCLAW_SYSTEMD_UNIT).toBe("openclaw-gateway.service");
+    expect(options.env.QUIET_CORE_SYSTEMD_UNIT).toBe("quiet-core-bot-gateway.service");
     expect(options.env.INVOCATION_ID).toBeUndefined();
     expect(options.env.KEEP_ME).toBe("1");
-    expect(options.env.OPENCLAW_UPDATE_RUN_HANDOFF).toBe("1");
+    expect(options.env.QUIET_CORE_UPDATE_RUN_HANDOFF).toBe("1");
   });
 
   it("starts the managed gateway service when the update command fails after handoff", async () => {
     const { binDir, recordPath } = await writeFakeSystemctl();
     const result = await runHelperWithCommand({
       commandArgv: [process.execPath, "-e", "process.exit(7)"],
-      serviceRecovery: { kind: "systemd", unit: "openclaw-gateway.service" },
+      serviceRecovery: { kind: "systemd", unit: "quiet-core-bot-gateway.service" },
       pathPrepend: binDir,
     });
 
     expect(result.code).toBe(7);
     await expect(fs.readFile(recordPath, "utf-8")).resolves.toBe(
-      "--user start openclaw-gateway.service\n",
+      "--user start quiet-core-bot-gateway.service\n",
     );
   });
 
@@ -505,7 +505,7 @@ describe("managed service update handoff", () => {
     const { binDir, recordPath } = await writeFakeSystemctl();
     const result = await runHelperWithCommand({
       commandArgv: [process.execPath, "-e", "process.exit(0)"],
-      serviceRecovery: { kind: "systemd", unit: "openclaw-gateway.service" },
+      serviceRecovery: { kind: "systemd", unit: "quiet-core-bot-gateway.service" },
       pathPrepend: binDir,
     });
 
@@ -520,8 +520,8 @@ describe("managed service update handoff", () => {
       serviceRecovery: {
         kind: "launchd",
         uid: 501,
-        label: "com.example.openclaw",
-        plistPath: "/Users/test/Library/LaunchAgents/com.example.openclaw.plist",
+        label: "com.example.quiet-core-bot",
+        plistPath: "/Users/test/Library/LaunchAgents/com.example.quiet-core-bot.plist",
       },
       pathPrepend: binDir,
     });
@@ -529,10 +529,10 @@ describe("managed service update handoff", () => {
     expect(result.code).toBe(7);
     await expect(fs.readFile(recordPath, "utf-8")).resolves.toBe(
       [
-        "kickstart gui/501/com.example.openclaw",
-        "enable gui/501/com.example.openclaw",
-        "bootstrap gui/501 /Users/test/Library/LaunchAgents/com.example.openclaw.plist",
-        "kickstart gui/501/com.example.openclaw",
+        "kickstart gui/501/com.example.quiet-core-bot",
+        "enable gui/501/com.example.quiet-core-bot",
+        "bootstrap gui/501 /Users/test/Library/LaunchAgents/com.example.quiet-core-bot.plist",
+        "kickstart gui/501/com.example.quiet-core-bot",
         "",
       ].join("\n"),
     );
@@ -544,29 +544,29 @@ describe("managed service update handoff", () => {
     const cases = [
       {
         supervisor: "launchd" as const,
-        env: { OPENCLAW_LAUNCHD_LABEL: "com.example.openclaw.test", HOME: "/Users/test" },
+        env: { QUIET_CORE_LAUNCHD_LABEL: "com.example.quiet-core-bot.test", HOME: "/Users/test" },
         expected: {
           kind: "launchd",
           uid: typeof process.getuid === "function" ? process.getuid() : 501,
-          label: "com.example.openclaw.test",
-          plistPath: "/Users/test/Library/LaunchAgents/com.example.openclaw.test.plist",
+          label: "com.example.quiet-core-bot.test",
+          plistPath: "/Users/test/Library/LaunchAgents/com.example.quiet-core-bot.test.plist",
         },
       },
       {
         supervisor: "schtasks" as const,
-        env: { OPENCLAW_WINDOWS_TASK_NAME: "Quiet Core bot Test Gateway" },
+        env: { QUIET_CORE_WINDOWS_TASK_NAME: "Quiet Core bot Test Gateway" },
         expected: { kind: "schtasks", taskName: "Quiet Core bot Test Gateway" },
       },
     ];
 
     for (const testCase of cases) {
       const result = await startManagedServiceUpdateHandoff({
-        root: "/tmp/openclaw",
+        root: "/tmp/quiet-core-bot",
         timeoutMs: 1_800_000,
         restartDelayMs: 500,
         parentPid: 12345,
         execPath: "/usr/local/bin/node",
-        argv1: "/opt/openclaw/quiet-core-bot.mjs",
+        argv1: "/opt/quiet-core-bot/quiet-core-bot.mjs",
         supervisor: testCase.supervisor,
         env: testCase.env,
         meta: { sessionKey: "agent:test:webchat:dm:user-123" },
@@ -671,11 +671,11 @@ describe("managed service update handoff", () => {
   });
 
   it("sweeps stale handoff temp directories while keeping fresh handoff logs", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-handoff-cleanup-test-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-handoff-cleanup-test-"));
     tempDirs.add(tmpDir);
     const staleDir = path.join(tmpDir, `${MANAGED_SERVICE_UPDATE_HANDOFF_TEMP_PREFIX}stale`);
     const freshDir = path.join(tmpDir, `${MANAGED_SERVICE_UPDATE_HANDOFF_TEMP_PREFIX}fresh`);
-    const unrelatedDir = path.join(tmpDir, "openclaw-other-temp");
+    const unrelatedDir = path.join(tmpDir, "quiet-core-bot-other-temp");
     await fs.mkdir(staleDir, { recursive: true });
     await fs.mkdir(freshDir, { recursive: true });
     await fs.mkdir(unrelatedDir, { recursive: true });

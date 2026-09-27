@@ -987,7 +987,7 @@ describe("createInboundDebouncer", () => {
 
 describe("initSessionState BodyStripped", () => {
   it("prefers BodyForAgent over Body for group chats", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-sender-meta-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-sender-meta-"));
     const storePath = path.join(root, "sessions.json");
     const cfg = { session: { store: storePath } } as OpenClawConfig;
 
@@ -1009,7 +1009,7 @@ describe("initSessionState BodyStripped", () => {
   });
 
   it("prefers BodyForAgent over Body for direct chats", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-sender-meta-direct-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-sender-meta-direct-"));
     const storePath = path.join(root, "sessions.json");
     const cfg = { session: { store: storePath } } as OpenClawConfig;
 
@@ -1034,20 +1034,20 @@ describe("mention helpers", () => {
   it("builds regexes and skips invalid or unsafe patterns", () => {
     const regexes = buildMentionRegexes({
       messages: {
-        groupChat: { mentionPatterns: ["\\bopenclaw\\b", "(invalid", "(a+)+$"] },
+        groupChat: { mentionPatterns: ["\\bquiet-core-bot\\b", "(invalid", "(a+)+$"] },
       },
     });
     expect(regexes).toHaveLength(1);
-    expect(regexes[0]?.test("openclaw")).toBe(true);
+    expect(regexes[0]?.test("quiet-core-bot")).toBe(true);
   });
 
   it("normalizes zero-width characters", () => {
-    expect(normalizeMentionText("open\u200bclaw")).toBe("openclaw");
+    expect(normalizeMentionText("open\u200bclaw")).toBe("quiet-core-bot");
   });
 
   it("matches patterns case-insensitively", () => {
     const regexes = buildMentionRegexes({
-      messages: { groupChat: { mentionPatterns: ["\\bopenclaw\\b"] } },
+      messages: { groupChat: { mentionPatterns: ["\\bquiet-core-bot\\b"] } },
     });
     expect(matchesMentionPatterns("OPENCLAW: hi", regexes)).toBe(true);
   });
@@ -1057,7 +1057,7 @@ describe("mention helpers", () => {
       messages: { groupChat: { mentionPatterns: [".*"] } },
     });
     const specificRegexes = buildMentionRegexes({
-      messages: { groupChat: { mentionPatterns: ["\\bopenclaw\\b"] } },
+      messages: { groupChat: { mentionPatterns: ["\\bquiet-core-bot\\b"] } },
     });
 
     expect(matchesMentionPatterns("", catchAllRegexes)).toBe(true);
@@ -1089,7 +1089,7 @@ describe("mention helpers", () => {
     const cfg = {
       messages: {
         groupChat: {
-          mentionPatterns: ["\\bopenclaw\\b"],
+          mentionPatterns: ["\\bquiet-core-bot\\b"],
         },
       },
       channels: {
@@ -1111,27 +1111,27 @@ describe("mention helpers", () => {
       conversationId: "C999",
     });
 
-    expect(matchesMentionPatterns("openclaw: hi", allowed)).toBe(true);
-    expect(matchesMentionPatterns("openclaw: hi", denied)).toBe(false);
+    expect(matchesMentionPatterns("quiet-core-bot: hi", allowed)).toBe(true);
+    expect(matchesMentionPatterns("quiet-core-bot: hi", denied)).toBe(false);
   });
 
   it("preserves mention patterns for callers without scoped policy facts", () => {
     const regexes = buildMentionRegexes({
       messages: {
         groupChat: {
-          mentionPatterns: ["\\bopenclaw\\b"],
+          mentionPatterns: ["\\bquiet-core-bot\\b"],
         },
       },
     });
 
-    expect(matchesMentionPatterns("openclaw", regexes)).toBe(true);
+    expect(matchesMentionPatterns("quiet-core-bot", regexes)).toBe(true);
   });
 
   it("lets provider deny lists override globally allowed mention patterns", () => {
     const cfg = {
       messages: {
         groupChat: {
-          mentionPatterns: ["\\bopenclaw\\b"],
+          mentionPatterns: ["\\bquiet-core-bot\\b"],
         },
       },
       channels: {
@@ -1151,7 +1151,7 @@ describe("mention helpers", () => {
     ).toEqual([]);
     expect(
       matchesMentionPatterns(
-        "openclaw",
+        "quiet-core-bot",
         buildMentionRegexes(cfg, undefined, {
           provider: "telegram",
           conversationId: "-100:topic:8",
@@ -1163,7 +1163,7 @@ describe("mention helpers", () => {
   it("strips safe mention patterns and ignores unsafe ones", () => {
     const stripped = stripMentions("quiet-core-bot " + "a".repeat(28) + "!", {} as MsgContext, {
       messages: {
-        groupChat: { mentionPatterns: ["\\bopenclaw\\b", "(a+)+$"] },
+        groupChat: { mentionPatterns: ["\\bquiet-core-bot\\b", "(a+)+$"] },
       },
     });
     expect(stripped).toBe(`${"a".repeat(28)}!`);

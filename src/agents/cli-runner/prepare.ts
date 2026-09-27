@@ -2,7 +2,7 @@
  * Prepares CLI backend run context: backend config, prompts, bootstrap context,
  * MCP, auth epoch, and reusable session metadata.
  */
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { uniqueStrings } from "@quiet-core/normalization-core/string-normalization";
 import { getRuntimeConfig } from "../../config/config.js";
 import {
   assertContextEngineHostSupport,
@@ -448,24 +448,24 @@ export async function prepareCliRunContext(
       : undefined,
     env: mcpLoopbackRuntime
       ? {
-          OPENCLAW_MCP_TOKEN: prepareDeps.resolveMcpLoopbackBearerToken(
+          QUIET_CORE_MCP_TOKEN: prepareDeps.resolveMcpLoopbackBearerToken(
             mcpLoopbackRuntime,
             params.senderIsOwner === true,
           ),
-          OPENCLAW_MCP_AGENT_ID: sessionAgentId ?? "",
-          OPENCLAW_MCP_ACCOUNT_ID: params.agentAccountId ?? "",
-          OPENCLAW_MCP_SESSION_KEY: params.sessionKey ?? "",
-          OPENCLAW_MCP_SESSION_ID: params.sessionId,
-          OPENCLAW_MCP_MESSAGE_CHANNEL: params.messageChannel ?? params.messageProvider ?? "",
-          OPENCLAW_MCP_CURRENT_CHANNEL_ID: params.currentChannelId ?? "",
-          OPENCLAW_MCP_CURRENT_THREAD_TS: params.currentThreadTs ?? "",
-          OPENCLAW_MCP_CURRENT_MESSAGE_ID:
+          QUIET_CORE_MCP_AGENT_ID: sessionAgentId ?? "",
+          QUIET_CORE_MCP_ACCOUNT_ID: params.agentAccountId ?? "",
+          QUIET_CORE_MCP_SESSION_KEY: params.sessionKey ?? "",
+          QUIET_CORE_MCP_SESSION_ID: params.sessionId,
+          QUIET_CORE_MCP_MESSAGE_CHANNEL: params.messageChannel ?? params.messageProvider ?? "",
+          QUIET_CORE_MCP_CURRENT_CHANNEL_ID: params.currentChannelId ?? "",
+          QUIET_CORE_MCP_CURRENT_THREAD_TS: params.currentThreadTs ?? "",
+          QUIET_CORE_MCP_CURRENT_MESSAGE_ID:
             params.currentMessageId != null ? String(params.currentMessageId) : "",
-          OPENCLAW_MCP_CURRENT_INBOUND_AUDIO: params.currentInboundAudio === true ? "true" : "",
-          OPENCLAW_MCP_INBOUND_EVENT_KIND: params.currentInboundEventKind ?? "",
-          OPENCLAW_MCP_SOURCE_REPLY_DELIVERY_MODE: params.sourceReplyDeliveryMode ?? "",
-          OPENCLAW_MCP_REQUIRE_EXPLICIT_MESSAGE_TARGET: requireExplicitMessageTarget ? "true" : "",
-          OPENCLAW_MCP_CLI_CAPTURE_KEY: "",
+          QUIET_CORE_MCP_CURRENT_INBOUND_AUDIO: params.currentInboundAudio === true ? "true" : "",
+          QUIET_CORE_MCP_INBOUND_EVENT_KIND: params.currentInboundEventKind ?? "",
+          QUIET_CORE_MCP_SOURCE_REPLY_DELIVERY_MODE: params.sourceReplyDeliveryMode ?? "",
+          QUIET_CORE_MCP_REQUIRE_EXPLICIT_MESSAGE_TARGET: requireExplicitMessageTarget ? "true" : "",
+          QUIET_CORE_MCP_CLI_CAPTURE_KEY: "",
         }
       : undefined,
     warn: (message) => cliBackendLog.warn(message),

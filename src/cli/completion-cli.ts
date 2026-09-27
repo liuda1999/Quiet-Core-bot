@@ -186,7 +186,7 @@ export function registerCompletionCli(program: Command) {
     .option("-i, --install", "Install completion script to shell profile")
     .option(
       "--write-state",
-      "Write completion scripts to $OPENCLAW_STATE_DIR/completions (no stdout)",
+      "Write completion scripts to $QUIET_CORE_STATE_DIR/completions (no stdout)",
     )
     .option("-y, --yes", "Skip confirmation (non-interactive)", false)
     .action(async (options) => {
@@ -243,10 +243,11 @@ export function registerCompletionCli(program: Command) {
 
 function generateZshCompletion(program: Command): string {
   const rootCmd = program.name();
+  const rootId = rootCmd.replace(/-/g, "_");
   const script = `
 #compdef ${rootCmd}
 
-_${rootCmd}_root_completion() {
+_${rootId}_root_completion() {
   local -a commands
   local -a options
   
@@ -258,29 +259,29 @@ _${rootCmd}_root_completion() {
   case $state in
     (args)
       case $line[1] in
-        ${program.commands.map((cmd) => `(${cmd.name()}) _${rootCmd}_${cmd.name().replace(/-/g, "_")} ;;`).join("\n        ")}
+        ${program.commands.map((cmd) => `(${cmd.name()}) _${rootId}_${cmd.name().replace(/-/g, "_")} ;;`).join("\n        ")}
       esac
       ;;
   esac
 }
 
-${generateZshSubcommands(program, rootCmd)}
+${generateZshSubcommands(program, rootId)}
 
-_${rootCmd}_register_completion() {
+_${rootId}_register_completion() {
   if (( ! $+functions[compdef] )); then
     return 0
   fi
 
-  compdef _${rootCmd}_root_completion ${rootCmd}
-  precmd_functions=(\${precmd_functions:#_${rootCmd}_register_completion})
-  unfunction _${rootCmd}_register_completion 2>/dev/null
+  compdef _${rootId}_root_completion ${rootCmd}
+  precmd_functions=(\${precmd_functions:#_${rootId}_register_completion})
+  unfunction _${rootId}_register_completion 2>/dev/null
 }
 
-_${rootCmd}_register_completion
+_${rootId}_register_completion
 if (( ! $+functions[compdef] )); then
   typeset -ga precmd_functions
-  if [[ -z "\${precmd_functions[(r)_${rootCmd}_register_completion]}" ]]; then
-    precmd_functions+=(_${rootCmd}_register_completion)
+  if [[ -z "\${precmd_functions[(r)_${rootId}_register_completion]}" ]]; then
+    precmd_functions+=(_${rootId}_register_completion)
   fi
 fi
 `;
@@ -380,10 +381,11 @@ function generateBashCompletion(program: Command): string {
   // For a robust implementation, usually one maps out the tree.
   // This assumes a simple structure.
   const rootCmd = program.name();
+  const rootId = rootCmd.replace(/-/g, "_");
 
   // We can use a recursive function to build the case statements
   return `
-_${rootCmd}_completion() {
+_${rootId}_completion() {
     local cur prev opts
     COMPREPLY=()
     cur="\${COMP_WORDS[COMP_CWORD]}"
@@ -404,7 +406,7 @@ _${rootCmd}_completion() {
     COMPREPLY=( $(compgen -W "\${opts}" -- \${cur}) )
 }
 
-complete -F _${rootCmd}_completion ${rootCmd}
+complete -F _${rootId}_completion ${rootCmd}
 `;
 }
 
@@ -486,7 +488,8 @@ Register-ArgumentCompleter -Native -CommandName ${rootCmd} -ScriptBlock {
 
 function generateFishCompletion(program: Command): string {
   const rootCmd = program.name();
-  const segments: string[] = [generateFishPathHelper(rootCmd)];
+  const rootId = rootCmd.replace(/-/g, "_");
+  const segments: string[] = [generateFishPathHelper(rootId)];
 
   const visit = (cmd: Command, parents: string[]) => {
     // Root logic
@@ -514,7 +517,7 @@ function generateFishCompletion(program: Command): string {
         );
       }
     } else {
-      const condition = fishCommandPathCondition(program, rootCmd, parents);
+      const condition = fishCommandPathCondition(program, rootId, parents);
       // Subcommands
       for (const sub of cmd.commands) {
         segments.push(

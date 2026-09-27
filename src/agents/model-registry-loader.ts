@@ -2,7 +2,7 @@
  * Shared model-registry loader for agent paths that need auth storage and
  * plugin metadata resolved together before model discovery.
  */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { discoverAuthStorage, discoverModels } from "./agent-model-discovery.js";
 import { resolveDefaultAgentDir } from "./agent-scope.js";
 import { resolveModelPluginMetadataSnapshot } from "./model-discovery-context.js";

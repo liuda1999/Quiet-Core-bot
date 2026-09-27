@@ -42,7 +42,7 @@ Read `principles.md` first, then follow this execution flow.
 - Keep headings informative and scannable.
 - Open each section with the takeaway sentence.
 - Add decision points with concrete branch guidance.
-- For Quiet Core bot docs work, choose a page type from `references/openclaw.md` before drafting.
+- For Quiet Core bot docs work, choose a page type from `references/quiet-core-bot.md` before drafting.
 - Keep task-critical Quiet Core bot configuration inline; link exhaustive defaults, enums, schemas, generated references, and rare debugging workflows.
 
 ## 6. Build AGENTS.md and CONTRIBUTING.md intentionally
@@ -103,7 +103,7 @@ Read `principles.md` first, then follow this execution flow.
 - Verify links and references in changed sections.
 - Run a reference existence sweep for every path/command you introduced.
 - Verify docs-framework consistency when in scope (for example Sphinx/Fern config and referenced doc paths).
-- For Quiet Core bot docs work, apply the validation checklist in `references/openclaw.md`.
+- For Quiet Core bot docs work, apply the validation checklist in `references/quiet-core-bot.md`.
 
 ## 13. Multilingual parity mode (when applicable)
 

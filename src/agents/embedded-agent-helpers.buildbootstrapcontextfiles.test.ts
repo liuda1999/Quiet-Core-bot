@@ -35,7 +35,7 @@ describe("ensureSessionHeader", () => {
   it("creates transcript files with restrictive permissions", async () => {
     // Session transcripts can contain private prompts and tool outputs, so both
     // the directory and file need restrictive permissions from creation.
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-session-header-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-session-header-"));
     try {
       const sessionFile = path.join(tempDir, "nested", "session.jsonl");
       await ensureSessionHeader({ sessionFile, sessionId: "session-1", cwd: tempDir });

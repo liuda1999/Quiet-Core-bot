@@ -18,7 +18,7 @@ Create a bot token in ClickClack:
 clickclack admin bot create \
   --workspace <workspace_id_or_slug> \
   --name "Quiet Core bot" \
-  --handle openclaw \
+  --handle quiet-core-bot \
   --scopes bot:write \
   --plain
 ```
@@ -64,7 +64,7 @@ ClickClack in channel setup or running `quiet-core-bot plugins enable clickclack
 appends `clickclack` to that list. Onboarding installation uses the same
 explicit-selection behavior. These paths do not override `plugins.deny` or a
 global `plugins.enabled: false` setting. Direct
-`quiet-core-bot plugins install @openclaw/clickclack` follows the normal
+`quiet-core-bot plugins install @quiet-core/clickclack` follows the normal
 plugin-install policy and also records ClickClack in an existing allowlist.
 
 ## Multiple bots

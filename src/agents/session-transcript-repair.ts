@@ -8,7 +8,7 @@ import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
   readStringValue,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/normalization-core/string-coerce";
 import type { AgentMessage } from "./runtime/index.js";
 import { isThinkingLikeBlock } from "./thinking-block.js";
 import {
@@ -183,7 +183,7 @@ function hasSessionsSpawnAttachmentToolCall(content: unknown[]): boolean {
 }
 
 const DEFAULT_MISSING_TOOL_RESULT_TEXT =
-  "[openclaw] missing tool result in session history; inserted synthetic error result for transcript repair.";
+  "[quiet-core-bot] missing tool result in session history; inserted synthetic error result for transcript repair.";
 const SYNTHETIC_MISSING_TOOL_RESULT_DETAIL_KEY = "openclawSyntheticMissingToolResult";
 
 function makeMissingToolResult(params: {

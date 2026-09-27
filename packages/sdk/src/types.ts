@@ -35,7 +35,7 @@ export type ConnectableOpenClawTransport = OpenClawTransport & {
 /** Desired runtime/harness selection for future per-run execution routing. */
 export type RuntimeSelection =
   | "auto"
-  | { type: "embedded"; id: "openclaw" | "codex" | (string & {}) }
+  | { type: "embedded"; id: "quiet-core-bot" | "codex" | (string & {}) }
   | { type: "cli"; id: "claude-cli" | (string & {}) }
   | { type: "acp"; harness: "claude" | "cursor" | "gemini" | "opencode" | (string & {}) }
   | { type: "managed"; provider: "local" | "node" | "testbox" | "cloud" | (string & {}) };

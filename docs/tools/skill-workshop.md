@@ -232,7 +232,7 @@ Read-only methods require `operator.read`. Mutating methods require
 ## Storage
 
 ```text
-<OPENCLAW_STATE_DIR>/skill-workshop/
+<QUIET_CORE_STATE_DIR>/skill-workshop/
   proposals.json
   proposals/<proposal-id>/
     proposal.json
@@ -271,7 +271,7 @@ Default state directory: `~/.quiet-core-bot`.
 | `Proposal scan failed`                         | Inspect scanner findings, then revise or quarantine the proposal.                                                                                                                                           |
 | `untrusted symlink target`                     | Configure `skills.load.allowSymlinkTargets` and enable `skills.workshop.allowSymlinkTargetWrites` only for intentional shared skill roots.                                                                  |
 | `Support file paths must be under one of...`   | Move support files under `assets/`, `examples/`, `references/`, `scripts/`, or `templates/`.                                                                                                                |
-| Proposal does not show in list                 | Check the selected `--agent` workspace and `OPENCLAW_STATE_DIR`.                                                                                                                                            |
+| Proposal does not show in list                 | Check the selected `--agent` workspace and `QUIET_CORE_STATE_DIR`.                                                                                                                                            |
 | Agent cannot call `skill_workshop`             | Check the active tool policy and run mode. `coding` includes the tool; restrictive `tools.allow` policies must list it explicitly, and sandboxed runs must use a normal host-side agent session or the CLI. |
 
 ## Related

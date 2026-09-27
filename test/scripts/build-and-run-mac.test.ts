@@ -17,7 +17,7 @@ const scriptPath = "scripts/build-and-run-mac.sh";
 const tempRoots: string[] = [];
 
 function runStopExistingLocalApp(params: { fakeLsof?: string; fakePgrep: string }) {
-  const root = mkdtempSync(join(tmpdir(), "openclaw-build-run-mac-test-"));
+  const root = mkdtempSync(join(tmpdir(), "quiet-core-bot-build-run-mac-test-"));
   tempRoots.push(root);
   const binDir = join(root, "bin");
   const killCallsPath = join(root, "kill-calls.txt");
@@ -75,8 +75,8 @@ function runStopExistingLocalApp(params: { fakeLsof?: string; fakePgrep: string 
       'BIN=".build-local/debug/OpenClaw"',
       'APP_CWD="/worktree/apps/macos"',
       "kill() {",
-      '  printf "%s\\n" "$*" >> "$OPENCLAW_TEST_KILL_CALLS"',
-      '  touch "$OPENCLAW_TEST_KILLED_MARKER"',
+      '  printf "%s\\n" "$*" >> "$QUIET_CORE_TEST_KILL_CALLS"',
+      '  touch "$QUIET_CORE_TEST_KILLED_MARKER"',
       "  return 0",
       "}",
       stopFunction,
@@ -89,10 +89,10 @@ function runStopExistingLocalApp(params: { fakeLsof?: string; fakePgrep: string 
     encoding: "utf8",
     env: {
       ...process.env,
-      OPENCLAW_TEST_KILLED_MARKER: join(root, "killed"),
-      OPENCLAW_TEST_KILL_CALLS: killCallsPath,
-      OPENCLAW_TEST_PGREP_CALLS: pgrepCallsPath,
-      OPENCLAW_TEST_PGREP_COUNT: join(root, "pgrep-count.txt"),
+      QUIET_CORE_TEST_KILLED_MARKER: join(root, "killed"),
+      QUIET_CORE_TEST_KILL_CALLS: killCallsPath,
+      QUIET_CORE_TEST_PGREP_CALLS: pgrepCallsPath,
+      QUIET_CORE_TEST_PGREP_COUNT: join(root, "pgrep-count.txt"),
       PATH: `${binDir}:${process.env.PATH ?? ""}`,
     },
   });
@@ -136,11 +136,11 @@ describe("scripts/build-and-run-mac.sh", () => {
 
     expect(script).toContain('cd "$APP_DIR"');
     expect(script).toContain(
-      'LOG_PATH="${OPENCLAW_MAC_RUN_LOG:-$(mktemp "${TMPDIR:-/tmp}/openclaw-${PRODUCT}.XXXXXX.log")}"',
+      'LOG_PATH="${QUIET_CORE_MAC_RUN_LOG:-$(mktemp "${TMPDIR:-/tmp}/quiet-core-bot-${PRODUCT}.XXXXXX.log")}"',
     );
     expect(script).toContain('nohup "$BIN_ABS" >"$LOG_PATH" 2>&1 &');
     expect(script).toContain('printf "Started $PRODUCT (PID $PID). Logs: $LOG_PATH\\n"');
-    expect(script).not.toContain("/tmp/openclaw.log");
+    expect(script).not.toContain("/tmp/quiet-core-bot.log");
   });
 
   it("stops only the local debug app binary before relaunching", () => {
@@ -148,10 +148,10 @@ describe("scripts/build-and-run-mac.sh", () => {
     const { killCalls, pgrepCalls, result } = runStopExistingLocalApp({
       fakePgrep: [
         "#!/usr/bin/env bash",
-        `printf '%s\\n' "$*" >> "$OPENCLAW_TEST_PGREP_CALLS"`,
-        'count="$(cat "$OPENCLAW_TEST_PGREP_COUNT" 2>/dev/null || echo 0)"',
+        `printf '%s\\n' "$*" >> "$QUIET_CORE_TEST_PGREP_CALLS"`,
+        'count="$(cat "$QUIET_CORE_TEST_PGREP_COUNT" 2>/dev/null || echo 0)"',
         'next="$((count + 1))"',
-        'printf "%s\\n" "$next" > "$OPENCLAW_TEST_PGREP_COUNT"',
+        'printf "%s\\n" "$next" > "$QUIET_CORE_TEST_PGREP_COUNT"',
         'if [[ "$2" == "/worktree/apps/macos/.build-local/debug/OpenClaw" ]]; then exit 1; fi',
         'if [[ "$2" == ".build-local/debug/OpenClaw" && "$count" == "1" ]]; then echo 321; exit 0; fi',
         "exit 1",

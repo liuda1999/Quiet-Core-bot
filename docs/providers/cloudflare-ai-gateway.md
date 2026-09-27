@@ -29,7 +29,7 @@ non-thinking prefill remains available.
 Install the official plugin, then restart Gateway:
 
 ```bash
-quiet-core-bot plugins install @openclaw/cloudflare-ai-gateway-provider
+quiet-core-bot plugins install @quiet-core/cloudflare-ai-gateway-provider
 quiet-core-bot gateway restart
 ```
 

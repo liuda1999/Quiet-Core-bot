@@ -28,14 +28,14 @@ struct GatewayEndpointStoreTests {
 
     @Test func `resolve gateway token prefers env and falls back to launchd`() {
         let snapshot = self.makeLaunchAgentSnapshot(
-            env: ["OPENCLAW_GATEWAY_TOKEN": "launchd-token"],
+            env: ["QUIET_CORE_GATEWAY_TOKEN": "launchd-token"],
             token: "launchd-token",
             password: nil)
 
         let envToken = GatewayEndpointStore._testResolveGatewayToken(
             isRemote: false,
             root: [:],
-            env: ["OPENCLAW_GATEWAY_TOKEN": "env-token"],
+            env: ["QUIET_CORE_GATEWAY_TOKEN": "env-token"],
             launchdSnapshot: snapshot)
         #expect(envToken == "env-token")
 
@@ -49,7 +49,7 @@ struct GatewayEndpointStoreTests {
 
     @Test func `resolve gateway token ignores launchd in remote mode`() {
         let snapshot = self.makeLaunchAgentSnapshot(
-            env: ["OPENCLAW_GATEWAY_TOKEN": "launchd-token"],
+            env: ["QUIET_CORE_GATEWAY_TOKEN": "launchd-token"],
             token: "launchd-token",
             password: nil)
 
@@ -90,7 +90,7 @@ struct GatewayEndpointStoreTests {
 
     @Test func `resolve gateway password falls back to launchd`() {
         let snapshot = self.makeLaunchAgentSnapshot(
-            env: ["OPENCLAW_GATEWAY_PASSWORD": "launchd-pass"],
+            env: ["QUIET_CORE_GATEWAY_PASSWORD": "launchd-pass"],
             token: nil,
             password: "launchd-pass")
 

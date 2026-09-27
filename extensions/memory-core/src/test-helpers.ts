@@ -1,7 +1,7 @@
 // Memory Core helper module supports test helpers behavior.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+import { resolvePreferredOpenClawTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";
 import { afterAll, beforeAll } from "vitest";
 import {
   configureMemoryCoreDreamingStateForTests,

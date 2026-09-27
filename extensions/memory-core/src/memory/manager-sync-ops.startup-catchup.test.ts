@@ -3,21 +3,21 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import type { DatabaseSync } from "node:sqlite";
-import { emitSessionTranscriptUpdate } from "openclaw/plugin-sdk/agent-harness-runtime";
+import { emitSessionTranscriptUpdate } from "quiet-core-bot/plugin-sdk/agent-harness-runtime";
 import {
   resolveSessionTranscriptsDirForAgent,
   type OpenClawConfig,
   type ResolvedMemorySearchConfig,
-} from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
+} from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
 import type {
   MemorySource,
   MemorySyncParams,
   MemorySyncProgressUpdate,
-} from "openclaw/plugin-sdk/memory-core-host-engine-storage";
+} from "quiet-core-bot/plugin-sdk/memory-core-host-engine-storage";
 import {
   clearConfigCache,
   clearRuntimeConfigSnapshot,
-} from "openclaw/plugin-sdk/runtime-config-snapshot";
+} from "quiet-core-bot/plugin-sdk/runtime-config-snapshot";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { MemoryManagerSyncOps } from "./manager-sync-ops.js";
 
@@ -54,7 +54,7 @@ type MemoryTranscriptUpdateSubscriber = (
 ) => () => void;
 
 const MEMORY_CORE_TRANSCRIPT_UPDATE_SUBSCRIBER_KEY = Symbol.for(
-  "openclaw.memoryCore.sessionTranscriptUpdateSubscriber",
+  "quiet-core-bot.memoryCore.sessionTranscriptUpdateSubscriber",
 );
 
 type SourceStateRow = { path: string; hash: string; mtime: number; size: number };
@@ -62,7 +62,7 @@ type SourceStateRow = { path: string; hash: string; mtime: number; size: number 
 class SessionStartupCatchupHarness extends MemoryManagerSyncOps {
   protected readonly cfg = {} as OpenClawConfig;
   protected readonly agentId = "main";
-  protected readonly workspaceDir = "/tmp/openclaw-test-workspace";
+  protected readonly workspaceDir = "/tmp/quiet-core-bot-test-workspace";
   protected readonly settings = {
     chunking: {
       overlap: 0,
@@ -229,8 +229,8 @@ describe("session startup catch-up", () => {
   let stateDir = "";
 
   beforeEach(async () => {
-    stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-session-startup-"));
-    vi.stubEnv("OPENCLAW_STATE_DIR", stateDir);
+    stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-session-startup-"));
+    vi.stubEnv("QUIET_CORE_STATE_DIR", stateDir);
   });
 
   afterEach(async () => {
@@ -437,7 +437,7 @@ describe("session startup catch-up", () => {
     const storeDir = path.join(stateDir, "custom-sessions");
     const sessionFile = path.join(storeDir, "custom-thread.jsonl");
     const storePath = path.join(storeDir, "sessions.json");
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "quiet-core-bot.json");
     await fs.mkdir(storeDir, { recursive: true });
     await fs.writeFile(
       sessionFile,
@@ -458,7 +458,7 @@ describe("session startup catch-up", () => {
       "utf-8",
     );
     await fs.writeFile(configPath, JSON.stringify({ session: { store: storePath } }), "utf-8");
-    vi.stubEnv("OPENCLAW_CONFIG_PATH", configPath);
+    vi.stubEnv("QUIET_CORE_CONFIG_PATH", configPath);
     clearRuntimeConfigSnapshot();
     clearConfigCache();
     const harness = new SessionStartupCatchupHarness([]);
@@ -484,7 +484,7 @@ describe("session startup catch-up", () => {
     const storeDir = path.join(stateDir, "custom-sessions");
     const sessionFile = path.join(storeDir, "explicit-target.jsonl");
     const storePath = path.join(storeDir, "sessions.json");
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "quiet-core-bot.json");
     await fs.mkdir(storeDir, { recursive: true });
     await fs.writeFile(
       sessionFile,
@@ -505,7 +505,7 @@ describe("session startup catch-up", () => {
       "utf-8",
     );
     await fs.writeFile(configPath, JSON.stringify({ session: { store: storePath } }), "utf-8");
-    vi.stubEnv("OPENCLAW_CONFIG_PATH", configPath);
+    vi.stubEnv("QUIET_CORE_CONFIG_PATH", configPath);
     clearRuntimeConfigSnapshot();
     clearConfigCache();
     const harness = new SessionStartupCatchupHarness([]);
@@ -520,7 +520,7 @@ describe("session startup catch-up", () => {
     const sessionFile = path.join(storeDir, "cron-thread.jsonl");
     const otherSessionFile = path.join(storeDir, "other-thread.jsonl");
     const storePath = path.join(storeDir, "sessions.json");
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "quiet-core-bot.json");
     await fs.mkdir(storeDir, { recursive: true });
     await fs.writeFile(
       sessionFile,
@@ -553,7 +553,7 @@ describe("session startup catch-up", () => {
       "utf-8",
     );
     await fs.writeFile(configPath, JSON.stringify({ session: { store: storePath } }), "utf-8");
-    vi.stubEnv("OPENCLAW_CONFIG_PATH", configPath);
+    vi.stubEnv("QUIET_CORE_CONFIG_PATH", configPath);
     clearRuntimeConfigSnapshot();
     clearConfigCache();
     const harness = new SessionStartupCatchupHarness([]);
@@ -639,7 +639,7 @@ describe("session startup catch-up", () => {
     const storeDir = path.join(stateDir, "custom-sessions");
     const sessionFile = path.join(storeDir, "custom-update.jsonl");
     const storePath = path.join(storeDir, "sessions.json");
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "quiet-core-bot.json");
     await fs.mkdir(storeDir, { recursive: true });
     await fs.writeFile(
       sessionFile,
@@ -660,7 +660,7 @@ describe("session startup catch-up", () => {
       "utf-8",
     );
     await fs.writeFile(configPath, JSON.stringify({ session: { store: storePath } }), "utf-8");
-    vi.stubEnv("OPENCLAW_CONFIG_PATH", configPath);
+    vi.stubEnv("QUIET_CORE_CONFIG_PATH", configPath);
     clearRuntimeConfigSnapshot();
     clearConfigCache();
     const harness = new SessionStartupCatchupHarness([]);

@@ -11,7 +11,7 @@ Quiet Core bot Raft channel plugin for secure CLI wake bridges.
 
 ## Distribution
 
-- Package: `@openclaw/raft`
+- Package: `@quiet-core/raft`
 - Install route: npm; ClawHub
 
 ## Surface

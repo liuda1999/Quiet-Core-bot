@@ -2,7 +2,7 @@
 import { execFile } from "node:child_process";
 import os from "node:os";
 import { promisify } from "node:util";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 
 const execFileAsync = promisify(execFile);
 
@@ -25,7 +25,7 @@ async function tryScutil(key: "ComputerName" | "LocalHostName") {
 
 function fallbackHostName() {
   const trimmed = normalizeOptionalString(os.hostname()) ?? "";
-  return trimmed.replace(/\.local$/i, "") || "openclaw";
+  return trimmed.replace(/\.local$/i, "") || "quiet-core-bot";
 }
 
 /** Resolve a user-facing name for the current machine. */

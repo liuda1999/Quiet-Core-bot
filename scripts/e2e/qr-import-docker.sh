@@ -4,14 +4,14 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/scripts/lib/docker-build.sh"
 source "$ROOT_DIR/scripts/lib/docker-e2e-container.sh"
-IMAGE_NAME="${OPENCLAW_QR_SMOKE_IMAGE:-openclaw-qr-smoke}"
+IMAGE_NAME="${QUIET_CORE_QR_SMOKE_IMAGE:-quiet-core-bot-qr-smoke}"
 DOCKER_BUILD_ARGS=()
 
-if [[ "${OPENCLAW_QR_SMOKE_FORCE_INSTALL:-0}" == "1" ]]; then
+if [[ "${QUIET_CORE_QR_SMOKE_FORCE_INSTALL:-0}" == "1" ]]; then
   INSTALL_CACHE_BUSTER="${GITHUB_SHA:-manual}-${GITHUB_RUN_ID:-$(date +%s)}-${GITHUB_RUN_ATTEMPT:-0}"
   DOCKER_BUILD_ARGS+=(
     --build-arg
-    "OPENCLAW_QR_INSTALL_CACHE_BUSTER=${INSTALL_CACHE_BUSTER}"
+    "QUIET_CORE_QR_INSTALL_CACHE_BUSTER=${INSTALL_CACHE_BUSTER}"
   )
 fi
 

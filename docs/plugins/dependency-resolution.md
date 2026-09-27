@@ -82,17 +82,17 @@ name list, removes dev-only workspace metadata from the published package
 manifest, runs a script-free npm install for package-local runtime
 dependencies, then packs or publishes the plugin tarball with those dependency
 files included. Native-heavy packages, including Codex and ACP runtimes, opt out
-with `openclaw.release.bundleRuntimeDependencies: false`; those packages still
+with `quiet-core-bot.release.bundleRuntimeDependencies: false`; those packages still
 ship their shrinkwrap, but npm resolves runtime dependencies during install
 instead of embedding every platform binary in the plugin tarball. The root
-`openclaw` package does not bundle its full dependency tree.
+`quiet-core-bot` package does not bundle its full dependency tree.
 
-Plugins that import `openclaw/plugin-sdk/*` declare `openclaw` as a peer
+Plugins that import `quiet-core-bot/plugin-sdk/*` declare `quiet-core-bot` as a peer
 dependency. Quiet Core bot does not let npm install a separate registry copy of the
 host package into a managed project, because stale host packages can affect npm
 peer resolution inside that plugin. Managed npm installs skip npm peer
 resolution/materialization and Quiet Core bot reasserts plugin-local
-`node_modules/openclaw` links for installed packages that declare the host peer
+`node_modules/quiet-core-bot` links for installed packages that declare the host peer
 after install or update.
 
 git installs clone or refresh the repository, then run:
@@ -155,7 +155,7 @@ not a supported way to prepare bundled plugin dependencies.
 
 | Install shape                        | Bundled plugin location               | Dependency owner                                                       |
 | ------------------------------------ | ------------------------------------- | ---------------------------------------------------------------------- |
-| `npm install -g openclaw`            | Built runtime tree inside the package | Quiet Core bot package and explicit plugin install/update/doctor flows |
+| `npm install -g quiet-core-bot`            | Built runtime tree inside the package | Quiet Core bot package and explicit plugin install/update/doctor flows |
 | Git checkout plus `pnpm install`     | `extensions/<id>` workspace packages  | The pnpm workspace, including each plugin package's own dependencies   |
 | `quiet-core-bot plugins install ...` | Managed npm project/git/ClawHub root  | The plugin install/update flow                                         |
 
@@ -165,7 +165,7 @@ Older Quiet Core bot versions generated bundled-plugin dependency roots at start
 during doctor repair. Current doctor cleanup removes those stale directories and
 symlinks when `--fix` is used, including old `plugin-runtime-deps` roots, global
 Node-prefix package symlinks that point at pruned `plugin-runtime-deps` targets,
-`.openclaw-runtime-deps*` manifests, generated plugin `node_modules`, install
+`.quiet-core-bot-runtime-deps*` manifests, generated plugin `node_modules`, install
 stage directories, and package-local pnpm stores. Packaged postinstall also
 removes those global symlinks before pruning the legacy target roots so upgrades
 do not leave dangling ESM package imports.

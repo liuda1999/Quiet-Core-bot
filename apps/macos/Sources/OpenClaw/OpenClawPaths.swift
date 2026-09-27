@@ -14,8 +14,8 @@ enum OpenClawEnv {
 }
 
 enum OpenClawPaths {
-    private static let configPathEnv = ["OPENCLAW_CONFIG_PATH"]
-    private static let stateDirEnv = ["OPENCLAW_STATE_DIR"]
+    private static let configPathEnv = ["QUIET_CORE_CONFIG_PATH"]
+    private static let stateDirEnv = ["QUIET_CORE_STATE_DIR"]
 
     static var stateDirURL: URL {
         for key in self.stateDirEnv {

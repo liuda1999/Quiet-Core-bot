@@ -14,8 +14,8 @@ import {
 const tempDirs: string[] = [];
 const noBundledPluginOverrideEnv = {
   ...process.env,
-  OPENCLAW_BUNDLED_PLUGINS_DIR: undefined,
-  OPENCLAW_DISABLE_BUNDLED_PLUGINS: undefined,
+  QUIET_CORE_BUNDLED_PLUGINS_DIR: undefined,
+  QUIET_CORE_DISABLE_BUNDLED_PLUGINS: undefined,
 } satisfies NodeJS.ProcessEnv;
 
 afterEach(() => {
@@ -25,7 +25,7 @@ afterEach(() => {
 });
 
 function createTempDir(): string {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-public-surface-runtime-"));
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-public-surface-runtime-"));
   tempDirs.push(tempDir);
   return tempDir;
 }

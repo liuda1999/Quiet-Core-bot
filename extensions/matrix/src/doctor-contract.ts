@@ -2,12 +2,12 @@
 import type {
   ChannelDoctorConfigMutation,
   ChannelDoctorLegacyConfigRule,
-} from "openclaw/plugin-sdk/channel-contract";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+} from "quiet-core-bot/plugin-sdk/channel-contract";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import {
   hasLegacyFlatAllowPrivateNetworkAlias,
   migrateLegacyFlatAllowPrivateNetworkAlias,
-} from "openclaw/plugin-sdk/ssrf-runtime";
+} from "quiet-core-bot/plugin-sdk/ssrf-runtime";
 import { isRecord } from "./record-shared.js";
 
 function hasLegacyMatrixRoomAllowAlias(value: unknown): boolean {
@@ -123,43 +123,43 @@ export const legacyConfigRules: ChannelDoctorLegacyConfigRule[] = [
   {
     path: ["channels", "matrix"],
     message:
-      'channels.matrix.allowPrivateNetwork is legacy; use channels.matrix.network.dangerouslyAllowPrivateNetwork instead. Run "openclaw doctor --fix".',
+      'channels.matrix.allowPrivateNetwork is legacy; use channels.matrix.network.dangerouslyAllowPrivateNetwork instead. Run "quiet-core-bot doctor --fix".',
     match: (value) => hasLegacyFlatAllowPrivateNetworkAlias(isRecord(value) ? value : {}),
   },
   {
     path: ["channels", "matrix", "accounts"],
     message:
-      'channels.matrix.accounts.<id>.allowPrivateNetwork is legacy; use channels.matrix.accounts.<id>.network.dangerouslyAllowPrivateNetwork instead. Run "openclaw doctor --fix".',
+      'channels.matrix.accounts.<id>.allowPrivateNetwork is legacy; use channels.matrix.accounts.<id>.network.dangerouslyAllowPrivateNetwork instead. Run "quiet-core-bot doctor --fix".',
     match: hasLegacyMatrixAccountPrivateNetworkAliases,
   },
   {
     path: ["channels", "matrix", "groups"],
     message:
-      'channels.matrix.groups.<room>.allow is legacy; use channels.matrix.groups.<room>.enabled instead. Run "openclaw doctor --fix".',
+      'channels.matrix.groups.<room>.allow is legacy; use channels.matrix.groups.<room>.enabled instead. Run "quiet-core-bot doctor --fix".',
     match: hasLegacyMatrixRoomMapAllowAliases,
   },
   {
     path: ["channels", "matrix", "rooms"],
     message:
-      'channels.matrix.rooms.<room>.allow is legacy; use channels.matrix.rooms.<room>.enabled instead. Run "openclaw doctor --fix".',
+      'channels.matrix.rooms.<room>.allow is legacy; use channels.matrix.rooms.<room>.enabled instead. Run "quiet-core-bot doctor --fix".',
     match: hasLegacyMatrixRoomMapAllowAliases,
   },
   {
     path: ["channels", "matrix", "accounts"],
     message:
-      'channels.matrix.accounts.<id>.{groups,rooms}.<room>.allow is legacy; use channels.matrix.accounts.<id>.{groups,rooms}.<room>.enabled instead. Run "openclaw doctor --fix".',
+      'channels.matrix.accounts.<id>.{groups,rooms}.<room>.allow is legacy; use channels.matrix.accounts.<id>.{groups,rooms}.<room>.enabled instead. Run "quiet-core-bot doctor --fix".',
     match: hasLegacyMatrixAccountRoomAllowAliases,
   },
   {
     path: ["channels", "matrix"],
     message:
-      'channels.matrix.dm.policy "trusted" is legacy; use "allowlist" (with allowFrom entries) or "pairing" instead. Run "openclaw doctor --fix".',
+      'channels.matrix.dm.policy "trusted" is legacy; use "allowlist" (with allowFrom entries) or "pairing" instead. Run "quiet-core-bot doctor --fix".',
     match: hasLegacyTrustedDmPolicy,
   },
   {
     path: ["channels", "matrix", "accounts"],
     message:
-      'channels.matrix.accounts.<id>.dm.policy "trusted" is legacy; use "allowlist" (with allowFrom entries) or "pairing" instead. Run "openclaw doctor --fix".',
+      'channels.matrix.accounts.<id>.dm.policy "trusted" is legacy; use "allowlist" (with allowFrom entries) or "pairing" instead. Run "quiet-core-bot doctor --fix".',
     match: hasLegacyMatrixAccountTrustedDmPolicies,
   },
 ];

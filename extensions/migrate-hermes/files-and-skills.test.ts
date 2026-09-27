@@ -2,8 +2,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
-import { loadAuthProfileStoreWithoutExternalProfiles } from "openclaw/plugin-sdk/agent-runtime";
-import { MIGRATION_REASON_TARGET_EXISTS } from "openclaw/plugin-sdk/migration";
+import { loadAuthProfileStoreWithoutExternalProfiles } from "quiet-core-bot/plugin-sdk/agent-runtime";
+import { MIGRATION_REASON_TARGET_EXISTS } from "quiet-core-bot/plugin-sdk/migration";
 import { afterEach, describe, expect, it } from "vitest";
 import { buildHermesMigrationProvider } from "./provider.js";
 import { cleanupTempRoots, makeContext, makeTempRoot, writeFile } from "./test/provider-helpers.js";
@@ -143,10 +143,10 @@ describe("Hermes migration file and skill items", () => {
     const copiedAgentsItem = result.items.find((item) => item.id === "workspace:AGENTS.md");
     expect(String(copiedAgentsItem?.details?.backupPath)).toContain("AGENTS.md");
     const agentDir = path.join(stateDir, "agents", "main", "agent");
-    const previousStateDir = process.env.OPENCLAW_STATE_DIR;
-    const previousAgentDir = process.env.OPENCLAW_AGENT_DIR;
-    process.env.OPENCLAW_STATE_DIR = stateDir;
-    process.env.OPENCLAW_AGENT_DIR = agentDir;
+    const previousStateDir = process.env.QUIET_CORE_STATE_DIR;
+    const previousAgentDir = process.env.QUIET_CORE_AGENT_DIR;
+    process.env.QUIET_CORE_STATE_DIR = stateDir;
+    process.env.QUIET_CORE_AGENT_DIR = agentDir;
     try {
       const authStore = loadAuthProfileStoreWithoutExternalProfiles(agentDir);
       expect(authStore.profiles?.["openai:hermes-import"]).toEqual(
@@ -158,14 +158,14 @@ describe("Hermes migration file and skill items", () => {
       );
     } finally {
       if (previousStateDir === undefined) {
-        delete process.env.OPENCLAW_STATE_DIR;
+        delete process.env.QUIET_CORE_STATE_DIR;
       } else {
-        process.env.OPENCLAW_STATE_DIR = previousStateDir;
+        process.env.QUIET_CORE_STATE_DIR = previousStateDir;
       }
       if (previousAgentDir === undefined) {
-        delete process.env.OPENCLAW_AGENT_DIR;
+        delete process.env.QUIET_CORE_AGENT_DIR;
       } else {
-        process.env.OPENCLAW_AGENT_DIR = previousAgentDir;
+        process.env.QUIET_CORE_AGENT_DIR = previousAgentDir;
       }
     }
   });

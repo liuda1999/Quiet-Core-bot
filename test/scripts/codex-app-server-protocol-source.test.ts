@@ -15,13 +15,13 @@ import {
 import { createScriptTestHarness } from "./test-helpers.js";
 
 const { createTempDir } = createScriptTestHarness();
-const originalOpenClawCodexRepo = process.env.OPENCLAW_CODEX_REPO;
+const originalOpenClawCodexRepo = process.env.QUIET_CORE_CODEX_REPO;
 
 afterEach(() => {
   if (originalOpenClawCodexRepo === undefined) {
-    delete process.env.OPENCLAW_CODEX_REPO;
+    delete process.env.QUIET_CORE_CODEX_REPO;
   } else {
-    process.env.OPENCLAW_CODEX_REPO = originalOpenClawCodexRepo;
+    process.env.QUIET_CORE_CODEX_REPO = originalOpenClawCodexRepo;
   }
 });
 
@@ -53,7 +53,7 @@ describe("codex app-server protocol source resolver", () => {
   });
 
   it("allows an explicit local disk headroom override", () => {
-    expect(resolveCodexProtocolMinFreeBytes({ OPENCLAW_CODEX_PROTOCOL_MIN_FREE_BYTES: "0" })).toBe(
+    expect(resolveCodexProtocolMinFreeBytes({ QUIET_CORE_CODEX_PROTOCOL_MIN_FREE_BYTES: "0" })).toBe(
       0,
     );
     expect(() =>
@@ -67,7 +67,7 @@ describe("codex app-server protocol source resolver", () => {
 
   it("rejects malformed local disk headroom overrides", () => {
     expect(() =>
-      resolveCodexProtocolMinFreeBytes({ OPENCLAW_CODEX_PROTOCOL_MIN_FREE_BYTES: "nope" }),
+      resolveCodexProtocolMinFreeBytes({ QUIET_CORE_CODEX_PROTOCOL_MIN_FREE_BYTES: "nope" }),
     ).toThrow(/non-negative byte count/);
   });
 
@@ -129,11 +129,11 @@ describe("codex app-server protocol source resolver", () => {
     });
   });
 
-  it("uses OPENCLAW_CODEX_REPO when provided", async () => {
-    const root = createTempDir("openclaw-protocol-source-root-");
-    const codexRepo = createTempDir("openclaw-protocol-source-codex-");
+  it("uses QUIET_CORE_CODEX_REPO when provided", async () => {
+    const root = createTempDir("quiet-core-bot-protocol-source-root-");
+    const codexRepo = createTempDir("quiet-core-bot-protocol-source-codex-");
     createProtocolSchema(codexRepo);
-    process.env.OPENCLAW_CODEX_REPO = codexRepo;
+    process.env.QUIET_CORE_CODEX_REPO = codexRepo;
 
     await expect(resolveCodexAppServerProtocolSource(root)).resolves.toEqual({
       codexRepo,
@@ -142,10 +142,10 @@ describe("codex app-server protocol source resolver", () => {
   });
 
   it("finds the primary checkout sibling from a git worktree", async () => {
-    const parentDir = createTempDir("openclaw-protocol-source-parent-");
-    const primaryOpenClaw = path.join(parentDir, "openclaw");
+    const parentDir = createTempDir("quiet-core-bot-protocol-source-parent-");
+    const primaryOpenClaw = path.join(parentDir, "quiet-core-bot");
     const codexRepo = path.join(parentDir, "codex");
-    const worktreeRoot = createTempDir("openclaw-protocol-source-worktree-");
+    const worktreeRoot = createTempDir("quiet-core-bot-protocol-source-worktree-");
     fs.mkdirSync(path.join(primaryOpenClaw, ".git", "worktrees", "codex-harness"), {
       recursive: true,
     });
@@ -155,7 +155,7 @@ describe("codex app-server protocol source resolver", () => {
       `gitdir: ${path.join(primaryOpenClaw, ".git", "worktrees", "codex-harness")}\n`,
     );
     createProtocolSchema(codexRepo);
-    delete process.env.OPENCLAW_CODEX_REPO;
+    delete process.env.QUIET_CORE_CODEX_REPO;
 
     await expect(resolveCodexAppServerProtocolSource(worktreeRoot)).resolves.toEqual({
       codexRepo,

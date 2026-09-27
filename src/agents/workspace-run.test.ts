@@ -61,12 +61,12 @@ describe("resolveRunWorkspaceDir", () => {
   });
 
   it("falls back to built-in main workspace when config is unavailable", () => {
-    const workspaceDir = path.join(path.sep, "srv", "openclaw-workspace");
+    const workspaceDir = path.join(path.sep, "srv", "quiet-core-bot-workspace");
     const result = resolveRunWorkspaceDir({
       workspaceDir: null,
       sessionKey: "agent:main:subagent:test",
       config: undefined,
-      env: { ...process.env, OPENCLAW_WORKSPACE_DIR: workspaceDir },
+      env: { ...process.env, QUIET_CORE_WORKSPACE_DIR: workspaceDir },
     });
 
     expect(result.usedFallback).toBe(true);
@@ -89,8 +89,8 @@ describe("resolveRunWorkspaceDir", () => {
     const env = {
       ...process.env,
       HOME: "/home/runner",
-      OPENCLAW_HOME: undefined,
-      OPENCLAW_STATE_DIR: "/tmp/openclaw-state",
+      QUIET_CORE_HOME: undefined,
+      QUIET_CORE_STATE_DIR: "/tmp/quiet-core-bot-state",
     } satisfies NodeJS.ProcessEnv;
     const result = resolveRunWorkspaceDir({
       workspaceDir: undefined,
@@ -102,7 +102,7 @@ describe("resolveRunWorkspaceDir", () => {
 
     expect(result.agentId).toBe("research");
     expect(result.agentIdSource).toBe("explicit");
-    expect(result.workspaceDir).toBe(path.resolve("/tmp/openclaw-state", "workspace-research"));
+    expect(result.workspaceDir).toBe(path.resolve("/tmp/quiet-core-bot-state", "workspace-research"));
   });
 
   it("throws for malformed agent session keys even when config has a default agent", () => {

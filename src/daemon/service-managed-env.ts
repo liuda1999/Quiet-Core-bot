@@ -1,9 +1,9 @@
 /** Tracks managed service environment keys across reinstall and repair flows. */
-import { sortUniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { sortUniqueStrings } from "@quiet-core/normalization-core/string-normalization";
 import { normalizeEnvVarKey } from "../infra/host-env-security.js";
 import type { GatewayServiceEnvironmentValueSource } from "./service-types.js";
 
-const MANAGED_SERVICE_ENV_KEYS_VAR = "OPENCLAW_SERVICE_MANAGED_ENV_KEYS";
+const MANAGED_SERVICE_ENV_KEYS_VAR = "QUIET_CORE_SERVICE_MANAGED_ENV_KEYS";
 
 // Tracks which service environment keys Quiet Core bot owns across reinstall/start flows.
 type ServiceEnvCommand = {

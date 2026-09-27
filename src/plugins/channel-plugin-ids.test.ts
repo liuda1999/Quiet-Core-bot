@@ -86,7 +86,7 @@ function withManifestLoadPaths<T extends { id: string }>(
   return {
     rootDir: `/tmp/plugins/${plugin.id}`,
     source: `/tmp/plugins/${plugin.id}/index.ts`,
-    manifestPath: `/tmp/plugins/${plugin.id}/openclaw.plugin.json`,
+    manifestPath: `/tmp/plugins/${plugin.id}/quiet-core-bot.plugin.json`,
     skills: [],
     hooks: [],
     ...plugin,
@@ -543,7 +543,7 @@ function filterManifestRegistryForInstalledIndex(params: {
 
 function createPluginPlanningTestEnv(overrides: NodeJS.ProcessEnv = {}): NodeJS.ProcessEnv {
   return {
-    OPENCLAW_DISABLE_PERSISTED_PLUGIN_REGISTRY: "1",
+    QUIET_CORE_DISABLE_PERSISTED_PLUGIN_REGISTRY: "1",
     ...overrides,
   };
 }
@@ -2344,7 +2344,7 @@ describe("resolveGatewayStartupPluginIds", () => {
     expectStartupPluginIdsCase({
       config: {} as OpenClawConfig,
       env: createPluginPlanningTestEnv({
-        OPENCLAW_STATE_DIR: "/tmp/openclaw-with-persisted-demo-channel",
+        QUIET_CORE_STATE_DIR: "/tmp/quiet-core-bot-with-persisted-demo-channel",
       }),
       expected: ["browser", "memory-core"],
     });
@@ -2368,7 +2368,7 @@ describe("resolveGatewayStartupPluginIds", () => {
           },
         } as OpenClawConfig,
         env: createPluginPlanningTestEnv({
-          OPENCLAW_STATE_DIR: "/tmp/openclaw-with-persisted-demo-channel",
+          QUIET_CORE_STATE_DIR: "/tmp/quiet-core-bot-with-persisted-demo-channel",
         }),
       }),
     ).toStrictEqual([]);
@@ -2654,7 +2654,7 @@ describe("resolveGatewayStartupPluginIds", () => {
           defaults: {
             model: { primary: "openai/gpt-5.5" },
             models: {
-              "openai/gpt-5.5": { agentRuntime: { id: "openclaw" } },
+              "openai/gpt-5.5": { agentRuntime: { id: "quiet-core-bot" } },
             },
           },
         },
@@ -2678,7 +2678,7 @@ describe("resolveGatewayStartupPluginIds", () => {
       config: createStartupConfig({
         enabledPluginIds: ["codex"],
       }),
-      env: { OPENCLAW_AGENT_RUNTIME: "codex" },
+      env: { QUIET_CORE_AGENT_RUNTIME: "codex" },
       expected: ["demo-channel", "browser", "memory-core"],
     });
   });

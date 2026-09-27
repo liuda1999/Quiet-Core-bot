@@ -57,7 +57,7 @@ describe("loadPluginMetadataRegistrySnapshot", () => {
     loadPluginMetadataRegistrySnapshot({
       config: { plugins: {} },
       activationSourceConfig: { plugins: { allow: ["demo"] } },
-      env: { HOME: "/tmp/openclaw-home" } as NodeJS.ProcessEnv,
+      env: { HOME: "/tmp/quiet-core-bot-home" } as NodeJS.ProcessEnv,
       workspaceDir: "/workspace",
       onlyPluginIds: ["demo"],
     });
@@ -68,7 +68,7 @@ describe("loadPluginMetadataRegistrySnapshot", () => {
       activationSourceConfig: { plugins: { allow: ["demo"] } },
       autoEnabledReasons: {},
       workspaceDir: "/workspace",
-      env: { HOME: "/tmp/openclaw-home" },
+      env: { HOME: "/tmp/quiet-core-bot-home" },
       throwOnLoadError: true,
       cache: false,
       activate: false,

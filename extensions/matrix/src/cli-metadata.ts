@@ -1,5 +1,5 @@
 // Matrix plugin module implements cli metadata behavior.
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/channel-plugin-common";
+import type { OpenClawPluginApi } from "quiet-core-bot/plugin-sdk/channel-plugin-common";
 
 export function registerMatrixCliMetadata(api: OpenClawPluginApi) {
   api.registerCli(

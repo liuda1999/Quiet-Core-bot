@@ -1,7 +1,7 @@
 // Speech Core module implements tts behavior.
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { resolveChannelTtsVoiceDelivery } from "openclaw/plugin-sdk/channel-targets";
+import { resolveChannelTtsVoiceDelivery } from "quiet-core-bot/plugin-sdk/channel-targets";
 import type {
   OpenClawConfig,
   ResolvedTtsPersona,
@@ -9,31 +9,31 @@ import type {
   TtsConfig,
   TtsModelOverrideConfig,
   TtsProvider,
-} from "openclaw/plugin-sdk/config-contracts";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { redactSensitiveText } from "openclaw/plugin-sdk/logging-core";
-import { transcodeAudioBuffer } from "openclaw/plugin-sdk/media-runtime";
-import { clampTimerTimeoutMs } from "openclaw/plugin-sdk/number-runtime";
+} from "quiet-core-bot/plugin-sdk/config-contracts";
+import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
+import { redactSensitiveText } from "quiet-core-bot/plugin-sdk/logging-core";
+import { transcodeAudioBuffer } from "quiet-core-bot/plugin-sdk/media-runtime";
+import { clampTimerTimeoutMs } from "quiet-core-bot/plugin-sdk/number-runtime";
 import {
   markReplyPayloadAsTtsSupplement,
   resolveSendableOutboundReplyParts,
   type ReplyPayload,
-} from "openclaw/plugin-sdk/reply-payload";
+} from "quiet-core-bot/plugin-sdk/reply-payload";
 import {
   getRuntimeConfigSnapshot,
   getRuntimeConfigSourceSnapshot,
   selectApplicableRuntimeConfig,
-} from "openclaw/plugin-sdk/runtime-config-snapshot";
-import { isVerbose, logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { tempWorkspaceSync, resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/sandbox";
-import { privateFileStoreSync } from "openclaw/plugin-sdk/security-runtime";
+} from "quiet-core-bot/plugin-sdk/runtime-config-snapshot";
+import { isVerbose, logVerbose } from "quiet-core-bot/plugin-sdk/runtime-env";
+import { tempWorkspaceSync, resolvePreferredOpenClawTmpDir } from "quiet-core-bot/plugin-sdk/sandbox";
+import { privateFileStoreSync } from "quiet-core-bot/plugin-sdk/security-runtime";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalLowercaseString,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
-import { stripMarkdown } from "openclaw/plugin-sdk/text-chunking";
-import { resolveConfigDir, resolveUserPath } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
+import { stripMarkdown } from "quiet-core-bot/plugin-sdk/text-chunking";
+import { resolveConfigDir, resolveUserPath } from "quiet-core-bot/plugin-sdk/text-utility-runtime";
 import {
   canonicalizeSpeechProviderId,
   getSpeechProvider,
@@ -237,7 +237,7 @@ function resolveTtsPrefsPathValue(prefsPath: string | undefined): string {
   if (prefsPath?.trim()) {
     return resolveUserPath(prefsPath.trim());
   }
-  const envPath = process.env.OPENCLAW_TTS_PREFS?.trim();
+  const envPath = process.env.QUIET_CORE_TTS_PREFS?.trim();
   if (envPath) {
     return resolveUserPath(envPath);
   }

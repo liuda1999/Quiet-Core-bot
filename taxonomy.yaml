@@ -636,7 +636,7 @@ surfaces:
         features:
           - name: Foreground startup
             coverageIds: [gateway.foreground-startup]
-            description: Local foreground startup via `openclaw gateway`.
+            description: Local foreground startup via `quiet-core-bot gateway`.
           - name: Service installation
             coverageIds: [gateway.service-installation]
             description: Supervised lifecycle installation on macOS, Linux user/systemd, and native Windows task scheduling.
@@ -762,7 +762,7 @@ surfaces:
             description: Operators can run OpenClaw from a source checkout for development or recovery workflows, and update flows distinguish this path from package installs.
           - name: CLI entrypoint
             coverageIds: [cli.entrypoint]
-            description: The packaged openclaw launcher, openclaw --help, openclaw --version, runtime preflight, and basic recovery expectations are documented.
+            description: The packaged quiet-core-bot launcher, quiet-core-bot --help, quiet-core-bot --version, runtime preflight, and basic recovery expectations are documented.
         docs:
           - docs/install/index.md
           - docs/install/installer.md
@@ -780,10 +780,10 @@ surfaces:
         features:
           - name: Guided onboarding
             coverageIds: [cli.guided-onboarding]
-            description: openclaw onboard walks through workspace, gateway, model auth, channels, skills, and health setup.
+            description: quiet-core-bot onboard walks through workspace, gateway, model auth, channels, skills, and health setup.
           - name: Targeted reconfiguration
             coverageIds: [cli.targeted-reconfiguration]
-            description: openclaw configure lets operators revisit only the sections they want to change after the initial setup.
+            description: quiet-core-bot configure lets operators revisit only the sections they want to change after the initial setup.
           - name: Auth choices
             coverageIds: [cli.auth-choices]
             description: Onboarding and configure support API-key, OAuth, and other provider-specific auth choices.
@@ -861,13 +861,13 @@ surfaces:
         features:
           - name: Status snapshots
             coverageIds: [cli.status-snapshots]
-            description: openclaw status and related flags summarize runtime state, config health, and update context.
+            description: quiet-core-bot status and related flags summarize runtime state, config health, and update context.
           - name: Health snapshots
             coverageIds: [telemetry.health-snapshots]
-            description: openclaw health gives a fast gateway health read and supports verbose or JSON output.
+            description: quiet-core-bot health gives a fast gateway health read and supports verbose or JSON output.
           - name: Remote log tailing
             coverageIds: [cli.remote-log-tailing]
-            description: openclaw logs tails gateway logs over RPC, including follow mode and JSON output.
+            description: quiet-core-bot logs tails gateway logs over RPC, including follow mode and JSON output.
           - name: Diagnostics export
             coverageIds: [cli.diagnostics-export]
             description: Gateway diagnostics bundles can be exported locally for bug reports and support workflows.
@@ -889,7 +889,7 @@ surfaces:
         features:
           - name: Interactive repair
             coverageIds: [cli.interactive-repair]
-            description: openclaw doctor supports inspect, repair, non-interactive, and forceful repair postures.
+            description: quiet-core-bot doctor supports inspect, repair, non-interactive, and forceful repair postures.
           - name: Config migration
             coverageIds: [cli.config-migration]
             description: Doctor rewrites legacy or damaged config and state into supported current formats.
@@ -901,7 +901,7 @@ surfaces:
             description: Doctor surfaces plugin-config issues and extension schema drift that block normal runtime operation.
           - name: Lint and JSON findings
             coverageIds: [cli.lint-and-json-findings]
-            description: openclaw doctor --lint --json provides stable machine-readable findings for automation.
+            description: quiet-core-bot doctor --lint --json provides stable machine-readable findings for automation.
           - name: Extra gateway discovery
             coverageIds: [cli.extra-gateway-discovery]
             description: Doctor can scan for unexpected gateway services and conflicting installs.
@@ -934,7 +934,7 @@ surfaces:
         features:
           - name: Update channels
             coverageIds: [cli.update-channels]
-            description: openclaw update supports stable, beta, and dev channel selection.
+            description: quiet-core-bot update supports stable, beta, and dev channel selection.
           - name: Install-kind switching
             coverageIds: [cli.install-kind-switching]
             description: Update flows can switch between package installs and git/source installs when supported.
@@ -1012,10 +1012,10 @@ surfaces:
             description: Deprecated or compatibility subpaths continue to resolve during author migrations.
           - name: Plugin manifest
             coverageIds: [plugins.manifest]
-            description: '`openclaw.plugin.json` declares plugin identity, capabilities, and config schema.'
+            description: '`quiet-core-bot.plugin.json` declares plugin identity, capabilities, and config schema.'
           - name: Package metadata
             coverageIds: [plugins.package-metadata]
-            description: '`package.json` carries the required `openclaw` metadata for discovery and release flows.'
+            description: '`package.json` carries the required `quiet-core-bot` metadata for discovery and release flows.'
           - name: Runtime compatibility
             coverageIds: [plugins.runtime-compatibility]
             description: Plugin packages declare supported runtime and plugin API compatibility.
@@ -1327,7 +1327,7 @@ surfaces:
         id: external-runtimes-and-subagents
         features:
           - name: External harness selection
-            coverageIds: [agents.openclaw-harness, workspace.planning]
+            coverageIds: [agents.quiet-core-bot-harness, workspace.planning]
             description: Choosing Codex app-server, ACP, and other external runtime harnesses.
           - name: CLI runtime aliases
             coverageIds: [runtime.cli-runtime-aliases]
@@ -1568,10 +1568,10 @@ surfaces:
         features:
           - name: CLI Session
             coverageIds: [session.cli-session]
-            description: Covers CLI Session across `openclaw sessions`, `openclaw transcripts`, cleanup, show/list/path behavior, TUI session history actions, and Gateway-backed session management commands.
+            description: Covers CLI Session across `quiet-core-bot sessions`, `quiet-core-bot transcripts`, cleanup, show/list/path behavior, TUI session history actions, and Gateway-backed session management commands.
           - name: Transcript Management
             coverageIds: [session.transcript-management]
-            description: Covers Transcript Management across `openclaw sessions`, `openclaw transcripts`, cleanup, show/list/path behavior, TUI session history actions, and Gateway-backed session management commands.
+            description: Covers Transcript Management across `quiet-core-bot sessions`, `quiet-core-bot transcripts`, cleanup, show/list/path behavior, TUI session history actions, and Gateway-backed session management commands.
         docs:
           - docs/concepts/session.md
           - docs/reference/session-management-compaction.md
@@ -1614,7 +1614,7 @@ surfaces:
             coverageIds: [docs.discovery, workspace.artifacts, workspace.long-running-task, workspace.repo-discovery]
             description: Covers Context Engine across context-engine selection, registry, host compatibility, legacy fallback, assemble/ingest/after-turn/compact lifecycle, runtime context projection, and the boundary between OpenClaw context assembly and native harness history.
           - name: Runtime Assembly
-            coverageIds: [agents.openclaw-harness, models.codex-cli, workspace.planning]
+            coverageIds: [agents.quiet-core-bot-harness, models.codex-cli, workspace.planning]
             description: Covers Runtime Assembly across context-engine selection, registry, host compatibility, legacy fallback, assemble/ingest/after-turn/compact lifecycle, runtime context projection, and the boundary between OpenClaw context assembly and native harness history.
         docs:
           - docs/concepts/context.md
@@ -2277,9 +2277,9 @@ surfaces:
           - name: Restart logging
             coverageIds: [telemetry.restart-logging]
             description: Restart logging and runtime snapshot evaluation
-          - name: openclaw doctor
+          - name: quiet-core-bot doctor
             coverageIds: [runtime.codex-plugin.auth, runtime.codex-plugin.lifecycle, runtime.doctor-repair]
-            description: openclaw doctor, openclaw doctor --fix, --repair, --yes, --non-interactive, --deep, and --lint
+            description: quiet-core-bot doctor, quiet-core-bot doctor --fix, --repair, --yes, --non-interactive, --deep, and --lint
           - name: Structured health checks
             coverageIds: [telemetry.structured-health-checks]
             description: Structured health checks, findings, repair results, check selection, JSON lint output, severity filtering, and exit behavior
@@ -2289,12 +2289,12 @@ surfaces:
           - name: Plugin SDK doctor/health contracts
             coverageIds: [telemetry.plugin-sdk-doctor-health-contracts]
             description: Plugin SDK doctor/health contracts behavior, status, and operator-visible verification.
-          - name: openclaw status
-            coverageIds: [windows.openclaw-status]
-            description: openclaw status, openclaw status --all, and openclaw status --deep
-          - name: openclaw health
-            coverageIds: [telemetry.openclaw-health]
-            description: openclaw health, openclaw health --verbose, and openclaw health --json
+          - name: quiet-core-bot status
+            coverageIds: [windows.quiet-core-bot-status]
+            description: quiet-core-bot status, quiet-core-bot status --all, and quiet-core-bot status --deep
+          - name: quiet-core-bot health
+            coverageIds: [telemetry.quiet-core-bot-health]
+            description: quiet-core-bot health, quiet-core-bot health --verbose, and quiet-core-bot health --json
           - name: Gateway RPC health
             coverageIds: [telemetry.gateway-rpc-health]
             description: Gateway RPC health and status
@@ -2313,10 +2313,10 @@ surfaces:
           - channel health monitor
           - restart cooldowns
           - stale transport activity
-          - openclaw doctor --fix
+          - quiet-core-bot doctor --fix
           - structured health checks
           - repair results
-          - openclaw health --json
+          - quiet-core-bot health --json
           - gateway RPC health
           - cached health snapshots
         category_note: health-status-probes.md
@@ -2327,9 +2327,9 @@ surfaces:
           - name: Rolling Gateway JSONL file logs
             coverageIds: [telemetry.rolling-gateway-jsonl-file-logs]
             description: Rolling Gateway JSONL file logs and console output
-          - name: openclaw logs
-            coverageIds: [telemetry.openclaw-logs]
-            description: openclaw logs, openclaw logs --follow, JSON/plain/color/timezone modes, and local fallback behavior
+          - name: quiet-core-bot logs
+            coverageIds: [telemetry.quiet-core-bot-logs]
+            description: quiet-core-bot logs, quiet-core-bot logs --follow, JSON/plain/color/timezone modes, and local fallback behavior
           - name: Gateway RPC logs.tail
             coverageIds: [telemetry.gateway-rpc-logs-tail]
             description: Gateway RPC logs.tail behavior, status, and operator-visible verification.
@@ -2344,7 +2344,7 @@ surfaces:
           - docs/gateway/logging.md
           - docs/cli/logs.md
         search_anchors:
-          - openclaw logs --follow
+          - quiet-core-bot logs --follow
           - logs.tail
           - redaction patterns
         category_note: logging-log-tail-and-redaction.md
@@ -2352,12 +2352,12 @@ surfaces:
       - name: Diagnostic Collection
         id: diagnostic-collection
         features:
-          - name: openclaw gateway diagnostics export
-            coverageIds: [telemetry.openclaw-gateway-diagnostics-export]
-            description: openclaw gateway diagnostics export and --json / --output / log-size options
-          - name: openclaw gateway stability --bundle
-            coverageIds: [telemetry.openclaw-gateway-stability-bundle]
-            description: openclaw gateway stability --bundle latest --export
+          - name: quiet-core-bot gateway diagnostics export
+            coverageIds: [telemetry.quiet-core-bot-gateway-diagnostics-export]
+            description: quiet-core-bot gateway diagnostics export and --json / --output / log-size options
+          - name: quiet-core-bot gateway stability --bundle
+            coverageIds: [telemetry.quiet-core-bot-gateway-stability-bundle]
+            description: quiet-core-bot gateway stability --bundle latest --export
           - name: Chat /diagnostics
             coverageIds: [telemetry.chat-diagnostics]
             description: Chat /diagnostics and /codex diagnostics approval flows
@@ -2367,9 +2367,9 @@ surfaces:
           - name: Bounded in-process stability recorder
             coverageIds: [telemetry.bounded-in-process-stability-recorder]
             description: Bounded in-process stability recorder and diagnostics.stability RPC
-          - name: openclaw gateway stability
-            coverageIds: [telemetry.openclaw-gateway-stability]
-            description: openclaw gateway stability, stability filtering, persisted stability bundles, and export-from-bundle
+          - name: quiet-core-bot gateway stability
+            coverageIds: [telemetry.quiet-core-bot-gateway-stability]
+            description: quiet-core-bot gateway stability, stability filtering, persisted stability bundles, and export-from-bundle
           - name: Memory pressure events
             coverageIds: [telemetry.memory-pressure-events]
             description: Memory pressure events, event-loop liveness warnings, oversized payload events, queue/session summaries, and fatal/shutdown/restart snapshots
@@ -2552,7 +2552,7 @@ surfaces:
           - Timezone and stagger
           - Cron RPCs
           - Agent cron tool
-          - openclaw cron
+          - quiet-core-bot cron
           - Manual cron runs
           - Isolated cron execution
           - Model/provider preflight
@@ -2587,19 +2587,19 @@ surfaces:
             description: Covers iMessage watch fallback across channel-level long polling and webhook modes, especially Telegram and Zalo; polling liveness, leases, watchdog thresholds, and related channel polling and webhooks behavior.
           - name: Gmail setup wizard
             coverageIds: [automation.gmail-setup-wizard]
-            description: Covers Gmail setup wizard across `openclaw webhooks gmail setup`, `hooks.gmail` config, `gog gmail watch start/serve`, watcher startup and renewal, and related gmail pub/sub watchers behavior.
+            description: Covers Gmail setup wizard across `quiet-core-bot webhooks gmail setup`, `hooks.gmail` config, `gog gmail watch start/serve`, watcher startup and renewal, and related gmail pub/sub watchers behavior.
           - name: Watcher start/serve
             coverageIds: [automation.watcher-start-serve]
-            description: Covers Watcher start/serve across `openclaw webhooks gmail setup`, `hooks.gmail` config, `gog gmail watch start/serve`, watcher startup and renewal, and related gmail pub/sub watchers behavior.
+            description: Covers Watcher start/serve across `quiet-core-bot webhooks gmail setup`, `hooks.gmail` config, `gog gmail watch start/serve`, watcher startup and renewal, and related gmail pub/sub watchers behavior.
           - name: Tailscale/public routing
             coverageIds: [automation.tailscale-public-routing]
-            description: Covers Tailscale/public routing across `openclaw webhooks gmail setup`, `hooks.gmail` config, `gog gmail watch start/serve`, watcher startup and renewal, and related gmail pub/sub watchers behavior.
+            description: Covers Tailscale/public routing across `quiet-core-bot webhooks gmail setup`, `hooks.gmail` config, `gog gmail watch start/serve`, watcher startup and renewal, and related gmail pub/sub watchers behavior.
           - name: Push token validation
             coverageIds: [automation.push-token-validation]
-            description: Covers Push token validation across `openclaw webhooks gmail setup`, `hooks.gmail` config, `gog gmail watch start/serve`, watcher startup and renewal, and related gmail pub/sub watchers behavior.
+            description: Covers Push token validation across `quiet-core-bot webhooks gmail setup`, `hooks.gmail` config, `gog gmail watch start/serve`, watcher startup and renewal, and related gmail pub/sub watchers behavior.
           - name: Gmail event routing
             coverageIds: [automation.gmail-event-routing]
-            description: Covers Gmail event routing across `openclaw webhooks gmail setup`, `hooks.gmail` config, `gog gmail watch start/serve`, watcher startup and renewal, and related gmail pub/sub watchers behavior.
+            description: Covers Gmail event routing across `quiet-core-bot webhooks gmail setup`, `hooks.gmail` config, `gog gmail watch start/serve`, watcher startup and renewal, and related gmail pub/sub watchers behavior.
           - name: POST /hooks/wake
             coverageIds: [automation.post-hooks-wake]
             description: Covers POST /hooks/wake across `/hooks/wake`, `/hooks/agent`, mapped hooks under `/hooks/<name>`, token extraction, and related http webhooks behavior.
@@ -2723,9 +2723,9 @@ surfaces:
           - name: Mirrored flows
             coverageIds: [automation.mirrored-flows]
             description: Covers Mirrored flows across managed and mirrored flow modes, flow registry persistence, revision tracking, owner-scoped access, and related task flow behavior.
-          - name: openclaw tasks flow
-            coverageIds: [automation.openclaw-tasks-flow]
-            description: Covers openclaw tasks flow across managed and mirrored flow modes, flow registry persistence, revision tracking, owner-scoped access, and related task flow behavior.
+          - name: quiet-core-bot tasks flow
+            coverageIds: [automation.quiet-core-bot-tasks-flow]
+            description: Covers quiet-core-bot tasks flow across managed and mirrored flow modes, flow registry persistence, revision tracking, owner-scoped access, and related task flow behavior.
           - name: Flow audit and maintenance
             coverageIds: [automation.flow-audit-and-maintenance]
             description: Covers Flow audit and maintenance across managed and mirrored flow modes, flow registry persistence, revision tracking, owner-scoped access, and related task flow behavior.
@@ -2746,7 +2746,7 @@ surfaces:
           - Task pressure status
           - Managed flows
           - Mirrored flows
-          - openclaw tasks flow
+          - quiet-core-bot tasks flow
           - Flow audit and maintenance
           - Plugin managedFlows
         category_note: background-task-ledger.md
@@ -2779,42 +2779,42 @@ surfaces:
           - Wake and cooldown handling
           - Due-only heartbeat tasks
           - Commitment check-ins
-          - openclaw cron
+          - quiet-core-bot cron
         category_note: heartbeat-commitments.md
         human_lts_override: false
       - name: Polling Controls
         id: polling-controls
         features:
-          - name: openclaw message poll
-            coverageIds: [automation.openclaw-message-poll]
-            description: Covers openclaw message poll across `openclaw message poll`, channel poll adapters, poll parameter normalization, Teams/Matrix/Telegram poll support, and related message polls and process polling behavior.
+          - name: quiet-core-bot message poll
+            coverageIds: [automation.quiet-core-bot-message-poll]
+            description: Covers quiet-core-bot message poll across `quiet-core-bot message poll`, channel poll adapters, poll parameter normalization, Teams/Matrix/Telegram poll support, and related message polls and process polling behavior.
           - name: Telegram polls
             coverageIds: [automation.telegram-polls]
-            description: Covers Telegram polls across `openclaw message poll`, channel poll adapters, poll parameter normalization, Teams/Matrix/Telegram poll support, and related message polls and process polling behavior.
+            description: Covers Telegram polls across `quiet-core-bot message poll`, channel poll adapters, poll parameter normalization, Teams/Matrix/Telegram poll support, and related message polls and process polling behavior.
           - name: Teams polls
             coverageIds: [automation.teams-polls]
-            description: Covers Teams polls across `openclaw message poll`, channel poll adapters, poll parameter normalization, Teams/Matrix/Telegram poll support, and related message polls and process polling behavior.
+            description: Covers Teams polls across `quiet-core-bot message poll`, channel poll adapters, poll parameter normalization, Teams/Matrix/Telegram poll support, and related message polls and process polling behavior.
           - name: Poll flags
             coverageIds: [automation.poll-flags]
-            description: Covers Poll flags across `openclaw message poll`, channel poll adapters, poll parameter normalization, Teams/Matrix/Telegram poll support, and related message polls and process polling behavior.
+            description: Covers Poll flags across `quiet-core-bot message poll`, channel poll adapters, poll parameter normalization, Teams/Matrix/Telegram poll support, and related message polls and process polling behavior.
           - name: Channel capability gates
             coverageIds: [automation.channel-capability-gates]
-            description: Covers Channel capability gates across `openclaw message poll`, channel poll adapters, poll parameter normalization, Teams/Matrix/Telegram poll support, and related message polls and process polling behavior.
+            description: Covers Channel capability gates across `quiet-core-bot message poll`, channel poll adapters, poll parameter normalization, Teams/Matrix/Telegram poll support, and related message polls and process polling behavior.
           - name: process poll
             coverageIds: [automation.process-poll]
-            description: Covers process poll across `openclaw message poll`, channel poll adapters, poll parameter normalization, Teams/Matrix/Telegram poll support, and related message polls and process polling behavior.
+            description: Covers process poll across `quiet-core-bot message poll`, channel poll adapters, poll parameter normalization, Teams/Matrix/Telegram poll support, and related message polls and process polling behavior.
           - name: process log
             coverageIds: [automation.process-log]
-            description: Covers process log across `openclaw message poll`, channel poll adapters, poll parameter normalization, Teams/Matrix/Telegram poll support, and related message polls and process polling behavior.
+            description: Covers process log across `quiet-core-bot message poll`, channel poll adapters, poll parameter normalization, Teams/Matrix/Telegram poll support, and related message polls and process polling behavior.
           - name: Background process status
             coverageIds: [automation.background-process-status]
-            description: Covers Background process status across `openclaw message poll`, channel poll adapters, poll parameter normalization, Teams/Matrix/Telegram poll support, and related message polls and process polling behavior.
+            description: Covers Background process status across `quiet-core-bot message poll`, channel poll adapters, poll parameter normalization, Teams/Matrix/Telegram poll support, and related message polls and process polling behavior.
           - name: No-progress loop detection
             coverageIds: [automation.no-progress-loop-detection]
-            description: Covers No-progress loop detection across `openclaw message poll`, channel poll adapters, poll parameter normalization, Teams/Matrix/Telegram poll support, and related message polls and process polling behavior.
+            description: Covers No-progress loop detection across `quiet-core-bot message poll`, channel poll adapters, poll parameter normalization, Teams/Matrix/Telegram poll support, and related message polls and process polling behavior.
           - name: Process input controls
             coverageIds: [automation.process-input-controls]
-            description: Covers Process input controls across `openclaw message poll`, channel poll adapters, poll parameter normalization, Teams/Matrix/Telegram poll support, and related message polls and process polling behavior.
+            description: Covers Process input controls across `quiet-core-bot message poll`, channel poll adapters, poll parameter normalization, Teams/Matrix/Telegram poll support, and related message polls and process polling behavior.
         docs:
           - docs/automation/poll.md
           - docs/cli/message.md
@@ -2822,7 +2822,7 @@ surfaces:
           - docs/channels/msteams.md
           - docs/gateway/background-process.md
         search_anchors:
-          - openclaw message poll
+          - quiet-core-bot message poll
           - Telegram polls
           - Teams polls
           - Poll flags
@@ -3637,19 +3637,19 @@ surfaces:
         features:
           - name: Gateway TUI launch
             coverageIds: [tui.gateway-tui-launch]
-            description: Covers Gateway TUI launch across `openclaw tui`, `openclaw chat`, `openclaw terminal`, local-vs-Gateway option validation, launch relaunching from setup/hatch paths, initial message and timeout flags, and launch docs.
+            description: Covers Gateway TUI launch across `quiet-core-bot tui`, `quiet-core-bot chat`, `quiet-core-bot terminal`, local-vs-Gateway option validation, launch relaunching from setup/hatch paths, initial message and timeout flags, and launch docs.
           - name: Local chat launch
             coverageIds: [tui.local-chat-launch]
-            description: Covers Local chat launch across `openclaw tui`, `openclaw chat`, `openclaw terminal`, local-vs-Gateway option validation, launch relaunching from setup/hatch paths, initial message and timeout flags, and launch docs.
+            description: Covers Local chat launch across `quiet-core-bot tui`, `quiet-core-bot chat`, `quiet-core-bot terminal`, local-vs-Gateway option validation, launch relaunching from setup/hatch paths, initial message and timeout flags, and launch docs.
           - name: Terminal alias launch
             coverageIds: [tui.terminal-alias-launch]
-            description: Covers Terminal alias launch across `openclaw tui`, `openclaw chat`, `openclaw terminal`, local-vs-Gateway option validation, launch relaunching from setup/hatch paths, initial message and timeout flags, and launch docs.
+            description: Covers Terminal alias launch across `quiet-core-bot tui`, `quiet-core-bot chat`, `quiet-core-bot terminal`, local-vs-Gateway option validation, launch relaunching from setup/hatch paths, initial message and timeout flags, and launch docs.
           - name: Initial message launch
             coverageIds: [tui.initial-message-launch]
-            description: Covers Initial message launch across `openclaw tui`, `openclaw chat`, `openclaw terminal`, local-vs-Gateway option validation, launch relaunching from setup/hatch paths, initial message and timeout flags, and launch docs.
+            description: Covers Initial message launch across `quiet-core-bot tui`, `quiet-core-bot chat`, `quiet-core-bot terminal`, local-vs-Gateway option validation, launch relaunching from setup/hatch paths, initial message and timeout flags, and launch docs.
           - name: Launch option validation
             coverageIds: [tui.launch-option-validation]
-            description: Covers Launch option validation across `openclaw tui`, `openclaw chat`, `openclaw terminal`, local-vs-Gateway option validation, launch relaunching from setup/hatch paths, initial message and timeout flags, and launch docs.
+            description: Covers Launch option validation across `quiet-core-bot tui`, `quiet-core-bot chat`, `quiet-core-bot terminal`, local-vs-Gateway option validation, launch relaunching from setup/hatch paths, initial message and timeout flags, and launch docs.
           - name: Gateway connection
             coverageIds: [tui.gateway-connection]
             description: Covers Gateway connection across Gateway connection resolution, token/password/SecretRef auth for TUI, `--url` auth requirements, client mode/capability registration, and related gateway transport, auth, and history behavior.
@@ -3850,7 +3850,7 @@ surfaces:
             coverageIds: [clawhub.package-publishing-owner]
             description: ClawHub package publishing owner and scope rules
           - name: OpenClaw-owned package release validation for ClawHub
-            coverageIds: [clawhub.openclaw-owned-package-release-validation-for-clawhub]
+            coverageIds: [clawhub.quiet-core-bot-owned-package-release-validation-for-clawhub]
             description: OpenClaw-owned package release validation for ClawHub and npm
           - name: Version bump gates
             coverageIds: [clawhub.version-bump-gates]
@@ -3885,7 +3885,7 @@ surfaces:
         id: catalog-discovery
         features:
           - name: Plugin catalog search
-            coverageIds: [clawhub.openclaw-plugins-search-as-the-clawhub]
+            coverageIds: [clawhub.quiet-core-bot-plugins-search-as-the-clawhub]
             description: OpenClaw plugin search resolves ClawHub package lookup results.
           - name: Search result metadata
             coverageIds: [clawhub.search-result-metadata]
@@ -3907,16 +3907,16 @@ surfaces:
           - docs/plugins/community.md
         search_anchors:
           - clawhub discovery, catalog metadata, and package lookup
-          - openclaw skills
+          - quiet-core-bot skills
           - ClawHub install and sync
         category_note: clawhub-discovery-catalog-metadata-and-package-lookup.md
         human_lts_override: false
       - name: Compatibility and Trust
         id: compatibility-and-trust
         features:
-          - name: openclaw.compat.pluginApi
-            coverageIds: [clawhub.openclaw-compat-pluginapi]
-            description: openclaw.compat.pluginApi, build metadata, and host/gateway minimums
+          - name: quiet-core-bot.compat.pluginApi
+            coverageIds: [clawhub.quiet-core-bot-compat-pluginapi]
+            description: quiet-core-bot.compat.pluginApi, build metadata, and host/gateway minimums
           - name: ClawHub package compatibility validation
             coverageIds: [clawhub.package-compatibility-validation]
             description: Evidence scope for ClawHub package compatibility validation.
@@ -4026,7 +4026,7 @@ surfaces:
             description: Dependency ownership between plugin packages and OpenClaw
           - name: Peer dependency relinking
             coverageIds: [clawhub.peer-dependency-relinking]
-            description: Peer dependency relinking for openclaw/plugin-sdk/*
+            description: Peer dependency relinking for quiet-core-bot/plugin-sdk/*
           - name: Legacy dependency root cleanup
             coverageIds: [clawhub.legacy-dependency-root-cleanup]
             description: Legacy dependency root cleanup and doctor repair
@@ -4082,13 +4082,13 @@ surfaces:
       by: codex
       source_ref: null
       process_version: 3
-  - id: openclaw-app-sdk
+  - id: quiet-core-bot-app-sdk
     name: OpenClaw App SDK
     family: core
     level: alpha
     level_code: M2
-    rationale: OpenClaw App SDK is a distinct external app contract separate from Gateway runtime and Plugin SDK. Current scoring shows a real `@openclaw/sdk` path with gaps around public packaging, auto-discovery, approvals, helpers, and compatibility.
-    completeness_instructions: references/completeness/openclaw-app-sdk.md
+    rationale: OpenClaw App SDK is a distinct external app contract separate from Gateway runtime and Plugin SDK. Current scoring shows a real `@quiet-core/sdk` path with gaps around public packaging, auto-discovery, approvals, helpers, and compatibility.
+    completeness_instructions: references/completeness/quiet-core-bot-app-sdk.md
     categories:
       - name: Client API
         id: client-api
@@ -4106,8 +4106,8 @@ surfaces:
             coverageIds: [app-sdk.app-plugin-boundary]
             description: Clear distinction between external app integrations and in-process plugin authoring.
         docs:
-          - docs/concepts/openclaw-sdk.md
-          - docs/reference/openclaw-sdk-api-design.md
+          - docs/concepts/quiet-core-bot-sdk.md
+          - docs/reference/quiet-core-bot-sdk-api-design.md
         search_anchors:
           - OpenClaw App SDK overview
           - What ships today
@@ -4135,8 +4135,8 @@ surfaces:
             coverageIds: [app-sdk.scopes-and-redaction]
             description: Token scopes, secret-forwarding defaults, and redaction boundaries.
         docs:
-          - docs/concepts/openclaw-sdk.md
-          - docs/reference/openclaw-sdk-api-design.md
+          - docs/concepts/quiet-core-bot-sdk.md
+          - docs/reference/quiet-core-bot-sdk-api-design.md
           - docs/gateway/protocol.md
           - docs/gateway/security/index.md
         search_anchors:
@@ -4170,8 +4170,8 @@ surfaces:
             coverageIds: [app-sdk.session-controls]
             description: Patch, abort, and compact operations.
         docs:
-          - docs/concepts/openclaw-sdk.md
-          - docs/reference/openclaw-sdk-api-design.md
+          - docs/concepts/quiet-core-bot-sdk.md
+          - docs/reference/quiet-core-bot-sdk-api-design.md
           - docs/gateway/protocol.md
         search_anchors:
           - Run an agent
@@ -4202,8 +4202,8 @@ surfaces:
             coverageIds: [app-sdk.questions]
             description: Question handling alongside approval flows.
         docs:
-          - docs/concepts/openclaw-sdk.md
-          - docs/reference/openclaw-sdk-api-design.md
+          - docs/concepts/quiet-core-bot-sdk.md
+          - docs/reference/quiet-core-bot-sdk-api-design.md
           - docs/gateway/protocol.md
         search_anchors:
           - Stream events
@@ -4233,8 +4233,8 @@ surfaces:
             coverageIds: [app-sdk.environments]
             description: Managed environment provider lifecycle and metadata.
         docs:
-          - docs/concepts/openclaw-sdk.md
-          - docs/reference/openclaw-sdk-api-design.md
+          - docs/concepts/quiet-core-bot-sdk.md
+          - docs/reference/quiet-core-bot-sdk-api-design.md
         search_anchors:
           - Models, tools, artifacts, and approvals
           - ToolSpace model
@@ -4262,7 +4262,7 @@ surfaces:
             coverageIds: [app-sdk.public-package-contract]
             description: Package publication and reusable-client expectations tracked explicitly.
         docs:
-          - docs/reference/openclaw-sdk-api-design.md
+          - docs/reference/quiet-core-bot-sdk-api-design.md
           - docs/concepts/typebox.md
           - docs/gateway/protocol.md
         search_anchors:
@@ -4278,7 +4278,7 @@ surfaces:
       status: complete
       completed_at: '2026-06-01'
       by: codex
-      source_ref: openclaw@29dd7847fd
+      source_ref: quiet-core-bot@29dd7847fd
       process_version: 3
   - id: macos-gateway-host
     name: macOS Gateway host
@@ -4402,18 +4402,18 @@ surfaces:
           - name: App-managed LaunchAgent handoff
             coverageIds: [macos.app-managed-launchagent-handoff]
             description: macOS app integration that manages the Gateway LaunchAgent in local mode and avoids it in remote or attach-only modes.
-          - name: openclaw update package/git handoff
-            coverageIds: [macos.openclaw-update-package-git-handoff]
-            description: openclaw update package/git handoff on macOS
+          - name: quiet-core-bot update package/git handoff
+            coverageIds: [macos.quiet-core-bot-update-package-git-handoff]
+            description: quiet-core-bot update package/git handoff on macOS
           - name: Managed service refresh
             coverageIds: [macos.managed-service-refresh]
             description: Managed service refresh and LaunchAgent rebootstrap after updates
           - name: Stale updater launchd job detection
             coverageIds: [macos.stale-updater-launchd-job-detection]
             description: Stale updater launchd job detection and cleanup
-          - name: openclaw uninstall
-            coverageIds: [macos.openclaw-uninstall]
-            description: openclaw uninstall, service uninstall, state cleanup, and manual launchd removal
+          - name: quiet-core-bot uninstall
+            coverageIds: [macos.quiet-core-bot-uninstall]
+            description: quiet-core-bot uninstall, service uninstall, state cleanup, and manual launchd removal
           - name: Stranded service recovery
             coverageIds: [macos.stranded-service-recovery]
             description: Recovery after partially updated or stranded macOS Gateway services.
@@ -4439,9 +4439,9 @@ surfaces:
           - name: LaunchAgent log paths
             coverageIds: [macos.launchagent-log-paths]
             description: LaunchAgent log paths and app diagnostic log paths
-          - name: openclaw gateway status --deep
-            coverageIds: [macos.openclaw-gateway-status-deep]
-            description: openclaw gateway status --deep, gateway probe, doctor, health, and logs commands
+          - name: quiet-core-bot gateway status --deep
+            coverageIds: [macos.quiet-core-bot-gateway-status-deep]
+            description: quiet-core-bot gateway status --deep, gateway probe, doctor, health, and logs commands
           - name: Gateway silently stops responding
             coverageIds: [macos.gateway-silently-stops-responding]
             description: Gateway silently stops responding, ENETDOWN sleep/wake failure, port conflicts, invalid config, and memory pressure runbooks
@@ -4873,7 +4873,7 @@ surfaces:
             description: Covers log viewing, log tailing, local fallback behavior, and operator-visible Gateway log status.
           - name: Doctor checks
             coverageIds: [telemetry.doctor-checks]
-            description: Covers `openclaw doctor` checks, Gateway health probes, and operator diagnostics for Linux Gateway deployments.
+            description: Covers `quiet-core-bot doctor` checks, Gateway health probes, and operator diagnostics for Linux Gateway deployments.
           - name: Operator repair guidance
             coverageIds: [linux.operator-repair-guidance]
             description: Covers failure handling, repair guidance, and recovery steps for Linux Gateway diagnostics and doctor findings.
@@ -4884,10 +4884,10 @@ surfaces:
           - docs/gateway/diagnostics.md
           - docs/gateway/index.md
         search_anchors:
-          - openclaw status
+          - quiet-core-bot status
           - gateway diagnostics
-          - openclaw logs
-          - openclaw doctor
+          - quiet-core-bot logs
+          - quiet-core-bot doctor
           - repair guidance
           - linux gateway host diagnostics, logs, doctor, and repair
           - diagnostics, logs, doctor, and repair
@@ -5080,11 +5080,11 @@ surfaces:
             description: Desktop-environment integration for GNOME/KDE/Wayland/X11 tray behavior
         docs:
           - docs/platforms/linux.md
-          - docs/start/openclaw.md
+          - docs/start/quiet-core-bot.md
           - docs/gateway/doctor.md
         search_anchors:
           - Gateway service install
-          - openclaw status
+          - quiet-core-bot status
           - Control UI
           - Linux app
           - status
@@ -5141,16 +5141,16 @@ surfaces:
         features:
           - name: WSL2 CLI entrypoints
             coverageIds: [wsl2.cli-entrypoints]
-            description: openclaw CLI install, version, onboard, doctor, status, and update commands run inside the WSL2 Linux environment.
-          - name: openclaw onboard
-            coverageIds: [windows.openclaw-onboard]
-            description: openclaw onboard and non-interactive onboarding run inside the WSL2 Linux environment.
-          - name: openclaw doctor status and logs
-            coverageIds: [wsl2.openclaw-doctor-status-and-logs]
-            description: openclaw doctor, status, and logs provide WSL2-specific repair and diagnostic feedback.
-          - name: openclaw update
-            coverageIds: [wsl2.openclaw-update]
-            description: openclaw update, channel switching, dry-run/status diagnostics
+            description: quiet-core-bot CLI install, version, onboard, doctor, status, and update commands run inside the WSL2 Linux environment.
+          - name: quiet-core-bot onboard
+            coverageIds: [windows.quiet-core-bot-onboard]
+            description: quiet-core-bot onboard and non-interactive onboarding run inside the WSL2 Linux environment.
+          - name: quiet-core-bot doctor status and logs
+            coverageIds: [wsl2.quiet-core-bot-doctor-status-and-logs]
+            description: quiet-core-bot doctor, status, and logs provide WSL2-specific repair and diagnostic feedback.
+          - name: quiet-core-bot update
+            coverageIds: [wsl2.quiet-core-bot-update]
+            description: quiet-core-bot update, channel switching, dry-run/status diagnostics
           - name: npm/pnpm/git package-root
             coverageIds: [wsl2.npm-pnpm-git-package-root]
             description: npm/pnpm/git package-root and install-mode switching
@@ -5174,11 +5174,11 @@ surfaces:
         search_anchors:
           - windows via wsl2 cli
           - WSL2 CLI entrypoints
-          - openclaw onboard
-          - openclaw doctor
-          - openclaw status
-          - openclaw logs
-          - openclaw update
+          - quiet-core-bot onboard
+          - quiet-core-bot doctor
+          - quiet-core-bot status
+          - quiet-core-bot logs
+          - quiet-core-bot update
           - package manager
         category_note: wsl2-cli.md
         human_lts_override: true
@@ -5187,10 +5187,10 @@ surfaces:
         features:
           - name: Onboarded systemd install
             coverageIds: [wsl2.onboarded-systemd-install]
-            description: openclaw onboard daemon installation inside WSL2.
+            description: quiet-core-bot onboard daemon installation inside WSL2.
           - name: Gateway service install
             coverageIds: [wsl2.gateway-service-install]
-            description: openclaw gateway install behavior under WSL2 systemd.
+            description: quiet-core-bot gateway install behavior under WSL2 systemd.
           - name: systemd user unit rendering
             coverageIds: [wsl2.systemd-user-unit-rendering]
             description: systemd user unit rendering and lifecycle metadata.
@@ -5282,15 +5282,15 @@ surfaces:
       - name: Diagnostics and Repair
         id: diagnostics-and-repair
         features:
-          - name: openclaw doctor
+          - name: quiet-core-bot doctor
             coverageIds: [runtime.codex-plugin.auth, runtime.codex-plugin.lifecycle, runtime.doctor-repair]
-            description: openclaw doctor and repair/migration for WSL2 Gateway
-          - name: openclaw status
-            coverageIds: [windows.openclaw-status]
-            description: openclaw status, status --all, and Gateway service/runtime summary
-          - name: openclaw logs
-            coverageIds: [telemetry.openclaw-logs]
-            description: openclaw logs and Linux systemd journal fallback
+            description: quiet-core-bot doctor and repair/migration for WSL2 Gateway
+          - name: quiet-core-bot status
+            coverageIds: [windows.quiet-core-bot-status]
+            description: quiet-core-bot status, status --all, and Gateway service/runtime summary
+          - name: quiet-core-bot logs
+            coverageIds: [telemetry.quiet-core-bot-logs]
+            description: quiet-core-bot logs and Linux systemd journal fallback
           - name: SecretRef
             coverageIds: [wsl2.secretref]
             description: SecretRef and auth diagnostics visible from status/doctor
@@ -5367,16 +5367,16 @@ surfaces:
             description: Node, Git, pnpm, npm, and PATH bootstrap for native Windows.
           - name: npm global install
             coverageIds: [windows.npm-global-install]
-            description: npm global install, git checkout install, and generated openclaw.cmd.
+            description: npm global install, git checkout install, and generated quiet-core-bot.cmd.
           - name: Packaged CLI launcher
             coverageIds: [windows.packaged-cli-launcher]
-            description: Packaged openclaw CLI launcher, version, and doctor entrypoints.
+            description: Packaged quiet-core-bot CLI launcher, version, and doctor entrypoints.
           - name: Windows command shims
             coverageIds: [windows.command-shims]
             description: Windows .cmd launcher, PATHEXT, and package-manager shim compatibility.
-          - name: openclaw onboard
-            coverageIds: [windows.openclaw-onboard]
-            description: openclaw onboard and openclaw onboard --non-interactive on native Windows
+          - name: quiet-core-bot onboard
+            coverageIds: [windows.quiet-core-bot-onboard]
+            description: quiet-core-bot onboard and quiet-core-bot onboard --non-interactive on native Windows
           - name: Local Gateway config
             coverageIds: [windows.local-gateway-config]
             description: Local Gateway config, auth choice, gateway token/password SecretRef handling, and local endpoint defaults.
@@ -5396,9 +5396,9 @@ surfaces:
           - native windows cli setup
           - install.ps1
           - PowerShell
-          - openclaw.cmd
+          - quiet-core-bot.cmd
           - PATHEXT
-          - openclaw onboard
+          - quiet-core-bot onboard
           - Local Gateway config
           - daemon install
         category_note: native-powershell-install-and-cli-entrypoints.md
@@ -5406,9 +5406,9 @@ surfaces:
       - name: Gateway Management
         id: gateway-management
         features:
-          - name: openclaw gateway
-            coverageIds: [windows.openclaw-gateway]
-            description: openclaw gateway, openclaw gateway run, openclaw gateway status, and foreground process behavior.
+          - name: quiet-core-bot gateway
+            coverageIds: [windows.quiet-core-bot-gateway]
+            description: quiet-core-bot gateway, quiet-core-bot gateway run, quiet-core-bot gateway status, and foreground process behavior.
           - name: Foreground runtime health/readiness
             coverageIds: [windows.foreground-runtime-health-readiness]
             description: Foreground runtime health/readiness and local loopback Gateway targets
@@ -5418,9 +5418,9 @@ surfaces:
           - name: Unmanaged foreground mode
             coverageIds: [windows.unmanaged-foreground-mode]
             description: Operator expectations when running without a managed Scheduled Task.
-          - name: openclaw gateway install
-            coverageIds: [windows.openclaw-gateway-install]
-            description: openclaw gateway install, status, start, stop, restart, and managed startup behavior.
+          - name: quiet-core-bot gateway install
+            coverageIds: [windows.quiet-core-bot-gateway-install]
+            description: quiet-core-bot gateway install, status, start, stop, restart, and managed startup behavior.
           - name: Gateway launcher files
             coverageIds: [windows.gateway-launcher-files]
             description: Generated gateway.cmd and hidden launcher files for managed startup.
@@ -5430,9 +5430,9 @@ surfaces:
           - name: Startup-folder fallback
             coverageIds: [windows.startup-folder-fallback]
             description: Startup-folder fallback when Task Scheduler is unavailable.
-          - name: openclaw status
-            coverageIds: [windows.openclaw-status]
-            description: openclaw status, openclaw gateway status, gateway status --deep, and Windows repair guidance.
+          - name: quiet-core-bot status
+            coverageIds: [windows.quiet-core-bot-status]
+            description: quiet-core-bot status, quiet-core-bot gateway status, gateway status --deep, and Windows repair guidance.
           - name: Windows service inspection
             coverageIds: [windows.service-inspection]
             description: Windows service inspection, Task Scheduler runtime parsing, Startup-folder
@@ -5445,14 +5445,14 @@ surfaces:
           - docs/cli/gateway.md
           - docs/cli/doctor.md
         search_anchors:
-          - openclaw gateway
+          - quiet-core-bot gateway
           - Foreground runtime
           - Windows signal handling
-          - openclaw gateway install
+          - quiet-core-bot gateway install
           - Scheduled Tasks
           - Startup-folder
-          - openclaw status
-          - openclaw doctor
+          - quiet-core-bot status
+          - quiet-core-bot doctor
           - Gateway diagnostics
         category_note: native-gateway-foreground-runtime-and-process-control.md
         human_lts_override: false
@@ -5485,9 +5485,9 @@ surfaces:
       - name: Updates
         id: updates
         features:
-          - name: openclaw update on native Windows package
-            coverageIds: [windows.openclaw-update-on-native-windows-package]
-            description: openclaw update on native Windows package installs
+          - name: quiet-core-bot update on native Windows package
+            coverageIds: [windows.quiet-core-bot-update-on-native-windows-package]
+            description: quiet-core-bot update on native Windows package installs
           - name: Managed Gateway stop/restart
             coverageIds: [windows.managed-gateway-stop-restart]
             description: Managed Gateway stop/restart and service metadata refresh during update
@@ -5501,7 +5501,7 @@ surfaces:
           - docs/install/updating.md
           - docs/ci.md
         search_anchors:
-          - openclaw update
+          - quiet-core-bot update
           - package locks
           - restart handoff
         category_note: windows-update-restart-handoff-and-package-locks.md
@@ -6135,7 +6135,7 @@ surfaces:
             coverageIds: [raspberry-pi.node-runtime-setup]
             description: Defines Node runtime setup setup, credential, configuration, and operator verification behavior for ARM Linux Setup and Prerequisites.
           - name: OpenClaw install and onboarding
-            coverageIds: [raspberry-pi.openclaw-install-and-onboarding]
+            coverageIds: [raspberry-pi.quiet-core-bot-install-and-onboarding]
             description: Defines OpenClaw install and onboarding setup, credential, configuration, and operator verification behavior for ARM Linux Setup and Prerequisites.
           - name: First-run verification
             coverageIds: [raspberry-pi.first-run-verification]
@@ -6365,7 +6365,7 @@ surfaces:
             description: Docker-only first-run notes, excluding Podman rootless setup and general Gateway protocol internals
           - name: Podman setup scripts and Quadlet template
             coverageIds: [docker.setup-scripts-and-quadlet-template]
-            description: Podman setup docs, scripts/podman/setup.sh, scripts/run-openclaw-podman.sh, and scripts/podman/openclaw.container.in
+            description: Podman setup docs, scripts/podman/setup.sh, scripts/run-quiet-core-bot-podman.sh, and scripts/podman/quiet-core-bot.container.in
           - name: Rootless Podman image setup
             coverageIds: [docker.rootless-podman-image-setup]
             description: Rootless Podman image setup, launch, setup/onboarding, host CLI routing, Quadlet autostart, and owner/permission checks
@@ -6387,7 +6387,7 @@ surfaces:
             description: Host CLI routing into running Docker/Podman containers
           - name: Container Targeting
             coverageIds: [docker.container-targeting]
-            description: Covers Container Targeting across Host CLI routing into running Docker/Podman containers. `--container` and `OPENCLAW_CONTAINER` behavior, env handling, ambiguous runtime detection, loopback proxy guard, and related host cli container targeting and update lifecycle behavior.
+            description: Covers Container Targeting across Host CLI routing into running Docker/Podman containers. `--container` and `QUIET_CORE_CONTAINER` behavior, env handling, ambiguous runtime detection, loopback proxy guard, and related host cli container targeting and update lifecycle behavior.
           - name: Container update/rebuild/restart guidance for Docker
             coverageIds: [docker.container-update-rebuild-restart-guidance-for-docker]
             description: Container update/rebuild/restart guidance for Docker and Podman hosts
@@ -6405,7 +6405,7 @@ surfaces:
             description: Docker Compose and Podman port publishing, bind mode, host local provider access, Bonjour, Tailscale, and Control UI origins
           - name: Container health endpoints
             coverageIds: [docker.container-health-endpoints]
-            description: Container health endpoints, Dockerfile/Compose healthchecks, openclaw health, logs, and metrics/OTel docs
+            description: Container health endpoints, Dockerfile/Compose healthchecks, quiet-core-bot health, logs, and metrics/OTel docs
           - name: Provider/VPS Docker hosting docs
             coverageIds: [docker.provider-vps-docker-hosting-docs]
             description: Provider/VPS Docker hosting docs and operational runbooks
@@ -6466,7 +6466,7 @@ surfaces:
         features:
           - name: Docker gateway setup
             coverageIds: [docker.gateway-setup]
-            description: Docker gateway setup with OPENCLAW_SANDBOX, Docker CLI build arg, socket mount, sandbox config writes, and rollback behavior
+            description: Docker gateway setup with QUIET_CORE_SANDBOX, Docker CLI build arg, socket mount, sandbox config writes, and rollback behavior
           - name: Docker-backed agent sandbox support
             coverageIds: [docker.backed-agent-sandbox-support]
             description: Docker-backed agent sandbox docs, source behavior, and tests that affect container-hosted Gateway operators.
@@ -6623,7 +6623,7 @@ surfaces:
       status: complete
       completed_at: '2026-06-01'
       by: codex
-      source_ref: openclaw@29dd7847fd
+      source_ref: quiet-core-bot@29dd7847fd
       process_version: 3
   - id: nix-install-path
     name: Nix install path
@@ -6638,16 +6638,16 @@ surfaces:
         features:
           - name: Nix install overview
             coverageIds: [nix.install-overview]
-            description: Covers Nix install overview across public Nix install page, install index discoverability, docs navigation, and the handoff to the first-party `nix-openclaw` Home Manager module. It excludes the actual external `openclaw/nix-openclaw` repository implementation, and related public nix docs and nix-openclaw handoff behavior.
+            description: Covers Nix install overview across public Nix install page, install index discoverability, docs navigation, and the handoff to the first-party `nix-openclaw` Home Manager module. It excludes the actual external `quiet-core-bot/nix-openclaw` repository implementation, and related public nix docs and nix-openclaw handoff behavior.
           - name: nix-openclaw source-of-truth
-            coverageIds: [nix.openclaw-source-of-truth]
-            description: Covers nix-openclaw source-of-truth across public Nix install page, install index discoverability, docs navigation, and the handoff to the first-party `nix-openclaw` Home Manager module. It excludes the actual external `openclaw/nix-openclaw` repository implementation, and related public nix docs and nix-openclaw handoff behavior.
+            coverageIds: [nix.quiet-core-bot-source-of-truth]
+            description: Covers nix-openclaw source-of-truth across public Nix install page, install index discoverability, docs navigation, and the handoff to the first-party `nix-openclaw` Home Manager module. It excludes the actual external `quiet-core-bot/nix-openclaw` repository implementation, and related public nix docs and nix-openclaw handoff behavior.
           - name: Install discoverability
             coverageIds: [nix.install-discoverability]
-            description: Covers Install discoverability across public Nix install page, install index discoverability, docs navigation, and the handoff to the first-party `nix-openclaw` Home Manager module. It excludes the actual external `openclaw/nix-openclaw` repository implementation, and related public nix docs and nix-openclaw handoff behavior.
+            description: Covers Install discoverability across public Nix install page, install index discoverability, docs navigation, and the handoff to the first-party `nix-openclaw` Home Manager module. It excludes the actual external `quiet-core-bot/nix-openclaw` repository implementation, and related public nix docs and nix-openclaw handoff behavior.
           - name: Verification handoff
             coverageIds: [nix.verification-handoff]
-            description: Covers Verification handoff across public Nix install page, install index discoverability, docs navigation, and the handoff to the first-party `nix-openclaw` Home Manager module. It excludes the actual external `openclaw/nix-openclaw` repository implementation, and related public nix docs and nix-openclaw handoff behavior.
+            description: Covers Verification handoff across public Nix install page, install index discoverability, docs navigation, and the handoff to the first-party `nix-openclaw` Home Manager module. It excludes the actual external `quiet-core-bot/nix-openclaw` repository implementation, and related public nix docs and nix-openclaw handoff behavior.
         docs:
           - docs/install/nix.md
           - docs/install/index.md
@@ -6699,16 +6699,16 @@ surfaces:
             description: Covers Runtime Nix-mode detection across Nix mode activation, environment-variable detection, macOS default detection, and the operator docs that explain how Nix mode is enabled.
           - name: Stable Nix defaults
             coverageIds: [nix.stable-nix-defaults]
-            description: Covers Stable Nix defaults across macOS app's `openclaw.nixMode` default handling, config read-only UX, settings banner, onboarding behavior, and local config write prevention.
+            description: Covers Stable Nix defaults across macOS app's `quiet-core-bot.nixMode` default handling, config read-only UX, settings banner, onboarding behavior, and local config write prevention.
           - name: Managed-by-Nix banner
             coverageIds: [nix.managed-by-nix-banner]
-            description: Covers Managed-by-Nix banner across macOS app's `openclaw.nixMode` default handling, config read-only UX, settings banner, onboarding behavior, and local config write prevention.
+            description: Covers Managed-by-Nix banner across macOS app's `quiet-core-bot.nixMode` default handling, config read-only UX, settings banner, onboarding behavior, and local config write prevention.
           - name: Read-only config controls
             coverageIds: [nix.read-only-config-controls]
-            description: Covers Read-only config controls across macOS app's `openclaw.nixMode` default handling, config read-only UX, settings banner, onboarding behavior, and local config write prevention.
+            description: Covers Read-only config controls across macOS app's `quiet-core-bot.nixMode` default handling, config read-only UX, settings banner, onboarding behavior, and local config write prevention.
           - name: Onboarding skip
             coverageIds: [nix.onboarding-skip]
-            description: Covers Onboarding skip across macOS app's `openclaw.nixMode` default handling, config read-only UX, settings banner, onboarding behavior, and local config write prevention.
+            description: Covers Onboarding skip across macOS app's `quiet-core-bot.nixMode` default handling, config read-only UX, settings banner, onboarding behavior, and local config write prevention.
         docs:
           - docs/install/nix.md
         search_anchors:
@@ -6726,13 +6726,13 @@ surfaces:
         features:
           - name: Immutable config guard
             coverageIds: [nix.immutable-config-guard]
-            description: Covers Immutable config guard across `OPENCLAW_NIX_MODE_CONFIG_IMMUTABLE` guard, source-edit guidance, config writer integration, and the agent-first Nix source instruction.
+            description: Covers Immutable config guard across `QUIET_CORE_NIX_MODE_CONFIG_IMMUTABLE` guard, source-edit guidance, config writer integration, and the agent-first Nix source instruction.
           - name: Config writer refusal
             coverageIds: [nix.config-writer-refusal]
-            description: Covers Config writer refusal across `OPENCLAW_NIX_MODE_CONFIG_IMMUTABLE` guard, source-edit guidance, config writer integration, and the agent-first Nix source instruction.
+            description: Covers Config writer refusal across `QUIET_CORE_NIX_MODE_CONFIG_IMMUTABLE` guard, source-edit guidance, config writer integration, and the agent-first Nix source instruction.
           - name: Agent-first Nix edits
             coverageIds: [nix.agent-first-nix-edits]
-            description: Covers Agent-first Nix edits across `OPENCLAW_NIX_MODE_CONFIG_IMMUTABLE` guard, source-edit guidance, config writer integration, and the agent-first Nix source instruction.
+            description: Covers Agent-first Nix edits across `QUIET_CORE_NIX_MODE_CONFIG_IMMUTABLE` guard, source-edit guidance, config writer integration, and the agent-first Nix source instruction.
           - name: Explicit config path
             coverageIds: [nix.explicit-config-path]
             description: Covers Explicit config path across config/state path environment variables, immutable store expectations, path resolution, state integrity checks around `/nix/store`, and runtime guidance that state should stay writable.
@@ -6776,16 +6776,16 @@ surfaces:
             description: Covers Trusted binary boundaries across `NIX_PROFILES` handling, `~/.nix-profile/bin` fallback, launchd/systemd service PATH generation, and adjacent safe binary resolution rules.
           - name: Setup write refusal
             coverageIds: [nix.setup-write-refusal]
-            description: Covers Setup write refusal across `openclaw setup`, `openclaw doctor` repair/token modes, `openclaw update`/startup auto-update behavior, and daemon service install/uninstall behavior under Nix mode.
+            description: Covers Setup write refusal across `quiet-core-bot setup`, `quiet-core-bot doctor` repair/token modes, `quiet-core-bot update`/startup auto-update behavior, and daemon service install/uninstall behavior under Nix mode.
           - name: Doctor repair refusal
             coverageIds: [nix.doctor-repair-refusal]
-            description: Covers Doctor repair refusal across `openclaw setup`, `openclaw doctor` repair/token modes, `openclaw update`/startup auto-update behavior, and daemon service install/uninstall behavior under Nix mode.
+            description: Covers Doctor repair refusal across `quiet-core-bot setup`, `quiet-core-bot doctor` repair/token modes, `quiet-core-bot update`/startup auto-update behavior, and daemon service install/uninstall behavior under Nix mode.
           - name: Update handoff
             coverageIds: [nix.update-handoff]
-            description: Covers Update handoff across `openclaw setup`, `openclaw doctor` repair/token modes, `openclaw update`/startup auto-update behavior, and daemon service install/uninstall behavior under Nix mode.
+            description: Covers Update handoff across `quiet-core-bot setup`, `quiet-core-bot doctor` repair/token modes, `quiet-core-bot update`/startup auto-update behavior, and daemon service install/uninstall behavior under Nix mode.
           - name: Service lifecycle handoff
             coverageIds: [nix.service-lifecycle-handoff]
-            description: Covers Service lifecycle handoff across `openclaw setup`, `openclaw doctor` repair/token modes, `openclaw update`/startup auto-update behavior, and daemon service install/uninstall behavior under Nix mode.
+            description: Covers Service lifecycle handoff across `quiet-core-bot setup`, `quiet-core-bot doctor` repair/token modes, `quiet-core-bot update`/startup auto-update behavior, and daemon service install/uninstall behavior under Nix mode.
         docs:
           - docs/install/nix.md
           - docs/cli/setup.md
@@ -7228,12 +7228,12 @@ surfaces:
       - name: Channel Setup and Operations
         id: channel-setup-and-operations
         features:
-          - name: Official @openclaw/whatsapp plugin metadata
-            coverageIds: [whatsapp.official-openclaw-whatsapp-plugin-metadata]
-            description: Official @openclaw/whatsapp plugin metadata, package entrypoints, and setup discovery.
-          - name: openclaw plugin install whatsapp
-            coverageIds: [whatsapp.openclaw-plugin-install-whatsapp]
-            description: openclaw plugin install whatsapp and config-first setup guidance
+          - name: Official @quiet-core/whatsapp plugin metadata
+            coverageIds: [whatsapp.official-quiet-core-bot-whatsapp-plugin-metadata]
+            description: Official @quiet-core/whatsapp plugin metadata, package entrypoints, and setup discovery.
+          - name: quiet-core-bot plugin install whatsapp
+            coverageIds: [whatsapp.quiet-core-bot-plugin-install-whatsapp]
+            description: quiet-core-bot plugin install whatsapp and config-first setup guidance
           - name: Channel config schema
             coverageIds: [whatsapp.channel-config-schema]
             description: Channel config schema, plugin hooks, setup finalization, default account, and secret handling.
@@ -7368,25 +7368,25 @@ surfaces:
         features:
           - name: App Install
             coverageIds: [slack.app-install]
-            description: Covers App Install across installing `@openclaw/slack`, creating the Slack app, choosing recommended/minimal manifests, bot/app/user/signing-secret credential handling, and related app install, auth, manifest, and scopes behavior.
+            description: Covers App Install across installing `@quiet-core/slack`, creating the Slack app, choosing recommended/minimal manifests, bot/app/user/signing-secret credential handling, and related app install, auth, manifest, and scopes behavior.
           - name: Slack app credentials
             coverageIds: [slack.app-credentials]
             description: Covers bot/app/user tokens, signing-secret handling, and Slack credential setup for app authentication.
           - name: Manifest
             coverageIds: [slack.manifest]
-            description: Covers Manifest across installing `@openclaw/slack`, creating the Slack app, choosing recommended/minimal manifests, bot/app/user/signing-secret credential handling, and related app install, auth, manifest, and scopes behavior.
+            description: Covers Manifest across installing `@quiet-core/slack`, creating the Slack app, choosing recommended/minimal manifests, bot/app/user/signing-secret credential handling, and related app install, auth, manifest, and scopes behavior.
           - name: Scopes
             coverageIds: [slack.scopes]
-            description: Covers Scopes across installing `@openclaw/slack`, creating the Slack app, choosing recommended/minimal manifests, bot/app/user/signing-secret credential handling, and related app install, auth, manifest, and scopes behavior.
+            description: Covers Scopes across installing `@quiet-core/slack`, creating the Slack app, choosing recommended/minimal manifests, bot/app/user/signing-secret credential handling, and related app install, auth, manifest, and scopes behavior.
           - name: Channel status diagnostics
             coverageIds: [slack.channel-status-diagnostics]
-            description: Covers `openclaw channels status --probe`, account snapshots, token source/status fields, capability and scope diagnostics, and Slack repair guidance.
+            description: Covers `quiet-core-bot channels status --probe`, account snapshots, token source/status fields, capability and scope diagnostics, and Slack repair guidance.
           - name: Slack account status
             coverageIds: [slack.account-status]
             description: Covers account snapshots, token source/status fields, capability summaries, and Slack status output.
           - name: Operator Repair
             coverageIds: [codex.operator-repair]
-            description: Covers Operator Repair across `openclaw channels status --probe`, account snapshots, token source/status fields, capability and scope diagnostics, and related diagnostics, status, and operator repair behavior.
+            description: Covers Operator Repair across `quiet-core-bot channels status --probe`, account snapshots, token source/status fields, capability and scope diagnostics, and related diagnostics, status, and operator repair behavior.
           - name: Socket
             coverageIds: [slack.socket]
             description: Covers Socket across Socket Mode startup/reconnect/backoff, HTTP Request URL registration and signing-secret verification, transport mode selection, multi-account lifecycle, status/liveness, and runtime startup/skip behavior.
@@ -7410,7 +7410,7 @@ surfaces:
           - Scopes
           - recommended manifest
           - minimal manifest
-          - openclaw channels status --probe
+          - quiet-core-bot channels status --probe
           - capability and scope diagnostics
           - account snapshots
           - Operator Repair
@@ -9303,19 +9303,19 @@ surfaces:
         features:
           - name: Bundled plugin distribution
             coverageIds: [google.bundled-plugin-distribution]
-            description: Covers Bundled plugin distribution across bundled `@openclaw/google-plugin` package, plugin manifest distribution, auto-enable metadata, capability-provider registration, and related google plugin adapters behavior.
+            description: Covers Bundled plugin distribution across bundled `@quiet-core/google-plugin` package, plugin manifest distribution, auto-enable metadata, capability-provider registration, and related google plugin adapters behavior.
           - name: Provider auto-enable metadata
             coverageIds: [google.provider-auto-enable-metadata]
-            description: Covers Provider auto-enable metadata across bundled `@openclaw/google-plugin` package, plugin manifest distribution, auto-enable metadata, capability-provider registration, and related google plugin adapters behavior.
+            description: Covers Provider auto-enable metadata across bundled `@quiet-core/google-plugin` package, plugin manifest distribution, auto-enable metadata, capability-provider registration, and related google plugin adapters behavior.
           - name: Image and media adapters
             coverageIds: [google.image-and-media-adapters]
-            description: Covers Image and media adapters across bundled `@openclaw/google-plugin` package, plugin manifest distribution, auto-enable metadata, capability-provider registration, and related google plugin adapters behavior.
+            description: Covers Image and media adapters across bundled `@quiet-core/google-plugin` package, plugin manifest distribution, auto-enable metadata, capability-provider registration, and related google plugin adapters behavior.
           - name: Speech and realtime adapters
             coverageIds: [google.speech-and-realtime-adapters]
-            description: Covers Speech and realtime adapters across bundled `@openclaw/google-plugin` package, plugin manifest distribution, auto-enable metadata, capability-provider registration, and related google plugin adapters behavior.
+            description: Covers Speech and realtime adapters across bundled `@quiet-core/google-plugin` package, plugin manifest distribution, auto-enable metadata, capability-provider registration, and related google plugin adapters behavior.
           - name: Search and generation tools
             coverageIds: [google.search-and-generation-tools]
-            description: Covers Search and generation tools across bundled `@openclaw/google-plugin` package, plugin manifest distribution, auto-enable metadata, capability-provider registration, and related google plugin adapters behavior.
+            description: Covers Search and generation tools across bundled `@quiet-core/google-plugin` package, plugin manifest distribution, auto-enable metadata, capability-provider registration, and related google plugin adapters behavior.
           - name: Realtime voice sessions
             coverageIds: [google.realtime-voice-sessions]
             description: Covers Realtime voice sessions across Gemini Live realtime voice provider behavior, Talk relay integration, constrained browser websocket tokens, audio queueing, and related gemini live talk behavior.
@@ -9622,10 +9622,10 @@ surfaces:
         features:
           - name: Provider Selection
             coverageIds: [local-models.provider-selection]
-            description: Covers Provider Selection across provider choice, `openclaw onboard`, model-picker contributions, non-interactive setup, and related provider selection and onboarding behavior.
+            description: Covers Provider Selection across provider choice, `quiet-core-bot onboard`, model-picker contributions, non-interactive setup, and related provider selection and onboarding behavior.
           - name: Onboarding
             coverageIds: [local-models.onboarding]
-            description: Covers Onboarding across provider choice, `openclaw onboard`, model-picker contributions, non-interactive setup, and related provider selection and onboarding behavior.
+            description: Covers Onboarding across provider choice, `quiet-core-bot onboard`, model-picker contributions, non-interactive setup, and related provider selection and onboarding behavior.
           - name: localService configuration
             coverageIds: [local-models.localservice-configuration]
             description: Covers localService configuration across `localService` config contract, process startup, readiness probes, lease/release behavior during provider requests, and related local service lifecycle and readiness behavior.

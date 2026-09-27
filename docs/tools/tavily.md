@@ -18,7 +18,7 @@ Tavily returns structured results optimized for LLM consumption with configurabl
 | Property  | Value                               |
 | --------- | ----------------------------------- |
 | Plugin id | `tavily`                            |
-| Package   | `@openclaw/tavily-plugin`           |
+| Package   | `@quiet-core/tavily-plugin`         |
 | Auth      | `TAVILY_API_KEY` or config `apiKey` |
 | Base URL  | `https://api.tavily.com` (default)  |
 | Tools     | `tavily_search`, `tavily_extract`   |
@@ -28,7 +28,7 @@ Tavily returns structured results optimized for LLM consumption with configurabl
 <Steps>
   <Step title="Install the plugin">
     ```bash
-    quiet-core-bot plugins install @openclaw/tavily-plugin
+    quiet-core-bot plugins install @quiet-core/tavily-plugin
     ```
   </Step>
   <Step title="Get an API key">

@@ -154,7 +154,7 @@ function runScript(
 
 describe("scripts/ios-team-id.sh", () => {
   beforeAll(async () => {
-    fixtureRoot = makeTempDir(tempDirs, "openclaw-ios-team-id-");
+    fixtureRoot = makeTempDir(tempDirs, "quiet-core-bot-ios-team-id-");
     sharedBinDir = path.join(fixtureRoot, "shared-bin");
     await mkdir(sharedBinDir, { recursive: true });
     sharedHomeDir = path.join(fixtureRoot, "home");
@@ -244,7 +244,7 @@ printf 'BBBBB22222\\t0\\tBeta Team\\r\\n'`,
   });
 
   it("prefers the canonical OpenClaw iOS team when it is present", async () => {
-    const homeDir = makeTempDir(tempDirs, "openclaw-ios-team-id-canonical-");
+    const homeDir = makeTempDir(tempDirs, "quiet-core-bot-ios-team-id-canonical-");
     const binDir = path.join(homeDir, "bin");
     await mkdir(path.join(homeDir, "Library", "Preferences"), { recursive: true });
     await mkdir(binDir, { recursive: true });
@@ -267,7 +267,7 @@ printf '${CANONICAL_TEAM_ID}\\t0\\tOpenClaw\\r\\n'`,
   });
 
   it("loads teams from Xcode account identifier team metadata", async () => {
-    const homeDir = makeTempDir(tempDirs, "openclaw-ios-team-id-by-identifier-");
+    const homeDir = makeTempDir(tempDirs, "quiet-core-bot-ios-team-id-by-identifier-");
     const binDir = path.join(homeDir, "bin");
     await mkdir(path.join(homeDir, "Library", "Preferences"), { recursive: true });
     await mkdir(binDir, { recursive: true });

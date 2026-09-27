@@ -176,12 +176,12 @@ async function writeConfig(params: {
 }
 
 export async function main() {
-  const rootDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-mcp-code-mode-"));
-  const keep = process.env.OPENCLAW_MCP_CODE_MODE_GATEWAY_E2E_KEEP === "1";
+  const rootDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-mcp-code-mode-"));
+  const keep = process.env.QUIET_CORE_MCP_CODE_MODE_GATEWAY_E2E_KEEP === "1";
   const previousEnv = {
-    configPath: process.env.OPENCLAW_CONFIG_PATH,
-    stateDir: process.env.OPENCLAW_STATE_DIR,
-    testFast: process.env.OPENCLAW_TEST_FAST,
+    configPath: process.env.QUIET_CORE_CONFIG_PATH,
+    stateDir: process.env.QUIET_CORE_STATE_DIR,
+    testFast: process.env.QUIET_CORE_TEST_FAST,
   };
   let provider: Awaited<ReturnType<typeof startQaMockOpenAiServer>> | undefined;
   let server: Awaited<ReturnType<typeof startGatewayServer>> | undefined;
@@ -190,7 +190,7 @@ export async function main() {
     const stateDir = path.join(rootDir, "state");
     const workspaceDir = path.join(rootDir, "workspace");
     const serverPath = path.join(rootDir, "mcp", "fixture-server.mjs");
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "quiet-core-bot.json");
     const gatewayPort = await freePort();
     await fs.mkdir(workspaceDir, { recursive: true });
     await writeProbeMcpServer(serverPath);
@@ -203,9 +203,9 @@ export async function main() {
       serverPath,
     });
 
-    process.env.OPENCLAW_STATE_DIR = stateDir;
-    process.env.OPENCLAW_CONFIG_PATH = configPath;
-    process.env.OPENCLAW_TEST_FAST = "1";
+    process.env.QUIET_CORE_STATE_DIR = stateDir;
+    process.env.QUIET_CORE_CONFIG_PATH = configPath;
+    process.env.QUIET_CORE_TEST_FAST = "1";
     resetConfigRuntimeState();
 
     server = await startGatewayServer(gatewayPort, {
@@ -220,11 +220,11 @@ export async function main() {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        "x-openclaw-scopes": "operator.write",
-        "x-openclaw-agent": "qa",
+        "x-quiet-core-bot-scopes": "operator.write",
+        "x-quiet-core-bot-agent": "qa",
       },
       body: JSON.stringify({
-        model: "openclaw/qa",
+        model: "quiet-core-bot/qa",
         input: [
           {
             type: "message",
@@ -276,9 +276,9 @@ export async function main() {
     await server?.close({ reason: "mcp code-mode gateway e2e complete" });
     await provider?.stop();
     resetConfigRuntimeState();
-    restoreEnvValue("OPENCLAW_STATE_DIR", previousEnv.stateDir);
-    restoreEnvValue("OPENCLAW_CONFIG_PATH", previousEnv.configPath);
-    restoreEnvValue("OPENCLAW_TEST_FAST", previousEnv.testFast);
+    restoreEnvValue("QUIET_CORE_STATE_DIR", previousEnv.stateDir);
+    restoreEnvValue("QUIET_CORE_CONFIG_PATH", previousEnv.configPath);
+    restoreEnvValue("QUIET_CORE_TEST_FAST", previousEnv.testFast);
     if (!keep) {
       await fs.rm(rootDir, { recursive: true, force: true });
     }

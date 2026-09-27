@@ -182,7 +182,7 @@ Recommended defaults:
     - `prompt` defaults to simple "Describe the {media}." plus the `maxChars` guidance (image/video only).
     - If the active primary image model already supports vision natively, Quiet Core bot skips the `[Image]` summary block and passes the original image into the model instead.
     - If a Gateway/WebChat primary model is text-only, image attachments are preserved as offloaded `media://inbound/*` refs so the image/PDF tools or configured image model can still inspect them instead of losing the attachment.
-    - Explicit `openclaw infer image describe --model <provider/model>` requests are different: they run that image-capable provider/model directly, including Ollama refs such as `ollama/qwen2.5vl:7b`.
+    - Explicit `quiet-core-bot infer image describe --model <provider/model>` requests are different: they run that image-capable provider/model directly, including Ollama refs such as `ollama/qwen2.5vl:7b`.
     - If `<capability>.enabled: true` but no models are configured, Quiet Core bot tries the **active reply model** when its provider supports the capability.
 
   </Accordion>
@@ -214,7 +214,7 @@ If `tools.media.<capability>.enabled` is **not** set to `false` and you haven't 
   <Step title="Provider auth">
     - Configured `models.providers.*` entries that support the capability are tried before the bundled fallback order.
     - Image-only config providers with an image-capable model auto-register for media understanding even when they are not a bundled vendor plugin.
-    - Ollama image understanding is available when selected explicitly, for example through `agents.defaults.imageModel` or `openclaw infer image describe --model ollama/<vision-model>`.
+    - Ollama image understanding is available when selected explicitly, for example through `agents.defaults.imageModel` or `quiet-core-bot infer image describe --model ollama/<vision-model>`.
 
     Bundled fallback order:
 

@@ -1,6 +1,6 @@
 // Image runtime tests cover model-backed image routing, auth/profile handling,
 // provider payload transforms, and MiniMax/Copilot special paths.
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@quiet-core/normalization-core/number-coercion";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const hoisted = vi.hoisted(() => ({
@@ -207,7 +207,7 @@ describe("describeImageWithModel", () => {
     const authStore = { version: 1, profiles: {} };
     const result = await describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
       provider: "minimax-portal",
       model: "MiniMax-VL-01",
       buffer: Buffer.from("png-bytes"),
@@ -269,7 +269,7 @@ describe("describeImageWithModel", () => {
 
     const result = await describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
       provider: "minimax-portal",
       model: "custom-vision",
       buffer: Buffer.from("png-bytes"),
@@ -295,7 +295,7 @@ describe("describeImageWithModel", () => {
         baseUrl: "https://api.minimax.io/anthropic",
       },
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
     });
     expect(completeMock).toHaveBeenCalledOnce();
     expect(fetchMock).not.toHaveBeenCalled();
@@ -314,8 +314,8 @@ describe("describeImageWithModel", () => {
     await expect(
       describeImageWithModel({
         cfg: {},
-        agentDir: "/tmp/openclaw-agent",
-        workspaceDir: "/tmp/openclaw-workspace",
+        agentDir: "/tmp/quiet-core-bot-agent",
+        workspaceDir: "/tmp/quiet-core-bot-workspace",
         provider: "minimax-portal",
         model: "MiniMax-VL-01",
         buffer: Buffer.from("png-bytes"),
@@ -332,8 +332,8 @@ describe("describeImageWithModel", () => {
     expect(resolveApiKeyForProviderMock).toHaveBeenCalledWith(
       expect.objectContaining({
         provider: "minimax-portal",
-        agentDir: "/tmp/openclaw-agent",
-        workspaceDir: "/tmp/openclaw-workspace",
+        agentDir: "/tmp/quiet-core-bot-agent",
+        workspaceDir: "/tmp/quiet-core-bot-workspace",
       }),
     );
     expect(fetchMock).toHaveBeenCalledOnce();
@@ -362,7 +362,7 @@ describe("describeImageWithModel", () => {
             },
           },
         },
-        agentDir: "/tmp/openclaw-agent",
+        agentDir: "/tmp/quiet-core-bot-agent",
         provider: "minimax-cn",
         model: "MiniMax-VL-01",
         buffer: Buffer.from("png-bytes"),
@@ -408,7 +408,7 @@ describe("describeImageWithModel", () => {
             },
           },
         },
-        agentDir: "/tmp/openclaw-agent",
+        agentDir: "/tmp/quiet-core-bot-agent",
         provider: "minimax-cn",
         model: "MiniMax-VL-01",
         buffer: Buffer.from("png-bytes"),
@@ -450,7 +450,7 @@ describe("describeImageWithModel", () => {
             },
           },
         },
-        agentDir: "/tmp/openclaw-agent",
+        agentDir: "/tmp/quiet-core-bot-agent",
         provider: "minimax-cn",
         model: "MiniMax-VL-01",
         buffer: Buffer.from("png-bytes"),
@@ -489,8 +489,8 @@ describe("describeImageWithModel", () => {
 
     const result = await describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
-      workspaceDir: "/tmp/openclaw-workspace",
+      agentDir: "/tmp/quiet-core-bot-agent",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
       provider: "google",
       model: "gemini-2.5-flash",
       buffer: Buffer.from("png-bytes"),
@@ -505,13 +505,13 @@ describe("describeImageWithModel", () => {
     expect(resolveModelAsyncMock).toHaveBeenCalledWith(
       "google",
       "gemini-2.5-flash",
-      "/tmp/openclaw-agent",
+      "/tmp/quiet-core-bot-agent",
       {},
       {
         allowBundledStaticCatalogFallback: true,
         skipAgentDiscovery: true,
         skipProviderRuntimeHooks: true,
-        workspaceDir: "/tmp/openclaw-workspace",
+        workspaceDir: "/tmp/quiet-core-bot-workspace",
       },
     );
     expect(registerProviderStreamForModelMock).toHaveBeenCalledWith({
@@ -522,8 +522,8 @@ describe("describeImageWithModel", () => {
         input: ["text", "image"],
       },
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
-      workspaceDir: "/tmp/openclaw-workspace",
+      agentDir: "/tmp/quiet-core-bot-agent",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
     });
   });
 
@@ -562,7 +562,7 @@ describe("describeImageWithModel", () => {
 
     const result = await describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
       provider: "openai",
       model: "gpt-5.4",
       buffer: Buffer.from("png-bytes"),
@@ -581,7 +581,7 @@ describe("describeImageWithModel", () => {
       1,
       "openai",
       "gpt-5.4",
-      "/tmp/openclaw-agent",
+      "/tmp/quiet-core-bot-agent",
       {},
       {
         allowBundledStaticCatalogFallback: true,
@@ -593,7 +593,7 @@ describe("describeImageWithModel", () => {
       2,
       "openai",
       "gpt-5.4",
-      "/tmp/openclaw-agent",
+      "/tmp/quiet-core-bot-agent",
       {},
       {
         allowBundledStaticCatalogFallback: true,
@@ -629,7 +629,7 @@ describe("describeImageWithModel", () => {
 
     const result = await describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
       provider: "ollama",
       model: "llava:latest",
       buffer: Buffer.from("png-bytes"),
@@ -651,7 +651,7 @@ describe("describeImageWithModel", () => {
         input: ["text", "image"],
       },
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
     });
     expect(streamFn).toHaveBeenCalledOnce();
     expect(completeMock).not.toHaveBeenCalled();
@@ -701,7 +701,7 @@ describe("describeImageWithModel", () => {
           },
         },
       },
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
       provider: "lmstudio",
       model: "google/gemma-4-e2b",
       buffer: Buffer.from("png-bytes"),
@@ -723,7 +723,7 @@ describe("describeImageWithModel", () => {
     const resolveRequest = requireRecord(resolveRequestValue, "model registry request");
     expect(resolveRequest.provider).toBe("lmstudio");
     expect(resolveRequest.modelId).toBe("google/gemma-4-e2b");
-    expect(resolveRequest.agentDir).toBe("/tmp/openclaw-agent");
+    expect(resolveRequest.agentDir).toBe("/tmp/quiet-core-bot-agent");
     expect(
       requireRecord(
         requireRecord(
@@ -752,7 +752,7 @@ describe("describeImageWithModel", () => {
     await expect(
       describeImageWithModel({
         cfg: {},
-        agentDir: "/tmp/openclaw-agent",
+        agentDir: "/tmp/quiet-core-bot-agent",
         provider: "lmstudio",
         model: "text-only",
         buffer: Buffer.from("png-bytes"),
@@ -788,7 +788,7 @@ describe("describeImageWithModel", () => {
 
     const result = await describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
       provider: "openai",
       model: "gpt-5.4",
       buffer: Buffer.from("png-bytes"),
@@ -854,7 +854,7 @@ describe("describeImageWithModel", () => {
 
     const result = await describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
       provider: "openai",
       model: "gpt-5.4",
       buffer: Buffer.from("png-bytes"),
@@ -895,7 +895,7 @@ describe("describeImageWithModel", () => {
 
     const result = await describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
       provider: "openrouter",
       model: "google/gemini-2.5-flash",
       buffer: Buffer.from("png-bytes"),
@@ -948,7 +948,7 @@ describe("describeImageWithModel", () => {
 
     const result = await describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
       provider: "qwen",
       model: "qwen-vl-max-latest",
       buffer: Buffer.from("png-bytes"),
@@ -1067,7 +1067,7 @@ describe("describeImageWithModel", () => {
 
       const result = await describeImageWithModel({
         cfg: {},
-        agentDir: "/tmp/openclaw-agent",
+        agentDir: "/tmp/quiet-core-bot-agent",
         provider,
         model: model.id,
         buffer: Buffer.from("png-bytes"),
@@ -1114,7 +1114,7 @@ describe("describeImageWithModel", () => {
 
     const result = describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
       provider: "openai",
       model: "gpt-5.4-mini",
       buffer: Buffer.from("png-bytes"),
@@ -1173,7 +1173,7 @@ describe("describeImageWithModel", () => {
 
     const result = describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
       provider: "openai",
       model: "gpt-5.4-mini",
       buffer: Buffer.from("png-bytes"),
@@ -1207,7 +1207,7 @@ describe("describeImageWithModel", () => {
 
     const result = describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
       provider: "openai",
       model: "gpt-5.4-mini",
       buffer: Buffer.from("png-bytes"),
@@ -1249,7 +1249,7 @@ describe("describeImageWithModel", () => {
 
     const result = await describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
       provider: "google",
       model: "gemini-3.1-flash-preview",
       profile: "google:default",
@@ -1294,7 +1294,7 @@ describe("describeImageWithModel", () => {
 
     const result = await describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
       provider: "google",
       model: "gemini-3.1-flash-lite",
       profile: "google:default",
@@ -1341,7 +1341,7 @@ describe("describeImageWithModel", () => {
 
     await describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
       provider: "github-copilot",
       model: "gemini-3.1-pro-preview",
       buffer: Buffer.from("png-bytes"),
@@ -1395,7 +1395,7 @@ describe("describeImageWithModel", () => {
     await expect(
       describeImageWithModel({
         cfg: {},
-        agentDir: "/tmp/openclaw-agent",
+        agentDir: "/tmp/quiet-core-bot-agent",
         provider: "github-copilot",
         model: "gemini-3.1-pro-preview",
         buffer: Buffer.from("png-bytes"),
@@ -1432,7 +1432,7 @@ describe("describeImageWithModel", () => {
 
     await describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
       provider: "openai",
       model: "gpt-4o",
       buffer: Buffer.from("png-bytes"),
@@ -1478,7 +1478,7 @@ describe("describeImageWithModel", () => {
 
     await describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
       provider: "agent-plan",
       model: "doubao-seed-2.0-pro",
       buffer: Buffer.from("png-bytes"),
@@ -1515,7 +1515,7 @@ describe("describeImageWithModel", () => {
 
     await describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
       provider: "fake",
       model: "small-vlm",
       buffer: Buffer.from("png-bytes"),

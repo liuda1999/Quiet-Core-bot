@@ -1,5 +1,5 @@
 {
-  "name": "@openclaw/memory-core",
+  "name": "@quiet-core/memory-core",
   "version": "2026.6.11",
   "private": true,
   "description": "OpenClaw core memory search plugin",
@@ -10,18 +10,18 @@
     "typebox": "1.1.39"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@quiet-core/plugin-sdk": "workspace:*",
+    "quiet-core-bot": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.6.11"
+    "quiet-core-bot": ">=2026.6.11"
   },
   "peerDependenciesMeta": {
-    "openclaw": {
+    "quiet-core-bot": {
       "optional": true
     }
   },
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": [
       "./index.ts"
     ]

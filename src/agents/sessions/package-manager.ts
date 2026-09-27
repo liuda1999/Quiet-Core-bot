@@ -214,7 +214,7 @@ function collectFiles(
   return files;
 }
 
-type SkillDiscoveryMode = "openclaw" | "agents";
+type SkillDiscoveryMode = "quiet-core-bot" | "agents";
 
 function collectSkillEntries(
   dir: string,
@@ -286,7 +286,7 @@ function collectSkillEntries(
 
       const relPath = toPosixPath(relative(root, fullPath));
       if (
-        mode === "openclaw" &&
+        mode === "quiet-core-bot" &&
         dir === root &&
         isFile &&
         entry.name.endsWith(".md") &&
@@ -450,8 +450,8 @@ function collectAutoThemeEntries(dir: string): string[] {
 function readResourceManifestFile(packageJsonPath: string): ResourceManifest | null {
   try {
     const content = readFileSync(packageJsonPath, "utf-8");
-    const pkg = JSON.parse(content) as { openclaw?: ResourceManifest };
-    return pkg.openclaw ?? null;
+    const pkg = JSON.parse(content) as { "quiet-core-bot"?: ResourceManifest };
+    return pkg["quiet-core-bot"] ?? null;
   } catch {
     return null;
   }
@@ -558,7 +558,7 @@ function collectAutoExtensionEntries(dir: string): string[] {
  */
 function collectResourceFiles(dir: string, resourceType: ResourceType): string[] {
   if (resourceType === "skills") {
-    return collectSkillEntries(dir, "openclaw");
+    return collectSkillEntries(dir, "quiet-core-bot");
   }
   if (resourceType === "extensions") {
     return collectAutoExtensionEntries(dir);
@@ -1040,7 +1040,7 @@ export class DefaultPackageManager implements PackageManager {
       .update(`${prefix}-${suffix ?? ""}`)
       .digest("hex")
       .slice(0, 8);
-    return join(tmpdir(), "openclaw-resources", prefix, hash, suffix ?? "");
+    return join(tmpdir(), "quiet-core-bot-resources", prefix, hash, suffix ?? "");
   }
 
   private getBaseDirForScope(scope: SourceScope): string {
@@ -1225,8 +1225,8 @@ export class DefaultPackageManager implements PackageManager {
 
     try {
       const content = readFileSync(packageJsonPath, "utf-8");
-      const pkg = JSON.parse(content) as { openclaw?: ResourceManifest };
-      return pkg.openclaw ?? null;
+      const pkg = JSON.parse(content) as { "quiet-core-bot"?: ResourceManifest };
+      return pkg["quiet-core-bot"] ?? null;
     } catch {
       return null;
     }
@@ -1391,7 +1391,7 @@ export class DefaultPackageManager implements PackageManager {
     // Project skills from the embedded agent project directory.
     addResources(
       "skills",
-      collectAutoSkillEntries(projectDirs.skills, "openclaw"),
+      collectAutoSkillEntries(projectDirs.skills, "quiet-core-bot"),
       projectMetadata,
       projectOverrides.skills,
       projectBaseDir,
@@ -1440,7 +1440,7 @@ export class DefaultPackageManager implements PackageManager {
     // User skills from ~/.quiet-core-bot/agent/
     addResources(
       "skills",
-      collectAutoSkillEntries(userDirs.skills, "openclaw"),
+      collectAutoSkillEntries(userDirs.skills, "quiet-core-bot"),
       userMetadata,
       userOverrides.skills,
       globalBaseDir,

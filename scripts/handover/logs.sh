@@ -7,7 +7,7 @@
 # docker mode -> docker compose logs
 # node mode   -> tail of .handover-logs/gateway.{out,err}.log
 #
-# Gateway log level is controlled by OPENCLAW_LOG_LEVEL / logging.* in config;
+# Gateway log level is controlled by QUIET_CORE_LOG_LEVEL / logging.* in config;
 # structured JSON lines go to stderr.
 
 set -euo pipefail
@@ -16,7 +16,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
 MODE_FILE=".handover-run-mode"
-LOG_DIR="${OPENCLAW_LOG_DIR:-$ROOT_DIR/.handover-logs}"
+LOG_DIR="${QUIET_CORE_LOG_DIR:-$ROOT_DIR/.handover-logs}"
 TAIL_N=200
 FOLLOW=""
 

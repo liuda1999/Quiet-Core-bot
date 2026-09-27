@@ -73,7 +73,7 @@ function createSnapshot(params: {
   const sourceConfig = params.sourceConfig as ConfigFileSnapshot["sourceConfig"];
   const parsed = params.parsed ?? params.sourceConfig;
   return {
-    path: params.path ?? "/tmp/openclaw.json",
+    path: params.path ?? "/tmp/quiet-core-bot.json",
     exists: true,
     raw: `${JSON.stringify(parsed, null, 2)}\n`,
     parsed,
@@ -96,8 +96,8 @@ async function resolveIncludeTarget(filePath: string): Promise<string> {
 const allowConfigPathWrite = () => {};
 
 describe("config mutate helpers", () => {
-  const suiteRootTracker = createSuiteTempRootTracker({ prefix: "openclaw-config-mutate-" });
-  const originalNixMode = process.env.OPENCLAW_NIX_MODE;
+  const suiteRootTracker = createSuiteTempRootTracker({ prefix: "quiet-core-bot-config-mutate-" });
+  const originalNixMode = process.env.QUIET_CORE_NIX_MODE;
 
   beforeAll(async () => {
     await suiteRootTracker.setup();
@@ -105,9 +105,9 @@ describe("config mutate helpers", () => {
 
   afterAll(async () => {
     if (originalNixMode === undefined) {
-      delete process.env.OPENCLAW_NIX_MODE;
+      delete process.env.QUIET_CORE_NIX_MODE;
     } else {
-      process.env.OPENCLAW_NIX_MODE = originalNixMode;
+      process.env.QUIET_CORE_NIX_MODE = originalNixMode;
     }
     await suiteRootTracker.cleanup();
   });
@@ -125,7 +125,7 @@ describe("config mutate helpers", () => {
     ioMocks.resolveConfigSnapshotHash.mockImplementation(
       (snapshot: { hash?: string }) => snapshot.hash ?? null,
     );
-    delete process.env.OPENCLAW_NIX_MODE;
+    delete process.env.QUIET_CORE_NIX_MODE;
   });
 
   it("mutates source config with optimistic hash protection", async () => {
@@ -234,12 +234,12 @@ describe("config mutate helpers", () => {
   it("preserves config path ownership across transform retries", async () => {
     const initial = createSnapshot({
       hash: "hash-1",
-      path: "/tmp/first-openclaw.json",
+      path: "/tmp/first-quiet-core-bot.json",
       sourceConfig: { agents: { list: [] } },
     });
     const fresh = createSnapshot({
       hash: "hash-2",
-      path: "/tmp/second-openclaw.json",
+      path: "/tmp/second-quiet-core-bot.json",
       sourceConfig: { agents: { list: [] } },
     });
     ioMocks.readConfigFileSnapshotForWrite
@@ -272,12 +272,12 @@ describe("config mutate helpers", () => {
   it("captures retry ownership before checking a caller base hash", async () => {
     const initial = createSnapshot({
       hash: "hash-1",
-      path: "/tmp/first-openclaw.json",
+      path: "/tmp/first-quiet-core-bot.json",
       sourceConfig: { agents: { list: [] } },
     });
     const fresh = createSnapshot({
       hash: "hash-2",
-      path: "/tmp/second-openclaw.json",
+      path: "/tmp/second-quiet-core-bot.json",
       sourceConfig: { agents: { list: [] } },
     });
     ioMocks.readConfigFileSnapshotForWrite
@@ -336,7 +336,7 @@ describe("config mutate helpers", () => {
     await expect(
       transformConfigFileWithRetry({
         transform(config) {
-          activeConfigPath = "/tmp/second-openclaw.json";
+          activeConfigPath = "/tmp/second-quiet-core-bot.json";
           return { nextConfig: config };
         },
       }),
@@ -436,7 +436,7 @@ describe("config mutate helpers", () => {
 
   it("rejects replace attempts when the active config path changed", async () => {
     const snapshot = createSnapshot({
-      path: "/tmp/second-openclaw.json",
+      path: "/tmp/second-quiet-core-bot.json",
       hash: "same-hash",
       sourceConfig: { gateway: { port: 18789 } },
     });
@@ -449,14 +449,14 @@ describe("config mutate helpers", () => {
       replaceConfigFile({
         baseHash: snapshot.hash,
         nextConfig: { gateway: { port: 19002 } },
-        writeOptions: { expectedConfigPath: "/tmp/first-openclaw.json" },
+        writeOptions: { expectedConfigPath: "/tmp/first-quiet-core-bot.json" },
       }),
     ).rejects.toThrow("config path changed since last load");
     expect(ioMocks.writeConfigFile).not.toHaveBeenCalled();
   });
 
   it("refuses replace writes in Nix mode before touching disk", async () => {
-    process.env.OPENCLAW_NIX_MODE = "1";
+    process.env.QUIET_CORE_NIX_MODE = "1";
     const snapshot = createSnapshot({
       hash: "hash-1",
       sourceConfig: { gateway: { port: 18789 } },
@@ -478,7 +478,7 @@ describe("config mutate helpers", () => {
   });
 
   it("refuses mutate writes in Nix mode before touching disk", async () => {
-    process.env.OPENCLAW_NIX_MODE = "1";
+    process.env.QUIET_CORE_NIX_MODE = "1";
     const snapshot = createSnapshot({
       hash: "hash-1",
       sourceConfig: { gateway: { port: 18789 } },
@@ -613,8 +613,8 @@ describe("config mutate helpers", () => {
 
   it("repairs invalid config through a single-file top-level plugins include", async () => {
     const home = await suiteRootTracker.make("include");
-    const configPath = path.join(home, ".openclaw", "openclaw.json");
-    const pluginsPath = path.join(home, ".openclaw", "config", "plugins.json5");
+    const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
+    const pluginsPath = path.join(home, ".quiet-core-bot", "config", "plugins.json5");
     await fs.mkdir(path.dirname(pluginsPath), { recursive: true });
     await fs.writeFile(
       configPath,
@@ -628,7 +628,7 @@ describe("config mutate helpers", () => {
           entries: {
             old: {
               enabled: true,
-              config: { token: "${OPENCLAW_TEST_PLUGIN_TOKEN}" },
+              config: { token: "${QUIET_CORE_TEST_PLUGIN_TOKEN}" },
             },
           },
         },
@@ -675,7 +675,7 @@ describe("config mutate helpers", () => {
         snapshot,
         writeOptions: {
           expectedConfigPath: configPath,
-          envSnapshotForRestore: { OPENCLAW_TEST_PLUGIN_TOKEN: "plugin-token-runtime" },
+          envSnapshotForRestore: { QUIET_CORE_TEST_PLUGIN_TOKEN: "plugin-token-runtime" },
           assertConfigPathForWrite: allowConfigPathWrite,
           includeFileTargetsForWrite: { [pluginsPath]: await resolveIncludeTarget(pluginsPath) },
         },
@@ -713,7 +713,7 @@ describe("config mutate helpers", () => {
           },
         },
         io: {
-          env: { OPENCLAW_TEST_PLUGIN_TOKEN: "plugin-token-after-read" },
+          env: { QUIET_CORE_TEST_PLUGIN_TOKEN: "plugin-token-after-read" },
           readConfigFileSnapshotForWrite: ioMocks.readConfigFileSnapshotForWrite,
           writeConfigFile: ioMocks.writeConfigFile,
         },
@@ -763,15 +763,15 @@ describe("config mutate helpers", () => {
       entries?: Record<string, { config?: { token?: string } }>;
       installs?: Record<string, unknown>;
     };
-    expect(persistedPlugins.entries?.old?.config?.token).toBe("${OPENCLAW_TEST_PLUGIN_TOKEN}");
+    expect(persistedPlugins.entries?.old?.config?.token).toBe("${QUIET_CORE_TEST_PLUGIN_TOKEN}");
     expect(persistedPlugins.entries?.demo).toEqual({ enabled: true });
     expect(persistedPlugins.installs).toBeUndefined();
   });
 
   it("repairs a malformed single-file top-level include", async () => {
     const home = await suiteRootTracker.make("malformed-include");
-    const configPath = path.join(home, ".openclaw", "openclaw.json");
-    const pluginsPath = path.join(home, ".openclaw", "config", "plugins.json5");
+    const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
+    const pluginsPath = path.join(home, ".quiet-core-bot", "config", "plugins.json5");
     await fs.mkdir(path.dirname(pluginsPath), { recursive: true });
     await fs.writeFile(
       configPath,
@@ -836,8 +836,8 @@ describe("config mutate helpers", () => {
 
   it("repairs a missing single-file top-level include from its snapshot", async () => {
     const home = await suiteRootTracker.make("missing-include");
-    const configPath = path.join(home, ".openclaw", "openclaw.json");
-    const pluginsPath = path.join(home, ".openclaw", "config", "plugins.json5");
+    const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
+    const pluginsPath = path.join(home, ".quiet-core-bot", "config", "plugins.json5");
     await fs.mkdir(path.dirname(pluginsPath), { recursive: true });
     await fs.writeFile(
       configPath,
@@ -903,8 +903,8 @@ describe("config mutate helpers", () => {
     async () => {
       const home = await suiteRootTracker.make("missing-include-symlink-escape");
       const outside = await suiteRootTracker.make("missing-include-symlink-outside");
-      const configPath = path.join(home, ".openclaw", "openclaw.json");
-      const linkPath = path.join(home, ".openclaw", "link");
+      const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
+      const linkPath = path.join(home, ".quiet-core-bot", "link");
       const pluginsPath = path.join(linkPath, "plugins.json5");
       const outsidePluginsPath = path.join(outside, "plugins.json5");
       await fs.mkdir(path.dirname(configPath), { recursive: true });
@@ -957,8 +957,8 @@ describe("config mutate helpers", () => {
 
   it("does not overwrite a malformed include changed after its snapshot", async () => {
     const home = await suiteRootTracker.make("malformed-include-concurrent");
-    const configPath = path.join(home, ".openclaw", "openclaw.json");
-    const pluginsPath = path.join(home, ".openclaw", "config", "plugins.json5");
+    const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
+    const pluginsPath = path.join(home, ".quiet-core-bot", "config", "plugins.json5");
     const snapshotRaw = "{ malformed";
     const concurrentRaw = "{ differently malformed";
     await fs.mkdir(path.dirname(pluginsPath), { recursive: true });
@@ -1011,8 +1011,8 @@ describe("config mutate helpers", () => {
 
   it("prefers mutation-start include hashes over commit-time reread hashes", async () => {
     const home = await suiteRootTracker.make("include-mutation-start-hash");
-    const configPath = path.join(home, ".openclaw", "openclaw.json");
-    const pluginsPath = path.join(home, ".openclaw", "config", "plugins.json5");
+    const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
+    const pluginsPath = path.join(home, ".quiet-core-bot", "config", "plugins.json5");
     const initialRaw = `${JSON.stringify({ entries: {} }, null, 2)}\n`;
     const concurrentRaw = `${JSON.stringify(
       { entries: { concurrent: { enabled: true } } },
@@ -1066,8 +1066,8 @@ describe("config mutate helpers", () => {
 
   it("uses a provided mutation-start snapshot even without write options", async () => {
     const home = await suiteRootTracker.make("include-mutation-start-snapshot");
-    const configPath = path.join(home, ".openclaw", "openclaw.json");
-    const pluginsPath = path.join(home, ".openclaw", "config", "plugins.json5");
+    const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
+    const pluginsPath = path.join(home, ".quiet-core-bot", "config", "plugins.json5");
     const concurrentRaw = `${JSON.stringify(
       { entries: { concurrent: { enabled: true } } },
       null,
@@ -1107,8 +1107,8 @@ describe("config mutate helpers", () => {
 
   it("keeps single-file top-level plugins include writes when plugin validation is skipped", async () => {
     const home = await suiteRootTracker.make("include-skip-plugin-validation");
-    const configPath = path.join(home, ".openclaw", "openclaw.json");
-    const pluginsPath = path.join(home, ".openclaw", "config", "plugins.json5");
+    const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
+    const pluginsPath = path.join(home, ".quiet-core-bot", "config", "plugins.json5");
     await fs.mkdir(path.dirname(pluginsPath), { recursive: true });
     await fs.writeFile(
       configPath,
@@ -1179,7 +1179,7 @@ describe("config mutate helpers", () => {
   it("rejects direct mutations to external include roots", async () => {
     const home = await suiteRootTracker.make("include-allowed-root");
     const sharedRoot = path.join(home, "shared");
-    const configPath = path.join(home, ".openclaw", "openclaw.json");
+    const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
     const pluginsPath = path.join(sharedRoot, "plugins.json5");
     await fs.mkdir(sharedRoot, { recursive: true });
     await fs.mkdir(path.dirname(configPath), { recursive: true });
@@ -1219,7 +1219,7 @@ describe("config mutate helpers", () => {
         },
         nextConfig,
         io: {
-          env: { OPENCLAW_INCLUDE_ROOTS: "~/shared" },
+          env: { QUIET_CORE_INCLUDE_ROOTS: "~/shared" },
           readConfigFileSnapshotForWrite: ioMocks.readConfigFileSnapshotForWrite,
           writeConfigFile: ioMocks.writeConfigFile,
         },
@@ -1234,8 +1234,8 @@ describe("config mutate helpers", () => {
 
   it("preflights single-file top-level include writes before persisting", async () => {
     const home = await suiteRootTracker.make("include-runtime-preflight");
-    const configPath = path.join(home, ".openclaw", "openclaw.json");
-    const pluginsPath = path.join(home, ".openclaw", "config", "plugins.json5");
+    const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
+    const pluginsPath = path.join(home, ".quiet-core-bot", "config", "plugins.json5");
     await fs.mkdir(path.dirname(pluginsPath), { recursive: true });
     await fs.writeFile(
       configPath,
@@ -1286,8 +1286,8 @@ describe("config mutate helpers", () => {
 
   it("does not overwrite concurrent include edits made during preflight", async () => {
     const home = await suiteRootTracker.make("include-preflight-concurrent");
-    const configPath = path.join(home, ".openclaw", "openclaw.json");
-    const pluginsPath = path.join(home, ".openclaw", "config", "plugins.json5");
+    const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
+    const pluginsPath = path.join(home, ".quiet-core-bot", "config", "plugins.json5");
     await fs.mkdir(path.dirname(pluginsPath), { recursive: true });
     await fs.writeFile(
       configPath,
@@ -1342,8 +1342,8 @@ describe("config mutate helpers", () => {
 
   it("does not overwrite concurrent include edits made during backup rotation", async () => {
     const home = await suiteRootTracker.make("include-backup-concurrent");
-    const configPath = path.join(home, ".openclaw", "openclaw.json");
-    const pluginsPath = path.join(home, ".openclaw", "config", "plugins.json5");
+    const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
+    const pluginsPath = path.join(home, ".quiet-core-bot", "config", "plugins.json5");
     const rootConfig = { plugins: { $include: "./config/plugins.json5" } };
     const initialPluginsRaw = `${JSON.stringify({ entries: {} }, null, 2)}\n`;
     const concurrentPluginsRaw = `${JSON.stringify(
@@ -1388,8 +1388,8 @@ describe("config mutate helpers", () => {
 
   it("does not write an include after its root ownership changes during backup rotation", async () => {
     const home = await suiteRootTracker.make("include-root-backup-concurrent");
-    const configPath = path.join(home, ".openclaw", "openclaw.json");
-    const pluginsPath = path.join(home, ".openclaw", "config", "plugins.json5");
+    const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
+    const pluginsPath = path.join(home, ".quiet-core-bot", "config", "plugins.json5");
     const rootConfig = { plugins: { $include: "./config/plugins.json5" } };
     const initialPluginsRaw = `${JSON.stringify({ entries: {} }, null, 2)}\n`;
     const concurrentRootRaw = `${JSON.stringify(
@@ -1435,8 +1435,8 @@ describe("config mutate helpers", () => {
 
   it("does not write an include after its root ownership changes during preflight", async () => {
     const home = await suiteRootTracker.make("include-root-preflight-concurrent");
-    const configPath = path.join(home, ".openclaw", "openclaw.json");
-    const pluginsPath = path.join(home, ".openclaw", "config", "plugins.json5");
+    const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
+    const pluginsPath = path.join(home, ".quiet-core-bot", "config", "plugins.json5");
     const rootConfig = { plugins: { $include: "./config/plugins.json5" } };
     const initialPluginsRaw = `${JSON.stringify({ entries: {} }, null, 2)}\n`;
     const concurrentRootRaw = `${JSON.stringify(
@@ -1490,8 +1490,8 @@ describe("config mutate helpers", () => {
 
   it("does not write an include after the active config path changes during preflight", async () => {
     const home = await suiteRootTracker.make("include-active-path-preflight-concurrent");
-    const firstConfigPath = path.join(home, "first", "openclaw.json");
-    const secondConfigPath = path.join(home, "second", "openclaw.json");
+    const firstConfigPath = path.join(home, "first", "quiet-core-bot.json");
+    const secondConfigPath = path.join(home, "second", "quiet-core-bot.json");
     const pluginsPath = path.join(home, "first", "plugins.json5");
     const rootConfig = { plugins: { $include: "./plugins.json5" } };
     const initialPluginsRaw = `${JSON.stringify({ entries: {} }, null, 2)}\n`;
@@ -1551,8 +1551,8 @@ describe("config mutate helpers", () => {
 
   it("rolls back an include write when config path ownership changes during commit", async () => {
     const home = await suiteRootTracker.make("include-active-path-commit-concurrent");
-    const configPath = path.join(home, ".openclaw", "openclaw.json");
-    const pluginsPath = path.join(home, ".openclaw", "plugins.json5");
+    const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
+    const pluginsPath = path.join(home, ".quiet-core-bot", "plugins.json5");
     const rootConfig = { plugins: { $include: "./plugins.json5" } };
     const initialPluginsRaw = `${JSON.stringify({ entries: {} }, null, 2)}\n`;
     await fs.mkdir(path.dirname(configPath), { recursive: true });
@@ -1567,7 +1567,7 @@ describe("config mutate helpers", () => {
     let activeConfigPath = configPath;
     const assertConfigPathForWrite = () => {
       if (fsNode.readFileSync(pluginsPath, "utf-8") !== initialPluginsRaw) {
-        activeConfigPath = "/tmp/other-openclaw.json";
+        activeConfigPath = "/tmp/other-quiet-core-bot.json";
       }
       if (activeConfigPath !== configPath) {
         throw new ConfigMutationConflictError("config path changed since last load", {
@@ -1605,8 +1605,8 @@ describe("config mutate helpers", () => {
       const home = await suiteRootTracker.make(
         `include-post-write-${changeKind.replaceAll(" ", "-")}`,
       );
-      const configPath = path.join(home, "first", "openclaw.json");
-      const otherConfigPath = path.join(home, "second", "openclaw.json");
+      const configPath = path.join(home, "first", "quiet-core-bot.json");
+      const otherConfigPath = path.join(home, "second", "quiet-core-bot.json");
       const pluginsPath = path.join(home, "first", "plugins.json5");
       const rootConfig = { plugins: { $include: "./plugins.json5" } };
       const initialPluginsRaw = `${JSON.stringify({ entries: {} }, null, 2)}\n`;
@@ -1667,9 +1667,9 @@ describe("config mutate helpers", () => {
     async () => {
       const home = await suiteRootTracker.make("include-preflight-parent-swap");
       const outside = await suiteRootTracker.make("include-preflight-parent-swap-outside");
-      const configPath = path.join(home, ".openclaw", "openclaw.json");
-      const includeDir = path.join(home, ".openclaw", "config");
-      const movedIncludeDir = path.join(home, ".openclaw", "config-original");
+      const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
+      const includeDir = path.join(home, ".quiet-core-bot", "config");
+      const movedIncludeDir = path.join(home, ".quiet-core-bot", "config-original");
       const pluginsPath = path.join(includeDir, "plugins.json5");
       const outsidePluginsPath = path.join(outside, "plugins.json5");
       await fs.mkdir(includeDir, { recursive: true });
@@ -1744,8 +1744,8 @@ describe("config mutate helpers", () => {
 
   it("does not overwrite include edits made after the mutation snapshot", async () => {
     const home = await suiteRootTracker.make("include-snapshot-concurrent");
-    const configPath = path.join(home, ".openclaw", "openclaw.json");
-    const pluginsPath = path.join(home, ".openclaw", "config", "plugins.json5");
+    const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
+    const pluginsPath = path.join(home, ".quiet-core-bot", "config", "plugins.json5");
     await fs.mkdir(path.dirname(pluginsPath), { recursive: true });
     await fs.writeFile(
       configPath,
@@ -1793,8 +1793,8 @@ describe("config mutate helpers", () => {
 
   it("preflights the restored include payload with the current environment", async () => {
     const home = await suiteRootTracker.make("include-restored-preflight");
-    const configPath = path.join(home, ".openclaw", "openclaw.json");
-    const pluginsPath = path.join(home, ".openclaw", "config", "plugins.json5");
+    const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
+    const pluginsPath = path.join(home, ".quiet-core-bot", "config", "plugins.json5");
     await fs.mkdir(path.dirname(pluginsPath), { recursive: true });
     await fs.writeFile(
       configPath,
@@ -1804,7 +1804,7 @@ describe("config mutate helpers", () => {
     const initialPluginsRaw = `${JSON.stringify(
       {
         entries: {
-          old: { enabled: true, config: { token: "${OPENCLAW_TEST_INCLUDE_TOKEN}" } },
+          old: { enabled: true, config: { token: "${QUIET_CORE_TEST_INCLUDE_TOKEN}" } },
         },
       },
       null,
@@ -1835,7 +1835,7 @@ describe("config mutate helpers", () => {
           snapshot,
           writeOptions: {
             expectedConfigPath: snapshot.path,
-            envSnapshotForRestore: { OPENCLAW_TEST_INCLUDE_TOKEN: "old-token" },
+            envSnapshotForRestore: { QUIET_CORE_TEST_INCLUDE_TOKEN: "old-token" },
             assertConfigPathForWrite: allowConfigPathWrite,
             includeFileTargetsForWrite: { [pluginsPath]: await resolveIncludeTarget(pluginsPath) },
           },
@@ -1848,7 +1848,7 @@ describe("config mutate helpers", () => {
             },
           },
           io: {
-            env: { OPENCLAW_TEST_INCLUDE_TOKEN: "new-token" },
+            env: { QUIET_CORE_TEST_INCLUDE_TOKEN: "new-token" },
             readConfigFileSnapshotForWrite: ioMocks.readConfigFileSnapshotForWrite,
             writeConfigFile: ioMocks.writeConfigFile,
           },
@@ -1864,8 +1864,8 @@ describe("config mutate helpers", () => {
 
   it("does not re-substitute resolved root values during include preflight", async () => {
     const home = await suiteRootTracker.make("include-root-escaped-env");
-    const configPath = path.join(home, ".openclaw", "openclaw.json");
-    const pluginsPath = path.join(home, ".openclaw", "config", "plugins.json5");
+    const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
+    const pluginsPath = path.join(home, ".quiet-core-bot", "config", "plugins.json5");
     await fs.mkdir(path.dirname(pluginsPath), { recursive: true });
     await fs.writeFile(
       configPath,
@@ -1932,8 +1932,8 @@ describe("config mutate helpers", () => {
 
   it("preserves unresolved optional env refs during include write-through", async () => {
     const home = await suiteRootTracker.make("include-unresolved-env");
-    const configPath = path.join(home, ".openclaw", "openclaw.json");
-    const pluginsPath = path.join(home, ".openclaw", "config", "plugins.json5");
+    const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
+    const pluginsPath = path.join(home, ".quiet-core-bot", "config", "plugins.json5");
     await fs.mkdir(path.dirname(pluginsPath), { recursive: true });
     await fs.writeFile(
       configPath,
@@ -1995,10 +1995,10 @@ describe("config mutate helpers", () => {
 
   it("rolls back single-file top-level include writes when runtime refresh fails", async () => {
     const home = await suiteRootTracker.make("include-runtime-refresh-rollback");
-    const configPath = path.join(home, ".openclaw", "openclaw.json");
-    const pluginsPath = path.join(home, ".openclaw", "config", "plugins.json5");
+    const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
+    const pluginsPath = path.join(home, ".quiet-core-bot", "config", "plugins.json5");
     const env = {} as NodeJS.ProcessEnv;
-    const envKey = "OPENCLAW_TEST_INCLUDE_ROLLBACK_ENV";
+    const envKey = "QUIET_CORE_TEST_INCLUDE_ROLLBACK_ENV";
     await fs.mkdir(path.dirname(pluginsPath), { recursive: true });
     await fs.writeFile(
       configPath,
@@ -2066,8 +2066,8 @@ describe("config mutate helpers", () => {
 
   it("does not overwrite concurrent include edits during failed refresh rollback", async () => {
     const home = await suiteRootTracker.make("include-runtime-refresh-concurrent");
-    const configPath = path.join(home, ".openclaw", "openclaw.json");
-    const pluginsPath = path.join(home, ".openclaw", "config", "plugins.json5");
+    const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
+    const pluginsPath = path.join(home, ".quiet-core-bot", "config", "plugins.json5");
     await fs.mkdir(path.dirname(pluginsPath), { recursive: true });
     await fs.writeFile(
       configPath,
@@ -2133,8 +2133,8 @@ describe("config mutate helpers", () => {
 
   it("rejects invalid base config before skipped-plugin include writes", async () => {
     const home = await suiteRootTracker.make("include-skip-invalid-base");
-    const configPath = path.join(home, ".openclaw", "openclaw.json");
-    const pluginsPath = path.join(home, ".openclaw", "config", "plugins.json5");
+    const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
+    const pluginsPath = path.join(home, ".quiet-core-bot", "config", "plugins.json5");
     await fs.mkdir(path.dirname(pluginsPath), { recursive: true });
     await fs.writeFile(
       configPath,
@@ -2195,7 +2195,7 @@ describe("config mutate helpers", () => {
   it("falls back to the root writer when a plugins include write is not isolated", async () => {
     const snapshot = createSnapshot({
       hash: "hash-multi",
-      path: "/tmp/openclaw.json",
+      path: "/tmp/quiet-core-bot.json",
       parsed: { plugins: { $include: "./config/plugins.json5" }, gateway: { mode: "local" } },
       sourceConfig: {
         gateway: { mode: "local" },
@@ -2231,7 +2231,7 @@ describe("config mutate helpers", () => {
 
   it("preflights injected root writers before persisting", async () => {
     const home = await suiteRootTracker.make("injected-root-runtime-preflight");
-    const configPath = path.join(home, ".openclaw", "openclaw.json");
+    const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
     await fs.mkdir(path.dirname(configPath), { recursive: true });
     const initialConfig = { gateway: { mode: "local" } } satisfies OpenClawConfig;
     const initialRaw = `${JSON.stringify(initialConfig, null, 2)}\n`;

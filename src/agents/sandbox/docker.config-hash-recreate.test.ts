@@ -40,7 +40,7 @@ const registryMocks = vi.hoisted(() => ({
 const tmpDirs: string[] = [];
 
 function makeTempDir(): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-docker-mounts-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-docker-mounts-"));
   tmpDirs.push(dir);
   return dir;
 }
@@ -76,7 +76,7 @@ function spawnDockerProcess(command: string, args: string[]) {
   } else if (
     args[0] === "inspect" &&
     args[1] === "-f" &&
-    args[2]?.includes('index .Config.Labels "openclaw.configHash"')
+    args[2]?.includes('index .Config.Labels "quiet-core-bot.configHash"')
   ) {
     stdout = `${spawnState.labelHash}\n`;
   } else if (
@@ -138,7 +138,7 @@ function createSandboxConfig(
     workspaceAccess,
     workspaceRoot: "~/.quiet-core-bot/sandboxes",
     docker: {
-      image: "openclaw-sandbox:test",
+      image: "quiet-core-bot-sandbox:test",
       containerPrefix: "oc-test-",
       workdir: "/workspace",
       readOnlyRoot: true,
@@ -153,15 +153,15 @@ function createSandboxConfig(
     },
     ssh: {
       command: "ssh",
-      workspaceRoot: "/tmp/openclaw-sandboxes",
+      workspaceRoot: "/tmp/quiet-core-bot-sandboxes",
       strictHostKeyChecking: true,
       updateHostKeys: true,
     },
     browser: {
       enabled: false,
-      image: "openclaw-browser:test",
+      image: "quiet-core-bot-browser:test",
       containerPrefix: "oc-browser-",
-      network: "openclaw-sandbox-browser",
+      network: "quiet-core-bot-sandbox-browser",
       cdpPort: 9222,
       vncPort: 5900,
       noVncPort: 6080,

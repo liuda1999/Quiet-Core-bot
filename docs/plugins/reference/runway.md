@@ -11,7 +11,7 @@ Adds video generation provider support.
 
 ## Distribution
 
-- Package: `@openclaw/runway-provider`
+- Package: `@quiet-core/runway-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

@@ -10,7 +10,7 @@ import {
   type ImageMetadata,
 } from "rastermill";
 import { resolveSystemBin } from "../infra/resolve-system-bin.js";
-import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-quiet-core-bot-dir.js";
 
 export type { ImageMetadata, ImageProbe };
 
@@ -61,7 +61,7 @@ export function createImageProcessor() {
     },
     temp: {
       rootDir: resolvePreferredOpenClawTmpDir(),
-      prefix: "openclaw-img-",
+      prefix: "quiet-core-bot-img-",
     },
     commandResolver: (command) =>
       resolveSystemBin(command, { trust: command === "powershell" ? "strict" : "standard" }),

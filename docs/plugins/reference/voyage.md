@@ -11,7 +11,7 @@ Adds memory embedding provider support.
 
 ## Distribution
 
-- Package: `@openclaw/voyage-provider`
+- Package: `@quiet-core/voyage-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

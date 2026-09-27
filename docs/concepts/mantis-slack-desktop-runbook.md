@@ -48,7 +48,7 @@ gh workflow run mantis-slack-desktop-smoke.yml \
 
 Allowed `candidate_ref` values are intentionally narrow because the workflow
 uses live credentials: current `main` ancestry, release tags, or an open PR head
-from `openclaw/openclaw`.
+from `liuda1999/quiet-core-bot`.
 
 The workflow writes:
 
@@ -60,7 +60,7 @@ The workflow writes:
 - `slack-desktop-smoke-change.mp4`;
 - `mantis-slack-desktop-smoke-summary.json`;
 - `mantis-slack-desktop-smoke-report.md`;
-- remote logs such as `slack-desktop-command.log`, `openclaw-gateway.log`,
+- remote logs such as `slack-desktop-command.log`, `quiet-core-bot-gateway.log`,
   `chrome.log`, and `ffmpeg.log`.
 
 The PR comment is updated in place by the hidden
@@ -209,7 +209,7 @@ If the VM run fails but screenshots were copied back, inspect:
 cat mantis-slack-desktop-smoke-report.md
 cat mantis-slack-desktop-smoke-summary.json
 cat slack-desktop-command.log
-cat openclaw-gateway.log
+cat quiet-core-bot-gateway.log
 cat chrome.log
 cat ffmpeg.log
 ```

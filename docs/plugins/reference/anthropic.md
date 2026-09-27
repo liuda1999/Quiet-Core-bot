@@ -11,7 +11,7 @@ Adds Anthropic model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/anthropic-provider`
+- Package: `@quiet-core/anthropic-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

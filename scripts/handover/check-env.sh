@@ -102,8 +102,8 @@ echo
 echo "== .env =="
 if [ -f "$ROOT_DIR/.env" ]; then
   ok ".env present (secrets are NOT in this package; values must be filled locally)"
-  if grep -q '^OPENCLAW_GATEWAY_TOKEN=$' "$ROOT_DIR/.env" 2>/dev/null; then
-    warn "OPENCLAW_GATEWAY_TOKEN is empty -> the gateway auto-generates one on first start, or set your own (openssl rand -hex 32)"
+  if grep -q '^QUIET_CORE_GATEWAY_TOKEN=$' "$ROOT_DIR/.env" 2>/dev/null; then
+    warn "QUIET_CORE_GATEWAY_TOKEN is empty -> the gateway auto-generates one on first start, or set your own (openssl rand -hex 32)"
   fi
 else
   warn ".env missing -> copy the template: cp .env.example .env"

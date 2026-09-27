@@ -1,7 +1,7 @@
 // Raft delivers wake hints only; message content stays in the operator's Raft CLI session.
 import { randomUUID } from "node:crypto";
-import type { ChannelGatewayContext } from "openclaw/plugin-sdk/channel-contract";
-import type { PluginRuntime } from "openclaw/plugin-sdk/plugin-runtime";
+import type { ChannelGatewayContext } from "quiet-core-bot/plugin-sdk/channel-contract";
+import type { PluginRuntime } from "quiet-core-bot/plugin-sdk/plugin-runtime";
 import type { ResolvedRaftAccount } from "./accounts.js";
 import { RAFT_CHANNEL_ID } from "./accounts.js";
 

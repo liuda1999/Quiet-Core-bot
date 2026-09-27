@@ -19,7 +19,7 @@ media are supported. Reactions and threads are not supported.
 Install QQ Bot before setup:
 
 ```bash
-quiet-core-bot plugins install @openclaw/qqbot
+quiet-core-bot plugins install @quiet-core/qqbot
 ```
 
 ## Setup

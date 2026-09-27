@@ -44,7 +44,7 @@ describe("security audit sandbox docker config", () => {
   });
 
   it("evaluates sandbox docker config findings", async () => {
-    const isolatedHome = path.join(os.tmpdir(), "openclaw-security-audit-home");
+    const isolatedHome = path.join(os.tmpdir(), "quiet-core-bot-security-audit-home");
     vi.spyOn(os, "homedir").mockReturnValue(isolatedHome);
     await withEnvAsync({ HOME: isolatedHome, USERPROFILE: isolatedHome }, async () => {
       const cases = [
@@ -132,7 +132,7 @@ describe("security audit sandbox docker config", () => {
                 sandbox: {
                   mode: "all",
                   docker: {
-                    binds: ["D:/data/openclaw/src:/src:ro"],
+                    binds: ["D:/data/quiet-core-bot/src:/src:ro"],
                   },
                 },
               },

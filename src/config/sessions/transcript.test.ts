@@ -120,9 +120,9 @@ describe("appendAssistantMessageToSessionTranscript", () => {
 
   it("uses configured session.store when storePath is omitted", async () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "transcript-config-store-"));
-    const previousStateDir = process.env.OPENCLAW_STATE_DIR;
+    const previousStateDir = process.env.QUIET_CORE_STATE_DIR;
     try {
-      process.env.OPENCLAW_STATE_DIR = path.join(tempDir, "default-state");
+      process.env.QUIET_CORE_STATE_DIR = path.join(tempDir, "default-state");
       const sessionsDir = path.join(tempDir, "configured", "sessions");
       fs.mkdirSync(sessionsDir, { recursive: true });
       const storePath = path.join(sessionsDir, "sessions.json");
@@ -158,9 +158,9 @@ describe("appendAssistantMessageToSessionTranscript", () => {
       );
     } finally {
       if (previousStateDir === undefined) {
-        delete process.env.OPENCLAW_STATE_DIR;
+        delete process.env.QUIET_CORE_STATE_DIR;
       } else {
-        process.env.OPENCLAW_STATE_DIR = previousStateDir;
+        process.env.QUIET_CORE_STATE_DIR = previousStateDir;
       }
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
@@ -168,10 +168,10 @@ describe("appendAssistantMessageToSessionTranscript", () => {
 
   it("uses the session key agent for configured session.store templates", async () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "transcript-agent-store-"));
-    const previousStateDir = process.env.OPENCLAW_STATE_DIR;
+    const previousStateDir = process.env.QUIET_CORE_STATE_DIR;
     const emitSpy = vi.spyOn(transcriptEvents, "emitSessionTranscriptUpdate");
     try {
-      process.env.OPENCLAW_STATE_DIR = path.join(tempDir, "default-state");
+      process.env.QUIET_CORE_STATE_DIR = path.join(tempDir, "default-state");
       const storeTemplate = path.join(tempDir, "agents", "{agentId}", "sessions", "sessions.json");
       const sessionsDir = path.join(tempDir, "agents", "worker", "sessions");
       fs.mkdirSync(sessionsDir, { recursive: true });
@@ -219,9 +219,9 @@ describe("appendAssistantMessageToSessionTranscript", () => {
     } finally {
       emitSpy.mockRestore();
       if (previousStateDir === undefined) {
-        delete process.env.OPENCLAW_STATE_DIR;
+        delete process.env.QUIET_CORE_STATE_DIR;
       } else {
-        process.env.OPENCLAW_STATE_DIR = previousStateDir;
+        process.env.QUIET_CORE_STATE_DIR = previousStateDir;
       }
       fs.rmSync(tempDir, { recursive: true, force: true });
     }
@@ -521,7 +521,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
     expect(event?.sessionKey).toBe(sessionKey);
     expect(event?.messageId).toBeTypeOf("string");
     expect(message?.role).toBe("assistant");
-    expect(message?.provider).toBe("openclaw");
+    expect(message?.provider).toBe("quiet-core-bot");
     expect(message?.model).toBe("delivery-mirror");
     expect(message?.content).toEqual([{ type: "text", text: "Hello from delivery mirror!" }]);
     emitSpy.mockRestore();
@@ -732,7 +732,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
       message: {
         ...createExactAssistantMessage({
           text: "Transcript delivery bookkeeping",
-          provider: "openclaw",
+          provider: "quiet-core-bot",
           model: "gateway-injected",
         }),
         timestamp: 2_000,
@@ -858,7 +858,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
       storePath: fixture.storePath(),
       message: createExactAssistantMessage({
         text: "Injected transcript text",
-        provider: "openclaw",
+        provider: "quiet-core-bot",
         model: "gateway-injected",
       }),
     });
@@ -909,8 +909,8 @@ describe("appendAssistantMessageToSessionTranscript", () => {
     expect(tailAssistantText?.text).toBe("Tail delivery mirror");
   });
 
-  it("scans past trailing non-assistant entries (e.g. openclaw.cache-ttl) to find the latest assistant text", async () => {
-    // Regression for openclaw/openclaw#83427: the cache-ttl custom entry was
+  it("scans past trailing non-assistant entries (e.g. quiet-core-bot.cache-ttl) to find the latest assistant text", async () => {
+    // Regression for liuda1999/quiet-core-bot#83427: the cache-ttl custom entry was
     // emitted after the canonical assistant turn, and the tail reader returned
     // undefined on the first non-assistant line, so the gap-fill check in
     // persistTextTurnTranscript wrote a duplicate `api: "cli"` assistant
@@ -933,7 +933,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
 
     const cacheTtlEntry = `${JSON.stringify({
       type: "custom",
-      customType: "openclaw.cache-ttl",
+      customType: "quiet-core-bot.cache-ttl",
       timestamp: new Date().toISOString(),
       data: {
         provider: "anthropic",
@@ -981,7 +981,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
       expect(lines.length).toBe(4);
 
       const messageLine = JSON.parse(lines[3]);
-      expect(messageLine.message.provider).toBe("openclaw");
+      expect(messageLine.message.provider).toBe("quiet-core-bot");
       expect(messageLine.message.model).toBe("delivery-mirror");
       expect(messageLine.message.content[0].text).toBe("Repeated answer");
     }
@@ -1157,7 +1157,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
             textSignature: JSON.stringify({ v: 1, id: "item_final", phase: "final_answer" }),
           },
         ],
-        provider: "openclaw",
+        provider: "quiet-core-bot",
         model: "delivery-mirror",
       }),
     });
@@ -1366,7 +1366,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
           updateMode: "none",
           message: createExactAssistantMessage({
             text: "Mirrored reply",
-            provider: "openclaw",
+            provider: "quiet-core-bot",
             model: "delivery-mirror",
           }),
         }),
@@ -1403,7 +1403,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
       updateMode: "file-only",
       message: createExactAssistantMessage({
         text: "Done.",
-        provider: "openclaw",
+        provider: "quiet-core-bot",
         model: "delivery-mirror",
       }),
     });
@@ -1818,7 +1818,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
       transcriptPath: sessionFile,
       message: {
         role: "assistant",
-        provider: "openclaw",
+        provider: "quiet-core-bot",
         model: "delivery-mirror",
         content: "second side delivery",
       },
@@ -1918,7 +1918,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
       transcriptPath: sessionFile,
       message: {
         role: "assistant",
-        provider: "openclaw",
+        provider: "quiet-core-bot",
         model: "delivery-mirror",
         content: "second side delivery",
       },

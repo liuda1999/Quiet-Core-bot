@@ -1383,7 +1383,7 @@ function createManifestRecord(overrides: Partial<PluginManifestRecord>): PluginM
     origin: "global",
     rootDir: "/tmp/plugin",
     source: "/tmp/plugin/index.js",
-    manifestPath: "/tmp/plugin/openclaw.plugin.json",
+    manifestPath: "/tmp/plugin/quiet-core-bot.plugin.json",
     ...overrides,
   };
 }

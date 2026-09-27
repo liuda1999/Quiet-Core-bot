@@ -192,7 +192,7 @@ function expectSignedPayloadFields(
   expect(payload?.split("|")).toEqual([
     "v2",
     "device-1",
-    "openclaw-control-ui",
+    "quiet-core-bot-control-ui",
     "webchat",
     "operator",
     params.scopes.join(","),

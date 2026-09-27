@@ -1,18 +1,18 @@
 {
-  "name": "@openclaw/irc",
+  "name": "@quiet-core/irc",
   "version": "2026.6.11",
   "description": "OpenClaw IRC channel plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@quiet-core/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "clawhubSpec": "clawhub:@openclaw/irc",
-      "npmSpec": "@openclaw/irc",
+      "clawhubSpec": "clawhub:@quiet-core/irc",
+      "npmSpec": "@quiet-core/irc",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.6.9",
       "allowInvalidConfigRecovery": true
@@ -58,6 +58,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/liuda1999/Quiet-Core-bot"
   }
 }

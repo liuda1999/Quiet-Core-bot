@@ -4,7 +4,7 @@ read_when:
   - You want a terminal UI for the Gateway (remote-friendly)
   - You want to pass url/token/session from scripts
   - You want to run the TUI in local embedded mode without a Gateway
-  - You want to use openclaw chat or quiet-core-bot tui --local
+  - You want to use quiet-core-bot chat or quiet-core-bot tui --local
 title: "TUI"
 ---
 
@@ -32,7 +32,7 @@ Related:
 | `--timeout-ms <ms>`   | `agents.defaults.timeoutSeconds`          | Agent timeout. Invalid values log a warning and are ignored.                       |
 | `--history-limit <n>` | `200`                                     | History entries to load on attach.                                                 |
 
-Aliases: `openclaw chat` and `openclaw terminal` invoke the same command with `--local` implied.
+Aliases: `quiet-core-bot chat` and `quiet-core-bot terminal` invoke the same command with `--local` implied.
 
 Notes:
 
@@ -49,12 +49,12 @@ Notes:
 ## Examples
 
 ```bash
-openclaw chat
+quiet-core-bot chat
 quiet-core-bot tui --local
 quiet-core-bot tui
 quiet-core-bot tui --url ws://127.0.0.1:18789 --token <token>
 quiet-core-bot tui --session main --deliver
-openclaw chat --message "Compare my config to the docs and tell me what to fix"
+quiet-core-bot chat --message "Compare my config to the docs and tell me what to fix"
 # when run inside an agent workspace, infers that agent automatically
 quiet-core-bot tui --session bugfix
 ```
@@ -66,11 +66,11 @@ embedded agent to inspect it, compare it against the docs, and help repair it
 from the same terminal:
 
 If `quiet-core-bot config validate` is already failing, use `quiet-core-bot configure` or
-`quiet-core-bot doctor --fix` first. `openclaw chat` does not bypass the invalid-
+`quiet-core-bot doctor --fix` first. `quiet-core-bot chat` does not bypass the invalid-
 config guard.
 
 ```bash
-openclaw chat
+quiet-core-bot chat
 ```
 
 Then inside the TUI:

@@ -21,12 +21,12 @@ function writeExecutable(filePath: string, contents: string) {
 function runDockerRunArgs(pathPrefix: string) {
   const script = [
     "source scripts/lib/live-docker-auth.sh",
-    "unset OPENCLAW_LIVE_DOCKER_DISABLE_RESOURCE_LIMITS OPENCLAW_DOCKER_E2E_DISABLE_RESOURCE_LIMITS",
-    "unset OPENCLAW_LIVE_DOCKER_MEMORY OPENCLAW_DOCKER_E2E_MEMORY",
-    "unset OPENCLAW_LIVE_DOCKER_CPUS OPENCLAW_DOCKER_E2E_CPUS",
-    "unset OPENCLAW_LIVE_DOCKER_PIDS_LIMIT OPENCLAW_DOCKER_E2E_PIDS_LIMIT",
+    "unset QUIET_CORE_LIVE_DOCKER_DISABLE_RESOURCE_LIMITS QUIET_CORE_DOCKER_E2E_DISABLE_RESOURCE_LIMITS",
+    "unset QUIET_CORE_LIVE_DOCKER_MEMORY QUIET_CORE_DOCKER_E2E_MEMORY",
+    "unset QUIET_CORE_LIVE_DOCKER_CPUS QUIET_CORE_DOCKER_E2E_CPUS",
+    "unset QUIET_CORE_LIVE_DOCKER_PIDS_LIMIT QUIET_CORE_DOCKER_E2E_PIDS_LIMIT",
     "ARGS=()",
-    "openclaw_live_init_docker_run_args ARGS 42s || exit $?",
+    "quiet_core_bot_live_init_docker_run_args ARGS 42s || exit $?",
     "printf '%s\\n' \"${ARGS[@]}\"",
   ].join("\n");
 
@@ -62,8 +62,8 @@ describe("scripts/lib/live-docker-auth.sh", () => {
         "-c",
         [
           "source scripts/lib/live-docker-auth.sh",
-          'fallback="$(openclaw_live_read_positive_int_env OPENCLAW_LIVE_SAMPLE_SECONDS 180)"',
-          'leading_zero="$(OPENCLAW_LIVE_SAMPLE_SECONDS=008 openclaw_live_read_positive_int_env OPENCLAW_LIVE_SAMPLE_SECONDS 180)"',
+          'fallback="$(quiet_core_bot_live_read_positive_int_env QUIET_CORE_LIVE_SAMPLE_SECONDS 180)"',
+          'leading_zero="$(QUIET_CORE_LIVE_SAMPLE_SECONDS=008 quiet_core_bot_live_read_positive_int_env QUIET_CORE_LIVE_SAMPLE_SECONDS 180)"',
           'printf "%s\\n%s\\n" "$fallback" "$leading_zero"',
         ].join("\n"),
       ],
@@ -75,7 +75,7 @@ describe("scripts/lib/live-docker-auth.sh", () => {
         "-c",
         [
           "source scripts/lib/live-docker-auth.sh",
-          "OPENCLAW_LIVE_SAMPLE_SECONDS=30s openclaw_live_read_positive_int_env OPENCLAW_LIVE_SAMPLE_SECONDS 180",
+          "QUIET_CORE_LIVE_SAMPLE_SECONDS=30s quiet_core_bot_live_read_positive_int_env QUIET_CORE_LIVE_SAMPLE_SECONDS 180",
         ].join("\n"),
       ],
       { cwd: process.cwd(), encoding: "utf8" },
@@ -84,11 +84,11 @@ describe("scripts/lib/live-docker-auth.sh", () => {
     expect(result.status).toBe(0);
     expect(result.stdout.trimEnd().split("\n")).toEqual(["180", "008"]);
     expect(invalid.status).toBe(2);
-    expect(invalid.stderr).toContain("invalid OPENCLAW_LIVE_SAMPLE_SECONDS: 30s");
+    expect(invalid.stderr).toContain("invalid QUIET_CORE_LIVE_SAMPLE_SECONDS: 30s");
   });
 
   it("adds a kill-after grace period when timeout supports it", () => {
-    const binDir = makeTempBin("openclaw-live-docker-auth-gnu-");
+    const binDir = makeTempBin("quiet-core-bot-live-docker-auth-gnu-");
     writeExecutable(
       path.join(binDir, "timeout"),
       [
@@ -117,7 +117,7 @@ describe("scripts/lib/live-docker-auth.sh", () => {
   });
 
   it("caps default CPU limits to the runner capacity", () => {
-    const binDir = makeTempBin("openclaw-live-docker-auth-cpus-");
+    const binDir = makeTempBin("quiet-core-bot-live-docker-auth-cpus-");
     writeExecutable(
       path.join(binDir, "timeout"),
       [
@@ -137,7 +137,7 @@ describe("scripts/lib/live-docker-auth.sh", () => {
         [
           "source scripts/lib/live-docker-auth.sh",
           "ARGS=()",
-          "OPENCLAW_LIVE_DOCKER_AVAILABLE_CPUS=8 openclaw_live_init_docker_run_args ARGS 42s",
+          "QUIET_CORE_LIVE_DOCKER_AVAILABLE_CPUS=8 quiet_core_bot_live_init_docker_run_args ARGS 42s",
           "printf '%s\\n' \"${ARGS[@]}\"",
         ].join("\n"),
       ],
@@ -168,7 +168,7 @@ describe("scripts/lib/live-docker-auth.sh", () => {
   });
 
   it("falls back to plain timeout when kill-after is unavailable", () => {
-    const binDir = makeTempBin("openclaw-live-docker-auth-plain-");
+    const binDir = makeTempBin("quiet-core-bot-live-docker-auth-plain-");
     writeExecutable(
       path.join(binDir, "timeout"),
       ["#!/bin/sh", 'if [ "$1" = "--kill-after=1s" ]; then', "  exit 1", "fi", "exit 0", ""].join(
@@ -191,7 +191,7 @@ describe("scripts/lib/live-docker-auth.sh", () => {
   });
 
   it("uses gtimeout when timeout is unavailable", () => {
-    const binDir = makeTempBin("openclaw-live-docker-auth-gtimeout-");
+    const binDir = makeTempBin("quiet-core-bot-live-docker-auth-gtimeout-");
     writeExecutable(
       path.join(binDir, "gtimeout"),
       [
@@ -220,7 +220,7 @@ describe("scripts/lib/live-docker-auth.sh", () => {
   });
 
   it("allows live Docker resource limits to be disabled", () => {
-    const binDir = makeTempBin("openclaw-live-docker-auth-no-limits-");
+    const binDir = makeTempBin("quiet-core-bot-live-docker-auth-no-limits-");
     writeExecutable(
       path.join(binDir, "timeout"),
       [
@@ -240,7 +240,7 @@ describe("scripts/lib/live-docker-auth.sh", () => {
         [
           "source scripts/lib/live-docker-auth.sh",
           "ARGS=()",
-          "OPENCLAW_LIVE_DOCKER_DISABLE_RESOURCE_LIMITS=1 openclaw_live_init_docker_run_args ARGS 42s",
+          "QUIET_CORE_LIVE_DOCKER_DISABLE_RESOURCE_LIMITS=1 quiet_core_bot_live_init_docker_run_args ARGS 42s",
           "printf '%s\\n' \"${ARGS[@]}\"",
         ].join("\n"),
       ],
@@ -265,7 +265,7 @@ describe("scripts/lib/live-docker-auth.sh", () => {
   });
 
   it("normalizes live Docker pids limits", () => {
-    const binDir = makeTempBin("openclaw-live-docker-auth-pids-");
+    const binDir = makeTempBin("quiet-core-bot-live-docker-auth-pids-");
     writeExecutable(
       path.join(binDir, "timeout"),
       [
@@ -285,7 +285,7 @@ describe("scripts/lib/live-docker-auth.sh", () => {
         [
           "source scripts/lib/live-docker-auth.sh",
           "ARGS=()",
-          "OPENCLAW_LIVE_DOCKER_PIDS_LIMIT=0008 openclaw_live_init_docker_run_args ARGS 42s",
+          "QUIET_CORE_LIVE_DOCKER_PIDS_LIMIT=0008 quiet_core_bot_live_init_docker_run_args ARGS 42s",
           "printf '%s\\n' \"${ARGS[@]}\"",
         ].join("\n"),
       ],
@@ -304,10 +304,10 @@ describe("scripts/lib/live-docker-auth.sh", () => {
   });
 
   it.each([
-    ["live", "OPENCLAW_LIVE_DOCKER_PIDS_LIMIT"],
-    ["shared", "OPENCLAW_DOCKER_E2E_PIDS_LIMIT"],
+    ["live", "QUIET_CORE_LIVE_DOCKER_PIDS_LIMIT"],
+    ["shared", "QUIET_CORE_DOCKER_E2E_PIDS_LIMIT"],
   ])("rejects invalid %s Docker pids limits before live Docker setup", (_label, envName) => {
-    const binDir = makeTempBin("openclaw-live-docker-auth-invalid-pids-");
+    const binDir = makeTempBin("quiet-core-bot-live-docker-auth-invalid-pids-");
     writeExecutable(
       path.join(binDir, "timeout"),
       [
@@ -327,7 +327,7 @@ describe("scripts/lib/live-docker-auth.sh", () => {
         [
           "source scripts/lib/live-docker-auth.sh",
           "ARGS=()",
-          "openclaw_live_init_docker_run_args ARGS 42s",
+          "quiet_core_bot_live_init_docker_run_args ARGS 42s",
         ].join("\n"),
       ],
       {
@@ -335,10 +335,10 @@ describe("scripts/lib/live-docker-auth.sh", () => {
         encoding: "utf8",
         env: {
           ...process.env,
-          OPENCLAW_DOCKER_E2E_PIDS_LIMIT:
-            envName === "OPENCLAW_DOCKER_E2E_PIDS_LIMIT" ? "many" : "",
-          OPENCLAW_LIVE_DOCKER_PIDS_LIMIT:
-            envName === "OPENCLAW_LIVE_DOCKER_PIDS_LIMIT" ? "many" : "",
+          QUIET_CORE_DOCKER_E2E_PIDS_LIMIT:
+            envName === "QUIET_CORE_DOCKER_E2E_PIDS_LIMIT" ? "many" : "",
+          QUIET_CORE_LIVE_DOCKER_PIDS_LIMIT:
+            envName === "QUIET_CORE_LIVE_DOCKER_PIDS_LIMIT" ? "many" : "",
           PATH: binDir,
         },
       },
@@ -350,7 +350,7 @@ describe("scripts/lib/live-docker-auth.sh", () => {
   });
 
   it("fails fast when no timeout wrapper is available", () => {
-    const binDir = makeTempBin("openclaw-live-docker-auth-no-timeout-");
+    const binDir = makeTempBin("quiet-core-bot-live-docker-auth-no-timeout-");
 
     const result = runDockerRunArgs(binDir);
     expect(result.status).toBe(127);

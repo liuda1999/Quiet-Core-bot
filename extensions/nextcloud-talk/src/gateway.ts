@@ -1,6 +1,6 @@
 // Nextcloud Talk plugin module implements gateway behavior.
-import { createAccountStatusSink } from "openclaw/plugin-sdk/channel-outbound";
-import { runStoppablePassiveMonitor } from "openclaw/plugin-sdk/extension-shared";
+import { createAccountStatusSink } from "quiet-core-bot/plugin-sdk/channel-outbound";
+import { runStoppablePassiveMonitor } from "quiet-core-bot/plugin-sdk/extension-shared";
 import { resolveNextcloudTalkAccount, type ResolvedNextcloudTalkAccount } from "./accounts.js";
 import {
   clearAccountEntryFields,

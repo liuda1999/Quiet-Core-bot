@@ -29,7 +29,7 @@ function copyRunOpengrepFiles(repo: string): void {
 
 describe("run-opengrep.sh", () => {
   it("validates the rulepack when only OpenGrep rulepack files changed", () => {
-    const repo = createTempDir("openclaw-run-opengrep-");
+    const repo = createTempDir("quiet-core-bot-run-opengrep-");
     git(repo, "init", "-q");
     git(repo, "config", "user.email", "test@example.com");
     git(repo, "config", "user.name", "Test User");
@@ -59,7 +59,7 @@ describe("run-opengrep.sh", () => {
       env: {
         ...process.env,
         PATH: `${binDir}${path.delimiter}${process.env.PATH ?? ""}`,
-        OPENCLAW_OPENGREP_BASE_REF: "HEAD",
+        QUIET_CORE_OPENGREP_BASE_REF: "HEAD",
       },
       encoding: "utf8",
     });
@@ -69,7 +69,7 @@ describe("run-opengrep.sh", () => {
   });
 
   it("writes empty SARIF when a changed scan has no first-party paths", () => {
-    const repo = createTempDir("openclaw-run-opengrep-empty-sarif-");
+    const repo = createTempDir("quiet-core-bot-run-opengrep-empty-sarif-");
     git(repo, "init", "-q");
     git(repo, "config", "user.email", "test@example.com");
     git(repo, "config", "user.name", "Test User");
@@ -100,7 +100,7 @@ describe("run-opengrep.sh", () => {
       env: {
         ...process.env,
         PATH: `${binDir}${path.delimiter}${process.env.PATH ?? ""}`,
-        OPENCLAW_OPENGREP_BASE_REF: "HEAD",
+        QUIET_CORE_OPENGREP_BASE_REF: "HEAD",
       },
       encoding: "utf8",
     });
@@ -116,7 +116,7 @@ describe("run-opengrep.sh", () => {
   });
 
   it("scans PR files instead of main-only files when the payload base is stale", () => {
-    const repo = createTempDir("openclaw-run-opengrep-merge-");
+    const repo = createTempDir("quiet-core-bot-run-opengrep-merge-");
     git(repo, "init", "-q", "--initial-branch=main");
     git(repo, "config", "user.email", "test@example.com");
     git(repo, "config", "user.name", "Test User");
@@ -158,8 +158,8 @@ describe("run-opengrep.sh", () => {
       env: {
         ...process.env,
         PATH: `${binDir}${path.delimiter}${process.env.PATH ?? ""}`,
-        OPENCLAW_OPENGREP_BASE_REF: `${staleBase}...HEAD`,
-        OPENCLAW_OPENGREP_MERGE_HEAD_FIRST_PARENT: "1",
+        QUIET_CORE_OPENGREP_BASE_REF: `${staleBase}...HEAD`,
+        QUIET_CORE_OPENGREP_MERGE_HEAD_FIRST_PARENT: "1",
       },
       encoding: "utf8",
     });

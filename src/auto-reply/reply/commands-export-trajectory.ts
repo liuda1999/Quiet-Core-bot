@@ -10,7 +10,7 @@ import {
   buildCurrentOpenClawCliArgv,
   buildCurrentOpenClawCliCommand,
   buildCurrentOpenClawCliExecEnv,
-} from "./commands-openclaw-cli.js";
+} from "./commands-quiet-core-bot-cli.js";
 import {
   deliverPrivateCommandReply,
   readCommandDeliveryTarget,
@@ -302,7 +302,7 @@ function buildTrajectoryExportExecRequest(
   return {
     argv: buildCurrentOpenClawCliArgv(args),
     command: buildCurrentOpenClawCliCommand(args),
-    displayCommand: ["openclaw", ...args].join(" "),
+    displayCommand: ["quiet-core-bot", ...args].join(" "),
     encodedRequest,
     request,
   };

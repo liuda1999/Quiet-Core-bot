@@ -8,7 +8,7 @@ import { renderCatFacePngBase64 } from "../../test/helpers/live-image-probe.js";
 import { isLiveTestEnabled } from "../agents/live-test-helpers.js";
 import type { ChannelOutboundContext } from "../channels/plugins/types.public.js";
 import { clearConfigCache, clearRuntimeConfigSnapshot } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { isTruthyEnvValue } from "../infra/env.js";
 import { getSessionBindingService } from "../infra/outbound/session-binding-service.js";
 import { resolveBundledPluginWorkspaceSourcePath } from "../plugins/bundled-plugin-metadata.js";
@@ -30,14 +30,14 @@ import {
 import { startGatewayServer } from "./server.js";
 
 const LIVE = isLiveTestEnabled();
-const CODEX_BIND_LIVE = isTruthyEnvValue(process.env.OPENCLAW_LIVE_CODEX_BIND);
+const CODEX_BIND_LIVE = isTruthyEnvValue(process.env.QUIET_CORE_LIVE_CODEX_BIND);
 const describeLive = LIVE && CODEX_BIND_LIVE ? describe : describe.skip;
 const CODEX_BIND_TIMEOUT_MS = resolveLiveTimeoutMs(
-  process.env.OPENCLAW_LIVE_CODEX_BIND_TIMEOUT_MS,
+  process.env.QUIET_CORE_LIVE_CODEX_BIND_TIMEOUT_MS,
   900_000,
 );
 const CODEX_BIND_REQUEST_TIMEOUT_MS = resolveLiveTimeoutMs(
-  process.env.OPENCLAW_LIVE_CODEX_BIND_REQUEST_TIMEOUT_MS,
+  process.env.QUIET_CORE_LIVE_CODEX_BIND_REQUEST_TIMEOUT_MS,
   300_000,
 );
 const DEFAULT_CODEX_BIND_MODEL = "gpt-5.5";
@@ -318,7 +318,7 @@ async function writePluginBindingApproval(params: {
   channel: string;
   accountId: string;
 }): Promise<void> {
-  const openclawDir = path.join(params.homeDir, ".openclaw");
+  const openclawDir = path.join(params.homeDir, ".quiet-core-bot");
   await fs.mkdir(openclawDir, { recursive: true });
   await fs.writeFile(
     path.join(openclawDir, "plugin-binding-approvals.json"),
@@ -389,11 +389,11 @@ async function writeGatewayConfig(params: {
 }
 
 function resolveCodexBindModelProvider(): string | undefined {
-  const configured = process.env.OPENCLAW_LIVE_CODEX_BIND_PROVIDER?.trim();
+  const configured = process.env.QUIET_CORE_LIVE_CODEX_BIND_PROVIDER?.trim();
   if (configured) {
     return configured;
   }
-  return process.env.OPENCLAW_LIVE_CODEX_HARNESS_AUTH === "api-key" ? "openai" : undefined;
+  return process.env.QUIET_CORE_LIVE_CODEX_HARNESS_AUTH === "api-key" ? "openai" : undefined;
 }
 
 describeLive("gateway live (native Codex conversation binding)", () => {
@@ -402,20 +402,20 @@ describeLive("gateway live (native Codex conversation binding)", () => {
     async () => {
       const previous = {
         codexHome: process.env.CODEX_HOME,
-        configPath: process.env.OPENCLAW_CONFIG_PATH,
-        gatewayToken: process.env.OPENCLAW_GATEWAY_TOKEN,
+        configPath: process.env.QUIET_CORE_CONFIG_PATH,
+        gatewayToken: process.env.QUIET_CORE_GATEWAY_TOKEN,
         home: process.env.HOME,
-        skipCanvas: process.env.OPENCLAW_SKIP_CANVAS_HOST,
-        skipChannels: process.env.OPENCLAW_SKIP_CHANNELS,
-        skipCron: process.env.OPENCLAW_SKIP_CRON,
-        skipGmail: process.env.OPENCLAW_SKIP_GMAIL_WATCHER,
-        stateDir: process.env.OPENCLAW_STATE_DIR,
+        skipCanvas: process.env.QUIET_CORE_SKIP_CANVAS_HOST,
+        skipChannels: process.env.QUIET_CORE_SKIP_CHANNELS,
+        skipCron: process.env.QUIET_CORE_SKIP_CRON,
+        skipGmail: process.env.QUIET_CORE_SKIP_GMAIL_WATCHER,
+        stateDir: process.env.QUIET_CORE_STATE_DIR,
       };
-      const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-live-codex-bind-"));
+      const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-live-codex-bind-"));
       const tempHome = path.join(tempRoot, "home");
       const stateDir = path.join(tempRoot, "state");
       const workspace = path.join(tempRoot, "workspace");
-      const configPath = path.join(tempRoot, "openclaw.json");
+      const configPath = path.join(tempRoot, "quiet-core-bot.json");
       const token = `test-${randomUUID()}`;
       const port = await getFreeGatewayPort();
       const sessionKey = "main";
@@ -423,7 +423,7 @@ describeLive("gateway live (native Codex conversation binding)", () => {
       const slackUserId = `U${randomUUID().replace(/-/g, "").slice(0, 10).toUpperCase()}`;
       const conversationId = `user:${slackUserId}`;
       const bindModel =
-        process.env.OPENCLAW_LIVE_CODEX_BIND_MODEL?.trim() || DEFAULT_CODEX_BIND_MODEL;
+        process.env.QUIET_CORE_LIVE_CODEX_BIND_MODEL?.trim() || DEFAULT_CODEX_BIND_MODEL;
       const bindProvider = resolveCodexBindModelProvider();
       const outboundReplies: CapturedOutboundReply[] = [];
 
@@ -460,13 +460,13 @@ describeLive("gateway live (native Codex conversation binding)", () => {
         delete process.env.CODEX_HOME;
       }
       process.env.HOME = tempHome;
-      process.env.OPENCLAW_CONFIG_PATH = configPath;
-      process.env.OPENCLAW_GATEWAY_TOKEN = token;
-      process.env.OPENCLAW_SKIP_CANVAS_HOST = "1";
-      process.env.OPENCLAW_SKIP_CHANNELS = "1";
-      process.env.OPENCLAW_SKIP_CRON = "1";
-      process.env.OPENCLAW_SKIP_GMAIL_WATCHER = "1";
-      process.env.OPENCLAW_STATE_DIR = stateDir;
+      process.env.QUIET_CORE_CONFIG_PATH = configPath;
+      process.env.QUIET_CORE_GATEWAY_TOKEN = token;
+      process.env.QUIET_CORE_SKIP_CANVAS_HOST = "1";
+      process.env.QUIET_CORE_SKIP_CHANNELS = "1";
+      process.env.QUIET_CORE_SKIP_CRON = "1";
+      process.env.QUIET_CORE_SKIP_GMAIL_WATCHER = "1";
+      process.env.QUIET_CORE_STATE_DIR = stateDir;
       let server: Awaited<ReturnType<typeof startGatewayServer>> | undefined;
       let client: Awaited<ReturnType<typeof connectTestGatewayClient>> | undefined;
       let pinnedChannelRegistry:
@@ -632,14 +632,14 @@ describeLive("gateway live (native Codex conversation binding)", () => {
         } finally {
           await fs.rm(tempRoot, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
           restoreEnvVar("CODEX_HOME", previous.codexHome);
-          restoreEnvVar("OPENCLAW_CONFIG_PATH", previous.configPath);
-          restoreEnvVar("OPENCLAW_GATEWAY_TOKEN", previous.gatewayToken);
+          restoreEnvVar("QUIET_CORE_CONFIG_PATH", previous.configPath);
+          restoreEnvVar("QUIET_CORE_GATEWAY_TOKEN", previous.gatewayToken);
           restoreEnvVar("HOME", previous.home);
-          restoreEnvVar("OPENCLAW_SKIP_CANVAS_HOST", previous.skipCanvas);
-          restoreEnvVar("OPENCLAW_SKIP_CHANNELS", previous.skipChannels);
-          restoreEnvVar("OPENCLAW_SKIP_CRON", previous.skipCron);
-          restoreEnvVar("OPENCLAW_SKIP_GMAIL_WATCHER", previous.skipGmail);
-          restoreEnvVar("OPENCLAW_STATE_DIR", previous.stateDir);
+          restoreEnvVar("QUIET_CORE_SKIP_CANVAS_HOST", previous.skipCanvas);
+          restoreEnvVar("QUIET_CORE_SKIP_CHANNELS", previous.skipChannels);
+          restoreEnvVar("QUIET_CORE_SKIP_CRON", previous.skipCron);
+          restoreEnvVar("QUIET_CORE_SKIP_GMAIL_WATCHER", previous.skipGmail);
+          restoreEnvVar("QUIET_CORE_STATE_DIR", previous.stateDir);
         }
       }
     },

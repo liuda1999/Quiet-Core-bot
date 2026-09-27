@@ -2,8 +2,8 @@
 import type {
   ProviderDefaultThinkingPolicyContext,
   ProviderThinkingProfile,
-} from "openclaw/plugin-sdk/plugin-entry";
-import { normalizeProviderId } from "openclaw/plugin-sdk/provider-model-shared";
+} from "quiet-core-bot/plugin-sdk/plugin-entry";
+import { normalizeProviderId } from "quiet-core-bot/plugin-sdk/provider-model-shared";
 
 export type VllmQwenThinkingFormat = "chat-template" | "top-level";
 

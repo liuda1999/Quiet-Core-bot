@@ -1,7 +1,7 @@
 // Qa Lab plugin module implements runtime tool fixture behavior.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { isRecord } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import {
   type QaRuntimeToolCoverageMetadata,
   readRuntimeToolCoverageMetadata,
@@ -630,7 +630,7 @@ export async function runRuntimeToolFixture(
     config,
   });
   const dynamicExposureIntentionallyExcluded =
-    env.gateway.runtimeEnv.OPENCLAW_QA_FORCE_RUNTIME === "codex" &&
+    env.gateway.runtimeEnv.QUIET_CORE_QA_FORCE_RUNTIME === "codex" &&
     metadata.expectedLayer === "codex-native-workspace";
   const expectedAvailable = readBoolean(config.expectedAvailable, true);
   if (!tools.has(toolName) && !dynamicExposureIntentionallyExcluded) {

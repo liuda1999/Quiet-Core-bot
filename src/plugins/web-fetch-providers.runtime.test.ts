@@ -27,7 +27,7 @@ function firstPluginLoadOptions(mock: { mock: { calls: unknown[][] } }): PluginL
 
 function createWebFetchEnv(overrides?: Partial<NodeJS.ProcessEnv>) {
   return {
-    OPENCLAW_HOME: "/tmp/openclaw-home",
+    QUIET_CORE_HOME: "/tmp/quiet-core-bot-home",
     ...overrides,
   } as NodeJS.ProcessEnv;
 }
@@ -48,7 +48,7 @@ function createManifestRegistryFixture() {
         origin: "bundled",
         rootDir: "/tmp/firecrawl",
         source: "/tmp/firecrawl/index.js",
-        manifestPath: "/tmp/firecrawl/openclaw.plugin.json",
+        manifestPath: "/tmp/firecrawl/quiet-core-bot.plugin.json",
         channels: [],
         providers: [],
         cliBackends: [],
@@ -63,7 +63,7 @@ function createManifestRegistryFixture() {
         origin: "bundled",
         rootDir: "/tmp/noise",
         source: "/tmp/noise/index.js",
-        manifestPath: "/tmp/noise/openclaw.plugin.json",
+        manifestPath: "/tmp/noise/quiet-core-bot.plugin.json",
         channels: [],
         providers: [],
         cliBackends: [],

@@ -11,9 +11,9 @@ import {
   basenameFromAnyPath,
   extnameFromAnyPath,
   nameFromAnyPath,
-} from "@openclaw/media-core/file-name";
-import { detectMime, extensionForMime } from "@openclaw/media-core/mime";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/media-core/file-name";
+import { detectMime, extensionForMime } from "@quiet-core/media-core/mime";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { toErrorObject } from "../infra/errors.js";
 import { fileStore } from "../infra/file-store.js";
 import { sanitizeUntrustedFileName } from "../infra/fs-safe-advanced.js";

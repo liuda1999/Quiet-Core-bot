@@ -251,7 +251,7 @@ enum ExecApprovalsStore {
     }
 
     private static func legacyStateDirURLs() -> [URL] {
-        if let home = OpenClawEnv.path("OPENCLAW_HOME") {
+        if let home = OpenClawEnv.path("QUIET_CORE_HOME") {
             var urls = [
                 URL(fileURLWithPath: home, isDirectory: true)
                     .appendingPathComponent(".openclaw", isDirectory: true),
@@ -272,7 +272,7 @@ enum ExecApprovalsStore {
     }
 
     private static func legacyFileURLIfPending() -> URL? {
-        guard OpenClawEnv.path("OPENCLAW_STATE_DIR") != nil else { return nil }
+        guard OpenClawEnv.path("QUIET_CORE_STATE_DIR") != nil else { return nil }
         let targetURL = self.fileURL()
         for stateDirURL in self.legacyStateDirURLs() {
             let legacyURL = stateDirURL

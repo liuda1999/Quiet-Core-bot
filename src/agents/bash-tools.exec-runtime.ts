@@ -4,7 +4,7 @@
  * approval messaging constants, environment safety, and exit outcome shaping.
  */
 import path from "node:path";
-import { normalizeStringEntries } from "@openclaw/normalization-core/string-normalization";
+import { normalizeStringEntries } from "@quiet-core/normalization-core/string-normalization";
 import { emitDiagnosticEvent } from "../infra/diagnostic-events.js";
 import {
   type EventSessionRoutingPolicy,
@@ -96,14 +96,14 @@ export function detectCursorKeyMode(raw: string): "application" | "normal" | nul
 
 /** Default retained aggregate output cap for exec sessions. */
 export const DEFAULT_MAX_OUTPUT = clampWithDefault(
-  readEnvInt("OPENCLAW_BASH_MAX_OUTPUT_CHARS", "PI_BASH_MAX_OUTPUT_CHARS"),
+  readEnvInt("QUIET_CORE_BASH_MAX_OUTPUT_CHARS", "PI_BASH_MAX_OUTPUT_CHARS"),
   200_000,
   1_000,
   200_000,
 );
 /** Default pending output cap for poll/update buffers. */
 export const DEFAULT_PENDING_MAX_OUTPUT = clampWithDefault(
-  readEnvInt("OPENCLAW_BASH_PENDING_MAX_OUTPUT_CHARS"),
+  readEnvInt("QUIET_CORE_BASH_PENDING_MAX_OUTPUT_CHARS"),
   30_000,
   1_000,
   200_000,
@@ -572,9 +572,9 @@ function wrapPosixCommandWithPathPrepend(
   }
 
   // Pass the prepend string safely via a temporary environment variable.
-  env.OPENCLAW_PREPEND_PATH = pathPrepend.join(path.delimiter);
+  env.QUIET_CORE_PREPEND_PATH = pathPrepend.join(path.delimiter);
 
-  return `export PATH="\${OPENCLAW_PREPEND_PATH}\${PATH:+:$PATH}"; unset OPENCLAW_PREPEND_PATH; ${command}`;
+  return `export PATH="\${QUIET_CORE_PREPEND_PATH}\${PATH:+:$PATH}"; unset QUIET_CORE_PREPEND_PATH; ${command}`;
 }
 
 /**
@@ -653,7 +653,7 @@ export async function runExecProcess(opts: {
   const supervisor = getProcessSupervisor();
   const shellRuntimeEnv: Record<string, string> = {
     ...opts.env,
-    OPENCLAW_SHELL: "exec",
+    QUIET_CORE_SHELL: "exec",
   };
 
   const session: ProcessSession = {

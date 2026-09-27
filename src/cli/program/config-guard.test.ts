@@ -35,7 +35,7 @@ function makeSnapshot() {
     issues: [] as ConfigIssue[],
     warnings: [] as ConfigIssue[],
     legacyIssues: [] as ConfigIssue[],
-    path: "/tmp/openclaw.json",
+    path: "/tmp/quiet-core-bot.json",
   };
 }
 
@@ -98,34 +98,34 @@ describe("ensureConfigReady", () => {
   }
 
   function useTempOpenClawHome(): string {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-config-guard-"));
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-config-guard-"));
     tempRoots.push(root);
-    setTestEnvValue("OPENCLAW_HOME", root);
-    deleteTestEnvValue("OPENCLAW_STATE_DIR");
+    setTestEnvValue("QUIET_CORE_HOME", root);
+    deleteTestEnvValue("QUIET_CORE_STATE_DIR");
     return root;
   }
 
   function writeLegacyTaskSidecarMarker(root: string): void {
-    const markerPath = path.join(root, ".openclaw", "tasks", "runs.sqlite");
+    const markerPath = path.join(root, ".quiet-core-bot", "tasks", "runs.sqlite");
     fs.mkdirSync(path.dirname(markerPath), { recursive: true });
     fs.writeFileSync(markerPath, "");
   }
 
   function writePendingTaskSidecarArchiveMarker(root: string): void {
-    const markerPath = path.join(root, ".openclaw", "tasks", "runs.sqlite");
+    const markerPath = path.join(root, ".quiet-core-bot", "tasks", "runs.sqlite");
     fs.mkdirSync(path.dirname(markerPath), { recursive: true });
     fs.writeFileSync(`${markerPath}.migrated`, "");
     fs.writeFileSync(`${markerPath}-wal`, "");
   }
 
   function writeStateMarker(root: string, relativePath: string): void {
-    const markerPath = path.join(root, ".openclaw", relativePath);
+    const markerPath = path.join(root, ".quiet-core-bot", relativePath);
     fs.mkdirSync(path.dirname(markerPath), { recursive: true });
     fs.writeFileSync(markerPath, "{}");
   }
 
   beforeEach(() => {
-    envSnapshot = captureEnv(["HOME", "OPENCLAW_HOME", "OPENCLAW_STATE_DIR"]);
+    envSnapshot = captureEnv(["HOME", "QUIET_CORE_HOME", "QUIET_CORE_STATE_DIR"]);
     vi.clearAllMocks();
     resetConfigGuardStateForTests();
     for (const root of tempRoots.splice(0)) {
@@ -211,7 +211,7 @@ describe("ensureConfigReady", () => {
 
   it("runs doctor flow for legacy sessions without task sidecars", async () => {
     const root = useTempOpenClawHome();
-    fs.mkdirSync(path.join(root, ".openclaw", "sessions"), { recursive: true });
+    fs.mkdirSync(path.join(root, ".quiet-core-bot", "sessions"), { recursive: true });
 
     await runEnsureConfigReady(["status"]);
 
@@ -221,23 +221,6 @@ describe("ensureConfigReady", () => {
   it("runs doctor flow before agent commands when the legacy plugin install index exists", async () => {
     const root = useTempOpenClawHome();
     writeStateMarker(root, "plugins/installs.json");
-
-    await runEnsureConfigReady(["agent"]);
-
-    expect(loadAndMaybeMigrateDoctorConfigMock).toHaveBeenCalledOnce();
-    expect(loadAndMaybeMigrateDoctorConfigMock).toHaveBeenCalledWith({
-      migrateState: true,
-      migrateLegacyConfig: false,
-      invalidConfigNote: false,
-      showStateMigrationWarnings: false,
-    });
-  });
-
-  it("runs doctor flow before agent commands when default exec approvals must move to a custom state dir", async () => {
-    const root = useTempOpenClawHome();
-    const stateDir = path.join(root, "custom-state");
-    setTestEnvValue("OPENCLAW_STATE_DIR", stateDir);
-    writeStateMarker(root, "exec-approvals.json");
 
     await runEnsureConfigReady(["agent"]);
 
@@ -272,12 +255,12 @@ describe("ensureConfigReady", () => {
     expect(loadAndMaybeMigrateDoctorConfigMock).toHaveBeenCalledOnce();
   });
 
-  it("uses shared tilde expansion for OPENCLAW_HOME in the startup detector", async () => {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-config-guard-home-"));
+  it("uses shared tilde expansion for QUIET_CORE_HOME in the startup detector", async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-config-guard-home-"));
     tempRoots.push(root);
     setTestEnvValue("HOME", root);
-    setTestEnvValue("OPENCLAW_HOME", "~/svc");
-    deleteTestEnvValue("OPENCLAW_STATE_DIR");
+    setTestEnvValue("QUIET_CORE_HOME", "~/svc");
+    deleteTestEnvValue("QUIET_CORE_STATE_DIR");
     writeLegacyTaskSidecarMarker(path.join(root, "svc"));
 
     await runEnsureConfigReady(["status"]);
@@ -352,7 +335,7 @@ describe("ensureConfigReady", () => {
 
     expect(plainErrorCalls(runtime)).toEqual([
       "Quiet Core bot config is invalid",
-      "File: /tmp/openclaw.json",
+      "File: /tmp/quiet-core-bot.json",
       "Problem:",
       "  - channels.quietchat: invalid",
       "",

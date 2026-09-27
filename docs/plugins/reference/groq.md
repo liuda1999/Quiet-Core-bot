@@ -11,8 +11,8 @@ Adds Groq model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/groq-provider`
-- Install route: npm; ClawHub: `clawhub:@openclaw/groq-provider`
+- Package: `@quiet-core/groq-provider`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/groq-provider`
 
 ## Surface
 

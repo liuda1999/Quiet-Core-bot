@@ -1,21 +1,21 @@
 {
-  "name": "@openclaw/nostr",
+  "name": "@quiet-core/nostr",
   "version": "2026.6.11",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@openclaw/nostr",
+      "name": "@quiet-core/nostr",
       "version": "2026.6.11",
       "dependencies": {
         "nostr-tools": "2.23.5",
         "zod": "4.4.3"
       },
       "peerDependencies": {
-        "openclaw": ">=2026.6.11"
+        "quiet-core-bot": ">=2026.6.11"
       },
       "peerDependenciesMeta": {
-        "openclaw": {
+        "quiet-core-bot": {
           "optional": true
         }
       }

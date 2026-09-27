@@ -18,7 +18,7 @@ function collectTrackedBundledPluginSourceCandidates(repoRoot) {
     [
       "ls-files",
       "--",
-      ":(glob)extensions/*/openclaw.plugin.json",
+      ":(glob)extensions/*/quiet-core-bot.plugin.json",
       ":(glob)extensions/*/package.json",
     ],
     {
@@ -44,7 +44,7 @@ function collectTrackedBundledPluginSourceCandidates(repoRoot) {
       packageJsonPath: null,
       pluginDir: path.join(repoRoot, "extensions", match[1]),
     };
-    if (match[2] === "openclaw.plugin.json") {
+    if (match[2] === "quiet-core-bot.plugin.json") {
       current.manifestPath = path.join(repoRoot, line);
     } else {
       current.packageJsonPath = path.join(repoRoot, line);
@@ -68,7 +68,7 @@ function collectBundledPluginSourceCandidatesFromDirectory(repoRoot) {
     .filter((dirent) => dirent.isDirectory())
     .map((dirent) => {
       const pluginDir = path.join(extensionsRoot, dirent.name);
-      const manifestPath = path.join(pluginDir, "openclaw.plugin.json");
+      const manifestPath = path.join(pluginDir, "quiet-core-bot.plugin.json");
       const packageJsonPath = path.join(pluginDir, "package.json");
       return {
         dirName: dirent.name,

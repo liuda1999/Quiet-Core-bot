@@ -314,7 +314,7 @@ describe("handleTtsCommands status fallback reporting", () => {
   });
 
   it("reads the latest assistant transcript reply once", async () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-tts-latest-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-tts-latest-"));
     const sessionFile = path.join(tempDir, "session.jsonl");
     fs.writeFileSync(
       sessionFile,
@@ -381,7 +381,7 @@ describe("handleTtsCommands status fallback reporting", () => {
   });
 
   it("does not resend /tts latest for the same assistant reply", async () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-tts-latest-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-tts-latest-"));
     const sessionFile = path.join(tempDir, "session.jsonl");
     fs.writeFileSync(
       sessionFile,

@@ -14,10 +14,10 @@ import {
 import { listQaRunnerCliContributions } from "./qa-runner-runtime.js";
 
 const ORIGINAL_ENV = {
-  OPENCLAW_DISABLE_BUNDLED_PLUGINS: process.env.OPENCLAW_DISABLE_BUNDLED_PLUGINS,
-  OPENCLAW_CONFIG_PATH: process.env.OPENCLAW_CONFIG_PATH,
-  OPENCLAW_STATE_DIR: process.env.OPENCLAW_STATE_DIR,
-  OPENCLAW_TEST_FAST: process.env.OPENCLAW_TEST_FAST,
+  QUIET_CORE_DISABLE_BUNDLED_PLUGINS: process.env.QUIET_CORE_DISABLE_BUNDLED_PLUGINS,
+  QUIET_CORE_CONFIG_PATH: process.env.QUIET_CORE_CONFIG_PATH,
+  QUIET_CORE_STATE_DIR: process.env.QUIET_CORE_STATE_DIR,
+  QUIET_CORE_TEST_FAST: process.env.QUIET_CORE_TEST_FAST,
 } as const;
 
 const tempDirs: string[] = [];
@@ -36,8 +36,8 @@ function resetQaRunnerRuntimeState() {
 describe("plugin-sdk qa-runner-runtime linked plugin smoke", () => {
   beforeEach(() => {
     resetQaRunnerRuntimeState();
-    process.env.OPENCLAW_DISABLE_BUNDLED_PLUGINS = "1";
-    process.env.OPENCLAW_TEST_FAST = "1";
+    process.env.QUIET_CORE_DISABLE_BUNDLED_PLUGINS = "1";
+    process.env.QUIET_CORE_TEST_FAST = "1";
   });
 
   afterEach(() => {
@@ -55,9 +55,9 @@ describe("plugin-sdk qa-runner-runtime linked plugin smoke", () => {
   });
 
   it("loads an activated qa runner from a linked plugin path without a bundled install fallback", async () => {
-    const stateDir = makeTempDir("openclaw-qa-runner-state-");
+    const stateDir = makeTempDir("quiet-core-bot-qa-runner-state-");
     const pluginDir = path.join(stateDir, "extensions", "qa-linked");
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "quiet-core-bot.json");
 
     fs.writeFileSync(
       configPath,
@@ -66,12 +66,12 @@ describe("plugin-sdk qa-runner-runtime linked plugin smoke", () => {
       }),
       "utf8",
     );
-    process.env.OPENCLAW_CONFIG_PATH = configPath;
-    process.env.OPENCLAW_STATE_DIR = stateDir;
+    process.env.QUIET_CORE_CONFIG_PATH = configPath;
+    process.env.QUIET_CORE_STATE_DIR = stateDir;
 
     fs.mkdirSync(pluginDir, { recursive: true });
     fs.writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "quiet-core-bot.plugin.json"),
       JSON.stringify({
         id: "qa-linked",
         qaRunners: [
@@ -91,12 +91,12 @@ describe("plugin-sdk qa-runner-runtime linked plugin smoke", () => {
     fs.writeFileSync(
       path.join(pluginDir, "package.json"),
       JSON.stringify({
-        name: "@openclaw/qa-linked",
+        name: "@quiet-core/qa-linked",
         type: "module",
-        openclaw: {
+        "quiet-core-bot": {
           extensions: ["./index.js"],
           install: {
-            npmSpec: "@openclaw/qa-linked",
+            npmSpec: "@quiet-core/qa-linked",
           },
         },
       }),

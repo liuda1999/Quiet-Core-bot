@@ -4,7 +4,7 @@ description: "Log all command events to a centralized audit file"
 homepage: https://github.com/liuda1999/Quiet-Core-bot/automation/hooks#command-logger
 metadata:
   {
-    "openclaw":
+    "quiet-core-bot":
       {
         "emoji": "📝",
         "events": ["command"],
@@ -90,9 +90,9 @@ The hook does not automatically rotate logs. To manage log size, you can:
    ```
 
 2. **Use logrotate** (Linux):
-   Create `/etc/logrotate.d/openclaw`:
+   Create `/etc/logrotate.d/quiet-core-bot`:
    ```
-   /home/username/.openclaw/logs/commands.log {
+   /home/username/.quiet-core-bot/logs/commands.log {
        weekly
        rotate 4
        compress

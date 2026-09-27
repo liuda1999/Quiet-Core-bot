@@ -6,8 +6,8 @@
 import {
   sanitizeInlineImageBase64,
   sanitizeInlineImageDataUrlForStorage,
-} from "@openclaw/media-core/inline-image-data-url";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+} from "@quiet-core/media-core/inline-image-data-url";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { readLoggingConfig } from "../logging/config.js";
 import {
   getDefaultRedactPatterns,
@@ -200,23 +200,23 @@ const OPENAI_RESPONSES_APIS = new Set([
   "openai-responses",
   "azure-openai-responses",
   "openai-chatgpt-responses",
-  "openclaw-openai-responses-transport",
-  "openclaw-azure-openai-responses-transport",
+  "quiet-core-bot-openai-responses-transport",
+  "quiet-core-bot-azure-openai-responses-transport",
 ]);
 const GOOGLE_REASONING_APIS = new Set([
   "google-generative-ai",
   "google-vertex",
   "google-gemini-cli",
-  "openclaw-google-generative-ai-transport",
+  "quiet-core-bot-google-generative-ai-transport",
 ]);
 const ANTHROPIC_REASONING_APIS = new Set([
   "anthropic-messages",
   "bedrock-converse-stream",
-  "openclaw-anthropic-messages-transport",
+  "quiet-core-bot-anthropic-messages-transport",
 ]);
 const OPENAI_COMPLETIONS_APIS = new Set([
   "openai-completions",
-  "openclaw-openai-completions-transport",
+  "quiet-core-bot-openai-completions-transport",
 ]);
 const OPAQUE_REPLAY_TOKEN_RE = /^[A-Za-z0-9+/_-]+={0,2}$/;
 const OPENAI_REPLAY_CONTEXT_HASH_RE = /^[a-f0-9]{16}$/;
@@ -250,7 +250,7 @@ function isCustomProviderRoute(route: TranscriptAssistantRoute | undefined): boo
 
 function isGitHubCopilotResponsesRoute(route: TranscriptAssistantRoute | undefined): boolean {
   return (
-    (route?.api === "openai-responses" || route?.api === "openclaw-openai-responses-transport") &&
+    (route?.api === "openai-responses" || route?.api === "quiet-core-bot-openai-responses-transport") &&
     route.provider === "github-copilot"
   );
 }

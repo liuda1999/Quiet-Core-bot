@@ -1,9 +1,6 @@
 // Doctor config preflight tests cover state migration preflight behavior before config repair.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const autoMigrateLegacyStateDir = vi.hoisted(() =>
-  vi.fn(async () => ({ migrated: false, skipped: false, changes: [], warnings: [] })),
-);
 const autoMigrateLegacyState = vi.hoisted(() =>
   vi.fn(async () => ({ migrated: true, skipped: false, changes: ["imported"], warnings: [] })),
 );
@@ -28,7 +25,6 @@ const note = vi.hoisted(() => vi.fn());
 
 vi.mock("./doctor-state-migrations.js", () => ({
   autoMigrateLegacyState,
-  autoMigrateLegacyStateDir,
   autoMigrateLegacyTaskStateSidecars,
 }));
 
@@ -64,7 +60,8 @@ describe("runDoctorConfigPreflight state migration", () => {
 
     expect(beforeStateMigrations).toHaveBeenCalledTimes(2);
     const guardOrder = beforeStateMigrations.mock.invocationCallOrder[0] ?? 0;
-    const firstMutationOrder = autoMigrateLegacyStateDir.mock.invocationCallOrder[0] ?? 0;
+    const firstMutationOrder =
+      repairLegacyCronStoreWithoutPrompt.mock.invocationCallOrder[0] ?? 0;
     expect(firstMutationOrder).toBeGreaterThan(guardOrder);
     const configGuardOrder = beforeStateMigrations.mock.invocationCallOrder[1] ?? 0;
     const configMutationOrder = repairLegacyCronStoreWithoutPrompt.mock.invocationCallOrder[0] ?? 0;
@@ -82,7 +79,6 @@ describe("runDoctorConfigPreflight state migration", () => {
       beforeStateMigrations: async () => false,
     });
 
-    expect(autoMigrateLegacyStateDir).not.toHaveBeenCalled();
     expect(repairLegacyCronStoreWithoutPrompt).not.toHaveBeenCalled();
     expect(autoMigrateLegacyState).not.toHaveBeenCalled();
     expect(autoMigrateLegacyTaskStateSidecars).not.toHaveBeenCalled();
@@ -101,7 +97,6 @@ describe("runDoctorConfigPreflight state migration", () => {
       beforeStateMigrations,
     });
 
-    expect(autoMigrateLegacyStateDir).toHaveBeenCalledOnce();
     expect(beforeStateMigrations).toHaveBeenCalledTimes(2);
     expect(repairLegacyCronStoreWithoutPrompt).not.toHaveBeenCalled();
     expect(autoMigrateLegacyState).not.toHaveBeenCalled();
@@ -114,7 +109,6 @@ describe("runDoctorConfigPreflight state migration", () => {
       invalidConfigNote: false,
     });
 
-    expect(autoMigrateLegacyStateDir).toHaveBeenCalledOnce();
     expect(readConfigFileSnapshot).toHaveBeenCalledOnce();
     expect(repairLegacyCronStoreWithoutPrompt).toHaveBeenCalledWith({
       cfg: { gateway: { mode: "local", port: 19091 } },

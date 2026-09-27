@@ -227,7 +227,7 @@ function configureTaskRegistryMaintenanceRuntimeForTest(params: {
       return next;
     },
     isRuntimeAuthoritative: () => true,
-    resolveCronJobsStorePath: () => "/tmp/openclaw-test-cron/jobs.json",
+    resolveCronJobsStorePath: () => "/tmp/quiet-core-bot-test-cron/jobs.json",
     loadCronJobsStoreSync: () => ({ version: 1, jobs: [] }),
     readCronRunLogEntriesSync: () => [],
   });
@@ -267,7 +267,7 @@ function createAcpSessionStoreEntry(params: {
   } as const;
   return {
     cfg: {} as never,
-    storePath: "/tmp/openclaw-test-sessions.json",
+    storePath: "/tmp/quiet-core-bot-test-sessions.json",
     sessionKey: params.sessionKey,
     storeSessionKey: params.sessionKey,
     entry: {
@@ -432,8 +432,8 @@ async function withTaskRegistryTempDir<T>(
   run: (root: string) => Promise<T>,
   options?: { durableStore?: boolean },
 ): Promise<T> {
-  return await withTempDir({ prefix: "openclaw-task-registry-" }, async (root) => {
-    return await withEnvAsync({ OPENCLAW_STATE_DIR: root }, async () => {
+  return await withTempDir({ prefix: "quiet-core-bot-task-registry-" }, async (root) => {
+    return await withEnvAsync({ QUIET_CORE_STATE_DIR: root }, async () => {
       resetTaskRegistryForTests({ persist: false });
       resetTaskFlowRegistryForTests({ persist: false });
       if (options?.durableStore !== true) {
@@ -1322,7 +1322,7 @@ describe("task-registry", () => {
 
   it("delivers delegated ACP completion directly to an explicitly bound Discord thread", async () => {
     await withTaskRegistryTempDir(async (root) => {
-      process.env.OPENCLAW_STATE_DIR = root;
+      process.env.QUIET_CORE_STATE_DIR = root;
       resetTaskRegistryForTests();
       const runId = "run-bound-discord-thread-terminal";
       hoisted.sendMessageMock.mockResolvedValue({
@@ -1414,7 +1414,7 @@ describe("task-registry", () => {
     "keeps delegated ACP completion queued without an explicit bound Discord thread ($id)",
     async ({ requesterOrigin }) => {
       await withTaskRegistryTempDir(async (root) => {
-        process.env.OPENCLAW_STATE_DIR = root;
+        process.env.QUIET_CORE_STATE_DIR = root;
         resetTaskRegistryForTests();
         const runId = `run-non-bound-discord-thread-terminal-${requesterOrigin.channel}-${requesterOrigin.to}`;
         hoisted.sendMessageMock.mockResolvedValue({
@@ -3030,7 +3030,7 @@ describe("task-registry", () => {
         resolveTaskForLookupToken: () => undefined,
         setTaskCleanupAfterById: () => null,
         isRuntimeAuthoritative: () => true,
-        resolveCronJobsStorePath: () => "/tmp/openclaw-test-cron/jobs.json",
+        resolveCronJobsStorePath: () => "/tmp/quiet-core-bot-test-cron/jobs.json",
         loadCronJobsStoreSync: () => ({ version: 1, jobs: [] }),
         readCronRunLogEntriesSync: () => [],
       });

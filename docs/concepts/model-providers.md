@@ -31,13 +31,13 @@ Reference for **LLM/model providers** (not chat channels like WhatsApp/Telegram)
 
     - `openai/<model>` uses the native Codex app-server harness for agent turns by default. This is the usual ChatGPT/Codex subscription setup.
     - legacy Codex model refs are legacy config that doctor rewrites to `openai/<model>`.
-    - `openai/<model>` plus provider/model `agentRuntime.id: "openclaw"` uses Quiet Core bot's built-in runtime for explicit API-key or compatibility routes.
+    - `openai/<model>` plus provider/model `agentRuntime.id: "quiet-core-bot"` uses Quiet Core bot's built-in runtime for explicit API-key or compatibility routes.
 
     See [OpenAI](/providers/openai) and [Codex harness](/plugins/codex-harness). If the provider/runtime split is confusing, read [Agent runtimes](/concepts/agent-runtimes) first.
 
     Plugin auto-enable follows the same boundary: `openai/*` agent refs enable the Codex plugin for the default route, and explicit provider/model `agentRuntime.id: "codex"` or legacy `codex/<model>` refs also require it.
 
-    GPT-5.5 is available through the native Codex app-server harness by default on `openai/gpt-5.5`, and through the Quiet Core bot runtime when provider/model runtime policy explicitly selects `openclaw`.
+    GPT-5.5 is available through the native Codex app-server harness by default on `openai/gpt-5.5`, and through the Quiet Core bot runtime when provider/model runtime policy explicitly selects `quiet-core-bot`.
 
   </Accordion>
   <Accordion title="CLI runtimes">
@@ -64,7 +64,7 @@ Provider-owned runner behavior lives on explicit provider hooks such as replay p
   <Accordion title="Key sources and priority">
     Configure multiple keys via:
 
-    - `OPENCLAW_LIVE_<PROVIDER>_KEY` (single live override, highest priority)
+    - `QUIET_CORE_LIVE_<PROVIDER>_KEY` (single live override, highest priority)
     - `<PROVIDER>_API_KEYS` (comma or semicolon list)
     - `<PROVIDER>_API_KEY` (primary key)
     - `<PROVIDER>_API_KEY_*` (numbered list, e.g. `<PROVIDER>_API_KEY_1`)
@@ -88,7 +88,7 @@ Official provider plugins publish their own model catalog rows. These providers 
 
 - Provider: `openai`
 - Auth: `OPENAI_API_KEY`
-- Optional rotation: `OPENAI_API_KEYS`, `OPENAI_API_KEY_1`, `OPENAI_API_KEY_2`, plus `OPENCLAW_LIVE_OPENAI_KEY` (single override)
+- Optional rotation: `OPENAI_API_KEYS`, `OPENAI_API_KEY_1`, `OPENAI_API_KEY_2`, plus `QUIET_CORE_LIVE_OPENAI_KEY` (single override)
 - Example models: `openai/gpt-5.5`, `openai/gpt-5.4-mini`
 - Verify account/model availability with `quiet-core-bot models list --provider openai` if a specific install or API key behaves differently.
 - CLI: `quiet-core-bot onboard --auth-choice openai-api-key`
@@ -111,7 +111,7 @@ Official provider plugins publish their own model catalog rows. These providers 
 
 - Provider: `anthropic`
 - Auth: `ANTHROPIC_API_KEY`
-- Optional rotation: `ANTHROPIC_API_KEYS`, `ANTHROPIC_API_KEY_1`, `ANTHROPIC_API_KEY_2`, plus `OPENCLAW_LIVE_ANTHROPIC_KEY` (single override)
+- Optional rotation: `ANTHROPIC_API_KEYS`, `ANTHROPIC_API_KEY_1`, `ANTHROPIC_API_KEY_2`, plus `QUIET_CORE_LIVE_ANTHROPIC_KEY` (single override)
 - Example model: `anthropic/claude-opus-4-6`
 - CLI: `quiet-core-bot onboard --auth-choice apiKey`
 - Direct public Anthropic requests support the shared `/fast` toggle and `params.fastMode`, including API-key and OAuth-authenticated traffic sent to `api.anthropic.com`; Quiet Core bot maps that to Anthropic `service_tier` (`auto` vs `standard_only`)
@@ -148,7 +148,7 @@ Anthropic staff told us Quiet Core bot-style Claude CLI usage is allowed again, 
 - `openai/gpt-5.5` uses the Codex catalog native `contextWindow = 400000` and default runtime `contextTokens = 272000`; override the runtime cap with `models.providers.openai.models[].contextTokens`
 - Policy note: OpenAI Codex OAuth is explicitly supported for external tools/workflows like Quiet Core bot.
 - For the common subscription plus native Codex runtime route, sign in with `openai` auth and configure `openai/gpt-5.5`; OpenAI agent turns select Codex by default.
-- Use provider/model `agentRuntime.id: "openclaw"` only when you want the built-in Quiet Core bot route; otherwise keep `openai/gpt-5.5` on the default Codex harness.
+- Use provider/model `agentRuntime.id: "quiet-core-bot"` only when you want the built-in Quiet Core bot route; otherwise keep `openai/gpt-5.5` on the default Codex harness.
 - legacy Codex GPT refs are legacy state, not a live provider route. Use `openai/gpt-5.5` on the native Codex runtime for new agent config, and run `quiet-core-bot doctor --fix` to migrate old legacy Codex model refs to canonical `openai/*` refs.
 
 ```json5
@@ -206,7 +206,7 @@ Anthropic staff told us Quiet Core bot-style Claude CLI usage is allowed again, 
 
 - Provider: `google`
 - Auth: `GEMINI_API_KEY`
-- Optional rotation: `GEMINI_API_KEYS`, `GEMINI_API_KEY_1`, `GEMINI_API_KEY_2`, `GOOGLE_API_KEY` fallback, and `OPENCLAW_LIVE_GEMINI_KEY` (single override)
+- Optional rotation: `GEMINI_API_KEYS`, `GEMINI_API_KEY_1`, `GEMINI_API_KEY_2`, `GOOGLE_API_KEY` fallback, and `QUIET_CORE_LIVE_GEMINI_KEY` (single override)
 - Example models: `google/gemini-3.1-pro-preview`, `google/gemini-3-flash-preview`
 - Compatibility: legacy Quiet Core bot config using `google/gemini-3.1-flash-preview` is normalized to `google/gemini-3-flash-preview`
 - Alias: `google/gemini-3.1-pro` is accepted and normalized to Google's live Gemini API id, `google/gemini-3.1-pro-preview`
@@ -332,7 +332,7 @@ Gateway model capability checks also read explicit `models.providers.<id>.models
 
 ### Moonshot AI (Kimi)
 
-Install `@openclaw/moonshot-provider` before onboarding. Add an explicit `models.providers.moonshot` entry only when you need to override the base URL or model metadata:
+Install `@quiet-core/moonshot-provider` before onboarding. Add an explicit `models.providers.moonshot` entry only when you need to override the base URL or model metadata:
 
 - Provider: `moonshot`
 - Auth: `MOONSHOT_API_KEY`

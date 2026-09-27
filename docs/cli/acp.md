@@ -11,7 +11,7 @@ Run the [Agent Client Protocol (ACP)](https://agentclientprotocol.com/) bridge t
 This command speaks ACP over stdio for IDEs and forwards prompts to the Gateway
 over WebSocket. It keeps ACP sessions mapped to Gateway session keys.
 
-`openclaw acp` is a Gateway-backed ACP bridge, not a full ACP-native editor
+`quiet-core-bot acp` is a Gateway-backed ACP bridge, not a full ACP-native editor
 runtime. It focuses on session routing, prompt delivery, and basic streaming
 updates.
 
@@ -23,7 +23,7 @@ conversations instead of hosting an ACP harness session, use
 
 This page is often confused with ACP harness sessions.
 
-`openclaw acp` means:
+`quiet-core-bot acp` means:
 
 - Quiet Core bot acts as an ACP server
 - an IDE or ACP client connects to Quiet Core bot
@@ -34,7 +34,7 @@ external harness such as Codex or Claude Code through `acpx`.
 
 Quick rule:
 
-- editor/client wants to talk ACP to Quiet Core bot: use `openclaw acp`
+- editor/client wants to talk ACP to Quiet Core bot: use `quiet-core-bot acp`
 - Quiet Core bot should launch Codex/Claude/Gemini as an ACP harness: use `/acp spawn` and [ACP Agents](/tools/acp-agents)
 
 ## Compatibility Matrix
@@ -84,22 +84,22 @@ Quick rule:
 ## Usage
 
 ```bash
-openclaw acp
+quiet-core-bot acp
 
 # Remote Gateway
-openclaw acp --url wss://gateway-host:18789 --token <token>
+quiet-core-bot acp --url wss://gateway-host:18789 --token <token>
 
 # Remote Gateway (token from file)
-openclaw acp --url wss://gateway-host:18789 --token-file ~/.quiet-core-bot/gateway.token
+quiet-core-bot acp --url wss://gateway-host:18789 --token-file ~/.quiet-core-bot/gateway.token
 
 # Attach to an existing session key
-openclaw acp --session agent:main:main
+quiet-core-bot acp --session agent:main:main
 
 # Attach by label (must already exist)
-openclaw acp --session-label "support inbox"
+quiet-core-bot acp --session-label "support inbox"
 
 # Reset the session key before the first prompt
-openclaw acp --session agent:main:main --reset-session
+quiet-core-bot acp --session agent:main:main --reset-session
 ```
 
 ## ACP client (debug)
@@ -108,13 +108,13 @@ Use the built-in ACP client to sanity-check the bridge without an IDE.
 It spawns the ACP bridge and lets you type prompts interactively.
 
 ```bash
-openclaw acp client
+quiet-core-bot acp client
 
 # Point the spawned bridge at a remote Gateway
-openclaw acp client --server-args --url wss://gateway-host:18789 --token-file ~/.quiet-core-bot/gateway.token
+quiet-core-bot acp client --server-args --url wss://gateway-host:18789 --token-file ~/.quiet-core-bot/gateway.token
 
-# Override the server command (default: openclaw)
-openclaw acp client --server "node" --server-args quiet-core-bot.mjs acp --url ws://127.0.0.1:19001
+# Override the server command (default: quiet-core-bot)
+quiet-core-bot acp client --server "node" --server-args quiet-core-bot.mjs acp --url ws://127.0.0.1:19001
 ```
 
 Permission model (client debug mode):
@@ -128,7 +128,7 @@ Permission model (client debug mode):
 ## Protocol smoke testing
 
 For protocol-level debugging, start a Gateway with isolated state and drive
-`openclaw acp` over stdio with an ACP JSON-RPC client. Cover `initialize`,
+`quiet-core-bot acp` over stdio with an ACP JSON-RPC client. Cover `initialize`,
 `session/new`, `session/list` with an absolute `cwd`, `session/resume`,
 `session/close`, duplicate close, and missing resume.
 
@@ -176,7 +176,7 @@ it to drive an Quiet Core bot Gateway session.
 
 1. Ensure the Gateway is running (local or remote).
 2. Configure the Gateway target (config or flags).
-3. Point your IDE to run `openclaw acp` over stdio.
+3. Point your IDE to run `quiet-core-bot acp` over stdio.
 
 Example config (persisted):
 
@@ -188,9 +188,9 @@ quiet-core-bot config set gateway.remote.token <token>
 Example direct run (no config write):
 
 ```bash
-openclaw acp --url wss://gateway-host:18789 --token <token>
+quiet-core-bot acp --url wss://gateway-host:18789 --token <token>
 # preferred for local process safety
-openclaw acp --url wss://gateway-host:18789 --token-file ~/.quiet-core-bot/gateway.token
+quiet-core-bot acp --url wss://gateway-host:18789 --token-file ~/.quiet-core-bot/gateway.token
 ```
 
 ## Selecting agents
@@ -200,9 +200,9 @@ ACP does not pick agents directly. It routes by the Gateway session key.
 Use agent-scoped session keys to target a specific agent:
 
 ```bash
-openclaw acp --session agent:main:main
-openclaw acp --session agent:design:main
-openclaw acp --session agent:qa:bug-123
+quiet-core-bot acp --session agent:main:main
+quiet-core-bot acp --session agent:design:main
+quiet-core-bot acp --session agent:qa:bug-123
 ```
 
 Each ACP session maps to a single Gateway session key. One agent can have many
@@ -217,17 +217,17 @@ If you want ACPX-backed sessions to see Quiet Core bot plugin tools or selected
 built-in tools such as `cron`, enable the gateway-side ACPX MCP bridges instead
 of trying to pass per-session `mcpServers`. See
 [ACP Agents](/tools/acp-agents-setup#plugin-tools-mcp-bridge) and
-[Quiet Core bot tools MCP bridge](/tools/acp-agents-setup#openclaw-tools-mcp-bridge).
+[Quiet Core bot tools MCP bridge](/tools/acp-agents-setup#quiet-core-bot-tools-mcp-bridge).
 
 ## Use from `acpx` (Codex, Claude, other ACP clients)
 
 If you want a coding agent such as Codex or Claude Code to talk to your
-Quiet Core bot bot over ACP, use `acpx` with its built-in `openclaw` target.
+Quiet Core bot bot over ACP, use `acpx` with its built-in `quiet-core-bot` target.
 
 Typical flow:
 
 1. Run the Gateway and make sure the ACP bridge can reach it.
-2. Point `acpx openclaw` at `openclaw acp`.
+2. Point `acpx quiet-core-bot` at `quiet-core-bot acp`.
 3. Target the Quiet Core bot session key you want the coding agent to use.
 
 Examples:
@@ -238,18 +238,18 @@ acpx quiet-core-bot exec "Summarize the active Quiet Core bot session state."
 
 # Persistent named session for follow-up turns
 acpx quiet-core-bot sessions ensure --name codex-bridge
-acpx openclaw -s codex-bridge --cwd /path/to/repo \
+acpx quiet-core-bot -s codex-bridge --cwd /path/to/repo \
   "Ask my Quiet Core bot work agent for recent context relevant to this repo."
 ```
 
-If you want `acpx openclaw` to target a specific Gateway and session key every
-time, override the `openclaw` agent command in `~/.acpx/config.json`:
+If you want `acpx quiet-core-bot` to target a specific Gateway and session key every
+time, override the `quiet-core-bot` agent command in `~/.acpx/config.json`:
 
 ```json
 {
   "agents": {
-    "openclaw": {
-      "command": "env OPENCLAW_HIDE_BANNER=1 OPENCLAW_SUPPRESS_NOTES=1 openclaw acp --url ws://127.0.0.1:18789 --token-file ~/.quiet-core-bot/gateway.token --session agent:main:main"
+    "quiet-core-bot": {
+      "command": "env QUIET_CORE_HIDE_BANNER=1 QUIET_CORE_SUPPRESS_NOTES=1 quiet-core-bot acp --url ws://127.0.0.1:18789 --token-file ~/.quiet-core-bot/gateway.token --session agent:main:main"
     }
   }
 }
@@ -259,7 +259,7 @@ For a repo-local Quiet Core bot checkout, use the direct CLI entrypoint instead 
 dev runner so the ACP stream stays clean. For example:
 
 ```bash
-env OPENCLAW_HIDE_BANNER=1 OPENCLAW_SUPPRESS_NOTES=1 node quiet-core-bot.mjs acp ...
+env QUIET_CORE_HIDE_BANNER=1 QUIET_CORE_SUPPRESS_NOTES=1 node quiet-core-bot.mjs acp ...
 ```
 
 This is the easiest way to let Codex, Claude Code, or another ACP-aware client
@@ -274,7 +274,7 @@ Add a custom ACP agent in `~/.config/zed/settings.json` (or use Zed's Settings U
   "agent_servers": {
     "Quiet Core bot ACP": {
       "type": "custom",
-      "command": "openclaw",
+      "command": "quiet-core-bot",
       "args": ["acp"],
       "env": {}
     }
@@ -289,7 +289,7 @@ To target a specific Gateway or agent:
   "agent_servers": {
     "Quiet Core bot ACP": {
       "type": "custom",
-      "command": "openclaw",
+      "command": "quiet-core-bot",
       "args": [
         "acp",
         "--url",
@@ -350,18 +350,18 @@ Learn more about session keys at [/concepts/session](/concepts/session).
 Security note:
 
 - `--token` and `--password` can be visible in local process listings on some systems.
-- Prefer `--token-file`/`--password-file` or environment variables (`OPENCLAW_GATEWAY_TOKEN`, `OPENCLAW_GATEWAY_PASSWORD`).
+- Prefer `--token-file`/`--password-file` or environment variables (`QUIET_CORE_GATEWAY_TOKEN`, `QUIET_CORE_GATEWAY_PASSWORD`).
 - Gateway auth resolution follows the shared contract used by other Gateway clients:
-  - local mode: env (`OPENCLAW_GATEWAY_*`) -> `gateway.auth.*` -> `gateway.remote.*` fallback only when `gateway.auth.*` is unset (configured-but-unresolved local SecretRefs fail closed)
+  - local mode: env (`QUIET_CORE_GATEWAY_*`) -> `gateway.auth.*` -> `gateway.remote.*` fallback only when `gateway.auth.*` is unset (configured-but-unresolved local SecretRefs fail closed)
   - remote mode: `gateway.remote.*` with env/config fallback per remote precedence rules
   - `--url` is override-safe and does not reuse implicit config/env credentials; pass explicit `--token`/`--password` (or file variants)
-- ACP runtime backend child processes receive `OPENCLAW_SHELL=acp`, which can be used for context-specific shell/profile rules.
-- `openclaw acp client` sets `OPENCLAW_SHELL=acp-client` on the spawned bridge process.
+- ACP runtime backend child processes receive `QUIET_CORE_SHELL=acp`, which can be used for context-specific shell/profile rules.
+- `quiet-core-bot acp client` sets `QUIET_CORE_SHELL=acp-client` on the spawned bridge process.
 
 ### `acp client` options
 
 - `--cwd <dir>`: working directory for the ACP session.
-- `--server <command>`: ACP server command (default: `openclaw`).
+- `--server <command>`: ACP server command (default: `quiet-core-bot`).
 - `--server-args <args...>`: extra arguments passed to the ACP server.
 - `--server-verbose`: enable verbose logging on the ACP server.
 - `--verbose, -v`: verbose client logging.

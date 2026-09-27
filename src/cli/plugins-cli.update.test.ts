@@ -23,7 +23,7 @@ import {
   writePersistedInstalledPluginIndexInstallRecords,
 } from "./plugins-cli-test-helpers.js";
 
-const ORIGINAL_OPENCLAW_NIX_MODE = process.env.OPENCLAW_NIX_MODE;
+const ORIGINAL_QUIET_CORE_NIX_MODE = process.env.QUIET_CORE_NIX_MODE;
 
 function createTrackedPluginConfig(params: {
   pluginId: string;
@@ -72,7 +72,7 @@ function primeUpdateConfigSnapshot(params: {
   includeFileHashesForWrite?: Record<string, string>;
   includeFileTargetsForWrite?: Record<string, string>;
 }): void {
-  const configPath = params.configPath ?? path.join(process.cwd(), "openclaw.json5");
+  const configPath = params.configPath ?? path.join(process.cwd(), "quiet-core-bot.json5");
   const parsed = params.parsed ?? (params.config as Record<string, unknown>);
   const sourceConfig = params.sourceConfig ?? params.config;
   const runtimeConfig = params.runtimeConfig ?? params.config;
@@ -106,7 +106,7 @@ function primeUpdateConfigSnapshot(params: {
 function primeBlockedUpdateConfig(section: "hooks" | "plugins", config: OpenClawConfig): void {
   const externalPath = path.join(
     path.parse(process.cwd()).root,
-    "external-openclaw",
+    "external-quiet-core-bot",
     `${section}.json5`,
   );
   primeUpdateConfigSnapshot({
@@ -124,10 +124,10 @@ describe("plugins cli update", () => {
   });
 
   afterEach(() => {
-    if (ORIGINAL_OPENCLAW_NIX_MODE === undefined) {
-      delete process.env.OPENCLAW_NIX_MODE;
+    if (ORIGINAL_QUIET_CORE_NIX_MODE === undefined) {
+      delete process.env.QUIET_CORE_NIX_MODE;
     } else {
-      process.env.OPENCLAW_NIX_MODE = ORIGINAL_OPENCLAW_NIX_MODE;
+      process.env.QUIET_CORE_NIX_MODE = ORIGINAL_QUIET_CORE_NIX_MODE;
     }
   });
 
@@ -146,17 +146,17 @@ describe("plugins cli update", () => {
   });
 
   it("refuses plugin updates in Nix mode before package-manager work", async () => {
-    const previous = process.env.OPENCLAW_NIX_MODE;
-    process.env.OPENCLAW_NIX_MODE = "1";
+    const previous = process.env.QUIET_CORE_NIX_MODE;
+    process.env.QUIET_CORE_NIX_MODE = "1";
     try {
       await expect(runPluginsCommand(["plugins", "update", "--all"])).rejects.toThrow(
-        "OPENCLAW_NIX_MODE=1",
+        "QUIET_CORE_NIX_MODE=1",
       );
     } finally {
       if (previous === undefined) {
-        delete process.env.OPENCLAW_NIX_MODE;
+        delete process.env.QUIET_CORE_NIX_MODE;
       } else {
-        process.env.OPENCLAW_NIX_MODE = previous;
+        process.env.QUIET_CORE_NIX_MODE = previous;
       }
     }
 
@@ -276,7 +276,7 @@ describe("plugins cli update", () => {
     const installRecords = {
       alpha: {
         source: "npm",
-        spec: "@openclaw/alpha@1.0.0",
+        spec: "@quiet-core/alpha@1.0.0",
         installPath: "/tmp/alpha",
       },
     } as const;
@@ -291,7 +291,7 @@ describe("plugins cli update", () => {
               "new-hooks": {
                 source: "npm",
                 spec: "@acme/new-hooks@1.0.0",
-                installPath: "/home/test/.openclaw/hooks/new-hooks",
+                installPath: "/home/test/.quiet-core-bot/hooks/new-hooks",
               },
             },
           },
@@ -325,7 +325,7 @@ describe("plugins cli update", () => {
             "new-hooks": {
               source: "npm",
               spec: "@acme/new-hooks@1.0.0",
-              installPath: "/home/test/.openclaw/hooks/new-hooks",
+              installPath: "/home/test/.quiet-core-bot/hooks/new-hooks",
             },
           },
         },
@@ -344,7 +344,7 @@ describe("plugins cli update", () => {
   it("uses resolved shipped install records instead of raw env placeholders", async () => {
     const cfg = createTrackedPluginConfig({
       pluginId: "alpha",
-      spec: "@openclaw/alpha@1.0.0",
+      spec: "@quiet-core/alpha@1.0.0",
     });
     primeUpdateConfigSnapshot({
       config: cfg,
@@ -375,7 +375,7 @@ describe("plugins cli update", () => {
   it("rejects invalid config snapshots before updater side effects", async () => {
     const cfg = createTrackedPluginConfig({
       pluginId: "alpha",
-      spec: "@openclaw/alpha@1.0.0",
+      spec: "@quiet-core/alpha@1.0.0",
     });
     primeUpdateConfigSnapshot({
       config: cfg,
@@ -424,16 +424,16 @@ describe("plugins cli update", () => {
     const cfg = { plugins: {} } as OpenClawConfig;
     const pluginRecords = createTrackedPluginConfig({
       pluginId: "voice-call",
-      spec: "@openclaw/voice-call@1.0.0",
+      spec: "@quiet-core/voice-call@1.0.0",
     }).plugins?.installs;
     const nextConfig = {
       ...cfg,
       plugins: {
         ...cfg.plugins,
         installs: {
-          "@openclaw/voice-call": {
+          "@quiet-core/voice-call": {
             source: "npm",
-            spec: "@openclaw/voice-call@1.1.0",
+            spec: "@quiet-core/voice-call@1.1.0",
           },
         },
       },
@@ -445,9 +445,9 @@ describe("plugins cli update", () => {
       changed: true,
       outcomes: [
         {
-          pluginId: "@openclaw/voice-call",
+          pluginId: "@quiet-core/voice-call",
           status: "updated",
-          message: "Updated @openclaw/voice-call.",
+          message: "Updated @quiet-core/voice-call.",
         },
       ],
     });
@@ -514,7 +514,7 @@ describe("plugins cli update", () => {
     setInstalledPluginIndexInstallRecords({
       "voice-call": {
         source: "npm",
-        spec: "@openclaw/voice-call",
+        spec: "@quiet-core/voice-call",
         installPath: "/tmp/voice-call",
       },
     });
@@ -536,8 +536,8 @@ describe("plugins cli update", () => {
       label: "ClawHub",
       record: {
         source: "clawhub",
-        spec: "clawhub:@openclaw/voice-call",
-        clawhubPackage: "@openclaw/voice-call",
+        spec: "clawhub:@quiet-core/voice-call",
+        clawhubPackage: "@quiet-core/voice-call",
         installPath: "/tmp/voice-call",
       },
     },
@@ -588,7 +588,7 @@ describe("plugins cli update", () => {
   it("blocks possible legacy id migration when an included plugins section is unresolved", async () => {
     const externalPath = path.join(
       path.parse(process.cwd()).root,
-      "external-openclaw",
+      "external-quiet-core-bot",
       "plugins.json5",
     );
     const cfg = { plugins: {} } as OpenClawConfig;
@@ -603,7 +603,7 @@ describe("plugins cli update", () => {
     setInstalledPluginIndexInstallRecords({
       "voice-call": {
         source: "npm",
-        spec: "@openclaw/voice-call",
+        spec: "@quiet-core/voice-call",
         installPath: "/tmp/voice-call",
       },
     });
@@ -636,7 +636,7 @@ describe("plugins cli update", () => {
         installs: {
           legacy: {
             source: "npm",
-            spec: "@openclaw/legacy@1.0.0",
+            spec: "@quiet-core/legacy@1.0.0",
             installPath: "/tmp/legacy",
           },
         },
@@ -720,17 +720,17 @@ describe("plugins cli update", () => {
   });
 
   it("preserves an include-owned plugins section during legacy-record cleanup", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-update-"));
-    const configPath = path.join(tempRoot, "openclaw.json5");
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-plugin-update-"));
+    const configPath = path.join(tempRoot, "quiet-core-bot.json5");
     const pluginsPath = path.join(tempRoot, "plugins.json5");
     const cfg = createTrackedPluginConfig({
       pluginId: "alpha",
-      spec: "@openclaw/alpha@1.0.0",
+      spec: "@quiet-core/alpha@1.0.0",
     });
     const pluginsRaw = `${JSON.stringify(cfg.plugins, null, 2)}\n`;
     const nextConfig = createTrackedPluginConfig({
       pluginId: "alpha",
-      spec: "@openclaw/alpha@1.1.0",
+      spec: "@quiet-core/alpha@1.1.0",
     });
     fs.writeFileSync(pluginsPath, pluginsRaw);
     primeUpdateConfigSnapshot({
@@ -766,22 +766,22 @@ describe("plugins cli update", () => {
   });
 
   it("migrates included legacy install records while updating another indexed plugin", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-update-"));
-    const configPath = path.join(tempRoot, "openclaw.json5");
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-plugin-update-"));
+    const configPath = path.join(tempRoot, "quiet-core-bot.json5");
     const pluginsPath = path.join(tempRoot, "plugins.json5");
     const legacyRecord = {
       source: "npm",
-      spec: "@openclaw/legacy@1.0.0",
+      spec: "@quiet-core/legacy@1.0.0",
       installPath: "/tmp/legacy",
     } as const;
     const indexedRecord = {
       source: "npm",
-      spec: "@openclaw/alpha@1.0.0",
+      spec: "@quiet-core/alpha@1.0.0",
       installPath: "/tmp/alpha",
     } as const;
     const updatedIndexedRecord = {
       ...indexedRecord,
-      spec: "@openclaw/alpha@1.1.0",
+      spec: "@quiet-core/alpha@1.1.0",
     } as const;
     const cfg = {
       plugins: {
@@ -843,8 +843,8 @@ describe("plugins cli update", () => {
   });
 
   it("blocks combined plugin and hook updates when either config section uses an include", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-update-"));
-    const configPath = path.join(tempRoot, "openclaw.json5");
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-plugin-update-"));
+    const configPath = path.join(tempRoot, "quiet-core-bot.json5");
     const pluginsPath = path.join(tempRoot, "plugins.json5");
     const pluginsRaw = "{}\n";
     fs.writeFileSync(pluginsPath, pluginsRaw);
@@ -864,7 +864,7 @@ describe("plugins cli update", () => {
         installs: {
           alpha: {
             source: "npm",
-            spec: "@openclaw/alpha@1.0.0",
+            spec: "@quiet-core/alpha@1.0.0",
             installPath: "/tmp/alpha",
           },
         },
@@ -928,8 +928,8 @@ describe("plugins cli update", () => {
 
   it("passes dangerous force unsafe install to plugin updates", async () => {
     const config = createTrackedPluginConfig({
-      pluginId: "openclaw-codex-app-server",
-      spec: "openclaw-codex-app-server@beta",
+      pluginId: "quiet-core-bot-codex-app-server",
+      spec: "quiet-core-bot-codex-app-server@beta",
     });
     loadConfig.mockReturnValue(config);
     setInstalledPluginIndexInstallRecords(config.plugins?.installs ?? {});
@@ -942,13 +942,13 @@ describe("plugins cli update", () => {
     await runPluginsCommand([
       "plugins",
       "update",
-      "openclaw-codex-app-server",
+      "quiet-core-bot-codex-app-server",
       "--dangerously-force-unsafe-install",
     ]);
 
     const updateParams = expectSingleCallParams(updateNpmInstalledPlugins);
     expect(updateParams.config).toEqual(config);
-    expect(updateParams.pluginIds).toEqual(["openclaw-codex-app-server"]);
+    expect(updateParams.pluginIds).toEqual(["quiet-core-bot-codex-app-server"]);
     expect(updateParams.dangerouslyForceUnsafeInstall).toBe(true);
     expect(
       runtimeLogs.some((message) =>
@@ -962,8 +962,8 @@ describe("plugins cli update", () => {
   it("does not sync official catalog specs for manual plugin updates", async () => {
     const config = createTrackedPluginConfig({
       pluginId: "codex",
-      spec: "@openclaw/codex@2026.5.28",
-      resolvedName: "@openclaw/codex",
+      spec: "@quiet-core/codex@2026.5.28",
+      resolvedName: "@quiet-core/codex",
     });
     loadConfig.mockReturnValue(config);
     setInstalledPluginIndexInstallRecords(config.plugins?.installs ?? {});
@@ -986,7 +986,7 @@ describe("plugins cli update", () => {
         installs: {
           alpha: {
             source: "npm",
-            spec: "@openclaw/alpha@1.0.0",
+            spec: "@quiet-core/alpha@1.0.0",
           },
         },
       },
@@ -996,7 +996,7 @@ describe("plugins cli update", () => {
         installs: {
           alpha: {
             source: "npm",
-            spec: "@openclaw/alpha@1.1.0",
+            spec: "@quiet-core/alpha@1.1.0",
           },
         },
       },
@@ -1064,11 +1064,11 @@ describe("plugins cli update", () => {
         installs: {
           alpha: {
             source: "npm",
-            spec: "@openclaw/alpha@1.0.0",
+            spec: "@quiet-core/alpha@1.0.0",
           },
           beta: {
             source: "npm",
-            spec: "@openclaw/beta@1.0.0",
+            spec: "@quiet-core/beta@1.0.0",
           },
         },
       },
@@ -1078,11 +1078,11 @@ describe("plugins cli update", () => {
         installs: {
           alpha: {
             source: "npm",
-            spec: "@openclaw/alpha@1.1.0",
+            spec: "@quiet-core/alpha@1.1.0",
           },
           beta: {
             source: "npm",
-            spec: "@openclaw/beta@1.0.0",
+            spec: "@quiet-core/beta@1.0.0",
           },
         },
       },

@@ -7,7 +7,7 @@ import path from "node:path";
 import { Command } from "commander";
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { TEST_BUNDLED_RUNTIME_SIDECAR_PATHS } from "../../test/helpers/bundled-runtime-sidecars.js";
-import type { OpenClawConfig, ConfigFileSnapshot } from "../config/types.openclaw.js";
+import type { OpenClawConfig, ConfigFileSnapshot } from "../config/types.quiet-core-bot.js";
 import type { PluginInstallRecord } from "../config/types.plugins.js";
 import { GATEWAY_SERVICE_RUNTIME_PID_ENV } from "../daemon/constants.js";
 import { writePackageDistInventory } from "../infra/package-dist-inventory.js";
@@ -71,8 +71,8 @@ const execFile = vi.fn((...args: unknown[]) => {
 const spawn = vi.fn();
 const { defaultRuntime: runtimeCapture, resetRuntimeCapture } = createCliRuntimeCapture();
 const serviceEnvSnapshot = captureEnv([
-  "OPENCLAW_SERVICE_MARKER",
-  "OPENCLAW_SERVICE_KIND",
+  "QUIET_CORE_SERVICE_MARKER",
+  "QUIET_CORE_SERVICE_KIND",
   GATEWAY_SERVICE_RUNTIME_PID_ENV,
 ]);
 
@@ -80,11 +80,11 @@ const serviceEnvSnapshot = captureEnv([
 // the upstream update path, so the guard is explicitly opted out here; the refusal itself is
 // covered by src/config/independent-build-guard.test.ts.
 beforeEach(() => {
-  process.env.OPENCLAW_INDEPENDENT_BUILD = "0";
+  process.env.QUIET_CORE_INDEPENDENT_BUILD = "0";
 });
 
 afterEach(() => {
-  delete process.env.OPENCLAW_INDEPENDENT_BUILD;
+  delete process.env.QUIET_CORE_INDEPENDENT_BUILD;
 });
 
 vi.mock("@clack/prompts", () => ({
@@ -99,17 +99,17 @@ vi.mock("../infra/update-runner.js", () => ({
   runGatewayUpdate: vi.fn(),
 }));
 
-vi.mock("../infra/openclaw-root.js", () => ({
+vi.mock("../infra/quiet-core-bot-root.js", () => ({
   resolveOpenClawPackageRoot: vi.fn(),
   resolveOpenClawPackageRootSync: vi.fn(() => process.cwd()),
 }));
 
 vi.mock("../config/config.js", () => ({
   assertConfigWriteAllowedInCurrentMode: () => {
-    if (process.env.OPENCLAW_NIX_MODE === "1") {
+    if (process.env.QUIET_CORE_NIX_MODE === "1") {
       throw new Error(
         [
-          "Config is managed by Nix (`OPENCLAW_NIX_MODE=1`), so Quiet Core bot treats quiet-core-bot.json as immutable.",
+          "Config is managed by Nix (`QUIET_CORE_NIX_MODE=1`), so Quiet Core bot treats quiet-core-bot.json as immutable.",
           "Do not run setup, onboarding, quiet-core-bot update, plugin install/update/uninstall/enable, doctor repair/token-generation, or config set against this file.",
           "Agent-first Nix setup: https://github.com/openclaw/nix-openclaw#quick-start",
           "Quiet Core bot Nix overview: https://github.com/liuda1999/Quiet-Core-bot/install/nix",
@@ -230,7 +230,7 @@ vi.mock("../utils.js", async (importOriginal) => {
     isRecord: (value: unknown) =>
       typeof value === "object" && value !== null && !Array.isArray(value),
     pathExists: (...args: unknown[]) => pathExists(...args),
-    resolveConfigDir: () => "/tmp/openclaw-config",
+    resolveConfigDir: () => "/tmp/quiet-core-bot-config",
   };
 });
 
@@ -362,7 +362,7 @@ vi.mock("../runtime.js", () => ({
 }));
 
 const { runGatewayUpdate } = await import("../infra/update-runner.js");
-const { resolveOpenClawPackageRoot } = await import("../infra/openclaw-root.js");
+const { resolveOpenClawPackageRoot } = await import("../infra/quiet-core-bot-root.js");
 const {
   mutateConfigFileWithRetry,
   readConfigFileSnapshot,
@@ -398,7 +398,7 @@ type UpdateCliScenario = {
 };
 
 describe("update-cli", () => {
-  const fixtureRoot = "/tmp/openclaw-update-tests";
+  const fixtureRoot = "/tmp/quiet-core-bot-update-tests";
   let fixtureCount = 0;
   const tempDirsToCleanup = new Set<string>();
 
@@ -416,7 +416,7 @@ describe("update-cli", () => {
 
   const baseConfig = {} as OpenClawConfig;
   const baseSnapshot: ConfigFileSnapshot = {
-    path: "/tmp/openclaw-config.json",
+    path: "/tmp/quiet-core-bot-config.json",
     exists: true,
     raw: "{}",
     parsed: {},
@@ -477,8 +477,8 @@ describe("update-cli", () => {
 
   const stripOpenClawPackageAlias = (spec: string) => {
     const trimmed = spec.trim();
-    return trimmed.toLowerCase().startsWith("openclaw@")
-      ? trimmed.slice("openclaw@".length)
+    return trimmed.toLowerCase().startsWith("quiet-core-bot@")
+      ? trimmed.slice("quiet-core-bot@".length)
       : trimmed;
   };
 
@@ -611,7 +611,7 @@ describe("update-cli", () => {
       if (!packDir) {
         throw new Error("Expected package pack directory");
       }
-      installSpec = path.join(packDir, "openclaw-9999.0.0.tgz");
+      installSpec = path.join(packDir, "quiet-core-bot-9999.0.0.tgz");
     } else {
       expect(packagePackCommandCall()).toBeUndefined();
     }
@@ -688,7 +688,7 @@ describe("update-cli", () => {
   };
 
   const setupNonInteractiveDowngrade = async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("quiet-core-bot-update");
     setTty(false);
     readPackageVersion.mockResolvedValue("2.0.0");
 
@@ -713,7 +713,7 @@ describe("update-cli", () => {
     gatewayUpdateImpl?: (root: string) => Promise<UpdateRunResult>;
     entrypoints?: string[];
   }) => {
-    const root = createCaseDir("openclaw-updated-root");
+    const root = createCaseDir("quiet-core-bot-updated-root");
     const entrypoints = params?.entrypoints ?? [path.join(root, "dist", "entry.js")];
     pathExists.mockImplementation(async (candidate: string) => entrypoints.includes(candidate));
     if (params?.gatewayUpdateImpl) {
@@ -732,8 +732,8 @@ describe("update-cli", () => {
   };
 
   beforeEach(() => {
-    delete process.env.OPENCLAW_SERVICE_MARKER;
-    delete process.env.OPENCLAW_SERVICE_KIND;
+    delete process.env.QUIET_CORE_SERVICE_MARKER;
+    delete process.env.QUIET_CORE_SERVICE_KIND;
     delete process.env[GATEWAY_SERVICE_RUNTIME_PID_ENV];
     vi.clearAllMocks();
     resetRuntimeCapture();
@@ -794,7 +794,7 @@ describe("update-cli", () => {
       if (argv[0] === "npm" && argv[1] === "pack") {
         const destination = argv[argv.indexOf("--pack-destination") + 1];
         if (destination) {
-          await fs.writeFile(path.join(destination, "openclaw-9999.0.0.tgz"), "packed\n", "utf8");
+          await fs.writeFile(path.join(destination, "quiet-core-bot-9999.0.0.tgz"), "packed\n", "utf8");
         }
       }
       return {
@@ -809,14 +809,14 @@ describe("update-cli", () => {
     vi.spyOn(updateCliShared, "readPackageName").mockImplementation(readPackageName);
     vi.spyOn(updateCliShared, "readPackageVersion").mockImplementation(readPackageVersion);
     vi.spyOn(updateCliShared, "resolveGlobalManager").mockImplementation(resolveGlobalManager);
-    readPackageName.mockResolvedValue("openclaw");
+    readPackageName.mockResolvedValue("quiet-core-bot");
     readPackageVersion.mockResolvedValue("1.0.0");
     resolveGlobalManager.mockResolvedValue("npm");
     serviceStop.mockResolvedValue(undefined);
     serviceRestart.mockResolvedValue({ outcome: "completed" });
     serviceLoaded.mockResolvedValue(false);
     serviceReadCommand.mockImplementation(async () =>
-      (await serviceLoaded()) ? { programArguments: ["openclaw", "gateway", "run"] } : null,
+      (await serviceLoaded()) ? { programArguments: ["quiet-core-bot", "gateway", "run"] } : null,
     );
     serviceReadRuntime.mockResolvedValue({
       status: "running",
@@ -824,12 +824,12 @@ describe("update-cli", () => {
       state: "running",
     });
     mockGetSelfAndAncestorPidsSync.mockReturnValue(new Set<number>([process.pid]));
-    prepareRestartScript.mockResolvedValue("/tmp/openclaw-restart-test.sh");
+    prepareRestartScript.mockResolvedValue("/tmp/quiet-core-bot-restart-test.sh");
     runRestartScript.mockResolvedValue(undefined);
     inspectPortUsage.mockResolvedValue({
       port: 18789,
       status: "busy",
-      listeners: [{ pid: 4242, command: "openclaw-gateway" }],
+      listeners: [{ pid: 4242, command: "quiet-core-bot-gateway" }],
       hints: [],
     });
     classifyPortListener.mockReturnValue("gateway");
@@ -870,7 +870,7 @@ describe("update-cli", () => {
       shell: "zsh",
       profileInstalled: false,
       cacheExists: false,
-      cachePath: "/tmp/openclaw-completion.zsh",
+      cachePath: "/tmp/quiet-core-bot-completion.zsh",
       usesSlowPattern: false,
     });
     ensureCompletionCacheExists.mockResolvedValue(true);
@@ -918,7 +918,7 @@ describe("update-cli", () => {
   });
 
   it("bounds completion cache refresh during update follow-up", async () => {
-    const root = createCaseDir("openclaw-completion-timeout");
+    const root = createCaseDir("quiet-core-bot-completion-timeout");
     pathExists.mockResolvedValue(true);
 
     await updateCliShared.tryWriteCompletionCache(root, false);
@@ -930,13 +930,13 @@ describe("update-cli", () => {
       "completion",
       "--write-state",
     ]);
-    expect(call?.[2]?.env?.OPENCLAW_COMPLETION_SKIP_PLUGIN_COMMANDS).toBe("1");
+    expect(call?.[2]?.env?.QUIET_CORE_COMPLETION_SKIP_PLUGIN_COMMANDS).toBe("1");
     expect(call?.[2]?.timeout).toBe(30_000);
   });
 
   it("disarms legacy launchd updater jobs before refusing mutating updates in Nix mode", async () => {
-    await withEnvAsync({ OPENCLAW_NIX_MODE: "1" }, async () => {
-      await expect(updateCommand({ yes: true })).rejects.toThrow("OPENCLAW_NIX_MODE=1");
+    await withEnvAsync({ QUIET_CORE_NIX_MODE: "1" }, async () => {
+      await expect(updateCommand({ yes: true })).rejects.toThrow("QUIET_CORE_NIX_MODE=1");
     });
 
     expect(launchdUpdateCleanupMocks.disableCurrentOpenClawUpdateLaunchdJob).toHaveBeenCalledOnce();
@@ -946,7 +946,7 @@ describe("update-cli", () => {
   });
 
   it("logs friendly hint with manual refresh command when completion cache write times out", async () => {
-    const root = createCaseDir("openclaw-completion-timeout-msg");
+    const root = createCaseDir("quiet-core-bot-completion-timeout-msg");
     pathExists.mockResolvedValue(true);
     const timeoutErr = Object.assign(new Error("spawnSync /usr/bin/node ETIMEDOUT"), {
       code: "ETIMEDOUT",
@@ -979,14 +979,14 @@ describe("update-cli", () => {
       shell: "zsh",
       profileInstalled: true,
       cacheExists: true,
-      cachePath: "/tmp/openclaw-completion.zsh",
+      cachePath: "/tmp/quiet-core-bot-completion.zsh",
       usesSlowPattern: true,
     });
     installCompletion.mockRejectedValueOnce(new Error("EACCES: permission denied"));
 
     await updateCommand({ yes: true, restart: false });
 
-    expect(installCompletion).toHaveBeenCalledWith("zsh", true, "openclaw");
+    expect(installCompletion).toHaveBeenCalledWith("zsh", true, "quiet-core-bot");
     const logOutput = vi
       .mocked(runtimeCapture.log)
       .mock.calls.map((call) => String(call[0]))
@@ -1005,10 +1005,10 @@ describe("update-cli", () => {
     expect(call?.[1]).toEqual([entrypoints[0], "update", "--yes", "--timeout", "1800"]);
     expect(call?.[2]?.stdio).toBe("inherit");
     expect(call?.[2]?.env?.NODE_DISABLE_COMPILE_CACHE).toBe("1");
-    expect(call?.[2]?.env?.OPENCLAW_UPDATE_IN_PROGRESS).toBe("1");
-    expect(call?.[2]?.env?.OPENCLAW_UPDATE_POST_CORE).toBe("1");
-    expect(call?.[2]?.env?.OPENCLAW_UPDATE_POST_CORE_CHANNEL).toBe("dev");
-    expect(call?.[2]?.env?.OPENCLAW_COMPATIBILITY_HOST_VERSION).toBe("1.0.0");
+    expect(call?.[2]?.env?.QUIET_CORE_UPDATE_IN_PROGRESS).toBe("1");
+    expect(call?.[2]?.env?.QUIET_CORE_UPDATE_POST_CORE).toBe("1");
+    expect(call?.[2]?.env?.QUIET_CORE_UPDATE_POST_CORE_CHANNEL).toBe("dev");
+    expect(call?.[2]?.env?.QUIET_CORE_COMPATIBILITY_HOST_VERSION).toBe("1.0.0");
     expect(vi.mocked(readConfigFileSnapshot).mock.calls[1]?.[0]).toEqual({
       skipPluginValidation: true,
       suppressFutureVersionWarning: true,
@@ -1023,7 +1023,7 @@ describe("update-cli", () => {
     const kill = vi.fn();
     spawn.mockImplementationOnce((_command: unknown, _argv: unknown, options: unknown) => {
       const resultPath = (options as { env?: NodeJS.ProcessEnv }).env
-        ?.OPENCLAW_UPDATE_POST_CORE_RESULT_PATH;
+        ?.QUIET_CORE_UPDATE_POST_CORE_RESULT_PATH;
       if (!resultPath) {
         throw new Error("missing post-core result path");
       }
@@ -1046,14 +1046,14 @@ describe("update-cli", () => {
   });
 
   it("does not restart a stopped managed gateway after post-core plugin errors", async () => {
-    const root = createCaseDir("openclaw-update");
+    const root = createCaseDir("quiet-core-bot-update");
     const entryPath = path.join(root, "dist", "index.js");
     mockPackageInstallStatus(root);
     serviceLoaded.mockResolvedValue(true);
     pathExists.mockImplementation(async (candidate: string) => candidate === entryPath);
     spawn.mockImplementationOnce((_command: unknown, _argv: unknown, options: unknown) => {
       const resultPath = (options as { env?: NodeJS.ProcessEnv }).env
-        ?.OPENCLAW_UPDATE_POST_CORE_RESULT_PATH;
+        ?.QUIET_CORE_UPDATE_POST_CORE_RESULT_PATH;
       if (!resultPath) {
         throw new Error("missing post-core result path");
       }
@@ -1115,8 +1115,8 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
-        OPENCLAW_SERVICE_KIND: "gateway",
+        QUIET_CORE_SERVICE_MARKER: "quiet-core-bot",
+        QUIET_CORE_SERVICE_KIND: "gateway",
         [GATEWAY_SERVICE_RUNTIME_PID_ENV]: "7777",
       },
       async () => {
@@ -1125,8 +1125,8 @@ describe("update-cli", () => {
     );
 
     const spawnEnv = spawnCall()?.[2]?.env;
-    expect(spawnEnv?.OPENCLAW_SERVICE_MARKER).toBeUndefined();
-    expect(spawnEnv?.OPENCLAW_SERVICE_KIND).toBeUndefined();
+    expect(spawnEnv?.QUIET_CORE_SERVICE_MARKER).toBeUndefined();
+    expect(spawnEnv?.QUIET_CORE_SERVICE_KIND).toBeUndefined();
     expect(spawnEnv?.[GATEWAY_SERVICE_RUNTIME_PID_ENV]).toBeUndefined();
   });
 
@@ -1135,8 +1135,8 @@ describe("update-cli", () => {
     const pluginInstallRecords = {
       demo: {
         source: "npm",
-        spec: "@openclaw/demo@1.0.0",
-        installPath: "/tmp/openclaw-demo-plugin",
+        spec: "@quiet-core/demo@1.0.0",
+        installPath: "/tmp/quiet-core-bot-demo-plugin",
       },
     } as const;
     const preUpdateConfig = {
@@ -1159,8 +1159,8 @@ describe("update-cli", () => {
     loadInstalledPluginIndexInstallRecords.mockResolvedValueOnce(pluginInstallRecords);
     spawn.mockImplementationOnce((_node, _argv, options) => {
       const env = (options as { env?: NodeJS.ProcessEnv }).env;
-      const recordsPath = env?.OPENCLAW_UPDATE_POST_CORE_INSTALL_RECORDS_PATH;
-      const sourceConfigPath = env?.OPENCLAW_UPDATE_POST_CORE_SOURCE_CONFIG_PATH;
+      const recordsPath = env?.QUIET_CORE_UPDATE_POST_CORE_INSTALL_RECORDS_PATH;
+      const sourceConfigPath = env?.QUIET_CORE_UPDATE_POST_CORE_SOURCE_CONFIG_PATH;
       if (!recordsPath) {
         throw new Error("missing post-core install records path");
       }
@@ -1197,12 +1197,12 @@ describe("update-cli", () => {
     const pluginInstallRecords = {
       msteams: {
         source: "npm",
-        spec: "@openclaw/msteams",
-        installPath: "/tmp/openclaw-msteams-plugin",
+        spec: "@quiet-core/msteams",
+        installPath: "/tmp/quiet-core-bot-msteams-plugin",
         version: "1.0.0",
-        resolvedName: "@openclaw/msteams",
+        resolvedName: "@quiet-core/msteams",
         resolvedVersion: "1.0.0",
-        resolvedSpec: "@openclaw/msteams@1.0.0",
+        resolvedSpec: "@quiet-core/msteams@1.0.0",
         integrity: "sha512-newer",
       },
     } as const;
@@ -1210,7 +1210,7 @@ describe("update-cli", () => {
     loadInstalledPluginIndexInstallRecords.mockResolvedValueOnce(pluginInstallRecords);
     spawn.mockImplementationOnce((_node, _argv, options) => {
       const env = (options as { env?: NodeJS.ProcessEnv }).env;
-      const recordsPath = env?.OPENCLAW_UPDATE_POST_CORE_INSTALL_RECORDS_PATH;
+      const recordsPath = env?.QUIET_CORE_UPDATE_POST_CORE_INSTALL_RECORDS_PATH;
       if (!recordsPath) {
         throw new Error("missing post-core install records path");
       }
@@ -1229,10 +1229,10 @@ describe("update-cli", () => {
     expect(capturedRecords).toEqual({
       msteams: {
         source: "npm",
-        spec: "@openclaw/msteams",
-        installPath: "/tmp/openclaw-msteams-plugin",
+        spec: "@quiet-core/msteams",
+        installPath: "/tmp/quiet-core-bot-msteams-plugin",
         version: "1.0.0",
-        resolvedName: "@openclaw/msteams",
+        resolvedName: "@quiet-core/msteams",
         integrity: "sha512-newer",
       },
     });
@@ -1255,16 +1255,16 @@ describe("update-cli", () => {
     expect(call?.[0]).toMatch(/node/);
     expect(call?.[1]).toEqual([entrypoints[0], "update", "--no-restart", "--yes"]);
     expect(call?.[2]?.stdio).toBe("inherit");
-    expect(call?.[2]?.env?.OPENCLAW_UPDATE_POST_CORE).toBe("1");
-    expect(call?.[2]?.env?.OPENCLAW_UPDATE_POST_CORE_CHANNEL).toBe("dev");
-    expect(call?.[2]?.env?.OPENCLAW_UPDATE_POST_CORE_REQUESTED_CHANNEL).toBe("dev");
+    expect(call?.[2]?.env?.QUIET_CORE_UPDATE_POST_CORE).toBe("1");
+    expect(call?.[2]?.env?.QUIET_CORE_UPDATE_POST_CORE_CHANNEL).toBe("dev");
+    expect(call?.[2]?.env?.QUIET_CORE_UPDATE_POST_CORE_REQUESTED_CHANNEL).toBe("dev");
     expect(replaceConfigFile).not.toHaveBeenCalled();
     expect(syncPluginsForUpdateChannel).not.toHaveBeenCalled();
     expect(updateNpmInstalledPlugins).not.toHaveBeenCalled();
   });
 
   it("keeps downgrade post-update work in the current process", async () => {
-    const downgradedRoot = createCaseDir("openclaw-downgraded-root");
+    const downgradedRoot = createCaseDir("quiet-core-bot-downgraded-root");
     setupUpdatedRootRefresh({
       gatewayUpdateImpl: async () =>
         makeOkUpdateResult({
@@ -1307,7 +1307,7 @@ describe("update-cli", () => {
   });
 
   it("pins the compatibility host version to the downgraded target during current-process post-core plugin convergence (#87914)", async () => {
-    const downgradedRoot = createCaseDir("openclaw-downgraded-compat-root");
+    const downgradedRoot = createCaseDir("quiet-core-bot-downgraded-compat-root");
     setupUpdatedRootRefresh({
       gatewayUpdateImpl: async () =>
         makeOkUpdateResult({
@@ -1324,10 +1324,10 @@ describe("update-cli", () => {
     );
     vi.mocked(resolveNpmChannelTag).mockResolvedValue({ tag: "latest", version: "2026.4.10" });
 
-    delete process.env.OPENCLAW_COMPATIBILITY_HOST_VERSION;
+    delete process.env.QUIET_CORE_COMPATIBILITY_HOST_VERSION;
     let hostVersionDuringPluginUpdate: string | undefined = "unset";
     updateNpmInstalledPlugins.mockImplementation(async () => {
-      hostVersionDuringPluginUpdate = process.env.OPENCLAW_COMPATIBILITY_HOST_VERSION;
+      hostVersionDuringPluginUpdate = process.env.QUIET_CORE_COMPATIBILITY_HOST_VERSION;
       return { changed: false, config: baseConfig, outcomes: [] };
     });
 
@@ -1341,9 +1341,9 @@ describe("update-cli", () => {
       // before restart.
       expect(hostVersionDuringPluginUpdate).toBe("2026.4.10");
       // The override is scoped to the plugin convergence and restored afterward.
-      expect(process.env.OPENCLAW_COMPATIBILITY_HOST_VERSION).toBeUndefined();
+      expect(process.env.QUIET_CORE_COMPATIBILITY_HOST_VERSION).toBeUndefined();
     } finally {
-      delete process.env.OPENCLAW_COMPATIBILITY_HOST_VERSION;
+      delete process.env.QUIET_CORE_COMPATIBILITY_HOST_VERSION;
     }
   });
 
@@ -1370,8 +1370,8 @@ describe("update-cli", () => {
   it("post-core resume mode skips the core update and only runs post-update tasks", async () => {
     await withEnvAsync(
       {
-        OPENCLAW_UPDATE_POST_CORE: "1",
-        OPENCLAW_UPDATE_POST_CORE_CHANNEL: "stable",
+        QUIET_CORE_UPDATE_POST_CORE: "1",
+        QUIET_CORE_UPDATE_POST_CORE_CHANNEL: "stable",
       },
       async () => {
         await updateCommand({ restart: false });
@@ -1398,15 +1398,15 @@ describe("update-cli", () => {
   });
 
   it("post-core resume children exit after writing a plugin update result", async () => {
-    const resultDir = createCaseDir("openclaw-post-core-result");
+    const resultDir = createCaseDir("quiet-core-bot-post-core-result");
     const resultPath = path.join(resultDir, "plugins.json");
     await fs.mkdir(resultDir, { recursive: true });
 
     await withEnvAsync(
       {
-        OPENCLAW_UPDATE_POST_CORE: "1",
-        OPENCLAW_UPDATE_POST_CORE_CHANNEL: "stable",
-        OPENCLAW_UPDATE_POST_CORE_RESULT_PATH: resultPath,
+        QUIET_CORE_UPDATE_POST_CORE: "1",
+        QUIET_CORE_UPDATE_POST_CORE_CHANNEL: "stable",
+        QUIET_CORE_UPDATE_POST_CORE_RESULT_PATH: resultPath,
       },
       async () => {
         await updateCommand({ restart: false });
@@ -1423,7 +1423,7 @@ describe("update-cli", () => {
   });
 
   it("post-core resume mode uses the parent install records snapshot for missing payload warnings", async () => {
-    const resultDir = createCaseDir("openclaw-post-core-records");
+    const resultDir = createCaseDir("quiet-core-bot-post-core-records");
     const recordsPath = path.join(resultDir, "plugin-install-records.json");
     const installPath = path.join(resultDir, "demo-plugin");
     await fs.mkdir(installPath, { recursive: true });
@@ -1432,7 +1432,7 @@ describe("update-cli", () => {
       `${JSON.stringify({
         demo: {
           source: "npm",
-          spec: "@openclaw/demo@1.0.0",
+          spec: "@quiet-core/demo@1.0.0",
           installPath,
         },
       })}\n`,
@@ -1442,9 +1442,9 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_UPDATE_POST_CORE: "1",
-        OPENCLAW_UPDATE_POST_CORE_CHANNEL: "stable",
-        OPENCLAW_UPDATE_POST_CORE_INSTALL_RECORDS_PATH: recordsPath,
+        QUIET_CORE_UPDATE_POST_CORE: "1",
+        QUIET_CORE_UPDATE_POST_CORE_CHANNEL: "stable",
+        QUIET_CORE_UPDATE_POST_CORE_INSTALL_RECORDS_PATH: recordsPath,
       },
       async () => {
         await updateCommand({ json: true, restart: false });
@@ -1461,7 +1461,7 @@ describe("update-cli", () => {
   });
 
   it("post-core resume mode prefers post-doctor disk install records over the stale parent snapshot", async () => {
-    const resultDir = createCaseDir("openclaw-post-core-disk-records");
+    const resultDir = createCaseDir("quiet-core-bot-post-core-disk-records");
     const recordsPath = path.join(resultDir, "plugin-install-records.json");
     await fs.mkdir(resultDir, { recursive: true });
     await fs.writeFile(
@@ -1469,7 +1469,7 @@ describe("update-cli", () => {
       `${JSON.stringify({
         stale: {
           source: "npm",
-          spec: "@openclaw/stale@1.0.0",
+          spec: "@quiet-core/stale@1.0.0",
           installPath: "/tmp/stale-plugin",
         },
       })}\n`,
@@ -1478,7 +1478,7 @@ describe("update-cli", () => {
     const postDoctorRecords = {
       codex: {
         source: "npm",
-        spec: "@openclaw/codex@2026.5.17",
+        spec: "@quiet-core/codex@2026.5.17",
         installPath: "/tmp/codex-plugin",
       },
     } satisfies Record<string, PluginInstallRecord>;
@@ -1486,9 +1486,9 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_UPDATE_POST_CORE: "1",
-        OPENCLAW_UPDATE_POST_CORE_CHANNEL: "stable",
-        OPENCLAW_UPDATE_POST_CORE_INSTALL_RECORDS_PATH: recordsPath,
+        QUIET_CORE_UPDATE_POST_CORE: "1",
+        QUIET_CORE_UPDATE_POST_CORE_CHANNEL: "stable",
+        QUIET_CORE_UPDATE_POST_CORE_INSTALL_RECORDS_PATH: recordsPath,
       },
       async () => {
         await updateCommand({ json: true, restart: false });
@@ -1511,9 +1511,9 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_UPDATE_POST_CORE: "1",
-        OPENCLAW_UPDATE_POST_CORE_CHANNEL: "dev",
-        OPENCLAW_UPDATE_POST_CORE_REQUESTED_CHANNEL: "dev",
+        QUIET_CORE_UPDATE_POST_CORE: "1",
+        QUIET_CORE_UPDATE_POST_CORE_CHANNEL: "dev",
+        QUIET_CORE_UPDATE_POST_CORE_REQUESTED_CHANNEL: "dev",
       },
       async () => {
         await updateCommand({ restart: false });
@@ -1594,9 +1594,9 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_UPDATE_POST_CORE: "1",
-        OPENCLAW_UPDATE_POST_CORE_CHANNEL: "dev",
-        OPENCLAW_UPDATE_POST_CORE_REQUESTED_CHANNEL: "dev",
+        QUIET_CORE_UPDATE_POST_CORE: "1",
+        QUIET_CORE_UPDATE_POST_CORE_CHANNEL: "dev",
+        QUIET_CORE_UPDATE_POST_CORE_REQUESTED_CHANNEL: "dev",
       },
       async () => {
         await updateCommand({ restart: false });
@@ -1611,8 +1611,8 @@ describe("update-cli", () => {
   it("passes the update timeout budget into post-core plugin updates", async () => {
     await withEnvAsync(
       {
-        OPENCLAW_UPDATE_POST_CORE: "1",
-        OPENCLAW_UPDATE_POST_CORE_CHANNEL: "stable",
+        QUIET_CORE_UPDATE_POST_CORE: "1",
+        QUIET_CORE_UPDATE_POST_CORE_CHANNEL: "stable",
       },
       async () => {
         await updateCommand({ restart: false, timeout: "1800" });
@@ -1646,8 +1646,8 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_UPDATE_POST_CORE: "1",
-        OPENCLAW_UPDATE_POST_CORE_CHANNEL: "beta",
+        QUIET_CORE_UPDATE_POST_CORE: "1",
+        QUIET_CORE_UPDATE_POST_CORE_CHANNEL: "beta",
       },
       async () => {
         await updateCommand({ restart: false });
@@ -1668,8 +1668,8 @@ describe("update-cli", () => {
   it("uses a fail-closed integrity policy for post-core plugin updates", async () => {
     await withEnvAsync(
       {
-        OPENCLAW_UPDATE_POST_CORE: "1",
-        OPENCLAW_UPDATE_POST_CORE_CHANNEL: "stable",
+        QUIET_CORE_UPDATE_POST_CORE: "1",
+        QUIET_CORE_UPDATE_POST_CORE_CHANNEL: "stable",
       },
       async () => {
         await updateCommand({ restart: false });
@@ -1697,8 +1697,8 @@ describe("update-cli", () => {
     await expect(
       onIntegrityDrift({
         pluginId: "demo",
-        spec: "@openclaw/demo@1.0.0",
-        resolvedSpec: "@openclaw/demo@1.0.0",
+        spec: "@quiet-core/demo@1.0.0",
+        resolvedSpec: "@quiet-core/demo@1.0.0",
         expectedIntegrity: "sha512-old",
         actualIntegrity: "sha512-new",
       }),
@@ -1723,8 +1723,8 @@ describe("update-cli", () => {
       }) => {
         const proceed = await params.onIntegrityDrift?.({
           pluginId: "demo",
-          spec: "@openclaw/demo@1.0.0",
-          resolvedSpec: "@openclaw/demo@1.0.0",
+          spec: "@quiet-core/demo@1.0.0",
+          resolvedSpec: "@quiet-core/demo@1.0.0",
           resolvedVersion: "1.0.0",
           expectedIntegrity: "sha512-old",
           actualIntegrity: "sha512-new",
@@ -1739,7 +1739,7 @@ describe("update-cli", () => {
               status: "error",
               message:
                 proceed === false
-                  ? "Failed to update demo: aborted: npm package integrity drift detected for @openclaw/demo@1.0.0"
+                  ? "Failed to update demo: aborted: npm package integrity drift detected for @quiet-core/demo@1.0.0"
                   : "unexpected drift continuation",
             },
           ],
@@ -1757,8 +1757,8 @@ describe("update-cli", () => {
     expect(jsonOutput?.postUpdate?.plugins?.integrityDrifts).toEqual([
       {
         pluginId: "demo",
-        spec: "@openclaw/demo@1.0.0",
-        resolvedSpec: "@openclaw/demo@1.0.0",
+        spec: "@quiet-core/demo@1.0.0",
+        resolvedSpec: "@quiet-core/demo@1.0.0",
         resolvedVersion: "1.0.0",
         expectedIntegrity: "sha512-old",
         actualIntegrity: "sha512-new",
@@ -1782,7 +1782,7 @@ describe("update-cli", () => {
   });
 
   it("detects missing plugin payloads from persisted records before npm updates", async () => {
-    const installPath = createCaseDir("openclaw-missing-plugin-payload");
+    const installPath = createCaseDir("quiet-core-bot-missing-plugin-payload");
     fsSync.mkdirSync(installPath, { recursive: true });
     const config = {
       plugins: {
@@ -1802,7 +1802,7 @@ describe("update-cli", () => {
     loadInstalledPluginIndexInstallRecords.mockResolvedValueOnce({
       demo: {
         source: "npm",
-        spec: "@openclaw/demo@1.0.0",
+        spec: "@quiet-core/demo@1.0.0",
         installPath,
       },
     });
@@ -1919,7 +1919,7 @@ describe("update-cli", () => {
       const env = (options as { env?: NodeJS.ProcessEnv }).env;
       queueMicrotask(() => {
         void (async () => {
-          const resultPath = env?.OPENCLAW_UPDATE_POST_CORE_RESULT_PATH;
+          const resultPath = env?.QUIET_CORE_UPDATE_POST_CORE_RESULT_PATH;
           if (resultPath) {
             await fs.writeFile(
               resultPath,
@@ -2067,7 +2067,7 @@ describe("update-cli", () => {
 
   it("parses update status --json as the subcommand option", async () => {
     const program = new Command();
-    program.name("openclaw");
+    program.name("quiet-core-bot");
     program.enablePositionalOptions();
     let seenJson = false;
     const update = program.command("update").option("--json", "", false);
@@ -2078,7 +2078,7 @@ describe("update-cli", () => {
         seenJson = Boolean(opts.json);
       });
 
-    await program.parseAsync(["node", "openclaw", "update", "status", "--json"]);
+    await program.parseAsync(["node", "quiet-core-bot", "update", "status", "--json"]);
 
     expect(seenJson).toBe(true);
   });
@@ -2096,7 +2096,7 @@ describe("update-cli", () => {
       name: "defaults to stable channel for package installs when unset",
       options: { yes: true },
       prepare: async () => {
-        const tempDir = createCaseDir("openclaw-update");
+        const tempDir = createCaseDir("quiet-core-bot-update");
         mockPackageInstallStatus(tempDir);
       },
       expectedChannel: undefined as "stable" | undefined,
@@ -2140,7 +2140,7 @@ describe("update-cli", () => {
           expect(call?.tag).toBe(expectedTag);
         }
       } else {
-        expectPackageInstallSpec("openclaw@latest");
+        expectPackageInstallSpec("quiet-core-bot@latest");
       }
 
       if (expectedPersistedChannel !== undefined) {
@@ -2154,7 +2154,7 @@ describe("update-cli", () => {
   );
 
   it("falls back to latest when beta tag is older than release", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("quiet-core-bot-update");
 
     mockPackageInstallStatus(tempDir);
     vi.mocked(readConfigFileSnapshot).mockResolvedValue({
@@ -2167,11 +2167,11 @@ describe("update-cli", () => {
     });
     await updateCommand({});
 
-    expectPackageInstallSpec("openclaw@latest");
+    expectPackageInstallSpec("quiet-core-bot@latest");
   });
 
   it("refreshes package-manager updates when the installed version already matches the target", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("quiet-core-bot-update");
     mockPackageInstallStatus(tempDir);
     readPackageVersion.mockResolvedValue("2026.4.22");
     vi.mocked(resolveNpmChannelTag).mockResolvedValue({
@@ -2194,7 +2194,7 @@ describe("update-cli", () => {
   });
 
   it("runs the package update when latest target lookup is unresolved", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("quiet-core-bot-update");
     setTty(false);
     mockPackageInstallStatus(tempDir);
     readPackageVersion.mockResolvedValue("2026.4.22");
@@ -2208,11 +2208,11 @@ describe("update-cli", () => {
     const errors = vi.mocked(defaultRuntime.error).mock.calls.map((call) => String(call[0]));
     expect(errors.join("\n")).not.toContain("Downgrade confirmation required.");
     expect(defaultRuntime.exit).not.toHaveBeenCalled();
-    expectPackageInstallSpec("openclaw@latest");
+    expectPackageInstallSpec("quiet-core-bot@latest");
   });
 
   it("blocks the package update when a non-latest dist-tag lookup is unresolved", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("quiet-core-bot-update");
     setTty(false);
     mockPackageInstallStatus(tempDir);
     readPackageVersion.mockResolvedValue("2026.4.22");
@@ -2231,7 +2231,7 @@ describe("update-cli", () => {
   });
 
   it("warns but still runs package updates when disk space looks low", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("quiet-core-bot-update");
     mockPackageInstallStatus(tempDir);
     vi.spyOn(fsSync, "statfsSync").mockReturnValue(
       statfsFixture({
@@ -2242,12 +2242,12 @@ describe("update-cli", () => {
 
     await updateCommand({ yes: true });
 
-    expectPackageInstallSpec("openclaw@latest");
+    expectPackageInstallSpec("quiet-core-bot@latest");
     const preflightParams = vi.mocked(fetchNpmPackageTargetStatus).mock.calls[0]?.[0];
     expect(preflightParams).toEqual(
       expect.objectContaining({
         target: "latest",
-        spec: "openclaw@latest",
+        spec: "quiet-core-bot@latest",
         cwd: process.cwd(),
       }),
     );
@@ -2262,7 +2262,7 @@ describe("update-cli", () => {
   });
 
   it("allows package updates from inherited gateway service env when the managed gateway is not running", async () => {
-    mockPackageInstallStatus(createCaseDir("openclaw-update"));
+    mockPackageInstallStatus(createCaseDir("quiet-core-bot-update"));
     serviceReadRuntime.mockResolvedValueOnce({
       status: "stopped",
       state: "stopped",
@@ -2270,8 +2270,8 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
-        OPENCLAW_SERVICE_KIND: "gateway",
+        QUIET_CORE_SERVICE_MARKER: "quiet-core-bot",
+        QUIET_CORE_SERVICE_KIND: "gateway",
       },
       async () => {
         await updateCommand({ yes: true });
@@ -2285,24 +2285,24 @@ describe("update-cli", () => {
         "Run `quiet-core-bot update` from a shell outside the gateway service, or stop the gateway service first and then update.",
       ].join("\n"),
     );
-    expectPackageInstallSpec("openclaw@latest");
+    expectPackageInstallSpec("quiet-core-bot@latest");
   });
 
   it("refuses package updates from inherited gateway service env when --no-restart leaves the gateway running", async () => {
-    mockPackageInstallStatus(createCaseDir("openclaw-update"));
+    mockPackageInstallStatus(createCaseDir("quiet-core-bot-update"));
     serviceReadCommand.mockResolvedValue({
-      programArguments: ["openclaw", "gateway", "run"],
+      programArguments: ["quiet-core-bot", "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
-        OPENCLAW_SERVICE_KIND: "gateway",
+        QUIET_CORE_SERVICE_MARKER: "quiet-core-bot",
+        QUIET_CORE_SERVICE_KIND: "gateway",
       },
     });
     serviceLoaded.mockResolvedValue(true);
 
     await withEnvAsync(
       {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
-        OPENCLAW_SERVICE_KIND: "gateway",
+        QUIET_CORE_SERVICE_MARKER: "quiet-core-bot",
+        QUIET_CORE_SERVICE_KIND: "gateway",
       },
       async () => {
         await updateCommand({ yes: true, restart: false });
@@ -2335,20 +2335,20 @@ describe("update-cli", () => {
   ])(
     "refuses package updates from inherited gateway service env when $name",
     async ({ setupRuntime }) => {
-      mockPackageInstallStatus(createCaseDir("openclaw-update"));
+      mockPackageInstallStatus(createCaseDir("quiet-core-bot-update"));
       serviceReadCommand.mockResolvedValue({
-        programArguments: ["openclaw", "gateway", "run"],
+        programArguments: ["quiet-core-bot", "gateway", "run"],
         environment: {
-          OPENCLAW_SERVICE_MARKER: "openclaw",
-          OPENCLAW_SERVICE_KIND: "gateway",
+          QUIET_CORE_SERVICE_MARKER: "quiet-core-bot",
+          QUIET_CORE_SERVICE_KIND: "gateway",
         },
       });
       setupRuntime();
 
       await withEnvAsync(
         {
-          OPENCLAW_SERVICE_MARKER: "openclaw",
-          OPENCLAW_SERVICE_KIND: "gateway",
+          QUIET_CORE_SERVICE_MARKER: "quiet-core-bot",
+          QUIET_CORE_SERVICE_KIND: "gateway",
         },
         async () => {
           await updateCommand({ yes: true });
@@ -2370,7 +2370,7 @@ describe("update-cli", () => {
   );
 
   it("refuses package updates from inherited gateway service env when the service definition is missing but runtime is live", async () => {
-    mockPackageInstallStatus(createCaseDir("openclaw-update"));
+    mockPackageInstallStatus(createCaseDir("quiet-core-bot-update"));
     serviceReadCommand.mockResolvedValue(null);
     serviceReadRuntime.mockResolvedValueOnce({
       status: "running",
@@ -2380,8 +2380,8 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
-        OPENCLAW_SERVICE_KIND: "gateway",
+        QUIET_CORE_SERVICE_MARKER: "quiet-core-bot",
+        QUIET_CORE_SERVICE_KIND: "gateway",
       },
       async () => {
         await updateCommand({ yes: true });
@@ -2402,7 +2402,7 @@ describe("update-cli", () => {
   });
 
   it("refuses package updates from inside the active gateway process tree", async () => {
-    mockPackageInstallStatus(createCaseDir("openclaw-update"));
+    mockPackageInstallStatus(createCaseDir("quiet-core-bot-update"));
     serviceLoaded.mockResolvedValue(true);
     mockGetSelfAndAncestorPidsSync.mockReturnValue(new Set<number>([process.pid, 4242]));
 
@@ -2419,7 +2419,7 @@ describe("update-cli", () => {
   });
 
   it("refuses package updates from inherited gateway runtime pid when process ancestry is truncated", async () => {
-    mockPackageInstallStatus(createCaseDir("openclaw-update"));
+    mockPackageInstallStatus(createCaseDir("quiet-core-bot-update"));
     serviceLoaded.mockResolvedValue(true);
     serviceReadRuntime.mockResolvedValue({
       status: "running",
@@ -2430,8 +2430,8 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
-        OPENCLAW_SERVICE_KIND: "gateway",
+        QUIET_CORE_SERVICE_MARKER: "quiet-core-bot",
+        QUIET_CORE_SERVICE_KIND: "gateway",
         [GATEWAY_SERVICE_RUNTIME_PID_ENV]: "4242",
       },
       async () => {
@@ -2450,7 +2450,7 @@ describe("update-cli", () => {
   });
 
   it("blocks package updates when the target requires a newer Node runtime", async () => {
-    mockPackageInstallStatus(createCaseDir("openclaw-update"));
+    mockPackageInstallStatus(createCaseDir("quiet-core-bot-update"));
     vi.mocked(fetchNpmPackageTargetStatus).mockResolvedValue({
       target: "latest",
       version: "2026.3.23-2",
@@ -2466,7 +2466,7 @@ describe("update-cli", () => {
     const errors = vi.mocked(defaultRuntime.error).mock.calls.map((call) => String(call[0]));
     expect(errors.join("\n")).toContain("Node ");
     expect(errors.join("\n")).toContain(
-      "Bare `npm i -g quiet-core-bot` can silently install an older compatible release.",
+      "Bare `npm i -g openclaw` can silently install an older compatible release.",
     );
   });
 
@@ -2474,96 +2474,96 @@ describe("update-cli", () => {
     {
       name: "explicit dist-tag",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
+        mockPackageInstallStatus(createCaseDir("quiet-core-bot-update"));
         await updateCommand({ tag: "next" });
       },
-      expectedSpec: "openclaw@next",
+      expectedSpec: "quiet-core-bot@next",
     },
     {
       name: "main shorthand",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
+        mockPackageInstallStatus(createCaseDir("quiet-core-bot-update"));
         await updateCommand({ yes: true, tag: "main" });
       },
-      expectedSpec: "github:openclaw/openclaw#main",
+      expectedSpec: "github:liuda1999/quiet-core-bot#main",
     },
     {
       name: "explicit git package spec",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
-        await updateCommand({ yes: true, tag: "github:openclaw/openclaw#main" });
+        mockPackageInstallStatus(createCaseDir("quiet-core-bot-update"));
+        await updateCommand({ yes: true, tag: "github:liuda1999/quiet-core-bot#main" });
       },
-      expectedSpec: "github:openclaw/openclaw#main",
+      expectedSpec: "github:liuda1999/quiet-core-bot#main",
     },
     {
       name: "aliased git package spec",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
-        await updateCommand({ yes: true, tag: "Quiet Core bot@github:openclaw/openclaw#main" });
+        mockPackageInstallStatus(createCaseDir("quiet-core-bot-update"));
+        await updateCommand({ yes: true, tag: "Quiet Core bot@github:liuda1999/quiet-core-bot#main" });
       },
-      expectedSpec: "Quiet Core bot@github:openclaw/openclaw#main",
+      expectedSpec: "Quiet Core bot@github:liuda1999/quiet-core-bot#main",
     },
     {
       name: "full git URL package spec",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
-        await updateCommand({ yes: true, tag: "https://github.com/openclaw/openclaw.git#main" });
+        mockPackageInstallStatus(createCaseDir("quiet-core-bot-update"));
+        await updateCommand({ yes: true, tag: "https://github.com/liuda1999/Quiet-Core-bot.git#main" });
       },
-      expectedSpec: "https://github.com/openclaw/openclaw.git#main",
+      expectedSpec: "https://github.com/liuda1999/Quiet-Core-bot.git#main",
     },
     {
       name: "hosted GitHub URL package spec without git suffix",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
-        await updateCommand({ yes: true, tag: "https://github.com/openclaw/openclaw#main" });
+        mockPackageInstallStatus(createCaseDir("quiet-core-bot-update"));
+        await updateCommand({ yes: true, tag: "https://github.com/liuda1999/Quiet-Core-bot#main" });
       },
-      expectedSpec: "https://github.com/openclaw/openclaw#main",
+      expectedSpec: "https://github.com/liuda1999/Quiet-Core-bot#main",
     },
     {
       name: "aliased hosted GitHub URL package spec without git suffix",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
+        mockPackageInstallStatus(createCaseDir("quiet-core-bot-update"));
         await updateCommand({
           yes: true,
-          tag: "openclaw@https://github.com/openclaw/openclaw#main",
+          tag: "quiet-core-bot@https://github.com/liuda1999/Quiet-Core-bot#main",
         });
       },
-      expectedSpec: "https://github.com/openclaw/openclaw#main",
+      expectedSpec: "https://github.com/liuda1999/Quiet-Core-bot#main",
     },
     {
       name: "GitHub shorthand package spec",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
-        await updateCommand({ yes: true, tag: "openclaw/openclaw#main" });
+        mockPackageInstallStatus(createCaseDir("quiet-core-bot-update"));
+        await updateCommand({ yes: true, tag: "liuda1999/quiet-core-bot#main" });
       },
-      expectedSpec: "openclaw/openclaw#main",
+      expectedSpec: "liuda1999/quiet-core-bot#main",
     },
     {
       name: "SCP-style SSH package spec",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
-        await updateCommand({ yes: true, tag: "git@github.com:openclaw/openclaw.git#main" });
+        mockPackageInstallStatus(createCaseDir("quiet-core-bot-update"));
+        await updateCommand({ yes: true, tag: "git@github.com:liuda1999/quiet-core-bot.git#main" });
       },
-      expectedSpec: "git@github.com:openclaw/openclaw.git#main",
+      expectedSpec: "git@github.com:liuda1999/quiet-core-bot.git#main",
     },
     {
-      name: "OPENCLAW_UPDATE_PACKAGE_SPEC override",
+      name: "QUIET_CORE_UPDATE_PACKAGE_SPEC override",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
+        mockPackageInstallStatus(createCaseDir("quiet-core-bot-update"));
         await withEnvAsync(
-          { OPENCLAW_UPDATE_PACKAGE_SPEC: "http://10.211.55.2:8138/openclaw-next.tgz" },
+          { QUIET_CORE_UPDATE_PACKAGE_SPEC: "http://10.211.55.2:8138/quiet-core-bot-next.tgz" },
           async () => {
             await updateCommand({ yes: true, tag: "latest" });
           },
         );
       },
-      expectedSpec: "http://10.211.55.2:8138/openclaw-next.tgz",
+      expectedSpec: "http://10.211.55.2:8138/quiet-core-bot-next.tgz",
     },
   ] as const)(
     "resolves package install specs from tags and env overrides: $name",
     async ({ run, expectedSpec }) => {
       vi.clearAllMocks();
-      readPackageName.mockResolvedValue("openclaw");
+      readPackageName.mockResolvedValue("quiet-core-bot");
       readPackageVersion.mockResolvedValue("1.0.0");
       resolveGlobalManager.mockResolvedValue("npm");
       vi.mocked(resolveOpenClawPackageRoot).mockResolvedValue(process.cwd());
@@ -2573,14 +2573,14 @@ describe("update-cli", () => {
   );
 
   it("fails package updates when the installed correction version does not match the requested target", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("quiet-core-bot-update");
     const nodeModules = path.join(tempDir, "node_modules");
-    const pkgRoot = path.join(nodeModules, "openclaw");
+    const pkgRoot = path.join(nodeModules, "quiet-core-bot");
     mockPackageInstallStatus(tempDir);
     await fs.mkdir(pkgRoot, { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.3.23" }),
+      JSON.stringify({ name: "quiet-core-bot", version: "2026.3.23" }),
       "utf-8",
     );
     for (const relativePath of TEST_BUNDLED_RUNTIME_SIDECAR_PATHS) {
@@ -2621,10 +2621,10 @@ describe("update-cli", () => {
   });
 
   it("stops package post-update work when staged npm install verification fails", async () => {
-    const tempDir = await createTrackedTempDir("openclaw-update-staged-fail-");
+    const tempDir = await createTrackedTempDir("quiet-core-bot-update-staged-fail-");
     const prefix = path.join(tempDir, "prefix");
     const nodeModules = path.join(prefix, "lib", "node_modules");
-    const pkgRoot = path.join(nodeModules, "openclaw");
+    const pkgRoot = path.join(nodeModules, "quiet-core-bot");
     mockPackageInstallStatus(pkgRoot);
     readPackageVersion.mockResolvedValue("2026.4.20");
     vi.mocked(resolveNpmChannelTag).mockResolvedValue({
@@ -2634,7 +2634,7 @@ describe("update-cli", () => {
     await fs.mkdir(path.join(pkgRoot, "dist"), { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.20" }),
+      JSON.stringify({ name: "quiet-core-bot", version: "2026.4.20" }),
       "utf-8",
     );
     await fs.writeFile(path.join(pkgRoot, "dist", "index.js"), "export {};\n", "utf-8");
@@ -2661,11 +2661,11 @@ describe("update-cli", () => {
         if (typeof stagePrefix !== "string") {
           throw new Error("missing stage prefix");
         }
-        const stageRoot = path.join(stagePrefix, "lib", "node_modules", "openclaw");
+        const stageRoot = path.join(stagePrefix, "lib", "node_modules", "quiet-core-bot");
         await fs.mkdir(path.join(stageRoot, "dist"), { recursive: true });
         await fs.writeFile(
           path.join(stageRoot, "package.json"),
-          JSON.stringify({ name: "openclaw", version: "2026.4.25" }),
+          JSON.stringify({ name: "quiet-core-bot", version: "2026.4.25" }),
           "utf-8",
         );
         await fs.writeFile(path.join(stageRoot, "dist", "index.js"), "export {};\n", "utf-8");
@@ -2700,15 +2700,15 @@ describe("update-cli", () => {
   });
 
   it("marks package post-update doctor as update-in-progress", async () => {
-    const tempDir = await createTrackedTempDir("openclaw-update-package-");
+    const tempDir = await createTrackedTempDir("quiet-core-bot-update-package-");
     const nodeModules = path.join(tempDir, "node_modules");
-    const pkgRoot = path.join(nodeModules, "openclaw");
+    const pkgRoot = path.join(nodeModules, "quiet-core-bot");
     const entryPath = path.join(pkgRoot, "dist", "index.js");
     mockPackageInstallStatus(pkgRoot);
     await fs.mkdir(path.dirname(entryPath), { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.21" }),
+      JSON.stringify({ name: "quiet-core-bot", version: "2026.4.21" }),
       "utf-8",
     );
     await fs.writeFile(entryPath, "export {};\n", "utf-8");
@@ -2751,20 +2751,20 @@ describe("update-cli", () => {
     expect(doctorCall?.[0][0]).toContain("node");
     expect(doctorCall?.[0].slice(1)).toEqual([entryPath, "doctor", "--non-interactive", "--fix"]);
     expect(
-      (doctorCall?.[1].env as NodeJS.ProcessEnv | undefined)?.OPENCLAW_UPDATE_IN_PROGRESS,
+      (doctorCall?.[1].env as NodeJS.ProcessEnv | undefined)?.QUIET_CORE_UPDATE_IN_PROGRESS,
     ).toBe("1");
   });
 
   it("continues package post-core work for explicit post-update doctor advisories", async () => {
-    const tempDir = await createTrackedTempDir("openclaw-update-package-doctor-warning-");
+    const tempDir = await createTrackedTempDir("quiet-core-bot-update-package-doctor-warning-");
     const nodeModules = path.join(tempDir, "node_modules");
-    const pkgRoot = path.join(nodeModules, "openclaw");
+    const pkgRoot = path.join(nodeModules, "quiet-core-bot");
     const entryPath = path.join(pkgRoot, "dist", "index.js");
     mockPackageInstallStatus(pkgRoot);
     await fs.mkdir(path.dirname(entryPath), { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.21" }),
+      JSON.stringify({ name: "quiet-core-bot", version: "2026.4.21" }),
       "utf-8",
     );
     await fs.writeFile(entryPath, "export {};\n", "utf-8");
@@ -2826,7 +2826,7 @@ describe("update-cli", () => {
     const postCoreCall = spawnCall();
     expect(postCoreCall?.[0]).toMatch(/node/);
     expect(postCoreCall?.[1]).toEqual([entryPath, "update", "--json", "--no-restart", "--yes"]);
-    expect(postCoreCall?.[2]?.env?.OPENCLAW_UPDATE_POST_CORE).toBe("1");
+    expect(postCoreCall?.[2]?.env?.QUIET_CORE_UPDATE_POST_CORE).toBe("1");
     expect(updateNpmInstalledPlugins).not.toHaveBeenCalled();
     expect(defaultRuntime.exit).not.toHaveBeenCalledWith(1);
     const jsonOutput = lastWriteJsonCall() as UpdateRunResult | undefined;
@@ -2843,15 +2843,15 @@ describe("update-cli", () => {
   });
 
   it("fails package updates when the post-update doctor is killed after verification", async () => {
-    const tempDir = await createTrackedTempDir("openclaw-update-package-doctor-timeout-");
+    const tempDir = await createTrackedTempDir("quiet-core-bot-update-package-doctor-timeout-");
     const nodeModules = path.join(tempDir, "node_modules");
-    const pkgRoot = path.join(nodeModules, "openclaw");
+    const pkgRoot = path.join(nodeModules, "quiet-core-bot");
     const entryPath = path.join(pkgRoot, "dist", "index.js");
     mockPackageInstallStatus(pkgRoot);
     await fs.mkdir(path.dirname(entryPath), { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.21" }),
+      JSON.stringify({ name: "quiet-core-bot", version: "2026.4.21" }),
       "utf-8",
     );
     await fs.writeFile(entryPath, "export {};\n", "utf-8");
@@ -2915,15 +2915,15 @@ describe("update-cli", () => {
   });
 
   it("runs package post-update doctor from the verified package root after a staged swap", async () => {
-    const tempDir = await createTrackedTempDir("openclaw-update-staged-doctor-");
+    const tempDir = await createTrackedTempDir("quiet-core-bot-update-staged-doctor-");
     const nodeModules = path.join(tempDir, "lib", "node_modules");
-    const pkgRoot = path.join(nodeModules, "openclaw");
+    const pkgRoot = path.join(nodeModules, "quiet-core-bot");
     const entryPath = path.join(pkgRoot, "dist", "index.js");
     mockPackageInstallStatus(pkgRoot);
     await fs.mkdir(path.dirname(entryPath), { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.21" }),
+      JSON.stringify({ name: "quiet-core-bot", version: "2026.4.21" }),
       "utf-8",
     );
     await fs.writeFile(entryPath, "export {};\n", "utf-8");
@@ -2963,13 +2963,13 @@ describe("update-cli", () => {
           requireValue(stagePrefix, "stage prefix"),
           "lib",
           "node_modules",
-          "openclaw",
+          "quiet-core-bot",
         );
         const stageEntryPath = path.join(stagePackageRoot, "dist", "index.js");
         await fs.mkdir(path.dirname(stageEntryPath), { recursive: true });
         await fs.writeFile(
           path.join(stagePackageRoot, "package.json"),
-          JSON.stringify({ name: "openclaw", version: "2026.5.14" }),
+          JSON.stringify({ name: "quiet-core-bot", version: "2026.5.14" }),
           "utf-8",
         );
         await fs.writeFile(stageEntryPath, "export {};\n", "utf-8");
@@ -2997,30 +2997,30 @@ describe("update-cli", () => {
     expect(doctorCall?.[0].slice(1)).toEqual([entryPath, "doctor", "--non-interactive", "--fix"]);
     expect(doctorCall?.[1].cwd).toBe(pkgRoot);
     expect(
-      (doctorCall?.[1].env as NodeJS.ProcessEnv | undefined)?.OPENCLAW_COMPATIBILITY_HOST_VERSION,
+      (doctorCall?.[1].env as NodeJS.ProcessEnv | undefined)?.QUIET_CORE_COMPATIBILITY_HOST_VERSION,
     ).toBe("2026.5.14");
     expect(defaultRuntime.exit).not.toHaveBeenCalledWith(1);
   });
 
   it("stops a running managed gateway before package replacement", async () => {
-    const tempDir = await createTrackedTempDir("openclaw-update-stop-service-");
+    const tempDir = await createTrackedTempDir("quiet-core-bot-update-stop-service-");
     const nodeModules = path.join(tempDir, "node_modules");
-    const pkgRoot = path.join(nodeModules, "openclaw");
+    const pkgRoot = path.join(nodeModules, "quiet-core-bot");
     const entryPath = path.join(pkgRoot, "dist", "index.js");
     mockPackageInstallStatus(pkgRoot);
     await fs.mkdir(path.dirname(entryPath), { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.21" }),
+      JSON.stringify({ name: "quiet-core-bot", version: "2026.4.21" }),
       "utf-8",
     );
     await fs.writeFile(entryPath, "export {};\n", "utf-8");
     await writePackageDistInventory(pkgRoot);
     serviceReadCommand.mockResolvedValue({
-      programArguments: ["openclaw", "gateway", "run"],
+      programArguments: ["quiet-core-bot", "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
-        OPENCLAW_SERVICE_KIND: "gateway",
+        QUIET_CORE_SERVICE_MARKER: "quiet-core-bot",
+        QUIET_CORE_SERVICE_KIND: "gateway",
       },
     });
     serviceLoaded.mockResolvedValue(true);
@@ -3060,8 +3060,8 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
-        OPENCLAW_SERVICE_KIND: "gateway",
+        QUIET_CORE_SERVICE_MARKER: "quiet-core-bot",
+        QUIET_CORE_SERVICE_KIND: "gateway",
       },
       async () => {
         await updateCommand({ yes: true });
@@ -3078,8 +3078,8 @@ describe("update-cli", () => {
     const serviceStopCall = serviceStop.mock.calls[0]?.[0] as
       | { env?: NodeJS.ProcessEnv }
       | undefined;
-    expect(serviceStopCall?.env?.OPENCLAW_SERVICE_MARKER).toBe("openclaw");
-    expect(serviceStopCall?.env?.OPENCLAW_SERVICE_KIND).toBe("gateway");
+    expect(serviceStopCall?.env?.QUIET_CORE_SERVICE_MARKER).toBe("quiet-core-bot");
+    expect(serviceStopCall?.env?.QUIET_CORE_SERVICE_KIND).toBe("gateway");
     const serviceStopCallOrder = serviceStop.mock.invocationCallOrder[0];
     const requiredServiceStopCallOrder = requireValue(
       serviceStopCallOrder,
@@ -3094,8 +3094,8 @@ describe("update-cli", () => {
     serviceReadCommand.mockResolvedValue({
       programArguments: ["node", serviceEntrypoint, "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
-        OPENCLAW_SERVICE_KIND: "gateway",
+        QUIET_CORE_SERVICE_MARKER: "quiet-core-bot",
+        QUIET_CORE_SERVICE_KIND: "gateway",
       },
     });
     serviceLoaded.mockResolvedValue(true);
@@ -3113,22 +3113,22 @@ describe("update-cli", () => {
     const serviceStopCall = serviceStop.mock.calls[0]?.[0] as
       | { env?: NodeJS.ProcessEnv }
       | undefined;
-    expect(serviceStopCall?.env?.OPENCLAW_SERVICE_MARKER).toBe("openclaw");
-    expect(serviceStopCall?.env?.OPENCLAW_SERVICE_KIND).toBe("gateway");
+    expect(serviceStopCall?.env?.QUIET_CORE_SERVICE_MARKER).toBe("quiet-core-bot");
+    expect(serviceStopCall?.env?.QUIET_CORE_SERVICE_KIND).toBe("gateway");
     const updateCall = vi.mocked(runGatewayUpdate).mock.calls[0]?.[0];
     expect(updateCall?.beforeGitMutation).toEqual(expect.any(Function));
   });
 
   it("stops a running managed git gateway when wrapper commands hide the service root", async () => {
     const wrapperPath = path.join(
-      createCaseDir("openclaw-update-wrapper-service"),
+      createCaseDir("quiet-core-bot-update-wrapper-service"),
       "gateway-wrapper",
     );
     serviceReadCommand.mockResolvedValue({
       programArguments: [wrapperPath, "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
-        OPENCLAW_SERVICE_KIND: "gateway",
+        QUIET_CORE_SERVICE_MARKER: "quiet-core-bot",
+        QUIET_CORE_SERVICE_KIND: "gateway",
       },
     });
     serviceLoaded.mockResolvedValue(true);
@@ -3152,8 +3152,8 @@ describe("update-cli", () => {
     serviceReadCommand.mockResolvedValue({
       programArguments: ["node", serviceEntrypoint, "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
-        OPENCLAW_SERVICE_KIND: "gateway",
+        QUIET_CORE_SERVICE_MARKER: "quiet-core-bot",
+        QUIET_CORE_SERVICE_KIND: "gateway",
       },
     });
     serviceLoaded.mockResolvedValue(false);
@@ -3187,8 +3187,8 @@ describe("update-cli", () => {
     serviceReadCommand.mockResolvedValue({
       programArguments: ["node", serviceEntrypoint, "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
-        OPENCLAW_SERVICE_KIND: "gateway",
+        QUIET_CORE_SERVICE_MARKER: "quiet-core-bot",
+        QUIET_CORE_SERVICE_KIND: "gateway",
       },
     });
     serviceLoaded.mockResolvedValue(false);
@@ -3217,14 +3217,14 @@ describe("update-cli", () => {
   });
 
   it("stops a managed gateway rooted at the git checkout when switching package installs to dev", async () => {
-    const packageRoot = createCaseDir("openclaw-update-package-root");
-    const gitRoot = await createTrackedTempDir("openclaw-update-git-service-root-");
+    const packageRoot = createCaseDir("quiet-core-bot-update-package-root");
+    const gitRoot = await createTrackedTempDir("quiet-core-bot-update-git-service-root-");
     const serviceEntrypoint = path.join(gitRoot, "dist", "index.js");
     await fs.mkdir(path.join(gitRoot, ".git"), { recursive: true });
     await fs.mkdir(path.dirname(serviceEntrypoint), { recursive: true });
     await fs.writeFile(
       path.join(gitRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.21" }),
+      JSON.stringify({ name: "quiet-core-bot", version: "2026.4.21" }),
       "utf-8",
     );
     await fs.writeFile(serviceEntrypoint, "export {};\n", "utf-8");
@@ -3233,8 +3233,8 @@ describe("update-cli", () => {
     serviceReadCommand.mockResolvedValue({
       programArguments: ["node", serviceEntrypoint, "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
-        OPENCLAW_SERVICE_KIND: "gateway",
+        QUIET_CORE_SERVICE_MARKER: "quiet-core-bot",
+        QUIET_CORE_SERVICE_KIND: "gateway",
       },
     });
     serviceLoaded.mockResolvedValue(true);
@@ -3250,7 +3250,7 @@ describe("update-cli", () => {
       }),
     );
 
-    await withEnvAsync({ OPENCLAW_GIT_DIR: gitRoot }, async () => {
+    await withEnvAsync({ QUIET_CORE_GIT_DIR: gitRoot }, async () => {
       await updateCommand({ channel: "dev", yes: true });
     });
 
@@ -3262,19 +3262,19 @@ describe("update-cli", () => {
   });
 
   it("stops a managed gateway rooted at the package install when switching package installs to dev", async () => {
-    const packageRoot = await createTrackedTempDir("openclaw-update-package-service-root-");
+    const packageRoot = await createTrackedTempDir("quiet-core-bot-update-package-service-root-");
     const packageEntrypoint = path.join(packageRoot, "dist", "index.js");
-    const gitRoot = await createTrackedTempDir("openclaw-update-git-service-root-");
+    const gitRoot = await createTrackedTempDir("quiet-core-bot-update-git-service-root-");
     await fs.mkdir(path.join(gitRoot, ".git"), { recursive: true });
     await fs.mkdir(path.dirname(packageEntrypoint), { recursive: true });
     await fs.writeFile(
       path.join(gitRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.21" }),
+      JSON.stringify({ name: "quiet-core-bot", version: "2026.4.21" }),
       "utf-8",
     );
     await fs.writeFile(
       path.join(packageRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.20" }),
+      JSON.stringify({ name: "quiet-core-bot", version: "2026.4.20" }),
       "utf-8",
     );
     await fs.writeFile(packageEntrypoint, "export {};\n", "utf-8");
@@ -3283,8 +3283,8 @@ describe("update-cli", () => {
     serviceReadCommand.mockResolvedValue({
       programArguments: ["node", packageEntrypoint, "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
-        OPENCLAW_SERVICE_KIND: "gateway",
+        QUIET_CORE_SERVICE_MARKER: "quiet-core-bot",
+        QUIET_CORE_SERVICE_KIND: "gateway",
       },
     });
     serviceLoaded.mockResolvedValue(true);
@@ -3300,7 +3300,7 @@ describe("update-cli", () => {
       }),
     );
 
-    await withEnvAsync({ OPENCLAW_GIT_DIR: gitRoot }, async () => {
+    await withEnvAsync({ QUIET_CORE_GIT_DIR: gitRoot }, async () => {
       await updateCommand({ channel: "dev", yes: true });
     });
 
@@ -3312,20 +3312,20 @@ describe("update-cli", () => {
   });
 
   it("does not stop or restart a managed gateway owned by another git checkout", async () => {
-    const otherRoot = await createTrackedTempDir("openclaw-update-other-service-root-");
+    const otherRoot = await createTrackedTempDir("quiet-core-bot-update-other-service-root-");
     const otherEntrypoint = path.join(otherRoot, "dist", "index.js");
     await fs.mkdir(path.dirname(otherEntrypoint), { recursive: true });
     await fs.writeFile(
       path.join(otherRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.21" }),
+      JSON.stringify({ name: "quiet-core-bot", version: "2026.4.21" }),
       "utf-8",
     );
     await fs.writeFile(otherEntrypoint, "export {};\n", "utf-8");
     serviceReadCommand.mockResolvedValue({
       programArguments: ["node", otherEntrypoint, "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
-        OPENCLAW_SERVICE_KIND: "gateway",
+        QUIET_CORE_SERVICE_MARKER: "quiet-core-bot",
+        QUIET_CORE_SERVICE_KIND: "gateway",
       },
     });
     serviceLoaded.mockResolvedValue(true);
@@ -3360,8 +3360,8 @@ describe("update-cli", () => {
     serviceReadCommand.mockResolvedValue({
       programArguments: ["node", serviceEntrypoint, "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
-        OPENCLAW_SERVICE_KIND: "gateway",
+        QUIET_CORE_SERVICE_MARKER: "quiet-core-bot",
+        QUIET_CORE_SERVICE_KIND: "gateway",
       },
     });
     serviceLoaded.mockResolvedValue(true);
@@ -3381,25 +3381,25 @@ describe("update-cli", () => {
   });
 
   it("keeps managed service stop output off stdout during json package updates", async () => {
-    const tempDir = await createTrackedTempDir("openclaw-update-json-stop-service-");
+    const tempDir = await createTrackedTempDir("quiet-core-bot-update-json-stop-service-");
     const nodeModules = path.join(tempDir, "node_modules");
-    const pkgRoot = path.join(nodeModules, "openclaw");
+    const pkgRoot = path.join(nodeModules, "quiet-core-bot");
     const entryPath = path.join(pkgRoot, "dist", "index.js");
     const stdoutWrite = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
     mockPackageInstallStatus(pkgRoot);
     await fs.mkdir(path.dirname(entryPath), { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.21" }),
+      JSON.stringify({ name: "quiet-core-bot", version: "2026.4.21" }),
       "utf-8",
     );
     await fs.writeFile(entryPath, "export {};\n", "utf-8");
     await writePackageDistInventory(pkgRoot);
     serviceReadCommand.mockResolvedValue({
-      programArguments: ["openclaw", "gateway", "run"],
+      programArguments: ["quiet-core-bot", "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
-        OPENCLAW_SERVICE_KIND: "gateway",
+        QUIET_CORE_SERVICE_MARKER: "quiet-core-bot",
+        QUIET_CORE_SERVICE_KIND: "gateway",
       },
     });
     serviceLoaded.mockResolvedValue(true);
@@ -3409,7 +3409,7 @@ describe("update-cli", () => {
       state: "running",
     });
     serviceStop.mockImplementationOnce(async (params: { stdout?: NodeJS.WritableStream }) => {
-      params.stdout?.write("Stopped systemd service: openclaw-gateway.service\n");
+      params.stdout?.write("Stopped systemd service: quiet-core-bot-gateway.service\n");
     });
     pathExists.mockImplementation(async (candidate: string) => {
       try {
@@ -3453,24 +3453,24 @@ describe("update-cli", () => {
   });
 
   it("disarms legacy launchd updater jobs before stopping the gateway", async () => {
-    const tempDir = await createTrackedTempDir("openclaw-update-launchd-loop-");
+    const tempDir = await createTrackedTempDir("quiet-core-bot-update-launchd-loop-");
     const nodeModules = path.join(tempDir, "node_modules");
-    const pkgRoot = path.join(nodeModules, "openclaw");
+    const pkgRoot = path.join(nodeModules, "quiet-core-bot");
     const entryPath = path.join(pkgRoot, "dist", "index.js");
     mockPackageInstallStatus(pkgRoot);
     await fs.mkdir(path.dirname(entryPath), { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.21" }),
+      JSON.stringify({ name: "quiet-core-bot", version: "2026.4.21" }),
       "utf-8",
     );
     await fs.writeFile(entryPath, "export {};\n", "utf-8");
     await writePackageDistInventory(pkgRoot);
     serviceReadCommand.mockResolvedValue({
-      programArguments: ["openclaw", "gateway", "run"],
+      programArguments: ["quiet-core-bot", "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
-        OPENCLAW_SERVICE_KIND: "gateway",
+        QUIET_CORE_SERVICE_MARKER: "quiet-core-bot",
+        QUIET_CORE_SERVICE_KIND: "gateway",
       },
     });
     serviceLoaded.mockResolvedValue(true);
@@ -3520,9 +3520,9 @@ describe("update-cli", () => {
   });
 
   it("refreshes package installs even when the current version already matches the target", async () => {
-    const tempDir = await createTrackedTempDir("openclaw-update-current-");
+    const tempDir = await createTrackedTempDir("quiet-core-bot-update-current-");
     const nodeModules = path.join(tempDir, "node_modules");
-    const pkgRoot = path.join(nodeModules, "openclaw");
+    const pkgRoot = path.join(nodeModules, "quiet-core-bot");
     const entryPath = path.join(pkgRoot, "dist", "index.js");
     mockPackageInstallStatus(pkgRoot);
     readPackageVersion.mockResolvedValue("2026.4.23");
@@ -3533,7 +3533,7 @@ describe("update-cli", () => {
     await fs.mkdir(path.dirname(entryPath), { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.23" }),
+      JSON.stringify({ name: "quiet-core-bot", version: "2026.4.23" }),
       "utf-8",
     );
     await fs.writeFile(entryPath, "export {};\n", "utf-8");
@@ -3574,7 +3574,7 @@ describe("update-cli", () => {
 
     await updateCommand({ yes: true, restart: false });
 
-    expectPackageInstallSpec("openclaw@latest");
+    expectPackageInstallSpec("quiet-core-bot@latest");
     const doctorCall = doctorCommandCall();
     expect(doctorCall?.[0][0]).toContain("node");
     expect(doctorCall?.[0].slice(1)).toEqual([entryPath, "doctor", "--non-interactive", "--fix"]);
@@ -3582,8 +3582,8 @@ describe("update-cli", () => {
     expect(postCoreSpawn?.[0]).toContain("node");
     expect(postCoreSpawn?.[1]).toEqual([entryPath, "update", "--no-restart", "--yes"]);
     expect(postCoreSpawn?.[2].stdio).toBe("inherit");
-    expect(postCoreSpawn?.[2].env?.OPENCLAW_UPDATE_POST_CORE).toBe("1");
-    expect(postCoreSpawn?.[2].env?.OPENCLAW_UPDATE_POST_CORE_CHANNEL).toBe("stable");
+    expect(postCoreSpawn?.[2].env?.QUIET_CORE_UPDATE_POST_CORE).toBe("1");
+    expect(postCoreSpawn?.[2].env?.QUIET_CORE_UPDATE_POST_CORE_CHANNEL).toBe("stable");
     expect(updateNpmInstalledPlugins).not.toHaveBeenCalled();
     expect(
       vi
@@ -3594,14 +3594,14 @@ describe("update-cli", () => {
   });
 
   it("retries package updates without optional deps when npm global update fails", async () => {
-    const tempDir = await createTrackedTempDir("openclaw-update-optional-");
+    const tempDir = await createTrackedTempDir("quiet-core-bot-update-optional-");
     const nodeModules = path.join(tempDir, "node_modules");
-    const pkgRoot = path.join(nodeModules, "openclaw");
+    const pkgRoot = path.join(nodeModules, "quiet-core-bot");
     mockPackageInstallStatus(pkgRoot);
     await fs.mkdir(pkgRoot, { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "1.0.0" }),
+      JSON.stringify({ name: "quiet-core-bot", version: "1.0.0" }),
       "utf-8",
     );
 
@@ -3651,7 +3651,7 @@ describe("update-cli", () => {
         "npm",
         "i",
         "-g",
-        "openclaw@latest",
+        "quiet-core-bot@latest",
         "--no-fund",
         "--no-audit",
         "--loglevel=error",
@@ -3661,7 +3661,7 @@ describe("update-cli", () => {
         "npm",
         "i",
         "-g",
-        "openclaw@latest",
+        "quiet-core-bot@latest",
         "--omit=optional",
         "--no-fund",
         "--no-audit",
@@ -3676,7 +3676,7 @@ describe("update-cli", () => {
     const platformSpy = vi.spyOn(process, "platform", "get").mockReturnValue("darwin");
     const brewPrefix = createCaseDir("brew-prefix");
     const brewRoot = path.join(brewPrefix, "lib", "node_modules");
-    const pkgRoot = path.join(brewRoot, "openclaw");
+    const pkgRoot = path.join(brewRoot, "quiet-core-bot");
     const brewNpm = path.join(brewPrefix, "bin", "npm");
     const win32PrefixNpm = path.join(brewPrefix, "npm.cmd");
     const pathNpmRoot = createCaseDir("nvm-root");
@@ -3740,7 +3740,7 @@ describe("update-cli", () => {
           isOwningNpmCommand(argv[0], brewPrefix) &&
           argv[1] === "i" &&
           argv[2] === "-g" &&
-          argv.includes("openclaw@latest"),
+          argv.includes("quiet-core-bot@latest"),
       );
 
     const requiredInstallCall = requireValue(installCall, "brew npm install call");
@@ -3768,8 +3768,8 @@ describe("update-cli", () => {
 
   it("prepends portable Git PATH for package updates on Windows", async () => {
     const platformSpy = vi.spyOn(process, "platform", "get").mockReturnValue("win32");
-    const tempDir = createCaseDir("openclaw-update");
-    const localAppData = createCaseDir("openclaw-localappdata");
+    const tempDir = createCaseDir("quiet-core-bot-update");
+    const localAppData = createCaseDir("quiet-core-bot-localappdata");
     const portableGitMingw = path.join(
       localAppData,
       "Quiet Core bot",
@@ -3851,7 +3851,7 @@ describe("update-cli", () => {
   ] as const)("updateCommand reports outcomes: $name", runUpdateCliScenario);
 
   it("persists the requested channel only after a successful package update", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("quiet-core-bot-update");
     mockPackageInstallStatus(tempDir);
 
     await updateCommand({ channel: "beta", yes: true });
@@ -3883,13 +3883,13 @@ describe("update-cli", () => {
   });
 
   it("warns when a package update targets a managed service root outside the shell root", async () => {
-    const shellRoot = createCaseDir("openclaw-shell-root");
-    const serviceRoot = await createTrackedTempDir("openclaw-service-root-");
+    const shellRoot = createCaseDir("quiet-core-bot-shell-root");
+    const serviceRoot = await createTrackedTempDir("quiet-core-bot-service-root-");
     const serviceNode = path.join(path.dirname(serviceRoot), "bin", "node");
     await fs.mkdir(path.join(serviceRoot, "dist"), { recursive: true });
     await fs.writeFile(
       path.join(serviceRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.5.18" }),
+      JSON.stringify({ name: "quiet-core-bot", version: "2026.5.18" }),
       "utf-8",
     );
     mockPackageInstallStatus(shellRoot);
@@ -3908,21 +3908,21 @@ describe("update-cli", () => {
       `Shell Quiet Core bot root differs from the managed gateway service root: ${shellRoot}`,
     );
     expect(logs).toContain(
-      "make sure `quiet-core-bot` on PATH resolves to the managed service root",
+      "make sure `openclaw` on PATH resolves to the managed service root",
     );
     expect(logs).toContain(`Managed gateway service Node: ${serviceNode}`);
   });
 
   it("checks the managed service Node runtime before updating a redirected package root", async () => {
-    const shellRoot = createCaseDir("openclaw-shell-root");
-    const serviceRoot = await createTrackedTempDir("openclaw-service-root-");
+    const shellRoot = createCaseDir("quiet-core-bot-shell-root");
+    const serviceRoot = await createTrackedTempDir("quiet-core-bot-service-root-");
     const serviceNode = path.join(path.dirname(serviceRoot), "bin", "node");
     await fs.mkdir(path.join(serviceRoot, "dist"), { recursive: true });
     await fs.mkdir(path.dirname(serviceNode), { recursive: true });
     await fs.writeFile(serviceNode, "", "utf-8");
     await fs.writeFile(
       path.join(serviceRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.5.18" }),
+      JSON.stringify({ name: "quiet-core-bot", version: "2026.5.18" }),
       "utf-8",
     );
     mockPackageInstallStatus(shellRoot);
@@ -3970,10 +3970,10 @@ describe("update-cli", () => {
   });
 
   it("runs managed service package follow-up commands with the service Node", async () => {
-    const shellRoot = createCaseDir("openclaw-shell-root");
-    const servicePrefix = await createTrackedTempDir("openclaw-service-prefix-");
+    const shellRoot = createCaseDir("quiet-core-bot-shell-root");
+    const servicePrefix = await createTrackedTempDir("quiet-core-bot-service-prefix-");
     const nodeModules = path.join(servicePrefix, "lib", "node_modules");
-    const serviceRoot = path.join(nodeModules, "openclaw");
+    const serviceRoot = path.join(nodeModules, "quiet-core-bot");
     const serviceNode = path.join(servicePrefix, "bin", "node");
     const serviceNpm = path.join(servicePrefix, "bin", "npm");
     const entrypoint = path.join(serviceRoot, "dist", "index.js");
@@ -3984,7 +3984,7 @@ describe("update-cli", () => {
     const serviceNpmReal = await fs.realpath(serviceNpm);
     await fs.writeFile(
       path.join(serviceRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.5.18" }),
+      JSON.stringify({ name: "quiet-core-bot", version: "2026.5.18" }),
       "utf-8",
     );
     await fs.writeFile(entrypoint, "", "utf-8");
@@ -4037,13 +4037,13 @@ describe("update-cli", () => {
           ? argv[argv.indexOf("--prefix") + 1]
           : undefined;
         const stageRoot = stagePrefix
-          ? path.join(stagePrefix, "lib", "node_modules", "openclaw")
+          ? path.join(stagePrefix, "lib", "node_modules", "quiet-core-bot")
           : serviceRoot;
         const stageEntryPoint = path.join(stageRoot, "dist", "index.js");
         await fs.mkdir(path.dirname(stageEntryPoint), { recursive: true });
         await fs.writeFile(
           path.join(stageRoot, "package.json"),
-          JSON.stringify({ name: "openclaw", version: "2026.5.20" }),
+          JSON.stringify({ name: "quiet-core-bot", version: "2026.5.20" }),
           "utf-8",
         );
         await fs.writeFile(stageEntryPoint, "export {};\n", "utf-8");
@@ -4070,7 +4070,7 @@ describe("update-cli", () => {
   });
 
   it("uses the managed service Node when package roots match but node binaries differ", async () => {
-    const root = createCaseDir("openclaw-same-root");
+    const root = createCaseDir("quiet-core-bot-same-root");
     // Service is baked with a different node than the current process.execPath.
     const serviceNode = "/opt/other-node/bin/node";
     const entrypoint = path.join(root, "dist", "index.js");
@@ -4096,9 +4096,9 @@ describe("update-cli", () => {
   });
 
   it("uses the managed service Node for follow-up commands when roots match but nodes differ", async () => {
-    const servicePrefix = await createTrackedTempDir("openclaw-service-prefix-");
+    const servicePrefix = await createTrackedTempDir("quiet-core-bot-service-prefix-");
     const nodeModules = path.join(servicePrefix, "lib", "node_modules");
-    const root = path.join(nodeModules, "openclaw");
+    const root = path.join(nodeModules, "quiet-core-bot");
     const serviceNode = path.join(servicePrefix, "bin", "node");
     const serviceNpm = path.join(servicePrefix, "bin", "npm");
     const entrypoint = path.join(root, "dist", "index.js");
@@ -4109,7 +4109,7 @@ describe("update-cli", () => {
     const serviceNpmReal = await fs.realpath(serviceNpm);
     await fs.writeFile(
       path.join(root, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.5.18" }),
+      JSON.stringify({ name: "quiet-core-bot", version: "2026.5.18" }),
       "utf-8",
     );
     await fs.writeFile(entrypoint, "", "utf-8");
@@ -4163,13 +4163,13 @@ describe("update-cli", () => {
           ? argv[argv.indexOf("--prefix") + 1]
           : undefined;
         const stageRoot = stagePrefix
-          ? path.join(stagePrefix, "lib", "node_modules", "openclaw")
+          ? path.join(stagePrefix, "lib", "node_modules", "quiet-core-bot")
           : root;
         const stageEntryPoint = path.join(stageRoot, "dist", "index.js");
         await fs.mkdir(path.dirname(stageEntryPoint), { recursive: true });
         await fs.writeFile(
           path.join(stageRoot, "package.json"),
-          JSON.stringify({ name: "openclaw", version: "2026.5.20" }),
+          JSON.stringify({ name: "quiet-core-bot", version: "2026.5.20" }),
           "utf-8",
         );
         await fs.writeFile(stageEntryPoint, "export {};\n", "utf-8");
@@ -4197,9 +4197,9 @@ describe("update-cli", () => {
   });
 
   it("pins package install to the service root when nodes differ and no owning npm exists at the prefix", async () => {
-    const servicePrefix = await createTrackedTempDir("openclaw-no-npm-prefix-");
+    const servicePrefix = await createTrackedTempDir("quiet-core-bot-no-npm-prefix-");
     const nodeModules = path.join(servicePrefix, "lib", "node_modules");
-    const root = path.join(nodeModules, "openclaw");
+    const root = path.join(nodeModules, "quiet-core-bot");
     const serviceNode = path.join(servicePrefix, "bin", "node");
     const entrypoint = path.join(root, "dist", "index.js");
     // Create the node binary but intentionally do NOT create <prefix>/bin/npm
@@ -4210,7 +4210,7 @@ describe("update-cli", () => {
     // No npm binary at servicePrefix/bin/npm!
     await fs.writeFile(
       path.join(root, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.5.18" }),
+      JSON.stringify({ name: "quiet-core-bot", version: "2026.5.18" }),
       "utf-8",
     );
     await fs.writeFile(entrypoint, "", "utf-8");
@@ -4262,13 +4262,13 @@ describe("update-cli", () => {
         const prefixIdx = argv.indexOf("--prefix");
         const stagePrefix = prefixIdx >= 0 ? argv[prefixIdx + 1] : undefined;
         const stageRoot = stagePrefix
-          ? path.join(stagePrefix, "lib", "node_modules", "openclaw")
+          ? path.join(stagePrefix, "lib", "node_modules", "quiet-core-bot")
           : root;
         const stageEntryPoint = path.join(stageRoot, "dist", "index.js");
         await fs.mkdir(path.dirname(stageEntryPoint), { recursive: true });
         await fs.writeFile(
           path.join(stageRoot, "package.json"),
-          JSON.stringify({ name: "openclaw", version: "2026.5.20" }),
+          JSON.stringify({ name: "quiet-core-bot", version: "2026.5.20" }),
           "utf-8",
         );
         await fs.writeFile(stageEntryPoint, "export {};\n", "utf-8");
@@ -4301,7 +4301,7 @@ describe("update-cli", () => {
   });
 
   it("repairs legacy config before persisting a requested update channel", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("quiet-core-bot-update");
     mockPackageInstallStatus(tempDir);
     const legacyConfig = {
       channels: {
@@ -4433,7 +4433,7 @@ describe("update-cli", () => {
   });
 
   it("does not auto-repair legacy config when authored includes are present", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("quiet-core-bot-update");
     mockPackageInstallStatus(tempDir);
     const legacyConfigWithInclude = {
       $include: "./channels.json5",
@@ -4475,7 +4475,7 @@ describe("update-cli", () => {
   });
 
   it("does not repair legacy config during a dry run", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("quiet-core-bot-update");
     mockPackageInstallStatus(tempDir);
     const legacyConfig = {
       channels: {
@@ -4517,7 +4517,7 @@ describe("update-cli", () => {
   });
 
   it("does not persist the requested channel when the package update fails", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("quiet-core-bot-update");
     mockPackageInstallStatus(tempDir);
     vi.mocked(runCommandWithTimeout).mockImplementation(async (argv) => {
       if (Array.isArray(argv) && argv[0] === "npm" && argv[1] === "i" && argv[2] === "-g") {
@@ -4547,7 +4547,7 @@ describe("update-cli", () => {
   });
 
   it("keeps the requested channel when plugin sync writes config after update", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("quiet-core-bot-update");
     mockPackageInstallStatus(tempDir);
     syncPluginsForUpdateChannel.mockImplementation(async ({ config }) => ({
       changed: true,
@@ -4574,7 +4574,7 @@ describe("update-cli", () => {
   });
 
   it("refreshes post-doctor config before post-update plugin sync", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("quiet-core-bot-update");
     mockPackageInstallStatus(tempDir);
     const preUpdateConfig = { update: { channel: "stable" } } as OpenClawConfig;
     const postDoctorConfig = {
@@ -4600,7 +4600,7 @@ describe("update-cli", () => {
         ...config,
         plugins: {
           ...config.plugins,
-          load: { paths: ["/tmp/openclaw-updated-plugin"] },
+          load: { paths: ["/tmp/quiet-core-bot-updated-plugin"] },
         },
       },
       summary: {
@@ -4633,8 +4633,8 @@ describe("update-cli", () => {
   });
 
   it("restores pre-update channels when post-core resume sees post-doctor config without them", async () => {
-    const tempDir = createCaseDir("openclaw-update");
-    const configPath = path.join(tempDir, "openclaw.json");
+    const tempDir = createCaseDir("quiet-core-bot-update");
+    const configPath = path.join(tempDir, "quiet-core-bot.json");
     const preUpdateConfig = {
       update: { channel: "stable" },
       channels: {
@@ -4679,8 +4679,8 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_UPDATE_POST_CORE: "1",
-        OPENCLAW_UPDATE_POST_CORE_CHANNEL: "stable",
+        QUIET_CORE_UPDATE_POST_CORE: "1",
+        QUIET_CORE_UPDATE_POST_CORE_CHANNEL: "stable",
       },
       async () => {
         await updateCommand({ yes: true, restart: false });
@@ -4707,8 +4707,8 @@ describe("update-cli", () => {
   });
 
   it("restores pre-update channel model overrides when post-core resume restores a channel", async () => {
-    const tempDir = createCaseDir("openclaw-update");
-    const configPath = path.join(tempDir, "openclaw.json");
+    const tempDir = createCaseDir("quiet-core-bot-update");
+    const configPath = path.join(tempDir, "quiet-core-bot.json");
     const preUpdateConfig = {
       update: { channel: "stable" },
       channels: {
@@ -4770,8 +4770,8 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_UPDATE_POST_CORE: "1",
-        OPENCLAW_UPDATE_POST_CORE_CHANNEL: "stable",
+        QUIET_CORE_UPDATE_POST_CORE: "1",
+        QUIET_CORE_UPDATE_POST_CORE_CHANNEL: "stable",
       },
       async () => {
         await updateCommand({ yes: true, restart: false });
@@ -4805,8 +4805,8 @@ describe("update-cli", () => {
   });
 
   it("does not restore stale backup channels when current pre-update snapshot has none", async () => {
-    const tempDir = createCaseDir("openclaw-update");
-    const configPath = path.join(tempDir, "openclaw.json");
+    const tempDir = createCaseDir("quiet-core-bot-update");
+    const configPath = path.join(tempDir, "quiet-core-bot.json");
     const removedChannelBackup = {
       update: { channel: "stable" },
       channels: {
@@ -4857,8 +4857,8 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_UPDATE_POST_CORE: "1",
-        OPENCLAW_UPDATE_POST_CORE_CHANNEL: "stable",
+        QUIET_CORE_UPDATE_POST_CORE: "1",
+        QUIET_CORE_UPDATE_POST_CORE_CHANNEL: "stable",
       },
       async () => {
         await updateCommand({ yes: true, restart: false });
@@ -4870,8 +4870,8 @@ describe("update-cli", () => {
   });
 
   it("ignores pre-update channel snapshots older than the current update attempt", async () => {
-    const tempDir = createCaseDir("openclaw-update");
-    const configPath = path.join(tempDir, "openclaw.json");
+    const tempDir = createCaseDir("quiet-core-bot-update");
+    const configPath = path.join(tempDir, "quiet-core-bot.json");
     const oldPreUpdateConfig = {
       update: { channel: "stable" },
       channels: {
@@ -4923,9 +4923,9 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_UPDATE_POST_CORE: "1",
-        OPENCLAW_UPDATE_POST_CORE_CHANNEL: "stable",
-        OPENCLAW_UPDATE_POST_CORE_STARTED_AT_MS: String(updateStartedAtMs),
+        QUIET_CORE_UPDATE_POST_CORE: "1",
+        QUIET_CORE_UPDATE_POST_CORE_CHANNEL: "stable",
+        QUIET_CORE_UPDATE_POST_CORE_STARTED_AT_MS: String(updateStartedAtMs),
       },
       async () => {
         await updateCommand({ yes: true, restart: false });
@@ -4937,8 +4937,8 @@ describe("update-cli", () => {
   });
 
   it("uses the Windows parent process start time for old post-core parents", async () => {
-    const tempDir = createCaseDir("openclaw-update");
-    const configPath = path.join(tempDir, "openclaw.json");
+    const tempDir = createCaseDir("quiet-core-bot-update");
+    const configPath = path.join(tempDir, "quiet-core-bot.json");
     const preUpdateConfig = {
       update: { channel: "stable" },
       channels: {
@@ -4997,8 +4997,8 @@ describe("update-cli", () => {
     try {
       await withEnvAsync(
         {
-          OPENCLAW_UPDATE_POST_CORE: "1",
-          OPENCLAW_UPDATE_POST_CORE_CHANNEL: "stable",
+          QUIET_CORE_UPDATE_POST_CORE: "1",
+          QUIET_CORE_UPDATE_POST_CORE_CHANNEL: "stable",
         },
         async () => {
           await updateCommand({ yes: true, restart: false });
@@ -5017,8 +5017,8 @@ describe("update-cli", () => {
   });
 
   it("ignores disk fallback snapshots when the update attempt start is unknown", async () => {
-    const tempDir = createCaseDir("openclaw-update");
-    const configPath = path.join(tempDir, "openclaw.json");
+    const tempDir = createCaseDir("quiet-core-bot-update");
+    const configPath = path.join(tempDir, "quiet-core-bot.json");
     const preUpdateConfig = {
       update: { channel: "stable" },
       channels: {
@@ -5069,8 +5069,8 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_UPDATE_POST_CORE: "1",
-        OPENCLAW_UPDATE_POST_CORE_CHANNEL: "stable",
+        QUIET_CORE_UPDATE_POST_CORE: "1",
+        QUIET_CORE_UPDATE_POST_CORE_CHANNEL: "stable",
       },
       async () => {
         await updateCommand({ yes: true, restart: false });
@@ -5082,7 +5082,7 @@ describe("update-cli", () => {
   });
 
   it("persists authored channel values when post-core restore input is resolved", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("quiet-core-bot-update");
     const sourceConfigPath = path.join(tempDir, "source-config.json");
     const resolvedPreUpdateConfig = {
       update: { channel: "stable" },
@@ -5140,9 +5140,9 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_UPDATE_POST_CORE: "1",
-        OPENCLAW_UPDATE_POST_CORE_CHANNEL: "stable",
-        OPENCLAW_UPDATE_POST_CORE_SOURCE_CONFIG_PATH: sourceConfigPath,
+        QUIET_CORE_UPDATE_POST_CORE: "1",
+        QUIET_CORE_UPDATE_POST_CORE_CHANNEL: "stable",
+        QUIET_CORE_UPDATE_POST_CORE_SOURCE_CONFIG_PATH: sourceConfigPath,
       },
       async () => {
         await updateCommand({ yes: true, restart: false });
@@ -5164,8 +5164,8 @@ describe("update-cli", () => {
   });
 
   it("resolves included pre-update channels for old post-core parents", async () => {
-    const tempDir = createCaseDir("openclaw-update");
-    const configPath = path.join(tempDir, "openclaw.json");
+    const tempDir = createCaseDir("quiet-core-bot-update");
+    const configPath = path.join(tempDir, "quiet-core-bot.json");
     const channelsPath = path.join(tempDir, "channels.json5");
     const includedChannels = {
       whatsapp: {
@@ -5212,8 +5212,8 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_UPDATE_POST_CORE: "1",
-        OPENCLAW_UPDATE_POST_CORE_CHANNEL: "stable",
+        QUIET_CORE_UPDATE_POST_CORE: "1",
+        QUIET_CORE_UPDATE_POST_CORE_CHANNEL: "stable",
         WHATSAPP_TOKEN: "resolved-token",
       },
       async () => {
@@ -5236,8 +5236,8 @@ describe("update-cli", () => {
   });
 
   it("ignores stale pre-update channel snapshots during post-core resume", async () => {
-    const tempDir = createCaseDir("openclaw-update");
-    const configPath = path.join(tempDir, "openclaw.json");
+    const tempDir = createCaseDir("quiet-core-bot-update");
+    const configPath = path.join(tempDir, "quiet-core-bot.json");
     const staleConfig = {
       channels: {
         whatsapp: {
@@ -5279,8 +5279,8 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_UPDATE_POST_CORE: "1",
-        OPENCLAW_UPDATE_POST_CORE_CHANNEL: "stable",
+        QUIET_CORE_UPDATE_POST_CORE: "1",
+        QUIET_CORE_UPDATE_POST_CORE_CHANNEL: "stable",
       },
       async () => {
         await updateCommand({ yes: true, restart: false });
@@ -5292,7 +5292,7 @@ describe("update-cli", () => {
   });
 
   it("uses source config and plugin index records for post-update plugin sync", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("quiet-core-bot-update");
     mockPackageInstallStatus(tempDir);
     const pluginInstallRecords = {
       "lossless-claw": {
@@ -5354,7 +5354,7 @@ describe("update-cli", () => {
   });
 
   it("persists channel and runs post-update work after switching from package to git", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("quiet-core-bot-update");
     const gitRoot = path.join(tempDir, "..", "openclaw");
     const completionCacheSpy = vi
       .spyOn(updateCliShared, "tryWriteCompletionCache")
@@ -5532,7 +5532,7 @@ describe("update-cli", () => {
   ] as const)("updateCommand service refresh behavior: $name", runUpdateCliScenario);
 
   it("fails a package update when service env refresh cannot complete", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("quiet-core-bot-update");
     mockPackageInstallStatus(tempDir);
     serviceLoaded.mockResolvedValue(true);
     vi.mocked(runDaemonInstall).mockRejectedValueOnce(new Error("refresh failed"));
@@ -5551,7 +5551,7 @@ describe("update-cli", () => {
   });
 
   it("tries the updated install restart when package service refresh fails", async () => {
-    const updatedRoot = createCaseDir("openclaw-updated-root");
+    const updatedRoot = createCaseDir("quiet-core-bot-updated-root");
     const updatedEntrypoint = path.join(updatedRoot, "dist", "entry.js");
     setupUpdatedRootRefresh({
       entrypoints: [updatedEntrypoint],
@@ -5612,13 +5612,13 @@ describe("update-cli", () => {
   });
 
   it("accepts same-version refresh failure recovery when the managed service restarts", async () => {
-    const updatedRoot = createCaseDir("openclaw-updated-root");
+    const updatedRoot = createCaseDir("quiet-core-bot-updated-root");
     const updatedEntrypoint = path.join(updatedRoot, "dist", "entry.js");
     const updatedPackageJson = path.join(updatedRoot, "package.json");
     await fs.mkdir(updatedRoot, { recursive: true });
     await fs.writeFile(
       updatedPackageJson,
-      JSON.stringify({ name: "openclaw", version: "2026.4.24" }),
+      JSON.stringify({ name: "quiet-core-bot", version: "2026.4.24" }),
       "utf8",
     );
     setupUpdatedRootRefresh({
@@ -5676,8 +5676,8 @@ describe("update-cli", () => {
   });
 
   it("rejects same-version refresh failure recovery from a stale service definition", async () => {
-    const oldRoot = createCaseDir("openclaw-old-root");
-    const updatedRoot = createCaseDir("openclaw-updated-root");
+    const oldRoot = createCaseDir("quiet-core-bot-old-root");
+    const updatedRoot = createCaseDir("quiet-core-bot-updated-root");
     const oldEntrypoint = path.join(oldRoot, "dist", "entry.js");
     const updatedEntrypoint = path.join(updatedRoot, "dist", "entry.js");
     const oldPackageJson = path.join(oldRoot, "package.json");
@@ -5689,12 +5689,12 @@ describe("update-cli", () => {
     await Promise.all([
       fs.writeFile(
         oldPackageJson,
-        JSON.stringify({ name: "openclaw", version: "2026.4.24" }),
+        JSON.stringify({ name: "quiet-core-bot", version: "2026.4.24" }),
         "utf8",
       ),
       fs.writeFile(
         updatedPackageJson,
-        JSON.stringify({ name: "openclaw", version: "2026.4.24" }),
+        JSON.stringify({ name: "quiet-core-bot", version: "2026.4.24" }),
         "utf8",
       ),
     ]);
@@ -5758,7 +5758,7 @@ describe("update-cli", () => {
   });
 
   it("fails a JSON package update when fallback restart leaves the old gateway running", async () => {
-    const updatedRoot = createCaseDir("openclaw-updated-root");
+    const updatedRoot = createCaseDir("quiet-core-bot-updated-root");
     const updatedEntrypoint = path.join(updatedRoot, "dist", "entry.js");
     setupUpdatedRootRefresh({
       entrypoints: [updatedEntrypoint],
@@ -5814,7 +5814,7 @@ describe("update-cli", () => {
   });
 
   it("skips the post-refresh restart script when LaunchAgent already serves the expected package version", async () => {
-    const updatedRoot = createCaseDir("openclaw-updated-root");
+    const updatedRoot = createCaseDir("quiet-core-bot-updated-root");
     const updatedEntrypoint = path.join(updatedRoot, "dist", "entry.js");
     setupUpdatedRootRefresh({
       entrypoints: [updatedEntrypoint],
@@ -5865,8 +5865,8 @@ describe("update-cli", () => {
   });
 
   it("writes the control-plane update sentinel after managed package restart health passes", async () => {
-    const stateDir = await createTrackedTempDir("openclaw-update-sentinel-state-");
-    const metaDir = await createTrackedTempDir("openclaw-update-sentinel-meta-");
+    const stateDir = await createTrackedTempDir("quiet-core-bot-update-sentinel-state-");
+    const metaDir = await createTrackedTempDir("quiet-core-bot-update-sentinel-meta-");
     const metaPath = path.join(metaDir, "meta.json");
     await fs.writeFile(
       metaPath,
@@ -5881,7 +5881,7 @@ describe("update-cli", () => {
       }),
     );
 
-    const updatedRoot = createCaseDir("openclaw-updated-root");
+    const updatedRoot = createCaseDir("quiet-core-bot-updated-root");
     const updatedEntrypoint = path.join(updatedRoot, "dist", "entry.js");
     setupUpdatedRootRefresh({
       entrypoints: [updatedEntrypoint],
@@ -5914,7 +5914,7 @@ describe("update-cli", () => {
     await withEnvAsync(
       {
         [CONTROL_PLANE_UPDATE_SENTINEL_META_ENV]: metaPath,
-        OPENCLAW_STATE_DIR: stateDir,
+        QUIET_CORE_STATE_DIR: stateDir,
       },
       async () => {
         await updateCommand({ yes: true, json: true });
@@ -5922,7 +5922,7 @@ describe("update-cli", () => {
     );
 
     const sentinel = await readRestartSentinel({
-      OPENCLAW_STATE_DIR: stateDir,
+      QUIET_CORE_STATE_DIR: stateDir,
     } as NodeJS.ProcessEnv);
     expect(sentinel?.payload.status).toBe("ok");
     expect(sentinel?.payload.message).toBe("Update requested from the agent.");
@@ -5935,8 +5935,8 @@ describe("update-cli", () => {
   });
 
   it("marks the control-plane update sentinel failed when restart health verification fails", async () => {
-    const stateDir = await createTrackedTempDir("openclaw-update-sentinel-state-");
-    const metaDir = await createTrackedTempDir("openclaw-update-sentinel-meta-");
+    const stateDir = await createTrackedTempDir("quiet-core-bot-update-sentinel-state-");
+    const metaDir = await createTrackedTempDir("quiet-core-bot-update-sentinel-meta-");
     const metaPath = path.join(metaDir, "meta.json");
     await fs.writeFile(
       metaPath,
@@ -5949,7 +5949,7 @@ describe("update-cli", () => {
       }),
     );
 
-    const updatedRoot = createCaseDir("openclaw-updated-root");
+    const updatedRoot = createCaseDir("quiet-core-bot-updated-root");
     const updatedEntrypoint = path.join(updatedRoot, "dist", "entry.js");
     setupUpdatedRootRefresh({
       entrypoints: [updatedEntrypoint],
@@ -5983,7 +5983,7 @@ describe("update-cli", () => {
     await withEnvAsync(
       {
         [CONTROL_PLANE_UPDATE_SENTINEL_META_ENV]: metaPath,
-        OPENCLAW_STATE_DIR: stateDir,
+        QUIET_CORE_STATE_DIR: stateDir,
       },
       async () => {
         await updateCommand({ yes: true, json: true });
@@ -5991,7 +5991,7 @@ describe("update-cli", () => {
     );
 
     const sentinel = await readRestartSentinel({
-      OPENCLAW_STATE_DIR: stateDir,
+      QUIET_CORE_STATE_DIR: stateDir,
     } as NodeJS.ProcessEnv);
     expect(sentinel?.payload.status).toBe("error");
     expect(sentinel?.payload.stats?.reason).toBe("restart-unhealthy");
@@ -6000,7 +6000,7 @@ describe("update-cli", () => {
   });
 
   it("fails a package update when the restarted gateway reports activated plugin load errors", async () => {
-    const updatedRoot = createCaseDir("openclaw-updated-root");
+    const updatedRoot = createCaseDir("quiet-core-bot-updated-root");
     const updatedEntrypoint = path.join(updatedRoot, "dist", "entry.js");
     setupUpdatedRootRefresh({
       entrypoints: [updatedEntrypoint],
@@ -6073,8 +6073,8 @@ describe("update-cli", () => {
       invoke: async () => {
         await withEnvAsync(
           {
-            OPENCLAW_STATE_DIR: "./state",
-            OPENCLAW_CONFIG_PATH: "./config/openclaw.json",
+            QUIET_CORE_STATE_DIR: "./state",
+            QUIET_CORE_CONFIG_PATH: "./config/quiet-core-bot.json",
           },
           async () => {
             await updateCommand({});
@@ -6082,8 +6082,8 @@ describe("update-cli", () => {
         );
       },
       expectedEnv: () => ({
-        OPENCLAW_STATE_DIR: path.resolve("./state"),
-        OPENCLAW_CONFIG_PATH: path.resolve("./config/openclaw.json"),
+        QUIET_CORE_STATE_DIR: path.resolve("./state"),
+        QUIET_CORE_CONFIG_PATH: path.resolve("./config/quiet-core-bot.json"),
       }),
       assertExtra: () => {
         expect(runDaemonInstall).not.toHaveBeenCalled();
@@ -6112,7 +6112,7 @@ describe("update-cli", () => {
         try {
           await withEnvAsync(
             {
-              OPENCLAW_STATE_DIR: "./state",
+              QUIET_CORE_STATE_DIR: "./state",
             },
             async () => {
               await updateCommand({});
@@ -6125,7 +6125,7 @@ describe("update-cli", () => {
       },
       customSetup: true,
       expectedEnv: (context?: { originalCwd: string }) => ({
-        OPENCLAW_STATE_DIR: path.resolve(context?.originalCwd ?? process.cwd(), "./state"),
+        QUIET_CORE_STATE_DIR: path.resolve(context?.originalCwd ?? process.cwd(), "./state"),
       }),
       assertExtra: () => {
         expect(runDaemonInstall).not.toHaveBeenCalled();
@@ -6156,7 +6156,7 @@ describe("update-cli", () => {
   it("updateCommand continues after doctor sub-step and clears update flag", async () => {
     const randomSpy = vi.spyOn(Math, "random").mockReturnValue(0);
     try {
-      await withEnvAsync({ OPENCLAW_UPDATE_IN_PROGRESS: undefined }, async () => {
+      await withEnvAsync({ QUIET_CORE_UPDATE_IN_PROGRESS: undefined }, async () => {
         vi.mocked(runGatewayUpdate).mockResolvedValue(makeOkUpdateResult());
         vi.mocked(runDaemonRestart).mockResolvedValue(true);
         vi.mocked(doctorCommand).mockResolvedValue(undefined);
@@ -6167,7 +6167,7 @@ describe("update-cli", () => {
         const doctorCall = vi.mocked(doctorCommand).mock.calls[0];
         expect(doctorCall?.[0]).toBe(defaultRuntime);
         expect(doctorCall?.[1]?.nonInteractive).toBe(true);
-        expect(process.env.OPENCLAW_UPDATE_IN_PROGRESS).toBeUndefined();
+        expect(process.env.QUIET_CORE_UPDATE_IN_PROGRESS).toBeUndefined();
 
         const logLines = vi.mocked(defaultRuntime.log).mock.calls.map((call) => String(call[0]));
         expect(
@@ -6182,26 +6182,26 @@ describe("update-cli", () => {
   });
 
   it("marks the whole update command as update-in-progress", async () => {
-    await withEnvAsync({ OPENCLAW_UPDATE_IN_PROGRESS: undefined }, async () => {
+    await withEnvAsync({ QUIET_CORE_UPDATE_IN_PROGRESS: undefined }, async () => {
       let observedUpdateEnv: string | undefined;
       vi.mocked(runGatewayUpdate).mockImplementationOnce(async () => {
-        observedUpdateEnv = process.env.OPENCLAW_UPDATE_IN_PROGRESS;
+        observedUpdateEnv = process.env.QUIET_CORE_UPDATE_IN_PROGRESS;
         return makeOkUpdateResult();
       });
 
       await updateCommand({ restart: false });
 
       expect(observedUpdateEnv).toBe("1");
-      expect(process.env.OPENCLAW_UPDATE_IN_PROGRESS).toBeUndefined();
+      expect(process.env.QUIET_CORE_UPDATE_IN_PROGRESS).toBeUndefined();
     });
   });
 
   it("updateFinalizeCommand runs doctor and plugin convergence with full update env", async () => {
     await withEnvAsync(
       {
-        OPENCLAW_UPDATE_IN_PROGRESS: undefined,
-        OPENCLAW_UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR: undefined,
-        OPENCLAW_UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE: undefined,
+        QUIET_CORE_UPDATE_IN_PROGRESS: undefined,
+        QUIET_CORE_UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR: undefined,
+        QUIET_CORE_UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE: undefined,
       },
       async () => {
         let doctorEnv: NodeJS.ProcessEnv | undefined;
@@ -6212,12 +6212,12 @@ describe("update-cli", () => {
 
         await updateFinalizeCommand({ json: true, yes: true, timeout: "9", restart: false });
 
-        expect(doctorEnv?.OPENCLAW_UPDATE_IN_PROGRESS).toBe("1");
-        expect(doctorEnv?.OPENCLAW_UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR).toBe("1");
-        expect(doctorEnv?.OPENCLAW_UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE).toBe("1");
-        expect(process.env.OPENCLAW_UPDATE_IN_PROGRESS).toBeUndefined();
-        expect(process.env.OPENCLAW_UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR).toBeUndefined();
-        expect(process.env.OPENCLAW_UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE).toBeUndefined();
+        expect(doctorEnv?.QUIET_CORE_UPDATE_IN_PROGRESS).toBe("1");
+        expect(doctorEnv?.QUIET_CORE_UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR).toBe("1");
+        expect(doctorEnv?.QUIET_CORE_UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE).toBe("1");
+        expect(process.env.QUIET_CORE_UPDATE_IN_PROGRESS).toBeUndefined();
+        expect(process.env.QUIET_CORE_UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR).toBeUndefined();
+        expect(process.env.QUIET_CORE_UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE).toBeUndefined();
         expect(doctorCommand).toHaveBeenCalledWith(defaultRuntime, {
           nonInteractive: true,
           repair: true,
@@ -6318,7 +6318,7 @@ describe("update-cli", () => {
   });
 
   it("updateFinalizeCommand restores channels from the RPC pre-update config payload", async () => {
-    const tempDir = createCaseDir("openclaw-rpc-finalize");
+    const tempDir = createCaseDir("quiet-core-bot-rpc-finalize");
     const sourceConfigPath = path.join(tempDir, "source-config.json");
     const preUpdateConfig = {
       channels: {
@@ -6352,7 +6352,7 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_UPDATE_POST_CORE_SOURCE_CONFIG_PATH: sourceConfigPath,
+        QUIET_CORE_UPDATE_POST_CORE_SOURCE_CONFIG_PATH: sourceConfigPath,
       },
       async () => {
         await updateFinalizeCommand({ json: true, restart: false });
@@ -6413,16 +6413,16 @@ describe("update-cli", () => {
       hash: "no-channel",
     };
     vi.mocked(readConfigFileSnapshot).mockResolvedValue(noChannelSnapshot);
-    const priorEffective = process.env.OPENCLAW_UPDATE_EFFECTIVE_CHANNEL;
+    const priorEffective = process.env.QUIET_CORE_UPDATE_EFFECTIVE_CHANNEL;
     // Simulate a no-config git/source update whose effective channel is dev.
-    process.env.OPENCLAW_UPDATE_EFFECTIVE_CHANNEL = "dev";
+    process.env.QUIET_CORE_UPDATE_EFFECTIVE_CHANNEL = "dev";
     try {
       await updateFinalizeCommand({ json: true, restart: false });
     } finally {
       if (priorEffective === undefined) {
-        delete process.env.OPENCLAW_UPDATE_EFFECTIVE_CHANNEL;
+        delete process.env.QUIET_CORE_UPDATE_EFFECTIVE_CHANNEL;
       } else {
-        process.env.OPENCLAW_UPDATE_EFFECTIVE_CHANNEL = priorEffective;
+        process.env.QUIET_CORE_UPDATE_EFFECTIVE_CHANNEL = priorEffective;
       }
     }
     // Convergence runs on the effective (git/dev) channel...
@@ -6513,8 +6513,8 @@ describe("update-cli", () => {
   });
 
   it("updateWizardCommand offers dev checkout and forwards selections", async () => {
-    const tempDir = createCaseDir("openclaw-update-wizard");
-    await withEnvAsync({ OPENCLAW_GIT_DIR: tempDir }, async () => {
+    const tempDir = createCaseDir("quiet-core-bot-update-wizard");
+    await withEnvAsync({ QUIET_CORE_GIT_DIR: tempDir }, async () => {
       setTty(true);
 
       vi.mocked(checkUpdateStatus).mockResolvedValue({
@@ -6544,18 +6544,18 @@ describe("update-cli", () => {
     });
   });
 
-  it("uses ~/openclaw as the default dev checkout directory", async () => {
+  it("uses ~/quiet-core-bot as the default dev checkout directory", async () => {
     const homedirSpy = vi.spyOn(os, "homedir").mockReturnValue("/tmp/oc-home");
     try {
       await withEnvAsync(
         {
           HOME: undefined,
-          OPENCLAW_GIT_DIR: undefined,
-          OPENCLAW_HOME: undefined,
+          QUIET_CORE_GIT_DIR: undefined,
+          QUIET_CORE_HOME: undefined,
           USERPROFILE: undefined,
         },
         async () => {
-          expect(resolveGitInstallDir()).toBe(path.posix.join("/tmp/oc-home", "openclaw"));
+          expect(resolveGitInstallDir()).toBe(path.posix.join("/tmp/oc-home", "quiet-core-bot"));
         },
       );
     } finally {
@@ -6563,13 +6563,13 @@ describe("update-cli", () => {
     }
   });
 
-  it("uses OPENCLAW_HOME for the default dev checkout directory", async () => {
+  it("uses QUIET_CORE_HOME for the default dev checkout directory", async () => {
     const homedirSpy = vi.spyOn(os, "homedir").mockReturnValue("/tmp/oc-home");
     try {
       await withEnvAsync(
-        { OPENCLAW_GIT_DIR: undefined, OPENCLAW_HOME: "/srv/openclaw-home" },
+        { QUIET_CORE_GIT_DIR: undefined, QUIET_CORE_HOME: "/srv/quiet-core-bot-home" },
         async () => {
-          expect(resolveGitInstallDir()).toBe(path.posix.join("/srv/openclaw-home", "openclaw"));
+          expect(resolveGitInstallDir()).toBe(path.posix.join("/srv/quiet-core-bot-home", "quiet-core-bot"));
         },
       );
     } finally {
@@ -6578,11 +6578,11 @@ describe("update-cli", () => {
   });
 
   it("creates the parent directory before cloning the default dev checkout", async () => {
-    const root = await createTrackedTempDir("openclaw-update-home-");
-    const home = path.join(root, "custom-openclaw-home");
-    const checkoutDir = path.join(home, "openclaw");
+    const root = await createTrackedTempDir("quiet-core-bot-update-home-");
+    const home = path.join(root, "custom-quiet-core-bot-home");
+    const checkoutDir = path.join(home, "quiet-core-bot");
 
-    await withEnvAsync({ OPENCLAW_GIT_DIR: undefined, OPENCLAW_HOME: home }, async () => {
+    await withEnvAsync({ QUIET_CORE_GIT_DIR: undefined, QUIET_CORE_HOME: home }, async () => {
       const dir = resolveGitInstallDir();
       expect(dir).toBe(checkoutDir);
       await ensureGitCheckout({ dir, timeoutMs: 1_000, env: process.env });
@@ -6595,7 +6595,7 @@ describe("update-cli", () => {
     expect(cloneCall?.[0]).toEqual([
       "git",
       "clone",
-      "https://github.com/openclaw/openclaw.git",
+      "https://github.com/liuda1999/Quiet-Core-bot.git",
       checkoutDir,
     ]);
   });

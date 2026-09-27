@@ -2,28 +2,28 @@
 import {
   defineFinalizableLivePreviewAdapter,
   deliverWithFinalizableLivePreviewAdapter,
-} from "openclaw/plugin-sdk/channel-outbound";
+} from "quiet-core-bot/plugin-sdk/channel-outbound";
 import {
   buildChannelProgressDraftLineForEntry,
   createChannelProgressDraftCompositor,
   resolveChannelStreamingPreviewToolProgress,
-} from "openclaw/plugin-sdk/channel-outbound";
-import { isLoopbackHost } from "openclaw/plugin-sdk/gateway-runtime";
-import { createClaimableDedupe, type ClaimableDedupe } from "openclaw/plugin-sdk/persistent-dedupe";
+} from "quiet-core-bot/plugin-sdk/channel-outbound";
+import { isLoopbackHost } from "quiet-core-bot/plugin-sdk/gateway-runtime";
+import { createClaimableDedupe, type ClaimableDedupe } from "quiet-core-bot/plugin-sdk/persistent-dedupe";
 import {
   buildTtsSupplementMediaPayload,
   getReplyPayloadTtsSupplement,
   isReasoningReplyPayload,
-} from "openclaw/plugin-sdk/reply-payload";
-import { resolveInboundLastRouteSessionKey } from "openclaw/plugin-sdk/routing";
-import { resolvePinnedMainDmOwnerFromAllowlist } from "openclaw/plugin-sdk/security-runtime";
-import { isPrivateNetworkOptInEnabled } from "openclaw/plugin-sdk/ssrf-runtime";
+} from "quiet-core-bot/plugin-sdk/reply-payload";
+import { resolveInboundLastRouteSessionKey } from "quiet-core-bot/plugin-sdk/routing";
+import { resolvePinnedMainDmOwnerFromAllowlist } from "quiet-core-bot/plugin-sdk/security-runtime";
+import { isPrivateNetworkOptInEnabled } from "quiet-core-bot/plugin-sdk/ssrf-runtime";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
   normalizeTrimmedStringList,
   uniqueStrings,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { getMattermostRuntime } from "../runtime.js";
 import {
   resolveMattermostAccount,

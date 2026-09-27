@@ -73,8 +73,8 @@ describe("generate-npm-shrinkwrap", () => {
   it("accepts strict npm shrinkwrap command timeout and buffer overrides", () => {
     expect(
       createNpmShrinkwrapExecOptions({ command: "npm", args: ["install"] }, "/tmp/package", {
-        OPENCLAW_NPM_SHRINKWRAP_COMMAND_MAX_BUFFER_BYTES: "1048576",
-        OPENCLAW_NPM_SHRINKWRAP_COMMAND_TIMEOUT_MS: "30000",
+        QUIET_CORE_NPM_SHRINKWRAP_COMMAND_MAX_BUFFER_BYTES: "1048576",
+        QUIET_CORE_NPM_SHRINKWRAP_COMMAND_TIMEOUT_MS: "30000",
       }),
     ).toMatchObject({
       maxBuffer: 1024 * 1024,
@@ -85,14 +85,14 @@ describe("generate-npm-shrinkwrap", () => {
   it("rejects loose npm shrinkwrap command timeout and buffer overrides", () => {
     expect(() =>
       createNpmShrinkwrapExecOptions({ command: "npm", args: ["install"] }, "/tmp/package", {
-        OPENCLAW_NPM_SHRINKWRAP_COMMAND_TIMEOUT_MS: "30s",
+        QUIET_CORE_NPM_SHRINKWRAP_COMMAND_TIMEOUT_MS: "30s",
       }),
-    ).toThrow("invalid OPENCLAW_NPM_SHRINKWRAP_COMMAND_TIMEOUT_MS: 30s");
+    ).toThrow("invalid QUIET_CORE_NPM_SHRINKWRAP_COMMAND_TIMEOUT_MS: 30s");
     expect(() =>
       createNpmShrinkwrapExecOptions({ command: "npm", args: ["install"] }, "/tmp/package", {
-        OPENCLAW_NPM_SHRINKWRAP_COMMAND_MAX_BUFFER_BYTES: "64mb",
+        QUIET_CORE_NPM_SHRINKWRAP_COMMAND_MAX_BUFFER_BYTES: "64mb",
       }),
-    ).toThrow("invalid OPENCLAW_NPM_SHRINKWRAP_COMMAND_MAX_BUFFER_BYTES: 64mb");
+    ).toThrow("invalid QUIET_CORE_NPM_SHRINKWRAP_COMMAND_MAX_BUFFER_BYTES: 64mb");
   });
 
   it("extracts exact versions from npm override specs", () => {
@@ -109,15 +109,15 @@ describe("generate-npm-shrinkwrap", () => {
 
   it("parses nested scoped package paths", () => {
     expect(
-      parseLockPackagePath("node_modules/@openclaw/codex/node_modules/@anthropic-ai/sdk"),
+      parseLockPackagePath("node_modules/@quiet-core/codex/node_modules/@anthropic-ai/sdk"),
     ).toEqual([
       {
-        name: "@openclaw/codex",
-        path: "node_modules/@openclaw/codex",
+        name: "@quiet-core/codex",
+        path: "node_modules/@quiet-core/codex",
       },
       {
         name: "@anthropic-ai/sdk",
-        path: "node_modules/@openclaw/codex/node_modules/@anthropic-ai/sdk",
+        path: "node_modules/@quiet-core/codex/node_modules/@anthropic-ai/sdk",
       },
     ]);
   });
@@ -142,17 +142,17 @@ describe("generate-npm-shrinkwrap", () => {
             "lru-cache": "^11.5.0",
           },
         },
-        "node_modules/@openclaw/codex": {
+        "node_modules/@quiet-core/codex": {
           version: "0.75.4",
           hasShrinkwrap: true,
         },
-        "node_modules/@openclaw/codex/node_modules/protobufjs": {
+        "node_modules/@quiet-core/codex/node_modules/protobufjs": {
           version: "7.5.9",
         },
-        "node_modules/@openclaw/codex/node_modules/fetch-blob": {
+        "node_modules/@quiet-core/codex/node_modules/fetch-blob": {
           version: "4.0.0",
         },
-        "node_modules/@openclaw/codex/node_modules/fetch-blob/node_modules/node-domexception": {
+        "node_modules/@quiet-core/codex/node_modules/fetch-blob/node_modules/node-domexception": {
           version: "1.0.0",
         },
       },
@@ -164,11 +164,11 @@ describe("generate-npm-shrinkwrap", () => {
 
     expect(collectOverrideViolations(lockfile, overrideRules)).toHaveLength(2);
     expect(disableShrinkwrappedOverrideConflictSources(lockfile, overrideRules)).toEqual([
-      "node_modules/@openclaw/codex",
+      "node_modules/@quiet-core/codex",
     ]);
-    expect(lockfile.packages["node_modules/@openclaw/codex"]).not.toHaveProperty("hasShrinkwrap");
+    expect(lockfile.packages["node_modules/@quiet-core/codex"]).not.toHaveProperty("hasShrinkwrap");
     expect(
-      lockfile.packages["node_modules/@openclaw/codex/node_modules/protobufjs"],
+      lockfile.packages["node_modules/@quiet-core/codex/node_modules/protobufjs"],
     ).toBeUndefined();
   });
 
@@ -394,8 +394,8 @@ describe("generate-npm-shrinkwrap", () => {
     expect(
       shouldUseLegacyPeerDepsForShrinkwrap({
         dependencies: { zod: "4.4.3" },
-        peerDependencies: { openclaw: ">=2026.5.30" },
-        peerDependenciesMeta: { openclaw: { optional: true } },
+        peerDependencies: { "quiet-core-bot": ">=2026.5.30" },
+        peerDependenciesMeta: { "quiet-core-bot": { optional: true } },
       }),
     ).toBe(true);
   });

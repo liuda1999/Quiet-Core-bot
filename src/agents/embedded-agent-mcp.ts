@@ -4,7 +4,7 @@
  * Embedded runs use this to merge bundled/plugin MCP server config and return
  * the launchable server map plus diagnostics for the caller.
  */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import type { BundleMcpDiagnostic, BundleMcpServerConfig } from "../plugins/bundle-mcp.js";
 import type { PluginManifestRegistry } from "../plugins/manifest-registry.js";
 import { loadMergedBundleMcpConfig } from "./bundle-mcp-config.js";

@@ -9,8 +9,8 @@ import {
   extractAssistantVisibleText,
   extractFirstTextBlock,
 } from "../../shared/chat-message-content.js";
-import { isTranscriptOnlyOpenClawAssistantModel } from "../../shared/transcript-only-openclaw-assistant.js";
-import type { OpenClawConfig } from "../types.openclaw.js";
+import { isTranscriptOnlyOpenClawAssistantModel } from "../../shared/transcript-only-quiet-core-bot-assistant.js";
+import type { OpenClawConfig } from "../types.quiet-core-bot.js";
 import {
   resolveDefaultSessionStorePath,
   resolveSessionFilePath,
@@ -302,7 +302,7 @@ export async function readTailAssistantTextFromSessionTranscript(
   for await (const line of streamSessionTranscriptLinesReverse(sessionFile)) {
     try {
       const parsed = JSON.parse(line) as { message?: unknown };
-      // Skip non-message entries (e.g. `openclaw.cache-ttl` custom events) so
+      // Skip non-message entries (e.g. `quiet-core-bot.cache-ttl` custom events) so
       // a metadata line emitted after the canonical assistant turn doesn't
       // make the tail reader fall through to "no assistant tail" and cause
       // persistTextTurnTranscript to append a duplicate. Stop at any real
@@ -359,7 +359,7 @@ export async function appendAssistantMessageToSessionTranscript(params: {
       role: "assistant" as const,
       content: [{ type: "text", text: mirrorText }],
       api: "openai-responses",
-      provider: "openclaw",
+      provider: "quiet-core-bot",
       model: "delivery-mirror",
       usage: {
         input: 0,
@@ -548,7 +548,7 @@ export async function appendExactAssistantMessageToSessionTranscript(params: {
 }
 
 function isRedundantDeliveryMirror(message: SessionTranscriptAssistantMessage): boolean {
-  return message.provider === "openclaw" && message.model === "delivery-mirror";
+  return message.provider === "quiet-core-bot" && message.model === "delivery-mirror";
 }
 
 function isChannelFinalDeliveryMirror(message: SessionTranscriptAssistantMessage): boolean {

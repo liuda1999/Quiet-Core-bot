@@ -61,7 +61,7 @@ describe("iOS release shell wrapper arguments", () => {
       ["--build-number", "7"],
       {
         IOS_DEVELOPMENT_TEAM: "FWJYW4S8P8",
-        OPENCLAW_PUSH_RELAY_BASE_URL: "https://relay.example.com",
+        QUIET_CORE_PUSH_RELAY_BASE_URL: "https://relay.example.com",
       },
     );
 

@@ -52,7 +52,7 @@ quiet-core-bot logs --limit 500
 quiet-core-bot logs --local-time
 quiet-core-bot logs --utc
 quiet-core-bot logs --follow --local-time
-quiet-core-bot logs --url ws://127.0.0.1:18789 --token "$OPENCLAW_GATEWAY_TOKEN"
+quiet-core-bot logs --url ws://127.0.0.1:18789 --token "$QUIET_CORE_GATEWAY_TOKEN"
 ```
 
 ## Notes

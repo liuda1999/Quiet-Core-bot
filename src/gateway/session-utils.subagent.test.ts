@@ -706,7 +706,7 @@ describe("listSessionsFromStore subagent metadata", () => {
   });
 
   test("prefers persisted terminal session state when only stale active subagent snapshots remain", () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-session-utils-subagent-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-session-utils-subagent-"));
     const stateDir = path.join(tempRoot, "state");
     fs.mkdirSync(stateDir, { recursive: true });
     try {
@@ -752,8 +752,8 @@ describe("listSessionsFromStore subagent metadata", () => {
 
       const row = withEnv(
         {
-          OPENCLAW_STATE_DIR: stateDir,
-          OPENCLAW_TEST_READ_SUBAGENT_RUNS_FROM_DISK: "1",
+          QUIET_CORE_STATE_DIR: stateDir,
+          QUIET_CORE_TEST_READ_SUBAGENT_RUNS_FROM_DISK: "1",
         },
         () => {
           const result = listSessionsFromStore({
@@ -788,7 +788,7 @@ describe("listSessionsFromStore subagent metadata", () => {
 
   test("reuses one subagent registry disk snapshot across sessions.list filtering and row enrichment", () => {
     const tempRoot = fs.mkdtempSync(
-      path.join(os.tmpdir(), "openclaw-session-utils-subagent-cache-"),
+      path.join(os.tmpdir(), "quiet-core-bot-session-utils-subagent-cache-"),
     );
     const stateDir = path.join(tempRoot, "state");
     const registryPath = path.join(stateDir, "subagents", "runs.json");
@@ -850,8 +850,8 @@ describe("listSessionsFromStore subagent metadata", () => {
     try {
       const result = withEnv(
         {
-          OPENCLAW_STATE_DIR: stateDir,
-          OPENCLAW_TEST_READ_SUBAGENT_RUNS_FROM_DISK: "1",
+          QUIET_CORE_STATE_DIR: stateDir,
+          QUIET_CORE_TEST_READ_SUBAGENT_RUNS_FROM_DISK: "1",
         },
         () =>
           listSessionsFromStore({
@@ -875,7 +875,7 @@ describe("listSessionsFromStore subagent metadata", () => {
 
   test("does not read the subagent registry when raw filters drop every session", () => {
     const tempRoot = fs.mkdtempSync(
-      path.join(os.tmpdir(), "openclaw-session-utils-subagent-cache-empty-"),
+      path.join(os.tmpdir(), "quiet-core-bot-session-utils-subagent-cache-empty-"),
     );
     const stateDir = path.join(tempRoot, "state");
     const registryPath = path.join(stateDir, "subagents", "runs.json");
@@ -886,8 +886,8 @@ describe("listSessionsFromStore subagent metadata", () => {
     try {
       const result = withEnv(
         {
-          OPENCLAW_STATE_DIR: stateDir,
-          OPENCLAW_TEST_READ_SUBAGENT_RUNS_FROM_DISK: "1",
+          QUIET_CORE_STATE_DIR: stateDir,
+          QUIET_CORE_TEST_READ_SUBAGENT_RUNS_FROM_DISK: "1",
         },
         () =>
           listSessionsFromStore({
@@ -1243,7 +1243,7 @@ describe("listSessionsFromStore subagent metadata", () => {
 
 describe("loadCombinedSessionStoreForGateway includes disk-only agents (#32804)", () => {
   test("ACP agent sessions are visible even when agents.list is configured", async () => {
-    await withStateDirEnv("openclaw-acp-vis-", async ({ stateDir }) => {
+    await withStateDirEnv("quiet-core-bot-acp-vis-", async ({ stateDir }) => {
       const customRoot = path.join(stateDir, "custom-state");
       const agentsDir = path.join(customRoot, "agents");
       const mainDir = path.join(agentsDir, "main", "sessions");
@@ -1284,7 +1284,7 @@ describe("loadCombinedSessionStoreForGateway includes disk-only agents (#32804)"
   });
 
   test("agent-scoped loads read only matching agent stores", async () => {
-    await withStateDirEnv("openclaw-acp-scoped-", async ({ stateDir }) => {
+    await withStateDirEnv("quiet-core-bot-acp-scoped-", async ({ stateDir }) => {
       const customRoot = path.join(stateDir, "custom-state");
       const agentsDir = path.join(customRoot, "agents");
       const mainDir = path.join(agentsDir, "main", "sessions");
@@ -1337,7 +1337,7 @@ describe("loadCombinedSessionStoreForGateway includes disk-only agents (#32804)"
   });
 
   test("keeps canonical single-target entries by reference", async () => {
-    await withStateDirEnv("openclaw-acp-canonical-", async ({ stateDir }) => {
+    await withStateDirEnv("quiet-core-bot-acp-canonical-", async ({ stateDir }) => {
       const customRoot = path.join(stateDir, "custom-state");
       const codexDir = path.join(customRoot, "agents", "codex", "sessions");
       fs.mkdirSync(codexDir, { recursive: true });

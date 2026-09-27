@@ -6,7 +6,7 @@ import { resolvePdfModelConfigForTool } from "./pdf-tool.model-config.js";
 import { resetPdfToolAuthEnv } from "./pdf-tool.test-support.js";
 
 const ANTHROPIC_PDF_MODEL = "anthropic/claude-opus-4-8";
-const TEST_AGENT_DIR = "/tmp/openclaw-pdf-model-config";
+const TEST_AGENT_DIR = "/tmp/quiet-core-bot-pdf-model-config";
 
 vi.mock("./model-config.helpers.js", () => ({
   coerceToolModelConfig: (model?: unknown) => {

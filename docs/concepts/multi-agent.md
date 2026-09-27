@@ -47,8 +47,8 @@ The Gateway can host **one agent** (default) or **many agents** side-by-side.
 
 ## Paths (quick map)
 
-- Config: `~/.quiet-core-bot/quiet-core-bot.json` (or `OPENCLAW_CONFIG_PATH`)
-- State dir: `~/.quiet-core-bot` (or `OPENCLAW_STATE_DIR`)
+- Config: `~/.quiet-core-bot/quiet-core-bot.json` (or `QUIET_CORE_CONFIG_PATH`)
+- State dir: `~/.quiet-core-bot` (or `QUIET_CORE_STATE_DIR`)
 - Workspace: `~/.quiet-core-bot/workspace` (or `~/.quiet-core-bot/workspace-<agentId>`)
 - Agent dir: `~/.quiet-core-bot/agents/<agentId>/agent` (or `agents.list[].agentDir`)
 - Sessions: `~/.quiet-core-bot/agents/<agentId>/sessions`
@@ -59,7 +59,7 @@ If you do nothing, Quiet Core bot runs a single agent:
 
 - `agentId` defaults to **`main`**.
 - Sessions are keyed as `agent:main:<mainKey>`.
-- Workspace defaults to `~/.quiet-core-bot/workspace` (or `~/.quiet-core-bot/workspace-<profile>` when `OPENCLAW_PROFILE` is set).
+- Workspace defaults to `~/.quiet-core-bot/workspace` (or `~/.quiet-core-bot/workspace-<profile>` when `QUIET_CORE_PROFILE` is set).
 - State defaults to `~/.quiet-core-bot/agents/main/agent`.
 
 ## Agent helper

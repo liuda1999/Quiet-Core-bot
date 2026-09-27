@@ -25,8 +25,8 @@ local Tailscale daemon is stopped or logged out.
 Set `gateway.auth.mode` to control the handshake:
 
 - `none` (private ingress only)
-- `token` (default when `OPENCLAW_GATEWAY_TOKEN` is set)
-- `password` (shared secret via `OPENCLAW_GATEWAY_PASSWORD` or config)
+- `token` (default when `QUIET_CORE_GATEWAY_TOKEN` is set)
+- `password` (shared secret via `QUIET_CORE_GATEWAY_PASSWORD` or config)
 - `trusted-proxy` (identity-aware reverse proxy; see [Trusted Proxy Auth](/gateway/trusted-proxy-auth))
 
 When `tailscale.mode = "serve"` and `gateway.auth.allowTailscale` is `true`,
@@ -74,13 +74,13 @@ device hostname, set `gateway.tailscale.serviceName` to the Service name:
 {
   gateway: {
     bind: "loopback",
-    tailscale: { mode: "serve", serviceName: "svc:openclaw" },
+    tailscale: { mode: "serve", serviceName: "svc:quiet-core-bot" },
   },
 }
 ```
 
 With the example above, startup reports the Service URL as
-`https://openclaw.<tailnet-name>.ts.net/` instead of the device hostname.
+`https://quiet-core-bot.<tailnet-name>.ts.net/` instead of the device hostname.
 Tailscale Services require the host to be an approved tagged node in your
 tailnet. Configure the tag and approve the Service in Tailscale before enabling
 this option, otherwise `tailscale serve --service=...` will fail during gateway
@@ -120,7 +120,7 @@ Loopback (`http://127.0.0.1:18789`) will **not** work in this mode.
 }
 ```
 
-Prefer `OPENCLAW_GATEWAY_PASSWORD` over committing a password to disk.
+Prefer `QUIET_CORE_GATEWAY_PASSWORD` over committing a password to disk.
 
 ## CLI examples
 
@@ -135,7 +135,7 @@ quiet-core-bot gateway --tailscale funnel --auth password
 - `tailscale.mode: "funnel"` refuses to start unless auth mode is `password` to avoid public exposure.
 - `gateway.tailscale.serviceName` applies only to Serve mode and is passed to
   `tailscale serve --service=<name>`. The value must use Tailscale's
-  `svc:<dns-label>` Service name format, for example `svc:openclaw`.
+  `svc:<dns-label>` Service name format, for example `svc:quiet-core-bot`.
   Tailscale requires Service hosts to be tagged nodes, and the Service may need
   approval in the admin console before Serve can publish it.
 - Set `gateway.tailscale.resetOnExit` if you want Quiet Core bot to undo `tailscale serve`

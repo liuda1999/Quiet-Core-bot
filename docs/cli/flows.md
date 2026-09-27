@@ -1,14 +1,14 @@
 ---
 summary: "Redirect: flow commands live under `quiet-core-bot tasks flow`"
 read_when:
-  - You encounter `openclaw flows` in older docs or release notes
+  - You encounter `quiet-core-bot flows` in older docs or release notes
   - You want a quick TaskFlow inspection reference
 title: "Flows (redirect)"
 ---
 
 # `quiet-core-bot tasks flow`
 
-There is no top-level `openclaw flows` command. Durable TaskFlow inspection lives under `quiet-core-bot tasks flow`.
+There is no top-level `quiet-core-bot flows` command. Durable TaskFlow inspection lives under `quiet-core-bot tasks flow`.
 
 ## Subcommands
 

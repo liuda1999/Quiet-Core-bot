@@ -12,7 +12,7 @@ Status: downloadable plugin for DMs + spaces via Google Chat API webhooks (HTTP 
 Install Google Chat before configuring the channel:
 
 ```bash
-quiet-core-bot plugins install @openclaw/googlechat
+quiet-core-bot plugins install @quiet-core/googlechat
 ```
 
 Local checkout (when running from a git repo):
@@ -28,7 +28,7 @@ quiet-core-bot plugins install ./path/to/local/googlechat-plugin
    - Enable the API if it is not already enabled.
 2. Create a **Service Account**:
    - Press **Create Credentials** > **Service Account**.
-   - Name it whatever you want (e.g., `openclaw-chat`).
+   - Name it whatever you want (e.g., `quiet-core-bot-chat`).
    - Leave permissions blank (press **Continue**).
    - Leave principals with access blank (press **Done**).
 3. Create and download the **JSON Key**:

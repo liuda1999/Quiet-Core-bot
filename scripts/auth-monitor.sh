@@ -3,18 +3,18 @@
 # Run via cron or systemd timer to get proactive notifications
 # before Claude Code auth expires.
 #
-# Suggested cron: */30 * * * * /path/to/openclaw/scripts/auth-monitor.sh
+# Suggested cron: */30 * * * * /path/to/quiet-core-bot/scripts/auth-monitor.sh
 #
 # Environment variables:
 #   NOTIFY_PHONE - Phone number to send OpenClaw notification (e.g., +1234567890)
-#   NOTIFY_NTFY  - ntfy.sh topic for push notifications (e.g., openclaw-alerts)
+#   NOTIFY_NTFY  - ntfy.sh topic for push notifications (e.g., quiet-core-bot-alerts)
 #   WARN_HOURS   - Hours before expiry to warn (default: 2)
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CLAUDE_CREDS="$HOME/.claude/.credentials.json"
-STATE_FILE="$HOME/.openclaw/auth-monitor-state"
+STATE_FILE="$HOME/.quiet-core-bot/auth-monitor-state"
 
 # Configuration
 WARN_HOURS="${WARN_HOURS:-2}"
@@ -43,10 +43,10 @@ send_notification() {
 
     # Send via OpenClaw if phone configured and auth still valid
     if [ -n "$NOTIFY_PHONE" ]; then
-        # Check if we can still use openclaw
+        # Check if we can still use quiet-core-bot
         if "$SCRIPT_DIR/claude-auth-status.sh" simple 2>/dev/null | grep -q "OK\|EXPIRING"; then
             echo "Sending via OpenClaw to $NOTIFY_PHONE..."
-            openclaw send --to "$NOTIFY_PHONE" --message "$message" 2>/dev/null || true
+            quiet-core-bot send --to "$NOTIFY_PHONE" --message "$message" 2>/dev/null || true
         fi
     fi
 

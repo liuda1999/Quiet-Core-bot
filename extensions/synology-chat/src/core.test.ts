@@ -1,12 +1,12 @@
 // Synology Chat tests cover core plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { MAX_TIMER_TIMEOUT_MS } from "openclaw/plugin-sdk/number-runtime";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import { MAX_TIMER_TIMEOUT_MS } from "quiet-core-bot/plugin-sdk/number-runtime";
 import {
   createPluginSetupWizardConfigure,
   createTestWizardPrompter,
   runSetupWizardConfigure,
-} from "openclaw/plugin-sdk/plugin-test-runtime";
-import type { WizardPrompter } from "openclaw/plugin-sdk/plugin-test-runtime";
+} from "quiet-core-bot/plugin-sdk/plugin-test-runtime";
+import type { WizardPrompter } from "quiet-core-bot/plugin-sdk/plugin-test-runtime";
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { listAccountIds, resolveAccount } from "./accounts.js";
 import { SynologyChatChannelConfigSchema } from "./config-schema.js";
@@ -88,7 +88,7 @@ describe("synology-chat core", () => {
     delete process.env.SYNOLOGY_NAS_HOST;
     delete process.env.SYNOLOGY_ALLOWED_USER_IDS;
     delete process.env.SYNOLOGY_RATE_LIMIT;
-    delete process.env.OPENCLAW_BOT_NAME;
+    delete process.env.QUIET_CORE_BOT_NAME;
   });
 
   it("exports dangerouslyAllowNameMatching in the JSON schema", () => {
@@ -215,7 +215,7 @@ describe("synology-chat account resolution", () => {
     process.env.SYNOLOGY_CHAT_TOKEN = "env-tok";
     process.env.SYNOLOGY_CHAT_INCOMING_URL = "https://nas/incoming";
     process.env.SYNOLOGY_NAS_HOST = "192.0.2.1";
-    process.env.OPENCLAW_BOT_NAME = "TestBot";
+    process.env.QUIET_CORE_BOT_NAME = "TestBot";
 
     const cfg = { channels: { "synology-chat": {} } };
     const account = resolveAccount(cfg);

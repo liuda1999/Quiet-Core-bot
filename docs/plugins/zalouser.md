@@ -29,7 +29,7 @@ No external `zca`/`openzca` CLI binary is required.
 ### Option A: install from npm
 
 ```bash
-quiet-core-bot plugins install @openclaw/zalouser
+quiet-core-bot plugins install @quiet-core/zalouser
 ```
 
 Use the bare package to follow the current official release tag. Pin an exact
@@ -69,7 +69,7 @@ quiet-core-bot channels login --channel zalouser
 quiet-core-bot channels logout --channel zalouser
 quiet-core-bot channels status --probe
 quiet-core-bot message send --channel zalouser --target <threadId> --message "Hello from Quiet Core bot"
-openclaw directory peers list --channel zalouser --query "name"
+quiet-core-bot directory peers list --channel zalouser --query "name"
 ```
 
 ## Agent tool

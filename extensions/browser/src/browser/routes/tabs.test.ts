@@ -1,5 +1,5 @@
 // Browser tests cover tabs plugin behavior.
-import { MAX_TIMER_TIMEOUT_MS } from "openclaw/plugin-sdk/number-runtime";
+import { MAX_TIMER_TIMEOUT_MS } from "quiet-core-bot/plugin-sdk/number-runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createBrowserRouteApp, createBrowserRouteResponse } from "./test-helpers.js";
 
@@ -73,7 +73,7 @@ function createProfileContext(overrides?: Partial<ReturnType<typeof baseProfileC
 function baseProfileContext() {
   return {
     profile: {
-      name: "openclaw",
+      name: "quiet-core-bot",
     },
     ensureBrowserAvailable: vi.fn(async () => {}),
     ensureTabAvailable: vi.fn(async () => ({

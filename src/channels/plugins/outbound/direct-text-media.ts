@@ -3,9 +3,9 @@
  *
  * Builds lightweight SDK-backed send adapters with chunking, sanitization, and media limits.
  */
-import { sendTextMediaPayload } from "openclaw/plugin-sdk/reply-payload";
+import { sendTextMediaPayload } from "quiet-core-bot/plugin-sdk/reply-payload";
 import { chunkText } from "../../../auto-reply/chunk.js";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
 import type { OutboundSendDeps } from "../../../infra/outbound/deliver.js";
 import { sanitizeForPlainText } from "../../../infra/outbound/sanitize-text.js";
 import type { OutboundMediaAccess } from "../../../media/load-options.js";
@@ -48,7 +48,7 @@ export {
   sendPayloadMediaSequenceAndFinalize,
   sendPayloadMediaSequenceOrFallback,
   sendTextMediaPayload,
-} from "openclaw/plugin-sdk/reply-payload";
+} from "quiet-core-bot/plugin-sdk/reply-payload";
 
 /**
  * Resolves an account-scoped channel media byte limit.

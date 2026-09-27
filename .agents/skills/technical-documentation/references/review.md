@@ -8,7 +8,7 @@ Read `principles.md` first, then apply this checklist.
 - Confirm brownfield vs evergreen intent.
 - Confirm expected outcome for the reader.
 - For full-repo reviews, explicitly include both governance surfaces and product-doc surfaces (`docs/`, README trees, `.md/.mdx/.mdc`, `.rst/.rsc`, framework docs configs).
-- For Quiet Core bot docs reviews, apply `references/openclaw.md` for page type, docs IA, preservation, examples, and validation checks.
+- For Quiet Core bot docs reviews, apply `references/quiet-core-bot.md` for page type, docs IA, preservation, examples, and validation checks.
 
 ## 2. Investigation behavior
 
@@ -75,7 +75,7 @@ For agent-platform awareness:
 - Validate heading flow and navigation discoverability.
 - Flag critical content trapped in images or buried sections.
 - Check Diataxis alignment and split mixed-purpose sections.
-- For Quiet Core bot docs, confirm the content matches an explicit page type from `references/openclaw.md`.
+- For Quiet Core bot docs, confirm the content matches an explicit page type from `references/quiet-core-bot.md`.
 
 ## 7. Writing quality review
 

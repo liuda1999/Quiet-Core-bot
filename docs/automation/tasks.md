@@ -95,7 +95,7 @@ Not every agent run creates a task. Heartbeat turns and normal interactive chat 
 | ACP background runs    | `acp`        | Spawning a child ACP session                                           | `done_only`           |
 | Subagent orchestration | `subagent`   | Spawning a subagent via `sessions_spawn`                               | `done_only`           |
 | Cron jobs (all types)  | `cron`       | Every cron execution (main-session and isolated)                       | `silent`              |
-| CLI operations         | `cli`        | `openclaw agent` commands that run through the gateway                 | `silent`              |
+| CLI operations         | `cli`        | `quiet-core-bot agent` commands that run through the gateway                 | `silent`              |
 | Agent media jobs       | `cli`        | Session-backed `image_generate`/`music_generate`/`video_generate` runs | `silent`              |
 
 <AccordionGroup>
@@ -154,7 +154,7 @@ Agent run completion is authoritative for active task records. A successful deta
 - CLI tasks: tasks with a run id/source id use the live run context, so
   lingering child-session or chat-session rows do not keep them alive after the
   gateway-owned run disappears. Legacy CLI tasks without run identity still fall
-  back to the child session. Gateway-backed `openclaw agent` runs also finalize
+  back to the child session. Gateway-backed `quiet-core-bot agent` runs also finalize
   from their run result, so completed runs do not sit active until the sweeper
   marks them `lost`.
 
@@ -306,7 +306,7 @@ Both `/status` and the `session_status` tool use a cleanup-aware task snapshot: 
 Task records persist in SQLite at:
 
 ```
-$OPENCLAW_STATE_DIR/tasks/runs.sqlite
+$QUIET_CORE_STATE_DIR/tasks/runs.sqlite
 ```
 
 The registry loads into memory at gateway start and syncs writes to SQLite for durability across restarts.

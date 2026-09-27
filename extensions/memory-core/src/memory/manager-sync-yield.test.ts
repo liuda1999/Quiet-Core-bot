@@ -6,8 +6,8 @@ import {
   resolveSessionTranscriptsDirForAgent,
   type OpenClawConfig,
   type ResolvedMemorySearchConfig,
-} from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
-import type { MemorySource } from "openclaw/plugin-sdk/memory-core-host-engine-storage";
+} from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
+import type { MemorySource } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-storage";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const { buildSessionEntryMock } = vi.hoisted(() => ({
@@ -27,7 +27,7 @@ vi.mock("undici", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/memory-core-host-engine-qmd", () => {
+vi.mock("quiet-core-bot/plugin-sdk/memory-core-host-engine-qmd", () => {
   const basename = (filePath: string) => filePath.split(/[\\/]/).pop() ?? filePath;
   return {
     buildSessionEntry: buildSessionEntryMock,
@@ -80,7 +80,7 @@ function createDbMock(): DatabaseSync {
 class SessionSyncYieldHarness extends MemoryManagerSyncOps {
   protected readonly cfg = {} as OpenClawConfig;
   protected readonly agentId = "main";
-  protected readonly workspaceDir = "/tmp/openclaw-test-workspace";
+  protected readonly workspaceDir = "/tmp/quiet-core-bot-test-workspace";
   protected readonly settings = {
     sync: {
       sessions: {
@@ -162,7 +162,7 @@ class SessionSyncYieldHarness extends MemoryManagerSyncOps {
 
 describe("session sync responsiveness", () => {
   beforeEach(() => {
-    vi.stubEnv("OPENCLAW_STATE_DIR", path.join(os.tmpdir(), "openclaw-session-sync-yield"));
+    vi.stubEnv("QUIET_CORE_STATE_DIR", path.join(os.tmpdir(), "quiet-core-bot-session-sync-yield"));
     buildSessionEntryMock.mockImplementation(async (absPath: string) => {
       const name = path.basename(absPath);
       return {

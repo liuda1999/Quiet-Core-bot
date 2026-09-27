@@ -6,19 +6,19 @@ import type {
   SessionBindingAdapter,
   SessionBindingRecord,
 } from "../infra/outbound/session-binding-service.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "../state/openclaw-state-db.js";
+} from "../state/quiet-core-bot-state-db.js";
 import { createEmptyPluginRegistry } from "./registry-empty.js";
 import type { PluginRegistry } from "./registry.js";
 import { cleanupTrackedTempDirs, makeTrackedTempDir } from "./test-helpers/fs-fixtures.js";
 
 const tempDirs: string[] = [];
-const tempRoot = makeTrackedTempDir("openclaw-plugin-binding", tempDirs);
-const previousStateDir = process.env.OPENCLAW_STATE_DIR;
+const tempRoot = makeTrackedTempDir("quiet-core-bot-plugin-binding", tempDirs);
+const previousStateDir = process.env.QUIET_CORE_STATE_DIR;
 
 type PluginBindingApprovalsDatabase = Pick<OpenClawStateKyselyDatabase, "plugin_binding_approvals">;
 
@@ -160,9 +160,9 @@ function createAdapter(channel: string, accountId: string): SessionBindingAdapte
 afterAll(() => {
   closeOpenClawStateDatabaseForTest();
   if (previousStateDir == null) {
-    delete process.env.OPENCLAW_STATE_DIR;
+    delete process.env.QUIET_CORE_STATE_DIR;
   } else {
-    process.env.OPENCLAW_STATE_DIR = previousStateDir;
+    process.env.QUIET_CORE_STATE_DIR = previousStateDir;
   }
   cleanupTrackedTempDirs(tempDirs);
 });
@@ -463,7 +463,7 @@ function insertPluginBindingApprovalRow(params: {
 
 describe("plugin conversation binding approvals", () => {
   beforeEach(() => {
-    process.env.OPENCLAW_STATE_DIR = tempRoot;
+    process.env.QUIET_CORE_STATE_DIR = tempRoot;
     clearPluginBindingApprovalRows();
     sessionBindingState.reset();
     testing.reset();
@@ -739,8 +739,8 @@ describe("plugin conversation binding approvals", () => {
     const data = {
       kind: "codex-app-server-session",
       version: 1,
-      sessionFile: "/tmp/openclaw/session.jsonl",
-      workspaceDir: "/workspace/openclaw",
+      sessionFile: "/tmp/quiet-core-bot/session.jsonl",
+      workspaceDir: "/workspace/quiet-core-bot",
     };
     const binding = await requestResolvedBinding(
       createCodexBindRequest({
@@ -1058,10 +1058,10 @@ describe("plugin conversation binding approvals", () => {
         accountId: "default",
         conversationId: "8460800771",
         summary: "Bind this conversation to Codex thread 019ce411-6322-7db2-a821-1a61c530e7d9.",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "quiet-core-bot-codex-app-server",
       }),
       expectedBinding: {
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "quiet-core-bot-codex-app-server",
         pluginRoot: "/plugins/codex-a",
         conversationId: "8460800771",
       },

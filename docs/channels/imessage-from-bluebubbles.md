@@ -225,10 +225,10 @@ If the gateway logs `imessage: dropping group message from chat_id=<id>` or the 
 | --------------------------------------------------- | ----------------------------------- | ----------------------------------------------------------------------------- |
 | Send text / SMS fallback                            | ✅                                  | ✅                                                                            |
 | Send media (photo, video, file, voice)              | ✅                                  | ✅                                                                            |
-| Threaded reply (`reply_to_guid`)                    | ✅                                  | ✅ (closes [#51892](https://github.com/openclaw/openclaw/issues/51892))       |
+| Threaded reply (`reply_to_guid`)                    | ✅                                  | ✅ (closes [#51892](https://github.com/liuda1999/Quiet-Core-bot/issues/51892))       |
 | Tapback (`react`)                                   | ✅                                  | ✅                                                                            |
 | Edit / unsend (macOS 13+ recipients)                | ✅                                  | ✅                                                                            |
-| Send with screen effect                             | ✅                                  | ✅ (closes part of [#9394](https://github.com/openclaw/openclaw/issues/9394)) |
+| Send with screen effect                             | ✅                                  | ✅ (closes part of [#9394](https://github.com/liuda1999/Quiet-Core-bot/issues/9394)) |
 | Rich text bold / italic / underline / strikethrough | ✅                                  | ✅ (typed-run formatting via attributedBody)                                  |
 | Rename group / set group icon                       | ✅                                  | ✅                                                                            |
 | Add / remove participant, leave group               | ✅                                  | ✅                                                                            |

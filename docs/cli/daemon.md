@@ -1,26 +1,26 @@
 ---
-summary: "CLI reference for `openclaw daemon` (legacy alias for gateway service management)"
+summary: "CLI reference for `quiet-core-bot daemon` (legacy alias for gateway service management)"
 read_when:
-  - You still use `openclaw daemon ...` in scripts
+  - You still use `quiet-core-bot daemon ...` in scripts
   - You need service lifecycle commands (install/start/stop/restart/status)
 title: "Daemon"
 ---
 
-# `openclaw daemon`
+# `quiet-core-bot daemon`
 
 Legacy alias for Gateway service management commands.
 
-`openclaw daemon ...` maps to the same service control surface as `quiet-core-bot gateway ...` service commands.
+`quiet-core-bot daemon ...` maps to the same service control surface as `quiet-core-bot gateway ...` service commands.
 
 ## Usage
 
 ```bash
-openclaw daemon status
-openclaw daemon install
-openclaw daemon start
-openclaw daemon stop
-openclaw daemon restart
-openclaw daemon uninstall
+quiet-core-bot daemon status
+quiet-core-bot daemon install
+quiet-core-bot daemon start
+quiet-core-bot daemon stop
+quiet-core-bot daemon restart
+quiet-core-bot daemon uninstall
 ```
 
 ## Subcommands

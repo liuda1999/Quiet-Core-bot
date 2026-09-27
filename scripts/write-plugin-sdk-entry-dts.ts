@@ -46,12 +46,12 @@ const RUNTIME_SHIMS: Partial<Record<string, string>> = {
 
 function isBareImportSpecifier(id: string): boolean {
   if (
-    id === "@openclaw/llm-core" ||
-    id.startsWith("@openclaw/llm-core/") ||
-    id === "@openclaw/model-catalog-core/model-catalog-types" ||
-    id.startsWith("@openclaw/normalization-core/") ||
-    id.startsWith("@openclaw/media-core/") ||
-    id.startsWith("@openclaw/acp-core/")
+    id === "@quiet-core/llm-core" ||
+    id.startsWith("@quiet-core/llm-core/") ||
+    id === "@quiet-core/model-catalog-core/model-catalog-types" ||
+    id.startsWith("@quiet-core/normalization-core/") ||
+    id.startsWith("@quiet-core/media-core/") ||
+    id.startsWith("@quiet-core/acp-core/")
   ) {
     return false;
   }
@@ -81,8 +81,8 @@ function copyFlatDeclarations(fromDir: string, toDir: string): void {
 }
 
 const distPluginSdkDir = path.join(process.cwd(), "dist/plugin-sdk");
-const flatDeclarationTempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-sdk-dts-"));
-const shouldBuildPrivateQaEntries = process.env.OPENCLAW_BUILD_PRIVATE_QA === "1";
+const flatDeclarationTempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-plugin-sdk-dts-"));
+const shouldBuildPrivateQaEntries = process.env.QUIET_CORE_BUILD_PRIVATE_QA === "1";
 const flatDeclarationEntrypoints = shouldBuildPrivateQaEntries
   ? pluginSdkEntrypoints
   : publicPluginSdkEntrypoints;

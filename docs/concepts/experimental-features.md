@@ -46,7 +46,7 @@ Removing them does not silently rewire Quiet Core bot — it just makes the dire
 
 Enable lean mode when you have already proved the model can talk to the Gateway but full agent turns misbehave. The typical signal chain is:
 
-1. `openclaw infer model run --gateway --model <ref> --prompt "Reply with exactly: pong"` succeeds.
+1. `quiet-core-bot infer model run --gateway --model <ref> --prompt "Reply with exactly: pong"` succeeds.
 2. A normal agent turn fails with malformed tool calls, oversized prompts, or the model ignoring its tools.
 3. Toggling `localModelLean: true` clears the failure.
 

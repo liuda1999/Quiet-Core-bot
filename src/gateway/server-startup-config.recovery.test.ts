@@ -68,7 +68,7 @@ vi.mock("../config/paths.js", () => ({
   get isNixMode() {
     return configMocks.isNixMode.value;
   },
-  resolveStateDir: vi.fn(() => "/tmp/openclaw-state"),
+  resolveStateDir: vi.fn(() => "/tmp/quiet-core-bot-state"),
 }));
 
 vi.mock("../config/runtime-overrides.js", () => ({
@@ -87,7 +87,7 @@ let loadGatewayStartupConfigSnapshot: typeof import("./server-startup-config.js"
 let configIo: typeof import("../config/io.js");
 let configMutate: typeof import("../config/mutate.js");
 
-const configPath = "/tmp/openclaw-startup-recovery.json";
+const configPath = "/tmp/quiet-core-bot-startup-recovery.json";
 const telegramAutoEnableChange = "Telegram configured, enabled automatically.";
 const runtimeOnlyAutoEnableLog = `gateway: auto-enabled plugins for this runtime without writing config:\n- ${telegramAutoEnableChange}`;
 const validConfig = {

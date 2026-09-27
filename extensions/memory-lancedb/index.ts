@@ -9,27 +9,27 @@
 import { Buffer } from "node:buffer";
 import { randomUUID } from "node:crypto";
 import type * as LanceDB from "@lancedb/lancedb";
-import type { AgentToolResult } from "openclaw/plugin-sdk/agent-core";
+import type { AgentToolResult } from "quiet-core-bot/plugin-sdk/agent-core";
 import {
   optionalFiniteNumberSchema,
   optionalPositiveIntegerSchema,
-} from "openclaw/plugin-sdk/channel-actions";
-import { BUNDLED_CHAT_CHANNEL_ENVELOPE_PREFIXES } from "openclaw/plugin-sdk/chat-channel-ids";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { MemoryEmbeddingProvider } from "openclaw/plugin-sdk/memory-core-host-engine-embeddings";
-import { MESSAGE_TOOL_DELIVERY_HINTS } from "openclaw/plugin-sdk/message-tool-delivery-hints";
+} from "quiet-core-bot/plugin-sdk/channel-actions";
+import { BUNDLED_CHAT_CHANNEL_ENVELOPE_PREFIXES } from "quiet-core-bot/plugin-sdk/chat-channel-ids";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { MemoryEmbeddingProvider } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-embeddings";
+import { MESSAGE_TOOL_DELIVERY_HINTS } from "quiet-core-bot/plugin-sdk/message-tool-delivery-hints";
 import {
   parseStrictPositiveInteger,
   resolveTimerTimeoutMs,
-} from "openclaw/plugin-sdk/number-runtime";
-import { readFiniteNumberParam, readPositiveIntegerParam } from "openclaw/plugin-sdk/param-readers";
-import { resolveLivePluginConfigObject } from "openclaw/plugin-sdk/plugin-config-runtime";
-import { ensureGlobalUndiciEnvProxyDispatcher } from "openclaw/plugin-sdk/runtime-env";
+} from "quiet-core-bot/plugin-sdk/number-runtime";
+import { readFiniteNumberParam, readPositiveIntegerParam } from "quiet-core-bot/plugin-sdk/param-readers";
+import { resolveLivePluginConfigObject } from "quiet-core-bot/plugin-sdk/plugin-config-runtime";
+import { ensureGlobalUndiciEnvProxyDispatcher } from "quiet-core-bot/plugin-sdk/runtime-env";
 import {
   asOptionalRecord as asRecord,
   normalizeLowercaseStringOrEmpty,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
-import { truncateUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
+import { truncateUtf16Safe } from "quiet-core-bot/plugin-sdk/text-utility-runtime";
 import { Type } from "typebox";
 import { definePluginEntry, type OpenClawPluginApi } from "./api.js";
 import {
@@ -86,23 +86,23 @@ function loadOpenAiModule(): Promise<typeof import("openai")> {
 }
 
 let memoryEmbeddingProviderModulePromise:
-  | Promise<typeof import("openclaw/plugin-sdk/memory-core-host-engine-embeddings")>
+  | Promise<typeof import("quiet-core-bot/plugin-sdk/memory-core-host-engine-embeddings")>
   | undefined;
 function loadMemoryEmbeddingProviderModule(): Promise<
-  typeof import("openclaw/plugin-sdk/memory-core-host-engine-embeddings")
+  typeof import("quiet-core-bot/plugin-sdk/memory-core-host-engine-embeddings")
 > {
   memoryEmbeddingProviderModulePromise ??=
-    import("openclaw/plugin-sdk/memory-core-host-engine-embeddings");
+    import("quiet-core-bot/plugin-sdk/memory-core-host-engine-embeddings");
   return memoryEmbeddingProviderModulePromise;
 }
 
 let memoryHostCoreModulePromise:
-  | Promise<typeof import("openclaw/plugin-sdk/memory-host-core")>
+  | Promise<typeof import("quiet-core-bot/plugin-sdk/memory-host-core")>
   | undefined;
 function loadMemoryHostCoreModule(): Promise<
-  typeof import("openclaw/plugin-sdk/memory-host-core")
+  typeof import("quiet-core-bot/plugin-sdk/memory-host-core")
 > {
-  memoryHostCoreModulePromise ??= import("openclaw/plugin-sdk/memory-host-core");
+  memoryHostCoreModulePromise ??= import("quiet-core-bot/plugin-sdk/memory-host-core");
   return memoryHostCoreModulePromise;
 }
 

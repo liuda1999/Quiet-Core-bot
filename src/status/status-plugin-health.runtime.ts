@@ -2,7 +2,7 @@ import { listPersistedRuntimeToolSchemaQuarantines } from "../agents/tool-schema
 import { resolveReadOnlyChannelPluginsForConfig } from "../channels/plugins/read-only.js";
 // Runtime plugin health collection is isolated from pure status formatting so
 // ordinary status tests do not eagerly load plugin registry internals.
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { listContextEngineQuarantines } from "../context-engine/registry.js";
 import { getActiveRuntimePluginRegistry } from "../plugins/active-runtime-registry.js";
 import {

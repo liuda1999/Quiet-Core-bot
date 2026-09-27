@@ -1,10 +1,10 @@
 // Parses auth profile directives into provider-scoped runtime overrides.
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import {
   ensureAuthProfileStore,
   findPersistedAuthProfileCredential,
 } from "../../agents/auth-profiles/store.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 
 /** Resolves a user-selected auth profile override for the requested provider. */
 export function resolveProfileOverride(params: {

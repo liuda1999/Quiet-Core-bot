@@ -1,6 +1,6 @@
 // Agent command-list tests cover provider metadata and command output for configured agents.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import type { OutputRuntimeEnv } from "../runtime.js";
 
 const {

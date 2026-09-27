@@ -27,7 +27,7 @@ PRODUCT="OpenClaw"
 BIN="$BUILD_PATH/debug/$PRODUCT"
 BIN_ABS="$(pwd)/$BIN"
 APP_CWD="$(pwd -P)"
-LOG_PATH="${OPENCLAW_MAC_RUN_LOG:-$(mktemp "${TMPDIR:-/tmp}/openclaw-${PRODUCT}.XXXXXX.log")}"
+LOG_PATH="${QUIET_CORE_MAC_RUN_LOG:-$(mktemp "${TMPDIR:-/tmp}/quiet-core-bot-${PRODUCT}.XXXXXX.log")}"
 
 process_cwd_matches() {
   local pid="$1"

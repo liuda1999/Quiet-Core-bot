@@ -145,7 +145,7 @@ async function withAgentWorkspace<T>(
 ): Promise<T> {
   // Each e2e case gets isolated agent/workspace dirs because usage stats and
   // transcripts are part of the fallback behavior under test.
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-model-fallback-"));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-model-fallback-"));
   const agentDir = path.join(root, "agent");
   const workspaceDir = path.join(root, "workspace");
   await fs.mkdir(agentDir, { recursive: true });

@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { listAgentRuns } from "../../state/agent-runs-store.js";
-import { closeOpenClawStateDatabaseForTest } from "../../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../../state/quiet-core-bot-state-db.js";
 import {
   testing,
   clearActiveEmbeddedRun,
@@ -15,7 +15,7 @@ import {
 
 type RunHandle = Parameters<typeof setActiveEmbeddedRun>[1];
 
-const originalStateDir = process.env["OPENCLAW_STATE_DIR"];
+const originalStateDir = process.env["QUIET_CORE_STATE_DIR"];
 let stateDir: string;
 
 function createRunHandle(): RunHandle {
@@ -34,17 +34,17 @@ function readRun(sessionKey: string) {
 }
 
 beforeEach(() => {
-  stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-embedded-run-ledger-"));
-  process.env["OPENCLAW_STATE_DIR"] = stateDir;
+  stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-embedded-run-ledger-"));
+  process.env["QUIET_CORE_STATE_DIR"] = stateDir;
 });
 
 afterEach(() => {
   testing.resetActiveEmbeddedRuns();
   closeOpenClawStateDatabaseForTest();
   if (originalStateDir === undefined) {
-    delete process.env["OPENCLAW_STATE_DIR"];
+    delete process.env["QUIET_CORE_STATE_DIR"];
   } else {
-    process.env["OPENCLAW_STATE_DIR"] = originalStateDir;
+    process.env["QUIET_CORE_STATE_DIR"] = originalStateDir;
   }
 });
 

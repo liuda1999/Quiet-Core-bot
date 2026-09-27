@@ -20,7 +20,7 @@ const {
   runMatrixQaOpenClawCli,
   startMatrixQaOpenClawCli,
 } = vi.hoisted(() => ({
-  formatMatrixQaCliCommand: (args: string[]) => `openclaw ${args.join(" ")}`,
+  formatMatrixQaCliCommand: (args: string[]) => `quiet-core-bot ${args.join(" ")}`,
   redactMatrixQaCliOutput: (text: string) => text,
   resolveMatrixQaOpenClawCliEntryPath: (cwd: string) => `${cwd}/dist/index.js`,
   runMatrixQaOpenClawCli: vi.fn(),
@@ -89,7 +89,7 @@ async function writeMatrixInboundDedupePluginStateEntry(params: {
   stateRoot: string;
 }) {
   const sqlite = await import("node:sqlite");
-  const databasePath = path.join(params.stateRoot, "state", "openclaw.sqlite");
+  const databasePath = path.join(params.stateRoot, "state", "quiet-core-bot.sqlite");
   await mkdir(path.dirname(databasePath), { recursive: true });
   const db = new sqlite.DatabaseSync(databasePath);
   try {
@@ -1179,7 +1179,7 @@ describe("matrix live qa scenarios", () => {
         ...matrixQaScenarioContext(),
         driverDeviceId: "DRIVERDEVICE",
         gatewayRuntimeEnv: {
-          OPENCLAW_CONFIG_PATH: gatewayConfigPath,
+          QUIET_CORE_CONFIG_PATH: gatewayConfigPath,
           PATH: process.env.PATH,
         },
         outputDir,
@@ -2278,7 +2278,7 @@ describe("matrix live qa scenarios", () => {
         ...matrixQaScenarioContext(),
         driverDeviceId: "DRIVER",
         gatewayRuntimeEnv: {
-          OPENCLAW_CONFIG_PATH: gatewayConfigPath,
+          QUIET_CORE_CONFIG_PATH: gatewayConfigPath,
           PATH: process.env.PATH,
         },
         gatewayStateDir: stateRoot,
@@ -2512,7 +2512,7 @@ describe("matrix live qa scenarios", () => {
       const result = await runMatrixQaScenario(scenario, {
         ...matrixQaScenarioContext(),
         gatewayRuntimeEnv: {
-          OPENCLAW_CONFIG_PATH: gatewayConfigPath,
+          QUIET_CORE_CONFIG_PATH: gatewayConfigPath,
           PATH: process.env.PATH,
         },
         outputDir,
@@ -5837,9 +5837,9 @@ describe("matrix live qa scenarios", () => {
       });
       let cliAccountConfigDuringRun: Record<string, unknown> | null = null;
       runMatrixQaOpenClawCli.mockImplementation(async ({ args, env, stdin }) => {
-        if (!cliAccountConfigDuringRun && env.OPENCLAW_CONFIG_PATH) {
+        if (!cliAccountConfigDuringRun && env.QUIET_CORE_CONFIG_PATH) {
           const cliConfig = JSON.parse(
-            await readFile(String(env.OPENCLAW_CONFIG_PATH), "utf8"),
+            await readFile(String(env.QUIET_CORE_CONFIG_PATH), "utf8"),
           ) as {
             channels?: {
               matrix?: {
@@ -5905,8 +5905,8 @@ describe("matrix live qa scenarios", () => {
         driverDeviceId: "DRIVERDEVICE",
         driverPassword: "driver-password",
         gatewayRuntimeEnv: {
-          OPENCLAW_CONFIG_PATH: "/tmp/gateway-config.json",
-          OPENCLAW_STATE_DIR: "/tmp/gateway-state",
+          QUIET_CORE_CONFIG_PATH: "/tmp/gateway-config.json",
+          QUIET_CORE_STATE_DIR: "/tmp/gateway-state",
           PATH: process.env.PATH,
         },
         outputDir,
@@ -5989,9 +5989,9 @@ describe("matrix live qa scenarios", () => {
       );
       const cliEnv = mockObjectArg(startMatrixQaOpenClawCli, "startMatrixQaOpenClawCli")
         .env as Record<string, unknown>;
-      expect(cliEnv?.OPENCLAW_STATE_DIR).toContain("openclaw-matrix-cli-qa-");
-      expect(cliEnv?.OPENCLAW_CONFIG_PATH).toContain("openclaw-matrix-cli-qa-");
-      const configPath = String(cliEnv?.OPENCLAW_CONFIG_PATH);
+      expect(cliEnv?.QUIET_CORE_STATE_DIR).toContain("quiet-core-bot-matrix-cli-qa-");
+      expect(cliEnv?.QUIET_CORE_CONFIG_PATH).toContain("quiet-core-bot-matrix-cli-qa-");
+      const configPath = String(cliEnv?.QUIET_CORE_CONFIG_PATH);
       if (!cliAccountConfigDuringRun) {
         throw new Error("expected CLI account config to be captured");
       }
@@ -6005,7 +6005,7 @@ describe("matrix live qa scenarios", () => {
       expect(cliAccountConfig.startupVerification).toBe("off");
       expect(cliAccountConfig.userId).toBe("@cli-owner:matrix-qa.test");
       await expectPathMissing(configPath);
-      await expectPathMissing(String(cliEnv?.OPENCLAW_STATE_DIR));
+      await expectPathMissing(String(cliEnv?.QUIET_CORE_STATE_DIR));
       expect(acceptVerification).toHaveBeenCalledWith("owner-request");
       expect(confirmVerificationSas).toHaveBeenCalledWith("owner-request");
       expect(deleteOwnDevices).toHaveBeenCalledWith(["CLIDEVICE"]);
@@ -6051,9 +6051,9 @@ describe("matrix live qa scenarios", () => {
         userId: "@cli-add:matrix-qa.test",
       });
       runMatrixQaOpenClawCli.mockImplementation(async ({ args, env }) => {
-        if (env.OPENCLAW_CONFIG_PATH) {
+        if (env.QUIET_CORE_CONFIG_PATH) {
           const initialConfig = JSON.parse(
-            await readFile(String(env.OPENCLAW_CONFIG_PATH), "utf8"),
+            await readFile(String(env.QUIET_CORE_CONFIG_PATH), "utf8"),
           ) as {
             channels?: { matrix?: { enabled?: boolean; accounts?: Record<string, unknown> } };
             plugins?: { allow?: string[]; entries?: { matrix?: unknown } };
@@ -6117,8 +6117,8 @@ describe("matrix live qa scenarios", () => {
         driverDeviceId: "DRIVERDEVICE",
         driverPassword: "driver-password",
         gatewayRuntimeEnv: {
-          OPENCLAW_CONFIG_PATH: "/tmp/gateway-config.json",
-          OPENCLAW_STATE_DIR: "/tmp/gateway-state",
+          QUIET_CORE_CONFIG_PATH: "/tmp/gateway-config.json",
+          QUIET_CORE_STATE_DIR: "/tmp/gateway-state",
           PATH: process.env.PATH,
         },
         outputDir,
@@ -6199,9 +6199,9 @@ describe("matrix live qa scenarios", () => {
       });
       let initialAccountConfig: Record<string, unknown> | null = null;
       runMatrixQaOpenClawCli.mockImplementation(async ({ args, env }) => {
-        if (!initialAccountConfig && env.OPENCLAW_CONFIG_PATH) {
+        if (!initialAccountConfig && env.QUIET_CORE_CONFIG_PATH) {
           const initialConfig = JSON.parse(
-            await readFile(String(env.OPENCLAW_CONFIG_PATH), "utf8"),
+            await readFile(String(env.QUIET_CORE_CONFIG_PATH), "utf8"),
           ) as {
             channels?: {
               matrix?: {
@@ -6271,8 +6271,8 @@ describe("matrix live qa scenarios", () => {
         driverDeviceId: "DRIVERDEVICE",
         driverPassword: "driver-password",
         gatewayRuntimeEnv: {
-          OPENCLAW_CONFIG_PATH: "/tmp/gateway-config.json",
-          OPENCLAW_STATE_DIR: "/tmp/gateway-state",
+          QUIET_CORE_CONFIG_PATH: "/tmp/gateway-config.json",
+          QUIET_CORE_STATE_DIR: "/tmp/gateway-state",
           PATH: process.env.PATH,
         },
         outputDir,
@@ -6343,9 +6343,9 @@ describe("matrix live qa scenarios", () => {
       });
       let initialAccountConfig: Record<string, unknown> | null = null;
       runMatrixQaOpenClawCli.mockImplementation(async ({ args, env }) => {
-        if (!initialAccountConfig && env.OPENCLAW_CONFIG_PATH) {
+        if (!initialAccountConfig && env.QUIET_CORE_CONFIG_PATH) {
           const initialConfig = JSON.parse(
-            await readFile(String(env.OPENCLAW_CONFIG_PATH), "utf8"),
+            await readFile(String(env.QUIET_CORE_CONFIG_PATH), "utf8"),
           ) as {
             channels?: {
               matrix?: {
@@ -6395,8 +6395,8 @@ describe("matrix live qa scenarios", () => {
         driverDeviceId: "DRIVERDEVICE",
         driverPassword: "driver-password",
         gatewayRuntimeEnv: {
-          OPENCLAW_CONFIG_PATH: "/tmp/gateway-config.json",
-          OPENCLAW_STATE_DIR: "/tmp/gateway-state",
+          QUIET_CORE_CONFIG_PATH: "/tmp/gateway-config.json",
+          QUIET_CORE_STATE_DIR: "/tmp/gateway-state",
           PATH: process.env.PATH,
         },
         outputDir,
@@ -6499,7 +6499,7 @@ describe("matrix live qa scenarios", () => {
       }));
       const wait = vi
         .fn()
-        .mockRejectedValue(new Error("openclaw matrix encryption setup exited 1"));
+        .mockRejectedValue(new Error("quiet-core-bot matrix encryption setup exited 1"));
       const kill = vi.fn();
       startMatrixQaOpenClawCli.mockReturnValue({
         args: ["matrix", "encryption", "setup", "--account", "cli-encryption-failure", "--json"],
@@ -6519,8 +6519,8 @@ describe("matrix live qa scenarios", () => {
         driverDeviceId: "DRIVERDEVICE",
         driverPassword: "driver-password",
         gatewayRuntimeEnv: {
-          OPENCLAW_CONFIG_PATH: "/tmp/gateway-config.json",
-          OPENCLAW_STATE_DIR: "/tmp/gateway-state",
+          QUIET_CORE_CONFIG_PATH: "/tmp/gateway-config.json",
+          QUIET_CORE_STATE_DIR: "/tmp/gateway-state",
           PATH: process.env.PATH,
         },
         outputDir,
@@ -6580,8 +6580,8 @@ describe("matrix live qa scenarios", () => {
             string,
             unknown
           >
-        ).OPENCLAW_CONFIG_PATH,
-      ).toContain("openclaw-matrix-e2ee-setup-qa-");
+        ).QUIET_CORE_CONFIG_PATH,
+      ).toContain("quiet-core-bot-matrix-e2ee-setup-qa-");
       expect(output).toHaveBeenCalledTimes(1);
       expect(wait).toHaveBeenCalledTimes(1);
       expect(kill).toHaveBeenCalledTimes(1);
@@ -6653,9 +6653,9 @@ describe("matrix live qa scenarios", () => {
       });
       let initialAccountConfig: Record<string, unknown> | null = null;
       runMatrixQaOpenClawCli.mockImplementation(async ({ args, env }) => {
-        if (!initialAccountConfig && env.OPENCLAW_CONFIG_PATH) {
+        if (!initialAccountConfig && env.QUIET_CORE_CONFIG_PATH) {
           const initialConfig = JSON.parse(
-            await readFile(String(env.OPENCLAW_CONFIG_PATH), "utf8"),
+            await readFile(String(env.QUIET_CORE_CONFIG_PATH), "utf8"),
           ) as {
             channels?: {
               matrix?: {
@@ -6709,8 +6709,8 @@ describe("matrix live qa scenarios", () => {
         driverDeviceId: "DRIVERDEVICE",
         driverPassword: "driver-password",
         gatewayRuntimeEnv: {
-          OPENCLAW_CONFIG_PATH: "/tmp/gateway-config.json",
-          OPENCLAW_STATE_DIR: "/tmp/gateway-state",
+          QUIET_CORE_CONFIG_PATH: "/tmp/gateway-config.json",
+          QUIET_CORE_STATE_DIR: "/tmp/gateway-state",
           PATH: process.env.PATH,
         },
         outputDir,
@@ -6830,7 +6830,7 @@ describe("matrix live qa scenarios", () => {
       }));
       const wait = vi
         .fn()
-        .mockRejectedValue(new Error("openclaw matrix encryption setup exited 1"));
+        .mockRejectedValue(new Error("quiet-core-bot matrix encryption setup exited 1"));
       const kill = vi.fn();
       startMatrixQaOpenClawCli.mockReturnValue({
         args: [
@@ -6857,8 +6857,8 @@ describe("matrix live qa scenarios", () => {
         driverDeviceId: "DRIVERDEVICE",
         driverPassword: "driver-password",
         gatewayRuntimeEnv: {
-          OPENCLAW_CONFIG_PATH: "/tmp/gateway-config.json",
-          OPENCLAW_STATE_DIR: "/tmp/gateway-state",
+          QUIET_CORE_CONFIG_PATH: "/tmp/gateway-config.json",
+          QUIET_CORE_STATE_DIR: "/tmp/gateway-state",
           PATH: process.env.PATH,
         },
         outputDir,
@@ -6929,7 +6929,7 @@ describe("matrix live qa scenarios", () => {
         userId: "@cli-multi:matrix-qa.test",
       });
       runMatrixQaOpenClawCli.mockImplementation(async ({ args, env }) => {
-        const configPath = String(env.OPENCLAW_CONFIG_PATH);
+        const configPath = String(env.QUIET_CORE_CONFIG_PATH);
         const config = JSON.parse(await readFile(configPath, "utf8")) as {
           channels: {
             matrix: {
@@ -6984,8 +6984,8 @@ describe("matrix live qa scenarios", () => {
         driverDeviceId: "DRIVERDEVICE",
         driverPassword: "driver-password",
         gatewayRuntimeEnv: {
-          OPENCLAW_CONFIG_PATH: "/tmp/gateway-config.json",
-          OPENCLAW_STATE_DIR: "/tmp/gateway-state",
+          QUIET_CORE_CONFIG_PATH: "/tmp/gateway-config.json",
+          QUIET_CORE_STATE_DIR: "/tmp/gateway-state",
           PATH: process.env.PATH,
         },
         outputDir,
@@ -7130,7 +7130,7 @@ describe("matrix live qa scenarios", () => {
       runMatrixQaOpenClawCli.mockImplementation(async ({ args, env }) => {
         const joined = args.join(" ");
         if (joined === "matrix encryption setup --account cli-setup-gateway --json") {
-          const configPath = String(env.OPENCLAW_CONFIG_PATH);
+          const configPath = String(env.QUIET_CORE_CONFIG_PATH);
           const config = JSON.parse(await readFile(configPath, "utf8")) as {
             channels: {
               matrix: {
@@ -7189,8 +7189,8 @@ describe("matrix live qa scenarios", () => {
         driverDeviceId: "DRIVERDEVICE",
         driverPassword: "driver-password",
         gatewayRuntimeEnv: {
-          OPENCLAW_CONFIG_PATH: gatewayConfigPath,
-          OPENCLAW_STATE_DIR: "/tmp/gateway-state",
+          QUIET_CORE_CONFIG_PATH: gatewayConfigPath,
+          QUIET_CORE_STATE_DIR: "/tmp/gateway-state",
           PATH: process.env.PATH,
         },
         outputDir,

@@ -82,12 +82,12 @@ describe("scripts/mantis/publish-pr-evidence", () => {
   it("renders a manifest-driven PR comment with inline screenshots and video links", () => {
     const manifest = loadEvidenceManifest(writeFixtureManifest());
     const body = renderEvidenceComment({
-      artifactUrl: "https://github.com/openclaw/openclaw/actions/runs/1/artifacts/2",
+      artifactUrl: "https://github.com/liuda1999/Quiet-Core-bot/actions/runs/1/artifacts/2",
       manifest,
       marker: "<!-- mantis-discord-status-reactions -->",
       rawBase: "https://qa.openclaw.ai/mantis/discord/pr-1/run-1",
       requestSource: "workflow_dispatch",
-      runUrl: "https://github.com/openclaw/openclaw/actions/runs/1",
+      runUrl: "https://github.com/liuda1999/Quiet-Core-bot/actions/runs/1",
       treeUrl: "https://qa.openclaw.ai/mantis/discord/pr-1/run-1",
     });
 
@@ -174,7 +174,7 @@ describe("scripts/mantis/publish-pr-evidence", () => {
         id: "slack-desktop-smoke",
         title: "Mantis Slack Desktop Smoke QA",
         summary: "Mantis could not finish VM setup.",
-        scenario: "slack-openclaw-desktop-smoke",
+        scenario: "slack-quiet-core-bot-desktop-smoke",
         comparison: {
           candidate: {
             expected: "Slack QA and VM gateway setup pass",
@@ -219,12 +219,12 @@ describe("scripts/mantis/publish-pr-evidence", () => {
       "mantis-evidence.json",
     ]);
     const body = renderEvidenceComment({
-      artifactUrl: "https://github.com/openclaw/openclaw/actions/runs/1/artifacts/2",
+      artifactUrl: "https://github.com/liuda1999/Quiet-Core-bot/actions/runs/1/artifacts/2",
       manifest,
       marker: "<!-- mantis-slack-desktop-smoke -->",
       rawBase: "https://qa.openclaw.ai/mantis/slack/pr-1/run-1",
       requestSource: "workflow_dispatch",
-      runUrl: "https://github.com/openclaw/openclaw/actions/runs/1",
+      runUrl: "https://github.com/liuda1999/Quiet-Core-bot/actions/runs/1",
       treeUrl: "https://qa.openclaw.ai/mantis/slack/pr-1/run-1",
     });
 
@@ -269,9 +269,9 @@ describe("scripts/mantis/publish-pr-evidence", () => {
       rawBase:
         "https://raw.githubusercontent.com/openclaw/openclaw/qa-artifacts/mantis/telegram-desktop/pr-1/run-1",
       requestSource: "issue_comment",
-      runUrl: "https://github.com/openclaw/openclaw/actions/runs/1",
+      runUrl: "https://github.com/liuda1999/Quiet-Core-bot/actions/runs/1",
       treeUrl:
-        "https://github.com/openclaw/openclaw/tree/qa-artifacts/mantis/telegram-desktop/pr-1/run-1",
+        "https://github.com/liuda1999/Quiet-Core-bot/tree/qa-artifacts/mantis/telegram-desktop/pr-1/run-1",
     });
 
     expect(manifest.artifacts.map((artifact) => artifact.targetPath)).toEqual([
@@ -321,7 +321,7 @@ describe("scripts/mantis/publish-pr-evidence", () => {
       marker: "<!-- mantis-telegram-desktop-proof -->",
       rawBase: "https://artifacts.openclaw.ai/mantis/telegram-desktop/pr-1/run-1",
       requestSource: "pull_request_target",
-      runUrl: "https://github.com/openclaw/openclaw/actions/runs/1",
+      runUrl: "https://github.com/liuda1999/Quiet-Core-bot/actions/runs/1",
       treeUrl: "https://artifacts.openclaw.ai/mantis/telegram-desktop/pr-1/run-1/index.json",
     });
 

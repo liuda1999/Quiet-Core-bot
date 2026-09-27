@@ -53,8 +53,8 @@ Use one of these (all supported):
 
 The service target depends on OS:
 
-- macOS: LaunchAgent (`ai.openclaw.gateway` or `ai.openclaw.<profile>`; legacy `com.openclaw.*`)
-- Linux/WSL2: systemd user service (`openclaw-gateway[-<profile>].service`)
+- macOS: LaunchAgent (`ai.quiet-core-bot.gateway` or `ai.quiet-core-bot.<profile>`; legacy `com.openclaw.*`)
+- Linux/WSL2: systemd user service (`quiet-core-bot-gateway[-<profile>].service`)
 - Native Windows: Scheduled Task (`Quiet Core bot Gateway` or `Quiet Core bot Gateway (<profile>)`), with a per-user Startup-folder login item fallback if task creation is denied
 
 ## Related

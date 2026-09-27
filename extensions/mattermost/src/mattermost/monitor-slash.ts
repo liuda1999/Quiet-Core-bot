@@ -1,5 +1,5 @@
 // Mattermost plugin module implements monitor slash behavior.
-import { isLoopbackHost } from "openclaw/plugin-sdk/gateway-runtime";
+import { isLoopbackHost } from "quiet-core-bot/plugin-sdk/gateway-runtime";
 import type { ResolvedMattermostAccount } from "./accounts.js";
 import {
   fetchMattermostUserTeams,
@@ -150,7 +150,7 @@ export async function registerMattermostMonitorSlashCommands(params: {
 
   try {
     const teams = await fetchMattermostUserTeams(params.client, params.botUserId);
-    const envPort = parseTcpPort(process.env.OPENCLAW_GATEWAY_PORT);
+    const envPort = parseTcpPort(process.env.QUIET_CORE_GATEWAY_PORT);
     const slashGatewayPort = envPort ?? params.cfg.gateway?.port ?? 18789;
     const slashCallbackUrl = resolveCallbackUrl({
       config: slashConfig,

@@ -3,4 +3,4 @@ export {
   renderQrPngBase64,
   renderQrPngDataUrl,
   writeQrPngTempFile,
-} from "openclaw/plugin-sdk/media-runtime";
+} from "quiet-core-bot/plugin-sdk/media-runtime";

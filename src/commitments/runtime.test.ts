@@ -61,10 +61,10 @@ describe("commitment extraction runtime", () => {
   });
 
   async function createConfig(): Promise<OpenClawConfig> {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-commitment-runtime-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-commitment-runtime-"));
     tmpDirs.push(tmpDir);
-    stateDirEnvSnapshot ??= captureEnv(["OPENCLAW_STATE_DIR"]);
-    setTestEnvValue("OPENCLAW_STATE_DIR", tmpDir);
+    stateDirEnvSnapshot ??= captureEnv(["QUIET_CORE_STATE_DIR"]);
+    setTestEnvValue("QUIET_CORE_STATE_DIR", tmpDir);
     return {
       commitments: {
         enabled: true,

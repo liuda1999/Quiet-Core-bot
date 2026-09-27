@@ -11,7 +11,7 @@ Quiet Core bot QA lab plugin with private debugger UI and scenario runner.
 
 ## Distribution
 
-- Package: `@openclaw/qa-lab`
+- Package: `@quiet-core/qa-lab`
 - Install route: source checkout only
 
 ## Surface

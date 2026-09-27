@@ -1,5 +1,5 @@
 // Mattermost plugin module implements doctor contract behavior.
-import { createLegacyPrivateNetworkDoctorContract } from "openclaw/plugin-sdk/ssrf-runtime";
+import { createLegacyPrivateNetworkDoctorContract } from "quiet-core-bot/plugin-sdk/ssrf-runtime";
 
 const contract = createLegacyPrivateNetworkDoctorContract({
   channelKey: "mattermost",

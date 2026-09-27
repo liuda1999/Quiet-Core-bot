@@ -18,9 +18,9 @@ const (
 	translateBaseDelay          = 15 * time.Second
 	defaultPromptTimeout        = 2 * time.Minute
 	defaultCommandWaitDelay     = 15 * time.Second
-	envDocsI18nPromptTimeout    = "OPENCLAW_DOCS_I18N_PROMPT_TIMEOUT"
-	envDocsI18nCommandWaitDelay = "OPENCLAW_DOCS_I18N_COMMAND_WAIT_DELAY"
-	envDocsI18nCodexExecutable  = "OPENCLAW_DOCS_I18N_CODEX_EXECUTABLE"
+	envDocsI18nPromptTimeout    = "QUIET_CORE_DOCS_I18N_PROMPT_TIMEOUT"
+	envDocsI18nCommandWaitDelay = "QUIET_CORE_DOCS_I18N_COMMAND_WAIT_DELAY"
+	envDocsI18nCodexExecutable  = "QUIET_CORE_DOCS_I18N_CODEX_EXECUTABLE"
 )
 
 var errEmptyTranslation = errors.New("empty translation")
@@ -201,7 +201,7 @@ func isRetryableTranslateError(err error) bool {
 }
 
 func runCodexExecPrompt(ctx context.Context, req codexPromptRequest) (string, error) {
-	outputFile, err := os.CreateTemp("", "openclaw-docs-i18n-codex-*.txt")
+	outputFile, err := os.CreateTemp("", "quiet-core-bot-docs-i18n-codex-*.txt")
 	if err != nil {
 		return "", err
 	}
@@ -287,7 +287,7 @@ func isolatedCodexHomeBase() (string, error) {
 		}
 		cacheDir = filepath.Join(homeDir, ".cache")
 	}
-	base := filepath.Join(cacheDir, "openclaw-docs-i18n")
+	base := filepath.Join(cacheDir, "quiet-core-bot-docs-i18n")
 	if err := os.MkdirAll(base, 0o700); err != nil {
 		return "", err
 	}

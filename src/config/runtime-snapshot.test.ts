@@ -308,7 +308,7 @@ describe("runtime snapshot state", () => {
 
     try {
       notifyRuntimeConfigWriteListeners({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/quiet-core-bot.json",
         sourceConfig: { gateway: { port: 18789 } },
         runtimeConfig: { gateway: { port: 19003 } },
         persistedHash: "abc123",
@@ -323,7 +323,7 @@ describe("runtime snapshot state", () => {
 
     expect(seen).toEqual([
       {
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/quiet-core-bot.json",
         runtimeConfig: { gateway: { port: 19003 } },
       },
     ]);

@@ -293,7 +293,7 @@ describe("composeSystemPromptWithHookContext", () => {
 
   it("keeps bootstrap truncation notices in the system prompt instead of the user prompt", () => {
     const baseSystemPrompt = buildAgentSystemPrompt({
-      workspaceDir: "/tmp/openclaw",
+      workspaceDir: "/tmp/quiet-core-bot",
       contextFiles: [{ path: "AGENTS.md", content: "Follow AGENTS guidance." }],
       toolNames: ["read"],
       bootstrapTruncationNotice:
@@ -2153,7 +2153,7 @@ describe("wrapStreamFnSanitizeMalformedToolCalls", () => {
     expect(repairedToolResult.content).toEqual([
       {
         type: "text",
-        text: "[openclaw] missing tool result in session history; inserted synthetic error result for transcript repair.",
+        text: "[quiet-core-bot] missing tool result in session history; inserted synthetic error result for transcript repair.",
       },
     ]);
     expect(repairedToolResult.isError).toBe(true);

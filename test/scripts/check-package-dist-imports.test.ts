@@ -37,7 +37,7 @@ describe("check-package-dist-imports", () => {
   });
 
   it("accepts a minimal package dist root", () => {
-    const root = makeTempDir(tempDirs, "openclaw-package-dist-imports-");
+    const root = makeTempDir(tempDirs, "quiet-core-bot-package-dist-imports-");
     mkdirSync(join(root, "dist"), { recursive: true });
     writeFileSync(join(root, "dist", "index.js"), "export {};\n", "utf8");
 
@@ -48,7 +48,7 @@ describe("check-package-dist-imports", () => {
   });
 
   it("rejects missing CommonJS require chunks", () => {
-    const root = makeTempDir(tempDirs, "openclaw-package-dist-imports-");
+    const root = makeTempDir(tempDirs, "quiet-core-bot-package-dist-imports-");
     mkdirSync(join(root, "dist"), { recursive: true });
     writeFileSync(
       join(root, "dist", "index.cjs"),

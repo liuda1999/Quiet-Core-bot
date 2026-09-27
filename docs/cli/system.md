@@ -23,7 +23,7 @@ All `system` subcommands use Gateway RPC and accept the shared client flags:
 
 ```bash
 quiet-core-bot system event --text "Check for urgent follow-ups" --mode now
-quiet-core-bot system event --text "Check for urgent follow-ups" --url ws://127.0.0.1:18789 --token "$OPENCLAW_GATEWAY_TOKEN"
+quiet-core-bot system event --text "Check for urgent follow-ups" --url ws://127.0.0.1:18789 --token "$QUIET_CORE_GATEWAY_TOKEN"
 quiet-core-bot system heartbeat enable
 quiet-core-bot system heartbeat last
 quiet-core-bot system presence

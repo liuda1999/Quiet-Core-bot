@@ -53,12 +53,12 @@ Look for:
 
 ## Split brain installs and newer config guard
 
-Use this when a gateway service unexpectedly stops after an update, or logs show that one `openclaw` binary is older than the version that last wrote `quiet-core-bot.json`.
+Use this when a gateway service unexpectedly stops after an update, or logs show that one `quiet-core-bot` binary is older than the version that last wrote `quiet-core-bot.json`.
 
 Quiet Core bot stamps config writes with `meta.lastTouchedVersion`. Read-only commands can still inspect a config written by a newer Quiet Core bot, but process and service mutations refuse to continue from an older binary. Blocked actions include gateway service start, stop, restart, uninstall, forced service reinstall, service-mode gateway startup, and `gateway --force` port cleanup.
 
 ```bash
-which openclaw
+which quiet-core-bot
 quiet-core-bot --version
 quiet-core-bot gateway status --deep
 quiet-core-bot config get meta.lastTouchedVersion
@@ -66,7 +66,7 @@ quiet-core-bot config get meta.lastTouchedVersion
 
 <Steps>
   <Step title="Fix PATH">
-    Fix `PATH` so `openclaw` resolves to the newer install, then rerun the action.
+    Fix `PATH` so `quiet-core-bot` resolves to the newer install, then rerun the action.
   </Step>
   <Step title="Reinstall the gateway service">
     Reinstall the intended gateway service from the newer install:
@@ -78,12 +78,12 @@ quiet-core-bot config get meta.lastTouchedVersion
 
   </Step>
   <Step title="Remove stale wrappers">
-    Remove stale system package or old wrapper entries that still point at an old `openclaw` binary.
+    Remove stale system package or old wrapper entries that still point at an old `quiet-core-bot` binary.
   </Step>
 </Steps>
 
 <Warning>
-For intentional downgrade or emergency recovery only, set `OPENCLAW_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS=1` for the single command. Leave it unset for normal operation.
+For intentional downgrade or emergency recovery only, set `QUIET_CORE_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS=1` for the single command. Leave it unset for normal operation.
 </Warning>
 
 ## Protocol mismatch after rollback
@@ -92,7 +92,7 @@ Use this when logs keep printing `protocol mismatch` after you downgrade or roll
 
 ```bash
 quiet-core-bot --version
-which -a openclaw
+which -a quiet-core-bot
 quiet-core-bot gateway status --deep
 quiet-core-bot doctor --deep
 quiet-core-bot logs --follow
@@ -250,7 +250,7 @@ curl http://127.0.0.1:1234/v1/models
 curl http://127.0.0.1:1234/v1/chat/completions \
   -H 'content-type: application/json' \
   -d '{"model":"<id>","messages":[{"role":"user","content":"hi"}],"stream":false}'
-openclaw infer model run --model <provider/model> --prompt "hi" --json
+quiet-core-bot infer model run --model <provider/model> --prompt "hi" --json
 quiet-core-bot logs --follow
 ```
 
@@ -446,7 +446,7 @@ Look for:
     - `refusing to bind gateway ... without auth` → non-loopback bind without a valid gateway auth path (token/password, or trusted-proxy where configured).
     - `another gateway instance is already listening` / `EADDRINUSE` → port conflict.
     - `Other gateway-like services detected (best effort)` → stale or parallel launchd/systemd/schtasks units exist. Most setups should keep one gateway per machine; if you do need more than one, isolate ports + config/state/workspace. See [/gateway#multiple-gateways-same-host](/gateway#multiple-gateways-same-host).
-    - `System-level Quiet Core bot gateway service detected` from doctor → a systemd system unit exists while the user-level service is missing. Remove or disable the duplicate before allowing doctor to install a user service, or set `OPENCLAW_SERVICE_REPAIR_POLICY=external` if the system unit is the intended supervisor.
+    - `System-level Quiet Core bot gateway service detected` from doctor → a systemd system unit exists while the user-level service is missing. Remove or disable the duplicate before allowing doctor to install a user service, or set `QUIET_CORE_SERVICE_REPAIR_POLICY=external` if the system unit is the intended supervisor.
     - `Gateway service port does not match current gateway config` → the installed supervisor still pins the old `--port`. Run `quiet-core-bot doctor --fix` or `quiet-core-bot gateway install --force`, then restart the gateway service.
 
   </Accordion>
@@ -466,7 +466,7 @@ Use this when channels (Telegram, WhatsApp, etc.) on a macOS host go quiet for m
 ls ~/.quiet-core-bot/logs/stability/ | tail -5
 quiet-core-bot gateway stability --bundle latest
 pmset -g log | grep -iE "sleep|wake|maintenance" | tail -50
-launchctl print gui/$UID/ai.openclaw.gateway | grep -E "state|last exit|runs"
+launchctl print gui/$UID/ai.quiet-core-bot.gateway | grep -E "state|last exit|runs"
 ```
 
 Look for:
@@ -479,7 +479,7 @@ Common signatures:
 
 - A stability bundle whose `error.code` is `ENETDOWN` or a sibling code, with the call stack pointing into Node `net` `lookupAndConnect` / `Socket.connect`. Quiet Core bot `2026.5.26` and newer classify these as benign transient network errors so they no longer propagate to the top-level uncaught handler; if you are on an older release, upgrade first.
 - Long quiet periods that end the instant you connect to the Control UI or SSH into the host: the user-visible activity is what re-arms launchd's respawn gate, not anything the dashboard does to the gateway.
-- `runs` count incrementing across the day with no corresponding `received SIG*; shutting down` line in `~/Library/Logs/openclaw/gateway.log`: clean shutdowns log a signal; transient crashes do not.
+- `runs` count incrementing across the day with no corresponding `received SIG*; shutting down` line in `~/Library/Logs/quiet-core-bot/gateway.log`: clean shutdowns log a signal; transient crashes do not.
 
 What to do:
 
@@ -496,9 +496,9 @@ What to do:
 
    ```bash
    # Example launchd-aware liveness check, suitable for a 5-minute cron or LaunchAgent
-   state=$(launchctl print gui/$UID/ai.openclaw.gateway 2>/dev/null | awk -F'= ' '/state =/ {print $2; exit}')
+   state=$(launchctl print gui/$UID/ai.quiet-core-bot.gateway 2>/dev/null | awk -F'= ' '/state =/ {print $2; exit}')
    if [ "$state" != "running" ]; then
-     launchctl kickstart -k gui/$UID/ai.openclaw.gateway
+     launchctl kickstart -k gui/$UID/ai.quiet-core-bot.gateway
    fi
    ```
 
@@ -746,7 +746,7 @@ Use this when browser tool actions fail even though the gateway itself is health
 
 ```bash
 quiet-core-bot browser status
-quiet-core-bot browser start --browser-profile openclaw
+quiet-core-bot browser start --browser-profile quiet-core-bot
 quiet-core-bot browser profiles
 quiet-core-bot logs --follow
 quiet-core-bot doctor
@@ -771,7 +771,7 @@ Look for:
 
   </Accordion>
   <Accordion title="Chrome MCP / existing-session signatures">
-    - `Could not find DevToolsActivePort for chrome` → Chrome MCP existing-session could not attach to the selected browser data dir yet. Open the browser inspect page, enable remote debugging, keep the browser open, approve the first attach prompt, then retry. If signed-in state is not required, prefer the managed `openclaw` profile.
+    - `Could not find DevToolsActivePort for chrome` → Chrome MCP existing-session could not attach to the selected browser data dir yet. Open the browser inspect page, enable remote debugging, keep the browser open, approve the first attach prompt, then retry. If signed-in state is not required, prefer the managed `quiet-core-bot` profile.
     - `No Chrome tabs found for profile="user"` → the Chrome MCP attach profile has no open local Chrome tabs.
     - `Remote CDP for profile "<name>" is not reachable` → the configured remote CDP endpoint is not reachable from the gateway host.
     - `Browser attachOnly is enabled ... not reachable` or `Browser attachOnly is enabled and CDP websocket ... is not reachable` → attach-only profile has no reachable target, or the HTTP endpoint answered but the CDP WebSocket still could not be opened.

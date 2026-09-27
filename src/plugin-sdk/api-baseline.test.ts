@@ -23,7 +23,7 @@ describe("Plugin SDK API baseline", () => {
   });
 
   it("normalizes dependency source paths to stable node_modules paths", () => {
-    const repoRoot = path.join(path.sep, "workspace", "openclaw-worktree");
+    const repoRoot = path.join(path.sep, "workspace", "quiet-core-bot-worktree");
     const linkedDependencyPath = path.join(
       path.sep,
       "workspace",

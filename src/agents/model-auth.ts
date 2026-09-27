@@ -7,8 +7,8 @@ import path from "node:path";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalLowercaseString,
-} from "@openclaw/normalization-core/string-coerce";
-import { normalizeUniqueStringEntries } from "@openclaw/normalization-core/string-normalization";
+} from "@quiet-core/normalization-core/string-coerce";
+import { normalizeUniqueStringEntries } from "@quiet-core/normalization-core/string-normalization";
 import { formatCliCommand } from "../cli/command-format.js";
 import {
   getRuntimeConfigSnapshot,
@@ -16,7 +16,7 @@ import {
   selectApplicableRuntimeConfig,
 } from "../config/config.js";
 import type { ModelProviderAuthMode, ModelProviderConfig } from "../config/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { coerceSecretRef } from "../config/types.secrets.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { getShellEnvAppliedKeys } from "../infra/shell-env.js";

@@ -5,11 +5,11 @@ import path from "node:path";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../config/config.js";
 import { resolveChannelAllowFromPath } from "../pairing/pairing-store.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/quiet-core-bot-state-db.js";
 import { createTrackedTempDirs } from "../test-utils/tracked-temp-dirs.js";
 import {
   executeSqliteQuerySync,
@@ -76,7 +76,7 @@ vi.mock("../channels/plugins/bundled.js", () => {
         });
       },
       ({ cfg, env }: { cfg: OpenClawConfig; env: NodeJS.ProcessEnv }) => {
-        const root = env.OPENCLAW_STATE_DIR;
+        const root = env.QUIET_CORE_STATE_DIR;
         if (!root) {
           return [];
         }
@@ -116,7 +116,7 @@ async function expectMissingPath(targetPath: string): Promise<void> {
   expect(statError?.path).toBe(targetPath);
   expect(statError?.syscall).toBe("stat");
 }
-const createTempDir = () => tempDirs.make("openclaw-state-migrations-test-");
+const createTempDir = () => tempDirs.make("quiet-core-bot-state-migrations-test-");
 
 function readUpdateCheckState(env: NodeJS.ProcessEnv):
   | {
@@ -273,13 +273,13 @@ function createEnv(stateDir: string): NodeJS.ProcessEnv {
   return {
     ...process.env,
     HOME: path.dirname(stateDir),
-    OPENCLAW_STATE_DIR: stateDir,
+    QUIET_CORE_STATE_DIR: stateDir,
   };
 }
 
 async function createLegacyStateFixture(params?: { includePreKey?: boolean }) {
   const root = await createTempDir();
-  const stateDir = path.join(root, ".openclaw");
+  const stateDir = path.join(root, ".quiet-core-bot");
   const env = createEnv(stateDir);
   const cfg = createConfig();
 
@@ -441,7 +441,7 @@ describe("state migrations", () => {
 
   it("migrates legacy delivery queue files into shared SQLite state", async () => {
     const root = await createTempDir();
-    const stateDir = path.join(root, ".openclaw");
+    const stateDir = path.join(root, ".quiet-core-bot");
     const env = createEnv(stateDir);
     const cfg = createConfig();
     await fs.mkdir(path.join(stateDir, "delivery-queue"), { recursive: true });
@@ -559,7 +559,7 @@ describe("state migrations", () => {
 
   it("migrates legacy voice wake JSON settings into shared SQLite state", async () => {
     const root = await createTempDir();
-    const stateDir = path.join(root, ".openclaw");
+    const stateDir = path.join(root, ".quiet-core-bot");
     const env = createEnv(stateDir);
     const cfg = createConfig();
     const settingsDir = path.join(stateDir, "settings");
@@ -611,7 +611,7 @@ describe("state migrations", () => {
 
   it("archives legacy voice wake JSON when shared SQLite already matches", async () => {
     const root = await createTempDir();
-    const stateDir = path.join(root, ".openclaw");
+    const stateDir = path.join(root, ".quiet-core-bot");
     const env = createEnv(stateDir);
     const cfg = createConfig();
     const settingsDir = path.join(stateDir, "settings");
@@ -648,7 +648,7 @@ describe("state migrations", () => {
 
   it("auto-migrates standalone legacy voice wake JSON settings", async () => {
     const root = await createTempDir();
-    const stateDir = path.join(root, ".openclaw");
+    const stateDir = path.join(root, ".quiet-core-bot");
     const env = createEnv(stateDir);
     const cfg = createConfig();
     const settingsDir = path.join(stateDir, "settings");
@@ -670,7 +670,7 @@ describe("state migrations", () => {
 
   it("migrates legacy update-check JSON into shared SQLite state", async () => {
     const root = await createTempDir();
-    const stateDir = path.join(root, ".openclaw");
+    const stateDir = path.join(root, ".quiet-core-bot");
     const env = createEnv(stateDir);
     const cfg = createConfig();
     const sourcePath = path.join(stateDir, "update-check.json");
@@ -708,10 +708,10 @@ describe("state migrations", () => {
 
   it("migrates legacy config health JSON into shared SQLite state", async () => {
     const root = await createTempDir();
-    const stateDir = path.join(root, ".openclaw");
+    const stateDir = path.join(root, ".quiet-core-bot");
     const env = createEnv(stateDir);
     const cfg = createConfig();
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "quiet-core-bot.json");
     const logsDir = path.join(stateDir, "logs");
     const sourcePath = path.join(logsDir, "config-health.json");
     const fingerprint = {
@@ -768,7 +768,7 @@ describe("state migrations", () => {
 
   it("migrates legacy current-conversation bindings JSON into shared SQLite state", async () => {
     const root = await createTempDir();
-    const stateDir = path.join(root, ".openclaw");
+    const stateDir = path.join(root, ".quiet-core-bot");
     const env = createEnv(stateDir);
     const cfg = createConfig();
     const bindingsDir = path.join(stateDir, "bindings");
@@ -829,7 +829,7 @@ describe("state migrations", () => {
 
   it("migrates legacy plugin binding approvals JSON into shared SQLite state", async () => {
     const root = await createTempDir();
-    const stateDir = path.join(root, ".openclaw");
+    const stateDir = path.join(root, ".quiet-core-bot");
     const env = createEnv(stateDir);
     const cfg = createConfig();
     const sourcePath = path.join(stateDir, "plugin-binding-approvals.json");
@@ -883,7 +883,7 @@ describe("state migrations", () => {
     const stateDir = path.join(root, "custom-state");
     const env = createEnv(stateDir);
     const cfg = createConfig();
-    const sourcePath = path.join(root, ".openclaw", "plugin-binding-approvals.json");
+    const sourcePath = path.join(root, ".quiet-core-bot", "plugin-binding-approvals.json");
     await fs.mkdir(path.dirname(sourcePath), { recursive: true });
     await fs.writeFile(
       sourcePath,
@@ -927,7 +927,7 @@ describe("state migrations", () => {
 
   it("imports non-conflicting legacy current-conversation bindings when SQLite has a conflict", async () => {
     const root = await createTempDir();
-    const stateDir = path.join(root, ".openclaw");
+    const stateDir = path.join(root, ".quiet-core-bot");
     const env = createEnv(stateDir);
     const cfg = createConfig();
     const bindingsDir = path.join(stateDir, "bindings");
@@ -1013,7 +1013,7 @@ describe("state migrations", () => {
 
   it("keeps legacy delivery queue files when shared SQLite already has a conflicting row", async () => {
     const root = await createTempDir();
-    const stateDir = path.join(root, ".openclaw");
+    const stateDir = path.join(root, ".quiet-core-bot");
     const env = createEnv(stateDir);
     const cfg = createConfig();
     const queueDir = path.join(stateDir, "delivery-queue");

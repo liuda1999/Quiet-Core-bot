@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 import { stripLeadingPackageManagerSeparator } from "./lib/arg-utils.mjs";
 import { readBoundedResponseText } from "./lib/bounded-response.mjs";
 
-const DEFAULT_REPO = "openclaw/openclaw";
+const DEFAULT_REPO = "liuda1999/quiet-core-bot";
 const DEFAULT_PROVIDER = "openai";
 const DEFAULT_MODE = "both";
 const DEFAULT_NPM_DIST_TAG = "beta";
@@ -226,16 +226,16 @@ function readJson(path, label) {
 }
 
 function githubApiTimeoutMs() {
-  const raw = process.env.OPENCLAW_RELEASE_CANDIDATE_GITHUB_API_TIMEOUT_MS;
+  const raw = process.env.QUIET_CORE_RELEASE_CANDIDATE_GITHUB_API_TIMEOUT_MS;
   if (!raw) {
     return DEFAULT_GITHUB_API_TIMEOUT_MS;
   }
   if (!/^[1-9]\d*$/u.test(raw)) {
-    throw new Error("OPENCLAW_RELEASE_CANDIDATE_GITHUB_API_TIMEOUT_MS must be a positive integer");
+    throw new Error("QUIET_CORE_RELEASE_CANDIDATE_GITHUB_API_TIMEOUT_MS must be a positive integer");
   }
   const value = Number(raw);
   if (!Number.isSafeInteger(value)) {
-    throw new Error("OPENCLAW_RELEASE_CANDIDATE_GITHUB_API_TIMEOUT_MS must be a positive integer");
+    throw new Error("QUIET_CORE_RELEASE_CANDIDATE_GITHUB_API_TIMEOUT_MS must be a positive integer");
   }
   return value;
 }
@@ -594,7 +594,7 @@ export function buildPublishCommand(options) {
     ["full_release_validation_run_id", options.fullReleaseRunId],
     ["npm_dist_tag", options.npmDistTag],
     ["plugin_publish_scope", options.pluginPublishScope],
-    ["publish_openclaw_npm", "true"],
+    ["publish_quiet_core_bot_npm", "true"],
     ["release_profile", "from-validation"],
     ["wait_for_clawhub", "false"],
   ];
@@ -614,7 +614,7 @@ export function buildPublishCommand(options) {
     "gh",
     "workflow",
     "run",
-    "openclaw-release-publish.yml",
+    "quiet-core-bot-release-publish.yml",
     "--repo",
     options.repo,
     "--ref",
@@ -713,7 +713,7 @@ async function runTelegramIfNeeded(options, artifactName) {
   }
   const workflowFile = "npm-telegram-beta-e2e.yml";
   const runId = dispatchWorkflow(options.repo, workflowFile, options.workflowRef, {
-    package_spec: `openclaw@${options.tag.replace(/^v/u, "")}`,
+    package_spec: `quiet-core-bot@${options.tag.replace(/^v/u, "")}`,
     package_label: options.tag,
     package_artifact_name: artifactName,
     package_artifact_run_id: options.npmPreflightRunId,
@@ -764,7 +764,7 @@ async function main() {
   }
 
   if (!options.npmPreflightRunId && !options.skipDispatch) {
-    const workflowFile = "openclaw-npm-release.yml";
+    const workflowFile = "quiet-core-bot-npm-release.yml";
     options.npmPreflightRunId = dispatchWorkflow(options.repo, workflowFile, options.workflowRef, {
       tag: options.tag,
       preflight_only: "true",
@@ -791,8 +791,8 @@ async function main() {
   const npmArtifactName = await downloadResolvedArtifact(
     options.repo,
     options.npmPreflightRunId,
-    `openclaw-npm-preflight-${options.tag}`,
-    "openclaw-npm-preflight-",
+    `quiet-core-bot-npm-preflight-${options.tag}`,
+    "quiet-core-bot-npm-preflight-",
     npmDir,
   );
   const fullArtifactName = await downloadResolvedArtifact(

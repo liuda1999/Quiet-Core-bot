@@ -7,7 +7,7 @@ title: "Plugin SDK subpaths"
 ---
 
 The plugin SDK is exposed as a set of narrow public subpaths under
-`openclaw/plugin-sdk/`. This page catalogs the commonly used subpaths grouped by
+`quiet-core-bot/plugin-sdk/`. This page catalogs the commonly used subpaths grouped by
 purpose. The generated compiler entrypoint inventory lives in
 `scripts/lib/plugin-sdk-entrypoints.json`; package exports are the public subset
 after subtracting repo-local test/internal subpaths listed in

@@ -1,11 +1,11 @@
 {
-  "name": "@openclaw/diffs",
+  "name": "@quiet-core/diffs",
   "version": "2026.6.11",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@openclaw/diffs",
+      "name": "@quiet-core/diffs",
       "version": "2026.6.11",
       "dependencies": {
         "@pierre/diffs": "1.2.4",

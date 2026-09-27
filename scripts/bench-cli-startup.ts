@@ -108,7 +108,7 @@ const DEFAULT_TIMEOUT_MS = 30_000;
 const TIMEOUT_KILL_GRACE_MS = 1_000;
 const PROCESS_GROUP_EXIT_POLL_MS = 25;
 const DEFAULT_ENTRY = "quiet-core-bot.mjs";
-const MAX_RSS_MARKER = "__OPENCLAW_MAX_RSS_KB__=";
+const MAX_RSS_MARKER = "__QUIET_CORE_MAX_RSS_KB__=";
 const VALUE_FLAGS = new Set([
   "--case",
   "--compare-baseline",
@@ -510,7 +510,7 @@ function parseGatewayPortEnv(raw: string | undefined): number {
   }
   const bracketHostMatch = /^\[[^\]]+\]:(\d+)$/u.exec(value);
   if (bracketHostMatch) {
-    return parsePositiveInt(bracketHostMatch[1], 32123, "OPENCLAW_GATEWAY_PORT");
+    return parsePositiveInt(bracketHostMatch[1], 32123, "QUIET_CORE_GATEWAY_PORT");
   }
   if (value.startsWith("[") && value.endsWith("]")) {
     return 32123;
@@ -520,7 +520,7 @@ function parseGatewayPortEnv(raw: string | undefined): number {
     return 32123;
   }
   const portRaw = colonCount === 1 ? value.split(":")[1] : value;
-  return parsePositiveInt(portRaw, 32123, "OPENCLAW_GATEWAY_PORT");
+  return parsePositiveInt(portRaw, 32123, "QUIET_CORE_GATEWAY_PORT");
 }
 
 function parsePresets(raw: string | undefined): string[] {
@@ -639,7 +639,7 @@ function buildConfigFixture(commandCase: CommandCase): Record<string, unknown> |
   ) {
     return null;
   }
-  const port = parseGatewayPortEnv(process.env.OPENCLAW_GATEWAY_PORT);
+  const port = parseGatewayPortEnv(process.env.QUIET_CORE_GATEWAY_PORT);
   return {
     gateway: {
       auth: { mode: "none" },
@@ -703,9 +703,9 @@ async function runSample(params: {
   heapProfDir?: string;
   rssHookPath: string;
 }): Promise<Sample> {
-  const runRoot = mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-bench-home-"));
-  const stateDir = path.join(runRoot, ".openclaw");
-  const configPath = path.join(stateDir, "openclaw.json");
+  const runRoot = mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-cli-bench-home-"));
+  const stateDir = path.join(runRoot, ".quiet-core-bot");
+  const configPath = path.join(stateDir, "quiet-core-bot.json");
   const configFixture = buildConfigFixture(params.commandCase);
   if (configFixture) {
     mkdirSync(stateDir, { recursive: true });
@@ -741,10 +741,10 @@ async function runSample(params: {
           ...process.env,
           HOME: runRoot,
           USERPROFILE: runRoot,
-          OPENCLAW_HOME: runRoot,
-          OPENCLAW_STATE_DIR: stateDir,
-          OPENCLAW_CONFIG_PATH: configPath,
-          OPENCLAW_HIDE_BANNER: "1",
+          QUIET_CORE_HOME: runRoot,
+          QUIET_CORE_STATE_DIR: stateDir,
+          QUIET_CORE_CONFIG_PATH: configPath,
+          QUIET_CORE_HIDE_BANNER: "1",
           NO_COLOR: "1",
           FORCE_COLOR: "0",
         },
@@ -1203,7 +1203,7 @@ async function main(): Promise<void> {
     printDelta(baseline, candidate);
     return;
   }
-  const tmpDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-bench-"));
+  const tmpDir = mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-cli-bench-"));
   const rssHookPath = buildRssHook(tmpDir);
   try {
     const primary = await buildSuiteResult({

@@ -28,7 +28,7 @@ vi.mock("../../config/config.js", () => {
       ) => unknown;
     }) => {
       const draft = structuredClone(loadedConfig) as OpenClawConfig;
-      const snapshot = { path: "/tmp/openclaw/config.json" };
+      const snapshot = { path: "/tmp/quiet-core-bot/config.json" };
       const result = await params.mutate(draft, {
         snapshot,
         previousHash: "test-hash",

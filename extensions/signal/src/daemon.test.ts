@@ -9,13 +9,13 @@ describe("signal daemon args", () => {
     expect(
       testApi.buildDaemonArgs({
         cliPath: "signal-cli",
-        configPath: "~/.openclaw/signal-cli",
+        configPath: "~/.quiet-core-bot/signal-cli",
         httpHost: "127.0.0.1",
         httpPort: 8080,
       }),
     ).toEqual([
       "--config",
-      path.join(os.homedir(), ".openclaw/signal-cli"),
+      path.join(os.homedir(), ".quiet-core-bot/signal-cli"),
       "daemon",
       "--http",
       "127.0.0.1:8080",

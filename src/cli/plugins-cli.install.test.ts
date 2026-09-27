@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { installedPluginRoot } from "openclaw/plugin-sdk/test-fixtures";
+import { installedPluginRoot } from "quiet-core-bot/plugin-sdk/test-fixtures";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import type { OpenClawConfig } from "../config/config.js";
 import { hashConfigIncludeRaw } from "../config/includes.js";
@@ -41,10 +41,10 @@ import {
   writePersistedInstalledPluginIndexInstallRecords,
 } from "./plugins-cli-test-helpers.js";
 
-const CLI_STATE_ROOT = "/tmp/openclaw-state";
-const ORIGINAL_OPENCLAW_STATE_DIR = process.env.OPENCLAW_STATE_DIR;
-const ORIGINAL_OPENCLAW_NIX_MODE = process.env.OPENCLAW_NIX_MODE;
-const PROFILE_STATE_ROOT = "/tmp/openclaw-ledger-profile";
+const CLI_STATE_ROOT = "/tmp/quiet-core-bot-state";
+const ORIGINAL_QUIET_CORE_STATE_DIR = process.env.QUIET_CORE_STATE_DIR;
+const ORIGINAL_QUIET_CORE_NIX_MODE = process.env.QUIET_CORE_NIX_MODE;
+const PROFILE_STATE_ROOT = "/tmp/quiet-core-bot-ledger-profile";
 
 const OFFICIAL_EXTERNAL_NPM_INSTALLS_WITHOUT_INTEGRITY = listOfficialExternalPluginCatalogEntries()
   .map((entry) => {
@@ -64,7 +64,7 @@ function cliInstallPath(pluginId: string): string {
 }
 
 function useProfileExtensionsDir(): string {
-  process.env.OPENCLAW_STATE_DIR = PROFILE_STATE_ROOT;
+  process.env.QUIET_CORE_STATE_DIR = PROFILE_STATE_ROOT;
   return path.resolve(PROFILE_STATE_ROOT, "extensions");
 }
 
@@ -142,12 +142,12 @@ function createNpmPackPluginInstallResult(
     targetDir: cliInstallPath(pluginId),
     version: "1.2.3",
     extensions: ["dist/index.js"],
-    manifestName: `@openclaw/${pluginId}`,
-    npmTarballName: `openclaw-${pluginId}-1.2.3.tgz`,
+    manifestName: `@quiet-core/${pluginId}`,
+    npmTarballName: `quiet-core-bot-${pluginId}-1.2.3.tgz`,
     npmResolution: {
-      name: `@openclaw/${pluginId}`,
+      name: `@quiet-core/${pluginId}`,
       version: "1.2.3",
-      resolvedSpec: `@openclaw/${pluginId}@1.2.3`,
+      resolvedSpec: `@quiet-core/${pluginId}@1.2.3`,
       integrity: "sha512-pack-demo",
       shasum: "packdemosha",
       resolvedAt: "2026-05-06T00:00:00.000Z",
@@ -255,7 +255,7 @@ function primeHookPackNpmFallback() {
   mockClawHubPackageNotFound("@acme/demo-hooks");
   installPluginFromNpmSpec.mockResolvedValue({
     ok: false,
-    error: "package.json missing openclaw.plugin.json",
+    error: "package.json missing quiet-core-bot.plugin.json",
   });
   installHooksFromNpmSpec.mockResolvedValue({
     ...createHookPackInstallResult("/tmp/hooks/demo-hooks"),
@@ -408,15 +408,15 @@ function runtimeLogsContain(fragment: string): boolean {
 function primeBlockedPluginConfigMutation(
   params: { blockHooks?: boolean; config?: OpenClawConfig } = {},
 ): void {
-  const configPath = path.join(process.cwd(), "openclaw.json5");
+  const configPath = path.join(process.cwd(), "quiet-core-bot.json5");
   const externalPluginsPath = path.join(
     path.parse(process.cwd()).root,
-    "external-openclaw",
+    "external-quiet-core-bot",
     "plugins.json5",
   );
   const externalHooksPath = path.join(
     path.parse(process.cwd()).root,
-    "external-openclaw",
+    "external-quiet-core-bot",
     "hooks.json5",
   );
   const config = params.config ?? ({} as OpenClawConfig);
@@ -454,7 +454,7 @@ function primeBlockedPluginConfigMutation(
 }
 
 function primeNestedPluginConfigMutation(tempRoot: string): void {
-  const configPath = path.join(tempRoot, "openclaw.json5");
+  const configPath = path.join(tempRoot, "quiet-core-bot.json5");
   const pluginsPath = path.join(tempRoot, "plugins.json5");
   const pluginsRaw = `${JSON.stringify({ entries: { $include: "./entries.json5" } }, null, 2)}\n`;
   const config = { plugins: { entries: {} } } as OpenClawConfig;
@@ -491,7 +491,7 @@ function primeNestedPluginConfigMutation(tempRoot: string): void {
 }
 
 function primeBlockedRootConfigMutation(config = {} as OpenClawConfig): void {
-  const configPath = path.join(process.cwd(), "openclaw.json5");
+  const configPath = path.join(process.cwd(), "quiet-core-bot.json5");
   loadConfig.mockReturnValue(config);
   readConfigFileSnapshotForWrite.mockResolvedValue({
     snapshot: {
@@ -518,10 +518,10 @@ function primeBlockedRootConfigMutation(config = {} as OpenClawConfig): void {
 }
 
 function primeBlockedHookConfigMutation(config = {} as OpenClawConfig): void {
-  const configPath = path.join(process.cwd(), "openclaw.json5");
+  const configPath = path.join(process.cwd(), "quiet-core-bot.json5");
   const externalHooksPath = path.join(
     path.parse(process.cwd()).root,
-    "external-openclaw",
+    "external-quiet-core-bot",
     "hooks.json5",
   );
   const parsed = { hooks: { $include: externalHooksPath } };
@@ -559,15 +559,15 @@ describe("plugins cli install", () => {
   });
 
   afterEach(() => {
-    if (ORIGINAL_OPENCLAW_STATE_DIR === undefined) {
-      delete process.env.OPENCLAW_STATE_DIR;
+    if (ORIGINAL_QUIET_CORE_STATE_DIR === undefined) {
+      delete process.env.QUIET_CORE_STATE_DIR;
     } else {
-      process.env.OPENCLAW_STATE_DIR = ORIGINAL_OPENCLAW_STATE_DIR;
+      process.env.QUIET_CORE_STATE_DIR = ORIGINAL_QUIET_CORE_STATE_DIR;
     }
-    if (ORIGINAL_OPENCLAW_NIX_MODE === undefined) {
-      delete process.env.OPENCLAW_NIX_MODE;
+    if (ORIGINAL_QUIET_CORE_NIX_MODE === undefined) {
+      delete process.env.QUIET_CORE_NIX_MODE;
     } else {
-      process.env.OPENCLAW_NIX_MODE = ORIGINAL_OPENCLAW_NIX_MODE;
+      process.env.QUIET_CORE_NIX_MODE = ORIGINAL_QUIET_CORE_NIX_MODE;
     }
   });
 
@@ -587,10 +587,10 @@ describe("plugins cli install", () => {
   });
 
   it("refuses plugin installs in Nix mode before installer side effects", async () => {
-    process.env.OPENCLAW_NIX_MODE = "1";
+    process.env.QUIET_CORE_NIX_MODE = "1";
 
     await expect(runPluginsCommand(["plugins", "install", "@acme/demo"])).rejects.toThrow(
-      "OPENCLAW_NIX_MODE=1",
+      "QUIET_CORE_NIX_MODE=1",
     );
 
     expect(installPluginFromNpmSpec).not.toHaveBeenCalled();
@@ -605,7 +605,7 @@ describe("plugins cli install", () => {
       primeBlockedPluginConfigMutation();
       installHooksFromNpmSpec.mockResolvedValue({
         ok: false,
-        error: "package.json missing openclaw.hooks",
+        error: "package.json missing quiet-core-bot.hooks",
       });
 
       await expect(runPluginsCommand(["plugins", "install", spec])).rejects.toThrow("__exit__:1");
@@ -710,12 +710,12 @@ describe("plugins cli install", () => {
   });
 
   it("blocks local package inspection when plugin and hook config are include-owned", async () => {
-    const localPath = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-hook-pack-"));
+    const localPath = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-hook-pack-"));
     primeBlockedPluginConfigMutation({ blockHooks: true });
     installHooksFromPath.mockResolvedValue(createHookPackInstallResult(localPath));
     installPluginFromPath.mockResolvedValue({
       ok: false,
-      error: "package.json missing openclaw.extensions",
+      error: "package.json missing quiet-core-bot.extensions",
       code: "missing_openclaw_extensions",
     });
 
@@ -735,7 +735,7 @@ describe("plugins cli install", () => {
   });
 
   it("blocks a proven local hook pack before plugin installer side effects when only hooks config is include-owned", async () => {
-    const localPath = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-hook-pack-"));
+    const localPath = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-hook-pack-"));
     primeBlockedHookConfigMutation();
     installHooksFromPath.mockResolvedValue(createHookPackInstallResult(localPath));
 
@@ -777,7 +777,7 @@ describe("plugins cli install", () => {
       parseClawHubPluginSpec.mockReturnValue({ name: "demo-hooks" });
       installPluginFromPath.mockResolvedValue({
         ok: false,
-        error: "package.json missing openclaw.extensions",
+        error: "package.json missing quiet-core-bot.extensions",
         code: "missing_openclaw_extensions",
       });
       installHooksFromPath.mockResolvedValue(createHookPackInstallResult(localPath));
@@ -802,7 +802,7 @@ describe("plugins cli install", () => {
     primeBlockedRootConfigMutation();
     installHooksFromNpmSpec.mockResolvedValue({
       ok: false,
-      error: "package.json missing openclaw.hooks",
+      error: "package.json missing quiet-core-bot.hooks",
     });
 
     await expect(runPluginsCommand(["plugins", "install", "@acme/demo-plugin"])).rejects.toThrow(
@@ -816,11 +816,11 @@ describe("plugins cli install", () => {
   });
 
   it("fails closed for ambiguous local plugins when the whole config is include-owned", async () => {
-    const localPath = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-demo-plugin-"));
+    const localPath = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-demo-plugin-"));
     primeBlockedRootConfigMutation();
     installHooksFromPath.mockResolvedValue({
       ok: false,
-      error: "package.json missing openclaw.hooks",
+      error: "package.json missing quiet-core-bot.hooks",
     });
 
     try {
@@ -838,12 +838,12 @@ describe("plugins cli install", () => {
   });
 
   it("fails closed before installing a blocked ambiguous local plugin", async () => {
-    const archivePath = path.join(os.tmpdir(), `openclaw-plugin-${process.pid}.tgz`);
+    const archivePath = path.join(os.tmpdir(), `quiet-core-bot-plugin-${process.pid}.tgz`);
     fs.writeFileSync(archivePath, "not-an-archive");
     primeBlockedPluginConfigMutation();
     installHooksFromPath.mockResolvedValue({
       ok: false,
-      error: "package.json missing openclaw.hooks",
+      error: "package.json missing quiet-core-bot.hooks",
     });
 
     try {
@@ -884,7 +884,7 @@ describe("plugins cli install", () => {
   });
 
   it("fails closed when a local hook probe finds a plugin-capable package", async () => {
-    const localPath = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-dual-package-"));
+    const localPath = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-dual-package-"));
     primeBlockedPluginConfigMutation();
     installHooksFromPath.mockResolvedValue({
       ...createHookPackInstallResult(localPath),
@@ -909,7 +909,7 @@ describe("plugins cli install", () => {
   });
 
   it("fails closed for a local bundle plugin instead of installing its hooks", async () => {
-    const localPath = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-bundle-plugin-"));
+    const localPath = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-bundle-plugin-"));
     primeBlockedPluginConfigMutation();
     installHooksFromPath.mockResolvedValue({
       ...createHookPackInstallResult(localPath),
@@ -950,7 +950,7 @@ describe("plugins cli install", () => {
   });
 
   it("fails closed when a blocked-config local hook probe throws", async () => {
-    const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-local-plugin-"));
+    const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-local-plugin-"));
     primeBlockedPluginConfigMutation();
     installHooksFromPath.mockRejectedValue(new Error("hook validation exploded"));
 
@@ -1063,7 +1063,7 @@ describe("plugins cli install", () => {
   });
 
   it("blocks explicit plugins through nested include config before installer side effects", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-nested-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-plugin-nested-"));
     primeNestedPluginConfigMutation(tempRoot);
     installPluginFromMarketplace.mockResolvedValue({
       ok: true,
@@ -1137,7 +1137,7 @@ describe("plugins cli install", () => {
       throw invalidConfigErr;
     });
     readConfigFileSnapshot.mockResolvedValue({
-      path: "/tmp/openclaw-config.json5",
+      path: "/tmp/quiet-core-bot-config.json5",
       exists: true,
       raw: '{ "models": { "default": 123 } }',
       parsed: { models: { default: 123 } },
@@ -1472,12 +1472,12 @@ describe("plugins cli install", () => {
       lookup: { kind: "pluginId", value: "brave" },
     });
     expect(installPluginFromClawHub).not.toHaveBeenCalled();
-    expect(npmInstallCall().spec).toBe("@openclaw/brave-plugin");
+    expect(npmInstallCall().spec).toBe("@quiet-core/brave-plugin");
     expect(npmInstallCall().expectedPluginId).toBe("brave");
     expect(npmInstallCall().trustedSourceLinkedOfficialInstall).toBe(true);
     const record = persistedInstallRecord("brave");
     expect(record.source).toBe("npm");
-    expect(record.spec).toBe("@openclaw/brave-plugin");
+    expect(record.spec).toBe("@quiet-core/brave-plugin");
     expect(record.installPath).toBe(cliInstallPath("brave"));
     expect(record.version).toBe("1.2.3");
     expect(writeConfigFile).toHaveBeenCalledWith(enabledCfg);
@@ -1485,11 +1485,11 @@ describe("plugins cli install", () => {
 
   it("passes third-party external catalog integrity with catalog install trust", async () => {
     const cfg = createEmptyPluginConfig();
-    const enabledCfg = createEnabledPluginConfig("wecom-openclaw-plugin");
+    const enabledCfg = createEnabledPluginConfig("wecom-quiet-core-bot-plugin");
     loadConfig.mockReturnValue(cfg);
     findBundledPluginSourceMock.mockReturnValue(undefined);
     installPluginFromNpmSpec.mockResolvedValue(
-      createNpmPluginInstallResult("wecom-openclaw-plugin"),
+      createNpmPluginInstallResult("wecom-quiet-core-bot-plugin"),
     );
     enablePluginInConfig.mockReturnValue({ config: enabledCfg });
     applyExclusiveSlotSelection.mockReturnValue({
@@ -1499,8 +1499,8 @@ describe("plugins cli install", () => {
 
     await runPluginsCommand(["plugins", "install", "wecom"]);
 
-    expect(npmInstallCall().spec).toBe("@wecom/wecom-openclaw-plugin@2026.5.7");
-    expect(npmInstallCall().expectedPluginId).toBe("wecom-openclaw-plugin");
+    expect(npmInstallCall().spec).toBe("@wecom/wecom-quiet-core-bot-plugin@2026.5.7");
+    expect(npmInstallCall().expectedPluginId).toBe("wecom-quiet-core-bot-plugin");
     expect(npmInstallCall().expectedIntegrity).toBe(
       "sha512-TCkP9as00WfEhgFWG8YL/rcmaWGIshAki2HQh83nTRccGfVBCoGjrEboTTqq3yDmK9koWTV11zi8u8A4dNtvug==",
     );
@@ -1539,19 +1539,19 @@ describe("plugins cli install", () => {
     findBundledPluginSourceMock.mockReturnValue(undefined);
     installPluginFromNpmSpec.mockResolvedValue({
       ok: false,
-      error: "package.json missing openclaw.extensions",
+      error: "package.json missing quiet-core-bot.extensions",
       code: "missing_openclaw_extensions",
     });
     installHooksFromNpmSpec.mockResolvedValue({
       ok: false,
       error:
-        "aborted: npm package integrity drift detected for @wecom/wecom-openclaw-plugin@2026.5.7",
+        "aborted: npm package integrity drift detected for @wecom/wecom-quiet-core-bot-plugin@2026.5.7",
     });
 
     await expect(runPluginsCommand(["plugins", "install", "wecom"])).rejects.toThrow("__exit__:1");
 
     expect(npmInstallCall().trustedSourceLinkedOfficialInstall).toBe(true);
-    expect(hookNpmInstallCall().spec).toBe("@wecom/wecom-openclaw-plugin@2026.5.7");
+    expect(hookNpmInstallCall().spec).toBe("@wecom/wecom-quiet-core-bot-plugin@2026.5.7");
     expect(hookNpmInstallCall().expectedIntegrity).toBe(
       "sha512-TCkP9as00WfEhgFWG8YL/rcmaWGIshAki2HQh83nTRccGfVBCoGjrEboTTqq3yDmK9koWTV11zi8u8A4dNtvug==",
     );
@@ -1654,7 +1654,7 @@ describe("plugins cli install", () => {
   it("installs npm-pack archives through npm install semantics", async () => {
     const cfg = createEmptyPluginConfig();
     const enabledCfg = createEnabledPluginConfig("demo");
-    const archivePath = "/tmp/openclaw-demo-1.2.3.tgz";
+    const archivePath = "/tmp/quiet-core-bot-demo-1.2.3.tgz";
 
     loadConfig.mockReturnValue(cfg);
     installPluginFromNpmPackArchive.mockResolvedValue(createNpmPackPluginInstallResult("demo"));
@@ -1673,7 +1673,7 @@ describe("plugins cli install", () => {
     expect(installPluginFromNpmSpec).not.toHaveBeenCalled();
     const record = persistedInstallRecord("demo");
     expect(record.source).toBe("npm");
-    expect(record.spec).toBe("@openclaw/demo@1.2.3");
+    expect(record.spec).toBe("@quiet-core/demo@1.2.3");
     expect(record.sourcePath).toBe(archivePath);
     expect(record.installPath).toBe(cliInstallPath("demo"));
     expect(record.version).toBe("1.2.3");
@@ -1681,7 +1681,7 @@ describe("plugins cli install", () => {
     expect(record.artifactFormat).toBe("tgz");
     expect(record.npmIntegrity).toBe("sha512-pack-demo");
     expect(record.npmShasum).toBe("packdemosha");
-    expect(record.npmTarballName).toBe("openclaw-demo-1.2.3.tgz");
+    expect(record.npmTarballName).toBe("quiet-core-bot-demo-1.2.3.tgz");
     expect(writeConfigFile).toHaveBeenCalledWith(enabledCfg);
   });
 
@@ -1719,9 +1719,9 @@ describe("plugins cli install", () => {
       warnings: [],
     });
 
-    await runPluginsCommand(["plugins", "install", "npm:@openclaw/discord"]);
+    await runPluginsCommand(["plugins", "install", "npm:@quiet-core/discord"]);
 
-    expect(npmInstallCall().spec).toBe("@openclaw/discord");
+    expect(npmInstallCall().spec).toBe("@quiet-core/discord");
     expect(npmInstallCall().expectedPluginId).toBe("discord");
     expect(npmInstallCall().trustedSourceLinkedOfficialInstall).toBe(true);
     expect(installPluginFromClawHub).not.toHaveBeenCalled();
@@ -1741,9 +1741,9 @@ describe("plugins cli install", () => {
       warnings: [],
     });
 
-    await runPluginsCommand(["plugins", "install", "@openclaw/discord"]);
+    await runPluginsCommand(["plugins", "install", "@quiet-core/discord"]);
 
-    expect(npmInstallCall().spec).toBe("@openclaw/discord");
+    expect(npmInstallCall().spec).toBe("@quiet-core/discord");
     expect(npmInstallCall().expectedPluginId).toBe("discord");
     expect(npmInstallCall().trustedSourceLinkedOfficialInstall).toBe(true);
     expect(installPluginFromClawHub).not.toHaveBeenCalled();
@@ -1759,11 +1759,11 @@ describe("plugins cli install", () => {
       const { lookup } = params as {
         lookup: { kind: "pluginId" | "npmSpec"; value: string };
       };
-      return lookup.kind === "npmSpec" && lookup.value === "@openclaw/discord"
+      return lookup.kind === "npmSpec" && lookup.value === "@quiet-core/discord"
         ? {
             pluginId: "discord",
             localPath: bundledPath,
-            npmSpec: "@openclaw/discord",
+            npmSpec: "@quiet-core/discord",
             version: "2026.5.24-beta.2",
           }
         : undefined;
@@ -1778,35 +1778,35 @@ describe("plugins cli install", () => {
     await runPluginsCommand([
       "plugins",
       "install",
-      "@openclaw/discord@2026.5.20",
+      "@quiet-core/discord@2026.5.20",
       "--pin",
       "--force",
     ]);
 
     expect(installPluginFromNpmSpec).not.toHaveBeenCalled();
     expect(findBundledPluginSourceMock).toHaveBeenCalledWith({
-      lookup: { kind: "npmSpec", value: "@openclaw/discord@2026.5.20" },
+      lookup: { kind: "npmSpec", value: "@quiet-core/discord@2026.5.20" },
     });
     expect(findBundledPluginSourceMock).toHaveBeenCalledWith({
-      lookup: { kind: "npmSpec", value: "@openclaw/discord" },
+      lookup: { kind: "npmSpec", value: "@quiet-core/discord" },
     });
     const record = persistedInstallRecord("discord");
     expect(record.source).toBe("path");
-    expect(record.spec).toBe("@openclaw/discord@2026.5.20");
+    expect(record.spec).toBe("@quiet-core/discord@2026.5.20");
     expect(record.sourcePath).toBe(bundledPath);
     expect(record.installPath).toBe(bundledPath);
     expect(runtimeLogsContain("ships with the current Quiet Core bot build")).toBe(true);
-    expect(runtimeLogsContain("npm:@openclaw/discord@2026.5.20")).toBe(true);
+    expect(runtimeLogsContain("npm:@quiet-core/discord@2026.5.20")).toBe(true);
   });
 
   it("marks catalog npm package installs with alternate selectors as trusted", async () => {
     const cfg = createEmptyPluginConfig();
-    const enabledCfg = createEnabledPluginConfig("wecom-openclaw-plugin");
+    const enabledCfg = createEnabledPluginConfig("wecom-quiet-core-bot-plugin");
 
     loadConfig.mockReturnValue(cfg);
     findBundledPluginSourceMock.mockReturnValue(undefined);
     installPluginFromNpmSpec.mockResolvedValue(
-      createNpmPluginInstallResult("wecom-openclaw-plugin"),
+      createNpmPluginInstallResult("wecom-quiet-core-bot-plugin"),
     );
     enablePluginInConfig.mockReturnValue({ config: enabledCfg });
     recordPluginInstall.mockReturnValue(enabledCfg);
@@ -1815,12 +1815,12 @@ describe("plugins cli install", () => {
       warnings: [],
     });
 
-    await runPluginsCommand(["plugins", "install", "@wecom/wecom-openclaw-plugin@latest"]);
+    await runPluginsCommand(["plugins", "install", "@wecom/wecom-quiet-core-bot-plugin@latest"]);
 
     // Alternate selectors stay trusted by catalog package name, but must not
     // inherit catalog integrity unless the install spec matches exactly.
-    expect(npmInstallCall().spec).toBe("@wecom/wecom-openclaw-plugin@latest");
-    expect(npmInstallCall().expectedPluginId).toBe("wecom-openclaw-plugin");
+    expect(npmInstallCall().spec).toBe("@wecom/wecom-quiet-core-bot-plugin@latest");
+    expect(npmInstallCall().expectedPluginId).toBe("wecom-quiet-core-bot-plugin");
     expect(npmInstallCall().trustedSourceLinkedOfficialInstall).toBe(true);
     expect(npmInstallCall().expectedIntegrity).toBeUndefined();
     expect(installPluginFromClawHub).not.toHaveBeenCalled();
@@ -1882,7 +1882,7 @@ describe("plugins cli install", () => {
     });
     installHooksFromNpmSpec.mockResolvedValue({
       ok: false,
-      error: "package.json missing openclaw.hooks",
+      error: "package.json missing quiet-core-bot.hooks",
     });
 
     await expect(runPluginsCommand(["plugins", "install", "npm:demo"])).rejects.toThrow(
@@ -1906,11 +1906,11 @@ describe("plugins cli install", () => {
     });
     installHooksFromNpmSpec.mockResolvedValue({
       ok: false,
-      error: "package.json missing openclaw.hooks",
+      error: "package.json missing quiet-core-bot.hooks",
     });
 
     await expect(
-      runPluginsCommand(["plugins", "install", "npm:@openclaw/whatsapp"]),
+      runPluginsCommand(["plugins", "install", "npm:@quiet-core/whatsapp"]),
     ).rejects.toThrow("__exit__:1");
 
     expect(installPluginFromClawHub).not.toHaveBeenCalled();
@@ -1930,7 +1930,7 @@ describe("plugins cli install", () => {
     });
     installHooksFromNpmSpec.mockResolvedValue({
       ok: false,
-      error: "package.json missing openclaw.hooks",
+      error: "package.json missing quiet-core-bot.hooks",
     });
 
     await expect(runPluginsCommand(["plugins", "install", "npm:memory-lancedb"])).rejects.toThrow(
@@ -2026,7 +2026,7 @@ describe("plugins cli install", () => {
       },
     } as OpenClawConfig;
     const enabledCfg = createEnabledPluginConfig("demo");
-    const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-link-"));
+    const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-plugin-link-"));
 
     loadConfig.mockReturnValue(cfg);
     installPluginFromPath.mockResolvedValueOnce({
@@ -2062,7 +2062,7 @@ describe("plugins cli install", () => {
   });
 
   it("passes dangerous force unsafe install to linked hook-pack probe fallback", async () => {
-    const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-hook-link-"));
+    const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-hook-link-"));
     primeHookPackPathFallback({
       tmpRoot,
       pluginInstallError: "plugin install probe failed",
@@ -2086,7 +2086,7 @@ describe("plugins cli install", () => {
   });
 
   it("does not fall back to hook pack for linked path when a no-flag security scan blocks", async () => {
-    const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-link-plugin-"));
+    const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-link-plugin-"));
     const pluginInstallError = "plugin blocked by security scan";
 
     loadConfig.mockReturnValue({} as OpenClawConfig);
@@ -2110,7 +2110,7 @@ describe("plugins cli install", () => {
   });
 
   it("passes dangerous force unsafe install to local hook-pack fallback installs", async () => {
-    const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-hook-install-"));
+    const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-hook-install-"));
     primeHookPackPathFallback({
       tmpRoot,
       pluginInstallError: "plugin install failed",
@@ -2134,7 +2134,7 @@ describe("plugins cli install", () => {
 
   it("passes the active profile extensions dir to local path installs", async () => {
     const extensionsDir = useProfileExtensionsDir();
-    const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-local-plugin-"));
+    const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-local-plugin-"));
     const cfg = createEmptyPluginConfig();
     const enabledCfg = createEnabledPluginConfig("demo");
 
@@ -2177,11 +2177,11 @@ describe("plugins cli install", () => {
     installPluginFromNpmSpec.mockResolvedValue({
       ok: false,
       error:
-        "plugin already exists: /home/openclaw/.openclaw/extensions/lossless-claw (delete it first)",
+        "plugin already exists: /home/quiet-core-bot/.quiet-core-bot/extensions/lossless-claw (delete it first)",
     });
     installHooksFromNpmSpec.mockResolvedValue({
       ok: false,
-      error: "package.json missing openclaw.hooks",
+      error: "package.json missing quiet-core-bot.hooks",
     });
 
     await expect(
@@ -2195,7 +2195,7 @@ describe("plugins cli install", () => {
   });
 
   it("does not append hook-pack fallback details for managed extensions boundary failures", async () => {
-    const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-local-plugin-"));
+    const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-local-plugin-"));
 
     loadConfig.mockReturnValue({} as OpenClawConfig);
     installPluginFromPath.mockResolvedValue({
@@ -2204,7 +2204,7 @@ describe("plugins cli install", () => {
     });
     installHooksFromPath.mockResolvedValue({
       ok: false,
-      error: "package.json missing openclaw.hooks",
+      error: "package.json missing quiet-core-bot.hooks",
     });
 
     try {
@@ -2220,7 +2220,7 @@ describe("plugins cli install", () => {
   });
 
   it("passes the install logger to the --link dry-run probe", async () => {
-    const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-link-plugin-"));
+    const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-link-plugin-"));
     const cfg = {
       plugins: {
         entries: {},
@@ -2284,7 +2284,7 @@ describe("plugins cli install", () => {
   });
 
   it("does not fall back to hook pack for local path when a no-flag security scan fails", async () => {
-    const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-local-plugin-"));
+    const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-local-plugin-"));
     const pluginInstallError = "plugin security scan failed";
 
     loadConfig.mockReturnValue({} as OpenClawConfig);
@@ -2308,7 +2308,7 @@ describe("plugins cli install", () => {
   });
 
   it("does not fall back to hook pack for local path when dangerous force unsafe install is set", async () => {
-    const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-local-plugin-"));
+    const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-local-plugin-"));
     const cfg = {} as OpenClawConfig;
     const pluginInstallError = "plugin blocked by security scan";
 
@@ -2337,7 +2337,7 @@ describe("plugins cli install", () => {
   });
 
   it("does not fall back to hook pack for local path when security scan fails under dangerous force unsafe install", async () => {
-    const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-local-plugin-"));
+    const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-local-plugin-"));
     const cfg = {} as OpenClawConfig;
     const pluginInstallError = "plugin security scan failed";
 
@@ -2429,7 +2429,7 @@ describe("plugins cli install", () => {
   });
 
   it("still falls back to local hook pack when dangerous force unsafe install is set for non-security errors", async () => {
-    const localHookDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-local-hook-pack-"));
+    const localHookDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-local-hook-pack-"));
     const cfg = {} as OpenClawConfig;
     const installedCfg = {
       hooks: {
@@ -2447,7 +2447,7 @@ describe("plugins cli install", () => {
     loadConfig.mockReturnValue(cfg);
     installPluginFromPath.mockResolvedValue({
       ok: false,
-      error: "package.json missing openclaw.plugin.json",
+      error: "package.json missing quiet-core-bot.plugin.json",
       code: "missing_openclaw_extensions",
     });
     installHooksFromPath.mockResolvedValue({
@@ -2497,7 +2497,7 @@ describe("plugins cli install", () => {
     });
     installPluginFromNpmSpec.mockResolvedValue({
       ok: false,
-      error: "package.json missing openclaw.plugin.json",
+      error: "package.json missing quiet-core-bot.plugin.json",
       code: "missing_openclaw_extensions",
     });
     installHooksFromNpmSpec.mockResolvedValue({

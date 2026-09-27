@@ -3,8 +3,8 @@ import {
   identityHasStableSessionId,
   isSessionIdentityPending,
   resolveSessionIdentityFromMeta,
-} from "@openclaw/acp-core/runtime/session-identity";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+} from "@quiet-core/acp-core/runtime/session-identity";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { logVerbose } from "../../globals.js";
 import type {
   AcpSessionManagerDeps,

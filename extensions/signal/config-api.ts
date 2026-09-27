@@ -2,4 +2,4 @@
 export {
   buildChannelConfigSchema,
   SignalConfigSchema,
-} from "openclaw/plugin-sdk/bundled-channel-config-schema";
+} from "quiet-core-bot/plugin-sdk/bundled-channel-config-schema";

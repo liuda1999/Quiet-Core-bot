@@ -2,7 +2,7 @@
 import {
   hasOutboundReplyContent,
   isReasoningReplyPayload,
-} from "openclaw/plugin-sdk/reply-payload";
+} from "quiet-core-bot/plugin-sdk/reply-payload";
 import type { ReplyPayload } from "./types.js";
 
 /**

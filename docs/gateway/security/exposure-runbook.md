@@ -55,8 +55,8 @@ Run these before opening access:
 
 ```bash
 quiet-core-bot doctor
-openclaw security audit
-openclaw security audit --deep
+quiet-core-bot security audit
+quiet-core-bot security audit --deep
 quiet-core-bot health
 ```
 
@@ -66,7 +66,7 @@ intentional and documented for the deployment.
 For remote CLI validation, pass credentials explicitly:
 
 ```bash
-quiet-core-bot gateway probe --url ws://127.0.0.1:18789 --token "$OPENCLAW_GATEWAY_TOKEN"
+quiet-core-bot gateway probe --url ws://127.0.0.1:18789 --token "$QUIET_CORE_GATEWAY_TOKEN"
 ```
 
 Do not assume local config credentials apply to an explicit remote URL.
@@ -134,7 +134,7 @@ For identity-aware proxies:
 - `gateway.auth.trustedProxy.allowUsers` should list expected users when the proxy serves more than one audience.
 - Same-host loopback proxy mode should use `allowLoopback` only when local processes are trusted and the proxy owns the identity headers.
 
-Run `openclaw security audit --deep` after proxy changes. Trusted-proxy findings
+Run `quiet-core-bot security audit --deep` after proxy changes. Trusted-proxy findings
 are intentionally high-signal because the proxy becomes the authentication
 boundary.
 
@@ -156,7 +156,7 @@ deployments, not only from prompts or session labels.
 
 After each exposure change:
 
-1. Re-run `openclaw security audit --deep`.
+1. Re-run `quiet-core-bot security audit --deep`.
 2. Test a successful authorized connection.
 3. Test that an unauthorized sender or browser session is denied.
 4. Confirm logs redact secrets.
@@ -194,7 +194,7 @@ Then:
 2. Rotate Gateway tokens/passwords and affected integration credentials.
 3. Remove `"*"` and unexpected senders from allowlists.
 4. Review recent audit logs, run history, tool calls, and config changes.
-5. Re-run `openclaw security audit --deep`.
+5. Re-run `quiet-core-bot security audit --deep`.
 6. Re-enable access with the narrowest pattern that satisfies the workflow.
 
 ## Review checklist

@@ -23,9 +23,9 @@ describe("runtime context prompt submission", () => {
     const effectivePrompt = [
       "visible ask",
       "",
-      "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
+      "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>",
       "secret runtime context",
-      "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
+      "<<<END_QUIET_CORE_INTERNAL_CONTEXT>>>",
     ].join("\n");
 
     expect(
@@ -36,7 +36,7 @@ describe("runtime context prompt submission", () => {
     ).toEqual({
       prompt: "visible ask",
       runtimeContext:
-        "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>\nsecret runtime context\n<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
+        "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>\nsecret runtime context\n<<<END_QUIET_CORE_INTERNAL_CONTEXT>>>",
     });
   });
 
@@ -80,9 +80,9 @@ describe("runtime context prompt submission", () => {
     const effectivePrompt = [
       prompt,
       "",
-      "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
+      "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>",
       "secret runtime context",
-      "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
+      "<<<END_QUIET_CORE_INTERNAL_CONTEXT>>>",
     ].join("\n");
 
     expect(
@@ -95,7 +95,7 @@ describe("runtime context prompt submission", () => {
       prompt: "visible ask",
       modelPrompt: prompt,
       runtimeContext:
-        "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>\nsecret runtime context\n<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
+        "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>\nsecret runtime context\n<<<END_QUIET_CORE_INTERNAL_CONTEXT>>>",
     });
   });
 
@@ -103,9 +103,9 @@ describe("runtime context prompt submission", () => {
     const effectivePrompt = [
       "visible ask",
       "",
-      "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
+      "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>",
       "secret runtime context",
-      "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
+      "<<<END_QUIET_CORE_INTERNAL_CONTEXT>>>",
     ].join("\n");
 
     expect(resolveRuntimeContextPromptParts({ effectivePrompt })).toEqual({
@@ -117,15 +117,15 @@ describe("runtime context prompt submission", () => {
     const effectivePrompt = [
       "runtime prefix",
       "",
-      "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
+      "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>",
       "first secret",
-      "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
+      "<<<END_QUIET_CORE_INTERNAL_CONTEXT>>>",
       "",
       "visible ask",
       "",
-      "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
+      "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>",
       "second secret",
-      "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
+      "<<<END_QUIET_CORE_INTERNAL_CONTEXT>>>",
       "",
       "retry instruction",
     ].join("\n");
@@ -140,9 +140,9 @@ describe("runtime context prompt submission", () => {
       prompt: "visible ask",
       modelPrompt: "runtime prefix\n\nvisible ask\n\nretry instruction",
       runtimeContext: [
-        "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>\nfirst secret\n<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
+        "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>\nfirst secret\n<<<END_QUIET_CORE_INTERNAL_CONTEXT>>>",
         "",
-        "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>\nsecond secret\n<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
+        "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>\nsecond secret\n<<<END_QUIET_CORE_INTERNAL_CONTEXT>>>",
       ].join("\n"),
     });
   });
@@ -152,16 +152,16 @@ describe("runtime context prompt submission", () => {
     // trigger recursive delimiter scanning.
     const inlineMarkers = Array.from(
       { length: 250 },
-      () => "inline <<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>> marker",
+      () => "inline <<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>> marker",
     ).join("\n");
     const effectivePrompt = [
       inlineMarkers,
       "",
       "visible ask",
       "",
-      "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
+      "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>",
       "secret runtime context",
-      "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
+      "<<<END_QUIET_CORE_INTERNAL_CONTEXT>>>",
     ].join("\n");
 
     const parts = resolveRuntimeContextPromptParts({
@@ -171,12 +171,12 @@ describe("runtime context prompt submission", () => {
     });
 
     expect(parts.prompt).toContain("visible ask");
-    expect(parts.modelPrompt).toContain("inline <<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>> marker");
+    expect(parts.modelPrompt).toContain("inline <<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>> marker");
     expect(parts.modelPrompt).toContain("visible ask");
     expect(parts.modelPrompt).not.toContain("secret runtime context");
     expect(parts.prompt).not.toContain("secret runtime context");
     expect(parts.runtimeContext).toBe(
-      "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>\nsecret runtime context\n<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
+      "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>\nsecret runtime context\n<<<END_QUIET_CORE_INTERNAL_CONTEXT>>>",
     );
   });
 
@@ -186,7 +186,7 @@ describe("runtime context prompt submission", () => {
     const effectivePrompt = [
       "visible ask",
       "",
-      "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
+      "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>",
       "secret runtime context",
       "",
       "still secret",
@@ -217,9 +217,9 @@ describe("runtime context prompt submission", () => {
         "Quiet Core bot runtime event.",
         "This context is runtime-generated, not user-authored. Keep internal details private.",
         "",
-        "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
+        "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>",
         "internal event",
-        "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
+        "<<<END_QUIET_CORE_INTERNAL_CONTEXT>>>",
       ].join("\n"),
     });
   });
@@ -242,9 +242,9 @@ describe("runtime context prompt submission", () => {
         "Quiet Core bot runtime event.",
         "This context is runtime-generated, not user-authored. Keep internal details private.",
         "",
-        "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
+        "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>",
         "internal event",
-        "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
+        "<<<END_QUIET_CORE_INTERNAL_CONTEXT>>>",
       ].join("\n"),
     });
   });
@@ -318,17 +318,17 @@ describe("runtime context prompt submission", () => {
   it("builds runtime context as prompt-local custom context before the current user prompt", () => {
     expect(buildRuntimeContextCustomMessage("secret runtime context")).toMatchObject({
       role: "custom",
-      customType: "openclaw.runtime-context",
+      customType: "quiet-core-bot.runtime-context",
       content: [
         "Quiet Core bot runtime context for the immediately preceding user message.",
         "This context is runtime-generated, not user-authored. Keep internal details private.",
         "",
-        "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
+        "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>",
         "secret runtime context",
-        "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
+        "<<<END_QUIET_CORE_INTERNAL_CONTEXT>>>",
       ].join("\n"),
       display: false,
-      details: { source: "openclaw-runtime-context" },
+      details: { source: "quiet-core-bot-runtime-context" },
     });
   });
 

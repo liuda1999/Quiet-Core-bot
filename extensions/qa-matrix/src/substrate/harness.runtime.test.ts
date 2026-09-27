@@ -18,7 +18,7 @@ async function withStartedMatrixHarness(
     const result = await startMatrixQaHarness(
       {
         outputDir,
-        repoRoot: "/repo/openclaw",
+        repoRoot: "/repo/quiet-core-bot",
         homeserverPort: 28008,
       },
       deps,
@@ -186,7 +186,7 @@ describe("matrix harness runtime", () => {
           `docker compose -f ${outputDir}/docker-compose.matrix-qa.yml ps -q matrix-qa-homeserver @/repo/openclaw`,
         );
         expect(calls).toContain(
-          "docker inspect --format {{range .NetworkSettings.Networks}}{{println .IPAddress}}{{end}} container-123 @/repo/openclaw",
+          "docker inspect --format {{range .NetworkSettings.Networks}}{{println .IPAddress}}{{end}} container-123 @/repo/quiet-core-bot",
         );
       },
     );

@@ -18,7 +18,7 @@ The recommended flow is:
 1. Scaffold a package with `quiet-core-bot plugins init`.
 2. Write tools with `defineToolPlugin`.
 3. Build JavaScript.
-4. Generate `openclaw.plugin.json` and `package.json` metadata with
+4. Generate `quiet-core-bot.plugin.json` and `package.json` metadata with
    `quiet-core-bot plugins build`.
 5. Validate the generated metadata before publishing or installing.
 
@@ -31,9 +31,9 @@ or [Provider Plugins](/plugins/sdk-provider-plugins) instead.
 - Node >= 22.
 - TypeScript ESM package output.
 - `typebox` for config and tool parameter schemas.
-- `openclaw >=2026.5.17`, the first Quiet Core bot version that exports
-  `openclaw/plugin-sdk/tool-plugin`.
-- A package root that can ship `dist/`, `openclaw.plugin.json`, and
+- `quiet-core-bot >=2026.5.17`, the first Quiet Core bot version that exports
+  `quiet-core-bot/plugin-sdk/tool-plugin`.
+- A package root that can ship `dist/`, `quiet-core-bot.plugin.json`, and
   `package.json`.
 
 The generated plugin imports `typebox` at runtime, so keep `typebox` in
@@ -58,8 +58,8 @@ The scaffold creates:
 - `src/index.test.ts`: a small metadata test.
 - `tsconfig.json`: NodeNext TypeScript output to `dist/`.
 - `package.json`: scripts, runtime dependencies, and
-  `openclaw.extensions: ["./dist/index.js"]`.
-- `openclaw.plugin.json`: generated manifest metadata for the initial tool.
+  `quiet-core-bot.extensions: ["./dist/index.js"]`.
+- `quiet-core-bot.plugin.json`: generated manifest metadata for the initial tool.
 
 Expected validation output:
 
@@ -75,7 +75,7 @@ schemas.
 
 ```typescript
 import { Type } from "typebox";
-import { defineToolPlugin } from "openclaw/plugin-sdk/tool-plugin";
+import { defineToolPlugin } from "quiet-core-bot/plugin-sdk/tool-plugin";
 
 export default defineToolPlugin({
   id: "stock-quotes",
@@ -279,14 +279,14 @@ For the simple tool-plugin workflow, `quiet-core-bot plugins build` aligns
 ```json
 {
   "type": "module",
-  "files": ["dist", "openclaw.plugin.json", "README.md"],
+  "files": ["dist", "quiet-core-bot.plugin.json", "README.md"],
   "dependencies": {
     "typebox": "^1.1.38"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.5.17"
+    "quiet-core-bot": ">=2026.5.17"
   },
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": ["./dist/index.js"]
   }
 }
@@ -310,11 +310,11 @@ npm test
 
 `plugins validate` checks that:
 
-- `openclaw.plugin.json` exists and passes the normal manifest loader.
+- `quiet-core-bot.plugin.json` exists and passes the normal manifest loader.
 - The current entry exports `defineToolPlugin` metadata.
 - Generated manifest fields match the entry metadata.
 - `contracts.tools` matches the declared tool names.
-- `package.json` points `openclaw.extensions` at the selected runtime entry.
+- `package.json` points `quiet-core-bot.extensions` at the selected runtime entry.
 
 ## Install and inspect locally
 
@@ -329,7 +329,7 @@ For a packaged smoke, pack first and install the tarball:
 
 ```bash
 npm pack
-quiet-core-bot plugins install npm-pack:./openclaw-plugin-stock-quotes-0.1.0.tgz
+quiet-core-bot plugins install npm-pack:./quiet-core-bot-plugin-stock-quotes-0.1.0.tgz
 quiet-core-bot plugins inspect stock-quotes --runtime --json
 ```
 
@@ -369,7 +369,7 @@ The entry did not export a value created by `defineToolPlugin`. Check that the
 module default export is the `defineToolPlugin(...)` result, or pass the correct
 entry with `--entry`.
 
-### `openclaw.plugin.json generated metadata is stale`
+### `quiet-core-bot.plugin.json generated metadata is stale`
 
 The manifest no longer matches the entry metadata. Run:
 
@@ -378,9 +378,9 @@ npm run build
 quiet-core-bot plugins build --entry ./dist/index.js
 ```
 
-Commit both `openclaw.plugin.json` and `package.json` changes.
+Commit both `quiet-core-bot.plugin.json` and `package.json` changes.
 
-### `package.json openclaw.extensions must include ./dist/index.js`
+### `package.json quiet-core-bot.extensions must include ./dist/index.js`
 
 The package metadata points at a different runtime entry. Run
 `quiet-core-bot plugins build --entry ./dist/index.js` so the generator aligns the
@@ -397,8 +397,8 @@ Check these in order:
 
 1. `quiet-core-bot plugins inspect <plugin-id> --runtime`
 2. `quiet-core-bot plugins validate --root <plugin-root> --entry ./dist/index.js`
-3. `openclaw.plugin.json` has `contracts.tools` with the expected tool names.
-4. `package.json` has `openclaw.extensions: ["./dist/index.js"]`.
+3. `quiet-core-bot.plugin.json` has `contracts.tools` with the expected tool names.
+4. `package.json` has `quiet-core-bot.extensions: ["./dist/index.js"]`.
 5. The Gateway was restarted or reloaded after installing the plugin.
 
 ## See also

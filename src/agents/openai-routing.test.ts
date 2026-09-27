@@ -1,6 +1,6 @@
 // Verifies OpenAI model selections route between Quiet Core bot and Codex runtimes.
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   listOpenAIAuthProfileProvidersForAgentRuntime,
   openAIProviderUsesCodexRuntimeByDefault,
@@ -87,13 +87,13 @@ describe("OpenAI runtime routing policy", () => {
     expect(
       listOpenAIAuthProfileProvidersForAgentRuntime({
         provider: "openai",
-        harnessRuntime: "openclaw",
+        harnessRuntime: "quiet-core-bot",
       }),
     ).toEqual(["openai"]);
     expect(
       resolveOpenAIRuntimeProvider({
         provider: "openai",
-        harnessRuntime: "openclaw",
+        harnessRuntime: "quiet-core-bot",
         authProfileProvider: "openai",
         authProfileId: "openai:work",
       }),
@@ -112,21 +112,21 @@ describe("OpenAI runtime routing policy", () => {
     expect(
       listOpenAIAuthProfileProvidersForAgentRuntime({
         provider: "openai",
-        harnessRuntime: "openclaw",
+        harnessRuntime: "quiet-core-bot",
         config,
       }),
     ).toEqual(["openai"]);
     expect(
       resolveSelectedOpenAIRuntimeProvider({
         provider: "openai",
-        harnessRuntime: "openclaw",
+        harnessRuntime: "quiet-core-bot",
         config,
       }),
     ).toBe("openai");
     expect(
       resolveOpenAIRuntimeProvider({
         provider: "openai",
-        harnessRuntime: "openclaw",
+        harnessRuntime: "quiet-core-bot",
         config,
       }),
     ).toBe("openai");
@@ -144,7 +144,7 @@ describe("OpenAI runtime routing policy", () => {
     expect(
       listOpenAIAuthProfileProvidersForAgentRuntime({
         provider: "openai",
-        harnessRuntime: "openclaw",
+        harnessRuntime: "quiet-core-bot",
         config,
       }),
     ).toEqual(["openai"]);
@@ -162,14 +162,14 @@ describe("OpenAI runtime routing policy", () => {
     expect(
       listOpenAIAuthProfileProvidersForAgentRuntime({
         provider: "openai",
-        harnessRuntime: "openclaw",
+        harnessRuntime: "quiet-core-bot",
         config,
       }),
     ).toEqual(["openai"]);
     expect(
       resolveSelectedOpenAIRuntimeProvider({
         provider: "openai",
-        harnessRuntime: "openclaw",
+        harnessRuntime: "quiet-core-bot",
         config,
       }),
     ).toBe("openai");
@@ -195,14 +195,14 @@ describe("OpenAI runtime routing policy", () => {
     expect(
       listOpenAIAuthProfileProvidersForAgentRuntime({
         provider: "openai",
-        harnessRuntime: "openclaw",
+        harnessRuntime: "quiet-core-bot",
         config,
       }),
     ).toEqual(["openai"]);
     expect(
       resolveSelectedOpenAIRuntimeProvider({
         provider: "openai",
-        harnessRuntime: "openclaw",
+        harnessRuntime: "quiet-core-bot",
         config,
       }),
     ).toBe("openai");

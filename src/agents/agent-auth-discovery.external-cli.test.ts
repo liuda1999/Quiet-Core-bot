@@ -1,6 +1,6 @@
 /** Tests external CLI scoping during agent auth-profile credential discovery. */
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 
 const storeMocks = vi.hoisted(() => ({
   ensureAuthProfileStore: vi.fn(() => ({ version: 1, profiles: {} })),
@@ -53,13 +53,13 @@ describe("resolveAgentCredentialsForDiscovery external CLI scoping", () => {
       providers: ["fireworks"],
     });
 
-    resolveAgentCredentialsForDiscovery("/tmp/openclaw-agent", {
+    resolveAgentCredentialsForDiscovery("/tmp/quiet-core-bot-agent", {
       config: cfg,
       env: {},
       externalCli,
     });
 
-    expect(storeMocks.ensureAuthProfileStore).toHaveBeenCalledWith("/tmp/openclaw-agent", {
+    expect(storeMocks.ensureAuthProfileStore).toHaveBeenCalledWith("/tmp/quiet-core-bot-agent", {
       allowKeychainPrompt: false,
       config: cfg,
       externalCli,
@@ -74,14 +74,14 @@ describe("resolveAgentCredentialsForDiscovery external CLI scoping", () => {
       providers: ["fireworks"],
     });
 
-    resolveAgentCredentialsForDiscovery("/tmp/openclaw-agent", {
+    resolveAgentCredentialsForDiscovery("/tmp/quiet-core-bot-agent", {
       config: cfg,
       env: {},
       externalCli,
       readOnly: true,
     });
 
-    expect(storeMocks.loadAuthProfileStoreForRuntime).toHaveBeenCalledWith("/tmp/openclaw-agent", {
+    expect(storeMocks.loadAuthProfileStoreForRuntime).toHaveBeenCalledWith("/tmp/quiet-core-bot-agent", {
       allowKeychainPrompt: false,
       config: cfg,
       externalCli,
@@ -90,14 +90,14 @@ describe("resolveAgentCredentialsForDiscovery external CLI scoping", () => {
   });
 
   it("can skip runtime external auth overlays and scope synthetic auth discovery", () => {
-    resolveAgentCredentialsForDiscovery("/tmp/openclaw-agent", {
+    resolveAgentCredentialsForDiscovery("/tmp/quiet-core-bot-agent", {
       env: {},
       skipExternalAuthProfiles: true,
       syntheticAuthProviderRefs: ["fireworks"],
     });
 
     expect(storeMocks.ensureAuthProfileStoreWithoutExternalProfiles).toHaveBeenCalledWith(
-      "/tmp/openclaw-agent",
+      "/tmp/quiet-core-bot-agent",
       {
         allowKeychainPrompt: false,
       },

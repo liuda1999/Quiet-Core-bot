@@ -4,4 +4,4 @@ export {
   type OpenClawPluginApi,
   type OpenClawPluginHttpRouteHandler,
   type PluginLogger,
-} from "openclaw/plugin-sdk/plugin-entry";
+} from "quiet-core-bot/plugin-sdk/plugin-entry";

@@ -686,7 +686,7 @@ Behavior notes:
 ## Per-user preferences
 
 Slash commands write local overrides to `prefsPath`. The default is
-`~/.quiet-core-bot/settings/tts.json`; override with the `OPENCLAW_TTS_PREFS` env var
+`~/.quiet-core-bot/settings/tts.json`; override with the `QUIET_CORE_TTS_PREFS` env var
 or `messages.tts.prefsPath`.
 
 | Stored field | Effect                                       |

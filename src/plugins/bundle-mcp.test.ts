@@ -93,7 +93,7 @@ describe("loadEnabledBundleMcpConfig", () => {
   it("loads enabled Claude bundle MCP config and absolutizes relative args", async () => {
     await withBundleHomeEnv(
       tempHarness,
-      "openclaw-bundle-mcp",
+      "quiet-core-bot-bundle-mcp",
       async ({ homeDir, workspaceDir }) => {
         const { pluginRoot, serverPath } = await createBundleProbePlugin(homeDir);
 
@@ -130,8 +130,8 @@ describe("loadEnabledBundleMcpConfig", () => {
   });
 
   it("uses a provided manifest registry instead of rediscovering bundle plugins", async () => {
-    const homeDir = await tempHarness.createTempDir("openclaw-bundle-mcp-home-");
-    const workspaceDir = await tempHarness.createTempDir("openclaw-bundle-mcp-workspace-");
+    const homeDir = await tempHarness.createTempDir("quiet-core-bot-bundle-mcp-home-");
+    const workspaceDir = await tempHarness.createTempDir("quiet-core-bot-bundle-mcp-workspace-");
     const { pluginRoot } = await createBundleProbePlugin(homeDir);
 
     const loaded = loadEnabledBundleMcpConfig({
@@ -166,7 +166,7 @@ describe("loadEnabledBundleMcpConfig", () => {
   it("merges inline bundle MCP servers and skips disabled bundles", async () => {
     await withBundleHomeEnv(
       tempHarness,
-      "openclaw-bundle-inline",
+      "quiet-core-bot-bundle-inline",
       async ({ homeDir, workspaceDir }) => {
         await writeClaudeBundleManifest({
           homeDir,
@@ -224,7 +224,7 @@ describe("loadEnabledBundleMcpConfig", () => {
   it("resolves inline Claude MCP paths from the plugin root and expands CLAUDE_PLUGIN_ROOT", async () => {
     await withBundleHomeEnv(
       tempHarness,
-      "openclaw-bundle-inline-placeholder",
+      "quiet-core-bot-bundle-inline-placeholder",
       async ({ homeDir, workspaceDir }) => {
         const pluginRoot = await writeClaudeBundleManifest({
           homeDir,
@@ -267,7 +267,7 @@ describe("loadEnabledBundleMcpConfig", () => {
   it("loads Link-style Codex bundle MCP config", async () => {
     await withBundleHomeEnv(
       tempHarness,
-      "openclaw-bundle-link",
+      "quiet-core-bot-bundle-link",
       async ({ homeDir, workspaceDir }) => {
         const pluginRoot = resolveBundlePluginRoot(homeDir, "link");
         await writeBundleTextFiles(pluginRoot, {
@@ -314,7 +314,7 @@ describe("loadEnabledBundleMcpConfig", () => {
   it("reports malformed file-backed MCP configs instead of silently dropping servers", async () => {
     await withBundleHomeEnv(
       tempHarness,
-      "openclaw-bundle-malformed-mcp",
+      "quiet-core-bot-bundle-malformed-mcp",
       async ({ homeDir, workspaceDir }) => {
         const pluginRoot = await writeClaudeBundleManifest({
           homeDir,
@@ -342,7 +342,7 @@ describe("loadEnabledBundleMcpConfig", () => {
   it("reports malformed file-backed LSP configs instead of silently dropping servers", async () => {
     await withBundleHomeEnv(
       tempHarness,
-      "openclaw-bundle-malformed-lsp",
+      "quiet-core-bot-bundle-malformed-lsp",
       async ({ homeDir, workspaceDir }) => {
         const pluginRoot = await writeClaudeBundleManifest({
           homeDir,

@@ -11,10 +11,10 @@ import type {
   JsonSchemaValidator,
   jsonSchemaValidator,
 } from "@modelcontextprotocol/sdk/validation/types.js";
-import { redactSensitiveUrlLikeString } from "@openclaw/net-policy/redact-sensitive-url";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { redactSensitiveUrlLikeString } from "@quiet-core/net-policy/redact-sensitive-url";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { Compile } from "typebox/compile";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { toErrorObject } from "../infra/errors.js";
 import { logWarn } from "../logger.js";
 import type { PluginManifestRegistry } from "../plugins/manifest-registry.js";
@@ -52,7 +52,7 @@ type CreateSessionMcpRuntime = (
   params: Parameters<typeof createSessionMcpRuntime>[0] & { configFingerprint?: string },
 ) => SessionMcpRuntime;
 
-const SESSION_MCP_RUNTIME_MANAGER_KEY = Symbol.for("openclaw.sessionMcpRuntimeManager");
+const SESSION_MCP_RUNTIME_MANAGER_KEY = Symbol.for("quiet-core-bot.sessionMcpRuntimeManager");
 const DRAFT_2020_12_SCHEMA = "https://json-schema.org/draft/2020-12/schema";
 const DEFAULT_SESSION_MCP_RUNTIME_IDLE_TTL_MS = 10 * 60 * 1000;
 const SESSION_MCP_RUNTIME_SWEEP_INTERVAL_MS = 60 * 1000;
@@ -578,7 +578,7 @@ export function createSessionMcpRuntime(params: {
           if (!session) {
             const client = new Client(
               {
-                name: "openclaw-bundle-mcp",
+                name: "quiet-core-bot-bundle-mcp",
                 version: "0.0.0",
               },
               {

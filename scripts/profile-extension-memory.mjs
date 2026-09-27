@@ -18,7 +18,7 @@ const DEFAULT_COMBINED_TIMEOUT_MS = 180_000;
 const DEFAULT_TOP = 10;
 const OUTPUT_CAPTURE_MAX_CHARS = 128 * 1024;
 const STDERR_PREVIEW_MAX_CHARS = 8 * 1024;
-const RSS_MARKER = "__OPENCLAW_MAX_RSS_KB__=";
+const RSS_MARKER = "__QUIET_CORE_MAX_RSS_KB__=";
 const PARENT_SIGNAL_EXIT_CODES = new Map([
   ["SIGHUP", 129],
   ["SIGINT", 130],
@@ -32,7 +32,7 @@ let parentSignalShutdownStarted = false;
 function defaultJsonReportPath() {
   return path.join(
     os.tmpdir(),
-    `openclaw-extension-memory-${process.pid}-${Date.now()}-${randomUUID()}.json`,
+    `quiet-core-bot-extension-memory-${process.pid}-${Date.now()}-${randomUUID()}.json`,
   );
 }
 
@@ -435,7 +435,7 @@ async function main() {
     throw new Error("No extensions selected for profiling");
   }
 
-  const tmpHome = mkdtempSync(path.join(os.tmpdir(), "openclaw-extension-memory-"));
+  const tmpHome = mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-extension-memory-"));
   const hookPath = path.join(tmpHome, "measure-rss.mjs");
   const jsonPath = options.jsonPath ?? defaultJsonReportPath();
 
@@ -460,7 +460,7 @@ async function main() {
     XDG_DATA_HOME: path.join(tmpHome, ".local", "share"),
     XDG_CACHE_HOME: path.join(tmpHome, ".cache"),
     NODE_DISABLE_COMPILE_CACHE: "1",
-    OPENCLAW_NO_RESPAWN: "1",
+    QUIET_CORE_NO_RESPAWN: "1",
     TERM: process.env.TERM ?? "dumb",
     LANG: process.env.LANG ?? "C.UTF-8",
   };

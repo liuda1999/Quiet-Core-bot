@@ -1,6 +1,6 @@
 // Covers MCP OAuth token persistence, isolation, and noninteractive behavior.
 import fs from "node:fs/promises";
-import { withTempHome } from "openclaw/plugin-sdk/test-env";
+import { withTempHome } from "quiet-core-bot/plugin-sdk/test-env";
 import { describe, expect, it } from "vitest";
 import { vi } from "vitest";
 import {
@@ -32,7 +32,7 @@ describe("MCP OAuth provider", () => {
 
         // Token files live under state, not workspace config, and are mode
         // 0600 because they contain bearer credentials.
-        const tokenDir = `${home}/.openclaw/mcp-oauth`;
+        const tokenDir = `${home}/.quiet-core-bot/mcp-oauth`;
         const entries = await fs.readdir(tokenDir);
         expect(entries).toHaveLength(1);
         expect(entries[0]).toMatch(/^Remote-Docs-[a-f0-9]{16}\.json$/);
@@ -41,11 +41,11 @@ describe("MCP OAuth provider", () => {
         expect(stat.mode & 0o777).toBe(0o600);
       },
       {
-        prefix: "openclaw-mcp-oauth-",
+        prefix: "quiet-core-bot-mcp-oauth-",
         skipSessionCleanup: true,
         env: {
-          OPENCLAW_CONFIG_PATH: undefined,
-          OPENCLAW_STATE_DIR: undefined,
+          QUIET_CORE_CONFIG_PATH: undefined,
+          QUIET_CORE_STATE_DIR: undefined,
         },
       },
     );
@@ -67,11 +67,11 @@ describe("MCP OAuth provider", () => {
         await expect(second.tokens()).resolves.toBeUndefined();
       },
       {
-        prefix: "openclaw-mcp-oauth-url-",
+        prefix: "quiet-core-bot-mcp-oauth-url-",
         skipSessionCleanup: true,
         env: {
-          OPENCLAW_CONFIG_PATH: undefined,
-          OPENCLAW_STATE_DIR: undefined,
+          QUIET_CORE_CONFIG_PATH: undefined,
+          QUIET_CORE_STATE_DIR: undefined,
         },
       },
     );
@@ -136,14 +136,14 @@ describe("MCP OAuth provider", () => {
           }),
         ).rejects.toThrow("localhost redirect also rejected");
 
-        await expect(fs.readdir(`${home}/.openclaw/mcp-oauth`)).rejects.toThrow();
+        await expect(fs.readdir(`${home}/.quiet-core-bot/mcp-oauth`)).rejects.toThrow();
       },
       {
-        prefix: "openclaw-mcp-oauth-localhost-failure-",
+        prefix: "quiet-core-bot-mcp-oauth-localhost-failure-",
         skipSessionCleanup: true,
         env: {
-          OPENCLAW_CONFIG_PATH: undefined,
-          OPENCLAW_STATE_DIR: undefined,
+          QUIET_CORE_CONFIG_PATH: undefined,
+          QUIET_CORE_STATE_DIR: undefined,
         },
       },
     );
@@ -168,7 +168,7 @@ describe("MCP OAuth provider", () => {
           }),
         ).resolves.toBe("redirect");
 
-        const tokenDir = `${home}/.openclaw/mcp-oauth`;
+        const tokenDir = `${home}/.quiet-core-bot/mcp-oauth`;
         const entries = await fs.readdir(tokenDir);
         const store = JSON.parse(await fs.readFile(`${tokenDir}/${entries[0]}`, "utf-8")) as {
           codeVerifier?: string;
@@ -189,11 +189,11 @@ describe("MCP OAuth provider", () => {
         ]);
       },
       {
-        prefix: "openclaw-mcp-oauth-localhost-persist-",
+        prefix: "quiet-core-bot-mcp-oauth-localhost-persist-",
         skipSessionCleanup: true,
         env: {
-          OPENCLAW_CONFIG_PATH: undefined,
-          OPENCLAW_STATE_DIR: undefined,
+          QUIET_CORE_CONFIG_PATH: undefined,
+          QUIET_CORE_STATE_DIR: undefined,
         },
       },
     );
@@ -220,11 +220,11 @@ describe("MCP OAuth provider", () => {
         ).rejects.toThrow("Run quiet-core-bot mcp login Remote Docs.");
       },
       {
-        prefix: "openclaw-mcp-oauth-noninteractive-",
+        prefix: "quiet-core-bot-mcp-oauth-noninteractive-",
         skipSessionCleanup: true,
         env: {
-          OPENCLAW_CONFIG_PATH: undefined,
-          OPENCLAW_STATE_DIR: undefined,
+          QUIET_CORE_CONFIG_PATH: undefined,
+          QUIET_CORE_STATE_DIR: undefined,
         },
       },
     );
@@ -247,11 +247,11 @@ describe("MCP OAuth provider", () => {
         await expect(provider.tokens()).resolves.toBeUndefined();
       },
       {
-        prefix: "openclaw-mcp-oauth-clear-",
+        prefix: "quiet-core-bot-mcp-oauth-clear-",
         skipSessionCleanup: true,
         env: {
-          OPENCLAW_CONFIG_PATH: undefined,
-          OPENCLAW_STATE_DIR: undefined,
+          QUIET_CORE_CONFIG_PATH: undefined,
+          QUIET_CORE_STATE_DIR: undefined,
         },
       },
     );

@@ -1,6 +1,6 @@
 /** Resolves ACP request metadata into Quiet Core bot Gateway session keys and reset behavior. */
-import { readBool, readString } from "@openclaw/acp-core/meta";
-import type { AcpServerOptions } from "@openclaw/acp-core/types";
+import { readBool, readString } from "@quiet-core/acp-core/meta";
+import type { AcpServerOptions } from "@quiet-core/acp-core/types";
 import type { GatewayClient } from "../gateway/client.js";
 
 type AcpSessionMeta = {

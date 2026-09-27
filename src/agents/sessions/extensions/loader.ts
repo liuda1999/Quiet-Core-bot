@@ -9,7 +9,7 @@ import * as os from "node:os";
 import * as path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import type { createJiti } from "jiti/static";
-import * as bundledLlm from "openclaw/plugin-sdk/llm";
+import * as bundledLlm from "quiet-core-bot/plugin-sdk/llm";
 // Static imports of packages that extensions may use.
 // These MUST be static so Bun bundles them into the compiled binary.
 // The virtualModules option then makes them available to extensions.
@@ -52,12 +52,12 @@ const VIRTUAL_MODULES: Record<string, unknown> = {
   "@sinclair/typebox/compile": bundledTypeboxCompile,
   "@sinclair/typebox/format": bundledTypeboxFormat,
   "@sinclair/typebox/value": bundledTypeboxValue,
-  "openclaw/plugin-sdk/agent-core": bundledAgentCore,
-  "@openclaw/plugin-sdk/agent-core": bundledAgentCore,
-  "openclaw/plugin-sdk/llm": bundledLlm,
-  "@openclaw/plugin-sdk/llm": bundledLlm,
-  "openclaw/plugin-sdk/agent-sessions": bundledAgentSessions,
-  "@openclaw/plugin-sdk/agent-sessions": bundledAgentSessions,
+  "quiet-core-bot/plugin-sdk/agent-core": bundledAgentCore,
+  "@quiet-core/plugin-sdk/agent-core": bundledAgentCore,
+  "quiet-core-bot/plugin-sdk/llm": bundledLlm,
+  "@quiet-core/plugin-sdk/llm": bundledLlm,
+  "quiet-core-bot/plugin-sdk/agent-sessions": bundledAgentSessions,
+  "@quiet-core/plugin-sdk/agent-sessions": bundledAgentSessions,
 };
 
 const require = createRequire(import.meta.url);
@@ -106,8 +106,8 @@ function getExtensionLoaderAliases(): Record<string, string> {
     ...buildPluginLoaderAliasMap(loaderModulePath, process.argv[1], import.meta.url),
     // The public agent-sessions export includes the resource loader. Extensions
     // load through the resource loader, so use the cycle-safe SDK barrel here.
-    "openclaw/plugin-sdk/agent-sessions": agentSessionsEntry,
-    "@openclaw/plugin-sdk/agent-sessions": agentSessionsEntry,
+    "quiet-core-bot/plugin-sdk/agent-sessions": agentSessionsEntry,
+    "@quiet-core/plugin-sdk/agent-sessions": agentSessionsEntry,
     typebox: typeboxEntry,
     "typebox/compile": typeboxCompileEntry,
     "typebox/format": typeboxFormatEntry,
@@ -570,8 +570,8 @@ function readResourceManifest(packageJsonPath: string): ResourceManifest | null 
   try {
     const content = fs.readFileSync(packageJsonPath, "utf-8");
     const pkg = JSON.parse(content);
-    if (pkg.openclaw && typeof pkg.openclaw === "object") {
-      return pkg.openclaw as ResourceManifest;
+    if (pkg["quiet-core-bot"] && typeof pkg["quiet-core-bot"] === "object") {
+      return pkg["quiet-core-bot"] as ResourceManifest;
     }
     return null;
   } catch {
@@ -587,13 +587,13 @@ function isExtensionFile(name: string): boolean {
  * Resolve extension entry points from a directory.
  *
  * Checks for:
- * 1. package.json with "openclaw.extensions" field -> returns declared paths
+ * 1. package.json with "quiet-core-bot.extensions" field -> returns declared paths
  * 2. index.ts or index.js -> returns the index file
  *
  * Returns resolved paths or null if no entry points found.
  */
 function resolveExtensionEntries(dir: string): string[] | null {
-  // Check for package.json with "openclaw" field first
+  // Check for package.json with "quiet-core-bot" field first
   const packageJsonPath = path.join(dir, "package.json");
   if (fs.existsSync(packageJsonPath)) {
     const manifest = readResourceManifest(packageJsonPath);
@@ -630,7 +630,7 @@ function resolveExtensionEntries(dir: string): string[] | null {
  * Discovery rules:
  * 1. Direct files: `extensions/*.ts` or `*.js` → load
  * 2. Subdirectory with index: `extensions/* /index.ts` or `index.js` → load
- * 3. Subdirectory with package.json: `extensions/* /package.json` with "openclaw" field → load what it declares
+ * 3. Subdirectory with package.json: `extensions/* /package.json` with "quiet-core-bot" field → load what it declares
  *
  * No recursion beyond one level. Complex packages must use package.json manifest.
  */

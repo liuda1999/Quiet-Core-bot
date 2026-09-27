@@ -1,5 +1,5 @@
 /** Resolves inline string or SecretRef inputs into normalized secret strings. */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   normalizeSecretInputString,
   resolveSecretInputRef,

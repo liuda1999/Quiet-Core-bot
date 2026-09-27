@@ -138,12 +138,12 @@ describe("config env vars", () => {
     const platformSpy = vi.spyOn(process, "platform", "get").mockReturnValue("win32");
     try {
       const merged = createConfigRuntimeEnv(
-        { env: { vars: { OPENCLAW_LOAD_SHELL_ENV: "1" } } } as OpenClawConfig,
-        { OpenClaw_Load_Shell_Env: "0" },
+        { env: { vars: { QUIET_CORE_LOAD_SHELL_ENV: "1" } } } as OpenClawConfig,
+        { Quiet_Core_Load_Shell_Env: "0" },
       );
 
-      expect(merged.OPENCLAW_LOAD_SHELL_ENV).toBe("0");
-      expect(Object.keys(merged)).toEqual(["OpenClaw_Load_Shell_Env"]);
+      expect(merged.QUIET_CORE_LOAD_SHELL_ENV).toBe("0");
+      expect(Object.keys(merged)).toEqual(["Quiet_Core_Load_Shell_Env"]);
     } finally {
       platformSpy.mockRestore();
     }
@@ -156,9 +156,9 @@ describe("config env vars", () => {
         SHELL: undefined,
         HOME: undefined,
         ZDOTDIR: undefined,
-        OPENCLAW_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS: undefined,
-        OPENCLAW_INCLUDE_ROOTS: undefined,
-        openclaw_allow_older_binary_destructive_actions: undefined,
+        QUIET_CORE_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS: undefined,
+        QUIET_CORE_INCLUDE_ROOTS: undefined,
+        quiet_core_allow_older_binary_destructive_actions: undefined,
         OPENROUTER_API_KEY: undefined,
       },
       async () => {
@@ -169,9 +169,9 @@ describe("config env vars", () => {
               SHELL: "/tmp/evil-shell",
               HOME: "/tmp/evil-home",
               ZDOTDIR: "/tmp/evil-zdotdir",
-              OPENCLAW_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS: "1",
-              OPENCLAW_INCLUDE_ROOTS: "/tmp/evil-include-root",
-              openclaw_allow_older_binary_destructive_actions: "1",
+              QUIET_CORE_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS: "1",
+              QUIET_CORE_INCLUDE_ROOTS: "/tmp/evil-include-root",
+              quiet_core_allow_older_binary_destructive_actions: "1",
               OPENROUTER_API_KEY: "config-key",
             },
           },
@@ -181,9 +181,9 @@ describe("config env vars", () => {
         expect(entries.SHELL).toBeUndefined();
         expect(entries.HOME).toBeUndefined();
         expect(entries.ZDOTDIR).toBeUndefined();
-        expect(entries.OPENCLAW_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS).toBeUndefined();
-        expect(entries.OPENCLAW_INCLUDE_ROOTS).toBeUndefined();
-        expect(entries.openclaw_allow_older_binary_destructive_actions).toBeUndefined();
+        expect(entries.QUIET_CORE_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS).toBeUndefined();
+        expect(entries.QUIET_CORE_INCLUDE_ROOTS).toBeUndefined();
+        expect(entries.quiet_core_allow_older_binary_destructive_actions).toBeUndefined();
         expect(entries.OPENROUTER_API_KEY).toBe("config-key");
 
         applyConfigEnvVars(config as OpenClawConfig);
@@ -191,9 +191,9 @@ describe("config env vars", () => {
         expect(process.env.SHELL).toBeUndefined();
         expect(process.env.HOME).toBeUndefined();
         expect(process.env.ZDOTDIR).toBeUndefined();
-        expect(process.env.OPENCLAW_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS).toBeUndefined();
-        expect(process.env.OPENCLAW_INCLUDE_ROOTS).toBeUndefined();
-        expect(process.env.openclaw_allow_older_binary_destructive_actions).toBeUndefined();
+        expect(process.env.QUIET_CORE_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS).toBeUndefined();
+        expect(process.env.QUIET_CORE_INCLUDE_ROOTS).toBeUndefined();
+        expect(process.env.quiet_core_allow_older_binary_destructive_actions).toBeUndefined();
         expect(process.env.OPENROUTER_API_KEY).toBe("config-key");
       },
     );
@@ -265,9 +265,9 @@ describe("config env vars", () => {
   it("loads ${VAR} substitutions from ~/.quiet-core-bot/.env on repeated runtime loads", async () => {
     await withTempHome(async (_home) => {
       await withEnvOverride({ BRAVE_API_KEY: undefined }, async () => {
-        const stateDir = process.env.OPENCLAW_STATE_DIR?.trim();
+        const stateDir = process.env.QUIET_CORE_STATE_DIR?.trim();
         if (!stateDir) {
-          throw new Error("Expected OPENCLAW_STATE_DIR to be set by withTempHome");
+          throw new Error("Expected QUIET_CORE_STATE_DIR to be set by withTempHome");
         }
         await fs.mkdir(stateDir, { recursive: true });
         await fs.writeFile(path.join(stateDir, ".env"), "BRAVE_API_KEY=from-dotenv\n", "utf-8");
@@ -314,26 +314,26 @@ describe("config env vars", () => {
   it("drops dangerous and empty values from the state-dir .env file", async () => {
     await withTempHome(async (_home) => {
       await writeStateDirDotEnv(
-        "NODE_OPTIONS=--require /tmp/evil.js\nOPENCLAW_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS=1\nEMPTY=\nVALID=ok\n",
+        "NODE_OPTIONS=--require /tmp/evil.js\nQUIET_CORE_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS=1\nEMPTY=\nVALID=ok\n",
         { env: process.env },
       );
       const vars = readStateDirDotEnvVars(process.env);
       expect(vars.NODE_OPTIONS).toBeUndefined();
-      expect(vars.OPENCLAW_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS).toBeUndefined();
+      expect(vars.QUIET_CORE_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS).toBeUndefined();
       expect(vars.EMPTY).toBeUndefined();
       expect(vars.VALID).toBe("ok");
     });
   });
 
-  it("respects OPENCLAW_STATE_DIR when reading state-dir .env vars", async () => {
+  it("respects QUIET_CORE_STATE_DIR when reading state-dir .env vars", async () => {
     await withTempHome(async (_home) => {
-      const customStateDir = path.join(process.env.OPENCLAW_STATE_DIR ?? "", "custom-state");
+      const customStateDir = path.join(process.env.QUIET_CORE_STATE_DIR ?? "", "custom-state");
       await writeStateDirDotEnv("CUSTOM_KEY=from-override\n", {
         stateDir: customStateDir,
       });
       expect(
         readStateDirDotEnvVars({
-          OPENCLAW_STATE_DIR: customStateDir,
+          QUIET_CORE_STATE_DIR: customStateDir,
         }).CUSTOM_KEY,
       ).toBe("from-override");
     });

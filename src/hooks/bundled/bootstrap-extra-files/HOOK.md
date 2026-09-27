@@ -4,7 +4,7 @@ description: "Inject additional workspace bootstrap files via glob/path patterns
 homepage: https://github.com/liuda1999/Quiet-Core-bot/automation/hooks#bootstrap-extra-files
 metadata:
   {
-    "openclaw":
+    "quiet-core-bot":
       {
         "emoji": "📎",
         "events": ["agent:bootstrap"],

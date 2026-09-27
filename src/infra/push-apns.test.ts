@@ -3,7 +3,7 @@ import { generateKeyPairSync } from "node:crypto";
 import { createServer, type Server as HttpServer } from "node:http";
 import http2 from "node:http2";
 import net from "node:net";
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@quiet-core/normalization-core/number-coercion";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { startProxy, stopProxy, type ProxyHandle } from "./net/proxy/proxy-lifecycle.js";
 import { appendApnsResponseBodyCapture, createApnsResponseBodyCapture } from "./push-apns-http2.js";
@@ -90,7 +90,7 @@ function createDirectApnsSendFixture(params: {
       nodeId: params.nodeId,
       transport: "direct" as const,
       token: "ABCD1234ABCD1234ABCD1234ABCD1234",
-      topic: "ai.openclaw.ios",
+      topic: "ai.quiet-core-bot.ios",
       environment: params.environment,
       updatedAtMs: 1,
     },
@@ -125,14 +125,14 @@ function createRelayApnsSendFixture(params: {
       relayHandle: params.relayHandle ?? "relay-handle-12345678",
       sendGrant: "send-grant-123",
       installationId: "install-123",
-      topic: "ai.openclaw.ios",
+      topic: "ai.quiet-core-bot.ios",
       environment,
       distribution: "official" as const,
       updatedAtMs: 1,
       tokenDebugSuffix: params.tokenDebugSuffix,
     },
     relayConfig: {
-      baseUrl: "https://relay.openclaw.test",
+      baseUrl: "https://relay.quiet-core-bot.test",
       timeoutMs: 2_500,
     },
     gatewayIdentity: {
@@ -376,7 +376,7 @@ describe("push APNs send semantics", () => {
       const request = apnsServer.requests[0];
       expect(request?.headers[":method"]).toBe("POST");
       expect(request?.headers[":path"]).toBe("/3/device/abcd1234abcd1234abcd1234abcd1234");
-      expect(request?.headers["apns-topic"]).toBe("ai.openclaw.ios");
+      expect(request?.headers["apns-topic"]).toBe("ai.quiet-core-bot.ios");
       expect(request?.headers["apns-push-type"]).toBe("alert");
       expect(request?.body).toContain('"nodeId":"ios-node-proxied-alert"');
     } finally {
@@ -512,7 +512,7 @@ describe("push APNs send semantics", () => {
         body: "Open Quiet Core bot to review this request.",
       },
       sound: "default",
-      category: "openclaw.exec-approval",
+      category: "quiet-core-bot.exec-approval",
       "content-available": 1,
     });
     const openclawPayload = requireRecord(payload.openclaw, "quiet-core-bot payload");
@@ -802,7 +802,7 @@ describe("push APNs send semantics", () => {
         body: "Open Quiet Core bot to review this request.",
       },
       sound: "default",
-      category: "openclaw.exec-approval",
+      category: "quiet-core-bot.exec-approval",
       "content-available": 1,
     });
     const openclawPayload = requireRecord(payload.openclaw, "quiet-core-bot payload");

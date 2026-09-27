@@ -41,25 +41,25 @@ function resolveNpmPackTarballFilename(value: unknown): string {
 
 export function resolveOpenClawRegistryVersion(specOrAlias: string): string {
   const rawValue = specOrAlias.trim();
-  const value = rawValue.startsWith("openclaw@") ? rawValue.slice("openclaw@".length) : rawValue;
+  const value = rawValue.startsWith("quiet-core-bot@") ? rawValue.slice("quiet-core-bot@".length) : rawValue;
   if (!value) {
     return "";
   }
   if (value === "latest" || value === "beta" || /^\d/.test(value)) {
-    return npmViewVersion(`openclaw@${value}`);
+    return npmViewVersion(`quiet-core-bot@${value}`);
   }
   const betaMatch = /^beta(\d+)$/u.exec(value);
   if (betaMatch) {
     const betaSuffix = `-beta.${betaMatch[1]}`;
     const versions = JSON.parse(
-      run("npm", ["view", "openclaw", "versions", "--json"], { quiet: true }).stdout,
+      run("npm", ["view", "quiet-core-bot", "versions", "--json"], { quiet: true }).stdout,
     ) as string[];
     const match = versions
       .filter((version) => version.endsWith(betaSuffix))
       .toSorted((a, b) => a.localeCompare(b, undefined, { numeric: true }))
       .at(-1);
     if (!match) {
-      die(`no openclaw registry version found for alias ${value}`);
+      die(`no quiet-core-bot registry version found for alias ${value}`);
     }
     return match;
   }
@@ -152,7 +152,7 @@ export async function packOpenClaw(input: {
     return { path: tgzPath, version };
   }
 
-  return await withPackageLock(path.join(tmpdir(), "openclaw-parallels-build.lock"), async () => {
+  return await withPackageLock(path.join(tmpdir(), "quiet-core-bot-parallels-build.lock"), async () => {
     await ensureCurrentBuildUnlocked({
       checkDirty: true,
       requireControlUi: input.requireControlUi,
@@ -173,7 +173,7 @@ export async function packOpenClaw(input: {
       },
     ).stdout;
     const packed = resolveNpmPackTarballFilename(JSON.parse(output).at(-1)?.filename);
-    const tgzPath = path.join(input.destination, `openclaw-main-${shortHead}.tgz`);
+    const tgzPath = path.join(input.destination, `quiet-core-bot-main-${shortHead}.tgz`);
     await copyFile(path.join(input.destination, packed), tgzPath);
     const buildCommit = await packageBuildCommitFromTgz(tgzPath);
     if (!buildCommit) {
@@ -199,8 +199,8 @@ async function acquirePackageLock(
   ownerToken: string,
   params: { writeOwner?: (lockDir: string, ownerToken: string) => Promise<void> } = {},
 ): Promise<void> {
-  const timeoutMs = readPositiveIntEnv("OPENCLAW_PARALLELS_PACKAGE_LOCK_TIMEOUT_MS", 30 * 60_000);
-  const staleMs = readPositiveIntEnv("OPENCLAW_PARALLELS_PACKAGE_LOCK_STALE_MS", 2 * 60 * 60_000);
+  const timeoutMs = readPositiveIntEnv("QUIET_CORE_PARALLELS_PACKAGE_LOCK_TIMEOUT_MS", 30 * 60_000);
+  const staleMs = readPositiveIntEnv("QUIET_CORE_PARALLELS_PACKAGE_LOCK_STALE_MS", 2 * 60 * 60_000);
   const startedAt = Date.now();
   let waitAnnouncementBudget = 1;
   const consumeWaitAnnouncement = () => waitAnnouncementBudget-- > 0;

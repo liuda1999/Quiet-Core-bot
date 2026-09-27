@@ -1,7 +1,7 @@
 <h1 align="center">
   <picture>
-    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/docs/assets/openclaw-logo-text-dark.svg">
-    <img src="https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/docs/assets/openclaw-logo-text.svg" alt="Quiet Core bot" width="500">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/docs/assets/quiet-core-bot-logo-text-dark.svg">
+    <img src="https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/docs/assets/quiet-core-bot-logo-text.svg" alt="Quiet Core bot" width="500">
   </picture>
   <br>
   🐉 Quiet Core bot — 自托管个人 AI 助手
@@ -46,6 +46,10 @@
 它把「控制平面」（Gateway）与「助理本体」（Agent）分开：Gateway 负责连接各家聊天渠道、调度工具与技能、托管 Web 控制台；Agent 负责理解你的意图并执行任务。你在日常使用的聊天软件里和它对话，它在你自己的机器上跑，状态与数据都留在本地。
 
 > 定位：**单用户、本地优先、常驻在线**的个人助理。不是多租户 SaaS，也不是单纯的聊天壳。
+
+> **独立衍生项目声明：** 本项目基于上游 **OpenClaw** 开源代码库改造而来，是一个**独立衍生项目**，已与上游**无依赖关系**：不跟踪上游版本、不向上游仓库提交、独立发布与维护。
+
+> **路径与迁移说明：** 本项目使用 `~/.quiet-core-bot` 作为状态目录、`~/.quiet-core-bot/quiet-core-bot.json` 作为配置文件。旧的 `.quiet-core-bot` / `.clawdbot` 状态目录与 `quiet-core-bot.json` / `clawdbot.json` 配置文件**不再自动迁移**到新品牌路径；如需沿用旧数据，请自行手动迁移。
 
 **核心仓库：** <https://github.com/liuda1999/Quiet-Core-bot>
 
@@ -273,7 +277,7 @@ quiet-core-bot daemon uninstall   # 卸载服务
 
 ```bash
 # 方式一：Compose（推荐）
-cp .env.example .env          # 按需填写 OPENCLAW_GATEWAY_TOKEN 等
+cp .env.example .env          # 按需填写 QUIET_CORE_GATEWAY_TOKEN 等
 docker compose up -d
 docker compose logs -f
 
@@ -288,12 +292,12 @@ docker run -d --name quiet-core-bot \
 Compose 中容器内的状态、配置、工作区路径被固定为：
 
 ```text
-OPENCLAW_STATE_DIR   = /home/node/.openclaw
-OPENCLAW_CONFIG_PATH = /home/node/.openclaw/quiet-core-bot.json
-OPENCLAW_WORKSPACE_DIR = /home/node/.openclaw/workspace
+QUIET_CORE_STATE_DIR   = /home/node/.quiet-core-bot
+QUIET_CORE_CONFIG_PATH = /home/node/.quiet-core-bot/quiet-core-bot.json
+QUIET_CORE_WORKSPACE_DIR = /home/node/.quiet-core-bot/workspace
 ```
 
-> 提示：在容器内运行时，宿主机路径不会生效；请把持久化目录挂载到 `/home/node/.openclaw`。
+> 提示：在容器内运行时，宿主机路径不会生效；请把持久化目录挂载到 `/home/node/.quiet-core-bot`。
 
 ---
 

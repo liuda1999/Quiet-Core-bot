@@ -652,22 +652,22 @@ Notes:
 - Overlapping routes with different `auth` levels are rejected. Keep `exact`/`prefix` fallthrough chains on the same auth level only.
 - `auth: "plugin"` routes do **not** receive operator runtime scopes automatically. They are for plugin-managed webhooks/signature verification, not privileged Gateway helper calls.
 - `auth: "gateway"` routes run inside a Gateway request runtime scope, but that scope is intentionally conservative:
-  - shared-secret bearer auth (`gateway.auth.mode = "token"` / `"password"`) keeps plugin-route runtime scopes pinned to `operator.write`, even if the caller sends `x-openclaw-scopes`
-  - trusted identity-bearing HTTP modes (for example `trusted-proxy` or `gateway.auth.mode = "none"` on a private ingress) honor `x-openclaw-scopes` only when the header is explicitly present
-  - if `x-openclaw-scopes` is absent on those identity-bearing plugin-route requests, runtime scope falls back to `operator.write`
-- Practical rule: do not assume a gateway-auth plugin route is an implicit admin surface. If your route needs admin-only behavior, require an identity-bearing auth mode and document the explicit `x-openclaw-scopes` header contract.
+  - shared-secret bearer auth (`gateway.auth.mode = "token"` / `"password"`) keeps plugin-route runtime scopes pinned to `operator.write`, even if the caller sends `x-quiet-core-bot-scopes`
+  - trusted identity-bearing HTTP modes (for example `trusted-proxy` or `gateway.auth.mode = "none"` on a private ingress) honor `x-quiet-core-bot-scopes` only when the header is explicitly present
+  - if `x-quiet-core-bot-scopes` is absent on those identity-bearing plugin-route requests, runtime scope falls back to `operator.write`
+- Practical rule: do not assume a gateway-auth plugin route is an implicit admin surface. If your route needs admin-only behavior, require an identity-bearing auth mode and document the explicit `x-quiet-core-bot-scopes` header contract.
 
 ## Plugin SDK import paths
 
-Use narrow SDK subpaths instead of the monolithic `openclaw/plugin-sdk` root
+Use narrow SDK subpaths instead of the monolithic `quiet-core-bot/plugin-sdk` root
 barrel when authoring new plugins. Core subpaths:
 
 | Subpath                             | Purpose                                                  |
 | ----------------------------------- | -------------------------------------------------------- |
-| `openclaw/plugin-sdk/plugin-entry`  | Plugin registration primitives                           |
-| `openclaw/plugin-sdk/channel-core`  | Channel entry/build helpers                              |
-| `openclaw/plugin-sdk/core`          | Generic shared helpers and umbrella contract             |
-| `openclaw/plugin-sdk/config-schema` | Root `quiet-core-bot.json` Zod schema (`OpenClawSchema`) |
+| `quiet-core-bot/plugin-sdk/plugin-entry`  | Plugin registration primitives                           |
+| `quiet-core-bot/plugin-sdk/channel-core`  | Channel entry/build helpers                              |
+| `quiet-core-bot/plugin-sdk/core`          | Generic shared helpers and umbrella contract             |
+| `quiet-core-bot/plugin-sdk/config-schema` | Root `quiet-core-bot.json` Zod schema (`OpenClawSchema`) |
 
 Channel plugins pick from a family of narrow seams — `channel-setup`,
 `setup-runtime`, `setup-tools`, `channel-pairing`,
@@ -685,10 +685,10 @@ Runtime and config helpers live under matching focused `*-runtime` subpaths
 instead of the broad `config-runtime` compatibility barrel.
 
 <Info>
-`openclaw/plugin-sdk/channel-runtime`, `openclaw/plugin-sdk/channel-lifecycle`,
-small channel helper facades, `openclaw/plugin-sdk/outbound-runtime`,
-`openclaw/plugin-sdk/outbound-send-deps`, `openclaw/plugin-sdk/config-runtime`,
-and `openclaw/plugin-sdk/infra-runtime` are deprecated compatibility shims for
+`quiet-core-bot/plugin-sdk/channel-runtime`, `quiet-core-bot/plugin-sdk/channel-lifecycle`,
+small channel helper facades, `quiet-core-bot/plugin-sdk/outbound-runtime`,
+`quiet-core-bot/plugin-sdk/outbound-send-deps`, `quiet-core-bot/plugin-sdk/config-runtime`,
+and `quiet-core-bot/plugin-sdk/infra-runtime` are deprecated compatibility shims for
 older plugins. New code should import narrower generic primitives instead.
 </Info>
 
@@ -699,7 +699,7 @@ Repo-internal entry points (per bundled plugin package root):
 - `runtime-api.js` — runtime-only barrel
 - `setup-entry.js` — setup plugin entry
 
-External plugins should only import `openclaw/plugin-sdk/*` subpaths. Never
+External plugins should only import `quiet-core-bot/plugin-sdk/*` subpaths. Never
 import another plugin package's `src/*` from core or from another plugin.
 Facade-loaded entry points prefer the active runtime config snapshot when one
 exists, then fall back to the resolved config file on disk.
@@ -758,7 +758,7 @@ Recommended split:
 
 Plugins that derive directory entries from config should keep that logic in the
 plugin and reuse the shared helpers from
-`openclaw/plugin-sdk/directory-runtime`.
+`quiet-core-bot/plugin-sdk/directory-runtime`.
 
 Use this when a channel needs config-backed peers/groups such as:
 
@@ -851,12 +851,12 @@ path" instead of crashing or misreporting the account as not configured.
 
 ## Package packs
 
-A plugin directory may include a `package.json` with `openclaw.extensions`:
+A plugin directory may include a `package.json` with `quiet-core-bot.extensions`:
 
 ```json
 {
   "name": "my-pack",
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": ["./src/safety.ts", "./src/tools.ts"],
     "setupEntry": "./src/setup-entry.ts"
   }
@@ -869,7 +869,7 @@ becomes `name/<fileBase>`.
 If your plugin imports npm deps, install them in that directory so
 `node_modules` is available (`npm install` / `pnpm install`).
 
-Security guardrail: every `openclaw.extensions` entry must stay inside the plugin
+Security guardrail: every `quiet-core-bot.extensions` entry must stay inside the plugin
 directory after symlink resolution. Entries that escape the package directory are
 rejected.
 
@@ -879,14 +879,14 @@ no dev dependencies at runtime), ignoring inherited global npm install settings.
 Keep plugin dependency trees "pure JS/TS" and avoid packages that require
 `postinstall` builds.
 
-Optional: `openclaw.setupEntry` can point at a lightweight setup-only module.
+Optional: `quiet-core-bot.setupEntry` can point at a lightweight setup-only module.
 When Quiet Core bot needs setup surfaces for a disabled channel plugin, or
 when a channel plugin is enabled but still unconfigured, it loads `setupEntry`
 instead of the full plugin entry. This keeps startup and setup lighter
 when your main plugin entry also wires tools, hooks, or other runtime-only
 code.
 
-Optional: `openclaw.startup.deferConfiguredChannelFullLoadUntilAfterListen`
+Optional: `quiet-core-bot.startup.deferConfiguredChannelFullLoadUntilAfterListen`
 can opt a channel plugin into the same `setupEntry` path during the gateway's
 pre-listen startup phase, even when the channel is already configured.
 
@@ -931,7 +931,7 @@ Example:
 ```json
 {
   "name": "@scope/my-channel",
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": ["./index.ts"],
     "setupEntry": "./setup-entry.ts",
     "startup": {
@@ -943,15 +943,15 @@ Example:
 
 ### Channel catalog metadata
 
-Channel plugins can advertise setup/discovery metadata via `openclaw.channel` and
-install hints via `openclaw.install`. This keeps the core catalog data-free.
+Channel plugins can advertise setup/discovery metadata via `quiet-core-bot.channel` and
+install hints via `quiet-core-bot.install`. This keeps the core catalog data-free.
 
 Example:
 
 ```json
 {
-  "name": "@openclaw/nextcloud-talk",
-  "openclaw": {
+  "name": "@quiet-core/nextcloud-talk",
+  "quiet-core-bot": {
     "extensions": ["./index.ts"],
     "channel": {
       "id": "nextcloud-talk",
@@ -964,7 +964,7 @@ Example:
       "aliases": ["nc-talk", "nc"]
     },
     "install": {
-      "npmSpec": "@openclaw/nextcloud-talk",
+      "npmSpec": "@quiet-core/nextcloud-talk",
       "localPath": "<bundled-plugin-local-path>",
       "defaultChoice": "npm"
     }
@@ -972,7 +972,7 @@ Example:
 }
 ```
 
-Useful `openclaw.channel` fields beyond the minimal example:
+Useful `quiet-core-bot.channel` fields beyond the minimal example:
 
 - `detailLabel`: secondary label for richer catalog/status surfaces
 - `docsLabel`: override link text for the docs link
@@ -994,12 +994,12 @@ registry export). Drop a JSON file at one of:
 - `~/.quiet-core-bot/mpm/catalog.json`
 - `~/.quiet-core-bot/plugins/catalog.json`
 
-Or point `OPENCLAW_PLUGIN_CATALOG_PATHS` (or `OPENCLAW_MPM_CATALOG_PATHS`) at
+Or point `QUIET_CORE_PLUGIN_CATALOG_PATHS` (or `QUIET_CORE_MPM_CATALOG_PATHS`) at
 one or more JSON files (comma/semicolon/`PATH`-delimited). Each file should
-contain `{ "entries": [ { "name": "@scope/pkg", "openclaw": { "channel": {...}, "install": {...} } } ] }`. The parser also accepts `"packages"` or `"plugins"` as legacy aliases for the `"entries"` key.
+contain `{ "entries": [ { "name": "@scope/pkg", "quiet-core-bot": { "channel": {...}, "install": {...} } } ] }`. The parser also accepts `"packages"` or `"plugins"` as legacy aliases for the `"entries"` key.
 
 Generated channel catalog entries and provider install catalog entries expose
-normalized install-source facts next to the raw `openclaw.install` block. The
+normalized install-source facts next to the raw `quiet-core-bot.install` block. The
 normalized facts identify whether the npm spec is an exact version or floating
 selector, whether expected integrity metadata is present, and whether a local
 source path is also available. When the catalog/package identity is known, the
@@ -1037,7 +1037,7 @@ Use this when your plugin needs to replace or extend the default context
 pipeline rather than just add memory search or hooks.
 
 ```ts
-import { buildMemorySystemPromptAddition } from "openclaw/plugin-sdk/core";
+import { buildMemorySystemPromptAddition } from "quiet-core-bot/plugin-sdk/core";
 
 export default function (api) {
   api.registerContextEngine("lossless-claw", (ctx) => ({
@@ -1082,7 +1082,7 @@ implemented and delegate it explicitly:
 import {
   buildMemorySystemPromptAddition,
   delegateCompactionToRuntime,
-} from "openclaw/plugin-sdk/core";
+} from "quiet-core-bot/plugin-sdk/core";
 
 export default function (api) {
   api.registerContextEngine("my-memory-engine", (ctx) => ({

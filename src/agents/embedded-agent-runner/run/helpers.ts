@@ -1,7 +1,7 @@
 /**
  * Shared run helpers for retry limits, model reporting, and final text.
  */
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
 import { generateSecureToken } from "../../../infra/secure-random.js";
 import type { AssistantMessage } from "../../../llm/types.js";
 import { extractAssistantTextForPhase } from "../../../shared/chat-message-content.js";
@@ -153,7 +153,7 @@ export function isAssistantForModelRef(
 }
 
 function isEmbeddedHarnessProvider(provider: string): boolean {
-  return provider.trim().toLowerCase() === "openclaw";
+  return provider.trim().toLowerCase() === "quiet-core-bot";
 }
 
 export function resolveReportedModelRef(params: {

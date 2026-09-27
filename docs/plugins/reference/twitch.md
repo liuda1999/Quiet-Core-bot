@@ -11,7 +11,7 @@ Quiet Core bot Twitch channel plugin for chat and moderation workflows.
 
 ## Distribution
 
-- Package: `@openclaw/twitch`
+- Package: `@quiet-core/twitch`
 - Install route: npm; ClawHub
 
 ## Surface

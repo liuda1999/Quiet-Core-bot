@@ -306,13 +306,13 @@ If the model loads cleanly but full agent turns misbehave, work top-down — con
 1. **Confirm the local model itself responds.** No tools, no agent context:
 
    ```bash
-   openclaw infer model run --local --model <provider/model> --prompt "Reply with exactly: pong" --json
+   quiet-core-bot infer model run --local --model <provider/model> --prompt "Reply with exactly: pong" --json
    ```
 
 2. **Confirm Gateway routing.** Sends only the supplied prompt — skips transcript, AGENTS bootstrap, context-engine assembly, tools, and bundled MCP servers, but still exercises Gateway routing, auth, and provider selection:
 
    ```bash
-   openclaw infer model run --gateway --model <provider/model> --prompt "Reply with exactly: pong" --json
+   quiet-core-bot infer model run --gateway --model <provider/model> --prompt "Reply with exactly: pong" --json
    ```
 
 3. **Try lean mode.** If both probes pass but real agent turns fail with malformed tool calls or oversized prompts, enable `agents.defaults.experimental.localModelLean: true`. It drops the three heaviest default tools (`browser`, `cron`, `message`) and defaults larger tool catalogs behind structured Tool Search controls, except for runs that must keep direct `message` delivery semantics. See [Experimental Features → Local model lean mode](/concepts/experimental-features#local-model-lean-mode) for the full explanation, when to use it, and how to confirm it is on.
@@ -336,7 +336,7 @@ If the model loads cleanly but full agent turns misbehave, work top-down — con
   Add `compat.requiresStringContent: true` on that model entry.
 - OpenAI-compatible server returns `validation.keys` or says message entries only allow `role` and `content`?
   Add `compat.strictMessageKeys: true` on that model entry.
-- Direct tiny `/v1/chat/completions` calls work, but `openclaw infer model run --local`
+- Direct tiny `/v1/chat/completions` calls work, but `quiet-core-bot infer model run --local`
   fails on Gemma or another local model? Check the provider URL, model ref, auth
   marker, and server logs first; local `model run` does not include agent tools.
   If local `model run` succeeds but larger agent turns fail, reduce the agent

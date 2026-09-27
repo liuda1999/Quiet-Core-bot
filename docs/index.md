@@ -9,13 +9,13 @@ title: "Quiet Core bot"
 
 <p align="center">
     <img
-        src="/assets/openclaw-logo-text-dark.png"
+        src="/assets/quiet-core-bot-logo-text-dark.png"
         alt="Quiet Core bot"
         width="500"
         class="dark:hidden"
     />
     <img
-        src="/assets/openclaw-logo-text.png"
+        src="/assets/quiet-core-bot-logo-text.png"
         alt="Quiet Core bot"
         width="500"
         class="hidden dark:block"
@@ -98,7 +98,7 @@ The Gateway is the single source of truth for sessions, routing, and channel con
 <Steps>
   <Step title="Install Quiet Core bot">
     ```bash
-    npm install -g openclaw@latest
+    npm install -g quiet-core-bot@latest
     ```
   </Step>
   <Step title="Onboard and install the service">
@@ -128,7 +128,7 @@ Open the browser Control UI after the Gateway starts.
 - Remote access: [Web surfaces](/web) and [Tailscale](/gateway/tailscale)
 
 <p align="center">
-  <img src="/whatsapp-openclaw.jpg" alt="Quiet Core bot" width="420" />
+  <img src="/whatsapp-quiet-core-bot.jpg" alt="Quiet Core bot" width="420" />
 </p>
 
 ## Configuration (optional)
@@ -148,7 +148,7 @@ Example:
       groups: { "*": { requireMention: true } },
     },
   },
-  messages: { groupChat: { mentionPatterns: ["@openclaw"] } },
+  messages: { groupChat: { mentionPatterns: ["@quiet-core-bot"] } },
 }
 ```
 

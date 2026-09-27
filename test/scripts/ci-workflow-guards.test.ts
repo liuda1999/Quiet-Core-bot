@@ -31,7 +31,7 @@ function readQaProfileEvidenceWorkflow() {
 }
 
 function readReleaseChecksWorkflow() {
-  return parse(readFileSync(".github/workflows/openclaw-release-checks.yml", "utf8"));
+  return parse(readFileSync(".github/workflows/quiet-core-bot-release-checks.yml", "utf8"));
 }
 
 function readCriticalQualityWorkflow() {
@@ -110,7 +110,7 @@ describe("ci workflow guards", () => {
     );
     expect(validationStep.run).toContain("release_gate must run from the branch at target_ref");
     expect(readFileSync(".github/workflows/ci.yml", "utf8")).toContain(
-      "OPENCLAW_CI_RUN_ANDROID: ${{ github.event_name == 'workflow_dispatch' && (inputs.release_gate || inputs.include_android) && 'true' || steps.changed_scope.outputs.run_android || 'false' }}",
+      "QUIET_CORE_CI_RUN_ANDROID: ${{ github.event_name == 'workflow_dispatch' && (inputs.release_gate || inputs.include_android) && 'true' || steps.changed_scope.outputs.run_android || 'false' }}",
     );
   });
 
@@ -215,12 +215,12 @@ describe("ci workflow guards", () => {
 
     expect(admission["runs-on"]).toBe("ubuntu-24.04");
     expect(admission.steps[0].if).toContain("github.ref == 'refs/heads/main'");
-    expect(admission.steps[0].run).toContain('sleep "${OPENCLAW_MAIN_CI_DEBOUNCE_SECONDS}"');
-    expect(admission.env.OPENCLAW_MAIN_CI_DEBOUNCE_SECONDS).toBe("90");
+    expect(admission.steps[0].run).toContain('sleep "${QUIET_CORE_MAIN_CI_DEBOUNCE_SECONDS}"');
+    expect(admission.env.QUIET_CORE_MAIN_CI_DEBOUNCE_SECONDS).toBe("90");
     expect(workflow.jobs.preflight.needs).toContain("runner-admission");
     expect(workflow.jobs["security-fast"].needs).toContain("runner-admission");
     expect(source).toContain(
-      "cancel-in-progress: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && github.repository == 'openclaw/openclaw' && github.ref == 'refs/heads/main') }}",
+      "cancel-in-progress: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && github.repository == 'liuda1999/Quiet-Core-bot' && github.ref == 'refs/heads/main') }}",
     );
   });
 
@@ -241,22 +241,20 @@ describe("ci workflow guards", () => {
     const source = readFileSync(".github/workflows/ci.yml", "utf8");
 
     expect(source).toContain("createNodeTestShardBundles");
-    expect(workflow.jobs["build-artifacts"]["runs-on"]).toContain("blacksmith-16vcpu-ubuntu-2404");
-    expect(workflow.jobs["checks-node-core-test-nondist-shard"]["runs-on"]).toContain(
-      "blacksmith-4vcpu-ubuntu-2404",
-    );
+    expect(workflow.jobs["build-artifacts"]["runs-on"]).toBe("ubuntu-24.04");
+    expect(workflow.jobs["checks-node-core-test-nondist-shard"]["runs-on"]).toBe("ubuntu-24.04");
     expect(workflow.jobs["check-shard"].strategy.matrix.include).toContainEqual({
       check_name: "check-dependencies",
       task: "dependencies",
       runner: "blacksmith-4vcpu-ubuntu-2404",
     });
-    expect(workflow.jobs["check-additional-shard"]["runs-on"]).toContain("matrix.runner");
+    expect(workflow.jobs["check-additional-shard"]["runs-on"]).toBe("ubuntu-24.04");
     expect(workflow.jobs["check-additional-shard"].strategy.matrix.include).toContainEqual({
       check_name: "check-session-accessor-boundary",
       group: "session-accessor-boundary",
       runner: "blacksmith-4vcpu-ubuntu-2404",
     });
-    expect(workflow.jobs["checks-windows"]["runs-on"]).toContain("matrix.runner");
+    expect(workflow.jobs["checks-windows"]["runs-on"]).toBe("windows-2025");
     expect(source).toContain("blacksmith-8vcpu-windows-2025");
   });
 
@@ -564,11 +562,11 @@ describe("ci workflow guards", () => {
 
     expect(JSON.stringify(preflightJob.steps)).toContain("timeout_minutes: shard.timeoutMinutes");
     expect(nodeTestJob["timeout-minutes"]).toBe("${{ matrix.timeout_minutes || 60 }}");
-    expect(runStep.env.OPENCLAW_VITEST_NO_OUTPUT_TIMEOUT_MS).toBe("300000");
-    expect(runStep.env.OPENCLAW_VITEST_NO_OUTPUT_RETRY).toBe("1");
-    expect(runStep.env.OPENCLAW_TEST_PROJECTS_PARALLEL).toBe("2");
-    expect(runStep.env.OPENCLAW_NODE_TEST_ENV_JSON).toBe("${{ toJson(matrix.env) }}");
-    expect(runStep.run).toContain("env: JSON.parse(process.env.OPENCLAW_NODE_TEST_ENV_JSON");
+    expect(runStep.env.QUIET_CORE_VITEST_NO_OUTPUT_TIMEOUT_MS).toBe("300000");
+    expect(runStep.env.QUIET_CORE_VITEST_NO_OUTPUT_RETRY).toBe("1");
+    expect(runStep.env.QUIET_CORE_TEST_PROJECTS_PARALLEL).toBe("2");
+    expect(runStep.env.QUIET_CORE_NODE_TEST_ENV_JSON).toBe("${{ toJson(matrix.env) }}");
+    expect(runStep.run).toContain("env: JSON.parse(process.env.QUIET_CORE_NODE_TEST_ENV_JSON");
     expect(runStep.run).toContain('if (plan.env && typeof plan.env === "object"');
     expect(runStep.run).toContain("childEnv[key] = value");
   });
@@ -654,7 +652,7 @@ describe("ci workflow guards", () => {
     });
     expect(maturityWorkflow.on.workflow_call.secrets.OPENAI_API_KEY.required).toBe(true);
     expect(
-      maturityWorkflow.on.workflow_call.secrets.OPENCLAW_MATURITY_SCORECARD_AGENT_OPENAI_API_KEY
+      maturityWorkflow.on.workflow_call.secrets.QUIET_CORE_MATURITY_SCORECARD_AGENT_OPENAI_API_KEY
         .required,
     ).toBe(false);
     expect(maturityWorkflow.on.workflow_call.secrets.GH_APP_PRIVATE_KEY.required).toBe(false);
@@ -811,7 +809,7 @@ describe("ci workflow guards", () => {
     expect(workflow).toContain("repository: openclaw/clawhub");
     expect(workflow).toContain("path: clawhub-source");
     expect(workflow).toContain(
-      "OPENCLAW_DOCS_SYNC_CLAWHUB_REPO: ${{ github.workspace }}/clawhub-source",
+      "QUIET_CORE_DOCS_SYNC_CLAWHUB_REPO: ${{ github.workspace }}/clawhub-source",
     );
   });
 

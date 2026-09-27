@@ -1,6 +1,6 @@
 /**
  * @deprecated Legacy compat surface for external plugins that still depend on
- * older broad plugin-sdk imports. Use focused openclaw/plugin-sdk subpaths
+ * older broad plugin-sdk imports. Use focused quiet-core-bot/plugin-sdk subpaths
  * instead.
  */
 
@@ -22,13 +22,13 @@ import {
 const shouldWarnCompatImport =
   process.env.VITEST !== "true" &&
   process.env.NODE_ENV !== "test" &&
-  process.env.OPENCLAW_SUPPRESS_PLUGIN_SDK_COMPAT_WARNING !== "1";
+  process.env.QUIET_CORE_SUPPRESS_PLUGIN_SDK_COMPAT_WARNING !== "1";
 
 if (shouldWarnCompatImport) {
   process.emitWarning(
-    "openclaw/plugin-sdk/compat is deprecated for new plugins. Migrate to focused openclaw/plugin-sdk/<subpath> imports. See https://github.com/liuda1999/Quiet-Core-bot/plugins/sdk-migration",
+    "quiet-core-bot/plugin-sdk/compat is deprecated for new plugins. Migrate to focused quiet-core-bot/plugin-sdk/<subpath> imports. See https://github.com/liuda1999/Quiet-Core-bot/plugins/sdk-migration",
     {
-      code: "OPENCLAW_PLUGIN_SDK_COMPAT_DEPRECATED",
+      code: "QUIET_CORE_PLUGIN_SDK_COMPAT_DEPRECATED",
       detail:
         "Bundled plugins must use scoped plugin-sdk subpaths. External plugins may keep compat temporarily while migrating. Migration guide: https://github.com/liuda1999/Quiet-Core-bot/plugins/sdk-migration",
     },
@@ -84,27 +84,27 @@ export * from "./reply-history.js";
 export * from "./directory-runtime.js";
 export { mapAllowlistResolutionInputs } from "./allow-from.js";
 
-/** @deprecated Use `openclaw/plugin-sdk/channel-outbound`. */
+/** @deprecated Use `quiet-core-bot/plugin-sdk/channel-outbound`. */
 export const createChannelReplyPipeline = createChannelReplyPipelineCompat;
-/** @deprecated Use `openclaw/plugin-sdk/channel-outbound`. */
+/** @deprecated Use `quiet-core-bot/plugin-sdk/channel-outbound`. */
 export const createReplyPrefixContext = createReplyPrefixContextCompat;
-/** @deprecated Use `openclaw/plugin-sdk/channel-outbound`. */
+/** @deprecated Use `quiet-core-bot/plugin-sdk/channel-outbound`. */
 export const createReplyPrefixOptions = createReplyPrefixOptionsCompat;
-/** @deprecated Use `openclaw/plugin-sdk/channel-outbound`. */
+/** @deprecated Use `quiet-core-bot/plugin-sdk/channel-outbound`. */
 export const createTypingCallbacks = createTypingCallbacksCompat;
-/** @deprecated Use `openclaw/plugin-sdk/channel-outbound`. */
+/** @deprecated Use `quiet-core-bot/plugin-sdk/channel-outbound`. */
 export const resolveChannelSourceReplyDeliveryMode = resolveChannelSourceReplyDeliveryModeCompat;
-/** @deprecated Use `openclaw/plugin-sdk/channel-outbound`. */
+/** @deprecated Use `quiet-core-bot/plugin-sdk/channel-outbound`. */
 export type ChannelReplyPipeline = ChannelReplyPipelineCompat;
-/** @deprecated Use `openclaw/plugin-sdk/channel-outbound`. */
+/** @deprecated Use `quiet-core-bot/plugin-sdk/channel-outbound`. */
 export type CreateTypingCallbacksParams = CreateTypingCallbacksParamsCompat;
-/** @deprecated Use `openclaw/plugin-sdk/channel-outbound`. */
+/** @deprecated Use `quiet-core-bot/plugin-sdk/channel-outbound`. */
 export type ReplyPrefixContext = ReplyPrefixContextCompat;
-/** @deprecated Use `openclaw/plugin-sdk/channel-outbound`. */
+/** @deprecated Use `quiet-core-bot/plugin-sdk/channel-outbound`. */
 export type ReplyPrefixContextBundle = ReplyPrefixContextBundleCompat;
-/** @deprecated Use `openclaw/plugin-sdk/channel-outbound`. */
+/** @deprecated Use `quiet-core-bot/plugin-sdk/channel-outbound`. */
 export type ReplyPrefixOptions = ReplyPrefixOptionsCompat;
-/** @deprecated Use `openclaw/plugin-sdk/channel-outbound`. */
+/** @deprecated Use `quiet-core-bot/plugin-sdk/channel-outbound`. */
 export type SourceReplyDeliveryMode = SourceReplyDeliveryModeCompat;
-/** @deprecated Use `openclaw/plugin-sdk/channel-outbound`. */
+/** @deprecated Use `quiet-core-bot/plugin-sdk/channel-outbound`. */
 export type TypingCallbacks = TypingCallbacksCompat;

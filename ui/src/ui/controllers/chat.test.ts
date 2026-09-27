@@ -1649,7 +1649,7 @@ describe("loadChatHistory filtering", () => {
         content: [
           {
             type: "text",
-            text: "[openclaw] missing tool result in session history; inserted synthetic error result for transcript repair.",
+            text: "[quiet-core-bot] missing tool result in session history; inserted synthetic error result for transcript repair.",
           },
         ],
       },
@@ -1675,11 +1675,11 @@ describe("loadChatHistory filtering", () => {
 
   it("keeps image-only user messages that carry transcript media paths", async () => {
     const messages = [
-      { role: "user", content: "", MediaPath: "/tmp/openclaw/user-upload.png" },
+      { role: "user", content: "", MediaPath: "/tmp/quiet-core-bot/user-upload.png" },
       {
         role: "user",
         content: "",
-        MediaPaths: ["/tmp/openclaw/first.png", "/tmp/openclaw/second.jpg"],
+        MediaPaths: ["/tmp/quiet-core-bot/first.png", "/tmp/quiet-core-bot/second.jpg"],
       },
       { role: "user", content: "" },
     ];
@@ -1703,7 +1703,7 @@ describe("loadChatHistory filtering", () => {
         content: [
           {
             type: "text",
-            text: "[openclaw] missing tool result in session history; inserted synthetic error result for transcript repair.",
+            text: "[quiet-core-bot] missing tool result in session history; inserted synthetic error result for transcript repair.",
           },
         ],
       },
@@ -2531,9 +2531,9 @@ describe("loadChatHistory retry handling", () => {
             {
               type: "text",
               text: [
-                "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
+                "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>",
                 "subagent completion payload",
-                "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
+                "<<<END_QUIET_CORE_INTERNAL_CONTEXT>>>",
               ].join("\n"),
             },
           ],

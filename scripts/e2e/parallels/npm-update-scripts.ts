@@ -24,10 +24,10 @@ export interface NpmUpdateScriptInput {
   updateTarget: string;
 }
 
-const windowsStalePostSwapImportRegex = String.raw`node_modules\\openclaw\\dist\\[^\\]+-[A-Za-z0-9_-]+\.js`;
+const windowsStalePostSwapImportRegex = String.raw`node_modules\\quiet-core-bot\\dist\\[^\\]+-[A-Za-z0-9_-]+\.js`;
 const macosGuestPath =
   "/opt/homebrew/bin:/opt/homebrew/opt/node/bin:/usr/local/bin:/usr/local/sbin:/opt/homebrew/sbin:/usr/bin:/bin:/usr/sbin:/sbin";
-const macosOpenClawCommand = '"$OPENCLAW_BIN"';
+const macosOpenClawCommand = '"$QUIET_CORE_BIN"';
 
 function posixModelProviderConfigCommands(
   command: string,
@@ -53,7 +53,7 @@ if [ "$provider_config_exit" -ne 0 ]; then exit "$provider_config_exit"; fi`;
 function posixPrintLogTailFunction(): string {
   return `print_log_tail() {
   log_file="$1"
-  max_bytes="\${OPENCLAW_PARALLELS_NPM_UPDATE_LOG_TAIL_BYTES:-262144}"
+  max_bytes="\${QUIET_CORE_PARALLELS_NPM_UPDATE_LOG_TAIL_BYTES:-262144}"
   case "$max_bytes" in
     ''|*[!0-9]*) max_bytes=262144 ;;
     *) [ "$max_bytes" -gt 0 ] || max_bytes=262144 ;;
@@ -86,10 +86,10 @@ agent_ok=false
 for attempt in 1 2; do
   session_id=${shellQuote(sessionId)}
   if [ "$attempt" -gt 1 ]; then session_id=${shellQuote(`${sessionId}-retry`)}"-$attempt"; fi
-  rm -f "$HOME/.openclaw/agents/main/sessions/$session_id.jsonl"
+  rm -f "$HOME/.quiet-core-bot/agents/main/sessions/$session_id.jsonl"
   output_file="$(mktemp)"
   set +e
-  OPENCLAW_ALLOW_ROOT="\${OPENCLAW_ALLOW_ROOT:-}" ${input.auth.apiKeyEnv}=${shellQuote(input.auth.apiKeyValue)} ${command} agent --local --agent main --session-id "$session_id" --message 'Reply with exact ASCII text OK only.' --thinking off --timeout ${resolveParallelsModelTimeoutSeconds(platform)} --json >"$output_file" 2>&1
+  QUIET_CORE_ALLOW_ROOT="\${QUIET_CORE_ALLOW_ROOT:-}" ${input.auth.apiKeyEnv}=${shellQuote(input.auth.apiKeyValue)} ${command} agent --local --agent main --session-id "$session_id" --message 'Reply with exact ASCII text OK only.' --thinking off --timeout ${resolveParallelsModelTimeoutSeconds(platform)} --json >"$output_file" 2>&1
   rc=$?
   set -e
   print_log_tail "$output_file"
@@ -114,14 +114,14 @@ for attempt in 1 2; do
   fi
 done
 if [ "$agent_ok" != true ]; then
-  echo "openclaw agent finished without OK response" >&2
+  echo "quiet-core-bot agent finished without OK response" >&2
   exit 1
 fi`;
 }
 
 function windowsUpdateWithBundledPluginsDisabled(input: NpmUpdateScriptInput): string {
   return `$script:OpenClawUpdateExit = 0
-$updateOutput = Invoke-WithScopedEnv @{ OPENCLAW_DISABLE_BUNDLED_PLUGINS = '1'; OPENCLAW_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS = '1' } {
+$updateOutput = Invoke-WithScopedEnv @{ QUIET_CORE_DISABLE_BUNDLED_PLUGINS = '1'; QUIET_CORE_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS = '1' } {
   Invoke-OpenClaw update --tag ${psSingleQuote(input.updateTarget)} --yes --json --no-restart 2>&1
   $script:OpenClawUpdateExit = $LASTEXITCODE
 }
@@ -154,14 +154,14 @@ Wait-OpenClawGateway`;
 function windowsAssertAgentOkScript(input: NpmUpdateScriptInput): string {
   return `${windowsAgentTurnConfigPatchScript(input.auth.modelId)}
 ${windowsCodexPlatformPackageRepairFunction()}
-$sessionPath = Join-Path $env:USERPROFILE '.openclaw\\agents\\main\\sessions\\parallels-npm-update-windows.jsonl'
+$sessionPath = Join-Path $env:USERPROFILE '.quiet-core-bot\\agents\\main\\sessions\\parallels-npm-update-windows.jsonl'
 Remove-Item $sessionPath -Force -ErrorAction SilentlyContinue
 ${windowsAgentWorkspaceScript("Parallels npm update smoke test assistant.")}
 Set-Item -Path ('Env:' + ${psSingleQuote(input.auth.apiKeyEnv)}) -Value ${psSingleQuote(input.auth.apiKeyValue)}
 $agentOk = $false
 for ($attempt = 1; $attempt -le 2; $attempt++) {
   $sessionId = if ($attempt -eq 1) { 'parallels-npm-update-windows' } else { "parallels-npm-update-windows-retry-$attempt" }
-  $sessionsDir = Join-Path $env:USERPROFILE '.openclaw\\agents\\main\\sessions'
+  $sessionsDir = Join-Path $env:USERPROFILE '.quiet-core-bot\\agents\\main\\sessions'
   $sessionPath = Join-Path $sessionsDir "$sessionId.jsonl"
   Remove-Item $sessionPath -Force -ErrorAction SilentlyContinue
   $output = Invoke-OpenClaw agent --local --agent main --session-id $sessionId --model ${psSingleQuote(input.auth.modelId)} --message 'Reply with exact ASCII text OK only.' --thinking off --timeout ${resolveParallelsModelTimeoutSeconds("windows")} --json 2>&1
@@ -181,7 +181,7 @@ for ($attempt = 1; $attempt -le 2; $attempt++) {
   }
   if ($agentExitCode -ne 0) { throw "agent failed with exit code $agentExitCode" }
 }
-if (-not $agentOk) { throw 'openclaw agent finished without OK response' }`;
+if (-not $agentOk) { throw 'quiet-core-bot agent finished without OK response' }`;
 }
 
 export function macosUpdateScript(input: NpmUpdateScriptInput): string {
@@ -194,12 +194,12 @@ resolve_required_command() {
     exit 127
   }
 }
-OPENCLAW_BIN="$(resolve_required_command openclaw)"
+QUIET_CORE_BIN="$(resolve_required_command quiet-core-bot)"
 scrub_future_plugin_entries() {
   python3 - <<'PY'
 import json
 from pathlib import Path
-path = Path.home() / ".openclaw" / "openclaw.json"
+path = Path.home() / ".quiet-core-bot" / "quiet-core-bot.json"
 if not path.exists():
     raise SystemExit(0)
 try:
@@ -220,9 +220,9 @@ if isinstance(allow, list):
 path.write_text(json.dumps(config, indent=2) + "\n")
 PY
 }
-stop_openclaw_gateway_processes() {
-  OPENCLAW_DISABLE_BUNDLED_PLUGINS=1 "$OPENCLAW_BIN" gateway stop || true
-  pkill -f 'openclaw.*gateway' >/dev/null 2>&1 || true
+stop_quiet_core_bot_gateway_processes() {
+  QUIET_CORE_DISABLE_BUNDLED_PLUGINS=1 "$QUIET_CORE_BIN" gateway stop || true
+  pkill -f 'quiet-core-bot.*gateway' >/dev/null 2>&1 || true
   if command -v lsof >/dev/null 2>&1; then
     pids="$(lsof -tiTCP:18789 -sTCP:LISTEN 2>/dev/null || true)"
     if [ -n "$pids" ]; then
@@ -233,36 +233,36 @@ stop_openclaw_gateway_processes() {
   fi
 }
 start_openclaw_gateway() {
-  stop_openclaw_gateway_processes
-  rm -f /tmp/openclaw-parallels-macos-gateway.log
+  stop_quiet_core_bot_gateway_processes
+  rm -f /tmp/quiet-core-bot-parallels-macos-gateway.log
   trap '' HUP
-  /usr/bin/env OPENCLAW_HOME="$HOME" OPENCLAW_STATE_DIR="$HOME/.openclaw" OPENCLAW_CONFIG_PATH="$HOME/.openclaw/openclaw.json" ${input.auth.apiKeyEnv}=${shellQuote(
+  /usr/bin/env QUIET_CORE_HOME="$HOME" QUIET_CORE_STATE_DIR="$HOME/.quiet-core-bot" QUIET_CORE_CONFIG_PATH="$HOME/.quiet-core-bot/quiet-core-bot.json" ${input.auth.apiKeyEnv}=${shellQuote(
     input.auth.apiKeyValue,
-  )} "$OPENCLAW_BIN" gateway run --bind loopback --port 18789 --force >/tmp/openclaw-parallels-macos-gateway.log 2>&1 </dev/null &
+  )} "$QUIET_CORE_BIN" gateway run --bind loopback --port 18789 --force >/tmp/quiet-core-bot-parallels-macos-gateway.log 2>&1 </dev/null &
   sleep 1
 }
 wait_for_gateway() {
   deadline=$((SECONDS + 240))
   while [ "$SECONDS" -lt "$deadline" ]; do
-    if "$OPENCLAW_BIN" gateway status --deep --require-rpc --timeout 15000; then
+    if "$QUIET_CORE_BIN" gateway status --deep --require-rpc --timeout 15000; then
       return
     fi
     sleep 2
   done
-  print_log_tail /tmp/openclaw-parallels-macos-gateway.log >&2
+  print_log_tail /tmp/quiet-core-bot-parallels-macos-gateway.log >&2
   echo "gateway did not become ready after update" >&2
   exit 1
 }
 scrub_future_plugin_entries
-stop_openclaw_gateway_processes
-OPENCLAW_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS=1 OPENCLAW_DISABLE_BUNDLED_PLUGINS=1 "$OPENCLAW_BIN" update --tag ${shellQuote(input.updateTarget)} --yes --json --no-restart
+stop_quiet_core_bot_gateway_processes
+QUIET_CORE_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS=1 QUIET_CORE_DISABLE_BUNDLED_PLUGINS=1 "$QUIET_CORE_BIN" update --tag ${shellQuote(input.updateTarget)} --yes --json --no-restart
 ${posixVersionCheck(macosOpenClawCommand, input.expectedNeedle)}
 start_openclaw_gateway
 wait_for_gateway
-"$OPENCLAW_BIN" models set ${shellQuote(input.auth.modelId)}
+"$QUIET_CORE_BIN" models set ${shellQuote(input.auth.modelId)}
 ${posixModelProviderConfigCommands(macosOpenClawCommand, input.auth.modelId, "macos")}
-"$OPENCLAW_BIN" config set agents.defaults.skipBootstrap true --strict-json
-"$OPENCLAW_BIN" config set tools.profile minimal
+"$QUIET_CORE_BIN" config set agents.defaults.skipBootstrap true --strict-json
+"$QUIET_CORE_BIN" config set tools.profile minimal
 ${posixAgentWorkspaceScript("Parallels npm update smoke test assistant.")}
 ${posixAssertAgentOkScript(macosOpenClawCommand, input, "macos", "parallels-npm-update-macos")}`;
 }
@@ -273,7 +273,7 @@ $PSNativeCommandUseErrorActionPreference = $false
 ${windowsOpenClawResolver}
 ${windowsScopedEnvFunction}
 function Remove-FuturePluginEntries {
-  $configPath = Join-Path $env:USERPROFILE '.openclaw\\openclaw.json'
+  $configPath = Join-Path $env:USERPROFILE '.quiet-core-bot\\quiet-core-bot.json'
   if (-not (Test-Path $configPath)) { return }
   try { $config = Get-Content $configPath -Raw | ConvertFrom-Json } catch { return }
   $plugins = Get-OpenClawJsonProperty $config 'plugins'
@@ -325,7 +325,7 @@ function Remove-OpenClawJsonProperty {
 function Stop-OpenClawGatewayProcesses {
   Invoke-OpenClaw gateway stop *>&1 | Out-Host
   Get-CimInstance Win32_Process -ErrorAction SilentlyContinue |
-    Where-Object { $_.CommandLine -match 'openclaw.*gateway' } |
+    Where-Object { $_.CommandLine -match 'quiet-core-bot.*gateway' } |
     ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }
   Get-NetTCPConnection -LocalPort 18789 -State Listen -ErrorAction SilentlyContinue |
     Select-Object -ExpandProperty OwningProcess -Unique |
@@ -338,8 +338,8 @@ ${windowsUpdateWithBundledPluginsDisabled(input)}
 if ($updateExit -ne 0) {
   $updateText = $updateOutput | Out-String
   $stalePostSwapImport = $updateText -match 'ERR_MODULE_NOT_FOUND' -and $updateText -match ${psSingleQuote(windowsStalePostSwapImportRegex)}
-  if (-not $stalePostSwapImport) { throw "openclaw update failed with exit code $updateExit" }
-  Write-Host "openclaw update returned a stale post-swap module import; continuing to post-update health checks"
+  if (-not $stalePostSwapImport) { throw "quiet-core-bot update failed with exit code $updateExit" }
+  Write-Host "quiet-core-bot update returned a stale post-swap module import; continuing to post-update health checks"
 }
 ${windowsVersionCheck(input.expectedNeedle)}
 ${windowsGatewayReadyScript()}
@@ -349,13 +349,13 @@ ${windowsAssertAgentOkScript(input)}`;
 export function linuxUpdateScript(input: NpmUpdateScriptInput): string {
   return String.raw`set -euo pipefail
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/snap/bin
-export OPENCLAW_ALLOW_ROOT=1
+export QUIET_CORE_ALLOW_ROOT=1
 ${posixPrintLogTailFunction()}
 scrub_future_plugin_entries() {
   node - <<'JS'
 const fs = require("node:fs");
 const path = require("node:path");
-const configPath = path.join(process.env.HOME || "/root", ".openclaw", "openclaw.json");
+const configPath = path.join(process.env.HOME || "/root", ".quiet-core-bot", "quiet-core-bot.json");
 if (!fs.existsSync(configPath)) process.exit(0);
 let config;
 try { config = JSON.parse(fs.readFileSync(configPath, "utf8")); } catch { process.exit(0); }
@@ -372,43 +372,43 @@ if (Array.isArray(plugins.allow)) {
 fs.writeFileSync(configPath, JSON.stringify(config, null, 2) + "\n");
 JS
 }
-stop_openclaw_gateway_processes() {
-  OPENCLAW_DISABLE_BUNDLED_PLUGINS=1 OPENCLAW_ALLOW_ROOT=1 openclaw gateway stop || true
-  pkill -f 'openclaw.*gateway' >/dev/null 2>&1 || true
+stop_quiet_core_bot_gateway_processes() {
+  QUIET_CORE_DISABLE_BUNDLED_PLUGINS=1 QUIET_CORE_ALLOW_ROOT=1 quiet-core-bot gateway stop || true
+  pkill -f 'quiet-core-bot.*gateway' >/dev/null 2>&1 || true
 }
 start_openclaw_gateway() {
-  pkill -f "openclaw gateway run" >/dev/null 2>&1 || true
-  rm -f /tmp/openclaw-parallels-linux-gateway.log
+  pkill -f "quiet-core-bot gateway run" >/dev/null 2>&1 || true
+  rm -f /tmp/quiet-core-bot-parallels-linux-gateway.log
   setsid sh -lc ${shellQuote(
-    `exec env OPENCLAW_HOME=/root OPENCLAW_STATE_DIR=/root/.openclaw OPENCLAW_CONFIG_PATH=/root/.openclaw/openclaw.json OPENCLAW_DISABLE_BONJOUR=1 OPENCLAW_ALLOW_ROOT=1 ${input.auth.apiKeyEnv}=${shellQuote(
+    `exec env QUIET_CORE_HOME=/root QUIET_CORE_STATE_DIR=/root/.quiet-core-bot QUIET_CORE_CONFIG_PATH=/root/.quiet-core-bot/quiet-core-bot.json QUIET_CORE_DISABLE_BONJOUR=1 QUIET_CORE_ALLOW_ROOT=1 ${input.auth.apiKeyEnv}=${shellQuote(
       input.auth.apiKeyValue,
-    )} openclaw gateway run --bind loopback --port 18789 --force >/tmp/openclaw-parallels-linux-gateway.log 2>&1`,
+    )} quiet-core-bot gateway run --bind loopback --port 18789 --force >/tmp/quiet-core-bot-parallels-linux-gateway.log 2>&1`,
   )} >/dev/null 2>&1 < /dev/null &
 }
 wait_for_gateway() {
   deadline=$((SECONDS + 240))
   while [ "$SECONDS" -lt "$deadline" ]; do
-    if openclaw gateway status --deep --require-rpc --timeout 15000; then
+    if quiet-core-bot gateway status --deep --require-rpc --timeout 15000; then
       return
     fi
     sleep 2
   done
-  print_log_tail /tmp/openclaw-parallels-linux-gateway.log >&2
+  print_log_tail /tmp/quiet-core-bot-parallels-linux-gateway.log >&2
   echo "gateway did not become ready after update" >&2
   exit 1
 }
 scrub_future_plugin_entries
-stop_openclaw_gateway_processes
-OPENCLAW_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS=1 OPENCLAW_DISABLE_BUNDLED_PLUGINS=1 openclaw update --tag ${shellQuote(input.updateTarget)} --yes --json --no-restart
-${posixVersionCheck("openclaw", input.expectedNeedle)}
+stop_quiet_core_bot_gateway_processes
+QUIET_CORE_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS=1 QUIET_CORE_DISABLE_BUNDLED_PLUGINS=1 quiet-core-bot update --tag ${shellQuote(input.updateTarget)} --yes --json --no-restart
+${posixVersionCheck("quiet-core-bot", input.expectedNeedle)}
 start_openclaw_gateway
 wait_for_gateway
-openclaw models set ${shellQuote(input.auth.modelId)}
-${posixModelProviderConfigCommands("openclaw", input.auth.modelId, "linux")}
-openclaw config set agents.defaults.skipBootstrap true --strict-json
-openclaw config set tools.profile minimal
+quiet-core-bot models set ${shellQuote(input.auth.modelId)}
+${posixModelProviderConfigCommands("quiet-core-bot", input.auth.modelId, "linux")}
+quiet-core-bot config set agents.defaults.skipBootstrap true --strict-json
+quiet-core-bot config set tools.profile minimal
 ${posixAgentWorkspaceScript("Parallels npm update smoke test assistant.")}
-${posixAssertAgentOkScript("openclaw", input, "linux", "parallels-npm-update-linux")}`;
+${posixAssertAgentOkScript("quiet-core-bot", input, "linux", "parallels-npm-update-linux")}`;
 }
 
 function posixVersionCheck(command: string, expectedNeedle: string): string {
@@ -460,7 +460,7 @@ while ($true) {
   $version = Invoke-OpenClaw --version
   $version
   if ($LASTEXITCODE -eq 0) { break }
-  if ((Get-Date) -ge $versionDeadline) { throw "openclaw --version failed with exit code $LASTEXITCODE" }
+  if ((Get-Date) -ge $versionDeadline) { throw "quiet-core-bot --version failed with exit code $LASTEXITCODE" }
   Start-Sleep -Seconds 2
 }`;
   }
@@ -472,7 +472,7 @@ while ($true) {
   $version
   if ($LASTEXITCODE -eq 0 -and (($version | Out-String) -like ${expectedPattern})) { break }
   if ((Get-Date) -ge $versionDeadline) {
-    if ($LASTEXITCODE -ne 0) { throw "openclaw --version failed with exit code $LASTEXITCODE" }
+    if ($LASTEXITCODE -ne 0) { throw "quiet-core-bot --version failed with exit code $LASTEXITCODE" }
     throw ${mismatch}
   }
   Start-Sleep -Seconds 2

@@ -1,5 +1,5 @@
 // Policy doctor checks and findings for gateway exposure policy.
-import type { HealthCheck, HealthFinding } from "openclaw/plugin-sdk/health";
+import type { HealthCheck, HealthFinding } from "quiet-core-bot/plugin-sdk/health";
 import type { PolicyEvidence } from "../../policy-state.js";
 import { CHECK_IDS } from "../metadata.js";
 import type { PolicyDoctorCheckDeps } from "../types.js";
@@ -134,7 +134,7 @@ function gatewayNonLoopbackBindFindings(
             ? "Gateway bind is omitted while the runtime default can permit non-loopback exposure."
             : `Gateway bind setting '${entry.id}' permits non-loopback exposure.`,
         source: "policy",
-        path: "openclaw config",
+        path: "quiet-core-bot config",
         ocPath: entry.source,
         target: entry.source,
         requirement: `oc://${policyDocName}/gateway/exposure/allowNonLoopbackBind`,
@@ -159,7 +159,7 @@ function gatewayAuthFindings(
             severity: "error",
             message: "Gateway authentication is disabled.",
             source: "policy",
-            path: "openclaw config",
+            path: "quiet-core-bot config",
             ocPath: entry.source,
             target: entry.source,
             requirement: `oc://${policyDocName}/gateway/auth/requireAuth`,
@@ -178,7 +178,7 @@ function gatewayAuthFindings(
             severity: "error",
             message: "Gateway authentication rate-limit posture is not explicit.",
             source: "policy",
-            path: "openclaw config",
+            path: "quiet-core-bot config",
             ocPath: entry.source,
             target: entry.source,
             requirement: `oc://${policyDocName}/gateway/auth/requireExplicitRateLimit`,
@@ -213,7 +213,7 @@ function gatewayControlUiFindings(
         severity: "error",
         message: `Gateway Control UI insecure toggle '${entry.id}' is enabled.`,
         source: "policy",
-        path: "openclaw config",
+        path: "quiet-core-bot config",
         ocPath: entry.source,
         target: entry.source,
         requirement: `oc://${policyDocName}/gateway/controlUi/allowInsecure`,
@@ -238,7 +238,7 @@ function gatewayTailscaleFindings(
         severity: "error",
         message: "Gateway Tailscale Funnel exposure is enabled.",
         source: "policy",
-        path: "openclaw config",
+        path: "quiet-core-bot config",
         ocPath: entry.source,
         target: entry.source,
         requirement: `oc://${policyDocName}/gateway/exposure/allowTailscaleFunnel`,
@@ -263,7 +263,7 @@ function gatewayRemoteFindings(
         severity: "error",
         message: `Gateway remote posture '${entry.id}' is enabled.`,
         source: "policy",
-        path: "openclaw config",
+        path: "quiet-core-bot config",
         ocPath: entry.source,
         target: entry.source,
         requirement: `oc://${policyDocName}/gateway/remote/allow`,
@@ -298,7 +298,7 @@ function gatewayHttpEndpointFindings(
         severity: "error",
         message: `Gateway HTTP endpoint '${entry.endpoint ?? entry.id}' is denied by policy.`,
         source: "policy",
-        path: "openclaw config",
+        path: "quiet-core-bot config",
         ocPath: entry.source,
         target: entry.source,
         requirement: `oc://${policyDocName}/gateway/http/denyEndpoints`,
@@ -323,7 +323,7 @@ function gatewayHttpUrlFetchFindings(
         severity: "error",
         message: `Gateway HTTP URL-fetch input '${entry.id}' has no URL allowlist.`,
         source: "policy",
-        path: "openclaw config",
+        path: "quiet-core-bot config",
         ocPath: entry.source,
         target: entry.source,
         requirement: `oc://${policyDocName}/gateway/http/requireUrlAllowlists`,

@@ -3,7 +3,7 @@
  */
 import { randomBytes } from "node:crypto";
 import fs from "node:fs/promises";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { sanitizeForLog } from "../../../packages/terminal-core/src/ansi.js";
 import { FAST_MODE_AUTO_PROGRESS_KIND, type ReplyPayload } from "../../auto-reply/reply-payload.js";
 import type { ThinkLevel } from "../../auto-reply/thinking.js";
@@ -11,7 +11,7 @@ import { SILENT_REPLY_TOKEN } from "../../auto-reply/tokens.js";
 import { getRuntimeConfigSnapshot } from "../../config/config.js";
 import { resolveStorePath } from "../../config/sessions.js";
 import { updateSessionEntry } from "../../config/sessions/session-accessor.js";
-import { OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST } from "../../context-engine/host-compat.js";
+import { QUIET_CORE_EMBEDDED_CONTEXT_ENGINE_HOST } from "../../context-engine/host-compat.js";
 import { ensureContextEnginesInitialized } from "../../context-engine/init.js";
 import {
   resolveContextEngine,
@@ -606,7 +606,7 @@ function buildTraceToolSummary(params: {
  * The return value is normalized: whitespace-only inputs collapse to undefined, and
  * successful resolution returns a trimmed session key. This is a read-only lookup
  * with no side effects.
- * See: https://github.com/openclaw/openclaw/issues/60552
+ * See: https://github.com/liuda1999/Quiet-Core-bot/issues/60552
  */
 function backfillSessionKey(params: {
   config: RunEmbeddedAgentParams["config"];
@@ -1159,7 +1159,7 @@ async function runEmbeddedAgentInternal(
         agentHarnessId: params.agentHarnessId,
         agentHarnessRuntimeOverride: params.agentHarnessRuntimeOverride,
       });
-      const pluginHarnessOwnsTransport = agentHarness.id !== "openclaw";
+      const pluginHarnessOwnsTransport = agentHarness.id !== "quiet-core-bot";
       const modelConfigProvider = provider;
       const selectedRuntimeProvider = resolveSelectedOpenAIRuntimeProvider({
         provider,
@@ -1535,7 +1535,7 @@ async function runEmbeddedAgentInternal(
       }) => {
         const fallbackReason = resolveRuntimeFallbackReason();
         return buildContextEngineRuntimeSettings({
-          contextEngineHost: OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST,
+          contextEngineHost: QUIET_CORE_EMBEDDED_CONTEXT_ENGINE_HOST,
           provider,
           requestedModel: requestedModelId,
           resolvedModel: modelId,

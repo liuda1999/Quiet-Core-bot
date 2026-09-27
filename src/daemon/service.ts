@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
 import { VERSION } from "../version.js";
 import { assertFutureConfigActionAllowed } from "./future-config-guard.js";
 import {
@@ -98,9 +98,9 @@ function mergeGatewayServiceEnv(
     ...command.environment,
   };
   for (const key of [
-    "OPENCLAW_LAUNCHD_LABEL",
-    "OPENCLAW_SYSTEMD_UNIT",
-    "OPENCLAW_WINDOWS_TASK_NAME",
+    "QUIET_CORE_LAUNCHD_LABEL",
+    "QUIET_CORE_SYSTEMD_UNIT",
+    "QUIET_CORE_WINDOWS_TASK_NAME",
   ]) {
     // Explicit caller env selects the target service identity; installed command
     // env may come from a different profile or stale service file.
@@ -143,7 +143,7 @@ function collectGatewayServiceStartRepairIssues(
     return [];
   }
   const issues: GatewayServiceStartRepairIssue[] = [];
-  const serviceVersion = command.environment?.OPENCLAW_SERVICE_VERSION?.trim();
+  const serviceVersion = command.environment?.QUIET_CORE_SERVICE_VERSION?.trim();
   if (serviceVersion && serviceVersion !== VERSION) {
     // Version drift often means the service points at old package paths; require
     // reinstall/repair before pretending restart succeeded.

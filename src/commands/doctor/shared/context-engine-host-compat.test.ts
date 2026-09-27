@@ -1,6 +1,6 @@
 // Context engine host compatibility tests cover doctor warnings for host/context mismatches.
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
 import { registerContextEngine } from "../../../context-engine/registry.js";
 import type { ContextEngine, ContextEngineHostCapability } from "../../../context-engine/types.js";
 import {
@@ -67,7 +67,7 @@ describe("doctor context-engine host compatibility", () => {
           defaults: {
             models: {
               "openai/gpt-5.5": { agentRuntime: { id: "codex" } },
-              "anthropic/claude-sonnet-4-6": { agentRuntime: { id: "openclaw" } },
+              "anthropic/claude-sonnet-4-6": { agentRuntime: { id: "quiet-core-bot" } },
             },
           },
         },
@@ -76,7 +76,7 @@ describe("doctor context-engine host compatibility", () => {
 
     expect(hosts.map((host) => host.host.id).toSorted()).toEqual([
       "codex-app-server",
-      "openclaw-embedded",
+      "quiet-core-bot-embedded",
     ]);
   });
 

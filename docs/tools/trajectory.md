@@ -44,7 +44,7 @@ Alias:
 Quiet Core bot writes the bundle under the workspace:
 
 ```text
-.openclaw/trajectory-exports/openclaw-trajectory-<session>-<timestamp>/
+.quiet-core-bot/trajectory-exports/quiet-core-bot-trajectory-<session>-<timestamp>/
 ```
 
 You can choose a relative output directory name:
@@ -53,7 +53,7 @@ You can choose a relative output directory name:
 /export-trajectory bug-1234
 ```
 
-The custom path is resolved inside `.openclaw/trajectory-exports/`. Absolute
+The custom path is resolved inside `.quiet-core-bot/trajectory-exports/`. Absolute
 paths and `~` paths are rejected.
 
 Trajectory bundles can contain prompts, model messages, tool schemas, tool
@@ -104,7 +104,7 @@ Events are written as JSON Lines with this schema marker:
 
 ```json
 {
-  "traceSchema": "openclaw-trajectory",
+  "traceSchema": "quiet-core-bot-trajectory",
   "schemaVersion": 1
 }
 ```
@@ -141,11 +141,11 @@ Quiet Core bot also writes a best-effort pointer file beside the session:
 <session>.trajectory-path.json
 ```
 
-Set `OPENCLAW_TRAJECTORY_DIR` to store runtime trajectory sidecars in a
+Set `QUIET_CORE_TRAJECTORY_DIR` to store runtime trajectory sidecars in a
 dedicated directory:
 
 ```bash
-export OPENCLAW_TRAJECTORY_DIR=/var/lib/openclaw/trajectories
+export QUIET_CORE_TRAJECTORY_DIR=/var/lib/quiet-core-bot/trajectories
 ```
 
 When this variable is set, Quiet Core bot writes one JSONL file per session id in that
@@ -158,10 +158,10 @@ belongs to that session.
 
 ## Disable capture
 
-Set `OPENCLAW_TRAJECTORY=0` before starting Quiet Core bot:
+Set `QUIET_CORE_TRAJECTORY=0` before starting Quiet Core bot:
 
 ```bash
-export OPENCLAW_TRAJECTORY=0
+export QUIET_CORE_TRAJECTORY=0
 ```
 
 This disables runtime trajectory capture. `/export-trajectory` can still export
@@ -172,15 +172,15 @@ provider artifacts, and prompt metadata may be missing.
 
 Quiet Core bot flushes runtime trajectory sidecars during agent cleanup. The default
 cleanup timeout is 10,000 ms. On slow disks or large stores, set
-`OPENCLAW_TRAJECTORY_FLUSH_TIMEOUT_MS` before starting Quiet Core bot:
+`QUIET_CORE_TRAJECTORY_FLUSH_TIMEOUT_MS` before starting Quiet Core bot:
 
 ```bash
-export OPENCLAW_TRAJECTORY_FLUSH_TIMEOUT_MS=30000
+export QUIET_CORE_TRAJECTORY_FLUSH_TIMEOUT_MS=30000
 ```
 
-This controls when Quiet Core bot logs an `openclaw-trajectory-flush` timeout and continues.
+This controls when Quiet Core bot logs an `quiet-core-bot-trajectory-flush` timeout and continues.
 It does not change the trajectory size caps. To tune all agent cleanup steps
-that do not pass an explicit timeout, set `OPENCLAW_AGENT_CLEANUP_TIMEOUT_MS`.
+that do not pass an explicit timeout, set `QUIET_CORE_AGENT_CLEANUP_TIMEOUT_MS`.
 
 ## Privacy and limits
 
@@ -208,8 +208,8 @@ and cannot know every application-specific secret.
 
 If the export has no runtime events:
 
-- confirm Quiet Core bot was started without `OPENCLAW_TRAJECTORY=0`
-- check whether `OPENCLAW_TRAJECTORY_DIR` points to a writable directory
+- confirm Quiet Core bot was started without `QUIET_CORE_TRAJECTORY=0`
+- check whether `QUIET_CORE_TRAJECTORY_DIR` points to a writable directory
 - run another message in the session, then export again
 - inspect `manifest.json` for `runtimeEventCount`
 
@@ -217,7 +217,7 @@ If the command rejects the output path:
 
 - use a relative name like `bug-1234`
 - do not pass `/tmp/...` or `~/...`
-- keep the export inside `.openclaw/trajectory-exports/`
+- keep the export inside `.quiet-core-bot/trajectory-exports/`
 
 If the export fails with a size error, the session or sidecar exceeded the
 export safety limits. Start a new session or export a smaller reproduction.

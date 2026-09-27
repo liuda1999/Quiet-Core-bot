@@ -1,5 +1,5 @@
 // Legacy model runtime config migrations for stale model refs, compat fields, and catalog data.
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
+import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
 import { splitTrailingAuthProfile } from "../../../agents/model-ref-profile.js";
 import {
   defineLegacyConfigMigration,

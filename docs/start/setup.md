@@ -100,13 +100,13 @@ pnpm gateway:watch
 
 `gateway:watch` starts or restarts the Gateway watch process in a named tmux
 session and auto-attaches from interactive terminals. Non-interactive shells stay
-detached and print `tmux attach -t openclaw-gateway-watch-main`; use
-`OPENCLAW_GATEWAY_WATCH_ATTACH=0 pnpm gateway:watch` to keep an interactive run
+detached and print `tmux attach -t quiet-core-bot-gateway-watch-main`; use
+`QUIET_CORE_GATEWAY_WATCH_ATTACH=0 pnpm gateway:watch` to keep an interactive run
 detached, or `pnpm gateway:watch:raw` for foreground watch mode. The watcher
 reloads on relevant source, config, and bundled-plugin metadata changes. If the
 watched Gateway exits during startup, `gateway:watch` runs
 `quiet-core-bot doctor --fix --non-interactive` once and retries; set
-`OPENCLAW_GATEWAY_WATCH_AUTO_DOCTOR=0` to disable that dev-only repair pass.
+`QUIET_CORE_GATEWAY_WATCH_AUTO_DOCTOR=0` to disable that dev-only repair pass.
 `pnpm quiet-core-bot setup` is the one-time local config/workspace initialization step for a fresh checkout.
 `pnpm gateway:watch` does not rebuild `dist/control-ui`, so rerun `pnpm ui:build` after `ui/` changes or use `pnpm ui:dev` while developing the Control UI.
 
@@ -133,7 +133,7 @@ quiet-core-bot health
   - Channel/provider state: `~/.quiet-core-bot/credentials/`
   - Model auth profiles: `~/.quiet-core-bot/agents/<agentId>/agent/auth-profiles.json`
   - Sessions: `~/.quiet-core-bot/agents/<agentId>/sessions/`
-  - Logs: `/tmp/openclaw/`
+  - Logs: `/tmp/quiet-core-bot/`
 
 ## Credential storage map
 
@@ -153,7 +153,7 @@ Use this when debugging auth or deciding what to back up:
 
 ## Updating (without wrecking your setup)
 
-- Keep `~/.quiet-core-bot/workspace` and `~/.quiet-core-bot/` as "your stuff"; don't put personal prompts/config into the `openclaw` repo.
+- Keep `~/.quiet-core-bot/workspace` and `~/.quiet-core-bot/` as "your stuff"; don't put personal prompts/config into the `quiet-core-bot` repo.
 - Updating source: `git pull` + `pnpm install` + keep using `pnpm gateway:watch`.
 
 ## Linux (systemd user service)
@@ -174,5 +174,5 @@ user service (no lingering needed). See [Gateway runbook](/gateway) for the syst
 - [Gateway runbook](/gateway) (flags, supervision, ports)
 - [Gateway configuration](/gateway/configuration) (config schema + examples)
 - [Discord](/channels/discord) and [Telegram](/channels/telegram) (reply tags + replyToMode settings)
-- [Quiet Core bot assistant setup](/start/openclaw)
+- [Quiet Core bot assistant setup](/start/quiet-core-bot)
 - [macOS app](/platforms/macos) (gateway lifecycle)

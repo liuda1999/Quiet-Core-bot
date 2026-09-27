@@ -107,7 +107,7 @@ body:
     attributes:
       label: Provider / routing chain
       description: Effective request path through gateways, proxies, providers, or model routers.
-      placeholder: openclaw -> cloudflare-ai-gateway -> minimax
+      placeholder: quiet-core-bot -> cloudflare-ai-gateway -> minimax
     validations:
       required: true
   - type: textarea
@@ -116,9 +116,9 @@ body:
       label: Additional provider/model setup details
       description: Optional. Include redacted routing details, per-agent overrides, auth-profile interactions, env/config context, or anything else needed to explain the effective provider/model setup. Do not include API keys, tokens, or passwords.
       placeholder: |
-        Default route is openclaw -> cloudflare-ai-gateway -> minimax.
-        Previous setup was openclaw -> cloudflare-ai-gateway -> openrouter -> minimax.
-        Relevant config lives in ~/.openclaw/openclaw.json under models.providers.minimax and models.providers.cloudflare-ai-gateway.
+        Default route is quiet-core-bot -> cloudflare-ai-gateway -> minimax.
+        Previous setup was quiet-core-bot -> cloudflare-ai-gateway -> openrouter -> minimax.
+        Relevant config lives in ~/.quiet-core-bot/quiet-core-bot.json under models.providers.minimax and models.providers.cloudflare-ai-gateway.
   - type: textarea
     id: logs
     attributes:

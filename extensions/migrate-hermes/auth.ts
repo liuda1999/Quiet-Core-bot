@@ -3,15 +3,15 @@ import { createHash } from "node:crypto";
 import {
   loadAuthProfileStoreWithoutExternalProfiles,
   resolveAuthStorePathForDisplay,
-} from "openclaw/plugin-sdk/agent-runtime";
+} from "quiet-core-bot/plugin-sdk/agent-runtime";
 import {
   createMigrationItem,
   createMigrationManualItem,
   markMigrationItemConflict,
   markMigrationItemError,
   markMigrationItemSkipped,
-} from "openclaw/plugin-sdk/migration";
-import type { MigrationItem, MigrationProviderContext } from "openclaw/plugin-sdk/plugin-entry";
+} from "quiet-core-bot/plugin-sdk/migration";
+import type { MigrationItem, MigrationProviderContext } from "quiet-core-bot/plugin-sdk/plugin-entry";
 import {
   buildOpenAICodexCredentialExtra,
   buildOauthProviderAuthResult,
@@ -23,7 +23,7 @@ import {
   type OAuthCredential,
   type OpenClawConfig,
   type ProviderAuthResult,
-} from "openclaw/plugin-sdk/provider-auth";
+} from "quiet-core-bot/plugin-sdk/provider-auth";
 import {
   applyAuthProfileConfigWithConflictCheck,
   hasAuthProfileConfigConflict,
@@ -365,7 +365,7 @@ export async function buildAuthItems(params: {
         message:
           "Hermes auth.json contains legacy OAuth credentials. OpenClaw no longer imports those into live auth during Hermes migration.",
         recommendation:
-          "Run openclaw models auth login --provider openai after migration, or run openclaw doctor --fix for existing OpenClaw legacy auth state.",
+          "Run quiet-core-bot models auth login --provider openai after migration, or run quiet-core-bot doctor --fix for existing OpenClaw legacy auth state.",
       }),
     );
   }

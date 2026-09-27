@@ -100,7 +100,7 @@ export type InstalledPluginIndexRecord = {
   /** Hash of the top-level installRecords entry; used to detect source-changed invalidation. */
   installRecordHash?: string;
   /**
-   * Package-authored openclaw.install metadata. This describes catalog/package
+   * Package-authored quiet-core-bot.install metadata. This describes catalog/package
    * install intent and must not be treated as the durable install record.
    */
   packageInstall?: PluginInstallSourceInfo;

@@ -2,8 +2,8 @@ import fsSync from "node:fs";
 import {
   findNormalizedProviderValue,
   normalizeProviderId,
-} from "@openclaw/model-catalog-core/provider-id";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/model-catalog-core/provider-id";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { note } from "../../packages/terminal-core/src/note.js";
 import {
   resolveAgentDir,
@@ -18,7 +18,7 @@ import {
   resolveUsableCustomProviderApiKey,
 } from "../agents/model-auth.js";
 import { formatCliCommand } from "../cli/command-format.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import {
   checkQmdBinaryAvailability,
@@ -487,7 +487,7 @@ export async function noteMemorySearchHealth(
         detail ? `Gateway probe: ${detail}` : null,
         "",
         "Fix (pick one):",
-        `- Install the llama.cpp provider plugin: ${formatCliCommand("quiet-core-bot plugins install @openclaw/llama-cpp-provider")}`,
+        `- Install the llama.cpp provider plugin: ${formatCliCommand("quiet-core-bot plugins install @quiet-core/llama-cpp-provider")}`,
         `- Set a local GGUF model path in config`,
         suggestedRemoteProvider
           ? `- Switch to a remote provider: ${formatCliCommand(`quiet-core-bot config set agents.defaults.memorySearch.provider ${suggestedRemoteProvider}`)}`

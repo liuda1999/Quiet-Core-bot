@@ -100,8 +100,8 @@ ms. Raise this only when legitimate prep, cleanup, compaction, or transcript mir
 longer on slow machines. `session.writeLock.staleMs` controls when an existing lock can be
 reclaimed as stale; the default is `1800000` ms. `session.writeLock.maxHoldMs` controls the
 in-process watchdog release threshold; the default is `300000` ms. Emergency env overrides are
-`OPENCLAW_SESSION_WRITE_LOCK_ACQUIRE_TIMEOUT_MS`, `OPENCLAW_SESSION_WRITE_LOCK_STALE_MS`, and
-`OPENCLAW_SESSION_WRITE_LOCK_MAX_HOLD_MS`.
+`QUIET_CORE_SESSION_WRITE_LOCK_ACQUIRE_TIMEOUT_MS`, `QUIET_CORE_SESSION_WRITE_LOCK_STALE_MS`, and
+`QUIET_CORE_SESSION_WRITE_LOCK_MAX_HOLD_MS`.
 
 Enforcement order for disk budget cleanup (`mode: "enforce"`):
 
@@ -205,7 +205,7 @@ The store is safe to edit, but the Gateway is the authority: it may rewrite or r
 
 ## Transcript structure (`*.jsonl`)
 
-Transcripts are managed by `openclaw/plugin-sdk/agent-sessions`'s `SessionManager`.
+Transcripts are managed by `quiet-core-bot/plugin-sdk/agent-sessions`'s `SessionManager`.
 
 The file is JSONL:
 

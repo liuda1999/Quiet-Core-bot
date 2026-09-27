@@ -4,7 +4,7 @@ import { EventEmitter } from "node:events";
 import process from "node:process";
 import { promisify } from "node:util";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { OPENCLAW_CLI_ENV_VALUE } from "../infra/openclaw-exec-env.js";
+import { QUIET_CORE_CLI_ENV_VALUE } from "../infra/quiet-core-bot-exec-env.js";
 import { MAX_TIMER_TIMEOUT_MS } from "../shared/number-coercion.js";
 
 const spawnMock = vi.hoisted(() => vi.fn());
@@ -114,18 +114,18 @@ describe("runCommandWithTimeout", () => {
     const resolved = resolveCommandEnv({
       argv: ["node", "script.js"],
       baseEnv: {
-        OPENCLAW_BASE_ENV: "base",
-        OPENCLAW_TO_REMOVE: undefined,
+        QUIET_CORE_BASE_ENV: "base",
+        QUIET_CORE_TO_REMOVE: undefined,
       },
       env: {
-        OPENCLAW_TEST_ENV: "ok",
+        QUIET_CORE_TEST_ENV: "ok",
       },
     });
 
-    expect(resolved.OPENCLAW_BASE_ENV).toBe("base");
-    expect(resolved.OPENCLAW_TEST_ENV).toBe("ok");
-    expect(resolved.OPENCLAW_TO_REMOVE).toBeUndefined();
-    expect(resolved.OPENCLAW_CLI).toBe(OPENCLAW_CLI_ENV_VALUE);
+    expect(resolved.QUIET_CORE_BASE_ENV).toBe("base");
+    expect(resolved.QUIET_CORE_TEST_ENV).toBe("ok");
+    expect(resolved.QUIET_CORE_TO_REMOVE).toBeUndefined();
+    expect(resolved.QUIET_CORE_CLI).toBe(QUIET_CORE_CLI_ENV_VALUE);
   });
 
   it("collapses case-insensitive duplicate env keys on Windows", () => {
@@ -134,18 +134,18 @@ describe("runCommandWithTimeout", () => {
       platform: "win32",
       baseEnv: {
         Path: "C:\\base\\bin",
-        OPENCLAW_BASE_ENV: "base",
+        QUIET_CORE_BASE_ENV: "base",
       },
       env: {
         PATH: "C:\\override\\bin",
-        OPENCLAW_TEST_ENV: "ok",
+        QUIET_CORE_TEST_ENV: "ok",
       },
     });
 
     expect(resolved.Path).toBeUndefined();
     expect(resolved.PATH).toBe("C:\\override\\bin");
-    expect(resolved.OPENCLAW_BASE_ENV).toBe("base");
-    expect(resolved.OPENCLAW_TEST_ENV).toBe("ok");
+    expect(resolved.QUIET_CORE_BASE_ENV).toBe("base");
+    expect(resolved.QUIET_CORE_TEST_ENV).toBe("ok");
   });
 
   it("preserves case-distinct env keys outside Windows", () => {

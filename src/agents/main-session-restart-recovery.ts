@@ -5,7 +5,7 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { sanitizePendingFinalDeliveryText } from "../auto-reply/reply/pending-final-delivery.js";
 import { resolveStateDir } from "../config/paths.js";
 import {
@@ -17,7 +17,7 @@ import {
   resolveSessionTranscriptPathInDir,
 } from "../config/sessions.js";
 import { applyRestartRecoveryLifecycle } from "../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { callGateway } from "../gateway/call.js";
 import { readSessionMessagesAsync } from "../gateway/session-transcript-readers.js";
 import { resolveGatewaySessionStoreTarget } from "../gateway/session-utils.js";
@@ -173,7 +173,7 @@ export async function markRestartAbortedMainSessions(params: {
   const env =
     params.stateDir === undefined
       ? process.env
-      : { ...process.env, OPENCLAW_STATE_DIR: params.stateDir };
+      : { ...process.env, QUIET_CORE_STATE_DIR: params.stateDir };
   const stateDir = resolveStateDir(env);
   const configs = [params.cfg, ...(params.additionalCfgs ?? [])].filter(
     (cfg): cfg is OpenClawConfig => Boolean(cfg),
@@ -881,7 +881,7 @@ async function resolveRestartRecoveryStorePaths(params: {
     storePaths.add(path.join(sessionsDir, "sessions.json"));
   }
   if (params.cfg) {
-    const env = { ...process.env, OPENCLAW_STATE_DIR: stateDir };
+    const env = { ...process.env, QUIET_CORE_STATE_DIR: stateDir };
     for (const target of resolveAllAgentSessionStoreTargetsSync(params.cfg, { env })) {
       storePaths.add(path.resolve(target.storePath));
     }

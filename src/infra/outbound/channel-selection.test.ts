@@ -41,10 +41,10 @@ vi.mock("../../plugins/official-external-plugin-repair-hints.js", () => ({
           pluginId: channelId,
           channelId,
           label: channelId === "whatsapp" ? "WhatsApp" : "Feishu",
-          installSpec: `@openclaw/${channelId}`,
-          installCommand: `quiet-core-bot plugins install @openclaw/${channelId}`,
+          installSpec: `@quiet-core/${channelId}`,
+          installCommand: `quiet-core-bot plugins install @quiet-core/${channelId}`,
           doctorFixCommand: "quiet-core-bot doctor --fix",
-          repairHint: `Install the official external plugin with: quiet-core-bot plugins install @openclaw/${channelId}, or run: quiet-core-bot doctor --fix.`,
+          repairHint: `Install the official external plugin with: quiet-core-bot plugins install @quiet-core/${channelId}, or run: quiet-core-bot doctor --fix.`,
         }
       : null,
 }));
@@ -299,7 +299,7 @@ describe("resolveMessageChannelSelection", () => {
         channel: "feishu",
       },
       expectedMessage:
-        "Channel is unavailable: feishu. Install the official external plugin with: quiet-core-bot plugins install @openclaw/feishu, or run: quiet-core-bot doctor --fix.",
+        "Channel is unavailable: feishu. Install the official external plugin with: quiet-core-bot plugins install @quiet-core/feishu, or run: quiet-core-bot doctor --fix.",
     },
     {
       params: { cfg: {} as never },
@@ -313,7 +313,7 @@ describe("resolveMessageChannelSelection", () => {
       },
       params: { cfg: { channels: { whatsapp: { enabled: true } } } as never },
       expectedMessage:
-        "Channel is required (no available channels detected). Configured official external channel WhatsApp is missing its plugin. Install the official external plugin with: quiet-core-bot plugins install @openclaw/whatsapp, or run: quiet-core-bot doctor --fix.",
+        "Channel is required (no available channels detected). Configured official external channel WhatsApp is missing its plugin. Install the official external plugin with: quiet-core-bot plugins install @quiet-core/whatsapp, or run: quiet-core-bot doctor --fix.",
     },
     {
       setup: () => {

@@ -294,7 +294,7 @@ export function renderOverview(props: OverviewProps) {
                         const v = (e.target as HTMLInputElement).value;
                         props.onSettingsChange({ ...props.settings, token: v });
                       }}
-                      placeholder="OPENCLAW_GATEWAY_TOKEN"
+                      placeholder="QUIET_CORE_GATEWAY_TOKEN"
                     />
                     <button
                       type="button"

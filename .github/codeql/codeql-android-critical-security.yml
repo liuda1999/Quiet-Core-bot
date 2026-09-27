@@ -1,4 +1,4 @@
-name: openclaw-codeql-android-critical-security
+name: quiet-core-bot-codeql-android-critical-security
 
 disable-default-queries: true
 

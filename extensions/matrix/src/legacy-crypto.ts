@@ -2,9 +2,9 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { loadJsonFile } from "openclaw/plugin-sdk/json-store";
-import { resolveStateDir } from "openclaw/plugin-sdk/state-paths";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import { loadJsonFile } from "quiet-core-bot/plugin-sdk/json-store";
+import { resolveStateDir } from "quiet-core-bot/plugin-sdk/state-paths";
 import { resolveConfiguredMatrixAccountIds } from "./account-selection.js";
 import { isMatrixLegacyCryptoInspectorAvailable } from "./legacy-crypto-inspector-availability.js";
 import {
@@ -439,7 +439,7 @@ export async function autoPrepareLegacyMatrixCrypto(params: {
     if (!summary.decryptionKeyBase64 && (summary.roomKeyCounts?.backedUp ?? 0) > 0) {
       warnings.push(
         `Legacy Matrix encrypted state for account "${plan.accountId}" has backed-up room keys, but no local backup decryption key was found. ` +
-          `Ask the operator to run "openclaw matrix verify backup restore --recovery-key <key>" after upgrade if they have the recovery key.`,
+          `Ask the operator to run "quiet-core-bot matrix verify backup restore --recovery-key <key>" after upgrade if they have the recovery key.`,
       );
     }
     if (!summary.decryptionKeyBase64 && (summary.roomKeyCounts?.total ?? 0) > 0) {

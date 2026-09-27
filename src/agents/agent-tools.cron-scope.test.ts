@@ -23,7 +23,7 @@ const mocks = vi.hoisted(() => {
   };
 });
 
-vi.mock("./openclaw-tools.js", () => ({
+vi.mock("./quiet-core-bot-tools.js", () => ({
   createOpenClawTools: (options: unknown) => {
     mocks.createOpenClawToolsOptions(options);
     return [mocks.stubTool("cron")];

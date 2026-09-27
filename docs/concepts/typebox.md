@@ -97,7 +97,7 @@ Connect (first message):
     "minProtocol": 3,
     "maxProtocol": 4,
     "client": {
-      "id": "openclaw-macos",
+      "id": "quiet-core-bot-macos",
       "displayName": "macos",
       "version": "1.0.0",
       "platform": "macos 15.1",

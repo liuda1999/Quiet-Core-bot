@@ -2,7 +2,7 @@
 // update.
 //
 // `runGatewayUpdate` (git mode) runs `quiet-core-bot doctor --fix` with
-// `OPENCLAW_UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE=1`, which makes the doctor
+// `QUIET_CORE_UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE=1`, which makes the doctor
 // pass DEFER configured-plugin repair to a later convergence step (see
 // `shouldDeferConfiguredPluginInstallRepair`). The `quiet-core-bot update` CLI resumes
 // that deferred work in a fresh post-core process; the gateway `update.run` RPC
@@ -58,12 +58,12 @@ function buildFinalizeEnv(
   sourceConfigPath?: string,
 ): NodeJS.ProcessEnv {
   const env: NodeJS.ProcessEnv = { ...baseEnv };
-  delete env.OPENCLAW_SERVICE_MARKER;
-  delete env.OPENCLAW_SERVICE_KIND;
+  delete env.QUIET_CORE_SERVICE_MARKER;
+  delete env.QUIET_CORE_SERVICE_KIND;
   delete env[GATEWAY_SERVICE_RUNTIME_PID_ENV];
   env[UPDATE_EFFECTIVE_CHANNEL_ENV] = effectiveChannel;
   if (compatHostVersion) {
-    env.OPENCLAW_COMPATIBILITY_HOST_VERSION = compatHostVersion;
+    env.QUIET_CORE_COMPATIBILITY_HOST_VERSION = compatHostVersion;
   }
   if (sourceConfigPath) {
     env[POST_CORE_UPDATE_SOURCE_CONFIG_PATH_ENV] = sourceConfigPath;
@@ -186,7 +186,7 @@ export async function runPostCoreFinalizeAfterGatewayUpdate(params: {
   try {
     let sourceConfigPath: string | undefined;
     if (params.preUpdateConfig) {
-      sourceConfigDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-update-post-core-"));
+      sourceConfigDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-update-post-core-"));
       sourceConfigPath = path.join(sourceConfigDir, "source-config.json");
       await fs.writeFile(sourceConfigPath, `${JSON.stringify(params.preUpdateConfig)}\n`, "utf-8");
     }

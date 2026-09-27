@@ -4,14 +4,14 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { normalizeOptionalString } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import {
   parseBrowserMajorVersion,
   readBrowserVersion,
   resolveBrowserExecutableForPlatform,
   resolveGoogleChromeExecutableForPlatform,
 } from "./browser/chrome.executables.js";
-import { DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME, resolveBrowserConfig } from "./browser/config.js";
+import { DEFAULT_QUIET_CORE_BROWSER_PROFILE_NAME, resolveBrowserConfig } from "./browser/config.js";
 import { movePathToTrash } from "./browser/trash.js";
 import type { OpenClawConfig } from "./config/config.js";
 import { asRecord } from "./record-shared.js";
@@ -98,7 +98,7 @@ function collectManagedProfiles(cfg: OpenClawConfig): ManagedProfile[] {
 
   for (const [profileName, rawProfile] of Object.entries(configuredProfiles)) {
     const profile = asRecord(rawProfile);
-    const driver = normalizeOptionalString(profile?.driver) ?? "openclaw";
+    const driver = normalizeOptionalString(profile?.driver) ?? "quiet-core-bot";
     if (driver !== "existing-session") {
       profiles.set(profileName, { name: profileName });
     }
@@ -178,7 +178,7 @@ export function detectLegacyClawdBrowserProfileResidue(
   const resolved = resolveBrowserConfig(cfg.browser, cfg);
   const defaultProfile = resolved.profiles[resolved.defaultProfile];
   if (
-    resolved.defaultProfile !== DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME ||
+    resolved.defaultProfile !== DEFAULT_QUIET_CORE_BROWSER_PROFILE_NAME ||
     defaultProfile?.driver === "existing-session"
   ) {
     return null;
@@ -189,7 +189,7 @@ export function detectLegacyClawdBrowserProfileResidue(
     legacyUserDataDir,
     canonicalUserDataDir: resolveManagedBrowserUserDataDir(
       configDir,
-      DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME,
+      DEFAULT_QUIET_CORE_BROWSER_PROFILE_NAME,
     ),
   };
 }
@@ -200,7 +200,7 @@ function formatLegacyClawdBrowserProfileResidueNote(
   return [
     `- Legacy managed browser profile residue was found at ${residue.legacyProfileDir}.`,
     `- The canonical OpenClaw-managed browser profile is ${residue.canonicalUserDataDir}.`,
-    `- If no browser is using the legacy profile, run ${formatCliCommand("openclaw doctor --fix")} to archive it safely instead of deleting it in place.`,
+    `- If no browser is using the legacy profile, run ${formatCliCommand("quiet-core-bot doctor --fix")} to archive it safely instead of deleting it in place.`,
   ].join("\n");
 }
 

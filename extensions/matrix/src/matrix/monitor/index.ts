@@ -1,10 +1,10 @@
 // Matrix plugin entrypoint registers its OpenClaw integration.
 import { format } from "node:util";
-import { CHANNEL_APPROVAL_NATIVE_RUNTIME_CONTEXT_CAPABILITY } from "openclaw/plugin-sdk/approval-handler-adapter-runtime";
-import type { ChannelRuntimeSurface } from "openclaw/plugin-sdk/channel-contract";
-import { waitUntilAbort } from "openclaw/plugin-sdk/channel-outbound";
-import { registerChannelRuntimeContext } from "openclaw/plugin-sdk/channel-runtime-context";
-import { resolveOptionalIntegerOption } from "openclaw/plugin-sdk/number-runtime";
+import { CHANNEL_APPROVAL_NATIVE_RUNTIME_CONTEXT_CAPABILITY } from "quiet-core-bot/plugin-sdk/approval-handler-adapter-runtime";
+import type { ChannelRuntimeSurface } from "quiet-core-bot/plugin-sdk/channel-contract";
+import { waitUntilAbort } from "quiet-core-bot/plugin-sdk/channel-outbound";
+import { registerChannelRuntimeContext } from "quiet-core-bot/plugin-sdk/channel-runtime-context";
+import { resolveOptionalIntegerOption } from "quiet-core-bot/plugin-sdk/number-runtime";
 import {
   GROUP_POLICY_BLOCKED_LABEL,
   resolveThreadBindingIdleTimeoutMsForChannel,
@@ -66,7 +66,7 @@ export type MonitorMatrixOpts = {
   initialSyncLimit?: number;
   replyToMode?: ReplyToMode;
   accountId?: string | null;
-  setStatus?: (next: import("openclaw/plugin-sdk/channel-contract").ChannelAccountSnapshot) => void;
+  setStatus?: (next: import("quiet-core-bot/plugin-sdk/channel-contract").ChannelAccountSnapshot) => void;
 };
 
 function isMatrixStreamingConfig(

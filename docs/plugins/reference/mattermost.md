@@ -11,8 +11,8 @@ Adds the Mattermost channel surface for sending and receiving Quiet Core bot mes
 
 ## Distribution
 
-- Package: `@openclaw/mattermost`
-- Install route: npm; ClawHub: `clawhub:@openclaw/mattermost`
+- Package: `@quiet-core/mattermost`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/mattermost`
 
 ## Surface
 

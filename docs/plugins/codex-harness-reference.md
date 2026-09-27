@@ -111,7 +111,7 @@ Supported `appServer` fields:
 contract. When enabled, Quiet Core bot also sets `features.network_proxy.enabled` and
 `default_permissions` in the Codex thread config so the generated permission
 profile can start Codex managed networking. By default, Quiet Core bot generates a
-collision-resistant `openclaw-network-<fingerprint>` profile name from the
+collision-resistant `quiet-core-bot-network-<fingerprint>` profile name from the
 profile body; use `profileName` only when a stable local name is required.
 
 ```js
@@ -286,7 +286,7 @@ accounts, plugin cache/data, and thread state scoped to the Quiet Core bot agent
 instead of leaking in from the operator's personal `~/.codex` home.
 
 Quiet Core bot does not rewrite `HOME` for normal local app-server launches. Codex-run
-subprocesses such as `openclaw`, `gh`, `git`, cloud CLIs, and shell commands see
+subprocesses such as `quiet-core-bot`, `gh`, `git`, cloud CLIs, and shell commands see
 the normal process home and can find user-home config and tokens. Codex may also
 discover `$HOME/.agents/skills` and `$HOME/.agents/plugins/marketplace.json`;
 that `.agents` discovery is intentionally shared with the operator home and is
@@ -298,8 +298,8 @@ you have useful Codex CLI skills or plugins from a Codex home that should become
 part of an Quiet Core bot agent, inventory them explicitly:
 
 ```bash
-openclaw migrate codex --dry-run
-openclaw migrate apply codex --yes
+quiet-core-bot migrate codex --dry-run
+quiet-core-bot migrate apply codex --yes
 ```
 
 If a deployment needs additional environment isolation, add those variables to
@@ -342,12 +342,12 @@ dynamic tools that duplicate Codex-native workspace operations:
 
 Most remaining Quiet Core bot integration tools, such as messaging, media, cron,
 browser, nodes, gateway, `heartbeat_respond`, and `web_search`, are available
-through Codex tool search under the `openclaw` namespace. This keeps the initial
+through Codex tool search under the `quiet-core-bot` namespace. This keeps the initial
 model context smaller. `sessions_yield` and message-tool-only source replies
 stay direct because those are turn-control contracts. `sessions_spawn` stays
 searchable so Codex's native `spawn_agent` remains the primary Codex subagent
 surface, while explicit Quiet Core bot or ACP delegation is still available through
-the `openclaw` dynamic tool namespace.
+the `quiet-core-bot` dynamic tool namespace.
 
 Set `codexDynamicToolsLoading: "direct"` only when connecting to a custom Codex
 app-server that cannot search deferred dynamic tools or when debugging the full
@@ -510,18 +510,18 @@ context.
 
 Environment overrides remain available for local testing:
 
-- `OPENCLAW_CODEX_APP_SERVER_BIN`
-- `OPENCLAW_CODEX_APP_SERVER_ARGS`
-- `OPENCLAW_CODEX_APP_SERVER_MODE=yolo|guardian`
-- `OPENCLAW_CODEX_APP_SERVER_APPROVAL_POLICY`
-- `OPENCLAW_CODEX_APP_SERVER_SANDBOX`
+- `QUIET_CORE_CODEX_APP_SERVER_BIN`
+- `QUIET_CORE_CODEX_APP_SERVER_ARGS`
+- `QUIET_CORE_CODEX_APP_SERVER_MODE=yolo|guardian`
+- `QUIET_CORE_CODEX_APP_SERVER_APPROVAL_POLICY`
+- `QUIET_CORE_CODEX_APP_SERVER_SANDBOX`
 
-`OPENCLAW_CODEX_APP_SERVER_BIN` bypasses the managed binary when
+`QUIET_CORE_CODEX_APP_SERVER_BIN` bypasses the managed binary when
 `appServer.command` is unset.
 
-`OPENCLAW_CODEX_APP_SERVER_GUARDIAN=1` was removed. Use
+`QUIET_CORE_CODEX_APP_SERVER_GUARDIAN=1` was removed. Use
 `plugins.entries.codex.config.appServer.mode: "guardian"` instead, or
-`OPENCLAW_CODEX_APP_SERVER_MODE=guardian` for one-off local testing. Config is
+`QUIET_CORE_CODEX_APP_SERVER_MODE=guardian` for one-off local testing. Config is
 preferred for repeatable deployments because it keeps the plugin behavior in the
 same reviewed file as the rest of the Codex harness setup.
 

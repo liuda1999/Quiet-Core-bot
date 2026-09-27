@@ -351,7 +351,7 @@ describe("doctor repair sequencing", () => {
       return true;
     });
     mocks.maybeRepairManagedNpmOpenClawPeerLinks.mockImplementation(async () => {
-      events.push("openclaw-peer-links");
+      events.push("quiet-core-bot-peer-links");
       return true;
     });
     mocks.repairMissingConfiguredPluginInstalls.mockImplementation(async () => {
@@ -381,7 +381,7 @@ describe("doctor repair sequencing", () => {
       doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
-    expect(events).toEqual(["bundled-shadow-cleanup", "openclaw-peer-links", "missing-installs"]);
+    expect(events).toEqual(["bundled-shadow-cleanup", "quiet-core-bot-peer-links", "missing-installs"]);
     expect(mocks.maybeRepairStaleManagedNpmBundledPlugins).toHaveBeenCalledOnce();
     const cleanupCall = mocks.maybeRepairStaleManagedNpmBundledPlugins.mock.calls[0]?.[0];
     expect(cleanupCall?.config.plugins?.entries?.["google-meet"]).toEqual({ enabled: true });
@@ -533,7 +533,7 @@ describe("doctor repair sequencing", () => {
 
   it("auto-enables newly installed configured plugins after doctor repair", async () => {
     mocks.repairMissingConfiguredPluginInstalls.mockResolvedValueOnce({
-      changes: ['Installed missing configured plugin "brave" from @openclaw/brave-plugin.'],
+      changes: ['Installed missing configured plugin "brave" from @quiet-core/brave-plugin.'],
       warnings: [],
     });
     mocks.applyPluginAutoEnable.mockImplementationOnce((params: { config: OpenClawConfig }) => ({
@@ -571,14 +571,14 @@ describe("doctor repair sequencing", () => {
     expect(result.state.candidate.plugins?.allow).toEqual(["telegram", "brave"]);
     expect(result.state.candidate.plugins?.entries?.brave?.enabled).toBe(true);
     expect(result.changeNotes).toStrictEqual([
-      'Installed missing configured plugin "brave" from @openclaw/brave-plugin.',
+      'Installed missing configured plugin "brave" from @quiet-core/brave-plugin.',
       "brave web search provider selected, enabled automatically.",
     ]);
   });
 
   it("explicitly enables plugins repaired from env-only configuration", async () => {
     mocks.repairMissingConfiguredPluginInstalls.mockResolvedValueOnce({
-      changes: ['Installed missing configured plugin "exa" from @openclaw/exa-plugin.'],
+      changes: ['Installed missing configured plugin "exa" from @quiet-core/exa-plugin.'],
       warnings: [],
       repairedPluginIds: ["exa"],
     });
@@ -615,7 +615,7 @@ describe("doctor repair sequencing", () => {
     });
     expect(result.state.candidate.plugins?.entries?.exa).toEqual({ enabled: true });
     expect(result.changeNotes).toStrictEqual([
-      'Installed missing configured plugin "exa" from @openclaw/exa-plugin.',
+      'Installed missing configured plugin "exa" from @quiet-core/exa-plugin.',
       "exa installed for existing configuration, enabled automatically.",
     ]);
   });
@@ -849,7 +849,7 @@ describe("doctor repair sequencing", () => {
       },
       doctorFixCommand: "quiet-core-bot doctor --fix",
       env: {
-        OPENCLAW_UPDATE_IN_PROGRESS: "1",
+        QUIET_CORE_UPDATE_IN_PROGRESS: "1",
       },
     });
 
@@ -865,7 +865,7 @@ describe("doctor repair sequencing", () => {
     mocks.repairMissingConfiguredPluginInstalls.mockResolvedValueOnce({
       changes: [],
       warnings: [
-        'Failed to install missing configured plugin "brave" from @openclaw/brave-plugin: package install failed',
+        'Failed to install missing configured plugin "brave" from @quiet-core/brave-plugin: package install failed',
       ],
       failedPluginIds: ["brave"],
     });
@@ -952,7 +952,7 @@ describe("doctor repair sequencing", () => {
       "plugins.entries: removed 1 stale plugin entry (old-plugin)",
     );
     expect(result.warningNotes).toStrictEqual([
-      'Failed to install missing configured plugin "brave" from @openclaw/brave-plugin: package install failed',
+      'Failed to install missing configured plugin "brave" from @quiet-core/brave-plugin: package install failed',
     ]);
   });
 
@@ -960,7 +960,7 @@ describe("doctor repair sequencing", () => {
     mocks.repairMissingConfiguredPluginInstalls.mockResolvedValueOnce({
       changes: [],
       warnings: [
-        'Failed to install missing configured channel plugin "whatsapp" from @openclaw/whatsapp: package install failed',
+        'Failed to install missing configured channel plugin "whatsapp" from @quiet-core/whatsapp: package install failed',
       ],
       failedPluginIds: ["whatsapp"],
     });
@@ -1005,7 +1005,7 @@ describe("doctor repair sequencing", () => {
       allowFrom: ["+15555550123"],
     });
     expect(result.warningNotes).toStrictEqual([
-      'Failed to install missing configured channel plugin "whatsapp" from @openclaw/whatsapp: package install failed',
+      'Failed to install missing configured channel plugin "whatsapp" from @quiet-core/whatsapp: package install failed',
     ]);
   });
 });

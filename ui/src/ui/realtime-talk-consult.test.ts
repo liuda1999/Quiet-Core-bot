@@ -82,7 +82,7 @@ describe("RealtimeTalkSession consult handoff", () => {
               state: "final",
               message: {
                 role: "assistant",
-                provider: "openclaw",
+                provider: "quiet-core-bot",
                 model: "delivery-mirror",
                 text: "The requested status is green.",
               },
@@ -143,7 +143,7 @@ describe("RealtimeTalkSession consult handoff", () => {
                   state: "final",
                   message: {
                     role: "assistant",
-                    provider: "openclaw",
+                    provider: "quiet-core-bot",
                     model: "delivery-mirror",
                     text: "The slow source reply wins.",
                   },
@@ -215,7 +215,7 @@ describe("RealtimeTalkSession consult handoff", () => {
                 state: "final",
                 message: {
                   role: "assistant",
-                  provider: "openclaw",
+                  provider: "quiet-core-bot",
                   model: "delivery-mirror",
                   text: "The source reply still wins.",
                 },
@@ -284,7 +284,7 @@ describe("RealtimeTalkSession consult handoff", () => {
                   state: "final",
                   message: {
                     role: "assistant",
-                    provider: "openclaw",
+                    provider: "quiet-core-bot",
                     model: "delivery-mirror",
                     text: "The source reply beats the fallback.",
                   },

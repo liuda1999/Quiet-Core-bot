@@ -15,7 +15,7 @@ export function formatMemoryVectorDegradedWriteReason(loadError?: string): strin
 export function formatMemoryVectorTableMissingHint(): string {
   return (
     "memory_index_chunks_vec is missing; skipping vector row maintenance and continuing with FTS-only indexing. " +
-    'Run "openclaw memory index --force" to rebuild the vector index.'
+    'Run "quiet-core-bot memory index --force" to rebuild the vector index.'
   );
 }
 

@@ -1,9 +1,9 @@
 // Formats ACP diagnostics and runtime error details for command replies.
-import { formatAcpRuntimeErrorText } from "@openclaw/acp-core/runtime/error-text";
+import { formatAcpRuntimeErrorText } from "@quiet-core/acp-core/runtime/error-text";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/normalization-core/string-coerce";
 import { getAcpSessionManager } from "../../../acp/control-plane/manager.js";
 import { toAcpRuntimeError } from "../../../acp/runtime/errors.js";
 import { getAcpRuntimeBackend, requireAcpRuntimeBackend } from "../../../acp/runtime/registry.js";

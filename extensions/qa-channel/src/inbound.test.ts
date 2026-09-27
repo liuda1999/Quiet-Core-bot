@@ -1,5 +1,5 @@
 // Qa Channel tests cover inbound plugin behavior.
-import { createPluginRuntimeMock } from "openclaw/plugin-sdk/channel-test-helpers";
+import { createPluginRuntimeMock } from "quiet-core-bot/plugin-sdk/channel-test-helpers";
 import { describe, expect, it, vi } from "vitest";
 import { setQaChannelRuntime } from "../api.js";
 import { handleQaInbound, isHttpMediaUrl } from "./inbound.js";
@@ -20,7 +20,7 @@ function createQaInboundParams(
       enabled: true,
       configured: true,
       baseUrl: "http://127.0.0.1:43123",
-      botUserId: "openclaw",
+      botUserId: "quiet-core-bot",
       botDisplayName: "OpenClaw QA",
       pollTimeoutMs: 250,
       config: {
@@ -81,7 +81,7 @@ describe("handleQaInbound", () => {
           },
           senderId: "alice",
           senderName: "Alice",
-          text: "@openclaw ping",
+          text: "@quiet-core-bot ping",
         },
       }),
     );

@@ -137,11 +137,11 @@ function readManifest(manifestPath) {
 
 function writeXcconfig(manifest) {
   const lines = [
-    "OPENCLAW_CODE_SIGN_STYLE = Manual",
-    "OPENCLAW_CODE_SIGN_IDENTITY = Apple Distribution",
+    "QUIET_CORE_CODE_SIGN_STYLE = Manual",
+    "QUIET_CORE_CODE_SIGN_IDENTITY = Apple Distribution",
   ];
   if (typeof manifest.appGroupId === "string") {
-    lines.push(`OPENCLAW_APP_GROUP_ID = ${manifest.appGroupId}`);
+    lines.push(`QUIET_CORE_APP_GROUP_ID = ${manifest.appGroupId}`);
   }
 
   for (const target of manifest.targets) {

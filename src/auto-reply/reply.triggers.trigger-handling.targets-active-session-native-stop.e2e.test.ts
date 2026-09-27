@@ -410,7 +410,7 @@ describe("trigger handling", () => {
 
   it("acknowledges bare /new without invoking the model or loading startup memory", async () => {
     await withTempHome(async (home) => {
-      const workspaceDir = join(home, "openclaw");
+      const workspaceDir = join(home, "quiet-core-bot");
       const nowMs = Date.now();
       const todayStamp = formatDateStampForZone(nowMs, TEST_TIME_ZONE);
       const yesterdayStamp = formatDateStampForZone(nowMs - 24 * 60 * 60 * 1000, TEST_TIME_ZONE);
@@ -432,7 +432,7 @@ describe("trigger handling", () => {
 
   it("acknowledges normalized bare /RESET without invoking the model", async () => {
     await withTempHome(async (home) => {
-      const workspaceDir = join(home, "openclaw");
+      const workspaceDir = join(home, "quiet-core-bot");
       const nowMs = Date.now();
       const todayStamp = formatDateStampForZone(nowMs, TEST_TIME_ZONE);
       await writeDailyMemoryNotes(workspaceDir, [
@@ -779,7 +779,7 @@ describe("trigger handling", () => {
       const runEmbeddedAgentMock = getRunEmbeddedAgentMock();
       runEmbeddedAgentMock.mockReset();
       const storePath = requireSessionStorePath(cfg);
-      const authDir = join(home, ".openclaw", "agents", "main", "agent");
+      const authDir = join(home, ".quiet-core-bot", "agents", "main", "agent");
       saveAuthProfileStore(
         {
           version: 1,

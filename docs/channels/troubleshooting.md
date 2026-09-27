@@ -73,7 +73,7 @@ Full troubleshooting: [WhatsApp troubleshooting](/channels/whatsapp#troubleshoot
 | Startup reports `getMe returned 401` | Check configured token source                          | Re-copy or regenerate the BotFather token and update `botToken`, `tokenFile`, or default-account `TELEGRAM_BOT_TOKEN`.     |
 | Polling stalls or reconnects slowly  | `quiet-core-bot logs --follow` for polling diagnostics | Upgrade; if restarts are false positives, tune `pollingStallThresholdMs`. Persistent stalls still point to proxy/DNS/IPv6. |
 | `setMyCommands` rejected at startup  | Inspect logs for `BOT_COMMANDS_TOO_MUCH`               | Reduce plugin/skill/custom Telegram commands or disable native menus.                                                      |
-| Upgraded and allowlist blocks you    | `openclaw security audit` and config allowlists        | Run `quiet-core-bot doctor --fix` or replace `@username` with numeric sender IDs.                                          |
+| Upgraded and allowlist blocks you    | `quiet-core-bot security audit` and config allowlists        | Run `quiet-core-bot doctor --fix` or replace `@username` with numeric sender IDs.                                          |
 
 Full troubleshooting: [Telegram troubleshooting](/channels/telegram#troubleshooting)
 
@@ -149,9 +149,9 @@ Full troubleshooting: [QQ Bot troubleshooting](/channels/qqbot#troubleshooting)
 | ----------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------- |
 | Logged in but ignores room messages | `quiet-core-bot channels status --probe` | Check `groupPolicy`, room allowlist, and mention gating.                  |
 | DMs do not process                  | `quiet-core-bot pairing list matrix`     | Approve sender or adjust DM policy.                                       |
-| Encrypted rooms fail                | `openclaw matrix verify status`          | Re-verify the device, then check `openclaw matrix verify backup status`.  |
-| Backup restore is pending/broken    | `openclaw matrix verify backup status`   | Run `openclaw matrix verify backup restore` or rerun with a recovery key. |
-| Cross-signing/bootstrap looks wrong | `openclaw matrix verify bootstrap`       | Repair secret storage, cross-signing, and backup state in one pass.       |
+| Encrypted rooms fail                | `quiet-core-bot matrix verify status`          | Re-verify the device, then check `quiet-core-bot matrix verify backup status`.  |
+| Backup restore is pending/broken    | `quiet-core-bot matrix verify backup status`   | Run `quiet-core-bot matrix verify backup restore` or rerun with a recovery key. |
+| Cross-signing/bootstrap looks wrong | `quiet-core-bot matrix verify bootstrap`       | Repair secret storage, cross-signing, and backup state in one pass.       |
 
 Full setup and config: [Matrix](/channels/matrix)
 

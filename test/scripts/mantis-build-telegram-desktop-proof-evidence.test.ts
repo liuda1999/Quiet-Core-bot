@@ -83,14 +83,14 @@ describe("scripts/mantis/build-telegram-desktop-proof-evidence", () => {
     expect(manifest.artifacts.map((artifact) => artifact.targetPath)).toContain(
       "candidate/telegram-desktop-proof.gif",
     );
-    const artifactUrl = "https://github.com/openclaw/openclaw/actions/runs/1/artifacts/2";
+    const artifactUrl = "https://github.com/liuda1999/Quiet-Core-bot/actions/runs/1/artifacts/2";
     const body = renderEvidenceComment({
       artifactUrl,
       manifest,
       marker: "<!-- mantis-telegram-desktop-proof -->",
       rawBase: "https://qa.openclaw.ai/mantis/telegram-desktop/pr-1/run-1",
       requestSource: "workflow_dispatch",
-      runUrl: "https://github.com/openclaw/openclaw/actions/runs/1",
+      runUrl: "https://github.com/liuda1999/Quiet-Core-bot/actions/runs/1",
       treeUrl: "https://qa.openclaw.ai/mantis/telegram-desktop/pr-1/run-1/index.json",
     });
 

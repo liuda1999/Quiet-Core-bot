@@ -11,7 +11,7 @@ Quiet Core bot Codex app-server harness and model provider plugin with a Codex-m
 
 ## Distribution
 
-- Package: `@openclaw/codex`
+- Package: `@quiet-core/codex`
 - Install route: npm; ClawHub
 
 ## Surface

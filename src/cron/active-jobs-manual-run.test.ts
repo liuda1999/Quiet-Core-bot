@@ -38,7 +38,7 @@ import {
 import type { CronJob } from "./types.js";
 
 const { logger, makeStorePath } = setupCronServiceSuite({
-  prefix: "openclaw-cron-active-jobs-manual-run-",
+  prefix: "quiet-core-bot-cron-active-jobs-manual-run-",
   baseTimeIso: "2025-12-13T17:00:00.000Z",
 });
 

@@ -147,7 +147,7 @@ if [[ "$IDENTITY" == "-" ]]; then
   timestamp_arg="--timestamp=none"
 fi
 
-ENT_TMP_DIR=$(mktemp -d -t openclaw-entitlements.XXXXXX)
+ENT_TMP_DIR=$(mktemp -d -t quiet-core-bot-entitlements.XXXXXX)
 trap cleanup EXIT
 ENT_TMP_APP="$ENT_TMP_DIR/app.plist"
 
@@ -242,7 +242,7 @@ verify_team_ids() {
 }
 
 # Sign bundled helper binaries before signing the app bundle.
-MLX_TTS_HELPER="$APP_BUNDLE/Contents/MacOS/openclaw-mlx-tts"
+MLX_TTS_HELPER="$APP_BUNDLE/Contents/MacOS/quiet-core-bot-mlx-tts"
 if [ -f "$MLX_TTS_HELPER" ]; then
   echo "Signing MLX TTS helper"; sign_item "$MLX_TTS_HELPER" "$APP_ENTITLEMENTS"
 fi

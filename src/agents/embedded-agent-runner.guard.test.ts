@@ -1,9 +1,9 @@
 // Covers session-manager guard behavior for tool-result pairing and transcript
 // redaction.
-import type { AgentMessage } from "openclaw/plugin-sdk/agent-core";
-import { SessionManager } from "openclaw/plugin-sdk/agent-sessions";
+import type { AgentMessage } from "quiet-core-bot/plugin-sdk/agent-core";
+import { SessionManager } from "quiet-core-bot/plugin-sdk/agent-sessions";
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { guardSessionManager } from "./session-tool-result-guard-wrapper.js";
 import { sanitizeToolUseResultPairing } from "./session-transcript-repair.js";
 
@@ -50,7 +50,7 @@ describe("guardSessionManager integration", () => {
     appendMessage(assistantToolCall("call_1"));
     appendMessage({
       role: "assistant",
-      provider: "openclaw",
+      provider: "quiet-core-bot",
       model: "delivery-mirror",
       content: [{ type: "text", text: "display copy" }],
     } as AgentMessage);

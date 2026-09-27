@@ -404,9 +404,7 @@ async function main(): Promise<void> {
   );
   if (!opts.quiet) {
     process.stdout.write(
-      `snapshots in ${opts.snapDir}/ — diff with:\n` +
-        `  node .agents/skills/openclaw-test-heap-leaks/scripts/heapsnapshot-delta.mjs ` +
-        `${baseline.snapshotPath} ${final.snapshotPath} --top 30\n`,
+      `snapshots in ${opts.snapDir}/ — compare ${baseline.snapshotPath} vs ${final.snapshotPath}\n`,
     );
   }
   process.exit(verdict === "PASS" ? 0 : 1);

@@ -4,7 +4,7 @@
  * requirements, and formats node invoke results for the exec tool.
  */
 import crypto from "node:crypto";
-import { normalizeNullableString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeNullableString } from "@quiet-core/normalization-core/string-coerce";
 import {
   describeInterpreterInlineEval,
   type InterpreterInlineEvalHit,

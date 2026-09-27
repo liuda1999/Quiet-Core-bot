@@ -1,9 +1,9 @@
 /** Loads and normalizes Quiet Core bot plugin manifests, including contracts and config schemas. */
 import fs from "node:fs";
 import path from "node:path";
-import { normalizeModelCatalog } from "@openclaw/model-catalog-core/model-catalog-normalize";
-import { normalizeModelCatalogProviderId } from "@openclaw/model-catalog-core/model-catalog-refs";
-import type { ModelCatalog } from "@openclaw/model-catalog-core/model-catalog-types";
+import { normalizeModelCatalog } from "@quiet-core/model-catalog-core/model-catalog-normalize";
+import { normalizeModelCatalogProviderId } from "@quiet-core/model-catalog-core/model-catalog-refs";
+import type { ModelCatalog } from "@quiet-core/model-catalog-core/model-catalog-types";
 import { normalizeOptionalString } from "../../packages/normalization-core/src/string-coerce.js";
 import { normalizeTrimmedStringList } from "../../packages/normalization-core/src/string-normalization.js";
 import type { ChannelConfigRuntimeSchema } from "../channels/plugins/types.config.js";
@@ -23,7 +23,7 @@ import { createPluginCacheKey, PluginLruCache } from "./plugin-cache-primitives.
 import type { PluginKind } from "./plugin-kind.types.js";
 
 /** Canonical plugin manifest filename inside plugin roots. */
-export const PLUGIN_MANIFEST_FILENAME = "openclaw.plugin.json";
+export const PLUGIN_MANIFEST_FILENAME = "quiet-core-bot.plugin.json";
 export const PLUGIN_MANIFEST_FILENAMES = [PLUGIN_MANIFEST_FILENAME] as const;
 export const MAX_PLUGIN_MANIFEST_BYTES = 256 * 1024;
 const MAX_PLUGIN_MANIFEST_LOAD_CACHE_ENTRIES = 512;
@@ -1875,7 +1875,7 @@ export function loadPluginManifest(
   });
 }
 
-// package.json "openclaw" metadata (used for setup/catalog)
+// package.json "quiet-core-bot" metadata (used for setup/catalog)
 export type PluginPackageChannel = {
   id?: string;
   label?: string;
@@ -2020,7 +2020,7 @@ export function resolvePackageExtensionEntries(
     return {
       status: "invalid",
       entries: [],
-      error: 'package.json "openclaw" field must be an object',
+      error: 'package.json "quiet-core-bot" field must be an object',
     };
   }
   const raw = rawOpenClaw.extensions;
@@ -2031,7 +2031,7 @@ export function resolvePackageExtensionEntries(
     return {
       status: "invalid",
       entries: [],
-      error: "package.json openclaw.extensions must be an array",
+      error: "package.json quiet-core-bot.extensions must be an array",
     };
   }
   const entries: string[] = [];
@@ -2041,7 +2041,7 @@ export function resolvePackageExtensionEntries(
       return {
         status: "invalid",
         entries: [],
-        error: `package.json openclaw.extensions[${index}] must be a non-empty string`,
+        error: `package.json quiet-core-bot.extensions[${index}] must be a non-empty string`,
       };
     }
     entries.push(normalized);

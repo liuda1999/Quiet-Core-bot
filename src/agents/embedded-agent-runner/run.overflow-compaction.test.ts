@@ -166,7 +166,7 @@ function makeForwardedRuntimePlan(overrides: RuntimePlanOverrides = {}): AgentRu
     resolvedRef: {
       provider: "anthropic",
       modelId: "test-model",
-      harnessId: "openclaw",
+      harnessId: "quiet-core-bot",
     },
     tools: {
       normalize: vi.fn((tools) => tools),
@@ -416,7 +416,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
       mockedEnsureAuthProfileStoreWithoutExternalProfiles,
     ) as [string | undefined, { allowKeychainPrompt?: boolean } | undefined];
     expect(typeof agentDir).toBe("string");
-    expect(String(agentDir).replaceAll("\\", "/").endsWith("/.openclaw/agents/main/agent")).toBe(
+    expect(String(agentDir).replaceAll("\\", "/").endsWith("/.quiet-core-bot/agents/main/agent")).toBe(
       true,
     );
     expect(authStoreOptions).toEqual({ allowKeychainPrompt: false });
@@ -2168,7 +2168,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
   });
 
   it("recovers preflight compaction when stale tokens point at an empty transcript", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-empty-preflight-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-empty-preflight-"));
     const storePath = path.join(dir, "sessions.json");
     await fs.writeFile(
       storePath,
@@ -2306,7 +2306,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
     ).length;
 
   it("D-OVF-1(a): submits the prompt best-effort when a precheck overflow finds no compactable region", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-noop-preflight-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-noop-preflight-"));
     const storePath = path.join(dir, "sessions.json");
     await writeStaleTokenSnapshot(storePath);
 
@@ -2386,7 +2386,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
   });
 
   it("D-OVF-1(c): bounds the no-compactable-region self-heal to one best-effort submission", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-noop-preflight-bound-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-noop-preflight-bound-"));
     const storePath = path.join(dir, "sessions.json");
     await writeStaleTokenSnapshot(storePath);
 
@@ -2456,7 +2456,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
     "[context-overflow-precheck-already-compacted-submit] already compacted";
 
   it("D-OVF-3(a): submits the prompt best-effort when a precheck overflow is already compacted", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-already-compacted-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-already-compacted-"));
     const storePath = path.join(dir, "sessions.json");
     await writeStaleTokenSnapshot(storePath);
 
@@ -2537,7 +2537,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
   });
 
   it("D-OVF-3(c): shares the bounded self-heal budget with the no-compactable-region class", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-shared-selfheal-bound-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-shared-selfheal-bound-"));
     const storePath = path.join(dir, "sessions.json");
     await writeStaleTokenSnapshot(storePath);
 
@@ -2595,7 +2595,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
   });
 
   it("D-OVF-3(d): keeps the no-compactable-region (D-OVF-1) path unchanged", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-dovf1-no-regression-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-dovf1-no-regression-"));
     const storePath = path.join(dir, "sessions.json");
     await writeStaleTokenSnapshot(storePath);
 
@@ -2655,7 +2655,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
     });
 
   it("D-OVF-4(a): submits the prompt best-effort when an empty transcript cannot be compacted", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-empty-transcript-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-empty-transcript-"));
     const storePath = path.join(dir, "sessions.json");
     await writeStaleTokenSnapshot(storePath);
     const onUserMessagePersisted = vi.fn();
@@ -2746,7 +2746,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
   });
 
   it("D-OVF-4(c): shares the bounded self-heal budget with the D-OVF-1/D-OVF-3 classes", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-empty-transcript-bound-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-empty-transcript-bound-"));
     const storePath = path.join(dir, "sessions.json");
     await writeStaleTokenSnapshot(storePath);
 
@@ -2816,7 +2816,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
     // D-OVF-1 class: the transcript is below keepRecentTokens ("Nothing to compact").
     const noRegion = await runWithNoop(
       "Nothing to compact (session too small)",
-      "openclaw-dovf4-d-no-region-",
+      "quiet-core-bot-dovf4-d-no-region-",
     );
     expect(attemptsThatSkippedPrecheck()).toBe(1);
     expect(warnLogsMatching(NOOP_SUBMIT_NO_REGION_LOG)).toHaveLength(1);
@@ -2829,7 +2829,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
     mockedLog.info.mockClear();
 
     // D-OVF-3 class: the transcript's last entry is already a compaction entry.
-    const alreadyCompacted = await runWithNoop("Already compacted", "openclaw-dovf4-d-already-");
+    const alreadyCompacted = await runWithNoop("Already compacted", "quiet-core-bot-dovf4-d-already-");
     expect(attemptsThatSkippedPrecheck()).toBe(1);
     expect(warnLogsMatching(ALREADY_COMPACTED_SUBMIT_LOG)).toHaveLength(1);
     expect(warnLogsMatching(EMPTY_TRANSCRIPT_SUBMIT_LOG)).toHaveLength(0);
@@ -3383,7 +3383,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
     const closedPort = await reserveClosedLoopbackPort();
     // The harness resets the module registry, so the managed-proxy state is
     // published through the child-process env contract instead of in-process state.
-    vi.stubEnv("OPENCLAW_PROXY_ACTIVE", "1");
+    vi.stubEnv("QUIET_CORE_PROXY_ACTIVE", "1");
     vi.stubEnv("HTTPS_PROXY", `http://127.0.0.1:${closedPort}`);
     mockedResolveModelAsync.mockResolvedValue({
       model: null,
@@ -3418,7 +3418,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
     await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
     const address = server.address();
     const listeningPort = typeof address === "object" && address ? address.port : 0;
-    vi.stubEnv("OPENCLAW_PROXY_ACTIVE", "1");
+    vi.stubEnv("QUIET_CORE_PROXY_ACTIVE", "1");
     vi.stubEnv("HTTPS_PROXY", `http://127.0.0.1:${listeningPort}`);
     mockedResolveModelAsync.mockResolvedValue({
       model: null,

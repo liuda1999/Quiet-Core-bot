@@ -9,8 +9,8 @@ import {
 import type { RuntimeId } from "./runtime-parity.js";
 import type { RuntimeParityComparisonMode } from "./runtime-tool-metadata.js";
 
-const LEFT: HarnessVariant = { id: "left", label: "Left", runtime: "openclaw" };
-const RIGHT: HarnessVariant = { id: "right", label: "Right", runtime: "openclaw" };
+const LEFT: HarnessVariant = { id: "left", label: "Left", runtime: "quiet-core-bot" };
+const RIGHT: HarnessVariant = { id: "right", label: "Right", runtime: "quiet-core-bot" };
 
 const BASE_PROMPT_REPORT = {
   systemPrompt: {
@@ -64,12 +64,12 @@ function classify(
     scenarioId: "scenario",
     left: buildHarnessParityCell({
       variant: LEFT,
-      cell: makeCell("openclaw", left),
+      cell: makeCell("quiet-core-bot", left),
       tokenUsageSource: "live-usage",
     }),
     right: buildHarnessParityCell({
       variant: RIGHT,
-      cell: makeCell("openclaw", right),
+      cell: makeCell("quiet-core-bot", right),
       tokenUsageSource: "live-usage",
     }),
     ...(comparisonMode ? { comparisonMode } : {}),
@@ -267,7 +267,7 @@ describe("harness parity", () => {
   });
 
   it("labels mock token estimates separately from live usage", () => {
-    const sourceCell = makeCell("openclaw", {
+    const sourceCell = makeCell("quiet-core-bot", {
       usage: { inputTokens: 0, outputTokens: 0, totalTokens: 0 },
     });
     const cell = buildHarnessParityCell({

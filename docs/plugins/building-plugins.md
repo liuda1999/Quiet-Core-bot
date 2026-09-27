@@ -60,24 +60,24 @@ local proof.
 
 ```json package.json
 {
-  "name": "@myorg/openclaw-my-plugin",
+  "name": "@myorg/quiet-core-bot-my-plugin",
   "version": "1.0.0",
   "type": "module",
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": ["./index.ts"],
     "compat": {
       "pluginApi": ">=2026.3.24-beta.2",
       "minGatewayVersion": "2026.3.24-beta.2"
     },
     "build": {
-      "openclawVersion": "2026.3.24-beta.2",
+      "quiet-core-botVersion": "2026.3.24-beta.2",
       "pluginSdkVersion": "2026.3.24-beta.2"
     }
   }
 }
 ```
 
-```json openclaw.plugin.json
+```json quiet-core-bot.plugin.json
 {
   "id": "my-plugin",
   "name": "My Plugin",
@@ -121,7 +121,7 @@ local proof.
   <Step title="Register the tool">
     ```typescript index.ts
     import { Type } from "typebox";
-    import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
+    import { definePluginEntry } from "quiet-core-bot/plugin-sdk/plugin-entry";
 
     export default definePluginEntry({
       id: "my-plugin",
@@ -156,7 +156,7 @@ local proof.
 
     If the plugin registers a CLI command, run that command too. For example,
     a demo command should have an execution proof such as
-    `openclaw demo-plugin ping`.
+    `quiet-core-bot demo-plugin ping`.
 
     For a bundled plugin in this repository, Quiet Core bot discovers source-checkout
     plugin packages from the `extensions/*` workspace. Run the closest targeted
@@ -268,14 +268,14 @@ loading that plugin runtime until the tool is explicitly allowlisted.
 Import from focused SDK subpaths:
 
 ```typescript
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
-import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
+import { definePluginEntry } from "quiet-core-bot/plugin-sdk/plugin-entry";
+import { createPluginRuntimeStore } from "quiet-core-bot/plugin-sdk/runtime-store";
 ```
 
 Do not import from the deprecated root barrel:
 
 ```typescript
-import { definePluginEntry } from "openclaw/plugin-sdk";
+import { definePluginEntry } from "quiet-core-bot/plugin-sdk";
 ```
 
 Within your plugin package, use local barrel files such as `api.ts` and
@@ -287,15 +287,15 @@ Custom Gateway RPC methods are an advanced entry point. Keep them on a
 plugin-specific prefix; core admin namespaces such as `config.*`,
 `exec.approvals.*`, `operator.admin.*`, `wizard.*`, and `update.*` stay reserved
 and resolve to `operator.admin`. The
-`openclaw/plugin-sdk/gateway-method-runtime` bridge is reserved for plugin HTTP
+`quiet-core-bot/plugin-sdk/gateway-method-runtime` bridge is reserved for plugin HTTP
 routes that declare `contracts.gatewayMethodDispatch: ["authenticated-request"]`.
 
 For the full import map, see [Plugin SDK overview](/plugins/sdk-overview).
 
 ## Pre-submission checklist
 
-<Check>**package.json** has correct `openclaw` metadata</Check>
-<Check>**openclaw.plugin.json** manifest is present and valid</Check>
+<Check>**package.json** has correct `quiet-core-bot` metadata</Check>
+<Check>**quiet-core-bot.plugin.json** manifest is present and valid</Check>
 <Check>Entry point uses `defineChannelPluginEntry` or `definePluginEntry`</Check>
 <Check>All imports use focused `plugin-sdk/<subpath>` paths</Check>
 <Check>Internal imports use local modules, not SDK self-imports</Check>
@@ -304,7 +304,7 @@ For the full import map, see [Plugin SDK overview](/plugins/sdk-overview).
 
 ## Test against beta releases
 
-1. Watch for GitHub release tags on [openclaw/openclaw](https://github.com/openclaw/openclaw/releases) and subscribe via `Watch` > `Releases`. Beta tags look like `v2026.3.N-beta.1`. You can also turn on notifications for the official Quiet Core bot X account [@openclaw](https://x.com/openclaw) for release announcements.
+1. Watch for GitHub release tags on [liuda1999/quiet-core-bot](https://github.com/liuda1999/Quiet-Core-bot/releases) and subscribe via `Watch` > `Releases`. Beta tags look like `v2026.3.N-beta.1`. You can also turn on notifications for the official Quiet Core bot X account [@quiet-core-bot](https://x.com/quiet-core-bot) for release announcements.
 2. Test your plugin against the beta tag as soon as it appears. The window before stable is typically only a few hours.
 3. Post in your plugin's thread in the `plugin-forum` Discord channel after testing with either `all good` or what broke. If you do not have a thread yet, create one.
 4. If something breaks, open or update an issue titled `Beta blocker: <plugin-name> - <summary>` and apply the `beta-blocker` label. Put the issue link in your thread.

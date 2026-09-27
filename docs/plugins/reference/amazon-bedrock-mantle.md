@@ -11,7 +11,7 @@ Quiet Core bot Amazon Bedrock Mantle provider plugin for OpenAI-compatible model
 
 ## Distribution
 
-- Package: `@openclaw/amazon-bedrock-mantle-provider`
+- Package: `@quiet-core/amazon-bedrock-mantle-provider`
 - Install route: npm; ClawHub
 
 ## Surface

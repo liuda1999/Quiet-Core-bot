@@ -7,17 +7,17 @@ import { promisify } from "node:util";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { prepareAcpxCodexAuthConfig } from "./codex-auth-bridge.js";
 import { resolveAcpxPluginConfig } from "./config.js";
-import { OPENCLAW_ACPX_LEASE_ID_ARG, OPENCLAW_GATEWAY_INSTANCE_ID_ARG } from "./process-lease.js";
+import { QUIET_CORE_ACPX_LEASE_ID_ARG, QUIET_CORE_GATEWAY_INSTANCE_ID_ARG } from "./process-lease.js";
 
 const execFileAsync = promisify(execFile);
 const tempDirs: string[] = [];
 const previousEnv = {
   CODEX_HOME: process.env.CODEX_HOME,
-  OPENCLAW_AGENT_DIR: process.env.OPENCLAW_AGENT_DIR,
+  QUIET_CORE_AGENT_DIR: process.env.QUIET_CORE_AGENT_DIR,
 };
 
 async function makeTempDir(): Promise<string> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-acpx-codex-auth-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-acpx-codex-auth-"));
   tempDirs.push(dir);
   return dir;
 }
@@ -91,7 +91,7 @@ async function expectPathMissing(targetPath: string): Promise<void> {
 afterEach(async () => {
   vi.restoreAllMocks();
   restoreEnv("CODEX_HOME");
-  restoreEnv("OPENCLAW_AGENT_DIR");
+  restoreEnv("QUIET_CORE_AGENT_DIR");
   for (const dir of tempDirs.splice(0)) {
     await fs.rm(dir, { recursive: true, force: true });
   }
@@ -112,7 +112,7 @@ describe("prepareAcpxCodexAuthConfig", () => {
       "bin",
       "codex-acp.js",
     );
-    process.env.OPENCLAW_AGENT_DIR = agentDir;
+    process.env.QUIET_CORE_AGENT_DIR = agentDir;
 
     const pluginConfig = resolveAcpxPluginConfig({
       rawConfig: {},
@@ -307,9 +307,9 @@ describe("prepareAcpxCodexAuthConfig", () => {
       process.execPath,
       [
         generated.wrapperPath,
-        "--openclaw-acpx-lease-id",
+        "--quiet-core-bot-acpx-lease-id",
         "lease-1",
-        "--openclaw-gateway-instance-id",
+        "--quiet-core-bot-gateway-instance-id",
         "gateway-1",
       ],
       {
@@ -511,7 +511,7 @@ describe("prepareAcpxCodexAuthConfig", () => {
       ].join("\n"),
     );
     process.env.CODEX_HOME = sourceCodexHome;
-    process.env.OPENCLAW_AGENT_DIR = agentDir;
+    process.env.QUIET_CORE_AGENT_DIR = agentDir;
 
     const pluginConfig = resolveAcpxPluginConfig({
       rawConfig: {},
@@ -721,12 +721,12 @@ describe("prepareAcpxCodexAuthConfig", () => {
     await expect(
       execFileAsync(process.execPath, [
         generated.wrapperPath,
-        "--openclaw-run-configured",
+        "--quiet-core-bot-run-configured",
         process.execPath,
         stderrScript,
-        OPENCLAW_ACPX_LEASE_ID_ARG,
+        QUIET_CORE_ACPX_LEASE_ID_ARG,
         "lease-secret",
-        OPENCLAW_GATEWAY_INSTANCE_ID_ARG,
+        QUIET_CORE_GATEWAY_INSTANCE_ID_ARG,
         "gateway-test",
       ]),
     ).rejects.toMatchObject({ code: 1 });

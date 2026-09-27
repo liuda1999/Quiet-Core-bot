@@ -22,7 +22,7 @@ builds do not need a separate install.
 - If your build excludes bundled Nostr, install the npm package directly.
 
 ```bash
-quiet-core-bot plugins install @openclaw/nostr
+quiet-core-bot plugins install @quiet-core/nostr
 ```
 
 Use the bare package to follow the current official release tag. Pin an exact
@@ -98,14 +98,14 @@ Example:
     nostr: {
       privateKey: "${NOSTR_PRIVATE_KEY}",
       profile: {
-        name: "openclaw",
+        name: "quiet-core-bot",
         displayName: "Quiet Core bot",
         about: "Personal assistant DM bot",
         picture: "https://example.com/avatar.png",
         banner: "https://example.com/banner.png",
         website: "https://example.com",
-        nip05: "openclaw@example.com",
-        lud16: "openclaw@example.com",
+        nip05: "quiet-core-bot@example.com",
+        lud16: "quiet-core-bot@example.com",
       },
     },
   },

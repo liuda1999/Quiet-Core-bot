@@ -4,7 +4,7 @@
  * Validates profile names and allocates CDP ports/colors for newly persisted
  * browser profiles.
  */
-import { parseBrowserHttpUrl } from "openclaw/plugin-sdk/browser-config";
+import { parseBrowserHttpUrl } from "quiet-core-bot/plugin-sdk/browser-config";
 
 /**
  * CDP port allocation for browser profiles.
@@ -89,7 +89,7 @@ export function getUsedPorts(
 
 /** Default browser profile color palette. */
 export const PROFILE_COLORS = [
-  "#FF4500", // Orange-red (openclaw default)
+  "#FF4500", // Orange-red (quiet-core-bot default)
   "#0066CC", // Blue
   "#00AA00", // Green
   "#9933FF", // Purple

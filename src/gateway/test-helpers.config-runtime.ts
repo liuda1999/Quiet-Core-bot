@@ -19,7 +19,7 @@ type GatewayConfigModule = typeof import("../config/config.js");
 
 /** Wraps the real config module with gateway-test runtime overrides. */
 export function createGatewayConfigModuleMock(actual: GatewayConfigModule): GatewayConfigModule {
-  const resolveConfigPath = () => path.join(testConfigRoot.value, "openclaw.json");
+  const resolveConfigPath = () => path.join(testConfigRoot.value, "quiet-core-bot.json");
 
   const composeTestConfig = (baseConfig: Record<string, unknown>) => {
     const fileAgents =
@@ -36,7 +36,7 @@ export function createGatewayConfigModuleMock(actual: GatewayConfigModule): Gate
         : {};
     const defaults = {
       model: { primary: "anthropic/claude-opus-4-6" },
-      workspace: path.join(os.tmpdir(), "openclaw-gateway-test"),
+      workspace: path.join(os.tmpdir(), "quiet-core-bot-gateway-test"),
       ...fileDefaults,
       ...testState.agentConfig,
     };

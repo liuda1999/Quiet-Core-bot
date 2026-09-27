@@ -5,7 +5,7 @@
  * request ids, and binary payload guardrails into stable Quiet Core bot error shapes.
  */
 export { asFiniteNumber } from "../../packages/normalization-core/src/number-coercion.js";
-import { readResponseWithLimit } from "@openclaw/media-core/read-response-with-limit";
+import { readResponseWithLimit } from "@quiet-core/media-core/read-response-with-limit";
 import { normalizeOptionalString as trimToUndefined } from "../../packages/normalization-core/src/string-coerce.js";
 import { redactSensitiveText } from "../logging/redact.js";
 export { asBoolean } from "../utils/boolean.js";

@@ -9,7 +9,7 @@ import {
   parseStrictInteger,
   parseStrictNonNegativeInteger,
   parseStrictPositiveInteger,
-} from "openclaw/plugin-sdk/number-runtime";
+} from "quiet-core-bot/plugin-sdk/number-runtime";
 import { normalizeBrowserTimerDelayMs } from "../timer-delay.js";
 
 function hasRouteInputValue(value: unknown): boolean {

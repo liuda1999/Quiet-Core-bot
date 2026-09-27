@@ -95,7 +95,7 @@ function createCatalogEntry(id: string, label: string): ChannelPluginCatalogEntr
   return {
     id,
     label,
-    pluginId: `@openclaw/${id}`,
+    pluginId: `@quiet-core/${id}`,
     origin: "official",
     meta: {
       id,
@@ -104,7 +104,7 @@ function createCatalogEntry(id: string, label: string): ChannelPluginCatalogEntr
       docsPath: `/channels/${id}`,
       blurb: label,
     },
-    install: { npmSpec: `@openclaw/${id}` },
+    install: { npmSpec: `@quiet-core/${id}` },
   } as unknown as ChannelPluginCatalogEntry;
 }
 
@@ -375,11 +375,11 @@ describe("channels list", () => {
       pluginId: "discord",
       channelId: "discord",
       label: "Discord",
-      installSpec: "@openclaw/discord",
-      installCommand: "quiet-core-bot plugins install @openclaw/discord",
+      installSpec: "@quiet-core/discord",
+      installCommand: "quiet-core-bot plugins install @quiet-core/discord",
       doctorFixCommand: "quiet-core-bot doctor --fix",
       repairHint:
-        "Install the official external plugin with: quiet-core-bot plugins install @openclaw/discord, or run: quiet-core-bot doctor --fix.",
+        "Install the official external plugin with: quiet-core-bot plugins install @quiet-core/discord, or run: quiet-core-bot doctor --fix.",
     });
     mocks.readConfigFileSnapshot.mockResolvedValue({
       ...baseConfigSnapshot,
@@ -407,7 +407,7 @@ describe("channels list", () => {
     expect(output).toContain("configured");
     expect(output).toContain("disabled");
     expect(output).toContain(
-      "run quiet-core-bot plugins install @openclaw/discord or quiet-core-bot doctor --fix",
+      "run quiet-core-bot plugins install @quiet-core/discord or quiet-core-bot doctor --fix",
     );
     expect(output).not.toContain("no configured chat channels");
   });
@@ -423,11 +423,11 @@ describe("channels list", () => {
       pluginId: "discord",
       channelId: "discord",
       label: "Discord",
-      installSpec: "@openclaw/discord",
-      installCommand: "quiet-core-bot plugins install @openclaw/discord",
+      installSpec: "@quiet-core/discord",
+      installCommand: "quiet-core-bot plugins install @quiet-core/discord",
       doctorFixCommand: "quiet-core-bot doctor --fix",
       repairHint:
-        "Install the official external plugin with: quiet-core-bot plugins install @openclaw/discord, or run: quiet-core-bot doctor --fix.",
+        "Install the official external plugin with: quiet-core-bot plugins install @quiet-core/discord, or run: quiet-core-bot doctor --fix.",
     });
     mocks.readConfigFileSnapshot.mockResolvedValue({
       ...baseConfigSnapshot,

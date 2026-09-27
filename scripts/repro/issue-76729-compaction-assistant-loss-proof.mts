@@ -12,9 +12,9 @@
 import { mkdtempSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { SessionManager } from "openclaw/plugin-sdk/agent-sessions";
-import type { AgentMessage } from "openclaw/plugin-sdk/agent-core";
-import type { TextContent } from "openclaw/plugin-sdk/llm";
+import { SessionManager } from "quiet-core-bot/plugin-sdk/agent-sessions";
+import type { AgentMessage } from "quiet-core-bot/plugin-sdk/agent-core";
+import type { TextContent } from "quiet-core-bot/plugin-sdk/llm";
 import { makeAgentAssistantMessage } from "../../src/agents/test-helpers/agent-message-fixtures.js";
 import { rotateTranscriptAfterCompaction } from "../../src/agents/embedded-agent-runner/compaction-successor-transcript.js";
 

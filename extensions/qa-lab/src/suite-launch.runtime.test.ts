@@ -30,7 +30,7 @@ async function makeTempRepo(prefix: string) {
 
 async function writeEvidence(pathLocal: string, writeFile = true) {
   const evidence = {
-    kind: "openclaw.qa.evidence-summary",
+    kind: "quiet-core-bot.qa.evidence-summary",
     schemaVersion: 2,
     generatedAt: "2026-06-14T00:00:00.000Z",
     evidenceMode: "full",
@@ -682,7 +682,7 @@ describe("qa suite runtime launcher", () => {
   });
 
   it("preserves configured isolated worker start stagger overrides", async () => {
-    vi.stubEnv("OPENCLAW_QA_SUITE_WORKER_START_STAGGER_MS", "2500");
+    vi.stubEnv("QUIET_CORE_QA_SUITE_WORKER_START_STAGGER_MS", "2500");
     const repoRoot = await makeTempRepo("qa-suite-stagger-env-");
     await runQaSuite({
       repoRoot,
@@ -715,7 +715,7 @@ describe("qa suite runtime launcher", () => {
     await expect(
       runQaSuite({
         repoRoot: process.cwd(),
-        runtimePair: ["openclaw", "codex"],
+        runtimePair: ["quiet-core-bot", "codex"],
         scenarioIds: ["control-ui-chat-flow-playwright"],
       }),
     ).rejects.toThrow("--runtime-pair requires execution.kind: flow scenarios");

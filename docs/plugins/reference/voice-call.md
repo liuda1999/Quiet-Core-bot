@@ -11,7 +11,7 @@ Quiet Core bot voice-call plugin for Twilio, Telnyx, and Plivo phone calls.
 
 ## Distribution
 
-- Package: `@openclaw/voice-call`
+- Package: `@quiet-core/voice-call`
 - Install route: npm; ClawHub
 
 ## Surface

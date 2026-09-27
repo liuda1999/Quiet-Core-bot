@@ -15,12 +15,12 @@ import {
 } from "../../infra/kysely-sync.js";
 import { requireNodeSqlite } from "../../infra/node-sqlite.js";
 import { resolveSqliteDatabaseFilePaths } from "../../infra/sqlite-files.js";
-import type { DB as OpenClawAgentKyselyDatabase } from "../../state/openclaw-agent-db.generated.js";
+import type { DB as OpenClawAgentKyselyDatabase } from "../../state/quiet-core-bot-agent-db.generated.js";
 import {
   runOpenClawAgentWriteTransaction,
   type OpenClawAgentDatabase,
-} from "../../state/openclaw-agent-db.js";
-import { OPENCLAW_SQLITE_BUSY_TIMEOUT_MS } from "../../state/openclaw-state-db.js";
+} from "../../state/quiet-core-bot-agent-db.js";
+import { QUIET_CORE_SQLITE_BUSY_TIMEOUT_MS } from "../../state/quiet-core-bot-state-db.js";
 import { resolveUserPath } from "../../utils.js";
 import { resolveRegisteredAgentIdForDir } from "../agent-dir-registry.js";
 import { resolveDefaultAgentDir } from "../agent-scope-config.js";
@@ -50,13 +50,13 @@ function inferAgentIdFromDir(agentDir: string): string {
   return `custom-${hash}`;
 }
 
-// The auth database lives in the agent dir and shares the openclaw-agent schema
+// The auth database lives in the agent dir and shares the quiet-core-bot-agent schema
 // so auth store/state can move with the rest of agent-local durable state.
 function resolveAuthProfileDatabaseOptions(agentDir?: string) {
   const dir = resolveAgentDir(agentDir);
   return {
     agentId: resolveRegisteredAgentIdForDir(dir) ?? inferAgentIdFromDir(dir),
-    path: path.join(dir, "openclaw-agent.sqlite"),
+    path: path.join(dir, "quiet-core-bot-agent.sqlite"),
   };
 }
 
@@ -94,7 +94,7 @@ function readAuthProfileJsonCellReadOnly(pathname: string, target: "store" | "st
     // This short-lived reader bypasses the canonical agent DB bootstrap, but it
     // must share its busy policy so brief rollback-journal locks do not look
     // like missing credentials.
-    db.exec(`PRAGMA busy_timeout = ${OPENCLAW_SQLITE_BUSY_TIMEOUT_MS};`);
+    db.exec(`PRAGMA busy_timeout = ${QUIET_CORE_SQLITE_BUSY_TIMEOUT_MS};`);
     const kysely = getAuthProfileKysely(db);
     if (target === "store") {
       const row = executeSqliteQueryTakeFirstSync(

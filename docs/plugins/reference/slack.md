@@ -11,7 +11,7 @@ Quiet Core bot Slack channel plugin for channels, DMs, commands, and app events.
 
 ## Distribution
 
-- Package: `@openclaw/slack`
+- Package: `@quiet-core/slack`
 - Install route: npm; ClawHub
 
 ## Surface

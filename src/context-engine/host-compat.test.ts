@@ -5,7 +5,7 @@ import {
   buildGenericCliContextEngineHostSupport,
   CODEX_APP_SERVER_CONTEXT_ENGINE_HOST,
   evaluateContextEngineHostSupport,
-  OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST,
+  QUIET_CORE_EMBEDDED_CONTEXT_ENGINE_HOST,
 } from "./host-compat.js";
 import type { ContextEngine, ContextEngineHostCapability } from "./types.js";
 
@@ -79,7 +79,7 @@ describe("context engine host compatibility", () => {
     assertContextEngineHostSupport({
       contextEngine: engine,
       operation: "agent-run",
-      host: OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST,
+      host: QUIET_CORE_EMBEDDED_CONTEXT_ENGINE_HOST,
     });
   });
 

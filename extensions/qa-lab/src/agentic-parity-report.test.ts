@@ -45,7 +45,7 @@ function makeRuntimeParitySummary(): QaRuntimeParitySuiteSummary {
           drift: "none",
           cells: {
             openclaw: {
-              runtime: "openclaw",
+              runtime: "quiet-core-bot",
               transcriptBytes: '{"role":"assistant"}\n',
               toolCalls: [{ tool: "read_file", argsHash: "a", resultHash: "r" }],
               finalText: "done",
@@ -75,7 +75,7 @@ function makeRuntimeParitySummary(): QaRuntimeParitySuiteSummary {
           driftDetails: "tool call 1 differs",
           cells: {
             openclaw: {
-              runtime: "openclaw",
+              runtime: "quiet-core-bot",
               transcriptBytes: '{"role":"assistant"}\n',
               toolCalls: [{ tool: "read_file", argsHash: "a", resultHash: "r" }],
               finalText: "done",
@@ -104,7 +104,7 @@ function makeRuntimeParitySummary(): QaRuntimeParitySuiteSummary {
     run: {
       providerMode: "mock-openai",
       primaryModel: "openai/gpt-5.5",
-      runtimePair: ["openclaw", "codex"],
+      runtimePair: ["quiet-core-bot", "codex"],
     },
   };
 }
@@ -192,7 +192,7 @@ describe("qa agentic parity report", () => {
             drift: "none",
             cells: {
               openclaw: {
-                runtime: "openclaw",
+                runtime: "quiet-core-bot",
                 transcriptBytes: '{"role":"assistant"}\n',
                 toolCalls: [],
                 finalText: "done",
@@ -882,7 +882,7 @@ status=done`,
       comparedAt: "2026-05-10T00:00:00.000Z",
     });
 
-    expect(report.runtimePair).toEqual(["openclaw", "codex"]);
+    expect(report.runtimePair).toEqual(["quiet-core-bot", "codex"]);
     expect(report.pass).toBe(true);
     expect(report.driftCounts.none).toBe(1);
     expect(report.driftCounts["tool-call-shape"]).toBe(1);
@@ -957,7 +957,7 @@ status=done`,
     expect(report.pass).toBe(false);
     expect(report.failedScenarios).toBe(1);
     expect(report.failures).toContain(
-      "Approval turn tool followthrough missing live assistant-message usage (openclaw=0, codex=0).",
+      "Approval turn tool followthrough missing live assistant-message usage (quiet-core-bot=0, codex=0).",
     );
     expect(report.scenarios[0]?.status).toBe("fail");
   });
@@ -973,7 +973,7 @@ status=done`,
         },
         run: {
           providerMode: "live-frontier",
-          runtimePair: ["openclaw", "codex"],
+          runtimePair: ["quiet-core-bot", "codex"],
         },
       },
       comparedAt: "2026-05-10T00:00:00.000Z",
@@ -991,7 +991,7 @@ status=done`,
       }),
     );
 
-    expect(report).toContain("# OpenClaw Runtime Parity Report — openclaw vs codex");
+    expect(report).toContain("# OpenClaw Runtime Parity Report — quiet-core-bot vs codex");
     expect(report).toContain("| Tool-call-shape drift | 1 |");
     expect(report).toContain("### Compaction retry after mutating tool");
     expect(report).toContain("- drift: tool-call-shape");

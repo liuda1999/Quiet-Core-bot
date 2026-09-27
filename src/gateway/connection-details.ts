@@ -1,6 +1,6 @@
 // Gateway connection detail builder for CLI/user-facing target diagnostics.
-import { redactSensitiveUrlLikeString } from "@openclaw/net-policy/redact-sensitive-url";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { redactSensitiveUrlLikeString } from "@quiet-core/net-policy/redact-sensitive-url";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { resolveConfigPath, resolveGatewayPort } from "../config/paths.js";
 import type { OpenClawConfig } from "../config/types.js";
 import { isSecureWebSocketUrl } from "./net.js";
@@ -51,7 +51,7 @@ export function buildGatewayConnectionDetailsWithResolvers(
   const envUrlOverride =
     cliUrlOverride || options.ignoreEnvUrlOverride || options.localPortOverride !== undefined
       ? undefined
-      : normalizeOptionalString(process.env.OPENCLAW_GATEWAY_URL);
+      : normalizeOptionalString(process.env.QUIET_CORE_GATEWAY_URL);
   const urlOverride = cliUrlOverride ?? envUrlOverride;
   const remoteUrl = normalizeOptionalString(remote?.url);
   const remoteMisconfigured = isRemoteMode && !urlOverride && !remoteUrl;
@@ -61,7 +61,7 @@ export function buildGatewayConnectionDetailsWithResolvers(
   const displayUrl = redactSensitiveUrlLikeString(url);
   const urlSource = urlOverride
     ? urlSourceHint === "env"
-      ? "env OPENCLAW_GATEWAY_URL"
+      ? "env QUIET_CORE_GATEWAY_URL"
       : "cli --url"
     : remoteUrl
       ? "config gateway.remote.url"
@@ -73,7 +73,7 @@ export function buildGatewayConnectionDetailsWithResolvers(
     ? "Warn: gateway.mode=remote but gateway.remote.url is missing; set gateway.remote.url or switch gateway.mode=local."
     : undefined;
 
-  const allowPrivateWs = process.env.OPENCLAW_ALLOW_INSECURE_PRIVATE_WS === "1";
+  const allowPrivateWs = process.env.QUIET_CORE_ALLOW_INSECURE_PRIVATE_WS === "1";
   if (!isSecureWebSocketUrl(url, { allowPrivateWs })) {
     throw new Error(
       [
@@ -87,7 +87,7 @@ export function buildGatewayConnectionDetailsWithResolvers(
         "- or use Tailscale Serve/Funnel for HTTPS remote access",
         allowPrivateWs
           ? undefined
-          : "Break-glass (trusted private networks only): set OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1",
+          : "Break-glass (trusted private networks only): set QUIET_CORE_ALLOW_INSECURE_PRIVATE_WS=1",
         "Doctor: quiet-core-bot doctor --fix",
         "Docs: https://github.com/liuda1999/Quiet-Core-bot/gateway/remote",
       ].join("\n"),

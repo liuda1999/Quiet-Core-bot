@@ -3,7 +3,7 @@
  * Resolves usable access tokens, refreshes expired credentials under global
  * locks, adopts safer main-store credentials, and mirrors refreshed tokens.
  */
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { normalizeSecretInputString } from "../../config/types.secrets.js";
 import { formatErrorMessage } from "../../infra/errors.js";
 import { withFileLock } from "../../infra/file-lock.js";

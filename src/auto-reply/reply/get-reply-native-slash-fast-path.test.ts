@@ -58,7 +58,7 @@ describe("maybeResolveNativeSlashCommandFastReply", () => {
     const result = await maybeResolveNativeSlashCommandFastReply({
       ctx,
       cfg: markCompleteReplyConfig({
-        session: { store: "/tmp/openclaw-native-slash-sessions.json" },
+        session: { store: "/tmp/quiet-core-bot-native-slash-sessions.json" },
       } as OpenClawConfig),
       agentId: "main",
       agentDir: "/tmp/agent",
@@ -120,7 +120,7 @@ describe("maybeResolveNativeSlashCommandFastReply", () => {
     const result = await maybeResolveNativeSlashCommandFastReply({
       ctx,
       cfg: markCompleteReplyConfig({
-        session: { store: "/tmp/openclaw-text-slash-sessions.json" },
+        session: { store: "/tmp/quiet-core-bot-text-slash-sessions.json" },
       } as OpenClawConfig),
       agentId: "dev",
       agentDir: "/tmp/agent",
@@ -173,7 +173,7 @@ describe("maybeResolveNativeSlashCommandFastReply", () => {
     const result = await maybeResolveNativeSlashCommandFastReply({
       ctx,
       cfg: markCompleteReplyConfig({
-        session: { store: "/tmp/openclaw-external-text-slash-sessions.json" },
+        session: { store: "/tmp/quiet-core-bot-external-text-slash-sessions.json" },
       } as OpenClawConfig),
       agentId: "dev",
       agentDir: "/tmp/agent",

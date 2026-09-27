@@ -10,7 +10,7 @@ import { buildSessionStartupContextPrelude, shouldApplyStartupContext } from "./
 const tmpDirs: string[] = [];
 
 async function makeWorkspace(): Promise<string> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-startup-context-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-startup-context-"));
   tmpDirs.push(dir);
   await fs.mkdir(path.join(dir, "memory"), { recursive: true });
   return dir;

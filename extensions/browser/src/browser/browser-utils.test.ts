@@ -231,14 +231,14 @@ describe("fetchBrowserJson loopback auth (bridge auth registry)", () => {
 describe("browser server-context listKnownProfileNames", () => {
   it("includes configured and runtime-only profile names", () => {
     const resolved = resolveBrowserConfig({
-      defaultProfile: "openclaw",
+      defaultProfile: "quiet-core-bot",
       profiles: {
         openclaw: { cdpPort: 18800, color: "#FF4500" },
       },
     });
-    const openclaw = resolveProfile(resolved, "openclaw");
+    const openclaw = resolveProfile(resolved, "quiet-core-bot");
     if (!openclaw) {
-      throw new Error("expected openclaw profile");
+      throw new Error("expected quiet-core-bot profile");
     }
 
     const state: BrowserServerState = {
@@ -256,6 +256,6 @@ describe("browser server-context listKnownProfileNames", () => {
       ]),
     };
 
-    expect(listKnownProfileNames(state).toSorted()).toEqual(["openclaw", "stale-removed", "user"]);
+    expect(listKnownProfileNames(state).toSorted()).toEqual(["quiet-core-bot", "stale-removed", "user"]);
   });
 });

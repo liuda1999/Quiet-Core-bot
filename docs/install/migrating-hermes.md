@@ -10,7 +10,7 @@ title: "Migrating from Hermes"
 Quiet Core bot imports Hermes state through a bundled migration provider. The provider previews everything before changing state, redacts secrets in plans and reports, and creates a verified backup before apply.
 
 <Note>
-Imports require a fresh Quiet Core bot setup. If you already have local Quiet Core bot state, reset config, credentials, sessions, and the workspace first, or use `openclaw migrate` directly with `--overwrite` after reviewing the plan.
+Imports require a fresh Quiet Core bot setup. If you already have local Quiet Core bot state, reset config, credentials, sessions, and the workspace first, or use `quiet-core-bot migrate` directly with `--overwrite` after reviewing the plan.
 </Note>
 
 ## Two ways to import
@@ -31,11 +31,11 @@ Imports require a fresh Quiet Core bot setup. If you already have local Quiet Co
 
   </Tab>
   <Tab title="CLI">
-    Use `openclaw migrate` for scripted or repeatable runs. See [`openclaw migrate`](/cli/migrate) for the full reference.
+    Use `quiet-core-bot migrate` for scripted or repeatable runs. See [`quiet-core-bot migrate`](/cli/migrate) for the full reference.
 
     ```bash
-    openclaw migrate hermes --dry-run    # preview only
-    openclaw migrate apply hermes --yes  # apply with confirmation skipped
+    quiet-core-bot migrate hermes --dry-run    # preview only
+    quiet-core-bot migrate apply hermes --yes  # apply with confirmation skipped
     ```
 
     Add `--from <path>` when Hermes lives outside `~/.hermes`.
@@ -66,7 +66,7 @@ Imports require a fresh Quiet Core bot setup. If you already have local Quiet Co
     Skills with a `SKILL.md` file under `skills/<name>/` are copied, along with per-skill config values from `skills.config`.
   </Accordion>
   <Accordion title="Auth credentials">
-    Interactive `openclaw migrate` asks before importing auth credentials, with yes selected by default. Accepted imports include OpenCode OpenAI OAuth credentials from OpenCode `auth.json`, OpenCode and GitHub Copilot entries from OpenCode `auth.json`, and the [supported `.env` keys](/cli/migrate#supported-env-keys). Hermes `auth.json` OAuth entries are legacy state and are surfaced as manual reauth/doctor work instead of imported into live auth. Use `--include-secrets` for non-interactive `openclaw migrate` credential import, `--no-auth-credentials` to skip it, or onboarding `--import-secrets` when importing from the onboarding wizard.
+    Interactive `quiet-core-bot migrate` asks before importing auth credentials, with yes selected by default. Accepted imports include OpenCode OpenAI OAuth credentials from OpenCode `auth.json`, OpenCode and GitHub Copilot entries from OpenCode `auth.json`, and the [supported `.env` keys](/cli/migrate#supported-env-keys). Hermes `auth.json` OAuth entries are legacy state and are surfaced as manual reauth/doctor work instead of imported into live auth. Use `--include-secrets` for non-interactive `quiet-core-bot migrate` credential import, `--no-auth-credentials` to skip it, or onboarding `--import-secrets` when importing from the onboarding wizard.
   </Accordion>
 </AccordionGroup>
 
@@ -88,7 +88,7 @@ Quiet Core bot refuses to execute or trust this state automatically because the 
 <Steps>
   <Step title="Preview the plan">
     ```bash
-    openclaw migrate hermes --dry-run
+    quiet-core-bot migrate hermes --dry-run
     ```
 
     The plan lists everything that will change, including conflicts, skipped items, and any sensitive items. Plan output redacts nested secret-looking keys.
@@ -96,7 +96,7 @@ Quiet Core bot refuses to execute or trust this state automatically because the 
   </Step>
   <Step title="Apply with backup">
     ```bash
-    openclaw migrate apply hermes --yes
+    quiet-core-bot migrate apply hermes --yes
     ```
 
     Quiet Core bot creates and verifies a backup before applying. This non-interactive example imports non-secret state. Run without `--yes` to answer the credential prompt, or add `--include-secrets` to include supported credentials in unattended runs.
@@ -135,7 +135,7 @@ If a conflict surfaces mid-apply (for example, an unexpected race on a config fi
 
 ## Secrets
 
-Interactive `openclaw migrate` asks whether to import detected auth credentials, with yes selected by default.
+Interactive `quiet-core-bot migrate` asks whether to import detected auth credentials, with yes selected by default.
 
 - Accepting the prompt imports OpenCode OpenAI OAuth credentials from OpenCode `auth.json`, OpenCode and GitHub Copilot entries from OpenCode `auth.json`, and the [supported `.env` keys](/cli/migrate#supported-env-keys). Hermes `auth.json` OAuth entries are reported for manual OpenAI reauth or doctor repair.
 - Use `--no-auth-credentials` or choose no at the prompt to import non-secret state only.
@@ -146,8 +146,8 @@ Interactive `openclaw migrate` asks whether to import detected auth credentials,
 ## JSON output for automation
 
 ```bash
-openclaw migrate hermes --dry-run --json
-openclaw migrate apply hermes --json --yes
+quiet-core-bot migrate hermes --dry-run --json
+quiet-core-bot migrate apply hermes --json --yes
 ```
 
 With `--json` and no `--yes`, apply prints the plan and does not mutate state. This is the safest mode for CI and shared scripts.
@@ -162,16 +162,16 @@ With `--json` and no `--yes`, apply prints the plan and does not mutate state. T
     Pass `--from /actual/path` (CLI) or `--import-source /actual/path` (onboarding).
   </Accordion>
   <Accordion title="Onboarding refuses to import on an existing setup">
-    Onboarding imports require a fresh setup. Either reset state and re-onboard, or use `openclaw migrate apply hermes` directly, which supports `--overwrite` and explicit backup control.
+    Onboarding imports require a fresh setup. Either reset state and re-onboard, or use `quiet-core-bot migrate apply hermes` directly, which supports `--overwrite` and explicit backup control.
   </Accordion>
   <Accordion title="API keys did not import">
-    Interactive `openclaw migrate` imports API keys only when you accept the credential prompt. Non-interactive `--yes` runs require `--include-secrets`; onboarding imports require `--import-secrets`. Only the [supported `.env` keys](/cli/migrate#supported-env-keys) are recognized; other variables in `.env` are ignored.
+    Interactive `quiet-core-bot migrate` imports API keys only when you accept the credential prompt. Non-interactive `--yes` runs require `--include-secrets`; onboarding imports require `--import-secrets`. Only the [supported `.env` keys](/cli/migrate#supported-env-keys) are recognized; other variables in `.env` are ignored.
   </Accordion>
 </AccordionGroup>
 
 ## Related
 
-- [`openclaw migrate`](/cli/migrate): full CLI reference, plugin contract, and JSON shapes.
+- [`quiet-core-bot migrate`](/cli/migrate): full CLI reference, plugin contract, and JSON shapes.
 - [Onboarding](/cli/onboard): wizard flow and non-interactive flags.
 - [Migrating](/install/migrating): move an Quiet Core bot install between machines.
 - [Doctor](/gateway/doctor): post-migration health check.

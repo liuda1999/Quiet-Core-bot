@@ -5,7 +5,7 @@ Official OpenClaw channel plugin for IRC.
 ## Install
 
 ```sh
-openclaw plugins install @openclaw/irc
+quiet-core-bot plugins install @quiet-core/irc
 ```
 
 ## Docs

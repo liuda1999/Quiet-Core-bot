@@ -11,7 +11,7 @@ Adds LM Studio model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/lmstudio-provider`
+- Package: `@quiet-core/lmstudio-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

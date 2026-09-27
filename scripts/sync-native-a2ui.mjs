@@ -17,7 +17,7 @@ export function getNativeA2uiResourcePaths(repoRoot = rootDir) {
       repoRoot,
       "apps",
       "shared",
-      "OpenClawKit",
+      "QuietCoreKit",
       "Sources",
       "OpenClawKit",
       "Resources",
@@ -142,15 +142,15 @@ function bundleA2ui(repoRoot = rootDir, env = process.env) {
 }
 
 async function withFreshBundleCheckSource(sourceDir, run) {
-  const tempDir = await fs.mkdtemp(path.join(tmpdir(), "openclaw-a2ui-native-check-"));
+  const tempDir = await fs.mkdtemp(path.join(tmpdir(), "quiet-core-bot-a2ui-native-check-"));
   try {
     const checkSourceDir = path.join(tempDir, "a2ui");
     await fs.mkdir(checkSourceDir, { recursive: true });
     await fs.copyFile(path.join(sourceDir, "index.html"), path.join(checkSourceDir, "index.html"));
     bundleA2ui(rootDir, {
       ...process.env,
-      OPENCLAW_A2UI_BUNDLE_OUT: path.join(checkSourceDir, "a2ui.bundle.js"),
-      OPENCLAW_A2UI_BUNDLE_HASH_FILE: path.join(tempDir, ".bundle.hash"),
+      QUIET_CORE_A2UI_BUNDLE_OUT: path.join(checkSourceDir, "a2ui.bundle.js"),
+      QUIET_CORE_A2UI_BUNDLE_HASH_FILE: path.join(tempDir, ".bundle.hash"),
     });
     await run(checkSourceDir);
   } finally {

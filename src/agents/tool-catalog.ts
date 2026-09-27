@@ -387,7 +387,7 @@ function buildCoreToolGroupMap() {
     (tool) => tool.id,
   );
   return {
-    "group:openclaw": openclawTools,
+    "group:quiet-core-bot": openclawTools,
     ...Object.fromEntries(sectionToolMap.entries()),
   };
 }

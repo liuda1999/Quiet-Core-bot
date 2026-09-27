@@ -8,8 +8,8 @@ import {
   PROTOCOL_VERSION,
   ndJsonStream,
 } from "@agentclientprotocol/sdk";
-import type { AcpServerOptions } from "@openclaw/acp-core/types";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import type { AcpServerOptions } from "@quiet-core/acp-core/types";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import {
   GATEWAY_CLIENT_CAPS,
   GATEWAY_CLIENT_MODES,
@@ -320,12 +320,12 @@ if (isMainModule({ currentFile: fileURLToPath(import.meta.url) })) {
   const argv = process.argv.slice(2);
   if (argv.includes("--token") || argv.includes("--gateway-token")) {
     console.error(
-      "Warning: --token can be exposed via process listings. Prefer --token-file or OPENCLAW_GATEWAY_TOKEN.",
+      "Warning: --token can be exposed via process listings. Prefer --token-file or QUIET_CORE_GATEWAY_TOKEN.",
     );
   }
   if (argv.includes("--password") || argv.includes("--gateway-password")) {
     console.error(
-      "Warning: --password can be exposed via process listings. Prefer --password-file or OPENCLAW_GATEWAY_PASSWORD.",
+      "Warning: --password can be exposed via process listings. Prefer --password-file or QUIET_CORE_GATEWAY_PASSWORD.",
     );
   }
   const opts = parseArgs(argv);

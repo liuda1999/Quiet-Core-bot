@@ -5,7 +5,7 @@
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { PluginDoctorStateMigration } from "openclaw/plugin-sdk/runtime-doctor";
+import type { PluginDoctorStateMigration } from "quiet-core-bot/plugin-sdk/runtime-doctor";
 
 type ActiveMemoryToggleEntry = {
   sessionKey: string;

@@ -11,7 +11,7 @@ Adds OpenRouter model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/openrouter-provider`
+- Package: `@quiet-core/openrouter-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

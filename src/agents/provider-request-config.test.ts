@@ -15,7 +15,7 @@ import {
   sanitizeRuntimeProviderRequestOverrides,
 } from "./provider-request-config.js";
 
-const ATTRIBUTION_ENV_KEY = "OPENCLAW_PROVIDER_ATTRIBUTION";
+const ATTRIBUTION_ENV_KEY = "QUIET_CORE_PROVIDER_ATTRIBUTION";
 
 // Attribution headers are opt-in, so the header-merging cases below run with the opt-in
 // enabled; the default-off contract has its own block.
@@ -497,7 +497,7 @@ describe("provider request config", () => {
       precedence: "defaults-win",
     });
 
-    expect(resolved?.originator).toBe("openclaw");
+    expect(resolved?.originator).toBe("quiet-core-bot");
     expect(typeof resolved?.version).toBe("string");
     expect(resolved?.["User-Agent"]).toMatch(/^openclaw\//);
     expect(resolved?.["X-Custom"]).toBe("1");
@@ -631,7 +631,7 @@ describe("provider request config", () => {
     expect(resolved.policy.endpointClass).toBe("openai-public");
     expect(resolved.capabilities.allowsResponsesStore).toBe(true);
     expect(resolved.headers?.authorization).toBe("Bearer test-key");
-    expect(resolved.headers?.originator).toBe("openclaw");
+    expect(resolved.headers?.originator).toBe("quiet-core-bot");
     expect(typeof resolved.headers?.version).toBe("string");
     expect(resolved.headers?.["User-Agent"]).toMatch(/^openclaw\//);
     expect(resolved.headers?.["X-Custom"]).toBe("1");

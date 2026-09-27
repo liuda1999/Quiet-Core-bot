@@ -41,7 +41,7 @@ describe("pinIosVersion", () => {
 
 - Draft release notes.
 `,
-      prefix: "openclaw-ios-pin-",
+      prefix: "quiet-core-bot-ios-pin-",
     });
 
     const result = pinIosVersion({
@@ -60,7 +60,7 @@ describe("pinIosVersion", () => {
     );
     expect(
       fs.readFileSync(path.join(rootDir, "apps", "ios", "Config", "Version.xcconfig"), "utf8"),
-    ).toContain("OPENCLAW_MARKETING_VERSION = 2026.4.7");
+    ).toContain("QUIET_CORE_MARKETING_VERSION = 2026.4.7");
     expect(
       fs.readFileSync(
         path.join(rootDir, "apps", "ios", "fastlane", "metadata", "en-US", "release_notes.txt"),
@@ -80,7 +80,7 @@ describe("pinIosVersion", () => {
 
 - Candidate release notes.
 `,
-      prefix: "openclaw-ios-pin-",
+      prefix: "quiet-core-bot-ios-pin-",
     });
 
     const result = pinIosVersion({
@@ -107,7 +107,7 @@ describe("pinIosVersion", () => {
 `,
       versionXcconfig: "stale\n",
       releaseNotes: "stale\n",
-      prefix: "openclaw-ios-pin-",
+      prefix: "quiet-core-bot-ios-pin-",
     });
 
     const result = pinIosVersion({

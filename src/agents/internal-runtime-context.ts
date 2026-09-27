@@ -4,26 +4,26 @@
  * context formats before replaying or comparing messages.
  */
 /** Opening delimiter for protected Quiet Core bot runtime context blocks. */
-export const INTERNAL_RUNTIME_CONTEXT_BEGIN = "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>";
+export const INTERNAL_RUNTIME_CONTEXT_BEGIN = "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>";
 /** Closing delimiter for protected Quiet Core bot runtime context blocks. */
-export const INTERNAL_RUNTIME_CONTEXT_END = "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>";
+export const INTERNAL_RUNTIME_CONTEXT_END = "<<<END_QUIET_CORE_INTERNAL_CONTEXT>>>";
 
-const ESCAPED_INTERNAL_RUNTIME_CONTEXT_BEGIN = "[[OPENCLAW_INTERNAL_CONTEXT_BEGIN]]";
-const ESCAPED_INTERNAL_RUNTIME_CONTEXT_END = "[[OPENCLAW_INTERNAL_CONTEXT_END]]";
+const ESCAPED_INTERNAL_RUNTIME_CONTEXT_BEGIN = "[[QUIET_CORE_INTERNAL_CONTEXT_BEGIN]]";
+const ESCAPED_INTERNAL_RUNTIME_CONTEXT_END = "[[QUIET_CORE_INTERNAL_CONTEXT_END]]";
 
 /** Notice inserted into runtime-generated context blocks. */
-export const OPENCLAW_RUNTIME_CONTEXT_NOTICE =
+export const QUIET_CORE_RUNTIME_CONTEXT_NOTICE =
   "This context is runtime-generated, not user-authored. Keep internal details private.";
 /** Header for context attached to the immediately preceding user message. */
-export const OPENCLAW_NEXT_TURN_RUNTIME_CONTEXT_HEADER =
+export const QUIET_CORE_NEXT_TURN_RUNTIME_CONTEXT_HEADER =
   "Quiet Core bot runtime context for the immediately preceding user message.";
 /** Header for runtime events passed as prompt context. */
-export const OPENCLAW_RUNTIME_EVENT_HEADER = "Quiet Core bot runtime event.";
+export const QUIET_CORE_RUNTIME_EVENT_HEADER = "Quiet Core bot runtime event.";
 /** Custom message type used for structured runtime-context messages. */
-export const OPENCLAW_RUNTIME_CONTEXT_CUSTOM_TYPE = "openclaw.runtime-context";
+export const QUIET_CORE_RUNTIME_CONTEXT_CUSTOM_TYPE = "quiet-core-bot.runtime-context";
 
 const LEGACY_INTERNAL_CONTEXT_HEADER =
-  ["Quiet Core bot runtime context (internal):", OPENCLAW_RUNTIME_CONTEXT_NOTICE, ""].join("\n") +
+  ["Quiet Core bot runtime context (internal):", QUIET_CORE_RUNTIME_CONTEXT_NOTICE, ""].join("\n") +
   "\n";
 
 const LEGACY_INTERNAL_EVENT_MARKER = "[Internal task completion event]";
@@ -183,7 +183,7 @@ function stripLegacyInternalRuntimeContext(text: string): string {
 
 function isRuntimeContextPromptHeader(line: string): boolean {
   return (
-    line === OPENCLAW_NEXT_TURN_RUNTIME_CONTEXT_HEADER || line === OPENCLAW_RUNTIME_EVENT_HEADER
+    line === QUIET_CORE_NEXT_TURN_RUNTIME_CONTEXT_HEADER || line === QUIET_CORE_RUNTIME_EVENT_HEADER
   );
 }
 
@@ -197,7 +197,7 @@ function stripRuntimeContextPromptPreface(text: string): string {
     const nextLine = lines[index + 1] ?? "";
     if (
       isRuntimeContextPromptHeader(line.trim()) &&
-      nextLine.trim() === OPENCLAW_RUNTIME_CONTEXT_NOTICE
+      nextLine.trim() === QUIET_CORE_RUNTIME_CONTEXT_NOTICE
     ) {
       changed = true;
       index += 1;
@@ -257,9 +257,9 @@ export function hasInternalRuntimeContext(text: string): boolean {
     findDelimitedTokenIndex(text, INTERNAL_RUNTIME_CONTEXT_BEGIN, 0) !== -1 ||
     text.includes(LEGACY_INTERNAL_CONTEXT_HEADER) ||
     text.includes(
-      `${OPENCLAW_NEXT_TURN_RUNTIME_CONTEXT_HEADER}\n${OPENCLAW_RUNTIME_CONTEXT_NOTICE}`,
+      `${QUIET_CORE_NEXT_TURN_RUNTIME_CONTEXT_HEADER}\n${QUIET_CORE_RUNTIME_CONTEXT_NOTICE}`,
     ) ||
-    text.includes(`${OPENCLAW_RUNTIME_EVENT_HEADER}\n${OPENCLAW_RUNTIME_CONTEXT_NOTICE}`)
+    text.includes(`${QUIET_CORE_RUNTIME_EVENT_HEADER}\n${QUIET_CORE_RUNTIME_CONTEXT_NOTICE}`)
   );
 }
 
@@ -269,7 +269,7 @@ function isOpenClawRuntimeContextCustomMessage(message: unknown): boolean {
   }
   const candidate = message as { role?: unknown; customType?: unknown };
   return (
-    candidate.role === "custom" && candidate.customType === OPENCLAW_RUNTIME_CONTEXT_CUSTOM_TYPE
+    candidate.role === "custom" && candidate.customType === QUIET_CORE_RUNTIME_CONTEXT_CUSTOM_TYPE
   );
 }
 

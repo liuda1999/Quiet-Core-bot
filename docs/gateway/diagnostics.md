@@ -24,7 +24,7 @@ quiet-core-bot gateway diagnostics export
 The command prints the written zip path. To choose a path:
 
 ```bash
-quiet-core-bot gateway diagnostics export --output openclaw-diagnostics.zip
+quiet-core-bot gateway diagnostics export --output quiet-core-bot-diagnostics.zip
 ```
 
 For automation:
@@ -158,7 +158,7 @@ Persisted bundles live under `~/.quiet-core-bot/logs/stability/` when events exi
 
 ```bash
 quiet-core-bot gateway diagnostics export \
-  --output openclaw-diagnostics.zip \
+  --output quiet-core-bot-diagnostics.zip \
   --log-lines 5000 \
   --log-bytes 1000000
 ```

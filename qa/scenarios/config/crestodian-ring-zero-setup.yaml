@@ -44,7 +44,7 @@ flow:
             expr: "path.join(env.gateway.tempRoot, setupSpec.stateDirName)"
         - set: configPath
           value:
-            expr: "path.join(stateDir, 'openclaw.json')"
+            expr: "path.join(stateDir, 'quiet-core-bot.json')"
         - set: defaultWorkspace
           value:
             expr: "path.join(env.gateway.tempRoot, setupSpec.defaultWorkspaceName)"
@@ -62,7 +62,7 @@ flow:
               expr: "String(template).replace(/\\{([A-Za-z0-9_]+)\\}/g, (match, key) => String(commandVars[key] ?? match))"
         - set: crestodianEnv
           value:
-            expr: "({ OPENCLAW_STATE_DIR: stateDir, OPENCLAW_CONFIG_PATH: configPath, OPENCLAW_BUNDLED_PLUGINS_DIR: path.join(env.repoRoot, 'dist', 'extensions'), [setupSpec.discordEnv]: setupSpec.discordToken })"
+            expr: "({ QUIET_CORE_STATE_DIR: stateDir, QUIET_CORE_CONFIG_PATH: configPath, QUIET_CORE_BUNDLED_PLUGINS_DIR: path.join(env.repoRoot, 'dist', 'extensions'), [setupSpec.discordEnv]: setupSpec.discordToken })"
         - call: fs.rm
           args:
             - ref: stateDir

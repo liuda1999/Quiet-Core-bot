@@ -20,7 +20,7 @@ This is not a perfect security boundary, but it materially limits filesystem and
 <AccordionGroup>
   <Accordion title="Sandboxed browser details">
     - By default, the sandbox browser auto-starts (ensures CDP is reachable) when the browser tool needs it. Configure via `agents.defaults.sandbox.browser.autoStart` and `agents.defaults.sandbox.browser.autoStartTimeoutMs`.
-    - By default, sandbox browser containers use a dedicated Docker network (`openclaw-sandbox-browser`) instead of the global `bridge` network. Configure with `agents.defaults.sandbox.browser.network`.
+    - By default, sandbox browser containers use a dedicated Docker network (`quiet-core-bot-sandbox-browser`) instead of the global `bridge` network. Configure with `agents.defaults.sandbox.browser.network`.
     - Optional `agents.defaults.sandbox.browser.cdpSourceRange` restricts container-edge CDP ingress with a CIDR allowlist (for example `172.21.0.1/32`).
     - noVNC observer access is password-protected by default; Quiet Core bot emits a short-lived token URL that serves a local bootstrap page and opens noVNC with password in URL fragment (not query/header logs).
     - `agents.defaults.sandbox.browser.allowHostControl` lets sandboxed sessions target the host browser explicitly.
@@ -96,8 +96,8 @@ To expose host GPUs to Docker sandboxes, set `agents.defaults.sandbox.docker.gpu
 
 If you deploy the Quiet Core bot Gateway itself as a Docker container, it orchestrates sibling sandbox containers using the host's Docker socket (DooD). This introduces a specific path mapping constraint:
 
-- **Config requires host paths**: The `quiet-core-bot.json` `workspace` configuration MUST contain the **Host's absolute path** (e.g. `/home/user/.openclaw/workspaces`), not the internal Gateway container path. When Quiet Core bot asks the Docker daemon to spawn a sandbox, the daemon evaluates paths relative to the Host OS namespace, not the Gateway namespace.
-- **FS bridge parity (identical volume map)**: The Quiet Core bot Gateway native process also writes heartbeat and bridge files to the `workspace` directory. Because the Gateway evaluates the exact same string (the host path) from within its own containerized environment, the Gateway deployment MUST include an identical volume map linking the host namespace natively (`-v /home/user/.openclaw:/home/user/.openclaw`).
+- **Config requires host paths**: The `quiet-core-bot.json` `workspace` configuration MUST contain the **Host's absolute path** (e.g. `/home/user/.quiet-core-bot/workspaces`), not the internal Gateway container path. When Quiet Core bot asks the Docker daemon to spawn a sandbox, the daemon evaluates paths relative to the Host OS namespace, not the Gateway namespace.
+- **FS bridge parity (identical volume map)**: The Quiet Core bot Gateway native process also writes heartbeat and bridge files to the `workspace` directory. Because the Gateway evaluates the exact same string (the host path) from within its own containerized environment, the Gateway deployment MUST include an identical volume map linking the host namespace natively (`-v /home/user/.quiet-core-bot:/home/user/.quiet-core-bot`).
 - **Codex code mode**: When an Quiet Core bot sandbox is active, Quiet Core bot disables Codex app-server native Code Mode, user MCP servers, and app-backed plugin execution for that turn because those native surfaces run from the Gateway-host app-server process instead of the Quiet Core bot sandbox backend. Shell access is exposed through Quiet Core bot sandbox-backed tools such as `sandbox_exec` and `sandbox_process` when the normal exec/process tools are available. Do not mount the host Docker socket into agent sandbox containers or custom Codex sandboxes.
 
 On Ubuntu/AppArmor hosts, Codex `workspace-write` can fail before shell startup
@@ -131,7 +131,7 @@ Use `backend: "ssh"` when you want Quiet Core bot to sandbox `exec`, file tools,
         workspaceAccess: "rw",
         ssh: {
           target: "user@gateway-host:22",
-          workspaceRoot: "/tmp/openclaw-sandboxes",
+          workspaceRoot: "/tmp/quiet-core-bot-sandboxes",
           strictHostKeyChecking: true,
           updateHostKeys: true,
           identityFile: "~/.ssh/id_ed25519",
@@ -196,7 +196,7 @@ OpenShell reuses the same core SSH transport and remote filesystem bridge as the
       openshell: {
         enabled: true,
         config: {
-          from: "openclaw",
+          from: "quiet-core-bot",
           mode: "remote", // mirror | remote
           remoteWorkspaceDir: "/sandbox",
           remoteAgentWorkspaceDir: "/agent",
@@ -318,7 +318,7 @@ With the OpenShell backend:
 Inbound media is copied into the active sandbox workspace (`media/inbound/*`).
 
 <Note>
-**Skills note:** the `read` tool is sandbox-rooted. With `workspaceAccess: "none"`, Quiet Core bot mirrors eligible skills into the sandbox workspace (`.../skills`) so they can be read. With `"rw"`, workspace skills are readable from `/workspace/skills`, and eligible managed, bundled, or plugin skills are materialized into the generated read-only path `/workspace/.openclaw/sandbox-skills/skills`.
+**Skills note:** the `read` tool is sandbox-rooted. With `workspaceAccess: "none"`, Quiet Core bot mirrors eligible skills into the sandbox workspace (`.../skills`) so they can be read. With `"rw"`, workspace skills are readable from `/workspace/skills`, and eligible managed, bundled, or plugin skills are materialized into the generated read-only path `/workspace/.quiet-core-bot/sandbox-skills/skills`.
 </Note>
 
 ## Custom bind mounts
@@ -375,14 +375,14 @@ Example (read-only source + an extra data directory):
 
 ## Images and setup
 
-Default Docker image: `openclaw-sandbox:bookworm-slim`
+Default Docker image: `quiet-core-bot-sandbox:bookworm-slim`
 
 <Note>
 **Source checkout vs npm install**
 
-The `scripts/sandbox-setup.sh`, `scripts/sandbox-common-setup.sh`, and `scripts/sandbox-browser-setup.sh` helper scripts are only available when running from a [source checkout](https://github.com/openclaw/openclaw). They are not included in the npm package.
+The `scripts/sandbox-setup.sh`, `scripts/sandbox-common-setup.sh`, and `scripts/sandbox-browser-setup.sh` helper scripts are only available when running from a [source checkout](https://github.com/liuda1999/Quiet-Core-bot). They are not included in the npm package.
 
-If you installed Quiet Core bot via `npm install -g openclaw`, use the inline `docker build` commands shown below instead.
+If you installed Quiet Core bot via `npm install -g quiet-core-bot`, use the inline `docker build` commands shown below instead.
 </Note>
 
 <Steps>
@@ -396,7 +396,7 @@ If you installed Quiet Core bot via `npm install -g openclaw`, use the inline `d
     From an npm install (no source checkout needed):
 
     ```bash
-    docker build -t openclaw-sandbox:bookworm-slim - <<'DOCKERFILE'
+    docker build -t quiet-core-bot-sandbox:bookworm-slim - <<'DOCKERFILE'
     FROM debian:bookworm-slim
     ENV DEBIAN_FRONTEND=noninteractive
     RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -411,7 +411,7 @@ If you installed Quiet Core bot via `npm install -g openclaw`, use the inline `d
 
     The default image does **not** include Node. If a skill needs Node (or other runtimes), either bake a custom image or install via `sandbox.docker.setupCommand` (requires network egress + writable root + root user).
 
-    Quiet Core bot does not silently substitute plain `debian:bookworm-slim` when `openclaw-sandbox:bookworm-slim` is missing. Sandbox runs that target the default image fail fast with a build instruction until you build it, because the bundled image carries `python3` for sandbox write/edit helpers.
+    Quiet Core bot does not silently substitute plain `debian:bookworm-slim` when `quiet-core-bot-sandbox:bookworm-slim` is missing. Sandbox runs that target the default image fail fast with a build instruction until you build it, because the bundled image carries `python3` for sandbox write/edit helpers.
 
   </Step>
   <Step title="Optional: build the common image">
@@ -423,9 +423,9 @@ If you installed Quiet Core bot via `npm install -g openclaw`, use the inline `d
     scripts/sandbox-common-setup.sh
     ```
 
-    From an npm install, build the default image first (see above), then build the common image on top using the [`scripts/docker/sandbox/Dockerfile.common`](https://github.com/openclaw/openclaw/blob/main/scripts/docker/sandbox/Dockerfile.common) from the repository.
+    From an npm install, build the default image first (see above), then build the common image on top using the [`scripts/docker/sandbox/Dockerfile.common`](https://github.com/liuda1999/Quiet-Core-bot/blob/main/scripts/docker/sandbox/Dockerfile.common) from the repository.
 
-    Then set `agents.defaults.sandbox.docker.image` to `openclaw-sandbox-common:bookworm-slim`.
+    Then set `agents.defaults.sandbox.docker.image` to `quiet-core-bot-sandbox-common:bookworm-slim`.
 
   </Step>
   <Step title="Optional: build the sandbox browser image">
@@ -435,7 +435,7 @@ If you installed Quiet Core bot via `npm install -g openclaw`, use the inline `d
     scripts/sandbox-browser-setup.sh
     ```
 
-    From an npm install, build using the [`scripts/docker/sandbox/Dockerfile.browser`](https://github.com/openclaw/openclaw/blob/main/scripts/docker/sandbox/Dockerfile.browser) from the repository.
+    From an npm install, build using the [`scripts/docker/sandbox/Dockerfile.browser`](https://github.com/liuda1999/Quiet-Core-bot/blob/main/scripts/docker/sandbox/Dockerfile.browser) from the repository.
 
   </Step>
 </Steps>
@@ -447,7 +447,7 @@ By default, Docker sandbox containers run with **no network**. Override with `ag
     The bundled sandbox browser image also applies conservative Chromium startup defaults for containerized workloads. Current container defaults include:
 
     - `--remote-debugging-address=127.0.0.1`
-    - `--remote-debugging-port=<derived from OPENCLAW_BROWSER_CDP_PORT>`
+    - `--remote-debugging-port=<derived from QUIET_CORE_BROWSER_CDP_PORT>`
     - `--user-data-dir=${HOME}/.chrome`
     - `--no-first-run`
     - `--no-default-browser-check`
@@ -464,9 +464,9 @@ By default, Docker sandbox containers run with **no network**. Override with `ag
     - `--metrics-recording-only`
     - `--renderer-process-limit=2`
     - `--no-sandbox` when `noSandbox` is enabled.
-    - The three graphics hardening flags (`--disable-3d-apis`, `--disable-software-rasterizer`, `--disable-gpu`) are optional and are useful when containers lack GPU support. Set `OPENCLAW_BROWSER_DISABLE_GRAPHICS_FLAGS=0` if your workload requires WebGL or other 3D/browser features.
-    - `--disable-extensions` is enabled by default and can be disabled with `OPENCLAW_BROWSER_DISABLE_EXTENSIONS=0` for extension-reliant flows.
-    - `--renderer-process-limit=2` is controlled by `OPENCLAW_BROWSER_RENDERER_PROCESS_LIMIT=<N>`, where `0` keeps Chromium's default.
+    - The three graphics hardening flags (`--disable-3d-apis`, `--disable-software-rasterizer`, `--disable-gpu`) are optional and are useful when containers lack GPU support. Set `QUIET_CORE_BROWSER_DISABLE_GRAPHICS_FLAGS=0` if your workload requires WebGL or other 3D/browser features.
+    - `--disable-extensions` is enabled by default and can be disabled with `QUIET_CORE_BROWSER_DISABLE_EXTENSIONS=0` for extension-reliant flows.
+    - `--renderer-process-limit=2` is controlled by `QUIET_CORE_BROWSER_RENDERER_PROCESS_LIMIT=<N>`, where `0` keeps Chromium's default.
 
     If you need a different runtime profile, use a custom browser image and provide your own entrypoint. For local (non-container) Chromium profiles, use `browser.extraArgs` to append additional startup flags.
 
@@ -481,7 +481,7 @@ By default, Docker sandbox containers run with **no network**. Override with `ag
 
 Docker installs and the containerized gateway live here: [Docker](/install/docker)
 
-For Docker gateway deployments, `scripts/docker/setup.sh` can bootstrap sandbox config. Set `OPENCLAW_SANDBOX=1` (or `true`/`yes`/`on`) to enable that path. You can override socket location with `OPENCLAW_DOCKER_SOCKET`. Full setup and env reference: [Docker](/install/docker#agent-sandbox).
+For Docker gateway deployments, `scripts/docker/setup.sh` can bootstrap sandbox config. Set `QUIET_CORE_SANDBOX=1` (or `true`/`yes`/`on`) to enable that path. You can override socket location with `QUIET_CORE_DOCKER_SOCKET`. Full setup and env reference: [Docker](/install/docker#agent-sandbox).
 
 ## setupCommand (one-time container setup)
 

@@ -18,7 +18,7 @@ quiet-core-bot status --usage
 Notes:
 
 - `--deep` runs live probes (WhatsApp Web + Telegram + Discord + Slack + Signal).
-- Plain `quiet-core-bot status` stays on the fast read-only path and marks memory as `not checked` instead of unavailable when it skips memory inspection. Heavy security audit, plugin compatibility, and memory-vector probes are left to `quiet-core-bot status --all`, `quiet-core-bot status --deep`, `openclaw security audit`, and `quiet-core-bot memory status --deep`.
+- Plain `quiet-core-bot status` stays on the fast read-only path and marks memory as `not checked` instead of unavailable when it skips memory inspection. Heavy security audit, plugin compatibility, and memory-vector probes are left to `quiet-core-bot status --all`, `quiet-core-bot status --deep`, `quiet-core-bot security audit`, and `quiet-core-bot memory status --deep`.
 - `status --json --all` reports memory details from the active memory plugin runtime selected by `plugins.slots.memory`. Custom memory plugins can leave built-in `agents.defaults.memorySearch.enabled` disabled and still report their own files, chunks, vector, and FTS state.
 - `--usage` prints normalized provider usage windows as `X% left`.
 - Session status output separates `Execution:` from `Runtime:`. `Execution` is the sandbox path (`direct`, `docker/*`), while `Runtime` tells you whether the session is using `Quiet Core bot Default`, `OpenAI Codex`, a CLI backend, or an ACP backend such as `codex (acp/acpx)`. See [Agent runtimes](/concepts/agent-runtimes) for the provider/model/runtime distinction.

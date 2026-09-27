@@ -74,7 +74,7 @@ describe("stripMatrixMentionPrefix", () => {
 
   it("strips mention prefix with display name (case-insensitive)", () => {
     const mentionRegexes = [/@OpenClaw Bot\b/i];
-    const text = "@openclaw bot /model";
+    const text = "@quiet-core-bot bot /model";
     const result = stripMatrixMentionPrefix({ text, mentionRegexes });
     expect(result).toBe("/model");
   });

@@ -23,10 +23,10 @@ import path from "node:path";
 import {
   asDateTimestampMs,
   resolveExpiresAtMsFromDurationMs,
-} from "@openclaw/normalization-core/number-coercion";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+} from "@quiet-core/normalization-core/number-coercion";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { toErrorObject } from "../../infra/errors.js";
-import { resolveOpenClawPackageRootSync } from "../../infra/openclaw-root.js";
+import { resolveOpenClawPackageRootSync } from "../../infra/quiet-core-bot-root.js";
 import { privateFileStoreSync } from "../../infra/private-file-store.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
 import { hasGlobalHooks } from "../../plugins/hook-runner-global.js";
@@ -251,7 +251,7 @@ type ActiveNativeHookRelayRegistrationHandle = NativeHookRelayRegistrationHandle
   generation: string;
 };
 
-const NATIVE_HOOK_RELAY_STATE_SYMBOL = Symbol.for("openclaw.nativeHookRelay.state");
+const NATIVE_HOOK_RELAY_STATE_SYMBOL = Symbol.for("quiet-core-bot.nativeHookRelay.state");
 
 function getNativeHookRelaySharedState(): NativeHookRelaySharedState {
   const globalRecord = globalThis as typeof globalThis & {
@@ -559,8 +559,8 @@ export function buildNativeHookRelayCommand(params: {
   const timeoutMs = normalizePositiveInteger(params.timeoutMs, DEFAULT_RELAY_TIMEOUT_MS);
   const executable = params.executable ?? resolveOpenClawCliExecutable();
   const argv =
-    executable === "openclaw"
-      ? ["openclaw"]
+    executable === "quiet-core-bot"
+      ? ["quiet-core-bot"]
       : [params.nodeExecutable ?? process.execPath, executable];
   const nicePrefix = resolveNativeHookRelayNicePrefix(params.nice);
   return shellQuoteArgs([
@@ -1317,7 +1317,7 @@ function isRetryableNativeHookRelayBridgeLookupError(params: {
 
 function nativeHookRelayBridgeDir(): string {
   const uid = typeof process.getuid === "function" ? process.getuid() : "nouid";
-  return path.join(tmpdir(), `openclaw-native-hook-relays-${uid}`);
+  return path.join(tmpdir(), `quiet-core-bot-native-hook-relays-${uid}`);
 }
 
 function ensureNativeHookRelayBridgeDir(): string {
@@ -1596,7 +1596,7 @@ function nativeHookRelayPermissionAllowAlwaysKey(params: {
   request: NativeHookRelayPermissionApprovalRequest;
 }): string {
   const hash = createHash("sha256");
-  hash.update("openclaw:native-hook-relay:permission-allow-always:v2");
+  hash.update("quiet-core-bot:native-hook-relay:permission-allow-always:v2");
   hash.update("\0");
   hash.update(params.registration.relayId);
   hash.update("\0");
@@ -1993,7 +1993,7 @@ async function requestNativeHookRelayPermissionApproval(
     "plugin.approval.request",
     { timeoutMs: timeoutMs + 10_000 },
     {
-      pluginId: `openclaw-native-hook-relay-${request.provider}`,
+      pluginId: `quiet-core-bot-native-hook-relay-${request.provider}`,
       title: truncateText(
         `${nativeHookRelayProviderDisplayName(request.provider)} permission request`,
         MAX_APPROVAL_TITLE_LENGTH,
@@ -2138,7 +2138,7 @@ function truncateText(value: string, maxLength: number): string {
 }
 
 function resolveOpenClawCliExecutable(): string {
-  const envPath = process.env.OPENCLAW_CLI_PATH?.trim();
+  const envPath = process.env.QUIET_CORE_CLI_PATH?.trim();
   if (envPath && existsSync(envPath)) {
     return envPath;
   }

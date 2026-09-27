@@ -8,27 +8,27 @@ export type {
   OpenClawConfig,
   OpenClawPluginApi,
   ReplyPayload,
-} from "openclaw/plugin-sdk/core";
-export type { RuntimeEnv } from "openclaw/plugin-sdk/runtime";
-export { buildAgentMediaPayload } from "openclaw/plugin-sdk/agent-media-payload";
-export { resolveAllowlistMatchSimple } from "openclaw/plugin-sdk/allow-from";
-export { logInboundDrop } from "openclaw/plugin-sdk/channel-inbound";
-export { createChannelPairingController } from "openclaw/plugin-sdk/channel-pairing";
-export { createChannelMessageReplyPipeline } from "openclaw/plugin-sdk/channel-outbound";
-export { logTypingFailure } from "openclaw/plugin-sdk/channel-feedback";
+} from "quiet-core-bot/plugin-sdk/core";
+export type { RuntimeEnv } from "quiet-core-bot/plugin-sdk/runtime";
+export { buildAgentMediaPayload } from "quiet-core-bot/plugin-sdk/agent-media-payload";
+export { resolveAllowlistMatchSimple } from "quiet-core-bot/plugin-sdk/allow-from";
+export { logInboundDrop } from "quiet-core-bot/plugin-sdk/channel-inbound";
+export { createChannelPairingController } from "quiet-core-bot/plugin-sdk/channel-pairing";
+export { createChannelMessageReplyPipeline } from "quiet-core-bot/plugin-sdk/channel-outbound";
+export { logTypingFailure } from "quiet-core-bot/plugin-sdk/channel-feedback";
 export {
   listSkillCommandsForAgents,
   resolveControlCommandGate,
-} from "openclaw/plugin-sdk/command-auth-native";
-export { buildModelsProviderData } from "openclaw/plugin-sdk/models-provider-runtime";
-export { isDangerousNameMatchingEnabled } from "openclaw/plugin-sdk/dangerous-name-runtime";
+} from "quiet-core-bot/plugin-sdk/command-auth-native";
+export { buildModelsProviderData } from "quiet-core-bot/plugin-sdk/models-provider-runtime";
+export { isDangerousNameMatchingEnabled } from "quiet-core-bot/plugin-sdk/dangerous-name-runtime";
 export {
   resolveAllowlistProviderRuntimeGroupPolicy,
   resolveDefaultGroupPolicy,
   warnMissingProviderGroupPolicyFallbackOnce,
-} from "openclaw/plugin-sdk/runtime-group-policy";
-export { resolveChannelMediaMaxBytes } from "openclaw/plugin-sdk/media-runtime";
-export { loadOutboundMediaFromUrl } from "openclaw/plugin-sdk/outbound-media";
+} from "quiet-core-bot/plugin-sdk/runtime-group-policy";
+export { resolveChannelMediaMaxBytes } from "quiet-core-bot/plugin-sdk/media-runtime";
+export { loadOutboundMediaFromUrl } from "quiet-core-bot/plugin-sdk/outbound-media";
 // Legacy map-helper exports stay for older plugin consumers. New message-turn
 // code should use createChannelHistoryWindow.
 export {
@@ -37,15 +37,15 @@ export {
   buildInboundHistoryFromMap,
   buildPendingHistoryContextFromMap,
   recordPendingHistoryEntryIfEnabled,
-} from "openclaw/plugin-sdk/reply-history";
-export { registerPluginHttpRoute } from "openclaw/plugin-sdk/webhook-targets";
+} from "quiet-core-bot/plugin-sdk/reply-history";
+export { registerPluginHttpRoute } from "quiet-core-bot/plugin-sdk/webhook-targets";
 export {
   isRequestBodyLimitError,
   readRequestBodyWithLimit,
-} from "openclaw/plugin-sdk/webhook-ingress";
+} from "quiet-core-bot/plugin-sdk/webhook-ingress";
 export {
   isTrustedProxyAddress,
   parseStrictPositiveInteger,
   resolveClientIp,
-} from "openclaw/plugin-sdk/core";
-export { parseTcpPort } from "openclaw/plugin-sdk/number-runtime";
+} from "quiet-core-bot/plugin-sdk/core";
+export { parseTcpPort } from "quiet-core-bot/plugin-sdk/number-runtime";

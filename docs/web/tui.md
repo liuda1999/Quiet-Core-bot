@@ -37,17 +37,17 @@ Use `--password` if your Gateway uses password auth.
 Run the TUI without a Gateway:
 
 ```bash
-openclaw chat
+quiet-core-bot chat
 # or
 quiet-core-bot tui --local
 ```
 
 Notes:
 
-- `openclaw chat` and `openclaw terminal` are aliases for `quiet-core-bot tui --local`.
+- `quiet-core-bot chat` and `quiet-core-bot terminal` are aliases for `quiet-core-bot tui --local`.
 - `--local` cannot be combined with `--url`, `--token`, or `--password`.
 - Local mode uses the embedded agent runtime directly. Most local tools work, but Gateway-only features are unavailable.
-- After a config file has authored settings, `openclaw` and `openclaw crestodian` also use this TUI shell, with Crestodian as the local setup and repair chat backend.
+- After a config file has authored settings, `quiet-core-bot` and `quiet-core-bot crestodian` also use this TUI shell, with Crestodian as the local setup and repair chat backend.
 
 ## What you see
 
@@ -150,7 +150,7 @@ Other Gateway slash commands (for example, `/context`) are forwarded to the Gate
 - Prefix a line with `!` to run a local shell command on the TUI host.
 - The TUI prompts once per session to allow local execution; declining keeps `!` disabled for the session.
 - Commands run in a fresh, non-interactive shell in the TUI working directory (no persistent `cd`/env).
-- Local shell commands receive `OPENCLAW_SHELL=tui-local` in their environment.
+- Local shell commands receive `QUIET_CORE_SHELL=tui-local` in their environment.
 - A lone `!` is sent as a normal message; leading spaces do not trigger local exec.
 
 ## Repair configs from the local TUI
@@ -160,7 +160,7 @@ embedded agent to inspect it on the same machine, compare it against the docs,
 and help repair drift without depending on a running Gateway.
 
 If `quiet-core-bot config validate` is already failing, start with `quiet-core-bot configure`
-or `quiet-core-bot doctor --fix` first. `openclaw chat` does not bypass the invalid-
+or `quiet-core-bot doctor --fix` first. `quiet-core-bot chat` does not bypass the invalid-
 config guard.
 
 Typical loop:
@@ -168,7 +168,7 @@ Typical loop:
 1. Start local mode:
 
 ```bash
-openclaw chat
+quiet-core-bot chat
 ```
 
 2. Ask the agent what you want checked, for example:
@@ -204,8 +204,8 @@ Tips:
 ## Terminal colors
 
 - The TUI keeps assistant body text in your terminal's default foreground so dark and light terminals both stay readable.
-- If your terminal uses a light background and auto-detection is wrong, set `OPENCLAW_THEME=light` before launching `quiet-core-bot tui`.
-- To force the original dark palette instead, set `OPENCLAW_THEME=dark`.
+- If your terminal uses a light background and auto-detection is wrong, set `QUIET_CORE_THEME=light` before launching `quiet-core-bot tui`.
+- To force the original dark palette instead, set `QUIET_CORE_THEME=dark`.
 
 ## History + streaming
 

@@ -80,15 +80,15 @@ describe("resolveNpmChannelTag", () => {
 
   it("delegates package target metadata to npm view with global config scope", async () => {
     versionByTag.latest = "1.0.4";
-    const env = { ...process.env, NPM_CONFIG_USERCONFIG: "/tmp/openclaw-user-npmrc" };
+    const env = { ...process.env, NPM_CONFIG_USERCONFIG: "/tmp/quiet-core-bot-user-npmrc" };
 
     await expect(
       fetchNpmPackageTargetStatus({
         target: "latest",
-        spec: "openclaw@latest",
-        command: "/opt/openclaw/node/bin/npm",
+        spec: "quiet-core-bot@latest",
+        command: "/opt/quiet-core-bot/node/bin/npm",
         timeoutMs: 1000,
-        cwd: "/tmp/openclaw-project",
+        cwd: "/tmp/quiet-core-bot-project",
         env,
         runCommand,
       }),
@@ -100,9 +100,9 @@ describe("resolveNpmChannelTag", () => {
 
     expect(runCommandMock).toHaveBeenCalledWith(
       [
-        "/opt/openclaw/node/bin/npm",
+        "/opt/quiet-core-bot/node/bin/npm",
         "view",
-        "openclaw@latest",
+        "quiet-core-bot@latest",
         "version",
         "engines.node",
         "--json",
@@ -110,14 +110,14 @@ describe("resolveNpmChannelTag", () => {
       ],
       expect.objectContaining({
         timeoutMs: 1000,
-        cwd: "/tmp/openclaw-project",
+        cwd: "/tmp/quiet-core-bot-project",
         env,
       }),
     );
   });
 
   it("uses npm global scope, user config auth, and ignores project npmrc for real metadata", async () => {
-    await withTempDir({ prefix: "openclaw-update-check-npm-view-" }, async (base) => {
+    await withTempDir({ prefix: "quiet-core-bot-update-check-npm-view-" }, async (base) => {
       const requests: Array<{ url: string; authorization?: string }> = [];
       const server = http.createServer((req, res) => {
         requests.push({
@@ -127,15 +127,15 @@ describe("resolveNpmChannelTag", () => {
         res.setHeader("content-type", "application/json");
         res.end(
           JSON.stringify({
-            name: "openclaw",
+            name: "quiet-core-bot",
             "dist-tags": { latest: "2026.6.6" },
             versions: {
               "2026.6.6": {
-                name: "openclaw",
+                name: "quiet-core-bot",
                 version: "2026.6.6",
                 engines: { node: ">=22.19.0" },
                 dist: {
-                  tarball: "http://example.invalid/openclaw-2026.6.6.tgz",
+                  tarball: "http://example.invalid/quiet-core-bot-2026.6.6.tgz",
                   shasum: "0".repeat(40),
                 },
               },
@@ -181,7 +181,7 @@ describe("resolveNpmChannelTag", () => {
           nodeEngine: ">=22.19.0",
         });
 
-        expect(requests.some((request) => request.url.startsWith("/user/openclaw"))).toBe(true);
+        expect(requests.some((request) => request.url.startsWith("/user/quiet-core-bot"))).toBe(true);
         expect(requests.some((request) => request.url.startsWith("/project/"))).toBe(false);
         expect(requests.some((request) => request.authorization === "Bearer test-token")).toBe(
           true,
@@ -214,7 +214,7 @@ describe("resolveNpmChannelTag", () => {
       nodeEngine: ">=22.19.0",
     });
     expect(fetch).toHaveBeenCalledWith(
-      "https://registry.npmjs.org/openclaw/latest",
+      "https://registry.npmjs.org/quiet-core-bot/latest",
       expect.objectContaining({ signal: expect.any(AbortSignal) }),
     );
   });
@@ -371,7 +371,7 @@ describe("formatGitInstallLabel", () => {
 
 describe("checkDepsStatus", () => {
   it("reports unknown, missing, stale, and ok states from lockfile markers", async () => {
-    await withTempDir({ prefix: "openclaw-update-check-" }, async (base) => {
+    await withTempDir({ prefix: "quiet-core-bot-update-check-" }, async (base) => {
       await expect(checkDepsStatus({ root: base, manager: "unknown" })).resolves.toEqual({
         manager: "unknown",
         status: "unknown",
@@ -408,7 +408,7 @@ describe("checkDepsStatus", () => {
   });
 
   it("uses npm-shrinkwrap as the npm dependency lock marker when present", async () => {
-    await withTempDir({ prefix: "openclaw-update-check-shrinkwrap-" }, async (root) => {
+    await withTempDir({ prefix: "quiet-core-bot-update-check-shrinkwrap-" }, async (root) => {
       const shrinkwrapPath = path.join(root, "npm-shrinkwrap.json");
       await fs.writeFile(shrinkwrapPath, "{}", "utf8");
       await fs.mkdir(path.join(root, "node_modules"), { recursive: true });
@@ -435,7 +435,7 @@ describe("checkUpdateStatus", () => {
   });
 
   it("detects package installs for non-git roots", async () => {
-    await withTempDir({ prefix: "openclaw-update-check-" }, async (root) => {
+    await withTempDir({ prefix: "quiet-core-bot-update-check-" }, async (root) => {
       await fs.writeFile(
         path.join(root, "package.json"),
         JSON.stringify({ packageManager: "npm@10.0.0" }),
@@ -460,10 +460,10 @@ describe("checkUpdateStatus", () => {
   });
 
   it("detects npm package installs that ship pnpm package metadata with shrinkwrap", async () => {
-    await withTempDir({ prefix: "openclaw-update-check-npm-shrinkwrap-" }, async (root) => {
+    await withTempDir({ prefix: "quiet-core-bot-update-check-npm-shrinkwrap-" }, async (root) => {
       await fs.writeFile(
         path.join(root, "package.json"),
-        JSON.stringify({ name: "openclaw", packageManager: "pnpm@11.2.2" }),
+        JSON.stringify({ name: "quiet-core-bot", packageManager: "pnpm@11.2.2" }),
         "utf8",
       );
       await fs.writeFile(path.join(root, "npm-shrinkwrap.json"), "{}", "utf8");
@@ -484,13 +484,13 @@ describe("checkUpdateStatus", () => {
   });
 
   it("treats symlinked git installs as git roots", async () => {
-    await withTempDir({ prefix: "openclaw-update-check-git-" }, async (base) => {
+    await withTempDir({ prefix: "quiet-core-bot-update-check-git-" }, async (base) => {
       const repoRoot = path.join(base, "repo");
-      const linkedRoot = path.join(base, "linked-openclaw");
+      const linkedRoot = path.join(base, "linked-quiet-core-bot");
       await fs.mkdir(repoRoot, { recursive: true });
       await fs.writeFile(
         path.join(repoRoot, "package.json"),
-        JSON.stringify({ name: "openclaw", packageManager: "pnpm@10.0.0" }),
+        JSON.stringify({ name: "quiet-core-bot", packageManager: "pnpm@10.0.0" }),
         "utf8",
       );
       await runCommandWithTimeout(["git", "init"], { cwd: repoRoot, timeoutMs: 1000 });

@@ -1,11 +1,11 @@
 {
-  "name": "@openclaw/lobster",
+  "name": "@quiet-core/lobster",
   "version": "2026.6.11",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@openclaw/lobster",
+      "name": "@quiet-core/lobster",
       "version": "2026.6.11",
       "dependencies": {
         "@clawdbot/lobster": "2026.5.22",

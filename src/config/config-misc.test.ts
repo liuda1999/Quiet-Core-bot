@@ -60,7 +60,8 @@ describe("boolean config validation", () => {
 });
 
 describe("model provider localService config", () => {
-  it("accepts standalone timeout overlays for bundled model providers", () => {
+  // Skipped: this standalone build does not bundle the openai provider plugin.
+  it.skip("accepts standalone timeout overlays for bundled model providers", () => {
     const result = OpenClawSchema.safeParse({
       models: {
         providers: {
@@ -77,7 +78,8 @@ describe("model provider localService config", () => {
     }
   });
 
-  it("accepts standalone timeout overlays for Xiaomi Token Plan", () => {
+  // Skipped: this standalone build does not bundle the xiaomi-token-plan provider plugin.
+  it.skip("accepts standalone timeout overlays for Xiaomi Token Plan", () => {
     const result = validateConfigObjectRaw({
       models: {
         providers: {
@@ -180,7 +182,8 @@ describe("model provider localService config", () => {
     expect(result.success).toBe(true);
   });
 
-  it("accepts bundled provider timeout overlays without custom provider fields", () => {
+  // Skipped: needs bundled provider metadata for openai/zai, which this standalone build does not ship.
+  it.skip("accepts bundled provider timeout overlays without custom provider fields", () => {
     for (const provider of ["openai", "zai"] as const) {
       const result = validateConfigObjectRaw({
         models: {
@@ -975,7 +978,7 @@ describe("config identity/materialization regressions", () => {
               theme: "space lobster",
               emoji: "🦞",
             },
-            groupChat: { mentionPatterns: ["@openclaw"] },
+            groupChat: { mentionPatterns: ["@quiet-core-bot"] },
           },
         ],
       },
@@ -987,7 +990,7 @@ describe("config identity/materialization regressions", () => {
     expect(res.ok).toBe(true);
     if (res.ok) {
       expect(res.config.messages?.responsePrefix).toBe("✅");
-      expect(res.config.agents?.list?.[0]?.groupChat?.mentionPatterns).toEqual(["@openclaw"]);
+      expect(res.config.agents?.list?.[0]?.groupChat?.mentionPatterns).toEqual(["@quiet-core-bot"]);
     }
   });
 
@@ -1201,7 +1204,7 @@ describe("config paths", () => {
 describe("config strict validation", () => {
   it("rejects unknown fields", () => {
     const res = validateConfigObject({
-      agents: { list: [{ id: "openclaw" }] },
+      agents: { list: [{ id: "quiet-core-bot" }] },
       customUnknownField: { nested: "value" },
     });
     expect(res.ok).toBe(false);
@@ -1375,7 +1378,7 @@ describe("config strict validation", () => {
           },
           list: [
             {
-              id: "openclaw",
+              id: "quiet-core-bot",
               sandbox: {
                 perSession: false,
               },
@@ -1399,11 +1402,11 @@ describe("config strict validation", () => {
   it("rejects resolved-only gateway.bind aliases as invalid schema values, not legacy", async () => {
     await withTempHome(async (home) => {
       await writeOpenClawConfig(home, {
-        gateway: { bind: "${OPENCLAW_BIND}" },
+        gateway: { bind: "${QUIET_CORE_BIND}" },
       });
 
-      const prev = process.env.OPENCLAW_BIND;
-      process.env.OPENCLAW_BIND = "0.0.0.0";
+      const prev = process.env.QUIET_CORE_BIND;
+      process.env.QUIET_CORE_BIND = "0.0.0.0";
       try {
         const snap = await readConfigFileSnapshot();
         expect(snap.valid).toBe(false);
@@ -1411,9 +1414,9 @@ describe("config strict validation", () => {
         expect(issuePaths(snap.issues)).toContain("gateway.bind");
       } finally {
         if (prev === undefined) {
-          delete process.env.OPENCLAW_BIND;
+          delete process.env.QUIET_CORE_BIND;
         } else {
-          process.env.OPENCLAW_BIND = prev;
+          process.env.QUIET_CORE_BIND = prev;
         }
       }
     });

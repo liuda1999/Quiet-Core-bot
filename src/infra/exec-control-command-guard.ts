@@ -1,5 +1,5 @@
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
-import { normalizeStringEntries } from "@openclaw/normalization-core/string-normalization";
+import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
+import { normalizeStringEntries } from "@quiet-core/normalization-core/string-normalization";
 import { splitShellArgs } from "../utils/shell-argv.js";
 import { buildCommandPayloadCandidates } from "./command-analysis/risks.js";
 import { explainShellCommand } from "./command-explainer/extract.js";
@@ -38,7 +38,7 @@ function normalizeCommandBaseName(token: string | undefined): string {
 
 function isOpenClawCliCommandName(token: string | undefined): boolean {
   const name = normalizeCommandBaseName(token);
-  return name === "openclaw" || name === "quiet-core-bot";
+  return name === "quiet-core-bot" || name === "quiet-core-bot";
 }
 
 function stripOpenClawPackageRunner(argv: string[]): string[] {

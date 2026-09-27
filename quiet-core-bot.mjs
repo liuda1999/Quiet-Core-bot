@@ -12,7 +12,7 @@ const MIN_NODE_MAJOR = 22;
 const MIN_NODE_MINOR = 19;
 const MIN_NODE_VERSION = `${MIN_NODE_MAJOR}.${MIN_NODE_MINOR}`;
 const MIN_COMPILE_CACHE_NODE_24_MINOR = 15;
-const COMPILE_CACHE_DISABLED_RESPAWNED_ENV = "OPENCLAW_COMPILE_CACHE_DISABLED_RESPAWNED";
+const COMPILE_CACHE_DISABLED_RESPAWNED_ENV = "QUIET_CORE_COMPILE_CACHE_DISABLED_RESPAWNED";
 
 const parseNodeVersion = (rawVersion) => {
   const [majorRaw = "0", minorRaw = "0"] = rawVersion.split(".");
@@ -41,7 +41,7 @@ const ensureSupportedNodeVersion = () => {
   }
 
   process.stderr.write(
-    `quiet-core-bot: Node.js v${MIN_NODE_VERSION}+ is required (current: v${process.versions.node}).\n` +
+    `openclaw: Node.js v${MIN_NODE_VERSION}+ is required (current: v${process.versions.node}).\n` +
       "If you use nvm, run:\n" +
       `  nvm install ${MIN_NODE_MAJOR}\n` +
       `  nvm use ${MIN_NODE_MAJOR}\n` +
@@ -237,7 +237,7 @@ const respawnWithPackagedCompileCacheIfNeeded = () => {
   ) {
     return false;
   }
-  if (process.env.OPENCLAW_PACKAGED_COMPILE_CACHE_RESPAWNED === "1") {
+  if (process.env.QUIET_CORE_PACKAGED_COMPILE_CACHE_RESPAWNED === "1") {
     return false;
   }
   const currentDirectory = module.getCompileCacheDir?.();
@@ -251,7 +251,7 @@ const respawnWithPackagedCompileCacheIfNeeded = () => {
   const env = {
     ...process.env,
     NODE_COMPILE_CACHE: desiredDirectory,
-    OPENCLAW_PACKAGED_COMPILE_CACHE_RESPAWNED: "1",
+    QUIET_CORE_PACKAGED_COMPILE_CACHE_RESPAWNED: "1",
   };
   return runRespawnedChild(
     process.execPath,
@@ -420,7 +420,7 @@ const consumeLauncherRootOptionToken = (args, index) => {
 };
 
 const hasLauncherContainerTarget = (argv) => {
-  if (normalizeLauncherMetadataValue(process.env.OPENCLAW_CONTAINER)) {
+  if (normalizeLauncherMetadataValue(process.env.QUIET_CORE_CONTAINER)) {
     return true;
   }
   const args = argv.slice(2);
@@ -486,7 +486,7 @@ const resolvePrecomputedCommandHelp = (argv) => {
 };
 
 const isHelpFastPathDisabled = () =>
-  process.env.OPENCLAW_DISABLE_CLI_STARTUP_HELP_FAST_PATH === "1";
+  process.env.QUIET_CORE_DISABLE_CLI_STARTUP_HELP_FAST_PATH === "1";
 
 const normalizeLauncherHomeValue = (value) => {
   const trimmed = value?.trim();
@@ -499,7 +499,7 @@ const resolveLauncherOsHomeDir = () =>
   os.homedir();
 
 const resolveLauncherHomeDir = () => {
-  const explicit = normalizeLauncherHomeValue(process.env.OPENCLAW_HOME);
+  const explicit = normalizeLauncherHomeValue(process.env.QUIET_CORE_HOME);
   const rawHome =
     explicit && (explicit === "~" || explicit.startsWith("~/") || explicit.startsWith("~\\"))
       ? explicit.replace(/^~(?=$|[\\/])/, resolveLauncherOsHomeDir())
@@ -517,31 +517,28 @@ const resolveLauncherUserPath = (input) => {
   return path.resolve(input);
 };
 
-// Mirrors `resolveDefaultConfigCandidates` in src/config/paths.ts: the current
-// state dir and config file name come first, then the pre-rebrand locations.
-const LAUNCHER_CONFIG_FILENAMES = ["quiet-core-bot.json", "openclaw.json", "clawdbot.json"];
-const LAUNCHER_STATE_DIR_NAMES = [".quiet-core-bot", ".clawdbot", ".openclaw"];
+// Mirrors `resolveDefaultConfigCandidates` in src/config/paths.ts: only the
+// current state dir and config file name are recognized.
+const LAUNCHER_CONFIG_FILENAME = "quiet-core-bot.json";
+const LAUNCHER_STATE_DIR_NAME = ".quiet-core-bot";
 
 const resolveLauncherConfigPaths = () => {
-  const explicit = process.env.OPENCLAW_CONFIG_PATH?.trim();
+  const explicit = process.env.QUIET_CORE_CONFIG_PATH?.trim();
   if (explicit) {
     return [resolveLauncherUserPath(explicit)];
   }
-  const stateOverride = process.env.OPENCLAW_STATE_DIR?.trim();
+  const stateOverride = process.env.QUIET_CORE_STATE_DIR?.trim();
   if (stateOverride) {
-    const stateDir = resolveLauncherUserPath(stateOverride);
-    return LAUNCHER_CONFIG_FILENAMES.map((name) => path.join(stateDir, name));
+    return [path.join(resolveLauncherUserPath(stateOverride), LAUNCHER_CONFIG_FILENAME)];
   }
   const homeDir = resolveLauncherHomeDir();
-  return LAUNCHER_STATE_DIR_NAMES.flatMap((dirName) =>
-    LAUNCHER_CONFIG_FILENAMES.map((fileName) => path.join(homeDir, dirName, fileName)),
-  );
+  return [path.join(homeDir, LAUNCHER_STATE_DIR_NAME, LAUNCHER_CONFIG_FILENAME)];
 };
 
 const shouldDeferRootHelpToRuntimeEntry = () => {
   if (
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR?.trim() ||
-    process.env.OPENCLAW_DISABLE_BUNDLED_PLUGINS?.trim()
+    process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR?.trim() ||
+    process.env.QUIET_CORE_DISABLE_BUNDLED_PLUGINS?.trim()
   ) {
     return true;
   }
@@ -569,7 +566,7 @@ const loadPrecomputedHelpText = (key, subkey) => {
 
 function tryOutputLauncherVersion(argv) {
   try {
-    if (normalizeLauncherMetadataValue(process.env.OPENCLAW_CONTAINER)) {
+    if (normalizeLauncherMetadataValue(process.env.QUIET_CORE_CONTAINER)) {
       return false;
     }
     if (!isLauncherVersionFastPathArgv(argv)) {
@@ -614,7 +611,7 @@ function resolveLauncherVersion() {
   if (buildVersion) {
     return buildVersion;
   }
-  return normalizeLauncherMetadataValue(process.env.OPENCLAW_BUNDLED_VERSION) ?? "0.0.0";
+  return normalizeLauncherMetadataValue(process.env.QUIET_CORE_BUNDLED_VERSION) ?? "0.0.0";
 }
 
 function resolveLauncherCommit() {

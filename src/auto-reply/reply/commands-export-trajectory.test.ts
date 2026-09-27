@@ -9,7 +9,7 @@ import type { HandleCommandsParams } from "./commands-types.js";
 const tempDirs: string[] = [];
 
 function makeTempDir(): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-export-command-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-export-command-"));
   tempDirs.push(dir);
   return dir;
 }
@@ -24,7 +24,7 @@ function makeParams(workspaceDir = makeTempDir()): HandleCommandsParams {
   return {
     cfg: {
       session: {
-        store: "/tmp/openclaw-sessions.json",
+        store: "/tmp/quiet-core-bot-sessions.json",
       },
     },
     ctx: {
@@ -160,7 +160,7 @@ describe("buildExportTrajectoryCommandReply", () => {
     expect(execCall.defaults.trigger).toBe("export-trajectory");
     expect(execCall.defaults.approvalFollowupMode).toBe("agent");
     expect(execCall.defaults.sessionId).toBe("session-1");
-    expect(execCall.defaults.sessionStore).toBe("/tmp/openclaw-sessions.json");
+    expect(execCall.defaults.sessionStore).toBe("/tmp/quiet-core-bot-sessions.json");
     expect(execCall.defaults.currentChannelId).toBe("bot");
     expect(execCall.defaults.accountId).toBe("account-1");
     expect(execCall.params.security).toBe("allowlist");
@@ -176,7 +176,7 @@ describe("buildExportTrajectoryCommandReply", () => {
     const request = readEncodedRequestFromCommand(command);
     expect(request.sessionKey).toBe("agent:target:session");
     expect(request.workspace).toBe(params.workspaceDir);
-    expect(String(request.workspace)).toContain("openclaw-export-command-");
+    expect(String(request.workspace)).toContain("quiet-core-bot-export-command-");
   });
 
   it("uses the originating Telegram route for native trajectory export followups", async () => {

@@ -5,8 +5,8 @@
  * provider-specific payload policy before converting SDK streams into Quiet Core bot assistant events.
  */
 import { createHash, randomUUID } from "node:crypto";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { isRecord } from "@quiet-core/normalization-core/record-coerce";
+import { uniqueStrings } from "@quiet-core/normalization-core/string-normalization";
 import OpenAI, { AzureOpenAI } from "openai";
 import type { ChatCompletionChunk } from "openai/resources/chat/completions.js";
 import type {
@@ -1406,7 +1406,7 @@ function createResponsesFirstEventTimeoutError(model: Model, timeoutMs: number):
   return new Error(
     `Azure OpenAI Responses stream did not deliver a first event within ${timeoutMs}ms after HTTP streaming headers. ` +
       `provider=${model.provider} model=${model.id}. ` +
-      "The provider may be stalled while parsing the tool payload; retry with a smaller tool surface or enable OPENCLAW_DEBUG_MODEL_PAYLOAD=tools to inspect exposed tools.",
+      "The provider may be stalled while parsing the tool payload; retry with a smaller tool surface or enable QUIET_CORE_DEBUG_MODEL_PAYLOAD=tools to inspect exposed tools.",
   );
 }
 
@@ -2136,7 +2136,7 @@ function resolveCacheRetention(cacheRetention: string | undefined): "short" | "l
   if (cacheRetention === "short" || cacheRetention === "long" || cacheRetention === "none") {
     return cacheRetention;
   }
-  if (typeof process !== "undefined" && process.env.OPENCLAW_CACHE_RETENTION === "long") {
+  if (typeof process !== "undefined" && process.env.QUIET_CORE_CACHE_RETENTION === "long") {
     return "long";
   }
   return "short";
@@ -2213,7 +2213,7 @@ function isOpenAICodexResponsesModel(model: Model): boolean {
   return (
     OPENAI_CODEX_RESPONSES_PROVIDERS.has(model.provider) &&
     (model.api === "openai-chatgpt-responses" ||
-      model.api === "openclaw-openai-responses-transport")
+      model.api === "quiet-core-bot-openai-responses-transport")
   );
 }
 

@@ -69,7 +69,7 @@ describe("legacy memory search config migrate", () => {
       memorySearch: {
         provider: "openai",
         store: {
-          path: "/tmp/openclaw-memory-{agentId}.sqlite",
+          path: "/tmp/quiet-core-bot-memory-{agentId}.sqlite",
           vector: { enabled: false },
         },
       },
@@ -1500,7 +1500,7 @@ describe("legacy migrate mention routing", () => {
         groupChat: {
           requireMention: false,
           historyLimit: 12,
-          mentionPatterns: ["@openclaw"],
+          mentionPatterns: ["@quiet-core-bot"],
         },
       },
       channels: {
@@ -1528,7 +1528,7 @@ describe("legacy migrate mention routing", () => {
     });
     expect(res.config?.messages?.groupChat).toEqual({
       historyLimit: 12,
-      mentionPatterns: ["@openclaw"],
+      mentionPatterns: ["@quiet-core-bot"],
     });
     expect(res.changes).toStrictEqual([
       "Moved routing.allowFrom → channels.whatsapp.allowFrom.",
@@ -1609,7 +1609,7 @@ describe("legacy migrate sandbox scope aliases", () => {
         list: [
           {
             id: "reviewer",
-            agentRuntime: { fallback: "openclaw" },
+            agentRuntime: { fallback: "quiet-core-bot" },
             embeddedHarness: {
               runtime: "codex",
               fallback: "none",
@@ -1692,7 +1692,7 @@ describe("legacy migrate sandbox scope aliases", () => {
           agentRuntime: { id: "claude-cli" },
           model: "anthropic/claude-opus-4-7",
           models: {
-            "anthropic/claude-opus-4-7": { agentRuntime: { id: "openclaw" } },
+            "anthropic/claude-opus-4-7": { agentRuntime: { id: "quiet-core-bot" } },
           },
         },
       },
@@ -1704,7 +1704,7 @@ describe("legacy migrate sandbox scope aliases", () => {
     expect(res.config?.agents?.defaults).toEqual({
       model: "anthropic/claude-opus-4-7",
       models: {
-        "anthropic/claude-opus-4-7": { agentRuntime: { id: "openclaw" } },
+        "anthropic/claude-opus-4-7": { agentRuntime: { id: "quiet-core-bot" } },
       },
     });
   });
@@ -1797,7 +1797,7 @@ describe("legacy migrate sandbox scope aliases", () => {
       agents: {
         list: [
           {
-            id: "openclaw",
+            id: "quiet-core-bot",
             sandbox: {
               perSession: false,
             },

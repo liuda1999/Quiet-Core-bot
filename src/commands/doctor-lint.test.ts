@@ -31,7 +31,7 @@ describe("runDoctorLintCli", () => {
       exists: true,
       valid: true,
       config: {},
-      path: "/tmp/openclaw.json",
+      path: "/tmp/quiet-core-bot.json",
     });
 
     const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
@@ -55,7 +55,7 @@ describe("runDoctorLintCli", () => {
       exists: true,
       valid: true,
       config: {},
-      path: "/tmp/openclaw.json",
+      path: "/tmp/quiet-core-bot.json",
     });
 
     const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
@@ -81,7 +81,7 @@ describe("runDoctorLintCli", () => {
       exists: true,
       valid: true,
       config: {},
-      path: "/tmp/openclaw.json",
+      path: "/tmp/quiet-core-bot.json",
     });
     const detect = vi.fn(async (_ctx: unknown) => []);
     registerHealthCheck({
@@ -114,7 +114,7 @@ describe("runDoctorLintCli", () => {
       exists: true,
       valid: false,
       config: {},
-      path: "/tmp/openclaw.json",
+      path: "/tmp/quiet-core-bot.json",
       issues: [{ path: "gateway.mode", message: "Required" }],
     });
 
@@ -147,7 +147,7 @@ describe("runDoctorLintCli", () => {
       exists: true,
       valid: true,
       config: {},
-      path: "/tmp/openclaw.json",
+      path: "/tmp/quiet-core-bot.json",
     });
 
     const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
@@ -180,7 +180,7 @@ describe("runDoctorLintCli", () => {
       exists: true,
       valid: true,
       config: {},
-      path: "/tmp/openclaw.json",
+      path: "/tmp/quiet-core-bot.json",
     });
     registerHealthCheck({
       id: "plugin/example/lint",
@@ -219,7 +219,7 @@ describe("runDoctorLintCli", () => {
       exists: true,
       valid: true,
       config: {},
-      path: "/tmp/openclaw.json",
+      path: "/tmp/quiet-core-bot.json",
     });
     registerHealthCheck({
       id: "plugin/example/lint",
@@ -264,7 +264,7 @@ describe("runDoctorLintCli", () => {
       exists: true,
       valid: true,
       config: {},
-      path: "/tmp/openclaw.json",
+      path: "/tmp/quiet-core-bot.json",
     });
     registerHealthCheck({
       id: "core/doctor/final-config-validation",
@@ -285,7 +285,7 @@ describe("runDoctorLintCli", () => {
       exists: true,
       valid: true,
       config: {},
-      path: "/tmp/openclaw.json",
+      path: "/tmp/quiet-core-bot.json",
     });
     registerHealthCheck({
       id: "core/doctor/final-config-validation",
@@ -306,7 +306,7 @@ describe("runDoctorLintCli", () => {
       exists: true,
       valid: true,
       config: {},
-      path: "/tmp/openclaw.json",
+      path: "/tmp/quiet-core-bot.json",
     });
     registerHealthCheck({
       id: "core/doctor/not-yet-owned",
@@ -327,7 +327,7 @@ describe("runDoctorLintCli", () => {
       exists: true,
       valid: true,
       config: {},
-      path: "/tmp/openclaw.json",
+      path: "/tmp/quiet-core-bot.json",
     });
     registerHealthCheck({
       id: "core/doctor/not-yet-owned",

@@ -4,8 +4,8 @@ import path from "node:path";
 import {
   normalizeOptionalLowercaseString,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+} from "@quiet-core/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
 import { resolveBundledPluginInstallCommandHint } from "../../../plugins/bundled-sources.js";
 
 /** Resolves the install command hint shown when the configured ACP backend is missing. */
@@ -26,7 +26,7 @@ export function resolveAcpInstallCommandHint(cfg: OpenClawConfig): string {
       workspaceDir,
     });
     if (bundledInstallHint) {
-      const localPath = bundledInstallHint.replace(/^openclaw plugins install /u, "");
+      const localPath = bundledInstallHint.replace(/^quiet-core-bot plugins install /u, "");
       const resolvedLocalPath = path.resolve(localPath);
       const relativeToWorkspace = path.relative(workspaceDir, resolvedLocalPath);
       // Only surface local path hints that belong to the current workspace.

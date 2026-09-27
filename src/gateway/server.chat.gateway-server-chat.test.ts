@@ -228,7 +228,7 @@ describe("gateway server chat", () => {
   };
 
   test("sessions.send accepts dashboard messages for existing sessions", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-sessions-send-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-sessions-send-"));
     testState.sessionStorePath = path.join(dir, "sessions.json");
     try {
       await writeSessionStore({
@@ -255,7 +255,7 @@ describe("gateway server chat", () => {
   });
 
   test("sessions.send creates a configured agent main session before sending", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-sessions-send-agent-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-sessions-send-agent-"));
     testState.sessionStorePath = path.join(dir, "sessions.json");
     testState.agentsConfig = {
       list: [{ id: "main", default: true }, { id: "orion" }],
@@ -286,7 +286,7 @@ describe("gateway server chat", () => {
   });
 
   test("sessions.steer accepts dashboard follow-up messages for existing sessions", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-sessions-steer-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-sessions-steer-"));
     testState.sessionStorePath = path.join(dir, "sessions.json");
     try {
       await writeSessionStore({
@@ -313,7 +313,7 @@ describe("gateway server chat", () => {
   });
 
   test("sessions.abort stops active dashboard runs", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-sessions-abort-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-sessions-abort-"));
     testState.sessionStorePath = path.join(dir, "sessions.json");
     try {
       await writeSessionStore({
@@ -388,7 +388,7 @@ describe("gateway server chat", () => {
   });
 
   test("sessions.abort resolves active runs by runId without a caller session key", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-sessions-abort-runid-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-sessions-abort-runid-"));
     testState.sessionStorePath = path.join(dir, "sessions.json");
     try {
       await writeSessionStore({
@@ -881,7 +881,7 @@ describe("gateway server chat", () => {
       },
       {
         role: "assistant",
-        provider: "openclaw",
+        provider: "quiet-core-bot",
         model: "delivery-mirror",
         content: [{ type: "text", text: replyText }],
         timestamp: 4,
@@ -903,7 +903,7 @@ describe("gateway server chat", () => {
       ),
     ).toBe(true);
     expect(historyMessages).not.toContainEqual(
-      expect.objectContaining({ provider: "openclaw", model: "delivery-mirror" }),
+      expect.objectContaining({ provider: "quiet-core-bot", model: "delivery-mirror" }),
     );
   });
 
@@ -934,7 +934,7 @@ describe("gateway server chat", () => {
       },
       {
         role: "assistant",
-        provider: "openclaw",
+        provider: "quiet-core-bot",
         model: "delivery-mirror",
         content: [{ type: "text", text: replyText }],
         timestamp: 3,
@@ -951,7 +951,7 @@ describe("gateway server chat", () => {
       ),
     ).toBe(true);
     expect(historyMessages).not.toContainEqual(
-      expect.objectContaining({ provider: "openclaw", model: "delivery-mirror" }),
+      expect.objectContaining({ provider: "quiet-core-bot", model: "delivery-mirror" }),
     );
   });
 
@@ -975,7 +975,7 @@ describe("gateway server chat", () => {
       },
       {
         role: "assistant",
-        provider: "openclaw",
+        provider: "quiet-core-bot",
         model: "delivery-mirror",
         content: [{ type: "text", text: replyText }],
         timestamp: 2,
@@ -999,7 +999,7 @@ describe("gateway server chat", () => {
       ),
     ).toBe(true);
     expect(historyMessages).not.toContainEqual(
-      expect.objectContaining({ provider: "openclaw", model: "delivery-mirror" }),
+      expect.objectContaining({ provider: "quiet-core-bot", model: "delivery-mirror" }),
     );
   });
 
@@ -1040,7 +1040,7 @@ describe("gateway server chat", () => {
       },
       {
         role: "assistant",
-        provider: "openclaw",
+        provider: "quiet-core-bot",
         model: "delivery-mirror",
         content: [{ type: "text", text: firstText }],
         timestamp: 3,
@@ -1054,7 +1054,7 @@ describe("gateway server chat", () => {
       },
       {
         role: "assistant",
-        provider: "openclaw",
+        provider: "quiet-core-bot",
         model: "delivery-mirror",
         content: [{ type: "text", text: secondText }],
         timestamp: 5,
@@ -1071,7 +1071,7 @@ describe("gateway server chat", () => {
       ),
     ).toHaveLength(2);
     expect(historyMessages).not.toContainEqual(
-      expect.objectContaining({ provider: "openclaw", model: "delivery-mirror" }),
+      expect.objectContaining({ provider: "quiet-core-bot", model: "delivery-mirror" }),
     );
   });
 
@@ -1079,7 +1079,7 @@ describe("gateway server chat", () => {
     const historyMessages = await loadChatHistoryWithMessages([
       {
         role: "assistant",
-        provider: "openclaw",
+        provider: "quiet-core-bot",
         model: "delivery-mirror",
         content: [{ type: "text", text: "standalone delivered reply" }],
         timestamp: 1,
@@ -1534,8 +1534,8 @@ describe("gateway server chat", () => {
   test("chat.history persists assistant image data URLs as managed image blocks", async () => {
     await withMainSessionStore(
       async (dir) => {
-        const envSnapshot = captureEnv(["OPENCLAW_STATE_DIR"]);
-        setTestEnvValue("OPENCLAW_STATE_DIR", dir);
+        const envSnapshot = captureEnv(["QUIET_CORE_STATE_DIR"]);
+        setTestEnvValue("QUIET_CORE_STATE_DIR", dir);
         const pngB64 =
           "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=";
         dispatchInboundMessageMock.mockImplementationOnce(async (...args: unknown[]) => {

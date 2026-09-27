@@ -1,7 +1,7 @@
 // Reads service manager state for status reports.
 // Converts gateway/node launchd/systemd state into a compact summary shape.
 
-import { OPENCLAW_WRAPPER_ENV_KEY } from "../daemon/program-args.js";
+import { QUIET_CORE_WRAPPER_ENV_KEY } from "../daemon/program-args.js";
 import {
   summarizeGatewayServiceLayout,
   type GatewayServiceLayoutSummary,
@@ -25,7 +25,7 @@ type ServiceStatusSummary = {
 function normalizeServiceWrapperPath(
   command: GatewayServiceCommandConfig | null,
 ): string | undefined {
-  const wrapperPath = command?.environment?.[OPENCLAW_WRAPPER_ENV_KEY]?.trim();
+  const wrapperPath = command?.environment?.[QUIET_CORE_WRAPPER_ENV_KEY]?.trim();
   return wrapperPath || undefined;
 }
 

@@ -2,11 +2,11 @@
 // Quiet Core bot HTTP/1, timeout, proxy TLS, and IP-safe proxy policies.
 import { createRequire } from "node:module";
 import net from "node:net";
-import { isRecord as isObjectRecord } from "@openclaw/normalization-core/record-coerce";
+import { isRecord as isObjectRecord } from "@quiet-core/normalization-core/record-coerce";
 import { addActiveManagedProxyTlsOptions } from "./proxy/managed-proxy-undici.js";
 import { resolveUndiciAutoSelectFamilyConnectOptions } from "./undici-family-policy.js";
 
-export const TEST_UNDICI_RUNTIME_DEPS_KEY = "__OPENCLAW_TEST_UNDICI_RUNTIME_DEPS__";
+export const TEST_UNDICI_RUNTIME_DEPS_KEY = "__QUIET_CORE_TEST_UNDICI_RUNTIME_DEPS__";
 
 /** Runtime-loaded undici constructors/functions used where static imports would affect globals. */
 export type UndiciRuntimeDeps = {

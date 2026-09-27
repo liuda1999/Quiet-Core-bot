@@ -1,7 +1,7 @@
 /** Provider plugin catalog loading for model-list output. */
 import { createHash } from "node:crypto";
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import { sortUniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
+import { sortUniqueStrings } from "@quiet-core/normalization-core/string-normalization";
 import { loadAuthProfileStoreWithoutExternalProfiles } from "../../agents/auth-profiles/store.js";
 import {
   buildAgentModelCatalogCacheKey,
@@ -14,7 +14,7 @@ import {
   createProviderAuthResolver,
 } from "../../agents/models-config.providers.secrets.js";
 import type { ModelProviderConfig } from "../../config/types.models.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { formatErrorMessage } from "../../infra/errors.js";
 import type { Model } from "../../llm/types.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";

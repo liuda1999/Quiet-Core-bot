@@ -25,18 +25,18 @@ function resolveInstallerVersionCases(params: { stdinCwd: string }): string[] {
       `${versionHelperSource}
 fake_openclaw_decorated() { printf '%s\\n' 'Quiet Core bot 2026.3.10 (abcdef0)'; }
 fake_openclaw_raw() { printf '%s\\n' "Quiet Core bot dev's build"; }
-OPENCLAW_BIN=fake_openclaw_decorated resolve_openclaw_version
-OPENCLAW_BIN=fake_openclaw_raw resolve_openclaw_version
+QUIET_CORE_BIN=fake_openclaw_decorated resolve_quiet_core_bot_version
+QUIET_CORE_BIN=fake_openclaw_raw resolve_quiet_core_bot_version
 (
   cd "$1"
-  source /dev/stdin <<'OPENCLAW_STDIN_INSTALLER'
+  source /dev/stdin <<'QUIET_CORE_STDIN_INSTALLER'
 ${versionHelperSource}
 fake_openclaw_stdin() { printf '%s\\n' 'Quiet Core bot 2026.3.10 (abcdef0)'; }
-OPENCLAW_BIN=fake_openclaw_stdin
-resolve_openclaw_version
-OPENCLAW_STDIN_INSTALLER
+QUIET_CORE_BIN=fake_openclaw_stdin
+resolve_quiet_core_bot_version
+QUIET_CORE_STDIN_INSTALLER
 )`,
-      "openclaw-version-test",
+      "quiet-core-bot-version-test",
       params.stdinCwd,
     ],
     {
@@ -44,7 +44,7 @@ OPENCLAW_STDIN_INSTALLER
       encoding: "utf-8",
       env: {
         ...process.env,
-        OPENCLAW_INSTALL_SH_NO_RUN: "1",
+        QUIET_CORE_INSTALL_SH_NO_RUN: "1",
       },
     },
   );
@@ -59,7 +59,7 @@ describe("install.sh version resolution", () => {
   it.runIf(process.platform !== "win32")(
     "parses CLI versions and keeps stdin helpers isolated from cwd",
     () => {
-      const hostileCwd = makeTempDir(tempRoots, "openclaw-install-stdin-");
+      const hostileCwd = makeTempDir(tempRoots, "quiet-core-bot-install-stdin-");
       const hostileHelper = path.join(
         hostileCwd,
         "docker",
@@ -70,7 +70,7 @@ describe("install.sh version resolution", () => {
       fs.writeFileSync(
         hostileHelper,
         `#!/usr/bin/env bash
-extract_openclaw_semver() {
+extract_quiet_core_bot_semver() {
   printf '%s' 'poisoned'
 }
 `,

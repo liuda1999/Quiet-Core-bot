@@ -23,8 +23,8 @@ Recommended operator loop:
 ```bash
 quiet-core-bot secrets audit --check
 quiet-core-bot secrets configure
-quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run
-quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json
+quiet-core-bot secrets apply --from /tmp/quiet-core-bot-secrets-plan.json --dry-run
+quiet-core-bot secrets apply --from /tmp/quiet-core-bot-secrets-plan.json
 quiet-core-bot secrets audit --check
 quiet-core-bot secrets reload
 ```
@@ -108,7 +108,7 @@ Build provider and SecretRef changes interactively, run preflight, and optionall
 
 ```bash
 quiet-core-bot secrets configure
-quiet-core-bot secrets configure --plan-out /tmp/openclaw-secrets-plan.json
+quiet-core-bot secrets configure --plan-out /tmp/quiet-core-bot-secrets-plan.json
 quiet-core-bot secrets configure --apply --yes
 quiet-core-bot secrets configure --providers-only
 quiet-core-bot secrets configure --skip-provider-setup
@@ -155,11 +155,11 @@ Exec provider safety note:
 Apply or preflight a plan generated previously:
 
 ```bash
-quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json
-quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json --allow-exec
-quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run
-quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run --allow-exec
-quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json --json
+quiet-core-bot secrets apply --from /tmp/quiet-core-bot-secrets-plan.json
+quiet-core-bot secrets apply --from /tmp/quiet-core-bot-secrets-plan.json --allow-exec
+quiet-core-bot secrets apply --from /tmp/quiet-core-bot-secrets-plan.json --dry-run
+quiet-core-bot secrets apply --from /tmp/quiet-core-bot-secrets-plan.json --dry-run --allow-exec
+quiet-core-bot secrets apply --from /tmp/quiet-core-bot-secrets-plan.json --json
 ```
 
 Exec behavior:

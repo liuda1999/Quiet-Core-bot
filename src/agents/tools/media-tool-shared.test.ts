@@ -61,13 +61,13 @@ function createModelRegistryStub(resolve: (provider: string, modelId: string) =>
 
 describe("resolveMediaToolLocalRoots", () => {
   it("does not widen default local roots from media sources", () => {
-    const stateDir = path.join("/tmp", "openclaw-media-tool-roots-state");
+    const stateDir = path.join("/tmp", "quiet-core-bot-media-tool-roots-state");
     const picturesDir =
       process.platform === "win32" ? "C:\\Users\\peter\\Pictures" : "/Users/peter/Pictures";
     const moviesDir =
       process.platform === "win32" ? "C:\\Users\\peter\\Movies" : "/Users/peter/Movies";
 
-    const roots = withEnv({ OPENCLAW_STATE_DIR: stateDir }, () =>
+    const roots = withEnv({ QUIET_CORE_STATE_DIR: stateDir }, () =>
       resolveMediaToolLocalRoots(path.join(stateDir, "workspace-agent"), undefined, [
         path.join(picturesDir, "photo.png"),
         pathToFileURL(path.join(moviesDir, "clip.mp4")).href,
@@ -86,8 +86,8 @@ describe("resolveMediaToolLocalRoots", () => {
   it("keeps channel inbound attachment roots separate from local roots", () => {
     // Inbound channel roots may include broad chat attachment folders; keep them
     // out of local filesystem allowlists unless the channel context asks.
-    const accountRoot = path.join("/tmp", "openclaw-imessage-work");
-    const sharedRoot = path.join("/tmp", "openclaw-imessage-shared");
+    const accountRoot = path.join("/tmp", "quiet-core-bot-imessage-work");
+    const sharedRoot = path.join("/tmp", "quiet-core-bot-imessage-shared");
     const cfg = {
       channels: {
         imessage: {

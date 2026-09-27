@@ -21,7 +21,7 @@ describe("bundle plugin hooks", () => {
   let previousBundledHooksDir: string | undefined;
 
   beforeAll(async () => {
-    fixtureRoot = await fsp.mkdtemp(path.join(os.tmpdir(), "openclaw-plugin-hooks-"));
+    fixtureRoot = await fsp.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-plugin-hooks-"));
   });
 
   beforeEach(async () => {
@@ -29,17 +29,17 @@ describe("bundle plugin hooks", () => {
     setInternalHooksEnabled(true);
     workspaceDir = path.join(fixtureRoot, `case-${caseId++}`);
     await fsp.mkdir(workspaceDir, { recursive: true });
-    previousBundledHooksDir = process.env.OPENCLAW_BUNDLED_HOOKS_DIR;
-    process.env.OPENCLAW_BUNDLED_HOOKS_DIR = "/nonexistent/bundled/hooks";
+    previousBundledHooksDir = process.env.QUIET_CORE_BUNDLED_HOOKS_DIR;
+    process.env.QUIET_CORE_BUNDLED_HOOKS_DIR = "/nonexistent/bundled/hooks";
   });
 
   afterEach(() => {
     clearInternalHooks();
     setInternalHooksEnabled(true);
     if (previousBundledHooksDir === undefined) {
-      delete process.env.OPENCLAW_BUNDLED_HOOKS_DIR;
+      delete process.env.QUIET_CORE_BUNDLED_HOOKS_DIR;
     } else {
-      process.env.OPENCLAW_BUNDLED_HOOKS_DIR = previousBundledHooksDir;
+      process.env.QUIET_CORE_BUNDLED_HOOKS_DIR = previousBundledHooksDir;
     }
   });
 
@@ -48,7 +48,7 @@ describe("bundle plugin hooks", () => {
   });
 
   async function writeBundleHookFixture(): Promise<string> {
-    const bundleRoot = path.join(workspaceDir, ".openclaw", "extensions", "sample-bundle");
+    const bundleRoot = path.join(workspaceDir, ".quiet-core-bot", "extensions", "sample-bundle");
     const hookDir = path.join(bundleRoot, "hooks", "bundle-hook");
     await fsp.mkdir(path.join(bundleRoot, ".codex-plugin"), { recursive: true });
     await fsp.mkdir(hookDir, { recursive: true });
@@ -66,7 +66,7 @@ describe("bundle plugin hooks", () => {
         "---",
         "name: bundle-hook",
         'description: "Bundle hook"',
-        'metadata: {"openclaw":{"events":["command:new"]}}',
+        'metadata: {"quiet-core-bot":{"events":["command:new"]}}',
         "---",
         "",
         "# Bundle hook",
@@ -117,7 +117,7 @@ describe("bundle plugin hooks", () => {
 
     const entry = requireOnlyHookEntry(entries);
     expect(entry.hook.name).toBe("bundle-hook");
-    expect(entry.hook.source).toBe("openclaw-plugin");
+    expect(entry.hook.source).toBe("quiet-core-bot-plugin");
     expect(entry.hook.pluginId).toBe("sample-bundle");
     expect(entry.hook.baseDir).toBe(
       fs.realpathSync.native(path.join(bundleRoot, "hooks", "bundle-hook")),
@@ -146,7 +146,7 @@ describe("bundle plugin hooks", () => {
   });
 
   it("does not treat Claude hooks.json bundles as Quiet Core bot hook packs", async () => {
-    const bundleRoot = path.join(workspaceDir, ".openclaw", "extensions", "claude-bundle");
+    const bundleRoot = path.join(workspaceDir, ".quiet-core-bot", "extensions", "claude-bundle");
     await fsp.mkdir(path.join(bundleRoot, ".claude-plugin"), { recursive: true });
     await fsp.mkdir(path.join(bundleRoot, "hooks"), { recursive: true });
     await fsp.writeFile(

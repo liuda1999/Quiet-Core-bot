@@ -17,7 +17,7 @@ Short guide to verify channel connectivity without guessing.
 - `quiet-core-bot health --verbose` — forces a live health probe and prints gateway connection details.
 - `quiet-core-bot health --json` — machine-readable health snapshot output.
 - Send `/status` as a standalone message in WhatsApp/WebChat to get a status reply without invoking the agent.
-- Logs: tail `/tmp/openclaw/openclaw-*.log` and filter for `web-heartbeat`, `web-reconnect`, `web-auto-reply`, `web-inbound`.
+- Logs: tail `/tmp/quiet-core-bot/quiet-core-bot-*.log` and filter for `web-heartbeat`, `web-reconnect`, `web-auto-reply`, `web-inbound`.
 
 For Discord and other chat providers, session rows are not socket liveness.
 `quiet-core-bot sessions`, Gateway `sessions.list`, and the agent `sessions_list` tool
@@ -49,7 +49,7 @@ External uptime monitoring services should use the dedicated `/health` endpoint,
 - **DO use:** `GET /health` — instant response, no session created, no LLM call, returns `{"ok":true,"status":"live"}`
 - **DON'T use:** `/v1/chat/completions` for health checks — each request creates a full agent session with skill snapshot, context assembly, and LLM calls
 
-When no `x-openclaw-session-key` header or `user` field is provided, `/v1/chat/completions` generates a new random session for each request. Monitoring services that ping every 15 minutes create ~96 sessions/day, each consuming 4–22KB. Over time this causes session store bloat and can lead to context window overflow.
+When no `x-quiet-core-bot-session-key` header or `user` field is provided, `/v1/chat/completions` generates a new random session for each request. Monitoring services that ping every 15 minutes create ~96 sessions/day, each consuming 4–22KB. Over time this causes session store bloat and can lead to context window overflow.
 
 ### Monitoring service setup examples
 

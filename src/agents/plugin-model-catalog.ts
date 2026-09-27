@@ -5,13 +5,13 @@
  */
 import { existsSync, readdirSync } from "node:fs";
 import path from "node:path";
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
+import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
 import type { PluginMetadataSnapshot } from "../plugins/plugin-metadata-snapshot.types.js";
 
 // Generated catalog files live under each agent profile so provider model
 // discovery can reuse plugin-owned catalogs without loading plugin runtimes.
 export const PLUGIN_MODEL_CATALOG_FILE = "catalog.json";
-export const PLUGIN_MODEL_CATALOG_GENERATED_BY = "openclaw-plugin-model-catalog-v1";
+export const PLUGIN_MODEL_CATALOG_GENERATED_BY = "quiet-core-bot-plugin-model-catalog-v1";
 
 export type PluginModelCatalogMetadataSnapshot = Pick<PluginMetadataSnapshot, "owners"> & {
   index?: {

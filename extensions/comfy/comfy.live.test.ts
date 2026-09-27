@@ -1,9 +1,9 @@
 // Comfy tests cover comfy plugin behavior.
-import { resolveDefaultAgentDir } from "openclaw/plugin-sdk/agent-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
-import { getRuntimeConfig } from "openclaw/plugin-sdk/runtime-config-snapshot";
-import { isLiveTestEnabled } from "openclaw/plugin-sdk/test-env";
+import { resolveDefaultAgentDir } from "quiet-core-bot/plugin-sdk/agent-runtime";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import { createTestPluginApi } from "quiet-core-bot/plugin-sdk/plugin-test-api";
+import { getRuntimeConfig } from "quiet-core-bot/plugin-sdk/runtime-config-snapshot";
+import { isLiveTestEnabled } from "quiet-core-bot/plugin-sdk/test-env";
 import { beforeAll, describe, expect, it } from "vitest";
 import plugin from "./index.js";
 import { getComfyConfig, isComfyCapabilityConfigured } from "./workflow-runtime.js";

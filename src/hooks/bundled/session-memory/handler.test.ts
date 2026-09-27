@@ -33,7 +33,7 @@ async function createCaseWorkspace(prefix = "case"): Promise<string> {
 
 beforeAll(async () => {
   ({ default: handler, flushSessionMemoryWritesForTest } = await import("./handler.js"));
-  suiteWorkspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-session-memory-"));
+  suiteWorkspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-session-memory-"));
 });
 
 afterAll(async () => {
@@ -303,7 +303,7 @@ describe("session-memory hook", () => {
     await withEnvAsync(
       {
         NODE_ENV: "production",
-        OPENCLAW_TEST_FAST: undefined,
+        QUIET_CORE_TEST_FAST: undefined,
         VITEST: undefined,
       },
       async () => {
@@ -328,7 +328,7 @@ describe("session-memory hook", () => {
     await withEnvAsync(
       {
         NODE_ENV: "production",
-        OPENCLAW_TEST_FAST: undefined,
+        QUIET_CORE_TEST_FAST: undefined,
         VITEST: undefined,
       },
       async () => {
@@ -383,7 +383,7 @@ describe("session-memory hook", () => {
     await withEnvAsync(
       {
         NODE_ENV: "production",
-        OPENCLAW_TEST_FAST: undefined,
+        QUIET_CORE_TEST_FAST: undefined,
         VITEST: undefined,
       },
       async () => {

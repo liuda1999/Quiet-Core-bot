@@ -4,7 +4,7 @@ import {
   type ModelAliasIndex,
   resolveDefaultModelForAgent,
 } from "../../agents/model-selection.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 
 /** Resolve default provider/model plus alias index for directive parsing. */
 export function resolveDefaultModel(params: { cfg: OpenClawConfig; agentId?: string }): {

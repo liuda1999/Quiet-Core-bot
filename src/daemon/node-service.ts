@@ -18,14 +18,14 @@ function withNodeServiceEnv(
   // node-specific labels, logs, task script, and service marker.
   return {
     ...env,
-    OPENCLAW_LAUNCHD_LABEL: resolveNodeLaunchAgentLabel(),
-    OPENCLAW_SYSTEMD_UNIT: resolveNodeSystemdServiceName(),
-    OPENCLAW_WINDOWS_TASK_NAME: resolveNodeWindowsTaskName(),
-    OPENCLAW_WINDOWS_TASK_HIDDEN_LAUNCHER: "1",
-    OPENCLAW_TASK_SCRIPT_NAME: NODE_WINDOWS_TASK_SCRIPT_NAME,
-    OPENCLAW_LOG_PREFIX: "node",
-    OPENCLAW_SERVICE_MARKER: NODE_SERVICE_MARKER,
-    OPENCLAW_SERVICE_KIND: NODE_SERVICE_KIND,
+    QUIET_CORE_LAUNCHD_LABEL: resolveNodeLaunchAgentLabel(),
+    QUIET_CORE_SYSTEMD_UNIT: resolveNodeSystemdServiceName(),
+    QUIET_CORE_WINDOWS_TASK_NAME: resolveNodeWindowsTaskName(),
+    QUIET_CORE_WINDOWS_TASK_HIDDEN_LAUNCHER: "1",
+    QUIET_CORE_TASK_SCRIPT_NAME: NODE_WINDOWS_TASK_SCRIPT_NAME,
+    QUIET_CORE_LOG_PREFIX: "node",
+    QUIET_CORE_SERVICE_MARKER: NODE_SERVICE_MARKER,
+    QUIET_CORE_SERVICE_KIND: NODE_SERVICE_KIND,
   };
 }
 
@@ -35,14 +35,14 @@ function withNodeInstallEnv(args: GatewayServiceInstallArgs): GatewayServiceInst
     env: withNodeServiceEnv(args.env),
     environment: {
       ...args.environment,
-      OPENCLAW_LAUNCHD_LABEL: resolveNodeLaunchAgentLabel(),
-      OPENCLAW_SYSTEMD_UNIT: resolveNodeSystemdServiceName(),
-      OPENCLAW_WINDOWS_TASK_NAME: resolveNodeWindowsTaskName(),
-      OPENCLAW_WINDOWS_TASK_HIDDEN_LAUNCHER: "1",
-      OPENCLAW_TASK_SCRIPT_NAME: NODE_WINDOWS_TASK_SCRIPT_NAME,
-      OPENCLAW_LOG_PREFIX: "node",
-      OPENCLAW_SERVICE_MARKER: NODE_SERVICE_MARKER,
-      OPENCLAW_SERVICE_KIND: NODE_SERVICE_KIND,
+      QUIET_CORE_LAUNCHD_LABEL: resolveNodeLaunchAgentLabel(),
+      QUIET_CORE_SYSTEMD_UNIT: resolveNodeSystemdServiceName(),
+      QUIET_CORE_WINDOWS_TASK_NAME: resolveNodeWindowsTaskName(),
+      QUIET_CORE_WINDOWS_TASK_HIDDEN_LAUNCHER: "1",
+      QUIET_CORE_TASK_SCRIPT_NAME: NODE_WINDOWS_TASK_SCRIPT_NAME,
+      QUIET_CORE_LOG_PREFIX: "node",
+      QUIET_CORE_SERVICE_MARKER: NODE_SERVICE_MARKER,
+      QUIET_CORE_SERVICE_KIND: NODE_SERVICE_KIND,
     },
   };
 }

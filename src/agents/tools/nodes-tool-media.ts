@@ -4,8 +4,8 @@
  * Captures camera/photos/screen media from paired nodes and formats media-safe tool results.
  */
 import crypto from "node:crypto";
-import { imageMimeFromFormat } from "@openclaw/media-core/mime";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { imageMimeFromFormat } from "@quiet-core/media-core/mime";
+import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
 import {
   type CameraFacing,
   cameraTempPath,

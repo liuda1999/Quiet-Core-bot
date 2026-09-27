@@ -1,8 +1,8 @@
 // Memory Wiki plugin module implements status behavior.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { listActiveMemoryPublicArtifacts } from "openclaw/plugin-sdk/memory-host-core";
-import { pathExists } from "openclaw/plugin-sdk/security-runtime";
+import { listActiveMemoryPublicArtifacts } from "quiet-core-bot/plugin-sdk/memory-host-core";
+import { pathExists } from "quiet-core-bot/plugin-sdk/security-runtime";
 import type { OpenClawConfig } from "../api.js";
 import type { ResolvedMemoryWikiConfig } from "./config.js";
 import { inferWikiPageKind, toWikiPageSummary, type WikiPageKind } from "./markdown.js";
@@ -271,7 +271,7 @@ export function buildMemoryWikiDoctorReport(status: MemoryWikiStatus): MemoryWik
     code: warning.code,
     message:
       warning.code === "vault-missing"
-        ? "Run `openclaw wiki init` to create the vault layout."
+        ? "Run `quiet-core-bot wiki init` to create the vault layout."
         : warning.code === "obsidian-cli-missing"
           ? "Install the official Obsidian CLI or disable `obsidian.useOfficialCli`."
           : warning.code === "bridge-disabled"

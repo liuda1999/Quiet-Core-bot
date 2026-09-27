@@ -3,10 +3,10 @@
  * Curates modern high-signal and small-model refs while preserving provider
  * spread and explicit operator selections for live test lanes.
  */
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import { parseStrictNonNegativeInteger } from "@openclaw/normalization-core/number-coercion";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
+import { parseStrictNonNegativeInteger } from "@quiet-core/normalization-core/number-coercion";
+import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { resolveProviderModernModelRef } from "../plugins/provider-runtime.js";
 import { liveProvidersShareOwningPlugin } from "./live-provider-owner.js";
 

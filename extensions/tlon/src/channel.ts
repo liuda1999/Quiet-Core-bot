@@ -1,16 +1,16 @@
 // Tlon plugin module implements channel behavior.
-import { describeAccountSnapshot } from "openclaw/plugin-sdk/account-helpers";
-import { DEFAULT_ACCOUNT_ID } from "openclaw/plugin-sdk/account-id";
-import { createHybridChannelConfigAdapter } from "openclaw/plugin-sdk/channel-config-helpers";
-import { createChatChannelPlugin, type ChannelPlugin } from "openclaw/plugin-sdk/channel-core";
-import { createChannelMessageAdapterFromOutbound } from "openclaw/plugin-sdk/channel-outbound";
-import { createRuntimeOutboundDelegates } from "openclaw/plugin-sdk/channel-outbound";
-import type { ChannelOutboundAdapter } from "openclaw/plugin-sdk/channel-send-result";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
+import { describeAccountSnapshot } from "quiet-core-bot/plugin-sdk/account-helpers";
+import { DEFAULT_ACCOUNT_ID } from "quiet-core-bot/plugin-sdk/account-id";
+import { createHybridChannelConfigAdapter } from "quiet-core-bot/plugin-sdk/channel-config-helpers";
+import { createChatChannelPlugin, type ChannelPlugin } from "quiet-core-bot/plugin-sdk/channel-core";
+import { createChannelMessageAdapterFromOutbound } from "quiet-core-bot/plugin-sdk/channel-outbound";
+import { createRuntimeOutboundDelegates } from "quiet-core-bot/plugin-sdk/channel-outbound";
+import type { ChannelOutboundAdapter } from "quiet-core-bot/plugin-sdk/channel-send-result";
+import { createLazyRuntimeModule } from "quiet-core-bot/plugin-sdk/lazy-runtime";
 import {
   createComputedAccountStatusAdapter,
   createDefaultChannelRuntimeState,
-} from "openclaw/plugin-sdk/status-helpers";
+} from "quiet-core-bot/plugin-sdk/status-helpers";
 import { tlonChannelConfigSchema } from "./config-schema.js";
 import { tlonDoctor } from "./doctor.js";
 import { resolveTlonOutboundSessionRoute } from "./session-route.js";

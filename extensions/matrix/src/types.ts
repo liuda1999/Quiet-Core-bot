@@ -2,7 +2,7 @@
 import type {
   ChannelBotLoopProtectionConfig,
   MentionPatternsPolicyConfig,
-} from "openclaw/plugin-sdk/config-contracts";
+} from "quiet-core-bot/plugin-sdk/config-contracts";
 import type {
   ContextVisibilityMode,
   DmPolicy,
@@ -98,7 +98,7 @@ export type MatrixStreamingMode = "partial" | "quiet" | "progress" | "off";
 export type MatrixStreamingConfig = {
   /** Preview streaming mode for Matrix replies. Default: "off". */
   mode?: MatrixStreamingMode;
-  progress?: import("openclaw/plugin-sdk/channel-outbound").ChannelStreamingProgressConfig;
+  progress?: import("quiet-core-bot/plugin-sdk/channel-outbound").ChannelStreamingProgressConfig;
   preview?: {
     /** Show tool/progress activity in the live draft preview. Default: true. */
     toolProgress?: boolean;

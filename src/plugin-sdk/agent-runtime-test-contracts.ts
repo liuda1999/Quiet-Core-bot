@@ -13,7 +13,7 @@ export {
   mediaToolResult,
   resetOpenClawOwnedToolHooks,
   textToolResult,
-} from "./test-helpers/agents/openclaw-owned-tool-runtime-contract.js";
+} from "./test-helpers/agents/quiet-core-bot-owned-tool-runtime-contract.js";
 export {
   createContractFallbackConfig,
   createContractRunResult,

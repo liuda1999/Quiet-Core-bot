@@ -379,7 +379,7 @@ model dropdowns. The picker respects `agents.defaults.models`, including
 /config show
 /config show messages.responsePrefix
 /config get messages.responsePrefix
-/config set messages.responsePrefix="[openclaw]"
+/config set messages.responsePrefix="[quiet-core-bot]"
 /config unset messages.responsePrefix
 ```
 
@@ -410,7 +410,7 @@ updates persist across restarts.
 
 ```text
 /debug show
-/debug set messages.responsePrefix="[openclaw]"
+/debug set messages.responsePrefix="[quiet-core-bot]"
 /debug set channels.whatsapp.allowFrom=["+1555","+4477"]
 /debug unset messages.responsePrefix
 /debug reset
@@ -477,7 +477,7 @@ See [BTW side questions](/tools/btw) for the full behavior.
 
   </Accordion>
   <Accordion title="Slack specifics">
-    `channels.slack.slashCommand` supports a single `/openclaw`-style command.
+    `channels.slack.slashCommand` supports a single `/quiet-core-bot`-style command.
     With `commands.native: true`, create one Slack slash command per built-in
     command. Register `/agentstatus` (not `/status`) because Slack reserves
     `/status`. Text `/status` still works in Slack messages.

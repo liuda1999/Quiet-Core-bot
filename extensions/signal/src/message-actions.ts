@@ -1,12 +1,12 @@
 // Signal plugin module implements message actions behavior.
-import { resolveReactionMessageId } from "openclaw/plugin-sdk/channel-actions";
-import { createActionGate, jsonResult, readStringParam } from "openclaw/plugin-sdk/channel-actions";
+import { resolveReactionMessageId } from "quiet-core-bot/plugin-sdk/channel-actions";
+import { createActionGate, jsonResult, readStringParam } from "quiet-core-bot/plugin-sdk/channel-actions";
 import type {
   ChannelMessageActionAdapter,
   ChannelMessageActionName,
-} from "openclaw/plugin-sdk/channel-contract";
-import { parseStrictNonNegativeInteger } from "openclaw/plugin-sdk/number-runtime";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "quiet-core-bot/plugin-sdk/channel-contract";
+import { parseStrictNonNegativeInteger } from "quiet-core-bot/plugin-sdk/number-runtime";
+import { normalizeLowercaseStringOrEmpty } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { removeReactionSignal, sendReactionSignal } from "../reaction-runtime-api.js";
 import { listEnabledSignalAccounts, resolveSignalAccount } from "./accounts.js";
 import { resolveSignalReactionLevel } from "./reaction-level.js";

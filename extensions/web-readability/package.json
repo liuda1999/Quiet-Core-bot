@@ -1,5 +1,5 @@
 {
-  "name": "@openclaw/web-readability-plugin",
+  "name": "@quiet-core/web-readability-plugin",
   "version": "2026.6.11",
   "private": true,
   "description": "OpenClaw local Readability web extraction plugin",
@@ -9,9 +9,9 @@
     "linkedom": "0.18.12"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@quiet-core/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": [
       "./index.ts"
     ]

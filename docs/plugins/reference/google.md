@@ -11,7 +11,7 @@ Adds Google, Google Gemini CLI, Google Vertex model provider support to Quiet Co
 
 ## Distribution
 
-- Package: `@openclaw/google-plugin`
+- Package: `@quiet-core/google-plugin`
 - Install route: included in Quiet Core bot
 
 ## Surface

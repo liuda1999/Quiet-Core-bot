@@ -169,7 +169,7 @@ describe("resolveMemoryBackendConfig", () => {
   it("preserves unquoted Windows absolute qmd command paths", () => {
     const command = String.raw`C:\Users\penny\AppData\Roaming\npm\node_modules\@tobilu\qmd\dist\cli\qmd.js`;
     const cfg = {
-      agents: { defaults: { workspace: String.raw`C:\Users\penny\.openclaw\workspace` } },
+      agents: { defaults: { workspace: String.raw`C:\Users\penny\.quiet-core-bot\workspace` } },
       memory: {
         backend: "qmd",
         qmd: {
@@ -185,7 +185,7 @@ describe("resolveMemoryBackendConfig", () => {
 
   it("preserves Windows wrapper command paths before extra args", () => {
     const cfg = {
-      agents: { defaults: { workspace: String.raw`C:\Users\penny\.openclaw\workspace` } },
+      agents: { defaults: { workspace: String.raw`C:\Users\penny\.quiet-core-bot\workspace` } },
       memory: {
         backend: "qmd",
         qmd: {
@@ -202,7 +202,7 @@ describe("resolveMemoryBackendConfig", () => {
   it("preserves unquoted UNC qmd command paths", () => {
     const command = String.raw`\\fileserver\tools\qmd\dist\cli\qmd.js`;
     const cfg = {
-      agents: { defaults: { workspace: String.raw`C:\Users\penny\.openclaw\workspace` } },
+      agents: { defaults: { workspace: String.raw`C:\Users\penny\.quiet-core-bot\workspace` } },
       memory: {
         backend: "qmd",
         qmd: {

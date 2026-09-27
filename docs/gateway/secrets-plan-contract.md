@@ -139,14 +139,14 @@ No writes are committed for an invalid plan.
 
 ```bash
 # Validate plan without writes
-quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run
+quiet-core-bot secrets apply --from /tmp/quiet-core-bot-secrets-plan.json --dry-run
 
 # Then apply for real
-quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json
+quiet-core-bot secrets apply --from /tmp/quiet-core-bot-secrets-plan.json
 
 # For exec-containing plans, opt in explicitly in both modes
-quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json --dry-run --allow-exec
-quiet-core-bot secrets apply --from /tmp/openclaw-secrets-plan.json --allow-exec
+quiet-core-bot secrets apply --from /tmp/quiet-core-bot-secrets-plan.json --dry-run --allow-exec
+quiet-core-bot secrets apply --from /tmp/quiet-core-bot-secrets-plan.json --allow-exec
 ```
 
 If apply fails with an invalid target path message, regenerate the plan with `quiet-core-bot secrets configure` or fix the target path to a supported shape above.

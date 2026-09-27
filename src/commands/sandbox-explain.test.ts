@@ -27,7 +27,7 @@ describe("sandbox explain command", () => {
         sandbox: { tools: { deny: ["browser"] } },
         elevated: { enabled: true, allowFrom: { quietchat: ["*"] } },
       },
-      session: { store: "/tmp/openclaw-test-sessions-{agentId}.json" },
+      session: { store: "/tmp/quiet-core-bot-test-sessions-{agentId}.json" },
     };
 
     const logs: string[] = [];
@@ -81,7 +81,7 @@ describe("sandbox explain command", () => {
           },
         },
       },
-      session: { store: "/tmp/openclaw-test-sessions-{agentId}.json" },
+      session: { store: "/tmp/quiet-core-bot-test-sessions-{agentId}.json" },
     };
 
     const logs: string[] = [];

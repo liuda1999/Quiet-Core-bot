@@ -127,7 +127,7 @@ describe("security audit exec safe-bin findings", () => {
     const riskyGlobalTrustedDirs =
       process.platform === "win32"
         ? [String.raw`C:\Users\ci-user\bin`, String.raw`C:\Users\ci-user\.local\bin`]
-        : ["/usr/local/bin", "/tmp/openclaw-safe-bins"];
+        : ["/usr/local/bin", "/tmp/quiet-core-bot-safe-bins"];
     const findings = collectExecRuntimeFindings({
       tools: {
         exec: {

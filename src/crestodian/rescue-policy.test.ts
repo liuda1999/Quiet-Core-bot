@@ -1,6 +1,6 @@
 // Crestodian rescue policy tests cover eligibility and safety decisions.
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { resolveCrestodianRescuePolicy } from "./rescue-policy.js";
 
 function decide(cfg: OpenClawConfig, overrides = {}) {

@@ -1,6 +1,6 @@
 // Verifies plugin registry behavior with runtime config inputs.
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { createPluginRecord } from "./loader-records.js";
 import { createPluginRegistry } from "./registry.js";
 import { getPluginRuntimeGatewayRequestScope } from "./runtime/gateway-request-scope.js";
@@ -24,7 +24,7 @@ describe("plugin registry runtime config scope", () => {
   it("adds plugin context to lazy runtime resolution failures", () => {
     const runtime = new Proxy({} as PluginRuntime, {
       get() {
-        throw new Error("Unable to resolve plugin runtime module; loader=/tmp/openclaw-loader.js");
+        throw new Error("Unable to resolve plugin runtime module; loader=/tmp/quiet-core-bot-loader.js");
       },
     });
     const pluginRegistry = createTestRegistry(runtime);
@@ -59,10 +59,10 @@ describe("plugin registry runtime config scope", () => {
     let replaceScope = getPluginRuntimeGatewayRequestScope();
     const config = {} as OpenClawConfig;
     const replaceResult = {
-      path: "/tmp/openclaw.json",
+      path: "/tmp/quiet-core-bot.json",
       previousHash: null,
       persistedHash: "persisted-hash",
-      snapshot: { path: "/tmp/openclaw.json" },
+      snapshot: { path: "/tmp/quiet-core-bot.json" },
       nextConfig: config,
       afterWrite: { mode: "auto" },
       followUp: { mode: "auto", requiresRestart: false },

@@ -105,7 +105,7 @@ describe("matrixOutbound cfg threading", () => {
       to: "room:!room:example",
       text: "caption",
       mediaUrl: "file:///tmp/cat.png",
-      mediaLocalRoots: ["/tmp/openclaw"],
+      mediaLocalRoots: ["/tmp/quiet-core-bot"],
       accountId: "default",
       audioAsVoice: true,
     });
@@ -116,7 +116,7 @@ describe("matrixOutbound cfg threading", () => {
     const options = mockOptions(mocks.sendMessageMatrix, "sendMessageMatrix");
     expect(options.cfg).toBe(cfg);
     expect(options.mediaUrl).toBe("file:///tmp/cat.png");
-    expect(options.mediaLocalRoots).toEqual(["/tmp/openclaw"]);
+    expect(options.mediaLocalRoots).toEqual(["/tmp/quiet-core-bot"]);
     expect(options.audioAsVoice).toBe(true);
   });
 

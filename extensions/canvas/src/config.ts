@@ -1,18 +1,18 @@
 /**
  * Canvas plugin config parsing, enablement, and schema metadata.
  */
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import {
   normalizePluginsConfig,
   resolveEffectiveEnableState,
   resolvePluginConfigObject,
-} from "openclaw/plugin-sdk/plugin-config-runtime";
-import { isTruthyEnvValue } from "openclaw/plugin-sdk/runtime-env";
+} from "quiet-core-bot/plugin-sdk/plugin-config-runtime";
+import { isTruthyEnvValue } from "quiet-core-bot/plugin-sdk/runtime-env";
 import {
   asBoolean as readBoolean,
   isRecord,
   readStringValue as readString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 
 /** Host-server configuration for Canvas and A2UI assets. */
 export type CanvasHostConfig = {
@@ -88,7 +88,7 @@ export function resolveCanvasHostConfig(params: {
 
 /** Returns whether the Canvas hosted route/server surface should be active. */
 export function isCanvasHostEnabled(config?: OpenClawConfig): boolean {
-  if (isTruthyEnvValue(process.env.OPENCLAW_SKIP_CANVAS_HOST)) {
+  if (isTruthyEnvValue(process.env.QUIET_CORE_SKIP_CANVAS_HOST)) {
     return false;
   }
   if (!isCanvasPluginEnabled(config)) {

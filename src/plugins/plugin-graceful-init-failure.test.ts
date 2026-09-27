@@ -5,7 +5,7 @@ import { afterAll, describe, expect, it } from "vitest";
 import { cleanupTrackedTempDirs, makeTrackedTempDir } from "./test-helpers/fs-fixtures.js";
 
 const fixtureTempDirs: string[] = [];
-const fixtureRoot = makeTrackedTempDir("openclaw-plugin-graceful", fixtureTempDirs);
+const fixtureRoot = makeTrackedTempDir("quiet-core-bot-plugin-graceful", fixtureTempDirs);
 let tempDirIndex = 0;
 const { loadOpenClawPlugins, clearPluginLoaderCache } = await import("./loader.js");
 
@@ -30,7 +30,7 @@ function writePlugin(params: { id: string; body: string; dir?: string }): {
   const file = path.join(dir, filename);
   fs.writeFileSync(file, params.body, "utf-8");
   fs.writeFileSync(
-    path.join(dir, "openclaw.plugin.json"),
+    path.join(dir, "quiet-core-bot.plugin.json"),
     JSON.stringify({
       id: params.id,
       name: params.id,
@@ -44,7 +44,7 @@ function writePlugin(params: { id: string; body: string; dir?: string }): {
 }
 
 function readPluginId(pluginPath: string): string {
-  const manifestPath = path.join(path.dirname(pluginPath), "openclaw.plugin.json");
+  const manifestPath = path.join(path.dirname(pluginPath), "quiet-core-bot.plugin.json");
   const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8")) as { id: string };
   return manifest.id;
 }

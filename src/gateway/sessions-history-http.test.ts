@@ -3,7 +3,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { AssistantMessage } from "openclaw/plugin-sdk/llm";
+import type { AssistantMessage } from "quiet-core-bot/plugin-sdk/llm";
 import { afterEach, describe, expect, test } from "vitest";
 import { writeSessionStoreForTestAsync } from "../config/sessions/test-helpers.js";
 import {
@@ -27,7 +27,7 @@ import {
 installGatewayTestHooks();
 
 const AUTH_HEADER = { Authorization: "Bearer test-gateway-token-1234567890" };
-const READ_SCOPE_HEADER = { "x-openclaw-scopes": "operator.read" };
+const READ_SCOPE_HEADER = { "x-quiet-core-bot-scopes": "operator.read" };
 const cleanupDirs: string[] = [];
 
 afterEach(async () => {
@@ -39,7 +39,7 @@ afterEach(async () => {
 });
 
 async function createSessionStoreFile(): Promise<string> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-session-history-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-session-history-"));
   cleanupDirs.push(dir);
   const storePath = path.join(dir, "sessions.json");
   testState.sessionStorePath = storePath;
@@ -128,7 +128,7 @@ function makeDeliveryMirrorAssistantMessage(
 ): AssistantMessage {
   return makeTranscriptAssistantMessage({
     ...params,
-    provider: "openclaw",
+    provider: "quiet-core-bot",
     model: "delivery-mirror",
   });
 }

@@ -1,9 +1,9 @@
 // User turn transcript helpers extract user-turn text from session transcripts.
 import path from "node:path";
-import { mimeTypeFromFilePath } from "@openclaw/media-core/mime";
+import { mimeTypeFromFilePath } from "@quiet-core/media-core/mime";
 import type { AgentMessage } from "../../packages/agent-core/src/types.js";
 import { persistSessionTranscriptTurn } from "../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { applyInputProvenanceToUserMessage, normalizeInputProvenance } from "./input-provenance.js";
 import type {
   PersistedUserTurnMediaInput,
@@ -235,7 +235,7 @@ function buildPersistedUserTurnMessage(params: UserTurnInput): PersistedUserTurn
   // derived from each message's own `timestamp` field, so the current turn and
   // every historical turn serialize identically on the wire. Persisting a stamp
   // here would NOT match the bare-current arrival (the gateway no longer stamps
-  // the live turn) — see https://github.com/openclaw/openclaw/issues/3658.
+  // the live turn) — see https://github.com/liuda1999/Quiet-Core-bot/issues/3658.
   const content = text || (hasMedia ? (params.mediaOnlyText ?? "") : "");
 
   const message = {

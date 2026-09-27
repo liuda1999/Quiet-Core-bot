@@ -2,7 +2,7 @@
 import type {
   OpenClawPluginNodeInvokePolicy,
   OpenClawPluginNodeInvokePolicyContext,
-} from "openclaw/plugin-sdk/plugin-entry";
+} from "quiet-core-bot/plugin-sdk/plugin-entry";
 import { describe, expect, it, vi } from "vitest";
 import { createLazyFileTransferNodeInvokePolicy } from "./lazy-node-invoke-policy.js";
 

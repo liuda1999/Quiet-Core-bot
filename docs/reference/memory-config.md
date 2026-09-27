@@ -286,7 +286,7 @@ Use `provider: "openai-compatible"` for a generic OpenAI-compatible
     | `local.modelCacheDir` | `string`           | node-llama-cpp default | Cache dir for downloaded models                                                                                                                                                                                                                                                                                      |
     | `local.contextSize`   | `number \| "auto"` | `4096`                 | Context window size for the embedding context. 4096 covers typical chunks (128–512 tokens) while bounding non-weight VRAM. Lower to 1024–2048 on constrained hosts. `"auto"` uses the model's trained maximum — not recommended for 8B+ models (Qwen3-Embedding-8B: 40 960 tokens → ~32 GB VRAM vs ~8.8 GB at 4096). |
 
-    Install the official llama.cpp provider first: `quiet-core-bot plugins install @openclaw/llama-cpp-provider`.
+    Install the official llama.cpp provider first: `quiet-core-bot plugins install @quiet-core/llama-cpp-provider`.
     Default model: `embeddinggemma-300m-qat-Q8_0.gguf` (~0.6 GB, auto-downloaded). Source checkouts still require native build approval: `pnpm approve-builds` then `pnpm rebuild node-llama-cpp`.
 
     Use the standalone CLI to verify the same provider path the Gateway uses:
@@ -466,7 +466,7 @@ When sqlite-vec is unavailable, Quiet Core bot falls back to in-process cosine s
 ## Index storage
 
 Built-in memory indexes live in each agent's Quiet Core bot SQLite database at
-`agents/<agentId>/agent/openclaw-agent.sqlite`.
+`agents/<agentId>/agent/quiet-core-bot-agent.sqlite`.
 
 | Key                   | Type     | Default     | Description                               |
 | --------------------- | -------- | ----------- | ----------------------------------------- |

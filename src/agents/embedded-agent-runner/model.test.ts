@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@quiet-core/normalization-core/number-coercion";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { withEnvAsync } from "../../test-utils/env.js";
 import { discoverAuthStorage, discoverModels } from "../agent-model-discovery.js";
@@ -25,7 +25,7 @@ const resolveRuntimeExternalAuthProviderRefsMock = vi.hoisted(() => vi.fn((): st
 
 vi.mock("../model-suppression.js", () => {
   // Mirrors the canonical manifest-driven suppression in
-  // extensions/qwen/openclaw.plugin.json and src/plugins/manifest-model-suppression.ts.
+  // extensions/qwen/quiet-core-bot.plugin.json and src/plugins/manifest-model-suppression.ts.
   function isQwenCodingPlanBaseUrl(value: string | undefined): boolean {
     const trimmed = value?.trim();
     if (!trimmed) {
@@ -308,7 +308,7 @@ describe("resolveModel", () => {
   });
 
   it("invalidates agent discovery stores when generated plugin catalogs change", async () => {
-    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-model-cache-plugin-"));
+    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-model-cache-plugin-"));
     const agentDir = path.join(rootDir, "agent");
     fs.mkdirSync(agentDir, { recursive: true });
     mockDiscoveredModel(discoverModels, {
@@ -342,7 +342,7 @@ describe("resolveModel", () => {
   });
 
   it("invalidates agent discovery stores when inherited default auth changes", async () => {
-    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-model-cache-"));
+    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-model-cache-"));
     const agentDir = path.join(rootDir, "agent");
     const defaultAgentDir = path.join(rootDir, "default-agent");
     fs.mkdirSync(agentDir, { recursive: true });
@@ -386,7 +386,7 @@ describe("resolveModel", () => {
   });
 
   it("uses the resolved default agent workspace for cached model discovery", () => {
-    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-model-workspace-"));
+    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-model-workspace-"));
     const agentDir = path.join(rootDir, "agent");
     const workspaceDir = path.join(rootDir, "workspace");
     fs.mkdirSync(agentDir, { recursive: true });
@@ -417,13 +417,13 @@ describe("resolveModel", () => {
   });
 
   it("invalidates agent discovery stores when implicit main auth changes without config", async () => {
-    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-model-cache-state-"));
+    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-model-cache-state-"));
     const agentDir = path.join(rootDir, "agents", "worker", "agent");
     const mainAgentDir = path.join(rootDir, "agents", "main", "agent");
     fs.mkdirSync(agentDir, { recursive: true });
     fs.mkdirSync(mainAgentDir, { recursive: true });
     try {
-      await withEnvAsync({ OPENCLAW_STATE_DIR: rootDir }, async () => {
+      await withEnvAsync({ QUIET_CORE_STATE_DIR: rootDir }, async () => {
         mockDiscoveredModel(discoverModels, {
           provider: "openai",
           modelId: "gpt-5.5",

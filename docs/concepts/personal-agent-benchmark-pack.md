@@ -34,7 +34,7 @@ The machine-readable pack metadata lives in
 `--pack personal-agent`:
 
 ```bash
-OPENCLAW_ENABLE_PRIVATE_QA_CLI=1 pnpm quiet-core-bot qa suite \
+QUIET_CORE_ENABLE_PRIVATE_QA_CLI=1 pnpm quiet-core-bot qa suite \
   --provider-mode mock-openai \
   --pack personal-agent \
   --concurrency 1

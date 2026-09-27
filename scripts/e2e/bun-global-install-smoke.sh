@@ -19,11 +19,11 @@ read_positive_int_env() {
 }
 
 BUN_BIN="${BUN_BIN:-bun}"
-HOST_BUILD="${OPENCLAW_BUN_GLOBAL_SMOKE_HOST_BUILD:-1}"
-DIST_IMAGE="${OPENCLAW_BUN_GLOBAL_SMOKE_DIST_IMAGE:-}"
-PACKAGE_TGZ="${OPENCLAW_BUN_GLOBAL_SMOKE_PACKAGE_TGZ:-}"
-COMMAND_TIMEOUT_MS="$(read_positive_int_env OPENCLAW_BUN_GLOBAL_SMOKE_TIMEOUT_MS 180000)"
-DOCKER_COMMAND_TIMEOUT="${DOCKER_COMMAND_TIMEOUT:-${OPENCLAW_BUN_GLOBAL_SMOKE_DOCKER_COMMAND_TIMEOUT:-600s}}"
+HOST_BUILD="${QUIET_CORE_BUN_GLOBAL_SMOKE_HOST_BUILD:-1}"
+DIST_IMAGE="${QUIET_CORE_BUN_GLOBAL_SMOKE_DIST_IMAGE:-}"
+PACKAGE_TGZ="${QUIET_CORE_BUN_GLOBAL_SMOKE_PACKAGE_TGZ:-}"
+COMMAND_TIMEOUT_MS="$(read_positive_int_env QUIET_CORE_BUN_GLOBAL_SMOKE_TIMEOUT_MS 180000)"
+DOCKER_COMMAND_TIMEOUT="${DOCKER_COMMAND_TIMEOUT:-${QUIET_CORE_BUN_GLOBAL_SMOKE_DOCKER_COMMAND_TIMEOUT:-600s}}"
 SMOKE_DIR=""
 PACK_DIR=""
 
@@ -130,7 +130,7 @@ restore_dist_from_image() {
 resolve_package_tgz() {
   if [ -n "$PACKAGE_TGZ" ]; then
     if [ ! -f "$PACKAGE_TGZ" ]; then
-      echo "OPENCLAW_BUN_GLOBAL_SMOKE_PACKAGE_TGZ does not exist: $PACKAGE_TGZ" >&2
+      echo "QUIET_CORE_BUN_GLOBAL_SMOKE_PACKAGE_TGZ does not exist: $PACKAGE_TGZ" >&2
       exit 1
     fi
     PACKAGE_TGZ="$(cd "$(dirname "$PACKAGE_TGZ")" && pwd)/$(basename "$PACKAGE_TGZ")"
@@ -143,11 +143,11 @@ resolve_package_tgz() {
     echo "==> Build host package artifacts"
     pnpm build
   else
-    echo "==> Skipping host build (OPENCLAW_BUN_GLOBAL_SMOKE_HOST_BUILD=0)"
+    echo "==> Skipping host build (QUIET_CORE_BUN_GLOBAL_SMOKE_HOST_BUILD=0)"
   fi
 
   if [ ! -d "$ROOT_DIR/dist" ]; then
-    echo "dist/ is missing; run pnpm build or set OPENCLAW_BUN_GLOBAL_SMOKE_DIST_IMAGE" >&2
+    echo "dist/ is missing; run pnpm build or set QUIET_CORE_BUN_GLOBAL_SMOKE_DIST_IMAGE" >&2
     exit 1
   fi
 
@@ -155,7 +155,7 @@ resolve_package_tgz() {
   node --import tsx scripts/write-package-dist-inventory.ts
 
   local pack_json_file
-  PACK_DIR="$(mktemp -d "${TMPDIR:-/tmp}/openclaw-bun-pack.XXXXXX")"
+  PACK_DIR="$(mktemp -d "${TMPDIR:-/tmp}/quiet-core-bot-bun-pack.XXXXXX")"
   pack_json_file="$PACK_DIR/pack.json"
 
   echo "==> Pack OpenClaw tarball"
@@ -178,15 +178,15 @@ main() {
   resolve_package_tgz
 
   local bun_path
-  local openclaw_bin
+  local quiet_core_bot_bin
   bun_path="$(command -v "$BUN_BIN")"
-  SMOKE_DIR="$(mktemp -d "${TMPDIR:-/tmp}/openclaw-bun-global.XXXXXX")"
+  SMOKE_DIR="$(mktemp -d "${TMPDIR:-/tmp}/quiet-core-bot-bun-global.XXXXXX")"
 
   export HOME="$SMOKE_DIR/home"
   export BUN_INSTALL="$HOME/.bun"
   export XDG_CACHE_HOME="$SMOKE_DIR/cache"
-  export OPENCLAW_NO_ONBOARD=1
-  export OPENCLAW_DISABLE_UPDATE_CHECK=1
+  export QUIET_CORE_NO_ONBOARD=1
+  export QUIET_CORE_DISABLE_UPDATE_CHECK=1
   export NO_COLOR=1
   mkdir -p "$HOME" "$BUN_INSTALL/bin" "$XDG_CACHE_HOME"
   export PATH="$BUN_INSTALL/bin:$(dirname "$(command -v node)"):$PATH"
@@ -197,22 +197,22 @@ main() {
   echo "==> Bun global install packed OpenClaw"
   "$bun_path" install -g "$PACKAGE_TGZ" --no-progress
 
-  openclaw_bin="$BUN_INSTALL/bin/openclaw"
-  if [ ! -x "$openclaw_bin" ]; then
-    openclaw_bin="$(command -v openclaw || true)"
+  quiet_core_bot_bin="$BUN_INSTALL/bin/quiet-core-bot"
+  if [ ! -x "$quiet_core_bot_bin" ]; then
+    quiet_core_bot_bin="$(command -v quiet-core-bot || true)"
   fi
-  if [ -z "$openclaw_bin" ] || [ ! -x "$openclaw_bin" ]; then
-    echo "Bun global install did not create an executable openclaw binary" >&2
+  if [ -z "$quiet_core_bot_bin" ] || [ ! -x "$quiet_core_bot_bin" ]; then
+    echo "Bun global install did not create an executable quiet-core-bot binary" >&2
     exit 1
   fi
 
   echo "==> OpenClaw version through Bun global install"
-  run_with_timeout "$COMMAND_TIMEOUT_MS" "$openclaw_bin" --version
+  run_with_timeout "$COMMAND_TIMEOUT_MS" "$quiet_core_bot_bin" --version
 
   echo "==> OpenClaw image providers through Bun global install"
   local providers_json
-  providers_json="$(run_with_timeout "$COMMAND_TIMEOUT_MS" "$openclaw_bin" infer image providers --json)"
-  OPENCLAW_IMAGE_PROVIDERS_JSON="$providers_json" node scripts/e2e/lib/bun-global-install/assertions.mjs assert-image-providers
+  providers_json="$(run_with_timeout "$COMMAND_TIMEOUT_MS" "$quiet_core_bot_bin" infer image providers --json)"
+  QUIET_CORE_IMAGE_PROVIDERS_JSON="$providers_json" node scripts/e2e/lib/bun-global-install/assertions.mjs assert-image-providers
 }
 
 main "$@"

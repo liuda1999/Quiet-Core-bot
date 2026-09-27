@@ -1,11 +1,11 @@
 {
-  "name": "@openclaw/firecrawl-plugin",
+  "name": "@quiet-core/firecrawl-plugin",
   "version": "2026.6.11",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@openclaw/firecrawl-plugin",
+      "name": "@quiet-core/firecrawl-plugin",
       "version": "2026.6.11",
       "dependencies": {
         "typebox": "1.1.39"

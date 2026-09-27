@@ -48,7 +48,7 @@ Do not use:
 
 Use these defaults when user names a harness directly:
 
-- "openclaw" -> `agentId: "openclaw"`
+- "quiet-core-bot" -> `agentId: "quiet-core-bot"`
 - "claude" or "claude code" -> `agentId: "claude"`
 - "codex" -> `agentId: "codex"` only for explicit ACP/acpx requests or background ACP runtime spawn
 - "copilot" or "github copilot" -> `agentId: "copilot"`
@@ -119,7 +119,7 @@ Do not default to subagent runtime for these requests.
 
 ## ACPX install and version policy (direct acpx path)
 
-For this repo, direct `acpx` calls must follow the same pinned policy as the `@openclaw/acpx` extension package.
+For this repo, direct `acpx` calls must follow the same pinned policy as the `@quiet-core/acpx` extension package.
 
 1. Prefer plugin-local binary, not global PATH:
    - `${ACPX_PLUGIN_ROOT}/node_modules/.bin/acpx`
@@ -200,7 +200,7 @@ ${ACPX_CMD} codex sessions close oc-codex-<conversationId>
 - `kilocode`
 - `kimi`
 - `kiro`
-- `openclaw`
+- `quiet-core-bot`
 - `opencode`
 - `qwen`
 
@@ -208,7 +208,7 @@ ${ACPX_CMD} codex sessions close oc-codex-<conversationId>
 
 Defaults are:
 
-- `openclaw -> openclaw acp`
+- `quiet-core-bot -> quiet-core-bot acp`
 - `claude -> bundled @agentclientprotocol/claude-agent-acp@0.32.0`
 - `codex -> bundled @zed-industries/codex-acp@0.13.0 through OpenClaw's isolated CODEX_HOME wrapper`
 - `copilot -> copilot --acp --stdio`

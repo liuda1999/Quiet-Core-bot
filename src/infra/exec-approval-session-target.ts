@@ -1,7 +1,7 @@
 // Resolves approval delivery targets from sessions and turn sources.
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { resolveSessionConversationRef } from "../channels/plugins/session-conversation.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { normalizeMessageChannel } from "../utils/message-channel.js";
 import {
   doesApprovalRequestMatchChannelAccount,

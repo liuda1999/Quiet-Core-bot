@@ -1,7 +1,7 @@
 // Link-understanding runner tests cover guarded fetches, command execution, scoping, and template behavior.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { MsgContext } from "../auto-reply/templating.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import type { LinkModelConfig } from "../config/types.tools.js";
 import { fetchWithSsrFGuard } from "../infra/net/fetch-guard.js";
 import { runCommandWithTimeout } from "../process/exec.js";
@@ -91,8 +91,8 @@ describe("runLinkUnderstanding", () => {
     );
     expect(runCommandWithTimeout).toHaveBeenCalledWith(["summarize", "--source"], {
       env: {
-        OPENCLAW_LINK_FINAL_URL: "https://example.com/final",
-        OPENCLAW_LINK_URL: "https://example.com/page",
+        QUIET_CORE_LINK_FINAL_URL: "https://example.com/final",
+        QUIET_CORE_LINK_URL: "https://example.com/page",
       },
       input: "page body",
       timeoutMs: 30000,

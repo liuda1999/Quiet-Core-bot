@@ -3,8 +3,8 @@
  *
  * Caps large tool results, repairs missing results, applies redaction, and emits transcript update events.
  */
-import { resolveIntegerOption } from "@openclaw/normalization-core/number-coercion";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { resolveIntegerOption } from "@quiet-core/normalization-core/number-coercion";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import {
   boundedJsonUtf8Bytes,
   firstEnumerableOwnKeys,
@@ -21,7 +21,7 @@ import type {
   PluginHookBeforeMessageWriteResult,
 } from "../plugins/types.js";
 import { emitSessionTranscriptUpdate } from "../sessions/transcript-events.js";
-import { isTranscriptOnlyOpenClawAssistantModel } from "../shared/transcript-only-openclaw-assistant.js";
+import { isTranscriptOnlyOpenClawAssistantModel } from "../shared/transcript-only-quiet-core-bot-assistant.js";
 import { formatContextLimitTruncationNotice } from "./embedded-agent-runner/context-truncation-notice.js";
 import {
   DEFAULT_MAX_LIVE_TOOL_RESULT_CHARS,
@@ -138,7 +138,7 @@ const MAX_PERSISTED_DETAIL_SESSION_COUNT = 10;
 const MAX_PERSISTED_DETAIL_FALLBACK_STRING_CHARS = 200;
 const MAX_PERSISTED_DETAIL_REDACTION_LOOKAHEAD_CHARS = 1_024;
 const MAX_PERSISTED_DETAIL_BOUNDARY_OVERLAP_CHARS = 512;
-const PERSISTED_DETAIL_REDACTION_BOUNDARY = "\u0000OPENCLAW_PERSISTED_DETAIL_BOUNDARY\u0000";
+const PERSISTED_DETAIL_REDACTION_BOUNDARY = "\u0000QUIET_CORE_PERSISTED_DETAIL_BOUNDARY\u0000";
 const PARTIAL_STRUCTURED_SECRET_VALUE_RE =
   /(?:["']?(?:api[-_]?key|apikey|token|secret|password|passwd|access[-_]?token|accesstoken|refresh[-_]?token|refreshtoken|auth[-_]?token|authtoken|client[-_]?secret|clientsecret|app[-_]?secret|appsecret|card[-_]?number|cardnumber|cvc|cvv)["']?\s*[:=]\s*["']?)(?!\*{3})(?=[^\s"',}\]]{8,})/i;
 const PARTIAL_PRIVATE_KEY_BLOCK_RE =

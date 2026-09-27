@@ -11,7 +11,7 @@ Adds MiniMax, MiniMax Portal model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/minimax-provider`
+- Package: `@quiet-core/minimax-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

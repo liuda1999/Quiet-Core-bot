@@ -30,8 +30,8 @@ import {
   stopOpenClawChrome,
 } from "./chrome.js";
 import {
-  DEFAULT_OPENCLAW_BROWSER_COLOR,
-  DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME,
+  DEFAULT_QUIET_CORE_BROWSER_COLOR,
+  DEFAULT_QUIET_CORE_BROWSER_PROFILE_NAME,
 } from "./constants.js";
 import { BrowserCdpEndpointBlockedError } from "./errors.js";
 import { DEFAULT_DOWNLOAD_DIR } from "./paths.js";
@@ -149,7 +149,7 @@ describe("browser chrome profile decoration", () => {
   };
 
   beforeAll(async () => {
-    fixtureRoot = await fsp.mkdtemp(path.join(os.tmpdir(), "openclaw-chrome-suite-"));
+    fixtureRoot = await fsp.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-chrome-suite-"));
   });
 
   beforeEach(() => {
@@ -169,14 +169,14 @@ describe("browser chrome profile decoration", () => {
 
   it("writes expected name + signed ARGB seed to Chrome prefs", async () => {
     const userDataDir = await createUserDataDir();
-    decorateOpenClawProfile(userDataDir, { color: DEFAULT_OPENCLAW_BROWSER_COLOR });
+    decorateOpenClawProfile(userDataDir, { color: DEFAULT_QUIET_CORE_BROWSER_COLOR });
 
     const expectedSignedArgb = ((0xff << 24) | 0xff4500) >> 0;
 
     const def = await readDefaultProfileFromLocalState(userDataDir);
 
-    expect(def.name).toBe(DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME);
-    expect(def.shortcut_name).toBe(DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME);
+    expect(def.name).toBe(DEFAULT_QUIET_CORE_BROWSER_PROFILE_NAME);
+    expect(def.shortcut_name).toBe(DEFAULT_QUIET_CORE_BROWSER_PROFILE_NAME);
     expect(def.profile_color_seed).toBe(expectedSignedArgb);
     expect(def.profile_highlight_color).toBe(expectedSignedArgb);
     expect(def.default_avatar_fill_color).toBe(expectedSignedArgb);
@@ -194,7 +194,7 @@ describe("browser chrome profile decoration", () => {
     expect(prefs.savefile).toBeUndefined();
 
     const marker = await fsp.readFile(
-      path.join(userDataDir, ".openclaw-profile-decorated"),
+      path.join(userDataDir, ".quiet-core-bot-profile-decorated"),
       "utf-8",
     );
     expect(marker.trim()).toMatch(/^\d+$/);
@@ -203,7 +203,7 @@ describe("browser chrome profile decoration", () => {
   it("writes managed download prefs when a download dir is provided", async () => {
     const userDataDir = await createUserDataDir();
     decorateOpenClawProfile(userDataDir, {
-      color: DEFAULT_OPENCLAW_BROWSER_COLOR,
+      color: DEFAULT_QUIET_CORE_BROWSER_COLOR,
       downloadDir: DEFAULT_DOWNLOAD_DIR,
     });
 
@@ -218,8 +218,8 @@ describe("browser chrome profile decoration", () => {
     expect(
       isProfileDecorated(
         userDataDir,
-        DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME,
-        DEFAULT_OPENCLAW_BROWSER_COLOR,
+        DEFAULT_QUIET_CORE_BROWSER_PROFILE_NAME,
+        DEFAULT_QUIET_CORE_BROWSER_COLOR,
         DEFAULT_DOWNLOAD_DIR,
       ),
     ).toBe(true);
@@ -227,13 +227,13 @@ describe("browser chrome profile decoration", () => {
 
   it("treats missing managed download prefs as undecorated when required", async () => {
     const userDataDir = await createUserDataDir();
-    decorateOpenClawProfile(userDataDir, { color: DEFAULT_OPENCLAW_BROWSER_COLOR });
+    decorateOpenClawProfile(userDataDir, { color: DEFAULT_QUIET_CORE_BROWSER_COLOR });
 
     expect(
       isProfileDecorated(
         userDataDir,
-        DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME,
-        DEFAULT_OPENCLAW_BROWSER_COLOR,
+        DEFAULT_QUIET_CORE_BROWSER_PROFILE_NAME,
+        DEFAULT_QUIET_CORE_BROWSER_COLOR,
         DEFAULT_DOWNLOAD_DIR,
       ),
     ).toBe(false);
@@ -244,7 +244,7 @@ describe("browser chrome profile decoration", () => {
     decorateOpenClawProfile(userDataDir, { color: "lobster-orange" });
     const def = await readDefaultProfileFromLocalState(userDataDir);
 
-    expect(def.name).toBe(DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME);
+    expect(def.name).toBe(DEFAULT_QUIET_CORE_BROWSER_PROFILE_NAME);
     expect(def.profile_color_seed).toBeUndefined();
   });
 
@@ -258,7 +258,7 @@ describe("browser chrome profile decoration", () => {
       "utf-8",
     );
 
-    decorateOpenClawProfile(userDataDir, { color: DEFAULT_OPENCLAW_BROWSER_COLOR });
+    decorateOpenClawProfile(userDataDir, { color: DEFAULT_QUIET_CORE_BROWSER_COLOR });
 
     const localState = await readJson(path.join(userDataDir, "Local State"));
     expect(typeof localState.profile).toBe("object");
@@ -277,12 +277,12 @@ describe("browser chrome profile decoration", () => {
 
   it("is idempotent when rerun on an existing profile", async () => {
     const userDataDir = await createUserDataDir();
-    decorateOpenClawProfile(userDataDir, { color: DEFAULT_OPENCLAW_BROWSER_COLOR });
-    decorateOpenClawProfile(userDataDir, { color: DEFAULT_OPENCLAW_BROWSER_COLOR });
+    decorateOpenClawProfile(userDataDir, { color: DEFAULT_QUIET_CORE_BROWSER_COLOR });
+    decorateOpenClawProfile(userDataDir, { color: DEFAULT_QUIET_CORE_BROWSER_COLOR });
 
     const prefs = await readJson(path.join(userDataDir, "Default", "Preferences"));
     const profile = prefs.profile as Record<string, unknown>;
-    expect(profile.name).toBe(DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME);
+    expect(profile.name).toBe(DEFAULT_QUIET_CORE_BROWSER_PROFILE_NAME);
   });
 
   it("clears stale singleton artifacts when the lock points at another host", async () => {
@@ -393,7 +393,7 @@ describe("browser chrome helpers", () => {
   });
 
   it("finds Playwright-managed Linux Chromium", () => {
-    const browserPath = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-ms-playwright-"));
+    const browserPath = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-ms-playwright-"));
     const executablePath = path.join(browserPath, "chromium-1217", "chrome-linux64", "chrome");
     vi.stubEnv("PLAYWRIGHT_BROWSERS_PATH", browserPath);
     fs.mkdirSync(path.dirname(executablePath), { recursive: true });
@@ -1025,27 +1025,27 @@ describe("browser chrome launch args", () => {
           maxTabsPerSession: 8,
           sweepMinutes: 5,
         },
-        defaultProfile: "openclaw",
+        defaultProfile: "quiet-core-bot",
         profiles: {
           openclaw: { cdpPort: 18800, color: "#FF4500" },
         },
       },
       profile: {
-        name: "openclaw",
+        name: "quiet-core-bot",
         cdpUrl: "http://127.0.0.1:18800",
         cdpPort: 18800,
         cdpHost: "127.0.0.1",
         cdpIsLoopback: true,
         color: "#FF4500",
-        driver: "openclaw",
+        driver: "quiet-core-bot",
         headless: false,
         attachOnly: false,
       },
-      userDataDir: "/tmp/openclaw-test-user-data",
+      userDataDir: "/tmp/quiet-core-bot-test-user-data",
     });
 
     expect(args).not.toContain("about:blank");
     expect(args).toContain("--remote-debugging-port=18800");
-    expect(args).toContain("--user-data-dir=/tmp/openclaw-test-user-data");
+    expect(args).toContain("--user-data-dir=/tmp/quiet-core-bot-test-user-data");
   });
 });

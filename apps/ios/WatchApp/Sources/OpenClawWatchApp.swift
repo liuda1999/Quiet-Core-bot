@@ -11,7 +11,7 @@ struct OpenClawWatchApp: App {
     private static let screenshotModeDefaultsKey = "openclaw.watch.screenshotMode"
     private static let isScreenshotMode = ProcessInfo.processInfo.arguments.contains(
         "--openclaw-watch-screenshot-mode")
-        || ProcessInfo.processInfo.environment["OPENCLAW_WATCH_SCREENSHOT_MODE"] == "1"
+        || ProcessInfo.processInfo.environment["QUIET_CORE_WATCH_SCREENSHOT_MODE"] == "1"
         || UserDefaults.standard.bool(forKey: OpenClawWatchApp.screenshotModeDefaultsKey)
 
     var body: some Scene {

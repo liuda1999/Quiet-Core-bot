@@ -1,19 +1,19 @@
 // Ollama setup module handles plugin onboarding behavior.
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
 import type {
   OpenClawConfig,
   SecretInput,
   SecretInputMode,
-} from "openclaw/plugin-sdk/provider-auth";
-import { upsertAuthProfileWithLock } from "openclaw/plugin-sdk/provider-auth";
-import { applyAgentDefaultModelPrimary } from "openclaw/plugin-sdk/provider-onboard";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime";
-import { WizardCancelledError, type WizardPrompter } from "openclaw/plugin-sdk/setup";
-import { fetchWithSsrFGuard } from "openclaw/plugin-sdk/ssrf-runtime";
+} from "quiet-core-bot/plugin-sdk/provider-auth";
+import { upsertAuthProfileWithLock } from "quiet-core-bot/plugin-sdk/provider-auth";
+import { applyAgentDefaultModelPrimary } from "quiet-core-bot/plugin-sdk/provider-onboard";
+import type { RuntimeEnv } from "quiet-core-bot/plugin-sdk/runtime";
+import { WizardCancelledError, type WizardPrompter } from "quiet-core-bot/plugin-sdk/setup";
+import { fetchWithSsrFGuard } from "quiet-core-bot/plugin-sdk/ssrf-runtime";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalLowercaseString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import {
   OLLAMA_DEFAULT_BASE_URL,
   OLLAMA_DOCKER_HOST_BASE_URL,
@@ -53,7 +53,7 @@ function isTruthyEnvValue(value: string | undefined): boolean {
 }
 
 function resolveOllamaSetupDefaultBaseUrl(env: NodeJS.ProcessEnv = process.env): string {
-  return isTruthyEnvValue(env.OPENCLAW_DOCKER_SETUP)
+  return isTruthyEnvValue(env.QUIET_CORE_DOCKER_SETUP)
     ? OLLAMA_DOCKER_HOST_BASE_URL
     : OLLAMA_DEFAULT_BASE_URL;
 }

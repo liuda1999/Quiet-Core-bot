@@ -36,10 +36,10 @@ export function warnLegacyOpenClawEnvVars(env: NodeJS.ProcessEnv = process.env):
 
   process.emitWarning(
     [
-      `Legacy ${detectedPrefixes} environment variables were detected (${legacyVarCount} total), but Quiet Core bot only reads OPENCLAW_* names now.`,
-      "Rename them by replacing the legacy prefix with OPENCLAW_; the old names are ignored.",
+      `Legacy ${detectedPrefixes} environment variables were detected (${legacyVarCount} total), but Quiet Core bot only reads QUIET_CORE_* names now.`,
+      "Rename them by replacing the legacy prefix with QUIET_CORE_; the old names are ignored.",
     ].join("\n"),
-    { code: "OPENCLAW_LEGACY_ENV_VARS", type: "DeprecationWarning" },
+    { code: "QUIET_CORE_LEGACY_ENV_VARS", type: "DeprecationWarning" },
   );
   warned = true;
 }

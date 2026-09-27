@@ -10,7 +10,7 @@ The Gateway serves a small **browser Control UI** (Vite + Lit) from the same por
 
 - default: `http://<host>:18789/`
 - with `gateway.tls.enabled: true`: `https://<host>:18789/`
-- optional prefix: set `gateway.controlUi.basePath` (e.g. `/openclaw`)
+- optional prefix: set `gateway.controlUi.basePath` (e.g. `/quiet-core-bot`)
 
 Capabilities live in [Control UI](/web/control-ui). The rest of this page focuses on bind modes, security, and web-facing surfaces.
 
@@ -33,7 +33,7 @@ You can control it via config:
 ```json5
 {
   gateway: {
-    controlUi: { enabled: true, basePath: "/openclaw" }, // basePath optional
+    controlUi: { enabled: true, basePath: "/quiet-core-bot" }, // basePath optional
   },
 }
 ```
@@ -93,7 +93,7 @@ Open:
   gateway: {
     bind: "loopback",
     tailscale: { mode: "funnel" },
-    auth: { mode: "password" }, // or OPENCLAW_GATEWAY_PASSWORD
+    auth: { mode: "password" }, // or QUIET_CORE_GATEWAY_PASSWORD
   },
 }
 ```

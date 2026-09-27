@@ -1,22 +1,22 @@
 ---
 summary: "CLI reference and security model for Crestodian, the configless-safe setup and repair helper"
 read_when:
-  - You run openclaw with no command after setup and want to understand Crestodian
+  - You run quiet-core-bot with no command after setup and want to understand Crestodian
   - You need a configless-safe way to inspect or repair Quiet Core bot
   - You are designing or enabling message-channel rescue mode
 title: "Crestodian"
 ---
 
-# `openclaw crestodian`
+# `quiet-core-bot crestodian`
 
 Crestodian is Quiet Core bot's local setup, repair, and configuration helper. It is
 designed to stay reachable when the normal agent path is broken.
 
-Running `openclaw` with no command starts classic onboarding first when the
+Running `quiet-core-bot` with no command starts classic onboarding first when the
 active config file is missing or has no authored settings (empty or
-metadata-only). After a config file has authored settings, running `openclaw`
+metadata-only). After a config file has authored settings, running `quiet-core-bot`
 with no command starts Crestodian in an interactive terminal. Running
-`openclaw crestodian` starts the same helper explicitly.
+`quiet-core-bot crestodian` starts the same helper explicitly.
 
 ## What Crestodian shows
 
@@ -40,19 +40,19 @@ local CLI probes, API-key presence, agents, model, and Gateway details.
 Crestodian uses the same Quiet Core bot reference discovery as regular agents. In a Git checkout,
 it points itself at local `docs/` and the local source tree. In an npm package install, it
 uses the bundled package docs and links to
-[https://github.com/openclaw/openclaw](https://github.com/openclaw/openclaw), with explicit
+[https://github.com/liuda1999/Quiet-Core-bot](https://github.com/liuda1999/Quiet-Core-bot), with explicit
 guidance to review source whenever the docs are not enough.
 
 ## Examples
 
 ```bash
-openclaw
-openclaw crestodian
-openclaw crestodian --json
-openclaw crestodian --message "models"
-openclaw crestodian --message "validate config"
-openclaw crestodian --message "setup workspace ~/Projects/work model openai/gpt-5.5" --yes
-openclaw crestodian --message "set default model openai/gpt-5.5" --yes
+quiet-core-bot
+quiet-core-bot crestodian
+quiet-core-bot crestodian --json
+quiet-core-bot crestodian --message "models"
+quiet-core-bot crestodian --message "validate config"
+quiet-core-bot crestodian --message "setup workspace ~/Projects/work model openai/gpt-5.5" --yes
+quiet-core-bot crestodian --message "set default model openai/gpt-5.5" --yes
 quiet-core-bot onboard --modern
 ```
 
@@ -67,7 +67,7 @@ validate config
 setup
 setup workspace ~/Projects/work model openai/gpt-5.5
 config set gateway.port 19001
-config set-ref gateway.auth.token env OPENCLAW_GATEWAY_TOKEN
+config set-ref gateway.auth.token env QUIET_CORE_GATEWAY_TOKEN
 gateway status
 restart gateway
 agents
@@ -76,8 +76,8 @@ models
 set default model openai/gpt-5.5
 plugins list
 plugins search slack
-plugin install clawhub:openclaw-codex-app-server
-plugin uninstall openclaw-codex-app-server
+plugin install clawhub:quiet-core-bot-codex-app-server
+plugin uninstall quiet-core-bot-codex-app-server
 talk to work agent
 talk to agent for ~/Projects/work
 audit
@@ -95,7 +95,7 @@ Crestodian's startup path is deliberately small. It can run when:
 - no agent has been configured yet
 
 `quiet-core-bot --help` and `quiet-core-bot --version` still use the normal fast paths.
-Noninteractive bare `openclaw` exits with a short message instead of printing
+Noninteractive bare `quiet-core-bot` exits with a short message instead of printing
 root help. On a fresh install, the message points to non-interactive onboarding;
 after setup, it points to one-shot Crestodian commands.
 
@@ -197,7 +197,7 @@ talk to work agent
 switch to main agent
 ```
 
-`quiet-core-bot tui`, `openclaw chat`, and `openclaw terminal` still open the normal
+`quiet-core-bot tui`, `quiet-core-bot chat`, and `quiet-core-bot terminal` still open the normal
 agent TUI directly. They do not start Crestodian.
 
 After switching into the normal TUI, use `/crestodian` to return to Crestodian.
@@ -255,7 +255,7 @@ Security contract for remote rescue:
   because it downloads executable code. Plugin uninstall can be allowed as an
   approved repair operation when rescue policy permits persistent writes.
 - Remote rescue cannot open the local TUI or switch into an interactive agent
-  session. Use local `openclaw` for agent handoff.
+  session. Use local `quiet-core-bot` for agent handoff.
 - Persistent writes still require approval, even in rescue mode.
 - Audit every applied rescue operation. Message-channel rescue records channel,
   account, sender, and source-address metadata. Config-mutating operations also

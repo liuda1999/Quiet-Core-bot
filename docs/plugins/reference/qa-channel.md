@@ -11,7 +11,7 @@ Adds the QA Channel surface for sending and receiving Quiet Core bot messages.
 
 ## Distribution
 
-- Package: `@openclaw/qa-channel`
+- Package: `@quiet-core/qa-channel`
 - Install route: source checkout only
 
 ## Surface

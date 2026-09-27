@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { execNodeEvalSync } from "../test-utils/node-process.js";
 import { lookupCachedContextWindow, providerContextTokenCacheKey } from "./context-cache.js";
 import {
@@ -17,7 +17,7 @@ describe("context runtime state", () => {
     const moduleUrl = new URL("./context-runtime-state.ts", import.meta.url).href;
     const output = execNodeEvalSync(
       `
-        const key = Symbol.for("openclaw.contextWindowRuntimeState");
+        const key = Symbol.for("quiet-core-bot.contextWindowRuntimeState");
         const legacyLoadPromise = Promise.resolve();
         globalThis[key] = {
           loadPromise: legacyLoadPromise,

@@ -553,7 +553,7 @@ describe("cli program (nodes basics)", () => {
       "nodes",
       "status",
       "--url",
-      "ws://gateway-user:url-secret@gateway.example:18789/openclaw?cluster=qa",
+      "ws://gateway-user:url-secret@gateway.example:18789/quiet-core-bot?cluster=qa",
       "--timeout",
       "3000",
       "--token",

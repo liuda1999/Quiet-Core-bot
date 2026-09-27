@@ -7,7 +7,7 @@ import type {
   SessionsListParams,
   SessionsResolveParams,
 } from "../../../packages/gateway-protocol/src/index.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import type { CallGatewayOptions } from "../../gateway/call.js";
 import type {
   ReadSessionMessagesAsyncOptions,
@@ -18,7 +18,7 @@ import type { SessionsResolveResult } from "../../gateway/sessions-resolve.js";
 import {
   normalizeFastMode,
   type FastMode,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/normalization-core/string-coerce";
 import { parseAgentSessionKey } from "../../routing/session-key.js";
 import { readPositiveIntegerParam } from "./common.js";
 

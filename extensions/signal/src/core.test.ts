@@ -2,9 +2,9 @@
 import {
   createMessageReceiptFromOutboundResults,
   verifyChannelMessageAdapterCapabilityProofs,
-} from "openclaw/plugin-sdk/channel-outbound";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { createPluginSetupWizardStatus } from "openclaw/plugin-sdk/plugin-test-runtime";
+} from "quiet-core-bot/plugin-sdk/channel-outbound";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import { createPluginSetupWizardStatus } from "quiet-core-bot/plugin-sdk/plugin-test-runtime";
 import { describe, expect, it, vi } from "vitest";
 import { signalPlugin } from "./channel.js";
 import * as clientModule from "./client-adapter.js";

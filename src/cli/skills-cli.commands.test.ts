@@ -177,7 +177,7 @@ vi.mock("../gateway/call.js", () => ({
 
 vi.mock("../utils.js", async (importOriginal) => ({
   ...(await importOriginal<typeof import("../utils.js")>()),
-  CONFIG_DIR: "/tmp/openclaw-config",
+  CONFIG_DIR: "/tmp/quiet-core-bot-config",
 }));
 
 vi.mock("../config/config.js", () => ({
@@ -315,7 +315,7 @@ describe("skills cli commands", () => {
       decision: "pass",
       reasons: [],
       skill: { slug: "agentreceipt", displayName: "Agent Receipt" },
-      publisher: { handle: "openclaw" },
+      publisher: { handle: "quiet-core-bot" },
       version: { version: "1.2.3" },
       card: {
         available: true,
@@ -625,7 +625,7 @@ describe("skills cli commands", () => {
       ok: true,
       slug: "calendar",
       version: "1.2.3",
-      targetDir: "/tmp/openclaw-config/skills/calendar",
+      targetDir: "/tmp/quiet-core-bot-config/skills/calendar",
     });
 
     await runCommand(["skills", "install", "calendar", "--global"]);
@@ -635,7 +635,7 @@ describe("skills cli commands", () => {
     expect(resolveAgentWorkspaceDirMock).not.toHaveBeenCalled();
     expect(installSkillFromClawHubMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        workspaceDir: "/tmp/openclaw-config",
+        workspaceDir: "/tmp/quiet-core-bot-config",
       }),
     );
   });
@@ -814,7 +814,7 @@ describe("skills cli commands", () => {
         previousVersion: "1.2.2",
         version: "1.2.3",
         changed: true,
-        targetDir: "/tmp/openclaw-config/skills/calendar",
+        targetDir: "/tmp/quiet-core-bot-config/skills/calendar",
       },
     ]);
 
@@ -823,9 +823,9 @@ describe("skills cli commands", () => {
     expect(resolveAgentIdByWorkspacePathMock).not.toHaveBeenCalled();
     expect(resolveDefaultAgentIdMock).not.toHaveBeenCalled();
     expect(resolveAgentWorkspaceDirMock).not.toHaveBeenCalled();
-    expect(readTrackedClawHubSkillSlugsMock).toHaveBeenCalledWith("/tmp/openclaw-config");
+    expect(readTrackedClawHubSkillSlugsMock).toHaveBeenCalledWith("/tmp/quiet-core-bot-config");
     expect(updateSkillsFromClawHubMock).toHaveBeenCalledWith({
-      workspaceDir: "/tmp/openclaw-config",
+      workspaceDir: "/tmp/quiet-core-bot-config",
       slug: undefined,
       logger: expect.any(Object),
       config: {},
@@ -841,7 +841,7 @@ describe("skills cli commands", () => {
         previousVersion: "1.2.2",
         version: "1.2.3",
         changed: true,
-        targetDir: "/tmp/openclaw-config/skills/calendar",
+        targetDir: "/tmp/quiet-core-bot-config/skills/calendar",
       },
     ]);
 
@@ -850,9 +850,9 @@ describe("skills cli commands", () => {
     expect(resolveAgentIdByWorkspacePathMock).not.toHaveBeenCalled();
     expect(resolveDefaultAgentIdMock).not.toHaveBeenCalled();
     expect(resolveAgentWorkspaceDirMock).not.toHaveBeenCalled();
-    expect(readTrackedClawHubSkillSlugsMock).toHaveBeenCalledWith("/tmp/openclaw-config");
+    expect(readTrackedClawHubSkillSlugsMock).toHaveBeenCalledWith("/tmp/quiet-core-bot-config");
     expect(updateSkillsFromClawHubMock).toHaveBeenCalledWith({
-      workspaceDir: "/tmp/openclaw-config",
+      workspaceDir: "/tmp/quiet-core-bot-config",
       slug: "calendar",
       logger: expect.any(Object),
       config: {},
@@ -998,7 +998,7 @@ describe("skills cli commands", () => {
     expect(resolveDefaultAgentIdMock).not.toHaveBeenCalled();
     expect(resolveAgentWorkspaceDirMock).not.toHaveBeenCalled();
     expect(resolveClawHubSkillVerificationTargetMock).toHaveBeenCalledWith({
-      workspaceDir: "/tmp/openclaw-config",
+      workspaceDir: "/tmp/quiet-core-bot-config",
       slug: "agentreceipt",
       version: "2.0.0",
       tag: undefined,
@@ -1008,7 +1008,7 @@ describe("skills cli commands", () => {
   it("includes verified ClawHub source URLs in verify JSON output", async () => {
     const provenance = {
       source: "server-resolved-github-import",
-      repo: "openclaw/skills",
+      repo: "quiet-core-bot/skills",
       commit: "0123456789abcdef0123456789abcdef01234567",
       path: "agentreceipt",
     };
@@ -1021,7 +1021,7 @@ describe("skills cli commands", () => {
       decision: "pass",
       reasons: [],
       skill: { slug: "agentreceipt", displayName: "Agent Receipt" },
-      publisher: { handle: "openclaw" },
+      publisher: { handle: "quiet-core-bot" },
       version: { version: "1.2.3" },
       card: {
         available: true,
@@ -1039,8 +1039,7 @@ describe("skills cli commands", () => {
     await runCommand(["skills", "verify", "agentreceipt"]);
 
     expect(readVerifiedClawHubSkillSourceUrlMock).toHaveBeenCalledWith(provenance);
-    const payload = JSON.parse(runtimeStdout.at(-1) ?? "{}") as {
-      openclaw?: { verifiedSourceUrl?: string };
+    const payload = JSON.parse(runtimeStdout.at(-1) ?? "{}") as { openclaw?: { verifiedSourceUrl?: string };
     };
     expect(payload.openclaw?.verifiedSourceUrl).toBe(verifiedSourceUrl);
     expect(defaultRuntime.exit).not.toHaveBeenCalled();
@@ -1053,7 +1052,7 @@ describe("skills cli commands", () => {
       decision: "pass",
       reasons: [],
       skill: { slug: "agentreceipt", displayName: "Agent Receipt" },
-      publisher: { handle: "openclaw" },
+      publisher: { handle: "quiet-core-bot" },
       version: { version: "1.2.3" },
       card: {
         available: true,

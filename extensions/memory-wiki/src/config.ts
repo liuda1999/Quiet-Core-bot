@@ -1,7 +1,7 @@
 // Memory Wiki helper module supports config behavior.
 import os from "node:os";
 import path from "node:path";
-import { mapPluginConfigIssues } from "openclaw/plugin-sdk/extension-shared";
+import { mapPluginConfigIssues } from "quiet-core-bot/plugin-sdk/extension-shared";
 import { buildPluginConfigSchema, z, type OpenClawPluginConfigSchema } from "../api.js";
 
 export const WIKI_VAULT_MODES = ["isolated", "bridge", "unsafe-local"] as const;
@@ -195,7 +195,7 @@ function expandHomePath(inputPath: string, homedir: string): string {
 }
 
 export function resolveDefaultMemoryWikiVaultPath(homedir = os.homedir()): string {
-  return path.join(homedir, ".openclaw", "wiki", "main");
+  return path.join(homedir, ".quiet-core-bot", "wiki", "main");
 }
 
 export function resolveMemoryWikiConfig(

@@ -5,7 +5,7 @@ import path from "node:path";
 import {
   normalizeStringEntries,
   uniqueStrings,
-} from "@openclaw/normalization-core/string-normalization";
+} from "@quiet-core/normalization-core/string-normalization";
 import { assertUpstreamUpdateAllowed } from "../config/independent-build-guard.js";
 import { resolveGatewayInstallEntrypoint } from "../daemon/gateway-entrypoint.js";
 import { type CommandOptions, runCommandWithTimeout } from "../process/exec.js";
@@ -202,24 +202,24 @@ function mapManagerResolutionFailure(
 const DEFAULT_TIMEOUT_MS = 20 * 60_000;
 const MAX_LOG_CHARS = 8000;
 const PREFLIGHT_MAX_COMMITS = 10;
-const DEFAULT_PACKAGE_NAME = "openclaw";
+const DEFAULT_PACKAGE_NAME = "quiet-core-bot";
 const CORE_PACKAGE_NAMES = new Set([DEFAULT_PACKAGE_NAME]);
 const UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR_ENV =
-  "OPENCLAW_UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR";
+  "QUIET_CORE_UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR";
 const UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE_ENV =
-  "OPENCLAW_UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE";
+  "QUIET_CORE_UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE";
 const PREFLIGHT_TEMP_PREFIX =
-  process.platform === "win32" ? "ocu-pf-" : "openclaw-update-preflight-";
+  process.platform === "win32" ? "ocu-pf-" : "quiet-core-bot-update-preflight-";
 const PREFLIGHT_WORKTREE_DIRNAME = process.platform === "win32" ? "wt" : "worktree";
 const PREFLIGHT_CLEANUP_TIMEOUT_MS = 60_000;
 const WINDOWS_PREFLIGHT_BASE_DIR = "ocu";
 const BUILD_MAX_OLD_SPACE_MB = 8192;
 const DEV_PREFLIGHT_LINT_ENV: NodeJS.ProcessEnv = {
-  OPENCLAW_LOCAL_CHECK: "1",
-  OPENCLAW_LOCAL_CHECK_MODE: "throttled",
-  OPENCLAW_OXLINT_SHARDS_SERIAL: "1",
+  QUIET_CORE_LOCAL_CHECK: "1",
+  QUIET_CORE_LOCAL_CHECK_MODE: "throttled",
+  QUIET_CORE_OXLINT_SHARDS_SERIAL: "1",
 };
-const DEV_PREFLIGHT_LINT_OPT_IN_ENV = "OPENCLAW_UPDATE_PREFLIGHT_LINT";
+const DEV_PREFLIGHT_LINT_OPT_IN_ENV = "QUIET_CORE_UPDATE_PREFLIGHT_LINT";
 
 function normalizeDir(value?: string | null) {
   if (!value) {
@@ -468,7 +468,7 @@ async function runStep(opts: RunStepOptions): Promise<UpdateStepResult> {
 }
 
 function normalizeTag(tag?: string) {
-  return normalizePackageTagInput(tag, ["openclaw", DEFAULT_PACKAGE_NAME]) ?? "latest";
+  return normalizePackageTagInput(tag, ["quiet-core-bot", DEFAULT_PACKAGE_NAME]) ?? "latest";
 }
 
 function normalizeDevTargetRef(value?: string | null): string | null {
@@ -830,7 +830,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       status: "error",
       mode: "unknown",
       root: gitRoot,
-      reason: "not-openclaw-root",
+      reason: "not-quiet-core-bot-root",
       steps: [],
       durationMs: Date.now() - startedAt,
     };
@@ -1573,7 +1573,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       const doctorArgv = [doctorNodePath, doctorEntry, "doctor", "--non-interactive", "--fix"];
       const doctorStep = await runStep(
         step("quiet-core-bot doctor", doctorArgv, gitRoot, {
-          OPENCLAW_UPDATE_IN_PROGRESS: "1",
+          QUIET_CORE_UPDATE_IN_PROGRESS: "1",
           ...(opts.deferConfiguredPluginInstallRepair
             ? { [UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR_ENV]: "1" }
             : {}),
@@ -1654,7 +1654,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
     return {
       status: "error",
       mode: "unknown",
-      reason: "not-openclaw-root",
+      reason: "not-quiet-core-bot-root",
       steps: [],
       durationMs: Date.now() - startedAt,
     };
@@ -1714,11 +1714,11 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
           cwd: verifiedPackageRoot,
           timeoutMs,
           env: {
-            OPENCLAW_UPDATE_IN_PROGRESS: "1",
+            QUIET_CORE_UPDATE_IN_PROGRESS: "1",
             [UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE_ENV]: "1",
             ...(candidateHostVersion === null
               ? {}
-              : { OPENCLAW_COMPATIBILITY_HOST_VERSION: candidateHostVersion }),
+              : { QUIET_CORE_COMPATIBILITY_HOST_VERSION: candidateHostVersion }),
           },
           progress,
           stepIndex: 0,

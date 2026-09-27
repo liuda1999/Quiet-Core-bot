@@ -27,7 +27,7 @@ quiet-core-bot agents bindings
 quiet-core-bot agents bind --agent work --bind telegram:ops
 quiet-core-bot agents unbind --agent work --bind telegram:ops
 quiet-core-bot agents set-identity --workspace ~/.quiet-core-bot/workspace --from-identity
-quiet-core-bot agents set-identity --agent main --avatar avatars/openclaw.png
+quiet-core-bot agents set-identity --agent main --avatar avatars/quiet-core-bot.png
 quiet-core-bot agents delete work
 ```
 
@@ -224,7 +224,7 @@ quiet-core-bot agents set-identity --workspace ~/.quiet-core-bot/workspace --fro
 Override fields explicitly:
 
 ```bash
-quiet-core-bot agents set-identity --agent main --name "Quiet Core bot" --emoji "🐉" --avatar avatars/openclaw.png
+quiet-core-bot agents set-identity --agent main --name "Quiet Core bot" --emoji "🐉" --avatar avatars/quiet-core-bot.png
 ```
 
 Config sample:
@@ -239,7 +239,7 @@ Config sample:
           name: "Quiet Core bot",
           theme: "space lobster",
           emoji: "🐉",
-          avatar: "avatars/openclaw.png",
+          avatar: "avatars/quiet-core-bot.png",
         },
       },
     ],

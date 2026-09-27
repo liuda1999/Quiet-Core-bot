@@ -24,7 +24,7 @@ function makeTempDir(prefix: string): string {
 }
 
 function entitlementTemps(dir: string): string[] {
-  return readdirSync(dir).filter((name) => name.startsWith("openclaw-entitlements"));
+  return readdirSync(dir).filter((name) => name.startsWith("quiet-core-bot-entitlements"));
 }
 
 function runCodesign(args: string[], tempRoot: string) {
@@ -100,7 +100,7 @@ describe("codesign-mac-app temp file hygiene", () => {
   });
 
   it("does not allocate entitlement temp files for help output", () => {
-    const tempRoot = makeTempDir("openclaw-codesign-help-");
+    const tempRoot = makeTempDir("quiet-core-bot-codesign-help-");
     const result = runCodesign(["--help"], tempRoot);
 
     expect(result.status).toBe(0);
@@ -109,7 +109,7 @@ describe("codesign-mac-app temp file hygiene", () => {
   });
 
   it("does not allocate entitlement temp files before app validation", () => {
-    const tempRoot = makeTempDir("openclaw-codesign-missing-");
+    const tempRoot = makeTempDir("quiet-core-bot-codesign-missing-");
     const missingApp = path.join(tempRoot, "Missing.app");
     const result = runCodesign([missingApp], tempRoot);
 
@@ -119,7 +119,7 @@ describe("codesign-mac-app temp file hygiene", () => {
   });
 
   it("rejects unknown options before app validation", () => {
-    const tempRoot = makeTempDir("openclaw-codesign-unknown-");
+    const tempRoot = makeTempDir("quiet-core-bot-codesign-unknown-");
     const result = runCodesign(["--wat"], tempRoot);
 
     expect(result.status).toBe(1);
@@ -128,7 +128,7 @@ describe("codesign-mac-app temp file hygiene", () => {
   });
 
   it("rejects extra app bundle arguments before signing", () => {
-    const tempRoot = makeTempDir("openclaw-codesign-extra-");
+    const tempRoot = makeTempDir("quiet-core-bot-codesign-extra-");
     const app = path.join(tempRoot, "Fake.app");
     mkdirSync(path.join(app, "Contents", "MacOS"), { recursive: true });
     const result = runCodesign([app, "extra"], tempRoot);
@@ -139,7 +139,7 @@ describe("codesign-mac-app temp file hygiene", () => {
   });
 
   it("cleans entitlement temp files when signing fails", () => {
-    const tempRoot = makeTempDir("openclaw-codesign-fail-");
+    const tempRoot = makeTempDir("quiet-core-bot-codesign-fail-");
     const app = path.join(tempRoot, "Fake.app");
     mkdirSync(path.join(app, "Contents", "MacOS"), { recursive: true });
 
@@ -158,7 +158,7 @@ describe("codesign-mac-app temp file hygiene", () => {
   });
 
   it("passes generated app entitlements to signing commands and cleans them", () => {
-    const tempRoot = makeTempDir("openclaw-codesign-success-");
+    const tempRoot = makeTempDir("quiet-core-bot-codesign-success-");
     const app = path.join(tempRoot, "Fake.app");
     const binDir = path.join(tempRoot, "bin");
     const captureDir = path.join(tempRoot, "capture");
@@ -193,7 +193,7 @@ describe("codesign-mac-app temp file hygiene", () => {
     for (const line of signLines) {
       const [, , entitlementPath, copiedEntitlementsPath] = line.split("\t");
       const copiedEntitlements = readFileSync(copiedEntitlementsPath, "utf8");
-      expect(entitlementPath).toContain("openclaw-entitlements");
+      expect(entitlementPath).toContain("quiet-core-bot-entitlements");
       expect(existsSync(entitlementPath)).toBe(false);
       expect(copiedEntitlements).toContain("com.apple.security.automation.apple-events");
       expect(copiedEntitlements).toContain("com.apple.security.device.camera");

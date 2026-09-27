@@ -66,11 +66,11 @@ Think Max behavior.
     check:
 
     ```bash
-    openclaw infer model run \
+    quiet-core-bot infer model run \
       --local \
       --model ds4/deepseek-v4-flash \
       --thinking off \
-      --prompt "Reply with exactly: openclaw-ds4-ok" \
+      --prompt "Reply with exactly: quiet-core-bot-ds4-ok" \
       --json
     ```
 
@@ -230,18 +230,18 @@ curl http://127.0.0.1:18000/v1/chat/completions \
 Then test Quiet Core bot model routing:
 
 ```bash
-openclaw infer model run \
+quiet-core-bot infer model run \
   --local \
   --model ds4/deepseek-v4-flash \
   --thinking off \
-  --prompt "Reply with exactly: openclaw-ds4-ok" \
+  --prompt "Reply with exactly: quiet-core-bot-ds4-ok" \
   --json
 ```
 
 For a full agent and tool-call smoke, use a context of at least 32768:
 
 ```bash
-openclaw agent \
+quiet-core-bot agent \
   --local \
   --session-id ds4-tool-smoke \
   --model ds4/deepseek-v4-flash \

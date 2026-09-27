@@ -6,13 +6,13 @@ import { promisify } from "node:util";
 import {
   resolveExpiresAtMsFromDurationSeconds,
   resolveTimestampMsToIsoString,
-} from "@openclaw/normalization-core/number-coercion";
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/normalization-core/number-coercion";
+import { normalizeOptionalLowercaseString } from "@quiet-core/normalization-core/string-coerce";
 
 const execFileAsync = promisify(execFile);
 const LIVE_CRON_PROBE_DELAY_SECONDS = 7 * 24 * 60 * 60;
-const OPENCLAW_CLI_GATEWAY_TIMEOUT_MS = 30_000;
-const OPENCLAW_CLI_CHILD_TIMEOUT_MS = OPENCLAW_CLI_GATEWAY_TIMEOUT_MS + 45_000;
+const QUIET_CORE_CLI_GATEWAY_TIMEOUT_MS = 30_000;
+const QUIET_CORE_CLI_CHILD_TIMEOUT_MS = QUIET_CORE_CLI_GATEWAY_TIMEOUT_MS + 45_000;
 
 type CronListCliResult = {
   jobs?: Array<{
@@ -103,7 +103,7 @@ export function buildLiveCronProbeMessage(params: {
   const claudeLike = isClaudeLikeLiveAgent(params.agent);
   if (params.attempt === 0) {
     return (
-      "Use the Quiet Core bot MCP cron tool from server `quiet-core-bot`. " +
+      "Use the Quiet Core bot MCP cron tool from server `openclaw`. " +
       "If it is not already visible, search/load MCP tools for `quiet-core-bot cron` or `cron`, " +
       "then call the matching Quiet Core bot MCP tool; Claude-style names may appear as `mcp__openclaw__cron`. " +
       "Do not use Claude native `CronCreate`, `CronList`, or `CronDelete`; those are not Quiet Core bot proof. " +
@@ -115,7 +115,7 @@ export function buildLiveCronProbeMessage(params: {
   }
   if (claudeLike) {
     return (
-      "Retry the Quiet Core bot MCP cron tool from server `quiet-core-bot` now. " +
+      "Retry the Quiet Core bot MCP cron tool from server `openclaw` now. " +
       "If it is not already visible, search/load MCP tools for `quiet-core-bot cron` or `cron`, " +
       "then call the matching Quiet Core bot MCP tool; Claude-style names may appear as `mcp__openclaw__cron`. " +
       "Do not use Claude native `CronCreate`, `CronList`, or `CronDelete`; those are not Quiet Core bot proof. " +
@@ -129,7 +129,7 @@ export function buildLiveCronProbeMessage(params: {
   }
   return (
     "Your previous Quiet Core bot cron MCP tool call was cancelled before the job was created. " +
-    "Retry the Quiet Core bot MCP cron tool from server `quiet-core-bot` now. " +
+    "Retry the Quiet Core bot MCP cron tool from server `openclaw` now. " +
     "If the harness shows Claude-style MCP names, use `mcp__openclaw__cron`. " +
     `Use these exact JSON arguments: ${params.argsJson}. ` +
     "Preserve job.sessionTarget and job.sessionKey exactly as provided. " +
@@ -148,14 +148,14 @@ export async function runOpenClawCliJson<T>(args: string[], env: NodeJS.ProcessE
   delete childEnv.VITEST_WORKER_ID;
   const cliArgs = args.includes("--timeout")
     ? args
-    : [...args, "--timeout", String(OPENCLAW_CLI_GATEWAY_TIMEOUT_MS)];
+    : [...args, "--timeout", String(QUIET_CORE_CLI_GATEWAY_TIMEOUT_MS)];
   const { stdout, stderr } = await execFileAsync(
     process.execPath,
     ["quiet-core-bot.mjs", ...cliArgs],
     {
       cwd: process.cwd(),
       env: childEnv,
-      timeout: OPENCLAW_CLI_CHILD_TIMEOUT_MS,
+      timeout: QUIET_CORE_CLI_CHILD_TIMEOUT_MS,
       maxBuffer: 1024 * 1024,
     },
   );
@@ -163,7 +163,7 @@ export async function runOpenClawCliJson<T>(args: string[], env: NodeJS.ProcessE
   if (!trimmed) {
     throw new Error(
       [
-        `quiet-core-bot ${args.join(" ")} produced no JSON stdout`,
+        `openclaw ${args.join(" ")} produced no JSON stdout`,
         stderr.trim() ? `stderr: ${stderr.trim()}` : undefined,
       ]
         .filter(Boolean)
@@ -175,7 +175,7 @@ export async function runOpenClawCliJson<T>(args: string[], env: NodeJS.ProcessE
   } catch (error) {
     throw new Error(
       [
-        `quiet-core-bot ${args.join(" ")} returned invalid JSON`,
+        `openclaw ${args.join(" ")} returned invalid JSON`,
         `stdout: ${trimmed}`,
         stderr.trim() ? `stderr: ${stderr.trim()}` : undefined,
         error instanceof Error ? `cause: ${error.message}` : undefined,

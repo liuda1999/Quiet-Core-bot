@@ -130,11 +130,11 @@ export function loadGlobalRuntimeDotEnvFiles(opts?: GlobalRuntimeDotEnvOptions) 
   const globalEnvPaths = [...new Set([stateEnvPath, ...(opts?.additionalEnvPaths ?? [])])];
   const defaultStateEnvPath = path.join(
     resolveRequiredHomeDir(process.env, os.homedir),
-    ".openclaw",
+    ".quiet-core-bot",
     ".env",
   );
   const hasExplicitNonDefaultStateDir =
-    process.env.OPENCLAW_STATE_DIR?.trim() !== undefined &&
+    process.env.QUIET_CORE_STATE_DIR?.trim() !== undefined &&
     path.resolve(stateEnvPath) !== path.resolve(defaultStateEnvPath);
   const globalEnvs = globalEnvPaths.map((filePath) =>
     readDotEnvFile({ entryFilter: opts?.entryFilter, filePath, quiet }),
@@ -147,7 +147,7 @@ export function loadGlobalRuntimeDotEnvFiles(opts?: GlobalRuntimeDotEnvOptions) 
       filePath: path.join(
         resolveRequiredHomeDir(process.env, os.homedir),
         ".config",
-        "openclaw",
+        "quiet-core-bot",
         "gateway.env",
       ),
       quiet,

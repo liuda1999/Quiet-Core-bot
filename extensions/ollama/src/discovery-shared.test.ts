@@ -1,5 +1,5 @@
 // Ollama tests cover discovery shared plugin behavior.
-import type { ModelProviderConfig } from "openclaw/plugin-sdk/provider-model-shared";
+import type { ModelProviderConfig } from "quiet-core-bot/plugin-sdk/provider-model-shared";
 import { describe, expect, it } from "vitest";
 import {
   isHostedOllamaCloud,

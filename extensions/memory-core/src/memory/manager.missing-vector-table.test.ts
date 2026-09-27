@@ -3,9 +3,9 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
-import { loadSqliteVecExtension } from "openclaw/plugin-sdk/memory-core-host-engine-storage";
-import { resolveOpenClawAgentSqlitePath } from "openclaw/plugin-sdk/sqlite-runtime";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
+import { loadSqliteVecExtension } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-storage";
+import { resolveOpenClawAgentSqlitePath } from "quiet-core-bot/plugin-sdk/sqlite-runtime";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import "./embedding.test-mocks.js";
 import { closeAllMemorySearchManagers, getMemorySearchManager } from "./index.js";
@@ -19,14 +19,14 @@ describe("memory index without a vector table", () => {
   let manager: MemoryIndexManager | null = null;
 
   beforeAll(async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-mem-missing-vec-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-mem-missing-vec-"));
   });
 
   beforeEach(async () => {
     workspaceDir = path.join(fixtureRoot, `case-${caseId++}`);
     await fs.mkdir(path.join(workspaceDir, "memory"), { recursive: true });
     await fs.writeFile(path.join(workspaceDir, "MEMORY.md"), "Alpha topic\n\nKeep this note.");
-    vi.stubEnv("OPENCLAW_STATE_DIR", path.join(workspaceDir, "state"));
+    vi.stubEnv("QUIET_CORE_STATE_DIR", path.join(workspaceDir, "state"));
     indexPath = resolveOpenClawAgentSqlitePath({ agentId: "main" });
   });
 

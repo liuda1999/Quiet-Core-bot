@@ -20,7 +20,7 @@ export type GatewayTlsConfig = {
 export type WideAreaDiscoveryConfig = {
   /** Enable DNS-SD style wide-area discovery. */
   enabled?: boolean;
-  /** Optional unicast DNS-SD domain (e.g. "openclaw.internal"). */
+  /** Optional unicast DNS-SD domain (e.g. "quiet-core-bot.internal"). */
   domain?: string;
 };
 
@@ -118,7 +118,7 @@ export type TalkConfigResponse = TalkConfig & {
 export type GatewayControlUiConfig = {
   /** If false, the Gateway will not serve the Control UI (default /). */
   enabled?: boolean;
-  /** Optional base path prefix for the Control UI (e.g. "/openclaw"). */
+  /** Optional base path prefix for the Control UI (e.g. "/quiet-core-bot"). */
   basePath?: string;
   /** Optional filesystem root for Control UI assets (defaults to dist/control-ui). */
   root?: string;
@@ -269,7 +269,7 @@ export type GatewayReloadConfig = {
    * before forcing a restart. Absent uses the gateway's default bounded wait;
    * 0 waits indefinitely and logs periodic still-pending warnings.
    * Lower positive values risk aborting active subagent LLM calls.
-   * @see https://github.com/openclaw/openclaw/issues/65485
+   * @see https://github.com/liuda1999/Quiet-Core-bot/issues/65485
    */
   deferralTimeoutMs?: number;
 };
@@ -506,7 +506,7 @@ export type GatewayConfig = {
   tools?: GatewayToolsConfig;
   /**
    * Pre-auth Gateway WebSocket handshake timeout in milliseconds.
-   * Env var OPENCLAW_HANDSHAKE_TIMEOUT_MS takes precedence. Default: 15000.
+   * Env var QUIET_CORE_HANDSHAKE_TIMEOUT_MS takes precedence. Default: 15000.
    */
   handshakeTimeoutMs?: number;
   /**

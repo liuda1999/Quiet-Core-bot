@@ -17,7 +17,7 @@ function runSurfaceReport(env: Record<string, string>) {
 function readDefaultPublicFunctionExportBudget() {
   const source = readFileSync("scripts/plugin-sdk-surface-report.mjs", "utf8");
   const match =
-    /publicFunctionExports:\s*readBudgetEnv\("OPENCLAW_PLUGIN_SDK_MAX_PUBLIC_FUNCTION_EXPORTS",\s*(\d+)\)/u.exec(
+    /publicFunctionExports:\s*readBudgetEnv\("QUIET_CORE_PLUGIN_SDK_MAX_PUBLIC_FUNCTION_EXPORTS",\s*(\d+)\)/u.exec(
       source,
     );
   if (match === null || match[1] === undefined) {
@@ -61,33 +61,33 @@ describe("plugin SDK surface report", () => {
 
   it("rejects loose numeric budget env vars before collecting SDK stats", () => {
     const result = runSurfaceReport({
-      OPENCLAW_PLUGIN_SDK_MAX_PUBLIC_EXPORTS: "1e9",
+      QUIET_CORE_PLUGIN_SDK_MAX_PUBLIC_EXPORTS: "1e9",
     });
 
     expect(result.status).toBe(1);
     expect(result.stdout).toBe("");
     expect(result.stderr).toContain(
-      "OPENCLAW_PLUGIN_SDK_MAX_PUBLIC_EXPORTS must be a non-negative integer",
+      "QUIET_CORE_PLUGIN_SDK_MAX_PUBLIC_EXPORTS must be a non-negative integer",
     );
     expect(result.stderr).not.toContain("at ");
   });
 
   it("rejects unsafe budget env vars before collecting SDK stats", () => {
     const result = runSurfaceReport({
-      OPENCLAW_PLUGIN_SDK_MAX_PUBLIC_EXPORTS: "9007199254740992",
+      QUIET_CORE_PLUGIN_SDK_MAX_PUBLIC_EXPORTS: "9007199254740992",
     });
 
     expect(result.status).toBe(1);
     expect(result.stdout).toBe("");
     expect(result.stderr).toContain(
-      "OPENCLAW_PLUGIN_SDK_MAX_PUBLIC_EXPORTS must be a safe non-negative integer",
+      "QUIET_CORE_PLUGIN_SDK_MAX_PUBLIC_EXPORTS must be a safe non-negative integer",
     );
     expect(result.stderr).not.toContain("at ");
   });
 
   it("accepts exact deprecated export budget overrides by public entrypoint", () => {
     const result = runSurfaceReport({
-      OPENCLAW_PLUGIN_SDK_MAX_PUBLIC_DEPRECATED_EXPORTS_BY_ENTRYPOINT: JSON.stringify({ core: 2 }),
+      QUIET_CORE_PLUGIN_SDK_MAX_PUBLIC_DEPRECATED_EXPORTS_BY_ENTRYPOINT: JSON.stringify({ core: 2 }),
     });
 
     expect(result.status).toBe(0);
@@ -97,7 +97,7 @@ describe("plugin SDK surface report", () => {
   it("keeps generated package declarations out of source surface counts", () => {
     const budget = readDefaultPublicFunctionExportBudget();
     const result = runSurfaceReport({
-      OPENCLAW_PLUGIN_SDK_MAX_PUBLIC_FUNCTION_EXPORTS: String(budget - 1),
+      QUIET_CORE_PLUGIN_SDK_MAX_PUBLIC_FUNCTION_EXPORTS: String(budget - 1),
     });
 
     expect(result.status).toBe(1);
@@ -106,7 +106,7 @@ describe("plugin SDK surface report", () => {
 
   it("rejects deprecated export growth by public entrypoint", () => {
     const result = runSurfaceReport({
-      OPENCLAW_PLUGIN_SDK_MAX_PUBLIC_DEPRECATED_EXPORTS_BY_ENTRYPOINT: JSON.stringify({ core: 1 }),
+      QUIET_CORE_PLUGIN_SDK_MAX_PUBLIC_DEPRECATED_EXPORTS_BY_ENTRYPOINT: JSON.stringify({ core: 1 }),
     });
 
     expect(result.status).toBe(1);

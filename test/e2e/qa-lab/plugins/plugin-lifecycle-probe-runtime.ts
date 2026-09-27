@@ -10,7 +10,7 @@ import { createTempDirTracker } from "../../../helpers/temp-dir.js";
 
 const tempDirs = createTempDirTracker();
 
-type ProbeEnv = Pick<NodeJS.ProcessEnv, "HOME" | "OPENCLAW_CONFIG_PATH" | "OPENCLAW_STATE_DIR">;
+type ProbeEnv = Pick<NodeJS.ProcessEnv, "HOME" | "QUIET_CORE_CONFIG_PATH" | "QUIET_CORE_STATE_DIR">;
 
 type MatrixEnv = NodeJS.ProcessEnv & ProbeEnv;
 
@@ -29,11 +29,11 @@ interface RegistryServer {
 }
 
 function stateDir(env: ProbeEnv = process.env) {
-  return env.OPENCLAW_STATE_DIR || path.join(env.HOME ?? os.homedir(), ".openclaw");
+  return env.QUIET_CORE_STATE_DIR || path.join(env.HOME ?? os.homedir(), ".quiet-core-bot");
 }
 
 function configPath(env: ProbeEnv = process.env) {
-  return env.OPENCLAW_CONFIG_PATH || path.join(stateDir(env), "openclaw.json");
+  return env.QUIET_CORE_CONFIG_PATH || path.join(stateDir(env), "quiet-core-bot.json");
 }
 
 function readJson(file: string) {
@@ -202,25 +202,25 @@ export function parseDurationMs(value: string | undefined, fallback: string) {
 
 function createMatrixStateEnv(resourceDir: string): MatrixEnv {
   const home = fs.mkdtempSync(path.join(resourceDir, "home."));
-  const stateDir = path.join(home, ".openclaw");
+  const stateDir = path.join(home, ".quiet-core-bot");
   const workspaceDir = path.join(home, "workspace");
-  const configFile = path.join(stateDir, "openclaw.json");
+  const configFile = path.join(stateDir, "quiet-core-bot.json");
   fs.mkdirSync(stateDir, { recursive: true });
   fs.mkdirSync(workspaceDir, { recursive: true });
   return {
     ...process.env,
     HOME: home,
     USERPROFILE: home,
-    OPENCLAW_HOME: home,
-    OPENCLAW_STATE_DIR: stateDir,
-    OPENCLAW_CONFIG_PATH: configFile,
-    OPENCLAW_TEST_WORKSPACE_DIR: workspaceDir,
-    OPENCLAW_AUTH_PROFILE_SECRET_KEY: randomBytes(32).toString("hex"),
+    QUIET_CORE_HOME: home,
+    QUIET_CORE_STATE_DIR: stateDir,
+    QUIET_CORE_CONFIG_PATH: configFile,
+    QUIET_CORE_TEST_WORKSPACE_DIR: workspaceDir,
+    QUIET_CORE_AUTH_PROFILE_SECRET_KEY: randomBytes(32).toString("hex"),
   };
 }
 
 function packageEntrypoint(prefix: string) {
-  const packageRoot = path.join(prefix, "lib", "node_modules", "openclaw");
+  const packageRoot = path.join(prefix, "lib", "node_modules", "quiet-core-bot");
   for (const entry of ["dist/index.mjs", "dist/index.js"]) {
     const candidate = path.join(packageRoot, entry);
     if (fs.existsSync(candidate)) {
@@ -371,9 +371,9 @@ async function runCommand(command: string, args: readonly string[], options: Com
 }
 
 async function installOpenClawPackage(prefix: string, env: MatrixEnv) {
-  const packageTgz = env.OPENCLAW_CURRENT_PACKAGE_TGZ;
-  assertProbe(packageTgz, "OPENCLAW_CURRENT_PACKAGE_TGZ is required");
-  const installLog = "/tmp/openclaw-plugin-lifecycle-install.log";
+  const packageTgz = env.QUIET_CORE_CURRENT_PACKAGE_TGZ;
+  assertProbe(packageTgz, "QUIET_CORE_CURRENT_PACKAGE_TGZ is required");
+  const installLog = "/tmp/quiet-core-bot-plugin-lifecycle-install.log";
   process.stdout.write("Installing mounted Quiet Core bot package...\n");
   await runCommand(
     "npm",
@@ -381,7 +381,7 @@ async function installOpenClawPackage(prefix: string, env: MatrixEnv) {
     {
       env,
       outputFile: installLog,
-      timeoutMs: parseDurationMs(env.OPENCLAW_E2E_NPM_INSTALL_TIMEOUT, "600s"),
+      timeoutMs: parseDurationMs(env.QUIET_CORE_E2E_NPM_INSTALL_TIMEOUT, "600s"),
     },
   );
 }
@@ -479,8 +479,8 @@ async function runMeasured(
 
 export async function runPluginLifecycleMatrix() {
   const pluginId = "lifecycle-claw";
-  const packageName = "@openclaw/lifecycle-claw";
-  const resourceDir = tempDirs.make("openclaw-plugin-lifecycle-matrix-");
+  const packageName = "@quiet-core/lifecycle-claw";
+  const resourceDir = tempDirs.make("quiet-core-bot-plugin-lifecycle-matrix-");
   const npmPrefix = "/tmp/npm-prefix";
   const env = createMatrixStateEnv(resourceDir);
   const tarballV1 = path.join(resourceDir, "lifecycle-claw-1.0.0.tgz");

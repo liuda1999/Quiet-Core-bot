@@ -48,14 +48,14 @@ export function resolveDefaultReleaseUpgradeBaseline(candidateVersion, published
   const versions = normalizePublishedVersions(publishedVersions);
   const older = versions.find((version) => compareOpenClawVersions(version, candidate.version) < 0);
   if (older) {
-    return `openclaw@${older}`;
+    return `quiet-core-bot@${older}`;
   }
 
   const same = versions.find(
     (version) => compareOpenClawVersions(version, candidate.version) === 0,
   );
   if (same) {
-    return `openclaw@${same}`;
+    return `quiet-core-bot@${same}`;
   }
 
   throw new Error(`no published OpenClaw baseline is <= candidate ${candidate.version}`);
@@ -88,13 +88,13 @@ function readPublishedVersions(args) {
     }
     return parsed;
   }
-  const raw = execFileSync("npm", ["view", "openclaw", "versions", "--json", "--silent"], {
+  const raw = execFileSync("npm", ["view", "quiet-core-bot", "versions", "--json", "--silent"], {
     encoding: "utf8",
     stdio: ["ignore", "pipe", "inherit"],
   });
   const parsed = JSON.parse(raw);
   if (!Array.isArray(parsed)) {
-    throw new Error("npm returned a non-array openclaw versions payload");
+    throw new Error("npm returned a non-array quiet-core-bot versions payload");
   }
   return parsed;
 }

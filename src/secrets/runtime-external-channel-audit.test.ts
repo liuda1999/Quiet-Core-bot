@@ -70,7 +70,7 @@ function createExternalChannelRecord(id: ExternalizedChannelId): PluginManifestR
     origin: "global",
     rootDir,
     source: path.join(rootDir, "index.js"),
-    manifestPath: path.join(rootDir, "openclaw.plugin.json"),
+    manifestPath: path.join(rootDir, "quiet-core-bot.plugin.json"),
   };
 }
 
@@ -105,7 +105,7 @@ function createGoogleChatSecretContractApi() {
       id: "channels.googlechat.accounts.*.serviceAccount",
       targetType: "channels.googlechat.serviceAccount",
       targetTypeAliases: ["channels.googlechat.accounts.*.serviceAccount"],
-      configFile: "openclaw.json",
+      configFile: "quiet-core-bot.json",
       pathPattern: "channels.googlechat.accounts.*.serviceAccount",
       refPathPattern: "channels.googlechat.accounts.*.serviceAccountRef",
       secretShape: "sibling_ref",
@@ -118,7 +118,7 @@ function createGoogleChatSecretContractApi() {
     {
       id: "channels.googlechat.serviceAccount",
       targetType: "channels.googlechat.serviceAccount",
-      configFile: "openclaw.json",
+      configFile: "quiet-core-bot.json",
       pathPattern: "channels.googlechat.serviceAccount",
       refPathPattern: "channels.googlechat.serviceAccountRef",
       secretShape: "sibling_ref",
@@ -503,7 +503,7 @@ describe("secrets runtime externalized channel SecretRef audit", () => {
     const snapshot = await prepareSecretsRuntimeSnapshot({
       config,
       env: {},
-      agentDirs: ["/tmp/openclaw-agent-main"],
+      agentDirs: ["/tmp/quiet-core-bot-agent-main"],
       loadAuthStore: () => loadAuthStoreWithProfiles({}),
       loadablePluginOrigins: externalChannelOrigins(records),
     });

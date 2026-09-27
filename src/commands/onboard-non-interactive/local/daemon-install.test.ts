@@ -48,7 +48,7 @@ describe("installGatewayDaemonNonInteractive", () => {
       warnings: [],
     });
     buildGatewayInstallPlan.mockResolvedValue({
-      programArguments: ["openclaw", "gateway", "run"],
+      programArguments: ["quiet-core-bot", "gateway", "run"],
       workingDirectory: "/tmp",
       environment: {},
     });
@@ -65,7 +65,7 @@ describe("installGatewayDaemonNonInteractive", () => {
             token: {
               source: "env",
               provider: "default",
-              id: "OPENCLAW_GATEWAY_TOKEN",
+              id: "QUIET_CORE_GATEWAY_TOKEN",
             },
           },
         },

@@ -1,7 +1,7 @@
 // Matrix plugin module implements logger behavior.
 import { format } from "node:util";
-import { redactSensitiveText } from "openclaw/plugin-sdk/logging-core";
-import type { RuntimeLogger } from "openclaw/plugin-sdk/plugin-runtime";
+import { redactSensitiveText } from "quiet-core-bot/plugin-sdk/logging-core";
+import type { RuntimeLogger } from "quiet-core-bot/plugin-sdk/plugin-runtime";
 import { getMatrixRuntime } from "../../runtime.js";
 
 type Logger = {

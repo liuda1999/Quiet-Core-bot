@@ -40,20 +40,20 @@ see [Using Codex with your ChatGPT plan](https://help.openai.com/en/articles/113
 Preview migration from the source Codex home:
 
 ```bash
-openclaw migrate codex --dry-run
+quiet-core-bot migrate codex --dry-run
 ```
 
 Use strict source app verification when you want migration to check source app
 accessibility before planning native plugin activation:
 
 ```bash
-openclaw migrate codex --dry-run --verify-plugin-apps
+quiet-core-bot migrate codex --dry-run --verify-plugin-apps
 ```
 
 Apply the migration when the plan looks right:
 
 ```bash
-openclaw migrate apply codex --yes
+quiet-core-bot migrate apply codex --yes
 ```
 
 Migration writes explicit `codexPlugins` entries for eligible plugins and calls

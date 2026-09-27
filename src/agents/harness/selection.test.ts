@@ -1,8 +1,8 @@
 // Covers agent harness selection, fallback behavior, and compaction routing.
-import type { Model } from "openclaw/plugin-sdk/llm";
+import type { Model } from "quiet-core-bot/plugin-sdk/llm";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../../config/config.js";
-import { OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST } from "../../context-engine/host-compat.js";
+import { QUIET_CORE_EMBEDDED_CONTEXT_ENGINE_HOST } from "../../context-engine/host-compat.js";
 import type { ContextEngine } from "../../context-engine/types.js";
 import { testing as cliBackendsTesting } from "../cli-backends.js";
 import type {
@@ -25,18 +25,18 @@ import type {
 } from "./types.js";
 
 const agentRunAttempt = vi.fn<AgentHarness["runAttempt"]>(async () =>
-  createAttemptResult("openclaw"),
+  createAttemptResult("quiet-core-bot"),
 );
 const compactAuthMocks = vi.hoisted(() => ({
   getApiKeyForModel: vi.fn(),
   resolveModelAsync: vi.fn(),
 }));
 
-vi.mock("./builtin-openclaw.js", () => ({
+vi.mock("./builtin-quiet-core-bot.js", () => ({
   createOpenClawAgentHarness: (): AgentHarness => ({
-    id: "openclaw",
+    id: "quiet-core-bot",
     label: "Quiet Core bot embedded agent",
-    contextEngineHostCapabilities: OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST.capabilities,
+    contextEngineHostCapabilities: QUIET_CORE_EMBEDDED_CONTEXT_ENGINE_HOST.capabilities,
     supports: () => ({ supported: true, priority: 0 }),
     runAttempt: agentRunAttempt,
   }),
@@ -48,7 +48,7 @@ vi.mock("../embedded-agent-runner/model.js", () => ({
   resolveModelAsync: compactAuthMocks.resolveModelAsync,
 }));
 
-const originalRuntime = process.env.OPENCLAW_AGENT_RUNTIME;
+const originalRuntime = process.env.QUIET_CORE_AGENT_RUNTIME;
 
 beforeEach(() => {
   clearAgentHarnesses();
@@ -88,9 +88,9 @@ afterEach(() => {
   compactAuthMocks.resolveModelAsync.mockReset();
   compactAuthMocks.getApiKeyForModel.mockReset();
   if (originalRuntime == null) {
-    delete process.env.OPENCLAW_AGENT_RUNTIME;
+    delete process.env.QUIET_CORE_AGENT_RUNTIME;
   } else {
-    process.env.OPENCLAW_AGENT_RUNTIME = originalRuntime;
+    process.env.QUIET_CORE_AGENT_RUNTIME = originalRuntime;
   }
 });
 
@@ -269,7 +269,7 @@ function agentModelRuntimeConfig(
 
 describe("runAgentHarnessAttempt", () => {
   it("fails when a forced plugin harness is unavailable and fallback is omitted", async () => {
-    process.env.OPENCLAW_AGENT_RUNTIME = "codex";
+    process.env.QUIET_CORE_AGENT_RUNTIME = "codex";
 
     await expect(
       runAgentHarnessAttempt(createAttemptParams(providerRuntimeConfig("codex", "codex"))),
@@ -280,17 +280,17 @@ describe("runAgentHarnessAttempt", () => {
   it("falls back to the Quiet Core bot harness in auto mode when no plugin harness matches", async () => {
     const result = await runAgentHarnessAttempt(createAttemptParams());
 
-    expect(result.sessionIdUsed).toBe("openclaw");
+    expect(result.sessionIdUsed).toBe("quiet-core-bot");
     expect(agentRunAttempt).toHaveBeenCalledTimes(1);
   });
 
   it("allows the selected Quiet Core bot harness to satisfy context-engine pre-prompt assembly", async () => {
     const result = await runAgentHarnessAttempt({
-      ...createAttemptParams(providerRuntimeConfig("codex", "openclaw")),
+      ...createAttemptParams(providerRuntimeConfig("codex", "quiet-core-bot")),
       contextEngine: createContextEngineRequiringAssembly(),
     });
 
-    expect(result.sessionIdUsed).toBe("openclaw");
+    expect(result.sessionIdUsed).toBe("quiet-core-bot");
     expect(agentRunAttempt).toHaveBeenCalledTimes(1);
   });
 
@@ -376,7 +376,7 @@ describe("runAgentHarnessAttempt", () => {
       runtimeSource: "implicit",
     });
     expect(resolveAvailableAgentHarnessPolicy({ provider: "openai", modelId: "gpt-5.4" })).toEqual({
-      runtime: "openclaw",
+      runtime: "quiet-core-bot",
       runtimeSource: "implicit",
     });
 
@@ -386,17 +386,17 @@ describe("runAgentHarnessAttempt", () => {
       modelId: "gpt-5.4",
     });
 
-    expect(result.sessionIdUsed).toBe("openclaw");
+    expect(result.sessionIdUsed).toBe("quiet-core-bot");
     expect(agentRunAttempt).toHaveBeenCalledTimes(1);
   });
 
   it("honors explicit Quiet Core bot runtime for OpenAI agent model runs", async () => {
     const result = await runAgentHarnessAttempt({
-      ...createAttemptParams(providerRuntimeConfig("openai", "openclaw")),
+      ...createAttemptParams(providerRuntimeConfig("openai", "quiet-core-bot")),
       provider: "openai",
       modelId: "gpt-5.4",
     });
-    expect(result.sessionIdUsed).toBe("openclaw");
+    expect(result.sessionIdUsed).toBe("quiet-core-bot");
     expect(agentRunAttempt).toHaveBeenCalledTimes(1);
   });
 
@@ -404,11 +404,11 @@ describe("runAgentHarnessAttempt", () => {
     registerSuccessfulCodexHarness();
 
     const result = await runAgentHarnessAttempt({
-      ...createAttemptParams(agentModelRuntimeConfig("openai/*", "openclaw")),
+      ...createAttemptParams(agentModelRuntimeConfig("openai/*", "quiet-core-bot")),
       provider: "openai",
       modelId: "gpt-5.4",
     });
-    expect(result.sessionIdUsed).toBe("openclaw");
+    expect(result.sessionIdUsed).toBe("quiet-core-bot");
     expect(agentRunAttempt).toHaveBeenCalledTimes(1);
   });
 
@@ -632,7 +632,7 @@ describe("selectAgentHarness", () => {
     const harness = selectAgentHarness({
       provider: "codex",
       modelId: "gpt-5.4",
-      agentHarnessId: "openclaw",
+      agentHarnessId: "quiet-core-bot",
     });
 
     expect(harness.id).toBe("codex");
@@ -645,18 +645,18 @@ describe("selectAgentHarness", () => {
     const harness = selectAgentHarness({
       provider: "openai",
       modelId: "gpt-5.4",
-      agentHarnessRuntimeOverride: "openclaw",
+      agentHarnessRuntimeOverride: "quiet-core-bot",
     });
 
-    expect(harness.id).toBe("openclaw");
+    expect(harness.id).toBe("quiet-core-bot");
 
     const result = await runAgentHarnessAttempt({
       ...createAttemptParams(),
       provider: "openai",
       modelId: "gpt-5.4",
-      agentHarnessRuntimeOverride: "openclaw",
+      agentHarnessRuntimeOverride: "quiet-core-bot",
     });
-    expect(result.sessionIdUsed).toBe("openclaw");
+    expect(result.sessionIdUsed).toBe("quiet-core-bot");
   });
 
   it("treats legacy PI runtime overrides as the built-in Quiet Core bot harness", async () => {
@@ -668,7 +668,7 @@ describe("selectAgentHarness", () => {
       agentHarnessRuntimeOverride: "pi",
     });
 
-    expect(harness.id).toBe("openclaw");
+    expect(harness.id).toBe("quiet-core-bot");
 
     const result = await runAgentHarnessAttempt({
       ...createAttemptParams(),
@@ -676,7 +676,7 @@ describe("selectAgentHarness", () => {
       modelId: "gpt-5.4",
       agentHarnessRuntimeOverride: "pi",
     });
-    expect(result.sessionIdUsed).toBe("openclaw");
+    expect(result.sessionIdUsed).toBe("quiet-core-bot");
   });
 
   it("allows per-agent model runtime policy overrides", () => {
@@ -691,12 +691,12 @@ describe("selectAgentHarness", () => {
       }),
     ).toThrow('Requested agent harness "codex" is not registered');
     expect(selectAgentHarness({ provider: "anthropic", modelId: "sonnet-4.6", config }).id).toBe(
-      "openclaw",
+      "quiet-core-bot",
     );
   });
 
   it("selects Quiet Core bot when the implicit OpenAI Codex harness is unavailable", () => {
-    expect(selectAgentHarness({ provider: "openai", modelId: "gpt-5.4" }).id).toBe("openclaw");
+    expect(selectAgentHarness({ provider: "openai", modelId: "gpt-5.4" }).id).toBe("quiet-core-bot");
   });
 
   it("ignores legacy agentRuntime as a runtime policy source", () => {
@@ -714,7 +714,7 @@ describe("selectAgentHarness", () => {
         modelId: "sonnet-4.6",
         config,
       }).id,
-    ).toBe("openclaw");
+    ).toBe("quiet-core-bot");
   });
 
   it("ignores legacy agent CLI runtime aliases for OpenAI agent model runs", async () => {
@@ -745,14 +745,14 @@ describe("selectAgentHarness", () => {
       selectAgentHarness({
         provider: "codex",
         modelId: "gpt-5.4",
-        agentHarnessId: "openclaw",
+        agentHarnessId: "quiet-core-bot",
         config: providerRuntimeConfig("codex", "codex"),
       }).id,
     ).toBe("codex");
   });
 
   it("ignores env-forced Quiet Core bot for OpenAI default runtime selection", () => {
-    process.env.OPENCLAW_AGENT_RUNTIME = "openclaw";
+    process.env.QUIET_CORE_AGENT_RUNTIME = "quiet-core-bot";
     registerFailingCodexHarness();
 
     expect(
@@ -839,7 +839,7 @@ describe("selectAgentHarness", () => {
             list: [{ id: "main", default: true, agentDir: "/tmp/main-agent" }],
             defaults: {
               models: {
-                "openai/gpt-5.5": { agentRuntime: { id: "openclaw" } },
+                "openai/gpt-5.5": { agentRuntime: { id: "quiet-core-bot" } },
               },
             },
           },
@@ -974,7 +974,7 @@ describe("selectAgentHarness", () => {
         model: "gpt-5.5",
         authProfileId: "deleted-profile",
         agentHarnessId: "codex",
-        config: agentModelRuntimeConfig("openai/gpt-5.5", "openclaw"),
+        config: agentModelRuntimeConfig("openai/gpt-5.5", "quiet-core-bot"),
       }),
     ).resolves.toEqual({ ok: true, compacted: false });
     expect(compact).toHaveBeenCalledTimes(1);
@@ -1123,7 +1123,7 @@ describe("selectAgentHarness", () => {
           modelId,
           agentHarnessRuntimeOverride: alias,
         }).id,
-      ).toBe("openclaw");
+      ).toBe("quiet-core-bot");
     },
   );
 

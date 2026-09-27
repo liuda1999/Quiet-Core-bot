@@ -1,4 +1,4 @@
-# @openclaw/nostr
+# @quiet-core/nostr
 
 Nostr DM channel plugin for OpenClaw using NIP-04 encrypted direct messages.
 
@@ -13,7 +13,7 @@ This extension adds Nostr as a messaging channel to OpenClaw. It enables your bo
 ## Installation
 
 ```bash
-openclaw plugins install @openclaw/nostr
+quiet-core-bot plugins install @quiet-core/nostr
 ```
 
 ## Quick Setup
@@ -94,7 +94,7 @@ processed unless approved.
 # Using strfry
 docker run -p 7777:7777 ghcr.io/hoytech/strfry
 
-# Configure openclaw to use local relay
+# Configure quiet-core-bot to use local relay
 "relays": ["ws://localhost:7777"]
 ```
 

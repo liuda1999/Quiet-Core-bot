@@ -112,9 +112,9 @@ function createManifestChannelPlugin(id: string, channels: string[]): PluginMani
     skills: [],
     hooks: [],
     origin: "workspace",
-    rootDir: `/tmp/openclaw-test/${id}`,
-    source: `/tmp/openclaw-test/${id}/index.ts`,
-    manifestPath: `/tmp/openclaw-test/${id}/openclaw.plugin.json`,
+    rootDir: `/tmp/quiet-core-bot-test/${id}`,
+    source: `/tmp/quiet-core-bot-test/${id}/index.ts`,
+    manifestPath: `/tmp/quiet-core-bot-test/${id}/quiet-core-bot.plugin.json`,
   };
 }
 
@@ -146,10 +146,10 @@ describe("resolveChannelSetupEntries workspace shadow exclusion (GHSA-2qrv-rc5x-
     };
     const bundledEntry = {
       id: "telegram",
-      pluginId: "@openclaw/telegram",
+      pluginId: "@quiet-core/telegram",
       origin: "bundled",
       meta: workspaceEntry.meta,
-      install: { npmSpec: "@openclaw/telegram" },
+      install: { npmSpec: "@quiet-core/telegram" },
     };
     listChannelPluginCatalogEntries.mockReturnValue([workspaceEntry]);
     getChannelPluginCatalogEntry.mockImplementation(
@@ -179,7 +179,7 @@ describe("resolveChannelSetupEntries workspace shadow exclusion (GHSA-2qrv-rc5x-
   it("still returns bundled-origin entries", () => {
     const bundledEntry = {
       id: "telegram",
-      pluginId: "@openclaw/telegram",
+      pluginId: "@quiet-core/telegram",
       origin: "bundled",
       meta: {
         id: "telegram",
@@ -189,7 +189,7 @@ describe("resolveChannelSetupEntries workspace shadow exclusion (GHSA-2qrv-rc5x-
         blurb: "t",
         order: 1,
       },
-      install: { npmSpec: "@openclaw/telegram" },
+      install: { npmSpec: "@quiet-core/telegram" },
     };
     listChannelPluginCatalogEntries.mockReturnValue([bundledEntry]);
 

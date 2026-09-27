@@ -11,7 +11,7 @@ Extract readable article content from local HTML web fetch responses.
 
 ## Distribution
 
-- Package: `@openclaw/web-readability-plugin`
+- Package: `@quiet-core/web-readability-plugin`
 - Install route: included in Quiet Core bot
 
 ## Surface

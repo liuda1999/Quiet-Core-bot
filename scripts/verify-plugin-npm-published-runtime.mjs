@@ -101,23 +101,23 @@ export function collectPluginNpmPublishedRuntimeErrors(params) {
   const errors = [];
   const extensionsResult = readPackageStringList(
     packageLabel,
-    "openclaw.extensions",
-    packageJson.openclaw?.extensions,
+    "quiet-core-bot.extensions",
+    packageJson["quiet-core-bot"]?.extensions,
   );
   const runtimeExtensionsResult = readPackageStringList(
     packageLabel,
-    "openclaw.runtimeExtensions",
-    packageJson.openclaw?.runtimeExtensions,
+    "quiet-core-bot.runtimeExtensions",
+    packageJson["quiet-core-bot"]?.runtimeExtensions,
   );
   const setupEntryResult = readOptionalPackageString(
     packageLabel,
-    "openclaw.setupEntry",
-    packageJson.openclaw?.setupEntry,
+    "quiet-core-bot.setupEntry",
+    packageJson["quiet-core-bot"]?.setupEntry,
   );
   const runtimeSetupEntryResult = readOptionalPackageString(
     packageLabel,
-    "openclaw.runtimeSetupEntry",
-    packageJson.openclaw?.runtimeSetupEntry,
+    "quiet-core-bot.runtimeSetupEntry",
+    packageJson["quiet-core-bot"]?.runtimeSetupEntry,
   );
   errors.push(
     ...extensionsResult.errors,
@@ -135,7 +135,7 @@ export function collectPluginNpmPublishedRuntimeErrors(params) {
 
   if (runtimeExtensions.length > 0 && runtimeExtensions.length !== extensions.length) {
     errors.push(
-      `${packageLabel} package.json openclaw.runtimeExtensions length (${runtimeExtensions.length}) must match openclaw.extensions length (${extensions.length})`,
+      `${packageLabel} package.json quiet-core-bot.runtimeExtensions length (${runtimeExtensions.length}) must match quiet-core-bot.extensions length (${extensions.length})`,
     );
     return errors;
   }
@@ -163,7 +163,7 @@ export function collectPluginNpmPublishedRuntimeErrors(params) {
 
   if (runtimeSetupEntry && !setupEntry) {
     errors.push(
-      `${packageLabel} package.json openclaw.runtimeSetupEntry requires openclaw.setupEntry`,
+      `${packageLabel} package.json quiet-core-bot.runtimeSetupEntry requires quiet-core-bot.setupEntry`,
     );
     return errors;
   }
@@ -227,13 +227,13 @@ export function readPluginNpmCommandOptions(env = process.env) {
     encoding: "utf8",
     killSignal: "SIGKILL",
     maxBuffer: readPositiveIntEnv(
-      "OPENCLAW_PLUGIN_NPM_COMMAND_MAX_BUFFER_BYTES",
+      "QUIET_CORE_PLUGIN_NPM_COMMAND_MAX_BUFFER_BYTES",
       DEFAULT_NPM_COMMAND_MAX_BUFFER_BYTES,
       env,
     ),
     stdio: ["ignore", "pipe", "pipe"],
     timeout: readPositiveIntEnv(
-      "OPENCLAW_PLUGIN_NPM_COMMAND_TIMEOUT_MS",
+      "QUIET_CORE_PLUGIN_NPM_COMMAND_TIMEOUT_MS",
       DEFAULT_NPM_COMMAND_TIMEOUT_MS,
       env,
     ),
@@ -278,8 +278,8 @@ function sleep(ms) {
 }
 
 async function packPublishedPackage(spec, destinationDir) {
-  const attempts = readPositiveIntEnv("OPENCLAW_PLUGIN_NPM_VERIFY_ATTEMPTS", 90);
-  const delayMs = readPositiveIntEnv("OPENCLAW_PLUGIN_NPM_VERIFY_DELAY_MS", 10000);
+  const attempts = readPositiveIntEnv("QUIET_CORE_PLUGIN_NPM_VERIFY_ATTEMPTS", 90);
+  const delayMs = readPositiveIntEnv("QUIET_CORE_PLUGIN_NPM_VERIFY_DELAY_MS", 10000);
   let lastError;
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     try {
@@ -298,8 +298,8 @@ async function packPublishedPackage(spec, destinationDir) {
 }
 
 async function verifyPublishedPackageReadme(spec) {
-  const attempts = readPositiveIntEnv("OPENCLAW_PLUGIN_NPM_README_VERIFY_ATTEMPTS", 6);
-  const delayMs = readPositiveIntEnv("OPENCLAW_PLUGIN_NPM_README_VERIFY_DELAY_MS", 10000);
+  const attempts = readPositiveIntEnv("QUIET_CORE_PLUGIN_NPM_README_VERIFY_ATTEMPTS", 6);
+  const delayMs = readPositiveIntEnv("QUIET_CORE_PLUGIN_NPM_README_VERIFY_DELAY_MS", 10000);
   let lastError;
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     try {
@@ -381,7 +381,7 @@ export function parseVerifyPublishedPluginRuntimeArgs(argv) {
 }
 
 export async function verifyPublishedPluginRuntime(spec) {
-  const workingDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-npm-runtime."));
+  const workingDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-plugin-npm-runtime."));
   try {
     const tarballPath = await packPublishedPackage(spec, workingDir);
     const extractDir = path.join(workingDir, "extract");

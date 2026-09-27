@@ -1,7 +1,7 @@
 /** Optional pre-doctor update prompt for source checkouts and package installs. */
 import fs from "node:fs/promises";
 import path from "node:path";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
 import { note } from "../../packages/terminal-core/src/note.js";
 import { formatCliCommand } from "../cli/command-format.js";
 import { createUpdateProgress } from "../cli/update-cli/progress.js";
@@ -48,11 +48,11 @@ export async function maybeOfferUpdateBeforeDoctor(params: {
 }) {
   // Independent distributions do not participate in upstream updates: never offer an
   // update prompt (and never print an `quiet-core-bot update` command) that the update guard
-  // would refuse. `OPENCLAW_INDEPENDENT_BUILD=0` restores the upstream behavior.
+  // would refuse. `QUIET_CORE_INDEPENDENT_BUILD=0` restores the upstream behavior.
   if (isIndependentBuild()) {
     return { updated: false };
   }
-  const updateInProgress = isTruthyEnvValue(process.env.OPENCLAW_UPDATE_IN_PROGRESS);
+  const updateInProgress = isTruthyEnvValue(process.env.QUIET_CORE_UPDATE_IN_PROGRESS);
   const canOfferUpdate =
     !updateInProgress &&
     params.options.nonInteractive !== true &&

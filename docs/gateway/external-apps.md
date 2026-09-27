@@ -21,7 +21,7 @@ results, cancel work, or inspect Gateway resources.
 
 <Note>
   This page is for code outside the Quiet Core bot process. Plugin code that runs
-  inside Quiet Core bot should use documented `openclaw/plugin-sdk/*` subpaths instead.
+  inside Quiet Core bot should use documented `quiet-core-bot/plugin-sdk/*` subpaths instead.
 </Note>
 
 ## What is available today
@@ -30,7 +30,7 @@ results, cancel work, or inspect Gateway resources.
 | ---------------------------------------- | ------ | --------------------------------------------------------------------------------------------- |
 | [Gateway protocol](/gateway/protocol)    | Ready  | WebSocket transport, connect handshake, auth scopes, protocol versioning, and events.         |
 | [Gateway RPC reference](/reference/rpc)  | Ready  | Current Gateway methods for agents, sessions, tasks, models, tools, artifacts, and approvals. |
-| [`openclaw agent`](/cli/agent)           | Ready  | One-shot script integration when shelling out to the CLI is enough.                           |
+| [`quiet-core-bot agent`](/cli/agent)           | Ready  | One-shot script integration when shelling out to the CLI is enough.                           |
 | [`quiet-core-bot message`](/cli/message) | Ready  | Sending messages or channel actions from scripts.                                             |
 
 The source tree contains internal package work for a future client library, but
@@ -69,7 +69,7 @@ Use the Plugin SDK when code runs inside Quiet Core bot:
 - agent harness plugins
 - trusted runtime helpers
 
-External apps should not import `openclaw/plugin-sdk/*`; those subpaths are for
+External apps should not import `quiet-core-bot/plugin-sdk/*`; those subpaths are for
 plugins loaded by Quiet Core bot.
 
 ## Related

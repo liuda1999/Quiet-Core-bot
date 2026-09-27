@@ -5,7 +5,7 @@ import { formatCliParseErrorOutput } from "./error-output.js";
 describe("formatCliParseErrorOutput", () => {
   it("explains unknown commands with root help and plugin hints", () => {
     const output = formatCliParseErrorOutput("error: unknown command 'wat'\n", {
-      argv: ["node", "openclaw", "wat"],
+      argv: ["node", "quiet-core-bot", "wat"],
     });
 
     expect(output).toBe(
@@ -15,7 +15,7 @@ describe("formatCliParseErrorOutput", () => {
 
   it("suggests close known commands for unknown commands", () => {
     const output = formatCliParseErrorOutput("error: unknown command 'upate'\n", {
-      argv: ["node", "openclaw", "upate"],
+      argv: ["node", "quiet-core-bot", "upate"],
     });
 
     expect(output).toBe(
@@ -25,33 +25,33 @@ describe("formatCliParseErrorOutput", () => {
 
   it("suggests explicit aliases for common adjacent terminology", () => {
     const output = formatCliParseErrorOutput("error: unknown command 'upgrade'\n", {
-      argv: ["node", "openclaw", "upgrade"],
+      argv: ["node", "quiet-core-bot", "upgrade"],
     });
 
     expect(output).toContain("Did you mean this?\n  quiet-core-bot update\n");
   });
 
   it("preserves active profile context in command suggestions", () => {
-    const originalProfile = process.env.OPENCLAW_PROFILE;
-    process.env.OPENCLAW_PROFILE = "work";
+    const originalProfile = process.env.QUIET_CORE_PROFILE;
+    process.env.QUIET_CORE_PROFILE = "work";
     try {
       const output = formatCliParseErrorOutput("error: unknown command 'doctr'\n", {
-        argv: ["node", "openclaw", "doctr"],
+        argv: ["node", "quiet-core-bot", "doctr"],
       });
 
       expect(output).toContain("Did you mean this?\n  quiet-core-bot --profile work doctor\n");
     } finally {
       if (originalProfile === undefined) {
-        delete process.env.OPENCLAW_PROFILE;
+        delete process.env.QUIET_CORE_PROFILE;
       } else {
-        process.env.OPENCLAW_PROFILE = originalProfile;
+        process.env.QUIET_CORE_PROFILE = originalProfile;
       }
     }
   });
 
   it("points unknown options at the active command help", () => {
     const output = formatCliParseErrorOutput("error: unknown option '--wat'\n", {
-      argv: ["node", "openclaw", "channels", "status", "--wat"],
+      argv: ["node", "quiet-core-bot", "channels", "status", "--wat"],
     });
 
     expect(output).toBe(
@@ -61,7 +61,7 @@ describe("formatCliParseErrorOutput", () => {
 
   it("points missing required arguments at command help", () => {
     const output = formatCliParseErrorOutput("error: missing required argument 'name'\n", {
-      argv: ["node", "openclaw", "plugins", "install"],
+      argv: ["node", "quiet-core-bot", "plugins", "install"],
     });
 
     expect(output).toBe(

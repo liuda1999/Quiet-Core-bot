@@ -1,7 +1,7 @@
 /**
  * Selects and invokes native agent harnesses for embedded run attempts.
  */
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import {
   createChildDiagnosticTraceContext,
   createDiagnosticTraceContext,
@@ -35,7 +35,7 @@ import {
   normalizeToolName,
   resolveToolProfilePolicy,
 } from "../tool-policy.js";
-import { createOpenClawAgentHarness } from "./builtin-openclaw.js";
+import { createOpenClawAgentHarness } from "./builtin-quiet-core-bot.js";
 import { MissingAgentHarnessError } from "./errors.js";
 import { runAgentHarnessLifecycleAttempt } from "./lifecycle.js";
 import {
@@ -70,16 +70,16 @@ type AgentHarnessSelectionDecision = {
   policy: AgentHarnessPolicy;
   selectedHarnessId: string;
   selectedReason:
-    | "forced_openclaw"
+    | "forced_quiet-core-bot"
     | "forced_plugin"
     // Implicit Codex preference found no registered Codex harness, so Quiet Core bot handled the run.
-    | "implicit_plugin_unavailable_openclaw"
+    | "implicit_plugin_unavailable_quiet-core-bot"
     // Provider-owned CLI runtime aliases have no agent harness plugin counterpart.
-    | "cli_runtime_passthrough_openclaw"
+    | "cli_runtime_passthrough_quiet-core-bot"
     // Auto mode chose a registered plugin harness that supports the provider/model.
     | "auto_plugin"
     // Auto mode found no supporting plugin harness, so Quiet Core bot handled the run.
-    | "auto_openclaw";
+    | "auto_quiet-core-bot";
   candidates: AgentHarnessSelectionCandidate[];
 };
 
@@ -136,7 +136,7 @@ function applyAgentHarnessAvailabilityPolicy(policy: AgentHarnessPolicy): AgentH
   ) {
     return {
       ...policy,
-      runtime: "openclaw",
+      runtime: "quiet-core-bot",
     };
   }
   return policy;
@@ -189,11 +189,11 @@ function selectAgentHarnessDecision(params: {
   const pluginHarnesses = listPluginAgentHarnesses();
   const openClawHarness = createOpenClawAgentHarness();
   const runtime = policy.runtime;
-  if (runtime === "openclaw") {
+  if (runtime === "quiet-core-bot") {
     return buildSelectionDecision({
       harness: openClawHarness,
       policy,
-      selectedReason: "forced_openclaw",
+      selectedReason: "forced_quiet-core-bot",
       candidates: listHarnessCandidates(pluginHarnesses),
     });
   }
@@ -218,9 +218,9 @@ function selectAgentHarnessDecision(params: {
           harness: openClawHarness,
           policy: {
             ...policy,
-            runtime: "openclaw",
+            runtime: "quiet-core-bot",
           },
-          selectedReason: "cli_runtime_passthrough_openclaw",
+          selectedReason: "cli_runtime_passthrough_quiet-core-bot",
           candidates: listHarnessCandidates(pluginHarnesses),
         });
       }
@@ -235,9 +235,9 @@ function selectAgentHarnessDecision(params: {
         harness: openClawHarness,
         policy: {
           ...policy,
-          runtime: "openclaw",
+          runtime: "quiet-core-bot",
         },
-        selectedReason: "implicit_plugin_unavailable_openclaw",
+        selectedReason: "implicit_plugin_unavailable_quiet-core-bot",
         candidates: listHarnessCandidates(pluginHarnesses),
       });
     }
@@ -252,9 +252,9 @@ function selectAgentHarnessDecision(params: {
         harness: openClawHarness,
         policy: {
           ...policy,
-          runtime: "openclaw",
+          runtime: "quiet-core-bot",
         },
-        selectedReason: "cli_runtime_passthrough_openclaw",
+        selectedReason: "cli_runtime_passthrough_quiet-core-bot",
         candidates: listHarnessCandidates(pluginHarnesses),
       });
     }
@@ -292,7 +292,7 @@ function selectAgentHarnessDecision(params: {
   return buildSelectionDecision({
     harness: openClawHarness,
     policy,
-    selectedReason: "auto_openclaw",
+    selectedReason: "auto_quiet-core-bot",
     candidates: candidates.map(toSelectionCandidate),
   });
 }
@@ -315,7 +315,7 @@ export async function runAgentHarnessAttempt(
   });
   const harness = selection.harness;
   const attemptParams =
-    harness.id === "openclaw" ? params : applyPluginHarnessDenyAllToolPolicy(params);
+    harness.id === "quiet-core-bot" ? params : applyPluginHarnessDenyAllToolPolicy(params);
   logAgentHarnessSelection(selection, {
     provider: params.provider,
     modelId: params.modelId,
@@ -323,7 +323,7 @@ export async function runAgentHarnessAttempt(
     agentId: params.agentId,
   });
   const runAttempt = () => runAgentHarnessLifecycleAttempt(harness, attemptParams);
-  if (harness.id === "openclaw") {
+  if (harness.id === "quiet-core-bot") {
     return await runWithDiagnosticTraceContext(harnessTrace, runAttempt);
   }
 

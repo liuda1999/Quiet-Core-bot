@@ -7,7 +7,7 @@ import os from "node:os";
 import path from "node:path";
 import { applyMergePatch } from "../../config/merge-patch.js";
 import type { CliBackendConfig } from "../../config/types.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { tryReadJson } from "../../infra/json-files.js";
 import { extractMcpServerMap, type BundleMcpConfig } from "../../plugins/bundle-mcp.js";
 import type { CliBundleMcpMode } from "../../plugins/types.js";
@@ -57,7 +57,7 @@ function normalizeOpenClawLoopbackUrl(value: string): string {
   if (!match) {
     return value;
   }
-  return `${match[1]}:<openclaw-loopback>${match[2]}`;
+  return `${match[1]}:<quiet-core-bot-loopback>${match[2]}`;
 }
 
 function canonicalizeBundleMcpConfigForResume(config: BundleMcpConfig): BundleMcpConfig {
@@ -65,7 +65,7 @@ function canonicalizeBundleMcpConfigForResume(config: BundleMcpConfig): BundleMc
   // hashing so resume compatibility tracks config shape, not ephemeral ports.
   const canonicalServers = Object.fromEntries(
     Object.entries(config.mcpServers).map(([name, server]) => {
-      if (name !== "openclaw" || typeof server.url !== "string") {
+      if (name !== "quiet-core-bot" || typeof server.url !== "string") {
         return [name, sortJsonValue(server)];
       }
       return [
@@ -82,14 +82,14 @@ function canonicalizeBundleMcpConfigForResume(config: BundleMcpConfig): BundleMc
   };
 }
 
-const OPENCLAW_MCP_ENV_TEMPLATE_PATTERN = /\$\{(OPENCLAW_MCP_[A-Z0-9_]+)\}/g;
+const QUIET_CORE_MCP_ENV_TEMPLATE_PATTERN = /\$\{(QUIET_CORE_MCP_[A-Z0-9_]+)\}/g;
 
 function resolveOpenClawMcpEnvTemplates(value: unknown, env?: Record<string, string>): unknown {
   if (!env) {
     return value;
   }
   if (typeof value === "string") {
-    return value.replace(OPENCLAW_MCP_ENV_TEMPLATE_PATTERN, (match, name: string) => {
+    return value.replace(QUIET_CORE_MCP_ENV_TEMPLATE_PATTERN, (match, name: string) => {
       return Object.hasOwn(env, name) ? env[name] : match;
     });
   }
@@ -146,7 +146,7 @@ async function prepareModeSpecificBundleMcpConfig(params: {
     };
   }
 
-  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-cli-mcp-"));
+  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-cli-mcp-"));
   const mcpConfigPath = path.join(tempDir, "mcp.json");
   const runtimeConfig = resolveOpenClawMcpEnvTemplates(
     params.mergedConfig,
@@ -258,7 +258,7 @@ export async function prepareCliBundleMcpCaptureAttempt(params: {
   return {
     env: {
       ...params.env,
-      OPENCLAW_MCP_CLI_CAPTURE_KEY: params.captureKey,
+      QUIET_CORE_MCP_CLI_CAPTURE_KEY: params.captureKey,
     },
   };
 }

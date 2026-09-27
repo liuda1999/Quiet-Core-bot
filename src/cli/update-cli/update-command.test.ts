@@ -25,18 +25,18 @@ import {
 
 describe("resolveGatewayInstallEntrypointCandidates", () => {
   it("prefers index.js before legacy entry.js", () => {
-    expect(resolveGatewayInstallEntrypointCandidates("/tmp/openclaw-root")).toEqual([
-      path.join("/tmp/openclaw-root", "dist", "index.js"),
-      path.join("/tmp/openclaw-root", "dist", "index.mjs"),
-      path.join("/tmp/openclaw-root", "dist", "entry.js"),
-      path.join("/tmp/openclaw-root", "dist", "entry.mjs"),
+    expect(resolveGatewayInstallEntrypointCandidates("/tmp/quiet-core-bot-root")).toEqual([
+      path.join("/tmp/quiet-core-bot-root", "dist", "index.js"),
+      path.join("/tmp/quiet-core-bot-root", "dist", "index.mjs"),
+      path.join("/tmp/quiet-core-bot-root", "dist", "entry.js"),
+      path.join("/tmp/quiet-core-bot-root", "dist", "entry.mjs"),
     ]);
   });
 });
 
 describe("resolveGatewayInstallEntrypoint", () => {
   it("prefers dist/index.js over dist/entry.js when both exist", async () => {
-    const root = "/tmp/openclaw-root";
+    const root = "/tmp/quiet-core-bot-root";
     const indexPath = path.join(root, "dist", "index.js");
     const entryPath = path.join(root, "dist", "entry.js");
 
@@ -49,7 +49,7 @@ describe("resolveGatewayInstallEntrypoint", () => {
   });
 
   it("falls back to dist/entry.js when index.js is missing", async () => {
-    const root = "/tmp/openclaw-root";
+    const root = "/tmp/quiet-core-bot-root";
     const entryPath = path.join(root, "dist", "entry.js");
 
     await expect(
@@ -122,8 +122,8 @@ describe("resolveUpdatedGatewayRestartPort", () => {
     expect(
       resolveUpdatedGatewayRestartPort({
         config: { gateway: { port: 19000 } } as never,
-        processEnv: { OPENCLAW_GATEWAY_PORT: "19001" },
-        serviceEnv: { OPENCLAW_GATEWAY_PORT: "19002" },
+        processEnv: { QUIET_CORE_GATEWAY_PORT: "19001" },
+        serviceEnv: { QUIET_CORE_GATEWAY_PORT: "19002" },
       }),
     ).toBe(19002);
   });
@@ -142,12 +142,12 @@ describe("resolveUpdatedGatewayRestartPort", () => {
 describe("resolvePostUpdateServiceStateReadEnv", () => {
   it("keeps package restart preparation anchored to the pre-update service env", () => {
     const processEnv = {
-      OPENCLAW_STATE_DIR: "/source/state",
-      OPENCLAW_CONFIG_PATH: "/source/openclaw.json",
+      QUIET_CORE_STATE_DIR: "/source/state",
+      QUIET_CORE_CONFIG_PATH: "/source/quiet-core-bot.json",
     } as NodeJS.ProcessEnv;
     const prePackageServiceEnv = {
-      OPENCLAW_STATE_DIR: "/managed/state",
-      OPENCLAW_CONFIG_PATH: "/managed/openclaw.json",
+      QUIET_CORE_STATE_DIR: "/managed/state",
+      QUIET_CORE_CONFIG_PATH: "/managed/quiet-core-bot.json",
     } as NodeJS.ProcessEnv;
 
     expect(
@@ -160,8 +160,8 @@ describe("resolvePostUpdateServiceStateReadEnv", () => {
   });
 
   it("keeps git updates tied to the caller environment", () => {
-    const processEnv = { OPENCLAW_STATE_DIR: "/source/state" } as NodeJS.ProcessEnv;
-    const prePackageServiceEnv = { OPENCLAW_STATE_DIR: "/managed/state" } as NodeJS.ProcessEnv;
+    const processEnv = { QUIET_CORE_STATE_DIR: "/source/state" } as NodeJS.ProcessEnv;
+    const prePackageServiceEnv = { QUIET_CORE_STATE_DIR: "/managed/state" } as NodeJS.ProcessEnv;
 
     expect(
       resolvePostUpdateServiceStateReadEnv({
@@ -173,8 +173,8 @@ describe("resolvePostUpdateServiceStateReadEnv", () => {
   });
 
   it("uses the managed service environment for git updates stopped by this updater", () => {
-    const processEnv = { OPENCLAW_STATE_DIR: "/source/state" } as NodeJS.ProcessEnv;
-    const preManagedServiceEnv = { OPENCLAW_STATE_DIR: "/managed/state" } as NodeJS.ProcessEnv;
+    const processEnv = { QUIET_CORE_STATE_DIR: "/source/state" } as NodeJS.ProcessEnv;
+    const preManagedServiceEnv = { QUIET_CORE_STATE_DIR: "/managed/state" } as NodeJS.ProcessEnv;
 
     expect(
       resolvePostUpdateServiceStateReadEnv({
@@ -189,61 +189,61 @@ describe("resolvePostUpdateServiceStateReadEnv", () => {
 describe("resolvePostInstallDoctorEnv", () => {
   it("uses the managed service profile paths for post-install doctor", () => {
     const env = resolvePostInstallDoctorEnv({
-      invocationCwd: "/srv/openclaw",
+      invocationCwd: "/srv/quiet-core-bot",
       baseEnv: {
         PATH: "/bin",
-        OPENCLAW_STATE_DIR: "/wrong/state",
-        OPENCLAW_CONFIG_PATH: "/wrong/openclaw.json",
-        OPENCLAW_PROFILE: "wrong",
+        QUIET_CORE_STATE_DIR: "/wrong/state",
+        QUIET_CORE_CONFIG_PATH: "/wrong/quiet-core-bot.json",
+        QUIET_CORE_PROFILE: "wrong",
       },
       serviceEnv: {
-        OPENCLAW_STATE_DIR: "daemon-state",
-        OPENCLAW_CONFIG_PATH: "daemon-state/openclaw.json",
-        OPENCLAW_PROFILE: "work",
+        QUIET_CORE_STATE_DIR: "daemon-state",
+        QUIET_CORE_CONFIG_PATH: "daemon-state/quiet-core-bot.json",
+        QUIET_CORE_PROFILE: "work",
       },
     });
 
     expect(env.PATH).toBe("/bin");
     expect(env.NODE_DISABLE_COMPILE_CACHE).toBe("1");
-    expect(env.OPENCLAW_STATE_DIR).toBe(path.join("/srv/openclaw", "daemon-state"));
-    expect(env.OPENCLAW_CONFIG_PATH).toBe(
-      path.join("/srv/openclaw", "daemon-state", "openclaw.json"),
+    expect(env.QUIET_CORE_STATE_DIR).toBe(path.join("/srv/quiet-core-bot", "daemon-state"));
+    expect(env.QUIET_CORE_CONFIG_PATH).toBe(
+      path.join("/srv/quiet-core-bot", "daemon-state", "quiet-core-bot.json"),
     );
-    expect(env.OPENCLAW_PROFILE).toBe("work");
+    expect(env.QUIET_CORE_PROFILE).toBe("work");
   });
 
   it("keeps the caller env when no managed service env is available", () => {
     const env = resolvePostInstallDoctorEnv({
       baseEnv: {
         PATH: "/bin",
-        OPENCLAW_STATE_DIR: "/caller/state",
-        OPENCLAW_PROFILE: "caller",
+        QUIET_CORE_STATE_DIR: "/caller/state",
+        QUIET_CORE_PROFILE: "caller",
       },
     });
 
     expect(env.PATH).toBe("/bin");
     expect(env.NODE_DISABLE_COMPILE_CACHE).toBe("1");
-    expect(env.OPENCLAW_STATE_DIR).toBe("/caller/state");
-    expect(env.OPENCLAW_PROFILE).toBe("caller");
+    expect(env.QUIET_CORE_STATE_DIR).toBe("/caller/state");
+    expect(env.QUIET_CORE_PROFILE).toBe("caller");
   });
 });
 
 describe("collectMissingPluginInstallPayloads", () => {
   it("reports tracked npm install records whose package payload is absent", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-update-plugin-payload-"));
-    const presentDir = path.join(tmpDir, "state", "npm", "node_modules", "@openclaw", "present");
-    const missingDir = path.join(tmpDir, "state", "npm", "node_modules", "@openclaw", "missing");
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-update-plugin-payload-"));
+    const presentDir = path.join(tmpDir, "state", "npm", "node_modules", "@quiet-core-bot", "present");
+    const missingDir = path.join(tmpDir, "state", "npm", "node_modules", "@quiet-core-bot", "missing");
     const noPackageJsonDir = path.join(
       tmpDir,
       "state",
       "npm",
       "node_modules",
-      "@openclaw",
+      "@quiet-core-bot",
       "no-package-json",
     );
     try {
       await fs.mkdir(presentDir, { recursive: true });
-      await fs.writeFile(path.join(presentDir, "package.json"), '{"name":"@openclaw/present"}\n');
+      await fs.writeFile(path.join(presentDir, "package.json"), '{"name":"@quiet-core/present"}\n');
       await fs.mkdir(noPackageJsonDir, { recursive: true });
 
       await expect(
@@ -252,22 +252,22 @@ describe("collectMissingPluginInstallPayloads", () => {
           records: {
             present: {
               source: "npm",
-              spec: "@openclaw/present@beta",
+              spec: "@quiet-core/present@beta",
               installPath: presentDir,
             },
             missing: {
               source: "npm",
-              spec: "@openclaw/missing@beta",
+              spec: "@quiet-core/missing@beta",
               installPath: missingDir,
             },
             "no-package-json": {
               source: "npm",
-              spec: "@openclaw/no-package-json@beta",
+              spec: "@quiet-core/no-package-json@beta",
               installPath: noPackageJsonDir,
             },
             "missing-install-path": {
               source: "npm",
-              spec: "@openclaw/missing-install-path@beta",
+              spec: "@quiet-core/missing-install-path@beta",
             },
             local: {
               source: "path",
@@ -298,8 +298,8 @@ describe("collectMissingPluginInstallPayloads", () => {
   });
 
   it("skips disabled tracked records when requested", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-update-plugin-payload-"));
-    const missingDir = path.join(tmpDir, "state", "npm", "node_modules", "@openclaw", "missing");
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-update-plugin-payload-"));
+    const missingDir = path.join(tmpDir, "state", "npm", "node_modules", "@quiet-core-bot", "missing");
     try {
       await expect(
         collectMissingPluginInstallPayloads({
@@ -317,7 +317,7 @@ describe("collectMissingPluginInstallPayloads", () => {
           records: {
             missing: {
               source: "npm",
-              spec: "@openclaw/missing@beta",
+              spec: "@quiet-core/missing@beta",
               installPath: missingDir,
             },
           },
@@ -329,8 +329,8 @@ describe("collectMissingPluginInstallPayloads", () => {
   });
 
   it("keeps disabled trusted official npm records eligible for payload repair when requested", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-update-plugin-payload-"));
-    const missingDir = path.join(tmpDir, "state", "npm", "node_modules", "@openclaw", "codex");
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-update-plugin-payload-"));
+    const missingDir = path.join(tmpDir, "state", "npm", "node_modules", "@quiet-core-bot", "codex");
     try {
       await expect(
         collectMissingPluginInstallPayloads({
@@ -349,9 +349,9 @@ describe("collectMissingPluginInstallPayloads", () => {
           records: {
             codex: {
               source: "npm",
-              spec: "@openclaw/codex@2026.5.3",
-              resolvedName: "@openclaw/codex",
-              resolvedSpec: "@openclaw/codex@2026.5.3",
+              spec: "@quiet-core/codex@2026.5.3",
+              resolvedName: "@quiet-core/codex",
+              resolvedSpec: "@quiet-core/codex@2026.5.3",
               installPath: missingDir,
             },
           },
@@ -369,7 +369,7 @@ describe("collectMissingPluginInstallPayloads", () => {
   });
 
   it("keeps disabled trusted official ClawHub records eligible for payload repair when requested", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-update-plugin-payload-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-update-plugin-payload-"));
     const missingDir = path.join(tmpDir, "state", "clawhub", "diagnostics-otel");
     try {
       await expect(
@@ -389,7 +389,7 @@ describe("collectMissingPluginInstallPayloads", () => {
           records: {
             "diagnostics-otel": {
               source: "clawhub",
-              spec: "clawhub:@openclaw/diagnostics-otel@2026.5.3",
+              spec: "clawhub:@quiet-core/diagnostics-otel@2026.5.3",
               installPath: missingDir,
             },
           },
@@ -468,8 +468,8 @@ describe("formatPostUpdateGatewayRecoveryInstructions", () => {
 describe("recoverInstalledLaunchAgentAfterUpdate", () => {
   it("re-bootstraps an installed-but-not-loaded macOS LaunchAgent after update", async () => {
     const service = {} as never;
-    const serviceEnv = { OPENCLAW_PROFILE: "stomme" } as NodeJS.ProcessEnv;
-    const recoveredEnv = { ...serviceEnv, OPENCLAW_PORT: "18790" } as NodeJS.ProcessEnv;
+    const serviceEnv = { QUIET_CORE_PROFILE: "stomme" } as NodeJS.ProcessEnv;
+    const recoveredEnv = { ...serviceEnv, QUIET_CORE_PORT: "18790" } as NodeJS.ProcessEnv;
     const readState = vi.fn(async () => ({
       installed: true,
       loaded: false,
@@ -528,7 +528,7 @@ describe("recoverInstalledLaunchAgentAfterUpdate", () => {
       installed: true,
       loaded: true,
       running: true,
-      env: { OPENCLAW_PROFILE: "stomme" } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_PROFILE: "stomme" } as NodeJS.ProcessEnv,
       command: null,
       runtime: { status: "running" },
     }));
@@ -553,7 +553,7 @@ describe("recoverInstalledLaunchAgentAfterUpdate", () => {
       installed: true,
       loaded: false,
       running: false,
-      env: { OPENCLAW_PROFILE: "stomme" } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_PROFILE: "stomme" } as NodeJS.ProcessEnv,
       command: null,
       runtime: { status: "unknown", missingSupervision: true },
     }));
@@ -608,7 +608,7 @@ describe("recoverLaunchAgentAndRecheckGatewayHealth", () => {
         service,
         port: 18790,
         expectedVersion: "2026.5.3",
-        env: { OPENCLAW_PROFILE: "stomme", OPENCLAW_PORT: "18790" },
+        env: { QUIET_CORE_PROFILE: "stomme", QUIET_CORE_PORT: "18790" },
         deps: { recoverLaunchAgent, waitForHealthy },
       }),
     ).resolves.toEqual({
@@ -625,7 +625,7 @@ describe("recoverLaunchAgentAndRecheckGatewayHealth", () => {
       service,
       port: 18790,
       expectedVersion: "2026.5.3",
-      env: { OPENCLAW_PROFILE: "stomme", OPENCLAW_PORT: "18790" },
+      env: { QUIET_CORE_PROFILE: "stomme", QUIET_CORE_PORT: "18790" },
     });
   });
 
@@ -686,7 +686,7 @@ describe("updatePluginsAfterCoreUpdate (invalid config end-to-end)", () => {
     // config is sufficient to prove the gate fires end-to-end. We pass
     // `json: true` to suppress logging side-effects without mocking.
     const result = await updatePluginsAfterCoreUpdate({
-      root: "/tmp/openclaw-test",
+      root: "/tmp/quiet-core-bot-test",
       channel: "stable",
       configSnapshot: {
         valid: false,

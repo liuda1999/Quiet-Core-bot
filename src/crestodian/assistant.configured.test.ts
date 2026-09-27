@@ -5,7 +5,7 @@ import { planCrestodianCommandWithConfiguredModel } from "./assistant.js";
 describe("Crestodian configured-model planner", () => {
   it("skips the configured model path when no config file exists", async () => {
     const readConfigFileSnapshot = vi.fn(async () => ({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/quiet-core-bot.json",
       exists: false,
       raw: null,
       parsed: {},
@@ -25,7 +25,7 @@ describe("Crestodian configured-model planner", () => {
         input: "please set up my model",
         overview: {
           config: {
-            path: "/tmp/openclaw.json",
+            path: "/tmp/quiet-core-bot.json",
             exists: false,
             valid: true,
             issues: [],
@@ -45,7 +45,7 @@ describe("Crestodian configured-model planner", () => {
           },
           references: {
             docsUrl: "https://github.com/liuda1999/Quiet-Core-bot",
-            sourceUrl: "https://github.com/openclaw/openclaw",
+            sourceUrl: "https://github.com/liuda1999/Quiet-Core-bot",
           },
         },
         deps: {

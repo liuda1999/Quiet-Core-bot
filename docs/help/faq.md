@@ -52,7 +52,7 @@ Quick answers plus deeper troubleshooting for real-world setups (local dev, VPS,
    If RPC is down, fall back to:
 
    ```bash
-   tail -f "$(ls -t /tmp/openclaw/openclaw-*.log | head -1)"
+   tail -f "$(ls -t /tmp/quiet-core-bot/quiet-core-bot-*.log | head -1)"
    ```
 
    File logs are separate from service logs; see [Logging](/logging) and [Troubleshooting](/gateway/troubleshooting).
@@ -272,7 +272,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
 
     Checklist:
 
-    - Confirm cron is enabled (`cron.enabled`) and `OPENCLAW_SKIP_CRON` is not set.
+    - Confirm cron is enabled (`cron.enabled`) and `QUIET_CORE_SKIP_CRON` is not set.
     - Check the Gateway is running 24/7 (no sleep/restarts).
     - Verify timezone settings for the job (`--tz` vs host timezone).
 
@@ -378,7 +378,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
   </Accordion>
 
   <Accordion title="Can I run Apple macOS-only skills from Linux?">
-    Not directly. macOS skills are gated by `metadata.openclaw.os` plus required binaries, and skills only appear in the system prompt when they are eligible on the **Gateway host**. On Linux, `darwin`-only skills (like `apple-notes`, `apple-reminders`, `things-mac`) will not load unless you override the gating.
+    Not directly. macOS skills are gated by `metadata.quiet-core-bot.os` plus required binaries, and skills only appear in the system prompt when they are eligible on the **Gateway host**. On Linux, `darwin`-only skills (like `apple-notes`, `apple-reminders`, `things-mac`) will not load unless you override the gating.
 
     You have three supported patterns:
 
@@ -406,7 +406,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
        ---
        name: apple-notes
        description: Manage Apple Notes via the memo CLI on macOS.
-       metadata: { "openclaw": { "os": ["darwin", "linux"], "requires": { "bins": ["memo"] } } }
+       metadata: { "quiet-core-bot": { "os": ["darwin", "linux"], "requires": { "bins": ["memo"] } } }
        ---
        ```
 
@@ -478,8 +478,8 @@ lives on the [First-run FAQ](/help/faq-first-run).
     The default image is security-first and runs as the `node` user, so it does not
     include system packages, Homebrew, or bundled browsers. For a fuller setup:
 
-    - Persist `/home/node` with `OPENCLAW_HOME_VOLUME` so caches survive.
-    - Bake system deps into the image with `OPENCLAW_IMAGE_APT_PACKAGES`.
+    - Persist `/home/node` with `QUIET_CORE_HOME_VOLUME` so caches survive.
+    - Bake system deps into the image with `QUIET_CORE_IMAGE_APT_PACKAGES`.
     - Install Playwright browsers via the bundled CLI:
       `node /app/node_modules/playwright-core/cli.js install chromium`
     - Set `PLAYWRIGHT_BROWSERS_PATH` and ensure the path is persisted.
@@ -582,19 +582,19 @@ lives on the [First-run FAQ](/help/faq-first-run).
   </Accordion>
 
   <Accordion title="Where does Quiet Core bot store its data?">
-    Everything lives under `$OPENCLAW_STATE_DIR` (default: `~/.quiet-core-bot`):
+    Everything lives under `$QUIET_CORE_STATE_DIR` (default: `~/.quiet-core-bot`):
 
     | Path                                                            | Purpose                                                            |
     | --------------------------------------------------------------- | ------------------------------------------------------------------ |
-    | `$OPENCLAW_STATE_DIR/quiet-core-bot.json`                             | Main config (JSON5)                                                |
-    | `$OPENCLAW_STATE_DIR/credentials/oauth.json`                    | Legacy OAuth import (copied into auth profiles on first use)       |
-    | `$OPENCLAW_STATE_DIR/agents/<agentId>/agent/auth-profiles.json` | Auth profiles (OAuth, API keys, and optional `keyRef`/`tokenRef`)  |
-    | `$OPENCLAW_STATE_DIR/secrets.json`                              | Optional file-backed secret payload for `file` SecretRef providers |
-    | `$OPENCLAW_STATE_DIR/agents/<agentId>/agent/auth.json`          | Legacy compatibility file (static `api_key` entries scrubbed)      |
-    | `$OPENCLAW_STATE_DIR/credentials/`                              | Provider state (e.g. `whatsapp/<accountId>/creds.json`)            |
-    | `$OPENCLAW_STATE_DIR/agents/`                                   | Per-agent state (agentDir + sessions)                              |
-    | `$OPENCLAW_STATE_DIR/agents/<agentId>/sessions/`                | Conversation history & state (per agent)                           |
-    | `$OPENCLAW_STATE_DIR/agents/<agentId>/sessions/sessions.json`   | Session metadata (per agent)                                       |
+    | `$QUIET_CORE_STATE_DIR/quiet-core-bot.json`                             | Main config (JSON5)                                                |
+    | `$QUIET_CORE_STATE_DIR/credentials/oauth.json`                    | Legacy OAuth import (copied into auth profiles on first use)       |
+    | `$QUIET_CORE_STATE_DIR/agents/<agentId>/agent/auth-profiles.json` | Auth profiles (OAuth, API keys, and optional `keyRef`/`tokenRef`)  |
+    | `$QUIET_CORE_STATE_DIR/secrets.json`                              | Optional file-backed secret payload for `file` SecretRef providers |
+    | `$QUIET_CORE_STATE_DIR/agents/<agentId>/agent/auth.json`          | Legacy compatibility file (static `api_key` entries scrubbed)      |
+    | `$QUIET_CORE_STATE_DIR/credentials/`                              | Provider state (e.g. `whatsapp/<accountId>/creds.json`)            |
+    | `$QUIET_CORE_STATE_DIR/agents/`                                   | Per-agent state (agentDir + sessions)                              |
+    | `$QUIET_CORE_STATE_DIR/agents/<agentId>/sessions/`                | Conversation history & state (per agent)                           |
+    | `$QUIET_CORE_STATE_DIR/agents/<agentId>/sessions/sessions.json`   | Session metadata (per agent)                                       |
 
     Legacy single-agent path: `~/.quiet-core-bot/agent/*` (migrated by `quiet-core-bot doctor`).
 
@@ -722,10 +722,10 @@ lives on the [First-run FAQ](/help/faq-first-run).
 
 <AccordionGroup>
   <Accordion title="What format is the config? Where is it?">
-    Quiet Core bot reads an optional **JSON5** config from `$OPENCLAW_CONFIG_PATH` (default: `~/.quiet-core-bot/quiet-core-bot.json`):
+    Quiet Core bot reads an optional **JSON5** config from `$QUIET_CORE_CONFIG_PATH` (default: `~/.quiet-core-bot/quiet-core-bot.json`):
 
     ```
-    $OPENCLAW_CONFIG_PATH
+    $QUIET_CORE_CONFIG_PATH
     ```
 
     If the file is missing, it uses safe-ish defaults (including a default workspace of `~/.quiet-core-bot/workspace`).
@@ -754,7 +754,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
 
     - `gateway.remote.token` / `.password` do **not** enable local gateway auth by themselves.
     - Local call paths can use `gateway.remote.*` as fallback only when `gateway.auth.*` is unset.
-    - For password auth, set `gateway.auth.mode: "password"` plus `gateway.auth.password` (or `OPENCLAW_GATEWAY_PASSWORD`) instead.
+    - For password auth, set `gateway.auth.mode: "password"` plus `gateway.auth.password` (or `QUIET_CORE_GATEWAY_PASSWORD`) instead.
     - If `gateway.auth.token` / `gateway.auth.password` is explicitly configured via SecretRef and unresolved, resolution fails closed (no remote fallback masking).
     - Shared-secret Control UI setups authenticate via `connect.params.auth.token` or `connect.params.auth.password` (stored in app/UI settings). Identity-bearing modes such as Tailscale Serve or `trusted-proxy` use request headers instead. Avoid putting shared secrets in URLs.
     - With `gateway.auth.mode: "trusted-proxy"`, same-host loopback reverse proxies require explicit `gateway.auth.trustedProxy.allowLoopback = true` and a loopback entry in `gateway.trustedProxies`.
@@ -762,7 +762,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
   </Accordion>
 
   <Accordion title="Why do I need a token on localhost now?">
-    Quiet Core bot enforces gateway auth by default, including loopback. In the normal default path that means token auth: if no explicit auth path is configured, gateway startup resolves to token mode and generates a runtime-only token for that startup, so **local WS clients must authenticate**. Configure `gateway.auth.token`, `gateway.auth.password`, `OPENCLAW_GATEWAY_TOKEN`, or `OPENCLAW_GATEWAY_PASSWORD` explicitly when clients need a stable secret across restarts. This blocks other local processes from calling the Gateway.
+    Quiet Core bot enforces gateway auth by default, including loopback. In the normal default path that means token auth: if no explicit auth path is configured, gateway startup resolves to token mode and generates a runtime-only token for that startup, so **local WS clients must authenticate**. Configure `gateway.auth.token`, `gateway.auth.password`, `QUIET_CORE_GATEWAY_TOKEN`, or `QUIET_CORE_GATEWAY_PASSWORD` explicitly when clients need a stable secret across restarts. This blocks other local processes from calling the Gateway.
 
     If you prefer a different auth path, you can explicitly choose password mode (or, for identity-aware reverse proxies, `trusted-proxy`). If you **really** want open loopback, set `gateway.auth.mode: "none"` explicitly in your config. Doctor can generate a token for you any time: `quiet-core-bot doctor --generate-gateway-token`.
 
@@ -792,7 +792,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
     - `off`: hides tagline text but keeps the banner title/version line.
     - `default`: uses `All your chats, one Quiet Core bot.` every time.
     - `random`: rotating funny/seasonal taglines (default behavior).
-    - If you want no banner at all, set env `OPENCLAW_HIDE_BANNER=1`.
+    - If you want no banner at all, set env `QUIET_CORE_HIDE_BANNER=1`.
 
   </Accordion>
 
@@ -1005,14 +1005,14 @@ lives on the [First-run FAQ](/help/faq-first-run).
     Have Bot A send a message to Bot B, then let Bot B reply as usual.
 
     **CLI bridge (generic):** run a script that calls the other Gateway with
-    `openclaw agent --message ... --deliver`, targeting a chat where the other bot
+    `quiet-core-bot agent --message ... --deliver`, targeting a chat where the other bot
     listens. If one bot is on a remote VPS, point your CLI at that remote Gateway
     via SSH/Tailscale (see [Remote access](/gateway/remote)).
 
     Example pattern (run from a machine that can reach the target Gateway):
 
     ```bash
-    openclaw agent --message "Hello from local bot" --deliver --channel telegram --reply-to <chat-id>
+    quiet-core-bot agent --message "Hello from local bot" --deliver --channel telegram --reply-to <chat-id>
     ```
 
     Tip: add a guardrail so the two bots do not loop endlessly (mention-only, channel
@@ -1149,7 +1149,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
     Quiet Core bot reads env vars from the parent process (shell, launchd/systemd, CI, etc.) and additionally loads:
 
     - `.env` from the current working directory
-    - a global fallback `.env` from `~/.quiet-core-bot/.env` (aka `$OPENCLAW_STATE_DIR/.env`)
+    - a global fallback `.env` from `~/.quiet-core-bot/.env` (aka `$QUIET_CORE_STATE_DIR/.env`)
 
     Neither `.env` file overrides existing env vars.
     Provider credential variables are an exception for workspace `.env`: keys such as
@@ -1189,7 +1189,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
     ```
 
     This runs your login shell and imports only missing expected keys (never overrides). Env var equivalents:
-    `OPENCLAW_LOAD_SHELL_ENV=1`, `OPENCLAW_SHELL_ENV_TIMEOUT_MS=15000`.
+    `QUIET_CORE_LOAD_SHELL_ENV=1`, `QUIET_CORE_SHELL_ENV_TIMEOUT_MS=15000`.
 
   </Accordion>
 
@@ -1294,7 +1294,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
     Notes:
 
     - Onboarding also offers **Reset** if it sees an existing config. See [Onboarding (CLI)](/start/wizard).
-    - If you used profiles (`--profile` / `OPENCLAW_PROFILE`), reset each state dir (defaults are `~/.quiet-core-bot-<profile>`).
+    - If you used profiles (`--profile` / `QUIET_CORE_PROFILE`), reset each state dir (defaults are `~/.quiet-core-bot-<profile>`).
     - Dev reset: `quiet-core-bot gateway --dev --reset` (dev-only; wipes dev config + credentials + sessions + workspace).
 
   </Accordion>
@@ -1391,7 +1391,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
     Option 2 (if already configured/allowlisted): list groups from config:
 
     ```bash
-    openclaw directory groups list --channel whatsapp
+    quiet-core-bot directory groups list --channel whatsapp
     ```
 
     Docs: [WhatsApp](/channels/whatsapp), [Directory](/cli/directory), [Logs](/cli/logs).
@@ -1462,7 +1462,7 @@ lives on the [Models FAQ](/help/faq-models).
     Precedence:
 
     ```
-    --port > OPENCLAW_GATEWAY_PORT > gateway.port > default 18789
+    --port > QUIET_CORE_GATEWAY_PORT > gateway.port > default 18789
     ```
 
   </Accordion>
@@ -1479,7 +1479,7 @@ lives on the [Models FAQ](/help/faq-models).
   </Accordion>
 
   <Accordion title='Why does quiet-core-bot gateway status show "Config (cli)" and "Config (service)" different?'>
-    You're editing one config file while the service is running another (often a `--profile` / `OPENCLAW_STATE_DIR` mismatch).
+    You're editing one config file while the service is running another (often a `--profile` / `QUIET_CORE_STATE_DIR` mismatch).
 
     Fix:
 
@@ -1538,7 +1538,7 @@ lives on the [Models FAQ](/help/faq-models).
     - Fastest: `quiet-core-bot dashboard` (prints + copies the dashboard URL, tries to open; shows SSH hint if headless).
     - If you don't have a token yet: `quiet-core-bot doctor --generate-gateway-token`.
     - If remote, tunnel first: `ssh -N -L 18789:127.0.0.1:18789 user@host` then open `http://127.0.0.1:18789/`.
-    - Shared-secret mode: set `gateway.auth.token` / `OPENCLAW_GATEWAY_TOKEN` or `gateway.auth.password` / `OPENCLAW_GATEWAY_PASSWORD`, then paste the matching secret in Control UI settings.
+    - Shared-secret mode: set `gateway.auth.token` / `QUIET_CORE_GATEWAY_TOKEN` or `gateway.auth.password` / `QUIET_CORE_GATEWAY_PASSWORD`, then paste the matching secret in Control UI settings.
     - Tailscale Serve mode: make sure `gateway.auth.allowTailscale` is enabled and you are opening the Serve URL, not a raw loopback/tailnet URL that bypasses Tailscale identity headers.
     - Trusted-proxy mode: make sure you are coming through the configured identity-aware proxy, not a raw gateway URL. Same-host loopback proxies also need `gateway.auth.trustedProxy.allowLoopback = true`.
     - If mismatch persists after the one retry, rotate/re-approve the paired device token:
@@ -1568,8 +1568,8 @@ lives on the [Models FAQ](/help/faq-models).
 
     Yes, but you must isolate:
 
-    - `OPENCLAW_CONFIG_PATH` (per-instance config)
-    - `OPENCLAW_STATE_DIR` (per-instance state)
+    - `QUIET_CORE_CONFIG_PATH` (per-instance config)
+    - `QUIET_CORE_STATE_DIR` (per-instance state)
     - `agents.defaults.workspace` (workspace isolation)
     - `gateway.port` (unique ports)
 
@@ -1579,7 +1579,7 @@ lives on the [Models FAQ](/help/faq-models).
     - Set a unique `gateway.port` in each profile config (or pass `--port` for manual runs).
     - Install a per-profile service: `quiet-core-bot --profile <name> gateway install`.
 
-    Profiles also suffix service names (`ai.openclaw.<profile>`; legacy `com.openclaw.*`, `openclaw-gateway-<profile>.service`, `Quiet Core bot Gateway (<profile>)`).
+    Profiles also suffix service names (`ai.quiet-core-bot.<profile>`; legacy `com.openclaw.*`, `quiet-core-bot-gateway-<profile>.service`, `Quiet Core bot Gateway (<profile>)`).
     Full guide: [Multiple gateways](/gateway/multiple-gateways).
 
   </Accordion>
@@ -1619,7 +1619,7 @@ lives on the [Models FAQ](/help/faq-models).
     File logs (structured):
 
     ```
-    /tmp/openclaw/openclaw-YYYY-MM-DD.log
+    /tmp/quiet-core-bot/quiet-core-bot-YYYY-MM-DD.log
     ```
 
     You can set a stable path via `logging.file`. File log level is controlled by `logging.level`. Console verbosity is controlled by `--verbose` and `logging.consoleLevel`.
@@ -1632,8 +1632,8 @@ lives on the [Models FAQ](/help/faq-models).
 
     Service/supervisor logs (when the gateway runs via launchd/systemd):
 
-    - macOS launchd stdout: `~/Library/Logs/openclaw/gateway.log` (profiles use `gateway-<profile>.log`; stderr is suppressed)
-    - Linux: `journalctl --user -u openclaw-gateway[-<profile>].service -n 200 --no-pager`
+    - macOS launchd stdout: `~/Library/Logs/quiet-core-bot/gateway.log` (profiles use `gateway-<profile>.log`; stderr is suppressed)
+    - Linux: `journalctl --user -u quiet-core-bot-gateway[-<profile>].service -n 200 --no-pager`
     - Windows: `schtasks /Query /TN "Quiet Core bot Gateway (<profile>)" /V /FO LIST`
 
     See [Troubleshooting](/gateway/troubleshooting) for more.
@@ -1810,7 +1810,7 @@ lives on the [Models FAQ](/help/faq-models).
 
 <AccordionGroup>
   <Accordion title="My skill generated an image/PDF, but nothing was sent">
-    Outbound attachments from the agent must use structured media fields such as `media`, `mediaUrl`, `path`, or `filePath`. See [Quiet Core bot assistant setup](/start/openclaw) and [Agent send](/tools/agent-send).
+    Outbound attachments from the agent must use structured media fields such as `media`, `mediaUrl`, `path`, or `filePath`. See [Quiet Core bot assistant setup](/start/quiet-core-bot) and [Agent send](/tools/agent-send).
 
     CLI sending:
 
@@ -1881,7 +1881,7 @@ lives on the [Models FAQ](/help/faq-models).
     - use pairing and allowlists for DMs and groups
     - deny or sandbox risky tools for untrusted inputs
     - install only trusted plugins and skills
-    - run `openclaw security audit --deep` after config changes
+    - run `quiet-core-bot security audit --deep` after config changes
 
     Details: [Security](/gateway/security), [Sandboxing](/gateway/sandboxing).
 
@@ -1891,7 +1891,7 @@ lives on the [Models FAQ](/help/faq-models).
     First check your actual deployment:
 
     ```bash
-    openclaw security audit --deep
+    quiet-core-bot security audit --deep
     quiet-core-bot gateway status
     ```
 
@@ -2032,8 +2032,8 @@ lives on the [Models FAQ](/help/faq-models).
     stop current run
     stop agent
     stop the agent
-    stop openclaw
-    openclaw stop
+    stop quiet-core-bot
+    quiet-core-bot stop
     stop don't do anything
     stop do not do anything
     stop doing anything
@@ -2106,7 +2106,7 @@ lives on the [Models FAQ](/help/faq-models).
 
 ---
 
-Still stuck? Ask in [Discord](https://discord.com/invite/clawd) or open a [GitHub discussion](https://github.com/openclaw/openclaw/discussions).
+Still stuck? Ask in [Discord](https://discord.com/invite/clawd) or open a [GitHub discussion](https://github.com/liuda1999/Quiet-Core-bot/discussions).
 
 ## Related
 

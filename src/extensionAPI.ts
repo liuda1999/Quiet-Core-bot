@@ -1,19 +1,19 @@
 /**
  * @deprecated Legacy compat surface for plugins that still import
- * openclaw/extension-api. Use the injected plugin runtime or focused
- * openclaw/plugin-sdk subpaths instead.
+ * quiet-core-bot/extension-api. Use the injected plugin runtime or focused
+ * quiet-core-bot/plugin-sdk subpaths instead.
  */
 
 const shouldWarnExtensionApiImport =
   process.env.VITEST !== "true" &&
   process.env.NODE_ENV !== "test" &&
-  process.env.OPENCLAW_SUPPRESS_EXTENSION_API_WARNING !== "1";
+  process.env.QUIET_CORE_SUPPRESS_EXTENSION_API_WARNING !== "1";
 
 if (shouldWarnExtensionApiImport) {
   process.emitWarning(
-    "openclaw/extension-api is deprecated. Migrate to api.runtime.agent.* or focused openclaw/plugin-sdk/<subpath> imports. See https://github.com/liuda1999/Quiet-Core-bot/plugins/sdk-migration",
+    "quiet-core-bot/extension-api is deprecated. Migrate to api.runtime.agent.* or focused quiet-core-bot/plugin-sdk/<subpath> imports. See https://github.com/liuda1999/Quiet-Core-bot/plugins/sdk-migration",
     {
-      code: "OPENCLAW_EXTENSION_API_DEPRECATED",
+      code: "QUIET_CORE_EXTENSION_API_DEPRECATED",
       detail:
         "This compatibility bridge is temporary. Bundled plugins should use the injected plugin runtime instead of importing host-side agent helpers directly. Migration guide: https://github.com/liuda1999/Quiet-Core-bot/plugins/sdk-migration",
     },

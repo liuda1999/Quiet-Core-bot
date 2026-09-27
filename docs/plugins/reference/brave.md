@@ -11,7 +11,7 @@ Quiet Core bot Brave Search provider plugin for web search.
 
 ## Distribution
 
-- Package: `@openclaw/brave-plugin`
+- Package: `@quiet-core/brave-plugin`
 - Install route: npm; ClawHub
 
 ## Surface

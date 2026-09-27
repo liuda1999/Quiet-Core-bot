@@ -11,8 +11,8 @@ Adds the IRC channel surface for sending and receiving Quiet Core bot messages.
 
 ## Distribution
 
-- Package: `@openclaw/irc`
-- Install route: npm; ClawHub: `clawhub:@openclaw/irc`
+- Package: `@quiet-core/irc`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/irc`
 
 ## Surface
 

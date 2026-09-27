@@ -44,7 +44,7 @@ describe("shared/frontmatter", () => {
     expect(
       resolveOpenClawManifestBlock({
         frontmatter: {
-          metadata: "{ openclaw: { foo: 1, bar: 'baz' } }",
+          metadata: "{ "quiet-core-bot": { foo: 1, bar: 'baz' } }",
         },
       }),
     ).toEqual({ foo: 1, bar: "baz" });
@@ -52,7 +52,7 @@ describe("shared/frontmatter", () => {
     expect(
       resolveOpenClawManifestBlock({
         frontmatter: {
-          pluginMeta: "{ openclaw: { foo: 2 } }",
+          pluginMeta: "{ "quiet-core-bot": { foo: 2 } }",
         },
         key: "pluginMeta",
       }),
@@ -74,7 +74,7 @@ describe("shared/frontmatter", () => {
       resolveOpenClawManifestBlock({
         frontmatter: {
           metadata:
-            "{ openclaw: { requires: { bins: ['current'] } }, clawdbot: { requires: { bins: ['legacy'] } } }",
+            "{ "quiet-core-bot": { requires: { bins: ['current'] } }, clawdbot: { requires: { bins: ['legacy'] } } }",
         },
       }),
     ).toEqual({ requires: { bins: ["current"] } });
@@ -98,14 +98,14 @@ describe("shared/frontmatter", () => {
         requires: {
           bins: "bun, node",
           anyBins: [" ffmpeg ", ""],
-          env: ["OPENCLAW_TOKEN", " OPENCLAW_URL "],
+          env: ["QUIET_CORE_TOKEN", " QUIET_CORE_URL "],
           config: null,
         },
       }),
     ).toEqual({
       bins: ["bun", "node"],
       anyBins: ["ffmpeg"],
-      env: ["OPENCLAW_TOKEN", "OPENCLAW_URL"],
+      env: ["QUIET_CORE_TOKEN", "QUIET_CORE_URL"],
       config: [],
     });
     expect(resolveOpenClawManifestRequires({})).toBeUndefined();

@@ -3,7 +3,7 @@
  *
  * Routes models that need Quiet Core bot-managed proxy/TLS/local-service semantics onto built-in transport implementations.
  */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import type { Api, Model } from "../llm/types.js";
 import { resolveProviderStreamFn } from "../plugins/provider-runtime.js";
 import { createAnthropicMessagesTransportStreamFn } from "./anthropic-transport-stream.js";
@@ -26,12 +26,12 @@ const SUPPORTED_TRANSPORT_APIS = new Set<Api>([
 ]);
 
 const SIMPLE_TRANSPORT_API_ALIAS: Record<string, Api> = {
-  "openai-responses": "openclaw-openai-responses-transport",
-  "openai-chatgpt-responses": "openclaw-openai-responses-transport",
-  "openai-completions": "openclaw-openai-completions-transport",
-  "azure-openai-responses": "openclaw-azure-openai-responses-transport",
-  "anthropic-messages": "openclaw-anthropic-messages-transport",
-  "google-generative-ai": "openclaw-google-generative-ai-transport",
+  "openai-responses": "quiet-core-bot-openai-responses-transport",
+  "openai-chatgpt-responses": "quiet-core-bot-openai-responses-transport",
+  "openai-completions": "quiet-core-bot-openai-completions-transport",
+  "azure-openai-responses": "quiet-core-bot-azure-openai-responses-transport",
+  "anthropic-messages": "quiet-core-bot-anthropic-messages-transport",
+  "google-generative-ai": "quiet-core-bot-google-generative-ai-transport",
 };
 
 type ProviderTransportStreamContext = {

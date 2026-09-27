@@ -48,7 +48,7 @@ function snapshotDiagnostic(snapshot) {
 }
 
 const snapshotMaxBytes = readPositiveIntEnv(
-  "OPENCLAW_BROWSER_CDP_SNAPSHOT_MAX_BYTES",
+  "QUIET_CORE_BROWSER_CDP_SNAPSHOT_MAX_BYTES",
   DEFAULT_SNAPSHOT_MAX_BYTES,
 );
 const snapshot = readBoundedSnapshot(snapshotPath, snapshotMaxBytes);

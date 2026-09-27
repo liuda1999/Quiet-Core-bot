@@ -77,7 +77,7 @@ export function registerBackupCommand(program: Command) {
       () =>
         `\n${theme.heading("Examples:")}\n${formatHelpExamples([
           [
-            "quiet-core-bot backup verify ./2026-03-09T08-00-00.000+08-00-openclaw-backup.tar.gz",
+            "quiet-core-bot backup verify ./2026-03-09T08-00-00.000+08-00-quiet-core-bot-backup.tar.gz",
             "Check that the archive structure and manifest are intact.",
           ],
           [

@@ -140,7 +140,7 @@ function formatFindingLine(line, pattern, info = {}) {
 }
 
 function shouldScanLogFile(entry) {
-  if (!(/\.(?:log|jsonl)$/u.test(entry) || /openclaw-kitchen-sink-/u.test(path.basename(entry)))) {
+  if (!(/\.(?:log|jsonl)$/u.test(entry) || /quiet-core-bot-kitchen-sink-/u.test(path.basename(entry)))) {
     return false;
   }
   return !normalizedPath(entry).includes("/.npm/_logs/");
@@ -210,7 +210,7 @@ function scanLogs() {
   if (!process.env.KITCHEN_SINK_TMP_DIR) {
     throw new Error("KITCHEN_SINK_TMP_DIR is required for kitchen-sink log scans");
   }
-  const roots = [scratchRoot, path.join(process.env.HOME, ".openclaw")];
+  const roots = [scratchRoot, path.join(process.env.HOME, ".quiet-core-bot")];
   const deny = [
     /\buncaught exception\b/iu,
     /\bunhandled rejection\b/iu,
@@ -259,7 +259,7 @@ function scanLogs() {
 }
 
 function readConfig() {
-  const configPath = path.join(process.env.HOME, ".openclaw", "openclaw.json");
+  const configPath = path.join(process.env.HOME, ".quiet-core-bot", "quiet-core-bot.json");
   return {
     configPath,
     exists: fs.existsSync(configPath),
@@ -394,17 +394,17 @@ function assertRealPathInside(parentPath, childPath, label) {
 }
 
 function assertClawHubExternalInstallContract(installPath) {
-  const openclawPeerPath = path.join(installPath, "node_modules", "openclaw");
+  const openclawPeerPath = path.join(installPath, "node_modules", "quiet-core-bot");
   if (!fs.existsSync(openclawPeerPath)) {
-    throw new Error(`missing kitchen-sink openclaw peer symlink: ${openclawPeerPath}`);
+    throw new Error(`missing kitchen-sink quiet-core-bot peer symlink: ${openclawPeerPath}`);
   }
   if (!fs.lstatSync(openclawPeerPath).isSymbolicLink()) {
-    throw new Error(`kitchen-sink openclaw peer is not a symlink: ${openclawPeerPath}`);
+    throw new Error(`kitchen-sink quiet-core-bot peer is not a symlink: ${openclawPeerPath}`);
   }
   const hostRoot = fs.realpathSync(process.cwd());
   const linkedHostRoot = fs.realpathSync(openclawPeerPath);
   if (linkedHostRoot !== hostRoot) {
-    throw new Error(`expected kitchen-sink openclaw peer ${linkedHostRoot} to target ${hostRoot}`);
+    throw new Error(`expected kitchen-sink quiet-core-bot peer ${linkedHostRoot} to target ${hostRoot}`);
   }
 
   const dependencyPackagePath = path.join(installPath, "node_modules", "is-number", "package.json");
@@ -637,7 +637,7 @@ function assertInstalled() {
     throw new Error(`kitchen-sink install path missing: ${record.installPath}`);
   }
   if (source === "clawhub") {
-    const extensionsRoot = path.join(process.env.HOME, ".openclaw", "extensions");
+    const extensionsRoot = path.join(process.env.HOME, ".quiet-core-bot", "extensions");
     assertRealPathInside(extensionsRoot, installPath, "kitchen-sink ClawHub install path");
   }
   if (source === "clawhub" && record.artifactKind === "npm-pack") {

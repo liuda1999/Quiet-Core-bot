@@ -1,6 +1,6 @@
 // Tests reply profiler flag detection and timing tracker output.
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { createReplyTimingTracker, isReplyProfilerEnabled } from "./reply-timing-tracker.js";
 
 describe("isReplyProfilerEnabled", () => {
@@ -9,7 +9,7 @@ describe("isReplyProfilerEnabled", () => {
     expect(isReplyProfilerEnabled({ config: cfg, env: {} as NodeJS.ProcessEnv })).toBe(true);
     expect(
       isReplyProfilerEnabled({
-        env: { OPENCLAW_DIAGNOSTICS: "profiler" } as NodeJS.ProcessEnv,
+        env: { QUIET_CORE_DIAGNOSTICS: "profiler" } as NodeJS.ProcessEnv,
       }),
     ).toBe(true);
   });
@@ -31,7 +31,7 @@ describe("createReplyTimingTracker", () => {
     const warn = vi.fn();
     const tracker = createReplyTimingTracker({
       log: { warn },
-      env: { OPENCLAW_DIAGNOSTICS: "reply.profiler" } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_DIAGNOSTICS: "reply.profiler" } as NodeJS.ProcessEnv,
       totalWarnMs: 0,
       stageWarnMs: 0,
     });

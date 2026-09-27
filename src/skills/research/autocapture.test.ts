@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   createOpenClawTestState,
   type OpenClawTestState,
-} from "../../test-utils/openclaw-test-state.js";
+} from "../../test-utils/quiet-core-bot-test-state.js";
 import { createTrackedTempDirs } from "../../test-utils/tracked-temp-dirs.js";
 import {
   applySkillProposal,
@@ -20,7 +20,7 @@ let testState: OpenClawTestState;
 beforeEach(async () => {
   testState = await createOpenClawTestState({
     layout: "state-only",
-    prefix: "openclaw-skill-workshop-state-",
+    prefix: "quiet-core-bot-skill-workshop-state-",
   });
 });
 
@@ -30,7 +30,7 @@ afterEach(async () => {
 });
 
 async function makeWorkspace(): Promise<string> {
-  return await tempDirs.make("openclaw-skill-workshop-");
+  return await tempDirs.make("quiet-core-bot-skill-workshop-");
 }
 
 describe("skill research auto-capture", () => {

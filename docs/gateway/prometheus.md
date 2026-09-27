@@ -27,7 +27,7 @@ For traces, logs, OTLP push, and OpenTelemetry GenAI semantic attributes, see [O
 <Steps>
   <Step title="Install the plugin">
     ```bash
-    quiet-core-bot plugins install clawhub:@openclaw/diagnostics-prometheus
+    quiet-core-bot plugins install clawhub:@quiet-core/diagnostics-prometheus
     ```
   </Step>
   <Step title="Enable the plugin">
@@ -61,7 +61,7 @@ For traces, logs, OTLP push, and OpenTelemetry GenAI semantic attributes, see [O
     Send the same gateway auth your operator clients use:
 
     ```bash
-    curl -H "Authorization: Bearer $OPENCLAW_GATEWAY_TOKEN" \
+    curl -H "Authorization: Bearer $QUIET_CORE_GATEWAY_TOKEN" \
       http://127.0.0.1:18789/api/diagnostics/prometheus
     ```
 
@@ -70,13 +70,13 @@ For traces, logs, OTLP push, and OpenTelemetry GenAI semantic attributes, see [O
     ```yaml
     # prometheus.yml
     scrape_configs:
-      - job_name: openclaw
+      - job_name: quiet-core-bot
         scrape_interval: 30s
         metrics_path: /api/diagnostics/prometheus
         authorization:
-          credentials_file: /etc/prometheus/openclaw-gateway-token
+          credentials_file: /etc/prometheus/quiet-core-bot-gateway-token
         static_configs:
-          - targets: ["openclaw-gateway:18789"]
+          - targets: ["quiet-core-bot-gateway:18789"]
     ```
   </Step>
 </Steps>

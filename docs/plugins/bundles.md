@@ -249,7 +249,7 @@ These are recognized and shown in diagnostics, but Quiet Core bot does not run t
 
 Quiet Core bot checks for native plugin format first:
 
-1. `openclaw.plugin.json` or valid `package.json` with `openclaw.extensions` — treated as **native plugin**
+1. `quiet-core-bot.plugin.json` or valid `package.json` with `quiet-core-bot.extensions` — treated as **native plugin**
 2. Bundle markers (`.codex-plugin/`, `.claude-plugin/`, or default Claude/Cursor layout) — treated as **bundle**
 
 If a directory contains both, Quiet Core bot uses the native path. This prevents

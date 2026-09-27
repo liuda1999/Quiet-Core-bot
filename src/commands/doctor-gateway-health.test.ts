@@ -107,9 +107,9 @@ describe("checkGatewayHealth", () => {
     const mismatchOutput = mismatchNotes.join("\n");
     expect(mismatchOutput).toContain("the running Gateway is Quiet Core bot 2026.4.23");
     expect(mismatchOutput).not.toContain("That usually means");
-    expect(mismatchOutput).toContain("Check `quiet-core-bot --version`, `which quiet-core-bot`");
+    expect(mismatchOutput).toContain("Check `quiet-core-bot --version`, `which openclaw`");
     expect(mismatchOutput).toContain(
-      "If this mismatch is unexpected, update PATH so `quiet-core-bot` points to the version you want",
+      "If this mismatch is unexpected, update PATH so `openclaw` points to the version you want",
     );
   });
 

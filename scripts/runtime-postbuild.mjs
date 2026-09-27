@@ -497,14 +497,14 @@ export function writeLegacyCliExitCompatChunks(params = {}) {
 
 function shouldCopyStaticExtensionAssets(params) {
   const env = params.env ?? process.env;
-  return env.OPENCLAW_RUNTIME_POSTBUILD_STATIC_ASSETS !== "0";
+  return env.QUIET_CORE_RUNTIME_POSTBUILD_STATIC_ASSETS !== "0";
 }
 
 /**
  * Runs every runtime postbuild phase after the main dist build.
  */
 export function runRuntimePostBuild(params = {}) {
-  const timingsEnabled = params.timings ?? process.env.OPENCLAW_RUNTIME_POSTBUILD_TIMINGS !== "0";
+  const timingsEnabled = params.timings ?? process.env.QUIET_CORE_RUNTIME_POSTBUILD_TIMINGS !== "0";
   const runPhase = (label, action) => {
     const startedAt = performance.now();
     try {

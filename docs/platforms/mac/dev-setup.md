@@ -35,13 +35,13 @@ To build the macOS app and package it into `dist/Quiet Core bot.app`, run:
 If you don't have an Apple Developer ID certificate, the script will automatically use **ad-hoc signing** (`-`).
 
 For dev run modes, signing flags, and Team ID troubleshooting, see the macOS app README:
-[https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md](https://github.com/openclaw/openclaw/blob/main/apps/macos/README.md)
+[https://github.com/liuda1999/Quiet-Core-bot/blob/main/apps/macos/README.md](https://github.com/liuda1999/Quiet-Core-bot/blob/main/apps/macos/README.md)
 
 > **Note**: Ad-hoc signed apps may trigger security prompts. If the app crashes immediately with "Abort trap 6", see the [Troubleshooting](#troubleshooting) section.
 
 ## 3. Install the CLI
 
-The macOS app expects a global `openclaw` CLI install to manage background tasks.
+The macOS app expects a global `quiet-core-bot` CLI install to manage background tasks.
 
 **To install it (recommended):**
 
@@ -52,10 +52,10 @@ The macOS app expects a global `openclaw` CLI install to manage background tasks
 Alternatively, install it manually:
 
 ```bash
-npm install -g openclaw@<version>
+npm install -g quiet-core-bot@<version>
 ```
 
-`pnpm add -g openclaw@<version>` and `bun add -g openclaw@<version>` also work.
+`pnpm add -g quiet-core-bot@<version>` and `bun add -g quiet-core-bot@<version>` also work.
 For the Gateway runtime, Node remains the recommended path.
 
 ## Troubleshooting
@@ -87,10 +87,10 @@ If the app crashes when you try to allow **Speech Recognition** or **Microphone*
 1. Reset the TCC permissions:
 
    ```bash
-   tccutil reset All ai.openclaw.mac.debug
+   tccutil reset All ai.quiet-core-bot.mac.debug
    ```
 
-2. If that fails, change the `BUNDLE_ID` temporarily in [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) to force a "clean slate" from macOS.
+2. If that fails, change the `BUNDLE_ID` temporarily in [`scripts/package-mac-app.sh`](https://github.com/liuda1999/Quiet-Core-bot/blob/main/scripts/package-mac-app.sh) to force a "clean slate" from macOS.
 
 ### Gateway "Starting..." indefinitely
 

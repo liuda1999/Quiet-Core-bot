@@ -19,7 +19,7 @@ describe("shouldAttemptTtsPayload", () => {
   let caseId = 0;
 
   beforeAll(() => {
-    root = mkdtempSync(path.join(tmpdir(), "openclaw-tts-config-"));
+    root = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-tts-config-"));
   });
 
   afterAll(() => {
@@ -29,11 +29,11 @@ describe("shouldAttemptTtsPayload", () => {
   });
 
   beforeEach(() => {
-    envSnapshot = captureEnv(["OPENCLAW_TTS_PREFS"]);
+    envSnapshot = captureEnv(["QUIET_CORE_TTS_PREFS"]);
     dir = path.join(root, `case-${caseId++}`);
     mkdirSync(dir, { recursive: true });
     prefsPath = path.join(dir, "tts.json");
-    process.env.OPENCLAW_TTS_PREFS = prefsPath;
+    process.env.QUIET_CORE_TTS_PREFS = prefsPath;
   });
 
   afterEach(() => {

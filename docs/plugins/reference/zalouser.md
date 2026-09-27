@@ -11,7 +11,7 @@ Quiet Core bot Zalo Personal Account plugin via native zca-js integration.
 
 ## Distribution
 
-- Package: `@openclaw/zalouser`
+- Package: `@quiet-core/zalouser`
 - Install route: npm; ClawHub
 
 ## Surface

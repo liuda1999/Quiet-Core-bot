@@ -5,7 +5,7 @@ import path from "node:path";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeStringifiedOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/normalization-core/string-coerce";
 import { Command } from "commander";
 import { buildBundleMcpToolsFromCatalog } from "../agents/agent-bundle-mcp-materialize.js";
 import { createSessionMcpRuntime } from "../agents/agent-bundle-mcp-runtime.js";
@@ -29,7 +29,7 @@ import {
   updateConfiguredMcpServer,
   updateConfiguredMcpServerTools,
 } from "../config/mcp-config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { serveOpenClawChannelMcp } from "../mcp/channel-server.js";
 import { defaultRuntime } from "../runtime.js";
@@ -408,7 +408,7 @@ async function probeMcpServerIssue(params: {
   server: Record<string, unknown>;
 }): Promise<McpDoctorIssue | null> {
   const runtime = createSessionMcpRuntime({
-    sessionId: "openclaw-cli-mcp-doctor",
+    sessionId: "quiet-core-bot-cli-mcp-doctor",
     workspaceDir: process.cwd(),
     cfg: buildMcpProbeConfig({
       config: params.config,
@@ -541,7 +541,7 @@ async function probeMcpServersOrFail(params: {
   path: string;
 }): Promise<ReturnType<typeof formatMcpProbeResult>> {
   const runtime = createSessionMcpRuntime({
-    sessionId: "openclaw-cli-mcp-probe",
+    sessionId: "quiet-core-bot-cli-mcp-probe",
     workspaceDir: process.cwd(),
     cfg: buildMcpProbeConfig({ config: params.config, servers: params.servers }),
     manifestRegistry: { plugins: [] },
@@ -563,7 +563,7 @@ async function probeMcpServersOrFail(params: {
   }
 }
 
-const OPENCLAW_MCP_REGISTRY_SCOPE_NOTE =
+const QUIET_CORE_MCP_REGISTRY_SCOPE_NOTE =
   "Note: this command only shows Quiet Core bot-managed mcp.servers entries and does not include mcporter servers from config/mcporter.json.";
 
 export function registerMcpCli(program: Command) {
@@ -631,7 +631,7 @@ export function registerMcpCli(program: Command) {
         defaultRuntime.log(
           `No Quiet Core bot-managed MCP servers configured in ${loaded.path}. Add one with ${formatCliCommand('quiet-core-bot mcp set <name> \'{"command":"uvx","args":["context7-mcp"]}\'')}.`,
         );
-        defaultRuntime.log(OPENCLAW_MCP_REGISTRY_SCOPE_NOTE);
+        defaultRuntime.log(QUIET_CORE_MCP_REGISTRY_SCOPE_NOTE);
         return;
       }
       defaultRuntime.log(`Quiet Core bot-managed MCP servers (${loaded.path}):`);
@@ -639,7 +639,7 @@ export function registerMcpCli(program: Command) {
         defaultRuntime.log(`- ${name}`);
       }
       defaultRuntime.log("");
-      defaultRuntime.log(OPENCLAW_MCP_REGISTRY_SCOPE_NOTE);
+      defaultRuntime.log(QUIET_CORE_MCP_REGISTRY_SCOPE_NOTE);
     });
 
   mcp
@@ -740,7 +740,7 @@ export function registerMcpCli(program: Command) {
         );
       }
       const runtime = createSessionMcpRuntime({
-        sessionId: "openclaw-cli-mcp-probe",
+        sessionId: "quiet-core-bot-cli-mcp-probe",
         workspaceDir: process.cwd(),
         cfg: buildMcpProbeConfig({ config: loaded.config, servers }),
         manifestRegistry: { plugins: [] },

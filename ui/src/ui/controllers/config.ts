@@ -198,7 +198,7 @@ function resolveUpdateStatusBanner(params: { status?: string; reason?: string })
       "no-upstream": "Set an upstream branch, then retry.",
       "not-git-install":
         "Not a git checkout. Run `quiet-core-bot update` from the CLI for a global reinstall.",
-      "not-openclaw-root":
+      "not-quiet-core-bot-root":
         "Run the update from an Quiet Core bot checkout or use the CLI global reinstall path.",
       "deps-install-failed": "Dependency install failed. Fix the install error and retry.",
       "build-failed": "Build failed. Fix the build error and retry.",

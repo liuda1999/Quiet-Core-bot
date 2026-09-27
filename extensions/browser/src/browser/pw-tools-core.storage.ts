@@ -1,7 +1,7 @@
 /**
  * Cookie and Web Storage helpers for Playwright-backed browser tools.
  */
-import { readStringValue } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { readStringValue } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { ensurePageState, getPageForTargetId } from "./pw-session.js";
 
 /** Returns cookies visible to the target browser context. */

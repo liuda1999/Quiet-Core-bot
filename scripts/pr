@@ -56,10 +56,10 @@ require_cmds() {
       missing+=("$cmd")
     fi
   done
-  if ! OPENCLAW_GH_BIN="$(resolve_plain_gh_bin)"; then
+  if ! QUIET_CORE_GH_BIN="$(resolve_plain_gh_bin)"; then
     missing+=("gh")
   else
-    export OPENCLAW_GH_BIN
+    export QUIET_CORE_GH_BIN
   fi
 
   if [ "${#missing[@]}" -gt 0 ]; then

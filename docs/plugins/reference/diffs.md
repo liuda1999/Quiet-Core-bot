@@ -11,7 +11,7 @@ Quiet Core bot read-only diff viewer plugin and file renderer for agents.
 
 ## Distribution
 
-- Package: `@openclaw/diffs`
+- Package: `@quiet-core/diffs`
 - Install route: npm; ClawHub
 
 ## Surface

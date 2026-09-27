@@ -273,8 +273,8 @@ describe("runHeartbeatOnce ack handling", () => {
     },
     {
       title: "strips responsePrefix before HEARTBEAT_OK detection and suppresses short ack text",
-      replyText: "[openclaw] HEARTBEAT_OK all good",
-      messages: { responsePrefix: "[openclaw]" },
+      replyText: "[quiet-core-bot] HEARTBEAT_OK all good",
+      messages: { responsePrefix: "[quiet-core-bot]" },
       expectedCalls: 0,
     },
     {

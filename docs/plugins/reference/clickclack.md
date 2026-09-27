@@ -11,8 +11,8 @@ Adds the Clickclack channel surface for sending and receiving Quiet Core bot mes
 
 ## Distribution
 
-- Package: `@openclaw/clickclack`
-- Install route: npm; ClawHub: `clawhub:@openclaw/clickclack`
+- Package: `@quiet-core/clickclack`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/clickclack`
 
 ## Surface
 

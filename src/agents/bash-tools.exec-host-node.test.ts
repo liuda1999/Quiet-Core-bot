@@ -1186,7 +1186,7 @@ describe("executeNodeHostCommand", () => {
           : [
               {
                 resolution: null,
-                argv: ["openclaw", "status"],
+                argv: ["quiet-core-bot", "status"],
                 raw: "quiet-core-bot status",
               },
               {
@@ -1258,7 +1258,7 @@ describe("executeNodeHostCommand", () => {
               }
             : {
                 resolution: null,
-                argv: ["openclaw", "config", "get", "security.audit.suppressions"],
+                argv: ["quiet-core-bot", "config", "get", "security.audit.suppressions"],
                 raw: "quiet-core-bot config get security.audit.suppressions",
               },
         ],

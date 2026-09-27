@@ -7,7 +7,7 @@ import os from "node:os";
 import path from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 import { gzipSync } from "node:zlib";
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@quiet-core/normalization-core/number-coercion";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { resolveWindowsTaskkillPath } from "../../../../scripts/lib/windows-taskkill.mjs";
 import { testing } from "./qa-otel-smoke-runtime.js";
@@ -38,9 +38,9 @@ describe("qa-otel-smoke receiver bounds", () => {
         encoding: "utf8",
         env: {
           ...process.env,
-          OPENCLAW_QA_OTEL_MAX_CAPTURED_BODY_TEXT_BYTES: "1024",
-          OPENCLAW_QA_OTEL_MAX_COMPRESSED_BODY_BYTES: "2048",
-          OPENCLAW_QA_OTEL_MAX_DECODED_BODY_BYTES: "4096",
+          QUIET_CORE_QA_OTEL_MAX_CAPTURED_BODY_TEXT_BYTES: "1024",
+          QUIET_CORE_QA_OTEL_MAX_COMPRESSED_BODY_BYTES: "2048",
+          QUIET_CORE_QA_OTEL_MAX_DECODED_BODY_BYTES: "4096",
         },
       },
     );
@@ -61,7 +61,7 @@ describe("qa-otel-smoke receiver bounds", () => {
           spanId: "span",
         },
       ],
-      metrics: [{ name: "openclaw.harness.duration_ms" }],
+      metrics: [{ name: "quiet-core-bot.harness.duration_ms" }],
       requests: [
         {
           path: "/v1/traces",
@@ -97,18 +97,18 @@ describe("qa-otel-smoke receiver bounds", () => {
       stdoutLogLines: [],
       stdoutLogRecords: [],
       spans: [
-        { name: "openclaw.run", parent: false, attributes: {} },
-        { name: "openclaw.harness.run", parent: true, attributes: {} },
-        { name: "openclaw.context.assembled", parent: true, attributes: {} },
-        { name: "openclaw.message.delivery", parent: true, attributes: {} },
+        { name: "quiet-core-bot.run", parent: false, attributes: {} },
+        { name: "quiet-core-bot.harness.run", parent: true, attributes: {} },
+        { name: "quiet-core-bot.context.assembled", parent: true, attributes: {} },
+        { name: "quiet-core-bot.message.delivery", parent: true, attributes: {} },
         {
           name: "chat gpt-5.5",
           parent: true,
           attributes: {
             "gen_ai.operation.name": "chat",
             "gen_ai.request.model": "gpt-5.5",
-            "openclaw.model": "gpt-5.5",
-            "openclaw.provider": "openai",
+            "quiet-core-bot.model": "gpt-5.5",
+            "quiet-core-bot.provider": "openai",
           },
         },
       ],
@@ -253,7 +253,7 @@ describe("qa-otel-smoke receiver bounds", () => {
     expect(env.OTEL_EXPORTER_OTLP_TRACES_ENDPOINT).toBe("http://127.0.0.1:4318/v1/traces");
     expect(env.OTEL_EXPORTER_OTLP_METRICS_ENDPOINT).toBe("http://127.0.0.1:4318/v1/metrics");
     expect(env.OTEL_EXPORTER_OTLP_LOGS_ENDPOINT).toBe("http://127.0.0.1:4318/v1/logs");
-    expect(env.OTEL_SERVICE_NAME).toBe("openclaw-qa-lab-otel-smoke");
+    expect(env.OTEL_SERVICE_NAME).toBe("quiet-core-bot-qa-lab-otel-smoke");
   });
 
   it("rejects identity OTLP bodies above the decoded byte ceiling", () => {
@@ -431,13 +431,13 @@ describe("qa-otel-smoke receiver bounds", () => {
     input.stdoutLogRecords = [
       {
         ts: "2026-06-18T00:00:00.000Z",
-        signal: "openclaw.diagnostic.log",
-        "service.name": "openclaw-qa-lab-otel-smoke",
+        signal: "quiet-core-bot.diagnostic.log",
+        "service.name": "quiet-core-bot-qa-lab-otel-smoke",
         severityText: "INFO",
         severityNumber: 9,
         body: "log",
         attributes: {
-          "openclaw.log.level": "INFO",
+          "quiet-core-bot.log.level": "INFO",
         },
       },
     ];
@@ -475,8 +475,8 @@ describe("qa-otel-smoke receiver bounds", () => {
     input.stdoutLogRecords = [
       {
         ts: "2026-06-18T00:00:00.000Z",
-        signal: "openclaw.diagnostic.log",
-        "service.name": "openclaw-qa-lab-otel-smoke",
+        signal: "quiet-core-bot.diagnostic.log",
+        "service.name": "quiet-core-bot-qa-lab-otel-smoke",
         severityText: "INFO",
         severityNumber: 9,
         body: "log",
@@ -515,8 +515,8 @@ describe("qa-otel-smoke receiver bounds", () => {
     input.stdoutLogRecords = [
       {
         ts: "2026-06-18T00:00:00.000Z",
-        signal: "openclaw.diagnostic.log",
-        "service.name": "openclaw-qa-lab-otel-smoke",
+        signal: "quiet-core-bot.diagnostic.log",
+        "service.name": "quiet-core-bot-qa-lab-otel-smoke",
         severityText: "INFO",
         severityNumber: 9,
         body: "log",
@@ -587,13 +587,13 @@ describe("qa-otel-smoke receiver bounds", () => {
   });
 
   it("streams gateway stdout artifact records without requiring them in the tail", async () => {
-    const tempRoot = mkdtempSync(path.join(os.tmpdir(), "openclaw-qa-otel-stdout-stream-"));
+    const tempRoot = mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-qa-otel-stdout-stream-"));
     const logPath = path.join(tempRoot, "gateway.stdout.log");
     const capture = testing.createStdoutDiagnosticLogCapture();
     const record = {
-      signal: "openclaw.diagnostic.log",
+      signal: "quiet-core-bot.diagnostic.log",
       ts: "2026-06-18T00:00:00.000Z",
-      "service.name": "openclaw-qa-lab-otel-smoke",
+      "service.name": "quiet-core-bot-qa-lab-otel-smoke",
       severityText: "INFO",
       severityNumber: 9,
       body: "early log",
@@ -616,13 +616,13 @@ describe("qa-otel-smoke receiver bounds", () => {
   });
 
   it("keeps gateway stdout artifact fallback parsing bounded", async () => {
-    const tempRoot = mkdtempSync(path.join(os.tmpdir(), "openclaw-qa-otel-stdout-artifact-"));
+    const tempRoot = mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-qa-otel-stdout-artifact-"));
     const outputDir = path.join(tempRoot, "output");
     const artifactDir = path.join(outputDir, "artifacts", "gateway-runtime");
     const record = {
-      signal: "openclaw.diagnostic.log",
+      signal: "quiet-core-bot.diagnostic.log",
       ts: "2026-06-18T00:00:00.000Z",
-      "service.name": "openclaw-qa-lab-otel-smoke",
+      "service.name": "quiet-core-bot-qa-lab-otel-smoke",
       severityText: "INFO",
       severityNumber: 9,
       body: "tail log",
@@ -650,7 +650,7 @@ describe("qa-otel-smoke receiver bounds", () => {
       return;
     }
 
-    const tempDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-qa-otel-child-"));
+    const tempDir = mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-qa-otel-child-"));
     const markerPath = path.join(tempDir, "marker.txt");
     try {
       const gatewayScript = [
@@ -720,7 +720,7 @@ describe("qa-otel-smoke receiver bounds", () => {
   });
 
   it("cleans Docker collector containers and temp config after readiness failures", async () => {
-    const tempRoot = mkdtempSync(path.join(os.tmpdir(), "openclaw-qa-otel-collector-"));
+    const tempRoot = mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-qa-otel-collector-"));
     const collectorDir = path.join(tempRoot, "collector");
     const child = new EventEmitter() as EventEmitter & {
       stderr: EventEmitter;
@@ -748,7 +748,7 @@ describe("qa-otel-smoke receiver bounds", () => {
       ).rejects.toThrow("collector never became ready");
 
       expect(stopDockerContainer).toHaveBeenCalledWith(
-        "openclaw-otel-smoke-00000000-0000-4000-8000-000000000000",
+        "quiet-core-bot-otel-smoke-00000000-0000-4000-8000-000000000000",
       );
       expect(existsSync(collectorDir)).toBe(false);
     } finally {
@@ -757,7 +757,7 @@ describe("qa-otel-smoke receiver bounds", () => {
   });
 
   it("reports bounded Docker collector output when readiness exits", async () => {
-    const tempRoot = mkdtempSync(path.join(os.tmpdir(), "openclaw-qa-otel-collector-output-"));
+    const tempRoot = mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-qa-otel-collector-output-"));
     const collectorDir = path.join(tempRoot, "collector");
     const child = new EventEmitter() as EventEmitter & {
       stderr: EventEmitter;

@@ -43,7 +43,7 @@ describe("ports-format", () => {
     // is no -L/-R forward, so it must not classify as a tunnel or emit the hint.
     [{ commandLine: "/opt/fast-ssh/server --listen 127.0.0.1:18789" }, "non_gateway"],
     [{ commandLine: "ssh -N -L 9999:remote:22 host" }, "ssh"],
-    [{ commandLine: "node /Users/me/Projects/openclaw/dist/entry.js gateway" }, "gateway"],
+    [{ commandLine: "node /Users/me/Projects/quiet-core-bot/dist/entry.js gateway" }, "gateway"],
     [{ commandLine: "python -m http.server 18789" }, "unknown"],
   ] as const)("classifies port listener %j", (listener, expected) => {
     expect(classifyPortListener(listener, 18789)).toBe(expected);
@@ -78,8 +78,8 @@ describe("ports-format", () => {
 
   it("treats single-process loopback dual-stack gateway listeners as benign", () => {
     const listeners = [
-      { pid: 4242, commandLine: "openclaw-gateway", address: "127.0.0.1:18789" },
-      { pid: 4242, commandLine: "openclaw-gateway", address: "[::1]:18789" },
+      { pid: 4242, commandLine: "quiet-core-bot-gateway", address: "127.0.0.1:18789" },
+      { pid: 4242, commandLine: "quiet-core-bot-gateway", address: "[::1]:18789" },
     ];
     expect(isDualStackLoopbackGatewayListeners(listeners, 18789)).toBe(true);
     expect(isExpectedGatewayListeners(listeners, 18789)).toBe(true);
@@ -94,7 +94,7 @@ describe("ports-format", () => {
     "[::]:18789",
     "*:18789",
   ])("treats a single expected Gateway listener on %s as benign", (address) => {
-    const listeners = [{ pid: 4242, commandLine: "openclaw-gateway", address }];
+    const listeners = [{ pid: 4242, commandLine: "quiet-core-bot-gateway", address }];
 
     expect(isSingleExpectedGatewayListener(listeners, 18789)).toBe(true);
     expect(isExpectedGatewayListeners(listeners, 18789)).toBe(true);
@@ -105,8 +105,8 @@ describe("ports-format", () => {
     expect(
       buildPortHints(
         [
-          { pid: 4242, commandLine: "openclaw-gateway", address: "0.0.0.0:18789" },
-          { pid: 4243, commandLine: "openclaw-gateway", address: "127.0.0.1:18789" },
+          { pid: 4242, commandLine: "quiet-core-bot-gateway", address: "0.0.0.0:18789" },
+          { pid: 4243, commandLine: "quiet-core-bot-gateway", address: "127.0.0.1:18789" },
         ],
         18789,
       ),

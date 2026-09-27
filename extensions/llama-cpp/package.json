@@ -1,24 +1,24 @@
 {
-  "name": "@openclaw/llama-cpp-provider",
+  "name": "@quiet-core/llama-cpp-provider",
   "version": "2026.6.11",
   "description": "OpenClaw llama.cpp embedding provider plugin",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/liuda1999/Quiet-Core-bot"
   },
   "type": "module",
   "optionalDependencies": {
     "node-llama-cpp": "3.18.1"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@quiet-core/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "npmSpec": "@openclaw/llama-cpp-provider",
+      "npmSpec": "@quiet-core/llama-cpp-provider",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.6.2"
     },

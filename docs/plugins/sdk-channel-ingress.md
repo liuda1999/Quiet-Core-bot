@@ -11,8 +11,8 @@ sidebarTitle: "Channel Ingress"
 # Channel ingress API
 
 Channel ingress is the experimental access-control boundary for inbound channel
-events. Use `openclaw/plugin-sdk/channel-ingress-runtime` for receive paths.
-The older `openclaw/plugin-sdk/channel-ingress` subpath stays exported as a
+events. Use `quiet-core-bot/plugin-sdk/channel-ingress-runtime` for receive paths.
+The older `quiet-core-bot/plugin-sdk/channel-ingress` subpath stays exported as a
 deprecated compatibility facade for third-party plugins.
 
 Plugins own platform facts and side effects. Core owns generic policy: DM/group
@@ -25,7 +25,7 @@ mention activation, redacted diagnostics, and admission.
 import {
   defineStableChannelIngressIdentity,
   resolveChannelMessageIngress,
-} from "openclaw/plugin-sdk/channel-ingress-runtime";
+} from "quiet-core-bot/plugin-sdk/channel-ingress-runtime";
 
 const identity = defineStableChannelIngressIdentity({
   key: "platform-user-id",

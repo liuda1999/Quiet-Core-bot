@@ -359,7 +359,7 @@ After configuring multi-agent sandbox and tools:
   </Step>
   <Step title="Verify sandbox containers">
     ```bash
-    docker ps --filter "name=openclaw-sbx-"
+    docker ps --filter "name=quiet-core-bot-sbx-"
     ```
   </Step>
   <Step title="Test tool restrictions">
@@ -369,7 +369,7 @@ After configuring multi-agent sandbox and tools:
   </Step>
   <Step title="Monitor logs">
     ```bash
-    tail -f "${OPENCLAW_STATE_DIR:-$HOME/.openclaw}/logs/gateway.log" | grep -E "routing|sandbox|tools"
+    tail -f "${QUIET_CORE_STATE_DIR:-$HOME/.quiet-core-bot}/logs/gateway.log" | grep -E "routing|sandbox|tools"
     ```
   </Step>
 </Steps>

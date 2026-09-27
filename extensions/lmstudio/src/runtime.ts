@@ -6,9 +6,9 @@ import {
   normalizeApiKeyConfig,
   normalizeOptionalSecretInput,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/provider-auth";
-import { resolveApiKeyForProvider } from "openclaw/plugin-sdk/provider-auth-runtime";
-import { resolveConfiguredSecretInputString } from "openclaw/plugin-sdk/secret-input-runtime";
+} from "quiet-core-bot/plugin-sdk/provider-auth";
+import { resolveApiKeyForProvider } from "quiet-core-bot/plugin-sdk/provider-auth-runtime";
+import { resolveConfiguredSecretInputString } from "quiet-core-bot/plugin-sdk/secret-input-runtime";
 import {
   LMSTUDIO_DEFAULT_API_KEY_ENV_VAR,
   LMSTUDIO_LOCAL_API_KEY_PLACEHOLDER,
@@ -244,7 +244,7 @@ export async function resolveLmstudioRuntimeApiKey(params: {
       [
         "LM Studio API key is required.",
         `Set models.providers.lmstudio.apiKey (for example "${envMarker}")`,
-        'or run "openclaw models auth lmstudio".',
+        'or run "quiet-core-bot models auth lmstudio".',
       ].join(" "),
     );
   };

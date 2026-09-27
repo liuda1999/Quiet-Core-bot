@@ -1,8 +1,8 @@
 // Lmstudio tests cover index plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/plugin-entry";
-import { capturePluginRegistration } from "openclaw/plugin-sdk/plugin-test-runtime";
-import { CUSTOM_LOCAL_AUTH_MARKER } from "openclaw/plugin-sdk/provider-auth";
-import type { ModelProviderConfig } from "openclaw/plugin-sdk/provider-model-shared";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/plugin-entry";
+import { capturePluginRegistration } from "quiet-core-bot/plugin-sdk/plugin-test-runtime";
+import { CUSTOM_LOCAL_AUTH_MARKER } from "quiet-core-bot/plugin-sdk/provider-auth";
+import type { ModelProviderConfig } from "quiet-core-bot/plugin-sdk/provider-model-shared";
 import { describe, expect, it } from "vitest";
 import plugin from "./index.js";
 import { LMSTUDIO_LOCAL_API_KEY_PLACEHOLDER } from "./src/defaults.js";
@@ -173,7 +173,7 @@ describe("lmstudio plugin", () => {
     expect(
       provider?.augmentModelCatalog?.({
         config,
-        agentDir: "/tmp/openclaw",
+        agentDir: "/tmp/quiet-core-bot",
         env: {},
         entries: [],
       }),

@@ -9,12 +9,12 @@ import { clearTimeout as clearNodeTimeout, setTimeout as setNodeTimeout } from "
 import {
   normalizeOptionalLowercaseString,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/normalization-core/string-coerce";
 import {
   normalizeStringEntries,
   normalizeTrimmedStringList,
   uniqueStrings,
-} from "@openclaw/normalization-core/string-normalization";
+} from "@quiet-core/normalization-core/string-normalization";
 import { resolveAuthProfileDatabaseFilePaths } from "../agents/auth-profiles/sqlite.js";
 import { formatCliCommand } from "../cli/command-format.js";
 import { MANIFEST_KEY } from "../compat/legacy-names.js";
@@ -337,7 +337,7 @@ async function listSandboxBrowserContainers(params: {
   try {
     const result = await withDockerProbeTimeout(params.timeoutMs, (signal) =>
       params.execDockerRawFn(
-        ["ps", "-a", "--filter", "label=openclaw.sandboxBrowser=1", "--format", "{{.Names}}"],
+        ["ps", "-a", "--filter", "label=quiet-core-bot.sandboxBrowser=1", "--format", "{{.Names}}"],
         { allowFailure: true, signal },
       ),
     );
@@ -365,7 +365,7 @@ async function readSandboxBrowserHashLabels(params: {
         [
           "inspect",
           "-f",
-          '{{ index .Config.Labels "openclaw.configHash" }}\t{{ index .Config.Labels "openclaw.browserConfigEpoch" }}',
+          '{{ index .Config.Labels "quiet-core-bot.configHash" }}\t{{ index .Config.Labels "quiet-core-bot.browserConfigEpoch" }}',
           params.containerName,
         ],
         { allowFailure: true, signal },
@@ -858,7 +858,7 @@ export async function collectPluginsCodeSafetyFindings(params: {
         title: `Plugin "${pluginName}" has a malformed package.json`,
         detail:
           `Could not parse plugin manifest: ${String(manifestErr)}.\n` +
-          "The extension entrypoint list is unavailable. Deep scan will cover the plugin directory but may miss entries declared via `openclaw.extensions`.",
+          "The extension entrypoint list is unavailable. Deep scan will cover the plugin directory but may miss entries declared via `quiet-core-bot.extensions`.",
         remediation:
           "Inspect the plugin package.json for syntax errors. If the plugin is untrusted, remove it from your Quiet Core bot extensions state directory.",
       });
@@ -892,7 +892,7 @@ export async function collectPluginsCodeSafetyFindings(params: {
         title: `Plugin "${pluginName}" has extension entry path traversal`,
         detail: `Found extension entries that escape the plugin directory:\n${escapedEntries.map((entry) => `  - ${entry}`).join("\n")}`,
         remediation:
-          "Update the plugin manifest so all openclaw.extensions entries stay inside the plugin directory.",
+          "Update the plugin manifest so all quiet-core-bot.extensions entries stay inside the plugin directory.",
       });
     }
 
@@ -962,7 +962,7 @@ export async function collectInstalledSkillsCodeSafetyFindings(params: {
   for (const workspaceDir of workspaceDirs) {
     const entries = loadWorkspaceSkillEntries(workspaceDir, { config: params.cfg });
     for (const entry of entries) {
-      if (resolveSkillSource(entry.skill) === "openclaw-bundled") {
+      if (resolveSkillSource(entry.skill) === "quiet-core-bot-bundled") {
         continue;
       }
 

@@ -2,8 +2,8 @@
 import { constants as fsConstants } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { writeExternalFileWithinRoot } from "openclaw/plugin-sdk/security-runtime";
+import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
+import { writeExternalFileWithinRoot } from "quiet-core-bot/plugin-sdk/security-runtime";
 import { chromium } from "playwright-core";
 import type { OpenClawConfig } from "../api.js";
 import type { DiffRenderOptions, DiffTheme } from "./types.js";
@@ -131,7 +131,7 @@ export class PlaywrightDiffScreenshotter implements DiffScreenshotter {
             if (document.documentElement.dataset.openclawDiffsReady === "true") {
               return true;
             }
-            return [...document.querySelectorAll("[data-openclaw-diff-host]")].every((element) => {
+            return [...document.querySelectorAll("[data-quiet-core-bot-diff-host]")].every((element) => {
               return (
                 element instanceof HTMLElement && element.shadowRoot?.querySelector("[data-diffs]")
               );
@@ -321,7 +321,7 @@ async function resolveBrowserExecutablePath(config: OpenClawConfig): Promise<str
   const cacheKey = JSON.stringify({
     configPath: config.browser?.executablePath?.trim() || "",
     env: [
-      process.env.OPENCLAW_BROWSER_EXECUTABLE_PATH ?? "",
+      process.env.QUIET_CORE_BROWSER_EXECUTABLE_PATH ?? "",
       process.env.BROWSER_EXECUTABLE_PATH ?? "",
       process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH ?? "",
     ],
@@ -355,7 +355,7 @@ async function resolveBrowserExecutablePathUncached(
   }
 
   const envCandidates = [
-    process.env.OPENCLAW_BROWSER_EXECUTABLE_PATH,
+    process.env.QUIET_CORE_BROWSER_EXECUTABLE_PATH,
     process.env.BROWSER_EXECUTABLE_PATH,
     process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,
   ]

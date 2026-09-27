@@ -5,9 +5,9 @@ import { existsSync } from "node:fs";
 import { chmod, mkdir, mkdtemp, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { redactSensitiveText } from "openclaw/plugin-sdk/logging-core";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
+import { redactSensitiveText } from "quiet-core-bot/plugin-sdk/logging-core";
+import { resolvePreferredOpenClawTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";
 import { resolveMatrixQaWindowsSystem32ExePath } from "../../windows-system-tools.js";
 
 export type MatrixQaCliRunResult = {
@@ -396,7 +396,7 @@ export async function createMatrixQaOpenClawCliRuntime(params: {
   userId: string;
 }) {
   const rootDir = await mkdtemp(
-    path.join(resolvePreferredOpenClawTmpDir(), "openclaw-matrix-cli-qa-"),
+    path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-matrix-cli-qa-"),
   );
   const artifactDir = path.join(
     params.outputDir,
@@ -454,9 +454,9 @@ export async function createMatrixQaOpenClawCliRuntime(params: {
     ...params.runtimeEnv,
     FORCE_COLOR: "0",
     NO_COLOR: "1",
-    OPENCLAW_CONFIG_PATH: configPath,
-    OPENCLAW_DISABLE_AUTO_UPDATE: "1",
-    OPENCLAW_STATE_DIR: stateDir,
+    QUIET_CORE_CONFIG_PATH: configPath,
+    QUIET_CORE_DISABLE_AUTO_UPDATE: "1",
+    QUIET_CORE_STATE_DIR: stateDir,
   };
   return {
     artifactDir,

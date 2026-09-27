@@ -17,7 +17,7 @@ describe("qa suite transport helpers", () => {
     state.addOutboundMessage({
       to: "dm:qa-operator",
       text: "⚠️ Something went wrong while processing your request. Please try again, or use /new to start a fresh session.",
-      senderId: "openclaw",
+      senderId: "quiet-core-bot",
       senderName: "OpenClaw QA",
     });
 
@@ -38,7 +38,7 @@ describe("qa suite transport helpers", () => {
     state.addOutboundMessage({
       to: "dm:qa-operator",
       text: '⚠️ No API key found for provider "openai". You are authenticated with OpenAI Codex OAuth. Use openai/gpt-5.5 with the Codex OAuth profile, or set OPENAI_API_KEY for direct OpenAI API access.',
-      senderId: "openclaw",
+      senderId: "quiet-core-bot",
       senderName: "OpenClaw QA",
     });
 
@@ -56,7 +56,7 @@ describe("qa suite transport helpers", () => {
     state.addOutboundMessage({
       to: "channel:qa-room",
       text: "⚠️ ✉️ Message failed",
-      senderId: "openclaw",
+      senderId: "quiet-core-bot",
       senderName: "OpenClaw QA",
     });
 
@@ -74,7 +74,7 @@ describe("qa suite transport helpers", () => {
     state.addOutboundMessage({
       to: "dm:qa-operator",
       text: "checking thread context; then post a tight progress reply here.\nQA_LEAK_OK",
-      senderId: "openclaw",
+      senderId: "quiet-core-bot",
       senderName: "OpenClaw QA",
     });
 
@@ -92,7 +92,7 @@ describe("qa suite transport helpers", () => {
     state.addOutboundMessage({
       to: "dm:qa-operator",
       text: "Read: AGENT.md\nEvidence snippet: Tool read not found\nStatus: blocked",
-      senderId: "openclaw",
+      senderId: "quiet-core-bot",
       senderName: "OpenClaw QA",
     });
 
@@ -104,7 +104,7 @@ describe("qa suite transport helpers", () => {
     state.addOutboundMessage({
       to: "dm:qa-operator",
       text: "previous scenario reply",
-      senderId: "openclaw",
+      senderId: "quiet-core-bot",
       senderName: "OpenClaw QA",
     });
     const sinceIndex = state
@@ -116,7 +116,7 @@ describe("qa suite transport helpers", () => {
     state.addOutboundMessage({
       to: "channel:qa-room",
       text: "current scenario reply",
-      senderId: "openclaw",
+      senderId: "quiet-core-bot",
       senderName: "OpenClaw QA",
     });
     await expect(waitForNoOutbound(state, 1, { sinceIndex })).rejects.toThrow(
@@ -145,7 +145,7 @@ describe("qa suite transport helpers", () => {
     state.addOutboundMessage({
       to: "dm:qa-operator",
       text: '⚠️ No API key found for provider "openai". You are authenticated with OpenAI Codex OAuth. Use openai/gpt-5.5 with the Codex OAuth profile, or set OPENAI_API_KEY for direct OpenAI API access.',
-      senderId: "openclaw",
+      senderId: "quiet-core-bot",
       senderName: "OpenClaw QA",
     });
 
@@ -163,7 +163,7 @@ describe("qa suite transport helpers", () => {
     state.addOutboundMessage({
       to: "dm:qa-operator",
       text: "working on it",
-      senderId: "openclaw",
+      senderId: "quiet-core-bot",
       senderName: "OpenClaw QA",
     });
     state.addInboundMessage({
@@ -192,7 +192,7 @@ describe("qa suite transport helpers", () => {
     state.addOutboundMessage({
       to: "dm:qa-operator",
       text: '⚠️ No API key found for provider "openai". You are authenticated with OpenAI Codex OAuth. Use openai/gpt-5.5 with the Codex OAuth profile, or set OPENAI_API_KEY for direct OpenAI API access.',
-      senderId: "openclaw",
+      senderId: "quiet-core-bot",
       senderName: "OpenClaw QA",
     });
 
@@ -210,13 +210,13 @@ describe("qa suite transport helpers", () => {
     state.addOutboundMessage({
       to: "dm:qa-operator",
       text: "working on it",
-      senderId: "openclaw",
+      senderId: "quiet-core-bot",
       senderName: "OpenClaw QA",
     });
     state.addOutboundMessage({
       to: "dm:qa-operator",
       text: "done",
-      senderId: "openclaw",
+      senderId: "quiet-core-bot",
       senderName: "OpenClaw QA",
     });
 
@@ -247,7 +247,7 @@ describe("qa suite transport helpers", () => {
     state.addOutboundMessage({
       to: "dm:qa-operator",
       text: "done",
-      senderId: "openclaw",
+      senderId: "quiet-core-bot",
       senderName: "OpenClaw QA",
     });
 

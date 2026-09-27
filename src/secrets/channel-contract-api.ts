@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { openRootFileSync } from "../infra/boundary-file-read.js";
 import { shouldRejectHardlinkedPluginFiles } from "../plugins/hardlink-policy.js";
 import type { PluginManifestRecord } from "../plugins/manifest-registry.js";
@@ -83,7 +83,7 @@ function orderedContractApiExtensions(): readonly string[] {
 
 function resolvePluginContractApiPath(rootDir: string): string | null {
   // Compiled npm-published plugins place their public artifacts under <rootDir>/dist/
-  // (per package.json `openclaw.runtimeExtensions`), while flat-layout plugins keep
+  // (per package.json `quiet-core-bot.runtimeExtensions`), while flat-layout plugins keep
   // them at <rootDir>/. Search both, preferring dist/ when running from built quiet-core-bot
   // artifacts and rootDir/ when running from source.
   const searchDirs = RUNNING_FROM_BUILT_ARTIFACT
@@ -140,7 +140,7 @@ function loadExternalChannelSecretContractFromRecord(
       return mod;
     }
   } catch (error) {
-    if (process.env.OPENCLAW_DEBUG_CHANNEL_CONTRACT_API === "1") {
+    if (process.env.QUIET_CORE_DEBUG_CHANNEL_CONTRACT_API === "1") {
       const detail = error instanceof Error ? error.message : String(error);
       process.stderr.write(
         `[channel-contract-api] failed to load ${record.id} contract ${safePath}: ${detail}\n`,

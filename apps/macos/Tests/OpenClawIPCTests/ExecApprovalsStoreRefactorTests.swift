@@ -59,8 +59,8 @@ struct ExecApprovalsStoreRefactorTests {
         try Self.seedCurrentApprovalsFile(in: stateDir)
 
         try await self.withLockedEnv([
-            "OPENCLAW_HOME": home.path,
-            "OPENCLAW_STATE_DIR": stateDir.path,
+            "QUIET_CORE_HOME": home.path,
+            "QUIET_CORE_STATE_DIR": stateDir.path,
         ]) {
             try await body(stateDir)
         }
@@ -76,8 +76,8 @@ struct ExecApprovalsStoreRefactorTests {
         defer { try? FileManager().removeItem(at: root) }
 
         try await self.withLockedEnv([
-            "OPENCLAW_HOME": home.path,
-            "OPENCLAW_STATE_DIR": stateDir.path,
+            "QUIET_CORE_HOME": home.path,
+            "QUIET_CORE_STATE_DIR": stateDir.path,
         ]) {
             try await body(home, stateDir)
         }

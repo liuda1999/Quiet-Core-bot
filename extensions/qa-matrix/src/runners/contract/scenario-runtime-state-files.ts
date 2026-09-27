@@ -3,7 +3,7 @@ import { createHash, randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
-import { isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { isRecord } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import type { MatrixQaScenarioContext } from "./scenario-runtime-shared.js";
 
 const MATRIX_SYNC_STORE_FILENAME = "bot-storage.json";
@@ -177,7 +177,7 @@ async function readMatrixSyncCacheCursorsFromSqlite(params: {
   userId?: string;
 }): Promise<MatrixSyncStoreCursor[]> {
   const databasePaths = await findFilesByName({
-    filename: "openclaw.sqlite",
+    filename: "quiet-core-bot.sqlite",
     rootDir: params.stateDir,
     maxDepth: 10,
   });
@@ -531,12 +531,12 @@ async function hasPersistedMatrixPluginStateDedupeEntry(params: {
     roomId: params.roomId,
   });
   const databasePaths = await findFilesByName({
-    filename: "openclaw.sqlite",
+    filename: "quiet-core-bot.sqlite",
     rootDir: params.stateDir,
     maxDepth: 4,
   });
   if (databasePaths.length === 0) {
-    databasePaths.push(path.join(params.stateDir, "state", "openclaw.sqlite"));
+    databasePaths.push(path.join(params.stateDir, "state", "quiet-core-bot.sqlite"));
   }
   const now = Date.now();
   const isExpectedValue = (raw: unknown) => {

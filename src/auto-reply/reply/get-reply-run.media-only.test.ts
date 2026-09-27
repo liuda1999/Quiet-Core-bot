@@ -2,7 +2,7 @@
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { importFreshModule } from "openclaw/plugin-sdk/test-fixtures";
+import { importFreshModule } from "quiet-core-bot/plugin-sdk/test-fixtures";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   clearActiveEmbeddedRun,
@@ -388,7 +388,7 @@ describe("runPreparedReply media-only handling", () => {
         resolvedThinkLevel: "high",
         sessionEntry,
         sessionStore,
-        storePath: "/tmp/openclaw-sessions.json",
+        storePath: "/tmp/quiet-core-bot-sessions.json",
         modelState: {
           resolveDefaultThinkingLevel: async () => "high",
           resolveThinkingCatalog: async () => [
@@ -958,7 +958,7 @@ describe("runPreparedReply media-only handling", () => {
   });
 
   it("hydrates current image MediaPaths by extension when MediaTypes are missing", async () => {
-    const tmpDir = await mkdtemp(path.join(os.tmpdir(), "openclaw-followup-image-"));
+    const tmpDir = await mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-followup-image-"));
     cleanupPaths.push(tmpDir);
     const imagePath = path.join(tmpDir, "inbound.png");
     await writeFile(
@@ -1082,7 +1082,7 @@ describe("runPreparedReply media-only handling", () => {
   });
 
   it("does not rehydrate current MediaPaths after image understanding enriched the prompt", async () => {
-    const tmpDir = await mkdtemp(path.join(os.tmpdir(), "openclaw-followup-image-"));
+    const tmpDir = await mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-followup-image-"));
     cleanupPaths.push(tmpDir);
     const imagePath = path.join(tmpDir, "inbound.png");
     await writeFile(
@@ -1153,7 +1153,7 @@ describe("runPreparedReply media-only handling", () => {
   });
 
   it("rehydrates only current MediaPaths missing image understanding", async () => {
-    const tmpDir = await mkdtemp(path.join(os.tmpdir(), "openclaw-followup-image-"));
+    const tmpDir = await mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-followup-image-"));
     cleanupPaths.push(tmpDir);
     const imagePath = path.join(tmpDir, "inbound.png");
     await writeFile(

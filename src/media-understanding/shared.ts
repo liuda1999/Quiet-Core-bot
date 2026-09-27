@@ -15,7 +15,7 @@ import {
   resolveDateTimestampMs,
   resolveExpiresAtMsFromDurationMs,
   resolveTimerTimeoutMs,
-} from "@openclaw/normalization-core/number-coercion";
+} from "@quiet-core/normalization-core/number-coercion";
 import type {
   ProviderRequestCapability,
   ProviderRequestTransport,
@@ -376,7 +376,7 @@ export function resolveProviderHttpRequestConfig(params: {
  * `TRUSTED_ENV_PROXY` mode based on the runtime environment.
  *
  * This is gated conservatively to avoid the SSRF bypasses the initial
- * auto-upgrade path exposed (see openclaw#64974 review threads):
+ * auto-upgrade path exposed (see quiet-core-bot#64974 review threads):
  *
  * 1. If the caller supplied an explicit `dispatcherPolicy` — custom proxy URL,
  *    `proxyTls`, or `connect` options — do NOT override it. Trusted-env mode
@@ -440,7 +440,7 @@ export async function fetchWithTimeoutGuarded(
   // `mode: GUARDED_FETCH_MODE.STRICT` here or by using `fetchWithSsrFGuard`
   // directly.
   //
-  // See openclaw#52162 for the reported failure mode on memory embeddings,
+  // See quiet-core-bot#52162 for the reported failure mode on memory embeddings,
   // which shares this code path with image/music/video/audio generation.
   const resolvedMode =
     options?.mode ??

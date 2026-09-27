@@ -95,7 +95,7 @@ function agentHarnessRunOutcome(result: AgentHarnessAttemptResult): DiagnosticHa
 }
 
 function shouldEmitAgentRunDiagnostics(harness: AgentHarness): boolean {
-  return harness.id !== "openclaw";
+  return harness.id !== "quiet-core-bot";
 }
 
 function diagnosticChannel(params: AgentHarnessAttemptParams): string | undefined {

@@ -4,7 +4,7 @@ import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { isInboundPathAllowed } from "@openclaw/media-core/inbound-path-policy";
+import { isInboundPathAllowed } from "@quiet-core/media-core/inbound-path-policy";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../../config/config.js";
 import type { ModelDefinitionConfig } from "../../config/types.models.js";
@@ -190,7 +190,7 @@ vi.mock("../auth-profiles.js", () => ({
   externalCliDiscoveryForProviderAuth: (params: { provider: string }) => params,
   ensureAuthProfileStore: (agentDir?: string) => {
     const store = readMockAuthProfileStore(agentDir);
-    if (process.env.OPENCLAW_TEST_CODEX_CLI_OAUTH === "1") {
+    if (process.env.QUIET_CORE_TEST_CODEX_CLI_OAUTH === "1") {
       store.profiles["openai:default"] = {
         provider: "openai",
         type: "oauth",
@@ -235,7 +235,7 @@ vi.mock("../auth-profiles/external-cli-sync.js", () => ({
       Array.from(options?.providerIds ?? []).map((providerId) => providerId.toLowerCase()),
     );
     if (
-      process.env.OPENCLAW_TEST_CODEX_CLI_OAUTH !== "1" ||
+      process.env.QUIET_CORE_TEST_CODEX_CLI_OAUTH !== "1" ||
       (!providerIds.has("openai") && !providerIds.has("codex"))
     ) {
       return [];
@@ -278,7 +278,7 @@ vi.mock("../model-auth.js", () => ({
   }) => {
     const providerConfig = params.cfg?.models?.providers?.[params.provider];
     if (params.provider === "codex") {
-      return process.env.OPENCLAW_TEST_CODEX_ROUTE === "1";
+      return process.env.QUIET_CORE_TEST_CODEX_ROUTE === "1";
     }
     if (params.provider === "openai" && params.modelApi === "openai-responses") {
       return Boolean(process.env.OPENAI_API_KEY || providerConfig?.apiKey);
@@ -314,7 +314,7 @@ vi.mock("../model-auth.js", () => ({
   },
 }));
 
-vi.mock("../openclaw-tools.js", async () => {
+vi.mock("../quiet-core-bot-tools.js", async () => {
   const { createImageTool: createImageToolLocal } = await import("./image-tool.js");
   return {
     createOpenClawTools: vi.fn((options?: MockOpenClawToolsOptions) => {
@@ -380,7 +380,7 @@ async function createOpenClawCodingToolsWithFreshModules(options?: CreateOpenCla
 }
 
 async function withTempAgentDir<T>(run: (agentDir: string) => Promise<T>): Promise<T> {
-  const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-image-"));
+  const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-image-"));
   try {
     return await run(agentDir);
   } finally {
@@ -446,7 +446,7 @@ async function withTempWorkspacePng(
   options?: { parentDir?: string },
 ) {
   const parentDir = options?.parentDir ?? os.tmpdir();
-  const workspaceParent = await fs.mkdtemp(path.join(parentDir, "openclaw-workspace-image-"));
+  const workspaceParent = await fs.mkdtemp(path.join(parentDir, "quiet-core-bot-workspace-image-"));
   try {
     const workspaceDir = path.join(workspaceParent, "workspace");
     await fs.mkdir(workspaceDir, { recursive: true });
@@ -883,7 +883,7 @@ type ImageToolInstance = ReturnType<typeof createRequiredImageTool>;
 async function withTempSandboxState(
   run: (ctx: { stateDir: string; agentDir: string; sandboxRoot: string }) => Promise<void>,
 ) {
-  const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-image-sandbox-"));
+  const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-image-sandbox-"));
   const agentDir = path.join(stateDir, "agent");
   const sandboxRoot = path.join(stateDir, "sandbox");
   await fs.mkdir(agentDir, { recursive: true });
@@ -974,8 +974,8 @@ describe("image tool implicit imageModel config", () => {
     "DASHSCOPE_API_KEY",
     "ZAI_API_KEY",
     "Z_AI_API_KEY",
-    "OPENCLAW_TEST_CODEX_CLI_OAUTH",
-    "OPENCLAW_TEST_CODEX_ROUTE",
+    "QUIET_CORE_TEST_CODEX_CLI_OAUTH",
+    "QUIET_CORE_TEST_CODEX_ROUTE",
     // Avoid implicit Copilot provider discovery hitting the network in tests.
     "COPILOT_GITHUB_TOKEN",
     "GH_TOKEN",
@@ -1051,7 +1051,7 @@ describe("image tool implicit imageModel config", () => {
     "$name",
     async ({ cfg, profiles, codexRoute, openAiApiKey, expected }) => {
       if (codexRoute) {
-        vi.stubEnv("OPENCLAW_TEST_CODEX_ROUTE", "1");
+        vi.stubEnv("QUIET_CORE_TEST_CODEX_ROUTE", "1");
       }
       if (openAiApiKey) {
         vi.stubEnv("OPENAI_API_KEY", "openai-test");
@@ -1074,7 +1074,7 @@ describe("image tool implicit imageModel config", () => {
   it("uses Codex media when OAuth-only OpenAI has configured vision model metadata", async () => {
     await withTempAgentDir(async (agentDir) => {
       await writeProfiles(agentDir, { "openai:chatgpt": openAiOAuthProfile() });
-      vi.stubEnv("OPENCLAW_TEST_CODEX_ROUTE", "1");
+      vi.stubEnv("QUIET_CORE_TEST_CODEX_ROUTE", "1");
       const cfg: OpenClawConfig = {
         ...openAiPrimaryCfg,
         models: {
@@ -1149,8 +1149,8 @@ describe("image tool implicit imageModel config", () => {
 
   it("lets external CLI Codex OAuth survive the candidate auth filter", async () => {
     await withTempAgentDir(async (agentDir) => {
-      vi.stubEnv("OPENCLAW_TEST_CODEX_CLI_OAUTH", "1");
-      vi.stubEnv("OPENCLAW_TEST_CODEX_ROUTE", "1");
+      vi.stubEnv("QUIET_CORE_TEST_CODEX_CLI_OAUTH", "1");
+      vi.stubEnv("QUIET_CORE_TEST_CODEX_ROUTE", "1");
 
       expect(resolveImageModelConfigForTool({ cfg: openAiPrimaryCfg, agentDir })).toEqual(
         codexImageModel,
@@ -1160,8 +1160,8 @@ describe("image tool implicit imageModel config", () => {
 
   it("lets external CLI Codex OAuth survive a supplied scoped auth store", async () => {
     await withTempAgentDir(async (agentDir) => {
-      vi.stubEnv("OPENCLAW_TEST_CODEX_CLI_OAUTH", "1");
-      vi.stubEnv("OPENCLAW_TEST_CODEX_ROUTE", "1");
+      vi.stubEnv("QUIET_CORE_TEST_CODEX_CLI_OAUTH", "1");
+      vi.stubEnv("QUIET_CORE_TEST_CODEX_ROUTE", "1");
 
       expect(
         resolveImageModelConfigForTool({
@@ -1176,7 +1176,7 @@ describe("image tool implicit imageModel config", () => {
   it("does not re-import persisted OpenAI OAuth when a scoped auth store is supplied", async () => {
     await withTempAgentDir(async (agentDir) => {
       await writeProfiles(agentDir, { "openai:chatgpt": openAiOAuthProfile() });
-      vi.stubEnv("OPENCLAW_TEST_CODEX_ROUTE", "1");
+      vi.stubEnv("QUIET_CORE_TEST_CODEX_ROUTE", "1");
 
       expect(
         resolveImageModelConfigForTool({
@@ -2105,7 +2105,7 @@ describe("image tool implicit imageModel config", () => {
         expect(fetch).toHaveBeenCalledTimes(1);
 
         // File outside workspace is rejected even without sandbox.
-        const outsideDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-outside-"));
+        const outsideDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-outside-"));
         const outsideImage = path.join(outsideDir, "secret.png");
         await fs.writeFile(outsideImage, Buffer.from(ONE_PIXEL_PNG_B64, "base64"));
         try {
@@ -2123,7 +2123,7 @@ describe("image tool implicit imageModel config", () => {
     const fetch = stubMinimaxOkFetch();
     await withTempAgentDir(async (agentDir) => {
       const cfg = createMinimaxImageConfig();
-      const outsideDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-image-outside-"));
+      const outsideDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-image-outside-"));
       const outsideImage = path.join(outsideDir, "secret.png");
       await fs.writeFile(outsideImage, Buffer.from(ONE_PIXEL_PNG_B64, "base64"));
       try {
@@ -2154,7 +2154,7 @@ describe("image tool implicit imageModel config", () => {
         capabilities: ["image"],
         describeImage,
       });
-      const attachmentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-imessage-root-"));
+      const attachmentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-imessage-root-"));
       const imagePath = path.join(attachmentRoot, "photo.png");
       await fs.writeFile(imagePath, Buffer.from(ONE_PIXEL_PNG_B64, "base64"));
       try {
@@ -2224,7 +2224,7 @@ describe("image tool implicit imageModel config", () => {
         describeImage,
       });
       const attachmentRootParent = await fs.mkdtemp(
-        path.join(os.tmpdir(), "openclaw-imessage-wildcard-root-"),
+        path.join(os.tmpdir(), "quiet-core-bot-imessage-wildcard-root-"),
       );
       const attachmentRoot = path.join(attachmentRootParent, "work", "Attachments");
       const imagePath = path.join(attachmentRoot, "photo.png");
@@ -2464,7 +2464,7 @@ describe("image tool implicit imageModel config", () => {
 
       const res = await tool.execute("t1", {
         prompt: "Describe the image.",
-        image: "@/Users/steipete/.openclaw/media/inbound/photo.png",
+        image: "@/Users/steipete/.quiet-core-bot/media/inbound/photo.png",
       });
 
       expect(fetch).toHaveBeenCalledTimes(1);
@@ -2669,7 +2669,7 @@ describe("image tool MiniMax VLM routing", () => {
   async function createMinimaxVlmFixture(baseResp: { status_code: number; status_msg: string }) {
     const fetch = stubMinimaxFetch(baseResp, baseResp.status_code === 0 ? "ok" : "");
 
-    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-minimax-vlm-"));
+    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-minimax-vlm-"));
     vi.stubEnv("MINIMAX_API_KEY", "minimax-test");
     const cfg = createMinimaxImageConfig();
     const tool = createRequiredImageTool({ config: cfg, agentDir });
@@ -2821,14 +2821,14 @@ describe("image tool managed inbound media", () => {
   async function withManagedInboundPng(
     run: (params: { stateDir: string; mediaId: string; mediaPath: string }) => Promise<void>,
   ) {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-image-managed-inbound-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-image-managed-inbound-"));
     const inboundDir = path.join(stateDir, "media", "inbound");
     const mediaId = "claim-check-test.png";
     const mediaPath = path.join(inboundDir, mediaId);
     await fs.mkdir(inboundDir, { recursive: true });
     await fs.writeFile(mediaPath, Buffer.from(ONE_PIXEL_PNG_B64, "base64"));
     try {
-      await withEnvAsync({ OPENCLAW_STATE_DIR: stateDir }, async () => {
+      await withEnvAsync({ QUIET_CORE_STATE_DIR: stateDir }, async () => {
         await run({ stateDir, mediaId, mediaPath });
       });
     } finally {

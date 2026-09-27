@@ -1,10 +1,10 @@
 /** TLS helpers for ChatGPT OAuth provider discovery in plugin runtime code. */
 import path from "node:path";
-import { resolveTimerTimeoutMs } from "@openclaw/normalization-core/number-coercion";
-import { asNullableObjectRecord } from "@openclaw/normalization-core/record-coerce";
+import { resolveTimerTimeoutMs } from "@quiet-core/normalization-core/number-coercion";
+import { asNullableObjectRecord } from "@quiet-core/normalization-core/record-coerce";
 import { note } from "../../packages/terminal-core/src/note.js";
 import { formatCliCommand } from "../cli/command-format.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 
 const TLS_CERT_ERROR_CODES = new Set([
   "UNABLE_TO_GET_ISSUER_CERT_LOCALLY",
@@ -23,7 +23,7 @@ const TLS_CERT_ERROR_PATTERNS = [
 ];
 
 const OPENAI_AUTH_PROBE_URL =
-  "https://auth.openai.com/oauth/authorize?response_type=code&client_id=openclaw-preflight&redirect_uri=http%3A%2F%2Flocalhost%3A1455%2Fauth%2Fcallback&scope=openid+profile+email";
+  "https://auth.openai.com/oauth/authorize?response_type=code&client_id=quiet-core-bot-preflight&redirect_uri=http%3A%2F%2Flocalhost%3A1455%2Fauth%2Fcallback&scope=openid+profile+email";
 const OPENAI_PROVIDER_ID = "openai";
 
 type PreflightFailureKind = "tls-cert" | "network";

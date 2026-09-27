@@ -1,5 +1,5 @@
 // Qa Lab plugin module implements auth behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import {
   applyAuthProfileConfig,
   coerceSecretRef,
@@ -9,23 +9,23 @@ import {
   readCodexCliCredentialsCached,
   resolveEnvApiKey,
   validateAnthropicSetupToken,
-} from "openclaw/plugin-sdk/provider-auth";
-import { normalizeStringEntries, uniqueStrings } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "quiet-core-bot/plugin-sdk/provider-auth";
+import { normalizeStringEntries, uniqueStrings } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { resolveQaAgentAuthDir, writeQaAuthProfiles } from "../shared/auth-store.js";
 
-export const QA_LIVE_ANTHROPIC_SETUP_TOKEN_ENV = "OPENCLAW_QA_LIVE_ANTHROPIC_SETUP_TOKEN";
-export const QA_LIVE_SETUP_TOKEN_VALUE_ENV = "OPENCLAW_LIVE_SETUP_TOKEN_VALUE";
-const QA_LIVE_ANTHROPIC_SETUP_TOKEN_PROFILE_ENV = "OPENCLAW_QA_LIVE_ANTHROPIC_SETUP_TOKEN_PROFILE";
+export const QA_LIVE_ANTHROPIC_SETUP_TOKEN_ENV = "QUIET_CORE_QA_LIVE_ANTHROPIC_SETUP_TOKEN";
+export const QA_LIVE_SETUP_TOKEN_VALUE_ENV = "QUIET_CORE_LIVE_SETUP_TOKEN_VALUE";
+const QA_LIVE_ANTHROPIC_SETUP_TOKEN_PROFILE_ENV = "QUIET_CORE_QA_LIVE_ANTHROPIC_SETUP_TOKEN_PROFILE";
 const QA_LIVE_ANTHROPIC_SETUP_TOKEN_PROFILE_ID = "anthropic:qa-setup-token";
 const QA_LIVE_API_KEY_AGENT_IDS = Object.freeze(["main", "qa"] as const);
 const QA_OPENAI_PROVIDER_ID = "openai";
 const QA_LIVE_API_KEY_ALIASES: Readonly<Record<string, readonly string[]>> = Object.freeze({
-  anthropic: ["OPENCLAW_LIVE_ANTHROPIC_KEY"],
-  gemini: ["OPENCLAW_LIVE_GEMINI_KEY"],
+  anthropic: ["QUIET_CORE_LIVE_ANTHROPIC_KEY"],
+  gemini: ["QUIET_CORE_LIVE_GEMINI_KEY"],
   openai: [
     "CODEX_API_KEY",
-    "OPENCLAW_LIVE_CODEX_API_KEY",
-    "OPENCLAW_LIVE_OPENAI_KEY",
+    "QUIET_CORE_LIVE_CODEX_API_KEY",
+    "QUIET_CORE_LIVE_OPENAI_KEY",
     "OPENAI_API_KEY",
   ],
 });
@@ -158,8 +158,8 @@ function qaLiveRequiresCodexAuth(params: {
   if (!providerIds.includes(QA_OPENAI_PROVIDER_ID)) {
     return false;
   }
-  const forcedRuntime = params.env.OPENCLAW_QA_FORCE_RUNTIME?.trim().toLowerCase();
-  if (forcedRuntime === "openclaw") {
+  const forcedRuntime = params.env.QUIET_CORE_QA_FORCE_RUNTIME?.trim().toLowerCase();
+  if (forcedRuntime === "quiet-core-bot") {
     return false;
   }
   if (forcedRuntime === "codex") {
@@ -297,7 +297,7 @@ export function assertQaLiveCodexAuthAvailable(params: {
   throw new Error(
     [
       "QA live-frontier cannot run Codex-backed OpenAI models inside an isolated QA agent because no portable Codex auth is available.",
-      "Set OPENAI_API_KEY or OPENCLAW_LIVE_OPENAI_KEY for an API-key fallback, or set CODEX_HOME to a logged-in Codex CLI home.",
+      "Set OPENAI_API_KEY or QUIET_CORE_LIVE_OPENAI_KEY for an API-key fallback, or set CODEX_HOME to a logged-in Codex CLI home.",
       "Host OpenClaw OAuth refresh profiles are not copied into QA temp stores.",
     ].join(" "),
   );

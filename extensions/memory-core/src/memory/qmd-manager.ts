@@ -6,8 +6,8 @@ import os from "node:os";
 import path from "node:path";
 import readline from "node:readline";
 import chokidar, { type FSWatcher } from "chokidar";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { withFileLock } from "openclaw/plugin-sdk/file-lock";
+import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
+import { withFileLock } from "quiet-core-bot/plugin-sdk/file-lock";
 import {
   createSubsystemLogger,
   isPathInside,
@@ -18,7 +18,7 @@ import {
   resolveGlobalSingleton,
   resolveStateDir,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
+} from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
 import {
   buildSessionEntry,
   deriveQmdScopeChannel,
@@ -33,7 +33,7 @@ import {
   type QmdQueryResult,
   type SessionFileEntry,
   type SessionTranscriptCorpusEntry,
-} from "openclaw/plugin-sdk/memory-core-host-engine-qmd";
+} from "quiet-core-bot/plugin-sdk/memory-core-host-engine-qmd";
 import {
   buildMemoryReadResult,
   buildMemoryReadResultFromSlice,
@@ -52,18 +52,18 @@ import {
   type ResolvedMemoryBackendConfig,
   type ResolvedQmdConfig,
   type ResolvedQmdMcporterConfig,
-} from "openclaw/plugin-sdk/memory-core-host-engine-storage";
+} from "quiet-core-bot/plugin-sdk/memory-core-host-engine-storage";
 import {
   addTimerTimeoutGraceMs,
   isFutureDateTimestampMs,
   resolveExpiresAtMsFromDurationMs,
-} from "openclaw/plugin-sdk/number-runtime";
-import { formatSessionTranscriptMemoryHitKey } from "openclaw/plugin-sdk/session-transcript-hit";
+} from "quiet-core-bot/plugin-sdk/number-runtime";
+import { formatSessionTranscriptMemoryHitKey } from "quiet-core-bot/plugin-sdk/session-transcript-hit";
 import {
   localeLowercasePreservingWhitespace,
   normalizeLowercaseStringOrEmpty,
   uniqueValues,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { asRecord } from "../dreaming-shared.js";
 import {
   attachQmdSessionArtifactHit,
@@ -122,9 +122,9 @@ const QMD_EMBED_LOCK_RETRY_TEMPLATE = {
   randomize: true,
 } as const;
 const QMD_INDEX_CONFIG_FILE = "index.yml";
-const MCPORTER_STATE_KEY = Symbol.for("openclaw.mcporterState");
-const QMD_EMBED_QUEUE_KEY = Symbol.for("openclaw.qmdEmbedQueueTail");
-const QMD_UPDATE_QUEUE_KEY = Symbol.for("openclaw.qmdUpdateQueueState");
+const MCPORTER_STATE_KEY = Symbol.for("quiet-core-bot.mcporterState");
+const QMD_EMBED_QUEUE_KEY = Symbol.for("quiet-core-bot.qmdEmbedQueueTail");
+const QMD_UPDATE_QUEUE_KEY = Symbol.for("quiet-core-bot.qmdUpdateQueueState");
 const IGNORED_MEMORY_WATCH_DIR_NAMES = new Set([
   ".git",
   ".cache",

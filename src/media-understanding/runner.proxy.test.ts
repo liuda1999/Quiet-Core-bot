@@ -118,7 +118,7 @@ describe("runCapability proxy fetch passthrough", () => {
   it("passes fetchFn to audio provider when HTTPS_PROXY is set", async () => {
     await withEnvAsync({ HTTPS_PROXY: "http://proxy.test:8080" }, async () => {
       const seenFetchFn = await runAudioCapabilityWithFetchCapture({
-        fixturePrefix: "openclaw-audio-proxy",
+        fixturePrefix: "quiet-core-bot-audio-proxy",
         outputText: "transcribed",
       });
       expect(seenFetchFn).toBe(proxyFetchMocks.proxyFetch);
@@ -127,7 +127,7 @@ describe("runCapability proxy fetch passthrough", () => {
 
   it("passes fetchFn to video provider when HTTPS_PROXY is set", async () => {
     await withEnvAsync({ HTTPS_PROXY: "http://proxy.test:8080" }, async () => {
-      await withVideoFixture("openclaw-video-proxy", async ({ ctx, media, cache }) => {
+      await withVideoFixture("quiet-core-bot-video-proxy", async ({ ctx, media, cache }) => {
         let seenFetchFn: typeof fetch | undefined;
 
         const result = await runCapability({
@@ -179,7 +179,7 @@ describe("runCapability proxy fetch passthrough", () => {
       { HTTPS_PROXY: "", HTTP_PROXY: "", https_proxy: "", http_proxy: "" },
       async () => {
         const seenFetchFn = await runAudioCapabilityWithFetchCapture({
-          fixturePrefix: "openclaw-audio-no-proxy",
+          fixturePrefix: "quiet-core-bot-audio-no-proxy",
           outputText: "ok",
         });
         expect(seenFetchFn).toBeUndefined();
@@ -190,7 +190,7 @@ describe("runCapability proxy fetch passthrough", () => {
   it("passes allowPrivateNetwork to audio provider when set in providerConfig.request", async () => {
     let seenRequest: AudioTranscriptionRequest["request"];
 
-    await withAudioFixture("openclaw-audio-allowprivatenetwork", async ({ ctx, media, cache }) => {
+    await withAudioFixture("quiet-core-bot-audio-allowprivatenetwork", async ({ ctx, media, cache }) => {
       const providerRegistry = buildProviderRegistry({
         openai: {
           id: "openai",

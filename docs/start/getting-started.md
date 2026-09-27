@@ -92,7 +92,7 @@ Need to install Node? See [Node setup](/install/node).
   assets and `index.html`.
 
 ```bash
-mkdir -p "$HOME/.openclaw/control-ui-custom"
+mkdir -p "$HOME/.quiet-core-bot/control-ui-custom"
 # Copy your built static files into that directory.
 ```
 
@@ -103,7 +103,7 @@ Then set:
   "gateway": {
     "controlUi": {
       "enabled": true,
-      "root": "$HOME/.openclaw/control-ui-custom"
+      "root": "$HOME/.quiet-core-bot/control-ui-custom"
     }
   }
 }
@@ -138,9 +138,9 @@ quiet-core-bot dashboard
 <Accordion title="Advanced: environment variables">
   If you run Quiet Core bot as a service account or want custom paths:
 
-- `OPENCLAW_HOME` — home directory for internal path resolution
-- `OPENCLAW_STATE_DIR` — override the state directory
-- `OPENCLAW_CONFIG_PATH` — override the config file path
+- `QUIET_CORE_HOME` — home directory for internal path resolution
+- `QUIET_CORE_STATE_DIR` — override the state directory
+- `QUIET_CORE_CONFIG_PATH` — override the config file path
 
 Full reference: [Environment variables](/help/environment).
 </Accordion>

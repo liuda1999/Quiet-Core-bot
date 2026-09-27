@@ -68,7 +68,7 @@ describe("buildBareSessionResetPrompt", () => {
   });
 
   it("resolves shared bare reset prompt state from workspace bootstrap truth", async () => {
-    const workspaceDir = await makeTempWorkspace("openclaw-reset-bootstrap-");
+    const workspaceDir = await makeTempWorkspace("quiet-core-bot-reset-bootstrap-");
     await fs.writeFile(path.join(workspaceDir, "BOOTSTRAP.md"), "ritual", "utf8");
 
     const pending = await resolveBareSessionResetPromptState({ workspaceDir });
@@ -85,7 +85,7 @@ describe("buildBareSessionResetPrompt", () => {
   });
 
   it("does not resolve bootstrap file access when bootstrap is complete", async () => {
-    const workspaceDir = await makeTempWorkspace("openclaw-reset-bootstrap-complete-");
+    const workspaceDir = await makeTempWorkspace("quiet-core-bot-reset-bootstrap-complete-");
     let resolvedAccess = false;
 
     const complete = await resolveBareSessionResetPromptState({
@@ -102,7 +102,7 @@ describe("buildBareSessionResetPrompt", () => {
   });
 
   it("suppresses bootstrap mode for non-primary bare reset sessions", async () => {
-    const workspaceDir = await makeTempWorkspace("openclaw-reset-non-primary-");
+    const workspaceDir = await makeTempWorkspace("quiet-core-bot-reset-non-primary-");
     await fs.writeFile(path.join(workspaceDir, "BOOTSTRAP.md"), "ritual", "utf8");
 
     const pending = await resolveBareSessionResetPromptState({
@@ -117,7 +117,7 @@ describe("buildBareSessionResetPrompt", () => {
   });
 
   it("uses limited bootstrap mode when bare reset has no bootstrap file access", async () => {
-    const workspaceDir = await makeTempWorkspace("openclaw-reset-no-file-access-");
+    const workspaceDir = await makeTempWorkspace("quiet-core-bot-reset-no-file-access-");
     await fs.writeFile(path.join(workspaceDir, "BOOTSTRAP.md"), "ritual", "utf8");
 
     const pending = await resolveBareSessionResetPromptState({

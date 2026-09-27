@@ -31,7 +31,7 @@ Use `--webhook <url>` when the job should POST the finished payload instead of d
 quiet-core-bot cron create "0 18 * * 1-5" \
   "Summarize today's deploys as JSON." \
   --name "Deploy digest" \
-  --webhook "https://example.invalid/openclaw/cron"
+  --webhook "https://example.invalid/quiet-core-bot/cron"
 ```
 
 Use `--command` for deterministic shell-style jobs that should run inside Quiet Core bot cron without starting an isolated agent/model run:
@@ -291,7 +291,7 @@ quiet-core-bot cron create "*/30 * * * *" \
   --timeout-seconds 120 \
   --no-output-timeout-seconds 30 \
   --output-max-bytes 65536 \
-  --webhook "https://example.invalid/openclaw/cron"
+  --webhook "https://example.invalid/quiet-core-bot/cron"
 ```
 
 ## Common admin commands
@@ -334,7 +334,7 @@ Delivery tweaks:
 
 ```bash
 quiet-core-bot cron edit <job-id> --announce --channel slack --to "channel:C1234567890"
-quiet-core-bot cron edit <job-id> --webhook "https://example.invalid/openclaw/cron"
+quiet-core-bot cron edit <job-id> --webhook "https://example.invalid/quiet-core-bot/cron"
 quiet-core-bot cron edit <job-id> --best-effort-deliver
 quiet-core-bot cron edit <job-id> --no-best-effort-deliver
 quiet-core-bot cron edit <job-id> --no-deliver

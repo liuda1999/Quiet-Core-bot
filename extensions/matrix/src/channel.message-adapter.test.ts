@@ -3,7 +3,7 @@ import {
   verifyChannelMessageAdapterCapabilityProofs,
   verifyChannelMessageLiveCapabilityAdapterProofs,
   verifyChannelMessageLiveFinalizerProofs,
-} from "openclaw/plugin-sdk/channel-outbound";
+} from "quiet-core-bot/plugin-sdk/channel-outbound";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../runtime-api.js";
 
@@ -103,7 +103,7 @@ describe("matrix channel message adapter", () => {
         to: "room:!room:example",
         text: "caption",
         mediaUrl: "file:///tmp/cat.png",
-        mediaLocalRoots: ["/tmp/openclaw"],
+        mediaLocalRoots: ["/tmp/quiet-core-bot"],
         accountId: "default",
         audioAsVoice: true,
       });
@@ -113,7 +113,7 @@ describe("matrix channel message adapter", () => {
       const options = lastMatrixSendOptions();
       expect(options.cfg).toBe(cfg);
       expect(options.mediaUrl).toBe("file:///tmp/cat.png");
-      expect(options.mediaLocalRoots).toEqual(["/tmp/openclaw"]);
+      expect(options.mediaLocalRoots).toEqual(["/tmp/quiet-core-bot"]);
       expect(options.audioAsVoice).toBe(true);
       expect(result.receipt.parts[0]?.kind).toBe("voice");
     };

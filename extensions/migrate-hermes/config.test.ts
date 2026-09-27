@@ -1,6 +1,6 @@
 // Migrate Hermes tests cover config plugin behavior.
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/provider-auth";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/provider-auth";
 import { afterEach, describe, expect, it } from "vitest";
 import { buildHermesMigrationProvider } from "./provider.js";
 import {

@@ -1,8 +1,8 @@
 // Transcript redaction tests cover structured and text transcript fields so
 // secrets do not persist in logs or replay artifacts.
-import type { AgentMessage } from "openclaw/plugin-sdk/agent-core";
+import type { AgentMessage } from "quiet-core-bot/plugin-sdk/agent-core";
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import * as loggingConfigModule from "../logging/config.js";
 import { redactTranscriptMessage } from "./transcript-redact.js";
 
@@ -149,7 +149,7 @@ describe("redactTranscriptMessage", () => {
 
   it.each([
     {
-      api: "openclaw-openai-responses-transport",
+      api: "quiet-core-bot-openai-responses-transport",
       provider: "openai",
       block: {
         type: "thinking",
@@ -168,7 +168,7 @@ describe("redactTranscriptMessage", () => {
       }),
     },
     {
-      api: "openclaw-anthropic-messages-transport",
+      api: "quiet-core-bot-anthropic-messages-transport",
       provider: "anthropic",
       block: {
         type: "thinking",
@@ -179,7 +179,7 @@ describe("redactTranscriptMessage", () => {
       expectedSignature: CIPHERTEXT_WITH_TOKEN_SHAPED_BYTES,
     },
     {
-      api: "openclaw-google-generative-ai-transport",
+      api: "quiet-core-bot-google-generative-ai-transport",
       provider: "google",
       block: {
         type: "toolCall",
@@ -205,7 +205,7 @@ describe("redactTranscriptMessage", () => {
       expectedSignature: SHORT_GOOGLE_THOUGHT_SIGNATURE,
     },
     {
-      api: "openclaw-openai-completions-transport",
+      api: "quiet-core-bot-openai-completions-transport",
       provider: "google",
       block: {
         type: "toolCall",
@@ -383,7 +383,7 @@ describe("redactTranscriptMessage", () => {
     expect(blocks[2].thought_signature).toBe(CIPHERTEXT_WITH_TOKEN_SHAPED_BYTES);
   });
 
-  it.each(["openai-responses", "openclaw-openai-responses-transport"])(
+  it.each(["openai-responses", "quiet-core-bot-openai-responses-transport"])(
     "preserves structured OpenAI text signatures for %s",
     (api) => {
       const textSignature = JSON.stringify({ v: 1, id: COPILOT_CONNECTION_BOUND_ID });

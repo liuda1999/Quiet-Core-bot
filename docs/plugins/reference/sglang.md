@@ -11,7 +11,7 @@ Adds SGLang model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/sglang-provider`
+- Package: `@quiet-core/sglang-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

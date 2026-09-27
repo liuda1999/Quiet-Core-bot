@@ -1,14 +1,14 @@
 // Normalizes model input config into provider and model references.
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
+import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
 import {
   normalizeGooglePreviewModelId,
   normalizeTogetherModelId,
-} from "@openclaw/model-catalog-core/provider-model-id-normalize";
-import { isRecord as isPlainRecord } from "@openclaw/normalization-core/record-coerce";
+} from "@quiet-core/model-catalog-core/provider-model-id-normalize";
+import { isRecord as isPlainRecord } from "@quiet-core/normalization-core/record-coerce";
 import {
   normalizeOptionalString,
   resolvePrimaryStringValue,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/normalization-core/string-coerce";
 import { modelKey } from "../shared/model-key.js";
 import type { AgentModelConfig, AgentToolModelConfig } from "./types.agents-shared.js";
 

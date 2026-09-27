@@ -49,14 +49,14 @@ function readManifestRecords(): PluginManifest[] {
   return listExtensionPackagePaths(extensionsDir)
     .filter((packagePath) => {
       const packageJson = JSON.parse(fs.readFileSync(packagePath, "utf-8")) as {
-        openclaw?: OpenClawPackageManifest;
+        "quiet-core-bot"?: OpenClawPackageManifest;
       };
-      return normalizeBundledPluginStringList(packageJson.openclaw?.extensions).length > 0;
+      return normalizeBundledPluginStringList(packageJson["quiet-core-bot"]?.extensions).length > 0;
     })
     .map(
       (packagePath) =>
         JSON.parse(
-          fs.readFileSync(path.join(path.dirname(packagePath), "openclaw.plugin.json"), "utf-8"),
+          fs.readFileSync(path.join(path.dirname(packagePath), "quiet-core-bot.plugin.json"), "utf-8"),
         ) as PluginManifest,
     )
     .toSorted((left, right) => left.id.localeCompare(right.id));

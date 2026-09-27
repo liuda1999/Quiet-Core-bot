@@ -39,7 +39,7 @@ Every rule's id is rewritten to `<source-id>.<original-id>`. Every rule's
 ## Recompiling
 
 ```bash
-# from the openclaw repo root
+# from the quiet-core-bot repo root
 node security/opengrep/compile-rules.mjs \
   --rules-dir <folder-with-source-rule-yaml>
 ```

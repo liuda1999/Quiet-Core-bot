@@ -12,7 +12,7 @@ import {
   readConfigFileSnapshot,
   replaceConfigFile,
 } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { tracePluginLifecyclePhaseAsync } from "../plugins/plugin-lifecycle-trace.js";
 import { defaultRuntime } from "../runtime.js";
 import { shortenHomeInString } from "../utils.js";
@@ -111,7 +111,7 @@ function formatBlockedRuntimePluginGuidance(params: {
   const alternative =
     pluginId === "acpx"
       ? "disable ACP/acpx in acp config"
-      : 'change the runtime policy to "openclaw"';
+      : 'change the runtime policy to "quiet-core-bot"';
   if (params.cfg.plugins?.enabled === false) {
     return `Enable plugin loading and the "${pluginId}" plugin, or ${alternative}.`;
   }

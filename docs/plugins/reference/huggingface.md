@@ -11,7 +11,7 @@ Adds Hugging Face model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/huggingface-provider`
+- Package: `@quiet-core/huggingface-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

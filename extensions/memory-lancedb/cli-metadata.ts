@@ -1,5 +1,5 @@
 // Memory Lancedb plugin module implements cli metadata behavior.
-import { definePluginEntry } from "openclaw/plugin-sdk/core";
+import { definePluginEntry } from "quiet-core-bot/plugin-sdk/core";
 
 export default definePluginEntry({
   id: "memory-lancedb",

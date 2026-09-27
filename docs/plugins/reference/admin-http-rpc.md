@@ -11,7 +11,7 @@ Quiet Core bot admin HTTP RPC endpoint.
 
 ## Distribution
 
-- Package: `@openclaw/admin-http-rpc`
+- Package: `@quiet-core/admin-http-rpc`
 - Install route: included in Quiet Core bot
 
 ## Surface

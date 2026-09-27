@@ -63,7 +63,7 @@ of live probe output.
 </Steps>
 
 <Note>
-Gateway config reload watches the active config file path (resolved from profile/state defaults, or `OPENCLAW_CONFIG_PATH` when set).
+Gateway config reload watches the active config file path (resolved from profile/state defaults, or `QUIET_CORE_CONFIG_PATH` when set).
 Default mode is `gateway.reload.mode="hybrid"`.
 After the first successful load, the running process serves the active in-memory config snapshot; successful reload swaps that snapshot atomically.
 </Note>
@@ -79,7 +79,7 @@ After the first successful load, the running process serves the active in-memory
 - Default bind mode: `loopback`.
 - Auth is required by default. Shared-secret setups use
   `gateway.auth.token` / `gateway.auth.password` (or
-  `OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`), and non-loopback
+  `QUIET_CORE_GATEWAY_TOKEN` / `QUIET_CORE_GATEWAY_PASSWORD`), and non-loopback
   reverse-proxy setups can use `gateway.auth.mode: "trusted-proxy"`.
 
 ## OpenAI-compatible endpoints
@@ -100,9 +100,9 @@ Why this set matters:
 
 Planning note:
 
-- `/v1/models` is agent-first: it returns `openclaw`, `openclaw/default`, and `openclaw/<agentId>`.
-- `openclaw/default` is the stable alias that always maps to the configured default agent.
-- Use `x-openclaw-model` when you want a backend provider/model override; otherwise the selected agent's normal model and embedding setup stays in control.
+- `/v1/models` is agent-first: it returns `quiet-core-bot`, `quiet-core-bot/default`, and `quiet-core-bot/<agentId>`.
+- `quiet-core-bot/default` is the stable alias that always maps to the configured default agent.
+- Use `x-quiet-core-bot-model` when you want a backend provider/model override; otherwise the selected agent's normal model and embedding setup stays in control.
 
 All of these run on the main Gateway port and use the same trusted operator auth boundary as the rest of the Gateway HTTP API.
 
@@ -112,7 +112,7 @@ Admin HTTP RPC (`POST /api/v1/admin/rpc`) is a separate, default-off plugin rout
 
 | Setting      | Resolution order                                              |
 | ------------ | ------------------------------------------------------------- |
-| Gateway port | `--port` → `OPENCLAW_GATEWAY_PORT` → `gateway.port` → `18789` |
+| Gateway port | `--port` → `QUIET_CORE_GATEWAY_PORT` → `gateway.port` → `18789` |
 | Bind mode    | CLI/override → `gateway.bind` → `loopback`                    |
 
 Installed gateway services record the resolved `--port` in supervisor metadata. After changing `gateway.port`, run `quiet-core-bot doctor --fix` or `quiet-core-bot gateway install --force` so launchd/systemd/schtasks starts the process on the new port.
@@ -183,15 +183,15 @@ What to expect:
 Checklist per instance:
 
 - Unique `gateway.port`
-- Unique `OPENCLAW_CONFIG_PATH`
-- Unique `OPENCLAW_STATE_DIR`
+- Unique `QUIET_CORE_CONFIG_PATH`
+- Unique `QUIET_CORE_STATE_DIR`
 - Unique `agents.defaults.workspace`
 
 Example:
 
 ```bash
-OPENCLAW_CONFIG_PATH=~/.quiet-core-bot/a.json OPENCLAW_STATE_DIR=~/.quiet-core-bot-a quiet-core-bot gateway --port 19001
-OPENCLAW_CONFIG_PATH=~/.quiet-core-bot/b.json OPENCLAW_STATE_DIR=~/.quiet-core-bot-b quiet-core-bot gateway --port 19002
+QUIET_CORE_CONFIG_PATH=~/.quiet-core-bot/a.json QUIET_CORE_STATE_DIR=~/.quiet-core-bot-a quiet-core-bot gateway --port 19001
+QUIET_CORE_CONFIG_PATH=~/.quiet-core-bot/b.json QUIET_CORE_STATE_DIR=~/.quiet-core-bot-b quiet-core-bot gateway --port 19002
 ```
 
 Detailed setup: [/gateway/multiple-gateways](/gateway/multiple-gateways).
@@ -235,7 +235,7 @@ When the gateway may be mid-work (queued operations, reply delivery, embedded ru
 
 On macOS, `gateway stop` uses `launchctl bootout` by default — this removes the LaunchAgent from the current boot session without persisting a disable, so KeepAlive auto-recovery still works after unexpected crashes and `gateway start` re-enables cleanly. To persistently suppress auto-respawn across reboots, pass `--disable`: `quiet-core-bot gateway stop --disable`.
 
-LaunchAgent labels are `ai.openclaw.gateway` (default) or `ai.openclaw.<profile>` (named profile). `quiet-core-bot doctor` audits and repairs service config drift.
+LaunchAgent labels are `ai.quiet-core-bot.gateway` (default) or `ai.quiet-core-bot.<profile>` (named profile). `quiet-core-bot doctor` audits and repairs service config drift.
 
   </Tab>
 
@@ -243,7 +243,7 @@ LaunchAgent labels are `ai.openclaw.gateway` (default) or `ai.openclaw.<profile>
 
 ```bash
 quiet-core-bot gateway install
-systemctl --user enable --now openclaw-gateway[-<profile>].service
+systemctl --user enable --now quiet-core-bot-gateway[-<profile>].service
 quiet-core-bot gateway status
 ```
 
@@ -262,7 +262,7 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
-ExecStart=/usr/local/bin/openclaw gateway --port 18789
+ExecStart=/usr/local/bin/quiet-core-bot gateway --port 18789
 Restart=always
 RestartSec=5
 TimeoutStopSec=30
@@ -299,14 +299,14 @@ Use a system unit for multi-user/always-on hosts.
 
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable --now openclaw-gateway[-<profile>].service
+sudo systemctl enable --now quiet-core-bot-gateway[-<profile>].service
 ```
 
 Use the same service body as the user unit, but install it under
-`/etc/systemd/system/openclaw-gateway[-<profile>].service` and adjust
-`ExecStart=` if your `openclaw` binary lives elsewhere.
+`/etc/systemd/system/quiet-core-bot-gateway[-<profile>].service` and adjust
+`ExecStart=` if your `quiet-core-bot` binary lives elsewhere.
 
-Do not also let `quiet-core-bot doctor --fix` install a user-level gateway service for the same profile/port. Doctor refuses that automatic install when it finds a system-level Quiet Core bot gateway service; use `OPENCLAW_SERVICE_REPAIR_POLICY=external` when the system unit owns the lifecycle.
+Do not also let `quiet-core-bot doctor --fix` install a user-level gateway service for the same profile/port. Doctor refuses that automatic install when it finds a system-level Quiet Core bot gateway service; use `QUIET_CORE_SERVICE_REPAIR_POLICY=external` when the system unit owns the lifecycle.
 
   </Tab>
 </Tabs>

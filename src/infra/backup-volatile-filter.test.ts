@@ -2,7 +2,7 @@
 import { describe, expect, it } from "vitest";
 import { isVolatileBackupPath } from "./backup-volatile-filter.js";
 
-const stateDir = "/opt/openclaw/state";
+const stateDir = "/opt/quiet-core-bot/state";
 const plan = { stateDirs: [stateDir] };
 
 describe("isVolatileBackupPath", () => {
@@ -91,7 +91,7 @@ describe("isVolatileBackupPath", () => {
   });
 
   it("normalizes Windows-style separators before anchor checks", () => {
-    const winStateDir = "C:\\openclaw\\state";
+    const winStateDir = "C:\\quiet-core-bot\\state";
     const winPlan = { stateDirs: [winStateDir] };
     expect(isVolatileBackupPath(`${winStateDir}\\sessions\\s-abc\\transcript.jsonl`, winPlan)).toBe(
       true,
@@ -106,7 +106,7 @@ describe("isVolatileBackupPath", () => {
 
   it("matches tar filter paths when node-tar omits the leading slash", () => {
     expect(
-      isVolatileBackupPath("opt/openclaw/state/agents/main/sessions/transcript.jsonl", plan),
+      isVolatileBackupPath("opt/quiet-core-bot/state/agents/main/sessions/transcript.jsonl", plan),
     ).toBe(true);
   });
 

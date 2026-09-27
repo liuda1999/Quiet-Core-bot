@@ -64,7 +64,7 @@ function enableAdvertiserUnitMode(hostname = "test-host") {
   delete process.env.VITEST;
   process.env.NODE_ENV = "development";
   vi.spyOn(os, "hostname").mockReturnValue(hostname);
-  process.env.OPENCLAW_MDNS_HOSTNAME = hostname;
+  process.env.QUIET_CORE_MDNS_HOSTNAME = hostname;
 }
 
 function mockCiaoService(params?: {
@@ -183,7 +183,7 @@ describe("gateway bonjour advertiser", () => {
       sshPort: 2222,
       gatewayDirectReachable: true,
       tailnetDns: "host.tailnet.ts.net",
-      cliPath: "/opt/homebrew/bin/openclaw",
+      cliPath: "/opt/homebrew/bin/quiet-core-bot",
       minimal: false,
     });
 
@@ -203,7 +203,7 @@ describe("gateway bonjour advertiser", () => {
       "host.tailnet.ts.net",
     );
     expect((gatewayCall?.[0]?.txt as Record<string, string>)?.cliPath).toBe(
-      "/opt/homebrew/bin/openclaw",
+      "/opt/homebrew/bin/quiet-core-bot",
     );
     expect((gatewayCall?.[0]?.txt as Record<string, string>)?.transport).toBe("gateway");
 
@@ -227,7 +227,7 @@ describe("gateway bonjour advertiser", () => {
     const started = await startAdvertiser({
       gatewayPort: 18789,
       sshPort: 2222,
-      cliPath: "/opt/homebrew/bin/openclaw",
+      cliPath: "/opt/homebrew/bin/quiet-core-bot",
       tailnetDns: "host.tailnet.ts.net",
       minimal: true,
     });
@@ -240,9 +240,9 @@ describe("gateway bonjour advertiser", () => {
     await started.stop();
   });
 
-  it("honors truthy OPENCLAW_DISABLE_BONJOUR values", async () => {
+  it("honors truthy QUIET_CORE_DISABLE_BONJOUR values", async () => {
     enableAdvertiserUnitMode();
-    process.env.OPENCLAW_DISABLE_BONJOUR = "true";
+    process.env.QUIET_CORE_DISABLE_BONJOUR = "true";
 
     const started = await startAdvertiser({
       gatewayPort: 18789,
@@ -269,7 +269,7 @@ describe("gateway bonjour advertiser", () => {
   it("auto-disables Bonjour on Fly Machines without Docker sentinel files", async () => {
     enableAdvertiserUnitMode();
     process.env.FLY_MACHINE_ID = "3d8d5459a03038";
-    process.env.FLY_APP_NAME = "openclaw-clawcks-test";
+    process.env.FLY_APP_NAME = "quiet-core-bot-clawcks-test";
     vi.spyOn(fs, "existsSync").mockReturnValue(false);
     vi.spyOn(fs, "readFileSync").mockReturnValue("10:cpuset:/\n9:perf_event:/\n8:memory:/\n0::/\n");
 
@@ -284,7 +284,7 @@ describe("gateway bonjour advertiser", () => {
 
   it("honors explicit Bonjour opt-in inside detected containers", async () => {
     enableAdvertiserUnitMode();
-    process.env.OPENCLAW_DISABLE_BONJOUR = "0";
+    process.env.QUIET_CORE_DISABLE_BONJOUR = "0";
     vi.spyOn(fs, "existsSync").mockImplementation((filePath) => String(filePath) === "/.dockerenv");
 
     const destroy = vi.fn().mockResolvedValue(undefined);
@@ -468,7 +468,7 @@ describe("gateway bonjour advertiser", () => {
     expect(
       handler?.(
         new Error(
-          "Can't probe for a service which is announced already. Received announcing for service OpenClaw Gateway._openclaw._tcp.local.",
+          "Can't probe for a service which is announced already. Received announcing for service OpenClaw Gateway._quiet-core-bot._tcp.local.",
         ),
       ),
     ).toBe(true);
@@ -902,11 +902,11 @@ describe("gateway bonjour advertiser", () => {
     await started.stop();
   });
 
-  it("falls back to openclaw when system hostname is invalid for DNS", async () => {
+  it("falls back to quiet-core-bot when system hostname is invalid for DNS", async () => {
     // Allow advertiser to run in unit tests.
     delete process.env.VITEST;
     process.env.NODE_ENV = "development";
-    delete process.env.OPENCLAW_MDNS_HOSTNAME;
+    delete process.env.QUIET_CORE_MDNS_HOSTNAME;
     vi.spyOn(os, "hostname").mockReturnValue("My_Lobster Host");
 
     const destroy = vi.fn().mockResolvedValue(undefined);
@@ -919,8 +919,8 @@ describe("gateway bonjour advertiser", () => {
     });
 
     const [gatewayCall] = createService.mock.calls as Array<[ServiceCall]>;
-    expect(gatewayCall?.[0]?.hostname).toBe("openclaw");
-    expect((gatewayCall?.[0]?.txt as Record<string, string>)?.lanHost).toBe("openclaw.local");
+    expect(gatewayCall?.[0]?.hostname).toBe("quiet-core-bot");
+    expect((gatewayCall?.[0]?.txt as Record<string, string>)?.lanHost).toBe("quiet-core-bot.local");
 
     await started.stop();
   });
@@ -998,11 +998,11 @@ describe("gateway bonjour advertiser", () => {
     await started.stop();
   });
 
-  it("uses system hostname when OPENCLAW_MDNS_HOSTNAME is unset", async () => {
+  it("uses system hostname when QUIET_CORE_MDNS_HOSTNAME is unset", async () => {
     // Allow advertiser to run in unit tests.
     delete process.env.VITEST;
     process.env.NODE_ENV = "development";
-    delete process.env.OPENCLAW_MDNS_HOSTNAME;
+    delete process.env.QUIET_CORE_MDNS_HOSTNAME;
     vi.spyOn(os, "hostname").mockReturnValue("Lobster");
 
     const destroy = vi.fn().mockResolvedValue(undefined);

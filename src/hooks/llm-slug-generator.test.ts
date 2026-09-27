@@ -1,13 +1,13 @@
 // LLM slug generator tests cover generated hook names and collision behavior.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 
 const runEmbeddedAgentMock = vi.fn();
 
 vi.mock("../agents/agent-scope.js", () => ({
   resolveDefaultAgentId: vi.fn(() => "main"),
-  resolveAgentWorkspaceDir: vi.fn(() => "/tmp/openclaw-agent"),
-  resolveAgentDir: vi.fn(() => "/tmp/openclaw-agent/.openclaw-agent"),
+  resolveAgentWorkspaceDir: vi.fn(() => "/tmp/quiet-core-bot-agent"),
+  resolveAgentDir: vi.fn(() => "/tmp/quiet-core-bot-agent/.quiet-core-bot-agent"),
   resolveAgentEffectiveModelPrimary: vi.fn((cfg: OpenClawConfig) => {
     const model = cfg.agents?.defaults?.model;
     if (typeof model === "string") {

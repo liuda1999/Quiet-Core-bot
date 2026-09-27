@@ -23,7 +23,7 @@ describe("managed proxy unreachable hint", () => {
     "https_proxy",
     "HTTP_PROXY",
     "HTTPS_PROXY",
-    "OPENCLAW_PROXY_ACTIVE",
+    "QUIET_CORE_PROXY_ACTIVE",
   ] as const;
 
   beforeEach(() => {
@@ -49,7 +49,7 @@ describe("managed proxy unreachable hint", () => {
   });
 
   it("recovers the proxy URL from inherited env in child processes", () => {
-    vi.stubEnv("OPENCLAW_PROXY_ACTIVE", "1");
+    vi.stubEnv("QUIET_CORE_PROXY_ACTIVE", "1");
     vi.stubEnv("HTTP_PROXY", "http://127.0.0.1:18888");
     expect(formatManagedProxyUnreachableHint("connection refused")).toContain(
       "quiet-core-bot proxy start --host 127.0.0.1 --port 18888",

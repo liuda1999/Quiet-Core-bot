@@ -6,13 +6,13 @@ import {
   clearRuntimeAuthProfileStoreSnapshots,
   saveAuthProfileStore,
 } from "../agents/auth-profiles/store.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
-import { closeOpenClawAgentDatabasesForTest } from "../state/openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import { closeOpenClawAgentDatabasesForTest } from "../state/quiet-core-bot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
 import {
   createOpenClawTestState,
   type OpenClawTestState,
-} from "../test-utils/openclaw-test-state.js";
+} from "../test-utils/quiet-core-bot-test-state.js";
 import {
   collectOpenAICodexAuthProfileStoreIdMap,
   maybeMigrateAuthProfileJsonStoresToSqlite,
@@ -46,9 +46,9 @@ function makePrompter(shouldRepair: boolean): DoctorPrompter {
 async function makeTestState(): Promise<OpenClawTestState> {
   const state = await createOpenClawTestState({
     layout: "state-only",
-    prefix: "openclaw-doctor-flat-auth-",
+    prefix: "quiet-core-bot-doctor-flat-auth-",
     env: {
-      OPENCLAW_AGENT_DIR: undefined,
+      QUIET_CORE_AGENT_DIR: undefined,
     },
   });
   states.push(state);

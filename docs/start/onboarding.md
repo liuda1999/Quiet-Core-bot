@@ -80,7 +80,7 @@ Onboarding requests TCC permissions needed for:
 </Step>
 <Step title="CLI">
   <Info>This step is optional</Info>
-  The app can install the global `openclaw` CLI via npm, pnpm, or bun.
+  The app can install the global `quiet-core-bot` CLI via npm, pnpm, or bun.
   It prefers npm first, then pnpm, then bun if that is the only detected
   package manager. For the Gateway runtime, Node remains the recommended path.
 </Step>

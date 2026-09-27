@@ -4,17 +4,17 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../../infra/kysely-sync.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../../state/quiet-core-bot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../../state/openclaw-state-db.js";
+} from "../../state/quiet-core-bot-state-db.js";
 import { createChannelIngressQueue, createStateDirEnv } from "./ingress-queue.js";
 
 type ChannelIngressTestDatabase = Pick<OpenClawStateKyselyDatabase, "channel_ingress_events">;
 
 async function withTempState<T>(fn: (stateDir: string) => Promise<T>): Promise<T> {
-  const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-ingress-queue-"));
+  const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-ingress-queue-"));
   try {
     return await fn(stateDir);
   } finally {
@@ -30,7 +30,7 @@ describe("channel ingress queue", () => {
 
   it("opens a custom state database without copying the full process env", async () => {
     const baseEnv: NodeJS.ProcessEnv = {
-      HOME: "/home/openclaw",
+      HOME: "/home/quiet-core-bot",
       PATH: "/usr/local/bin:/usr/bin",
     };
     for (let index = 0; index < 10_000; index += 1) {
@@ -45,13 +45,13 @@ describe("channel ingress queue", () => {
     await withTempState(async (stateDir) => {
       const env = createStateDirEnv(stateDir, inheritedEnv);
 
-      expect(env.OPENCLAW_STATE_DIR).toBe(stateDir);
-      expect(env.HOME).toBe("/home/openclaw");
+      expect(env.QUIET_CORE_STATE_DIR).toBe(stateDir);
+      expect(env.HOME).toBe("/home/quiet-core-bot");
       expect(Object.getPrototypeOf(env)).toBe(inheritedEnv);
-      expect(Object.keys(env)).toEqual(["OPENCLAW_STATE_DIR"]);
+      expect(Object.keys(env)).toEqual(["QUIET_CORE_STATE_DIR"]);
 
       const database = openOpenClawStateDatabase({ env });
-      expect(database.path).toBe(path.join(stateDir, "state", "openclaw.sqlite"));
+      expect(database.path).toBe(path.join(stateDir, "state", "quiet-core-bot.sqlite"));
     });
   });
 

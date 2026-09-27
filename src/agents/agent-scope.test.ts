@@ -41,7 +41,7 @@ describe("resolveAgentConfig", () => {
   it("should return undefined when agent id does not exist", () => {
     const cfg: OpenClawConfig = {
       agents: {
-        list: [{ id: "main", workspace: "~/openclaw" }],
+        list: [{ id: "main", workspace: "~/quiet-core-bot" }],
       },
     };
     const result = resolveAgentConfig(cfg, "nonexistent");
@@ -55,7 +55,7 @@ describe("resolveAgentConfig", () => {
           {
             id: "main",
             name: "Main Agent",
-            workspace: "~/openclaw",
+            workspace: "~/quiet-core-bot",
             agentDir: "~/.quiet-core-bot/agents/main",
             model: "anthropic/claude-sonnet-4-6",
           },
@@ -65,7 +65,7 @@ describe("resolveAgentConfig", () => {
     const result = resolveAgentConfig(cfg, "main");
     expect(result).toEqual({
       name: "Main Agent",
-      workspace: "~/openclaw",
+      workspace: "~/quiet-core-bot",
       agentDir: "~/.quiet-core-bot/agents/main",
       model: "anthropic/claude-sonnet-4-6",
       identity: undefined,
@@ -1062,7 +1062,7 @@ describe("resolveAgentConfig", () => {
         list: [
           {
             id: "work",
-            workspace: "~/openclaw-work",
+            workspace: "~/quiet-core-bot-work",
             sandbox: {
               mode: "all",
               scope: "agent",
@@ -1090,7 +1090,7 @@ describe("resolveAgentConfig", () => {
         list: [
           {
             id: "restricted",
-            workspace: "~/openclaw-restricted",
+            workspace: "~/quiet-core-bot-restricted",
             tools: {
               allow: ["read"],
               deny: ["exec", "write", "edit"],
@@ -1120,7 +1120,7 @@ describe("resolveAgentConfig", () => {
         list: [
           {
             id: "family",
-            workspace: "~/openclaw-family",
+            workspace: "~/quiet-core-bot-family",
             sandbox: {
               mode: "all",
               scope: "agent",
@@ -1141,28 +1141,28 @@ describe("resolveAgentConfig", () => {
   it("should normalize agent id", () => {
     const cfg: OpenClawConfig = {
       agents: {
-        list: [{ id: "main", workspace: "~/openclaw" }],
+        list: [{ id: "main", workspace: "~/quiet-core-bot" }],
       },
     };
     // Should normalize to "main" (default)
     const result = resolveAgentConfig(cfg, "");
-    expect(result?.workspace).toBe("~/openclaw");
+    expect(result?.workspace).toBe("~/quiet-core-bot");
   });
 
-  it("uses OPENCLAW_HOME for default agent workspace", () => {
-    const home = path.join(path.sep, "srv", "openclaw-home");
-    withEnv({ OPENCLAW_HOME: home }, () => {
+  it("uses QUIET_CORE_HOME for default agent workspace", () => {
+    const home = path.join(path.sep, "srv", "quiet-core-bot-home");
+    withEnv({ QUIET_CORE_HOME: home }, () => {
       const workspace = resolveAgentWorkspaceDir({} as OpenClawConfig, "main");
-      expect(workspace).toBe(path.join(path.resolve(home), ".openclaw", "workspace"));
+      expect(workspace).toBe(path.join(path.resolve(home), ".quiet-core-bot", "workspace"));
     });
   });
 
-  it("uses OPENCLAW_WORKSPACE_DIR for default agent workspace", () => {
-    const workspaceDir = path.join(path.sep, "srv", "openclaw-workspace");
+  it("uses QUIET_CORE_WORKSPACE_DIR for default agent workspace", () => {
+    const workspaceDir = path.join(path.sep, "srv", "quiet-core-bot-workspace");
     withEnv(
       {
-        OPENCLAW_WORKSPACE_DIR: workspaceDir,
-        OPENCLAW_HOME: path.join(path.sep, "srv", "openclaw-home"),
+        QUIET_CORE_WORKSPACE_DIR: workspaceDir,
+        QUIET_CORE_HOME: path.join(path.sep, "srv", "quiet-core-bot-home"),
       },
       () => {
         const workspace = resolveAgentWorkspaceDir({} as OpenClawConfig, "main");
@@ -1171,11 +1171,11 @@ describe("resolveAgentConfig", () => {
     );
   });
 
-  it("uses OPENCLAW_HOME for default agentDir", () => {
-    const home = path.join(path.sep, "srv", "openclaw-home");
-    withEnv({ OPENCLAW_HOME: home, OPENCLAW_STATE_DIR: "" }, () => {
+  it("uses QUIET_CORE_HOME for default agentDir", () => {
+    const home = path.join(path.sep, "srv", "quiet-core-bot-home");
+    withEnv({ QUIET_CORE_HOME: home, QUIET_CORE_STATE_DIR: "" }, () => {
       const agentDir = resolveAgentDir({} as OpenClawConfig, "main");
-      expect(agentDir).toBe(path.join(path.resolve(home), ".openclaw", "agents", "main", "agent"));
+      expect(agentDir).toBe(path.join(path.resolve(home), ".quiet-core-bot", "agents", "main", "agent"));
     });
   });
 
@@ -1187,7 +1187,7 @@ describe("resolveAgentConfig", () => {
       },
     };
 
-    const agentDir = withEnv({ OPENCLAW_STATE_DIR: stateDir }, () => resolveDefaultAgentDir(cfg));
+    const agentDir = withEnv({ QUIET_CORE_STATE_DIR: stateDir }, () => resolveDefaultAgentDir(cfg));
 
     expect(agentDir).toBe(path.resolve(stateDir, "agents", "ops", "agent"));
   });
@@ -1221,7 +1221,7 @@ describe("resolveAgentConfig", () => {
         list: [{ id: "main" }, { id: "work", default: true, workspace: "/work-ws" }],
       },
     };
-    const workspace = withEnv({ OPENCLAW_STATE_DIR: stateDir }, () =>
+    const workspace = withEnv({ QUIET_CORE_STATE_DIR: stateDir }, () =>
       resolveAgentWorkspaceDir(cfg, "main"),
     );
     expect(workspace).toBe(path.resolve(stateDir, "workspace-main"));
@@ -1230,7 +1230,7 @@ describe("resolveAgentConfig", () => {
 
 describe("resolveAgentIdByWorkspacePath", () => {
   it("returns the most specific workspace match for a directory", () => {
-    const workspaceRoot = `/tmp/openclaw-agent-scope-${Date.now()}-root`;
+    const workspaceRoot = `/tmp/quiet-core-bot-agent-scope-${Date.now()}-root`;
     const opsWorkspace = `${workspaceRoot}/projects/ops`;
     const cfg: OpenClawConfig = {
       agents: {
@@ -1245,7 +1245,7 @@ describe("resolveAgentIdByWorkspacePath", () => {
   });
 
   it("returns undefined when directory has no matching workspace", () => {
-    const workspaceRoot = `/tmp/openclaw-agent-scope-${Date.now()}-root`;
+    const workspaceRoot = `/tmp/quiet-core-bot-agent-scope-${Date.now()}-root`;
     const cfg: OpenClawConfig = {
       agents: {
         list: [
@@ -1256,12 +1256,12 @@ describe("resolveAgentIdByWorkspacePath", () => {
     };
 
     expect(
-      resolveAgentIdByWorkspacePath(cfg, `/tmp/openclaw-agent-scope-${Date.now()}-unrelated`),
+      resolveAgentIdByWorkspacePath(cfg, `/tmp/quiet-core-bot-agent-scope-${Date.now()}-unrelated`),
     ).toBeUndefined();
   });
 
   it("matches workspace paths through symlink aliases", () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-agent-scope-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-agent-scope-"));
     const realWorkspaceRoot = path.join(tempRoot, "real-root");
     const realOpsWorkspace = path.join(realWorkspaceRoot, "projects", "ops");
     const aliasWorkspaceRoot = path.join(tempRoot, "alias-root");
@@ -1296,7 +1296,7 @@ describe("resolveAgentIdByWorkspacePath", () => {
 
 describe("resolveAgentIdsByWorkspacePath", () => {
   it("returns matching workspaces ordered by specificity", () => {
-    const workspaceRoot = `/tmp/openclaw-agent-scope-${Date.now()}-root`;
+    const workspaceRoot = `/tmp/quiet-core-bot-agent-scope-${Date.now()}-root`;
     const opsWorkspace = `${workspaceRoot}/projects/ops`;
     const opsDevWorkspace = `${opsWorkspace}/dev`;
     const cfg: OpenClawConfig = {

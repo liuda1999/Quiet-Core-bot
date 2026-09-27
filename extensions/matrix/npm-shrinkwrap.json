@@ -1,11 +1,11 @@
 {
-  "name": "@openclaw/matrix",
+  "name": "@quiet-core/matrix",
   "version": "2026.6.11",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@openclaw/matrix",
+      "name": "@quiet-core/matrix",
       "version": "2026.6.11",
       "dependencies": {
         "@matrix-org/matrix-sdk-crypto-nodejs": "0.6.0",
@@ -18,10 +18,10 @@
         "zod": "4.4.3"
       },
       "peerDependencies": {
-        "openclaw": ">=2026.6.11"
+        "quiet-core-bot": ">=2026.6.11"
       },
       "peerDependenciesMeta": {
-        "openclaw": {
+        "quiet-core-bot": {
           "optional": true
         }
       }

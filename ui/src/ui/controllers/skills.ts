@@ -321,7 +321,7 @@ export async function loadSkillCard(state: SkillsState, skillKey: string) {
   state.skillCardErrors = nextErrors;
   try {
     const response = await state.client.request<{
-      schema: "openclaw.skills.skill-card.v1";
+      schema: "quiet-core-bot.skills.skill-card.v1";
       skillKey: string;
       path: string;
       sizeBytes: number;
@@ -360,7 +360,7 @@ async function loadClawHubSecurityVerdicts(state: SkillsState, report: SkillStat
   state.clawhubVerdictsError = null;
   try {
     const response = await client.request<{
-      schema: "openclaw.skills.security-verdicts.v1";
+      schema: "quiet-core-bot.skills.security-verdicts.v1";
       items: ClawHubSkillSecurityVerdict[];
     }>("skills.securityVerdicts", skillsAgentParams(state));
     if (!isSkillsAgentScopeCurrent(state, agentScope)) {

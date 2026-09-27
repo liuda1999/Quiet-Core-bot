@@ -1,11 +1,11 @@
 ---
-summary: "CLI reference for `openclaw agent` (send one agent turn via the Gateway)"
+summary: "CLI reference for `quiet-core-bot agent` (send one agent turn via the Gateway)"
 read_when:
   - You want to run one agent turn from scripts (optionally deliver reply)
 title: "Agent"
 ---
 
-# `openclaw agent`
+# `quiet-core-bot agent`
 
 Run an agent turn via the Gateway (use `--local` for embedded).
 Use `--agent <id>` to target a configured agent directly.
@@ -44,16 +44,16 @@ Related:
 ## Examples
 
 ```bash
-openclaw agent --to +15555550123 --message "status update" --deliver
-openclaw agent --agent ops --message "Summarize logs"
-openclaw agent --agent ops --message-file ./task.md
-openclaw agent --agent ops --model openai/gpt-5.4 --message "Summarize logs"
-openclaw agent --session-key agent:ops:incident-42 --message "Summarize status"
-openclaw agent --agent ops --session-key incident-42 --message "Summarize status"
-openclaw agent --session-id 1234 --message "Summarize inbox" --thinking medium
-openclaw agent --to +15555550123 --message "Trace logs" --verbose on --json
-openclaw agent --agent ops --message "Generate report" --deliver --reply-channel slack --reply-to "#reports"
-openclaw agent --agent ops --message "Run locally" --local
+quiet-core-bot agent --to +15555550123 --message "status update" --deliver
+quiet-core-bot agent --agent ops --message "Summarize logs"
+quiet-core-bot agent --agent ops --message-file ./task.md
+quiet-core-bot agent --agent ops --model openai/gpt-5.4 --message "Summarize logs"
+quiet-core-bot agent --session-key agent:ops:incident-42 --message "Summarize status"
+quiet-core-bot agent --agent ops --session-key incident-42 --message "Summarize status"
+quiet-core-bot agent --session-id 1234 --message "Summarize inbox" --thinking medium
+quiet-core-bot agent --to +15555550123 --message "Trace logs" --verbose on --json
+quiet-core-bot agent --agent ops --message "Generate report" --deliver --reply-channel slack --reply-to "#reports"
+quiet-core-bot agent --agent ops --message "Run locally" --local
 ```
 
 ## Notes
@@ -68,7 +68,7 @@ openclaw agent --agent ops --message "Run locally" --local
 - `--json` keeps stdout reserved for the JSON response. Gateway, plugin, and embedded-fallback diagnostics are routed to stderr so scripts can parse stdout directly.
 - Embedded fallback JSON includes `meta.transport: "embedded"` and `meta.fallbackFrom: "gateway"` so scripts can distinguish fallback runs from Gateway runs.
 - If the Gateway accepts an agent run but the CLI times out waiting for the final reply, embedded fallback uses a fresh explicit `gateway-fallback-*` session/run id and reports `meta.fallbackReason: "gateway_timeout"` plus the fallback session fields. This avoids racing the Gateway-owned transcript lock or silently replacing the original routed conversation session.
-- For Gateway-backed runs, `SIGTERM` and `SIGINT` interrupt the waiting CLI request. If the Gateway has already accepted the run, the CLI also sends `chat.abort` for that accepted run id before exiting. Local `--local` runs and embedded fallback runs receive the same abort signal, but do not send `chat.abort`. If a duplicate `--run-id` reaches the Gateway while the original agent run is still active, the duplicate response reports `status: "in_flight"` and the non-JSON CLI prints a stderr diagnostic instead of an empty reply. For external cron/systemd wrappers, keep an outer hard-kill backstop such as `timeout -k 60 600 openclaw agent ...` so the supervisor can still reap the process if shutdown cannot drain.
+- For Gateway-backed runs, `SIGTERM` and `SIGINT` interrupt the waiting CLI request. If the Gateway has already accepted the run, the CLI also sends `chat.abort` for that accepted run id before exiting. Local `--local` runs and embedded fallback runs receive the same abort signal, but do not send `chat.abort`. If a duplicate `--run-id` reaches the Gateway while the original agent run is still active, the duplicate response reports `status: "in_flight"` and the non-JSON CLI prints a stderr diagnostic instead of an empty reply. For external cron/systemd wrappers, keep an outer hard-kill backstop such as `timeout -k 60 600 quiet-core-bot agent ...` so the supervisor can still reap the process if shutdown cannot drain.
 - If a Gateway-backed turn ends while an exec approval is still pending, the CLI prints the block plus the commands that clear it, for example `Blocked on 1 pending exec approval(s) for <session>: <id>` followed by `List with: quiet-core-bot approvals pending   Resolve with: quiet-core-bot approvals approve <id> | quiet-core-bot approvals deny <id>`. This keeps unattended hosts resolvable without the Control UI; see [Approvals](/cli/approvals).
 - When this command triggers `models.json` regeneration, SecretRef-managed provider credentials are persisted as non-secret markers (for example env var names, `secretref-env:ENV_VAR_NAME`, or `secretref-managed`), not resolved secret plaintext.
 - Marker writes are source-authoritative: Quiet Core bot persists markers from the active source config snapshot, not from resolved runtime secret values.

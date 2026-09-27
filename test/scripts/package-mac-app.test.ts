@@ -9,7 +9,7 @@ const tempDirs: string[] = [];
 const scriptPath = "scripts/package-mac-app.sh";
 
 function makePlist(): string {
-  const dir = mkdtempSync(path.join(tmpdir(), "openclaw-plistbuddy-"));
+  const dir = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-plistbuddy-"));
   tempDirs.push(dir);
   const plist = path.join(dir, "Info.plist");
   writeFileSync(
@@ -82,8 +82,8 @@ function getSwiftCompatibilityBlock(): string {
 }
 
 function runStopPackagedAppHarness(killZeroStatus: 0 | 1) {
-  const root = mkdtempSync(path.join(tmpdir(), "openclaw-package-stop-root-"));
-  const toolsDir = mkdtempSync(path.join(tmpdir(), "openclaw-package-stop-tools-"));
+  const root = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-package-stop-root-"));
+  const toolsDir = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-package-stop-tools-"));
   tempDirs.push(root, toolsDir);
 
   const appRoot = path.join(root, "dist", "OpenClaw.app");
@@ -120,8 +120,8 @@ function runStopPackagedAppHarness(killZeroStatus: 0 | 1) {
 }
 
 function runSwiftCompatibilityHarness(buildConfig: "debug" | "release") {
-  const root = mkdtempSync(path.join(tmpdir(), "openclaw-package-swift-root-"));
-  const toolsDir = mkdtempSync(path.join(tmpdir(), "openclaw-package-swift-tools-"));
+  const root = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-package-swift-root-"));
+  const toolsDir = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-package-swift-tools-"));
   const developerDir = path.join(root, "Xcode.app", "Contents", "Developer");
   const appRoot = path.join(root, "OpenClaw.app");
   const xcodeSelectPath = path.join(toolsDir, "xcode-select");
@@ -165,8 +165,8 @@ describe("package-mac-app plist stamping", () => {
 
   it("falls back to corepack pnpm when the pnpm shim is absent", () => {
     const helperBlock = getPackageManagerHelperBlock();
-    const tempRoot = mkdtempSync(path.join(tmpdir(), "openclaw-package-pnpm-root-"));
-    const toolsDir = mkdtempSync(path.join(tmpdir(), "openclaw-package-pnpm-tools-"));
+    const tempRoot = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-package-pnpm-root-"));
+    const toolsDir = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-package-pnpm-tools-"));
     const logPath = path.join(tempRoot, "corepack.log");
     tempDirs.push(tempRoot, toolsDir);
 
@@ -176,7 +176,7 @@ describe("package-mac-app plist stamping", () => {
       [
         "#!/usr/bin/env bash",
         "set -euo pipefail",
-        'printf \'%s|%s\\n\' "$PWD" "$*" >> "$OPENCLAW_TEST_LOG"',
+        'printf \'%s|%s\\n\' "$PWD" "$*" >> "$QUIET_CORE_TEST_LOG"',
         'if [[ "${1:-}" == "pnpm" && "${2:-}" == "--version" ]]; then',
         "  echo '11.2.2'",
         "fi",
@@ -189,8 +189,8 @@ describe("package-mac-app plist stamping", () => {
     const result = runHelper(`
       set -euo pipefail
       ROOT_DIR=${JSON.stringify(tempRoot)}
-      OPENCLAW_TEST_LOG=${JSON.stringify(logPath)}
-      export OPENCLAW_TEST_LOG
+      QUIET_CORE_TEST_LOG=${JSON.stringify(logPath)}
+      export QUIET_CORE_TEST_LOG
       PATH=${JSON.stringify(`${toolsDir}:/usr/bin:/bin`)}
       ${helperBlock}
       run_pnpm install --frozen-lockfile --config.node-linker=hoisted
@@ -207,9 +207,9 @@ describe("package-mac-app plist stamping", () => {
 
   it("prefers repo Corepack pnpm over a global pnpm shim", () => {
     const helperBlock = getPackageManagerHelperBlock();
-    const tempRoot = mkdtempSync(path.join(tmpdir(), "openclaw-package-pnpm-root-"));
-    const outerRoot = mkdtempSync(path.join(tmpdir(), "openclaw-package-pnpm-outer-"));
-    const toolsDir = mkdtempSync(path.join(tmpdir(), "openclaw-package-pnpm-tools-"));
+    const tempRoot = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-package-pnpm-root-"));
+    const outerRoot = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-package-pnpm-outer-"));
+    const toolsDir = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-package-pnpm-tools-"));
     const logPath = path.join(tempRoot, "pnpm.log");
     tempDirs.push(tempRoot, outerRoot, toolsDir);
 
@@ -226,7 +226,7 @@ describe("package-mac-app plist stamping", () => {
       [
         "#!/usr/bin/env bash",
         "set -euo pipefail",
-        'printf "global|%s|%s\\n" "$PWD" "$*" >> "$OPENCLAW_TEST_LOG"',
+        'printf "global|%s|%s\\n" "$PWD" "$*" >> "$QUIET_CORE_TEST_LOG"',
         'if [[ "${1:-}" == "--version" ]]; then echo "11.8.0"; fi',
         "",
       ].join("\n"),
@@ -237,7 +237,7 @@ describe("package-mac-app plist stamping", () => {
       [
         "#!/usr/bin/env bash",
         "set -euo pipefail",
-        'printf "corepack|%s|%s\\n" "$PWD" "$*" >> "$OPENCLAW_TEST_LOG"',
+        'printf "corepack|%s|%s\\n" "$PWD" "$*" >> "$QUIET_CORE_TEST_LOG"',
         'if [[ "${1:-}" == "pnpm" && "${2:-}" == "--version" ]]; then',
         '  if grep -q "pnpm@11.2.2" package.json 2>/dev/null; then echo "11.2.2"; else echo "11.8.0"; fi',
         "fi",
@@ -251,8 +251,8 @@ describe("package-mac-app plist stamping", () => {
     const result = runHelper(`
       set -euo pipefail
       ROOT_DIR=${JSON.stringify(tempRoot)}
-      OPENCLAW_TEST_LOG=${JSON.stringify(logPath)}
-      export OPENCLAW_TEST_LOG
+      QUIET_CORE_TEST_LOG=${JSON.stringify(logPath)}
+      export QUIET_CORE_TEST_LOG
       PATH=${JSON.stringify(`${toolsDir}:/usr/bin:/bin`)}
       cd ${JSON.stringify(outerRoot)}
       ${helperBlock}
@@ -269,8 +269,8 @@ describe("package-mac-app plist stamping", () => {
 
   it("fails with an actionable error when neither pnpm nor corepack pnpm is available", () => {
     const helperBlock = getPackageManagerHelperBlock();
-    const tempRoot = mkdtempSync(path.join(tmpdir(), "openclaw-package-pnpm-root-"));
-    const toolsDir = mkdtempSync(path.join(tmpdir(), "openclaw-package-pnpm-tools-"));
+    const tempRoot = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-package-pnpm-root-"));
+    const toolsDir = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-package-pnpm-tools-"));
     tempDirs.push(tempRoot, toolsDir);
 
     const result = runHelper(`
@@ -287,8 +287,8 @@ describe("package-mac-app plist stamping", () => {
 
   it("runs Sparkle build metadata derivation from the repository root", () => {
     const helperBlock = getSparkleBuildHelperBlock();
-    const tempRoot = mkdtempSync(path.join(tmpdir(), "openclaw-package-sparkle-root-"));
-    const toolsDir = mkdtempSync(path.join(tmpdir(), "openclaw-package-sparkle-tools-"));
+    const tempRoot = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-package-sparkle-root-"));
+    const toolsDir = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-package-sparkle-tools-"));
     tempDirs.push(tempRoot, toolsDir);
 
     const nodePath = path.join(toolsDir, "node");
@@ -297,7 +297,7 @@ describe("package-mac-app plist stamping", () => {
       [
         "#!/usr/bin/env bash",
         "set -euo pipefail",
-        'if [[ "$PWD" != "$OPENCLAW_ROOT" ]]; then',
+        'if [[ "$PWD" != "$QUIET_CORE_ROOT" ]]; then',
         '  echo "node ran outside repo root: $PWD" >&2',
         "  exit 1",
         "fi",
@@ -311,9 +311,9 @@ describe("package-mac-app plist stamping", () => {
     const result = runHelper(`
       set -euo pipefail
       ROOT_DIR=${JSON.stringify(tempRoot)}
-      OPENCLAW_ROOT=${JSON.stringify(tempRoot)}
+      QUIET_CORE_ROOT=${JSON.stringify(tempRoot)}
       PATH=${JSON.stringify(`${toolsDir}:/usr/bin:/bin`)}
-      export OPENCLAW_ROOT PATH
+      export QUIET_CORE_ROOT PATH
       cd /tmp
       ${helperBlock}
       sparkle_canonical_build_from_version 2026.6.2
@@ -416,14 +416,14 @@ describe("package-mac-app plist stamping", () => {
       const result = runHelper(`
         set -euo pipefail
         source scripts/lib/plistbuddy.sh
-        plist_set_string_required ${JSON.stringify(plist)} CFBundleIdentifier 'ai.openclaw.test'
+        plist_set_string_required ${JSON.stringify(plist)} CFBundleIdentifier 'ai.quiet-core-bot.test'
         /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' ${JSON.stringify(plist)}
         broken="$(mktemp -d)"
         plist_set_string_required "$broken" CFBundleIdentifier broken
       `);
 
       expect(result.status).toBe(1);
-      expect(result.stdout).toContain("ai.openclaw.test");
+      expect(result.stdout).toContain("ai.quiet-core-bot.test");
       expect(result.stderr).toContain("Error Reading File");
     },
   );

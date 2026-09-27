@@ -1,13 +1,13 @@
 {
   "entries": [
     {
-      "name": "@wecom/wecom-openclaw-plugin",
+      "name": "@wecom/wecom-quiet-core-bot-plugin",
       "description": "OpenClaw WeCom channel plugin by the Tencent WeCom team.",
       "source": "external",
       "kind": "channel",
-      "openclaw": {
+      "quiet-core-bot": {
         "plugin": {
-          "id": "wecom-openclaw-plugin",
+          "id": "wecom-quiet-core-bot-plugin",
           "label": "WeCom"
         },
         "contracts": {
@@ -41,20 +41,20 @@
           }
         },
         "install": {
-          "npmSpec": "@wecom/wecom-openclaw-plugin@2026.5.7",
+          "npmSpec": "@wecom/wecom-quiet-core-bot-plugin@2026.5.7",
           "defaultChoice": "npm",
           "expectedIntegrity": "sha512-TCkP9as00WfEhgFWG8YL/rcmaWGIshAki2HQh83nTRccGfVBCoGjrEboTTqq3yDmK9koWTV11zi8u8A4dNtvug=="
         }
       }
     },
     {
-      "name": "openclaw-plugin-yuanbao",
+      "name": "quiet-core-bot-plugin-yuanbao",
       "description": "OpenClaw Yuanbao channel plugin by the Tencent Yuanbao team.",
       "source": "external",
       "kind": "channel",
-      "openclaw": {
+      "quiet-core-bot": {
         "plugin": {
-          "id": "openclaw-plugin-yuanbao",
+          "id": "quiet-core-bot-plugin-yuanbao",
           "label": "Yuanbao"
         },
         "contracts": {
@@ -91,24 +91,24 @@
           }
         },
         "install": {
-          "npmSpec": "openclaw-plugin-yuanbao@2.15.0",
+          "npmSpec": "quiet-core-bot-plugin-yuanbao@2.15.0",
           "defaultChoice": "npm",
           "expectedIntegrity": "sha512-3GD+mf3EjTSUTOAREjTHAyp/deXdpgqB+q+xE0b19Qtat4ADhUV1mHDwFkVCRqTCBY5ATFKtKcipoDejqFj/+w=="
         }
       }
     },
     {
-      "name": "@tencent-weixin/openclaw-weixin",
+      "name": "@tencent-weixin/quiet-core-bot-weixin",
       "description": "OpenClaw Weixin channel plugin by the Tencent Weixin team.",
       "source": "external",
       "kind": "channel",
-      "openclaw": {
+      "quiet-core-bot": {
         "plugin": {
-          "id": "openclaw-weixin",
+          "id": "quiet-core-bot-weixin",
           "label": "Weixin"
         },
         "channel": {
-          "id": "openclaw-weixin",
+          "id": "quiet-core-bot-weixin",
           "label": "Weixin",
           "selectionLabel": "Weixin（微信）",
           "detailLabel": "Weixin",
@@ -123,7 +123,7 @@
           "order": 75
         },
         "channelConfigs": {
-          "openclaw-weixin": {
+          "quiet-core-bot-weixin": {
             "label": "Weixin",
             "description": "Personal WeChat conversation channel.",
             "schema": {
@@ -133,7 +133,7 @@
           }
         },
         "install": {
-          "npmSpec": "@tencent-weixin/openclaw-weixin@2.4.3",
+          "npmSpec": "@tencent-weixin/quiet-core-bot-weixin@2.4.3",
           "defaultChoice": "npm",
           "expectedIntegrity": "sha512-dPQbidUNWigC6V10vGW4i+GLH09x+6zUhafZRjuxkJ9GDu8o62WBsnUTojp4KqUH756hz+t2v9khiCRSi0dBDw==",
           "minHostVersion": ">=2026.3.22"
@@ -141,17 +141,17 @@
       }
     },
     {
-      "name": "@zalo-platforms/openclaw-zaloclawbot",
+      "name": "@zalo-platforms/quiet-core-bot-zaloclawbot",
       "description": "OpenClaw Zalo ClawBot channel plugin by the Zalo Platforms team.",
       "source": "external",
       "kind": "channel",
-      "openclaw": {
+      "quiet-core-bot": {
         "plugin": {
-          "id": "openclaw-zaloclawbot",
+          "id": "quiet-core-bot-zaloclawbot",
           "label": "Zalo ClawBot"
         },
         "channel": {
-          "id": "openclaw-zaloclawbot",
+          "id": "quiet-core-bot-zaloclawbot",
           "label": "Zalo ClawBot",
           "selectionLabel": "Zalo ClawBot (QR)",
           "detailLabel": "Zalo ClawBot",
@@ -165,7 +165,7 @@
           "order": 82
         },
         "channelConfigs": {
-          "openclaw-zaloclawbot": {
+          "quiet-core-bot-zaloclawbot": {
             "label": "Zalo ClawBot",
             "description": "Personal Zalo assistant — QR-onboarded, owner-bound.",
             "schema": {
@@ -175,7 +175,7 @@
           }
         },
         "install": {
-          "npmSpec": "@zalo-platforms/openclaw-zaloclawbot@0.1.4",
+          "npmSpec": "@zalo-platforms/quiet-core-bot-zaloclawbot@0.1.4",
           "defaultChoice": "npm",
           "expectedIntegrity": "sha512-5IxZriHJYACLLGqkCPPsTP9tas62kXEOFqTFAFMdunAM3SPhIJwVFRp0WvoP/m7L2PX85weD0g8LOtxM93VDYg==",
           "minHostVersion": ">=2026.4.10"
@@ -183,11 +183,11 @@
       }
     },
     {
-      "name": "@openclaw/clickclack",
+      "name": "@quiet-core/clickclack",
       "description": "OpenClaw ClickClack channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "quiet-core-bot": {
         "channel": {
           "id": "clickclack",
           "label": "ClickClack",
@@ -209,8 +209,8 @@
           }
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/clickclack",
-          "npmSpec": "@openclaw/clickclack",
+          "clawhubSpec": "clawhub:@quiet-core/clickclack",
+          "npmSpec": "@quiet-core/clickclack",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.6.9",
           "allowInvalidConfigRecovery": true
@@ -218,11 +218,11 @@
       }
     },
     {
-      "name": "@openclaw/irc",
+      "name": "@quiet-core/irc",
       "description": "OpenClaw IRC channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "quiet-core-bot": {
         "channel": {
           "id": "irc",
           "label": "IRC",
@@ -249,8 +249,8 @@
           "systemImage": "network"
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/irc",
-          "npmSpec": "@openclaw/irc",
+          "clawhubSpec": "clawhub:@quiet-core/irc",
+          "npmSpec": "@quiet-core/irc",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.6.9",
           "allowInvalidConfigRecovery": true
@@ -258,11 +258,11 @@
       }
     },
     {
-      "name": "@openclaw/mattermost",
+      "name": "@quiet-core/mattermost",
       "description": "OpenClaw Mattermost channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "quiet-core-bot": {
         "channel": {
           "id": "mattermost",
           "label": "Mattermost",
@@ -277,8 +277,8 @@
           "order": 65
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/mattermost",
-          "npmSpec": "@openclaw/mattermost",
+          "clawhubSpec": "clawhub:@quiet-core/mattermost",
+          "npmSpec": "@quiet-core/mattermost",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.6.9",
           "allowInvalidConfigRecovery": true
@@ -286,11 +286,11 @@
       }
     },
     {
-      "name": "@openclaw/matrix",
+      "name": "@quiet-core/matrix",
       "description": "OpenClaw Matrix channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "quiet-core-bot": {
         "channel": {
           "id": "matrix",
           "label": "Matrix",
@@ -331,8 +331,8 @@
           ]
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/matrix",
-          "npmSpec": "@openclaw/matrix",
+          "clawhubSpec": "clawhub:@quiet-core/matrix",
+          "npmSpec": "@quiet-core/matrix",
           "defaultChoice": "clawhub",
           "minHostVersion": ">=2026.4.10",
           "allowInvalidConfigRecovery": true
@@ -340,11 +340,11 @@
       }
     },
     {
-      "name": "@openclaw/nextcloud-talk",
+      "name": "@quiet-core/nextcloud-talk",
       "description": "OpenClaw Nextcloud Talk channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "quiet-core-bot": {
         "channel": {
           "id": "nextcloud-talk",
           "label": "Nextcloud Talk",
@@ -360,18 +360,18 @@
           "quickstartAllowFrom": true
         },
         "install": {
-          "npmSpec": "@openclaw/nextcloud-talk",
+          "npmSpec": "@quiet-core/nextcloud-talk",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@openclaw/nostr",
+      "name": "@quiet-core/nostr",
       "description": "OpenClaw Nostr channel plugin for NIP-04 encrypted DMs",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "quiet-core-bot": {
         "channel": {
           "id": "nostr",
           "label": "Nostr",
@@ -383,18 +383,18 @@
           "quickstartAllowFrom": true
         },
         "install": {
-          "npmSpec": "@openclaw/nostr",
+          "npmSpec": "@quiet-core/nostr",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@openclaw/signal",
+      "name": "@quiet-core/signal",
       "description": "OpenClaw Signal channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "quiet-core-bot": {
         "channel": {
           "id": "signal",
           "label": "Signal",
@@ -421,8 +421,8 @@
           ]
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/signal",
-          "npmSpec": "@openclaw/signal",
+          "clawhubSpec": "clawhub:@quiet-core/signal",
+          "npmSpec": "@quiet-core/signal",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.6.9",
           "allowInvalidConfigRecovery": true
@@ -430,11 +430,11 @@
       }
     },
     {
-      "name": "@openclaw/synology-chat",
+      "name": "@quiet-core/synology-chat",
       "description": "Synology Chat channel plugin for OpenClaw",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "quiet-core-bot": {
         "channel": {
           "id": "synology-chat",
           "label": "Synology Chat",
@@ -445,18 +445,18 @@
           "order": 90
         },
         "install": {
-          "npmSpec": "@openclaw/synology-chat",
+          "npmSpec": "@quiet-core/synology-chat",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@openclaw/raft",
+      "name": "@quiet-core/raft",
       "description": "OpenClaw Raft channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "quiet-core-bot": {
         "channel": {
           "id": "raft",
           "label": "Raft",
@@ -511,18 +511,18 @@
           }
         },
         "install": {
-          "npmSpec": "@openclaw/raft",
+          "npmSpec": "@quiet-core/raft",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.6.8"
         }
       }
     },
     {
-      "name": "@openclaw/tlon",
+      "name": "@quiet-core/tlon",
       "description": "OpenClaw Tlon/Urbit channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "quiet-core-bot": {
         "channel": {
           "id": "tlon",
           "label": "Tlon",
@@ -534,7 +534,7 @@
           "quickstartAllowFrom": true
         },
         "install": {
-          "npmSpec": "@openclaw/tlon",
+          "npmSpec": "@quiet-core/tlon",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }

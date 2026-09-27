@@ -5,7 +5,7 @@ import {
   resolveOAuthDir,
   resolveStateDir,
 } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { buildCleanupPlan } from "./cleanup-utils.js";
 
 /** Build the cleanup plan for the current runtime config/state/credential paths on disk. */

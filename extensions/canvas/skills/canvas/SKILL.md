@@ -1,7 +1,7 @@
 ---
 name: canvas
 description: "Present HTML on connected OpenClaw node canvases, navigate/eval/snapshot, and debug canvas host URLs."
-metadata: { "openclaw": { "emoji": "🖼️" } }
+metadata: { "quiet-core-bot": { "emoji": "🖼️" } }
 ---
 
 # Canvas
@@ -20,7 +20,7 @@ Use canvas to show HTML on connected Mac/iOS/Android nodes.
 
 ## Config
 
-Active config: `$OPENCLAW_CONFIG_PATH` or `~/.openclaw/openclaw.json`.
+Active config: `$QUIET_CORE_CONFIG_PATH` or `~/.quiet-core-bot/quiet-core-bot.json`.
 
 ```json
 {
@@ -30,7 +30,7 @@ Active config: `$OPENCLAW_CONFIG_PATH` or `~/.openclaw/openclaw.json`.
         "config": {
           "host": {
             "enabled": true,
-            "root": "~/.openclaw/canvas",
+            "root": "~/.quiet-core-bot/canvas",
             "liveReload": true
           }
         }

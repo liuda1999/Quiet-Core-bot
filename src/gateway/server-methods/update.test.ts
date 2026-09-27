@@ -1,7 +1,7 @@
 // Update method tests cover update.run/status, restart sentinel metadata,
 // managed-service handoff, restart scheduling, and delivery context preservation.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { ConfigFileSnapshot, OpenClawConfig } from "../../config/types.openclaw.js";
+import type { ConfigFileSnapshot, OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import type { RestartSentinelPayload } from "../../infra/restart-sentinel.js";
 import type { RespawnSupervisor } from "../../infra/supervisor-markers.js";
 import type { UpdateInstallSurface, UpdateRunResult } from "../../infra/update-runner.js";
@@ -14,8 +14,8 @@ const runGatewayUpdateMock = vi.fn<() => Promise<UpdateRunResult>>();
 const resolveUpdateInstallSurfaceMock = vi.fn<() => Promise<UpdateInstallSurface>>(async () => ({
   kind: "git",
   mode: "git",
-  root: "/tmp/openclaw",
-  packageRoot: "/tmp/openclaw",
+  root: "/tmp/quiet-core-bot",
+  packageRoot: "/tmp/quiet-core-bot",
 }));
 const getLatestUpdateRestartSentinelMock = vi.fn<() => RestartSentinelPayload | null>(() => null);
 const refreshLatestUpdateRestartSentinelMock = vi.fn<() => Promise<RestartSentinelPayload | null>>(
@@ -31,7 +31,7 @@ const startManagedServiceUpdateHandoffMock = vi.fn(async () => ({
   status: "started" as const,
   pid: 12345,
   command: "quiet-core-bot update --yes --timeout 1800",
-  logPath: "/tmp/openclaw-update-run-handoff/handoff.log",
+  logPath: "/tmp/quiet-core-bot-update-run-handoff/handoff.log",
 }));
 
 const scheduleGatewaySigusr1RestartMock = vi.fn(() => ({ scheduled: true }));
@@ -81,13 +81,13 @@ vi.mock("../../config/sessions.js", () => ({
   },
 }));
 
-vi.mock("../../infra/openclaw-root.js", async () => {
-  const actual = await vi.importActual<typeof import("../../infra/openclaw-root.js")>(
-    "../../infra/openclaw-root.js",
+vi.mock("../../infra/quiet-core-bot-root.js", async () => {
+  const actual = await vi.importActual<typeof import("../../infra/quiet-core-bot-root.js")>(
+    "../../infra/quiet-core-bot-root.js",
   );
   return {
     ...actual,
-    resolveOpenClawPackageRoot: async () => "/tmp/openclaw",
+    resolveOpenClawPackageRoot: async () => "/tmp/quiet-core-bot",
   };
 });
 
@@ -184,7 +184,7 @@ beforeEach(() => {
   normalizeUpdateChannelMock.mockReturnValue(null);
   readConfigFileSnapshotMock.mockReset();
   readConfigFileSnapshotMock.mockResolvedValue({
-    path: "/tmp/openclaw.json",
+    path: "/tmp/quiet-core-bot.json",
     exists: true,
     raw: "{}",
     parsed: {},
@@ -211,8 +211,8 @@ beforeEach(() => {
   resolveUpdateInstallSurfaceMock.mockResolvedValue({
     kind: "git",
     mode: "git",
-    root: "/tmp/openclaw",
-    packageRoot: "/tmp/openclaw",
+    root: "/tmp/quiet-core-bot",
+    packageRoot: "/tmp/quiet-core-bot",
   });
   getLatestUpdateRestartSentinelMock.mockClear();
   refreshLatestUpdateRestartSentinelMock.mockClear();
@@ -280,8 +280,8 @@ function mockGlobalInstallSurface() {
   resolveUpdateInstallSurfaceMock.mockResolvedValueOnce({
     kind: "global",
     mode: "npm",
-    root: "/tmp/openclaw-global",
-    packageRoot: "/tmp/openclaw-global",
+    root: "/tmp/quiet-core-bot-global",
+    packageRoot: "/tmp/quiet-core-bot-global",
   });
 }
 
@@ -422,7 +422,7 @@ describe("update.run restart scheduling", () => {
     detectRespawnSupervisorMock.mockReturnValueOnce("launchd");
     mockGlobalInstallSurface();
 
-    const payload = await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.gateway" }, () =>
+    const payload = await withProcessEnv({ QUIET_CORE_LAUNCHD_LABEL: "ai.quiet-core-bot.gateway" }, () =>
       captureUpdateRunPayload(),
     );
 
@@ -430,7 +430,7 @@ describe("update.run restart scheduling", () => {
     expect(startManagedServiceUpdateHandoffMock).toHaveBeenCalledTimes(1);
     expect(startManagedServiceUpdateHandoffMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        root: "/tmp/openclaw",
+        root: "/tmp/quiet-core-bot",
         handoffId: expect.any(String),
         supervisor: "launchd",
         meta: expect.objectContaining({
@@ -486,7 +486,7 @@ describe("update.run restart scheduling", () => {
     detectRespawnSupervisorMock.mockReturnValueOnce("systemd");
     mockGlobalInstallSurface();
 
-    await withProcessEnv({ OPENCLAW_SYSTEMD_UNIT: "openclaw-gateway.service" }, () =>
+    await withProcessEnv({ QUIET_CORE_SYSTEMD_UNIT: "quiet-core-bot-gateway.service" }, () =>
       invokeUpdateRun({ restartDelayMs: 0 }),
     );
 
@@ -513,7 +513,7 @@ describe("update.run restart scheduling", () => {
       throw Object.assign(new Error("uv_cwd"), { code: "ENOENT", syscall: "uv_cwd" });
     });
     try {
-      await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.gateway" }, () =>
+      await withProcessEnv({ QUIET_CORE_LAUNCHD_LABEL: "ai.quiet-core-bot.gateway" }, () =>
         invokeUpdateRun({}),
       );
     } finally {
@@ -523,15 +523,15 @@ describe("update.run restart scheduling", () => {
     expect(startManagedServiceUpdateHandoffMock).toHaveBeenCalledTimes(1);
     expect(startManagedServiceUpdateHandoffMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        root: "/tmp/openclaw",
+        root: "/tmp/quiet-core-bot",
       }),
     );
   });
 
   it("hands supervised git/dev updates to the CLI path instead of rebuilding live dist in-process", async () => {
     detectRespawnSupervisorMock.mockReturnValueOnce("launchd");
-    mockGitInstallSurface("/tmp/openclaw-git");
-    const payload = await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.gateway" }, () =>
+    mockGitInstallSurface("/tmp/quiet-core-bot-git");
+    const payload = await withProcessEnv({ QUIET_CORE_LAUNCHD_LABEL: "ai.quiet-core-bot.gateway" }, () =>
       captureUpdateRunPayload(),
     );
 
@@ -539,7 +539,7 @@ describe("update.run restart scheduling", () => {
     expect(startManagedServiceUpdateHandoffMock).toHaveBeenCalledTimes(1);
     expect(startManagedServiceUpdateHandoffMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        root: "/tmp/openclaw",
+        root: "/tmp/quiet-core-bot",
         handoffId: expect.any(String),
         supervisor: "launchd",
         meta: expect.objectContaining({
@@ -563,9 +563,9 @@ describe("update.run restart scheduling", () => {
   it("does not pass the stored stable channel to supervised git handoff CLI", async () => {
     normalizeUpdateChannelMock.mockReturnValueOnce("stable");
     detectRespawnSupervisorMock.mockReturnValueOnce("launchd");
-    mockGitInstallSurface("/tmp/openclaw-git");
+    mockGitInstallSurface("/tmp/quiet-core-bot-git");
 
-    const payload = await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.gateway" }, () =>
+    const payload = await withProcessEnv({ QUIET_CORE_LAUNCHD_LABEL: "ai.quiet-core-bot.gateway" }, () =>
       captureUpdateRunPayload(),
     );
 
@@ -587,7 +587,7 @@ describe("update.run restart scheduling", () => {
       steps: [],
       durationMs: 100,
     });
-    mockGitInstallSurface("/tmp/openclaw-git");
+    mockGitInstallSurface("/tmp/quiet-core-bot-git");
 
     const payload = await captureUpdateRunPayload();
 
@@ -602,11 +602,11 @@ describe("update.run restart scheduling", () => {
 
   it("hands systemd-supervised git/dev updates to handoff from the durable unit identity", async () => {
     detectRespawnSupervisorMock.mockReturnValueOnce("systemd");
-    mockGitInstallSurface("/tmp/openclaw-git");
+    mockGitInstallSurface("/tmp/quiet-core-bot-git");
 
     const payload = await withProcessEnv(
       {
-        OPENCLAW_SYSTEMD_UNIT: "openclaw-gateway.service",
+        QUIET_CORE_SYSTEMD_UNIT: "quiet-core-bot-gateway.service",
         INVOCATION_ID: "8a77e69a8f604bf0b7984879b9f17a7c",
       },
       () => captureUpdateRunPayload(),
@@ -616,7 +616,7 @@ describe("update.run restart scheduling", () => {
     expect(startManagedServiceUpdateHandoffMock).toHaveBeenCalledTimes(1);
     expect(startManagedServiceUpdateHandoffMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        root: "/tmp/openclaw",
+        root: "/tmp/quiet-core-bot",
         supervisor: "systemd",
       }),
     );
@@ -629,11 +629,11 @@ describe("update.run restart scheduling", () => {
 
   it("does not hand off systemd-supervised git/dev updates from generic systemd markers alone", async () => {
     detectRespawnSupervisorMock.mockReturnValueOnce("systemd");
-    mockGitInstallSurface("/tmp/openclaw-git");
+    mockGitInstallSurface("/tmp/quiet-core-bot-git");
 
     const payload = await withProcessEnv(
       {
-        OPENCLAW_SYSTEMD_UNIT: undefined,
+        QUIET_CORE_SYSTEMD_UNIT: undefined,
         INVOCATION_ID: "8a77e69a8f604bf0b7984879b9f17a7c",
       },
       () => captureUpdateRunPayload(),
@@ -703,9 +703,9 @@ describe("update.run post-core plugin finalize", () => {
   it("resumes official plugin convergence after a git/source core update", async () => {
     runPostCoreFinalizeAfterGatewayUpdateMock.mockResolvedValueOnce({
       status: "ok",
-      entrypoint: "/tmp/openclaw-git/dist/index.mjs",
+      entrypoint: "/tmp/quiet-core-bot-git/dist/index.mjs",
     });
-    mockGitOkUpdate("/tmp/openclaw-git");
+    mockGitOkUpdate("/tmp/quiet-core-bot-git");
 
     const payload = await captureUpdateRunPayload();
 
@@ -731,7 +731,7 @@ describe("update.run post-core plugin finalize", () => {
       },
     } as OpenClawConfig;
     readConfigFileSnapshotMock.mockResolvedValueOnce({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/quiet-core-bot.json",
       exists: true,
       raw: JSON.stringify(preUpdateConfig),
       parsed: preUpdateConfig,
@@ -746,9 +746,9 @@ describe("update.run post-core plugin finalize", () => {
     });
     runPostCoreFinalizeAfterGatewayUpdateMock.mockResolvedValueOnce({
       status: "ok",
-      entrypoint: "/tmp/openclaw-git/dist/index.mjs",
+      entrypoint: "/tmp/quiet-core-bot-git/dist/index.mjs",
     });
-    mockGitOkUpdate("/tmp/openclaw-git");
+    mockGitOkUpdate("/tmp/quiet-core-bot-git");
 
     await captureUpdateRunPayload();
 
@@ -766,11 +766,11 @@ describe("update.run post-core plugin finalize", () => {
     runPostCoreFinalizeAfterGatewayUpdateMock.mockResolvedValueOnce({
       status: "error",
       reason: "nonzero-exit",
-      entrypoint: "/tmp/openclaw-git/dist/index.mjs",
+      entrypoint: "/tmp/quiet-core-bot-git/dist/index.mjs",
       exitCode: 1,
       message: "convergence failed",
     });
-    mockGitOkUpdate("/tmp/openclaw-git");
+    mockGitOkUpdate("/tmp/quiet-core-bot-git");
 
     const payload = await captureUpdateRunPayload();
 
@@ -786,7 +786,7 @@ describe("update.run post-core plugin finalize", () => {
     detectRespawnSupervisorMock.mockReturnValueOnce("launchd");
     mockGlobalInstallSurface();
 
-    await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.gateway" }, () =>
+    await withProcessEnv({ QUIET_CORE_LAUNCHD_LABEL: "ai.quiet-core-bot.gateway" }, () =>
       captureUpdateRunPayload(),
     );
 

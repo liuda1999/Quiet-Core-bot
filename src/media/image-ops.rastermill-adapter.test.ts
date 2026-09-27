@@ -39,7 +39,7 @@ describe("image ops Rastermill adapter", () => {
         outputPixels: MAX_IMAGE_INPUT_PIXELS,
       },
       temp: expect.objectContaining({
-        prefix: "openclaw-img-",
+        prefix: "quiet-core-bot-img-",
       }),
       commandResolver: expect.any(Function),
     });

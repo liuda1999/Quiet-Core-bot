@@ -13,7 +13,7 @@ describe("secrets runtime state", () => {
   let envSnapshot: ReturnType<typeof captureEnv>;
 
   beforeEach(() => {
-    envSnapshot = captureEnv(["OPENCLAW_STATE_DIR"]);
+    envSnapshot = captureEnv(["QUIET_CORE_STATE_DIR"]);
   });
 
   afterEach(() => {

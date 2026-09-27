@@ -2,8 +2,8 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { ModelProviderConfig } from "openclaw/plugin-sdk/provider-model-shared";
-import { normalizeStringEntries, uniqueStrings } from "openclaw/plugin-sdk/string-coerce-runtime";
+import type { ModelProviderConfig } from "quiet-core-bot/plugin-sdk/provider-model-shared";
+import { normalizeStringEntries, uniqueStrings } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 
 const QA_ALWAYS_STAGE_RUNTIME_PLUGIN_IDS = Object.freeze([
   "image-generation-core",
@@ -123,7 +123,7 @@ function findQaBundledPluginDirsByManifestId(params: {
         continue;
       }
       const candidate = path.join(sourceRoot, entry.name);
-      const manifestId = readQaBundledManifestId(path.join(candidate, "openclaw.plugin.json"));
+      const manifestId = readQaBundledManifestId(path.join(candidate, "quiet-core-bot.plugin.json"));
       if (manifestId === params.pluginId) {
         candidates.push(candidate);
       }
@@ -149,7 +149,7 @@ export async function resolveQaOwnerPluginIdsForProviderIds(params: {
       if (!entry.isDirectory()) {
         continue;
       }
-      const manifestPath = path.join(sourceRoot, entry.name, "openclaw.plugin.json");
+      const manifestPath = path.join(sourceRoot, entry.name, "quiet-core-bot.plugin.json");
       if (!existsSync(manifestPath)) {
         continue;
       }
@@ -278,7 +278,7 @@ async function seedQaStagedNodeModules(params: { repoRoot: string; stagedRoot: s
   const stagedNodeModulesDir = path.join(params.stagedRoot, "node_modules");
   await fs.mkdir(stagedNodeModulesDir, { recursive: true });
   for (const entry of await fs.readdir(sourceNodeModulesDir, { withFileTypes: true })) {
-    if (entry.name === "openclaw") {
+    if (entry.name === "quiet-core-bot") {
       continue;
     }
     await symlinkQaStagedDirEntry({
@@ -371,14 +371,13 @@ export async function resolveQaRuntimeHostVersion(params: {
       continue;
     }
     const packageRaw = await fs.readFile(packagePath, "utf8");
-    const packageJson = JSON.parse(packageRaw) as {
-      openclaw?: {
+    const packageJson = JSON.parse(packageRaw) as { "quiet-core-bot"?: {
         install?: {
           minHostVersion?: string;
         };
       };
     };
-    const candidate = parseStableSemverFloor(packageJson.openclaw?.install?.minHostVersion);
+    const candidate = parseStableSemverFloor(packageJson["quiet-core-bot"]?.install?.minHostVersion);
     if (compareSemverFloors(candidate, selected) > 0) {
       selected = candidate;
     }
@@ -412,7 +411,7 @@ export async function createQaBundledPluginsDir(params: {
     repoRoot: params.repoRoot,
     stagedRoot,
   });
-  const stagedOpenClawPackageDir = path.join(stagedRoot, "node_modules", "openclaw");
+  const stagedOpenClawPackageDir = path.join(stagedRoot, "node_modules", "quiet-core-bot");
   await fs.mkdir(stagedOpenClawPackageDir, { recursive: true });
   await fs.copyFile(
     path.join(params.repoRoot, "package.json"),

@@ -1,4 +1,4 @@
-name: openclaw-codeql-ui-control-plane-critical-quality
+name: quiet-core-bot-codeql-ui-control-plane-critical-quality
 
 disable-default-queries: true
 

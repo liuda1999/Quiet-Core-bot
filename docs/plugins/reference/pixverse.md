@@ -11,8 +11,8 @@ Quiet Core bot PixVerse video generation provider plugin.
 
 ## Distribution
 
-- Package: `@openclaw/pixverse-provider`
-- Install route: npm; ClawHub: `clawhub:@openclaw/pixverse-provider`
+- Package: `@quiet-core/pixverse-provider`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/pixverse-provider`
 
 ## Surface
 

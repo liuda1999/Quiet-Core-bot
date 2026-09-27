@@ -24,7 +24,7 @@ function buildNodeInstallEnvironmentValueSources(): Record<
   GatewayServiceEnvironmentValueSource | undefined
 > {
   return {
-    OPENCLAW_GATEWAY_TOKEN: "file",
+    QUIET_CORE_GATEWAY_TOKEN: "file",
   };
 }
 
@@ -75,7 +75,7 @@ export async function buildNodeInstallPlan(params: {
     extraPathDirs: resolveDaemonNodeBinDir(nodePath),
   });
   const description = formatNodeServiceDescription({
-    version: environment.OPENCLAW_SERVICE_VERSION,
+    version: environment.QUIET_CORE_SERVICE_VERSION,
   });
 
   return {

@@ -23,7 +23,7 @@ which helps with JS-heavy sites or pages that block plain HTTP fetches.
 Install the official plugin, then restart Gateway:
 
 ```bash
-quiet-core-bot plugins install @openclaw/firecrawl-plugin
+quiet-core-bot plugins install @quiet-core/firecrawl-plugin
 quiet-core-bot gateway restart
 ```
 

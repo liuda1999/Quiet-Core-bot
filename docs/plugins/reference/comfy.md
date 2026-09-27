@@ -11,7 +11,7 @@ Adds ComfyUI model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/comfy-provider`
+- Package: `@quiet-core/comfy-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

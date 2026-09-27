@@ -2,8 +2,8 @@
 import {
   resolveStableChannelMessageIngress,
   type StableChannelIngressIdentityParams,
-} from "openclaw/plugin-sdk/channel-ingress-runtime";
-import { formatErrorMessage as sharedFormatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+} from "quiet-core-bot/plugin-sdk/channel-ingress-runtime";
+import { formatErrorMessage as sharedFormatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
 import { normalizeShip } from "../targets.js";
 
 export interface ParsedCite {

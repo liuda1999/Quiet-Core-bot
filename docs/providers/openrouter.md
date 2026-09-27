@@ -281,7 +281,7 @@ faster analysis and judge models.
 Test the configured ref with a one-shot local model call:
 
 ```bash
-openclaw infer model run --local \
+quiet-core-bot infer model run --local \
   --model openrouter/openrouter/fusion \
   --prompt "Reply with exactly: FUSION_OK" \
   --json

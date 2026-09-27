@@ -11,7 +11,7 @@ Quiet Core bot LanceDB-backed long-term memory plugin with auto-recall, auto-cap
 
 ## Distribution
 
-- Package: `@openclaw/memory-lancedb`
+- Package: `@quiet-core/memory-lancedb`
 - Install route: npm; ClawHub
 
 ## Surface

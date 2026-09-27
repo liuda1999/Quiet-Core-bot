@@ -43,7 +43,7 @@ describe("gateway hook runner methods", () => {
   const gatewayCtx = {
     port: 18789,
     config: {} as never,
-    workspaceDir: "/tmp/openclaw-workspace",
+    workspaceDir: "/tmp/quiet-core-bot-workspace",
     getCron: () => undefined,
   };
 

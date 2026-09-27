@@ -35,7 +35,7 @@ struct ConfigureRemoteCommandTests {
             }
         }
 
-        try await TestIsolation.withIsolatedState(env: ["OPENCLAW_CONFIG_PATH": configURL.path]) {
+        try await TestIsolation.withIsolatedState(env: ["QUIET_CORE_CONFIG_PATH": configURL.path]) {
             let output = try configureRemote(.init(
                 sshTarget: "alice@gateway.example",
                 localPort: 19089,
@@ -88,7 +88,7 @@ struct ConfigureRemoteCommandTests {
         try FileManager().createDirectory(at: configURL.deletingLastPathComponent(), withIntermediateDirectories: true)
         try initialData.write(to: configURL)
 
-        try await TestIsolation.withIsolatedState(env: ["OPENCLAW_CONFIG_PATH": configURL.path]) {
+        try await TestIsolation.withIsolatedState(env: ["QUIET_CORE_CONFIG_PATH": configURL.path]) {
             try configureRemote(.init(sshTarget: "alice@gateway.example"))
 
             let data = try Data(contentsOf: configURL)
@@ -158,7 +158,7 @@ struct ConfigureRemoteCommandTests {
             }
         }
 
-        try await TestIsolation.withIsolatedState(env: ["OPENCLAW_CONFIG_PATH": configURL.path]) {
+        try await TestIsolation.withIsolatedState(env: ["QUIET_CORE_CONFIG_PATH": configURL.path]) {
             let output = try configureRemote(.init(
                 directUrl: "ws://192.168.0.202:18789",
                 token: "test-token")) // pragma: allowlist secret
@@ -187,7 +187,7 @@ struct ConfigureRemoteCommandTests {
             .appendingPathComponent("openclaw-configure-direct-reject-\(UUID().uuidString).json")
         defer { try? FileManager().removeItem(at: configURL) }
 
-        _ = await TestIsolation.withIsolatedState(env: ["OPENCLAW_CONFIG_PATH": configURL.path]) {
+        _ = await TestIsolation.withIsolatedState(env: ["QUIET_CORE_CONFIG_PATH": configURL.path]) {
             #expect(throws: Error.self) {
                 try configureRemote(.init(directUrl: "ws://fd-example.com:18789"))
             }

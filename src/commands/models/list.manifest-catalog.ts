@@ -1,7 +1,7 @@
 /** Manifest-backed model catalog row loaders for `quiet-core-bot models list`. */
-import { normalizeModelCatalogProviderId } from "@openclaw/model-catalog-core/model-catalog-refs";
-import type { NormalizedModelCatalogRow } from "@openclaw/model-catalog-core/model-catalog-types";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import { normalizeModelCatalogProviderId } from "@quiet-core/model-catalog-core/model-catalog-refs";
+import type { NormalizedModelCatalogRow } from "@quiet-core/model-catalog-core/model-catalog-types";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { planManifestModelCatalogRows } from "../../model-catalog/index.js";
 import { loadManifestMetadataSnapshot } from "../../plugins/manifest-contract-eligibility.js";
 import type { PluginManifestRegistry } from "../../plugins/manifest-registry.js";

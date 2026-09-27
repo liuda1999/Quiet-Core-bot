@@ -3,6 +3,7 @@ import { drainSessionWriteLockStateForTest } from "../agents/session-write-lock.
 import { clearSessionStoreCaches } from "../config/sessions/store-cache.js";
 import { drainSessionStoreWriterQueuesForTest } from "../config/sessions/store-writer-state.js";
 import { drainFileLockStateForTest } from "../infra/file-lock.js";
+import { closeOpenClawStateDatabase } from "../state/quiet-core-bot-state-db.js";
 
 let fileLockDrainerForTests: typeof drainFileLockStateForTest | null = null;
 let sessionStoreWriterQueueDrainerForTests: typeof drainSessionStoreWriterQueuesForTest | null =
@@ -37,4 +38,8 @@ export async function cleanupSessionStateForTest(): Promise<void> {
   clearSessionStoreCaches();
   await (fileLockDrainerForTests ?? drainFileLockStateForTest)();
   await (sessionWriteLockDrainerForTests ?? drainSessionWriteLockStateForTest)();
+  // Release cached state database handles before callers delete temp homes: an
+  // open SQLite handle keeps the .sqlite/-wal/-shm files locked, which makes the
+  // Windows temp-home fs.rm retry indefinitely instead of settling.
+  closeOpenClawStateDatabase();
 }

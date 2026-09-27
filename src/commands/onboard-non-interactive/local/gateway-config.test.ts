@@ -1,6 +1,6 @@
 // Non-interactive gateway config tests cover port, bind, auth token, and SecretRef preservation behavior.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
 import { withEnv } from "../../../test-utils/env.js";
 import type { OnboardOptions } from "../../onboard-types.js";
 import { applyNonInteractiveGatewayConfig } from "./gateway-config.js";
@@ -32,7 +32,7 @@ const baseOpts = {} as OnboardOptions;
 const SAMPLE_SECRET_REF = {
   source: "env" as const,
   provider: "default",
-  id: "OPENCLAW_GATEWAY_TOKEN_REF",
+  id: "QUIET_CORE_GATEWAY_TOKEN_REF",
 };
 
 function createTokenConfig(token: unknown): OpenClawConfig {
@@ -54,7 +54,7 @@ function applyGatewayConfig({
 } = {}) {
   return withEnv(
     {
-      OPENCLAW_GATEWAY_TOKEN: undefined,
+      QUIET_CORE_GATEWAY_TOKEN: undefined,
       [SAMPLE_SECRET_REF.id]: undefined,
       ...env,
     },
@@ -85,14 +85,14 @@ describe("applyNonInteractiveGatewayConfig token resolution chain", () => {
     expect(randomToken).not.toHaveBeenCalled();
   });
 
-  it("prefers existing plaintext token over ambient OPENCLAW_GATEWAY_TOKEN on re-onboard", () => {
-    // A stale shell/launchd OPENCLAW_GATEWAY_TOKEN must not rotate a
+  it("prefers existing plaintext token over ambient QUIET_CORE_GATEWAY_TOKEN on re-onboard", () => {
+    // A stale shell/launchd QUIET_CORE_GATEWAY_TOKEN must not rotate a
     // persisted token — that would break already-paired clients.
     const nextConfig = createTokenConfig("existing-user-token");
 
     const result = applyGatewayConfig({
       nextConfig,
-      env: { OPENCLAW_GATEWAY_TOKEN: "stale-env-token" },
+      env: { QUIET_CORE_GATEWAY_TOKEN: "stale-env-token" },
     });
 
     expect(result?.nextConfig.gateway?.auth?.token).toBe("existing-user-token");
@@ -111,8 +111,8 @@ describe("applyNonInteractiveGatewayConfig token resolution chain", () => {
     expect(randomToken).not.toHaveBeenCalled();
   });
 
-  it("uses OPENCLAW_GATEWAY_TOKEN to fill an empty config on first-run", () => {
-    const result = applyGatewayConfig({ env: { OPENCLAW_GATEWAY_TOKEN: "env-token" } });
+  it("uses QUIET_CORE_GATEWAY_TOKEN to fill an empty config on first-run", () => {
+    const result = applyGatewayConfig({ env: { QUIET_CORE_GATEWAY_TOKEN: "env-token" } });
 
     expect(result?.nextConfig.gateway?.auth?.token).toBe("env-token");
     expect(randomToken).not.toHaveBeenCalled();
@@ -136,13 +136,13 @@ describe("applyNonInteractiveGatewayConfig token resolution chain", () => {
     expect(randomToken).not.toHaveBeenCalled();
   });
 
-  it("preserves an existing SecretRef even when ambient OPENCLAW_GATEWAY_TOKEN is set", () => {
+  it("preserves an existing SecretRef even when ambient QUIET_CORE_GATEWAY_TOKEN is set", () => {
     // A stale ambient env must not declassify a configured SecretRef.
     const nextConfig = createTokenConfig(SAMPLE_SECRET_REF);
 
     const result = applyGatewayConfig({
       nextConfig,
-      env: { OPENCLAW_GATEWAY_TOKEN: "stale-env-token" },
+      env: { QUIET_CORE_GATEWAY_TOKEN: "stale-env-token" },
     });
 
     expect(result?.nextConfig.gateway?.auth?.token).toEqual(SAMPLE_SECRET_REF);
@@ -174,7 +174,7 @@ describe("applyNonInteractiveGatewayConfig token resolution chain", () => {
   });
 
   it("overrides an existing SecretRef when --gateway-token-ref-env is provided", () => {
-    const newRefId = "OPENCLAW_GATEWAY_TOKEN_NEW_REF";
+    const newRefId = "QUIET_CORE_GATEWAY_TOKEN_NEW_REF";
     const nextConfig = createTokenConfig(SAMPLE_SECRET_REF);
 
     const result = applyGatewayConfig({

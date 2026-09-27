@@ -31,7 +31,7 @@ How to see whether the linked channel is healthy from the menu bar app.
 
 ## When in doubt
 
-- You can still use the CLI flow in [Gateway health](/gateway/health) (`quiet-core-bot status`, `quiet-core-bot status --deep`, `quiet-core-bot health --json`) and tail `/tmp/openclaw/openclaw-*.log` for `web-heartbeat` / `web-reconnect`.
+- You can still use the CLI flow in [Gateway health](/gateway/health) (`quiet-core-bot status`, `quiet-core-bot status --deep`, `quiet-core-bot health --json`) and tail `/tmp/quiet-core-bot/quiet-core-bot-*.log` for `web-heartbeat` / `web-reconnect`.
 
 ## Related
 

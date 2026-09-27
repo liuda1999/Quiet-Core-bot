@@ -33,7 +33,7 @@ function manifest(id: string): PluginManifestRecord {
     origin: "bundled",
     rootDir: `/plugins/${id}`,
     source: `/plugins/${id}`,
-    manifestPath: `/plugins/${id}/openclaw.plugin.json`,
+    manifestPath: `/plugins/${id}/quiet-core-bot.plugin.json`,
   };
 }
 
@@ -243,7 +243,7 @@ describe("doctor stale plugin config helpers", () => {
         },
         list: [
           {
-            id: "openclaw",
+            id: "quiet-core-bot",
             heartbeat: {
               target: "missing-chat-plugin",
             },
@@ -304,7 +304,7 @@ describe("doctor stale plugin config helpers", () => {
         },
       },
       channels: {
-        "openclaw-weixin": {
+        "quiet-core-bot-weixin": {
           enabled: true,
         },
       },
@@ -388,7 +388,7 @@ describe("doctor stale plugin config helpers", () => {
           openai: {
             baseUrl: "https://api.openai.com/v1",
             models: [],
-            agentRuntime: { id: "openclaw" },
+            agentRuntime: { id: "quiet-core-bot" },
           },
         },
       },

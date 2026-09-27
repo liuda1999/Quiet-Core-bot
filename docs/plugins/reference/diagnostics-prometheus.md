@@ -11,8 +11,8 @@ Quiet Core bot diagnostics Prometheus exporter for runtime metrics.
 
 ## Distribution
 
-- Package: `@openclaw/diagnostics-prometheus`
-- Install route: npm; ClawHub: `clawhub:@openclaw/diagnostics-prometheus`
+- Package: `@quiet-core/diagnostics-prometheus`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/diagnostics-prometheus`
 
 ## Surface
 

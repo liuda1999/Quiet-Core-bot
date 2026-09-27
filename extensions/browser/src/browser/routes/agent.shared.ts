@@ -4,7 +4,7 @@
  * Centralizes body/query parsing, profile resolution, error mapping, Playwright
  * availability checks, and tab-context guards for route modules.
  */
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { normalizeOptionalString } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { resolveBrowserNavigationProxyMode } from "../browser-proxy-mode.js";
 import { toBrowserErrorResponse } from "../errors.js";
 import {

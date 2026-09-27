@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 import { pathToFileURL } from "node:url";
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@quiet-core/normalization-core/number-coercion";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   COMMAND_TIMEOUT_MS,
@@ -35,7 +35,7 @@ function expectedTaskkillPath(): string {
 }
 
 function makeTempDir(): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-telegram-proof-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-telegram-proof-"));
   tempDirs.push(dir);
   return dir;
 }
@@ -94,7 +94,7 @@ describe("telegram user Crabbox proof log polling", () => {
     fs.writeFileSync(fakePnpm, "#!/usr/bin/env node\n", { mode: 0o755 });
 
     const spec = createOpenClawGatewaySpawnSpec({
-      env: { ...process.env, OPENCLAW_TELEGRAM_PROOF_SENTINEL: "1" },
+      env: { ...process.env, QUIET_CORE_TELEGRAM_PROOF_SENTINEL: "1" },
       gatewayPort: 19042,
       nodeExecPath: "/opt/node/bin/node",
       npmExecPath: fakePnpm,
@@ -102,9 +102,9 @@ describe("telegram user Crabbox proof log polling", () => {
     });
 
     expect(spec.command).toBe("/opt/node/bin/node");
-    expect(spec.args).toEqual([fakePnpm, "openclaw", "gateway", "--port", "19042"]);
+    expect(spec.args).toEqual([fakePnpm, "quiet-core-bot", "gateway", "--port", "19042"]);
     expect(spec.options.cwd).toBe(root);
-    expect(spec.options.env?.OPENCLAW_TELEGRAM_PROOF_SENTINEL).toBe("1");
+    expect(spec.options.env?.QUIET_CORE_TELEGRAM_PROOF_SENTINEL).toBe("1");
     expect(spec.options.shell).toBe(false);
   });
 
@@ -116,17 +116,17 @@ describe("telegram user Crabbox proof log polling", () => {
   it("rejects loose numeric log tail limits instead of parsing prefixes", () => {
     expect(() =>
       readTelegramUserProofLogTailBytes({
-        OPENCLAW_TELEGRAM_USER_PROOF_LOG_TAIL_BYTES: "1e3",
+        QUIET_CORE_TELEGRAM_USER_PROOF_LOG_TAIL_BYTES: "1e3",
       }),
-    ).toThrow("invalid OPENCLAW_TELEGRAM_USER_PROOF_LOG_TAIL_BYTES: 1e3");
+    ).toThrow("invalid QUIET_CORE_TELEGRAM_USER_PROOF_LOG_TAIL_BYTES: 1e3");
     expect(() =>
       readTelegramUserProofLogTailBytes({
-        OPENCLAW_TELEGRAM_USER_PROOF_LOG_TAIL_BYTES: "1000bytes",
+        QUIET_CORE_TELEGRAM_USER_PROOF_LOG_TAIL_BYTES: "1000bytes",
       }),
-    ).toThrow("invalid OPENCLAW_TELEGRAM_USER_PROOF_LOG_TAIL_BYTES: 1000bytes");
+    ).toThrow("invalid QUIET_CORE_TELEGRAM_USER_PROOF_LOG_TAIL_BYTES: 1000bytes");
     expect(
       readTelegramUserProofLogTailBytes({
-        OPENCLAW_TELEGRAM_USER_PROOF_LOG_TAIL_BYTES: "4096",
+        QUIET_CORE_TELEGRAM_USER_PROOF_LOG_TAIL_BYTES: "4096",
       }),
     ).toBe(4096);
   });
@@ -254,7 +254,7 @@ describe("telegram user Crabbox proof log polling", () => {
   });
 
   it("shell-quotes generated remote setup and chat literals", () => {
-    const payload = "name $(touch /tmp/openclaw-proof-injected) `touch /tmp/also-injected`";
+    const payload = "name $(touch /tmp/quiet-core-bot-proof-injected) `touch /tmp/also-injected`";
 
     expect(renderRemoteSetup({ tdlibSha256: payload, tdlibUrl: payload })).toContain(
       `tdlib_url='${payload}'`,
@@ -270,7 +270,7 @@ describe("telegram user Crabbox proof log polling", () => {
     fs.mkdirSync(path.join(outputDir, "publish-gif-only"));
     fs.writeFileSync(
       path.join(outputDir, "session.json"),
-      '{"sshKey":"/private/tmp/openclaw/key"}',
+      '{"sshKey":"/private/tmp/quiet-core-bot/key"}',
     );
     fs.writeFileSync(path.join(outputDir, "lease.json"), '{"token":"secret"}');
     fs.writeFileSync(path.join(outputDir, "status.json"), '{"ok":true}');
@@ -306,7 +306,7 @@ describe("telegram user Crabbox proof log polling", () => {
     const outputDir = makeTempDir();
     fs.writeFileSync(
       path.join(outputDir, "session.json"),
-      '{"sshKey":"/private/tmp/openclaw/key"}',
+      '{"sshKey":"/private/tmp/quiet-core-bot/key"}',
     );
     fs.writeFileSync(path.join(outputDir, "status.json"), '{"ok":true}');
     fs.writeFileSync(path.join(outputDir, "telegram-desktop.log"), "log");
@@ -328,7 +328,7 @@ describe("telegram user Crabbox proof log polling", () => {
       fakePython,
       `#!/usr/bin/env node
 import fs from "node:fs";
-fs.writeFileSync(process.env.OPENCLAW_TEST_ARGV_PATH, JSON.stringify(process.argv.slice(1)));
+fs.writeFileSync(process.env.QUIET_CORE_TEST_ARGV_PATH, JSON.stringify(process.argv.slice(1)));
 `,
     );
     writeExecutable(
@@ -346,7 +346,7 @@ fs.writeFileSync(process.env.OPENCLAW_TEST_ARGV_PATH, JSON.stringify(process.arg
       encoding: "utf8",
       env: {
         ...process.env,
-        OPENCLAW_TEST_ARGV_PATH: argvPath,
+        QUIET_CORE_TEST_ARGV_PATH: argvPath,
         PATH: `${root}${path.delimiter}${process.env.PATH ?? ""}`,
       },
     });

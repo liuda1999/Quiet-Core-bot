@@ -165,7 +165,7 @@ import type { NostrProfileFormState } from "./views/channels.nostr-profile-form.
 
 declare global {
   interface Window {
-    __OPENCLAW_CONTROL_UI_BASE_PATH__?: string;
+    __QUIET_CORE_CONTROL_UI_BASE_PATH__?: string;
   }
 }
 

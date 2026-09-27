@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { afterEach, describe, expect, it } from "vitest";
 import { listRaftAccountIds, resolveRaftAccount } from "./accounts.js";
 import { RaftConfigSchema } from "./config-schema.js";

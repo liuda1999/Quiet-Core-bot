@@ -15,7 +15,7 @@ CLI, and scripting patterns (snapshots, refs, waits, debug flows).
 
 For local integrations only, the Gateway exposes a small loopback HTTP API.
 This standalone server is opt-in — set the environment variable
-`OPENCLAW_EAGER_BROWSER_CONTROL_SERVER=1` in the gateway service environment
+`QUIET_CORE_EAGER_BROWSER_CONTROL_SERVER=1` in the gateway service environment
 and restart the gateway before the HTTP endpoints become available. Without
 this variable the browser control runtime still works through the CLI and
 agent tools, but nothing listens on the loopback control port.
@@ -47,7 +47,7 @@ target-id prefixes still work, but they are volatile diagnostic handles.
 If shared-secret gateway auth is configured, browser HTTP routes require auth too:
 
 - `Authorization: Bearer <gateway token>`
-- `x-openclaw-password: <gateway password>` or HTTP Basic auth with that password
+- `x-quiet-core-bot-password: <gateway password>` or HTTP Basic auth with that password
 
 Notes:
 
@@ -90,7 +90,7 @@ What still works without Playwright:
   `--depth`, `--efficient`) when a per-tab CDP WebSocket is available. This is
   a fallback for inspection and ref discovery; Playwright remains the primary
   action engine.
-- Page screenshots for the managed `openclaw` browser when a per-tab CDP
+- Page screenshots for the managed `quiet-core-bot` browser when a per-tab CDP
   WebSocket is available
 - Page screenshots for `existing-session` / Chrome MCP profiles
 - `existing-session` ref-based screenshots (`--ref`) from snapshot output
@@ -117,19 +117,19 @@ If your Gateway runs in Docker, avoid `npx playwright` (npm override conflicts).
 For custom images, bake Chromium into the image:
 
 ```bash
-OPENCLAW_INSTALL_BROWSER=1 ./scripts/docker/setup.sh
+QUIET_CORE_INSTALL_BROWSER=1 ./scripts/docker/setup.sh
 ```
 
 For an existing image, install through the bundled CLI instead:
 
 ```bash
-docker compose run --rm openclaw-cli \
+docker compose run --rm quiet-core-bot-cli \
   node /app/node_modules/playwright-core/cli.js install chromium
 ```
 
 To persist browser downloads, set `PLAYWRIGHT_BROWSERS_PATH` (for example,
 `/home/node/.cache/ms-playwright`) and make sure `/home/node` is persisted via
-`OPENCLAW_HOME_VOLUME` or a bind mount. Quiet Core bot auto-detects the persisted
+`QUIET_CORE_HOME_VOLUME` or a bind mount. Quiet Core bot auto-detects the persisted
 Chromium on Linux. See [Docker](/install/docker).
 
 ## How it works (internal)
@@ -200,7 +200,7 @@ quiet-core-bot browser drag 10 11
 quiet-core-bot browser select 9 OptionA OptionB
 quiet-core-bot browser download e12 report.pdf
 quiet-core-bot browser waitfordownload report.pdf
-quiet-core-bot browser upload /tmp/openclaw/uploads/file.pdf
+quiet-core-bot browser upload /tmp/quiet-core-bot/uploads/file.pdf
 quiet-core-bot browser upload media://inbound/file.pdf
 quiet-core-bot browser fill --fields '[{"ref":"1","type":"text","value":"Ada"}]'
 quiet-core-bot browser dialog --accept
@@ -244,7 +244,7 @@ Notes:
 
 - `upload` and `dialog` are **arming** calls; run them before the click/press that triggers the chooser/dialog. If an action opens a modal, the action response includes `blockedByDialog` and `browserState.dialogs.pending`; pass that `dialogId` to respond directly. Dialogs handled outside Quiet Core bot appear under `browserState.dialogs.recent`.
 - `click`/`type`/etc require a `ref` from `snapshot` (numeric `12`, role ref `e12`, or actionable ARIA ref `ax12`). CSS selectors are intentionally not supported for actions. Use `click-coords` when the visible viewport position is the only reliable target.
-- Download and trace paths are constrained to Quiet Core bot temp roots: `/tmp/openclaw{,/downloads}` (fallback: `${os.tmpdir()}/openclaw/...`).
+- Download and trace paths are constrained to Quiet Core bot temp roots: `/tmp/quiet-core-bot{,/downloads}` (fallback: `${os.tmpdir()}/quiet-core-bot/...`).
 - `upload` accepts files from the Quiet Core bot temp uploads root and
   Quiet Core bot-managed inbound media. Managed inbound media can be referenced as
   `media://inbound/<id>`, sandbox-relative `media/inbound/<id>`, or a resolved
@@ -322,7 +322,7 @@ You can wait on more than just time/text:
   - `quiet-core-bot browser wait --url "**/dash"`
 - Wait for load state:
   - `quiet-core-bot browser wait --load networkidle`
-  - Supported on managed `openclaw` and raw/remote CDP profiles. The `user` and `existing-session` profiles reject `networkidle`; use `--url`, `--text`, a selector, or `--fn` waits there.
+  - Supported on managed `quiet-core-bot` and raw/remote CDP profiles. The `user` and `existing-session` profiles reject `networkidle`; use `--url`, `--text`, a selector, or `--fn` waits there.
 - Wait for a JS predicate:
   - `quiet-core-bot browser wait --fn "window.ready===true"`
 - Wait for a selector to become visible:

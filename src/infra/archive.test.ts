@@ -10,7 +10,7 @@ import { createZipCentralDirectoryArchive } from "../test-utils/zip-central-dire
 import type { ArchiveSecurityError } from "./archive.js";
 import { extractArchive, resolvePackedRootDir } from "./archive.js";
 
-const fixtureRootTracker = createSuiteTempRootTracker({ prefix: "openclaw-archive-" });
+const fixtureRootTracker = createSuiteTempRootTracker({ prefix: "quiet-core-bot-archive-" });
 const directorySymlinkType = process.platform === "win32" ? "junction" : undefined;
 const ARCHIVE_EXTRACT_TIMEOUT_MS = 15_000;
 

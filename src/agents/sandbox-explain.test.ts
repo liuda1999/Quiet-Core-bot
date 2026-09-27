@@ -30,7 +30,7 @@ describe("sandbox explain helpers", () => {
         list: [
           {
             id: "work",
-            workspace: "~/openclaw-work",
+            workspace: "~/quiet-core-bot-work",
             tools: { sandbox: { tools: { allow: ["write"] } } },
           },
         ],
@@ -58,7 +58,7 @@ describe("sandbox explain helpers", () => {
         list: [
           {
             id: "work",
-            workspace: "~/openclaw-work",
+            workspace: "~/quiet-core-bot-work",
             tools: {
               sandbox: { tools: { allow: ["group:memory", "group:fs"] } },
             },

@@ -59,14 +59,14 @@ export function resolveDaemonNodeBinDir(nodePath?: string): string[] | undefined
 }
 
 function isOpenClawCommandBasename(basename: string, platform: NodeJS.Platform): boolean {
-  if (basename === "openclaw" || basename === "quiet-core-bot") {
+  if (basename === "quiet-core-bot" || basename === "quiet-core-bot") {
     return true;
   }
   if (platform === "win32") {
     return (
-      basename === "openclaw.cmd" ||
-      basename === "openclaw.ps1" ||
-      basename === "openclaw.exe" ||
+      basename === "quiet-core-bot.cmd" ||
+      basename === "quiet-core-bot.ps1" ||
+      basename === "quiet-core-bot.exe" ||
       basename === "quiet-core-bot.cmd" ||
       basename === "quiet-core-bot.ps1" ||
       basename === "quiet-core-bot.exe"
@@ -130,7 +130,7 @@ export function resolveDaemonOpenClawBinDir(
     if (!path.isAbsolute(segment)) {
       continue;
     }
-    const candidate = path.join(segment, platform === "win32" ? "openclaw.cmd" : "openclaw");
+    const candidate = path.join(segment, platform === "win32" ? "quiet-core-bot.cmd" : "quiet-core-bot");
     if (!existsSync(candidate)) {
       continue;
     }

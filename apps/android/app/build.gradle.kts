@@ -15,15 +15,15 @@ fun requireOpenClawAndroidVersionProperty(name: String): String =
   openClawAndroidVersionProperties.getProperty(name)?.trim()?.takeIf { it.isNotEmpty() }
     ?: error("Missing $name in Config/Version.properties. Run `pnpm android:version:sync`.")
 
-val openClawAndroidVersionName = requireOpenClawAndroidVersionProperty("OPENCLAW_ANDROID_VERSION_NAME")
+val openClawAndroidVersionName = requireOpenClawAndroidVersionProperty("QUIET_CORE_ANDROID_VERSION_NAME")
 val openClawAndroidVersionCode =
-  requireOpenClawAndroidVersionProperty("OPENCLAW_ANDROID_VERSION_CODE").toIntOrNull()
-    ?: error("OPENCLAW_ANDROID_VERSION_CODE must be an integer in Config/Version.properties.")
+  requireOpenClawAndroidVersionProperty("QUIET_CORE_ANDROID_VERSION_CODE").toIntOrNull()
+    ?: error("QUIET_CORE_ANDROID_VERSION_CODE must be an integer in Config/Version.properties.")
 
-val androidStoreFile = providers.gradleProperty("OPENCLAW_ANDROID_STORE_FILE").orNull?.takeIf { it.isNotBlank() }
-val androidStorePassword = providers.gradleProperty("OPENCLAW_ANDROID_STORE_PASSWORD").orNull?.takeIf { it.isNotBlank() }
-val androidKeyAlias = providers.gradleProperty("OPENCLAW_ANDROID_KEY_ALIAS").orNull?.takeIf { it.isNotBlank() }
-val androidKeyPassword = providers.gradleProperty("OPENCLAW_ANDROID_KEY_PASSWORD").orNull?.takeIf { it.isNotBlank() }
+val androidStoreFile = providers.gradleProperty("QUIET_CORE_ANDROID_STORE_FILE").orNull?.takeIf { it.isNotBlank() }
+val androidStorePassword = providers.gradleProperty("QUIET_CORE_ANDROID_STORE_PASSWORD").orNull?.takeIf { it.isNotBlank() }
+val androidKeyAlias = providers.gradleProperty("QUIET_CORE_ANDROID_KEY_ALIAS").orNull?.takeIf { it.isNotBlank() }
+val androidKeyPassword = providers.gradleProperty("QUIET_CORE_ANDROID_KEY_PASSWORD").orNull?.takeIf { it.isNotBlank() }
 val resolvedAndroidStoreFile =
   androidStoreFile?.let { storeFilePath ->
     if (storeFilePath.startsWith("~/")) {
@@ -44,9 +44,9 @@ val wantsAndroidReleaseBuild =
 
 if (wantsAndroidReleaseBuild && !hasAndroidReleaseSigning) {
   error(
-    "Missing Android release signing properties. Set OPENCLAW_ANDROID_STORE_FILE, " +
-      "OPENCLAW_ANDROID_STORE_PASSWORD, OPENCLAW_ANDROID_KEY_ALIAS, and " +
-      "OPENCLAW_ANDROID_KEY_PASSWORD in ~/.gradle/gradle.properties.",
+    "Missing Android release signing properties. Set QUIET_CORE_ANDROID_STORE_FILE, " +
+      "QUIET_CORE_ANDROID_STORE_PASSWORD, QUIET_CORE_ANDROID_KEY_ALIAS, and " +
+      "QUIET_CORE_ANDROID_KEY_PASSWORD in ~/.gradle/gradle.properties.",
   )
 }
 
@@ -75,7 +75,7 @@ android {
 
   sourceSets {
     getByName("main") {
-      assets.directories.add("../../shared/OpenClawKit/Sources/OpenClawKit/Resources")
+      assets.directories.add("../../shared/QuietCoreKit/Sources/OpenClawKit/Resources")
     }
   }
 

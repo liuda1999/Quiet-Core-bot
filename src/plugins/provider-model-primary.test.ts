@@ -1,6 +1,6 @@
 /** Verifies primary provider model selection across plugin model metadata. */
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { applyPrimaryModel } from "./provider-model-primary.js";
 
 describe("applyPrimaryModel", () => {

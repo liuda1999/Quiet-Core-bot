@@ -1,4 +1,4 @@
-// Windows Git script supports OpenClaw repository automation.
+// Windows Git script supports Quiet Core bot repository automation.
 import path from "node:path";
 import type { WindowsGuest } from "./guest-transports.ts";
 import { die, run, say } from "./host-command.ts";
@@ -26,7 +26,7 @@ try:
     req = urllib.request.Request(
         "https://api.github.com/repos/git-for-windows/git/releases/latest",
         headers={
-            "User-Agent": "openclaw-parallels-smoke",
+            "User-Agent": "quiet-core-bot-parallels-smoke",
             "Accept": "application/vnd.github+json",
         },
     )

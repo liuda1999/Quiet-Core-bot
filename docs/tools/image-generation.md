@@ -486,7 +486,7 @@ to 10 for GPT Image 2 edits, up to 10 style references for Krea 2, and up to
 Equivalent CLI:
 
 ```bash
-openclaw infer image generate \
+quiet-core-bot infer image generate \
   --model openai/gpt-image-1.5 \
   --output-format png \
   --background transparent \
@@ -503,7 +503,7 @@ openclaw infer image generate \
 Equivalent CLI:
 
 ```bash
-openclaw infer image generate \
+quiet-core-bot infer image generate \
   --model openai/gpt-image-2 \
   --quality low \
   --openai-moderation low \
@@ -535,7 +535,7 @@ openclaw infer image generate \
 </Tabs>
 
 The same `--output-format`, `--background`, `--quality`, and
-`--openai-moderation` flags are available on `openclaw infer image edit`;
+`--openai-moderation` flags are available on `quiet-core-bot infer image edit`;
 `--openai-background` remains as an OpenAI-specific alias. Bundled providers
 other than OpenAI do not declare explicit background control today, so
 `background: "transparent"` is reported as ignored for them.

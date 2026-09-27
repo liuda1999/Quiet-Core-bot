@@ -11,14 +11,14 @@ Adds Microsoft Foundry model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/microsoft-foundry`
+- Package: `@quiet-core/microsoft-foundry`
 - Install route: included in Quiet Core bot
 
 ## Surface
 
 providers: microsoft-foundry; contracts: imageGenerationProviders
 
-<!-- openclaw-plugin-reference:manual-start -->
+<!-- quiet-core-bot-plugin-reference:manual-start -->
 
 - Image-generation provider: `microsoft-foundry`
 
@@ -110,4 +110,4 @@ MAI image constraints:
 - `supports MAI image deployments only`: the selected image model points at a
   non-MAI deployment. Use a deployed MAI image model for `image_generate`.
 
-<!-- openclaw-plugin-reference:manual-end -->
+<!-- quiet-core-bot-plugin-reference:manual-end -->

@@ -28,7 +28,7 @@ function parseArgs(args: string[]): Options {
         if (arg !== "--help" && arg !== "-h") {
           throw new Error(`Unknown qa coverage option: ${arg}`);
         }
-        process.stdout.write(`Usage: openclaw qa coverage [options]
+        process.stdout.write(`Usage: quiet-core-bot qa coverage [options]
 
 Options:
   --json                Print machine-readable JSON

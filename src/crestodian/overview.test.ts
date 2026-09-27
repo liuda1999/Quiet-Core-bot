@@ -20,7 +20,7 @@ describe("loadCrestodianOverview", () => {
       gateway: { port: 19001 },
     };
     const snapshot: ConfigFileSnapshot = {
-      path: "/tmp/openclaw.json",
+      path: "/tmp/quiet-core-bot.json",
       exists: true,
       raw: "{}",
       parsed: runtimeConfig,
@@ -35,10 +35,10 @@ describe("loadCrestodianOverview", () => {
       legacyIssues: [],
     };
     const overview = await loadCrestodianOverview({
-      env: { OPENCLAW_TEST_FAST: "1" },
+      env: { QUIET_CORE_TEST_FAST: "1" },
       deps: {
         readConfigFileSnapshot: async () => snapshot,
-        resolveConfigPath: () => "/tmp/openclaw.json",
+        resolveConfigPath: () => "/tmp/quiet-core-bot.json",
         resolveGatewayPort: (cfg) => cfg?.gateway?.port ?? 8765,
         buildGatewayConnectionDetails: (input) => ({
           url: `ws://127.0.0.1:${input.config.gateway?.port ?? 8765}`,
@@ -63,7 +63,7 @@ describe("loadCrestodianOverview", () => {
     expect(overview.gateway.url).toBe("ws://127.0.0.1:19001");
     expect(overview.gateway.reachable).toBe(false);
     expect(overview.references.docsPath).toMatch(/docs$/);
-    expect(overview.references.sourceUrl).toBe("https://github.com/openclaw/openclaw");
+    expect(overview.references.sourceUrl).toBe("https://github.com/liuda1999/Quiet-Core-bot");
     expect(formatCrestodianOverview(overview)).toContain(
       'Next: run "gateway status" or "restart gateway"',
     );

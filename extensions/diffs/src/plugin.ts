@@ -1,7 +1,7 @@
 // Diffs plugin module implements plugin behavior.
 import fs from "node:fs";
 import path from "node:path";
-import { resolveLivePluginConfigObject } from "openclaw/plugin-sdk/plugin-config-runtime";
+import { resolveLivePluginConfigObject } from "quiet-core-bot/plugin-sdk/plugin-config-runtime";
 import {
   resolvePreferredOpenClawTmpDir,
   type OpenClawConfig,
@@ -21,7 +21,7 @@ const DIFFS_LANGUAGE_PACK_PLUGIN_ID = "diffs-language-pack";
 
 export function registerDiffsPlugin(api: OpenClawPluginApi): void {
   const store = new DiffArtifactStore({
-    rootDir: path.join(resolvePreferredOpenClawTmpDir(), "openclaw-diffs"),
+    rootDir: path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-diffs"),
     logger: api.logger,
   });
   const resolveCurrentPluginConfig = () =>
@@ -105,7 +105,7 @@ function hasSiblingLanguagePackRuntime(rootDir: string | undefined): boolean {
     path.join(languagePackRoot, "dist", "assets", "viewer-runtime.js"),
   ];
   return (
-    fs.existsSync(path.join(languagePackRoot, "openclaw.plugin.json")) &&
+    fs.existsSync(path.join(languagePackRoot, "quiet-core-bot.plugin.json")) &&
     runtimePaths.some((runtimePath) => fs.existsSync(runtimePath))
   );
 }

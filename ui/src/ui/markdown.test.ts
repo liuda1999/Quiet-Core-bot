@@ -17,7 +17,7 @@ function htmlFragment(html: string): HTMLElement {
 }
 
 function withControlUiBasePath<T>(basePath: string, fn: () => T): T {
-  Object.defineProperty(window, "__OPENCLAW_CONTROL_UI_BASE_PATH__", {
+  Object.defineProperty(window, "__QUIET_CORE_CONTROL_UI_BASE_PATH__", {
     value: basePath,
     writable: true,
     configurable: true,
@@ -25,7 +25,7 @@ function withControlUiBasePath<T>(basePath: string, fn: () => T): T {
   try {
     return fn();
   } finally {
-    delete window["__OPENCLAW_CONTROL_UI_BASE_PATH__"];
+    delete window["__QUIET_CORE_CONTROL_UI_BASE_PATH__"];
   }
 }
 
@@ -593,7 +593,7 @@ PY
 
     it("strips href from host-local absolute file paths", () => {
       const html = toSanitizedMarkdownHtml(
-        "[report.docx](/Users/test/.openclaw/data/skills/output/report.docx)",
+        "[report.docx](/Users/test/.quiet-core-bot/data/skills/output/report.docx)",
       );
       expect(html).toBe("<p><a>report.docx</a></p>\n");
     });

@@ -162,11 +162,11 @@ describe("resolveGatewayProbeAuthSafeWithSecretInputs", () => {
   it("resolves env SecretRef token via async secret-inputs path", async () => {
     const result = await resolveGatewayProbeAuthSafeWithSecretInputs({
       cfg: configWithDefaultEnvProvider({
-        auth: tokenAuthConfig("OPENCLAW_GATEWAY_TOKEN"),
+        auth: tokenAuthConfig("QUIET_CORE_GATEWAY_TOKEN"),
       }),
       mode: "local",
       env: {
-        OPENCLAW_GATEWAY_TOKEN: "test-token-from-env",
+        QUIET_CORE_GATEWAY_TOKEN: "test-token-from-env",
       } as NodeJS.ProcessEnv,
     });
 

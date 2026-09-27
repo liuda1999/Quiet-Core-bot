@@ -1,5 +1,5 @@
 // Log line parsing helpers convert text log entries into structured records.
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalLowercaseString } from "@quiet-core/normalization-core/string-coerce";
 
 // Parser for JSON LogTape lines emitted by the Quiet Core bot logger.
 type ParsedLogLine = {

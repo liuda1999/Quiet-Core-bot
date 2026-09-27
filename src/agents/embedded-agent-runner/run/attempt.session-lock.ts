@@ -6,8 +6,8 @@ import { createHash } from "node:crypto";
 import { createReadStream, readFileSync, statSync } from "node:fs";
 import fs from "node:fs/promises";
 import { isDeepStrictEqual } from "node:util";
-import { clampTimerTimeoutMs } from "@openclaw/normalization-core/number-coercion";
-import { normalizeStringEntries } from "@openclaw/normalization-core/string-normalization";
+import { clampTimerTimeoutMs } from "@quiet-core/normalization-core/number-coercion";
+import { normalizeStringEntries } from "@quiet-core/normalization-core/string-normalization";
 import {
   type OwnedSessionTranscriptPublishedEntry,
   type OwnedSessionTranscriptWriteOptions,
@@ -17,7 +17,7 @@ import {
 import { toErrorObject } from "../../../infra/errors.js";
 import { createSubsystemLogger } from "../../../logging/subsystem.js";
 import { resolveGlobalSingleton } from "../../../shared/global-singleton.js";
-import { isTranscriptOnlyOpenClawAssistantMessage } from "../../../shared/transcript-only-openclaw-assistant.js";
+import { isTranscriptOnlyOpenClawAssistantMessage } from "../../../shared/transcript-only-quiet-core-bot-assistant.js";
 import { isSessionWriteLockAcquireError } from "../../session-write-lock-error.js";
 import type { acquireSessionWriteLock } from "../../session-write-lock.js";
 import type {
@@ -849,7 +849,7 @@ type SessionFileOwnerState = {
 };
 
 const EMBEDDED_ATTEMPT_SESSION_FILE_OWNER_STATE_KEY = Symbol.for(
-  "openclaw.embeddedAttemptSessionFileOwnerState",
+  "quiet-core-bot.embeddedAttemptSessionFileOwnerState",
 );
 
 const sessionFileOwnerState = resolveGlobalSingleton(

@@ -20,7 +20,7 @@ function successfulRun(name: string, id: number, updatedAt: string) {
     path: ".github/workflows/ci.yml",
     created_at: "2026-06-17T10:46:24Z",
     updated_at: updatedAt,
-    html_url: `https://github.com/openclaw/openclaw/actions/runs/${id}`,
+    html_url: `https://github.com/liuda1999/Quiet-Core-bot/actions/runs/${id}`,
   };
 }
 
@@ -333,26 +333,26 @@ describe("verify-pr-hosted-gates", () => {
     expect(
       parseArgs([
         "--repo",
-        "openclaw/openclaw",
+        "liuda1999/quiet-core-bot",
         "--sha",
         sha,
         "--output",
         ".local/gates-hosted-checks.json",
       ]),
     ).toEqual({
-      repo: "openclaw/openclaw",
+      repo: "liuda1999/quiet-core-bot",
       sha,
       output: ".local/gates-hosted-checks.json",
       changelogOnly: false,
     });
-    expect(() => parseArgs(["--repo", "openclaw/openclaw"])).toThrow("Usage:");
+    expect(() => parseArgs(["--repo", "liuda1999/quiet-core-bot"])).toThrow("Usage:");
     expect(() =>
       parseArgs(["--repo", "-h", "--sha", sha, "--output", ".local/gates-hosted-checks.json"]),
     ).toThrow("Expected --repo <value>.");
     expect(() =>
       parseArgs([
         "--repo",
-        "openclaw/openclaw",
+        "liuda1999/quiet-core-bot",
         "--sha",
         "-h",
         "--output",
@@ -360,14 +360,14 @@ describe("verify-pr-hosted-gates", () => {
       ]),
     ).toThrow("Expected --sha <value>.");
     expect(() =>
-      parseArgs(["--repo", "openclaw/openclaw", "--sha", sha, "--output", "-h"]),
+      parseArgs(["--repo", "liuda1999/quiet-core-bot", "--sha", sha, "--output", "-h"]),
     ).toThrow("Expected --output <value>.");
   });
 
   it("rejects duplicate hosted gate verifier CLI arguments", () => {
     const requiredArgs = [
       "--repo",
-      "openclaw/openclaw",
+      "liuda1999/quiet-core-bot",
       "--sha",
       sha,
       "--output",
@@ -376,15 +376,15 @@ describe("verify-pr-hosted-gates", () => {
     const duplicateCases = [
       [
         "--repo",
-        ["--repo", "openclaw/openclaw", "--repo", "fork/openclaw", "--sha", sha, "--output", "out.json"],
+        ["--repo", "liuda1999/quiet-core-bot", "--repo", "fork/quiet-core-bot", "--sha", sha, "--output", "out.json"],
       ],
       [
         "--sha",
-        ["--repo", "openclaw/openclaw", "--sha", sha, "--sha", "other-sha", "--output", "out.json"],
+        ["--repo", "liuda1999/quiet-core-bot", "--sha", sha, "--sha", "other-sha", "--output", "out.json"],
       ],
       [
         "--output",
-        ["--repo", "openclaw/openclaw", "--sha", sha, "--output", "one.json", "--output", "two.json"],
+        ["--repo", "liuda1999/quiet-core-bot", "--sha", sha, "--output", "one.json", "--output", "two.json"],
       ],
       ["--changelog-only", [...requiredArgs, "--changelog-only", "--changelog-only"]],
     ] satisfies Array<[string, string[]]>;

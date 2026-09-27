@@ -43,9 +43,9 @@ install method:
   suffixes.
 - **`beta`** (git installs): prefers the latest beta git tag, but falls back to
   the latest stable git tag when beta is missing or older.
-- **`dev`**: ensures a git checkout (default `~/openclaw`, or
-  `$OPENCLAW_HOME/openclaw` when `OPENCLAW_HOME` is set; override with
-  `OPENCLAW_GIT_DIR`), switches to `main`, rebases on upstream, builds, and
+- **`dev`**: ensures a git checkout (default `~/quiet-core-bot`, or
+  `$QUIET_CORE_HOME/quiet-core-bot` when `QUIET_CORE_HOME` is set; override with
+  `QUIET_CORE_GIT_DIR`), switches to `main`, rebases on upstream, builds, and
   installs the global CLI from that checkout.
 
 <Tip>
@@ -68,7 +68,7 @@ quiet-core-bot update --tag beta
 quiet-core-bot update --channel dev
 
 # Install a specific npm package spec
-quiet-core-bot update --tag openclaw@2026.4.1-beta.1
+quiet-core-bot update --tag quiet-core-bot@2026.4.1-beta.1
 
 # Install from GitHub main once without persisting the channel
 quiet-core-bot update --tag main

@@ -36,7 +36,7 @@ afterEach(() => {
 });
 
 function makeFakePnpm(): { binDir: string; logPath: string } {
-  const root = makeTempDir(tempDirs, "openclaw-release-preflight-");
+  const root = makeTempDir(tempDirs, "quiet-core-bot-release-preflight-");
   const binDir = join(root, "bin");
   const logPath = join(root, "pnpm.log");
   mkdirSync(binDir);
@@ -47,8 +47,8 @@ function makeFakePnpm(): { binDir: string; logPath: string } {
 import { appendFileSync } from "node:fs";
 
 const command = process.argv.slice(2).join(" ");
-appendFileSync(process.env.OPENCLAW_RELEASE_PREFLIGHT_PNPM_LOG, command + "\\n");
-const failures = new Set((process.env.OPENCLAW_RELEASE_PREFLIGHT_FAIL_COMMANDS ?? "").split(";").filter(Boolean));
+appendFileSync(process.env.QUIET_CORE_RELEASE_PREFLIGHT_PNPM_LOG, command + "\\n");
+const failures = new Set((process.env.QUIET_CORE_RELEASE_PREFLIGHT_FAIL_COMMANDS ?? "").split(";").filter(Boolean));
 process.exit(failures.has(command) ? 7 : 0);
 `,
     { mode: 0o755 },
@@ -70,7 +70,7 @@ function runPreflight(
       ...extraEnv,
       ...(fakePnpm
         ? {
-            OPENCLAW_RELEASE_PREFLIGHT_PNPM_LOG: fakePnpm.logPath,
+            QUIET_CORE_RELEASE_PREFLIGHT_PNPM_LOG: fakePnpm.logPath,
             PATH: `${fakePnpm.binDir}${delimiter}${process.env.PATH ?? ""}`,
           }
         : {}),
@@ -95,7 +95,7 @@ describe("scripts/release-preflight.mjs", () => {
   it("runs every check command and reports all failed release artifact checks", () => {
     const fakePnpm = makeFakePnpm();
     const result = runPreflight(["--check"], fakePnpm, {
-      OPENCLAW_RELEASE_PREFLIGHT_FAIL_COMMANDS: "plugins:sync:check;config:docs:check",
+      QUIET_CORE_RELEASE_PREFLIGHT_FAIL_COMMANDS: "plugins:sync:check;config:docs:check",
     });
 
     expect(result.status).toBe(1);
@@ -111,8 +111,8 @@ describe("scripts/release-preflight.mjs", () => {
       encoding: "utf8",
       env: {
         ...process.env,
-        OPENCLAW_RELEASE_PREFLIGHT_FAIL_COMMANDS: "deps:shrinkwrap:changed:generate",
-        OPENCLAW_RELEASE_PREFLIGHT_PNPM_LOG: fakePnpm.logPath,
+        QUIET_CORE_RELEASE_PREFLIGHT_FAIL_COMMANDS: "deps:shrinkwrap:changed:generate",
+        QUIET_CORE_RELEASE_PREFLIGHT_PNPM_LOG: fakePnpm.logPath,
         PATH: `${fakePnpm.binDir}${delimiter}${process.env.PATH ?? ""}`,
       },
     });

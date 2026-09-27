@@ -72,7 +72,7 @@ export function configureProgramHelp(
     .version(ctx.programVersion)
     .option(
       "--container <name>",
-      "Run the CLI inside a running Podman/Docker container named <name> (default: env OPENCLAW_CONTAINER)",
+      "Run the CLI inside a running Podman/Docker container named <name> (default: env QUIET_CORE_CONTAINER)",
     )
     .option(
       "--dev",
@@ -80,7 +80,7 @@ export function configureProgramHelp(
     )
     .option(
       "--profile <name>",
-      "Use a named profile (isolates OPENCLAW_STATE_DIR/OPENCLAW_CONFIG_PATH under ~/.quiet-core-bot-<name>)",
+      "Use a named profile (isolates QUIET_CORE_STATE_DIR/QUIET_CORE_CONFIG_PATH under ~/.quiet-core-bot-<name>)",
     )
     .option(
       "--log-level <level>",
@@ -142,7 +142,7 @@ export function configureProgramHelp(
   }
 
   program.addHelpText("beforeAll", () => {
-    if (hasEmittedCliBanner() || process.env.OPENCLAW_SUPPRESS_HELP_BANNER === "1") {
+    if (hasEmittedCliBanner() || process.env.QUIET_CORE_SUPPRESS_HELP_BANNER === "1") {
       return "";
     }
     const rich = isRich();

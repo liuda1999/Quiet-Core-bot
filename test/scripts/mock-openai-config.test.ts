@@ -101,7 +101,7 @@ describe("scripts/e2e/lib/fixtures/mock-openai-config.mjs", () => {
       models: {
         "openai/gpt-5.4": { params: { preserved: true } },
         "openai/gpt-5.5": {
-          agentRuntime: { id: "openclaw" },
+          agentRuntime: { id: "quiet-core-bot" },
           params: { transport: "sse", openaiWsWarmup: false },
         },
       },

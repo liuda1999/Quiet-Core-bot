@@ -1,6 +1,6 @@
 // Verifies provider runtime uses current plugin metadata snapshots.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   clearCurrentPluginMetadataSnapshot,
   setCurrentPluginMetadataSnapshot,
@@ -58,7 +58,7 @@ function makeIndex(pluginId = "demo"): InstalledPluginIndex {
     plugins: [
       {
         pluginId,
-        manifestPath: `${rootDir}/openclaw.plugin.json`,
+        manifestPath: `${rootDir}/quiet-core-bot.plugin.json`,
         manifestHash: `${pluginId}-manifest`,
         rootDir,
         origin: "global",
@@ -87,7 +87,7 @@ function makeManifestRegistry(pluginId = "demo"): PluginManifestRegistry {
     commandAliases: [],
     rootDir: `/plugins/${pluginId}`,
     source: `/plugins/${pluginId}/index.js`,
-    manifestPath: `/plugins/${pluginId}/openclaw.plugin.json`,
+    manifestPath: `/plugins/${pluginId}/quiet-core-bot.plugin.json`,
     origin: "global",
   };
   return { plugins: [plugin], diagnostics: [] };

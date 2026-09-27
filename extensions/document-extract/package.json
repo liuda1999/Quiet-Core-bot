@@ -1,5 +1,5 @@
 {
-  "name": "@openclaw/document-extract-plugin",
+  "name": "@quiet-core/document-extract-plugin",
   "version": "2026.6.11",
   "private": true,
   "description": "OpenClaw local document extraction plugin",
@@ -8,9 +8,9 @@
     "clawpdf": "0.3.0"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@quiet-core/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": [
       "./index.ts"
     ]

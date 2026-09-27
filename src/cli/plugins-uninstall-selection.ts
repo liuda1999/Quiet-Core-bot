@@ -1,5 +1,5 @@
 // Plugin uninstall id resolver for registry ids, display names, npm specs, and ClawHub specs.
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { parseClawHubPluginSpec } from "../infra/clawhub-spec.js";
 import type { PluginRecord } from "../plugins/registry.js";
 

@@ -23,7 +23,7 @@ Status: external CLI integration. Gateway talks to `signal-cli` over HTTP — ei
 2. Install the Quiet Core bot plugin:
 
 ```bash
-quiet-core-bot plugins install @openclaw/signal
+quiet-core-bot plugins install @quiet-core/signal
 ```
 
 3. Install `signal-cli` (Java required if you use the JVM build).
@@ -149,7 +149,7 @@ signal-cli -a +<BOT_PHONE_NUMBER> verify <VERIFICATION_CODE>
 
 ```bash
 # If you run the gateway as a user systemd service:
-systemctl --user restart openclaw-gateway.service
+systemctl --user restart quiet-core-bot-gateway.service
 
 # Then verify:
 quiet-core-bot doctor
@@ -365,7 +365,7 @@ Extra checks:
 ```bash
 quiet-core-bot pairing list signal
 pgrep -af signal-cli
-grep -i "signal" "/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log" | tail -20
+grep -i "signal" "/tmp/quiet-core-bot/quiet-core-bot-$(date +%Y-%m-%d).log" | tail -20
 ```
 
 For triage flow: [/channels/troubleshooting](/channels/troubleshooting).

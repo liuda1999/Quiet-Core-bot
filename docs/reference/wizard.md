@@ -69,7 +69,7 @@ For a high-level overview, see [Onboarding (CLI)](/start/wizard).
     Headless/server tip: complete OAuth on a machine with a browser, then copy
     that agent's `auth-profiles.json` (for example
     `~/.quiet-core-bot/agents/<agentId>/agent/auth-profiles.json`, or the matching
-    `$OPENCLAW_STATE_DIR/...` path) to the gateway host. `credentials/oauth.json`
+    `$QUIET_CORE_STATE_DIR/...` path) to the gateway host. `credentials/oauth.json`
     is only a legacy import source.
     </Note>
   </Step>
@@ -168,12 +168,12 @@ Add `--json` for a machine-readable summary.
 Gateway token SecretRef in non-interactive mode:
 
 ```bash
-export OPENCLAW_GATEWAY_TOKEN="your-token"
+export QUIET_CORE_GATEWAY_TOKEN="your-token"
 quiet-core-bot onboard --non-interactive \
   --mode local \
   --auth-choice skip \
   --gateway-auth token \
-  --gateway-token-ref-env OPENCLAW_GATEWAY_TOKEN
+  --gateway-token-ref-env QUIET_CORE_GATEWAY_TOKEN
 ```
 
 `--gateway-token` and `--gateway-token-ref-env` are mutually exclusive.

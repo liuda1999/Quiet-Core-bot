@@ -1,6 +1,6 @@
 // Stores durable delivery queue entries in SQLite.
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
-import { openOpenClawStateDatabase } from "../state/openclaw-state-db.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
+import { openOpenClawStateDatabase } from "../state/quiet-core-bot-state-db.js";
 import {
   executeSqliteQuerySync,
   executeSqliteQueryTakeFirstSync,
@@ -45,7 +45,7 @@ type QueueRow = {
 
 function openStateDatabase(stateDir?: string) {
   return openOpenClawStateDatabase({
-    env: stateDir ? { ...process.env, OPENCLAW_STATE_DIR: stateDir } : process.env,
+    env: stateDir ? { ...process.env, QUIET_CORE_STATE_DIR: stateDir } : process.env,
   });
 }
 

@@ -1,5 +1,5 @@
 // Shared doctor dispatcher for channel plugin repair, warning, and compatibility adapters.
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalLowercaseString } from "@quiet-core/normalization-core/string-coerce";
 import {
   getBundledChannelPlugin,
   getBundledChannelSetupPlugin,
@@ -12,7 +12,7 @@ import type {
   ChannelDoctorEmptyAllowlistAccountContext,
   ChannelDoctorSequenceResult,
 } from "../../../channels/plugins/types.adapters.js";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
 import { isUnresolvedSecretInputError } from "../../../config/types.secrets.js";
 
 type ChannelDoctorEntry = {

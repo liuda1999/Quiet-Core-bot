@@ -21,7 +21,7 @@ import {
 } from "./npm-managed-root.js";
 
 const fixtureRootTracker = createSuiteTempRootTracker({
-  prefix: "openclaw-npm-managed-root-",
+  prefix: "quiet-core-bot-npm-managed-root-",
 });
 const tempDirs: string[] = [];
 let npmConfigEnvSnapshot: ReturnType<typeof captureEnv> | undefined;
@@ -170,7 +170,7 @@ describe("managed npm root", () => {
         {
           private: true,
           dependencies: {
-            "@openclaw/discord": "2026.5.2",
+            "@quiet-core/discord": "2026.5.2",
           },
           devDependencies: {
             fixture: "1.0.0",
@@ -183,7 +183,7 @@ describe("managed npm root", () => {
 
     await upsertManagedNpmRootDependency({
       npmRoot,
-      packageName: "@openclaw/feishu",
+      packageName: "@quiet-core/feishu",
       dependencySpec: "2026.5.2",
     });
 
@@ -192,8 +192,8 @@ describe("managed npm root", () => {
     ).resolves.toEqual({
       private: true,
       dependencies: {
-        "@openclaw/discord": "2026.5.2",
-        "@openclaw/feishu": "2026.5.2",
+        "@quiet-core/discord": "2026.5.2",
+        "@quiet-core/feishu": "2026.5.2",
       },
       devDependencies: {
         fixture: "1.0.0",
@@ -209,14 +209,14 @@ describe("managed npm root", () => {
         {
           private: true,
           dependencies: {
-            "@openclaw/discord": "2026.5.2",
+            "@quiet-core/discord": "2026.5.2",
           },
           overrides: {
             axios: "1.13.6",
             "left-pad": "1.3.0",
             qs: "6.14.0",
           },
-          openclaw: {
+          "quiet-core-bot": {
             managedOverrides: ["axios", "qs"],
           },
         },
@@ -227,7 +227,7 @@ describe("managed npm root", () => {
 
     await upsertManagedNpmRootDependency({
       npmRoot,
-      packageName: "@openclaw/feishu",
+      packageName: "@quiet-core/feishu",
       dependencySpec: "2026.5.4",
       managedOverrides: {
         axios: "1.16.0",
@@ -244,8 +244,8 @@ describe("managed npm root", () => {
     ).resolves.toEqual({
       private: true,
       dependencies: {
-        "@openclaw/discord": "2026.5.2",
-        "@openclaw/feishu": "2026.5.4",
+        "@quiet-core/discord": "2026.5.2",
+        "@quiet-core/feishu": "2026.5.4",
       },
       overrides: {
         "left-pad": "1.3.0",
@@ -256,7 +256,7 @@ describe("managed npm root", () => {
           semver: "1.2.3",
         },
       },
-      openclaw: {
+      "quiet-core-bot": {
         managedOverrides: ["axios", "nested", "node-domexception"],
       },
     });
@@ -267,7 +267,7 @@ describe("managed npm root", () => {
 
     await upsertManagedNpmRootDependency({
       npmRoot,
-      packageName: "@openclaw/feishu",
+      packageName: "@quiet-core/feishu",
       dependencySpec: "2026.5.4",
       omitUnsupportedManagedOverrides: true,
       managedOverrides: {
@@ -289,7 +289,7 @@ describe("managed npm root", () => {
           semver: "1.2.3",
         },
       },
-      openclaw: {
+      "quiet-core-bot": {
         managedOverrides: ["axios", "nested"],
       },
     });
@@ -306,7 +306,7 @@ describe("managed npm root", () => {
             plugin: "1.0.0",
             "runtime-peer": "4.12.23",
           },
-          openclaw: {
+          "quiet-core-bot": {
             managedPeerDependencies: ["runtime-peer"],
           },
         },
@@ -335,7 +335,7 @@ describe("managed npm root", () => {
       overrides: {
         "runtime-peer": "4.12.18",
       },
-      openclaw: {
+      "quiet-core-bot": {
         managedOverrides: ["runtime-peer"],
         managedPeerDependencies: ["runtime-peer"],
       },
@@ -365,7 +365,7 @@ describe("managed npm root", () => {
       overrides: {
         axios: "1.16.0",
       },
-      openclaw: {
+      "quiet-core-bot": {
         managedOverrides: ["axios"],
       },
     });
@@ -393,7 +393,7 @@ describe("managed npm root", () => {
       overrides: {
         "pinned-package": { "vuln-child": "3.0.0" },
       },
-      openclaw: {
+      "quiet-core-bot": {
         managedOverrides: ["pinned-package"],
       },
     });
@@ -410,7 +410,7 @@ describe("managed npm root", () => {
             plugin: "1.0.0",
             "runtime-peer": "4.12.23",
           },
-          openclaw: {
+          "quiet-core-bot": {
             managedPeerDependencies: ["runtime-peer"],
           },
         },
@@ -452,7 +452,7 @@ describe("managed npm root", () => {
             plugin: "1.0.0",
             "runtime-peer": "4.12.23",
           },
-          openclaw: {
+          "quiet-core-bot": {
             managedPeerDependencies: ["runtime-peer"],
           },
         },
@@ -494,7 +494,7 @@ describe("managed npm root", () => {
           overrides: {
             "runtime-peer": "4.12.18",
           },
-          openclaw: {
+          "quiet-core-bot": {
             managedOverrides: ["runtime-peer"],
             managedPeerDependencies: ["runtime-peer"],
           },
@@ -523,7 +523,7 @@ describe("managed npm root", () => {
       overrides: {
         "runtime-peer": "4.12.18",
       },
-      openclaw: {
+      "quiet-core-bot": {
         managedOverrides: ["runtime-peer"],
         managedPeerDependencies: ["runtime-peer"],
       },
@@ -550,7 +550,7 @@ describe("managed npm root", () => {
       path.join(packageRoot, "package.json"),
       `${JSON.stringify(
         {
-          name: "openclaw",
+          name: "quiet-core-bot",
         },
         null,
         2,
@@ -577,7 +577,7 @@ describe("managed npm root", () => {
       path.join(packageRoot, "package.json"),
       `${JSON.stringify(
         {
-          name: "openclaw",
+          name: "quiet-core-bot",
           dependencies: {
             "managed-runtime": "3.1024.0",
             "node-domexception": "npm:@nolyfill/domexception@1.0.28",
@@ -623,7 +623,7 @@ describe("managed npm root", () => {
     await expect(
       upsertManagedNpmRootDependency({
         npmRoot,
-        packageName: "@openclaw/feishu",
+        packageName: "@quiet-core/feishu",
         dependencySpec: "2026.5.2",
       }),
     ).rejects.toThrow(/JSON|package\.json|not-json/i);
@@ -635,16 +635,16 @@ describe("managed npm root", () => {
     expect(
       resolveManagedNpmRootDependencySpec({
         parsedSpec: {
-          name: "@openclaw/discord",
-          raw: "@openclaw/discord@stable",
+          name: "@quiet-core/discord",
+          raw: "@quiet-core/discord@stable",
           selector: "stable",
           selectorKind: "tag",
           selectorIsPrerelease: false,
         },
         resolution: {
-          name: "@openclaw/discord",
+          name: "@quiet-core/discord",
           version: "2026.5.2",
-          resolvedSpec: "@openclaw/discord@2026.5.2",
+          resolvedSpec: "@quiet-core/discord@2026.5.2",
           resolvedAt: "2026-05-03T00:00:00.000Z",
         },
       }),
@@ -653,15 +653,15 @@ describe("managed npm root", () => {
     expect(
       resolveManagedNpmRootDependencySpec({
         parsedSpec: {
-          name: "@openclaw/discord",
-          raw: "@openclaw/discord",
+          name: "@quiet-core/discord",
+          raw: "@quiet-core/discord",
           selectorKind: "none",
           selectorIsPrerelease: false,
         },
         resolution: {
-          name: "@openclaw/discord",
+          name: "@quiet-core/discord",
           version: "2026.5.2",
-          resolvedSpec: "@openclaw/discord@2026.5.2",
+          resolvedSpec: "@quiet-core/discord@2026.5.2",
           resolvedAt: "2026-05-03T00:00:00.000Z",
         },
       }),
@@ -676,9 +676,9 @@ describe("managed npm root", () => {
         {
           lockfileVersion: 3,
           packages: {
-            "node_modules/@openclaw/discord": {
+            "node_modules/@quiet-core/discord": {
               version: "2026.5.2",
-              resolved: "https://registry.npmjs.org/@openclaw/discord/-/discord-2026.5.2.tgz",
+              resolved: "https://registry.npmjs.org/@quiet-core/discord/-/discord-2026.5.2.tgz",
               integrity: "sha512-discord",
             },
           },
@@ -691,11 +691,11 @@ describe("managed npm root", () => {
     await expect(
       readManagedNpmRootInstalledDependency({
         npmRoot,
-        packageName: "@openclaw/discord",
+        packageName: "@quiet-core/discord",
       }),
     ).resolves.toEqual({
       version: "2026.5.2",
-      resolved: "https://registry.npmjs.org/@openclaw/discord/-/discord-2026.5.2.tgz",
+      resolved: "https://registry.npmjs.org/@quiet-core/discord/-/discord-2026.5.2.tgz",
       integrity: "sha512-discord",
     });
   });
@@ -715,7 +715,7 @@ describe("managed npm root", () => {
           devDependencies: {
             "dev-plugin": "1.0.0",
           },
-          openclaw: {
+          "quiet-core-bot": {
             managedPeerDependencies: ["old-peer"],
           },
         },
@@ -765,7 +765,7 @@ describe("managed npm root", () => {
                 peer: true,
                 version: "2.1.0",
               },
-              "node_modules/openclaw": {
+              "node_modules/quiet-core-bot": {
                 peer: true,
                 version: "2026.5.12",
               },
@@ -773,7 +773,7 @@ describe("managed npm root", () => {
                 peerDependencies: {
                   "existing-root": "^1.0.0",
                   "new-peer": "^2.0.0",
-                  openclaw: ">=2026.5.0",
+                  "quiet-core-bot": ">=2026.5.0",
                 },
                 version: "1.0.0",
               },
@@ -826,7 +826,7 @@ describe("managed npm root", () => {
       devDependencies: {
         "dev-plugin": "1.0.0",
       },
-      openclaw: {
+      "quiet-core-bot": {
         managedPeerDependencies: ["new-peer"],
       },
     });
@@ -846,7 +846,7 @@ describe("managed npm root", () => {
           overrides: {
             "runtime-peer": "4.12.18",
           },
-          openclaw: {
+          "quiet-core-bot": {
             managedOverrides: ["runtime-peer"],
             managedPeerDependencies: ["runtime-peer"],
           },
@@ -916,7 +916,7 @@ describe("managed npm root", () => {
       overrides: {
         "runtime-peer": "4.12.18",
       },
-      openclaw: {
+      "quiet-core-bot": {
         managedOverrides: ["runtime-peer"],
         managedPeerDependencies: ["runtime-peer"],
       },
@@ -935,7 +935,7 @@ describe("managed npm root", () => {
             plugin: "1.0.0",
             "runtime-peer": "4.12.23",
           },
-          openclaw: {
+          "quiet-core-bot": {
             managedPeerDependencies: ["aliased-peer", "runtime-peer"],
           },
         },
@@ -977,7 +977,7 @@ describe("managed npm root", () => {
         "aliased-peer": "npm:@scope/real@3.0.10",
         "runtime-peer": "4.12.18",
       },
-      openclaw: {
+      "quiet-core-bot": {
         managedOverrides: ["aliased-peer", "runtime-peer"],
         managedPeerDependencies: ["aliased-peer", "runtime-peer"],
       },
@@ -995,7 +995,7 @@ describe("managed npm root", () => {
             plugin: "1.0.0",
             "runtime-peer": "2.0.0",
           },
-          openclaw: {
+          "quiet-core-bot": {
             managedPeerDependencies: ["runtime-peer"],
           },
         },
@@ -1023,7 +1023,7 @@ describe("managed npm root", () => {
         plugin: "1.0.0",
         "runtime-peer": "2.0.0",
       },
-      openclaw: {
+      "quiet-core-bot": {
         managedPeerDependencies: ["runtime-peer"],
       },
     });
@@ -1054,7 +1054,7 @@ describe("managed npm root", () => {
         return {
           code: 1,
           stdout: "",
-          stderr: "npm ERR! notarget No matching version found for openclaw@2026.5.99-beta.1",
+          stderr: "npm ERR! notarget No matching version found for quiet-core-bot@2026.5.99-beta.1",
           signal: null,
           killed: false,
           termination: "exit" as const,
@@ -1073,7 +1073,7 @@ describe("managed npm root", () => {
               },
               "node_modules/plugin": {
                 peerDependencies: {
-                  openclaw: "2026.5.99-beta.1",
+                  "quiet-core-bot": "2026.5.99-beta.1",
                   "runtime-peer": "^2.0.0",
                 },
                 version: "1.0.0",
@@ -1105,7 +1105,7 @@ describe("managed npm root", () => {
         plugin: "1.0.0",
         "runtime-peer": "^2.0.0",
       },
-      openclaw: {
+      "quiet-core-bot": {
         managedPeerDependencies: ["runtime-peer"],
       },
     });
@@ -1174,7 +1174,7 @@ describe("managed npm root", () => {
         plugin: "1.0.0",
         "runtime-peer": "^2.0.0",
       },
-      openclaw: {
+      "quiet-core-bot": {
         managedPeerDependencies: ["runtime-peer"],
       },
     });
@@ -1253,8 +1253,8 @@ describe("managed npm root", () => {
         {
           private: true,
           dependencies: {
-            "@openclaw/discord": "2026.5.2",
-            "@openclaw/voice-call": "2026.5.2",
+            "@quiet-core/discord": "2026.5.2",
+            "@quiet-core/voice-call": "2026.5.2",
           },
           devDependencies: {
             fixture: "1.0.0",
@@ -1267,7 +1267,7 @@ describe("managed npm root", () => {
 
     await removeManagedNpmRootDependency({
       npmRoot,
-      packageName: "@openclaw/voice-call",
+      packageName: "@quiet-core/voice-call",
     });
 
     await expect(
@@ -1275,7 +1275,7 @@ describe("managed npm root", () => {
     ).resolves.toEqual({
       private: true,
       dependencies: {
-        "@openclaw/discord": "2026.5.2",
+        "@quiet-core/discord": "2026.5.2",
       },
       devDependencies: {
         fixture: "1.0.0",
@@ -1283,17 +1283,17 @@ describe("managed npm root", () => {
     });
   });
 
-  it("repairs stale managed openclaw peer state without dropping plugin packages", async () => {
+  it("repairs stale managed quiet-core-bot peer state without dropping plugin packages", async () => {
     const npmRoot = await makeTempRoot();
-    await fs.mkdir(path.join(npmRoot, "node_modules", "openclaw"), { recursive: true });
+    await fs.mkdir(path.join(npmRoot, "node_modules", "quiet-core-bot"), { recursive: true });
     await fs.writeFile(
       path.join(npmRoot, "package.json"),
       `${JSON.stringify(
         {
           private: true,
           dependencies: {
-            openclaw: "2026.5.4",
-            "@openclaw/discord": "2026.5.4",
+            "quiet-core-bot": "2026.5.4",
+            "@quiet-core/discord": "2026.5.4",
           },
         },
         null,
@@ -1308,19 +1308,19 @@ describe("managed npm root", () => {
           packages: {
             "": {
               dependencies: {
-                openclaw: "2026.5.4",
-                "@openclaw/discord": "2026.5.4",
+                "quiet-core-bot": "2026.5.4",
+                "@quiet-core/discord": "2026.5.4",
               },
             },
-            "node_modules/openclaw": {
+            "node_modules/quiet-core-bot": {
               version: "2026.5.4",
             },
-            "node_modules/@openclaw/discord": {
+            "node_modules/@quiet-core/discord": {
               version: "2026.5.4",
             },
           },
           dependencies: {
-            openclaw: {
+            "quiet-core-bot": {
               version: "2026.5.4",
             },
           },
@@ -1330,20 +1330,20 @@ describe("managed npm root", () => {
       )}\n`,
     );
     await fs.writeFile(
-      path.join(npmRoot, "node_modules", "openclaw", "package.json"),
-      `${JSON.stringify({ name: "openclaw", version: "2026.5.4" })}\n`,
+      path.join(npmRoot, "node_modules", "quiet-core-bot", "package.json"),
+      `${JSON.stringify({ name: "quiet-core-bot", version: "2026.5.4" })}\n`,
     );
     await fs.mkdir(path.join(npmRoot, "node_modules", ".bin"), { recursive: true });
-    await fs.writeFile(path.join(npmRoot, "node_modules", ".bin", "openclaw"), "shim");
-    await fs.writeFile(path.join(npmRoot, "node_modules", ".bin", "openclaw.cmd"), "cmd shim");
-    await fs.writeFile(path.join(npmRoot, "node_modules", ".bin", "openclaw.ps1"), "ps1 shim");
+    await fs.writeFile(path.join(npmRoot, "node_modules", ".bin", "quiet-core-bot"), "shim");
+    await fs.writeFile(path.join(npmRoot, "node_modules", ".bin", "quiet-core-bot.cmd"), "cmd shim");
+    await fs.writeFile(path.join(npmRoot, "node_modules", ".bin", "quiet-core-bot.ps1"), "ps1 shim");
     await fs.writeFile(
       path.join(npmRoot, "node_modules", ".package-lock.json"),
       `${JSON.stringify(
         {
           lockfileVersion: 3,
           packages: {
-            "node_modules/openclaw": {
+            "node_modules/quiet-core-bot": {
               version: "2026.5.4",
             },
           },
@@ -1366,7 +1366,7 @@ describe("managed npm root", () => {
       "--ignore-scripts",
       "--no-audit",
       "--no-fund",
-      "openclaw",
+      "quiet-core-bot",
     ]);
     expect(repairOptions?.cwd).toBe(npmRoot);
     expect(repairOptions?.timeoutMs).toBe(300_000);
@@ -1376,7 +1376,7 @@ describe("managed npm root", () => {
       dependencies?: Record<string, string>;
     };
     expect(manifest.dependencies).toEqual({
-      "@openclaw/discord": "2026.5.4",
+      "@quiet-core/discord": "2026.5.4",
     });
     const lockfile = JSON.parse(
       await fs.readFile(path.join(npmRoot, "package-lock.json"), "utf8"),
@@ -1385,13 +1385,13 @@ describe("managed npm root", () => {
       dependencies?: Record<string, unknown>;
     };
     expect(lockfile.packages?.[""]?.dependencies).toEqual({
-      "@openclaw/discord": "2026.5.4",
+      "@quiet-core/discord": "2026.5.4",
     });
-    expect(lockfile.packages?.["node_modules/openclaw"]).toBeUndefined();
-    expect(lockfile.packages?.["node_modules/@openclaw/discord"]?.version).toBe("2026.5.4");
-    expect(lockfile.dependencies?.openclaw).toBeUndefined();
-    await expectPathMissing(path.join(npmRoot, "node_modules", "openclaw"));
-    for (const binName of ["openclaw", "openclaw.cmd", "openclaw.ps1"]) {
+    expect(lockfile.packages?.["node_modules/quiet-core-bot"]).toBeUndefined();
+    expect(lockfile.packages?.["node_modules/@quiet-core/discord"]?.version).toBe("2026.5.4");
+    expect(lockfile.dependencies?.["quiet-core-bot"]).toBeUndefined();
+    await expectPathMissing(path.join(npmRoot, "node_modules", "quiet-core-bot"));
+    for (const binName of ["quiet-core-bot", "quiet-core-bot.cmd", "quiet-core-bot.ps1"]) {
       await expectPathMissing(path.join(npmRoot, "node_modules", ".bin", binName));
     }
     await expectPathMissing(path.join(npmRoot, "node_modules", ".package-lock.json"));
@@ -1399,7 +1399,7 @@ describe("managed npm root", () => {
 
   it("does not repair the active Quiet Core bot host package in a root-managed install", async () => {
     const npmRoot = await makeTempRoot();
-    const hostPackageRoot = path.join(npmRoot, "node_modules", "openclaw");
+    const hostPackageRoot = path.join(npmRoot, "node_modules", "quiet-core-bot");
     await fs.mkdir(path.join(hostPackageRoot, "dist"), { recursive: true });
     await fs.writeFile(
       path.join(npmRoot, "package.json"),
@@ -1407,8 +1407,8 @@ describe("managed npm root", () => {
         {
           private: true,
           dependencies: {
-            openclaw: "2026.5.12-beta.6",
-            "@xdarkicex/openclaw-memory-libravdb": "1.4.69",
+            "quiet-core-bot": "2026.5.12-beta.6",
+            "@xdarkicex/quiet-core-bot-memory-libravdb": "1.4.69",
           },
         },
         null,
@@ -1423,11 +1423,11 @@ describe("managed npm root", () => {
           packages: {
             "": {
               dependencies: {
-                openclaw: "2026.5.12-beta.6",
-                "@xdarkicex/openclaw-memory-libravdb": "1.4.69",
+                "quiet-core-bot": "2026.5.12-beta.6",
+                "@xdarkicex/quiet-core-bot-memory-libravdb": "1.4.69",
               },
             },
-            "node_modules/openclaw": {
+            "node_modules/quiet-core-bot": {
               version: "2026.5.12-beta.6",
             },
           },
@@ -1438,7 +1438,7 @@ describe("managed npm root", () => {
     );
     await fs.writeFile(
       path.join(hostPackageRoot, "package.json"),
-      `${JSON.stringify({ name: "openclaw", version: "2026.5.12-beta.6" })}\n`,
+      `${JSON.stringify({ name: "quiet-core-bot", version: "2026.5.12-beta.6" })}\n`,
     );
 
     const runCommand = vi.fn().mockResolvedValue(successfulSpawn);
@@ -1455,8 +1455,8 @@ describe("managed npm root", () => {
       fs.readFile(path.join(npmRoot, "package.json"), "utf8").then((raw) => JSON.parse(raw)),
     ).resolves.toMatchObject({
       dependencies: {
-        openclaw: "2026.5.12-beta.6",
-        "@xdarkicex/openclaw-memory-libravdb": "1.4.69",
+        "quiet-core-bot": "2026.5.12-beta.6",
+        "@xdarkicex/quiet-core-bot-memory-libravdb": "1.4.69",
       },
     });
     await expect(
@@ -1466,24 +1466,24 @@ describe("managed npm root", () => {
 
   it("scrubs managed ownership metadata without deleting a linked active host package", async () => {
     const npmRoot = await makeTempRoot();
-    const hostPackageRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-host-package-"));
+    const hostPackageRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-host-package-"));
     tempDirs.push(hostPackageRoot);
     await fs.mkdir(path.join(npmRoot, "node_modules", ".bin"), { recursive: true });
     await fs.writeFile(
       path.join(hostPackageRoot, "package.json"),
-      `${JSON.stringify({ name: "openclaw", version: "2026.5.12-beta.6" })}\n`,
+      `${JSON.stringify({ name: "quiet-core-bot", version: "2026.5.12-beta.6" })}\n`,
     );
-    await fs.symlink(hostPackageRoot, path.join(npmRoot, "node_modules", "openclaw"), "dir");
-    await fs.writeFile(path.join(npmRoot, "node_modules", ".bin", "openclaw"), "shim");
-    await fs.writeFile(path.join(npmRoot, "node_modules", ".bin", "openclaw.cmd"), "cmd shim");
-    await fs.writeFile(path.join(npmRoot, "node_modules", ".bin", "openclaw.ps1"), "ps1 shim");
+    await fs.symlink(hostPackageRoot, path.join(npmRoot, "node_modules", "quiet-core-bot"), "dir");
+    await fs.writeFile(path.join(npmRoot, "node_modules", ".bin", "quiet-core-bot"), "shim");
+    await fs.writeFile(path.join(npmRoot, "node_modules", ".bin", "quiet-core-bot.cmd"), "cmd shim");
+    await fs.writeFile(path.join(npmRoot, "node_modules", ".bin", "quiet-core-bot.ps1"), "ps1 shim");
     await fs.writeFile(
       path.join(npmRoot, "node_modules", ".package-lock.json"),
       `${JSON.stringify(
         {
           lockfileVersion: 3,
           packages: {
-            "node_modules/openclaw": {
+            "node_modules/quiet-core-bot": {
               version: "2026.5.12-beta.6",
             },
           },
@@ -1498,8 +1498,8 @@ describe("managed npm root", () => {
         {
           private: true,
           dependencies: {
-            openclaw: "2026.5.12-beta.6",
-            "@xdarkicex/openclaw-memory-libravdb": "1.4.69",
+            "quiet-core-bot": "2026.5.12-beta.6",
+            "@xdarkicex/quiet-core-bot-memory-libravdb": "1.4.69",
           },
         },
         null,
@@ -1514,19 +1514,19 @@ describe("managed npm root", () => {
           packages: {
             "": {
               dependencies: {
-                openclaw: "2026.5.12-beta.6",
-                "@xdarkicex/openclaw-memory-libravdb": "1.4.69",
+                "quiet-core-bot": "2026.5.12-beta.6",
+                "@xdarkicex/quiet-core-bot-memory-libravdb": "1.4.69",
               },
             },
-            "node_modules/openclaw": {
+            "node_modules/quiet-core-bot": {
               version: "2026.5.12-beta.6",
             },
-            "node_modules/@xdarkicex/openclaw-memory-libravdb": {
+            "node_modules/@xdarkicex/quiet-core-bot-memory-libravdb": {
               version: "1.4.69",
             },
           },
           dependencies: {
-            openclaw: {
+            "quiet-core-bot": {
               version: "2026.5.12-beta.6",
             },
           },
@@ -1546,7 +1546,7 @@ describe("managed npm root", () => {
     ).resolves.toBe(true);
 
     expect(runCommand).not.toHaveBeenCalled();
-    await expect(fs.realpath(path.join(npmRoot, "node_modules", "openclaw"))).resolves.toBe(
+    await expect(fs.realpath(path.join(npmRoot, "node_modules", "quiet-core-bot"))).resolves.toBe(
       await fs.realpath(hostPackageRoot),
     );
     await expect(
@@ -1557,7 +1557,7 @@ describe("managed npm root", () => {
       dependencies?: Record<string, string>;
     };
     expect(manifest.dependencies).toEqual({
-      "@xdarkicex/openclaw-memory-libravdb": "1.4.69",
+      "@xdarkicex/quiet-core-bot-memory-libravdb": "1.4.69",
     });
 
     const lockfile = JSON.parse(
@@ -1567,14 +1567,14 @@ describe("managed npm root", () => {
       dependencies?: Record<string, unknown>;
     };
     expect(lockfile.packages?.[""]?.dependencies).toEqual({
-      "@xdarkicex/openclaw-memory-libravdb": "1.4.69",
+      "@xdarkicex/quiet-core-bot-memory-libravdb": "1.4.69",
     });
-    expect(lockfile.packages?.["node_modules/openclaw"]).toBeUndefined();
-    expect(lockfile.packages?.["node_modules/@xdarkicex/openclaw-memory-libravdb"]?.version).toBe(
+    expect(lockfile.packages?.["node_modules/quiet-core-bot"]).toBeUndefined();
+    expect(lockfile.packages?.["node_modules/@xdarkicex/quiet-core-bot-memory-libravdb"]?.version).toBe(
       "1.4.69",
     );
-    expect(lockfile.dependencies?.openclaw).toBeUndefined();
-    for (const binName of ["openclaw", "openclaw.cmd", "openclaw.ps1"]) {
+    expect(lockfile.dependencies?.["quiet-core-bot"]).toBeUndefined();
+    for (const binName of ["quiet-core-bot", "quiet-core-bot.cmd", "quiet-core-bot.ps1"]) {
       await expectPathMissing(path.join(npmRoot, "node_modules", ".bin", binName));
     }
     await expectPathMissing(path.join(npmRoot, "node_modules", ".package-lock.json"));

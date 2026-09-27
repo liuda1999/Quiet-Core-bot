@@ -16,9 +16,9 @@ type InteractiveState = {
   inflightCallbackDedupe: Set<string>;
 };
 
-const PLUGIN_INTERACTIVE_STATE_KEY = Symbol.for("openclaw.pluginInteractiveState");
+const PLUGIN_INTERACTIVE_STATE_KEY = Symbol.for("quiet-core-bot.pluginInteractiveState");
 const PLUGIN_INTERACTIVE_CALLBACK_DEDUPE_KEY = Symbol.for(
-  "openclaw.pluginInteractiveCallbackDedupe",
+  "quiet-core-bot.pluginInteractiveCallbackDedupe",
 );
 
 function createInteractiveCallbackDedupe(): DedupeCache {

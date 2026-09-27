@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { closeOpenClawStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
 import { createConfigIO } from "./io.js";
 
 const shellEnvMocks = vi.hoisted(() => ({
@@ -21,9 +22,9 @@ vi.mock("../infra/shell-env.js", async (importOriginal) => ({
 }));
 
 async function withConfig(run: (params: { home: string; configPath: string }) => Promise<void>) {
-  const home = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-shell-env-"));
+  const home = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-shell-env-"));
   try {
-    const configPath = path.join(home, ".openclaw", "openclaw.json");
+    const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
     await fs.mkdir(path.dirname(configPath), { recursive: true });
     await fs.writeFile(
       configPath,
@@ -31,6 +32,8 @@ async function withConfig(run: (params: { home: string; configPath: string }) =>
     );
     await run({ home, configPath });
   } finally {
+    // Windows keeps the state SQLite handle open, which makes the temp-home removal fail EBUSY.
+    closeOpenClawStateDatabaseForTest();
     await fs.rm(home, { recursive: true, force: true });
   }
 }

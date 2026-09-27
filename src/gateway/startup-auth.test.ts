@@ -68,10 +68,10 @@ describe("mergeGatewayTailscaleConfig", () => {
   it("preserves explicit serviceName overrides", () => {
     expect(
       mergeGatewayTailscaleConfig(
-        { mode: "serve", serviceName: "svc:old-openclaw", resetOnExit: false },
-        { serviceName: "svc:openclaw" },
+        { mode: "serve", serviceName: "svc:old-quiet-core-bot", resetOnExit: false },
+        { serviceName: "svc:quiet-core-bot" },
       ),
-    ).toEqual({ mode: "serve", serviceName: "svc:openclaw", resetOnExit: false });
+    ).toEqual({ mode: "serve", serviceName: "svc:quiet-core-bot", resetOnExit: false });
   });
 });
 
@@ -217,20 +217,20 @@ describe("ensureGatewayStartupAuth", () => {
 
   it("resolves env-template gateway.auth.token before env-token short-circuiting", async () => {
     await expectResolvedToken({
-      cfg: gatewayAuthConfig({ mode: "token", token: "${OPENCLAW_GATEWAY_TOKEN}" }),
+      cfg: gatewayAuthConfig({ mode: "token", token: "${QUIET_CORE_GATEWAY_TOKEN}" }),
       env: {
-        OPENCLAW_GATEWAY_TOKEN: "resolved-token",
+        QUIET_CORE_GATEWAY_TOKEN: "resolved-token",
       } as NodeJS.ProcessEnv,
       expectedToken: "resolved-token",
-      expectedConfiguredToken: "${OPENCLAW_GATEWAY_TOKEN}",
+      expectedConfiguredToken: "${QUIET_CORE_GATEWAY_TOKEN}",
     });
   });
 
-  it("uses OPENCLAW_GATEWAY_TOKEN without resolving configured token SecretRef", async () => {
+  it("uses QUIET_CORE_GATEWAY_TOKEN without resolving configured token SecretRef", async () => {
     await expectResolvedToken({
       cfg: createMissingGatewayTokenSecretRefConfig(),
       env: {
-        OPENCLAW_GATEWAY_TOKEN: "token-from-env",
+        QUIET_CORE_GATEWAY_TOKEN: "token-from-env",
       } as NodeJS.ProcessEnv,
       expectedToken: "token-from-env",
     });
@@ -259,14 +259,14 @@ describe("ensureGatewayStartupAuth", () => {
     expect(mocks.replaceConfigFile).not.toHaveBeenCalled();
   });
 
-  it("uses OPENCLAW_GATEWAY_PASSWORD without resolving configured password SecretRef", async () => {
+  it("uses QUIET_CORE_GATEWAY_PASSWORD without resolving configured password SecretRef", async () => {
     const result = await runStartupAuth({
       cfg: gatewayAuthConfigWithDefaultEnvProvider({
         mode: "password",
         password: gatewayEnvSecretRef("MISSING_GW_PASSWORD"),
       }),
       env: {
-        OPENCLAW_GATEWAY_PASSWORD: "password-from-env", // pragma: allowlist secret
+        QUIET_CORE_GATEWAY_PASSWORD: "password-from-env", // pragma: allowlist secret
       } as NodeJS.ProcessEnv,
       persist: true,
     });
@@ -371,7 +371,7 @@ describe("ensureGatewayStartupAuth", () => {
         },
       },
       env: {
-        OPENCLAW_GATEWAY_TOKEN: "shared-gateway-token-1234567890",
+        QUIET_CORE_GATEWAY_TOKEN: "shared-gateway-token-1234567890",
       } as NodeJS.ProcessEnv,
       warn,
     });
@@ -435,7 +435,7 @@ describe("ensureGatewayStartupAuth", () => {
         runStartupAuth({
           cfg: {},
           env: {
-            OPENCLAW_GATEWAY_TOKEN: token,
+            QUIET_CORE_GATEWAY_TOKEN: token,
           } as NodeJS.ProcessEnv,
         }),
       ).rejects.toThrow(/example placeholder/i);

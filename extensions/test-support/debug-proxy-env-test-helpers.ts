@@ -2,9 +2,9 @@
 import { afterEach, vi } from "vitest";
 
 const DEBUG_PROXY_ENV_KEYS = [
-  "OPENCLAW_DEBUG_PROXY_ENABLED",
-  "OPENCLAW_DEBUG_PROXY_SESSION_ID",
-  "OPENCLAW_STATE_DIR",
+  "QUIET_CORE_DEBUG_PROXY_ENABLED",
+  "QUIET_CORE_DEBUG_PROXY_SESSION_ID",
+  "QUIET_CORE_STATE_DIR",
 ] as const;
 
 type DebugProxyEnvKey = (typeof DEBUG_PROXY_ENV_KEYS)[number];
@@ -33,9 +33,9 @@ export function installDebugProxyTestResetHooks() {
   let priorProxyEnv = originalProxyEnv;
 
   afterEach(async () => {
-    const { closeDebugProxyCaptureStore } = await import("openclaw/plugin-sdk/proxy-capture");
+    const { closeDebugProxyCaptureStore } = await import("quiet-core-bot/plugin-sdk/proxy-capture");
     const { closeOpenClawStateDatabaseForTest } =
-      await import("openclaw/plugin-sdk/sqlite-runtime-testing");
+      await import("quiet-core-bot/plugin-sdk/sqlite-runtime-testing");
     closeDebugProxyCaptureStore();
     closeOpenClawStateDatabaseForTest();
     globalThis.fetch = originalFetch;

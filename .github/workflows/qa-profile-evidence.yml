@@ -72,10 +72,10 @@ concurrency:
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
   NODE_VERSION: "24.x"
-  OPENCLAW_BUILD_PRIVATE_QA: "1"
-  OPENCLAW_ENABLE_PRIVATE_QA_CLI: "1"
-  OPENCLAW_QA_REDACT_PUBLIC_METADATA: "1"
-  OPENCLAW_QA_TRANSPORT_READY_TIMEOUT_MS: "180000"
+  QUIET_CORE_BUILD_PRIVATE_QA: "1"
+  QUIET_CORE_ENABLE_PRIVATE_QA_CLI: "1"
+  QUIET_CORE_QA_REDACT_PUBLIC_METADATA: "1"
+  QUIET_CORE_QA_TRANSPORT_READY_TIMEOUT_MS: "180000"
 
 jobs:
   authorize_actor:
@@ -266,7 +266,7 @@ jobs:
           echo "output_dir=${output_dir}" >> "$GITHUB_OUTPUT"
 
           qa_exit_code=0
-          pnpm openclaw qa run \
+          pnpm quiet-core-bot qa run \
             --repo-root . \
             --qa-profile "${QA_PROFILE}" \
             --output-dir "${output_dir}" || qa_exit_code=$?

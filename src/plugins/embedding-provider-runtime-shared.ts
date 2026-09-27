@@ -1,6 +1,6 @@
 /** Shared runtime helpers for embedding provider lookup across core and plugin capabilities. */
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   resolvePluginCapabilityProvider,
   resolvePluginCapabilityProviders,

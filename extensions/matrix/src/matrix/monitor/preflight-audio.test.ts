@@ -17,7 +17,7 @@ import {
   sendMatrixPreflightAudioTranscriptEcho,
 } from "./preflight-audio.js";
 
-const cfg = {} as import("openclaw/plugin-sdk/config-contracts").OpenClawConfig;
+const cfg = {} as import("quiet-core-bot/plugin-sdk/config-contracts").OpenClawConfig;
 
 describe("isMatrixAudioContent", () => {
   it("accepts Matrix audio messages and audio files", () => {
@@ -84,7 +84,7 @@ describe("resolveMatrixPreflightAudioTranscript", () => {
   it("suppresses shared echo during pre-mention transcription", async () => {
     const echoCfg = {
       tools: { media: { audio: { echoTranscript: true, echoFormat: "echo: {transcript}" } } },
-    } as import("openclaw/plugin-sdk/config-contracts").OpenClawConfig;
+    } as import("quiet-core-bot/plugin-sdk/config-contracts").OpenClawConfig;
     transcribeFirstAudioMock.mockResolvedValue("hello from voice");
 
     await resolveMatrixPreflightAudioTranscript({
@@ -146,7 +146,7 @@ describe("sendMatrixPreflightAudioTranscriptEcho", () => {
       transcript: "hello bot",
       cfg: {
         tools: { media: { audio: { echoTranscript: true, echoFormat: "heard: {transcript}" } } },
-      } as import("openclaw/plugin-sdk/config-contracts").OpenClawConfig,
+      } as import("quiet-core-bot/plugin-sdk/config-contracts").OpenClawConfig,
       accountId: "ops",
       originatingTo: "room:!room:example.org",
       messageThreadId: "$thread",

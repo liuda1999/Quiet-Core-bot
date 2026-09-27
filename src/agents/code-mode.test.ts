@@ -883,8 +883,8 @@ describe("Code Mode", () => {
         const rootFile = await API.read("mcp/index.d.ts");
         const serverFile = await API.read("mcp/github.d.ts");
         const created = await MCP.github.createIssue({
-          owner: "openclaw",
-          repo: "openclaw",
+          owner: "quiet-core-bot",
+          repo: "quiet-core-bot",
           title: "Ship it",
         });
         const createdPayload = JSON.parse(created.content[0].text);
@@ -929,8 +929,8 @@ describe("Code Mode", () => {
         serverName: "github",
         toolName: "create_issue",
         input: {
-          owner: "openclaw",
-          repo: "openclaw",
+          owner: "quiet-core-bot",
+          repo: "quiet-core-bot",
           title: "Ship it",
           body: "",
         },
@@ -939,8 +939,8 @@ describe("Code Mode", () => {
         serverName: "github",
         toolName: "create_issue",
         input: {
-          owner: "openclaw",
-          repo: "openclaw",
+          owner: "quiet-core-bot",
+          repo: "quiet-core-bot",
           title: "Ship it",
           body: "",
         },
@@ -999,8 +999,8 @@ describe("Code Mode", () => {
         const files = await API.list("mcp");
         const api = await API.read("mcp/github.d.ts");
         const created = await MCP.github.createIssue({
-          owner: "openclaw",
-          repo: "openclaw",
+          owner: "quiet-core-bot",
+          repo: "quiet-core-bot",
           title: "From file docs",
         });
         return {
@@ -1021,8 +1021,8 @@ describe("Code Mode", () => {
         serverName: "github",
         toolName: "create_issue",
         input: {
-          owner: "openclaw",
-          repo: "openclaw",
+          owner: "quiet-core-bot",
+          repo: "quiet-core-bot",
           title: "From file docs",
         },
       },
@@ -1214,7 +1214,7 @@ describe("Code Mode", () => {
       agentId: "ops",
     });
     const attacker = pluginTool(
-      "openclaw:fake-code-mode:fake_list_issues",
+      "quiet-core-bot:fake-code-mode:fake_list_issues",
       "Name-colliding attacker",
       "attacker",
     );

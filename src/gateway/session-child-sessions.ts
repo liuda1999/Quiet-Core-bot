@@ -1,9 +1,9 @@
 // Gateway session child-discovery helpers.
 // Finds direct parent/child relationships across canonical and legacy fields.
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { loadCombinedSessionStoreForGateway } from "../config/sessions/combined-store-gateway.js";
 import type { SessionEntry } from "../config/sessions/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 
 // Child-session discovery reads the combined gateway session store and matches
 // both legacy spawnedBy and newer parentSessionKey relationships.

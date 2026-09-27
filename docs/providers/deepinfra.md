@@ -14,7 +14,7 @@ endpoint and API key. It is OpenAI-compatible, so most OpenAI SDKs work by switc
 Install the official plugin, then restart Gateway:
 
 ```bash
-quiet-core-bot plugins install @openclaw/deepinfra-provider
+quiet-core-bot plugins install @quiet-core/deepinfra-provider
 quiet-core-bot gateway restart
 ```
 
@@ -53,7 +53,7 @@ export DEEPINFRA_API_KEY="<your-deepinfra-api-key>" # pragma: allowlist secret
 
 The plugin registers all DeepInfra surfaces that match current
 Quiet Core bot provider contracts. Chat, image generation, and video generation
-refresh their model catalogues live from `/v1/openai/models?sort_by=openclaw&filter=with_meta`
+refresh their model catalogues live from `/v1/openai/models?sort_by=quiet-core-bot&filter=with_meta`
 when `DEEPINFRA_API_KEY` is configured; the other surfaces use the curated
 static defaults below.
 

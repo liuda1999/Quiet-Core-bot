@@ -195,7 +195,7 @@ describe("resolveSubagentToolPolicyForSession", () => {
   it("uses stored leaf role for flat depth-1 session keys", () => {
     const storePath = path.join(
       os.tmpdir(),
-      `openclaw-subagent-policy-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
+      `quiet-core-bot-subagent-policy-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
     );
     fs.mkdirSync(path.dirname(storePath), { recursive: true });
     fs.writeFileSync(
@@ -232,7 +232,7 @@ describe("resolveSubagentToolPolicyForSession", () => {
   it("resolves inherited tool denies from stored subagent sessions", () => {
     const storePath = path.join(
       os.tmpdir(),
-      `openclaw-subagent-inherited-deny-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
+      `quiet-core-bot-subagent-inherited-deny-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
     );
     fs.mkdirSync(path.dirname(storePath), { recursive: true });
     fs.writeFileSync(
@@ -269,7 +269,7 @@ describe("resolveSubagentToolPolicyForSession", () => {
   it("resolves inherited tool allows from stored subagent sessions", () => {
     const storePath = path.join(
       os.tmpdir(),
-      `openclaw-subagent-inherited-allow-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
+      `quiet-core-bot-subagent-inherited-allow-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
     );
     fs.mkdirSync(path.dirname(storePath), { recursive: true });
     fs.writeFileSync(
@@ -307,7 +307,7 @@ describe("resolveSubagentToolPolicyForSession", () => {
   it("keeps configured plugin allows separate from inherited tool allows", () => {
     const storePath = path.join(
       os.tmpdir(),
-      `openclaw-subagent-inherited-allow-separate-${Date.now()}-${Math.random()
+      `quiet-core-bot-subagent-inherited-allow-separate-${Date.now()}-${Math.random()
         .toString(16)
         .slice(2)}.json`,
     );
@@ -356,7 +356,7 @@ describe("resolveSubagentToolPolicyForSession", () => {
   it("applies inherited tool policy from stored ACP sessions without subagent metadata", () => {
     const storePath = path.join(
       os.tmpdir(),
-      `openclaw-acp-inherited-deny-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
+      `quiet-core-bot-acp-inherited-deny-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
     );
     fs.mkdirSync(path.dirname(storePath), { recursive: true });
     fs.writeFileSync(
@@ -505,7 +505,7 @@ describe("resolveEffectiveToolPolicy", () => {
   });
 
   it("does not warn an agent profile about inherited global tool sections (#47487)", async () => {
-    const warnLogs = createWarnLogCapture("openclaw-agent-tools-policy-test");
+    const warnLogs = createWarnLogCapture("quiet-core-bot-agent-tools-policy-test");
     try {
       const cfg = {
         tools: {
@@ -534,7 +534,7 @@ describe("resolveEffectiveToolPolicy", () => {
   });
 
   it("still warns when an agent profile has its own configured exec section (#47487)", async () => {
-    const warnLogs = createWarnLogCapture("openclaw-agent-tools-policy-test");
+    const warnLogs = createWarnLogCapture("quiet-core-bot-agent-tools-policy-test");
     try {
       const cfg = {
         agents: {
@@ -562,7 +562,7 @@ describe("resolveEffectiveToolPolicy", () => {
   });
 
   it("only lists configured sections whose grants are still missing (#47487)", async () => {
-    const warnLogs = createWarnLogCapture("openclaw-agent-tools-policy-test");
+    const warnLogs = createWarnLogCapture("quiet-core-bot-agent-tools-policy-test");
     try {
       const cfg = {
         agents: {

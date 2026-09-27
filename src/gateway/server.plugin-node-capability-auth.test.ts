@@ -500,7 +500,7 @@ describe("gateway plugin node capability auth", () => {
           await expectWsRejected(`ws://${host}:${listener.port}${activeWsPath}`, {});
         },
       });
-    }, "openclaw-canvas-auth-test-");
+    }, "quiet-core-bot-canvas-auth-test-");
   }, 60_000);
 
   test("rejects malformed raw HTTP request targets without disrupting gateway", async () => {

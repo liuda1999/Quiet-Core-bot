@@ -38,7 +38,7 @@ async function cancelUnreadResponseBody(response: Response): Promise<void> {
 }
 
 function isOfflineModeEnabled(): boolean {
-  const value = process.env.OPENCLAW_OFFLINE;
+  const value = process.env.QUIET_CORE_OFFLINE;
   if (!value) {
     return false;
   }

@@ -3,11 +3,11 @@ import { statSync } from "node:fs";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../infra/kysely-sync.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
-import { openOpenClawStateDatabase } from "../state/openclaw-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "../state/openclaw-state-db.paths.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
+import { openOpenClawStateDatabase } from "../state/quiet-core-bot-state-db.js";
+import { resolveOpenClawStateSqlitePath } from "../state/quiet-core-bot-state-db.paths.js";
 import { withEnvAsync } from "../test-utils/env.js";
-import { withOpenClawTestState } from "../test-utils/openclaw-test-state.js";
+import { withOpenClawTestState } from "../test-utils/quiet-core-bot-test-state.js";
 import {
   createManagedTaskFlow as createManagedTaskFlowOrNull,
   getTaskFlowById,
@@ -65,13 +65,13 @@ async function withFlowRegistryTempDir<T>(run: (root: string) => Promise<T>): Pr
   return await withOpenClawTestState(
     {
       layout: "state-only",
-      prefix: "openclaw-task-flow-store-",
+      prefix: "quiet-core-bot-task-flow-store-",
     },
     async (state) => {
       const root = state.stateDir;
       resetTaskFlowRegistryForTests();
       try {
-        return await withEnvAsync({ OPENCLAW_STATE_DIR: root }, async () => await run(root));
+        return await withEnvAsync({ QUIET_CORE_STATE_DIR: root }, async () => await run(root));
       } finally {
         resetTaskFlowRegistryForTests();
       }
@@ -314,7 +314,7 @@ describe("task-flow-registry store runtime", () => {
 
       const databasePath = resolveOpenClawStateSqlitePath(process.env);
       const registryDir = path.dirname(databasePath);
-      expect(databasePath.endsWith(path.join("state", "openclaw.sqlite"))).toBe(true);
+      expect(databasePath.endsWith(path.join("state", "quiet-core-bot.sqlite"))).toBe(true);
       expect(statSync(registryDir).mode & 0o777).toBe(0o700);
       expect(statSync(databasePath).mode & 0o777).toBe(0o600);
     });

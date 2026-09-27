@@ -1,5 +1,5 @@
 // Signal helper module supports config ui hints behavior.
-import type { ChannelConfigUiHint } from "openclaw/plugin-sdk/core";
+import type { ChannelConfigUiHint } from "quiet-core-bot/plugin-sdk/core";
 
 export const signalChannelConfigUiHints = {
   "": {

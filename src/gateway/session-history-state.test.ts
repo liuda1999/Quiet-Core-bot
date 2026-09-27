@@ -446,9 +446,9 @@ describe("SessionHistorySseState", () => {
             {
               type: "text",
               text: [
-                "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
+                "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>",
                 "secret runtime context",
-                "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
+                "<<<END_QUIET_CORE_INTERNAL_CONTEXT>>>",
                 "",
                 "visible ask",
               ].join("\n"),
@@ -478,9 +478,9 @@ describe("SessionHistorySseState", () => {
             {
               type: "text",
               text: [
-                "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
+                "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>",
                 "subagent completion payload",
-                "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
+                "<<<END_QUIET_CORE_INTERNAL_CONTEXT>>>",
               ].join("\n"),
             },
           ],
@@ -498,7 +498,7 @@ describe("SessionHistorySseState", () => {
       rawMessages: [
         {
           role: "custom",
-          customType: "openclaw.runtime-context",
+          customType: "quiet-core-bot.runtime-context",
           content: "secret runtime context",
           display: false,
           __openclaw: { seq: 1 },
@@ -522,9 +522,9 @@ describe("SessionHistorySseState", () => {
               text: [
                 "[Inter-session message] sourceSession=agent:main:subagent:child sourceChannel=webchat sourceTool=subagent_announce isUser=false",
                 "This content was routed by Quiet Core bot from another session or internal tool.",
-                "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
+                "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>",
                 "subagent completion payload",
-                "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
+                "<<<END_QUIET_CORE_INTERNAL_CONTEXT>>>",
               ].join("\n"),
             },
           ],
@@ -580,7 +580,7 @@ describe("SessionHistorySseState", () => {
       state.appendInlineMessage({
         message: {
           role: "custom",
-          customType: "openclaw.runtime-context",
+          customType: "quiet-core-bot.runtime-context",
           content: "secret runtime context",
           display: false,
         },
@@ -594,9 +594,9 @@ describe("SessionHistorySseState", () => {
             {
               type: "text",
               text: [
-                "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
+                "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>",
                 "runtime details",
-                "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
+                "<<<END_QUIET_CORE_INTERNAL_CONTEXT>>>",
               ].join("\n"),
             },
           ],

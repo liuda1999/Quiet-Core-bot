@@ -4,11 +4,11 @@ import path from "node:path";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/normalization-core/string-coerce";
 import {
   normalizeStringEntries,
   sortUniqueStrings,
-} from "@openclaw/normalization-core/string-normalization";
+} from "@quiet-core/normalization-core/string-normalization";
 import { normalizeEnvVarKey } from "../infra/host-env-security.js";
 import { parseTcpPort } from "../infra/tcp-port.js";
 import { VERSION } from "../version.js";
@@ -333,7 +333,7 @@ function auditGatewayToken(
   }
   issues.push({
     code: SERVICE_AUDIT_CODES.gatewayTokenEmbedded,
-    message: "Gateway service embeds OPENCLAW_GATEWAY_TOKEN and should be reinstalled.",
+    message: "Gateway service embeds QUIET_CORE_GATEWAY_TOKEN and should be reinstalled.",
     detail: "Run `quiet-core-bot gateway install --force` to remove embedded service token.",
     level: "recommended",
   });
@@ -344,7 +344,7 @@ function auditGatewayToken(
   issues.push({
     code: SERVICE_AUDIT_CODES.gatewayTokenMismatch,
     message:
-      "Gateway service OPENCLAW_GATEWAY_TOKEN does not match gateway.auth.token in quiet-core-bot.json",
+      "Gateway service QUIET_CORE_GATEWAY_TOKEN does not match gateway.auth.token in quiet-core-bot.json",
     detail: "service token is stale",
     level: "recommended",
   });
@@ -431,10 +431,10 @@ export function readEmbeddedGatewayToken(command: GatewayServiceCommand): string
   if (!command) {
     return undefined;
   }
-  if (isEnvironmentFileOnlySource(command.environmentValueSources?.OPENCLAW_GATEWAY_TOKEN)) {
+  if (isEnvironmentFileOnlySource(command.environmentValueSources?.QUIET_CORE_GATEWAY_TOKEN)) {
     return undefined;
   }
-  return normalizeOptionalString(command.environment?.OPENCLAW_GATEWAY_TOKEN);
+  return normalizeOptionalString(command.environment?.QUIET_CORE_GATEWAY_TOKEN);
 }
 
 function getPathModule(platform: NodeJS.Platform) {
@@ -604,7 +604,7 @@ export function checkTokenDrift(params: {
 }
 
 function auditGatewayServiceVersion(command: GatewayServiceCommand, issues: ServiceConfigIssue[]) {
-  const serviceVersion = command?.environment?.OPENCLAW_SERVICE_VERSION?.trim();
+  const serviceVersion = command?.environment?.QUIET_CORE_SERVICE_VERSION?.trim();
   if (!serviceVersion || serviceVersion === VERSION) {
     return;
   }

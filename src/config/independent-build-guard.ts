@@ -4,16 +4,16 @@
 // participate in upstream Quiet Core bot releases, so the mutating update commands (`update`,
 // `update repair`, `update finalize`, `update wizard`) are refused before any network call
 // or config write. Read-only status (`quiet-core-bot update status`) stays available.
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
 
 /** Environment switch that restores the upstream update flow (`0`/`false`/`off`/`no`). */
-export const INDEPENDENT_BUILD_ENV_KEY = "OPENCLAW_INDEPENDENT_BUILD";
+export const INDEPENDENT_BUILD_ENV_KEY = "QUIET_CORE_INDEPENDENT_BUILD";
 
 const UPSTREAM_UPDATE_RESTORE_VALUES = new Set(["0", "false", "off", "no"]);
 
 /** Error thrown when a mutating update command is attempted on an independent build. */
 export class IndependentBuildUpdateError extends Error {
-  readonly code = "OPENCLAW_INDEPENDENT_BUILD_UPDATE_DISABLED";
+  readonly code = "QUIET_CORE_INDEPENDENT_BUILD_UPDATE_DISABLED";
 
   constructor() {
     super(formatIndependentBuildUpdateMessage());

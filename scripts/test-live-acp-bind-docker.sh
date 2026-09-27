@@ -2,42 +2,42 @@
 set -euo pipefail
 
 SCRIPT_ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-ROOT_DIR="${OPENCLAW_LIVE_DOCKER_REPO_ROOT:-$SCRIPT_ROOT_DIR}"
+ROOT_DIR="${QUIET_CORE_LIVE_DOCKER_REPO_ROOT:-$SCRIPT_ROOT_DIR}"
 ROOT_DIR="$(cd "$ROOT_DIR" && pwd)"
-TRUSTED_HARNESS_DIR="${OPENCLAW_LIVE_DOCKER_TRUSTED_HARNESS_DIR:-$SCRIPT_ROOT_DIR}"
+TRUSTED_HARNESS_DIR="${QUIET_CORE_LIVE_DOCKER_TRUSTED_HARNESS_DIR:-$SCRIPT_ROOT_DIR}"
 if [[ -z "$TRUSTED_HARNESS_DIR" || ! -d "$TRUSTED_HARNESS_DIR" ]]; then
   echo "ERROR: trusted live Docker harness directory not found: ${TRUSTED_HARNESS_DIR:-<empty>}." >&2
   exit 1
 fi
 TRUSTED_HARNESS_DIR="$(cd "$TRUSTED_HARNESS_DIR" && pwd)"
 source "$TRUSTED_HARNESS_DIR/scripts/lib/live-docker-auth.sh"
-IMAGE_NAME="${OPENCLAW_IMAGE:-openclaw:local}"
-LIVE_IMAGE_NAME="${OPENCLAW_LIVE_IMAGE:-${IMAGE_NAME}-live}"
-CONFIG_DIR="${OPENCLAW_CONFIG_DIR:-$HOME/.openclaw}"
-WORKSPACE_DIR="${OPENCLAW_WORKSPACE_DIR:-$HOME/.openclaw/workspace}"
-PROFILE_FILE="$(openclaw_live_default_profile_file)"
-ACP_AGENT_LIST_RAW="${OPENCLAW_LIVE_ACP_BIND_AGENTS:-${OPENCLAW_LIVE_ACP_BIND_AGENT:-claude,codex,gemini}}"
-ACP_SETUP_TIMEOUT_SECONDS="$(openclaw_live_read_positive_int_env OPENCLAW_LIVE_ACP_BIND_SETUP_TIMEOUT_SECONDS 180)"
+IMAGE_NAME="${QUIET_CORE_IMAGE:-quiet-core-bot:local}"
+LIVE_IMAGE_NAME="${QUIET_CORE_LIVE_IMAGE:-${IMAGE_NAME}-live}"
+CONFIG_DIR="${QUIET_CORE_CONFIG_DIR:-$HOME/.quiet-core-bot}"
+WORKSPACE_DIR="${QUIET_CORE_WORKSPACE_DIR:-$HOME/.quiet-core-bot/workspace}"
+PROFILE_FILE="$(quiet_core_bot_live_default_profile_file)"
+ACP_AGENT_LIST_RAW="${QUIET_CORE_LIVE_ACP_BIND_AGENTS:-${QUIET_CORE_LIVE_ACP_BIND_AGENT:-claude,codex,gemini}}"
+ACP_SETUP_TIMEOUT_SECONDS="$(quiet_core_bot_live_read_positive_int_env QUIET_CORE_LIVE_ACP_BIND_SETUP_TIMEOUT_SECONDS 180)"
 TEMP_DIRS=()
-DOCKER_USER="${OPENCLAW_DOCKER_USER:-node}"
+DOCKER_USER="${QUIET_CORE_DOCKER_USER:-node}"
 DOCKER_HOME_MOUNT=()
 DOCKER_AUTH_PRESTAGED=0
 DOCKER_TRUSTED_HARNESS_CONTAINER_DIR="/trusted-harness"
 DOCKER_TRUSTED_HARNESS_MOUNT=(-v "$TRUSTED_HARNESS_DIR":"$DOCKER_TRUSTED_HARNESS_CONTAINER_DIR":ro)
 
-openclaw_live_acp_bind_append_build_extension() {
+quiet_core_bot_live_acp_bind_append_build_extension() {
   local extension="${1:?extension required}"
-  local current="${OPENCLAW_DOCKER_BUILD_EXTENSIONS:-${OPENCLAW_EXTENSIONS:-}}"
+  local current="${QUIET_CORE_DOCKER_BUILD_EXTENSIONS:-${QUIET_CORE_EXTENSIONS:-}}"
   case " $current " in
     *" $extension "*)
       ;;
     *)
-      export OPENCLAW_DOCKER_BUILD_EXTENSIONS="${current:+$current }$extension"
+      export QUIET_CORE_DOCKER_BUILD_EXTENSIONS="${current:+$current }$extension"
       ;;
   esac
 }
 
-openclaw_live_acp_bind_resolve_auth_provider() {
+quiet_core_bot_live_acp_bind_resolve_auth_provider() {
   case "${1:-}" in
     claude) printf '%s\n' "claude-cli" ;;
     codex) printf '%s\n' "codex-cli" ;;
@@ -45,19 +45,19 @@ openclaw_live_acp_bind_resolve_auth_provider() {
     gemini) printf '%s\n' "google-gemini-cli" ;;
     opencode) printf '%s\n' "opencode" ;;
     *)
-      echo "Unsupported OPENCLAW_LIVE_ACP_BIND agent: ${1:-} (expected claude, codex, droid, gemini, or opencode)" >&2
+      echo "Unsupported QUIET_CORE_LIVE_ACP_BIND agent: ${1:-} (expected claude, codex, droid, gemini, or opencode)" >&2
       return 1
       ;;
   esac
 }
 
-openclaw_live_acp_bind_resolve_agent_command() {
+quiet_core_bot_live_acp_bind_resolve_agent_command() {
   case "${1:-}" in
-    claude) printf '%s' "${OPENCLAW_LIVE_ACP_BIND_AGENT_COMMAND_CLAUDE:-${OPENCLAW_LIVE_ACP_BIND_AGENT_COMMAND:-}}" ;;
-    codex) printf '%s' "${OPENCLAW_LIVE_ACP_BIND_AGENT_COMMAND_CODEX:-${OPENCLAW_LIVE_ACP_BIND_AGENT_COMMAND:-}}" ;;
-    droid) printf '%s' "${OPENCLAW_LIVE_ACP_BIND_AGENT_COMMAND_DROID:-${OPENCLAW_LIVE_ACP_BIND_AGENT_COMMAND:-}}" ;;
-    gemini) printf '%s' "${OPENCLAW_LIVE_ACP_BIND_AGENT_COMMAND_GEMINI:-${OPENCLAW_LIVE_ACP_BIND_AGENT_COMMAND:-}}" ;;
-    opencode) printf '%s' "${OPENCLAW_LIVE_ACP_BIND_AGENT_COMMAND_OPENCODE:-${OPENCLAW_LIVE_ACP_BIND_AGENT_COMMAND:-}}" ;;
+    claude) printf '%s' "${QUIET_CORE_LIVE_ACP_BIND_AGENT_COMMAND_CLAUDE:-${QUIET_CORE_LIVE_ACP_BIND_AGENT_COMMAND:-}}" ;;
+    codex) printf '%s' "${QUIET_CORE_LIVE_ACP_BIND_AGENT_COMMAND_CODEX:-${QUIET_CORE_LIVE_ACP_BIND_AGENT_COMMAND:-}}" ;;
+    droid) printf '%s' "${QUIET_CORE_LIVE_ACP_BIND_AGENT_COMMAND_DROID:-${QUIET_CORE_LIVE_ACP_BIND_AGENT_COMMAND:-}}" ;;
+    gemini) printf '%s' "${QUIET_CORE_LIVE_ACP_BIND_AGENT_COMMAND_GEMINI:-${QUIET_CORE_LIVE_ACP_BIND_AGENT_COMMAND:-}}" ;;
+    opencode) printf '%s' "${QUIET_CORE_LIVE_ACP_BIND_AGENT_COMMAND_OPENCODE:-${QUIET_CORE_LIVE_ACP_BIND_AGENT_COMMAND:-}}" ;;
     *) return 1 ;;
   esac
 }
@@ -69,26 +69,26 @@ cleanup_temp_dirs() {
 }
 trap cleanup_temp_dirs EXIT
 
-if [[ -n "${OPENCLAW_DOCKER_CLI_TOOLS_DIR:-}" ]]; then
-  CLI_TOOLS_DIR="${OPENCLAW_DOCKER_CLI_TOOLS_DIR}"
-elif openclaw_live_is_ci; then
-  CLI_TOOLS_DIR="$(mktemp -d "${RUNNER_TEMP:-/tmp}/openclaw-docker-cli-tools.XXXXXX")"
+if [[ -n "${QUIET_CORE_DOCKER_CLI_TOOLS_DIR:-}" ]]; then
+  CLI_TOOLS_DIR="${QUIET_CORE_DOCKER_CLI_TOOLS_DIR}"
+elif quiet_core_bot_live_is_ci; then
+  CLI_TOOLS_DIR="$(mktemp -d "${RUNNER_TEMP:-/tmp}/quiet-core-bot-docker-cli-tools.XXXXXX")"
   TEMP_DIRS+=("$CLI_TOOLS_DIR")
 else
-  CLI_TOOLS_DIR="$HOME/.cache/openclaw/docker-cli-tools"
+  CLI_TOOLS_DIR="$HOME/.cache/quiet-core-bot/docker-cli-tools"
 fi
-if [[ -n "${OPENCLAW_DOCKER_CACHE_HOME_DIR:-}" ]]; then
-  CACHE_HOME_DIR="${OPENCLAW_DOCKER_CACHE_HOME_DIR}"
-elif openclaw_live_is_ci; then
-  CACHE_HOME_DIR="$(mktemp -d "${RUNNER_TEMP:-/tmp}/openclaw-docker-cache.XXXXXX")"
+if [[ -n "${QUIET_CORE_DOCKER_CACHE_HOME_DIR:-}" ]]; then
+  CACHE_HOME_DIR="${QUIET_CORE_DOCKER_CACHE_HOME_DIR}"
+elif quiet_core_bot_live_is_ci; then
+  CACHE_HOME_DIR="$(mktemp -d "${RUNNER_TEMP:-/tmp}/quiet-core-bot-docker-cache.XXXXXX")"
   TEMP_DIRS+=("$CACHE_HOME_DIR")
 else
-  CACHE_HOME_DIR="$HOME/.cache/openclaw/docker-cache"
+  CACHE_HOME_DIR="$HOME/.cache/quiet-core-bot/docker-cache"
 fi
 
-openclaw_live_prepare_bind_dir_for_container_user "$CLI_TOOLS_DIR"
-openclaw_live_prepare_bind_dir_for_container_user "$CACHE_HOME_DIR"
-if openclaw_live_uses_managed_bind_dirs; then
+quiet_core_bot_live_prepare_bind_dir_for_container_user "$CLI_TOOLS_DIR"
+quiet_core_bot_live_prepare_bind_dir_for_container_user "$CACHE_HOME_DIR"
+if quiet_core_bot_live_uses_managed_bind_dirs; then
   DOCKER_USER="$(id -u):$(id -g)"
 fi
 
@@ -98,7 +98,7 @@ if [[ -f "$PROFILE_FILE" && -r "$PROFILE_FILE" ]]; then
   PROFILE_STATUS="$PROFILE_FILE"
 fi
 
-openclaw_live_acp_bind_load_factory_api_key_from_profile() {
+quiet_core_bot_live_acp_bind_load_factory_api_key_from_profile() {
   [[ -z "${FACTORY_API_KEY:-}" ]] || return 0
   [[ -f "$PROFILE_FILE" && -r "$PROFILE_FILE" ]] || return 0
   [[ "$PROFILE_FILE" != "$HOME/.profile" ]] || return 0
@@ -131,7 +131,7 @@ mkdir -p "$NPM_CONFIG_PREFIX" "$HOME/.local/bin" "$XDG_CACHE_HOME" "$COREPACK_HO
 chmod 700 "$XDG_CACHE_HOME" "$COREPACK_HOME" "$NPM_CONFIG_CACHE" || true
 export PATH="$HOME/.local/bin:$NPM_CONFIG_PREFIX/bin:$PATH"
 run_setup_command() {
-  local timeout_value="${OPENCLAW_LIVE_ACP_BIND_SETUP_TIMEOUT_SECONDS:?missing live ACP bind setup timeout seconds}s"
+  local timeout_value="${QUIET_CORE_LIVE_ACP_BIND_SETUP_TIMEOUT_SECONDS:?missing live ACP bind setup timeout seconds}s"
   local timeout_bin=""
   if command -v timeout >/dev/null 2>&1; then
     timeout_bin="timeout"
@@ -147,9 +147,9 @@ run_setup_command() {
     "$timeout_bin" "$timeout_value" "$@"
   fi
 }
-if [ "${OPENCLAW_DOCKER_AUTH_PRESTAGED:-0}" != "1" ]; then
-  IFS=',' read -r -a auth_dirs <<<"${OPENCLAW_DOCKER_AUTH_DIRS_RESOLVED:-}"
-  IFS=',' read -r -a auth_files <<<"${OPENCLAW_DOCKER_AUTH_FILES_RESOLVED:-}"
+if [ "${QUIET_CORE_DOCKER_AUTH_PRESTAGED:-0}" != "1" ]; then
+  IFS=',' read -r -a auth_dirs <<<"${QUIET_CORE_DOCKER_AUTH_DIRS_RESOLVED:-}"
+  IFS=',' read -r -a auth_files <<<"${QUIET_CORE_DOCKER_AUTH_FILES_RESOLVED:-}"
   if ((${#auth_dirs[@]} > 0)); then
     for auth_dir in "${auth_dirs[@]}"; do
       [ -n "$auth_dir" ] || continue
@@ -171,7 +171,7 @@ if [ "${OPENCLAW_DOCKER_AUTH_PRESTAGED:-0}" != "1" ]; then
     done
   fi
 fi
-agent="${OPENCLAW_LIVE_ACP_BIND_AGENT:-claude}"
+agent="${QUIET_CORE_LIVE_ACP_BIND_AGENT:-claude}"
 case "$agent" in
   claude)
     if [ ! -x "$NPM_CONFIG_PREFIX/bin/claude" ]; then
@@ -185,11 +185,11 @@ case "$agent" in
       cat > "$NPM_CONFIG_PREFIX/bin/claude" <<WRAP
 #!/usr/bin/env bash
 script_dir="\$(CDPATH= cd -- "\$(dirname -- "\$0")" && pwd)"
-if [ -n "\${OPENCLAW_LIVE_ACP_BIND_ANTHROPIC_API_KEY:-}" ]; then
-  export ANTHROPIC_API_KEY="\${OPENCLAW_LIVE_ACP_BIND_ANTHROPIC_API_KEY}"
+if [ -n "\${QUIET_CORE_LIVE_ACP_BIND_ANTHROPIC_API_KEY:-}" ]; then
+  export ANTHROPIC_API_KEY="\${QUIET_CORE_LIVE_ACP_BIND_ANTHROPIC_API_KEY}"
 fi
-if [ -n "\${OPENCLAW_LIVE_ACP_BIND_ANTHROPIC_API_KEY_OLD:-}" ]; then
-  export ANTHROPIC_API_KEY_OLD="\${OPENCLAW_LIVE_ACP_BIND_ANTHROPIC_API_KEY_OLD}"
+if [ -n "\${QUIET_CORE_LIVE_ACP_BIND_ANTHROPIC_API_KEY_OLD:-}" ]; then
+  export ANTHROPIC_API_KEY_OLD="\${QUIET_CORE_LIVE_ACP_BIND_ANTHROPIC_API_KEY_OLD}"
 fi
 exec "\$script_dir/claude-real" "\$@"
 WRAP
@@ -251,100 +251,100 @@ NODE
       run_setup_command npm install -g opencode-ai
     fi
     export OPENCODE_CONFIG_CONTENT="$(
-      node -e 'process.stdout.write(JSON.stringify({model: process.env.OPENCLAW_LIVE_ACP_BIND_OPENCODE_MODEL || "opencode/kimi-k2.6"}))'
+      node -e 'process.stdout.write(JSON.stringify({model: process.env.QUIET_CORE_LIVE_ACP_BIND_OPENCODE_MODEL || "opencode/kimi-k2.6"}))'
     )"
     ;;
   *)
-    echo "Unsupported OPENCLAW_LIVE_ACP_BIND_AGENT: $agent" >&2
+    echo "Unsupported QUIET_CORE_LIVE_ACP_BIND_AGENT: $agent" >&2
     exit 1
     ;;
 esac
 tmp_dir="$(mktemp -d)"
-trusted_scripts_dir="${OPENCLAW_LIVE_DOCKER_SCRIPTS_DIR:-/src/scripts}"
+trusted_scripts_dir="${QUIET_CORE_LIVE_DOCKER_SCRIPTS_DIR:-/src/scripts}"
 source "$trusted_scripts_dir/lib/live-docker-stage.sh"
-openclaw_live_stage_source_tree "$tmp_dir"
-openclaw_live_stage_node_modules "$tmp_dir"
-openclaw_live_link_runtime_tree "$tmp_dir"
-openclaw_live_stage_state_dir "$tmp_dir/.openclaw-state"
-openclaw_live_prepare_staged_config
+quiet_core_bot_live_stage_source_tree "$tmp_dir"
+quiet_core_bot_live_stage_node_modules "$tmp_dir"
+quiet_core_bot_live_link_runtime_tree "$tmp_dir"
+quiet_core_bot_live_stage_state_dir "$tmp_dir/.quiet-core-bot-state"
+quiet_core_bot_live_prepare_staged_config
 cd "$tmp_dir"
-export OPENCLAW_LIVE_ACP_BIND_AGENT_COMMAND="${OPENCLAW_LIVE_ACP_BIND_AGENT_COMMAND:-}"
-node scripts/test-live.mjs -- ${OPENCLAW_LIVE_ACP_BIND_TEST_FILES:-src/gateway/gateway-acp-bind.live.test.ts}
+export QUIET_CORE_LIVE_ACP_BIND_AGENT_COMMAND="${QUIET_CORE_LIVE_ACP_BIND_AGENT_COMMAND:-}"
+node scripts/test-live.mjs -- ${QUIET_CORE_LIVE_ACP_BIND_TEST_FILES:-src/gateway/gateway-acp-bind.live.test.ts}
 EOF
 
-openclaw_live_acp_bind_append_build_extension acpx
-OPENCLAW_LIVE_DOCKER_REPO_ROOT="$ROOT_DIR" "$TRUSTED_HARNESS_DIR/scripts/test-live-build-docker.sh"
+quiet_core_bot_live_acp_bind_append_build_extension acpx
+QUIET_CORE_LIVE_DOCKER_REPO_ROOT="$ROOT_DIR" "$TRUSTED_HARNESS_DIR/scripts/test-live-build-docker.sh"
 
 IFS=',' read -r -a ACP_AGENT_TOKENS <<<"$ACP_AGENT_LIST_RAW"
 ACP_AGENTS=()
 for token in "${ACP_AGENT_TOKENS[@]}"; do
-  agent="$(openclaw_live_trim "$token")"
+  agent="$(quiet_core_bot_live_trim "$token")"
   [[ -n "$agent" ]] || continue
-  openclaw_live_acp_bind_resolve_auth_provider "$agent" >/dev/null
+  quiet_core_bot_live_acp_bind_resolve_auth_provider "$agent" >/dev/null
   ACP_AGENTS+=("$agent")
 done
 
 if ((${#ACP_AGENTS[@]} == 0)); then
-  echo "No ACP bind agents selected. Use OPENCLAW_LIVE_ACP_BIND_AGENTS=claude,codex,droid,gemini,opencode." >&2
+  echo "No ACP bind agents selected. Use QUIET_CORE_LIVE_ACP_BIND_AGENTS=claude,codex,droid,gemini,opencode." >&2
   exit 1
 fi
 
 for ACP_AGENT in "${ACP_AGENTS[@]}"; do
-  AUTH_PROVIDER="$(openclaw_live_acp_bind_resolve_auth_provider "$ACP_AGENT")"
-  AGENT_COMMAND="$(openclaw_live_acp_bind_resolve_agent_command "$ACP_AGENT")"
+  AUTH_PROVIDER="$(quiet_core_bot_live_acp_bind_resolve_auth_provider "$ACP_AGENT")"
+  AGENT_COMMAND="$(quiet_core_bot_live_acp_bind_resolve_agent_command "$ACP_AGENT")"
 
   AUTH_DIRS=()
   AUTH_FILES=()
-  if [[ -n "${OPENCLAW_DOCKER_AUTH_DIRS:-}" ]]; then
+  if [[ -n "${QUIET_CORE_DOCKER_AUTH_DIRS:-}" ]]; then
     while IFS= read -r auth_dir; do
       [[ -n "$auth_dir" ]] || continue
       AUTH_DIRS+=("$auth_dir")
-    done < <(openclaw_live_collect_auth_dirs)
+    done < <(quiet_core_bot_live_collect_auth_dirs)
     while IFS= read -r auth_file; do
       [[ -n "$auth_file" ]] || continue
       AUTH_FILES+=("$auth_file")
-    done < <(openclaw_live_collect_auth_files)
+    done < <(quiet_core_bot_live_collect_auth_files)
   else
     while IFS= read -r auth_dir; do
       [[ -n "$auth_dir" ]] || continue
       AUTH_DIRS+=("$auth_dir")
-    done < <(openclaw_live_collect_auth_dirs_from_csv "$AUTH_PROVIDER")
+    done < <(quiet_core_bot_live_collect_auth_dirs_from_csv "$AUTH_PROVIDER")
     while IFS= read -r auth_file; do
       [[ -n "$auth_file" ]] || continue
       AUTH_FILES+=("$auth_file")
-    done < <(openclaw_live_collect_auth_files_from_csv "$AUTH_PROVIDER")
+    done < <(quiet_core_bot_live_collect_auth_files_from_csv "$AUTH_PROVIDER")
   fi
 
   AUTH_DIRS_CSV=""
   if ((${#AUTH_DIRS[@]} > 0)); then
-    AUTH_DIRS_CSV="$(openclaw_live_join_csv "${AUTH_DIRS[@]}")"
+    AUTH_DIRS_CSV="$(quiet_core_bot_live_join_csv "${AUTH_DIRS[@]}")"
   fi
   AUTH_FILES_CSV=""
   if ((${#AUTH_FILES[@]} > 0)); then
-    AUTH_FILES_CSV="$(openclaw_live_join_csv "${AUTH_FILES[@]}")"
+    AUTH_FILES_CSV="$(quiet_core_bot_live_join_csv "${AUTH_FILES[@]}")"
   fi
 
   DOCKER_HOME_MOUNT=()
   DOCKER_AUTH_PRESTAGED=0
-  if openclaw_live_uses_managed_bind_dirs; then
-    DOCKER_HOME_DIR="$(mktemp -d "${RUNNER_TEMP:-/tmp}/openclaw-docker-home.XXXXXX")"
+  if quiet_core_bot_live_uses_managed_bind_dirs; then
+    DOCKER_HOME_DIR="$(mktemp -d "${RUNNER_TEMP:-/tmp}/quiet-core-bot-docker-home.XXXXXX")"
     TEMP_DIRS+=("$DOCKER_HOME_DIR")
-    openclaw_live_prepare_bind_dir_for_container_user "$DOCKER_HOME_DIR"
+    quiet_core_bot_live_prepare_bind_dir_for_container_user "$DOCKER_HOME_DIR"
     DOCKER_HOME_MOUNT=(-v "$DOCKER_HOME_DIR":/home/node)
     if [[ -f "$PROFILE_FILE" && -r "$PROFILE_FILE" ]]; then
-      openclaw_live_stage_profile_into_home "$DOCKER_HOME_DIR" "$PROFILE_FILE"
+      quiet_core_bot_live_stage_profile_into_home "$DOCKER_HOME_DIR" "$PROFILE_FILE"
     fi
   elif [[ -f "$PROFILE_FILE" && -r "$PROFILE_FILE" ]]; then
     PROFILE_MOUNT=(-v "$PROFILE_FILE":/home/node/.profile:ro)
   fi
 
   if [[ -n "${DOCKER_HOME_DIR:-}" ]]; then
-    openclaw_live_stage_auth_into_home "$DOCKER_HOME_DIR" "${AUTH_DIRS[@]}" --files "${AUTH_FILES[@]}"
+    quiet_core_bot_live_stage_auth_into_home "$DOCKER_HOME_DIR" "${AUTH_DIRS[@]}" --files "${AUTH_FILES[@]}"
     DOCKER_AUTH_PRESTAGED=1
   fi
 
   if [[ "$ACP_AGENT" == "droid" ]]; then
-    openclaw_live_acp_bind_load_factory_api_key_from_profile
+    quiet_core_bot_live_acp_bind_load_factory_api_key_from_profile
   fi
   if [[ "$ACP_AGENT" == "droid" && -z "${FACTORY_API_KEY:-}" ]]; then
     echo "==> Run ACP bind live test in Docker"
@@ -359,7 +359,7 @@ for ACP_AGENT in "${ACP_AGENTS[@]}"; do
   EXTERNAL_AUTH_MOUNTS=()
   if ((${#AUTH_DIRS[@]} > 0)); then
     for auth_dir in "${AUTH_DIRS[@]}"; do
-      auth_dir="$(openclaw_live_validate_relative_home_path "$auth_dir")"
+      auth_dir="$(quiet_core_bot_live_validate_relative_home_path "$auth_dir")"
       host_path="$HOME/$auth_dir"
       if [[ -d "$host_path" ]]; then
         EXTERNAL_AUTH_MOUNTS+=(-v "$host_path":/host-auth/"$auth_dir":ro)
@@ -368,7 +368,7 @@ for ACP_AGENT in "${ACP_AGENTS[@]}"; do
   fi
   if ((${#AUTH_FILES[@]} > 0)); then
     for auth_file in "${AUTH_FILES[@]}"; do
-      auth_file="$(openclaw_live_validate_relative_home_path "$auth_file")"
+      auth_file="$(quiet_core_bot_live_validate_relative_home_path "$auth_file")"
       host_path="$HOME/$auth_file"
       if [[ -f "$host_path" ]]; then
         EXTERNAL_AUTH_MOUNTS+=(-v "$host_path":/host-auth-files/"$auth_file":ro)
@@ -378,12 +378,12 @@ for ACP_AGENT in "${ACP_AGENTS[@]}"; do
 
   echo "==> Run ACP bind live test in Docker"
   echo "==> Agent: $ACP_AGENT"
-  echo "==> Test files: ${OPENCLAW_LIVE_ACP_BIND_TEST_FILES:-src/gateway/gateway-acp-bind.live.test.ts}"
+  echo "==> Test files: ${QUIET_CORE_LIVE_ACP_BIND_TEST_FILES:-src/gateway/gateway-acp-bind.live.test.ts}"
   echo "==> Profile file: $PROFILE_STATUS"
   echo "==> Auth dirs: ${AUTH_DIRS_CSV:-none}"
   echo "==> Auth files: ${AUTH_FILES_CSV:-none}"
-  if openclaw_live_uses_managed_bind_dirs; then
-    openclaw_live_chown_bind_dirs_for_container_user \
+  if quiet_core_bot_live_uses_managed_bind_dirs; then
+    quiet_core_bot_live_chown_bind_dirs_for_container_user \
       "$LIVE_IMAGE_NAME" \
       "$DOCKER_USER" \
       "$CLI_TOOLS_DIR" \
@@ -391,14 +391,14 @@ for ACP_AGENT in "${ACP_AGENTS[@]}"; do
       "${DOCKER_HOME_DIR:-}"
   fi
   DOCKER_RUN_ARGS=()
-  openclaw_live_init_docker_run_args DOCKER_RUN_ARGS "${OPENCLAW_LIVE_ACP_BIND_DOCKER_RUN_TIMEOUT:-2700s}"
+  quiet_core_bot_live_init_docker_run_args DOCKER_RUN_ARGS "${QUIET_CORE_LIVE_ACP_BIND_DOCKER_RUN_TIMEOUT:-2700s}"
   DOCKER_RUN_ARGS+=(--rm -t \
     -u "$DOCKER_USER" \
     --entrypoint bash \
     -e ANTHROPIC_API_KEY \
     -e ANTHROPIC_API_KEY_OLD \
-    -e OPENCLAW_LIVE_ACP_BIND_ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY:-}" \
-    -e OPENCLAW_LIVE_ACP_BIND_ANTHROPIC_API_KEY_OLD="${ANTHROPIC_API_KEY_OLD:-}" \
+    -e QUIET_CORE_LIVE_ACP_BIND_ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY:-}" \
+    -e QUIET_CORE_LIVE_ACP_BIND_ANTHROPIC_API_KEY_OLD="${ANTHROPIC_API_KEY_OLD:-}" \
     -e GEMINI_API_KEY \
     -e GOOGLE_API_KEY \
     -e FACTORY_API_KEY \
@@ -411,38 +411,38 @@ for ACP_AGENT in "${ACP_AGENTS[@]}"; do
     -e OPENCODE_CONFIG_CONTENT \
     -e COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
     -e HOME=/home/node \
-    -e NODE_OPTIONS="$(openclaw_live_container_node_options)" \
-    -e OPENCLAW_SKIP_CHANNELS=1 \
-    -e OPENCLAW_VITEST_FS_MODULE_CACHE=0 \
-    -e OPENCLAW_DOCKER_AUTH_PRESTAGED="$DOCKER_AUTH_PRESTAGED" \
-    -e OPENCLAW_DOCKER_AUTH_DIRS_RESOLVED="$AUTH_DIRS_CSV" \
-    -e OPENCLAW_DOCKER_AUTH_FILES_RESOLVED="$AUTH_FILES_CSV" \
-    -e OPENCLAW_LIVE_DOCKER_SCRIPTS_DIR="${DOCKER_TRUSTED_HARNESS_CONTAINER_DIR}/scripts" \
-    -e OPENCLAW_LIVE_DOCKER_SOURCE_STAGE_MODE="${OPENCLAW_LIVE_DOCKER_SOURCE_STAGE_MODE:-copy}" \
-    -e OPENCLAW_LIVE_TEST=1 \
-    -e OPENCLAW_LIVE_ACP_BIND=1 \
-    -e OPENCLAW_LIVE_ACP_BIND_AGENT="$ACP_AGENT" \
-    -e OPENCLAW_LIVE_ACP_BIND_TEST_FILES="${OPENCLAW_LIVE_ACP_BIND_TEST_FILES:-}" \
-    -e OPENCLAW_LIVE_ACP_BIND_CODEX_MODEL="${OPENCLAW_LIVE_ACP_BIND_CODEX_MODEL:-}" \
-    -e OPENCLAW_LIVE_ACP_BIND_SETUP_TIMEOUT_SECONDS="$ACP_SETUP_TIMEOUT_SECONDS" \
-    -e OPENCLAW_LIVE_ACP_BIND_OPENCODE_MODEL="${OPENCLAW_LIVE_ACP_BIND_OPENCODE_MODEL:-opencode/kimi-k2.6}" \
-    -e OPENCLAW_LIVE_ACP_SPAWN_DEFAULTS="${OPENCLAW_LIVE_ACP_SPAWN_DEFAULTS:-}" \
-    -e OPENCLAW_LIVE_ACP_SPAWN_DEFAULTS_AGENT="${OPENCLAW_LIVE_ACP_SPAWN_DEFAULTS_AGENT:-}" \
-    -e OPENCLAW_LIVE_ACP_SPAWN_DEFAULTS_CONNECT_TIMEOUT_MS="${OPENCLAW_LIVE_ACP_SPAWN_DEFAULTS_CONNECT_TIMEOUT_MS:-}" \
-    -e OPENCLAW_LIVE_ACP_SPAWN_DEFAULTS_MODEL="${OPENCLAW_LIVE_ACP_SPAWN_DEFAULTS_MODEL:-}" \
-    -e OPENCLAW_LIVE_ACP_SPAWN_DEFAULTS_THINKING="${OPENCLAW_LIVE_ACP_SPAWN_DEFAULTS_THINKING:-}" \
-    -e OPENCLAW_LIVE_ACP_SPAWN_DEFAULTS_TIMEOUT_MS="${OPENCLAW_LIVE_ACP_SPAWN_DEFAULTS_TIMEOUT_MS:-}" \
-    -e OPENCLAW_LIVE_ACP_BIND_AGENT_COMMAND="$AGENT_COMMAND")
-  openclaw_live_append_array DOCKER_RUN_ARGS DOCKER_HOME_MOUNT
-  openclaw_live_append_array DOCKER_RUN_ARGS DOCKER_TRUSTED_HARNESS_MOUNT
+    -e NODE_OPTIONS="$(quiet_core_bot_live_container_node_options)" \
+    -e QUIET_CORE_SKIP_CHANNELS=1 \
+    -e QUIET_CORE_VITEST_FS_MODULE_CACHE=0 \
+    -e QUIET_CORE_DOCKER_AUTH_PRESTAGED="$DOCKER_AUTH_PRESTAGED" \
+    -e QUIET_CORE_DOCKER_AUTH_DIRS_RESOLVED="$AUTH_DIRS_CSV" \
+    -e QUIET_CORE_DOCKER_AUTH_FILES_RESOLVED="$AUTH_FILES_CSV" \
+    -e QUIET_CORE_LIVE_DOCKER_SCRIPTS_DIR="${DOCKER_TRUSTED_HARNESS_CONTAINER_DIR}/scripts" \
+    -e QUIET_CORE_LIVE_DOCKER_SOURCE_STAGE_MODE="${QUIET_CORE_LIVE_DOCKER_SOURCE_STAGE_MODE:-copy}" \
+    -e QUIET_CORE_LIVE_TEST=1 \
+    -e QUIET_CORE_LIVE_ACP_BIND=1 \
+    -e QUIET_CORE_LIVE_ACP_BIND_AGENT="$ACP_AGENT" \
+    -e QUIET_CORE_LIVE_ACP_BIND_TEST_FILES="${QUIET_CORE_LIVE_ACP_BIND_TEST_FILES:-}" \
+    -e QUIET_CORE_LIVE_ACP_BIND_CODEX_MODEL="${QUIET_CORE_LIVE_ACP_BIND_CODEX_MODEL:-}" \
+    -e QUIET_CORE_LIVE_ACP_BIND_SETUP_TIMEOUT_SECONDS="$ACP_SETUP_TIMEOUT_SECONDS" \
+    -e QUIET_CORE_LIVE_ACP_BIND_OPENCODE_MODEL="${QUIET_CORE_LIVE_ACP_BIND_OPENCODE_MODEL:-opencode/kimi-k2.6}" \
+    -e QUIET_CORE_LIVE_ACP_SPAWN_DEFAULTS="${QUIET_CORE_LIVE_ACP_SPAWN_DEFAULTS:-}" \
+    -e QUIET_CORE_LIVE_ACP_SPAWN_DEFAULTS_AGENT="${QUIET_CORE_LIVE_ACP_SPAWN_DEFAULTS_AGENT:-}" \
+    -e QUIET_CORE_LIVE_ACP_SPAWN_DEFAULTS_CONNECT_TIMEOUT_MS="${QUIET_CORE_LIVE_ACP_SPAWN_DEFAULTS_CONNECT_TIMEOUT_MS:-}" \
+    -e QUIET_CORE_LIVE_ACP_SPAWN_DEFAULTS_MODEL="${QUIET_CORE_LIVE_ACP_SPAWN_DEFAULTS_MODEL:-}" \
+    -e QUIET_CORE_LIVE_ACP_SPAWN_DEFAULTS_THINKING="${QUIET_CORE_LIVE_ACP_SPAWN_DEFAULTS_THINKING:-}" \
+    -e QUIET_CORE_LIVE_ACP_SPAWN_DEFAULTS_TIMEOUT_MS="${QUIET_CORE_LIVE_ACP_SPAWN_DEFAULTS_TIMEOUT_MS:-}" \
+    -e QUIET_CORE_LIVE_ACP_BIND_AGENT_COMMAND="$AGENT_COMMAND")
+  quiet_core_bot_live_append_array DOCKER_RUN_ARGS DOCKER_HOME_MOUNT
+  quiet_core_bot_live_append_array DOCKER_RUN_ARGS DOCKER_TRUSTED_HARNESS_MOUNT
   DOCKER_RUN_ARGS+=(\
     -v "$CACHE_HOME_DIR":/home/node/.cache \
     -v "$ROOT_DIR":/src:ro \
-    -v "$CONFIG_DIR":/home/node/.openclaw \
-    -v "$WORKSPACE_DIR":/home/node/.openclaw/workspace \
+    -v "$CONFIG_DIR":/home/node/.quiet-core-bot \
+    -v "$WORKSPACE_DIR":/home/node/.quiet-core-bot/workspace \
     -v "$CLI_TOOLS_DIR":/home/node/.npm-global)
-  openclaw_live_append_array DOCKER_RUN_ARGS EXTERNAL_AUTH_MOUNTS
-  openclaw_live_append_array DOCKER_RUN_ARGS PROFILE_MOUNT
+  quiet_core_bot_live_append_array DOCKER_RUN_ARGS EXTERNAL_AUTH_MOUNTS
+  quiet_core_bot_live_append_array DOCKER_RUN_ARGS PROFILE_MOUNT
   DOCKER_RUN_ARGS+=(\
     "$LIVE_IMAGE_NAME" \
     -lc "$LIVE_TEST_CMD")

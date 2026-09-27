@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { ChunkMode } from "openclaw/plugin-sdk/reply-runtime";
+import type { ChunkMode } from "quiet-core-bot/plugin-sdk/reply-runtime";
 import { describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig, PluginRuntime } from "../../runtime-api.js";
 import {
@@ -225,9 +225,9 @@ describe("deliverMattermostReplyPayload", () => {
   });
 
   it("passes agent-scoped mediaLocalRoots when sending media paths", async () => {
-    const previousStateDir = process.env.OPENCLAW_STATE_DIR;
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-mm-state-"));
-    process.env.OPENCLAW_STATE_DIR = stateDir;
+    const previousStateDir = process.env.QUIET_CORE_STATE_DIR;
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-mm-state-"));
+    process.env.QUIET_CORE_STATE_DIR = stateDir;
 
     try {
       const sendMessage = vi.fn(async () => undefined);
@@ -266,9 +266,9 @@ describe("deliverMattermostReplyPayload", () => {
       });
     } finally {
       if (previousStateDir === undefined) {
-        delete process.env.OPENCLAW_STATE_DIR;
+        delete process.env.QUIET_CORE_STATE_DIR;
       } else {
-        process.env.OPENCLAW_STATE_DIR = previousStateDir;
+        process.env.QUIET_CORE_STATE_DIR = previousStateDir;
       }
       await fs.rm(stateDir, { recursive: true, force: true });
     }

@@ -34,7 +34,7 @@ function parseArgs(args: string[]): Options {
         if (arg !== "--help" && arg !== "-h") {
           throw new Error(`Unknown qa parity-report option: ${arg}`);
         }
-        process.stdout.write(`Usage: openclaw qa parity-report [options]
+        process.stdout.write(`Usage: quiet-core-bot qa parity-report [options]
 
 Options:
   --candidate-summary <path>  Candidate qa-suite-summary.json path

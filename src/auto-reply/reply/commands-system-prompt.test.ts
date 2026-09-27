@@ -280,7 +280,7 @@ describe("resolveCommandsSystemPromptBundle", () => {
   });
 
   it("uses materialized sandbox skill paths for sandbox command prompts", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-command-sandbox-skills-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-command-sandbox-skills-"));
     try {
       const workspaceDir = path.join(root, "workspace");
       const skillsWorkspaceDir = path.join(root, "state", "sandbox-skills");
@@ -314,7 +314,7 @@ describe("resolveCommandsSystemPromptBundle", () => {
       vi.mocked(resolveReusableWorkspaceSkillSnapshot).mockReturnValue({
         snapshot: {
           prompt:
-            "<available_skills>~/.npm-global/lib/node_modules/openclaw/skills/gog/SKILL.md</available_skills>",
+            "<available_skills>~/.npm-global/lib/node_modules/quiet-core-bot/skills/gog/SKILL.md</available_skills>",
           skills: [],
           resolvedSkills: [],
         },
@@ -325,7 +325,7 @@ describe("resolveCommandsSystemPromptBundle", () => {
       const result = await resolveCommandsSystemPromptBundle(params);
 
       expect(result.skillsPrompt).toContain(
-        "/workspace/.openclaw/sandbox-skills/skills/gog/SKILL.md",
+        "/workspace/.quiet-core-bot/sandbox-skills/skills/gog/SKILL.md",
       );
       expect(result.skillsPrompt).not.toContain("~/.npm-global");
       expect(vi.mocked(resolveReusableWorkspaceSkillSnapshot)).not.toHaveBeenCalled();
@@ -334,7 +334,7 @@ describe("resolveCommandsSystemPromptBundle", () => {
         "buildAgentSystemPrompt",
       );
       expect(promptParams.skillsPrompt).toContain(
-        "/workspace/.openclaw/sandbox-skills/skills/gog/SKILL.md",
+        "/workspace/.quiet-core-bot/sandbox-skills/skills/gog/SKILL.md",
       );
       expect(String(promptParams.skillsPrompt)).not.toContain("~/.npm-global");
     } finally {

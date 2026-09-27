@@ -5,14 +5,14 @@
  */
 import { spawn } from "node:child_process";
 import os from "node:os";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
+import { isRecord } from "@quiet-core/normalization-core/record-coerce";
 import {
   normalizeStringEntries,
   uniqueStrings,
   uniqueValues,
-} from "@openclaw/normalization-core/string-normalization";
+} from "@quiet-core/normalization-core/string-normalization";
 import { Type } from "typebox";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { getPluginToolMeta, type PluginToolMcpMeta } from "../plugins/tools.js";
 import {
   isToolWrappedWithBeforeToolCallHook,
@@ -50,7 +50,7 @@ const MAX_TOOL_SCHEMA_DIRECTORY_PROMPT_CHARS = 18_000;
 const TOOL_DIRECTORY_IDENTIFIER_RE = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/u;
 
 type ToolSearchMode = "code" | "tools" | "directory";
-type CatalogSource = "openclaw" | "mcp" | "client";
+type CatalogSource = "quiet-core-bot" | "mcp" | "client";
 type CatalogTool = AnyAgentTool | ToolDefinition;
 type CatalogVisibilityOptions = {
   includeMcp?: boolean;
@@ -249,7 +249,7 @@ function settleBridge(message) {
 }
 
 function buildModelScriptSource(code) {
-  return "(async (quiet-core-bot, console) => {\n" + code + "\n})(quiet-core-bot, console)";
+  return "(async (openclaw, console) => {\n" + code + "\n})(openclaw, console)";
 }
 
 function buildControllerSource() {
@@ -311,7 +311,7 @@ function buildControllerSource() {
     "  }),\n" +
     "});\n" +
     "return Object.freeze({\n" +
-    "  quiet-core-bot,\n" +
+    "  openclaw,\n" +
     "  console,\n" +
     "  isBridgeIdle,\n" +
     "  waitForBridgeIdle,\n" +
@@ -412,7 +412,7 @@ process.on("message", (message) => {
 });
 `;
 
-const SESSION_CATALOGS_KEY = Symbol.for("openclaw.toolSearch.sessionCatalogs");
+const SESSION_CATALOGS_KEY = Symbol.for("quiet-core-bot.toolSearch.sessionCatalogs");
 const globalToolSearchState = globalThis as typeof globalThis & {
   [SESSION_CATALOGS_KEY]?: Map<string, ToolSearchCatalogSession>;
 };
@@ -663,9 +663,9 @@ function classifyTool(tool: CatalogTool): {
     };
   }
   if (pluginId) {
-    return { source: "openclaw", sourceName: pluginId };
+    return { source: "quiet-core-bot", sourceName: pluginId };
   }
-  return { source: "openclaw", sourceName: "core" };
+  return { source: "quiet-core-bot", sourceName: "core" };
 }
 
 function makeCatalogId(tool: CatalogTool, source: CatalogSource, sourceName?: string): string {
@@ -1139,7 +1139,7 @@ function formatToolDirectoryIdentifier(value: string | undefined): string | unde
 }
 
 function formatToolDirectoryEntry(entry: ReturnType<typeof compactEntry>): string | undefined {
-  if (entry.source !== "openclaw") {
+  if (entry.source !== "quiet-core-bot") {
     return undefined;
   }
   const name = formatToolDirectoryIdentifier(entry.name);
@@ -1597,7 +1597,7 @@ function formatUnknownToolIdError(
   ).slice(0, 3);
   const recoveryText =
     options.recoverySurface === "code-mode"
-      ? "Use openclaw.tools.search to find a tool, openclaw.tools.describe to inspect it, then openclaw.tools.call with the exact id or name."
+      ? "Use quiet-core-bot.tools.search to find a tool, quiet-core-bot.tools.describe to inspect it, then quiet-core-bot.tools.call with the exact id or name."
       : options.recoverySurface === "tools"
         ? "Use tools.search to find a tool, tools.describe to inspect it, then tools.call with the exact id or name."
         : "Use tool_search to find a tool, tool_describe to inspect it, then tool_call with the exact id or name.";
@@ -1688,7 +1688,7 @@ function readCallArgs(args: unknown): { id: string; input: unknown } {
 
 function getTelemetry(catalog: ToolSearchCatalogSession) {
   const sources: Record<CatalogSource, number> = {
-    openclaw: 0,
+    "quiet-core-bot": 0,
     mcp: 0,
     client: 0,
   };
@@ -2265,11 +2265,11 @@ export function createToolSearchTools(ctx: ToolSearchToolContext): AnyAgentTool[
       name: TOOL_SEARCH_CODE_MODE_TOOL_NAME,
       label: "Tool Search Code",
       description:
-        "Run JavaScript in an isolated Node subprocess with openclaw.tools.search, openclaw.tools.describe, and openclaw.tools.call for large tool catalogs.",
+        "Run JavaScript in an isolated Node subprocess with quiet-core-bot.tools.search, quiet-core-bot.tools.describe, and quiet-core-bot.tools.call for large tool catalogs.",
       parameters: Type.Object({
         code: Type.String({
           description:
-            "JavaScript body for an async function. Use return to return the final value. The openclaw.tools bridge is available.",
+            "JavaScript body for an async function. Use return to return the final value. The quiet-core-bot.tools bridge is available.",
         }),
       }),
       execute: async (

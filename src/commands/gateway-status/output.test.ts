@@ -93,7 +93,7 @@ function createReachableTarget(
   id: string,
   self: GatewayStatusProbedTarget["self"],
   target?: Partial<GatewayStatusProbedTarget["target"]>,
-  configPath = "/tmp/openclaw/config.json",
+  configPath = "/tmp/quiet-core-bot/config.json",
 ): GatewayStatusProbedTarget {
   const probe = createProbe("admin_capable", {
     ok: true,

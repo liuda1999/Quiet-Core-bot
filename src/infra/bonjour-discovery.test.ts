@@ -7,7 +7,7 @@ import {
   resolveGatewayDiscoveryEndpoint,
 } from "./bonjour-discovery.js";
 
-const WIDE_AREA_DOMAIN = "openclaw.internal.";
+const WIDE_AREA_DOMAIN = "quiet-core-bot.internal.";
 
 function collectMatching<T, U>(
   items: readonly T[],
@@ -304,7 +304,7 @@ describe("bonjour-discovery", () => {
               `"transport=gateway"`,
               `"sshPort=22"`,
               `"tailnetDns=peters-mac-studio-1.sheep-coho.ts.net"`,
-              `"cliPath=/opt/homebrew/bin/openclaw"`,
+              `"cliPath=/opt/homebrew/bin/quiet-core-bot"`,
               "",
             ].join(" "),
             stderr: "",
@@ -335,7 +335,7 @@ describe("bonjour-discovery", () => {
     expect(beacon.tailnetDns).toBe("peters-mac-studio-1.sheep-coho.ts.net");
     expect(beacon.gatewayPort).toBe(18789);
     expect(beacon.sshPort).toBe(22);
-    expect(beacon.cliPath).toBe("/opt/homebrew/bin/openclaw");
+    expect(beacon.cliPath).toBe("/opt/homebrew/bin/quiet-core-bot");
 
     expect(calls.map((c) => c.argv.slice(0, 2).join(" "))).toContain("tailscale status");
     expect(calls.map((c) => c.argv[0])).toContain("dig");
@@ -357,7 +357,7 @@ describe("bonjour-discovery", () => {
     await discoverGatewayBeacons({
       platform: "darwin",
       timeoutMs: 1,
-      domains: ["local", "openclaw.internal"],
+      domains: ["local", "quiet-core-bot.internal"],
       run: run as unknown as typeof runCommandWithTimeout,
     });
 
@@ -367,7 +367,7 @@ describe("bonjour-discovery", () => {
       (c) => c[3],
     );
     expect(browseDomains).toContain("local.");
-    expect(browseDomains).toContain("openclaw.internal.");
+    expect(browseDomains).toContain("quiet-core-bot.internal.");
 
     calls.length = 0;
     await discoverGatewayBeacons({

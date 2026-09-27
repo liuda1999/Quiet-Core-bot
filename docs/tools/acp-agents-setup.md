@@ -39,7 +39,7 @@ Current acpx built-in harness aliases:
 - `kilocode`
 - `kimi`
 - `kiro`
-- `openclaw`
+- `quiet-core-bot`
 - `opencode`
 - `qwen`
 
@@ -76,9 +76,9 @@ Core ACP baseline:
       "kilocode",
       "kimi",
       "kiro",
-      "openclaw",
+      "quiet-core-bot",
       "opencode",
-      "openclaw",
+      "quiet-core-bot",
       "qwen",
     ],
     maxConcurrentSessions: 8,
@@ -125,11 +125,11 @@ See [Configuration Reference](/gateway/configuration-reference).
 
 ## Plugin setup for acpx backend
 
-Packaged installs use the official `@openclaw/acpx` runtime plugin for ACP.
+Packaged installs use the official `@quiet-core/acpx` runtime plugin for ACP.
 Install and enable it before using ACP harness sessions:
 
 ```bash
-quiet-core-bot plugins install @openclaw/acpx
+quiet-core-bot plugins install @quiet-core/acpx
 quiet-core-bot config set plugins.entries.acpx.enabled true
 ```
 
@@ -145,7 +145,7 @@ If you disabled `acpx`, denied it via `plugins.allow` / `plugins.deny`, or want
 to switch back to the packaged plugin, use the explicit package path:
 
 ```bash
-quiet-core-bot plugins install @openclaw/acpx
+quiet-core-bot plugins install @quiet-core/acpx
 quiet-core-bot config set plugins.entries.acpx.enabled true
 ```
 
@@ -165,8 +165,8 @@ Then verify backend health:
 
 By default, the `acpx` plugin registers the embedded ACP backend during Gateway
 startup and waits for the embedded runtime startup probe before the gateway
-`ready` signal. Set `OPENCLAW_ACPX_RUNTIME_STARTUP_PROBE=0` or
-`OPENCLAW_SKIP_ACPX_RUNTIME_PROBE=1` only for scripts or environments that
+`ready` signal. Set `QUIET_CORE_ACPX_RUNTIME_STARTUP_PROBE=0` or
+`QUIET_CORE_SKIP_ACPX_RUNTIME_PROBE=1` only for scripts or environments that
 intentionally keep the startup probe disabled. Run `/acp doctor` for an explicit
 on-demand probe.
 
@@ -222,10 +222,10 @@ See [Plugins](/tools/plugin).
 
 ### Automatic dependency install
 
-When you install Quiet Core bot globally with `npm install -g openclaw`, the acpx
+When you install Quiet Core bot globally with `npm install -g quiet-core-bot`, the acpx
 runtime dependencies (platform-specific binaries) are installed automatically
 via a postinstall hook. If the automatic install fails, the gateway still starts
-normally and reports the missing dependency through `openclaw acp doctor`.
+normally and reports the missing dependency through `quiet-core-bot acp doctor`.
 
 ### Plugin tools MCP bridge
 
@@ -241,7 +241,7 @@ quiet-core-bot config set plugins.entries.acpx.config.pluginToolsMcpBridge true
 
 What this does:
 
-- Injects a built-in MCP server named `openclaw-plugin-tools` into ACPX session
+- Injects a built-in MCP server named `quiet-core-bot-plugin-tools` into ACPX session
   bootstrap.
 - Exposes plugin tools already registered by installed and enabled Quiet Core bot
   plugins.
@@ -270,7 +270,7 @@ quiet-core-bot config set plugins.entries.acpx.config.openClawToolsMcpBridge tru
 
 What this does:
 
-- Injects a built-in MCP server named `openclaw-tools` into ACPX session
+- Injects a built-in MCP server named `quiet-core-bot-tools` into ACPX session
   bootstrap.
 - Exposes selected built-in Quiet Core bot tools. The initial server exposes `cron`.
 - Keeps core-tool exposure explicit and default-off.

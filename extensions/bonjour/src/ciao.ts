@@ -2,7 +2,7 @@
  * Ciao process-error classifier. It recognizes known noisy ciao failures so
  * the Bonjour plugin can suppress or repair expected mDNS lifecycle issues.
  */
-import { collectErrorGraphCandidates } from "openclaw/plugin-sdk/error-runtime";
+import { collectErrorGraphCandidates } from "quiet-core-bot/plugin-sdk/error-runtime";
 import { formatBonjourError } from "./errors.js";
 
 const CIAO_CANCELLATION_MESSAGE_RE = /^CIAO (?:ANNOUNCEMENT|PROBING) CANCELLED\b/u;

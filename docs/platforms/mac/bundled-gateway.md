@@ -8,16 +8,16 @@ title: "Gateway on macOS"
 ---
 
 Quiet Core bot.app no longer bundles Node/Bun or the Gateway runtime. The macOS app
-expects an **external** `openclaw` CLI install, does not spawn the Gateway as a
+expects an **external** `quiet-core-bot` CLI install, does not spawn the Gateway as a
 child process, and manages a per-user launchd service to keep the Gateway
 running (or attaches to an existing local Gateway if one is already running).
 
 ## Install the CLI (required for local mode)
 
-Node 24 is the default runtime on the Mac. Node 22 LTS, currently `22.19+`, still works for compatibility. Then install `openclaw` globally:
+Node 24 is the default runtime on the Mac. Node 22 LTS, currently `22.19+`, still works for compatibility. Then install `quiet-core-bot` globally:
 
 ```bash
-npm install -g openclaw@<version>
+npm install -g quiet-core-bot@<version>
 ```
 
 The macOS app's **Install CLI** button runs the same global install flow the app
@@ -28,12 +28,12 @@ detected package manager. Node remains the recommended Gateway runtime.
 
 Label:
 
-- `ai.openclaw.gateway` (or `ai.openclaw.<profile>`; legacy `com.openclaw.*` may remain)
+- `ai.quiet-core-bot.gateway` (or `ai.quiet-core-bot.<profile>`; legacy `com.openclaw.*` may remain)
 
 Plist location (per-user):
 
-- `~/Library/LaunchAgents/ai.openclaw.gateway.plist`
-  (or `~/Library/LaunchAgents/ai.openclaw.<profile>.plist`)
+- `~/Library/LaunchAgents/ai.quiet-core-bot.gateway.plist`
+  (or `~/Library/LaunchAgents/ai.quiet-core-bot.<profile>.plist`)
 
 Manager:
 
@@ -49,7 +49,7 @@ Behavior:
 
 Logging:
 
-- launchd stdout: `~/Library/Logs/openclaw/gateway.log` (profiles use `gateway-<profile>.log`)
+- launchd stdout: `~/Library/Logs/quiet-core-bot/gateway.log` (profiles use `gateway-<profile>.log`)
 - launchd stderr: suppressed
 
 ## Version compatibility
@@ -62,8 +62,8 @@ incompatible, update the global CLI to match the app version.
 ```bash
 quiet-core-bot --version
 
-OPENCLAW_SKIP_CHANNELS=1 \
-OPENCLAW_SKIP_CANVAS_HOST=1 \
+QUIET_CORE_SKIP_CHANNELS=1 \
+QUIET_CORE_SKIP_CANVAS_HOST=1 \
 quiet-core-bot gateway --port 18999 --bind loopback
 ```
 

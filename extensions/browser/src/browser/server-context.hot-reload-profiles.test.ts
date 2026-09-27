@@ -8,7 +8,7 @@ type TestProfileConfig = {
   color?: string;
   headless?: boolean;
   executablePath?: string;
-  driver?: "openclaw" | "existing-session";
+  driver?: "quiet-core-bot" | "existing-session";
 };
 type TestConfig = {
   browser: {
@@ -37,7 +37,7 @@ function buildConfig(): TestConfig {
       enabled: true,
       color: "#FF4500",
       headless: true,
-      defaultProfile: "openclaw",
+      defaultProfile: "quiet-core-bot",
       profiles: { ...mockState.cfgProfiles },
     },
   };
@@ -85,7 +85,7 @@ describe("server-context hot-reload profiles", () => {
   });
 
   it("forProfile hot-reloads newly added profiles from config", () => {
-    // Start with only openclaw profile
+    // Start with only quiet-core-bot profile
     // 1. Prime the cache by calling getRuntimeConfig() first
     const cfg = getRuntimeConfig();
     const resolved = resolveBrowserConfig(cfg.browser, cfg);
@@ -108,7 +108,7 @@ describe("server-context hot-reload profiles", () => {
       }),
     ).toBeNull();
 
-    // 2. Simulate adding a new profile to config (like user editing openclaw.json)
+    // 2. Simulate adding a new profile to config (like user editing quiet-core-bot.json)
     mockState.cfgProfiles.desktop = { cdpUrl: "http://127.0.0.1:9222", color: "#0066CC" };
 
     // 3. Verify without clearConfigCache, getRuntimeConfig() still returns stale cached value
@@ -169,7 +169,7 @@ describe("server-context hot-reload profiles", () => {
     const after = resolveBrowserProfileWithHotReload({
       current: state,
       refreshConfigFromDisk: true,
-      name: "openclaw",
+      name: "quiet-core-bot",
     });
     expect(after?.cdpPort).toBe(19999);
     expect(state.resolved.profiles.openclaw?.cdpPort).toBe(19999);
@@ -200,8 +200,8 @@ describe("server-context hot-reload profiles", () => {
     const cfg = getRuntimeConfig();
     const resolved = resolveBrowserConfig(cfg.browser, cfg);
     const openclawProfile = requireValue(
-      resolveProfile(resolved, "openclaw"),
-      "openclaw profile missing",
+      resolveProfile(resolved, "quiet-core-bot"),
+      "quiet-core-bot profile missing",
     );
     const state: BrowserServerState = {
       server: null,
@@ -209,7 +209,7 @@ describe("server-context hot-reload profiles", () => {
       resolved,
       profiles: new Map([
         [
-          "openclaw",
+          "quiet-core-bot",
           {
             profile: openclawProfile,
             running: { pid: 123 } as never,
@@ -229,7 +229,7 @@ describe("server-context hot-reload profiles", () => {
       mode: "cached",
     });
 
-    const runtime = requireValue(state.profiles.get("openclaw"), "openclaw runtime missing");
+    const runtime = requireValue(state.profiles.get("quiet-core-bot"), "quiet-core-bot runtime missing");
     expect(runtime.profile.cdpPort).toBe(19999);
     expect(runtime.lastTargetId).toBeNull();
     expect(runtime.reconcile?.reason).toContain("cdpPort");
@@ -239,8 +239,8 @@ describe("server-context hot-reload profiles", () => {
     const cfg = getRuntimeConfig();
     const resolved = resolveBrowserConfig(cfg.browser, cfg);
     const openclawProfile = requireValue(
-      resolveProfile(resolved, "openclaw"),
-      "openclaw profile missing",
+      resolveProfile(resolved, "quiet-core-bot"),
+      "quiet-core-bot profile missing",
     );
     expect(openclawProfile.headless).toBe(true);
     const state: BrowserServerState = {
@@ -249,7 +249,7 @@ describe("server-context hot-reload profiles", () => {
       resolved,
       profiles: new Map([
         [
-          "openclaw",
+          "quiet-core-bot",
           {
             profile: openclawProfile,
             running: { pid: 123 } as never,
@@ -273,7 +273,7 @@ describe("server-context hot-reload profiles", () => {
       mode: "cached",
     });
 
-    const runtime = requireValue(state.profiles.get("openclaw"), "openclaw runtime missing");
+    const runtime = requireValue(state.profiles.get("quiet-core-bot"), "quiet-core-bot runtime missing");
     expect(runtime.profile.headless).toBe(false);
     expect(runtime.lastTargetId).toBeNull();
     expect(runtime.reconcile?.reason).toContain("headless");
@@ -289,8 +289,8 @@ describe("server-context hot-reload profiles", () => {
     const cfg = getRuntimeConfig();
     const resolved = resolveBrowserConfig(cfg.browser, cfg);
     const openclawProfile = requireValue(
-      resolveProfile(resolved, "openclaw"),
-      "openclaw profile missing",
+      resolveProfile(resolved, "quiet-core-bot"),
+      "quiet-core-bot profile missing",
     );
     expect(openclawProfile.executablePath).toBe("/usr/bin/chrome-old");
     const state: BrowserServerState = {
@@ -299,7 +299,7 @@ describe("server-context hot-reload profiles", () => {
       resolved,
       profiles: new Map([
         [
-          "openclaw",
+          "quiet-core-bot",
           {
             profile: openclawProfile,
             running: { pid: 123 } as never,
@@ -323,7 +323,7 @@ describe("server-context hot-reload profiles", () => {
       mode: "cached",
     });
 
-    const runtime = requireValue(state.profiles.get("openclaw"), "openclaw runtime missing");
+    const runtime = requireValue(state.profiles.get("quiet-core-bot"), "quiet-core-bot runtime missing");
     expect(runtime.profile.executablePath).toBe("/usr/bin/chrome-new");
     expect(runtime.lastTargetId).toBeNull();
     expect(runtime.reconcile?.reason).toContain("executablePath");
@@ -398,7 +398,7 @@ describe("server-context hot-reload profiles", () => {
       resolveProfile(resolved, "remote"),
       "remote profile missing",
     );
-    expect(remoteProfile.driver).toBe("openclaw");
+    expect(remoteProfile.driver).toBe("quiet-core-bot");
     expect(remoteProfile.attachOnly).toBe(false);
     expect(remoteProfile.cdpIsLoopback).toBe(false);
     expect(remoteProfile.headless).toBe(true);
@@ -434,7 +434,7 @@ describe("server-context hot-reload profiles", () => {
     });
 
     const runtime = requireValue(state.profiles.get("remote"), "remote runtime missing");
-    expect(runtime.profile.driver).toBe("openclaw");
+    expect(runtime.profile.driver).toBe("quiet-core-bot");
     expect(runtime.profile.cdpIsLoopback).toBe(false);
     expect(runtime.profile.headless).toBe(false);
     expect(runtime.lastTargetId).toBe("tab-remote-cdp");

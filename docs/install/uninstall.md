@@ -8,7 +8,7 @@ title: "Uninstall"
 
 Two paths:
 
-- **Easy path** if `openclaw` is still installed.
+- **Easy path** if `quiet-core-bot` is still installed.
 - **Manual service removal** if the CLI is gone but the service is still running.
 
 ## Easy path (CLI still installed)
@@ -51,10 +51,10 @@ quiet-core-bot gateway uninstall
 3. Delete state + config:
 
 ```bash
-rm -rf "${OPENCLAW_STATE_DIR:-$HOME/.openclaw}"
+rm -rf "${QUIET_CORE_STATE_DIR:-$HOME/.quiet-core-bot}"
 ```
 
-If you set `OPENCLAW_CONFIG_PATH` to a custom location outside the state dir, delete that file too.
+If you set `QUIET_CORE_CONFIG_PATH` to a custom location outside the state dir, delete that file too.
 If you want to keep a workspace inside the state dir, such as `~/.quiet-core-bot/workspace`, move it aside before running `rm -rf` or delete state contents selectively.
 
 4. Delete your workspace (optional, removes agent files):
@@ -66,9 +66,9 @@ rm -rf ~/.quiet-core-bot/workspace
 5. Remove the CLI install (pick the one you used):
 
 ```bash
-npm rm -g openclaw
-pnpm remove -g openclaw
-bun remove -g openclaw
+npm rm -g quiet-core-bot
+pnpm remove -g quiet-core-bot
+bun remove -g quiet-core-bot
 ```
 
 6. If you installed the macOS app:
@@ -79,31 +79,31 @@ rm -rf /Applications/Quiet Core bot.app
 
 Notes:
 
-- If you used profiles (`--profile` / `OPENCLAW_PROFILE`), repeat step 3 for each state dir (defaults are `~/.quiet-core-bot-<profile>`).
+- If you used profiles (`--profile` / `QUIET_CORE_PROFILE`), repeat step 3 for each state dir (defaults are `~/.quiet-core-bot-<profile>`).
 - In remote mode, the state dir lives on the **gateway host**, so run steps 1-4 there too.
 
 ## Manual service removal (CLI not installed)
 
-Use this if the gateway service keeps running but `openclaw` is missing.
+Use this if the gateway service keeps running but `quiet-core-bot` is missing.
 
 ### macOS (launchd)
 
-Default label is `ai.openclaw.gateway` (or `ai.openclaw.<profile>`; legacy `com.openclaw.*` may still exist):
+Default label is `ai.quiet-core-bot.gateway` (or `ai.quiet-core-bot.<profile>`; legacy `com.openclaw.*` may still exist):
 
 ```bash
-launchctl bootout gui/$UID/ai.openclaw.gateway
-rm -f ~/Library/LaunchAgents/ai.openclaw.gateway.plist
+launchctl bootout gui/$UID/ai.quiet-core-bot.gateway
+rm -f ~/Library/LaunchAgents/ai.quiet-core-bot.gateway.plist
 ```
 
-If you used a profile, replace the label and plist name with `ai.openclaw.<profile>`. Remove any legacy `com.openclaw.*` plists if present.
+If you used a profile, replace the label and plist name with `ai.quiet-core-bot.<profile>`. Remove any legacy `com.openclaw.*` plists if present.
 
 ### Linux (systemd user unit)
 
-Default unit name is `openclaw-gateway.service` (or `openclaw-gateway-<profile>.service`):
+Default unit name is `quiet-core-bot-gateway.service` (or `quiet-core-bot-gateway-<profile>.service`):
 
 ```bash
-systemctl --user disable --now openclaw-gateway.service
-rm -f ~/.config/systemd/user/openclaw-gateway.service
+systemctl --user disable --now quiet-core-bot-gateway.service
+rm -f ~/.config/systemd/user/quiet-core-bot-gateway.service
 systemctl --user daemon-reload
 ```
 
@@ -116,23 +116,23 @@ of opening `gateway.cmd` directly.
 
 ```powershell
 schtasks /Delete /F /TN "Quiet Core bot Gateway"
-Remove-Item -Force "$env:USERPROFILE\.openclaw\gateway.cmd" -ErrorAction SilentlyContinue
-Remove-Item -Force "$env:USERPROFILE\.openclaw\gateway.vbs" -ErrorAction SilentlyContinue
+Remove-Item -Force "$env:USERPROFILE\.quiet-core-bot\gateway.cmd" -ErrorAction SilentlyContinue
+Remove-Item -Force "$env:USERPROFILE\.quiet-core-bot\gateway.vbs" -ErrorAction SilentlyContinue
 ```
 
 If you used a profile, delete the matching task name and the `gateway.cmd` /
-`gateway.vbs` files under `~\.openclaw-<profile>`.
+`gateway.vbs` files under `~\.quiet-core-bot-<profile>`.
 
 ## Normal install vs source checkout
 
 ### Normal install (install.sh / npm / pnpm / bun)
 
-If you used `https://openclaw.ai/install.sh` or `install.ps1`, the CLI was installed with `npm install -g openclaw@latest`.
-Remove it with `npm rm -g openclaw` (or `pnpm remove -g` / `bun remove -g` if you installed that way).
+If you used `https://openclaw.ai/install.sh` or `install.ps1`, the CLI was installed with `npm install -g quiet-core-bot@latest`.
+Remove it with `npm rm -g quiet-core-bot` (or `pnpm remove -g` / `bun remove -g` if you installed that way).
 
 ### Source checkout (git clone)
 
-If you run from a repo checkout (`git clone` + `openclaw ...` / `bun run openclaw ...`):
+If you run from a repo checkout (`git clone` + `quiet-core-bot ...` / `bun run quiet-core-bot ...`):
 
 1. Uninstall the gateway service **before** deleting the repo (use the easy path above or manual service removal).
 2. Delete the repo directory.

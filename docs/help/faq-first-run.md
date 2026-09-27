@@ -38,8 +38,8 @@ and troubleshooting see the main [FAQ](/help/faq).
     necessary commands. That keeps changes small and easier to audit.
 
     If you discover a real bug or fix, please file a GitHub issue or send a PR:
-    [https://github.com/openclaw/openclaw/issues](https://github.com/openclaw/openclaw/issues)
-    [https://github.com/openclaw/openclaw/pulls](https://github.com/openclaw/openclaw/pulls)
+    [https://github.com/liuda1999/Quiet-Core-bot/issues](https://github.com/liuda1999/Quiet-Core-bot/issues)
+    [https://github.com/liuda1999/Quiet-Core-bot/pulls](https://github.com/liuda1999/Quiet-Core-bot/pulls)
 
     Start with these commands (share outputs when asking for help):
 
@@ -91,8 +91,8 @@ and troubleshooting see the main [FAQ](/help/faq).
     From source (contributors/dev):
 
     ```bash
-    git clone https://github.com/openclaw/openclaw.git
-    cd openclaw
+    git clone https://github.com/liuda1999/Quiet-Core-bot.git
+    cd quiet-core-bot
     pnpm install
     pnpm build
     pnpm ui:build
@@ -112,8 +112,8 @@ and troubleshooting see the main [FAQ](/help/faq).
 
     - Open `http://127.0.0.1:18789/`.
     - If it asks for shared-secret auth, paste the configured token or password into Control UI settings.
-    - Token source: `gateway.auth.token` (or `OPENCLAW_GATEWAY_TOKEN`).
-    - Password source: `gateway.auth.password` (or `OPENCLAW_GATEWAY_PASSWORD`).
+    - Token source: `gateway.auth.token` (or `QUIET_CORE_GATEWAY_TOKEN`).
+    - Password source: `gateway.auth.password` (or `QUIET_CORE_GATEWAY_PASSWORD`).
     - If no shared secret is configured yet, generate a token with `quiet-core-bot doctor --generate-gateway-token`.
 
     **Not on localhost:**
@@ -215,7 +215,7 @@ and troubleshooting see the main [FAQ](/help/faq).
     state) as long as you copy **both** locations:
 
     1. Install Quiet Core bot on the new machine.
-    2. Copy `$OPENCLAW_STATE_DIR` (default: `~/.quiet-core-bot`) from the old machine.
+    2. Copy `$QUIET_CORE_STATE_DIR` (default: `~/.quiet-core-bot`) from the old machine.
     3. Copy your workspace (default: `~/.quiet-core-bot/workspace`).
     4. Run `quiet-core-bot doctor` and restart the Gateway service.
 
@@ -234,7 +234,7 @@ and troubleshooting see the main [FAQ](/help/faq).
 
   <Accordion title="Where do I see what is new in the latest version?">
     Check the GitHub changelog:
-    [https://github.com/openclaw/openclaw/blob/main/CHANGELOG.md](https://github.com/openclaw/openclaw/blob/main/CHANGELOG.md)
+    [https://github.com/liuda1999/Quiet-Core-bot/blob/main/CHANGELOG.md](https://github.com/liuda1999/Quiet-Core-bot/blob/main/CHANGELOG.md)
 
     Newest entries are at the top. If the top section is marked **Unreleased**, the next dated
     section is the latest shipped version. Entries are grouped by **Highlights**, **Changes**, and
@@ -248,7 +248,7 @@ and troubleshooting see the main [FAQ](/help/faq).
     Please help us unblock it by reporting here: [https://spa.xfinity.com/check_url_status](https://spa.xfinity.com/check_url_status).
 
     If you still can't reach the site, the docs are mirrored on GitHub:
-    [https://github.com/openclaw/openclaw/tree/main/docs](https://github.com/openclaw/openclaw/tree/main/docs)
+    [https://github.com/liuda1999/Quiet-Core-bot/tree/main/docs](https://github.com/liuda1999/Quiet-Core-bot/tree/main/docs)
 
   </Accordion>
 
@@ -264,7 +264,7 @@ and troubleshooting see the main [FAQ](/help/faq).
     point at the **same version** after promotion.
 
     See what changed:
-    [https://github.com/openclaw/openclaw/blob/main/CHANGELOG.md](https://github.com/openclaw/openclaw/blob/main/CHANGELOG.md)
+    [https://github.com/liuda1999/Quiet-Core-bot/blob/main/CHANGELOG.md](https://github.com/liuda1999/Quiet-Core-bot/blob/main/CHANGELOG.md)
 
     For install one-liners and the difference between beta and dev, see the accordion below.
 
@@ -313,8 +313,8 @@ and troubleshooting see the main [FAQ](/help/faq).
     If you prefer a clean clone manually, use:
 
     ```bash
-    git clone https://github.com/openclaw/openclaw.git
-    cd openclaw
+    git clone https://github.com/liuda1999/Quiet-Core-bot.git
+    cd quiet-core-bot
     pnpm install
     pnpm build
     ```
@@ -367,7 +367,7 @@ and troubleshooting see the main [FAQ](/help/faq).
 
   </Accordion>
 
-  <Accordion title="Windows install says git not found or openclaw not recognized">
+  <Accordion title="Windows install says git not found or quiet-core-bot not recognized">
     Two common Windows issues:
 
     **1) npm error spawn git / git not found**
@@ -375,7 +375,7 @@ and troubleshooting see the main [FAQ](/help/faq).
     - Install **Git for Windows** and make sure `git` is on your PATH.
     - Close and reopen PowerShell, then re-run the installer.
 
-    **2) openclaw is not recognized after install**
+    **2) quiet-core-bot is not recognized after install**
 
     - Your npm global bin folder is not on PATH.
     - Check the path:
@@ -418,7 +418,7 @@ and troubleshooting see the main [FAQ](/help/faq).
 
     If you still reproduce this on latest Quiet Core bot, track/report it in:
 
-    - [Issue #30640](https://github.com/openclaw/openclaw/issues/30640)
+    - [Issue #30640](https://github.com/liuda1999/Quiet-Core-bot/issues/30640)
 
   </Accordion>
 

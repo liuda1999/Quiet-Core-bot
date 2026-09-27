@@ -11,10 +11,10 @@ describe("claude-auth-status.sh", () => {
   const harness = createScriptTestHarness();
 
   it("prints expiry timestamps on macOS without GNU date", () => {
-    const root = harness.createTempDir("openclaw-claude-auth-status-");
+    const root = harness.createTempDir("quiet-core-bot-claude-auth-status-");
     const bin = path.join(root, "bin");
     mkdirSync(bin, { recursive: true });
-    const openclaw = path.join(bin, "openclaw");
+    const openclaw = path.join(bin, "quiet-core-bot");
     const futureMs = String(Date.now() + 2 * 60 * 60 * 1000);
     writeNodeBackedJq(bin);
 

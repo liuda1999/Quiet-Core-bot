@@ -11,8 +11,8 @@ Adds Kilocode model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/kilocode-provider`
-- Install route: npm; ClawHub: `clawhub:@openclaw/kilocode-provider`
+- Package: `@quiet-core/kilocode-provider`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/kilocode-provider`
 
 ## Surface
 

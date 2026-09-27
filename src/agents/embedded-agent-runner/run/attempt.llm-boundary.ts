@@ -341,7 +341,7 @@ export function installModelPromptTransform(params: {
  * Turns with attachments (image / document blocks) must remain as arrays and
  * are NOT collapsed.
  *
- * @see https://github.com/openclaw/openclaw/issues/3658
+ * @see https://github.com/liuda1999/Quiet-Core-bot/issues/3658
  */
 function canonicalizeTextOnlyUserContent(content: unknown): unknown {
   if (!Array.isArray(content)) {

@@ -6,8 +6,8 @@ import os from "node:os";
 import path from "node:path";
 import { Writable } from "node:stream";
 import { confirm, isCancel } from "@clack/prompts";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { isRecord } from "@quiet-core/normalization-core/record-coerce";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { stylePromptMessage } from "../../../packages/terminal-core/src/prompt-style.js";
 import { theme } from "../../../packages/terminal-core/src/theme.js";
 import {
@@ -33,7 +33,7 @@ import { assertUpstreamUpdateAllowed } from "../../config/independent-build-guar
 import { formatConfigIssueLines } from "../../config/issue-format.js";
 import { asResolvedSourceConfig, asRuntimeConfig } from "../../config/materialize.js";
 import { CONFIG_PATH, resolveIncludeRoots } from "../../config/paths.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import type { PluginInstallRecord } from "../../config/types.plugins.js";
 import {
   GATEWAY_SERVICE_KIND,
@@ -168,22 +168,22 @@ const SERVICE_REFRESH_TIMEOUT_MS = 60_000;
 const POST_REFRESH_ALREADY_HEALTHY_ATTEMPTS = 10;
 const POST_REFRESH_ALREADY_HEALTHY_DELAY_MS = 500;
 const DEFAULT_UPDATE_STEP_TIMEOUT_MS = 30 * 60_000;
-const POST_CORE_UPDATE_ENV = "OPENCLAW_UPDATE_POST_CORE";
-const POST_CORE_UPDATE_CHANNEL_ENV = "OPENCLAW_UPDATE_POST_CORE_CHANNEL";
-const POST_CORE_UPDATE_REQUESTED_CHANNEL_ENV = "OPENCLAW_UPDATE_POST_CORE_REQUESTED_CHANNEL";
-const POST_CORE_UPDATE_RESULT_PATH_ENV = "OPENCLAW_UPDATE_POST_CORE_RESULT_PATH";
-const POST_CORE_UPDATE_INSTALL_RECORDS_PATH_ENV = "OPENCLAW_UPDATE_POST_CORE_INSTALL_RECORDS_PATH";
-const POST_CORE_UPDATE_STARTED_AT_ENV = "OPENCLAW_UPDATE_POST_CORE_STARTED_AT_MS";
+const POST_CORE_UPDATE_ENV = "QUIET_CORE_UPDATE_POST_CORE";
+const POST_CORE_UPDATE_CHANNEL_ENV = "QUIET_CORE_UPDATE_POST_CORE_CHANNEL";
+const POST_CORE_UPDATE_REQUESTED_CHANNEL_ENV = "QUIET_CORE_UPDATE_POST_CORE_REQUESTED_CHANNEL";
+const POST_CORE_UPDATE_RESULT_PATH_ENV = "QUIET_CORE_UPDATE_POST_CORE_RESULT_PATH";
+const POST_CORE_UPDATE_INSTALL_RECORDS_PATH_ENV = "QUIET_CORE_UPDATE_POST_CORE_INSTALL_RECORDS_PATH";
+const POST_CORE_UPDATE_STARTED_AT_ENV = "QUIET_CORE_UPDATE_POST_CORE_STARTED_AT_MS";
 const POST_CORE_UPDATE_RESULT_POLL_MS = 100;
 const PRE_UPDATE_CONFIG_SNAPSHOT_MAX_AGE_MS = 6 * 60 * 60 * 1000;
 const SERVICE_REFRESH_PATH_ENV_KEYS = [
-  "OPENCLAW_HOME",
-  "OPENCLAW_STATE_DIR",
-  "OPENCLAW_CONFIG_PATH",
+  "QUIET_CORE_HOME",
+  "QUIET_CORE_STATE_DIR",
+  "QUIET_CORE_CONFIG_PATH",
 ] as const;
 const POST_INSTALL_DOCTOR_SERVICE_ENV_KEYS = [
   ...SERVICE_REFRESH_PATH_ENV_KEYS,
-  "OPENCLAW_PROFILE",
+  "QUIET_CORE_PROFILE",
 ] as const;
 const POST_UPDATE_PLUGIN_REPAIR_GUIDANCE =
   "Run quiet-core-bot update repair to retry post-update plugin repair.";
@@ -801,7 +801,7 @@ type PreManagedServiceStop = {
 
 class UpdateCommandAbort extends Error {
   constructor() {
-    super("openclaw-update-abort");
+    super("quiet-core-bot-update-abort");
     this.name = "UpdateCommandAbort";
   }
 }
@@ -1004,10 +1004,10 @@ async function maybeRestartServiceAfterFailedMutableUpdate(params: {
 function isRunningInsideGatewayService(
   env: Record<string, string | undefined> = process.env,
 ): boolean {
-  if (env.OPENCLAW_SERVICE_MARKER?.trim() !== GATEWAY_SERVICE_MARKER) {
+  if (env.QUIET_CORE_SERVICE_MARKER?.trim() !== GATEWAY_SERVICE_MARKER) {
     return false;
   }
-  const serviceKind = env.OPENCLAW_SERVICE_KIND?.trim();
+  const serviceKind = env.QUIET_CORE_SERVICE_KIND?.trim();
   return !serviceKind || serviceKind === GATEWAY_SERVICE_KIND;
 }
 
@@ -1089,13 +1089,13 @@ async function resolvePackageRuntimePreflightError(params: {
     ? `Node ${runtime.version ?? "unknown"} at ${runtime.nodeRunner}`
     : `Node ${runtime.version ?? "unknown"}`;
   return [
-    `${runtimeLabel} is too old for openclaw@${targetLabel}.`,
+    `${runtimeLabel} is too old for quiet-core-bot@${targetLabel}.`,
     `The requested package requires ${status.nodeEngine}.`,
     runtime.nodeRunner
       ? "Upgrade the Node runtime that owns the managed Gateway service, then rerun `quiet-core-bot update`."
       : "Upgrade Node to 22.19+ or Node 24, then rerun `quiet-core-bot update`.",
-    "Bare `npm i -g quiet-core-bot` can silently install an older compatible release.",
-    "After upgrading Node, use `npm i -g openclaw@latest`.",
+    "Bare `npm i -g openclaw` can silently install an older compatible release.",
+    "After upgrading Node, use `npm i -g quiet-core-bot@latest`.",
   ].join("\n");
 }
 
@@ -1147,8 +1147,8 @@ function disableUpdatedPackageCompileCacheEnv(env: NodeJS.ProcessEnv): NodeJS.Pr
 
 function stripGatewayServiceMarkerEnv(env: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
   const resolvedEnv = { ...env };
-  delete resolvedEnv.OPENCLAW_SERVICE_MARKER;
-  delete resolvedEnv.OPENCLAW_SERVICE_KIND;
+  delete resolvedEnv.QUIET_CORE_SERVICE_MARKER;
+  delete resolvedEnv.QUIET_CORE_SERVICE_KIND;
   delete resolvedEnv[GATEWAY_SERVICE_RUNTIME_PID_ENV];
   return resolvedEnv;
 }
@@ -1611,13 +1611,13 @@ async function runPackageInstallUpdate(params: {
               serviceEnv: params.managedServiceEnv,
               invocationCwd: params.invocationCwd,
             }),
-            OPENCLAW_UPDATE_IN_PROGRESS: "1",
+            QUIET_CORE_UPDATE_IN_PROGRESS: "1",
             [UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR_ENV]: "1",
             [UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE_ENV]: "1",
             [UPDATE_POST_INSTALL_DOCTOR_RESULT_PATH_ENV]: doctorResultPath,
             ...(candidateHostVersion === null
               ? {}
-              : { OPENCLAW_COMPATIBILITY_HOST_VERSION: candidateHostVersion }),
+              : { QUIET_CORE_COMPATIBILITY_HOST_VERSION: candidateHostVersion }),
           },
           timeoutMs: params.timeoutMs,
         });
@@ -2343,7 +2343,7 @@ async function maybeRestartService(params: {
         defaultRuntime.log(theme.success("Daemon restarted successfully."));
         defaultRuntime.log("");
         await createUpdateConfigSnapshot();
-        process.env.OPENCLAW_UPDATE_IN_PROGRESS = "1";
+        process.env.QUIET_CORE_UPDATE_IN_PROGRESS = "1";
         process.env[UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE_ENV] = "1";
         try {
           const interactiveDoctor =
@@ -2354,7 +2354,7 @@ async function maybeRestartService(params: {
         } catch (err) {
           defaultRuntime.log(theme.warn(`Doctor failed: ${String(err)}`));
         } finally {
-          delete process.env.OPENCLAW_UPDATE_IN_PROGRESS;
+          delete process.env.QUIET_CORE_UPDATE_IN_PROGRESS;
           delete process.env[UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE_ENV];
         }
       }
@@ -2434,19 +2434,19 @@ type UpdateFinalizeResult = {
 };
 
 function withUpdateFinalizationEnv<T>(run: () => Promise<T>): Promise<T> {
-  const previousUpdateInProgress = process.env.OPENCLAW_UPDATE_IN_PROGRESS;
+  const previousUpdateInProgress = process.env.QUIET_CORE_UPDATE_IN_PROGRESS;
   const previousDeferConfiguredPluginInstallRepair =
     process.env[UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR_ENV];
   const previousParentSupportsDoctorConfigWrite =
     process.env[UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE_ENV];
-  process.env.OPENCLAW_UPDATE_IN_PROGRESS = "1";
+  process.env.QUIET_CORE_UPDATE_IN_PROGRESS = "1";
   process.env[UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR_ENV] = "1";
   process.env[UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE_ENV] = "1";
   return run().finally(() => {
     if (previousUpdateInProgress === undefined) {
-      delete process.env.OPENCLAW_UPDATE_IN_PROGRESS;
+      delete process.env.QUIET_CORE_UPDATE_IN_PROGRESS;
     } else {
-      process.env.OPENCLAW_UPDATE_IN_PROGRESS = previousUpdateInProgress;
+      process.env.QUIET_CORE_UPDATE_IN_PROGRESS = previousUpdateInProgress;
     }
     if (previousDeferConfiguredPluginInstallRepair === undefined) {
       delete process.env[UPDATE_DEFER_CONFIGURED_PLUGIN_INSTALL_REPAIR_ENV];
@@ -2976,7 +2976,7 @@ async function continuePostCoreUpdateInFreshProcess(params: {
   if (params.opts.timeout) {
     argv.push("--timeout", params.opts.timeout);
   }
-  const resultDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-update-post-core-"));
+  const resultDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-update-post-core-"));
   const resultPath = path.join(resultDir, "plugins.json");
   const installRecordsPath = path.join(resultDir, "plugin-install-records.json");
   const sourceConfigPath = path.join(resultDir, "source-config.json");
@@ -2998,7 +2998,7 @@ async function continuePostCoreUpdateInFreshProcess(params: {
       stdio: childStdio,
       env: {
         ...stripGatewayServiceMarkerEnv(disableUpdatedPackageCompileCacheEnv(process.env)),
-        OPENCLAW_UPDATE_IN_PROGRESS: "1",
+        QUIET_CORE_UPDATE_IN_PROGRESS: "1",
         [POST_CORE_UPDATE_ENV]: "1",
         [POST_CORE_UPDATE_CHANNEL_ENV]: params.channel,
         ...(params.requestedChannel
@@ -3009,7 +3009,7 @@ async function continuePostCoreUpdateInFreshProcess(params: {
         [POST_CORE_UPDATE_STARTED_AT_ENV]: String(params.updateStartedAtMs),
         ...(postCoreHostVersion === null
           ? {}
-          : { OPENCLAW_COMPATIBILITY_HOST_VERSION: postCoreHostVersion }),
+          : { QUIET_CORE_COMPATIBILITY_HOST_VERSION: postCoreHostVersion }),
         ...(params.preUpdateConfig
           ? { [POST_CORE_UPDATE_SOURCE_CONFIG_PATH_ENV]: sourceConfigPath }
           : {}),
@@ -3156,13 +3156,13 @@ async function markControlPlaneUpdateRestartSentinelFailureBestEffort(params: {
 }
 
 async function withUpdateInProgressEnv<T>(run: () => Promise<T>): Promise<T> {
-  const previousUpdateInProgress = process.env.OPENCLAW_UPDATE_IN_PROGRESS;
-  process.env.OPENCLAW_UPDATE_IN_PROGRESS = "1";
+  const previousUpdateInProgress = process.env.QUIET_CORE_UPDATE_IN_PROGRESS;
+  process.env.QUIET_CORE_UPDATE_IN_PROGRESS = "1";
   return run().finally(() => {
     if (previousUpdateInProgress === undefined) {
-      delete process.env.OPENCLAW_UPDATE_IN_PROGRESS;
+      delete process.env.QUIET_CORE_UPDATE_IN_PROGRESS;
     } else {
-      process.env.OPENCLAW_UPDATE_IN_PROGRESS = previousUpdateInProgress;
+      process.env.QUIET_CORE_UPDATE_IN_PROGRESS = previousUpdateInProgress;
     }
   });
 }
@@ -3216,7 +3216,7 @@ async function updateCommandInternal(opts: UpdateCommandOptions): Promise<void> 
       return;
     }
 
-    process.env.OPENCLAW_COMPATIBILITY_HOST_VERSION = (await readPackageVersion(root)) ?? VERSION;
+    process.env.QUIET_CORE_COMPATIBILITY_HOST_VERSION = (await readPackageVersion(root)) ?? VERSION;
 
     let postCoreConfigSnapshot = await readConfigFileSnapshot({
       skipPluginValidation: true,
@@ -3320,7 +3320,7 @@ async function updateCommandInternal(opts: UpdateCommandOptions): Promise<void> 
     updateInstallKind === "git" ? DEFAULT_GIT_CHANNEL : DEFAULT_PACKAGE_CHANNEL;
   const channel = requestedChannel ?? storedChannel ?? defaultChannel;
   const devTargetRef =
-    channel === "dev" ? process.env.OPENCLAW_UPDATE_DEV_TARGET_REF?.trim() || undefined : undefined;
+    channel === "dev" ? process.env.QUIET_CORE_UPDATE_DEV_TARGET_REF?.trim() || undefined : undefined;
 
   const explicitTag = normalizeTag(opts.tag);
   let tag = explicitTag ?? channelToNpmTag(channel);
@@ -3759,7 +3759,7 @@ async function updateCommandInternal(opts: UpdateCommandOptions): Promise<void> 
       );
       defaultRuntime.log(
         theme.muted(
-          `Examples: \`${replaceCliName("npm i -g openclaw@latest", CLI_NAME)}\` or \`${replaceCliName("pnpm add -g openclaw@latest", CLI_NAME)}\``,
+          `Examples: \`${replaceCliName("npm i -g quiet-core-bot@latest", CLI_NAME)}\` or \`${replaceCliName("pnpm add -g quiet-core-bot@latest", CLI_NAME)}\``,
         ),
       );
     }
@@ -3858,9 +3858,9 @@ async function updateCommandInternal(opts: UpdateCommandOptions): Promise<void> 
         : null;
     const compatibilityDowngradeTarget =
       versionComparison != null && versionComparison > 0 ? postUpdateInstalledVersion : null;
-    const previousCompatibilityHostVersion = process.env.OPENCLAW_COMPATIBILITY_HOST_VERSION;
+    const previousCompatibilityHostVersion = process.env.QUIET_CORE_COMPATIBILITY_HOST_VERSION;
     if (compatibilityDowngradeTarget) {
-      process.env.OPENCLAW_COMPATIBILITY_HOST_VERSION = compatibilityDowngradeTarget;
+      process.env.QUIET_CORE_COMPATIBILITY_HOST_VERSION = compatibilityDowngradeTarget;
     }
     try {
       postCorePluginUpdate = await runPostCorePluginUpdate({
@@ -3876,9 +3876,9 @@ async function updateCommandInternal(opts: UpdateCommandOptions): Promise<void> 
     } finally {
       if (compatibilityDowngradeTarget) {
         if (previousCompatibilityHostVersion === undefined) {
-          delete process.env.OPENCLAW_COMPATIBILITY_HOST_VERSION;
+          delete process.env.QUIET_CORE_COMPATIBILITY_HOST_VERSION;
         } else {
-          process.env.OPENCLAW_COMPATIBILITY_HOST_VERSION = previousCompatibilityHostVersion;
+          process.env.QUIET_CORE_COMPATIBILITY_HOST_VERSION = previousCompatibilityHostVersion;
         }
       }
     }

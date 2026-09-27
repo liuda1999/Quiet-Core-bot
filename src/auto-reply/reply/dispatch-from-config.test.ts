@@ -5186,8 +5186,8 @@ describe("dispatchReplyFromConfig", () => {
     replyMediaPathMocks.createReplyMediaPathNormalizer.mockReturnValue(
       async (payload: ReplyPayload) => ({
         ...payload,
-        mediaUrl: "/tmp/openclaw-media/normalized-tts.ogg",
-        mediaUrls: ["/tmp/openclaw-media/normalized-tts.ogg"],
+        mediaUrl: "/tmp/quiet-core-bot-media/normalized-tts.ogg",
+        mediaUrls: ["/tmp/quiet-core-bot-media/normalized-tts.ogg"],
       }),
     );
     const dispatcher = createDispatcher();
@@ -5210,8 +5210,8 @@ describe("dispatchReplyFromConfig", () => {
       .calls[0]?.[0] as { messageProvider?: unknown } | undefined;
     expect(normalizerOptions?.messageProvider).toBe("feishu");
     const finalPayload = firstFinalReplyPayload(dispatcher);
-    expect(finalPayload?.mediaUrl).toBe("/tmp/openclaw-media/normalized-tts.ogg");
-    expect(finalPayload?.mediaUrls).toStrictEqual(["/tmp/openclaw-media/normalized-tts.ogg"]);
+    expect(finalPayload?.mediaUrl).toBe("/tmp/quiet-core-bot-media/normalized-tts.ogg");
+    expect(finalPayload?.mediaUrls).toStrictEqual(["/tmp/quiet-core-bot-media/normalized-tts.ogg"]);
     expect(finalPayload?.audioAsVoice).toBe(true);
     expect(finalPayload?.spokenText).toBe("Hello from block streaming.");
     expect(finalPayload?.trustedLocalMedia).toBe(true);
@@ -6152,7 +6152,7 @@ describe("dispatchReplyFromConfig", () => {
       ((hookName?: string) =>
         hookName === "inbound_claim" || hookName === "message_received") as () => boolean,
     );
-    hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+    hookMocks.registry.plugins = [{ id: "quiet-core-bot-codex-app-server", status: "loaded" }];
     hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
       status: "handled",
       result: { handled: true },
@@ -6170,13 +6170,13 @@ describe("dispatchReplyFromConfig", () => {
       boundAt: 1710000000000,
       metadata: {
         pluginBindingOwner: "plugin",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "quiet-core-bot-codex-app-server",
         pluginRoot: "/Users/huntharo/github/quiet-core-bot-app-server",
         data: {
           kind: "codex-app-server-session",
           version: 1,
           sessionFile: "/tmp/session.jsonl",
-          workspaceDir: "/workspace/openclaw",
+          workspaceDir: "/workspace/quiet-core-bot",
         },
       },
     } satisfies SessionBindingRecord);
@@ -6218,7 +6218,7 @@ describe("dispatchReplyFromConfig", () => {
           },
         ]
       | undefined;
-    expect(inboundClaimCall?.[0]).toBe("openclaw-codex-app-server");
+    expect(inboundClaimCall?.[0]).toBe("quiet-core-bot-codex-app-server");
     expect(inboundClaimCall?.[1]?.channel).toBe("discord");
     expect(inboundClaimCall?.[1]?.accountId).toBe("default");
     expect(inboundClaimCall?.[1]?.conversationId).toBe("channel:1481858418548412579");
@@ -6265,7 +6265,7 @@ describe("dispatchReplyFromConfig", () => {
       ((hookName?: string) =>
         hookName === "inbound_claim" || hookName === "message_received") as () => boolean,
     );
-    hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+    hookMocks.registry.plugins = [{ id: "quiet-core-bot-codex-app-server", status: "loaded" }];
     hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
       status: "handled",
       result: { handled: true },
@@ -6294,8 +6294,8 @@ describe("dispatchReplyFromConfig", () => {
               boundAt: 1710000000000,
               metadata: {
                 pluginBindingOwner: "plugin",
-                pluginId: "openclaw-codex-app-server",
-                pluginRoot: "/plugins/openclaw-codex-app-server",
+                pluginId: "quiet-core-bot-codex-app-server",
+                pluginRoot: "/plugins/quiet-core-bot-codex-app-server",
               },
             } satisfies SessionBindingRecord)
           : null,
@@ -6337,7 +6337,7 @@ describe("dispatchReplyFromConfig", () => {
       }),
     );
     expect(hookMocks.runner.runInboundClaimForPluginOutcome).toHaveBeenCalledWith(
-      "openclaw-codex-app-server",
+      "quiet-core-bot-codex-app-server",
       expect.objectContaining({
         channel: "discord",
         conversationId: "1510164477642014740",
@@ -6358,7 +6358,7 @@ describe("dispatchReplyFromConfig", () => {
       ((hookName?: string) =>
         hookName === "inbound_claim" || hookName === "message_received") as () => boolean,
     );
-    hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+    hookMocks.registry.plugins = [{ id: "quiet-core-bot-codex-app-server", status: "loaded" }];
     hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
       status: "handled",
       result: { handled: true, reply: { text: "should not send" } },
@@ -6376,13 +6376,13 @@ describe("dispatchReplyFromConfig", () => {
       boundAt: 1710000000000,
       metadata: {
         pluginBindingOwner: "plugin",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "quiet-core-bot-codex-app-server",
         pluginRoot: "/workspace/quiet-core-bot-app-server",
         data: {
           kind: "codex-app-server-session",
           version: 1,
           sessionFile: "/tmp/session.jsonl",
-          workspaceDir: "/workspace/openclaw",
+          workspaceDir: "/workspace/quiet-core-bot",
         },
       },
     } satisfies SessionBindingRecord);
@@ -6443,7 +6443,7 @@ describe("dispatchReplyFromConfig", () => {
       ((hookName?: string) =>
         hookName === "inbound_claim" || hookName === "message_received") as () => boolean,
     );
-    hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+    hookMocks.registry.plugins = [{ id: "quiet-core-bot-codex-app-server", status: "loaded" }];
     hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
       status: "handled",
       result: { handled: true },
@@ -6461,14 +6461,14 @@ describe("dispatchReplyFromConfig", () => {
       boundAt: 1710000000000,
       metadata: {
         pluginBindingOwner: "plugin",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "quiet-core-bot-codex-app-server",
         pluginRoot: "/Users/huntharo/github/quiet-core-bot-app-server",
         detachHint: "/codex detach",
         data: {
           kind: "codex-app-server-session",
           version: 1,
           sessionFile: "/tmp/session.jsonl",
-          workspaceDir: "/workspace/openclaw",
+          workspaceDir: "/workspace/quiet-core-bot",
         },
       },
     } satisfies SessionBindingRecord);
@@ -6510,7 +6510,7 @@ describe("dispatchReplyFromConfig", () => {
       ((hookName?: string) =>
         hookName === "inbound_claim" || hookName === "message_received") as () => boolean,
     );
-    hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+    hookMocks.registry.plugins = [{ id: "quiet-core-bot-codex-app-server", status: "loaded" }];
     hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
       status: "handled",
       result: { handled: true },
@@ -6528,7 +6528,7 @@ describe("dispatchReplyFromConfig", () => {
       boundAt: 1710000000000,
       metadata: {
         pluginBindingOwner: "plugin",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "quiet-core-bot-codex-app-server",
         pluginRoot: "/Users/huntharo/github/quiet-core-bot-app-server",
       },
     } satisfies SessionBindingRecord);
@@ -6559,7 +6559,7 @@ describe("dispatchReplyFromConfig", () => {
     expect(result).toEqual({ queuedFinal: false, counts: { tool: 0, block: 0, final: 0 } });
     expect(sessionBindingMocks.touch).toHaveBeenCalledWith("binding-command-unknown-slash");
     expect(hookMocks.runner.runInboundClaimForPluginOutcome).toHaveBeenCalledWith(
-      "openclaw-codex-app-server",
+      "quiet-core-bot-codex-app-server",
       expect.objectContaining({ content: "/notes keep this with the bound plugin" }),
       expect.objectContaining({
         pluginBinding: expect.objectContaining({ bindingId: "binding-command-unknown-slash" }),
@@ -6575,7 +6575,7 @@ describe("dispatchReplyFromConfig", () => {
       ((hookName?: string) =>
         hookName === "inbound_claim" || hookName === "message_received") as () => boolean,
     );
-    hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+    hookMocks.registry.plugins = [{ id: "quiet-core-bot-codex-app-server", status: "loaded" }];
     hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
       status: "handled",
       result: { handled: true, reply: { text: "do not leak slash reply" } },
@@ -6593,7 +6593,7 @@ describe("dispatchReplyFromConfig", () => {
       boundAt: 1710000000000,
       metadata: {
         pluginBindingOwner: "plugin",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "quiet-core-bot-codex-app-server",
         pluginRoot: "/Users/huntharo/github/quiet-core-bot-app-server",
         detachHint: "/codex detach",
       },
@@ -6630,7 +6630,7 @@ describe("dispatchReplyFromConfig", () => {
     });
     expect(sessionBindingMocks.touch).toHaveBeenCalledWith("binding-command-escape-denied");
     expect(hookMocks.runner.runInboundClaimForPluginOutcome).toHaveBeenCalledWith(
-      "openclaw-codex-app-server",
+      "quiet-core-bot-codex-app-server",
       expect.objectContaining({ content: "/codex detach" }),
       expect.objectContaining({
         pluginBinding: expect.objectContaining({ bindingId: "binding-command-escape-denied" }),
@@ -6703,7 +6703,7 @@ describe("dispatchReplyFromConfig", () => {
       ((hookName?: string) =>
         hookName === "inbound_claim" || hookName === "message_received") as () => boolean,
     );
-    hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+    hookMocks.registry.plugins = [{ id: "quiet-core-bot-codex-app-server", status: "loaded" }];
     hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
       status: "handled",
       result: { handled: true },
@@ -6721,7 +6721,7 @@ describe("dispatchReplyFromConfig", () => {
       boundAt: 1710000000000,
       metadata: {
         pluginBindingOwner: "plugin",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "quiet-core-bot-codex-app-server",
         pluginRoot: "/Users/huntharo/github/quiet-core-bot-app-server",
       },
     } satisfies SessionBindingRecord);
@@ -6759,7 +6759,7 @@ describe("dispatchReplyFromConfig", () => {
           { accountId?: unknown; channelId?: unknown; conversationId?: unknown },
         ]
       | undefined;
-    expect(inboundClaimCall?.[0]).toBe("openclaw-codex-app-server");
+    expect(inboundClaimCall?.[0]).toBe("quiet-core-bot-codex-app-server");
     expect(inboundClaimCall?.[1]?.channel).toBe("discord");
     expect(inboundClaimCall?.[1]?.accountId).toBe("default");
     expect(inboundClaimCall?.[1]?.conversationId).toBe("1480574946919846079");
@@ -6793,7 +6793,7 @@ describe("dispatchReplyFromConfig", () => {
       boundAt: 1710000000000,
       metadata: {
         pluginBindingOwner: "plugin",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "quiet-core-bot-codex-app-server",
         pluginName: "Codex App Server",
         pluginRoot: "/Users/huntharo/github/quiet-core-bot-app-server",
         detachHint: "/codex_detach",
@@ -6864,7 +6864,7 @@ describe("dispatchReplyFromConfig", () => {
       ((hookName?: string) =>
         hookName === "inbound_claim" || hookName === "message_received") as () => boolean,
     );
-    hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+    hookMocks.registry.plugins = [{ id: "quiet-core-bot-codex-app-server", status: "loaded" }];
     hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
       status: "no_handler",
     });
@@ -6882,7 +6882,7 @@ describe("dispatchReplyFromConfig", () => {
       boundAt: 1710000000000,
       metadata: {
         pluginBindingOwner: "plugin",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "quiet-core-bot-codex-app-server",
         pluginName: "Codex App Server",
         pluginRoot: "/Users/huntharo/github/quiet-core-bot-app-server",
       },
@@ -6926,7 +6926,7 @@ describe("dispatchReplyFromConfig", () => {
       ((hookName?: string) =>
         hookName === "inbound_claim" || hookName === "message_received") as () => boolean,
     );
-    hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+    hookMocks.registry.plugins = [{ id: "quiet-core-bot-codex-app-server", status: "loaded" }];
     hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
       status: "declined",
     });
@@ -6943,7 +6943,7 @@ describe("dispatchReplyFromConfig", () => {
       boundAt: 1710000000000,
       metadata: {
         pluginBindingOwner: "plugin",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "quiet-core-bot-codex-app-server",
         pluginName: "Codex App Server",
         pluginRoot: "/Users/huntharo/github/quiet-core-bot-app-server",
         detachHint: "/codex_detach",
@@ -6984,7 +6984,7 @@ describe("dispatchReplyFromConfig", () => {
       ((hookName?: string) =>
         hookName === "inbound_claim" || hookName === "message_received") as () => boolean,
     );
-    hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+    hookMocks.registry.plugins = [{ id: "quiet-core-bot-codex-app-server", status: "loaded" }];
     hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
       status: "error",
       error: "boom",
@@ -7002,7 +7002,7 @@ describe("dispatchReplyFromConfig", () => {
       boundAt: 1710000000000,
       metadata: {
         pluginBindingOwner: "plugin",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "quiet-core-bot-codex-app-server",
         pluginName: "Codex App Server",
         pluginRoot: "/Users/huntharo/github/quiet-core-bot-app-server",
       },
@@ -8311,7 +8311,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       ((hookName?: string) =>
         hookName === "inbound_claim" || hookName === "message_received") as () => boolean,
     );
-    hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+    hookMocks.registry.plugins = [{ id: "quiet-core-bot-codex-app-server", status: "loaded" }];
     hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
       status: "handled",
       result: { handled: true },
@@ -8329,7 +8329,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       boundAt: 1710000000000,
       metadata: {
         pluginBindingOwner: "plugin",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "quiet-core-bot-codex-app-server",
         pluginRoot: "/tmp/plugin",
       },
     } satisfies SessionBindingRecord);
@@ -8463,7 +8463,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
         ((hookName?: string) =>
           hookName === "inbound_claim" || hookName === "message_received") as () => boolean,
       );
-      hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+      hookMocks.registry.plugins = [{ id: "quiet-core-bot-codex-app-server", status: "loaded" }];
       hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
         status: "handled",
         result: params.pluginReply
@@ -8479,7 +8479,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
         boundAt: 1710000000000,
         metadata: {
           pluginBindingOwner: "plugin",
-          pluginId: "openclaw-codex-app-server",
+          pluginId: "quiet-core-bot-codex-app-server",
           pluginRoot: "/tmp/plugin",
         },
       } satisfies SessionBindingRecord);
@@ -8506,7 +8506,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       });
       expect(sessionBindingMocks.touch).toHaveBeenCalledWith(params.bindingId);
       expect(hookMocks.runner.runInboundClaimForPluginOutcome).toHaveBeenCalledWith(
-        "openclaw-codex-app-server",
+        "quiet-core-bot-codex-app-server",
         expect.objectContaining({
           content: "observed message",
           ...params.expectedClaim,
@@ -8530,7 +8530,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       ((hookName?: string) =>
         hookName === "inbound_claim" || hookName === "message_received") as () => boolean,
     );
-    hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+    hookMocks.registry.plugins = [{ id: "quiet-core-bot-codex-app-server", status: "loaded" }];
     hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
       status: "no_handler",
     });
@@ -8549,7 +8549,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       boundAt: 1710000000000,
       metadata: {
         pluginBindingOwner: "plugin",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "quiet-core-bot-codex-app-server",
         pluginRoot: "/tmp/plugin",
       },
     } satisfies SessionBindingRecord);
@@ -8593,7 +8593,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       hookMocks.runner.runInboundClaimForPluginOutcome,
       "plugin inbound claim",
     );
-    expect(claimCall[0]).toBe("openclaw-codex-app-server");
+    expect(claimCall[0]).toBe("quiet-core-bot-codex-app-server");
     expect(claimCall[1]).toMatchObject({
       channel: "telegram",
       content: "observed message",
@@ -8614,7 +8614,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       ((hookName?: string) =>
         hookName === "inbound_claim" || hookName === "message_received") as () => boolean,
     );
-    hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+    hookMocks.registry.plugins = [{ id: "quiet-core-bot-codex-app-server", status: "loaded" }];
     hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
       status: "no_handler",
     });
@@ -8633,7 +8633,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       boundAt: 1710000000000,
       metadata: {
         pluginBindingOwner: "plugin",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "quiet-core-bot-codex-app-server",
         pluginRoot: "/tmp/plugin",
       },
     } satisfies SessionBindingRecord);
@@ -8655,10 +8655,10 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       MessageThreadId: 11,
       ChatType: "group",
       GroupSubject: "Dev",
-      Body: "/reset@openclaw",
-      RawBody: "/reset@openclaw",
-      CommandBody: "/reset@openclaw",
-      BotUsername: "openclaw",
+      Body: "/reset@quiet-core-bot",
+      RawBody: "/reset@quiet-core-bot",
+      CommandBody: "/reset@quiet-core-bot",
+      BotUsername: "quiet-core-bot",
       CommandSource: undefined,
       CommandAuthorized: true,
       WasMentioned: false,
@@ -8682,7 +8682,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       ((hookName?: string) =>
         hookName === "inbound_claim" || hookName === "message_received") as () => boolean,
     );
-    hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+    hookMocks.registry.plugins = [{ id: "quiet-core-bot-codex-app-server", status: "loaded" }];
     hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
       status: "handled",
       result: { handled: true },
@@ -8702,7 +8702,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       boundAt: 1710000000000,
       metadata: {
         pluginBindingOwner: "plugin",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "quiet-core-bot-codex-app-server",
         pluginRoot: "/tmp/plugin",
       },
     } satisfies SessionBindingRecord);
@@ -8742,7 +8742,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       hookMocks.runner.runInboundClaimForPluginOutcome,
       "plugin inbound claim",
     );
-    expect(claimCall[0]).toBe("openclaw-codex-app-server");
+    expect(claimCall[0]).toBe("quiet-core-bot-codex-app-server");
     expect(claimCall[1]).toMatchObject({
       channel: "telegram",
       content: "/status",
@@ -8758,7 +8758,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       ((hookName?: string) =>
         hookName === "inbound_claim" || hookName === "message_received") as () => boolean,
     );
-    hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+    hookMocks.registry.plugins = [{ id: "quiet-core-bot-codex-app-server", status: "loaded" }];
     hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
       status: "handled",
       result: { handled: true },
@@ -8778,7 +8778,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       boundAt: 1710000000000,
       metadata: {
         pluginBindingOwner: "plugin",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "quiet-core-bot-codex-app-server",
         pluginRoot: "/tmp/plugin",
       },
     } satisfies SessionBindingRecord);
@@ -8823,7 +8823,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       hookMocks.runner.runInboundClaimForPluginOutcome,
       "plugin inbound claim",
     );
-    expect(claimCall[0]).toBe("openclaw-codex-app-server");
+    expect(claimCall[0]).toBe("quiet-core-bot-codex-app-server");
     expect(claimCall[1]).toMatchObject({
       channel: "telegram",
       content: "/think high through this",

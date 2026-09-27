@@ -36,7 +36,7 @@ quiet-core-bot --update
 
 - `--no-restart`: skip restarting the Gateway service after a successful update. Package-manager updates that do restart the Gateway verify the restarted service reports the expected updated version before the command succeeds.
 - `--channel <stable|beta|dev>`: set the update channel (git + npm; persisted in config).
-- `--tag <dist-tag|version|spec>`: override the package target for this update only. For package installs, `main` maps to `github:openclaw/openclaw#main`; GitHub/git source specs are packed into a temporary tarball before the staged global npm install.
+- `--tag <dist-tag|version|spec>`: override the package target for this update only. For package installs, `main` maps to `github:liuda1999/quiet-core-bot#main`; GitHub/git source specs are packed into a temporary tarball before the staged global npm install.
 - `--dry-run`: preview planned update actions (channel/tag/target/restart flow) without writing config, installing, syncing plugins, or restarting.
 - `--json`: print machine-readable `UpdateRunResult` JSON, including
   `postUpdate.plugins.warnings` when corrupt or unloadable managed plugins need
@@ -55,11 +55,11 @@ terminal/WebSocket output, while file logs require `logging.level: "debug"` or
 `"trace"` in config. See [Gateway logging](/gateway/logging).
 
 <Note>
-In Nix mode (`OPENCLAW_NIX_MODE=1`), mutating `quiet-core-bot update` runs are disabled. Update the Nix source or flake input for this install instead; for nix-openclaw, use the agent-first [Quick Start](https://github.com/openclaw/nix-openclaw#quick-start). `quiet-core-bot update status` and `quiet-core-bot update --dry-run` remain read-only.
+In Nix mode (`QUIET_CORE_NIX_MODE=1`), mutating `quiet-core-bot update` runs are disabled. Update the Nix source or flake input for this install instead; for nix-openclaw, use the agent-first [Quick Start](https://github.com/openclaw/nix-openclaw#quick-start). `quiet-core-bot update status` and `quiet-core-bot update --dry-run` remain read-only.
 </Note>
 
 <Note>
-Independent distributions (`OPENCLAW_INDEPENDENT_BUILD`, on unless explicitly switched off) do not participate in upstream Quiet Core bot updates. The refusal is enforced inside the update executor, so it covers every entry point: the mutating `quiet-core-bot update` / `quiet-core-bot update repair` / `quiet-core-bot update finalize` / `quiet-core-bot update wizard` commands, the `update.run` Gateway RPC (Control UI and other control-plane clients), and the pre-doctor update prompt. The RPC reports the refusal as a skipped run with `reason: "independent-build-update-disabled"`. Read-only `quiet-core-bot update status` stays available. Set `OPENCLAW_INDEPENDENT_BUILD=0` to restore the upstream update commands.
+Independent distributions (`QUIET_CORE_INDEPENDENT_BUILD`, on unless explicitly switched off) do not participate in upstream Quiet Core bot updates. The refusal is enforced inside the update executor, so it covers every entry point: the mutating `quiet-core-bot update` / `quiet-core-bot update repair` / `quiet-core-bot update finalize` / `quiet-core-bot update wizard` commands, the `update.run` Gateway RPC (Control UI and other control-plane clients), and the pre-doctor update prompt. The RPC reports the refusal as a skipped run with `reason: "independent-build-update-disabled"`. Read-only `quiet-core-bot update status` stays available. Set `QUIET_CORE_INDEPENDENT_BUILD=0` to restore the upstream update commands.
 </Note>
 
 <Warning>
@@ -126,8 +126,8 @@ Options:
 When you switch channels explicitly (`--channel ...`), Quiet Core bot also keeps the
 install method aligned:
 
-- `dev` → ensures a git checkout (default: `~/openclaw`, or `$OPENCLAW_HOME/openclaw` when
-  `OPENCLAW_HOME` is set; override with `OPENCLAW_GIT_DIR`),
+- `dev` → ensures a git checkout (default: `~/quiet-core-bot`, or `$QUIET_CORE_HOME/quiet-core-bot` when
+  `QUIET_CORE_HOME` is set; override with `QUIET_CORE_GIT_DIR`),
   updates it, and installs the global CLI from that checkout.
 - `stable` → installs from npm using `latest`.
 - `beta` → prefers npm dist-tag `beta`, but falls back to `latest` when beta is
@@ -193,7 +193,7 @@ Gateway exits:
   `handoff.status: "unavailable"` mean Quiet Core bot could not find a supervising
   service boundary and durable service identity for a safe handoff. For
   example, systemd handoff requires the Quiet Core bot unit identity
-  (`OPENCLAW_SYSTEMD_UNIT`), not only ambient systemd process markers. The
+  (`QUIET_CORE_SYSTEMD_UNIT`), not only ambient systemd process markers. The
   response includes `handoff.command`, the shell command to run from outside the
   Gateway.
 - `ok: false`, `result.reason: "managed-service-handoff-failed"` means the
@@ -230,7 +230,7 @@ returns the latest sentinel.
     Dev only.
   </Step>
   <Step title="Preflight build (dev only)">
-    Runs the TypeScript build in a temp worktree. If the tip fails, walks back up to 10 commits to find the newest buildable commit. Set `OPENCLAW_UPDATE_PREFLIGHT_LINT=1` to also run lint during this preflight; lint runs in constrained serial mode because user update hosts are often smaller than CI runners.
+    Runs the TypeScript build in a temp worktree. If the tip fails, walks back up to 10 commits to find the newest buildable commit. Set `QUIET_CORE_UPDATE_PREFLIGHT_LINT=1` to also run lint during this preflight; lint runs in constrained serial mode because user update hosts are often smaller than CI runners.
   </Step>
   <Step title="Rebase">
     Rebases onto the selected commit (dev only).

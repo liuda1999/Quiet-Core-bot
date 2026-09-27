@@ -7,7 +7,7 @@ import {
   bundledDistPluginFile,
   bundledPluginFile,
   bundledPluginRoot,
-} from "openclaw/plugin-sdk/test-fixtures";
+} from "quiet-core-bot/plugin-sdk/test-fixtures";
 import { describe, expect, it, vi } from "vitest";
 import { copyBundledPluginMetadata } from "../../scripts/copy-bundled-plugin-metadata.mjs";
 import {
@@ -47,7 +47,7 @@ const EXTENSION_INDEX = bundledPluginFile("demo", "index.ts");
 const EXTENSION_SRC = bundledPluginFile("demo", "src/index.ts");
 const EXTENSION_EXTRA_SRC = bundledPluginFile("demo", "src/extra.ts");
 const EXTENSION_SKILL = bundledPluginFile("demo", "skills/SKILL.md");
-const EXTENSION_MANIFEST = bundledPluginFile("demo", "openclaw.plugin.json");
+const EXTENSION_MANIFEST = bundledPluginFile("demo", "quiet-core-bot.plugin.json");
 const EXTENSION_PACKAGE = bundledPluginFile("demo", "package.json");
 const EXTENSION_README = bundledPluginFile("demo", "README.md");
 const DIST_EXTENSION_INDEX = bundledDistPluginFile("demo", "index.js");
@@ -55,19 +55,19 @@ const DIST_EXTENSION_SRC = bundledDistPluginFile("demo", "src/index.js");
 const DIST_EXTENSION_SKILL = bundledDistPluginFile("demo", "skills/SKILL.md");
 const DIST_EXTENSION_RUNTIME_SRC = "dist-runtime/extensions/demo/src/index.js";
 const DIST_RUNTIME_EXTENSION_INDEX = "dist-runtime/extensions/demo/index.js";
-const DIST_RUNTIME_EXTENSION_MANIFEST = "dist-runtime/extensions/demo/openclaw.plugin.json";
+const DIST_RUNTIME_EXTENSION_MANIFEST = "dist-runtime/extensions/demo/quiet-core-bot.plugin.json";
 const DIST_RUNTIME_EXTENSION_PACKAGE = "dist-runtime/extensions/demo/package.json";
 const DIST_RUNTIME_EXTENSION_SKILL = "dist-runtime/extensions/demo/skills/SKILL.md";
-const DIST_OPENCLAW_ALIAS_PACKAGE = "dist/extensions/node_modules/openclaw/package.json";
-const DIST_OPENCLAW_ALIAS_PLUGIN_SDK_INDEX =
-  "dist/extensions/node_modules/openclaw/plugin-sdk/index.js";
-const DIST_OPENCLAW_ALIAS_PLUGIN_SDK_STRING_COERCE =
-  "dist/extensions/node_modules/openclaw/plugin-sdk/string-coerce-runtime.js";
+const DIST_QUIET_CORE_ALIAS_PACKAGE = "dist/extensions/node_modules/quiet-core-bot/package.json";
+const DIST_QUIET_CORE_ALIAS_PLUGIN_SDK_INDEX =
+  "dist/extensions/node_modules/quiet-core-bot/plugin-sdk/index.js";
+const DIST_QUIET_CORE_ALIAS_PLUGIN_SDK_STRING_COERCE =
+  "dist/extensions/node_modules/quiet-core-bot/plugin-sdk/string-coerce-runtime.js";
 const DIFFS_PACKAGE = "extensions/diffs/package.json";
 const DIFFS_VIEWER_RUNTIME_SOURCE = "extensions/diffs/assets/viewer-runtime.js";
 const DIST_DIFFS_VIEWER_RUNTIME = "dist/extensions/diffs/assets/viewer-runtime.js";
 const DIST_RUNTIME_DIFFS_VIEWER_RUNTIME = "dist-runtime/extensions/diffs/assets/viewer-runtime.js";
-const DIST_EXTENSION_MANIFEST = bundledDistPluginFile("demo", "openclaw.plugin.json");
+const DIST_EXTENSION_MANIFEST = bundledDistPluginFile("demo", "quiet-core-bot.plugin.json");
 const DIST_EXTENSION_PACKAGE = bundledDistPluginFile("demo", "package.json");
 
 const OLD_TIME = new Date("2026-03-13T10:00:00.000Z");
@@ -76,7 +76,7 @@ const NEW_TIME = new Date("2026-03-13T12:00:01.000Z");
 
 const BASE_PROJECT_FILES = {
   [ROOT_TSCONFIG]: "{}\n",
-  [ROOT_PACKAGE]: '{"name":"openclaw-test"}\n',
+  [ROOT_PACKAGE]: '{"name":"quiet-core-bot-test"}\n',
   [DIST_ENTRY]: "console.log('built');\n",
   [BUILD_STAMP]: '{"head":"abc123"}\n',
 } as const;
@@ -152,8 +152,8 @@ async function writeRuntimePostBuildScaffold(tmp: string): Promise<void> {
     [DIST_CHANNEL_CATALOG]: '{"entries":[]}\n',
     [DIST_LEGACY_CLI_EXIT_COMPAT]: "export function hasMemoryRuntime() { return false; }\n",
     [DIST_LEGACY_CLI_EXIT_COMPAT_ALT]: "export function hasMemoryRuntime() { return false; }\n",
-    [DIST_OPENCLAW_ALIAS_PACKAGE]:
-      '{"name":"openclaw","type":"module","exports":{"./plugin-sdk":"./plugin-sdk/index.js"}}\n',
+    [DIST_QUIET_CORE_ALIAS_PACKAGE]:
+      '{"name":"quiet-core-bot","type":"module","exports":{"./plugin-sdk":"./plugin-sdk/index.js"}}\n',
   });
   await touchProjectFiles(
     tmp,
@@ -162,7 +162,7 @@ async function writeRuntimePostBuildScaffold(tmp: string): Promise<void> {
       DIST_CHANNEL_CATALOG,
       DIST_LEGACY_CLI_EXIT_COMPAT,
       DIST_LEGACY_CLI_EXIT_COMPAT_ALT,
-      DIST_OPENCLAW_ALIAS_PACKAGE,
+      DIST_QUIET_CORE_ALIAS_PACKAGE,
     ],
     BUILD_TIME,
   );
@@ -310,7 +310,7 @@ async function runStatusCommand(params: {
     args: ["status"],
     env: {
       ...process.env,
-      OPENCLAW_RUNNER_LOG: "0",
+      QUIET_CORE_RUNNER_LOG: "0",
       ...params.env,
     },
     spawn: params.spawn,
@@ -336,7 +336,7 @@ async function runGatewayCallStatusCommand(params: {
     args: ["gateway", "call", "status", "--json"],
     env: {
       ...process.env,
-      OPENCLAW_RUNNER_LOG: "0",
+      QUIET_CORE_RUNNER_LOG: "0",
       ...params.env,
     },
     spawn: params.spawn,
@@ -362,7 +362,7 @@ async function runQaCommand(params: {
     args: ["qa", "suite", "--transport", "qa-channel", "--provider-mode", "mock-openai"],
     env: {
       ...process.env,
-      OPENCLAW_RUNNER_LOG: "0",
+      QUIET_CORE_RUNNER_LOG: "0",
       ...params.env,
     },
     spawn: params.spawn,
@@ -384,7 +384,7 @@ describe("run-node script", () => {
   it.runIf(process.platform !== "win32")(
     "preserves control-ui assets by building with tsdown --no-clean",
     async () => {
-      await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+      await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
         const argsPath = resolvePath(tmp, ".build-args.txt");
         const indexPath = resolvePath(tmp, "dist/control-ui/index.html");
 
@@ -411,8 +411,8 @@ describe("run-node script", () => {
           args: ["--version"],
           env: {
             ...process.env,
-            OPENCLAW_FORCE_BUILD: "1",
-            OPENCLAW_RUNNER_LOG: "0",
+            QUIET_CORE_FORCE_BUILD: "1",
+            QUIET_CORE_RUNNER_LOG: "0",
           },
           spawn,
           runRuntimePostBuild: skipRuntimePostBuild,
@@ -435,7 +435,7 @@ describe("run-node script", () => {
   );
 
   it("copies bundled plugin metadata after rebuilding from a clean dist", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await writeRuntimePostBuildScaffold(tmp);
       await writeProjectFiles(tmp, {
         [EXTENSION_MANIFEST]: '{"id":"demo","configSchema":{"type":"object"}}\n',
@@ -443,7 +443,7 @@ describe("run-node script", () => {
           JSON.stringify(
             {
               name: "demo",
-              openclaw: {
+              "quiet-core-bot": {
                 extensions: ["./src/index.ts", "./nested/entry.mts"],
               },
             },
@@ -461,7 +461,7 @@ describe("run-node script", () => {
       const exitCode = await runStatusCommand({
         tmp,
         spawn,
-        env: { OPENCLAW_FORCE_BUILD: "1" },
+        env: { QUIET_CORE_FORCE_BUILD: "1" },
         runRuntimePostBuild: syncBundledPluginMetadata,
       });
 
@@ -485,7 +485,7 @@ describe("run-node script", () => {
   });
 
   it("skips DTS generation only for launcher-triggered local builds", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await writeRuntimePostBuildScaffold(tmp);
       const spawnCalls: Array<{
         args: string[];
@@ -505,8 +505,8 @@ describe("run-node script", () => {
         args: ["status"],
         env: {
           ...process.env,
-          OPENCLAW_FORCE_BUILD: "1",
-          OPENCLAW_RUNNER_LOG: "0",
+          QUIET_CORE_FORCE_BUILD: "1",
+          QUIET_CORE_RUNNER_LOG: "0",
         },
         spawn,
         runRuntimePostBuild: skipRuntimePostBuild,
@@ -523,14 +523,14 @@ describe("run-node script", () => {
       ]);
       expect(spawnCalls[1]?.args).toEqual(["scripts/tsdown-build.mjs", "--no-clean"]);
       expect(spawnCalls[2]?.args).toEqual(["quiet-core-bot.mjs", "status"]);
-      expect(spawnCalls[0]?.env.OPENCLAW_RUN_NODE_SKIP_DTS_BUILD).toBeUndefined();
-      expect(spawnCalls[1]?.env.OPENCLAW_RUN_NODE_SKIP_DTS_BUILD).toBe("1");
-      expect(spawnCalls[2]?.env.OPENCLAW_RUN_NODE_SKIP_DTS_BUILD).toBeUndefined();
+      expect(spawnCalls[0]?.env.QUIET_CORE_RUN_NODE_SKIP_DTS_BUILD).toBeUndefined();
+      expect(spawnCalls[1]?.env.QUIET_CORE_RUN_NODE_SKIP_DTS_BUILD).toBe("1");
+      expect(spawnCalls[2]?.env.QUIET_CORE_RUN_NODE_SKIP_DTS_BUILD).toBeUndefined();
     });
   });
 
   it("tees launcher output into the requested generic output log", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp);
       const outputPath = path.join(tmp, ".artifacts", "qa-e2e", "matrix", "output.log");
       const spawnCalls: Array<{
@@ -559,9 +559,9 @@ describe("run-node script", () => {
         args: ["status"],
         env: {
           ...process.env,
-          OPENCLAW_FORCE_BUILD: "1",
-          OPENCLAW_RUNNER_LOG: "1",
-          OPENCLAW_RUN_NODE_OUTPUT_LOG: outputPath,
+          QUIET_CORE_FORCE_BUILD: "1",
+          QUIET_CORE_RUNNER_LOG: "1",
+          QUIET_CORE_RUN_NODE_OUTPUT_LOG: outputPath,
         },
         spawn,
         stderr: mutedStream,
@@ -574,15 +574,15 @@ describe("run-node script", () => {
       expect(exitCode).toBe(0);
       await expect(fs.readFile(outputPath, "utf-8")).resolves.toContain("child stdout\n");
       await expect(fs.readFile(outputPath, "utf-8")).resolves.toContain("child stderr\n");
-      await expect(fs.readFile(outputPath, "utf-8")).resolves.toContain("[openclaw]");
+      await expect(fs.readFile(outputPath, "utf-8")).resolves.toContain("[quiet-core-bot]");
       expect(spawnCalls.at(-1)?.args).toEqual(["quiet-core-bot.mjs", "status"]);
-      expect(spawnCalls.at(-1)?.env.OPENCLAW_RUN_NODE_OUTPUT_LOG).toBe(outputPath);
+      expect(spawnCalls.at(-1)?.env.QUIET_CORE_RUN_NODE_OUTPUT_LOG).toBe(outputPath);
       expect(spawnCalls.at(-1)?.stdio).toEqual(["inherit", "pipe", "pipe"]);
     });
   });
 
   it("routes local build stdout to stderr before JSON command output", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await writeRuntimePostBuildScaffold(tmp);
       const outputPath = path.join(tmp, ".artifacts", "run-node", "output.log");
       const spawn = (_cmd: string, args: string[]) => {
@@ -620,9 +620,9 @@ describe("run-node script", () => {
         args: ["plugins", "list", "--json"],
         env: {
           ...process.env,
-          OPENCLAW_FORCE_BUILD: "1",
-          OPENCLAW_RUNNER_LOG: "0",
-          OPENCLAW_RUN_NODE_OUTPUT_LOG: outputPath,
+          QUIET_CORE_FORCE_BUILD: "1",
+          QUIET_CORE_RUNNER_LOG: "0",
+          QUIET_CORE_RUN_NODE_OUTPUT_LOG: outputPath,
         },
         spawn,
         stdout,
@@ -645,7 +645,7 @@ describe("run-node script", () => {
   });
 
   it("routes sync I/O trace stderr blocks to the output log without flooding stderr", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp);
       const outputPath = path.join(tmp, ".artifacts", "gateway-watch-profiles", "output.log");
       const childStderr = [
@@ -676,9 +676,9 @@ describe("run-node script", () => {
         args: ["status"],
         env: {
           ...process.env,
-          OPENCLAW_RUNNER_LOG: "0",
-          OPENCLAW_RUN_NODE_FILTER_SYNC_IO_STDERR: "1",
-          OPENCLAW_RUN_NODE_OUTPUT_LOG: outputPath,
+          QUIET_CORE_RUNNER_LOG: "0",
+          QUIET_CORE_RUN_NODE_FILTER_SYNC_IO_STDERR: "1",
+          QUIET_CORE_RUN_NODE_OUTPUT_LOG: outputPath,
         },
         spawn,
         stderr,
@@ -699,7 +699,7 @@ describe("run-node script", () => {
   });
 
   it("adds Node CPU profiling flags to the launched Quiet Core bot child when requested", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -736,8 +736,8 @@ describe("run-node script", () => {
         args: ["status"],
         env: {
           ...process.env,
-          OPENCLAW_RUNNER_LOG: "0",
-          OPENCLAW_RUN_NODE_CPU_PROF_DIR: ".artifacts/profiles",
+          QUIET_CORE_RUNNER_LOG: "0",
+          QUIET_CORE_RUN_NODE_CPU_PROF_DIR: ".artifacts/profiles",
         },
         spawn,
         spawnSync,
@@ -752,16 +752,16 @@ describe("run-node script", () => {
       expect(childArgs[0]).toBe("--cpu-prof");
       expect(childArgs[1]).toBe(`--cpu-prof-dir=${profileDir}`);
       expect(childArgs[2]).toMatch(
-        /^--cpu-prof-name=openclaw-status-4242-\d{4}-\d{2}-\d{2}T.*\.cpuprofile$/,
+        /^--cpu-prof-name=quiet-core-bot-status-4242-\d{4}-\d{2}-\d{2}T.*\.cpuprofile$/,
       );
       expect(childArgs.slice(3)).toEqual(["quiet-core-bot.mjs", "status"]);
-      expect(spawnCalls.at(-1)?.env.OPENCLAW_RUN_NODE_CPU_PROF_DIR).toBe(profileDir);
+      expect(spawnCalls.at(-1)?.env.QUIET_CORE_RUN_NODE_CPU_PROF_DIR).toBe(profileDir);
       expect(fsSync.existsSync(profileDir)).toBe(true);
     });
   });
 
   it("rotates old Node CPU profiles when a retention cap is set", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -772,9 +772,9 @@ describe("run-node script", () => {
       const profileDir = path.join(tmp, ".artifacts", "profiles");
       fsSync.mkdirSync(profileDir, { recursive: true });
       const oldProfiles = [
-        "openclaw-status-oldest.cpuprofile",
-        "openclaw-status-middle.cpuprofile",
-        "openclaw-status-newest.cpuprofile",
+        "quiet-core-bot-status-oldest.cpuprofile",
+        "quiet-core-bot-status-middle.cpuprofile",
+        "quiet-core-bot-status-newest.cpuprofile",
       ];
       for (const [index, name] of oldProfiles.entries()) {
         const filePath = path.join(profileDir, name);
@@ -782,7 +782,7 @@ describe("run-node script", () => {
         const mtime = new Date(1_700_000_000_000 + index * 1000);
         fsSync.utimesSync(filePath, mtime, mtime);
       }
-      fsSync.writeFileSync(path.join(profileDir, "openclaw-models-old.cpuprofile"), "{}");
+      fsSync.writeFileSync(path.join(profileDir, "quiet-core-bot-models-old.cpuprofile"), "{}");
 
       const spawn = () => createExitedProcess(0);
       const { spawnSync } = createSpawnRecorder({
@@ -795,9 +795,9 @@ describe("run-node script", () => {
         args: ["status"],
         env: {
           ...process.env,
-          OPENCLAW_RUNNER_LOG: "0",
-          OPENCLAW_RUN_NODE_CPU_PROF_DIR: ".artifacts/profiles",
-          OPENCLAW_RUN_NODE_CPU_PROF_MAX_FILES: "2",
+          QUIET_CORE_RUNNER_LOG: "0",
+          QUIET_CORE_RUN_NODE_CPU_PROF_DIR: ".artifacts/profiles",
+          QUIET_CORE_RUN_NODE_CPU_PROF_MAX_FILES: "2",
         },
         spawn,
         spawnSync,
@@ -811,12 +811,12 @@ describe("run-node script", () => {
       expect(fsSync.existsSync(path.join(profileDir, oldProfiles[0]))).toBe(false);
       expect(fsSync.existsSync(path.join(profileDir, oldProfiles[1]))).toBe(false);
       expect(fsSync.existsSync(path.join(profileDir, oldProfiles[2]))).toBe(true);
-      expect(fsSync.existsSync(path.join(profileDir, "openclaw-models-old.cpuprofile"))).toBe(true);
+      expect(fsSync.existsSync(path.join(profileDir, "quiet-core-bot-models-old.cpuprofile"))).toBe(true);
     });
   });
 
   it("adds Node sync I/O tracing flag to the launched Quiet Core bot child when requested", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -839,8 +839,8 @@ describe("run-node script", () => {
         args: ["gateway", "--force"],
         env: {
           ...process.env,
-          OPENCLAW_RUNNER_LOG: "0",
-          OPENCLAW_TRACE_SYNC_IO: "1",
+          QUIET_CORE_RUNNER_LOG: "0",
+          QUIET_CORE_TRACE_SYNC_IO: "1",
         },
         spawn,
         spawnSync,
@@ -860,7 +860,7 @@ describe("run-node script", () => {
   });
 
   it("surfaces generic output log stream errors", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp);
       const outputPath = path.join(tmp, ".artifacts", "qa-e2e", "matrix", "output.log");
       await fs.mkdir(outputPath, { recursive: true });
@@ -878,8 +878,8 @@ describe("run-node script", () => {
         args: ["status"],
         env: {
           ...process.env,
-          OPENCLAW_RUNNER_LOG: "0",
-          OPENCLAW_RUN_NODE_OUTPUT_LOG: outputPath,
+          QUIET_CORE_RUNNER_LOG: "0",
+          QUIET_CORE_RUN_NODE_OUTPUT_LOG: outputPath,
         },
         spawn,
         stderr: mutedStream,
@@ -895,7 +895,7 @@ describe("run-node script", () => {
   });
 
   it("does not mutate Matrix QA args when no generic output log is requested", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp);
       const spawnCalls: Array<{ args: string[]; env: Record<string, string | undefined> }> = [];
       const spawn = (_cmd: string, args: string[], options?: unknown) => {
@@ -912,7 +912,7 @@ describe("run-node script", () => {
         args: ["qa", "matrix"],
         env: {
           ...process.env,
-          OPENCLAW_RUNNER_LOG: "0",
+          QUIET_CORE_RUNNER_LOG: "0",
         },
         spawn,
         stderr: mutedStream,
@@ -925,12 +925,12 @@ describe("run-node script", () => {
       expect(exitCode).toBe(0);
       const childArgs = spawnCalls.at(-1)?.args ?? [];
       expect(childArgs).toEqual(["quiet-core-bot.mjs", "qa", "matrix"]);
-      expect(spawnCalls.at(-1)?.env.OPENCLAW_RUN_NODE_OUTPUT_LOG).toBeUndefined();
+      expect(spawnCalls.at(-1)?.env.QUIET_CORE_RUN_NODE_OUTPUT_LOG).toBeUndefined();
     });
   });
 
   it("skips rebuilding when dist is current and the source tree is clean", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -956,7 +956,7 @@ describe("run-node script", () => {
   });
 
   it("skips rebuilding for private QA commands when the private QA facades are present", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -1001,7 +1001,7 @@ describe("run-node script", () => {
   });
 
   it("rebuilds private QA commands when the private QA runtime facade is missing", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -1041,7 +1041,7 @@ describe("run-node script", () => {
   });
 
   it("passes the synthesized private QA env into runtime postbuild staging", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -1064,14 +1064,14 @@ describe("run-node script", () => {
         | { cwd?: string; env?: Record<string, string | undefined> }
         | undefined;
       expect(postBuildParams?.cwd).toBe(tmp);
-      expect(postBuildParams?.env?.OPENCLAW_BUILD_PRIVATE_QA).toBe("1");
-      expect(postBuildParams?.env?.OPENCLAW_ENABLE_PRIVATE_QA_CLI).toBe("1");
-      expect(postBuildParams?.env?.OPENCLAW_DISABLE_BUNDLED_PLUGINS).toBe("0");
+      expect(postBuildParams?.env?.QUIET_CORE_BUILD_PRIVATE_QA).toBe("1");
+      expect(postBuildParams?.env?.QUIET_CORE_ENABLE_PRIVATE_QA_CLI).toBe("1");
+      expect(postBuildParams?.env?.QUIET_CORE_DISABLE_BUNDLED_PLUGINS).toBe("0");
     });
   });
 
   it("preserves an explicit bundled plugin disable flag for QA runs", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -1091,19 +1091,19 @@ describe("run-node script", () => {
         spawn,
         spawnSync,
         runRuntimePostBuild,
-        env: { OPENCLAW_DISABLE_BUNDLED_PLUGINS: "1" },
+        env: { QUIET_CORE_DISABLE_BUNDLED_PLUGINS: "1" },
       });
 
       expect(exitCode).toBe(0);
       const postBuildParams = firstMockCall(runRuntimePostBuild)?.[0] as
         | { cwd?: string; env?: Record<string, string | undefined> }
         | undefined;
-      expect(postBuildParams?.env?.OPENCLAW_DISABLE_BUNDLED_PLUGINS).toBe("1");
+      expect(postBuildParams?.env?.QUIET_CORE_DISABLE_BUNDLED_PLUGINS).toBe("1");
     });
   });
 
   it("derives private QA facade checks from distRoot for direct freshness checks", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -1115,7 +1115,7 @@ describe("run-node script", () => {
 
       const requirement = resolveBuildRequirement(
         createBuildRequirementDeps(tmp, {
-          env: { OPENCLAW_BUILD_PRIVATE_QA: "1" },
+          env: { QUIET_CORE_BUILD_PRIVATE_QA: "1" },
           gitHead: "abc123\n",
           gitStatus: "",
         }),
@@ -1129,7 +1129,7 @@ describe("run-node script", () => {
   });
 
   it("skips runtime postbuild restaging in watch mode when dist is already current", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -1147,7 +1147,7 @@ describe("run-node script", () => {
         tmp,
         spawn,
         spawnSync,
-        env: { OPENCLAW_WATCH_MODE: "1" },
+        env: { QUIET_CORE_WATCH_MODE: "1" },
         runRuntimePostBuild,
       });
 
@@ -1158,7 +1158,7 @@ describe("run-node script", () => {
   });
 
   it("reruns runtime postbuild in watch mode when required outputs are missing with no runtime stamp", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -1176,7 +1176,7 @@ describe("run-node script", () => {
           BUILD_STAMP,
         ],
       });
-      await fs.rm(resolvePath(tmp, DIST_OPENCLAW_ALIAS_PACKAGE));
+      await fs.rm(resolvePath(tmp, DIST_QUIET_CORE_ALIAS_PACKAGE));
 
       const runRuntimePostBuild = vi.fn();
       const { spawnCalls, spawn, spawnSync } = createSpawnRecorder({
@@ -1187,7 +1187,7 @@ describe("run-node script", () => {
         tmp,
         spawn,
         spawnSync,
-        env: { OPENCLAW_WATCH_MODE: "1" },
+        env: { QUIET_CORE_WATCH_MODE: "1" },
         runRuntimePostBuild,
       });
 
@@ -1198,11 +1198,11 @@ describe("run-node script", () => {
   });
 
   it("reruns runtime postbuild for dirty extension package metadata in watch mode", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
-          [EXTENSION_PACKAGE]: '{"openclaw":{"extensions":["./index.ts"]}}\n',
+          [EXTENSION_PACKAGE]: '{"quiet-core-bot":{"extensions":["./index.ts"]}}\n',
           [RUNTIME_POSTBUILD_STAMP]: '{"head":"abc123"}\n',
         },
         buildPaths: [
@@ -1225,7 +1225,7 @@ describe("run-node script", () => {
         tmp,
         spawn,
         spawnSync,
-        env: { OPENCLAW_WATCH_MODE: "1" },
+        env: { QUIET_CORE_WATCH_MODE: "1" },
         runRuntimePostBuild,
       });
 
@@ -1236,7 +1236,7 @@ describe("run-node script", () => {
   });
 
   it("runs QA parity report from source without rebuilding private QA dist", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           "extensions/qa-lab/src/cli.runtime.ts": "export {};\n",
@@ -1262,7 +1262,7 @@ describe("run-node script", () => {
         ],
         env: {
           ...process.env,
-          OPENCLAW_RUNNER_LOG: "0",
+          QUIET_CORE_RUNNER_LOG: "0",
         },
         spawn,
         execPath: process.execPath,
@@ -1286,7 +1286,7 @@ describe("run-node script", () => {
   });
 
   it("runs QA coverage report from source without rebuilding private QA dist", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           "extensions/qa-lab/src/cli.runtime.ts": "export {};\n",
@@ -1312,7 +1312,7 @@ describe("run-node script", () => {
         ],
         env: {
           ...process.env,
-          OPENCLAW_RUNNER_LOG: "0",
+          QUIET_CORE_RUNNER_LOG: "0",
         },
         spawn,
         execPath: process.execPath,
@@ -1336,7 +1336,7 @@ describe("run-node script", () => {
   });
 
   it("skips runtime postbuild restaging when the runtime stamp is current", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -1365,7 +1365,7 @@ describe("run-node script", () => {
   });
 
   it("restages runtime artifacts when runtime metadata is dirty", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -1406,7 +1406,7 @@ describe("run-node script", () => {
   });
 
   it("serializes runtime postbuild restaging across concurrent clean launchers", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -1443,7 +1443,7 @@ describe("run-node script", () => {
           spawn,
           spawnSync,
           env: {
-            OPENCLAW_RUN_NODE_BUILD_LOCK_POLL_MS: "1",
+            QUIET_CORE_RUN_NODE_BUILD_LOCK_POLL_MS: "1",
           },
           runRuntimePostBuild,
         }),
@@ -1452,7 +1452,7 @@ describe("run-node script", () => {
           spawn,
           spawnSync,
           env: {
-            OPENCLAW_RUN_NODE_BUILD_LOCK_POLL_MS: "1",
+            QUIET_CORE_RUN_NODE_BUILD_LOCK_POLL_MS: "1",
           },
           runRuntimePostBuild,
         }),
@@ -1469,7 +1469,7 @@ describe("run-node script", () => {
   });
 
   it("returns the build exit code when the compiler step fails", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       const spawn = (cmd: string, args: string[] = []) => {
         if (cmd === process.execPath && args[0] === "scripts/tsdown-build.mjs") {
           return createExitedProcess(23);
@@ -1482,8 +1482,8 @@ describe("run-node script", () => {
         args: ["status"],
         env: {
           ...process.env,
-          OPENCLAW_FORCE_BUILD: "1",
-          OPENCLAW_RUNNER_LOG: "0",
+          QUIET_CORE_FORCE_BUILD: "1",
+          QUIET_CORE_RUNNER_LOG: "0",
         },
         spawn,
         execPath: process.execPath,
@@ -1495,7 +1495,7 @@ describe("run-node script", () => {
   });
 
   it("returns failure and releases the build lock when the compiler spawn errors", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       const spawn = (cmd: string, args: string[] = []) => {
         if (cmd === process.execPath && args[0] === "scripts/tsdown-build.mjs") {
           const events = new EventEmitter();
@@ -1515,8 +1515,8 @@ describe("run-node script", () => {
         args: ["status"],
         env: {
           ...process.env,
-          OPENCLAW_FORCE_BUILD: "1",
-          OPENCLAW_RUNNER_LOG: "0",
+          QUIET_CORE_FORCE_BUILD: "1",
+          QUIET_CORE_RUNNER_LOG: "0",
         },
         spawn,
         execPath: process.execPath,
@@ -1529,7 +1529,7 @@ describe("run-node script", () => {
   });
 
   it("forwards wrapper SIGTERM to the active quiet-core-bot child and returns 143", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -1573,7 +1573,7 @@ describe("run-node script", () => {
         args: ["status"],
         env: {
           ...process.env,
-          OPENCLAW_RUNNER_LOG: "0",
+          QUIET_CORE_RUNNER_LOG: "0",
         },
         process: fakeProcess,
         spawn,
@@ -1603,7 +1603,7 @@ describe("run-node script", () => {
   it.runIf(process.platform !== "win32")(
     "force-cleans the active quiet-core-bot child process group after forwarded SIGTERM",
     async () => {
-      await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+      await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
         await setupTrackedProject(tmp, {
           files: {
             [ROOT_SRC]: "export const value = 1;\n",
@@ -1648,7 +1648,7 @@ describe("run-node script", () => {
           args: ["status"],
           env: {
             ...process.env,
-            OPENCLAW_RUNNER_LOG: "0",
+            QUIET_CORE_RUNNER_LOG: "0",
           },
           platform: "darwin",
           process: fakeProcess,
@@ -1688,7 +1688,7 @@ describe("run-node script", () => {
   );
 
   it("rebuilds when extension sources are newer than the build stamp", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [EXTENSION_SRC]: "export const extensionValue = 1;\n",
@@ -1715,7 +1715,7 @@ describe("run-node script", () => {
   });
 
   it("shows tty progress while rebuilding source-checkout artifacts", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -1739,7 +1739,7 @@ describe("run-node script", () => {
         env: {
           ...process.env,
           CI: "false",
-          OPENCLAW_FORCE_BUILD: "1",
+          QUIET_CORE_FORCE_BUILD: "1",
         },
         spawn,
         spawnSync,
@@ -1757,7 +1757,7 @@ describe("run-node script", () => {
   });
 
   it("rebuilds when git HEAD changes even if source mtimes do not exceed the old build stamp", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -1787,15 +1787,15 @@ describe("run-node script", () => {
   });
 
   it("skips rebuilding when extension package metadata is newer than the build stamp", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [EXTENSION_INDEX]: "export default {};\n",
           [EXTENSION_MANIFEST]: '{"id":"demo","configSchema":{"type":"object"}}\n',
-          [EXTENSION_PACKAGE]: '{"name":"demo","openclaw":{"extensions":["./index.ts"]}}\n',
+          [EXTENSION_PACKAGE]: '{"name":"demo","quiet-core-bot":{"extensions":["./index.ts"]}}\n',
           [ROOT_TSDOWN]: "export default {};\n",
           [DIST_EXTENSION_INDEX]: "export default {};\n",
-          [DIST_EXTENSION_PACKAGE]: '{"name":"demo","openclaw":{"extensions":["./stale.js"]}}\n',
+          [DIST_EXTENSION_PACKAGE]: '{"name":"demo","quiet-core-bot":{"extensions":["./stale.js"]}}\n',
         },
         oldPaths: [EXTENSION_INDEX, EXTENSION_MANIFEST, ROOT_TSCONFIG, ROOT_PACKAGE, ROOT_TSDOWN],
         buildPaths: [DIST_ENTRY, BUILD_STAMP, DIST_EXTENSION_INDEX, DIST_EXTENSION_PACKAGE],
@@ -1819,7 +1819,7 @@ describe("run-node script", () => {
   });
 
   it("skips rebuilding for dirty non-source files under extensions", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -1854,7 +1854,7 @@ describe("run-node script", () => {
   });
 
   it("skips rebuilding for dirty extension manifests that only affect runtime reload", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -1896,7 +1896,7 @@ describe("run-node script", () => {
   });
 
   it("reports dirty watched source trees as an explicit build reason", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -1919,7 +1919,7 @@ describe("run-node script", () => {
   });
 
   it("does not rebuild for gateway client calls against an existing dirty dist", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -1954,7 +1954,7 @@ describe("run-node script", () => {
   });
 
   it("reports a clean tree explicitly when dist is current", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -1978,7 +1978,7 @@ describe("run-node script", () => {
   });
 
   it("reports clean in sparse worktrees without bundled plugin sources", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -2003,14 +2003,14 @@ describe("run-node script", () => {
   });
 
   it("rebuilds when dirty bundled package entries point at missing dist outputs", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
           [EXTENSION_SRC]: "export default {};\n",
           [EXTENSION_EXTRA_SRC]: "export const extra = true;\n",
           [EXTENSION_MANIFEST]: '{"id":"demo","configSchema":{"type":"object"}}\n',
-          [EXTENSION_PACKAGE]: '{"openclaw":{"extensions":["./src/index.ts","./src/extra.ts"]}}\n',
+          [EXTENSION_PACKAGE]: '{"quiet-core-bot":{"extensions":["./src/index.ts","./src/extra.ts"]}}\n',
           [DIST_EXTENSION_SRC]: "export default {};\n",
         },
         buildPaths: [
@@ -2042,14 +2042,14 @@ describe("run-node script", () => {
   });
 
   it("rebuilds when clean bundled plugin dist outputs are partially missing", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
           [EXTENSION_SRC]: "export default {};\n",
           [EXTENSION_EXTRA_SRC]: "export const extra = true;\n",
           [EXTENSION_MANIFEST]: '{"id":"demo","configSchema":{"type":"object"}}\n',
-          [EXTENSION_PACKAGE]: '{"openclaw":{"extensions":["./src/index.ts","./src/extra.ts"]}}\n',
+          [EXTENSION_PACKAGE]: '{"quiet-core-bot":{"extensions":["./src/index.ts","./src/extra.ts"]}}\n',
           [DIST_EXTENSION_SRC]: "export default {};\n",
         },
         buildPaths: [
@@ -2081,13 +2081,13 @@ describe("run-node script", () => {
   });
 
   it("rebuilds when a clean stamped bundled plugin dist directory is missing", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
           [EXTENSION_SRC]: "export default {};\n",
           [EXTENSION_MANIFEST]: '{"id":"demo","configSchema":{"type":"object"}}\n',
-          [EXTENSION_PACKAGE]: '{"openclaw":{"extensions":["./src/index.ts"]}}\n',
+          [EXTENSION_PACKAGE]: '{"quiet-core-bot":{"extensions":["./src/index.ts"]}}\n',
         },
         buildPaths: [
           ROOT_SRC,
@@ -2116,7 +2116,7 @@ describe("run-node script", () => {
   });
 
   it("reports clean runtime postbuild artifacts when the runtime stamp matches HEAD", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -2141,19 +2141,19 @@ describe("run-node script", () => {
   });
 
   it("reports missing runtime postbuild outputs even when stamps match HEAD", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
           [EXTENSION_SRC]: "export default {};\n",
           [EXTENSION_MANIFEST]: '{"id":"demo","configSchema":{"type":"object"}}\n',
-          [EXTENSION_PACKAGE]: '{"openclaw":{"extensions":["./src/index.ts"]}}\n',
+          [EXTENSION_PACKAGE]: '{"quiet-core-bot":{"extensions":["./src/index.ts"]}}\n',
           [DIST_EXTENSION_SRC]: "export default {};\n",
           [DIST_EXTENSION_MANIFEST]: '{"id":"demo","configSchema":{"type":"object"}}\n',
-          [DIST_EXTENSION_PACKAGE]: '{"openclaw":{"extensions":["./src/index.js"]}}\n',
+          [DIST_EXTENSION_PACKAGE]: '{"quiet-core-bot":{"extensions":["./src/index.js"]}}\n',
           [DIST_EXTENSION_RUNTIME_SRC]: "export default {};\n",
           [DIST_RUNTIME_EXTENSION_MANIFEST]: '{"id":"demo","configSchema":{"type":"object"}}\n',
-          [DIST_RUNTIME_EXTENSION_PACKAGE]: '{"openclaw":{"extensions":["./src/index.js"]}}\n',
+          [DIST_RUNTIME_EXTENSION_PACKAGE]: '{"quiet-core-bot":{"extensions":["./src/index.js"]}}\n',
           [RUNTIME_POSTBUILD_STAMP]: '{"head":"abc123"}\n',
         },
         buildPaths: [
@@ -2189,16 +2189,16 @@ describe("run-node script", () => {
   });
 
   it("reports missing runtime overlay outputs from restored dist without plugin sources", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
           [DIST_EXTENSION_INDEX]: "export default {};\n",
           [DIST_EXTENSION_MANIFEST]: '{"id":"demo","configSchema":{"type":"object"}}\n',
-          [DIST_EXTENSION_PACKAGE]: '{"openclaw":{"extensions":["./index.js"]}}\n',
+          [DIST_EXTENSION_PACKAGE]: '{"quiet-core-bot":{"extensions":["./index.js"]}}\n',
           [DIST_RUNTIME_EXTENSION_INDEX]: "export default {};\n",
           [DIST_RUNTIME_EXTENSION_MANIFEST]: '{"id":"demo","configSchema":{"type":"object"}}\n',
-          [DIST_RUNTIME_EXTENSION_PACKAGE]: '{"openclaw":{"extensions":["./index.js"]}}\n',
+          [DIST_RUNTIME_EXTENSION_PACKAGE]: '{"quiet-core-bot":{"extensions":["./index.js"]}}\n',
           [RUNTIME_POSTBUILD_STAMP]: '{"head":"abc123"}\n',
         },
         buildPaths: [
@@ -2232,7 +2232,7 @@ describe("run-node script", () => {
   });
 
   it("does not require Quiet Core bot SDK alias outputs when dist extensions are absent", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -2273,14 +2273,14 @@ describe("run-node script", () => {
   });
 
   it("reports missing Quiet Core bot SDK alias outputs when runtime stamps match HEAD", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
           [DIST_PLUGIN_SDK_INDEX]: "export * from './core.js';\n",
-          [DIST_OPENCLAW_ALIAS_PACKAGE]:
-            '{"name":"openclaw","type":"module","exports":{"./plugin-sdk":"./plugin-sdk/index.js"}}\n',
-          [DIST_OPENCLAW_ALIAS_PLUGIN_SDK_INDEX]:
+          [DIST_QUIET_CORE_ALIAS_PACKAGE]:
+            '{"name":"quiet-core-bot","type":"module","exports":{"./plugin-sdk":"./plugin-sdk/index.js"}}\n',
+          [DIST_QUIET_CORE_ALIAS_PLUGIN_SDK_INDEX]:
             "export * from '../../../../plugin-sdk/index.js';\n",
           [RUNTIME_POSTBUILD_STAMP]: '{"head":"abc123"}\n',
         },
@@ -2288,13 +2288,13 @@ describe("run-node script", () => {
           ROOT_SRC,
           DIST_ENTRY,
           DIST_PLUGIN_SDK_INDEX,
-          DIST_OPENCLAW_ALIAS_PACKAGE,
-          DIST_OPENCLAW_ALIAS_PLUGIN_SDK_INDEX,
+          DIST_QUIET_CORE_ALIAS_PACKAGE,
+          DIST_QUIET_CORE_ALIAS_PLUGIN_SDK_INDEX,
           BUILD_STAMP,
           RUNTIME_POSTBUILD_STAMP,
         ],
       });
-      await fs.rm(resolvePath(tmp, DIST_OPENCLAW_ALIAS_PLUGIN_SDK_INDEX));
+      await fs.rm(resolvePath(tmp, DIST_QUIET_CORE_ALIAS_PLUGIN_SDK_INDEX));
 
       const requirement = resolveRuntimePostBuildRequirement(
         createBuildRequirementDeps(tmp, {
@@ -2311,13 +2311,13 @@ describe("run-node script", () => {
   });
 
   it("does not require private Quiet Core bot SDK dist files that package exports omit", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
           [ROOT_PACKAGE]: JSON.stringify(
             {
-              name: "openclaw-test",
+              name: "quiet-core-bot-test",
               exports: {
                 "./plugin-sdk": "./dist/plugin-sdk/index.js",
                 "./plugin-sdk/string-coerce-runtime": "./dist/plugin-sdk/string-coerce-runtime.js",
@@ -2329,11 +2329,11 @@ describe("run-node script", () => {
           [DIST_PLUGIN_SDK_INDEX]: "export * from './core.js';\n",
           "dist/plugin-sdk/string-coerce-runtime.js": "export const publicRuntime = true;\n",
           "dist/plugin-sdk/ssrf-runtime-internal.js": "export const internal = true;\n",
-          [DIST_OPENCLAW_ALIAS_PACKAGE]:
-            '{"name":"openclaw","type":"module","exports":{"./plugin-sdk":"./plugin-sdk/index.js","./plugin-sdk/string-coerce-runtime":"./plugin-sdk/string-coerce-runtime.js"}}\n',
-          [DIST_OPENCLAW_ALIAS_PLUGIN_SDK_INDEX]:
+          [DIST_QUIET_CORE_ALIAS_PACKAGE]:
+            '{"name":"quiet-core-bot","type":"module","exports":{"./plugin-sdk":"./plugin-sdk/index.js","./plugin-sdk/string-coerce-runtime":"./plugin-sdk/string-coerce-runtime.js"}}\n',
+          [DIST_QUIET_CORE_ALIAS_PLUGIN_SDK_INDEX]:
             "export * from '../../../../plugin-sdk/index.js';\n",
-          [DIST_OPENCLAW_ALIAS_PLUGIN_SDK_STRING_COERCE]:
+          [DIST_QUIET_CORE_ALIAS_PLUGIN_SDK_STRING_COERCE]:
             "export * from '../../../../plugin-sdk/string-coerce-runtime.js';\n",
           [RUNTIME_POSTBUILD_STAMP]: '{"head":"abc123"}\n',
         },
@@ -2344,9 +2344,9 @@ describe("run-node script", () => {
           DIST_PLUGIN_SDK_INDEX,
           "dist/plugin-sdk/string-coerce-runtime.js",
           "dist/plugin-sdk/ssrf-runtime-internal.js",
-          DIST_OPENCLAW_ALIAS_PACKAGE,
-          DIST_OPENCLAW_ALIAS_PLUGIN_SDK_INDEX,
-          DIST_OPENCLAW_ALIAS_PLUGIN_SDK_STRING_COERCE,
+          DIST_QUIET_CORE_ALIAS_PACKAGE,
+          DIST_QUIET_CORE_ALIAS_PLUGIN_SDK_INDEX,
+          DIST_QUIET_CORE_ALIAS_PLUGIN_SDK_STRING_COERCE,
           BUILD_STAMP,
           RUNTIME_POSTBUILD_STAMP,
         ],
@@ -2367,12 +2367,12 @@ describe("run-node script", () => {
   });
 
   it("reports missing static runtime postbuild asset outputs when runtime stamps match HEAD", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
           [DIFFS_PACKAGE]:
-            '{"openclaw":{"build":{"staticAssets":[{"source":"./assets/viewer-runtime.js","output":"assets/viewer-runtime.js"}]}}}\n',
+            '{"quiet-core-bot":{"build":{"staticAssets":[{"source":"./assets/viewer-runtime.js","output":"assets/viewer-runtime.js"}]}}}\n',
           [DIFFS_VIEWER_RUNTIME_SOURCE]: "export {};\n",
           [DIST_DIFFS_VIEWER_RUNTIME]: "export {};\n",
           [DIST_RUNTIME_DIFFS_VIEWER_RUNTIME]: "export {};\n",
@@ -2406,12 +2406,12 @@ describe("run-node script", () => {
   });
 
   it("reports missing static runtime overlay asset outputs when runtime stamps match HEAD", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
           [DIFFS_PACKAGE]:
-            '{"openclaw":{"build":{"staticAssets":[{"source":"./assets/viewer-runtime.js","output":"assets/viewer-runtime.js"}]}}}\n',
+            '{"quiet-core-bot":{"build":{"staticAssets":[{"source":"./assets/viewer-runtime.js","output":"assets/viewer-runtime.js"}]}}}\n',
           [DIFFS_VIEWER_RUNTIME_SOURCE]: "export {};\n",
           [DIST_DIFFS_VIEWER_RUNTIME]: "export {};\n",
           [DIST_RUNTIME_DIFFS_VIEWER_RUNTIME]: "export {};\n",
@@ -2445,14 +2445,14 @@ describe("run-node script", () => {
   });
 
   it("does not require static asset outputs when runtime static assets are disabled", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
           [DIFFS_PACKAGE]:
-            '{"openclaw":{"build":{"staticAssets":[{"source":"./assets/viewer-runtime.js","output":"assets/viewer-runtime.js"}]}}}\n',
+            '{"quiet-core-bot":{"build":{"staticAssets":[{"source":"./assets/viewer-runtime.js","output":"assets/viewer-runtime.js"}]}}}\n',
           [DIFFS_VIEWER_RUNTIME_SOURCE]: "export {};\n",
-          [DIST_RUNTIME_EXTENSION_PACKAGE]: '{"openclaw":{"extensions":["./index.js"]}}\n',
+          [DIST_RUNTIME_EXTENSION_PACKAGE]: '{"quiet-core-bot":{"extensions":["./index.js"]}}\n',
           [RUNTIME_POSTBUILD_STAMP]: '{"head":"abc123"}\n',
         },
         buildPaths: [
@@ -2468,7 +2468,7 @@ describe("run-node script", () => {
 
       const requirement = resolveRuntimePostBuildRequirement(
         createBuildRequirementDeps(tmp, {
-          env: { OPENCLAW_RUNTIME_POSTBUILD_STATIC_ASSETS: "0" },
+          env: { QUIET_CORE_RUNTIME_POSTBUILD_STATIC_ASSETS: "0" },
           gitHead: "abc123\n",
           gitStatus: "",
         }),
@@ -2482,12 +2482,12 @@ describe("run-node script", () => {
   });
 
   it("does not require static asset outputs when the declared source is absent", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
           [DIFFS_PACKAGE]:
-            '{"openclaw":{"build":{"staticAssets":[{"source":"./assets/viewer-runtime.js","output":"assets/viewer-runtime.js"}]}}}\n',
+            '{"quiet-core-bot":{"build":{"staticAssets":[{"source":"./assets/viewer-runtime.js","output":"assets/viewer-runtime.js"}]}}}\n',
           [RUNTIME_POSTBUILD_STAMP]: '{"head":"abc123"}\n',
         },
         buildPaths: [ROOT_SRC, DIFFS_PACKAGE, DIST_ENTRY, BUILD_STAMP, RUNTIME_POSTBUILD_STAMP],
@@ -2508,7 +2508,7 @@ describe("run-node script", () => {
   });
 
   it("reports missing core runtime postbuild outputs when runtime stamps match HEAD", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -2558,7 +2558,7 @@ describe("run-node script", () => {
   });
 
   it("does not require ambiguous stable runtime aliases that postbuild cannot create", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -2591,7 +2591,7 @@ describe("run-node script", () => {
   });
 
   it("reports missing runtime skill outputs even when stamps match HEAD", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -2639,7 +2639,7 @@ describe("run-node script", () => {
   });
 
   it("reports dirty runtime postbuild inputs separately from rebuild inputs", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -2678,7 +2678,7 @@ describe("run-node script", () => {
   });
 
   it("ignores dirty generated plugin bundle artifacts when dist is current", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -2702,7 +2702,7 @@ describe("run-node script", () => {
   });
 
   it("reports bundled skill edits as runtime postbuild inputs", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -2735,7 +2735,7 @@ describe("run-node script", () => {
   });
 
   it("repairs missing bundled plugin metadata without rerunning tsdown", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -2775,7 +2775,7 @@ describe("run-node script", () => {
   });
 
   it("removes stale bundled plugin metadata when the source manifest is gone", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -2816,7 +2816,7 @@ describe("run-node script", () => {
   });
 
   it("skips rebuilding when only non-source extension files are newer than the build stamp", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -2842,7 +2842,7 @@ describe("run-node script", () => {
   });
 
   it("rebuilds when tsdown config is newer than the build stamp", async () => {
-    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+    await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
       await setupTrackedProject(tmp, {
         files: {
           [ROOT_SRC]: "export const value = 1;\n",
@@ -2877,14 +2877,14 @@ describe("run-node script", () => {
     const lockDeps = (tmp: string, fakeProcess: NodeJS.Process) => ({
       cwd: tmp,
       args: ["status"],
-      env: { OPENCLAW_RUNNER_LOG: "0" },
+      env: { QUIET_CORE_RUNNER_LOG: "0" },
       fs: fsSync,
       process: fakeProcess,
       stderr: { write: () => true } as unknown as NodeJS.WriteStream,
     });
 
     it("releases the lock directory when the wrapper receives SIGINT", async () => {
-      await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+      await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
         const fakeProcess = createFakeProcess();
         const lockDir = path.join(tmp, ".artifacts", "run-node-build.lock");
 
@@ -2903,7 +2903,7 @@ describe("run-node script", () => {
     });
 
     it("releases the lock directory when the wrapper receives SIGTERM", async () => {
-      await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+      await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
         const fakeProcess = createFakeProcess();
         const lockDir = path.join(tmp, ".artifacts", "run-node-build.lock");
 
@@ -2917,7 +2917,7 @@ describe("run-node script", () => {
     });
 
     it("releases the lock directory on process exit", async () => {
-      await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+      await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
         const fakeProcess = createFakeProcess();
         const lockDir = path.join(tmp, ".artifacts", "run-node-build.lock");
 
@@ -2931,7 +2931,7 @@ describe("run-node script", () => {
     });
 
     it("detaches signal listeners after a normal release", async () => {
-      await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+      await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
         const fakeProcess = createFakeProcess();
         const lockDir = path.join(tmp, ".artifacts", "run-node-build.lock");
 
@@ -2949,7 +2949,7 @@ describe("run-node script", () => {
     });
 
     it("removes a lock left by a dead wrapper process without waiting for age-out", async () => {
-      await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+      await withTempDir({ prefix: "quiet-core-bot-run-node-" }, async (tmp) => {
         const lockDir = path.join(tmp, ".artifacts", "run-node-build.lock");
         await fs.mkdir(lockDir, { recursive: true });
         await fs.writeFile(

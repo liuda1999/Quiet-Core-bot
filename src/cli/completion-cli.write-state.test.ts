@@ -71,23 +71,23 @@ describe("completion-cli write-state", () => {
 
   it("keeps completion cache generation alive when a subcli fails to register", async () => {
     const { registerCompletionCli } = await import("./completion-cli.js");
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-completion-state-"));
-    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-completion-home-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-completion-state-"));
+    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-completion-home-"));
 
     try {
-      await withEnvAsync({ HOME: homeDir, OPENCLAW_STATE_DIR: stateDir }, async () => {
+      await withEnvAsync({ HOME: homeDir, QUIET_CORE_STATE_DIR: stateDir }, async () => {
         const program = new Command();
-        program.name("openclaw");
+        program.name("quiet-core-bot");
         registerCompletionCli(program);
 
         await program.parseAsync(["completion", "--write-state"], { from: "user" });
 
         const cacheDir = path.join(stateDir, "completions");
         expect((await fs.readdir(cacheDir)).toSorted()).toEqual([
-          "openclaw.bash",
-          "openclaw.fish",
-          "openclaw.ps1",
-          "openclaw.zsh",
+          "quiet-core-bot.bash",
+          "quiet-core-bot.fish",
+          "quiet-core-bot.ps1",
+          "quiet-core-bot.zsh",
         ]);
         expect(registerSubCliByNameMock.mock.calls).toEqual([
           [program, "qa", process.argv, { purpose: "completion" }],
@@ -110,19 +110,19 @@ describe("completion-cli write-state", () => {
       import("./completion-runtime.js"),
       import("./completion-cli.js"),
     ]);
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-completion-state-"));
-    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-completion-home-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-completion-state-"));
+    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-completion-home-"));
 
     try {
       await withEnvAsync(
         {
           HOME: homeDir,
-          OPENCLAW_STATE_DIR: stateDir,
+          QUIET_CORE_STATE_DIR: stateDir,
           [COMPLETION_SKIP_PLUGIN_COMMANDS_ENV]: "1",
         },
         async () => {
           const program = new Command();
-          program.name("openclaw");
+          program.name("quiet-core-bot");
           registerCompletionCli(program);
 
           await program.parseAsync(["completion", "--write-state"], { from: "user" });
@@ -132,10 +132,10 @@ describe("completion-cli write-state", () => {
           ]);
           expect(registerPluginCliCommandsFromValidatedConfigMock).not.toHaveBeenCalled();
           expect((await fs.readdir(path.join(stateDir, "completions"))).toSorted()).toEqual([
-            "openclaw.bash",
-            "openclaw.fish",
-            "openclaw.ps1",
-            "openclaw.zsh",
+            "quiet-core-bot.bash",
+            "quiet-core-bot.fish",
+            "quiet-core-bot.ps1",
+            "quiet-core-bot.zsh",
           ]);
         },
       );

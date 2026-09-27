@@ -59,9 +59,9 @@ const buildGatewayInstallPlan = vi.fn(
     programArguments: ["/bin/node", "cli", "gateway", "--port", String(params.port)],
     workingDirectory: process.cwd(),
     environment: {
-      OPENCLAW_GATEWAY_PORT: String(params.port),
-      ...(params.wrapperPath ? { OPENCLAW_WRAPPER: params.wrapperPath } : {}),
-      ...(params.token ? { OPENCLAW_GATEWAY_TOKEN: params.token } : {}),
+      QUIET_CORE_GATEWAY_PORT: String(params.port),
+      ...(params.wrapperPath ? { QUIET_CORE_WRAPPER: params.wrapperPath } : {}),
+      ...(params.token ? { QUIET_CORE_GATEWAY_TOKEN: params.token } : {}),
     },
   }),
 );
@@ -83,7 +83,7 @@ vi.mock("../gateway/probe-auth.js", () => ({
 }));
 
 vi.mock("../daemon/program-args.js", () => ({
-  OPENCLAW_WRAPPER_ENV_KEY: "OPENCLAW_WRAPPER",
+  QUIET_CORE_WRAPPER_ENV_KEY: "QUIET_CORE_WRAPPER",
   resolveGatewayProgramArguments: (opts: unknown) => resolveGatewayProgramArguments(opts),
   resolveOpenClawWrapperPath: async (value: string | undefined) => value?.trim() || undefined,
 }));
@@ -184,17 +184,17 @@ describe("daemon-cli coverage", () => {
 
   beforeEach(() => {
     daemonProgram = createDaemonProgram();
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-daemon-cli-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-daemon-cli-"));
     envSnapshot = captureEnv([
-      "OPENCLAW_STATE_DIR",
-      "OPENCLAW_CONFIG_PATH",
-      "OPENCLAW_GATEWAY_PORT",
-      "OPENCLAW_PROFILE",
+      "QUIET_CORE_STATE_DIR",
+      "QUIET_CORE_CONFIG_PATH",
+      "QUIET_CORE_GATEWAY_PORT",
+      "QUIET_CORE_PROFILE",
     ]);
-    process.env.OPENCLAW_STATE_DIR = tmpDir;
-    process.env.OPENCLAW_CONFIG_PATH = path.join(tmpDir, "openclaw.json");
-    delete process.env.OPENCLAW_GATEWAY_PORT;
-    delete process.env.OPENCLAW_PROFILE;
+    process.env.QUIET_CORE_STATE_DIR = tmpDir;
+    process.env.QUIET_CORE_CONFIG_PATH = path.join(tmpDir, "quiet-core-bot.json");
+    delete process.env.QUIET_CORE_GATEWAY_PORT;
+    delete process.env.QUIET_CORE_PROFILE;
     serviceReadCommand.mockResolvedValue(null);
     resolveGatewayProbeAuthSafeWithSecretInputs.mockClear();
     findExtraGatewayServices.mockClear();
@@ -229,12 +229,12 @@ describe("daemon-cli coverage", () => {
     serviceReadCommand.mockResolvedValueOnce({
       programArguments: ["/bin/node", "cli", "gateway", "--port", "19001"],
       environment: {
-        OPENCLAW_PROFILE: "dev",
-        OPENCLAW_STATE_DIR: "/tmp/openclaw-daemon-state",
-        OPENCLAW_CONFIG_PATH: "/tmp/openclaw-daemon-state/openclaw.json",
-        OPENCLAW_GATEWAY_PORT: "19001",
+        QUIET_CORE_PROFILE: "dev",
+        QUIET_CORE_STATE_DIR: "/tmp/quiet-core-bot-daemon-state",
+        QUIET_CORE_CONFIG_PATH: "/tmp/quiet-core-bot-daemon-state/quiet-core-bot.json",
+        QUIET_CORE_GATEWAY_PORT: "19001",
       },
-      sourcePath: "/tmp/ai.openclaw.gateway.plist",
+      sourcePath: "/tmp/ai.quiet-core-bot.gateway.plist",
     });
 
     await runDaemonCommand(["daemon", "status", "--json"]);
@@ -303,12 +303,12 @@ describe("daemon-cli coverage", () => {
     serviceReadCommand.mockResolvedValueOnce({
       programArguments: ["/bin/node", "cli", "gateway", "--port", "18789"],
       environment: {
-        OPENCLAW_WRAPPER: "/usr/local/bin/openclaw-doppler",
+        QUIET_CORE_WRAPPER: "/usr/local/bin/quiet-core-bot-doppler",
         PATH: "/custom/go/bin:/usr/bin",
         GOPATH: "/Users/test/.local/gopath",
         GOBIN: "/Users/test/.local/gopath/bin",
       },
-      sourcePath: "/tmp/ai.openclaw.gateway.plist",
+      sourcePath: "/tmp/ai.quiet-core-bot.gateway.plist",
     });
 
     await runDaemonCommand(["daemon", "install", "--force", "--json"]);
@@ -319,12 +319,12 @@ describe("daemon-cli coverage", () => {
     );
     expect(installPlanParams.existingEnvironment).toEqual({
       PATH: "/custom/go/bin:/usr/bin",
-      OPENCLAW_WRAPPER: "/usr/local/bin/openclaw-doppler",
+      QUIET_CORE_WRAPPER: "/usr/local/bin/quiet-core-bot-doppler",
       GOPATH: "/Users/test/.local/gopath",
       GOBIN: "/Users/test/.local/gopath/bin",
     });
-    expect((installPlanParams.env as NodeJS.ProcessEnv).OPENCLAW_WRAPPER).toBe(
-      "/usr/local/bin/openclaw-doppler",
+    expect((installPlanParams.env as NodeJS.ProcessEnv).QUIET_CORE_WRAPPER).toBe(
+      "/usr/local/bin/quiet-core-bot-doppler",
     );
   });
 
@@ -336,12 +336,12 @@ describe("daemon-cli coverage", () => {
       "daemon",
       "install",
       "--wrapper",
-      "/usr/local/bin/openclaw-doppler",
+      "/usr/local/bin/quiet-core-bot-doppler",
       "--json",
     ]);
 
     expect(requireMockCallArg(buildGatewayInstallPlan, "buildGatewayInstallPlan").wrapperPath).toBe(
-      "/usr/local/bin/openclaw-doppler",
+      "/usr/local/bin/quiet-core-bot-doppler",
     );
   });
 

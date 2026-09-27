@@ -29,7 +29,7 @@ the Gateway, then restart the Gateway to load it.
     <Tabs>
       <Tab title="From npm">
         ```bash
-        quiet-core-bot plugins install @openclaw/voice-call
+        quiet-core-bot plugins install @quiet-core/voice-call
         ```
       </Tab>
       <Tab title="From a local folder (dev)">
@@ -55,7 +55,7 @@ the Gateway, then restart the Gateway to load it.
   </Step>
   <Step title="Verify setup">
     ```bash
-    openclaw voicecall setup
+    quiet-core-bot voicecall setup
     ```
 
     The default output is readable in chat logs and terminals. It checks
@@ -66,15 +66,15 @@ the Gateway, then restart the Gateway to load it.
   </Step>
   <Step title="Smoke test">
     ```bash
-    openclaw voicecall smoke
-    openclaw voicecall smoke --to "+15555550123"
+    quiet-core-bot voicecall smoke
+    quiet-core-bot voicecall smoke --to "+15555550123"
     ```
 
     Both are dry runs by default. Add `--yes` to actually place a short
     outbound notify call:
 
     ```bash
-    openclaw voicecall smoke --to "+15555550123" --yes
+    quiet-core-bot voicecall smoke --to "+15555550123" --yes
     ```
 
   </Step>
@@ -724,16 +724,16 @@ Example with a stable public host:
 ## CLI
 
 ```bash
-openclaw voicecall call --to "+15555550123" --message "Hello from Quiet Core bot"
-openclaw voicecall start --to "+15555550123"   # alias for call
-openclaw voicecall continue --call-id <id> --message "Any questions?"
-openclaw voicecall speak --call-id <id> --message "One moment"
-openclaw voicecall dtmf --call-id <id> --digits "ww123456#"
-openclaw voicecall end --call-id <id>
-openclaw voicecall status --call-id <id>
-openclaw voicecall tail
-openclaw voicecall latency                      # summarize turn latency from logs
-openclaw voicecall expose --mode funnel
+quiet-core-bot voicecall call --to "+15555550123" --message "Hello from Quiet Core bot"
+quiet-core-bot voicecall start --to "+15555550123"   # alias for call
+quiet-core-bot voicecall continue --call-id <id> --message "Any questions?"
+quiet-core-bot voicecall speak --call-id <id> --message "One moment"
+quiet-core-bot voicecall dtmf --call-id <id> --digits "ww123456#"
+quiet-core-bot voicecall end --call-id <id>
+quiet-core-bot voicecall status --call-id <id>
+quiet-core-bot voicecall tail
+quiet-core-bot voicecall latency                      # summarize turn latency from logs
+quiet-core-bot voicecall expose --mode funnel
 ```
 
 When the Gateway is already running, operational `voicecall` commands delegate
@@ -783,8 +783,8 @@ digits.
 Run setup from the same environment that runs the Gateway:
 
 ```bash
-openclaw voicecall setup
-openclaw voicecall setup --json
+quiet-core-bot voicecall setup
+quiet-core-bot voicecall setup --json
 ```
 
 For `twilio`, `telnyx`, and `plivo`, `webhook-exposure` must be green. A
@@ -822,8 +822,8 @@ Use one public exposure path:
 After changing config, restart or reload the Gateway, then run:
 
 ```bash
-openclaw voicecall setup
-openclaw voicecall smoke
+quiet-core-bot voicecall setup
+quiet-core-bot voicecall smoke
 ```
 
 `voicecall smoke` is a dry run unless you pass `--yes`.
@@ -853,8 +853,8 @@ https://voice.example.com/voice/webhook
 Then inspect runtime state:
 
 ```bash
-openclaw voicecall status --call-id <id>
-openclaw voicecall tail
+quiet-core-bot voicecall status --call-id <id>
+quiet-core-bot voicecall tail
 quiet-core-bot logs --follow
 ```
 
@@ -889,14 +889,14 @@ from the incoming request. If signatures fail:
 Google Meet uses this plugin for Twilio dial-in joins. First verify Voice Call:
 
 ```bash
-openclaw voicecall setup
-openclaw voicecall smoke --to "+15555550123"
+quiet-core-bot voicecall setup
+quiet-core-bot voicecall smoke --to "+15555550123"
 ```
 
 Then verify the Google Meet transport explicitly:
 
 ```bash
-openclaw googlemeet setup --transport twilio
+quiet-core-bot googlemeet setup --transport twilio
 ```
 
 If Voice Call is green but the Meet participant never joins, check the Meet
@@ -918,7 +918,7 @@ join logs this order:
 - Voice Call serves realtime TwiML for the Twilio call.
 - Google Meet requests intro speech with `voicecall.speak` after the post-DTMF delay.
 
-`openclaw voicecall tail` still shows persisted call records; it is useful for
+`quiet-core-bot voicecall tail` still shows persisted call records; it is useful for
 call state and transcripts, but not every webhook/realtime transition appears
 there.
 

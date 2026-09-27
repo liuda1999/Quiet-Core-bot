@@ -1,6 +1,6 @@
 // Builds diagnostics for Codex plugin config and provider wiring.
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
+import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
 import {
   AUTO_AGENT_RUNTIME_ID,
   normalizeOptionalAgentRuntimeId,
@@ -9,7 +9,7 @@ import { resolveModelRuntimePolicy } from "../agents/model-runtime-policy.js";
 import { openAIProviderUsesCodexRuntimeByDefault } from "../agents/openai-routing.js";
 import type { AgentModelEntryConfig } from "./types.agent-defaults.js";
 import type { AgentRuntimePolicyConfig } from "./types.agents-shared.js";
-import type { OpenClawConfig } from "./types.openclaw.js";
+import type { OpenClawConfig } from "./types.quiet-core-bot.js";
 
 const CODEX_PLUGIN_ID = "codex";
 const OPENAI_PROVIDER_ID = "openai";

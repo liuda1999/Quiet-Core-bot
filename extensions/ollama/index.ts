@@ -1,7 +1,7 @@
 // Ollama plugin entrypoint registers its OpenClaw integration.
-import { collectConfiguredModelRefValues } from "@openclaw/model-catalog-core/configured-model-refs";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { resolvePluginConfigObject } from "openclaw/plugin-sdk/plugin-config-runtime";
+import { collectConfiguredModelRefValues } from "@quiet-core/model-catalog-core/configured-model-refs";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import { resolvePluginConfigObject } from "quiet-core-bot/plugin-sdk/plugin-config-runtime";
 import {
   definePluginEntry,
   type OpenClawPluginApi,
@@ -12,20 +12,20 @@ import {
   type ProviderCatalogContext,
   type ProviderReplayPolicy,
   type ProviderRuntimeModel,
-} from "openclaw/plugin-sdk/plugin-entry";
+} from "quiet-core-bot/plugin-sdk/plugin-entry";
 import {
   buildApiKeyCredential,
   coerceSecretRef,
   isNonSecretApiKeyMarker,
-} from "openclaw/plugin-sdk/provider-auth";
+} from "quiet-core-bot/plugin-sdk/provider-auth";
 import type {
   ModelDefinitionConfig,
   ModelProviderConfig,
-} from "openclaw/plugin-sdk/provider-model-shared";
+} from "quiet-core-bot/plugin-sdk/provider-model-shared";
 import {
   buildOpenAICompatibleReplayPolicy,
   OPENAI_COMPATIBLE_REPLAY_HOOKS,
-} from "openclaw/plugin-sdk/provider-model-shared";
+} from "quiet-core-bot/plugin-sdk/provider-model-shared";
 import {
   buildOllamaModelDefinition,
   buildOllamaProvider,
@@ -594,7 +594,7 @@ export default definePluginEntry({
       },
       buildUnknownModelHint: () =>
         "Ollama requires authentication to be registered as a provider. " +
-        'Set OLLAMA_API_KEY="ollama-local" (any value works) or run "openclaw configure". ' +
+        'Set OLLAMA_API_KEY="ollama-local" (any value works) or run "quiet-core-bot configure". ' +
         "See: https://github.com/liuda1999/Quiet-Core-bot/providers/ollama",
     });
   },

@@ -1312,7 +1312,7 @@ export const th: TranslationMap = {
     skillWorkshop: "ตรวจสอบ ปรับแต่ง และนำข้อเสนอไปใช้ก่อนที่จะกลายเป็น Skills ที่ใช้งานจริง",
     nodes: "อุปกรณ์ที่จับคู่และคำสั่ง",
     chat: "แชตเกตเวย์สำหรับการดำเนินการอย่างรวดเร็ว",
-    config: "แก้ไข openclaw.json",
+    config: "แก้ไข quiet-core-bot.json",
     communications: "ช่องทาง ข้อความ และการตั้งค่าเสียง",
     appearance: "ธีม UI และการตั้งค่าตัวช่วยเริ่มต้น",
     automation: "คำสั่ง hooks cron และ plugins",

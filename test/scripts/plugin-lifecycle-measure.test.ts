@@ -17,7 +17,7 @@ const tempDirs: string[] = [];
 const scriptPath = "scripts/e2e/lib/plugin-lifecycle-matrix/measure.mjs";
 
 function makeTempDir(): string {
-  const dir = mkdtempSync(path.join(tmpdir(), "openclaw-plugin-lifecycle-measure-"));
+  const dir = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-plugin-lifecycle-measure-"));
   tempDirs.push(dir);
   return dir;
 }
@@ -104,8 +104,8 @@ describe("plugin lifecycle resource sampler", () => {
         GETCONF_LOG: logPath,
         PATH: `${binDir}:${process.env.PATH ?? ""}`,
       };
-      delete env.OPENCLAW_PROC_PAGE_SIZE;
-      delete env.OPENCLAW_PROC_CLK_TCK;
+      delete env.QUIET_CORE_PROC_PAGE_SIZE;
+      delete env.QUIET_CORE_PROC_CLK_TCK;
 
       const result = spawnSync(
         process.execPath,
@@ -119,7 +119,7 @@ describe("plugin lifecycle resource sampler", () => {
       );
 
       expect(readFileSync(logPath, "utf8")).toBe("PAGESIZE\nCLK_TCK\n");
-      expect(result.stderr).not.toContain("failed to derive OPENCLAW_PROC");
+      expect(result.stderr).not.toContain("failed to derive QUIET_CORE_PROC");
     },
   );
 
@@ -131,14 +131,14 @@ describe("plugin lifecycle resource sampler", () => {
       encoding: "utf8",
       env: {
         ...process.env,
-        OPENCLAW_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS: "150ms",
+        QUIET_CORE_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS: "150ms",
       },
       timeout: 5000,
     });
 
     expect(result.status).not.toBe(0);
     expect(result.stderr).toContain(
-      "OPENCLAW_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS must be a positive integer; got: 150ms",
+      "QUIET_CORE_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS must be a positive integer; got: 150ms",
     );
   });
 
@@ -150,14 +150,14 @@ describe("plugin lifecycle resource sampler", () => {
       encoding: "utf8",
       env: {
         ...process.env,
-        OPENCLAW_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS: "0",
+        QUIET_CORE_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS: "0",
       },
       timeout: 5000,
     });
 
     expect(result.status).not.toBe(0);
     expect(result.stderr).toContain(
-      "OPENCLAW_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS must be a positive integer; got: 0",
+      "QUIET_CORE_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS must be a positive integer; got: 0",
     );
   });
 
@@ -169,25 +169,25 @@ describe("plugin lifecycle resource sampler", () => {
       encoding: "utf8",
       env: {
         ...process.env,
-        OPENCLAW_PLUGIN_LIFECYCLE_MAX_CPU_CORE_RATIO: "1x",
+        QUIET_CORE_PLUGIN_LIFECYCLE_MAX_CPU_CORE_RATIO: "1x",
       },
       timeout: 5000,
     });
 
     expect(result.status).not.toBe(0);
     expect(result.stderr).toContain(
-      "OPENCLAW_PLUGIN_LIFECYCLE_MAX_CPU_CORE_RATIO must be a positive number; got: 1x",
+      "QUIET_CORE_PLUGIN_LIFECYCLE_MAX_CPU_CORE_RATIO must be a positive number; got: 1x",
     );
   });
 
   it("configures a phase timeout with process-group cleanup", () => {
     const script = readFileSync(scriptPath, "utf8");
 
-    expect(script).toContain("OPENCLAW_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS");
-    expect(script).toContain("OPENCLAW_PLUGIN_LIFECYCLE_TIMEOUT_KILL_GRACE_MS");
-    expect(script).toContain("OPENCLAW_PLUGIN_LIFECYCLE_MAX_RSS_KB");
-    expect(script).toContain("OPENCLAW_PLUGIN_LIFECYCLE_MAX_WALL_MS");
-    expect(script).toContain("OPENCLAW_PLUGIN_LIFECYCLE_MAX_CPU_CORE_RATIO");
+    expect(script).toContain("QUIET_CORE_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS");
+    expect(script).toContain("QUIET_CORE_PLUGIN_LIFECYCLE_TIMEOUT_KILL_GRACE_MS");
+    expect(script).toContain("QUIET_CORE_PLUGIN_LIFECYCLE_MAX_RSS_KB");
+    expect(script).toContain("QUIET_CORE_PLUGIN_LIFECYCLE_MAX_WALL_MS");
+    expect(script).toContain("QUIET_CORE_PLUGIN_LIFECYCLE_MAX_CPU_CORE_RATIO");
     expect(script).toContain("detached: true");
     expect(script).toContain("process.kill(-child.pid, signal)");
     expect(script).toContain("plugin lifecycle resource ceiling exceeded");
@@ -208,8 +208,8 @@ describe("plugin lifecycle resource sampler", () => {
           encoding: "utf8",
           env: {
             ...process.env,
-            OPENCLAW_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS: "5000",
-            OPENCLAW_PLUGIN_LIFECYCLE_MAX_WALL_MS: "1",
+            QUIET_CORE_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS: "5000",
+            QUIET_CORE_PLUGIN_LIFECYCLE_MAX_WALL_MS: "1",
           },
           timeout: 5000,
         },
@@ -235,8 +235,8 @@ describe("plugin lifecycle resource sampler", () => {
           encoding: "utf8",
           env: {
             ...process.env,
-            OPENCLAW_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS: "150",
-            OPENCLAW_PLUGIN_LIFECYCLE_TIMEOUT_KILL_GRACE_MS: "50",
+            QUIET_CORE_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS: "150",
+            QUIET_CORE_PLUGIN_LIFECYCLE_TIMEOUT_KILL_GRACE_MS: "50",
           },
           timeout: 5000,
         },
@@ -270,9 +270,9 @@ describe("plugin lifecycle resource sampler", () => {
         encoding: "utf8",
         env: {
           ...process.env,
-          OPENCLAW_PLUGIN_LIFECYCLE_METRIC_POLL_MS: oversizedTimerMs,
-          OPENCLAW_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS: oversizedTimerMs,
-          OPENCLAW_PLUGIN_LIFECYCLE_TIMEOUT_KILL_GRACE_MS: oversizedTimerMs,
+          QUIET_CORE_PLUGIN_LIFECYCLE_METRIC_POLL_MS: oversizedTimerMs,
+          QUIET_CORE_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS: oversizedTimerMs,
+          QUIET_CORE_PLUGIN_LIFECYCLE_TIMEOUT_KILL_GRACE_MS: oversizedTimerMs,
         },
         timeout: 5000,
       },
@@ -314,8 +314,8 @@ describe("plugin lifecycle resource sampler", () => {
             encoding: "utf8",
             env: {
               ...process.env,
-              OPENCLAW_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS: "1000",
-              OPENCLAW_PLUGIN_LIFECYCLE_TIMEOUT_KILL_GRACE_MS: "200",
+              QUIET_CORE_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS: "1000",
+              QUIET_CORE_PLUGIN_LIFECYCLE_TIMEOUT_KILL_GRACE_MS: "200",
               PID_FILE: pidFile,
             },
             timeout: 5000,
@@ -361,8 +361,8 @@ describe("plugin lifecycle resource sampler", () => {
             cwd: process.cwd(),
             env: {
               ...process.env,
-              OPENCLAW_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS: "5000",
-              OPENCLAW_PLUGIN_LIFECYCLE_TIMEOUT_KILL_GRACE_MS: "200",
+              QUIET_CORE_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS: "5000",
+              QUIET_CORE_PLUGIN_LIFECYCLE_TIMEOUT_KILL_GRACE_MS: "200",
               PID_FILE: pidFile,
             },
             stdio: "ignore",
@@ -410,8 +410,8 @@ describe("plugin lifecycle resource sampler", () => {
           cwd: process.cwd(),
           env: {
             ...process.env,
-            OPENCLAW_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS: "5000",
-            OPENCLAW_PLUGIN_LIFECYCLE_TIMEOUT_KILL_GRACE_MS: "1500",
+            QUIET_CORE_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS: "5000",
+            QUIET_CORE_PLUGIN_LIFECYCLE_TIMEOUT_KILL_GRACE_MS: "1500",
             READY_FILE: readyFile,
           },
           stdio: "ignore",
@@ -449,8 +449,8 @@ describe("plugin lifecycle resource sampler", () => {
           cwd: process.cwd(),
           env: {
             ...process.env,
-            OPENCLAW_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS: "5000",
-            OPENCLAW_PLUGIN_LIFECYCLE_TIMEOUT_KILL_GRACE_MS: "1500",
+            QUIET_CORE_PLUGIN_LIFECYCLE_PHASE_TIMEOUT_MS: "5000",
+            QUIET_CORE_PLUGIN_LIFECYCLE_TIMEOUT_KILL_GRACE_MS: "1500",
             READY_FILE: readyFile,
           },
           stdio: "ignore",

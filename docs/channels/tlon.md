@@ -23,7 +23,7 @@ current npm package:
 Install via CLI (npm registry):
 
 ```bash
-quiet-core-bot plugins install @openclaw/tlon
+quiet-core-bot plugins install @quiet-core/tlon
 ```
 
 Use the bare package to follow the current official release tag. Pin an exact

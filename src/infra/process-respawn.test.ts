@@ -9,7 +9,7 @@ const triggerOpenClawRestartMock = vi.hoisted(() => vi.fn());
 const isContainerEnvironmentMock = vi.hoisted(() => vi.fn(() => false));
 
 vi.mock("node:child_process", async () => {
-  const { mockNodeBuiltinModule } = await import("openclaw/plugin-sdk/test-node-mocks");
+  const { mockNodeBuiltinModule } = await import("quiet-core-bot/plugin-sdk/test-node-mocks");
   return mockNodeBuiltinModule(
     () => vi.importActual<typeof import("node:child_process")>("node:child_process"),
     {
@@ -59,7 +59,7 @@ function expectLaunchdSupervisedWithoutKickstart(params?: { launchJobLabel?: str
   if (params?.launchJobLabel) {
     process.env.LAUNCH_JOB_LABEL = params.launchJobLabel;
   }
-  process.env.OPENCLAW_LAUNCHD_LABEL = "ai.openclaw.gateway";
+  process.env.QUIET_CORE_LAUNCHD_LABEL = "ai.quiet-core-bot.gateway";
   const result = restartGatewayProcessWithFreshPid();
   expect(result).toEqual({ mode: "supervised" });
   expect(triggerOpenClawRestartMock).not.toHaveBeenCalled();
@@ -67,18 +67,18 @@ function expectLaunchdSupervisedWithoutKickstart(params?: { launchJobLabel?: str
 }
 
 describe("restartGatewayProcessWithFreshPid", () => {
-  it("returns disabled when OPENCLAW_NO_RESPAWN is set", () => {
-    process.env.OPENCLAW_NO_RESPAWN = "1";
+  it("returns disabled when QUIET_CORE_NO_RESPAWN is set", () => {
+    process.env.QUIET_CORE_NO_RESPAWN = "1";
     const result = restartGatewayProcessWithFreshPid();
     expect(result.mode).toBe("disabled");
     expect(spawnMock).not.toHaveBeenCalled();
   });
 
-  it("keeps OPENCLAW_NO_RESPAWN ahead of inherited supervisor hints", () => {
+  it("keeps QUIET_CORE_NO_RESPAWN ahead of inherited supervisor hints", () => {
     clearSupervisorHints();
     setPlatform("darwin");
-    process.env.OPENCLAW_NO_RESPAWN = "1";
-    process.env.LAUNCH_JOB_LABEL = "ai.openclaw.gateway";
+    process.env.QUIET_CORE_NO_RESPAWN = "1";
+    process.env.LAUNCH_JOB_LABEL = "ai.quiet-core-bot.gateway";
 
     const result = restartGatewayProcessWithFreshPid();
 
@@ -89,13 +89,13 @@ describe("restartGatewayProcessWithFreshPid", () => {
 
   it("returns supervised when Quiet Core bot launchd markers are present on macOS (no kickstart)", () => {
     clearSupervisorHints();
-    expectLaunchdSupervisedWithoutKickstart({ launchJobLabel: "ai.openclaw.gateway" });
+    expectLaunchdSupervisedWithoutKickstart({ launchJobLabel: "ai.quiet-core-bot.gateway" });
   });
 
   it("returns supervised for a real gateway launchd job without the injected marker", () => {
     clearSupervisorHints();
     setPlatform("darwin");
-    process.env.LAUNCH_JOB_LABEL = "ai.openclaw.gateway";
+    process.env.LAUNCH_JOB_LABEL = "ai.quiet-core-bot.gateway";
 
     const result = restartGatewayProcessWithFreshPid();
 
@@ -107,7 +107,7 @@ describe("restartGatewayProcessWithFreshPid", () => {
   it("returns supervised for a real gateway XPC launchd job without the injected marker", () => {
     clearSupervisorHints();
     setPlatform("darwin");
-    process.env.XPC_SERVICE_NAME = "ai.openclaw.gateway";
+    process.env.XPC_SERVICE_NAME = "ai.quiet-core-bot.gateway";
 
     const result = restartGatewayProcessWithFreshPid();
 
@@ -117,13 +117,13 @@ describe("restartGatewayProcessWithFreshPid", () => {
   });
 
   it("returns supervised on macOS when launchd label is set (no kickstart)", () => {
-    expectLaunchdSupervisedWithoutKickstart({ launchJobLabel: "ai.openclaw.gateway" });
+    expectLaunchdSupervisedWithoutKickstart({ launchJobLabel: "ai.quiet-core-bot.gateway" });
   });
 
   it("launchd supervisor never returns failed regardless of triggerOpenClawRestart outcome", () => {
     clearSupervisorHints();
     setPlatform("darwin");
-    process.env.OPENCLAW_LAUNCHD_LABEL = "ai.openclaw.gateway";
+    process.env.QUIET_CORE_LAUNCHD_LABEL = "ai.quiet-core-bot.gateway";
     // Even if triggerOpenClawRestart *would* fail, launchd path must not call it.
     triggerOpenClawRestartMock.mockReturnValue({
       ok: false,
@@ -139,7 +139,7 @@ describe("restartGatewayProcessWithFreshPid", () => {
   it("does not schedule kickstart on non-darwin platforms", () => {
     setPlatform("linux");
     process.env.INVOCATION_ID = "abc123";
-    process.env.OPENCLAW_LAUNCHD_LABEL = "ai.openclaw.gateway";
+    process.env.QUIET_CORE_LAUNCHD_LABEL = "ai.quiet-core-bot.gateway";
 
     const result = restartGatewayProcessWithFreshPid();
 
@@ -151,8 +151,8 @@ describe("restartGatewayProcessWithFreshPid", () => {
   it("does not treat inherited XPC_SERVICE_NAME as launchd supervision", () => {
     clearSupervisorHints();
     setPlatform("darwin");
-    process.env.XPC_SERVICE_NAME = "ai.openclaw.mac";
-    process.env.OPENCLAW_PROFILE = "mac";
+    process.env.XPC_SERVICE_NAME = "ai.quiet-core-bot.mac";
+    process.env.QUIET_CORE_PROFILE = "mac";
 
     const result = restartGatewayProcessWithFreshPid();
 
@@ -165,7 +165,7 @@ describe("restartGatewayProcessWithFreshPid", () => {
   });
 
   it("uses in-process restart on unmanaged Unix so custom supervisors keep the tracked PID", () => {
-    delete process.env.OPENCLAW_NO_RESPAWN;
+    delete process.env.QUIET_CORE_NO_RESPAWN;
     clearSupervisorHints();
     setPlatform("linux");
     process.execArgv = ["--import", "tsx"];
@@ -181,15 +181,15 @@ describe("restartGatewayProcessWithFreshPid", () => {
     expect(spawnMock).not.toHaveBeenCalled();
   });
 
-  it("returns supervised when OPENCLAW_LAUNCHD_LABEL is set (stock launchd plist)", () => {
+  it("returns supervised when QUIET_CORE_LAUNCHD_LABEL is set (stock launchd plist)", () => {
     clearSupervisorHints();
     expectLaunchdSupervisedWithoutKickstart();
   });
 
-  it("returns supervised when OPENCLAW_SYSTEMD_UNIT is set", () => {
+  it("returns supervised when QUIET_CORE_SYSTEMD_UNIT is set", () => {
     clearSupervisorHints();
     setPlatform("linux");
-    process.env.OPENCLAW_SYSTEMD_UNIT = "openclaw-gateway.service";
+    process.env.QUIET_CORE_SYSTEMD_UNIT = "quiet-core-bot-gateway.service";
     const result = restartGatewayProcessWithFreshPid();
     expect(result.mode).toBe("supervised");
     expect(spawnMock).not.toHaveBeenCalled();
@@ -198,8 +198,8 @@ describe("restartGatewayProcessWithFreshPid", () => {
   it("returns supervised when Quiet Core bot gateway task markers are set on Windows", () => {
     clearSupervisorHints();
     setPlatform("win32");
-    process.env.OPENCLAW_SERVICE_MARKER = "openclaw";
-    process.env.OPENCLAW_SERVICE_KIND = "gateway";
+    process.env.QUIET_CORE_SERVICE_MARKER = "quiet-core-bot";
+    process.env.QUIET_CORE_SERVICE_KIND = "gateway";
     triggerOpenClawRestartMock.mockReturnValue({ ok: true, method: "schtasks" });
     const result = restartGatewayProcessWithFreshPid();
     expect(result.mode).toBe("supervised");
@@ -210,8 +210,8 @@ describe("restartGatewayProcessWithFreshPid", () => {
   it("keeps generic service markers out of non-Windows supervisor detection", () => {
     clearSupervisorHints();
     setPlatform("linux");
-    process.env.OPENCLAW_SERVICE_MARKER = "openclaw";
-    process.env.OPENCLAW_SERVICE_KIND = "gateway";
+    process.env.QUIET_CORE_SERVICE_MARKER = "quiet-core-bot";
+    process.env.QUIET_CORE_SERVICE_KIND = "gateway";
 
     const result = restartGatewayProcessWithFreshPid();
 
@@ -235,7 +235,7 @@ describe("restartGatewayProcessWithFreshPid", () => {
   });
 
   it("returns disabled in containers so PID 1 stays alive for in-process restart", () => {
-    delete process.env.OPENCLAW_NO_RESPAWN;
+    delete process.env.QUIET_CORE_NO_RESPAWN;
     clearSupervisorHints();
     setPlatform("linux");
     isContainerEnvironmentMock.mockReturnValue(true);
@@ -252,10 +252,10 @@ describe("restartGatewayProcessWithFreshPid", () => {
   it("ignores node task script hints for gateway restart detection on Windows", () => {
     clearSupervisorHints();
     setPlatform("win32");
-    process.env.OPENCLAW_TASK_SCRIPT = "C:\\openclaw\\node.cmd";
-    process.env.OPENCLAW_TASK_SCRIPT_NAME = "node.cmd";
-    process.env.OPENCLAW_SERVICE_MARKER = "openclaw";
-    process.env.OPENCLAW_SERVICE_KIND = "node";
+    process.env.QUIET_CORE_TASK_SCRIPT = "C:\\quiet-core-bot\\node.cmd";
+    process.env.QUIET_CORE_TASK_SCRIPT_NAME = "node.cmd";
+    process.env.QUIET_CORE_SERVICE_MARKER = "quiet-core-bot";
+    process.env.QUIET_CORE_SERVICE_KIND = "node";
 
     const result = restartGatewayProcessWithFreshPid();
 
@@ -265,7 +265,7 @@ describe("restartGatewayProcessWithFreshPid", () => {
   });
 
   it("does not attempt detached spawn on unmanaged Unix even if spawn would throw", () => {
-    delete process.env.OPENCLAW_NO_RESPAWN;
+    delete process.env.QUIET_CORE_NO_RESPAWN;
     clearSupervisorHints();
     setPlatform("linux");
 
@@ -282,13 +282,13 @@ describe("restartGatewayProcessWithFreshPid", () => {
 });
 
 describe("respawnGatewayProcessForUpdate", () => {
-  it("keeps OPENCLAW_NO_RESPAWN semantics for update restarts", () => {
+  it("keeps QUIET_CORE_NO_RESPAWN semantics for update restarts", () => {
     clearSupervisorHints();
-    process.env.OPENCLAW_NO_RESPAWN = "1";
+    process.env.QUIET_CORE_NO_RESPAWN = "1";
 
     const result = respawnGatewayProcessForUpdate();
 
-    expect(result).toEqual({ mode: "disabled", detail: "OPENCLAW_NO_RESPAWN" });
+    expect(result).toEqual({ mode: "disabled", detail: "QUIET_CORE_NO_RESPAWN" });
     expect(spawnMock).not.toHaveBeenCalled();
   });
 
@@ -298,7 +298,7 @@ describe("respawnGatewayProcessForUpdate", () => {
     process.execArgv = [];
     process.argv = [
       "C:\\Program Files\\node.exe",
-      "C:\\openclaw\\node_modules\\.pnpm\\openclaw@2026.6.5\\node_modules\\openclaw\\dist\\index.js",
+      "C:\\quiet-core-bot\\node_modules\\.pnpm\\quiet-core-bot@2026.6.5\\node_modules\\quiet-core-bot\\dist\\index.js",
       "gateway",
       "run",
     ];
@@ -310,7 +310,7 @@ describe("respawnGatewayProcessForUpdate", () => {
     expect(result.pid).toBe(5151);
     expect(spawnMock).toHaveBeenCalledWith(
       process.execPath,
-      ["C:\\openclaw\\node_modules\\openclaw\\quiet-core-bot.mjs", "gateway", "run"],
+      ["C:\\quiet-core-bot\\node_modules\\quiet-core-bot\\quiet-core-bot.mjs", "gateway", "run"],
       {
         detached: true,
         env: process.env,
@@ -325,7 +325,7 @@ describe("respawnGatewayProcessForUpdate", () => {
     process.execArgv = [];
     process.argv = [
       "/usr/local/bin/node",
-      "/app/node_modules/.pnpm/openclaw@2026.6.5/node_modules/openclaw/dist/entry.js",
+      "/app/node_modules/.pnpm/quiet-core-bot@2026.6.5/node_modules/quiet-core-bot/dist/entry.js",
       "gateway",
       "run",
     ];
@@ -336,7 +336,7 @@ describe("respawnGatewayProcessForUpdate", () => {
     expect(result.mode).toBe("spawned");
     expect(spawnMock).toHaveBeenCalledWith(
       process.execPath,
-      ["/app/node_modules/openclaw/quiet-core-bot.mjs", "gateway", "run"],
+      ["/app/node_modules/quiet-core-bot/quiet-core-bot.mjs", "gateway", "run"],
       {
         detached: true,
         env: process.env,
@@ -366,7 +366,7 @@ describe("respawnGatewayProcessForUpdate", () => {
   it("spawns a detached update process when macOS only has inherited XPC state", () => {
     clearSupervisorHints();
     setPlatform("darwin");
-    process.env.XPC_SERVICE_NAME = "ai.openclaw.mac";
+    process.env.XPC_SERVICE_NAME = "ai.quiet-core-bot.mac";
     process.execArgv = [];
     process.argv = ["/usr/local/bin/node", "/repo/dist/index.js", "gateway", "run"];
     spawnMock.mockReturnValue({ pid: 6161, unref: vi.fn(), kill: vi.fn() });
@@ -389,8 +389,8 @@ describe("respawnGatewayProcessForUpdate", () => {
   it("treats Linux Quiet Core bot gateway service markers as supervised for update restarts", () => {
     clearSupervisorHints();
     setPlatform("linux");
-    process.env.OPENCLAW_SERVICE_MARKER = "openclaw";
-    process.env.OPENCLAW_SERVICE_KIND = "gateway";
+    process.env.QUIET_CORE_SERVICE_MARKER = "quiet-core-bot";
+    process.env.QUIET_CORE_SERVICE_KIND = "gateway";
 
     const result = respawnGatewayProcessForUpdate();
 
@@ -399,7 +399,7 @@ describe("respawnGatewayProcessForUpdate", () => {
   });
 
   it("returns failed when update detached respawn throws", () => {
-    delete process.env.OPENCLAW_NO_RESPAWN;
+    delete process.env.QUIET_CORE_NO_RESPAWN;
     clearSupervisorHints();
     setPlatform("linux");
 

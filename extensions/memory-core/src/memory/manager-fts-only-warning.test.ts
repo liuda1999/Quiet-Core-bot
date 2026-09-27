@@ -6,9 +6,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const memoryLoggerWarn = vi.hoisted(() => vi.fn());
 
-vi.mock("openclaw/plugin-sdk/memory-core-host-engine-foundation", async (importOriginal) => {
+vi.mock("quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation", async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import("openclaw/plugin-sdk/memory-core-host-engine-foundation")>();
+    await importOriginal<typeof import("quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation")>();
   return {
     ...actual,
     createSubsystemLogger: (subsystem: string) => ({
@@ -18,7 +18,7 @@ vi.mock("openclaw/plugin-sdk/memory-core-host-engine-foundation", async (importO
   };
 });
 
-import type { OpenClawConfig } from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
 import { closeAllMemorySearchManagers, getMemorySearchManager } from "./index.js";
 import { resetFtsOnlyDegradationWarningForTest } from "./manager.js";
 
@@ -34,8 +34,8 @@ describe("memory fts-only degradation warning", () => {
   beforeEach(async () => {
     memoryLoggerWarn.mockClear();
     resetFtsOnlyDegradationWarningForTest();
-    workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-memory-fts-only-"));
-    vi.stubEnv("OPENCLAW_STATE_DIR", path.join(workspaceDir, "state"));
+    workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-memory-fts-only-"));
+    vi.stubEnv("QUIET_CORE_STATE_DIR", path.join(workspaceDir, "state"));
     await fs.mkdir(path.join(workspaceDir, "memory"), { recursive: true });
   });
 

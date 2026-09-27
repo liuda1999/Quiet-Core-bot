@@ -27,7 +27,7 @@ const OPENAI_ERROR_BODY_MAX_CHARS = 4096;
 const OPENAI_RESPONSE_BODY_MAX_BYTES = 256 * 1024;
 const STATE_FILE_NAME = "issue-labeler-state.json";
 const CONFIG_BASE_DIR = process.env.XDG_CONFIG_HOME ?? join(homedir(), ".config");
-const STATE_FILE_PATH = join(CONFIG_BASE_DIR, "openclaw", STATE_FILE_NAME);
+const STATE_FILE_PATH = join(CONFIG_BASE_DIR, "quiet-core-bot", STATE_FILE_NAME);
 
 const ISSUE_QUERY = `
   query($owner: String!, $name: String!, $after: String, $pageSize: Int!) {
@@ -256,10 +256,10 @@ function isMainModule() {
   return entry ? import.meta.url === pathToFileURL(entry).href : false;
 }
 
-function resolveOpenAITimeoutMs(raw = process.env.OPENCLAW_LABEL_OPEN_ISSUES_OPENAI_TIMEOUT_MS) {
+function resolveOpenAITimeoutMs(raw = process.env.QUIET_CORE_LABEL_OPEN_ISSUES_OPENAI_TIMEOUT_MS) {
   return parseStrictIntegerOption({
     fallback: DEFAULT_OPENAI_TIMEOUT_MS,
-    label: "OPENCLAW_LABEL_OPEN_ISSUES_OPENAI_TIMEOUT_MS",
+    label: "QUIET_CORE_LABEL_OPEN_ISSUES_OPENAI_TIMEOUT_MS",
     min: 1,
     raw,
   });

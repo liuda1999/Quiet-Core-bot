@@ -1,6 +1,6 @@
 /** Builds installed-index records from normalized plugin manifest registry entries. */
 import path from "node:path";
-import { normalizeSortedUniqueStringEntries } from "@openclaw/normalization-core/string-normalization";
+import { normalizeSortedUniqueStringEntries } from "@quiet-core/normalization-core/string-normalization";
 import type { OpenClawConfig } from "../config/types.js";
 import type { PluginCompatCode } from "./compat/registry.js";
 import { normalizePluginsConfig, resolveEffectiveEnableState } from "./config-state.js";
@@ -290,7 +290,7 @@ export function buildInstalledPluginIndexRecords(params: {
       contributions: buildContributionInfo(record),
       compat: collectPluginManifestCompatCodes(record),
     };
-    if (record.format && record.format !== "openclaw") {
+    if (record.format && record.format !== "quiet-core-bot") {
       indexRecord.format = record.format;
     }
     if (record.bundleFormat) {

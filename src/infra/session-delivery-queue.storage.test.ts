@@ -1,6 +1,6 @@
 // Covers session delivery queue persistence state transitions.
 import { describe, expect, it } from "vitest";
-import { openOpenClawStateDatabase } from "../state/openclaw-state-db.js";
+import { openOpenClawStateDatabase } from "../state/quiet-core-bot-state-db.js";
 import { withTempDir } from "../test-helpers/temp-dir.js";
 import {
   ackSessionDelivery,
@@ -12,7 +12,7 @@ import {
 describe("session-delivery queue storage", () => {
   function readSessionQueueStatus(tempDir: string, id: string): string | undefined {
     const { db } = openOpenClawStateDatabase({
-      env: { ...process.env, OPENCLAW_STATE_DIR: tempDir },
+      env: { ...process.env, QUIET_CORE_STATE_DIR: tempDir },
     });
     const row = db
       .prepare("SELECT status FROM delivery_queue_entries WHERE queue_name = 'session' AND id = ?")
@@ -21,7 +21,7 @@ describe("session-delivery queue storage", () => {
   }
 
   it("dedupes entries when an idempotency key is reused", async () => {
-    await withTempDir({ prefix: "openclaw-session-delivery-" }, async (tempDir) => {
+    await withTempDir({ prefix: "quiet-core-bot-session-delivery-" }, async (tempDir) => {
       const firstId = await enqueueSessionDelivery(
         {
           kind: "agentTurn",
@@ -49,7 +49,7 @@ describe("session-delivery queue storage", () => {
   });
 
   it("persists retry metadata and removes acked entries", async () => {
-    await withTempDir({ prefix: "openclaw-session-delivery-" }, async (tempDir) => {
+    await withTempDir({ prefix: "quiet-core-bot-session-delivery-" }, async (tempDir) => {
       const id = await enqueueSessionDelivery(
         {
           kind: "systemEvent",
@@ -70,7 +70,7 @@ describe("session-delivery queue storage", () => {
   });
 
   it("moves entries out of pending retry state", async () => {
-    await withTempDir({ prefix: "openclaw-session-delivery-" }, async (tempDir) => {
+    await withTempDir({ prefix: "quiet-core-bot-session-delivery-" }, async (tempDir) => {
       const id = await enqueueSessionDelivery(
         {
           kind: "systemEvent",

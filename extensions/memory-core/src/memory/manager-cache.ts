@@ -1,5 +1,5 @@
 // Memory Core plugin module implements manager cache behavior.
-import { resolveGlobalSingleton } from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
+import { resolveGlobalSingleton } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
 
 type Closable = {
   close?: () => Promise<void> | void;

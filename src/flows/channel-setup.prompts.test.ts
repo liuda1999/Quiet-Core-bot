@@ -1,7 +1,7 @@
 // Channel setup prompt tests cover prompt choices and validation.
 import { describe, expect, it, vi } from "vitest";
 import type { ChannelSetupDmPolicy } from "../channels/plugins/setup-wizard-types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import type { WizardPrompter } from "../wizard/prompts.js";
 import { maybeConfigureDmPolicies } from "./channel-setup.prompts.js";
@@ -24,7 +24,7 @@ describe("maybeConfigureDmPolicies", () => {
       setPolicy: (cfg: OpenClawConfig) => cfg,
     };
 
-    await withEnvAsync({ OPENCLAW_LOCALE: "zh-CN" }, async () => {
+    await withEnvAsync({ QUIET_CORE_LOCALE: "zh-CN" }, async () => {
       await maybeConfigureDmPolicies({
         cfg: {},
         selection: ["telegram" as never],

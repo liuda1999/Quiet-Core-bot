@@ -8,7 +8,7 @@ import {
   addTimerTimeoutGraceMs,
   clampPositiveTimerTimeoutMs,
   resolveTimerTimeoutMs,
-} from "openclaw/plugin-sdk/number-runtime";
+} from "quiet-core-bot/plugin-sdk/number-runtime";
 import type {
   BrowserActionOk,
   BrowserActionPathResult,

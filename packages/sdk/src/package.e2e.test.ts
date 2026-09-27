@@ -19,9 +19,9 @@ type CommandResult = {
 const COMMAND_TIMEOUT_MS = 120_000;
 const tempDirs: string[] = [];
 const WORKSPACE_PACKAGE_NAMES = [
-  "@openclaw/gateway-protocol",
-  "@openclaw/gateway-client",
-  "@openclaw/sdk",
+  "@quiet-core/gateway-protocol",
+  "@quiet-core/gateway-client",
+  "@quiet-core/sdk",
 ] as const;
 
 type PackageManifest = {
@@ -190,7 +190,7 @@ function normalizeWorkspaceDependencies(
   const normalized: Record<string, string> = {};
   for (const [name, spec] of Object.entries(dependencies)) {
     normalized[name] =
-      name.startsWith("@openclaw/") && spec === "workspace:*" ? "0.0.0-private" : spec;
+      name.startsWith("@quiet-core/") && spec === "workspace:*" ? "0.0.0-private" : spec;
   }
   return normalized;
 }
@@ -348,7 +348,7 @@ describe("OpenClaw SDK package e2e", () => {
       path.join(repoRoot, "packages", "gateway-client"),
       path.join(repoRoot, "packages", "sdk"),
     ];
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-sdk-consumer-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-sdk-consumer-"));
     tempDirs.push(tempDir);
 
     for (const packageName of WORKSPACE_PACKAGE_NAMES) {
@@ -372,7 +372,7 @@ describe("OpenClaw SDK package e2e", () => {
       packedPackages.push({ manifest, tarball });
     }
     const sdkTarball =
-      packedPackages.find((pkg) => pkg.manifest.name === "@openclaw/sdk")?.tarball ?? "";
+      packedPackages.find((pkg) => pkg.manifest.name === "@quiet-core/sdk")?.tarball ?? "";
     expect(sdkTarball).not.toBe("");
     const registry = await startOpenClawRegistry(packedPackages);
 
@@ -390,7 +390,7 @@ describe("OpenClaw SDK package e2e", () => {
     }
 
     const importScript = `
-      import { GatewayClientTransport, OpenClaw, normalizeGatewayEvent } from "@openclaw/sdk";
+      import { GatewayClientTransport, OpenClaw, normalizeGatewayEvent } from "@quiet-core/sdk";
       if (typeof GatewayClientTransport !== "function") throw new Error("missing transport export");
       if (typeof OpenClaw !== "function") throw new Error("missing client export");
       const event = normalizeGatewayEvent({

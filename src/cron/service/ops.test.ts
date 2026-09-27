@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { runOpenClawStateWriteTransaction } from "../../state/openclaw-state-db.js";
+import { runOpenClawStateWriteTransaction } from "../../state/quiet-core-bot-state-db.js";
 import * as detachedTaskRuntime from "../../tasks/detached-task-runtime.js";
 import { findTaskByRunId, resetTaskRegistryForTests } from "../../tasks/task-registry.js";
 import { formatTaskStatusDetail } from "../../tasks/task-status.js";
@@ -25,7 +25,7 @@ async function withStateDirForStorePath<T>(
   const stateRoot = path.dirname(path.dirname(storePath));
   resetTaskRegistryForTests();
   try {
-    return await withEnvAsync({ OPENCLAW_STATE_DIR: stateRoot }, runWithStateDir);
+    return await withEnvAsync({ QUIET_CORE_STATE_DIR: stateRoot }, runWithStateDir);
   } finally {
     resetTaskRegistryForTests();
   }

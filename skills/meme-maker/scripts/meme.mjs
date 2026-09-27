@@ -146,7 +146,7 @@ function cacheRoot() {
     (process.platform === "darwin"
       ? path.join(homedir(), "Library", "Caches")
       : path.join(homedir(), ".cache"));
-  return path.join(root, "openclaw", "meme-maker");
+  return path.join(root, "quiet-core-bot", "meme-maker");
 }
 
 function extFromUrl(url) {

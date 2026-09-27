@@ -54,18 +54,18 @@ This guide sets up an Azure Linux VM with the Azure CLI, applies Network Securit
 
   <Step title="Set deployment variables">
     ```bash
-    RG="rg-openclaw"
+    RG="rg-quiet-core-bot"
     LOCATION="westus2"
-    VNET_NAME="vnet-openclaw"
+    VNET_NAME="vnet-quiet-core-bot"
     VNET_PREFIX="10.40.0.0/16"
-    VM_SUBNET_NAME="snet-openclaw-vm"
+    VM_SUBNET_NAME="snet-quiet-core-bot-vm"
     VM_SUBNET_PREFIX="10.40.2.0/24"
     BASTION_SUBNET_PREFIX="10.40.1.0/26"
-    NSG_NAME="nsg-openclaw-vm"
-    VM_NAME="vm-openclaw"
-    ADMIN_USERNAME="openclaw"
-    BASTION_NAME="bas-openclaw"
-    BASTION_PIP_NAME="pip-openclaw-bastion"
+    NSG_NAME="nsg-quiet-core-bot-vm"
+    VM_NAME="vm-quiet-core-bot"
+    ADMIN_USERNAME="quiet-core-bot"
+    BASTION_NAME="bas-quiet-core-bot"
+    BASTION_PIP_NAME="pip-quiet-core-bot-bastion"
     ```
 
     Adjust names and CIDR ranges to fit your environment. The Bastion subnet must be at least `/26`.
@@ -306,7 +306,7 @@ This removes the resource group and everything inside it (VM, VNet, NSG, Bastion
 - Set up messaging channels: [Channels](/channels)
 - Pair local devices as nodes: [Nodes](/nodes)
 - Configure the Gateway: [Gateway configuration](/gateway/configuration)
-- For more details on Quiet Core bot Azure deployment with the GitHub Copilot model provider: [Quiet Core bot on Azure with GitHub Copilot](https://github.com/johnsonshi/openclaw-azure-github-copilot)
+- For more details on Quiet Core bot Azure deployment with the GitHub Copilot model provider: [Quiet Core bot on Azure with GitHub Copilot](https://github.com/johnsonshi/quiet-core-bot-azure-github-copilot)
 
 ## Related
 

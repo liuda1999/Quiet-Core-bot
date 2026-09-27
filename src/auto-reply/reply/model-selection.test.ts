@@ -656,7 +656,7 @@ describe("createModelSelectionState catalog loading", () => {
           providers: {
             openai: {
               baseUrl: "https://api.openai.com/v1",
-              agentRuntime: { id: "openclaw" },
+              agentRuntime: { id: "quiet-core-bot" },
               models: [],
             },
           },

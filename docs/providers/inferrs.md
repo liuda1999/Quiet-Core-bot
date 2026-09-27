@@ -201,7 +201,7 @@ path in config. For the full field reference, see
     ```
 
     ```bash
-    openclaw infer model run \
+    quiet-core-bot infer model run \
       --model inferrs/google/gemma-4-E2B-it \
       --prompt "What is 2 + 2? Reply with one short sentence." \
       --json
@@ -238,7 +238,7 @@ path in config. For the full field reference, see
     `requiresStringContent` section above for details.
   </Accordion>
 
-  <Accordion title="Direct /v1/chat/completions calls pass but openclaw infer model run fails">
+  <Accordion title="Direct /v1/chat/completions calls pass but quiet-core-bot infer model run fails">
     Try setting `compat.supportsTools: false` to disable the tool schema surface.
     See the Gemma tool-schema caveat above.
   </Accordion>

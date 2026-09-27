@@ -1,7 +1,7 @@
 // agents_list tests cover subagent discovery, runtime metadata, and legacy
 // runtime override handling.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { createAgentsListTool } from "./agents-list-tool.js";
 
 const loadConfigMock = vi.fn<() => OpenClawConfig>();
@@ -38,7 +38,7 @@ describe("agents_list tool", () => {
       agents: {
         defaults: {
           model: "anthropic/claude-opus-4.5",
-          agentRuntime: { id: "openclaw" },
+          agentRuntime: { id: "quiet-core-bot" },
           subagents: { allowAgents: ["codex"] },
         },
         list: [
@@ -47,7 +47,7 @@ describe("agents_list tool", () => {
             id: "codex",
             name: "Codex",
             model: "openai/gpt-5.5",
-            agentRuntime: { id: "openclaw" },
+            agentRuntime: { id: "quiet-core-bot" },
             models: {
               "openai/gpt-5.5": { agentRuntime: { id: "codex" } },
             },
@@ -166,7 +166,7 @@ describe("agents_list tool", () => {
   it("ignores legacy env-forced plugin runtime selections", async () => {
     // Runtime selection now comes from config/model routing, not a process-wide
     // legacy env override.
-    vi.stubEnv("OPENCLAW_AGENT_RUNTIME", "codex");
+    vi.stubEnv("QUIET_CORE_AGENT_RUNTIME", "codex");
     loadConfigMock.mockReturnValue({
       agents: {
         defaults: {

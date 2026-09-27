@@ -1,6 +1,6 @@
 // Emits session lifecycle hooks for channel plugins and agent runtimes.
 import { resolveSessionAgentId } from "../../agents/agent-scope.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import type {
   PluginHookSessionEndEvent,
   PluginHookSessionEndReason,

@@ -4,23 +4,23 @@
 import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import type { Command } from "commander";
-import { runCommandWithRuntime, theme } from "openclaw/plugin-sdk/cli-runtime";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import { runCommandWithRuntime, theme } from "quiet-core-bot/plugin-sdk/cli-runtime";
+import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
 import {
   callGatewayFromCli,
   resolveNodeFromNodeList,
   type NodeMatchCandidate,
-} from "openclaw/plugin-sdk/gateway-runtime";
+} from "quiet-core-bot/plugin-sdk/gateway-runtime";
 import {
   parseStrictFiniteNumber,
   parseStrictPositiveInteger,
-} from "openclaw/plugin-sdk/number-runtime";
-import { defaultRuntime } from "openclaw/plugin-sdk/runtime";
+} from "quiet-core-bot/plugin-sdk/number-runtime";
+import { defaultRuntime } from "quiet-core-bot/plugin-sdk/runtime";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
-import { shortenHomePath } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
+import { shortenHomePath } from "quiet-core-bot/plugin-sdk/text-utility-runtime";
 import { buildA2UITextJsonl, validateA2UIJsonl } from "./a2ui-jsonl.js";
 import { canvasSnapshotTempPath, parseCanvasSnapshotPayload } from "./cli-helpers.js";
 

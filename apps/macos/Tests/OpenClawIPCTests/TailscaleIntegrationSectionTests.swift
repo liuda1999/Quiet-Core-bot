@@ -82,8 +82,8 @@ struct TailscaleIntegrationSectionTests {
         try initialConfig.write(to: configPath, atomically: true, encoding: .utf8)
 
         try await TestIsolation.withEnvValues([
-            "OPENCLAW_STATE_DIR": stateDir.path,
-            "OPENCLAW_CONFIG_PATH": configPath.path,
+            "QUIET_CORE_STATE_DIR": stateDir.path,
+            "QUIET_CORE_CONFIG_PATH": configPath.path,
         ]) {
             let before = try Data(contentsOf: configPath)
             let root = try #require(

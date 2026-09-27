@@ -86,14 +86,14 @@ Notes:
   then falls back to Windows PowerShell 5.1.
 - On non-Windows gateway hosts, bash and zsh exec commands use a startup snapshot. Quiet Core bot captures sourceable
   aliases/functions and a small safe environment set from shell startup files into
-  `$OPENCLAW_STATE_DIR/cache/shell-snapshots/`, then sources that snapshot before each exec command.
+  `$QUIET_CORE_STATE_DIR/cache/shell-snapshots/`, then sources that snapshot before each exec command.
   Secret-looking variables are excluded; sandbox and node exec do not use this snapshot. Set
-  `OPENCLAW_EXEC_SHELL_SNAPSHOT=0` in the Gateway process environment to disable this snapshot path.
+  `QUIET_CORE_EXEC_SHELL_SNAPSHOT=0` in the Gateway process environment to disable this snapshot path.
 - Host execution (`gateway`/`node`) rejects `env.PATH` and loader overrides (`LD_*`/`DYLD_*`) to
   prevent binary hijacking or injected code.
-- Quiet Core bot sets `OPENCLAW_SHELL=exec` in the spawned command environment (including PTY and sandbox execution) so shell/profile rules can detect exec-tool context.
+- Quiet Core bot sets `QUIET_CORE_SHELL=exec` in the spawned command environment (including PTY and sandbox execution) so shell/profile rules can detect exec-tool context.
 - For channel-origin runs, Quiet Core bot also exposes a narrow sender/chat identity JSON payload in
-  `OPENCLAW_CHANNEL_CONTEXT` when the channel provided those ids.
+  `QUIET_CORE_CHANNEL_CONTEXT` when the channel provided those ids.
 - `quiet-core-bot channels login` is blocked from `exec` because it is an interactive channel-auth flow; run it in a terminal on the gateway host, or use the channel-native login tool from chat when one exists.
 - Important: sandboxing is **off by default**. If sandboxing is off, implicit `host=auto`
   resolves to `gateway`. Explicit `host=sandbox` still fails closed instead of silently
@@ -219,8 +219,8 @@ Use the two controls for different jobs:
 - allowlist: explicit trust for executable paths.
 
 Do not treat `safeBins` as a generic allowlist, and do not add interpreter/runtime binaries (for example `python3`, `node`, `ruby`, `bash`). If you need those, use explicit allowlist entries and keep approval prompts enabled.
-`openclaw security audit` warns when interpreter/runtime `safeBins` entries are missing explicit profiles, and `quiet-core-bot doctor --fix` can scaffold missing custom `safeBinProfiles` entries.
-`openclaw security audit` and `quiet-core-bot doctor` also warn when you explicitly add broad-behavior bins such as `jq` back into `safeBins`.
+`quiet-core-bot security audit` warns when interpreter/runtime `safeBins` entries are missing explicit profiles, and `quiet-core-bot doctor --fix` can scaffold missing custom `safeBinProfiles` entries.
+`quiet-core-bot security audit` and `quiet-core-bot doctor` also warn when you explicitly add broad-behavior bins such as `jq` back into `safeBins`.
 If you explicitly allowlist interpreters, enable `tools.exec.strictInlineEval` so inline code-eval forms still require reviewer or explicit approval.
 
 For full policy details and examples, see [Exec approvals](/tools/exec-approvals-advanced#safe-bins-stdin-only) and [Safe bins versus allowlist](/tools/exec-approvals-advanced#safe-bins-versus-allowlist).

@@ -1,18 +1,18 @@
 // Doctor checks for context engine host requirements against configured agent runtimes.
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
+import { uniqueStrings } from "@quiet-core/normalization-core/string-normalization";
 import { normalizeEmbeddedAgentRuntime } from "../../../agents/agent-runtime-id.js";
 import { resolveDefaultAgentDir } from "../../../agents/agent-scope-config.js";
 import { resolveCliBackendConfig } from "../../../agents/cli-backends.js";
 import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "../../../agents/defaults.js";
 import { resolveAgentHarnessPolicy } from "../../../agents/harness/policy.js";
 import { getRegisteredAgentHarness } from "../../../agents/harness/registry.js";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
 import {
   buildGenericCliContextEngineHostSupport,
   CODEX_APP_SERVER_CONTEXT_ENGINE_HOST,
   evaluateContextEngineHostSupport,
-  OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST,
+  QUIET_CORE_EMBEDDED_CONTEXT_ENGINE_HOST,
   type ContextEngineHostSupport,
 } from "../../../context-engine/host-compat.js";
 import { ensureContextEnginesInitialized } from "../../../context-engine/init.js";
@@ -167,8 +167,8 @@ function runtimeHostCandidate(params: {
   paths: string[];
 }): HostCandidate {
   const runtimeId = normalizeRuntimeId(params.runtimeId) ?? params.runtimeId;
-  if (runtimeId === "openclaw" || runtimeId === "auto") {
-    return { runtimeId, host: OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST, paths: params.paths };
+  if (runtimeId === "quiet-core-bot" || runtimeId === "auto") {
+    return { runtimeId, host: QUIET_CORE_EMBEDDED_CONTEXT_ENGINE_HOST, paths: params.paths };
   }
   if (runtimeId === "codex") {
     return { runtimeId, host: CODEX_APP_SERVER_CONTEXT_ENGINE_HOST, paths: params.paths };

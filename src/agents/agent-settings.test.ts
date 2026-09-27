@@ -392,7 +392,7 @@ describe("isSilentOverflowProneModel", () => {
     ).toBe(true);
   });
 
-  // openclaw#75799 reporter's setup: an OpenAI-compatible in-house gateway
+  // quiet-core-bot#75799 reporter's setup: an OpenAI-compatible in-house gateway
   // exposing Zhipu's GLM family directly (model id `glm-5.1`, no `z-ai/`
   // qualifier, custom baseUrl that is not api.z.ai). Catch the bare GLM
   // family name so direct gateway deployments hit the guard regardless of
@@ -450,7 +450,7 @@ describe("isSilentOverflowProneModel", () => {
 });
 
 describe("applyAgentAutoCompactionGuard", () => {
-  // Direct repro of openclaw#75799: shared model runtime's silent-overflow detection misfires
+  // Direct repro of quiet-core-bot#75799: shared model runtime's silent-overflow detection misfires
   // on a successful turn against z.ai-style providers, triggering Quiet Core bot runtime's
   // _runAutoCompaction from inside Session.prompt() and reassigning
   // agent.state.messages between the runner's prompt.submitted trajectory

@@ -36,7 +36,7 @@ Do not guess from `can't connect`.
 
 ## Canonical checks
 
-Prefer `openclaw qr --json`. It uses the same setup-code payload Android scans.
+Prefer `quiet-core-bot qr --json`. It uses the same setup-code payload Android scans.
 
 ```bash
 quiet-core-bot config get gateway.mode
@@ -46,7 +46,7 @@ quiet-core-bot config get gateway.remote.url
 quiet-core-bot config get gateway.auth.mode
 quiet-core-bot config get gateway.auth.allowTailscale
 quiet-core-bot config get plugins.entries.device-pair.config.publicUrl
-openclaw qr --json
+quiet-core-bot qr --json
 quiet-core-bot devices list
 quiet-core-bot nodes status
 ```
@@ -54,7 +54,7 @@ quiet-core-bot nodes status
 If this Quiet Core bot instance is pointed at a remote gateway, also run:
 
 ```bash
-openclaw qr --remote --json
+quiet-core-bot qr --remote --json
 ```
 
 If Tailscale is part of the story:
@@ -65,7 +65,7 @@ tailscale status --json
 
 ## Read the result, not guesses
 
-`openclaw qr --json` success means:
+`quiet-core-bot qr --json` success means:
 
 - `gatewayUrl`: this is the actual endpoint the app should use.
 - `urlSource`: this tells you which config path won.
@@ -80,7 +80,7 @@ Common good sources:
 
 ## Root-cause map
 
-If `openclaw qr --json` says `Gateway is only bound to loopback`:
+If `quiet-core-bot qr --json` says `Gateway is only bound to loopback`:
 
 - remote node cannot connect yet
 - fix the route, then generate a fresh setup code
@@ -136,7 +136,7 @@ If there is not enough signal yet, ask for setup + exact app text instead of gue
 
 Good:
 
-- `The gateway is still loopback-only, so a node on another network can never reach it. Enable Tailscale Serve, restart the gateway, run openclaw qr again, rescan, then approve the pending device pairing.`
+- `The gateway is still loopback-only, so a node on another network can never reach it. Enable Tailscale Serve, restart the gateway, run quiet-core-bot qr again, rescan, then approve the pending device pairing.`
 
 Bad:
 

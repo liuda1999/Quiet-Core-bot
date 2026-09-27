@@ -104,7 +104,7 @@ export function readStateDirDotEnvFromStateDir(stateDir: string): ParsedStateDir
 }
 
 /**
- * Read and parse `~/.quiet-core-bot/.env` (or `$OPENCLAW_STATE_DIR/.env`), returning
+ * Read and parse `~/.quiet-core-bot/.env` (or `$QUIET_CORE_STATE_DIR/.env`), returning
  * a filtered record of key-value pairs suitable for a managed service
  * environment source.
  */

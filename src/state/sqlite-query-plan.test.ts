@@ -7,14 +7,14 @@ import { afterEach, describe, expect, it } from "vitest";
 import {
   closeOpenClawAgentDatabasesForTest,
   openOpenClawAgentDatabase,
-} from "./openclaw-agent-db.js";
+} from "./quiet-core-bot-agent-db.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "./openclaw-state-db.js";
+} from "./quiet-core-bot-state-db.js";
 
 function createTempStateDir(): string {
-  return fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-sqlite-plan-"));
+  return fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-sqlite-plan-"));
 }
 
 function explainQueryPlan(
@@ -57,7 +57,7 @@ describe("sqlite hot query plans", () => {
   it("uses shared state indexes for list and queue queries", () => {
     const stateDir = createTempStateDir();
     const database = openOpenClawStateDatabase({
-      env: { OPENCLAW_STATE_DIR: stateDir },
+      env: { QUIET_CORE_STATE_DIR: stateDir },
     });
 
     expectPlanUsesIndex({
@@ -162,7 +162,7 @@ describe("sqlite hot query plans", () => {
     const stateDir = createTempStateDir();
     const database = openOpenClawAgentDatabase({
       agentId: "worker-1",
-      env: { OPENCLAW_STATE_DIR: stateDir },
+      env: { QUIET_CORE_STATE_DIR: stateDir },
     });
 
     expectPlanIncludes({

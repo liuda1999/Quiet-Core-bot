@@ -15,8 +15,8 @@ builds do not need a separate install.
 If you are on an older build or a custom install that excludes Zalo, install the
 npm package directly:
 
-- Install via CLI: `quiet-core-bot plugins install @openclaw/zalo`
-- Pinned version: `quiet-core-bot plugins install @openclaw/zalo@2026.5.2`
+- Install via CLI: `quiet-core-bot plugins install @quiet-core/zalo`
+- Pinned version: `quiet-core-bot plugins install @quiet-core/zalo@2026.5.2`
 - Or from a source checkout: `quiet-core-bot plugins install ./path/to/local/zalo-plugin`
 - Details: [Plugins](/tools/plugin)
 

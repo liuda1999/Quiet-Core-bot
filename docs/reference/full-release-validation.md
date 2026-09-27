@@ -34,7 +34,7 @@ soak and blocking product-performance evidence.
 
 Package Acceptance normally builds the candidate tarball from the resolved
 `ref`, including full-SHA runs dispatched with `pnpm ci:full-release`. After a
-beta publish, pass `release_package_spec=openclaw@YYYY.M.PATCH-beta.N` to reuse the
+beta publish, pass `release_package_spec=quiet-core-bot@YYYY.M.PATCH-beta.N` to reuse the
 shipped npm package across release checks, Package Acceptance, cross-OS,
 release-path Docker, and package Telegram. Use `package_acceptance_package_spec`
 only when Package Acceptance should intentionally prove a different package.
@@ -173,7 +173,7 @@ dynamic tool drift in the standard tier also blocks the release-check verifier.
 Tideclaw alpha runs may still treat non-package-safety release-check lanes as
 advisory. When `live_suite_filter` explicitly requests a gated QA live lane such
 as Discord, WhatsApp, or Slack, the matching
-`OPENCLAW_RELEASE_QA_*_LIVE_CI_ENABLED` repo variable must be enabled; otherwise
+`QUIET_CORE_RELEASE_QA_*_LIVE_CI_ENABLED` repo variable must be enabled; otherwise
 input capture fails instead of silently skipping the lane. Rerun `rerun_group=qa`,
 `qa-parity`, or `qa-live` when you need fresh QA evidence.
 
@@ -194,9 +194,9 @@ Useful artifacts:
 ## Workflow files
 
 - `.github/workflows/full-release-validation.yml`
-- `.github/workflows/openclaw-release-checks.yml`
-- `.github/workflows/openclaw-live-and-e2e-checks-reusable.yml`
+- `.github/workflows/quiet-core-bot-release-checks.yml`
+- `.github/workflows/quiet-core-bot-live-and-e2e-checks-reusable.yml`
 - `.github/workflows/plugin-prerelease.yml`
 - `.github/workflows/install-smoke.yml`
-- `.github/workflows/openclaw-cross-os-release-checks-reusable.yml`
+- `.github/workflows/quiet-core-bot-cross-os-release-checks-reusable.yml`
 - `.github/workflows/package-acceptance.yml`

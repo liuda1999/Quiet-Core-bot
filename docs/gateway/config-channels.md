@@ -266,10 +266,10 @@ WhatsApp runs through the gateway's web channel (Baileys Web). It starts automat
       replyToMode: "off", // off | first | all | batched
       dmPolicy: "pairing",
       allowFrom: ["1234567890", "123456789012345678"],
-      dm: { enabled: true, groupEnabled: false, groupChannels: ["openclaw-dm"] },
+      dm: { enabled: true, groupEnabled: false, groupChannels: ["quiet-core-bot-dm"] },
       guilds: {
         "123456789012345678": {
-          slug: "friends-of-openclaw",
+          slug: "friends-of-quiet-core-bot",
           requireMention: false,
           ignoreOtherMentions: true,
           reactionNotifications: "own",
@@ -469,7 +469,7 @@ WhatsApp runs through the gateway's web channel (Baileys Web). It starts automat
       },
       slashCommand: {
         enabled: true,
-        name: "openclaw",
+        name: "quiet-core-bot",
         sessionPrefix: "slack:slash",
         ephemeral: true,
       },
@@ -531,8 +531,8 @@ WhatsApp runs through the gateway's web channel (Baileys Web). It starts automat
 
 Mattermost ships as a bundled plugin in current Quiet Core bot releases. Older or
 custom builds can install a current npm package with
-`quiet-core-bot plugins install @openclaw/mattermost`. Check
-[npmjs.com/package/@openclaw/mattermost](https://www.npmjs.com/package/@openclaw/mattermost)
+`quiet-core-bot plugins install @quiet-core/mattermost`. Check
+[npmjs.com/package/@quiet-core/mattermost](https://www.npmjs.com/package/@quiet-core/mattermost)
 for the current dist-tags before pinning a version.
 
 ```json5
@@ -839,7 +839,7 @@ Fix: either pick a stronger tool-calling model, remove the explicit `"message_to
     },
   },
   agents: {
-    list: [{ id: "main", groupChat: { mentionPatterns: ["@openclaw", "openclaw"] } }],
+    list: [{ id: "main", groupChat: { mentionPatterns: ["@quiet-core-bot", "quiet-core-bot"] } }],
   },
 }
 ```
@@ -885,7 +885,7 @@ Include your own number in `allowFrom` to enable self-chat mode (ignores native 
     list: [
       {
         id: "main",
-        groupChat: { mentionPatterns: ["reisponde", "@openclaw"] },
+        groupChat: { mentionPatterns: ["reisponde", "@quiet-core-bot"] },
       },
     ],
   },

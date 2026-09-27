@@ -27,7 +27,7 @@ IFS=' ' read -r -a DSYM_ARCHS <<< "$DSYM_ARCHS_VALUE"
 
 # Use release bundle ID (not .debug) so Sparkle auto-update works.
 # The .debug suffix in package-mac-app.sh blanks SUFeedURL intentionally for dev builds.
-export BUNDLE_ID="${BUNDLE_ID:-ai.openclaw.mac}"
+export BUNDLE_ID="${BUNDLE_ID:-ai.quiet-core-bot.mac}"
 
 DIST_PNPM_CMD=()
 SPARKLE_BUILD_DEPS_RETRIED=0
@@ -68,7 +68,7 @@ canonical_sparkle_build() {
   local output
   local stderr_file
 
-  stderr_file="$(mktemp "${TMPDIR:-/tmp}/openclaw-sparkle-build.XXXXXX")" || {
+  stderr_file="$(mktemp "${TMPDIR:-/tmp}/quiet-core-bot-sparkle-build.XXXXXX")" || {
     echo "ERROR: failed to create temporary stderr capture for Sparkle build metadata." >&2
     return 1
   }

@@ -31,7 +31,7 @@ type ConfigWritePayload = {
 };
 
 async function createIdentityWorkspace(subdir = "work") {
-  const root = await makeTempWorkspace("openclaw-identity-");
+  const root = await makeTempWorkspace("quiet-core-bot-identity-");
   const workspace = path.join(root, subdir);
   await fs.mkdir(workspace, { recursive: true });
   return { root, workspace };
@@ -76,7 +76,7 @@ describe("agents set-identity command", () => {
       "- Name: Quiet Core bot",
       "- Creature: helpful sloth",
       "- Emoji: :)",
-      "- Avatar: avatars/openclaw.png",
+      "- Avatar: avatars/quiet-core-bot.png",
       "",
     ]);
 
@@ -99,7 +99,7 @@ describe("agents set-identity command", () => {
       name: "Quiet Core bot",
       theme: "helpful sloth",
       emoji: ":)",
-      avatar: "avatars/openclaw.png",
+      avatar: "avatars/quiet-core-bot.png",
     });
   });
 
@@ -134,7 +134,7 @@ describe("agents set-identity command", () => {
       "- Name: Quiet Core bot",
       "- Theme: space lobster",
       "- Emoji: :)",
-      "- Avatar: avatars/openclaw.png",
+      "- Avatar: avatars/quiet-core-bot.png",
       "",
     ]);
 

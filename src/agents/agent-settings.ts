@@ -1,6 +1,6 @@
 /** Applies agent compaction settings and small-context overflow guards. */
 import type { AgentCompactionMode } from "../config/types.agent-defaults.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import type { ContextEngineInfo } from "../context-engine/types.js";
 import { MIN_PROMPT_BUDGET_RATIO, MIN_PROMPT_BUDGET_TOKENS } from "./agent-compaction-constants.js";
 import { resolveProviderEndpoint } from "./provider-attribution.js";
@@ -116,7 +116,7 @@ export function resolveEffectiveCompactionMode(cfg?: OpenClawConfig): AgentCompa
  * Detect providers whose shared model runtime `isContextOverflow` Case 2 (silent overflow)
  * fires on a successful turn and triggers Quiet Core bot runtime's `_runAutoCompaction` from
  * inside `Session.prompt()`, collapsing `agent.state.messages` before the
- * provider call (openclaw#75799).
+ * provider call (quiet-core-bot#75799).
  *
  * True on any of: `zai-native` endpoint class,
  * a `z-ai/` / `openrouter/z-ai/` model-id namespace prefix, or a bare `glm-`
@@ -156,7 +156,7 @@ export function isSilentOverflowProneModel(model: {
  * fire from inside `Session.prompt()` and reassign `agent.state.messages`
  * before the provider call) when Quiet Core bot or a plugin owns compaction:
  * `contextEngineInfo.ownsCompaction === true`, effective safeguard compaction,
- * or an active model that is silent-overflow-prone (openclaw#75799).
+ * or an active model that is silent-overflow-prone (quiet-core-bot#75799).
  * Default-mode runs against ordinary providers keep Quiet Core bot runtime's auto-compaction as
  * the existing baseline.
  */

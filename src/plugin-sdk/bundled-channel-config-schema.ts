@@ -2,7 +2,7 @@
  * Bundled-channel config schemas for Quiet Core bot-maintained plugins.
  *
  * Third-party plugins should define plugin-local schemas and import primitives
- * from openclaw/plugin-sdk/channel-config-schema instead of depending on these
+ * from quiet-core-bot/plugin-sdk/channel-config-schema instead of depending on these
  * bundled channel schemas.
  */
 export {

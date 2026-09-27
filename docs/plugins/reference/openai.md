@@ -11,7 +11,7 @@ Adds OpenAI model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/openai-provider`
+- Package: `@quiet-core/openai-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

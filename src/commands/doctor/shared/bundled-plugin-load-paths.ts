@@ -2,7 +2,7 @@
 import path from "node:path";
 import { sanitizeForLog } from "../../../../packages/terminal-core/src/ansi.js";
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../../../agents/agent-scope.js";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
 import {
   buildBundledPluginLoadPathAliases,
   normalizeBundledLookupPath,
@@ -28,7 +28,7 @@ function isOpenClawNodeModulesPackageRoot(packageRoot: string): boolean {
   const normalized = normalizeBundledLookupPath(packageRoot);
   const packageDir = path.basename(normalized);
   const parentDir = path.basename(path.dirname(normalized));
-  return packageDir === "openclaw" && parentDir === "node_modules";
+  return packageDir === "quiet-core-bot" && parentDir === "node_modules";
 }
 
 /** Find configured plugin load paths that alias bundled plugins already shipped by Quiet Core bot. */

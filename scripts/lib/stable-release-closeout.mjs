@@ -57,8 +57,8 @@ function readReleaseAssets(release) {
 function isCloseoutEvidenceAsset(assetName, tag) {
   const releaseVersion = tag.slice(1);
   return (
-    assetName === `openclaw-${releaseVersion}-stable-main-closeout.json` ||
-    assetName === `openclaw-${releaseVersion}-stable-main-closeout.json.sha256`
+    assetName === `quiet-core-bot-${releaseVersion}-stable-main-closeout.json` ||
+    assetName === `quiet-core-bot-${releaseVersion}-stable-main-closeout.json.sha256`
   );
 }
 

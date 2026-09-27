@@ -2,12 +2,12 @@
 import {
   channelIngressRoutes,
   resolveStableChannelMessageIngress,
-} from "openclaw/plugin-sdk/channel-ingress-runtime";
-import { resolveInboundRouteEnvelopeBuilderWithRuntime } from "openclaw/plugin-sdk/inbound-envelope";
+} from "quiet-core-bot/plugin-sdk/channel-ingress-runtime";
+import { resolveInboundRouteEnvelopeBuilderWithRuntime } from "quiet-core-bot/plugin-sdk/inbound-envelope";
 import {
   normalizeOptionalString,
   normalizeStringEntries,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import {
   GROUP_POLICY_BLOCKED_LABEL,
   resolveAllowlistProviderRuntimeGroupPolicy,

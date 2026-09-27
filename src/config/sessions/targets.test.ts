@@ -2,7 +2,7 @@
 import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { withTempHome } from "openclaw/plugin-sdk/test-env";
+import { withTempHome } from "quiet-core-bot/plugin-sdk/test-env";
 import { describe, expect, it } from "vitest";
 import type { OpenClawConfig } from "../config.js";
 import { resolveStorePath } from "./paths.js";
@@ -215,7 +215,7 @@ describe("resolveAgentSessionStoreTargetsSync", () => {
 describe("resolveAllAgentSessionStoreTargetsSync", () => {
   it("includes discovered on-disk agent stores alongside configured targets", async () => {
     await withTempHome(async (home) => {
-      const stateDir = path.join(home, ".openclaw");
+      const stateDir = path.join(home, ".quiet-core-bot");
       const storePaths = await createAgentSessionStores(stateDir, ["ops", "retired"]);
 
       const cfg: OpenClawConfig = {
@@ -268,7 +268,7 @@ describe("resolveAllAgentSessionStoreTargetsSync", () => {
 
       const env = {
         ...process.env,
-        OPENCLAW_STATE_DIR: envStateDir,
+        QUIET_CORE_STATE_DIR: envStateDir,
       };
       const cfg: OpenClawConfig = {};
       const mainStorePath = await resolveRealStorePath(mainSessionsDir);
@@ -298,7 +298,7 @@ describe("resolveAllAgentSessionStoreTargetsSync", () => {
       const cfg = createCustomRootCfg(customRoot, "main");
       const env = {
         ...process.env,
-        OPENCLAW_STATE_DIR: envStateDir,
+        QUIET_CORE_STATE_DIR: envStateDir,
       };
 
       const targets = resolveAllAgentSessionStoreTargetsSync(cfg, { env });
@@ -336,7 +336,7 @@ describe("resolveAllAgentSessionStoreTargetsSync", () => {
 
   it("skips discovered directories that only normalize into the default main agent", async () => {
     await withTempHome(async (home) => {
-      const stateDir = path.join(home, ".openclaw");
+      const stateDir = path.join(home, ".quiet-core-bot");
       const mainSessionsDir = path.join(stateDir, "agents", "main", "sessions");
       const junkSessionsDir = path.join(stateDir, "agents", "###", "sessions");
       await fs.mkdir(mainSessionsDir, { recursive: true });

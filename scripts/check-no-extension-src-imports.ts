@@ -31,7 +31,7 @@ function main() {
       console.error(`- ${relativeToCwd(offender)}`);
     }
     console.error(
-      "Publish a focused openclaw/plugin-sdk/<subpath> surface or use the extension's own public barrel instead.",
+      "Publish a focused quiet-core-bot/plugin-sdk/<subpath> surface or use the extension's own public barrel instead.",
     );
     process.exit(1);
   }

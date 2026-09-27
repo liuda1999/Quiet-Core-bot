@@ -11,11 +11,11 @@ import {
   type ChannelSetupInput,
   type ChannelSetupWizard,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/setup";
+} from "quiet-core-bot/plugin-sdk/setup";
 import {
   normalizeOptionalString,
   normalizeStringifiedOptionalString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { buildTlonAccountFields, type TlonAccountFieldsInput } from "./account-fields.js";
 import { normalizeShip } from "./targets.js";
 import { listTlonAccountIds, resolveTlonAccount, type TlonResolvedAccount } from "./types.js";

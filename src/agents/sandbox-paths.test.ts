@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { describe, expect, it, vi } from "vitest";
-import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-quiet-core-bot-dir.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import { resolveAllowedManagedMediaPath, resolveSandboxedMediaSource } from "./sandbox-paths.js";
 
@@ -32,9 +32,9 @@ function makeTmpProbePath(prefix: string): string {
 }
 
 async function withManagedMediaRoot<T>(run: (ctx: { stateDir: string }) => Promise<T>) {
-  const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-managed-media-"));
+  const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-managed-media-"));
   try {
-    return await withEnvAsync({ OPENCLAW_STATE_DIR: stateDir }, async () => {
+    return await withEnvAsync({ QUIET_CORE_STATE_DIR: stateDir }, async () => {
       await fs.mkdir(path.join(stateDir, "media", "outbound"), { recursive: true });
       await fs.mkdir(path.join(stateDir, "media", "tool-image-generation"), { recursive: true });
       return await run({ stateDir });
@@ -230,7 +230,7 @@ describe("resolveSandboxedMediaSource", () => {
     },
     {
       name: "absolute paths under host tmp outside quiet-core-bot tmp root",
-      media: path.join(os.tmpdir(), "outside-openclaw", "passwd"),
+      media: path.join(os.tmpdir(), "outside-quiet-core-bot", "passwd"),
       expected: /sandbox/i,
     },
     {

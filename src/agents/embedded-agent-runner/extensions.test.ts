@@ -1,6 +1,6 @@
 // Coverage for embedded extension factory selection and runtime wiring.
-import type { SessionManager } from "openclaw/plugin-sdk/agent-sessions";
-import type { Model } from "openclaw/plugin-sdk/llm";
+import type { SessionManager } from "quiet-core-bot/plugin-sdk/agent-sessions";
+import type { Model } from "quiet-core-bot/plugin-sdk/llm";
 import { describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../../config/config.js";
 import { getCompactionSafeguardRuntime } from "../agent-hooks/compaction-safeguard-runtime.js";
@@ -118,11 +118,11 @@ describe("buildEmbeddedExtensionFactories", () => {
           },
         },
       } as OpenClawConfig,
-      "/tmp/openclaw-workspace",
+      "/tmp/quiet-core-bot-workspace",
     );
 
     expect(getCompactionSafeguardRuntime(sessionManager)?.workspaceDir).toBe(
-      "/tmp/openclaw-workspace",
+      "/tmp/quiet-core-bot-workspace",
     );
   });
 

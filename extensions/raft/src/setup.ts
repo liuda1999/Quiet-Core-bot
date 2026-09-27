@@ -1,13 +1,13 @@
 // Raft plugin setup owns only the Raft CLI profile, never Raft credentials.
-import { createPatchedAccountSetupAdapter } from "openclaw/plugin-sdk/setup";
-import type { ChannelPlugin } from "openclaw/plugin-sdk/core";
+import { createPatchedAccountSetupAdapter } from "quiet-core-bot/plugin-sdk/setup";
+import type { ChannelPlugin } from "quiet-core-bot/plugin-sdk/core";
 import {
   createDetectedBinaryStatus,
   formatDocsLink,
   setSetupChannelEnabled,
-} from "openclaw/plugin-sdk/setup";
-import { detectBinary } from "openclaw/plugin-sdk/setup-tools";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "quiet-core-bot/plugin-sdk/setup";
+import { detectBinary } from "quiet-core-bot/plugin-sdk/setup-tools";
+import { normalizeOptionalString } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import {
   listRaftAccountIds,
   RAFT_CHANNEL_ID,

@@ -8,7 +8,7 @@ describe("resolveRemoteEmbeddingBearerClient", () => {
       provider: "openai",
       defaultBaseUrl: "https://api.openai.com/v1",
       options: {
-        agentDir: "/tmp/openclaw-agent",
+        agentDir: "/tmp/quiet-core-bot-agent",
         config: {
           models: {
             providers: {
@@ -29,7 +29,7 @@ describe("resolveRemoteEmbeddingBearerClient", () => {
   });
 
   it("adds OpenClaw attribution to native OpenAI embedding requests", async () => {
-    vi.stubEnv("OPENCLAW_VERSION", "2026.3.22");
+    vi.stubEnv("QUIET_CORE_VERSION", "2026.3.22");
     const client = await resolveRemoteEmbeddingBearerClient({
       provider: "openai",
       defaultBaseUrl: "https://api.openai.com/v1",
@@ -39,8 +39,8 @@ describe("resolveRemoteEmbeddingBearerClient", () => {
         remote: {
           apiKey: "sk-test",
           headers: {
-            originator: "openclaw",
-            "User-Agent": "openclaw",
+            originator: "quiet-core-bot",
+            "User-Agent": "quiet-core-bot",
           },
         },
       },
@@ -49,9 +49,9 @@ describe("resolveRemoteEmbeddingBearerClient", () => {
     expect(client.headers).toEqual({
       Authorization: "Bearer sk-test",
       "Content-Type": "application/json",
-      originator: "openclaw",
+      originator: "quiet-core-bot",
       version: "2026.3.22",
-      "User-Agent": "openclaw/2026.3.22",
+      "User-Agent": "quiet-core-bot/2026.3.22",
     });
   });
 });

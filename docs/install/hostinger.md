@@ -7,11 +7,11 @@ read_when:
 title: "Hostinger"
 ---
 
-Run a persistent Quiet Core bot Gateway on [Hostinger](https://www.hostinger.com/openclaw) via a **1-Click** managed deployment or a **VPS** install.
+Run a persistent Quiet Core bot Gateway on [Hostinger](https://www.hostinger.com/quiet-core-bot) via a **1-Click** managed deployment or a **VPS** install.
 
 ## Prerequisites
 
-- Hostinger account ([signup](https://www.hostinger.com/openclaw))
+- Hostinger account ([signup](https://www.hostinger.com/quiet-core-bot))
 - About 5-10 minutes
 
 ## Option A: 1-Click Quiet Core bot
@@ -20,7 +20,7 @@ The fastest way to get started. Hostinger handles infrastructure, Docker, and au
 
 <Steps>
   <Step title="Purchase and launch">
-    1. From the [Hostinger Quiet Core bot page](https://www.hostinger.com/openclaw), choose a Managed Quiet Core bot plan and complete checkout.
+    1. From the [Hostinger Quiet Core bot page](https://www.hostinger.com/quiet-core-bot), choose a Managed Quiet Core bot plan and complete checkout.
 
     <Note>
     During checkout you can select **Ready-to-Use AI** credits that are pre-purchased and integrated instantly inside Quiet Core bot -- no external accounts or API keys from other providers needed. You can start chatting right away. Alternatively, provide your own key from Anthropic, OpenAI, Google Gemini, or xAI during setup.
@@ -48,7 +48,7 @@ More control over your server. Hostinger deploys Quiet Core bot via Docker on yo
 
 <Steps>
   <Step title="Purchase a VPS">
-    1. From the [Hostinger Quiet Core bot page](https://www.hostinger.com/openclaw), choose an Quiet Core bot on VPS plan and complete checkout.
+    1. From the [Hostinger Quiet Core bot page](https://www.hostinger.com/quiet-core-bot), choose an Quiet Core bot on VPS plan and complete checkout.
 
     <Note>
     You can select **Ready-to-Use AI** credits during checkout -- these are pre-purchased and integrated instantly inside Quiet Core bot, so you can start chatting without any external accounts or API keys from other providers.

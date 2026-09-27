@@ -2,10 +2,10 @@
 export {
   registerSessionBindingAdapter,
   testing,
-} from "openclaw/plugin-sdk/session-binding-runtime";
-export { resolveAgentRoute } from "openclaw/plugin-sdk/routing";
+} from "quiet-core-bot/plugin-sdk/session-binding-runtime";
+export { resolveAgentRoute } from "quiet-core-bot/plugin-sdk/routing";
 export {
   createTestRegistry,
   setActivePluginRegistry,
-} from "openclaw/plugin-sdk/plugin-test-runtime";
-export type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+} from "quiet-core-bot/plugin-sdk/plugin-test-runtime";
+export type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";

@@ -17,7 +17,7 @@ describe("runEmbeddedAttempt bootstrap warning prompt assembly", () => {
         bootstrapFiles: [
           {
             name: "AGENTS.md",
-            path: "/tmp/openclaw-warning-workspace/AGENTS.md",
+            path: "/tmp/quiet-core-bot-warning-workspace/AGENTS.md",
             content: "A".repeat(200),
             missing: false,
           },

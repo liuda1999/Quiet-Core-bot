@@ -17,7 +17,7 @@ If you use `OPENROUTER_API_KEY`, an `sk-or-...` key in `plugins.entries.perplexi
 Install the official plugin, then restart Gateway:
 
 ```bash
-quiet-core-bot plugins install @openclaw/perplexity-plugin
+quiet-core-bot plugins install @quiet-core/perplexity-plugin
 quiet-core-bot gateway restart
 ```
 

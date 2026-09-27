@@ -6,9 +6,9 @@
   "gradlePropertiesEncryptedFile": "gradle.properties.enc",
   "materializedRoot": "apps/android/build/release-signing",
   "gradlePropertyNames": [
-    "OPENCLAW_ANDROID_STORE_FILE",
-    "OPENCLAW_ANDROID_STORE_PASSWORD",
-    "OPENCLAW_ANDROID_KEY_ALIAS",
-    "OPENCLAW_ANDROID_KEY_PASSWORD"
+    "QUIET_CORE_ANDROID_STORE_FILE",
+    "QUIET_CORE_ANDROID_STORE_PASSWORD",
+    "QUIET_CORE_ANDROID_KEY_ALIAS",
+    "QUIET_CORE_ANDROID_KEY_PASSWORD"
   ]
 }

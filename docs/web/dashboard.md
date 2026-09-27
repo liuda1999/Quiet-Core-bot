@@ -40,7 +40,7 @@ Prefer localhost, Tailscale Serve, or an SSH tunnel.
 - After onboarding, the CLI auto-opens the dashboard and prints a clean (non-tokenized) link.
 - Re-open anytime: `quiet-core-bot dashboard` (copies link, opens browser if possible, shows SSH hint if headless).
 - If clipboard and browser delivery fail, `quiet-core-bot dashboard` still prints the
-  clean URL and tells you to use the token from `OPENCLAW_GATEWAY_TOKEN` or
+  clean URL and tells you to use the token from `QUIET_CORE_GATEWAY_TOKEN` or
   `gateway.auth.token` as the URL fragment key `token`; it does not print token
   values in logs.
 - If the UI prompts for shared-secret auth, paste the configured token or
@@ -52,7 +52,7 @@ Prefer localhost, Tailscale Serve, or an SSH tunnel.
 - **Gateway TLS**: when `gateway.tls.enabled: true`, dashboard/status links use
   `https://` and Control UI WebSocket links use `wss://`.
 - **Shared-secret token source**: `gateway.auth.token` (or
-  `OPENCLAW_GATEWAY_TOKEN`); `quiet-core-bot dashboard` can pass it via URL fragment
+  `QUIET_CORE_GATEWAY_TOKEN`); `quiet-core-bot dashboard` can pass it via URL fragment
   for one-time bootstrap, and the Control UI keeps it in sessionStorage for the
   current browser tab session and selected gateway URL instead of localStorage.
 - If `gateway.auth.token` is SecretRef-managed, `quiet-core-bot dashboard`
@@ -63,7 +63,7 @@ Prefer localhost, Tailscale Serve, or an SSH tunnel.
   current shell, `quiet-core-bot dashboard` still prints a non-tokenized URL plus
   actionable auth setup guidance.
 - **Shared-secret password**: use the configured `gateway.auth.password` (or
-  `OPENCLAW_GATEWAY_PASSWORD`). The dashboard does not persist passwords across
+  `QUIET_CORE_GATEWAY_PASSWORD`). The dashboard does not persist passwords across
   reloads.
 - **Identity-bearing modes**: Tailscale Serve can satisfy Control UI/WebSocket
   auth via identity headers when `gateway.auth.allowTailscale: true`, and a
@@ -92,9 +92,9 @@ Prefer localhost, Tailscale Serve, or an SSH tunnel.
 - Retrieve or supply the shared secret from the gateway host:
   - Token: `quiet-core-bot config get gateway.auth.token`
   - Password: resolve the configured `gateway.auth.password` or
-    `OPENCLAW_GATEWAY_PASSWORD`
+    `QUIET_CORE_GATEWAY_PASSWORD`
   - SecretRef-managed token: resolve the external secret provider or export
-    `OPENCLAW_GATEWAY_TOKEN` in this shell, then rerun `quiet-core-bot dashboard`
+    `QUIET_CORE_GATEWAY_TOKEN` in this shell, then rerun `quiet-core-bot dashboard`
   - No shared secret configured: `quiet-core-bot doctor --generate-gateway-token`
 - In the dashboard settings, paste the token or password into the auth field,
   then connect.

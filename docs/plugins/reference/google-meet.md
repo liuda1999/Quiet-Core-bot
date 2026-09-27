@@ -11,7 +11,7 @@ Quiet Core bot Google Meet participant plugin for joining calls through Chrome o
 
 ## Distribution
 
-- Package: `@openclaw/google-meet`
+- Package: `@quiet-core/google-meet`
 - Install route: npm; ClawHub
 
 ## Surface

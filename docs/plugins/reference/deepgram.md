@@ -11,7 +11,7 @@ Adds media understanding provider support. Adds realtime transcription provider 
 
 ## Distribution
 
-- Package: `@openclaw/deepgram-provider`
+- Package: `@quiet-core/deepgram-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

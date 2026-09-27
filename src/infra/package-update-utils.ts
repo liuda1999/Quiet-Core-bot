@@ -2,7 +2,7 @@
 import fsSync from "node:fs";
 import path from "node:path";
 import { readRootJsonObjectSync } from "@openclaw/fs-safe/json";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
+import { isRecord } from "@quiet-core/normalization-core/record-coerce";
 
 // Package update utilities inspect installed package metadata without trusting
 // paths outside the provided package root.
@@ -56,15 +56,15 @@ export function readInstalledPackagePeerDependencies(dir: string): Record<string
   );
 }
 
-/** Return true when an installed package needs an openclaw peer link repair. */
+/** Return true when an installed package needs an quiet-core-bot peer link repair. */
 export function installedPackageNeedsOpenClawPeerLinkRepair(dir: string): boolean {
   const peerDependencies = readInstalledPackagePeerDependencies(dir);
-  if (!Object.hasOwn(peerDependencies, "openclaw")) {
+  if (!Object.hasOwn(peerDependencies, "quiet-core-bot")) {
     return false;
   }
 
   try {
-    fsSync.statSync(path.join(dir, "node_modules", "openclaw"));
+    fsSync.statSync(path.join(dir, "node_modules", "quiet-core-bot"));
     return false;
   } catch (error) {
     const code = (error as NodeJS.ErrnoException | undefined)?.code;

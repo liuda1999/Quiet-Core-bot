@@ -6,7 +6,7 @@ import { saveCronStore } from "../cron/store.js";
 import {
   createOpenClawTestState,
   type OpenClawTestState,
-} from "../test-utils/openclaw-test-state.js";
+} from "../test-utils/quiet-core-bot-test-state.js";
 import {
   formatCronSessionDiagnosticFields,
   formatStoppedCronSessionDiagnosticFields,
@@ -27,7 +27,7 @@ describe("diagnostic session context", () => {
   beforeEach(async () => {
     testState = await createOpenClawTestState({
       layout: "state-only",
-      prefix: "openclaw-diagnostic-session-",
+      prefix: "quiet-core-bot-diagnostic-session-",
     });
     tempDir = testState.stateDir;
   });

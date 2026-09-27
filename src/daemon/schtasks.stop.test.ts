@@ -84,7 +84,7 @@ function expectGatewayTermination(pid: number) {
 async function withPreparedGatewayTask(
   run: (context: { env: Record<string, string>; stdout: PassThrough }) => Promise<void>,
 ) {
-  await withWindowsEnv("openclaw-win-stop-", async ({ env }) => {
+  await withWindowsEnv("quiet-core-bot-win-stop-", async ({ env }) => {
     await writeGatewayScript(env, GATEWAY_PORT);
     const stdout = new PassThrough();
     await run({ env, stdout });
@@ -157,7 +157,7 @@ describe("Scheduled Task stop/restart cleanup", () => {
         .mockResolvedValueOnce(
           busyPortUsage(6262, {
             commandLine:
-              '"C:\\Program Files\\nodejs\\node.exe" "C:\\Users\\steipete\\AppData\\Roaming\\npm\\node_modules\\openclaw\\dist\\index.js" gateway --port 18789',
+              '"C:\\Program Files\\nodejs\\node.exe" "C:\\Users\\steipete\\AppData\\Roaming\\npm\\node_modules\\quiet-core-bot\\dist\\index.js" gateway --port 18789',
           }),
         )
         .mockResolvedValueOnce(freePortUsage());
@@ -172,8 +172,8 @@ describe("Scheduled Task stop/restart cleanup", () => {
   it("does not reclaim gateway listeners when stopping a node Scheduled Task", async () => {
     await withPreparedGatewayTask(async ({ env, stdout }) => {
       pushSuccessfulSchtasksResponses(3);
-      env.OPENCLAW_SERVICE_KIND = "node";
-      env.OPENCLAW_WINDOWS_TASK_NAME = "Quiet Core bot Node";
+      env.QUIET_CORE_SERVICE_KIND = "node";
+      env.QUIET_CORE_WINDOWS_TASK_NAME = "Quiet Core bot Node";
       findVerifiedGatewayListenerPidsOnPortSync.mockReturnValue([4242]);
       inspectPortUsage.mockResolvedValue(busyPortUsage(4242));
 
@@ -219,8 +219,8 @@ describe("Scheduled Task stop/restart cleanup", () => {
   it("does not wait on or force-kill the gateway port when restarting a node Scheduled Task", async () => {
     await withPreparedGatewayTask(async ({ env, stdout }) => {
       pushSuccessfulSchtasksResponses(4);
-      env.OPENCLAW_SERVICE_KIND = "node";
-      env.OPENCLAW_WINDOWS_TASK_NAME = "Quiet Core bot Node";
+      env.QUIET_CORE_SERVICE_KIND = "node";
+      env.QUIET_CORE_WINDOWS_TASK_NAME = "Quiet Core bot Node";
       findVerifiedGatewayListenerPidsOnPortSync.mockReturnValue([5151]);
       inspectPortUsage.mockResolvedValue(busyPortUsage(5151));
 

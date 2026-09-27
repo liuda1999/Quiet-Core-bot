@@ -2,8 +2,8 @@
 import { randomUUID } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { TextDecoder } from "node:util";
-import { resolveTimerTimeoutMs } from "@openclaw/normalization-core/number-coercion";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { resolveTimerTimeoutMs } from "@quiet-core/normalization-core/number-coercion";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import {
   GATEWAY_CLIENT_MODES,
   GATEWAY_CLIENT_NAMES,
@@ -16,7 +16,7 @@ import {
   readGatewayDispatchConfig,
   readGatewayDispatchConfigWithShellEnvFallback,
 } from "../config/gateway-dispatch-config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   callGateway,
   isGatewayCredentialsRequiredError,
@@ -200,7 +200,7 @@ let embeddedAgentCommandPromise: Promise<EmbeddedAgentCommandModule["agentComman
 let agentSessionModulePromise: Promise<AgentSessionModule> | undefined;
 let runtimeConfigModulePromise: Promise<RuntimeConfigModule> | undefined;
 let replyPayloadModulePromise:
-  | Promise<typeof import("openclaw/plugin-sdk/reply-payload")>
+  | Promise<typeof import("quiet-core-bot/plugin-sdk/reply-payload")>
   | undefined;
 const defaultAgentSessionModuleLoader: AgentSessionModuleLoader = () =>
   import("./agent/session.js");
@@ -228,7 +228,7 @@ async function loadRuntimeConfig(): Promise<OpenClawConfig> {
 }
 
 function loadReplyPayloadModule() {
-  replyPayloadModulePromise ??= import("openclaw/plugin-sdk/reply-payload");
+  replyPayloadModulePromise ??= import("quiet-core-bot/plugin-sdk/reply-payload");
   return replyPayloadModulePromise;
 }
 

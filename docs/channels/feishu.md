@@ -322,7 +322,7 @@ Feishu/Lark supports ACP for DMs and group thread messages. Feishu/Lark ACP is t
             agent: "codex",
             backend: "acpx",
             mode: "persistent",
-            cwd: "/workspace/openclaw",
+            cwd: "/workspace/quiet-core-bot",
           },
         },
       },
@@ -531,7 +531,7 @@ Check gateway logs to confirm dynamic creation is working:
 
 ```
 feishu: creating dynamic agent "feishu-ou_xxxxxx" for user ou_xxxxxx
-workspace: /Users/you/.openclaw/workspace-feishu-ou_xxxxxx
+workspace: /Users/you/.quiet-core-bot/workspace-feishu-ou_xxxxxx
 feishu: dynamic agent created, new route: agent:feishu-ou_xxxxxx:main
 ```
 

@@ -8,16 +8,16 @@ import { readTextFileBounded } from "./text-file-utils.mjs";
 const INDEX_KEY = "installed-plugin-index";
 const ERROR_DETAIL_TAIL_BYTES = 16 * 1024;
 const JSON_ARTIFACT_MAX_BYTES = readPositiveIntEnv(
-  "OPENCLAW_PLUGIN_INDEX_JSON_MAX_BYTES",
+  "QUIET_CORE_PLUGIN_INDEX_JSON_MAX_BYTES",
   1024 * 1024,
 );
 
 export function stateDir() {
-  return process.env.OPENCLAW_STATE_DIR || path.join(process.env.HOME, ".openclaw");
+  return process.env.QUIET_CORE_STATE_DIR || path.join(process.env.HOME, ".quiet-core-bot");
 }
 
 export function configPath() {
-  return process.env.OPENCLAW_CONFIG_PATH || path.join(stateDir(), "openclaw.json");
+  return process.env.QUIET_CORE_CONFIG_PATH || path.join(stateDir(), "quiet-core-bot.json");
 }
 
 function readJsonMaybe(file) {
@@ -62,7 +62,7 @@ function assertIndexJsonByteLength(bytesRaw, label) {
 }
 
 function sqlitePath(root = stateDir()) {
-  return path.join(root, "state", "openclaw.sqlite");
+  return path.join(root, "state", "quiet-core-bot.sqlite");
 }
 
 function legacyIndexPath(root = stateDir()) {

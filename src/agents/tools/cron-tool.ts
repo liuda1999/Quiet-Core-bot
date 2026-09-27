@@ -3,7 +3,7 @@
  *
  * Manages scheduled jobs, wake/run actions, delivery context, and reminder-style payload normalization.
  */
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
 import { Type, type TSchema } from "typebox";
 import { getRuntimeConfig } from "../../config/config.js";
 import { resolveCronCreationDelivery } from "../../cron/delivery-context.js";
@@ -920,7 +920,7 @@ Use jobId canonical; id accepted compat. contextMessages (0-10) adds previous me
           // job properties to the top level alongside `action` instead of nesting
           // them inside `job`. When `params.job` is missing or empty, reconstruct
           // a synthetic job object from any recognised top-level job fields.
-          // See: https://github.com/openclaw/openclaw/issues/11310
+          // See: https://github.com/liuda1999/Quiet-Core-bot/issues/11310
           if (isMissingOrEmptyObject(params.job)) {
             const synthetic = recoverCronObjectFromFlatParams(params);
             // Only use the synthetic job if at least one meaningful field is present
@@ -1108,7 +1108,7 @@ Use jobId canonical; id accepted compat. contextMessages (0-10) adds previous me
           // Without this, the wake gateway call goes through with no session
           // key and the system event lands on the heartbeat / main default
           // rather than the originating conversation lane. Closes the
-          // upstream half of openclaw/openclaw#46886 (#64556 — agentId/
+          // upstream half of liuda1999/quiet-core-bot#46886 (#64556 — agentId/
           // sessionKey silently ignored for `action: "wake"`). Explicit
           // params on the tool call still take precedence over the inferred
           // value, so call sites that want to wake a different session can

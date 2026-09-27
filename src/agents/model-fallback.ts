@@ -1,13 +1,13 @@
 /**
  * Runs model and image fallback chains across provider/model candidates.
  */
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { sanitizeForLog } from "../../packages/terminal-core/src/ansi.js";
 import {
   resolveAgentModelFallbackValues,
   resolveAgentModelPrimaryValue,
 } from "../config/model-input.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { emitFailoverEvent } from "../infra/diagnostic-events.js";
 import { formatErrorMessage, toErrorObject } from "../infra/errors.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
@@ -544,7 +544,7 @@ async function resolveModelFallbackCandidateHarnessAuthPrecheck(
     // profile state must not block the candidate before the CLI starts.
     return { skipsProviderAuthCooldown: true };
   }
-  if (agentRuntime === "openclaw") {
+  if (agentRuntime === "quiet-core-bot") {
     return { skipsProviderAuthCooldown: false };
   }
   if (agentRuntime === "auto" || (agentRuntime === "codex" && agentRuntimeSource === "implicit")) {

@@ -2,7 +2,7 @@
 import {
   registerProviderPlugin,
   requireRegisteredProvider,
-} from "openclaw/plugin-sdk/plugin-test-runtime";
+} from "quiet-core-bot/plugin-sdk/plugin-test-runtime";
 import { describe, expect, it } from "vitest";
 import { resolveDefaultAgentDir } from "../src/agents/agent-scope.js";
 import { isBillingErrorMessage } from "../src/agents/embedded-agent-helpers/failover-matches.js";
@@ -27,14 +27,14 @@ import { loadBundledProviderPlugin as loadBundledProviderPluginFromTestHelper } 
 
 const LIVE = isLiveTestEnabled();
 const REQUIRE_PROFILE_KEYS =
-  isLiveProfileKeyModeEnabled() || isTruthyEnvValue(process.env.OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS);
+  isLiveProfileKeyModeEnabled() || isTruthyEnvValue(process.env.QUIET_CORE_LIVE_REQUIRE_PROFILE_KEYS);
 const describeLive = LIVE ? describe : describe.skip;
-const providerFilter = parseCsvFilter(process.env.OPENCLAW_LIVE_IMAGE_GENERATION_PROVIDERS);
-const caseFilter = parseCaseFilter(process.env.OPENCLAW_LIVE_IMAGE_GENERATION_CASES);
-const envModelMap = parseProviderModelMap(process.env.OPENCLAW_LIVE_IMAGE_GENERATION_MODELS);
+const providerFilter = parseCsvFilter(process.env.QUIET_CORE_LIVE_IMAGE_GENERATION_PROVIDERS);
+const caseFilter = parseCaseFilter(process.env.QUIET_CORE_LIVE_IMAGE_GENERATION_CASES);
+const envModelMap = parseProviderModelMap(process.env.QUIET_CORE_LIVE_IMAGE_GENERATION_MODELS);
 const DEFAULT_LIVE_IMAGE_GENERATION_TIMEOUT_MS = 120_000;
 const LIVE_IMAGE_GENERATION_TIMEOUT_MS = resolvePositiveIntegerEnv(
-  process.env.OPENCLAW_LIVE_IMAGE_GENERATION_TIMEOUT_MS,
+  process.env.QUIET_CORE_LIVE_IMAGE_GENERATION_TIMEOUT_MS,
   DEFAULT_LIVE_IMAGE_GENERATION_TIMEOUT_MS,
 );
 

@@ -6,14 +6,14 @@ import { withEnv } from "../test-utils/env.js";
 import { resolveDefaultAgentWorkspaceDir } from "./workspace.js";
 
 describe("DEFAULT_AGENT_WORKSPACE_DIR", () => {
-  it("uses OPENCLAW_HOME when resolving the default workspace dir", () => {
-    const home = path.join(path.sep, "srv", "openclaw-home");
+  it("uses QUIET_CORE_HOME when resolving the default workspace dir", () => {
+    const home = path.join(path.sep, "srv", "quiet-core-bot-home");
 
     const resolved = withEnv(
       {
-        OPENCLAW_WORKSPACE_DIR: undefined,
-        OPENCLAW_PROFILE: undefined,
-        OPENCLAW_HOME: home,
+        QUIET_CORE_WORKSPACE_DIR: undefined,
+        QUIET_CORE_PROFILE: undefined,
+        QUIET_CORE_HOME: home,
         HOME: path.join(path.sep, "home", "other"),
       },
       () => resolveDefaultAgentWorkspaceDir(),
@@ -22,13 +22,13 @@ describe("DEFAULT_AGENT_WORKSPACE_DIR", () => {
     expect(resolved).toBe(path.join(path.resolve(home), ".quiet-core-bot", "workspace"));
   });
 
-  it("uses OPENCLAW_WORKSPACE_DIR before OPENCLAW_HOME", () => {
-    const workspaceDir = path.join(path.sep, "srv", "openclaw-workspace");
+  it("uses QUIET_CORE_WORKSPACE_DIR before QUIET_CORE_HOME", () => {
+    const workspaceDir = path.join(path.sep, "srv", "quiet-core-bot-workspace");
 
     const resolved = withEnv(
       {
-        OPENCLAW_WORKSPACE_DIR: workspaceDir,
-        OPENCLAW_HOME: path.join(path.sep, "srv", "openclaw-home"),
+        QUIET_CORE_WORKSPACE_DIR: workspaceDir,
+        QUIET_CORE_HOME: path.join(path.sep, "srv", "quiet-core-bot-home"),
       },
       () => resolveDefaultAgentWorkspaceDir(),
     );

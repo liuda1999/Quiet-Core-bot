@@ -4,7 +4,7 @@ import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { SessionManager } from "../../agents/sessions/session-manager.js";
 import { onSessionTranscriptUpdate } from "../../sessions/transcript-events.js";
-import type { OpenClawConfig } from "../types.openclaw.js";
+import type { OpenClawConfig } from "../types.quiet-core-bot.js";
 import {
   applyRestartRecoveryLifecycle,
   appendTranscriptMessage,
@@ -47,7 +47,7 @@ describe("session accessor file-backed seam", () => {
   let transcriptPath: string;
 
   beforeEach(() => {
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-session-accessor-"));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-session-accessor-"));
     storePath = path.join(tempDir, "sessions.json");
     transcriptPath = path.join(tempDir, "session.jsonl");
   });
@@ -751,7 +751,7 @@ describe("session accessor file-backed seam", () => {
 
   it("updates the freshest matching session entry across discovered agent stores", async () => {
     const stateDir = path.join(tempDir, "state");
-    const env = { ...process.env, OPENCLAW_STATE_DIR: stateDir };
+    const env = { ...process.env, QUIET_CORE_STATE_DIR: stateDir };
     const cfg = {
       session: {
         mainKey: "main",
@@ -1184,7 +1184,10 @@ describe("session accessor file-backed seam", () => {
     await appendTranscriptEvent(scope, { type: "session", sessionId: "session-1" });
     await appendTranscriptEvent(scope, event);
 
-    expect(fs.statSync(transcriptPath).mode & 0o777).toBe(0o600);
+    // POSIX file modes are not enforced on Windows; the permission contract is POSIX-only.
+    if (process.platform !== "win32") {
+      expect(fs.statSync(transcriptPath).mode & 0o777).toBe(0o600);
+    }
   });
 
   it("applies keyed lifecycle removals and artifact cleanup from the final store", async () => {
@@ -1429,7 +1432,10 @@ describe("session accessor file-backed seam", () => {
       { type: "message", id: "entry-3", parentId: null },
       { type: "message", id: "entry-4", parentId: "entry-3" },
     ]);
-    expect(fs.statSync(manualTranscriptPath).mode & 0o777).toBe(0o600);
+    // POSIX file modes are not enforced on Windows; the permission contract is POSIX-only.
+    if (process.platform !== "win32") {
+      expect(fs.statSync(manualTranscriptPath).mode & 0o777).toBe(0o600);
+    }
     const reopened = SessionManager.open(manualTranscriptPath, tempDir, tempDir);
     expect(reopened.getEntries().map((entry) => entry.id)).toEqual(["entry-3", "entry-4"]);
     expect(reopened.buildSessionContext().messages).toHaveLength(2);

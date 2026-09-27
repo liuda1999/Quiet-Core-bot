@@ -36,6 +36,6 @@ export async function stopKnownBrowserProfiles(params: {
       }
     }
   } catch (err) {
-    params.onWarn(`openclaw browser stop failed: ${String(err)}`);
+    params.onWarn(`quiet-core-bot browser stop failed: ${String(err)}`);
   }
 }

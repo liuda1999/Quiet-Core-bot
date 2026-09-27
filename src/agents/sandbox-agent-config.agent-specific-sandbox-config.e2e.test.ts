@@ -108,7 +108,7 @@ function createWorkSetupCommandConfig(scope: "agent" | "shared"): OpenClawConfig
       list: [
         {
           id: "work",
-          workspace: "~/openclaw-work",
+          workspace: "~/quiet-core-bot-work",
           sandbox: {
             mode: "all",
             scope,
@@ -149,7 +149,7 @@ describe("Agent-specific sandbox config", () => {
         list: [
           {
             id: "isolated",
-            workspace: "~/openclaw-isolated",
+            workspace: "~/quiet-core-bot-isolated",
             sandbox: {
               mode: "all",
               scope: "agent",
@@ -180,14 +180,14 @@ describe("Agent-specific sandbox config", () => {
         list: [
           {
             id: "main",
-            workspace: "~/openclaw",
+            workspace: "~/quiet-core-bot",
             sandbox: {
               mode: "off",
             },
           },
           {
             id: "family",
-            workspace: "~/openclaw-family",
+            workspace: "~/quiet-core-bot-family",
             sandbox: {
               mode: "all",
               scope: "agent",
@@ -247,7 +247,7 @@ describe("Agent-specific sandbox config", () => {
         list: [
           {
             id: "main",
-            workspace: "~/openclaw",
+            workspace: "~/quiet-core-bot",
           },
         ],
       },
@@ -299,7 +299,7 @@ describe("Agent-specific sandbox config", () => {
         list: [
           {
             id: "work",
-            workspace: "~/openclaw-work",
+            workspace: "~/quiet-core-bot-work",
             sandbox: {
               mode: "all",
               scope: "agent",
@@ -332,7 +332,7 @@ describe("Agent-specific sandbox config", () => {
             list: [
               {
                 id: "main",
-                workspace: "~/openclaw",
+                workspace: "~/quiet-core-bot",
                 sandbox: {
                   mode: "off",
                 },
@@ -357,7 +357,7 @@ describe("Agent-specific sandbox config", () => {
             list: [
               {
                 id: "family",
-                workspace: "~/openclaw-family",
+                workspace: "~/quiet-core-bot-family",
                 sandbox: {
                   mode: "all",
                   scope: "agent",
@@ -393,7 +393,7 @@ describe("Agent-specific sandbox config", () => {
         list: [
           {
             id: "work",
-            workspace: "~/openclaw-work",
+            workspace: "~/quiet-core-bot-work",
             sandbox: {
               mode: "all",
               scope: "agent",

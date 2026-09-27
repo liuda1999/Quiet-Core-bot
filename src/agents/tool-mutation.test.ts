@@ -45,8 +45,8 @@ describe("tool mutation helpers", () => {
     ["exec", "sed -n '1,220p' src/agents/tool-mutation.ts"],
     ["bash", "cat package.json"],
     ["exec", "rg -n tool-mutation src/agents"],
-    ["exec", "gh search prs --repo openclaw/openclaw tool-mutation --json number,title,state"],
-    ["bash", "gh pr view 123 --repo openclaw/openclaw --json title,state"],
+    ["exec", "gh search prs --repo liuda1999/quiet-core-bot tool-mutation --json number,title,state"],
+    ["bash", "gh pr view 123 --repo liuda1999/quiet-core-bot --json title,state"],
   ])("treats read-only shell command as non-mutating: %s %s", (toolName, command) => {
     expect(isMutatingToolCall(toolName, { command })).toBe(false);
     expect(buildToolMutationState(toolName, { command }).mutatingAction).toBe(false);

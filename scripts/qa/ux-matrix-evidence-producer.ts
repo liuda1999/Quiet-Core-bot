@@ -23,7 +23,7 @@ import {
 const execFileAsync = promisify(execFile);
 const SCENARIO_ID = "ux-matrix-evidence-dashboard";
 const SOURCE_PATH = "scripts/qa/ux-matrix-evidence-producer.ts";
-const SUITE_COMMAND = `pnpm openclaw qa suite --scenario ${SCENARIO_ID}`;
+const SUITE_COMMAND = `pnpm quiet-core-bot qa suite --scenario ${SCENARIO_ID}`;
 
 type MatrixCell = {
   artifacts: Array<{ kind: string; path: string }>;
@@ -179,7 +179,7 @@ function buildExecution(params: {
   return {
     runner: "ux-matrix-script-producer",
     environment: {
-      ref: process.env.OPENCLAW_QA_REF?.trim() || process.env.GITHUB_SHA?.trim() || null,
+      ref: process.env.QUIET_CORE_QA_REF?.trim() || process.env.GITHUB_SHA?.trim() || null,
       os: process.platform,
       nodeVersion: process.version,
     },

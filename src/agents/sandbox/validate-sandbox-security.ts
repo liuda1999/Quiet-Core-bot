@@ -7,7 +7,7 @@
 
 import os from "node:os";
 import path from "node:path";
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalLowercaseString } from "@quiet-core/normalization-core/string-coerce";
 import { resolveRequiredHomeDir, resolveRequiredOsHomeDir } from "../../infra/home-dir.js";
 import { splitSandboxBindSpec } from "./bind-spec.js";
 import { SANDBOX_AGENT_WORKSPACE_MOUNT } from "./constants.js";
@@ -160,7 +160,7 @@ function getBlockedReasonForSourcePath(
 function getBlockedHostPaths(): string[] {
   const cacheKey = JSON.stringify({
     home: process.env.HOME,
-    openclawHome: process.env.OPENCLAW_HOME,
+    openclawHome: process.env.QUIET_CORE_HOME,
     osHome: os.homedir(),
     userProfile: process.env.USERPROFILE,
   });
@@ -180,7 +180,7 @@ function getBlockedHostPaths(): string[] {
 function getBlockedHomeRoots(): string[] {
   const roots = new Set<string>();
   for (const candidate of [
-    process.env.OPENCLAW_HOME,
+    process.env.QUIET_CORE_HOME,
     process.env.HOME,
     process.env.USERPROFILE,
     resolveRequiredHomeDir(process.env, os.homedir),

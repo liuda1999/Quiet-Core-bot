@@ -252,7 +252,7 @@ describe("commands registry", () => {
     );
     expect(
       normalizeCommandBody("/skill@openclaw: demo_skill first line\nsecond line", {
-        botUsername: "openclaw",
+        botUsername: "quiet-core-bot",
       }),
     ).toBe("/skill demo_skill first line\nsecond line");
     expect(resolveTextCommand("/skill demo_skill first line\nsecond line")?.args).toBe(
@@ -592,21 +592,21 @@ describe("commands registry", () => {
   });
 
   it("normalizes telegram-style command mentions for the current bot", () => {
-    expect(normalizeCommandBody("/help@openclaw", { botUsername: "openclaw" })).toBe("/help");
+    expect(normalizeCommandBody("/help@quiet-core-bot", { botUsername: "quiet-core-bot" })).toBe("/help");
     expect(
-      normalizeCommandBody("/help@openclaw args", {
-        botUsername: "openclaw",
+      normalizeCommandBody("/help@quiet-core-bot args", {
+        botUsername: "quiet-core-bot",
       }),
     ).toBe("/help args");
     expect(
       normalizeCommandBody("/help@openclaw: args", {
-        botUsername: "openclaw",
+        botUsername: "quiet-core-bot",
       }),
     ).toBe("/help args");
   });
 
   it("keeps telegram-style command mentions for other bots", () => {
-    expect(normalizeCommandBody("/help@otherbot", { botUsername: "openclaw" })).toBe(
+    expect(normalizeCommandBody("/help@otherbot", { botUsername: "quiet-core-bot" })).toBe(
       "/help@otherbot",
     );
   });

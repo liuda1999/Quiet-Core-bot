@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { CURRENT_SESSION_VERSION } from "openclaw/plugin-sdk/agent-sessions";
+import { CURRENT_SESSION_VERSION } from "quiet-core-bot/plugin-sdk/agent-sessions";
 import { describe, expect, it } from "vitest";
 import { withEnvAsync } from "../../test-utils/env.js";
 import {
@@ -103,13 +103,13 @@ function expectBranchSummary(value: unknown, summary: string) {
 }
 
 async function withCliSessionState<T>(stateDir: string, run: () => Promise<T>): Promise<T> {
-  return await withEnvAsync({ OPENCLAW_STATE_DIR: stateDir }, run);
+  return await withEnvAsync({ QUIET_CORE_STATE_DIR: stateDir }, run);
 }
 
 describe("loadCliSessionHistoryMessages", () => {
   it("reads the canonical session transcript instead of an arbitrary external path", async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-state-"));
-    const outsideDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-outside-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-cli-state-"));
+    const outsideDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-cli-outside-"));
     createSessionTranscript({
       rootDir: stateDir,
       sessionId: "session-test",
@@ -142,8 +142,8 @@ describe("loadCliSessionHistoryMessages", () => {
   });
 
   it("detects canonical transcripts when callers pass stale external session paths", async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-state-"));
-    const outsideDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-outside-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-cli-state-"));
+    const outsideDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-cli-outside-"));
     createSessionTranscript({
       rootDir: stateDir,
       sessionId: "session-test",
@@ -174,7 +174,7 @@ describe("loadCliSessionHistoryMessages", () => {
   });
 
   it("keeps only the newest bounded history window", async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-state-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-cli-state-"));
     const sessionFile = createSessionTranscript({
       rootDir: stateDir,
       sessionId: "session-bounded",
@@ -205,7 +205,7 @@ describe("loadCliSessionHistoryMessages", () => {
   });
 
   it("loads only the branch selected by transcript leaf controls", async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-state-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-cli-state-"));
     const sessionFile = createSessionTranscript({
       rootDir: stateDir,
       sessionId: "session-leaf-control",
@@ -264,7 +264,7 @@ describe("loadCliSessionHistoryMessages", () => {
   });
 
   it("keeps complete history for context-engine snapshots", async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-state-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-cli-state-"));
     const sessionFile = createSessionTranscript({
       rootDir: stateDir,
       sessionId: "session-context-engine-history",
@@ -295,7 +295,7 @@ describe("loadCliSessionHistoryMessages", () => {
   });
 
   it("uses the latest compaction summary and complete tail for context-engine snapshots", async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-state-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-cli-state-"));
     const sessionFile = createSessionTranscript({
       rootDir: stateDir,
       sessionId: "session-context-engine-compacted",
@@ -377,8 +377,8 @@ describe("loadCliSessionHistoryMessages", () => {
   });
 
   it("rejects symlinked transcripts instead of following them outside the sessions directory", async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-state-"));
-    const outsideDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-outside-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-cli-state-"));
+    const outsideDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-cli-outside-"));
     const canonicalSessionFile = path.join(
       stateDir,
       "agents",
@@ -415,7 +415,7 @@ describe("loadCliSessionHistoryMessages", () => {
   });
 
   it("drops oversized transcript files instead of loading them into hook payloads", async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-state-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-cli-state-"));
     const sessionFile = path.join(
       stateDir,
       "agents",
@@ -443,8 +443,8 @@ describe("loadCliSessionHistoryMessages", () => {
   });
 
   it("honors custom session store roots when resolving hook history transcripts", async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-state-"));
-    const customStoreDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-store-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-cli-state-"));
+    const customStoreDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-cli-store-"));
     const storePath = path.join(customStoreDir, "sessions.json");
     fs.writeFileSync(storePath, "{}", "utf-8");
     const sessionFile = createSessionTranscript({
@@ -479,7 +479,7 @@ describe("loadCliSessionHistoryMessages", () => {
 
 describe("loadCliSessionReseedMessages", () => {
   it("does not reseed fresh CLI sessions from raw transcript history before compaction", async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-state-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-cli-state-"));
     const sessionFile = createSessionTranscript({
       rootDir: stateDir,
       sessionId: "session-no-compaction",
@@ -503,7 +503,7 @@ describe("loadCliSessionReseedMessages", () => {
   });
 
   it("reseeds safe invalidated sessions from a bounded raw message tail when explicitly opted in", async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-state-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-cli-state-"));
     const sessionFile = createSessionTranscript({
       rootDir: stateDir,
       sessionId: "session-opt-in-raw-tail",
@@ -541,7 +541,7 @@ describe("loadCliSessionReseedMessages", () => {
   });
 
   it("does not raw-reseed auth-boundary invalidations even when opted in", async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-state-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-cli-state-"));
     const sessionFile = createSessionTranscript({
       rootDir: stateDir,
       sessionId: "session-auth-boundary",
@@ -579,7 +579,7 @@ describe("loadCliSessionReseedMessages", () => {
   });
 
   it("reseeds fresh CLI sessions from the latest compaction summary and post-compaction tail", async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-state-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-cli-state-"));
     const sessionFile = createSessionTranscript({
       rootDir: stateDir,
       sessionId: "session-compacted",

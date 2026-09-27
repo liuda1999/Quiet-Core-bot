@@ -3,7 +3,7 @@ import {
   definePluginEntry,
   type OpenClawPluginApi,
   type ProviderAuthMethodNonInteractiveContext,
-} from "openclaw/plugin-sdk/plugin-entry";
+} from "quiet-core-bot/plugin-sdk/plugin-entry";
 import {
   buildVllmProvider,
   VLLM_DEFAULT_API_KEY_ENV_VAR,
@@ -17,7 +17,7 @@ import { resolveThinkingProfile } from "./thinking-policy.js";
 const PROVIDER_ID = "vllm";
 
 async function loadProviderSetup() {
-  return await import("openclaw/plugin-sdk/provider-setup");
+  return await import("quiet-core-bot/plugin-sdk/provider-setup");
 }
 
 export default definePluginEntry({
@@ -90,7 +90,7 @@ export default definePluginEntry({
       },
       buildUnknownModelHint: () =>
         "vLLM requires authentication to be registered as a provider. " +
-        'Set VLLM_API_KEY (any value works) or run "openclaw configure". ' +
+        'Set VLLM_API_KEY (any value works) or run "quiet-core-bot configure". ' +
         "See: https://github.com/liuda1999/Quiet-Core-bot/providers/vllm",
       resolveThinkingProfile,
       wrapStreamFn: wrapVllmProviderStream,

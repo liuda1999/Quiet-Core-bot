@@ -32,8 +32,8 @@ function makePlaywrightQaSuiteTestScenario(id: string): ReturnType<typeof makeQa
 
 describe("qa suite planning helpers", () => {
   it("normalizes suite concurrency to a bounded integer", () => {
-    const previous = process.env.OPENCLAW_QA_SUITE_CONCURRENCY;
-    delete process.env.OPENCLAW_QA_SUITE_CONCURRENCY;
+    const previous = process.env.QUIET_CORE_QA_SUITE_CONCURRENCY;
+    delete process.env.QUIET_CORE_QA_SUITE_CONCURRENCY;
     try {
       expect(normalizeQaSuiteConcurrency(undefined, 10)).toBe(10);
       expect(normalizeQaSuiteConcurrency(undefined, 80)).toBe(64);
@@ -48,21 +48,21 @@ describe("qa suite planning helpers", () => {
       expect(normalizeQaSuiteConcurrency(20, 3)).toBe(3);
       expect(normalizeQaSuiteConcurrency(0, 3)).toBe(1);
 
-      process.env.OPENCLAW_QA_SUITE_CONCURRENCY = "3";
+      process.env.QUIET_CORE_QA_SUITE_CONCURRENCY = "3";
       expect(normalizeQaSuiteConcurrency(undefined, 10)).toBe(3);
 
-      process.env.OPENCLAW_QA_SUITE_CONCURRENCY = "0";
+      process.env.QUIET_CORE_QA_SUITE_CONCURRENCY = "0";
       expect(normalizeQaSuiteConcurrency(undefined, 10)).toBe(1);
 
       for (const value of ["0x10", "1e2", "2.5"]) {
-        process.env.OPENCLAW_QA_SUITE_CONCURRENCY = value;
+        process.env.QUIET_CORE_QA_SUITE_CONCURRENCY = value;
         expect(normalizeQaSuiteConcurrency(undefined, 10)).toBe(10);
       }
     } finally {
       if (previous === undefined) {
-        delete process.env.OPENCLAW_QA_SUITE_CONCURRENCY;
+        delete process.env.QUIET_CORE_QA_SUITE_CONCURRENCY;
       } else {
-        process.env.OPENCLAW_QA_SUITE_CONCURRENCY = previous;
+        process.env.QUIET_CORE_QA_SUITE_CONCURRENCY = previous;
       }
     }
   });
@@ -204,18 +204,18 @@ describe("qa suite planning helpers", () => {
     expect(resolveQaSuiteWorkerStartStaggerMs(4, {})).toBe(1500);
     expect(
       resolveQaSuiteWorkerStartStaggerMs(4, {
-        OPENCLAW_QA_SUITE_WORKER_START_STAGGER_MS: "0",
+        QUIET_CORE_QA_SUITE_WORKER_START_STAGGER_MS: "0",
       }),
     ).toBe(0);
     expect(
       resolveQaSuiteWorkerStartStaggerMs(4, {
-        OPENCLAW_QA_SUITE_WORKER_START_STAGGER_MS: "25",
+        QUIET_CORE_QA_SUITE_WORKER_START_STAGGER_MS: "25",
       }),
     ).toBe(25);
     for (const value of ["0x10", "1e3", "10.5"]) {
       expect(
         resolveQaSuiteWorkerStartStaggerMs(4, {
-          OPENCLAW_QA_SUITE_WORKER_START_STAGGER_MS: value,
+          QUIET_CORE_QA_SUITE_WORKER_START_STAGGER_MS: value,
         }),
       ).toBe(1500);
     }
@@ -224,7 +224,7 @@ describe("qa suite planning helpers", () => {
       resolveQaSuiteWorkerStartStaggerMs(
         4,
         {
-          OPENCLAW_QA_SUITE_WORKER_START_STAGGER_MS: "25",
+          QUIET_CORE_QA_SUITE_WORKER_START_STAGGER_MS: "25",
         },
         500,
       ),

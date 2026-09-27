@@ -85,8 +85,8 @@ Runtimes are automatically recreated when the agent is next used.
 
 ```bash
 # Pull new image
-docker pull openclaw-sandbox:latest
-docker tag openclaw-sandbox:latest openclaw-sandbox:bookworm-slim
+docker pull quiet-core-bot-sandbox:latest
+docker tag quiet-core-bot-sandbox:latest quiet-core-bot-sandbox:bookworm-slim
 
 # Update config to use new image
 # Edit config: agents.defaults.sandbox.docker.image (or agents.list[].sandbox.docker.image)
@@ -186,8 +186,8 @@ Sandbox settings live in `~/.quiet-core-bot/quiet-core-bot.json` under `agents.d
         "backend": "docker", // docker, ssh, openshell
         "scope": "agent", // session, agent, shared
         "docker": {
-          "image": "openclaw-sandbox:bookworm-slim",
-          "containerPrefix": "openclaw-sbx-",
+          "image": "quiet-core-bot-sandbox:bookworm-slim",
+          "containerPrefix": "quiet-core-bot-sbx-",
           // ... more Docker options
         },
         "prune": {

@@ -11,7 +11,7 @@ Quiet Core bot Discord channel plugin for channels, DMs, commands, and app event
 
 ## Distribution
 
-- Package: `@openclaw/discord`
+- Package: `@quiet-core/discord`
 - Install route: npm; ClawHub
 
 ## Surface

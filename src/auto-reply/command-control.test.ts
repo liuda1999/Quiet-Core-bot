@@ -365,7 +365,7 @@ describe("resolveCommandAuthorization", () => {
       Provider: "webchat",
       Surface: "webchat",
       OriginatingChannel: "webchat",
-      SenderId: "openclaw-control-ui",
+      SenderId: "quiet-core-bot-control-ui",
     } as MsgContext;
 
     const auth = resolveCommandAuthorization({
@@ -1152,12 +1152,12 @@ describe("control command parsing", () => {
   it("ignores telegram commands addressed to other bots", () => {
     expect(
       hasControlCommand("/help@otherbot", undefined, {
-        botUsername: "openclaw",
+        botUsername: "quiet-core-bot",
       }),
     ).toBe(false);
     expect(
-      hasControlCommand("/help@openclaw", undefined, {
-        botUsername: "openclaw",
+      hasControlCommand("/help@quiet-core-bot", undefined, {
+        botUsername: "quiet-core-bot",
       }),
     ).toBe(true);
   });

@@ -3,9 +3,9 @@
  *
  * Applies provider and conversation allow/deny rules to mention pattern matching.
  */
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import type { MentionPatternsMode, MentionPatternsPolicyConfig } from "../config/types.messages.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 
 /**
  * Inputs for resolving whether mention-pattern matching is enabled in a conversation.

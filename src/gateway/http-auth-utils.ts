@@ -4,9 +4,9 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/normalization-core/string-coerce";
 import { getRuntimeConfig } from "../config/io.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import type { AuthRateLimiter } from "./auth-rate-limit.js";
 import {
   authorizeHttpGatewayConnect,
@@ -201,7 +201,7 @@ export function resolveTrustedHttpOperatorScopes(
     return [];
   }
 
-  const headerValue = getHeader(req, "x-openclaw-scopes");
+  const headerValue = getHeader(req, "x-quiet-core-bot-scopes");
   if (headerValue === undefined) {
     // No scope header present - trusted clients without an explicit header
     // get the default operator scopes (matching pre-#57783 behavior).
@@ -265,7 +265,7 @@ export function authorizeOpenAiCompatibleHttpModelOverride(
   req: IncomingMessage,
   requestAuth: AuthorizedGatewayHttpRequest,
 ): { allowed: true } | { allowed: false; missingScope: typeof ADMIN_SCOPE } {
-  const requestedModelOverride = normalizeOptionalString(getHeader(req, "x-openclaw-model"));
+  const requestedModelOverride = normalizeOptionalString(getHeader(req, "x-quiet-core-bot-model"));
   if (!requestedModelOverride || resolveOpenAiCompatibleHttpSenderIsOwner(req, requestAuth)) {
     return { allowed: true };
   }

@@ -1,5 +1,5 @@
 // Control UI view renders mcp screen content.
-import { redactSensitiveUrlLikeString } from "@openclaw/net-policy/redact-sensitive-url";
+import { redactSensitiveUrlLikeString } from "@quiet-core/net-policy/redact-sensitive-url";
 import { html, nothing, type TemplateResult } from "lit";
 
 type McpServerRow = {

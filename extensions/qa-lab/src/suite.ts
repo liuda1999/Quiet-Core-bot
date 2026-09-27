@@ -7,16 +7,16 @@ import {
   runOpenClawCrablineChannelDriverSmoke,
   type OpenClawCrablineChannelDriverSelection,
 } from "@openclaw/crabline";
-import { disposeRegisteredAgentHarnesses } from "openclaw/plugin-sdk/agent-harness";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { parseStrictPositiveInteger } from "openclaw/plugin-sdk/number-runtime";
+import { disposeRegisteredAgentHarnesses } from "quiet-core-bot/plugin-sdk/agent-harness";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
+import { parseStrictPositiveInteger } from "quiet-core-bot/plugin-sdk/number-runtime";
 import {
   renderQaMarkdownReport,
   type QaReportCheck,
   type QaReportScenario,
-} from "openclaw/plugin-sdk/qa-runtime";
-import { fetchWithSsrFGuard } from "openclaw/plugin-sdk/ssrf-runtime";
+} from "quiet-core-bot/plugin-sdk/qa-runtime";
+import { fetchWithSsrFGuard } from "quiet-core-bot/plugin-sdk/ssrf-runtime";
 import { assertQaSuiteArtifactWritten } from "./artifact-assertion.js";
 import {
   buildQaSuiteEvidenceSummary,
@@ -164,7 +164,7 @@ export type QaSuiteRunParams = {
 };
 
 function shouldLogQaSuiteProgress(env: NodeJS.ProcessEnv = process.env) {
-  const override = parseQaSuiteBooleanEnv(env.OPENCLAW_QA_SUITE_PROGRESS);
+  const override = parseQaSuiteBooleanEnv(env.QUIET_CORE_QA_SUITE_PROGRESS);
   if (override !== undefined) {
     return override;
   }
@@ -182,7 +182,7 @@ function resolveQaSuiteTransportReadyTimeoutMs(
   ) {
     return Math.floor(explicitTimeoutMs);
   }
-  const raw = env.OPENCLAW_QA_TRANSPORT_READY_TIMEOUT_MS;
+  const raw = env.QUIET_CORE_QA_TRANSPORT_READY_TIMEOUT_MS;
   if (!raw) {
     return 120_000;
   }
@@ -302,11 +302,11 @@ async function runScenario(name: string, steps: QaSuiteStep[]): Promise<QaSuiteS
   const stepResults: QaReportCheck[] = [];
   for (const step of steps) {
     try {
-      if (process.env.OPENCLAW_QA_DEBUG === "1") {
+      if (process.env.QUIET_CORE_QA_DEBUG === "1") {
         console.error(`[qa-suite] start scenario="${name}" step="${step.name}"`);
       }
       const details = await step.run();
-      if (process.env.OPENCLAW_QA_DEBUG === "1") {
+      if (process.env.QUIET_CORE_QA_DEBUG === "1") {
         console.error(`[qa-suite] pass scenario="${name}" step="${step.name}"`);
       }
       stepResults.push({
@@ -316,7 +316,7 @@ async function runScenario(name: string, steps: QaSuiteStep[]): Promise<QaSuiteS
       });
     } catch (error) {
       const details = formatErrorMessage(error);
-      if (process.env.OPENCLAW_QA_DEBUG === "1") {
+      if (process.env.QUIET_CORE_QA_DEBUG === "1") {
         console.error(`[qa-suite] fail scenario="${name}" step="${step.name}" details=${details}`);
       }
       stepResults.push({
@@ -509,8 +509,8 @@ function buildQaRuntimeEnvPatch(params: {
 }): NodeJS.ProcessEnv | undefined {
   const patch: NodeJS.ProcessEnv = {};
   if (params.forcedRuntime) {
-    patch.OPENCLAW_BUILD_PRIVATE_QA = "1";
-    patch.OPENCLAW_QA_FORCE_RUNTIME = params.forcedRuntime;
+    patch.QUIET_CORE_BUILD_PRIVATE_QA = "1";
+    patch.QUIET_CORE_QA_FORCE_RUNTIME = params.forcedRuntime;
   }
   if (params.forcedRuntime !== "codex" || params.providerMode !== "mock-openai") {
     return Object.keys(patch).length > 0 ? patch : undefined;
@@ -522,7 +522,7 @@ function buildQaRuntimeEnvPatch(params: {
   // The forced codex lane uses the Codex app-server's native OpenAI provider
   // path, so pin the managed app-server to the QA mock endpoint instead of
   // leaking to the maintainer's real OpenAI config.
-  patch.OPENCLAW_CODEX_APP_SERVER_ARGS = `app-server -c openai_base_url=${mockBaseUrl}/v1 --listen stdio://`;
+  patch.QUIET_CORE_CODEX_APP_SERVER_ARGS = `app-server -c openai_base_url=${mockBaseUrl}/v1 --listen stdio://`;
   patch.OPENAI_API_KEY = "qa-mock-openai-key";
   patch.CODEX_API_KEY = "qa-mock-openai-key";
   return patch;
@@ -534,7 +534,7 @@ function appendNodeOption(raw: string | undefined, option: string) {
 }
 
 function shouldCaptureGatewayHeapCheckpoints(env: NodeJS.ProcessEnv = process.env) {
-  return parseQaSuiteBooleanEnv(env.OPENCLAW_QA_GATEWAY_HEAP_CHECKPOINTS) === true;
+  return parseQaSuiteBooleanEnv(env.QUIET_CORE_QA_GATEWAY_HEAP_CHECKPOINTS) === true;
 }
 
 function buildQaGatewayHeapCheckpointRuntimeEnvPatch(
@@ -961,7 +961,7 @@ async function writeQaSuiteArtifacts(params: {
       `${JSON.stringify(
         {
           version: 1,
-          source: "openclaw/crabline",
+          source: "quiet-core-bot/crabline",
           channelDriver: crablineChannelDriverSelection.channelDriver,
           selectedChannel: crablineChannelDriverSelection.channel,
           manifestPath: crablineChannelDriverSmoke.manifestPath,
@@ -977,7 +977,7 @@ async function writeQaSuiteArtifacts(params: {
       `${JSON.stringify(
         {
           version: 1,
-          source: "openclaw/crabline",
+          source: "quiet-core-bot/crabline",
           channelDriver: crablineChannelDriverSelection.channelDriver,
           selectedChannel: crablineChannelDriverSelection.channel,
           manifestPath: crablineChannelDriverSmoke.manifestPath,
@@ -1169,7 +1169,7 @@ export async function runQaFlowSuite(params?: QaSuiteRunParams): Promise<QaSuite
     ...new Set([
       ...collectQaSuitePluginIds(selectedScenarios),
       ...(params?.enabledPluginIds ?? []).map((pluginId) => pluginId.trim()).filter(Boolean),
-      ...(params?.forcedRuntime && params.forcedRuntime !== "openclaw"
+      ...(params?.forcedRuntime && params.forcedRuntime !== "quiet-core-bot"
         ? [params.forcedRuntime]
         : []),
     ]),
@@ -1743,7 +1743,7 @@ export async function runQaFlowSuite(params?: QaSuiteRunParams): Promise<QaSuite
     throw error;
   } finally {
     await closeQaWebSessions(env.webSessionIds);
-    const keepTemp = process.env.OPENCLAW_QA_KEEP_TEMP === "1" || false;
+    const keepTemp = process.env.QUIET_CORE_QA_KEEP_TEMP === "1" || false;
     await gateway.stop({
       keepTemp,
       preserveToDir: keepTemp ? undefined : preserveGatewayRuntimeDir,

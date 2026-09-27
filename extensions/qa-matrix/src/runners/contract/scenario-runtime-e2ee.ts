@@ -3,8 +3,8 @@ import { randomUUID } from "node:crypto";
 import { chmod, mkdir, mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
-import type { MatrixVerificationSummary } from "@openclaw/matrix/test-api.js";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+import type { MatrixVerificationSummary } from "@quiet-core/matrix/test-api.js";
+import { resolvePreferredOpenClawTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";
 import { createMatrixQaClient } from "../../substrate/client.js";
 import {
   createMatrixQaE2eeScenarioClient,
@@ -139,7 +139,7 @@ function requireMatrixQaCliRuntimeEnv(context: MatrixQaScenarioContext) {
 }
 
 function requireMatrixQaGatewayConfigPath(context: MatrixQaScenarioContext) {
-  const configPath = requireMatrixQaCliRuntimeEnv(context).OPENCLAW_CONFIG_PATH?.trim();
+  const configPath = requireMatrixQaCliRuntimeEnv(context).QUIET_CORE_CONFIG_PATH?.trim();
   if (!configPath) {
     throw new Error("Matrix CLI QA scenarios require the gateway config path");
   }
@@ -563,7 +563,7 @@ async function createMatrixQaCliSelfVerificationRuntime(params: {
 }) {
   const outputDir = requireMatrixQaE2eeOutputDir(params.context);
   const rootDir = await mkdtemp(
-    path.join(resolvePreferredOpenClawTmpDir(), "openclaw-matrix-cli-qa-"),
+    path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-matrix-cli-qa-"),
   );
   const artifactDir = path.join(
     outputDir,
@@ -621,9 +621,9 @@ async function createMatrixQaCliSelfVerificationRuntime(params: {
     ...requireMatrixQaCliRuntimeEnv(params.context),
     FORCE_COLOR: "0",
     NO_COLOR: "1",
-    OPENCLAW_CONFIG_PATH: configPath,
-    OPENCLAW_DISABLE_AUTO_UPDATE: "1",
-    OPENCLAW_STATE_DIR: stateDir,
+    QUIET_CORE_CONFIG_PATH: configPath,
+    QUIET_CORE_DISABLE_AUTO_UPDATE: "1",
+    QUIET_CORE_STATE_DIR: stateDir,
   };
   const run = async (args: string[], timeoutMs = params.context.timeoutMs, stdin?: string) =>
     await runMatrixQaOpenClawCli({
@@ -657,7 +657,7 @@ async function createMatrixQaCliE2eeSetupRuntime(params: {
 }) {
   const outputDir = requireMatrixQaE2eeOutputDir(params.context);
   const rootDir = await mkdtemp(
-    path.join(resolvePreferredOpenClawTmpDir(), "openclaw-matrix-e2ee-setup-qa-"),
+    path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-matrix-e2ee-setup-qa-"),
   );
   const artifactDir = path.join(
     outputDir,
@@ -684,9 +684,9 @@ async function createMatrixQaCliE2eeSetupRuntime(params: {
     ...requireMatrixQaCliRuntimeEnv(params.context),
     FORCE_COLOR: "0",
     NO_COLOR: "1",
-    OPENCLAW_CONFIG_PATH: configPath,
-    OPENCLAW_DISABLE_AUTO_UPDATE: "1",
-    OPENCLAW_STATE_DIR: stateDir,
+    QUIET_CORE_CONFIG_PATH: configPath,
+    QUIET_CORE_DISABLE_AUTO_UPDATE: "1",
+    QUIET_CORE_STATE_DIR: stateDir,
   };
   const run = async (args: string[], timeoutMs = params.context.timeoutMs) =>
     await runMatrixQaOpenClawCli({
@@ -729,7 +729,7 @@ async function createMatrixQaCliGatewayRuntime(params: {
     ...requireMatrixQaCliRuntimeEnv(params.context),
     FORCE_COLOR: "0",
     NO_COLOR: "1",
-    OPENCLAW_DISABLE_AUTO_UPDATE: "1",
+    QUIET_CORE_DISABLE_AUTO_UPDATE: "1",
   };
   const run = async (args: string[], timeoutMs = params.context.timeoutMs) =>
     await runMatrixQaOpenClawCli({
@@ -2997,7 +2997,7 @@ export async function runMatrixQaE2eeCliSelfVerificationScenario(
         );
         const cliSas = parseMatrixQaCliSasText(
           sasOutput.text,
-          "interactive openclaw matrix verify self",
+          "interactive quiet-core-bot matrix verify self",
         );
         const ownerSas = await waitForMatrixQaVerificationSummary({
           client: owner,
@@ -3093,7 +3093,7 @@ export async function runMatrixQaE2eeCliSelfVerificationScenario(
             secondaryDeviceId: cliDevice.deviceId,
           },
           details: [
-            "Matrix CLI self-verification established full Matrix identity trust through interactive openclaw matrix verify self",
+            "Matrix CLI self-verification established full Matrix identity trust through interactive quiet-core-bot matrix verify self",
             "cli secret config cleaned after run: yes",
             `cli backup restore stdout: ${restoreArtifacts.stdoutPath}`,
             `cli backup restore stderr: ${restoreArtifacts.stderrPath}`,
@@ -3562,7 +3562,7 @@ export async function runMatrixQaE2eeArtifactRedactionScenario(
         },
         details: [
           "decrypted E2EE payload reached in-memory assertions only",
-          "observed-event artifacts redact body/formatted_body unless OPENCLAW_QA_MATRIX_CAPTURE_CONTENT=1",
+          "observed-event artifacts redact body/formatted_body unless QUIET_CORE_QA_MATRIX_CAPTURE_CONTENT=1",
           `encrypted room id: ${result.roomId}`,
           `isolated driver user: ${driverUserId}`,
           ...buildMatrixReplyDetails("E2EE reply", result.reply),

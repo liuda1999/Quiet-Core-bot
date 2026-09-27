@@ -12,11 +12,11 @@ import {
   type ChannelSetupAdapter,
   type ChannelSetupWizard,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/setup";
+} from "quiet-core-bot/plugin-sdk/setup";
 import {
   normalizeOptionalString,
   normalizeStringEntries,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { listAccountIds, resolveAccount } from "./accounts.js";
 import type { SynologyChatAccountRaw, SynologyChatChannelConfig } from "./types.js";
 

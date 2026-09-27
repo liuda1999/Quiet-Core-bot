@@ -17,7 +17,7 @@ vi.mock("../logging/subsystem.js", async (importOriginal) => {
   };
 });
 
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 
 function providerNoneConfig(): OpenClawConfig {
   return {

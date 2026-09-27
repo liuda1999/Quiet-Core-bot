@@ -2,7 +2,7 @@
  * Detects, resolves, and loads prompt image references for model input.
  */
 import path from "node:path";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
 import { formatErrorMessage } from "../../../infra/errors.js";
 import { assertNoWindowsNetworkPath, safeFileURLToPath } from "../../../infra/local-file-access.js";
 import type { ImageContent } from "../../../llm/types.js";
@@ -107,11 +107,11 @@ function normalizeRefForDedupe(raw: string): string {
 function isOpenClawCliImageCachePath(filePath: string): boolean {
   const parts = filePath.replaceAll("\\", "/").split("/");
   return parts.some((part, index) => {
-    if (part === ".openclaw-cli-images") {
+    if (part === ".quiet-core-bot-cli-images") {
       return true;
     }
     const parent = parts[index - 1] ?? "";
-    return part === "openclaw-cli-images" && /^openclaw(?:-\d+)?$/.test(parent);
+    return part === "quiet-core-bot-cli-images" && /^openclaw(?:-\d+)?$/.test(parent);
   });
 }
 

@@ -296,7 +296,7 @@ describe("custom theme import helpers", () => {
     syncCustomThemeStyleTag(theme);
 
     expect(appendChild).toHaveBeenCalledWith(style);
-    expect(style.id).toBe("openclaw-custom-theme");
+    expect(style.id).toBe("quiet-core-bot-custom-theme");
     expect(style.textContent).toBe(buildCustomThemeStyles(theme));
 
     vi.stubGlobal("document", {

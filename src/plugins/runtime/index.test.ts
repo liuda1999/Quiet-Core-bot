@@ -344,7 +344,7 @@ describe("plugin runtime command execution", () => {
   });
 
   it("preserves requireWriteSuccess through runtime session entry updates", async () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-runtime-session-store-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-runtime-session-store-"));
     const storePath = path.join(tempDir, "sessions.json");
     const sessionKey = "agent:main:main";
     const runtime = createPluginRuntime();

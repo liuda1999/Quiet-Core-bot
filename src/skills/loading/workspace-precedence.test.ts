@@ -12,7 +12,7 @@ vi.mock("./plugin-skills.js", () => ({
   resolvePluginSkillDirs: () => [],
 }));
 
-const fixtureSuite = createFixtureSuite("openclaw-skills-prompt-suite-");
+const fixtureSuite = createFixtureSuite("quiet-core-bot-skills-prompt-suite-");
 
 beforeAll(async () => {
   await fixtureSuite.setup();

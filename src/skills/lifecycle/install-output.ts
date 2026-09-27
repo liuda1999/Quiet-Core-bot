@@ -1,5 +1,5 @@
 // Install output helpers format skill installation results for CLI callers.
-import { normalizeStringEntries } from "@openclaw/normalization-core/string-normalization";
+import { normalizeStringEntries } from "@quiet-core/normalization-core/string-normalization";
 
 type InstallCommandResult = {
   code: number | null;

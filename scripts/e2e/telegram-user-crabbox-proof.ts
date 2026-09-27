@@ -12,7 +12,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { clampTimerTimeoutMs } from "@openclaw/normalization-core/number-coercion";
+import { clampTimerTimeoutMs } from "@quiet-core/normalization-core/number-coercion";
 import { resolveWindowsTaskkillPath } from "../lib/windows-taskkill.mjs";
 import { createPnpmRunnerSpawnSpec } from "../pnpm-runner.mjs";
 import { readPositiveIntEnv } from "./lib/env-limits.mjs";
@@ -158,10 +158,10 @@ export const COMMAND_TIMEOUT_MS = 30 * 60 * 1000;
 export const COMMAND_TIMEOUT_KILL_GRACE_MS = 5_000;
 const COMMAND_PROCESS_TREE_EXIT_POLL_MS = 25;
 export const REMOTE_SETUP_COMMAND_TIMEOUT_MS = 90 * 60 * 1000;
-const REMOTE_ROOT = "/tmp/openclaw-telegram-user-crabbox";
+const REMOTE_ROOT = "/tmp/quiet-core-bot-telegram-user-crabbox";
 const CREDENTIAL_SCRIPT = fileURLToPath(new URL("./telegram-user-credential.ts", import.meta.url));
 export function readTelegramUserProofLogTailBytes(env: NodeJS.ProcessEnv = process.env): number {
-  return readPositiveIntEnv("OPENCLAW_TELEGRAM_USER_PROOF_LOG_TAIL_BYTES", 256 * 1024, env);
+  return readPositiveIntEnv("QUIET_CORE_TELEGRAM_USER_PROOF_LOG_TAIL_BYTES", 256 * 1024, env);
 }
 
 const LOG_READY_TAIL_BYTES = readTelegramUserProofLogTailBytes();
@@ -207,7 +207,7 @@ function usageText() {
     "  --pr <number>                 Pull request number for publish.",
     "  --record-fps <fps>             Desktop recording frames per second. Default: 24.",
     "  --record-seconds <seconds>    Desktop video duration. Default: 35.",
-    "  --repo <owner/name>           GitHub repo for publish. Default: openclaw/openclaw.",
+    "  --repo <owner/name>           GitHub repo for publish. Default: liuda1999/quiet-core-bot.",
     "  --session <path>              Session file from start. Default: <output-dir>/session.json.",
     "  --summary <text>              Artifact publish summary.",
     "  --full-artifacts              Publish all session artifacts. Default publishes only the motion GIF.",
@@ -293,23 +293,23 @@ export function parseArgs(argvInput: string[]): Options {
   const opts: Options = {
     crabboxClass: "standard",
     command,
-    crabboxBin: trimToValue(process.env.OPENCLAW_TELEGRAM_USER_CRABBOX_BIN) ?? "crabbox",
+    crabboxBin: trimToValue(process.env.QUIET_CORE_TELEGRAM_USER_CRABBOX_BIN) ?? "crabbox",
     desktopChatTitle:
-      trimToValue(process.env.OPENCLAW_TELEGRAM_USER_DESKTOP_CHAT_TITLE) ?? "OpenClaw Testing",
+      trimToValue(process.env.QUIET_CORE_TELEGRAM_USER_DESKTOP_CHAT_TITLE) ?? "OpenClaw Testing",
     dryRun: false,
     expect: ["OpenClaw"],
     gatewayPort: 19_879,
     idleTimeout: "60m",
     keepBox: false,
-    mockResponseText: "OPENCLAW_E2E_OK",
+    mockResponseText: "QUIET_CORE_E2E_OK",
     mockPort: 19_882,
     outputDir: path.join(DEFAULT_OUTPUT_ROOT, createTelegramProofRunId()),
     previewCropWidth: TELEGRAM_PROOF_CROP.cropWidth,
     previewFps: 24,
     previewWidth: 1920,
-    provider: process.env.OPENCLAW_TELEGRAM_USER_CRABBOX_PROVIDER?.trim() || "aws",
+    provider: process.env.QUIET_CORE_TELEGRAM_USER_CRABBOX_PROVIDER?.trim() || "aws",
     publishFullArtifacts: false,
-    publishRepo: "openclaw/openclaw",
+    publishRepo: "liuda1999/quiet-core-bot",
     recordFps: 24,
     recordSeconds: 35,
     remoteCommand: [],
@@ -318,7 +318,7 @@ export function parseArgs(argvInput: string[]): Options {
     timeoutMs: 90_000,
     ttl: "120m",
     userDriverScript:
-      trimToValue(process.env.OPENCLAW_TELEGRAM_USER_DRIVER_SCRIPT) ?? DEFAULT_USER_DRIVER,
+      trimToValue(process.env.QUIET_CORE_TELEGRAM_USER_DRIVER_SCRIPT) ?? DEFAULT_USER_DRIVER,
   };
   const commandSeparator = argv.indexOf("--");
   if (command === "run" && commandSeparator >= 0) {
@@ -495,8 +495,8 @@ function childProcessBaseEnv() {
     "LANG",
     "LC_ALL",
     "NODE_OPTIONS",
-    "OPENCLAW_BUILD_PRIVATE_QA",
-    "OPENCLAW_ENABLE_PRIVATE_QA_CLI",
+    "QUIET_CORE_BUILD_PRIVATE_QA",
+    "QUIET_CORE_ENABLE_PRIVATE_QA_CLI",
     "PATH",
     "PNPM_HOME",
     "SHELL",
@@ -529,9 +529,9 @@ function mockServerEnv(params: { mockPort: number; mockResponseText: string; req
 function gatewayEnv(params: { configPath: string; stateDir: string; sutToken: string }) {
   return {
     ...childProcessBaseEnv(),
-    OPENAI_API_KEY: "sk-openclaw-e2e-mock",
-    OPENCLAW_CONFIG_PATH: params.configPath,
-    OPENCLAW_STATE_DIR: params.stateDir,
+    OPENAI_API_KEY: "sk-quiet-core-bot-e2e-mock",
+    QUIET_CORE_CONFIG_PATH: params.configPath,
+    QUIET_CORE_STATE_DIR: params.stateDir,
     TELEGRAM_BOT_TOKEN: params.sutToken,
   };
 }
@@ -552,7 +552,7 @@ export function createOpenClawGatewaySpawnSpec(params: {
     nodeExecPath: params.nodeExecPath,
     npmExecPath: params.npmExecPath,
     platform: params.platform,
-    pnpmArgs: ["openclaw", "gateway", "--port", String(params.gatewayPort)],
+    pnpmArgs: ["quiet-core-bot", "gateway", "--port", String(params.gatewayPort)],
   });
   return {
     args: spec.args,
@@ -1109,12 +1109,12 @@ function writeSutConfig(params: {
   outputDir: string;
   testerId: string;
 }) {
-  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-tg-crabbox-sut-"));
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-tg-crabbox-sut-"));
   const stateDir = path.join(tempRoot, "state");
   const workspace = path.join(tempRoot, "workspace");
   fs.mkdirSync(stateDir, { recursive: true });
   fs.mkdirSync(workspace, { recursive: true });
-  const configPath = path.join(tempRoot, "openclaw.json");
+  const configPath = path.join(tempRoot, "quiet-core-bot.json");
   const config = {
     agents: {
       defaults: {
@@ -1607,14 +1607,14 @@ set -euo pipefail
 root=${REMOTE_ROOT}
 tdlib_sha256=${tdlibSha256}
 tdlib_url=${tdlibUrl}
-setup_step_timeout_kill_after="\${OPENCLAW_TELEGRAM_USER_SETUP_KILL_AFTER_SECONDS:-30}s"
-apt_timeout="\${OPENCLAW_TELEGRAM_USER_APT_TIMEOUT_SECONDS:-900}s"
-download_timeout="\${OPENCLAW_TELEGRAM_USER_DOWNLOAD_TIMEOUT_SECONDS:-600}"
-download_connect_timeout="\${OPENCLAW_TELEGRAM_USER_DOWNLOAD_CONNECT_TIMEOUT_SECONDS:-15}"
-download_retries="\${OPENCLAW_TELEGRAM_USER_DOWNLOAD_RETRIES:-3}"
-download_retry_delay="\${OPENCLAW_TELEGRAM_USER_DOWNLOAD_RETRY_DELAY_SECONDS:-5}"
-tdlib_clone_timeout="\${OPENCLAW_TELEGRAM_USER_TDLIB_CLONE_TIMEOUT_SECONDS:-600}s"
-tdlib_build_timeout="\${OPENCLAW_TELEGRAM_USER_TDLIB_BUILD_TIMEOUT_SECONDS:-1800}s"
+setup_step_timeout_kill_after="\${QUIET_CORE_TELEGRAM_USER_SETUP_KILL_AFTER_SECONDS:-30}s"
+apt_timeout="\${QUIET_CORE_TELEGRAM_USER_APT_TIMEOUT_SECONDS:-900}s"
+download_timeout="\${QUIET_CORE_TELEGRAM_USER_DOWNLOAD_TIMEOUT_SECONDS:-600}"
+download_connect_timeout="\${QUIET_CORE_TELEGRAM_USER_DOWNLOAD_CONNECT_TIMEOUT_SECONDS:-15}"
+download_retries="\${QUIET_CORE_TELEGRAM_USER_DOWNLOAD_RETRIES:-3}"
+download_retry_delay="\${QUIET_CORE_TELEGRAM_USER_DOWNLOAD_RETRY_DELAY_SECONDS:-5}"
+tdlib_clone_timeout="\${QUIET_CORE_TELEGRAM_USER_TDLIB_CLONE_TIMEOUT_SECONDS:-600}s"
+tdlib_build_timeout="\${QUIET_CORE_TELEGRAM_USER_TDLIB_BUILD_TIMEOUT_SECONDS:-1800}s"
 run_setup_step() {
   local label="$1"
   local timeout_value="$2"
@@ -1637,7 +1637,7 @@ download_file() {
 mkdir -p "$root"
 tar -xzf "$root/state.tgz" -C "$root"
 run_setup_step "apt-get update" "$apt_timeout" sudo apt-get update -y
-run_setup_step "apt-get install" "$apt_timeout" sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y curl git cmake g++ make zlib1g-dev libssl-dev python3 ffmpeg scrot xz-utils tar wmctrl xdotool x11-utils zbar-tools libopengl0 libxcb-cursor0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-shape0 libxcb-xfixes0 libxcb-xinerama0 libxkbcommon-x11-0 >/tmp/openclaw-telegram-apt.log
+run_setup_step "apt-get install" "$apt_timeout" sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y curl git cmake g++ make zlib1g-dev libssl-dev python3 ffmpeg scrot xz-utils tar wmctrl xdotool x11-utils zbar-tools libopengl0 libxcb-cursor0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-shape0 libxcb-xfixes0 libxcb-xinerama0 libxkbcommon-x11-0 >/tmp/quiet-core-bot-telegram-apt.log
 if ! command -v python3 >/dev/null 2>&1; then
   echo "python3 is required" >&2
   exit 127
@@ -2175,8 +2175,8 @@ async function startSession(root: string, opts: Options, outputDir: string) {
 
   const convexEnvFile = expandHome(opts.envFile ?? DEFAULT_CONVEX_ENV_FILE);
   const hasConvexEnv =
-    trimToValue(process.env.OPENCLAW_QA_CONVEX_SITE_URL) &&
-    trimToValue(process.env.OPENCLAW_QA_CONVEX_SECRET_CI);
+    trimToValue(process.env.QUIET_CORE_QA_CONVEX_SITE_URL) &&
+    trimToValue(process.env.QUIET_CORE_QA_CONVEX_SECRET_CI);
   if (!hasConvexEnv && !fs.existsSync(convexEnvFile)) {
     throw new Error(`Missing Convex env file: ${opts.envFile ?? DEFAULT_CONVEX_ENV_FILE}`);
   }
@@ -2265,10 +2265,10 @@ async function startSession(root: string, opts: Options, outputDir: string) {
       },
       webvnc: `${opts.crabboxBin} webvnc --provider ${opts.provider} --target ${opts.target} --id ${leaseId} --open`,
       commands: {
-        send: `openclaw-telegram-user-crabbox-proof send --session ${path.relative(root, pathname)} --text '/status'`,
-        view: `openclaw-telegram-user-crabbox-proof view --session ${path.relative(root, pathname)} --message-id <message-id>`,
-        run: `openclaw-telegram-user-crabbox-proof run --session ${path.relative(root, pathname)} -- bash -lc 'source ${REMOTE_ROOT}/env.sh && python3 ${REMOTE_ROOT}/user-driver.py transcript --limit 20 --json'`,
-        finish: `openclaw-telegram-user-crabbox-proof finish --session ${path.relative(root, pathname)} --preview-crop telegram-window`,
+        send: `quiet-core-bot-telegram-user-crabbox-proof send --session ${path.relative(root, pathname)} --text '/status'`,
+        view: `quiet-core-bot-telegram-user-crabbox-proof view --session ${path.relative(root, pathname)} --message-id <message-id>`,
+        run: `quiet-core-bot-telegram-user-crabbox-proof run --session ${path.relative(root, pathname)} -- bash -lc 'source ${REMOTE_ROOT}/env.sh && python3 ${REMOTE_ROOT}/user-driver.py transcript --limit 20 --json'`,
+        finish: `quiet-core-bot-telegram-user-crabbox-proof finish --session ${path.relative(root, pathname)} --preview-crop telegram-window`,
       },
     };
   } catch (error) {
@@ -2600,7 +2600,7 @@ async function publishSessionArtifacts(root: string, opts: Options, outputDir: s
           ? "Telegram real-user Crabbox session artifacts"
           : "Telegram real-user Crabbox session motion GIF"),
       "--template",
-      "openclaw",
+      "quiet-core-bot",
       ...(opts.dryRun ? ["--dry-run"] : []),
     ],
     cwd: root,
@@ -2657,7 +2657,7 @@ async function main() {
     return;
   }
 
-  const localRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-telegram-crabbox-"));
+  const localRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-telegram-crabbox-"));
   const summary: JsonObject = {
     artifacts: {},
     crabbox: { provider: opts.provider, target: opts.target },
@@ -2674,8 +2674,8 @@ async function main() {
   try {
     const convexEnvFile = expandHome(opts.envFile ?? DEFAULT_CONVEX_ENV_FILE);
     const hasConvexEnv =
-      trimToValue(process.env.OPENCLAW_QA_CONVEX_SITE_URL) &&
-      trimToValue(process.env.OPENCLAW_QA_CONVEX_SECRET_CI);
+      trimToValue(process.env.QUIET_CORE_QA_CONVEX_SITE_URL) &&
+      trimToValue(process.env.QUIET_CORE_QA_CONVEX_SECRET_CI);
     if (!hasConvexEnv && !fs.existsSync(convexEnvFile)) {
       throw new Error(`Missing Convex env file: ${opts.envFile ?? DEFAULT_CONVEX_ENV_FILE}`);
     }

@@ -70,11 +70,11 @@ describe("noteDevicePairingHealth", () => {
       initial: Awaited<ReturnType<typeof requestDevicePairing>>;
     }) => Promise<void>,
   ): Promise<void> {
-    await withTempDir("openclaw-doctor-device-pairing-", async (stateDir) => {
+    await withTempDir("quiet-core-bot-doctor-device-pairing-", async (stateDir) => {
       await withEnvAsync(
         {
-          OPENCLAW_STATE_DIR: stateDir,
-          OPENCLAW_TEST_FAST: "1",
+          QUIET_CORE_STATE_DIR: stateDir,
+          QUIET_CORE_TEST_FAST: "1",
         },
         async () => {
           const identity = loadOrCreateDeviceIdentity();
@@ -138,11 +138,11 @@ describe("noteDevicePairingHealth", () => {
   });
 
   it("warns when local pairing state is corrupt instead of treating it as empty", async () => {
-    await withTempDir("openclaw-doctor-device-pairing-", async (stateDir) => {
+    await withTempDir("quiet-core-bot-doctor-device-pairing-", async (stateDir) => {
       await withEnvAsync(
         {
-          OPENCLAW_STATE_DIR: stateDir,
-          OPENCLAW_TEST_FAST: "1",
+          QUIET_CORE_STATE_DIR: stateDir,
+          QUIET_CORE_TEST_FAST: "1",
         },
         async () => {
           const pairedPath = path.join(stateDir, "devices", "paired.json");

@@ -2,7 +2,7 @@
  * Shared harness builders for gateway config method tests.
  */
 import { vi, type Mock } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import type { GatewayRequestHandlerOptions } from "./types.js";
 
 type UnknownMock = Mock<(...args: unknown[]) => unknown>;
@@ -32,7 +32,7 @@ function createGatewayLog(): GatewayLogMocks {
 export function createConfigWriteSnapshot(config: OpenClawConfig) {
   return {
     snapshot: {
-      path: "/tmp/openclaw.json",
+      path: "/tmp/quiet-core-bot.json",
       exists: true,
       raw: JSON.stringify(config, null, 2),
       parsed: config,

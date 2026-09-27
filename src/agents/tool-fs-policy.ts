@@ -3,7 +3,7 @@
  *
  * Combines global and agent fs/tool policy into workspace-only and root-expansion decisions.
  */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { resolveAgentConfig } from "./agent-scope.js";
 import { pickSandboxToolPolicy } from "./sandbox-tool-policy.js";
 import type { ToolFsPolicy } from "./tool-fs-policy.types.js";

@@ -3,7 +3,7 @@
  *
  * Maps channel-specific direct/group/channel labels into Quiet Core bot chat types.
  */
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalLowercaseString } from "@quiet-core/normalization-core/string-coerce";
 
 /**
  * Normalized conversation kind shared by channel routing, sessions, and SDK helpers.

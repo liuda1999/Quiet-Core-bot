@@ -27,7 +27,7 @@ Coding Plan support can lag behind the public catalog.
 Install the official plugin, then restart Gateway:
 
 ```bash
-quiet-core-bot plugins install @openclaw/qwen-provider
+quiet-core-bot plugins install @quiet-core/qwen-provider
 quiet-core-bot gateway restart
 ```
 

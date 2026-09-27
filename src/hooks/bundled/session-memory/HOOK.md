@@ -4,7 +4,7 @@ description: "Save session context to memory when /new or /reset command is issu
 homepage: https://github.com/liuda1999/Quiet-Core-bot/automation/hooks#session-memory
 metadata:
   {
-    "openclaw":
+    "quiet-core-bot":
       {
         "emoji": "💾",
         "events": ["command:new", "command:reset"],

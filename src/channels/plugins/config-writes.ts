@@ -3,8 +3,8 @@
  *
  * Applies shared config write authorization to concrete Quiet Core bot channel config.
  */
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import {
   authorizeConfigWriteShared,
   canBypassConfigWritePolicyShared,

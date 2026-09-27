@@ -9,14 +9,14 @@ import {
 } from "../config/sessions/store.js";
 import type { SessionEntry } from "../config/sessions/types.js";
 import * as jsonFiles from "../infra/json-files.js";
-import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-quiet-core-bot-dir.js";
 import { captureEnv, setTestEnvValue } from "../test-utils/env.js";
 import { runPluginHostCleanup } from "./host-hook-cleanup.js";
 import { createEmptyPluginRegistry } from "./registry-empty.js";
 
 describe("plugin host cleanup session stores", () => {
   let stateDir: string | undefined;
-  const envSnapshot = captureEnv(["OPENCLAW_STATE_DIR"]);
+  const envSnapshot = captureEnv(["QUIET_CORE_STATE_DIR"]);
 
   afterEach(async () => {
     clearSessionStoreCacheForTest();
@@ -29,9 +29,9 @@ describe("plugin host cleanup session stores", () => {
 
   it("does not rewrite session stores when cleanup scans find no plugin-owned state", async () => {
     stateDir = await fs.mkdtemp(
-      path.join(resolvePreferredOpenClawTmpDir(), "openclaw-host-cleanup-noop-"),
+      path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-host-cleanup-noop-"),
     );
-    setTestEnvValue("OPENCLAW_STATE_DIR", stateDir);
+    setTestEnvValue("QUIET_CORE_STATE_DIR", stateDir);
     const storePath = path.join(stateDir, "sessions.json");
     await saveSessionStore(
       storePath,
@@ -58,9 +58,9 @@ describe("plugin host cleanup session stores", () => {
 
   it("can defer persistent session-state cleanup to an atomic owner", async () => {
     stateDir = await fs.mkdtemp(
-      path.join(resolvePreferredOpenClawTmpDir(), "openclaw-host-cleanup-deferred-"),
+      path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-host-cleanup-deferred-"),
     );
-    setTestEnvValue("OPENCLAW_STATE_DIR", stateDir);
+    setTestEnvValue("QUIET_CORE_STATE_DIR", stateDir);
     const storePath = path.join(stateDir, "sessions.json");
     await saveSessionStore(
       storePath,
@@ -98,9 +98,9 @@ describe("plugin host cleanup session stores", () => {
 
   it("clears plugin-owned session state across resolved stores without touching unrelated rows", async () => {
     stateDir = await fs.mkdtemp(
-      path.join(resolvePreferredOpenClawTmpDir(), "openclaw-host-cleanup-multistore-"),
+      path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-host-cleanup-multistore-"),
     );
-    setTestEnvValue("OPENCLAW_STATE_DIR", stateDir);
+    setTestEnvValue("QUIET_CORE_STATE_DIR", stateDir);
     const firstStorePath = path.join(stateDir, "agent-a", "sessions.json");
     const secondStorePath = path.join(stateDir, "agent-b", "sessions.json");
     const beforeUpdatedAt = 100;

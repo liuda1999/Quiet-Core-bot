@@ -115,8 +115,8 @@ describe("status-all diagnosis port checks", () => {
 
   it("treats same-process dual-stack loopback listeners as healthy", async () => {
     const params = createBaseParams([
-      { pid: 5001, commandLine: "openclaw-gateway", address: "127.0.0.1:18789" },
-      { pid: 5001, commandLine: "openclaw-gateway", address: "[::1]:18789" },
+      { pid: 5001, commandLine: "quiet-core-bot-gateway", address: "127.0.0.1:18789" },
+      { pid: 5001, commandLine: "quiet-core-bot-gateway", address: "[::1]:18789" },
     ]);
 
     await appendStatusAllDiagnosis(params);
@@ -129,7 +129,7 @@ describe("status-all diagnosis port checks", () => {
 
   it("treats a single wildcard Gateway listener as healthy", async () => {
     const params = createBaseParams([
-      { pid: 5001, commandLine: "openclaw-gateway", address: "0.0.0.0:18789" },
+      { pid: 5001, commandLine: "quiet-core-bot-gateway", address: "0.0.0.0:18789" },
     ]);
 
     await appendStatusAllDiagnosis(params);
@@ -142,8 +142,8 @@ describe("status-all diagnosis port checks", () => {
 
   it("keeps warning for multi-process listener conflicts", async () => {
     const params = createBaseParams([
-      { pid: 5001, commandLine: "openclaw-gateway", address: "127.0.0.1:18789" },
-      { pid: 5002, commandLine: "openclaw-gateway", address: "[::1]:18789" },
+      { pid: 5001, commandLine: "quiet-core-bot-gateway", address: "127.0.0.1:18789" },
+      { pid: 5002, commandLine: "quiet-core-bot-gateway", address: "[::1]:18789" },
     ]);
 
     await appendStatusAllDiagnosis(params);
@@ -382,12 +382,12 @@ describe("status-all diagnosis port checks", () => {
     Object.defineProperty(process, "platform", { value: "darwin" });
     try {
       restartLogMocks.resolveGatewaySupervisorLogPaths.mockReturnValue({
-        logDir: "/Users/test/Library/Logs/openclaw",
-        stdoutPath: "/Users/test/Library/Logs/openclaw/gateway.log",
-        stderrPath: "/Users/test/Library/Logs/openclaw/gateway.err.log",
+        logDir: "/Users/test/Library/Logs/quiet-core-bot",
+        stdoutPath: "/Users/test/Library/Logs/quiet-core-bot/gateway.log",
+        stderrPath: "/Users/test/Library/Logs/quiet-core-bot/gateway.err.log",
       });
       restartLogMocks.resolveGatewayRestartLogPath.mockReturnValue(
-        "/tmp/openclaw/logs/gateway-restart.log",
+        "/tmp/quiet-core-bot/logs/gateway-restart.log",
       );
       gatewayMocks.readFileTailLines.mockImplementation(async (filePath: string) => {
         if (filePath.endsWith("gateway.log")) {
@@ -404,10 +404,10 @@ describe("status-all diagnosis port checks", () => {
 
       const output = params.lines.join("\n");
       expect(gatewayMocks.readFileTailLines).not.toHaveBeenCalledWith(
-        "/Users/test/Library/Logs/openclaw/gateway.err.log",
+        "/Users/test/Library/Logs/quiet-core-bot/gateway.err.log",
         40,
       );
-      expect(output).toContain("# stdout: /Users/test/Library/Logs/openclaw/gateway.log");
+      expect(output).toContain("# stdout: /Users/test/Library/Logs/quiet-core-bot/gateway.log");
       expect(output).toContain("gateway stdout current");
       expect(output).not.toContain("# stderr:");
       expect(output).not.toContain("failed to bind gateway socket stale");

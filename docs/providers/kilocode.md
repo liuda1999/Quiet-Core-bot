@@ -21,7 +21,7 @@ endpoint and API key. It is OpenAI-compatible, so most OpenAI SDKs work by switc
 Install the official plugin, then restart Gateway:
 
 ```bash
-quiet-core-bot plugins install @openclaw/kilocode-provider
+quiet-core-bot plugins install @quiet-core/kilocode-provider
 quiet-core-bot gateway restart
 ```
 

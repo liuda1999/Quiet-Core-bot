@@ -10,9 +10,9 @@ const originalArgv = process.argv;
 let tempDirs: string[] = [];
 
 function writeConfig(source: string): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-logging-config-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-logging-config-"));
   tempDirs.push(dir);
-  const configPath = path.join(dir, "openclaw.json");
+  const configPath = path.join(dir, "quiet-core-bot.json");
   fs.writeFileSync(configPath, source);
   return configPath;
 }
@@ -27,11 +27,11 @@ describe("readLoggingConfig", () => {
   });
 
   it("skips mutating config loads for config schema", () => {
-    process.argv = ["node", "openclaw", "config", "schema"];
+    process.argv = ["node", "quiet-core-bot", "config", "schema"];
     const configPath = writeConfig(`{ logging: { file: "/tmp/should-not-read.log" } }`);
     fs.rmSync(configPath);
 
-    withEnv({ OPENCLAW_CONFIG_PATH: configPath }, () => {
+    withEnv({ QUIET_CORE_CONFIG_PATH: configPath }, () => {
       expect(readLoggingConfig()).toBeUndefined();
     });
   });
@@ -40,15 +40,15 @@ describe("readLoggingConfig", () => {
     const configPath = writeConfig(`{
       logging: {
         level: "debug",
-        file: "/tmp/openclaw-custom.log",
+        file: "/tmp/quiet-core-bot-custom.log",
         maxFileBytes: 1234,
       },
     }`);
 
-    withEnv({ OPENCLAW_CONFIG_PATH: configPath }, () => {
+    withEnv({ QUIET_CORE_CONFIG_PATH: configPath }, () => {
       expect(readLoggingConfig()).toStrictEqual({
         level: "debug",
-        file: "/tmp/openclaw-custom.log",
+        file: "/tmp/quiet-core-bot-custom.log",
         maxFileBytes: 1234,
       });
     });
@@ -62,7 +62,7 @@ describe("readLoggingConfig", () => {
       },
     }`);
 
-    withEnv({ OPENCLAW_CONFIG_PATH: configPath }, () => {
+    withEnv({ QUIET_CORE_CONFIG_PATH: configPath }, () => {
       expect(readLoggingConfig()).toStrictEqual({
         consoleLevel: "warn",
       });
@@ -71,14 +71,14 @@ describe("readLoggingConfig", () => {
 
   it("returns undefined for missing or malformed config files", () => {
     withEnv(
-      { OPENCLAW_CONFIG_PATH: path.join(os.tmpdir(), "openclaw-missing-config.json") },
+      { QUIET_CORE_CONFIG_PATH: path.join(os.tmpdir(), "quiet-core-bot-missing-config.json") },
       () => {
         expect(readLoggingConfig()).toBeUndefined();
       },
     );
 
     const configPath = writeConfig(`{ logging: `);
-    withEnv({ OPENCLAW_CONFIG_PATH: configPath }, () => {
+    withEnv({ QUIET_CORE_CONFIG_PATH: configPath }, () => {
       expect(readLoggingConfig()).toBeUndefined();
     });
   });

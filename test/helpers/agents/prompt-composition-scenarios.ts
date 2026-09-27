@@ -740,7 +740,7 @@ async function createMaintenanceScenario(workspaceDir: string): Promise<PromptSc
 
 /** Create a temp workspace with prompt composition context files. */
 export async function createWorkspaceWithPromptCompositionFiles(): Promise<string> {
-  const workspaceDir = await makeTempWorkspace("openclaw-prompt-cache-");
+  const workspaceDir = await makeTempWorkspace("quiet-core-bot-prompt-cache-");
   await writeWorkspaceFile({
     dir: workspaceDir,
     name: "AGENTS.md",
@@ -775,7 +775,7 @@ export async function createPromptCompositionScenarios(): Promise<{
   cleanup: () => Promise<void>;
 }> {
   const workspaceDir = await createWorkspaceWithPromptCompositionFiles();
-  const warningWorkspaceDir = await makeTempWorkspace("openclaw-prompt-cache-warning-");
+  const warningWorkspaceDir = await makeTempWorkspace("quiet-core-bot-prompt-cache-warning-");
   const scenarios = [
     createDirectScenario(workspaceDir),
     createGroupScenario(workspaceDir),

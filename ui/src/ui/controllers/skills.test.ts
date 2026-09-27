@@ -134,7 +134,7 @@ describe("loadSkills", () => {
       }
       if (method === "skills.securityVerdicts") {
         return {
-          schema: "openclaw.skills.security-verdicts.v1",
+          schema: "quiet-core-bot.skills.security-verdicts.v1",
           items: [
             {
               registry: "https://clawhub.ai",
@@ -198,7 +198,7 @@ describe("loadSkills", () => {
       }
       if (method === "skills.securityVerdicts") {
         return {
-          schema: "openclaw.skills.security-verdicts.v1",
+          schema: "quiet-core-bot.skills.security-verdicts.v1",
           items: [],
         };
       }
@@ -337,7 +337,7 @@ describe("loadSkills", () => {
     expect(state.skillsLoading).toBe(false);
     expect(state.clawhubVerdictsLoading).toBe(true);
 
-    resolveVerdicts({ schema: "openclaw.skills.security-verdicts.v1", items: [] });
+    resolveVerdicts({ schema: "quiet-core-bot.skills.security-verdicts.v1", items: [] });
     await Promise.resolve();
     await Promise.resolve();
 
@@ -388,7 +388,7 @@ describe("loadSkillCard", () => {
     const { state, request } = createState();
     state.skillsAgentId = "research";
     request.mockResolvedValueOnce({
-      schema: "openclaw.skills.skill-card.v1",
+      schema: "quiet-core-bot.skills.skill-card.v1",
       skillKey: "agentreceipt",
       path: "/tmp/workspace/skills/agentreceipt/skill-card.md",
       sizeBytes: 34,
@@ -501,7 +501,7 @@ describe("loadSkillCard", () => {
       ],
     };
     resolveCard({
-      schema: "openclaw.skills.skill-card.v1",
+      schema: "quiet-core-bot.skills.skill-card.v1",
       skillKey: "agentreceipt",
       path: "/tmp/workspace/skills/agentreceipt/skill-card.md",
       sizeBytes: 34,

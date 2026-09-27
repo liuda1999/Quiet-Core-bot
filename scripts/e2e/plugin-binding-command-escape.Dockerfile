@@ -6,9 +6,9 @@ RUN apt-get update \
 
 RUN corepack enable
 
-WORKDIR /workspace/openclaw
+WORKDIR /workspace/quiet-core-bot
 COPY . .
 
-RUN OPENCLAW_DISABLE_BUNDLED_PLUGIN_POSTINSTALL=1 pnpm install --frozen-lockfile --ignore-scripts --filter openclaw
+RUN QUIET_CORE_DISABLE_BUNDLED_PLUGIN_POSTINSTALL=1 pnpm install --frozen-lockfile --ignore-scripts --filter quiet-core-bot
 
 CMD ["bash"]

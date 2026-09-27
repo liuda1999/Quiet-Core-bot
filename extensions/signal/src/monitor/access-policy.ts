@@ -2,10 +2,10 @@
 import {
   createChannelIngressResolver,
   defineStableChannelIngressIdentity,
-} from "openclaw/plugin-sdk/channel-ingress-runtime";
-import { createChannelPairingChallengeIssuer } from "openclaw/plugin-sdk/channel-pairing";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { upsertChannelPairingRequest } from "openclaw/plugin-sdk/conversation-runtime";
+} from "quiet-core-bot/plugin-sdk/channel-ingress-runtime";
+import { createChannelPairingChallengeIssuer } from "quiet-core-bot/plugin-sdk/channel-pairing";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import { upsertChannelPairingRequest } from "quiet-core-bot/plugin-sdk/conversation-runtime";
 import {
   formatSignalSenderId,
   looksLikeUuid,

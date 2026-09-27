@@ -208,8 +208,8 @@ vi.mock("./stale-plugin-config.js", () => ({
     const hits = [...(cfg.plugins?.allow ?? []), ...Object.keys(cfg.plugins?.entries ?? {})]
       .filter((id) => !knownIds.has(id))
       .map((id) => ({ id, surface: "plugin" }));
-    if (cfg.channels?.["openclaw-weixin"]) {
-      hits.push({ id: "openclaw-weixin", surface: "channel" });
+    if (cfg.channels?.["quiet-core-bot-weixin"]) {
+      hits.push({ id: "quiet-core-bot-weixin", surface: "channel" });
     }
     return hits.filter(
       (hit, index) => hits.findIndex((candidate) => candidate.id === hit.id) === index,
@@ -335,7 +335,7 @@ describe("doctor preview warnings", () => {
   });
 
   it("routes personal Codex asset notices to info instead of warnings", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-preview-codex-assets-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-preview-codex-assets-"));
     tempRoots.add(root);
     const codexHome = path.join(root, ".codex");
     await fs.mkdir(path.join(root, ".agents", "skills", "agent-helper"), { recursive: true });
@@ -536,7 +536,7 @@ describe("doctor preview warnings", () => {
     const warnings = await collectDoctorPreviewWarnings({
       cfg: {
         channels: {
-          "openclaw-weixin": {
+          "quiet-core-bot-weixin": {
             enabled: true,
           },
         },
@@ -544,11 +544,11 @@ describe("doctor preview warnings", () => {
       doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
-    expectSingleWarningContaining(warnings, "channels.openclaw-weixin: dangling channel config");
+    expectSingleWarningContaining(warnings, "channels.quiet-core-bot-weixin: dangling channel config");
   });
 
   it("includes bundled plugin load path migration warnings", async () => {
-    const packageRoot = path.resolve("app-node-modules", "openclaw");
+    const packageRoot = path.resolve("app-node-modules", "quiet-core-bot");
     const legacyPath = path.join(packageRoot, "extensions", "feishu");
     manifestState.plugins = [manifest("feishu")];
 

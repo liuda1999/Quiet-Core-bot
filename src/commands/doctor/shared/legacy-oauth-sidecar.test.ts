@@ -5,7 +5,7 @@ import { loggingState } from "../../../logging/state.js";
 import {
   createOpenClawTestState,
   type OpenClawTestState,
-} from "../../../test-utils/openclaw-test-state.js";
+} from "../../../test-utils/quiet-core-bot-test-state.js";
 import {
   legacyOAuthSidecarInternalTestUtils,
   legacyOAuthSidecarTestUtils,
@@ -26,21 +26,21 @@ function setPlatform(value: NodeJS.Platform): () => void {
 
 async function writeLegacySidecarThatNeedsKeychain(): Promise<{
   state: OpenClawTestState;
-  ref: { source: "openclaw-credentials"; provider: "openai-codex"; id: string };
+  ref: { source: "quiet-core-bot-credentials"; provider: "openai-codex"; id: string };
   profileId: string;
 }> {
   const state = await createOpenClawTestState({
     layout: "state-only",
-    prefix: "openclaw-legacy-oauth-keychain-warn-",
+    prefix: "quiet-core-bot-legacy-oauth-keychain-warn-",
     env: {
-      OPENCLAW_AGENT_DIR: undefined,
-      OPENCLAW_AUTH_PROFILE_SECRET_KEY: undefined,
+      QUIET_CORE_AGENT_DIR: undefined,
+      QUIET_CORE_AUTH_PROFILE_SECRET_KEY: undefined,
     },
   });
   states.push(state);
   const profileId = "openai-codex:default";
   const ref = {
-    source: "openclaw-credentials" as const,
+    source: "quiet-core-bot-credentials" as const,
     provider: "openai-codex" as const,
     id: "0123456789abcdef0123456789abcdef",
   };

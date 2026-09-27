@@ -6,31 +6,31 @@ export {
   listNodes,
   resolveNodeIdFromList,
   selectDefaultNodeFromList,
-} from "openclaw/plugin-sdk/agent-harness-runtime";
-export type { AnyAgentTool, NodeListNode } from "openclaw/plugin-sdk/agent-harness-runtime";
+} from "quiet-core-bot/plugin-sdk/agent-harness-runtime";
+export type { AnyAgentTool, NodeListNode } from "quiet-core-bot/plugin-sdk/agent-harness-runtime";
 export {
   imageResultFromFile,
   jsonResult,
   readPositiveIntegerParam,
   readStringParam,
-} from "openclaw/plugin-sdk/channel-actions";
-export { optionalStringEnum, stringEnum } from "openclaw/plugin-sdk/channel-actions";
+} from "quiet-core-bot/plugin-sdk/channel-actions";
+export { optionalStringEnum, stringEnum } from "quiet-core-bot/plugin-sdk/channel-actions";
 export {
   formatCliCommand,
   formatHelpExamples,
   inheritOptionFromParent,
   note,
   theme,
-} from "openclaw/plugin-sdk/cli-runtime";
-export { danger, info } from "openclaw/plugin-sdk/runtime-env";
+} from "quiet-core-bot/plugin-sdk/cli-runtime";
+export { danger, info } from "quiet-core-bot/plugin-sdk/runtime-env";
 export {
   IMAGE_REDUCE_QUALITY_STEPS,
   buildImageResizeSideGrid,
   getImageMetadata,
   isImageProcessorUnavailableError,
   resizeToJpeg,
-} from "openclaw/plugin-sdk/media-runtime";
-export { detectMime } from "openclaw/plugin-sdk/media-mime";
-export { ensureMediaDir, saveMediaBuffer } from "openclaw/plugin-sdk/media-runtime";
-export { describeImageFile } from "openclaw/plugin-sdk/media-understanding-runtime";
-export { formatDocsLink } from "openclaw/plugin-sdk/setup-tools";
+} from "quiet-core-bot/plugin-sdk/media-runtime";
+export { detectMime } from "quiet-core-bot/plugin-sdk/media-mime";
+export { ensureMediaDir, saveMediaBuffer } from "quiet-core-bot/plugin-sdk/media-runtime";
+export { describeImageFile } from "quiet-core-bot/plugin-sdk/media-understanding-runtime";
+export { formatDocsLink } from "quiet-core-bot/plugin-sdk/setup-tools";

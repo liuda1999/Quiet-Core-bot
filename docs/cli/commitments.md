@@ -1,10 +1,10 @@
 ---
-summary: "CLI reference for `openclaw commitments` (inspect and dismiss inferred follow-ups)"
+summary: "CLI reference for `quiet-core-bot commitments` (inspect and dismiss inferred follow-ups)"
 read_when:
   - You want to inspect inferred follow-up commitments
   - You want to dismiss pending check-ins
   - You are auditing what heartbeat may deliver
-title: "`openclaw commitments`"
+title: "`quiet-core-bot commitments`"
 ---
 
 List and manage inferred follow-up commitments.
@@ -13,14 +13,14 @@ Commitments are opt-in, short-lived follow-up memories created from
 conversation context. See [Inferred commitments](/concepts/commitments) for the
 conceptual guide.
 
-With no subcommand, `openclaw commitments` lists pending commitments.
+With no subcommand, `quiet-core-bot commitments` lists pending commitments.
 
 ## Usage
 
 ```bash
-openclaw commitments [--all] [--agent <id>] [--status <status>] [--json]
-openclaw commitments list [--all] [--agent <id>] [--status <status>] [--json]
-openclaw commitments dismiss <id...> [--json]
+quiet-core-bot commitments [--all] [--agent <id>] [--status <status>] [--json]
+quiet-core-bot commitments list [--all] [--agent <id>] [--status <status>] [--json]
+quiet-core-bot commitments dismiss <id...> [--json]
 ```
 
 ## Options
@@ -36,37 +36,37 @@ openclaw commitments dismiss <id...> [--json]
 List pending commitments:
 
 ```bash
-openclaw commitments
+quiet-core-bot commitments
 ```
 
 List every stored commitment:
 
 ```bash
-openclaw commitments --all
+quiet-core-bot commitments --all
 ```
 
 Filter to one agent:
 
 ```bash
-openclaw commitments --agent main
+quiet-core-bot commitments --agent main
 ```
 
 Find snoozed commitments:
 
 ```bash
-openclaw commitments --status snoozed
+quiet-core-bot commitments --status snoozed
 ```
 
 Dismiss one or more commitments:
 
 ```bash
-openclaw commitments dismiss cm_abc123 cm_def456
+quiet-core-bot commitments dismiss cm_abc123 cm_def456
 ```
 
 Export as JSON:
 
 ```bash
-openclaw commitments --all --json
+quiet-core-bot commitments --all --json
 ```
 
 ## Output

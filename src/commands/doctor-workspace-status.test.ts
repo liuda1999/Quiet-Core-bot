@@ -1,7 +1,7 @@
 // Doctor workspace status tests cover workspace inspection and status output.
 import { describe, expect, it, vi } from "vitest";
 import * as noteModule from "../../packages/terminal-core/src/note.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import type { PluginVersionDriftReport } from "../plugins/plugin-version-drift.js";
 import {
   createPluginLoadResult,
@@ -234,8 +234,8 @@ describe("noteWorkspaceStatus", () => {
               installedVersion: "2026.6.9",
               gatewayVersion: "2026.6.10-beta.1",
               source: "npm",
-              packageName: "@openclaw/brave-plugin",
-              spec: "@openclaw/brave-plugin@2026.6.9",
+              packageName: "@quiet-core/brave-plugin",
+              spec: "@quiet-core/brave-plugin@2026.6.9",
             },
           ],
         },
@@ -246,7 +246,7 @@ describe("noteWorkspaceStatus", () => {
       expect(driftCalls).toHaveLength(1);
       const [[body]] = driftCalls;
       expect(body).toContain(
-        "quiet-core-bot plugins update @openclaw/brave-plugin@2026.6.10-beta.1",
+        "quiet-core-bot plugins update @quiet-core/brave-plugin@2026.6.10-beta.1",
       );
       expect(body).not.toContain("quiet-core-bot plugins update brave");
       expect(body).toContain("quiet-core-bot gateway restart");

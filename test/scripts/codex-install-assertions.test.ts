@@ -23,7 +23,7 @@ function writeJson(filePath: string, value: unknown) {
 
 describe("Codex install helpers", () => {
   it("resolves package roots and package manifests inside managed npm installs", () => {
-    const root = makeTempDir(tempDirs, "openclaw-codex-install-utils-");
+    const root = makeTempDir(tempDirs, "quiet-core-bot-codex-install-utils-");
     const packageRoot = path.join(
       root,
       "state",
@@ -31,10 +31,10 @@ describe("Codex install helpers", () => {
       "projects",
       "codex",
       "node_modules",
-      "@openclaw",
+      "@quiet-core-bot",
       "codex",
     );
-    const projectRoot = npmProjectRootForInstalledPackage(packageRoot, "@openclaw/codex");
+    const projectRoot = npmProjectRootForInstalledPackage(packageRoot, "@quiet-core/codex");
     const dependencyPackage = path.join(
       projectRoot,
       "node_modules",

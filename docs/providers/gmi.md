@@ -27,7 +27,7 @@ model availability, billing, rate limits, and any provider-side routing policy.
 Install the plugin, restart the gateway, then create an API key in GMI Cloud:
 
 ```bash
-quiet-core-bot plugins install @openclaw/gmi-provider
+quiet-core-bot plugins install @quiet-core/gmi-provider
 quiet-core-bot gateway restart
 ```
 

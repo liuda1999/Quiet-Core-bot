@@ -51,9 +51,9 @@ describe("doctor browser facade", () => {
 
   it("delegates legacy clawd browser profile detection to the browser facade surface", async () => {
     const residue = {
-      legacyProfileDir: "/tmp/openclaw-home/browser/clawd",
-      legacyUserDataDir: "/tmp/openclaw-home/browser/clawd/user-data",
-      canonicalUserDataDir: "/tmp/openclaw-home/browser/openclaw/user-data",
+      legacyProfileDir: "/tmp/quiet-core-bot-home/browser/clawd",
+      legacyUserDataDir: "/tmp/quiet-core-bot-home/browser/clawd/user-data",
+      canonicalUserDataDir: "/tmp/quiet-core-bot-home/browser/quiet-core-bot/user-data",
     };
     const detect = vi.fn().mockReturnValue(residue);
     loadBundledPluginPublicSurfaceModuleSync.mockReturnValue({
@@ -68,8 +68,8 @@ describe("doctor browser facade", () => {
       },
     };
     const deps = {
-      configDir: "/tmp/openclaw-home",
-      pathExists: (targetPath: string) => targetPath === "/tmp/openclaw-home/browser/clawd",
+      configDir: "/tmp/quiet-core-bot-home",
+      pathExists: (targetPath: string) => targetPath === "/tmp/quiet-core-bot-home/browser/clawd",
     };
 
     await expect(detectLegacyClawdBrowserProfileResidue(cfg, deps)).resolves.toEqual(residue);
@@ -95,8 +95,8 @@ describe("doctor browser facade", () => {
       },
     };
     const deps = {
-      configDir: "/tmp/openclaw-home",
-      pathExists: (targetPath: string) => targetPath === "/tmp/openclaw-home/browser/clawd",
+      configDir: "/tmp/quiet-core-bot-home",
+      pathExists: (targetPath: string) => targetPath === "/tmp/quiet-core-bot-home/browser/clawd",
     };
 
     await expect(maybeArchiveLegacyClawdBrowserProfileResidue(cfg, deps)).resolves.toEqual({
@@ -119,8 +119,8 @@ describe("doctor browser facade", () => {
       maybeArchiveLegacyClawdBrowserProfileResidue(
         {},
         {
-          configDir: "/tmp/openclaw-home",
-          pathExists: (targetPath: string) => targetPath === "/tmp/openclaw-home/browser/clawd",
+          configDir: "/tmp/quiet-core-bot-home",
+          pathExists: (targetPath: string) => targetPath === "/tmp/quiet-core-bot-home/browser/clawd",
         },
       ),
     ).resolves.toEqual({
@@ -134,7 +134,7 @@ describe("doctor browser facade", () => {
       detectLegacyClawdBrowserProfileResidue(
         {},
         {
-          configDir: "/tmp/openclaw-home",
+          configDir: "/tmp/quiet-core-bot-home",
           pathExists: () => false,
         },
       ),
@@ -147,7 +147,7 @@ describe("doctor browser facade", () => {
       maybeArchiveLegacyClawdBrowserProfileResidue(
         {},
         {
-          configDir: "/tmp/openclaw-home",
+          configDir: "/tmp/quiet-core-bot-home",
           pathExists: () => false,
         },
       ),

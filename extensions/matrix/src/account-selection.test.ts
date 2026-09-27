@@ -1,5 +1,5 @@
 // Matrix tests cover account selection plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { describe, expect, it } from "vitest";
 import {
   findMatrixAccountEntry,

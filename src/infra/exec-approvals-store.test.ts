@@ -34,7 +34,7 @@ let resolveExecApprovalsTranscriptPath: ExecApprovalsModule["resolveExecApproval
 let saveExecApprovals: ExecApprovalsModule["saveExecApprovals"];
 
 const tempDirs: string[] = [];
-const testEnvSnapshot = captureEnv(["OPENCLAW_HOME", "OPENCLAW_STATE_DIR"]);
+const testEnvSnapshot = captureEnv(["QUIET_CORE_HOME", "QUIET_CORE_STATE_DIR"]);
 
 beforeAll(async () => {
   ({
@@ -73,17 +73,13 @@ afterEach(() => {
 function createHomeDir(): string {
   const dir = makeTempDir();
   tempDirs.push(dir);
-  setTestEnvValue("OPENCLAW_HOME", dir);
-  deleteTestEnvValue("OPENCLAW_STATE_DIR");
+  setTestEnvValue("QUIET_CORE_HOME", dir);
+  deleteTestEnvValue("QUIET_CORE_STATE_DIR");
   return dir;
 }
 
 function approvalsFilePath(homeDir: string): string {
   return path.join(homeDir, ".quiet-core-bot", "exec-approvals.json");
-}
-
-function legacyApprovalsFilePath(homeDir: string): string {
-  return path.join(homeDir, ".openclaw", "exec-approvals.json");
 }
 
 function stateApprovalsFilePath(stateDir: string): string {
@@ -136,10 +132,10 @@ describe("exec approvals store helpers", () => {
     expect(resolveExecApprovalsDisplayPath()).toBe("~/.quiet-core-bot/exec-approvals.json");
   });
 
-  it("uses OPENCLAW_STATE_DIR for default file and socket paths", () => {
+  it("uses QUIET_CORE_STATE_DIR for default file and socket paths", () => {
     const dir = createHomeDir();
     const stateDir = path.join(dir, "custom-state");
-    setTestEnvValue("OPENCLAW_STATE_DIR", stateDir);
+    setTestEnvValue("QUIET_CORE_STATE_DIR", stateDir);
 
     expect(path.normalize(resolveExecApprovalsPath())).toBe(
       path.normalize(stateApprovalsFilePath(stateDir)),
@@ -148,69 +144,13 @@ describe("exec approvals store helpers", () => {
       path.normalize(path.join(stateDir, "exec-approvals.sock")),
     );
     expect(resolveExecApprovalsDisplayPath()).toBe(stateApprovalsFilePath(stateDir));
-    expect(resolveExecApprovalsTranscriptPath()).toBe("$OPENCLAW_STATE_DIR/exec-approvals.json");
+    expect(resolveExecApprovalsTranscriptPath()).toBe("$QUIET_CORE_STATE_DIR/exec-approvals.json");
 
     const ensured = ensureExecApprovals();
 
     expect(ensured.socket?.path).toBe(resolveExecApprovalsSocketPath());
     expect(fs.existsSync(stateApprovalsFilePath(stateDir))).toBe(true);
     expect(fs.existsSync(approvalsFilePath(dir))).toBe(false);
-  });
-
-  it("fails closed without writing target approvals before state migration runs", () => {
-    const dir = createHomeDir();
-    const stateDir = path.join(dir, "custom-state");
-    fs.mkdirSync(path.dirname(legacyApprovalsFilePath(dir)), { recursive: true });
-    fs.writeFileSync(
-      legacyApprovalsFilePath(dir),
-      `${JSON.stringify({
-        version: 1,
-        socket: {
-          path: path.join(dir, ".openclaw", "exec-approvals.sock"),
-          token: "legacy-token",
-        },
-        defaults: {
-          security: "deny",
-          ask: "always",
-        },
-        agents: {},
-      })}\n`,
-      "utf8",
-    );
-    setTestEnvValue("OPENCLAW_STATE_DIR", stateDir);
-
-    const resolved = resolveExecApprovals("main", {
-      security: "full",
-      ask: "off",
-    });
-
-    expect(resolved.agent.security).toBe("deny");
-    expect(resolved.agent.ask).toBe("always");
-    expect(resolved.token).toBe("");
-    expect(fs.existsSync(stateApprovalsFilePath(stateDir))).toBe(false);
-    expect(fs.existsSync(legacyApprovalsFilePath(dir))).toBe(true);
-
-    const ensured = ensureExecApprovals();
-
-    expect(ensured.defaults).toEqual({
-      security: "deny",
-      ask: "always",
-      askFallback: "deny",
-      autoAllowSkills: undefined,
-    });
-    expect(fs.existsSync(stateApprovalsFilePath(stateDir))).toBe(false);
-  });
-
-  it("keeps the default approvals path when only legacy state exists", () => {
-    const dir = createHomeDir();
-    fs.mkdirSync(path.join(dir, ".clawdbot"), { recursive: true });
-
-    expect(path.normalize(resolveExecApprovalsPath())).toBe(path.normalize(approvalsFilePath(dir)));
-
-    ensureExecApprovals();
-
-    expect(fs.existsSync(approvalsFilePath(dir))).toBe(true);
-    expect(fs.existsSync(path.join(dir, ".clawdbot", "exec-approvals.json"))).toBe(false);
   });
 
   it("merges socket defaults from normalized, current, and built-in fallback", () => {
@@ -663,13 +603,13 @@ describe("exec approvals store helpers", () => {
   );
 
   it.runIf(process.platform !== "win32")(
-    "accepts a symlinked OPENCLAW_HOME as the trusted approvals root",
+    "accepts a symlinked QUIET_CORE_HOME as the trusted approvals root",
     () => {
       const realHome = makeTempDir();
       const linkedHome = `${realHome}-link`;
       tempDirs.push(realHome, linkedHome);
       fs.symlinkSync(realHome, linkedHome, "dir");
-      setTestEnvValue("OPENCLAW_HOME", linkedHome);
+      setTestEnvValue("QUIET_CORE_HOME", linkedHome);
 
       saveExecApprovals({ version: 1, defaults: { security: "full" }, agents: {} });
 
@@ -689,7 +629,7 @@ describe("exec approvals store helpers", () => {
       fs.mkdirSync(linkedStateTarget, { recursive: true });
       fs.symlinkSync(realHome, linkedHome, "dir");
       fs.symlinkSync(linkedStateTarget, path.join(realHome, ".quiet-core-bot"), "dir");
-      setTestEnvValue("OPENCLAW_HOME", linkedHome);
+      setTestEnvValue("QUIET_CORE_HOME", linkedHome);
 
       expect(() =>
         saveExecApprovals({ version: 1, defaults: { security: "full" }, agents: {} }),

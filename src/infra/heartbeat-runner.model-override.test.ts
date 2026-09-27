@@ -57,7 +57,7 @@ async function withHeartbeatFixture(
       };
       return run({ tmpDir, storePath, replySpy, seedSession });
     },
-    { prefix: "openclaw-hb-model-" },
+    { prefix: "quiet-core-bot-hb-model-" },
   );
 }
 

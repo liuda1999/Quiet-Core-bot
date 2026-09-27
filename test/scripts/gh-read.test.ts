@@ -30,20 +30,20 @@ describe("gh-read helpers", () => {
     }
 
     expect(stderr).toContain("usage: scripts/gh-read <gh args...>");
-    expect(stderr).toContain("OPENCLAW_GH_READ_APP_ID");
+    expect(stderr).toContain("QUIET_CORE_GH_READ_APP_ID");
   });
 
   it("finds repo from gh args", () => {
-    expect(parseRepoArg(["pr", "view", "42", "-R", "openclaw/openclaw"])).toBe("openclaw/openclaw");
-    expect(parseRepoArg(["run", "list", "--repo=openclaw/docs"])).toBe("openclaw/docs");
+    expect(parseRepoArg(["pr", "view", "42", "-R", "liuda1999/quiet-core-bot"])).toBe("liuda1999/quiet-core-bot");
+    expect(parseRepoArg(["run", "list", "--repo=quiet-core-bot/docs"])).toBe("quiet-core-bot/docs");
     expect(parseRepoArg(["pr", "view", "42"])).toBeNull();
   });
 
   it("normalizes repo strings from common git formats", () => {
-    expect(normalizeRepo("openclaw/openclaw")).toBe("openclaw/openclaw");
-    expect(normalizeRepo("github.com/openclaw/openclaw")).toBe("openclaw/openclaw");
-    expect(normalizeRepo("https://github.com/openclaw/openclaw.git")).toBe("openclaw/openclaw");
-    expect(normalizeRepo("git@github.com:openclaw/openclaw.git")).toBe("openclaw/openclaw");
+    expect(normalizeRepo("liuda1999/quiet-core-bot")).toBe("liuda1999/quiet-core-bot");
+    expect(normalizeRepo("github.com/liuda1999/Quiet-Core-bot")).toBe("liuda1999/quiet-core-bot");
+    expect(normalizeRepo("https://github.com/liuda1999/Quiet-Core-bot.git")).toBe("liuda1999/quiet-core-bot");
+    expect(normalizeRepo("git@github.com:liuda1999/quiet-core-bot.git")).toBe("liuda1999/quiet-core-bot");
     expect(normalizeRepo("invalid")).toBeNull();
   });
 
@@ -193,7 +193,7 @@ describe("gh-read helpers", () => {
   it("rejects invalid GitHub API timeout values", () => {
     expect(resolveGitHubFetchTimeoutMs("1000")).toBe(1000);
     expect(() => resolveGitHubFetchTimeoutMs("1s")).toThrow(
-      /OPENCLAW_GH_READ_FETCH_TIMEOUT_MS must be an integer/u,
+      /QUIET_CORE_GH_READ_FETCH_TIMEOUT_MS must be an integer/u,
     );
   });
 });

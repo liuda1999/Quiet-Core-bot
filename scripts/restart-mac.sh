@@ -5,23 +5,23 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "${ROOT_DIR}/scripts/lib/restart-mac-gateway.sh"
-APP_BUNDLE="${OPENCLAW_APP_BUNDLE:-}"
+APP_BUNDLE="${QUIET_CORE_APP_BUNDLE:-}"
 APP_EXECUTABLE_RELATIVE_PATH="Contents/MacOS/OpenClaw"
 DEBUG_PROCESS_PATTERN="${ROOT_DIR}/apps/macos/.build/debug/OpenClaw"
 LOCAL_PROCESS_PATTERN="${ROOT_DIR}/apps/macos/.build-local/debug/OpenClaw"
 RELEASE_PROCESS_PATTERN="${ROOT_DIR}/apps/macos/.build/release/OpenClaw"
-LAUNCH_AGENT="${HOME}/Library/LaunchAgents/ai.openclaw.mac.plist"
+LAUNCH_AGENT="${HOME}/Library/LaunchAgents/ai.quiet-core-bot.mac.plist"
 LOCK_KEY="$(printf '%s' "${ROOT_DIR}" | shasum -a 256 | cut -c1-8)"
-LOCK_DIR="${TMPDIR:-/tmp}/openclaw-restart-${LOCK_KEY}"
+LOCK_DIR="${TMPDIR:-/tmp}/quiet-core-bot-restart-${LOCK_KEY}"
 LOCK_PID_FILE="${LOCK_DIR}/pid"
 LOCK_HELD=0
 WAIT_FOR_LOCK=0
-LOG_PATH="${OPENCLAW_RESTART_LOG:-${TMPDIR:-/tmp}/openclaw-restart-${LOCK_KEY}.log}"
+LOG_PATH="${QUIET_CORE_RESTART_LOG:-${TMPDIR:-/tmp}/quiet-core-bot-restart-${LOCK_KEY}.log}"
 NO_SIGN=0
 SIGN=0
 AUTO_DETECT_SIGNING=1
-GATEWAY_WAIT_SECONDS="${OPENCLAW_GATEWAY_WAIT_SECONDS:-0}"
-LAUNCHAGENT_DISABLE_MARKER="${HOME}/.openclaw/disable-launchagent"
+GATEWAY_WAIT_SECONDS="${QUIET_CORE_GATEWAY_WAIT_SECONDS:-0}"
+LAUNCHAGENT_DISABLE_MARKER="${HOME}/.quiet-core-bot/disable-launchagent"
 ATTACH_ONLY=1
 
 log()  { printf '%s\n' "$*"; }
@@ -90,7 +90,7 @@ canonicalize_app_bundle() {
     return 0
   fi
   if [[ ! -d "${APP_BUNDLE}" ]]; then
-    fail "OPENCLAW_APP_BUNDLE does not exist: ${APP_BUNDLE}"
+    fail "QUIET_CORE_APP_BUNDLE does not exist: ${APP_BUNDLE}"
   fi
   APP_BUNDLE="$(cd "${APP_BUNDLE}" && pwd -P)"
 }
@@ -113,14 +113,14 @@ for arg in "$@"; do
       log "  --no-attach-only Launch app without attach-only override"
       log ""
       log "Env:"
-      log "  OPENCLAW_GATEWAY_WAIT_SECONDS=0  Wait time before gateway port check (unsigned only)"
+      log "  QUIET_CORE_GATEWAY_WAIT_SECONDS=0  Wait time before gateway port check (unsigned only)"
       log ""
       log "Unsigned recovery:"
       log "  node quiet-core-bot.mjs daemon install --force --runtime node"
       log "  node quiet-core-bot.mjs daemon restart"
       log ""
       log "Reset unsigned overrides:"
-      log "  rm ~/.openclaw/disable-launchagent"
+      log "  rm ~/.quiet-core-bot/disable-launchagent"
       log ""
       log "Default behavior: Auto-detect signing keys, fallback to --no-sign if none found"
       exit 0
@@ -148,10 +148,10 @@ fi
 
 acquire_lock
 
-kill_all_openclaw() {
+kill_all_quiet-core-bot() {
   for _ in {1..10}; do
     local pids=""
-    pids="$(openclaw_process_pids)"
+    pids="$(quiet_core_bot_process_pids)"
     if [[ -z "${pids}" ]]; then
       return 0
     fi
@@ -160,10 +160,10 @@ kill_all_openclaw() {
     done <<< "${pids}"
     sleep 0.3
   done
-  [[ -z "$(openclaw_process_pids)" ]]
+  [[ -z "$(quiet_core_bot_process_pids)" ]]
 }
 
-known_openclaw_executables() {
+known_quiet_core_bot_executables() {
   if [[ -n "${APP_BUNDLE}" ]]; then
     printf '%s\n' "${APP_BUNDLE}/${APP_EXECUTABLE_RELATIVE_PATH}"
   fi
@@ -175,12 +175,12 @@ known_openclaw_executables() {
     "${RELEASE_PROCESS_PATTERN}"
 }
 
-openclaw_process_pids() {
+quiet_core_bot_process_pids() {
   local pattern=""
   while IFS= read -r pattern; do
     [[ -n "${pattern}" ]] || continue
     process_pids_matching "${pattern}"
-  done < <(known_openclaw_executables) | sort -u
+  done < <(known_quiet_core_bot_executables) | sort -u
 }
 
 process_pids_matching() {
@@ -195,13 +195,13 @@ process_pids_matching() {
 }
 
 stop_launch_agent() {
-  launchctl bootout gui/"$UID"/ai.openclaw.mac 2>/dev/null || true
+  launchctl bootout gui/"$UID"/ai.quiet-core-bot.mac 2>/dev/null || true
 }
 
 # 1) Stop launchd supervision, then kill all running instances.
 stop_launch_agent
 log "==> Killing existing OpenClaw instances"
-if ! kill_all_openclaw; then
+if ! kill_all_quiet-core-bot; then
   fail "OpenClaw instances did not exit after cleanup attempts"
 fi
 
@@ -225,7 +225,7 @@ fi
 if [ "$NO_SIGN" -eq 1 ]; then
   export ALLOW_ADHOC_SIGNING=1
   export SIGN_IDENTITY="-"
-  mkdir -p "${HOME}/.openclaw"
+  mkdir -p "${HOME}/.quiet-core-bot"
   run_step "disable launchagent writes" /usr/bin/touch "${LAUNCHAGENT_DISABLE_MARKER}"
 elif [ "$SIGN" -eq 1 ]; then
   if ! check_signing_keys; then
@@ -257,7 +257,7 @@ choose_app_bundle() {
     return 0
   fi
 
-  fail "App bundle not found. Set OPENCLAW_APP_BUNDLE to your installed OpenClaw.app"
+  fail "App bundle not found. Set QUIET_CORE_APP_BUNDLE to your installed OpenClaw.app"
 }
 
 choose_app_bundle
@@ -280,7 +280,7 @@ if [ "$NO_SIGN" -eq 1 ] && [ "$ATTACH_ONLY" -ne 1 ]; then
       const fs = require("node:fs");
       const path = require("node:path");
       try {
-        const raw = fs.readFileSync(path.join(process.env.HOME, ".openclaw", "openclaw.json"), "utf8");
+        const raw = fs.readFileSync(path.join(process.env.HOME, ".quiet-core-bot", "quiet-core-bot.json"), "utf8");
         const cfg = JSON.parse(raw);
         const port = cfg && cfg.gateway && typeof cfg.gateway.port === "number" ? cfg.gateway.port : 18789;
         process.stdout.write(String(port));
@@ -318,5 +318,5 @@ else
 fi
 
 if [ "$NO_SIGN" -eq 1 ] && [ "$ATTACH_ONLY" -ne 1 ]; then
-  run_step "show gateway launch agent args (unsigned)" bash -lc "/usr/bin/plutil -p '${HOME}/Library/LaunchAgents/ai.openclaw.gateway.plist' | head -n 40 || true"
+  run_step "show gateway launch agent args (unsigned)" bash -lc "/usr/bin/plutil -p '${HOME}/Library/LaunchAgents/ai.quiet-core-bot.gateway.plist' | head -n 40 || true"
 fi

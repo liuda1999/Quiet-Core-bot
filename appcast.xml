@@ -40,9 +40,9 @@
 <li>Dependencies: update Hono to 4.12.25 so published Quiet Core bot and ACPX packages use the patched runtime.</li>
 <li>Release and test reliability: extend slow Gateway/full-suite watchdogs, split local full-suite shards when throttled, stabilize plugin auth marker fixtures, avoid brittle provider-ref error text, fold Telegram RTT sampling into live QA evidence, simplify QA scorecard mappings around canonical coverage IDs, keep QA Lab bootstrap selection assertions aligned with flow-only scenarios, skip QA coverage artifact consumers when runtime parity producer status is not green, keep Feishu lifecycle release checks pointed at the active fixture config, isolate trajectory-export live seed turns from Codex-native shell approvals, preserve release-check child refs while pinning expected SHAs, widen live OpenAI TTS budgets for slower provider responses, and avoid false downgrade prompts for unresolved latest-tag updates. (#92652, #92550, #92558, #92911) Thanks @RomneyDa and @Andy312432.</li>
 </ul>
-<p><a href="https://github.com/openclaw/openclaw/blob/main/CHANGELOG.md">View full changelog</a></p>
+<p><a href="https://github.com/liuda1999/Quiet-Core-bot/blob/main/CHANGELOG.md">View full changelog</a></p>
 ]]></description>
-            <enclosure url="https://github.com/openclaw/openclaw/releases/download/v2026.6.8/OpenClaw-2026.6.8.zip" length="55815364" type="application/octet-stream" sparkle:edSignature="hLJ14xg6+DMFrXViIW3Njs++OPIGO+RWH9h+mPCSzXPAkKyYUGvtOLu1qEKvvfC8rs5FGgW/w4zDLfD2azqiBA=="/>
+            <enclosure url="https://github.com/liuda1999/Quiet-Core-bot/releases/download/v2026.6.8/OpenClaw-2026.6.8.zip" length="55815364" type="application/octet-stream" sparkle:edSignature="hLJ14xg6+DMFrXViIW3Njs++OPIGO+RWH9h+mPCSzXPAkKyYUGvtOLu1qEKvvfC8rs5FGgW/w4zDLfD2azqiBA=="/>
         </item>
         <item>
             <title>2026.6.5</title>
@@ -120,9 +120,9 @@
 <li>Tests/state isolation: provider, media, auth, cron, task, session, sandbox, Gateway, and Codex timeout fixtures now scope more home/state/env data per test, reducing cross-test leakage and making release validation failures less noisy. (#90027, #89974)</li>
 <li>Sessions: the beta SQLite downgrade rescue now skips extra pre-reads for active non-empty JSON session stores, preserving cache race detection while still restoring missing or empty beta session files.</li>
 </ul>
-<p><a href="https://github.com/openclaw/openclaw/blob/main/CHANGELOG.md">View full changelog</a></p>
+<p><a href="https://github.com/liuda1999/Quiet-Core-bot/blob/main/CHANGELOG.md">View full changelog</a></p>
 ]]></description>
-            <enclosure url="https://github.com/openclaw/openclaw/releases/download/v2026.6.5/OpenClaw-2026.6.5.zip" length="55725877" type="application/octet-stream" sparkle:edSignature="EKr7gCfpEVStis9HSADJk1CWYbmH2MHMqSgNfZvLbBFCBWmk3pjBJS6K2qkxkq5lIbTj4H+Lo7Iri6ip/xTGDA=="/>
+            <enclosure url="https://github.com/liuda1999/Quiet-Core-bot/releases/download/v2026.6.5/OpenClaw-2026.6.5.zip" length="55725877" type="application/octet-stream" sparkle:edSignature="EKr7gCfpEVStis9HSADJk1CWYbmH2MHMqSgNfZvLbBFCBWmk3pjBJS6K2qkxkq5lIbTj4H+Lo7Iri6ip/xTGDA=="/>
         </item>
         <item>
             <title>2026.6.1</title>
@@ -154,8 +154,8 @@
 <li>Skills: let pending proposals be revised in place with versioned, dated proposal frontmatter before approval. Thanks @shakkernerd.</li>
 <li>Skills: add Skill Workshop with pending proposals, CLI/Gateway review actions, rollback metadata, and the <code>skill_workshop</code> agent tool. Thanks @shakkernerd.</li>
 <li>Skill Workshop: add the Control UI navigation, styled dashboard, proposal today view, revision dialog, file preview modal, searchable preview files, reusable session handoff, and localized strings.</li>
-<li>Plugins: externalize Tokenjuice as the official <code>@openclaw/tokenjuice</code> plugin with npm and ClawHub publish metadata.</li>
-<li>Plugins: externalize the GitHub Copilot agent runtime as the official <code>@openclaw/copilot</code> plugin with npm and ClawHub publish metadata.</li>
+<li>Plugins: externalize Tokenjuice as the official <code>@quiet-core/tokenjuice</code> plugin with npm and ClawHub publish metadata.</li>
+<li>Plugins: externalize the GitHub Copilot agent runtime as the official <code>@quiet-core/copilot</code> plugin with npm and ClawHub publish metadata.</li>
 <li>iOS: add hosted push relay defaults, realtime Talk playback, and a guarded WebSocket ping path for more reliable mobile sessions. (#88096, #88105, #88231)</li>
 <li>iOS: support native iPad display layouts.</li>
 <li>Workboard: add orchestration primitives and agent coordination tools for multi-agent planning and run tracking. (#87469)</li>
@@ -202,7 +202,7 @@
 <li>CLI/desktop: bridge WSL clipboard operations through the shell, recognize manual-update launchd jobs, and keep machine-readable startup output parseable during progress setup. (#88764, #88689) Thanks @alexzhu0.</li>
 <li>Plugins: make PixVerse external-plugin ClawHub metadata explicit and keep it out of bundled dist builds.</li>
 <li>Plugins: clarify plugin loader failure guidance so missing or incompatible plugin packages point operators at the right repair path.</li>
-<li>Plugins: preserve npm plugin roots after blocked installs, skip plugin-local <code>openclaw</code> peer symlinks during rollback snapshots, relink those peers after restore, isolate cached tool runtime siblings, and isolate web-provider factory failures so one bad plugin does not poison sibling runtime paths. (#77237, #88807)</li>
+<li>Plugins: preserve npm plugin roots after blocked installs, skip plugin-local <code>quiet-core-bot</code> peer symlinks during rollback snapshots, relink those peers after restore, isolate cached tool runtime siblings, and isolate web-provider factory failures so one bad plugin does not poison sibling runtime paths. (#77237, #88807)</li>
 <li>Cron: keep SQLite cron migrations compatible with legacy run-log tables, archived job stores, diagnostic cron names, and legacy one-shot delete-after-run behavior. (#88285)</li>
 <li>Cron: keep update delivery validation scoped, harden restart state, and retire MCP runtimes on isolated cron cleanup.</li>
 <li>Memory: serialize QMD update/embed writes per store, reduce Linux watcher fan-out, retry transient FileProvider-backed reads, preserve phase signals on read errors, harden envelope metadata sanitization, reattach Linux native watchers when directories are recreated, and rewrite generated transcript paths on rollover so memory/search state survives concurrent gateway and CLI activity. (#66339, #85931, #89185, #89188, #85351) Thanks @openperf, @amittell, @RomneyDa, and @NianJiuZst.</li>
@@ -247,9 +247,9 @@
 <li>Performance: skip declaration bundling for runtime-only CLI startup and gateway watch build profiles.</li>
 <li>Performance: reuse prepared provider handles, strict tool schemas, gateway runtime metadata, session maintenance config, plugin metadata, bundled skill allowlists, package-local plugin artifacts, single-entry store writes, and validated/serialized session prompt blobs.</li>
 </ul>
-<p><a href="https://github.com/openclaw/openclaw/blob/main/CHANGELOG.md">View full changelog</a></p>
+<p><a href="https://github.com/liuda1999/Quiet-Core-bot/blob/main/CHANGELOG.md">View full changelog</a></p>
 ]]></description>
-            <enclosure url="https://github.com/openclaw/openclaw/releases/download/v2026.6.1/OpenClaw-2026.6.1.zip" length="55062100" type="application/octet-stream" sparkle:edSignature="PVp8E2HBCvikB/0LCr36lFEyHPAzoFA2ScT6LW27FlzvP+m4r1AEuVN2UrtgWlpkGSsn4Eav0kPJe32u4ObNBw=="/>
+            <enclosure url="https://github.com/liuda1999/Quiet-Core-bot/releases/download/v2026.6.1/OpenClaw-2026.6.1.zip" length="55062100" type="application/octet-stream" sparkle:edSignature="PVp8E2HBCvikB/0LCr36lFEyHPAzoFA2ScT6LW27FlzvP+m4r1AEuVN2UrtgWlpkGSsn4Eav0kPJe32u4ObNBw=="/>
         </item>
     </channel>
 </rss>

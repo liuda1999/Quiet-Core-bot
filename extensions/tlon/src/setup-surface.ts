@@ -1,6 +1,6 @@
 // Tlon plugin module implements setup surface behavior.
-import { createSetupTranslator } from "openclaw/plugin-sdk/setup-runtime";
-import { normalizeStringEntries } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { createSetupTranslator } from "quiet-core-bot/plugin-sdk/setup-runtime";
+import { normalizeStringEntries } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import {
   applyTlonSetupConfig,
   createTlonSetupWizardBase,

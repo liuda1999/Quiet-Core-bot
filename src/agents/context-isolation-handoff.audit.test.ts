@@ -24,17 +24,17 @@ import {
   InMemorySessionStorage,
   prepareCompaction,
   Session,
-} from "openclaw/plugin-sdk/agent-core";
-import type { AgentMessage, SessionTreeEntry } from "openclaw/plugin-sdk/agent-core";
+} from "quiet-core-bot/plugin-sdk/agent-core";
+import type { AgentMessage, SessionTreeEntry } from "quiet-core-bot/plugin-sdk/agent-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { forkSessionFromParent } from "../auto-reply/reply/session-fork.js";
 import { CURRENT_SESSION_VERSION } from "../config/sessions/version.js";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../infra/kysely-sync.js";
-import type { DB as OpenClawStateDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateDatabase } from "../state/quiet-core-bot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/quiet-core-bot-state-db.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import {
   buildAnnounceDropEventKey,
@@ -145,7 +145,7 @@ describe("Task 3 · subagent context isolation and handoff", () => {
   let sessionsDir: string;
 
   beforeEach(async () => {
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-k1-isolation-"));
+    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-k1-isolation-"));
     sessionsDir = path.join(tempDir, "sessions");
     await fs.mkdir(sessionsDir, { recursive: true });
   });
@@ -270,7 +270,7 @@ describe("Task 3 · subagent context isolation and handoff", () => {
     const stateDir = path.join(tempDir, "state-dir");
     await fs.mkdir(stateDir, { recursive: true });
 
-    await withEnvAsync({ OPENCLAW_STATE_DIR: stateDir }, async () => {
+    await withEnvAsync({ QUIET_CORE_STATE_DIR: stateDir }, async () => {
       const delivered: SubagentRunRecord = normalizeSubagentRunState({
         runId: "run-delivered",
         childSessionKey: "agent:main:subagent:delivered",
@@ -516,7 +516,7 @@ describe("Task 3 · C9 fallback visibility", () => {
         role: "assistant",
         content: [{ type: "text", text }],
         api: "responses",
-        provider: "openclaw",
+        provider: "quiet-core-bot",
         model: "delivery-mirror",
         openclawDeliveryMirror: { kind },
         usage: usage(),

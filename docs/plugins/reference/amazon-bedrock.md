@@ -11,7 +11,7 @@ Quiet Core bot Amazon Bedrock provider plugin with model discovery, embeddings, 
 
 ## Distribution
 
-- Package: `@openclaw/amazon-bedrock-provider`
+- Package: `@quiet-core/amazon-bedrock-provider`
 - Install route: npm; ClawHub
 
 ## Surface

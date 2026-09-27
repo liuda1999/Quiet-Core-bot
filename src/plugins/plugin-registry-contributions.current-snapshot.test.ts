@@ -1,6 +1,6 @@
 // Verifies current plugin registry contribution snapshots.
 import { afterEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   clearCurrentPluginMetadataSnapshot,
   setCurrentPluginMetadataSnapshot,
@@ -18,7 +18,7 @@ afterEach(() => {
 function createPluginRecord(id: string, enabled: boolean): InstalledPluginIndex["plugins"][number] {
   return {
     pluginId: id,
-    manifestPath: `/plugins/${id}/openclaw.plugin.json`,
+    manifestPath: `/plugins/${id}/quiet-core-bot.plugin.json`,
     manifestHash: id,
     rootDir: `/plugins/${id}`,
     origin: "global",
@@ -99,8 +99,8 @@ describe("loadPluginManifestRegistryForPluginRegistry current snapshot", () => {
   it("reuses compatible current manifest metadata", () => {
     const config: OpenClawConfig = {};
     const env = {
-      HOME: "/tmp/openclaw-test-home",
-      OPENCLAW_DISABLE_BUNDLED_PLUGINS: "1",
+      HOME: "/tmp/quiet-core-bot-test-home",
+      QUIET_CORE_DISABLE_BUNDLED_PLUGINS: "1",
     };
     const workspaceDir = "/workspace";
     setCurrentPluginMetadataSnapshot(createSnapshot({ config, workspaceDir }), {
@@ -145,8 +145,8 @@ describe("loadPluginManifestRegistryForPluginRegistry current snapshot", () => {
   it("does not reuse current metadata for explicit registry inputs or diagnostics", () => {
     const config: OpenClawConfig = {};
     const env = {
-      HOME: "/tmp/openclaw-test-home",
-      OPENCLAW_DISABLE_BUNDLED_PLUGINS: "1",
+      HOME: "/tmp/quiet-core-bot-test-home",
+      QUIET_CORE_DISABLE_BUNDLED_PLUGINS: "1",
     };
     const workspaceDir = "/workspace";
     setCurrentPluginMetadataSnapshot(createSnapshot({ config, workspaceDir }), {

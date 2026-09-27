@@ -1,6 +1,6 @@
 // Implements `quiet-core-bot channels status` with gateway status and config-only fallback.
-import { redactSensitiveUrlLikeString } from "@openclaw/net-policy/redact-sensitive-url";
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
+import { redactSensitiveUrlLikeString } from "@quiet-core/net-policy/redact-sensitive-url";
+import { normalizeOptionalLowercaseString } from "@quiet-core/normalization-core/string-coerce";
 import { formatDocsLink } from "../../../packages/terminal-core/src/links.js";
 import { theme } from "../../../packages/terminal-core/src/theme.js";
 import { normalizeChannelId } from "../../channels/plugins/index.js";

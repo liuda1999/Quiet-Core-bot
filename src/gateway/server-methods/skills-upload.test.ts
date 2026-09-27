@@ -9,7 +9,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   createOpenClawTestState,
   type OpenClawTestState,
-} from "../../test-utils/openclaw-test-state.js";
+} from "../../test-utils/quiet-core-bot-test-state.js";
 import type { GatewayRequestHandlers } from "./types.js";
 
 const agentScopeState = vi.hoisted(() => ({
@@ -49,7 +49,7 @@ vi.mock("../../infra/replace-file.js", async (importOriginal) => {
       if (
         replaceFileState.publishFailures === 0 &&
         replaceFileState.publishFailureTarget &&
-        options.from.includes(".openclaw-install-stage-") &&
+        options.from.includes(".quiet-core-bot-install-stage-") &&
         options.to === replaceFileState.publishFailureTarget
       ) {
         replaceFileState.publishFailures += 1;
@@ -76,7 +76,7 @@ async function makeHarness(): Promise<{
 }> {
   const testState = await createOpenClawTestState({
     layout: "state-only",
-    prefix: "openclaw-skill-upload-handler-",
+    prefix: "quiet-core-bot-skill-upload-handler-",
   });
   testStates.push(testState);
   const stateDir = testState.stateDir;

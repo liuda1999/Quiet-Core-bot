@@ -180,7 +180,7 @@ describe("scripts/lib/ci-node-test-plan.mjs", () => {
         .flatMap((shard) => shard.groups)
         .find((group) => group.shard_name === "core-runtime-tui-pty")?.env,
     ).toEqual({
-      OPENCLAW_TUI_PTY_INCLUDE_LOCAL: "1",
+      QUIET_CORE_TUI_PTY_INCLUDE_LOCAL: "1",
     });
     expect(
       compact
@@ -552,7 +552,7 @@ describe("scripts/lib/ci-node-test-plan.mjs", () => {
       checkName: "checks-node-core-runtime-tui-pty",
       configs: ["test/vitest/vitest.tui-pty.config.ts"],
       env: {
-        OPENCLAW_TUI_PTY_INCLUDE_LOCAL: "1",
+        QUIET_CORE_TUI_PTY_INCLUDE_LOCAL: "1",
       },
       requiresDist: false,
     });

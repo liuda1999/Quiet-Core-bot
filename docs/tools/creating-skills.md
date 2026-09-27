@@ -83,7 +83,7 @@ Quiet Core bot loads skills from several roots in a defined [precedence order](/
     Send a message that should trigger the skill:
 
     ```bash
-    openclaw agent --message "give me a greeting"
+    quiet-core-bot agent --message "give me a greeting"
     ```
 
     Or open a chat and ask the agent directly. Use `/skill hello-world` to
@@ -132,7 +132,7 @@ Gate your skill so it only loads when its dependencies are available:
 ---
 name: gemini-search
 description: Search using Gemini CLI.
-metadata: { "openclaw": { "requires": { "bins": ["gemini"] }, "primaryEnv": "GEMINI_API_KEY" } }
+metadata: { "quiet-core-bot": { "requires": { "bins": ["gemini"] }, "primaryEnv": "GEMINI_API_KEY" } }
 ---
 ```
 
@@ -217,7 +217,7 @@ See [Skill Workshop](/tools/skill-workshop) for the full proposal lifecycle.
 
 <Steps>
   <Step title="Ensure your SKILL.md is complete">
-    Make sure `name`, `description`, and any `metadata.openclaw` gating fields
+    Make sure `name`, `description`, and any `metadata.quiet-core-bot` gating fields
     are set. Add a `homepage` URL if you have a project page.
   </Step>
   <Step title="Install the ClawHub skill">
@@ -225,7 +225,7 @@ See [Skill Workshop](/tools/skill-workshop) for the full proposal lifecycle.
     metadata:
 
     ```bash
-    quiet-core-bot skills install @openclaw/clawhub-publish
+    quiet-core-bot skills install @quiet-core/clawhub-publish
     ```
 
   </Step>
@@ -245,7 +245,7 @@ See [Skill Workshop](/tools/skill-workshop) for the full proposal lifecycle.
   - **Be concise** — instruct the model on *what* to do, not how to be an AI.
   - **Safety first** — if your skill uses `exec`, ensure prompts do not allow
     arbitrary command injection from untrusted input.
-  - **Test locally** — use `openclaw agent --message "..."` before sharing.
+  - **Test locally** — use `quiet-core-bot agent --message "..."` before sharing.
   - **Use ClawHub** — browse community skills at [clawhub.ai](https://clawhub.ai)
     before building from scratch.
 </Tip>

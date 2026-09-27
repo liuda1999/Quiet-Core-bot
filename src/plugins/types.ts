@@ -4,7 +4,7 @@ import type { Duplex } from "node:stream";
 import type {
   UnifiedModelCatalogEntry,
   UnifiedModelCatalogKind,
-} from "@openclaw/model-catalog-core/model-catalog-types";
+} from "@quiet-core/model-catalog-core/model-catalog-types";
 import type { Command } from "commander";
 import type {
   ApiKeyCredential,
@@ -23,7 +23,7 @@ import type { AnyAgentTool } from "../agents/tools/common.js";
 import type { ReplyPayload } from "../auto-reply/reply-payload.js";
 import type { ThinkLevel } from "../auto-reply/thinking.shared.js";
 import type { ModelProviderConfig } from "../config/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import type { OperatorScope } from "../gateway/operator-scopes.js";
 import type { GatewayRequestHandler } from "../gateway/server-methods/types.js";
 import type { InternalHookHandler } from "../hooks/internal-hook-types.js";
@@ -2153,7 +2153,7 @@ export type OpenClawPluginCliContext = {
   /**
    * Command object where this plugin should register its commands.
    *
-   * For root CLI registrations this is the root `quiet-core-bot` program. For nested
+   * For root CLI registrations this is the root `openclaw` program. For nested
    * registrations it is the resolved parent command from `parentPath`.
    */
   program: Command;
@@ -2370,7 +2370,7 @@ export type OpenClawPluginDefinition = {
   description?: string;
   version?: string;
   /**
-   * @deprecated Declare exclusive plugin kind in `openclaw.plugin.json` via
+   * @deprecated Declare exclusive plugin kind in `quiet-core-bot.plugin.json` via
    * manifest `kind`. Runtime-exported `kind` is kept as a compatibility
    * fallback for older plugins and may require loading plugin runtime on
    * metadata-only command paths.

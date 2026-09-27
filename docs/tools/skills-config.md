@@ -113,12 +113,12 @@ skill dependency installers, and plugin install/update sources.
       targets: ["skill", "plugin"],
       exec: {
         source: "exec",
-        command: "/usr/local/bin/openclaw-install-policy",
+        command: "/usr/local/bin/quiet-core-bot-install-policy",
         args: ["--json"],
         timeoutMs: 10000,
         noOutputTimeoutMs: 10000,
         maxOutputBytes: 1048576,
-        passEnv: ["OPENCLAW_STATE_DIR", "PATH"],
+        passEnv: ["QUIET_CORE_STATE_DIR", "PATH"],
         env: { POLICY_MODE: "strict" },
         trustedDirs: ["/usr/local/bin"],
       },
@@ -183,7 +183,7 @@ skill dependency installers, and plugin install/update sources.
 </ParamField>
 
 The policy receives one JSON object on stdin with `protocolVersion: 1`,
-`openclawVersion`, `targetType`, `targetName`, `sourcePath`, `sourcePathKind`,
+`quiet-core-botVersion`, `targetType`, `targetName`, `sourcePath`, `sourcePathKind`,
 optional structured `source`, structured `origin`, and `request`. It must write
 one JSON object on stdout: `{ "protocolVersion": 1, "decision": "allow" }` or
 `{ "protocolVersion": 1, "decision": "block", "reason": "..." }`. Non-zero
@@ -203,14 +203,14 @@ Example stdin:
 ```json
 {
   "protocolVersion": 1,
-  "openclawVersion": "2026.6.1",
+  "quiet-core-botVersion": "2026.6.1",
   "targetType": "skill",
   "targetName": "weather",
-  "sourcePath": "/var/folders/.../openclaw-skill-clawhub/root",
+  "sourcePath": "/var/folders/.../quiet-core-bot-skill-clawhub/root",
   "sourcePathKind": "directory",
   "source": {
     "kind": "clawhub",
-    "authority": "openclaw",
+    "authority": "quiet-core-bot",
     "mutable": false,
     "network": true
   },
@@ -268,7 +268,7 @@ process.stdin.on("end", () => {
 ## Per-skill entries (`skills.entries`)
 
 Keys under `entries` match the skill `name` by default. If a skill defines
-`metadata.openclaw.skillKey`, use that key instead. Quote hyphenated names
+`metadata.quiet-core-bot.skillKey`, use that key instead. Quote hyphenated names
 (JSON5 allows quoted keys).
 
 <ParamField path="skills.entries.<key>.enabled" type="boolean">
@@ -278,7 +278,7 @@ Keys under `entries` match the skill `name` by default. If a skill defines
 </ParamField>
 
 <ParamField path="skills.entries.<key>.apiKey" type='string | { source, provider, id }'>
-  Convenience field for skills that declare `metadata.openclaw.primaryEnv`.
+  Convenience field for skills that declare `metadata.quiet-core-bot.primaryEnv`.
   Supports a plaintext string or a SecretRef: `{ source: "env", provider: "default", id: "VAR_NAME" }`.
 </ParamField>
 

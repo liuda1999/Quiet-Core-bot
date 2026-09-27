@@ -240,7 +240,7 @@ final class DashboardWindowController: NSWindowController, WKNavigationDelegate,
             const allowedPath = \(Self.jsStringLiteral(allowedPath));
             if (location.origin !== allowedOrigin) return;
             if (allowedPath !== "/" && !location.pathname.startsWith(allowedPath)) return;
-            Object.defineProperty(window, "__OPENCLAW_NATIVE_CONTROL_AUTH__", {
+            Object.defineProperty(window, "__QUIET_CORE_NATIVE_CONTROL_AUTH__", {
               value: \(json),
               configurable: true,
             });

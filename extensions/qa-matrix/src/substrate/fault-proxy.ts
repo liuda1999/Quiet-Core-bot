@@ -5,8 +5,8 @@ import {
   type IncomingMessage,
   type ServerResponse,
 } from "node:http";
-import { readResponseWithLimit } from "openclaw/plugin-sdk/response-limit-runtime";
-import { fetchWithSsrFGuard } from "openclaw/plugin-sdk/ssrf-runtime";
+import { readResponseWithLimit } from "quiet-core-bot/plugin-sdk/response-limit-runtime";
+import { fetchWithSsrFGuard } from "quiet-core-bot/plugin-sdk/ssrf-runtime";
 
 const DEFAULT_FAULT_PROXY_REQUEST_MAX_BYTES = 16 * 1024 * 1024;
 const DEFAULT_FAULT_PROXY_RESPONSE_MAX_BYTES = 16 * 1024 * 1024;

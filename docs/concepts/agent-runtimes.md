@@ -18,7 +18,7 @@ configuration. They are different layers:
 | ------------- | -------------------------------------------- | ------------------------------------------------------------------------- |
 | Provider      | `openai`, `anthropic`, `github-copilot`      | How Quiet Core bot authenticates, discovers models, and names model refs. |
 | Model         | `gpt-5.5`, `claude-opus-4-6`                 | The model selected for the agent turn.                                    |
-| Agent runtime | `openclaw`, `codex`, `copilot`, `claude-cli` | The low level loop or backend that executes the prepared turn.            |
+| Agent runtime | `quiet-core-bot`, `codex`, `copilot`, `claude-cli` | The low level loop or backend that executes the prepared turn.            |
 | Channel       | Telegram, Discord, Slack, WhatsApp           | Where messages enter and leave Quiet Core bot.                            |
 
 You will also see the word **harness** in code. A harness is the implementation
@@ -32,7 +32,7 @@ runtime policy where needed.
 There are two runtime families:
 
 - **Embedded harnesses** run inside Quiet Core bot's prepared agent loop. Today this
-  is the built-in `openclaw` runtime plus registered plugin harnesses such as
+  is the built-in `quiet-core-bot` runtime plus registered plugin harnesses such as
   `codex` and `copilot`.
 - **CLI backends** run a local CLI process while keeping the model ref
   canonical. For example, `anthropic/claude-opus-4-8` with
@@ -95,7 +95,7 @@ This is the agent-facing decision tree:
    subscription-backed Codex agent experience, use `openai/<model>`.
 3. If the user explicitly chooses **Quiet Core bot for an OpenAI model**, keep the model ref
    as `openai/<model>` and set provider/model runtime policy to
-   `agentRuntime.id: "openclaw"`. A selected `openai` OAuth profile is routed
+   `agentRuntime.id: "quiet-core-bot"`. A selected `openai` OAuth profile is routed
    internally through Quiet Core bot's Codex-auth transport.
 4. If legacy config still contains **legacy Codex model refs**, repair it to
    `openai/<model>` with `quiet-core-bot doctor --fix`; doctor keeps the Codex auth
@@ -153,12 +153,12 @@ Quiet Core bot chooses an embedded runtime after provider and model resolution:
    `models.providers.<provider>.agentRuntime`.
 3. In `auto` mode, registered plugin runtimes can claim supported provider/model
    pairs.
-4. If no runtime claims a turn in `auto` mode, Quiet Core bot uses `openclaw` as the
+4. If no runtime claims a turn in `auto` mode, Quiet Core bot uses `quiet-core-bot` as the
    compatibility runtime. Use an explicit runtime id when the run must be
    strict.
 
 Whole-session and whole-agent runtime pins are ignored. That includes
-`OPENCLAW_AGENT_RUNTIME`, session `agentHarnessId`/`agentRuntimeOverride` state,
+`QUIET_CORE_AGENT_RUNTIME`, session `agentHarnessId`/`agentRuntimeOverride` state,
 `agents.defaults.agentRuntime`, and `agents.list[].agentRuntime`. Run
 `quiet-core-bot doctor --fix` to remove stale whole-agent runtime config and convert
 legacy runtime model refs where Quiet Core bot can preserve the intent.
@@ -207,7 +207,7 @@ legacy Codex model refs remain in config, treat that as legacy route state. Run
 
 ## GitHub Copilot agent runtime
 
-The external `@openclaw/copilot` plugin registers an opt-in `copilot` runtime
+The external `@quiet-core/copilot` plugin registers an opt-in `copilot` runtime
 backed by the GitHub Copilot CLI (`@github/copilot-sdk`). It claims the
 canonical subscription `github-copilot` provider and is **never** selected by
 `auto`. Opt in per-model or per-provider via `agentRuntime.id`:

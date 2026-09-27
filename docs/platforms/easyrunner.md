@@ -15,7 +15,7 @@ Compose apps and exposes HTTPS through Caddy.
 
 - An EasyRunner server with a domain routed to it.
 - A built or published Quiet Core bot container image.
-- A persistent config volume for `/home/node/.openclaw`.
+- A persistent config volume for `/home/node/.quiet-core-bot`.
 - A persistent workspace volume for `/workspace`.
 - A strong Gateway token or password.
 
@@ -29,30 +29,30 @@ Create an EasyRunner app with a Compose file shaped like this:
 
 ```yaml
 services:
-  openclaw:
-    image: ghcr.io/openclaw/openclaw:latest
+  quiet-core-bot:
+    image: ghcr.io/liuda1999/quiet-core-bot:latest
     restart: unless-stopped
     environment:
-      OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN}
-      OPENCLAW_HOME: /home/node
-      OPENCLAW_STATE_DIR: /home/node/.openclaw
-      OPENCLAW_CONFIG_PATH: /home/node/.openclaw/quiet-core-bot.json
-      OPENCLAW_WORKSPACE_DIR: /workspace
+      QUIET_CORE_GATEWAY_TOKEN: ${QUIET_CORE_GATEWAY_TOKEN}
+      QUIET_CORE_HOME: /home/node
+      QUIET_CORE_STATE_DIR: /home/node/.quiet-core-bot
+      QUIET_CORE_CONFIG_PATH: /home/node/.quiet-core-bot/quiet-core-bot.json
+      QUIET_CORE_WORKSPACE_DIR: /workspace
     volumes:
-      - openclaw-config:/home/node/.openclaw
-      - openclaw-workspace:/workspace
+      - quiet-core-bot-config:/home/node/.quiet-core-bot
+      - quiet-core-bot-workspace:/workspace
     labels:
-      caddy: openclaw.example.com
+      caddy: quiet-core-bot.example.com
       caddy.reverse_proxy: "{{upstreams 1455}}"
-    command: ["openclaw", "gateway", "--bind", "lan", "--port", "1455"]
+    command: ["quiet-core-bot", "gateway", "--bind", "lan", "--port", "1455"]
 
 volumes:
-  openclaw-config:
-  openclaw-workspace:
+  quiet-core-bot-config:
+  quiet-core-bot-workspace:
 ```
 
-Replace `openclaw.example.com` with your Gateway hostname. Store
-`OPENCLAW_GATEWAY_TOKEN` in EasyRunner's secret/environment manager instead of
+Replace `quiet-core-bot.example.com` with your Gateway hostname. Store
+`QUIET_CORE_GATEWAY_TOKEN` in EasyRunner's secret/environment manager instead of
 committing it to the app definition.
 
 ## Configure Quiet Core bot
@@ -66,7 +66,7 @@ the proxy and require auth:
     bind: "lan",
     port: 1455,
     auth: {
-      token: "${OPENCLAW_GATEWAY_TOKEN}",
+      token: "${QUIET_CORE_GATEWAY_TOKEN}",
     },
   },
 }
@@ -81,8 +81,8 @@ the exact proxy path rather than disabling auth checks globally. See
 From your workstation:
 
 ```bash
-quiet-core-bot gateway probe --url https://openclaw.example.com --token <token>
-quiet-core-bot gateway status --url https://openclaw.example.com --token <token>
+quiet-core-bot gateway probe --url https://quiet-core-bot.example.com --token <token>
+quiet-core-bot gateway status --url https://quiet-core-bot.example.com --token <token>
 ```
 
 From the EasyRunner host, check the app logs for a listening Gateway and no
@@ -91,8 +91,8 @@ startup SecretRef, plugin, or channel auth failures.
 ## Updates and backups
 
 - Pull or build the new Quiet Core bot image, then redeploy the EasyRunner app.
-- Back up the `openclaw-config` volume before updates.
-- Back up `openclaw-workspace` if agents write durable project data there.
+- Back up the `quiet-core-bot-config` volume before updates.
+- Back up `quiet-core-bot-workspace` if agents write durable project data there.
 - Run `quiet-core-bot doctor` after major updates to catch config migrations and
   service warnings.
 
@@ -103,7 +103,7 @@ startup SecretRef, plugin, or channel auth failures.
 - Auth fails: rotate the token in EasyRunner secrets and the local client
   command together.
 - Files are root-owned after restore: repair the mounted volumes so the
-  container user can write `/home/node/.openclaw` and `/workspace`.
+  container user can write `/home/node/.quiet-core-bot` and `/workspace`.
 - Browser or channel plugins fail: check whether the required external
   binaries, network egress, and mounted credentials are available inside the
   container.

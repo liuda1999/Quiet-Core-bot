@@ -8,14 +8,14 @@ title: "Android app"
 ---
 
 <Note>
-The official Android app is available on [Google Play](https://play.google.com/store/apps/details?id=ai.openclaw.app&hl=en_IN). It is a companion node and requires a running Quiet Core bot Gateway. The source code is also available in the [Quiet Core bot repository](https://github.com/openclaw/openclaw) under `apps/android`; see [apps/android/README.md](https://github.com/openclaw/openclaw/blob/main/apps/android/README.md) for build instructions.
+The official Android app is available on [Google Play](https://play.google.com/store/apps/details?id=ai.quiet-core-bot.app&hl=en_IN). It is a companion node and requires a running Quiet Core bot Gateway. The source code is also available in the [Quiet Core bot repository](https://github.com/liuda1999/Quiet-Core-bot) under `apps/android`; see [apps/android/README.md](https://github.com/liuda1999/Quiet-Core-bot/blob/main/apps/android/README.md) for build instructions.
 </Note>
 
 ## Support snapshot
 
 - Role: companion node app (Android does not host the Gateway).
 - Gateway required: yes (run it on macOS, Linux, or Windows via WSL2).
-- Install: [Google Play](https://play.google.com/store/apps/details?id=ai.openclaw.app&hl=en_IN) for the app, [Getting Started](/start/getting-started) for the Gateway, then [Pairing](/channels/pairing).
+- Install: [Google Play](https://play.google.com/store/apps/details?id=ai.quiet-core-bot.app&hl=en_IN) for the app, [Getting Started](/start/getting-started) for the Gateway, then [Pairing](/channels/pairing).
 - Gateway: [Runbook](/gateway) + [Configuration](/gateway/configuration).
   - Protocols: [Gateway protocol](/gateway/protocol) (nodes + control plane).
 
@@ -43,7 +43,7 @@ For Tailscale or public hosts, Android requires a secure endpoint:
   - Same Tailscale tailnet using Wide-Area Bonjour / unicast DNS-SD (see below), **or**
   - Manual gateway host/port (fallback)
 - Tailnet/public mobile pairing does **not** use raw tailnet IP `ws://` endpoints. Use Tailscale Serve or another `wss://` URL instead.
-- You can run the CLI (`openclaw`) on the gateway machine (or via SSH).
+- You can run the CLI (`quiet-core-bot`) on the gateway machine (or via SSH).
 
 ### 1) Start the Gateway
 
@@ -88,7 +88,7 @@ Android NSD/mDNS discovery won't cross networks. If your Android node and the ga
 
 Discovery alone is not sufficient for tailnet/public Android pairing. The discovered route still needs a secure endpoint (`wss://` or Tailscale Serve):
 
-1. Set up a DNS-SD zone (example `openclaw.internal.`) on the gateway host and publish `_openclaw-gw._tcp` records.
+1. Set up a DNS-SD zone (example `quiet-core-bot.internal.`) on the gateway host and publish `_openclaw-gw._tcp` records.
 2. Configure Tailscale split DNS for your chosen domain pointing at that DNS server.
 
 Details and example CoreDNS config: [Bonjour](/gateway/bonjour).

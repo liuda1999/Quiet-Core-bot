@@ -4,7 +4,7 @@
  * Bridges legacy top-level credentials with plugin-owned provider configuration.
  */
 import { resolvePluginWebSearchConfig } from "../../config/plugin-web-search-config.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { isLegacyWebSearchProviderConfigKey } from "../../config/web-search-legacy-provider-keys.js";
 
 /** Reads the legacy top-level web search credential value. */

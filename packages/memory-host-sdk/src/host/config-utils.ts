@@ -1,5 +1,4 @@
 // Memory Host SDK helper module supports config utils behavior.
-import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import {
@@ -8,7 +7,7 @@ import {
   normalizeStringEntries,
   uniqueStrings,
 } from "./string-utils.js";
-export { splitShellArgs } from "./openclaw-runtime-io.js";
+export { splitShellArgs } from "./quiet-core-bot-runtime-io.js";
 
 // Shared OpenClaw config helpers used by memory host, QMD, and agent context code.
 
@@ -172,8 +171,7 @@ const VALID_ID_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/i;
 const INVALID_CHARS_RE = /[^a-z0-9_-]+/g;
 const LEADING_DASH_RE = /^-+/;
 const TRAILING_DASH_RE = /-+$/;
-const LEGACY_STATE_DIRNAMES = [".clawdbot"] as const;
-const NEW_STATE_DIRNAME = ".openclaw";
+const STATE_DIR_NAME = ".quiet-core-bot";
 const DURATION_MULTIPLIERS: Record<string, number> = {
   ms: 1,
   s: 1000,
@@ -228,12 +226,12 @@ function resolveRawOsHomeDir(env: NodeJS.ProcessEnv, homedir: () => string): str
   );
 }
 
-/** Resolve OPENCLAW_HOME or the OS home, falling back to cwd for hermetic tests. */
+/** Resolve QUIET_CORE_HOME or the OS home, falling back to cwd for hermetic tests. */
 function resolveRequiredHomeDir(
   env: NodeJS.ProcessEnv = process.env,
   homedir: () => string = os.homedir,
 ): string {
-  const explicitHome = normalizeHomeValue(env.OPENCLAW_HOME);
+  const explicitHome = normalizeHomeValue(env.QUIET_CORE_HOME);
   const rawHome = explicitHome
     ? explicitHome.replace(/^~(?=$|[\\/])/, resolveRawOsHomeDir(env, homedir) ?? "")
     : resolveRawOsHomeDir(env, homedir);
@@ -256,44 +254,26 @@ export function resolveUserPath(
   return path.resolve(trimmed);
 }
 
-/** Return legacy state roots in priority order. */
-function legacyStateDirs(homedir: () => string): string[] {
-  return LEGACY_STATE_DIRNAMES.map((dir) => path.join(homedir(), dir));
-}
-
-/** Resolve the current state root while preserving shipped legacy installs when present. */
+/** Resolve the current state root. */
 export function resolveStateDir(
   env: NodeJS.ProcessEnv = process.env,
   homedir: () => string = os.homedir,
 ): string {
-  const override = env.OPENCLAW_STATE_DIR?.trim();
+  const override = env.QUIET_CORE_STATE_DIR?.trim();
   if (override) {
     return resolveUserPath(override, env, homedir);
   }
-  const effectiveHome = () => resolveRequiredHomeDir(env, homedir);
-  const nextDir = path.join(effectiveHome(), NEW_STATE_DIRNAME);
-  if (env.OPENCLAW_TEST_FAST === "1" || fs.existsSync(nextDir)) {
-    return nextDir;
-  }
-  // Existing legacy state remains authoritative until an explicit migration creates .openclaw.
-  const existingLegacy = legacyStateDirs(effectiveHome).find((dir) => {
-    try {
-      return fs.existsSync(dir);
-    } catch {
-      return false;
-    }
-  });
-  return existingLegacy ?? nextDir;
+  return path.join(resolveRequiredHomeDir(env, homedir), STATE_DIR_NAME);
 }
 
-/** Resolve the default agent workspace, partitioned by OPENCLAW_PROFILE when set. */
+/** Resolve the default agent workspace, partitioned by QUIET_CORE_PROFILE when set. */
 function resolveDefaultAgentWorkspaceDir(env: NodeJS.ProcessEnv = process.env): string {
   const home = resolveRequiredHomeDir(env, os.homedir);
-  const profile = env.OPENCLAW_PROFILE?.trim();
+  const profile = env.QUIET_CORE_PROFILE?.trim();
   if (profile && normalizeLowercaseStringOrEmpty(profile) !== "default") {
-    return path.join(home, ".openclaw", `workspace-${profile}`);
+    return path.join(home, ".quiet-core-bot", `workspace-${profile}`);
   }
-  return path.join(home, ".openclaw", "workspace");
+  return path.join(home, ".quiet-core-bot", "workspace");
 }
 
 /** Return configured agent entries after dropping nullish placeholders. */

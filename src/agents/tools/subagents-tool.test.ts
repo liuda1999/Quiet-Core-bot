@@ -5,7 +5,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { closeOpenClawStateDatabaseForTest } from "../../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../../state/quiet-core-bot-state-db.js";
 import { withEnvAsync } from "../../test-utils/env.js";
 import { testing as subagentAnnounceOutputTesting } from "../subagent-announce-output.js";
 import { saveSubagentRegistryToSqlite } from "../subagent-registry.store.sqlite.js";
@@ -88,7 +88,7 @@ describe("subagents tool", () => {
     let tempStateDir: string | null = null;
 
     beforeEach(async () => {
-      tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-subagents-tool-"));
+      tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-subagents-tool-"));
     });
 
     afterEach(async () => {
@@ -104,7 +104,7 @@ describe("subagents tool", () => {
       if (!tempStateDir) {
         throw new Error("expected temp state dir");
       }
-      return await withEnvAsync({ OPENCLAW_STATE_DIR: tempStateDir }, fn);
+      return await withEnvAsync({ QUIET_CORE_STATE_DIR: tempStateDir }, fn);
     }
 
     it("returns the persisted terminal result for a controlled run", async () => {

@@ -35,7 +35,7 @@ describe("config secret refs schema", () => {
           },
           vault: {
             source: "exec",
-            command: "/usr/local/bin/openclaw-secret-resolver",
+            command: "/usr/local/bin/quiet-core-bot-secret-resolver",
             args: ["resolve"],
             allowSymlinkCommand: true,
           },

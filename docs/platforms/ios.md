@@ -20,7 +20,7 @@ Availability: iPhone app builds are distributed through Apple channels when enab
 - Gateway running on another device (macOS, Linux, or Windows via WSL2).
 - Network path:
   - Same LAN via Bonjour, **or**
-  - Tailnet via unicast DNS-SD (example domain: `openclaw.internal.`), **or**
+  - Tailnet via unicast DNS-SD (example domain: `quiet-core-bot.internal.`), **or**
   - Manual host/port (fallback).
 
 ## Quick start (pair + connect)
@@ -129,8 +129,8 @@ compatible but does not count as a durable last-seen update.
 
 Compatibility note:
 
-- `OPENCLAW_APNS_RELAY_BASE_URL` still works as a temporary env override for the gateway.
-- The public App Store release lane rejects `OPENCLAW_PUSH_RELAY_BASE_URL` for iOS builds.
+- `QUIET_CORE_APNS_RELAY_BASE_URL` still works as a temporary env override for the gateway.
+- The public App Store release lane rejects `QUIET_CORE_PUSH_RELAY_BASE_URL` for iOS builds.
 
 ## Authentication and trust flow
 
@@ -187,9 +187,9 @@ Local/manual builds remain on direct APNs. If you are testing those builds witho
 gateway still needs direct APNs credentials:
 
 ```bash
-export OPENCLAW_APNS_TEAM_ID="TEAMID"
-export OPENCLAW_APNS_KEY_ID="KEYID"
-export OPENCLAW_APNS_PRIVATE_KEY_P8="$(cat /path/to/AuthKey_KEYID.p8)"
+export QUIET_CORE_APNS_TEAM_ID="TEAMID"
+export QUIET_CORE_APNS_KEY_ID="KEYID"
+export QUIET_CORE_APNS_PRIVATE_KEY_P8="$(cat /path/to/AuthKey_KEYID.p8)"
 ```
 
 These are gateway-host runtime env vars, not Fastlane settings. `apps/ios/fastlane/.env` only stores
@@ -203,7 +203,7 @@ mkdir -p ~/.quiet-core-bot/credentials/apns
 chmod 700 ~/.quiet-core-bot/credentials/apns
 mv /path/to/AuthKey_KEYID.p8 ~/.quiet-core-bot/credentials/apns/AuthKey_KEYID.p8
 chmod 600 ~/.quiet-core-bot/credentials/apns/AuthKey_KEYID.p8
-export OPENCLAW_APNS_PRIVATE_KEY_PATH="$HOME/.openclaw/credentials/apns/AuthKey_KEYID.p8"
+export QUIET_CORE_APNS_PRIVATE_KEY_PATH="$HOME/.quiet-core-bot/credentials/apns/AuthKey_KEYID.p8"
 ```
 
 Do not commit the `.p8` file or place it under the repo checkout.
@@ -219,7 +219,7 @@ cross-network discovery can use the configured wide-area domain without changing
 ### Tailnet (cross-network)
 
 If mDNS is blocked, use a unicast DNS-SD zone (choose a domain; example:
-`openclaw.internal.`) and Tailscale split DNS.
+`quiet-core-bot.internal.`) and Tailscale split DNS.
 See [Bonjour](/gateway/bonjour) for the CoreDNS example.
 
 ### Manual host/port
@@ -257,7 +257,7 @@ for local desktop control and this page for iOS node capabilities.
 ### Canvas eval / snapshot
 
 ```bash
-quiet-core-bot nodes invoke --node "iOS Node" --command canvas.eval --params '{"javaScript":"(() => { const {ctx} = window.__openclaw; ctx.clearRect(0,0,innerWidth,innerHeight); ctx.lineWidth=6; ctx.strokeStyle=\"#ff2d55\"; ctx.beginPath(); ctx.moveTo(40,40); ctx.lineTo(innerWidth-40, innerHeight-40); ctx.stroke(); return \"ok\"; })()"}'
+quiet-core-bot nodes invoke --node "iOS Node" --command canvas.eval --params '{"javaScript":"(() => { const {ctx} = window.__quiet-core-bot; ctx.clearRect(0,0,innerWidth,innerHeight); ctx.lineWidth=6; ctx.strokeStyle=\"#ff2d55\"; ctx.beginPath(); ctx.moveTo(40,40); ctx.lineTo(innerWidth-40, innerHeight-40); ctx.stroke(); return \"ok\"; })()"}'
 ```
 
 ```bash

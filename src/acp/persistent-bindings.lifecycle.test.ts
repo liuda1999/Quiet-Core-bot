@@ -101,7 +101,7 @@ describe("ensureConfiguredAcpBindingSession", () => {
     const spec = createPersistentSpec();
     const sessionKey = mockReadySession({
       spec,
-      cwd: "/workspace/openclaw",
+      cwd: "/workspace/quiet-core-bot",
     });
 
     const ensured = await ensureConfiguredAcpBindingSession({

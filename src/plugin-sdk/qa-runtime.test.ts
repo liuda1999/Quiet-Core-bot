@@ -18,30 +18,30 @@ vi.mock("./facade-runtime.js", () => ({
   loadBundledPluginPublicSurfaceModuleSync,
 }));
 
-vi.mock("../infra/openclaw-root.js", () => ({
+vi.mock("../infra/quiet-core-bot-root.js", () => ({
   resolveOpenClawPackageRootSync,
 }));
 
 describe("plugin-sdk qa-runtime", () => {
   const tempDirs: string[] = [];
-  const originalPrivateQaCli = process.env.OPENCLAW_ENABLE_PRIVATE_QA_CLI;
-  const originalBundledPluginsDir = process.env.OPENCLAW_BUNDLED_PLUGINS_DIR;
+  const originalPrivateQaCli = process.env.QUIET_CORE_ENABLE_PRIVATE_QA_CLI;
+  const originalBundledPluginsDir = process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR;
 
   beforeEach(() => {
     vi.resetModules();
     loadBundledPluginPublicSurfaceModuleSync.mockReset();
     resolveOpenClawPackageRootSync.mockReset().mockReturnValue(null);
-    delete process.env.OPENCLAW_ENABLE_PRIVATE_QA_CLI;
-    delete process.env.OPENCLAW_BUNDLED_PLUGINS_DIR;
+    delete process.env.QUIET_CORE_ENABLE_PRIVATE_QA_CLI;
+    delete process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR;
   });
 
   afterEach(() => {
     cleanupTempDirs(tempDirs);
     restorePrivateQaCliEnv(originalPrivateQaCli);
     if (originalBundledPluginsDir === undefined) {
-      delete process.env.OPENCLAW_BUNDLED_PLUGINS_DIR;
+      delete process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR;
     } else {
-      process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = originalBundledPluginsDir;
+      process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR = originalBundledPluginsDir;
     }
   });
 
@@ -226,7 +226,7 @@ describe("plugin-sdk qa-runtime", () => {
 
     await qa.parseAsync([
       "node",
-      "openclaw",
+      "quiet-core-bot",
       "telegram",
       "--repo-root",
       "/tmp/repo",

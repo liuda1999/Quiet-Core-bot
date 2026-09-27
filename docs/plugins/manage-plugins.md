@@ -59,14 +59,14 @@ quiet-core-bot plugins install clawhub:<package>@beta
 
 # Install from npm.
 quiet-core-bot plugins install npm:<package>
-quiet-core-bot plugins install npm:@scope/openclaw-plugin@1.2.3
-quiet-core-bot plugins install npm:@openclaw/codex
+quiet-core-bot plugins install npm:@scope/quiet-core-bot-plugin@1.2.3
+quiet-core-bot plugins install npm:@quiet-core/codex
 
 # Install from a local npm pack artifact.
 quiet-core-bot plugins install npm-pack:<path.tgz>
 
 # Install from git or a local development checkout.
-quiet-core-bot plugins install git:github.com/acme/openclaw-plugin@v1.0.0
+quiet-core-bot plugins install git:github.com/acme/quiet-core-bot-plugin@v1.0.0
 quiet-core-bot plugins install ./my-plugin
 quiet-core-bot plugins install --link ./my-plugin
 ```
@@ -114,8 +114,8 @@ For npm installs, you can pass an explicit package spec to switch the tracked
 record:
 
 ```bash
-quiet-core-bot plugins update @scope/openclaw-plugin@beta
-quiet-core-bot plugins update @scope/openclaw-plugin
+quiet-core-bot plugins update @scope/quiet-core-bot-plugin@beta
+quiet-core-bot plugins update @scope/quiet-core-bot-plugin
 ```
 
 The second command moves a plugin back to the registry's default release line
@@ -138,7 +138,7 @@ allow/deny list entries, and linked load paths when applicable. Managed install
 directories are removed unless you pass `--keep-files`. A running managed
 Gateway restarts automatically when the uninstall changes plugin source.
 
-In Nix mode (`OPENCLAW_NIX_MODE=1`), plugin install, update, uninstall, enable,
+In Nix mode (`QUIET_CORE_NIX_MODE=1`), plugin install, update, uninstall, enable,
 and disable commands are disabled. Manage those choices in the Nix source for
 the install instead.
 
@@ -147,7 +147,7 @@ the install instead.
 | Source      | Use when                                                                      | Example                                                              |
 | ----------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------- |
 | ClawHub     | You want Quiet Core bot-native discovery, scan summaries, versions, and hints | `quiet-core-bot plugins install clawhub:<package>`                   |
-| npmjs.com   | You already ship JavaScript packages or need npm dist-tags/private registry   | `quiet-core-bot plugins install npm:@acme/openclaw-plugin`           |
+| npmjs.com   | You already ship JavaScript packages or need npm dist-tags/private registry   | `quiet-core-bot plugins install npm:@acme/quiet-core-bot-plugin`           |
 | git         | You want a branch, tag, or commit from a repository                           | `quiet-core-bot plugins install git:github.com/<owner>/<repo>@<ref>` |
 | local path  | You are developing or testing a plugin on the same machine                    | `quiet-core-bot plugins install --link ./my-plugin`                  |
 | npm pack    | You are proving a local package artifact through npm install semantics        | `quiet-core-bot plugins install npm-pack:<path.tgz>`                 |
@@ -176,10 +176,10 @@ publishing:
 
 ```json package.json
 {
-  "name": "@acme/openclaw-plugin",
+  "name": "@acme/quiet-core-bot-plugin",
   "version": "1.0.0",
   "type": "module",
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": ["./dist/index.js"]
   }
 }
@@ -187,9 +187,9 @@ publishing:
 
 ```bash
 npm publish --access public
-quiet-core-bot plugins install npm:@acme/openclaw-plugin
-quiet-core-bot plugins install npm:@acme/openclaw-plugin@beta
-quiet-core-bot plugins install npm:@acme/openclaw-plugin@1.0.0
+quiet-core-bot plugins install npm:@acme/quiet-core-bot-plugin
+quiet-core-bot plugins install npm:@acme/quiet-core-bot-plugin@beta
+quiet-core-bot plugins install npm:@acme/quiet-core-bot-plugin@1.0.0
 ```
 
 Use these pages for the full publishing contract instead of treating this page

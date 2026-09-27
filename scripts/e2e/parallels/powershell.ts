@@ -42,8 +42,8 @@ export function windowsAgentTurnConfigPatchScript(modelId: string): string {
     operations: batchJson ? (JSON.parse(batchJson) as unknown) : [],
     pluginId,
   });
-  return `$agentTurnConfigPatchPath = $env:OPENCLAW_CONFIG_PATH
-if (-not $agentTurnConfigPatchPath) { $agentTurnConfigPatchPath = Join-Path $env:USERPROFILE '.openclaw\\openclaw.json' }
+  return `$agentTurnConfigPatchPath = $env:QUIET_CORE_CONFIG_PATH
+if (-not $agentTurnConfigPatchPath) { $agentTurnConfigPatchPath = Join-Path $env:USERPROFILE '.quiet-core-bot\\quiet-core-bot.json' }
 $agentTurnVersionText = Invoke-OpenClaw --version 2>$null | Out-String
 $agentTurnRuntimePolicySupported = $false
 if ($agentTurnVersionText -match 'OpenClaw\\s+(\\d{4})\\.(\\d{1,2})\\.(\\d{1,2})') {
@@ -52,18 +52,18 @@ if ($agentTurnVersionText -match 'OpenClaw\\s+(\\d{4})\\.(\\d{1,2})\\.(\\d{1,2})
   $agentTurnDay = [int]$Matches[3]
   $agentTurnRuntimePolicySupported = ($agentTurnYear -gt 2026) -or ($agentTurnYear -eq 2026 -and (($agentTurnMonth -gt 5) -or ($agentTurnMonth -eq 5 -and $agentTurnDay -ge 9)))
 }
-$env:OPENCLAW_PARALLELS_AGENT_CONFIG_PATCH = @'
+$env:QUIET_CORE_PARALLELS_AGENT_CONFIG_PATCH = @'
 ${payloadJson}
 '@
-$env:OPENCLAW_PARALLELS_AGENT_CONFIG_PATH = $agentTurnConfigPatchPath
-$env:OPENCLAW_PARALLELS_AGENT_RUNTIME_POLICY_SUPPORTED = if ($agentTurnRuntimePolicySupported) { '1' } else { '0' }
-$agentTurnConfigPatchScriptPath = Join-Path ([System.IO.Path]::GetTempPath()) 'openclaw-agent-turn-config-patch.cjs'
+$env:QUIET_CORE_PARALLELS_AGENT_CONFIG_PATH = $agentTurnConfigPatchPath
+$env:QUIET_CORE_PARALLELS_AGENT_RUNTIME_POLICY_SUPPORTED = if ($agentTurnRuntimePolicySupported) { '1' } else { '0' }
+$agentTurnConfigPatchScriptPath = Join-Path ([System.IO.Path]::GetTempPath()) 'quiet-core-bot-agent-turn-config-patch.cjs'
 @'
 const fs = require("node:fs");
 const path = require("node:path");
-const configPath = process.env.OPENCLAW_PARALLELS_AGENT_CONFIG_PATH;
-const payload = JSON.parse(process.env.OPENCLAW_PARALLELS_AGENT_CONFIG_PATCH || "{}");
-const canWriteAgentRuntime = process.env.OPENCLAW_PARALLELS_AGENT_RUNTIME_POLICY_SUPPORTED === "1";
+const configPath = process.env.QUIET_CORE_PARALLELS_AGENT_CONFIG_PATH;
+const payload = JSON.parse(process.env.QUIET_CORE_PARALLELS_AGENT_CONFIG_PATCH || "{}");
+const canWriteAgentRuntime = process.env.QUIET_CORE_PARALLELS_AGENT_RUNTIME_POLICY_SUPPORTED === "1";
 function readJsonFile(filePath) {
   return JSON.parse(fs.readFileSync(filePath, "utf8").replace(/^\\uFEFF/u, ""));
 }
@@ -80,7 +80,7 @@ cfg.plugins = cfg.plugins && typeof cfg.plugins === "object" && !Array.isArray(c
 cfg.plugins.entries = { [payload.pluginId]: { enabled: true } };
 cfg.plugins.allow = [payload.pluginId];
 const stateDir = path.dirname(configPath);
-fs.rmSync(path.join(stateDir, "npm", "node_modules", "@openclaw", "codex"), { recursive: true, force: true });
+fs.rmSync(path.join(stateDir, "npm", "node_modules", "@quiet-core-bot", "codex"), { recursive: true, force: true });
 for (const op of payload.operations || []) {
   const segments = String(op.path || "").match(/(?:[^.[\\]]+)|(?:\\["((?:\\\\.|[^"\\\\])*)"\\])/g) || [];
   let cursor = cfg;
@@ -123,9 +123,9 @@ fs.writeFileSync(configPath, JSON.stringify(cfg, null, 2) + "\\n", { mode: 0o600
 node.exe $agentTurnConfigPatchScriptPath
 $agentTurnConfigPatchExit = $LASTEXITCODE
 Remove-Item $agentTurnConfigPatchScriptPath -Force -ErrorAction SilentlyContinue
-Remove-Item Env:OPENCLAW_PARALLELS_AGENT_CONFIG_PATCH -Force -ErrorAction SilentlyContinue
-Remove-Item Env:OPENCLAW_PARALLELS_AGENT_CONFIG_PATH -Force -ErrorAction SilentlyContinue
-Remove-Item Env:OPENCLAW_PARALLELS_AGENT_RUNTIME_POLICY_SUPPORTED -Force -ErrorAction SilentlyContinue
+Remove-Item Env:QUIET_CORE_PARALLELS_AGENT_CONFIG_PATCH -Force -ErrorAction SilentlyContinue
+Remove-Item Env:QUIET_CORE_PARALLELS_AGENT_CONFIG_PATH -Force -ErrorAction SilentlyContinue
+Remove-Item Env:QUIET_CORE_PARALLELS_AGENT_RUNTIME_POLICY_SUPPORTED -Force -ErrorAction SilentlyContinue
 if ($agentTurnConfigPatchExit -ne 0) { throw "agent turn config patch failed" }`;
 }
 
@@ -137,10 +137,10 @@ function Resolve-OpenClawCommand {
   if ($script:OpenClawResolvedCommand) { return $script:OpenClawResolvedCommand }
   $shimCandidates = @()
   if ($env:APPDATA) {
-    $shimCandidates += Join-Path $env:APPDATA 'npm\openclaw.cmd'
-    $shimCandidates += Join-Path $env:APPDATA 'npm\openclaw.ps1'
+    $shimCandidates += Join-Path $env:APPDATA 'npm\quiet-core-bot.cmd'
+    $shimCandidates += Join-Path $env:APPDATA 'npm\quiet-core-bot.ps1'
   }
-  foreach ($name in @('openclaw.cmd', 'openclaw.ps1', 'openclaw')) {
+  foreach ($name in @('quiet-core-bot.cmd', 'quiet-core-bot.ps1', 'quiet-core-bot')) {
     $command = Get-Command $name -ErrorAction SilentlyContinue | Select-Object -First 1
     if ($command -and $command.Source) { $shimCandidates += $command.Source }
   }
@@ -149,8 +149,8 @@ function Resolve-OpenClawCommand {
     $npmPrefix = (& npm.cmd prefix -g 2>$null | Select-Object -First 1)
   } catch {}
   if ($npmPrefix) {
-    $shimCandidates += Join-Path $npmPrefix 'openclaw.cmd'
-    $shimCandidates += Join-Path $npmPrefix 'openclaw.ps1'
+    $shimCandidates += Join-Path $npmPrefix 'quiet-core-bot.cmd'
+    $shimCandidates += Join-Path $npmPrefix 'quiet-core-bot.ps1'
   }
   foreach ($candidate in $shimCandidates) {
     if ($candidate -and (Test-Path $candidate)) {
@@ -160,10 +160,10 @@ function Resolve-OpenClawCommand {
   }
   $entryCandidates = @()
   if ($env:APPDATA) {
-    $entryCandidates += Join-Path $env:APPDATA 'npm\node_modules\openclaw\quiet-core-bot.mjs'
+    $entryCandidates += Join-Path $env:APPDATA 'npm\node_modules\quiet-core-bot\quiet-core-bot.mjs'
   }
   if ($npmPrefix) {
-    $entryCandidates += Join-Path $npmPrefix 'node_modules\openclaw\quiet-core-bot.mjs'
+    $entryCandidates += Join-Path $npmPrefix 'node_modules\quiet-core-bot\quiet-core-bot.mjs'
   }
   foreach ($candidate in $entryCandidates) {
     if ($candidate -and (Test-Path $candidate)) {
@@ -171,7 +171,7 @@ function Resolve-OpenClawCommand {
       return $script:OpenClawResolvedCommand
     }
   }
-  throw 'openclaw command not found in PATH, APPDATA npm, or npm global prefix'
+  throw 'quiet-core-bot command not found in PATH, APPDATA npm, or npm global prefix'
 }
 function Invoke-OpenClaw {
   param([Parameter(ValueFromRemainingArguments = $true)][string[]] $OpenClawArgs)

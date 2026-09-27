@@ -34,13 +34,13 @@ describe("plugin-sdk browser facades", () => {
     const rootConfig = { gateway: { port: 18789 } } as import("../config/config.js").OpenClawConfig;
 
     expect(browserProfiles.resolveBrowserConfig(cfg, rootConfig)).toBe(resolvedConfig);
-    expect(browserProfiles.resolveProfile(resolvedConfig, "openclaw")).toBe(resolvedProfile);
+    expect(browserProfiles.resolveProfile(resolvedConfig, "quiet-core-bot")).toBe(resolvedProfile);
     expect(loadBundledPluginPublicSurfaceModuleSync).toHaveBeenCalledWith({
       dirName: "browser",
       artifactBasename: "browser-profiles.js",
     });
     expect(resolveBrowserConfig).toHaveBeenCalledWith(cfg, rootConfig);
-    expect(resolveProfile).toHaveBeenCalledWith(resolvedConfig, "openclaw");
+    expect(resolveProfile).toHaveBeenCalledWith(resolvedConfig, "quiet-core-bot");
   });
 
   it("hard-fails when browser profile facade is unavailable", async () => {

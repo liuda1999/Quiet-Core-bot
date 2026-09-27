@@ -2,8 +2,8 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { resolveStateDir } from "openclaw/plugin-sdk/state-paths";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import { resolveStateDir } from "quiet-core-bot/plugin-sdk/state-paths";
 import {
   resolveMatrixCredentialsDir,
   resolveMatrixCredentialsFilename,

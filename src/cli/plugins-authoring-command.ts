@@ -1,7 +1,7 @@
 // Plugin authoring commands for init/build/validate manifest generation.
 import fs from "node:fs";
 import path from "node:path";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { uniqueStrings } from "@quiet-core/normalization-core/string-normalization";
 import { getToolPluginMetadata, type ToolPluginMetadata } from "../plugin-sdk/tool-plugin.js";
 import {
   loadPluginManifest,
@@ -191,20 +191,20 @@ export function buildToolPluginPackageManifest(params: {
   packageManifest: JsonObject;
   entry: string;
 }): JsonObject {
-  const openclaw =
-    params.packageManifest.openclaw &&
-    typeof params.packageManifest.openclaw === "object" &&
-    !Array.isArray(params.packageManifest.openclaw)
-      ? { ...(params.packageManifest.openclaw as JsonObject) }
+  const manifestBlock =
+    params.packageManifest["quiet-core-bot"] &&
+    typeof params.packageManifest["quiet-core-bot"] === "object" &&
+    !Array.isArray(params.packageManifest["quiet-core-bot"])
+      ? { ...(params.packageManifest["quiet-core-bot"] as JsonObject) }
       : {};
-  const existingExtensions = Array.isArray(openclaw.extensions)
-    ? openclaw.extensions.filter((entry): entry is string => typeof entry === "string")
+  const existingExtensions = Array.isArray(manifestBlock.extensions)
+    ? manifestBlock.extensions.filter((entry): entry is string => typeof entry === "string")
     : [];
   const extensions = uniqueStrings([...existingExtensions, params.entry]);
   return {
     ...params.packageManifest,
-    openclaw: {
-      ...openclaw,
+    "quiet-core-bot": {
+      ...manifestBlock,
       extensions,
     },
   };
@@ -224,16 +224,16 @@ export function validateToolPluginProject(params: {
   });
   if (JSON.stringify(params.manifest) !== JSON.stringify(expectedManifest)) {
     errors.push(
-      "openclaw.plugin.json generated metadata is stale. Run quiet-core-bot plugins build.",
+      "quiet-core-bot.plugin.json generated metadata is stale. Run quiet-core-bot plugins build.",
     );
   }
   if (params.manifest.id !== params.metadata.id) {
     errors.push(
-      `openclaw.plugin.json id (${String(params.manifest.id)}) must match entry id (${params.metadata.id})`,
+      `quiet-core-bot.plugin.json id (${String(params.manifest.id)}) must match entry id (${params.metadata.id})`,
     );
   }
   if (!params.manifest.configSchema || typeof params.manifest.configSchema !== "object") {
-    errors.push("openclaw.plugin.json must include object configSchema");
+    errors.push("quiet-core-bot.plugin.json must include object configSchema");
   }
   const manifestContracts = params.manifest.contracts as { tools?: unknown } | undefined;
   const manifestTools = Array.isArray(manifestContracts?.tools)
@@ -243,11 +243,11 @@ export function validateToolPluginProject(params: {
   const missing = metadataTools.filter((tool) => !manifestTools.includes(tool));
   const extra = manifestTools.filter((tool) => !metadataTools.includes(tool));
   if (missing.length > 0) {
-    errors.push(`openclaw.plugin.json contracts.tools is missing: ${missing.join(", ")}`);
+    errors.push(`quiet-core-bot.plugin.json contracts.tools is missing: ${missing.join(", ")}`);
   }
   if (extra.length > 0) {
     errors.push(
-      `openclaw.plugin.json contracts.tools has no matching defineToolPlugin tool: ${extra.join(
+      `quiet-core-bot.plugin.json contracts.tools has no matching defineToolPlugin tool: ${extra.join(
         ", ",
       )}`,
     );
@@ -256,11 +256,11 @@ export function validateToolPluginProject(params: {
   if (extensionResolution.status !== "ok") {
     errors.push(
       extensionResolution.status === "missing" || extensionResolution.status === "empty"
-        ? "package.json must include openclaw.extensions"
+        ? "package.json must include quiet-core-bot.extensions"
         : extensionResolution.error,
     );
   } else if (!extensionResolution.entries.includes(params.entry)) {
-    errors.push(`package.json openclaw.extensions must include ${params.entry}`);
+    errors.push(`package.json quiet-core-bot.extensions must include ${params.entry}`);
   }
   return errors;
 }
@@ -356,7 +356,7 @@ export async function runPluginsInitCommand(id: string, opts: PluginsInitOptions
   fs.mkdirSync(path.join(rootDir, "src"), { recursive: true });
 
   const packageManifest = {
-    name: `openclaw-plugin-${id}`,
+    name: `quiet-core-bot-plugin-${id}`,
     version: "0.1.0",
     type: "module",
     private: true,
@@ -366,19 +366,19 @@ export async function runPluginsInitCommand(id: string, opts: PluginsInitOptions
       "plugin:validate": "npm run build && quiet-core-bot plugins validate --entry ./dist/index.js",
       test: "vitest run",
     },
-    files: ["dist", "openclaw.plugin.json", "README.md"],
+    files: ["dist", "quiet-core-bot.plugin.json", "README.md"],
     peerDependencies: {
-      openclaw: ">=2026.5.17",
+      "quiet-core-bot": ">=2026.5.17",
     },
     dependencies: {
       typebox: "^1.1.38",
     },
     devDependencies: {
-      openclaw: "latest",
+      "quiet-core-bot": "latest",
       typescript: "^5.9.0",
       vitest: "^3.2.0",
     },
-    openclaw: {
+    "quiet-core-bot": {
       extensions: ["./dist/index.js"],
     },
   };
@@ -386,7 +386,7 @@ export async function runPluginsInitCommand(id: string, opts: PluginsInitOptions
   const nameLiteral = jsStringLiteral(name);
   const descriptionLiteral = jsStringLiteral(`Add ${name} tools to Quiet Core bot.`);
   const indexSource = `import { Type } from "typebox";
-import { defineToolPlugin } from "openclaw/plugin-sdk/tool-plugin";
+import { defineToolPlugin } from "quiet-core-bot/plugin-sdk/tool-plugin";
 
 export default defineToolPlugin({
   id: ${idLiteral},
@@ -406,7 +406,7 @@ export default defineToolPlugin({
 `;
   const testSource = `import { describe, expect, it } from "vitest";
 import entry from "./index.js";
-import { getToolPluginMetadata } from "openclaw/plugin-sdk/tool-plugin";
+import { getToolPluginMetadata } from "quiet-core-bot/plugin-sdk/tool-plugin";
 
 describe(${idLiteral}, () => {
   it("declares tool metadata", () => {

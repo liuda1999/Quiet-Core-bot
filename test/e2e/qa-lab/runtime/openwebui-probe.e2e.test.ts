@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { createServer, type IncomingMessage, type Server as HttpServer } from "node:http";
 import { createServer as createTcpServer, type Server as TcpServer, type Socket } from "node:net";
 import path from "node:path";
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@quiet-core/normalization-core/number-coercion";
 import { describe, expect, it } from "vitest";
 import { createBoundedChildOutput } from "../../../helpers/bounded-child-output.js";
 
@@ -375,7 +375,7 @@ describe("scripts/e2e/openwebui-probe.mjs", () => {
         expect(request.headers.authorization).toBe("Bearer test-token");
         expect(request.headers.cookie).toContain("openwebui-session=test");
         response.writeHead(200, { "content-type": "application/json" });
-        response.end(JSON.stringify({ data: [{ id: "openclaw/default" }] }));
+        response.end(JSON.stringify({ data: [{ id: "quiet-core-bot/default" }] }));
         return;
       }
       response.writeHead(404).end();
@@ -390,7 +390,7 @@ describe("scripts/e2e/openwebui-probe.mjs", () => {
       expect(result.status).toBe(0);
       expect(JSON.parse(result.stdout)).toMatchObject({
         mode: "models",
-        model: "openclaw/default",
+        model: "quiet-core-bot/default",
         ok: true,
       });
     } finally {
@@ -411,7 +411,7 @@ describe("scripts/e2e/openwebui-probe.mjs", () => {
       }
       if (request.url === "/api/models") {
         response.writeHead(200, { "content-type": "application/json" });
-        response.end(JSON.stringify({ data: [{ id: "openclaw/default" }] }));
+        response.end(JSON.stringify({ data: [{ id: "quiet-core-bot/default" }] }));
         return;
       }
       if (request.url === "/api/chat/completions") {
@@ -434,14 +434,14 @@ describe("scripts/e2e/openwebui-probe.mjs", () => {
 
       expect(result.status).toBe(0);
       expect(JSON.parse(result.stdout)).toMatchObject({
-        model: "openclaw/default",
+        model: "quiet-core-bot/default",
         ok: true,
         reply: "Quiet Core bot replied with nonce-123",
       });
       expect(chatRequests).toEqual([
         {
           messages: [{ content: "reply with nonce-123", role: "user" }],
-          model: "openclaw/default",
+          model: "quiet-core-bot/default",
         },
       ]);
     } finally {
@@ -461,7 +461,7 @@ describe("scripts/e2e/openwebui-probe.mjs", () => {
       }
       if (request.url === "/api/models") {
         response.writeHead(200, { "content-type": "application/json" });
-        response.end(JSON.stringify({ data: [{ id: "openclaw/default" }] }));
+        response.end(JSON.stringify({ data: [{ id: "quiet-core-bot/default" }] }));
         return;
       }
       if (request.url === "/api/chat/completions") {

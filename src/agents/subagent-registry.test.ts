@@ -3477,7 +3477,7 @@ describe("subagent registry seam flow", () => {
 
   it("removes attachments for killed delete-mode runs", async () => {
     const attachmentsRootDir = await fs.mkdtemp(
-      path.join(os.tmpdir(), "openclaw-kill-attachments-"),
+      path.join(os.tmpdir(), "quiet-core-bot-kill-attachments-"),
     );
     const attachmentsDir = path.join(attachmentsRootDir, "child");
     await fs.mkdir(attachmentsDir, { recursive: true });
@@ -3571,7 +3571,7 @@ describe("subagent registry seam flow", () => {
 
   it("removes attachments for released delete-mode runs", async () => {
     const attachmentsRootDir = await fs.mkdtemp(
-      path.join(os.tmpdir(), "openclaw-release-attachments-"),
+      path.join(os.tmpdir(), "quiet-core-bot-release-attachments-"),
     );
     const attachmentsDir = path.join(attachmentsRootDir, "child");
     await fs.mkdir(attachmentsDir, { recursive: true });

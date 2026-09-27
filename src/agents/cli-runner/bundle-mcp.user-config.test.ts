@@ -16,7 +16,7 @@ setupCliBundleMcpTestHarness();
 describe("prepareCliBundleMcpConfig user mcp.servers", () => {
   it("merges user-configured mcp.servers from Quiet Core bot config", async () => {
     const workspaceDir = await cliBundleMcpHarness.tempHarness.createTempDir(
-      "openclaw-cli-bundle-mcp-user-servers-",
+      "quiet-core-bot-cli-bundle-mcp-user-servers-",
     );
 
     const prepared = await prepareCliBundleMcpConfig({
@@ -53,7 +53,7 @@ describe("prepareCliBundleMcpConfig user mcp.servers", () => {
 
   it("translates Quiet Core bot transport field on user mcp.servers into Claude type", async () => {
     const workspaceDir = await cliBundleMcpHarness.tempHarness.createTempDir(
-      "openclaw-cli-bundle-mcp-user-servers-transport-",
+      "quiet-core-bot-cli-bundle-mcp-user-servers-transport-",
     );
 
     const prepared = await prepareCliBundleMcpConfig({
@@ -99,7 +99,7 @@ describe("prepareCliBundleMcpConfig user mcp.servers", () => {
 
   it("preserves explicit type and still strips transport on user mcp.servers", async () => {
     const workspaceDir = await cliBundleMcpHarness.tempHarness.createTempDir(
-      "openclaw-cli-bundle-mcp-user-servers-transport-explicit-",
+      "quiet-core-bot-cli-bundle-mcp-user-servers-transport-explicit-",
     );
 
     const prepared = await prepareCliBundleMcpConfig({
@@ -139,7 +139,7 @@ describe("prepareCliBundleMcpConfig user mcp.servers", () => {
     // The Quiet Core bot loopback server is generated runtime state and must win over
     // user config with the same server name.
     const workspaceDir = await cliBundleMcpHarness.tempHarness.createTempDir(
-      "openclaw-cli-bundle-mcp-user-servers-loopback-",
+      "quiet-core-bot-cli-bundle-mcp-user-servers-loopback-",
     );
 
     const prepared = await prepareCliBundleMcpConfig({
@@ -166,7 +166,7 @@ describe("prepareCliBundleMcpConfig user mcp.servers", () => {
           openclaw: {
             type: "http",
             url: "http://127.0.0.1:23119/mcp",
-            headers: { Authorization: "Bearer ${OPENCLAW_MCP_TOKEN}" },
+            headers: { Authorization: "Bearer ${QUIET_CORE_MCP_TOKEN}" },
           },
         },
       },
@@ -183,7 +183,7 @@ describe("prepareCliBundleMcpConfig user mcp.servers", () => {
 
   it("replaces overlapping bundle server entries with user-configured mcp.servers", async () => {
     const workspaceDir = await cliBundleMcpHarness.tempHarness.createTempDir(
-      "openclaw-cli-bundle-mcp-user-servers-replace-",
+      "quiet-core-bot-cli-bundle-mcp-user-servers-replace-",
     );
     await writeClaudeBundleManifest({
       homeDir: cliBundleMcpHarness.bundleProbeHomeDir,
@@ -192,7 +192,7 @@ describe("prepareCliBundleMcpConfig user mcp.servers", () => {
     });
     const pluginDir = path.join(
       cliBundleMcpHarness.bundleProbeHomeDir,
-      ".openclaw",
+      ".quiet-core-bot",
       "extensions",
       "omi",
     );

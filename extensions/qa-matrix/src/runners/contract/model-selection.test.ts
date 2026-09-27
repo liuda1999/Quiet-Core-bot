@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const loadQaRuntimeModule = vi.hoisted(() => vi.fn());
 const defaultQaRuntimeModelForMode = vi.hoisted(() => vi.fn());
 
-vi.mock("openclaw/plugin-sdk/qa-runner-runtime", () => ({
+vi.mock("quiet-core-bot/plugin-sdk/qa-runner-runtime", () => ({
   loadQaRuntimeModule,
 }));
 

@@ -11,7 +11,7 @@ Extract text and fallback page images from local document attachments.
 
 ## Distribution
 
-- Package: `@openclaw/document-extract-plugin`
+- Package: `@quiet-core/document-extract-plugin`
 - Install route: included in Quiet Core bot
 
 ## Surface

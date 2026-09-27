@@ -1,7 +1,7 @@
 // Verifies quota suspension persists lane state and auto-resumes safely.
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { DEFAULT_CRON_MAX_CONCURRENT_RUNS } from "../config/cron-limits.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { CommandLane } from "../process/lanes.js";
 import { MAX_TIMER_TIMEOUT_MS } from "../shared/number-coercion.js";
 
@@ -20,7 +20,7 @@ vi.mock("../process/command-queue.js", () => commandQueueMocks);
 vi.mock("./command/session.js", () => ({
   resolveStoredSessionKeyForSessionId: () => ({
     sessionKey: "session-key",
-    storePath: "/tmp/openclaw-session-suspension-test/sessions.json",
+    storePath: "/tmp/quiet-core-bot-session-suspension-test/sessions.json",
   }),
 }));
 

@@ -1,7 +1,7 @@
 // Tlon plugin entrypoint registers its OpenClaw integration.
-import type { ReplyPayload } from "openclaw/plugin-sdk/reply-runtime";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime";
-import { asFiniteNumber } from "openclaw/plugin-sdk/string-coerce-runtime";
+import type { ReplyPayload } from "quiet-core-bot/plugin-sdk/reply-runtime";
+import type { RuntimeEnv } from "quiet-core-bot/plugin-sdk/runtime";
+import { asFiniteNumber } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import type { OpenClawConfig } from "../../runtime-api.js";
 import { createLoggerBackedRuntime } from "../../runtime-api.js";
 import { getTlonRuntime } from "../runtime.js";

@@ -11,7 +11,7 @@ Quiet Core bot Nextcloud Talk channel plugin for conversations.
 
 ## Distribution
 
-- Package: `@openclaw/nextcloud-talk`
+- Package: `@quiet-core/nextcloud-talk`
 - Install route: npm; ClawHub
 
 ## Surface

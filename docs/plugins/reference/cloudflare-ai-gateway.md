@@ -11,8 +11,8 @@ Adds Cloudflare AI Gateway model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/cloudflare-ai-gateway-provider`
-- Install route: npm; ClawHub: `clawhub:@openclaw/cloudflare-ai-gateway-provider`
+- Package: `@quiet-core/cloudflare-ai-gateway-provider`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/cloudflare-ai-gateway-provider`
 
 ## Surface
 

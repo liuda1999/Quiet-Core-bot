@@ -29,23 +29,23 @@ describe("registerChannelsCli", () => {
   });
 
   it("loads channel-specific add options only for channels add invocations", async () => {
-    process.argv = ["node", "openclaw", "channels"];
-    await registerChannelsCli(new Command().name("openclaw"));
+    process.argv = ["node", "quiet-core-bot", "channels"];
+    await registerChannelsCli(new Command().name("quiet-core-bot"));
 
     expect(listBundledPackageChannelMetadataMock).not.toHaveBeenCalled();
 
-    process.argv = ["node", "openclaw", "channels", "add", "--help"];
-    await registerChannelsCli(new Command().name("openclaw"));
+    process.argv = ["node", "quiet-core-bot", "channels", "add", "--help"];
+    await registerChannelsCli(new Command().name("quiet-core-bot"));
 
     expect(listBundledPackageChannelMetadataMock).toHaveBeenCalledTimes(1);
   });
 
   it("uses caller argv instead of raw process argv for channel-specific add options", async () => {
-    process.argv = ["node", "openclaw", "channels"];
+    process.argv = ["node", "quiet-core-bot", "channels"];
 
-    await registerChannelsCli(new Command().name("openclaw"), [
+    await registerChannelsCli(new Command().name("quiet-core-bot"), [
       "node",
-      "openclaw",
+      "quiet-core-bot",
       "channels",
       "add",
       "--help",
@@ -61,8 +61,8 @@ describe("registerChannelsCli", () => {
         cliAddOptions: [{ flags: "--homeserver <url>", description: "Matrix homeserver URL" }],
       },
     ]);
-    process.argv = ["node", "openclaw", "completion", "--write-state"];
-    const program = new Command().name("openclaw");
+    process.argv = ["node", "quiet-core-bot", "completion", "--write-state"];
+    const program = new Command().name("quiet-core-bot");
 
     await registerChannelsCli(program, process.argv, { includeSetupOptions: true });
 
@@ -80,7 +80,7 @@ describe("registerChannelsCli", () => {
     mockProcessPlatform("win32");
     process.argv = [
       "C:\\Program Files\\nodejs\\node.exe",
-      "C:\\repo\\openclaw.js",
+      "C:\\repo\\quiet-core-bot.js",
       "C:\\Program Files\\nodejs\\node.exe",
       "channels",
       "add",
@@ -89,7 +89,7 @@ describe("registerChannelsCli", () => {
       "--homeserver",
       "https://matrix.example.org",
     ];
-    const program = new Command().name("openclaw");
+    const program = new Command().name("quiet-core-bot");
 
     await registerChannelsCli(program);
 

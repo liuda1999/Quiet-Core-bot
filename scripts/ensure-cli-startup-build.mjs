@@ -30,7 +30,7 @@ function positiveEnvInt(name, env, fallback) {
  * Resolves the CLI startup build timeout from environment.
  */
 export function resolveCliStartupBuildTimeoutMs(env = process.env) {
-  return positiveEnvInt("OPENCLAW_CLI_STARTUP_BUILD_TIMEOUT_MS", env, DEFAULT_BUILD_TIMEOUT_MS);
+  return positiveEnvInt("QUIET_CORE_CLI_STARTUP_BUILD_TIMEOUT_MS", env, DEFAULT_BUILD_TIMEOUT_MS);
 }
 
 /**

@@ -10,7 +10,7 @@ sidebarTitle: "Control UI"
 The Control UI is a small **Vite + Lit** single-page app served by the Gateway:
 
 - default: `http://<host>:18789/`
-- optional prefix: set `gateway.controlUi.basePath` (e.g. `/openclaw`)
+- optional prefix: set `gateway.controlUi.basePath` (e.g. `/quiet-core-bot`)
 
 It speaks **directly to the Gateway WebSocket** on the same port.
 
@@ -213,7 +213,7 @@ Activity entries keep only sanitized summaries and redacted, truncated output pr
   <Accordion title="Stop and abort">
     - Click **Stop** (calls `chat.abort`).
     - While a run is active, normal follow-ups queue. Click **Steer** on a queued message to inject that follow-up into the running turn.
-    - Type `/stop` (or standalone abort phrases like `stop`, `stop action`, `stop run`, `stop openclaw`, `please stop`) to abort out-of-band.
+    - Type `/stop` (or standalone abort phrases like `stop`, `stop action`, `stop run`, `stop quiet-core-bot`, `please stop`) to abort out-of-band.
     - `chat.abort` supports `{ sessionKey }` (no `runId`) to abort all active runs for that session.
 
   </Accordion>
@@ -240,9 +240,9 @@ If the page shows **Protocol mismatch** right after an Quiet Core bot update, fi
 
 Override the VAPID keypair through env vars on the Gateway process when you want to pin keys (for multi-host deployments, secrets rotation, or tests):
 
-- `OPENCLAW_VAPID_PUBLIC_KEY`
-- `OPENCLAW_VAPID_PRIVATE_KEY`
-- `OPENCLAW_VAPID_SUBJECT` (defaults to `https://openclaw.ai`)
+- `QUIET_CORE_VAPID_PUBLIC_KEY`
+- `QUIET_CORE_VAPID_PRIVATE_KEY`
+- `QUIET_CORE_VAPID_SUBJECT` (defaults to `https://openclaw.ai`)
 
 The Control UI uses these scope-gated Gateway methods to register and test browser subscriptions:
 
@@ -446,7 +446,7 @@ pnpm ui:build
 Optional absolute base (when you want fixed asset URLs):
 
 ```bash
-OPENCLAW_CONTROL_UI_BASE_PATH=/openclaw/ pnpm ui:build
+QUIET_CORE_CONTROL_UI_BASE_PATH=/quiet-core-bot/ pnpm ui:build
 ```
 
 For local development (separate dev server):
@@ -459,7 +459,7 @@ Then point the UI at your Gateway WS URL (e.g. `ws://127.0.0.1:18789`).
 
 ## Blank Control UI page
 
-If the browser loads a blank dashboard and DevTools shows no useful error, an extension or early content script may have prevented the JavaScript module app from evaluating. The static page includes a plain HTML recovery panel that appears when `<openclaw-app>` is not registered after startup.
+If the browser loads a blank dashboard and DevTools shows no useful error, an extension or early content script may have prevented the JavaScript module app from evaluating. The static page includes a plain HTML recovery panel that appears when `<quiet-core-bot-app>` is not registered after startup.
 
 Use the panel's **Try again** action after changing the browser environment, or reload manually after these checks:
 

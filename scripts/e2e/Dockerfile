@@ -25,7 +25,7 @@ ENV PATH="/home/appuser/.local/bin:${PATH}"
 ENV NODE_OPTIONS="--disable-warning=ExperimentalWarning"
 # Docker E2E lanes start many loopback gateways concurrently; mDNS advertising
 # is unrelated to those checks and can flap under container CPU/network load.
-ENV OPENCLAW_DISABLE_BONJOUR="1"
+ENV QUIET_CORE_DISABLE_BONJOUR="1"
 
 USER appuser
 WORKDIR /app
@@ -42,15 +42,15 @@ FROM bare AS functional
 
 # The app under test enters through the named BuildKit context, not by copying
 # checkout sources into the image.
-COPY --from=openclaw_package --chown=appuser:appuser openclaw-current.tgz /tmp/openclaw-current.tgz
-# Preserve package self-reference imports such as openclaw/plugin-sdk/* after
+COPY --from=quiet_core_bot_package --chown=appuser:appuser quiet-core-bot-current.tgz /tmp/quiet-core-bot-current.tgz
+# Preserve package self-reference imports such as quiet-core-bot/plugin-sdk/* after
 # copying the installed package out of npm's global node_modules tree.
-RUN npm install -g --prefix /tmp/openclaw-prefix /tmp/openclaw-current.tgz --no-fund --no-audit \
- && cp -a /tmp/openclaw-prefix/lib/node_modules/openclaw/. /app/ \
+RUN npm install -g --prefix /tmp/quiet-core-bot-prefix /tmp/quiet-core-bot-current.tgz --no-fund --no-audit \
+ && cp -a /tmp/quiet-core-bot-prefix/lib/node_modules/quiet-core-bot/. /app/ \
  && mkdir -p "$HOME/.local/bin" \
- && ln -sf /app/quiet-core-bot.mjs "$HOME/.local/bin/openclaw" \
- && rm -rf /app/node_modules/openclaw \
- && ln -sf /app /app/node_modules/openclaw \
- && rm -rf /tmp/openclaw-prefix /tmp/openclaw-current.tgz
+ && ln -sf /app/quiet-core-bot.mjs "$HOME/.local/bin/quiet-core-bot" \
+ && rm -rf /app/node_modules/quiet-core-bot \
+ && ln -sf /app /app/node_modules/quiet-core-bot \
+ && rm -rf /tmp/quiet-core-bot-prefix /tmp/quiet-core-bot-current.tgz
 
 CMD ["bash"]

@@ -89,8 +89,8 @@ function requireMemoryEmbeddingProvider(providerId: string) {
 }
 
 function makeOpenClawDevSourceRoot(): string {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-loader-dev-source-"));
-  fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({ name: "openclaw" }), "utf-8");
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-loader-dev-source-"));
+  fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({ name: "quiet-core-bot" }), "utf-8");
   fs.mkdirSync(path.join(root, "src"), { recursive: true });
   fs.mkdirSync(path.join(root, "extensions"), { recursive: true });
   return root;
@@ -331,13 +331,13 @@ describe("getCompatibleActivePluginRegistry", () => {
             load: { paths: ["/tmp/demo.js"] },
           },
         },
-        env: { ...process.env, OPENCLAW_DEV_SOURCE_ROOT: undefined },
+        env: { ...process.env, QUIET_CORE_DEV_SOURCE_ROOT: undefined },
       };
 
       const base = testing.resolvePluginLoadCacheContext(baseOptions).cacheKey;
       const dev = testing.resolvePluginLoadCacheContext({
         ...baseOptions,
-        env: { ...process.env, OPENCLAW_DEV_SOURCE_ROOT: devSourceRoot },
+        env: { ...process.env, QUIET_CORE_DEV_SOURCE_ROOT: devSourceRoot },
       }).cacheKey;
 
       expect(dev).not.toBe(base);

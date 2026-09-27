@@ -86,17 +86,17 @@ Friends of the Crustacean gather here to build the future of human-AI collaborat
 
 Molty (then Quiet Core bot): _happily runs `find ~` and shares entire directory structure in group chat_
 
-Peter: "openclaw what did we discuss about talking with people xD"
+Peter: "quiet-core-bot what did we discuss about talking with people xD"
 
 Molty: _visible lobster embarrassment_
 
 ### The Great Molt (Jan 27, 2026)
 
-At 5am, Anthropic's email arrived. By 6:14am, Peter called it: "fuck it, let's go with openclaw."
+At 5am, Anthropic's email arrived. By 6:14am, Peter called it: "fuck it, let's go with quiet-core-bot."
 
 Then the chaos began.
 
-**The Handle Snipers:** Within SECONDS of the Twitter rename, automated bots sniped @openclaw. The squatter immediately posted a crypto wallet address. Peter's contacts at X were called in.
+**The Handle Snipers:** Within SECONDS of the Twitter rename, automated bots sniped @quiet-core-bot. The squatter immediately posted a crypto wallet address. Peter's contacts at X were called in.
 
 **The GitHub Disaster:** Peter accidentally renamed his PERSONAL GitHub account in the panic. Bots sniped `steipete` within minutes. GitHub's SVP was contacted.
 
@@ -116,8 +116,8 @@ Moltbot never quite rolled off the tongue. And so, at 4am GMT, the team gathered
 
 In just 3 hours:
 
-- GitHub renamed: `github.com/openclaw/openclaw` ✅
-- X handle `@openclaw` secured with GOLD CHECKMARK 💰
+- GitHub renamed: `github.com/liuda1999/Quiet-Core-bot` ✅
+- X handle `@quiet-core-bot` secured with GOLD CHECKMARK 💰
 - npm packages released under new name
 - Docs migrated to `github.com/liuda1999/Quiet-Core-bot`
 - 200K+ views on announcement in 90 minutes

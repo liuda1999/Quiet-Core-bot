@@ -69,7 +69,7 @@ describe("resolveEmbeddedRunSkillEntries", () => {
     };
 
     resolveEmbeddedRunSkillEntries({
-      workspaceDir: "/tmp/workspace/.openclaw/sandbox-skills",
+      workspaceDir: "/tmp/workspace/.quiet-core-bot/sandbox-skills",
       config: {},
       eligibility,
       skillsSnapshot: {
@@ -80,7 +80,7 @@ describe("resolveEmbeddedRunSkillEntries", () => {
     });
 
     expect(loadWorkspaceSkillEntriesSpy).toHaveBeenCalledWith(
-      "/tmp/workspace/.openclaw/sandbox-skills",
+      "/tmp/workspace/.quiet-core-bot/sandbox-skills",
       {
         config: {},
         eligibility,

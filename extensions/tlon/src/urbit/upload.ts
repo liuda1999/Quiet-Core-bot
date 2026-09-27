@@ -1,7 +1,7 @@
 /**
  * Upload an image from a URL to Tlon storage.
  */
-import { fetchWithSsrFGuard } from "openclaw/plugin-sdk/ssrf-runtime";
+import { fetchWithSsrFGuard } from "quiet-core-bot/plugin-sdk/ssrf-runtime";
 import { uploadFile } from "../tlon-api.js";
 
 /**

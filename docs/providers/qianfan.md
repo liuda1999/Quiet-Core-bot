@@ -21,7 +21,7 @@ endpoint and API key. It is OpenAI-compatible, so most OpenAI SDKs work by switc
 Install the official plugin, then restart Gateway:
 
 ```bash
-quiet-core-bot plugins install @openclaw/qianfan-provider
+quiet-core-bot plugins install @quiet-core/qianfan-provider
 quiet-core-bot gateway restart
 ```
 

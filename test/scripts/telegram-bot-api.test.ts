@@ -10,18 +10,18 @@ describe("Telegram Bot API helper", () => {
   it("rejects loose numeric env limits instead of parsing prefixes", () => {
     expect(() =>
       readTelegramBotApiLimits({
-        OPENCLAW_TELEGRAM_USER_BOT_API_TIMEOUT_MS: "1e3",
+        QUIET_CORE_TELEGRAM_USER_BOT_API_TIMEOUT_MS: "1e3",
       }),
-    ).toThrow("invalid OPENCLAW_TELEGRAM_USER_BOT_API_TIMEOUT_MS: 1e3");
+    ).toThrow("invalid QUIET_CORE_TELEGRAM_USER_BOT_API_TIMEOUT_MS: 1e3");
     expect(() =>
       readTelegramBotApiLimits({
-        OPENCLAW_TELEGRAM_USER_BOT_API_BODY_MAX_BYTES: "1000ms",
+        QUIET_CORE_TELEGRAM_USER_BOT_API_BODY_MAX_BYTES: "1000ms",
       }),
-    ).toThrow("invalid OPENCLAW_TELEGRAM_USER_BOT_API_BODY_MAX_BYTES: 1000ms");
+    ).toThrow("invalid QUIET_CORE_TELEGRAM_USER_BOT_API_BODY_MAX_BYTES: 1000ms");
     expect(
       readTelegramBotApiLimits({
-        OPENCLAW_TELEGRAM_USER_BOT_API_BODY_MAX_BYTES: "2048",
-        OPENCLAW_TELEGRAM_USER_BOT_API_TIMEOUT_MS: "15000",
+        QUIET_CORE_TELEGRAM_USER_BOT_API_BODY_MAX_BYTES: "2048",
+        QUIET_CORE_TELEGRAM_USER_BOT_API_TIMEOUT_MS: "15000",
       }),
     ).toEqual({
       bodyMaxBytes: 2048,

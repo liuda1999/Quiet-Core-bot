@@ -6,7 +6,7 @@ import { createBrowserPluginService } from "./plugin-service.js";
 
 const SERVICE_CONTEXT = {
   config: {},
-  stateDir: "/tmp/openclaw-state",
+  stateDir: "/tmp/quiet-core-bot-state",
   logger: console,
 };
 
@@ -62,7 +62,7 @@ describe("createBrowserPluginService", () => {
 
   for (const value of ["0", "", "disabled"]) {
     it(`does not start the control server for eager env value ${JSON.stringify(value)}`, async () => {
-      vi.stubEnv("OPENCLAW_EAGER_BROWSER_CONTROL_SERVER", value);
+      vi.stubEnv("QUIET_CORE_EAGER_BROWSER_CONTROL_SERVER", value);
       const service = createBrowserPluginService();
 
       await service.start(SERVICE_CONTEXT);
@@ -72,7 +72,7 @@ describe("createBrowserPluginService", () => {
   }
 
   it("passes a browser override validator to the eager service loader", async () => {
-    vi.stubEnv("OPENCLAW_EAGER_BROWSER_CONTROL_SERVER", "1");
+    vi.stubEnv("QUIET_CORE_EAGER_BROWSER_CONTROL_SERVER", "1");
     const service = createBrowserPluginService();
 
     await service.start(SERVICE_CONTEXT);
@@ -82,7 +82,7 @@ describe("createBrowserPluginService", () => {
   });
 
   it("rejects unsafe browser override specifiers", async () => {
-    vi.stubEnv("OPENCLAW_EAGER_BROWSER_CONTROL_SERVER", "1");
+    vi.stubEnv("QUIET_CORE_EAGER_BROWSER_CONTROL_SERVER", "1");
     const service = createBrowserPluginService();
 
     await service.start(SERVICE_CONTEXT);

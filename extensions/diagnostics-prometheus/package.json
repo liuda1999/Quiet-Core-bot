@@ -1,22 +1,22 @@
 {
-  "name": "@openclaw/diagnostics-prometheus",
+  "name": "@quiet-core/diagnostics-prometheus",
   "version": "2026.6.11",
   "description": "OpenClaw diagnostics Prometheus exporter for runtime metrics.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/liuda1999/Quiet-Core-bot"
   },
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@quiet-core/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "clawhubSpec": "clawhub:@openclaw/diagnostics-prometheus",
-      "npmSpec": "@openclaw/diagnostics-prometheus",
+      "clawhubSpec": "clawhub:@quiet-core/diagnostics-prometheus",
+      "npmSpec": "@quiet-core/diagnostics-prometheus",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.25"
     },

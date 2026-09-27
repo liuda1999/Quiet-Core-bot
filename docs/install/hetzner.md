@@ -106,8 +106,8 @@ For the generic Docker flow, see [Docker](/install/docker).
 
   <Step title="Clone the Quiet Core bot repository">
     ```bash
-    git clone https://github.com/openclaw/openclaw.git
-    cd openclaw
+    git clone https://github.com/liuda1999/Quiet-Core-bot.git
+    cd quiet-core-bot
     ```
 
     This guide assumes you will build a custom image to guarantee binary persistence.
@@ -119,10 +119,10 @@ For the generic Docker flow, see [Docker](/install/docker).
     All long-lived state must live on the host.
 
     ```bash
-    mkdir -p /root/.openclaw/workspace
+    mkdir -p /root/.quiet-core-bot/workspace
 
     # Set ownership to the container user (uid 1000):
-    chown -R 1000:1000 /root/.openclaw
+    chown -R 1000:1000 /root/.quiet-core-bot
     ```
 
   </Step>
@@ -131,19 +131,19 @@ For the generic Docker flow, see [Docker](/install/docker).
     Create `.env` in the repository root.
 
     ```bash
-    OPENCLAW_IMAGE=openclaw:latest
-    OPENCLAW_GATEWAY_TOKEN=
-    OPENCLAW_GATEWAY_BIND=lan
-    OPENCLAW_GATEWAY_PORT=18789
+    QUIET_CORE_IMAGE=quiet-core-bot:latest
+    QUIET_CORE_GATEWAY_TOKEN=
+    QUIET_CORE_GATEWAY_BIND=lan
+    QUIET_CORE_GATEWAY_PORT=18789
 
-    OPENCLAW_CONFIG_DIR=/root/.openclaw
-    OPENCLAW_WORKSPACE_DIR=/root/.openclaw/workspace
+    QUIET_CORE_CONFIG_DIR=/root/.quiet-core-bot
+    QUIET_CORE_WORKSPACE_DIR=/root/.quiet-core-bot/workspace
 
     GOG_KEYRING_PASSWORD=
-    XDG_CONFIG_HOME=/home/node/.openclaw
+    XDG_CONFIG_HOME=/home/node/.quiet-core-bot
     ```
 
-    Set `OPENCLAW_GATEWAY_TOKEN` when you want to manage the stable gateway
+    Set `QUIET_CORE_GATEWAY_TOKEN` when you want to manage the stable gateway
     token through `.env`; otherwise configure `gateway.auth.token` before
     relying on clients across restarts. If neither source exists, Quiet Core bot uses
     a runtime-only token for that startup. Generate a keyring password and paste
@@ -155,7 +155,7 @@ For the generic Docker flow, see [Docker](/install/docker).
 
     **Do not commit this file.**
 
-    This `.env` file is for container/runtime env such as `OPENCLAW_GATEWAY_TOKEN`.
+    This `.env` file is for container/runtime env such as `QUIET_CORE_GATEWAY_TOKEN`.
     Stored provider OAuth/API-key auth lives in the mounted
     `~/.quiet-core-bot/agents/<agentId>/agent/auth-profiles.json`.
 
@@ -166,8 +166,8 @@ For the generic Docker flow, see [Docker](/install/docker).
 
     ```yaml
     services:
-      openclaw-gateway:
-        image: ${OPENCLAW_IMAGE}
+      quiet-core-bot-gateway:
+        image: ${QUIET_CORE_IMAGE}
         build: .
         restart: unless-stopped
         env_file:
@@ -176,28 +176,28 @@ For the generic Docker flow, see [Docker](/install/docker).
           - HOME=/home/node
           - NODE_ENV=production
           - TERM=xterm-256color
-          - OPENCLAW_GATEWAY_BIND=${OPENCLAW_GATEWAY_BIND}
-          - OPENCLAW_GATEWAY_PORT=${OPENCLAW_GATEWAY_PORT}
-          - OPENCLAW_GATEWAY_TOKEN=${OPENCLAW_GATEWAY_TOKEN}
+          - QUIET_CORE_GATEWAY_BIND=${QUIET_CORE_GATEWAY_BIND}
+          - QUIET_CORE_GATEWAY_PORT=${QUIET_CORE_GATEWAY_PORT}
+          - QUIET_CORE_GATEWAY_TOKEN=${QUIET_CORE_GATEWAY_TOKEN}
           - GOG_KEYRING_PASSWORD=${GOG_KEYRING_PASSWORD}
           - XDG_CONFIG_HOME=${XDG_CONFIG_HOME}
           - PATH=/home/linuxbrew/.linuxbrew/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
         volumes:
-          - ${OPENCLAW_CONFIG_DIR}:/home/node/.openclaw
-          - ${OPENCLAW_WORKSPACE_DIR}:/home/node/.openclaw/workspace
+          - ${QUIET_CORE_CONFIG_DIR}:/home/node/.quiet-core-bot
+          - ${QUIET_CORE_WORKSPACE_DIR}:/home/node/.quiet-core-bot/workspace
         ports:
           # Recommended: keep the Gateway loopback-only on the VPS; access via SSH tunnel.
           # To expose it publicly, remove the `127.0.0.1:` prefix and firewall accordingly.
-          - "127.0.0.1:${OPENCLAW_GATEWAY_PORT}:18789"
+          - "127.0.0.1:${QUIET_CORE_GATEWAY_PORT}:18789"
         command:
           [
             "node",
             "dist/index.js",
             "gateway",
             "--bind",
-            "${OPENCLAW_GATEWAY_BIND}",
+            "${QUIET_CORE_GATEWAY_BIND}",
             "--port",
-            "${OPENCLAW_GATEWAY_PORT}",
+            "${QUIET_CORE_GATEWAY_PORT}",
             "--allow-unconfigured",
           ]
     ```
@@ -262,8 +262,8 @@ For teams preferring infrastructure-as-code workflows, a community-maintained Te
 
 **Repositories:**
 
-- Infrastructure: [openclaw-terraform-hetzner](https://github.com/andreesg/openclaw-terraform-hetzner)
-- Docker config: [openclaw-docker-config](https://github.com/andreesg/openclaw-docker-config)
+- Infrastructure: [quiet-core-bot-terraform-hetzner](https://github.com/andreesg/quiet-core-bot-terraform-hetzner)
+- Docker config: [quiet-core-bot-docker-config](https://github.com/andreesg/quiet-core-bot-docker-config)
 
 This approach complements the Docker setup above with reproducible deployments, version-controlled infrastructure, and automated disaster recovery.
 

@@ -34,7 +34,7 @@ directly to existing Quiet Core bot channel conversations, use
 | ----------------------------------------------------------------------------------------------------- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Bind or control Codex in the current conversation                                                     | `/codex bind`, `/codex threads`       | Native Codex app-server path when the `codex` plugin is enabled; includes bound chat replies, image forwarding, model/fast/permissions, stop, and steer controls. ACP is an explicit fallback |
 | Run Claude Code, Gemini CLI, explicit Codex ACP, or another external harness _through_ Quiet Core bot | This page                             | Chat-bound sessions, `/acp spawn`, `sessions_spawn({ runtime: "acp" })`, background tasks, runtime controls                                                                                   |
-| Expose an Quiet Core bot Gateway session _as_ an ACP server for an editor or client                   | [`openclaw acp`](/cli/acp)            | Bridge mode. IDE/client talks ACP to Quiet Core bot over stdio/WebSocket                                                                                                                      |
+| Expose an Quiet Core bot Gateway session _as_ an ACP server for an editor or client                   | [`quiet-core-bot acp`](/cli/acp)            | Bridge mode. IDE/client talks ACP to Quiet Core bot over stdio/WebSocket                                                                                                                      |
 | Reuse a local AI CLI as a text-only fallback model                                                    | [CLI Backends](/gateway/cli-backends) | Not ACP. No Quiet Core bot tools, no ACP controls, no harness runtime                                                                                                                         |
 
 ## Does this work out of the box?
@@ -42,7 +42,7 @@ directly to existing Quiet Core bot channel conversations, use
 Yes, after installing the official ACP runtime plugin:
 
 ```bash
-quiet-core-bot plugins install @openclaw/acpx
+quiet-core-bot plugins install @quiet-core/acpx
 quiet-core-bot config set plugins.entries.acpx.enabled true
 ```
 
@@ -108,7 +108,7 @@ or `sessions_spawn({ runtime: "acp", agentId: "<id>" })` targets:
 | `kimi`     | Kimi/Moonshot CLI                                    | Requires Kimi/Moonshot auth on the host.                                            |
 | `kiro`     | Kiro CLI                                             | Adapter availability and model control depend on the installed CLI.                 |
 | `opencode` | OpenCode ACP adapter                                 | Requires OpenCode CLI/provider auth.                                                |
-| `openclaw` | Quiet Core bot Gateway bridge through `openclaw acp` | Lets an ACP-aware harness talk back to an Quiet Core bot Gateway session.           |
+| `quiet-core-bot` | Quiet Core bot Gateway bridge through `quiet-core-bot acp` | Lets an ACP-aware harness talk back to an Quiet Core bot Gateway session.           |
 | `qwen`     | Qwen Code / Qwen CLI                                 | Requires Qwen-compatible auth on the host.                                          |
 
 Custom acpx agent aliases can be configured in acpx itself, but Quiet Core bot
@@ -238,7 +238,7 @@ See also [Sub-agents](/tools/subagents).
 For Claude Code through ACP, the stack is:
 
 1. Quiet Core bot ACP session control plane.
-2. Official `@openclaw/acpx` runtime plugin.
+2. Official `@quiet-core/acpx` runtime plugin.
 3. Claude ACP adapter.
 4. Claude-side runtime/session machinery.
 
@@ -386,7 +386,7 @@ Use `agents.list[].runtime` to define ACP defaults once per agent:
             agent: "codex",
             backend: "acpx",
             mode: "persistent",
-            cwd: "/workspace/openclaw",
+            cwd: "/workspace/quiet-core-bot",
           },
         },
       },
@@ -640,7 +640,7 @@ background work. The delivery path depends on that shape.
 
     - Normal bound follow-ups are sent as prompt text, plus attachments only when the harness/backend supports them.
     - `/acp` management commands and local Gateway commands are intercepted before ACP dispatch.
-    - Runtime-generated completion events are materialized per target. Quiet Core bot agents get Quiet Core bot's internal runtime-context envelope; external ACP harnesses get a plain prompt with the child result and instruction. The raw `<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>` envelope should never be sent to external harnesses or persisted as ACP user transcript text.
+    - Runtime-generated completion events are materialized per target. Quiet Core bot agents get Quiet Core bot's internal runtime-context envelope; external ACP harnesses get a plain prompt with the child result and instruction. The raw `<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>` envelope should never be sent to external harnesses or persisted as ACP user transcript text.
     - ACP transcript entries use the user-visible trigger text or the plain completion prompt. Internal event metadata stays structured in Quiet Core bot where possible and is not treated as user-authored chat content.
 
   </Accordion>
@@ -845,7 +845,7 @@ permission modes, see
 | `AcpRuntimeError: Permission prompt unavailable in non-interactive mode`    | `permissionMode` blocks writes/exec in non-interactive ACP session.                                                    | Set `plugins.entries.acpx.config.permissionMode` to `approve-all` and restart gateway. See [Permission configuration](/tools/acp-agents-setup#permission-configuration). |
 | ACP session fails early with little output                                  | Permission prompts are blocked by `permissionMode`/`nonInteractivePermissions`.                                        | Check gateway logs for `AcpRuntimeError`. For full permissions, set `permissionMode=approve-all`; for graceful degradation, set `nonInteractivePermissions=deny`.        |
 | ACP session stalls indefinitely after completing work                       | Harness process finished but ACP session did not report completion.                                                    | Update Quiet Core bot; current acpx cleanup reaps Quiet Core bot-owned stale wrapper and adapter processes on close and Gateway startup.                                 |
-| Harness sees `<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>`                        | Internal event envelope leaked across the ACP boundary.                                                                | Update Quiet Core bot and rerun the completion flow; external harnesses should receive plain completion prompts only.                                                    |
+| Harness sees `<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>`                      | Internal event envelope leaked across the ACP boundary.                                                                | Update Quiet Core bot and rerun the completion flow; external harnesses should receive plain completion prompts only.                                                    |
 
 <Note>
 `Command blocked by PreToolUse hook: Native hook relay unavailable` belongs to
@@ -863,5 +863,5 @@ repeating `/new`. See [Codex harness troubleshooting](/plugins/codex-harness#tro
 - [Codex harness](/plugins/codex-harness)
 - [Codex harness runtime](/plugins/codex-harness-runtime)
 - [Multi-agent sandbox tools](/tools/multi-agent-sandbox-tools)
-- [`openclaw acp` (bridge mode)](/cli/acp)
+- [`quiet-core-bot acp` (bridge mode)](/cli/acp)
 - [Sub-agents](/tools/subagents)

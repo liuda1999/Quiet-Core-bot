@@ -5,8 +5,8 @@ import { describe, expect, it } from "vitest";
 const AUTH_MONITOR_PATH = "scripts/auth-monitor.sh";
 const MOBILE_REAUTH_PATH = "scripts/mobile-reauth.sh";
 const SETUP_AUTH_SYSTEM_PATH = "scripts/setup-auth-system.sh";
-const AUTH_MONITOR_SERVICE_PATH = "scripts/systemd/openclaw-auth-monitor.service";
-const AUTH_MONITOR_TIMER_PATH = "scripts/systemd/openclaw-auth-monitor.timer";
+const AUTH_MONITOR_SERVICE_PATH = "scripts/systemd/quiet-core-bot-auth-monitor.service";
+const AUTH_MONITOR_TIMER_PATH = "scripts/systemd/quiet-core-bot-auth-monitor.timer";
 const TERMUX_WIDGET_PATHS = [
   "scripts/termux-auth-widget.sh",
   "scripts/termux-quick-auth.sh",
@@ -23,7 +23,7 @@ describe("auth monitoring scripts", () => {
     const service = readScript(AUTH_MONITOR_SERVICE_PATH);
     const timer = readScript(AUTH_MONITOR_TIMER_PATH);
 
-    expect(service).toContain("ExecStart=@OPENCLAW_AUTH_MONITOR_PATH@");
+    expect(service).toContain("ExecStart=@QUIET_CORE_AUTH_MONITOR_PATH@");
     expect(setup).toContain('AUTH_MONITOR_PATH="$SCRIPT_DIR/auth-monitor.sh"');
     expect(setup).toContain(
       'RENDERED_EXEC_START="ExecStart=$(systemd_quote_arg "$AUTH_MONITOR_PATH")"',
@@ -43,10 +43,10 @@ describe("auth monitoring scripts", () => {
     expect(joined).not.toContain(privateHostAlias);
     expect(joined).toContain("Run on the OpenClaw host: ${SCRIPT_DIR}/mobile-reauth.sh");
     for (const script of TERMUX_WIDGET_PATHS.map(readScript)) {
-      expect(script).toContain('SERVER="${OPENCLAW_SERVER:-openclaw-host}"');
+      expect(script).toContain('SERVER="${QUIET_CORE_SERVER:-quiet-core-bot-host}"');
     }
     expect(readScript("scripts/termux-sync-widget.sh")).toContain(
-      "'$HOME/openclaw/scripts/sync-claude-code-auth.sh'",
+      "'$HOME/quiet-core-bot/scripts/sync-claude-code-auth.sh'",
     );
   });
 
@@ -58,6 +58,6 @@ describe("auth monitoring scripts", () => {
     expect(script).toContain('"$SCRIPT_DIR/claude-auth-status.sh" full');
     expect(script).toContain("https://console.anthropic.com/settings/api-keys");
     expect(script).toContain("claude setup-token");
-    expect(script).toContain("systemctl --user restart openclaw");
+    expect(script).toContain("systemctl --user restart quiet-core-bot");
   });
 });

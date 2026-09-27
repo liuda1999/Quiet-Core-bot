@@ -2,8 +2,8 @@
  * Claude CLI argument helpers for Quiet Core bot-managed bundle MCP config.
  */
 import fs from "node:fs/promises";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { isRecord } from "@quiet-core/normalization-core/record-coerce";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 
 /** Find an existing Claude `--mcp-config` argument value. */
 export function findClaudeMcpConfigPath(args?: string[]): string | undefined {
@@ -72,7 +72,7 @@ export async function writeClaudeMcpCaptureConfig(params: {
             ...openclaw,
             headers: {
               ...headers,
-              "x-openclaw-cli-capture-key": params.captureKey,
+              "x-quiet-core-bot-cli-capture-key": params.captureKey,
             },
           },
         },

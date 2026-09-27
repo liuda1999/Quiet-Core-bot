@@ -49,7 +49,7 @@ type RegisterContextEngineForOwnerOptions = {
   allowSameOwnerRefresh?: boolean;
 };
 
-const LEGACY_SESSION_KEY_COMPAT = Symbol.for("openclaw.contextEngine.sessionKeyCompat");
+const LEGACY_SESSION_KEY_COMPAT = Symbol.for("quiet-core-bot.contextEngine.sessionKeyCompat");
 type ResolvedContextEngineMetadata = {
   owner: string;
 };
@@ -376,7 +376,7 @@ function wrapResolvedContextEngine(
 // Registry (module-level singleton)
 // ---------------------------------------------------------------------------
 
-const CONTEXT_ENGINE_REGISTRY_STATE = Symbol.for("openclaw.contextEngineRegistryState");
+const CONTEXT_ENGINE_REGISTRY_STATE = Symbol.for("quiet-core-bot.contextEngineRegistryState");
 const CORE_CONTEXT_ENGINE_OWNER = "core";
 const PUBLIC_CONTEXT_ENGINE_OWNER = "public-sdk";
 

@@ -17,7 +17,7 @@ quiet-core-bot backup create --dry-run --json
 quiet-core-bot backup create --verify
 quiet-core-bot backup create --no-include-workspace
 quiet-core-bot backup create --only-config
-quiet-core-bot backup verify ./2026-03-09T08-00-00.000+08-00-openclaw-backup.tar.gz
+quiet-core-bot backup verify ./2026-03-09T08-00-00.000+08-00-quiet-core-bot-backup.tar.gz
 ```
 
 ## Notes

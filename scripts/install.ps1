@@ -118,34 +118,34 @@ if ($PSVersionTable.PSVersion.Major -lt 5) {
 Write-Host "[OK] Windows detected" -ForegroundColor Green
 
 if (-not $PSBoundParameters.ContainsKey("InstallMethod")) {
-    if (-not [string]::IsNullOrWhiteSpace($env:OPENCLAW_INSTALL_METHOD)) {
-        $InstallMethod = $env:OPENCLAW_INSTALL_METHOD
+    if (-not [string]::IsNullOrWhiteSpace($env:QUIET_CORE_INSTALL_METHOD)) {
+        $InstallMethod = $env:QUIET_CORE_INSTALL_METHOD
     }
 }
 if (-not $PSBoundParameters.ContainsKey("GitDir")) {
-    if (-not [string]::IsNullOrWhiteSpace($env:OPENCLAW_GIT_DIR)) {
-        $GitDir = $env:OPENCLAW_GIT_DIR
+    if (-not [string]::IsNullOrWhiteSpace($env:QUIET_CORE_GIT_DIR)) {
+        $GitDir = $env:QUIET_CORE_GIT_DIR
     }
 }
 if (-not $PSBoundParameters.ContainsKey("NoOnboard")) {
-    if ($env:OPENCLAW_NO_ONBOARD -eq "1") {
+    if ($env:QUIET_CORE_NO_ONBOARD -eq "1") {
         $NoOnboard = $true
     }
 }
 if (-not $PSBoundParameters.ContainsKey("NoGitUpdate")) {
-    if ($env:OPENCLAW_GIT_UPDATE -eq "0") {
+    if ($env:QUIET_CORE_GIT_UPDATE -eq "0") {
         $NoGitUpdate = $true
     }
 }
 if (-not $PSBoundParameters.ContainsKey("DryRun")) {
-    if ($env:OPENCLAW_DRY_RUN -eq "1") {
+    if ($env:QUIET_CORE_DRY_RUN -eq "1") {
         $DryRun = $true
     }
 }
 
 if ([string]::IsNullOrWhiteSpace($GitDir)) {
     $userHome = [Environment]::GetFolderPath("UserProfile")
-    $GitDir = (Join-Path $userHome "openclaw")
+    $GitDir = (Join-Path $userHome "quiet-core-bot")
 }
 
 # Check for Node.js
@@ -238,7 +238,7 @@ function Ensure-PortableNodeOnUserPath {
 
     $nodeDir = Split-Path -Parent $nodeExe
     if (Add-ToUserPath $nodeDir) {
-        Write-Host "[!] Added $nodeDir to user PATH (restart terminal if node or openclaw is not found)" -ForegroundColor Yellow
+        Write-Host "[!] Added $nodeDir to user PATH (restart terminal if node or quiet-core-bot is not found)" -ForegroundColor Yellow
     }
 }
 
@@ -536,7 +536,7 @@ function Ensure-PortableGitOnUserPath {
 function Resolve-PortableGitDownload {
     $releaseApi = "https://api.github.com/repos/git-for-windows/git/releases/latest"
     $headers = @{
-        "User-Agent" = "openclaw-installer"
+        "User-Agent" = "quiet-core-bot-installer"
         "Accept" = "application/vnd.github+json"
     }
     $release = Invoke-RestMethod -Uri $releaseApi -Headers $headers
@@ -582,7 +582,7 @@ function Install-PortableGit {
     $portableRoot = Get-PortableGitRoot
     $portableParent = Split-Path -Parent $portableRoot
     $tmpZip = Join-Path $env:TEMP $download.Name
-    $tmpExtract = Join-Path $env:TEMP ("openclaw-portable-git-" + [guid]::NewGuid().ToString("N"))
+    $tmpExtract = Join-Path $env:TEMP ("quiet-core-bot-portable-git-" + [guid]::NewGuid().ToString("N"))
 
     New-Item -ItemType Directory -Force -Path $portableParent | Out-Null
     if (Test-Path $portableRoot) {
@@ -640,14 +640,14 @@ function Ensure-Git {
 }
 
 function Get-OpenClawCommandPath {
-    $openclawCmd = Get-Command openclaw.cmd -ErrorAction SilentlyContinue
-    if ($openclawCmd -and $openclawCmd.Source) {
-        return $openclawCmd.Source
+    $quiet-core-botCmd = Get-Command quiet-core-bot.cmd -ErrorAction SilentlyContinue
+    if ($quiet-core-botCmd -and $quiet-core-botCmd.Source) {
+        return $quiet-core-botCmd.Source
     }
 
-    $openclaw = Get-Command openclaw -ErrorAction SilentlyContinue
-    if ($openclaw -and $openclaw.Source) {
-        return $openclaw.Source
+    $quiet-core-bot = Get-Command quiet-core-bot -ErrorAction SilentlyContinue
+    if ($quiet-core-bot -and $quiet-core-bot.Source) {
+        return $quiet-core-bot.Source
     }
 
     return $null
@@ -661,7 +661,7 @@ function Invoke-OpenClawCommand {
 
     $commandPath = Get-OpenClawCommandPath
     if (-not $commandPath) {
-        throw "openclaw command not found on PATH."
+        throw "quiet-core-bot command not found on PATH."
     }
 
     & $commandPath @Arguments
@@ -675,12 +675,12 @@ function Invoke-InteractiveOpenClawCommand {
 
     $commandPath = Get-OpenClawCommandPath
     if (-not $commandPath) {
-        throw "openclaw command not found on PATH."
+        throw "quiet-core-bot command not found on PATH."
     }
 
     $process = Start-Process -FilePath $commandPath -ArgumentList $Arguments -NoNewWindow -Wait -PassThru
     if ($process.ExitCode -ne 0) {
-        throw "openclaw $($Arguments -join ' ') failed with exit code $($process.ExitCode)."
+        throw "quiet-core-bot $($Arguments -join ' ') failed with exit code $($process.ExitCode)."
     }
 }
 
@@ -794,7 +794,7 @@ function Ensure-OpenClawOnPath {
 
     $npmBins = Get-NpmGlobalBinCandidates -NpmPrefix $npmPrefix
     foreach ($npmBin in $npmBins) {
-        if (-not (Test-Path (Join-Path $npmBin "openclaw.cmd"))) {
+        if (-not (Test-Path (Join-Path $npmBin "quiet-core-bot.cmd"))) {
             continue
         }
 
@@ -804,7 +804,7 @@ function Ensure-OpenClawOnPath {
         return $true
     }
 
-    Write-Host "[!] openclaw is not on PATH yet." -ForegroundColor Yellow
+    Write-Host "[!] quiet-core-bot is not on PATH yet." -ForegroundColor Yellow
     Write-Host "Restart PowerShell or add the npm global install folder to PATH." -ForegroundColor Yellow
     if ($npmBins.Count -gt 0) {
         Write-Host "Expected path (one of):" -ForegroundColor Gray
@@ -998,14 +998,14 @@ function Test-OpenClawSourcePackageInstallSpec {
     }
 
     $normalizedTag = $RequestedTag.Trim().ToLowerInvariant()
-    if ($normalizedTag.StartsWith("openclaw@")) {
-        $normalizedTag = $normalizedTag.Substring("openclaw@".Length)
+    if ($normalizedTag.StartsWith("quiet-core-bot@")) {
+        $normalizedTag = $normalizedTag.Substring("quiet-core-bot@".Length)
     }
 
     if ($normalizedTag -eq "main") {
         return $true
     }
-    if ($normalizedTag -match '^github:openclaw/openclaw($|[#/])') {
+    if ($normalizedTag -match '^github:liuda1999/quiet-core-bot($|[#/])') {
         return $true
     }
 
@@ -1014,9 +1014,9 @@ function Test-OpenClawSourcePackageInstallSpec {
     }
     return (
         $normalizedTag -match '^https?://github\.com/openclaw/openclaw(\.git)?($|[?#])' -or
-        $normalizedTag -match '^ssh://git@github\.com[:/]openclaw/openclaw(\.git)?($|[?#])' -or
+        $normalizedTag -match '^ssh://git@github\.com[:/]liuda1999/quiet-core-bot(\.git)?($|[?#])' -or
         $normalizedTag -match '^git://github\.com/openclaw/openclaw(\.git)?($|[?#])' -or
-        $normalizedTag -match '^git@github\.com:openclaw/openclaw(\.git)?($|[?#])'
+        $normalizedTag -match '^git@github\.com:liuda1999/quiet-core-bot(\.git)?($|[?#])'
     )
 }
 
@@ -1168,10 +1168,10 @@ function Install-OpenClaw {
         return $false
     }
 
-    # Use openclaw package for beta, openclaw for stable
-    $packageName = "openclaw"
+    # Use quiet-core-bot package for beta, quiet-core-bot for stable
+    $packageName = "quiet-core-bot"
     if ($Tag -eq "beta" -or $Tag -match "^beta\.") {
-        $packageName = "openclaw"
+        $packageName = "quiet-core-bot"
     }
     $installSpec = Resolve-NpmOpenClawInstallSpec -PackageName $packageName -RequestedTag $Tag
     Write-Host "[*] Installing OpenClaw ($installSpec)..." -ForegroundColor Yellow
@@ -1238,7 +1238,7 @@ function Install-OpenClawFromGit {
         return $false
     }
 
-    $repoUrl = "https://github.com/openclaw/openclaw.git"
+    $repoUrl = "https://github.com/liuda1999/Quiet-Core-bot.git"
     Write-Host "[*] Installing OpenClaw from GitHub ($repoUrl)..." -ForegroundColor Yellow
 
     if (-not (Test-Path $RepoDir)) {
@@ -1340,7 +1340,7 @@ function Install-OpenClawFromGit {
     if (-not (Test-Path $binDir)) {
         New-Item -ItemType Directory -Force -Path $binDir | Out-Null
     }
-    $cmdPath = Join-Path $binDir "openclaw.cmd"
+    $cmdPath = Join-Path $binDir "quiet-core-bot.cmd"
     $cmdContents = "@echo off`r`nnode ""$entryPath"" %*`r`n"
     Set-Content -Path $cmdPath -Value $cmdContents -NoNewline
 
@@ -1406,11 +1406,11 @@ function Refresh-GatewayServiceIfLoaded {
 }
 
 function Get-LegacyRepoDir {
-    if (-not [string]::IsNullOrWhiteSpace($env:OPENCLAW_GIT_DIR)) {
-        return $env:OPENCLAW_GIT_DIR
+    if (-not [string]::IsNullOrWhiteSpace($env:QUIET_CORE_GIT_DIR)) {
+        return $env:QUIET_CORE_GIT_DIR
     }
     $userHome = [Environment]::GetFolderPath("UserProfile")
-    return (Join-Path $userHome "openclaw")
+    return (Join-Path $userHome "quiet-core-bot")
 }
 
 function Remove-LegacySubmodule {
@@ -1476,7 +1476,7 @@ function Main {
         try {
             $npmCommand = Get-NpmCommandPath
             if ($npmCommand) {
-                Invoke-NpmCommand -Arguments @("uninstall", "-g", "openclaw") 2>$null | Out-Null
+                Invoke-NpmCommand -Arguments @("uninstall", "-g", "quiet-core-bot") 2>$null | Out-Null
                 Write-Host "[OK] Removed npm global install if present" -ForegroundColor Green
             }
         } catch { }
@@ -1486,7 +1486,7 @@ function Main {
             return (Fail-Install)
         }
     } else {
-        $gitWrapper = Join-Path (Join-Path $env:USERPROFILE ".local\\bin") "openclaw.cmd"
+        $gitWrapper = Join-Path (Join-Path $env:USERPROFILE ".local\\bin") "quiet-core-bot.cmd"
         if (Test-Path $gitWrapper) {
             Remove-Item -Force $gitWrapper
             Write-Host "[OK] Removed git wrapper (switching to npm)" -ForegroundColor Green
@@ -1499,7 +1499,7 @@ function Main {
 
     if (-not (Ensure-OpenClawOnPath)) {
         Write-Host "Install completed, but OpenClaw is not on PATH yet." -ForegroundColor Yellow
-        Write-Host "Open a new terminal, then run: openclaw doctor" -ForegroundColor Cyan
+        Write-Host "Open a new terminal, then run: quiet-core-bot doctor" -ForegroundColor Cyan
         return
     }
 
@@ -1519,8 +1519,8 @@ function Main {
     if (-not $installedVersion) {
         try {
             $npmList = Invoke-NpmCommand -Arguments @("list", "-g", "--depth", "0", "--json") 2>$null | ConvertFrom-Json
-            if ($npmList -and $npmList.dependencies -and $npmList.dependencies.openclaw -and $npmList.dependencies.openclaw.version) {
-                $installedVersion = $npmList.dependencies.openclaw.version
+            if ($npmList -and $npmList.dependencies -and $npmList.dependencies.quiet-core-bot -and $npmList.dependencies.quiet-core-bot.version) {
+                $installedVersion = $npmList.dependencies.quiet-core-bot.version
             }
         } catch {
             $installedVersion = $null
@@ -1578,18 +1578,18 @@ function Main {
 
     if ($InstallMethod -eq "git") {
         Write-Host "Source checkout: $finalGitDir" -ForegroundColor Cyan
-        Write-Host "Wrapper: $env:USERPROFILE\\.local\\bin\\openclaw.cmd" -ForegroundColor Cyan
+        Write-Host "Wrapper: $env:USERPROFILE\\.local\\bin\\quiet-core-bot.cmd" -ForegroundColor Cyan
         Write-Host ""
     }
 
     if ($isUpgrade) {
         Write-Host "Upgrade complete. Run " -NoNewline
-        Write-Host "openclaw doctor" -ForegroundColor Cyan -NoNewline
+        Write-Host "quiet-core-bot doctor" -ForegroundColor Cyan -NoNewline
         Write-Host " to check for additional migrations."
     } else {
         if ($NoOnboard) {
             Write-Host "Skipping onboard (requested). Run " -NoNewline
-            Write-Host "openclaw onboard" -ForegroundColor Cyan -NoNewline
+            Write-Host "quiet-core-bot onboard" -ForegroundColor Cyan -NoNewline
             Write-Host " later."
         } else {
             Write-Host "Starting setup..." -ForegroundColor Cyan

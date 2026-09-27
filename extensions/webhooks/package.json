@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/webhooks",
+  "name": "@quiet-core/webhooks",
   "version": "2026.6.11",
   "private": true,
   "description": "OpenClaw webhook bridge plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@quiet-core/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": [
       "./index.ts"
     ]

@@ -112,7 +112,7 @@ describe("buildGatewayAuthConfig", () => {
     const tokenRef = {
       source: "env",
       provider: "default",
-      id: "OPENCLAW_GATEWAY_TOKEN",
+      id: "QUIET_CORE_GATEWAY_TOKEN",
     } as const;
     const result = buildGatewayAuthConfig({
       mode: "token",

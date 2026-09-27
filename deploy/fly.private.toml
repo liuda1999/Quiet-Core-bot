@@ -9,7 +9,7 @@
 #
 # See https://fly.io/docs/reference/configuration/
 
-app = "my-openclaw" # change to your app name
+app = "my-quiet-core-bot" # change to your app name
 primary_region = "iad" # change to your closest region
 
 [build]
@@ -17,8 +17,8 @@ dockerfile = "Dockerfile"
 
 [env]
 NODE_ENV = "production"
-OPENCLAW_PREFER_PNPM = "1"
-OPENCLAW_STATE_DIR = "/data"
+QUIET_CORE_PREFER_PNPM = "1"
+QUIET_CORE_STATE_DIR = "/data"
 NODE_OPTIONS = "--max-old-space-size=1536"
 
 [processes]
@@ -35,5 +35,5 @@ size = "shared-cpu-2x"
 memory = "2048mb"
 
 [mounts]
-source = "openclaw_data"
+source = "quiet_core_bot_data"
 destination = "/data"

@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { note } from "../../packages/terminal-core/src/note.js";
 import { formatCliCommand } from "../cli/command-format.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import {
   probeInstallPolicy,
@@ -47,7 +47,7 @@ export async function collectInstallPolicyHealthLines(
     return lines;
   }
 
-  const probeDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-install-policy-probe-"));
+  const probeDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-install-policy-probe-"));
   try {
     const result = await probeInstallPolicy({
       config: cfg,

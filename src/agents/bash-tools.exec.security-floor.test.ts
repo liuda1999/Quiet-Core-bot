@@ -32,7 +32,7 @@ function installAllowlistedGogFixture(root: string): string {
 }
 
 function writeExecApprovalsFixture(root: string, file: Record<string, unknown>): void {
-  const stateDir = process.env.OPENCLAW_STATE_DIR ?? path.join(root, "state");
+  const stateDir = process.env.QUIET_CORE_STATE_DIR ?? path.join(root, "state");
   fs.mkdirSync(stateDir, { recursive: true });
   fs.writeFileSync(path.join(stateDir, "exec-approvals.json"), `${JSON.stringify(file)}\n`);
 }
@@ -63,15 +63,15 @@ describe("exec security floor", () => {
       "USERPROFILE",
       "HOMEDRIVE",
       "HOMEPATH",
-      "OPENCLAW_HOME",
-      "OPENCLAW_STATE_DIR",
+      "QUIET_CORE_HOME",
+      "QUIET_CORE_STATE_DIR",
       "SHELL",
     ]);
-    tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-exec-security-floor-"));
+    tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-exec-security-floor-"));
     setTestEnvValue("HOME", tempRoot);
     setTestEnvValue("USERPROFILE", tempRoot);
-    setTestEnvValue("OPENCLAW_HOME", tempRoot);
-    setTestEnvValue("OPENCLAW_STATE_DIR", path.join(tempRoot, "state"));
+    setTestEnvValue("QUIET_CORE_HOME", tempRoot);
+    setTestEnvValue("QUIET_CORE_STATE_DIR", path.join(tempRoot, "state"));
     if (process.platform === "win32") {
       const parsed = path.parse(tempRoot);
       setTestEnvValue("HOMEDRIVE", parsed.root.slice(0, 2));

@@ -2,7 +2,7 @@
 import type {
   ModelCatalogSource,
   NormalizedModelCatalogRow,
-} from "@openclaw/model-catalog-core/model-catalog-types";
+} from "@quiet-core/model-catalog-core/model-catalog-types";
 
 // Source authority decides which duplicate catalog row survives when providers,
 // manifests, config, and cache all describe the same provider/model merge key.

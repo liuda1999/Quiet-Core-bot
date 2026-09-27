@@ -19,7 +19,7 @@ vi.mock("../agents/agent-scope.js", () => ({
 describe("onboard-hooks", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    delete process.env.OPENCLAW_LOCALE;
+    delete process.env.QUIET_CORE_LOCALE;
   });
 
   const createMockPrompter = (multiselectValue: string[]): WizardPrompter => ({
@@ -59,7 +59,7 @@ describe("onboard-hooks", () => {
       ? undefined
       : "missing requirements") as HookStatusEntry["blockedReason"],
     ...params,
-    source: "openclaw-bundled" as const,
+    source: "quiet-core-bot-bundled" as const,
     pluginId: undefined,
     homepage: undefined,
     always: false,
@@ -87,7 +87,7 @@ describe("onboard-hooks", () => {
 
   const createMockHookReport = (eligible = true): HookStatusReport => ({
     workspaceDir: "/mock/workspace",
-    managedHooksDir: "/mock/.openclaw/hooks",
+    managedHooksDir: "/mock/.quiet-core-bot/hooks",
     hooks: [
       createMockHook(
         {
@@ -168,8 +168,8 @@ describe("onboard-hooks", () => {
       });
     });
 
-    it("localizes built-in hook prompts when OPENCLAW_LOCALE is set", async () => {
-      process.env.OPENCLAW_LOCALE = "zh-CN";
+    it("localizes built-in hook prompts when QUIET_CORE_LOCALE is set", async () => {
+      process.env.QUIET_CORE_LOCALE = "zh-CN";
       const { prompter } = await runSetupInternalHooks({
         selected: ["__skip__"],
       });
@@ -241,8 +241,8 @@ describe("onboard-hooks", () => {
     });
 
     it("should show informative notes to user", async () => {
-      vi.stubEnv("OPENCLAW_CONTAINER_HINT", "");
-      vi.stubEnv("OPENCLAW_PROFILE", "");
+      vi.stubEnv("QUIET_CORE_CONTAINER_HINT", "");
+      vi.stubEnv("QUIET_CORE_PROFILE", "");
       const { prompter } = await runSetupInternalHooks({
         selected: ["session-memory"],
       });

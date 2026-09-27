@@ -1,5 +1,5 @@
 // ChatGPT Responses provider tests cover stream handling and timeout behavior.
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@quiet-core/normalization-core/number-coercion";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { SYSTEM_PROMPT_CACHE_BOUNDARY } from "../../agents/system-prompt-cache-boundary.js";
 import type { Context, Model } from "../types.js";
@@ -430,7 +430,7 @@ describe("streamOpenAICodexResponses transport", () => {
 
     expect(result.stopReason).toBe("error");
     expect(capturedPayload?.instructions).toBe("Stable\nDynamic");
-    expect(JSON.stringify(capturedPayload)).not.toContain("OPENCLAW_CACHE_BOUNDARY");
+    expect(JSON.stringify(capturedPayload)).not.toContain("QUIET_CORE_CACHE_BOUNDARY");
   });
 
   it("falls back to the default instructions when no system prompt is set", async () => {

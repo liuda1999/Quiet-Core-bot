@@ -45,8 +45,8 @@ vi.mock("../config/config.js", async () => {
 });
 
 vi.mock("../daemon/constants.js", () => ({
-  resolveGatewayLaunchAgentLabel: vi.fn(() => "ai.openclaw.gateway"),
-  resolveNodeLaunchAgentLabel: vi.fn(() => "ai.openclaw.node"),
+  resolveGatewayLaunchAgentLabel: vi.fn(() => "ai.quiet-core-bot.gateway"),
+  resolveNodeLaunchAgentLabel: vi.fn(() => "ai.quiet-core-bot.node"),
 }));
 
 vi.mock("../daemon/diagnostics.js", () => ({
@@ -149,7 +149,7 @@ vi.mock("./health.js", () => ({
 describe("maybeRepairGatewayDaemon", () => {
   let maybeRepairGatewayDaemon: typeof import("./doctor-gateway-daemon-flow.js").maybeRepairGatewayDaemon;
   const originalPlatformDescriptor = Object.getOwnPropertyDescriptor(process, "platform");
-  const originalUpdateInProgress = process.env.OPENCLAW_UPDATE_IN_PROGRESS;
+  const originalUpdateInProgress = process.env.QUIET_CORE_UPDATE_IN_PROGRESS;
 
   beforeAll(async () => {
     ({ maybeRepairGatewayDaemon } = await import("./doctor-gateway-daemon-flow.js"));
@@ -190,9 +190,9 @@ describe("maybeRepairGatewayDaemon", () => {
       Object.defineProperty(process, "platform", originalPlatformDescriptor);
     }
     if (originalUpdateInProgress === undefined) {
-      delete process.env.OPENCLAW_UPDATE_IN_PROGRESS;
+      delete process.env.QUIET_CORE_UPDATE_IN_PROGRESS;
     } else {
-      process.env.OPENCLAW_UPDATE_IN_PROGRESS = originalUpdateInProgress;
+      process.env.QUIET_CORE_UPDATE_IN_PROGRESS = originalUpdateInProgress;
     }
   });
 
@@ -226,7 +226,7 @@ describe("maybeRepairGatewayDaemon", () => {
   }
 
   async function runNonInteractiveUpdateRepair() {
-    process.env.OPENCLAW_UPDATE_IN_PROGRESS = "1";
+    process.env.QUIET_CORE_UPDATE_IN_PROGRESS = "1";
     await runNonInteractiveRepair();
   }
 
@@ -294,8 +294,8 @@ describe("maybeRepairGatewayDaemon", () => {
     service.readCommand.mockResolvedValueOnce({
       programArguments: ["/bin/node", "cli", "gateway"],
       environment: {
-        OPENCLAW_STATE_DIR: "/tmp/openclaw-service",
-        OPENCLAW_CONFIG_PATH: "/tmp/openclaw-service/openclaw.json",
+        QUIET_CORE_STATE_DIR: "/tmp/quiet-core-bot-service",
+        QUIET_CORE_CONFIG_PATH: "/tmp/quiet-core-bot-service/quiet-core-bot.json",
       },
     });
     readGatewayRestartHandoffSync.mockReturnValueOnce({
@@ -325,10 +325,10 @@ describe("maybeRepairGatewayDaemon", () => {
 
     expect(readGatewayRestartHandoffSync).toHaveBeenCalledTimes(2);
     const [handoffEnv] = readGatewayRestartHandoffSync.mock.calls[0] as unknown as [
-      { OPENCLAW_STATE_DIR?: string; OPENCLAW_CONFIG_PATH?: string },
+      { QUIET_CORE_STATE_DIR?: string; QUIET_CORE_CONFIG_PATH?: string },
     ];
-    expect(handoffEnv?.OPENCLAW_STATE_DIR).toBe("/tmp/openclaw-service");
-    expect(handoffEnv?.OPENCLAW_CONFIG_PATH).toBe("/tmp/openclaw-service/openclaw.json");
+    expect(handoffEnv?.QUIET_CORE_STATE_DIR).toBe("/tmp/quiet-core-bot-service");
+    expect(handoffEnv?.QUIET_CORE_CONFIG_PATH).toBe("/tmp/quiet-core-bot-service/quiet-core-bot.json");
     expect(note).toHaveBeenCalledWith(
       "Recent restart handoff: full-process via systemd; source=plugin-change; reason=plugin source changed; pid=12345; age=30s; expiresIn=30s",
       "Gateway",
@@ -413,7 +413,7 @@ describe("maybeRepairGatewayDaemon", () => {
         {
           pid: 4242,
           command: "node",
-          commandLine: "/tmp/newer-openclaw/bin/openclaw logs --follow",
+          commandLine: "/tmp/newer-quiet-core-bot/bin/quiet-core-bot logs --follow",
           address: "TCP 127.0.0.1:50123->127.0.0.1:18789 (ESTABLISHED)",
           direction: "client",
         },
@@ -445,7 +445,7 @@ describe("maybeRepairGatewayDaemon", () => {
         {
           pid: 5151,
           command: "node",
-          commandLine: "/tmp/newer-openclaw/bin/openclaw logs --follow",
+          commandLine: "/tmp/newer-quiet-core-bot/bin/quiet-core-bot logs --follow",
           address: "TCP 127.0.0.1:50123->127.0.0.1:18789 (ESTABLISHED)",
           direction: "client",
         },
@@ -472,7 +472,7 @@ describe("maybeRepairGatewayDaemon", () => {
 
   it("suppresses busy-port note for expected Gateway listeners", async () => {
     setPlatform("linux");
-    const listeners = [{ pid: 5001, commandLine: "openclaw-gateway", address: "0.0.0.0:18789" }];
+    const listeners = [{ pid: 5001, commandLine: "quiet-core-bot-gateway", address: "0.0.0.0:18789" }];
     inspectPortUsage.mockResolvedValue({
       port: 18789,
       status: "busy",
@@ -494,8 +494,8 @@ describe("maybeRepairGatewayDaemon", () => {
       port: 18789,
       status: "busy",
       listeners: [
-        { pid: 5001, commandLine: "openclaw-gateway", address: "0.0.0.0:18789" },
-        { pid: 5002, commandLine: "openclaw-gateway", address: "127.0.0.1:18789" },
+        { pid: 5001, commandLine: "quiet-core-bot-gateway", address: "0.0.0.0:18789" },
+        { pid: 5002, commandLine: "quiet-core-bot-gateway", address: "127.0.0.1:18789" },
       ],
       hints: ["Multiple listeners detected"],
     });
@@ -579,7 +579,7 @@ describe("maybeRepairGatewayDaemon", () => {
     setPlatform("linux");
     service.isLoaded.mockResolvedValue(false);
 
-    await withEnvAsync({ OPENCLAW_SERVICE_REPAIR_POLICY: "external" }, async () => {
+    await withEnvAsync({ QUIET_CORE_SERVICE_REPAIR_POLICY: "external" }, async () => {
       await runAutoRepair();
     });
 
@@ -594,10 +594,10 @@ describe("maybeRepairGatewayDaemon", () => {
     findSystemGatewayServices.mockResolvedValue([
       {
         platform: "linux",
-        label: "openclaw-gateway.service",
-        detail: "unit: /etc/systemd/system/openclaw-gateway.service",
+        label: "quiet-core-bot-gateway.service",
+        detail: "unit: /etc/systemd/system/quiet-core-bot-gateway.service",
         scope: "system",
-        marker: "openclaw",
+        marker: "quiet-core-bot",
         legacy: false,
       },
     ]);
@@ -610,7 +610,7 @@ describe("maybeRepairGatewayDaemon", () => {
     expect(note).toHaveBeenCalledWith(
       [
         "System-level Quiet Core bot gateway service detected while the user gateway service is not installed.",
-        "- openclaw-gateway.service (unit: /etc/systemd/system/openclaw-gateway.service)",
+        "- quiet-core-bot-gateway.service (unit: /etc/systemd/system/quiet-core-bot-gateway.service)",
         "Quiet Core bot will not install a second user-level gateway service automatically.",
         "Run `quiet-core-bot gateway status --deep` or `quiet-core-bot doctor --deep` to inspect duplicate services.",
         `Set ${SERVICE_REPAIR_POLICY_ENV}=external if a system supervisor owns the gateway lifecycle.`,
@@ -623,7 +623,7 @@ describe("maybeRepairGatewayDaemon", () => {
     setPlatform("linux");
     service.readRuntime.mockResolvedValue({ status: "stopped" });
 
-    await withEnvAsync({ OPENCLAW_SERVICE_REPAIR_POLICY: "external" }, async () => {
+    await withEnvAsync({ QUIET_CORE_SERVICE_REPAIR_POLICY: "external" }, async () => {
       await runAutoRepair();
     });
 
@@ -634,7 +634,7 @@ describe("maybeRepairGatewayDaemon", () => {
   it("skips gateway service restart when service repair policy is external", async () => {
     setPlatform("linux");
 
-    await withEnvAsync({ OPENCLAW_SERVICE_REPAIR_POLICY: "external" }, async () => {
+    await withEnvAsync({ QUIET_CORE_SERVICE_REPAIR_POLICY: "external" }, async () => {
       await runAutoRepair();
     });
 
@@ -648,7 +648,7 @@ describe("maybeRepairGatewayDaemon", () => {
     vi.mocked(launchd.isLaunchAgentLoaded).mockResolvedValue(false);
     vi.mocked(launchd.launchAgentPlistExists).mockResolvedValue(true);
 
-    await withEnvAsync({ OPENCLAW_SERVICE_REPAIR_POLICY: "external" }, async () => {
+    await withEnvAsync({ QUIET_CORE_SERVICE_REPAIR_POLICY: "external" }, async () => {
       await runAutoRepair();
     });
 

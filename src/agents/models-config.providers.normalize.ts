@@ -1,7 +1,7 @@
 /**
  * Normalizes configured provider model rows for runtime/discovery use.
  */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import type { PluginManifestRecord } from "../plugins/manifest-registry.js";
 import { ensureAuthProfileStore } from "./auth-profiles/store.js";
 import { normalizeConfiguredProviderCatalogModelId } from "./model-ref-shared.js";

@@ -30,7 +30,7 @@ function usage() {
   return [
     "Usage: node --import tsx scripts/measure-rpc-rtt.mjs",
     "  --output-dir <dir>",
-    "  [--repo-root <openclaw-repo>]",
+    "  [--repo-root <quiet-core-bot-repo>]",
     "  [--iterations <count>]",
     "  [--methods <comma-separated-methods>]",
     "  [--help, -h]",
@@ -546,14 +546,14 @@ export async function startGateway({
           XDG_CONFIG_HOME: path.join(tempRoot, "xdg-config"),
           XDG_DATA_HOME: path.join(tempRoot, "xdg-data"),
           XDG_CACHE_HOME: path.join(tempRoot, "xdg-cache"),
-          OPENCLAW_CONFIG_PATH: configPath,
-          OPENCLAW_STATE_DIR: path.join(tempRoot, "state"),
-          OPENCLAW_GATEWAY_TOKEN: token,
-          OPENCLAW_SKIP_BROWSER_CONTROL_SERVER: "1",
-          OPENCLAW_SKIP_GMAIL_WATCHER: "1",
-          OPENCLAW_SKIP_CANVAS_HOST: "1",
-          OPENCLAW_NO_RESPAWN: "1",
-          OPENCLAW_TEST_FAST: "1",
+          QUIET_CORE_CONFIG_PATH: configPath,
+          QUIET_CORE_STATE_DIR: path.join(tempRoot, "state"),
+          QUIET_CORE_GATEWAY_TOKEN: token,
+          QUIET_CORE_SKIP_BROWSER_CONTROL_SERVER: "1",
+          QUIET_CORE_SKIP_GMAIL_WATCHER: "1",
+          QUIET_CORE_SKIP_CANVAS_HOST: "1",
+          QUIET_CORE_NO_RESPAWN: "1",
+          QUIET_CORE_TEST_FAST: "1",
         },
         stdio: ["ignore", stdout.fd, stderr.fd],
       },
@@ -887,14 +887,14 @@ async function main() {
     process.stdout.write(`${usage()}\n`);
     return;
   }
-  const repoRoot = path.resolve(args.repoRoot ?? process.env.OPENCLAW_REPO_ROOT ?? process.cwd());
+  const repoRoot = path.resolve(args.repoRoot ?? process.env.QUIET_CORE_REPO_ROOT ?? process.cwd());
   const outputDir = path.resolve(args.outputDir);
   await fs.mkdir(outputDir, { recursive: true });
   const tempRoot = await fs.mkdtemp(path.join(outputDir, "..", ".rpc-rtt-"));
   const startedAt = new Date();
   const token = `rpc-rtt-${randomUUID()}`;
   const port = await getFreePort();
-  const configPath = path.join(tempRoot, "openclaw.json");
+  const configPath = path.join(tempRoot, "quiet-core-bot.json");
   const stdoutPath = path.join(tempRoot, "gateway.stdout.log");
   const stderrPath = path.join(tempRoot, "gateway.stderr.log");
   let gatewayChild;
@@ -950,14 +950,14 @@ async function main() {
         maxProtocol: protocol.PROTOCOL_VERSION,
         client: {
           id: "gateway-client",
-          displayName: "openclaw-rtt rpc probe",
+          displayName: "quiet-core-bot-rtt rpc probe",
           version: "rtt",
           platform: process.platform,
           mode: "backend",
-          instanceId: `openclaw-rtt-rpc-${randomUUID()}`,
+          instanceId: `quiet-core-bot-rtt-rpc-${randomUUID()}`,
         },
         locale: "en-US",
-        userAgent: "openclaw-rtt-rpc",
+        userAgent: "quiet-core-bot-rtt-rpc",
         role: "operator",
         scopes: ["operator.admin"],
         caps: [],

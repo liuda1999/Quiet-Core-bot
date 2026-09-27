@@ -1,7 +1,7 @@
 /**
  * Builds and repairs prompt inputs for embedded-agent attempts.
  */
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
 import type {
   ContextEnginePromptCacheInfo,
   ContextEngineRuntimeContext,

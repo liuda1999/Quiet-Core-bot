@@ -11,7 +11,7 @@ Adds video generation provider support.
 
 ## Distribution
 
-- Package: `@openclaw/alibaba-provider`
+- Package: `@quiet-core/alibaba-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

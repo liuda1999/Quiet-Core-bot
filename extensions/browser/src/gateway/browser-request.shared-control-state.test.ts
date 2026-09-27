@@ -42,7 +42,7 @@ vi.mock("../browser/chrome.js", () => ({
   launchOpenClawChrome: vi.fn(async () => {
     throw new Error("launch should not be needed for status");
   }),
-  resolveOpenClawUserDataDir: vi.fn(() => "/tmp/openclaw-browser"),
+  resolveOpenClawUserDataDir: vi.fn(() => "/tmp/quiet-core-bot-browser"),
   stopOpenClawChrome: vi.fn(async () => {}),
 }));
 
@@ -67,7 +67,7 @@ function browserConfig(params: {
     },
     browser: {
       enabled: true,
-      defaultProfile: "openclaw",
+      defaultProfile: "quiet-core-bot",
       ...(params.executablePath ? { executablePath: params.executablePath } : {}),
       ...(typeof params.headless === "boolean" ? { headless: params.headless } : {}),
       ...(typeof params.noSandbox === "boolean" ? { noSandbox: params.noSandbox } : {}),
@@ -87,7 +87,7 @@ async function browserRequestStatus(): Promise<unknown> {
     params: {
       method: "GET",
       path: "/",
-      query: { profile: "openclaw" },
+      query: { profile: "quiet-core-bot" },
     },
     respond: respond as never,
     context: {

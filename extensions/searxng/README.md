@@ -5,7 +5,7 @@ Official OpenClaw plugin for SearXNG.
 ## Install
 
 ```sh
-openclaw plugins install @openclaw/searxng-plugin
+quiet-core-bot plugins install @quiet-core/searxng-plugin
 ```
 
 ## Docs

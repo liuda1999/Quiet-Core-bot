@@ -11,7 +11,7 @@ Quiet Core bot ACP runtime backend with plugin-owned session and transport manag
 
 ## Distribution
 
-- Package: `@openclaw/acpx`
+- Package: `@quiet-core/acpx`
 - Install route: npm; ClawHub
 
 ## Surface

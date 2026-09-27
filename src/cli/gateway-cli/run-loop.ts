@@ -112,7 +112,7 @@ export async function runGatewayLoop(params: {
   // listeners. Without this, every subsequent lifecycle path (SIGUSR1,
   // SIGTERM-with-intent, restart iteration hook, stability bundle writer)
   // depends on a dynamic import() call. After an in-place package upgrade
-  // (e.g. `npm install -g openclaw@latest` triggered via update.run),
+  // (e.g. `npm install -g quiet-core-bot@latest` triggered via update.run),
   // dist/ chunk hashes rotate while the process is still running. The next
   // SIGUSR1 — including the one update.run schedules for itself — would
   // hit ERR_MODULE_NOT_FOUND from inside its async IIFE, reject silently,
@@ -250,7 +250,7 @@ export async function runGatewayLoop(params: {
         });
       } else {
         gatewayLog.info(
-          `restart mode: in-process restart (${respawn.detail ?? "OPENCLAW_NO_RESPAWN"})`,
+          `restart mode: in-process restart (${respawn.detail ?? "QUIET_CORE_NO_RESPAWN"})`,
         );
       }
       if (!(await reacquireLockForInProcessRestart())) {
@@ -308,7 +308,7 @@ export async function runGatewayLoop(params: {
       );
     } else {
       gatewayLog.info(
-        `restart mode: in-process restart (${respawn.detail ?? "OPENCLAW_NO_RESPAWN"})`,
+        `restart mode: in-process restart (${respawn.detail ?? "QUIET_CORE_NO_RESPAWN"})`,
       );
     }
     if (!(await reacquireLockForInProcessRestart())) {

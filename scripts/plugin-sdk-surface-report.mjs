@@ -196,20 +196,20 @@ let budgets;
 let publicDeprecatedExportsByEntrypointBudget;
 try {
   budgets = {
-    publicEntrypoints: readBudgetEnv("OPENCLAW_PLUGIN_SDK_MAX_PUBLIC_ENTRYPOINTS", 322),
-    publicExports: readBudgetEnv("OPENCLAW_PLUGIN_SDK_MAX_PUBLIC_EXPORTS", 10377),
-    publicFunctionExports: readBudgetEnv("OPENCLAW_PLUGIN_SDK_MAX_PUBLIC_FUNCTION_EXPORTS", 5206),
+    publicEntrypoints: readBudgetEnv("QUIET_CORE_PLUGIN_SDK_MAX_PUBLIC_ENTRYPOINTS", 322),
+    publicExports: readBudgetEnv("QUIET_CORE_PLUGIN_SDK_MAX_PUBLIC_EXPORTS", 10377),
+    publicFunctionExports: readBudgetEnv("QUIET_CORE_PLUGIN_SDK_MAX_PUBLIC_FUNCTION_EXPORTS", 5206),
     publicDeprecatedExports: readBudgetEnv(
-      "OPENCLAW_PLUGIN_SDK_MAX_PUBLIC_DEPRECATED_EXPORTS",
+      "QUIET_CORE_PLUGIN_SDK_MAX_PUBLIC_DEPRECATED_EXPORTS",
       3247,
     ),
     publicWildcardReexports: readBudgetEnv(
-      "OPENCLAW_PLUGIN_SDK_MAX_PUBLIC_WILDCARD_REEXPORTS",
+      "QUIET_CORE_PLUGIN_SDK_MAX_PUBLIC_WILDCARD_REEXPORTS",
       215,
     ),
   };
   publicDeprecatedExportsByEntrypointBudget = readEntrypointBudgetEnv(
-    "OPENCLAW_PLUGIN_SDK_MAX_PUBLIC_DEPRECATED_EXPORTS_BY_ENTRYPOINT",
+    "QUIET_CORE_PLUGIN_SDK_MAX_PUBLIC_DEPRECATED_EXPORTS_BY_ENTRYPOINT",
     defaultPublicDeprecatedExportsByEntrypointBudget,
   );
 } catch (error) {

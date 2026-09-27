@@ -114,13 +114,13 @@ Photos are recompressed to keep the base64 payload under 5 MB.
 
 The macOS companion app exposes a checkbox:
 
-- **Settings → General → Allow Camera** (`openclaw.cameraEnabled`)
+- **Settings → General → Allow Camera** (`quiet-core-bot.cameraEnabled`)
   - Default: **off**
   - When off: camera requests return "Camera disabled by user".
 
 ### CLI helper (node invoke)
 
-Use the main `openclaw` CLI to invoke camera commands on the macOS node.
+Use the main `quiet-core-bot` CLI to invoke camera commands on the macOS node.
 
 Examples:
 

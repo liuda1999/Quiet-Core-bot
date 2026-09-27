@@ -1,5 +1,5 @@
 {
-  "name": "@openclaw/signal",
+  "name": "@quiet-core/signal",
   "version": "2026.6.11",
   "description": "OpenClaw Signal channel plugin",
   "type": "module",
@@ -7,9 +7,9 @@
     "ws": "8.21.0"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@quiet-core/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": [
       "./index.ts"
     ],
@@ -40,8 +40,8 @@
       ]
     },
     "install": {
-      "clawhubSpec": "clawhub:@openclaw/signal",
-      "npmSpec": "@openclaw/signal",
+      "clawhubSpec": "clawhub:@quiet-core/signal",
+      "npmSpec": "@quiet-core/signal",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.6.9",
       "allowInvalidConfigRecovery": true
@@ -60,6 +60,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/liuda1999/Quiet-Core-bot"
   }
 }

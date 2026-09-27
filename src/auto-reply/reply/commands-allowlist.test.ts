@@ -59,7 +59,7 @@ vi.mock("../../config/config.js", () => ({
     const writePayload = { nextConfig: transformed.nextConfig, afterWrite };
     await replaceConfigFileMock(writePayload);
     return {
-      path: snapshot.path ?? "/tmp/openclaw.json",
+      path: snapshot.path ?? "/tmp/quiet-core-bot.json",
       previousHash,
       persistedHash: "persisted-hash",
       snapshot,
@@ -227,7 +227,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   setAllowlistPluginRegistry();
   readConfigFileSnapshotMock.mockImplementation(async () => {
-    const configPath = process.env.OPENCLAW_CONFIG_PATH;
+    const configPath = process.env.QUIET_CORE_CONFIG_PATH;
     if (!configPath) {
       return { valid: false, parsed: null };
     }
@@ -239,7 +239,7 @@ beforeEach(() => {
     config,
   }));
   replaceConfigFileMock.mockImplementation(async (params: { nextConfig: unknown }) => {
-    const configPath = process.env.OPENCLAW_CONFIG_PATH;
+    const configPath = process.env.QUIET_CORE_CONFIG_PATH;
     if (configPath) {
       await fs.writeFile(configPath, JSON.stringify(params.nextConfig, null, 2), "utf-8");
     }
@@ -253,18 +253,18 @@ async function withTempConfigPath<T>(
   initialConfig: Record<string, unknown>,
   run: (configPath: string) => Promise<T>,
 ): Promise<T> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-allowlist-config-"));
-  const configPath = path.join(dir, "openclaw.json");
-  const previous = process.env.OPENCLAW_CONFIG_PATH;
-  process.env.OPENCLAW_CONFIG_PATH = configPath;
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-allowlist-config-"));
+  const configPath = path.join(dir, "quiet-core-bot.json");
+  const previous = process.env.QUIET_CORE_CONFIG_PATH;
+  process.env.QUIET_CORE_CONFIG_PATH = configPath;
   await fs.writeFile(configPath, JSON.stringify(initialConfig, null, 2), "utf-8");
   try {
     return await run(configPath);
   } finally {
     if (previous === undefined) {
-      delete process.env.OPENCLAW_CONFIG_PATH;
+      delete process.env.QUIET_CORE_CONFIG_PATH;
     } else {
-      process.env.OPENCLAW_CONFIG_PATH = previous;
+      process.env.QUIET_CORE_CONFIG_PATH = previous;
     }
     await fs.rm(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
   }

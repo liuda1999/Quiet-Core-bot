@@ -11,7 +11,7 @@ Quiet Core bot QQ Bot channel plugin for group and direct-message workflows.
 
 ## Distribution
 
-- Package: `@openclaw/qqbot`
+- Package: `@quiet-core/qqbot`
 - Install route: npm; ClawHub
 
 ## Surface

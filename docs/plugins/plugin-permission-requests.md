@@ -39,7 +39,7 @@ Most plugin-authored prompts should start in a `before_tool_call` hook. The hook
 runs after the model selects a tool and before Quiet Core bot executes it:
 
 ```typescript
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
+import { definePluginEntry } from "quiet-core-bot/plugin-sdk/plugin-entry";
 
 export default definePluginEntry({
   id: "deploy-policy",

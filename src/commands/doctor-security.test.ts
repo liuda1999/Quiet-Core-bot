@@ -34,25 +34,25 @@ describe("noteSecurityWarnings gateway exposure", () => {
     listReadOnlyChannelPluginsForConfigMock.mockReset();
     listReadOnlyChannelPluginsForConfigMock.mockImplementation(() => pluginRegistry.list);
     pluginRegistry.list = [];
-    prevToken = process.env.OPENCLAW_GATEWAY_TOKEN;
-    prevPassword = process.env.OPENCLAW_GATEWAY_PASSWORD;
+    prevToken = process.env.QUIET_CORE_GATEWAY_TOKEN;
+    prevPassword = process.env.QUIET_CORE_GATEWAY_PASSWORD;
     prevHome = process.env.HOME;
-    prevServiceKind = process.env.OPENCLAW_SERVICE_KIND;
-    delete process.env.OPENCLAW_GATEWAY_TOKEN;
-    delete process.env.OPENCLAW_GATEWAY_PASSWORD;
-    delete process.env.OPENCLAW_SERVICE_KIND;
+    prevServiceKind = process.env.QUIET_CORE_SERVICE_KIND;
+    delete process.env.QUIET_CORE_GATEWAY_TOKEN;
+    delete process.env.QUIET_CORE_GATEWAY_PASSWORD;
+    delete process.env.QUIET_CORE_SERVICE_KIND;
   });
 
   afterEach(() => {
     if (prevToken === undefined) {
-      delete process.env.OPENCLAW_GATEWAY_TOKEN;
+      delete process.env.QUIET_CORE_GATEWAY_TOKEN;
     } else {
-      process.env.OPENCLAW_GATEWAY_TOKEN = prevToken;
+      process.env.QUIET_CORE_GATEWAY_TOKEN = prevToken;
     }
     if (prevPassword === undefined) {
-      delete process.env.OPENCLAW_GATEWAY_PASSWORD;
+      delete process.env.QUIET_CORE_GATEWAY_PASSWORD;
     } else {
-      process.env.OPENCLAW_GATEWAY_PASSWORD = prevPassword;
+      process.env.QUIET_CORE_GATEWAY_PASSWORD = prevPassword;
     }
     if (prevHome === undefined) {
       delete process.env.HOME;
@@ -60,9 +60,9 @@ describe("noteSecurityWarnings gateway exposure", () => {
       process.env.HOME = prevHome;
     }
     if (prevServiceKind === undefined) {
-      delete process.env.OPENCLAW_SERVICE_KIND;
+      delete process.env.QUIET_CORE_SERVICE_KIND;
     } else {
-      process.env.OPENCLAW_SERVICE_KIND = prevServiceKind;
+      process.env.QUIET_CORE_SERVICE_KIND = prevServiceKind;
     }
   });
 
@@ -72,11 +72,11 @@ describe("noteSecurityWarnings gateway exposure", () => {
     file: Record<string, unknown>,
     run: () => Promise<void>,
   ): Promise<void> {
-    const home = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-doctor-security-"));
+    const home = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-doctor-security-"));
     process.env.HOME = home;
-    await fs.mkdir(path.join(home, ".openclaw"), { recursive: true });
+    await fs.mkdir(path.join(home, ".quiet-core-bot"), { recursive: true });
     await fs.writeFile(
-      path.join(home, ".openclaw", "exec-approvals.json"),
+      path.join(home, ".quiet-core-bot", "exec-approvals.json"),
       JSON.stringify(file, null, 2),
     );
     await run();
@@ -136,7 +136,7 @@ describe("noteSecurityWarnings gateway exposure", () => {
   });
 
   it("uses env token to avoid critical warning", async () => {
-    process.env.OPENCLAW_GATEWAY_TOKEN = "token-123";
+    process.env.QUIET_CORE_GATEWAY_TOKEN = "token-123";
     const cfg = { gateway: { bind: "lan" } } as OpenClawConfig;
     await noteSecurityWarnings(cfg);
     const message = lastMessage();
@@ -150,7 +150,7 @@ describe("noteSecurityWarnings gateway exposure", () => {
         bind: "lan",
         auth: {
           mode: "token",
-          token: { source: "env", provider: "default", id: "OPENCLAW_GATEWAY_TOKEN" },
+          token: { source: "env", provider: "default", id: "QUIET_CORE_GATEWAY_TOKEN" },
         },
       },
     } as OpenClawConfig;
@@ -160,8 +160,8 @@ describe("noteSecurityWarnings gateway exposure", () => {
     expect(message).not.toContain("CRITICAL");
   });
 
-  it("warns when OPENCLAW_GATEWAY_TOKEN env conflicts with gateway.auth.token config (#74271)", async () => {
-    process.env.OPENCLAW_GATEWAY_TOKEN = "env-token-123";
+  it("warns when QUIET_CORE_GATEWAY_TOKEN env conflicts with gateway.auth.token config (#74271)", async () => {
+    process.env.QUIET_CORE_GATEWAY_TOKEN = "env-token-123";
     const cfg = {
       gateway: {
         auth: {
@@ -171,22 +171,22 @@ describe("noteSecurityWarnings gateway exposure", () => {
     } as OpenClawConfig;
     await noteSecurityWarnings(cfg);
     const message = lastMessage();
-    expect(message).toContain("OPENCLAW_GATEWAY_TOKEN conflicts with gateway.auth.token");
+    expect(message).toContain("QUIET_CORE_GATEWAY_TOKEN conflicts with gateway.auth.token");
     expect(message).toContain("Direct local Gateway clients commonly prefer the env token");
     expect(message).toContain("~/.quiet-core-bot/.env");
   });
 
   it("does not warn when only env token is set without config token", async () => {
-    process.env.OPENCLAW_GATEWAY_TOKEN = "env-token-only";
+    process.env.QUIET_CORE_GATEWAY_TOKEN = "env-token-only";
     const cfg = { gateway: { bind: "lan" } } as OpenClawConfig;
     await noteSecurityWarnings(cfg);
     const message = lastMessage();
-    expect(message).not.toContain("OPENCLAW_GATEWAY_TOKEN overrides");
+    expect(message).not.toContain("QUIET_CORE_GATEWAY_TOKEN overrides");
   });
 
   it("does not warn inside the managed gateway service credential context", async () => {
-    process.env.OPENCLAW_GATEWAY_TOKEN = "env-token-123";
-    process.env.OPENCLAW_SERVICE_KIND = "gateway";
+    process.env.QUIET_CORE_GATEWAY_TOKEN = "env-token-123";
+    process.env.QUIET_CORE_SERVICE_KIND = "gateway";
     const cfg = {
       gateway: {
         auth: {
@@ -196,22 +196,22 @@ describe("noteSecurityWarnings gateway exposure", () => {
     } as OpenClawConfig;
     await noteSecurityWarnings(cfg);
     const message = lastMessage();
-    expect(message).not.toContain("OPENCLAW_GATEWAY_TOKEN conflicts");
+    expect(message).not.toContain("QUIET_CORE_GATEWAY_TOKEN conflicts");
   });
 
-  it("does not warn when config token uses OPENCLAW_GATEWAY_TOKEN SecretRef", async () => {
-    process.env.OPENCLAW_GATEWAY_TOKEN = "env-token-123";
+  it("does not warn when config token uses QUIET_CORE_GATEWAY_TOKEN SecretRef", async () => {
+    process.env.QUIET_CORE_GATEWAY_TOKEN = "env-token-123";
     const cfg = {
-      gateway: { auth: { token: "${OPENCLAW_GATEWAY_TOKEN}" } },
+      gateway: { auth: { token: "${QUIET_CORE_GATEWAY_TOKEN}" } },
       secrets: { providers: { default: { source: "env" } } },
     } as OpenClawConfig;
     await noteSecurityWarnings(cfg);
     const message = lastMessage();
-    expect(message).not.toContain("OPENCLAW_GATEWAY_TOKEN overrides");
+    expect(message).not.toContain("QUIET_CORE_GATEWAY_TOKEN overrides");
   });
 
   it("does not warn about local gateway auth token precedence in remote mode", async () => {
-    process.env.OPENCLAW_GATEWAY_TOKEN = "env-token-123";
+    process.env.QUIET_CORE_GATEWAY_TOKEN = "env-token-123";
     const cfg = {
       gateway: {
         mode: "remote",
@@ -221,7 +221,7 @@ describe("noteSecurityWarnings gateway exposure", () => {
     } as OpenClawConfig;
     await noteSecurityWarnings(cfg);
     const message = lastMessage();
-    expect(message).not.toContain("OPENCLAW_GATEWAY_TOKEN overrides");
+    expect(message).not.toContain("QUIET_CORE_GATEWAY_TOKEN overrides");
   });
 
   it("treats whitespace token as missing", async () => {

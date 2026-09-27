@@ -1,7 +1,7 @@
 /** Factory for image providers with OpenAI-compatible generation/edit endpoints. */
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { isProviderApiKeyConfigured } from "openclaw/plugin-sdk/provider-auth";
-import { resolveApiKeyForProvider } from "openclaw/plugin-sdk/provider-auth-runtime";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import { isProviderApiKeyConfigured } from "quiet-core-bot/plugin-sdk/provider-auth";
+import { resolveApiKeyForProvider } from "quiet-core-bot/plugin-sdk/provider-auth-runtime";
 import {
   assertOkOrThrowHttpError,
   createProviderOperationDeadline,
@@ -10,8 +10,8 @@ import {
   resolveProviderHttpRequestConfig,
   resolveProviderOperationTimeoutMs,
   sanitizeConfiguredModelProviderRequest,
-} from "openclaw/plugin-sdk/provider-http";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "quiet-core-bot/plugin-sdk/provider-http";
+import { normalizeOptionalString } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { parseOpenAiCompatibleImageResponse } from "./image-assets.js";
 import type {
   ImageGenerationProvider,

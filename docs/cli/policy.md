@@ -1,5 +1,5 @@
 ---
-summary: "CLI reference for `openclaw policy` conformance checks"
+summary: "CLI reference for `quiet-core-bot policy` conformance checks"
 read_when:
   - You want to check Quiet Core bot settings against an authored policy.jsonc
   - You want policy findings in doctor lint
@@ -7,9 +7,9 @@ read_when:
 title: "Policy"
 ---
 
-# `openclaw policy`
+# `quiet-core-bot policy`
 
-`openclaw policy` is provided by the bundled Policy plugin. Policy is an
+`quiet-core-bot policy` is provided by the bundled Policy plugin. Policy is an
 enterprise conformance layer over existing Quiet Core bot settings. It does not add a
 second configuration system. `policy.jsonc` defines authored requirements,
 Quiet Core bot observes the active workspace as evidence, and policy health checks
@@ -417,8 +417,8 @@ allowlist such as `["all"]`.
 
 Exec approvals policy observes the active runtime `exec-approvals.json`
 artifact. By default this is `~/.quiet-core-bot/exec-approvals.json`; when
-`OPENCLAW_STATE_DIR` is set, Policy reads
-`$OPENCLAW_STATE_DIR/exec-approvals.json`. Actual posture rules such as
+`QUIET_CORE_STATE_DIR` is set, Policy reads
+`$QUIET_CORE_STATE_DIR/exec-approvals.json`. Actual posture rules such as
 `execApprovals.defaults.*` or `execApprovals.agents.*` require readable artifact
 evidence; a missing or invalid artifact is reported as unobservable evidence
 instead of becoming a best-effort pass against synthetic runtime defaults. Once
@@ -505,9 +505,9 @@ allow only reviewed exec approval posture for selected agents:
 Run policy-only checks during authoring:
 
 ```bash
-openclaw policy check
-openclaw policy check --json
-openclaw policy check --severity-min error
+quiet-core-bot policy check
+quiet-core-bot policy check --json
+quiet-core-bot policy check --severity-min error
 ```
 
 `policy check` runs only the policy check set and emits evidence, findings, and
@@ -517,8 +517,8 @@ when the Policy plugin is enabled.
 Compare an operator policy file to an authored baseline policy file:
 
 ```bash
-openclaw policy compare --baseline official.policy.jsonc
-openclaw policy compare --baseline official.policy.jsonc --policy policy.jsonc --json
+quiet-core-bot policy compare --baseline official.policy.jsonc
+quiet-core-bot policy compare --baseline official.policy.jsonc --policy policy.jsonc --json
 ```
 
 `policy compare` compares policy file syntax to policy file syntax. It does not
@@ -633,7 +633,7 @@ Example JSON output:
       {
         "id": "telegram",
         "provider": "telegram",
-        "source": "oc://openclaw.config/channels/telegram",
+        "source": "oc://quiet-core-bot.config/channels/telegram",
         "enabled": false
       }
     ],
@@ -641,14 +641,14 @@ Example JSON output:
       {
         "id": "docs",
         "transport": "stdio",
-        "source": "oc://openclaw.config/mcp/servers/docs",
+        "source": "oc://quiet-core-bot.config/mcp/servers/docs",
         "command": "npx"
       }
     ],
     "modelProviders": [
       {
         "id": "openai",
-        "source": "oc://openclaw.config/models/providers/openai"
+        "source": "oc://quiet-core-bot.config/models/providers/openai"
       }
     ],
     "modelRefs": [
@@ -656,13 +656,13 @@ Example JSON output:
         "ref": "openai/gpt-5.5",
         "provider": "openai",
         "model": "gpt-5.5",
-        "source": "oc://openclaw.config/agents/defaults/model"
+        "source": "oc://quiet-core-bot.config/agents/defaults/model"
       }
     ],
     "network": [
       {
         "id": "browser-private-network",
-        "source": "oc://openclaw.config/browser/ssrfPolicy/dangerouslyAllowPrivateNetwork",
+        "source": "oc://quiet-core-bot.config/browser/ssrfPolicy/dangerouslyAllowPrivateNetwork",
         "value": false
       }
     ],
@@ -670,7 +670,7 @@ Example JSON output:
       {
         "id": "gateway-bind",
         "kind": "bind",
-        "source": "oc://openclaw.config/gateway/bind",
+        "source": "oc://quiet-core-bot.config/gateway/bind",
         "value": "loopback",
         "nonLoopback": false,
         "explicit": true
@@ -680,18 +680,18 @@ Example JSON output:
       {
         "id": "agents-defaults-workspace-access",
         "kind": "workspaceAccess",
-        "source": "oc://openclaw.config/agents/defaults/sandbox/workspaceAccess",
+        "source": "oc://quiet-core-bot.config/agents/defaults/sandbox/workspaceAccess",
         "scope": "defaults",
         "value": "ro",
         "sandboxMode": "all",
-        "sandboxModeSource": "oc://openclaw.config/agents/defaults/sandbox/mode",
+        "sandboxModeSource": "oc://quiet-core-bot.config/agents/defaults/sandbox/mode",
         "sandboxEnabled": true,
         "explicit": true
       },
       {
         "id": "agents-defaults-tool-exec",
         "kind": "toolDeny",
-        "source": "oc://openclaw.config/tools/deny",
+        "source": "oc://quiet-core-bot.config/tools/deny",
         "scope": "defaults",
         "tool": "exec",
         "denied": true,
@@ -702,13 +702,13 @@ Example JSON output:
       {
         "id": "vault",
         "kind": "provider",
-        "source": "oc://openclaw.config/secrets/providers/vault",
+        "source": "oc://quiet-core-bot.config/secrets/providers/vault",
         "providerSource": "env"
       },
       {
-        "id": "oc://openclaw.config/models/providers/openai/apiKey",
+        "id": "oc://quiet-core-bot.config/models/providers/openai/apiKey",
         "kind": "input",
-        "source": "oc://openclaw.config/models/providers/openai/apiKey",
+        "source": "oc://quiet-core-bot.config/models/providers/openai/apiKey",
         "provenance": "secretRef",
         "refSource": "env",
         "refProvider": "vault"
@@ -717,7 +717,7 @@ Example JSON output:
     "authProfiles": [
       {
         "id": "github",
-        "source": "oc://openclaw.config/auth/profiles/github",
+        "source": "oc://quiet-core-bot.config/auth/profiles/github",
         "validMetadata": true,
         "provider": "github",
         "mode": "token"
@@ -758,7 +758,7 @@ stable attestation hash.
 Use this lifecycle when accepting policy state:
 
 1. Author or review `policy.jsonc`.
-2. Run `openclaw policy check --json`.
+2. Run `quiet-core-bot policy check --json`.
 3. If the result is clean, record `attestation.policy.hash` as `expectedHash`.
 4. Record `attestation.attestationHash` as `expectedAttestationHash`.
 5. Re-run `quiet-core-bot doctor --lint` in CI or release gates.
@@ -773,11 +773,11 @@ evidence and refresh accepted attestation hashes after enabling these rules.
 Enabling or upgrading tool posture rules adds `toolPosture` evidence in the
 same way.
 
-`openclaw policy watch` runs the same check repeatedly and reports when the
+`quiet-core-bot policy watch` runs the same check repeatedly and reports when the
 current evidence no longer matches `expectedAttestationHash`:
 
 ```bash
-openclaw policy watch --json
+quiet-core-bot policy watch --json
 ```
 
 Use `--once` in CI or scripts that only need one drift evaluation. Without
@@ -872,8 +872,8 @@ Example JSON finding:
   "message": "Channel 'telegram' uses denied provider 'telegram'.",
   "source": "policy",
   "path": "quiet-core-bot config",
-  "ocPath": "oc://openclaw.config/channels/telegram",
-  "target": "oc://openclaw.config/channels/telegram",
+  "ocPath": "oc://quiet-core-bot.config/channels/telegram",
+  "target": "oc://quiet-core-bot.config/channels/telegram",
   "requirement": "oc://policy.jsonc/channels/denyRules/#0",
   "fixHint": "Telegram is not approved for this workspace."
 }
@@ -904,8 +904,8 @@ Example MCP finding:
   "message": "MCP server 'remote' is not in the policy allowlist.",
   "source": "policy",
   "path": "quiet-core-bot config",
-  "ocPath": "oc://openclaw.config/mcp/servers/remote",
-  "target": "oc://openclaw.config/mcp/servers/remote",
+  "ocPath": "oc://quiet-core-bot.config/mcp/servers/remote",
+  "target": "oc://quiet-core-bot.config/mcp/servers/remote",
   "requirement": "oc://policy.jsonc/mcp/servers/allow"
 }
 ```
@@ -919,8 +919,8 @@ Example model-provider finding:
   "message": "Model ref 'anthropic/claude-sonnet-4.7' uses unapproved provider 'anthropic'.",
   "source": "policy",
   "path": "quiet-core-bot config",
-  "ocPath": "oc://openclaw.config/agents/defaults/model/fallbacks/#0",
-  "target": "oc://openclaw.config/agents/defaults/model/fallbacks/#0",
+  "ocPath": "oc://quiet-core-bot.config/agents/defaults/model/fallbacks/#0",
+  "target": "oc://quiet-core-bot.config/agents/defaults/model/fallbacks/#0",
   "requirement": "oc://policy.jsonc/models/providers/allow"
 }
 ```
@@ -934,8 +934,8 @@ Example network finding:
   "message": "Network setting 'browser-private-network' allows private-network access.",
   "source": "policy",
   "path": "quiet-core-bot config",
-  "ocPath": "oc://openclaw.config/browser/ssrfPolicy/dangerouslyAllowPrivateNetwork",
-  "target": "oc://openclaw.config/browser/ssrfPolicy/dangerouslyAllowPrivateNetwork",
+  "ocPath": "oc://quiet-core-bot.config/browser/ssrfPolicy/dangerouslyAllowPrivateNetwork",
+  "target": "oc://quiet-core-bot.config/browser/ssrfPolicy/dangerouslyAllowPrivateNetwork",
   "requirement": "oc://policy.jsonc/network/privateNetwork/allow"
 }
 ```
@@ -949,8 +949,8 @@ Example Gateway exposure finding:
   "message": "Gateway bind setting 'gateway-bind' permits non-loopback exposure.",
   "source": "policy",
   "path": "quiet-core-bot config",
-  "ocPath": "oc://openclaw.config/gateway/bind",
-  "target": "oc://openclaw.config/gateway/bind",
+  "ocPath": "oc://quiet-core-bot.config/gateway/bind",
+  "target": "oc://quiet-core-bot.config/gateway/bind",
   "requirement": "oc://policy.jsonc/gateway/exposure/allowNonLoopbackBind"
 }
 ```
@@ -964,8 +964,8 @@ Example agent workspace finding:
   "message": "agents.defaults sandbox workspaceAccess 'rw' is not allowed by policy.",
   "source": "policy",
   "path": "quiet-core-bot config",
-  "ocPath": "oc://openclaw.config/agents/defaults/sandbox/workspaceAccess",
-  "target": "oc://openclaw.config/agents/defaults/sandbox/workspaceAccess",
+  "ocPath": "oc://quiet-core-bot.config/agents/defaults/sandbox/workspaceAccess",
+  "target": "oc://quiet-core-bot.config/agents/defaults/sandbox/workspaceAccess",
   "requirement": "oc://policy.jsonc/agents/workspace/allowedAccess"
 }
 ```

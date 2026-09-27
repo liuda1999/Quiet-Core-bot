@@ -23,9 +23,9 @@ export function formatCliCommand(
 ): string {
   const cliName = resolveCliName();
   const normalizedCommand = replaceCliName(command, cliName);
-  const rawContainer = env.OPENCLAW_CONTAINER_HINT?.trim();
+  const rawContainer = env.QUIET_CORE_CONTAINER_HINT?.trim();
   const container = rawContainer && CONTAINER_HINT_RE.test(rawContainer) ? rawContainer : undefined;
-  const profile = normalizeProfileName(env.OPENCLAW_PROFILE);
+  const profile = normalizeProfileName(env.QUIET_CORE_PROFILE);
   if (!container && !profile) {
     return normalizedCommand;
   }

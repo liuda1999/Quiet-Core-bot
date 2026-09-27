@@ -359,7 +359,7 @@ Custom providers in `models.providers` are written into `models.json` under the 
 </AccordionGroup>
 
 <Note>
-Marker persistence is source-authoritative: Quiet Core bot writes markers from the active source config snapshot (pre-resolution), not from resolved runtime secret values. This applies whenever Quiet Core bot regenerates `models.json`, including command-driven paths like `openclaw agent`.
+Marker persistence is source-authoritative: Quiet Core bot writes markers from the active source config snapshot (pre-resolution), not from resolved runtime secret values. This applies whenever Quiet Core bot regenerates `models.json`, including command-driven paths like `quiet-core-bot agent`.
 </Note>
 
 ## Related

@@ -1,17 +1,17 @@
 // Policy plugin module implements policy state behavior.
 import { createHash } from "node:crypto";
-import { normalizeProviderId } from "openclaw/plugin-sdk/provider-model-shared";
-import { normalizeAgentId } from "openclaw/plugin-sdk/routing";
-import { coerceSecretRef } from "openclaw/plugin-sdk/secret-input";
+import { normalizeProviderId } from "quiet-core-bot/plugin-sdk/provider-model-shared";
+import { normalizeAgentId } from "quiet-core-bot/plugin-sdk/routing";
+import { coerceSecretRef } from "quiet-core-bot/plugin-sdk/secret-input";
 import {
   asBoolean as readBoolean,
   isRecord,
   normalizeOptionalString as readString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { POLICY_TOOL_GROUPS } from "./tool-policy-conformance.js";
 
 // Mirrors the sandbox browser config default without importing core internals into the policy plugin.
-const DEFAULT_POLICY_SANDBOX_BROWSER_NETWORK = "openclaw-sandbox-browser";
+const DEFAULT_POLICY_SANDBOX_BROWSER_NETWORK = "quiet-core-bot-sandbox-browser";
 const DEFAULT_EXEC_APPROVAL_AGENT_ID = "main";
 const ALLOWLIST_DEFAULT_INGRESS_GROUP_POLICY_CHANNELS = new Set([
   "googlechat",
@@ -675,7 +675,7 @@ export function scanPolicyChannels(cfg: Record<string, unknown>): readonly Polic
       } = {
         id,
         provider: id,
-        source: `oc://openclaw.config/channels/${id}`,
+        source: `oc://quiet-core-bot.config/channels/${id}`,
       };
       if (isRecord(value) && typeof value.enabled === "boolean") {
         entry.enabled = value.enabled;
@@ -699,7 +699,7 @@ export function scanPolicyMcpServers(
       } = {
         id,
         transport: mcpServerTransport(value),
-        source: `oc://openclaw.config/mcp/servers/${ocPathSegment(id)}`,
+        source: `oc://quiet-core-bot.config/mcp/servers/${ocPathSegment(id)}`,
       };
       if (isRecord(value)) {
         if (typeof value.command === "string") {
@@ -720,7 +720,7 @@ export function scanPolicyModelProviders(
     .toSorted((a, b) => a.localeCompare(b))
     .map((id) => ({
       id: normalizeProviderId(id),
-      source: `oc://openclaw.config/models/providers/${id}`,
+      source: `oc://quiet-core-bot.config/models/providers/${id}`,
     }));
 }
 
@@ -729,7 +729,7 @@ export function scanPolicyModelRefs(
 ): readonly PolicyModelRefEvidence[] {
   const refs: PolicyModelRefEvidence[] = [];
   if (isRecord(cfg.agents)) {
-    collectModelRefsFromRecord(refs, cfg.agents, "oc://openclaw.config/agents");
+    collectModelRefsFromRecord(refs, cfg.agents, "oc://quiet-core-bot.config/agents");
     collectModelRefsFromAgentAllowlist(refs, cfg.agents);
   }
   return refs.toSorted(
@@ -743,37 +743,37 @@ export function scanPolicyNetwork(cfg: Record<string, unknown>): readonly Policy
       cfg,
       "browser-private-network",
       ["browser", "ssrfPolicy", "dangerouslyAllowPrivateNetwork"],
-      "oc://openclaw.config/browser/ssrfPolicy/dangerouslyAllowPrivateNetwork",
+      "oc://quiet-core-bot.config/browser/ssrfPolicy/dangerouslyAllowPrivateNetwork",
     ),
     networkBooleanEvidence(
       cfg,
       "browser-private-network-legacy",
       ["browser", "ssrfPolicy", "allowPrivateNetwork"],
-      "oc://openclaw.config/browser/ssrfPolicy/allowPrivateNetwork",
+      "oc://quiet-core-bot.config/browser/ssrfPolicy/allowPrivateNetwork",
     ),
     networkBooleanEvidence(
       cfg,
       "web-fetch-private-network",
       ["tools", "web", "fetch", "ssrfPolicy", "dangerouslyAllowPrivateNetwork"],
-      "oc://openclaw.config/tools/web/fetch/ssrfPolicy/dangerouslyAllowPrivateNetwork",
+      "oc://quiet-core-bot.config/tools/web/fetch/ssrfPolicy/dangerouslyAllowPrivateNetwork",
     ),
     networkBooleanEvidence(
       cfg,
       "web-fetch-private-network-legacy",
       ["tools", "web", "fetch", "ssrfPolicy", "allowPrivateNetwork"],
-      "oc://openclaw.config/tools/web/fetch/ssrfPolicy/allowPrivateNetwork",
+      "oc://quiet-core-bot.config/tools/web/fetch/ssrfPolicy/allowPrivateNetwork",
     ),
     networkBooleanEvidence(
       cfg,
       "web-fetch-rfc2544-benchmark-range",
       ["tools", "web", "fetch", "ssrfPolicy", "allowRfc2544BenchmarkRange"],
-      "oc://openclaw.config/tools/web/fetch/ssrfPolicy/allowRfc2544BenchmarkRange",
+      "oc://quiet-core-bot.config/tools/web/fetch/ssrfPolicy/allowRfc2544BenchmarkRange",
     ),
     networkBooleanEvidence(
       cfg,
       "web-fetch-ipv6-unique-local-range",
       ["tools", "web", "fetch", "ssrfPolicy", "allowIpv6UniqueLocalRange"],
-      "oc://openclaw.config/tools/web/fetch/ssrfPolicy/allowIpv6UniqueLocalRange",
+      "oc://quiet-core-bot.config/tools/web/fetch/ssrfPolicy/allowIpv6UniqueLocalRange",
     ),
   ].filter((entry): entry is PolicyNetworkEvidence => entry !== undefined);
 }
@@ -782,14 +782,14 @@ export function scanPolicyIngress(cfg: Record<string, unknown>): readonly Policy
   const channels = configuredChannels(cfg);
   const channelDefaults = isRecord(channels.defaults) ? channels.defaults : {};
   const inheritedChannelDefaults = pickSupportedIngressDefaults(channelDefaults);
-  const channelDefaultsSource = "oc://openclaw.config/channels/defaults";
+  const channelDefaultsSource = "oc://quiet-core-bot.config/channels/defaults";
   const entries: PolicyIngressEvidence[] = [];
   const session = isRecord(cfg.session) ? cfg.session : {};
   const dmScope = readString(session.dmScope)?.toLowerCase();
   entries.push({
     id: "session-dm-scope",
     kind: "sessionDmScope",
-    source: "oc://openclaw.config/session/dmScope",
+    source: "oc://quiet-core-bot.config/session/dmScope",
     value: dmScope ?? "main",
     explicit: dmScope !== undefined,
   });
@@ -798,7 +798,7 @@ export function scanPolicyIngress(cfg: Record<string, unknown>): readonly Policy
     if (RESERVED_CHANNEL_CONFIG_KEYS.has(channel) || !isRecord(value) || value.enabled === false) {
       continue;
     }
-    const channelSource = `oc://openclaw.config/channels/${ocPathSegment(channel)}`;
+    const channelSource = `oc://quiet-core-bot.config/channels/${ocPathSegment(channel)}`;
     const accounts = isRecord(value.accounts) ? value.accounts : {};
     const configuredAccounts = Object.entries(accounts).filter(
       (entry): entry is [string, Record<string, unknown>] => isRecord(entry[1]),
@@ -846,7 +846,7 @@ export function scanPolicyGatewayExposure(
   entries.push({
     id: bind === undefined ? "gateway-bind-default" : "gateway-bind",
     kind: "bind",
-    source: "oc://openclaw.config/gateway/bind",
+    source: "oc://quiet-core-bot.config/gateway/bind",
     value: bind ?? (tailscaleForcesLoopback ? "loopback" : "runtime-default"),
     nonLoopback:
       bind === undefined
@@ -860,7 +860,7 @@ export function scanPolicyGatewayExposure(
     entries.push({
       id: "gateway-custom-bind-host",
       kind: "bind",
-      source: "oc://openclaw.config/gateway/customBindHost",
+      source: "oc://quiet-core-bot.config/gateway/customBindHost",
       value: customBindHost,
       nonLoopback: isRuntimeNonLoopbackCustomBindHost(customBindHost),
     });
@@ -870,14 +870,14 @@ export function scanPolicyGatewayExposure(
   entries.push({
     id: "gateway-auth-mode",
     kind: "auth",
-    source: "oc://openclaw.config/gateway/auth/mode",
+    source: "oc://quiet-core-bot.config/gateway/auth/mode",
     value: typeof auth.mode === "string" ? auth.mode : "token",
     explicit: typeof auth.mode === "string",
   });
   entries.push({
     id: "gateway-auth-rate-limit",
     kind: "authRateLimit",
-    source: "oc://openclaw.config/gateway/auth/rateLimit",
+    source: "oc://quiet-core-bot.config/gateway/auth/rateLimit",
     value: isRecord(auth.rateLimit),
     explicit: isRecord(auth.rateLimit),
   });
@@ -888,35 +888,35 @@ export function scanPolicyGatewayExposure(
     "gateway-control-ui-enabled",
     "controlUi",
     controlUi.enabled,
-    "oc://openclaw.config/gateway/controlUi/enabled",
+    "oc://quiet-core-bot.config/gateway/controlUi/enabled",
   );
   pushGatewayBooleanEvidence(
     entries,
     "gateway-control-ui-insecure-auth",
     "controlUi",
     controlUi.allowInsecureAuth,
-    "oc://openclaw.config/gateway/controlUi/allowInsecureAuth",
+    "oc://quiet-core-bot.config/gateway/controlUi/allowInsecureAuth",
   );
   pushGatewayBooleanEvidence(
     entries,
     "gateway-control-ui-device-auth-disabled",
     "controlUi",
     controlUi.dangerouslyDisableDeviceAuth,
-    "oc://openclaw.config/gateway/controlUi/dangerouslyDisableDeviceAuth",
+    "oc://quiet-core-bot.config/gateway/controlUi/dangerouslyDisableDeviceAuth",
   );
   pushGatewayBooleanEvidence(
     entries,
     "gateway-control-ui-host-origin-fallback",
     "controlUi",
     controlUi.dangerouslyAllowHostHeaderOriginFallback,
-    "oc://openclaw.config/gateway/controlUi/dangerouslyAllowHostHeaderOriginFallback",
+    "oc://quiet-core-bot.config/gateway/controlUi/dangerouslyAllowHostHeaderOriginFallback",
   );
 
   if (typeof tailscale.mode === "string") {
     entries.push({
       id: "gateway-tailscale-mode",
       kind: "tailscale",
-      source: "oc://openclaw.config/gateway/tailscale/mode",
+      source: "oc://quiet-core-bot.config/gateway/tailscale/mode",
       value: tailscale.mode,
     });
   }
@@ -924,7 +924,7 @@ export function scanPolicyGatewayExposure(
     entries.push({
       id: "gateway-tailscale-preserve-funnel",
       kind: "tailscale",
-      source: "oc://openclaw.config/gateway/tailscale/preserveFunnel",
+      source: "oc://quiet-core-bot.config/gateway/tailscale/preserveFunnel",
       value: "funnel",
     });
   }
@@ -934,14 +934,14 @@ export function scanPolicyGatewayExposure(
     entries.push({
       id: "gateway-mode-remote",
       kind: "remote",
-      source: "oc://openclaw.config/gateway/mode",
+      source: "oc://quiet-core-bot.config/gateway/mode",
       value: "remote",
     });
     if (typeof remote.url === "string" && remote.url.trim() !== "") {
       entries.push({
         id: "gateway-remote-url",
         kind: "remote",
-        source: "oc://openclaw.config/gateway/remote/url",
+        source: "oc://quiet-core-bot.config/gateway/remote/url",
         value: true,
       });
     }
@@ -969,10 +969,10 @@ export function scanPolicyAgentWorkspace(
     inheritedSandbox: {},
     tools: defaultTools,
     inheritedTools: {},
-    workspaceSourceBase: "oc://openclaw.config/agents/defaults",
-    inheritedWorkspaceSourceBase: "oc://openclaw.config/agents/defaults",
-    toolsSourceBase: "oc://openclaw.config/tools",
-    inheritedToolsSourceBase: "oc://openclaw.config/tools",
+    workspaceSourceBase: "oc://quiet-core-bot.config/agents/defaults",
+    inheritedWorkspaceSourceBase: "oc://quiet-core-bot.config/agents/defaults",
+    toolsSourceBase: "oc://quiet-core-bot.config/tools",
+    inheritedToolsSourceBase: "oc://quiet-core-bot.config/tools",
   });
 
   const list = Array.isArray(agents.list) ? agents.list : [];
@@ -992,10 +992,10 @@ export function scanPolicyAgentWorkspace(
       inheritedSandbox: defaultSandbox,
       tools,
       inheritedTools: defaultTools,
-      workspaceSourceBase: `oc://openclaw.config/agents/list/#${index}`,
-      inheritedWorkspaceSourceBase: "oc://openclaw.config/agents/defaults",
-      toolsSourceBase: `oc://openclaw.config/agents/list/#${index}/tools`,
-      inheritedToolsSourceBase: "oc://openclaw.config/tools",
+      workspaceSourceBase: `oc://quiet-core-bot.config/agents/list/#${index}`,
+      inheritedWorkspaceSourceBase: "oc://quiet-core-bot.config/agents/defaults",
+      toolsSourceBase: `oc://quiet-core-bot.config/agents/list/#${index}/tools`,
+      inheritedToolsSourceBase: "oc://quiet-core-bot.config/tools",
     });
   });
   return entries.toSorted((a, b) => a.source.localeCompare(b.source) || a.id.localeCompare(b.id));
@@ -1013,8 +1013,8 @@ export function scanPolicySandboxPosture(
     scope: "defaults",
     sandbox: defaultSandbox,
     inheritedSandbox: {},
-    sourceBase: "oc://openclaw.config/agents/defaults/sandbox",
-    inheritedSourceBase: "oc://openclaw.config/agents/defaults/sandbox",
+    sourceBase: "oc://quiet-core-bot.config/agents/defaults/sandbox",
+    inheritedSourceBase: "oc://quiet-core-bot.config/agents/defaults/sandbox",
   });
 
   const list = Array.isArray(agents.list) ? agents.list : [];
@@ -1032,8 +1032,8 @@ export function scanPolicySandboxPosture(
       sandbox,
       inheritedSandbox: defaultSandbox,
       sharedSandboxScope: sandboxScopeIsShared(sandbox, defaultSandbox),
-      sourceBase: `oc://openclaw.config/agents/list/#${index}/sandbox`,
-      inheritedSourceBase: "oc://openclaw.config/agents/defaults/sandbox",
+      sourceBase: `oc://quiet-core-bot.config/agents/list/#${index}/sandbox`,
+      inheritedSourceBase: "oc://quiet-core-bot.config/agents/defaults/sandbox",
     });
   });
 
@@ -1055,8 +1055,8 @@ export function scanPolicyToolPosture(
     inheritedTools: {},
     sandbox: defaultSandbox,
     inheritedSandbox: {},
-    sourceBase: "oc://openclaw.config/tools",
-    inheritedSourceBase: "oc://openclaw.config/tools",
+    sourceBase: "oc://quiet-core-bot.config/tools",
+    inheritedSourceBase: "oc://quiet-core-bot.config/tools",
   });
 
   const list = Array.isArray(agents.list) ? agents.list : [];
@@ -1074,8 +1074,8 @@ export function scanPolicyToolPosture(
       inheritedTools: globalTools,
       sandbox: isRecord(agent.sandbox) ? agent.sandbox : {},
       inheritedSandbox: defaultSandbox,
-      sourceBase: `oc://openclaw.config/agents/list/#${index}/tools`,
-      inheritedSourceBase: "oc://openclaw.config/tools",
+      sourceBase: `oc://quiet-core-bot.config/agents/list/#${index}/tools`,
+      inheritedSourceBase: "oc://quiet-core-bot.config/tools",
     });
   });
 
@@ -1104,7 +1104,7 @@ export function scanPolicyAuthProfiles(
         mode?: string;
       } = {
         id,
-        source: `oc://openclaw.config/auth/profiles/${ocPathSegment(id)}`,
+        source: `oc://quiet-core-bot.config/auth/profiles/${ocPathSegment(id)}`,
         validMetadata: isValidAuthProfileMetadata(value),
       };
       if (isRecord(value)) {
@@ -1127,7 +1127,7 @@ export function scanPolicyDataHandling(
   entries.push({
     id: "logging-redaction",
     kind: "sensitiveLoggingRedaction",
-    source: "oc://openclaw.config/logging/redactSensitive",
+    source: "oc://quiet-core-bot.config/logging/redactSensitive",
     scope: "global",
     value: logging.redactSensitive !== "off",
     explicit: logging.redactSensitive !== undefined,
@@ -1147,7 +1147,7 @@ export function scanPolicyDataHandling(
   entries.push({
     id: "diagnostics-otel-content-capture",
     kind: "telemetryContentCapture",
-    source: "oc://openclaw.config/diagnostics/otel/captureContent",
+    source: "oc://quiet-core-bot.config/diagnostics/otel/captureContent",
     scope: "global",
     value: captureContent,
     explicit: otel.captureContent !== undefined,
@@ -1159,7 +1159,7 @@ export function scanPolicyDataHandling(
   entries.push({
     id: "session-maintenance-mode",
     kind: "sessionRetentionMode",
-    source: "oc://openclaw.config/session/maintenance/mode",
+    source: "oc://quiet-core-bot.config/session/maintenance/mode",
     scope: "global",
     value: retentionMode,
     explicit: maintenance.mode !== undefined,
@@ -1206,7 +1206,7 @@ function pushMemorySessionTranscriptIndexing(
     entries.push({
       id: "memory-qmd-session-transcripts",
       kind: "memorySessionTranscriptIndexing",
-      source: "oc://openclaw.config/memory/qmd/sessions/enabled",
+      source: "oc://quiet-core-bot.config/memory/qmd/sessions/enabled",
       scope: "global",
       value: memory.backend === "qmd" && readBoolean(qmdSessions.enabled) === true,
       explicit: true,
@@ -1221,7 +1221,7 @@ function pushMemorySessionTranscriptIndexing(
     entries.push({
       id: "agents-defaults-memory-session-transcripts",
       kind: "memorySessionTranscriptIndexing",
-      source: "oc://openclaw.config/agents/defaults/memorySearch/experimental/sessionMemory",
+      source: "oc://quiet-core-bot.config/agents/defaults/memorySearch/experimental/sessionMemory",
       scope: "global",
       value: defaultSessionMemory,
       explicit: true,
@@ -1253,8 +1253,8 @@ function pushMemorySessionTranscriptIndexing(
       id: `${agentId}-memory-session-transcripts`,
       kind: "memorySessionTranscriptIndexing",
       source: explicit
-        ? `oc://openclaw.config/agents/list/#${index}/memorySearch/experimental/sessionMemory`
-        : "oc://openclaw.config/agents/defaults/memorySearch/experimental/sessionMemory",
+        ? `oc://quiet-core-bot.config/agents/list/#${index}/memorySearch/experimental/sessionMemory`
+        : "oc://quiet-core-bot.config/agents/defaults/memorySearch/experimental/sessionMemory",
       scope: "agent",
       agentId: normalizeAgentId(agentId),
       value: agentSessionMemory,
@@ -1329,7 +1329,7 @@ function scanPolicySecretProviders(cfg: Record<string, unknown>): readonly Polic
     } = {
       id,
       kind: "provider",
-      source: `oc://openclaw.config/secrets/providers/${ocPathSegment(id)}`,
+      source: `oc://quiet-core-bot.config/secrets/providers/${ocPathSegment(id)}`,
     };
     if (isRecord(value) && typeof value.source === "string") {
       entry.providerSource = value.source;
@@ -1384,7 +1384,7 @@ function collectSecretInputs(
 }
 
 function configPathSource(path: readonly string[]): string {
-  return `oc://openclaw.config/${path.map(ocPathSegment).join("/")}`;
+  return `oc://quiet-core-bot.config/${path.map(ocPathSegment).join("/")}`;
 }
 
 function isSecretInputPath(path: readonly string[]): boolean {
@@ -1453,7 +1453,7 @@ function pushAgentWorkspaceEvidence(
       ? `${params.workspaceSourceBase}/sandbox/mode`
       : inheritedSandboxMode !== undefined
         ? `${params.inheritedWorkspaceSourceBase}/sandbox/mode`
-        : "oc://openclaw.config/agents/defaults/sandbox/mode";
+        : "oc://quiet-core-bot.config/agents/defaults/sandbox/mode";
   const explicitWorkspaceAccess = readString(params.sandbox.workspaceAccess);
   const inheritedWorkspaceAccess = readString(params.inheritedSandbox.workspaceAccess);
   entries.push({
@@ -1464,7 +1464,7 @@ function pushAgentWorkspaceEvidence(
         ? `${params.workspaceSourceBase}/sandbox/workspaceAccess`
         : inheritedWorkspaceAccess !== undefined
           ? `${params.inheritedWorkspaceSourceBase}/sandbox/workspaceAccess`
-          : "oc://openclaw.config/agents/defaults/sandbox/workspaceAccess",
+          : "oc://quiet-core-bot.config/agents/defaults/sandbox/workspaceAccess",
     scope: params.scope,
     ...(params.agentId === undefined ? {} : { agentId: params.agentId }),
     value: explicitWorkspaceAccess ?? inheritedWorkspaceAccess ?? "none",
@@ -2804,7 +2804,7 @@ function pushGatewayHttpEndpointEvidence(
   if (!isRecord(config)) {
     return;
   }
-  const source = `oc://openclaw.config/gateway/http/endpoints/${endpoint}`;
+  const source = `oc://quiet-core-bot.config/gateway/http/endpoints/${endpoint}`;
   const enabled = config.enabled === true;
   if (enabled) {
     entries.push({
@@ -2944,7 +2944,7 @@ function collectModelRefsFromAgentAllowlist(
     collectModelRefsFromModelMap(
       refs,
       defaults.models,
-      "oc://openclaw.config/agents/defaults/models",
+      "oc://quiet-core-bot.config/agents/defaults/models",
     );
   }
 
@@ -2959,7 +2959,7 @@ function collectModelRefsFromAgentAllowlist(
     collectModelRefsFromModelMap(
       refs,
       agent.models,
-      `oc://openclaw.config/agents/list/#${index}/models`,
+      `oc://quiet-core-bot.config/agents/list/#${index}/models`,
     );
   }
 }

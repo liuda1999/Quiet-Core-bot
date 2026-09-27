@@ -1,5 +1,5 @@
 // Gateway service lifecycle runners, including unmanaged-process fallbacks and restart health checks.
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { theme } from "../../../packages/terminal-core/src/theme.js";
 import { isRestartEnabled } from "../../config/commands.flags.js";
 import { readBestEffortConfig, resolveGatewayPort } from "../../config/config.js";
@@ -97,8 +97,8 @@ async function assertUnmanagedGatewayRestartEnabled(port: number): Promise<void>
   const probe = await probeGateway({
     url: `${scheme}://127.0.0.1:${port}`,
     auth: {
-      token: normalizeOptionalString(process.env.OPENCLAW_GATEWAY_TOKEN),
-      password: normalizeOptionalString(process.env.OPENCLAW_GATEWAY_PASSWORD),
+      token: normalizeOptionalString(process.env.QUIET_CORE_GATEWAY_TOKEN),
+      password: normalizeOptionalString(process.env.QUIET_CORE_GATEWAY_PASSWORD),
     },
     timeoutMs: 1_000,
   }).catch(() => null);

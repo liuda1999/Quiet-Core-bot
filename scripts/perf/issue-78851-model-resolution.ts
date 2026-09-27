@@ -9,7 +9,7 @@ import {
   ensureOpenClawModelsJson,
   resetModelsJsonReadyCacheForTest,
 } from "../../src/agents/models-config.js";
-import type { OpenClawConfig } from "../../src/config/types.openclaw.js";
+import type { OpenClawConfig } from "../../src/config/types.quiet-core-bot.js";
 
 type Options = {
   agentCount: number;
@@ -484,7 +484,7 @@ async function main(): Promise<void> {
     return;
   }
   const options = parseOptions(args);
-  const tempRoot = await mkdtemp(path.join(tmpdir(), "openclaw-issue-78851-"));
+  const tempRoot = await mkdtemp(path.join(tmpdir(), "quiet-core-bot-issue-78851-"));
   const workspaceDir = path.join(tempRoot, "workspace");
   await mkdir(workspaceDir, { recursive: true });
   const config = buildConfig(options, workspaceDir);

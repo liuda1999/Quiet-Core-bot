@@ -9,7 +9,7 @@ import {
   shouldStartOnboardingForFreshInstall,
 } from "../../dist/cli/run-main.js";
 import { clearConfigCache } from "../../dist/config/config.js";
-import type { OpenClawConfig } from "../../dist/config/types.openclaw.js";
+import type { OpenClawConfig } from "../../dist/config/types.quiet-core-bot.js";
 import { runCrestodian } from "../../dist/crestodian/crestodian.js";
 import type { RuntimeEnv } from "../../dist/runtime.js";
 import { createE2eStateDir } from "./lib/temp-state-dir.ts";
@@ -67,26 +67,26 @@ function renderCommandTemplate(template: string, vars: Record<string, string>): 
 
 async function main() {
   const spec = await readFirstRunSpec();
-  const tempState = await createE2eStateDir("openclaw-crestodian-first-run-");
+  const tempState = await createE2eStateDir("quiet-core-bot-crestodian-first-run-");
   tempState.registerExitCleanup();
   const stateDir = tempState.stateDir;
-  const configPath = process.env.OPENCLAW_CONFIG_PATH ?? path.join(stateDir, "openclaw.json");
-  process.env.OPENCLAW_STATE_DIR = stateDir;
-  process.env.OPENCLAW_CONFIG_PATH = configPath;
+  const configPath = process.env.QUIET_CORE_CONFIG_PATH ?? path.join(stateDir, "quiet-core-bot.json");
+  process.env.QUIET_CORE_STATE_DIR = stateDir;
+  process.env.QUIET_CORE_CONFIG_PATH = configPath;
   await fs.rm(stateDir, { recursive: true, force: true });
   await fs.mkdir(stateDir, { recursive: true });
   clearConfigCache();
 
   assert(
-    await shouldStartOnboardingForFreshInstall(["node", "openclaw"]),
+    await shouldStartOnboardingForFreshInstall(["node", "quiet-core-bot"]),
     "fresh bare OpenClaw invocation did not route to onboarding",
   );
   assert(
-    shouldStartCrestodianForModernOnboard(["node", "openclaw", "onboard", "--modern"]),
+    shouldStartCrestodianForModernOnboard(["node", "quiet-core-bot", "onboard", "--modern"]),
     "modern onboard invocation did not route to Crestodian",
   );
   process.exitCode = undefined;
-  await runCli(["node", "openclaw", "onboard", "--modern", "--non-interactive", "--json"]);
+  await runCli(["node", "quiet-core-bot", "onboard", "--modern", "--non-interactive", "--json"]);
   assert(
     process.exitCode === undefined || process.exitCode === 0,
     "modern onboard overview exited nonzero",

@@ -15,17 +15,17 @@ const tempRoots: string[] = [];
 function issue(overrides: Partial<UiProtocolFreshnessIssue> = {}): UiProtocolFreshnessIssue {
   return {
     kind: "missing-assets",
-    root: "/repo/openclaw",
-    uiIndexPath: "/repo/openclaw/dist/control-ui/index.html",
+    root: "/repo/quiet-core-bot",
+    uiIndexPath: "/repo/quiet-core-bot/dist/control-ui/index.html",
     canBuild: true,
     ...overrides,
   } as UiProtocolFreshnessIssue;
 }
 
 async function createOpenClawRoot(): Promise<string> {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-doctor-ui-"));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-doctor-ui-"));
   tempRoots.push(root);
-  await fs.writeFile(path.join(root, "package.json"), JSON.stringify({ name: "openclaw" }));
+  await fs.writeFile(path.join(root, "package.json"), JSON.stringify({ name: "quiet-core-bot" }));
   await fs.mkdir(path.join(root, "packages/gateway-protocol/src"), { recursive: true });
   await fs.writeFile(path.join(root, "packages/gateway-protocol/src/schema.ts"), "export {};\n");
   return root;
@@ -51,7 +51,7 @@ describe("UI protocol freshness health mapping", () => {
       expect.objectContaining({
         checkId: "core/doctor/ui-protocol-freshness",
         severity: "warning",
-        path: "/repo/openclaw/dist/control-ui/index.html",
+        path: "/repo/quiet-core-bot/dist/control-ui/index.html",
         fixHint: expect.stringContaining("quiet-core-bot doctor --fix"),
       }),
     );
@@ -59,7 +59,7 @@ describe("UI protocol freshness health mapping", () => {
       {
         kind: "process",
         action: "would-build-control-ui",
-        target: "/repo/openclaw",
+        target: "/repo/quiet-core-bot",
         dryRunSafe: false,
       },
     ]);
@@ -78,7 +78,7 @@ describe("UI protocol freshness health mapping", () => {
       {
         kind: "process",
         action: "would-rebuild-control-ui",
-        target: "/repo/openclaw",
+        target: "/repo/quiet-core-bot",
         dryRunSafe: false,
       },
     ]);

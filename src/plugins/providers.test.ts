@@ -1,5 +1,5 @@
 // Covers provider plugin registration and runtime composition.
-import { sortUniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { sortUniqueStrings } from "@quiet-core/normalization-core/string-normalization";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../config/config.js";
 import type { PluginAutoEnableResult } from "../config/plugin-auto-enable.js";
@@ -79,7 +79,7 @@ function createManifestProviderPlugin(params: {
     origin: params.origin ?? "bundled",
     rootDir: `/tmp/${params.id}`,
     source: params.origin ?? "bundled",
-    manifestPath: `/tmp/${params.id}/openclaw.plugin.json`,
+    manifestPath: `/tmp/${params.id}/quiet-core-bot.plugin.json`,
   };
 }
 
@@ -770,7 +770,7 @@ describe("resolvePluginProviders", () => {
   });
 
   it("forwards an explicit env to plugin loading", () => {
-    const env = { OPENCLAW_HOME: "/srv/openclaw-home" } as NodeJS.ProcessEnv;
+    const env = { QUIET_CORE_HOME: "/srv/quiet-core-bot-home" } as NodeJS.ProcessEnv;
 
     const providers = resolvePluginProviders({
       workspaceDir: "/workspace/explicit",

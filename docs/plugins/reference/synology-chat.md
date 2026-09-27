@@ -11,7 +11,7 @@ Synology Chat channel plugin for Quiet Core bot channels and direct messages.
 
 ## Distribution
 
-- Package: `@openclaw/synology-chat`
+- Package: `@quiet-core/synology-chat`
 - Install route: npm; ClawHub
 
 ## Surface

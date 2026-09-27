@@ -5,7 +5,7 @@ import { redactQaLiveLaneDetails, redactQaLiveLaneIssues } from "./live-artifact
 describe("live transport artifacts", () => {
   it("uses a stable public metadata redaction marker", () => {
     expect(redactQaLiveLaneDetails()).toBe(
-      "details redacted (OPENCLAW_QA_REDACT_PUBLIC_METADATA=1)",
+      "details redacted (QUIET_CORE_QA_REDACT_PUBLIC_METADATA=1)",
     );
   });
 
@@ -16,8 +16,8 @@ describe("live transport artifacts", () => {
         "live gateway cleanup: failed to stop pid 123",
       ]),
     ).toEqual([
-      "credential lease release: details redacted (OPENCLAW_QA_REDACT_PUBLIC_METADATA=1)",
-      "live gateway cleanup: details redacted (OPENCLAW_QA_REDACT_PUBLIC_METADATA=1)",
+      "credential lease release: details redacted (QUIET_CORE_QA_REDACT_PUBLIC_METADATA=1)",
+      "live gateway cleanup: details redacted (QUIET_CORE_QA_REDACT_PUBLIC_METADATA=1)",
     ]);
   });
 
@@ -28,9 +28,9 @@ describe("live transport artifacts", () => {
           "WhatsApp QA failed before scenario completion.",
           "raw startup error with +15550000002",
           "Artifacts:",
-          "- gatewayDebug: /tmp/openclaw-whatsapp-qa/gateway-debug",
+          "- gatewayDebug: /tmp/quiet-core-bot-whatsapp-qa/gateway-debug",
         ].join("\n"),
       ]),
-    ).toEqual(["details redacted (OPENCLAW_QA_REDACT_PUBLIC_METADATA=1)"]);
+    ).toEqual(["details redacted (QUIET_CORE_QA_REDACT_PUBLIC_METADATA=1)"]);
   });
 });

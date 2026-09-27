@@ -1,7 +1,7 @@
 // ACPX tests cover process reaper plugin behavior.
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { OPENCLAW_ACPX_LEASE_ID_ARG, OPENCLAW_GATEWAY_INSTANCE_ID_ARG } from "./process-lease.js";
+import { QUIET_CORE_ACPX_LEASE_ID_ARG, QUIET_CORE_GATEWAY_INSTANCE_ID_ARG } from "./process-lease.js";
 import {
   cleanupOpenClawOwnedAcpxProcessTree,
   isOpenClawLeaseAwareAcpxProcessCommand,
@@ -10,12 +10,12 @@ import {
   type AcpxProcessInfo,
 } from "./process-reaper.js";
 
-const WRAPPER_ROOT = "/tmp/openclaw-state/acpx";
+const WRAPPER_ROOT = "/tmp/quiet-core-bot-state/acpx";
 const CODEX_WRAPPER_COMMAND = `node ${WRAPPER_ROOT}/codex-acp-wrapper.mjs`;
-const CODEX_WRAPPER_COMMAND_WITH_LEASE = `${CODEX_WRAPPER_COMMAND} ${OPENCLAW_ACPX_LEASE_ID_ARG} lease-1 ${OPENCLAW_GATEWAY_INSTANCE_ID_ARG} gateway-1`;
+const CODEX_WRAPPER_COMMAND_WITH_LEASE = `${CODEX_WRAPPER_COMMAND} ${QUIET_CORE_ACPX_LEASE_ID_ARG} lease-1 ${QUIET_CORE_GATEWAY_INSTANCE_ID_ARG} gateway-1`;
 const CLAUDE_WRAPPER_COMMAND = `node ${WRAPPER_ROOT}/claude-agent-acp-wrapper.mjs`;
 const PLUGIN_DEPS_CODEX_COMMAND =
-  "node /tmp/openclaw/plugin-runtime-deps/node_modules/@zed-industries/codex-acp/bin/codex-acp.js";
+  "node /tmp/quiet-core-bot/plugin-runtime-deps/node_modules/@zed-industries/codex-acp/bin/codex-acp.js";
 const LOCAL_NODE_MODULES_CODEX_COMMAND = `node ${path.resolve(
   "node_modules/@zed-industries/codex-acp/bin/codex-acp.js",
 )}`;
@@ -166,7 +166,7 @@ describe("process reaper", () => {
       {
         pid: 113,
         ppid: 1,
-        command: `${CODEX_WRAPPER_COMMAND} ${OPENCLAW_ACPX_LEASE_ID_ARG} other-lease ${OPENCLAW_GATEWAY_INSTANCE_ID_ARG} gateway-1`,
+        command: `${CODEX_WRAPPER_COMMAND} ${QUIET_CORE_ACPX_LEASE_ID_ARG} other-lease ${QUIET_CORE_GATEWAY_INSTANCE_ID_ARG} gateway-1`,
       },
     ]);
 
@@ -182,7 +182,7 @@ describe("process reaper", () => {
     expect(result).toEqual({
       inspectedPids: [113],
       terminatedPids: [],
-      skippedReason: "not-openclaw-owned",
+      skippedReason: "not-quiet-core-bot-owned",
     });
     expect(killed).toStrictEqual([]);
   });
@@ -225,7 +225,7 @@ describe("process reaper", () => {
     expect(result).toEqual({
       inspectedPids: [250],
       terminatedPids: [],
-      skippedReason: "not-openclaw-owned",
+      skippedReason: "not-quiet-core-bot-owned",
     });
     expect(killed).toStrictEqual([]);
   });
@@ -249,7 +249,7 @@ describe("process reaper", () => {
     expect(result).toEqual({
       inspectedPids: [260],
       terminatedPids: [],
-      skippedReason: "not-openclaw-owned",
+      skippedReason: "not-quiet-core-bot-owned",
     });
     expect(killed).toStrictEqual([]);
   });
@@ -264,7 +264,7 @@ describe("process reaper", () => {
       deps,
     });
 
-    expect(result.skippedReason).toBe("not-openclaw-owned");
+    expect(result.skippedReason).toBe("not-quiet-core-bot-owned");
     expect(killed).toStrictEqual([]);
   });
 

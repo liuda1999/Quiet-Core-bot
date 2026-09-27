@@ -148,7 +148,7 @@ describe("setAssistantAvatarOverride", () => {
 
   it("migrates the legacy global override to the first loaded agent", () => {
     localStorage.setItem(
-      "openclaw.control.assistant.v1",
+      "quiet-core-bot.control.assistant.v1",
       JSON.stringify({ avatar: "data:image/png;base64,bGVnYWN5" }),
     );
 

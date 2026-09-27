@@ -133,7 +133,7 @@ git commit -m "Add agent workspace"
 
 ## Usage notes
 
-- Prefer the `openclaw` CLI for scripting and automation.
+- Prefer the `quiet-core-bot` CLI for scripting and automation.
 - Run installs from the Skills tab; it hides the button if a binary is already present.
 - Keep heartbeats enabled so the assistant can schedule reminders, monitor inboxes, and trigger camera captures.
 - Canvas UI runs full-screen with native overlays. Avoid placing critical controls in the top-left/top-right/bottom edges; add explicit gutters in the layout and don't rely on safe-area insets.

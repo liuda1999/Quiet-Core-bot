@@ -20,7 +20,7 @@ When sandboxing is enabled and `workspaceAccess` is not `"rw"`, tools operate in
 ## Default location
 
 - Default: `~/.quiet-core-bot/workspace`
-- If `OPENCLAW_PROFILE` is set and not `"default"`, the default becomes `~/.quiet-core-bot/workspace-<profile>`.
+- If `QUIET_CORE_PROFILE` is set and not `"default"`, the default becomes `~/.quiet-core-bot/workspace-<profile>`.
 - Override in `~/.quiet-core-bot/quiet-core-bot.json`:
 
 ```json5
@@ -47,10 +47,10 @@ If you already manage the workspace files yourself, you can disable bootstrap fi
 
 ## Extra workspace folders
 
-Older installs may have created `~/openclaw`. Keeping multiple workspace directories around can cause confusing auth or state drift, because only one workspace is active at a time.
+Older installs may have created `~/quiet-core-bot`. Keeping multiple workspace directories around can cause confusing auth or state drift, because only one workspace is active at a time.
 
 <Note>
-**Recommendation:** keep a single active workspace. If you no longer use the extra folders, archive or move them to Trash (for example `trash ~/openclaw`). If you intentionally keep multiple workspaces, make sure `agents.defaults.workspace` points to the active one.
+**Recommendation:** keep a single active workspace. If you no longer use the extra folders, archive or move them to Trash (for example `trash ~/quiet-core-bot`). If you intentionally keep multiple workspaces, make sure `agents.defaults.workspace` points to the active one.
 
 `quiet-core-bot doctor` warns when it detects extra workspace directories.
 </Note>
@@ -150,7 +150,7 @@ Run these steps on the machine where the Gateway runs (that is where the workspa
       <Tab title="GitHub CLI (gh)">
         ```bash
         gh auth login
-        gh repo create openclaw-workspace --private --source . --remote origin --push
+        gh repo create quiet-core-bot-workspace --private --source . --remote origin --push
         ```
       </Tab>
       <Tab title="GitLab web UI">

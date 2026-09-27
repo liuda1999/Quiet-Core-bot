@@ -1,5 +1,5 @@
 // Signal tests cover monitor.tool result.autostart plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { describe, expect, it, vi } from "vitest";
 import type { SignalDaemonExitEvent } from "./daemon.js";
 import {
@@ -116,7 +116,7 @@ describe("monitorSignalProvider autostart", () => {
 
   it("passes channels.signal.configPath to signal-cli daemon startup", async () => {
     const runtime = createMonitorRuntime();
-    setSignalAutoStartConfig({ configPath: "~/.openclaw/signal-cli" });
+    setSignalAutoStartConfig({ configPath: "~/.quiet-core-bot/signal-cli" });
     const abortController = createAutoAbortController();
 
     await runMonitorWithMocks({
@@ -128,7 +128,7 @@ describe("monitorSignalProvider autostart", () => {
 
     expect(spawnSignalDaemonMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        configPath: "~/.openclaw/signal-cli",
+        configPath: "~/.quiet-core-bot/signal-cli",
       }),
     );
   });

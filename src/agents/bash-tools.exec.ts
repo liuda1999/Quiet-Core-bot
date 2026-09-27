@@ -10,7 +10,7 @@ import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalLowercaseString,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/normalization-core/string-coerce";
 import { normalizeChatChannelId } from "../channels/ids.js";
 import {
   type ExecAsk,
@@ -35,7 +35,7 @@ import {
   normalizeHostOverrideEnvVarKey,
   sanitizeHostExecEnvWithDiagnostics,
 } from "../infra/host-env-security.js";
-import { OPENCLAW_CLI_ENV_VAR } from "../infra/openclaw-exec-env.js";
+import { QUIET_CORE_CLI_ENV_VAR } from "../infra/quiet-core-bot-exec-env.js";
 import {
   getShellPathFromLoginShell,
   resolveShellEnvFallbackTimeoutMs,
@@ -109,7 +109,7 @@ type ExecToolArgs = Record<string, unknown> & {
   node?: string;
 };
 
-const CHANNEL_CONTEXT_ENV_KEY = "OPENCLAW_CHANNEL_CONTEXT";
+const CHANNEL_CONTEXT_ENV_KEY = "QUIET_CORE_CHANNEL_CONTEXT";
 
 function buildSubprocessChannelContext(
   channelContext: PluginHookChannelContext | undefined,
@@ -158,7 +158,7 @@ function filterPluginExecEnv(rawEnv: Record<string, string>): Record<string, str
     const upperKey = key.toUpperCase();
     if (
       upperKey === "PATH" ||
-      upperKey === OPENCLAW_CLI_ENV_VAR ||
+      upperKey === QUIET_CORE_CLI_ENV_VAR ||
       isDangerousHostEnvVarName(upperKey) ||
       isDangerousHostEnvOverrideVarName(upperKey)
     ) {
@@ -1245,7 +1245,7 @@ export function createExecTool(
   defaults?: ExecToolDefaults,
 ): AgentToolWithMeta<typeof execSchema, ExecToolDetails> {
   const defaultBackgroundMs = clampWithDefault(
-    defaults?.backgroundMs ?? readEnvInt("OPENCLAW_BASH_YIELD_MS", "PI_BASH_YIELD_MS"),
+    defaults?.backgroundMs ?? readEnvInt("QUIET_CORE_BASH_YIELD_MS", "PI_BASH_YIELD_MS"),
     10_000,
     10,
     120_000,

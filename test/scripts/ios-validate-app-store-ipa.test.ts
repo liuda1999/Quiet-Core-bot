@@ -193,7 +193,7 @@ async function writeValidFixture(
   mkdirSync(fixturesDir, { recursive: true });
 
   const infoBody = [
-    plistString("CFBundleIdentifier", "ai.openclawfoundation.app"),
+    plistString("CFBundleIdentifier", "ai.quiet-core-botfoundation.app"),
     plistString("OpenClawPushMode", options.pushMode ?? "appStore"),
     plistString("OpenClawPushRelayBaseURL", ""),
     options.legacyKey ? plistString("OpenClawPushRelayProfile", "production") : "",
@@ -206,12 +206,12 @@ async function writeValidFixture(
     entitlementsPath,
     plist(
       [
-        plistString("application-identifier", "FWJYW4S8P8.ai.openclawfoundation.app"),
+        plistString("application-identifier", "FWJYW4S8P8.ai.quiet-core-botfoundation.app"),
         plistString("com.apple.developer.team-identifier", "FWJYW4S8P8"),
         plistString("aps-environment", "production"),
         plistString("com.apple.developer.devicecheck.appattest-environment", "production"),
         plistArray("com.apple.security.application-groups", [
-          "group.ai.openclawfoundation.app.shared",
+          "group.ai.quiet-core-botfoundation.app.shared",
         ]),
       ].join(""),
     ),
@@ -223,16 +223,16 @@ async function writeValidFixture(
     profilePath,
     plist(
       [
-        plistString("Name", "OpenClaw App Store ai.openclawfoundation.app"),
+        plistString("Name", "OpenClaw App Store ai.quiet-core-botfoundation.app"),
         plistArray("TeamIdentifier", ["FWJYW4S8P8"]),
         plistDict(
           "Entitlements",
           [
-            plistString("application-identifier", "FWJYW4S8P8.ai.openclawfoundation.app"),
+            plistString("application-identifier", "FWJYW4S8P8.ai.quiet-core-botfoundation.app"),
             plistString("aps-environment", "production"),
             plistArray("com.apple.developer.devicecheck.appattest-environment", ["production"]),
             plistArray("com.apple.security.application-groups", [
-              "group.ai.openclawfoundation.app.shared",
+              "group.ai.quiet-core-botfoundation.app.shared",
             ]),
           ].join(""),
         ),
@@ -303,7 +303,7 @@ describe("scripts/ios-validate-app-store-ipa.sh", () => {
   });
 
   it("accepts an App Store IPA with appStore mode and production entitlements", async () => {
-    const root = mkdtempSync(path.join(os.tmpdir(), "openclaw-ios-ipa-"));
+    const root = mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-ios-ipa-"));
     tempDirs.push(root);
     const fixture = await writeValidFixture(root);
 
@@ -314,7 +314,7 @@ describe("scripts/ios-validate-app-store-ipa.sh", () => {
   });
 
   it("rejects an IPA that was exported with a non-App-Store push mode", async () => {
-    const root = mkdtempSync(path.join(os.tmpdir(), "openclaw-ios-ipa-"));
+    const root = mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-ios-ipa-"));
     tempDirs.push(root);
     const fixture = await writeValidFixture(root, { pushMode: "localProduction" });
 
@@ -325,7 +325,7 @@ describe("scripts/ios-validate-app-store-ipa.sh", () => {
   });
 
   it("rejects legacy independently selectable production push keys", async () => {
-    const root = mkdtempSync(path.join(os.tmpdir(), "openclaw-ios-ipa-"));
+    const root = mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-ios-ipa-"));
     tempDirs.push(root);
     const fixture = await writeValidFixture(root, { legacyKey: true });
 

@@ -179,7 +179,7 @@ async function connectGatewayOnce(params: {
       minProtocol: PROTOCOL_VERSION,
       maxProtocol: PROTOCOL_VERSION,
       client: {
-        id: "openclaw-tui",
+        id: "quiet-core-bot-tui",
         displayName: "docker-mcp-channels",
         version: "1.0.0",
         platform: process.platform,
@@ -247,13 +247,13 @@ export async function connectMcpClient(params: {
     cwd: "/app",
     env: {
       ...process.env,
-      OPENCLAW_ALLOW_INSECURE_PRIVATE_WS: "1",
-      OPENCLAW_STATE_DIR: tempState.stateDir,
+      QUIET_CORE_ALLOW_INSECURE_PRIVATE_WS: "1",
+      QUIET_CORE_STATE_DIR: tempState.stateDir,
     },
     stderr: "pipe",
   });
   transport.stderr?.on("data", (chunk) => {
-    process.stderr.write(`[openclaw mcp] ${String(chunk)}`);
+    process.stderr.write(`[quiet-core-bot mcp] ${String(chunk)}`);
   });
   const rawMessages: unknown[] = [];
   Reflect.set(transport, "onmessage", (message: unknown) => {

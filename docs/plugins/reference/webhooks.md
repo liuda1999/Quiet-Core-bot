@@ -11,7 +11,7 @@ Authenticated inbound webhooks that bind external automation to Quiet Core bot T
 
 ## Distribution
 
-- Package: `@openclaw/webhooks`
+- Package: `@quiet-core/webhooks`
 - Install route: included in Quiet Core bot
 
 ## Surface

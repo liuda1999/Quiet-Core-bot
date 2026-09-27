@@ -25,18 +25,18 @@ const {
   }),
 }));
 
-vi.mock("openclaw/plugin-sdk/memory-host-search", () => ({
+vi.mock("quiet-core-bot/plugin-sdk/memory-host-search", () => ({
   getActiveMemorySearchManager: getActiveMemorySearchManagerMock,
 }));
 
-vi.mock("openclaw/plugin-sdk/memory-host-core", () => ({
+vi.mock("quiet-core-bot/plugin-sdk/memory-host-core", () => ({
   resolveDefaultAgentId: resolveDefaultAgentIdMock,
   resolveSessionAgentId: resolveSessionAgentIdMock,
 }));
 
-vi.mock("openclaw/plugin-sdk/session-transcript-hit", async (importOriginal) => {
+vi.mock("quiet-core-bot/plugin-sdk/session-transcript-hit", async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import("openclaw/plugin-sdk/session-transcript-hit")>();
+    await importOriginal<typeof import("quiet-core-bot/plugin-sdk/session-transcript-hit")>();
   return {
     ...actual,
     loadCombinedSessionStoreForGateway: loadCombinedSessionStoreForGatewayMock,
@@ -126,12 +126,12 @@ function mockSessionTranscriptStore() {
       "agent:main:child-session": {
         sessionId: "child-session",
         updatedAt: 1,
-        sessionFile: "/tmp/openclaw/child-session.jsonl",
+        sessionFile: "/tmp/quiet-core-bot/child-session.jsonl",
       },
       "agent:main:sibling-session": {
         sessionId: "sibling-session",
         updatedAt: 2,
-        sessionFile: "/tmp/openclaw/sibling-session.jsonl",
+        sessionFile: "/tmp/quiet-core-bot/sibling-session.jsonl",
       },
     },
   });
@@ -857,7 +857,7 @@ describe("searchMemoryWiki", () => {
         "agent:main:abc-uuid": {
           sessionId: "abc-uuid",
           updatedAt: 1,
-          sessionFile: "/tmp/openclaw/abc-uuid.jsonl",
+          sessionFile: "/tmp/quiet-core-bot/abc-uuid.jsonl",
         },
       },
     });
@@ -910,7 +910,7 @@ describe("searchMemoryWiki", () => {
         "agent:secondary:visible-session": {
           sessionId: "visible-session",
           updatedAt: 1,
-          sessionFile: "/tmp/openclaw/visible-session.jsonl",
+          sessionFile: "/tmp/quiet-core-bot/visible-session.jsonl",
         },
       },
     });
@@ -980,7 +980,7 @@ describe("searchMemoryWiki", () => {
         global: {
           sessionId: "visible-session",
           updatedAt: 1,
-          sessionFile: "/tmp/openclaw/visible-session.jsonl",
+          sessionFile: "/tmp/quiet-core-bot/visible-session.jsonl",
         },
       },
     });
@@ -1080,7 +1080,7 @@ describe("searchMemoryWiki", () => {
         "agent:secondary:main": {
           sessionId: "main",
           updatedAt: 1,
-          sessionFile: "/tmp/openclaw/main.jsonl",
+          sessionFile: "/tmp/quiet-core-bot/main.jsonl",
         },
       },
     });
@@ -1130,7 +1130,7 @@ describe("searchMemoryWiki", () => {
         "agent:other:visible-session": {
           sessionId: "visible-session",
           updatedAt: 1,
-          sessionFile: "/tmp/openclaw/visible-session.jsonl",
+          sessionFile: "/tmp/quiet-core-bot/visible-session.jsonl",
         },
       },
     });

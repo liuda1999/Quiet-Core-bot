@@ -1,99 +1,99 @@
 {
   "entries": [
     {
-      "name": "@openclaw/acpx",
+      "name": "@quiet-core/acpx",
       "description": "OpenClaw ACP runtime backend",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "quiet-core-bot": {
         "plugin": {
           "id": "acpx",
           "label": "ACPX Runtime"
         },
         "install": {
-          "npmSpec": "@openclaw/acpx",
+          "npmSpec": "@quiet-core/acpx",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.25"
         }
       }
     },
     {
-      "name": "@openclaw/diagnostics-otel",
+      "name": "@quiet-core/diagnostics-otel",
       "description": "OpenClaw diagnostics OpenTelemetry exporter",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "quiet-core-bot": {
         "plugin": {
           "id": "diagnostics-otel",
           "label": "Diagnostics OpenTelemetry"
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/diagnostics-otel",
-          "npmSpec": "@openclaw/diagnostics-otel",
+          "clawhubSpec": "clawhub:@quiet-core/diagnostics-otel",
+          "npmSpec": "@quiet-core/diagnostics-otel",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.25"
         }
       }
     },
     {
-      "name": "@openclaw/diagnostics-prometheus",
+      "name": "@quiet-core/diagnostics-prometheus",
       "description": "OpenClaw diagnostics Prometheus exporter",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "quiet-core-bot": {
         "plugin": {
           "id": "diagnostics-prometheus",
           "label": "Diagnostics Prometheus"
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/diagnostics-prometheus",
-          "npmSpec": "@openclaw/diagnostics-prometheus",
+          "clawhubSpec": "clawhub:@quiet-core/diagnostics-prometheus",
+          "npmSpec": "@quiet-core/diagnostics-prometheus",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.25"
         }
       }
     },
     {
-      "name": "@openclaw/diffs",
+      "name": "@quiet-core/diffs",
       "description": "OpenClaw diff viewer plugin",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "quiet-core-bot": {
         "plugin": {
           "id": "diffs",
           "label": "Diffs"
         },
         "install": {
-          "npmSpec": "@openclaw/diffs",
+          "npmSpec": "@quiet-core/diffs",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.30"
         }
       }
     },
     {
-      "name": "@openclaw/diffs-language-pack",
+      "name": "@quiet-core/diffs-language-pack",
       "description": "OpenClaw diffs viewer syntax highlighting language pack",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "quiet-core-bot": {
         "plugin": {
           "id": "diffs-language-pack",
           "label": "Diff Viewer Language Pack"
         },
         "install": {
-          "npmSpec": "@openclaw/diffs-language-pack",
-          "clawhubSpec": "clawhub:@openclaw/diffs-language-pack",
+          "npmSpec": "@quiet-core/diffs-language-pack",
+          "clawhubSpec": "clawhub:@quiet-core/diffs-language-pack",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.5.27"
         }
       }
     },
     {
-      "name": "@openclaw/firecrawl-plugin",
+      "name": "@quiet-core/firecrawl-plugin",
       "description": "OpenClaw Firecrawl plugin.",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "quiet-core-bot": {
         "plugin": {
           "id": "firecrawl",
           "label": "Firecrawl"
@@ -130,53 +130,53 @@
           }
         ],
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/firecrawl-plugin",
-          "npmSpec": "@openclaw/firecrawl-plugin",
+          "clawhubSpec": "clawhub:@quiet-core/firecrawl-plugin",
+          "npmSpec": "@quiet-core/firecrawl-plugin",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.6.8"
         }
       }
     },
     {
-      "name": "@openclaw/lobster",
+      "name": "@quiet-core/lobster",
       "description": "Lobster workflow tool plugin (typed pipelines + resumable approvals)",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "quiet-core-bot": {
         "plugin": {
           "id": "lobster",
           "label": "Lobster"
         },
         "install": {
-          "npmSpec": "@openclaw/lobster",
+          "npmSpec": "@quiet-core/lobster",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.25"
         }
       }
     },
     {
-      "name": "@openclaw/memory-lancedb",
+      "name": "@quiet-core/memory-lancedb",
       "description": "OpenClaw LanceDB-backed long-term memory plugin with auto-recall/capture",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "quiet-core-bot": {
         "plugin": {
           "id": "memory-lancedb",
           "label": "Memory LanceDB"
         },
         "install": {
-          "npmSpec": "@openclaw/memory-lancedb",
+          "npmSpec": "@quiet-core/memory-lancedb",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.5.31"
         }
       }
     },
     {
-      "name": "@openclaw/llama-cpp-provider",
+      "name": "@quiet-core/llama-cpp-provider",
       "description": "OpenClaw llama.cpp embedding provider plugin",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "quiet-core-bot": {
         "plugin": {
           "id": "llama-cpp",
           "label": "llama.cpp Provider"
@@ -187,18 +187,18 @@
           ]
         },
         "install": {
-          "npmSpec": "@openclaw/llama-cpp-provider",
+          "npmSpec": "@quiet-core/llama-cpp-provider",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.6.2"
         }
       }
     },
     {
-      "name": "@openclaw/searxng-plugin",
+      "name": "@quiet-core/searxng-plugin",
       "description": "OpenClaw SearXNG plugin",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "quiet-core-bot": {
         "plugin": {
           "id": "searxng",
           "label": "SearXNG"
@@ -229,8 +229,8 @@
           }
         ],
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/searxng-plugin",
-          "npmSpec": "@openclaw/searxng-plugin",
+          "clawhubSpec": "clawhub:@quiet-core/searxng-plugin",
+          "npmSpec": "@quiet-core/searxng-plugin",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.6.9",
           "allowInvalidConfigRecovery": true
@@ -238,18 +238,18 @@
       }
     },
     {
-      "name": "@openclaw/tokenjuice",
+      "name": "@quiet-core/tokenjuice",
       "description": "OpenClaw tokenjuice exec output compaction plugin",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "quiet-core-bot": {
         "plugin": {
           "id": "tokenjuice",
           "label": "Tokenjuice"
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/tokenjuice",
-          "npmSpec": "@openclaw/tokenjuice",
+          "clawhubSpec": "clawhub:@quiet-core/tokenjuice",
+          "npmSpec": "@quiet-core/tokenjuice",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.5.28"
         }

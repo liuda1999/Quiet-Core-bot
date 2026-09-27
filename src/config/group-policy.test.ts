@@ -255,11 +255,12 @@ describe("resolveToolsBySender", () => {
     expect(
       resolveToolsBySender({
         toolsBySender: {
-          "channel:msteams:user:alice": { allow: ["exec"] },
+          // `nc` is a canonical alias of the bundled nextcloud-talk channel.
+          "channel:nc:user:alice": { allow: ["exec"] },
           "id:user:alice": { deny: ["exec"] },
           "*": { deny: ["write"] },
         },
-        messageProvider: "teams",
+        messageProvider: "nextcloud-talk",
         senderId: "user:alice",
       }),
     ).toEqual({ allow: ["exec"] });
@@ -410,6 +411,6 @@ describe("resolveToolsBySender", () => {
     expect(warningSpy).toHaveBeenCalledTimes(1);
     const [warningMessage, warningMeta] = firstWarningCall(warningSpy);
     expect(String(warningMessage)).toContain(`toolsBySender key "${legacyKey}"`);
-    expect(warningMeta?.code).toBe("OPENCLAW_TOOLS_BY_SENDER_UNTYPED_KEY");
+    expect(warningMeta?.code).toBe("QUIET_CORE_TOOLS_BY_SENDER_UNTYPED_KEY");
   });
 });

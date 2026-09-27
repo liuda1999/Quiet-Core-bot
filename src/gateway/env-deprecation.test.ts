@@ -39,18 +39,18 @@ describe("warnLegacyOpenClawEnvVars", () => {
     ];
     expect(message).toContain("Legacy CLAWDBOT_*, MOLTBOT_* environment variables");
     expect(message).toContain("3 total");
-    expect(message).toContain("replacing the legacy prefix with OPENCLAW_");
+    expect(message).toContain("replacing the legacy prefix with QUIET_CORE_");
     expect(message).not.toContain("GATEWAY_TOKEN");
     expect(message).not.toContain("GATEWAY_PASSWORD");
     expect(message).not.toContain("forged");
     expect(options).toEqual({
-      code: "OPENCLAW_LEGACY_ENV_VARS",
+      code: "QUIET_CORE_LEGACY_ENV_VARS",
       type: "DeprecationWarning",
     });
   });
 
   it("does not warn for current OPENCLAW names", () => {
-    warnLegacyOpenClawEnvVars({ OPENCLAW_GATEWAY_TOKEN: "token" });
+    warnLegacyOpenClawEnvVars({ QUIET_CORE_GATEWAY_TOKEN: "token" });
 
     expect(emitWarning).not.toHaveBeenCalled();
   });

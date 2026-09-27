@@ -9,11 +9,11 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import {
   sortUniqueStrings,
   uniqueStrings,
-} from "@openclaw/normalization-core/string-normalization";
+} from "@quiet-core/normalization-core/string-normalization";
 import { sanitizeForLog } from "../../../packages/terminal-core/src/ansi.js";
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../../agents/agent-scope.js";
 import { resolveRuntimeConfigCacheKey } from "../../config/runtime-snapshot.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { formatErrorMessage } from "../../infra/errors.js";
 import { isBlockedObjectKey } from "../../infra/prototype-keys.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
@@ -93,7 +93,7 @@ function listBuiltPluginLoaderModuleCandidateUrls(importerUrl: string): URL[] {
     return [];
   }
   // Bundled read-only chunks live under dist/ with hashed names. Source-relative
-  // ../../plugins candidates would escape the installed openclaw package there.
+  // ../../plugins candidates would escape the installed quiet-core-bot package there.
   const distRoot = importerPath.slice(0, distMarkerIndex + distMarker.length - 1);
   return BUILT_PLUGIN_LOADER_MODULE_CANDIDATES.map((candidate) =>
     pathToFileURL(path.join(distRoot, candidate)),

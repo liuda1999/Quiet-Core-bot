@@ -6,7 +6,7 @@ import { setTimeout as sleep } from "node:timers/promises";
 import type { CliDeps } from "../cli/deps.types.js";
 import { resolveStateDir } from "../config/paths.js";
 import type { GatewayTailscaleMode } from "../config/types.gateway.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { hasConfiguredInternalHooks } from "../hooks/configured.js";
 import { isTruthyEnvValue } from "../infra/env.js";
 import { hasRestartSentinel } from "../infra/restart-sentinel.js";
@@ -35,7 +35,7 @@ const PROVIDER_AUTH_REWARM_DELAY_MS = 1_000;
 const AGENT_RUNTIME_PLUGIN_PREWARM_START_DELAY_MS = 10_000;
 const DEFERRED_SIDECAR_START_DELAY_MS = 100;
 const SESSION_LOCK_CLEANUP_CONCURRENCY = 4;
-const SKIP_STARTUP_MODEL_PREWARM_ENV = "OPENCLAW_SKIP_STARTUP_MODEL_PREWARM";
+const SKIP_STARTUP_MODEL_PREWARM_ENV = "QUIET_CORE_SKIP_STARTUP_MODEL_PREWARM";
 const QMD_STARTUP_IDLE_DELAY_MS = 120_000;
 
 type Awaitable<T> = T | Promise<T>;
@@ -578,7 +578,7 @@ async function prewarmConfiguredPrimaryModel(params: {
   if (!explicitPrimary) {
     return;
   }
-  const { normalizeProviderId } = await import("@openclaw/model-catalog-core/provider-id");
+  const { normalizeProviderId } = await import("@quiet-core/model-catalog-core/provider-id");
   if (
     isConfiguredCliBackendPrimary({
       cfg: params.cfg,
@@ -721,8 +721,8 @@ export async function startGatewaySidecars(params: {
   });
 
   const skipChannels =
-    isTruthyEnvValue(process.env.OPENCLAW_SKIP_CHANNELS) ||
-    isTruthyEnvValue(process.env.OPENCLAW_SKIP_PROVIDERS);
+    isTruthyEnvValue(process.env.QUIET_CORE_SKIP_CHANNELS) ||
+    isTruthyEnvValue(process.env.QUIET_CORE_SKIP_PROVIDERS);
   await measureStartup(params.startupTrace, "sidecars.main-session-recovery", async () => {
     try {
       const { markStartupOrphanedMainSessionsForRecovery } =
@@ -755,7 +755,7 @@ export async function startGatewaySidecars(params: {
     } else {
       await measureStartup(params.startupTrace, "sidecars.channel-skip", () =>
         params.logChannels.info(
-          "skipping channel start (OPENCLAW_SKIP_CHANNELS=1 or OPENCLAW_SKIP_PROVIDERS=1)",
+          "skipping channel start (QUIET_CORE_SKIP_CHANNELS=1 or QUIET_CORE_SKIP_PROVIDERS=1)",
         ),
       );
     }
@@ -817,7 +817,7 @@ export async function startGatewaySidecars(params: {
         const [{ getAcpSessionManager }, { ACP_SESSION_IDENTITY_RENDERER_VERSION }] =
           await Promise.all([
             import("../acp/control-plane/manager.js"),
-            import("@openclaw/acp-core/runtime/session-identifiers"),
+            import("@quiet-core/acp-core/runtime/session-identifiers"),
           ]);
         const result = await getAcpSessionManager().reconcilePendingSessionIdentities({
           cfg: params.cfg,

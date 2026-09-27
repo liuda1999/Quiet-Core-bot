@@ -37,7 +37,7 @@ node.
 ## Prereqs on the remote host
 
 1. Install Node + pnpm and build/install the Quiet Core bot CLI (`pnpm install && pnpm build && pnpm link --global`).
-2. Ensure `openclaw` is on PATH for non-interactive shells (symlink into `/usr/local/bin` or `/opt/homebrew/bin` if needed).
+2. Ensure `quiet-core-bot` is on PATH for non-interactive shells (symlink into `/usr/local/bin` or `/opt/homebrew/bin` if needed).
 3. For SSH transport only: open SSH with key auth. We recommend **Tailscale** IPs for stable reachability off-LAN.
 
 ## macOS app setup
@@ -45,19 +45,19 @@ node.
 To preconfigure the app without the welcome flow:
 
 ```bash
-openclaw-mac configure-remote \
+quiet-core-bot-mac configure-remote \
   --ssh-target user@gateway.local \
   --local-port 18789 \
   --remote-port 18789 \
-  --token "$OPENCLAW_GATEWAY_TOKEN"
+  --token "$QUIET_CORE_GATEWAY_TOKEN"
 ```
 
 For a gateway already reachable on a trusted LAN or Tailnet, skip SSH entirely:
 
 ```bash
-openclaw-mac configure-remote \
+quiet-core-bot-mac configure-remote \
   --direct-url ws://192.168.0.202:18789 \
-  --token "$OPENCLAW_GATEWAY_TOKEN"
+  --token "$QUIET_CORE_GATEWAY_TOKEN"
 ```
 
 This writes the remote config, marks onboarding complete, and lets the app own
@@ -71,7 +71,7 @@ the selected transport when it starts.
    - **Gateway URL** (Direct only): `wss://gateway.example.ts.net` (or `ws://...` for local/LAN).
    - **Identity file** (advanced): path to your key.
    - **Project root** (advanced): remote checkout path used for commands.
-   - **CLI path** (advanced): optional path to a runnable `openclaw` entrypoint/binary (auto-filled when advertised).
+   - **CLI path** (advanced): optional path to a runnable `quiet-core-bot` entrypoint/binary (auto-filled when advertised).
 3. Hit **Test remote**. Success indicates the remote `quiet-core-bot status --json` runs correctly. Failures usually mean PATH/CLI issues; exit 127 means the CLI isn't found remotely.
 4. Health checks and Web Chat will now run through the selected transport automatically.
 
@@ -100,7 +100,7 @@ the selected transport when it starts.
 
 ## Troubleshooting
 
-- **exit 127 / not found**: `openclaw` isn't on PATH for non-login shells. Add it to `/etc/paths`, your shell rc, or symlink into `/usr/local/bin`/`/opt/homebrew/bin`.
+- **exit 127 / not found**: `quiet-core-bot` isn't on PATH for non-login shells. Add it to `/etc/paths`, your shell rc, or symlink into `/usr/local/bin`/`/opt/homebrew/bin`.
 - **Health probe failed**: check SSH reachability, PATH, and that Baileys is logged in (`quiet-core-bot status --json`).
 - **Web Chat stuck**: confirm the gateway is running on the remote host and the forwarded port matches the gateway WS port; the UI requires a healthy WS connection.
 - **Node IP shows 127.0.0.1**: expected with the SSH tunnel. Switch **Transport** to **Direct (ws/wss)** if you want the gateway to see the real client IP.
@@ -109,7 +109,7 @@ the selected transport when it starts.
 
 ## Notification sounds
 
-Pick sounds per notification from scripts with `openclaw` and `node.invoke`, e.g.:
+Pick sounds per notification from scripts with `quiet-core-bot` and `node.invoke`, e.g.:
 
 ```bash
 quiet-core-bot nodes notify --node <id> --title "Ping" --body "Remote gateway ready" --sound Glass

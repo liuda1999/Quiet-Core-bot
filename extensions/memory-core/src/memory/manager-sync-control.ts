@@ -1,12 +1,12 @@
 // Memory Core plugin module implements manager sync control behavior.
 import type { DatabaseSync } from "node:sqlite";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { createSubsystemLogger } from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
+import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
+import { createSubsystemLogger } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
 import type {
   MemorySessionSyncTarget,
   MemorySyncParams,
   MemorySyncProgressUpdate,
-} from "openclaw/plugin-sdk/memory-core-host-engine-storage";
+} from "quiet-core-bot/plugin-sdk/memory-core-host-engine-storage";
 
 const log = createSubsystemLogger("memory");
 

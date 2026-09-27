@@ -1,17 +1,17 @@
 /** Cross-platform daemon service names, labels, and profile-aware descriptions. */
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
 
 // Default service labels (canonical + legacy compatibility)
-export const GATEWAY_LAUNCH_AGENT_LABEL = "ai.openclaw.gateway";
-export const GATEWAY_SYSTEMD_SERVICE_NAME = "openclaw-gateway";
+export const GATEWAY_LAUNCH_AGENT_LABEL = "ai.quiet-core-bot.gateway";
+export const GATEWAY_SYSTEMD_SERVICE_NAME = "quiet-core-bot-gateway";
 export const GATEWAY_WINDOWS_TASK_NAME = "Quiet Core Gateway";
-export const GATEWAY_SERVICE_MARKER = "openclaw";
+export const GATEWAY_SERVICE_MARKER = "quiet-core-bot";
 export const GATEWAY_SERVICE_KIND = "gateway";
-export const GATEWAY_SERVICE_RUNTIME_PID_ENV = "OPENCLAW_GATEWAY_SERVICE_PID";
-const NODE_LAUNCH_AGENT_LABEL = "ai.openclaw.node";
-const NODE_SYSTEMD_SERVICE_NAME = "openclaw-node";
+export const GATEWAY_SERVICE_RUNTIME_PID_ENV = "QUIET_CORE_GATEWAY_SERVICE_PID";
+const NODE_LAUNCH_AGENT_LABEL = "ai.quiet-core-bot.node";
+const NODE_SYSTEMD_SERVICE_NAME = "quiet-core-bot-node";
 const NODE_WINDOWS_TASK_NAME = "Quiet Core Node";
-export const NODE_SERVICE_MARKER = "openclaw";
+export const NODE_SERVICE_MARKER = "quiet-core-bot";
 export const NODE_SERVICE_KIND = "node";
 export const NODE_WINDOWS_TASK_SCRIPT_NAME = "node.cmd";
 export const LEGACY_GATEWAY_SYSTEMD_SERVICE_NAMES: string[] = ["clawdbot-gateway"];
@@ -35,7 +35,7 @@ export function resolveGatewayLaunchAgentLabel(profile?: string): string {
   if (!normalized) {
     return GATEWAY_LAUNCH_AGENT_LABEL;
   }
-  return `ai.openclaw.${normalized}`;
+  return `ai.quiet-core-bot.${normalized}`;
 }
 
 export function resolveLegacyGatewayLaunchAgentLabels(profile?: string): string[] {
@@ -48,7 +48,7 @@ export function resolveGatewaySystemdServiceName(profile?: string): string {
   if (!suffix) {
     return GATEWAY_SYSTEMD_SERVICE_NAME;
   }
-  return `openclaw-gateway${suffix}`;
+  return `quiet-core-bot-gateway${suffix}`;
 }
 
 export function resolveGatewayWindowsTaskName(profile?: string): string {
@@ -86,8 +86,8 @@ export function resolveGatewayServiceDescription(params: {
   return (
     params.description ??
     formatGatewayServiceDescription({
-      profile: params.env.OPENCLAW_PROFILE,
-      version: params.environment?.OPENCLAW_SERVICE_VERSION ?? params.env.OPENCLAW_SERVICE_VERSION,
+      profile: params.env.QUIET_CORE_PROFILE,
+      version: params.environment?.QUIET_CORE_SERVICE_VERSION ?? params.env.QUIET_CORE_SERVICE_VERSION,
     })
   );
 }

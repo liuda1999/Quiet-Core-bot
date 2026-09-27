@@ -9,14 +9,14 @@ describe("sandbox common smoke workflow", () => {
 
   it("bounds Docker build and run smoke steps", () => {
     expect(workflow).toContain(
-      "timeout --kill-after=30s 5m docker build -t openclaw-sandbox-smoke-base:bookworm-slim -",
+      "timeout --kill-after=30s 5m docker build -t quiet-core-bot-sandbox-smoke-base:bookworm-slim -",
     );
     expect(workflow).toContain(
-      "timeout --kill-after=30s 2m docker run --rm openclaw-sandbox-common-smoke:bookworm-slim",
+      "timeout --kill-after=30s 2m docker run --rm quiet-core-bot-sandbox-common-smoke:bookworm-slim",
     );
-    expect(workflow).not.toMatch(/(^|\n)\s+docker build -t openclaw-sandbox-smoke-base/u);
+    expect(workflow).not.toMatch(/(^|\n)\s+docker build -t quiet-core-bot-sandbox-smoke-base/u);
     expect(workflow).not.toContain(
-      'u="$(docker run --rm openclaw-sandbox-common-smoke:bookworm-slim',
+      'u="$(docker run --rm quiet-core-bot-sandbox-common-smoke:bookworm-slim',
     );
   });
 });

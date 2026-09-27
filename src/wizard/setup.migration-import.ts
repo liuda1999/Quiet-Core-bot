@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import type { OnboardOptions } from "../commands/onboard-types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import type { MigrationProviderPlugin } from "../plugins/types.js";
 import type { RuntimeEnv } from "../runtime.js";
@@ -103,7 +103,7 @@ function assertFreshSetupMigrationTarget(freshness: {
 }): void {
   // Migration import is currently fresh-setup only unless an explicit env gate
   // opts into existing-target behavior.
-  if (freshness.fresh || process.env.OPENCLAW_MIGRATION_EXISTING_IMPORT === "1") {
+  if (freshness.fresh || process.env.QUIET_CORE_MIGRATION_EXISTING_IMPORT === "1") {
     return;
   }
   throw new Error(

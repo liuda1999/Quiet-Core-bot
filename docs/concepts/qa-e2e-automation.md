@@ -127,13 +127,13 @@ That script starts a local OTLP/HTTP receiver, runs the `otel-trace-smoke` QA
 scenario with the `diagnostics-otel` plugin enabled, then asserts traces,
 metrics, and logs are exported. It decodes the exported protobuf trace spans
 and checks the release-critical shape:
-`openclaw.run`, `openclaw.harness.run`, a latest GenAI semantic-convention
-model-call span, `openclaw.context.assembled`, and `openclaw.message.delivery`
+`quiet-core-bot.run`, `quiet-core-bot.harness.run`, a latest GenAI semantic-convention
+model-call span, `quiet-core-bot.context.assembled`, and `quiet-core-bot.message.delivery`
 must be present. The smoke forces
 `OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental`, so the model-call
 span must use the `{gen_ai.operation.name} {gen_ai.request.model}` name;
 model calls must not export `StreamAbandoned` on successful turns; raw diagnostic IDs and
-`openclaw.content.*` attributes must stay out of the trace. The raw OTLP
+`quiet-core-bot.content.*` attributes must stay out of the trace. The raw OTLP
 payloads must not contain the prompt sentinel, response sentinel, or QA session
 key. It writes `otel-smoke-summary.json` next to the QA suite artifacts.
 
@@ -186,7 +186,7 @@ pnpm quiet-core-bot qa matrix --profile fast --fail-fast
 
 The full CLI reference, profile/scenario catalog, env vars, and artifact layout for this lane live in [Matrix QA](/concepts/qa-matrix). At a glance: it provisions a disposable Tuwunel homeserver in Docker, registers temporary driver/SUT/observer users, runs the real Matrix plugin inside a child QA gateway scoped to that transport (no `qa-channel`), then writes a Markdown report, JSON summary, observed-events artifact, and combined output log under `.artifacts/qa-e2e/matrix-<timestamp>/`.
 
-The scenarios cover transport behavior that unit tests cannot prove end to end: mention gating, allow-bot policies, allowlists, top-level and threaded replies, DM routing, reaction handling, inbound edit suppression, restart replay dedupe, homeserver interruption recovery, approval metadata delivery, media handling, and Matrix E2EE bootstrap/recovery/verification flows. The E2EE CLI profile also drives `openclaw matrix encryption setup` and verification commands through the same disposable homeserver before checking gateway replies.
+The scenarios cover transport behavior that unit tests cannot prove end to end: mention gating, allow-bot policies, allowlists, top-level and threaded replies, DM routing, reaction handling, inbound edit suppression, restart replay dedupe, homeserver interruption recovery, approval metadata delivery, media handling, and Matrix E2EE bootstrap/recovery/verification flows. The E2EE CLI profile also drives `quiet-core-bot matrix encryption setup` and verification commands through the same disposable homeserver before checking gateway replies.
 
 Discord also has Mantis-only opt-in scenarios for bug reproduction. Use
 `--scenario discord-status-reactions-tool-only` for the explicit status reaction
@@ -202,7 +202,7 @@ decision still comes from the Discord REST oracle.
 
 CI uses the same command surface in its Matrix live lane.
 Scheduled and default manual runs execute the fast Matrix profile with live
-frontier credentials, `--fast`, and `OPENCLAW_QA_MATRIX_NO_REPLY_WINDOW_MS=3000`.
+frontier credentials, `--fast`, and `QUIET_CORE_QA_MATRIX_NO_REPLY_WINDOW_MS=3000`.
 Manual `matrix_profile=all` fans out into the five profile shards.
 
 For transport-real Telegram, Discord, Slack, and WhatsApp smoke lanes:
@@ -276,7 +276,7 @@ pnpm quiet-core-bot qa mantis visual-task \
 
 `visual-task` leases or reuses a Crabbox desktop/browser machine, starts
 `crabbox record --while`, drives the visible browser through a nested
-`visual-driver`, captures `visual-task.png`, runs `openclaw infer image describe`
+`visual-driver`, captures `visual-task.png`, runs `quiet-core-bot infer image describe`
 against the screenshot when `--vision-mode image-describe` is selected, and
 writes `visual-task.mp4`, `mantis-visual-task-summary.json`,
 `mantis-visual-task-driver-result.json`, and `mantis-visual-task-report.md`.
@@ -304,7 +304,7 @@ Live transport lanes share one contract instead of each inventing their own scen
 
 Live transport runners should import the shared scenario ids, baseline
 coverage helpers, and scenario-selection helper from
-`openclaw/plugin-sdk/qa-live-transport-scenarios`.
+`quiet-core-bot/plugin-sdk/qa-live-transport-scenarios`.
 
 | Lane     | Canary | Mention gating | Bot-to-bot | Allowlist block | Top-level reply | Quote reply | Restart resume | Thread follow-up | Thread isolation | Reaction observation | Help command | Native command registration |
 | -------- | ------ | -------------- | ---------- | --------------- | --------------- | ----------- | -------------- | ---------------- | ---------------- | -------------------- | ------------ | --------------------------- |
@@ -376,9 +376,9 @@ Targets one real private Telegram group with two distinct bots (driver + SUT). T
 
 Required env when `--credential-source env`:
 
-- `OPENCLAW_QA_TELEGRAM_GROUP_ID` - numeric chat id (string).
-- `OPENCLAW_QA_TELEGRAM_DRIVER_BOT_TOKEN`
-- `OPENCLAW_QA_TELEGRAM_SUT_BOT_TOKEN`
+- `QUIET_CORE_QA_TELEGRAM_GROUP_ID` - numeric chat id (string).
+- `QUIET_CORE_QA_TELEGRAM_DRIVER_BOT_TOKEN`
+- `QUIET_CORE_QA_TELEGRAM_SUT_BOT_TOKEN`
 
 Scenarios (`extensions/qa-lab/src/live-transports/telegram/telegram-live.runtime.ts`):
 
@@ -416,16 +416,16 @@ Targets one real private Discord guild channel with two bots: a driver bot contr
 
 Required env when `--credential-source env`:
 
-- `OPENCLAW_QA_DISCORD_GUILD_ID`
-- `OPENCLAW_QA_DISCORD_CHANNEL_ID`
-- `OPENCLAW_QA_DISCORD_DRIVER_BOT_TOKEN`
-- `OPENCLAW_QA_DISCORD_SUT_BOT_TOKEN`
-- `OPENCLAW_QA_DISCORD_SUT_APPLICATION_ID` - must match the SUT bot user id returned by Discord (the lane fails fast otherwise).
+- `QUIET_CORE_QA_DISCORD_GUILD_ID`
+- `QUIET_CORE_QA_DISCORD_CHANNEL_ID`
+- `QUIET_CORE_QA_DISCORD_DRIVER_BOT_TOKEN`
+- `QUIET_CORE_QA_DISCORD_SUT_BOT_TOKEN`
+- `QUIET_CORE_QA_DISCORD_SUT_APPLICATION_ID` - must match the SUT bot user id returned by Discord (the lane fails fast otherwise).
 
 Optional:
 
-- `OPENCLAW_QA_DISCORD_CAPTURE_CONTENT=1` keeps message bodies in observed-message artifacts.
-- `OPENCLAW_QA_DISCORD_VOICE_CHANNEL_ID` selects the voice/stage channel for `discord-voice-autojoin`; without it, the scenario picks the first visible voice/stage channel for the SUT bot.
+- `QUIET_CORE_QA_DISCORD_CAPTURE_CONTENT=1` keeps message bodies in observed-message artifacts.
+- `QUIET_CORE_QA_DISCORD_VOICE_CHANNEL_ID` selects the voice/stage channel for `discord-voice-autojoin`; without it, the scenario picks the first visible voice/stage channel for the SUT bot.
 
 Scenarios (`extensions/qa-lab/src/live-transports/discord/discord-live.runtime.ts:36`):
 
@@ -458,7 +458,7 @@ Output artifacts:
 
 - `discord-qa-report.md`
 - `qa-evidence.json` - evidence entries for the live transport checks.
-- `discord-qa-observed-messages.json` - bodies redacted unless `OPENCLAW_QA_DISCORD_CAPTURE_CONTENT=1`.
+- `discord-qa-observed-messages.json` - bodies redacted unless `QUIET_CORE_QA_DISCORD_CAPTURE_CONTENT=1`.
 - `discord-qa-reaction-timelines.json` and `discord-status-reactions-tool-only-timeline.png` when the status-reaction scenario runs.
 
 ### Slack QA
@@ -471,18 +471,18 @@ Targets one real private Slack channel with two distinct bots: a driver bot cont
 
 Required env when `--credential-source env`:
 
-- `OPENCLAW_QA_SLACK_CHANNEL_ID`
-- `OPENCLAW_QA_SLACK_DRIVER_BOT_TOKEN`
-- `OPENCLAW_QA_SLACK_SUT_BOT_TOKEN`
-- `OPENCLAW_QA_SLACK_SUT_APP_TOKEN`
+- `QUIET_CORE_QA_SLACK_CHANNEL_ID`
+- `QUIET_CORE_QA_SLACK_DRIVER_BOT_TOKEN`
+- `QUIET_CORE_QA_SLACK_SUT_BOT_TOKEN`
+- `QUIET_CORE_QA_SLACK_SUT_APP_TOKEN`
 
 Optional:
 
-- `OPENCLAW_QA_SLACK_CAPTURE_CONTENT=1` keeps message bodies in observed-message artifacts.
-- `OPENCLAW_QA_SLACK_APPROVAL_CHECKPOINT_DIR` enables visual approval
+- `QUIET_CORE_QA_SLACK_CAPTURE_CONTENT=1` keeps message bodies in observed-message artifacts.
+- `QUIET_CORE_QA_SLACK_APPROVAL_CHECKPOINT_DIR` enables visual approval
   checkpoints for Mantis. The runner writes `<scenario>.pending.json` and
   `<scenario>.resolved.json`, then waits for matching `.ack.json` files.
-- `OPENCLAW_QA_SLACK_APPROVAL_CHECKPOINT_TIMEOUT_MS` overrides the checkpoint
+- `QUIET_CORE_QA_SLACK_APPROVAL_CHECKPOINT_TIMEOUT_MS` overrides the checkpoint
   acknowledgement timeout. The default is `120000`.
 
 Scenarios (`extensions/qa-lab/src/live-transports/slack/slack-live.runtime.ts`):
@@ -506,9 +506,9 @@ Output artifacts:
 
 - `slack-qa-report.md`
 - `qa-evidence.json` - evidence entries for the live transport checks.
-- `slack-qa-observed-messages.json` - bodies redacted unless `OPENCLAW_QA_SLACK_CAPTURE_CONTENT=1`.
+- `slack-qa-observed-messages.json` - bodies redacted unless `QUIET_CORE_QA_SLACK_CAPTURE_CONTENT=1`.
 - `approval-checkpoints/` - only when Mantis sets
-  `OPENCLAW_QA_SLACK_APPROVAL_CHECKPOINT_DIR`; contains checkpoint JSON,
+  `QUIET_CORE_QA_SLACK_APPROVAL_CHECKPOINT_DIR`; contains checkpoint JSON,
   acknowledgement JSON, and pending/resolved screenshots.
 
 #### Setting up the Slack workspace
@@ -631,7 +631,7 @@ Verify the two bots have distinct user ids by calling `auth.test` on each token.
 
 **3. Create the channel**
 
-In the QA workspace, create a channel (e.g. `#openclaw-qa`) and invite both bots from inside the channel:
+In the QA workspace, create a channel (e.g. `#quiet-core-bot-qa`) and invite both bots from inside the channel:
 
 ```
 /invite @Quiet Core bot QA Driver
@@ -642,7 +642,7 @@ Copy the `Cxxxxxxxxxx` id from _channel info → About → Channel ID_ - that be
 
 **4. Register the credentials**
 
-Two options. Use env vars for single-machine debugging (set the four `OPENCLAW_QA_SLACK_*` variables and pass `--credential-source env`), or seed the shared Convex pool so CI and other maintainers can lease them.
+Two options. Use env vars for single-machine debugging (set the four `QUIET_CORE_QA_SLACK_*` variables and pass `--credential-source env`), or seed the shared Convex pool so CI and other maintainers can lease them.
 
 For the Convex pool, write the four fields to a JSON file:
 
@@ -655,7 +655,7 @@ For the Convex pool, write the four fields to a JSON file:
 }
 ```
 
-With `OPENCLAW_QA_CONVEX_SITE_URL` and `OPENCLAW_QA_CONVEX_SECRET_MAINTAINER` exported in your shell, register and verify:
+With `QUIET_CORE_QA_CONVEX_SITE_URL` and `QUIET_CORE_QA_CONVEX_SECRET_MAINTAINER` exported in your shell, register and verify:
 
 ```bash
 pnpm quiet-core-bot qa credentials add \
@@ -693,16 +693,16 @@ bundled WhatsApp plugin.
 
 Required env when `--credential-source env`:
 
-- `OPENCLAW_QA_WHATSAPP_DRIVER_PHONE_E164`
-- `OPENCLAW_QA_WHATSAPP_SUT_PHONE_E164`
-- `OPENCLAW_QA_WHATSAPP_DRIVER_AUTH_ARCHIVE_BASE64`
-- `OPENCLAW_QA_WHATSAPP_SUT_AUTH_ARCHIVE_BASE64`
+- `QUIET_CORE_QA_WHATSAPP_DRIVER_PHONE_E164`
+- `QUIET_CORE_QA_WHATSAPP_SUT_PHONE_E164`
+- `QUIET_CORE_QA_WHATSAPP_DRIVER_AUTH_ARCHIVE_BASE64`
+- `QUIET_CORE_QA_WHATSAPP_SUT_AUTH_ARCHIVE_BASE64`
 
 Optional:
 
-- `OPENCLAW_QA_WHATSAPP_GROUP_JID` enables group scenarios such as
+- `QUIET_CORE_QA_WHATSAPP_GROUP_JID` enables group scenarios such as
   `whatsapp-mention-gating` and `whatsapp-group-allowlist-block`.
-- `OPENCLAW_QA_WHATSAPP_CAPTURE_CONTENT=1` keeps message bodies in
+- `QUIET_CORE_QA_WHATSAPP_CAPTURE_CONTENT=1` keeps message bodies in
   observed-message artifacts.
 
 Scenario catalog (`extensions/qa-lab/src/live-transports/whatsapp/whatsapp-live.runtime.ts`):
@@ -743,7 +743,7 @@ remain explicit by scenario id.
 The WhatsApp QA driver observes structured live events (`text`, `media`,
 `location`, `reaction`, and `poll`) and can actively send media, polls,
 contacts, locations, and stickers. QA Lab imports that driver through the
-`@openclaw/whatsapp/api.js` package surface instead of reaching into private
+`@quiet-core/whatsapp/api.js` package surface instead of reaching into private
 WhatsApp runtime files. Message content is redacted by default. Outbound
 poll and upload-file coverage run through deterministic gateway `poll` and
 `message.action` calls instead of model-prompt-only tool invocation.
@@ -752,11 +752,11 @@ Output artifacts:
 
 - `whatsapp-qa-report.md`
 - `qa-evidence.json` - evidence entries for the live transport checks.
-- `whatsapp-qa-observed-messages.json` - bodies redacted unless `OPENCLAW_QA_WHATSAPP_CAPTURE_CONTENT=1`.
+- `whatsapp-qa-observed-messages.json` - bodies redacted unless `QUIET_CORE_QA_WHATSAPP_CAPTURE_CONTENT=1`.
 
 ### Convex credential pool
 
-Telegram, Discord, Slack, and WhatsApp lanes can lease credentials from a shared Convex pool instead of reading the env vars above. Pass `--credential-source convex` (or set `OPENCLAW_QA_CREDENTIAL_SOURCE=convex`); QA Lab acquires an exclusive lease, heartbeats it for the duration of the run, and releases it on shutdown. Pool kinds are `"telegram"`, `"discord"`, `"slack"`, and `"whatsapp"`.
+Telegram, Discord, Slack, and WhatsApp lanes can lease credentials from a shared Convex pool instead of reading the env vars above. Pass `--credential-source convex` (or set `QUIET_CORE_QA_CREDENTIAL_SOURCE=convex`); QA Lab acquires an exclusive lease, heartbeats it for the duration of the run, and releases it on shutdown. Pool kinds are `"telegram"`, `"discord"`, `"slack"`, and `"whatsapp"`.
 
 Payload shapes the broker validates on `admin/add`:
 
@@ -887,7 +887,7 @@ The minimum adoption bar for a new channel:
 1. Keep `qa-lab` as the owner of the shared `qa` root.
 2. Implement the transport runner on the shared `qa-lab` host seam.
 3. Keep transport-specific mechanics inside the runner plugin or channel harness.
-4. Mount the runner as `quiet-core-bot qa <runner>` instead of registering a competing root command. Runner plugins should declare `qaRunners` in `openclaw.plugin.json` and export a matching `qaRunnerCliRegistrations` array from `runtime-api.ts`. Keep `runtime-api.ts` light; lazy CLI and runner execution should stay behind separate entrypoints.
+4. Mount the runner as `quiet-core-bot qa <runner>` instead of registering a competing root command. Runner plugins should declare `qaRunners` in `quiet-core-bot.plugin.json` and export a matching `qaRunnerCliRegistrations` array from `runtime-api.ts`. Keep `runtime-api.ts` light; lazy CLI and runner execution should stay behind separate entrypoints.
 5. Author or adapt YAML scenarios under the themed `qa/scenarios/` directories.
 6. Use the generic scenario helpers for new scenarios.
 7. Keep existing compatibility aliases working unless the repo is doing an intentional migration.

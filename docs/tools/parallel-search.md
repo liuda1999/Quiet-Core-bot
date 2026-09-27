@@ -32,7 +32,7 @@ explicitly.
 Install the official plugin, then restart Gateway:
 
 ```bash
-quiet-core-bot plugins install @openclaw/parallel-plugin
+quiet-core-bot plugins install @quiet-core/parallel-plugin
 quiet-core-bot gateway restart
 ```
 

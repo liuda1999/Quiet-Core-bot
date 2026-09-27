@@ -11,8 +11,8 @@ Adds DeepInfra model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/deepinfra-provider`
-- Install route: npm; ClawHub: `clawhub:@openclaw/deepinfra-provider`
+- Package: `@quiet-core/deepinfra-provider`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/deepinfra-provider`
 
 ## Surface
 

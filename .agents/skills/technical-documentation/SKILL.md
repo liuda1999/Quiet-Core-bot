@@ -31,7 +31,7 @@ Produce and review technical documentation that is clear, actionable, and mainta
 3. Detect multilingual scope (README/docs in multiple languages) and define required parity level.
 4. Read `references/agent-and-contributing.md` for agent instruction and `CONTRIBUTING.md` workflow rules (inventory, canonical/alias mapping, dual-mode balance, deliverable standards, and precedence/conflict handling).
 5. Read `references/principles.md` for the governing ruleset (Matt Palmer & OpenAI).
-6. For Quiet Core bot docs work, read `references/openclaw.md` before the build/review playbook.
+6. For Quiet Core bot docs work, read `references/quiet-core-bot.md` before the build/review playbook.
 7. For build tasks, follow `references/build.md`.
 8. For review tasks, follow `references/review.md` and proactively detect issues without waiting for repeated prompts.
 9. For complex or high-risk tasks (build or review), it is acceptable to run longer, deeper, and more exhaustive investigations when needed for confidence.

@@ -3,7 +3,7 @@ import {
   createWebSearchProviderContractFields,
   enablePluginInConfig,
   type WebSearchProviderPlugin,
-} from "openclaw/plugin-sdk/provider-web-search-contract";
+} from "quiet-core-bot/plugin-sdk/provider-web-search-contract";
 
 export const FIRECRAWL_CREDENTIAL_PATH = "plugins.entries.firecrawl.config.webSearch.apiKey";
 export const FIRECRAWL_FETCH_CREDENTIAL_PATH = "plugins.entries.firecrawl.config.webFetch.apiKey";

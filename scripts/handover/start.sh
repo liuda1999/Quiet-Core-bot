@@ -19,9 +19,9 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
 MODE_FILE=".handover-run-mode"
-LOG_DIR="${OPENCLAW_LOG_DIR:-$ROOT_DIR/.handover-logs}"
+LOG_DIR="${QUIET_CORE_LOG_DIR:-$ROOT_DIR/.handover-logs}"
 PID_FILE="$LOG_DIR/gateway.pid"
-GATEWAY_PORT="${OPENCLAW_GATEWAY_PORT:-18789}"
+GATEWAY_PORT="${QUIET_CORE_GATEWAY_PORT:-18789}"
 
 compose_args() {
   local args=(-f docker-compose.yml)

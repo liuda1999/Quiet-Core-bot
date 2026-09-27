@@ -4,7 +4,7 @@ import path from "node:path";
 import {
   replaceManagedMarkdownBlock,
   withTrailingNewline,
-} from "openclaw/plugin-sdk/memory-host-markdown";
+} from "quiet-core-bot/plugin-sdk/memory-host-markdown";
 import {
   assessPageFreshness,
   buildClaimContradictionClusters,

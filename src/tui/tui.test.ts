@@ -228,19 +228,19 @@ describe("resolveTuiShutdownHardExitMs", () => {
   });
 
   it("adds local run shutdown grace before forcing embedded shutdown", () => {
-    withEnv({ OPENCLAW_TUI_LOCAL_RUN_SHUTDOWN_GRACE_MS: "3456" }, () => {
+    withEnv({ QUIET_CORE_TUI_LOCAL_RUN_SHUTDOWN_GRACE_MS: "3456" }, () => {
       expect(resolveTuiShutdownHardExitMs({ localMode: true })).toBe(5456);
     });
   });
 
   it("ignores partial local run shutdown grace values", () => {
-    withEnv({ OPENCLAW_TUI_LOCAL_RUN_SHUTDOWN_GRACE_MS: "3456abc" }, () => {
+    withEnv({ QUIET_CORE_TUI_LOCAL_RUN_SHUTDOWN_GRACE_MS: "3456abc" }, () => {
       expect(resolveTuiShutdownHardExitMs({ localMode: true })).toBe(122000);
     });
   });
 
   it("clamps oversized local run shutdown grace values", () => {
-    withEnv({ OPENCLAW_TUI_LOCAL_RUN_SHUTDOWN_GRACE_MS: String(Number.MAX_SAFE_INTEGER) }, () => {
+    withEnv({ QUIET_CORE_TUI_LOCAL_RUN_SHUTDOWN_GRACE_MS: String(Number.MAX_SAFE_INTEGER) }, () => {
       expect(resolveTuiShutdownHardExitMs({ localMode: true })).toBe(MAX_TIMER_TIMEOUT_MS + 2000);
     });
   });
@@ -303,8 +303,8 @@ describe("resolveInitialTuiAgentId", () => {
   const cfg: OpenClawConfig = {
     agents: {
       list: [
-        { id: "main", workspace: "/tmp/openclaw" },
-        { id: "ops", workspace: "/tmp/openclaw/projects/ops" },
+        { id: "main", workspace: "/tmp/quiet-core-bot" },
+        { id: "ops", workspace: "/tmp/quiet-core-bot/projects/ops" },
       ],
     },
   };
@@ -315,7 +315,7 @@ describe("resolveInitialTuiAgentId", () => {
         cfg,
         fallbackAgentId: "main",
         initialSessionInput: "",
-        cwd: "/tmp/openclaw/projects/ops/src",
+        cwd: "/tmp/quiet-core-bot/projects/ops/src",
       }),
     ).toBe("ops");
   });
@@ -326,7 +326,7 @@ describe("resolveInitialTuiAgentId", () => {
         cfg,
         fallbackAgentId: "main",
         initialSessionInput: "agent:main:incident",
-        cwd: "/tmp/openclaw/projects/ops/src",
+        cwd: "/tmp/quiet-core-bot/projects/ops/src",
       }),
     ).toBe("main");
   });

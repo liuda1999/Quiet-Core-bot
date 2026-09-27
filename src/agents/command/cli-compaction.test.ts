@@ -2,10 +2,10 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { CURRENT_SESSION_VERSION } from "openclaw/plugin-sdk/agent-sessions";
+import { CURRENT_SESSION_VERSION } from "quiet-core-bot/plugin-sdk/agent-sessions";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { SessionEntry } from "../../config/sessions/types.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import type { ContextEngine } from "../../context-engine/types.js";
 import {
   resetCliCompactionTestDeps,
@@ -78,7 +78,7 @@ describe("runCliTurnCompactionLifecycle", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-cli-compaction-"));
+    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-cli-compaction-"));
     setCliCompactionTestDeps({ resolveCliBackendConfig: () => null });
   });
 
@@ -466,10 +466,10 @@ describe("runCliTurnCompactionLifecycle", () => {
   });
 
   it("ignores stale native harness ids when the active provider no longer matches", async () => {
-    const sessionKey = "agent:main:openclaw-after-codex";
-    const sessionId = "session-openclaw-after-codex";
-    const sessionFile = path.join(tmpDir, "session-openclaw-after-codex.jsonl");
-    const storePath = path.join(tmpDir, "sessions-openclaw-after-codex.json");
+    const sessionKey = "agent:main:quiet-core-bot-after-codex";
+    const sessionId = "session-quiet-core-bot-after-codex";
+    const sessionFile = path.join(tmpDir, "session-quiet-core-bot-after-codex.jsonl");
+    const storePath = path.join(tmpDir, "sessions-quiet-core-bot-after-codex.json");
     await writeSessionFile({ sessionFile, sessionId });
 
     const sessionEntry: SessionEntry = {
@@ -521,7 +521,7 @@ describe("runCliTurnCompactionLifecycle", () => {
       sessionAgentId: "main",
       workspaceDir: tmpDir,
       agentDir: tmpDir,
-      provider: "openclaw",
+      provider: "quiet-core-bot",
       model: "sonnet-4.6",
     });
 

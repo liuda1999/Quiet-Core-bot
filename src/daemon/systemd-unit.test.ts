@@ -6,17 +6,17 @@ describe("buildSystemdUnit", () => {
   it("quotes arguments with whitespace", () => {
     const unit = buildSystemdUnit({
       description: "Quiet Core Gateway",
-      programArguments: ["/usr/bin/openclaw", "gateway", "--name", "My Bot"],
+      programArguments: ["/usr/bin/quiet-core-bot", "gateway", "--name", "My Bot"],
       environment: {},
     });
     const execStart = unit.split("\n").find((line) => line.startsWith("ExecStart="));
-    expect(execStart).toBe('ExecStart=/usr/bin/openclaw gateway --name "My Bot"');
+    expect(execStart).toBe('ExecStart=/usr/bin/quiet-core-bot gateway --name "My Bot"');
   });
 
   it("renders control-group kill mode for child-process cleanup", () => {
     const unit = buildSystemdUnit({
       description: "Quiet Core Gateway",
-      programArguments: ["/usr/bin/openclaw", "gateway", "run"],
+      programArguments: ["/usr/bin/quiet-core-bot", "gateway", "run"],
       environment: {},
     });
     expect(unit).toContain("KillMode=control-group");
@@ -33,7 +33,7 @@ describe("buildSystemdUnit", () => {
     expect(() =>
       buildSystemdUnit({
         description: "Quiet Core Gateway",
-        programArguments: ["/usr/bin/openclaw", "gateway", "start"],
+        programArguments: ["/usr/bin/quiet-core-bot", "gateway", "start"],
         environment: {
           INJECT: "ok\nExecStartPre=/bin/touch /tmp/oc15789_rce",
         },
@@ -44,16 +44,16 @@ describe("buildSystemdUnit", () => {
   it("renders EnvironmentFile entries before inline Environment values", () => {
     const unit = buildSystemdUnit({
       description: "Quiet Core Gateway",
-      programArguments: ["/usr/bin/openclaw", "gateway", "run"],
-      environmentFiles: ["/home/test/.openclaw/.env"],
+      programArguments: ["/usr/bin/quiet-core-bot", "gateway", "run"],
+      environmentFiles: ["/home/test/.quiet-core-bot/.env"],
       environment: {
-        OPENCLAW_GATEWAY_PORT: "18789",
+        QUIET_CORE_GATEWAY_PORT: "18789",
       },
     });
-    expect(unit).toContain("EnvironmentFile=-/home/test/.openclaw/.env");
-    expect(unit).toContain("Environment=OPENCLAW_GATEWAY_PORT=18789");
-    expect(unit.indexOf("EnvironmentFile=-/home/test/.openclaw/.env")).toBeLessThan(
-      unit.indexOf("Environment=OPENCLAW_GATEWAY_PORT=18789"),
+    expect(unit).toContain("EnvironmentFile=-/home/test/.quiet-core-bot/.env");
+    expect(unit).toContain("Environment=QUIET_CORE_GATEWAY_PORT=18789");
+    expect(unit.indexOf("EnvironmentFile=-/home/test/.quiet-core-bot/.env")).toBeLessThan(
+      unit.indexOf("Environment=QUIET_CORE_GATEWAY_PORT=18789"),
     );
   });
 });

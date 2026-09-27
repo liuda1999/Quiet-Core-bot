@@ -10,7 +10,7 @@ import type {
   SessionEntryPatchOptions,
 } from "../config/sessions/session-accessor.js";
 import type { SessionEntry } from "../config/sessions/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import type { CallGatewayOptions } from "../gateway/call.js";
 import {
   testing,
@@ -161,7 +161,7 @@ let tempRoot = "";
 let tempStoreIndex = 0;
 
 beforeAll(() => {
-  tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-subagent-control-"));
+  tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-subagent-control-"));
 });
 
 afterAll(() => {

@@ -8,7 +8,7 @@ const overview: CrestodianOverview = {
   defaultAgentId: "main",
   defaultModel: "openai/gpt-5.5",
   agents: [{ id: "main", isDefault: true, model: "openai/gpt-5.5" }],
-  config: { path: "/tmp/openclaw.json", exists: true, valid: true, issues: [], hash: null },
+  config: { path: "/tmp/quiet-core-bot.json", exists: true, valid: true, issues: [], hash: null },
   tools: {
     codex: { command: "codex", found: false, error: "not found" },
     claude: { command: "claude", found: false, error: "not found" },
@@ -22,7 +22,7 @@ const overview: CrestodianOverview = {
   },
   references: {
     docsUrl: "https://github.com/liuda1999/Quiet-Core-bot",
-    sourceUrl: "https://github.com/openclaw/openclaw",
+    sourceUrl: "https://github.com/liuda1999/Quiet-Core-bot",
   },
 };
 

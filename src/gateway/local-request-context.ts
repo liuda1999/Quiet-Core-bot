@@ -2,7 +2,7 @@
 // Lets local agent paths reuse Gateway server methods without starting a server.
 import { loadManifestModelCatalog } from "../agents/model-catalog.js";
 import type { CliDeps } from "../cli/deps.types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import type { CronServiceContract } from "../cron/service-contract.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import {

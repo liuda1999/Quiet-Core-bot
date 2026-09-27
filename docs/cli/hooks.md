@@ -90,9 +90,9 @@ quiet-core-bot hooks info session-memory
 Save session context to memory when /new or /reset command is issued
 
 Details:
-  Source: openclaw-bundled
-  Path: /path/to/openclaw/hooks/bundled/session-memory/HOOK.md
-  Handler: /path/to/openclaw/hooks/bundled/session-memory/handler.ts
+  Source: quiet-core-bot-bundled
+  Path: /path/to/quiet-core-bot/hooks/bundled/session-memory/HOOK.md
+  Handler: /path/to/quiet-core-bot/hooks/bundled/session-memory/handler.ts
   Homepage: https://github.com/liuda1999/Quiet-Core-bot/automation/hooks#session-memory
   Events: command:new, command:reset
 
@@ -240,7 +240,7 @@ quiet-core-bot plugins install ./my-hook-pack
 quiet-core-bot plugins install ./my-hook-pack.zip
 
 # NPM package
-quiet-core-bot plugins install @openclaw/my-hook-pack
+quiet-core-bot plugins install @quiet-core/my-hook-pack
 
 # Link a local directory without copying
 quiet-core-bot plugins install -l ./my-hook-pack

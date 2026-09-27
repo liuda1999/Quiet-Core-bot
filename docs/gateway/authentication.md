@@ -108,7 +108,7 @@ The auth profile store keeps credentials only. Legacy `auth-profiles.json` files
 }
 ```
 
-Quiet Core bot now reads auth profiles from each agent's `openclaw-agent.sqlite`. If an older install still has `auth-profiles.json`, `auth-state.json`, or a flat auth profile file such as `{ "openrouter": { "apiKey": "..." } }`, run `quiet-core-bot doctor --fix` to import it into SQLite; doctor keeps timestamped backups beside the original JSON files. Endpoint details such as `baseUrl`, `api`, model ids, headers, and timeouts belong under `models.providers.<id>` in `quiet-core-bot.json` or `models.json`, not in auth profiles.
+Quiet Core bot now reads auth profiles from each agent's `quiet-core-bot-agent.sqlite`. If an older install still has `auth-profiles.json`, `auth-state.json`, or a flat auth profile file such as `{ "openrouter": { "apiKey": "..." } }`, run `quiet-core-bot doctor --fix` to import it into SQLite; doctor keeps timestamped backups beside the original JSON files. Endpoint details such as `baseUrl`, `api`, model ids, headers, and timeouts belong under `models.providers.<id>` in `quiet-core-bot.json` or `models.json`, not in auth profiles.
 
 External auth routes such as Bedrock `auth: "aws-sdk"` are also not credentials. If you want a named Bedrock route, put `auth.profiles.<id>.mode: "aws-sdk"` in `quiet-core-bot.json`; do not write `type: "aws-sdk"` into the auth profile store. `quiet-core-bot doctor --fix` moves legacy AWS SDK markers from the credential store into config metadata.
 
@@ -166,7 +166,7 @@ Some providers support retrying a request with alternative keys when an API call
 hits a provider rate limit.
 
 - Priority order:
-  - `OPENCLAW_LIVE_<PROVIDER>_KEY` (single override)
+  - `QUIET_CORE_LIVE_<PROVIDER>_KEY` (single override)
   - `<PROVIDER>_API_KEYS`
   - `<PROVIDER>_API_KEY`
   - `<PROVIDER>_API_KEY_*`

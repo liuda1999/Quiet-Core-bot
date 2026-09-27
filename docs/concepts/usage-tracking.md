@@ -57,7 +57,7 @@ change:
 
 ```jsonc
 {
-  "schema": "openclaw.usageBar.v1",
+  "schema": "quiet-core-bot.usageBar.v1",
   "scales": {
     "braille": "⠐⡀⡄⡆⡇⣇⣧⣷⣿",
     "block": "░▏▎▍▌▋▊▉█",
@@ -134,7 +134,7 @@ change:
 
 ```jsonc
 {
-  "schema": "openclaw.usageBar.v1",
+  "schema": "quiet-core-bot.usageBar.v1",
   "scales": { "<name>": "low-to-high glyphs" }, // string (1 glyph/char) or array
   "aliases": { "<table>": { "<value>": "<label>" } },
   "output": {
@@ -204,7 +204,7 @@ Pipe a value through verbs left to right; a non-verb segment is the fallback.
 
 ```jsonc
 {
-  "schema": "openclaw.usageBar.v1",
+  "schema": "quiet-core-bot.usageBar.v1",
   "scales": { "braille": "⠐⡀⡄⡆⡇⣇⣧⣷⣿" },
   "aliases": { "reasoning": { "medium": "🌗", "high": "🌕" } },
   "output": {

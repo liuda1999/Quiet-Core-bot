@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import {
   downloadClawHubGitHubSkillArchive,
   downloadClawHubSkillArchive,
@@ -1107,14 +1107,14 @@ async function installArchiveResolution(params: {
   version: string;
   archivePath: string;
   registry: string;
-  authority: "openclaw" | "third-party";
+  authority: "quiet-core-bot" | "third-party";
   force?: boolean;
   logger?: Logger;
   config?: OpenClawConfig;
 }) {
   return await withExtractedArchiveRoot({
     archivePath: params.archivePath,
-    tempDirPrefix: "openclaw-skill-clawhub-",
+    tempDirPrefix: "quiet-core-bot-skill-clawhub-",
     timeoutMs: 120_000,
     rootMarkers: CLAWHUB_SKILL_ARCHIVE_ROOT_MARKERS,
     onExtracted: async (rootDir) =>
@@ -1162,7 +1162,7 @@ async function installGitHubResolution(params: {
 }) {
   return await withExtractedArchiveRoot({
     archivePath: params.archivePath,
-    tempDirPrefix: "openclaw-skill-clawhub-github-",
+    tempDirPrefix: "quiet-core-bot-skill-clawhub-github-",
     timeoutMs: 120_000,
     onExtracted: async (repoRoot) =>
       await installExtractedSkillRoot({
@@ -1218,7 +1218,7 @@ async function performClawHubSkillInstall(
   try {
     const targetDir = resolveWorkspaceSkillInstallDir(params.workspaceDir, params.slug);
     const registry = resolveClawHubBaseUrl(params.baseUrl);
-    const clawhubAuthority = isDefaultClawHubBaseUrl(params.baseUrl) ? "openclaw" : "third-party";
+    const clawhubAuthority = isDefaultClawHubBaseUrl(params.baseUrl) ? "quiet-core-bot" : "third-party";
     if (!params.force && (await pathExists(targetDir))) {
       return {
         ok: false,

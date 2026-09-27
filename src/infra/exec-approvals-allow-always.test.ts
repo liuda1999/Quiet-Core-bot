@@ -190,7 +190,7 @@ describe("resolveAllowAlwaysPatterns", () => {
   }
 
   it("returns direct executable paths for non-shell segments", () => {
-    const exe = path.join("/tmp", "openclaw-tool");
+    const exe = path.join("/tmp", "quiet-core-bot-tool");
     const patterns = resolveAllowAlwaysPatterns({
       segments: [
         {
@@ -200,7 +200,7 @@ describe("resolveAllowAlwaysPatterns", () => {
             execution: makeMockExecutableResolution({
               rawExecutable: exe,
               resolvedPath: exe,
-              executableName: "openclaw-tool",
+              executableName: "quiet-core-bot-tool",
             }),
           }),
         },
@@ -538,14 +538,14 @@ describe("resolveAllowAlwaysPatterns", () => {
       return;
     }
     const dir = makeTempDir();
-    const tool = makeExecutable(dir, "openclaw-ok");
+    const tool = makeExecutable(dir, "quiet-core-bot-ok");
     const env = { PATH: `${dir}${path.delimiter}${process.env.PATH ?? ""}` };
     const safeBins = resolveSafeBins(undefined);
 
     for (const command of [
-      `bash --login -c "openclaw-ok && openclaw-ok"`,
-      `bash -i -c "openclaw-ok && openclaw-ok"`,
-      `bash -lc "openclaw-ok && openclaw-ok"`,
+      `bash --login -c "quiet-core-bot-ok && quiet-core-bot-ok"`,
+      `bash -i -c "quiet-core-bot-ok && quiet-core-bot-ok"`,
+      `bash -lc "quiet-core-bot-ok && quiet-core-bot-ok"`,
       `bash --login -c '$0 "$1"' ${tool} marker`,
       `bash -i -c '$0 "$1"' ${tool} marker`,
       `bash -lc '$0 "$1"' ${tool} marker`,

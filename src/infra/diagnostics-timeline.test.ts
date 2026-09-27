@@ -3,7 +3,7 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   emitDiagnosticsTimelineEvent,
   isDiagnosticsTimelineEnabled,
@@ -14,14 +14,14 @@ import {
 const tempDirs: string[] = [];
 
 async function createTimelineEnv() {
-  const dir = await mkdtemp(join(tmpdir(), "openclaw-diagnostics-timeline-"));
+  const dir = await mkdtemp(join(tmpdir(), "quiet-core-bot-diagnostics-timeline-"));
   tempDirs.push(dir);
   return {
     env: {
-      OPENCLAW_DIAGNOSTICS: "timeline",
-      OPENCLAW_DIAGNOSTICS_RUN_ID: "run-1",
-      OPENCLAW_DIAGNOSTICS_ENV: "env-1",
-      OPENCLAW_DIAGNOSTICS_TIMELINE_PATH: join(dir, "nested", "timeline.jsonl"),
+      QUIET_CORE_DIAGNOSTICS: "timeline",
+      QUIET_CORE_DIAGNOSTICS_RUN_ID: "run-1",
+      QUIET_CORE_DIAGNOSTICS_ENV: "env-1",
+      QUIET_CORE_DIAGNOSTICS_TIMELINE_PATH: join(dir, "nested", "timeline.jsonl"),
     } as NodeJS.ProcessEnv,
     path: join(dir, "nested", "timeline.jsonl"),
   };
@@ -63,31 +63,31 @@ describe("diagnostics timeline", () => {
     const { env } = await createTimelineEnv();
 
     expect(isDiagnosticsTimelineEnabled({ env })).toBe(true);
-    expect(isDiagnosticsTimelineEnabled({ env: { ...env, OPENCLAW_DIAGNOSTICS: "1" } })).toBe(true);
-    expect(isDiagnosticsTimelineEnabled({ env: { ...env, OPENCLAW_DIAGNOSTICS: "yes" } })).toBe(
+    expect(isDiagnosticsTimelineEnabled({ env: { ...env, QUIET_CORE_DIAGNOSTICS: "1" } })).toBe(true);
+    expect(isDiagnosticsTimelineEnabled({ env: { ...env, QUIET_CORE_DIAGNOSTICS: "yes" } })).toBe(
       true,
     );
-    expect(isDiagnosticsTimelineEnabled({ env: { ...env, OPENCLAW_DIAGNOSTICS: "on" } })).toBe(
+    expect(isDiagnosticsTimelineEnabled({ env: { ...env, QUIET_CORE_DIAGNOSTICS: "on" } })).toBe(
       true,
     );
-    expect(isDiagnosticsTimelineEnabled({ env: { ...env, OPENCLAW_DIAGNOSTICS: "all" } })).toBe(
+    expect(isDiagnosticsTimelineEnabled({ env: { ...env, QUIET_CORE_DIAGNOSTICS: "all" } })).toBe(
       true,
     );
-    expect(isDiagnosticsTimelineEnabled({ env: { ...env, OPENCLAW_DIAGNOSTICS: "*" } })).toBe(true);
+    expect(isDiagnosticsTimelineEnabled({ env: { ...env, QUIET_CORE_DIAGNOSTICS: "*" } })).toBe(true);
     expect(
       isDiagnosticsTimelineEnabled({
-        env: { ...env, OPENCLAW_DIAGNOSTICS: "diagnostics.timeline" },
+        env: { ...env, QUIET_CORE_DIAGNOSTICS: "diagnostics.timeline" },
       }),
     ).toBe(true);
     expect(
-      isDiagnosticsTimelineEnabled({ env: { ...env, OPENCLAW_DIAGNOSTICS: "telegram.http" } }),
+      isDiagnosticsTimelineEnabled({ env: { ...env, QUIET_CORE_DIAGNOSTICS: "telegram.http" } }),
     ).toBe(false);
-    expect(isDiagnosticsTimelineEnabled({ env: { ...env, OPENCLAW_DIAGNOSTICS: "0" } })).toBe(
+    expect(isDiagnosticsTimelineEnabled({ env: { ...env, QUIET_CORE_DIAGNOSTICS: "0" } })).toBe(
       false,
     );
     expect(
       isDiagnosticsTimelineEnabled({
-        env: { ...env, OPENCLAW_DIAGNOSTICS_TIMELINE_PATH: "" },
+        env: { ...env, QUIET_CORE_DIAGNOSTICS_TIMELINE_PATH: "" },
       }),
     ).toBe(false);
   });
@@ -95,7 +95,7 @@ describe("diagnostics timeline", () => {
   it("honors config diagnostics flags after config is available", async () => {
     const { env } = await createTimelineEnv();
     const envWithoutFlag = { ...env };
-    delete envWithoutFlag.OPENCLAW_DIAGNOSTICS;
+    delete envWithoutFlag.QUIET_CORE_DIAGNOSTICS;
     const configWithTimeline = { diagnostics: { flags: ["timeline"] } } as OpenClawConfig;
     const configWithWildcard = { diagnostics: { flags: ["*"] } } as OpenClawConfig;
     const configWithoutTimeline = { diagnostics: { flags: ["telegram.http"] } } as OpenClawConfig;
@@ -118,7 +118,7 @@ describe("diagnostics timeline", () => {
     expect(
       isDiagnosticsTimelineEnabled({
         config: configWithTimeline,
-        env: { ...env, OPENCLAW_DIAGNOSTICS: "0" },
+        env: { ...env, QUIET_CORE_DIAGNOSTICS: "0" },
       }),
     ).toBe(false);
   });
@@ -141,7 +141,7 @@ describe("diagnostics timeline", () => {
     );
 
     const [event] = await readTimeline(path);
-    expect(event?.schemaVersion).toBe("openclaw.diagnostics.v1");
+    expect(event?.schemaVersion).toBe("quiet-core-bot.diagnostics.v1");
     expect(event?.type).toBe("mark");
     expect(event?.name).toBe("gateway.ready");
     expect(event?.runId).toBe("run-1");
@@ -158,7 +158,7 @@ describe("diagnostics timeline", () => {
   it("records span start and end events around successful work", async () => {
     const { env, path } = await createTimelineEnv();
     const configOnlyEnv = { ...env };
-    delete configOnlyEnv.OPENCLAW_DIAGNOSTICS;
+    delete configOnlyEnv.QUIET_CORE_DIAGNOSTICS;
 
     await expect(
       measureDiagnosticsTimelineSpan("runtimeDeps.stage", () => "ok", {

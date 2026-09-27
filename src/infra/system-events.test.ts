@@ -305,12 +305,12 @@ describe("system events (session routing)", () => {
 
   it("returns false for non-consecutive duplicate events with the same context", () => {
     const key = "agent:main:test-noncons-dupe";
-    const first = enqueueSystemEvent("exec approval: ps aux | grep openclaw", {
+    const first = enqueueSystemEvent("exec approval: ps aux | grep quiet-core-bot", {
       sessionKey: key,
       contextKey: "exec:befadc79",
     });
     const interleaved = enqueueSystemEvent("Node connected", { sessionKey: key });
-    const failoverRetry = enqueueSystemEvent("exec approval: ps aux | grep openclaw", {
+    const failoverRetry = enqueueSystemEvent("exec approval: ps aux | grep quiet-core-bot", {
       sessionKey: key,
       contextKey: "exec:befadc79",
     });
@@ -319,7 +319,7 @@ describe("system events (session routing)", () => {
     expect(interleaved).toBe(true);
     expect(failoverRetry).toBe(false);
     expect(peekSystemEvents(key)).toEqual([
-      "exec approval: ps aux | grep openclaw",
+      "exec approval: ps aux | grep quiet-core-bot",
       "Node connected",
     ]);
   });

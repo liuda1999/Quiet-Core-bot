@@ -2,11 +2,11 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 // Covers restart sentinel persistence, summaries, and messages.
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/quiet-core-bot-state-db.js";
 import { withTempDir } from "../test-helpers/temp-dir.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import {
@@ -35,9 +35,9 @@ import {
 import { buildUpdateRestartSentinelPayload } from "./update-restart-sentinel-payload.js";
 
 async function withRestartSentinelStateDir(run: () => Promise<void>): Promise<void> {
-  await withTempDir({ prefix: "openclaw-sentinel-" }, async (tempDir) => {
+  await withTempDir({ prefix: "quiet-core-bot-sentinel-" }, async (tempDir) => {
     try {
-      await withEnvAsync({ OPENCLAW_STATE_DIR: tempDir }, run);
+      await withEnvAsync({ QUIET_CORE_STATE_DIR: tempDir }, run);
     } finally {
       closeOpenClawStateDatabaseForTest();
     }
@@ -126,7 +126,7 @@ describe("restart sentinel", () => {
           reason: "restart-health-pending",
         },
       };
-      const legacyPath = path.join(process.env.OPENCLAW_STATE_DIR ?? "", "restart-sentinel.json");
+      const legacyPath = path.join(process.env.QUIET_CORE_STATE_DIR ?? "", "restart-sentinel.json");
       await fs.writeFile(legacyPath, `${JSON.stringify({ version: 1, payload })}\n`, "utf-8");
 
       await expect(hasRestartSentinel()).resolves.toBe(true);
@@ -144,7 +144,7 @@ describe("restart sentinel", () => {
 
   it("does not replay a legacy file superseded by a sqlite sentinel", async () => {
     await withRestartSentinelStateDir(async () => {
-      const legacyPath = path.join(process.env.OPENCLAW_STATE_DIR ?? "", "restart-sentinel.json");
+      const legacyPath = path.join(process.env.QUIET_CORE_STATE_DIR ?? "", "restart-sentinel.json");
       await fs.writeFile(
         legacyPath,
         `${JSON.stringify({
@@ -196,7 +196,7 @@ describe("restart sentinel", () => {
 
   it("keeps old config restart sentinels readable without restart-required stats", async () => {
     await withRestartSentinelStateDir(async () => {
-      const filePath = path.join(process.env.OPENCLAW_STATE_DIR ?? "", "restart-sentinel.json");
+      const filePath = path.join(process.env.QUIET_CORE_STATE_DIR ?? "", "restart-sentinel.json");
       const payload = {
         kind: "config-patch" as const,
         status: "ok" as const,
@@ -485,7 +485,7 @@ describe("control-plane update restart sentinel", () => {
     const result = {
       status: "ok" as const,
       mode: "npm" as const,
-      root: "/tmp/openclaw",
+      root: "/tmp/quiet-core-bot",
       before: { version: "2026.4.23" },
       after: { version: "2026.4.24" },
       steps: [],
@@ -561,7 +561,7 @@ describe("restart sentinel message dedup", () => {
   it("keeps profile-aware doctor guidance actionable outside constrained delivery surfaces", () => {
     expect(
       formatDoctorNonInteractiveHint({
-        OPENCLAW_PROFILE: "isolated",
+        QUIET_CORE_PROFILE: "isolated",
         PATH: "/usr/bin:/bin",
       }),
     ).toBe(

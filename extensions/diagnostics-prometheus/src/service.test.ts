@@ -1,5 +1,5 @@
 // Diagnostics Prometheus tests cover service plugin behavior.
-import type { DiagnosticEventPrivateData } from "openclaw/plugin-sdk/diagnostic-runtime";
+import type { DiagnosticEventPrivateData } from "quiet-core-bot/plugin-sdk/diagnostic-runtime";
 // Diagnostics Prometheus tests cover service plugin behavior.
 import { describe, expect, it, vi } from "vitest";
 import type { DiagnosticEventMetadata, DiagnosticEventPayload } from "../api.js";
@@ -679,7 +679,7 @@ describe("diagnostics-prometheus service", () => {
 
     exporter.service.start({
       config: {} as never,
-      stateDir: "/tmp/openclaw-prometheus-test",
+      stateDir: "/tmp/quiet-core-bot-prometheus-test",
       logger: {
         info: vi.fn(),
         warn: vi.fn(),

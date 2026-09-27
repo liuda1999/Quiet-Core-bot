@@ -16,7 +16,7 @@ import { getTotalPendingReplies } from "../auto-reply/reply/dispatcher-registry.
 import type { CliDeps } from "../cli/deps.types.js";
 import { isRestartEnabled } from "../config/commands.flags.js";
 import { getRuntimeConfig } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { isTruthyEnvValue } from "../infra/env.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import type { HeartbeatRunner } from "../infra/heartbeat-runner.js";
@@ -355,8 +355,8 @@ export function createGatewayReloadHandlers(params: GatewayReloadHandlerParams) 
     const channelsStoppedBeforePluginReload = new Set<ChannelKind>();
     let activePluginChannelsAfterReload: ReadonlySet<ChannelKind> | null = null;
     const shouldSkipChannelRestart = () =>
-      isTruthyEnvValue(process.env.OPENCLAW_SKIP_CHANNELS) ||
-      isTruthyEnvValue(process.env.OPENCLAW_SKIP_PROVIDERS);
+      isTruthyEnvValue(process.env.QUIET_CORE_SKIP_CHANNELS) ||
+      isTruthyEnvValue(process.env.QUIET_CORE_SKIP_PROVIDERS);
     if (plan.reloadPlugins) {
       const stopChannelsBeforePluginReplace = async (channels: ReadonlySet<ChannelKind>) => {
         for (const channel of channels) {
@@ -474,7 +474,7 @@ export function createGatewayReloadHandlers(params: GatewayReloadHandlerParams) 
               signal: restartAbortController.signal,
               onSkipped: () =>
                 params.logHooks.info(
-                  "skipping gmail watcher restart (OPENCLAW_SKIP_GMAIL_WATCHER=1)",
+                  "skipping gmail watcher restart (QUIET_CORE_SKIP_GMAIL_WATCHER=1)",
                 ),
             });
           }
@@ -487,7 +487,7 @@ export function createGatewayReloadHandlers(params: GatewayReloadHandlerParams) 
     if (channelsToRestart.size > 0) {
       if (shouldSkipChannelRestart()) {
         params.logChannels.info(
-          "skipping channel reload (OPENCLAW_SKIP_CHANNELS=1 or OPENCLAW_SKIP_PROVIDERS=1)",
+          "skipping channel reload (QUIET_CORE_SKIP_CHANNELS=1 or QUIET_CORE_SKIP_PROVIDERS=1)",
         );
       } else {
         if (!plan.reloadPlugins) {

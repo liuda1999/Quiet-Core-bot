@@ -53,7 +53,7 @@ describe("evaluateGatewayAuthSurfaceStates", () => {
           },
         },
       } as OpenClawConfig,
-      { OPENCLAW_GATEWAY_TOKEN: "env-token" } as NodeJS.ProcessEnv,
+      { QUIET_CORE_GATEWAY_TOKEN: "env-token" } as NodeJS.ProcessEnv,
     );
 
     expectGatewayState(states["gateway.auth.token"], {
@@ -123,7 +123,7 @@ describe("evaluateGatewayAuthSurfaceStates", () => {
           },
         },
       } as OpenClawConfig,
-      { OPENCLAW_GATEWAY_TOKEN: "env-token" } as NodeJS.ProcessEnv,
+      { QUIET_CORE_GATEWAY_TOKEN: "env-token" } as NodeJS.ProcessEnv,
     );
 
     expectGatewayState(states["gateway.auth.password"], {

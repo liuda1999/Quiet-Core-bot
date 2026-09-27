@@ -112,7 +112,7 @@ describe("jsonl replay", () => {
         return {
           scenarioStatus: "pass",
           cell: makeCell(runtime, {
-            finalText: runtime === "openclaw" ? "openclaw wording" : "codex wording",
+            finalText: runtime === "openclaw" ? "quiet-core-bot wording" : "codex wording",
           }),
         };
       }

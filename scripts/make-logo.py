@@ -122,16 +122,16 @@ def main() -> None:
 
     # --- Docs (transparent) ---
     docs = ROOT / "docs" / "assets"
-    write(docs / "openclaw-logo-text.png", base.resize((1000, 1000), Image.LANCZOS))
-    write(docs / "openclaw-logo-text-dark.png", base.resize((1000, 1000), Image.LANCZOS))
-    (docs / "openclaw-logo-text.svg").write_text(svg_with(base, 256), encoding="utf-8")
-    (docs / "openclaw-logo-text-dark.svg").write_text(svg_with(base, 256), encoding="utf-8")
+    write(docs / "quiet-core-bot-logo-text.png", base.resize((1000, 1000), Image.LANCZOS))
+    write(docs / "quiet-core-bot-logo-text-dark.png", base.resize((1000, 1000), Image.LANCZOS))
+    (docs / "quiet-core-bot-logo-text.svg").write_text(svg_with(base, 256), encoding="utf-8")
+    (docs / "quiet-core-bot-logo-text-dark.svg").write_text(svg_with(base, 256), encoding="utf-8")
     (docs / "pixel-dragon.svg").write_text(svg_with(base, 192), encoding="utf-8")
     print(f"  {(docs / 'pixel-dragon.svg').relative_to(ROOT)}  (svg)")
 
     # --- macOS (opaque) ---
     mac = ROOT / "apps" / "macos"
-    write(mac / "Icon.icon" / "Assets" / "openclaw-mac.png", flatten(base, 1024))
+    write(mac / "Icon.icon" / "Assets" / "quiet-core-bot-mac.png", flatten(base, 1024))
     write_icns(base, mac / "Sources" / "OpenClaw" / "Resources" / "OpenClaw.icns")
 
     # --- iOS AppIcon (opaque, exact filenames from Contents.json) ---
@@ -140,7 +140,7 @@ def main() -> None:
     for size in (20, 29, 40, 48, 55, 57, 58, 60, 66, 76, 80, 87, 88, 92, 100,
                  102, 108, 114, 120, 152, 167, 172, 180, 196, 216, 234, 258, 1024):
         write(appicon / f"{size}.png", flatten(base, size))
-    write(ios / "OpenClawIcon.imageset" / "openclaw-icon.png", base.resize((180, 180), Image.LANCZOS))
+    write(ios / "OpenClawIcon.imageset" / "quiet-core-bot-icon.png", base.resize((180, 180), Image.LANCZOS))
 
     # --- watchOS ---
     watch = ROOT / "apps" / "ios" / "WatchApp" / "Assets.xcassets"
@@ -154,7 +154,7 @@ def main() -> None:
         "watch-marketing-1024.png": 1024,
     }.items():
         write(watch / "AppIcon.appiconset" / name, flatten(base, size))
-    write(watch / "OpenClawIcon.imageset" / "openclaw-icon.png", base.resize((180, 180), Image.LANCZOS))
+    write(watch / "OpenClawIcon.imageset" / "quiet-core-bot-icon.png", base.resize((180, 180), Image.LANCZOS))
 
     # --- Android (legacy opaque + adaptive foreground transparent) ---
     res = ROOT / "apps" / "android" / "app" / "src" / "main" / "res"

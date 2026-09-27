@@ -1,6 +1,6 @@
 // Bench Model script supports OpenClaw repository automation.
 import { pathToFileURL } from "node:url";
-import { completeSimple, type Model } from "openclaw/plugin-sdk/llm";
+import { completeSimple, type Model } from "quiet-core-bot/plugin-sdk/llm";
 import { parseStrictIntegerOption } from "./lib/dev-tooling-safety.ts";
 
 type Usage = {

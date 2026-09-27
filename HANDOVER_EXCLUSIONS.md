@@ -2,8 +2,8 @@
 
 本文件说明交接压缩包里**包含什么、排除了什么、为什么**，以及被排除内容的获取方式。
 
-包文件名：`openclaw_handover_2026.6.11_<YYYYMMDD_HHMM>.tar.gz`
-解包后顶层目录：`openclaw/`
+包文件名：`quiet_core_bot_handover_2026.6.11_<YYYYMMDD_HHMM>.tar.gz`
+解包后顶层目录：`quiet-core-bot/`
 
 ---
 
@@ -24,14 +24,14 @@
 
 | 排除项 | 原因 | 如何获取 |
 | --- | --- | --- |
-| `.git/`（约 71 MB） | 体积大；避免历史与作者信息外泄 | 当前分支/commit 已记录在 `BUILD_INFO.md` 与 `HANDOVER.md`；如需完整历史，从上游 https://github.com/openclaw/openclaw 克隆后打上对应 commit |
+| `.git/`（约 71 MB） | 体积大；避免历史与作者信息外泄 | 当前分支/commit 已记录在 `BUILD_INFO.md` 与 `HANDOVER.md`；如需完整历史，从上游 https://github.com/liuda1999/Quiet-Core-bot 克隆后打上对应 commit |
 | `node_modules/`（含 `ui/node_modules`、`packages/*/node_modules`、`extensions/*/node_modules`） | 可由 `pnpm install` 生成，体积巨大 | 目标机执行 `pnpm install`（需 pnpm 11.2.2，见 `HANDOVER.md` §7） |
 | `dist/`（约 94 MB）、`dist-runtime/`（约 18 MB） | 构建产物；Docker 路径会在镜像内重建 | `pnpm build` / `pnpm ui:build`，或 `docker compose build` |
-| `.artifacts/`、`coverage/`、`**/__openclaw_vitest__/`、`.turbo/`、`.cache/`、`.pnpm-store/` | 临时/缓存 | 自动重新生成 |
+| `.artifacts/`、`coverage/`、`**/__quiet-core-bot_vitest__/`、`.turbo/`、`.cache/`、`.pnpm-store/` | 临时/缓存 | 自动重新生成 |
 | `.env` 及各 `*_API_KEY` 真实值 | **敏感信息**，不得打包 | 从 `.env.example` 复制后在本机填写（见 `HANDOVER.md` §6） |
 | `*.log`、`.handover-logs/`、`.handover-run-mode` | 运行日志与本地状态 | 运行时重新生成 |
 | `.vscode/` | IDE 配置（个人偏好） | 无需；自行配置 |
-| 状态目录 `~/.openclaw/`（**不在仓库内**） | 含会话、转录、SQLite、凭据引用、个人数据 | 目标机从零初始化；如需迁移，从原机器的 `~/.openclaw/` 单独安全传输（**勿入版本库**） |
+| 状态目录 `~/.quiet-core-bot/`（**不在仓库内**） | 含会话、转录、SQLite、凭据引用、个人数据 | 目标机从零初始化；如需迁移，从原机器的 `~/.quiet-core-bot/` 单独安全传输（**勿入版本库**） |
 | 本机绝对路径文件 / 个人数据 / 生产数据 | 隐私与可移植性 | — |
 
 > 注：`.gitignore` 与 `.dockerignore` 中还有更多运行时排除项，本清单只列与交接相关的重点。
@@ -68,7 +68,7 @@ a8efd81c chore: drop dead codex/openai/telegram docker e2e lanes and sync stale 
 
 **体积对比（同一机器实测）**
 
-| | 完整快照 `openclaw-06-11-深度拆解.tar.gz`（2026-08-03） | 本交接包 |
+| | 完整快照 `quiet-core-bot-06-11-深度拆解.tar.gz`（2026-08-03） | 本交接包 |
 | --- | --- | --- |
 | 压缩后 | 50.4 MB | 见 `SHA256SUMS` / `MANIFEST.txt` |
 | 条目数 | 21,756 | **16,282**（文件） |

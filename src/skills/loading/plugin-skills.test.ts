@@ -76,7 +76,7 @@ function buildRegistry(params: { acpxRoot: string; helperRoot: string }): Plugin
         origin: "workspace",
         rootDir: params.acpxRoot,
         source: params.acpxRoot,
-        manifestPath: path.join(params.acpxRoot, "openclaw.plugin.json"),
+        manifestPath: path.join(params.acpxRoot, "quiet-core-bot.plugin.json"),
       },
       {
         id: "helper",
@@ -89,7 +89,7 @@ function buildRegistry(params: { acpxRoot: string; helperRoot: string }): Plugin
         origin: "workspace",
         rootDir: params.helperRoot,
         source: params.helperRoot,
-        manifestPath: path.join(params.helperRoot, "openclaw.plugin.json"),
+        manifestPath: path.join(params.helperRoot, "quiet-core-bot.plugin.json"),
       },
     ],
   };
@@ -98,7 +98,7 @@ function buildRegistry(params: { acpxRoot: string; helperRoot: string }): Plugin
 function createSinglePluginRegistry(params: {
   pluginRoot: string;
   skills: string[];
-  format?: "openclaw" | "bundle";
+  format?: "quiet-core-bot" | "bundle";
   legacyPluginIds?: string[];
 }): PluginManifestRegistry {
   return {
@@ -117,16 +117,16 @@ function createSinglePluginRegistry(params: {
         origin: "workspace",
         rootDir: params.pluginRoot,
         source: params.pluginRoot,
-        manifestPath: path.join(params.pluginRoot, "openclaw.plugin.json"),
+        manifestPath: path.join(params.pluginRoot, "quiet-core-bot.plugin.json"),
       },
     ],
   };
 }
 
 async function setupAcpxAndHelperRegistry() {
-  const workspaceDir = await tempDirs.make("openclaw-");
-  const acpxRoot = await tempDirs.make("openclaw-acpx-plugin-");
-  const helperRoot = await tempDirs.make("openclaw-helper-plugin-");
+  const workspaceDir = await tempDirs.make("quiet-core-bot-");
+  const acpxRoot = await tempDirs.make("quiet-core-bot-acpx-plugin-");
+  const helperRoot = await tempDirs.make("quiet-core-bot-helper-plugin-");
   await fs.mkdir(path.join(acpxRoot, "skills"), { recursive: true });
   await fs.mkdir(path.join(helperRoot, "skills"), { recursive: true });
   hoisted.loadPluginManifestRegistryForInstalledIndex.mockReturnValue(
@@ -136,9 +136,9 @@ async function setupAcpxAndHelperRegistry() {
 }
 
 async function setupPluginOutsideSkills() {
-  const workspaceDir = await tempDirs.make("openclaw-");
-  const pluginRoot = await tempDirs.make("openclaw-plugin-");
-  const outsideDir = await tempDirs.make("openclaw-outside-");
+  const workspaceDir = await tempDirs.make("quiet-core-bot-");
+  const pluginRoot = await tempDirs.make("quiet-core-bot-plugin-");
+  const outsideDir = await tempDirs.make("quiet-core-bot-outside-");
   const outsideSkills = path.join(outsideDir, "skills");
   return { workspaceDir, pluginRoot, outsideSkills };
 }
@@ -294,7 +294,7 @@ describe("resolvePluginSkillDirs", () => {
   });
 
   it("cleans up generated plugin skill links when the plugin registry is empty", async () => {
-    const workspaceDir = await tempDirs.make("openclaw-");
+    const workspaceDir = await tempDirs.make("quiet-core-bot-");
     const pluginSkillsDir = await tempDirs.make("managed-plugin-skills-");
     const staleRoot = await tempDirs.make("stale-plugin-skills-");
     const staleSkill = path.join(staleRoot, "stale-skill");
@@ -334,8 +334,8 @@ describe("resolvePluginSkillDirs", () => {
   });
 
   it("resolves Claude bundle command roots through the normal plugin skill path", async () => {
-    const workspaceDir = await tempDirs.make("openclaw-");
-    const pluginRoot = await tempDirs.make("openclaw-claude-bundle-");
+    const workspaceDir = await tempDirs.make("quiet-core-bot-");
+    const pluginRoot = await tempDirs.make("quiet-core-bot-claude-bundle-");
     await fs.mkdir(path.join(pluginRoot, "commands"), { recursive: true });
     await fs.mkdir(path.join(pluginRoot, "skills"), { recursive: true });
 
@@ -365,8 +365,8 @@ describe("resolvePluginSkillDirs", () => {
   });
 
   it("resolves enabled plugin skills through legacy manifest aliases", async () => {
-    const workspaceDir = await tempDirs.make("openclaw-");
-    const pluginRoot = await tempDirs.make("openclaw-legacy-plugin-");
+    const workspaceDir = await tempDirs.make("quiet-core-bot-");
+    const pluginRoot = await tempDirs.make("quiet-core-bot-legacy-plugin-");
     await fs.mkdir(path.join(pluginRoot, "skills"), { recursive: true });
 
     hoisted.loadPluginManifestRegistryForInstalledIndex.mockReturnValue(

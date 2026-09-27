@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { resolvePreferredOpenClawTmpDir } from "./tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "./tmp-quiet-core-bot-dir.js";
 import {
   consumeUpdatePostInstallDoctorResult,
   createDeferredConfiguredPluginRepairDoctorResult,
@@ -33,7 +33,7 @@ describe("post-install doctor result IPC", () => {
     const tempRoot = resolvePreferredOpenClawTmpDir();
     const resultPath = path.join(
       `${tempRoot}-outside`,
-      `openclaw-update-doctor-${process.pid}-00000000-0000-4000-8000-000000000000.json`,
+      `quiet-core-bot-update-doctor-${process.pid}-00000000-0000-4000-8000-000000000000.json`,
     );
 
     await expect(

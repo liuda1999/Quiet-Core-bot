@@ -23,33 +23,33 @@ These test-helper subpaths are repo-local source entrypoints for Quiet Core bot'
 bundled plugin tests. They are not package exports for third-party plugins, and
 they may import Vitest or other repo-only test dependencies.
 
-**Plugin API mock import:** `openclaw/plugin-sdk/plugin-test-api`
+**Plugin API mock import:** `quiet-core-bot/plugin-sdk/plugin-test-api`
 
-**Agent runtime contract import:** `openclaw/plugin-sdk/agent-runtime-test-contracts`
+**Agent runtime contract import:** `quiet-core-bot/plugin-sdk/agent-runtime-test-contracts`
 
-**Channel contract import:** `openclaw/plugin-sdk/channel-contract-testing`
+**Channel contract import:** `quiet-core-bot/plugin-sdk/channel-contract-testing`
 
-**Channel test helper import:** `openclaw/plugin-sdk/channel-test-helpers`
+**Channel test helper import:** `quiet-core-bot/plugin-sdk/channel-test-helpers`
 
-**Channel target test import:** `openclaw/plugin-sdk/channel-target-testing`
+**Channel target test import:** `quiet-core-bot/plugin-sdk/channel-target-testing`
 
-**Plugin contract import:** `openclaw/plugin-sdk/plugin-test-contracts`
+**Plugin contract import:** `quiet-core-bot/plugin-sdk/plugin-test-contracts`
 
-**Plugin runtime test import:** `openclaw/plugin-sdk/plugin-test-runtime`
+**Plugin runtime test import:** `quiet-core-bot/plugin-sdk/plugin-test-runtime`
 
-**Provider contract import:** `openclaw/plugin-sdk/provider-test-contracts`
+**Provider contract import:** `quiet-core-bot/plugin-sdk/provider-test-contracts`
 
-**Provider HTTP mock import:** `openclaw/plugin-sdk/provider-http-test-mocks`
+**Provider HTTP mock import:** `quiet-core-bot/plugin-sdk/provider-http-test-mocks`
 
-**Environment/network test import:** `openclaw/plugin-sdk/test-env`
+**Environment/network test import:** `quiet-core-bot/plugin-sdk/test-env`
 
-**Generic fixture import:** `openclaw/plugin-sdk/test-fixtures`
+**Generic fixture import:** `quiet-core-bot/plugin-sdk/test-fixtures`
 
-**Node builtin mock import:** `openclaw/plugin-sdk/test-node-mocks`
+**Node builtin mock import:** `quiet-core-bot/plugin-sdk/test-node-mocks`
 
 Inside the Quiet Core bot repo, prefer the focused subpaths below for new bundled
 plugin tests. The broad
-`openclaw/plugin-sdk/testing` barrel is legacy compatibility only.
+`quiet-core-bot/plugin-sdk/testing` barrel is legacy compatibility only.
 Repo guardrails reject new real imports from `plugin-sdk/testing` and
 `plugin-sdk/test-utils`; those names remain only as deprecated compatibility
 surfaces for compatibility-record tests.
@@ -58,23 +58,23 @@ surfaces for compatibility-record tests.
 import {
   shouldAckReaction,
   removeAckReactionAfterReply,
-} from "openclaw/plugin-sdk/channel-feedback";
-import { installCommonResolveTargetErrorCases } from "openclaw/plugin-sdk/channel-target-testing";
-import { AUTH_PROFILE_RUNTIME_CONTRACT } from "openclaw/plugin-sdk/agent-runtime-test-contracts";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
-import { expectChannelInboundContextContract } from "openclaw/plugin-sdk/channel-contract-testing";
-import { createStartAccountContext } from "openclaw/plugin-sdk/channel-test-helpers";
-import { describePluginRegistrationContract } from "openclaw/plugin-sdk/plugin-test-contracts";
-import { registerSingleProviderPlugin } from "openclaw/plugin-sdk/plugin-test-runtime";
-import { describeOpenAIProviderRuntimeContract } from "openclaw/plugin-sdk/provider-test-contracts";
-import { getProviderHttpMocks } from "openclaw/plugin-sdk/provider-http-test-mocks";
-import { withEnv, withFetchPreconnect, withServer } from "openclaw/plugin-sdk/test-env";
+} from "quiet-core-bot/plugin-sdk/channel-feedback";
+import { installCommonResolveTargetErrorCases } from "quiet-core-bot/plugin-sdk/channel-target-testing";
+import { AUTH_PROFILE_RUNTIME_CONTRACT } from "quiet-core-bot/plugin-sdk/agent-runtime-test-contracts";
+import { createTestPluginApi } from "quiet-core-bot/plugin-sdk/plugin-test-api";
+import { expectChannelInboundContextContract } from "quiet-core-bot/plugin-sdk/channel-contract-testing";
+import { createStartAccountContext } from "quiet-core-bot/plugin-sdk/channel-test-helpers";
+import { describePluginRegistrationContract } from "quiet-core-bot/plugin-sdk/plugin-test-contracts";
+import { registerSingleProviderPlugin } from "quiet-core-bot/plugin-sdk/plugin-test-runtime";
+import { describeOpenAIProviderRuntimeContract } from "quiet-core-bot/plugin-sdk/provider-test-contracts";
+import { getProviderHttpMocks } from "quiet-core-bot/plugin-sdk/provider-http-test-mocks";
+import { withEnv, withFetchPreconnect, withServer } from "quiet-core-bot/plugin-sdk/test-env";
 import {
   bundledPluginRoot,
   createCliRuntimeCapture,
   typedCases,
-} from "openclaw/plugin-sdk/test-fixtures";
-import { mockNodeBuiltinModule } from "openclaw/plugin-sdk/test-node-mocks";
+} from "quiet-core-bot/plugin-sdk/test-fixtures";
+import { mockNodeBuiltinModule } from "quiet-core-bot/plugin-sdk/test-node-mocks";
 ```
 
 ### Available exports
@@ -166,9 +166,9 @@ Focused testing subpaths also re-export types useful in test files:
 import type {
   ChannelAccountSnapshot,
   ChannelGatewayContext,
-} from "openclaw/plugin-sdk/channel-contract";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { MockFn, PluginRuntime, RuntimeEnv } from "openclaw/plugin-sdk/plugin-test-runtime";
+} from "quiet-core-bot/plugin-sdk/channel-contract";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { MockFn, PluginRuntime, RuntimeEnv } from "quiet-core-bot/plugin-sdk/plugin-test-runtime";
 ```
 
 ## Testing target resolution
@@ -178,7 +178,7 @@ channel target resolution:
 
 ```typescript
 import { describe } from "vitest";
-import { installCommonResolveTargetErrorCases } from "openclaw/plugin-sdk/channel-target-testing";
+import { installCommonResolveTargetErrorCases } from "quiet-core-bot/plugin-sdk/channel-target-testing";
 
 describe("my-channel target resolution", () => {
   installCommonResolveTargetErrorCases({
@@ -213,7 +213,7 @@ entry to declare `kind: "memory"`.
 
 ### Testing runtime config access
 
-Prefer the shared plugin runtime mock from `openclaw/plugin-sdk/channel-test-helpers`
+Prefer the shared plugin runtime mock from `quiet-core-bot/plugin-sdk/channel-test-helpers`
 when testing bundled channel plugins. Its deprecated `runtime.config.loadConfig()` and
 `runtime.config.writeConfigFile(...)` mocks throw by default so tests catch new
 usage of compatibility APIs. Override those mocks only when the test is
@@ -288,8 +288,8 @@ describe("my-provider plugin", () => {
 For code that uses `createPluginRuntimeStore`, mock the runtime in tests:
 
 ```typescript
-import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
-import type { PluginRuntime } from "openclaw/plugin-sdk/runtime-store";
+import { createPluginRuntimeStore } from "quiet-core-bot/plugin-sdk/runtime-store";
+import type { PluginRuntime } from "quiet-core-bot/plugin-sdk/runtime-store";
 
 const store = createPluginRuntimeStore<PluginRuntime>({
   pluginId: "test-plugin",
@@ -364,7 +364,7 @@ pnpm test -- src/plugins/contracts/runtime-seams.contract.test.ts
 
 Three rules are enforced by `pnpm check` for in-repo plugins:
 
-1. **No monolithic root imports** -- `openclaw/plugin-sdk` root barrel is rejected
+1. **No monolithic root imports** -- `quiet-core-bot/plugin-sdk` root barrel is rejected
 2. **No direct `src/` imports** -- plugins cannot import `../../src/` directly
 3. **No self-imports** -- plugins cannot import their own `plugin-sdk/<name>` subpath
 
@@ -392,7 +392,7 @@ pnpm test:coverage
 If local runs cause memory pressure:
 
 ```bash
-OPENCLAW_VITEST_MAX_WORKERS=1 pnpm test
+QUIET_CORE_VITEST_MAX_WORKERS=1 pnpm test
 ```
 
 ## Related

@@ -7,8 +7,8 @@ import { createHash } from "node:crypto";
 import syncFs from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { readStringValue } from "@openclaw/normalization-core/string-coerce";
-import { resolveLegacyStateDirs, resolveStateDir } from "../config/paths.js";
+import { readStringValue } from "@quiet-core/normalization-core/string-coerce";
+import { resolveStateDir } from "../config/paths.js";
 import { openRootFile } from "../infra/boundary-file-read.js";
 import { pathExists } from "../infra/fs-safe.js";
 import { replaceFileAtomic } from "../infra/replace-file.js";
@@ -36,14 +36,14 @@ export const DEFAULT_USER_FILENAME = "USER.md";
 export const DEFAULT_HEARTBEAT_FILENAME = "HEARTBEAT.md";
 export const DEFAULT_BOOTSTRAP_FILENAME = "BOOTSTRAP.md";
 export const DEFAULT_MEMORY_FILENAME = CANONICAL_ROOT_MEMORY_FILENAME;
-const LEGACY_WORKSPACE_STATE_DIRNAME = ".openclaw";
+const LEGACY_WORKSPACE_STATE_DIRNAME = ".quiet-core-bot";
 const LEGACY_WORKSPACE_STATE_FILENAME = "workspace-state.json";
-const WORKSPACE_STATE_FILENAME = "openclaw-workspace-state.json";
+const WORKSPACE_STATE_FILENAME = "quiet-core-bot-workspace-state.json";
 const WORKSPACE_STATE_VERSION = 1;
 const WORKSPACE_ATTESTATION_SUFFIX = ".attested";
 const WORKSPACE_ATTESTATION_DIRNAME = "workspace-attestations";
 const WORKSPACE_ATTESTATION_RECENT_MS = 24 * 60 * 60 * 1000;
-const WORKSPACE_ATTESTATION_HEADER = "openclaw-workspace-attestation:v1";
+const WORKSPACE_ATTESTATION_HEADER = "quiet-core-bot-workspace-attestation:v1";
 const WORKSPACE_ATTESTATION_MAX_BYTES = 2048;
 const WORKSPACE_ONBOARDING_PROFILE_FILENAMES = [
   DEFAULT_SOUL_FILENAME,
@@ -477,7 +477,7 @@ function resolveLegacyWorkspaceAttestationPath(dir: string): string {
 }
 
 export function resolveWorkspaceAttestationPaths(dir: string): string[] {
-  const stateAttestationPaths = [resolveStateDir(), ...resolveLegacyStateDirs()].map((stateDir) =>
+  const stateAttestationPaths = [resolveStateDir()].map((stateDir) =>
     resolveWorkspaceAttestationPathInStateDir(dir, stateDir),
   );
   const legacy = resolveLegacyWorkspaceAttestationPath(dir);

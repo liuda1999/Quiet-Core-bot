@@ -1,7 +1,7 @@
 /**
  * Shared types for projecting bundle MCP config into Codex app-server threads.
  */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import type { BundleMcpDiagnostic } from "../plugins/bundle-mcp.js";
 
 /** Codex app-server `mcp_servers` config map. */

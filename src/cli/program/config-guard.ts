@@ -4,9 +4,8 @@ import os from "node:os";
 import path from "node:path";
 import { withSuppressedNotes } from "../../../packages/terminal-core/src/note.js";
 import { readConfigFileSnapshot, setRuntimeConfigSnapshot } from "../../config/config.js";
-import { resolveLegacyStateDirs, resolveOAuthDir, resolveStateDir } from "../../config/paths.js";
+import { resolveOAuthDir, resolveStateDir } from "../../config/paths.js";
 import type { ConfigFileSnapshot } from "../../config/types.js";
-import { resolveRequiredHomeDir } from "../../infra/home-dir.js";
 import type { RuntimeEnv } from "../../runtime.js";
 import { shouldMigrateStateFromPath } from "../argv.js";
 
@@ -98,20 +97,6 @@ function hasBundledChannelLegacyStateMigrationInputs(stateDir: string, oauthDir:
   return dirHasFile(oauthDir, isLegacyWhatsAppAuthFile);
 }
 
-function hasLegacyExecApprovalsMigrationInput(stateDir: string): boolean {
-  if (!process.env.OPENCLAW_STATE_DIR?.trim()) {
-    return false;
-  }
-  const homeDir = resolveRequiredHomeDir(process.env, os.homedir);
-  const sourcePath = path.join(homeDir, ".openclaw", "exec-approvals.json");
-  const targetPath = path.join(stateDir, "exec-approvals.json");
-  return (
-    path.resolve(sourcePath) !== path.resolve(targetPath) &&
-    fileOrDirExists(sourcePath) &&
-    !fileOrDirExists(targetPath)
-  );
-}
-
 function hasPendingSqliteSidecarArchive(sourcePath: string): boolean {
   return (
     fileOrDirExists(`${sourcePath}.migrated`) &&
@@ -123,14 +108,6 @@ function hasLegacyStateMigrationInputs(): boolean {
   // Only run migration prompts when old state actually exists in known legacy locations.
   const stateDir = resolveStateDir(process.env, os.homedir);
   const oauthDir = resolveOAuthDir(process.env, stateDir);
-  if (
-    !process.env.OPENCLAW_STATE_DIR?.trim() &&
-    resolveLegacyStateDirs(() => resolveRequiredHomeDir(process.env, os.homedir)).some(
-      fileOrDirExists,
-    )
-  ) {
-    return true;
-  }
   const sqliteSidecarPaths = [
     path.join(stateDir, "flows", "registry.sqlite"),
     path.join(stateDir, "plugin-state", "state.sqlite"),
@@ -146,8 +123,7 @@ function hasLegacyStateMigrationInputs(): boolean {
     sqliteSidecarPaths.some(
       (sourcePath) => fileOrDirExists(sourcePath) || hasPendingSqliteSidecarArchive(sourcePath),
     ) ||
-    hasBundledChannelLegacyStateMigrationInputs(stateDir, oauthDir) ||
-    hasLegacyExecApprovalsMigrationInput(stateDir)
+    hasBundledChannelLegacyStateMigrationInputs(stateDir, oauthDir)
   );
 }
 

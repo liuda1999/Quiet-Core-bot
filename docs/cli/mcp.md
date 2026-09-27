@@ -22,7 +22,7 @@ In other words:
   `list`, `show`, `set`, and `unset` only read and write Quiet Core bot-managed `mcp.servers` entries in Quiet Core bot config. They do not include mcporter servers from `config/mcporter.json`; use `mcporter list` for that registry.
 </Note>
 
-Use [`openclaw acp`](/cli/acp) when Quiet Core bot should host a coding harness session itself and route that runtime through ACP.
+Use [`quiet-core-bot acp`](/cli/acp) when Quiet Core bot should host a coding harness session itself and route that runtime through ACP.
 
 ## Choose the right MCP path
 
@@ -35,7 +35,7 @@ Quiet Core bot has several MCP surfaces. Pick the one that matches who owns the 
 | Check a saved server without running an agent turn                        | `quiet-core-bot mcp status`, `doctor`, `probe`                       | `status` and `doctor` inspect config; `probe` opens a live MCP connection and lists capabilities.               |
 | Edit MCP config from a browser                                            | Control UI `/mcp`                                                    | The page shows inventory, enablement, OAuth/filter summaries, command hints, and a scoped `mcp` editor.         |
 | Give Codex app-server a scoped native MCP server                          | `mcp.servers.<name>.codex`                                           | The `codex` block only affects Codex app-server thread projection and is stripped before native config handoff. |
-| Run ACP-hosted harness sessions                                           | [`openclaw acp`](/cli/acp) and [ACP Agents](/tools/acp-agents-setup) | ACP bridge mode does not accept per-session MCP server injection; configure gateway/plugin bridges instead.     |
+| Run ACP-hosted harness sessions                                           | [`quiet-core-bot acp`](/cli/acp) and [ACP Agents](/tools/acp-agents-setup) | ACP bridge mode does not accept per-session MCP server injection; configure gateway/plugin bridges instead.     |
 
 <Tip>
 If you are not sure which path you need, start with `quiet-core-bot mcp status --verbose`. It shows what Quiet Core bot has saved without starting any MCP servers.
@@ -53,7 +53,7 @@ Use `quiet-core-bot mcp serve` when:
 - you already have a local or remote Quiet Core bot Gateway with routed sessions
 - you want one MCP server that works across Quiet Core bot's channel backends instead of running separate per-channel bridges
 
-Use [`openclaw acp`](/cli/acp) instead when Quiet Core bot should host the coding runtime itself and keep the agent session inside Quiet Core bot.
+Use [`quiet-core-bot acp`](/cli/acp) instead when Quiet Core bot should host the coding runtime itself and keep the agent session inside Quiet Core bot.
 
 ### How it works
 
@@ -83,7 +83,7 @@ Use [`openclaw acp`](/cli/acp) instead when Quiet Core bot should host the codin
     - older transcript history is read with `messages_read`
     - Claude push notifications only exist while the MCP session is alive
     - when the client disconnects, the bridge exits and the live queue is gone
-    - one-shot agent entry points such as `openclaw agent` and `openclaw infer model run` retire any bundled MCP runtimes they open when the reply completes, so repeated scripted runs do not accumulate stdio MCP child processes
+    - one-shot agent entry points such as `quiet-core-bot agent` and `quiet-core-bot infer model run` retire any bundled MCP runtimes they open when the reply completes, so repeated scripted runs do not accumulate stdio MCP child processes
     - stdio MCP servers launched by Quiet Core bot (bundled or user-configured) are torn down as a process tree on shutdown, so child subprocesses started by the server do not survive after the parent stdio client exits
     - deleting or resetting a session disposes that session's MCP clients through the shared runtime cleanup path, so there are no lingering stdio connections tied to a removed session
 
@@ -265,8 +265,8 @@ Example stdio client config:
 ```json
 {
   "mcpServers": {
-    "openclaw": {
-      "command": "openclaw",
+    "quiet-core-bot": {
+      "command": "quiet-core-bot",
       "args": [
         "mcp",
         "serve",
@@ -506,7 +506,7 @@ These examples save server definitions only. Run `quiet-core-bot mcp doctor --pr
     quiet-core-bot mcp add local-tools \
       --command node \
       --arg ./dist/mcp-server.js \
-      --cwd /srv/openclaw-tools \
+      --cwd /srv/quiet-core-bot-tools \
       --env API_BASE=https://internal.example
     quiet-core-bot mcp status --verbose
     ```
@@ -550,7 +550,7 @@ Use `--json` for scripts and dashboards. Field sets can grow over time, so consu
   <Accordion title="status --json">
     ```json
     {
-      "path": "/home/user/.openclaw/quiet-core-bot.json",
+      "path": "/home/user/.quiet-core-bot/quiet-core-bot.json",
       "servers": [
         {
           "name": "docs",
@@ -583,7 +583,7 @@ Use `--json` for scripts and dashboards. Field sets can grow over time, so consu
     ```json
     {
       "ok": false,
-      "path": "/home/user/.openclaw/quiet-core-bot.json",
+      "path": "/home/user/.quiet-core-bot/quiet-core-bot.json",
       "servers": [
         {
           "name": "docs",
@@ -605,7 +605,7 @@ Use `--json` for scripts and dashboards. Field sets can grow over time, so consu
   <Accordion title="probe --json">
     ```json
     {
-      "path": "/home/user/.openclaw/quiet-core-bot.json",
+      "path": "/home/user/.quiet-core-bot/quiet-core-bot.json",
       "generatedAt": "2026-05-31T09:00:00.000Z",
       "servers": {
         "docs": {

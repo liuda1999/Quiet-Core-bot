@@ -46,7 +46,7 @@ const PLUGIN_SDK_DTS_CACHE_INPUTS = [
   "src/video-generation/dashscope-compatible.ts",
   "src/video-generation/types.ts",
 ];
-const PLUGIN_SDK_ENTRY_DTS_CACHE_ENV = ["OPENCLAW_BUILD_PRIVATE_QA"];
+const PLUGIN_SDK_ENTRY_DTS_CACHE_ENV = ["QUIET_CORE_BUILD_PRIVATE_QA"];
 const PLUGIN_SDK_ENTRY_DTS_CACHE_INPUTS = [
   "scripts/write-plugin-sdk-entry-dts.ts",
   "scripts/lib/plugin-sdk-entries.mjs",
@@ -140,7 +140,7 @@ export const BUILD_ALL_STEPS = [
     kind: "pnpm",
     pnpmArgs: ["ui:build"],
     // No build-all cache: ui/vite.config.ts derives the Control UI build ID
-    // from package.json, git HEAD, and OPENCLAW_CONTROL_UI_BUILD_ID env, so a
+    // from package.json, git HEAD, and QUIET_CORE_CONTROL_UI_BUILD_ID env, so a
     // file-input signature cannot exactly invalidate generated assets and a
     // warm hit could restore stale service-worker/app cache metadata.
     cache: undefined,
@@ -211,35 +211,35 @@ export const BUILD_ALL_PROFILES = {
 export const BUILD_ALL_PROFILE_STEP_ENV = {
   full: {
     tsdown: {
-      OPENCLAW_PRESERVE_CLI_STARTUP_METADATA: "1",
+      QUIET_CORE_PRESERVE_CLI_STARTUP_METADATA: "1",
     },
   },
   ciArtifacts: {
     tsdown: {
-      OPENCLAW_RUN_NODE_SKIP_DTS_BUILD: "1",
-      OPENCLAW_PRESERVE_CLI_STARTUP_METADATA: "1",
+      QUIET_CORE_RUN_NODE_SKIP_DTS_BUILD: "1",
+      QUIET_CORE_PRESERVE_CLI_STARTUP_METADATA: "1",
     },
   },
   gatewayWatch: {
     tsdown: {
-      OPENCLAW_RUN_NODE_SKIP_DTS_BUILD: "1",
+      QUIET_CORE_RUN_NODE_SKIP_DTS_BUILD: "1",
     },
     "runtime-postbuild": {
-      OPENCLAW_RUNTIME_POSTBUILD_STATIC_ASSETS: "0",
+      QUIET_CORE_RUNTIME_POSTBUILD_STATIC_ASSETS: "0",
     },
   },
   qaRuntime: {
     tsdown: {
-      OPENCLAW_RUN_NODE_SKIP_DTS_BUILD: "1",
+      QUIET_CORE_RUN_NODE_SKIP_DTS_BUILD: "1",
     },
   },
   cliStartup: {
     tsdown: {
-      OPENCLAW_RUN_NODE_SKIP_DTS_BUILD: "1",
-      OPENCLAW_PRESERVE_CLI_STARTUP_METADATA: "1",
+      QUIET_CORE_RUN_NODE_SKIP_DTS_BUILD: "1",
+      QUIET_CORE_PRESERVE_CLI_STARTUP_METADATA: "1",
     },
     "runtime-postbuild": {
-      OPENCLAW_RUNTIME_POSTBUILD_STATIC_ASSETS: "0",
+      QUIET_CORE_RUNTIME_POSTBUILD_STATIC_ASSETS: "0",
     },
   },
 };
@@ -325,7 +325,7 @@ export function resolveBuildAllStep(step, params = {}) {
   const env = resolveStepEnv(step, params.env ?? process.env, platform);
   if (step.kind === "pnpm") {
     const nodeFallbackArgs =
-      env.OPENCLAW_BUILD_ALL_NO_PNPM === "1" ? PNPM_STEP_NODE_FALLBACKS.get(step.label) : undefined;
+      env.QUIET_CORE_BUILD_ALL_NO_PNPM === "1" ? PNPM_STEP_NODE_FALLBACKS.get(step.label) : undefined;
     if (nodeFallbackArgs) {
       return {
         command: params.nodeExecPath ?? nodeBin,
@@ -635,7 +635,7 @@ if (isMainModule()) {
     for (const step of resolveBuildAllSteps(args.profile)) {
       const startedAt = performance.now();
       const cacheState = resolveBuildAllStepCacheState(step);
-      if (process.env.OPENCLAW_BUILD_CACHE !== "0" && cacheState.fresh) {
+      if (process.env.QUIET_CORE_BUILD_CACHE !== "0" && cacheState.fresh) {
         restoreBuildAllStepCacheOutputs(cacheState);
         const durationMs = performance.now() - startedAt;
         timings.push({ label: step.label, status: "cached", durationMs });

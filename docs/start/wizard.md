@@ -20,11 +20,11 @@ quiet-core-bot onboard
 ## Locale
 
 The CLI wizard localizes fixed onboarding copy. It resolves locale from
-`OPENCLAW_LOCALE`, then `LC_ALL`, then `LC_MESSAGES`, then `LANG`, and falls
+`QUIET_CORE_LOCALE`, then `LC_ALL`, then `LC_MESSAGES`, then `LANG`, and falls
 back to English. Supported wizard locales are `en`, `zh-CN`, and `zh-TW`.
 
 ```bash
-OPENCLAW_LOCALE=zh-CN quiet-core-bot onboard
+QUIET_CORE_LOCALE=zh-CN quiet-core-bot onboard
 ```
 
 Names and stable identifiers stay literal: `Quiet Core bot`, `Gateway`, `Tailscale`,

@@ -1,6 +1,6 @@
 // Verifies generated models.json preserves source secret markers from runtime snapshots.
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { createFixtureSuite } from "../test-utils/fixture-suite.js";
 import { NON_ENV_SECRETREF_MARKER } from "./model-auth-markers.js";
 import {
@@ -51,7 +51,7 @@ let ensureOpenClawModelsJson: typeof import("./models-config.js").ensureOpenClaw
 let resetModelsJsonReadyCacheForTest: typeof import("./models-config.js").resetModelsJsonReadyCacheForTest;
 let planOpenClawModelsJsonWithDeps: typeof import("./models-config.plan.js").planOpenClawModelsJsonWithDeps;
 let readGeneratedModelsJson: typeof import("./models-config.test-utils.js").readGeneratedModelsJson;
-const fixtureSuite = createFixtureSuite("openclaw-models-runtime-source-");
+const fixtureSuite = createFixtureSuite("quiet-core-bot-models-runtime-source-");
 
 beforeAll(async () => {
   await fixtureSuite.setup();
@@ -113,7 +113,7 @@ function createCustomProviderApiKeySourceConfig(): OpenClawConfig {
           apiKey: {
             source: "env",
             provider: "default",
-            id: "OPENCLAW_MODEL_LITELLM_API_KEY", // pragma: allowlist secret
+            id: "QUIET_CORE_MODEL_LITELLM_API_KEY", // pragma: allowlist secret
           },
           api: "openai-completions" as const,
           models: [],
@@ -229,7 +229,7 @@ async function planGeneratedProviders(params: {
     {
       cfg: params.config,
       sourceConfigForSecrets: params.sourceConfigForSecrets,
-      agentDir: "/tmp/openclaw-models-plan",
+      agentDir: "/tmp/quiet-core-bot-models-plan",
       env: {},
       existingRaw: "",
       existingParsed: null,
@@ -330,7 +330,7 @@ describe("models-config runtime source snapshot", () => {
       try {
         setRuntimeConfigSnapshot(runtimeConfig, sourceConfig);
         await ensureOpenClawModelsJson(runtimeConfig, agentDir);
-        await expectGeneratedProviderApiKey(agentDir, "litellm", "OPENCLAW_MODEL_LITELLM_API_KEY"); // pragma: allowlist secret
+        await expectGeneratedProviderApiKey(agentDir, "litellm", "QUIET_CORE_MODEL_LITELLM_API_KEY"); // pragma: allowlist secret
       } finally {
         clearRuntimeConfigSnapshot();
         clearConfigCache();

@@ -13,14 +13,14 @@ This is the easiest "no terminal on the server" path: Northflank runs the Gatewa
 
 ## How to get started
 
-1. Click [Deploy Quiet Core bot](https://northflank.com/stacks/deploy-openclaw) to open the template.
+1. Click [Deploy Quiet Core bot](https://northflank.com/stacks/deploy-quiet-core-bot) to open the template.
 2. Create an [account on Northflank](https://app.northflank.com/signup) if you don't already have one.
 3. Click **Deploy Quiet Core bot now**.
-4. Set the required environment variable: `OPENCLAW_GATEWAY_TOKEN` (use a strong random value).
+4. Set the required environment variable: `QUIET_CORE_GATEWAY_TOKEN` (use a strong random value).
 5. Click **Deploy stack** to build and run the Quiet Core bot template.
 6. Wait for the deployment to complete, then click **View resources**.
 7. Open the Quiet Core bot service.
-8. Open the public Quiet Core bot URL at `/openclaw` and connect using the configured shared secret. This template uses `OPENCLAW_GATEWAY_TOKEN` by default; if you replace it with password auth, use that password instead.
+8. Open the public Quiet Core bot URL at `/quiet-core-bot` and connect using the configured shared secret. This template uses `QUIET_CORE_GATEWAY_TOKEN` by default; if you replace it with password auth, use that password instead.
 
 ## What you get
 
@@ -31,7 +31,7 @@ This is the easiest "no terminal on the server" path: Northflank runs the Gatewa
 
 ## Connect a channel
 
-Use the Control UI at `/openclaw` or run `quiet-core-bot onboard` via SSH for channel setup instructions:
+Use the Control UI at `/quiet-core-bot` or run `quiet-core-bot onboard` via SSH for channel setup instructions:
 
 - [Telegram](/channels/telegram) (fastest — just a bot token)
 - [Discord](/channels/discord)

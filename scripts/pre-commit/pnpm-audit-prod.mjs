@@ -698,7 +698,7 @@ function parsePositiveIntegerEnv(name, fallback) {
 function resolveBulkAdvisoryRequestTimeoutMs() {
   return clampTimerTimeoutMs(
     parsePositiveIntegerEnv(
-      "OPENCLAW_PNPM_AUDIT_BULK_TIMEOUT_MS",
+      "QUIET_CORE_PNPM_AUDIT_BULK_TIMEOUT_MS",
       BULK_ADVISORY_REQUEST_TIMEOUT_MS,
     ),
   );
@@ -706,7 +706,7 @@ function resolveBulkAdvisoryRequestTimeoutMs() {
 
 function resolveBulkAdvisoryResponseBodyMaxBytes() {
   return parsePositiveIntegerEnv(
-    "OPENCLAW_PNPM_AUDIT_BULK_RESPONSE_MAX_BYTES",
+    "QUIET_CORE_PNPM_AUDIT_BULK_RESPONSE_MAX_BYTES",
     BULK_ADVISORY_RESPONSE_BODY_MAX_BYTES,
   );
 }

@@ -1,12 +1,12 @@
 import fsSync from "node:fs";
 import path from "node:path";
 import type { DatabaseSync } from "node:sqlite";
-import { requireNodeSqlite } from "openclaw/plugin-sdk/memory-core-host-engine-storage";
-import type { MemorySearchResult } from "openclaw/plugin-sdk/memory-core-host-runtime-files";
+import { requireNodeSqlite } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-storage";
+import type { MemorySearchResult } from "quiet-core-bot/plugin-sdk/memory-core-host-runtime-files";
 
 const QMD_SESSION_ARTIFACT_TABLE = "openclaw_qmd_session_artifacts";
 
-export const QMD_SESSION_ARTIFACT_HIT: unique symbol = Symbol("openclaw.qmdSessionArtifactHit");
+export const QMD_SESSION_ARTIFACT_HIT: unique symbol = Symbol("quiet-core-bot.qmdSessionArtifactHit");
 
 export type QmdSessionArtifactMapping = {
   agentId: string;

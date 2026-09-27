@@ -334,7 +334,7 @@ export type AgentDefaultsConfig = {
   /** Embedded Quiet Core bot runner hardening and compatibility controls. */
   embeddedAgent?: {
     /**
-     * How embedded Quiet Core bot should trust workspace-local `.openclaw/settings.json`.
+     * How embedded Quiet Core bot should trust workspace-local `.quiet-core-bot/settings.json`.
      * - sanitize (default): apply project settings except shellPath/shellCommandPrefix
      * - ignore: ignore project settings entirely
      * - trusted: trust project settings as-is

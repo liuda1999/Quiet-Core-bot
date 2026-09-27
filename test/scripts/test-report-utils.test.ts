@@ -92,13 +92,13 @@ describe("scripts/test-report-utils collectVitestAssertionDurations", () => {
 
 describe("scripts/test-report-utils tryReadJsonFile", () => {
   it("returns the fallback when the file is missing", () => {
-    const missingPath = path.join(os.tmpdir(), `openclaw-missing-${Date.now()}.json`);
+    const missingPath = path.join(os.tmpdir(), `quiet-core-bot-missing-${Date.now()}.json`);
 
     expect(tryReadJsonFile(missingPath, { ok: true })).toEqual({ ok: true });
   });
 
   it("reads valid JSON files", () => {
-    const tempPath = path.join(os.tmpdir(), `openclaw-json-${Date.now()}.json`);
+    const tempPath = path.join(os.tmpdir(), `quiet-core-bot-json-${Date.now()}.json`);
     fs.writeFileSync(tempPath, JSON.stringify({ ok: true }));
 
     try {
@@ -117,7 +117,7 @@ describe("scripts/test-report-utils runVitestJsonReport", () => {
 
   it("launches Vitest through pnpm exec", async () => {
     const { runVitestJsonReport } = await import("../../scripts/test-report-utils.mjs");
-    const reportPath = path.join(os.tmpdir(), `openclaw-vitest-json-${Date.now()}.json`);
+    const reportPath = path.join(os.tmpdir(), `quiet-core-bot-vitest-json-${Date.now()}.json`);
     spawnSyncMock.mockImplementation(() => {
       fs.writeFileSync(reportPath, `${JSON.stringify({ testResults: [] })}\n`, "utf8");
       return { status: 0 };
@@ -178,7 +178,7 @@ describe("scripts/test-report-utils runVitestJsonReport", () => {
       for (const reportPath of reportPaths) {
         expect(path.dirname(reportPath)).toBe(os.tmpdir());
         expect(path.basename(reportPath)).toMatch(
-          /^openclaw-vitest-report-\d+-1234567890-[0-9a-f-]+\.json$/u,
+          /^quiet-core-bot-vitest-report-\d+-1234567890-[0-9a-f-]+\.json$/u,
         );
       }
     } finally {
@@ -192,7 +192,7 @@ describe("scripts/test-report-utils runVitestJsonReport", () => {
   it("fails when Vitest exits successfully without writing a JSON report", async () => {
     const { runVitestJsonReport } = await import("../../scripts/test-report-utils.mjs");
     spawnSyncMock.mockReturnValue({ status: 0 });
-    const reportPath = path.join(os.tmpdir(), `openclaw-vitest-json-missing-${Date.now()}.json`);
+    const reportPath = path.join(os.tmpdir(), `quiet-core-bot-vitest-json-missing-${Date.now()}.json`);
     const exitSpy = vi.spyOn(process, "exit").mockImplementation((code) => {
       throw new Error(`process.exit ${String(code)}`);
     });

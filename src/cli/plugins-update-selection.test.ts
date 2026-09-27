@@ -21,18 +21,18 @@ describe("resolvePluginUpdateSelection", () => {
     expect(
       resolvePluginUpdateSelection({
         installs: {
-          "openclaw-codex-app-server": createNpmInstall({
-            spec: "openclaw-codex-app-server",
-            installPath: "/tmp/openclaw-codex-app-server",
-            resolvedName: "openclaw-codex-app-server",
+          "quiet-core-bot-codex-app-server": createNpmInstall({
+            spec: "quiet-core-bot-codex-app-server",
+            installPath: "/tmp/quiet-core-bot-codex-app-server",
+            resolvedName: "quiet-core-bot-codex-app-server",
           }),
         },
-        rawId: "openclaw-codex-app-server@beta",
+        rawId: "quiet-core-bot-codex-app-server@beta",
       }),
     ).toEqual({
-      pluginIds: ["openclaw-codex-app-server"],
+      pluginIds: ["quiet-core-bot-codex-app-server"],
       specOverrides: {
-        "openclaw-codex-app-server": "openclaw-codex-app-server@beta",
+        "quiet-core-bot-codex-app-server": "quiet-core-bot-codex-app-server@beta",
       },
     });
   });
@@ -42,17 +42,17 @@ describe("resolvePluginUpdateSelection", () => {
       resolvePluginUpdateSelection({
         installs: {
           "voice-call": createNpmInstall({
-            spec: "@openclaw/voice-call",
+            spec: "@quiet-core/voice-call",
             installPath: "/tmp/voice-call",
-            resolvedName: "@openclaw/voice-call",
+            resolvedName: "@quiet-core/voice-call",
           }),
         },
-        rawId: "@openclaw/voice-call@beta",
+        rawId: "@quiet-core/voice-call@beta",
       }),
     ).toEqual({
       pluginIds: ["voice-call"],
       specOverrides: {
-        "voice-call": "@openclaw/voice-call@beta",
+        "voice-call": "@quiet-core/voice-call@beta",
       },
     });
   });
@@ -61,18 +61,18 @@ describe("resolvePluginUpdateSelection", () => {
     expect(
       resolvePluginUpdateSelection({
         installs: {
-          "openclaw-codex-app-server": createNpmInstall({
-            spec: "openclaw-codex-app-server",
-            installPath: "/tmp/openclaw-codex-app-server",
-            resolvedName: "openclaw-codex-app-server",
+          "quiet-core-bot-codex-app-server": createNpmInstall({
+            spec: "quiet-core-bot-codex-app-server",
+            installPath: "/tmp/quiet-core-bot-codex-app-server",
+            resolvedName: "quiet-core-bot-codex-app-server",
           }),
         },
-        rawId: "openclaw-codex-app-server@0.2.0-beta.4",
+        rawId: "quiet-core-bot-codex-app-server@0.2.0-beta.4",
       }),
     ).toEqual({
-      pluginIds: ["openclaw-codex-app-server"],
+      pluginIds: ["quiet-core-bot-codex-app-server"],
       specOverrides: {
-        "openclaw-codex-app-server": "openclaw-codex-app-server@0.2.0-beta.4",
+        "quiet-core-bot-codex-app-server": "quiet-core-bot-codex-app-server@0.2.0-beta.4",
       },
     });
   });
@@ -81,16 +81,16 @@ describe("resolvePluginUpdateSelection", () => {
     expect(
       resolvePluginUpdateSelection({
         installs: {
-          "openclaw-codex-app-server": createNpmInstall({
-            spec: "openclaw-codex-app-server@beta",
-            installPath: "/tmp/openclaw-codex-app-server",
-            resolvedName: "openclaw-codex-app-server",
+          "quiet-core-bot-codex-app-server": createNpmInstall({
+            spec: "quiet-core-bot-codex-app-server@beta",
+            installPath: "/tmp/quiet-core-bot-codex-app-server",
+            resolvedName: "quiet-core-bot-codex-app-server",
           }),
         },
-        rawId: "openclaw-codex-app-server",
+        rawId: "quiet-core-bot-codex-app-server",
       }),
     ).toEqual({
-      pluginIds: ["openclaw-codex-app-server"],
+      pluginIds: ["quiet-core-bot-codex-app-server"],
     });
   });
 

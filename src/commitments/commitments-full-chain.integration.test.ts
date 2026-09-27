@@ -34,7 +34,7 @@ describe("commitments full-chain integration", () => {
     vi.setSystemTime(writeMs);
 
     await withTempHeartbeatSandbox(async ({ tmpDir, storePath, replySpy }) => {
-      await withEnvAsync({ OPENCLAW_STATE_DIR: tmpDir }, async () => {
+      await withEnvAsync({ QUIET_CORE_STATE_DIR: tmpDir }, async () => {
         const sessionKey = "agent:main:telegram:user-155462274";
         const cfg: OpenClawConfig = {
           agents: {

@@ -7,7 +7,7 @@ import { loadOrCreateDeviceIdentity } from "../../src/infra/device-identity.js";
 import { extractFirstTextBlock } from "../../src/shared/chat-message-content.js";
 import { sleep } from "../../src/utils.js";
 import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from "../../src/utils/message-channel.js";
-import { createOpenClawTestInstance, type OpenClawTestInstance } from "./openclaw-test-instance.js";
+import { createOpenClawTestInstance, type OpenClawTestInstance } from "./quiet-core-bot-test-instance.js";
 
 export { extractFirstTextBlock };
 

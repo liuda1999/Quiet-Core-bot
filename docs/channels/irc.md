@@ -14,7 +14,7 @@ Install the official IRC plugin, then configure it under `channels.irc`.
 1. Install the plugin:
 
 ```bash
-quiet-core-bot plugins install @openclaw/irc
+quiet-core-bot plugins install @quiet-core/irc
 ```
 
 2. Enable IRC config in `~/.quiet-core-bot/quiet-core-bot.json`.
@@ -28,8 +28,8 @@ quiet-core-bot plugins install @openclaw/irc
       host: "irc.example.com",
       port: 6697,
       tls: true,
-      nick: "openclaw-bot",
-      channels: ["#openclaw"],
+      nick: "quiet-core-bot-bot",
+      channels: ["#quiet-core-bot"],
     },
   },
 }

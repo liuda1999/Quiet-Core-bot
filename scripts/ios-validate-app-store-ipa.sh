@@ -12,9 +12,9 @@ EOF
 
 IPA_PATH=""
 EXPECTED_TEAM_ID="FWJYW4S8P8"
-EXPECTED_BUNDLE_ID="ai.openclawfoundation.app"
-EXPECTED_PROFILE_NAME="OpenClaw App Store ai.openclawfoundation.app"
-EXPECTED_APP_GROUP="group.ai.openclawfoundation.app.shared"
+EXPECTED_BUNDLE_ID="ai.quiet-core-botfoundation.app"
+EXPECTED_PROFILE_NAME="OpenClaw App Store ai.quiet-core-botfoundation.app"
+EXPECTED_APP_GROUP="group.ai.quiet-core-botfoundation.app.shared"
 EXPECTED_PUSH_MODE="appStore"
 
 PLIST_BUDDY_BIN="${IOS_VALIDATE_PLIST_BUDDY_BIN:-/usr/libexec/PlistBuddy}"
@@ -63,7 +63,7 @@ if [[ ! -f "${IPA_PATH}" ]]; then
   exit 1
 fi
 
-tmp_dir="$(mktemp -d -t openclaw-ios-ipa.XXXXXX)"
+tmp_dir="$(mktemp -d -t quiet-core-bot-ios-ipa.XXXXXX)"
 trap 'rm -rf "${tmp_dir}"' EXIT
 
 "${UNZIP_BIN}" -q "${IPA_PATH}" -d "${tmp_dir}"

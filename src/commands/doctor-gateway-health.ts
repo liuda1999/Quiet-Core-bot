@@ -1,7 +1,7 @@
 /** Gateway health probes used by doctor before deeper daemon and memory diagnostics. */
 import { note } from "../../packages/terminal-core/src/note.js";
 import { probeGatewayStatus } from "../cli/daemon-cli/probe.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   buildGatewayConnectionDetails,
   buildGatewayProbeConnectionDetails,
@@ -51,8 +51,8 @@ function noteCliGatewayVersionSkew(status: StatusSummary | undefined): void {
   note(
     [
       `This command is Quiet Core bot ${VERSION}; the running Gateway is Quiet Core bot ${gatewayVersion}.`,
-      "Check `quiet-core-bot --version`, `which quiet-core-bot`, and `quiet-core-bot gateway status --deep`.",
-      "If this mismatch is unexpected, update PATH so `quiet-core-bot` points to the version you want, or reinstall the Gateway service from that same Quiet Core bot install.",
+      "Check `quiet-core-bot --version`, `which openclaw`, and `quiet-core-bot gateway status --deep`.",
+      "If this mismatch is unexpected, update PATH so `openclaw` points to the version you want, or reinstall the Gateway service from that same Quiet Core bot install.",
     ].join("\n"),
     "Quiet Core bot version mismatch",
   );

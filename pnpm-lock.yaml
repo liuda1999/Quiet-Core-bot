@@ -317,13 +317,13 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/admin-http-rpc:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -333,7 +333,7 @@ importers:
         specifier: 1.3.9
         version: 1.3.9
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -358,7 +358,7 @@ importers:
         specifier: 8.21.0
         version: 8.21.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
       undici:
@@ -386,7 +386,7 @@ importers:
         specifier: 8.21.0
         version: 8.21.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -399,22 +399,22 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      quiet-core-bot:
         specifier: workspace:*
         version: link:../..
 
   extensions/comfy:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/copilot-proxy:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -454,13 +454,13 @@ importers:
         specifier: 1.41.1
         version: 1.41.1
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/diagnostics-prometheus:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -485,13 +485,13 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/diffs-language-pack:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -501,7 +501,7 @@ importers:
         specifier: 0.3.0
         version: 0.3.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -514,7 +514,7 @@ importers:
         specifier: 1.1.39
         version: 1.1.39
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -524,13 +524,13 @@ importers:
         specifier: 1.1.39
         version: 1.1.39
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/image-generation-core:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -540,19 +540,19 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/litellm:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/llama-cpp:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
     optionalDependencies:
@@ -566,7 +566,7 @@ importers:
         specifier: 1.1.39
         version: 1.1.39
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -581,7 +581,7 @@ importers:
         specifier: 1.1.39
         version: 1.1.39
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -612,10 +612,10 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      quiet-core-bot:
         specifier: workspace:*
         version: link:../..
 
@@ -628,16 +628,16 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      quiet-core-bot:
         specifier: workspace:*
         version: link:../..
 
   extensions/media-understanding-core:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -653,10 +653,10 @@ importers:
         specifier: 1.1.39
         version: 1.1.39
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      quiet-core-bot:
         specifier: workspace:*
         version: link:../..
 
@@ -675,7 +675,7 @@ importers:
         specifier: 1.1.39
         version: 1.1.39
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -691,19 +691,19 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      quiet-core-bot:
         specifier: workspace:*
         version: link:../..
 
   extensions/migrate-claude:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      quiet-core-bot:
         specifier: workspace:*
         version: link:../..
 
@@ -713,10 +713,10 @@ importers:
         specifier: 2.9.0
         version: 2.9.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      quiet-core-bot:
         specifier: workspace:*
         version: link:../..
 
@@ -726,10 +726,10 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      quiet-core-bot:
         specifier: workspace:*
         version: link:../..
 
@@ -742,10 +742,10 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      quiet-core-bot:
         specifier: workspace:*
         version: link:../..
 
@@ -764,10 +764,10 @@ importers:
         specifier: 2.9.0
         version: 2.9.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      quiet-core-bot:
         specifier: workspace:*
         version: link:../..
 
@@ -777,13 +777,13 @@ importers:
         specifier: 1.1.39
         version: 1.1.39
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/open-prose:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -793,10 +793,10 @@ importers:
         specifier: 2.2.3
         version: 2.2.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      quiet-core-bot:
         specifier: workspace:*
         version: link:../..
 
@@ -809,10 +809,10 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      quiet-core-bot:
         specifier: workspace:*
         version: link:../..
 
@@ -837,10 +837,10 @@ importers:
       '@openclaw/crabline':
         specifier: 0.1.6
         version: 0.1.6
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      quiet-core-bot:
         specifier: workspace:*
         version: link:../..
 
@@ -850,13 +850,13 @@ importers:
         specifier: 8.5.0
         version: 8.5.0
     devDependencies:
-      '@openclaw/matrix':
+      '@quiet-core/matrix':
         specifier: workspace:*
         version: link:../matrix
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      quiet-core-bot:
         specifier: workspace:*
         version: link:../..
 
@@ -866,22 +866,22 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      quiet-core-bot:
         specifier: workspace:*
         version: link:../..
 
   extensions/searxng:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/sglang:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -891,7 +891,7 @@ importers:
         specifier: 8.21.0
         version: 8.21.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -901,7 +901,7 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -923,10 +923,10 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      quiet-core-bot:
         specifier: workspace:*
         version: link:../..
 
@@ -936,28 +936,28 @@ importers:
         specifier: 0.8.1
         version: 0.8.1
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      quiet-core-bot:
         specifier: workspace:*
         version: link:../..
 
   extensions/tts-local-cli:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/video-generation-core:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/vllm:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -970,7 +970,7 @@ importers:
         specifier: 0.18.12
         version: 0.18.12
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -980,7 +980,7 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -990,22 +990,22 @@ importers:
         specifier: 1.1.39
         version: 1.1.39
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@quiet-core/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      quiet-core-bot:
         specifier: workspace:*
         version: link:../..
 
   packages/acp-core:
     dependencies:
-      '@openclaw/normalization-core':
+      '@quiet-core/normalization-core':
         specifier: workspace:*
         version: link:../normalization-core
 
   packages/agent-core:
     dependencies:
-      '@openclaw/llm-core':
+      '@quiet-core/llm-core':
         specifier: workspace:*
         version: link:../llm-core
       typebox:
@@ -1014,7 +1014,7 @@ importers:
 
   packages/gateway-client:
     dependencies:
-      '@openclaw/gateway-protocol':
+      '@quiet-core/gateway-protocol':
         specifier: workspace:*
         version: link:../gateway-protocol
       ipaddr.js:
@@ -1038,7 +1038,7 @@ importers:
 
   packages/llm-runtime:
     dependencies:
-      '@openclaw/llm-core':
+      '@quiet-core/llm-core':
         specifier: workspace:*
         version: link:../llm-core
 
@@ -1053,7 +1053,7 @@ importers:
 
   packages/media-core:
     dependencies:
-      '@openclaw/normalization-core':
+      '@quiet-core/normalization-core':
         specifier: workspace:*
         version: link:../normalization-core
       file-type:
@@ -1082,13 +1082,13 @@ importers:
 
   packages/sdk:
     dependencies:
-      '@openclaw/gateway-client':
+      '@quiet-core/gateway-client':
         specifier: workspace:*
         version: link:../gateway-client
 
   packages/speech-core:
     dependencies:
-      openclaw:
+      quiet-core-bot:
         specifier: workspace:*
         version: link:../..
 
@@ -1113,10 +1113,10 @@ importers:
       '@noble/ed25519':
         specifier: 3.1.0
         version: 3.1.0
-      '@openclaw/media-core':
+      '@quiet-core/media-core':
         specifier: workspace:*
         version: link:../packages/media-core
-      '@openclaw/normalization-core':
+      '@quiet-core/normalization-core':
         specifier: workspace:*
         version: link:../packages/normalization-core
       dompurify:

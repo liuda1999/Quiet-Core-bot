@@ -2,12 +2,12 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import {
-  OPENCLAW_CRABLINE_DEFAULT_CHANNEL,
+  QUIET_CORE_CRABLINE_DEFAULT_CHANNEL,
   resolveOpenClawCrablineChannelDriverSelection,
 } from "@openclaw/crabline";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { parseStrictPositiveInteger } from "openclaw/plugin-sdk/number-runtime";
-import { uniqueStrings } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
+import { parseStrictPositiveInteger } from "quiet-core-bot/plugin-sdk/number-runtime";
+import { uniqueStrings } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import {
   buildQaAgenticParityComparison,
   buildQaRuntimeParityReport,
@@ -98,7 +98,7 @@ import {
 } from "./tool-coverage-report.js";
 
 const QA_SUITE_INFRA_RETRY_LIMIT = 1;
-const QA_CREDENTIAL_PAYLOAD_MAX_BYTES_ENV = "OPENCLAW_QA_CREDENTIAL_PAYLOAD_MAX_BYTES";
+const QA_CREDENTIAL_PAYLOAD_MAX_BYTES_ENV = "QUIET_CORE_QA_CREDENTIAL_PAYLOAD_MAX_BYTES";
 const DEFAULT_QA_CREDENTIAL_PAYLOAD_MAX_BYTES = 64 * 1024 * 1024;
 const QA_SUITE_INFRA_RETRY_NETWORK_ERROR_CODES = new Set([
   "ECONNRESET",
@@ -862,15 +862,15 @@ function formatQaRunProfileFilterList(
 }
 
 async function withTemporaryQaProfileEnv<T>(profile: string, run: () => Promise<T>): Promise<T> {
-  const previousProfile = process.env.OPENCLAW_QA_PROFILE;
-  process.env.OPENCLAW_QA_PROFILE = profile;
+  const previousProfile = process.env.QUIET_CORE_QA_PROFILE;
+  process.env.QUIET_CORE_QA_PROFILE = profile;
   try {
     return await run();
   } finally {
     if (previousProfile === undefined) {
-      delete process.env.OPENCLAW_QA_PROFILE;
+      delete process.env.QUIET_CORE_QA_PROFILE;
     } else {
-      process.env.OPENCLAW_QA_PROFILE = previousProfile;
+      process.env.QUIET_CORE_QA_PROFILE = previousProfile;
     }
   }
 }
@@ -913,7 +913,7 @@ export async function runQaSuiteCommand(opts: QaSuiteCommandOptions) {
     channelDriver === "crabline"
       ? resolveOpenClawCrablineChannelDriverSelection({
           channel: resolveQaSuiteScenarioChannel({
-            defaultChannel: OPENCLAW_CRABLINE_DEFAULT_CHANNEL,
+            defaultChannel: QUIET_CORE_CRABLINE_DEFAULT_CHANNEL,
             explicitChannel: opts.channel,
             scenarios: selectQaScenarioDefinitionsForChannelResolution({
               scenarioIds,
@@ -1551,7 +1551,7 @@ export async function runQaLabUiCommand(opts: {
     advertiseHost: opts.advertiseHost,
     advertisePort: Number.isFinite(opts.advertisePort) ? opts.advertisePort : undefined,
     controlUiUrl: opts.controlUiUrl,
-    controlUiProxyToken: process.env.OPENCLAW_QA_CONTROL_UI_PROXY_TOKEN,
+    controlUiProxyToken: process.env.QUIET_CORE_QA_CONTROL_UI_PROXY_TOKEN,
     controlUiProxyTarget: opts.controlUiProxyTarget,
     uiDistDir: opts.uiDistDir,
     autoKickoffTarget: opts.autoKickoffTarget,

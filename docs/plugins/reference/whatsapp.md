@@ -11,8 +11,8 @@ Quiet Core bot WhatsApp channel plugin for WhatsApp Web chats.
 
 ## Distribution
 
-- Package: `@openclaw/whatsapp`
-- Install route: ClawHub: `clawhub:@openclaw/whatsapp`; npm
+- Package: `@quiet-core/whatsapp`
+- Install route: ClawHub: `clawhub:@quiet-core/whatsapp`; npm
 
 ## Surface
 

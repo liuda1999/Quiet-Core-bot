@@ -20,8 +20,8 @@ packaged builds do not need a separate install.
 If you are on an older build or a custom install that excludes Zalo Personal,
 install the npm package directly:
 
-- Install via CLI: `quiet-core-bot plugins install @openclaw/zalouser`
-- Pinned version: `quiet-core-bot plugins install @openclaw/zalouser@2026.5.2`
+- Install via CLI: `quiet-core-bot plugins install @quiet-core/zalouser`
+- Pinned version: `quiet-core-bot plugins install @quiet-core/zalouser@2026.5.2`
 - Or from a source checkout: `quiet-core-bot plugins install ./path/to/local/zalouser-plugin`
 - Details: [Plugins](/tools/plugin)
 
@@ -67,9 +67,9 @@ Channel id is `zalouser` to make it explicit this automates a **personal Zalo us
 Use the directory CLI to discover peers/groups and their IDs:
 
 ```bash
-openclaw directory self --channel zalouser
-openclaw directory peers list --channel zalouser --query "name"
-openclaw directory groups list --channel zalouser --query "work"
+quiet-core-bot directory self --channel zalouser
+quiet-core-bot directory peers list --channel zalouser --query "name"
+quiet-core-bot directory groups list --channel zalouser --query "work"
 ```
 
 ## Limits

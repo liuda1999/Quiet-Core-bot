@@ -15,18 +15,18 @@ function normalizeOptionalLowercaseString(raw?: string | null): string | undefin
 /** Canonical client ids accepted in gateway hello/connect payloads. */
 export const GATEWAY_CLIENT_IDS = {
   WEBCHAT_UI: "webchat-ui",
-  CONTROL_UI: "openclaw-control-ui",
-  TUI: "openclaw-tui",
+  CONTROL_UI: "quiet-core-bot-control-ui",
+  TUI: "quiet-core-bot-tui",
   WEBCHAT: "webchat",
   CLI: "cli",
   GATEWAY_CLIENT: "gateway-client",
-  MACOS_APP: "openclaw-macos",
-  IOS_APP: "openclaw-ios",
-  ANDROID_APP: "openclaw-android",
+  MACOS_APP: "quiet-core-bot-macos",
+  IOS_APP: "quiet-core-bot-ios",
+  ANDROID_APP: "quiet-core-bot-android",
   NODE_HOST: "node-host",
   TEST: "test",
   FINGERPRINT: "fingerprint",
-  PROBE: "openclaw-probe",
+  PROBE: "quiet-core-bot-probe",
 } as const;
 
 /** Stable gateway client ids used on the wire during hello/connect handshakes. */

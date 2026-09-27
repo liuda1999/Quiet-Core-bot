@@ -4,8 +4,8 @@
 import {
   clampTimerTimeoutMs,
   finiteSecondsToTimerSafeMilliseconds,
-} from "@openclaw/normalization-core/number-coercion";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+} from "@quiet-core/normalization-core/number-coercion";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import type { CompactResult, ContextEngine } from "../../context-engine/types.js";
 import { withTimeout } from "../../node-host/with-timeout.js";
 import type { StreamFn } from "../runtime/index.js";

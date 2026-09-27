@@ -189,7 +189,7 @@ describe("models-config", () => {
 
         const agentDir = path.join(home, "agent-empty");
         // ensureAuthProfileStore merges the main auth store into non-main dirs; point main at our temp dir.
-        setTestEnvValue("OPENCLAW_AGENT_DIR", agentDir);
+        setTestEnvValue("QUIET_CORE_AGENT_DIR", agentDir);
 
         const result = await ensureOpenClawModelsJson(
           {

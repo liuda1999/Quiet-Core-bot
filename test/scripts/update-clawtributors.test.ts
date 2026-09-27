@@ -58,7 +58,7 @@ function mockClawtributorsFixture() {
     }
     if (
       cmd ===
-      "gh pr list -R openclaw/openclaw --state merged --limit 5000 --json author --jq '.[].author.login'"
+      "gh pr list -R liuda1999/quiet-core-bot --state merged --limit 5000 --json author --jq '.[].author.login'"
     ) {
       return "";
     }

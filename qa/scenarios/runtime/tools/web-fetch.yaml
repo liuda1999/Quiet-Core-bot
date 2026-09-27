@@ -26,9 +26,9 @@ scenario:
       toolCoverage:
         family: web_fetch
         actualTool: web_fetch
-        bucket: openclaw-dynamic-integration
-        expectedLayer: openclaw-dynamic
-        capabilityLayer: openclaw-dynamic-direct
+        bucket: quiet-core-bot-dynamic-integration
+        expectedLayer: quiet-core-bot-dynamic
+        capabilityLayer: quiet-core-bot-dynamic-direct
         required: true
         codexDefaultImpact: P4
         qaImpact: P1

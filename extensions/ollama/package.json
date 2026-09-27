@@ -1,5 +1,5 @@
 {
-  "name": "@openclaw/ollama-provider",
+  "name": "@quiet-core/ollama-provider",
   "version": "2026.6.11",
   "private": true,
   "description": "OpenClaw Ollama provider plugin",
@@ -8,9 +8,9 @@
     "typebox": "1.1.39"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@quiet-core/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": [
       "./index.ts"
     ]

@@ -25,12 +25,12 @@ import {
 
 const TEST_ENV_KEYS = [
   "HOME",
-  "OPENCLAW_STATE_DIR",
-  "OPENCLAW_CONFIG_PATH",
-  "OPENCLAW_GATEWAY_URL",
-  "OPENCLAW_GATEWAY_TOKEN",
-  "OPENCLAW_GATEWAY_PASSWORD",
-  "OPENCLAW_GATEWAY_PORT",
+  "QUIET_CORE_STATE_DIR",
+  "QUIET_CORE_CONFIG_PATH",
+  "QUIET_CORE_GATEWAY_URL",
+  "QUIET_CORE_GATEWAY_TOKEN",
+  "QUIET_CORE_GATEWAY_PASSWORD",
+  "QUIET_CORE_GATEWAY_PORT",
 ];
 
 describe("plugin.approval.request turn-source routing (real gateway)", () => {
@@ -41,23 +41,23 @@ describe("plugin.approval.request turn-source routing (real gateway)", () => {
 
   beforeAll(async () => {
     envSnapshot = captureEnv(TEST_ENV_KEYS);
-    deleteTestEnvValue("OPENCLAW_CONFIG_PATH");
-    deleteTestEnvValue("OPENCLAW_GATEWAY_URL");
-    deleteTestEnvValue("OPENCLAW_GATEWAY_TOKEN");
-    deleteTestEnvValue("OPENCLAW_GATEWAY_PASSWORD");
+    deleteTestEnvValue("QUIET_CORE_CONFIG_PATH");
+    deleteTestEnvValue("QUIET_CORE_GATEWAY_URL");
+    deleteTestEnvValue("QUIET_CORE_GATEWAY_TOKEN");
+    deleteTestEnvValue("QUIET_CORE_GATEWAY_PASSWORD");
 
     tempHome = await fs.mkdtemp(
-      path.join(os.tmpdir(), "openclaw-plugin-approval-turn-source-e2e-"),
+      path.join(os.tmpdir(), "quiet-core-bot-plugin-approval-turn-source-e2e-"),
     );
-    const stateDir = path.join(tempHome, ".openclaw");
+    const stateDir = path.join(tempHome, ".quiet-core-bot");
     await fs.mkdir(stateDir, { recursive: true });
     setTestEnvValue("HOME", tempHome);
-    setTestEnvValue("OPENCLAW_STATE_DIR", stateDir);
+    setTestEnvValue("QUIET_CORE_STATE_DIR", stateDir);
 
     const port = await getFreeGatewayPort();
     const token = "plugin-approval-turn-source-e2e-token";
     const url = `ws://127.0.0.1:${port}`;
-    setTestEnvValue("OPENCLAW_GATEWAY_PORT", String(port));
+    setTestEnvValue("QUIET_CORE_GATEWAY_PORT", String(port));
 
     server = await startGatewayServer(port, {
       bind: "loopback",

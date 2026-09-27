@@ -2,9 +2,9 @@
  * Handles embedded-agent assistant message events, block replies, reasoning
  * streams, reply directives, and pending tool media attachment handoff.
  */
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
-import { resolveSendableOutboundReplyParts } from "openclaw/plugin-sdk/reply-payload";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
+import { uniqueStrings } from "@quiet-core/normalization-core/string-normalization";
+import { resolveSendableOutboundReplyParts } from "quiet-core-bot/plugin-sdk/reply-payload";
 import { createInlineCodeState } from "../../packages/markdown-core/src/code-spans.js";
 import {
   parseReplyDirectives,
@@ -54,7 +54,7 @@ function isTranscriptOnlyOpenClawAssistantMessage(message: AgentMessage | undefi
   }
   const provider = normalizeOptionalString(message.provider) ?? "";
   const model = normalizeOptionalString(message.model) ?? "";
-  return provider === "openclaw" && (model === "delivery-mirror" || model === "gateway-injected");
+  return provider === "quiet-core-bot" && (model === "delivery-mirror" || model === "gateway-injected");
 }
 
 function isOpenAiResponsesAssistantMessage(message: AgentMessage | undefined): boolean {
@@ -70,7 +70,7 @@ function isOpenAiCompletionsAssistantMessage(message: AgentMessage | undefined):
     return false;
   }
   const api = normalizeOptionalString((message as { api?: unknown }).api) ?? "";
-  return api === "openai-completions" || api === "openclaw-openai-completions-transport";
+  return api === "openai-completions" || api === "quiet-core-bot-openai-completions-transport";
 }
 
 function asRecord(value: unknown): Record<string, unknown> | undefined {

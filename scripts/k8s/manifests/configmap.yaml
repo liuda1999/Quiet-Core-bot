@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: openclaw-config
+  name: quiet-core-bot-config
   labels:
-    app: openclaw
+    app: quiet-core-bot
 data:
-  openclaw.json: |
+  quiet-core-bot.json: |
     {
       "gateway": {
         "mode": "local",
@@ -20,13 +20,13 @@ data:
       },
       "agents": {
         "defaults": {
-          "workspace": "~/.openclaw/workspace"
+          "workspace": "~/.quiet-core-bot/workspace"
         },
         "list": [
           {
             "id": "default",
             "name": "OpenClaw Assistant",
-            "workspace": "~/.openclaw/workspace"
+            "workspace": "~/.quiet-core-bot/workspace"
           }
         ]
       },

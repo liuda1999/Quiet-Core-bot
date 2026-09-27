@@ -57,8 +57,8 @@ when `name` is missing).
 
 <Note>
   Codex CLI's native `$CODEX_HOME/skills` directory is **not** an Quiet Core bot
-  skill root. Use `openclaw migrate plan codex` to inventory those skills, then
-  `openclaw migrate codex` to copy them into your Quiet Core bot workspace.
+  skill root. Use `quiet-core-bot migrate plan codex` to inventory those skills, then
+  `quiet-core-bot migrate codex` to copy them into your Quiet Core bot workspace.
 </Note>
 
 ## Per-agent vs shared skills
@@ -110,13 +110,13 @@ regardless of where they are loaded from.
 ## Plugins and skills
 
 Plugins can ship their own skills by listing `skills` directories in
-`openclaw.plugin.json` (paths relative to the plugin root). Plugin skills load
+`quiet-core-bot.plugin.json` (paths relative to the plugin root). Plugin skills load
 when the plugin is enabled — for example, the browser plugin ships a
 `browser-automation` skill for multi-step browser control.
 
 Plugin skill directories merge at the same low-precedence level as
 `skills.load.extraDirs`, so a same-named bundled, managed, agent, or workspace
-skill overrides them. Gate them via `metadata.openclaw.requires.config` on the
+skill overrides them. Gate them via `metadata.quiet-core-bot.requires.config` on the
 plugin's config entry.
 
 See [Plugins](/tools/plugin) and [Tools](/tools) for the full plugin system.
@@ -253,7 +253,7 @@ When the user asks to generate an image, use the `image_generate` tool...
 
 <ParamField path="homepage" type="string">
   URL shown as "Website" in the macOS Skills UI. Also supported via
-  `metadata.openclaw.homepage`.
+  `metadata.quiet-core-bot.homepage`.
 </ParamField>
 
 <ParamField path="user-invocable" type="boolean" default="true">
@@ -283,8 +283,8 @@ When the user asks to generate an image, use the `image_generate` tool...
 
 ## Gating
 
-Quiet Core bot filters skills at load time using `metadata.openclaw` (single-line
-JSON in the frontmatter). A skill with no `metadata.openclaw` block is always
+Quiet Core bot filters skills at load time using `metadata.quiet-core-bot` (single-line
+JSON in the frontmatter). A skill with no `metadata.quiet-core-bot` block is always
 eligible unless explicitly disabled.
 
 ```markdown
@@ -293,7 +293,7 @@ name: image-lab
 description: Generate or edit images via a provider-backed image workflow
 metadata:
   {
-    "openclaw":
+    "quiet-core-bot":
       {
         "requires": { "bins": ["uv"], "env": ["GEMINI_API_KEY"], "config": ["browser.enabled"] },
         "primaryEnv": "GEMINI_API_KEY",
@@ -344,9 +344,9 @@ metadata:
 
 <Note>
   Legacy `metadata.clawdbot` blocks are still accepted when
-  `metadata.openclaw` is absent, so older installed skills keep their
+  `metadata.quiet-core-bot` is absent, so older installed skills keep their
   dependency gates and installer hints. New skills should use
-  `metadata.openclaw`.
+  `metadata.quiet-core-bot`.
 </Note>
 
 ### Installer specs
@@ -359,7 +359,7 @@ name: gemini
 description: Use Gemini CLI for coding assistance and Google search lookups.
 metadata:
   {
-    "openclaw":
+    "quiet-core-bot":
       {
         "emoji": "♊️",
         "requires": { "bins": ["gemini"] },
@@ -444,7 +444,7 @@ Toggle and configure bundled or managed skills under `skills.entries` in
 </ParamField>
 
 <ParamField path="apiKey" type='string | { source, provider, id }'>
-  Convenience field for skills that declare `metadata.openclaw.primaryEnv`.
+  Convenience field for skills that declare `metadata.quiet-core-bot.primaryEnv`.
   Supports a plaintext string or a SecretRef object.
 </ParamField>
 
@@ -464,7 +464,7 @@ Toggle and configure bundled or managed skills under `skills.entries` in
 
 <Note>
   Config keys match the **skill name** by default. If a skill defines
-  `metadata.openclaw.skillKey`, use that key under `skills.entries`. Quote
+  `metadata.quiet-core-bot.skillKey`, use that key under `skills.entries`. Quote
   hyphenated names: JSON5 allows quoted keys.
 </Note>
 

@@ -78,7 +78,7 @@ export function formatGatewayCommandFailure(params: {
 }): string {
   const raw = params.error instanceof Error ? params.error.message : String(params.error);
   const message = raw
-    .replace(/\s*Run [`"]?openclaw doctor[`"]? for diagnostics\.?/gi, "")
+    .replace(/\s*Run [`"]?quiet-core-bot doctor[`"]? for diagnostics\.?/gi, "")
     .replace(/\s+Gateway target:\s+.*$/isu, "")
     .replace(/\s+/g, " ")
     .trim()

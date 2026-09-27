@@ -185,7 +185,7 @@ describe("session hook context wiring", () => {
 
   it("passes sessionKey to session_start hook context", async () => {
     const sessionKey = "agent:main:telegram:direct:123";
-    const storePath = await createStorePath("openclaw-session-hook-start");
+    const storePath = await createStorePath("quiet-core-bot-session-hook-start");
     await writeStore(storePath, {});
     const cfg = { session: { store: storePath } } as OpenClawConfig;
 
@@ -204,7 +204,7 @@ describe("session hook context wiring", () => {
   it("passes sessionKey to session_end hook context on reset", async () => {
     const sessionKey = "agent:main:telegram:direct:123";
     const { storePath } = await createStoredSession({
-      prefix: "openclaw-session-hook-end",
+      prefix: "quiet-core-bot-session-hook-end",
       sessionKey,
       sessionId: "old-session",
     });
@@ -239,7 +239,7 @@ describe("session hook context wiring", () => {
   it("marks explicit /reset rollovers with reason reset", async () => {
     const sessionKey = "agent:main:telegram:direct:456";
     const { storePath } = await createStoredSession({
-      prefix: "openclaw-session-hook-explicit-reset",
+      prefix: "quiet-core-bot-session-hook-explicit-reset",
       sessionKey,
       sessionId: "reset-session",
       text: "reset me",
@@ -259,7 +259,7 @@ describe("session hook context wiring", () => {
   it("maps custom reset trigger aliases to the new-session reason", async () => {
     const sessionKey = "agent:main:telegram:direct:alias";
     const { storePath } = await createStoredSession({
-      prefix: "openclaw-session-hook-reset-alias",
+      prefix: "quiet-core-bot-session-hook-reset-alias",
       sessionKey,
       sessionId: "alias-session",
       text: "alias me",
@@ -287,7 +287,7 @@ describe("session hook context wiring", () => {
       vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
       const sessionKey = "agent:main:telegram:direct:daily";
       await initStoredSessionState({
-        prefix: "openclaw-session-hook-daily",
+        prefix: "quiet-core-bot-session-hook-daily",
         sessionKey,
         sessionId: "daily-session",
         text: "daily",
@@ -313,7 +313,7 @@ describe("session hook context wiring", () => {
       vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
       const sessionKey = "agent:main:telegram:direct:idle";
       await initStoredSessionState({
-        prefix: "openclaw-session-hook-idle",
+        prefix: "quiet-core-bot-session-hook-idle",
         sessionKey,
         sessionId: "idle-session",
         text: "idle",
@@ -337,7 +337,7 @@ describe("session hook context wiring", () => {
       vi.setSystemTime(new Date(2026, 0, 18, 5, 30, 0));
       const sessionKey = "agent:main:telegram:direct:overlap";
       await initStoredSessionState({
-        prefix: "openclaw-session-hook-overlap",
+        prefix: "quiet-core-bot-session-hook-overlap",
         sessionKey,
         sessionId: "overlap-session",
         text: "overlap",

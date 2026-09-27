@@ -173,7 +173,7 @@ describe("qa test file scenario runner", () => {
         };
       },
       env: {
-        OPENCLAW_QA_REF: "scenario-ref",
+        QUIET_CORE_QA_REF: "scenario-ref",
       } as NodeJS.ProcessEnv,
     });
 
@@ -410,7 +410,7 @@ describe("qa test file scenario runner", () => {
         };
       },
       env: {
-        OPENCLAW_QA_REF: "scenario-ref",
+        QUIET_CORE_QA_REF: "scenario-ref",
       } as NodeJS.ProcessEnv,
     });
 
@@ -654,7 +654,7 @@ describe("qa test file scenario runner", () => {
         };
       },
       env: {
-        OPENCLAW_QA_REF: "scenario-ref",
+        QUIET_CORE_QA_REF: "scenario-ref",
       } as NodeJS.ProcessEnv,
     });
 
@@ -785,7 +785,7 @@ describe("qa test file scenario runner", () => {
         };
       },
       env: {
-        OPENCLAW_QA_REF: "scenario-ref",
+        QUIET_CORE_QA_REF: "scenario-ref",
       } as NodeJS.ProcessEnv,
     });
 
@@ -834,7 +834,7 @@ describe("qa test file scenario runner", () => {
         };
       },
       env: {
-        OPENCLAW_QA_REF: "scenario-ref",
+        QUIET_CORE_QA_REF: "scenario-ref",
       } as NodeJS.ProcessEnv,
     });
 
@@ -877,7 +877,7 @@ describe("qa test file scenario runner", () => {
         };
       },
       env: {
-        OPENCLAW_QA_REF: "scenario-ref",
+        QUIET_CORE_QA_REF: "scenario-ref",
       } as NodeJS.ProcessEnv,
     });
 
@@ -940,8 +940,8 @@ describe("qa test file scenario runner", () => {
         return { exitCode: 0, stdout: "script pass\n", stderr: "" };
       },
       env: {
-        OPENCLAW_QA_REF: "scenario-ref",
-        OPENCLAW_QA_PROFILE: "smoke-ci",
+        QUIET_CORE_QA_REF: "scenario-ref",
+        QUIET_CORE_QA_PROFILE: "smoke-ci",
       } as NodeJS.ProcessEnv,
     });
 
@@ -1011,7 +1011,7 @@ describe("qa test file scenario runner", () => {
         );
         return { exitCode: 0, stdout: "script pass\n", stderr: "" };
       },
-      env: { OPENCLAW_QA_REF: "scenario-ref" } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_QA_REF: "scenario-ref" } as NodeJS.ProcessEnv,
     });
 
     const evidence = validateQaEvidenceSummaryJson(
@@ -1036,7 +1036,7 @@ describe("qa test file scenario runner", () => {
       primaryModel: "mock-openai/gpt-5.5",
       scenarios: [scenario],
       env: {
-        OPENCLAW_QA_REF: "scenario-ref",
+        QUIET_CORE_QA_REF: "scenario-ref",
       } as NodeJS.ProcessEnv,
     });
 

@@ -9,7 +9,7 @@ import {
 } from "../../packages/gateway-protocol/src/connect-error-details.js";
 import { sanitizeTerminalText } from "../../packages/terminal-core/src/safe-text.js";
 import { withProgress } from "../cli/progress.js";
-import { OPENCLAW_WRAPPER_ENV_KEY } from "../daemon/program-args.js";
+import { QUIET_CORE_WRAPPER_ENV_KEY } from "../daemon/program-args.js";
 import { readRestartSentinel } from "../infra/restart-sentinel.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { createLazyImportLoader } from "../shared/lazy-promise.js";
@@ -108,7 +108,7 @@ function resolveServiceWrapperContextHint(params: {
   if (normalizeStatusWrapperPath(params.cliWrapperPath) === serviceWrapperPath) {
     return null;
   }
-  return `The installed gateway service uses ${OPENCLAW_WRAPPER_ENV_KEY} (${sanitizeTerminalText(serviceWrapperPath)}), but this CLI process is not running with that same wrapper. Missing-secret diagnostics may describe the current CLI process rather than the installed gateway service context.`;
+  return `The installed gateway service uses ${QUIET_CORE_WRAPPER_ENV_KEY} (${sanitizeTerminalText(serviceWrapperPath)}), but this CLI process is not running with that same wrapper. Missing-secret diagnostics may describe the current CLI process rather than the installed gateway service context.`;
 }
 
 /** Runs `quiet-core-bot status`, including JSON/all routing and optional deep probes. */
@@ -269,7 +269,7 @@ export async function statusCommand(
     }
     const wrapperContextHint = resolveServiceWrapperContextHint({
       serviceWrapperPath: daemon.wrapperPath,
-      cliWrapperPath: process.env[OPENCLAW_WRAPPER_ENV_KEY],
+      cliWrapperPath: process.env[QUIET_CORE_WRAPPER_ENV_KEY],
     });
     if (wrapperContextHint) {
       runtime.log(theme.warn(wrapperContextHint));

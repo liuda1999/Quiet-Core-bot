@@ -15,7 +15,7 @@ import {
 const EMPTY_TOOL_PLUGIN_CONFIG_SCHEMA = Type.Object({}, { additionalProperties: false });
 
 /** Non-enumerable metadata symbol attached to entries created by `defineToolPlugin`. */
-export const toolPluginMetadataSymbol = Symbol.for("openclaw.plugin-sdk.tool-plugin.metadata");
+export const toolPluginMetadataSymbol = Symbol.for("quiet-core-bot.plugin-sdk.tool-plugin.metadata");
 
 /** Runtime context supplied to a concrete tool plugin execution handler. */
 export type ToolPluginExecutionContext = {

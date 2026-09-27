@@ -15,7 +15,7 @@ import {
 import { resolveContextConfigProviderForRuntime } from "../../agents/openai-routing.js";
 import { replaceSessionEntry } from "../../config/sessions/session-accessor.js";
 import type { SessionEntry } from "../../config/sessions/types.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { triggerSessionPatchHook } from "../../gateway/session-patch-hooks.js";
 import { enqueueSystemEvent } from "../../infra/system-events.js";
 import { applyTraceOverride, applyVerboseOverride } from "../../sessions/level-overrides.js";
@@ -57,8 +57,8 @@ function resolveModelRuntimeOverride(params: {
   if (MODEL_RUNTIME_CLEAR_VALUES.has(runtime)) {
     return { kind: "clear" };
   }
-  if (runtime === "openclaw") {
-    return { kind: "set", runtime: "openclaw" };
+  if (runtime === "quiet-core-bot") {
+    return { kind: "set", runtime: "quiet-core-bot" };
   }
   if (normalizeProviderId(params.provider) === "openai" && runtime === "codex") {
     return { kind: "set", runtime: "codex" };

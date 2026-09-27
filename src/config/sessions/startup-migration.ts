@@ -1,5 +1,5 @@
 import { migrateOrphanedSessionKeys } from "../../infra/state-migrations.js";
-import type { OpenClawConfig } from "../types.openclaw.js";
+import type { OpenClawConfig } from "../types.quiet-core-bot.js";
 
 export type SessionStartupMigrationLogger = {
   info: (message: string) => void;

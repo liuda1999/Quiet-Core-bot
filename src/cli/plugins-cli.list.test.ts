@@ -100,7 +100,7 @@ describe("plugins cli list", () => {
     };
     loadConfig.mockReturnValue({});
     readConfigFileSnapshot.mockResolvedValueOnce({
-      path: "/tmp/openclaw-config.json5",
+      path: "/tmp/quiet-core-bot-config.json5",
       exists: true,
       raw: "{}",
       parsed: sourceConfig,
@@ -153,7 +153,7 @@ describe("plugins cli list", () => {
     };
     loadConfig.mockReturnValue(sourceConfig);
     readConfigFileSnapshot.mockResolvedValueOnce({
-      path: "/tmp/openclaw-config.json5",
+      path: "/tmp/quiet-core-bot-config.json5",
       exists: true,
       raw: "{}",
       parsed: sourceConfig,
@@ -178,7 +178,7 @@ describe("plugins cli list", () => {
     expect(output).toContain("Plugin configuration:");
     expect(output).toContain('Configured runtime "codex" requires the Codex plugin');
     expect(output).toContain("quiet-core-bot doctor --fix");
-    expect(output).toContain("quiet-core-bot plugins install @openclaw/codex");
+    expect(output).toContain("quiet-core-bot plugins install @quiet-core/codex");
     expect(output).toContain(
       "No plugin install-tree issues detected; configuration warnings remain.",
     );
@@ -203,7 +203,7 @@ describe("plugins cli list", () => {
     expect(output).toContain("Plugin configuration:");
     expect(output).toContain('Configured runtime "acpx" requires the ACPX Runtime plugin');
     expect(output).toContain("quiet-core-bot doctor --fix");
-    expect(output).toContain("quiet-core-bot plugins install @openclaw/acpx");
+    expect(output).toContain("quiet-core-bot plugins install @quiet-core/acpx");
     expect(output).not.toContain("No plugin issues detected.");
   });
 
@@ -230,8 +230,8 @@ describe("plugins cli list", () => {
     expect(output).toContain('Configured runtime "acpx" requires the ACPX Runtime plugin');
     expect(output).toContain("Set plugins.entries.acpx.enabled=true");
     expect(output).toContain("disable ACP/acpx in acp config");
-    expect(output).not.toContain('runtime policy to "openclaw"');
-    expect(output).not.toContain("quiet-core-bot plugins install @openclaw/acpx");
+    expect(output).not.toContain('runtime policy to "quiet-core-bot"');
+    expect(output).not.toContain("quiet-core-bot plugins install @quiet-core/acpx");
     expect(output).not.toContain("No plugin issues detected.");
   });
 
@@ -253,8 +253,8 @@ describe("plugins cli list", () => {
     expect(output).toContain('Configured runtime "acpx" requires the ACPX Runtime plugin');
     expect(output).toContain('Enable the "acpx" plugin');
     expect(output).toContain("disable ACP/acpx in acp config");
-    expect(output).not.toContain('runtime policy to "openclaw"');
-    expect(output).not.toContain("quiet-core-bot plugins install @openclaw/acpx");
+    expect(output).not.toContain('runtime policy to "quiet-core-bot"');
+    expect(output).not.toContain("quiet-core-bot plugins install @quiet-core/acpx");
     expect(output).not.toContain("No plugin issues detected.");
   });
 
@@ -326,7 +326,7 @@ describe("plugins cli list", () => {
     expect(output).toContain('Configured runtime "codex" requires the Codex plugin');
     expect(output).toContain('but "codex" is disabled');
     expect(output).toContain('Enable the "codex" plugin');
-    expect(output).not.toContain("quiet-core-bot plugins install @openclaw/codex");
+    expect(output).not.toContain("quiet-core-bot plugins install @quiet-core/codex");
     expect(output).not.toContain("No plugin issues detected.");
   });
 
@@ -358,7 +358,7 @@ describe("plugins cli list", () => {
     expect(output).toContain('but "codex" is blocked by plugin configuration');
     expect(output).toContain('Remove "codex" from plugins.deny');
     expect(output).not.toContain('Run "quiet-core-bot doctor --fix" to install');
-    expect(output).not.toContain("quiet-core-bot plugins install @openclaw/codex");
+    expect(output).not.toContain("quiet-core-bot plugins install @quiet-core/codex");
     expect(output).not.toContain("No plugin issues detected.");
   });
 
@@ -392,7 +392,7 @@ describe("plugins cli list", () => {
     expect(output).toContain('but "codex" is blocked by plugin configuration');
     expect(output).toContain("Set plugins.entries.codex.enabled=true");
     expect(output).not.toContain('Run "quiet-core-bot doctor --fix" to install');
-    expect(output).not.toContain("quiet-core-bot plugins install @openclaw/codex");
+    expect(output).not.toContain("quiet-core-bot plugins install @quiet-core/codex");
     expect(output).not.toContain("No plugin issues detected.");
   });
 
@@ -402,7 +402,7 @@ describe("plugins cli list", () => {
         createPluginRecord({
           id: "discord",
           origin: "config",
-          source: "/tmp/openclaw-upstream/extensions/discord/index.ts",
+          source: "/tmp/quiet-core-bot-upstream/extensions/discord/index.ts",
           status: "error",
           error: "Cannot find module 'chalk'",
         }),
@@ -411,9 +411,9 @@ describe("plugins cli list", () => {
         {
           level: "warn",
           pluginId: "discord",
-          source: "/tmp/openclaw/npm/node_modules/@openclaw/discord/index.ts",
+          source: "/tmp/quiet-core-bot/npm/node_modules/@quiet-core/discord/index.ts",
           message:
-            "duplicate plugin id resolved by explicit config-selected plugin; global plugin will be overridden by config plugin (/tmp/openclaw-upstream/extensions/discord/index.ts)",
+            "duplicate plugin id resolved by explicit config-selected plugin; global plugin will be overridden by config plugin (/tmp/quiet-core-bot-upstream/extensions/discord/index.ts)",
         },
       ],
     });
@@ -425,8 +425,8 @@ describe("plugins cli list", () => {
     expect(output).toContain(
       "discord: duplicate plugin id resolved by explicit config-selected plugin",
     );
-    expect(output).toContain("active: /tmp/openclaw-upstream/extensions/discord/index.ts");
-    expect(output).toContain("shadowed: /tmp/openclaw/npm/node_modules/@openclaw/discord/index.ts");
+    expect(output).toContain("active: /tmp/quiet-core-bot-upstream/extensions/discord/index.ts");
+    expect(output).toContain("shadowed: /tmp/quiet-core-bot/npm/node_modules/@quiet-core/discord/index.ts");
     expect(output).toContain("quiet-core-bot plugins registry --refresh");
   });
 
@@ -436,7 +436,7 @@ describe("plugins cli list", () => {
         createPluginRecord({
           id: "discord",
           origin: "config",
-          source: "/tmp/openclaw-upstream/extensions/discord/index.ts",
+          source: "/tmp/quiet-core-bot-upstream/extensions/discord/index.ts",
           status: "loaded",
         }),
       ],
@@ -444,9 +444,9 @@ describe("plugins cli list", () => {
         {
           level: "warn",
           pluginId: "discord",
-          source: "/tmp/openclaw/npm/node_modules/@openclaw/discord/index.ts",
+          source: "/tmp/quiet-core-bot/npm/node_modules/@quiet-core/discord/index.ts",
           message:
-            "duplicate plugin id resolved by explicit config-selected plugin; global plugin will be overridden by config plugin (/tmp/openclaw-upstream/extensions/discord/index.ts)",
+            "duplicate plugin id resolved by explicit config-selected plugin; global plugin will be overridden by config plugin (/tmp/quiet-core-bot-upstream/extensions/discord/index.ts)",
         },
       ],
     });
@@ -501,18 +501,18 @@ describe("plugins cli list", () => {
 
   it("keeps inspect on the static snapshot by default", async () => {
     setInstalledPluginIndexInstallRecords({
-      "openclaw-mem0": {
+      "quiet-core-bot-mem0": {
         source: "clawhub",
-        spec: "clawhub:openclaw-mem0",
-        installPath: "/plugins/openclaw-mem0",
+        spec: "clawhub:quiet-core-bot-mem0",
+        installPath: "/plugins/quiet-core-bot-mem0",
         version: "2026.5.1",
-        clawhubPackage: "openclaw-mem0",
+        clawhubPackage: "quiet-core-bot-mem0",
         clawhubChannel: "official",
         artifactKind: "npm-pack",
         artifactFormat: "tgz",
         npmIntegrity: "sha512-clawpack",
         npmShasum: "1".repeat(40),
-        npmTarballName: "openclaw-mem0-2026.5.1.tgz",
+        npmTarballName: "quiet-core-bot-mem0-2026.5.1.tgz",
         clawpackSha256: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         clawpackSpecVersion: 1,
         clawpackManifestSha256: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
@@ -520,12 +520,12 @@ describe("plugins cli list", () => {
       },
     });
     buildPluginSnapshotReport.mockReturnValue({
-      plugins: [createPluginRecord({ id: "openclaw-mem0", name: "Mem0" })],
+      plugins: [createPluginRecord({ id: "quiet-core-bot-mem0", name: "Mem0" })],
       diagnostics: [],
     });
     buildPluginInspectReport.mockReturnValue({
       workspaceDir: "/workspace",
-      plugin: createPluginRecord({ id: "openclaw-mem0", name: "Mem0" }),
+      plugin: createPluginRecord({ id: "quiet-core-bot-mem0", name: "Mem0" }),
       shape: "hook-only",
       capabilityMode: "plain",
       capabilityCount: 1,
@@ -551,12 +551,12 @@ describe("plugins cli list", () => {
       compatibility: [],
     });
 
-    await runPluginsCommand(["plugins", "inspect", "openclaw-mem0"]);
+    await runPluginsCommand(["plugins", "inspect", "quiet-core-bot-mem0"]);
 
     expect(buildPluginDiagnosticsReport).not.toHaveBeenCalled();
     expect(runtimeLogs.join("\n")).toContain("Policy");
     expect(runtimeLogs.join("\n")).toContain("allowConversationAccess: true");
-    expect(runtimeLogs.join("\n")).toContain("ClawHub package: openclaw-mem0");
+    expect(runtimeLogs.join("\n")).toContain("ClawHub package: quiet-core-bot-mem0");
     expect(runtimeLogs.join("\n")).toContain("Artifact kind: npm-pack");
     expect(runtimeLogs.join("\n")).toContain("Npm integrity: sha512-clawpack");
     expect(runtimeLogs.join("\n")).toContain(
@@ -568,12 +568,12 @@ describe("plugins cli list", () => {
 
   it("runtime-inspects without repairing deps", async () => {
     buildPluginSnapshotReport.mockReturnValue({
-      plugins: [createPluginRecord({ id: "openclaw-mem0", name: "Mem0" })],
+      plugins: [createPluginRecord({ id: "quiet-core-bot-mem0", name: "Mem0" })],
       diagnostics: [],
     });
     buildPluginInspectReport.mockReturnValue({
       workspaceDir: "/workspace",
-      plugin: createPluginRecord({ id: "openclaw-mem0", name: "Mem0" }),
+      plugin: createPluginRecord({ id: "quiet-core-bot-mem0", name: "Mem0" }),
       shape: "hook-only",
       capabilityMode: "plain",
       capabilityCount: 1,
@@ -598,11 +598,11 @@ describe("plugins cli list", () => {
       compatibility: [],
     });
 
-    await runPluginsCommand(["plugins", "inspect", "openclaw-mem0", "--runtime"]);
+    await runPluginsCommand(["plugins", "inspect", "quiet-core-bot-mem0", "--runtime"]);
 
     expect(buildPluginDiagnosticsReport).toHaveBeenCalledWith({
       config: {},
-      onlyPluginIds: ["openclaw-mem0"],
+      onlyPluginIds: ["quiet-core-bot-mem0"],
     });
   });
 

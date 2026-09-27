@@ -11,7 +11,7 @@ Adds text-to-speech provider support.
 
 ## Distribution
 
-- Package: `@openclaw/tts-local-cli`
+- Package: `@quiet-core/tts-local-cli`
 - Install route: included in Quiet Core bot
 
 ## Surface

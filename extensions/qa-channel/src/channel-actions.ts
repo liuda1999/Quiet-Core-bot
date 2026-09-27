@@ -1,6 +1,6 @@
 // Qa Channel plugin module implements channel actions behavior.
-import { jsonResult, readStringParam } from "openclaw/plugin-sdk/channel-actions";
-import { extractToolSend } from "openclaw/plugin-sdk/tool-send";
+import { jsonResult, readStringParam } from "quiet-core-bot/plugin-sdk/channel-actions";
+import { extractToolSend } from "quiet-core-bot/plugin-sdk/tool-send";
 import { Type } from "typebox";
 import { resolveQaChannelAccount } from "./accounts.js";
 import {

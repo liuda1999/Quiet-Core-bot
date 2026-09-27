@@ -40,8 +40,8 @@ describe("security audit loopback and logging findings", () => {
       })(),
       withEnvAsync(
         {
-          OPENCLAW_GATEWAY_TOKEN: undefined,
-          OPENCLAW_GATEWAY_PASSWORD: undefined,
+          QUIET_CORE_GATEWAY_TOKEN: undefined,
+          QUIET_CORE_GATEWAY_PASSWORD: undefined,
         },
         async () => {
           const cfg: OpenClawConfig = {

@@ -241,7 +241,7 @@ export function createProfileAvailability({
       return (
         `Chrome MCP existing-session attach for profile "${profile.name}" could not connect to Chrome. ` +
         "Enable remote debugging in the browser inspect page, keep the browser open, approve the attach prompt, and retry. " +
-        'If you do not need your signed-in browser session, use the managed "openclaw" profile instead.' +
+        'If you do not need your signed-in browser session, use the managed "quiet-core-bot" profile instead.' +
         detail
       );
     }

@@ -9,7 +9,7 @@ import path from "node:path";
 import { beforeEach, describe, expect, it } from "vitest";
 import "./test-helpers/fast-bash-tools.js";
 import "./test-helpers/fast-coding-tools.js";
-import "./test-helpers/fast-openclaw-tools.js";
+import "./test-helpers/fast-quiet-core-bot-tools.js";
 import type { OpenClawConfig } from "../config/config.js";
 import { resolveChannelGroupToolsPolicy } from "../config/group-policy.js";
 import { setActivePluginRegistry } from "../plugins/runtime.js";
@@ -61,7 +61,7 @@ describe("Agent-specific tool filtering", () => {
       patch: string;
     }) => Promise<void>,
   ) {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-agent-tools-"));
+    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-agent-tools-"));
     const escapedPath = path.join(
       path.dirname(workspaceDir),
       `escaped-${process.pid}-${Date.now()}-${Math.random().toString(16).slice(2)}.txt`,
@@ -127,7 +127,7 @@ describe("Agent-specific tool filtering", () => {
         list: [
           {
             id: "main",
-            workspace: "~/openclaw",
+            workspace: "~/quiet-core-bot",
             ...(params.agentTools ? { tools: params.agentTools } : {}),
           },
         ],
@@ -283,7 +283,7 @@ describe("Agent-specific tool filtering", () => {
         list: [
           {
             id: "restricted",
-            workspace: "~/openclaw-restricted",
+            workspace: "~/quiet-core-bot-restricted",
             tools: {
               allow: ["read"], // Agent override: only read
               deny: ["exec", "write", "edit"],
@@ -361,12 +361,12 @@ describe("Agent-specific tool filtering", () => {
         list: [
           {
             id: "main",
-            workspace: "~/openclaw",
+            workspace: "~/quiet-core-bot",
             // No tools restriction - all tools available
           },
           {
             id: "family",
-            workspace: "~/openclaw-family",
+            workspace: "~/quiet-core-bot-family",
             tools: {
               allow: ["read"],
               deny: ["exec", "write", "edit", "process"],
@@ -490,7 +490,7 @@ describe("Agent-specific tool filtering", () => {
         list: [
           {
             id: "trusted",
-            workspace: "~/openclaw-trusted",
+            workspace: "~/quiet-core-bot-trusted",
             tools: {
               toolsBySender: {
                 "id:alice": {},
@@ -671,7 +671,7 @@ describe("Agent-specific tool filtering", () => {
         list: [
           {
             id: "work",
-            workspace: "~/openclaw-work",
+            workspace: "~/quiet-core-bot-work",
             tools: {
               deny: ["exec", "process"], // Agent deny (override)
             },

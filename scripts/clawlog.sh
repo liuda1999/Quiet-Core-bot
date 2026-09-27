@@ -6,7 +6,7 @@
 set -euo pipefail
 
 # Configuration
-SUBSYSTEM="ai.openclaw"
+SUBSYSTEM="ai.quiet-core-bot"
 DEFAULT_LEVEL="info"
 
 # Colors for output
@@ -59,7 +59,7 @@ DESCRIPTION:
     Requires sudo access configured for /usr/bin/log command.
 
 LOG FLOW ARCHITECTURE:
-    OpenClaw logs flow through the macOS unified log (subsystem: ai.openclaw).
+    OpenClaw logs flow through the macOS unified log (subsystem: ai.quiet-core-bot).
 
 LOG CATEGORIES (examples):
     • voicewake           - Voice wake detection/test harness

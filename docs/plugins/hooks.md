@@ -20,7 +20,7 @@ operator-installed `HOOK.md` script for command and Gateway events such as
 Register typed plugin hooks with `api.on(...)` from your plugin entry:
 
 ```typescript
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
+import { definePluginEntry } from "quiet-core-bot/plugin-sdk/plugin-entry";
 
 export default definePluginEntry({
   id: "tool-preflight",
@@ -340,10 +340,10 @@ When sender identity is available, agent hook contexts also include:
 Core only defines the nested `id` fields. Channel plugins that pass richer
 sender or chat metadata through the inbound helper can augment
 `PluginHookChannelSenderContext` or `PluginHookChannelChatContext` from
-`openclaw/plugin-sdk/channel-inbound`:
+`quiet-core-bot/plugin-sdk/channel-inbound`:
 
 ```ts
-declare module "openclaw/plugin-sdk/channel-inbound" {
+declare module "quiet-core-bot/plugin-sdk/channel-inbound" {
   interface PluginHookChannelSenderContext {
     unionId?: string;
     userId?: string;

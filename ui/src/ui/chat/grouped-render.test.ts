@@ -62,8 +62,8 @@ vi.mock("../views/agents-utils.ts", () => {
     /^data:image\//i.test(value) || (value.startsWith("/") && !value.startsWith("//"));
 
   return {
-    assistantAvatarFallbackUrl: () => "/openclaw-molty.png",
-    agentLogoUrl: () => "/openclaw-logo.svg",
+    assistantAvatarFallbackUrl: () => "/quiet-core-bot-molty.png",
+    agentLogoUrl: () => "/quiet-core-bot-logo.svg",
     isRenderableControlUiAvatarUrl,
     resolveAssistantTextAvatar: (value: string | null | undefined) => {
       const trimmed = value?.trim();
@@ -333,7 +333,7 @@ function renderMessageGroups(
 }
 
 function clearDeleteConfirmSkip() {
-  localStorageValues.delete("openclaw:skipDeleteConfirm");
+  localStorageValues.delete("quiet-core-bot:skipDeleteConfirm");
 }
 
 function stubAnimationFrameQueue() {
@@ -1466,10 +1466,10 @@ describe("grouped chat rendering", () => {
     resetAssistantAttachmentAvailabilityCacheForTest();
     const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
       const mediaUrl = new URL(url, "http://control.test");
-      expect(mediaUrl.pathname).toBe("/openclaw/__openclaw__/assistant-media");
+      expect(mediaUrl.pathname).toBe("/quiet-core-bot/__openclaw__/assistant-media");
       expect([...mediaUrl.searchParams.keys()].toSorted()).toEqual(["meta", "source"]);
       expect(mediaUrl.searchParams.get("meta")).toBe("1");
-      expect(mediaUrl.searchParams.get("source")).toMatch(/^\/tmp\/openclaw\/.+\.(png|jpg)$/u);
+      expect(mediaUrl.searchParams.get("source")).toMatch(/^\/tmp\/quiet-core-bot\/.+\.(png|jpg)$/u);
       const headers = init?.headers as Headers;
       expect(headers.get("Authorization")).toBe("Bearer session-token");
       return {
@@ -1484,9 +1484,9 @@ describe("grouped chat rendering", () => {
       const renderMessage = () =>
         renderGroupedMessage(container, message, "user", {
           showToolCalls: false,
-          basePath: "/openclaw",
+          basePath: "/quiet-core-bot",
           assistantAttachmentAuthToken: "session-token",
-          localMediaPreviewRoots: ["/tmp/openclaw"],
+          localMediaPreviewRoots: ["/tmp/quiet-core-bot"],
           onRequestUpdate: renderMessage,
         });
       renderMessage();
@@ -1497,21 +1497,21 @@ describe("grouped chat rendering", () => {
       id: "user-history-image",
       role: "user",
       content: "",
-      MediaPath: "/tmp/openclaw/user-upload.png",
+      MediaPath: "/tmp/quiet-core-bot/user-upload.png",
       timestamp: Date.now(),
     });
     await flushAssistantAttachmentAvailabilityChecks();
     expect(
       container.querySelector<HTMLImageElement>(".chat-message-image")?.getAttribute("src"),
     ).toBe(
-      "/openclaw/__openclaw__/assistant-media?source=%2Ftmp%2Fopenclaw%2Fuser-upload.png&mediaTicket=ticket-user",
+      "/quiet-core-bot/__openclaw__/assistant-media?source=%2Ftmp%2Fquiet-core-bot%2Fuser-upload.png&mediaTicket=ticket-user",
     );
 
     container = renderUserMedia({
       id: "user-history-image-octet-stream",
       role: "user",
       content: "",
-      MediaPath: "/tmp/openclaw/user-upload.png",
+      MediaPath: "/tmp/quiet-core-bot/user-upload.png",
       MediaType: "application/octet-stream",
       timestamp: Date.now(),
     });
@@ -1519,14 +1519,14 @@ describe("grouped chat rendering", () => {
     expect(
       container.querySelector<HTMLImageElement>(".chat-message-image")?.getAttribute("src"),
     ).toBe(
-      "/openclaw/__openclaw__/assistant-media?source=%2Ftmp%2Fopenclaw%2Fuser-upload.png&mediaTicket=ticket-user",
+      "/quiet-core-bot/__openclaw__/assistant-media?source=%2Ftmp%2Fquiet-core-bot%2Fuser-upload.png&mediaTicket=ticket-user",
     );
 
     container = renderUserMedia({
       id: "user-history-images",
       role: "user",
       content: "",
-      MediaPaths: ["/tmp/openclaw/first.png", "/tmp/openclaw/second.jpg"],
+      MediaPaths: ["/tmp/quiet-core-bot/first.png", "/tmp/quiet-core-bot/second.jpg"],
       MediaTypes: ["image/png", "application/octet-stream"],
       timestamp: Date.now(),
     });
@@ -1536,8 +1536,8 @@ describe("grouped chat rendering", () => {
         image.getAttribute("src"),
       ),
     ).toEqual([
-      "/openclaw/__openclaw__/assistant-media?source=%2Ftmp%2Fopenclaw%2Ffirst.png&mediaTicket=ticket-user",
-      "/openclaw/__openclaw__/assistant-media?source=%2Ftmp%2Fopenclaw%2Fsecond.jpg&mediaTicket=ticket-user",
+      "/quiet-core-bot/__openclaw__/assistant-media?source=%2Ftmp%2Fquiet-core-bot%2Ffirst.png&mediaTicket=ticket-user",
+      "/quiet-core-bot/__openclaw__/assistant-media?source=%2Ftmp%2Fquiet-core-bot%2Fsecond.jpg&mediaTicket=ticket-user",
     ]);
 
     const assistantContainer = document.createElement("div");
@@ -1599,7 +1599,7 @@ describe("grouped chat rendering", () => {
     const fetchMock = vi.fn(async (_url: string, init?: RequestInit) => {
       const headers = init?.headers as Headers;
       expect(headers.get("Authorization")).toBe("Bearer session-token");
-      expect(headers.get("x-openclaw-requester-session-key")).toBe("agent:main:main");
+      expect(headers.get("x-quiet-core-bot-requester-session-key")).toBe("agent:main:main");
       return {
         ok: true,
         blob: async () => new Blob(["png"], { type: "image/png" }),
@@ -1767,14 +1767,14 @@ describe("grouped chat rendering", () => {
           id: "assistant-local-media-inline",
           role: "assistant",
           content:
-            "Local image\nMEDIA:/tmp/openclaw/test image.png\nMEDIA:/tmp/openclaw/test-doc.pdf",
+            "Local image\nMEDIA:/tmp/quiet-core-bot/test image.png\nMEDIA:/tmp/quiet-core-bot/test-doc.pdf",
           timestamp: Date.now(),
         },
         {
           showToolCalls: false,
-          basePath: "/openclaw",
+          basePath: "/quiet-core-bot",
           assistantAttachmentAuthToken: "session-token",
-          localMediaPreviewRoots: ["/tmp/openclaw"],
+          localMediaPreviewRoots: ["/tmp/quiet-core-bot"],
           onRequestUpdate: renderMessage,
         },
       );
@@ -1789,7 +1789,7 @@ describe("grouped chat rendering", () => {
 
     const [, fetchInit] = requireFetchCallForUrl(
       fetchMock,
-      "/openclaw/__openclaw__/assistant-media?source=%2Ftmp%2Fopenclaw%2Ftest+image.png&meta=1",
+      "/quiet-core-bot/__openclaw__/assistant-media?source=%2Ftmp%2Fquiet-core-bot%2Ftest+image.png&meta=1",
     );
     expectSameOriginGet(fetchInit);
 
@@ -1798,10 +1798,10 @@ describe("grouped chat rendering", () => {
       ".chat-assistant-attachment-card__link",
     );
     expect(image?.getAttribute("src")).toBe(
-      "/openclaw/__openclaw__/assistant-media?source=%2Ftmp%2Fopenclaw%2Ftest+image.png&mediaTicket=ticket-local",
+      "/quiet-core-bot/__openclaw__/assistant-media?source=%2Ftmp%2Fquiet-core-bot%2Ftest+image.png&mediaTicket=ticket-local",
     );
     expect(docLink?.getAttribute("href")).toBe(
-      "/openclaw/__openclaw__/assistant-media?source=%2Ftmp%2Fopenclaw%2Ftest-doc.pdf&mediaTicket=ticket-local",
+      "/quiet-core-bot/__openclaw__/assistant-media?source=%2Ftmp%2Fquiet-core-bot%2Ftest-doc.pdf&mediaTicket=ticket-local",
     );
     expect(image?.getAttribute("alt")).toBe("test image.png");
     expect(container.querySelector(".chat-assistant-attachment-card__title")).toBeNull();
@@ -1832,14 +1832,14 @@ describe("grouped chat rendering", () => {
         {
           id: "assistant-local-media-ticket-refresh",
           role: "assistant",
-          content: "Local image\nMEDIA:/tmp/openclaw/test image.png",
+          content: "Local image\nMEDIA:/tmp/quiet-core-bot/test image.png",
           timestamp: Date.now(),
         },
         {
           showToolCalls: false,
-          basePath: "/openclaw",
+          basePath: "/quiet-core-bot",
           assistantAttachmentAuthToken: "session-token",
-          localMediaPreviewRoots: ["/tmp/openclaw"],
+          localMediaPreviewRoots: ["/tmp/quiet-core-bot"],
           onRequestUpdate: renderMessage,
         },
       );
@@ -1850,7 +1850,7 @@ describe("grouped chat rendering", () => {
     expect(
       container.querySelector<HTMLImageElement>(".chat-message-image")?.getAttribute("src"),
     ).toBe(
-      "/openclaw/__openclaw__/assistant-media?source=%2Ftmp%2Fopenclaw%2Ftest+image.png&mediaTicket=ticket-old",
+      "/quiet-core-bot/__openclaw__/assistant-media?source=%2Ftmp%2Fquiet-core-bot%2Ftest+image.png&mediaTicket=ticket-old",
     );
 
     vi.advanceTimersByTime(1_001);
@@ -1860,7 +1860,7 @@ describe("grouped chat rendering", () => {
     expect(
       container.querySelector<HTMLImageElement>(".chat-message-image")?.getAttribute("src"),
     ).toBe(
-      "/openclaw/__openclaw__/assistant-media?source=%2Ftmp%2Fopenclaw%2Ftest+image.png&mediaTicket=ticket-new",
+      "/quiet-core-bot/__openclaw__/assistant-media?source=%2Ftmp%2Fquiet-core-bot%2Ftest+image.png&mediaTicket=ticket-new",
     );
     vi.useRealTimers();
     vi.unstubAllGlobals();
@@ -1888,14 +1888,14 @@ describe("grouped chat rendering", () => {
         {
           id: "assistant-local-media-auth-refresh",
           role: "assistant",
-          content: "Local image\nMEDIA:/tmp/openclaw/test image.png",
+          content: "Local image\nMEDIA:/tmp/quiet-core-bot/test image.png",
           timestamp: Date.now(),
         },
         {
           showToolCalls: false,
-          basePath: "/openclaw",
+          basePath: "/quiet-core-bot",
           assistantAttachmentAuthToken: token,
-          localMediaPreviewRoots: ["/tmp/openclaw"],
+          localMediaPreviewRoots: ["/tmp/quiet-core-bot"],
           onRequestUpdate: () => renderWithToken(token),
         },
       );
@@ -1915,17 +1915,17 @@ describe("grouped chat rendering", () => {
     expect(fetchMock).toHaveBeenCalledTimes(2);
     const [firstFetchUrl, firstFetchInit] = requireFetchCall(fetchMock, 0);
     expect(firstFetchUrl).toBe(
-      "/openclaw/__openclaw__/assistant-media?source=%2Ftmp%2Fopenclaw%2Ftest+image.png&meta=1",
+      "/quiet-core-bot/__openclaw__/assistant-media?source=%2Ftmp%2Fquiet-core-bot%2Ftest+image.png&meta=1",
     );
     expectSameOriginGet(firstFetchInit);
     const [secondFetchUrl, secondFetchInit] = requireFetchCall(fetchMock, 1);
     expect(secondFetchUrl).toBe(
-      "/openclaw/__openclaw__/assistant-media?source=%2Ftmp%2Fopenclaw%2Ftest+image.png&meta=1",
+      "/quiet-core-bot/__openclaw__/assistant-media?source=%2Ftmp%2Fquiet-core-bot%2Ftest+image.png&meta=1",
     );
     expectSameOriginGet(secondFetchInit);
     const image = expectElement(container, ".chat-message-image", HTMLImageElement);
     expect(image.getAttribute("src")).toBe(
-      "/openclaw/__openclaw__/assistant-media?source=%2Ftmp%2Fopenclaw%2Ftest+image.png&mediaTicket=ticket-fresh",
+      "/quiet-core-bot/__openclaw__/assistant-media?source=%2Ftmp%2Fquiet-core-bot%2Ftest+image.png&mediaTicket=ticket-fresh",
     );
     expect(container.querySelector(".chat-assistant-attachment-badge")).toBeNull();
     vi.unstubAllGlobals();
@@ -1945,8 +1945,8 @@ describe("grouped chat rendering", () => {
       },
       {
         showToolCalls: false,
-        basePath: "/openclaw",
-        localMediaPreviewRoots: ["/tmp/openclaw"],
+        basePath: "/quiet-core-bot",
+        localMediaPreviewRoots: ["/tmp/quiet-core-bot"],
       },
     );
 
@@ -1973,8 +1973,8 @@ describe("grouped chat rendering", () => {
       },
       {
         showToolCalls: false,
-        basePath: "/openclaw",
-        localMediaPreviewRoots: ["/tmp/openclaw"],
+        basePath: "/quiet-core-bot",
+        localMediaPreviewRoots: ["/tmp/quiet-core-bot"],
       },
     );
 
@@ -2009,7 +2009,7 @@ describe("grouped chat rendering", () => {
     const renderCase = (params: { expectedUrl: string; message: unknown; roots: string[] }) => {
       renderAssistantMessage(container, params.message, {
         showToolCalls: false,
-        basePath: "/openclaw",
+        basePath: "/quiet-core-bot",
         localMediaPreviewRoots: params.roots,
         onRequestUpdate: () => undefined,
       });
@@ -2018,15 +2018,15 @@ describe("grouped chat rendering", () => {
 
     const cases = [
       renderCase({
-        roots: ["C:\\tmp\\openclaw"],
+        roots: ["C:\\tmp\\quiet-core-bot"],
         message: {
           id: "assistant-windows-file-url",
           role: "assistant",
-          content: "Windows image\nMEDIA:file:///C:/tmp/openclaw/test%20image.png",
+          content: "Windows image\nMEDIA:file:///C:/tmp/quiet-core-bot/test%20image.png",
           timestamp: Date.now(),
         },
         expectedUrl:
-          "/openclaw/__openclaw__/assistant-media?source=%2FC%3A%2Ftmp%2Fopenclaw%2Ftest%2520image.png&meta=1",
+          "/quiet-core-bot/__openclaw__/assistant-media?source=%2FC%3A%2Ftmp%2Fquiet-core-bot%2Ftest%2520image.png&meta=1",
       }),
       renderCase({
         roots: ["c:\\users\\test\\pictures"],
@@ -2037,7 +2037,7 @@ describe("grouped chat rendering", () => {
           timestamp: Date.now(),
         },
         expectedUrl:
-          "/openclaw/__openclaw__/assistant-media?source=C%3A%5CUsers%5CTest%5CPictures%5Ctest+image.png&meta=1",
+          "/quiet-core-bot/__openclaw__/assistant-media?source=C%3A%5CUsers%5CTest%5CPictures%5Ctest+image.png&meta=1",
       }),
       renderCase({
         roots: ["/Users/test/Pictures"],
@@ -2059,7 +2059,7 @@ describe("grouped chat rendering", () => {
           timestamp: Date.now(),
         }),
         expectedUrl:
-          "/openclaw/__openclaw__/assistant-media?source=%7E%2FPictures%2Ftest+image.png&meta=1",
+          "/quiet-core-bot/__openclaw__/assistant-media?source=%7E%2FPictures%2Ftest+image.png&meta=1",
       }),
     ];
 
@@ -2102,13 +2102,13 @@ describe("grouped chat rendering", () => {
         {
           id: "assistant-local-media-retry-after-unavailable",
           role: "assistant",
-          content: "Local image\nMEDIA:/tmp/openclaw/test image.png",
+          content: "Local image\nMEDIA:/tmp/quiet-core-bot/test image.png",
           timestamp: Date.now(),
         },
         {
           showToolCalls: false,
-          basePath: "/openclaw",
-          localMediaPreviewRoots: ["/tmp/openclaw"],
+          basePath: "/quiet-core-bot",
+          localMediaPreviewRoots: ["/tmp/quiet-core-bot"],
           onRequestUpdate: renderMessage,
         },
       );
@@ -2131,7 +2131,7 @@ describe("grouped chat rendering", () => {
     expect(
       expectElement(container, ".chat-message-image", HTMLImageElement).getAttribute("src"),
     ).toBe(
-      "/openclaw/__openclaw__/assistant-media?source=%2Ftmp%2Fopenclaw%2Ftest+image.png&mediaTicket=ticket-retry",
+      "/quiet-core-bot/__openclaw__/assistant-media?source=%2Ftmp%2Fquiet-core-bot%2Ftest+image.png&mediaTicket=ticket-retry",
     );
     expect(container.querySelector(".chat-assistant-attachment-badge")).toBeNull();
 

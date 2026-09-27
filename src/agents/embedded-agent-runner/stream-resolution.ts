@@ -87,7 +87,7 @@ export function describeEmbeddedAgentStreamStrategy(params: {
       currentStreamFn: params.currentStreamFn,
     })
   ) {
-    return "openclaw-native-codex-responses";
+    return "quiet-core-bot-native-codex-responses";
   }
   if (isDefaultOpenClawStreamFnForModel(params.model, params.currentStreamFn)) {
     return createBoundaryAwareStreamFnForModel(params.model)

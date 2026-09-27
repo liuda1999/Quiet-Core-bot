@@ -12,17 +12,17 @@ describe("runDoctorConfigPreflight", () => {
   it("skips plugin schema validation while doctor is running inside update", () => {
     expect(
       shouldSkipPluginValidationForDoctorConfigPreflight({
-        OPENCLAW_UPDATE_IN_PROGRESS: "1",
+        QUIET_CORE_UPDATE_IN_PROGRESS: "1",
       } as NodeJS.ProcessEnv),
     ).toBe(true);
     expect(
       shouldSkipPluginValidationForDoctorConfigPreflight({
-        OPENCLAW_UPDATE_IN_PROGRESS: "true",
+        QUIET_CORE_UPDATE_IN_PROGRESS: "true",
       } as NodeJS.ProcessEnv),
     ).toBe(true);
     expect(
       shouldSkipPluginValidationForDoctorConfigPreflight({
-        OPENCLAW_UPDATE_IN_PROGRESS: "0",
+        QUIET_CORE_UPDATE_IN_PROGRESS: "0",
       } as NodeJS.ProcessEnv),
     ).toBe(false);
   });

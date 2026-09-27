@@ -10,7 +10,7 @@ describe("session store writer", () => {
   });
 
   it("serializes runtime writes through one in-process writer", async () => {
-    const storePath = "/tmp/openclaw-store.json";
+    const storePath = "/tmp/quiet-core-bot-store.json";
     const firstStarted = createDeferred();
     const releaseFirst = createDeferred();
     const order: string[] = [];

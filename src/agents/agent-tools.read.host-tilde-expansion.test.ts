@@ -103,7 +103,7 @@ describe("host tool tilde expansion (non-workspace mode)", () => {
   });
 
   it("edit readFile expands ~ to the OS home directory", async () => {
-    const dir = await createTempDir("openclaw-tilde-test-edit-");
+    const dir = await createTempDir("quiet-core-bot-tilde-test-edit-");
     const testFile = path.join(dir, "test.txt");
     await fs.writeFile(testFile, "hello", "utf8");
 
@@ -114,7 +114,7 @@ describe("host tool tilde expansion (non-workspace mode)", () => {
   });
 
   it("edit access expands ~ to the OS home directory", async () => {
-    const dir = await createTempDir("openclaw-tilde-test-edit-");
+    const dir = await createTempDir("quiet-core-bot-tilde-test-edit-");
     const testFile = path.join(dir, "test.txt");
     await fs.writeFile(testFile, "hello", "utf8");
 
@@ -124,7 +124,7 @@ describe("host tool tilde expansion (non-workspace mode)", () => {
   });
 
   it("write writeFile expands ~ to the OS home directory", async () => {
-    const dir = await createTempDir("openclaw-tilde-test-write-");
+    const dir = await createTempDir("quiet-core-bot-tilde-test-write-");
     const testFile = path.join(dir, "tilde-write-test.txt");
 
     createHostWorkspaceWriteTool(dir, { workspaceOnly: false });
@@ -134,7 +134,7 @@ describe("host tool tilde expansion (non-workspace mode)", () => {
   });
 
   it("write mkdir expands ~ to the OS home directory", async () => {
-    const dir = await createTempDir("openclaw-tilde-test-mkdir-");
+    const dir = await createTempDir("quiet-core-bot-tilde-test-mkdir-");
     const newDir = path.join(dir, "subdir");
 
     createHostWorkspaceWriteTool(dir, { workspaceOnly: false });
@@ -143,12 +143,12 @@ describe("host tool tilde expansion (non-workspace mode)", () => {
     expect((await fs.stat(newDir)).isDirectory()).toBe(true);
   });
 
-  it("ignores OPENCLAW_HOME for write operations", async () => {
-    const openclawHome = await createTempDir("openclaw-home-override-", os.tmpdir());
-    const dir = await createTempDir("openclaw-tilde-test-write-");
+  it("ignores QUIET_CORE_HOME for write operations", async () => {
+    const openclawHome = await createTempDir("quiet-core-bot-home-override-", os.tmpdir());
+    const dir = await createTempDir("quiet-core-bot-tilde-test-write-");
     const testFile = path.join(dir, "os-home-write.txt");
 
-    await withEnvAsync({ OPENCLAW_HOME: openclawHome }, async () => {
+    await withEnvAsync({ QUIET_CORE_HOME: openclawHome }, async () => {
       createHostWorkspaceWriteTool(openclawHome, { workspaceOnly: false });
       await readWriteOps().writeFile(toTildePath(testFile), "written via os home");
 
@@ -157,12 +157,12 @@ describe("host tool tilde expansion (non-workspace mode)", () => {
     });
   });
 
-  it("ignores OPENCLAW_HOME for mkdir operations", async () => {
-    const openclawHome = await createTempDir("openclaw-home-override-", os.tmpdir());
-    const dir = await createTempDir("openclaw-tilde-test-mkdir-");
+  it("ignores QUIET_CORE_HOME for mkdir operations", async () => {
+    const openclawHome = await createTempDir("quiet-core-bot-home-override-", os.tmpdir());
+    const dir = await createTempDir("quiet-core-bot-tilde-test-mkdir-");
     const newDir = path.join(dir, "os-home-subdir");
 
-    await withEnvAsync({ OPENCLAW_HOME: openclawHome }, async () => {
+    await withEnvAsync({ QUIET_CORE_HOME: openclawHome }, async () => {
       createHostWorkspaceWriteTool(openclawHome, { workspaceOnly: false });
       await readWriteOps().mkdir(toTildePath(newDir));
 
@@ -171,13 +171,13 @@ describe("host tool tilde expansion (non-workspace mode)", () => {
     });
   });
 
-  it("ignores OPENCLAW_HOME for readFile operations", async () => {
-    const openclawHome = await createTempDir("openclaw-home-override-", os.tmpdir());
-    const dir = await createTempDir("openclaw-tilde-test-edit-");
+  it("ignores QUIET_CORE_HOME for readFile operations", async () => {
+    const openclawHome = await createTempDir("quiet-core-bot-home-override-", os.tmpdir());
+    const dir = await createTempDir("quiet-core-bot-tilde-test-edit-");
     const testFile = path.join(dir, "os-home-read.txt");
     await fs.writeFile(testFile, "OS home content", "utf8");
 
-    await withEnvAsync({ OPENCLAW_HOME: openclawHome }, async () => {
+    await withEnvAsync({ QUIET_CORE_HOME: openclawHome }, async () => {
       createHostWorkspaceEditTool(openclawHome, { workspaceOnly: false });
       const content = await readEditOps().readFile(toTildePath(testFile));
 
@@ -186,13 +186,13 @@ describe("host tool tilde expansion (non-workspace mode)", () => {
     });
   });
 
-  it("ignores OPENCLAW_HOME for access operations", async () => {
-    const openclawHome = await createTempDir("openclaw-home-override-", os.tmpdir());
-    const dir = await createTempDir("openclaw-tilde-test-edit-");
+  it("ignores QUIET_CORE_HOME for access operations", async () => {
+    const openclawHome = await createTempDir("quiet-core-bot-home-override-", os.tmpdir());
+    const dir = await createTempDir("quiet-core-bot-tilde-test-edit-");
     const testFile = path.join(dir, "os-home-access.txt");
     await fs.writeFile(testFile, "exists", "utf8");
 
-    await withEnvAsync({ OPENCLAW_HOME: openclawHome }, async () => {
+    await withEnvAsync({ QUIET_CORE_HOME: openclawHome }, async () => {
       createHostWorkspaceEditTool(openclawHome, { workspaceOnly: false });
 
       await expect(readEditOps().access(toTildePath(testFile))).resolves.toBeUndefined();

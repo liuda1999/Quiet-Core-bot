@@ -2,7 +2,7 @@
  * Test script for shell completion installation feature.
  *
  * This script simulates the shell completion prompt that appears during
- * `openclaw update`. Use it to verify the completion installation flow
+ * `quiet-core-bot update`. Use it to verify the completion installation flow
  * without running a full update.
  *
  * Run from repo root:
@@ -41,7 +41,7 @@ import {
   ensureCompletionCacheExists,
 } from "../src/commands/doctor-completion.js";
 
-const CLI_NAME = "openclaw";
+const CLI_NAME = "quiet-core-bot";
 
 interface Options {
   checkOnly: boolean;
@@ -94,7 +94,7 @@ function printHelp(): void {
 ${theme.heading("Shell Completion Test Script")}
 
 This script simulates the shell completion checks that run during
-\`openclaw update\`, \`openclaw doctor\`, and \`openclaw onboard\`.
+\`quiet-core-bot update\`, \`quiet-core-bot doctor\`, and \`quiet-core-bot onboard\`.
 
 ${theme.heading("Usage (run from repo root):")}
   node --import tsx scripts/test-shell-completion.ts [options]
@@ -201,7 +201,7 @@ async function main() {
   });
 
   if (isCancel(shouldInstall) || !shouldInstall) {
-    console.log(theme.muted(`Skipped. Run \`openclaw completion --install\` later to enable.`));
+    console.log(theme.muted(`Skipped. Run \`quiet-core-bot completion --install\` later to enable.`));
     return;
   }
 

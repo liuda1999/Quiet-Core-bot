@@ -48,7 +48,7 @@ const slashApi = {
   runtime: RuntimeEnv;
 };
 
-const ACCOUNT_STATES_KEY = Symbol.for("openclaw.mattermost.slash-account-states");
+const ACCOUNT_STATES_KEY = Symbol.for("quiet-core-bot.mattermost.slash-account-states");
 
 describe("slash-state global singleton", () => {
   afterEach(() => {

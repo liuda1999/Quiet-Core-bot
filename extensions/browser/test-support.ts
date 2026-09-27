@@ -6,13 +6,13 @@ export {
   expectGeneratedTokenPersistedToGatewayAuth,
   type CliMockOutputRuntime,
   type CliRuntimeCapture,
-} from "openclaw/plugin-sdk/test-fixtures";
+} from "quiet-core-bot/plugin-sdk/test-fixtures";
 export {
   createTempHomeEnv,
   withEnv,
   withEnvAsync,
   withFetchPreconnect,
   isLiveTestEnabled,
-} from "openclaw/plugin-sdk/test-env";
-export type { FetchMock, TempHomeEnv } from "openclaw/plugin-sdk/test-env";
-export type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+} from "quiet-core-bot/plugin-sdk/test-env";
+export type { FetchMock, TempHomeEnv } from "quiet-core-bot/plugin-sdk/test-env";
+export type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";

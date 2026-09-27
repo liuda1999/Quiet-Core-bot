@@ -2,18 +2,18 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { withTempDir } from "../../test-helpers/temp-dir.js";
 import type { MsgContext } from "../templating.js";
 import { resolveCurrentTurnImages } from "./current-turn-images.js";
 
-const originalStateDirEnv = process.env.OPENCLAW_STATE_DIR;
+const originalStateDirEnv = process.env.QUIET_CORE_STATE_DIR;
 
 function restoreProcessState() {
   if (originalStateDirEnv === undefined) {
-    delete process.env.OPENCLAW_STATE_DIR;
+    delete process.env.QUIET_CORE_STATE_DIR;
   } else {
-    process.env.OPENCLAW_STATE_DIR = originalStateDirEnv;
+    process.env.QUIET_CORE_STATE_DIR = originalStateDirEnv;
   }
 }
 
@@ -24,7 +24,7 @@ describe("resolveCurrentTurnImages", () => {
   });
 
   it("hydrates Telegram-style state-relative media into native prompt images", async () => {
-    await withTempDir({ prefix: "openclaw-current-turn-images-" }, async (base) => {
+    await withTempDir({ prefix: "quiet-core-bot-current-turn-images-" }, async (base) => {
       const stateDir = path.join(base, "state");
       const cwd = path.join(base, "cwd");
       const relativePath = "media/inbound/telegram.jpg";
@@ -33,7 +33,7 @@ describe("resolveCurrentTurnImages", () => {
       await fs.mkdir(path.dirname(attachmentPath), { recursive: true });
       await fs.mkdir(cwd, { recursive: true });
       await fs.writeFile(attachmentPath, imageBytes);
-      process.env.OPENCLAW_STATE_DIR = stateDir;
+      process.env.QUIET_CORE_STATE_DIR = stateDir;
       vi.spyOn(process, "cwd").mockReturnValue(cwd);
 
       const result = await resolveCurrentTurnImages({

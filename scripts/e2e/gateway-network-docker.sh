@@ -3,29 +3,29 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/scripts/lib/docker-e2e-image.sh"
-IMAGE_NAME="$(docker_e2e_resolve_image "openclaw-gateway-network-e2e" OPENCLAW_GATEWAY_NETWORK_E2E_IMAGE)"
-SKIP_BUILD="${OPENCLAW_GATEWAY_NETWORK_E2E_SKIP_BUILD:-0}"
+IMAGE_NAME="$(docker_e2e_resolve_image "quiet-core-bot-gateway-network-e2e" QUIET_CORE_GATEWAY_NETWORK_E2E_IMAGE)"
+SKIP_BUILD="${QUIET_CORE_GATEWAY_NETWORK_E2E_SKIP_BUILD:-0}"
 
 PORT="18789"
 TOKEN="e2e-$(date +%s)-$$"
-NET_NAME="openclaw-net-e2e-$$"
-GW_NAME="openclaw-gateway-e2e-$$"
-DOCKER_COMMAND_TIMEOUT="${OPENCLAW_GATEWAY_NETWORK_DOCKER_COMMAND_TIMEOUT:-600s}"
-CLIENT_TIMEOUT="${OPENCLAW_GATEWAY_NETWORK_CLIENT_TIMEOUT:-90s}"
+NET_NAME="quiet-core-bot-net-e2e-$$"
+GW_NAME="quiet-core-bot-gateway-e2e-$$"
+DOCKER_COMMAND_TIMEOUT="${QUIET_CORE_GATEWAY_NETWORK_DOCKER_COMMAND_TIMEOUT:-600s}"
+CLIENT_TIMEOUT="${QUIET_CORE_GATEWAY_NETWORK_CLIENT_TIMEOUT:-90s}"
 CLIENT_LIMIT_ENV_ARGS=()
-if [[ -n "${OPENCLAW_GATEWAY_NETWORK_CLIENT_CONNECT_TIMEOUT_MS+x}" ]]; then
+if [[ -n "${QUIET_CORE_GATEWAY_NETWORK_CLIENT_CONNECT_TIMEOUT_MS+x}" ]]; then
   CLIENT_CONNECT_TIMEOUT_MS="$(
-    docker_e2e_read_positive_int_env OPENCLAW_GATEWAY_NETWORK_CLIENT_CONNECT_TIMEOUT_MS 80000
+    docker_e2e_read_positive_int_env QUIET_CORE_GATEWAY_NETWORK_CLIENT_CONNECT_TIMEOUT_MS 80000
   )"
   CLIENT_LIMIT_ENV_ARGS+=(
-    -e "OPENCLAW_GATEWAY_NETWORK_CLIENT_CONNECT_TIMEOUT_MS=$CLIENT_CONNECT_TIMEOUT_MS"
+    -e "QUIET_CORE_GATEWAY_NETWORK_CLIENT_CONNECT_TIMEOUT_MS=$CLIENT_CONNECT_TIMEOUT_MS"
   )
-elif [[ -n "${OPENCLAW_GATEWAY_NETWORK_CONNECT_READY_TIMEOUT_MS+x}" ]]; then
+elif [[ -n "${QUIET_CORE_GATEWAY_NETWORK_CONNECT_READY_TIMEOUT_MS+x}" ]]; then
   CONNECT_READY_TIMEOUT_MS="$(
-    docker_e2e_read_positive_int_env OPENCLAW_GATEWAY_NETWORK_CONNECT_READY_TIMEOUT_MS 80000
+    docker_e2e_read_positive_int_env QUIET_CORE_GATEWAY_NETWORK_CONNECT_READY_TIMEOUT_MS 80000
   )"
   CLIENT_LIMIT_ENV_ARGS+=(
-    -e "OPENCLAW_GATEWAY_NETWORK_CONNECT_READY_TIMEOUT_MS=$CONNECT_READY_TIMEOUT_MS"
+    -e "QUIET_CORE_GATEWAY_NETWORK_CONNECT_READY_TIMEOUT_MS=$CONNECT_READY_TIMEOUT_MS"
   )
 fi
 
@@ -46,16 +46,16 @@ docker_e2e_docker_cmd run -d \
   "${DOCKER_E2E_HARNESS_ARGS[@]}" \
   --name "$GW_NAME" \
   --network "$NET_NAME" \
-  -e "OPENCLAW_GATEWAY_TOKEN=$TOKEN" \
-  -e "OPENCLAW_SKIP_CHANNELS=1" \
-  -e "OPENCLAW_SKIP_GMAIL_WATCHER=1" \
-  -e "OPENCLAW_SKIP_CRON=1" \
-  -e "OPENCLAW_SKIP_CANVAS_HOST=1" \
+  -e "QUIET_CORE_GATEWAY_TOKEN=$TOKEN" \
+  -e "QUIET_CORE_SKIP_CHANNELS=1" \
+  -e "QUIET_CORE_SKIP_GMAIL_WATCHER=1" \
+  -e "QUIET_CORE_SKIP_CRON=1" \
+  -e "QUIET_CORE_SKIP_CANVAS_HOST=1" \
   "$IMAGE_NAME" \
-  bash -lc "set -euo pipefail; source scripts/lib/openclaw-e2e-instance.sh; entry=\"\$(openclaw_e2e_resolve_entrypoint)\"; node \"\$entry\" config set gateway.controlUi.enabled false >/dev/null; openclaw_e2e_exec_gateway \"\$entry\" $PORT lan /tmp/gateway-net-e2e.log" >/dev/null
+  bash -lc "set -euo pipefail; source scripts/lib/quiet-core-bot-e2e-instance.sh; entry=\"\$(quiet_core_bot_e2e_resolve_entrypoint)\"; node \"\$entry\" config set gateway.controlUi.enabled false >/dev/null; quiet_core_bot_e2e_exec_gateway \"\$entry\" $PORT lan /tmp/gateway-net-e2e.log" >/dev/null
 
 echo "Waiting for gateway to come up..."
-if ! docker_e2e_wait_container_bash "$GW_NAME" 180 0.5 "source scripts/lib/openclaw-e2e-instance.sh; openclaw_e2e_probe_tcp 127.0.0.1 $PORT"; then
+if ! docker_e2e_wait_container_bash "$GW_NAME" 180 0.5 "source scripts/lib/quiet-core-bot-e2e-instance.sh; quiet_core_bot_e2e_probe_tcp 127.0.0.1 $PORT"; then
   echo "Gateway failed to start"
   docker_e2e_tail_container_file_if_running "$GW_NAME" /tmp/gateway-net-e2e.log 120
   exit 1

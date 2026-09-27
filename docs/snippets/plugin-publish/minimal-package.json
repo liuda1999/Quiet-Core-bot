@@ -1,8 +1,8 @@
 {
-  "name": "@myorg/openclaw-my-plugin",
+  "name": "@myorg/quiet-core-bot-my-plugin",
   "version": "1.0.0",
   "type": "module",
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": ["./index.ts"],
     "compat": {
       "pluginApi": ">=2026.3.24-beta.2",

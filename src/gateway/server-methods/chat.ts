@@ -5,16 +5,16 @@ import fs from "node:fs";
 import path from "node:path";
 import { performance } from "node:perf_hooks";
 import { fileURLToPath } from "node:url";
-import { isAudioFileName } from "@openclaw/media-core/mime";
-import { asOptionalRecord } from "@openclaw/normalization-core/record-coerce";
-import type { FastMode } from "@openclaw/normalization-core/string-coerce";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { isAudioFileName } from "@quiet-core/media-core/mime";
+import { asOptionalRecord } from "@quiet-core/normalization-core/record-coerce";
+import type { FastMode } from "@quiet-core/normalization-core/string-coerce";
+import { uniqueStrings } from "@quiet-core/normalization-core/string-normalization";
 import {
   buildTtsSupplementMediaPayload,
   getReplyPayloadTtsSupplement,
   isReplyPayloadTtsSupplement,
   resolveSendableOutboundReplyParts,
-} from "openclaw/plugin-sdk/reply-payload";
+} from "quiet-core-bot/plugin-sdk/reply-payload";
 import {
   GATEWAY_CLIENT_CAPS,
   GATEWAY_CLIENT_MODES,
@@ -62,7 +62,7 @@ import type { MsgContext, TemplateContext } from "../../auto-reply/templating.js
 import { resolveSessionFilePath, updateSessionStoreEntry } from "../../config/sessions.js";
 import { resolveMirroredTranscriptText } from "../../config/sessions/transcript-mirror.js";
 import { CURRENT_SESSION_VERSION } from "../../config/sessions/version.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import {
   claimAgentRunContext,
   clearAgentRunContext,
@@ -530,7 +530,7 @@ function resolveWebchatPromptCacheKey(params: {
     )
     .digest("hex")
     .slice(0, 32);
-  return `openclaw-webchat-${digest}`;
+  return `quiet-core-bot-webchat-${digest}`;
 }
 
 async function buildWebchatAssistantMediaMessage(
@@ -1774,7 +1774,7 @@ async function findSourceReplyTranscriptMirrorByIdempotencyKey(
     transcriptPath,
     idempotencyKey,
   );
-  if (found?.message.provider !== "openclaw" || found.message.model !== "delivery-mirror") {
+  if (found?.message.provider !== "quiet-core-bot" || found.message.model !== "delivery-mirror") {
     return null;
   }
   return found;
@@ -1826,7 +1826,7 @@ async function findSourceReplyTranscriptMirrorByMetadata(params: {
       typeof entry.id === "string" &&
       entry.id.trim().length > 0 &&
       message?.role === "assistant" &&
-      message.provider === "openclaw" &&
+      message.provider === "quiet-core-bot" &&
       message.model === "delivery-mirror" &&
       extractAssistantTranscriptText(message) === expectedText
     );
@@ -3671,7 +3671,7 @@ export const chatHandlers: GatewayRequestHandlers = {
       // identical bytes on the wire. BodyForAgent uses the same bare text as
       // Body; the transient gateway stamp is removed (stamping the live turn
       // here would diverge from bare stored history and bust the prompt cache).
-      // See: https://github.com/openclaw/openclaw/issues/3658
+      // See: https://github.com/liuda1999/Quiet-Core-bot/issues/3658
       const ctx: MsgContext = {
         Body: messageForAgent,
         BodyForAgent: messageForAgent,

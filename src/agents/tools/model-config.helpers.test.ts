@@ -13,7 +13,7 @@ vi.mock("../auth-profiles/external-cli-sync.js", () => ({
   resolveExternalCliAuthProfiles: () => [],
 }));
 
-const AGENT_DIR = "/tmp/openclaw-model-config-helper";
+const AGENT_DIR = "/tmp/quiet-core-bot-model-config-helper";
 const MODEL = "gpt-5.5";
 
 type Decision = ReturnType<typeof resolveOpenAiImageMediaCandidate>;

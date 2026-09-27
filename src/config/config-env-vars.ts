@@ -16,7 +16,7 @@ import type { OpenClawConfig } from "./types.js";
 function isBlockedConfigEnvVar(key: string): boolean {
   return (
     key.toUpperCase() === ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS_ENV ||
-    key.toUpperCase() === "OPENCLAW_INCLUDE_ROOTS" ||
+    key.toUpperCase() === "QUIET_CORE_INCLUDE_ROOTS" ||
     isDangerousHostEnvVarName(key) ||
     isDangerousHostEnvOverrideVarName(key)
   );
@@ -214,7 +214,7 @@ export function applyConfigEnvVars(
     }
     // Skip values containing unresolved ${VAR} references — applyConfigEnvVars runs
     // before env substitution, so these would pollute process.env with literal placeholders
-    // (e.g. process.env.OPENCLAW_GATEWAY_TOKEN = "${VAULT_TOKEN}") which downstream auth
+    // (e.g. process.env.QUIET_CORE_GATEWAY_TOKEN = "${VAULT_TOKEN}") which downstream auth
     // resolution would accept as valid credentials.
     if (containsEnvVarReference(value)) {
       continue;

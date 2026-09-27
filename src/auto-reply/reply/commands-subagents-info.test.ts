@@ -19,7 +19,7 @@ import {
 
 const TEST_SESSION_STORE_PATH = path.join(
   os.tmpdir(),
-  `openclaw-commands-subagents-info-${process.pid}.json`,
+  `quiet-core-bot-commands-subagents-info-${process.pid}.json`,
 );
 
 function buildCommandTestConfig(): OpenClawConfig {

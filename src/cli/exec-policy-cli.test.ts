@@ -121,10 +121,10 @@ const mocks = vi.hoisted(() => {
       mutate(draft);
       configState = draft;
       return {
-        path: "/tmp/openclaw.json",
+        path: "/tmp/quiet-core-bot.json",
         previousHash: "hash-1",
         persistedHash: "hash-1",
-        snapshot: { path: "/tmp/openclaw.json" },
+        snapshot: { path: "/tmp/quiet-core-bot.json" },
         nextConfig: draft,
         result: undefined,
       };
@@ -133,10 +133,10 @@ const mocks = vi.hoisted(() => {
       async ({ nextConfig }: { nextConfig: OpenClawConfig; baseHash?: string }) => {
         configState = structuredClone(nextConfig);
         return {
-          path: "/tmp/openclaw.json",
+          path: "/tmp/quiet-core-bot.json",
           previousHash: "hash-1",
           persistedHash: "hash-1",
-          snapshot: { path: "/tmp/openclaw.json" },
+          snapshot: { path: "/tmp/quiet-core-bot.json" },
           nextConfig,
         };
       },
@@ -144,7 +144,7 @@ const mocks = vi.hoisted(() => {
     readConfigFileSnapshot: vi.fn<
       () => Promise<{ path: string; hash: string; config: OpenClawConfig }>
     >(async () => ({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/quiet-core-bot.json",
       hash: "config-hash-1",
       config: configState,
     })),
@@ -235,10 +235,10 @@ describe("exec-policy CLI", () => {
         mutate(draft);
         mocks.setConfig(draft);
         return {
-          path: "/tmp/openclaw.json",
+          path: "/tmp/quiet-core-bot.json",
           previousHash: "hash-1",
           persistedHash: "hash-1",
-          snapshot: { path: "/tmp/openclaw.json" },
+          snapshot: { path: "/tmp/quiet-core-bot.json" },
           nextConfig: draft,
           result: undefined,
         };
@@ -249,17 +249,17 @@ describe("exec-policy CLI", () => {
       async ({ nextConfig }: { nextConfig: OpenClawConfig; baseHash?: string }) => {
         mocks.setConfig(structuredClone(nextConfig));
         return {
-          path: "/tmp/openclaw.json",
+          path: "/tmp/quiet-core-bot.json",
           previousHash: "hash-1",
           persistedHash: "hash-1",
-          snapshot: { path: "/tmp/openclaw.json" },
+          snapshot: { path: "/tmp/quiet-core-bot.json" },
           nextConfig,
         };
       },
     );
     mocks.readConfigFileSnapshot.mockReset();
     mocks.readConfigFileSnapshot.mockImplementation(async () => ({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/quiet-core-bot.json",
       hash: "config-hash-1",
       config: mocks.getConfig(),
     }));
@@ -285,7 +285,7 @@ describe("exec-policy CLI", () => {
     expect(mocks.defaultRuntime.writeJson).toHaveBeenCalledTimes(1);
     const payload = readLastJsonWrite();
     expectFields(payload, {
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/quiet-core-bot.json",
       approvalsPath: "/tmp/exec-approvals.json",
     });
     const scope = readFirstPolicyScope(payload);
@@ -431,7 +431,7 @@ describe("exec-policy CLI", () => {
     const output = stripAnsi(
       mocks.defaultRuntime.log.mock.calls.map((call) => String(call[0] ?? "")).join("\n"),
     );
-    expect(output).toContain("/tmp/openclaw.json");
+    expect(output).toContain("/tmp/quiet-core-bot.json");
     expect(output).toContain("/tmp/exec-approvals.json");
     expect(output).toContain("scope\\u{200B}name");
     expect(output).toContain("host=auto");

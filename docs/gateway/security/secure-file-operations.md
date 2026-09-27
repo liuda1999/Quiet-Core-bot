@@ -23,16 +23,16 @@ Quiet Core bot only changes the default. If you explicitly set a mode, fs-safe h
 
 ```bash
 # Default Quiet Core bot behavior: Node-only fs-safe fallbacks.
-OPENCLAW_FS_SAFE_PYTHON_MODE=off
+QUIET_CORE_FS_SAFE_PYTHON_MODE=off
 
 # Opt into the helper when available, falling back if unavailable.
-OPENCLAW_FS_SAFE_PYTHON_MODE=auto
+QUIET_CORE_FS_SAFE_PYTHON_MODE=auto
 
 # Fail closed if the helper cannot start.
-OPENCLAW_FS_SAFE_PYTHON_MODE=require
+QUIET_CORE_FS_SAFE_PYTHON_MODE=require
 
 # Optional explicit interpreter.
-OPENCLAW_FS_SAFE_PYTHON=/usr/bin/python3
+QUIET_CORE_FS_SAFE_PYTHON=/usr/bin/python3
 ```
 
 The generic fs-safe names also work: `FS_SAFE_PYTHON_MODE` and `FS_SAFE_PYTHON`.
@@ -60,14 +60,14 @@ That narrows same-UID race windows where another process can swap a parent direc
 If your deployment has that risk and Python is guaranteed to exist, use:
 
 ```bash
-OPENCLAW_FS_SAFE_PYTHON_MODE=require
+QUIET_CORE_FS_SAFE_PYTHON_MODE=require
 ```
 
 Use `require` rather than `auto` when the helper is part of your security posture; `auto` intentionally falls back to Node-only behavior if the helper is unavailable.
 
 ## Plugin and core guidance
 
-- Plugin-facing file access should go through `openclaw/plugin-sdk/*` helpers, not raw `fs`, when a path comes from a message, model output, config, or plugin input.
+- Plugin-facing file access should go through `quiet-core-bot/plugin-sdk/*` helpers, not raw `fs`, when a path comes from a message, model output, config, or plugin input.
 - Core code should use the local fs-safe wrappers under `src/infra/*` so Quiet Core bot's process policy is applied consistently.
 - Archive extraction should use the fs-safe archive helpers with explicit size, entry-count, link, and destination limits.
 - Secrets should use Quiet Core bot secret helpers or fs-safe secret/private-state helpers; do not hand-roll mode checks around `fs.writeFile`.

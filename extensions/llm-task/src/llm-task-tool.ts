@@ -1,19 +1,19 @@
 // Llm Task plugin module implements llm task tool behavior.
 import path from "node:path";
-import { buildModelAliasIndex, resolveModelRefFromString } from "openclaw/plugin-sdk/agent-runtime";
+import { buildModelAliasIndex, resolveModelRefFromString } from "quiet-core-bot/plugin-sdk/agent-runtime";
 import {
   optionalFiniteNumberSchema,
   optionalPositiveIntegerSchema,
-} from "openclaw/plugin-sdk/channel-actions";
+} from "quiet-core-bot/plugin-sdk/channel-actions";
 import {
   type JsonSchemaObject,
   validateJsonSchemaValue,
-} from "openclaw/plugin-sdk/json-schema-runtime";
-import { readFiniteNumberParam, readPositiveIntegerParam } from "openclaw/plugin-sdk/param-readers";
+} from "quiet-core-bot/plugin-sdk/json-schema-runtime";
+import { readFiniteNumberParam, readPositiveIntegerParam } from "quiet-core-bot/plugin-sdk/param-readers";
 import {
   asPositiveSafeInteger,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { Type } from "typebox";
 import { resolvePreferredOpenClawTmpDir, withTempWorkspace } from "../api.js";
 import type { OpenClawPluginApi } from "../api.js";
@@ -119,7 +119,7 @@ export const llmTaskToolDefinition = {
   name: "llm-task",
   label: "LLM Task",
   description:
-    "Run a generic JSON-only LLM task and return schema-validated JSON. Designed for orchestration from Lobster workflows via openclaw.invoke.",
+    "Run a generic JSON-only LLM task and return schema-validated JSON. Designed for orchestration from Lobster workflows via quiet-core-bot.invoke.",
   parameters: Type.Object({
     prompt: Type.String({ description: "Task instruction for the LLM." }),
     input: Type.Optional(Type.Unknown({ description: "Optional input payload for the task." })),
@@ -261,7 +261,7 @@ export function createLlmTaskTool(api: OpenClawPluginApi) {
       const fullPrompt = `${system}\n\nTASK:\n${prompt}\n\nINPUT_JSON:\n${inputJson}\n`;
 
       return await withTempWorkspace(
-        { rootDir: resolvePreferredOpenClawTmpDir(), prefix: "openclaw-llm-task-" },
+        { rootDir: resolvePreferredOpenClawTmpDir(), prefix: "quiet-core-bot-llm-task-" },
         async ({ dir: tmpDir }) => {
           const sessionId = `llm-task-${Date.now()}`;
           const sessionFile = path.join(tmpDir, "session.json");

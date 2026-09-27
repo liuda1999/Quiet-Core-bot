@@ -3,7 +3,7 @@
  * Overlays per-agent loop detection settings on global tool defaults while
  * preserving nested detector and post-compaction guard fields.
  */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import type { ToolLoopDetectionConfig } from "../config/types.tools.js";
 import { resolveAgentConfig } from "./agent-scope.js";
 

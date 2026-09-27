@@ -162,7 +162,7 @@ describe("createCacheTrace", () => {
         },
       },
       env: {
-        OPENCLAW_CACHE_TRACE: "0",
+        QUIET_CORE_CACHE_TRACE: "0",
       },
       writer: {
         filePath: "memory",

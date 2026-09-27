@@ -70,7 +70,7 @@ function writeSourceToolPluginProject(params: {
       {
         name: params.packageName,
         type: "module",
-        openclaw: { extensions: ["./src/index.ts"] },
+        "quiet-core-bot": { extensions: ["./src/index.ts"] },
       },
       null,
       2,
@@ -79,7 +79,7 @@ function writeSourceToolPluginProject(params: {
   const entryPath = path.join(sourceDir, "index.ts");
   fs.writeFileSync(
     entryPath,
-    `import { defineToolPlugin } from "openclaw/plugin-sdk/tool-plugin";
+    `import { defineToolPlugin } from "quiet-core-bot/plugin-sdk/tool-plugin";
 
 export default defineToolPlugin({
   id: ${JSON.stringify(params.pluginId)},
@@ -101,11 +101,11 @@ export default defineToolPlugin({
 
 describe("plugin authoring commands", () => {
   beforeAll(async () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-source-warm-"));
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-plugin-source-warm-"));
     try {
       const entryPath = writeSourceToolPluginProject({
         tmpDir,
-        packageName: "openclaw-plugin-source-warm",
+        packageName: "quiet-core-bot-plugin-source-warm",
         pluginId: "source-warm",
         toolName: "source_warm_echo",
       });
@@ -203,14 +203,14 @@ describe("plugin authoring commands", () => {
         metadata,
         entry: "./src/index.ts",
         manifest,
-        packageManifest: { version: "1.2.3", openclaw: { extensions: ["./src/index.ts"] } },
+        packageManifest: { version: "1.2.3", "quiet-core-bot": { extensions: ["./src/index.ts"] } },
       }),
     ).toEqual([]);
   });
 
   it("drops stale manifest-owned tool metadata when no generated metadata remains", () => {
     const metadata = createDemoMetadata();
-    const packageManifest = { version: "1.2.3", openclaw: { extensions: ["./src/index.ts"] } };
+    const packageManifest = { version: "1.2.3", "quiet-core-bot": { extensions: ["./src/index.ts"] } };
     const manifest = buildToolPluginManifest({
       metadata,
       packageManifest,
@@ -239,13 +239,13 @@ describe("plugin authoring commands", () => {
       buildToolPluginPackageManifest({
         packageManifest: {
           name: "demo",
-          openclaw: { setupEntry: "./setup.ts", extensions: ["./src/other.ts"] },
+          "quiet-core-bot": { setupEntry: "./setup.ts", extensions: ["./src/other.ts"] },
         },
         entry: "./src/index.ts",
       }),
     ).toEqual({
       name: "demo",
-      openclaw: {
+      "quiet-core-bot": {
         setupEntry: "./setup.ts",
         extensions: ["./src/other.ts", "./src/index.ts"],
       },
@@ -254,7 +254,7 @@ describe("plugin authoring commands", () => {
 
   it("validates manifest tools and package entry metadata", () => {
     const metadata = createDemoMetadata();
-    const packageManifest = { version: "1.2.3", openclaw: { extensions: ["./src/index.ts"] } };
+    const packageManifest = { version: "1.2.3", "quiet-core-bot": { extensions: ["./src/index.ts"] } };
 
     expect(
       validateToolPluginProject({
@@ -278,17 +278,17 @@ describe("plugin authoring commands", () => {
           configSchema: {},
           contracts: { tools: ["other_tool"] },
         },
-        packageManifest: { openclaw: { extensions: ["./src/index.ts"] } },
+        packageManifest: { "quiet-core-bot": { extensions: ["./src/index.ts"] } },
       }),
     ).toEqual([
-      "openclaw.plugin.json generated metadata is stale. Run quiet-core-bot plugins build.",
-      "openclaw.plugin.json contracts.tools is missing: demo_echo",
-      "openclaw.plugin.json contracts.tools has no matching defineToolPlugin tool: other_tool",
+      "quiet-core-bot.plugin.json generated metadata is stale. Run quiet-core-bot plugins build.",
+      "quiet-core-bot.plugin.json contracts.tools is missing: demo_echo",
+      "quiet-core-bot.plugin.json contracts.tools has no matching defineToolPlugin tool: other_tool",
     ]);
   });
 
   it("reports missing entries with an author-facing path", async () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-missing-"));
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-plugin-missing-"));
 
     await expect(
       loadToolPlugin({ rootDir: tmpDir, entryPath: path.join(tmpDir, "dist/index.js") }),
@@ -296,10 +296,10 @@ describe("plugin authoring commands", () => {
   });
 
   it("loads source entries that import the Quiet Core bot plugin SDK package subpath", async () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-source-"));
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-plugin-source-"));
     const entryPath = writeSourceToolPluginProject({
       tmpDir,
-      packageName: "openclaw-plugin-source-demo",
+      packageName: "quiet-core-bot-plugin-source-demo",
       pluginId: "source-demo",
       toolName: "source_echo",
     });
@@ -314,7 +314,7 @@ describe("plugin authoring commands", () => {
   });
 
   it("scaffolds a dist-entry tool plugin project", async () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-init-"));
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-plugin-init-"));
     const projectDir = path.join(tmpDir, "stock-quotes");
 
     await runPluginsInitCommand("stock-quotes", {
@@ -332,10 +332,10 @@ describe("plugin authoring commands", () => {
         typebox: "^1.1.38",
       },
       peerDependencies: {
-        openclaw: ">=2026.5.17",
+        "quiet-core-bot": ">=2026.5.17",
       },
       devDependencies: {
-        openclaw: "latest",
+        "quiet-core-bot": "latest",
         typescript: "^5.9.0",
         vitest: "^3.2.0",
       },
@@ -344,12 +344,12 @@ describe("plugin authoring commands", () => {
         "plugin:validate":
           "npm run build && quiet-core-bot plugins validate --entry ./dist/index.js",
       },
-      openclaw: {
+      "quiet-core-bot": {
         extensions: ["./dist/index.js"],
       },
     });
     expect(
-      JSON.parse(fs.readFileSync(path.join(projectDir, "openclaw.plugin.json"), "utf8")),
+      JSON.parse(fs.readFileSync(path.join(projectDir, "quiet-core-bot.plugin.json"), "utf8")),
     ).toMatchObject({
       id: "stock-quotes",
       name: 'Stock "Quotes"',

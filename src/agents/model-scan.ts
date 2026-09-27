@@ -1,20 +1,20 @@
 /**
  * Scans remote provider model catalogs for configured providers.
  */
-import { readResponseWithLimit } from "@openclaw/media-core/read-response-with-limit";
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
+import { readResponseWithLimit } from "@quiet-core/media-core/read-response-with-limit";
+import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
 import {
   asDateTimestampMs,
   resolveTimerTimeoutMs,
-} from "@openclaw/normalization-core/number-coercion";
+} from "@quiet-core/normalization-core/number-coercion";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/normalization-core/string-coerce";
 import {
   normalizeStringEntries,
   uniqueStrings,
-} from "@openclaw/normalization-core/string-normalization";
+} from "@quiet-core/normalization-core/string-normalization";
 import { Type } from "typebox";
 import { formatErrorMessage } from "../infra/errors.js";
 import { getEnvApiKey } from "../llm/env-api-keys.js";

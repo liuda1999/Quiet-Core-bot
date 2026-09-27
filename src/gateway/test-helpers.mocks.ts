@@ -330,5 +330,5 @@ vi.mock("../plugins/loader.js", async () => {
     loadOpenClawPlugins: () => getTestPluginRegistry(),
   };
 });
-process.env.OPENCLAW_SKIP_CHANNELS = "1";
-process.env.OPENCLAW_SKIP_CRON = "1";
+process.env.QUIET_CORE_SKIP_CHANNELS = "1";
+process.env.QUIET_CORE_SKIP_CRON = "1";

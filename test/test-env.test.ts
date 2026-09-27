@@ -1,7 +1,7 @@
 // Test environment tests validate shared env setup helpers.
 import fs from "node:fs";
 import path from "node:path";
-import { importFreshModule } from "openclaw/plugin-sdk/test-fixtures";
+import { importFreshModule } from "quiet-core-bot/plugin-sdk/test-fixtures";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanupTempDirs, makeTempDir } from "./helpers/temp-dir.js";
 import { installTestEnv } from "./test-env.js";
@@ -32,7 +32,7 @@ function writeFile(targetPath: string, content: string): void {
 }
 
 function createTempHome(): string {
-  return makeTempDir(tempDirs, "openclaw-test-env-real-home-");
+  return makeTempDir(tempDirs, "quiet-core-bot-test-env-real-home-");
 }
 
 function requireRecord(
@@ -81,13 +81,13 @@ describe("installTestEnv", () => {
         agents: {
           defaults: {
             workspace: "/Users/peter/Projects",
-            agentDir: "/Users/peter/.openclaw/agents/main/agent",
+            agentDir: "/Users/peter/.quiet-core-bot/agents/main/agent",
           },
           list: [
             {
               id: "dev",
               workspace: "/Users/peter/dev-workspace",
-              agentDir: "/Users/peter/.openclaw/agents/dev/agent",
+              agentDir: "/Users/peter/.quiet-core-bot/agents/dev/agent",
             },
           ],
         },
@@ -114,13 +114,13 @@ describe("installTestEnv", () => {
         },
       }`,
     );
-    writeFile(path.join(realHome, ".openclaw", "credentials", "token.txt"), "secret\n");
+    writeFile(path.join(realHome, ".quiet-core-bot", "credentials", "token.txt"), "secret\n");
     writeFile(
-      path.join(realHome, ".openclaw", "external-plugins", "glueclaw", "openclaw.plugin.json"),
+      path.join(realHome, ".quiet-core-bot", "external-plugins", "glueclaw", "quiet-core-bot.plugin.json"),
       '{"id":"glueclaw"}\n',
     );
     writeFile(
-      path.join(realHome, ".openclaw", "agents", "main", "agent", "auth-profiles.json"),
+      path.join(realHome, ".quiet-core-bot", "agents", "main", "agent", "auth-profiles.json"),
       JSON.stringify({ version: 1, profiles: { default: { provider: "openai" } } }, null, 2),
     );
     writeFile(path.join(realHome, ".claude", ".credentials.json"), '{"accessToken":"token"}\n');
@@ -135,21 +135,21 @@ describe("installTestEnv", () => {
 
     process.env.HOME = realHome;
     process.env.USERPROFILE = realHome;
-    process.env.OPENCLAW_LIVE_TEST = "1";
-    process.env.OPENCLAW_LIVE_TEST_QUIET = "1";
-    process.env.OPENCLAW_CONFIG_PATH = "~/custom-quiet-core-bot.json5";
-    process.env.OPENCLAW_TEST_HOME = priorIsolatedHome;
-    process.env.OPENCLAW_STATE_DIR = path.join(priorIsolatedHome, ".openclaw");
+    process.env.QUIET_CORE_LIVE_TEST = "1";
+    process.env.QUIET_CORE_LIVE_TEST_QUIET = "1";
+    process.env.QUIET_CORE_CONFIG_PATH = "~/custom-quiet-core-bot.json5";
+    process.env.QUIET_CORE_TEST_HOME = priorIsolatedHome;
+    process.env.QUIET_CORE_STATE_DIR = path.join(priorIsolatedHome, ".quiet-core-bot");
 
     const testEnv = installTestEnv();
     cleanupFns.push(testEnv.cleanup);
 
     expect(testEnv.tempHome).not.toBe(realHome);
     expect(process.env.HOME).toBe(testEnv.tempHome);
-    expect(process.env.OPENCLAW_TEST_HOME).toBe(testEnv.tempHome);
+    expect(process.env.QUIET_CORE_TEST_HOME).toBe(testEnv.tempHome);
     expect(process.env.TEST_PROFILE_ONLY).toBe("from-profile");
 
-    const copiedConfigPath = path.join(testEnv.tempHome, ".openclaw", "openclaw.json");
+    const copiedConfigPath = path.join(testEnv.tempHome, ".quiet-core-bot", "quiet-core-bot.json");
     const copiedConfig = JSON.parse(fs.readFileSync(copiedConfigPath, "utf8")) as {
       agents?: {
         defaults?: Record<string, unknown>;
@@ -187,22 +187,22 @@ describe("installTestEnv", () => {
     });
 
     expect(
-      fs.existsSync(path.join(testEnv.tempHome, ".openclaw", "credentials", "token.txt")),
+      fs.existsSync(path.join(testEnv.tempHome, ".quiet-core-bot", "credentials", "token.txt")),
     ).toBe(true);
     expect(
       fs.existsSync(
         path.join(
           testEnv.tempHome,
-          ".openclaw",
+          ".quiet-core-bot",
           "external-plugins",
           "glueclaw",
-          "openclaw.plugin.json",
+          "quiet-core-bot.plugin.json",
         ),
       ),
     ).toBe(true);
     expect(
       fs.existsSync(
-        path.join(testEnv.tempHome, ".openclaw", "agents", "main", "agent", "auth-profiles.json"),
+        path.join(testEnv.tempHome, ".quiet-core-bot", "agents", "main", "agent", "auth-profiles.json"),
       ),
     ).toBe(true);
     expect(fs.existsSync(path.join(testEnv.tempHome, ".claude", ".credentials.json"))).toBe(true);
@@ -221,9 +221,9 @@ describe("installTestEnv", () => {
 
     process.env.HOME = realHome;
     process.env.USERPROFILE = realHome;
-    process.env.OPENCLAW_LIVE_TEST = "1";
-    process.env.OPENCLAW_LIVE_USE_REAL_HOME = "1";
-    process.env.OPENCLAW_LIVE_TEST_QUIET = "1";
+    process.env.QUIET_CORE_LIVE_TEST = "1";
+    process.env.QUIET_CORE_LIVE_USE_REAL_HOME = "1";
+    process.env.QUIET_CORE_LIVE_TEST_QUIET = "1";
 
     const testEnv = installTestEnv();
 
@@ -239,10 +239,10 @@ describe("installTestEnv", () => {
     process.env.HOME = realHome;
     process.env.USERPROFILE = realHome;
     delete process.env.LIVE;
-    delete process.env.OPENCLAW_LIVE_TEST;
-    delete process.env.OPENCLAW_LIVE_GATEWAY;
-    delete process.env.OPENCLAW_LIVE_USE_REAL_HOME;
-    delete process.env.OPENCLAW_LIVE_TEST_QUIET;
+    delete process.env.QUIET_CORE_LIVE_TEST;
+    delete process.env.QUIET_CORE_LIVE_GATEWAY;
+    delete process.env.QUIET_CORE_LIVE_USE_REAL_HOME;
+    delete process.env.QUIET_CORE_LIVE_TEST_QUIET;
 
     const testEnv = installTestEnv();
     cleanupFns.push(testEnv.cleanup);
@@ -257,9 +257,9 @@ describe("installTestEnv", () => {
 
     process.env.HOME = realHome;
     process.env.USERPROFILE = realHome;
-    process.env.OPENCLAW_LIVE_TEST = "1";
-    process.env.OPENCLAW_LIVE_USE_REAL_HOME = "1";
-    process.env.OPENCLAW_LIVE_TEST_QUIET = "1";
+    process.env.QUIET_CORE_LIVE_TEST = "1";
+    process.env.QUIET_CORE_LIVE_USE_REAL_HOME = "1";
+    process.env.QUIET_CORE_LIVE_TEST_QUIET = "1";
 
     vi.doMock("node:child_process", () => ({
       execFileSync: () => {

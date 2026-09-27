@@ -7,7 +7,7 @@ describe("buildDaemonHintItems", () => {
     expect(
       buildDaemonHintItems([
         "quiet-core-bot gateway install",
-        "Restart the container or the service that manages it for openclaw-demo-container.",
+        "Restart the container or the service that manages it for quiet-core-bot-demo-container.",
         "systemd user services are unavailable; install/enable systemd or run the gateway under your supervisor.",
         "On a headless server (SSH/no desktop session): run `sudo loginctl enable-linger $(whoami)` to persist your systemd user session across logins.",
         "If you're in a container, run the gateway in the foreground instead of `quiet-core-bot gateway`.",
@@ -17,7 +17,7 @@ describe("buildDaemonHintItems", () => {
       { kind: "install", text: "quiet-core-bot gateway install" },
       {
         kind: "container-restart",
-        text: "Restart the container or the service that manages it for openclaw-demo-container.",
+        text: "Restart the container or the service that manages it for quiet-core-bot-demo-container.",
       },
       {
         kind: "systemd-unavailable",

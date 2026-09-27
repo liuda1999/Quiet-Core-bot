@@ -15,8 +15,8 @@ import {
 } from "../lib/windows-taskkill.mjs";
 
 const PLUGIN_SPEC =
-  process.env.OPENCLAW_KITCHEN_SINK_NPM_SPEC || "npm:@openclaw/kitchen-sink@latest";
-const PLUGIN_ID = process.env.OPENCLAW_KITCHEN_SINK_PLUGIN_ID || "openclaw-kitchen-sink-fixture";
+  process.env.QUIET_CORE_KITCHEN_SINK_NPM_SPEC || "npm:@quiet-core/kitchen-sink@latest";
+const PLUGIN_ID = process.env.QUIET_CORE_KITCHEN_SINK_PLUGIN_ID || "quiet-core-bot-kitchen-sink-fixture";
 const CHANNEL_ID = "kitchen-sink-channel";
 const CHANNEL_ACCOUNT_ID = "local";
 const TOKEN = "kitchen-sink-rpc-token";
@@ -104,21 +104,21 @@ function usage() {
 Runs the external Kitchen Sink plugin RPC walk against a built OpenClaw entry.
 
 Environment:
-  OPENCLAW_ENTRY                         Built OpenClaw entrypoint. Defaults to dist/index.mjs or dist/index.js.
-  OPENCLAW_KITCHEN_SINK_NPM_SPEC         Plugin package spec. Default: npm:@openclaw/kitchen-sink@latest.
-  OPENCLAW_KITCHEN_SINK_PLUGIN_ID        Plugin id. Default: openclaw-kitchen-sink-fixture.
-  OPENCLAW_KITCHEN_SINK_PERSONALITY      Plugin fixture personality. Default: conformance.
-  OPENCLAW_KITCHEN_SINK_RPC_PORT         Gateway loopback port. Default: OS-selected free port.
-  OPENCLAW_KITCHEN_SINK_RPC_READY_MS     Gateway readiness timeout.
-  OPENCLAW_KITCHEN_SINK_RPC_COMMAND_MS   OpenClaw command timeout.
-  OPENCLAW_KITCHEN_SINK_RPC_INSTALL_MS   Plugin install timeout.
-  OPENCLAW_KITCHEN_SINK_RPC_CALL_MS      RPC call timeout.
-  OPENCLAW_KITCHEN_SINK_RPC_FETCH_MS     HTTP readiness probe timeout.
-  OPENCLAW_KITCHEN_SINK_RPC_FETCH_BODY_BYTES  HTTP readiness probe response ceiling.
-  OPENCLAW_KITCHEN_SINK_MAX_RSS_MIB      Gateway RSS ceiling.
-  OPENCLAW_KITCHEN_SINK_COMMAND_MAX_RSS_MIB  Install/CLI command RSS ceiling.
-  OPENCLAW_KITCHEN_SINK_OUTPUT_CAPTURE_CHARS  Per-command stdout/stderr capture ceiling.
-  OPENCLAW_KITCHEN_SINK_KEEP_TMP=1       Preserve the isolated temp home.
+  QUIET_CORE_ENTRY                         Built OpenClaw entrypoint. Defaults to dist/index.mjs or dist/index.js.
+  QUIET_CORE_KITCHEN_SINK_NPM_SPEC         Plugin package spec. Default: npm:@quiet-core/kitchen-sink@latest.
+  QUIET_CORE_KITCHEN_SINK_PLUGIN_ID        Plugin id. Default: quiet-core-bot-kitchen-sink-fixture.
+  QUIET_CORE_KITCHEN_SINK_PERSONALITY      Plugin fixture personality. Default: conformance.
+  QUIET_CORE_KITCHEN_SINK_RPC_PORT         Gateway loopback port. Default: OS-selected free port.
+  QUIET_CORE_KITCHEN_SINK_RPC_READY_MS     Gateway readiness timeout.
+  QUIET_CORE_KITCHEN_SINK_RPC_COMMAND_MS   OpenClaw command timeout.
+  QUIET_CORE_KITCHEN_SINK_RPC_INSTALL_MS   Plugin install timeout.
+  QUIET_CORE_KITCHEN_SINK_RPC_CALL_MS      RPC call timeout.
+  QUIET_CORE_KITCHEN_SINK_RPC_FETCH_MS     HTTP readiness probe timeout.
+  QUIET_CORE_KITCHEN_SINK_RPC_FETCH_BODY_BYTES  HTTP readiness probe response ceiling.
+  QUIET_CORE_KITCHEN_SINK_MAX_RSS_MIB      Gateway RSS ceiling.
+  QUIET_CORE_KITCHEN_SINK_COMMAND_MAX_RSS_MIB  Install/CLI command RSS ceiling.
+  QUIET_CORE_KITCHEN_SINK_OUTPUT_CAPTURE_CHARS  Per-command stdout/stderr capture ceiling.
+  QUIET_CORE_KITCHEN_SINK_KEEP_TMP=1       Preserve the isolated temp home.
 `;
 }
 
@@ -163,51 +163,51 @@ export function readPositiveTimerMs(raw, fallback, label = "value") {
 
 export function resolveKitchenSinkRpcConfig(env = process.env) {
   const commandTimeoutMs = readPositiveTimerMs(
-    env.OPENCLAW_KITCHEN_SINK_RPC_COMMAND_MS,
+    env.QUIET_CORE_KITCHEN_SINK_RPC_COMMAND_MS,
     DEFAULT_COMMAND_TIMEOUT_MS,
-    "OPENCLAW_KITCHEN_SINK_RPC_COMMAND_MS",
+    "QUIET_CORE_KITCHEN_SINK_RPC_COMMAND_MS",
   );
   return {
     commandMaxRssMiB: readPositiveInt(
-      env.OPENCLAW_KITCHEN_SINK_COMMAND_MAX_RSS_MIB,
+      env.QUIET_CORE_KITCHEN_SINK_COMMAND_MAX_RSS_MIB,
       DEFAULT_MAX_COMMAND_RSS_MIB,
-      "OPENCLAW_KITCHEN_SINK_COMMAND_MAX_RSS_MIB",
+      "QUIET_CORE_KITCHEN_SINK_COMMAND_MAX_RSS_MIB",
     ),
     commandTimeoutMs,
     fetchBodyMaxBytes: readPositiveInt(
-      env.OPENCLAW_KITCHEN_SINK_RPC_FETCH_BODY_BYTES,
+      env.QUIET_CORE_KITCHEN_SINK_RPC_FETCH_BODY_BYTES,
       DEFAULT_FETCH_BODY_MAX_BYTES,
-      "OPENCLAW_KITCHEN_SINK_RPC_FETCH_BODY_BYTES",
+      "QUIET_CORE_KITCHEN_SINK_RPC_FETCH_BODY_BYTES",
     ),
     fetchTimeoutMs: readPositiveTimerMs(
-      env.OPENCLAW_KITCHEN_SINK_RPC_FETCH_MS,
+      env.QUIET_CORE_KITCHEN_SINK_RPC_FETCH_MS,
       DEFAULT_FETCH_TIMEOUT_MS,
-      "OPENCLAW_KITCHEN_SINK_RPC_FETCH_MS",
+      "QUIET_CORE_KITCHEN_SINK_RPC_FETCH_MS",
     ),
     installTimeoutMs: readPositiveTimerMs(
-      env.OPENCLAW_KITCHEN_SINK_RPC_INSTALL_MS,
+      env.QUIET_CORE_KITCHEN_SINK_RPC_INSTALL_MS,
       Math.max(commandTimeoutMs, DEFAULT_INSTALL_TIMEOUT_MS),
-      "OPENCLAW_KITCHEN_SINK_RPC_INSTALL_MS",
+      "QUIET_CORE_KITCHEN_SINK_RPC_INSTALL_MS",
     ),
     maxRssMiB: readPositiveInt(
-      env.OPENCLAW_KITCHEN_SINK_MAX_RSS_MIB,
+      env.QUIET_CORE_KITCHEN_SINK_MAX_RSS_MIB,
       DEFAULT_MAX_RSS_MIB,
-      "OPENCLAW_KITCHEN_SINK_MAX_RSS_MIB",
+      "QUIET_CORE_KITCHEN_SINK_MAX_RSS_MIB",
     ),
     outputCaptureChars: readPositiveInt(
-      env.OPENCLAW_KITCHEN_SINK_OUTPUT_CAPTURE_CHARS,
+      env.QUIET_CORE_KITCHEN_SINK_OUTPUT_CAPTURE_CHARS,
       DEFAULT_OUTPUT_CAPTURE_CHARS,
-      "OPENCLAW_KITCHEN_SINK_OUTPUT_CAPTURE_CHARS",
+      "QUIET_CORE_KITCHEN_SINK_OUTPUT_CAPTURE_CHARS",
     ),
     readyTimeoutMs: readPositiveTimerMs(
-      env.OPENCLAW_KITCHEN_SINK_RPC_READY_MS,
+      env.QUIET_CORE_KITCHEN_SINK_RPC_READY_MS,
       DEFAULT_READY_TIMEOUT_MS,
-      "OPENCLAW_KITCHEN_SINK_RPC_READY_MS",
+      "QUIET_CORE_KITCHEN_SINK_RPC_READY_MS",
     ),
     rpcTimeoutMs: readPositiveTimerMs(
-      env.OPENCLAW_KITCHEN_SINK_RPC_CALL_MS,
+      env.QUIET_CORE_KITCHEN_SINK_RPC_CALL_MS,
       DEFAULT_RPC_TIMEOUT_MS,
-      "OPENCLAW_KITCHEN_SINK_RPC_CALL_MS",
+      "QUIET_CORE_KITCHEN_SINK_RPC_CALL_MS",
     ),
   };
 }
@@ -241,12 +241,12 @@ export async function findAvailableLoopbackPort(options = {}) {
 }
 
 export async function resolveKitchenSinkRpcPort(env = process.env, options = {}) {
-  const rawPort = (env.OPENCLAW_KITCHEN_SINK_RPC_PORT || "").trim();
+  const rawPort = (env.QUIET_CORE_KITCHEN_SINK_RPC_PORT || "").trim();
   if (rawPort) {
-    const port = readPositiveInt(rawPort, 0, "OPENCLAW_KITCHEN_SINK_RPC_PORT");
+    const port = readPositiveInt(rawPort, 0, "QUIET_CORE_KITCHEN_SINK_RPC_PORT");
     if (port > 65535) {
       throw new Error(
-        `OPENCLAW_KITCHEN_SINK_RPC_PORT must be a TCP port from 1 to 65535. Got: ${JSON.stringify(rawPort)}`,
+        `QUIET_CORE_KITCHEN_SINK_RPC_PORT must be a TCP port from 1 to 65535. Got: ${JSON.stringify(rawPort)}`,
       );
     }
     return port;
@@ -255,11 +255,11 @@ export async function resolveKitchenSinkRpcPort(env = process.env, options = {})
 }
 
 function resolveOpenClawRunner() {
-  if (process.env.OPENCLAW_ENTRY) {
+  if (process.env.QUIET_CORE_ENTRY) {
     return {
       command: "node",
-      baseArgs: [process.env.OPENCLAW_ENTRY],
-      label: process.env.OPENCLAW_ENTRY,
+      baseArgs: [process.env.QUIET_CORE_ENTRY],
+      label: process.env.QUIET_CORE_ENTRY,
     };
   }
   for (const candidate of ["dist/index.mjs", "dist/index.js"]) {
@@ -268,13 +268,13 @@ function resolveOpenClawRunner() {
       return { command: "node", baseArgs: [resolved], label: resolved };
     }
   }
-  return { pnpm: true, baseArgs: ["openclaw"], label: "pnpm openclaw" };
+  return { pnpm: true, baseArgs: ["quiet-core-bot"], label: "pnpm quiet-core-bot" };
 }
 
 export function makeEnv() {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-kitchen-sink-rpc-"));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-kitchen-sink-rpc-"));
   const home = path.join(root, "home");
-  const stateDir = path.join(home, ".openclaw");
+  const stateDir = path.join(home, ".quiet-core-bot");
   fs.mkdirSync(stateDir, { recursive: true });
   return {
     root,
@@ -282,13 +282,13 @@ export function makeEnv() {
       ...process.env,
       HOME: home,
       USERPROFILE: home,
-      OPENCLAW_HOME: home,
-      OPENCLAW_STATE_DIR: stateDir,
-      OPENCLAW_CONFIG_PATH: path.join(stateDir, "openclaw.json"),
-      OPENCLAW_NO_ONBOARD: "1",
-      OPENCLAW_SKIP_PROVIDERS: "0",
-      OPENCLAW_KITCHEN_SINK_PERSONALITY:
-        process.env.OPENCLAW_KITCHEN_SINK_PERSONALITY || "conformance",
+      QUIET_CORE_HOME: home,
+      QUIET_CORE_STATE_DIR: stateDir,
+      QUIET_CORE_CONFIG_PATH: path.join(stateDir, "quiet-core-bot.json"),
+      QUIET_CORE_NO_ONBOARD: "1",
+      QUIET_CORE_SKIP_PROVIDERS: "0",
+      QUIET_CORE_KITCHEN_SINK_PERSONALITY:
+        process.env.QUIET_CORE_KITCHEN_SINK_PERSONALITY || "conformance",
     },
   };
 }
@@ -902,8 +902,8 @@ async function rpcCall(method, params, options) {
   const module = await loadCallGatewayModule(options.runner);
   const payload = module
     ? await module.callGateway({
-        config: readJson(options.env.OPENCLAW_CONFIG_PATH),
-        configPath: options.env.OPENCLAW_CONFIG_PATH,
+        config: readJson(options.env.QUIET_CORE_CONFIG_PATH),
+        configPath: options.env.QUIET_CORE_CONFIG_PATH,
         url: `ws://127.0.0.1:${options.port}`,
         token: TOKEN,
         method,
@@ -988,7 +988,7 @@ export function usesBuiltOpenClawEntry(runner, cwd = process.cwd(), env = proces
     return false;
   }
   const entry = runner.baseArgs[0];
-  if (env.OPENCLAW_ENTRY && entry === env.OPENCLAW_ENTRY) {
+  if (env.QUIET_CORE_ENTRY && entry === env.QUIET_CORE_ENTRY) {
     return true;
   }
   const relative = path.relative(path.resolve(cwd, "dist"), path.resolve(cwd, entry));
@@ -1217,7 +1217,7 @@ function cancelReaderSoon(reader) {
 }
 
 function configureKitchenSink(env, port) {
-  const configPath = env.OPENCLAW_CONFIG_PATH;
+  const configPath = env.QUIET_CORE_CONFIG_PATH;
   const config = fs.existsSync(configPath) ? readJson(configPath) : {};
   config.gateway = {
     ...config.gateway,
@@ -1240,7 +1240,7 @@ function configureKitchenSink(env, port) {
         enabled: true,
         config: {
           ...config.plugins?.entries?.[PLUGIN_ID]?.config,
-          personality: env.OPENCLAW_KITCHEN_SINK_PERSONALITY,
+          personality: env.QUIET_CORE_KITCHEN_SINK_PERSONALITY,
         },
         hooks: {
           ...config.plugins?.entries?.[PLUGIN_ID]?.hooks,
@@ -2070,7 +2070,7 @@ async function samplePosixProcessTree(pid, run, commandLineNeedles) {
     const commandMatches = descendants.filter(matchesCommandNeedles);
     const rootCommandMatches = rootRow && matchesCommandNeedles(rootRow) ? [rootRow] : [];
     const gatewayTitleMatches = descendants.filter((row) =>
-      row.command.toLowerCase().includes("openclaw-gateway"),
+      row.command.toLowerCase().includes("quiet-core-bot-gateway"),
     );
     const selected = selectPeakRssProcess(
       commandMatches.length > 0
@@ -2559,7 +2559,7 @@ export async function main() {
   const port = await resolveKitchenSinkRpcPort();
   const { root, env } = makeEnv();
   const logPath = path.join(root, "gateway.log");
-  const keepTmp = process.env.OPENCLAW_KITCHEN_SINK_KEEP_TMP === "1";
+  const keepTmp = process.env.QUIET_CORE_KITCHEN_SINK_KEEP_TMP === "1";
   let failed = false;
   let child;
 
@@ -2733,7 +2733,7 @@ export async function main() {
 
     const uiDescriptors = await retryRpcCall("plugins.uiDescriptors", {}, rpcOptions);
     assertKitchenSinkUiDescriptors(uiDescriptors, {
-      expectDescriptor: env.OPENCLAW_KITCHEN_SINK_PERSONALITY !== "conformance",
+      expectDescriptor: env.QUIET_CORE_KITCHEN_SINK_PERSONALITY !== "conformance",
     });
     const stability = await retryRpcCall("diagnostics.stability", {}, rpcOptions);
     assertDiagnosticStabilityClean(stability);

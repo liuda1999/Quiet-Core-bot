@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import type { AuthProfileStore } from "./auth-profiles.js";
 import { resolveEnvApiKey } from "./model-auth-env.js";
@@ -17,11 +17,11 @@ import { hasAuthForModelProvider } from "./model-provider-auth.js";
 async function writeWorkspaceAuthEvidencePlugin(workspaceDir: string) {
   // Creates a trusted workspace plugin manifest with local-file auth evidence
   // so runtime and picker checks exercise the same scoped metadata path.
-  const pluginDir = path.join(workspaceDir, ".openclaw", "extensions", "workspace-cloud");
+  const pluginDir = path.join(workspaceDir, ".quiet-core-bot", "extensions", "workspace-cloud");
   await fs.mkdir(pluginDir, { recursive: true });
   await fs.writeFile(path.join(pluginDir, "index.ts"), "export default {}\n", "utf8");
   await fs.writeFile(
-    path.join(pluginDir, "openclaw.plugin.json"),
+    path.join(pluginDir, "quiet-core-bot.plugin.json"),
     JSON.stringify({
       id: "workspace-cloud",
       configSchema: { type: "object" },
@@ -49,7 +49,7 @@ describe("workspace plugin model auth evidence", () => {
   it("uses trusted workspace plugin auth evidence across runtime and picker auth checks", async () => {
     // Without workspace scope the same env var is ignored; with scope, the
     // plugin-owned marker is accepted across all auth surfaces.
-    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-workspace-auth-"));
+    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-workspace-auth-"));
     const workspaceDir = path.join(tempRoot, "workspace");
     const bundledDir = path.join(tempRoot, "bundled");
     const stateDir = path.join(tempRoot, "state");
@@ -69,8 +69,8 @@ describe("workspace plugin model auth evidence", () => {
     try {
       await withEnvAsync(
         {
-          OPENCLAW_BUNDLED_PLUGINS_DIR: bundledDir,
-          OPENCLAW_STATE_DIR: stateDir,
+          QUIET_CORE_BUNDLED_PLUGINS_DIR: bundledDir,
+          QUIET_CORE_STATE_DIR: stateDir,
           WORKSPACE_CLOUD_CREDENTIALS: credentialsPath,
         },
         async () => {

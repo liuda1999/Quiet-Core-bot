@@ -156,7 +156,7 @@ describe("qa run config", () => {
   });
 
   it("anchors generated run output dirs under the provided repo root", () => {
-    const repoRoot = path.resolve("/tmp/openclaw-repo");
+    const repoRoot = path.resolve("/tmp/quiet-core-bot-repo");
     const outputDir = createQaRunOutputDir(repoRoot);
     expect(outputDir.startsWith(path.join(repoRoot, ".artifacts", "qa-e2e", "lab-"))).toBe(true);
   });
@@ -165,7 +165,7 @@ describe("qa run config", () => {
     vi.useFakeTimers();
     try {
       vi.setSystemTime(new Date("2026-06-23T07:30:00.000Z"));
-      const repoRoot = path.resolve("/tmp/openclaw-repo");
+      const repoRoot = path.resolve("/tmp/quiet-core-bot-repo");
       const first = createQaRunOutputDir(repoRoot);
       const second = createQaRunOutputDir(repoRoot);
 

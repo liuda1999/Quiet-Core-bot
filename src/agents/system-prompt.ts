@@ -7,12 +7,12 @@ import { createHmac, createHash } from "node:crypto";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalLowercaseString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/normalization-core/string-coerce";
 import {
   normalizeStringEntries,
   normalizeStringEntriesLower,
   normalizeUniqueStringEntries,
-} from "@openclaw/normalization-core/string-normalization";
+} from "@quiet-core/normalization-core/string-normalization";
 import type { SourceReplyDeliveryMode } from "../auto-reply/get-reply-options.types.js";
 import type { ReasoningLevel, ThinkLevel } from "../auto-reply/thinking.js";
 import { SILENT_REPLY_TOKEN } from "../auto-reply/tokens.js";
@@ -588,7 +588,7 @@ function buildDocsSection(params: {
     "## Documentation",
     docsPath ? `Docs: ${docsPath}` : "Docs: https://github.com/liuda1999/Quiet-Core-bot",
     docsPath ? "Mirror: https://github.com/liuda1999/Quiet-Core-bot" : undefined,
-    sourcePath ? `Source: ${sourcePath}` : "Source: https://github.com/openclaw/openclaw",
+    sourcePath ? `Source: ${sourcePath}` : "Source: https://github.com/liuda1999/Quiet-Core-bot",
     docsPath
       ? `Docs are authoritative for Quiet Core bot self-knowledge: before understanding how Quiet Core bot works (memory/daily notes, sessions, tools, Gateway, config, commands, project context), use \`${params.readToolName}\` or search local docs first; treat AGENTS.md/project context, workspace/profile/memory notes, and \`memory_search\` as instruction context or user memory, not Quiet Core bot design/implementation knowledge.`
       : "Docs are authoritative for Quiet Core bot self-knowledge: before understanding how Quiet Core bot works (memory/daily notes, sessions, tools, Gateway, config, commands, project context), use the docs mirror first when web tooling is available; treat AGENTS.md/project context, workspace/profile/memory notes, and `memory_search` as instruction context or user memory, not Quiet Core bot design/implementation knowledge.",
@@ -933,7 +933,7 @@ export function buildAgentSystemPrompt(params: {
       : "Treat this directory as the single global workspace for file operations unless explicitly instructed otherwise.";
   const workspaceOnlyGuidance =
     params.fsWorkspaceOnly === true
-      ? "tools.fs.workspaceOnly is enabled: scratch/temp/meta files that file tools must later read/write/edit must stay inside the workspace, preferably as relative paths under `.openclaw/tmp/`. Do not write files to `/tmp/...` with exec if a later read/write/edit/apply_patch tool needs them; use `.openclaw/tmp/...` instead."
+      ? "tools.fs.workspaceOnly is enabled: scratch/temp/meta files that file tools must later read/write/edit must stay inside the workspace, preferably as relative paths under `.quiet-core-bot/tmp/`. Do not write files to `/tmp/...` with exec if a later read/write/edit/apply_patch tool needs them; use `.quiet-core-bot/tmp/...` instead."
       : "";
   const safetySection = [
     "## Safety",

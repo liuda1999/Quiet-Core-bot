@@ -53,8 +53,8 @@ app or helper that should own UI automation.
 Example resets (replace bundle ID as needed):
 
 ```bash
-sudo tccutil reset Accessibility ai.openclaw.mac
-sudo tccutil reset ScreenCapture ai.openclaw.mac
+sudo tccutil reset Accessibility ai.quiet-core-bot.mac
+sudo tccutil reset ScreenCapture ai.quiet-core-bot.mac
 sudo tccutil reset AppleEvents
 ```
 

@@ -4,7 +4,7 @@
  * The only persisted setting here is the Node package manager used by skill
  * installs; validation stays close to the CLI option handling.
  */
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
 import type { RuntimeEnv } from "../../../runtime.js";
 import type { OnboardOptions } from "../../onboard-types.js";
 

@@ -13,7 +13,7 @@ import {
   cleanupTrackedTempDirs,
   makeTrackedTempDir,
 } from "../../../plugins/test-helpers/fs-fixtures.js";
-import { runOpenClawStateWriteTransaction } from "../../../state/openclaw-state-db.js";
+import { runOpenClawStateWriteTransaction } from "../../../state/quiet-core-bot-state-db.js";
 import {
   DISABLE_PLUGIN_REGISTRY_MIGRATION_ENV,
   FORCE_PLUGIN_REGISTRY_MIGRATION_ENV,
@@ -28,13 +28,13 @@ afterEach(() => {
 });
 
 function makeTempDir() {
-  return makeTrackedTempDir("openclaw-plugin-registry-migration", tempDirs);
+  return makeTrackedTempDir("quiet-core-bot-plugin-registry-migration", tempDirs);
 }
 
 function hermeticEnv(overrides: NodeJS.ProcessEnv = {}): NodeJS.ProcessEnv {
   return {
-    OPENCLAW_BUNDLED_PLUGINS_DIR: undefined,
-    OPENCLAW_VERSION: "2026.4.25",
+    QUIET_CORE_BUNDLED_PLUGINS_DIR: undefined,
+    QUIET_CORE_VERSION: "2026.4.25",
     VITEST: "true",
     ...overrides,
   };
@@ -52,7 +52,7 @@ function createCandidate(
     "utf8",
   );
   fs.writeFileSync(
-    path.join(rootDir, "openclaw.plugin.json"),
+    path.join(rootDir, "quiet-core-bot.plugin.json"),
     JSON.stringify({
       id,
       name: id,
@@ -140,7 +140,7 @@ function insertStalePersistedIndexRow(stateDir: string) {
         `,
       ).run();
     },
-    { env: { ...process.env, OPENCLAW_STATE_DIR: stateDir } },
+    { env: { ...process.env, QUIET_CORE_STATE_DIR: stateDir } },
   );
 }
 

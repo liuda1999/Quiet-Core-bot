@@ -5,8 +5,8 @@ import { safePathSegmentHashed } from "../infra/install-safe-path.js";
 import { resolveDefaultPluginNpmDir, resolvePluginNpmProjectsDir } from "./install-paths.js";
 import { listManagedPluginNpmRootsSync } from "./npm-project-roots.js";
 
-export const RETAINED_MANAGED_NPM_INSTALL_MARKER = ".openclaw-retained-npm-install.json";
-const RETAINED_MANAGED_NPM_INSTALL_MARKER_DIR = ".openclaw-retained-npm-installs";
+export const RETAINED_MANAGED_NPM_INSTALL_MARKER = ".quiet-core-bot-retained-npm-install.json";
+const RETAINED_MANAGED_NPM_INSTALL_MARKER_DIR = ".quiet-core-bot-retained-npm-installs";
 
 export function resolveRetainedManagedNpmInstallPackageInfo(packageDir: string): {
   packageName: string;

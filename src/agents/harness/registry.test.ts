@@ -1,6 +1,6 @@
 // Exercises agent harness registration, ownership metadata, and selection handoff.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import {
   clearAgentHarnesses,
   disposeRegisteredAgentHarnesses,
@@ -13,7 +13,7 @@ import {
 import { selectAgentHarness } from "./selection.js";
 import type { AgentHarness } from "./types.js";
 
-const originalRuntime = process.env.OPENCLAW_AGENT_RUNTIME;
+const originalRuntime = process.env.QUIET_CORE_AGENT_RUNTIME;
 
 beforeEach(() => {
   clearAgentHarnesses();
@@ -22,9 +22,9 @@ beforeEach(() => {
 afterEach(() => {
   clearAgentHarnesses();
   if (originalRuntime == null) {
-    delete process.env.OPENCLAW_AGENT_RUNTIME;
+    delete process.env.QUIET_CORE_AGENT_RUNTIME;
   } else {
-    process.env.OPENCLAW_AGENT_RUNTIME = originalRuntime;
+    process.env.QUIET_CORE_AGENT_RUNTIME = originalRuntime;
   }
 });
 
@@ -56,7 +56,7 @@ function providerRuntimeConfig(provider: string, runtime: string): OpenClawConfi
     models: {
       providers: {
         [provider]: {
-          baseUrl: "https://api.openclaw.test/v1",
+          baseUrl: "https://api.quiet-core-bot.test/v1",
           agentRuntime: { id: runtime },
           models: [],
         },
@@ -128,10 +128,10 @@ describe("agent harness registry", () => {
   it("keeps model-specific harnesses behind plugin registration in auto mode", () => {
     // Auto mode should not select a model-specific runtime until the owning
     // plugin has registered its harness in this process.
-    process.env.OPENCLAW_AGENT_RUNTIME = "auto";
+    process.env.QUIET_CORE_AGENT_RUNTIME = "auto";
 
     expect(selectAgentHarness({ provider: "plugin-models", modelId: "custom-1" }).id).toBe(
-      "openclaw",
+      "quiet-core-bot",
     );
 
     registerAgentHarness(makeHarness("custom", { providers: ["plugin-models"] }), {
@@ -144,15 +144,15 @@ describe("agent harness registry", () => {
   });
 
   it("falls back to Quiet Core bot for other models", () => {
-    process.env.OPENCLAW_AGENT_RUNTIME = "auto";
+    process.env.QUIET_CORE_AGENT_RUNTIME = "auto";
 
     expect(selectAgentHarness({ provider: "anthropic", modelId: "sonnet-4.6" }).id).toBe(
-      "openclaw",
+      "quiet-core-bot",
     );
   });
 
   it("lets a plugin harness win in auto mode by priority", () => {
-    process.env.OPENCLAW_AGENT_RUNTIME = "auto";
+    process.env.QUIET_CORE_AGENT_RUNTIME = "auto";
     registerAgentHarness(makeHarness("plugin-harness", { priority: 200 }), {
       ownerPluginId: "plugin-a",
     });
@@ -169,9 +169,9 @@ describe("agent harness registry", () => {
       selectAgentHarness({
         provider: "codex",
         modelId: "gpt-5.4",
-        config: providerRuntimeConfig("codex", "openclaw"),
+        config: providerRuntimeConfig("codex", "quiet-core-bot"),
       }).id,
-    ).toBe("openclaw");
+    ).toBe("quiet-core-bot");
   });
 
   it("honors explicit provider plugin runtime policy when the plugin harness is registered", () => {

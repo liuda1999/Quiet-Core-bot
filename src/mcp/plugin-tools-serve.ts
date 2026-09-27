@@ -17,7 +17,7 @@ import {
 } from "../agents/tool-policy.js";
 import type { AnyAgentTool } from "../agents/tools/common.js";
 import { getRuntimeConfig } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { routeLogsToStderr } from "../logging/console.js";
 import { ensureStandalonePluginToolRegistryLoaded, resolvePluginTools } from "../plugins/tools.js";
@@ -62,7 +62,7 @@ export function createPluginToolsMcpServer(
 ): Server {
   const cfg = params.config ?? getRuntimeConfig();
   const tools = params.tools ?? resolveTools(cfg);
-  return createToolsMcpServer({ name: "openclaw-plugin-tools", tools });
+  return createToolsMcpServer({ name: "quiet-core-bot-plugin-tools", tools });
 }
 
 export async function servePluginToolsMcp(): Promise<void> {

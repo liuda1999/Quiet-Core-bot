@@ -10,7 +10,7 @@ import {
   type Api,
   type Model,
   type ModelThinkingLevel,
-} from "openclaw/plugin-sdk/llm";
+} from "quiet-core-bot/plugin-sdk/llm";
 import { afterEach, describe, expect, it } from "vitest";
 import { renderCatNoncePngBase64 } from "../../test/helpers/live-image-probe.js";
 import { discoverAuthStorage, discoverModels } from "../agents/agent-model-discovery.js";
@@ -72,13 +72,13 @@ import { startGatewayServer } from "./server.impl.js";
 import { readSessionMessagesAsync } from "./session-transcript-readers.js";
 import { loadSessionEntry } from "./session-utils.js";
 
-const ZAI_FALLBACK = isTruthyEnvValue(process.env.OPENCLAW_LIVE_GATEWAY_ZAI_FALLBACK);
+const ZAI_FALLBACK = isTruthyEnvValue(process.env.QUIET_CORE_LIVE_GATEWAY_ZAI_FALLBACK);
 const REQUIRE_PROFILE_KEYS = isLiveProfileKeyModeEnabled();
 const LIVE_CREDENTIAL_PRECEDENCE = REQUIRE_PROFILE_KEYS ? "profile-first" : "env-first";
-const PROVIDERS = parseFilter(process.env.OPENCLAW_LIVE_GATEWAY_PROVIDERS);
-const GATEWAY_LIVE_SMOKE = isTruthyEnvValue(process.env.OPENCLAW_LIVE_GATEWAY_SMOKE);
+const PROVIDERS = parseFilter(process.env.QUIET_CORE_LIVE_GATEWAY_PROVIDERS);
+const GATEWAY_LIVE_SMOKE = isTruthyEnvValue(process.env.QUIET_CORE_LIVE_GATEWAY_SMOKE);
 const THINKING_LEVEL = resolveGatewayLiveThinkingLevel({
-  raw: process.env.OPENCLAW_LIVE_GATEWAY_THINKING,
+  raw: process.env.QUIET_CORE_LIVE_GATEWAY_THINKING,
   smoke: GATEWAY_LIVE_SMOKE,
 });
 const ENABLE_EXTRA_TOOL_PROBES = !GATEWAY_LIVE_SMOKE;
@@ -91,7 +91,7 @@ const EXPLICIT_LIVE_FALLBACK_CONTEXT_WINDOW = 128_000;
 const GATEWAY_LIVE_MAX_TIMEOUT_MS = 2 * 60 * 60 * 1000;
 const GATEWAY_LIVE_PROBE_TIMEOUT_MS = Math.max(
   30_000,
-  toInt(process.env.OPENCLAW_LIVE_GATEWAY_STEP_TIMEOUT_MS, 90_000),
+  toInt(process.env.QUIET_CORE_LIVE_GATEWAY_STEP_TIMEOUT_MS, 90_000),
 );
 const GATEWAY_LIVE_SETUP_TIMEOUT_MS = resolveGatewayLiveSetupTimeoutMs();
 const GATEWAY_LIVE_MODEL_TIMEOUT_MS = resolveGatewayLiveModelTimeoutMs();
@@ -101,7 +101,7 @@ const GATEWAY_LIVE_AGENT_RUN_TIMEOUT_MS = resolveGatewayLiveAgentRunTimeoutMs();
 const GATEWAY_LIVE_AGENT_WAIT_TIMEOUT_MS = resolveGatewayLiveAgentWaitTimeoutMs();
 const GATEWAY_LIVE_HEARTBEAT_MS = Math.max(
   1_000,
-  toInt(process.env.OPENCLAW_LIVE_GATEWAY_HEARTBEAT_MS, 30_000),
+  toInt(process.env.QUIET_CORE_LIVE_GATEWAY_HEARTBEAT_MS, 30_000),
 );
 const GATEWAY_LIVE_STRIP_SCAFFOLDING_MODEL_KEYS = new Set([
   "google/gemini-3-flash-preview",
@@ -126,9 +126,9 @@ const GATEWAY_LIVE_TOOL_NONCE_MISS_SKIP_MODEL_KEYS = new Set([
 ]);
 const GATEWAY_LIVE_MAX_MODELS = resolveGatewayLiveMaxModels();
 const GATEWAY_LIVE_SUITE_TIMEOUT_MS = resolveGatewayLiveSuiteTimeoutMs(GATEWAY_LIVE_MAX_MODELS);
-const QUIET_LIVE_LOGS = process.env.OPENCLAW_LIVE_TEST_QUIET !== "0";
+const QUIET_LIVE_LOGS = process.env.QUIET_CORE_LIVE_TEST_QUIET !== "0";
 
-const describeLive = isLiveTestEnabled(["OPENCLAW_LIVE_GATEWAY"]) ? describe : describe.skip;
+const describeLive = isLiveTestEnabled(["QUIET_CORE_LIVE_GATEWAY"]) ? describe : describe.skip;
 
 function parseFilter(raw?: string): Set<string> | null {
   const trimmed = raw?.trim();
@@ -254,22 +254,22 @@ function toInt(value: string | undefined, fallback: number): number {
 }
 
 function resolveGatewayLiveSetupTimeoutMs(
-  raw = process.env.OPENCLAW_LIVE_GATEWAY_SETUP_TIMEOUT_MS,
+  raw = process.env.QUIET_CORE_LIVE_GATEWAY_SETUP_TIMEOUT_MS,
 ): number {
   return Math.max(1_000, toInt(raw, 180_000));
 }
 
 function resolveGatewayLiveMaxModels(): number {
-  const gatewayRaw = process.env.OPENCLAW_LIVE_GATEWAY_MAX_MODELS?.trim();
+  const gatewayRaw = process.env.QUIET_CORE_LIVE_GATEWAY_MAX_MODELS?.trim();
   if (gatewayRaw) {
     return Math.max(0, toInt(gatewayRaw, 0));
   }
-  const rawModels = process.env.OPENCLAW_LIVE_GATEWAY_MODELS?.trim();
+  const rawModels = process.env.QUIET_CORE_LIVE_GATEWAY_MODELS?.trim();
   const useSmallModels = rawModels === "small";
   const useExplicitModels =
     Boolean(rawModels) && rawModels !== "modern" && rawModels !== "all" && !useSmallModels;
   return resolveHighSignalLiveModelLimit({
-    rawMaxModels: process.env.OPENCLAW_LIVE_MAX_MODELS,
+    rawMaxModels: process.env.QUIET_CORE_LIVE_MAX_MODELS,
     useExplicitModels,
     defaultLimit: useSmallModels
       ? DEFAULT_SMALL_LIVE_MODEL_LIMIT
@@ -293,8 +293,8 @@ function resolveGatewayLiveSuiteTimeoutMs(maxModels: number): number {
 }
 
 function resolveGatewayLiveModelTimeoutMs(
-  gatewayModelTimeoutRaw = process.env.OPENCLAW_LIVE_GATEWAY_MODEL_TIMEOUT_MS,
-  liveModelTimeoutRaw = process.env.OPENCLAW_LIVE_MODEL_TIMEOUT_MS,
+  gatewayModelTimeoutRaw = process.env.QUIET_CORE_LIVE_GATEWAY_MODEL_TIMEOUT_MS,
+  liveModelTimeoutRaw = process.env.QUIET_CORE_LIVE_MODEL_TIMEOUT_MS,
   stepTimeoutMs = GATEWAY_LIVE_PROBE_TIMEOUT_MS,
 ): number {
   const requested = toInt(gatewayModelTimeoutRaw, toInt(liveModelTimeoutRaw, 300_000));
@@ -538,10 +538,10 @@ function enterProductionEnvForLiveRun() {
   const previous = {
     vitest: process.env.VITEST,
     nodeEnv: process.env.NODE_ENV,
-    testFast: process.env.OPENCLAW_TEST_FAST,
+    testFast: process.env.QUIET_CORE_TEST_FAST,
   };
   delete process.env.VITEST;
-  delete process.env.OPENCLAW_TEST_FAST;
+  delete process.env.QUIET_CORE_TEST_FAST;
   process.env.NODE_ENV = "production";
   return previous;
 }
@@ -557,9 +557,9 @@ function restoreProductionEnvForLiveRun(previous: {
     process.env.VITEST = previous.vitest;
   }
   if (previous.testFast === undefined) {
-    delete process.env.OPENCLAW_TEST_FAST;
+    delete process.env.QUIET_CORE_TEST_FAST;
   } else {
-    process.env.OPENCLAW_TEST_FAST = previous.testFast;
+    process.env.QUIET_CORE_TEST_FAST = previous.testFast;
   }
   if (previous.nodeEnv === undefined) {
     delete process.env.NODE_ENV;
@@ -1078,9 +1078,9 @@ describe("resolveGatewayLiveSuiteTimeoutMs", () => {
 });
 
 describe("resolveGatewayLiveMaxModels", () => {
-  const originalGatewayModels = process.env.OPENCLAW_LIVE_GATEWAY_MODELS;
-  const originalGatewayMax = process.env.OPENCLAW_LIVE_GATEWAY_MAX_MODELS;
-  const originalSharedMax = process.env.OPENCLAW_LIVE_MAX_MODELS;
+  const originalGatewayModels = process.env.QUIET_CORE_LIVE_GATEWAY_MODELS;
+  const originalGatewayMax = process.env.QUIET_CORE_LIVE_GATEWAY_MAX_MODELS;
+  const originalSharedMax = process.env.QUIET_CORE_LIVE_MAX_MODELS;
   function restoreEnvValue(name: string, value: string | undefined): void {
     if (value === undefined) {
       delete process.env[name];
@@ -1090,35 +1090,35 @@ describe("resolveGatewayLiveMaxModels", () => {
   }
 
   afterEach(() => {
-    restoreEnvValue("OPENCLAW_LIVE_GATEWAY_MODELS", originalGatewayModels);
-    restoreEnvValue("OPENCLAW_LIVE_GATEWAY_MAX_MODELS", originalGatewayMax);
-    restoreEnvValue("OPENCLAW_LIVE_MAX_MODELS", originalSharedMax);
+    restoreEnvValue("QUIET_CORE_LIVE_GATEWAY_MODELS", originalGatewayModels);
+    restoreEnvValue("QUIET_CORE_LIVE_GATEWAY_MAX_MODELS", originalGatewayMax);
+    restoreEnvValue("QUIET_CORE_LIVE_MAX_MODELS", originalSharedMax);
   });
 
   it("defaults modern gateway sweeps to the curated high-signal cap", () => {
-    delete process.env.OPENCLAW_LIVE_GATEWAY_MODELS;
-    delete process.env.OPENCLAW_LIVE_GATEWAY_MAX_MODELS;
-    delete process.env.OPENCLAW_LIVE_MAX_MODELS;
+    delete process.env.QUIET_CORE_LIVE_GATEWAY_MODELS;
+    delete process.env.QUIET_CORE_LIVE_GATEWAY_MAX_MODELS;
+    delete process.env.QUIET_CORE_LIVE_MAX_MODELS;
 
     expect(resolveGatewayLiveMaxModels()).toBe(DEFAULT_HIGH_SIGNAL_LIVE_MODEL_LIMIT);
   });
 
   it("defaults small gateway sweeps to the curated small-model cap", () => {
-    process.env.OPENCLAW_LIVE_GATEWAY_MODELS = "small";
-    delete process.env.OPENCLAW_LIVE_GATEWAY_MAX_MODELS;
-    delete process.env.OPENCLAW_LIVE_MAX_MODELS;
+    process.env.QUIET_CORE_LIVE_GATEWAY_MODELS = "small";
+    delete process.env.QUIET_CORE_LIVE_GATEWAY_MAX_MODELS;
+    delete process.env.QUIET_CORE_LIVE_MAX_MODELS;
 
     expect(resolveGatewayLiveMaxModels()).toBe(DEFAULT_SMALL_LIVE_MODEL_LIMIT);
   });
 
   it("keeps explicit gateway model lists uncapped unless a cap is provided", () => {
-    process.env.OPENCLAW_LIVE_GATEWAY_MODELS = "openai/gpt-5.5,anthropic/claude-opus-4-6";
-    delete process.env.OPENCLAW_LIVE_GATEWAY_MAX_MODELS;
-    delete process.env.OPENCLAW_LIVE_MAX_MODELS;
+    process.env.QUIET_CORE_LIVE_GATEWAY_MODELS = "openai/gpt-5.5,anthropic/claude-opus-4-6";
+    delete process.env.QUIET_CORE_LIVE_GATEWAY_MAX_MODELS;
+    delete process.env.QUIET_CORE_LIVE_MAX_MODELS;
 
     expect(resolveGatewayLiveMaxModels()).toBe(0);
 
-    process.env.OPENCLAW_LIVE_GATEWAY_MAX_MODELS = "2";
+    process.env.QUIET_CORE_LIVE_GATEWAY_MAX_MODELS = "2";
     expect(resolveGatewayLiveMaxModels()).toBe(2);
   });
 });
@@ -1434,7 +1434,7 @@ describe("buildLiveGatewayConfig", () => {
     });
 
     expect(cfg.agents?.defaults?.models?.["openai/gpt-5.5"]).toEqual({
-      agentRuntime: { id: "openclaw" },
+      agentRuntime: { id: "quiet-core-bot" },
     });
   });
 
@@ -1499,22 +1499,22 @@ describe("enterProductionEnvForLiveRun", () => {
     const previous = {
       vitest: process.env.VITEST,
       nodeEnv: process.env.NODE_ENV,
-      testFast: process.env.OPENCLAW_TEST_FAST,
+      testFast: process.env.QUIET_CORE_TEST_FAST,
     };
     process.env.VITEST = "1";
     process.env.NODE_ENV = "test";
-    process.env.OPENCLAW_TEST_FAST = "1";
+    process.env.QUIET_CORE_TEST_FAST = "1";
 
     const runtimeEnv = enterProductionEnvForLiveRun();
     try {
       expect(process.env.VITEST).toBeUndefined();
       expect(process.env.NODE_ENV).toBe("production");
-      expect(process.env.OPENCLAW_TEST_FAST).toBeUndefined();
+      expect(process.env.QUIET_CORE_TEST_FAST).toBeUndefined();
     } finally {
       restoreProductionEnvForLiveRun(runtimeEnv);
       restoreOptionalEnv("VITEST", previous.vitest);
       restoreOptionalEnv("NODE_ENV", previous.nodeEnv);
-      restoreOptionalEnv("OPENCLAW_TEST_FAST", previous.testFast);
+      restoreOptionalEnv("QUIET_CORE_TEST_FAST", previous.testFast);
     }
   });
 });
@@ -2757,7 +2757,7 @@ function buildLiveGatewayConfig(params: {
         models: Object.fromEntries(
           params.candidates.map((m) => [
             `${m.provider}/${m.id}`,
-            { agentRuntime: { id: "openclaw" as const } },
+            { agentRuntime: { id: "quiet-core-bot" as const } },
           ]),
         ),
       },
@@ -2840,29 +2840,29 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
   clearRuntimeConfigSnapshot();
   const runtimeEnv = enterProductionEnvForLiveRun();
   const previous = {
-    configPath: process.env.OPENCLAW_CONFIG_PATH,
-    token: process.env.OPENCLAW_GATEWAY_TOKEN,
-    skipChannels: process.env.OPENCLAW_SKIP_CHANNELS,
-    skipGmail: process.env.OPENCLAW_SKIP_GMAIL_WATCHER,
-    skipCron: process.env.OPENCLAW_SKIP_CRON,
-    skipCanvas: process.env.OPENCLAW_SKIP_CANVAS_HOST,
-    disableBonjour: process.env.OPENCLAW_DISABLE_BONJOUR,
-    logLevel: process.env.OPENCLAW_LOG_LEVEL,
-    agentDir: process.env.OPENCLAW_AGENT_DIR,
-    stateDir: process.env.OPENCLAW_STATE_DIR,
+    configPath: process.env.QUIET_CORE_CONFIG_PATH,
+    token: process.env.QUIET_CORE_GATEWAY_TOKEN,
+    skipChannels: process.env.QUIET_CORE_SKIP_CHANNELS,
+    skipGmail: process.env.QUIET_CORE_SKIP_GMAIL_WATCHER,
+    skipCron: process.env.QUIET_CORE_SKIP_CRON,
+    skipCanvas: process.env.QUIET_CORE_SKIP_CANVAS_HOST,
+    disableBonjour: process.env.QUIET_CORE_DISABLE_BONJOUR,
+    logLevel: process.env.QUIET_CORE_LOG_LEVEL,
+    agentDir: process.env.QUIET_CORE_AGENT_DIR,
+    stateDir: process.env.QUIET_CORE_STATE_DIR,
   };
 
-  process.env.OPENCLAW_SKIP_CHANNELS = "1";
-  process.env.OPENCLAW_SKIP_GMAIL_WATCHER = "1";
-  process.env.OPENCLAW_SKIP_CRON = "1";
-  process.env.OPENCLAW_SKIP_CANVAS_HOST = "1";
+  process.env.QUIET_CORE_SKIP_CHANNELS = "1";
+  process.env.QUIET_CORE_SKIP_GMAIL_WATCHER = "1";
+  process.env.QUIET_CORE_SKIP_CRON = "1";
+  process.env.QUIET_CORE_SKIP_CANVAS_HOST = "1";
   if (QUIET_LIVE_LOGS) {
-    process.env.OPENCLAW_DISABLE_BONJOUR = "1";
-    process.env.OPENCLAW_LOG_LEVEL = "silent";
+    process.env.QUIET_CORE_DISABLE_BONJOUR = "1";
+    process.env.QUIET_CORE_LOG_LEVEL = "silent";
   }
 
   const token = `test-${randomUUID()}`;
-  process.env.OPENCLAW_GATEWAY_TOKEN = token;
+  process.env.QUIET_CORE_GATEWAY_TOKEN = token;
   const agentId = "dev";
 
   const hostAgentDir = resolveDefaultAgentDir(getRuntimeConfig());
@@ -2879,9 +2879,9 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
     usageStats: hostStore.usageStats ? { ...hostStore.usageStats } : undefined,
   });
   const tempStateDir: string | undefined = await fs.mkdtemp(
-    path.join(os.tmpdir(), "openclaw-live-state-"),
+    path.join(os.tmpdir(), "quiet-core-bot-live-state-"),
   );
-  process.env.OPENCLAW_STATE_DIR = tempStateDir;
+  process.env.QUIET_CORE_STATE_DIR = tempStateDir;
   const tempAgentDir: string | undefined = path.join(
     tempStateDir,
     "agents",
@@ -2893,13 +2893,13 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
   if (tempSessionAgentDir !== tempAgentDir) {
     saveAuthProfileStore(sanitizedStore, tempSessionAgentDir);
   }
-  process.env.OPENCLAW_AGENT_DIR = tempAgentDir;
+  process.env.QUIET_CORE_AGENT_DIR = tempAgentDir;
 
   const workspaceDir = resolveAgentWorkspaceDir(params.cfg, agentId);
   await fs.mkdir(workspaceDir, { recursive: true });
-  await fs.mkdir(path.join(workspaceDir, ".openclaw"), { recursive: true });
+  await fs.mkdir(path.join(workspaceDir, ".quiet-core-bot"), { recursive: true });
   await fs.writeFile(
-    path.join(workspaceDir, ".openclaw", "workspace-state.json"),
+    path.join(workspaceDir, ".quiet-core-bot", "workspace-state.json"),
     `${JSON.stringify(
       {
         version: 1,
@@ -2912,7 +2912,7 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
   await fs.rm(path.join(workspaceDir, "BOOTSTRAP.md"), { force: true });
   const nonceA = randomUUID();
   const nonceB = randomUUID();
-  const toolProbePath = path.join(workspaceDir, `.openclaw-live-tool-probe.${nonceA}.txt`);
+  const toolProbePath = path.join(workspaceDir, `.quiet-core-bot-live-tool-probe.${nonceA}.txt`);
   await fs.writeFile(toolProbePath, `nonceA=${nonceA}\nnonceB=${nonceB}\n`);
 
   const agentDir = resolveDefaultAgentDir(params.cfg);
@@ -2925,10 +2925,10 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
     candidates: params.candidates,
     providerOverrides: params.providerOverrides,
   });
-  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-live-"));
-  const tempConfigPath = path.join(tempDir, "openclaw.json");
+  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-live-"));
+  const tempConfigPath = path.join(tempDir, "quiet-core-bot.json");
   await fs.writeFile(tempConfigPath, `${JSON.stringify(nextCfg, null, 2)}\n`);
-  process.env.OPENCLAW_CONFIG_PATH = tempConfigPath;
+  process.env.QUIET_CORE_CONFIG_PATH = tempConfigPath;
 
   const liveProviders = nextCfg.models?.providers;
   if (liveProviders && Object.keys(liveProviders).length > 0) {
@@ -3632,16 +3632,16 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
       await fs.rm(tempStateDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 });
     }
 
-    restoreOptionalEnv("OPENCLAW_CONFIG_PATH", previous.configPath);
-    restoreOptionalEnv("OPENCLAW_GATEWAY_TOKEN", previous.token);
-    restoreOptionalEnv("OPENCLAW_SKIP_CHANNELS", previous.skipChannels);
-    restoreOptionalEnv("OPENCLAW_SKIP_GMAIL_WATCHER", previous.skipGmail);
-    restoreOptionalEnv("OPENCLAW_SKIP_CRON", previous.skipCron);
-    restoreOptionalEnv("OPENCLAW_SKIP_CANVAS_HOST", previous.skipCanvas);
-    restoreOptionalEnv("OPENCLAW_DISABLE_BONJOUR", previous.disableBonjour);
-    restoreOptionalEnv("OPENCLAW_LOG_LEVEL", previous.logLevel);
-    restoreOptionalEnv("OPENCLAW_AGENT_DIR", previous.agentDir);
-    restoreOptionalEnv("OPENCLAW_STATE_DIR", previous.stateDir);
+    restoreOptionalEnv("QUIET_CORE_CONFIG_PATH", previous.configPath);
+    restoreOptionalEnv("QUIET_CORE_GATEWAY_TOKEN", previous.token);
+    restoreOptionalEnv("QUIET_CORE_SKIP_CHANNELS", previous.skipChannels);
+    restoreOptionalEnv("QUIET_CORE_SKIP_GMAIL_WATCHER", previous.skipGmail);
+    restoreOptionalEnv("QUIET_CORE_SKIP_CRON", previous.skipCron);
+    restoreOptionalEnv("QUIET_CORE_SKIP_CANVAS_HOST", previous.skipCanvas);
+    restoreOptionalEnv("QUIET_CORE_DISABLE_BONJOUR", previous.disableBonjour);
+    restoreOptionalEnv("QUIET_CORE_LOG_LEVEL", previous.logLevel);
+    restoreOptionalEnv("QUIET_CORE_AGENT_DIR", previous.agentDir);
+    restoreOptionalEnv("QUIET_CORE_STATE_DIR", previous.stateDir);
   }
 }
 
@@ -3670,7 +3670,7 @@ describeLive("gateway live (dev agent, profile keys)", () => {
         );
         const agentDir = modelsJsonResult.agentDir;
 
-        const rawModels = process.env.OPENCLAW_LIVE_GATEWAY_MODELS?.trim();
+        const rawModels = process.env.QUIET_CORE_LIVE_GATEWAY_MODELS?.trim();
         const useModern = !rawModels || rawModels === "modern" || rawModels === "all";
         const useSmall = rawModels === "small";
         const useExplicit = Boolean(rawModels) && !useModern && !useSmall;
@@ -3839,7 +3839,7 @@ describeLive("gateway live (dev agent, profile keys)", () => {
         );
         if (selectedCandidates.length < candidates.length) {
           logProgress(
-            `[all-models] capped to ${selectedCandidates.length}/${candidates.length} via OPENCLAW_LIVE_GATEWAY_MAX_MODELS=${maxModels}`,
+            `[all-models] capped to ${selectedCandidates.length}/${candidates.length} via QUIET_CORE_LIVE_GATEWAY_MAX_MODELS=${maxModels}`,
           );
         }
         expect(selectedCandidates.length).toBeGreaterThan(0);
@@ -3895,21 +3895,21 @@ describeLive("gateway live (dev agent, profile keys)", () => {
     clearRuntimeConfigSnapshot();
     const runtimeEnv = enterProductionEnvForLiveRun();
     const previous = {
-      configPath: process.env.OPENCLAW_CONFIG_PATH,
-      token: process.env.OPENCLAW_GATEWAY_TOKEN,
-      skipChannels: process.env.OPENCLAW_SKIP_CHANNELS,
-      skipGmail: process.env.OPENCLAW_SKIP_GMAIL_WATCHER,
-      skipCron: process.env.OPENCLAW_SKIP_CRON,
-      skipCanvas: process.env.OPENCLAW_SKIP_CANVAS_HOST,
+      configPath: process.env.QUIET_CORE_CONFIG_PATH,
+      token: process.env.QUIET_CORE_GATEWAY_TOKEN,
+      skipChannels: process.env.QUIET_CORE_SKIP_CHANNELS,
+      skipGmail: process.env.QUIET_CORE_SKIP_GMAIL_WATCHER,
+      skipCron: process.env.QUIET_CORE_SKIP_CRON,
+      skipCanvas: process.env.QUIET_CORE_SKIP_CANVAS_HOST,
     };
 
-    process.env.OPENCLAW_SKIP_CHANNELS = "1";
-    process.env.OPENCLAW_SKIP_GMAIL_WATCHER = "1";
-    process.env.OPENCLAW_SKIP_CRON = "1";
-    process.env.OPENCLAW_SKIP_CANVAS_HOST = "1";
+    process.env.QUIET_CORE_SKIP_CHANNELS = "1";
+    process.env.QUIET_CORE_SKIP_GMAIL_WATCHER = "1";
+    process.env.QUIET_CORE_SKIP_CRON = "1";
+    process.env.QUIET_CORE_SKIP_CANVAS_HOST = "1";
 
     const token = `test-${randomUUID()}`;
-    process.env.OPENCLAW_GATEWAY_TOKEN = token;
+    process.env.QUIET_CORE_GATEWAY_TOKEN = token;
 
     let server: Awaited<ReturnType<typeof startGatewayServer>> | undefined;
     let client: GatewayClient | undefined;
@@ -3947,7 +3947,7 @@ describeLive("gateway live (dev agent, profile keys)", () => {
       await fs.mkdir(workspaceDir, { recursive: true });
       const nonceA = randomUUID();
       const nonceB = randomUUID();
-      toolProbePath = path.join(workspaceDir, `.openclaw-live-zai-fallback.${nonceA}.txt`);
+      toolProbePath = path.join(workspaceDir, `.quiet-core-bot-live-zai-fallback.${nonceA}.txt`);
       await fs.writeFile(toolProbePath, `nonceA=${nonceA}\nnonceB=${nonceB}\n`);
 
       try {
@@ -4062,12 +4062,12 @@ describeLive("gateway live (dev agent, profile keys)", () => {
         await fs.rm(toolProbePath, { force: true });
       }
 
-      restoreOptionalEnv("OPENCLAW_CONFIG_PATH", previous.configPath);
-      restoreOptionalEnv("OPENCLAW_GATEWAY_TOKEN", previous.token);
-      restoreOptionalEnv("OPENCLAW_SKIP_CHANNELS", previous.skipChannels);
-      restoreOptionalEnv("OPENCLAW_SKIP_GMAIL_WATCHER", previous.skipGmail);
-      restoreOptionalEnv("OPENCLAW_SKIP_CRON", previous.skipCron);
-      restoreOptionalEnv("OPENCLAW_SKIP_CANVAS_HOST", previous.skipCanvas);
+      restoreOptionalEnv("QUIET_CORE_CONFIG_PATH", previous.configPath);
+      restoreOptionalEnv("QUIET_CORE_GATEWAY_TOKEN", previous.token);
+      restoreOptionalEnv("QUIET_CORE_SKIP_CHANNELS", previous.skipChannels);
+      restoreOptionalEnv("QUIET_CORE_SKIP_GMAIL_WATCHER", previous.skipGmail);
+      restoreOptionalEnv("QUIET_CORE_SKIP_CRON", previous.skipCron);
+      restoreOptionalEnv("QUIET_CORE_SKIP_CANVAS_HOST", previous.skipCanvas);
     }
   }, 180_000);
 });

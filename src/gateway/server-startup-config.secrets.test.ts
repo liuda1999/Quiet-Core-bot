@@ -59,7 +59,7 @@ function asConfig(value: unknown): OpenClawConfig {
 function buildSnapshot(config: OpenClawConfig): ConfigFileSnapshot {
   const raw = `${JSON.stringify(config, null, 2)}\n`;
   return buildTestConfigSnapshot({
-    path: "/tmp/openclaw-startup-secrets-test.json",
+    path: "/tmp/quiet-core-bot-startup-secrets-test.json",
     exists: true,
     raw,
     parsed: config,
@@ -172,25 +172,25 @@ function readTimelineEvents(filePath: string): Array<Record<string, unknown>> {
 }
 
 function installDiagnosticsTimelineEnv() {
-  const root = mkdtempSync(path.join(tmpdir(), "openclaw-startup-secrets-timeline-"));
+  const root = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-startup-secrets-timeline-"));
   const timelinePath = path.join(root, "timeline.jsonl");
-  const previousDiagnostics = process.env.OPENCLAW_DIAGNOSTICS;
-  const previousTimelinePath = process.env.OPENCLAW_DIAGNOSTICS_TIMELINE_PATH;
-  process.env.OPENCLAW_DIAGNOSTICS = "timeline";
-  process.env.OPENCLAW_DIAGNOSTICS_TIMELINE_PATH = timelinePath;
+  const previousDiagnostics = process.env.QUIET_CORE_DIAGNOSTICS;
+  const previousTimelinePath = process.env.QUIET_CORE_DIAGNOSTICS_TIMELINE_PATH;
+  process.env.QUIET_CORE_DIAGNOSTICS = "timeline";
+  process.env.QUIET_CORE_DIAGNOSTICS_TIMELINE_PATH = timelinePath;
 
   return {
     timelinePath,
     cleanup: () => {
       if (previousDiagnostics === undefined) {
-        delete process.env.OPENCLAW_DIAGNOSTICS;
+        delete process.env.QUIET_CORE_DIAGNOSTICS;
       } else {
-        process.env.OPENCLAW_DIAGNOSTICS = previousDiagnostics;
+        process.env.QUIET_CORE_DIAGNOSTICS = previousDiagnostics;
       }
       if (previousTimelinePath === undefined) {
-        delete process.env.OPENCLAW_DIAGNOSTICS_TIMELINE_PATH;
+        delete process.env.QUIET_CORE_DIAGNOSTICS_TIMELINE_PATH;
       } else {
-        process.env.OPENCLAW_DIAGNOSTICS_TIMELINE_PATH = previousTimelinePath;
+        process.env.QUIET_CORE_DIAGNOSTICS_TIMELINE_PATH = previousTimelinePath;
       }
       rmSync(root, { force: true, recursive: true });
     },
@@ -311,19 +311,19 @@ async function expectImportedStartupConfigUsesFullSecretsRuntime(
 }
 
 describe("gateway startup config secret preflight", () => {
-  const previousSkipChannels = process.env.OPENCLAW_SKIP_CHANNELS;
-  const previousSkipProviders = process.env.OPENCLAW_SKIP_PROVIDERS;
+  const previousSkipChannels = process.env.QUIET_CORE_SKIP_CHANNELS;
+  const previousSkipProviders = process.env.QUIET_CORE_SKIP_PROVIDERS;
 
   afterEach(() => {
     if (previousSkipChannels === undefined) {
-      delete process.env.OPENCLAW_SKIP_CHANNELS;
+      delete process.env.QUIET_CORE_SKIP_CHANNELS;
     } else {
-      process.env.OPENCLAW_SKIP_CHANNELS = previousSkipChannels;
+      process.env.QUIET_CORE_SKIP_CHANNELS = previousSkipChannels;
     }
     if (previousSkipProviders === undefined) {
-      delete process.env.OPENCLAW_SKIP_PROVIDERS;
+      delete process.env.QUIET_CORE_SKIP_PROVIDERS;
     } else {
-      process.env.OPENCLAW_SKIP_PROVIDERS = previousSkipProviders;
+      process.env.QUIET_CORE_SKIP_PROVIDERS = previousSkipProviders;
     }
   });
 
@@ -613,7 +613,7 @@ describe("gateway startup config secret preflight", () => {
   );
 
   it("prunes channel refs from startup secret preflight when channels are skipped", async () => {
-    process.env.OPENCLAW_SKIP_CHANNELS = "1";
+    process.env.QUIET_CORE_SKIP_CHANNELS = "1";
     const prepareRuntimeSecretsSnapshot = vi.fn(async ({ config }) => preparedSnapshot(config));
     const activateRuntimeSecrets = runtimeSecretsActivatorForTest({
       prepareRuntimeSecretsSnapshot,
@@ -756,7 +756,7 @@ describe("gateway startup config secret preflight", () => {
 
   it("activates no-SecretRef startup config without importing the full secrets runtime", async () => {
     vi.resetModules();
-    const agentDir = mkdtempSync(path.join(tmpdir(), "openclaw-startup-fast-path-"));
+    const agentDir = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-startup-fast-path-"));
     const runtimeImport = vi.fn();
     const prepareRuntimeSecretsSnapshot = vi.fn(async ({ config }) => preparedSnapshot(config));
     const activateRuntimeSecretsSnapshot = vi.fn();
@@ -853,7 +853,7 @@ describe("gateway startup config secret preflight", () => {
   });
 
   it("keeps the full secrets runtime path when startup config has a SecretRef", async () => {
-    const harness = createGatewayStartupSecretsRuntimeHarness("openclaw-startup-secret-ref-");
+    const harness = createGatewayStartupSecretsRuntimeHarness("quiet-core-bot-startup-secret-ref-");
     await expectImportedStartupConfigUsesFullSecretsRuntime(
       harness,
       asConfig({
@@ -873,7 +873,7 @@ describe("gateway startup config secret preflight", () => {
   });
 
   it("keeps the full secrets runtime path when auth profile files are present", async () => {
-    const harness = createGatewayStartupSecretsRuntimeHarness("openclaw-startup-auth-store-");
+    const harness = createGatewayStartupSecretsRuntimeHarness("quiet-core-bot-startup-auth-store-");
     writeFileSync(
       path.join(harness.agentDir, "auth-profiles.json"),
       `${JSON.stringify({

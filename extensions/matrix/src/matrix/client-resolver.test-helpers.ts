@@ -24,9 +24,9 @@ export const matrixClientResolverMocks: MatrixClientResolverMocks = {
   resolveMatrixAuthContextMock: vi.fn(),
 };
 
-vi.mock("openclaw/plugin-sdk/plugin-config-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/plugin-config-runtime")>(
-    "openclaw/plugin-sdk/plugin-config-runtime",
+vi.mock("quiet-core-bot/plugin-sdk/plugin-config-runtime", async () => {
+  const actual = await vi.importActual<typeof import("quiet-core-bot/plugin-sdk/plugin-config-runtime")>(
+    "quiet-core-bot/plugin-sdk/plugin-config-runtime",
   );
   return {
     ...actual,

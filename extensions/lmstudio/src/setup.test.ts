@@ -1,14 +1,14 @@
 // Lmstudio tests cover setup plugin behavior.
-import { CUSTOM_LOCAL_AUTH_MARKER } from "openclaw/plugin-sdk/provider-auth";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/provider-auth";
-import type { ModelDefinitionConfig } from "openclaw/plugin-sdk/provider-model-shared";
-import { resolveAgentModelPrimaryValue } from "openclaw/plugin-sdk/provider-onboard";
+import { CUSTOM_LOCAL_AUTH_MARKER } from "quiet-core-bot/plugin-sdk/provider-auth";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/provider-auth";
+import type { ModelDefinitionConfig } from "quiet-core-bot/plugin-sdk/provider-model-shared";
+import { resolveAgentModelPrimaryValue } from "quiet-core-bot/plugin-sdk/provider-onboard";
 import {
   SELF_HOSTED_DEFAULT_CONTEXT_WINDOW,
   type ProviderAuthMethodNonInteractiveContext,
   type ProviderCatalogContext,
-} from "openclaw/plugin-sdk/provider-setup";
-import type { WizardPrompter } from "openclaw/plugin-sdk/setup";
+} from "quiet-core-bot/plugin-sdk/provider-setup";
+import type { WizardPrompter } from "quiet-core-bot/plugin-sdk/setup";
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   LMSTUDIO_DEFAULT_API_KEY_ENV_VAR,
@@ -33,8 +33,8 @@ vi.mock("./models.fetch.js", () => ({
   ensureLmstudioModelLoaded: vi.fn(),
 }));
 
-vi.mock("openclaw/plugin-sdk/provider-auth", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("openclaw/plugin-sdk/provider-auth")>();
+vi.mock("quiet-core-bot/plugin-sdk/provider-auth", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("quiet-core-bot/plugin-sdk/provider-auth")>();
   return {
     ...actual,
     removeProviderAuthProfilesWithLock: (...args: unknown[]) =>
@@ -42,8 +42,8 @@ vi.mock("openclaw/plugin-sdk/provider-auth", async (importOriginal) => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/provider-setup", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("openclaw/plugin-sdk/provider-setup")>();
+vi.mock("quiet-core-bot/plugin-sdk/provider-setup", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("quiet-core-bot/plugin-sdk/provider-setup")>();
   return {
     ...actual,
     configureOpenAICompatibleSelfHostedProviderNonInteractive: (...args: unknown[]) =>
@@ -53,8 +53,8 @@ vi.mock("openclaw/plugin-sdk/provider-setup", async (importOriginal) => {
 
 afterAll(() => {
   vi.doUnmock("./models.fetch.js");
-  vi.doUnmock("openclaw/plugin-sdk/provider-auth");
-  vi.doUnmock("openclaw/plugin-sdk/provider-setup");
+  vi.doUnmock("quiet-core-bot/plugin-sdk/provider-auth");
+  vi.doUnmock("quiet-core-bot/plugin-sdk/provider-setup");
   vi.resetModules();
 });
 
@@ -754,7 +754,7 @@ describe("lmstudio setup", () => {
       customModelId: "missing-model",
     });
     const dockerSetup = ["1", "true", "yes", "on"].includes(
-      process.env.OPENCLAW_DOCKER_SETUP?.trim().toLowerCase() ?? "",
+      process.env.QUIET_CORE_DOCKER_SETUP?.trim().toLowerCase() ?? "",
     );
     const expectedBaseUrl = dockerSetup
       ? LMSTUDIO_DOCKER_HOST_INFERENCE_BASE_URL
@@ -921,7 +921,7 @@ describe("lmstudio setup", () => {
   });
 
   it("interactive Docker setup defaults to the host LM Studio endpoint", async () => {
-    vi.stubEnv("OPENCLAW_DOCKER_SETUP", "1");
+    vi.stubEnv("QUIET_CORE_DOCKER_SETUP", "1");
     const { prompter, text } = createQueuedWizardPrompterHarness([
       "http://host.docker.internal:1234",
       "",

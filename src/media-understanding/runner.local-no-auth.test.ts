@@ -29,7 +29,7 @@ vi.mock("../plugins/providers.js", async (importOriginal) => ({
 const AUTH_ENV = {
   LOCAL_AUDIO_API_KEY: undefined,
   REMOTE_AUDIO_API_KEY: undefined,
-  OPENCLAW_AGENT_DIR: undefined,
+  QUIET_CORE_AGENT_DIR: undefined,
 } satisfies Record<string, string | undefined>;
 
 function createAudioProvider(
@@ -59,7 +59,7 @@ function createVideoProvider(
 }
 
 async function withIsolatedAgentDir<T>(run: (agentDir: string) => Promise<T>): Promise<T> {
-  const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-local-audio-auth-"));
+  const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-local-audio-auth-"));
   try {
     return await run(agentDir);
   } finally {
@@ -113,7 +113,7 @@ describe("runCapability local no-auth audio providers", () => {
   it("allows a local no-auth audio provider when configured as a local models provider", async () => {
     await withIsolatedAgentDir(async (agentDir) => {
       await withEnvAsync(AUTH_ENV, async () => {
-        await withAudioFixture("openclaw-local-audio-configured", async ({ ctx, media, cache }) => {
+        await withAudioFixture("quiet-core-bot-local-audio-configured", async ({ ctx, media, cache }) => {
           const transcribeAudio = vi.fn(async (req: AudioTranscriptionRequest) => ({
             text: `ok:${req.apiKey}`,
             model: req.model,
@@ -153,7 +153,7 @@ describe("runCapability local no-auth audio providers", () => {
     await withIsolatedAgentDir(async (agentDir) => {
       await withEnvAsync(AUTH_ENV, async () => {
         await withAudioFixture(
-          "openclaw-local-audio-plugin-only",
+          "quiet-core-bot-local-audio-plugin-only",
           async ({ ctx, media, cache }) => {
             const transcribeAudio = vi.fn(async (req: AudioTranscriptionRequest) => ({
               text: "plugin local ok",
@@ -201,7 +201,7 @@ describe("runCapability local no-auth audio providers", () => {
   it("prefers resolver env credentials over plugin-only media no-auth", async () => {
     await withIsolatedAgentDir(async (agentDir) => {
       await withEnvAsync({ ...AUTH_ENV, OPENAI_API_KEY: "env-openai-audio-key" }, async () => {
-        await withAudioFixture("openclaw-openai-audio-env-key", async ({ ctx, media, cache }) => {
+        await withAudioFixture("quiet-core-bot-openai-audio-env-key", async ({ ctx, media, cache }) => {
           const transcribeAudio = vi.fn(async (req: AudioTranscriptionRequest) => ({
             text: `env:${req.apiKey}`,
             model: req.model,
@@ -254,7 +254,7 @@ describe("runCapability local no-auth audio providers", () => {
           { filterExternalAuthProfiles: false, syncExternalCli: false },
         );
         await withAudioFixture(
-          "openclaw-openai-audio-oauth-env-key",
+          "quiet-core-bot-openai-audio-oauth-env-key",
           async ({ ctx, media, cache }) => {
             const transcribeAudio = vi.fn(async (req: AudioTranscriptionRequest) => ({
               text: `auth:${req.apiKey}`,
@@ -302,7 +302,7 @@ describe("runCapability local no-auth audio providers", () => {
           { filterExternalAuthProfiles: false, syncExternalCli: false },
         );
         await withAudioFixture(
-          "openclaw-local-audio-stored-profile",
+          "quiet-core-bot-local-audio-stored-profile",
           async ({ ctx, media, cache }) => {
             const transcribeAudio = vi.fn(async (req: AudioTranscriptionRequest) => ({
               text: `profile:${req.apiKey}`,
@@ -340,7 +340,7 @@ describe("runCapability local no-auth audio providers", () => {
   it("still rejects a remote audio provider without credentials", async () => {
     await withIsolatedAgentDir(async (agentDir) => {
       await withEnvAsync(AUTH_ENV, async () => {
-        await withAudioFixture("openclaw-remote-audio-no-auth", async ({ ctx, media, cache }) => {
+        await withAudioFixture("quiet-core-bot-remote-audio-no-auth", async ({ ctx, media, cache }) => {
           const transcribeAudio = vi.fn(async () => ({
             text: "should not run",
             model: "remote-whisper",
@@ -381,7 +381,7 @@ describe("runCapability local no-auth audio providers", () => {
     await withIsolatedAgentDir(async (agentDir) => {
       await withEnvAsync(AUTH_ENV, async () => {
         await withAudioFixture(
-          "openclaw-local-audio-literal-key",
+          "quiet-core-bot-local-audio-literal-key",
           async ({ ctx, media, cache }) => {
             const transcribeAudio = vi.fn(async (req: AudioTranscriptionRequest) => ({
               text: `literal:${req.apiKey}`,
@@ -425,7 +425,7 @@ describe("runCapability local no-auth audio providers", () => {
   it("allows a media auth hook to provide an api key after normal auth misses", async () => {
     await withIsolatedAgentDir(async (agentDir) => {
       await withEnvAsync(AUTH_ENV, async () => {
-        await withAudioFixture("openclaw-local-audio-hook-key", async ({ ctx, media, cache }) => {
+        await withAudioFixture("quiet-core-bot-local-audio-hook-key", async ({ ctx, media, cache }) => {
           const transcribeAudio = vi.fn(async (req: AudioTranscriptionRequest) => ({
             text: `hook:${req.apiKey}`,
             model: req.model,
@@ -465,7 +465,7 @@ describe("runCapability local no-auth audio providers", () => {
   it("does not allow plugin-only media provider without explicit no-auth", async () => {
     await withIsolatedAgentDir(async (agentDir) => {
       await withEnvAsync(AUTH_ENV, async () => {
-        await withAudioFixture("openclaw-local-audio-no-hook", async ({ ctx, media, cache }) => {
+        await withAudioFixture("quiet-core-bot-local-audio-no-hook", async ({ ctx, media, cache }) => {
           const transcribeAudio = vi.fn(async () => ({
             text: "should not run",
             model: "whisper-local",
@@ -497,7 +497,7 @@ describe("runCapability local no-auth audio providers", () => {
   it("does not allow plugin-only media provider when no-auth hook returns null", async () => {
     await withIsolatedAgentDir(async (agentDir) => {
       await withEnvAsync(AUTH_ENV, async () => {
-        await withAudioFixture("openclaw-local-audio-null-hook", async ({ ctx, media, cache }) => {
+        await withAudioFixture("quiet-core-bot-local-audio-null-hook", async ({ ctx, media, cache }) => {
           const transcribeAudio = vi.fn(async () => ({
             text: "should not run",
             model: "whisper-local",
@@ -532,7 +532,7 @@ describe("runCapability local no-auth audio providers", () => {
     await withIsolatedAgentDir(async (agentDir) => {
       await withEnvAsync(AUTH_ENV, async () => {
         await withAudioFixture(
-          "openclaw-local-audio-plugin-missing-profile",
+          "quiet-core-bot-local-audio-plugin-missing-profile",
           async ({ ctx, media, cache }) => {
             const transcribeAudio = vi.fn(async () => ({
               text: "should not run",
@@ -576,7 +576,7 @@ describe("runCapability local no-auth audio providers", () => {
     await withIsolatedAgentDir(async (agentDir) => {
       await withEnvAsync(AUTH_ENV, async () => {
         await withAudioFixture(
-          "openclaw-local-audio-missing-profile",
+          "quiet-core-bot-local-audio-missing-profile",
           async ({ ctx, media, cache }) => {
             const transcribeAudio = vi.fn(async () => ({
               text: "should not run",
@@ -625,7 +625,7 @@ describe("runCapability local no-auth audio providers", () => {
     await withIsolatedAgentDir(async (agentDir) => {
       await withEnvAsync(AUTH_ENV, async () => {
         await withVideoFixture(
-          "openclaw-local-video-plugin-only",
+          "quiet-core-bot-local-video-plugin-only",
           async ({ ctx, media, cache }) => {
             const describeVideo = vi.fn(async (req: VideoDescriptionRequest) => ({
               text: `video:${req.auth?.kind}`,

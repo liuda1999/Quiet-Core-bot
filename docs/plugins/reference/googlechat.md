@@ -11,7 +11,7 @@ Quiet Core bot Google Chat channel plugin for spaces and direct messages.
 
 ## Distribution
 
-- Package: `@openclaw/googlechat`
+- Package: `@quiet-core/googlechat`
 - Install route: npm; ClawHub
 
 ## Surface

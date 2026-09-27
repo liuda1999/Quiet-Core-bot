@@ -2,26 +2,22 @@
 import { spawnSync } from "node:child_process";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { withTempHome } from "openclaw/plugin-sdk/test-env";
+import { withTempHome } from "quiet-core-bot/plugin-sdk/test-env";
 import { describe, expect, it } from "vitest";
 
 describe("cli json stdout contract", () => {
-  it("keeps `update status --json` stdout parseable even with legacy doctor preflight inputs", async () => {
+  it("keeps `update status --json` stdout parseable during doctor preflight", async () => {
     await withTempHome(
       async (tempHome) => {
-        const legacyDir = path.join(tempHome, ".clawdbot");
-        await fs.mkdir(legacyDir, { recursive: true });
-        await fs.writeFile(path.join(legacyDir, "clawdbot.json"), "{}", "utf8");
-
         const env = {
           ...process.env,
           HOME: tempHome,
           USERPROFILE: tempHome,
-          OPENCLAW_TEST_FAST: "1",
+          QUIET_CORE_TEST_FAST: "1",
         };
-        delete env.OPENCLAW_HOME;
-        delete env.OPENCLAW_STATE_DIR;
-        delete env.OPENCLAW_CONFIG_PATH;
+        delete env.QUIET_CORE_HOME;
+        delete env.QUIET_CORE_STATE_DIR;
+        delete env.QUIET_CORE_CONFIG_PATH;
         delete env.VITEST;
 
         const entry = path.resolve(process.cwd(), "src/entry.ts");
@@ -47,7 +43,7 @@ describe("cli json stdout contract", () => {
         expect(stdout).not.toContain("Doctor changes");
         expect(stdout).not.toContain("Config invalid");
       },
-      { prefix: "openclaw-json-e2e-" },
+      { prefix: "quiet-core-bot-json-e2e-" },
     );
   });
 });

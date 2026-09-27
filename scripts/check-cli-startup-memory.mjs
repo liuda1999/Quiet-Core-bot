@@ -9,10 +9,10 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const tmpDir = process.env.TMPDIR || process.env.TEMP || process.env.TMP || os.tmpdir();
-const MAX_RSS_MARKER = "__OPENCLAW_MAX_RSS_KB__=";
+const MAX_RSS_MARKER = "__QUIET_CORE_MAX_RSS_KB__=";
 const DEFAULT_COMMAND_TIMEOUT_MS = 60_000;
 const COMMAND_TIMEOUT_MS = readPositiveIntEnv(
-  "OPENCLAW_STARTUP_MEMORY_TIMEOUT_MS",
+  "QUIET_CORE_STARTUP_MEMORY_TIMEOUT_MS",
   DEFAULT_COMMAND_TIMEOUT_MS,
 );
 let tmpHome = null;
@@ -58,10 +58,10 @@ function readRequiredPathOption(argv, index, flag) {
 function parseArgs(argv) {
   const options = {
     jsonPath:
-      readNonEmptyEnv("OPENCLAW_STARTUP_MEMORY_JSON_PATH") ??
+      readNonEmptyEnv("QUIET_CORE_STARTUP_MEMORY_JSON_PATH") ??
       path.join(repoRoot, ".artifacts", "startup-memory", "startup-memory.json"),
     summaryPath:
-      readNonEmptyEnv("OPENCLAW_STARTUP_MEMORY_SUMMARY_PATH") ??
+      readNonEmptyEnv("QUIET_CORE_STARTUP_MEMORY_SUMMARY_PATH") ??
       path.join(repoRoot, ".artifacts", "startup-memory", "summary.md"),
   };
   for (let index = 0; index < argv.length; index += 1) {
@@ -107,14 +107,14 @@ const cases = [
     id: "help",
     label: "--help",
     args: ["quiet-core-bot.mjs", "--help"],
-    limitMb: readPositiveNumberEnv("OPENCLAW_STARTUP_MEMORY_HELP_MB", DEFAULT_LIMITS_MB.help),
+    limitMb: readPositiveNumberEnv("QUIET_CORE_STARTUP_MEMORY_HELP_MB", DEFAULT_LIMITS_MB.help),
   },
   {
     id: "statusJson",
     label: "status --json",
     args: ["quiet-core-bot.mjs", "status", "--json"],
     limitMb: readPositiveNumberEnv(
-      "OPENCLAW_STARTUP_MEMORY_STATUS_JSON_MB",
+      "QUIET_CORE_STARTUP_MEMORY_STATUS_JSON_MB",
       DEFAULT_LIMITS_MB.statusJson,
     ),
   },
@@ -123,7 +123,7 @@ const cases = [
     label: "gateway status",
     args: ["quiet-core-bot.mjs", "gateway", "status"],
     limitMb: readPositiveNumberEnv(
-      "OPENCLAW_STARTUP_MEMORY_GATEWAY_STATUS_MB",
+      "QUIET_CORE_STARTUP_MEMORY_GATEWAY_STATUS_MB",
       DEFAULT_LIMITS_MB.gatewayStatus,
     ),
   },
@@ -210,7 +210,7 @@ function buildBenchEnv() {
   }
   // Keep the benchmark on a single process so RSS reflects the actual command
   // path rather than the warning-suppression respawn wrapper.
-  env.OPENCLAW_NO_RESPAWN = "1";
+  env.QUIET_CORE_NO_RESPAWN = "1";
 
   return env;
 }
@@ -342,7 +342,7 @@ function runStartupMemoryCheck(argv = process.argv.slice(2), params = {}) {
     return { skipped: true, results: [] };
   }
   const options = parseArgs(argv);
-  tmpHome = mkdtempSync(path.join(os.tmpdir(), "openclaw-startup-memory-"));
+  tmpHome = mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-startup-memory-"));
   rssHookPath = path.join(tmpHome, "measure-rss.mjs");
   writeFileSync(
     rssHookPath,

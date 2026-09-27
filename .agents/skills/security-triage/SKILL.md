@@ -25,7 +25,7 @@ Do not close only because `main` is fixed. If latest shipped tag or npm release 
 Before answering:
 
 1. Read `SECURITY.md`.
-2. Read the GHSA body with `gh api /repos/openclaw/openclaw/security-advisories/<GHSA>`.
+2. Read the GHSA body with `gh api /repos/liuda1999/Quiet-Core-bot/security-advisories/<GHSA>`.
 3. Inspect the exact implicated code paths.
 4. Verify shipped state:
    - `git tag --sort=-creatordate | head`
@@ -128,14 +128,14 @@ Tell the user that the clipboard now contains the proposed response for that adv
 ## Useful Commands
 
 ```bash
-gh api /repos/openclaw/openclaw/security-advisories/<GHSA>
-gh api /repos/openclaw/openclaw/security-advisories --paginate
+gh api /repos/liuda1999/Quiet-Core-bot/security-advisories/<GHSA>
+gh api /repos/liuda1999/Quiet-Core-bot/security-advisories --paginate
 git tag --sort=-creatordate | head -n 20
 npm view quiet-core-bot version --userconfig "$(mktemp)"
 git tag --contains <commit>
 git show <tag>:<path>
-gh search issues --repo openclaw/openclaw --match title,body,comments -- "<terms>"
-gh search prs --repo openclaw/openclaw --match title,body,comments -- "<terms>"
+gh search issues --repo liuda1999/quiet-core-bot --match title,body,comments -- "<terms>"
+gh search prs --repo liuda1999/quiet-core-bot --match title,body,comments -- "<terms>"
 ```
 
 ## Decision Notes

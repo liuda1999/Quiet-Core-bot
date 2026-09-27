@@ -11,7 +11,7 @@ Adds Synthetic model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/synthetic-provider`
+- Package: `@quiet-core/synthetic-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

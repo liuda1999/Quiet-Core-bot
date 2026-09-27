@@ -28,7 +28,7 @@ export function tryHandleRootVersionFastPath(
     deps.onError ??
     ((error: unknown) => {
       console.error(
-        "[openclaw] Failed to resolve version:",
+        "[quiet-core-bot] Failed to resolve version:",
         error instanceof Error ? (error.stack ?? error.message) : error,
       );
       process.exitCode = 1;

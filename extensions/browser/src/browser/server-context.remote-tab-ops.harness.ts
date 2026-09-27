@@ -14,7 +14,7 @@ export const originalFetch = globalThis.fetch;
 
 /** Creates Browser server state for remote or local profile tab tests. */
 export function makeState(
-  profile: "remote" | "openclaw",
+  profile: "remote" | "quiet-core-bot",
 ): BrowserServerState & { profiles: Map<string, { lastTargetId?: string | null }> } {
   return {
     server: null as unknown as BrowserServerState["server"],
@@ -91,7 +91,7 @@ function resolveProfileForTest(
     cdpHost,
     cdpIsLoopback,
     color: rawProfile.color ?? state.resolved.color,
-    driver: rawProfile.driver === "existing-session" ? "existing-session" : "openclaw",
+    driver: rawProfile.driver === "existing-session" ? "existing-session" : "quiet-core-bot",
     headless: rawProfile.headless ?? state.resolved.headless,
     headlessSource:
       typeof rawProfile.headless === "boolean" ? "profile" : state.resolved.headlessSource,

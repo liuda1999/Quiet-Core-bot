@@ -145,8 +145,8 @@ async function runMockRuntimeToolFixtureWithOutputs(params: {
     {
       toolName: params.toolName,
       toolCoverage: {
-        bucket: "openclaw-dynamic-integration",
-        expectedLayer: "openclaw-dynamic",
+        bucket: "quiet-core-bot-dynamic-integration",
+        expectedLayer: "quiet-core-bot-dynamic",
       },
       promptSnippet,
       failurePromptSnippet,
@@ -183,8 +183,8 @@ describe("runtime tool fixture", () => {
       {
         toolName: "read",
         toolCoverage: {
-          bucket: "openclaw-dynamic-integration",
-          expectedLayer: "openclaw-dynamic",
+          bucket: "quiet-core-bot-dynamic-integration",
+          expectedLayer: "quiet-core-bot-dynamic",
         },
       },
       {
@@ -227,8 +227,8 @@ describe("runtime tool fixture", () => {
         {
           toolName: "read",
           toolCoverage: {
-            bucket: "openclaw-dynamic-integration",
-            expectedLayer: "openclaw-dynamic",
+            bucket: "quiet-core-bot-dynamic-integration",
+            expectedLayer: "quiet-core-bot-dynamic",
           },
         },
         {
@@ -251,8 +251,8 @@ describe("runtime tool fixture", () => {
       {
         toolName: "read",
         toolCoverage: {
-          bucket: "openclaw-dynamic-integration",
-          expectedLayer: "openclaw-dynamic",
+          bucket: "quiet-core-bot-dynamic-integration",
+          expectedLayer: "quiet-core-bot-dynamic",
         },
       },
       {
@@ -315,8 +315,8 @@ describe("runtime tool fixture", () => {
         {
           toolName: "read",
           toolCoverage: {
-            bucket: "openclaw-dynamic-integration",
-            expectedLayer: "openclaw-dynamic",
+            bucket: "quiet-core-bot-dynamic-integration",
+            expectedLayer: "quiet-core-bot-dynamic",
           },
         },
         {
@@ -379,8 +379,8 @@ describe("runtime tool fixture", () => {
         {
           toolName: "read",
           toolCoverage: {
-            bucket: "openclaw-dynamic-integration",
-            expectedLayer: "openclaw-dynamic",
+            bucket: "quiet-core-bot-dynamic-integration",
+            expectedLayer: "quiet-core-bot-dynamic",
           },
         },
         {
@@ -401,7 +401,7 @@ describe("runtime tool fixture", () => {
         baseUrl: "http://127.0.0.1:1",
         tempRoot: "",
         workspaceDir: "",
-        runtimeEnv: { OPENCLAW_QA_FORCE_RUNTIME: "codex" },
+        runtimeEnv: { QUIET_CORE_QA_FORCE_RUNTIME: "codex" },
         call: vi.fn(),
       },
     });
@@ -475,8 +475,8 @@ describe("runtime tool fixture", () => {
         {
           toolName: "read",
           toolCoverage: {
-            bucket: "openclaw-dynamic-integration",
-            expectedLayer: "openclaw-dynamic",
+            bucket: "quiet-core-bot-dynamic-integration",
+            expectedLayer: "quiet-core-bot-dynamic",
           },
           promptSnippet: "target=read",
           failurePromptSnippet: "failure target=read",
@@ -529,8 +529,8 @@ describe("runtime tool fixture", () => {
       {
         toolName: "read",
         toolCoverage: {
-          bucket: "openclaw-dynamic-integration",
-          expectedLayer: "openclaw-dynamic",
+          bucket: "quiet-core-bot-dynamic-integration",
+          expectedLayer: "quiet-core-bot-dynamic",
         },
         promptSnippet: "target=read",
         failurePromptSnippet: "failure target=read",
@@ -575,8 +575,8 @@ describe("runtime tool fixture", () => {
       {
         toolName: "image_generate",
         toolCoverage: {
-          bucket: "openclaw-dynamic-integration",
-          expectedLayer: "openclaw-dynamic",
+          bucket: "quiet-core-bot-dynamic-integration",
+          expectedLayer: "quiet-core-bot-dynamic",
           required: false,
           action: "optional runtime parity gate with async image completion coverage",
         },
@@ -630,8 +630,8 @@ describe("runtime tool fixture", () => {
         {
           toolName: "image_generate",
           toolCoverage: {
-            bucket: "openclaw-dynamic-integration",
-            expectedLayer: "openclaw-dynamic",
+            bucket: "quiet-core-bot-dynamic-integration",
+            expectedLayer: "quiet-core-bot-dynamic",
             required: false,
             action: "optional runtime parity gate with async image completion coverage",
           },
@@ -682,8 +682,8 @@ describe("runtime tool fixture", () => {
         {
           toolName: "image_generate",
           toolCoverage: {
-            bucket: "openclaw-dynamic-integration",
-            expectedLayer: "openclaw-dynamic",
+            bucket: "quiet-core-bot-dynamic-integration",
+            expectedLayer: "quiet-core-bot-dynamic",
             required: false,
             action: "optional runtime parity gate with async image completion coverage",
           },
@@ -729,8 +729,8 @@ describe("runtime tool fixture", () => {
         {
           toolName: "image_generate",
           toolCoverage: {
-            bucket: "openclaw-dynamic-integration",
-            expectedLayer: "openclaw-dynamic",
+            bucket: "quiet-core-bot-dynamic-integration",
+            expectedLayer: "quiet-core-bot-dynamic",
             required: false,
             action: "optional runtime parity gate with async image completion coverage",
           },
@@ -776,8 +776,8 @@ describe("runtime tool fixture", () => {
         {
           toolName: "image_generate",
           toolCoverage: {
-            bucket: "openclaw-dynamic-integration",
-            expectedLayer: "openclaw-dynamic",
+            bucket: "quiet-core-bot-dynamic-integration",
+            expectedLayer: "quiet-core-bot-dynamic",
             required: false,
             action: "optional runtime parity gate with async image completion coverage",
           },
@@ -833,8 +833,8 @@ describe("runtime tool fixture", () => {
         {
           toolName: "read",
           toolCoverage: {
-            bucket: "openclaw-dynamic-integration",
-            expectedLayer: "openclaw-dynamic",
+            bucket: "quiet-core-bot-dynamic-integration",
+            expectedLayer: "quiet-core-bot-dynamic",
           },
           promptSnippet: "target=read",
           failurePromptSnippet: "failure target=read",
@@ -888,8 +888,8 @@ describe("runtime tool fixture", () => {
         {
           toolName: "read",
           toolCoverage: {
-            bucket: "openclaw-dynamic-integration",
-            expectedLayer: "openclaw-dynamic",
+            bucket: "quiet-core-bot-dynamic-integration",
+            expectedLayer: "quiet-core-bot-dynamic",
           },
           promptSnippet: "target=read",
           failurePromptSnippet: "failure target=read",
@@ -995,8 +995,8 @@ describe("runtime tool fixture", () => {
       {
         toolName: "read",
         toolCoverage: {
-          bucket: "openclaw-dynamic-integration",
-          expectedLayer: "openclaw-dynamic",
+          bucket: "quiet-core-bot-dynamic-integration",
+          expectedLayer: "quiet-core-bot-dynamic",
         },
         promptSnippet: "target=read",
         failurePromptSnippet: "failure target=read",
@@ -1051,8 +1051,8 @@ describe("runtime tool fixture", () => {
         {
           toolName: "read",
           toolCoverage: {
-            bucket: "openclaw-dynamic-integration",
-            expectedLayer: "openclaw-dynamic",
+            bucket: "quiet-core-bot-dynamic-integration",
+            expectedLayer: "quiet-core-bot-dynamic",
           },
           promptSnippet: "target=read",
           failurePromptSnippet: "failure target=read",
@@ -1103,8 +1103,8 @@ describe("runtime tool fixture", () => {
         {
           toolName: "read",
           toolCoverage: {
-            bucket: "openclaw-dynamic-integration",
-            expectedLayer: "openclaw-dynamic",
+            bucket: "quiet-core-bot-dynamic-integration",
+            expectedLayer: "quiet-core-bot-dynamic",
           },
           promptSnippet: "target=read",
           failurePromptSnippet: "failure target=read",
@@ -1129,8 +1129,8 @@ describe("runtime tool fixture", () => {
         {
           toolName: "web_search",
           toolCoverage: {
-            bucket: "openclaw-dynamic-integration",
-            expectedLayer: "openclaw-dynamic",
+            bucket: "quiet-core-bot-dynamic-integration",
+            expectedLayer: "quiet-core-bot-dynamic",
           },
         },
         {

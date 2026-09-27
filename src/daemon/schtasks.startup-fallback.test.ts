@@ -78,7 +78,7 @@ const {
 } = await import("./schtasks.js");
 
 function resolveStartupEntryPath(env: Record<string, string>, extension = "cmd") {
-  const taskName = env.OPENCLAW_WINDOWS_TASK_NAME ?? "Quiet Core Gateway";
+  const taskName = env.QUIET_CORE_WINDOWS_TASK_NAME ?? "Quiet Core Gateway";
   return path.join(
     env.APPDATA,
     "Microsoft",
@@ -104,9 +104,9 @@ async function writeNodeScript(env: Record<string, string>, port = "18789") {
     scriptPath,
     [
       "@echo off",
-      `set "OPENCLAW_SERVICE_KIND=node"`,
-      `set "OPENCLAW_GATEWAY_PORT=${port}"`,
-      `"C:\\bin\\openclaw.cmd" node run --host 127.0.0.1 --port ${port}`,
+      `set "QUIET_CORE_SERVICE_KIND=node"`,
+      `set "QUIET_CORE_GATEWAY_PORT=${port}"`,
+      `"C:\\bin\\quiet-core-bot.cmd" node run --host 127.0.0.1 --port ${port}`,
       "",
     ].join("\r\n"),
     "utf8",
@@ -119,8 +119,8 @@ const NODE_PROCESS_QUERY =
 function makeNodeServiceEnv(env: Record<string, string>): Record<string, string> {
   return {
     ...env,
-    OPENCLAW_SERVICE_KIND: "node",
-    OPENCLAW_WINDOWS_TASK_NAME: "Quiet Core bot Node",
+    QUIET_CORE_SERVICE_KIND: "node",
+    QUIET_CORE_WINDOWS_TASK_NAME: "Quiet Core bot Node",
   };
 }
 
@@ -148,7 +148,7 @@ function mockWindowsNodeHostProcess(processId = 5151): void {
         stdout: JSON.stringify([
           {
             ProcessId: processId,
-            CommandLine: "C:\\bin\\openclaw.cmd node run --host 127.0.0.1 --port 18789",
+            CommandLine: "C:\\bin\\quiet-core-bot.cmd node run --host 127.0.0.1 --port 18789",
           },
         ]),
       });
@@ -183,7 +183,7 @@ function expectStartupFallbackSpawn() {
   expect(args).toContain("--port");
   expect(args).toContain("18789");
   expect(options.detached).toBe(true);
-  expect((options.env as Record<string, string> | undefined)?.OPENCLAW_GATEWAY_PORT).toBe("18789");
+  expect((options.env as Record<string, string> | undefined)?.QUIET_CORE_GATEWAY_PORT).toBe("18789");
   expect(options.stdio).toBe("ignore");
   expect(options.windowsHide).toBe(true);
 }
@@ -211,7 +211,7 @@ function installGatewayScheduledTask(env: Record<string, string>, stdout = new P
     env,
     stdout,
     programArguments: ["node", "gateway.js", "--port", "18789"],
-    environment: { OPENCLAW_GATEWAY_PORT: "18789" },
+    environment: { QUIET_CORE_GATEWAY_PORT: "18789" },
   });
 }
 
@@ -219,8 +219,8 @@ function installNodeScheduledTask(env: Record<string, string>, stdout = new Pass
   return installScheduledTask({
     env: {
       ...env,
-      OPENCLAW_SERVICE_KIND: "node",
-      OPENCLAW_WINDOWS_TASK_NAME: "Quiet Core bot Node",
+      QUIET_CORE_SERVICE_KIND: "node",
+      QUIET_CORE_WINDOWS_TASK_NAME: "Quiet Core bot Node",
     },
     stdout,
     programArguments: [
@@ -234,8 +234,8 @@ function installNodeScheduledTask(env: Record<string, string>, stdout = new Pass
       "18789",
     ],
     environment: {
-      OPENCLAW_SERVICE_KIND: "node",
-      OPENCLAW_GATEWAY_PORT: "18789",
+      QUIET_CORE_SERVICE_KIND: "node",
+      QUIET_CORE_GATEWAY_PORT: "18789",
     },
   });
 }
@@ -293,7 +293,7 @@ afterEach(() => {
 
 describe("Windows startup fallback", () => {
   it("falls back to a Startup-folder launcher when schtasks create is denied", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       addStartupFallbackMissingResponses([
         { code: 5, stdout: "", stderr: "ERROR: Access is denied." },
       ]);
@@ -318,14 +318,14 @@ describe("Windows startup fallback", () => {
   });
 
   it("uses a hidden Startup-folder launcher when requested", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       addStartupFallbackMissingResponses([
         { code: 5, stdout: "", stderr: "ERROR: Access is denied." },
       ]);
 
       const result = await installGatewayScheduledTask({
         ...env,
-        OPENCLAW_WINDOWS_TASK_HIDDEN_LAUNCHER: "1",
+        QUIET_CORE_WINDOWS_TASK_HIDDEN_LAUNCHER: "1",
       });
 
       const startupEntryPath = resolveStartupEntryPath(env, "vbs");
@@ -339,7 +339,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("falls back to a Startup-folder launcher when schtasks create returns Spanish access denied", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       addStartupFallbackMissingResponses([
         { code: 1, stdout: "", stderr: "Error: Acceso denegado." },
       ]);
@@ -352,7 +352,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("falls back to a Startup-folder launcher when schtasks create returns localized access denied", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       addStartupFallbackMissingResponses([{ code: 1, stdout: "", stderr: "错误: 拒绝访问。" }]);
 
       await installGatewayScheduledTask(env);
@@ -363,7 +363,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("falls back to a Startup-folder launcher when schtasks create hangs", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       addStartupFallbackMissingResponses([
         { code: 124, stdout: "", stderr: "schtasks timed out after 15000ms" },
       ]);
@@ -376,7 +376,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("falls back to a Startup-folder launcher when schtasks availability is slow", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       schtasksResponses.push(
         { code: 124, stdout: "", stderr: "schtasks produced no output for 30000ms" },
         { code: 124, stdout: "", stderr: "schtasks produced no output for 30000ms" },
@@ -391,7 +391,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("launches through the Startup-style launcher when schtasks /Run is accepted but never starts the task", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       fastForwardTaskStartWait();
       addAcceptedRunNeverStartsResponses();
 
@@ -402,7 +402,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("does not treat a gateway listener as node Scheduled Task launch evidence", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       fastForwardTaskStartWait();
       findVerifiedGatewayListenerPidsOnPortSync.mockReturnValue([4242]);
       addAcceptedRunNeverStartsResponses();
@@ -415,7 +415,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("does not relaunch when the node Scheduled Task process is already running", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       vi.spyOn(process, "platform", "get").mockReturnValue("win32");
       fastForwardTaskStartWait();
       findVerifiedGatewayListenerPidsOnPortSync.mockReturnValue([4242]);
@@ -460,7 +460,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("does not relaunch the task script when schtasks shows startup progress after /Run", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       addStartupFallbackMissingResponses([
         { code: 0, stdout: "", stderr: "" },
         { code: 0, stdout: "", stderr: "" },
@@ -485,7 +485,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("does not relaunch the task script when the scheduled task process is already starting", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       vi.spyOn(process, "platform", "get").mockReturnValue("win32");
       const taskScriptPath = resolveTaskScriptPath(env);
       fastForwardTaskStartWait();
@@ -529,7 +529,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("reports a fallback-launched gateway as running even when schtasks still says not-yet-run", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       await writeGatewayScript(env);
       findVerifiedGatewayListenerPidsOnPortSync.mockReturnValue([4242]);
       schtasksResponses.push(
@@ -546,9 +546,9 @@ describe("Windows startup fallback", () => {
   });
 
   it("does not report a node task as running from a gateway listener", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
-      env.OPENCLAW_SERVICE_KIND = "node";
-      env.OPENCLAW_WINDOWS_TASK_NAME = "Quiet Core bot Node";
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
+      env.QUIET_CORE_SERVICE_KIND = "node";
+      env.QUIET_CORE_WINDOWS_TASK_NAME = "Quiet Core bot Node";
       findVerifiedGatewayListenerPidsOnPortSync.mockReturnValue([4242]);
       schtasksResponses.push(
         { code: 0, stdout: "", stderr: "" },
@@ -564,12 +564,12 @@ describe("Windows startup fallback", () => {
   });
 
   it("reports a registered node task as running from the matching node host process", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       vi.spyOn(process, "platform", "get").mockReturnValue("win32");
       const nodeEnv = {
         ...env,
-        OPENCLAW_SERVICE_KIND: "node",
-        OPENCLAW_WINDOWS_TASK_NAME: "Quiet Core bot Node",
+        QUIET_CORE_SERVICE_KIND: "node",
+        QUIET_CORE_WINDOWS_TASK_NAME: "Quiet Core bot Node",
       };
       await writeNodeScript(nodeEnv);
       findVerifiedGatewayListenerPidsOnPortSync.mockReturnValue([4242]);
@@ -591,11 +591,11 @@ describe("Windows startup fallback", () => {
             stdout: JSON.stringify([
               {
                 ProcessId: 4242,
-                CommandLine: "C:\\manual\\openclaw.cmd node run --host 127.0.0.1 --port 18789",
+                CommandLine: "C:\\manual\\quiet-core-bot.cmd node run --host 127.0.0.1 --port 18789",
               },
               {
                 ProcessId: 5151,
-                CommandLine: "C:\\bin\\openclaw.cmd node run --host 127.0.0.1 --port 18789",
+                CommandLine: "C:\\bin\\quiet-core-bot.cmd node run --host 127.0.0.1 --port 18789",
               },
             ]),
             stderr: "",
@@ -622,7 +622,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("does not trust an unverified busy port when schtasks still says not-yet-run", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       await writeGatewayScript(env);
       inspectPortUsage.mockResolvedValue({
         port: 18789,
@@ -643,7 +643,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("treats an installed Startup-folder launcher as loaded", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       addStartupFallbackMissingResponses();
       await writeStartupFallbackEntry(env);
 
@@ -652,7 +652,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("keeps legacy Startup-folder cmd entries visible after hidden launcher opt-in", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       addStartupFallbackMissingResponses();
       await writeStartupFallbackEntry(env);
 
@@ -660,7 +660,7 @@ describe("Windows startup fallback", () => {
         isScheduledTaskInstalled({
           env: {
             ...env,
-            OPENCLAW_WINDOWS_TASK_HIDDEN_LAUNCHER: "1",
+            QUIET_CORE_WINDOWS_TASK_HIDDEN_LAUNCHER: "1",
           },
         }),
       ).resolves.toBe(true);
@@ -668,7 +668,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("removes legacy Startup-folder cmd entries after hidden launcher opt-in", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       schtasksResponses.push({ code: 0, stdout: "", stderr: "" });
       const startupEntryPath = await writeStartupFallbackEntry(env);
       const stdout = new PassThrough();
@@ -676,7 +676,7 @@ describe("Windows startup fallback", () => {
       await uninstallScheduledTask({
         env: {
           ...env,
-          OPENCLAW_WINDOWS_TASK_HIDDEN_LAUNCHER: "1",
+          QUIET_CORE_WINDOWS_TASK_HIDDEN_LAUNCHER: "1",
         },
         stdout,
       });
@@ -686,7 +686,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("removes hidden Startup-folder entries when the caller env lacks the marker", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       schtasksResponses.push({ code: 0, stdout: "", stderr: "" });
       const startupEntryPath = resolveStartupEntryPath(env, "vbs");
       await fs.mkdir(path.dirname(startupEntryPath), { recursive: true });
@@ -702,7 +702,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("reports runtime from the gateway listener when using the Startup fallback", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       addStartupFallbackMissingResponses();
       await writeStartupFallbackEntry(env);
       inspectPortUsage.mockResolvedValue({
@@ -719,7 +719,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("does not report a node Startup fallback as running from the gateway listener", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       const nodeEnv = makeNodeServiceEnv(env);
       addStartupFallbackMissingResponses();
       await writeStartupFallbackEntry(nodeEnv);
@@ -738,7 +738,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("does not kill the gateway listener when stopping a node Startup fallback", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       const nodeEnv = makeNodeServiceEnv(env);
       addStartupFallbackMissingResponses();
       await writeStartupFallbackEntry(nodeEnv);
@@ -757,7 +757,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("stops a node Startup fallback by terminating the matching node host process", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       const nodeEnv = makeNodeServiceEnv(env);
       addStartupFallbackMissingResponses();
       await writeStartupFallbackEntry(nodeEnv);
@@ -772,7 +772,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("cleans up a stale node Startup fallback when a node Scheduled Task is registered", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       const nodeEnv = makeNodeServiceEnv(env);
       schtasksResponses.push(
         { code: 0, stdout: "", stderr: "" },
@@ -791,7 +791,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("stops a registered node Scheduled Task by terminating the matching node host process", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       const nodeEnv = makeNodeServiceEnv(env);
       schtasksResponses.push(
         { code: 0, stdout: "", stderr: "" },
@@ -809,7 +809,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("restarts the Startup fallback by killing the current pid and relaunching the entry", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       addStartupFallbackMissingResponses([
         { code: 0, stdout: "", stderr: "" },
         { code: 1, stdout: "", stderr: "not found" },
@@ -833,7 +833,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("relaunches the task script when restart sees a scheduled-task run no-op", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       await writeGatewayScript(env);
       sleepMock.mockImplementationOnce(async () => {
         timeState.now += 15_000;
@@ -864,7 +864,7 @@ describe("Windows startup fallback", () => {
   });
 
   it("kills the Startup fallback runtime even when the CLI env omits the gateway port", async () => {
-    await withWindowsEnv("openclaw-win-startup-", async ({ env }) => {
+    await withWindowsEnv("quiet-core-bot-win-startup-", async ({ env }) => {
       schtasksResponses.push({ code: 0, stdout: "", stderr: "" });
       await writeGatewayScript(env);
       await writeStartupFallbackEntry(env);
@@ -890,7 +890,7 @@ describe("Windows startup fallback", () => {
 
       const stdout = new PassThrough();
       const envWithoutPort = { ...env };
-      delete envWithoutPort.OPENCLAW_GATEWAY_PORT;
+      delete envWithoutPort.QUIET_CORE_GATEWAY_PORT;
       await stopScheduledTask({ env: envWithoutPort, stdout });
 
       expectGatewayTermination(5151);

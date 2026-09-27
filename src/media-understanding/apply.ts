@@ -4,7 +4,7 @@ import path from "node:path";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/normalization-core/string-coerce";
 import { finalizeInboundContext } from "../auto-reply/reply/inbound-context.js";
 import type { MsgContext } from "../auto-reply/templating.js";
 import type { OpenClawConfig } from "../config/types.js";
@@ -334,7 +334,7 @@ function buildSyntheticSkippedAudioOutputs(
         kind: "audio.transcription" as const,
         attachmentIndex: attachment.attachmentIndex,
         text: EMPTY_VOICE_NOTE_PLACEHOLDER,
-        provider: "openclaw",
+        provider: "quiet-core-bot",
         model: "synthetic-empty-audio",
       },
     ];

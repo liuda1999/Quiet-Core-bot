@@ -25,7 +25,7 @@ Quiet Core bot is a single container with some config files. The interesting cus
 export <PROVIDER>_API_KEY="..."
 ./scripts/k8s/deploy.sh
 
-kubectl port-forward svc/openclaw 18789:18789 -n openclaw
+kubectl port-forward svc/quiet-core-bot 18789:18789 -n quiet-core-bot
 open http://localhost:18789
 ```
 
@@ -33,7 +33,7 @@ Retrieve the configured shared secret for the Control UI. This deploy script
 creates token auth by default:
 
 ```bash
-kubectl get secret openclaw-secrets -n openclaw -o jsonpath='{.data.OPENCLAW_GATEWAY_TOKEN}' | base64 -d
+kubectl get secret quiet-core-bot-secrets -n quiet-core-bot -o jsonpath='{.data.QUIET_CORE_GATEWAY_TOKEN}' | base64 -d
 ```
 
 For local debugging, `./scripts/k8s/deploy.sh --show-token` prints the token after deploy.
@@ -76,19 +76,19 @@ Use `--show-token` with either command if you want the token printed to stdout f
 ### 2) Access the gateway
 
 ```bash
-kubectl port-forward svc/openclaw 18789:18789 -n openclaw
+kubectl port-forward svc/quiet-core-bot 18789:18789 -n quiet-core-bot
 open http://localhost:18789
 ```
 
 ## What gets deployed
 
 ```
-Namespace: openclaw (configurable via OPENCLAW_NAMESPACE)
-├── Deployment/openclaw        # Single pod, init container + gateway
-├── Service/openclaw           # ClusterIP on port 18789
+Namespace: quiet-core-bot (configurable via QUIET_CORE_NAMESPACE)
+├── Deployment/quiet-core-bot        # Single pod, init container + gateway
+├── Service/quiet-core-bot           # ClusterIP on port 18789
 ├── PersistentVolumeClaim      # 10Gi for agent state and config
-├── ConfigMap/openclaw-config  # quiet-core-bot.json + AGENTS.md
-└── Secret/openclaw-secrets    # Gateway token + API keys
+├── ConfigMap/quiet-core-bot-config  # quiet-core-bot.json + AGENTS.md
+└── Secret/quiet-core-bot-secrets    # Gateway token + API keys
 ```
 
 ## Customization
@@ -121,15 +121,15 @@ Existing provider keys stay in the Secret unless you overwrite them.
 Or patch the Secret directly:
 
 ```bash
-kubectl patch secret openclaw-secrets -n openclaw \
+kubectl patch secret quiet-core-bot-secrets -n quiet-core-bot \
   -p '{"stringData":{"<PROVIDER>_API_KEY":"..."}}'
-kubectl rollout restart deployment/openclaw -n openclaw
+kubectl rollout restart deployment/quiet-core-bot -n quiet-core-bot
 ```
 
 ### Custom namespace
 
 ```bash
-OPENCLAW_NAMESPACE=my-namespace ./scripts/k8s/deploy.sh
+QUIET_CORE_NAMESPACE=my-namespace ./scripts/k8s/deploy.sh
 ```
 
 ### Custom image
@@ -137,7 +137,7 @@ OPENCLAW_NAMESPACE=my-namespace ./scripts/k8s/deploy.sh
 Edit the `image` field in `scripts/k8s/manifests/deployment.yaml`:
 
 ```yaml
-image: ghcr.io/openclaw/openclaw:latest # primary; official Docker Hub mirror: openclaw/openclaw:latest
+image: ghcr.io/liuda1999/quiet-core-bot:latest # primary; official Docker Hub mirror: liuda1999/quiet-core-bot:latest
 ```
 
 ### Expose beyond port-forward

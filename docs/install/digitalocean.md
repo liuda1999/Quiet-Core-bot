@@ -52,15 +52,15 @@ DigitalOcean is the simplest paid VPS path. If you prefer cheaper or free option
     curl -fsSL https://openclaw.ai/install.sh | bash
 
     # Create the non-root user that will own Quiet Core bot state and services.
-    adduser openclaw
-    usermod -aG sudo openclaw
-    loginctl enable-linger openclaw
+    adduser quiet-core-bot
+    usermod -aG sudo quiet-core-bot
+    loginctl enable-linger quiet-core-bot
 
-    su - openclaw
+    su - quiet-core-bot
     quiet-core-bot --version
     ```
 
-    Use the root shell only for system bootstrap. Run Quiet Core bot commands as the non-root `openclaw` user so state lives under `/home/openclaw/.openclaw/` and the Gateway installs as that user's systemd service.
+    Use the root shell only for system bootstrap. Run Quiet Core bot commands as the non-root `quiet-core-bot` user so state lives under `/home/quiet-core-bot/.quiet-core-bot/` and the Gateway installs as that user's systemd service.
 
   </Step>
 
@@ -86,8 +86,8 @@ DigitalOcean is the simplest paid VPS path. If you prefer cheaper or free option
   <Step title="Verify the gateway">
     ```bash
     quiet-core-bot status
-    systemctl --user status openclaw-gateway.service
-    journalctl --user -u openclaw-gateway.service -f
+    systemctl --user status quiet-core-bot-gateway.service
+    journalctl --user -u quiet-core-bot-gateway.service -f
     ```
   </Step>
 
@@ -154,7 +154,7 @@ The $6 Droplet only has 1 GB RAM. To keep things smooth:
 
 ## Troubleshooting
 
-**Gateway will not start** -- Run `quiet-core-bot doctor --non-interactive` and check logs with `journalctl --user -u openclaw-gateway.service -n 50`.
+**Gateway will not start** -- Run `quiet-core-bot doctor --non-interactive` and check logs with `journalctl --user -u quiet-core-bot-gateway.service -n 50`.
 
 **Port already in use** -- Run `lsof -i :18789` to find the process, then stop it.
 

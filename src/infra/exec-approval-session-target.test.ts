@@ -136,7 +136,7 @@ describe("exec approval session target", () => {
   };
 
   it("returns null for blank session keys, missing entries, and unresolved targets", () => {
-    withTempDirSync({ prefix: "openclaw-exec-approval-session-target-" }, (tmpDir) => {
+    withTempDirSync({ prefix: "quiet-core-bot-exec-approval-session-target-" }, (tmpDir) => {
       const storePath = path.join(tmpDir, "sessions.json");
       const cfg = writeStoreFile(storePath, {
         "agent:main:main": {
@@ -159,7 +159,7 @@ describe("exec approval session target", () => {
   });
 
   it("prefers turn-source routing over stale session delivery state", () => {
-    withTempDirSync({ prefix: "openclaw-exec-approval-session-target-" }, (tmpDir) => {
+    withTempDirSync({ prefix: "quiet-core-bot-exec-approval-session-target-" }, (tmpDir) => {
       const storePath = path.join(tmpDir, "sessions.json");
       const cfg = writeStoreFile(storePath, {
         "agent:main:main": {
@@ -236,7 +236,7 @@ describe("exec approval session target", () => {
   ] satisfies PlaceholderStoreCase[])(
     "$name",
     ({ relativeStoreDir, entries, request, expected }) => {
-      withTempDirSync({ prefix: "openclaw-exec-approval-session-target-" }, (tmpDir) => {
+      withTempDirSync({ prefix: "quiet-core-bot-exec-approval-session-target-" }, (tmpDir) => {
         const cfg = writeStoreFile(path.join(tmpDir, relativeStoreDir, "sessions.json"), entries);
         cfg.session = { store: path.join(tmpDir, "{agentId}", "sessions.json") };
         expect(expectResolvedSessionTarget(cfg, request)).toEqual(expected);
@@ -245,7 +245,7 @@ describe("exec approval session target", () => {
   );
 
   it("preserves string thread ids from the session store", () => {
-    withTempDirSync({ prefix: "openclaw-exec-approval-session-target-" }, (tmpDir) => {
+    withTempDirSync({ prefix: "quiet-core-bot-exec-approval-session-target-" }, (tmpDir) => {
       const storePath = path.join(tmpDir, "sessions.json");
       const cfg = writeStoreFile(storePath, {
         "agent:main:main": {
@@ -348,7 +348,7 @@ describe("exec approval session target", () => {
   });
 
   it("falls back to the stored session binding when turn source uses another channel", () => {
-    withTempDirSync({ prefix: "openclaw-exec-approval-session-target-" }, (tmpDir) => {
+    withTempDirSync({ prefix: "quiet-core-bot-exec-approval-session-target-" }, (tmpDir) => {
       const storePath = path.join(tmpDir, "sessions.json");
       const cfg = writeStoreFile(storePath, {
         "agent:main:matrix:channel:!ops:example.org": {
@@ -378,7 +378,7 @@ describe("exec approval session target", () => {
   });
 
   it("falls back to the session-bound account when no turn-source account is present", () => {
-    withTempDirSync({ prefix: "openclaw-exec-approval-session-target-" }, (tmpDir) => {
+    withTempDirSync({ prefix: "quiet-core-bot-exec-approval-session-target-" }, (tmpDir) => {
       const storePath = path.join(tmpDir, "sessions.json");
       const cfg = writeStoreFile(storePath, {
         "agent:main:main": {
@@ -405,7 +405,7 @@ describe("exec approval session target", () => {
   });
 
   it("prefers explicit turn-source accounts over stale session account bindings", () => {
-    withTempDirSync({ prefix: "openclaw-exec-approval-session-target-" }, (tmpDir) => {
+    withTempDirSync({ prefix: "quiet-core-bot-exec-approval-session-target-" }, (tmpDir) => {
       const storePath = path.join(tmpDir, "sessions.json");
       const cfg = writeStoreFile(storePath, {
         "agent:main:main": {
@@ -434,7 +434,7 @@ describe("exec approval session target", () => {
   });
 
   it("reconciles plugin-request turn source and session origin targets through the shared helper", () => {
-    withTempDirSync({ prefix: "openclaw-exec-approval-session-target-" }, (tmpDir) => {
+    withTempDirSync({ prefix: "quiet-core-bot-exec-approval-session-target-" }, (tmpDir) => {
       const storePath = path.join(tmpDir, "sessions.json");
       const cfg = writeStoreFile(storePath, {
         "agent:main:main": {
@@ -455,7 +455,7 @@ describe("exec approval session target", () => {
   });
 
   it("returns null when explicit turn source conflicts with the session-bound origin target", () => {
-    withTempDirSync({ prefix: "openclaw-exec-approval-session-target-" }, (tmpDir) => {
+    withTempDirSync({ prefix: "quiet-core-bot-exec-approval-session-target-" }, (tmpDir) => {
       const storePath = path.join(tmpDir, "sessions.json");
       const cfg = writeStoreFile(storePath, {
         "agent:main:main": {

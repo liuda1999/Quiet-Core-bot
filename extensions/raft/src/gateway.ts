@@ -12,13 +12,13 @@ import type { Socket } from "node:net";
 import {
   keepHttpServerTaskAlive,
   waitUntilAbort,
-} from "openclaw/plugin-sdk/channel-outbound";
-import type { ChannelGatewayContext } from "openclaw/plugin-sdk/channel-contract";
-import { KeyedAsyncQueue } from "openclaw/plugin-sdk/keyed-async-queue";
+} from "quiet-core-bot/plugin-sdk/channel-outbound";
+import type { ChannelGatewayContext } from "quiet-core-bot/plugin-sdk/channel-contract";
+import { KeyedAsyncQueue } from "quiet-core-bot/plugin-sdk/keyed-async-queue";
 import {
   createClaimableDedupe,
   type ClaimableDedupe,
-} from "openclaw/plugin-sdk/persistent-dedupe";
+} from "quiet-core-bot/plugin-sdk/persistent-dedupe";
 import { RAFT_CHANNEL_ID, type ResolvedRaftAccount } from "./accounts.js";
 import { dispatchRaftWake } from "./inbound.js";
 

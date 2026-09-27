@@ -20,7 +20,7 @@ title: "Gradium"
 Install the official plugin, then restart Gateway:
 
 ```bash
-quiet-core-bot plugins install @openclaw/gradium-speech
+quiet-core-bot plugins install @quiet-core/gradium-speech
 quiet-core-bot gateway restart
 ```
 

@@ -14,9 +14,9 @@ import {
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "./openclaw-state-db.js";
+} from "./quiet-core-bot-state-db.js";
 
-const originalStateDir = process.env["OPENCLAW_STATE_DIR"];
+const originalStateDir = process.env["QUIET_CORE_STATE_DIR"];
 let stateDir: string;
 
 function insertAgentRun(row: {
@@ -55,8 +55,8 @@ function readAgentRun(runId: string): Record<string, unknown> | undefined {
 }
 
 beforeEach(() => {
-  stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-agent-runs-"));
-  process.env["OPENCLAW_STATE_DIR"] = stateDir;
+  stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-agent-runs-"));
+  process.env["QUIET_CORE_STATE_DIR"] = stateDir;
   testing.resetSweepStateForTest();
   testing.resetPendingTerminalWritesForTest();
 });
@@ -65,9 +65,9 @@ afterEach(() => {
   testing.resetPendingTerminalWritesForTest();
   closeOpenClawStateDatabaseForTest();
   if (originalStateDir === undefined) {
-    delete process.env["OPENCLAW_STATE_DIR"];
+    delete process.env["QUIET_CORE_STATE_DIR"];
   } else {
-    process.env["OPENCLAW_STATE_DIR"] = originalStateDir;
+    process.env["QUIET_CORE_STATE_DIR"] = originalStateDir;
   }
 });
 

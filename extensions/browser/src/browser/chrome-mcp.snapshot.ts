@@ -4,7 +4,7 @@
  * Converts chrome-devtools-mcp structured snapshots into OpenClaw ARIA nodes
  * and compact AI snapshots with stable refs and duplicate tracking.
  */
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { normalizeLowercaseStringOrEmpty } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { normalizeString } from "../record-shared.js";
 import type { SnapshotAriaNode } from "./client.types.js";
 import {

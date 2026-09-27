@@ -115,7 +115,7 @@ After setup completes:
 ## 4) Get the VM IP address
 
 ```bash
-lume get openclaw
+lume get quiet-core-bot
 ```
 
 Look for the IP address (usually `192.168.64.x`).
@@ -137,7 +137,7 @@ Replace `youruser` with the account you created, and the IP with your VM's IP.
 Inside the VM:
 
 ```bash
-npm install -g openclaw@latest
+npm install -g quiet-core-bot@latest
 quiet-core-bot onboard --install-daemon
 ```
 
@@ -182,7 +182,7 @@ quiet-core-bot channels login
 Stop the VM and restart without display:
 
 ```bash
-lume stop openclaw
+lume stop quiet-core-bot
 lume run quiet-core-bot --no-display
 ```
 
@@ -232,15 +232,15 @@ Full setup details: [iMessage channel](/channels/imessage)
 Before customizing further, snapshot your clean state:
 
 ```bash
-lume stop openclaw
-lume clone openclaw openclaw-golden
+lume stop quiet-core-bot
+lume clone quiet-core-bot quiet-core-bot-golden
 ```
 
 Reset anytime:
 
 ```bash
-lume stop openclaw && lume delete openclaw
-lume clone openclaw-golden openclaw
+lume stop quiet-core-bot && lume delete quiet-core-bot
+lume clone quiet-core-bot-golden quiet-core-bot
 lume run quiet-core-bot --no-display
 ```
 
@@ -263,7 +263,7 @@ For true always-on, consider a dedicated Mac mini or a small VPS. See [VPS hosti
 | Problem                  | Solution                                                                                 |
 | ------------------------ | ---------------------------------------------------------------------------------------- |
 | Can't SSH into VM        | Check "Remote Login" is enabled in VM's System Settings                                  |
-| VM IP not showing        | Wait for VM to fully boot, run `lume get openclaw` again                                 |
+| VM IP not showing        | Wait for VM to fully boot, run `lume get quiet-core-bot` again                                 |
 | Lume command not found   | Add `~/.local/bin` to your PATH                                                          |
 | WhatsApp QR not scanning | Ensure you're logged into the VM (not host) when running `quiet-core-bot channels login` |
 

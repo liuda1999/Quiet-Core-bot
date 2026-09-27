@@ -29,9 +29,9 @@ function runPullHelperWithEnv(binDir: string, env: Record<string, string>) {
     encoding: "utf8",
     env: {
       ...process.env,
-      OPENCLAW_DOCKER_PULL_ATTEMPTS: "1",
-      OPENCLAW_DOCKER_PULL_RETRY_DELAY_SECONDS: "0",
-      OPENCLAW_DOCKER_PULL_TIMEOUT_SECONDS: "42",
+      QUIET_CORE_DOCKER_PULL_ATTEMPTS: "1",
+      QUIET_CORE_DOCKER_PULL_RETRY_DELAY_SECONDS: "0",
+      QUIET_CORE_DOCKER_PULL_TIMEOUT_SECONDS: "42",
       ...env,
       PATH: binDir,
     },
@@ -46,7 +46,7 @@ afterEach(() => {
 
 describe("scripts/ci-docker-pull-retry.sh", () => {
   it("uses a kill-after grace period when timeout supports it", () => {
-    const binDir = makeTempBin("openclaw-ci-docker-pull-gnu-");
+    const binDir = makeTempBin("quiet-core-bot-ci-docker-pull-gnu-");
     const timeoutArgsPath = path.join(binDir, "timeout-args.txt");
     const dockerArgsPath = path.join(binDir, "docker-args.txt");
 
@@ -81,7 +81,7 @@ describe("scripts/ci-docker-pull-retry.sh", () => {
   });
 
   it("falls back to plain timeout when kill-after is unavailable", () => {
-    const binDir = makeTempBin("openclaw-ci-docker-pull-plain-");
+    const binDir = makeTempBin("quiet-core-bot-ci-docker-pull-plain-");
     const timeoutArgsPath = path.join(binDir, "timeout-args.txt");
     const dockerArgsPath = path.join(binDir, "docker-args.txt");
 
@@ -116,7 +116,7 @@ describe("scripts/ci-docker-pull-retry.sh", () => {
   });
 
   it("uses gtimeout when timeout is unavailable", () => {
-    const binDir = makeTempBin("openclaw-ci-docker-pull-gtimeout-");
+    const binDir = makeTempBin("quiet-core-bot-ci-docker-pull-gtimeout-");
     const timeoutArgsPath = path.join(binDir, "gtimeout-args.txt");
     const dockerArgsPath = path.join(binDir, "docker-args.txt");
 
@@ -151,7 +151,7 @@ describe("scripts/ci-docker-pull-retry.sh", () => {
   });
 
   it("fails fast when timeout and gtimeout are unavailable", () => {
-    const binDir = makeTempBin("openclaw-ci-docker-pull-no-timeout-");
+    const binDir = makeTempBin("quiet-core-bot-ci-docker-pull-no-timeout-");
     const dockerArgsPath = path.join(binDir, "docker-args.txt");
 
     writeExecutable(
@@ -171,7 +171,7 @@ describe("scripts/ci-docker-pull-retry.sh", () => {
   });
 
   it("returns the last pull failure status after retries are exhausted", () => {
-    const binDir = makeTempBin("openclaw-ci-docker-pull-fail-");
+    const binDir = makeTempBin("quiet-core-bot-ci-docker-pull-fail-");
     const dockerArgsPath = path.join(binDir, "docker-args.txt");
 
     writeExecutable(
@@ -196,7 +196,7 @@ describe("scripts/ci-docker-pull-retry.sh", () => {
       ].join("\n"),
     );
 
-    const result = runPullHelperWithEnv(binDir, { OPENCLAW_DOCKER_PULL_ATTEMPTS: "2" });
+    const result = runPullHelperWithEnv(binDir, { QUIET_CORE_DOCKER_PULL_ATTEMPTS: "2" });
 
     expect(result.status).toBe(42);
     expect(result.stderr).toContain("Docker pull failed or timed out after 42s: status=42");

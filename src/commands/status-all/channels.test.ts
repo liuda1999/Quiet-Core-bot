@@ -47,11 +47,11 @@ vi.mock("../../plugins/official-external-plugin-repair-hints.js", () => ({
           pluginId: channelId,
           channelId,
           label: "Feishu",
-          installSpec: "@openclaw/feishu",
-          installCommand: "quiet-core-bot plugins install @openclaw/feishu",
+          installSpec: "@quiet-core/feishu",
+          installCommand: "quiet-core-bot plugins install @quiet-core/feishu",
           doctorFixCommand: "quiet-core-bot doctor --fix",
           repairHint:
-            "Install the official external plugin with: quiet-core-bot plugins install @openclaw/feishu, or run: quiet-core-bot doctor --fix.",
+            "Install the official external plugin with: quiet-core-bot plugins install @quiet-core/feishu, or run: quiet-core-bot doctor --fix.",
         }
       : null,
 }));
@@ -136,7 +136,7 @@ describe("buildChannelsTable", () => {
           enabled: true,
           state: "warn",
           detail:
-            "plugin not installed - run quiet-core-bot plugins install @openclaw/feishu or quiet-core-bot doctor --fix",
+            "plugin not installed - run quiet-core-bot plugins install @quiet-core/feishu or quiet-core-bot doctor --fix",
         },
       ],
       details: [],

@@ -3,14 +3,14 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { loadSessionStore } from "../config/sessions/store.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { resolveAgentRunSessionTarget } from "./run-session-target.js";
 
 describe("agent run session target", () => {
   let tempDir: string;
 
   beforeEach(() => {
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-run-session-target-"));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-run-session-target-"));
   });
 
   afterEach(() => {

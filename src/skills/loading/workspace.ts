@@ -2,13 +2,13 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import {
   normalizeTrimmedStringList,
   uniqueStrings,
-} from "@openclaw/normalization-core/string-normalization";
+} from "@quiet-core/normalization-core/string-normalization";
 import { resolveSandboxPath } from "../../agents/sandbox-paths.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { walkDirectorySync } from "../../infra/fs-safe.js";
 import { resolveOsHomeDir } from "../../infra/home-dir.js";
 import { isPathInside } from "../../infra/path-guards.js";
@@ -39,7 +39,7 @@ import { resolveAllowedSkillSymlinkTargetRealPaths, tryRealpath } from "./symlin
 
 const fsp = fs.promises;
 const skillsLogger = createSubsystemLogger("skills");
-const SKILL_SOURCE_ORIGIN_RELATIVE_PATH = path.join(".openclaw", "source-origin.json");
+const SKILL_SOURCE_ORIGIN_RELATIVE_PATH = path.join(".quiet-core-bot", "source-origin.json");
 const MAX_SKILL_SOURCE_ORIGIN_BYTES = 16 * 1024;
 
 /**
@@ -118,7 +118,7 @@ function isContainerStateHomeWherePromptTildeEscapes(home: string): boolean {
   const configDir = path.resolve(resolveConfigDir());
   return (
     home === "/data" &&
-    (configDir === "/data/.openclaw" || isPathInside("/data/.openclaw", configDir))
+    (configDir === "/data/.quiet-core-bot" || isPathInside("/data/.quiet-core-bot", configDir))
   );
 }
 
@@ -439,7 +439,7 @@ function buildEscapedSkillPathReason(params: { source: string; candidatePath: st
   consoleHint: string;
 } {
   const candidateIsSymlink = isSymlinkPath(params.candidatePath);
-  if (params.source === "openclaw-bundled" && candidateIsSymlink) {
+  if (params.source === "quiet-core-bot-bundled" && candidateIsSymlink) {
     return {
       reason: "bundled-symlink-escape",
       consoleHint:
@@ -452,7 +452,7 @@ function buildEscapedSkillPathReason(params: { source: string; candidatePath: st
       consoleHint: "reason=symlink-escape",
     };
   }
-  if (params.source === "openclaw-bundled") {
+  if (params.source === "quiet-core-bot-bundled") {
     return {
       reason: "bundled-root-escape",
       consoleHint:
@@ -722,13 +722,13 @@ function isPathInsideAnyRoot(rootRealPaths: readonly string[], candidateRealPath
 }
 
 function shouldEnforceConfiguredSkillRootContainment(source: string): boolean {
-  return source !== "openclaw-managed" && source !== "agents-skills-personal";
+  return source !== "quiet-core-bot-managed" && source !== "agents-skills-personal";
 }
 
 function shouldUseConfiguredSymlinkTargets(source: string): boolean {
   return (
-    source === "openclaw-workspace" ||
-    source === "openclaw-extra" ||
+    source === "quiet-core-bot-workspace" ||
+    source === "quiet-core-bot-extra" ||
     source === "agents-skills-project"
   );
 }
@@ -1068,7 +1068,7 @@ function loadSkillEntries(
 
       const candidatePath = path.resolve(candidate.skillDir);
       const maxGroupedDepth =
-        params.source === "openclaw-extra" &&
+        params.source === "quiet-core-bot-extra" &&
         !baseDirIsNestedSkillsRoot &&
         !baseDirLooksLikeSkillsRoot &&
         candidatePath !== nestedSkillsRootPath &&
@@ -1167,7 +1167,7 @@ function loadSkillEntries(
   const bundledSkills = bundledSkillsDir
     ? loadSkills({
         dir: bundledSkillsDir,
-        source: "openclaw-bundled",
+        source: "quiet-core-bot-bundled",
       })
     : [];
   const extraSkills = [
@@ -1175,13 +1175,13 @@ function loadSkillEntries(
       const resolved = resolveUserPath(dir);
       return loadSkills({
         dir: resolved,
-        source: "openclaw-extra",
+        source: "quiet-core-bot-extra",
       });
     }),
     ...loadGeneratedPluginSkillRecords({
       pluginSkillsDir,
       pluginSkillDirs,
-      source: "openclaw-extra",
+      source: "quiet-core-bot-extra",
       limits,
     }),
   ];
@@ -1189,7 +1189,7 @@ function loadSkillEntries(
     ? []
     : loadSkills({
         dir: managedSkillsDir,
-        source: "openclaw-managed",
+        source: "quiet-core-bot-managed",
       });
   const osHomeDir = resolveUserHomeDir();
   const personalAgentsSkillsDir = osHomeDir
@@ -1210,7 +1210,7 @@ function loadSkillEntries(
       });
   const workspaceSkills = loadSkills({
     dir: workspaceSkillsDir,
-    source: "openclaw-workspace",
+    source: "quiet-core-bot-workspace",
   });
 
   const merged = new Map<string, LoadedSkillRecord>();

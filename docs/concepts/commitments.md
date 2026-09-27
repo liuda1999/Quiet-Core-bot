@@ -104,14 +104,14 @@ but the conversation clearly created a useful future check-in.
 Use the CLI to inspect and clear stored commitments:
 
 ```bash
-openclaw commitments
-openclaw commitments --all
-openclaw commitments --agent main
-openclaw commitments --status snoozed
-openclaw commitments dismiss cm_abc123
+quiet-core-bot commitments
+quiet-core-bot commitments --all
+quiet-core-bot commitments --agent main
+quiet-core-bot commitments --status snoozed
+quiet-core-bot commitments dismiss cm_abc123
 ```
 
-See [`openclaw commitments`](/cli/commitments) for the command reference.
+See [`quiet-core-bot commitments`](/cli/commitments) for the command reference.
 
 ## Privacy and cost
 
@@ -132,7 +132,7 @@ quiet-core-bot config set commitments.enabled false
 If expected follow-ups are not appearing:
 
 - Confirm `commitments.enabled` is `true`.
-- Check `openclaw commitments --all` for pending, dismissed, snoozed, or expired
+- Check `quiet-core-bot commitments --all` for pending, dismissed, snoozed, or expired
   records.
 - Make sure heartbeat is running for the agent.
 - Check whether `commitments.maxPerDay` has already been reached for that
@@ -146,5 +146,5 @@ If expected follow-ups are not appearing:
 - [Active memory](/concepts/active-memory)
 - [Heartbeat](/gateway/heartbeat)
 - [Scheduled tasks](/automation/cron-jobs)
-- [`openclaw commitments`](/cli/commitments)
+- [`quiet-core-bot commitments`](/cli/commitments)
 - [Configuration reference](/gateway/configuration-reference#commitments)

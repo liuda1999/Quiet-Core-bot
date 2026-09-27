@@ -7,12 +7,12 @@ import {
   validateExternalCodePluginPackageJson,
 } from "./index.js";
 
-describe("@openclaw/plugin-package-contract", () => {
+describe("@quiet-core/plugin-package-contract", () => {
   it("normalizes the OpenClaw compatibility block for external plugins", () => {
     expect(
       normalizeExternalPluginCompatibility({
         version: "1.2.3",
-        openclaw: {
+        "quiet-core-bot": {
           compat: {
             pluginApi: ">=2026.3.24-beta.2",
             minGatewayVersion: "2026.3.24-beta.2",
@@ -35,7 +35,7 @@ describe("@openclaw/plugin-package-contract", () => {
     expect(
       normalizeExternalPluginCompatibility({
         version: "1.2.3",
-        openclaw: {
+        "quiet-core-bot": {
           compat: {
             pluginApi: ">=1.0.0",
           },
@@ -53,31 +53,31 @@ describe("@openclaw/plugin-package-contract", () => {
 
   it("lists the required external code-plugin fields", () => {
     expect(EXTERNAL_CODE_PLUGIN_REQUIRED_FIELD_PATHS).toEqual([
-      "openclaw.compat.pluginApi",
-      "openclaw.build.openclawVersion",
+      "quiet-core-bot.compat.pluginApi",
+      "quiet-core-bot.build.openclawVersion",
     ]);
   });
 
   it("reports missing required fields with stable field paths", () => {
     const packageJson = {
-      openclaw: {
+      "quiet-core-bot": {
         compat: {},
         build: {},
       },
     };
 
     expect(listMissingExternalCodePluginFieldPaths(packageJson)).toEqual([
-      "openclaw.compat.pluginApi",
-      "openclaw.build.openclawVersion",
+      "quiet-core-bot.compat.pluginApi",
+      "quiet-core-bot.build.openclawVersion",
     ]);
     expect(validateExternalCodePluginPackageJson(packageJson).issues).toEqual([
       {
-        fieldPath: "openclaw.compat.pluginApi",
-        message: "openclaw.compat.pluginApi is required for external code plugin packages.",
+        fieldPath: "quiet-core-bot.compat.pluginApi",
+        message: "quiet-core-bot.compat.pluginApi is required for external code plugin packages.",
       },
       {
-        fieldPath: "openclaw.build.openclawVersion",
-        message: "openclaw.build.openclawVersion is required for external code plugin packages.",
+        fieldPath: "quiet-core-bot.build.openclawVersion",
+        message: "quiet-core-bot.build.openclawVersion is required for external code plugin packages.",
       },
     ]);
   });

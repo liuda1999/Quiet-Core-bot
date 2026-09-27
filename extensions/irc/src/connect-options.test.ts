@@ -8,8 +8,8 @@ describe("buildIrcConnectOptions", () => {
       host: "irc.libera.chat",
       port: 6697,
       tls: true,
-      nick: "openclaw",
-      username: "openclaw",
+      nick: "quiet-core-bot",
+      username: "quiet-core-bot",
       realname: "OpenClaw Bot",
       password: "server-pass",
       config: {
@@ -31,8 +31,8 @@ describe("buildIrcConnectOptions", () => {
       host: "irc.libera.chat",
       port: 6697,
       tls: true,
-      nick: "openclaw",
-      username: "openclaw",
+      nick: "quiet-core-bot",
+      username: "quiet-core-bot",
       realname: "OpenClaw Bot",
       password: "server-pass",
       nickserv: {

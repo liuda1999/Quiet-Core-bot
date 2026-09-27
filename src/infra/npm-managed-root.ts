@@ -3,15 +3,15 @@ import type { Stats } from "node:fs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
-import { normalizeOptionalString as readOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { isRecord } from "@quiet-core/normalization-core/record-coerce";
+import { normalizeOptionalString as readOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { parse as parseYaml } from "yaml";
 import { runCommandWithTimeout } from "../process/exec.js";
 import { hasErrnoCode } from "./errors.js";
 import type { NpmSpecResolution } from "./install-source-utils.js";
 import { readJson, readJsonIfExists, writeJson } from "./json-files.js";
 import type { ParsedRegistryNpmSpec } from "./npm-registry-spec.js";
-import { CORE_PACKAGE_NAMES, resolveOpenClawPackageRootSync } from "./openclaw-root.js";
+import { CORE_PACKAGE_NAMES, resolveOpenClawPackageRootSync } from "./quiet-core-bot-root.js";
 import { createSafeNpmInstallArgs, createSafeNpmInstallEnv } from "./safe-package-install.js";
 
 // Managed npm roots are private package roots used for installed plugins. This
@@ -270,7 +270,7 @@ function applyManagedNpmRootOverrides(params: {
   managedDependencyNames: ReadonlySet<string>;
 }): { overrides: Record<string, unknown>; managedOverrideKeys: string[] } {
   const overrides = readOverrideRecord(params.manifest.overrides);
-  for (const key of readManagedOverrideKeys(params.manifest.openclaw)) {
+  for (const key of readManagedOverrideKeys(params.manifest["quiet-core-bot"])) {
     delete overrides[key];
   }
   Object.assign(overrides, params.managedOverrides);
@@ -352,7 +352,7 @@ export async function upsertManagedNpmRootDependency(params: {
   };
   // Explicit install transfers ownership: the package stops being a managed peer pin,
   // so the installer's spec wins now and later syncs may not re-pin or delete it.
-  const managedDependencyNames = new Set(readManagedPeerDependencyKeys(manifest.openclaw));
+  const managedDependencyNames = new Set(readManagedPeerDependencyKeys(manifest["quiet-core-bot"]));
   managedDependencyNames.delete(params.packageName);
   const { overrides, managedOverrideKeys } = applyManagedNpmRootOverrides({
     manifest,
@@ -361,7 +361,7 @@ export async function upsertManagedNpmRootDependency(params: {
     managedDependencyNames,
   });
   const openclawMetadata = buildManagedOpenClawMetadata({
-    current: manifest.openclaw,
+    current: manifest["quiet-core-bot"],
     managedOverrideKeys,
     managedPeerDependencyKeys: [...managedDependencyNames].toSorted(),
   });
@@ -376,9 +376,9 @@ export async function upsertManagedNpmRootDependency(params: {
     delete next.overrides;
   }
   if (openclawMetadata) {
-    next.openclaw = openclawMetadata;
+    next["quiet-core-bot"] = openclawMetadata;
   } else {
-    delete next.openclaw;
+    delete next["quiet-core-bot"];
   }
   await writeJson(manifestPath, next, { trailingNewline: true });
 }
@@ -641,9 +641,9 @@ function scrubHostPeerFromLockPackage(value: unknown): boolean {
     return false;
   }
   let changed = false;
-  if (isRecord(value.peerDependencies) && "openclaw" in value.peerDependencies) {
+  if (isRecord(value.peerDependencies) && "quiet-core-bot" in value.peerDependencies) {
     const peerDependencies = { ...value.peerDependencies };
-    delete peerDependencies.openclaw;
+    delete peerDependencies["quiet-core-bot"];
     if (Object.keys(peerDependencies).length > 0) {
       value.peerDependencies = peerDependencies;
     } else {
@@ -651,9 +651,9 @@ function scrubHostPeerFromLockPackage(value: unknown): boolean {
     }
     changed = true;
   }
-  if (isRecord(value.peerDependenciesMeta) && "openclaw" in value.peerDependenciesMeta) {
+  if (isRecord(value.peerDependenciesMeta) && "quiet-core-bot" in value.peerDependenciesMeta) {
     const peerDependenciesMeta = { ...value.peerDependenciesMeta };
-    delete peerDependenciesMeta.openclaw;
+    delete peerDependenciesMeta["quiet-core-bot"];
     if (Object.keys(peerDependenciesMeta).length > 0) {
       value.peerDependenciesMeta = peerDependenciesMeta;
     } else {
@@ -703,7 +703,7 @@ function isHostPeerResolutionFailure(
   result: Awaited<ReturnType<ManagedNpmRootRunCommand>>,
 ): boolean {
   const output = `${result.stdout}\n${result.stderr}`;
-  return /(^|[^@\w.-])openclaw(?=$|[@\s:,"'])/i.test(output);
+  return /(^|[^@\w.-])quiet-core-bot(?=$|[@\s:,"'])/i.test(output);
 }
 
 function createManagedNpmPeerPlanArgs(params?: {
@@ -734,7 +734,7 @@ async function collectNpmResolvedManagedNpmRootPeerDependencyPins(params: {
 }): Promise<Record<string, string>> {
   const manifest = await readManagedNpmRootManifest(path.join(params.npmRoot, "package.json"));
   const dependencies = readDependencyRecord(manifest.dependencies);
-  const previousManagedPeerDependencies = readManagedPeerDependencyKeys(manifest.openclaw);
+  const previousManagedPeerDependencies = readManagedPeerDependencyKeys(manifest["quiet-core-bot"]);
   const fallbackPeerPins = collectExistingManagedPeerDependencyPins(
     dependencies,
     previousManagedPeerDependencies,
@@ -742,9 +742,9 @@ async function collectNpmResolvedManagedNpmRootPeerDependencyPins(params: {
   for (const packageName of previousManagedPeerDependencies) {
     delete dependencies[packageName];
   }
-  const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-managed-peer-plan-"));
+  const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-managed-peer-plan-"));
   try {
-    delete dependencies.openclaw;
+    delete dependencies["quiet-core-bot"];
     await writeJson(
       path.join(tempRoot, "package.json"),
       {
@@ -762,8 +762,8 @@ async function collectNpmResolvedManagedNpmRootPeerDependencyPins(params: {
     await scrubHostPeerFromTempPackageLock(tempLockPath);
     await copyPathIfExists(path.join(params.npmRoot, ".npmrc"), path.join(tempRoot, ".npmrc"));
     await copyPathIfExists(
-      path.join(params.npmRoot, "_openclaw-pack-archives"),
-      path.join(tempRoot, "_openclaw-pack-archives"),
+      path.join(params.npmRoot, "_quiet-core-bot-pack-archives"),
+      path.join(tempRoot, "_quiet-core-bot-pack-archives"),
     );
 
     const command = params.runCommand ?? runCommandWithTimeout;
@@ -815,7 +815,7 @@ export async function readManagedNpmRootPeerDependencySnapshot(params: {
 }): Promise<ManagedNpmRootPeerDependencySnapshot> {
   const manifest = await readManagedNpmRootManifest(path.join(params.npmRoot, "package.json"));
   const dependencies = readDependencyRecord(manifest.dependencies);
-  const managedPeerDependencies = readManagedPeerDependencyKeys(manifest.openclaw).toSorted();
+  const managedPeerDependencies = readManagedPeerDependencyKeys(manifest["quiet-core-bot"]).toSorted();
   const dependencySnapshot: Record<string, string> = {};
   for (const packageName of managedPeerDependencies) {
     const dependencySpec = dependencies[packageName];
@@ -837,12 +837,12 @@ export async function restoreManagedNpmRootPeerDependencySnapshot(params: {
   const manifestPath = path.join(params.npmRoot, "package.json");
   const manifest = await readManagedNpmRootManifest(manifestPath);
   const dependencies = readDependencyRecord(manifest.dependencies);
-  for (const packageName of readManagedPeerDependencyKeys(manifest.openclaw)) {
+  for (const packageName of readManagedPeerDependencyKeys(manifest["quiet-core-bot"])) {
     delete dependencies[packageName];
   }
   Object.assign(dependencies, params.snapshot.dependencies);
   const overrides = readOverrideRecord(manifest.overrides);
-  const currentManagedOverrideKeys = readManagedOverrideKeys(manifest.openclaw);
+  const currentManagedOverrideKeys = readManagedOverrideKeys(manifest["quiet-core-bot"]);
   // Restored pins predate the overrides currently in the manifest; realign them so a
   // rollback never persists a root npm rejects with EOVERRIDE.
   reconcileManagedNpmRootOverrideConflicts({
@@ -855,7 +855,7 @@ export async function restoreManagedNpmRootPeerDependencySnapshot(params: {
     .filter((key) => Object.hasOwn(overrides, key))
     .toSorted();
   const openclawMetadata = buildManagedOpenClawMetadata({
-    current: manifest.openclaw,
+    current: manifest["quiet-core-bot"],
     managedOverrideKeys,
     managedPeerDependencyKeys: params.snapshot.managedPeerDependencies.toSorted(),
   });
@@ -870,9 +870,9 @@ export async function restoreManagedNpmRootPeerDependencySnapshot(params: {
     delete next.overrides;
   }
   if (openclawMetadata) {
-    next.openclaw = openclawMetadata;
+    next["quiet-core-bot"] = openclawMetadata;
   } else {
-    delete next.openclaw;
+    delete next["quiet-core-bot"];
   }
   await writeJson(manifestPath, next, { trailingNewline: true });
 }
@@ -888,7 +888,7 @@ export async function syncManagedNpmRootPeerDependencies(params: {
   const manifestPath = path.join(params.npmRoot, "package.json");
   const manifest = await readManagedNpmRootManifest(manifestPath);
   const dependencies = readDependencyRecord(manifest.dependencies);
-  const previousManagedPeerDependencies = readManagedPeerDependencyKeys(manifest.openclaw);
+  const previousManagedPeerDependencies = readManagedPeerDependencyKeys(manifest["quiet-core-bot"]);
   const previousManagedPeerDependencySet = new Set(previousManagedPeerDependencies);
   const peerPins = await collectNpmResolvedManagedNpmRootPeerDependencyPins({
     npmRoot: params.npmRoot,
@@ -930,7 +930,7 @@ export async function syncManagedNpmRootPeerDependencies(params: {
   });
   const managedPeerDependencyKeys = [...managedPeerDependencyNames].toSorted();
   const openclawMetadata = buildManagedOpenClawMetadata({
-    current: manifest.openclaw,
+    current: manifest["quiet-core-bot"],
     managedOverrideKeys,
     managedPeerDependencyKeys,
   });
@@ -945,9 +945,9 @@ export async function syncManagedNpmRootPeerDependencies(params: {
     delete next.overrides;
   }
   if (openclawMetadata) {
-    next.openclaw = openclawMetadata;
+    next["quiet-core-bot"] = openclawMetadata;
   } else {
-    delete next.openclaw;
+    delete next["quiet-core-bot"];
   }
   const changed = JSON.stringify(next) !== JSON.stringify(manifest);
   if (changed) {
@@ -956,7 +956,7 @@ export async function syncManagedNpmRootPeerDependencies(params: {
   return changed;
 }
 
-/** Remove stale managed-root openclaw peer installs while preserving active host links. */
+/** Remove stale managed-root quiet-core-bot peer installs while preserving active host links. */
 export async function repairManagedNpmRootOpenClawPeer(params: {
   npmRoot: string;
   packageRoot?: string | null;
@@ -977,9 +977,9 @@ export async function repairManagedNpmRootOpenClawPeer(params: {
   const manifestPath = path.join(params.npmRoot, "package.json");
   const manifest = await readManagedNpmRootManifest(manifestPath);
   const dependencies = readDependencyRecord(manifest.dependencies);
-  const hasManifestDependency = "openclaw" in dependencies;
+  const hasManifestDependency = "quiet-core-bot" in dependencies;
   const hasLockDependency = await managedNpmRootLockfileHasOpenClawPeer(params.npmRoot);
-  const hasPackageDir = await pathExists(path.join(params.npmRoot, "node_modules", "openclaw"));
+  const hasPackageDir = await pathExists(path.join(params.npmRoot, "node_modules", "quiet-core-bot"));
   const preserveActiveHostLink = activeHostState === "linked-active-host";
   if (!hasManifestDependency && !hasLockDependency && (!hasPackageDir || preserveActiveHostLink)) {
     return false;
@@ -1003,7 +1003,7 @@ export async function repairManagedNpmRootOpenClawPeer(params: {
         "--ignore-scripts",
         "--no-audit",
         "--no-fund",
-        "openclaw",
+        "quiet-core-bot",
       ]
     : [
         "npm",
@@ -1027,12 +1027,12 @@ export async function repairManagedNpmRootOpenClawPeer(params: {
     });
     if (result.code !== 0) {
       params.logger?.warn?.(
-        `npm ${hasManifestDependency ? "uninstall openclaw" : "prune"} failed while repairing managed npm root; falling back to direct cleanup: ${result.stderr.trim() || result.stdout.trim()}`,
+        `npm ${hasManifestDependency ? "uninstall quiet-core-bot" : "prune"} failed while repairing managed npm root; falling back to direct cleanup: ${result.stderr.trim() || result.stdout.trim()}`,
       );
     }
   } catch (error) {
     params.logger?.warn?.(
-      `npm ${hasManifestDependency ? "uninstall openclaw" : "prune"} failed while repairing managed npm root; falling back to direct cleanup: ${String(error)}`,
+      `npm ${hasManifestDependency ? "uninstall quiet-core-bot" : "prune"} failed while repairing managed npm root; falling back to direct cleanup: ${String(error)}`,
     );
   }
 
@@ -1056,7 +1056,7 @@ async function readManagedNpmRootOpenClawHostState(params: {
     return "none";
   }
 
-  const managedOpenClawPackageDir = path.join(params.npmRoot, "node_modules", "openclaw");
+  const managedOpenClawPackageDir = path.join(params.npmRoot, "node_modules", "quiet-core-bot");
   const [hostPackageRoot, managedPackageRoot, managedPackageStat] = await Promise.all([
     realpathIfExists(packageRoot),
     realpathIfExists(managedOpenClawPackageDir),
@@ -1077,15 +1077,15 @@ async function managedNpmRootLockfileHasOpenClawPeer(npmRoot: string): Promise<b
       if (
         isRecord(rootPackage) &&
         isRecord(rootPackage.dependencies) &&
-        "openclaw" in rootPackage.dependencies
+        "quiet-core-bot" in rootPackage.dependencies
       ) {
         return true;
       }
-      if ("node_modules/openclaw" in parsed.packages) {
+      if ("node_modules/quiet-core-bot" in parsed.packages) {
         return true;
       }
     }
-    return isRecord(parsed.dependencies) && "openclaw" in parsed.dependencies;
+    return isRecord(parsed.dependencies) && "quiet-core-bot" in parsed.dependencies;
   } catch (err) {
     if ((err as NodeJS.ErrnoException).code === "ENOENT") {
       return false;
@@ -1135,8 +1135,8 @@ async function scrubManagedNpmRootOpenClawPeer(params: {
   const manifestPath = path.join(params.npmRoot, "package.json");
   const manifest = await readManagedNpmRootManifest(manifestPath);
   const dependencies = readDependencyRecord(manifest.dependencies);
-  if ("openclaw" in dependencies) {
-    const { openclaw: _removed, ...nextDependencies } = dependencies;
+  if ("quiet-core-bot" in dependencies) {
+    const { "quiet-core-bot": _removed, ...nextDependencies } = dependencies;
     await fs.writeFile(
       manifestPath,
       `${JSON.stringify({ ...manifest, private: true, dependencies: nextDependencies }, null, 2)}\n`,
@@ -1152,20 +1152,20 @@ async function scrubManagedNpmRootOpenClawPeer(params: {
       const rootPackage = parsed.packages[""];
       if (isRecord(rootPackage) && isRecord(rootPackage.dependencies)) {
         const dependenciesValue = { ...rootPackage.dependencies };
-        if ("openclaw" in dependenciesValue) {
-          delete dependenciesValue.openclaw;
+        if ("quiet-core-bot" in dependenciesValue) {
+          delete dependenciesValue["quiet-core-bot"];
           parsed.packages[""] = { ...rootPackage, dependencies: dependenciesValue };
           lockChanged = true;
         }
       }
-      if ("node_modules/openclaw" in parsed.packages) {
-        delete parsed.packages["node_modules/openclaw"];
+      if ("node_modules/quiet-core-bot" in parsed.packages) {
+        delete parsed.packages["node_modules/quiet-core-bot"];
         lockChanged = true;
       }
     }
-    if (isRecord(parsed.dependencies) && "openclaw" in parsed.dependencies) {
+    if (isRecord(parsed.dependencies) && "quiet-core-bot" in parsed.dependencies) {
       const dependenciesLocal = { ...parsed.dependencies };
-      delete dependenciesLocal.openclaw;
+      delete dependenciesLocal["quiet-core-bot"];
       parsed.dependencies = dependenciesLocal;
       lockChanged = true;
     }
@@ -1178,13 +1178,13 @@ async function scrubManagedNpmRootOpenClawPeer(params: {
     }
   }
 
-  const openclawPackageDir = path.join(params.npmRoot, "node_modules", "openclaw");
+  const openclawPackageDir = path.join(params.npmRoot, "node_modules", "quiet-core-bot");
   if (!params.preservePackageDir && (await pathExists(openclawPackageDir))) {
     await fs.rm(openclawPackageDir, { recursive: true, force: true });
   }
   const binDir = path.join(params.npmRoot, "node_modules", ".bin");
   await Promise.all(
-    ["openclaw", "openclaw.cmd", "openclaw.ps1"].map((binName) =>
+    ["quiet-core-bot", "quiet-core-bot.cmd", "quiet-core-bot.ps1"].map((binName) =>
       fs.rm(path.join(binDir, binName), { force: true }),
     ),
   );

@@ -1,10 +1,10 @@
 // Matrix helper module supports migration config behavior.
 import fs from "node:fs";
 import os from "node:os";
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "openclaw/plugin-sdk/account-id";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { resolveStateDir } from "openclaw/plugin-sdk/state-paths";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "quiet-core-bot/plugin-sdk/account-id";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import { resolveStateDir } from "quiet-core-bot/plugin-sdk/state-paths";
+import { normalizeOptionalString } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import {
   findMatrixAccountEntry,
   requiresExplicitMatrixDefaultAccount,
@@ -207,14 +207,14 @@ export function resolveLegacyMatrixFlatStoreTarget(params: {
     return {
       warning:
         `Legacy Matrix ${params.detectedKind} detected at ${params.detectedPath}, but channels.matrix is not configured yet. ` +
-        'Configure Matrix, then rerun "openclaw doctor --fix" or restart the gateway.',
+        'Configure Matrix, then rerun "quiet-core-bot doctor --fix" or restart the gateway.',
     };
   }
   if (requiresExplicitMatrixDefaultAccount(params.cfg)) {
     return {
       warning:
         `Legacy Matrix ${params.detectedKind} detected at ${params.detectedPath}, but multiple Matrix accounts are configured and channels.matrix.defaultAccount is not set. ` +
-        'Set "channels.matrix.defaultAccount" to the intended target account before rerunning "openclaw doctor --fix" or restarting the gateway.',
+        'Set "channels.matrix.defaultAccount" to the intended target account before rerunning "quiet-core-bot doctor --fix" or restarting the gateway.',
     };
   }
 
@@ -233,7 +233,7 @@ export function resolveLegacyMatrixFlatStoreTarget(params: {
       warning:
         `Legacy Matrix ${params.detectedKind} detected at ${params.detectedPath}, but ${targetDescription} could not be resolved yet ` +
         `(need homeserver, userId, and access token for channels.matrix${accountId === DEFAULT_ACCOUNT_ID ? "" : `.accounts.${accountId}`}). ` +
-        'Start the gateway once with a working Matrix login, or rerun "openclaw doctor --fix" after cached credentials are available.',
+        'Start the gateway once with a working Matrix login, or rerun "quiet-core-bot doctor --fix" after cached credentials are available.',
     };
   }
 

@@ -4,7 +4,7 @@
 import type { SourceReplyDeliveryMode } from "../../auto-reply/get-reply-options.types.js";
 import type { ReasoningLevel, ThinkLevel } from "../../auto-reply/thinking.js";
 import type { ChatType } from "../../channels/chat-type.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import type { SkillSnapshot } from "../../skills/types.js";
 import { normalizeOptionalAgentRuntimeId } from "../agent-runtime-id.js";
 import {
@@ -89,7 +89,7 @@ export function resolveEmbeddedCompactionTarget(params: {
       provider: targetProvider,
       harnessRuntime: params.harnessRuntime,
     });
-    const harnessRuntime = useCodexHarnessRuntime ? params.harnessRuntime : "openclaw";
+    const harnessRuntime = useCodexHarnessRuntime ? params.harnessRuntime : "quiet-core-bot";
     const runtimeProvider = resolveSelectedOpenAIRuntimeProvider({
       provider: targetProvider,
       harnessRuntime: harnessRuntime ?? undefined,

@@ -1,7 +1,7 @@
 // Doctor config-flow tests cover config repair, migration, stripping, and validation orchestration.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { withTempHome } from "openclaw/plugin-sdk/test-env";
+import { withTempHome } from "quiet-core-bot/plugin-sdk/test-env";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { loadAndMaybeMigrateDoctorConfig } from "./doctor-config-flow.js";
 import {
@@ -1258,9 +1258,9 @@ vi.mock("./doctor-config-preflight.js", async () => {
 
   function resolveConfigPath() {
     const stateDir =
-      process.env.OPENCLAW_STATE_DIR ||
-      (process.env.HOME ? pathLocal.join(process.env.HOME, ".openclaw") : "");
-    return process.env.OPENCLAW_CONFIG_PATH || pathLocal.join(stateDir, "openclaw.json");
+      process.env.QUIET_CORE_STATE_DIR ||
+      (process.env.HOME ? pathLocal.join(process.env.HOME, ".quiet-core-bot") : "");
+    return process.env.QUIET_CORE_CONFIG_PATH || pathLocal.join(stateDir, "quiet-core-bot.json");
   }
 
   function normalizeDiscordStreamingCompat(cfg: Record<string, unknown>): Record<string, unknown> {
@@ -1447,7 +1447,6 @@ vi.mock("./doctor-config-analysis.js", () => {
 
 vi.mock("./doctor-state-migrations.js", () => ({
   autoMigrateLegacyState: vi.fn(async () => ({ changes: [], warnings: [] })),
-  autoMigrateLegacyStateDir: vi.fn(async () => ({ changes: [], warnings: [] })),
   autoMigrateLegacyTaskStateSidecars: vi.fn(async () => ({ changes: [], warnings: [] })),
 }));
 
@@ -1519,7 +1518,7 @@ describe("doctor config flow", () => {
     const result = await runDoctorConfigWithInput({
       config: {
         gateway: { auth: { mode: "token", token: 123 } },
-        agents: { list: [{ id: "openclaw" }] },
+        agents: { list: [{ id: "quiet-core-bot" }] },
       },
       run: loadAndMaybeMigrateDoctorConfig,
     });
@@ -1713,13 +1712,13 @@ describe("doctor config flow", () => {
       hooks: {
         enabled: true,
         token: "hook-secret",
-        transformsDir: "/virtual/.openclaw/workspace/skills/linear-webhook",
+        transformsDir: "/virtual/.quiet-core-bot/workspace/skills/linear-webhook",
         mappings: [
           {
             match: { path: "linear" },
             action: "agent",
             messageTemplate: "Linear event",
-            transform: { module: "./openclaw-linear-transform.js" },
+            transform: { module: "./quiet-core-bot-linear-transform.js" },
           },
         ],
       },
@@ -1727,8 +1726,8 @@ describe("doctor config flow", () => {
 
     const warning = doctorWarnings.join("\n");
     expect(warning).toContain("hooks.transformsDir:");
-    expect(warning).toContain("/virtual/.openclaw/workspace/skills/linear-webhook");
-    expect(warning).toContain("/virtual/.openclaw/hooks/transforms");
+    expect(warning).toContain("/virtual/.quiet-core-bot/workspace/skills/linear-webhook");
+    expect(warning).toContain("/virtual/.quiet-core-bot/hooks/transforms");
     expect(warning).toContain("move custom transforms there or remove hooks.transformsDir");
   });
 
@@ -1741,7 +1740,7 @@ describe("doctor config flow", () => {
               enabled: true,
               handler: "./hooks/custom.ts",
               extraDirs: ["./hooks"],
-              env: { OPENCLAW_CUSTOM_HOOK: "1" },
+              env: { QUIET_CORE_CUSTOM_HOOK: "1" },
             },
             "valid-hook": {
               enabled: true,
@@ -1954,7 +1953,7 @@ describe("doctor config flow", () => {
       config: {
         bridge: { bind: "auto" },
         gateway: { auth: { mode: "token", token: "ok", extra: true } },
-        agents: { list: [{ id: "openclaw" }] },
+        agents: { list: [{ id: "quiet-core-bot" }] },
         session: {
           maintenance: {
             rotateBytes: "10mb",
@@ -2118,8 +2117,8 @@ describe("doctor config flow", () => {
   it("keeps discord streaming aliases on disk during repair so downgrades stay recoverable", async () => {
     await withTempHome(
       async (home) => {
-        const configDir = path.join(home, ".openclaw");
-        const configPath = path.join(configDir, "openclaw.json");
+        const configDir = path.join(home, ".quiet-core-bot");
+        const configPath = path.join(configDir, "quiet-core-bot.json");
         await fs.mkdir(configDir, { recursive: true });
         await fs.writeFile(
           configPath,
@@ -2420,10 +2419,10 @@ describe("doctor config flow", () => {
   it("converts numeric discord ids to strings on repair", async () => {
     await withTempHome(
       async (home) => {
-        const configDir = path.join(home, ".openclaw");
+        const configDir = path.join(home, ".quiet-core-bot");
         await fs.mkdir(configDir, { recursive: true });
         await fs.writeFile(
-          path.join(configDir, "openclaw.json"),
+          path.join(configDir, "quiet-core-bot.json"),
           JSON.stringify(
             {
               channels: {
@@ -2591,11 +2590,11 @@ describe("doctor config flow", () => {
   it('repairs dmPolicy="allowlist" by restoring allowFrom from pairing store on repair', async () => {
     const result = await withTempHome(
       async (home) => {
-        const configDir = path.join(home, ".openclaw");
+        const configDir = path.join(home, ".quiet-core-bot");
         const credentialsDir = path.join(configDir, "credentials");
         await fs.mkdir(credentialsDir, { recursive: true });
         await fs.writeFile(
-          path.join(configDir, "openclaw.json"),
+          path.join(configDir, "quiet-core-bot.json"),
           JSON.stringify(
             {
               channels: {
@@ -2965,10 +2964,10 @@ describe("doctor config flow", () => {
     await withTempHome(
       async (home) => {
         const providerId = "acme-speech";
-        const configDir = path.join(home, ".openclaw");
+        const configDir = path.join(home, ".quiet-core-bot");
         await fs.mkdir(configDir, { recursive: true });
         await fs.writeFile(
-          path.join(configDir, "openclaw.json"),
+          path.join(configDir, "quiet-core-bot.json"),
           JSON.stringify(
             {
               talk: {

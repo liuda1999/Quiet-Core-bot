@@ -45,16 +45,16 @@ describe("runDaemonInstall integration", () => {
   beforeAll(async () => {
     envSnapshot = captureEnv([
       "HOME",
-      "OPENCLAW_STATE_DIR",
-      "OPENCLAW_CONFIG_PATH",
-      "OPENCLAW_GATEWAY_TOKEN",
-      "OPENCLAW_GATEWAY_PASSWORD",
+      "QUIET_CORE_STATE_DIR",
+      "QUIET_CORE_CONFIG_PATH",
+      "QUIET_CORE_GATEWAY_TOKEN",
+      "QUIET_CORE_GATEWAY_PASSWORD",
     ]);
-    tempHome = await makeTempWorkspace("openclaw-daemon-install-int-");
-    configPath = path.join(tempHome, "openclaw.json");
+    tempHome = await makeTempWorkspace("quiet-core-bot-daemon-install-int-");
+    configPath = path.join(tempHome, "quiet-core-bot.json");
     process.env.HOME = tempHome;
-    process.env.OPENCLAW_STATE_DIR = tempHome;
-    process.env.OPENCLAW_CONFIG_PATH = configPath;
+    process.env.QUIET_CORE_STATE_DIR = tempHome;
+    process.env.QUIET_CORE_CONFIG_PATH = configPath;
   });
 
   afterAll(async () => {
@@ -67,8 +67,8 @@ describe("runDaemonInstall integration", () => {
     resetRuntimeCapture();
     clearRuntimeConfigSnapshot();
     // Keep these defined-but-empty so dotenv won't repopulate from local .env.
-    process.env.OPENCLAW_GATEWAY_TOKEN = "";
-    process.env.OPENCLAW_GATEWAY_PASSWORD = "";
+    process.env.QUIET_CORE_GATEWAY_TOKEN = "";
+    process.env.QUIET_CORE_GATEWAY_PASSWORD = "";
     serviceMock.isLoaded.mockResolvedValue(false);
     await fs.writeFile(configPath, JSON.stringify({}, null, 2));
     clearConfigCache();
@@ -160,6 +160,6 @@ describe("runDaemonInstall integration", () => {
     expect(persistedToken).toEqual(expect.stringMatching(/^[0-9a-f]{48}$/));
 
     const installEnv = serviceMock.install.mock.calls[0]?.[0]?.environment;
-    expect(installEnv?.OPENCLAW_GATEWAY_TOKEN).toBeUndefined();
+    expect(installEnv?.QUIET_CORE_GATEWAY_TOKEN).toBeUndefined();
   });
 });

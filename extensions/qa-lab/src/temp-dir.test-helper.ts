@@ -3,7 +3,7 @@ import {
   tempWorkspace,
   resolvePreferredOpenClawTmpDir,
   type TempWorkspace,
-} from "openclaw/plugin-sdk/temp-path";
+} from "quiet-core-bot/plugin-sdk/temp-path";
 
 export function createTempDirHarness() {
   const tempDirs: TempWorkspace[] = [];

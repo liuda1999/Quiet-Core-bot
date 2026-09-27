@@ -11,7 +11,7 @@ Adds the iMessage channel surface for sending and receiving Quiet Core bot messa
 
 ## Distribution
 
-- Package: `@openclaw/imessage`
+- Package: `@quiet-core/imessage`
 - Install route: included in Quiet Core bot
 
 ## Surface

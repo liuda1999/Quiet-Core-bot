@@ -4,7 +4,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import type { ApiContributor, Entry, MapConfig, User } from "./update-clawtributors.types.js";
 
-const REPO = "openclaw/openclaw";
+const REPO = "liuda1999/quiet-core-bot";
 const PER_LINE = 10;
 const AVATAR_PROBE_SIZE = 40;
 const AVATAR_PROBE_MAX_BYTES = 256 * 1024;
@@ -457,7 +457,7 @@ async function probeDefaultGitHubAvatar(login: string): Promise<boolean> {
   try {
     return await withAvatarProbeTimeout(login, async ({ signal, timeoutPromise }) => {
       const response = await fetch(`https://github.com/${login}.png?size=${AVATAR_PROBE_SIZE}`, {
-        headers: { "user-agent": "openclaw-clawtributors" },
+        headers: { "user-agent": "quiet-core-bot-clawtributors" },
         signal,
       });
       if (!response.ok) {

@@ -26,7 +26,7 @@ import { resolveChannelResetConfig, resolveSessionResetType } from "../../config
 import { resolveSessionKey } from "../../config/sessions/session-key.js";
 import { loadSessionStore } from "../../config/sessions/store-load.js";
 import type { SessionEntry } from "../../config/sessions/types.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import {
   buildAgentMainSessionKey,
   classifySessionKeyShape,

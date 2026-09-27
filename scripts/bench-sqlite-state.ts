@@ -7,11 +7,11 @@ import { pathToFileURL } from "node:url";
 import {
   openOpenClawAgentDatabase,
   closeOpenClawAgentDatabasesForTest,
-} from "../src/state/openclaw-agent-db.js";
+} from "../src/state/quiet-core-bot-agent-db.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../src/state/openclaw-state-db.js";
+} from "../src/state/quiet-core-bot-state-db.js";
 import { parseStrictIntegerOption } from "./lib/dev-tooling-safety.ts";
 
 type ProfileId = "smoke" | "default" | "large";
@@ -577,8 +577,8 @@ function main(): void {
   const options = parseOptions(argv);
   const config = applyScale(PROFILES[options.profile]);
   const stateDir =
-    options.stateDir ?? fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-sqlite-perf-"));
-  const env = { OPENCLAW_STATE_DIR: stateDir };
+    options.stateDir ?? fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-sqlite-perf-"));
+  const env = { QUIET_CORE_STATE_DIR: stateDir };
   const started = nowMs();
   try {
     const stateDatabase = openOpenClawStateDatabase({ env });

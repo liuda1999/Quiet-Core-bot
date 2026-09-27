@@ -10,11 +10,11 @@ import {
 
 describe("resolveGatewayDevMode", () => {
   it("detects src ts entrypoints", () => {
-    expect(resolveGatewayDevMode(["node", "/Users/me/openclaw/src/cli/index.ts"])).toBe(true);
-    expect(resolveGatewayDevMode(["node", "C:\\Users\\me\\openclaw\\src\\cli\\index.ts"])).toBe(
+    expect(resolveGatewayDevMode(["node", "/Users/me/quiet-core-bot/src/cli/index.ts"])).toBe(true);
+    expect(resolveGatewayDevMode(["node", "C:\\Users\\me\\quiet-core-bot\\src\\cli\\index.ts"])).toBe(
       true,
     );
-    expect(resolveGatewayDevMode(["node", "/Users/me/openclaw/dist/cli/index.js"])).toBe(false);
+    expect(resolveGatewayDevMode(["node", "/Users/me/quiet-core-bot/dist/cli/index.js"])).toBe(false);
   });
 });
 
@@ -48,7 +48,7 @@ describe("resolveDaemonOpenClawBinDir", () => {
   it("uses the active quiet-core-bot command directory", () => {
     expect(
       resolveDaemonOpenClawBinDir({
-        argv: ["node", "/Users/testuser/.npm-global/bin/openclaw", "gateway", "install"],
+        argv: ["node", "/Users/testuser/.npm-global/bin/quiet-core-bot", "gateway", "install"],
         env: { PATH: "" },
         platform: "darwin",
       }),
@@ -57,10 +57,10 @@ describe("resolveDaemonOpenClawBinDir", () => {
 
   it("finds the PATH shim that resolves to the active package entrypoint", () => {
     const realpaths = new Map([
-      ["/Users/testuser/.npm-global/bin/openclaw", "/pkg/openclaw/quiet-core-bot.mjs"],
+      ["/Users/testuser/.npm-global/bin/quiet-core-bot", "/pkg/quiet-core-bot/quiet-core-bot.mjs"],
       [
-        "/Users/testuser/.npm-global/lib/node_modules/openclaw/quiet-core-bot.mjs",
-        "/pkg/openclaw/quiet-core-bot.mjs",
+        "/Users/testuser/.npm-global/lib/node_modules/quiet-core-bot/quiet-core-bot.mjs",
+        "/pkg/quiet-core-bot/quiet-core-bot.mjs",
       ],
     ]);
 
@@ -68,13 +68,13 @@ describe("resolveDaemonOpenClawBinDir", () => {
       resolveDaemonOpenClawBinDir({
         argv: [
           "node",
-          "/Users/testuser/.npm-global/lib/node_modules/openclaw/quiet-core-bot.mjs",
+          "/Users/testuser/.npm-global/lib/node_modules/quiet-core-bot/quiet-core-bot.mjs",
           "gateway",
           "install",
         ],
         env: { PATH: "/Users/testuser/.npm-global/bin:/usr/bin" },
         platform: "darwin",
-        existsSync: (candidate) => candidate === "/Users/testuser/.npm-global/bin/openclaw",
+        existsSync: (candidate) => candidate === "/Users/testuser/.npm-global/bin/quiet-core-bot",
         realpathSync: (candidate) => realpaths.get(candidate) ?? candidate,
       }),
     ).toEqual(["/Users/testuser/.npm-global/bin"]);
@@ -83,12 +83,12 @@ describe("resolveDaemonOpenClawBinDir", () => {
   it("ignores unrelated quiet-core-bot commands elsewhere on PATH", () => {
     expect(
       resolveDaemonOpenClawBinDir({
-        argv: ["node", "/opt/openclaw/quiet-core-bot.mjs", "gateway", "install"],
+        argv: ["node", "/opt/quiet-core-bot/quiet-core-bot.mjs", "gateway", "install"],
         env: { PATH: "/Users/testuser/.npm-global/bin" },
         platform: "darwin",
         existsSync: () => true,
         realpathSync: (candidate) =>
-          candidate === "/Users/testuser/.npm-global/bin/openclaw"
+          candidate === "/Users/testuser/.npm-global/bin/quiet-core-bot"
             ? "/other/quiet-core-bot.mjs"
             : candidate,
       }),
@@ -101,7 +101,7 @@ describe("resolveDaemonServicePathDirs", () => {
     expect(
       resolveDaemonServicePathDirs({
         nodePath: "/opt/homebrew/opt/node/bin/node",
-        argv: ["node", "/Users/testuser/.npm-global/bin/openclaw", "gateway", "install"],
+        argv: ["node", "/Users/testuser/.npm-global/bin/quiet-core-bot", "gateway", "install"],
         env: { PATH: "" },
         platform: "darwin",
       }),

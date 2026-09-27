@@ -124,7 +124,7 @@ describe("modelsSetCommand", () => {
   });
 
   it("persists manifest-owned provider aliases with the canonical provider id", async () => {
-    vi.stubEnv("OPENCLAW_BUNDLED_PLUGINS_DIR", path.resolve("extensions"));
+    vi.stubEnv("QUIET_CORE_BUNDLED_PLUGINS_DIR", path.resolve("extensions"));
 
     const sourceConfig = {
       agents: {

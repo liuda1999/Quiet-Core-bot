@@ -14,7 +14,7 @@ import type { CrestodianOverview } from "./overview.js";
 function overview(overrides: Partial<CrestodianOverview["tools"]> = {}): CrestodianOverview {
   return {
     config: {
-      path: "/tmp/openclaw.json",
+      path: "/tmp/quiet-core-bot.json",
       exists: false,
       valid: false,
       issues: [],
@@ -35,7 +35,7 @@ function overview(overrides: Partial<CrestodianOverview["tools"]> = {}): Crestod
     },
     references: {
       docsUrl: "https://github.com/liuda1999/Quiet-Core-bot",
-      sourceUrl: "https://github.com/openclaw/openclaw",
+      sourceUrl: "https://github.com/liuda1999/Quiet-Core-bot",
     },
   };
 }
@@ -81,7 +81,7 @@ describe("Crestodian assistant", () => {
           apiKeys: { openai: true, anthropic: false },
         }),
         config: {
-          path: "/tmp/openclaw.json",
+          path: "/tmp/quiet-core-bot.json",
           exists: true,
           valid: true,
           issues: [],
@@ -99,10 +99,10 @@ describe("Crestodian assistant", () => {
         defaultAgentId: "main",
         defaultModel: "openai/gpt-5.5",
         references: {
-          docsPath: "/tmp/openclaw/docs",
+          docsPath: "/tmp/quiet-core-bot/docs",
           docsUrl: "https://github.com/liuda1999/Quiet-Core-bot",
-          sourcePath: "/tmp/openclaw",
-          sourceUrl: "https://github.com/openclaw/openclaw",
+          sourcePath: "/tmp/quiet-core-bot",
+          sourceUrl: "https://github.com/liuda1999/Quiet-Core-bot",
         },
       },
     });
@@ -111,8 +111,8 @@ describe("Crestodian assistant", () => {
     expect(prompt).toContain("Default model: openai/gpt-5.5");
     expect(prompt).toContain("id=main, name=Main, workspace=/tmp/main");
     expect(prompt).toContain("OpenAI API key: found");
-    expect(prompt).toContain("Quiet Core bot docs: /tmp/openclaw/docs");
-    expect(prompt).toContain("Quiet Core bot source: /tmp/openclaw");
+    expect(prompt).toContain("Quiet Core bot docs: /tmp/quiet-core-bot/docs");
+    expect(prompt).toContain("Quiet Core bot source: /tmp/quiet-core-bot");
   });
 
   it("uses Claude CLI first for configless planning", async () => {

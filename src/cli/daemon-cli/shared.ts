@@ -115,11 +115,11 @@ export function pickProbeHostForBind(
 }
 
 const SAFE_DAEMON_ENV_KEYS = [
-  "OPENCLAW_PROFILE",
-  "OPENCLAW_STATE_DIR",
-  "OPENCLAW_CONFIG_PATH",
-  "OPENCLAW_GATEWAY_PORT",
-  "OPENCLAW_NIX_MODE",
+  "QUIET_CORE_PROFILE",
+  "QUIET_CORE_STATE_DIR",
+  "QUIET_CORE_CONFIG_PATH",
+  "QUIET_CORE_GATEWAY_PORT",
+  "QUIET_CORE_NIX_MODE",
 ];
 
 /** Keep only daemon env keys safe to print in diagnostics. */
@@ -213,8 +213,8 @@ export function renderRuntimeHints(
     hints.push(
       ...buildPlatformRuntimeLogHints({
         env,
-        systemdServiceName: resolveGatewaySystemdServiceName(env.OPENCLAW_PROFILE),
-        windowsTaskName: resolveGatewayWindowsTaskName(env.OPENCLAW_PROFILE),
+        systemdServiceName: resolveGatewaySystemdServiceName(env.QUIET_CORE_PROFILE),
+        windowsTaskName: resolveGatewayWindowsTaskName(env.QUIET_CORE_PROFILE),
       }),
     );
   }
@@ -223,7 +223,7 @@ export function renderRuntimeHints(
 
 /** Render install/start hints for the current service platform/container context. */
 export function renderGatewayServiceStartHints(env: NodeJS.ProcessEnv = process.env): string[] {
-  const profile = env.OPENCLAW_PROFILE;
+  const profile = env.QUIET_CORE_PROFILE;
   const container = resolveDaemonContainerContext(env);
   const hints = buildPlatformServiceStartHints({
     installCommand: formatCliCommand("quiet-core-bot gateway install", env),

@@ -1,7 +1,7 @@
 // Covers extra-params stream wrapper composition across provider families.
-import type { StreamFn } from "openclaw/plugin-sdk/agent-core";
-import type { Context, Model, SimpleStreamOptions } from "openclaw/plugin-sdk/llm";
-import { createAssistantMessageEventStream } from "openclaw/plugin-sdk/llm";
+import type { StreamFn } from "quiet-core-bot/plugin-sdk/agent-core";
+import type { Context, Model, SimpleStreamOptions } from "quiet-core-bot/plugin-sdk/llm";
+import { createAssistantMessageEventStream } from "quiet-core-bot/plugin-sdk/llm";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { testing as extraParamsTesting } from "./embedded-agent-runner/extra-params.js";
 
@@ -509,14 +509,14 @@ describe("applyExtraParamsToAgent", () => {
       undefined,
       "high",
       "cass",
-      "/tmp/openclaw-workspace",
+      "/tmp/quiet-core-bot-workspace",
       model,
-      "/tmp/openclaw-agent",
+      "/tmp/quiet-core-bot-agent",
       undefined,
     );
 
-    expect(capturedContext?.agentDir).toBe("/tmp/openclaw-agent");
-    expect(capturedContext?.workspaceDir).toBe("/tmp/openclaw-workspace");
+    expect(capturedContext?.agentDir).toBe("/tmp/quiet-core-bot-agent");
+    expect(capturedContext?.workspaceDir).toBe("/tmp/quiet-core-bot-workspace");
   });
 
   function runResponsesPayloadMutationCase(params: {

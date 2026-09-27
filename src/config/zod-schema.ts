@@ -2,7 +2,7 @@
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeStringifiedOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/normalization-core/string-coerce";
 import { z } from "zod";
 import { parseByteSize } from "../cli/parse-bytes.js";
 import { parseDurationMs } from "../cli/parse-duration.js";
@@ -73,7 +73,7 @@ const GatewayRemoteConfigSchema = z.object(GatewayRemoteSchemaShape).strict().op
 
 const TailscaleServiceNameSchema = z.string().regex(/^svc:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/, {
   message:
-    'Tailscale serviceName must use the "svc:<dns-label>" format, for example "svc:openclaw"',
+    'Tailscale serviceName must use the "svc:<dns-label>" format, for example "svc:quiet-core-bot"',
 });
 
 const LegacyCanvasHostSchema = z

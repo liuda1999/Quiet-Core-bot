@@ -135,8 +135,8 @@ describe("dev tooling safety helpers", () => {
   });
 
   it("redacts home paths and masks opaque ids", () => {
-    expect(redactHomePath("/home/alice/.openclaw/state.json", "/home/alice")).toBe(
-      "~/.openclaw/state.json",
+    expect(redactHomePath("/home/alice/.quiet-core-bot/state.json", "/home/alice")).toBe(
+      "~/.quiet-core-bot/state.json",
     );
     expect(maskIdentifier("session-key-abcdef123456")).toBe("sessio...3456");
   });
@@ -396,7 +396,7 @@ describe("script-specific dev tooling hardening", () => {
   });
 
   it("reads TUI PTY mirror updates incrementally with a bounded chunk", async () => {
-    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-tui-watch-test-"));
+    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-tui-watch-test-"));
     tempDirs.push(tempRoot);
     const mirrorPath = path.join(tempRoot, "mirror.ansi");
     await fs.writeFile(mirrorPath, "first-second-third", "utf8");
@@ -411,7 +411,7 @@ describe("script-specific dev tooling hardening", () => {
   });
 
   it("restarts TUI PTY mirror reads when the mirror file is truncated", async () => {
-    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-tui-watch-test-"));
+    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-tui-watch-test-"));
     tempDirs.push(tempRoot);
     const mirrorPath = path.join(tempRoot, "mirror.ansi");
     await fs.writeFile(mirrorPath, "fresh", "utf8");
@@ -423,7 +423,7 @@ describe("script-specific dev tooling hardening", () => {
   });
 
   it("drains all pending TUI PTY mirror chunks after the child exits", async () => {
-    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-tui-watch-test-"));
+    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-tui-watch-test-"));
     tempDirs.push(tempRoot);
     const mirrorPath = path.join(tempRoot, "mirror.ansi");
     await fs.writeFile(mirrorPath, "first-second-third", "utf8");
@@ -574,7 +574,7 @@ describe("script-specific dev tooling hardening", () => {
   it("rejects invalid OpenAI realtime smoke timeout values", () => {
     expect(realtimeSmokeTesting.resolveOpenAIHttpTimeoutMs("42")).toBe(42);
     expect(() => realtimeSmokeTesting.resolveOpenAIHttpTimeoutMs("2s")).toThrow(
-      /OPENCLAW_REALTIME_OPENAI_HTTP_TIMEOUT_MS must be an integer/u,
+      /QUIET_CORE_REALTIME_OPENAI_HTTP_TIMEOUT_MS must be an integer/u,
     );
   });
 
@@ -693,7 +693,7 @@ describe("script-specific dev tooling hardening", () => {
   });
 
   it("reads only the bounded Anthropic prompt probe gateway log tail", async () => {
-    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-prompt-probe-log-"));
+    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-prompt-probe-log-"));
     tempDirs.push(tempRoot);
     const logPath = path.join(tempRoot, "gateway.log");
     const token = "sk-test1234567890abcdefghijklmnop"; // pragma: allowlist secret
@@ -715,7 +715,7 @@ describe("script-specific dev tooling hardening", () => {
   });
 
   it("drops partial Anthropic prompt probe log lines before redaction", async () => {
-    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-prompt-probe-log-"));
+    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-prompt-probe-log-"));
     tempDirs.push(tempRoot);
     const logPath = path.join(tempRoot, "gateway.log");
     const token = `sk-test${"a".repeat(80)}`; // pragma: allowlist secret
@@ -728,8 +728,8 @@ describe("script-specific dev tooling hardening", () => {
   });
 
   it("cleans Anthropic prompt probe temp dirs unless explicitly kept", async () => {
-    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-prompt-probe-test-"));
-    const keepRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-prompt-probe-test-"));
+    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-prompt-probe-test-"));
+    const keepRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-prompt-probe-test-"));
 
     expect(promptProbeTesting.promptProbeTmpResult(tempRoot, false)).toEqual({});
     expect(promptProbeTesting.promptProbeTmpResult(keepRoot, true)).toEqual({ tmpDir: keepRoot });
@@ -745,7 +745,7 @@ describe("script-specific dev tooling hardening", () => {
   it.runIf(process.platform !== "win32")(
     "cleans Anthropic direct prompt descendants after timeout",
     async () => {
-      const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-direct-prompt-tree-"));
+      const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-direct-prompt-tree-"));
       tempDirs.push(tempRoot);
       const descendantPidPath = path.join(tempRoot, "descendant.pid");
       let descendantPid = 0;
@@ -758,9 +758,9 @@ describe("script-specific dev tooling hardening", () => {
           env: {
             ...process.env,
             CLAUDE_BIN: fakeClaudeBin,
-            OPENCLAW_PROMPT_TEXT: "timeout cleanup proof",
-            OPENCLAW_PROMPT_TIMEOUT_MS: "1000",
-            OPENCLAW_PROMPT_TRANSPORT: "direct",
+            QUIET_CORE_PROMPT_TEXT: "timeout cleanup proof",
+            QUIET_CORE_PROMPT_TIMEOUT_MS: "1000",
+            QUIET_CORE_PROMPT_TRANSPORT: "direct",
           },
           stdio: "ignore",
         },
@@ -788,7 +788,7 @@ describe("script-specific dev tooling hardening", () => {
   it.runIf(process.platform !== "win32")(
     "cleans Anthropic direct prompt descendants on parent signal",
     async () => {
-      const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-direct-parent-signal-"));
+      const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-direct-parent-signal-"));
       tempDirs.push(tempRoot);
       const descendantPidPath = path.join(tempRoot, "descendant.pid");
       let descendantPid = 0;
@@ -801,9 +801,9 @@ describe("script-specific dev tooling hardening", () => {
           env: {
             ...process.env,
             CLAUDE_BIN: fakeClaudeBin,
-            OPENCLAW_PROMPT_TEXT: "parent signal cleanup proof",
-            OPENCLAW_PROMPT_TIMEOUT_MS: "10000",
-            OPENCLAW_PROMPT_TRANSPORT: "direct",
+            QUIET_CORE_PROMPT_TEXT: "parent signal cleanup proof",
+            QUIET_CORE_PROMPT_TIMEOUT_MS: "10000",
+            QUIET_CORE_PROMPT_TRANSPORT: "direct",
           },
           stdio: "ignore",
         },
@@ -900,7 +900,7 @@ describe("script-specific dev tooling hardening", () => {
   it.runIf(process.platform !== "win32")(
     "cleans Anthropic prompt gateway descendants after leader exit",
     async () => {
-      const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-prompt-gateway-tree-"));
+      const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-prompt-gateway-tree-"));
       tempDirs.push(tempRoot);
       const descendantPidPath = path.join(tempRoot, "descendant.pid");
       let descendantPid = 0;
@@ -960,7 +960,7 @@ describe("script-specific dev tooling hardening", () => {
   it.runIf(process.platform !== "win32")(
     "cleans Anthropic prompt gateway descendants on parent signal",
     async () => {
-      const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-prompt-parent-signal-"));
+      const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-prompt-parent-signal-"));
       tempDirs.push(tempRoot);
       const descendantPidPath = path.join(tempRoot, "descendant.pid");
       const readyPath = path.join(tempRoot, "ready");
@@ -1155,7 +1155,7 @@ describe("script-specific dev tooling hardening", () => {
   it("rejects invalid Claude usage timeout values", () => {
     expect(claudeUsageTesting.resolveFetchTimeoutMs("123")).toBe(123);
     expect(() => claudeUsageTesting.resolveFetchTimeoutMs("1.5")).toThrow(
-      /OPENCLAW_DEBUG_CLAUDE_USAGE_FETCH_TIMEOUT_MS must be an integer/u,
+      /QUIET_CORE_DEBUG_CLAUDE_USAGE_FETCH_TIMEOUT_MS must be an integer/u,
     );
   });
 

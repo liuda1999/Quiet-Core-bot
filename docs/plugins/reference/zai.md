@@ -11,8 +11,8 @@ Adds Z.AI model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/zai-provider`
-- Install route: npm; ClawHub: `clawhub:@openclaw/zai-provider`
+- Package: `@quiet-core/zai-provider`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/zai-provider`
 
 ## Surface
 

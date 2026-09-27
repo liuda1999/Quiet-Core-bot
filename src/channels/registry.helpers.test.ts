@@ -68,15 +68,15 @@ describe("channel registry helpers", () => {
   });
 
   it("prefers the pinned channel registry when resolving registered plugin channels", () => {
-    const startupRegistry = createRegistryWithRegisteredChannel("openclaw-weixin", ["weixin"]);
+    const startupRegistry = createRegistryWithRegisteredChannel("quiet-core-bot-weixin", ["weixin"]);
     setActivePluginRegistry(startupRegistry);
     pinActivePluginChannelRegistry(startupRegistry);
 
     const replacementRegistry = createRegistryWithRegisteredChannel("qqbot", ["qq"]);
     setActivePluginRegistry(replacementRegistry);
 
-    expect(listRegisteredChannelPluginIds()).toEqual(["openclaw-weixin"]);
-    expect(normalizeAnyChannelId("weixin")).toBe("openclaw-weixin");
+    expect(listRegisteredChannelPluginIds()).toEqual(["quiet-core-bot-weixin"]);
+    expect(normalizeAnyChannelId("weixin")).toBe("quiet-core-bot-weixin");
     expect(getRegisteredChannelPluginMeta("OPENCLAW-WEIXIN")?.aliases).toEqual(["weixin"]);
   });
 

@@ -2,21 +2,21 @@
 import {
   expectOpenClawLiveTranscriptMarker,
   normalizeTranscriptForMatch,
-  OPENCLAW_LIVE_TRANSCRIPT_MARKER_RE,
-} from "openclaw/plugin-sdk/provider-test-contracts";
+  QUIET_CORE_LIVE_TRANSCRIPT_MARKER_RE,
+} from "quiet-core-bot/plugin-sdk/provider-test-contracts";
 import { describe, expect, it } from "vitest";
 
 describe("normalizeTranscriptForMatch", () => {
   it("normalizes punctuation and common Quiet Core bot live transcription variants", () => {
-    expect(normalizeTranscriptForMatch("Open-Claw integration OK")).toBe("openclawintegrationok");
+    expect(normalizeTranscriptForMatch("Open-Claw integration OK")).toBe("quiet-core-botintegrationok");
     expect(normalizeTranscriptForMatch("Testing OpenFlaw realtime transcription")).toMatch(
       /open(?:claw|flaw)/,
     );
     expect(normalizeTranscriptForMatch("OpenCore xAI realtime transcription")).toMatch(
-      OPENCLAW_LIVE_TRANSCRIPT_MARKER_RE,
+      QUIET_CORE_LIVE_TRANSCRIPT_MARKER_RE,
     );
     expect(normalizeTranscriptForMatch("OpenCL xAI realtime transcription")).toMatch(
-      OPENCLAW_LIVE_TRANSCRIPT_MARKER_RE,
+      QUIET_CORE_LIVE_TRANSCRIPT_MARKER_RE,
     );
     expectOpenClawLiveTranscriptMarker("OpenClar integration OK");
   });

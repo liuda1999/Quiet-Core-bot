@@ -1,5 +1,5 @@
 {
-  "name": "@openclaw/file-transfer",
+  "name": "@quiet-core/file-transfer",
   "version": "2026.6.11",
   "description": "OpenClaw file transfer plugin (file_fetch, dir_list, dir_fetch, file_write)",
   "type": "module",
@@ -8,9 +8,9 @@
     "typebox": "1.1.39"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@quiet-core/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "quiet-core-bot": {
     "extensions": [
       "./index.ts"
     ]

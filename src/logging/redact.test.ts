@@ -18,9 +18,9 @@ const defaults = getDefaultRedactPatterns();
 let tempDirs: string[] = [];
 
 function writeConfig(source: string): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-redact-config-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-redact-config-"));
   tempDirs.push(dir);
-  const configPath = path.join(dir, "openclaw.json");
+  const configPath = path.join(dir, "quiet-core-bot.json");
   fs.writeFileSync(configPath, source);
   return configPath;
 }
@@ -367,8 +367,8 @@ describe("redactSensitiveText", () => {
       "https://browser-user:browser-password-1234567890@api.example.test/v1",
       "https://:empty-username-password-1234567890@api.example.test/v1",
       "https://same:same@example.test/v1",
-      "postgres://dbuser:database-password-1234567890@db.example.test/openclaw",
-      "postgres://secret:secret@db.example.test/openclaw",
+      "postgres://dbuser:database-password-1234567890@db.example.test/quiet-core-bot",
+      "postgres://secret:secret@db.example.test/quiet-core-bot",
       "mongodb+srv://mongo:mongodb-password-1234567890@cluster.example.test/app",
       "redis://:redis-password-1234567890@cache.example.test/0",
       "rediss://cache:redis-tls-password-1234567890@cache.example.test/0",
@@ -383,8 +383,8 @@ describe("redactSensitiveText", () => {
     expect(output).toContain("https://browser-user:browse…7890@api.example.test/v1");
     expect(output).toContain("https://:empty-…7890@api.example.test/v1");
     expect(output).toContain("https://same:***@example.test/v1");
-    expect(output).toContain("postgres://dbuser:databa…7890@db.example.test/openclaw");
-    expect(output).toContain("postgres://secret:***@db.example.test/openclaw");
+    expect(output).toContain("postgres://dbuser:databa…7890@db.example.test/quiet-core-bot");
+    expect(output).toContain("postgres://secret:***@db.example.test/quiet-core-bot");
     expect(output).toContain("mongodb+srv://mongo:mongod…7890@cluster.example.test/app");
     expect(output).toContain("redis://:redis-…7890@cache.example.test/0");
     expect(output).toContain("rediss://cache:redis-…7890@cache.example.test/0");
@@ -905,10 +905,10 @@ describe("redactSensitiveText", () => {
 
   it("masks connection-string passwords through the default options path", () => {
     expect(
-      redactSensitiveText("postgres://dbuser:opaquepw12345@db.example.test/openclaw", {
+      redactSensitiveText("postgres://dbuser:opaquepw12345@db.example.test/quiet-core-bot", {
         mode: "tools",
       }),
-    ).toBe("postgres://dbuser:***@db.example.test/openclaw");
+    ).toBe("postgres://dbuser:***@db.example.test/quiet-core-bot");
   });
 
   it("masks quoted standalone values containing the other quote character", () => {
@@ -979,7 +979,7 @@ describe("redactSensitiveText", () => {
       },
     }`);
 
-    withEnv({ OPENCLAW_CONFIG_PATH: configPath }, () =>
+    withEnv({ QUIET_CORE_CONFIG_PATH: configPath }, () =>
       expect(redactSensitiveText("OPENAI_API_KEY=sk-1234567890abcdef")).toBe(
         "OPENAI_API_KEY=sk-1234567890abcdef",
       ),
@@ -1043,7 +1043,7 @@ describe("redactSensitiveText", () => {
       },
     }`);
 
-    withEnv({ OPENCLAW_CONFIG_PATH: configPath }, () =>
+    withEnv({ QUIET_CORE_CONFIG_PATH: configPath }, () =>
       expect(redactSensitiveText("ticket internal-12345 should hide")).toBe(
         "ticket *** should hide",
       ),

@@ -70,7 +70,7 @@ steps:
 
 Recommended preflight checks:
 
-- Browser availability and profile choice, for example `openclaw` for managed state or `user` when a signed-in Chrome session is required. See [Browser](/tools/browser).
+- Browser availability and profile choice, for example `quiet-core-bot` for managed state or `user` when a signed-in Chrome session is required. See [Browser](/tools/browser).
 - API credentials and quota for each source.
 - Network reachability for required endpoints.
 - Required tools enabled for the agent, such as `lobster`, `browser`, and `llm-task`.

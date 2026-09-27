@@ -2572,7 +2572,7 @@ describe("runAgentTurnWithFallback", () => {
       payloads: [{ text: "handled" }],
       meta: {
         agentMeta: {
-          sessionId: "openclaw-session",
+          sessionId: "quiet-core-bot-session",
           provider: "codex-cli",
           model: "gpt-5.4",
         },
@@ -7518,7 +7518,7 @@ describe("runAgentTurnWithFallback", () => {
     const followupRun = createFollowupRun();
     followupRun.run.provider = "anthropic";
     followupRun.run.model = "claude-opus";
-    followupRun.run.authProfileId = "anthropic:openclaw";
+    followupRun.run.authProfileId = "anthropic:quiet-core-bot";
     followupRun.run.authProfileIdSource = "user";
 
     const sessionEntry: SessionEntry = {
@@ -7772,7 +7772,7 @@ describe("runAgentTurnWithFallback", () => {
     const entry = {
       sessionId: "session",
       updatedAt: 1,
-      authProfileOverride: "anthropic:openclaw",
+      authProfileOverride: "anthropic:quiet-core-bot",
       authProfileOverrideSource: "user" as const,
     } as SessionEntry;
 
@@ -7781,7 +7781,7 @@ describe("runAgentTurnWithFallback", () => {
       run: {
         provider: "anthropic",
         model: "claude-opus",
-        authProfileId: "anthropic:openclaw",
+        authProfileId: "anthropic:quiet-core-bot",
         authProfileIdSource: "user",
       } as FollowupRun["run"],
       provider: "anthropic",
@@ -7797,7 +7797,7 @@ describe("runAgentTurnWithFallback", () => {
       modelOverrideSource: "auto",
       modelOverrideFallbackOriginProvider: "anthropic",
       modelOverrideFallbackOriginModel: "claude-opus",
-      authProfileOverride: "anthropic:openclaw",
+      authProfileOverride: "anthropic:quiet-core-bot",
       authProfileOverrideSource: "user",
     });
   });

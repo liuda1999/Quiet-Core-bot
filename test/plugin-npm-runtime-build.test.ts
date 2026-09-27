@@ -43,10 +43,10 @@ describe("plugin npm runtime build planning", () => {
       expectDistRelativePaths(plan.runtimeExtensions);
       expectDistRelativePaths(plan.runtimeBuildOutputs);
       expect(plan.packageFiles).toContain("dist/**");
-      expect(plan.packagePeerMetadata.peerDependencies.openclaw).toBe(
-        plan.packageJson.openclaw.compat.pluginApi,
+      expect(plan.packagePeerMetadata.peerDependencies["quiet-core-bot"]).toBe(
+        plan.packageJson["quiet-core-bot"].compat.pluginApi,
       );
-      expect(plan.packagePeerMetadata.peerDependenciesMeta.openclaw.optional).toBe(true);
+      expect(plan.packagePeerMetadata.peerDependenciesMeta["quiet-core-bot"].optional).toBe(true);
     }
   });
 
@@ -83,7 +83,7 @@ describe("plugin npm runtime build planning", () => {
     });
     expect(diffsRuntimePlan.packageFiles).toEqual([
       "dist/**",
-      "openclaw.plugin.json",
+      "quiet-core-bot.plugin.json",
       "npm-shrinkwrap.json",
       "README.md",
       "skills/**",

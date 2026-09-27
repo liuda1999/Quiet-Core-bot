@@ -5,7 +5,7 @@ import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { clearConfigCache, clearRuntimeConfigSnapshot } from "../config/config.js";
 import { clearSessionStoreCacheForTest } from "../config/sessions/store.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { captureEnv, deleteTestEnvValue, setTestEnvValue } from "../test-utils/env.js";
 import { ADMIN_SCOPE, APPROVALS_SCOPE } from "./method-scopes.js";
 import { withOperatorApprovalsGatewayClient } from "./operator-approvals-client.js";
@@ -18,12 +18,12 @@ import {
 
 const TEST_ENV_KEYS = [
   "HOME",
-  "OPENCLAW_STATE_DIR",
-  "OPENCLAW_CONFIG_PATH",
-  "OPENCLAW_GATEWAY_URL",
-  "OPENCLAW_GATEWAY_TOKEN",
-  "OPENCLAW_GATEWAY_PASSWORD",
-  "OPENCLAW_GATEWAY_PORT",
+  "QUIET_CORE_STATE_DIR",
+  "QUIET_CORE_CONFIG_PATH",
+  "QUIET_CORE_GATEWAY_URL",
+  "QUIET_CORE_GATEWAY_TOKEN",
+  "QUIET_CORE_GATEWAY_PASSWORD",
+  "QUIET_CORE_GATEWAY_PORT",
 ];
 
 type Cleanup = () => Promise<void> | void;
@@ -63,25 +63,25 @@ describe("operator approval gateway client runtime token source", () => {
   it("uses runtime authority only for generated local gateway URLs", async () => {
     const envSnapshot = captureEnv(TEST_ENV_KEYS);
     cleanup.push(() => envSnapshot.restore());
-    deleteTestEnvValue("OPENCLAW_CONFIG_PATH");
-    deleteTestEnvValue("OPENCLAW_GATEWAY_URL");
-    deleteTestEnvValue("OPENCLAW_GATEWAY_TOKEN");
-    deleteTestEnvValue("OPENCLAW_GATEWAY_PASSWORD");
+    deleteTestEnvValue("QUIET_CORE_CONFIG_PATH");
+    deleteTestEnvValue("QUIET_CORE_GATEWAY_URL");
+    deleteTestEnvValue("QUIET_CORE_GATEWAY_TOKEN");
+    deleteTestEnvValue("QUIET_CORE_GATEWAY_PASSWORD");
 
     const tempHome = await fs.mkdtemp(
       path.join(os.tmpdir(), "quiet-core-bot-approval-client-e2e-"),
     );
     cleanup.push(() => fs.rm(tempHome, { recursive: true, force: true, maxRetries: 5 }));
 
-    const stateDir = path.join(tempHome, ".openclaw");
+    const stateDir = path.join(tempHome, ".quiet-core-bot");
     await fs.mkdir(stateDir, { recursive: true });
     setTestEnvValue("HOME", tempHome);
-    setTestEnvValue("OPENCLAW_STATE_DIR", stateDir);
+    setTestEnvValue("QUIET_CORE_STATE_DIR", stateDir);
 
     const port = await getFreeGatewayPort();
     const token = "approval-client-e2e-token";
     const url = `ws://127.0.0.1:${port}`;
-    setTestEnvValue("OPENCLAW_GATEWAY_PORT", String(port));
+    setTestEnvValue("QUIET_CORE_GATEWAY_PORT", String(port));
 
     const server = await startGatewayServer(port, {
       bind: "loopback",

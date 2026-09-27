@@ -4,8 +4,8 @@
  * Live provider checks use this to decide when two provider ids belong to the
  * same plugin owner without repeating manifest/provider resolution work.
  */
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { resolveOwningPluginIdsForProviderRef } from "../plugins/providers.js";
 
 type LiveProviderOwnerContext = {

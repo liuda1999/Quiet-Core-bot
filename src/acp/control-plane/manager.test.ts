@@ -1,7 +1,7 @@
 /** Tests ACP session manager resolution, turn execution, state transitions, and cleanup. */
 import { setTimeout as scheduleNativeTimeout } from "node:timers";
 import { setTimeout as sleep } from "node:timers/promises";
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@quiet-core/normalization-core/number-coercion";
 import { describe, expect, it, vi } from "vitest";
 import {
   requireTaskByRunId,
@@ -275,7 +275,7 @@ describe("AcpSessionManager", () => {
         label: "Korean path",
         task: "Print the current directory in Korean",
         status: "succeeded",
-        progressSummary: "현재 작업 디렉토리는 /home/bykim0119/.openclaw/workspace 입니다",
+        progressSummary: "현재 작업 디렉토리는 /home/bykim0119/.quiet-core-bot/workspace 입니다",
       });
     });
   }, 300_000);
@@ -1108,7 +1108,7 @@ describe("AcpSessionManager", () => {
       sessionKey: "agent:openclaw:acp:session-1",
       storeSessionKey: "agent:openclaw:acp:session-1",
       acp: readySessionMeta({
-        agent: "openclaw",
+        agent: "quiet-core-bot",
       }),
     });
 

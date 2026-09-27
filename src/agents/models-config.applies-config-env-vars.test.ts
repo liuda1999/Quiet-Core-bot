@@ -17,7 +17,7 @@ import {
 import type { ProviderConfig } from "./models-config.providers.secrets.js";
 import { encodePluginModelCatalogRelativePath } from "./plugin-model-catalog.js";
 
-const TEST_ENV_VAR = "OPENCLAW_MODELS_CONFIG_TEST_ENV";
+const TEST_ENV_VAR = "QUIET_CORE_MODELS_CONFIG_TEST_ENV";
 const BUNDLED_PLUGINS_DIR = fileURLToPath(new URL("../../extensions/", import.meta.url));
 
 function createImplicitOpenRouterProvider(): ProviderConfig {
@@ -88,7 +88,7 @@ async function resolveProvidersForConfigEnvTest(params: {
   return await resolveProvidersForModelsJsonWithDeps(
     {
       cfg: params.cfg,
-      agentDir: "/tmp/openclaw-models-config-env-vars-test",
+      agentDir: "/tmp/quiet-core-bot-models-config-env-vars-test",
       env,
     },
     {
@@ -134,7 +134,7 @@ beforeAll(async () => {
   unauthenticatedProviderWritePlan = await planOpenClawModelsJsonWithDeps(
     {
       cfg: { models: { providers: {} } },
-      agentDir: "/tmp/openclaw-models-config-env-vars-test",
+      agentDir: "/tmp/quiet-core-bot-models-config-env-vars-test",
       env: {},
       existingRaw: "",
       existingParsed: null,
@@ -174,7 +174,7 @@ describe("models-config", () => {
             },
           },
         },
-        agentDir: "/tmp/openclaw-models-config-env-vars-test",
+        agentDir: "/tmp/quiet-core-bot-models-config-env-vars-test",
         env: {},
       },
       {
@@ -205,7 +205,7 @@ describe("models-config", () => {
     await resolveProvidersForModelsJsonWithDeps(
       {
         cfg: { models: { providers: {} } },
-        agentDir: "/tmp/openclaw-models-config-env-vars-test",
+        agentDir: "/tmp/quiet-core-bot-models-config-env-vars-test",
         env: {},
         pluginMetadataSnapshot,
       },
@@ -226,9 +226,9 @@ describe("models-config", () => {
     await resolveProvidersForModelsJsonWithDeps(
       {
         cfg: { models: { providers: {} } },
-        agentDir: "/tmp/openclaw-models-config-env-vars-test",
+        agentDir: "/tmp/quiet-core-bot-models-config-env-vars-test",
         env: {},
-        workspaceDir: "/tmp/openclaw-workspace",
+        workspaceDir: "/tmp/quiet-core-bot-workspace",
       },
       {
         resolveImplicitProviders: async ({ workspaceDir }) => {
@@ -238,7 +238,7 @@ describe("models-config", () => {
       },
     );
 
-    expect(observedWorkspaceDir).toBe("/tmp/openclaw-workspace");
+    expect(observedWorkspaceDir).toBe("/tmp/quiet-core-bot-workspace");
   });
 
   it("threads startup provider discovery scope into implicit provider discovery", async () => {
@@ -249,7 +249,7 @@ describe("models-config", () => {
     await resolveProvidersForModelsJsonWithDeps(
       {
         cfg: { models: { providers: {} } },
-        agentDir: "/tmp/openclaw-models-config-env-vars-test",
+        agentDir: "/tmp/quiet-core-bot-models-config-env-vars-test",
         env: {},
         providerDiscoveryProviderIds: ["openai"],
         providerDiscoveryEntriesOnly: true,
@@ -288,7 +288,7 @@ describe("models-config", () => {
     await planOpenClawModelsJsonWithDeps(
       {
         cfg: { models: { providers: {} } },
-        agentDir: "/tmp/openclaw-models-config-env-vars-test",
+        agentDir: "/tmp/quiet-core-bot-models-config-env-vars-test",
         env: {},
         existingRaw: "",
         existingParsed: null,
@@ -315,7 +315,7 @@ describe("models-config", () => {
     const plan = await planOpenClawModelsJsonWithDeps(
       {
         cfg: { models: { mode: "replace", providers: {} } },
-        agentDir: "/tmp/openclaw-models-config-env-vars-test",
+        agentDir: "/tmp/quiet-core-bot-models-config-env-vars-test",
         env: {},
         existingRaw: `${JSON.stringify({ providers: { stale: {} } }, null, 2)}\n`,
         existingParsed: { providers: { stale: {} } },
@@ -347,7 +347,7 @@ describe("models-config", () => {
     const plan = await planOpenClawModelsJsonWithDeps(
       {
         cfg: { models: { providers: {} } },
-        agentDir: "/tmp/openclaw-models-config-env-vars-test",
+        agentDir: "/tmp/quiet-core-bot-models-config-env-vars-test",
         env: { ZAI_API_KEY: "sk-test" } as NodeJS.ProcessEnv,
         existingRaw: "",
         existingParsed: null,
@@ -387,7 +387,7 @@ describe("models-config", () => {
     const plan = await planOpenClawModelsJsonWithDeps(
       {
         cfg: { models: { providers: {} } },
-        agentDir: "/tmp/openclaw-models-config-env-vars-test",
+        agentDir: "/tmp/quiet-core-bot-models-config-env-vars-test",
         env: { OPENAI_API_KEY: "sk-test" } as NodeJS.ProcessEnv,
         existingRaw: "",
         existingParsed: null,
@@ -413,7 +413,7 @@ describe("models-config", () => {
     const plan = await planOpenClawModelsJsonWithDeps(
       {
         cfg: { models: { mode: "merge", providers: {} } },
-        agentDir: "/tmp/openclaw-models-config-env-vars-test",
+        agentDir: "/tmp/quiet-core-bot-models-config-env-vars-test",
         env: {},
         existingRaw: "",
         existingParsed: {
@@ -468,7 +468,7 @@ describe("models-config", () => {
   });
 
   it("keeps google-vertex static catalog rows when an auth profile supplies the API key", async () => {
-    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-google-vertex-models-"));
+    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-google-vertex-models-"));
     try {
       saveAuthProfileStore(
         {
@@ -531,14 +531,14 @@ describe("models-config", () => {
   });
 
   it("keeps google-vertex static catalog rows when ADC auth evidence supplies the marker", async () => {
-    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-google-vertex-adc-models-"));
+    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-google-vertex-adc-models-"));
     const credentialsPath = path.join(agentDir, "application_default_credentials.json");
     await fs.writeFile(credentialsPath, JSON.stringify({ type: "authorized_user" }), "utf8");
     try {
       const plan = await withEnvAsync(
         {
-          OPENCLAW_BUNDLED_PLUGINS_DIR: BUNDLED_PLUGINS_DIR,
-          OPENCLAW_DISABLE_BUNDLED_PLUGINS: undefined,
+          QUIET_CORE_BUNDLED_PLUGINS_DIR: BUNDLED_PLUGINS_DIR,
+          QUIET_CORE_DISABLE_BUNDLED_PLUGINS: undefined,
         },
         async () =>
           await planOpenClawModelsJsonWithDeps(
@@ -556,8 +556,8 @@ describe("models-config", () => {
               },
               agentDir,
               env: {
-                OPENCLAW_BUNDLED_PLUGINS_DIR: BUNDLED_PLUGINS_DIR,
-                OPENCLAW_DISABLE_BUNDLED_PLUGINS: undefined,
+                QUIET_CORE_BUNDLED_PLUGINS_DIR: BUNDLED_PLUGINS_DIR,
+                QUIET_CORE_DISABLE_BUNDLED_PLUGINS: undefined,
                 GOOGLE_APPLICATION_CREDENTIALS: credentialsPath,
                 GOOGLE_CLOUD_PROJECT: "vertex-project",
                 GOOGLE_CLOUD_LOCATION: "global",

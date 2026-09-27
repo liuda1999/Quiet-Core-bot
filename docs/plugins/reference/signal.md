@@ -11,8 +11,8 @@ Adds the Signal channel surface for sending and receiving Quiet Core bot message
 
 ## Distribution
 
-- Package: `@openclaw/signal`
-- Install route: npm; ClawHub: `clawhub:@openclaw/signal`
+- Package: `@quiet-core/signal`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/signal`
 
 ## Surface
 

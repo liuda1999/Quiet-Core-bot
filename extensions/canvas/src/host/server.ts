@@ -13,14 +13,14 @@ import {
   setTimeout as scheduleNativeTimeout,
 } from "node:timers";
 import chokidar from "chokidar";
-import { detectMime } from "openclaw/plugin-sdk/media-mime";
-import { isTruthyEnvValue, type RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
-import { resolveStateDir } from "openclaw/plugin-sdk/state-paths";
+import { detectMime } from "quiet-core-bot/plugin-sdk/media-mime";
+import { isTruthyEnvValue, type RuntimeEnv } from "quiet-core-bot/plugin-sdk/runtime-env";
+import { resolveStateDir } from "quiet-core-bot/plugin-sdk/state-paths";
 import {
   lowercasePreservingWhitespace,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
-import { ensureDir, resolveUserPath } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
+import { ensureDir, resolveUserPath } from "quiet-core-bot/plugin-sdk/text-utility-runtime";
 import { type WebSocket, WebSocketServer } from "ws";
 import {
   CANVAS_HOST_PATH,
@@ -151,7 +151,7 @@ function defaultIndexHTML() {
     const d = ev && ev.detail || {};
     log("Action status: id=" + (d.id || "?") + " ok=" + String(!!d.ok) + (d.error ? (" error=" + d.error) : ""));
   };
-  window.addEventListener("openclaw:a2ui-action-status", onStatus);
+  window.addEventListener("quiet-core-bot:a2ui-action-status", onStatus);
 
   function send(name, sourceComponentId) {
     if (!hasHelper()) {
@@ -181,7 +181,7 @@ function defaultIndexHTML() {
 }
 
 function isDisabledByEnv() {
-  if (isTruthyEnvValue(process.env.OPENCLAW_SKIP_CANVAS_HOST)) {
+  if (isTruthyEnvValue(process.env.QUIET_CORE_SKIP_CANVAS_HOST)) {
     return true;
   }
   if (process.env.NODE_ENV === "test") {

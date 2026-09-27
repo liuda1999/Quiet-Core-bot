@@ -5,11 +5,11 @@ import { existsSync } from "node:fs";
 import {
   normalizeOptionalLowercaseString,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/normalization-core/string-coerce";
 import {
   normalizeStringEntries,
   uniqueStrings,
-} from "@openclaw/normalization-core/string-normalization";
+} from "@quiet-core/normalization-core/string-normalization";
 import {
   GATEWAY_CLIENT_CAPS,
   GATEWAY_CLIENT_MODES,
@@ -73,7 +73,7 @@ import {
   updateSessionStore,
 } from "../../config/sessions.js";
 import { resolveMaintenanceConfigFromInput } from "../../config/sessions/store-maintenance.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import {
   assertAgentRunLifecycleGenerationCurrent,
   claimAgentRunContext,
@@ -1722,7 +1722,7 @@ export const agentHandlers: GatewayRequestHandlers = {
       // identical bytes on the wire. The transient gateway injectTimestamp call
       // is removed — stamping the live turn here would diverge from the bare
       // stored history and bust the prompt cache.
-      // See: https://github.com/openclaw/openclaw/issues/3658
+      // See: https://github.com/liuda1999/Quiet-Core-bot/issues/3658
 
       if (requestedSessionKey) {
         const sessionLoadOptions = {

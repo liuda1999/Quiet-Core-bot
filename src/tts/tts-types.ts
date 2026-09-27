@@ -1,5 +1,5 @@
 // TTS shared types describe speech requests, responses, and runtime config.
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import type {
   ResolvedTtsPersona,
   TtsAutoMode,

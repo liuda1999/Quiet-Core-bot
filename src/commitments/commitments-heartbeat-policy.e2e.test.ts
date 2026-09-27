@@ -53,7 +53,7 @@ describe("commitments heartbeat delivery policy e2e", () => {
 
   it("does not send externally when heartbeat target is none", async () => {
     await withTempHeartbeatSandbox(async ({ tmpDir, storePath, replySpy }) => {
-      await withEnvAsync({ OPENCLAW_STATE_DIR: tmpDir }, async () => {
+      await withEnvAsync({ QUIET_CORE_STATE_DIR: tmpDir }, async () => {
         const cfg: OpenClawConfig = {
           agents: {
             defaults: {

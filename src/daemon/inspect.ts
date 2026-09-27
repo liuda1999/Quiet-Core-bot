@@ -1,7 +1,7 @@
 /** Inspects installed platform services for extra Quiet Core bot or legacy gateway jobs. */
 import fs from "node:fs/promises";
 import path from "node:path";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
 import {
   GATEWAY_SERVICE_KIND,
   GATEWAY_SERVICE_MARKER,
@@ -18,7 +18,7 @@ export type ExtraGatewayService = {
   label: string;
   detail: string;
   scope: "user" | "system";
-  marker?: "openclaw" | "clawdbot";
+  marker?: "quiet-core-bot" | "clawdbot";
   legacy?: boolean;
 };
 
@@ -26,7 +26,7 @@ export type FindExtraGatewayServicesOptions = {
   deep?: boolean;
 };
 
-const EXTRA_MARKERS = ["openclaw", "clawdbot"] as const;
+const EXTRA_MARKERS = ["quiet-core-bot", "clawdbot"] as const;
 const SYSTEMD_REFERENCE_ONLY_KEYS = new Set([
   "after",
   "before",
@@ -44,7 +44,7 @@ const SYSTEMD_REFERENCE_ONLY_KEYS = new Set([
 export function renderGatewayServiceCleanupHints(
   env: Record<string, string | undefined> = process.env as Record<string, string | undefined>,
 ): string[] {
-  const profile = env.OPENCLAW_PROFILE;
+  const profile = env.QUIET_CORE_PROFILE;
   switch (process.platform) {
     case "darwin": {
       const label = resolveGatewayLaunchAgentLabel(profile);
@@ -182,17 +182,17 @@ function isOpenClawGatewayLaunchdService(label: string, contents: string): boole
   if (hasGatewayServiceMarker(contents)) {
     return true;
   }
-  if (detectLaunchdGatewayExecutionMarker(contents) !== "openclaw") {
+  if (detectLaunchdGatewayExecutionMarker(contents) !== "quiet-core-bot") {
     return false;
   }
-  return label.startsWith("ai.openclaw.");
+  return label.startsWith("ai.quiet-core-bot.");
 }
 
 function isOpenClawGatewaySystemdService(name: string, contents: string): boolean {
   if (hasGatewayServiceMarker(contents)) {
     return true;
   }
-  if (!name.startsWith("openclaw-gateway")) {
+  if (!name.startsWith("quiet-core-bot-gateway")) {
     return false;
   }
   return normalizeLowercaseStringOrEmpty(contents).includes("gateway");
@@ -215,7 +215,7 @@ function isOpenClawGatewayTaskName(name: string): boolean {
   // Historical task names must keep being recognized as managed gateway tasks,
   // otherwise an installed pre-rebrand task (OpenClaw Gateway) or a
   // profile-suffixed rebrand task would be reported as a competing extra service.
-  return /^(?:openclaw|quiet core(?: bot)?) gateway(?: \(.+\))?$/.test(stripped);
+  return /^(?:quiet-core-bot|quiet core(?: bot)?) gateway(?: \(.+\))?$/.test(stripped);
 }
 
 function tryExtractPlistLabel(contents: string): string | null {
@@ -303,8 +303,8 @@ async function scanLaunchdDir(params: {
     const legacyLabel = isLegacyLabel(labelFromName) || isLegacyLabel(label);
     const executionMarker = detectLaunchdGatewayExecutionMarker(contents);
     const marker =
-      hasGatewayServiceMarker(contents) || executionMarker === "openclaw"
-        ? "openclaw"
+      hasGatewayServiceMarker(contents) || executionMarker === "quiet-core-bot"
+        ? "quiet-core-bot"
         : executionMarker === "clawdbot" || legacyLabel
           ? "clawdbot"
           : null;
@@ -316,7 +316,7 @@ async function scanLaunchdDir(params: {
     if (isIgnoredLaunchdLabel(label)) {
       continue;
     }
-    if (marker === "openclaw" && isOpenClawGatewayLaunchdService(label, contents)) {
+    if (marker === "quiet-core-bot" && isOpenClawGatewayLaunchdService(label, contents)) {
       continue;
     }
     results.push({
@@ -325,7 +325,7 @@ async function scanLaunchdDir(params: {
       detail: `plist: ${fullPath}`,
       scope: params.scope,
       marker,
-      legacy: marker !== "openclaw" || isLegacyLabel(label),
+      legacy: marker !== "quiet-core-bot" || isLegacyLabel(label),
     });
   }
 
@@ -346,14 +346,14 @@ async function scanSystemdDir(params: {
 
   for (const { entry, name, fullPath, contents } of candidates) {
     const marker = hasGatewayServiceMarker(contents)
-      ? "openclaw"
+      ? "quiet-core-bot"
       : detectMarkerLineWithGateway(contents);
     if (!marker) {
       continue;
     }
     if (
       !params.includeManagedOpenClaw &&
-      marker === "openclaw" &&
+      marker === "quiet-core-bot" &&
       isOpenClawGatewaySystemdService(name, contents)
     ) {
       continue;
@@ -364,7 +364,7 @@ async function scanSystemdDir(params: {
       detail: `unit: ${fullPath}`,
       scope: params.scope,
       marker,
-      legacy: marker !== "openclaw",
+      legacy: marker !== "quiet-core-bot",
     });
   }
 
@@ -552,7 +552,7 @@ export async function findExtraGatewayServices(
         detail: task.taskToRun ? `task: ${name}, run: ${task.taskToRun}` : name,
         scope: "system",
         marker,
-        legacy: marker !== "openclaw",
+        legacy: marker !== "quiet-core-bot",
       });
     }
     return results;

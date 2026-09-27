@@ -78,7 +78,7 @@ function killProcessTree(parentPid: number): void {
 
 describe("runCliCommand real process lifecycle", () => {
   it("kills the command and its descendant when the caller aborts", async () => {
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-qmd-abort-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-qmd-abort-"));
     const pidFile = path.join(tempDir, "pids.json");
     const controller = new AbortController();
     const abortError = new Error("memory_search timed out after 15s");

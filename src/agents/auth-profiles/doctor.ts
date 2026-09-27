@@ -3,8 +3,8 @@
  * Adds local migration guidance for known legacy profiles before falling back
  * to provider plugin doctor copy.
  */
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { buildProviderAuthDoctorHintWithPlugin } from "../../plugins/provider-runtime.runtime.js";
 import type { AuthProfileStore } from "./types.js";
 

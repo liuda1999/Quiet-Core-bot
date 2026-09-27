@@ -13,7 +13,7 @@ Quiet Core bot uses the `zai` provider with a Z.AI API key.
 | Property | Value                                        |
 | -------- | -------------------------------------------- |
 | Provider | `zai`                                        |
-| Package  | `@openclaw/zai-provider`                     |
+| Package  | `@quiet-core/zai-provider`                   |
 | Auth     | `ZAI_API_KEY` (legacy alias: `Z_AI_API_KEY`) |
 | API      | Z.AI Chat Completions (Bearer auth)          |
 
@@ -27,7 +27,7 @@ refs such as `zai/glm-5.2`: provider `zai`, model id `glm-5.2`.
 Install the provider plugin first:
 
 ```bash
-quiet-core-bot plugins install @openclaw/zai-provider
+quiet-core-bot plugins install @quiet-core/zai-provider
 ```
 
 <Tabs>

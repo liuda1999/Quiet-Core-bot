@@ -57,12 +57,12 @@ export function readToolSearchGatewayFetchLimits(
 ): ToolSearchGatewayFetchLimits {
   return {
     bodyMaxBytes: readPositiveIntEnv(
-      "OPENCLAW_TOOL_SEARCH_GATEWAY_E2E_FETCH_BODY_MAX_BYTES",
+      "QUIET_CORE_TOOL_SEARCH_GATEWAY_E2E_FETCH_BODY_MAX_BYTES",
       1024 * 1024,
       env,
     ),
     timeoutMs: readPositiveIntEnv(
-      "OPENCLAW_TOOL_SEARCH_GATEWAY_E2E_FETCH_TIMEOUT_MS",
+      "QUIET_CORE_TOOL_SEARCH_GATEWAY_E2E_FETCH_TIMEOUT_MS",
       180_000,
       env,
     ),
@@ -81,9 +81,9 @@ export function snapshotToolSearchGatewayEnv(
   env: NodeJS.ProcessEnv = process.env,
 ): ToolSearchGatewayEnvSnapshot {
   return {
-    configPath: env.OPENCLAW_CONFIG_PATH,
-    stateDir: env.OPENCLAW_STATE_DIR,
-    testFast: env.OPENCLAW_TEST_FAST,
+    configPath: env.QUIET_CORE_CONFIG_PATH,
+    stateDir: env.QUIET_CORE_STATE_DIR,
+    testFast: env.QUIET_CORE_TEST_FAST,
   };
 }
 
@@ -91,7 +91,7 @@ function restoreEnvValue(
   env: NodeJS.ProcessEnv,
   key: keyof Pick<
     NodeJS.ProcessEnv,
-    "OPENCLAW_CONFIG_PATH" | "OPENCLAW_STATE_DIR" | "OPENCLAW_TEST_FAST"
+    "QUIET_CORE_CONFIG_PATH" | "QUIET_CORE_STATE_DIR" | "QUIET_CORE_TEST_FAST"
   >,
   value: string | undefined,
 ): void {
@@ -106,9 +106,9 @@ export function restoreToolSearchGatewayEnv(
   snapshot: ToolSearchGatewayEnvSnapshot,
   env: NodeJS.ProcessEnv = process.env,
 ): void {
-  restoreEnvValue(env, "OPENCLAW_CONFIG_PATH", snapshot.configPath);
-  restoreEnvValue(env, "OPENCLAW_STATE_DIR", snapshot.stateDir);
-  restoreEnvValue(env, "OPENCLAW_TEST_FAST", snapshot.testFast);
+  restoreEnvValue(env, "QUIET_CORE_CONFIG_PATH", snapshot.configPath);
+  restoreEnvValue(env, "QUIET_CORE_STATE_DIR", snapshot.stateDir);
+  restoreEnvValue(env, "QUIET_CORE_TEST_FAST", snapshot.testFast);
 }
 
 function timeoutError(message: string) {
@@ -440,10 +440,10 @@ async function writeFakePlugin(params: {
     path.join(pluginDir, "package.json"),
     `${JSON.stringify(
       {
-        name: "@openclaw/tool-search-e2e-fixture",
+        name: "@quiet-core/tool-search-e2e-fixture",
         version: "0.0.0",
         type: "module",
-        openclaw: {
+        "quiet-core-bot": {
           extensions: ["./index.js"],
         },
       },
@@ -453,7 +453,7 @@ async function writeFakePlugin(params: {
     "utf8",
   );
   await fs.writeFile(
-    path.join(pluginDir, "openclaw.plugin.json"),
+    path.join(pluginDir, "quiet-core-bot.plugin.json"),
     `${JSON.stringify(
       {
         id: FAKE_PLUGIN_ID,
@@ -518,7 +518,7 @@ async function runLane(params: {
   fakePluginDir: string;
 }): Promise<LaneResult> {
   const stateDir = path.join(params.rootDir, params.lane, "state");
-  const configPath = path.join(stateDir, "openclaw.json");
+  const configPath = path.join(stateDir, "quiet-core-bot.json");
   const workspaceDir = path.join(params.rootDir, params.lane, "workspace");
   const gatewayPort = await freePort();
   const previousEnv = snapshotToolSearchGatewayEnv();
@@ -538,9 +538,9 @@ async function runLane(params: {
     fakePluginDir: params.fakePluginDir,
   });
 
-  process.env.OPENCLAW_STATE_DIR = stateDir;
-  process.env.OPENCLAW_CONFIG_PATH = configPath;
-  process.env.OPENCLAW_TEST_FAST = "1";
+  process.env.QUIET_CORE_STATE_DIR = stateDir;
+  process.env.QUIET_CORE_CONFIG_PATH = configPath;
+  process.env.QUIET_CORE_TEST_FAST = "1";
   resetConfigRuntimeState();
 
   try {
@@ -557,11 +557,11 @@ async function runLane(params: {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        "x-openclaw-scopes": "operator.write",
-        "x-openclaw-agent": "qa",
+        "x-quiet-core-bot-scopes": "operator.write",
+        "x-quiet-core-bot-agent": "qa",
       },
       body: JSON.stringify({
-        model: "openclaw/qa",
+        model: "quiet-core-bot/qa",
         input: [
           {
             type: "message",
@@ -661,7 +661,7 @@ export function assertToolSearchLaneResults(params: {
 export async function main() {
   const { startQaMockOpenAiServer } =
     await import("../extensions/qa-lab/src/providers/mock-openai/server.js");
-  const rootDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-tool-search-"));
+  const rootDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-tool-search-"));
   let provider: Awaited<ReturnType<typeof startQaMockOpenAiServer>> | undefined;
   try {
     provider = await startQaMockOpenAiServer();

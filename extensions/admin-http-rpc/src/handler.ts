@@ -4,8 +4,8 @@
  */
 import { randomUUID } from "node:crypto";
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { dispatchGatewayMethod } from "openclaw/plugin-sdk/gateway-method-runtime";
-import { isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { dispatchGatewayMethod } from "quiet-core-bot/plugin-sdk/gateway-method-runtime";
+import { isRecord } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { isAdminHttpRpcAllowedMethod, listAdminHttpRpcAllowedMethods } from "./methods.js";
 
 const DEFAULT_RPC_BODY_BYTES = 1024 * 1024;

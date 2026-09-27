@@ -95,7 +95,7 @@ The local implementation can derive most fields from Codex thread metadata. Flee
 
 ## MCP Surface For Codex
 
-Every supervised Codex gets an MCP server named `openclaw-codex-supervisor`.
+Every supervised Codex gets an MCP server named `quiet-core-bot-codex-supervisor`.
 
 Tools:
 

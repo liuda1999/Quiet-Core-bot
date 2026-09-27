@@ -11,12 +11,12 @@ const resolvePreferredOpenClawTmpDirMock = vi.hoisted(() => vi.fn(() => os.tmpdi
 const resolveTaskScriptPathMock = vi.hoisted(() =>
   vi.fn((env: Record<string, string | undefined>) => {
     const home = env.USERPROFILE || env.HOME || os.homedir();
-    return path.join(home, ".openclaw", "gateway.cmd");
+    return path.join(home, ".quiet-core-bot", "gateway.cmd");
   }),
 );
 
 vi.mock("node:child_process", async () => {
-  const { mockNodeBuiltinModule } = await import("openclaw/plugin-sdk/test-node-mocks");
+  const { mockNodeBuiltinModule } = await import("quiet-core-bot/plugin-sdk/test-node-mocks");
   return mockNodeBuiltinModule(
     () => vi.importActual<typeof import("node:child_process")>("node:child_process"),
     {
@@ -24,7 +24,7 @@ vi.mock("node:child_process", async () => {
     },
   );
 });
-vi.mock("./tmp-openclaw-dir.js", () => ({
+vi.mock("./tmp-quiet-core-bot-dir.js", () => ({
   resolvePreferredOpenClawTmpDir: () => resolvePreferredOpenClawTmpDirMock(),
 }));
 vi.mock("../daemon/schtasks.js", () => ({
@@ -87,7 +87,7 @@ describe("relaunchGatewayScheduledTask", () => {
     resolveTaskScriptPathMock.mockReset();
     resolveTaskScriptPathMock.mockImplementation((env: Record<string, string | undefined>) => {
       const home = env.USERPROFILE || env.HOME || os.homedir();
-      return path.join(home, ".openclaw", "gateway.cmd");
+      return path.join(home, ".quiet-core-bot", "gateway.cmd");
     });
   });
 
@@ -100,7 +100,7 @@ describe("relaunchGatewayScheduledTask", () => {
       return { unref };
     });
 
-    const result = relaunchGatewayScheduledTask({ OPENCLAW_PROFILE: "work" });
+    const result = relaunchGatewayScheduledTask({ QUIET_CORE_PROFILE: "work" });
     const cmdExePath = getWindowsCmdExePath();
 
     expect(result.ok).toBe(true);
@@ -138,15 +138,15 @@ describe("relaunchGatewayScheduledTask", () => {
     expect(script).toContain('del "%~f0" >nul 2>&1');
   });
 
-  it("prefers OPENCLAW_WINDOWS_TASK_NAME overrides", () => {
+  it("prefers QUIET_CORE_WINDOWS_TASK_NAME overrides", () => {
     spawnMock.mockImplementation((_file: string, args: string[]) => {
       createdScriptPaths.add(decodeCmdPathArg(args[3]));
       return { unref: vi.fn() };
     });
 
     relaunchGatewayScheduledTask({
-      OPENCLAW_PROFILE: "work",
-      OPENCLAW_WINDOWS_TASK_NAME: "Quiet Core bot Gateway (custom)",
+      QUIET_CORE_PROFILE: "work",
+      QUIET_CORE_WINDOWS_TASK_NAME: "Quiet Core bot Gateway (custom)",
     });
 
     const scriptPath = [...createdScriptPaths][0];
@@ -161,7 +161,7 @@ describe("relaunchGatewayScheduledTask", () => {
     });
 
     relaunchGatewayScheduledTask({
-      OPENCLAW_WINDOWS_TASK_NAME: "Quiet Core bot Gateway (Bob's work)",
+      QUIET_CORE_WINDOWS_TASK_NAME: "Quiet Core bot Gateway (Bob's work)",
     });
 
     const scriptPath = [...createdScriptPaths][0];
@@ -176,7 +176,7 @@ describe("relaunchGatewayScheduledTask", () => {
       throw new Error("spawn failed");
     });
 
-    const result = relaunchGatewayScheduledTask({ OPENCLAW_PROFILE: "work" });
+    const result = relaunchGatewayScheduledTask({ QUIET_CORE_PROFILE: "work" });
 
     expect(result.ok).toBe(false);
     expect(result.method).toBe("schtasks");
@@ -185,12 +185,12 @@ describe("relaunchGatewayScheduledTask", () => {
 
   it("quotes the cmd /c script path when temp paths contain metacharacters", () => {
     const unref = vi.fn();
-    const metacharTmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw&(restart)-"));
+    const metacharTmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot&(restart)-"));
     createdTmpDirs.add(metacharTmpDir);
     resolvePreferredOpenClawTmpDirMock.mockReturnValue(metacharTmpDir);
     spawnMock.mockReturnValue({ unref });
 
-    relaunchGatewayScheduledTask({ OPENCLAW_PROFILE: "work" });
+    relaunchGatewayScheduledTask({ QUIET_CORE_PROFILE: "work" });
 
     expect(spawnMock).toHaveBeenCalledOnce();
     const spawnCall = requireFirstMockCall(spawnMock, "restart helper spawn");
@@ -215,7 +215,7 @@ describe("relaunchGatewayScheduledTask", () => {
   });
 
   it("includes startup fallback", () => {
-    const taskScriptDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-state-"));
+    const taskScriptDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-state-"));
     createdTmpDirs.add(taskScriptDir);
     const taskScriptPath = path.join(taskScriptDir, "gateway.cmd");
     fs.writeFileSync(taskScriptPath, "@echo off\r\nrem placeholder\r\n", "utf8");
@@ -226,7 +226,7 @@ describe("relaunchGatewayScheduledTask", () => {
       return { unref: vi.fn() };
     });
 
-    const result = relaunchGatewayScheduledTask({ OPENCLAW_PROFILE: "work" });
+    const result = relaunchGatewayScheduledTask({ QUIET_CORE_PROFILE: "work" });
 
     expect(result.ok).toBe(true);
     const scriptPath = [...createdScriptPaths][0];

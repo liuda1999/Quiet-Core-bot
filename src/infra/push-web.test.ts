@@ -62,9 +62,9 @@ describe("resolveVapidKeys", () => {
     await resolveVapidKeys(tmpDir);
 
     // Set env overrides.
-    process.env.OPENCLAW_VAPID_PUBLIC_KEY = "env-public";
-    process.env.OPENCLAW_VAPID_PRIVATE_KEY = "env-private";
-    process.env.OPENCLAW_VAPID_SUBJECT = "mailto:env@test.com";
+    process.env.QUIET_CORE_VAPID_PUBLIC_KEY = "env-public";
+    process.env.QUIET_CORE_VAPID_PRIVATE_KEY = "env-private";
+    process.env.QUIET_CORE_VAPID_SUBJECT = "mailto:env@test.com";
     try {
       const keys = await resolveVapidKeys(tmpDir);
       expect(keys.publicKey).toBe("env-public");
@@ -72,9 +72,9 @@ describe("resolveVapidKeys", () => {
       expect(keys.subject).toBe("mailto:env@test.com");
       expect(vi.mocked(webPush.generateVAPIDKeys)).toHaveBeenCalledTimes(1);
     } finally {
-      delete process.env.OPENCLAW_VAPID_PUBLIC_KEY;
-      delete process.env.OPENCLAW_VAPID_PRIVATE_KEY;
-      delete process.env.OPENCLAW_VAPID_SUBJECT;
+      delete process.env.QUIET_CORE_VAPID_PUBLIC_KEY;
+      delete process.env.QUIET_CORE_VAPID_PRIVATE_KEY;
+      delete process.env.QUIET_CORE_VAPID_SUBJECT;
     }
   });
 });

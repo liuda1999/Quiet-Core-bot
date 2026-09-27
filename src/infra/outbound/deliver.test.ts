@@ -28,7 +28,7 @@ import {
   resetDiagnosticEventsForTest,
   type DiagnosticEventPayload,
 } from "../diagnostic-events.js";
-import { resolvePreferredOpenClawTmpDir } from "../tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "../tmp-quiet-core-bot-dir.js";
 
 const mocks = vi.hoisted(() => ({
   appendAssistantMessageToSessionTranscript: vi.fn<() => Promise<SessionTranscriptAppendResult>>(
@@ -2103,7 +2103,7 @@ describe("deliverOutboundPayloads", () => {
     expect(sendFormattedMediaCall?.mediaLocalRoots).toContain(expectedPreferredTmpRoot);
     expect(
       sendFormattedMediaCall?.mediaLocalRoots?.some((root) =>
-        root.endsWith(path.join(".openclaw", "workspace-work")),
+        root.endsWith(path.join(".quiet-core-bot", "workspace-work")),
       ),
     ).toBe(true);
     expect(sendMedia).not.toHaveBeenCalled();
@@ -2891,19 +2891,19 @@ describe("deliverOutboundPayloads", () => {
         {
           text: [
             "visible",
-            "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
+            "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>",
             "Quiet Core bot runtime context (internal):",
             "<<<BEGIN_UNTRUSTED_CHILD_RESULT>>>",
             "raw child output",
             "<<<END_UNTRUSTED_CHILD_RESULT>>>",
-            "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
+            "<<<END_QUIET_CORE_INTERNAL_CONTEXT>>>",
             "after",
           ].join("\n"),
           channelData: {
             internal: [
-              "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
+              "<<<BEGIN_QUIET_CORE_INTERNAL_CONTEXT>>>",
               "internal metadata",
-              "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
+              "<<<END_QUIET_CORE_INTERNAL_CONTEXT>>>",
             ].join("\n"),
           },
         },
@@ -3015,7 +3015,7 @@ describe("deliverOutboundPayloads", () => {
   });
 
   it("bails out without sending when a concurrent drain already claimed the queue entry", async () => {
-    // Regression for openclaw/openclaw#70386: if a reconnect or startup drain
+    // Regression for liuda1999/quiet-core-bot#70386: if a reconnect or startup drain
     // observes the newly enqueued entry and claims it before the live send
     // path claims it, the live path must not send. The drain already owns
     // ack/fail for that id; sending here would duplicate the outbound and

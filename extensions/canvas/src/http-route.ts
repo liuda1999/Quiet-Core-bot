@@ -4,8 +4,8 @@
  */
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Duplex } from "node:stream";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { RuntimeEnv } from "quiet-core-bot/plugin-sdk/runtime-env";
 import { isCanvasHostEnabled, resolveCanvasHostConfig } from "./config.js";
 import { A2UI_PATH, CANVAS_HOST_PATH, CANVAS_WS_PATH, handleA2uiHttpRequest } from "./host/a2ui.js";
 import { createCanvasHostHandler, type CanvasHostHandler } from "./host/server.js";

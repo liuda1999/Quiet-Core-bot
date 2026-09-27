@@ -16,7 +16,7 @@ If you are on an older build or a custom install that excludes bundled Teams,
 install the npm package directly:
 
 ```bash
-quiet-core-bot plugins install @openclaw/msteams
+quiet-core-bot plugins install @quiet-core/msteams
 ```
 
 Use the bare package to follow the current official release tag. Pin an exact
@@ -52,11 +52,11 @@ Install and authenticate the devtunnel CLI if you haven't already ([getting star
 
 ```bash
 # One-time setup (persistent URL across sessions):
-devtunnel create my-openclaw-bot --allow-anonymous
-devtunnel port create my-openclaw-bot -p 3978 --protocol auto
+devtunnel create my-quiet-core-bot-bot --allow-anonymous
+devtunnel port create my-quiet-core-bot-bot -p 3978 --protocol auto
 
 # Each dev session:
-devtunnel host my-openclaw-bot
+devtunnel host my-quiet-core-bot-bot
 # Your endpoint: https://<tunnel-id>.devtunnels.ms/api/messages
 ```
 
@@ -219,7 +219,7 @@ If you can't use the Teams CLI, you can set up the bot manually through the Azur
 
    | Field              | Value                                                    |
    | ------------------ | -------------------------------------------------------- |
-   | **Bot handle**     | Your bot name, e.g., `openclaw-msteams` (must be unique) |
+   | **Bot handle**     | Your bot name, e.g., `quiet-core-bot-msteams` (must be unique) |
    | **Subscription**   | Select your Azure subscription                           |
    | **Resource group** | Create new or use existing                               |
    | **Pricing tier**   | **Free** for dev/testing                                 |
@@ -434,11 +434,11 @@ Teams can't reach `localhost`. Use a persistent dev tunnel so your URL stays the
 
 ```bash
 # One-time setup:
-devtunnel create my-openclaw-bot --allow-anonymous
-devtunnel port create my-openclaw-bot -p 3978 --protocol auto
+devtunnel create my-quiet-core-bot-bot --allow-anonymous
+devtunnel port create my-quiet-core-bot-bot -p 3978 --protocol auto
 
 # Each dev session:
-devtunnel host my-openclaw-bot
+devtunnel host my-quiet-core-bot-bot
 ```
 
 Alternatives: `ngrok http 3978` or `tailscale funnel 3978` (URLs may change each session).
@@ -915,7 +915,7 @@ Uploaded files are stored in a `/OpenClawShared/` folder in the configured Share
 Quiet Core bot sends Teams polls as Adaptive Cards (there is no native Teams poll API).
 
 - CLI: `quiet-core-bot message poll --channel msteams --target conversation:<id> ...`
-- Votes are recorded by the gateway in Quiet Core bot plugin-state SQLite under `state/openclaw.sqlite`.
+- Votes are recorded by the gateway in Quiet Core bot plugin-state SQLite under `state/quiet-core-bot.sqlite`.
 - Existing `msteams-polls.json` files are imported by `quiet-core-bot doctor --fix`, not by the running plugin.
 - The gateway must stay online to record votes.
 - Polls do not auto-post result summaries yet, and there is no supported poll-results CLI yet.

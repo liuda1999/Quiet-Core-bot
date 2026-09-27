@@ -12,7 +12,7 @@ import {
 
 const DEVICE_ID = "device-cli";
 const PUBLIC_KEY = "public-key-cli";
-const suiteRootTracker = createSuiteTempRootTracker({ prefix: "openclaw-device-pairing-churn-" });
+const suiteRootTracker = createSuiteTempRootTracker({ prefix: "quiet-core-bot-device-pairing-churn-" });
 
 function requireValue<T>(value: T | null | undefined, message: string): T {
   if (value == null) {

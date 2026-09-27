@@ -472,14 +472,14 @@ describe("cron cli", () => {
       "--system-event",
       "Summarize the latest status",
       "--webhook",
-      " https://example.invalid/openclaw ",
+      " https://example.invalid/quiet-core-bot ",
     ]);
 
     expect(params?.name).toBe("Webhook reminder");
     expect(params?.sessionTarget).toBe("main");
     expect(params?.delivery).toEqual({
       mode: "webhook",
-      to: "https://example.invalid/openclaw",
+      to: "https://example.invalid/quiet-core-bot",
       channel: undefined,
       threadId: undefined,
       accountId: undefined,
@@ -561,7 +561,7 @@ describe("cron cli", () => {
       "--message",
       "hello",
       "--webhook",
-      "https://example.invalid/openclaw",
+      "https://example.invalid/quiet-core-bot",
       "--to",
       "channel:C123",
     ]);

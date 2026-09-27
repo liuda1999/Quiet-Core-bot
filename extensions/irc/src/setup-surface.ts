@@ -1,11 +1,11 @@
 // Irc plugin module implements setup surface behavior.
-import { parseStrictPositiveInteger } from "openclaw/plugin-sdk/number-runtime";
-import { DEFAULT_ACCOUNT_ID } from "openclaw/plugin-sdk/routing";
+import { parseStrictPositiveInteger } from "quiet-core-bot/plugin-sdk/number-runtime";
+import { DEFAULT_ACCOUNT_ID } from "quiet-core-bot/plugin-sdk/routing";
 import type {
   ChannelSetupDmPolicy,
   ChannelSetupWizard,
   WizardPrompter,
-} from "openclaw/plugin-sdk/setup";
+} from "quiet-core-bot/plugin-sdk/setup";
 import {
   createAllowFromSection,
   createPromptParsedAllowFromForAccount,
@@ -13,13 +13,13 @@ import {
   createStandardChannelSetupStatus,
   formatDocsLink,
   setSetupChannelEnabled,
-} from "openclaw/plugin-sdk/setup";
+} from "quiet-core-bot/plugin-sdk/setup";
 import {
   normalizeOptionalString,
   normalizeStringEntries,
   normalizeStringifiedOptionalString,
   uniqueStrings,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { resolveDefaultIrcAccountId, resolveIrcAccount } from "./accounts.js";
 import {
   isChannelTarget,
@@ -309,7 +309,7 @@ export const ircSetupWizard: ChannelSetupWizard = {
       initialValue: ({ cfg, accountId, credentialValues }) =>
         resolveIrcAccount({ cfg: cfg as CoreConfig, accountId }).config.username ||
         credentialValues.token ||
-        "openclaw",
+        "quiet-core-bot",
       validate: ({ value }) => (normalizeStringifiedOptionalString(value) ? undefined : "Required"),
       normalizeValue: ({ value }) => normalizeStringifiedOptionalString(value) ?? "",
       applySet: async ({ cfg, accountId, value }) =>

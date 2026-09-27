@@ -23,15 +23,13 @@ import type { InstalledPluginInstallRecordInfo } from "../plugins/installed-plug
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/quiet-core-bot-state-db.js";
 import { loadTaskFlowRegistryStateFromSqlite } from "../tasks/task-flow-registry.store.sqlite.js";
 import { loadTaskRegistryStateFromSqlite } from "../tasks/task-registry.store.sqlite.js";
 import {
-  autoMigrateLegacyStateDir,
   autoMigrateLegacyState,
   autoMigrateLegacyTaskStateSidecars,
   detectLegacyStateMigrations,
-  resetAutoMigrateLegacyStateDirForTest,
   resetAutoMigrateLegacyStateForTest,
   resetAutoMigrateLegacyTaskStateSidecarsForTest,
   runLegacyStateMigrations,
@@ -70,7 +68,7 @@ vi.mock("../channels/plugins/bundled.js", async () => {
     cfg: OpenClawConfig;
     env: NodeJS.ProcessEnv;
   }) {
-    const root = params.env.OPENCLAW_STATE_DIR;
+    const root = params.env.QUIET_CORE_STATE_DIR;
     if (!root) {
       return [];
     }
@@ -171,7 +169,7 @@ vi.mock("../infra/json-files.js", async () => {
 });
 
 async function makeTempRoot() {
-  const root = await fs.promises.mkdtemp(path.join(os.tmpdir(), "openclaw-doctor-"));
+  const root = await fs.promises.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-doctor-"));
   tempRoots.push(root);
   return root;
 }
@@ -202,7 +200,7 @@ async function runTelegramAllowFromMigration(params: { root: string; cfg: OpenCl
   writeLegacyTelegramAllowFromStore(oauthDir);
   const detected = await detectLegacyStateMigrations({
     cfg: params.cfg,
-    env: { OPENCLAW_STATE_DIR: params.root } as NodeJS.ProcessEnv,
+    env: { QUIET_CORE_STATE_DIR: params.root } as NodeJS.ProcessEnv,
   });
   const result = await runLegacyStateMigrations({ detected, now: () => 123 });
   return { oauthDir, detected, result };
@@ -210,7 +208,6 @@ async function runTelegramAllowFromMigration(params: { root: string; cfg: OpenCl
 
 afterEach(async () => {
   resetAutoMigrateLegacyStateForTest();
-  resetAutoMigrateLegacyStateDirForTest();
   resetAutoMigrateLegacyTaskStateSidecarsForTest();
   closeOpenClawStateDatabaseForTest();
   setMaxPluginStateEntriesPerPluginForTests();
@@ -239,7 +236,7 @@ function readPrimaryKeyColumns(db: DatabaseSync, tableName: string): string[] {
 }
 
 function createLegacyAgentDatabaseRegistry(stateDir: string): string {
-  const stateDatabasePath = path.join(stateDir, "state", "openclaw.sqlite");
+  const stateDatabasePath = path.join(stateDir, "state", "quiet-core-bot.sqlite");
   fs.mkdirSync(path.dirname(stateDatabasePath), { recursive: true });
   const { DatabaseSync } = requireNodeSqlite();
   const db = new DatabaseSync(stateDatabasePath);
@@ -260,7 +257,7 @@ function createLegacyAgentDatabaseRegistry(stateDir: string): string {
         size_bytes
       ) VALUES (
         'worker-1',
-        '/legacy/worker-1/openclaw-agent.sqlite',
+        '/legacy/worker-1/quiet-core-bot-agent.sqlite',
         1,
         10,
         20
@@ -378,8 +375,8 @@ function writeLegacyDebugProxyCaptureSidecar(
       100,
       200,
       "proxy-run",
-      "openclaw",
-      "openclaw",
+      "quiet-core-bot",
+      "quiet-core-bot",
       "http://127.0.0.1:8080",
       sourcePath,
       blobDir,
@@ -393,8 +390,8 @@ function writeLegacyDebugProxyCaptureSidecar(
     ).run(
       "legacy-session",
       150,
-      "openclaw",
-      "openclaw",
+      "quiet-core-bot",
+      "quiet-core-bot",
       "https",
       "outbound",
       "request",
@@ -451,7 +448,7 @@ function writeLegacyPluginInstallIndex(
 async function runLegacyStateMigrationsForRoot(root: string) {
   const detected = await detectLegacyStateMigrations({
     cfg: {},
-    env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+    env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
   });
   return await runLegacyStateMigrations({ detected });
 }
@@ -649,21 +646,21 @@ async function detectAndRunMigrations(params: {
 }) {
   const detected = await detectLegacyStateMigrations({
     cfg: params.cfg,
-    env: { OPENCLAW_STATE_DIR: params.root } as NodeJS.ProcessEnv,
+    env: { QUIET_CORE_STATE_DIR: params.root } as NodeJS.ProcessEnv,
   });
   await runLegacyStateMigrations({ detected, now: params.now });
 }
 
 async function withStateDir<T>(root: string, run: () => Promise<T>): Promise<T> {
-  const previous = process.env.OPENCLAW_STATE_DIR;
-  process.env.OPENCLAW_STATE_DIR = root;
+  const previous = process.env.QUIET_CORE_STATE_DIR;
+  process.env.QUIET_CORE_STATE_DIR = root;
   try {
     return await run();
   } finally {
     if (previous === undefined) {
-      delete process.env.OPENCLAW_STATE_DIR;
+      delete process.env.QUIET_CORE_STATE_DIR;
     } else {
-      process.env.OPENCLAW_STATE_DIR = previous;
+      process.env.QUIET_CORE_STATE_DIR = previous;
     }
   }
 }
@@ -689,36 +686,6 @@ async function runAndReadSessionsStore(params: {
   return readSessionsStore(params.targetDir);
 }
 
-type StateDirMigrationResult = Awaited<ReturnType<typeof autoMigrateLegacyStateDir>>;
-
-const DIR_LINK_TYPE = process.platform === "win32" ? "junction" : "dir";
-
-function getStateDirMigrationPaths(root: string) {
-  return {
-    targetDir: path.join(root, ".openclaw"),
-    legacyDir: path.join(root, ".clawdbot"),
-  };
-}
-
-function ensureLegacyAndTargetStateDirs(root: string) {
-  const paths = getStateDirMigrationPaths(root);
-  fs.mkdirSync(paths.targetDir, { recursive: true });
-  fs.mkdirSync(paths.legacyDir, { recursive: true });
-  return paths;
-}
-
-async function runStateDirMigration(root: string, env = {} as NodeJS.ProcessEnv) {
-  return autoMigrateLegacyStateDir({
-    env,
-    homedir: () => root,
-  });
-}
-
-async function runFreshStateDirMigration(root: string, env = {} as NodeJS.ProcessEnv) {
-  resetAutoMigrateLegacyStateDirForTest();
-  return runStateDirMigration(root, env);
-}
-
 async function runAutoMigrateLegacyStateWithLog(params: {
   root: string;
   cfg: OpenClawConfig;
@@ -727,23 +694,11 @@ async function runAutoMigrateLegacyStateWithLog(params: {
   const log = { info: vi.fn(), warn: vi.fn() };
   const result = await autoMigrateLegacyState({
     cfg: params.cfg,
-    env: { OPENCLAW_STATE_DIR: params.root } as NodeJS.ProcessEnv,
+    env: { QUIET_CORE_STATE_DIR: params.root } as NodeJS.ProcessEnv,
     log,
     now: params.now,
   });
   return { result, log };
-}
-
-function expectTargetAlreadyExistsWarning(result: StateDirMigrationResult, targetDir: string) {
-  expect(result.migrated).toBe(false);
-  expect(result.warnings).toEqual([
-    `State dir migration skipped: target already exists (${targetDir}). Remove or merge manually.`,
-  ]);
-}
-
-function expectUnmigratedWithoutWarnings(result: StateDirMigrationResult) {
-  expect(result.migrated).toBe(false);
-  expect(result.warnings).toStrictEqual([]);
 }
 
 function writeLegacyAgentFiles(root: string, files: Record<string, string>) {
@@ -793,7 +748,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg,
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     const result = await runLegacyStateMigrations({
       detected,
@@ -846,7 +801,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     expect(detected.preview).toContain(
       `- Sessions: repair migrated transcript paths in ${path.join(targetDir, "sessions.json")}`,
@@ -886,7 +841,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     expect(detected.sessions.hasLegacy).toBe(false);
     expect(detected.preview).not.toContain(
@@ -903,7 +858,7 @@ describe("doctor legacy state migrations", () => {
     await expect(
       detectLegacyStateMigrations({
         cfg: {},
-        env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+        env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
       }),
     ).resolves.toBeDefined();
   });
@@ -924,14 +879,14 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     expect(detected.sessions.hasLegacy).toBe(true);
   });
 
   it("migrates the legacy shared state agent registry primary key", async () => {
     const root = await makeTempRoot();
-    const stateDir = path.join(root, ".openclaw");
+    const stateDir = path.join(root, ".quiet-core-bot");
     const stateDatabasePath = createLegacyAgentDatabaseRegistry(stateDir);
     const detected = await detectLegacyStateMigrations({
       cfg: {},
@@ -963,7 +918,7 @@ describe("doctor legacy state migrations", () => {
             size_bytes
           ) VALUES (
             'worker-1',
-            '/relocated/worker-1/openclaw-agent.sqlite',
+            '/relocated/worker-1/quiet-core-bot-agent.sqlite',
             1,
             20,
             30
@@ -980,7 +935,7 @@ describe("doctor legacy state migrations", () => {
 
   it("does not repair newer shared state schemas", async () => {
     const root = await makeTempRoot();
-    const stateDir = path.join(root, ".openclaw");
+    const stateDir = path.join(root, ".quiet-core-bot");
     const stateDatabasePath = createLegacyAgentDatabaseRegistry(stateDir);
     const { DatabaseSync } = requireNodeSqlite();
     const seededDb = new DatabaseSync(stateDatabasePath);
@@ -1030,7 +985,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg,
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     const result = await runLegacyStateMigrations({
       detected,
@@ -1045,7 +1000,7 @@ describe("doctor legacy state migrations", () => {
     expect(store[legacySessionKey]?.acp).toBeUndefined();
 
     const sqlite = requireNodeSqlite();
-    const db = new sqlite.DatabaseSync(path.join(root, "state", "openclaw.sqlite"));
+    const db = new sqlite.DatabaseSync(path.join(root, "state", "quiet-core-bot.sqlite"));
     try {
       const row = db
         .prepare(
@@ -1265,7 +1220,7 @@ describe("doctor legacy state migrations", () => {
     const cfg: OpenClawConfig = {};
     const detected = await detectLegacyStateMigrations({
       cfg,
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     const result = await runLegacyStateMigrations({ detected });
     expect(result.changes).toStrictEqual([]);
@@ -1320,7 +1275,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     const result = await runLegacyStateMigrations({ detected });
 
@@ -1402,7 +1357,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     const result = await runLegacyStateMigrations({ detected });
 
@@ -1450,7 +1405,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     const result = await runLegacyStateMigrations({ detected });
 
@@ -1497,7 +1452,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     const result = await runLegacyStateMigrations({ detected });
 
@@ -1536,7 +1491,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     const result = await runLegacyStateMigrations({ detected });
 
@@ -1586,7 +1541,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     const result = await runLegacyStateMigrations({ detected });
 
@@ -1619,7 +1574,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     expect(detected.pluginStateSidecar).toEqual({ sourcePath, hasLegacy: true });
     expect(detected.preview).toContain(
@@ -1654,7 +1609,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     expect(detected.debugProxyCaptureSidecar).toEqual({
       sourcePath,
@@ -1678,7 +1633,7 @@ describe("doctor legacy state migrations", () => {
     expect(fs.readFileSync(path.join(certDir, "ca.pem"), "utf8")).toBe("keep");
 
     const state = openOpenClawStateDatabase({
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     expect(
       state.db.prepare("SELECT id, mode FROM capture_sessions WHERE id = ?").get("legacy-session"),
@@ -1709,9 +1664,9 @@ describe("doctor legacy state migrations", () => {
       legacyDb.close();
     }
     const env = {
-      OPENCLAW_STATE_DIR: root,
-      OPENCLAW_DEBUG_PROXY_DB_PATH: sourcePath,
-      OPENCLAW_DEBUG_PROXY_BLOB_DIR: blobDir,
+      QUIET_CORE_STATE_DIR: root,
+      QUIET_CORE_DEBUG_PROXY_DB_PATH: sourcePath,
+      QUIET_CORE_DEBUG_PROXY_BLOB_DIR: blobDir,
     } as NodeJS.ProcessEnv;
 
     const detected = await detectLegacyStateMigrations({ cfg: {}, env });
@@ -1740,7 +1695,7 @@ describe("doctor legacy state migrations", () => {
     expect(fs.existsSync(`${sourcePath}.migrated`)).toBe(true);
     expect(fs.existsSync(blobDir)).toBe(true);
     const state = openOpenClawStateDatabase({
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     expect(
       state.db.prepare("SELECT blob_id FROM capture_blobs WHERE blob_id = ?").get(blobId),
@@ -1752,9 +1707,9 @@ describe("doctor legacy state migrations", () => {
 
   it("ignores a legacy debug proxy override that points at shared state", async () => {
     const root = await makeTempRoot();
-    const sharedStatePath = path.join(root, "state", "openclaw.sqlite");
+    const sharedStatePath = path.join(root, "state", "quiet-core-bot.sqlite");
     const state = openOpenClawStateDatabase({
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     state.db
       .prepare(
@@ -1762,12 +1717,12 @@ describe("doctor legacy state migrations", () => {
           id, started_at, mode, source_scope, source_process
         ) VALUES (?, ?, ?, ?, ?)`,
       )
-      .run("shared-session", 100, "proxy-run", "openclaw", "openclaw");
+      .run("shared-session", 100, "proxy-run", "quiet-core-bot", "quiet-core-bot");
     const detected = await detectLegacyStateMigrations({
       cfg: {},
       env: {
-        OPENCLAW_STATE_DIR: root,
-        OPENCLAW_DEBUG_PROXY_DB_PATH: sharedStatePath,
+        QUIET_CORE_STATE_DIR: root,
+        QUIET_CORE_DEBUG_PROXY_DB_PATH: sharedStatePath,
       } as NodeJS.ProcessEnv,
     });
 
@@ -1825,7 +1780,7 @@ describe("doctor legacy state migrations", () => {
 
     expect(retryResult.warnings).toStrictEqual([]);
     const state = openOpenClawStateDatabase({
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     expect(state.db.prepare("SELECT COUNT(*) AS count FROM capture_events").get()).toEqual({
       count: 2,
@@ -1836,7 +1791,7 @@ describe("doctor legacy state migrations", () => {
     const root = await makeTempRoot();
     const { sourcePath, blobDir } = writeLegacyDebugProxyCaptureSidecar(root);
     const state = openOpenClawStateDatabase({
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     state.db
       .prepare(
@@ -1844,7 +1799,7 @@ describe("doctor legacy state migrations", () => {
           id, started_at, mode, source_scope, source_process
         ) VALUES (?, ?, ?, ?, ?)`,
       )
-      .run("legacy-session", 999, "different", "openclaw", "openclaw");
+      .run("legacy-session", 999, "different", "quiet-core-bot", "quiet-core-bot");
 
     const result = await runLegacyStateMigrationsForRoot(root);
 
@@ -1878,7 +1833,7 @@ describe("doctor legacy state migrations", () => {
 
     const retryDetected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     expect(retryDetected.debugProxyCaptureSidecar.hasLegacy).toBe(true);
     const retryResult = await runLegacyStateMigrations({ detected: retryDetected });
@@ -1888,7 +1843,7 @@ describe("doctor legacy state migrations", () => {
       `Archived debug proxy capture blobs → ${blobDir}.migrated`,
     ]);
     const state = openOpenClawStateDatabase({
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     expect(state.db.prepare("SELECT COUNT(*) AS count FROM capture_events").get()).toEqual({
       count: 1,
@@ -1944,7 +1899,7 @@ describe("doctor legacy state migrations", () => {
 
     const retryDetected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     expect(retryDetected.pluginStateSidecar).toEqual({ sourcePath, hasLegacy: true });
     expect(retryDetected.preview).toContain(
@@ -1990,7 +1945,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     expect(detected.pluginInstallIndex).toEqual({ sourcePath, hasLegacy: true });
     expect(detected.preview).toContain(
@@ -2033,7 +1988,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     const result = await runLegacyStateMigrations({ detected });
 
@@ -2066,7 +2021,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     const result = await runLegacyStateMigrations({ detected });
 
@@ -2153,8 +2108,8 @@ describe("doctor legacy state migrations", () => {
     await writeExistingPluginInstallIndex(root, {
       discord: {
         source: "npm",
-        spec: "@openclaw/discord@latest",
-        resolvedName: "@openclaw/discord",
+        spec: "@quiet-core/discord@latest",
+        resolvedName: "@quiet-core/discord",
         resolvedVersion: "2026.6.16",
         integrity: "sha512-current",
         installedAt: "2026-06-16T12:00:00.000Z",
@@ -2163,7 +2118,7 @@ describe("doctor legacy state migrations", () => {
     const sourcePath = writeLegacyPluginInstallIndex(root, {
       discord: {
         source: "npm",
-        spec: "@openclaw/discord@2026.6.16",
+        spec: "@quiet-core/discord@2026.6.16",
         version: "2026.6.16",
         installedAt: "2026-06-01T12:00:00.000Z",
       },
@@ -2178,8 +2133,8 @@ describe("doctor legacy state migrations", () => {
       installRecords: {
         discord: {
           source: "npm",
-          spec: "@openclaw/discord@latest",
-          resolvedName: "@openclaw/discord",
+          spec: "@quiet-core/discord@latest",
+          resolvedName: "@quiet-core/discord",
           resolvedVersion: "2026.6.16",
           integrity: "sha512-current",
         },
@@ -2218,11 +2173,11 @@ describe("doctor legacy state migrations", () => {
       label: "name different packages",
       current: {
         source: "npm",
-        spec: "@openclaw/demo@1.0.0",
+        spec: "@quiet-core/demo@1.0.0",
         version: "1.0.0",
-        resolvedName: "@openclaw/demo",
+        resolvedName: "@quiet-core/demo",
         resolvedVersion: "1.0.0",
-        resolvedSpec: "@openclaw/demo@1.0.0",
+        resolvedSpec: "@quiet-core/demo@1.0.0",
       },
       legacy: {
         source: "npm",
@@ -2337,7 +2292,7 @@ describe("doctor legacy state migrations", () => {
 
     const result = await autoMigrateLegacyState({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
       log: { info: vi.fn(), warn: vi.fn() },
     });
 
@@ -2362,8 +2317,8 @@ describe("doctor legacy state migrations", () => {
     const result = await autoMigrateLegacyState({
       cfg: {},
       env: {
-        OPENCLAW_STATE_DIR: root,
-        OPENCLAW_AGENT_DIR: path.join(root, "custom-agent"),
+        QUIET_CORE_STATE_DIR: root,
+        QUIET_CORE_AGENT_DIR: path.join(root, "custom-agent"),
       } as NodeJS.ProcessEnv,
       log: { info: vi.fn(), warn: vi.fn() },
     });
@@ -2385,8 +2340,8 @@ describe("doctor legacy state migrations", () => {
   it("migrates default exec approvals into an explicit state dir", async () => {
     const root = await makeTempRoot();
     const stateDir = path.join(root, "custom-state");
-    const sourcePath = path.join(root, ".openclaw", "exec-approvals.json");
-    const legacySocketPath = path.join(root, ".openclaw", "exec-approvals.sock");
+    const sourcePath = path.join(root, ".quiet-core-bot", "exec-approvals.json");
+    const legacySocketPath = path.join(root, ".quiet-core-bot", "exec-approvals.sock");
     const targetPath = path.join(stateDir, "exec-approvals.json");
     const targetSocketPath = path.join(stateDir, "exec-approvals.sock");
     writeJson5(sourcePath, {
@@ -2408,7 +2363,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: stateDir } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: stateDir } as NodeJS.ProcessEnv,
       homedir: () => root,
     });
     expect(detected.preview).toContain(`- Exec approvals: ${sourcePath} → ${targetPath}`);
@@ -2437,7 +2392,7 @@ describe("doctor legacy state migrations", () => {
   it("skips exec approvals migration when the target appears after detection", async () => {
     const root = await makeTempRoot();
     const stateDir = path.join(root, "custom-state");
-    const sourcePath = path.join(root, ".openclaw", "exec-approvals.json");
+    const sourcePath = path.join(root, ".quiet-core-bot", "exec-approvals.json");
     const targetPath = path.join(stateDir, "exec-approvals.json");
     writeJson5(sourcePath, {
       version: 1,
@@ -2450,7 +2405,7 @@ describe("doctor legacy state migrations", () => {
     });
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: stateDir } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: stateDir } as NodeJS.ProcessEnv,
       homedir: () => root,
     });
     writeJson5(targetPath, {
@@ -2483,7 +2438,7 @@ describe("doctor legacy state migrations", () => {
   it("auto-migrates exec approvals without a valid config snapshot", async () => {
     const root = await makeTempRoot();
     const stateDir = path.join(root, "custom-state");
-    const sourcePath = path.join(root, ".openclaw", "exec-approvals.json");
+    const sourcePath = path.join(root, ".quiet-core-bot", "exec-approvals.json");
     const targetPath = path.join(stateDir, "exec-approvals.json");
     writeJson5(sourcePath, {
       version: 1,
@@ -2497,7 +2452,7 @@ describe("doctor legacy state migrations", () => {
     });
 
     const result = await autoMigrateLegacyTaskStateSidecars({
-      env: { OPENCLAW_STATE_DIR: stateDir } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: stateDir } as NodeJS.ProcessEnv,
       homedir: () => root,
     });
 
@@ -2531,7 +2486,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     const result = await runLegacyStateMigrations({ detected });
 
@@ -2601,7 +2556,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     const result = await runLegacyStateMigrations({ detected });
 
@@ -2679,7 +2634,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     const result = await runLegacyStateMigrations({ detected });
 
@@ -2710,7 +2665,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     const result = await runLegacyStateMigrations({ detected });
 
@@ -2737,7 +2692,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     const result = await runLegacyStateMigrations({ detected });
 
@@ -2760,7 +2715,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
 
     expect(detected.taskStateSidecars).toEqual({
@@ -2822,7 +2777,7 @@ describe("doctor legacy state migrations", () => {
     fs.writeFileSync(flowJournalPath, "");
 
     const result = await autoMigrateLegacyTaskStateSidecars({
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
 
     expect(result.warnings).toStrictEqual([]);
@@ -2846,7 +2801,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
 
     expect(detected.taskStateSidecars.hasLegacy).toBe(true);
@@ -2873,7 +2828,7 @@ describe("doctor legacy state migrations", () => {
     const firstResult = await (async () => {
       try {
         return await autoMigrateLegacyTaskStateSidecars({
-          env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+          env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
         });
       } finally {
         rename.mockRestore();
@@ -2893,7 +2848,7 @@ describe("doctor legacy state migrations", () => {
 
     resetAutoMigrateLegacyTaskStateSidecarsForTest();
     const retryResult = await autoMigrateLegacyTaskStateSidecars({
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
 
     expect(retryResult.warnings).toStrictEqual([]);
@@ -2928,7 +2883,7 @@ describe("doctor legacy state migrations", () => {
     }
 
     const result = await autoMigrateLegacyTaskStateSidecars({
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
 
     expect(result.changes).toContain("Migrated 1 task registry sidecar row → shared SQLite state");
@@ -2951,7 +2906,7 @@ describe("doctor legacy state migrations", () => {
     const { taskRunsPath, flowRunsPath } = writeLegacyTaskStateSidecars(root);
 
     const result = await autoMigrateLegacyTaskStateSidecars({
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
 
     expect(result.warnings).toStrictEqual([]);
@@ -2972,7 +2927,7 @@ describe("doctor legacy state migrations", () => {
     appendLegacyCrossAgentTask(taskRunsPath);
 
     const result = await autoMigrateLegacyTaskStateSidecars({
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
 
     expect(result.warnings).toStrictEqual([]);
@@ -2998,7 +2953,7 @@ describe("doctor legacy state migrations", () => {
       loadTaskRegistryStateFromSqlite();
       closeOpenClawStateDatabaseForTest();
       const sqlite = requireNodeSqlite();
-      const db = new sqlite.DatabaseSync(path.join(root, "state", "openclaw.sqlite"));
+      const db = new sqlite.DatabaseSync(path.join(root, "state", "quiet-core-bot.sqlite"));
       try {
         db.prepare(
           `INSERT INTO task_runs (
@@ -3041,7 +2996,7 @@ describe("doctor legacy state migrations", () => {
     });
 
     const result = await autoMigrateLegacyTaskStateSidecars({
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
 
     expect(result.warnings).toContain(
@@ -3056,7 +3011,7 @@ describe("doctor legacy state migrations", () => {
 
     await withStateDir(root, async () => {
       const sqlite = requireNodeSqlite();
-      const sharedPath = path.join(root, "state", "openclaw.sqlite");
+      const sharedPath = path.join(root, "state", "quiet-core-bot.sqlite");
       fs.mkdirSync(path.dirname(sharedPath), { recursive: true });
       const db = new sqlite.DatabaseSync(sharedPath);
       try {
@@ -3114,7 +3069,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg: {},
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { QUIET_CORE_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     const result = await runLegacyStateMigrations({ detected });
 
@@ -3283,98 +3238,5 @@ describe("doctor legacy state migrations", () => {
     expect(log.info).toHaveBeenCalled();
     expect(store["main"]).toBeUndefined();
     expect(store["agent:main:main"]?.sessionId).toBe("legacy");
-  });
-
-  it("does nothing when no legacy state dir exists", async () => {
-    const root = await makeTempRoot();
-    const result = await runStateDirMigration(root);
-
-    expect(result.migrated).toBe(false);
-    expect(result.skipped).toBe(false);
-    expect(result.warnings).toHaveLength(0);
-  });
-
-  it("skips state dir migration when env override is set", async () => {
-    const root = await makeTempRoot();
-    const { legacyDir } = getStateDirMigrationPaths(root);
-    fs.mkdirSync(legacyDir, { recursive: true });
-
-    const result = await runStateDirMigration(root, {
-      OPENCLAW_STATE_DIR: "/custom/state",
-    } as NodeJS.ProcessEnv);
-
-    expect(result.skipped).toBe(true);
-    expect(result.migrated).toBe(false);
-  });
-
-  it("classifies already-migrated symlink mirrors without warnings", async () => {
-    const flatRoot = await makeTempRoot();
-    const flat = ensureLegacyAndTargetStateDirs(flatRoot);
-    fs.mkdirSync(path.join(flat.targetDir, "sessions"), { recursive: true });
-    fs.mkdirSync(path.join(flat.targetDir, "agent"), { recursive: true });
-    fs.symlinkSync(
-      path.join(flat.targetDir, "sessions"),
-      path.join(flat.legacyDir, "sessions"),
-      DIR_LINK_TYPE,
-    );
-    fs.symlinkSync(
-      path.join(flat.targetDir, "agent"),
-      path.join(flat.legacyDir, "agent"),
-      DIR_LINK_TYPE,
-    );
-    expectUnmigratedWithoutWarnings(await runFreshStateDirMigration(flatRoot));
-
-    const nestedRoot = await makeTempRoot();
-    const nested = ensureLegacyAndTargetStateDirs(nestedRoot);
-    fs.mkdirSync(path.join(nested.targetDir, "agents", "main"), { recursive: true });
-    fs.mkdirSync(path.join(nested.legacyDir, "agents"), { recursive: true });
-    fs.symlinkSync(
-      path.join(nested.targetDir, "agents", "main"),
-      path.join(nested.legacyDir, "agents", "main"),
-      DIR_LINK_TYPE,
-    );
-    expectUnmigratedWithoutWarnings(await runFreshStateDirMigration(nestedRoot));
-  });
-
-  it("warns when target exists and legacy state is not a safe mirror", async () => {
-    const emptyRoot = await makeTempRoot();
-    const empty = ensureLegacyAndTargetStateDirs(emptyRoot);
-    expectTargetAlreadyExistsWarning(await runFreshStateDirMigration(emptyRoot), empty.targetDir);
-
-    const fileRoot = await makeTempRoot();
-    const file = ensureLegacyAndTargetStateDirs(fileRoot);
-    fs.writeFileSync(path.join(file.legacyDir, "sessions.json"), "{}", "utf-8");
-    expectTargetAlreadyExistsWarning(await runFreshStateDirMigration(fileRoot), file.targetDir);
-
-    const outsideRoot = await makeTempRoot();
-    const outside = ensureLegacyAndTargetStateDirs(outsideRoot);
-    const outsideDir = path.join(outsideRoot, ".outside-state");
-    fs.mkdirSync(path.join(outside.targetDir, "sessions"), { recursive: true });
-    fs.mkdirSync(outsideDir, { recursive: true });
-    fs.symlinkSync(outsideDir, path.join(outside.legacyDir, "sessions"), DIR_LINK_TYPE);
-    expectTargetAlreadyExistsWarning(
-      await runFreshStateDirMigration(outsideRoot),
-      outside.targetDir,
-    );
-
-    const brokenRoot = await makeTempRoot();
-    const broken = ensureLegacyAndTargetStateDirs(brokenRoot);
-    const targetSessionDir = path.join(broken.targetDir, "sessions");
-    fs.mkdirSync(targetSessionDir, { recursive: true });
-    fs.symlinkSync(targetSessionDir, path.join(broken.legacyDir, "sessions"), DIR_LINK_TYPE);
-    fs.rmSync(targetSessionDir, { recursive: true, force: true });
-    expectTargetAlreadyExistsWarning(await runFreshStateDirMigration(brokenRoot), broken.targetDir);
-
-    const secondHopRoot = await makeTempRoot();
-    const secondHop = ensureLegacyAndTargetStateDirs(secondHopRoot);
-    const secondHopOutsideDir = path.join(secondHopRoot, ".outside-state");
-    fs.mkdirSync(secondHopOutsideDir, { recursive: true });
-    const targetHop = path.join(secondHop.targetDir, "hop");
-    fs.symlinkSync(secondHopOutsideDir, targetHop, DIR_LINK_TYPE);
-    fs.symlinkSync(targetHop, path.join(secondHop.legacyDir, "sessions"), DIR_LINK_TYPE);
-    expectTargetAlreadyExistsWarning(
-      await runFreshStateDirMigration(secondHopRoot),
-      secondHop.targetDir,
-    );
   });
 });

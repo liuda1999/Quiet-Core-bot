@@ -147,7 +147,7 @@ ordering to generated context text.
 
 Harness selection remains as-is:
 
-- `runtime: "openclaw"` selects the built-in Quiet Core bot harness
+- `runtime: "quiet-core-bot"` selects the built-in Quiet Core bot harness
 - `runtime: "codex"` selects the registered Codex harness
 - `runtime: "auto"` lets plugin harnesses claim supported providers
 - unmatched `auto` runs use the built-in Quiet Core bot harness

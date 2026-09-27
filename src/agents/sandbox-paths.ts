@@ -6,7 +6,7 @@
 import os from "node:os";
 import path from "node:path";
 import { URL } from "node:url";
-import { isPassThroughRemoteMediaSource } from "@openclaw/media-core/media-source-url";
+import { isPassThroughRemoteMediaSource } from "@quiet-core/media-core/media-source-url";
 import { isWindowsDrivePath } from "../infra/archive-path.js";
 import {
   assertNoWindowsNetworkPath,
@@ -15,7 +15,7 @@ import {
 } from "../infra/local-file-access.js";
 import { assertNoPathAliasEscape, type PathAliasPolicy } from "../infra/path-alias-guards.js";
 import { isPathInside } from "../infra/path-guards.js";
-import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-quiet-core-bot-dir.js";
 import { resolveConfigDir } from "../utils.js";
 
 const UNICODE_SPACES = /[\u00A0\u2000-\u200A\u202F\u205F\u3000]/g;

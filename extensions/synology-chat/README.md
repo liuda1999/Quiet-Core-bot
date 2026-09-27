@@ -5,7 +5,7 @@ Official OpenClaw channel plugin for Synology Chat conversations and direct mess
 Install from OpenClaw:
 
 ```bash
-openclaw plugin add @openclaw/synology-chat
+quiet-core-bot plugin add @quiet-core/synology-chat
 ```
 
 Configure Synology Chat credentials and allowed conversations in OpenClaw, then use the plugin to route messages between Synology Chat and OpenClaw agents.

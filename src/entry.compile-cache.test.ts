@@ -31,20 +31,20 @@ describe("entry compile cache", () => {
   });
 
   it("resolves install roots from source and dist entry paths", () => {
-    expect(resolveEntryInstallRoot("/repo/openclaw/src/entry.ts")).toBe("/repo/openclaw");
-    expect(resolveEntryInstallRoot("/repo/openclaw/dist/entry.js")).toBe("/repo/openclaw");
-    expect(resolveEntryInstallRoot("/pkg/openclaw/entry.js")).toBe("/pkg/openclaw");
+    expect(resolveEntryInstallRoot("/repo/quiet-core-bot/src/entry.ts")).toBe("/repo/quiet-core-bot");
+    expect(resolveEntryInstallRoot("/repo/quiet-core-bot/dist/entry.js")).toBe("/repo/quiet-core-bot");
+    expect(resolveEntryInstallRoot("/pkg/quiet-core-bot/entry.js")).toBe("/pkg/quiet-core-bot");
   });
 
   it("treats git and source entry markers as source checkouts", async () => {
-    const root = makeTempDir(tempDirs, "openclaw-compile-cache-source-");
-    await fs.writeFile(path.join(root, ".git"), "gitdir: .git/worktrees/openclaw\n", "utf8");
+    const root = makeTempDir(tempDirs, "quiet-core-bot-compile-cache-source-");
+    await fs.writeFile(path.join(root, ".git"), "gitdir: .git/worktrees/quiet-core-bot\n", "utf8");
 
     expect(isSourceCheckoutInstallRoot(root)).toBe(true);
   });
 
   it("disables compile cache for source-checkout installs", async () => {
-    const root = makeTempDir(tempDirs, "openclaw-compile-cache-src-entry-");
+    const root = makeTempDir(tempDirs, "quiet-core-bot-compile-cache-src-entry-");
     await fs.mkdir(path.join(root, "src"), { recursive: true });
     await fs.writeFile(path.join(root, "src", "entry.ts"), "export {};\n", "utf8");
 
@@ -57,7 +57,7 @@ describe("entry compile cache", () => {
   });
 
   it("keeps compile cache enabled for packaged installs unless disabled by env", () => {
-    const root = makeTempDir(tempDirs, "openclaw-compile-cache-package-");
+    const root = makeTempDir(tempDirs, "quiet-core-bot-compile-cache-package-");
 
     expect(
       shouldEnableOpenClawCompileCache({
@@ -78,7 +78,7 @@ describe("entry compile cache", () => {
   });
 
   it("scopes packaged compile cache by package install metadata", async () => {
-    const root = makeTempDir(tempDirs, "openclaw-compile-cache-package-key-");
+    const root = makeTempDir(tempDirs, "quiet-core-bot-compile-cache-package-key-");
     const packageJsonPath = path.join(root, "package.json");
     await fs.writeFile(packageJsonPath, '{"version":"2026.4.29"}\n', "utf8");
 
@@ -87,19 +87,19 @@ describe("entry compile cache", () => {
       installRoot: root,
     });
 
-    expect(directory).toContain(path.join(".node-cache", "openclaw"));
+    expect(directory).toContain(path.join(".node-cache", "quiet-core-bot"));
     expect(directory).toContain("2026.4.29");
     expect(path.basename(directory)).toMatch(/^\d+-\d+$/);
   });
 
   it("builds a one-shot no-cache respawn plan when source checkout inherits NODE_COMPILE_CACHE", async () => {
-    const root = makeTempDir(tempDirs, "openclaw-compile-cache-respawn-");
+    const root = makeTempDir(tempDirs, "quiet-core-bot-compile-cache-respawn-");
     await fs.mkdir(path.join(root, "src"), { recursive: true });
     await fs.writeFile(path.join(root, "src", "entry.ts"), "export {};\n", "utf8");
 
     const plan = buildOpenClawCompileCacheRespawnPlan({
       currentFile: path.join(root, "dist", "entry.js"),
-      env: { NODE_COMPILE_CACHE: "/tmp/openclaw-cache" },
+      env: { NODE_COMPILE_CACHE: "/tmp/quiet-core-bot-cache" },
       execArgv: ["--no-warnings"],
       execPath: "/usr/bin/node",
       installRoot: root,
@@ -111,21 +111,21 @@ describe("entry compile cache", () => {
       args: ["--no-warnings", path.join(root, "dist", "entry.js"), "status", "--json"],
       env: {
         NODE_DISABLE_COMPILE_CACHE: "1",
-        OPENCLAW_COMPILE_CACHE_DISABLED_RESPAWNED: "1",
+        QUIET_CORE_COMPILE_CACHE_DISABLED_RESPAWNED: "1",
       },
       detachForProcessTree: true,
     });
   });
 
   it("keeps interactive no-cache respawn plans attached to the terminal", async () => {
-    const root = makeTempDir(tempDirs, "openclaw-compile-cache-interactive-");
+    const root = makeTempDir(tempDirs, "quiet-core-bot-compile-cache-interactive-");
     const entryFile = path.join(root, "dist", "entry.js");
     await fs.mkdir(path.join(root, "src"), { recursive: true });
     await fs.writeFile(path.join(root, "src", "entry.ts"), "export {};\n", "utf8");
 
     const plan = buildOpenClawCompileCacheRespawnPlan({
       currentFile: entryFile,
-      env: { NODE_COMPILE_CACHE: "/tmp/openclaw-cache" },
+      env: { NODE_COMPILE_CACHE: "/tmp/quiet-core-bot-cache" },
       execPath: "/usr/bin/node",
       installRoot: root,
       argv: ["/usr/bin/node", entryFile, "tui"],
@@ -135,14 +135,14 @@ describe("entry compile cache", () => {
   });
 
   it("keeps bare-root no-cache respawn plans attached to the terminal", async () => {
-    const root = makeTempDir(tempDirs, "openclaw-compile-cache-root-");
+    const root = makeTempDir(tempDirs, "quiet-core-bot-compile-cache-root-");
     const entryFile = path.join(root, "dist", "entry.js");
     await fs.mkdir(path.join(root, "src"), { recursive: true });
     await fs.writeFile(path.join(root, "src", "entry.ts"), "export {};\n", "utf8");
 
     const plan = buildOpenClawCompileCacheRespawnPlan({
       currentFile: entryFile,
-      env: { NODE_COMPILE_CACHE: "/tmp/openclaw-cache" },
+      env: { NODE_COMPILE_CACHE: "/tmp/quiet-core-bot-cache" },
       execPath: "/usr/bin/node",
       installRoot: root,
       argv: ["/usr/bin/node", entryFile],
@@ -152,12 +152,12 @@ describe("entry compile cache", () => {
   });
 
   it("does not respawn unaffected packaged installs when NODE_COMPILE_CACHE is configured", () => {
-    const root = makeTempDir(tempDirs, "openclaw-compile-cache-package-respawn-");
+    const root = makeTempDir(tempDirs, "quiet-core-bot-compile-cache-package-respawn-");
 
     expect(
       buildOpenClawCompileCacheRespawnPlan({
         currentFile: path.join(root, "dist", "entry.js"),
-        env: { NODE_COMPILE_CACHE: "/tmp/openclaw-cache" },
+        env: { NODE_COMPILE_CACHE: "/tmp/quiet-core-bot-cache" },
         installRoot: root,
         nodeVersion: "24.1.0",
         platform: "linux",
@@ -166,12 +166,12 @@ describe("entry compile cache", () => {
   });
 
   it("builds a no-cache respawn plan for affected Windows packaged installs", () => {
-    const root = makeTempDir(tempDirs, "openclaw-compile-cache-package-win24-");
+    const root = makeTempDir(tempDirs, "quiet-core-bot-compile-cache-package-win24-");
     const entryFile = path.join(root, "dist", "entry.js");
 
     const plan = buildOpenClawCompileCacheRespawnPlan({
       currentFile: entryFile,
-      env: { NODE_COMPILE_CACHE: "/tmp/openclaw-cache" },
+      env: { NODE_COMPILE_CACHE: "/tmp/quiet-core-bot-cache" },
       execArgv: ["--no-warnings"],
       execPath: "/usr/bin/node",
       installRoot: root,
@@ -185,14 +185,14 @@ describe("entry compile cache", () => {
       args: ["--no-warnings", entryFile, "doctor", "--fix", "--non-interactive"],
       env: {
         NODE_DISABLE_COMPILE_CACHE: "1",
-        OPENCLAW_COMPILE_CACHE_DISABLED_RESPAWNED: "1",
+        QUIET_CORE_COMPILE_CACHE_DISABLED_RESPAWNED: "1",
       },
       detachForProcessTree: false,
     });
   });
 
   it("does not respawn source checkouts twice", async () => {
-    const root = makeTempDir(tempDirs, "openclaw-compile-cache-respawn-once-");
+    const root = makeTempDir(tempDirs, "quiet-core-bot-compile-cache-respawn-once-");
     await fs.mkdir(path.join(root, "src"), { recursive: true });
     await fs.writeFile(path.join(root, "src", "entry.ts"), "export {};\n", "utf8");
 
@@ -200,8 +200,8 @@ describe("entry compile cache", () => {
       buildOpenClawCompileCacheRespawnPlan({
         currentFile: path.join(root, "dist", "entry.js"),
         env: {
-          NODE_COMPILE_CACHE: "/tmp/openclaw-cache",
-          OPENCLAW_COMPILE_CACHE_DISABLED_RESPAWNED: "1",
+          NODE_COMPILE_CACHE: "/tmp/quiet-core-bot-cache",
+          QUIET_CORE_COMPILE_CACHE_DISABLED_RESPAWNED: "1",
         },
         installRoot: root,
       }),
@@ -218,7 +218,7 @@ describe("entry compile cache", () => {
     runOpenClawCompileCacheRespawnPlan(
       {
         command: "/usr/bin/node",
-        args: ["/repo/openclaw/dist/entry.js", "status"],
+        args: ["/repo/quiet-core-bot/dist/entry.js", "status"],
         env: { NODE_DISABLE_COMPILE_CACHE: "1" },
         detachForProcessTree: true,
       },
@@ -232,7 +232,7 @@ describe("entry compile cache", () => {
 
     expect(spawn).toHaveBeenCalledWith(
       "/usr/bin/node",
-      ["/repo/openclaw/dist/entry.js", "status"],
+      ["/repo/quiet-core-bot/dist/entry.js", "status"],
       {
         stdio: "inherit",
         env: { NODE_DISABLE_COMPILE_CACHE: "1" },
@@ -261,7 +261,7 @@ describe("entry compile cache", () => {
     runOpenClawCompileCacheRespawnPlan(
       {
         command: "/usr/bin/node",
-        args: ["/repo/openclaw/dist/entry.js"],
+        args: ["/repo/quiet-core-bot/dist/entry.js"],
         env: {},
         detachForProcessTree: true,
       },
@@ -291,7 +291,7 @@ describe("entry compile cache", () => {
       runOpenClawCompileCacheRespawnPlan(
         {
           command: "/usr/bin/node",
-          args: ["/repo/openclaw/dist/entry.js"],
+          args: ["/repo/quiet-core-bot/dist/entry.js"],
           env: {},
           detachForProcessTree: false,
         },
@@ -326,7 +326,7 @@ describe("entry compile cache", () => {
   });
 
   it("disables compile cache for early Node 24.x versions on Windows", () => {
-    const root = makeTempDir(tempDirs, "openclaw-compile-cache-node24-");
+    const root = makeTempDir(tempDirs, "quiet-core-bot-compile-cache-node24-");
     expect(
       shouldEnableOpenClawCompileCache({
         env: {},
@@ -346,7 +346,7 @@ describe("entry compile cache", () => {
   });
 
   it("keeps compile cache enabled for early Node 24.x on non-Windows packaged installs", () => {
-    const root = makeTempDir(tempDirs, "openclaw-compile-cache-node24-nonwin-");
+    const root = makeTempDir(tempDirs, "quiet-core-bot-compile-cache-node24-nonwin-");
     expect(
       shouldEnableOpenClawCompileCache({
         env: {},
@@ -366,7 +366,7 @@ describe("entry compile cache", () => {
   });
 
   it("keeps compile cache enabled for Node 24.15+ and other majors on Windows", () => {
-    const root = makeTempDir(tempDirs, "openclaw-compile-cache-node2415-");
+    const root = makeTempDir(tempDirs, "quiet-core-bot-compile-cache-node2415-");
     expect(
       shouldEnableOpenClawCompileCache({
         env: {},

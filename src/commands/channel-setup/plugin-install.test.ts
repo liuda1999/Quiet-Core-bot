@@ -1,6 +1,6 @@
 // Channel setup plugin install tests cover install decisions, registry reloads, scoped snapshots, and trust boundaries.
 import path from "node:path";
-import { bundledPluginRoot, bundledPluginRootAt } from "openclaw/plugin-sdk/test-fixtures";
+import { bundledPluginRoot, bundledPluginRootAt } from "quiet-core-bot/plugin-sdk/test-fixtures";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("node:fs", async () => {
@@ -108,11 +108,11 @@ import {
   loadChannelSetupPluginRegistrySnapshotForChannel,
 } from "./plugin-install.js";
 
-const bundledChatNpmSpec = "@openclaw/bundled-chat@1.2.3";
+const bundledChatNpmSpec = "@quiet-core/bundled-chat@1.2.3";
 const bundledChatIntegrity = "sha512-bundled-chat";
 const bundledChatForkNpmSpec = "@vendor/bundled-chat-fork@1.2.3";
 const bundledChatForkIntegrity = "sha512-vendor-bundled-chat-fork";
-const ORIGINAL_OPENCLAW_STATE_DIR = process.env.OPENCLAW_STATE_DIR;
+const ORIGINAL_QUIET_CORE_STATE_DIR = process.env.QUIET_CORE_STATE_DIR;
 
 const baseEntry: ChannelPluginCatalogEntry = {
   id: "bundled-chat",
@@ -139,7 +139,7 @@ function mockBundledChatSource() {
         "bundled-chat",
         {
           pluginId: "bundled-chat",
-          localPath: bundledPluginRootAt("/opt/openclaw", "bundled-chat"),
+          localPath: bundledPluginRootAt("/opt/quiet-core-bot", "bundled-chat"),
           npmSpec: bundledChatNpmSpec,
         },
       ],
@@ -185,9 +185,9 @@ function createManifestRecord(
     skills: [],
     hooks: [],
     origin: "bundled",
-    rootDir: `/tmp/openclaw-test/${id}`,
-    source: `/tmp/openclaw-test/${id}/index.ts`,
-    manifestPath: `/tmp/openclaw-test/${id}/openclaw.plugin.json`,
+    rootDir: `/tmp/quiet-core-bot-test/${id}`,
+    source: `/tmp/quiet-core-bot-test/${id}/index.ts`,
+    manifestPath: `/tmp/quiet-core-bot-test/${id}/quiet-core-bot.plugin.json`,
     ...rest,
   };
 }
@@ -201,7 +201,7 @@ function expectSetupSnapshotDoesNotScopeToPlugin(params: {
     cfg: params.cfg,
     runtime: params.runtime,
     channel: "external-chat",
-    workspaceDir: "/tmp/openclaw-workspace",
+    workspaceDir: "/tmp/quiet-core-bot-workspace",
   });
 
   expect(loadOpenClawPlugins).toHaveBeenCalledTimes(1);
@@ -229,10 +229,10 @@ beforeEach(() => {
 
 afterEach(() => {
   clearPluginMetadataLifecycleCaches();
-  if (ORIGINAL_OPENCLAW_STATE_DIR === undefined) {
-    delete process.env.OPENCLAW_STATE_DIR;
+  if (ORIGINAL_QUIET_CORE_STATE_DIR === undefined) {
+    delete process.env.QUIET_CORE_STATE_DIR;
   } else {
-    process.env.OPENCLAW_STATE_DIR = ORIGINAL_OPENCLAW_STATE_DIR;
+    process.env.QUIET_CORE_STATE_DIR = ORIGINAL_QUIET_CORE_STATE_DIR;
   }
 });
 
@@ -398,8 +398,8 @@ describe("ensureChannelSetupPluginInstalled", () => {
     const prompter = makePrompter({
       select: vi.fn(async () => "npm") as WizardPrompter["select"],
     });
-    const profileStateDir = "/tmp/openclaw-ledger-channel";
-    process.env.OPENCLAW_STATE_DIR = profileStateDir;
+    const profileStateDir = "/tmp/quiet-core-bot-ledger-channel";
+    process.env.QUIET_CORE_STATE_DIR = profileStateDir;
     vi.mocked(fs.existsSync).mockReturnValue(false);
     installPluginFromNpmSpec.mockResolvedValue({
       ok: true,
@@ -479,13 +479,13 @@ describe("ensureChannelSetupPluginInstalled", () => {
     vi.mocked(fs.existsSync).mockReturnValue(false);
     installPluginFromNpmSpec.mockResolvedValue({
       ok: true,
-      pluginId: "wecom-openclaw-plugin",
-      targetDir: "/tmp/wecom-openclaw-plugin",
+      pluginId: "wecom-quiet-core-bot-plugin",
+      targetDir: "/tmp/wecom-quiet-core-bot-plugin",
       version: "2026.5.4-beta.1",
       npmResolution: {
-        name: "@openclaw/wecom",
+        name: "@quiet-core/wecom",
         version: "2026.5.4-beta.1",
-        resolvedSpec: "@openclaw/wecom@2026.5.4-beta.1",
+        resolvedSpec: "@quiet-core/wecom@2026.5.4-beta.1",
       },
     });
 
@@ -493,7 +493,7 @@ describe("ensureChannelSetupPluginInstalled", () => {
       cfg,
       entry: {
         id: "wecom",
-        pluginId: "wecom-openclaw-plugin",
+        pluginId: "wecom-quiet-core-bot-plugin",
         meta: {
           id: "wecom",
           label: "WeCom",
@@ -502,7 +502,7 @@ describe("ensureChannelSetupPluginInstalled", () => {
           blurb: "WeCom channel",
         },
         install: {
-          npmSpec: "@openclaw/wecom",
+          npmSpec: "@quiet-core/wecom",
         },
       },
       prompter,
@@ -512,10 +512,10 @@ describe("ensureChannelSetupPluginInstalled", () => {
 
     expect(select).not.toHaveBeenCalled();
     expectRecordFields(requireMockCallArg(installPluginFromNpmSpec, 0), "npm install args", {
-      spec: "@openclaw/wecom@beta",
-      expectedPluginId: "wecom-openclaw-plugin",
+      spec: "@quiet-core/wecom@beta",
+      expectedPluginId: "wecom-quiet-core-bot-plugin",
     });
-    expect(result.cfg.plugins?.installs?.["wecom-openclaw-plugin"]?.spec).toBe("@openclaw/wecom");
+    expect(result.cfg.plugins?.installs?.["wecom-quiet-core-bot-plugin"]?.spec).toBe("@quiet-core/wecom");
   });
 
   it("defaults to bundled local path on beta channel when available", async () => {
@@ -539,7 +539,7 @@ describe("ensureChannelSetupPluginInstalled", () => {
       "local option",
       {
         value: "local",
-        hint: bundledPluginRootAt("/opt/openclaw", "bundled-chat"),
+        hint: bundledPluginRootAt("/opt/quiet-core-bot", "bundled-chat"),
       },
     );
   });
@@ -625,7 +625,7 @@ describe("ensureChannelSetupPluginInstalled", () => {
           blurb: "Test",
         },
         install: {
-          clawhubSpec: "clawhub:openclaw/clawhub-chat@2026.5.2",
+          clawhubSpec: "clawhub:quiet-core-bot/clawhub-chat@2026.5.2",
           defaultChoice: "clawhub",
         },
       },
@@ -639,7 +639,7 @@ describe("ensureChannelSetupPluginInstalled", () => {
     expect(options).toHaveLength(2);
     expectRecordFields(options[0], "clawhub option", {
       value: "clawhub",
-      label: "Download from ClawHub (clawhub:openclaw/clawhub-chat@2026.5.2)",
+      label: "Download from ClawHub (clawhub:quiet-core-bot/clawhub-chat@2026.5.2)",
     });
     expectRecordFields(options[1], "skip option", {
       value: "skip",
@@ -681,7 +681,7 @@ describe("ensureChannelSetupPluginInstalled", () => {
     // npm-only entry (no local path)
     const npmOnlyEntry: ChannelPluginCatalogEntry = {
       id: "wecom",
-      pluginId: "wecom-openclaw-plugin",
+      pluginId: "wecom-quiet-core-bot-plugin",
       meta: {
         id: "wecom",
         label: "WeCom",
@@ -690,13 +690,13 @@ describe("ensureChannelSetupPluginInstalled", () => {
         blurb: "WeCom channel",
       },
       install: {
-        npmSpec: "@openclaw/wecom@2026.4.23",
+        npmSpec: "@quiet-core/wecom@2026.4.23",
       },
     };
     installPluginFromNpmSpec.mockResolvedValue({
       ok: true,
-      pluginId: "wecom-openclaw-plugin",
-      installPath: "/tmp/wecom-openclaw-plugin",
+      pluginId: "wecom-quiet-core-bot-plugin",
+      installPath: "/tmp/wecom-quiet-core-bot-plugin",
     });
     vi.mocked(fs.existsSync).mockReturnValue(false);
     resolveBundledPluginSources.mockReturnValue(new Map());
@@ -711,7 +711,7 @@ describe("ensureChannelSetupPluginInstalled", () => {
 
     expect(select).not.toHaveBeenCalled();
     expect(result.installed).toBe(true);
-    expect(result.pluginId).toBe("wecom-openclaw-plugin");
+    expect(result.pluginId).toBe("wecom-quiet-core-bot-plugin");
   });
 
   it("loads setup snapshots from the auto-enabled config snapshot", () => {
@@ -738,7 +738,7 @@ describe("ensureChannelSetupPluginInstalled", () => {
       cfg,
       runtime,
       channel: "external-chat",
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
     });
 
     expect(applyPluginAutoEnable).toHaveBeenCalledWith({
@@ -762,21 +762,21 @@ describe("ensureChannelSetupPluginInstalled", () => {
       cfg,
       runtime,
       channel: "external-chat",
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
     });
 
     expectLoadOpenClawPluginFields({
       config: cfg,
       activationSourceConfig: cfg,
       autoEnabledReasons: {},
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
       cache: false,
       onlyPluginIds: ["@vendor/external-chat-plugin"],
       includeSetupOnlyChannelPlugins: true,
       activate: false,
     });
     expect(getChannelPluginCatalogEntry).toHaveBeenCalledWith("external-chat", {
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
     });
   });
 
@@ -791,17 +791,17 @@ describe("ensureChannelSetupPluginInstalled", () => {
       cfg,
       runtime,
       channel: "external-chat",
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
     });
 
     expectLoadOpenClawPluginFields({
       onlyPluginIds: ["@vendor/external-chat-plugin"],
     });
     expect(getChannelPluginCatalogEntry).toHaveBeenNthCalledWith(1, "external-chat", {
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
     });
     expect(getChannelPluginCatalogEntry).toHaveBeenNthCalledWith(2, "external-chat", {
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
       env: undefined,
       excludePluginRefs: [{ pluginId: "evil-external-chat-shadow", origin: "workspace" }],
     });
@@ -824,7 +824,7 @@ describe("ensureChannelSetupPluginInstalled", () => {
       cfg,
       runtime,
       channel: "external-chat",
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
     });
 
     expectLoadOpenClawPluginFields({
@@ -841,7 +841,7 @@ describe("ensureChannelSetupPluginInstalled", () => {
       cfg,
       runtime,
       channel: "external-chat",
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
     });
 
     expectLoadOpenClawPluginFields({
@@ -866,14 +866,14 @@ describe("ensureChannelSetupPluginInstalled", () => {
       cfg,
       runtime,
       channel: "external-chat",
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
     });
 
     expectLoadOpenClawPluginFields({
       config: cfg,
       activationSourceConfig: cfg,
       autoEnabledReasons: {},
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
       cache: false,
       onlyPluginIds: ["custom-external-chat-plugin"],
       includeSetupOnlyChannelPlugins: true,
@@ -889,7 +889,7 @@ describe("ensureChannelSetupPluginInstalled", () => {
       if (
         isRecord(args) &&
         args.config === cfg &&
-        args.workspaceDir === "/tmp/openclaw-workspace" &&
+        args.workspaceDir === "/tmp/quiet-core-bot-workspace" &&
         Array.isArray(args.candidates)
       ) {
         sawTrustedCandidate ||= args.candidates.some((candidate) => {
@@ -914,7 +914,7 @@ describe("ensureChannelSetupPluginInstalled", () => {
       cfg,
       runtime,
       channel: "external-chat",
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
     });
 
     expectLoadOpenClawPluginFields({
@@ -932,7 +932,7 @@ describe("ensureChannelSetupPluginInstalled", () => {
       cfg,
       runtime,
       channel: "external-chat",
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
     });
 
     expect(loadPluginManifestRegistry).toHaveBeenCalled();
@@ -1064,14 +1064,14 @@ describe("ensureChannelSetupPluginInstalled", () => {
       runtime,
       channel: "external-chat",
       pluginId: "@vendor/external-chat-plugin",
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
     });
 
     expectLoadOpenClawPluginFields({
       config: cfg,
       activationSourceConfig: cfg,
       autoEnabledReasons: {},
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/quiet-core-bot-workspace",
       cache: false,
       onlyPluginIds: ["@vendor/external-chat-plugin"],
       includeSetupOnlyChannelPlugins: true,

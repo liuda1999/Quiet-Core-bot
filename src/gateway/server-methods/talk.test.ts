@@ -341,7 +341,7 @@ describe("talk.speak handler", () => {
 
     mocks.getRuntimeConfig.mockReturnValue(runtimeConfig);
     mocks.readConfigFileSnapshot.mockResolvedValue({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/quiet-core-bot.json",
       hash: "test-hash",
       valid: true,
       config: diskConfig,
@@ -460,7 +460,7 @@ describe("talk.config handler", () => {
     } as OpenClawConfig;
 
     mocks.readConfigFileSnapshot.mockResolvedValue({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/quiet-core-bot.json",
       hash: "test-hash",
       valid: true,
       config: sourceConfig,
@@ -514,7 +514,7 @@ describe("talk.config handler", () => {
     expectRecordFields(talkConfig, { provider: "acme" });
     const resolved = talkConfig?.resolved as Record<string, unknown> | undefined;
     expectRecordFields(resolved, { provider: "acme" });
-    expectRecordFields(resolved?.config, { apiKey: "__OPENCLAW_REDACTED__" });
+    expectRecordFields(resolved?.config, { apiKey: "__QUIET_CORE_REDACTED__" });
   });
 });
 

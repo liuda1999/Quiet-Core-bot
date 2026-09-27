@@ -617,9 +617,9 @@ describe("/model chat UX", () => {
   });
 
   it("passes workspace scope through the /model list browser alias", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-model-list-auth-label-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-model-list-auth-label-"));
     const workspaceDir = path.join(tempRoot, "workspace");
-    const pluginDir = path.join(workspaceDir, ".openclaw", "extensions", "workspace-model-list");
+    const pluginDir = path.join(workspaceDir, ".quiet-core-bot", "extensions", "workspace-model-list");
     const bundledDir = path.join(tempRoot, "bundled");
     const stateDir = path.join(tempRoot, "state");
     const credentialPath = path.join(tempRoot, "credentials.json");
@@ -629,7 +629,7 @@ describe("/model chat UX", () => {
     fs.writeFileSync(path.join(pluginDir, "index.ts"), "export default {}\n", "utf8");
     fs.writeFileSync(credentialPath, "{}", "utf8");
     fs.writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "quiet-core-bot.plugin.json"),
       JSON.stringify({
         id: "workspace-model-list",
         configSchema: { type: "object" },
@@ -655,8 +655,8 @@ describe("/model chat UX", () => {
     try {
       await withEnvAsync(
         {
-          OPENCLAW_BUNDLED_PLUGINS_DIR: bundledDir,
-          OPENCLAW_STATE_DIR: stateDir,
+          QUIET_CORE_BUNDLED_PLUGINS_DIR: bundledDir,
+          QUIET_CORE_STATE_DIR: stateDir,
           WORKSPACE_MODEL_LIST_CREDENTIALS: credentialPath,
         },
         async () => {
@@ -912,7 +912,7 @@ describe("/model chat UX", () => {
             model: { primary: "openai/gpt-5.5" },
             models: {
               "openai/gpt-5.5": {
-                agentRuntime: { id: "openclaw" },
+                agentRuntime: { id: "quiet-core-bot" },
               },
             },
           },
@@ -954,7 +954,7 @@ describe("/model chat UX", () => {
             model: { primary: "openai/gpt-5.5" },
             models: {
               "openai/gpt-5.5": {
-                agentRuntime: { id: "openclaw" },
+                agentRuntime: { id: "quiet-core-bot" },
               },
             },
           },
@@ -969,9 +969,9 @@ describe("/model chat UX", () => {
   });
 
   it("uses workspace-scoped auth evidence in /model status labels", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-model-status-auth-label-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-model-status-auth-label-"));
     const workspaceDir = path.join(tempRoot, "workspace");
-    const pluginDir = path.join(workspaceDir, ".openclaw", "extensions", "workspace-model-auth");
+    const pluginDir = path.join(workspaceDir, ".quiet-core-bot", "extensions", "workspace-model-auth");
     const bundledDir = path.join(tempRoot, "bundled");
     const stateDir = path.join(tempRoot, "state");
     const credentialPath = path.join(tempRoot, "credentials.json");
@@ -981,7 +981,7 @@ describe("/model chat UX", () => {
     fs.writeFileSync(path.join(pluginDir, "index.ts"), "export default {}\n", "utf8");
     fs.writeFileSync(credentialPath, "{}", "utf8");
     fs.writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "quiet-core-bot.plugin.json"),
       JSON.stringify({
         id: "workspace-model-auth",
         configSchema: { type: "object" },
@@ -1009,8 +1009,8 @@ describe("/model chat UX", () => {
         {
           ANTHROPIC_API_KEY: undefined,
           ANTHROPIC_OAUTH_TOKEN: undefined,
-          OPENCLAW_BUNDLED_PLUGINS_DIR: bundledDir,
-          OPENCLAW_STATE_DIR: stateDir,
+          QUIET_CORE_BUNDLED_PLUGINS_DIR: bundledDir,
+          QUIET_CORE_STATE_DIR: stateDir,
           WORKSPACE_MODEL_CREDENTIALS: credentialPath,
         },
         async () => {
@@ -1341,7 +1341,7 @@ describe("/model chat UX", () => {
     const { sessionEntry } = await persistModelDirectiveForTest({
       command: "/model openai/gpt-4o --runtime claude-cli hello",
       allowedModelKeys: ["openai/gpt-4o"],
-      sessionEntry: createSessionEntry({ agentRuntimeOverride: "openclaw" }),
+      sessionEntry: createSessionEntry({ agentRuntimeOverride: "quiet-core-bot" }),
       provider: "openai",
       model: "gpt-4o",
       initialModelLabel: "openai/gpt-4o",

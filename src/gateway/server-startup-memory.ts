@@ -2,7 +2,7 @@
 // Starts qmd memory boot sync for eligible agents without loading every agent.
 import { listAgentEntries, listAgentIds, resolveDefaultAgentId } from "../agents/agent-scope.js";
 import { resolveMemorySearchConfig } from "../agents/memory-search.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   resolveMemoryBackendConfig,
   type ResolvedQmdConfig,

@@ -1,5 +1,5 @@
 // Formats port probe results for diagnostics and CLI output.
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
 import { formatCliCommand } from "../cli/command-format.js";
 import type { PortListener, PortListenerKind, PortUsage } from "./ports-types.js";
 
@@ -8,7 +8,7 @@ export function classifyPortListener(listener: PortListener, _port: number): Por
   const raw = normalizeLowercaseStringOrEmpty(
     `${listener.commandLine ?? ""} ${listener.command ?? ""}`,
   );
-  if (raw.includes("quiet-core-bot") || raw.includes("openclaw")) {
+  if (raw.includes("quiet-core-bot") || raw.includes("quiet-core-bot")) {
     return "gateway";
   }
   const command = normalizeLowercaseStringOrEmpty(listener.command ?? "");

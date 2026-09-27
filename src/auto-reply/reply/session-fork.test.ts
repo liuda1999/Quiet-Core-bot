@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { forkSessionEntryFromParent } from "./session-fork.js";
 
 const runtimeMocks = vi.hoisted(() => ({
@@ -29,7 +29,7 @@ afterEach(async () => {
 
 describe("forkSessionEntryFromParent", () => {
   it("forks transcripts in the directory for the store being mutated", async () => {
-    const root = await makeRoot("openclaw-session-fork-boundary-");
+    const root = await makeRoot("quiet-core-bot-session-fork-boundary-");
     const activeStoreDir = path.join(root, "active-store");
     const configStoreDir = path.join(root, "config-store");
     await fs.mkdir(activeStoreDir, { recursive: true });

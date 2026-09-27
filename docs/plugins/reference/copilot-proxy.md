@@ -11,7 +11,7 @@ Adds Copilot Proxy model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/copilot-proxy`
+- Package: `@quiet-core/copilot-proxy`
 - Install route: included in Quiet Core bot
 
 ## Surface

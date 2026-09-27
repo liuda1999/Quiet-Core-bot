@@ -1,12 +1,12 @@
 ---
-summary: "CLI reference for `openclaw wiki` (memory-wiki vault status, search, compile, lint, apply, bridge, and Obsidian helpers)"
+summary: "CLI reference for `quiet-core-bot wiki` (memory-wiki vault status, search, compile, lint, apply, bridge, and Obsidian helpers)"
 read_when:
   - You want to use the memory-wiki CLI
-  - You are documenting or changing `openclaw wiki`
+  - You are documenting or changing `quiet-core-bot wiki`
 title: "Wiki"
 ---
 
-# `openclaw wiki`
+# `quiet-core-bot wiki`
 
 Inspect and maintain the `memory-wiki` vault.
 
@@ -20,7 +20,7 @@ Related:
 
 ## What it is for
 
-Use `openclaw wiki` when you want a compiled knowledge vault with:
+Use `quiet-core-bot wiki` when you want a compiled knowledge vault with:
 
 - wiki-native search and page reads
 - provenance-rich syntheses
@@ -31,34 +31,34 @@ Use `openclaw wiki` when you want a compiled knowledge vault with:
 ## Common commands
 
 ```bash
-openclaw wiki status
-openclaw wiki doctor
-openclaw wiki init
-openclaw wiki ingest ./notes/alpha.md
-openclaw wiki okf import ./knowledge-catalog/okf/bundles/ga4
-openclaw wiki compile
-openclaw wiki lint
-openclaw wiki search "alpha"
-openclaw wiki search "who should I ask about Teams?" --mode route-question
-openclaw wiki get entity.alpha --from 1 --lines 80
+quiet-core-bot wiki status
+quiet-core-bot wiki doctor
+quiet-core-bot wiki init
+quiet-core-bot wiki ingest ./notes/alpha.md
+quiet-core-bot wiki okf import ./knowledge-catalog/okf/bundles/ga4
+quiet-core-bot wiki compile
+quiet-core-bot wiki lint
+quiet-core-bot wiki search "alpha"
+quiet-core-bot wiki search "who should I ask about Teams?" --mode route-question
+quiet-core-bot wiki get entity.alpha --from 1 --lines 80
 
-openclaw wiki apply synthesis "Alpha Summary" \
+quiet-core-bot wiki apply synthesis "Alpha Summary" \
   --body "Short synthesis body" \
   --source-id source.alpha
 
-openclaw wiki apply metadata entity.alpha \
+quiet-core-bot wiki apply metadata entity.alpha \
   --source-id source.alpha \
   --status review \
   --question "Still active?"
 
-openclaw wiki bridge import
-openclaw wiki unsafe-local import
+quiet-core-bot wiki bridge import
+quiet-core-bot wiki unsafe-local import
 
-openclaw wiki obsidian status
-openclaw wiki obsidian search "alpha"
-openclaw wiki obsidian open syntheses/alpha-summary.md
-openclaw wiki obsidian command workspace:quick-switcher
-openclaw wiki obsidian daily
+quiet-core-bot wiki obsidian status
+quiet-core-bot wiki obsidian search "alpha"
+quiet-core-bot wiki obsidian open syntheses/alpha-summary.md
+quiet-core-bot wiki obsidian command workspace:quick-switcher
+quiet-core-bot wiki obsidian daily
 ```
 
 ## Commands
@@ -124,10 +124,10 @@ unchanged.
 Examples:
 
 ```bash
-openclaw wiki okf import ./bundles/ga4
-openclaw wiki okf import ./bundles/ga4 --json
-openclaw wiki search "BigQuery Table" --mode source-evidence --json
-openclaw wiki get <path-from-json-result>
+quiet-core-bot wiki okf import ./bundles/ga4
+quiet-core-bot wiki okf import ./bundles/ga4 --json
+quiet-core-bot wiki search "BigQuery Table" --mode source-evidence --json
+quiet-core-bot wiki get <path-from-json-result>
 ```
 
 ### `wiki compile`
@@ -136,8 +136,8 @@ Rebuild indexes, related blocks, dashboards, and compiled digests.
 
 This writes stable machine-facing artifacts under:
 
-- `.openclaw-wiki/cache/agent-digest.json`
-- `.openclaw-wiki/cache/claims.jsonl`
+- `.quiet-core-bot-wiki/cache/agent-digest.json`
+- `.quiet-core-bot-wiki/cache/claims.jsonl`
 
 If `render.createDashboards` is enabled, compile also refreshes report pages.
 
@@ -179,10 +179,10 @@ Search modes help the agent choose the right surface:
 Examples:
 
 ```bash
-openclaw wiki search "bgroux" --mode find-person
-openclaw wiki search "who knows Teams rollout?" --mode route-question
-openclaw wiki search "maintainer-whois" --mode source-evidence
-openclaw wiki search "strong route Teams" --mode raw-claim --json
+quiet-core-bot wiki search "bgroux" --mode find-person
+quiet-core-bot wiki search "who knows Teams rollout?" --mode route-question
+quiet-core-bot wiki search "maintainer-whois" --mode source-evidence
+quiet-core-bot wiki search "strong route Teams" --mode raw-claim --json
 ```
 
 Text output includes `Claim:` and `Evidence:` lines when a result matches a
@@ -197,8 +197,8 @@ Read a wiki page by id or relative path.
 Examples:
 
 ```bash
-openclaw wiki get entity.alpha
-openclaw wiki get syntheses/alpha-summary.md --from 1 --lines 80
+quiet-core-bot wiki get entity.alpha
+quiet-core-bot wiki get syntheses/alpha-summary.md --from 1 --lines 80
 ```
 
 ### `wiki apply`
@@ -266,7 +266,7 @@ These require the official `obsidian` CLI on `PATH` when
 
 ## Configuration tie-ins
 
-`openclaw wiki` behavior is shaped by:
+`quiet-core-bot wiki` behavior is shaped by:
 
 - `plugins.entries.memory-wiki.config.vaultMode`
 - `plugins.entries.memory-wiki.config.search.backend`

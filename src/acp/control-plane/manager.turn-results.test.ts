@@ -1,5 +1,5 @@
 /** Tests ACP turn terminal results and detached-task progress outcomes. */
-import type { AcpRuntimeEvent } from "@openclaw/acp-core/runtime/types";
+import type { AcpRuntimeEvent } from "@quiet-core/acp-core/runtime/types";
 import { describe, expect, it, vi } from "vitest";
 import {
   requireTaskByRunId,
@@ -123,7 +123,7 @@ describe("AcpSessionManager turn results", () => {
           yield {
             type: "text_delta" as const,
             stream: "output" as const,
-            text: "Current directory is /tmp/openclaw.",
+            text: "Current directory is /tmp/quiet-core-bot.",
           };
         })(),
         result: Promise.resolve({
@@ -188,7 +188,7 @@ describe("AcpSessionManager turn results", () => {
         label: "Directory check",
         task: "Print the current directory",
         status: "succeeded",
-        progressSummary: "Current directory is /tmp/openclaw.",
+        progressSummary: "Current directory is /tmp/quiet-core-bot.",
       });
     });
   });

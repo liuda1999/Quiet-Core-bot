@@ -2,7 +2,7 @@
  * Converts authorized ClickClack messages into OpenClaw agent/model replies and
  * routes resulting outbound text back to ClickClack.
  */
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { resolveClickClackInboundAccess, type ClickClackInboundAccess } from "./access.js";
 import { sendClickClackText } from "./outbound.js";
 import { getClickClackRuntime } from "./runtime.js";

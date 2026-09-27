@@ -1,6 +1,6 @@
 // Gateway auth mode policy rejects ambiguous token+password config before
 // credential resolution can choose the wrong side.
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { hasConfiguredSecretInput } from "../config/types.secrets.js";
 
 // Gateway auth mode validation keeps ambiguous token/password configs out of

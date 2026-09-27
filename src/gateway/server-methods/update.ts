@@ -2,7 +2,7 @@
 // sentinels, and hand off managed-service restarts when needed.
 import { randomUUID } from "node:crypto";
 import os from "node:os";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
+import { isRecord } from "@quiet-core/normalization-core/record-coerce";
 import {
   validateUpdateRunParams,
   validateUpdateStatusParams,
@@ -11,9 +11,9 @@ import { isRestartEnabled } from "../../config/commands.flags.js";
 import { readConfigFileSnapshot } from "../../config/config.js";
 import { IndependentBuildUpdateError } from "../../config/independent-build-guard.js";
 import { extractDeliveryInfo } from "../../config/sessions.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import { GATEWAY_SERVICE_KIND, GATEWAY_SERVICE_MARKER } from "../../daemon/constants.js";
-import { resolveOpenClawPackageRoot } from "../../infra/openclaw-root.js";
+import { resolveOpenClawPackageRoot } from "../../infra/quiet-core-bot-root.js";
 import { readPackageVersion } from "../../infra/package-json.js";
 import { type RestartSentinelPayload, writeRestartSentinel } from "../../infra/restart-sentinel.js";
 import { scheduleGatewaySigusr1Restart } from "../../infra/restart.js";
@@ -98,7 +98,7 @@ function hasManagedServiceHandoffContext(
 ): boolean {
   if (supervisor === "launchd") {
     return Boolean(
-      env.OPENCLAW_LAUNCHD_LABEL?.trim() ||
+      env.QUIET_CORE_LAUNCHD_LABEL?.trim() ||
       env.LAUNCH_JOB_LABEL?.trim() ||
       env.LAUNCH_JOB_NAME?.trim() ||
       env.XPC_SERVICE_NAME?.trim(),
@@ -108,13 +108,13 @@ function hasManagedServiceHandoffContext(
     // Ambient systemd markers only prove that a service manager started this
     // process. The detached CLI needs the durable unit name to stop the same
     // gateway before mutating the install root.
-    return Boolean(env.OPENCLAW_SYSTEMD_UNIT?.trim());
+    return Boolean(env.QUIET_CORE_SYSTEMD_UNIT?.trim());
   }
   if (supervisor === "schtasks") {
     return Boolean(
-      env.OPENCLAW_WINDOWS_TASK_NAME?.trim() ||
-      (env.OPENCLAW_SERVICE_MARKER?.trim() === GATEWAY_SERVICE_MARKER &&
-        env.OPENCLAW_SERVICE_KIND?.trim() === GATEWAY_SERVICE_KIND),
+      env.QUIET_CORE_WINDOWS_TASK_NAME?.trim() ||
+      (env.QUIET_CORE_SERVICE_MARKER?.trim() === GATEWAY_SERVICE_MARKER &&
+        env.QUIET_CORE_SERVICE_KIND?.trim() === GATEWAY_SERVICE_KIND),
     );
   }
   return false;

@@ -6,19 +6,19 @@ source "$ROOT_DIR/scripts/lib/docker-build.sh"
 source "$ROOT_DIR/scripts/lib/host-timeout.sh"
 COMPOSE_FILE="$ROOT_DIR/docker-compose.yml"
 EXTRA_COMPOSE_FILE="$ROOT_DIR/docker-compose.extra.yml"
-IMAGE_NAME="${OPENCLAW_IMAGE:-openclaw:local}"
-EXTRA_MOUNTS="${OPENCLAW_EXTRA_MOUNTS:-}"
-HOME_VOLUME_NAME="${OPENCLAW_HOME_VOLUME:-}"
-RAW_SANDBOX_SETTING="${OPENCLAW_SANDBOX:-}"
+IMAGE_NAME="${QUIET_CORE_IMAGE:-quiet-core-bot:local}"
+EXTRA_MOUNTS="${QUIET_CORE_EXTRA_MOUNTS:-}"
+HOME_VOLUME_NAME="${QUIET_CORE_HOME_VOLUME:-}"
+RAW_SANDBOX_SETTING="${QUIET_CORE_SANDBOX:-}"
 SANDBOX_ENABLED=""
-DOCKER_SOCKET_PATH="${OPENCLAW_DOCKER_SOCKET:-}"
-TIMEZONE="${OPENCLAW_TZ:-}"
-RAW_SKIP_ONBOARDING="${OPENCLAW_SKIP_ONBOARDING:-}"
+DOCKER_SOCKET_PATH="${QUIET_CORE_DOCKER_SOCKET:-}"
+TIMEZONE="${QUIET_CORE_TZ:-}"
+RAW_SKIP_ONBOARDING="${QUIET_CORE_SKIP_ONBOARDING:-}"
 SKIP_ONBOARDING=""
-DOCKER_PULL_TIMEOUT="${OPENCLAW_DOCKER_SETUP_PULL_TIMEOUT:-600s}"
+DOCKER_PULL_TIMEOUT="${QUIET_CORE_DOCKER_SETUP_PULL_TIMEOUT:-600s}"
 OFFLINE_MODE=""
-DEFAULT_SANDBOX_IMAGE="openclaw-sandbox:bookworm-slim"
-DEFAULT_SANDBOX_BROWSER_IMAGE="openclaw-sandbox-browser:bookworm-slim"
+DEFAULT_SANDBOX_IMAGE="quiet-core-bot-sandbox:bookworm-slim"
+DEFAULT_SANDBOX_BROWSER_IMAGE="quiet-core-bot-sandbox-browser:bookworm-slim"
 SANDBOX_BROWSER_IMAGE_CONTRACT_EPOCH="2026-05-12-cdp-relay-auth"
 
 fail() {
@@ -53,7 +53,7 @@ run_docker_build() {
 
 run_docker_pull() {
   local image="$1"
-  openclaw_host_timeout_cmd "$DOCKER_PULL_TIMEOUT" docker pull "$image"
+  quiet_core_bot_host_timeout_cmd "$DOCKER_PULL_TIMEOUT" docker pull "$image"
 }
 
 require_local_docker_image() {
@@ -74,7 +74,7 @@ is_truthy_value() {
 }
 
 read_config_gateway_token() {
-  local config_path="$OPENCLAW_CONFIG_DIR/openclaw.json"
+  local config_path="$QUIET_CORE_CONFIG_DIR/quiet-core-bot.json"
   if [[ ! -f "$config_path" ]]; then
     return 0
   fi
@@ -130,8 +130,8 @@ read_env_gateway_token() {
   fi
   while IFS= read -r line || [[ -n "$line" ]]; do
     line="${line%$'\r'}"
-    if [[ "$line" == OPENCLAW_GATEWAY_TOKEN=* ]]; then
-      token="${line#OPENCLAW_GATEWAY_TOKEN=}"
+    if [[ "$line" == QUIET_CORE_GATEWAY_TOKEN=* ]]; then
+      token="${line#QUIET_CORE_GATEWAY_TOKEN=}"
     fi
   done <"$env_path"
   if [[ -n "$token" ]]; then
@@ -144,15 +144,15 @@ sync_gateway_config() {
   local current_allowed_origins=""
   local batch_json=""
 
-  if [[ "${OPENCLAW_GATEWAY_BIND}" != "loopback" ]]; then
-    allowed_origin_json="$(printf '["http://localhost:%s","http://127.0.0.1:%s"]' "$OPENCLAW_GATEWAY_PORT" "$OPENCLAW_GATEWAY_PORT")"
+  if [[ "${QUIET_CORE_GATEWAY_BIND}" != "loopback" ]]; then
+    allowed_origin_json="$(printf '["http://localhost:%s","http://127.0.0.1:%s"]' "$QUIET_CORE_GATEWAY_PORT" "$QUIET_CORE_GATEWAY_PORT")"
     current_allowed_origins="$(
       run_prestart_cli config get gateway.controlUi.allowedOrigins 2>/dev/null || true
     )"
     current_allowed_origins="${current_allowed_origins//$'\r'/}"
   fi
 
-  batch_json="$(printf '[{"path":"gateway.mode","value":"local"},{"path":"gateway.bind","value":"%s"}' "$OPENCLAW_GATEWAY_BIND")"
+  batch_json="$(printf '[{"path":"gateway.mode","value":"local"},{"path":"gateway.bind","value":"%s"}' "$QUIET_CORE_GATEWAY_BIND")"
   if [[ -n "$allowed_origin_json" ]]; then
     if [[ -n "$current_allowed_origins" && "$current_allowed_origins" != "null" && "$current_allowed_origins" != "[]" ]]; then
       echo "Control UI allowlist already configured; leaving gateway.controlUi.allowedOrigins unchanged."
@@ -163,7 +163,7 @@ sync_gateway_config() {
   batch_json+="]"
 
   run_prestart_cli config set --batch-json "$batch_json" >/dev/null
-  echo "Pinned gateway.mode=local and gateway.bind=$OPENCLAW_GATEWAY_BIND for Docker setup."
+  echo "Pinned gateway.mode=local and gateway.bind=$QUIET_CORE_GATEWAY_BIND for Docker setup."
   if [[ -n "$allowed_origin_json" ]]; then
     if [[ -z "$current_allowed_origins" || "$current_allowed_origins" == "null" || "$current_allowed_origins" == "[]" ]]; then
       echo "Set gateway.controlUi.allowedOrigins to $allowed_origin_json for non-loopback bind."
@@ -184,20 +184,20 @@ run_prestart_gateway() {
 }
 
 run_prestart_cli() {
-  # During setup, avoid the shared-network openclaw-cli service because it
+  # During setup, avoid the shared-network quiet-core-bot-cli service because it
   # requires the gateway container's network namespace to already exist. That
   # creates a circular dependency for config writes that are needed before the
   # gateway can start cleanly.
-  # Host OPENCLAW_* paths are Compose bind-mount sources. Setup-time CLI writes
+  # Host QUIET_CORE_* paths are Compose bind-mount sources. Setup-time CLI writes
   # must still resolve state/config paths inside the container.
   run_prestart_gateway \
     -e HOME=/home/node \
-    -e OPENCLAW_HOME=/home/node \
-    -e OPENCLAW_STATE_DIR=/home/node/.openclaw \
-    -e OPENCLAW_CONFIG_PATH=/home/node/.openclaw/openclaw.json \
-    -e OPENCLAW_CONFIG_DIR=/home/node/.openclaw \
-    -e OPENCLAW_WORKSPACE_DIR=/home/node/.openclaw/workspace \
-    --entrypoint node openclaw-gateway \
+    -e QUIET_CORE_HOME=/home/node \
+    -e QUIET_CORE_STATE_DIR=/home/node/.quiet-core-bot \
+    -e QUIET_CORE_CONFIG_PATH=/home/node/.quiet-core-bot/quiet-core-bot.json \
+    -e QUIET_CORE_CONFIG_DIR=/home/node/.quiet-core-bot \
+    -e QUIET_CORE_WORKSPACE_DIR=/home/node/.quiet-core-bot/workspace \
+    --entrypoint node quiet-core-bot-gateway \
     dist/index.js "$@"
 }
 
@@ -225,7 +225,7 @@ run_runtime_cli() {
     *) fail "Unknown runtime CLI deps mode: $deps_mode" ;;
   esac
 
-  docker compose "${compose_args[@]}" "${run_args[@]}" openclaw-cli "$@"
+  docker compose "${compose_args[@]}" "${run_args[@]}" quiet-core-bot-cli "$@"
 }
 
 run_gateway_up() {
@@ -246,7 +246,7 @@ run_gateway_up() {
   fi
   up_args+=("$@")
 
-  docker compose "${compose_args[@]}" "${up_args[@]}" openclaw-gateway
+  docker compose "${compose_args[@]}" "${up_args[@]}" quiet-core-bot-gateway
 }
 
 resolve_offline_sandbox_images() {
@@ -263,7 +263,7 @@ resolve_offline_sandbox_images() {
   fi
 
   printf '%s' "$agents_json" | run_prestart_gateway \
-    -T --entrypoint node openclaw-gateway -e '
+    -T --entrypoint node quiet-core-bot-gateway -e '
 const fs = require("node:fs");
 const agents = JSON.parse(fs.readFileSync(0, "utf8") || "{}");
 const globalToolPolicy = JSON.parse(process.argv[3] || "{}");
@@ -278,7 +278,7 @@ const entries = configuredEntries.length > 0 ? configuredEntries : [{ sandbox: {
 
 const matchesBrowser = (rawPattern) => {
   const pattern = String(rawPattern ?? "").trim().toLowerCase();
-  if (pattern === "group:openclaw" || pattern === "group:ui") {
+  if (pattern === "group:quiet-core-bot" || pattern === "group:ui") {
     return true;
   }
   if (!pattern) {
@@ -365,7 +365,7 @@ validate_offline_sandbox_prerequisites() {
       browser)
         if ! browser_contract="$(
           docker --host "unix://$DOCKER_SOCKET_PATH" image inspect \
-            -f '{{ index .Config.Labels "org.openclaw.sandbox-browser.contract" }}' \
+            -f '{{ index .Config.Labels "org.quiet-core-bot.sandbox-browser.contract" }}' \
             "$sandbox_image" 2>/dev/null
         )"; then
           sandbox_image_errors+=("$sandbox_image (missing)")
@@ -398,7 +398,7 @@ validate_offline_sandbox_prerequisites() {
     fi
   done <<<"$sandbox_images"
 
-  if ! run_compose_one_off --rm --entrypoint docker openclaw-gateway --version >/dev/null 2>&1; then
+  if ! run_compose_one_off --rm --entrypoint docker quiet-core-bot-gateway --version >/dev/null 2>&1; then
     fail "Offline sandbox setup requires Docker CLI in $IMAGE_NAME."
   fi
 }
@@ -427,14 +427,14 @@ validate_mount_path_value() {
 validate_named_volume() {
   local value="$1"
   if [[ ! "$value" =~ ^[A-Za-z0-9][A-Za-z0-9_.-]*$ ]]; then
-    fail "OPENCLAW_HOME_VOLUME must match [A-Za-z0-9][A-Za-z0-9_.-]* when using a named volume."
+    fail "QUIET_CORE_HOME_VOLUME must match [A-Za-z0-9][A-Za-z0-9_.-]* when using a named volume."
   fi
 }
 
 validate_mount_spec() {
   local mount="$1"
   if contains_disallowed_chars "$mount"; then
-    fail "OPENCLAW_EXTRA_MOUNTS entries cannot contain control characters."
+    fail "QUIET_CORE_EXTRA_MOUNTS entries cannot contain control characters."
   fi
   # Keep mount specs strict to avoid YAML structure injection.
   # Expected format: source:target[:options]
@@ -469,66 +469,66 @@ if is_truthy_value "$RAW_SKIP_ONBOARDING"; then
   SKIP_ONBOARDING="1"
 fi
 
-OPENCLAW_CONFIG_DIR="${OPENCLAW_CONFIG_DIR:-$HOME/.openclaw}"
-OPENCLAW_WORKSPACE_DIR="${OPENCLAW_WORKSPACE_DIR:-$HOME/.openclaw/workspace}"
-OPENCLAW_AUTH_PROFILE_SECRET_DIR="${OPENCLAW_AUTH_PROFILE_SECRET_DIR:-$HOME/.openclaw-auth-profile-secrets}"
+QUIET_CORE_CONFIG_DIR="${QUIET_CORE_CONFIG_DIR:-$HOME/.quiet-core-bot}"
+QUIET_CORE_WORKSPACE_DIR="${QUIET_CORE_WORKSPACE_DIR:-$HOME/.quiet-core-bot/workspace}"
+QUIET_CORE_AUTH_PROFILE_SECRET_DIR="${QUIET_CORE_AUTH_PROFILE_SECRET_DIR:-$HOME/.quiet-core-bot-auth-profile-secrets}"
 
-validate_mount_path_value "OPENCLAW_CONFIG_DIR" "$OPENCLAW_CONFIG_DIR"
-validate_mount_path_value "OPENCLAW_WORKSPACE_DIR" "$OPENCLAW_WORKSPACE_DIR"
-validate_mount_path_value "OPENCLAW_AUTH_PROFILE_SECRET_DIR" "$OPENCLAW_AUTH_PROFILE_SECRET_DIR"
+validate_mount_path_value "QUIET_CORE_CONFIG_DIR" "$QUIET_CORE_CONFIG_DIR"
+validate_mount_path_value "QUIET_CORE_WORKSPACE_DIR" "$QUIET_CORE_WORKSPACE_DIR"
+validate_mount_path_value "QUIET_CORE_AUTH_PROFILE_SECRET_DIR" "$QUIET_CORE_AUTH_PROFILE_SECRET_DIR"
 if [[ -n "$HOME_VOLUME_NAME" ]]; then
   if [[ "$HOME_VOLUME_NAME" == *"/"* ]]; then
-    validate_mount_path_value "OPENCLAW_HOME_VOLUME" "$HOME_VOLUME_NAME"
+    validate_mount_path_value "QUIET_CORE_HOME_VOLUME" "$HOME_VOLUME_NAME"
   else
     validate_named_volume "$HOME_VOLUME_NAME"
   fi
 fi
 if contains_disallowed_chars "$EXTRA_MOUNTS"; then
-  fail "OPENCLAW_EXTRA_MOUNTS cannot contain control characters."
+  fail "QUIET_CORE_EXTRA_MOUNTS cannot contain control characters."
 fi
 if [[ -n "$SANDBOX_ENABLED" ]]; then
-  validate_mount_path_value "OPENCLAW_DOCKER_SOCKET" "$DOCKER_SOCKET_PATH"
+  validate_mount_path_value "QUIET_CORE_DOCKER_SOCKET" "$DOCKER_SOCKET_PATH"
 fi
 if [[ -n "$TIMEZONE" ]]; then
   if contains_disallowed_chars "$TIMEZONE"; then
-    fail "OPENCLAW_TZ contains unsupported control characters."
+    fail "QUIET_CORE_TZ contains unsupported control characters."
   fi
   if [[ ! "$TIMEZONE" =~ ^[A-Za-z0-9/_+\-]+$ ]]; then
-    fail "OPENCLAW_TZ must be a valid IANA timezone string (e.g. Asia/Shanghai)."
+    fail "QUIET_CORE_TZ must be a valid IANA timezone string (e.g. Asia/Shanghai)."
   fi
   if ! is_valid_timezone "$TIMEZONE"; then
-    fail "OPENCLAW_TZ must match a timezone in /usr/share/zoneinfo (e.g. Asia/Shanghai)."
+    fail "QUIET_CORE_TZ must match a timezone in /usr/share/zoneinfo (e.g. Asia/Shanghai)."
   fi
 fi
 
-mkdir -p "$OPENCLAW_CONFIG_DIR"
-mkdir -p "$OPENCLAW_WORKSPACE_DIR"
-mkdir -p "$OPENCLAW_AUTH_PROFILE_SECRET_DIR"
+mkdir -p "$QUIET_CORE_CONFIG_DIR"
+mkdir -p "$QUIET_CORE_WORKSPACE_DIR"
+mkdir -p "$QUIET_CORE_AUTH_PROFILE_SECRET_DIR"
 # Seed directory tree eagerly so bind mounts work even on Docker Desktop/Windows
 # where the container (even as root) cannot create new host subdirectories.
-mkdir -p "$OPENCLAW_CONFIG_DIR/identity"
-mkdir -p "$OPENCLAW_CONFIG_DIR/agents/main/agent"
-mkdir -p "$OPENCLAW_CONFIG_DIR/agents/main/sessions"
+mkdir -p "$QUIET_CORE_CONFIG_DIR/identity"
+mkdir -p "$QUIET_CORE_CONFIG_DIR/agents/main/agent"
+mkdir -p "$QUIET_CORE_CONFIG_DIR/agents/main/sessions"
 
-export OPENCLAW_CONFIG_DIR
-export OPENCLAW_WORKSPACE_DIR
-export OPENCLAW_AUTH_PROFILE_SECRET_DIR
-export OPENCLAW_GATEWAY_PORT="${OPENCLAW_GATEWAY_PORT:-18789}"
-export OPENCLAW_BRIDGE_PORT="${OPENCLAW_BRIDGE_PORT:-18790}"
-export OPENCLAW_GATEWAY_BIND="${OPENCLAW_GATEWAY_BIND:-lan}"
-export OPENCLAW_DISABLE_BONJOUR="${OPENCLAW_DISABLE_BONJOUR:-}"
-export OPENCLAW_IMAGE="$IMAGE_NAME"
-export OPENCLAW_IMAGE_APT_PACKAGES="${OPENCLAW_IMAGE_APT_PACKAGES-${OPENCLAW_DOCKER_APT_PACKAGES:-}}"
-export OPENCLAW_IMAGE_PIP_PACKAGES="${OPENCLAW_IMAGE_PIP_PACKAGES:-}"
-export OPENCLAW_EXTENSIONS="${OPENCLAW_EXTENSIONS:-}"
-export OPENCLAW_INSTALL_BROWSER="${OPENCLAW_INSTALL_BROWSER:-}"
-export OPENCLAW_EXTRA_MOUNTS="$EXTRA_MOUNTS"
-export OPENCLAW_HOME_VOLUME="$HOME_VOLUME_NAME"
-export OPENCLAW_ALLOW_INSECURE_PRIVATE_WS="${OPENCLAW_ALLOW_INSECURE_PRIVATE_WS:-}"
-export OPENCLAW_SANDBOX="$SANDBOX_ENABLED"
-export OPENCLAW_DOCKER_SOCKET="$DOCKER_SOCKET_PATH"
-export OPENCLAW_DOCKER_SETUP=1
-export OPENCLAW_TZ="$TIMEZONE"
+export QUIET_CORE_CONFIG_DIR
+export QUIET_CORE_WORKSPACE_DIR
+export QUIET_CORE_AUTH_PROFILE_SECRET_DIR
+export QUIET_CORE_GATEWAY_PORT="${QUIET_CORE_GATEWAY_PORT:-18789}"
+export QUIET_CORE_BRIDGE_PORT="${QUIET_CORE_BRIDGE_PORT:-18790}"
+export QUIET_CORE_GATEWAY_BIND="${QUIET_CORE_GATEWAY_BIND:-lan}"
+export QUIET_CORE_DISABLE_BONJOUR="${QUIET_CORE_DISABLE_BONJOUR:-}"
+export QUIET_CORE_IMAGE="$IMAGE_NAME"
+export QUIET_CORE_IMAGE_APT_PACKAGES="${QUIET_CORE_IMAGE_APT_PACKAGES-${QUIET_CORE_DOCKER_APT_PACKAGES:-}}"
+export QUIET_CORE_IMAGE_PIP_PACKAGES="${QUIET_CORE_IMAGE_PIP_PACKAGES:-}"
+export QUIET_CORE_EXTENSIONS="${QUIET_CORE_EXTENSIONS:-}"
+export QUIET_CORE_INSTALL_BROWSER="${QUIET_CORE_INSTALL_BROWSER:-}"
+export QUIET_CORE_EXTRA_MOUNTS="$EXTRA_MOUNTS"
+export QUIET_CORE_HOME_VOLUME="$HOME_VOLUME_NAME"
+export QUIET_CORE_ALLOW_INSECURE_PRIVATE_WS="${QUIET_CORE_ALLOW_INSECURE_PRIVATE_WS:-}"
+export QUIET_CORE_SANDBOX="$SANDBOX_ENABLED"
+export QUIET_CORE_DOCKER_SOCKET="$DOCKER_SOCKET_PATH"
+export QUIET_CORE_DOCKER_SETUP=1
+export QUIET_CORE_TZ="$TIMEZONE"
 export OTEL_EXPORTER_OTLP_ENDPOINT="${OTEL_EXPORTER_OTLP_ENDPOINT:-}"
 export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT="${OTEL_EXPORTER_OTLP_TRACES_ENDPOINT:-}"
 export OTEL_EXPORTER_OTLP_METRICS_ENDPOINT="${OTEL_EXPORTER_OTLP_METRICS_ENDPOINT:-}"
@@ -536,8 +536,8 @@ export OTEL_EXPORTER_OTLP_LOGS_ENDPOINT="${OTEL_EXPORTER_OTLP_LOGS_ENDPOINT:-}"
 export OTEL_EXPORTER_OTLP_PROTOCOL="${OTEL_EXPORTER_OTLP_PROTOCOL:-}"
 export OTEL_SERVICE_NAME="${OTEL_SERVICE_NAME:-}"
 export OTEL_SEMCONV_STABILITY_OPT_IN="${OTEL_SEMCONV_STABILITY_OPT_IN:-}"
-export OPENCLAW_OTEL_PRELOADED="${OPENCLAW_OTEL_PRELOADED:-}"
-export OPENCLAW_SKIP_ONBOARDING="$SKIP_ONBOARDING"
+export QUIET_CORE_OTEL_PRELOADED="${QUIET_CORE_OTEL_PRELOADED:-}"
+export QUIET_CORE_SKIP_ONBOARDING="$SKIP_ONBOARDING"
 
 # Detect Docker socket GID for sandbox group_add.
 DOCKER_GID=""
@@ -546,20 +546,20 @@ if [[ -n "$SANDBOX_ENABLED" && -S "$DOCKER_SOCKET_PATH" ]]; then
 fi
 export DOCKER_GID
 
-if [[ -z "${OPENCLAW_GATEWAY_TOKEN:-}" ]]; then
+if [[ -z "${QUIET_CORE_GATEWAY_TOKEN:-}" ]]; then
   EXISTING_CONFIG_TOKEN="$(read_config_gateway_token || true)"
   if [[ -n "$EXISTING_CONFIG_TOKEN" ]]; then
-    OPENCLAW_GATEWAY_TOKEN="$EXISTING_CONFIG_TOKEN"
-    echo "Reusing gateway token from $OPENCLAW_CONFIG_DIR/openclaw.json"
+    QUIET_CORE_GATEWAY_TOKEN="$EXISTING_CONFIG_TOKEN"
+    echo "Reusing gateway token from $QUIET_CORE_CONFIG_DIR/quiet-core-bot.json"
   else
     DOTENV_GATEWAY_TOKEN="$(read_env_gateway_token "$ROOT_DIR/.env" || true)"
     if [[ -n "$DOTENV_GATEWAY_TOKEN" ]]; then
-      OPENCLAW_GATEWAY_TOKEN="$DOTENV_GATEWAY_TOKEN"
+      QUIET_CORE_GATEWAY_TOKEN="$DOTENV_GATEWAY_TOKEN"
       echo "Reusing gateway token from $ROOT_DIR/.env"
     elif command -v openssl >/dev/null 2>&1; then
-      OPENCLAW_GATEWAY_TOKEN="$(openssl rand -hex 32)"
+      QUIET_CORE_GATEWAY_TOKEN="$(openssl rand -hex 32)"
     else
-      OPENCLAW_GATEWAY_TOKEN="$(python3 - <<'PY'
+      QUIET_CORE_GATEWAY_TOKEN="$(python3 - <<'PY'
 import secrets
 print(secrets.token_hex(32))
 PY
@@ -567,7 +567,7 @@ PY
     fi
   fi
 fi
-export OPENCLAW_GATEWAY_TOKEN
+export QUIET_CORE_GATEWAY_TOKEN
 
 COMPOSE_FILES=("$COMPOSE_FILE")
 COMPOSE_ARGS=()
@@ -583,15 +583,15 @@ write_extra_compose() {
 
   cat >"$EXTRA_COMPOSE_FILE" <<'YAML'
 services:
-  openclaw-gateway:
+  quiet-core-bot-gateway:
     volumes:
 YAML
 
   if [[ -n "$home_volume" ]]; then
     gateway_home_mount="${home_volume}:/home/node"
-    gateway_config_mount="${OPENCLAW_CONFIG_DIR}:/home/node/.openclaw"
-    gateway_workspace_mount="${OPENCLAW_WORKSPACE_DIR}:/home/node/.openclaw/workspace"
-    gateway_auth_profile_secret_mount="${OPENCLAW_AUTH_PROFILE_SECRET_DIR}:/home/node/.config/openclaw"
+    gateway_config_mount="${QUIET_CORE_CONFIG_DIR}:/home/node/.quiet-core-bot"
+    gateway_workspace_mount="${QUIET_CORE_WORKSPACE_DIR}:/home/node/.quiet-core-bot/workspace"
+    gateway_auth_profile_secret_mount="${QUIET_CORE_AUTH_PROFILE_SECRET_DIR}:/home/node/.config/quiet-core-bot"
     validate_mount_spec "$gateway_home_mount"
     validate_mount_spec "$gateway_config_mount"
     validate_mount_spec "$gateway_workspace_mount"
@@ -608,7 +608,7 @@ YAML
   done
 
   cat >>"$EXTRA_COMPOSE_FILE" <<'YAML'
-  openclaw-cli:
+  quiet-core-bot-cli:
     volumes:
 YAML
 
@@ -636,8 +636,8 @@ YAML
 # When sandbox is requested, ensure Docker CLI build arg is set for local builds.
 # Docker socket mount is deferred until sandbox prerequisites are verified.
 if [[ -n "$SANDBOX_ENABLED" ]]; then
-  if [[ -z "${OPENCLAW_INSTALL_DOCKER_CLI:-}" ]]; then
-    export OPENCLAW_INSTALL_DOCKER_CLI=1
+  if [[ -z "${QUIET_CORE_INSTALL_DOCKER_CLI:-}" ]]; then
+    export QUIET_CORE_INSTALL_DOCKER_CLI=1
   fi
 fi
 
@@ -712,27 +712,27 @@ upsert_env() {
 }
 
 upsert_env "$ENV_FILE" \
-  OPENCLAW_CONFIG_DIR \
-  OPENCLAW_WORKSPACE_DIR \
-  OPENCLAW_AUTH_PROFILE_SECRET_DIR \
-  OPENCLAW_GATEWAY_PORT \
-  OPENCLAW_BRIDGE_PORT \
-  OPENCLAW_GATEWAY_BIND \
-  OPENCLAW_DISABLE_BONJOUR \
-  OPENCLAW_GATEWAY_TOKEN \
-  OPENCLAW_IMAGE \
-  OPENCLAW_EXTRA_MOUNTS \
-  OPENCLAW_HOME_VOLUME \
-  OPENCLAW_IMAGE_APT_PACKAGES \
-  OPENCLAW_IMAGE_PIP_PACKAGES \
-  OPENCLAW_EXTENSIONS \
-  OPENCLAW_INSTALL_BROWSER \
-  OPENCLAW_SANDBOX \
-  OPENCLAW_DOCKER_SOCKET \
+  QUIET_CORE_CONFIG_DIR \
+  QUIET_CORE_WORKSPACE_DIR \
+  QUIET_CORE_AUTH_PROFILE_SECRET_DIR \
+  QUIET_CORE_GATEWAY_PORT \
+  QUIET_CORE_BRIDGE_PORT \
+  QUIET_CORE_GATEWAY_BIND \
+  QUIET_CORE_DISABLE_BONJOUR \
+  QUIET_CORE_GATEWAY_TOKEN \
+  QUIET_CORE_IMAGE \
+  QUIET_CORE_EXTRA_MOUNTS \
+  QUIET_CORE_HOME_VOLUME \
+  QUIET_CORE_IMAGE_APT_PACKAGES \
+  QUIET_CORE_IMAGE_PIP_PACKAGES \
+  QUIET_CORE_EXTENSIONS \
+  QUIET_CORE_INSTALL_BROWSER \
+  QUIET_CORE_SANDBOX \
+  QUIET_CORE_DOCKER_SOCKET \
   DOCKER_GID \
-  OPENCLAW_INSTALL_DOCKER_CLI \
-  OPENCLAW_ALLOW_INSECURE_PRIVATE_WS \
-  OPENCLAW_TZ \
+  QUIET_CORE_INSTALL_DOCKER_CLI \
+  QUIET_CORE_ALLOW_INSECURE_PRIVATE_WS \
+  QUIET_CORE_TZ \
   OTEL_EXPORTER_OTLP_ENDPOINT \
   OTEL_EXPORTER_OTLP_TRACES_ENDPOINT \
   OTEL_EXPORTER_OTLP_METRICS_ENDPOINT \
@@ -740,20 +740,20 @@ upsert_env "$ENV_FILE" \
   OTEL_EXPORTER_OTLP_PROTOCOL \
   OTEL_SERVICE_NAME \
   OTEL_SEMCONV_STABILITY_OPT_IN \
-  OPENCLAW_OTEL_PRELOADED \
-  OPENCLAW_SKIP_ONBOARDING
+  QUIET_CORE_OTEL_PRELOADED \
+  QUIET_CORE_SKIP_ONBOARDING
 
 if [[ -n "$OFFLINE_MODE" ]]; then
   require_local_docker_image "$IMAGE_NAME"
   echo "==> Using preloaded Docker image: $IMAGE_NAME"
-elif [[ "$IMAGE_NAME" == "openclaw:local" ]]; then
+elif [[ "$IMAGE_NAME" == "quiet-core-bot:local" ]]; then
   echo "==> Building Docker image: $IMAGE_NAME"
   run_docker_build \
-    --build-arg "OPENCLAW_IMAGE_APT_PACKAGES=${OPENCLAW_IMAGE_APT_PACKAGES}" \
-    --build-arg "OPENCLAW_IMAGE_PIP_PACKAGES=${OPENCLAW_IMAGE_PIP_PACKAGES}" \
-    --build-arg "OPENCLAW_EXTENSIONS=${OPENCLAW_EXTENSIONS}" \
-    --build-arg "OPENCLAW_INSTALL_BROWSER=${OPENCLAW_INSTALL_BROWSER}" \
-    --build-arg "OPENCLAW_INSTALL_DOCKER_CLI=${OPENCLAW_INSTALL_DOCKER_CLI:-}" \
+    --build-arg "QUIET_CORE_IMAGE_APT_PACKAGES=${QUIET_CORE_IMAGE_APT_PACKAGES}" \
+    --build-arg "QUIET_CORE_IMAGE_PIP_PACKAGES=${QUIET_CORE_IMAGE_PIP_PACKAGES}" \
+    --build-arg "QUIET_CORE_EXTENSIONS=${QUIET_CORE_EXTENSIONS}" \
+    --build-arg "QUIET_CORE_INSTALL_BROWSER=${QUIET_CORE_INSTALL_BROWSER}" \
+    --build-arg "QUIET_CORE_INSTALL_DOCKER_CLI=${QUIET_CORE_INSTALL_DOCKER_CLI:-}" \
     -t "$IMAGE_NAME" \
     -f "$ROOT_DIR/Dockerfile" \
     "$ROOT_DIR"
@@ -776,27 +776,27 @@ echo "==> Fixing data-directory permissions"
 # the recursive chown would cross into the workspace bind mount and rewrite
 # ownership of all user project files on Linux hosts.
 # After fixing the config dir, only the OpenClaw metadata subdirectory
-# (.openclaw/) inside the workspace gets chowned, not the user's project files.
-run_prestart_gateway --user root --entrypoint sh openclaw-gateway -c \
-  'find /home/node/.openclaw -xdev -exec chown node:node {} +; \
+# (.quiet-core-bot/) inside the workspace gets chowned, not the user's project files.
+run_prestart_gateway --user root --entrypoint sh quiet-core-bot-gateway -c \
+  'find /home/node/.quiet-core-bot -xdev -exec chown node:node {} +; \
    chown node:node /home/node/.config; \
-   find /home/node/.config/openclaw -xdev -exec chown node:node {} +; \
-   [ -d /home/node/.openclaw/workspace/.openclaw ] && chown -R node:node /home/node/.openclaw/workspace/.openclaw || true'
+   find /home/node/.config/quiet-core-bot -xdev -exec chown node:node {} +; \
+   [ -d /home/node/.quiet-core-bot/workspace/.quiet-core-bot ] && chown -R node:node /home/node/.quiet-core-bot/workspace/.quiet-core-bot || true'
 
 echo ""
 if [[ -n "$SKIP_ONBOARDING" ]]; then
-  echo "==> Skipping onboarding (OPENCLAW_SKIP_ONBOARDING is set)"
+  echo "==> Skipping onboarding (QUIET_CORE_SKIP_ONBOARDING is set)"
 else
   echo "==> Onboarding (interactive)"
   echo "Docker setup pins Gateway mode to local."
-  echo "Gateway runtime bind comes from OPENCLAW_GATEWAY_BIND (default: lan)."
-  echo "Current runtime bind: $OPENCLAW_GATEWAY_BIND"
-  if is_truthy_value "$OPENCLAW_DISABLE_BONJOUR"; then
-    echo "Bonjour/mDNS advertising: force disabled (OPENCLAW_DISABLE_BONJOUR=$OPENCLAW_DISABLE_BONJOUR)."
-  elif [[ -z "$OPENCLAW_DISABLE_BONJOUR" ]]; then
+  echo "Gateway runtime bind comes from QUIET_CORE_GATEWAY_BIND (default: lan)."
+  echo "Current runtime bind: $QUIET_CORE_GATEWAY_BIND"
+  if is_truthy_value "$QUIET_CORE_DISABLE_BONJOUR"; then
+    echo "Bonjour/mDNS advertising: force disabled (QUIET_CORE_DISABLE_BONJOUR=$QUIET_CORE_DISABLE_BONJOUR)."
+  elif [[ -z "$QUIET_CORE_DISABLE_BONJOUR" ]]; then
     echo "Bonjour/mDNS advertising: auto (disabled inside the Gateway container unless explicitly enabled)."
   else
-    echo "Bonjour/mDNS advertising: explicitly enabled (OPENCLAW_DISABLE_BONJOUR=$OPENCLAW_DISABLE_BONJOUR)."
+    echo "Bonjour/mDNS advertising: explicitly enabled (QUIET_CORE_DISABLE_BONJOUR=$QUIET_CORE_DISABLE_BONJOUR)."
   fi
   echo "Gateway token: stored in Docker environment/config (not printed)."
   echo "Tailscale exposure: Off (use host-level tailnet/Tailscale setup separately)."
@@ -806,7 +806,7 @@ else
     --mode local \
     --no-install-daemon \
     --gateway-auth token \
-    --gateway-token-ref-env OPENCLAW_GATEWAY_TOKEN \
+    --gateway-token-ref-env QUIET_CORE_GATEWAY_TOKEN \
     --skip-ui \
     --suppress-gateway-token-output
 fi
@@ -818,11 +818,11 @@ sync_gateway_config
 echo ""
 echo "==> Provider setup (optional)"
 echo "WhatsApp (QR):"
-echo "  ${COMPOSE_HINT} run --rm openclaw-cli channels login"
+echo "  ${COMPOSE_HINT} run --rm quiet-core-bot-cli channels login"
 echo "Telegram (bot token):"
-echo "  ${COMPOSE_HINT} run --rm openclaw-cli channels add --channel telegram --token <token>"
+echo "  ${COMPOSE_HINT} run --rm quiet-core-bot-cli channels add --channel telegram --token <token>"
 echo "Discord (bot token):"
-echo "  ${COMPOSE_HINT} run --rm openclaw-cli channels add --channel discord --token <token>"
+echo "  ${COMPOSE_HINT} run --rm quiet-core-bot-cli channels add --channel discord --token <token>"
 echo "Docs: https://github.com/liuda1999/Quiet-Core-bot/channels"
 
 if [[ -n "$SANDBOX_ENABLED" && -n "$OFFLINE_MODE" ]]; then
@@ -835,14 +835,14 @@ echo ""
 echo "==> Starting gateway"
 run_gateway_up current
 
-# --- Sandbox setup (opt-in via OPENCLAW_SANDBOX=1) ---
+# --- Sandbox setup (opt-in via QUIET_CORE_SANDBOX=1) ---
 if [[ -n "$SANDBOX_ENABLED" ]]; then
   echo ""
   echo "==> Sandbox setup"
 
   sandbox_dockerfile="$ROOT_DIR/scripts/docker/sandbox/Dockerfile"
   if [[ -z "$OFFLINE_MODE" && ! -S "$DOCKER_SOCKET_PATH" ]]; then
-    echo "WARNING: OPENCLAW_SANDBOX enabled but Docker socket not found at $DOCKER_SOCKET_PATH." >&2
+    echo "WARNING: QUIET_CORE_SANDBOX enabled but Docker socket not found at $DOCKER_SOCKET_PATH." >&2
     echo "  Sandbox requires Docker socket access. Skipping sandbox setup." >&2
     SANDBOX_ENABLED=""
   fi
@@ -863,10 +863,10 @@ if [[ -n "$SANDBOX_ENABLED" ]]; then
   # sandbox. This avoids claiming sandbox is enabled when the image cannot
   # launch sandbox containers.
   if [[ -n "$SANDBOX_ENABLED" && -z "$OFFLINE_MODE" ]] &&
-    ! run_compose_one_off --rm --entrypoint docker openclaw-gateway --version >/dev/null 2>&1; then
+    ! run_compose_one_off --rm --entrypoint docker quiet-core-bot-gateway --version >/dev/null 2>&1; then
     echo "WARNING: Docker CLI not found inside the container image." >&2
-    echo "  Sandbox requires Docker CLI. Rebuild with --build-arg OPENCLAW_INSTALL_DOCKER_CLI=1" >&2
-    echo "  or use a local build (OPENCLAW_IMAGE=openclaw:local). Skipping sandbox setup." >&2
+    echo "  Sandbox requires Docker CLI. Rebuild with --build-arg QUIET_CORE_INSTALL_DOCKER_CLI=1" >&2
+    echo "  or use a local build (QUIET_CORE_IMAGE=quiet-core-bot:local). Skipping sandbox setup." >&2
     SANDBOX_ENABLED=""
   fi
 fi
@@ -879,7 +879,7 @@ if [[ -n "$SANDBOX_ENABLED" ]]; then
   SANDBOX_COMPOSE_FILE="$ROOT_DIR/docker-compose.sandbox.yml"
   cat >"$SANDBOX_COMPOSE_FILE" <<YAML
 services:
-  openclaw-gateway:
+  quiet-core-bot-gateway:
     volumes:
       - $(quote_yaml_string "${DOCKER_SOCKET_PATH}:/var/run/docker.sock")
 YAML
@@ -948,10 +948,10 @@ fi
 echo ""
 echo "Gateway running with host port mapping."
 echo "Access from tailnet devices via the host's tailnet IP."
-echo "Config: $OPENCLAW_CONFIG_DIR"
-echo "Workspace: $OPENCLAW_WORKSPACE_DIR"
+echo "Config: $QUIET_CORE_CONFIG_DIR"
+echo "Workspace: $QUIET_CORE_WORKSPACE_DIR"
 echo "Token: stored in Docker environment/config (not printed)."
 echo ""
 echo "Commands:"
-echo "  ${COMPOSE_HINT} logs -f openclaw-gateway"
-echo "  ${COMPOSE_HINT} exec openclaw-gateway sh -lc 'node dist/index.js health --token \"\$OPENCLAW_GATEWAY_TOKEN\"'"
+echo "  ${COMPOSE_HINT} logs -f quiet-core-bot-gateway"
+echo "  ${COMPOSE_HINT} exec quiet-core-bot-gateway sh -lc 'node dist/index.js health --token \"\$QUIET_CORE_GATEWAY_TOKEN\"'"

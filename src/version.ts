@@ -1,9 +1,9 @@
 // Resolves package version metadata for CLI and library callers.
 import { createRequire } from "node:module";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 
 // oxlint-disable-next-line eslint/no-underscore-dangle -- Bundled builds replace this compile-time define identifier.
-declare const __OPENCLAW_VERSION__: string | undefined;
+declare const __QUIET_CORE_VERSION__: string | undefined;
 const CORE_PACKAGE_NAME = "quiet-core-bot";
 
 const PACKAGE_JSON_CANDIDATES = [
@@ -58,7 +58,7 @@ function firstNonEmpty(...values: Array<string | undefined>): string | undefined
 }
 
 function readInjectedVersion(): string | undefined {
-  return typeof __OPENCLAW_VERSION__ === "string" ? __OPENCLAW_VERSION__ : undefined;
+  return typeof __QUIET_CORE_VERSION__ === "string" ? __QUIET_CORE_VERSION__ : undefined;
 }
 
 export function readVersionFromPackageJsonForModuleUrl(moduleUrl: string): string | null {
@@ -118,12 +118,12 @@ function resolveVersionFromRuntimeSources(params: {
 }): string {
   const preferredCandidates =
     params.preference === "env-first"
-      ? [params.env["OPENCLAW_VERSION"], params.runtimeVersion]
-      : [params.runtimeVersion, params.env["OPENCLAW_VERSION"]];
+      ? [params.env["QUIET_CORE_VERSION"], params.runtimeVersion]
+      : [params.runtimeVersion, params.env["QUIET_CORE_VERSION"]];
   return (
     firstNonEmpty(
       ...preferredCandidates,
-      params.env["OPENCLAW_SERVICE_VERSION"],
+      params.env["QUIET_CORE_SERVICE_VERSION"],
       params.env["npm_package_version"],
     ) ?? params.fallback
   );
@@ -145,7 +145,7 @@ export function resolveCompatibilityHostVersion(
   env: RuntimeVersionEnv = process.env as RuntimeVersionEnv,
   fallback = RUNTIME_SERVICE_VERSION_FALLBACK,
 ): string {
-  const explicitCompatibilityVersion = firstNonEmpty(env.OPENCLAW_COMPATIBILITY_HOST_VERSION);
+  const explicitCompatibilityVersion = firstNonEmpty(env.QUIET_CORE_COMPATIBILITY_HOST_VERSION);
   if (explicitCompatibilityVersion) {
     return explicitCompatibilityVersion;
   }
@@ -163,5 +163,5 @@ export function resolveCompatibilityHostVersion(
 export const VERSION = resolveBinaryVersion({
   moduleUrl: import.meta.url,
   injectedVersion: readInjectedVersion(),
-  bundledVersion: process.env.OPENCLAW_BUNDLED_VERSION,
+  bundledVersion: process.env.QUIET_CORE_BUNDLED_VERSION,
 });

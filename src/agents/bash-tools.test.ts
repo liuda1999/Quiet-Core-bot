@@ -159,14 +159,14 @@ vi.mock("../process/supervisor/index.js", () => {
     return commands;
   };
   const applySegmentShellEffects = (segment: string, env: NodeJS.ProcessEnv) => {
-    if (segment === 'export PATH="${OPENCLAW_PREPEND_PATH}${PATH:+:$PATH}"') {
-      const prepend = env.OPENCLAW_PREPEND_PATH ?? "";
+    if (segment === 'export PATH="${QUIET_CORE_PREPEND_PATH}${PATH:+:$PATH}"') {
+      const prepend = env.QUIET_CORE_PREPEND_PATH ?? "";
       const current = readEnvPath(env);
       writeEnvPath(env, `${prepend}${current ? `:${current}` : ""}`);
       return;
     }
-    if (segment === "unset OPENCLAW_PREPEND_PATH") {
-      delete env.OPENCLAW_PREPEND_PATH;
+    if (segment === "unset QUIET_CORE_PREPEND_PATH") {
+      delete env.QUIET_CORE_PREPEND_PATH;
     }
   };
   const stdoutForSegment = (segment: string, env: NodeJS.ProcessEnv) => {
@@ -242,7 +242,7 @@ vi.mock("../process/supervisor/index.js", () => {
 const isWin = process.platform === "win32";
 const defaultShell = isWin
   ? undefined
-  : process.env.OPENCLAW_TEST_SHELL || resolveShellFromPath("bash") || process.env.SHELL || "sh";
+  : process.env.QUIET_CORE_TEST_SHELL || resolveShellFromPath("bash") || process.env.SHELL || "sh";
 // PowerShell: Start-Sleep for delays, ; for command separation, $null for null device
 const shortDelayCmd = isWin ? "Start-Sleep -Milliseconds 4" : "sleep 0.004";
 const POLL_INTERVAL_MS = isWin ? 15 : 2;
@@ -256,8 +256,8 @@ const NOTIFY_POLL_OPTIONS = {
   timeout: NOTIFY_EVENT_TIMEOUT_MS,
   interval: POLL_INTERVAL_MS,
 };
-const SHELL_ENV_KEYS = ["OPENCLAW_EXEC_SHELL_SNAPSHOT", "SHELL"] as const;
-const PATH_SHELL_ENV_KEYS = ["OPENCLAW_EXEC_SHELL_SNAPSHOT", "PATH", "SHELL"] as const;
+const SHELL_ENV_KEYS = ["QUIET_CORE_EXEC_SHELL_SNAPSHOT", "SHELL"] as const;
+const PATH_SHELL_ENV_KEYS = ["QUIET_CORE_EXEC_SHELL_SNAPSHOT", "PATH", "SHELL"] as const;
 const PROCESS_STATUS_RUNNING = "running";
 const PROCESS_STATUS_COMPLETED = "completed";
 const PROCESS_STATUS_FAILED = "failed";
@@ -390,7 +390,7 @@ async function pollProcessSession(params: {
   };
 }
 function applyDefaultShellEnv() {
-  process.env.OPENCLAW_EXEC_SHELL_SNAPSHOT = "0";
+  process.env.QUIET_CORE_EXEC_SHELL_SNAPSHOT = "0";
   if (!isWin && defaultShell) {
     process.env.SHELL = defaultShell;
   }
@@ -530,12 +530,14 @@ type NotifyNoopCase = LabeledCase & {
 };
 const NOOP_NOTIFY_CASES: NotifyNoopCase[] = [
   withLabel("default behavior skips no-op completion events", { expectNotification: false }),
+  // Telegram is not a bundled channel in this repository; assert the chat-provider
+  // default using a channel that is actually installed (matrix) so the case stays meaningful.
   withLabel("chat providers default no-op completion notifications on", {
-    defaults: { messageProvider: " Telegram " },
+    defaults: { messageProvider: " Matrix " },
     expectNotification: true,
   }),
   withLabel("explicit false keeps chat provider no-op completions silent", {
-    defaults: { messageProvider: "telegram", notifyOnExitEmptySuccess: false },
+    defaults: { messageProvider: "matrix", notifyOnExitEmptySuccess: false },
     expectNotification: false,
   }),
   withLabel("generic providers keep no-op completions silent by default", {

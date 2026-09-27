@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { normalizeProviderId } from "../../agents/model-selection.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import {
   loadPluginManifestRegistry,
   type PluginManifestRecord,
@@ -45,7 +45,7 @@ function resolveSourcePeerPluginRoot(
   }
   const packageRoot = parts.slice(0, -3).join(path.sep) || path.sep;
   const sourceRoot = path.join(packageRoot, "extensions", plugin.id);
-  return fs.existsSync(path.join(sourceRoot, "openclaw.plugin.json")) ? sourceRoot : undefined;
+  return fs.existsSync(path.join(sourceRoot, "quiet-core-bot.plugin.json")) ? sourceRoot : undefined;
 }
 
 function loadSourcePeerModelCatalog(

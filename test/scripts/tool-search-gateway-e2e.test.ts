@@ -12,18 +12,18 @@ describe("tool search gateway e2e fetch helper", () => {
   it("rejects loose numeric env limits instead of parsing prefixes", () => {
     expect(() =>
       readToolSearchGatewayFetchLimits({
-        OPENCLAW_TOOL_SEARCH_GATEWAY_E2E_FETCH_TIMEOUT_MS: "1e3",
+        QUIET_CORE_TOOL_SEARCH_GATEWAY_E2E_FETCH_TIMEOUT_MS: "1e3",
       }),
-    ).toThrow("invalid OPENCLAW_TOOL_SEARCH_GATEWAY_E2E_FETCH_TIMEOUT_MS: 1e3");
+    ).toThrow("invalid QUIET_CORE_TOOL_SEARCH_GATEWAY_E2E_FETCH_TIMEOUT_MS: 1e3");
     expect(() =>
       readToolSearchGatewayFetchLimits({
-        OPENCLAW_TOOL_SEARCH_GATEWAY_E2E_FETCH_BODY_MAX_BYTES: "1000ms",
+        QUIET_CORE_TOOL_SEARCH_GATEWAY_E2E_FETCH_BODY_MAX_BYTES: "1000ms",
       }),
-    ).toThrow("invalid OPENCLAW_TOOL_SEARCH_GATEWAY_E2E_FETCH_BODY_MAX_BYTES: 1000ms");
+    ).toThrow("invalid QUIET_CORE_TOOL_SEARCH_GATEWAY_E2E_FETCH_BODY_MAX_BYTES: 1000ms");
     expect(
       readToolSearchGatewayFetchLimits({
-        OPENCLAW_TOOL_SEARCH_GATEWAY_E2E_FETCH_BODY_MAX_BYTES: "4096",
-        OPENCLAW_TOOL_SEARCH_GATEWAY_E2E_FETCH_TIMEOUT_MS: "120000",
+        QUIET_CORE_TOOL_SEARCH_GATEWAY_E2E_FETCH_BODY_MAX_BYTES: "4096",
+        QUIET_CORE_TOOL_SEARCH_GATEWAY_E2E_FETCH_TIMEOUT_MS: "120000",
       }),
     ).toEqual({
       bodyMaxBytes: 4096,
@@ -92,20 +92,20 @@ describe("tool search gateway e2e fetch helper", () => {
 describe("tool search gateway e2e environment helpers", () => {
   it("restores mutated gateway environment values", () => {
     const env: NodeJS.ProcessEnv = {
-      OPENCLAW_CONFIG_PATH: "/before/openclaw.json",
-      OPENCLAW_STATE_DIR: "/before/state",
+      QUIET_CORE_CONFIG_PATH: "/before/quiet-core-bot.json",
+      QUIET_CORE_STATE_DIR: "/before/state",
     };
     const snapshot = snapshotToolSearchGatewayEnv(env);
 
-    env.OPENCLAW_CONFIG_PATH = "/after/openclaw.json";
-    env.OPENCLAW_STATE_DIR = "/after/state";
-    env.OPENCLAW_TEST_FAST = "1";
+    env.QUIET_CORE_CONFIG_PATH = "/after/quiet-core-bot.json";
+    env.QUIET_CORE_STATE_DIR = "/after/state";
+    env.QUIET_CORE_TEST_FAST = "1";
 
     restoreToolSearchGatewayEnv(snapshot, env);
 
     expect(env).toEqual({
-      OPENCLAW_CONFIG_PATH: "/before/openclaw.json",
-      OPENCLAW_STATE_DIR: "/before/state",
+      QUIET_CORE_CONFIG_PATH: "/before/quiet-core-bot.json",
+      QUIET_CORE_STATE_DIR: "/before/state",
     });
   });
 });

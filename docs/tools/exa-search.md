@@ -16,7 +16,7 @@ extraction (highlights, text, summaries).
 Install the official plugin, then restart Gateway:
 
 ```bash
-quiet-core-bot plugins install @openclaw/exa-plugin
+quiet-core-bot plugins install @quiet-core/exa-plugin
 quiet-core-bot gateway restart
 ```
 

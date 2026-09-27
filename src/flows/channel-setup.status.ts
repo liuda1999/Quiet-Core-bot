@@ -19,7 +19,7 @@ import { shouldShowChannelInSetup } from "../commands/channel-setup/discovery.js
 import { resolveChannelSetupWizardAdapterForPlugin } from "../commands/channel-setup/registry.js";
 import type { ChannelChoice } from "../commands/onboard-types.js";
 import { isChannelConfigured } from "../config/channel-configured.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   findBundledPluginSourceInMap,
   resolveBundledPluginSources,

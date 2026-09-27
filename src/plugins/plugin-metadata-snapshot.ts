@@ -1,10 +1,10 @@
 // Builds plugin metadata snapshots for gateway and diagnostics.
 import fs from "node:fs";
 import path from "node:path";
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
+import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
+import { isRecord } from "@quiet-core/normalization-core/record-coerce";
 import { resolveIsNixMode } from "../config/paths.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   getActiveDiagnosticsTimelineSpan,
   measureDiagnosticsTimelineSpanSync,
@@ -64,15 +64,15 @@ registerPluginMetadataProcessMemoLifecycleClear(clearLoadPluginMetadataSnapshotM
 const MEMO_RELEVANT_ENV_KEYS = [
   "APPDATA",
   "HOME",
-  "OPENCLAW_BUNDLED_PLUGINS_DIR",
-  "OPENCLAW_COMPATIBILITY_HOST_VERSION",
-  "OPENCLAW_CONFIG_PATH",
-  "OPENCLAW_DISABLE_BUNDLED_PLUGINS",
-  "OPENCLAW_DISABLE_BUNDLED_SOURCE_OVERLAYS",
-  "OPENCLAW_DISABLE_PERSISTED_PLUGIN_REGISTRY",
-  "OPENCLAW_HOME",
-  "OPENCLAW_NIX_MODE",
-  "OPENCLAW_STATE_DIR",
+  "QUIET_CORE_BUNDLED_PLUGINS_DIR",
+  "QUIET_CORE_COMPATIBILITY_HOST_VERSION",
+  "QUIET_CORE_CONFIG_PATH",
+  "QUIET_CORE_DISABLE_BUNDLED_PLUGINS",
+  "QUIET_CORE_DISABLE_BUNDLED_SOURCE_OVERLAYS",
+  "QUIET_CORE_DISABLE_PERSISTED_PLUGIN_REGISTRY",
+  "QUIET_CORE_HOME",
+  "QUIET_CORE_NIX_MODE",
+  "QUIET_CORE_STATE_DIR",
   "USERPROFILE",
   "XDG_CONFIG_HOME",
 ] as const;
@@ -180,7 +180,7 @@ function resolvePersistedRegistryFastMemoFingerprint(params: {
   preferPersisted?: boolean;
   stateDir?: string;
 }): Record<string, unknown> {
-  const disabledByEnv = params.env.OPENCLAW_DISABLE_PERSISTED_PLUGIN_REGISTRY?.trim().toLowerCase();
+  const disabledByEnv = params.env.QUIET_CORE_DISABLE_PERSISTED_PLUGIN_REGISTRY?.trim().toLowerCase();
   const disabled =
     params.preferPersisted === false ||
     (Boolean(disabledByEnv) &&

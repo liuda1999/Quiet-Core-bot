@@ -1,6 +1,6 @@
 // Channel plugin blocker tests cover doctor diagnostics for blocked channel plugin setup.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
 import * as manifestRegistry from "../../../plugins/manifest-registry.js";
 import {
   collectConfiguredChannelPluginBlockerWarnings,
@@ -550,7 +550,7 @@ describe("channel plugin blockers", () => {
           origin: "bundled",
           channels: ["twitch"],
           channelEnvVars: {
-            twitch: ["OPENCLAW_TWITCH_ACCESS_TOKEN"],
+            twitch: ["QUIET_CORE_TWITCH_ACCESS_TOKEN"],
           },
           enabledByDefault: false,
         },
@@ -559,7 +559,7 @@ describe("channel plugin blockers", () => {
     } as unknown as ReturnType<typeof manifestRegistry.loadPluginManifestRegistry>);
 
     const hits = scanConfiguredChannelPluginBlockers({}, {
-      OPENCLAW_TWITCH_ACCESS_TOKEN: "configured",
+      QUIET_CORE_TWITCH_ACCESS_TOKEN: "configured",
     } as NodeJS.ProcessEnv);
 
     expect(hits).toEqual([
@@ -582,7 +582,7 @@ describe("channel plugin blockers", () => {
           origin: "bundled",
           channels: ["twitch"],
           channelEnvVars: {
-            twitch: ["OPENCLAW_TWITCH_ACCESS_TOKEN"],
+            twitch: ["QUIET_CORE_TWITCH_ACCESS_TOKEN"],
           },
           enabledByDefault: false,
         },
@@ -597,7 +597,7 @@ describe("channel plugin blockers", () => {
         },
       },
       {
-        OPENCLAW_TWITCH_ACCESS_TOKEN: "configured",
+        QUIET_CORE_TWITCH_ACCESS_TOKEN: "configured",
       } as NodeJS.ProcessEnv,
     );
 
@@ -1108,7 +1108,7 @@ describe("channel plugin blockers", () => {
           enabledByDefault: true,
         },
         {
-          id: "openclaw-lark",
+          id: "quiet-core-bot-lark",
           origin: "config",
           channels: ["feishu"],
           enabledByDefault: false,
@@ -1130,7 +1130,7 @@ describe("channel plugin blockers", () => {
           feishu: {
             enabled: false,
           },
-          "openclaw-lark": {
+          "quiet-core-bot-lark": {
             enabled: true,
           },
         },
@@ -1157,7 +1157,7 @@ describe("channel plugin blockers", () => {
           enabledByDefault: true,
         },
         {
-          id: "openclaw-lark",
+          id: "quiet-core-bot-lark",
           origin: "config",
           channels: ["feishu"],
           enabledByDefault: false,
@@ -1198,7 +1198,7 @@ describe("channel plugin blockers", () => {
       },
       {
         channelId: "feishu",
-        pluginId: "openclaw-lark",
+        pluginId: "quiet-core-bot-lark",
         reason: "missing explicit enablement",
       },
     ]);

@@ -18,7 +18,7 @@ export type HookRunnerGlobalState = {
   registry: TrustedPolicyHookRunnerRegistry | null;
 };
 
-const hookRunnerGlobalStateKey = Symbol.for("openclaw.plugins.hook-runner-global-state");
+const hookRunnerGlobalStateKey = Symbol.for("quiet-core-bot.plugins.hook-runner-global-state");
 
 export function getHookRunnerGlobalState(): HookRunnerGlobalState {
   return resolveGlobalSingleton<HookRunnerGlobalState>(hookRunnerGlobalStateKey, () => ({

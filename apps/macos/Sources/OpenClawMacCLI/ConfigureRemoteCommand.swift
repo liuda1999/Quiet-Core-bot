@@ -206,7 +206,7 @@ private func configureDirectRemote(
 }
 
 private func openClawConfigURL() -> URL {
-    if let raw = ProcessInfo.processInfo.environment["OPENCLAW_CONFIG_PATH"],
+    if let raw = ProcessInfo.processInfo.environment["QUIET_CORE_CONFIG_PATH"],
        !raw.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     {
         return URL(fileURLWithPath: NSString(string: raw).expandingTildeInPath)

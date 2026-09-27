@@ -1,7 +1,7 @@
 /**
  * Shared A2UI/Canvas host paths and live-reload injection helpers.
  */
-import { lowercasePreservingWhitespace } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { lowercasePreservingWhitespace } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 
 /** Hosted path prefix for bundled A2UI assets. */
 export const A2UI_PATH = "/__openclaw__/a2ui";

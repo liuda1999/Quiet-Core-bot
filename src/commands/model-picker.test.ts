@@ -1,5 +1,5 @@
 // Model picker tests cover catalog rows, provider metadata, backend defaults, and prompt choices.
-import type { NormalizedModelCatalogRow } from "@openclaw/model-catalog-core/model-catalog-types";
+import type { NormalizedModelCatalogRow } from "@quiet-core/model-catalog-core/model-catalog-types";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { testing as cliBackendsTesting } from "../agents/cli-backends.js";
 import type { ModelCatalogEntry } from "../agents/model-catalog.js";
@@ -284,7 +284,7 @@ function providerCallProviders() {
 }
 
 beforeEach(() => {
-  delete process.env.OPENCLAW_LOCALE;
+  delete process.env.QUIET_CORE_LOCALE;
   vi.clearAllMocks();
   cliBackendsTesting.setDepsForTest({
     resolveRuntimeCliBackends: () => [
@@ -1075,7 +1075,7 @@ describe("promptDefaultModel", () => {
     const prompter = makePrompter({ select });
     const env = {
       ...process.env,
-      OPENCLAW_STATE_DIR: "/tmp/openclaw-picker-state",
+      QUIET_CORE_STATE_DIR: "/tmp/quiet-core-bot-picker-state",
     };
     const config = {
       agents: {
@@ -1100,7 +1100,7 @@ describe("promptDefaultModel", () => {
     expect(loadPreferredProviderPickerCatalog).toHaveBeenCalledWith({
       cfg: config,
       preferredProvider: "nvidia",
-      agentDir: "/tmp/openclaw-picker-state/agents/worker/agent",
+      agentDir: "/tmp/quiet-core-bot-picker-state/agents/worker/agent",
       env,
     });
   });
@@ -1156,7 +1156,7 @@ describe("promptDefaultModel", () => {
       includeManual: false,
       includeProviderPluginSetups: true,
       ignoreAllowlist: true,
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
       runtime: {} as never,
     });
 
@@ -1220,7 +1220,7 @@ describe("promptDefaultModel", () => {
       includeManual: false,
       includeProviderPluginSetups: true,
       ignoreAllowlist: true,
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
       runtime: {} as never,
     });
 
@@ -1249,7 +1249,7 @@ describe("promptDefaultModel", () => {
       ignoreAllowlist: true,
       includeProviderPluginSetups: true,
       loadCatalog: false,
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
       runtime: {} as never,
     });
 
@@ -1301,7 +1301,7 @@ describe("promptDefaultModel", () => {
       includeManual: false,
       includeProviderPluginSetups: true,
       ignoreAllowlist: true,
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/quiet-core-bot-agent",
       runtime: {} as never,
     });
 
@@ -1348,7 +1348,7 @@ describe("promptModelAllowlist", () => {
   });
 
   it("localizes the model allowlist picker", async () => {
-    process.env.OPENCLAW_LOCALE = "zh-CN";
+    process.env.QUIET_CORE_LOCALE = "zh-CN";
     loadModelCatalog.mockResolvedValue([
       {
         provider: "openai",

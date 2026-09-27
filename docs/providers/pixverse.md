@@ -12,7 +12,7 @@ Quiet Core bot provides `pixverse` as an official external plugin for hosted Pix
 | Property           | Value                                                                |
 | ------------------ | -------------------------------------------------------------------- |
 | Provider id        | `pixverse`                                                           |
-| Plugin package     | `@openclaw/pixverse-provider`                                        |
+| Plugin package     | `@quiet-core/pixverse-provider`                                      |
 | Auth env var       | `PIXVERSE_API_KEY`                                                   |
 | Onboarding flag    | `--auth-choice pixverse-api-key`                                     |
 | Direct CLI flag    | `--pixverse-api-key <key>`                                           |
@@ -25,7 +25,7 @@ Quiet Core bot provides `pixverse` as an official external plugin for hosted Pix
 <Steps>
   <Step title="Install the plugin">
     ```bash
-    quiet-core-bot plugins install clawhub:@openclaw/pixverse-provider
+    quiet-core-bot plugins install clawhub:@quiet-core/pixverse-provider
     quiet-core-bot gateway restart
     ```
   </Step>

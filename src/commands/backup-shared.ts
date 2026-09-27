@@ -81,7 +81,7 @@ export function formatBackupArchiveTimestamp(
 
 /** Build the root directory name stored inside a backup tarball. */
 export function buildBackupArchiveRoot(nowMs = Date.now()): string {
-  return `${formatBackupArchiveTimestamp(nowMs)}-openclaw-backup`;
+  return `${formatBackupArchiveTimestamp(nowMs)}-quiet-core-bot-backup`;
 }
 
 /** Build the default `.tar.gz` filename for a backup archive. */

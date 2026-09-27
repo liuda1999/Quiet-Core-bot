@@ -1,5 +1,5 @@
 // Shared abort runtime types for cancellation and cutoff persistence.
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
 import type { FinalizedMsgContext } from "../templating.js";
 
 /** Result from the fast abort path before normal reply dispatch starts. */

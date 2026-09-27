@@ -3,14 +3,14 @@
  *
  * Classifies provider routes so transports know which attribution headers, payload features, and endpoint policies apply.
  */
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
+import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
+import { isRecord } from "@quiet-core/normalization-core/record-coerce";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalLowercaseString,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
-import { normalizeTrimmedStringList } from "@openclaw/normalization-core/string-normalization";
+} from "@quiet-core/normalization-core/string-coerce";
+import { normalizeTrimmedStringList } from "@quiet-core/normalization-core/string-normalization";
 import { isTruthyEnvValue } from "../infra/env.js";
 import { listOpenClawPluginManifestMetadata } from "../plugins/manifest-metadata-scan.js";
 import { asBoolean } from "../utils/boolean.js";
@@ -141,8 +141,8 @@ function readCompatBoolean(
   return asBoolean((compat as Record<string, unknown>)[key]);
 }
 
-const OPENCLAW_ATTRIBUTION_PRODUCT = "Quiet Core bot";
-const OPENCLAW_ATTRIBUTION_ORIGINATOR = "openclaw";
+const QUIET_CORE_ATTRIBUTION_PRODUCT = "Quiet Core bot";
+const QUIET_CORE_ATTRIBUTION_ORIGINATOR = "quiet-core-bot";
 const OPENROUTER_ATTRIBUTION_CATEGORIES =
   "cli-agent,cloud-agent,programming-app,creative-writing,writing-assistant,general-chat,personal-agent";
 
@@ -222,7 +222,7 @@ const BUILT_IN_PROVIDER_ENDPOINT_FALLBACKS: readonly ManifestProviderEndpointCac
 ];
 
 function formatOpenClawUserAgent(version: string): string {
-  return `${OPENCLAW_ATTRIBUTION_ORIGINATOR}/${version}`;
+  return `${QUIET_CORE_ATTRIBUTION_ORIGINATOR}/${version}`;
 }
 
 function tryParseHostname(value: string): string | undefined {
@@ -524,7 +524,7 @@ export function resolveProviderAttributionIdentity(
   env: RuntimeVersionEnv = process.env as RuntimeVersionEnv,
 ): ProviderAttributionIdentity {
   return {
-    product: OPENCLAW_ATTRIBUTION_PRODUCT,
+    product: QUIET_CORE_ATTRIBUTION_PRODUCT,
     version: resolveRuntimeServiceVersion(env),
   };
 }
@@ -532,10 +532,10 @@ export function resolveProviderAttributionIdentity(
 /**
  * Provider attribution headers (`HTTP-Referer`, `X-OpenRouter-Title`, `originator`, vendor
  * billing headers, …) identify this runtime to the vendor. They are opt-in: nothing is sent
- * unless the operator explicitly enables them with `OPENCLAW_PROVIDER_ATTRIBUTION=1`
+ * unless the operator explicitly enables them with `QUIET_CORE_PROVIDER_ATTRIBUTION=1`
  * (or `true`/`on`/`yes`).
  */
-const PROVIDER_ATTRIBUTION_ENV_KEY = "OPENCLAW_PROVIDER_ATTRIBUTION";
+const PROVIDER_ATTRIBUTION_ENV_KEY = "QUIET_CORE_PROVIDER_ATTRIBUTION";
 
 function isProviderAttributionEnabled(env: RuntimeVersionEnv): boolean {
   return isTruthyEnvValue(env[PROVIDER_ATTRIBUTION_ENV_KEY]);
@@ -573,7 +573,7 @@ function buildNvidiaAttributionPolicy(
       "NVIDIA NIM billing invoke-origin attribution header. Applied only on verified NVIDIA routes.",
     ...resolveProviderAttributionIdentity(env),
     headers: {
-      "X-BILLING-INVOKE-ORIGIN": OPENCLAW_ATTRIBUTION_PRODUCT,
+      "X-BILLING-INVOKE-ORIGIN": QUIET_CORE_ATTRIBUTION_PRODUCT,
     },
   };
 }
@@ -591,7 +591,7 @@ function buildOpenAIAttributionPolicy(
       "OpenAI native traffic supports hidden originator/User-Agent attribution. Verified against the Codex wire contract.",
     ...identity,
     headers: {
-      originator: OPENCLAW_ATTRIBUTION_ORIGINATOR,
+      originator: QUIET_CORE_ATTRIBUTION_ORIGINATOR,
       version: identity.version,
       "User-Agent": formatOpenClawUserAgent(identity.version),
     },
@@ -611,7 +611,7 @@ function buildXaiAttributionPolicy(
       "xAI api.x.ai accepts a standard quiet-core-bot User-Agent. Companion originator/version headers mirror the OpenAI attribution shape for consistency; they are not validated against an xAI-specific spec and are expected to be ignored by xAI's OpenAI-compatible surface.",
     ...identity,
     headers: {
-      originator: OPENCLAW_ATTRIBUTION_ORIGINATOR,
+      originator: QUIET_CORE_ATTRIBUTION_ORIGINATOR,
       version: identity.version,
       "User-Agent": formatOpenClawUserAgent(identity.version),
     },

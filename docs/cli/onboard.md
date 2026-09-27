@@ -48,20 +48,20 @@ quiet-core-bot onboard --mode remote --remote-url wss://gateway-host:18789
 `--modern`, `quiet-core-bot onboard` keeps the classic onboarding flow.
 
 On a fresh install where the active config file is missing or has no authored
-settings (empty or metadata-only), bare `openclaw` also starts the classic
-onboarding flow. Once a config file has authored settings, bare `openclaw`
+settings (empty or metadata-only), bare `quiet-core-bot` also starts the classic
+onboarding flow. Once a config file has authored settings, bare `quiet-core-bot`
 opens Crestodian instead.
 
 Plaintext `ws://` is accepted for loopback, private IP literals, `.local`, and
 Tailnet `*.ts.net` gateway URLs. For other trusted private-DNS names, set
-`OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` in the onboarding process environment.
+`QUIET_CORE_ALLOW_INSECURE_PRIVATE_WS=1` in the onboarding process environment.
 
 ## Locale
 
 Interactive onboarding uses the CLI wizard locale for fixed setup copy. Resolve
 order is:
 
-1. `OPENCLAW_LOCALE`
+1. `QUIET_CORE_LOCALE`
 2. `LC_ALL`
 3. `LC_MESSAGES`
 4. `LANG`
@@ -75,7 +75,7 @@ remain literal.
 Example:
 
 ```bash
-OPENCLAW_LOCALE=zh-CN quiet-core-bot onboard
+QUIET_CORE_LOCALE=zh-CN quiet-core-bot onboard
 ```
 
 Non-interactive custom provider:
@@ -153,12 +153,12 @@ Gateway token options in non-interactive mode:
 Example:
 
 ```bash
-export OPENCLAW_GATEWAY_TOKEN="your-token"
+export QUIET_CORE_GATEWAY_TOKEN="your-token"
 quiet-core-bot onboard --non-interactive \
   --mode local \
   --auth-choice skip \
   --gateway-auth token \
-  --gateway-token-ref-env OPENCLAW_GATEWAY_TOKEN \
+  --gateway-token-ref-env QUIET_CORE_GATEWAY_TOKEN \
   --accept-risk
 ```
 

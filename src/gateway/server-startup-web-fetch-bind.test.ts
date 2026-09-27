@@ -72,8 +72,8 @@ async function writeConfig(config: OpenClawConfig): Promise<void> {
 
 describe("gateway startup web fetch config", () => {
   it("binds HTTP with credential-free tools.web.fetch config without fetch provider discovery", async () => {
-    const previousMinimal = process.env.OPENCLAW_TEST_MINIMAL_GATEWAY;
-    process.env.OPENCLAW_TEST_MINIMAL_GATEWAY = "0";
+    const previousMinimal = process.env.QUIET_CORE_TEST_MINIMAL_GATEWAY;
+    process.env.QUIET_CORE_TEST_MINIMAL_GATEWAY = "0";
     let server: Awaited<ReturnType<typeof startGatewayServer>> | undefined;
     try {
       await writeConfig({
@@ -114,9 +114,9 @@ describe("gateway startup web fetch config", () => {
         await server.close();
       }
       if (previousMinimal === undefined) {
-        delete process.env.OPENCLAW_TEST_MINIMAL_GATEWAY;
+        delete process.env.QUIET_CORE_TEST_MINIMAL_GATEWAY;
       } else {
-        process.env.OPENCLAW_TEST_MINIMAL_GATEWAY = previousMinimal;
+        process.env.QUIET_CORE_TEST_MINIMAL_GATEWAY = previousMinimal;
       }
     }
   });

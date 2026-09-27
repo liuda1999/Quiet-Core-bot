@@ -3,8 +3,8 @@ summary: "Migrate from the legacy backwards-compatibility layer to the modern pl
 title: "Plugin SDK migration"
 sidebarTitle: "Migrate to SDK"
 read_when:
-  - You see the OPENCLAW_PLUGIN_SDK_COMPAT_DEPRECATED warning
-  - You see the OPENCLAW_EXTENSION_API_DEPRECATED warning
+  - You see the QUIET_CORE_PLUGIN_SDK_COMPAT_DEPRECATED warning
+  - You see the QUIET_CORE_EXTENSION_API_DEPRECATED warning
   - You used api.registerEmbeddedExtensionFactory before Quiet Core bot 2026.4.25
   - You are updating a plugin to the modern plugin architecture
   - You maintain an external Quiet Core bot plugin
@@ -19,16 +19,16 @@ the new architecture, this guide helps you migrate.
 The old plugin system provided two wide-open surfaces that let plugins import
 anything they needed from a single entry point:
 
-- **`openclaw/plugin-sdk/compat`** - a single import that re-exported dozens of
+- **`quiet-core-bot/plugin-sdk/compat`** - a single import that re-exported dozens of
   helpers. It was introduced to keep older hook-based plugins working while the
   new plugin architecture was being built.
-- **`openclaw/plugin-sdk/infra-runtime`** - a broad runtime helper barrel that
+- **`quiet-core-bot/plugin-sdk/infra-runtime`** - a broad runtime helper barrel that
   mixed system events, heartbeat state, delivery queues, fetch/proxy helpers,
   file helpers, approval types, and unrelated utilities.
-- **`openclaw/plugin-sdk/config-runtime`** - a broad config compatibility barrel
+- **`quiet-core-bot/plugin-sdk/config-runtime`** - a broad config compatibility barrel
   that still carries deprecated direct load/write helpers during the migration
   window.
-- **`openclaw/extension-api`** - a bridge that gave plugins direct access to
+- **`quiet-core-bot/extension-api`** - a bridge that gave plugins direct access to
   host-side helpers like the embedded agent runner.
 - **`api.registerEmbeddedExtensionFactory(...)`** - a removed embedded-runner-only bundled
   extension hook that could observe embedded-runner events such as
@@ -59,7 +59,7 @@ The old approach caused problems:
 - **Circular dependencies** - broad re-exports made it easy to create import cycles
 - **Unclear API surface** - no way to tell which exports were stable vs internal
 
-The modern plugin SDK fixes this: each import path (`openclaw/plugin-sdk/\<subpath\>`)
+The modern plugin SDK fixes this: each import path (`quiet-core-bot/plugin-sdk/\<subpath\>`)
 is a small, self-contained module with a clear purpose and documented contract.
 
 Legacy provider convenience seams for bundled channels are also gone.
@@ -81,7 +81,7 @@ Current bundled provider examples:
 
 Realtime voice, telephony, meeting, and browser Talk code is moving from
 surface-local turn bookkeeping to a shared Talk session controller exported by
-`openclaw/plugin-sdk/realtime-voice`. The new controller owns the common Talk
+`quiet-core-bot/plugin-sdk/realtime-voice`. The new controller owns the common Talk
 event envelope, active turn state, capture state, output-audio state, recent
 event history, and stale-turn rejection. Provider plugins should keep owning
 vendor-specific realtime sessions; surface plugins should keep owning capture,
@@ -272,20 +272,20 @@ releases.
     zero allowed ambient `loadConfig()` calls.
 
     New plugin code should also avoid importing the broad
-    `openclaw/plugin-sdk/config-runtime` compatibility barrel. Use the narrow
+    `quiet-core-bot/plugin-sdk/config-runtime` compatibility barrel. Use the narrow
     SDK subpath that matches the job:
 
     | Need | Import |
     | --- | --- |
-    | Config types such as `OpenClawConfig` | `openclaw/plugin-sdk/config-contracts` |
-    | Already-loaded config assertions and plugin-entry config lookup | `openclaw/plugin-sdk/plugin-config-runtime` |
-    | Current runtime snapshot reads | `openclaw/plugin-sdk/runtime-config-snapshot` |
-    | Config writes | `openclaw/plugin-sdk/config-mutation` |
-    | Session store helpers | `openclaw/plugin-sdk/session-store-runtime` |
-    | Markdown table config | `openclaw/plugin-sdk/markdown-table-runtime` |
-    | Group policy runtime helpers | `openclaw/plugin-sdk/runtime-group-policy` |
-    | Secret input resolution | `openclaw/plugin-sdk/secret-input-runtime` |
-    | Model/session overrides | `openclaw/plugin-sdk/model-session-runtime` |
+    | Config types such as `OpenClawConfig` | `quiet-core-bot/plugin-sdk/config-contracts` |
+    | Already-loaded config assertions and plugin-entry config lookup | `quiet-core-bot/plugin-sdk/plugin-config-runtime` |
+    | Current runtime snapshot reads | `quiet-core-bot/plugin-sdk/runtime-config-snapshot` |
+    | Config writes | `quiet-core-bot/plugin-sdk/config-mutation` |
+    | Session store helpers | `quiet-core-bot/plugin-sdk/session-store-runtime` |
+    | Markdown table config | `quiet-core-bot/plugin-sdk/markdown-table-runtime` |
+    | Group policy runtime helpers | `quiet-core-bot/plugin-sdk/runtime-group-policy` |
+    | Secret input resolution | `quiet-core-bot/plugin-sdk/secret-input-runtime` |
+    | Model/session overrides | `quiet-core-bot/plugin-sdk/model-session-runtime` |
 
     Bundled plugins and their tests are scanner-guarded against the broad
     barrel so imports and mocks stay local to the behavior they need. The broad
@@ -304,7 +304,7 @@ releases.
     api.registerAgentToolResultMiddleware(async (event) => {
       return compactToolResult(event);
     }, {
-      runtimes: ["openclaw", "codex"],
+      runtimes: ["quiet-core-bot", "codex"],
     });
     ```
 
@@ -313,7 +313,7 @@ releases.
     ```json
     {
       "contracts": {
-        "agentToolResultMiddleware": ["openclaw", "codex"]
+        "agentToolResultMiddleware": ["quiet-core-bot", "codex"]
       }
     }
     ```
@@ -340,7 +340,7 @@ releases.
     - `plugin.auth` remains for channel login/logout flows only; approval auth
       hooks there are no longer read by core
     - Register channel-owned runtime objects such as clients, tokens, or Bolt
-      apps through `openclaw/plugin-sdk/channel-runtime-context`
+      apps through `quiet-core-bot/plugin-sdk/channel-runtime-context`
     - Do not send plugin-owned reroute notices from native approval handlers;
       core now owns routed-elsewhere notices from actual delivery results
     - When passing `channelRuntime` into `createChannelManager(...)`, provide a
@@ -352,7 +352,7 @@ releases.
   </Step>
 
   <Step title="Audit Windows wrapper fallback behavior">
-    If your plugin uses `openclaw/plugin-sdk/windows-spawn`, unresolved Windows
+    If your plugin uses `quiet-core-bot/plugin-sdk/windows-spawn`, unresolved Windows
     `.cmd`/`.bat` wrappers now fail closed unless you explicitly pass
     `allowShellFallback: true`.
 
@@ -381,7 +381,7 @@ releases.
     grep -r "plugin-sdk/compat" my-plugin/
     grep -r "plugin-sdk/infra-runtime" my-plugin/
     grep -r "plugin-sdk/config-runtime" my-plugin/
-    grep -r "openclaw/extension-api" my-plugin/
+    grep -r "quiet-core-bot/extension-api" my-plugin/
     ```
 
   </Step>
@@ -395,12 +395,12 @@ releases.
       createChannelReplyPipeline,
       createPluginRuntimeStore,
       resolveControlCommandGate,
-    } from "openclaw/plugin-sdk/compat";
+    } from "quiet-core-bot/plugin-sdk/compat";
 
     // After (modern focused imports)
-    import { createChannelReplyPipeline } from "openclaw/plugin-sdk/channel-reply-pipeline";
-    import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
-    import { resolveControlCommandGate } from "openclaw/plugin-sdk/command-auth";
+    import { createChannelReplyPipeline } from "quiet-core-bot/plugin-sdk/channel-reply-pipeline";
+    import { createPluginRuntimeStore } from "quiet-core-bot/plugin-sdk/runtime-store";
+    import { resolveControlCommandGate } from "quiet-core-bot/plugin-sdk/command-auth";
     ```
 
     For host-side helpers, use the injected plugin runtime instead of importing
@@ -408,7 +408,7 @@ releases.
 
     ```typescript
     // Before (deprecated extension-api bridge)
-    import { runEmbeddedAgent } from "openclaw/extension-api";
+    import { runEmbeddedAgent } from "quiet-core-bot/extension-api";
     const result = await runEmbeddedAgent({ sessionId, prompt });
 
     // After (injected runtime)
@@ -430,30 +430,30 @@ releases.
   </Step>
 
   <Step title="Replace broad infra-runtime imports">
-    `openclaw/plugin-sdk/infra-runtime` still exists for external
+    `quiet-core-bot/plugin-sdk/infra-runtime` still exists for external
     compatibility, but new code should import the focused helper surface it
     actually needs:
 
     | Need | Import |
     | --- | --- |
-    | System event queue helpers | `openclaw/plugin-sdk/system-event-runtime` |
-    | Heartbeat wake, event, and visibility helpers | `openclaw/plugin-sdk/heartbeat-runtime` |
-    | Pending delivery queue drain | `openclaw/plugin-sdk/delivery-queue-runtime` |
-    | Channel activity telemetry | `openclaw/plugin-sdk/channel-activity-runtime` |
-    | In-memory dedupe caches | `openclaw/plugin-sdk/dedupe-runtime` |
-    | Safe local-file/media path helpers | `openclaw/plugin-sdk/file-access-runtime` |
-    | Dispatcher-aware fetch | `openclaw/plugin-sdk/runtime-fetch` |
-    | Proxy and guarded fetch helpers | `openclaw/plugin-sdk/fetch-runtime` |
-    | SSRF dispatcher policy types | `openclaw/plugin-sdk/ssrf-dispatcher` |
-    | Approval request/resolution types | `openclaw/plugin-sdk/approval-runtime` |
-    | Approval reply payload and command helpers | `openclaw/plugin-sdk/approval-reply-runtime` |
-    | Error formatting helpers | `openclaw/plugin-sdk/error-runtime` |
-    | Transport readiness waits | `openclaw/plugin-sdk/transport-ready-runtime` |
-    | Secure token helpers | `openclaw/plugin-sdk/secure-random-runtime` |
-    | Bounded async task concurrency | `openclaw/plugin-sdk/concurrency-runtime` |
-    | Numeric coercion | `openclaw/plugin-sdk/number-runtime` |
-    | Process-local async lock | `openclaw/plugin-sdk/async-lock-runtime` |
-    | File locks | `openclaw/plugin-sdk/file-lock` |
+    | System event queue helpers | `quiet-core-bot/plugin-sdk/system-event-runtime` |
+    | Heartbeat wake, event, and visibility helpers | `quiet-core-bot/plugin-sdk/heartbeat-runtime` |
+    | Pending delivery queue drain | `quiet-core-bot/plugin-sdk/delivery-queue-runtime` |
+    | Channel activity telemetry | `quiet-core-bot/plugin-sdk/channel-activity-runtime` |
+    | In-memory dedupe caches | `quiet-core-bot/plugin-sdk/dedupe-runtime` |
+    | Safe local-file/media path helpers | `quiet-core-bot/plugin-sdk/file-access-runtime` |
+    | Dispatcher-aware fetch | `quiet-core-bot/plugin-sdk/runtime-fetch` |
+    | Proxy and guarded fetch helpers | `quiet-core-bot/plugin-sdk/fetch-runtime` |
+    | SSRF dispatcher policy types | `quiet-core-bot/plugin-sdk/ssrf-dispatcher` |
+    | Approval request/resolution types | `quiet-core-bot/plugin-sdk/approval-runtime` |
+    | Approval reply payload and command helpers | `quiet-core-bot/plugin-sdk/approval-reply-runtime` |
+    | Error formatting helpers | `quiet-core-bot/plugin-sdk/error-runtime` |
+    | Transport readiness waits | `quiet-core-bot/plugin-sdk/transport-ready-runtime` |
+    | Secure token helpers | `quiet-core-bot/plugin-sdk/secure-random-runtime` |
+    | Bounded async task concurrency | `quiet-core-bot/plugin-sdk/concurrency-runtime` |
+    | Numeric coercion | `quiet-core-bot/plugin-sdk/number-runtime` |
+    | Process-local async lock | `quiet-core-bot/plugin-sdk/async-lock-runtime` |
+    | File locks | `quiet-core-bot/plugin-sdk/file-lock` |
 
     Bundled plugins are scanner-guarded against `infra-runtime`, so repo code
     cannot regress to the broad barrel.
@@ -461,7 +461,7 @@ releases.
   </Step>
 
   <Step title="Migrate channel route helpers">
-    New channel route code should use `openclaw/plugin-sdk/channel-route`.
+    New channel route code should use `quiet-core-bot/plugin-sdk/channel-route`.
     The older route-key and comparable-target names remain as compatibility
     aliases during the migration window, but new plugins should use the route
     names that describe the behavior directly:
@@ -698,19 +698,19 @@ canonical replacement.
 
 <AccordionGroup>
   <Accordion title="command-auth help builders → command-status">
-    **Old (`openclaw/plugin-sdk/command-auth`)**: `buildCommandsMessage`,
+    **Old (`quiet-core-bot/plugin-sdk/command-auth`)**: `buildCommandsMessage`,
     `buildCommandsMessagePaginated`, `buildHelpMessage`.
 
-    **New (`openclaw/plugin-sdk/command-status`)**: same signatures, same
+    **New (`quiet-core-bot/plugin-sdk/command-status`)**: same signatures, same
     exports - just imported from the narrower subpath. `command-auth`
     re-exports them as compat stubs.
 
     ```typescript
     // Before
-    import { buildHelpMessage } from "openclaw/plugin-sdk/command-auth";
+    import { buildHelpMessage } from "quiet-core-bot/plugin-sdk/command-auth";
 
     // After
-    import { buildHelpMessage } from "openclaw/plugin-sdk/command-status";
+    import { buildHelpMessage } from "quiet-core-bot/plugin-sdk/command-status";
     ```
 
   </Accordion>
@@ -718,8 +718,8 @@ canonical replacement.
   <Accordion title="Mention gating helpers → resolveInboundMentionDecision">
     **Old**: `resolveInboundMentionRequirement({ facts, policy })` and
     `shouldDropInboundForMention(...)` from
-    `openclaw/plugin-sdk/channel-inbound` or
-    `openclaw/plugin-sdk/channel-mention-gating`.
+    `quiet-core-bot/plugin-sdk/channel-inbound` or
+    `quiet-core-bot/plugin-sdk/channel-mention-gating`.
 
     **New**: `resolveInboundMentionDecision({ facts, policy })` - returns a
     single decision object instead of two split calls.
@@ -730,12 +730,12 @@ canonical replacement.
   </Accordion>
 
   <Accordion title="Channel runtime shim and channel actions helpers">
-    `openclaw/plugin-sdk/channel-runtime` is a compatibility shim for older
+    `quiet-core-bot/plugin-sdk/channel-runtime` is a compatibility shim for older
     channel plugins. Do not import it from new code; use
-    `openclaw/plugin-sdk/channel-runtime-context` for registering runtime
+    `quiet-core-bot/plugin-sdk/channel-runtime-context` for registering runtime
     objects.
 
-    `channelActions*` helpers in `openclaw/plugin-sdk/channel-actions` are
+    `channelActions*` helpers in `quiet-core-bot/plugin-sdk/channel-actions` are
     deprecated alongside raw "actions" channel exports. Expose capabilities
     through the semantic `presentation` surface instead - channel plugins
     declare what they render (cards, buttons, selects) rather than which raw
@@ -744,7 +744,7 @@ canonical replacement.
   </Accordion>
 
   <Accordion title="Web search provider tool() helper → createTool() on the plugin">
-    **Old**: `tool()` factory from `openclaw/plugin-sdk/provider-web-search`.
+    **Old**: `tool()` factory from `quiet-core-bot/plugin-sdk/provider-web-search`.
 
     **New**: implement `createTool(...)` directly on the provider plugin.
     Quiet Core bot no longer needs the SDK helper to register the tool wrapper.
@@ -955,14 +955,14 @@ canonical replacement.
   </Accordion>
 
   <Accordion title="OpenClawSchemaType alias → OpenClawConfig">
-    `OpenClawSchemaType` re-exported from `openclaw/plugin-sdk` is now a
+    `OpenClawSchemaType` re-exported from `quiet-core-bot/plugin-sdk` is now a
     one-line alias for `OpenClawConfig`. Prefer the canonical name.
 
     ```typescript
     // Before
-    import type { OpenClawSchemaType } from "openclaw/plugin-sdk";
+    import type { OpenClawSchemaType } from "quiet-core-bot/plugin-sdk";
     // After
-    import type { OpenClawConfig } from "openclaw/plugin-sdk/config-schema";
+    import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-schema";
     ```
 
   </Accordion>
@@ -991,8 +991,8 @@ before the next major release.
 Set these environment variables while you work on migrating:
 
 ```bash
-OPENCLAW_SUPPRESS_PLUGIN_SDK_COMPAT_WARNING=1 quiet-core-bot gateway run
-OPENCLAW_SUPPRESS_EXTENSION_API_WARNING=1 quiet-core-bot gateway run
+QUIET_CORE_SUPPRESS_PLUGIN_SDK_COMPAT_WARNING=1 quiet-core-bot gateway run
+QUIET_CORE_SUPPRESS_EXTENSION_API_WARNING=1 quiet-core-bot gateway run
 ```
 
 This is a temporary escape hatch, not a permanent solution.

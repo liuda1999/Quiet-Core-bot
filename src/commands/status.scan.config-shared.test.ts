@@ -1,6 +1,6 @@
 // Status scan config tests cover scan command config loading and cold-start resolution.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   loadStatusScanCommandConfig,
   resolveStatusScanColdStart,
@@ -19,7 +19,7 @@ describe("status.scan.config-shared", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.resolveConfigPath.mockReturnValue(
-      `/tmp/openclaw-status-scan-config-shared-missing-${process.pid}.json`,
+      `/tmp/quiet-core-bot-status-scan-config-shared-missing-${process.pid}.json`,
     );
   });
 
@@ -147,12 +147,12 @@ describe("status.scan.config-shared", () => {
       commandName: "status --json",
       readConfigSnapshot,
       resolveConfig,
-      env: { VITEST: "true", OPENCLAW_GATEWAY_TOKEN: "env-token" },
+      env: { VITEST: "true", QUIET_CORE_GATEWAY_TOKEN: "env-token" },
       allowMissingConfigFastPath: true,
     });
 
     expect(result.secretDiagnostics).toEqual([
-      "OPENCLAW_GATEWAY_TOKEN conflicts with gateway.auth.token: Remove OPENCLAW_GATEWAY_TOKEN from the shell, ~/.quiet-core-bot/.env, or launchctl env if gateway.auth.token is intended, or point gateway.auth.token at ${OPENCLAW_GATEWAY_TOKEN} if the env var should be canonical.",
+      "QUIET_CORE_GATEWAY_TOKEN conflicts with gateway.auth.token: Remove QUIET_CORE_GATEWAY_TOKEN from the shell, ~/.quiet-core-bot/.env, or launchctl env if gateway.auth.token is intended, or point gateway.auth.token at ${QUIET_CORE_GATEWAY_TOKEN} if the env var should be canonical.",
     ]);
   });
 
@@ -173,8 +173,8 @@ describe("status.scan.config-shared", () => {
       resolveConfig,
       env: {
         VITEST: "true",
-        OPENCLAW_GATEWAY_TOKEN: "env-token",
-        OPENCLAW_SERVICE_KIND: "gateway",
+        QUIET_CORE_GATEWAY_TOKEN: "env-token",
+        QUIET_CORE_SERVICE_KIND: "gateway",
       },
       allowMissingConfigFastPath: true,
     });
@@ -182,9 +182,9 @@ describe("status.scan.config-shared", () => {
     expect(result.secretDiagnostics).toStrictEqual([]);
   });
 
-  it("does not add a status diagnostic when config uses OPENCLAW_GATEWAY_TOKEN", async () => {
+  it("does not add a status diagnostic when config uses QUIET_CORE_GATEWAY_TOKEN", async () => {
     const sourceConfig = {
-      gateway: { auth: { token: "${OPENCLAW_GATEWAY_TOKEN}" } },
+      gateway: { auth: { token: "${QUIET_CORE_GATEWAY_TOKEN}" } },
       secrets: { providers: { default: { source: "env" as const } } },
     };
     const readConfigSnapshot = vi.fn(async () => ({
@@ -200,7 +200,7 @@ describe("status.scan.config-shared", () => {
       commandName: "status --json",
       readConfigSnapshot,
       resolveConfig,
-      env: { VITEST: "true", OPENCLAW_GATEWAY_TOKEN: "env-token" },
+      env: { VITEST: "true", QUIET_CORE_GATEWAY_TOKEN: "env-token" },
       allowMissingConfigFastPath: true,
     });
 
@@ -228,7 +228,7 @@ describe("status.scan.config-shared", () => {
       commandName: "status --json",
       readConfigSnapshot,
       resolveConfig,
-      env: { VITEST: "true", OPENCLAW_GATEWAY_TOKEN: "env-token" },
+      env: { VITEST: "true", QUIET_CORE_GATEWAY_TOKEN: "env-token" },
       allowMissingConfigFastPath: true,
     });
 

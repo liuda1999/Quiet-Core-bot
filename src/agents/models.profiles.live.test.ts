@@ -1,11 +1,11 @@
 // Live-sweeps discovered model profiles with optional provider/model filters and probes.
 import { writeSync } from "node:fs";
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import { type Api, completeSimple, type Model } from "openclaw/plugin-sdk/llm";
+import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
+import { type Api, completeSimple, type Model } from "quiet-core-bot/plugin-sdk/llm";
 import { Type } from "typebox";
 import { describe, expect, it, vi } from "vitest";
 import { getRuntimeConfig } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { coerceSecretRef, type SecretInput } from "../config/types.secrets.js";
 import { parseLiveCsvFilter } from "../media-generation/live-test-helpers.js";
 import { withBundledPluginEnablementCompat } from "../plugins/bundled-compat.js";
@@ -73,23 +73,23 @@ import type { StreamFn } from "./runtime/index.js";
 import { prepareModelForSimpleCompletion } from "./simple-completion-transport.js";
 
 const LIVE = isLiveTestEnabled();
-const DIRECT_ENABLED = Boolean(process.env.OPENCLAW_LIVE_MODELS?.trim());
+const DIRECT_ENABLED = Boolean(process.env.QUIET_CORE_LIVE_MODELS?.trim());
 const REQUIRE_PROFILE_KEYS = isLiveProfileKeyModeEnabled();
-const LIVE_HEARTBEAT_MS = Math.max(1_000, toInt(process.env.OPENCLAW_LIVE_HEARTBEAT_MS, 30_000));
+const LIVE_HEARTBEAT_MS = Math.max(1_000, toInt(process.env.QUIET_CORE_LIVE_HEARTBEAT_MS, 30_000));
 const LIVE_SETUP_TIMEOUT_MS = Math.max(
   1_000,
-  toInt(process.env.OPENCLAW_LIVE_SETUP_TIMEOUT_MS, 45_000),
+  toInt(process.env.QUIET_CORE_LIVE_SETUP_TIMEOUT_MS, 45_000),
 );
 const LIVE_TEST_TIMEOUT_MS = Math.max(
   1_000,
-  toInt(process.env.OPENCLAW_LIVE_TEST_TIMEOUT_MS, 60 * 60 * 1000),
+  toInt(process.env.QUIET_CORE_LIVE_TEST_TIMEOUT_MS, 60 * 60 * 1000),
 );
 const DEFAULT_LIVE_MODEL_CONCURRENCY = 20;
 const LIVE_MODEL_CONCURRENCY = resolveLiveModelConcurrency(
-  process.env.OPENCLAW_LIVE_MODEL_CONCURRENCY,
+  process.env.QUIET_CORE_LIVE_MODEL_CONCURRENCY,
 );
 const LIVE_MODELS_JSON_TIMEOUT_MS = resolveLiveModelsJsonTimeoutMs(
-  process.env.OPENCLAW_LIVE_MODELS_JSON_TIMEOUT_MS,
+  process.env.QUIET_CORE_LIVE_MODELS_JSON_TIMEOUT_MS,
 );
 const LIVE_FILE_PROBE_ENABLED = isLiveModelProbeEnabled(process.env, LIVE_MODEL_FILE_PROBE_ENV);
 const LIVE_IMAGE_PROBE_ENABLED = isLiveModelProbeEnabled(process.env, LIVE_MODEL_IMAGE_PROBE_ENV);
@@ -298,7 +298,7 @@ function applyLiveOllamaProviderEnvCompat(params: {
   }
   const existingProvider = params.config.models?.providers?.ollama;
   const configuredBaseUrl = readConfiguredOllamaBaseUrl(existingProvider);
-  const liveBaseUrl = params.env?.OPENCLAW_LIVE_OLLAMA_BASE_URL?.trim();
+  const liveBaseUrl = params.env?.QUIET_CORE_LIVE_OLLAMA_BASE_URL?.trim();
   const baseUrl = liveBaseUrl || configuredBaseUrl || OLLAMA_DEFAULT_BASE_URL;
   const shouldPreserveConfiguredApiKey =
     !liveBaseUrl ||
@@ -811,7 +811,7 @@ describe("explicit live model discovery scope", () => {
     ).toEqual(["together", "zai"]);
   });
 
-  it("merges explicit model providers with OPENCLAW_LIVE_PROVIDERS", () => {
+  it("merges explicit model providers with QUIET_CORE_LIVE_PROVIDERS", () => {
     const explicitRefs = parseExplicitLiveModelRefs(parseModelFilter("zai/glm-5.1"));
 
     expect(
@@ -875,7 +875,7 @@ describe("explicit live model discovery scope", () => {
       config: cfg,
       providers: ["ollama"],
       env: {
-        OPENCLAW_LIVE_OLLAMA_BASE_URL: "https://ollama.com",
+        QUIET_CORE_LIVE_OLLAMA_BASE_URL: "https://ollama.com",
       },
     });
 
@@ -988,7 +988,7 @@ describe("explicit live model discovery scope", () => {
         config: cfg,
         providers: ["ollama"],
         env: {
-          OPENCLAW_LIVE_OLLAMA_BASE_URL: baseUrl,
+          QUIET_CORE_LIVE_OLLAMA_BASE_URL: baseUrl,
         },
       });
 
@@ -1064,7 +1064,7 @@ describe("explicit live model discovery scope", () => {
       config: cfg,
       providers: ["ollama"],
       env: {
-        OPENCLAW_LIVE_OLLAMA_BASE_URL: "http://127.0.0.1:11434",
+        QUIET_CORE_LIVE_OLLAMA_BASE_URL: "http://127.0.0.1:11434",
       },
     });
 
@@ -1097,7 +1097,7 @@ describe("explicit live model discovery scope", () => {
       config: cfg,
       providers: ["ollama"],
       env: {
-        OPENCLAW_LIVE_OLLAMA_BASE_URL: "http://127.0.0.1:11434",
+        QUIET_CORE_LIVE_OLLAMA_BASE_URL: "http://127.0.0.1:11434",
       },
     });
 
@@ -1118,7 +1118,7 @@ describe("explicit live model discovery scope", () => {
       },
       providers: ["ollama"],
       env: {
-        OPENCLAW_LIVE_OLLAMA_BASE_URL: "http://127.0.0.1:11434",
+        QUIET_CORE_LIVE_OLLAMA_BASE_URL: "http://127.0.0.1:11434",
         OLLAMA_API_KEY: "real-cloud-key",
       },
     });
@@ -1153,7 +1153,7 @@ describe("explicit live model discovery scope", () => {
         },
         providers: ["ollama"],
         env: {
-          OPENCLAW_LIVE_OLLAMA_BASE_URL: "https://ollama.com",
+          QUIET_CORE_LIVE_OLLAMA_BASE_URL: "https://ollama.com",
         },
       });
 
@@ -1718,13 +1718,13 @@ describeLive("live models (profile keys)", () => {
         Promise.resolve().then(() => getRuntimeConfig()),
         "[live-models] load config",
       );
-      const rawModels = process.env.OPENCLAW_LIVE_MODELS?.trim();
+      const rawModels = process.env.QUIET_CORE_LIVE_MODELS?.trim();
       const useModern = rawModels === "modern" || rawModels === "all";
       const useSmall = rawModels === "small";
       const useExplicit = Boolean(rawModels) && !useModern && !useSmall;
       const filter = useExplicit ? parseModelFilter(rawModels) : null;
       const explicitRefs = useExplicit ? parseExplicitLiveModelRefs(filter) : [];
-      const providers = parseProviderFilter(process.env.OPENCLAW_LIVE_PROVIDERS);
+      const providers = parseProviderFilter(process.env.QUIET_CORE_LIVE_PROVIDERS);
       const priorityRefs = useSmall
         ? filterLiveModelRefsByProvider(listPrioritizedSmallLiveModelRefs(), providers)
         : [];
@@ -1755,7 +1755,7 @@ describeLive("live models (profile keys)", () => {
       );
       if (!DIRECT_ENABLED) {
         logProgress(
-          "[live-models] skipping (set OPENCLAW_LIVE_MODELS=modern|small|all|<list>; all=modern)",
+          "[live-models] skipping (set QUIET_CORE_LIVE_MODELS=modern|small|all|<list>; all=modern)",
         );
         return;
       }
@@ -1821,9 +1821,9 @@ describeLive("live models (profile keys)", () => {
         }
         return augmented.models;
       })();
-      const perModelTimeoutMs = toInt(process.env.OPENCLAW_LIVE_MODEL_TIMEOUT_MS, 30_000);
+      const perModelTimeoutMs = toInt(process.env.QUIET_CORE_LIVE_MODEL_TIMEOUT_MS, 30_000);
       const maxModels = resolveHighSignalLiveModelLimit({
-        rawMaxModels: process.env.OPENCLAW_LIVE_MAX_MODELS,
+        rawMaxModels: process.env.QUIET_CORE_LIVE_MAX_MODELS,
         useExplicitModels: useExplicit,
         ...(useSmall ? { defaultLimit: DEFAULT_SMALL_LIVE_MODEL_LIMIT } : {}),
       });
@@ -1941,7 +1941,7 @@ describeLive("live models (profile keys)", () => {
       logProgress(`[live-models] selection=${selectionLabel}`);
       if (selectedCandidates.length < candidates.length) {
         logProgress(
-          `[live-models] capped to ${selectedCandidates.length}/${candidates.length} via OPENCLAW_LIVE_MAX_MODELS=${maxModels}`,
+          `[live-models] capped to ${selectedCandidates.length}/${candidates.length} via QUIET_CORE_LIVE_MAX_MODELS=${maxModels}`,
         );
       }
       logProgress(`[live-models] running ${selectedCandidates.length} models`);

@@ -119,7 +119,7 @@ describe("doctor exec safe bin helpers", () => {
   });
 
   it("flags safeBins that resolve outside trusted directories", () => {
-    const tempDir = mkdtempSync(join(tmpdir(), "openclaw-safe-bin-"));
+    const tempDir = mkdtempSync(join(tmpdir(), "quiet-core-bot-safe-bin-"));
     try {
       const binPath = join(tempDir, "custom-safe-bin");
       writeFileSync(binPath, "#!/bin/sh\nexit 0\n");

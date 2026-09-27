@@ -1,8 +1,8 @@
 /** Relays child ACP session stream updates back into the requester parent session. */
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
-import { asFiniteNumber } from "@openclaw/normalization-core/number-coercion";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { asFiniteNumber } from "@quiet-core/normalization-core/number-coercion";
+import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { readAcpSessionEntry } from "../acp/runtime/session-meta.js";
 import {
   isAcpTagVisible,
@@ -14,7 +14,7 @@ import {
   type StreamingCompatEntry,
 } from "../channels/streaming.js";
 import { resolveSessionFilePath, resolveSessionFilePathOptions } from "../config/sessions/paths.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import { onAgentEvent } from "../infra/agent-events.js";
 import {
   type EventSessionRoutingPolicy,

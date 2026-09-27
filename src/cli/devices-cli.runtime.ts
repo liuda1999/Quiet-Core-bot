@@ -3,8 +3,8 @@ import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
   normalizeStringifiedOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+} from "@quiet-core/normalization-core/string-coerce";
+import { uniqueStrings } from "@quiet-core/normalization-core/string-normalization";
 import {
   GATEWAY_CLIENT_MODES,
   GATEWAY_CLIENT_NAMES,
@@ -185,7 +185,7 @@ function buildFallbackStateMismatchError(details: ConnectPairingRequiredDetails)
       details.requestId
         ? `${FALLBACK_STATE_MISMATCH_MESSAGE} Missing requestId: ${details.requestId}.`
         : FALLBACK_STATE_MISMATCH_MESSAGE,
-      "The running gateway is probably using a different OPENCLAW_PROFILE or OPENCLAW_STATE_DIR than this CLI.",
+      "The running gateway is probably using a different QUIET_CORE_PROFILE or QUIET_CORE_STATE_DIR than this CLI.",
       "Rerun with the same profile/state-dir as the gateway, or pass --token/--password so the CLI can approve through the gateway.",
     ].join("\n"),
   );
@@ -637,7 +637,7 @@ function lookupPairedDevice(
 }
 
 function buildExplicitApproveCommand(opts: DevicesRpcOpts, requestId: string): string {
-  const args = ["openclaw", "devices", "approve", requestId];
+  const args = ["quiet-core-bot", "devices", "approve", requestId];
   const url = normalizeOptionalString(opts.url);
   if (url) {
     args.push("--url", url);

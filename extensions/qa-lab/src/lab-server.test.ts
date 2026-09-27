@@ -144,14 +144,14 @@ const captureMock = vi.hoisted(() => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/proxy-capture", () => ({
+vi.mock("quiet-core-bot/plugin-sdk/proxy-capture", () => ({
   acquireDebugProxyCaptureStore: () => ({
     store: captureMock.store,
     release: captureMock.store.close,
   }),
   getDebugProxyCaptureStore: () => captureMock.store,
   resolveDebugProxySettings: () => ({
-    proxyUrl: process.env.OPENCLAW_DEBUG_PROXY_URL ?? "",
+    proxyUrl: process.env.QUIET_CORE_DEBUG_PROXY_URL ?? "",
     sessionId: "qa-lab-test",
   }),
 }));
@@ -472,7 +472,7 @@ describe("qa-lab server", () => {
       path.join(evidenceDir, "qa-evidence.json"),
       `${JSON.stringify(
         {
-          kind: "openclaw.qa.evidence-summary",
+          kind: "quiet-core-bot.qa.evidence-summary",
           schemaVersion: 2,
           generatedAt: "2026-06-17T12:00:00.000Z",
           evidenceMode: "full",
@@ -902,7 +902,7 @@ describe("qa-lab server", () => {
         `  fs.writeFileSync(${JSON.stringify(stoppedPath)}, "terminated", "utf8");`,
         "  process.exit(0);",
         "});",
-        `fs.writeFileSync(${JSON.stringify(markerPath)}, process.env.OPENCLAW_CODEX_DISCOVERY_LIVE || "", "utf8");`,
+        `fs.writeFileSync(${JSON.stringify(markerPath)}, process.env.QUIET_CORE_CODEX_DISCOVERY_LIVE || "", "utf8");`,
         "setInterval(() => {}, 1000);",
       ].join("\n"),
       "utf8",
@@ -1043,14 +1043,14 @@ describe("qa-lab server", () => {
       id: "qa-capture-session",
       startedAt: Date.now(),
       mode: "proxy-run",
-      sourceScope: "openclaw",
-      sourceProcess: "openclaw",
+      sourceScope: "quiet-core-bot",
+      sourceProcess: "quiet-core-bot",
     });
     store.recordEvent({
       sessionId: "qa-capture-session",
       ts: Date.now(),
-      sourceScope: "openclaw",
-      sourceProcess: "openclaw",
+      sourceScope: "quiet-core-bot",
+      sourceProcess: "quiet-core-bot",
       protocol: "https",
       direction: "outbound",
       kind: "request",
@@ -1070,8 +1070,8 @@ describe("qa-lab server", () => {
     store.recordEvent({
       sessionId: "qa-capture-session",
       ts: Date.now() + 1,
-      sourceScope: "openclaw",
-      sourceProcess: "openclaw",
+      sourceScope: "quiet-core-bot",
+      sourceProcess: "quiet-core-bot",
       protocol: "https",
       direction: "outbound",
       kind: "request",
@@ -1091,8 +1091,8 @@ describe("qa-lab server", () => {
     store.recordEvent({
       sessionId: "qa-capture-session",
       ts: Date.now() + 2,
-      sourceScope: "openclaw",
-      sourceProcess: "openclaw",
+      sourceScope: "quiet-core-bot",
+      sourceProcess: "quiet-core-bot",
       protocol: "https",
       direction: "outbound",
       kind: "request",

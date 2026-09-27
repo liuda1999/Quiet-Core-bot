@@ -1,5 +1,5 @@
 // Model auth tests cover provider auth status, expiry, and display helpers.
-import { MAX_DATE_TIMESTAMP_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_DATE_TIMESTAMP_MS } from "@quiet-core/normalization-core/number-coercion";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../../config/config.js";
 import type { ProviderPlugin } from "../../plugins/types.js";
@@ -369,9 +369,9 @@ describe("modelsAuthLoginCommand", () => {
     mocks.removeProviderAuthProfilesWithLock.mockResolvedValue({ version: 1, profiles: {} });
 
     mocks.resolveDefaultAgentId.mockReturnValue("main");
-    mocks.resolveAgentDir.mockReturnValue("/tmp/openclaw/agents/main");
-    mocks.resolveAgentWorkspaceDir.mockReturnValue("/tmp/openclaw/workspace");
-    mocks.resolveDefaultAgentWorkspaceDir.mockReturnValue("/tmp/openclaw/workspace");
+    mocks.resolveAgentDir.mockReturnValue("/tmp/quiet-core-bot/agents/main");
+    mocks.resolveAgentWorkspaceDir.mockReturnValue("/tmp/quiet-core-bot/workspace");
+    mocks.resolveDefaultAgentWorkspaceDir.mockReturnValue("/tmp/quiet-core-bot/workspace");
     mocks.isRemoteEnvironment.mockReturnValue(false);
     mocks.resolvePluginSetupProvider.mockReturnValue(undefined);
     mocks.resolvePluginSetupRegistry.mockReturnValue({
@@ -429,15 +429,15 @@ describe("modelsAuthLoginCommand", () => {
   function useCoderAgentConfig() {
     currentConfig = {
       agents: {
-        list: [{ id: "main" }, { id: "coder", workspace: "/tmp/openclaw/workspaces/coder" }],
+        list: [{ id: "main" }, { id: "coder", workspace: "/tmp/quiet-core-bot/workspaces/coder" }],
       },
     };
     const originalConfig = currentConfig;
     mocks.resolveAgentDir.mockImplementation((_cfg: OpenClawConfig, agentId: string) =>
-      agentId === "coder" ? "/tmp/openclaw/agents/coder" : "/tmp/openclaw/agents/main",
+      agentId === "coder" ? "/tmp/quiet-core-bot/agents/coder" : "/tmp/quiet-core-bot/agents/main",
     );
     mocks.resolveAgentWorkspaceDir.mockImplementation((_cfg: OpenClawConfig, agentId: string) =>
-      agentId === "coder" ? "/tmp/openclaw/workspaces/coder" : "/tmp/openclaw/workspace",
+      agentId === "coder" ? "/tmp/quiet-core-bot/workspaces/coder" : "/tmp/quiet-core-bot/workspace",
     );
     return originalConfig;
   }
@@ -464,7 +464,7 @@ describe("modelsAuthLoginCommand", () => {
 
     await modelsAuthLoginCommand({ provider: "openai" }, runtime);
 
-    expect(mocks.loadAuthProfileStoreForRuntime).toHaveBeenCalledWith("/tmp/openclaw/agents/main", {
+    expect(mocks.loadAuthProfileStoreForRuntime).toHaveBeenCalledWith("/tmp/quiet-core-bot/agents/main", {
       externalCli: {
         mode: "scoped",
         allowKeychainPrompt: false,
@@ -474,7 +474,7 @@ describe("modelsAuthLoginCommand", () => {
     expect(mocks.clearAuthProfileCooldown).toHaveBeenCalledWith({
       store: fakeStore,
       profileId: "openai:user@example.com",
-      agentDir: "/tmp/openclaw/agents/main",
+      agentDir: "/tmp/quiet-core-bot/agents/main",
     });
     expect(mocks.clearAuthProfileCooldown.mock.invocationCallOrder[0]).toBeLessThan(
       runProviderAuth.mock.invocationCallOrder[0],
@@ -484,9 +484,9 @@ describe("modelsAuthLoginCommand", () => {
     expect(upsertCall.profileId).toBe("openai:user@example.com");
     expect(upsertCall.credential?.type).toBe("oauth");
     expect(upsertCall.credential?.provider).toBe("openai");
-    expect(upsertCall.agentDir).toBe("/tmp/openclaw/agents/main");
+    expect(upsertCall.agentDir).toBe("/tmp/quiet-core-bot/agents/main");
     expect(mocks.promoteAuthProfileInOrder).toHaveBeenCalledWith({
-      agentDir: "/tmp/openclaw/agents/main",
+      agentDir: "/tmp/quiet-core-bot/agents/main",
       provider: "openai",
       profileId: "openai:user@example.com",
       createIfMissing: false,
@@ -519,7 +519,7 @@ describe("modelsAuthLoginCommand", () => {
 
     expect(mocks.updateConfig).not.toHaveBeenCalled();
     expect(mocks.promoteAuthProfileInOrder).toHaveBeenCalledWith({
-      agentDir: "/tmp/openclaw/agents/main",
+      agentDir: "/tmp/quiet-core-bot/agents/main",
       provider: "openai",
       profileId: "openai:user@example.com",
       createIfMissing: true,
@@ -541,7 +541,7 @@ describe("modelsAuthLoginCommand", () => {
 
     expect(mocks.updateConfig).not.toHaveBeenCalled();
     expect(mocks.promoteAuthProfileInOrder).toHaveBeenCalledWith({
-      agentDir: "/tmp/openclaw/agents/main",
+      agentDir: "/tmp/quiet-core-bot/agents/main",
       provider: "openai",
       profileId: "openai:user@example.com",
       createIfMissing: true,
@@ -642,7 +642,7 @@ describe("modelsAuthLoginCommand", () => {
     expect(mocks.resolvePluginSetupProvider).toHaveBeenCalledWith({
       provider: "openai",
       config: initialConfig,
-      workspaceDir: "/tmp/openclaw/workspace",
+      workspaceDir: "/tmp/quiet-core-bot/workspace",
     });
     expect(runOauthAuth).toHaveBeenCalledOnce();
     expect(runApiKeyAuth).not.toHaveBeenCalled();
@@ -650,7 +650,7 @@ describe("modelsAuthLoginCommand", () => {
     expect(mocks.clearAuthProfileCooldown).toHaveBeenCalledWith({
       store: fakeStore,
       profileId: "openai:api-key-backup",
-      agentDir: "/tmp/openclaw/agents/main",
+      agentDir: "/tmp/quiet-core-bot/agents/main",
     });
     expect(mocks.clearAuthProfileCooldown).toHaveBeenCalledOnce();
   });
@@ -807,7 +807,7 @@ describe("modelsAuthLoginCommand", () => {
     expect(mocks.resolveDefaultAgentId).not.toHaveBeenCalled();
     expect(mocks.resolveAgentDir).toHaveBeenCalledWith(originalConfig, "coder");
     expect(mocks.loadAuthProfileStoreForRuntime).toHaveBeenCalledWith(
-      "/tmp/openclaw/agents/coder",
+      "/tmp/quiet-core-bot/agents/coder",
       {
         externalCli: {
           mode: "scoped",
@@ -817,11 +817,11 @@ describe("modelsAuthLoginCommand", () => {
       },
     );
     const authRunCall = readMockCallArg(runProviderAuth) as AuthRunCall;
-    expect(authRunCall.agentDir).toBe("/tmp/openclaw/agents/coder");
-    expect(authRunCall.workspaceDir).toBe("/tmp/openclaw/workspaces/coder");
+    expect(authRunCall.agentDir).toBe("/tmp/quiet-core-bot/agents/coder");
+    expect(authRunCall.workspaceDir).toBe("/tmp/quiet-core-bot/workspaces/coder");
     expect(
       (readMockCallArg(mocks.upsertAuthProfileWithLock) as UpsertAuthProfileCall).agentDir,
-    ).toBe("/tmp/openclaw/agents/coder");
+    ).toBe("/tmp/quiet-core-bot/agents/coder");
   });
 
   it("loads the owning plugin for an explicit provider even in a clean config", async () => {
@@ -868,7 +868,7 @@ describe("modelsAuthLoginCommand", () => {
       mocks.resolvePluginProviders,
     ) as ResolvePluginProvidersCall;
     expect(providerResolutionCall.config).toEqual({});
-    expect(providerResolutionCall.workspaceDir).toBe("/tmp/openclaw/workspace");
+    expect(providerResolutionCall.workspaceDir).toBe("/tmp/quiet-core-bot/workspace");
     expect(providerResolutionCall.bundledProviderVitestCompat).toBe(true);
     expect(providerResolutionCall.includeUntrustedWorkspacePlugins).toBe(false);
     expect(providerResolutionCall.providerRefs).toEqual(["anthropic"]);
@@ -910,8 +910,8 @@ describe("modelsAuthLoginCommand", () => {
     const runApiKeyAuth = vi.fn();
     const runClaudeCliMigration = vi.fn().mockImplementation(async (ctx) => {
       expect(ctx.config).toEqual(currentConfig);
-      expect(ctx.agentDir).toBe("/tmp/openclaw/agents/main");
-      expect(ctx.workspaceDir).toBe("/tmp/openclaw/workspace");
+      expect(ctx.agentDir).toBe("/tmp/quiet-core-bot/agents/main");
+      expect(ctx.workspaceDir).toBe("/tmp/quiet-core-bot/workspace");
       expect(ctx.prompter.note).toBe(note);
       expect(ctx.prompter.select).toBe(select);
       expect(ctx.runtime).toBe(runtime);
@@ -999,12 +999,12 @@ describe("modelsAuthLoginCommand", () => {
     expect(mocks.clearAuthProfileCooldown).toHaveBeenNthCalledWith(1, {
       store: fakeStore,
       profileId: "anthropic:claude-cli",
-      agentDir: "/tmp/openclaw/agents/main",
+      agentDir: "/tmp/quiet-core-bot/agents/main",
     });
     expect(mocks.clearAuthProfileCooldown).toHaveBeenNthCalledWith(2, {
       store: fakeStore,
       profileId: "anthropic:legacy",
-      agentDir: "/tmp/openclaw/agents/main",
+      agentDir: "/tmp/quiet-core-bot/agents/main",
     });
     expect(
       mocks.clearAuthProfileCooldown.mock.invocationCallOrder.every(
@@ -1189,7 +1189,7 @@ describe("modelsAuthLoginCommand", () => {
 
     expect(mocks.removeProviderAuthProfilesWithLock).toHaveBeenCalledWith({
       provider: "openai",
-      agentDir: "/tmp/openclaw/agents/main",
+      agentDir: "/tmp/quiet-core-bot/agents/main",
     });
     expect(runProviderAuth).toHaveBeenCalledOnce();
     expect(runtime.log).toHaveBeenCalledWith(
@@ -1331,7 +1331,7 @@ describe("modelsAuthLoginCommand", () => {
         provider: "anthropic",
         token: `sk-ant-oat01-${"a".repeat(80)}`,
       },
-      agentDir: "/tmp/openclaw/agents/main",
+      agentDir: "/tmp/quiet-core-bot/agents/main",
     });
     expect(runtime.log).toHaveBeenCalledWith(
       "Anthropic setup-token auth is supported in Quiet Core bot.",
@@ -1359,7 +1359,7 @@ describe("modelsAuthLoginCommand", () => {
         provider: "openai",
         token: "openai-token",
       },
-      agentDir: "/tmp/openclaw/agents/coder",
+      agentDir: "/tmp/quiet-core-bot/agents/coder",
     });
   });
 
@@ -1447,7 +1447,7 @@ describe("modelsAuthLoginCommand", () => {
         provider: "openai",
         key: "sk-openai-chatgpt-api-key-value",
       },
-      agentDir: "/tmp/openclaw/agents/coder",
+      agentDir: "/tmp/quiet-core-bot/agents/coder",
     });
     expect(lastUpdatedConfig?.auth?.profiles?.["openai:manual"]).toEqual({
       provider: "openai",
@@ -1471,7 +1471,7 @@ describe("modelsAuthLoginCommand", () => {
         provider: "openai",
         key: "sk-openai-chatgpt-api-key-value",
       },
-      agentDir: "/tmp/openclaw/agents/main",
+      agentDir: "/tmp/quiet-core-bot/agents/main",
     });
     expect(lastUpdatedConfig?.auth?.profiles?.["openai:manual"]).toEqual({
       provider: "openai",
@@ -1494,7 +1494,7 @@ describe("modelsAuthLoginCommand", () => {
         provider: "openai",
         key: "sk-openai-chat-api-key-value",
       },
-      agentDir: "/tmp/openclaw/agents/main",
+      agentDir: "/tmp/quiet-core-bot/agents/main",
     });
     expect(lastUpdatedConfig?.auth?.profiles?.["openai:manual"]).toEqual({
       provider: "openai",
@@ -1582,7 +1582,7 @@ describe("modelsAuthLoginCommand", () => {
         provider: "moonshot",
         token: "moonshot-token",
       },
-      agentDir: "/tmp/openclaw/agents/main",
+      agentDir: "/tmp/quiet-core-bot/agents/main",
     });
   });
 
@@ -1620,11 +1620,11 @@ describe("modelsAuthLoginCommand", () => {
 
     expect(mocks.resolveDefaultAgentId).not.toHaveBeenCalled();
     const tokenAuthCall = readMockCallArg(runTokenAuth) as AuthRunCall;
-    expect(tokenAuthCall.agentDir).toBe("/tmp/openclaw/agents/coder");
-    expect(tokenAuthCall.workspaceDir).toBe("/tmp/openclaw/workspaces/coder");
+    expect(tokenAuthCall.agentDir).toBe("/tmp/quiet-core-bot/agents/coder");
+    expect(tokenAuthCall.workspaceDir).toBe("/tmp/quiet-core-bot/workspaces/coder");
     expect(
       (readMockCallArg(mocks.upsertAuthProfileWithLock) as UpsertAuthProfileCall).agentDir,
-    ).toBe("/tmp/openclaw/agents/coder");
+    ).toBe("/tmp/quiet-core-bot/agents/coder");
   });
 
   it("uses the requested agent store for interactive token auth add", async () => {
@@ -1662,11 +1662,11 @@ describe("modelsAuthLoginCommand", () => {
 
     expect(mocks.resolveDefaultAgentId).not.toHaveBeenCalled();
     const tokenAuthCall = readMockCallArg(runTokenAuth) as AuthRunCall;
-    expect(tokenAuthCall.agentDir).toBe("/tmp/openclaw/agents/coder");
-    expect(tokenAuthCall.workspaceDir).toBe("/tmp/openclaw/workspaces/coder");
+    expect(tokenAuthCall.agentDir).toBe("/tmp/quiet-core-bot/agents/coder");
+    expect(tokenAuthCall.workspaceDir).toBe("/tmp/quiet-core-bot/workspaces/coder");
     expect(
       (readMockCallArg(mocks.upsertAuthProfileWithLock) as UpsertAuthProfileCall).agentDir,
-    ).toBe("/tmp/openclaw/agents/coder");
+    ).toBe("/tmp/quiet-core-bot/agents/coder");
   });
 
   it("keeps the requested agent store when interactive auth add falls back to paste-token", async () => {
@@ -1688,7 +1688,7 @@ describe("modelsAuthLoginCommand", () => {
         provider: "openai",
         token: "openai-token",
       },
-      agentDir: "/tmp/openclaw/agents/coder",
+      agentDir: "/tmp/quiet-core-bot/agents/coder",
     });
   });
 });

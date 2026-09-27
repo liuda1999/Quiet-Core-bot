@@ -1,7 +1,7 @@
 // Gateway auxiliary handler tests cover hot config reload behavior, prepared
 // secret snapshot updates, and restart-plan side effects.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import {
   activateSecretsRuntimeSnapshot,
   clearSecretsRuntimeSnapshot,
@@ -184,20 +184,20 @@ function createSecretsReloadHarnessWithChannelMocks(
 }
 
 // Other gateway test helpers (e.g. test-helpers.mocks.ts, test-helpers.server.ts)
-// set OPENCLAW_SKIP_CHANNELS / OPENCLAW_SKIP_PROVIDERS at module load. When a
+// set QUIET_CORE_SKIP_CHANNELS / QUIET_CORE_SKIP_PROVIDERS at module load. When a
 // shared vitest worker imports those helpers before this file's tests run,
 // the leaked env vars route the secrets.reload skip-mode branch and prevent
 // the channel restart loop from firing. Reset them before every test so this
 // suite is independent of worker import order.
 beforeEach(() => {
-  delete process.env.OPENCLAW_SKIP_CHANNELS;
-  delete process.env.OPENCLAW_SKIP_PROVIDERS;
+  delete process.env.QUIET_CORE_SKIP_CHANNELS;
+  delete process.env.QUIET_CORE_SKIP_PROVIDERS;
 });
 
 afterEach(() => {
   clearSecretsRuntimeSnapshot();
-  delete process.env.OPENCLAW_SKIP_CHANNELS;
-  delete process.env.OPENCLAW_SKIP_PROVIDERS;
+  delete process.env.QUIET_CORE_SKIP_CHANNELS;
+  delete process.env.QUIET_CORE_SKIP_PROVIDERS;
 });
 
 describe("gateway aux handlers", () => {
@@ -411,7 +411,7 @@ describe("gateway aux handlers", () => {
 
   it("fails reload when channel restarts are required but skip flags block them", async () => {
     const buildReloadPlan = buildRestartChannelsPlan("slack");
-    process.env.OPENCLAW_SKIP_CHANNELS = "1";
+    process.env.QUIET_CORE_SKIP_CHANNELS = "1";
     activateSnapshot(slackConfig("old-slack-secret"));
     const activateRuntimeSecrets = mockResolvedSecrets(slackConfig("new-slack-secret"));
 

@@ -7,16 +7,16 @@ describe("formatCliFailureLines", () => {
     const lines = formatCliFailureLines({
       title: "Could not start the CLI.",
       error: new Error("config file is invalid"),
-      argv: ["node", "openclaw", "status"],
+      argv: ["node", "quiet-core-bot", "status"],
       env: {},
     });
 
     expect(lines).toEqual([
-      "[openclaw] Could not start the CLI.",
-      "[openclaw] Reason: config file is invalid",
-      "[openclaw] Debug: set OPENCLAW_DEBUG=1 to include the stack trace.",
-      "[openclaw] Try: quiet-core-bot doctor",
-      "[openclaw] Help: quiet-core-bot --help",
+      "[quiet-core-bot] Could not start the CLI.",
+      "[quiet-core-bot] Reason: config file is invalid",
+      "[quiet-core-bot] Debug: set QUIET_CORE_DEBUG=1 to include the stack trace.",
+      "[quiet-core-bot] Try: quiet-core-bot doctor",
+      "[quiet-core-bot] Help: quiet-core-bot --help",
     ]);
   });
 
@@ -24,14 +24,14 @@ describe("formatCliFailureLines", () => {
     const lines = formatCliFailureLines({
       title: "The CLI command failed.",
       error: new Error("boom"),
-      env: { OPENCLAW_DEBUG: "1" },
+      env: { QUIET_CORE_DEBUG: "1" },
     });
 
     expect(lines.slice(0, 4)).toEqual([
-      "[openclaw] The CLI command failed.",
-      "[openclaw] Reason: boom",
-      "[openclaw] Stack:",
-      "[openclaw] Error: boom",
+      "[quiet-core-bot] The CLI command failed.",
+      "[quiet-core-bot] Reason: boom",
+      "[quiet-core-bot] Stack:",
+      "[quiet-core-bot] Error: boom",
     ]);
     expect(lines.join("\n")).toContain("Error: boom");
   });

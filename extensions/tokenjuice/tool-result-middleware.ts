@@ -4,7 +4,7 @@ import type {
   AgentToolResultMiddleware,
   AgentToolResultMiddlewareEvent,
   OpenClawAgentToolResult,
-} from "openclaw/plugin-sdk/agent-harness";
+} from "quiet-core-bot/plugin-sdk/agent-harness";
 import { createTokenjuiceOpenClawEmbeddedExtension } from "./runtime-api.js";
 
 type TokenjuiceToolResultHandler = (

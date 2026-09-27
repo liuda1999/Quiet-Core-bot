@@ -50,7 +50,7 @@ quiet-core-bot approvals approve <id>     # or: --always
 quiet-core-bot approvals deny <id>
 ```
 
-`openclaw agent` reports the block and these commands when a turn ends while a
+`quiet-core-bot agent` reports the block and these commands when a turn ends while a
 request is still pending. See [Approvals CLI](/cli/approvals).
 
 <Tip>
@@ -64,7 +64,7 @@ pending approval message. For example, Matrix seeds reaction shortcuts
 
 Exec approvals are enforced locally on the execution host:
 
-- **Gateway host** → `openclaw` process on the gateway machine.
+- **Gateway host** → `quiet-core-bot` process on the gateway machine.
 - **Node host** → node runner (macOS companion app or headless node host).
 
 ### Trust model
@@ -85,17 +85,17 @@ Exec approvals are enforced locally on the execution host:
 ## Settings and storage
 
 Approvals live in a local JSON file on the execution host. When
-`OPENCLAW_STATE_DIR` is set, the file follows that state directory;
+`QUIET_CORE_STATE_DIR` is set, the file follows that state directory;
 otherwise it uses the default Quiet Core bot state directory:
 
 ```text
-$OPENCLAW_STATE_DIR/exec-approvals.json
+$QUIET_CORE_STATE_DIR/exec-approvals.json
 # otherwise
 ~/.quiet-core-bot/exec-approvals.json
 ```
 
 The default approval socket follows the same root:
-`$OPENCLAW_STATE_DIR/exec-approvals.sock`, or
+`$QUIET_CORE_STATE_DIR/exec-approvals.sock`, or
 `~/.quiet-core-bot/exec-approvals.sock` when the variable is unset.
 
 Example schema:

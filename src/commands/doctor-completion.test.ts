@@ -11,7 +11,7 @@ import {
   type ShellCompletionStatus,
 } from "./doctor-completion.js";
 
-const originalEnv = captureEnv(["HOME", "OPENCLAW_STATE_DIR", "SHELL"]);
+const originalEnv = captureEnv(["HOME", "QUIET_CORE_STATE_DIR", "SHELL"]);
 const tempDirs: string[] = [];
 
 afterEach(async () => {
@@ -26,7 +26,7 @@ function status(overrides: Partial<ShellCompletionStatus> = {}): ShellCompletion
     shell: "zsh",
     profileInstalled: true,
     cacheExists: true,
-    cachePath: "/tmp/openclaw.zsh",
+    cachePath: "/tmp/quiet-core-bot.zsh",
     usesSlowPattern: false,
     ...overrides,
   };
@@ -34,17 +34,17 @@ function status(overrides: Partial<ShellCompletionStatus> = {}): ShellCompletion
 
 describe("shell completion health mapping", () => {
   it("checks an explicit shell instead of the detected environment shell", async () => {
-    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-completion-home-"));
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-completion-state-"));
+    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-completion-home-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-completion-state-"));
     tempDirs.push(homeDir, stateDir);
     setTestEnvValue("HOME", homeDir);
-    setTestEnvValue("OPENCLAW_STATE_DIR", stateDir);
+    setTestEnvValue("QUIET_CORE_STATE_DIR", stateDir);
     setTestEnvValue("SHELL", "/bin/zsh");
 
-    const current = await checkShellCompletionStatus("openclaw", { shell: "fish" });
+    const current = await checkShellCompletionStatus("quiet-core-bot", { shell: "fish" });
 
     expect(current.shell).toBe("fish");
-    expect(current.cachePath).toBe(path.join(stateDir, "completions", "openclaw.fish"));
+    expect(current.cachePath).toBe(path.join(stateDir, "completions", "quiet-core-bot.fish"));
     expect(current.profileInstalled).toBe(false);
     expect(current.cacheExists).toBe(false);
   });
@@ -63,7 +63,7 @@ describe("shell completion health mapping", () => {
       {
         kind: "state",
         action: "would-generate-completion-cache",
-        target: "/tmp/openclaw.zsh",
+        target: "/tmp/quiet-core-bot.zsh",
         dryRunSafe: true,
       },
       {
@@ -89,7 +89,7 @@ describe("shell completion health mapping", () => {
       {
         kind: "state",
         action: "would-regenerate-completion-cache",
-        target: "/tmp/openclaw.zsh",
+        target: "/tmp/quiet-core-bot.zsh",
         dryRunSafe: true,
       },
     ]);

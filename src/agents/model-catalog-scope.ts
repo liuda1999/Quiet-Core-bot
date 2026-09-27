@@ -4,9 +4,9 @@
 import {
   findNormalizedProviderValue,
   normalizeProviderId,
-} from "@openclaw/model-catalog-core/provider-id";
-import { normalizeUniqueSingleOrTrimmedStringList } from "@openclaw/normalization-core/string-normalization";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+} from "@quiet-core/model-catalog-core/provider-id";
+import { normalizeUniqueSingleOrTrimmedStringList } from "@quiet-core/normalization-core/string-normalization";
+import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 
 // Scope refs feed provider discovery and model catalog lookups. Keep the
 // ordering deterministic so prompt/cache inputs do not drift across runs.

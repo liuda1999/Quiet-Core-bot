@@ -11,8 +11,8 @@ Adds Venice model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/venice-provider`
-- Install route: npm; ClawHub: `clawhub:@openclaw/venice-provider`
+- Package: `@quiet-core/venice-provider`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/venice-provider`
 
 ## Surface
 

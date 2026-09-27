@@ -116,7 +116,7 @@ harness options in Quiet Core bot config, and use the CLI only for Codex auth:
 | Sign in with ChatGPT/Codex OAuth       | `quiet-core-bot models auth login --provider openai`                             | CLI auth profile                         |
 | Add API-key backup for Codex runs      | `openai:*` API-key profile listed after subscription auth in `auth.order.openai` | CLI auth profile + Quiet Core bot config |
 | Fail closed when Codex is unavailable  | Provider or model `agentRuntime.id: "codex"`                                     | Quiet Core bot model/provider config     |
-| Use direct OpenAI API traffic          | Provider or model `agentRuntime.id: "openclaw"` with normal OpenAI auth          | Quiet Core bot model/provider config     |
+| Use direct OpenAI API traffic          | Provider or model `agentRuntime.id: "quiet-core-bot"` with normal OpenAI auth          | Quiet Core bot model/provider config     |
 | Tune app-server behavior               | `plugins.entries.codex.config.appServer.*`                                       | Codex plugin config                      |
 | Enable native Codex plugin apps        | `plugins.entries.codex.config.codexPlugins.*`                                    | Codex plugin config                      |
 | Enable Codex Computer Use              | `plugins.entries.codex.config.computerUse.*`                                     | Codex plugin config                      |
@@ -200,7 +200,7 @@ Keep provider refs and runtime policy separate:
   repair legacy refs and stale session route pins.
 - `agentRuntime.id: "codex"` is optional for normal OpenAI auto mode, but useful
   when a deployment should fail closed if Codex is unavailable.
-- `agentRuntime.id: "openclaw"` opts a provider or model into the Quiet Core bot
+- `agentRuntime.id: "quiet-core-bot"` opts a provider or model into the Quiet Core bot
   embedded runtime when that is intentional.
 - `/codex ...` controls native Codex app-server conversations from chat.
 - ACP/acpx is a separate external harness path. Use it only when the user asks
@@ -223,7 +223,7 @@ Common command routing:
 | ---------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------- | ------------------------------------------- |
 | ChatGPT/Codex subscription with native Codex runtime | `openai/gpt-*` plus enabled `codex` plugin                             | `/status` shows `Runtime: OpenAI Codex`   | Recommended path                            |
 | Fail closed if Codex is unavailable                  | Provider or model `agentRuntime.id: "codex"`                           | Turn fails instead of embedded fallback   | Use for Codex-only deployments              |
-| Direct OpenAI API-key traffic through Quiet Core bot | Provider or model `agentRuntime.id: "openclaw"` and normal OpenAI auth | `/status` shows Quiet Core bot runtime    | Use only when Quiet Core bot is intentional |
+| Direct OpenAI API-key traffic through Quiet Core bot | Provider or model `agentRuntime.id: "quiet-core-bot"` and normal OpenAI auth | `/status` shows Quiet Core bot runtime    | Use only when Quiet Core bot is intentional |
 | Legacy config                                        | legacy Codex GPT refs                                                  | `quiet-core-bot doctor --fix` rewrites it | Do not write new config this way            |
 | ACP/acpx Codex adapter                               | ACP `sessions_spawn({ runtime: "acp" })`                               | ACP task/session status                   | Separate from native Codex harness          |
 
@@ -509,7 +509,7 @@ dynamic tools that duplicate Codex-native workspace operations: `read`, `write`,
 `edit`, `apply_patch`, `exec`, `process`, and `update_plan`. Most remaining
 Quiet Core bot integration tools such as messaging, media, cron, browser, nodes,
 gateway, and `heartbeat_respond` are available through Codex tool search under
-the `openclaw` namespace, keeping the initial model context smaller. Web search
+the `quiet-core-bot` namespace, keeping the initial model context smaller. Web search
 uses Codex's hosted `web_search` tool by default when search is enabled and no
 managed provider is selected. Native hosted search and Quiet Core bot's managed
 `web_search` dynamic tool are mutually exclusive so managed search cannot bypass
@@ -527,7 +527,7 @@ restricted thread and preserve the existing binding for later resume.
 `sessions_yield` and message-tool-only source replies stay direct because
 those are turn-control contracts. `sessions_spawn` stays searchable so Codex's
 native `spawn_agent` remains the primary Codex subagent surface, while explicit
-Quiet Core bot or ACP delegation is still available through the `openclaw` dynamic
+Quiet Core bot or ACP delegation is still available through the `quiet-core-bot` dynamic
 tool namespace. Heartbeat collaboration instructions tell Codex to search for
 `heartbeat_respond` before ending a heartbeat turn when the tool is not already
 loaded.
@@ -572,7 +572,7 @@ Supported `appServer` fields:
 contract. When enabled, Quiet Core bot also sets `features.network_proxy.enabled` and
 `default_permissions` in the Codex thread config so the generated permission
 profile can start Codex managed networking. By default, Quiet Core bot generates a
-collision-resistant `openclaw-network-<fingerprint>` profile name from the
+collision-resistant `quiet-core-bot-network-<fingerprint>` profile name from the
 profile body; use `profileName` only when a stable local name is required.
 
 ```js
@@ -666,18 +666,18 @@ tool content.
 
 Environment overrides remain available for local testing:
 
-- `OPENCLAW_CODEX_APP_SERVER_BIN`
-- `OPENCLAW_CODEX_APP_SERVER_ARGS`
-- `OPENCLAW_CODEX_APP_SERVER_MODE=yolo|guardian`
-- `OPENCLAW_CODEX_APP_SERVER_APPROVAL_POLICY`
-- `OPENCLAW_CODEX_APP_SERVER_SANDBOX`
+- `QUIET_CORE_CODEX_APP_SERVER_BIN`
+- `QUIET_CORE_CODEX_APP_SERVER_ARGS`
+- `QUIET_CORE_CODEX_APP_SERVER_MODE=yolo|guardian`
+- `QUIET_CORE_CODEX_APP_SERVER_APPROVAL_POLICY`
+- `QUIET_CORE_CODEX_APP_SERVER_SANDBOX`
 
-`OPENCLAW_CODEX_APP_SERVER_BIN` bypasses the managed binary when
+`QUIET_CORE_CODEX_APP_SERVER_BIN` bypasses the managed binary when
 `appServer.command` is unset.
 
-`OPENCLAW_CODEX_APP_SERVER_GUARDIAN=1` was removed. Use
+`QUIET_CORE_CODEX_APP_SERVER_GUARDIAN=1` was removed. Use
 `plugins.entries.codex.config.appServer.mode: "guardian"` instead, or
-`OPENCLAW_CODEX_APP_SERVER_MODE=guardian` for one-off local testing. Config is
+`QUIET_CORE_CODEX_APP_SERVER_MODE=guardian` for one-off local testing. Config is
 preferred for repeatable deployments because it keeps the plugin behavior in the
 same reviewed file as the rest of the Codex harness setup.
 
@@ -786,10 +786,10 @@ Ask affected collaborators to run this read-only command on their Quiet Core bot
 (
   pattern='openai/gpt-5\.[45]|openai[-]codex|agentRuntime(\.id)?|harnessRuntime|Runtime: OpenAI Codex|legacy OpenAI Codex prefix|resolveSelectedOpenAIRuntimeProvider|candidateProvider[": ]+openai|status[": ]+401|Incorrect API key|No API key|api-key path|API-key path|OAuth'
 
-  if ls /tmp/openclaw/openclaw-*.log >/dev/null 2>&1; then
-    grep -E -i -n "$pattern" /tmp/openclaw/openclaw-*.log 2>/dev/null || true
+  if ls /tmp/quiet-core-bot/quiet-core-bot-*.log >/dev/null 2>&1; then
+    grep -E -i -n "$pattern" /tmp/quiet-core-bot/quiet-core-bot-*.log 2>/dev/null || true
   else
-    journalctl --user -u openclaw-gateway --since today --no-pager 2>/dev/null \
+    journalctl --user -u quiet-core-bot-gateway --since today --no-pager 2>/dev/null \
       | grep -E -i "$pattern" || true
   fi
 ) | sed -E \

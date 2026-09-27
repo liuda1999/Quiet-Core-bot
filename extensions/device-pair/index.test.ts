@@ -5,8 +5,8 @@ import path from "node:path";
 import type {
   OpenClawPluginCommandDefinition,
   PluginCommandContext,
-} from "openclaw/plugin-sdk/core";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+} from "quiet-core-bot/plugin-sdk/core";
+import { createTestPluginApi } from "quiet-core-bot/plugin-sdk/plugin-test-api";
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawPluginApi } from "./api.js";
 
@@ -19,7 +19,7 @@ const pluginApiMocks = vi.hoisted(() => ({
   revokeDeviceBootstrapToken: vi.fn(async () => ({ removed: true })),
   renderQrPngDataUrl: vi.fn(async () => "data:image/png;base64,ZmFrZXBuZw=="),
   resolveGatewayPort: vi.fn(() => 18789),
-  resolvePreferredOpenClawTmpDir: vi.fn(() => path.join(os.tmpdir(), "openclaw-device-pair-tests")),
+  resolvePreferredOpenClawTmpDir: vi.fn(() => path.join(os.tmpdir(), "quiet-core-bot-device-pair-tests")),
   writeQrPngTempFile: vi.fn(async (dataValue: string, opts: { tmpRoot: string }) => {
     const dirPath = await fs.mkdtemp(path.join(opts.tmpRoot, "device-pair-qr-"));
     const filePath = path.join(dirPath, "pair-qr.png");
@@ -835,7 +835,7 @@ describe("device-pair /pair default setup code", () => {
   it("allows mdns cleartext setup urls", async () => {
     const command = registerPairCommand({
       pluginConfig: {
-        publicUrl: "ws://openclaw.local:18789",
+        publicUrl: "ws://quiet-core-bot.local:18789",
       },
     });
     const result = await command.handler(
@@ -848,7 +848,7 @@ describe("device-pair /pair default setup code", () => {
     );
 
     expect(pluginApiMocks.issueDeviceBootstrapToken).toHaveBeenCalledTimes(1);
-    expect(requireText(result)).toContain("Gateway: ws://openclaw.local:18789");
+    expect(requireText(result)).toContain("Gateway: ws://quiet-core-bot.local:18789");
   });
 
   it("rejects public cleartext setup urls before issuing setup codes", async () => {

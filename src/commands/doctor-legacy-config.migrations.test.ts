@@ -64,7 +64,7 @@ vi.mock("../secrets/target-registry.js", () => {
   const entry = {
     id: "channels.discord.token",
     targetType: "channels.discord.token",
-    configFile: "openclaw.json",
+    configFile: "quiet-core-bot.json",
     pathPattern: "channels.discord.token",
     secretShape: "secret_input",
     expectedResolvedValue: "string",
@@ -148,9 +148,9 @@ describe("normalizeCompatibilityConfigValues", () => {
   });
 
   beforeAll(() => {
-    previousOauthDir = process.env.OPENCLAW_OAUTH_DIR;
-    tempOauthDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-oauth-"));
-    process.env.OPENCLAW_OAUTH_DIR = tempOauthDir;
+    previousOauthDir = process.env.QUIET_CORE_OAUTH_DIR;
+    tempOauthDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-oauth-"));
+    process.env.QUIET_CORE_OAUTH_DIR = tempOauthDir;
   });
 
   beforeEach(() => {
@@ -160,9 +160,9 @@ describe("normalizeCompatibilityConfigValues", () => {
 
   afterAll(() => {
     if (previousOauthDir === undefined) {
-      delete process.env.OPENCLAW_OAUTH_DIR;
+      delete process.env.QUIET_CORE_OAUTH_DIR;
     } else {
-      process.env.OPENCLAW_OAUTH_DIR = previousOauthDir;
+      process.env.QUIET_CORE_OAUTH_DIR = previousOauthDir;
     }
     fs.rmSync(tempOauthDir, { recursive: true, force: true });
   });
@@ -174,13 +174,13 @@ describe("normalizeCompatibilityConfigValues", () => {
       },
       messages: {
         groupChat: {
-          mentionPatterns: ["@openclaw"],
+          mentionPatterns: ["@quiet-core-bot"],
         },
       },
     });
 
     expect(res.config.messages?.groupChat).toEqual({
-      mentionPatterns: ["@openclaw"],
+      mentionPatterns: ["@quiet-core-bot"],
     });
     expect(res.changes.some((change) => change.includes("messages.groupChat.visibleReplies"))).toBe(
       false,
@@ -274,7 +274,7 @@ describe("normalizeCompatibilityConfigValues", () => {
       normalizeCompatibilityConfigValues({
         messages: {
           groupChat: {
-            mentionPatterns: ["@openclaw"],
+            mentionPatterns: ["@quiet-core-bot"],
           },
         },
       }).changes,
@@ -906,7 +906,7 @@ describe("normalizeCompatibilityConfigValues", () => {
             agentRuntime: { id: "claude-cli" },
             model: "anthropic/claude-opus-4-7",
             models: {
-              "anthropic/claude-opus-4-7": { agentRuntime: { id: "openclaw" } },
+              "anthropic/claude-opus-4-7": { agentRuntime: { id: "quiet-core-bot" } },
             },
           },
         ],
@@ -915,7 +915,7 @@ describe("normalizeCompatibilityConfigValues", () => {
 
     expect(res.config.agents?.list?.[0]?.agentRuntime).toEqual({ id: "claude-cli" });
     expect(res.config.agents?.list?.[0]?.models).toEqual({
-      "anthropic/claude-opus-4-7": { agentRuntime: { id: "openclaw" } },
+      "anthropic/claude-opus-4-7": { agentRuntime: { id: "quiet-core-bot" } },
     });
     expect(res.changes).toStrictEqual([]);
   });

@@ -1,13 +1,13 @@
 ---
-summary: "Reference catalog of checkIds emitted by openclaw security audit"
+summary: "Reference catalog of checkIds emitted by quiet-core-bot security audit"
 read_when:
-  - You saw a specific `checkId` in `openclaw security audit` output and want to know what it means
+  - You saw a specific `checkId` in `quiet-core-bot security audit` output and want to know what it means
   - You need the fix key/path for a given finding
   - You are triaging severity across a security audit run
 title: "Security audit checks"
 ---
 
-`openclaw security audit` emits structured findings keyed by `checkId`. This
+`quiet-core-bot security audit` emits structured findings keyed by `checkId`. This
 page is the reference catalog for those IDs. For the high-level threat model
 and hardening guidance, see [Security](/gateway/security).
 
@@ -21,7 +21,7 @@ exhaustive):
 | `fs.state_dir.perms_readable`                                 | warn          | State dir is readable by others                                                      | filesystem perms on `~/.quiet-core-bot`                                                              | yes      |
 | `fs.state_dir.symlink`                                        | warn          | State dir target becomes another trust boundary                                      | state dir filesystem layout                                                                          | no       |
 | `fs.config.perms_writable`                                    | critical      | Others can change auth/tool policy/config                                            | filesystem perms on `~/.quiet-core-bot/quiet-core-bot.json`                                          | yes      |
-| `fs.config.symlink`                                           | warn          | Symlinked config files are unsupported for writes and add another trust boundary     | replace with a regular config file or point `OPENCLAW_CONFIG_PATH` at the real file                  | no       |
+| `fs.config.symlink`                                           | warn          | Symlinked config files are unsupported for writes and add another trust boundary     | replace with a regular config file or point `QUIET_CORE_CONFIG_PATH` at the real file                  | no       |
 | `fs.config.perms_group_readable`                              | warn          | Group users can read config tokens/settings                                          | filesystem perms on config file                                                                      | yes      |
 | `fs.config.perms_world_readable`                              | critical      | Config can expose tokens/settings                                                    | filesystem perms on config file                                                                      | yes      |
 | `fs.config_include.perms_writable`                            | critical      | Config include file can be modified by others                                        | include-file perms referenced from `quiet-core-bot.json`                                             | yes      |

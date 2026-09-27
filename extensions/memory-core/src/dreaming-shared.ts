@@ -1,6 +1,6 @@
 // Memory Core plugin module implements dreaming shared behavior.
-export { asNullableRecord as asRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
-export { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+export { asNullableRecord as asRecord } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
+export { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
 
 export function normalizeTrimmedString(value: unknown): string | undefined {
   if (typeof value !== "string") {

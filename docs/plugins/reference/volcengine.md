@@ -11,7 +11,7 @@ Adds Volcengine, Volcengine Plan model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/volcengine-provider`
+- Package: `@quiet-core/volcengine-provider`
 - Install route: included in Quiet Core bot
 
 ## Surface

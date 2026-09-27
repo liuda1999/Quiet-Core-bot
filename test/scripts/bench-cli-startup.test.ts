@@ -115,7 +115,7 @@ describe("bench-cli-startup", () => {
     "cleans timed-out benchmark process groups when the leader exits first",
     () => {
       const tempDirs = createTempDirTracker();
-      const tmpDir = tempDirs.make("openclaw-cli-startup-timeout-group-");
+      const tmpDir = tempDirs.make("quiet-core-bot-cli-startup-timeout-group-");
       const entryPath = join(tmpDir, "entry.mjs");
       const childPidPath = join(tmpDir, "child.pid");
       let childPid: number | undefined;
@@ -178,7 +178,7 @@ describe("bench-cli-startup", () => {
 
   it("writes compare-mode JSON output and creates parent directories", () => {
     const tempDirs = createTempDirTracker();
-    const tmpDir = tempDirs.make("openclaw-cli-startup-compare-output-");
+    const tmpDir = tempDirs.make("quiet-core-bot-cli-startup-compare-output-");
     try {
       const baselinePath = join(tmpDir, "baseline.json");
       const candidatePath = join(tmpDir, "candidate.json");
@@ -474,7 +474,7 @@ describe("bench-cli-startup", () => {
       },
     ]) {
       expect(
-        withEnv({ OPENCLAW_GATEWAY_PORT: undefined }, () =>
+        withEnv({ QUIET_CORE_GATEWAY_PORT: undefined }, () =>
           testing.buildConfigFixture(commandCase),
         ),
       ).toEqual(expectedFixture);
@@ -489,7 +489,7 @@ describe("bench-cli-startup", () => {
     expect(testing.parseGatewayPortEnv("[::1]")).toBe(32123);
 
     expect(
-      withEnv({ OPENCLAW_GATEWAY_PORT: "45678" }, () =>
+      withEnv({ QUIET_CORE_GATEWAY_PORT: "45678" }, () =>
         testing.buildConfigFixture({
           id: "gatewayHealthJson",
           name: "gateway health --json",
@@ -501,7 +501,7 @@ describe("bench-cli-startup", () => {
 
     for (const invalid of ["45678abc", "127.0.0.1:45678abc"]) {
       expect(() =>
-        withEnv({ OPENCLAW_GATEWAY_PORT: invalid }, () =>
+        withEnv({ QUIET_CORE_GATEWAY_PORT: invalid }, () =>
           testing.buildConfigFixture({
             id: "gatewayHealthJson",
             name: "gateway health --json",
@@ -509,7 +509,7 @@ describe("bench-cli-startup", () => {
             presets: ["real"],
           }),
         ),
-      ).toThrow("OPENCLAW_GATEWAY_PORT must be an integer >= 1");
+      ).toThrow("QUIET_CORE_GATEWAY_PORT must be an integer >= 1");
     }
   });
 });

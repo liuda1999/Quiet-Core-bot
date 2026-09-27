@@ -2,7 +2,7 @@
 summary: "Integrated browser control service + action commands"
 read_when:
   - Adding agent-controlled browser automation
-  - Debugging why openclaw is interfering with your own Chrome
+  - Debugging why quiet-core-bot is interfering with your own Chrome
   - Implementing browser settings + lifecycle in the macOS app
 title: "Browser (Quiet Core bot-managed)"
 ---
@@ -14,19 +14,19 @@ control service inside the Gateway (loopback only).
 Beginner view:
 
 - Think of it as a **separate, agent-only browser**.
-- The `openclaw` profile does **not** touch your personal browser profile.
+- The `quiet-core-bot` profile does **not** touch your personal browser profile.
 - The agent can **open tabs, read pages, click, and type** in a safe lane.
 - The built-in `user` profile attaches to your real signed-in Chrome session via Chrome MCP.
 
 ## What you get
 
-- A separate browser profile named **openclaw** (orange accent by default).
+- A separate browser profile named **quiet-core-bot** (orange accent by default).
 - Deterministic tab control (list/open/focus/close).
 - Agent actions (click/type/drag/select), snapshots, screenshots, PDFs.
 - A bundled `browser-automation` skill that teaches agents the snapshot,
   stable-tab, stale-ref, and manual-blocker recovery loop when the browser
   plugin is enabled.
-- Optional multi-profile support (`openclaw`, `work`, `remote`, ...).
+- Optional multi-profile support (`quiet-core-bot`, `work`, `remote`, ...).
 
 This browser is **not** your daily driver. It is a safe, isolated surface for
 agent automation and verification.
@@ -37,9 +37,9 @@ agent automation and verification.
 quiet-core-bot browser --browser-profile quiet-core-bot doctor
 quiet-core-bot browser --browser-profile quiet-core-bot doctor --deep
 quiet-core-bot browser --browser-profile quiet-core-bot status
-quiet-core-bot browser --browser-profile openclaw start
-quiet-core-bot browser --browser-profile openclaw open https://example.com
-quiet-core-bot browser --browser-profile openclaw snapshot
+quiet-core-bot browser --browser-profile quiet-core-bot start
+quiet-core-bot browser --browser-profile quiet-core-bot open https://example.com
+quiet-core-bot browser --browser-profile quiet-core-bot snapshot
 ```
 
 If you get "Browser disabled", enable it in config (see below) and restart the
@@ -116,20 +116,20 @@ If `quiet-core-bot browser` is unknown after an upgrade, `browser.request` is mi
 
 An explicit root `browser` block, for example `browser.enabled=true` or `browser.profiles.<name>`, activates the bundled browser plugin even under a restrictive `plugins.allow`, matching channel config behavior. `plugins.entries.browser.enabled=true` and `tools.alsoAllow: ["browser"]` do not substitute for allowlist membership by themselves. Removing `plugins.allow` entirely also restores the default.
 
-## Profiles: `openclaw` vs `user`
+## Profiles: `quiet-core-bot` vs `user`
 
-- `openclaw`: managed, isolated browser (no extension required).
+- `quiet-core-bot`: managed, isolated browser (no extension required).
 - `user`: built-in Chrome MCP attach profile for your **real signed-in Chrome**
   session.
 
 For agent browser tool calls:
 
-- Default: use the isolated `openclaw` browser.
+- Default: use the isolated `quiet-core-bot` browser.
 - Prefer `profile="user"` when existing logged-in sessions matter and the user
   is at the computer to click/approve any attach prompt.
 - `profile` is the explicit override when you want a specific browser mode.
 
-Set `browser.defaultProfile: "openclaw"` if you want managed mode by default.
+Set `browser.defaultProfile: "quiet-core-bot"` if you want managed mode by default.
 
 ## Configuration
 
@@ -157,14 +157,14 @@ Browser settings live in `~/.quiet-core-bot/quiet-core-bot.json`.
       maxTabsPerSession: 8, // set 0 to disable the per-session cap
       sweepMinutes: 5,
     },
-    defaultProfile: "openclaw",
+    defaultProfile: "quiet-core-bot",
     color: "#FF4500",
     headless: false,
     noSandbox: false,
     attachOnly: false,
     executablePath: "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser",
     profiles: {
-      openclaw: { cdpPort: 18800, color: "#FF4500" },
+      quiet-core-bot: { cdpPort: 18800, color: "#FF4500" },
       work: {
         cdpPort: 18801,
         color: "#0066CC",
@@ -243,8 +243,8 @@ main model can read the screenshot directly.
 
 <Accordion title="Ports and reachability">
 
-- Control service binds to loopback on a port derived from `gateway.port` (default `18791` = gateway + 2). Overriding `gateway.port` or `OPENCLAW_GATEWAY_PORT` shifts the derived ports in the same family.
-- Local `openclaw` profiles auto-assign `cdpPort`/`cdpUrl`; set those only for
+- Control service binds to loopback on a port derived from `gateway.port` (default `18791` = gateway + 2). Overriding `gateway.port` or `QUIET_CORE_GATEWAY_PORT` shifts the derived ports in the same family.
+- Local `quiet-core-bot` profiles auto-assign `cdpPort`/`cdpUrl`; set those only for
   remote CDP profiles or existing-session endpoint attach. `cdpUrl` defaults to
   the managed local CDP port when unset.
 - `remoteCdpTimeoutMs` applies to remote and `attachOnly` CDP HTTP reachability
@@ -292,13 +292,13 @@ main model can read the screenshot directly.
   config explicitly chooses headed mode. `quiet-core-bot browser status --json`
   reports `headlessSource` as `env`, `profile`, `config`,
   `request`, `linux-display-fallback`, or `default`.
-- `OPENCLAW_BROWSER_HEADLESS=1` forces local managed launches headless for the
-  current process. `OPENCLAW_BROWSER_HEADLESS=0` forces headed mode for ordinary
+- `QUIET_CORE_BROWSER_HEADLESS=1` forces local managed launches headless for the
+  current process. `QUIET_CORE_BROWSER_HEADLESS=0` forces headed mode for ordinary
   starts and returns an actionable error on Linux hosts without a display server;
   an explicit `start --headless` request still wins for that one launch.
 - `executablePath` can be set globally or per local managed profile. Per-profile values override `browser.executablePath`, so different managed profiles can launch different Chromium-based browsers. Both forms accept `~` for your OS home directory.
 - `color` (top-level and per-profile) tints the browser UI so you can see which profile is active.
-- Default profile is `openclaw` (managed standalone). Use `defaultProfile: "user"` to opt into the signed-in user browser.
+- Default profile is `quiet-core-bot` (managed standalone). Use `defaultProfile: "user"` to opt into the signed-in user browser.
 - Auto-detect order: system default browser if Chromium-based; otherwise Chrome → Brave → Edge → Chromium → Chrome Canary.
 - `driver: "existing-session"` uses Chrome DevTools MCP instead of raw CDP. It can attach through Chrome MCP auto-connect, or through `cdpUrl` when you already have a DevTools endpoint for the running browser.
 - Set `browser.profiles.<name>.userDataDir` when an existing-session profile should attach to a non-default Chromium user profile (Brave, Edge, etc.). This path also accepts `~` for your OS home directory.
@@ -577,14 +577,14 @@ Key ideas:
 
 - Browser control is loopback-only; access flows through the Gateway's auth or node pairing.
 - The standalone loopback browser HTTP API uses **shared-secret auth only**:
-  gateway token bearer auth, `x-openclaw-password`, or HTTP Basic auth with the
+  gateway token bearer auth, `x-quiet-core-bot-password`, or HTTP Basic auth with the
   configured gateway password.
 - Tailscale Serve identity headers and `gateway.auth.mode: "trusted-proxy"` do
   **not** authenticate this standalone loopback browser API.
 - If browser control is enabled and no shared-secret auth is configured, Quiet Core bot
   generates a runtime-only gateway token for that startup. Configure
-  `gateway.auth.token`, `gateway.auth.password`, `OPENCLAW_GATEWAY_TOKEN`, or
-  `OPENCLAW_GATEWAY_PASSWORD` explicitly if clients need a stable secret across
+  `gateway.auth.token`, `gateway.auth.password`, `QUIET_CORE_GATEWAY_TOKEN`, or
+  `QUIET_CORE_GATEWAY_PASSWORD` explicitly if clients need a stable secret across
   restarts.
 - Quiet Core bot does **not** auto-generate that token when `gateway.auth.mode` is
   already `password`, `none`, or `trusted-proxy`.
@@ -600,13 +600,13 @@ Remote CDP tips:
 
 Quiet Core bot supports multiple named profiles (routing configs). Profiles can be:
 
-- **openclaw-managed**: a dedicated Chromium-based browser instance with its own user data directory + CDP port
+- **quiet-core-bot-managed**: a dedicated Chromium-based browser instance with its own user data directory + CDP port
 - **remote**: an explicit CDP URL (Chromium-based browser running elsewhere)
 - **existing session**: your existing Chrome profile via Chrome DevTools MCP auto-connect
 
 Defaults:
 
-- The `openclaw` profile is auto-created if missing.
+- The `quiet-core-bot` profile is auto-created if missing.
 - The `user` profile is built-in for Chrome MCP existing-session attach.
 - Existing-session profiles are opt-in beyond `user`; create them with `--driver existing-session`.
 - Local CDP ports allocate from **18800-18899** by default.
@@ -706,7 +706,7 @@ Agent use:
 
 Notes:
 
-- This path is higher-risk than the isolated `openclaw` profile because it can
+- This path is higher-risk than the isolated `quiet-core-bot` profile because it can
   act inside your signed-in browser session.
 - Quiet Core bot does not launch the browser for this driver; it only attaches.
 - Quiet Core bot uses the official Chrome DevTools MCP `--autoConnect` flow here. If
@@ -739,7 +739,7 @@ directory.
 
 <Accordion title="Existing-session feature limitations">
 
-Compared to the managed `openclaw` profile, existing-session drivers are more constrained:
+Compared to the managed `quiet-core-bot` profile, existing-session drivers are more constrained:
 
 - **Screenshots** - page captures and `--ref` element captures work; CSS `--element` selectors do not. `--full-page` cannot combine with `--ref` or `--element`. Playwright is not required for page or ref-based element screenshots.
 - **Actions** - `click`, `type`, `hover`, `scrollIntoView`, `drag`, and `select` require snapshot refs (no CSS selectors). `click-coords` clicks visible viewport coordinates and does not require a snapshot ref. `click` is left-button only. `type` does not support `slowly=true`; use `fill` or `press`. `press` does not support `delayMs`. `type`, `hover`, `scrollIntoView`, `drag`, `select`, `fill`, and `evaluate` do not support per-call timeouts. `select` accepts a single value.
@@ -804,9 +804,9 @@ These are different failure classes and they point to different code paths.
 Common examples:
 
 - CDP startup or readiness failure:
-  - `Chrome CDP websocket for profile "openclaw" is not reachable after start`
+  - `Chrome CDP websocket for profile "quiet-core-bot" is not reachable after start`
   - `Remote CDP for profile "<name>" is not reachable at <cdpUrl>`
-  - `Port <port> is in use for profile "<name>" but not by openclaw` when a
+  - `Port <port> is in use for profile "<name>" but not by quiet-core-bot` when a
     loopback external CDP service is configured without `attachOnly: true`
 - Navigation SSRF block:
   - `open`, `navigate`, snapshot, or tab-opening flows fail with a browser/network policy error while `start` and `tabs` still work
@@ -814,9 +814,9 @@ Common examples:
 Use this minimal sequence to separate the two:
 
 ```bash
-quiet-core-bot browser --browser-profile openclaw start
-quiet-core-bot browser --browser-profile openclaw tabs
-quiet-core-bot browser --browser-profile openclaw open https://example.com
+quiet-core-bot browser --browser-profile quiet-core-bot start
+quiet-core-bot browser --browser-profile quiet-core-bot tabs
+quiet-core-bot browser --browser-profile quiet-core-bot open https://example.com
 ```
 
 How to read the results:
@@ -829,7 +829,7 @@ How to read the results:
 Important behavior details:
 
 - Browser config defaults to a fail-closed SSRF policy object even when you do not configure `browser.ssrfPolicy`.
-- For the local loopback `openclaw` managed profile, CDP health checks intentionally skip browser SSRF reachability enforcement for Quiet Core bot's own local control plane.
+- For the local loopback `quiet-core-bot` managed profile, CDP health checks intentionally skip browser SSRF reachability enforcement for Quiet Core bot's own local control plane.
 - Navigation protection is separate. A successful `start` or `tabs` result does not mean a later `open` or `navigate` target is allowed.
 
 Security guidance:
@@ -851,7 +851,7 @@ How it maps:
 - `browser screenshot` captures pixels (full page, element, or labeled refs).
 - `browser doctor` checks Gateway, plugin, profile, browser, and tab readiness.
 - `browser` accepts:
-  - `profile` to choose a named browser profile (openclaw, chrome, or remote CDP).
+  - `profile` to choose a named browser profile (quiet-core-bot, chrome, or remote CDP).
   - `target` (`sandbox` | `host` | `node`) to select where the browser lives.
   - In sandboxed sessions, `target: "host"` requires `agents.defaults.sandbox.browser.allowHostControl=true`.
   - If `target` is omitted: sandboxed sessions default to `sandbox`, non-sandbox sessions default to `host`.

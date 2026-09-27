@@ -11,7 +11,7 @@ Adds text-to-speech provider support.
 
 ## Distribution
 
-- Package: `@openclaw/microsoft-speech`
+- Package: `@quiet-core/microsoft-speech`
 - Install route: included in Quiet Core bot
 
 ## Surface

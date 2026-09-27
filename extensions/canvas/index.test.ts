@@ -1,6 +1,6 @@
 // Canvas tests cover index plugin behavior.
-import type { AnyAgentTool, OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+import type { AnyAgentTool, OpenClawPluginApi } from "quiet-core-bot/plugin-sdk/plugin-entry";
+import { createTestPluginApi } from "quiet-core-bot/plugin-sdk/plugin-test-api";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import canvasPlugin from "./index.js";
 

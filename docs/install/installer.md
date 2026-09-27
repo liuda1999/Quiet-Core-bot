@@ -51,7 +51,7 @@ Quiet Core bot ships three installer scripts, served from `openclaw.ai`.
 </Tabs>
 
 <Note>
-If install succeeds but `openclaw` is not found in a new terminal, see [Node.js troubleshooting](/install/node#troubleshooting).
+If install succeeds but `quiet-core-bot` is not found in a new terminal, see [Node.js troubleshooting](/install/node#troubleshooting).
 </Note>
 
 ---
@@ -79,7 +79,7 @@ Recommended for most interactive installs on macOS/Linux/WSL.
   </Step>
   <Step title="Install Quiet Core bot">
     - `npm` method (default): global npm install
-    - `git` method: clone/update repo, install deps with pnpm, build, then install wrapper at `~/.local/bin/openclaw`
+    - `git` method: clone/update repo, install deps with pnpm, build, then install wrapper at `~/.local/bin/quiet-core-bot`
 
   </Step>
   <Step title="Post-install tasks">
@@ -141,7 +141,7 @@ The script exits with code `2` for invalid method selection or invalid `--instal
 | `--git`                               | Shortcut for git method. Alias: `--github`                 |
 | `--version <version\|dist-tag\|spec>` | npm version, dist-tag, or package spec (default: `latest`) |
 | `--beta`                              | Use beta dist-tag if available, else fallback to `latest`  |
-| `--git-dir <path>`                    | Checkout directory (default: `~/openclaw`). Alias: `--dir` |
+| `--git-dir <path>`                    | Checkout directory (default: `~/quiet-core-bot`). Alias: `--dir` |
 | `--no-git-update`                     | Skip `git pull` for existing checkout                      |
 | `--no-prompt`                         | Disable prompts                                            |
 | `--no-onboard`                        | Skip onboarding                                            |
@@ -156,17 +156,17 @@ The script exits with code `2` for invalid method selection or invalid `--instal
 
 | Variable                                          | Description                                                              |
 | ------------------------------------------------- | ------------------------------------------------------------------------ |
-| `OPENCLAW_INSTALL_METHOD=git\|npm`                | Install method                                                           |
-| `OPENCLAW_VERSION=latest\|next\|<semver>\|<spec>` | npm version, dist-tag, or package spec                                   |
-| `OPENCLAW_BETA=0\|1`                              | Use beta if available                                                    |
-| `OPENCLAW_HOME=<path>`                            | Base directory for Quiet Core bot state and default git/onboarding paths |
-| `OPENCLAW_GIT_DIR=<path>`                         | Checkout directory                                                       |
-| `OPENCLAW_GIT_UPDATE=0\|1`                        | Toggle git updates                                                       |
-| `OPENCLAW_NO_PROMPT=1`                            | Disable prompts                                                          |
-| `OPENCLAW_NO_ONBOARD=1`                           | Skip onboarding                                                          |
-| `OPENCLAW_DRY_RUN=1`                              | Dry run mode                                                             |
-| `OPENCLAW_VERBOSE=1`                              | Debug mode                                                               |
-| `OPENCLAW_NPM_LOGLEVEL=error\|warn\|notice`       | npm log level                                                            |
+| `QUIET_CORE_INSTALL_METHOD=git\|npm`                | Install method                                                           |
+| `QUIET_CORE_VERSION=latest\|next\|<semver>\|<spec>` | npm version, dist-tag, or package spec                                   |
+| `QUIET_CORE_BETA=0\|1`                              | Use beta if available                                                    |
+| `QUIET_CORE_HOME=<path>`                            | Base directory for Quiet Core bot state and default git/onboarding paths |
+| `QUIET_CORE_GIT_DIR=<path>`                         | Checkout directory                                                       |
+| `QUIET_CORE_GIT_UPDATE=0\|1`                        | Toggle git updates                                                       |
+| `QUIET_CORE_NO_PROMPT=1`                            | Disable prompts                                                          |
+| `QUIET_CORE_NO_ONBOARD=1`                           | Skip onboarding                                                          |
+| `QUIET_CORE_DRY_RUN=1`                              | Dry run mode                                                             |
+| `QUIET_CORE_VERBOSE=1`                              | Debug mode                                                               |
+| `QUIET_CORE_NPM_LOGLEVEL=error\|warn\|notice`       | npm log level                                                            |
 
   </Accordion>
 </AccordionGroup>
@@ -194,8 +194,8 @@ by default, plus git-checkout installs under the same prefix flow.
     If Git is missing, attempts install via apt/dnf/yum/apk on Linux or Homebrew on macOS.
   </Step>
   <Step title="Install Quiet Core bot under prefix">
-    - `npm` method (default): installs under the prefix with npm, then writes wrapper to `<prefix>/bin/openclaw`
-    - `git` method: clones/updates a checkout (default `~/openclaw`) and still writes the wrapper to `<prefix>/bin/openclaw`
+    - `npm` method (default): installs under the prefix with npm, then writes wrapper to `<prefix>/bin/quiet-core-bot`
+    - `git` method: clones/updates a checkout (default `~/quiet-core-bot`) and still writes the wrapper to `<prefix>/bin/quiet-core-bot`
 
   </Step>
   <Step title="Refresh loaded gateway service">
@@ -215,17 +215,17 @@ by default, plus git-checkout installs under the same prefix flow.
   </Tab>
   <Tab title="Custom prefix + version">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash -s -- --prefix /opt/openclaw --version latest
+    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash -s -- --prefix /opt/quiet-core-bot --version latest
     ```
   </Tab>
   <Tab title="Git install">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash -s -- --install-method git --git-dir ~/openclaw
+    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash -s -- --install-method git --git-dir ~/quiet-core-bot
     ```
   </Tab>
   <Tab title="Automation JSON output">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash -s -- --json --prefix /opt/openclaw
+    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash -s -- --json --prefix /opt/quiet-core-bot
     ```
   </Tab>
   <Tab title="Run onboarding">
@@ -244,7 +244,7 @@ by default, plus git-checkout installs under the same prefix flow.
 | `--install-method npm\|git` | Choose install method (default: `npm`). Alias: `--method`                       |
 | `--npm`                     | Shortcut for npm method                                                         |
 | `--git`, `--github`         | Shortcut for git method                                                         |
-| `--git-dir <path>`          | Git checkout directory (default: `~/openclaw`). Alias: `--dir`                  |
+| `--git-dir <path>`          | Git checkout directory (default: `~/quiet-core-bot`). Alias: `--dir`                  |
 | `--version <ver>`           | Quiet Core bot version or dist-tag (default: `latest`)                          |
 | `--node-version <ver>`      | Node version (default: `22.22.0`)                                               |
 | `--json`                    | Emit NDJSON events                                                              |
@@ -259,15 +259,15 @@ by default, plus git-checkout installs under the same prefix flow.
 
 | Variable                                    | Description                                                              |
 | ------------------------------------------- | ------------------------------------------------------------------------ |
-| `OPENCLAW_PREFIX=<path>`                    | Install prefix                                                           |
-| `OPENCLAW_INSTALL_METHOD=git\|npm`          | Install method                                                           |
-| `OPENCLAW_VERSION=<ver>`                    | Quiet Core bot version or dist-tag                                       |
-| `OPENCLAW_NODE_VERSION=<ver>`               | Node version                                                             |
-| `OPENCLAW_HOME=<path>`                      | Base directory for Quiet Core bot state and default git/onboarding paths |
-| `OPENCLAW_GIT_DIR=<path>`                   | Git checkout directory for git installs                                  |
-| `OPENCLAW_GIT_UPDATE=0\|1`                  | Toggle git updates for existing checkouts                                |
-| `OPENCLAW_NO_ONBOARD=1`                     | Skip onboarding                                                          |
-| `OPENCLAW_NPM_LOGLEVEL=error\|warn\|notice` | npm log level                                                            |
+| `QUIET_CORE_PREFIX=<path>`                    | Install prefix                                                           |
+| `QUIET_CORE_INSTALL_METHOD=git\|npm`          | Install method                                                           |
+| `QUIET_CORE_VERSION=<ver>`                    | Quiet Core bot version or dist-tag                                       |
+| `QUIET_CORE_NODE_VERSION=<ver>`               | Node version                                                             |
+| `QUIET_CORE_HOME=<path>`                      | Base directory for Quiet Core bot state and default git/onboarding paths |
+| `QUIET_CORE_GIT_DIR=<path>`                   | Git checkout directory for git installs                                  |
+| `QUIET_CORE_GIT_UPDATE=0\|1`                  | Toggle git updates for existing checkouts                                |
+| `QUIET_CORE_NO_ONBOARD=1`                     | Skip onboarding                                                          |
+| `QUIET_CORE_NPM_LOGLEVEL=error\|warn\|notice` | npm log level                                                            |
 
   </Accordion>
 </AccordionGroup>
@@ -289,7 +289,7 @@ by default, plus git-checkout installs under the same prefix flow.
   </Step>
   <Step title="Install Quiet Core bot">
     - `npm` method (default): global npm install using selected `-Tag`, launched from a writable installer temp directory so shells opened in protected folders such as `C:\` still work
-    - `git` method: clone/update repo, install/build with pnpm, and install wrapper at `%USERPROFILE%\.local\bin\openclaw.cmd`. If Git is missing, the script bootstraps user-local MinGit under `%LOCALAPPDATA%\Quiet Core bot\deps\portable-git` and adds it to the current process and user PATH.
+    - `git` method: clone/update repo, install/build with pnpm, and install wrapper at `%USERPROFILE%\.local\bin\quiet-core-bot.cmd`. If Git is missing, the script bootstraps user-local MinGit under `%LOCALAPPDATA%\Quiet Core bot\deps\portable-git` and adds it to the current process and user PATH.
 
   </Step>
   <Step title="Post-install tasks">
@@ -323,7 +323,7 @@ by default, plus git-checkout installs under the same prefix flow.
   </Tab>
   <Tab title="Custom git directory">
     ```powershell
-    & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -InstallMethod git -GitDir "C:\openclaw"
+    & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -InstallMethod git -GitDir "C:\quiet-core-bot"
     ```
   </Tab>
   <Tab title="Dry run">
@@ -348,7 +348,7 @@ by default, plus git-checkout installs under the same prefix flow.
 | --------------------------- | ---------------------------------------------------------- |
 | `-InstallMethod npm\|git`   | Install method (default: `npm`)                            |
 | `-Tag <tag\|version\|spec>` | npm dist-tag, version, or package spec (default: `latest`) |
-| `-GitDir <path>`            | Checkout directory (default: `%USERPROFILE%\openclaw`)     |
+| `-GitDir <path>`            | Checkout directory (default: `%USERPROFILE%\quiet-core-bot`)     |
 | `-NoOnboard`                | Skip onboarding                                            |
 | `-NoGitUpdate`              | Skip `git pull`                                            |
 | `-DryRun`                   | Print actions only                                         |
@@ -359,11 +359,11 @@ by default, plus git-checkout installs under the same prefix flow.
 
 | Variable                           | Description        |
 | ---------------------------------- | ------------------ |
-| `OPENCLAW_INSTALL_METHOD=git\|npm` | Install method     |
-| `OPENCLAW_GIT_DIR=<path>`          | Checkout directory |
-| `OPENCLAW_NO_ONBOARD=1`            | Skip onboarding    |
-| `OPENCLAW_GIT_UPDATE=0`            | Disable git pull   |
-| `OPENCLAW_DRY_RUN=1`               | Dry run mode       |
+| `QUIET_CORE_INSTALL_METHOD=git\|npm` | Install method     |
+| `QUIET_CORE_GIT_DIR=<path>`          | Checkout directory |
+| `QUIET_CORE_NO_ONBOARD=1`            | Skip onboarding    |
+| `QUIET_CORE_GIT_UPDATE=0`            | Disable git pull   |
+| `QUIET_CORE_DRY_RUN=1`               | Dry run mode       |
 
   </Accordion>
 </AccordionGroup>
@@ -386,13 +386,13 @@ Use non-interactive flags/env vars for predictable runs.
   </Tab>
   <Tab title="install.sh (non-interactive git)">
     ```bash
-    OPENCLAW_INSTALL_METHOD=git OPENCLAW_NO_PROMPT=1 \
+    QUIET_CORE_INSTALL_METHOD=git QUIET_CORE_NO_PROMPT=1 \
       curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash
     ```
   </Tab>
   <Tab title="install-cli.sh (JSON)">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash -s -- --json --prefix /opt/openclaw
+    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash -s -- --json --prefix /opt/quiet-core-bot
     ```
   </Tab>
   <Tab title="install.ps1 (skip onboarding)">
@@ -419,7 +419,7 @@ Use non-interactive flags/env vars for predictable runs.
     Rerun the installer so it can bootstrap user-local MinGit, or install Git for Windows and reopen PowerShell.
   </Accordion>
 
-  <Accordion title='Windows: "openclaw is not recognized"'>
+  <Accordion title='Windows: "quiet-core-bot is not recognized"'>
     Run `npm config get prefix` and add that directory to your user PATH (no `\bin` suffix needed on Windows), then reopen PowerShell.
   </Accordion>
 
@@ -435,7 +435,7 @@ Use non-interactive flags/env vars for predictable runs.
 
   </Accordion>
 
-  <Accordion title="openclaw not found after install">
+  <Accordion title="quiet-core-bot not found after install">
     Usually a PATH issue. See [Node.js troubleshooting](/install/node#troubleshooting).
   </Accordion>
 </AccordionGroup>

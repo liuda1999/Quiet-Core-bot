@@ -37,7 +37,7 @@ on:
       OPENAI_API_KEY:
         description: OpenAI API key used by live QA profile scenarios
         required: true
-      OPENCLAW_MATURITY_SCORECARD_AGENT_OPENAI_API_KEY:
+      QUIET_CORE_MATURITY_SCORECARD_AGENT_OPENAI_API_KEY:
         description: Optional OpenAI API key used by maturity scorecard agent steps
         required: false
       GH_APP_PRIVATE_KEY:
@@ -266,11 +266,11 @@ jobs:
 
       - name: Ensure maturity scorecard agent key exists
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENCLAW_MATURITY_SCORECARD_AGENT_OPENAI_API_KEY || secrets.OPENAI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.QUIET_CORE_MATURITY_SCORECARD_AGENT_OPENAI_API_KEY || secrets.OPENAI_API_KEY }}
         run: |
           set -euo pipefail
           if [[ -z "${OPENAI_API_KEY:-}" ]]; then
-            echo "Missing OPENCLAW_MATURITY_SCORECARD_AGENT_OPENAI_API_KEY or OPENAI_API_KEY secret." >&2
+            echo "Missing QUIET_CORE_MATURITY_SCORECARD_AGENT_OPENAI_API_KEY or OPENAI_API_KEY secret." >&2
             exit 1
           fi
 
@@ -281,9 +281,9 @@ jobs:
           MATURITY_SCORES_PATH: qa/maturity-scores.yaml
           MATURITY_TAXONOMY_PATH: taxonomy.yaml
         with:
-          openai-api-key: ${{ secrets.OPENCLAW_MATURITY_SCORECARD_AGENT_OPENAI_API_KEY || secrets.OPENAI_API_KEY }}
+          openai-api-key: ${{ secrets.QUIET_CORE_MATURITY_SCORECARD_AGENT_OPENAI_API_KEY || secrets.OPENAI_API_KEY }}
           prompt-file: .github/codex/prompts/maturity-scorecard-agent.md
-          model: ${{ vars.OPENCLAW_CI_OPENAI_MODEL_BARE }}
+          model: ${{ vars.QUIET_CORE_CI_OPENAI_MODEL_BARE }}
           effort: high
           sandbox: workspace-write
           safety-strategy: drop-sudo

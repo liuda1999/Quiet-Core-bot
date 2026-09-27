@@ -2,7 +2,7 @@
 import { chmodSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@quiet-core/normalization-core/number-coercion";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { runWindowsBackgroundPowerShell } from "../../scripts/e2e/parallels/guest-transports.ts";
 import { run as hostCommandRun } from "../../scripts/e2e/parallels/host-command.ts";
@@ -34,7 +34,7 @@ const TEST_AUTH = {
 const tempDirs: string[] = [];
 
 function makeTempDir(): string {
-  const root = mkdtempSync(path.join(tmpdir(), "openclaw-parallels-npm-update-"));
+  const root = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-parallels-npm-update-"));
   tempDirs.push(root);
   return root;
 }
@@ -92,8 +92,8 @@ function extractWindowsBackgroundControlMarkers(decoded: string): {
     return match[0];
   };
   return {
-    done: marker("__OPENCLAW_BACKGROUND_DONE__", false),
-    exitPrefix: marker("__OPENCLAW_BACKGROUND_EXIT__", true),
+    done: marker("__QUIET_CORE_BACKGROUND_DONE__", false),
+    exitPrefix: marker("__QUIET_CORE_BACKGROUND_EXIT__", true),
   };
 }
 
@@ -106,13 +106,13 @@ afterEach(() => {
 
 describe("parallels npm update smoke", () => {
   it("accepts one prepared tarball target for update and fresh install", () => {
-    expect(parseArgs(["--target-tarball", "/tmp/openclaw-candidate.tgz"])).toMatchObject({
-      targetTarball: "/tmp/openclaw-candidate.tgz",
+    expect(parseArgs(["--target-tarball", "/tmp/quiet-core-bot-candidate.tgz"])).toMatchObject({
+      targetTarball: "/tmp/quiet-core-bot-candidate.tgz",
       updateTarget: "",
       freshTargetSpec: undefined,
     });
     expect(() =>
-      parseArgs(["--target-tarball", "/tmp/openclaw-candidate.tgz", "--update-target", "beta"]),
+      parseArgs(["--target-tarball", "/tmp/quiet-core-bot-candidate.tgz", "--update-target", "beta"]),
     ).toThrow("--target-tarball cannot be combined");
   });
 
@@ -143,7 +143,7 @@ describe("parallels npm update smoke", () => {
       const smoke = new FailingNpmUpdateSmoke({
         ...TEST_AUTH,
         json: false,
-        packageSpec: "openclaw@latest",
+        packageSpec: "quiet-core-bot@latest",
         platforms: new Set<Platform>(["linux"]),
         provider: "openai",
         updateTarget: "local-main",
@@ -166,15 +166,15 @@ set -euo pipefail
 log_path=${JSON.stringify(logPath)}
 printf '%s\\n' "$*" >>"$log_path"
 args=" $* "
-if [[ "$args" == *" /usr/bin/tee /tmp/openclaw-parallels-npm-update-linux-"* ]]; then
+if [[ "$args" == *" /usr/bin/tee /tmp/quiet-core-bot-parallels-npm-update-linux-"* ]]; then
   cat >/dev/null
   exit 0
 fi
-if [[ "$args" == *" /bin/chmod 755 /tmp/openclaw-parallels-npm-update-linux-"* ]]; then
+if [[ "$args" == *" /bin/chmod 755 /tmp/quiet-core-bot-parallels-npm-update-linux-"* ]]; then
   echo "chmod denied" >&2
   exit 7
 fi
-if [[ "$args" == *" /bin/rm -f /tmp/openclaw-parallels-npm-update-linux-"* ]]; then
+if [[ "$args" == *" /bin/rm -f /tmp/quiet-core-bot-parallels-npm-update-linux-"* ]]; then
   printf 'cleanup\\n' >>"$log_path"
   exit 0
 fi
@@ -192,7 +192,7 @@ exit 1
         const smoke = new NpmUpdateSmoke({
           ...TEST_AUTH,
           json: false,
-          packageSpec: "openclaw@latest",
+          packageSpec: "quiet-core-bot@latest",
           platforms: new Set<Platform>(["linux"]),
           provider: "openai",
           updateTarget: "local-main",
@@ -208,15 +208,15 @@ exit 1
             smoke,
             "Linux VM",
             "echo update",
-            "openclaw-parallels-npm-update-linux",
+            "quiet-core-bot-parallels-npm-update-linux",
           ),
         ).toThrow("failed to chmod guest script");
       },
     );
 
     const log = readFileSync(logPath, "utf8");
-    expect(log).toContain("/bin/chmod 755 /tmp/openclaw-parallels-npm-update-linux-");
-    expect(log).toContain("/bin/rm -f /tmp/openclaw-parallels-npm-update-linux-");
+    expect(log).toContain("/bin/chmod 755 /tmp/quiet-core-bot-parallels-npm-update-linux-");
+    expect(log).toContain("/bin/rm -f /tmp/quiet-core-bot-parallels-npm-update-linux-");
     expect(log.match(/^cleanup$/gm)).toHaveLength(1);
   });
 
@@ -226,7 +226,7 @@ exit 1
     expect(script).toContain("--beta-validation [target]");
     expect(script).toContain("resolveOpenClawRegistryVersion");
     expect(script).toContain("this.options.updateTarget = version");
-    expect(script).toContain("this.options.freshTargetSpec = `openclaw@${version}`");
+    expect(script).toContain("this.options.freshTargetSpec = `quiet-core-bot@${version}`");
     expect(script).toContain("runFreshTargetInstalls");
     expect(script).toContain("freshTargetStatus");
   });
@@ -253,13 +253,13 @@ exit 1
       parseRegistryPackageMetadata(
         JSON.stringify({
           version: "2026.5.20-beta.1",
-          "dist.tarball": "https://registry.example/openclaw-keyed.tgz",
+          "dist.tarball": "https://registry.example/quiet-core-bot-keyed.tgz",
           gitHead: "abcdef0123456789",
         }),
       ),
     ).toEqual({
       version: "2026.5.20-beta.1",
-      tarball: "https://registry.example/openclaw-keyed.tgz",
+      tarball: "https://registry.example/quiet-core-bot-keyed.tgz",
       gitHead: "abcdef0123456789",
     });
 
@@ -267,12 +267,12 @@ exit 1
       parseRegistryPackageMetadata(
         JSON.stringify({
           version: "2026.5.20-beta.1",
-          dist: { tarball: "https://registry.example/openclaw-nested.tgz" },
+          dist: { tarball: "https://registry.example/quiet-core-bot-nested.tgz" },
         }),
       ),
     ).toEqual({
       version: "2026.5.20-beta.1",
-      tarball: "https://registry.example/openclaw-nested.tgz",
+      tarball: "https://registry.example/quiet-core-bot-nested.tgz",
       gitHead: "",
     });
   });
@@ -283,7 +283,7 @@ exit 1
     expect(script).toContain("assertPublishedTargetMatchesHarnessCheckout");
     expect(script).toContain("readHarnessCheckoutVersion");
     expect(script).toContain("openClawVersionFamily");
-    expect(script).toContain("OPENCLAW_PARALLELS_ALLOW_HARNESS_TARGET_MISMATCH");
+    expect(script).toContain("QUIET_CORE_PARALLELS_ALLOW_HARNESS_TARGET_MISMATCH");
     expect(script).toContain("checkout the matching release branch");
   });
 
@@ -333,12 +333,12 @@ exit 1
     ].join("\n");
 
     expect(scripts).toContain("print_log_tail()");
-    expect(scripts).toContain("OPENCLAW_PARALLELS_NPM_UPDATE_LOG_TAIL_BYTES");
+    expect(scripts).toContain("QUIET_CORE_PARALLELS_NPM_UPDATE_LOG_TAIL_BYTES");
     expect(scripts).toContain('print_log_tail "$output_file"');
-    expect(scripts).toContain("print_log_tail /tmp/openclaw-parallels-macos-gateway.log >&2");
-    expect(scripts).toContain("print_log_tail /tmp/openclaw-parallels-linux-gateway.log >&2");
+    expect(scripts).toContain("print_log_tail /tmp/quiet-core-bot-parallels-macos-gateway.log >&2");
+    expect(scripts).toContain("print_log_tail /tmp/quiet-core-bot-parallels-linux-gateway.log >&2");
     expect(scripts).not.toContain('cat "$output_file"');
-    expect(scripts).not.toContain("cat /tmp/openclaw-parallels-");
+    expect(scripts).not.toContain("cat /tmp/quiet-core-bot-parallels-");
   });
 
   it("passes platform model timeouts to POSIX update agent turns", () => {
@@ -349,9 +349,9 @@ exit 1
     };
     withEnv(
       {
-        OPENCLAW_PARALLELS_LINUX_MODEL_TIMEOUT_S: undefined,
-        OPENCLAW_PARALLELS_MACOS_MODEL_TIMEOUT_S: undefined,
-        OPENCLAW_PARALLELS_MODEL_TIMEOUT_S: undefined,
+        QUIET_CORE_PARALLELS_LINUX_MODEL_TIMEOUT_S: undefined,
+        QUIET_CORE_PARALLELS_MACOS_MODEL_TIMEOUT_S: undefined,
+        QUIET_CORE_PARALLELS_MODEL_TIMEOUT_S: undefined,
       },
       () => {
         expect(macosUpdateScript(input)).toContain("--timeout 1800 --json");
@@ -360,8 +360,8 @@ exit 1
     );
     withEnv(
       {
-        OPENCLAW_PARALLELS_LINUX_MODEL_TIMEOUT_S: "321",
-        OPENCLAW_PARALLELS_MACOS_MODEL_TIMEOUT_S: "654",
+        QUIET_CORE_PARALLELS_LINUX_MODEL_TIMEOUT_S: "321",
+        QUIET_CORE_PARALLELS_MACOS_MODEL_TIMEOUT_S: "654",
       },
       () => {
         expect(macosUpdateScript(input)).toContain("--timeout 654 --json");
@@ -393,18 +393,18 @@ exit 1
   });
 
   it("sets platform-aware fresh lane timeouts", () => {
-    withEnv({ OPENCLAW_PARALLELS_NPM_UPDATE_FRESH_TIMEOUT_S: undefined }, () => {
+    withEnv({ QUIET_CORE_PARALLELS_NPM_UPDATE_FRESH_TIMEOUT_S: undefined }, () => {
       expect(freshLaneTimeoutMs("macos")).toBe(75 * 60 * 1000);
       expect(freshLaneTimeoutMs("linux")).toBe(75 * 60 * 1000);
       expect(freshLaneTimeoutMs("windows")).toBe(90 * 60 * 1000);
     });
 
-    withEnv({ OPENCLAW_PARALLELS_NPM_UPDATE_FRESH_TIMEOUT_S: "3" }, () => {
+    withEnv({ QUIET_CORE_PARALLELS_NPM_UPDATE_FRESH_TIMEOUT_S: "3" }, () => {
       expect(freshLaneTimeoutMs("macos")).toBe(3000);
     });
 
     withEnv(
-      { OPENCLAW_PARALLELS_NPM_UPDATE_FRESH_TIMEOUT_S: String(Number.MAX_SAFE_INTEGER) },
+      { QUIET_CORE_PARALLELS_NPM_UPDATE_FRESH_TIMEOUT_S: String(Number.MAX_SAFE_INTEGER) },
       () => {
         expect(freshLaneTimeoutMs("linux")).toBe(MAX_TIMER_TIMEOUT_MS);
       },
@@ -515,7 +515,7 @@ exit 1
         new NpmUpdateSmoke({
           ...TEST_AUTH,
           json: false,
-          packageSpec: "openclaw@latest",
+          packageSpec: "quiet-core-bot@latest",
           platforms: new Set<Platform>(["linux"]),
           provider: "openai",
           updateTarget: "local-main",
@@ -533,7 +533,7 @@ exit 1
     ) => Promise<number>;
 
     await expect(
-      runStreamingToJobLog.call(smoke, "openclaw-definitely-missing-command", [], 60 * 60 * 1000, {
+      runStreamingToJobLog.call(smoke, "quiet-core-bot-definitely-missing-command", [], 60 * 60 * 1000, {
         append: () => undefined,
         logPath: "",
         signal: new AbortController().signal,
@@ -555,7 +555,7 @@ exit 1
           new NpmUpdateSmoke({
             ...TEST_AUTH,
             json: false,
-            packageSpec: "openclaw@latest",
+            packageSpec: "quiet-core-bot@latest",
             platforms: new Set<Platform>(["linux"]),
             provider: "openai",
             updateTarget: "local-main",
@@ -611,8 +611,8 @@ exit 1
 
     expect(script).toContain("runWindowsBackgroundPowerShell");
     expect(transports).toContain("runWindowsBackgroundPowerShell");
-    expect(transports).toContain("__OPENCLAW_BACKGROUND_EXIT__");
-    expect(transports).toContain("__OPENCLAW_BACKGROUND_DONE__");
+    expect(transports).toContain("__QUIET_CORE_BACKGROUND_EXIT__");
+    expect(transports).toContain("__QUIET_CORE_BACKGROUND_DONE__");
     expect(transports).toContain("${options.label} timed out");
   });
 
@@ -787,7 +787,7 @@ exit 7
         const smoke = new NpmUpdateSmoke({
           ...TEST_AUTH,
           json: false,
-          packageSpec: "openclaw@latest",
+          packageSpec: "quiet-core-bot@latest",
           platforms: new Set<Platform>(["macos"]),
           provider: "openai",
           updateTarget: "local-main",
@@ -828,7 +828,7 @@ exit 7
         const smoke = new NpmUpdateSmoke({
           ...TEST_AUTH,
           json: false,
-          packageSpec: "openclaw@latest",
+          packageSpec: "quiet-core-bot@latest",
           platforms: new Set<Platform>(["macos"]),
           provider: "openai",
           updateTarget: "local-main",
@@ -857,20 +857,20 @@ exit 7
     expect(script).toContain("delete plugins.entries.feishu");
     expect(script).toContain("delete plugins.entries.whatsapp");
     expect(script).toContain("Remove-FuturePluginEntries\nStop-OpenClawGatewayProcesses");
-    expect(script).toContain("scrub_future_plugin_entries\nstop_openclaw_gateway_processes");
-    expect(script).toContain("Invoke-WithScopedEnv @{ OPENCLAW_DISABLE_BUNDLED_PLUGINS = '1'");
-    expect(macosScript).toContain('OPENCLAW_BIN="$(resolve_required_command openclaw)"');
+    expect(script).toContain("scrub_future_plugin_entries\nstop_quiet_core_bot_gateway_processes");
+    expect(script).toContain("Invoke-WithScopedEnv @{ QUIET_CORE_DISABLE_BUNDLED_PLUGINS = '1'");
+    expect(macosScript).toContain('QUIET_CORE_BIN="$(resolve_required_command quiet-core-bot)"');
     expect(macosScript).toContain("/usr/local/bin:/usr/local/sbin");
     expect(macosScript).toContain(
-      'OPENCLAW_DISABLE_BUNDLED_PLUGINS=1 "$OPENCLAW_BIN" update --tag',
+      'QUIET_CORE_DISABLE_BUNDLED_PLUGINS=1 "$QUIET_CORE_BIN" update --tag',
     );
-    expect(macosScript).not.toContain("/opt/homebrew/bin/openclaw");
-    expect(script).toContain("OPENCLAW_DISABLE_BUNDLED_PLUGINS=1 openclaw update --tag");
+    expect(macosScript).not.toContain("/opt/homebrew/bin/quiet-core-bot");
+    expect(script).toContain("QUIET_CORE_DISABLE_BUNDLED_PLUGINS=1 quiet-core-bot update --tag");
     expect(macosScript).toContain(
-      'OPENCLAW_DISABLE_BUNDLED_PLUGINS=1 "$OPENCLAW_BIN" gateway stop',
+      'QUIET_CORE_DISABLE_BUNDLED_PLUGINS=1 "$QUIET_CORE_BIN" gateway stop',
     );
     expect(script).toContain(
-      "OPENCLAW_DISABLE_BUNDLED_PLUGINS=1 OPENCLAW_ALLOW_ROOT=1 openclaw gateway stop",
+      "QUIET_CORE_DISABLE_BUNDLED_PLUGINS=1 QUIET_CORE_ALLOW_ROOT=1 quiet-core-bot gateway stop",
     );
   });
 
@@ -882,7 +882,7 @@ exit 7
     });
 
     const updateIndex = script.indexOf("Invoke-OpenClaw update --tag");
-    const scopedIndex = script.indexOf("Invoke-WithScopedEnv @{ OPENCLAW_DISABLE_BUNDLED_PLUGINS");
+    const scopedIndex = script.indexOf("Invoke-WithScopedEnv @{ QUIET_CORE_DISABLE_BUNDLED_PLUGINS");
     const versionIndex = script.indexOf("Invoke-OpenClaw --version", scopedIndex);
     const restartIndex = script.indexOf("Invoke-OpenClaw gateway restart");
     const agentIndex = script.indexOf("Invoke-OpenClaw agent --local");
@@ -893,7 +893,7 @@ exit 7
     expect(versionIndex).toBeGreaterThan(updateIndex);
     expect(restartIndex).toBeGreaterThan(updateIndex);
     expect(agentIndex).toBeGreaterThan(updateIndex);
-    expect(script).not.toContain("$env:OPENCLAW_DISABLE_BUNDLED_PLUGINS = '1'");
+    expect(script).not.toContain("$env:QUIET_CORE_DISABLE_BUNDLED_PLUGINS = '1'");
   });
 
   it("generates a .NET-safe Windows stale import regex in the update-failure guard", () => {
@@ -915,13 +915,13 @@ exit 7
     expect(staleImportLine).toContain("$updateText -match 'ERR_MODULE_NOT_FOUND'");
     expect(staleImportLine).toContain(`$updateText -match '${staleImportPattern}'`);
     expect(staleImportPattern).toBe(
-      String.raw`node_modules\\openclaw\\dist\\[^\\]+-[A-Za-z0-9_-]+\.js`,
+      String.raw`node_modules\\quiet-core-bot\\dist\\[^\\]+-[A-Za-z0-9_-]+\.js`,
     );
     expect(staleImportPattern).not.toContain("node_modules\\openclaw\\dist\\");
     expect(staleImportPattern.match(/\\\\/g)).toHaveLength(4);
-    const representativeUpdateFailure = String.raw`Error [ERR_MODULE_NOT_FOUND]: Cannot find module 'C:\Users\runner\AppData\Roaming\npm\node_modules\openclaw\dist\main-a1_B2.js' imported from C:\Users\runner\AppData\Roaming\npm\node_modules\openclaw\dist\cli.js`;
+    const representativeUpdateFailure = String.raw`Error [ERR_MODULE_NOT_FOUND]: Cannot find module 'C:\Users\runner\AppData\Roaming\npm\node_modules\quiet-core-bot\dist\main-a1_B2.js' imported from C:\Users\runner\AppData\Roaming\npm\node_modules\quiet-core-bot\dist\cli.js`;
     const generatedRegex = new RegExp(staleImportPattern);
     expect(generatedRegex.test(representativeUpdateFailure)).toBe(true);
-    expect(generatedRegex.test(String.raw`node_modules\openclaw\dist\main.js`)).toBe(false);
+    expect(generatedRegex.test(String.raw`node_modules\quiet-core-bot\dist\main.js`)).toBe(false);
   });
 });

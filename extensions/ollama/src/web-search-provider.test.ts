@@ -1,5 +1,5 @@
 // Ollama tests cover web search provider plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createOllamaWebSearchProvider as createContractOllamaWebSearchProvider } from "../web-search-contract-api.js";
 import {
@@ -12,7 +12,7 @@ const { fetchWithSsrFGuardMock } = vi.hoisted(() => ({
   fetchWithSsrFGuardMock: vi.fn(),
 }));
 
-vi.mock("openclaw/plugin-sdk/ssrf-runtime", () => ({
+vi.mock("quiet-core-bot/plugin-sdk/ssrf-runtime", () => ({
   fetchWithSsrFGuard: fetchWithSsrFGuardMock,
 }));
 
@@ -100,7 +100,7 @@ function expectOllamaWebSearchRequest(
       method: "POST",
       headers: params.headers ?? { "Content-Type": "application/json" },
       body: JSON.stringify({
-        query: params.query ?? "openclaw",
+        query: params.query ?? "quiet-core-bot",
         max_results: params.maxResults ?? 5,
       }),
       signal: request.init.signal,
@@ -241,18 +241,18 @@ describe("ollama web search provider", () => {
     if (!tool) {
       throw new Error("Expected tool definition");
     }
-    const result = await tool.execute({ query: "openclaw docs", count: 3 });
+    const result = await tool.execute({ query: "quiet-core-bot docs", count: 3 });
 
     expectOllamaWebSearchRequest(fetchCall(), {
       url: "http://ollama.local:11434/api/experimental/web_search",
-      query: "openclaw docs",
+      query: "quiet-core-bot docs",
       maxResults: 3,
       policy: {
         allowPrivateNetwork: true,
         hostnameAllowlist: ["ollama.local"],
       },
     });
-    expect(result.query).toBe("openclaw docs");
+    expect(result.query).toBe("quiet-core-bot docs");
     expect(result.provider).toBe("ollama");
     expect(result.count).toBe(1);
     expectSingleSearchResultUrl(result.results, "https://openclaw.ai/docs");
@@ -280,7 +280,7 @@ describe("ollama web search provider", () => {
 
     const result = await runOllamaWebSearch({
       config: createOllamaConfig(),
-      query: "openclaw",
+      query: "quiet-core-bot",
     });
 
     expect(result.count).toBe(1);
@@ -311,7 +311,7 @@ describe("ollama web search provider", () => {
         baseUrl: "https://ollama.com",
         apiKey: "cloud-config-secret",
       }),
-      query: "openclaw",
+      query: "quiet-core-bot",
     });
 
     expect(result.count).toBe(1);
@@ -358,7 +358,7 @@ describe("ollama web search provider", () => {
 
       const result = await runOllamaWebSearch({
         config: createOllamaConfig(),
-        query: "openclaw",
+        query: "quiet-core-bot",
       });
 
       expect(result.count).toBe(1);
@@ -387,7 +387,7 @@ describe("ollama web search provider", () => {
       release: vi.fn(async () => {}),
     });
 
-    await expect(runOllamaWebSearch({ query: "latest openclaw release" })).rejects.toThrow(
+    await expect(runOllamaWebSearch({ query: "latest quiet-core-bot release" })).rejects.toThrow(
       "ollama signin",
     );
   });
@@ -401,7 +401,7 @@ describe("ollama web search provider", () => {
     await expect(
       runOllamaWebSearch({
         config: createOllamaConfig(),
-        query: "openclaw",
+        query: "quiet-core-bot",
       }),
     ).rejects.toThrow("Ollama web search returned malformed JSON");
   });

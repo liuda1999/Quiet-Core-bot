@@ -27,7 +27,7 @@ function runBash(script: string, env: NodeJS.ProcessEnv = {}) {
 
 describe("Parallels lib helpers", () => {
   it("reads build-info commit metadata from the current package cwd", () => {
-    const root = makeTempDir(tempDirs, "openclaw-parallels-build-info-");
+    const root = makeTempDir(tempDirs, "quiet-core-bot-parallels-build-info-");
 
     const missingResult = spawnSync(process.execPath, [BUILD_INFO_COMMIT_SCRIPT], {
       cwd: root,
@@ -53,7 +53,7 @@ describe("Parallels lib helpers", () => {
   });
 
   it("reclaims stale package shell locks and releases current locks", () => {
-    const root = makeTempDir(tempDirs, "openclaw-parallels-package-lock-");
+    const root = makeTempDir(tempDirs, "quiet-core-bot-parallels-package-lock-");
     const lockDir = path.join(root, "build.lock");
     const result = runBash(`
 set -euo pipefail
@@ -74,7 +74,7 @@ printf 'owner=%s exists=%s\\n' "$owner" "$([[ -e "$lock_dir" ]] && echo yes || e
   });
 
   it("resolves macOS desktop users through prlctl fallbacks", () => {
-    const root = makeTempDir(tempDirs, "openclaw-parallels-macos-common-");
+    const root = makeTempDir(tempDirs, "quiet-core-bot-parallels-macos-common-");
     const binDir = path.join(root, "bin");
     const macHome = `${"/"}Users/alice`;
     mkdirSync(binDir);

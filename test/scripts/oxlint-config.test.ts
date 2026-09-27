@@ -151,7 +151,7 @@ describe("oxlint config", () => {
       "src/canvas-host/a2ui/a2ui.bundle.js",
       "vendor/",
       "**/.cache/**",
-      "**/.openclaw-runtime-deps-copy-*/**",
+      "**/.quiet-core-bot-runtime-deps-copy-*/**",
       "**/build/**",
       "**/coverage/**",
       "**/dist/**",

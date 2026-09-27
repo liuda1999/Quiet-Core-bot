@@ -5,7 +5,7 @@ export function buildOfficialChannelCatalog(params?: { repoRoot?: string; cwd?: 
     name: string;
     version?: string;
     description?: string;
-    openclaw: {
+    "quiet-core-bot": {
       channel: Record<string, unknown>;
       install: {
         clawhubSpec?: string;

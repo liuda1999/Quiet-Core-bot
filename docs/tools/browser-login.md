@@ -16,11 +16,11 @@ Back to the main browser docs: [Browser](/tools/browser).
 
 ## Which Chrome profile is used?
 
-Quiet Core bot controls a **dedicated Chrome profile** (named `openclaw`, orange-tinted UI). This is separate from your daily browser profile.
+Quiet Core bot controls a **dedicated Chrome profile** (named `quiet-core-bot`, orange-tinted UI). This is separate from your daily browser profile.
 
 For agent browser tool calls:
 
-- Default choice: the agent should use its isolated `openclaw` browser.
+- Default choice: the agent should use its isolated `quiet-core-bot` browser.
 - Use `profile="user"` only when existing logged-in sessions matter and the user is at the computer to click/approve any attach prompt.
 - If you have multiple user-browser profiles, specify the profile explicitly instead of guessing.
 
@@ -34,7 +34,7 @@ quiet-core-bot browser start
 quiet-core-bot browser open https://x.com
 ```
 
-If you have multiple profiles, pass `--browser-profile <name>` (the default is `openclaw`).
+If you have multiple profiles, pass `--browser-profile <name>` (the default is `quiet-core-bot`).
 
 ## X/Twitter: recommended flow
 
@@ -65,7 +65,7 @@ If the agent is sandboxed, the browser tool defaults to the sandbox. To allow ho
 Then open the host browser yourself (CLI invocations always run against the host browser):
 
 ```bash
-quiet-core-bot browser open https://x.com --browser-profile openclaw
+quiet-core-bot browser open https://x.com --browser-profile quiet-core-bot
 ```
 
 The agent's `browser` tool calls can then target the host once `sandbox.browser.allowHostControl: true` is set. Alternatively, disable sandboxing for the agent that posts updates.

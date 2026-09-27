@@ -3,7 +3,7 @@
  * Converts provider-specific usage shapes into Quiet Core bot's normalized input,
  * output, cache, reasoning, and total token accounting fields.
  */
-import { asFiniteNumber } from "@openclaw/normalization-core/number-coercion";
+import { asFiniteNumber } from "@quiet-core/normalization-core/number-coercion";
 
 /** Provider/SDK usage payload variants accepted by usage normalization. */
 export type UsageLike = {

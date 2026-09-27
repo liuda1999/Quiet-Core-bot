@@ -7,7 +7,7 @@ import {
   normalizeOptionalLowercaseString,
   normalizeOptionalString,
   readStringValue,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@quiet-core/normalization-core/string-coerce";
 import { resolveStateDir } from "../config/paths.js";
 import { DEFAULT_AGENT_ID } from "../routing/session-key.js";
 import type { CommandExplanationSummary } from "./command-analysis/explain.js";
@@ -298,8 +298,6 @@ const DEFAULT_SECURITY: ExecSecurity = "full";
 const DEFAULT_ASK: ExecAsk = "off";
 export const DEFAULT_EXEC_APPROVAL_ASK_FALLBACK: ExecSecurity = "deny";
 const DEFAULT_AUTO_ALLOW_SKILLS = false;
-// Pre-rebrand state dir, kept as the fallback location for unmigrated hosts.
-const LEGACY_EXEC_APPROVALS_STATE_DIR = "~/.openclaw";
 const EXEC_APPROVALS_FILE = "exec-approvals.json";
 const EXEC_APPROVALS_SOCKET = "exec-approvals.sock";
 
@@ -314,7 +312,7 @@ function resolveExecApprovalsStateDir(env: NodeJS.ProcessEnv = process.env): {
   path: string;
   displayPath: string;
 } {
-  const override = env.OPENCLAW_STATE_DIR?.trim();
+  const override = env.QUIET_CORE_STATE_DIR?.trim();
   if (override) {
     const resolved = resolveHomeRelativePath(override, { env });
     return {
@@ -355,37 +353,9 @@ export function resolveExecApprovalsDisplayPath(): string {
 }
 
 export function resolveExecApprovalsTranscriptPath(): string {
-  return process.env.OPENCLAW_STATE_DIR?.trim()
-    ? `$OPENCLAW_STATE_DIR/${EXEC_APPROVALS_FILE}`
+  return process.env.QUIET_CORE_STATE_DIR?.trim()
+    ? `$QUIET_CORE_STATE_DIR/${EXEC_APPROVALS_FILE}`
     : `${resolveExecApprovalsStateDir().displayPath}/${EXEC_APPROVALS_FILE}`;
-}
-
-function resolveLegacyExecApprovalsPath(): string {
-  return path.join(expandHomePrefix(LEGACY_EXEC_APPROVALS_STATE_DIR), EXEC_APPROVALS_FILE);
-}
-
-function hasUnmigratedLegacyExecApprovals(filePath: string): boolean {
-  if (!process.env.OPENCLAW_STATE_DIR?.trim()) {
-    return false;
-  }
-  const legacyPath = resolveLegacyExecApprovalsPath();
-  return (
-    path.resolve(legacyPath) !== path.resolve(filePath) &&
-    !fs.existsSync(filePath) &&
-    fs.existsSync(legacyPath)
-  );
-}
-
-function createUnmigratedLegacyExecApprovalsFallback(): ExecApprovalsFile {
-  return normalizeExecApprovals({
-    version: 1,
-    defaults: {
-      security: "deny",
-      ask: "always",
-      askFallback: "deny",
-    },
-    agents: {},
-  });
 }
 
 function normalizeAllowlistPattern(value: string | undefined): string | null {
@@ -814,16 +784,6 @@ function generateToken(): string {
 
 export function readExecApprovalsSnapshot(): ExecApprovalsSnapshot {
   const filePath = resolveExecApprovalsPath();
-  if (hasUnmigratedLegacyExecApprovals(filePath)) {
-    const file = createUnmigratedLegacyExecApprovalsFallback();
-    return {
-      path: filePath,
-      exists: false,
-      raw: null,
-      file,
-      hash: hashExecApprovalsRaw(null),
-    };
-  }
   if (!fs.existsSync(filePath)) {
     const file = normalizeExecApprovals({ version: 1, agents: {} });
     return {
@@ -856,9 +816,6 @@ export function readExecApprovalsSnapshot(): ExecApprovalsSnapshot {
 
 export function loadExecApprovals(): ExecApprovalsFile {
   const filePath = resolveExecApprovalsPath();
-  if (hasUnmigratedLegacyExecApprovals(filePath)) {
-    return createUnmigratedLegacyExecApprovalsFallback();
-  }
   try {
     if (!fs.existsSync(filePath)) {
       return normalizeExecApprovals({ version: 1, agents: {} });
@@ -919,9 +876,6 @@ export function restoreExecApprovalsSnapshot(snapshot: ExecApprovalsSnapshot): v
 }
 
 export function ensureExecApprovals(): ExecApprovalsFile {
-  if (hasUnmigratedLegacyExecApprovals(resolveExecApprovalsPath())) {
-    return createUnmigratedLegacyExecApprovalsFallback();
-  }
   const loaded = loadExecApprovals();
   const next = normalizeExecApprovals(loaded);
   const socketPath = next.socket?.path?.trim();
@@ -938,9 +892,6 @@ export function ensureExecApprovals(): ExecApprovalsFile {
 }
 
 function readExecApprovalsForNoPersistence(filePath: string): ExecApprovalsFile {
-  if (hasUnmigratedLegacyExecApprovals(filePath)) {
-    return createUnmigratedLegacyExecApprovalsFallback();
-  }
   const dir = path.dirname(filePath);
   assertNoExecApprovalsSymlinkParents(dir, resolveRequiredHomeDir());
   assertSafeExecApprovalsDestination(filePath);
@@ -1105,16 +1056,6 @@ export function resolveExecApprovals(
   overrides?: ExecApprovalsDefaultOverrides,
 ): ExecApprovalsResolved {
   const filePath = resolveExecApprovalsPath();
-  if (hasUnmigratedLegacyExecApprovals(filePath)) {
-    return resolveExecApprovalsFromFile({
-      file: createUnmigratedLegacyExecApprovalsFallback(),
-      agentId,
-      overrides,
-      path: filePath,
-      socketPath: resolveExecApprovalsSocketPath(),
-      token: "",
-    });
-  }
   if (!overrides?.requireSocket) {
     const file = readExecApprovalsForNoPersistence(filePath);
     const resolved = resolveExecApprovalsFromFile({
@@ -1267,8 +1208,8 @@ function textMentionsSecurityAuditSuppressions(value: string): boolean {
 
 function isReadOnlySecurityAuditSuppressionInspection(argv: string[]): boolean {
   const command = normalizeCommandName(argv[0]);
-  let offset = command === "pnpm" && argv[1] === "openclaw" ? 1 : 0;
-  if (normalizeCommandName(argv[offset]) !== "openclaw") {
+  let offset = command === "pnpm" && argv[1] === "quiet-core-bot" ? 1 : 0;
+  if (normalizeCommandName(argv[offset]) !== "quiet-core-bot") {
     return false;
   }
   offset += 1;

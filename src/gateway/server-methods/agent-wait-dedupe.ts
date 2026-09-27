@@ -1,7 +1,7 @@
 // Agent wait dedupe helpers normalize terminal run snapshots and wake waiters
 // that are blocked on active agent/chat dedupe entries.
-import { asFiniteNumber } from "@openclaw/normalization-core/number-coercion";
-import { asOptionalRecord } from "@openclaw/normalization-core/record-coerce";
+import { asFiniteNumber } from "@quiet-core/normalization-core/number-coercion";
+import { asOptionalRecord } from "@quiet-core/normalization-core/record-coerce";
 import {
   buildAgentRunTerminalOutcome,
   isStickyAgentRunTerminalOutcome,

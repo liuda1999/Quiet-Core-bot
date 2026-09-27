@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: openclaw-home-pvc
+  name: quiet-core-bot-home-pvc
   labels:
-    app: openclaw
+    app: quiet-core-bot
 spec:
   accessModes:
     - ReadWriteOnce

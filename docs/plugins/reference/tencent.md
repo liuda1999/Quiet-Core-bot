@@ -11,8 +11,8 @@ Adds Tencent TokenHub model provider support to Quiet Core bot.
 
 ## Distribution
 
-- Package: `@openclaw/tencent-provider`
-- Install route: npm; ClawHub: `clawhub:@openclaw/tencent-provider`
+- Package: `@quiet-core/tencent-provider`
+- Install route: npm; ClawHub: `clawhub:@quiet-core/tencent-provider`
 
 ## Surface
 

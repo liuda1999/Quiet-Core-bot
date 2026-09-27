@@ -1,7 +1,7 @@
 // OpenAI stream wrapper tests cover streamed text, tools, and reasoning fields.
-import type { StreamFn } from "openclaw/plugin-sdk/agent-core";
-import type { Model } from "openclaw/plugin-sdk/llm";
-import { createAssistantMessageEventStream } from "openclaw/plugin-sdk/llm";
+import type { StreamFn } from "quiet-core-bot/plugin-sdk/agent-core";
+import type { Model } from "quiet-core-bot/plugin-sdk/llm";
+import { createAssistantMessageEventStream } from "quiet-core-bot/plugin-sdk/llm";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   createOpenAIAttributionHeadersWrapper,
@@ -12,7 +12,7 @@ import {
   createOpenAICodeModeToolSurfaceWrapper,
 } from "./openai.js";
 
-const ATTRIBUTION_ENV_KEY = "OPENCLAW_PROVIDER_ATTRIBUTION";
+const ATTRIBUTION_ENV_KEY = "QUIET_CORE_PROVIDER_ATTRIBUTION";
 
 // Attribution headers are opt-in. The wrapper tests below cover the opted-in payloads; the
 // default-off contract has its own block.
@@ -645,14 +645,14 @@ describe("createOpenAIAttributionHeadersWrapper", () => {
       { messages: [] },
       {
         headers: {
-          originator: "openclaw",
-          "User-Agent": "openclaw",
+          originator: "quiet-core-bot",
+          "User-Agent": "quiet-core-bot",
         },
       },
     );
 
     expect(codexCalls).toBe(1);
-    expect(capturedHeaders?.originator).toBe("openclaw");
+    expect(capturedHeaders?.originator).toBe("quiet-core-bot");
     expect(capturedHeaders?.["User-Agent"]).toMatch(/^openclaw\//);
   });
 
@@ -687,8 +687,8 @@ describe("createOpenAIAttributionHeadersWrapper", () => {
       {
         apiKey: "oauth-bearer-token",
         headers: {
-          originator: "openclaw",
-          "User-Agent": "openclaw",
+          originator: "quiet-core-bot",
+          "User-Agent": "quiet-core-bot",
         },
       },
     );
@@ -696,7 +696,7 @@ describe("createOpenAIAttributionHeadersWrapper", () => {
     expect(upstreamCalls).toBe(1);
     expect(codexCalls).toBe(0);
     expect(capturedOptions?.apiKey).toBe("oauth-bearer-token");
-    expect(capturedOptions?.headers?.originator).toBe("openclaw");
+    expect(capturedOptions?.headers?.originator).toBe("quiet-core-bot");
     expect(capturedOptions?.headers?.["User-Agent"]).toMatch(/^openclaw\//);
   });
 });

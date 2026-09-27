@@ -22,7 +22,7 @@ agent (with a session switcher for other sessions).
   dist/Quiet Core bot.app/Contents/MacOS/Quiet Core bot --webchat
   ```
 
-- Logs: `./scripts/clawlog.sh` (subsystem `ai.openclaw`, category `WebChatSwiftUI`).
+- Logs: `./scripts/clawlog.sh` (subsystem `ai.quiet-core-bot`, category `WebChatSwiftUI`).
 
 ## How it is wired
 

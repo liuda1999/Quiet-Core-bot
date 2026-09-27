@@ -5,7 +5,7 @@ import { shouldWarnOnTouchedVersion } from "./version.js";
 
 /** Override env var for intentional older-binary destructive config actions. */
 export const ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS_ENV =
-  "OPENCLAW_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS";
+  "QUIET_CORE_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS";
 
 /** Block payload shown when an older binary would mutate newer-written config. */
 export type FutureConfigActionBlock = {
