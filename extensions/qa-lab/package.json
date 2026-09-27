@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@quiet-core/plugin-sdk": "workspace:*",
-    "@openclaw/crabline": "0.1.6",
+    "@openclaw/crabline": "0.1.28",
     "quiet-core-bot": "workspace:*"
   },
   "peerDependencies": {
