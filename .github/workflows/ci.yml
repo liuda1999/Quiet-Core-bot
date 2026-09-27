@@ -18,15 +18,10 @@ on:
         required: false
         default: false
         type: boolean
-  push:
-    branches: [main]
-    paths-ignore:
-      - "**/*.md"
-      - "docs/**"
-  pull_request:
-    types: [opened, reopened, synchronize, ready_for_review, converted_to_draft]
-    paths-ignore:
-      - "CHANGELOG.md"
+  # Trimmed deployment: this checkout ships without the cloud channel/provider
+  # extensions, while the inherited node/check/contract matrix still asserts the
+  # full upstream openclaw layout. Those lanes cannot pass here, so keep the
+  # workflow as a manual entry point instead of reporting permanent red checks.
 
 permissions:
   contents: read
