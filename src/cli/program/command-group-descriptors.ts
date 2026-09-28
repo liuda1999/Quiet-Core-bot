@@ -7,6 +7,15 @@ export type NamedCommandDescriptor = {
   description: string;
   hasSubcommands: boolean;
   parentDefaultHelp?: boolean;
+  /**
+   * Explicit legacy-state migration policy for this command.
+   *
+   * The implicit legacy-state migration rewrites on-disk state (it can rename/archive files),
+   * so it must never be triggered implicitly. Only commands marked here own the migration;
+   * everything else (including read-only inspection) is a no-op. `doctor`/`migrate` remain the
+   * canonical entry points for running migrations deliberately.
+   */
+  stateMigration?: boolean;
 };
 
 /** Group spec that names the placeholders owned by one registrar. */

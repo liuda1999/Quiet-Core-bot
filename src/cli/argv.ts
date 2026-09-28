@@ -596,19 +596,25 @@ export function buildParseArgv(params: {
   return ["node", programName || "quiet-core-bot", ...normalizedArgv];
 }
 
+/**
+ * Root commands that explicitly own the implicit legacy-state migration.
+ *
+ * Derived from the command catalog's explicit `stateMigration` flag. The default is to **not**
+ * migrate: the migration rewrites on-disk state (it can rename/archive legacy files), so it must
+ * be opted into per command instead of opted out of via a read-only allowlist. Read-only
+ * inspection (for example `status`) therefore never mutates state, while `doctor`/`migrate`
+ * remain the deliberate entry points for running migrations.
+ */
+const STATE_MIGRATION_COMMANDS: ReadonlySet<string> = new Set(
+  ROOT_COMMAND_DESCRIPTORS.filter((descriptor) => descriptor.stateMigration === true).map(
+    (descriptor) => descriptor.name,
+  ),
+);
+
 export function shouldMigrateStateFromPath(path: string[]): boolean {
-  if (path.length === 0) {
-    return true;
-  }
-  const [primary, secondary] = path;
-  if (primary === "health" || primary === "sessions") {
+  const [primary] = path;
+  if (!primary) {
     return false;
   }
-  if (primary === "update" && secondary === "status") {
-    return false;
-  }
-  if (primary === "config" && (secondary === "get" || secondary === "unset")) {
-    return false;
-  }
-  return true;
+  return STATE_MIGRATION_COMMANDS.has(primary);
 }

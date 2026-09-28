@@ -185,7 +185,7 @@ describe("ensureConfigReady", () => {
     const root = useTempOpenClawHome();
     writeLegacyTaskSidecarMarker(root);
 
-    await runEnsureConfigReady(["status"]);
+    await runEnsureConfigReady(["agent"]);
 
     expect(loadAndMaybeMigrateDoctorConfigMock).toHaveBeenCalledWith({
       migrateState: true,
@@ -199,7 +199,7 @@ describe("ensureConfigReady", () => {
     const root = useTempOpenClawHome();
     writePendingTaskSidecarArchiveMarker(root);
 
-    await runEnsureConfigReady(["status"]);
+    await runEnsureConfigReady(["agent"]);
 
     expect(loadAndMaybeMigrateDoctorConfigMock).toHaveBeenCalledWith({
       migrateState: true,
@@ -213,7 +213,7 @@ describe("ensureConfigReady", () => {
     const root = useTempOpenClawHome();
     fs.mkdirSync(path.join(root, ".quiet-core-bot", "sessions"), { recursive: true });
 
-    await runEnsureConfigReady(["status"]);
+    await runEnsureConfigReady(["agent"]);
 
     expect(loadAndMaybeMigrateDoctorConfigMock).toHaveBeenCalledOnce();
   });
@@ -250,7 +250,7 @@ describe("ensureConfigReady", () => {
     const root = useTempOpenClawHome();
     writeStateMarker(root, relativePath);
 
-    await runEnsureConfigReady(["status"]);
+    await runEnsureConfigReady(["agent"]);
 
     expect(loadAndMaybeMigrateDoctorConfigMock).toHaveBeenCalledOnce();
   });
@@ -263,12 +263,15 @@ describe("ensureConfigReady", () => {
     deleteTestEnvValue("QUIET_CORE_STATE_DIR");
     writeLegacyTaskSidecarMarker(path.join(root, "svc"));
 
-    await runEnsureConfigReady(["status"]);
+    await runEnsureConfigReady(["agent"]);
 
     expect(loadAndMaybeMigrateDoctorConfigMock).toHaveBeenCalledOnce();
   });
 
-  it("runs doctor flow for read-only commands with configured custom session stores", async () => {
+  it("does not run doctor flow for read-only status with configured custom session stores", async () => {
+    // Behavior change (intentional): `status` is read-only and no longer triggers the implicit
+    // legacy-state migration, even when a custom `session.store` is configured. Legacy session
+    // data is read directly instead of being migrated/merged as a side effect of a read.
     const root = useTempOpenClawHome();
     const customStore = path.join(root, "sessions", "sessions.json");
     const snapshot = {
@@ -284,7 +287,7 @@ describe("ensureConfigReady", () => {
 
     await runEnsureConfigReady(["status"]);
 
-    expect(loadAndMaybeMigrateDoctorConfigMock).toHaveBeenCalledOnce();
+    expect(loadAndMaybeMigrateDoctorConfigMock).not.toHaveBeenCalled();
   });
 
   it("pins a valid preflight snapshot for command code reuse", async () => {

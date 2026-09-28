@@ -117,6 +117,7 @@ vi.mock("../config/config.js", () => ({
 
 vi.mock("../config/sessions/paths.js", () => ({
   resolveStorePath: vi.fn(() => "/tmp/sessions.json"),
+  resolveLegacyDefaultSessionStorePath: vi.fn(() => "/tmp/legacy-default-sessions.json"),
 }));
 
 vi.mock("../config/sessions/session-accessor.js", () => ({

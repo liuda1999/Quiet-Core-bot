@@ -6,7 +6,10 @@ import { areRuntimeModelRefsEquivalent } from "../agents/model-runtime-aliases.j
 import { getRuntimeConfig, projectConfigOntoRuntimeSourceSnapshot } from "../config/config.js";
 import { resolveMainSessionKey } from "../config/sessions/main-session.js";
 import { hasSessionAutoModelFallbackProvenance } from "../config/sessions/model-override-provenance.js";
-import { resolveStorePath } from "../config/sessions/paths.js";
+import {
+  resolveLegacyDefaultSessionStorePath,
+  resolveStorePath,
+} from "../config/sessions/paths.js";
 import { listSessionEntries } from "../config/sessions/session-accessor.js";
 import { resolveSessionTotalTokens, type SessionEntry } from "../config/sessions/types.js";
 import type { OpenClawConfig } from "../config/types.js";
@@ -348,13 +351,30 @@ export async function getStatusSummary(
     }) ?? DEFAULT_CONTEXT_TOKENS;
 
   const candidateCache = new Map<string, SessionCandidate[]>();
+  const defaultAgentId = agentList.defaultId;
+  const legacyDefaultStorePath = resolveLegacyDefaultSessionStorePath();
   const loadSessionCandidates = (storePath: string, agentId?: string) => {
     const cacheKey = `${storePath}\0${agentId ?? ""}`;
     const cached = candidateCache.get(cacheKey);
     if (cached) {
       return cached;
     }
-    const candidates = listSessionCandidates(storePath, agentId);
+    let candidates = listSessionCandidates(storePath, agentId);
+    // Legacy (pre-rebrand) sessions may still live in the top-level `<stateDir>/sessions` store.
+    // Read both locations so `status` surfaces legacy sessions without running the
+    // state-mutating migration; the configured store always wins on key collisions.
+    if (agentId === defaultAgentId) {
+      const legacyCandidates = listSessionCandidates(legacyDefaultStorePath, agentId);
+      if (legacyCandidates.length > 0) {
+        const merged = new Map(candidates.map((candidate) => [candidate.key, candidate]));
+        for (const candidate of legacyCandidates) {
+          if (!merged.has(candidate.key)) {
+            merged.set(candidate.key, candidate);
+          }
+        }
+        candidates = [...merged.values()].toSorted(compareSessionCandidatesByUpdatedAt);
+      }
+    }
     candidateCache.set(cacheKey, candidates);
     return candidates;
   };

@@ -37,6 +37,17 @@ export function resolveDefaultSessionStorePath(agentId?: string): string {
   return path.join(resolveAgentSessionsDir(agentId), "sessions.json");
 }
 
+/**
+ * Legacy (pre-rebrand) default session store path.
+ *
+ * Sessions used to live in a single top-level `<stateDir>/sessions` directory before they moved
+ * under `agents/<agentId>/sessions`. Read-only callers consult this location directly so legacy
+ * data stays visible without running the state-mutating migration (which renames/archives files).
+ */
+export function resolveLegacyDefaultSessionStorePath(env: NodeJS.ProcessEnv = process.env): string {
+  return path.join(resolveStateDir(env), "sessions", "sessions.json");
+}
+
 export type SessionFilePathOptions = {
   agentId?: string;
   sessionsDir?: string;

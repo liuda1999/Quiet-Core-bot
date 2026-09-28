@@ -15,16 +15,19 @@ const coreCliCommandCatalog = defineCommandDescriptorCatalog([
     name: "setup",
     description: "Initialize local config and an agent workspace",
     hasSubcommands: false,
+    stateMigration: true,
   },
   {
     name: "onboard",
     description: "Interactive onboarding for gateway, workspace, and skills",
     hasSubcommands: false,
+    stateMigration: true,
   },
   {
     name: "configure",
     description: "Interactive configuration for credentials, channels, gateway, and agent defaults",
     hasSubcommands: false,
+    stateMigration: true,
   },
   {
     name: "config",
@@ -41,11 +44,13 @@ const coreCliCommandCatalog = defineCommandDescriptorCatalog([
     name: "migrate",
     description: "Import state from another agent system",
     hasSubcommands: true,
+    stateMigration: true,
   },
   {
     name: "doctor",
     description: "Diagnose and repair config, Gateway, plugin, and channel problems",
     hasSubcommands: false,
+    stateMigration: true,
   },
   {
     name: "dashboard",
@@ -56,6 +61,7 @@ const coreCliCommandCatalog = defineCommandDescriptorCatalog([
     name: "reset",
     description: "Reset local config/state (keeps the CLI installed)",
     hasSubcommands: false,
+    stateMigration: true,
   },
   {
     name: "uninstall",
@@ -66,6 +72,7 @@ const coreCliCommandCatalog = defineCommandDescriptorCatalog([
     name: "message",
     description: "Send, read, and manage channel messages",
     hasSubcommands: true,
+    stateMigration: true,
   },
   {
     name: "mcp",
@@ -82,6 +89,7 @@ const coreCliCommandCatalog = defineCommandDescriptorCatalog([
     name: "agent",
     description: "Run one agent turn via the Gateway",
     hasSubcommands: false,
+    stateMigration: true,
   },
   {
     name: "agents",
@@ -112,6 +120,7 @@ const coreCliCommandCatalog = defineCommandDescriptorCatalog([
     name: "tasks",
     description: "Inspect durable background tasks and flows",
     hasSubcommands: true,
+    stateMigration: true,
   },
 ] as const satisfies ReadonlyArray<CoreCliCommandDescriptor>);
 

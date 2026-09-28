@@ -132,18 +132,9 @@ function shouldRunStateMigrationOnlyWithLegacyInputs(commandPath: string[]): boo
   const subcommandName = commandPath[1];
   return (
     commandName === "agent" ||
-    commandName === "status" ||
     (commandName === "tasks" &&
       (subcommandName === undefined || ALLOWED_INVALID_TASK_SUBCOMMANDS.has(subcommandName)))
   );
-}
-
-function snapshotHasConfiguredSessionStore(
-  snapshot: Awaited<ReturnType<typeof readConfigFileSnapshot>>,
-): boolean {
-  const cfg = snapshot.runtimeConfig ?? snapshot.config;
-  const store = cfg?.session?.store;
-  return typeof store === "string" && store.trim().length > 0;
 }
 
 async function getConfigSnapshot() {
@@ -199,17 +190,6 @@ export async function ensureConfigReady(params: {
   }
 
   let snapshot = preflightSnapshot ?? (await getConfigSnapshot());
-  if (
-    !preflightSnapshot &&
-    !didRunDoctorConfigFlow &&
-    shouldConsiderStateMigration &&
-    requiresLegacyStateInput &&
-    snapshot.valid &&
-    snapshotHasConfiguredSessionStore(snapshot)
-  ) {
-    preflightSnapshot = await runStateMigrationPreflight();
-    snapshot = preflightSnapshot;
-  }
   const commandName = commandPath[0];
   const subcommandName = commandPath[1];
   const isBareGatewayForegroundRun =

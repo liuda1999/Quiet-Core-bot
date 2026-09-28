@@ -179,7 +179,16 @@ describe("argv helpers", () => {
     },
     {
       name: "keeps existing root options first",
-      argv: ["node", "quiet-core-bot", "--profile", "work", "doctor", "--no-color", "--lint", "--json"],
+      argv: [
+        "node",
+        "quiet-core-bot",
+        "--profile",
+        "work",
+        "doctor",
+        "--no-color",
+        "--lint",
+        "--json",
+      ],
       expected: [
         "node",
         "quiet-core-bot",
@@ -465,7 +474,16 @@ describe("argv helpers", () => {
   it("extracts routed config get positionals with interleaved root options", () => {
     expect(
       getCommandPositionalsWithRootOptions(
-        ["node", "quiet-core-bot", "config", "get", "--log-level", "debug", "update.channel", "--json"],
+        [
+          "node",
+          "quiet-core-bot",
+          "config",
+          "get",
+          "--log-level",
+          "debug",
+          "update.channel",
+          "--json",
+        ],
         {
           commandPath: ["config", "get"],
           booleanFlags: ["--json"],
@@ -577,9 +595,9 @@ describe("argv helpers", () => {
   it("parses verbose flags", () => {
     expect(getVerboseFlag(["node", "quiet-core-bot", "status", "--verbose"])).toBe(true);
     expect(getVerboseFlag(["node", "quiet-core-bot", "status", "--debug"])).toBe(false);
-    expect(getVerboseFlag(["node", "quiet-core-bot", "status", "--debug"], { includeDebug: true })).toBe(
-      true,
-    );
+    expect(
+      getVerboseFlag(["node", "quiet-core-bot", "status", "--debug"], { includeDebug: true }),
+    ).toBe(true);
   });
 
   it.each([
@@ -725,18 +743,20 @@ describe("argv helpers", () => {
   });
 
   it.each([
-    { argv: ["node", "quiet-core-bot", "status"], expected: true },
+    { argv: ["node", "quiet-core-bot", "status"], expected: false },
     { argv: ["node", "quiet-core-bot", "health"], expected: false },
     { argv: ["node", "quiet-core-bot", "sessions"], expected: false },
-    { argv: ["node", "quiet-core-bot", "--profile", "work", "status"], expected: true },
-    { argv: ["node", "quiet-core-bot", "--log-level=debug", "models", "list"], expected: true },
+    { argv: ["node", "quiet-core-bot", "--profile", "work", "status"], expected: false },
+    { argv: ["node", "quiet-core-bot", "--log-level=debug", "models", "list"], expected: false },
     { argv: ["node", "quiet-core-bot", "config", "get", "update"], expected: false },
     { argv: ["node", "quiet-core-bot", "config", "unset", "update"], expected: false },
-    { argv: ["node", "quiet-core-bot", "models", "list"], expected: true },
-    { argv: ["node", "quiet-core-bot", "models", "status"], expected: true },
+    { argv: ["node", "quiet-core-bot", "models", "list"], expected: false },
+    { argv: ["node", "quiet-core-bot", "models", "status"], expected: false },
     { argv: ["node", "quiet-core-bot", "update", "status", "--json"], expected: false },
     { argv: ["node", "quiet-core-bot", "agent", "--message", "hi"], expected: true },
-    { argv: ["node", "quiet-core-bot", "agents", "list"], expected: true },
+    { argv: ["node", "quiet-core-bot", "agents", "list"], expected: false },
+    { argv: ["node", "quiet-core-bot", "plugins", "list"], expected: false },
+    { argv: ["node", "quiet-core-bot", "skills", "list"], expected: false },
     { argv: ["node", "quiet-core-bot", "message", "send"], expected: true },
   ] as const)("decides when to migrate state: $argv", ({ argv, expected }) => {
     const commandPath = getCommandPathWithRootOptions([...argv], 2);
@@ -744,12 +764,14 @@ describe("argv helpers", () => {
   });
 
   it.each([
-    { path: ["status"], expected: true },
+    { path: ["status"], expected: false },
     { path: ["update", "status"], expected: false },
     { path: ["config", "get"], expected: false },
     { path: ["agent"], expected: true },
-    { path: ["models", "status"], expected: true },
-    { path: ["agents", "list"], expected: true },
+    { path: ["models", "status"], expected: false },
+    { path: ["agents", "list"], expected: false },
+    { path: ["plugins", "list"], expected: false },
+    { path: [], expected: false },
   ])("reuses command path for migrate state decisions: $path", ({ path, expected }) => {
     expect(shouldMigrateStateFromPath(path)).toBe(expected);
   });
