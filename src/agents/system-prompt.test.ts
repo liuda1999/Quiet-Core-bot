@@ -1087,7 +1087,7 @@ describe("buildAgentSystemPrompt", () => {
     const prompt = buildAgentSystemPrompt({
       workspaceDir: "/tmp/quiet-core-bot",
       runtimeInfo: {
-        channel: "slack",
+        channel: "signal",
       },
     });
 
@@ -1099,7 +1099,7 @@ describe("buildAgentSystemPrompt", () => {
     const prompt = buildAgentSystemPrompt({
       workspaceDir: "/tmp/quiet-core-bot",
       runtimeInfo: {
-        channel: "discord",
+        channel: "matrix",
       },
     });
 

@@ -552,11 +552,14 @@ function buildMessagingSection(params: {
 }
 
 function buildMessageChannelOptions(runtimeChannel?: string): string | undefined {
-  const deliverableChannels: readonly string[] = listDeliverableMessageChannels();
-  if (deliverableChannels.length <= 1) {
+  // A turn that already has a source channel never needs the proactive channel list, even when
+  // that channel is not in the loaded deliverable set (for example in deployments that ship a
+  // trimmed channel catalog). The lean "only when sending elsewhere" guidance is correct either way.
+  if (runtimeChannel) {
     return undefined;
   }
-  if (runtimeChannel && deliverableChannels.includes(runtimeChannel)) {
+  const deliverableChannels: readonly string[] = listDeliverableMessageChannels();
+  if (deliverableChannels.length <= 1) {
     return undefined;
   }
   return deliverableChannels.join("|");
