@@ -254,7 +254,7 @@ This guide sets up an Azure Linux VM with the Azure CLI, applies Network Securit
 
   <Step title="Install Quiet Core bot (in the VM shell)">
     ```bash
-    curl -fsSL https://openclaw.ai/install.sh -o /tmp/install.sh
+    curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh -o /tmp/install.sh
     bash /tmp/install.sh
     rm -f /tmp/install.sh
     ```

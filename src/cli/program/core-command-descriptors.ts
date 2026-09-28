@@ -5,7 +5,7 @@ import type { NamedCommandDescriptor } from "./command-group-descriptors.js";
 /** Descriptor shape for root commands owned by the core CLI. */
 export type CoreCliCommandDescriptor = NamedCommandDescriptor;
 
-const coreCliCommandCatalog = defineCommandDescriptorCatalog([
+const coreCliCommandCatalog = defineCommandDescriptorCatalog<CoreCliCommandDescriptor>([
   {
     name: "crestodian",
     description: "Open the interactive setup and repair assistant",

@@ -21,7 +21,7 @@ describe("shared/entry-status", () => {
       always: false,
       metadata: {
         emoji: "🦀",
-        homepage: "https://openclaw.ai",
+        homepage: "https://github.com/liuda1999/Quiet-Core-bot",
         requires: {
           bins: ["bun"],
           anyBins: ["ffmpeg", "sox"],
@@ -45,7 +45,7 @@ describe("shared/entry-status", () => {
 
     expect(result).toEqual({
       emoji: "🦀",
-      homepage: "https://openclaw.ai",
+      homepage: "https://github.com/liuda1999/Quiet-Core-bot",
       required: {
         bins: ["bun"],
         anyBins: ["ffmpeg", "sox"],

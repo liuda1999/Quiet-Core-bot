@@ -64,11 +64,13 @@ describe("channel registry helpers", () => {
     const line = formatChannelSelectionLine(telegram, formatTestLink);
     expect(line).not.toContain("Docs:");
     expect(line).toContain("/channels/telegram");
-    expect(line).toContain("https://openclaw.ai");
+    expect(line).toContain("https://github.com/liuda1999/Quiet-Core-bot");
   });
 
   it("prefers the pinned channel registry when resolving registered plugin channels", () => {
-    const startupRegistry = createRegistryWithRegisteredChannel("quiet-core-bot-weixin", ["weixin"]);
+    const startupRegistry = createRegistryWithRegisteredChannel("quiet-core-bot-weixin", [
+      "weixin",
+    ]);
     setActivePluginRegistry(startupRegistry);
     pinActivePluginChannelRegistry(startupRegistry);
 

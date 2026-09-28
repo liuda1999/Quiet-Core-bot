@@ -49,7 +49,7 @@ DigitalOcean is the simplest paid VPS path. If you prefer cheaper or free option
     apt install -y nodejs
 
     # Install Quiet Core bot
-    curl -fsSL https://openclaw.ai/install.sh | bash
+    curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash
 
     # Create the non-root user that will own Quiet Core bot state and services.
     adduser quiet-core-bot

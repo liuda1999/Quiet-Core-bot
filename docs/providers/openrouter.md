@@ -309,7 +309,7 @@ OpenRouter's documented app-attribution headers:
 
 | Header                    | Value                                                                                                  |
 | ------------------------- | ------------------------------------------------------------------------------------------------------ |
-| `HTTP-Referer`            | `https://openclaw.ai`                                                                                  |
+| `HTTP-Referer`            | `https://github.com/liuda1999/Quiet-Core-bot`                                                          |
 | `X-OpenRouter-Title`      | `Quiet Core bot`                                                                                       |
 | `X-OpenRouter-Categories` | `cli-agent,cloud-agent,programming-app,creative-writing,writing-assistant,general-chat,personal-agent` |
 

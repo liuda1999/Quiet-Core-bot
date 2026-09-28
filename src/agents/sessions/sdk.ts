@@ -182,7 +182,7 @@ function getAttributionHeaders(
 
   if (model.provider === "openrouter" || baseUrl.includes("openrouter.ai")) {
     return {
-      "HTTP-Referer": "https://openclaw.ai",
+      "HTTP-Referer": "https://github.com/liuda1999/Quiet-Core-bot",
       "X-OpenRouter-Title": "Quiet Core bot",
       "X-OpenRouter-Categories": "cli-agent",
     };

@@ -170,7 +170,9 @@ describe("provider attribution defaults", () => {
   it("still exposes the vendor-declared policy metadata", () => {
     const policy = resolveProviderAttributionPolicy("openrouter");
     expect(policy?.enabledByDefault).toBe(true);
-    expect(policy?.headers).toMatchObject({ "HTTP-Referer": "https://openclaw.ai" });
+    expect(policy?.headers).toMatchObject({
+      "HTTP-Referer": "https://github.com/liuda1999/Quiet-Core-bot",
+    });
   });
 });
 
@@ -201,7 +203,7 @@ describe("provider attribution", () => {
       product: "Quiet Core bot",
       version: "2026.3.22",
       headers: {
-        "HTTP-Referer": "https://openclaw.ai",
+        "HTTP-Referer": "https://github.com/liuda1999/Quiet-Core-bot",
         "X-OpenRouter-Title": "Quiet Core bot",
         "X-OpenRouter-Categories":
           "cli-agent,cloud-agent,programming-app,creative-writing,writing-assistant,general-chat,personal-agent",
@@ -235,7 +237,7 @@ describe("provider attribution", () => {
         QUIET_CORE_VERSION: "2026.3.22",
       })?.headers,
     ).toEqual({
-      "HTTP-Referer": "https://openclaw.ai",
+      "HTTP-Referer": "https://github.com/liuda1999/Quiet-Core-bot",
       "X-OpenRouter-Title": "Quiet Core bot",
       "X-OpenRouter-Categories":
         "cli-agent,cloud-agent,programming-app,creative-writing,writing-assistant,general-chat,personal-agent",
@@ -243,21 +245,23 @@ describe("provider attribution", () => {
   });
 
   it("returns a hidden-spec OpenAI attribution policy", () => {
-    expect(resolveProviderAttributionPolicy("openai", { QUIET_CORE_VERSION: "2026.3.22" })).toEqual({
-      provider: "openai",
-      enabledByDefault: true,
-      verification: "vendor-hidden-api-spec",
-      hook: "request-headers",
-      reviewNote:
-        "OpenAI native traffic supports hidden originator/User-Agent attribution. Verified against the Codex wire contract.",
-      product: "Quiet Core bot",
-      version: "2026.3.22",
-      headers: {
-        originator: "quiet-core-bot",
+    expect(resolveProviderAttributionPolicy("openai", { QUIET_CORE_VERSION: "2026.3.22" })).toEqual(
+      {
+        provider: "openai",
+        enabledByDefault: true,
+        verification: "vendor-hidden-api-spec",
+        hook: "request-headers",
+        reviewNote:
+          "OpenAI native traffic supports hidden originator/User-Agent attribution. Verified against the Codex wire contract.",
+        product: "Quiet Core bot",
         version: "2026.3.22",
-        "User-Agent": "quiet-core-bot/2026.3.22",
+        headers: {
+          originator: "quiet-core-bot",
+          version: "2026.3.22",
+          "User-Agent": "quiet-core-bot/2026.3.22",
+        },
       },
-    });
+    );
     expect(
       resolveProviderAttributionPolicy("openai", { QUIET_CORE_VERSION: "2026.3.22" })?.headers,
     ).toEqual({
@@ -268,21 +272,23 @@ describe("provider attribution", () => {
   });
 
   it("maps legacy OpenAI Codex attribution to canonical OpenAI policy", () => {
-    expect(resolveProviderAttributionPolicy("openai", { QUIET_CORE_VERSION: "2026.3.22" })).toEqual({
-      provider: "openai",
-      enabledByDefault: true,
-      verification: "vendor-hidden-api-spec",
-      hook: "request-headers",
-      reviewNote:
-        "OpenAI native traffic supports hidden originator/User-Agent attribution. Verified against the Codex wire contract.",
-      product: "Quiet Core bot",
-      version: "2026.3.22",
-      headers: {
-        originator: "quiet-core-bot",
+    expect(resolveProviderAttributionPolicy("openai", { QUIET_CORE_VERSION: "2026.3.22" })).toEqual(
+      {
+        provider: "openai",
+        enabledByDefault: true,
+        verification: "vendor-hidden-api-spec",
+        hook: "request-headers",
+        reviewNote:
+          "OpenAI native traffic supports hidden originator/User-Agent attribution. Verified against the Codex wire contract.",
+        product: "Quiet Core bot",
         version: "2026.3.22",
-        "User-Agent": "quiet-core-bot/2026.3.22",
+        headers: {
+          originator: "quiet-core-bot",
+          version: "2026.3.22",
+          "User-Agent": "quiet-core-bot/2026.3.22",
+        },
       },
-    });
+    );
   });
 
   it("returns a hidden-spec xAI attribution policy", () => {

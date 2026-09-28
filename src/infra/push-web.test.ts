@@ -44,11 +44,11 @@ describe("resolveVapidKeys", () => {
     const keys = await resolveVapidKeys(tmpDir);
     expect(keys.publicKey).toBe("test-public-key-base64url");
     expect(keys.privateKey).toBe("test-private-key-base64url");
-    expect(keys.subject).toBe("https://openclaw.ai");
+    expect(keys.subject).toBe("https://github.com/liuda1999/Quiet-Core-bot");
     const persistedKeys = JSON.parse(
       await fs.readFile(path.join(tmpDir, "push", "vapid-keys.json"), "utf8"),
     ) as { subject?: string };
-    expect(persistedKeys.subject).toBe("https://openclaw.ai");
+    expect(persistedKeys.subject).toBe("https://github.com/liuda1999/Quiet-Core-bot");
 
     // Second call returns same keys.
     const keys2 = await resolveVapidKeys(tmpDir);

@@ -221,7 +221,7 @@ describe("ollama web search provider", () => {
           results: [
             {
               title: "OpenClaw",
-              url: "https://openclaw.ai/docs",
+              url: "https://github.com/liuda1999/Quiet-Core-bot/tree/main/docs",
               content: "Gateway docs and setup details",
             },
           ],
@@ -255,7 +255,10 @@ describe("ollama web search provider", () => {
     expect(result.query).toBe("quiet-core-bot docs");
     expect(result.provider).toBe("ollama");
     expect(result.count).toBe(1);
-    expectSingleSearchResultUrl(result.results, "https://openclaw.ai/docs");
+    expectSingleSearchResultUrl(
+      result.results,
+      "https://github.com/liuda1999/Quiet-Core-bot/tree/main/docs",
+    );
     expect(release).toHaveBeenCalledTimes(1);
   });
 

@@ -215,12 +215,12 @@ describe("createAgentSession attribution headers", () => {
     });
 
     expect(providerOptions.headers).toMatchObject({
-      "HTTP-Referer": "https://openclaw.ai",
+      "HTTP-Referer": "https://github.com/liuda1999/Quiet-Core-bot",
       "X-OpenRouter-Title": "Quiet Core bot",
       "X-OpenRouter-Categories": "cli-agent",
     });
     expect(endpointOptions.headers).toMatchObject({
-      "HTTP-Referer": "https://openclaw.ai",
+      "HTTP-Referer": "https://github.com/liuda1999/Quiet-Core-bot",
       "X-OpenRouter-Title": "Quiet Core bot",
       "X-OpenRouter-Categories": "cli-agent",
     });

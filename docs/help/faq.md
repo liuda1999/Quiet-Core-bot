@@ -159,7 +159,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
     - **Always-on Gateway** (run on a VPS, interact from anywhere)
     - **Nodes** for local browser/screen/camera/exec
 
-    Showcase: [https://openclaw.ai/showcase](https://openclaw.ai/showcase)
+    Showcase: [https://github.com/liuda1999/Quiet-Core-bot](https://github.com/liuda1999/Quiet-Core-bot)
 
   </Accordion>
 </AccordionGroup>

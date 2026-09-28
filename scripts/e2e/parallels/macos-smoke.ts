@@ -121,7 +121,7 @@ const defaultOptions = (): MacosOptions => ({
   hostIp: undefined,
   hostPort: 18425,
   hostPortExplicit: false,
-  installUrl: "https://openclaw.ai/install.sh",
+  installUrl: "https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh",
   installVersion: "",
   json: false,
   keepServer: false,
@@ -148,7 +148,7 @@ Options:
   --model <provider/model>    Override the model used for the agent-turn smoke.
   --api-key-env <var>        Host env var name for provider API key.
   --openai-api-key-env <var> Alias for --api-key-env (backward compatible)
-  --install-url <url>        Installer URL for latest release. Default: https://openclaw.ai/install.sh
+  --install-url <url>        Installer URL for latest release. Default: https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh
   --host-port <port>         Host HTTP port for current-main tgz. Default: 18425
   --host-ip <ip>             Override Parallels host IP.
   --latest-version <ver>     Override npm latest version lookup.
@@ -305,7 +305,10 @@ class MacosSmoke {
       modelId: options.modelId,
       provider: options.provider,
     });
-    this.agentTimeoutSeconds = readPositiveIntEnv("QUIET_CORE_PARALLELS_MACOS_AGENT_TIMEOUT_S", 2700);
+    this.agentTimeoutSeconds = readPositiveIntEnv(
+      "QUIET_CORE_PARALLELS_MACOS_AGENT_TIMEOUT_S",
+      2700,
+    );
     this.modelTimeoutSeconds = resolveParallelsModelTimeoutSeconds("macos");
     this.updateDevTimeoutSeconds = readPositiveIntEnv(
       "QUIET_CORE_PARALLELS_MACOS_UPDATE_DEV_TIMEOUT_S",

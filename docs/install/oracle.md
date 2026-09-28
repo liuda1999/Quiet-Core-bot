@@ -73,7 +73,7 @@ Run a persistent Quiet Core bot Gateway on Oracle Cloud's **Always Free** ARM ti
 
   <Step title="Install Quiet Core bot">
     ```bash
-    curl -fsSL https://openclaw.ai/install.sh | bash
+    curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash
     source ~/.bashrc
     ```
 

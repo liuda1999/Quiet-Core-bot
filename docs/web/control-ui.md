@@ -242,7 +242,7 @@ Override the VAPID keypair through env vars on the Gateway process when you want
 
 - `QUIET_CORE_VAPID_PUBLIC_KEY`
 - `QUIET_CORE_VAPID_PRIVATE_KEY`
-- `QUIET_CORE_VAPID_SUBJECT` (defaults to `https://openclaw.ai`)
+- `QUIET_CORE_VAPID_SUBJECT` (defaults to `https://github.com/liuda1999/Quiet-Core-bot`)
 
 The Control UI uses these scope-gated Gateway methods to register and test browser subscriptions:
 

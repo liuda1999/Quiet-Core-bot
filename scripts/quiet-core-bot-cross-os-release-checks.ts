@@ -33,7 +33,8 @@ import { resolveWindowsTaskkillPath } from "./lib/windows-taskkill.mjs";
 import { buildCmdExeCommandLine, resolveWindowsCmdExePath } from "./windows-cmd-helpers.mjs";
 
 const SCRIPT_PATH = fileURLToPath(import.meta.url);
-const PUBLISHED_INSTALLER_BASE_URL = "https://openclaw.ai";
+const PUBLISHED_INSTALLER_BASE_URL =
+  "https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts";
 
 const SUPPORTED_MODES = new Set(["fresh", "upgrade", "both"]);
 const SUPPORTED_SUITES = new Set([
@@ -124,7 +125,8 @@ export function resolveProviderConfig(provider, env = process.env) {
     return null;
   }
   const providerEnvKey = `QUIET_CORE_CROSS_OS_${provider.toUpperCase().replace(/[^A-Z0-9]+/gu, "_")}_MODEL`;
-  const model = env[providerEnvKey]?.trim() || env.QUIET_CORE_CROSS_OS_MODEL?.trim() || config.model;
+  const model =
+    env[providerEnvKey]?.trim() || env.QUIET_CORE_CROSS_OS_MODEL?.trim() || config.model;
   return { ...config, model };
 }
 
@@ -1707,10 +1709,14 @@ async function resolveInstallerTargetVersion(params) {
   if (resolvedVersion) {
     return resolvedVersion;
   }
-  const latestResult = await runCommand(npmCommand(), ["view", "quiet-core-bot@latest", "version"], {
-    logPath: join(params.logsDir, `${params.suiteName}-latest-version.log`),
-    timeoutMs: 2 * 60 * 1000,
-  });
+  const latestResult = await runCommand(
+    npmCommand(),
+    ["view", "quiet-core-bot@latest", "version"],
+    {
+      logPath: join(params.logsDir, `${params.suiteName}-latest-version.log`),
+      timeoutMs: 2 * 60 * 1000,
+    },
+  );
   const latestVersion = latestResult.stdout.trim();
   if (!latestVersion) {
     throw new Error("npm view quiet-core-bot@latest version did not return a version.");

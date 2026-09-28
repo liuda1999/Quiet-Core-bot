@@ -112,7 +112,7 @@ Mode matrix:
 For terminal-first use, install Quiet Core bot from PowerShell:
 
 ```powershell
-iwr -useb https://openclaw.ai/install.ps1 | iex
+iwr -useb https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.ps1 | iex
 ```
 
 Verify:
@@ -177,7 +177,7 @@ wsl --shutdown
 Then install Quiet Core bot inside WSL with the Linux quickstart:
 
 ```bash
-curl -fsSL https://openclaw.ai/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash
 quiet-core-bot gateway status
 ```
 

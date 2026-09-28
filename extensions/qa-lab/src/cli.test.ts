@@ -460,7 +460,7 @@ describe("qa cli registration", () => {
       "--output-dir",
       ".artifacts/qa-e2e/mantis/desktop-browser",
       "--browser-url",
-      "https://openclaw.ai/docs",
+      "https://github.com/liuda1999/Quiet-Core-bot/tree/main/docs",
       "--html-file",
       "qa-artifacts/timeline.html",
       "--crabbox-bin",
@@ -479,7 +479,7 @@ describe("qa cli registration", () => {
     ]);
 
     expect(runMantisDesktopBrowserSmokeCommand).toHaveBeenCalledWith({
-      browserUrl: "https://openclaw.ai/docs",
+      browserUrl: "https://github.com/liuda1999/Quiet-Core-bot/tree/main/docs",
       crabboxBin: "/tmp/crabbox",
       htmlFile: "qa-artifacts/timeline.html",
       idleTimeout: "30m",
@@ -797,7 +797,9 @@ describe("qa cli registration", () => {
     });
     registerQaLabCli(invalidProgram);
 
-    await expect(invalidProgram.parseAsync(["node", "quiet-core-bot", ...args])).rejects.toThrow(message);
+    await expect(invalidProgram.parseAsync(["node", "quiet-core-bot", ...args])).rejects.toThrow(
+      message,
+    );
   });
 
   it.each([
@@ -824,7 +826,9 @@ describe("qa cli registration", () => {
     });
     registerQaLabCli(invalidProgram);
 
-    await expect(invalidProgram.parseAsync(["node", "quiet-core-bot", ...args])).rejects.toThrow(message);
+    await expect(invalidProgram.parseAsync(["node", "quiet-core-bot", ...args])).rejects.toThrow(
+      message,
+    );
   });
 
   it("shows an enable hint when a discovered runner plugin is installed but blocked", async () => {

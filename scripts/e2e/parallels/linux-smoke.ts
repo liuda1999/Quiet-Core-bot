@@ -123,7 +123,7 @@ const defaultOptions = (): LinuxOptions => ({
   hostIp: undefined,
   hostPort: 18427,
   hostPortExplicit: false,
-  installUrl: "https://openclaw.ai/install.sh",
+  installUrl: "https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh",
   installVersion: "",
   json: false,
   keepServer: false,
@@ -150,7 +150,7 @@ Options:
   --model <provider/model>    Override the model used for the agent-turn smoke.
   --api-key-env <var>        Host env var name for provider API key.
   --openai-api-key-env <var> Alias for --api-key-env (backward compatible)
-  --install-url <url>        Installer URL for latest release. Default: https://openclaw.ai/install.sh
+  --install-url <url>        Installer URL for latest release. Default: https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh
   --host-port <port>         Host HTTP port for current-main tgz. Default: 18427
   --host-ip <ip>             Override Parallels host IP.
   --latest-version <ver>     Override npm latest version lookup.
@@ -514,9 +514,7 @@ if command -v curl >/dev/null 2>&1; then
     url,
   )} -o ${shellQuote(outputPath)}
 else
-  wget -q --timeout=10 --read-timeout=120 --tries=3 -O ${shellQuote(outputPath)} ${shellQuote(
-    url,
-  )}
+  wget -q --timeout=10 --read-timeout=120 --tries=3 -O ${shellQuote(outputPath)} ${shellQuote(url)}
 fi`);
   }
 
@@ -660,13 +658,22 @@ setsid sh -lc ` +
   }
 
   private showGatewayStatusCompat(check = true): boolean {
-    const help = this.guestExec(["quiet-core-bot", "gateway", "status", "--help"], { check: false });
+    const help = this.guestExec(["quiet-core-bot", "gateway", "status", "--help"], {
+      check: false,
+    });
     const args = help.includes("--require-rpc")
       ? ["quiet-core-bot", "gateway", "status", "--deep", "--require-rpc"]
       : ["quiet-core-bot", "gateway", "status", "--deep"];
     const result = run(
       "prlctl",
-      ["exec", this.options.vmName, "/usr/bin/env", "HOME=/root", "QUIET_CORE_ALLOW_ROOT=1", ...args],
+      [
+        "exec",
+        this.options.vmName,
+        "/usr/bin/env",
+        "HOME=/root",
+        "QUIET_CORE_ALLOW_ROOT=1",
+        ...args,
+      ],
       {
         check: false,
         quiet: true,

@@ -6,7 +6,7 @@ import { isPrivateQaCliEnabled } from "./private-qa-cli.js";
 /** Descriptor shape for root-level sub-CLI commands. */
 export type SubCliDescriptor = NamedCommandDescriptor;
 
-const subCliCommandCatalog = defineCommandDescriptorCatalog([
+const subCliCommandCatalog = defineCommandDescriptorCatalog<SubCliDescriptor>([
   { name: "acp", description: "Run and manage ACP-backed coding agents", hasSubcommands: true },
   {
     name: "gateway",

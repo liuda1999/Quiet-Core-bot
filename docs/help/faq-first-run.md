@@ -27,7 +27,7 @@ and troubleshooting see the main [FAQ](/help/faq).
     the hackable (git) install:
 
     ```bash
-    curl -fsSL https://openclaw.ai/install.sh | bash -s -- --install-method git
+    curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --install-method git
     ```
 
     This installs Quiet Core bot **from a git checkout**, so the agent can read the code + docs and
@@ -82,7 +82,7 @@ and troubleshooting see the main [FAQ](/help/faq).
     The repo recommends running from source and using onboarding:
 
     ```bash
-    curl -fsSL https://openclaw.ai/install.sh | bash
+    curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash
     quiet-core-bot onboard --install-daemon
     ```
 
@@ -277,15 +277,15 @@ and troubleshooting see the main [FAQ](/help/faq).
     One-liners (macOS/Linux):
 
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -- --beta
+    curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --beta
     ```
 
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -- --install-method git
+    curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --install-method git
     ```
 
     Windows installer (PowerShell):
-    [https://openclaw.ai/install.ps1](https://openclaw.ai/install.ps1)
+    [https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.ps1](https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.ps1)
 
     More detail: [Development channels](/install/development-channels) and [Installer flags](/install/installer).
 
@@ -305,7 +305,7 @@ and troubleshooting see the main [FAQ](/help/faq).
     2. **Hackable install (from the installer site):**
 
     ```bash
-    curl -fsSL https://openclaw.ai/install.sh | bash -s -- --install-method git
+    curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --install-method git
     ```
 
     That gives you a local repo you can edit, then update via git.
@@ -339,19 +339,19 @@ and troubleshooting see the main [FAQ](/help/faq).
     Re-run the installer with **verbose output**:
 
     ```bash
-    curl -fsSL https://openclaw.ai/install.sh | bash -s -- --verbose
+    curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --verbose
     ```
 
     Beta install with verbose:
 
     ```bash
-    curl -fsSL https://openclaw.ai/install.sh | bash -s -- --beta --verbose
+    curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --beta --verbose
     ```
 
     For a hackable (git) install:
 
     ```bash
-    curl -fsSL https://openclaw.ai/install.sh | bash -s -- --install-method git --verbose
+    curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --install-method git --verbose
     ```
 
     Windows (PowerShell) equivalent:
@@ -359,7 +359,7 @@ and troubleshooting see the main [FAQ](/help/faq).
     ```powershell
     # install.ps1 has no dedicated -Verbose flag yet.
     Set-PSDebug -Trace 1
-    & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -NoOnboard
+    & ([scriptblock]::Create((iwr -useb https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.ps1))) -NoOnboard
     Set-PSDebug -Trace 0
     ```
 
@@ -427,7 +427,7 @@ and troubleshooting see the main [FAQ](/help/faq).
     your bot (or Claude/Codex) _from that folder_ so it can read the repo and answer precisely.
 
     ```bash
-    curl -fsSL https://openclaw.ai/install.sh | bash -s -- --install-method git
+    curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --install-method git
     ```
 
     More detail: [Install](/install) and [Installer flags](/install/installer).
@@ -795,8 +795,8 @@ and troubleshooting see the main [FAQ](/help/faq).
     The installer can force either mode too:
 
     ```bash
-    curl -fsSL https://openclaw.ai/install.sh | bash -s -- --install-method git
-    curl -fsSL https://openclaw.ai/install.sh | bash -s -- --install-method npm
+    curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --install-method git
+    curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --install-method npm
     ```
 
     Backup tips: see [Backup strategy](/help/faq#where-things-live-on-disk).

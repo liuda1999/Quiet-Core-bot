@@ -1,13 +1,13 @@
 ---
 summary: "How the installer scripts work (install.sh, install-cli.sh, install.ps1), flags, and automation"
 read_when:
-  - You want to understand `openclaw.ai/install.sh`
+  - You want to understand `scripts/install.sh`
   - You want to automate installs (CI / headless)
   - You want to install from a GitHub checkout
 title: "Installer internals"
 ---
 
-Quiet Core bot ships three installer scripts, served from `openclaw.ai`.
+Quiet Core bot ships three installer scripts, served from this repository's `scripts/` directory.
 
 | Script                             | Platform             | What it does                                                                                                               |
 | ---------------------------------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------- |
@@ -20,31 +20,31 @@ Quiet Core bot ships three installer scripts, served from `openclaw.ai`.
 <Tabs>
   <Tab title="install.sh">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash
+    curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash
     ```
 
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -- --help
+    curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --help
     ```
 
   </Tab>
   <Tab title="install-cli.sh">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash
+    curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install-cli.sh | bash
     ```
 
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash -s -- --help
+    curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install-cli.sh | bash -s -- --help
     ```
 
   </Tab>
   <Tab title="install.ps1">
     ```powershell
-    iwr -useb https://openclaw.ai/install.ps1 | iex
+    iwr -useb https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.ps1 | iex
     ```
 
     ```powershell
-    & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -Tag beta -NoOnboard -DryRun
+    & ([scriptblock]::Create((iwr -useb https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.ps1))) -Tag beta -NoOnboard -DryRun
     ```
 
   </Tab>
@@ -106,27 +106,27 @@ The script exits with code `2` for invalid method selection or invalid `--instal
 <Tabs>
   <Tab title="Default">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash
+    curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash
     ```
   </Tab>
   <Tab title="Skip onboarding">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -- --no-onboard
+    curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --no-onboard
     ```
   </Tab>
   <Tab title="Git install">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -- --install-method git
+    curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --install-method git
     ```
   </Tab>
   <Tab title="GitHub main checkout">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -- --install-method git --version main
+    curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --install-method git --version main
     ```
   </Tab>
   <Tab title="Dry run">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -- --dry-run
+    curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --dry-run
     ```
   </Tab>
 </Tabs>
@@ -134,28 +134,28 @@ The script exits with code `2` for invalid method selection or invalid `--instal
 <AccordionGroup>
   <Accordion title="Flags reference">
 
-| Flag                                  | Description                                                |
-| ------------------------------------- | ---------------------------------------------------------- |
-| `--install-method npm\|git`           | Choose install method (default: `npm`). Alias: `--method`  |
-| `--npm`                               | Shortcut for npm method                                    |
-| `--git`                               | Shortcut for git method. Alias: `--github`                 |
-| `--version <version\|dist-tag\|spec>` | npm version, dist-tag, or package spec (default: `latest`) |
-| `--beta`                              | Use beta dist-tag if available, else fallback to `latest`  |
+| Flag                                  | Description                                                      |
+| ------------------------------------- | ---------------------------------------------------------------- |
+| `--install-method npm\|git`           | Choose install method (default: `npm`). Alias: `--method`        |
+| `--npm`                               | Shortcut for npm method                                          |
+| `--git`                               | Shortcut for git method. Alias: `--github`                       |
+| `--version <version\|dist-tag\|spec>` | npm version, dist-tag, or package spec (default: `latest`)       |
+| `--beta`                              | Use beta dist-tag if available, else fallback to `latest`        |
 | `--git-dir <path>`                    | Checkout directory (default: `~/quiet-core-bot`). Alias: `--dir` |
-| `--no-git-update`                     | Skip `git pull` for existing checkout                      |
-| `--no-prompt`                         | Disable prompts                                            |
-| `--no-onboard`                        | Skip onboarding                                            |
-| `--onboard`                           | Enable onboarding                                          |
-| `--dry-run`                           | Print actions without applying changes                     |
-| `--verbose`                           | Enable debug output (`set -x`, npm notice-level logs)      |
-| `--help`                              | Show usage (`-h`)                                          |
+| `--no-git-update`                     | Skip `git pull` for existing checkout                            |
+| `--no-prompt`                         | Disable prompts                                                  |
+| `--no-onboard`                        | Skip onboarding                                                  |
+| `--onboard`                           | Enable onboarding                                                |
+| `--dry-run`                           | Print actions without applying changes                           |
+| `--verbose`                           | Enable debug output (`set -x`, npm notice-level logs)            |
+| `--help`                              | Show usage (`-h`)                                                |
 
   </Accordion>
 
   <Accordion title="Environment variables reference">
 
-| Variable                                          | Description                                                              |
-| ------------------------------------------------- | ------------------------------------------------------------------------ |
+| Variable                                            | Description                                                              |
+| --------------------------------------------------- | ------------------------------------------------------------------------ |
 | `QUIET_CORE_INSTALL_METHOD=git\|npm`                | Install method                                                           |
 | `QUIET_CORE_VERSION=latest\|next\|<semver>\|<spec>` | npm version, dist-tag, or package spec                                   |
 | `QUIET_CORE_BETA=0\|1`                              | Use beta if available                                                    |
@@ -210,27 +210,27 @@ by default, plus git-checkout installs under the same prefix flow.
 <Tabs>
   <Tab title="Default">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash
+    curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install-cli.sh | bash
     ```
   </Tab>
   <Tab title="Custom prefix + version">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash -s -- --prefix /opt/quiet-core-bot --version latest
+    curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install-cli.sh | bash -s -- --prefix /opt/quiet-core-bot --version latest
     ```
   </Tab>
   <Tab title="Git install">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash -s -- --install-method git --git-dir ~/quiet-core-bot
+    curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install-cli.sh | bash -s -- --install-method git --git-dir ~/quiet-core-bot
     ```
   </Tab>
   <Tab title="Automation JSON output">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash -s -- --json --prefix /opt/quiet-core-bot
+    curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install-cli.sh | bash -s -- --json --prefix /opt/quiet-core-bot
     ```
   </Tab>
   <Tab title="Run onboarding">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash -s -- --onboard
+    curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install-cli.sh | bash -s -- --onboard
     ```
   </Tab>
 </Tabs>
@@ -244,7 +244,7 @@ by default, plus git-checkout installs under the same prefix flow.
 | `--install-method npm\|git` | Choose install method (default: `npm`). Alias: `--method`                       |
 | `--npm`                     | Shortcut for npm method                                                         |
 | `--git`, `--github`         | Shortcut for git method                                                         |
-| `--git-dir <path>`          | Git checkout directory (default: `~/quiet-core-bot`). Alias: `--dir`                  |
+| `--git-dir <path>`          | Git checkout directory (default: `~/quiet-core-bot`). Alias: `--dir`            |
 | `--version <ver>`           | Quiet Core bot version or dist-tag (default: `latest`)                          |
 | `--node-version <ver>`      | Node version (default: `22.22.0`)                                               |
 | `--json`                    | Emit NDJSON events                                                              |
@@ -257,8 +257,8 @@ by default, plus git-checkout installs under the same prefix flow.
 
   <Accordion title="Environment variables reference">
 
-| Variable                                    | Description                                                              |
-| ------------------------------------------- | ------------------------------------------------------------------------ |
+| Variable                                      | Description                                                              |
+| --------------------------------------------- | ------------------------------------------------------------------------ |
 | `QUIET_CORE_PREFIX=<path>`                    | Install prefix                                                           |
 | `QUIET_CORE_INSTALL_METHOD=git\|npm`          | Install method                                                           |
 | `QUIET_CORE_VERSION=<ver>`                    | Quiet Core bot version or dist-tag                                       |
@@ -308,34 +308,34 @@ by default, plus git-checkout installs under the same prefix flow.
 <Tabs>
   <Tab title="Default">
     ```powershell
-    iwr -useb https://openclaw.ai/install.ps1 | iex
+    iwr -useb https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.ps1 | iex
     ```
   </Tab>
   <Tab title="Git install">
     ```powershell
-    & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -InstallMethod git
+    & ([scriptblock]::Create((iwr -useb https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.ps1))) -InstallMethod git
     ```
   </Tab>
   <Tab title="GitHub main checkout">
     ```powershell
-    & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -InstallMethod git -Tag main
+    & ([scriptblock]::Create((iwr -useb https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.ps1))) -InstallMethod git -Tag main
     ```
   </Tab>
   <Tab title="Custom git directory">
     ```powershell
-    & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -InstallMethod git -GitDir "C:\quiet-core-bot"
+    & ([scriptblock]::Create((iwr -useb https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.ps1))) -InstallMethod git -GitDir "C:\quiet-core-bot"
     ```
   </Tab>
   <Tab title="Dry run">
     ```powershell
-    & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -DryRun
+    & ([scriptblock]::Create((iwr -useb https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.ps1))) -DryRun
     ```
   </Tab>
   <Tab title="Debug trace">
     ```powershell
     # install.ps1 has no dedicated -Verbose flag yet.
     Set-PSDebug -Trace 1
-    & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -NoOnboard
+    & ([scriptblock]::Create((iwr -useb https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.ps1))) -NoOnboard
     Set-PSDebug -Trace 0
     ```
   </Tab>
@@ -344,21 +344,21 @@ by default, plus git-checkout installs under the same prefix flow.
 <AccordionGroup>
   <Accordion title="Flags reference">
 
-| Flag                        | Description                                                |
-| --------------------------- | ---------------------------------------------------------- |
-| `-InstallMethod npm\|git`   | Install method (default: `npm`)                            |
-| `-Tag <tag\|version\|spec>` | npm dist-tag, version, or package spec (default: `latest`) |
-| `-GitDir <path>`            | Checkout directory (default: `%USERPROFILE%\quiet-core-bot`)     |
-| `-NoOnboard`                | Skip onboarding                                            |
-| `-NoGitUpdate`              | Skip `git pull`                                            |
-| `-DryRun`                   | Print actions only                                         |
+| Flag                        | Description                                                  |
+| --------------------------- | ------------------------------------------------------------ |
+| `-InstallMethod npm\|git`   | Install method (default: `npm`)                              |
+| `-Tag <tag\|version\|spec>` | npm dist-tag, version, or package spec (default: `latest`)   |
+| `-GitDir <path>`            | Checkout directory (default: `%USERPROFILE%\quiet-core-bot`) |
+| `-NoOnboard`                | Skip onboarding                                              |
+| `-NoGitUpdate`              | Skip `git pull`                                              |
+| `-DryRun`                   | Print actions only                                           |
 
   </Accordion>
 
   <Accordion title="Environment variables reference">
 
-| Variable                           | Description        |
-| ---------------------------------- | ------------------ |
+| Variable                             | Description        |
+| ------------------------------------ | ------------------ |
 | `QUIET_CORE_INSTALL_METHOD=git\|npm` | Install method     |
 | `QUIET_CORE_GIT_DIR=<path>`          | Checkout directory |
 | `QUIET_CORE_NO_ONBOARD=1`            | Skip onboarding    |
@@ -381,23 +381,23 @@ Use non-interactive flags/env vars for predictable runs.
 <Tabs>
   <Tab title="install.sh (non-interactive npm)">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -- --no-prompt --no-onboard
+    curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --no-prompt --no-onboard
     ```
   </Tab>
   <Tab title="install.sh (non-interactive git)">
     ```bash
     QUIET_CORE_INSTALL_METHOD=git QUIET_CORE_NO_PROMPT=1 \
-      curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash
+      curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash
     ```
   </Tab>
   <Tab title="install-cli.sh (JSON)">
     ```bash
-    curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install-cli.sh | bash -s -- --json --prefix /opt/quiet-core-bot
+    curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install-cli.sh | bash -s -- --json --prefix /opt/quiet-core-bot
     ```
   </Tab>
   <Tab title="install.ps1 (skip onboarding)">
     ```powershell
-    & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -NoOnboard
+    & ([scriptblock]::Create((iwr -useb https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.ps1))) -NoOnboard
     ```
   </Tab>
 </Tabs>
@@ -429,7 +429,7 @@ Use non-interactive flags/env vars for predictable runs.
 
     ```powershell
     Set-PSDebug -Trace 1
-    & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -NoOnboard
+    & ([scriptblock]::Create((iwr -useb https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.ps1))) -NoOnboard
     Set-PSDebug -Trace 0
     ```
 

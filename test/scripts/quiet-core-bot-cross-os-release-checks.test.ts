@@ -274,7 +274,9 @@ describe("scripts/quiet-core-bot-cross-os-release-checks", () => {
   });
 
   it("rejects malformed cross-OS positive integer environment values", () => {
-    expect(parsePositiveIntegerEnv("QUIET_CORE_CROSS_OS_COMMAND_HEARTBEAT_SECONDS", 60, {})).toBe(60);
+    expect(parsePositiveIntegerEnv("QUIET_CORE_CROSS_OS_COMMAND_HEARTBEAT_SECONDS", 60, {})).toBe(
+      60,
+    );
     expect(
       parsePositiveIntegerEnv("QUIET_CORE_CROSS_OS_COMMAND_HEARTBEAT_SECONDS", 60, {
         QUIET_CORE_CROSS_OS_COMMAND_HEARTBEAT_SECONDS: "25",
@@ -556,7 +558,10 @@ describe("scripts/quiet-core-bot-cross-os-release-checks", () => {
       ".github/workflows/quiet-core-bot-cross-os-release-checks-reusable.yml",
       "utf8",
     );
-    const releaseChecks = readFileSync(".github/workflows/quiet-core-bot-release-checks.yml", "utf8");
+    const releaseChecks = readFileSync(
+      ".github/workflows/quiet-core-bot-release-checks.yml",
+      "utf8",
+    );
 
     expect(workflow).toContain(
       "QUIET_CORE_CROSS_OS_OPENAI_MODEL: ${{ inputs.openai_model || vars.QUIET_CORE_CROSS_OS_OPENAI_MODEL || 'openai/gpt-5.5' }}",
@@ -600,7 +605,9 @@ describe("scripts/quiet-core-bot-cross-os-release-checks", () => {
   });
 
   it("rejects unsafe npm pack tarball filenames before staging release artifacts", () => {
-    expect(resolveNpmPackTarballFileName("quiet-core-bot-2026.6.17.tgz")).toBe("quiet-core-bot-2026.6.17.tgz");
+    expect(resolveNpmPackTarballFileName("quiet-core-bot-2026.6.17.tgz")).toBe(
+      "quiet-core-bot-2026.6.17.tgz",
+    );
 
     const unsafeFilenames = [
       "../quiet-core-bot.tgz",
@@ -630,7 +637,9 @@ describe("scripts/quiet-core-bot-cross-os-release-checks", () => {
   });
 
   it("keeps packaged-upgrade release updates out of service restart flow", () => {
-    const args = buildPackagedUpgradeUpdateArgs("http://127.0.0.1:49152/quiet-core-bot-current.tgz");
+    const args = buildPackagedUpgradeUpdateArgs(
+      "http://127.0.0.1:49152/quiet-core-bot-current.tgz",
+    );
     expect(args.slice(0, 6)).toEqual([
       "update",
       "--tag",
@@ -931,7 +940,9 @@ describe("scripts/quiet-core-bot-cross-os-release-checks", () => {
   it("serves installer scripts as UTF-8 text and package payloads as binary", () => {
     expect(resolveStaticFileContentType("scripts/install.sh")).toBe("text/plain; charset=utf-8");
     expect(resolveStaticFileContentType("scripts/install.ps1")).toBe("text/plain; charset=utf-8");
-    expect(resolveStaticFileContentType("quiet-core-bot-2026.4.14.tgz")).toBe("application/octet-stream");
+    expect(resolveStaticFileContentType("quiet-core-bot-2026.4.14.tgz")).toBe(
+      "application/octet-stream",
+    );
   });
 
   it("streams release artifacts from the static file server", async () => {
@@ -1032,9 +1043,15 @@ describe("scripts/quiet-core-bot-cross-os-release-checks", () => {
   });
 
   it("uses the published installer URLs for native installer lanes", () => {
-    expect(resolvePublishedInstallerUrl("darwin")).toBe("https://openclaw.ai/install.sh");
-    expect(resolvePublishedInstallerUrl("linux")).toBe("https://openclaw.ai/install.sh");
-    expect(resolvePublishedInstallerUrl("win32")).toBe("https://openclaw.ai/install.ps1");
+    expect(resolvePublishedInstallerUrl("darwin")).toBe(
+      "https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh",
+    );
+    expect(resolvePublishedInstallerUrl("linux")).toBe(
+      "https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh",
+    );
+    expect(resolvePublishedInstallerUrl("win32")).toBe(
+      "https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.ps1",
+    );
   });
 
   it("uses managed gateway services only on native Windows runners", () => {
@@ -1475,7 +1492,10 @@ describe("scripts/quiet-core-bot-cross-os-release-checks", () => {
       ),
     ).toBe(String.raw`C:\Users\runner\AppData\Roaming\npm`);
     expect(
-      resolveInstalledPrefixDirFromCliPath("/Users/runner/.npm-global/bin/quiet-core-bot", "darwin"),
+      resolveInstalledPrefixDirFromCliPath(
+        "/Users/runner/.npm-global/bin/quiet-core-bot",
+        "darwin",
+      ),
     ).toBe("/Users/runner/.npm-global");
   });
 

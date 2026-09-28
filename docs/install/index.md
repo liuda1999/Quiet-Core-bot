@@ -24,12 +24,12 @@ Windows desktop users can also install the native [Windows Hub](/platforms/windo
 <Tabs>
   <Tab title="macOS / Linux / WSL2">
     ```bash
-    curl -fsSL https://openclaw.ai/install.sh | bash
+    curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash
     ```
   </Tab>
   <Tab title="Windows (PowerShell)">
     ```powershell
-    iwr -useb https://openclaw.ai/install.ps1 | iex
+    iwr -useb https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.ps1 | iex
     ```
   </Tab>
 </Tabs>
@@ -39,12 +39,12 @@ To install without running onboarding:
 <Tabs>
   <Tab title="macOS / Linux / WSL2">
     ```bash
-    curl -fsSL https://openclaw.ai/install.sh | bash -s -- --no-onboard
+    curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --no-onboard
     ```
   </Tab>
   <Tab title="Windows (PowerShell)">
     ```powershell
-    & ([scriptblock]::Create((iwr -useb https://openclaw.ai/install.ps1))) -NoOnboard
+    & ([scriptblock]::Create((iwr -useb https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.ps1))) -NoOnboard
     ```
   </Tab>
 </Tabs>
@@ -59,7 +59,7 @@ Use this when you want Quiet Core bot and Node kept under a local prefix such as
 `~/.quiet-core-bot`, without depending on a system-wide Node install:
 
 ```bash
-curl -fsSL https://openclaw.ai/install-cli.sh | bash
+curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install-cli.sh | bash
 ```
 
 It supports npm installs by default, plus git-checkout installs under the same
@@ -129,7 +129,7 @@ Or skip the link and use `pnpm quiet-core-bot ...` from inside the repo. See [Se
 ### Install from the GitHub main checkout
 
 ```bash
-curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash -s -- --install-method git --version main
+curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --install-method git --version main
 ```
 
 ### Containers and package managers
