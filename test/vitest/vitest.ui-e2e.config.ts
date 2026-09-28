@@ -31,7 +31,9 @@ export function createUiE2eVitestConfig(
       name: "ui-e2e",
       pool: "forks",
       runner: undefined,
-      setupFiles: [],
+      // Keep the shared isolated HOME/bootstrap so these workers never resolve the developer's
+      // real config/state directories.
+      setupFiles: baseTest.setupFiles ?? [],
     },
   });
 }

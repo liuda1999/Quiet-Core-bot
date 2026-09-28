@@ -59,6 +59,17 @@ vi.mock("../../channels/plugins/message-action-dispatch.js", () => ({
 }));
 
 const TEST_AGENT_WORKSPACE = "/tmp/quiet-core-bot-test-workspace";
+// The gateway resolves deliverable channels from the active plugin registry, so
+// each test needs the standard bundled channels registered; an empty registry
+// hides every channel and makes outbound resolution fail.
+const TEST_DELIVERABLE_CHANNEL_IDS = [
+  "discord",
+  "slack",
+  "telegram",
+  "whatsapp",
+  "signal",
+  "imessage",
+] as const;
 let sendHandlers: typeof import("./send.js").sendHandlers;
 
 function resolveAgentIdFromSessionKeyForTests(params: { sessionKey?: string }): string {
@@ -308,7 +319,19 @@ describe("gateway send mirroring", () => {
   beforeEach(async () => {
     vi.clearAllMocks();
     registrySeq += 1;
-    setActivePluginRegistry(createTestRegistry([]), `send-test-${registrySeq}`);
+    setActivePluginRegistry(
+      createTestRegistry(
+        TEST_DELIVERABLE_CHANNEL_IDS.map((id) => ({
+          pluginId: id,
+          source: "test",
+          plugin: { id, meta: { id, label: id } },
+        })),
+      ),
+      `send-test-${registrySeq}`,
+    );
+    // `clearAllMocks` keeps queued `mockReturnValueOnce` values, so a leftover
+    // one-shot plugin would shadow the per-test plugin below and leak across tests.
+    mocks.getChannelPlugin.mockReset();
     mocks.applyPluginAutoEnable.mockImplementation(({ config }) => ({
       config,
       changes: [],

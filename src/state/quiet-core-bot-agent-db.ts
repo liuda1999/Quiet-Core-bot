@@ -7,6 +7,7 @@ import {
   executeSqliteQuerySync,
   getNodeSqliteKysely,
 } from "../infra/kysely-sync.js";
+import { migrateLegacyAgentDatabaseFile } from "../infra/legacy-openclaw-migration.js";
 import { requireNodeSqlite } from "../infra/node-sqlite.js";
 import { resolveSqliteDatabaseFilePaths } from "../infra/sqlite-files.js";
 import { runSqliteImmediateTransactionSync } from "../infra/sqlite-transaction.js";
@@ -247,6 +248,9 @@ export function openOpenClawAgentDatabase(
     cachedDatabases.delete(pathname);
   }
 
+  // Rename a pre-rebrand `openclaw-agent.sqlite` onto the current filename so agent
+  // memory and auth rows written by earlier releases are preserved across upgrades.
+  migrateLegacyAgentDatabaseFile(pathname);
   ensureOpenClawAgentDatabasePermissions(pathname, databaseOptions);
   const sqlite = requireNodeSqlite();
   const db = new sqlite.DatabaseSync(pathname);

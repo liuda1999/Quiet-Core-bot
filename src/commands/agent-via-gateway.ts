@@ -63,6 +63,10 @@ const EMBEDDED_FALLBACK_META = {
   transport: "embedded",
   fallbackFrom: "gateway",
 } as const;
+/** Positive transport marker so scripts can see a Gateway-backed run explicitly. */
+const GATEWAY_TRANSPORT_META = {
+  transport: "gateway",
+} as const;
 const GATEWAY_TIMEOUT_FALLBACK_SESSION_PREFIX = "gateway-fallback-";
 const GATEWAY_TRANSIENT_CONNECT_RETRY_DELAYS_MS = [1_000, 2_000, 5_000, 10_000, 15_000] as const;
 
@@ -120,6 +124,24 @@ async function recordEmbeddedFallback(params: {
  */
 const cliFallbackLog = createSubsystemLogger("cli-fallback");
 
+/**
+ * Turn a Gateway connect rejection into actionable guidance, because the two
+ * local first-run failure modes (unpaired device / pending scope upgrade) look
+ * like generic "Gateway unavailable" unless we name them.
+ */
+function describeGatewayFallbackRemediation(err: unknown): string | undefined {
+  const text = String(err);
+  // A pending scope upgrade is reported by the transport layer as
+  // "pairing required: device is asking for more scopes than currently approved".
+  if (/scope upgrade pending approval|more scopes than currently approved/iu.test(text)) {
+    return `Gateway rejected this connection because the local device needs an approved scope upgrade. Review and approve it with: ${formatCliCommand("quiet-core-bot devices list")} then ${formatCliCommand("quiet-core-bot devices approve <requestId>")}`;
+  }
+  if (/pairing required|device is not approved|device identity required/iu.test(text)) {
+    return `Gateway rejected this connection because this device is not paired yet. Review and approve it with: ${formatCliCommand("quiet-core-bot devices list")} then ${formatCliCommand("quiet-core-bot devices approve <requestId>")}`;
+  }
+  return undefined;
+}
+
 function warnBeforeEmbeddedFallback(params: {
   runtime: RuntimeEnv;
   runId: string;
@@ -131,9 +153,10 @@ function warnBeforeEmbeddedFallback(params: {
   const advisory = rerun
     ? "This will re-run the ENTIRE turn inside the CLI process; tool side effects that already executed against the gateway may be REPLAYED, and the gateway ledger has no record of this fallback. If the gateway failure is transient, verify the gateway is healthy and consider retrying before confirming the fallback."
     : "This will run the embedded agent with a fresh session (GATEWAY_TIMEOUT_FALLBACK_SESSION_PREFIX).";
+  const remediation = describeGatewayFallbackRemediation(err);
   const message = `[cli-fallback] Gateway ${reason === "gateway_timeout" ? "timed out" : "unavailable"}; falling back to an embedded ${
     rerun ? "in-process whole-turn rerun" : "run with a fresh session"
-  } for runId=${runId}. ${advisory}`;
+  } for runId=${runId}. ${advisory}${remediation ? ` ${remediation}` : ""}`;
   runtime.error?.(message);
   cliFallbackLog.warn(message, {
     reason,
@@ -774,13 +797,21 @@ async function resolveAgentIdForGatewayTimeoutFallback(
 
 function buildGatewayJsonResponse(response: GatewayAgentResponse): GatewayAgentResponse {
   const deliveryStatus = response.result?.deliveryStatus;
+  const result = response.result;
+  // Mark Gateway-backed JSON runs explicitly: embedded fallback sets
+  // meta.transport="embedded", so the positive counterpart removes the
+  // "did I actually go through the Gateway?" ambiguity for scripts.
+  const meta =
+    result?.meta && typeof result.meta === "object" && !Array.isArray(result.meta)
+      ? { ...(result.meta as Record<string, unknown>), ...GATEWAY_TRANSPORT_META }
+      : { ...GATEWAY_TRANSPORT_META };
+  const withMeta: GatewayAgentResponse = result
+    ? { ...response, result: { ...result, meta } }
+    : response;
   if (deliveryStatus === undefined) {
-    return response;
+    return withMeta;
   }
-  return {
-    ...response,
-    deliveryStatus,
-  };
+  return { ...withMeta, deliveryStatus };
 }
 
 function isInFlightGatewayAgentResponse(response: GatewayAgentResponse): boolean {

@@ -1538,7 +1538,10 @@ describe("agentCliCommand", () => {
 
       await agentCliCommand({ message: "hi", to: "+1555", json: true }, jsonRuntime);
 
-      expect(jsonRuntime.writeJson).toHaveBeenCalledWith(response, 2);
+      expect(jsonRuntime.writeJson).toHaveBeenCalledWith(
+        { ...response, result: { ...response.result, meta: { stub: true, transport: "gateway" } } },
+        2,
+      );
       expect(jsonRuntime.log).not.toHaveBeenCalled();
     });
   });
@@ -1568,6 +1571,7 @@ describe("agentCliCommand", () => {
       expect(jsonRuntime.writeJson).toHaveBeenCalledWith(
         {
           ...response,
+          result: { ...response.result, meta: { stub: true, transport: "gateway" } },
           deliveryStatus,
         },
         2,

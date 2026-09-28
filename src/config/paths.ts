@@ -3,6 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { resolveHomeRelativePath, resolveRequiredHomeDir } from "../infra/home-dir.js";
+import { LEGACY_STATE_DIR_NAME, renameLegacyStateDir } from "../infra/legacy-openclaw-migration.js";
 import { parseTcpPort } from "../infra/tcp-port.js";
 import type { OpenClawConfig } from "./types.js";
 
@@ -184,10 +185,30 @@ export function pinRuntimePaths(env: NodeJS.ProcessEnv = process.env): {
   stateDir: string;
 } {
   normalizeStateDirEnv(env);
+  migrateLegacyDefaultStateDir(env);
   isNixMode = resolveIsNixMode(env);
   STATE_DIR = resolveStateDir(env);
   CONFIG_PATH = resolveConfigPathCandidate(env);
   return { configPath: CONFIG_PATH, stateDir: STATE_DIR };
+}
+
+/**
+ * Rename a pre-rebrand `~/.openclaw` state directory onto `~/.quiet-core-bot` on first
+ * startup after an upgrade.
+ *
+ * Only the default (home-relative) location is migrated, and an existing current state
+ * directory always wins, so an explicit `QUIET_CORE_STATE_DIR` or an already-upgraded
+ * install is never moved and no data is overwritten.
+ */
+function migrateLegacyDefaultStateDir(env: NodeJS.ProcessEnv): void {
+  if (env.QUIET_CORE_STATE_DIR?.trim()) {
+    return;
+  }
+  const homedir = () => resolveRequiredHomeDir(env, os.homedir);
+  renameLegacyStateDir({
+    currentDir: newStateDir(homedir),
+    legacyDir: path.join(homedir(), LEGACY_STATE_DIR_NAME),
+  });
 }
 
 /**

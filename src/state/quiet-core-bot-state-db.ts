@@ -7,6 +7,7 @@ import {
   executeSqliteQuerySync,
   getNodeSqliteKysely,
 } from "../infra/kysely-sync.js";
+import { migrateLegacyStateDatabaseFile } from "../infra/legacy-openclaw-migration.js";
 import { requireNodeSqlite } from "../infra/node-sqlite.js";
 import { applyPrivateModeSync } from "../infra/private-mode.js";
 import { resolveSqliteDatabaseFilePaths } from "../infra/sqlite-files.js";
@@ -876,6 +877,9 @@ export function openOpenClawStateDatabase(
     cachedDatabases.delete(pathname);
   }
 
+  // Rename a pre-rebrand `openclaw.sqlite` onto the current filename before creating a
+  // fresh database, so upgrades keep the rows written by earlier releases.
+  migrateLegacyStateDatabaseFile(pathname);
   ensureOpenClawStatePermissions(pathname, env);
   const sqlite = requireNodeSqlite();
   const db = new sqlite.DatabaseSync(pathname);

@@ -16,12 +16,19 @@ import {
 import { sanitizeForLog } from "../../packages/terminal-core/src/ansi.js";
 import { getTerminalTableWidth, renderTable } from "../../packages/terminal-core/src/table.js";
 import { theme } from "../../packages/terminal-core/src/theme.js";
+import { readGatewayDispatchConfig } from "../config/gateway-dispatch-config.js";
 import {
   buildGatewayConnectionDetails,
   callGateway,
   formatGatewayTransportErrorJson,
 } from "../gateway/call.js";
-import { ADMIN_SCOPE, PAIRING_SCOPE, type OperatorScope } from "../gateway/method-scopes.js";
+import {
+  ADMIN_SCOPE,
+  PAIRING_SCOPE,
+  READ_SCOPE,
+  WRITE_SCOPE,
+  type OperatorScope,
+} from "../gateway/method-scopes.js";
 import { isLoopbackHost } from "../gateway/net.js";
 import {
   approveDevicePairing,
@@ -114,13 +121,56 @@ const KNOWN_NON_ADMIN_OPERATOR_SCOPES = new Set<OperatorScope>([
   "operator.write",
 ]);
 
+/**
+ * Device management runs on the trusted direct-local backend shared-secret lane
+ * when the target is the implicit loopback gateway.
+ *
+ * Why: management commands declare the operator scopes they act on (for example
+ * `device.pair.approve` declares the pending request's requested scopes). A
+ * local CLI that already paired a narrower device baseline would re-trigger a
+ * scope-upgrade on connect, and that upgrade *supersedes* the very pending
+ * request the command is about to approve — so the documented
+ * `quiet-core-bot devices approve <requestId>` recovery could never succeed.
+ * The direct-local backend lane authenticates with the same shared secret
+ * without device identity, so device management is not gated by a stale
+ * baseline. Scope upgrades still require this explicit approval step (nothing is
+ * auto-approved), and the gateway validates the shared credential as before.
+ */
+function resolveLocalSharedSecretLane(opts: DevicesRpcOpts):
+  | {
+      clientName: typeof GATEWAY_CLIENT_NAMES.GATEWAY_CLIENT;
+      mode: typeof GATEWAY_CLIENT_MODES.BACKEND;
+    }
+  | undefined {
+  if (normalizeOptionalString(opts.url)) {
+    return undefined;
+  }
+  try {
+    const connection = buildGatewayConnectionDetails();
+    if (connection.urlSource !== "local loopback") {
+      return undefined;
+    }
+    if (!isLoopbackHost(new URL(connection.url).hostname)) {
+      return undefined;
+    }
+  } catch {
+    return undefined;
+  }
+  const authMode = readGatewayDispatchConfig()?.gateway?.auth?.mode;
+  if (authMode !== "token" && authMode !== "password" && authMode !== "none") {
+    return undefined;
+  }
+  return { clientName: GATEWAY_CLIENT_NAMES.GATEWAY_CLIENT, mode: GATEWAY_CLIENT_MODES.BACKEND };
+}
+
 const callGatewayCli = async (
   method: string,
   opts: DevicesRpcOpts,
   params?: unknown,
   callOpts?: { scopes?: OperatorScope[] },
-) =>
-  withProgress(
+) => {
+  const lane = resolveLocalSharedSecretLane(opts);
+  return await withProgress(
     {
       label: `Devices ${method}`,
       indeterminate: true,
@@ -134,11 +184,12 @@ const callGatewayCli = async (
         method,
         params,
         timeoutMs: parseTimeoutMsWithFallback(opts.timeout, DEFAULT_DEVICES_TIMEOUT_MS),
-        clientName: GATEWAY_CLIENT_NAMES.CLI,
-        mode: GATEWAY_CLIENT_MODES.CLI,
+        clientName: lane?.clientName ?? GATEWAY_CLIENT_NAMES.CLI,
+        mode: lane?.mode ?? GATEWAY_CLIENT_MODES.CLI,
         scopes: callOpts?.scopes,
       }),
   );
+};
 
 function normalizeErrorMessage(error: unknown): string {
   if (error instanceof Error) {
@@ -508,7 +559,16 @@ function resolveApprovePairingScopesForRequest(
   request: PendingDevice,
   paired: PairedDevice | undefined,
 ): OperatorScope[] | undefined {
-  const operatorScopes = resolvePendingOperatorApprovalScopes(request, paired);
+  // Approval merges the pending request into the device's existing operator
+  // baseline, so the approving session must hold that union — not only the
+  // newly requested scopes. Declaring just the requested scopes made approvals
+  // fail with `missing scope: ...` whenever the device already held a broader
+  // operator token (for example a write-scoped CLI device asking for pairing).
+  const operatorScopes = uniqueStrings([
+    ...resolvePendingOperatorApprovalScopes(request, paired),
+    ...resolvePairedOperatorScopes(paired),
+    ...normalizeOperatorScopes(paired?.scopes),
+  ]);
   if (operatorScopes.length === 0) {
     return undefined;
   }
@@ -521,6 +581,11 @@ function resolveApprovePairingScopesForRequest(
       return [ADMIN_SCOPE];
     }
     out.add(scope);
+  }
+  // `operator.write` satisfies `operator.read` in method policy, and the merged
+  // operator token keeps an explicit read entry, so mirror that implication here.
+  if (out.has(WRITE_SCOPE)) {
+    out.add(READ_SCOPE);
   }
   return [...out];
 }

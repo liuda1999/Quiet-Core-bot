@@ -20,7 +20,9 @@ export function createUnitFastFakeTimersVitestConfig(
       name: "unit-fast-fake-timers",
       isolate: false,
       runner: nonIsolatedRunnerPath,
-      setupFiles: [],
+      // Keep the shared isolated HOME/bootstrap. Without it these workers fall back to the
+      // developer's real HOME/state database (os.homedir() stays real inside thread-pool workers).
+      setupFiles: sharedTest.setupFiles,
       include: includeFromEnv ?? cliInclude ?? unitFastTimerTestFiles,
       exclude: sharedTest.exclude ?? [],
       maxWorkers: 1,

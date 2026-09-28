@@ -106,7 +106,10 @@ describe("unit-fast vitest lane", () => {
 
     expect(testConfig.isolate).toBe(false);
     expect(testConfig.runner).toBeUndefined();
-    expect(testConfig.setupFiles).toStrictEqual([]);
+    // The fast lane keeps the shared isolated setup (test/setup.ts) so workers never fall back to
+    // the developer's real HOME, but it must not pull in the reset-heavy runtime setup.
+    expect(testConfig.setupFiles).toHaveLength(1);
+    expect(testConfig.setupFiles?.[0]).toMatch(/test[\\/]setup\.ts$/u);
     expect(testConfig.include).toContain(
       "src/agents/agent-tools.deferred-followup-guidance.test.ts",
     );
