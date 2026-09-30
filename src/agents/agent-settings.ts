@@ -3,9 +3,34 @@ import type { AgentCompactionMode } from "../config/types.agent-defaults.js";
 import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import type { ContextEngineInfo } from "../context-engine/types.js";
 import { MIN_PROMPT_BUDGET_RATIO, MIN_PROMPT_BUDGET_TOKENS } from "./agent-compaction-constants.js";
+import { log } from "./embedded-agent-runner/logger.js";
 import { resolveProviderEndpoint } from "./provider-attribution.js";
 
 export const DEFAULT_AGENT_COMPACTION_RESERVE_TOKENS_FLOOR = 20_000;
+
+const warnedKeepRecentBudgetKeys = new Set<string>();
+
+/**
+ * Report a `keepRecentTokens` that can never leave a compactable region.
+ * Deduplicated so a long-lived gateway does not repeat the warning every run.
+ */
+function warnKeepRecentTokensExceedsPromptBudget(params: {
+  promptBudget: number;
+  keepRecentTokens: number;
+}): void {
+  const key = `${params.promptBudget}:${params.keepRecentTokens}`;
+  if (warnedKeepRecentBudgetKeys.has(key)) {
+    return;
+  }
+  warnedKeepRecentBudgetKeys.add(key);
+  log.warn(
+    `[agent-compaction-config] compaction.keepRecentTokens=${params.keepRecentTokens} is at or above the ` +
+      `reserve-adjusted prompt budget (${params.promptBudget}). No transcript can exceed the prompt budget, ` +
+      `so every overflow compaction reports no_compactable_entries and is skipped. Lower ` +
+      `agents.defaults.compaction.keepRecentTokens (or raise the model contextWindow) to below ` +
+      `${params.promptBudget} to re-enable compaction.`,
+  );
+}
 
 type AgentSettingsManagerLike = {
   getCompactionReserveTokens: () => number;
@@ -26,6 +51,35 @@ function resolveCompactionReserveTokensFloor(cfg?: OpenClawConfig): number {
     return Math.floor(raw);
   }
   return DEFAULT_AGENT_COMPACTION_RESERVE_TOKENS_FLOOR;
+}
+
+/**
+ * Resolve the reserve-token floor actually enforced for a given context window.
+ *
+ * The configured/default floor is capped to a safe fraction of the context
+ * window so small-context models (e.g. Ollama with 16 K tokens) are not starved
+ * of prompt budget. Without the cap the default floor of 20 000 can exceed the
+ * entire context window, classifying every prompt as an overflow.
+ *
+ * Shared by the runtime settings path and `doctor`'s prompt-budget advice so the
+ * two can never disagree about what the enforced floor is.
+ */
+export function resolveCompactionReserveTokensFloorForContext(params: {
+  cfg?: OpenClawConfig;
+  /** When known, the resolved context window budget for the current model. */
+  contextTokenBudget?: number;
+}): number {
+  let reserveTokensFloor = resolveCompactionReserveTokensFloor(params.cfg);
+  const ctxBudget = params.contextTokenBudget;
+  if (typeof ctxBudget === "number" && Number.isFinite(ctxBudget) && ctxBudget > 0) {
+    const minPromptBudget = Math.min(
+      MIN_PROMPT_BUDGET_TOKENS,
+      Math.max(1, Math.floor(ctxBudget * MIN_PROMPT_BUDGET_RATIO)),
+    );
+    const maxReserve = Math.max(0, ctxBudget - minPromptBudget);
+    reserveTokensFloor = Math.min(reserveTokensFloor, maxReserve);
+  }
+  return reserveTokensFloor;
 }
 
 function toNonNegativeInt(value: unknown): number | undefined {
@@ -58,7 +112,6 @@ export function applyAgentCompactionSettingsFromConfig(params: {
 
   const configuredReserveTokens = toNonNegativeInt(compactionCfg?.reserveTokens);
   const configuredKeepRecentTokens = toPositiveInt(compactionCfg?.keepRecentTokens);
-  let reserveTokensFloor = resolveCompactionReserveTokensFloor(params.cfg);
 
   // Cap the floor to a safe fraction of the context window so that
   // small-context models (e.g. Ollama with 16 K tokens) are not starved of
@@ -66,20 +119,33 @@ export function applyAgentCompactionSettingsFromConfig(params: {
   // the entire context window, causing every prompt to be classified as an
   // overflow and triggering an infinite compaction loop.
   const ctxBudget = params.contextTokenBudget;
-  if (typeof ctxBudget === "number" && Number.isFinite(ctxBudget) && ctxBudget > 0) {
-    const minPromptBudget = Math.min(
-      MIN_PROMPT_BUDGET_TOKENS,
-      Math.max(1, Math.floor(ctxBudget * MIN_PROMPT_BUDGET_RATIO)),
-    );
-    const maxReserve = Math.max(0, ctxBudget - minPromptBudget);
-    reserveTokensFloor = Math.min(reserveTokensFloor, maxReserve);
-  }
+  const reserveTokensFloor = resolveCompactionReserveTokensFloorForContext({
+    cfg: params.cfg,
+    contextTokenBudget: ctxBudget,
+  });
 
   const targetReserveTokens = Math.max(
     configuredReserveTokens ?? currentReserveTokens,
     reserveTokensFloor,
   );
   const targetKeepRecentTokens = configuredKeepRecentTokens ?? currentKeepRecentTokens;
+
+  // Config validation: `keepRecentTokens` at or above the reserve-adjusted prompt
+  // budget can never be satisfied. No transcript can exceed the prompt budget, so
+  // every overflow compaction reports `no_compactable_entries` ("Nothing to
+  // compact (session too small)") and compaction is permanently disabled — the
+  // run then degrades to best-effort over-budget submits. This is not corrected
+  // automatically (the value is operator-owned and valid for large windows), it
+  // is reported so the misconfiguration is visible instead of silent.
+  if (typeof ctxBudget === "number" && Number.isFinite(ctxBudget) && ctxBudget > 0) {
+    const promptBudget = Math.max(0, ctxBudget - targetReserveTokens);
+    if (promptBudget > 0 && targetKeepRecentTokens >= promptBudget) {
+      warnKeepRecentTokensExceedsPromptBudget({
+        promptBudget,
+        keepRecentTokens: targetKeepRecentTokens,
+      });
+    }
+  }
 
   const overrides: { reserveTokens?: number; keepRecentTokens?: number } = {};
   if (targetReserveTokens !== currentReserveTokens) {

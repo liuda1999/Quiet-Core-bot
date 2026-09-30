@@ -42,7 +42,9 @@ describe("prepareCliBundleMcpConfig gemini", () => {
       mcp?: { allowed?: string[] };
       mcpServers?: Record<string, { url?: string; headers?: Record<string, string> }>;
     };
-    expect(raw.mcp?.allowed).toEqual(["quiet-core-bot"]);
+    // `mcp.allowed` mirrors the mcpServers keys, which stay `openclaw` (only the
+    // request headers were renamed to the quiet-core-bot prefix).
+    expect(raw.mcp?.allowed).toEqual(["openclaw"]);
     expect(raw.mcpServers?.openclaw?.url).toBe("http://127.0.0.1:23119/mcp");
     expect(raw.mcpServers?.openclaw?.headers?.Authorization).toBe("Bearer loopback-token-123");
 
@@ -135,7 +137,9 @@ describe("prepareCliBundleMcpConfig gemini", () => {
       ) as {
         mcpServers?: Record<string, { headers?: Record<string, string> }>;
       };
-      expect(raw.mcpServers?.openclaw?.headers?.["x-quiet-core-bot-cli-capture-key"]).toBe("attempt-123");
+      expect(raw.mcpServers?.openclaw?.headers?.["x-quiet-core-bot-cli-capture-key"]).toBe(
+        "attempt-123",
+      );
       expect(attempt.env?.GEMINI_CLI_SYSTEM_SETTINGS_PATH).not.toBe(
         prepared.env?.GEMINI_CLI_SYSTEM_SETTINGS_PATH,
       );

@@ -11,7 +11,8 @@ describe("exec allowlist matching", () => {
 
   it("handles wildcard and path matching semantics", () => {
     const cases: Array<{ entries: ExecAllowlistEntry[]; expectedPattern: string | null }> = [
-      { entries: [{ pattern: "RG" }], expectedPattern: null },
+      // Windows command-name matching is case-insensitive.
+      { entries: [{ pattern: "RG" }], expectedPattern: process.platform === "win32" ? "RG" : null },
       { entries: [{ pattern: "not-rg" }], expectedPattern: null },
       { entries: [{ pattern: "/opt/**/rg" }], expectedPattern: "/opt/**/rg" },
       { entries: [{ pattern: "/opt/*/rg" }], expectedPattern: null },
@@ -120,9 +121,7 @@ describe("exec allowlist matching", () => {
         ];
 
         expect(matchAllowlist(restrictedEntries, resolution, undefined, platform)).toBeNull();
-        expect(matchAllowlist(mixedEntries, resolution, undefined, platform)).toBe(
-          mixedEntries[1],
-        );
+        expect(matchAllowlist(mixedEntries, resolution, undefined, platform)).toBe(mixedEntries[1]);
       },
     );
 

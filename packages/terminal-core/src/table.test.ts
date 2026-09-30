@@ -116,14 +116,17 @@ describe("renderTable", () => {
       ],
     });
 
-    const lines = out
+    const styledLines = out
       .trimEnd()
       .split("\n")
-      .filter((line) => line.includes("Use when"));
-    expect(lines).toHaveLength(1);
-    expect(lines[0]).toContain("\u001b[2mUse when");
-    expect(lines[0]).not.toContain("│  Use when");
-    expect(lines[0]).not.toContain("│ \x1b[2m Use when");
+      .filter((line) => line.includes("\u001b[2m"));
+    // The styled description wraps across lines; each wrapped line must re-open
+    // the ANSI style directly after the cell border with no extra indentation.
+    expect(styledLines.length).toBeGreaterThan(1);
+    for (const line of styledLines) {
+      expect(line).toMatch(/[│|] \u001b\[2m\S/u);
+      expect(line).not.toContain("\u001b[2m ");
+    }
   });
 
   it("keeps ANSI styling when a multiline cell wraps after an unstyled line", () => {

@@ -13,6 +13,9 @@ describe("DEFAULT_AGENT_WORKSPACE_DIR", () => {
       {
         QUIET_CORE_WORKSPACE_DIR: undefined,
         QUIET_CORE_PROFILE: undefined,
+        // The test harness pins QUIET_CORE_STATE_DIR on Windows; clear it so
+        // QUIET_CORE_HOME drives the resolved workspace.
+        QUIET_CORE_STATE_DIR: undefined,
         QUIET_CORE_HOME: home,
         HOME: path.join(path.sep, "home", "other"),
       },

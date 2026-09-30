@@ -9,6 +9,9 @@ import {
   resolveEffectiveCompactionMode,
 } from "./agent-settings.js";
 
+const loggerMock = vi.hoisted(() => ({ warn: vi.fn() }));
+vi.mock("./embedded-agent-runner/logger.js", () => ({ log: loggerMock }));
+
 describe("applyAgentCompactionSettingsFromConfig", () => {
   it("bumps reserveTokens when below floor", () => {
     const settingsManager = {
@@ -327,6 +330,50 @@ describe("applyAgentCompactionSettingsFromConfig", () => {
     const result = applyAgentCompactionSettingsFromConfig({ settingsManager });
 
     expect(result.compaction.reserveTokens).toBe(DEFAULT_AGENT_COMPACTION_RESERVE_TOKENS_FLOOR);
+  });
+
+  it("warns when keepRecentTokens cannot leave a compactable region", () => {
+    loggerMock.warn.mockClear();
+    const settingsManager = {
+      getCompactionReserveTokens: () => 4_096,
+      getCompactionKeepRecentTokens: () => 20_000,
+      applyOverrides: vi.fn(),
+    };
+
+    // 16 384 window with reserveTokens/floor=0 leaves a 16 384 prompt budget;
+    // keepRecentTokens=20 000 exceeds it, so no transcript can ever be larger than
+    // the budget and compaction would always report no_compactable_entries.
+    const result = applyAgentCompactionSettingsFromConfig({
+      settingsManager,
+      cfg: {
+        agents: { defaults: { compaction: { reserveTokens: 0, reserveTokensFloor: 0 } } },
+      },
+      contextTokenBudget: 16_384,
+    });
+
+    // The value is operator-owned: it is reported, not rewritten.
+    expect(result.compaction.keepRecentTokens).toBe(20_000);
+    expect(loggerMock.warn).toHaveBeenCalledWith(
+      expect.stringContaining("[agent-compaction-config]"),
+    );
+    expect(loggerMock.warn).toHaveBeenCalledWith(expect.stringContaining("no_compactable_entries"));
+  });
+
+  it("does not warn when keepRecentTokens fits the prompt budget", () => {
+    loggerMock.warn.mockClear();
+    const settingsManager = {
+      getCompactionReserveTokens: () => 16_384,
+      getCompactionKeepRecentTokens: () => 20_000,
+      applyOverrides: vi.fn(),
+    };
+
+    // 200 000 window → 180 000 prompt budget comfortably fits 20 000.
+    applyAgentCompactionSettingsFromConfig({
+      settingsManager,
+      contextTokenBudget: 200_000,
+    });
+
+    expect(loggerMock.warn).not.toHaveBeenCalled();
   });
 });
 

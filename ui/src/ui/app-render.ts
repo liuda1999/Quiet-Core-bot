@@ -25,9 +25,8 @@ import {
   dismissChatError,
   dismissRealtimeTalkError,
   switchChatSession,
-  switchChatSessionAndWait,
 } from "./app-render.helpers.ts";
-import { hasOperatorAdminAccess, hasOperatorWriteAccess, warnQueryToken } from "./app-settings.ts";
+import { warnQueryToken } from "./app-settings.ts";
 import type { AppViewState } from "./app-view-state.ts";
 import { reconcileChatRunLifecycle } from "./chat/run-lifecycle.ts";
 import {
@@ -126,7 +125,6 @@ import { loadNodes } from "./controllers/nodes.ts";
 import { loadPresence } from "./controllers/presence.ts";
 import {
   branchSessionFromCheckpoint,
-  createSessionAndRefresh,
   deleteSessionsAndRefresh,
   loadSessions,
   parseSessionsFilterInteger,
@@ -248,129 +246,6 @@ export function loadSkillWorkshopUseCurrentChatForRevisions(): boolean {
   } catch {
     return false;
   }
-}
-
-function setSkillWorkshopUseCurrentChatForRevisions(state: AppViewState, enabled: boolean): void {
-  state.skillWorkshopUseCurrentChatForRevisions = enabled;
-  try {
-    getSafeLocalStorage()?.setItem(SKILL_WORKSHOP_CURRENT_CHAT_REVISIONS_KEY, String(enabled));
-  } catch {
-    // Preference persistence is optional; the active toggle still controls this handoff.
-  }
-}
-
-function setSkillWorkshopMode(state: AppViewState, mode: "board" | "today"): void {
-  if (state.skillWorkshopMode === mode) {
-    return;
-  }
-  state.skillWorkshopMode = mode;
-  try {
-    getSafeLocalStorage()?.setItem(SKILL_WORKSHOP_MODE_KEY, mode);
-  } catch {
-    // Mode persistence is a convenience; the in-memory switch still works.
-  }
-}
-
-function findSkillWorkshopRevisionSessionRow(
-  state: AppViewState,
-  sessionKey: string | undefined,
-): GatewaySessionRow | null {
-  const key = normalizeOptionalString(sessionKey);
-  if (!key) {
-    return null;
-  }
-  const current = state.sessionsResult?.sessions.find((row) => row.key === key);
-  if (current) {
-    return current;
-  }
-  for (const rows of Object.values(state.chatAgentSessionRowsByAgent ?? {})) {
-    const cached = rows.find((row) => row.key === key);
-    if (cached) {
-      return cached;
-    }
-  }
-  return null;
-}
-
-function isUsableSkillWorkshopRevisionSession(
-  row: GatewaySessionRow | null,
-): row is GatewaySessionRow {
-  return Boolean(row && !row.archived && !row.hasActiveRun);
-}
-
-async function ensureSkillWorkshopRevisionSessionsLoaded(
-  state: AppViewState,
-  agentId: string,
-): Promise<void> {
-  const resultAgentId = normalizeOptionalString(state.sessionsResultAgentId);
-  if (resultAgentId === agentId && state.sessionsResult?.sessions.length) {
-    return;
-  }
-  await loadSessions(state, {
-    ...createChatSessionsLoadOverrides(state),
-    agentId,
-  });
-}
-
-async function resolveSkillWorkshopRevisionSessionKey(
-  state: AppViewState,
-  proposal: { key: string; slug: string; origin?: { agentId?: string; sessionKey?: string } },
-  proposalAgentId: string,
-): Promise<string | null> {
-  if (state.skillWorkshopUseCurrentChatForRevisions) {
-    return normalizeOptionalString(state.sessionKey) ?? null;
-  }
-
-  const agentId = normalizeAgentId(proposal.origin?.agentId ?? proposalAgentId);
-  await ensureSkillWorkshopRevisionSessionsLoaded(state, agentId);
-
-  const originRow = findSkillWorkshopRevisionSessionRow(state, proposal.origin?.sessionKey);
-  if (isUsableSkillWorkshopRevisionSession(originRow)) {
-    return originRow.key;
-  }
-
-  return createSessionAndRefresh(
-    state as unknown as Parameters<typeof createSessionAndRefresh>[0],
-    {
-      agentId,
-      label: `Skill Workshop: ${proposal.slug || proposal.key}`.slice(0, 80),
-    },
-    {
-      ...createChatSessionsLoadOverrides(state),
-      agentId,
-    },
-  );
-}
-
-async function sendSkillWorkshopRevisionRequest(
-  state: AppViewState,
-  instructions: string,
-  proposal: { key: string; slug: string; origin?: { agentId?: string; sessionKey?: string } },
-  proposalAgentId: string,
-): Promise<void> {
-  if (!state.client || !state.connected) {
-    throw new Error("Gateway is not connected.");
-  }
-  const sessionKey = await resolveSkillWorkshopRevisionSessionKey(state, proposal, proposalAgentId);
-  if (!sessionKey) {
-    throw new Error(state.sessionsError ?? "Could not prepare a Skill Workshop session.");
-  }
-  if (state.tab !== "chat") {
-    state.setTab("chat" as Tab);
-  }
-  if (state.sessionKey === sessionKey) {
-    await loadChatHistory(state);
-  } else {
-    await switchChatSessionAndWait(state, sessionKey);
-  }
-  const scopedProposalAgentId = proposal.origin?.agentId?.trim() || proposalAgentId;
-  await state.handleSendChat(instructions, {
-    restoreDraft: true,
-    skillWorkshopRevision: {
-      proposalId: proposal.key,
-      agentId: scopedProposalAgentId,
-    },
-  });
 }
 
 function renderSettingsSectionNav(state: AppViewState) {
@@ -2864,10 +2739,6 @@ export function renderApp(state: AppViewState) {
           : nothing}
         ${state.tab === "sessions"
           ? renderLazyView(lazySessions, (m) => {
-              const operatorCanWrite = hasOperatorWriteAccess(
-                (state.hello as { auth?: { role?: string; scopes?: string[] } } | null)?.auth ??
-                  null,
-              );
               return m.renderSessions({
                 loading: state.sessionsLoading,
                 result: state.sessionsResult,

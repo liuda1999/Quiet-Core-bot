@@ -1,6 +1,10 @@
 // Memory Host SDK tests cover internal behavior.
 import fsSync from "node:fs";
 import fs from "node:fs/promises";
+// The module under test resolves `~` through the named `homedir` export, which
+// Vitest snapshots before the shared setup pins `os.homedir`. Read the same
+// binding so the expectation matches the module's source of truth.
+import { homedir as resolveOsHomedir } from "node:os";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
@@ -111,8 +115,8 @@ describe("memory host SDK package internals", () => {
     ).toEqual([
       path.resolve(workspaceDir, "notes"),
       absPath,
-      path.join(os.homedir(), "shared-notes"),
-      os.homedir(),
+      path.join(resolveOsHomedir(), "shared-notes"),
+      resolveOsHomedir(),
     ]);
   });
 

@@ -1,4 +1,5 @@
 // Daemon restart log tests cover restart log formatting and filtering.
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   GATEWAY_RESTART_LOG_FILENAME,
@@ -17,12 +18,12 @@ describe("restart log conventions", () => {
     };
 
     expect(resolveGatewayLogPaths(env)).toEqual({
-      logDir: "/Users/test/.quiet-core-bot-work/logs",
-      stdoutPath: "/Users/test/.quiet-core-bot-work/logs/gateway.log",
-      stderrPath: "/Users/test/.quiet-core-bot-work/logs/gateway.err.log",
+      logDir: path.resolve("/Users/test/.quiet-core-bot-work/logs"),
+      stdoutPath: path.resolve("/Users/test/.quiet-core-bot-work/logs/gateway.log"),
+      stderrPath: path.resolve("/Users/test/.quiet-core-bot-work/logs/gateway.err.log"),
     });
     expect(resolveGatewayRestartLogPath(env)).toBe(
-      `/Users/test/.quiet-core-bot-work/logs/${GATEWAY_RESTART_LOG_FILENAME}`,
+      path.resolve(`/Users/test/.quiet-core-bot-work/logs/${GATEWAY_RESTART_LOG_FILENAME}`),
     );
   });
 
@@ -33,7 +34,7 @@ describe("restart log conventions", () => {
     };
 
     expect(resolveGatewayRestartLogPath(env)).toBe(
-      `/tmp/quiet-core-bot-state/logs/${GATEWAY_RESTART_LOG_FILENAME}`,
+      path.resolve(`/tmp/quiet-core-bot-state/logs/${GATEWAY_RESTART_LOG_FILENAME}`),
     );
   });
 
@@ -49,7 +50,7 @@ describe("restart log conventions", () => {
       stderrPath: "/Users/test/Library/Logs/quiet-core-bot/gateway.err.log",
     });
     expect(resolveGatewayRestartLogPath(env)).toBe(
-      `/Volumes/External/openclaw/logs/${GATEWAY_RESTART_LOG_FILENAME}`,
+      path.resolve(`/Volumes/External/quiet-core-bot/logs/${GATEWAY_RESTART_LOG_FILENAME}`),
     );
   });
 
@@ -71,10 +72,21 @@ describe("restart log conventions", () => {
       HOME: "/Users/test's",
     });
 
-    expect(setup).toContain(
-      "if mkdir -p '/Users/test'\\''s/.quiet-core-bot/logs' 2>/dev/null && : >>'/Users/test'\\''s/.quiet-core-bot/logs/gateway-restart.log' 2>/dev/null; then",
+    // Platform-aware: the state dir resolves through path.resolve/path.join,
+    // so the rendered paths follow the host separator rules.
+    const restartLogPath = path.join(
+      path.resolve("/Users/test's"),
+      ".quiet-core-bot",
+      "logs",
+      GATEWAY_RESTART_LOG_FILENAME,
     );
-    expect(setup).toContain("exec >>'/Users/test'\\''s/.quiet-core-bot/logs/gateway-restart.log' 2>&1");
+    const restartLogDir = path.dirname(restartLogPath);
+    const escape = (value: string) => value.replace(/'/g, "'\\''");
+
+    expect(setup).toContain(
+      `if mkdir -p '${escape(restartLogDir)}' 2>/dev/null && : >>'${escape(restartLogPath)}' 2>/dev/null; then`,
+    );
+    expect(setup).toContain(`exec >>'${escape(restartLogPath)}' 2>&1`);
   });
 
   it("renders CMD log setup with quoted paths", () => {
@@ -82,9 +94,10 @@ describe("restart log conventions", () => {
       USERPROFILE: "C:\\Users\\Test User",
     });
 
-    expect(setup.quotedLogPath).toBe('"C:\\Users\\Test User/.quiet-core-bot/logs/gateway-restart.log"');
-    expect(setup.lines).toContain(
-      'if not exist "C:\\Users\\Test User/.quiet-core-bot/logs" mkdir "C:\\Users\\Test User/.quiet-core-bot/logs" >nul 2>&1',
-    );
+    const logDir = path.join(path.join("C:\\Users\\Test User", ".quiet-core-bot"), "logs");
+    const restartLogPath = path.join(logDir, GATEWAY_RESTART_LOG_FILENAME);
+
+    expect(setup.quotedLogPath).toBe(`"${restartLogPath}"`);
+    expect(setup.lines).toContain(`if not exist "${logDir}" mkdir "${logDir}" >nul 2>&1`);
   });
 });

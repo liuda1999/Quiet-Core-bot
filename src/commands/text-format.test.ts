@@ -8,7 +8,7 @@ describe("shortenText", () => {
   });
 
   it("truncates and appends ellipsis when over limit", () => {
-    expect(shortenText("quiet-core-bot-status-output", 10)).toBe("quiet-core-bot-…");
+    expect(shortenText("quiet-core-bot-status-output", 10)).toBe("quiet-cor…");
   });
 
   it("counts multi-byte characters correctly", () => {

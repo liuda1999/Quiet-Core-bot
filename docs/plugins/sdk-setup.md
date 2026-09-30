@@ -50,7 +50,7 @@ Your `package.json` needs an `quiet-core-bot` field that tells the plugin system
           "minGatewayVersion": "2026.3.24-beta.2"
         },
         "build": {
-          "quiet-core-botVersion": "2026.3.24-beta.2",
+          "openclawVersion": "2026.3.24-beta.2",
           "pluginSdkVersion": "2026.3.24-beta.2"
         }
       }

@@ -1,4 +1,5 @@
 // Trajectory metadata tests cover metadata capture and normalization.
+import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { REDACTED_SENTINEL } from "../config/redact-snapshot.js";
 import {
@@ -54,7 +55,7 @@ describe("trajectory metadata", () => {
       "/Users/tester/project/quiet-core-bot.js",
       "--api-key",
       "super-secret",
-      "--config=/Users/tester/.quiet-core-bot/quiet-core-bot.json",
+      `--config=${path.resolve("/Users/tester/.quiet-core-bot/quiet-core-bot.json")}`,
     ];
     try {
       const metadata = buildTrajectoryRunMetadata({
@@ -75,14 +76,14 @@ describe("trajectory metadata", () => {
       };
       expect(harness.invocation).toEqual([
         "node",
-        "~/project/quiet-core-bot.js",
+        path.join("~", "project", "quiet-core-bot.js"),
         "--api-key",
         "<redacted>",
-        "--config=$QUIET_CORE_STATE_DIR/quiet-core-bot.json",
+        `--config=${path.join("$QUIET_CORE_STATE_DIR", "quiet-core-bot.json")}`,
       ]);
-      expect(harness.entrypoint).toBe("~/project/quiet-core-bot.js");
-      expect(harness.workspaceDir).toBe("~/project");
-      expect(harness.sessionFile).toBe("~/project/session.jsonl");
+      expect(harness.entrypoint).toBe(path.join("~", "project", "quiet-core-bot.js"));
+      expect(harness.workspaceDir).toBe(path.join("~", "project"));
+      expect(harness.sessionFile).toBe(path.join("~", "project", "session.jsonl"));
     } finally {
       process.argv = originalArgv;
     }
@@ -181,7 +182,9 @@ describe("trajectory metadata", () => {
     expect(plugins.source).toBe("active-registry");
     expect(plugins.entries?.map((entry) => entry.id)).toEqual(["demo-plugin"]);
     expect(skills.entries?.[0]?.id).toBe("weather");
-    expect(skills.entries?.[0]?.filePath).toBe("/tmp/workspace/skills/weather/SKILL.md");
+    expect(skills.entries?.[0]?.filePath).toBe(
+      path.resolve("/tmp/workspace/skills/weather/SKILL.md"),
+    );
   });
 
   it("tolerates skill snapshot entries with missing name/paths (symlink-escape rejects)", () => {

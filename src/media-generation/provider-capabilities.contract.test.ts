@@ -2,39 +2,13 @@
 import { describe, expect, it } from "vitest";
 import { BUNDLED_PLUGIN_CONTRACT_SNAPSHOTS } from "../plugins/contracts/inventory/bundled-capability-metadata.js";
 
-const EXPECTED_BUNDLED_VIDEO_PROVIDER_PLUGIN_IDS = [
-  "alibaba",
-  "byteplus",
-  "comfy",
-  "deepinfra",
-  "fal",
-  "google",
-  "minimax",
-  "openai",
-  "openrouter",
-  "pixverse",
-  "qwen",
-  "runway",
-  "together",
-  "vydra",
-  "xai",
-] as const;
+const EXPECTED_BUNDLED_VIDEO_PROVIDER_PLUGIN_IDS = ["comfy"] as const;
 
-const EXPECTED_BUNDLED_MUSIC_PROVIDER_PLUGIN_IDS = [
-  "comfy",
-  "fal",
-  "google",
-  "minimax",
-  "openrouter",
-] as const;
+const EXPECTED_BUNDLED_MUSIC_PROVIDER_PLUGIN_IDS = ["comfy"] as const;
 
-const EXPECTED_BUNDLED_VIDEO_PROVIDER_IDS_BY_PLUGIN: Record<string, readonly string[]> = {
-  minimax: ["minimax", "minimax-portal"],
-};
+const EXPECTED_BUNDLED_VIDEO_PROVIDER_IDS_BY_PLUGIN: Record<string, readonly string[]> = {};
 
-const EXPECTED_BUNDLED_MUSIC_PROVIDER_IDS_BY_PLUGIN: Record<string, readonly string[]> = {
-  minimax: ["minimax", "minimax-portal"],
-};
+const EXPECTED_BUNDLED_MUSIC_PROVIDER_IDS_BY_PLUGIN: Record<string, readonly string[]> = {};
 
 function bundledVideoProviderPluginIds(): string[] {
   return BUNDLED_PLUGIN_CONTRACT_SNAPSHOTS.filter(

@@ -1,7 +1,7 @@
 // Qa Lab tests cover Crabline fake-provider transport integration behavior.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { QUIET_CORE_CRABLINE_MANIFEST_PATH } from "@openclaw/crabline";
+import { OPENCLAW_CRABLINE_MANIFEST_PATH } from "@openclaw/crabline";
 import { fetchWithSsrFGuard } from "quiet-core-bot/plugin-sdk/ssrf-runtime";
 import { withTempDir } from "quiet-core-bot/plugin-sdk/test-env";
 import { describe, expect, it } from "vitest";
@@ -48,7 +48,7 @@ describe("crabline transport", () => {
         });
 
         const manifest = JSON.parse(
-          await fs.readFile(path.join(outputDir, QUIET_CORE_CRABLINE_MANIFEST_PATH), "utf8"),
+          await fs.readFile(path.join(outputDir, OPENCLAW_CRABLINE_MANIFEST_PATH), "utf8"),
         ) as {
           provider?: string;
         };

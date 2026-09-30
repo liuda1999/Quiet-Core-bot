@@ -168,6 +168,7 @@ import {
   createPostCompactionLoopGuard,
   PostCompactionLoopPersistedError,
 } from "./post-compaction-loop-guard.js";
+import { recordProviderContextLimit } from "./provider-context-limit-registry.js";
 import { createEmbeddedRunReplayState, observeReplayMetadata } from "./replay-state.js";
 import {
   handleAssistantFailover,
@@ -2819,6 +2820,17 @@ async function runEmbeddedAgentInternal(
                   `declared contextWindow disagrees with the provider's own limit; ` +
                   `set models.providers.${provider}.models[].contextWindow to the real limit`,
               );
+              // Remember an over-declaration so the next turn resolves its budget
+              // and compaction threshold from the limit the provider enforces,
+              // instead of overflowing again on the stale declaration.
+              if (contextLimitMismatch.direction === "over-declared") {
+                recordProviderContextLimit({
+                  provider,
+                  modelId,
+                  statedLimitTokens: contextLimitMismatch.statedLimitTokens,
+                  declaredContextWindow: contextLimitMismatch.declaredContextWindow,
+                });
+              }
             }
             // The attempt-level (SDK) auto-compaction is not bounded by
             // `agents.defaults.compaction.timeoutSeconds`; only the runner-owned

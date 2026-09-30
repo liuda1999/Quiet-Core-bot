@@ -44,7 +44,7 @@ describe("shared/frontmatter", () => {
     expect(
       resolveOpenClawManifestBlock({
         frontmatter: {
-          metadata: "{ "quiet-core-bot": { foo: 1, bar: 'baz' } }",
+          metadata: `{ "quiet-core-bot": { foo: 1, bar: 'baz' } }`,
         },
       }),
     ).toEqual({ foo: 1, bar: "baz" });
@@ -52,7 +52,7 @@ describe("shared/frontmatter", () => {
     expect(
       resolveOpenClawManifestBlock({
         frontmatter: {
-          pluginMeta: "{ "quiet-core-bot": { foo: 2 } }",
+          pluginMeta: `{ "quiet-core-bot": { foo: 2 } }`,
         },
         key: "pluginMeta",
       }),
@@ -73,8 +73,7 @@ describe("shared/frontmatter", () => {
     expect(
       resolveOpenClawManifestBlock({
         frontmatter: {
-          metadata:
-            "{ "quiet-core-bot": { requires: { bins: ['current'] } }, clawdbot: { requires: { bins: ['legacy'] } } }",
+          metadata: `{ "quiet-core-bot": { requires: { bins: ['current'] } }, clawdbot: { requires: { bins: ['legacy'] } } }`,
         },
       }),
     ).toEqual({ requires: { bins: ["current"] } });

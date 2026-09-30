@@ -1,5 +1,6 @@
 // ls tool tests cover deterministic directory listings and safe limit
 // normalization for agent-visible file enumeration.
+import nodePath from "node:path";
 import { describe, expect, it } from "vitest";
 import { createLsToolDefinition, type LsOperations } from "./ls.js";
 
@@ -7,7 +8,9 @@ function operations(entries: string[]): LsOperations {
   return {
     exists: () => true,
     stat: (absolutePath) => ({
-      isDirectory: () => absolutePath === "/workspace" || absolutePath.endsWith("/dir"),
+      isDirectory: () =>
+        absolutePath === nodePath.resolve("/workspace") ||
+        absolutePath.endsWith(`${nodePath.sep}dir`),
     }),
     readdir: () => entries,
   };

@@ -22,11 +22,13 @@ import type {
   MemoryEmbeddingProvider,
   MemoryEmbeddingProviderAdapter,
 } from "../plugins/memory-embedding-providers.js";
+import { isEmbeddingProviderConfigError } from "../plugins/openai-compatible-embedding-provider.js";
 import type { AuthRateLimiter } from "./auth-rate-limit.js";
 import type { ResolvedGatewayAuth } from "./auth.js";
 import { sendJson, sendMissingScopeForbidden } from "./http-common.js";
 import { handleGatewayPostJsonEndpoint } from "./http-endpoint-helpers.js";
 import {
+  OPENAI_COMPAT_INVALID_MODEL_MESSAGE,
   QUIET_CORE_MODEL_ID,
   authorizeOpenAiCompatibleHttpModelOverride,
   getHeader,
@@ -273,7 +275,7 @@ export async function handleOpenAiEmbeddingsHttpRequest(
   if (requestModel !== QUIET_CORE_MODEL_ID && !resolveAgentIdFromModel(requestModel, cfg)) {
     sendJson(res, 400, {
       error: {
-        message: "Invalid `model`. Use `openclaw` or `openclaw/<agentId>`.",
+        message: OPENAI_COMPAT_INVALID_MODEL_MESSAGE,
         type: "invalid_request_error",
       },
     });
@@ -331,8 +333,9 @@ export async function handleOpenAiEmbeddingsHttpRequest(
     return true;
   }
 
+  let provider: MemoryEmbeddingProvider;
   try {
-    const provider = await createConfiguredEmbeddingProvider({
+    provider = await createConfiguredEmbeddingProvider({
       cfg,
       agentDir,
       provider: target.provider,
@@ -347,6 +350,33 @@ export async function handleOpenAiEmbeddingsHttpRequest(
           }
         : undefined,
     });
+  } catch (err) {
+    // Build-time configuration problems (missing baseUrl/model/dimensions, an
+    // unresolved secret ref) are operator-actionable and carry no secrets, so
+    // report them to the caller. Collapsing them into an opaque 500 leaves the
+    // fix only in the server log — the caller sees "internal error" and cannot
+    // tell a misconfiguration from an outage.
+    if (isEmbeddingProviderConfigError(err)) {
+      logWarn(`openai-compat: embeddings configuration error: ${formatErrorMessage(err)}`);
+      sendJson(res, 400, {
+        error: {
+          message: formatErrorMessage(err),
+          type: "invalid_request_error",
+        },
+      });
+      return true;
+    }
+    logWarn(`openai-compat: embeddings provider setup failed: ${formatErrorMessage(err)}`);
+    sendJson(res, 500, {
+      error: {
+        message: "internal error",
+        type: "api_error",
+      },
+    });
+    return true;
+  }
+
+  try {
     const embeddings = await provider.embedBatch(texts);
     const encodingFormat = payload.encoding_format === "base64" ? "base64" : "float";
 

@@ -1,10 +1,11 @@
 import { spawnSync } from "node:child_process";
 import { describe, expect, it } from "vitest";
+import { resolveBashPath } from "../helpers/bash-path.js";
 
 const SCRIPT = "scripts/android-screenshots.sh";
 
 function runAndroidScreenshots(args: string[]) {
-  return spawnSync("bash", [SCRIPT, ...args], {
+  return spawnSync(resolveBashPath(), [SCRIPT, ...args], {
     encoding: "utf8",
   });
 }

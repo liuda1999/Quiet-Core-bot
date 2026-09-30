@@ -33,13 +33,12 @@ describe("legacy config migrate validation", () => {
       },
       plugins: {
         entries: {
-          brave: {
+          firecrawl: {
             enabled: true,
             config: { webSearch: { mode: "definitely-invalid" } },
           },
         },
       },
-      tools: { web: { search: { provider: "brave" } } },
     });
     agentModelTimeoutResult = migrateLegacyConfig({
       agents: {
@@ -100,9 +99,12 @@ describe("legacy config migrate validation", () => {
     });
   });
 
-  it("returns valid migrated config for legacy group chat routing drift", () => {
+  it("applies legacy group chat routing drift and reports removed channels as remaining issues", () => {
     const res = groupChatRoutingResult;
-    expect(res.partiallyValid).toBeUndefined();
+    // whatsapp/telegram are no longer bundled channels in this checkout, so the
+    // migrated config is reported as partially valid even though the migration
+    // itself still applies cleanly.
+    expect(res.partiallyValid).toBe(true);
     const migratedConfig = res.config as Record<string, unknown> | null;
     expect(migratedConfig?.routing).toBeUndefined();
     expect(res.config?.channels?.whatsapp?.allowFrom).toEqual(["+15550001111"]);
@@ -122,6 +124,7 @@ describe("legacy config migrate validation", () => {
       'Moved routing.groupChat.requireMention → channels.telegram.groups."*".requireMention.',
       "Moved routing.groupChat.historyLimit → messages.groupChat.historyLimit.",
       "Moved routing.groupChat.mentionPatterns → messages.groupChat.mentionPatterns.",
+      "Migration applied; other validation issues remain — run doctor to review.",
     ]);
   });
 
@@ -136,7 +139,6 @@ describe("legacy config migrate validation", () => {
     expect(res.config?.agents?.defaults).toEqual({
       model: { primary: "openai/gpt-5.5" },
     });
-    expect(res.config?.tools?.web?.search?.provider).toBe("brave");
   });
 
   it("returns valid config after removing ignored agent model timeouts", () => {

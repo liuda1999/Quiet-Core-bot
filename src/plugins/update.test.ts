@@ -334,7 +334,7 @@ function mockNpmViewMetadata(params: {
       version: params.version,
       ...(params.integrity ? { "dist.integrity": params.integrity } : {}),
       ...(params.shasum ? { "dist.shasum": params.shasum } : {}),
-      ...(params.openclaw ? { openclaw: params.openclaw } : {}),
+      ...(params["quiet-core-bot"] ? { "quiet-core-bot": params["quiet-core-bot"] } : {}),
     }),
     stderr: "",
   });
@@ -2544,7 +2544,8 @@ describe("updateNpmInstalledPlugins", () => {
         if (proceed === false) {
           return {
             ok: false,
-            error: "aborted: npm package integrity drift detected for @opik/opik-quiet-core-bot@0.2.5",
+            error:
+              "aborted: npm package integrity drift detected for @opik/opik-quiet-core-bot@0.2.5",
           };
         }
         return createSuccessfulNpmUpdateResult();
@@ -2923,7 +2924,8 @@ describe("updateNpmInstalledPlugins", () => {
       requestedLabel: "@beta",
       usedLabel: "@latest",
       reason: "failed",
-      message: "plugin channel fallback: quiet-core-bot-codex-app-server used @latest after @beta failed",
+      message:
+        "plugin channel fallback: quiet-core-bot-codex-app-server used @latest after @beta failed",
     });
   });
 

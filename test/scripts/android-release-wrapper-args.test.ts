@@ -2,8 +2,9 @@
 import { execFileSync } from "node:child_process";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { resolveBashEnv, resolveBashPath } from "../helpers/bash-path.js";
 
-const BASH_BIN = process.platform === "win32" ? "bash" : "/bin/bash";
+const BASH_BIN = resolveBashPath();
 
 function runScript(
   scriptPath: string,
@@ -15,6 +16,7 @@ function runScript(
     const stdout = execFileSync(BASH_BIN, [...scriptArgs, ...args], {
       cwd: process.cwd(),
       encoding: "utf8",
+      env: resolveBashEnv(),
       stdio: ["ignore", "pipe", "pipe"],
     });
     return { ok: true, stdout, stderr: "" };

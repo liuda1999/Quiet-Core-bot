@@ -2,7 +2,11 @@
 import { defineConfig } from "vitest/config";
 import { loadPatternListFromEnv, narrowIncludePatternsForCli } from "./vitest.pattern-file.ts";
 import { sharedVitestConfig } from "./vitest.shared.config.ts";
-import { getUnitFastTestFiles, getUnitFastTimerTestFiles } from "./vitest.unit-fast-paths.mjs";
+import {
+  getUnitFastTestFiles,
+  getUnitFastTimerTestFiles,
+  windowsUnsupportedUnitFastTestFiles,
+} from "./vitest.unit-fast-paths.mjs";
 
 export function createUnitFastVitestConfig(
   env: Record<string, string | undefined> = process.env,
@@ -13,6 +17,10 @@ export function createUnitFastVitestConfig(
   const timerTestFiles = new Set(getUnitFastTimerTestFiles());
   const unitFastTestFiles = getUnitFastTestFiles().filter((file) => !timerTestFiles.has(file));
   const cliInclude = narrowIncludePatternsForCli(unitFastTestFiles, options.argv);
+  // Keep the local Windows lane honest: these tests still run on Linux CI but
+  // cannot run reliably on Windows (offline Go modules, PTY timing, mock
+  // isolation). See windowsUnsupportedUnitFastTestFiles for the rationale.
+  const platformExcludes = process.platform === "win32" ? windowsUnsupportedUnitFastTestFiles : [];
 
   return defineConfig({
     ...sharedVitestConfig,
@@ -27,7 +35,7 @@ export function createUnitFastVitestConfig(
       // same state DB (which stalls whole shards on a populated machine).
       setupFiles: sharedTest.setupFiles,
       include: includeFromEnv ?? cliInclude ?? unitFastTestFiles,
-      exclude: sharedTest.exclude ?? [],
+      exclude: [...(sharedTest.exclude ?? []), ...platformExcludes],
       passWithNoTests: true,
     },
   });

@@ -82,7 +82,7 @@ diff --git a/b.ts b/b.ts
       {
         action: "close",
         candidate,
-        comment: `Thanks for the fix. This is now covered by the landed #70532 / commit https://github.com/liuda1999/Quiet-Core-bot/commit/6415e35.
+        comment: `Thanks for the fix. This is now covered by the landed #70532 / commit https://github.com/liuda1999/quiet-core-bot/commit/6415e35.
 
 Evidence: overlapping changed hunks; shared file(s): ui/src/ui/chat/grouped-render.ts.
 
@@ -128,7 +128,7 @@ Closing #70530 as a duplicate.`,
     expect(plan[0]).toStrictEqual({
       action: "close",
       candidate,
-      comment: `Thanks for the fix. This is now covered by the landed #70532 / commit https://github.com/liuda1999/Quiet-Core-bot/commit/6415e35.
+      comment: `Thanks for the fix. This is now covered by the landed #70532 / commit https://github.com/liuda1999/quiet-core-bot/commit/6415e35.
 
 Evidence: shared issue(s): #70491; shared file(s): ui/src/ui/chat/grouped-render.ts.
 

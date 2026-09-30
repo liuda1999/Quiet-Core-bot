@@ -118,22 +118,26 @@ beforeAll(async () => {
   clearEmbeddingProviders();
   genericEmbeddingServer = await startGenericEmbeddingServer();
   genericEmbeddingBaseUrl = genericEmbeddingServer.baseUrl;
-  const openAiAdapter: MemoryEmbeddingProviderAdapter = {
-    id: "openai",
+  // The fork defaults agents.defaults.memorySearch.provider to "ollama"
+  // (local-first), so the default /v1/embeddings path resolves that provider.
+  // Register the mock adapter under that id; upstream's cloud "openai" default
+  // no longer applies here.
+  const defaultMemoryEmbeddingAdapter: MemoryEmbeddingProviderAdapter = {
+    id: "ollama",
     defaultModel: "text-embedding-3-small",
     transport: "remote",
     autoSelectPriority: 20,
     allowExplicitWhenConfiguredAuto: true,
     create: async (options) => {
       const result = await createEmbeddingProviderMock({
-        provider: "openai",
+        provider: "ollama",
         model: options.model,
         agentDir: options.agentDir,
       });
       return result;
     },
   };
-  registerMemoryEmbeddingProvider(openAiAdapter);
+  registerMemoryEmbeddingProvider(defaultMemoryEmbeddingAdapter);
   ({ startGatewayServer } = await import("./server.js"));
   enabledPort = await getFreePort();
   enabledServer = await startOpenAiCompatGatewayServer({
@@ -267,13 +271,13 @@ describe("OpenAI-compatible embeddings HTTP API (e2e)", () => {
         model: "quiet-core-bot/default",
         input: "hello again",
       },
-      { "x-quiet-core-bot-model": "openai/text-embedding-3-small" },
+      { "x-quiet-core-bot-model": "ollama/text-embedding-3-small" },
     );
     expect(qualified.status).toBe(200);
     const qualifiedJson = (await qualified.json()) as { model?: string };
     expect(qualifiedJson.model).toBe("quiet-core-bot/default");
     const lastCall = latestCreateEmbeddingProviderOptions();
-    expect(lastCall.provider).toBe("openai");
+    expect(lastCall.provider).toBe("ollama");
     expect(lastCall.model).toBe("text-embedding-3-small");
   });
 
@@ -438,7 +442,7 @@ describe("OpenAI-compatible embeddings HTTP API (e2e)", () => {
     });
     await expectInvalidEmbeddingRequest(
       res,
-      "Invalid `model`. Use `openclaw` or `openclaw/<agentId>`.",
+      "Invalid `model`. Use `quiet-core-bot` or `quiet-core-bot/<agentId>`.",
     );
   });
 
@@ -448,7 +452,9 @@ describe("OpenAI-compatible embeddings HTTP API (e2e)", () => {
         model: "quiet-core-bot/default",
         input: "hello",
       },
-      { "x-quiet-core-bot-model": "ollama/nomic-embed-text" },
+      // The default memory provider is "ollama" here, so any other provider in
+      // the override must be rejected rather than silently re-routed.
+      { "x-quiet-core-bot-model": "openai/nomic-embed-text" },
     );
     await expectInvalidEmbeddingRequest(
       res,
@@ -508,5 +514,28 @@ describe("OpenAI-compatible embeddings HTTP API (e2e)", () => {
       type: "api_error",
       message: "internal error",
     });
+  });
+
+  it("reports a missing embedding model as an actionable 400, not an opaque 500", async () => {
+    testState.agentConfig = {
+      memorySearch: {
+        provider: "openai-compatible",
+        remote: { baseUrl: genericEmbeddingBaseUrl },
+      },
+    };
+    resetConfigRuntimeState();
+    try {
+      const res = await postEmbeddings({
+        model: "quiet-core-bot/default",
+        input: "hello",
+      });
+      expect(res.status).toBe(400);
+      const json = (await res.json()) as { error?: { type?: string; message?: string } };
+      expect(json.error?.type).toBe("invalid_request_error");
+      expect(json.error?.message).toContain("missing model");
+    } finally {
+      testState.agentConfig = undefined;
+      resetConfigRuntimeState();
+    }
   });
 });

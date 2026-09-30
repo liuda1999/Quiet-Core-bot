@@ -5,11 +5,11 @@ import { collectRuntimeChannelCapabilities } from "./runtime-capabilities.js";
 describe("collectRuntimeChannelCapabilities", () => {
   it("adds thread-bound spawn capabilities when the channel account allows unified spawns", () => {
     const capabilities = collectRuntimeChannelCapabilities({
-      channel: "discord",
+      channel: "matrix",
       accountId: "default",
       cfg: {
         channels: {
-          discord: {
+          matrix: {
             threadBindings: {
               spawnSessions: true,
             },
@@ -23,11 +23,11 @@ describe("collectRuntimeChannelCapabilities", () => {
 
   it("omits thread-bound spawn capabilities when unified spawns are disabled", () => {
     const capabilities = collectRuntimeChannelCapabilities({
-      channel: "discord",
+      channel: "matrix",
       accountId: "default",
       cfg: {
         channels: {
-          discord: {
+          matrix: {
             threadBindings: {
               spawnSessions: false,
             },

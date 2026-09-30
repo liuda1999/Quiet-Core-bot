@@ -127,28 +127,31 @@ describe("DebugProxyCaptureStore", () => {
     expect(lease.store.isClosed).toBe(true);
   });
 
-  it("uses rollback journaling for captures on NFS-backed volumes", () => {
-    vi.spyOn(fs, "statfsSync").mockReturnValue({
-      type: 0x6969,
-      bsize: 1024,
-      blocks: 1,
-      bfree: 1,
-      bavail: 1,
-      files: 0,
-      ffree: 0,
-    });
-
-    const store = new DebugProxyCaptureStore({
-      env: makeStateEnv("quiet-core-bot-proxy-capture-nfs-"),
-    });
-    try {
-      expect(store.db.prepare("PRAGMA journal_mode").get()).toMatchObject({
-        journal_mode: "delete",
+  it.skipIf(process.platform === "win32")(
+    "uses rollback journaling for captures on NFS-backed volumes",
+    () => {
+      vi.spyOn(fs, "statfsSync").mockReturnValue({
+        type: 0x6969,
+        bsize: 1024,
+        blocks: 1,
+        bfree: 1,
+        bavail: 1,
+        files: 0,
+        ffree: 0,
       });
-    } finally {
-      store.close();
-    }
-  });
+
+      const store = new DebugProxyCaptureStore({
+        env: makeStateEnv("quiet-core-bot-proxy-capture-nfs-"),
+      });
+      try {
+        expect(store.db.prepare("PRAGMA journal_mode").get()).toMatchObject({
+          journal_mode: "delete",
+        });
+      } finally {
+        store.close();
+      }
+    },
+  );
 
   it.runIf(process.platform !== "win32")(
     "stores capture blobs in the private shared state database",

@@ -26,9 +26,10 @@ describe("runtime-import", () => {
     vi.spyOn(process, "platform", "get").mockReturnValue("win32");
 
     expect(
-      resolveRuntimeImportSpecifier("C:\\Users\\alice\\quiet-core-bot\\dist\\subagent-registry.js", [
-        "./subagent-registry.runtime.js",
-      ]),
+      resolveRuntimeImportSpecifier(
+        "C:\\Users\\alice\\quiet-core-bot\\dist\\subagent-registry.js",
+        ["./subagent-registry.runtime.js"],
+      ),
     ).toBe("file:///C:/Users/alice/quiet-core-bot/dist/subagent-registry.runtime.js");
   });
 
@@ -36,9 +37,10 @@ describe("runtime-import", () => {
     vi.spyOn(process, "platform", "get").mockReturnValue("win32");
 
     expect(
-      resolveRuntimeImportSpecifier("file:///C:/Users/alice/quiet-core-bot/dist/subagent-registry.js", [
-        "./subagent-registry.runtime.js",
-      ]),
+      resolveRuntimeImportSpecifier(
+        "file:///C:/Users/alice/quiet-core-bot/dist/subagent-registry.js",
+        ["./subagent-registry.runtime.js"],
+      ),
     ).toBe("file:///C:/Users/alice/quiet-core-bot/dist/subagent-registry.runtime.js");
   });
 
@@ -46,10 +48,11 @@ describe("runtime-import", () => {
     vi.spyOn(process, "platform", "get").mockReturnValue("win32");
 
     expect(
-      resolveRuntimeImportSpecifier("file:///C:/Users/alice/quiet-core-bot/dist/subagent-registry.js", [
-        "D:\\Quiet Core bot\\dist\\subagent-registry.runtime.js",
-      ]),
-    ).toBe("file:///D:/Quiet Core bot/dist/subagent-registry.runtime.js");
+      resolveRuntimeImportSpecifier(
+        "file:///C:/Users/alice/quiet-core-bot/dist/subagent-registry.js",
+        ["D:\\Quiet Core bot\\dist\\subagent-registry.runtime.js"],
+      ),
+    ).toBe("file:///D:/Quiet%20Core%20bot/dist/subagent-registry.runtime.js");
   });
 
   it("keeps non-Windows import paths unchanged", () => {

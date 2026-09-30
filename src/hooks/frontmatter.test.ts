@@ -180,10 +180,10 @@ describe("resolveOpenClawMetadata", () => {
 
     const result = resolveOpenClawMetadata(frontmatter);
     const openclaw = requireOpenClawMetadata(result);
-    expect(quiet-core-bot.emoji).toBe("🔥");
-    expect(quiet-core-bot.events).toEqual(["command:new", "command:reset"]);
-    expect(quiet-core-bot.requires?.config).toEqual(["workspace.dir"]);
-    expect(quiet-core-bot.requires?.bins).toEqual(["git"]);
+    expect(openclaw.emoji).toBe("🔥");
+    expect(openclaw.events).toEqual(["command:new", "command:reset"]);
+    expect(openclaw.requires?.config).toEqual(["workspace.dir"]);
+    expect(openclaw.requires?.bins).toEqual(["git"]);
   });
 
   it("returns undefined when metadata is missing", () => {
@@ -270,10 +270,10 @@ metadata:
     );
 
     const openclaw = requireOpenClawMetadata(resolveOpenClawMetadata(frontmatter));
-    expect(quiet-core-bot.emoji).toBe("💾");
-    expect(quiet-core-bot.events).toEqual(["command:new", "command:reset"]);
-    expect(quiet-core-bot.requires?.config).toEqual(["workspace.dir"]);
-    expect(quiet-core-bot.install?.[0].kind).toBe("bundled");
+    expect(openclaw.emoji).toBe("💾");
+    expect(openclaw.events).toEqual(["command:new", "command:reset"]);
+    expect(openclaw.requires?.config).toEqual(["workspace.dir"]);
+    expect(openclaw.install?.[0].kind).toBe("bundled");
   });
 
   it("parses YAML metadata map", () => {
@@ -288,8 +288,8 @@ metadata:
 `;
     const frontmatter = parseFrontmatter(content);
     const openclaw = resolveOpenClawMetadata(frontmatter);
-    expect(quiet-core-bot?.emoji).toBe("disk");
-    expect(quiet-core-bot?.events).toEqual(["command:new"]);
+    expect(openclaw?.emoji).toBe("disk");
+    expect(openclaw?.events).toEqual(["command:new"]);
   });
 });
 

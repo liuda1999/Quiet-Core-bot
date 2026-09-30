@@ -231,9 +231,26 @@ export function collectConfiguredContextEngineAgentRunHosts(params: {
     push(policy.runtime, model.path);
   }
 
-  return [...runtimePaths.entries()].map(([runtimeId, paths]) =>
+  const candidates = [...runtimePaths.entries()].map(([runtimeId, paths]) =>
     runtimeHostCandidate({ cfg: params.cfg, runtimeId, paths }),
   );
+  // Distinct runtime ids can resolve to the same context-engine host (for
+  // example an explicit embedded runtime plus the default selected model). Collapse
+  // them by host id so downstream compatibility checks report each host once.
+  const byHostId = new Map<string, HostCandidate>();
+  for (const candidate of candidates) {
+    const existing = byHostId.get(candidate.host.id);
+    if (existing) {
+      for (const path of candidate.paths) {
+        if (!existing.paths.includes(path)) {
+          existing.paths.push(path);
+        }
+      }
+      continue;
+    }
+    byHostId.set(candidate.host.id, { ...candidate, paths: [...candidate.paths] });
+  }
+  return [...byHostId.values()];
 }
 
 function selectedContextEngineSlotId(cfg: OpenClawConfig): string {

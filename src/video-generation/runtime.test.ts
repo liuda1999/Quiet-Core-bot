@@ -395,7 +395,7 @@ describe("video-generation runtime", () => {
     ];
 
     const result = await runGenerateVideo({
-      cfg: {} as OpenClawConfig,
+      cfg: { agents: { defaults: { model: "openai/sora-2" } } } as OpenClawConfig,
       prompt: "animate a cat",
       providerOptions: { seed: 42 },
     });

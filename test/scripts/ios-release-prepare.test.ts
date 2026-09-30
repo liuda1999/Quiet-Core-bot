@@ -2,9 +2,10 @@
 import { execFileSync } from "node:child_process";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { resolveBashPath } from "../helpers/bash-path.js";
 
 const SCRIPT = path.join(process.cwd(), "scripts", "ios-release-prepare.sh");
-const BASH_BIN = process.platform === "win32" ? "bash" : "/bin/bash";
+const BASH_BIN = resolveBashPath();
 const BASH_ARGS = process.platform === "win32" ? [SCRIPT] : ["--noprofile", "--norc", SCRIPT];
 
 function runPrepare(extraArgs: string[]): { ok: boolean; stdout: string; stderr: string } {

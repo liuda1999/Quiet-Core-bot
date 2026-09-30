@@ -15,7 +15,7 @@ describe("scripts/quiet-core-bot-release-clawhub-runtime-state.ts", () => {
   it("emits verifier args and proof lines for awaited ClawHub runs", () => {
     const result = runRuntimeStateScript([
       "--repository",
-      "liuda1999/quiet-core-bot",
+      "liuda1999/Quiet-Core-bot",
       "--wait-for-clawhub",
       "true",
       "--force-skip-clawhub",
@@ -32,7 +32,8 @@ describe("scripts/quiet-core-bot-release-clawhub-runtime-state.ts", () => {
     expect(JSON.parse(result.stdout)).toEqual({
       verifierArgs: ["--plugin-clawhub-run", "123", "--plugin-clawhub-bootstrap-run", "456"],
       proofLines: {
-        normal: "- plugin ClawHub publish: https://github.com/liuda1999/Quiet-Core-bot/actions/runs/123",
+        normal:
+          "- plugin ClawHub publish: https://github.com/liuda1999/Quiet-Core-bot/actions/runs/123",
         bootstrap:
           "- plugin ClawHub bootstrap: https://github.com/liuda1999/Quiet-Core-bot/actions/runs/456",
       },

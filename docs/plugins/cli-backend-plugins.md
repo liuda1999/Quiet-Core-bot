@@ -30,11 +30,11 @@ fallback if API providers are unavailable.
 
 A CLI backend plugin has three contracts:
 
-| Contract             | File                   | Purpose                                                   |
-| -------------------- | ---------------------- | --------------------------------------------------------- |
-| Package entry        | `package.json`         | Points Quiet Core bot at the plugin runtime module        |
+| Contract             | File                         | Purpose                                                   |
+| -------------------- | ---------------------------- | --------------------------------------------------------- |
+| Package entry        | `package.json`               | Points Quiet Core bot at the plugin runtime module        |
 | Manifest ownership   | `quiet-core-bot.plugin.json` | Declares the backend id before runtime loads              |
-| Runtime registration | `index.ts`             | Calls `api.registerCliBackend(...)` with command defaults |
+| Runtime registration | `index.ts`                   | Calls `api.registerCliBackend(...)` with command defaults |
 
 The manifest is discovery metadata. It does not execute the CLI and does not
 register runtime behavior. Runtime behavior starts when the plugin entry calls
@@ -56,7 +56,7 @@ register runtime behavior. Runtime behavior starts when the plugin entry calls
           "minGatewayVersion": "2026.3.24-beta.2"
         },
         "build": {
-          "quiet-core-botVersion": "2026.3.24-beta.2",
+          "openclawVersion": "2026.3.24-beta.2",
           "pluginSdkVersion": "2026.3.24-beta.2"
         }
       },

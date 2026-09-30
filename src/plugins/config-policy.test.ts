@@ -40,13 +40,13 @@ describe("isBundledChannelEnabledByChannelConfig", () => {
   it("only treats enabled channel entries as bundled plugin enablement", () => {
     const cfg = {
       channels: {
-        telegram: { enabled: true },
-        slack: { enabled: false },
+        signal: { enabled: true },
+        irc: { enabled: false },
       },
     } as OpenClawConfig;
 
-    expect(isBundledChannelEnabledByChannelConfig(cfg, "telegram")).toBe(true);
-    expect(isBundledChannelEnabledByChannelConfig(cfg, "slack")).toBe(false);
+    expect(isBundledChannelEnabledByChannelConfig(cfg, "signal")).toBe(true);
+    expect(isBundledChannelEnabledByChannelConfig(cfg, "irc")).toBe(false);
     expect(isBundledChannelEnabledByChannelConfig(cfg, "not-a-channel")).toBe(false);
   });
 });

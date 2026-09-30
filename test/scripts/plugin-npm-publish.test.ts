@@ -1,11 +1,12 @@
 // Plugin NPM Publish tests cover publish wrapper argument safety.
 import { spawnSync } from "node:child_process";
 import { describe, expect, it } from "vitest";
+import { resolveBashPath } from "../helpers/bash-path.js";
 
 const scriptPath = "scripts/plugin-npm-publish.sh";
 
 function runPluginPublishWrapper(args: string[]) {
-  return spawnSync("bash", [scriptPath, ...args], {
+  return spawnSync(resolveBashPath(), [scriptPath, ...args], {
     cwd: process.cwd(),
     encoding: "utf8",
   });

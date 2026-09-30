@@ -6,29 +6,28 @@ import {
 } from "./web-search-install-catalog.js";
 
 describe("web-search install catalog", () => {
-  it("keeps Parallel's keyless provider installable but opt-in", () => {
+  it("keeps Firecrawl's credential-backed provider installable and auto-detected", () => {
     const entry = resolveWebSearchInstallCatalogEntry({
-      providerId: "parallel-free",
-      pluginId: "parallel",
+      providerId: "firecrawl",
+      pluginId: "firecrawl",
     });
 
     expect(entry).toMatchObject({
-      pluginId: "parallel",
+      pluginId: "firecrawl",
       install: {
-        clawhubSpec: "clawhub:@quiet-core/parallel-plugin",
-        npmSpec: "@quiet-core/parallel-plugin",
+        clawhubSpec: "clawhub:@quiet-core/firecrawl-plugin",
+        npmSpec: "@quiet-core/firecrawl-plugin",
       },
       provider: {
-        id: "parallel-free",
-        requiresCredential: false,
-        envVars: [],
-        credentialPath: "",
+        id: "firecrawl",
+        envVars: ["FIRECRAWL_API_KEY"],
+        credentialPath: "plugins.entries.firecrawl.config.webSearch.apiKey",
       },
     });
-    expect(entry?.provider.autoDetectOrder).toBeUndefined();
+    expect(entry?.provider.autoDetectOrder).toBe(60);
     expect(
       resolveWebSearchInstallCatalogEntries().some(
-        (candidate) => candidate.provider.id === "parallel",
+        (candidate) => candidate.provider.id === "firecrawl",
       ),
     ).toBe(true);
   });
@@ -36,14 +35,9 @@ describe("web-search install catalog", () => {
   it("resolves credential-backed plugins for env-only auto-detection", () => {
     expect(
       resolveWebSearchInstallCatalogEntriesForEnv({
-        EXA_API_KEY: "exa-key",
         FIRECRAWL_API_KEY: "firecrawl-key",
-        KIMI_API_KEY: "kimi-key",
-        OPENROUTER_API_KEY: "openrouter-key",
-        PARALLEL_API_KEY: "parallel-key",
         SEARXNG_BASE_URL: "http://search.local",
-        TAVILY_API_KEY: "tavily-key",
       }).map((entry) => entry.pluginId),
-    ).toEqual(["exa", "firecrawl", "moonshot", "parallel", "perplexity", "searxng", "tavily"]);
+    ).toEqual(["firecrawl", "searxng"]);
   });
 });

@@ -153,7 +153,7 @@ describe("docker base image pinning", () => {
     const dockerUpdate = requireDependabotDockerUpdate(config);
     const dockerImagesGroup = requireDockerImageGroup(dockerUpdate);
 
-    expect(dockerUpdate.schedule?.interval).toBe("weekly");
+    expect(dockerUpdate.schedule?.interval).toBe("monthly");
     expect(dockerImagesGroup.patterns).toContain("*");
   });
 });

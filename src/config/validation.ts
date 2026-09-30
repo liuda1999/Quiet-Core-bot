@@ -841,11 +841,7 @@ function collectUnrecognizedKeyNames(record: UnknownIssueRecord | null): string[
  * object). The key list is still structured on the issue, so re-derive the
  * message from it whenever the raw text does not already name those keys.
  */
-function withUnrecognizedKeyMessage(
-  record: UnknownIssueRecord | null,
-  message: string,
-  unrecognizedKeys: readonly string[],
-): string {
+function withUnrecognizedKeyMessage(message: string, unrecognizedKeys: readonly string[]): string {
   if (unrecognizedKeys.length === 0) {
     return message;
   }
@@ -859,11 +855,7 @@ function mapZodIssueToConfigIssue(issue: unknown): ConfigValidationIssue {
   const record = toIssueRecord(issue);
   const pathItem = formatConfigPath(toConfigPathSegments(record?.path));
   const rawMessage = typeof record?.message === "string" ? record.message : "Invalid input";
-  const message = withUnrecognizedKeyMessage(
-    record,
-    rawMessage,
-    collectUnrecognizedKeyNames(record),
-  );
+  const message = withUnrecognizedKeyMessage(rawMessage, collectUnrecognizedKeyNames(record));
 
   // Numeric ceiling/floor hints (too_big / too_small with numeric origin).
   // Append a parenthesized bound alongside Zod's native message,

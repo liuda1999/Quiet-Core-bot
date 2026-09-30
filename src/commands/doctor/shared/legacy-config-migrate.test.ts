@@ -1556,23 +1556,20 @@ describe("legacy migrate mention routing", () => {
     ]);
   });
 
-  it("moves channels.telegram.requireMention into the wildcard group default", () => {
+  it("leaves current channel-level requireMention untouched", () => {
+    // `channels.<id>.requireMention` is a current field for bundled channels, so
+    // the legacy mention-routing migration must not rewrite it. (The former
+    // Telegram-specific case referenced a channel this checkout no longer ships.)
     const res = migrateLegacyConfigForTest({
       channels: {
-        telegram: {
+        mattermost: {
           requireMention: false,
         },
       },
     });
 
-    expect(res.config?.channels?.telegram).toEqual({
-      groups: {
-        "*": { requireMention: false },
-      },
-    });
-    expect(res.changes).toStrictEqual([
-      'Moved channels.telegram.requireMention → channels.telegram.groups."*".requireMention.',
-    ]);
+    expect(res.changes).toStrictEqual([]);
+    expect(res.config).toBeNull();
   });
 });
 

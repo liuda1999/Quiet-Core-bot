@@ -1,4 +1,5 @@
 // Daemon install plan tests cover shared install plan validation and platform warning helpers.
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   resolveDaemonInstallRuntimeInputs,
@@ -11,10 +12,12 @@ import {
 describe("resolveGatewayDevMode", () => {
   it("detects src ts entrypoints", () => {
     expect(resolveGatewayDevMode(["node", "/Users/me/quiet-core-bot/src/cli/index.ts"])).toBe(true);
-    expect(resolveGatewayDevMode(["node", "C:\\Users\\me\\quiet-core-bot\\src\\cli\\index.ts"])).toBe(
-      true,
+    expect(
+      resolveGatewayDevMode(["node", "C:\\Users\\me\\quiet-core-bot\\src\\cli\\index.ts"]),
+    ).toBe(true);
+    expect(resolveGatewayDevMode(["node", "/Users/me/quiet-core-bot/dist/cli/index.js"])).toBe(
+      false,
     );
-    expect(resolveGatewayDevMode(["node", "/Users/me/quiet-core-bot/dist/cli/index.js"])).toBe(false);
   });
 });
 
@@ -56,11 +59,17 @@ describe("resolveDaemonOpenClawBinDir", () => {
   });
 
   it("finds the PATH shim that resolves to the active package entrypoint", () => {
+    // The source joins the PATH segment with the platform-appropriate binary
+    // name, so shim lookups must compare normalized separators on Windows.
+    const normalize = (value: string) => path.normalize(value);
     const realpaths = new Map([
-      ["/Users/testuser/.npm-global/bin/quiet-core-bot", "/pkg/quiet-core-bot/quiet-core-bot.mjs"],
       [
-        "/Users/testuser/.npm-global/lib/node_modules/quiet-core-bot/quiet-core-bot.mjs",
-        "/pkg/quiet-core-bot/quiet-core-bot.mjs",
+        normalize("/Users/testuser/.npm-global/bin/quiet-core-bot"),
+        normalize("/pkg/quiet-core-bot/quiet-core-bot.mjs"),
+      ],
+      [
+        normalize("/Users/testuser/.npm-global/lib/node_modules/quiet-core-bot/quiet-core-bot.mjs"),
+        normalize("/pkg/quiet-core-bot/quiet-core-bot.mjs"),
       ],
     ]);
 
@@ -72,10 +81,11 @@ describe("resolveDaemonOpenClawBinDir", () => {
           "gateway",
           "install",
         ],
-        env: { PATH: "/Users/testuser/.npm-global/bin:/usr/bin" },
+        env: { PATH: ["/Users/testuser/.npm-global/bin", "/usr/bin"].join(path.delimiter) },
         platform: "darwin",
-        existsSync: (candidate) => candidate === "/Users/testuser/.npm-global/bin/quiet-core-bot",
-        realpathSync: (candidate) => realpaths.get(candidate) ?? candidate,
+        existsSync: (candidate) =>
+          normalize(candidate) === normalize("/Users/testuser/.npm-global/bin/quiet-core-bot"),
+        realpathSync: (candidate) => realpaths.get(normalize(candidate)) ?? candidate,
       }),
     ).toEqual(["/Users/testuser/.npm-global/bin"]);
   });

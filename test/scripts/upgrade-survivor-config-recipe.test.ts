@@ -82,9 +82,10 @@ describe("upgrade survivor config recipe command resolution", () => {
     );
 
     expect(calls).toHaveLength(1);
+    const expectedInvocation = resolveUpgradeSurvivorOpenClawCommand(["config", "validate"]);
     expect(calls[0]).toMatchObject({
-      args: ["config", "validate"],
-      command: "quiet-core-bot",
+      args: expectedInvocation.args,
+      command: expectedInvocation.command,
       options: {
         killSignal: "SIGTERM",
         maxBuffer: CONFIG_COMMAND_MAX_BUFFER_BYTES,

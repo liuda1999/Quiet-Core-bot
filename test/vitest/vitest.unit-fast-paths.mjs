@@ -211,6 +211,24 @@ export const forcedUnitFastTestFiles = [
   "src/version.test.ts",
   "src/video-generation/provider-registry.test.ts",
 ];
+/**
+ * Tests that cannot run reliably in the local Windows `test:unit:fast` lane.
+ * They are intentionally kept in the repository and still run on Linux CI; this
+ * list only excludes them from local Windows runs so the lane stays honest:
+ *  - docs-i18n*: require downloading Go modules (`github.com/yuin/goldmark`),
+ *    which fails on offline Windows hosts.
+ *  - bash-tools.exec.pty: PTY session completion is timing-sensitive under the
+ *    concurrent non-isolated Windows runner.
+ *  - plugin-activation-boundary: relies on `vi.mock` isolation that the shared
+ *    non-isolated module registry does not guarantee for this worker shard.
+ */
+export const windowsUnsupportedUnitFastTestFiles = [
+  "test/scripts/docs-i18n.test.ts",
+  "test/scripts/docs-i18n-behavior.test.ts",
+  "src/agents/bash-tools.exec.pty.test.ts",
+  "src/plugin-activation-boundary.test.ts",
+];
+
 const forcedUnitFastTestFileSet = new Set(forcedUnitFastTestFiles);
 const unitFastCandidateExactFiles = [...pluginSdkLightTestFiles, ...commandsLightTestFiles];
 const unitFastCandidateExactFileSet = new Set(unitFastCandidateExactFiles);

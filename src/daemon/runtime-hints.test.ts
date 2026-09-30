@@ -1,6 +1,13 @@
 // Daemon runtime hint tests cover platform-specific daemon guidance.
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { buildPlatformRuntimeLogHints, buildPlatformServiceStartHints } from "./runtime-hints.js";
+
+const restartLogPath = path.join(
+  path.resolve("/tmp/quiet-core-bot-state"),
+  "logs",
+  "gateway-restart.log",
+);
 
 describe("buildPlatformRuntimeLogHints", () => {
   it("renders launchd log hints on darwin", () => {
@@ -34,7 +41,7 @@ describe("buildPlatformRuntimeLogHints", () => {
       }),
     ).toEqual([
       "Logs: journalctl --user -u quiet-core-bot-gateway.service -n 200 --no-pager",
-      "Restart attempts: /tmp/quiet-core-bot-state/logs/gateway-restart.log",
+      `Restart attempts: ${restartLogPath}`,
     ]);
     expect(
       buildPlatformRuntimeLogHints({
@@ -47,7 +54,7 @@ describe("buildPlatformRuntimeLogHints", () => {
       }),
     ).toEqual([
       'Logs: schtasks /Query /TN "Quiet Core bot Gateway" /V /FO LIST',
-      "Restart attempts: /tmp/quiet-core-bot-state/logs/gateway-restart.log",
+      `Restart attempts: ${restartLogPath}`,
     ]);
   });
 });

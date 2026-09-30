@@ -11,7 +11,7 @@ function npmRecord(
   version: string,
   overrides: Partial<PluginInstallRecord> = {},
 ): PluginInstallRecord {
-  const resolvedName = overrides.resolvedName ?? "@quiet-core/whatsapp";
+  const resolvedName = overrides.resolvedName ?? "@quiet-core/tokenjuice";
   return {
     source: "npm",
     spec: `${resolvedName}@latest`,
@@ -27,8 +27,8 @@ function clawhubRecord(
 ): PluginInstallRecord {
   return {
     source: "clawhub",
-    spec: "clawhub:@quiet-core/whatsapp",
-    clawhubPackage: "@quiet-core/whatsapp",
+    spec: "clawhub:@quiet-core/tokenjuice",
+    clawhubPackage: "@quiet-core/tokenjuice",
     resolvedVersion: version,
     ...overrides,
   };
@@ -39,8 +39,8 @@ describe("detectPluginVersionDrift", () => {
     const result = detectPluginVersionDrift({
       gatewayVersion: "2026.5.4",
       installRecords: {
-        whatsapp: npmRecord("2026.5.4"),
-        discord: npmRecord("2026.5.4", { resolvedName: "@quiet-core/discord" }),
+        tokenjuice: npmRecord("2026.5.4"),
+        firecrawl: npmRecord("2026.5.4", { resolvedName: "@quiet-core/firecrawl-plugin" }),
       },
     });
 
@@ -52,22 +52,22 @@ describe("detectPluginVersionDrift", () => {
     const result = detectPluginVersionDrift({
       gatewayVersion: "2026.5.4",
       installRecords: {
-        whatsapp: npmRecord("2026.5.3", {
-          resolvedName: "@quiet-core/whatsapp",
-          spec: "@quiet-core/whatsapp@2026.5.3",
+        tokenjuice: npmRecord("2026.5.3", {
+          resolvedName: "@quiet-core/tokenjuice",
+          spec: "@quiet-core/tokenjuice@2026.5.3",
         }),
-        discord: npmRecord("2026.5.4", { resolvedName: "@quiet-core/discord" }),
+        firecrawl: npmRecord("2026.5.4", { resolvedName: "@quiet-core/firecrawl-plugin" }),
       },
     });
 
     expect(result.drifts).toHaveLength(1);
     expect(result.drifts[0]).toEqual({
-      pluginId: "whatsapp",
+      pluginId: "tokenjuice",
       installedVersion: "2026.5.3",
       gatewayVersion: "2026.5.4",
       source: "npm",
-      packageName: "@quiet-core/whatsapp",
-      spec: "@quiet-core/whatsapp@2026.5.3",
+      packageName: "@quiet-core/tokenjuice",
+      spec: "@quiet-core/tokenjuice@2026.5.3",
     });
   });
 
@@ -75,9 +75,9 @@ describe("detectPluginVersionDrift", () => {
     const result = detectPluginVersionDrift({
       gatewayVersion: "2026.5.4-1",
       installRecords: {
-        whatsapp: npmRecord("2026.5.4"),
+        tokenjuice: npmRecord("2026.5.4"),
         // ...and the inverse direction
-        discord: npmRecord("2026.5.4-1", { resolvedName: "@quiet-core/discord" }),
+        firecrawl: npmRecord("2026.5.4-1", { resolvedName: "@quiet-core/firecrawl-plugin" }),
       },
     });
 
@@ -88,7 +88,7 @@ describe("detectPluginVersionDrift", () => {
     const result = detectPluginVersionDrift({
       gatewayVersion: "2026.5.4",
       installRecords: {
-        whatsapp: clawhubRecord("2026.5.3"),
+        tokenjuice: clawhubRecord("2026.5.3"),
       },
     });
 
@@ -100,16 +100,16 @@ describe("detectPluginVersionDrift", () => {
     const result = detectPluginVersionDrift({
       gatewayVersion: "2026.5.4",
       installRecords: {
-        discord: clawhubRecord("2026.5.3", {
-          spec: "clawhub:@quiet-core/discord",
-          clawhubPackage: "@quiet-core/discord",
+        firecrawl: clawhubRecord("2026.5.3", {
+          spec: "clawhub:@quiet-core/firecrawl-plugin",
+          clawhubPackage: "@quiet-core/firecrawl-plugin",
           clawhubChannel: "official",
           clawhubUrl: "https://clawhub.ai",
         }),
       },
     });
 
-    expect(result.drifts.map((d) => d.pluginId)).toEqual(["discord"]);
+    expect(result.drifts.map((d) => d.pluginId)).toEqual(["firecrawl"]);
   });
 
   it("ignores community npm installs without an official lockstep contract", () => {
@@ -177,19 +177,19 @@ describe("detectPluginVersionDrift", () => {
         // bump alone.
         archive: {
           source: "archive",
-          resolvedName: "@quiet-core/whatsapp",
+          resolvedName: "@quiet-core/tokenjuice",
           resolvedVersion: "2026.5.3",
-          spec: "@quiet-core/whatsapp@archive",
+          spec: "@quiet-core/tokenjuice@archive",
         },
         local: {
           source: "path",
-          resolvedName: "@quiet-core/whatsapp",
+          resolvedName: "@quiet-core/tokenjuice",
           resolvedVersion: "2026.5.3",
           spec: "/tmp/local-plugin",
         },
         forked: {
           source: "git",
-          resolvedName: "@quiet-core/whatsapp",
+          resolvedName: "@quiet-core/tokenjuice",
           resolvedVersion: "2026.5.3",
           spec: "git+ssh://example/forked",
         },
@@ -203,10 +203,10 @@ describe("detectPluginVersionDrift", () => {
     const result = detectPluginVersionDrift({
       gatewayVersion: "2026.5.4",
       installRecords: {
-        whatsapp: {
+        tokenjuice: {
           source: "npm",
-          spec: "@quiet-core/whatsapp@latest",
-          resolvedName: "@quiet-core/whatsapp",
+          spec: "@quiet-core/tokenjuice@latest",
+          resolvedName: "@quiet-core/tokenjuice",
           version: "2026.5.3",
         },
       },
@@ -220,7 +220,7 @@ describe("detectPluginVersionDrift", () => {
     const result = detectPluginVersionDrift({
       gatewayVersion: "2026.5.4",
       installRecords: {
-        whatsapp: { source: "npm", spec: "@quiet-core/whatsapp@latest" },
+        tokenjuice: { source: "npm", spec: "@quiet-core/tokenjuice@latest" },
       },
     });
 
@@ -231,8 +231,8 @@ describe("detectPluginVersionDrift", () => {
     const config: OpenClawConfig = {
       plugins: {
         entries: {
-          whatsapp: { enabled: false },
-          discord: { enabled: true },
+          tokenjuice: { enabled: false },
+          firecrawl: { enabled: true },
         },
       },
     } as OpenClawConfig;
@@ -240,13 +240,13 @@ describe("detectPluginVersionDrift", () => {
     const result = detectPluginVersionDrift({
       gatewayVersion: "2026.5.4",
       installRecords: {
-        whatsapp: npmRecord("2026.5.3"),
-        discord: npmRecord("2026.5.3", { resolvedName: "@quiet-core/discord" }),
+        tokenjuice: npmRecord("2026.5.3"),
+        firecrawl: npmRecord("2026.5.3", { resolvedName: "@quiet-core/firecrawl-plugin" }),
       },
       config,
     });
 
-    expect(result.drifts.map((d) => d.pluginId)).toEqual(["discord"]);
+    expect(result.drifts.map((d) => d.pluginId)).toEqual(["firecrawl"]);
   });
 
   it("skips plugins disabled by the global plugin activation policy", () => {
@@ -259,7 +259,7 @@ describe("detectPluginVersionDrift", () => {
     const result = detectPluginVersionDrift({
       gatewayVersion: "2026.5.4",
       installRecords: {
-        whatsapp: npmRecord("2026.5.3"),
+        tokenjuice: npmRecord("2026.5.3"),
       },
       config,
     });
@@ -271,22 +271,22 @@ describe("detectPluginVersionDrift", () => {
     const denied = detectPluginVersionDrift({
       gatewayVersion: "2026.5.4",
       installRecords: {
-        whatsapp: npmRecord("2026.5.3"),
+        tokenjuice: npmRecord("2026.5.3"),
       },
       config: {
         plugins: {
-          deny: ["whatsapp"],
+          deny: ["tokenjuice"],
         },
       } as OpenClawConfig,
     });
     const notAllowed = detectPluginVersionDrift({
       gatewayVersion: "2026.5.4",
       installRecords: {
-        whatsapp: npmRecord("2026.5.3"),
+        tokenjuice: npmRecord("2026.5.3"),
       },
       config: {
         plugins: {
-          allow: ["discord"],
+          allow: ["firecrawl"],
         },
       } as OpenClawConfig,
     });
@@ -300,7 +300,7 @@ describe("detectPluginVersionDrift", () => {
     const result = detectPluginVersionDrift({
       gatewayVersion: "2026.5.4",
       installRecords: {
-        whatsapp: npmRecord("2026.5.3"),
+        tokenjuice: npmRecord("2026.5.3"),
       },
       config,
     });
@@ -312,13 +312,13 @@ describe("detectPluginVersionDrift", () => {
     const result = detectPluginVersionDrift({
       gatewayVersion: "2026.5.4",
       installRecords: {
-        whatsapp: npmRecord("2026.5.3"),
-        discord: npmRecord("2026.5.3", { resolvedName: "@quiet-core/discord" }),
+        tokenjuice: npmRecord("2026.5.3"),
+        firecrawl: npmRecord("2026.5.3", { resolvedName: "@quiet-core/firecrawl-plugin" }),
         matrix: npmRecord("2026.5.3", { resolvedName: "@quiet-core/matrix" }),
       },
     });
 
-    expect(result.drifts.map((d) => d.pluginId)).toEqual(["discord", "matrix", "whatsapp"]);
+    expect(result.drifts.map((d) => d.pluginId)).toEqual(["firecrawl", "matrix", "tokenjuice"]);
   });
 });
 

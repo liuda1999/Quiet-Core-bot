@@ -252,7 +252,7 @@ describe("image-generation runtime", () => {
     ];
 
     const result = await runGenerateImage({
-      cfg: {} as OpenClawConfig,
+      cfg: { agents: { defaults: { model: "openai/gpt-image-1" } } } as OpenClawConfig,
       prompt: "draw a cat",
     });
 

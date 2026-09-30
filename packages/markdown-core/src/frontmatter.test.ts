@@ -56,7 +56,7 @@ tags:
   - alpha
   - beta
 metadata:
-  openclaw:
+  quiet-core-bot:
     events:
       - command:new
 ---
@@ -92,7 +92,7 @@ description: |-
     const content = `---
 name: sample-skill
 metadata:
-  openclaw: true
+  quiet-core-bot: true
 ---`;
     const result = parseFrontmatterBlock(content);
     expect(result.metadata).toBe('{"quiet-core-bot":true}');

@@ -437,8 +437,8 @@ describe("runSearchSetupFlow", () => {
   });
 
   it("installs an external catalog search provider before enabling it", async () => {
-    const select = vi.fn().mockResolvedValueOnce("brave");
-    const text = vi.fn().mockResolvedValue("brave-test-key");
+    const select = vi.fn().mockResolvedValueOnce("firecrawl");
+    const text = vi.fn().mockResolvedValue("firecrawl-test-key");
     const prompter = createWizardPrompter({
       select: select as never,
       text: text as never,
@@ -448,24 +448,24 @@ describe("runSearchSetupFlow", () => {
 
     expect(ensureOnboardingPluginInstalled).toHaveBeenCalledTimes(1);
     const installRequest = latestPluginInstallRequest();
-    expect(installRequest.entry?.pluginId).toBe("brave");
-    expect(installRequest.entry?.label).toBe("Brave");
+    expect(installRequest.entry?.pluginId).toBe("firecrawl");
+    expect(installRequest.entry?.label).toBe("Firecrawl");
     expect(installRequest.entry?.trustedSourceLinkedOfficialInstall).toBe(true);
-    expect(installRequest.entry?.install?.npmSpec).toBe("@quiet-core/brave-plugin");
+    expect(installRequest.entry?.install?.npmSpec).toBe("@quiet-core/firecrawl-plugin");
     expect(installRequest.autoConfirmSingleSource).toBe(true);
-    expect(next.tools?.web?.search?.provider).toBe("brave");
+    expect(next.tools?.web?.search?.provider).toBe("firecrawl");
     expect(next.tools?.web?.search?.enabled).toBe(true);
-    const braveConfig = next.plugins?.entries?.brave?.config as
+    const firecrawlConfig = next.plugins?.entries?.firecrawl?.config as
       | { webSearch?: { apiKey?: string } }
       | undefined;
-    expect(braveConfig?.webSearch?.apiKey).toBe("brave-test-key");
-    expect(next.plugins?.installs?.brave?.source).toBe("npm");
-    expect(next.plugins?.installs?.brave?.spec).toBe("@quiet-core/brave-plugin");
+    expect(firecrawlConfig?.webSearch?.apiKey).toBe("firecrawl-test-key");
+    expect(next.plugins?.installs?.firecrawl?.source).toBe("npm");
+    expect(next.plugins?.installs?.firecrawl?.spec).toBe("@quiet-core/firecrawl-plugin");
   });
 
   it("installs an external catalog search provider when web search stays disabled", async () => {
-    const select = vi.fn().mockResolvedValueOnce("brave");
-    const text = vi.fn().mockResolvedValue("brave-disabled-key");
+    const select = vi.fn().mockResolvedValueOnce("firecrawl");
+    const text = vi.fn().mockResolvedValue("firecrawl-disabled-key");
     const prompter = createWizardPrompter({
       select: select as never,
       text: text as never,
@@ -476,7 +476,7 @@ describe("runSearchSetupFlow", () => {
         tools: {
           web: {
             search: {
-              provider: "brave",
+              provider: "firecrawl",
               enabled: false,
             },
           },
@@ -488,19 +488,19 @@ describe("runSearchSetupFlow", () => {
 
     expect(ensureOnboardingPluginInstalled).toHaveBeenCalledTimes(1);
     const installRequest = latestPluginInstallRequest();
-    expect(installRequest.entry?.pluginId).toBe("brave");
-    expect(installRequest.entry?.label).toBe("Brave");
+    expect(installRequest.entry?.pluginId).toBe("firecrawl");
+    expect(installRequest.entry?.label).toBe("Firecrawl");
     expect(installRequest.entry?.trustedSourceLinkedOfficialInstall).toBe(true);
-    expect(installRequest.entry?.install?.npmSpec).toBe("@quiet-core/brave-plugin");
+    expect(installRequest.entry?.install?.npmSpec).toBe("@quiet-core/firecrawl-plugin");
     expect(installRequest.autoConfirmSingleSource).toBe(true);
-    expect(next.tools?.web?.search?.provider).toBe("brave");
+    expect(next.tools?.web?.search?.provider).toBe("firecrawl");
     expect(next.tools?.web?.search?.enabled).toBe(false);
-    const braveConfig = next.plugins?.entries?.brave?.config as
+    const firecrawlConfig = next.plugins?.entries?.firecrawl?.config as
       | { webSearch?: { apiKey?: string } }
       | undefined;
-    expect(braveConfig?.webSearch?.apiKey).toBe("brave-disabled-key");
-    expect(next.plugins?.entries?.brave?.enabled).toBeUndefined();
-    expect(next.plugins?.installs?.brave?.source).toBe("npm");
-    expect(next.plugins?.installs?.brave?.spec).toBe("@quiet-core/brave-plugin");
+    expect(firecrawlConfig?.webSearch?.apiKey).toBe("firecrawl-disabled-key");
+    expect(next.plugins?.entries?.firecrawl?.enabled).toBeUndefined();
+    expect(next.plugins?.installs?.firecrawl?.source).toBe("npm");
+    expect(next.plugins?.installs?.firecrawl?.spec).toBe("@quiet-core/firecrawl-plugin");
   });
 });

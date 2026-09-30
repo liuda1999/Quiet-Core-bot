@@ -841,6 +841,123 @@ async function runToolResultCapHealth(ctx: DoctorHealthFlowContext): Promise<voi
   }
 }
 
+/**
+ * Measure the fixed prompt overhead charged inside the prompt budget before any
+ * transcript is added: injected workspace bootstrap context plus the rendered
+ * skills prompt. The base system prompt and tool schemas are not included, so
+ * the result is a lower bound.
+ */
+async function measureFixedPromptOverheadTokens(params: {
+  cfg: OpenClawConfig;
+  agentId?: string;
+}): Promise<number | undefined> {
+  try {
+    const { resolveAgentWorkspaceDir, resolveDefaultAgentId } = await loadAgentScopeModule();
+    const { resolveBootstrapContextForRun } = await import("../agents/bootstrap-files.js");
+    const { buildBootstrapInjectionStats } = await import("../agents/bootstrap-budget.js");
+    const { loadWorkspaceSkillEntries, resolveSkillsPromptForRun } =
+      await import("../skills/loading/workspace.js");
+    const { estimateStringChars, estimateTokensFromChars } = await import("../utils/cjk-chars.js");
+    const workspaceDir = resolveAgentWorkspaceDir(
+      params.cfg,
+      params.agentId ?? resolveDefaultAgentId(params.cfg),
+    );
+    const { bootstrapFiles, contextFiles } = await resolveBootstrapContextForRun({
+      workspaceDir,
+      config: params.cfg,
+    });
+    const injectedChars = buildBootstrapInjectionStats({
+      bootstrapFiles,
+      injectedFiles: contextFiles,
+    }).reduce((sum, file) => sum + file.injectedChars, 0);
+    const skillsPrompt = resolveSkillsPromptForRun({
+      entries: loadWorkspaceSkillEntries(workspaceDir, {
+        config: params.cfg,
+        agentId: params.agentId,
+      }),
+      config: params.cfg,
+      workspaceDir,
+      agentId: params.agentId,
+    });
+    return estimateTokensFromChars(injectedChars + estimateStringChars(skillsPrompt));
+  } catch {
+    // Best-effort diagnostic: doctor keeps running without the overhead estimate.
+    return undefined;
+  }
+}
+
+async function runPromptBudgetHealth(ctx: DoctorHealthFlowContext): Promise<void> {
+  const compactionCfg = ctx.cfg.agents?.defaults?.compaction;
+  const configuredKeepRecentTokens = compactionCfg?.keepRecentTokens;
+  const deep = ctx.options.deep === true;
+  // Only keepRecentTokens can be compared reliably without a live runtime; the
+  // effective value is otherwise derived from the embedded runtime defaults.
+  if (configuredKeepRecentTokens === undefined && !deep) {
+    return;
+  }
+
+  const { normalizeAgentId } = await import("../routing/session-key.js");
+  const targets: Array<{ agentId?: string; scopeLabel: string }> = [{ scopeLabel: "defaults" }];
+  for (const entry of ctx.cfg.agents?.list ?? []) {
+    const normalizedAgentId = normalizeAgentId(entry.id);
+    if (!normalizedAgentId) {
+      continue;
+    }
+    targets.push({ agentId: normalizedAgentId, scopeLabel: `agent "${normalizedAgentId}"` });
+  }
+
+  const { DEFAULT_CONTEXT_TOKENS } = await loadAgentDefaultsModule();
+  const { loadModelCatalog, findModelCatalogEntry } = await loadModelCatalogModule();
+  const { resolveContextWindowInfo } = await import("../agents/context-window-guard.js");
+  const { resolveCompactionReserveTokensFloorForContext } =
+    await import("../agents/agent-settings.js");
+  const { resolveDefaultModelForAgent, modelKey } = await loadModelSelectionModule();
+  const { buildPromptBudgetDoctorAdvice } = await import("./doctor-prompt-budget-advice.js");
+  const { note } = await loadNoteModule();
+
+  const catalog = await loadModelCatalog({ config: ctx.cfg });
+  const lines: string[] = [];
+  for (const target of targets) {
+    const modelRef = resolveDefaultModelForAgent({ cfg: ctx.cfg, agentId: target.agentId });
+    const entry = findModelCatalogEntry(catalog, {
+      provider: modelRef.provider,
+      modelId: modelRef.model,
+    });
+    const contextWindow = resolveContextWindowInfo({
+      cfg: ctx.cfg,
+      provider: modelRef.provider,
+      modelId: modelRef.model,
+      modelContextTokens: entry?.contextTokens,
+      modelContextWindow: entry?.contextWindow,
+      defaultTokens: DEFAULT_CONTEXT_TOKENS,
+    });
+    const reserveTokens = Math.max(
+      compactionCfg?.reserveTokens ?? 0,
+      resolveCompactionReserveTokensFloorForContext({
+        cfg: ctx.cfg,
+        contextTokenBudget: contextWindow.tokens,
+      }),
+    );
+    lines.push(
+      ...buildPromptBudgetDoctorAdvice({
+        contextWindowTokens: contextWindow.tokens,
+        modelKey: modelKey(modelRef.provider, modelRef.model),
+        reserveTokens,
+        configuredKeepRecentTokens,
+        fixedOverheadTokens: await measureFixedPromptOverheadTokens({
+          cfg: ctx.cfg,
+          agentId: target.agentId,
+        }),
+        deep,
+        scopeLabel: target.scopeLabel,
+      }),
+    );
+  }
+  if (lines.length > 0) {
+    note(lines.join("\n"), "Prompt budget");
+  }
+}
+
 async function runSystemdLingerHealth(ctx: DoctorHealthFlowContext): Promise<void> {
   if (
     ctx.options.nonInteractive === true ||
@@ -1377,6 +1494,11 @@ export function resolveDoctorHealthContributions(): DoctorHealthContribution[] {
       id: "doctor:tool-result-cap",
       label: "Tool result cap",
       run: runToolResultCapHealth,
+    }),
+    createDoctorHealthContribution({
+      id: "doctor:prompt-budget",
+      label: "Prompt budget",
+      run: runPromptBudgetHealth,
     }),
     createDoctorHealthContribution({
       id: "doctor:provider-catalog-projection",

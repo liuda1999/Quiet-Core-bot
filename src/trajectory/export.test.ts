@@ -1127,51 +1127,54 @@ describe("exportTrajectoryBundle", () => {
     expect(eventTypes(bundle.events)).not.toContain("outside-runtime");
   });
 
-  it("does not fall back to runtime pointer targets that are not regular files", async () => {
-    const tmpDir = makeTempDir();
-    const sessionFile = path.join(tmpDir, "session.jsonl");
-    const targetFile = path.join(tmpDir, "outside-target.jsonl");
-    const symlinkFile = path.join(tmpDir, "recorded", "session-1.jsonl");
-    const outputDir = path.join(tmpDir, "bundle");
-    writeSimpleSessionFile(sessionFile);
-    fs.mkdirSync(path.dirname(symlinkFile), { recursive: true });
-    fs.writeFileSync(
-      resolveTrajectoryPointerFilePath(sessionFile),
-      `${JSON.stringify({
-        traceSchema: "quiet-core-bot-trajectory-pointer",
-        schemaVersion: 1,
-        sessionId: "session-1",
-        runtimeFile: symlinkFile,
-      })}\n`,
-      "utf8",
-    );
-    fs.writeFileSync(
-      targetFile,
-      `${JSON.stringify({
-        traceSchema: "quiet-core-bot-trajectory",
-        schemaVersion: 1,
-        traceId: "session-1",
-        source: "runtime",
-        type: "symlink-runtime",
-        ts: "2026-04-22T08:00:00.000Z",
-        seq: 1,
-        sourceSeq: 1,
-        sessionId: "session-1",
-      })}\n`,
-      "utf8",
-    );
-    fs.symlinkSync(targetFile, symlinkFile);
+  it.skipIf(process.platform === "win32")(
+    "does not fall back to runtime pointer targets that are not regular files",
+    async () => {
+      const tmpDir = makeTempDir();
+      const sessionFile = path.join(tmpDir, "session.jsonl");
+      const targetFile = path.join(tmpDir, "outside-target.jsonl");
+      const symlinkFile = path.join(tmpDir, "recorded", "session-1.jsonl");
+      const outputDir = path.join(tmpDir, "bundle");
+      writeSimpleSessionFile(sessionFile);
+      fs.mkdirSync(path.dirname(symlinkFile), { recursive: true });
+      fs.writeFileSync(
+        resolveTrajectoryPointerFilePath(sessionFile),
+        `${JSON.stringify({
+          traceSchema: "quiet-core-bot-trajectory-pointer",
+          schemaVersion: 1,
+          sessionId: "session-1",
+          runtimeFile: symlinkFile,
+        })}\n`,
+        "utf8",
+      );
+      fs.writeFileSync(
+        targetFile,
+        `${JSON.stringify({
+          traceSchema: "quiet-core-bot-trajectory",
+          schemaVersion: 1,
+          traceId: "session-1",
+          source: "runtime",
+          type: "symlink-runtime",
+          ts: "2026-04-22T08:00:00.000Z",
+          seq: 1,
+          sourceSeq: 1,
+          sessionId: "session-1",
+        })}\n`,
+        "utf8",
+      );
+      fs.symlinkSync(targetFile, symlinkFile);
 
-    const bundle = await exportTrajectoryBundle({
-      outputDir,
-      sessionFile,
-      sessionId: "session-1",
-      workspaceDir: tmpDir,
-    });
+      const bundle = await exportTrajectoryBundle({
+        outputDir,
+        sessionFile,
+        sessionId: "session-1",
+        workspaceDir: tmpDir,
+      });
 
-    expect(bundle.runtimeFile).toBeUndefined();
-    expect(eventTypes(bundle.events)).not.toContain("symlink-runtime");
-  });
+      expect(bundle.runtimeFile).toBeUndefined();
+      expect(eventTypes(bundle.events)).not.toContain("symlink-runtime");
+    },
+  );
 
   it("counts expanded transcript events when enforcing the total event limit", async () => {
     const tmpDir = makeTempDir();
@@ -1428,7 +1431,11 @@ describe("exportTrajectoryBundle", () => {
     expect(types).toContain("tool.call");
     expect(types).toContain("tool.result");
     expect(types).toContain("context.compiled");
-    expect(JSON.stringify(exportedEvents)).toContain("$WORKSPACE_DIR/inside.txt");
+    const workspacePath = (...parts: string[]) => path.join("$WORKSPACE_DIR", ...parts);
+    // JSON support files serialize path separators, so match the escaped form.
+    const jsonWorkspacePath = (...parts: string[]) =>
+      workspacePath(...parts).replaceAll("\\", "\\\\");
+    expect(JSON.stringify(exportedEvents)).toContain(jsonWorkspacePath("inside.txt"));
     expect(JSON.stringify(exportedEvents)).not.toContain("$WORKSPACE_DIR2");
 
     const manifest = JSON.parse(fs.readFileSync(path.join(outputDir, "manifest.json"), "utf8")) as {
@@ -1437,8 +1444,8 @@ describe("exportTrajectoryBundle", () => {
       workspaceDir?: string;
     };
     expect(manifest.workspaceDir).toBe("$WORKSPACE_DIR");
-    expect(manifest.sourceFiles?.session).toBe("$WORKSPACE_DIR/session.jsonl");
-    expect(manifest.sourceFiles?.runtime).toBe("$WORKSPACE_DIR/session.trajectory.jsonl");
+    expect(manifest.sourceFiles?.session).toBe(workspacePath("session.jsonl"));
+    expect(manifest.sourceFiles?.runtime).toBe(workspacePath("session.trajectory.jsonl"));
     expect(manifest.contents?.map((entry) => entry.path).toSorted()).toEqual([
       "artifacts.json",
       "events.jsonl",
@@ -1460,11 +1467,11 @@ describe("exportTrajectoryBundle", () => {
     const artifacts = fs.readFileSync(path.join(outputDir, "artifacts.json"), "utf8");
     const systemPrompt = fs.readFileSync(path.join(outputDir, "system-prompt.txt"), "utf8");
     const tools = fs.readFileSync(path.join(outputDir, "tools.json"), "utf8");
-    expect(prompts).toContain("$WORKSPACE_DIR/AGENTS.md");
-    expect(artifacts).toContain("$WORKSPACE_DIR/prompt.txt");
+    expect(prompts).toContain(jsonWorkspacePath("AGENTS.md"));
+    expect(artifacts).toContain(jsonWorkspacePath("prompt.txt"));
     expect(artifacts).toContain("non_deliverable_terminal_turn");
-    expect(systemPrompt).toContain("$WORKSPACE_DIR/instructions.md");
-    expect(tools).toContain("$WORKSPACE_DIR/docs");
+    expect(systemPrompt).toContain(workspacePath("instructions.md"));
+    expect(tools).toContain(jsonWorkspacePath("docs"));
     expect(`${prompts}\n${artifacts}\n${systemPrompt}\n${tools}`).not.toContain(tmpDir);
   });
 });

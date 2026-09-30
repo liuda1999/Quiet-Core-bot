@@ -42,25 +42,25 @@ describe("normalizeRegisteredChannelPlugin", () => {
       pluginId: "demo-plugin",
       source: "/tmp/demo/index.ts",
       plugin: createChannelPlugin({
-        id: "telegram",
+        id: "signal",
         meta: {
-          id: "telegram",
+          id: "signal",
         } as never,
       }),
       pushDiagnostic,
     });
 
-    const telegram = getChatChannelMeta("telegram");
+    const signal = getChatChannelMeta("signal");
     expect({
       label: normalized?.meta.label,
       selectionLabel: normalized?.meta.selectionLabel,
       docsPath: normalized?.meta.docsPath,
       blurb: normalized?.meta.blurb,
     }).toEqual({
-      label: telegram.label,
-      selectionLabel: telegram.selectionLabel,
-      docsPath: telegram.docsPath,
-      blurb: telegram.blurb,
+      label: signal.label,
+      selectionLabel: signal.selectionLabel,
+      docsPath: signal.docsPath,
+      blurb: signal.blurb,
     });
     expect(diagnostics).toEqual([
       {
@@ -68,7 +68,7 @@ describe("normalizeRegisteredChannelPlugin", () => {
         pluginId: "demo-plugin",
         source: "/tmp/demo/index.ts",
         message:
-          'channel "telegram" registered incomplete metadata; filled missing label, selectionLabel, docsPath, blurb',
+          'channel "signal" registered incomplete metadata; filled missing label, selectionLabel, docsPath, blurb',
       },
     ]);
   });

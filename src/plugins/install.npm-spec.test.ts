@@ -230,7 +230,7 @@ function writeInstalledNpmPlugin(params: {
     JSON.stringify({
       name: params.packageName,
       version: params.version,
-      openclaw: params.openclaw ?? { extensions: ["./dist/index.js"] },
+      "quiet-core-bot": params["quiet-core-bot"] ?? { extensions: ["./dist/index.js"] },
       ...(params.dependency
         ? { dependencies: { [params.dependency.name]: params.dependency.version } }
         : {}),
@@ -461,7 +461,9 @@ function mockNpmViewAndInstallMany(packages: MockNpmPackage[]) {
               integrity: viewPackage.integrity ?? "sha512-plugin-test",
               shasum: viewPackage.shasum ?? "pluginshasum",
             },
-            ...(viewPackage["quiet-core-bot"] ? { openclaw: viewPackage["quiet-core-bot"] } : {}),
+            ...(viewPackage["quiet-core-bot"]
+              ? { "quiet-core-bot": viewPackage["quiet-core-bot"] }
+              : {}),
           }),
         );
       }
@@ -1811,7 +1813,9 @@ describe("installPluginFromNpmSpec", () => {
     expect(result.error).toContain("requires plugin API >=2026.5.27");
     expect(result.error).toContain("runtime exposes 2026.5.10-beta.1");
     expect(result.error).toContain("install a compatible plugin version");
-    expect(fs.existsSync(path.join(npmRoot, "node_modules", "@quiet-core-bot", "whatsapp"))).toBe(false);
+    expect(fs.existsSync(path.join(npmRoot, "node_modules", "@quiet-core-bot", "whatsapp"))).toBe(
+      false,
+    );
     expect(fs.existsSync(path.join(npmRoot, "package.json"))).toBe(false);
     expect(
       runCommandWithTimeoutMock.mock.calls.some(([argv]) => isManagedNpmInstallCommand(argv)),
@@ -2129,7 +2133,9 @@ describe("installPluginFromNpmSpec", () => {
         packageName: "required-peer-plugin",
       });
       const requiredPeerPluginDir = resolveTestPluginPackageDir(npmRoot, "required-peer-plugin");
-      expect(fs.existsSync(path.join(npmProjectRoot, "node_modules", "quiet-core-bot"))).toBe(false);
+      expect(fs.existsSync(path.join(npmProjectRoot, "node_modules", "quiet-core-bot"))).toBe(
+        false,
+      );
       const lockfile = JSON.parse(
         fs.readFileSync(path.join(npmProjectRoot, "package-lock.json"), "utf8"),
       ) as {
@@ -2137,7 +2143,9 @@ describe("installPluginFromNpmSpec", () => {
       };
       expect(lockfile.packages?.["node_modules/quiet-core-bot"]).toBeUndefined();
       expect(
-        fs.lstatSync(path.join(requiredPeerPluginDir, "node_modules", "quiet-core-bot")).isSymbolicLink(),
+        fs
+          .lstatSync(path.join(requiredPeerPluginDir, "node_modules", "quiet-core-bot"))
+          .isSymbolicLink(),
       ).toBe(true);
     },
   );
@@ -2305,7 +2313,9 @@ describe("installPluginFromNpmSpec", () => {
       fs.readFileSync(path.join(npmRoot, "package.json"), "utf8"),
     ) as { dependencies?: Record<string, string> };
     expect(baseManifest.dependencies?.["quiet-core-bot"]).toBe("2026.5.12-beta.6");
-    expect(baseManifest.dependencies?.["@xdarkicex/quiet-core-bot-memory-libravdb"]).toBeUndefined();
+    expect(
+      baseManifest.dependencies?.["@xdarkicex/quiet-core-bot-memory-libravdb"],
+    ).toBeUndefined();
     const npmProjectRoot = resolvePluginNpmProjectDir({
       npmDir: npmRoot,
       packageName: "@xdarkicex/quiet-core-bot-memory-libravdb",
@@ -2313,7 +2323,9 @@ describe("installPluginFromNpmSpec", () => {
     const projectManifest = JSON.parse(
       fs.readFileSync(path.join(npmProjectRoot, "package.json"), "utf8"),
     ) as { dependencies?: Record<string, string> };
-    expect(projectManifest.dependencies?.["@xdarkicex/quiet-core-bot-memory-libravdb"]).toBe("1.4.69");
+    expect(projectManifest.dependencies?.["@xdarkicex/quiet-core-bot-memory-libravdb"]).toBe(
+      "1.4.69",
+    );
     expect(fs.existsSync(hostPackageRoot)).toBe(true);
     expect(result.targetDir).toBe(
       resolveTestPluginPackageDir(npmRoot, "@xdarkicex/quiet-core-bot-memory-libravdb"),
@@ -2635,7 +2647,10 @@ describe("installPluginFromNpmSpec", () => {
           }
           const manifest = JSON.parse(
             fs.readFileSync(path.join(npmProjectRoot, "package.json"), "utf8"),
-          ) as { overrides?: Record<string, unknown>; "quiet-core-bot"?: { managedOverrides?: string[] } };
+          ) as {
+            overrides?: Record<string, unknown>;
+            "quiet-core-bot"?: { managedOverrides?: string[] };
+          };
           if (installAttempts === 1) {
             expect(manifest.overrides?.["node-domexception"]).toBe(
               "npm:@nolyfill/domexception@1.0.28",
@@ -3058,7 +3073,9 @@ describe("installPluginFromNpmSpec", () => {
       npmRoot,
       packageName: "@quiet-core/whatsapp",
     });
-    expect(fs.existsSync(resolveTestPluginPackageDir(npmRoot, "@quiet-core/voice-call"))).toBe(true);
+    expect(fs.existsSync(resolveTestPluginPackageDir(npmRoot, "@quiet-core/voice-call"))).toBe(
+      true,
+    );
     expect(fs.existsSync(resolveTestPluginPackageDir(npmRoot, "@quiet-core/whatsapp"))).toBe(true);
   });
 

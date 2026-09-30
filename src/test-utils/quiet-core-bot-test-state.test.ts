@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { loadPersistedAuthProfileStore } from "../agents/auth-profiles/persisted.js";
+import { closeOpenClawAgentDatabasesForTest } from "../state/quiet-core-bot-agent-db.js";
 import { withEnvAsync } from "./env.js";
 import { createOpenClawTestState, withOpenClawTestState } from "./quiet-core-bot-test-state.js";
 
@@ -119,28 +120,34 @@ describe("quiet-core-bot test state", () => {
         scenario: "update-stable",
       },
       async (state) => {
-        expect(JSON.parse(await fs.readFile(state.configPath, "utf8"))).toEqual({
-          update: {
-            channel: "stable",
-          },
-          plugins: {},
-        });
-
-        const profilePath = await state.writeAuthProfiles({
-          version: 1,
-          profiles: {
-            "openai:test": {
-              type: "api_key",
-              provider: "openai",
-              key: "sk-test",
+        try {
+          expect(JSON.parse(await fs.readFile(state.configPath, "utf8"))).toEqual({
+            update: {
+              channel: "stable",
             },
-          },
-        });
+            plugins: {},
+          });
 
-        expect(profilePath).toBe(path.join(state.agentDir(), "quiet-core-bot-agent.sqlite"));
-        const profiles = loadPersistedAuthProfileStore(state.agentDir());
-        expect(profiles?.version).toBe(1);
-        expect(profiles?.profiles["openai:test"]?.provider).toBe("openai");
+          const profilePath = await state.writeAuthProfiles({
+            version: 1,
+            profiles: {
+              "openai:test": {
+                type: "api_key",
+                provider: "openai",
+                key: "sk-test",
+              },
+            },
+          });
+
+          expect(profilePath).toBe(path.join(state.agentDir(), "quiet-core-bot-agent.sqlite"));
+          const profiles = loadPersistedAuthProfileStore(state.agentDir());
+          expect(profiles?.version).toBe(1);
+          expect(profiles?.profiles["openai:test"]?.provider).toBe("openai");
+        } finally {
+          // Release the cached agent SQLite handles so Windows can delete the
+          // temp root (the open -wal/-shm files otherwise report EBUSY).
+          closeOpenClawAgentDatabasesForTest();
+        }
       },
     );
   });

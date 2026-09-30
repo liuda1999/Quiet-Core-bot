@@ -252,10 +252,22 @@ function emitGatewayAuthSecurityEvent(params: {
   });
 }
 
-/** Match production release versions (YYYY.M.PATCH or YYYY.M.PATCH-beta.N). */
-const RELEASED_VERSION_RE = /^\d{4}\.\d+\.\d+/;
+/**
+ * Match production release versions. Upstream shipped calendar versions
+ * (`YYYY.M.PATCH`, optionally `-beta.N`); this build ships plain semver
+ * (`X.Y.Z`), so both shapes count as released. Anything else — `unknown`, a
+ * git-describe string such as `v1.2.3-4-gabcdef`, or the `0.0.0` resolver
+ * fallback — is treated as a dev/unresolved build so the node-host kick is
+ * skipped. Requiring the calendar shape alone made the guard dead code here:
+ * the runtime version is `0.1.0`, which never matched, so a stale local node
+ * host was accepted instead of being closed for a supervisor restart.
+ */
+const RELEASED_VERSION_RE = /^(?:\d{4}\.\d+\.\d+|\d+\.\d+\.\d+)(?:-[0-9A-Za-z.-]+)?$/;
 
 function isReleasedVersion(version: string): boolean {
+  if (version === "0.0.0") {
+    return false;
+  }
   return RELEASED_VERSION_RE.test(version);
 }
 

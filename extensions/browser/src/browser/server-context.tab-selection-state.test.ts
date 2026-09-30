@@ -96,7 +96,7 @@ async function openManagedTabWithRunningProfile(params: {
   seedRunningProfileState(state);
   const ctx = createTestBrowserRouteContext({ getState: () => state });
   const openclaw = ctx.forProfile("quiet-core-bot");
-  return await quiet-core-bot.openTab(params.url ?? "http://127.0.0.1:3009");
+  return await openclaw.openTab(params.url ?? "http://127.0.0.1:3009");
 }
 
 describe("browser server-context tab selection state", () => {
@@ -129,7 +129,7 @@ describe("browser server-context tab selection state", () => {
     const ctx = createTestBrowserRouteContext({ getState: () => state });
     const openclaw = ctx.forProfile("quiet-core-bot");
 
-    const opened = await quiet-core-bot.openTab("http://127.0.0.1:8080");
+    const opened = await openclaw.openTab("http://127.0.0.1:8080");
     expect(opened.targetId).toBe("CREATED");
     expect(state.profiles.get("quiet-core-bot")?.lastTargetId).toBe("CREATED");
     expect(createTargetViaCdp).toHaveBeenCalledWith({
@@ -174,7 +174,7 @@ describe("browser server-context tab selection state", () => {
     const ctx = createTestBrowserRouteContext({ getState: () => state });
     const openclaw = ctx.forProfile("quiet-core-bot");
 
-    const selected = await quiet-core-bot.ensureTabAvailable();
+    const selected = await openclaw.ensureTabAvailable();
     expect(selected.targetId).toBe("CREATED");
     expect(createTargetViaCdp).toHaveBeenCalledWith({
       cdpUrl: "http://127.0.0.1:18800",
@@ -232,7 +232,7 @@ describe("browser server-context tab selection state", () => {
     const ctx = createTestBrowserRouteContext({ getState: () => state });
     const openclaw = ctx.forProfile("quiet-core-bot");
 
-    const selected = await quiet-core-bot.ensureTabAvailable();
+    const selected = await openclaw.ensureTabAvailable();
     expect(selected.targetId).toBe("REAL");
     expect(state.profiles.get("quiet-core-bot")?.lastTargetId).toBe("REAL");
     expect(createTargetViaCdp).toHaveBeenCalledWith({
@@ -296,7 +296,7 @@ describe("browser server-context tab selection state", () => {
     const ctx = createTestBrowserRouteContext({ getState: () => state });
     const openclaw = ctx.forProfile("quiet-core-bot");
 
-    const opened = await quiet-core-bot.openTab("http://127.0.0.1:3009");
+    const opened = await openclaw.openTab("http://127.0.0.1:3009");
     expect(opened.targetId).toBe("NEW");
   });
 
@@ -316,7 +316,7 @@ describe("browser server-context tab selection state", () => {
     const ctx = createTestBrowserRouteContext({ getState: () => state });
     const openclaw = ctx.forProfile("quiet-core-bot");
 
-    const opened = await quiet-core-bot.openTab("http://127.0.0.1:3009");
+    const opened = await openclaw.openTab("http://127.0.0.1:3009");
     expect(opened.targetId).toBe("NEW");
     expect(fetchCallUrls(fetchMock).filter((url) => url.includes("/json/close/"))).toEqual([]);
   });
@@ -359,7 +359,7 @@ describe("browser server-context tab selection state", () => {
     const ctx = createTestBrowserRouteContext({ getState: () => state });
     const openclaw = ctx.forProfile("quiet-core-bot");
 
-    await expect(quiet-core-bot.openTab("file:///etc/passwd")).rejects.toBeInstanceOf(
+    await expect(openclaw.openTab("file:///etc/passwd")).rejects.toBeInstanceOf(
       InvalidBrowserNavigationUrlError,
     );
     expect(fetchMock).not.toHaveBeenCalled();
@@ -381,7 +381,7 @@ describe("browser server-context tab selection state", () => {
     const ctx = createTestBrowserRouteContext({ getState: () => state });
     const openclaw = ctx.forProfile("quiet-core-bot");
 
-    const opened = await quiet-core-bot.openTab("https://example.com");
+    const opened = await openclaw.openTab("https://example.com");
     expect(opened.targetId).toBe("NEW");
     const jsonNewEndpoint = "http://127.0.0.1:18800/json/new?https%3A%2F%2Fexample.com";
     expect(fetchJsonCall(fetchJson, 0)).toEqual([
@@ -430,7 +430,7 @@ describe("browser server-context tab selection state", () => {
     const ctx = createTestBrowserRouteContext({ getState: () => state });
     const openclaw = ctx.forProfile("quiet-core-bot");
 
-    expect(await quiet-core-bot.listTabs()).toEqual([
+    expect(await openclaw.listTabs()).toEqual([
       expect.objectContaining({
         targetId: "DOCS_RAW",
         tabId: "t1",
@@ -443,7 +443,7 @@ describe("browser server-context tab selection state", () => {
       }),
     ]);
 
-    await expect(quiet-core-bot.labelTab("t1", "docs")).resolves.toEqual(
+    await expect(openclaw.labelTab("t1", "docs")).resolves.toEqual(
       expect.objectContaining({
         targetId: "DOCS_RAW",
         tabId: "t1",
@@ -506,8 +506,8 @@ describe("browser server-context tab selection state", () => {
     const ctx = createTestBrowserRouteContext({ getState: () => state });
     const openclaw = ctx.forProfile("quiet-core-bot");
 
-    expect((await quiet-core-bot.listTabs()).map((tab) => tab.tabId)).toEqual(["t1", "t2"]);
-    expect(await quiet-core-bot.listTabs()).toEqual([
+    expect((await openclaw.listTabs()).map((tab) => tab.tabId)).toEqual(["t1", "t2"]);
+    expect(await openclaw.listTabs()).toEqual([
       expect.objectContaining({ targetId: "FIRST_RAW", tabId: "t1" }),
       expect.objectContaining({ targetId: "THIRD_RAW", tabId: "t2" }),
     ]);
@@ -593,12 +593,12 @@ describe("browser server-context tab selection state", () => {
     const ctx = createTestBrowserRouteContext({ getState: () => state });
     const openclaw = ctx.forProfile("quiet-core-bot");
 
-    await quiet-core-bot.labelTab("DOCS_RAW", "docs");
-    await expect(quiet-core-bot.ensureTabAvailable("t1")).resolves.toEqual(
+    await openclaw.labelTab("DOCS_RAW", "docs");
+    await expect(openclaw.ensureTabAvailable("t1")).resolves.toEqual(
       expect.objectContaining({ targetId: "DOCS_RAW" }),
     );
-    await quiet-core-bot.focusTab("docs");
-    await quiet-core-bot.closeTab("t1");
+    await openclaw.focusTab("docs");
+    await openclaw.closeTab("t1");
 
     expect(fetchCallUrls(fetchMock).some((url) => url.includes("/json/activate/DOCS_RAW"))).toBe(
       true,

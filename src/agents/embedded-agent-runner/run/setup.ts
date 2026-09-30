@@ -19,6 +19,7 @@ import { DEFAULT_CONTEXT_TOKENS } from "../../defaults.js";
 import { FailoverError } from "../../failover-error.js";
 import { log } from "../logger.js";
 import { readAgentModelContextTokens } from "../model-context-tokens.js";
+import { clampContextBudgetWithLearnedLimit } from "../provider-context-limit-registry.js";
 
 type HookContext = {
   agentId?: string;
@@ -159,7 +160,30 @@ export function resolveEffectiveRuntimeModel(params: {
     ctxInfo.tokens < (params.runtimeModel.contextWindow ?? Infinity)
       ? { ...params.runtimeModel, contextWindow: ctxInfo.tokens }
       : params.runtimeModel;
-  const ctxGuard = evaluateContextWindowGuard({ info: ctxInfo });
+  // A previously observed provider limit wins over the (possibly stale) declared
+  // window: when a session switches to a model whose real limit is smaller than
+  // the declaration, the compaction threshold must use the real limit or the
+  // prompt overflows before compaction is ever considered.
+  const learnedLimit = clampContextBudgetWithLearnedLimit({
+    provider: params.provider,
+    modelId: params.modelId,
+    declaredContextWindowTokens: ctxInfo.tokens,
+  });
+  const effectiveCtxInfo: ContextWindowInfo =
+    learnedLimit.tokens === ctxInfo.tokens ? ctxInfo : { ...ctxInfo, tokens: learnedLimit.tokens };
+  const effectiveRuntimeModel =
+    learnedLimit.tokens < (effectiveModel.contextWindow ?? Infinity)
+      ? { ...effectiveModel, contextWindow: learnedLimit.tokens }
+      : effectiveModel;
+  if (learnedLimit.learnedLimitTokens !== undefined) {
+    log.warn(
+      `[context-window-learned] provider=${params.provider} model=${params.modelId} ` +
+        `declaredContextWindow=${ctxInfo.tokens} providerStatedContextLimit=${learnedLimit.learnedLimitTokens}: ` +
+        `using the provider-stated limit for the compaction/budget threshold so the prompt is compacted ` +
+        `against the window the provider actually enforces`,
+    );
+  }
+  const ctxGuard = evaluateContextWindowGuard({ info: effectiveCtxInfo });
   const runtimeBaseUrl =
     typeof (params.runtimeModel as { baseUrl?: unknown }).baseUrl === "string"
       ? (params.runtimeModel as { baseUrl: string }).baseUrl
@@ -190,7 +214,7 @@ export function resolveEffectiveRuntimeModel(params: {
   }
 
   return {
-    ctxInfo,
-    effectiveModel,
+    ctxInfo: effectiveCtxInfo,
+    effectiveModel: effectiveRuntimeModel,
   };
 }

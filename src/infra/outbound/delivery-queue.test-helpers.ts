@@ -4,6 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { afterAll, beforeAll, beforeEach, vi } from "vitest";
 import { openOpenClawStateDatabase } from "../../state/quiet-core-bot-state-db.js";
+import { removeTestTempPathSync } from "../../test-utils/session-state-cleanup.js";
 import { resolvePreferredOpenClawTmpDir } from "../tmp-quiet-core-bot-dir.js";
 import type { DeliverFn, RecoveryLogger } from "./delivery-queue.js";
 
@@ -14,7 +15,9 @@ export function installDeliveryQueueTmpDirHooks(): { readonly tmpDir: () => stri
   let fixtureCount = 0;
 
   beforeAll(() => {
-    fixtureRoot = fs.mkdtempSync(path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-dq-suite-"));
+    fixtureRoot = fs.mkdtempSync(
+      path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-dq-suite-"),
+    );
   });
 
   beforeEach(() => {
@@ -26,7 +29,9 @@ export function installDeliveryQueueTmpDirHooks(): { readonly tmpDir: () => stri
     if (!fixtureRoot) {
       return;
     }
-    fs.rmSync(fixtureRoot, { recursive: true, force: true });
+    // Release cached SQLite handles and retry: Windows reports EPERM/EBUSY while
+    // the state database -shm/-wal files are still open.
+    removeTestTempPathSync(fixtureRoot);
     fixtureRoot = "";
   });
 
@@ -36,7 +41,9 @@ export function installDeliveryQueueTmpDirHooks(): { readonly tmpDir: () => stri
 }
 
 export function readQueuedEntry(tmpDir: string, id: string): Record<string, unknown> {
-  const { db } = openOpenClawStateDatabase({ env: { ...process.env, QUIET_CORE_STATE_DIR: tmpDir } });
+  const { db } = openOpenClawStateDatabase({
+    env: { ...process.env, QUIET_CORE_STATE_DIR: tmpDir },
+  });
   const row = db
     .prepare(
       "SELECT entry_json FROM delivery_queue_entries WHERE queue_name = 'outbound' AND id = ?",
@@ -49,7 +56,9 @@ export function readQueuedEntry(tmpDir: string, id: string): Record<string, unkn
 }
 
 export function readQueuedEntries(tmpDir: string): Record<string, unknown>[] {
-  const { db } = openOpenClawStateDatabase({ env: { ...process.env, QUIET_CORE_STATE_DIR: tmpDir } });
+  const { db } = openOpenClawStateDatabase({
+    env: { ...process.env, QUIET_CORE_STATE_DIR: tmpDir },
+  });
   const rows = db
     .prepare(
       `
@@ -96,7 +105,9 @@ export function setQueuedEntryState(
   if (state.recoveryState !== undefined) {
     entry.recoveryState = state.recoveryState;
   }
-  const { db } = openOpenClawStateDatabase({ env: { ...process.env, QUIET_CORE_STATE_DIR: tmpDir } });
+  const { db } = openOpenClawStateDatabase({
+    env: { ...process.env, QUIET_CORE_STATE_DIR: tmpDir },
+  });
   db.prepare(
     `
       UPDATE delivery_queue_entries

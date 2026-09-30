@@ -1,4 +1,5 @@
 // Memory host dreaming tests cover dreaming artifact persistence and lookup.
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import type { OpenClawConfig } from "../config/config.js";
 import {
@@ -162,11 +163,11 @@ describe("memory dreaming host helpers", () => {
 
     expect(resolveMemoryDreamingWorkspaces(cfg)).toEqual([
       {
-        workspaceDir: "/workspace/shared",
+        workspaceDir: path.resolve("/workspace/shared"),
         agentIds: ["alpha", "gamma"],
       },
       {
-        workspaceDir: "/workspace/beta",
+        workspaceDir: path.resolve("/workspace/beta"),
         agentIds: ["beta"],
       },
     ]);
@@ -189,11 +190,11 @@ describe("memory dreaming host helpers", () => {
       }),
     ).toEqual([
       {
-        workspaceDir: "/workspace/agi-ceo",
+        workspaceDir: path.resolve("/workspace/agi-ceo"),
         agentIds: ["agi-ceo"],
       },
       {
-        workspaceDir: "/workspace/agi-cdo",
+        workspaceDir: path.resolve("/workspace/agi-cdo"),
         agentIds: ["agi-cdo"],
       },
       {
@@ -214,7 +215,7 @@ describe("memory dreaming host helpers", () => {
 
     expect(resolveMemoryDreamingWorkspaces(cfg)).toEqual([
       {
-        workspaceDir: "/workspace",
+        workspaceDir: path.resolve("/workspace"),
         agentIds: ["main"],
       },
     ]);

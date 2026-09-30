@@ -300,7 +300,7 @@ describe("OpenResponses HTTP API (e2e)", () => {
       };
       expect(invalidModelJson.error?.type).toBe("invalid_request_error");
       expect(invalidModelJson.error?.message).toBe(
-        "Invalid `model`. Use `openclaw` or `openclaw/<agentId>`.",
+        "Invalid `model`. Use `quiet-core-bot` or `quiet-core-bot/<agentId>`.",
       );
       expect(agentCommand).toHaveBeenCalledTimes(0);
       await ensureResponseConsumed(resInvalidModel);
@@ -362,7 +362,10 @@ describe("OpenResponses HTTP API (e2e)", () => {
       await ensureResponseConsumed(resModel);
 
       mockAgentOnce([{ text: "hello" }]);
-      const resDefaultAlias = await postResponses(port, { model: "quiet-core-bot/default", input: "hi" });
+      const resDefaultAlias = await postResponses(port, {
+        model: "quiet-core-bot/default",
+        input: "hi",
+      });
       expect(resDefaultAlias.status).toBe(200);
       const optsDefaultAlias = firstAgentOpts();
       expect((optsDefaultAlias as { sessionKey?: string } | undefined)?.sessionKey ?? "").toMatch(
@@ -386,7 +389,10 @@ describe("OpenResponses HTTP API (e2e)", () => {
 
       {
         agentCommand.mockClear();
-        const res = await postResponses(port, { model: "quiet-core-bot/missing-agent", input: "hi" });
+        const res = await postResponses(port, {
+          model: "quiet-core-bot/missing-agent",
+          input: "hi",
+        });
         expect(res.status).toBe(400);
         const json = (await res.json()) as { error?: { type?: string; message?: string } };
         expect(json.error?.type).toBe("invalid_request_error");

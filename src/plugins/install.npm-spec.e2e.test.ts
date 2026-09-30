@@ -121,7 +121,7 @@ async function packPlugin(params: {
         name: params.packageName,
         version: params.version,
         type: "module",
-        openclaw: params.openclaw ?? { extensions: ["./dist/index.js"] },
+        "quiet-core-bot": params["quiet-core-bot"] ?? { extensions: ["./dist/index.js"] },
         ...(params.dependencies ? { dependencies: params.dependencies } : {}),
         ...(params.optionalDependencies
           ? { optionalDependencies: params.optionalDependencies }
@@ -172,7 +172,7 @@ async function packPlugin(params: {
     archive,
     ...(params.dependencies ? { dependencies: params.dependencies } : {}),
     integrity: `sha512-${crypto.createHash("sha512").update(archive).digest("base64")}`,
-    ...(params.openclaw ? { openclaw: params.openclaw } : {}),
+    ...(params["quiet-core-bot"] ? { "quiet-core-bot": params["quiet-core-bot"] } : {}),
     ...(params.optionalDependencies ? { optionalDependencies: params.optionalDependencies } : {}),
     ...(params.peerDependencies ? { peerDependencies: params.peerDependencies } : {}),
     ...(peerDependenciesMeta ? { peerDependenciesMeta } : {}),
@@ -216,7 +216,7 @@ async function startStaticRegistry(
                 {
                   name: pkg.packageName,
                   version,
-                  ...(entry["quiet-core-bot"] ? { openclaw: entry["quiet-core-bot"] } : {}),
+                  ...(entry["quiet-core-bot"] ? { "quiet-core-bot": entry["quiet-core-bot"] } : {}),
                   ...(entry.dependencies ? { dependencies: entry.dependencies } : {}),
                   ...(entry.optionalDependencies
                     ? { optionalDependencies: entry.optionalDependencies }
@@ -302,7 +302,7 @@ async function startMutableRegistry(params: {
               {
                 name: params.packageName,
                 version,
-                ...(entry["quiet-core-bot"] ? { openclaw: entry["quiet-core-bot"] } : {}),
+                ...(entry["quiet-core-bot"] ? { "quiet-core-bot": entry["quiet-core-bot"] } : {}),
                 ...(entry.peerDependencies ? { peerDependencies: entry.peerDependencies } : {}),
                 ...(entry.peerDependenciesMeta
                   ? { peerDependenciesMeta: entry.peerDependenciesMeta }
@@ -367,14 +367,14 @@ describe("installPluginFromNpmSpec e2e", () => {
         pluginId: packageName,
         version: "2026.5.26",
         rootDir,
-        openclaw: compatibleOpenClaw,
+        "quiet-core-bot": compatibleOpenClaw,
       }),
       await packPlugin({
         packageName,
         pluginId: packageName,
         version: "2026.5.27",
         rootDir,
-        openclaw: incompatibleOpenClaw,
+        "quiet-core-bot": incompatibleOpenClaw,
       }),
     ];
     const registry = await startStaticRegistry([{ packageName, latest: "2026.5.27", versions }]);
@@ -767,7 +767,9 @@ describe("installPluginFromNpmSpec e2e", () => {
     };
     expect(rootManifest.dependencies?.[laterPlugin]).toBeUndefined();
     expect(rootManifest.dependencies?.[runtimePeer]).toBeUndefined();
-    expect(rootManifest["quiet-core-bot"]?.managedPeerDependencies ?? []).not.toContain(runtimePeer);
+    expect(rootManifest["quiet-core-bot"]?.managedPeerDependencies ?? []).not.toContain(
+      runtimePeer,
+    );
   });
 
   it("ignores legacy flat-root package cycles during isolated installs", async () => {
@@ -915,7 +917,9 @@ describe("installPluginFromNpmSpec e2e", () => {
       };
       expect(rootManifest.dependencies?.[blockedPlugin]).toBeUndefined();
       expect(rootManifest.dependencies?.[runtimePeer]).toBeUndefined();
-      expect(rootManifest["quiet-core-bot"]?.managedPeerDependencies ?? []).not.toContain(runtimePeer);
+      expect(rootManifest["quiet-core-bot"]?.managedPeerDependencies ?? []).not.toContain(
+        runtimePeer,
+      );
     } catch (error) {
       expect((error as NodeJS.ErrnoException).code).toBe("ENOENT");
     }
@@ -968,7 +972,9 @@ describe("installPluginFromNpmSpec e2e", () => {
     };
     expect(rootManifest.dependencies?.[blockedPlugin]).toBe("1.0.0");
     expect(rootManifest.dependencies?.[missingPeer]).toBeUndefined();
-    expect(rootManifest["quiet-core-bot"]?.managedPeerDependencies ?? []).not.toContain(missingPeer);
+    expect(rootManifest["quiet-core-bot"]?.managedPeerDependencies ?? []).not.toContain(
+      missingPeer,
+    );
     await expect(
       fs.lstat(path.join(projectRoot, "node_modules", blockedPlugin, "package.json")),
     ).resolves.toBeTruthy();
@@ -1081,7 +1087,9 @@ describe("installPluginFromNpmSpec e2e", () => {
     expect(rootManifest["quiet-core-bot"]?.managedPeerDependencies ?? []).not.toContain(
       existingRootDependency,
     );
-    expect(rootManifest["quiet-core-bot"]?.managedPeerDependencies ?? []).not.toContain(runtimePeer);
+    expect(rootManifest["quiet-core-bot"]?.managedPeerDependencies ?? []).not.toContain(
+      runtimePeer,
+    );
     await expect(
       fs.lstat(
         path.join(blockedProjectRoot, "node_modules", existingRootDependency, "package.json"),

@@ -138,6 +138,8 @@ describe("composeProviderStreamWrappers", () => {
 
 describe("buildProviderStreamFamilyHooks", () => {
   it("covers the stream family matrix", async () => {
+    // Attribution headers are opt-in on the wire; this matrix case covers the opted-in payloads.
+    process.env.QUIET_CORE_PROVIDER_ATTRIBUTION = "1";
     let capturedPayload: Record<string, unknown> | undefined;
     let capturedModelId: string | undefined;
     let capturedModelReasoning: boolean | undefined;
@@ -342,10 +344,11 @@ describe("buildProviderStreamFamilyHooks", () => {
     expectDefaultThinkingBudget(openAiPayload);
     expect(openAiPayload.service_tier).toBe("flex");
     expect(capturedHeaders).toEqual({
-      "User-Agent": `openclaw/${VERSION}`,
+      "User-Agent": `quiet-core-bot/${VERSION}`,
       originator: "quiet-core-bot",
       version: VERSION,
     });
+    delete process.env.QUIET_CORE_PROVIDER_ATTRIBUTION;
 
     const openRouterHooks = OPENROUTER_THINKING_STREAM_HOOKS;
     void requireStreamFn(

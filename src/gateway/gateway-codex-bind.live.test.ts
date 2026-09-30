@@ -4,7 +4,6 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { removeTestTempPath } from "../../test-utils/session-state-cleanup.js";
 import { renderCatFacePngBase64 } from "../../test/helpers/live-image-probe.js";
 import { isLiveTestEnabled } from "../agents/live-test-helpers.js";
 import type { ChannelOutboundContext } from "../channels/plugins/types.public.js";
@@ -22,6 +21,7 @@ import {
 } from "../plugins/runtime.js";
 import { extractFirstTextBlock } from "../shared/chat-message-content.js";
 import { createTestRegistry } from "../test-utils/channel-plugins.js";
+import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import { sleep } from "../utils.js";
 import type { GatewayClient } from "./client.js";
 import {

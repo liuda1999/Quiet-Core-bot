@@ -386,10 +386,11 @@ export function createMcpLoopbackServerConfig(port: number) {
           "x-quiet-core-bot-current-message-id": "${QUIET_CORE_MCP_CURRENT_MESSAGE_ID}",
           "x-quiet-core-bot-current-inbound-audio": "${QUIET_CORE_MCP_CURRENT_INBOUND_AUDIO}",
           "x-quiet-core-bot-inbound-event-kind": "${QUIET_CORE_MCP_INBOUND_EVENT_KIND}",
-          "x-quiet-core-bot-source-reply-delivery-mode": "${QUIET_CORE_MCP_SOURCE_REPLY_DELIVERY_MODE}",
+          "x-quiet-core-bot-source-reply-delivery-mode":
+            "${QUIET_CORE_MCP_SOURCE_REPLY_DELIVERY_MODE}",
           "x-quiet-core-bot-require-explicit-message-target":
             "${QUIET_CORE_MCP_REQUIRE_EXPLICIT_MESSAGE_TARGET}",
-          "x-openclaw-cli-capture-key": "${QUIET_CORE_MCP_CLI_CAPTURE_KEY}",
+          "x-quiet-core-bot-cli-capture-key": "${QUIET_CORE_MCP_CLI_CAPTURE_KEY}",
         },
       },
     },

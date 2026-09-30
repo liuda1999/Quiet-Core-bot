@@ -113,6 +113,15 @@ export function resolveAgentIdFromModel(
   return normalizeAgentId(agentId);
 }
 
+/**
+ * Canonical invalid-`model` guidance shared by the OpenAI-compatible routes.
+ * Exported so the embeddings route cannot drift back to the pre-rename product
+ * name the way it did before (`Use \`openclaw\`` while this route said
+ * `quiet-core-bot`).
+ */
+export const OPENAI_COMPAT_INVALID_MODEL_MESSAGE =
+  "Invalid `model`. Use `quiet-core-bot` or `quiet-core-bot/<agentId>`.";
+
 /** Validates and resolves the `x-quiet-core-bot-model` override for OpenAI-compatible requests. */
 export async function resolveOpenAiCompatModelOverride(params: {
   req: IncomingMessage;
@@ -122,7 +131,7 @@ export async function resolveOpenAiCompatModelOverride(params: {
   const requestModel = params.model?.trim();
   if (requestModel && !resolveAgentIdFromModel(requestModel)) {
     return {
-      errorMessage: "Invalid `model`. Use `quiet-core-bot` or `quiet-core-bot/<agentId>`.",
+      errorMessage: OPENAI_COMPAT_INVALID_MODEL_MESSAGE,
     };
   }
 

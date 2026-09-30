@@ -23,29 +23,29 @@ function bundledSource(pluginId: string, localPath: string): Map<string, Bundled
 
 describe("listStaleLocalBundledPluginInstallRecords", () => {
   it("lists path install records that point at stale compiled bundled output", () => {
-    const currentPath = path.join("/opt/quiet-core-bot", "dist", "extensions", "discord");
-    const stalePath = path.join("/tmp/old-quiet-core-bot", "dist", "extensions", "discord");
+    const currentPath = path.resolve("/opt/quiet-core-bot", "dist", "extensions", "irc");
+    const stalePath = path.resolve("/tmp/old-quiet-core-bot", "dist", "extensions", "irc");
     const records: Record<string, PluginInstallRecord> = {
-      discord: {
+      irc: {
         source: "path",
         installPath: stalePath,
         version: "2026.5.4-beta.3",
       },
-      brave: {
+      tlon: {
         source: "npm",
-        installPath: "/tmp/plugins/brave",
+        installPath: "/tmp/plugins/tlon",
       },
     };
 
     expect(
       listStaleLocalBundledPluginInstallRecords({
         installRecords: records,
-        bundled: bundledSource("discord", currentPath),
+        bundled: bundledSource("irc", currentPath),
       }),
     ).toStrictEqual([
       {
-        pluginId: "discord",
-        record: records.discord,
+        pluginId: "irc",
+        record: records.irc,
         recordPathField: "installPath",
         stalePath,
         bundledPath: currentPath,
@@ -54,66 +54,72 @@ describe("listStaleLocalBundledPluginInstallRecords", () => {
   });
 
   it("does not list the current bundled path", () => {
-    const currentPath = path.join("/opt/quiet-core-bot", "dist", "extensions", "discord");
+    const currentPath = path.resolve("/opt/quiet-core-bot", "dist", "extensions", "irc");
 
     expect(
       listStaleLocalBundledPluginInstallRecords({
         installRecords: {
-          discord: {
+          irc: {
             source: "path",
             installPath: currentPath,
             version: "2026.5.4-beta.3",
           },
         },
-        bundled: bundledSource("discord", currentPath),
+        bundled: bundledSource("irc", currentPath),
       }),
     ).toStrictEqual([]);
   });
 
   it("does not list compiled bundled paths without a stale version", () => {
-    const currentPath = path.join("/opt/quiet-core-bot", "dist", "extensions", "discord");
+    const currentPath = path.resolve("/opt/quiet-core-bot", "dist", "extensions", "irc");
 
     expect(
       listStaleLocalBundledPluginInstallRecords({
         installRecords: {
-          discord: {
+          irc: {
             source: "path",
-            installPath: path.join("/tmp/local-quiet-core-bot", "dist", "extensions", "discord"),
+            installPath: path.resolve("/tmp/local-quiet-core-bot", "dist", "extensions", "irc"),
           },
           acpx: {
             source: "path",
-            installPath: path.join("/tmp/local-quiet-core-bot", "dist", "extensions", "acpx"),
+            installPath: path.resolve("/tmp/local-quiet-core-bot", "dist", "extensions", "acpx"),
             version: "2026.5.20",
           },
         },
         bundled: new Map([
-          ...bundledSource("discord", currentPath),
-          ...bundledSource("acpx", path.join("/opt/quiet-core-bot", "dist", "extensions", "acpx")),
+          ...bundledSource("irc", currentPath),
+          ...bundledSource(
+            "acpx",
+            path.resolve("/opt/quiet-core-bot", "dist", "extensions", "acpx"),
+          ),
         ]),
       }),
     ).toStrictEqual([]);
   });
 
   it("does not list source checkout or arbitrary local plugin paths", () => {
-    const currentPath = path.join("/opt/quiet-core-bot", "dist", "extensions", "discord");
+    const currentPath = path.resolve("/opt/quiet-core-bot", "dist", "extensions", "irc");
 
     expect(
       listStaleLocalBundledPluginInstallRecords({
         installRecords: {
-          discord: {
+          irc: {
             source: "path",
-            installPath: path.join("/tmp/quiet-core-bot", "extensions", "discord"),
+            installPath: path.resolve("/tmp/quiet-core-bot", "extensions", "irc"),
             version: "2026.5.4-beta.3",
           },
           acpx: {
             source: "path",
-            installPath: path.join("/tmp/custom-plugins", "acpx"),
+            installPath: path.resolve("/tmp/custom-plugins", "acpx"),
             version: "2026.5.4-beta.3",
           },
         },
         bundled: new Map([
-          ...bundledSource("discord", currentPath),
-          ...bundledSource("acpx", path.join("/opt/quiet-core-bot", "dist", "extensions", "acpx")),
+          ...bundledSource("irc", currentPath),
+          ...bundledSource(
+            "acpx",
+            path.resolve("/opt/quiet-core-bot", "dist", "extensions", "acpx"),
+          ),
         ]),
       }),
     ).toStrictEqual([]);
@@ -122,33 +128,33 @@ describe("listStaleLocalBundledPluginInstallRecords", () => {
 
 describe("pruneStaleLocalBundledPluginInstallRecords", () => {
   it("removes only stale local bundled plugin install records", () => {
-    const currentPath = path.join("/opt/quiet-core-bot", "dist", "extensions", "discord");
-    const stalePath = path.join("/tmp/old-quiet-core-bot", "dist", "extensions", "discord");
+    const currentPath = path.resolve("/opt/quiet-core-bot", "dist", "extensions", "irc");
+    const stalePath = path.resolve("/tmp/old-quiet-core-bot", "dist", "extensions", "irc");
     const records: Record<string, PluginInstallRecord> = {
-      discord: {
+      irc: {
         source: "path",
         installPath: stalePath,
         version: "2026.5.4-beta.3",
       },
-      brave: {
+      tlon: {
         source: "npm",
-        installPath: "/tmp/plugins/brave",
+        installPath: "/tmp/plugins/tlon",
       },
     };
 
     expect(
       pruneStaleLocalBundledPluginInstallRecords({
         installRecords: records,
-        bundled: bundledSource("discord", currentPath),
+        bundled: bundledSource("irc", currentPath),
       }),
     ).toStrictEqual({
       records: {
-        brave: records.brave,
+        tlon: records.tlon,
       },
       stale: [
         {
-          pluginId: "discord",
-          record: records.discord,
+          pluginId: "irc",
+          record: records.irc,
           recordPathField: "installPath",
           stalePath,
           bundledPath: currentPath,

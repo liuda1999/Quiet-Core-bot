@@ -554,7 +554,7 @@ describe("parseCrestodianOperation", () => {
     const config = requireRecord(mockConfig.currentConfig(), "current config");
     const agents = requireRecord(config.agents, "agents config");
     expectRecordFields(requireRecord(agents.defaults, "agent defaults"), {
-      workspace: "/tmp/work",
+      workspace: path.resolve("/tmp/work"),
       model: { primary: "openai/gpt-5.5" },
     });
     const auditPath = path.join(tempDir, "audit", "crestodian.jsonl");
@@ -567,7 +567,7 @@ describe("parseCrestodianOperation", () => {
       },
       {
         rescue: true,
-        workspace: "/tmp/work",
+        workspace: path.resolve("/tmp/work"),
         model: "openai/gpt-5.5",
         modelSource: "OPENAI_API_KEY",
       },

@@ -14,7 +14,7 @@ describe("prepareCliBundleMcpConfig resume hash", () => {
     const first = await prepareBundleProbeCliConfig({
       additionalConfig: {
         mcpServers: {
-          openclaw: {
+          "quiet-core-bot": {
             type: "http",
             url: "http://127.0.0.1:23119/mcp",
             headers: {
@@ -27,7 +27,7 @@ describe("prepareCliBundleMcpConfig resume hash", () => {
     const second = await prepareBundleProbeCliConfig({
       additionalConfig: {
         mcpServers: {
-          openclaw: {
+          "quiet-core-bot": {
             type: "http",
             url: "http://127.0.0.1:24567/mcp",
             headers: {
@@ -49,7 +49,7 @@ describe("prepareCliBundleMcpConfig resume hash", () => {
     const first = await prepareBundleProbeCliConfig({
       additionalConfig: {
         mcpServers: {
-          openclaw: {
+          "quiet-core-bot": {
             type: "http",
             url: "http://127.0.0.1:23119/mcp",
             headers: {
@@ -62,7 +62,7 @@ describe("prepareCliBundleMcpConfig resume hash", () => {
     const second = await prepareBundleProbeCliConfig({
       additionalConfig: {
         mcpServers: {
-          openclaw: {
+          "quiet-core-bot": {
             type: "http",
             url: "http://127.0.0.1:23119/other",
             headers: {

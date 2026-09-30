@@ -1,4 +1,5 @@
 // Covers package manager resolution for update build flows.
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   resolveUpdateBuildManager,
@@ -48,7 +49,9 @@ describe("resolveUpdateBuildManager", () => {
       expect(typeof tempRoot).toBe("string");
       expect(tempRoot?.includes("quiet-core-bot-update-pnpm-")).toBe(true);
       expect(paths).toHaveLength(1);
-      expect(paths[0]?.split(":")[0]).toBe(`${tempRoot}/node_modules/.bin`);
+      expect(paths[0]?.split(path.delimiter)[0]).toBe(
+        path.join(tempRoot ?? "", "node_modules", ".bin"),
+      );
       await result.cleanup?.();
     }
   });

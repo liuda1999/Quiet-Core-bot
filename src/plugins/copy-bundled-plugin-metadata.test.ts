@@ -41,7 +41,7 @@ function createPlugin(
   });
   writeJson(path.join(pluginDir, "package.json"), {
     name: params.packageName,
-    ...(params.packageOpenClaw ? { openclaw: params.packageOpenClaw } : {}),
+    ...(params.packageOpenClaw ? { "quiet-core-bot": params.packageOpenClaw } : {}),
   });
   return pluginDir;
 }
@@ -114,7 +114,9 @@ describe("copyBundledPluginMetadata", () => {
     copyBundledPluginMetadata({ repoRoot });
 
     expect(
-      fs.existsSync(path.join(repoRoot, "dist", "extensions", "acpx", "quiet-core-bot.plugin.json")),
+      fs.existsSync(
+        path.join(repoRoot, "dist", "extensions", "acpx", "quiet-core-bot.plugin.json"),
+      ),
     ).toBe(true);
     expect(
       fs.readFileSync(
@@ -346,11 +348,14 @@ describe("copyBundledPluginMetadata", () => {
       "export default {}\n",
       "utf8",
     );
-    writeJson(path.join(repoRoot, "dist", "extensions", "removed-plugin", "quiet-core-bot.plugin.json"), {
-      id: "removed-plugin",
-      configSchema: { type: "object" },
-      skills: ["./bundled-skills/@scope/skill"],
-    });
+    writeJson(
+      path.join(repoRoot, "dist", "extensions", "removed-plugin", "quiet-core-bot.plugin.json"),
+      {
+        id: "removed-plugin",
+        configSchema: { type: "object" },
+        skills: ["./bundled-skills/@scope/skill"],
+      },
+    );
     writeJson(path.join(repoRoot, "dist", "extensions", "removed-plugin", "package.json"), {
       name: "@quiet-core/removed-plugin",
     });
@@ -489,7 +494,13 @@ describe("copyBundledPluginMetadata", () => {
     ).toBe(true);
     expect(
       fs.existsSync(
-        path.join(repoRoot, "dist", "extensions", "image-generation-core", "quiet-core-bot.plugin.json"),
+        path.join(
+          repoRoot,
+          "dist",
+          "extensions",
+          "image-generation-core",
+          "quiet-core-bot.plugin.json",
+        ),
       ),
     ).toBe(false);
     expect(

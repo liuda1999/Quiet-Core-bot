@@ -6,25 +6,14 @@ import { loadProviderIndexCatalogRowsForList } from "./list.provider-index-catal
 const baseConfig = {} satisfies OpenClawConfig;
 
 describe("loadProviderIndexCatalogRowsForList", () => {
-  it("returns provider-index preview rows when the provider plugin is enabled", () => {
+  it("returns no preview rows while the bundled provider index is empty", () => {
     expect(
       loadProviderIndexCatalogRowsForList({
         cfg: baseConfig,
         providerFilter: "moonshot",
-      }).map((row) => row.ref),
-    ).toEqual(["moonshot/kimi-k2.6", "moonshot/kimi-k2.7-code"]);
-  });
-
-  it("returns all enabled provider-index preview rows without a provider filter", () => {
-    const refs = loadProviderIndexCatalogRowsForList({
-      cfg: baseConfig,
-    }).map((row) => row.ref);
-    expect(refs).toEqual([
-      "deepseek/deepseek-chat",
-      "deepseek/deepseek-reasoner",
-      "moonshot/kimi-k2.6",
-      "moonshot/kimi-k2.7-code",
-    ]);
+      }),
+    ).toEqual([]);
+    expect(loadProviderIndexCatalogRowsForList({ cfg: baseConfig })).toEqual([]);
   });
 
   it("suppresses provider-index preview rows when the provider plugin is disabled", () => {

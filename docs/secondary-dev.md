@@ -4825,7 +4825,7 @@ flowchart LR
     G --> H["8 发布 ClawHub"]
 ```
 
-1. **创建包目录**：在 `extensions/<my-channel>/`（内置插件）或独立 npm 包目录下创建 `package.json`、`quiet-core-bot.plugin.json`、`index.ts`。`package.json` 需含 `quiet-core-bot` 元数据（`extensions`、`compat.pluginApi`、`compat.minGatewayVersion`、`build.quiet-core-botVersion`、`build.pluginSdkVersion`）。源码检出插件开发仅支持 pnpm（因内置插件从 `extensions/*` workspace 加载）。
+1. **创建包目录**：在 `extensions/<my-channel>/`（内置插件）或独立 npm 包目录下创建 `package.json`、`quiet-core-bot.plugin.json`、`index.ts`。`package.json` 需含 `quiet-core-bot` 元数据（`extensions`、`compat.pluginApi`、`compat.minGatewayVersion`、`build.openclawVersion`、`build.pluginSdkVersion`）。源码检出插件开发仅支持 pnpm（因内置插件从 `extensions/*` workspace 加载）。
 2. **编写 manifest**：`quiet-core-bot.plugin.json` 声明 `id`、`name`、`description`、`contracts`、`activation`、`configSchema`。channel 插件需声明 channel 契约字段；host-trusted surface（如 `agentToolResultMiddleware`、`trustedToolPolicies`）须在 `contracts` 中显式声明。
 3. **实现 channel 契约**：用 `defineChannelPluginEntry`（非 channel 插件用 `definePluginEntry`）实现 inbound/outbound、`ChannelCapabilities`、`ChannelSetupAdapter`、pairing、lifecycle 等。导入自 `quiet-core-bot/plugin-sdk/channel-entry-contract`、`channel-runtime`、`channel-inbound`、`channel-outbound`、`channel-streaming`。
 4. **注册插件入口**：在 `index.ts` 中 `export default defineChannelPluginEntry({ id, name, description, register(api) { ... } })`。

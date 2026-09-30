@@ -2,9 +2,11 @@
 import { execFileSync, spawnSync } from "node:child_process";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
+import { resolveBashPath } from "../helpers/bash-path.js";
 import { createTempDirTracker } from "../helpers/temp-dir.js";
 
 const SCRIPT_PATH = "scripts/github/resolve-quiet-core-bot-ref.sh";
+const BASH_BIN = resolveBashPath();
 const tempDirs = createTempDirTracker();
 
 afterEach(() => {
@@ -24,7 +26,7 @@ function createRemoteRepo() {
   git(repo, ["init", "-q", "-b", "main"]);
   git(repo, ["config", "user.email", "test-user"]);
   git(repo, ["config", "user.name", "Test User"]);
-  execFileSync("bash", ["-c", "printf seed > seed.txt"], { cwd: repo });
+  execFileSync(BASH_BIN, ["-c", "printf seed > seed.txt"], { cwd: repo });
   git(repo, ["add", "seed.txt"]);
   git(repo, ["commit", "-qm", "seed"]);
   const sha = git(repo, ["rev-parse", "HEAD"]);
@@ -36,7 +38,7 @@ function createRemoteRepo() {
 }
 
 function runResolver(remote: string, args: string[]) {
-  return spawnSync("bash", [SCRIPT_PATH, ...args], {
+  return spawnSync(BASH_BIN, [SCRIPT_PATH, ...args], {
     cwd: process.cwd(),
     encoding: "utf8",
     env: {

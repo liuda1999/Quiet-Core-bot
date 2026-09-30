@@ -369,57 +369,63 @@ describe("resolveMemoryBackendConfig", () => {
     expect(devNames).toStrictEqual(["memory-dir-dev", "memory-root-dev", "notion-mirror"]);
   });
 
-  it("keeps symlinked workspace paths agent-scoped when deciding custom collection names", async () => {
-    const tmpRoot = await createFixtureDir("symlinked-workspace");
-    const workspaceDir = path.join(tmpRoot, "workspace");
-    const workspaceAliasDir = path.join(tmpRoot, "workspace-alias");
-    await fs.mkdir(workspaceDir, { recursive: true });
-    await fs.symlink(workspaceDir, workspaceAliasDir);
-    const cfg = {
-      agents: {
-        defaults: { workspace: workspaceDir },
-        list: [{ id: "main", default: true, workspace: workspaceDir }],
-      },
-      memory: {
-        backend: "qmd",
-        qmd: {
-          includeDefaultMemory: false,
-          paths: [{ path: workspaceAliasDir, name: "workspace", pattern: "**/*.md" }],
+  it.skipIf(process.platform === "win32")(
+    "keeps symlinked workspace paths agent-scoped when deciding custom collection names",
+    async () => {
+      const tmpRoot = await createFixtureDir("symlinked-workspace");
+      const workspaceDir = path.join(tmpRoot, "workspace");
+      const workspaceAliasDir = path.join(tmpRoot, "workspace-alias");
+      await fs.mkdir(workspaceDir, { recursive: true });
+      await fs.symlink(workspaceDir, workspaceAliasDir);
+      const cfg = {
+        agents: {
+          defaults: { workspace: workspaceDir },
+          list: [{ id: "main", default: true, workspace: workspaceDir }],
         },
-      },
-    } as OpenClawConfig;
-    const resolved = resolveMemoryBackendConfig({ cfg, agentId: "main" });
-    const names = collectionNames(resolved);
-    expect(names).toStrictEqual(["workspace-main"]);
-  });
+        memory: {
+          backend: "qmd",
+          qmd: {
+            includeDefaultMemory: false,
+            paths: [{ path: workspaceAliasDir, name: "workspace", pattern: "**/*.md" }],
+          },
+        },
+      } as OpenClawConfig;
+      const resolved = resolveMemoryBackendConfig({ cfg, agentId: "main" });
+      const names = collectionNames(resolved);
+      expect(names).toStrictEqual(["workspace-main"]);
+    },
+  );
 
-  it("keeps unresolved child paths under a symlinked workspace agent-scoped", async () => {
-    const tmpRoot = await createFixtureDir("symlinked-child");
-    const realRootDir = path.join(tmpRoot, "real-root");
-    const aliasRootDir = path.join(tmpRoot, "alias-root");
-    const workspaceDir = path.join(realRootDir, "workspace");
-    const workspaceAliasDir = path.join(aliasRootDir, "workspace");
-    await fs.mkdir(workspaceDir, { recursive: true });
-    await fs.symlink(realRootDir, aliasRootDir);
-    const cfg = {
-      agents: {
-        defaults: { workspace: workspaceDir },
-        list: [{ id: "main", default: true, workspace: workspaceDir }],
-      },
-      memory: {
-        backend: "qmd",
-        qmd: {
-          includeDefaultMemory: false,
-          paths: [
-            { path: path.join(workspaceAliasDir, "notes"), name: "notes", pattern: "**/*.md" },
-          ],
+  it.skipIf(process.platform === "win32")(
+    "keeps unresolved child paths under a symlinked workspace agent-scoped",
+    async () => {
+      const tmpRoot = await createFixtureDir("symlinked-child");
+      const realRootDir = path.join(tmpRoot, "real-root");
+      const aliasRootDir = path.join(tmpRoot, "alias-root");
+      const workspaceDir = path.join(realRootDir, "workspace");
+      const workspaceAliasDir = path.join(aliasRootDir, "workspace");
+      await fs.mkdir(workspaceDir, { recursive: true });
+      await fs.symlink(realRootDir, aliasRootDir);
+      const cfg = {
+        agents: {
+          defaults: { workspace: workspaceDir },
+          list: [{ id: "main", default: true, workspace: workspaceDir }],
         },
-      },
-    } as OpenClawConfig;
-    const resolved = resolveMemoryBackendConfig({ cfg, agentId: "main" });
-    const names = collectionNames(resolved);
-    expect(names).toStrictEqual(["notes-main"]);
-  });
+        memory: {
+          backend: "qmd",
+          qmd: {
+            includeDefaultMemory: false,
+            paths: [
+              { path: path.join(workspaceAliasDir, "notes"), name: "notes", pattern: "**/*.md" },
+            ],
+          },
+        },
+      } as OpenClawConfig;
+      const resolved = resolveMemoryBackendConfig({ cfg, agentId: "main" });
+      const names = collectionNames(resolved);
+      expect(names).toStrictEqual(["notes-main"]);
+    },
+  );
 
   it("resolves qmd update timeout overrides", () => {
     const cfg = {

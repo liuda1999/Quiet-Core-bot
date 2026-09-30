@@ -3,18 +3,27 @@ import fsSync from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { closeOpenClawStateDatabaseUnder } from "../../../../src/state/quiet-core-bot-state-db.js";
 import { clearConfigCache, clearRuntimeConfigSnapshot } from "./quiet-core-bot-runtime-session.js";
 import {
   buildSessionEntry,
   listSessionFilesForAgent,
   listSessionTranscriptCorpusEntriesForAgent,
   loadSessionTranscriptClassificationForAgent,
+  normalizeSessionTranscriptPathForComparison,
   parseCanonicalSessionSyncTargetFromPath,
   resolveSessionIdentityForTranscriptFile,
   resolveSessionFileForSyncTarget,
   sessionPathForFile,
   type SessionFileEntry,
 } from "./session-files.js";
+
+// Session file paths are lowercased on Windows, so compare case-insensitively.
+const normalizePath = (value: string) => normalizeSessionTranscriptPathForComparison(value);
+const withNormalizedSessionFile = <T extends { sessionFile: string }>(entry: T) => ({
+  ...entry,
+  sessionFile: normalizePath(entry.sessionFile),
+});
 
 function captureStateDirEnv() {
   const stateDir = process.env.QUIET_CORE_STATE_DIR;
@@ -45,7 +54,10 @@ beforeAll(() => {
 });
 
 afterAll(() => {
-  fsSync.rmSync(fixtureRoot, { recursive: true, force: true });
+  // Release cached SQLite handles under the fixture before removing it; Windows
+  // reports EPERM/EBUSY while those files stay open.
+  closeOpenClawStateDatabaseUnder(fixtureRoot);
+  fsSync.rmSync(fixtureRoot, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
 });
 
 beforeEach(() => {
@@ -147,13 +159,17 @@ describe("listSessionTranscriptCorpusEntriesForAgent", () => {
     const classification = loadSessionTranscriptClassificationForAgent("main");
 
     expect(classification.cronRunTranscriptPaths).toEqual(
-      new Set([activePath, archivePath].map((filePath) => path.resolve(filePath))),
+      new Set([activePath, archivePath].map((filePath) => normalizePath(filePath))),
     );
-    await expect(listSessionTranscriptCorpusEntriesForAgent("main")).resolves.toContainEqual({
+    await expect(
+      listSessionTranscriptCorpusEntriesForAgent("main").then((entries) =>
+        entries.map(withNormalizedSessionFile),
+      ),
+    ).resolves.toContainEqual({
       agentId: "main",
       artifactKind: "archive-artifact",
       generatedByCronRun: true,
-      sessionFile: archivePath,
+      sessionFile: normalizePath(archivePath),
       sessionId: "cron-run",
     });
   });
@@ -176,14 +192,22 @@ describe("listSessionTranscriptCorpusEntriesForAgent", () => {
     const expectedArchivePath = archivePath;
     const classification = loadSessionTranscriptClassificationForAgent("main");
 
-    expect(classification.cronRunTranscriptPaths).toEqual(new Set([expectedArchivePath]));
-    await expect(listSessionFilesForAgent("main")).resolves.toEqual([expectedArchivePath]);
-    await expect(listSessionTranscriptCorpusEntriesForAgent("main")).resolves.toEqual([
+    expect(classification.cronRunTranscriptPaths).toEqual(
+      new Set([normalizePath(expectedArchivePath)]),
+    );
+    await expect(
+      listSessionFilesForAgent("main").then((files) => files.map(normalizePath)),
+    ).resolves.toEqual([normalizePath(expectedArchivePath)]);
+    await expect(
+      listSessionTranscriptCorpusEntriesForAgent("main").then((entries) =>
+        entries.map(withNormalizedSessionFile),
+      ),
+    ).resolves.toEqual([
       {
         agentId: "main",
         artifactKind: "archive-artifact",
         generatedByCronRun: true,
-        sessionFile: expectedArchivePath,
+        sessionFile: normalizePath(expectedArchivePath),
         sessionId: "cron-run",
       },
     ]);
@@ -206,26 +230,29 @@ describe("listSessionTranscriptCorpusEntriesForAgent", () => {
     await expect(listSessionTranscriptCorpusEntriesForAgent("main")).resolves.toEqual([]);
   });
 
-  it("omits active session entries whose transcript path is a symlink", async () => {
-    const sessionsDir = path.join(tmpDir, "agents", "main", "sessions");
-    const targetPath = path.join(tmpDir, "external.jsonl");
-    const symlinkPath = path.join(sessionsDir, "linked.jsonl");
-    fsSync.mkdirSync(sessionsDir, { recursive: true });
-    fsSync.writeFileSync(targetPath, "");
-    fsSync.symlinkSync(targetPath, symlinkPath);
-    fsSync.writeFileSync(
-      path.join(sessionsDir, "sessions.json"),
-      JSON.stringify({
-        "agent:main:chat:linked": {
-          sessionFile: "linked.jsonl",
-          sessionId: "linked",
-        },
-      }),
-    );
+  it.skipIf(process.platform === "win32")(
+    "omits active session entries whose transcript path is a symlink",
+    async () => {
+      const sessionsDir = path.join(tmpDir, "agents", "main", "sessions");
+      const targetPath = path.join(tmpDir, "external.jsonl");
+      const symlinkPath = path.join(sessionsDir, "linked.jsonl");
+      fsSync.mkdirSync(sessionsDir, { recursive: true });
+      fsSync.writeFileSync(targetPath, "");
+      fsSync.symlinkSync(targetPath, symlinkPath);
+      fsSync.writeFileSync(
+        path.join(sessionsDir, "sessions.json"),
+        JSON.stringify({
+          "agent:main:chat:linked": {
+            sessionFile: "linked.jsonl",
+            sessionId: "linked",
+          },
+        }),
+      );
 
-    await expect(listSessionFilesForAgent("main")).resolves.toEqual([]);
-    await expect(listSessionTranscriptCorpusEntriesForAgent("main")).resolves.toEqual([]);
-  });
+      await expect(listSessionFilesForAgent("main")).resolves.toEqual([]);
+      await expect(listSessionTranscriptCorpusEntriesForAgent("main")).resolves.toEqual([]);
+    },
+  );
 
   it("rejects session ids that would escape the sessions directory", async () => {
     const sessionsDir = path.join(tmpDir, "agents", "main", "sessions");

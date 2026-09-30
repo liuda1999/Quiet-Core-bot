@@ -8,7 +8,7 @@ describe("parseGitUrl", () => {
     expect(parseGitUrl("git:github.com/openclaw/example-plugin")).toMatchObject({
       type: "git",
       host: "github.com",
-      path: "quiet-core-bot/example-plugin",
+      path: "openclaw/example-plugin",
       repo: "https://github.com/openclaw/example-plugin",
     });
   });
@@ -16,20 +16,20 @@ describe("parseGitUrl", () => {
   it("parses refs from hosted, scp-style, and generic shorthand sources", () => {
     expect(parseGitUrl("git:https://github.com/openclaw/example-plugin.git@v1.2.3")).toMatchObject({
       host: "github.com",
-      path: "quiet-core-bot/example-plugin",
+      path: "openclaw/example-plugin",
       repo: "https://github.com/openclaw/example-plugin.git",
       ref: "v1.2.3",
       pinned: true,
     });
-    expect(parseGitUrl("git:git@github.com:quiet-core-bot/example-plugin.git@feature/foo")).toMatchObject(
-      {
-        host: "github.com",
-        path: "quiet-core-bot/example-plugin",
-        repo: "git@github.com:quiet-core-bot/example-plugin.git",
-        ref: "feature/foo",
-        pinned: true,
-      },
-    );
+    expect(
+      parseGitUrl("git:git@github.com:quiet-core-bot/example-plugin.git@feature/foo"),
+    ).toMatchObject({
+      host: "github.com",
+      path: "quiet-core-bot/example-plugin",
+      repo: "git@github.com:quiet-core-bot/example-plugin.git",
+      ref: "feature/foo",
+      pinned: true,
+    });
     expect(parseGitUrl("git:example.com/quiet-core-bot/example-plugin@main")).toMatchObject({
       host: "example.com",
       path: "quiet-core-bot/example-plugin",

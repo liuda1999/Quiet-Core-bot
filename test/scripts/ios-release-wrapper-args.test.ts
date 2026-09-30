@@ -2,8 +2,9 @@
 import { execFileSync } from "node:child_process";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { resolveBashPath } from "../helpers/bash-path.js";
 
-const BASH_BIN = process.platform === "win32" ? "bash" : "/bin/bash";
+const BASH_BIN = resolveBashPath();
 
 type WrapperCase = readonly [scriptPath: string, args: readonly string[], option: string];
 

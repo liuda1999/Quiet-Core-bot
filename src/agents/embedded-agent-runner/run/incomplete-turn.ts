@@ -585,15 +585,24 @@ function isEmptyResponseAssistantTurn(params: {
   if (assistant.stopReason === "error") {
     return false;
   }
-  if (
-    isIncompleteTerminalAssistantTurn({
-      hasAssistantVisibleText: false,
-      lastAssistant: assistant,
-    }) ||
-    isReasoningOnlyAssistantTurn(assistant)
-  ) {
+  // A `toolUse` terminal turn expects a post-tool continuation handled by the
+  // tool loop, so it is never an "empty reply" to retry here.
+  if (assistant.stopReason === "toolUse") {
     return false;
   }
+  // Reasoning-only turns have their own (2x) retry path; do not double-count them.
+  if (isReasoningOnlyAssistantTurn(assistant)) {
+    return false;
+  }
+  // Note: `stopReason === "length"` is deliberately NOT rejected here. At this
+  // point the turn is already known to carry zero payloads and zero visible
+  // assistant text, so a token-limited turn that produced nothing usable is
+  // exactly the empty reply the bounded empty-response retry exists for. It was
+  // previously rejected via `isIncompleteTerminalAssistantTurn`, which left such
+  // turns with no retry at all: the reasoning-only path skips them too because an
+  // empty content array classifies as neither `incomplete-text` nor unsigned
+  // thinking. Partial token-limited answers never reach this branch (they have
+  // payloads / visible text and return earlier).
   return true;
 }
 

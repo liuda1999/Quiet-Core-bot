@@ -214,11 +214,11 @@ describe("collectPluginToolAllowlistWarnings", () => {
   it("does not warn when the active provider profile blocks MCP tools before sandbox policy", () => {
     const warnings = collectPluginToolAllowlistWarnings({
       cfg: {
-        agents: { defaults: { sandbox: { mode: "all" } } },
+        agents: { defaults: { model: "ollama/llama3", sandbox: { mode: "all" } } },
         mcp: { servers: { outlook: { command: "node", args: ["outlook-server.js"] } } },
         tools: {
           byProvider: {
-            openai: { profile: "minimal" },
+            ollama: { profile: "minimal" },
           },
           sandbox: { tools: { alsoAllow: ["web_fetch"] } },
         },
@@ -232,11 +232,11 @@ describe("collectPluginToolAllowlistWarnings", () => {
   it("does not warn when the active provider allowlist blocks MCP tools before sandbox policy", () => {
     const warnings = collectPluginToolAllowlistWarnings({
       cfg: {
-        agents: { defaults: { sandbox: { mode: "all" } } },
+        agents: { defaults: { model: "ollama/llama3", sandbox: { mode: "all" } } },
         mcp: { servers: { outlook: { command: "node", args: ["outlook-server.js"] } } },
         tools: {
           byProvider: {
-            openai: { allow: ["read"] },
+            ollama: { allow: ["read"] },
           },
           sandbox: { tools: { alsoAllow: ["web_fetch"] } },
         },

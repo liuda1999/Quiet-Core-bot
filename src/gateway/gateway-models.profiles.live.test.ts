@@ -12,7 +12,6 @@ import {
   type ModelThinkingLevel,
 } from "quiet-core-bot/plugin-sdk/llm";
 import { afterEach, describe, expect, it } from "vitest";
-import { removeTestTempPath } from "../../test-utils/session-state-cleanup.js";
 import { renderCatNoncePngBase64 } from "../../test/helpers/live-image-probe.js";
 import { discoverAuthStorage, discoverModels } from "../agents/agent-model-discovery.js";
 import { resolveAgentWorkspaceDir, resolveDefaultAgentDir } from "../agents/agent-scope.js";
@@ -60,6 +59,7 @@ import type { ProviderThinkingModelCompat } from "../plugins/provider-thinking.t
 import { DEFAULT_AGENT_ID } from "../routing/session-key.js";
 import { stripAssistantInternalScaffolding } from "../shared/text/assistant-visible-text.js";
 import { findFinalTagMatches, stripFinalTags } from "../shared/text/final-tags.js";
+import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from "../utils/message-channel.js";
 import { GatewayClient } from "./client.js";
 import {

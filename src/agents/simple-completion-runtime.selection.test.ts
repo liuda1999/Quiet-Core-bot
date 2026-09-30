@@ -1,6 +1,7 @@
 // Verifies simple-completion model selection preserves provider, model, and profile refs.
 import { describe, expect, it } from "vitest";
 import type { OpenClawConfig } from "../config/config.js";
+import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "./defaults.js";
 import { resolveSimpleCompletionSelectionForAgent } from "./simple-completion-runtime.js";
 
 function requireSelection(selection: ReturnType<typeof resolveSimpleCompletionSelectionForAgent>) {
@@ -102,8 +103,8 @@ describe("resolveSimpleCompletionSelectionForAgent", () => {
     const selection = requireSelection(
       resolveSimpleCompletionSelectionForAgent({ cfg, agentId: "main" }),
     );
-    expect(selection.provider).toBe("openai");
-    expect(selection.modelId).toBe("gpt-5.5");
+    expect(selection.provider).toBe(DEFAULT_PROVIDER);
+    expect(selection.modelId).toBe(DEFAULT_MODEL);
   });
 
   it("uses configured provider fallback when default provider is unavailable", () => {
@@ -137,6 +138,6 @@ describe("resolveSimpleCompletionSelectionForAgent", () => {
       resolveSimpleCompletionSelectionForAgent({ cfg, agentId: "main" }),
     );
     expect(selection.provider).toBe("openai");
-    expect(selection.modelId).toBe("gpt-5.5");
+    expect(selection.modelId).toBe("gpt-5");
   });
 });

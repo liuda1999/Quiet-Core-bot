@@ -52,7 +52,7 @@ describe("deriveToolParams", () => {
     );
     const cwd = path.join("/tmp", "quiet-core-bot-derived");
     expect(deriveToolParams("apply_patch", { input: patch }, { cwd })).toEqual({
-      derivedPaths: [path.join(cwd, "new.ts")],
+      derivedPaths: [path.resolve(cwd, "new.ts")],
     });
   });
 
@@ -103,7 +103,7 @@ describe("deriveToolParams", () => {
         },
       ),
     ).toEqual({
-      derivedPaths: ["/host/sandbox/src/new.ts"],
+      derivedPaths: [path.normalize("/host/sandbox/src/new.ts")],
     });
   });
 

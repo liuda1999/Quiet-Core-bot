@@ -2014,6 +2014,76 @@ describe("runEmbeddedAgent incomplete-turn safety", () => {
     expect(retryInstruction).toBe(EMPTY_RESPONSE_RETRY_INSTRUCTION);
   });
 
+  it("retries token-limited local turns that produced no usable text", () => {
+    const retryInstruction = resolveEmptyResponseRetryInstruction({
+      provider: "localapi",
+      modelId: "qwen3-27b",
+      modelApi: "openai-completions",
+      payloadCount: 0,
+      aborted: false,
+      timedOut: false,
+      attempt: makeAttemptResult({
+        assistantTexts: [],
+        lastAssistant: {
+          role: "assistant",
+          stopReason: "length",
+          provider: "localapi",
+          model: "qwen3-27b",
+          content: [],
+          usage: { input: 9_000, output: 3_072, totalTokens: 12_072 },
+        } as unknown as EmbeddedRunAttemptResult["lastAssistant"],
+      }),
+    });
+
+    expect(retryInstruction).toBe(EMPTY_RESPONSE_RETRY_INSTRUCTION);
+  });
+
+  it("does not retry token-limited turns from providers outside the retry-guard allowlist", () => {
+    const retryInstruction = resolveEmptyResponseRetryInstruction({
+      provider: "some-custom-provider",
+      modelId: "mystery-model",
+      modelApi: "proprietary-wire-api",
+      payloadCount: 0,
+      aborted: false,
+      timedOut: false,
+      attempt: makeAttemptResult({
+        assistantTexts: [],
+        lastAssistant: {
+          role: "assistant",
+          stopReason: "length",
+          provider: "some-custom-provider",
+          model: "mystery-model",
+          content: [],
+        } as unknown as EmbeddedRunAttemptResult["lastAssistant"],
+      }),
+    });
+
+    expect(retryInstruction).toBeNull();
+  });
+
+  it("does not retry empty toolUse terminal turns", () => {
+    const retryInstruction = resolveEmptyResponseRetryInstruction({
+      provider: "localapi",
+      modelId: "qwen3-27b",
+      modelApi: "openai-completions",
+      payloadCount: 0,
+      aborted: false,
+      timedOut: false,
+      attempt: makeAttemptResult({
+        assistantTexts: [],
+        lastAssistant: {
+          role: "assistant",
+          stopReason: "toolUse",
+          provider: "localapi",
+          model: "qwen3-27b",
+          content: [],
+        } as unknown as EmbeddedRunAttemptResult["lastAssistant"],
+      }),
+    });
+
+    expect(retryInstruction).toBeNull();
+  });
+
   it("does not retry clean zero-token Ollama stop turns", () => {
     const retryInstruction = resolveEmptyResponseRetryInstruction({
       provider: "ollama",

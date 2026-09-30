@@ -5,6 +5,7 @@ import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { ChannelPlugin } from "../channels/plugins/types.js";
 import type { OpenClawConfig } from "../config/config.js";
+import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import {
   applySecurityFixConfigMutations,
   collectSecurityPermissionTargets,
@@ -156,7 +157,9 @@ describe("security fix", () => {
 
   afterAll(async () => {
     if (fixtureRoot) {
-      await fs.rm(fixtureRoot, { recursive: true, force: true });
+      // Release cached SQLite handles and retry: Windows reports EBUSY while the
+      // state database -shm/-wal files are still open.
+      await removeTestTempPath(fixtureRoot);
     }
   });
 

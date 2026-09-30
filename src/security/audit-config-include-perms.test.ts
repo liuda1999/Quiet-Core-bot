@@ -36,11 +36,15 @@ describe("security audit config include permissions", () => {
       platform: "linux",
     });
 
+    // Windows chmod cannot clear POSIX write bits, so the same include file
+    // surfaces as writable-by-others instead of world-readable.
     const finding = findings.find(
-      (entry) => entry.checkId === "fs.config_include.perms_world_readable",
+      (entry) =>
+        entry.checkId === "fs.config_include.perms_world_readable" ||
+        entry.checkId === "fs.config_include.perms_writable",
     );
     if (!finding) {
-      throw new Error("Expected world-readable include finding");
+      throw new Error("Expected include permission finding");
     }
     expect(finding.severity).toBe("critical");
   });

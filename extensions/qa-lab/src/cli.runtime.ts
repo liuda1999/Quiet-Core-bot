@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import {
-  QUIET_CORE_CRABLINE_DEFAULT_CHANNEL,
+  OPENCLAW_CRABLINE_DEFAULT_CHANNEL,
   resolveOpenClawCrablineChannelDriverSelection,
 } from "@openclaw/crabline";
 import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
@@ -913,7 +913,7 @@ export async function runQaSuiteCommand(opts: QaSuiteCommandOptions) {
     channelDriver === "crabline"
       ? resolveOpenClawCrablineChannelDriverSelection({
           channel: resolveQaSuiteScenarioChannel({
-            defaultChannel: QUIET_CORE_CRABLINE_DEFAULT_CHANNEL,
+            defaultChannel: OPENCLAW_CRABLINE_DEFAULT_CHANNEL,
             explicitChannel: opts.channel,
             scenarios: selectQaScenarioDefinitionsForChannelResolution({
               scenarioIds,

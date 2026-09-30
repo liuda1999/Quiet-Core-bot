@@ -1,14 +1,22 @@
 // Setup tests cover model-resolution hooks and effective runtime model context
 // metadata before an embedded run starts.
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import type { ModelDefinitionConfig } from "../../../config/types.models.js";
 import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
 import type { ProviderRuntimeModel } from "../../../plugins/provider-runtime-model.types.js";
+import {
+  recordProviderContextLimit,
+  resetLearnedProviderContextLimitsForTest,
+} from "../provider-context-limit-registry.js";
 import {
   buildBeforeModelResolveAttachments,
   resolveEffectiveRuntimeModel,
   resolveHookModelSelection,
 } from "./setup.js";
+
+afterEach(() => {
+  resetLearnedProviderContextLimitsForTest();
+});
 
 const hookContext = {
   sessionId: "session-1",
@@ -171,5 +179,39 @@ describe("resolveEffectiveRuntimeModel", () => {
       tokens: 272_000,
     });
     expect(result.effectiveModel.contextWindow).toBe(272_000);
+  });
+
+  it("clamps the resolved budget and model window to a learned provider limit", () => {
+    const cfg = {
+      models: {
+        providers: {
+          openai: {
+            baseUrl: "https://chatgpt.com/backend-api/codex",
+            models: [createConfiguredModel()],
+          },
+        },
+      },
+    } satisfies OpenClawConfig;
+
+    // The provider enforced 128K on a previous turn while the config still
+    // declares 1M; the next turn must budget against 128K so compaction is
+    // evaluated against the window that actually applies.
+    recordProviderContextLimit({
+      provider: "codex",
+      modelId: "gpt-5.5",
+      statedLimitTokens: 128_000,
+      declaredContextWindow: 1_000_000,
+    });
+
+    const result = resolveEffectiveRuntimeModel({
+      cfg,
+      provider: "codex",
+      contextConfigProvider: "openai",
+      modelId: "gpt-5.5",
+      runtimeModel: createRuntimeModel(),
+    });
+
+    expect(result.ctxInfo).toEqual({ source: "modelsConfig", tokens: 128_000 });
+    expect(result.effectiveModel.contextWindow).toBe(128_000);
   });
 });

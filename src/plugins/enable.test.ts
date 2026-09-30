@@ -24,8 +24,8 @@ function expectEnabledAllowlist(
 }
 
 function expectBuiltInChannelEnabled(result: ReturnType<typeof enablePluginInConfig>) {
-  expect(result.config.channels?.telegram?.enabled).toBe(true);
-  expect(result.config.plugins?.entries?.telegram?.enabled).toBe(true);
+  expect(result.config.channels?.signal?.enabled).toBe(true);
+  expect(result.config.plugins?.entries?.signal?.enabled).toBe(true);
 }
 
 function expectBuiltInChannelEnabledWithAllowlist(
@@ -93,7 +93,7 @@ describe("enablePluginInConfig", () => {
     {
       name: "writes built-in channels to channels.<id>.enabled and plugins.entries",
       cfg: {} as OpenClawConfig,
-      pluginId: "telegram",
+      pluginId: "signal",
       expectedEnabled: true,
       assert: expectBuiltInChannelEnabled,
     },
@@ -104,44 +104,44 @@ describe("enablePluginInConfig", () => {
           allow: ["memory-core"],
         },
       } as OpenClawConfig,
-      pluginId: "telegram",
+      pluginId: "signal",
       expectedEnabled: false,
       assert: (result: ReturnType<typeof enablePluginInConfig>) => {
         expect(result.reason).toBe("blocked by allowlist");
         expect(result.config.plugins?.allow).toEqual(["memory-core"]);
-        expect(result.config.channels?.telegram?.enabled).toBeUndefined();
+        expect(result.config.channels?.signal?.enabled).toBeUndefined();
       },
     },
     {
       name: "enables built-in channel already present in configured allowlist",
       cfg: {
         plugins: {
-          allow: ["telegram"],
+          allow: ["signal"],
         },
       } as OpenClawConfig,
-      pluginId: "telegram",
+      pluginId: "signal",
       expectedEnabled: true,
       assert: (result: ReturnType<typeof enablePluginInConfig>) => {
-        expectBuiltInChannelEnabledWithAllowlist(result, ["telegram"]);
+        expectBuiltInChannelEnabledWithAllowlist(result, ["signal"]);
       },
     },
     {
       name: "re-enables built-in channels after explicit plugin-level disable",
       cfg: {
         channels: {
-          telegram: {
+          signal: {
             enabled: true,
           },
         },
         plugins: {
           entries: {
-            telegram: {
+            signal: {
               enabled: false,
             },
           },
         },
       } as OpenClawConfig,
-      pluginId: "telegram",
+      pluginId: "signal",
       expectedEnabled: true,
       assert: expectBuiltInChannelEnabledWithAllowlist,
     },

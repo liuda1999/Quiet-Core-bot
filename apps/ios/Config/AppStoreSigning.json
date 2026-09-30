@@ -1,46 +1,46 @@
 {
   "teamId": "FWJYW4S8P8",
-  "signingRepo": "git@github.com:openclaw/apps-signing.git",
+  "signingRepo": "git@github.com:quiet-core-bot/apps-signing.git",
   "signingBranch": "main",
   "profileType": "appstore",
-  "appGroupId": "group.ai.openclawfoundation.app.shared",
+  "appGroupId": "group.ai.quiet-core-botfoundation.app.shared",
   "targets": [
     {
       "target": "OpenClaw",
       "displayName": "OpenClaw",
-      "bundleId": "ai.openclawfoundation.app",
+      "bundleId": "ai.quiet-core-botfoundation.app",
       "platform": "IOS",
       "profileKey": "QUIET_CORE_APP_PROFILE",
-      "profileName": "OpenClaw App Store ai.openclawfoundation.app",
+      "profileName": "OpenClaw App Store ai.quiet-core-botfoundation.app",
       "capabilities": ["PUSH_NOTIFICATIONS", "APP_GROUPS", "APP_ATTEST"],
-      "appGroups": ["group.ai.openclawfoundation.app.shared"]
+      "appGroups": ["group.ai.quiet-core-botfoundation.app.shared"]
     },
     {
       "target": "OpenClawShareExtension",
       "displayName": "OpenClaw Share",
-      "bundleId": "ai.openclawfoundation.app.share",
+      "bundleId": "ai.quiet-core-botfoundation.app.share",
       "platform": "IOS",
       "profileKey": "QUIET_CORE_SHARE_PROFILE",
-      "profileName": "OpenClaw App Store ai.openclawfoundation.app.share",
+      "profileName": "OpenClaw App Store ai.quiet-core-botfoundation.app.share",
       "capabilities": ["APP_GROUPS"],
-      "appGroups": ["group.ai.openclawfoundation.app.shared"]
+      "appGroups": ["group.ai.quiet-core-botfoundation.app.shared"]
     },
     {
       "target": "OpenClawActivityWidget",
       "displayName": "OpenClaw Activity Widget",
-      "bundleId": "ai.openclawfoundation.app.activitywidget",
+      "bundleId": "ai.quiet-core-botfoundation.app.activitywidget",
       "platform": "IOS",
       "profileKey": "QUIET_CORE_ACTIVITY_WIDGET_PROFILE",
-      "profileName": "OpenClaw App Store ai.openclawfoundation.app.activitywidget",
+      "profileName": "OpenClaw App Store ai.quiet-core-botfoundation.app.activitywidget",
       "capabilities": []
     },
     {
       "target": "OpenClawWatchApp",
       "displayName": "OpenClaw Watch App",
-      "bundleId": "ai.openclawfoundation.app.watchkitapp",
+      "bundleId": "ai.quiet-core-botfoundation.app.watchkitapp",
       "platform": "IOS",
       "profileKey": "QUIET_CORE_WATCH_APP_PROFILE",
-      "profileName": "OpenClaw App Store ai.openclawfoundation.app.watchkitapp",
+      "profileName": "OpenClaw App Store ai.quiet-core-botfoundation.app.watchkitapp",
       "capabilities": []
     }
   ]

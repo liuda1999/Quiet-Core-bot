@@ -127,7 +127,7 @@ rule:
   enabled, a missing, slow, unreadable, or permission-blocked policy executable
   fails closed.
 - Approving plugin versions without considering the policy request's
-  `quiet-core-botVersion` and the plugin candidate metadata.
+  `openclawVersion` and the plugin candidate metadata.
 
 Safer policy rules allow trusted Quiet Core bot-owned plugin updates when the
 candidate is compatible with the current Quiet Core bot host, instead of pinning a

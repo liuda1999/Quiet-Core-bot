@@ -19,15 +19,22 @@ describe("plugin-sdk chat-channel-ids", () => {
   });
 
   it("covers channel labels and aliases used by envelope formatters", () => {
-    expect(BUNDLED_CHAT_CHANNEL_ENVELOPE_PREFIXES).toEqual(
-      expect.arrayContaining([
-        "googlechat",
-        "Google Chat",
-        "nextcloud-talk",
-        "Nextcloud Talk",
-        "msteams",
-        "teams",
-      ]),
+    // The prefix list is built with case-insensitive de-duplication, so compare the same way.
+    const normalizedPrefixes = new Set(
+      BUNDLED_CHAT_CHANNEL_ENVELOPE_PREFIXES.map((prefix) => prefix.toLowerCase()),
     );
+    const entries = listBundledChannelCatalogEntries();
+    expect(entries.length).toBeGreaterThan(0);
+    for (const entry of entries) {
+      expect(normalizedPrefixes.has(entry.id.toLowerCase()), entry.id).toBe(true);
+      if (entry.channel.label) {
+        expect(normalizedPrefixes.has(entry.channel.label.toLowerCase()), entry.channel.label).toBe(
+          true,
+        );
+      }
+      for (const alias of entry.aliases) {
+        expect(normalizedPrefixes.has(alias.toLowerCase()), alias).toBe(true);
+      }
+    }
   });
 });

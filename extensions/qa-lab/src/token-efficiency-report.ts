@@ -115,7 +115,7 @@ function runtimeUsage(cell: RuntimeParityCell): TokenEfficiencyRuntimeUsage {
 
 function toolNamesForCells(openclaw: RuntimeParityCell, codex: RuntimeParityCell): string[] {
   return [
-    ...new Set([...quiet-core-bot.toolCalls, ...codex.toolCalls].map((call) => call.tool)),
+    ...new Set([...openclaw.toolCalls, ...codex.toolCalls].map((call) => call.tool)),
   ].toSorted((left, right) => left.localeCompare(right));
 }
 
@@ -126,7 +126,7 @@ function buildRow(params: {
 }): TokenEfficiencyRow {
   const openclaw = runtimeUsage(params.result.cells.openclaw);
   const codex = runtimeUsage(params.result.cells.codex);
-  const delta = deltaPercent(quiet-core-bot.totalTokens, codex.totalTokens);
+  const delta = deltaPercent(openclaw.totalTokens, codex.totalTokens);
   const flagged = params.usageSource === "live-usage" && delta > params.thresholdPercent;
   const classification =
     delta > params.thresholdPercent
@@ -173,7 +173,9 @@ function buildAggregate(rows: readonly TokenEfficiencyRow[]): TokenEfficiencyRep
 function liveEvidenceFailures(row: TokenEfficiencyRow): string[] {
   const failures: string[] = [];
   if (row.openclaw.totalTokens <= 0) {
-    failures.push(`${row.scenarioId} quiet-core-bot live usage totalTokens=${row.openclaw.totalTokens}`);
+    failures.push(
+      `${row.scenarioId} quiet-core-bot live usage totalTokens=${row.openclaw.totalTokens}`,
+    );
   }
   if (row.codex.totalTokens <= 0) {
     failures.push(`${row.scenarioId} codex live usage totalTokens=${row.codex.totalTokens}`);
@@ -243,7 +245,11 @@ export function buildTokenEfficiencyReport(
     const rowFailures =
       liveUsage && result
         ? [
-            ...liveUsageShapeFailures(row.scenarioId, "quiet-core-bot", result.cells.openclaw.usage),
+            ...liveUsageShapeFailures(
+              row.scenarioId,
+              "quiet-core-bot",
+              result.cells.openclaw.usage,
+            ),
             ...liveUsageShapeFailures(row.scenarioId, "codex", result.cells.codex.usage),
             ...liveEvidenceFailures(row),
           ]

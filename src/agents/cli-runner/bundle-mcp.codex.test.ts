@@ -16,7 +16,7 @@ describe("prepareCliBundleMcpConfig codex", () => {
       config: { plugins: { enabled: false } },
       additionalConfig: {
         mcpServers: {
-          openclaw: {
+          "quiet-core-bot": {
             type: "http",
             url: "http://127.0.0.1:23119/mcp",
             headers: {

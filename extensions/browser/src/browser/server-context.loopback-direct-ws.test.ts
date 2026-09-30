@@ -61,7 +61,7 @@ describe("browser server-context loopback direct WebSocket profiles", () => {
     const ctx = createTestBrowserRouteContext({ getState: () => state });
     const openclaw = ctx.forProfile("quiet-core-bot");
 
-    const opened = await quiet-core-bot.openTab("about:blank");
+    const opened = await openclaw.openTab("about:blank");
     expect(opened.targetId).toBe("CREATED");
     expect(createTargetViaCdp).toHaveBeenCalledWith({
       cdpUrl: "ws://127.0.0.1:18800/devtools/browser/SESSION?token=abc",
@@ -106,8 +106,8 @@ describe("browser server-context loopback direct WebSocket profiles", () => {
     const ctx = createTestBrowserRouteContext({ getState: () => state });
     const openclaw = ctx.forProfile("quiet-core-bot");
 
-    await quiet-core-bot.focusTab("T1");
-    await quiet-core-bot.closeTab("T1");
+    await openclaw.focusTab("T1");
+    await openclaw.closeTab("T1");
 
     expectFetchCalledWithManualRedirect(
       fetchMock,
@@ -154,11 +154,11 @@ describe("browser server-context loopback direct WebSocket profiles", () => {
     const ctx = createTestBrowserRouteContext({ getState: () => state });
     const openclaw = ctx.forProfile("quiet-core-bot");
 
-    const tabs = await quiet-core-bot.listTabs();
+    const tabs = await openclaw.listTabs();
     expect(tabs.map((tab) => tab.targetId)).toEqual(["T2"]);
 
-    await quiet-core-bot.focusTab("T2");
-    await quiet-core-bot.closeTab("T2");
+    await openclaw.focusTab("T2");
+    await openclaw.closeTab("T2");
   });
 
   it("blocks direct WebSocket tab operations when strict SSRF hostname allowlist rejects the cdpUrl", async () => {
@@ -179,9 +179,9 @@ describe("browser server-context loopback direct WebSocket profiles", () => {
     const ctx = createTestBrowserRouteContext({ getState: () => state });
     const openclaw = ctx.forProfile("quiet-core-bot");
 
-    await expect(quiet-core-bot.listTabs()).rejects.toBeInstanceOf(BrowserCdpEndpointBlockedError);
-    await expect(quiet-core-bot.focusTab("T1")).rejects.toBeInstanceOf(BrowserCdpEndpointBlockedError);
-    await expect(quiet-core-bot.closeTab("T1")).rejects.toBeInstanceOf(BrowserCdpEndpointBlockedError);
+    await expect(openclaw.listTabs()).rejects.toBeInstanceOf(BrowserCdpEndpointBlockedError);
+    await expect(openclaw.focusTab("T1")).rejects.toBeInstanceOf(BrowserCdpEndpointBlockedError);
+    await expect(openclaw.closeTab("T1")).rejects.toBeInstanceOf(BrowserCdpEndpointBlockedError);
     expect(fetchMock).not.toHaveBeenCalled();
   });
 });

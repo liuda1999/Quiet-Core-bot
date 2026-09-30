@@ -1,4 +1,5 @@
 // Coverage for attempt bootstrap ownership and context path remapping.
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   isPrimaryBootstrapRun,
@@ -47,15 +48,15 @@ describe("remapInjectedContextFilesToWorkspace", () => {
       }),
     ).toEqual([
       {
-        path: "/sandbox/workspace/AGENTS.md",
+        path: path.join("/sandbox/workspace", "AGENTS.md"),
         content: "agents",
       },
       {
-        path: "/sandbox/workspace/nested/TOOLS.md",
+        path: path.join("/sandbox/workspace", "nested", "TOOLS.md"),
         content: "tools",
       },
       {
-        path: "/sandbox/workspace/..context/USER.md",
+        path: path.join("/sandbox/workspace", "..context", "USER.md"),
         content: "dot-prefixed context",
       },
       {

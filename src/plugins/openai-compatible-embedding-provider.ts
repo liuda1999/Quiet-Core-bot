@@ -14,6 +14,26 @@ import type {
 
 /** Provider id for OpenAI-compatible remote embedding servers. */
 export const OPENAI_COMPATIBLE_EMBEDDING_PROVIDER_ID = "openai-compatible";
+
+/**
+ * Thrown when an OpenAI-compatible embedding client cannot be built from the
+ * supplied configuration (missing baseUrl/model, invalid dimensions, or an
+ * unresolved secret ref). These are operator-actionable and contain no secrets,
+ * so HTTP surfaces may report them to the caller — unlike transport failures,
+ * which stay sanitized as `internal error`.
+ */
+export class EmbeddingProviderConfigError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "EmbeddingProviderConfigError";
+  }
+}
+
+/** Narrow an unknown error to a build-time embedding configuration error. */
+export function isEmbeddingProviderConfigError(err: unknown): err is EmbeddingProviderConfigError {
+  return err instanceof EmbeddingProviderConfigError;
+}
+
 const OPENAI_COMPATIBLE_MODEL_APIS = new Set(["openai-completions", "openai-responses"]);
 const EMBEDDING_ERROR_BODY_MAX_BYTES = 8 * 1024;
 const EMBEDDING_ERROR_BODY_MAX_CHARS = 1_000;
@@ -45,7 +65,7 @@ type ConfiguredEmbeddingProvider = {
 function normalizeBaseUrl(value: string | undefined): string {
   const baseUrl = value?.trim();
   if (!baseUrl) {
-    throw new Error(
+    throw new EmbeddingProviderConfigError(
       "openai-compatible embeddings: missing remote.baseUrl. Set it to your OpenAI-compatible embeddings server, for example http://127.0.0.1:11434/v1.",
     );
   }
@@ -55,7 +75,7 @@ function normalizeBaseUrl(value: string | undefined): string {
 function normalizeModel(value: string | undefined, providerId: string | undefined): string {
   const model = value?.trim();
   if (!model) {
-    throw new Error(
+    throw new EmbeddingProviderConfigError(
       "openai-compatible embeddings: missing model. Set it to the embedding model id your server expects.",
     );
   }
@@ -81,7 +101,9 @@ function normalizeDimensions(value: number | undefined): number | undefined {
     return undefined;
   }
   if (!Number.isInteger(value) || value <= 0) {
-    throw new Error("openai-compatible embeddings: dimensions must be a positive integer.");
+    throw new EmbeddingProviderConfigError(
+      "openai-compatible embeddings: dimensions must be a positive integer.",
+    );
   }
   return value;
 }
@@ -183,7 +205,7 @@ async function resolveSecretString(params: {
     unresolvedReasonStyle: "detailed",
   });
   if (resolved.unresolvedRefReason) {
-    throw new Error(resolved.unresolvedRefReason);
+    throw new EmbeddingProviderConfigError(resolved.unresolvedRefReason);
   }
   return normalizeSecretInputString(resolved.value);
 }

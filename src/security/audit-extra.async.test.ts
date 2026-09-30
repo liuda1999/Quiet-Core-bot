@@ -215,7 +215,9 @@ description: test skill
         "plugin code-safety",
       );
       expect(codeSafetyFinding.title).toContain('Plugin "demo"');
-      expect(findings.map((f) => f.title).join("\n")).not.toContain(".quiet-core-bot-install-backups");
+      expect(findings.map((f) => f.title).join("\n")).not.toContain(
+        ".quiet-core-bot-install-backups",
+      );
     } finally {
       scanSpy.mockRestore();
     }
@@ -295,8 +297,14 @@ description: test skill
       platform: "linux",
     });
 
+    // Windows cannot clear POSIX write bits, so these stores surface as
+    // writable-by-others instead of readable-by-others.
     const readableAuthTargets = findings
-      .filter((finding) => finding.checkId === "fs.auth_profiles.perms_readable")
+      .filter(
+        (finding) =>
+          finding.checkId === "fs.auth_profiles.perms_readable" ||
+          finding.checkId === "fs.auth_profiles.perms_writable",
+      )
       .map((finding) => finding.detail);
     expect(readableAuthTargets).toEqual(
       expect.arrayContaining([
