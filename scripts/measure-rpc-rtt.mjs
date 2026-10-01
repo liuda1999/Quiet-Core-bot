@@ -290,7 +290,7 @@ async function defaultOpen(filePath, flags) {
   return await fs.open(filePath, flags);
 }
 
-function resolveOpenClawLaunchArgs(repoRoot, sourceEntryExists = existsSync) {
+function resolveQuietCoreLaunchArgs(repoRoot, sourceEntryExists = existsSync) {
   const sourceEntry = path.join(repoRoot, "src", "entry.ts");
   if (sourceEntryExists(sourceEntry)) {
     return ["--import", "tsx", sourceEntry];
@@ -523,7 +523,7 @@ export async function startGateway({
   }
 
   let child;
-  const launcherArgs = resolveOpenClawLaunchArgs(repoRoot, sourceEntryExists);
+  const launcherArgs = resolveQuietCoreLaunchArgs(repoRoot, sourceEntryExists);
   try {
     child = spawnImpl(
       process.execPath,
@@ -935,8 +935,8 @@ async function main() {
     removeGatewayParentCleanup = installGatewayParentCleanup(gatewayChild);
     await waitForGatewayReady({ child: gatewayChild, port, stderrPath });
 
-    const requireFromOpenClaw = createRequire(path.join(repoRoot, "package.json"));
-    const WebSocket = requireFromOpenClaw("ws");
+    const requireFromQuietCore = createRequire(path.join(repoRoot, "package.json"));
+    const WebSocket = requireFromQuietCore("ws");
     const protocol = await import(
       pathToFileURL(path.join(repoRoot, "packages/gateway-protocol/src/version.ts")).href
     );

@@ -33,7 +33,7 @@ import { assertUpstreamUpdateAllowed } from "../../config/independent-build-guar
 import { formatConfigIssueLines } from "../../config/issue-format.js";
 import { asResolvedSourceConfig, asRuntimeConfig } from "../../config/materialize.js";
 import { CONFIG_PATH, resolveIncludeRoots } from "../../config/paths.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { PluginInstallRecord } from "../../config/types.plugins.js";
 import {
   GATEWAY_SERVICE_KIND,
@@ -41,7 +41,7 @@ import {
   GATEWAY_SERVICE_RUNTIME_PID_ENV,
 } from "../../daemon/constants.js";
 import { resolveGatewayInstallEntrypoint } from "../../daemon/gateway-entrypoint.js";
-import { disableCurrentOpenClawUpdateLaunchdJob } from "../../daemon/launchd.js";
+import { disableCurrentQuietCoreUpdateLaunchdJob } from "../../daemon/launchd.js";
 import { resolveGatewayRestartLogPath } from "../../daemon/restart-logs.js";
 import { summarizeGatewayServiceLayout } from "../../daemon/service-layout.js";
 import type { GatewayServiceCommandConfig } from "../../daemon/service-types.js";
@@ -370,7 +370,7 @@ function restoreDroppedPreUpdateChannels(
   const authoredChannels = resolveRestoredAuthoredChannels({
     currentChannels: snapshot.sourceConfig.channels,
     currentAuthoredChannels: isRecord(snapshot.parsed)
-      ? (snapshot.parsed as OpenClawConfig).channels
+      ? (snapshot.parsed as QuietCoreConfig).channels
       : snapshot.sourceConfig.channels,
     preUpdateAuthoredChannels: preUpdateConfig.authoredConfig.channels,
     restoredChannelIds,
@@ -378,7 +378,7 @@ function restoreDroppedPreUpdateChannels(
   const nextConfig = {
     ...snapshot.sourceConfig,
     channels: restoredChannels,
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
   return {
     snapshot: {
       ...createUpdatedConfigSnapshot(snapshot, nextConfig),
@@ -467,7 +467,7 @@ function resolveRestoredAuthoredChannels(params: {
 
 export async function collectMissingPluginInstallPayloads(params: {
   records: Record<string, PluginInstallRecord>;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   skipDisabledPlugins?: boolean;
   syncOfficialPluginInstalls?: boolean;
   env?: NodeJS.ProcessEnv;
@@ -1181,7 +1181,7 @@ export function resolvePostInstallDoctorEnv(params?: {
 }
 
 export function resolveUpdatedGatewayRestartPort(params: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   processEnv?: NodeJS.ProcessEnv;
   serviceEnv?: NodeJS.ProcessEnv;
 }): number {
@@ -1977,7 +1977,7 @@ export async function updatePluginsAfterCoreUpdate(params: {
     if (params.restoredAuthoredChannels !== undefined) {
       nextConfig = {
         ...nextConfig,
-        channels: structuredClone(params.restoredAuthoredChannels) as OpenClawConfig["channels"],
+        channels: structuredClone(params.restoredAuthoredChannels) as QuietCoreConfig["channels"],
       };
     }
     await commitPluginInstallRecordsWithConfig({
@@ -2483,7 +2483,7 @@ export async function updateFinalizeCommand(opts: UpdateFinalizeOptions): Promis
       ? {
           sourceConfig: configSnapshot.sourceConfig,
           authoredConfig: isRecord(configSnapshot.parsed)
-            ? (configSnapshot.parsed as OpenClawConfig)
+            ? (configSnapshot.parsed as QuietCoreConfig)
             : configSnapshot.sourceConfig,
         }
       : undefined);
@@ -2616,7 +2616,7 @@ async function persistRequestedUpdateChannel(params: {
 
 function createUpdatedConfigSnapshot(
   snapshot: Awaited<ReturnType<typeof readConfigFileSnapshot>>,
-  next: OpenClawConfig,
+  next: QuietCoreConfig,
 ): Awaited<ReturnType<typeof readConfigFileSnapshot>> {
   if (!snapshot.valid) {
     return snapshot;
@@ -2716,11 +2716,11 @@ function normalizePreUpdateConfigRestoreInput(
   const authoredConfig = parsed.authoredConfig;
   if (isRecord(sourceConfig) && isRecord(authoredConfig)) {
     return {
-      sourceConfig: sourceConfig as OpenClawConfig,
-      authoredConfig: authoredConfig as OpenClawConfig,
+      sourceConfig: sourceConfig as QuietCoreConfig,
+      authoredConfig: authoredConfig as QuietCoreConfig,
     };
   }
-  const authored = parsed as OpenClawConfig;
+  const authored = parsed as QuietCoreConfig;
   return {
     sourceConfig: options?.configPath
       ? resolvePreUpdateSourceConfigFromAuthored(authored, options.configPath)
@@ -2730,9 +2730,9 @@ function normalizePreUpdateConfigRestoreInput(
 }
 
 function resolvePreUpdateSourceConfigFromAuthored(
-  authoredConfig: OpenClawConfig,
+  authoredConfig: QuietCoreConfig,
   configPath: string,
-): OpenClawConfig {
+): QuietCoreConfig {
   try {
     const withIncludes = resolveConfigIncludes(authoredConfig, configPath, undefined, {
       allowedRoots: resolveIncludeRoots(process.env),
@@ -2740,7 +2740,7 @@ function resolvePreUpdateSourceConfigFromAuthored(
     const resolved = resolveConfigEnvVars(withIncludes, process.env, {
       onMissing: () => undefined,
     });
-    return isRecord(resolved) ? (resolved as OpenClawConfig) : authoredConfig;
+    return isRecord(resolved) ? (resolved as QuietCoreConfig) : authoredConfig;
   } catch {
     return authoredConfig;
   }
@@ -3190,7 +3190,7 @@ async function updateCommandInternal(opts: UpdateCommandOptions): Promise<void> 
     return;
   }
   if (opts.dryRun !== true) {
-    await disableCurrentOpenClawUpdateLaunchdJob().catch(() => undefined);
+    await disableCurrentQuietCoreUpdateLaunchdJob().catch(() => undefined);
     assertConfigWriteAllowedInCurrentMode();
   }
   const updateStepTimeoutMs = timeoutMs ?? DEFAULT_UPDATE_STEP_TIMEOUT_MS;
@@ -3820,7 +3820,7 @@ async function updateCommandInternal(opts: UpdateCommandOptions): Promise<void> 
         ? {
             sourceConfig: configSnapshot.sourceConfig,
             authoredConfig: isRecord(configSnapshot.parsed)
-              ? (configSnapshot.parsed as OpenClawConfig)
+              ? (configSnapshot.parsed as QuietCoreConfig)
               : configSnapshot.sourceConfig,
           }
         : undefined,
@@ -3842,7 +3842,7 @@ async function updateCommandInternal(opts: UpdateCommandOptions): Promise<void> 
         ? {
             sourceConfig: configSnapshot.sourceConfig,
             authoredConfig: isRecord(configSnapshot.parsed)
-              ? (configSnapshot.parsed as OpenClawConfig)
+              ? (configSnapshot.parsed as QuietCoreConfig)
               : configSnapshot.sourceConfig,
           }
         : undefined,

@@ -1,6 +1,6 @@
 /**
  * Gateway loop for polling ClickClack backlog events, opening the realtime
- * websocket, and dispatching user messages into OpenClaw.
+ * websocket, and dispatching user messages into QuietCore.
  */
 import type { ChannelGatewayContext } from "quiet-core-bot/plugin-sdk/channel-contract";
 import type { RawData } from "ws";

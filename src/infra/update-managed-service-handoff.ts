@@ -9,7 +9,7 @@ import {
   resolveGatewaySystemdServiceName,
   resolveGatewayWindowsTaskName,
 } from "../daemon/constants.js";
-import { resolveOpenClawStateSqlitePath } from "../state/quiet-core-bot-state-db.paths.js";
+import { resolveQuietCoreStateSqlitePath } from "../state/quiet-core-bot-state-db.paths.js";
 import { SUPERVISOR_HINT_ENV_VARS, type RespawnSupervisor } from "./supervisor-markers.js";
 import {
   CONTROL_PLANE_UPDATE_SENTINEL_META_ENV,
@@ -693,7 +693,7 @@ export async function startManagedServiceUpdateHandoff(params: {
     handoffId: params.handoffId,
     logPath,
     metaPath,
-    stateDatabasePath: resolveOpenClawStateSqlitePath(params.env ?? process.env),
+    stateDatabasePath: resolveQuietCoreStateSqlitePath(params.env ?? process.env),
     sensitivePaths: [scriptPath, paramsPath, metaPath],
     serviceRecovery: resolveGatewayServiceRecovery(params.supervisor, params.env ?? process.env),
   };

@@ -809,7 +809,7 @@ describe("scripts/changed-lanes", () => {
 
   it("runs changed-check app tests under the parent heavy-check lock", () => {
     const result = detectChangedLanes([
-      "apps/shared/QuietCoreKit/Sources/OpenClawProtocol/GatewayModels.swift",
+      "apps/shared/QuietCoreKit/Sources/QuietCoreProtocol/GatewayModels.swift",
     ]);
     const plan = createChangedCheckPlan(result, { env: { PATH: "/usr/bin" } });
     const testCommand = plan.commands.find((command) => command.args[0] === "test:macos:ci");
@@ -1254,7 +1254,7 @@ describe("scripts/changed-lanes", () => {
       "apps/ios/Config/Version.xcconfig",
       "apps/ios/fastlane/metadata/en-US/release_notes.txt",
       "apps/ios/version.json",
-      "apps/macos/Sources/OpenClaw/Resources/Info.plist",
+      "apps/macos/Sources/QuietCore/Resources/Info.plist",
       "docs/.generated/config-baseline.sha256",
       "package.json",
     ]);
@@ -1473,9 +1473,9 @@ describe("scripts/changed-lanes", () => {
 
   it("runs macOS app CI tests for macOS app dependency changes", () => {
     for (const changedPath of [
-      "apps/macos/Sources/OpenClawMac/AppDelegate.swift",
-      "apps/macos-mlx-tts/Sources/OpenClawMLXTTS/main.swift",
-      "apps/shared/QuietCoreKit/Sources/OpenClawProtocol/GatewayModels.swift",
+      "apps/macos/Sources/QuietCoreMac/AppDelegate.swift",
+      "apps/macos-mlx-tts/Sources/QuietCoreMLXTTS/main.swift",
+      "apps/shared/QuietCoreKit/Sources/QuietCoreProtocol/GatewayModels.swift",
       "apps/swabble/Sources/SwabbleKit/WakeWordGate.swift",
       "Swabble/Sources/SwabbleKit/WakeWordGate.swift",
     ]) {
@@ -1538,7 +1538,7 @@ describe("scripts/changed-lanes", () => {
 
   it("runs app lint when SwiftLint is available in Testbox", () => {
     const result = detectChangedLanes([
-      "apps/shared/QuietCoreKit/Sources/OpenClawProtocol/GatewayModels.swift",
+      "apps/shared/QuietCoreKit/Sources/QuietCoreProtocol/GatewayModels.swift",
     ]);
     const plan = createChangedCheckPlan(result, {
       env: { CI: "1", PATH: "/usr/bin" },
@@ -1607,7 +1607,7 @@ describe("scripts/changed-lanes", () => {
 
   it("checks native A2UI resources when the copied resource tree changes", () => {
     const result = detectChangedLanes([
-      "apps/shared/QuietCoreKit/Sources/OpenClawKit/Resources/CanvasA2UI/a2ui.bundle.js",
+      "apps/shared/QuietCoreKit/Sources/QuietCoreKit/Resources/CanvasA2UI/a2ui.bundle.js",
     ]);
     const plan = createChangedCheckPlan(result);
 

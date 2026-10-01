@@ -21,7 +21,7 @@ import { buildChannelAccountSnapshot } from "../../channels/plugins/status.js";
 import type { ChannelPlugin } from "../../channels/plugins/types.plugin.js";
 import type { ChannelAccountSnapshot } from "../../channels/plugins/types.public.js";
 import { readConfigFileSnapshot } from "../../config/config.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { getChannelActivity } from "../../infra/channel-activity.js";
 import { DEFAULT_ACCOUNT_ID } from "../../routing/session-key.js";
 import { defaultRuntime } from "../../runtime.js";
@@ -233,7 +233,7 @@ function resolveRuntimeAccountSnapshot(params: {
 
 function resolveChannelGatewayAccountId(params: {
   plugin: ChannelPlugin;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   accountId?: string | null;
 }): string {
   // Runtime operations use the same account precedence as channel setup:
@@ -250,7 +250,7 @@ function resolveChannelGatewayAccountId(params: {
 export async function logoutChannelAccount(params: {
   channelId: ChannelId;
   accountId?: string | null;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   context: GatewayRequestContext;
   plugin: ChannelPlugin;
 }): Promise<ChannelLogoutPayload> {
@@ -285,7 +285,7 @@ export async function logoutChannelAccount(params: {
 export async function startChannelAccount(params: {
   channelId: ChannelId;
   accountId?: string | null;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   context: GatewayRequestContext;
   plugin: ChannelPlugin;
 }): Promise<ChannelStartPayload> {
@@ -312,7 +312,7 @@ export async function startChannelAccount(params: {
 export async function stopChannelAccount(params: {
   channelId: ChannelId;
   accountId?: string | null;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   context: GatewayRequestContext;
   plugin: ChannelPlugin;
 }): Promise<ChannelStopPayload> {

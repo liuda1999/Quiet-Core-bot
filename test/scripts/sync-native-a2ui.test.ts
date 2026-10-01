@@ -41,7 +41,7 @@ describe("scripts/sync-native-a2ui.mjs", () => {
         "shared",
         "QuietCoreKit",
         "Sources",
-        "OpenClawKit",
+        "QuietCoreKit",
         "Resources",
         "CanvasA2UI",
       ),

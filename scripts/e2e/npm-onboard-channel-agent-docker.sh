@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Installs a prepared OpenClaw npm tarball in Docker, runs non-interactive
+# Installs a prepared QuietCore npm tarball in Docker, runs non-interactive
 # onboarding for a channel, and verifies one mocked model turn through Gateway.
 set -euo pipefail
 
@@ -148,7 +148,7 @@ if [ -d "$package_root/dist/extensions/$CHANNEL" ]; then
   CHANNEL_PACKAGE_MODE="bundled"
 else
   CHANNEL_PACKAGE_MODE="external"
-  echo "$CHANNEL is not packaged with core OpenClaw; expecting channel selection to install it on demand."
+  echo "$CHANNEL is not packaged with core QuietCore; expecting channel selection to install it on demand."
 fi
 
 mock_pid="$(quiet_core_bot_e2e_start_mock_openai "$MOCK_PORT" /tmp/quiet-core-bot-mock-openai.log)"

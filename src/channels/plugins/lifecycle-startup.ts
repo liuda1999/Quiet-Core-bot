@@ -3,7 +3,7 @@
  *
  * Invokes optional plugin lifecycle hooks without blocking unrelated channels.
  */
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { listChannelPlugins } from "./registry.js";
 
 type ChannelStartupLogger = {
@@ -15,7 +15,7 @@ type ChannelStartupLogger = {
  * Runs startup maintenance hooks for all loaded channel plugins.
  */
 export async function runChannelPluginStartupMaintenance(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
   log: ChannelStartupLogger;
   trigger?: string;

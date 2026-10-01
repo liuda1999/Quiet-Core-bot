@@ -98,7 +98,7 @@ vi.mock("../../plugins/plugin-module-loader-cache.js", async (importOriginal) =>
     );
   }
 
-  function loadOpenClawPlugins(params: LoaderParams) {
+  function loadQuietCorePlugins(params: LoaderParams) {
     const onlyPluginIds = new Set(params.onlyPluginIds ?? []);
     const diagnostics: Array<{
       level: "error";
@@ -160,7 +160,7 @@ vi.mock("../../plugins/plugin-module-loader-cache.js", async (importOriginal) =>
           modulePath.endsWith("/plugins/loader.js") ||
           modulePath.endsWith("/plugins/loader.ts")
         ) {
-          return { loadOpenClawPlugins };
+          return { loadQuietCorePlugins };
         }
         return actualLoader(modulePath);
       }) as ReturnType<typeof actual.getCachedPluginModuleLoader>;

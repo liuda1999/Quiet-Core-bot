@@ -5,7 +5,7 @@ import {
   resolveTimerTimeoutMs,
 } from "@quiet-core/normalization-core/number-coercion";
 import type { MsgContext } from "../auto-reply/templating.js";
-import type { OpenClawConfig } from "../config/types.js";
+import type { QuietCoreConfig } from "../config/types.js";
 import type {
   MediaUnderstandingConfig,
   MediaUnderstandingModelConfig,
@@ -62,7 +62,7 @@ export function resolvePrompt(
 export function resolveMaxChars(params: {
   capability: MediaUnderstandingCapability;
   entry: MediaUnderstandingModelConfig;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   config?: MediaUnderstandingConfig;
 }): number | undefined {
   const { capability, entry, cfg } = params;
@@ -78,7 +78,7 @@ export function resolveMaxChars(params: {
 export function resolveMaxBytes(params: {
   capability: MediaUnderstandingCapability;
   entry: MediaUnderstandingModelConfig;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   config?: MediaUnderstandingConfig;
 }): number {
   const configured =
@@ -106,7 +106,7 @@ export function resolveScopeDecision(params: {
 
 /** Resolves configured model entries that can handle the requested media capability. */
 export function resolveModelEntries(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   capability: MediaUnderstandingCapability;
   config?: MediaUnderstandingConfig;
   providerRegistry: Map<string, { capabilities?: MediaUnderstandingCapability[] }>;
@@ -145,7 +145,7 @@ export function resolveModelEntries(params: {
 }
 
 /** Resolves the bounded media-understanding task concurrency from config. */
-export function resolveConcurrency(cfg: OpenClawConfig): number {
+export function resolveConcurrency(cfg: QuietCoreConfig): number {
   const configured = cfg.tools?.media?.concurrency;
   if (typeof configured === "number" && Number.isFinite(configured) && configured > 0) {
     return Math.floor(configured);

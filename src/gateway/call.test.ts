@@ -4,7 +4,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import type { DeviceIdentity } from "../infra/device-identity.js";
 import { createEmptyPluginRegistry } from "../plugins/registry-empty.js";
 import { setActivePluginRegistry } from "../plugins/runtime.js";
@@ -271,9 +271,9 @@ function resetGatewayCallMocks() {
   closeReason = "";
   helloMethods = ["health", "secrets.resolve"];
   connectError = null;
-  const loadConfigForTests = getRuntimeConfig as unknown as () => OpenClawConfig;
+  const loadConfigForTests = getRuntimeConfig as unknown as () => QuietCoreConfig;
   const resolveGatewayPortForTests = resolveGatewayPort as unknown as (
-    cfg?: OpenClawConfig,
+    cfg?: QuietCoreConfig,
     env?: NodeJS.ProcessEnv,
   ) => number;
   testing.setDepsForTests({
@@ -663,7 +663,7 @@ describe("callGateway url resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as QuietCoreConfig);
     resolveGatewayPort.mockReturnValue(18789);
     pickPrimaryTailnetIPv4.mockReturnValue(undefined);
     process.env.QUIET_CORE_GATEWAY_URL = "wss://gateway-in-container.internal:9443/ws";
@@ -848,7 +848,7 @@ describe("callGateway url resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as QuietCoreConfig);
     setGatewayNetworkDefaults();
 
     await callGatewayCli({ method: "node.list", useStoredDeviceAuth: true });
@@ -1124,7 +1124,7 @@ describe("buildGatewayConnectionDetails", () => {
         tls: { enabled: true },
         handshakeTimeoutMs: 4321,
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
     resolveGatewayPort.mockReturnValue(18800);
     testing.setDepsForTests({
       getRuntimeConfig: () => config,
@@ -1149,7 +1149,7 @@ describe("buildGatewayConnectionDetails", () => {
         mode: "local",
         bind: "loopback",
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
     resolveGatewayPort.mockImplementation((_config?: unknown, env?: unknown) => {
       const candidateEnv = env as NodeJS.ProcessEnv | undefined;
       return Number(candidateEnv?.QUIET_CORE_GATEWAY_PORT ?? 18789);
@@ -1838,11 +1838,11 @@ describe("callGateway error details", () => {
             stopStarted = true;
           },
         }) as never,
-      getRuntimeConfig: getRuntimeConfig as unknown as () => OpenClawConfig,
+      getRuntimeConfig: getRuntimeConfig as unknown as () => QuietCoreConfig,
       loadOrCreateDeviceIdentity: () => deviceIdentityState.value,
       loadDeviceAuthToken: loadDeviceAuthTokenMock,
       resolveGatewayPort: resolveGatewayPort as unknown as (
-        cfg?: OpenClawConfig,
+        cfg?: QuietCoreConfig,
         env?: NodeJS.ProcessEnv,
       ) => number,
     });
@@ -1903,11 +1903,11 @@ describe("callGateway error details", () => {
             stopStarted = true;
           },
         }) as never,
-      getRuntimeConfig: getRuntimeConfig as unknown as () => OpenClawConfig,
+      getRuntimeConfig: getRuntimeConfig as unknown as () => QuietCoreConfig,
       loadOrCreateDeviceIdentity: () => deviceIdentityState.value,
       loadDeviceAuthToken: loadDeviceAuthTokenMock,
       resolveGatewayPort: resolveGatewayPort as unknown as (
-        cfg?: OpenClawConfig,
+        cfg?: QuietCoreConfig,
         env?: NodeJS.ProcessEnv,
       ) => number,
     });
@@ -1989,11 +1989,11 @@ describe("callGateway error details", () => {
             });
           },
         }) as never,
-      getRuntimeConfig: getRuntimeConfig as unknown as () => OpenClawConfig,
+      getRuntimeConfig: getRuntimeConfig as unknown as () => QuietCoreConfig,
       loadOrCreateDeviceIdentity: () => deviceIdentityState.value,
       loadDeviceAuthToken: loadDeviceAuthTokenMock,
       resolveGatewayPort: resolveGatewayPort as unknown as (
-        cfg?: OpenClawConfig,
+        cfg?: QuietCoreConfig,
         env?: NodeJS.ProcessEnv,
       ) => number,
     });
@@ -2051,11 +2051,11 @@ describe("callGateway error details", () => {
             });
           },
         }) as never,
-      getRuntimeConfig: getRuntimeConfig as unknown as () => OpenClawConfig,
+      getRuntimeConfig: getRuntimeConfig as unknown as () => QuietCoreConfig,
       loadOrCreateDeviceIdentity: () => deviceIdentityState.value,
       loadDeviceAuthToken: loadDeviceAuthTokenMock,
       resolveGatewayPort: resolveGatewayPort as unknown as (
-        cfg?: OpenClawConfig,
+        cfg?: QuietCoreConfig,
         env?: NodeJS.ProcessEnv,
       ) => number,
     });
@@ -2256,7 +2256,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as QuietCoreConfig);
 
     await callGateway({ method: "health" });
 
@@ -2279,7 +2279,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as QuietCoreConfig);
 
     await callGateway({ method: "health" });
 
@@ -2302,7 +2302,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as QuietCoreConfig);
 
     await callGateway({ method: "health" });
 
@@ -2325,7 +2325,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as QuietCoreConfig);
 
     await callGateway({ method: "health" });
 
@@ -2352,7 +2352,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as QuietCoreConfig);
 
     await expect(callGateway({ method: "health" })).rejects.toThrow("gateway.auth.token");
   });
@@ -2372,7 +2372,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as QuietCoreConfig);
 
     await callGateway({ method: "health" });
 
@@ -2396,7 +2396,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as QuietCoreConfig);
 
     await callGateway({ method: "health" });
 
@@ -2419,7 +2419,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as QuietCoreConfig);
 
     await expect(callGateway({ method: "health" })).rejects.toThrow("gateway.auth.password");
   });
@@ -2443,7 +2443,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as QuietCoreConfig);
 
     await callGateway({ method: "health" });
 
@@ -2467,7 +2467,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as QuietCoreConfig);
 
     await callGateway({ method: "health" });
 
@@ -2491,7 +2491,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as QuietCoreConfig);
 
     await callGateway({ method: "health" });
 
@@ -2515,7 +2515,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as QuietCoreConfig);
 
     await callGateway({ method: "health" });
 
@@ -2541,7 +2541,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as QuietCoreConfig);
 
     await callGateway({ method: "health" });
 
@@ -2566,7 +2566,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as QuietCoreConfig);
 
     await callGateway({ method: "health" });
 
@@ -2591,7 +2591,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as QuietCoreConfig);
 
     await callGateway({ method: "health" });
 
@@ -2616,7 +2616,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as QuietCoreConfig);
 
     await callGateway({ method: "health" });
 
@@ -2641,7 +2641,7 @@ describe("callGateway password resolution", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as QuietCoreConfig);
 
     await callGateway({ method: "health" });
 

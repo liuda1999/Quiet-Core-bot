@@ -1,4 +1,4 @@
-// Mcp Channels Docker Client script supports OpenClaw repository automation.
+// Mcp Channels Docker Client script supports QuietCore repository automation.
 import { randomUUID } from "node:crypto";
 import {
   assert,

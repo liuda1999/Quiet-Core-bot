@@ -6,11 +6,11 @@ import { loadModelCatalog } from "../agents/model-catalog.js";
 import { resolveDefaultModelForAgent } from "../agents/model-selection.js";
 import { listOpenAIAuthProfileProvidersForAgentRuntime } from "../agents/openai-routing.js";
 import { buildProviderAuthRecoveryHint } from "../agents/provider-auth-recovery-hint.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { WizardPrompter } from "../wizard/prompts.js";
 
 function resolveAuthProviderCandidates(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   provider: string;
   modelId: string;
   agentId?: string;
@@ -43,7 +43,7 @@ function hasProfileForProvider(params: {
 
 /** Warn when the selected default model is unknown or has no usable credentials. */
 export async function warnIfModelConfigLooksOff(
-  config: OpenClawConfig,
+  config: QuietCoreConfig,
   prompter: WizardPrompter,
   options?: { agentId?: string; agentDir?: string; validateCatalog?: boolean },
 ) {

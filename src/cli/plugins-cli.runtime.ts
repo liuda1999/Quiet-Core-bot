@@ -12,7 +12,7 @@ import {
   readConfigFileSnapshot,
   replaceConfigFile,
 } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { tracePluginLifecyclePhaseAsync } from "../plugins/plugin-lifecycle-trace.js";
 import { defaultRuntime } from "../runtime.js";
 import { shortenHomeInString } from "../utils.js";
@@ -104,7 +104,7 @@ function pluginIdListIncludes(list: readonly string[] | undefined, pluginId: str
 }
 
 function formatBlockedRuntimePluginGuidance(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   pluginId: string;
 }): string | undefined {
   const pluginId = params.pluginId;
@@ -125,7 +125,7 @@ function formatBlockedRuntimePluginGuidance(params: {
 }
 
 function formatDisabledRuntimePluginGuidance(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   pluginId: string;
 }): string {
   const allow = params.cfg.plugins?.allow;
@@ -140,7 +140,7 @@ function formatDisabledRuntimePluginGuidance(params: {
 }
 
 function collectConfiguredRuntimePluginWarnings(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env: NodeJS.ProcessEnv;
   plugins: readonly { enabled?: boolean; id: string; status?: string }[];
 }): string[] {
@@ -189,7 +189,7 @@ export async function runPluginsEnableCommand(idInput: string): Promise<void> {
   const { applySlotSelectionForPlugin, logSlotWarnings } = await loadPluginsCommandHelpers();
   const { refreshPluginRegistryAfterConfigMutation } = await loadPluginsRegistryRefresh();
   const snapshot = await readConfigFileSnapshot();
-  const cfg = (snapshot.sourceConfig ?? snapshot.config) as OpenClawConfig;
+  const cfg = (snapshot.sourceConfig ?? snapshot.config) as QuietCoreConfig;
   const report = buildPluginRegistrySnapshotReport({ config: cfg });
   id = normalizePluginId(id);
   if (!report.plugins.some((plugin) => matchesPluginId(plugin, id))) {
@@ -198,7 +198,7 @@ export async function runPluginsEnableCommand(idInput: string): Promise<void> {
   const enableResult = enableExplicitlySelectedPluginInConfig(cfg, id, {
     updateChannelConfig: false,
   });
-  let next: OpenClawConfig = enableResult.config;
+  let next: QuietCoreConfig = enableResult.config;
   const slotResult = applySlotSelectionForPlugin(next, id);
   next = slotResult.config;
   await replaceConfigFile({
@@ -234,7 +234,7 @@ export async function runPluginsDisableCommand(idInput: string): Promise<void> {
   const { setPluginEnabledInConfig } = await import("./plugins-config.js");
   const { refreshPluginRegistryAfterConfigMutation } = await loadPluginsRegistryRefresh();
   const snapshot = await readConfigFileSnapshot();
-  const cfg = (snapshot.sourceConfig ?? snapshot.config) as OpenClawConfig;
+  const cfg = (snapshot.sourceConfig ?? snapshot.config) as QuietCoreConfig;
   const report = buildPluginRegistrySnapshotReport({ config: cfg });
   id = normalizePluginId(id);
   if (!report.plugins.some((plugin) => matchesPluginId(plugin, id))) {
@@ -343,7 +343,7 @@ export async function runPluginsDoctorCommand(): Promise<void> {
   const cfg = getRuntimeConfig();
   const configSnapshot = await readConfigFileSnapshot().catch(() => null);
   const sourceCfg = (configSnapshot?.sourceConfig ?? configSnapshot?.config ?? cfg) as
-    | OpenClawConfig
+    | QuietCoreConfig
     | undefined;
   const report = buildPluginDiagnosticsReport({ config: cfg, effectiveOnly: true });
   const errors = report.plugins.filter((p) => p.status === "error");

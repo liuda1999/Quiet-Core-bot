@@ -8,7 +8,7 @@ import {
   type AuthProfileStore,
 } from "quiet-core-bot/plugin-sdk/agent-runtime";
 import type { MigrationProviderContext } from "quiet-core-bot/plugin-sdk/plugin-entry";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/provider-auth";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/provider-auth";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   HERMES_REASON_AUTH_PROFILE_EXISTS,
@@ -79,7 +79,7 @@ describe("Hermes migration secret items", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const provider = buildHermesMigrationProvider();
     const plan = await provider.plan(
@@ -147,7 +147,7 @@ describe("Hermes migration secret items", () => {
           workspace: workspaceDir,
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const runtime = {
       config: {
         current: () => config,
@@ -291,7 +291,7 @@ describe("Hermes migration secret items", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const provider = buildHermesMigrationProvider();
     const ctx = makeContext({
@@ -330,7 +330,7 @@ describe("Hermes migration secret items", () => {
           workspace: workspaceDir,
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const provider = buildHermesMigrationProvider();
     const ctx = makeContext({
@@ -383,7 +383,7 @@ describe("Hermes migration secret items", () => {
           workspace: workspaceDir,
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const provider = buildHermesMigrationProvider();
     const ctx = makeContext({
@@ -523,7 +523,7 @@ describe("Hermes migration secret items", () => {
           workspace: workspaceDir,
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const provider = buildHermesMigrationProvider();
     const ctx = makeContext({
@@ -627,7 +627,7 @@ describe("Hermes migration secret items", () => {
           workspace: workspaceDir,
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const provider = buildHermesMigrationProvider();
     const ctx = makeContext({
@@ -685,7 +685,7 @@ describe("Hermes migration secret items", () => {
           workspace: workspaceDir,
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     try {
       process.env.XDG_DATA_HOME = xdgDataHome;
@@ -764,7 +764,7 @@ describe("Hermes migration secret items", () => {
           workspace: workspaceDir,
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const provider = buildHermesMigrationProvider();
     const ctx = makeContext({
@@ -901,7 +901,7 @@ describe("Hermes migration secret items", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     await writeFile(path.join(source, "auth.json"), "{}");
     await writeFile(
       path.join(root, ".local", "share", "opencode", "auth.json"),
@@ -959,7 +959,7 @@ describe("Hermes migration secret items", () => {
           workspace: workspaceDir,
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     await writeFile(path.join(source, "config.yaml"), "model: openai/gpt-5.5\n");
     await writeFile(
       path.join(root, ".local", "share", "opencode", "auth.json"),

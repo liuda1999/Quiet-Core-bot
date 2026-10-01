@@ -3,9 +3,9 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import type { PluginStateEntry } from "quiet-core-bot/plugin-sdk/plugin-state-runtime";
 import { createTestPluginApi } from "quiet-core-bot/plugin-sdk/plugin-test-api";
-import { resolvePreferredOpenClawTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";
+import { resolvePreferredQuietCoreTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";
 import { afterEach, vi } from "vitest";
-import type { OpenClawPluginApi } from "../api.js";
+import type { QuietCorePluginApi } from "../api.js";
 import {
   resolveMemoryWikiConfig,
   type MemoryWikiPluginConfig,
@@ -21,7 +21,7 @@ type MemoryWikiTestVault = {
 };
 
 type MemoryWikiPluginApiHarness = {
-  api: OpenClawPluginApi;
+  api: QuietCorePluginApi;
   registerCli: ReturnType<typeof vi.fn>;
   registerGatewayMethod: ReturnType<typeof vi.fn>;
   registerMemoryCorpusSupplement: ReturnType<typeof vi.fn>;
@@ -79,7 +79,7 @@ export function createMemoryWikiTestHarness() {
   });
 
   async function createTempDir(prefix: string): Promise<string> {
-    const tempDir = await fs.mkdtemp(path.join(resolvePreferredOpenClawTmpDir(), prefix));
+    const tempDir = await fs.mkdtemp(path.join(resolvePreferredQuietCoreTmpDir(), prefix));
     tempDirs.push(tempDir);
     return tempDir;
   }
@@ -125,7 +125,7 @@ export function createMemoryWikiTestHarness() {
         state: {
           openKeyedStore: vi.fn(<T>() => createMemoryKeyedStore<T>()),
         },
-      } as unknown as OpenClawPluginApi["runtime"],
+      } as unknown as QuietCorePluginApi["runtime"],
       registerCli,
       registerGatewayMethod,
       registerMemoryCorpusSupplement,

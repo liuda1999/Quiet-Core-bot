@@ -7,9 +7,9 @@ import { promisify } from "node:util";
 import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { note } from "../../packages/terminal-core/src/note.js";
 import { formatCliCommand } from "../cli/command-format.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { hasConfiguredSecretInput } from "../config/types.secrets.js";
-import { findStaleOpenClawUpdateLaunchdJobs } from "../daemon/launchd.js";
+import { findStaleQuietCoreUpdateLaunchdJobs } from "../daemon/launchd.js";
 import { resolveGatewayService, type GatewayService } from "../daemon/service.js";
 import { shortenHomePath } from "../utils.js";
 
@@ -53,9 +53,9 @@ export async function noteMacLaunchAgentOverrides() {
 }
 
 /** Returns a warning for stale Quiet Core bot updater launchd jobs left after interrupted updates. */
-export async function collectMacStaleOpenClawUpdateLaunchdJobsWarning(deps?: {
+export async function collectMacStaleQuietCoreUpdateLaunchdJobsWarning(deps?: {
   platform?: NodeJS.Platform;
-  findJobs?: typeof findStaleOpenClawUpdateLaunchdJobs;
+  findJobs?: typeof findStaleQuietCoreUpdateLaunchdJobs;
   env?: NodeJS.ProcessEnv;
 }): Promise<string | null> {
   const platform = deps?.platform ?? process.platform;
@@ -63,7 +63,7 @@ export async function collectMacStaleOpenClawUpdateLaunchdJobsWarning(deps?: {
     return null;
   }
   const scanEnv = deps?.env ?? process.env;
-  const jobs = await (deps?.findJobs ?? findStaleOpenClawUpdateLaunchdJobs)(scanEnv).catch(
+  const jobs = await (deps?.findJobs ?? findStaleQuietCoreUpdateLaunchdJobs)(scanEnv).catch(
     () => [],
   );
   if (jobs.length === 0) {
@@ -85,9 +85,9 @@ export async function collectMacStaleOpenClawUpdateLaunchdJobsWarning(deps?: {
 }
 
 /** Emits stale updater launchd job notes using the gateway service environment when available. */
-export async function noteMacStaleOpenClawUpdateLaunchdJobs(deps?: {
+export async function noteMacStaleQuietCoreUpdateLaunchdJobs(deps?: {
   platform?: NodeJS.Platform;
-  findJobs?: typeof findStaleOpenClawUpdateLaunchdJobs;
+  findJobs?: typeof findStaleQuietCoreUpdateLaunchdJobs;
   env?: NodeJS.ProcessEnv;
   service?: Pick<GatewayService, "readCommand">;
   noteFn?: typeof note;
@@ -95,7 +95,7 @@ export async function noteMacStaleOpenClawUpdateLaunchdJobs(deps?: {
   const platform = deps?.platform ?? process.platform;
   const serviceEnv =
     platform === "darwin" ? await resolveGatewayServiceEnvForPlatformNotes(deps) : deps?.env;
-  const warning = await collectMacStaleOpenClawUpdateLaunchdJobsWarning({
+  const warning = await collectMacStaleQuietCoreUpdateLaunchdJobsWarning({
     env: serviceEnv,
     findJobs: deps?.findJobs,
     platform,
@@ -115,7 +115,7 @@ async function launchctlGetenv(name: string): Promise<string | undefined> {
   }
 }
 
-function hasConfigGatewayCreds(cfg: OpenClawConfig): boolean {
+function hasConfigGatewayCreds(cfg: QuietCoreConfig): boolean {
   const localPassword = cfg.gateway?.auth?.password;
   const remoteToken = cfg.gateway?.remote?.token;
   const remotePassword = cfg.gateway?.remote?.password;
@@ -129,7 +129,7 @@ function hasConfigGatewayCreds(cfg: OpenClawConfig): boolean {
 
 /** Returns a warning for host-wide launchctl gateway auth env overrides. */
 export async function collectMacLaunchctlGatewayEnvOverrideWarning(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   deps?: {
     platform?: NodeJS.Platform;
     getenv?: (name: string) => Promise<string | undefined>;
@@ -179,7 +179,7 @@ export async function collectMacLaunchctlGatewayEnvOverrideWarning(
 
 /** Emits macOS launchctl gateway auth override warnings. */
 export async function noteMacLaunchctlGatewayEnvOverrides(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   deps?: {
     platform?: NodeJS.Platform;
     getenv?: (name: string) => Promise<string | undefined>;
@@ -209,12 +209,12 @@ async function resolveGatewayServiceEnvForPlatformNotes(deps?: {
 
 /** Collects all macOS gateway platform warnings without emitting notes. */
 export async function collectMacGatewayPlatformWarnings(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   deps?: {
     platform?: NodeJS.Platform;
     env?: NodeJS.ProcessEnv;
     service?: Pick<GatewayService, "readCommand">;
-    findJobs?: typeof findStaleOpenClawUpdateLaunchdJobs;
+    findJobs?: typeof findStaleQuietCoreUpdateLaunchdJobs;
   },
 ): Promise<readonly string[]> {
   const platform = deps?.platform ?? process.platform;
@@ -225,7 +225,7 @@ export async function collectMacGatewayPlatformWarnings(
   }
   const serviceEnv =
     platform === "darwin" ? await resolveGatewayServiceEnvForPlatformNotes(deps) : deps?.env;
-  const staleUpdateWarning = await collectMacStaleOpenClawUpdateLaunchdJobsWarning({
+  const staleUpdateWarning = await collectMacStaleQuietCoreUpdateLaunchdJobsWarning({
     env: serviceEnv,
     findJobs: deps?.findJobs,
     platform,

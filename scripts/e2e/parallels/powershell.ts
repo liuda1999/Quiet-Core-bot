@@ -1,4 +1,4 @@
-// Powershell script supports OpenClaw repository automation.
+// Powershell script supports QuietCore repository automation.
 import { modelProviderConfigBatchJson, providerIdFromModelId } from "./provider-auth.ts";
 
 export function psSingleQuote(value: string): string {
@@ -44,9 +44,9 @@ export function windowsAgentTurnConfigPatchScript(modelId: string): string {
   });
   return `$agentTurnConfigPatchPath = $env:QUIET_CORE_CONFIG_PATH
 if (-not $agentTurnConfigPatchPath) { $agentTurnConfigPatchPath = Join-Path $env:USERPROFILE '.quiet-core-bot\\quiet-core-bot.json' }
-$agentTurnVersionText = Invoke-OpenClaw --version 2>$null | Out-String
+$agentTurnVersionText = Invoke-QuietCore --version 2>$null | Out-String
 $agentTurnRuntimePolicySupported = $false
-if ($agentTurnVersionText -match 'OpenClaw\\s+(\\d{4})\\.(\\d{1,2})\\.(\\d{1,2})') {
+if ($agentTurnVersionText -match 'QuietCore\\s+(\\d{4})\\.(\\d{1,2})\\.(\\d{1,2})') {
   $agentTurnYear = [int]$Matches[1]
   $agentTurnMonth = [int]$Matches[2]
   $agentTurnDay = [int]$Matches[3]
@@ -129,12 +129,12 @@ Remove-Item Env:QUIET_CORE_PARALLELS_AGENT_RUNTIME_POLICY_SUPPORTED -Force -Erro
 if ($agentTurnConfigPatchExit -ne 0) { throw "agent turn config patch failed" }`;
 }
 
-export const windowsOpenClawResolver = String.raw`$portableNode = if ($env:LOCALAPPDATA) { Join-Path $env:LOCALAPPDATA 'Programs\nodejs' } else { $null }
+export const windowsQuietCoreResolver = String.raw`$portableNode = if ($env:LOCALAPPDATA) { Join-Path $env:LOCALAPPDATA 'Programs\nodejs' } else { $null }
 if ($portableNode -and (Test-Path (Join-Path $portableNode 'node.exe'))) {
   $env:PATH = "$portableNode;$env:PATH"
 }
-function Resolve-OpenClawCommand {
-  if ($script:OpenClawResolvedCommand) { return $script:OpenClawResolvedCommand }
+function Resolve-QuietCoreCommand {
+  if ($script:QuietCoreResolvedCommand) { return $script:QuietCoreResolvedCommand }
   $shimCandidates = @()
   if ($env:APPDATA) {
     $shimCandidates += Join-Path $env:APPDATA 'npm\quiet-core-bot.cmd'
@@ -154,8 +154,8 @@ function Resolve-OpenClawCommand {
   }
   foreach ($candidate in $shimCandidates) {
     if ($candidate -and (Test-Path $candidate)) {
-      $script:OpenClawResolvedCommand = @{ Kind = 'shim'; Path = $candidate }
-      return $script:OpenClawResolvedCommand
+      $script:QuietCoreResolvedCommand = @{ Kind = 'shim'; Path = $candidate }
+      return $script:QuietCoreResolvedCommand
     }
   }
   $entryCandidates = @()
@@ -167,24 +167,24 @@ function Resolve-OpenClawCommand {
   }
   foreach ($candidate in $entryCandidates) {
     if ($candidate -and (Test-Path $candidate)) {
-      $script:OpenClawResolvedCommand = @{ Kind = 'node'; Path = $candidate }
-      return $script:OpenClawResolvedCommand
+      $script:QuietCoreResolvedCommand = @{ Kind = 'node'; Path = $candidate }
+      return $script:QuietCoreResolvedCommand
     }
   }
   throw 'quiet-core-bot command not found in PATH, APPDATA npm, or npm global prefix'
 }
-function Invoke-OpenClaw {
-  param([Parameter(ValueFromRemainingArguments = $true)][string[]] $OpenClawArgs)
-  $command = Resolve-OpenClawCommand
+function Invoke-QuietCore {
+  param([Parameter(ValueFromRemainingArguments = $true)][string[]] $QuietCoreArgs)
+  $command = Resolve-QuietCoreCommand
   $previousErrorActionPreference = $ErrorActionPreference
   $previousNativeErrorActionPreference = $PSNativeCommandUseErrorActionPreference
   $ErrorActionPreference = 'Continue'
   $PSNativeCommandUseErrorActionPreference = $false
   try {
     if ($command.Kind -eq 'node') {
-      & node.exe $command.Path @OpenClawArgs
+      & node.exe $command.Path @QuietCoreArgs
     } else {
-      & $command.Path @OpenClawArgs
+      & $command.Path @QuietCoreArgs
     }
   } finally {
     $ErrorActionPreference = $previousErrorActionPreference

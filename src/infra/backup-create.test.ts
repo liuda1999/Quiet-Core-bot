@@ -7,12 +7,12 @@ import { describe, expect, it, vi } from "vitest";
 import { saveAuthProfileStore } from "../agents/auth-profiles/store.js";
 import { backupVerifyCommand } from "../commands/backup-verify.js";
 import type { RuntimeEnv } from "../runtime.js";
-import { closeOpenClawAgentDatabasesForTest } from "../state/quiet-core-bot-agent-db.js";
+import { closeQuietCoreAgentDatabasesForTest } from "../state/quiet-core-bot-agent-db.js";
 import {
-  closeOpenClawStateDatabase,
-  openOpenClawStateDatabase,
+  closeQuietCoreStateDatabase,
+  openQuietCoreStateDatabase,
 } from "../state/quiet-core-bot-state-db.js";
-import { withOpenClawTestState } from "../test-utils/quiet-core-bot-test-state.js";
+import { withQuietCoreTestState } from "../test-utils/quiet-core-bot-test-state.js";
 import {
   testApi as backupCreateInternals,
   buildExtensionsNodeModulesFilter,
@@ -315,7 +315,7 @@ describe("buildExtensionsNodeModulesFilter", () => {
 
 describe("createBackupArchive", () => {
   it("falls back when injected nowMs is outside Date range", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-backup-invalid-now-",
@@ -345,7 +345,7 @@ describe("createBackupArchive", () => {
   });
 
   it("falls back to epoch when injected nowMs and Date.now are outside Date range", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-backup-invalid-fallback-now-",
@@ -375,7 +375,7 @@ describe("createBackupArchive", () => {
   });
 
   it("skips current live volatile state files while preserving workspace locks", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "split",
         prefix: "quiet-core-bot-backup-volatile-",
@@ -441,7 +441,7 @@ describe("createBackupArchive", () => {
   });
 
   it("scrubs transient SQLite delivery queue rows from archive snapshots", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-backup-sqlite-queue-",
@@ -452,7 +452,7 @@ describe("createBackupArchive", () => {
         const extractDir = state.path("extract");
         await fs.mkdir(outputDir, { recursive: true });
         await fs.mkdir(extractDir, { recursive: true });
-        const { db } = openOpenClawStateDatabase({ env: state.env });
+        const { db } = openQuietCoreStateDatabase({ env: state.env });
         db.prepare(
           `
             INSERT INTO delivery_queue_entries (
@@ -493,14 +493,14 @@ describe("createBackupArchive", () => {
             count: 1,
           });
         } finally {
-          closeOpenClawStateDatabase();
+          closeQuietCoreStateDatabase();
         }
       },
     );
   });
 
   it("snapshots per-agent SQLite auth stores without deleted secret pages", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-backup-agent-sqlite-",
@@ -525,7 +525,7 @@ describe("createBackupArchive", () => {
           state.agentDir(),
           { syncExternalCli: false },
         );
-        closeOpenClawAgentDatabasesForTest();
+        closeQuietCoreAgentDatabasesForTest();
         const sqlite = requireNodeSqlite();
         const liveDbPath = path.join(state.agentDir(), "quiet-core-bot-agent.sqlite");
         const deletedSecretMarker = "QUIET_CORE_DELETED_SECRET_PAGE_MARKER";
@@ -588,7 +588,7 @@ describe("createBackupArchive", () => {
   });
 
   it("snapshots nested live SQLite databases with transaction continuity", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-backup-nested-sqlite-",
@@ -681,7 +681,7 @@ describe("createBackupArchive", () => {
   });
 
   it("fails instead of raw-copying malformed nested SQLite databases", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-backup-malformed-sqlite-",
@@ -708,7 +708,7 @@ describe("createBackupArchive", () => {
   it.each(["late.sqlite", "late.sqlite-wal"])(
     "fails when SQLite-looking state appears after snapshot discovery: %s",
     async (lateName) => {
-      await withOpenClawTestState(
+      await withQuietCoreTestState(
         {
           layout: "state-only",
           prefix: "quiet-core-bot-backup-late-sqlite-",
@@ -756,7 +756,7 @@ describe("createBackupArchive", () => {
   );
 
   it("omits pre-existing orphan SQLite sidecars without failing backup", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-backup-orphan-sqlite-sidecars-",
@@ -790,7 +790,7 @@ describe("createBackupArchive", () => {
   });
 
   it("omits transient memory reindex databases and sidecars", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-backup-memory-reindex-lock-",
@@ -843,7 +843,7 @@ describe("createBackupArchive", () => {
       return;
     }
 
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-backup-symlinked-sqlite-",
@@ -876,7 +876,7 @@ describe("createBackupArchive", () => {
       return;
     }
 
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-backup-global-sqlite-symlink-",
@@ -967,7 +967,7 @@ describe("createBackupArchive", () => {
   });
 
   it("fails when the canonical global SQLite path is not a file", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-backup-global-sqlite-directory-",
@@ -992,7 +992,7 @@ describe("createBackupArchive", () => {
   });
 
   it("omits installed plugin node_modules from the real archive while keeping plugin files", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-backup-plugin-deps-",
@@ -1072,7 +1072,7 @@ describe("createBackupArchive", () => {
   });
 
   it("dereferences hardlinks instead of emitting restore-hostile Link entries", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-backup-hardlink-",
@@ -1111,7 +1111,7 @@ describe("createBackupArchive", () => {
   });
 
   it("does not duplicate the root manifest when the system tempdir lives inside the state dir", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-backup-tmp-overlap-",
@@ -1148,7 +1148,7 @@ describe("createBackupArchive", () => {
   });
 
   it("does not duplicate the root manifest when the system tempdir is the state dir itself", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-backup-tmp-equals-state-",

@@ -1,7 +1,7 @@
 // Matrix tests cover legacy crypto plugin behavior.
 import fs from "node:fs";
 import path from "node:path";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { resetPluginStateStoreForTests } from "quiet-core-bot/plugin-sdk/plugin-state-test-runtime";
 import { withTempHome } from "quiet-core-bot/plugin-sdk/test-env";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -34,7 +34,7 @@ import {
 } from "./test-helpers.js";
 import { installMatrixTestRuntime } from "./test-runtime.js";
 
-function createDefaultMatrixConfig(): OpenClawConfig {
+function createDefaultMatrixConfig(): QuietCoreConfig {
   return {
     channels: {
       matrix: {
@@ -181,7 +181,7 @@ describe("matrix legacy encrypted-state migration", () => {
         home,
         includeStoredCredentials: true,
       });
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         channels: {
           matrix: {
             accounts: {

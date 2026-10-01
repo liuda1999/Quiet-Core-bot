@@ -1,4 +1,4 @@
-// OpenClaw Control – Service Worker
+// QuietCore Control – Service Worker
 // Handles offline caching and push notifications.
 
 const CACHE_PREFIX = "quiet-core-bot-control-";
@@ -107,10 +107,10 @@ self.addEventListener("push", (event) => {
   try {
     data = event.data.json();
   } catch {
-    data = { title: "OpenClaw", body: event.data.text() };
+    data = { title: "QuietCore", body: event.data.text() };
   }
 
-  const title = data.title || "OpenClaw";
+  const title = data.title || "QuietCore";
   const options = {
     body: data.body || "",
     icon: "./apple-touch-icon.png",

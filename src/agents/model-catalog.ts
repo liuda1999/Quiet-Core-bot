@@ -10,7 +10,7 @@ import {
   normalizeOptionalString,
 } from "@quiet-core/normalization-core/string-coerce";
 import { getRuntimeConfig } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import { planManifestModelCatalogRows } from "../model-catalog/manifest-planner.js";
 import { getCurrentPluginMetadataSnapshot } from "../plugins/current-plugin-metadata-snapshot.js";
@@ -43,7 +43,7 @@ import {
 } from "./model-selection-shared.js";
 import {
   buildModelsJsonSourceFingerprint,
-  prepareOpenClawModelsJsonSource,
+  prepareQuietCoreModelsJsonSource,
 } from "./models-config.js";
 import {
   filterGeneratedPluginModelCatalogProviders,
@@ -87,11 +87,11 @@ type ManifestModelCatalogCacheEntry = {
   snapshot: PluginMetadataSnapshot;
   rows: ModelCatalogEntry[];
 };
-let manifestModelCatalogCache = new WeakMap<OpenClawConfig, ManifestModelCatalogCacheEntry>();
+let manifestModelCatalogCache = new WeakMap<QuietCoreConfig, ManifestModelCatalogCacheEntry>();
 
 function buildLoadModelCatalogStateCacheKey(params: {
   agentDir: string;
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   metadataSnapshot?: PluginMetadataSnapshot;
   sourceFingerprint: string;
   workspaceDir?: string;
@@ -226,7 +226,7 @@ function mergeCatalogEntries(models: ModelCatalogEntry[], entries: ModelCatalogE
 }
 
 export function loadManifestModelCatalog(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   workspaceDir?: string;
   env?: NodeJS.ProcessEnv;
   fallbackToMetadataScan?: boolean;
@@ -411,7 +411,7 @@ async function loadReadOnlyPersistedProviderRows(
 }
 
 async function loadReadOnlyPersistedModelCatalog(params?: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   metadataSnapshot?: PluginMetadataSnapshot;
 }): Promise<ModelCatalogEntry[]> {
   const cfg = params?.config ?? getRuntimeConfig();
@@ -493,7 +493,7 @@ async function loadReadOnlyPersistedModelCatalog(params?: {
   return sortModelCatalogEntries(models);
 }
 
-function hasConfiguredProviderRowsNeedingManifestLookup(cfg: OpenClawConfig): boolean {
+function hasConfiguredProviderRowsNeedingManifestLookup(cfg: QuietCoreConfig): boolean {
   const providers = cfg.models?.providers;
   if (!providers || typeof providers !== "object") {
     return false;
@@ -505,7 +505,7 @@ function hasConfiguredProviderRowsNeedingManifestLookup(cfg: OpenClawConfig): bo
 }
 
 function loadReadOnlyStaticModelCatalog(params?: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   metadataSnapshot?: PluginMetadataSnapshot;
 }): ModelCatalogEntry[] {
   const cfg = params?.config ?? getRuntimeConfig();
@@ -546,7 +546,7 @@ function loadReadOnlyStaticModelCatalog(params?: {
 }
 
 export async function loadModelCatalog(params?: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   useCache?: boolean;
   cacheOnly?: boolean;
   readOnly?: boolean;
@@ -629,7 +629,7 @@ export async function loadModelCatalog(params?: {
         }
       }
       if (!readOnly) {
-        const preparedSource = await prepareOpenClawModelsJsonSource(cfg, agentDir, {
+        const preparedSource = await prepareQuietCoreModelsJsonSource(cfg, agentDir, {
           pluginMetadataSnapshot: params?.metadataSnapshot,
           workspaceDir,
         });

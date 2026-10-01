@@ -17,7 +17,7 @@ type ExpectedTranscriptMatch = RegExp | string;
 
 export const QUIET_CORE_LIVE_TRANSCRIPT_MARKER_RE = /open(?:claw|cl|flaw|clar|core)/;
 
-export function expectOpenClawLiveTranscriptMarker(value: string): void {
+export function expectQuietCoreLiveTranscriptMarker(value: string): void {
   expect(normalizeTranscriptForMatch(value)).toMatch(QUIET_CORE_LIVE_TRANSCRIPT_MARKER_RE);
 }
 

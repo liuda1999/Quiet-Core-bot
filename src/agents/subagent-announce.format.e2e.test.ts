@@ -8,7 +8,7 @@ import { SILENT_REPLY_TOKEN } from "../auto-reply/tokens.js";
 import {
   clearRuntimeConfigSnapshot,
   setRuntimeConfigSnapshot,
-  type OpenClawConfig,
+  type QuietCoreConfig,
 } from "../config/config.js";
 import * as configSessions from "../config/sessions.js";
 import type { SessionEntry } from "../config/sessions/types.js";
@@ -21,7 +21,7 @@ import * as hookRunnerGlobal from "../plugins/hook-runner-global.js";
 import type { HookRunner } from "../plugins/hooks.js";
 import { setActivePluginRegistry } from "../plugins/runtime.js";
 import { readDiagnosticEvents } from "../state/diagnostic-events-store.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
+import { closeQuietCoreStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
 import { createChannelTestPluginBase, createTestRegistry } from "../test-utils/channel-plugins.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
@@ -221,7 +221,7 @@ const chatHistoryMock = vi.fn(async (_sessionKey?: string) => ({
   messages: [] as Array<unknown>,
 }));
 let sessionStore: SessionStoreFixture = {};
-let configOverride: OpenClawConfig = {
+let configOverride: QuietCoreConfig = {
   session: {
     mainKey: "main",
     scope: "per-sender",
@@ -288,7 +288,7 @@ const announceFormatChannelPlugins = [
   },
 ];
 
-function setConfigOverride(next: OpenClawConfig): void {
+function setConfigOverride(next: QuietCoreConfig): void {
   configOverride = next;
   setRuntimeConfigSnapshot(configOverride);
 }
@@ -779,7 +779,7 @@ describe("subagent announce formatting", () => {
         });
       });
     } finally {
-      closeOpenClawStateDatabaseForTest();
+      closeQuietCoreStateDatabaseForTest();
       await removeTestTempPath(tempStateDir);
     }
   });

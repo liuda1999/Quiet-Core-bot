@@ -13,7 +13,7 @@ import {
   cleanupTrackedTempDirs,
   makeTrackedTempDir,
 } from "../../../plugins/test-helpers/fs-fixtures.js";
-import { runOpenClawStateWriteTransaction } from "../../../state/quiet-core-bot-state-db.js";
+import { runQuietCoreStateWriteTransaction } from "../../../state/quiet-core-bot-state-db.js";
 import {
   DISABLE_PLUGIN_REGISTRY_MIGRATION_ENV,
   FORCE_PLUGIN_REGISTRY_MIGRATION_ENV,
@@ -124,7 +124,7 @@ function requirePlugin(index: InstalledPluginIndex | null | undefined, pluginId:
 }
 
 function insertStalePersistedIndexRow(stateDir: string) {
-  runOpenClawStateWriteTransaction(
+  runQuietCoreStateWriteTransaction(
     ({ db }) => {
       db.prepare(
         `

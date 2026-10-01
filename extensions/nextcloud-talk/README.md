@@ -1,11 +1,11 @@
-# OpenClaw Nextcloud Talk
+# QuietCore Nextcloud Talk
 
-Official OpenClaw channel plugin for Nextcloud Talk conversations.
+Official QuietCore channel plugin for Nextcloud Talk conversations.
 
-Install from OpenClaw:
+Install from QuietCore:
 
 ```bash
 quiet-core-bot plugin add @quiet-core/nextcloud-talk
 ```
 
-Configure the Nextcloud server and Talk credentials in OpenClaw, then enable the conversations where agents should receive and send messages.
+Configure the Nextcloud server and Talk credentials in QuietCore, then enable the conversations where agents should receive and send messages.

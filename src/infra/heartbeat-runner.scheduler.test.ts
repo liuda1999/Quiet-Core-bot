@@ -1,6 +1,6 @@
 // Tests heartbeat runner scheduling and timer cleanup.
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { startHeartbeatRunner } from "./heartbeat-runner.js";
 import { computeNextHeartbeatPhaseDueMs, resolveHeartbeatPhaseMs } from "./heartbeat-schedule.js";
 import {
@@ -30,14 +30,14 @@ describe("startHeartbeatRunner", () => {
   }
 
   function heartbeatConfig(
-    list?: NonNullable<NonNullable<OpenClawConfig["agents"]>["list"]>,
-  ): OpenClawConfig {
+    list?: NonNullable<NonNullable<QuietCoreConfig["agents"]>["list"]>,
+  ): QuietCoreConfig {
     return {
       agents: {
         defaults: { heartbeat: { every: "30m" } },
         ...(list ? { list } : {}),
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
   }
 
   function resolveDueFromNow(nowMs: number, intervalMs: number, agentId: string) {
@@ -143,7 +143,7 @@ describe("startHeartbeatRunner", () => {
   }
 
   async function expectWakeDispatch(params: {
-    cfg: OpenClawConfig;
+    cfg: QuietCoreConfig;
     runSpy: MockRunOnce;
     wake: Parameters<typeof requestHeartbeat>[0];
     expectedCall: Record<string, unknown>;
@@ -190,7 +190,7 @@ describe("startHeartbeatRunner", () => {
           { id: "ops", heartbeat: { every: "15m" } },
         ],
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     const nowAfterReload = Date.now();
     const nextMainDueMs = resolveDueFromNow(nowAfterReload, 10 * 60_000, "main");
@@ -274,7 +274,7 @@ describe("startHeartbeatRunner", () => {
 
     const cfg = {
       agents: { defaults: { heartbeat: { every: "30m" } } },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const firstDueMs = resolveDueFromNow(0, 30 * 60_000, "main");
 
     // Start runner A
@@ -481,7 +481,7 @@ describe("startHeartbeatRunner", () => {
           { id: "main", heartbeat: { every: "30m" } },
           { id: "ops", heartbeat: { every: "15m" } },
         ]),
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       runSpy,
       wake: {
         source: "cron",
@@ -543,7 +543,7 @@ describe("startHeartbeatRunner", () => {
             },
           },
         ]),
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       runSpy,
       wake: {
         source: "cron",
@@ -586,7 +586,7 @@ describe("startHeartbeatRunner", () => {
             },
           },
         ]),
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       runSpy,
       wake: {
         source: "hook",
@@ -640,7 +640,7 @@ describe("startHeartbeatRunner", () => {
           { id: "main", heartbeat: { every: "30m" } },
           { id: "finance", heartbeat: { every: "30m" } },
         ]),
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       runSpy,
       wake: {
         source: "exec-event",

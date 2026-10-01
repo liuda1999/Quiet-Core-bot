@@ -1,8 +1,8 @@
 # @quiet-core/diagnostics-prometheus
 
-Official Prometheus diagnostics exporter for OpenClaw.
+Official Prometheus diagnostics exporter for QuietCore.
 
-This plugin exposes OpenClaw Gateway runtime metrics in Prometheus text format for Prometheus, Grafana, VictoriaMetrics, and compatible scrapers.
+This plugin exposes QuietCore Gateway runtime metrics in Prometheus text format for Prometheus, Grafana, VictoriaMetrics, and compatible scrapers.
 
 ## Install
 
@@ -24,4 +24,4 @@ The full config surface, metric names, and scrape examples live in the docs:
 
 - Plugin id: `diagnostics-prometheus`
 - Package: `@quiet-core/diagnostics-prometheus`
-- Minimum OpenClaw host: `2026.4.25`
+- Minimum QuietCore host: `2026.4.25`

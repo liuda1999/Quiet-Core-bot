@@ -35,7 +35,7 @@ import {
   resolveSupportedThinkingLevel,
 } from "../auto-reply/thinking.js";
 import type { SessionEntry } from "../config/sessions.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { normalizeExecTarget } from "../infra/exec-approvals.js";
 import {
   isAcpSessionKey,
@@ -74,7 +74,7 @@ function normalizeExecAsk(raw: string): "off" | "on-miss" | "always" | undefined
 }
 
 function shouldPreserveSessionAuthProfileOverride(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   entry: SessionEntry;
   currentProvider: string;
   provider: string;
@@ -137,7 +137,7 @@ type SessionPatchProjectionEntry = {
 
 /** Project a validated gateway session patch for one session entry. */
 export async function projectSessionsPatchEntry(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   entries: readonly SessionPatchProjectionEntry[];
   existingEntry?: SessionEntry;
   storeKey: string;
@@ -648,7 +648,7 @@ export async function projectSessionsPatchEntry(params: {
 
 /** Apply a validated gateway session patch to an in-memory session store entry. */
 export async function applySessionsPatchToStore(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   store: Record<string, SessionEntry>;
   storeKey: string;
   agentId?: string;

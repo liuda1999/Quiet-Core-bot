@@ -16,7 +16,7 @@ import {
   type DiagnosticTraceContext,
 } from "../../infra/diagnostic-trace-context.js";
 import type { EmbeddedRunAttemptResult } from "../embedded-agent-runner/run/types.js";
-import { createOpenClawAgentHarness } from "./builtin-quiet-core-bot.js";
+import { createQuietCoreAgentHarness } from "./builtin-quiet-core-bot.js";
 import { runAgentHarnessLifecycleAttempt } from "./lifecycle.js";
 import type { AgentHarness, AgentHarnessAttemptParams } from "./types.js";
 
@@ -184,7 +184,7 @@ describe("AgentHarness lifecycle runner", () => {
   });
 
   it("advertises Quiet Core bot embedded host capabilities", async () => {
-    const harness = createOpenClawAgentHarness();
+    const harness = createQuietCoreAgentHarness();
 
     expect(harness.contextEngineHostCapabilities).toEqual(
       QUIET_CORE_EMBEDDED_CONTEXT_ENGINE_HOST.capabilities,

@@ -1,7 +1,7 @@
 // Ollama setup module handles plugin onboarding behavior.
 import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
 import type {
-  OpenClawConfig,
+  QuietCoreConfig,
   SecretInput,
   SecretInputMode,
 } from "quiet-core-bot/plugin-sdk/provider-auth";
@@ -43,7 +43,7 @@ type OllamaSetupOptions = {
 };
 
 type OllamaSetupResult = {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   credential: SecretInput;
   credentialMode?: SecretInputMode;
 };
@@ -384,12 +384,12 @@ function findAvailableOllamaModelName(modelName: string, availableModelNames: It
 }
 
 function applyOllamaProviderConfig(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   baseUrl: string,
   modelNames: string[],
   discoveredModelsByName?: Map<string, OllamaModelWithContext>,
   apiKey: SecretInput = "OLLAMA_API_KEY",
-): OpenClawConfig {
+): QuietCoreConfig {
   return {
     ...cfg,
     models: {
@@ -431,7 +431,7 @@ async function promptForOllamaBaseUrl(
 }
 
 async function promptAndConfigureHostBackedOllama(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   prompter: WizardPrompter;
   env?: NodeJS.ProcessEnv;
 }): Promise<OllamaSetupResult> {
@@ -462,7 +462,7 @@ async function promptAndConfigureHostBackedOllama(params: {
 }
 
 export async function promptAndConfigureOllama(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
   opts?: Record<string, unknown>;
   prompter: WizardPrompter;
@@ -477,11 +477,11 @@ export async function promptAndConfigureOllama(params: {
 }
 
 export async function configureOllamaNonInteractive(params: {
-  nextConfig: OpenClawConfig;
+  nextConfig: QuietCoreConfig;
   opts: OllamaSetupOptions;
   runtime: RuntimeEnv;
   agentDir?: string;
-}): Promise<OpenClawConfig> {
+}): Promise<QuietCoreConfig> {
   const baseUrl = resolveOllamaApiBase(
     (params.opts.customBaseUrl?.trim() || resolveOllamaSetupDefaultBaseUrl()).replace(/\/+$/, ""),
   );
@@ -566,7 +566,7 @@ export async function configureOllamaNonInteractive(params: {
 }
 
 export async function ensureOllamaModelPulled(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   model: string;
   prompter: WizardPrompter;
 }): Promise<void> {

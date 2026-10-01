@@ -101,7 +101,7 @@ describe("native Gateway protocol levels", () => {
     }
 
     const swiftGeneratedPath =
-      "apps/shared/QuietCoreKit/Sources/OpenClawProtocol/GatewayModels.swift";
+      "apps/shared/QuietCoreKit/Sources/QuietCoreProtocol/GatewayModels.swift";
     const swiftGenerated = await readRepoFile(swiftGeneratedPath);
     assertLevelsMatch(swiftGeneratedPath, {
       min: extractInteger(
@@ -118,7 +118,7 @@ describe("native Gateway protocol levels", () => {
       ),
     });
 
-    const androidPath = "apps/android/app/src/main/java/ai/openclaw/app/gateway/GatewayProtocol.kt";
+    const androidPath = "apps/android/app/src/main/java/ai/quietcore/app/gateway/GatewayProtocol.kt";
     const android = await readRepoFile(androidPath);
     assertLevelsMatch(androidPath, {
       min: extractInteger(
@@ -138,8 +138,8 @@ describe("native Gateway protocol levels", () => {
 
   it("uses the min constant for native connect compatibility ranges", async () => {
     const swiftConnectFiles = [
-      "apps/shared/QuietCoreKit/Sources/OpenClawKit/GatewayChannel.swift",
-      "apps/macos/Sources/OpenClawMacCLI/WizardCommand.swift",
+      "apps/shared/QuietCoreKit/Sources/QuietCoreKit/GatewayChannel.swift",
+      "apps/macos/Sources/QuietCoreMacCLI/WizardCommand.swift",
     ];
     for (const relativePath of swiftConnectFiles) {
       const content = await readRepoFile(relativePath);
@@ -157,7 +157,7 @@ describe("native Gateway protocol levels", () => {
       );
     }
 
-    const androidPath = "apps/android/app/src/main/java/ai/openclaw/app/gateway/GatewaySession.kt";
+    const androidPath = "apps/android/app/src/main/java/ai/quietcore/app/gateway/GatewaySession.kt";
     const android = await readRepoFile(androidPath);
     assertPattern(
       android,
@@ -206,7 +206,7 @@ describe("native Gateway protocol levels", () => {
 
   it("emits named string-literal unions as Swift enums", async () => {
     const swiftGeneratedPath =
-      "apps/shared/QuietCoreKit/Sources/OpenClawProtocol/GatewayModels.swift";
+      "apps/shared/QuietCoreKit/Sources/QuietCoreProtocol/GatewayModels.swift";
     const swiftGenerated = await readRepoFile(swiftGeneratedPath);
 
     for (const [name, schema] of Object.entries(ProtocolSchemas)) {

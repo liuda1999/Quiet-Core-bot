@@ -9,7 +9,7 @@ import {
   resolveSourceReplyDeliveryMode,
   type SourceReplyDeliveryModeContext,
 } from "../../auto-reply/reply/source-reply-delivery-mode.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { getLoadedChannelPluginForRead } from "../plugins/registry-loaded-read.js";
 import { normalizeAnyChannelId } from "../registry-normalize.js";
 import {
@@ -33,7 +33,7 @@ export type { SourceReplyDeliveryMode };
 /** Resolves whether a channel reply should use source delivery, message tools, or direct sending. */
 export function resolveChannelSourceReplyDeliveryMode(params: {
   /** Full config used to inspect source-reply delivery settings. */
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   /** Reply delivery context from the current channel turn. */
   ctx: SourceReplyDeliveryModeContext;
   /** Caller-requested delivery mode override. */

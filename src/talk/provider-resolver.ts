@@ -4,7 +4,7 @@
  * This adapter applies the generic capability-provider resolver to Talk
  * providers, including default model injection and per-call config overrides.
  */
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { resolveConfiguredCapabilityProvider } from "../plugin-sdk/provider-selection-runtime.js";
 import type { RealtimeVoiceProviderPlugin } from "../plugins/types.js";
 import { getRealtimeVoiceProvider, listRealtimeVoiceProviders } from "./provider-registry.js";
@@ -22,9 +22,9 @@ export type ResolveConfiguredRealtimeVoiceProviderParams = {
   providerConfigs?: Record<string, Record<string, unknown> | undefined>;
   /** Last-mile overrides from a session/client request. */
   providerConfigOverrides?: Record<string, unknown>;
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   /** Alternate config object used by generic provider selection internals. */
-  cfgForResolve?: OpenClawConfig;
+  cfgForResolve?: QuietCoreConfig;
   /** Test/runtime override for the provider list. */
   providers?: RealtimeVoiceProviderPlugin[];
   /** Model injected before provider-specific resolveConfig runs. */
@@ -36,7 +36,7 @@ export type ResolveConfiguredRealtimeVoiceProviderParams = {
 export function resolveConfiguredRealtimeVoiceProvider(
   params: ResolveConfiguredRealtimeVoiceProviderParams,
 ): ResolvedRealtimeVoiceProvider {
-  const cfgForResolve = params.cfgForResolve ?? params.cfg ?? ({} as OpenClawConfig);
+  const cfgForResolve = params.cfgForResolve ?? params.cfg ?? ({} as QuietCoreConfig);
   const providers = params.providers ?? listRealtimeVoiceProviders(params.cfg);
   const resolution = resolveConfiguredCapabilityProvider({
     configuredProviderId: params.configuredProviderId,

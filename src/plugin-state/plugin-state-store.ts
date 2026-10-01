@@ -1,5 +1,5 @@
 // Plugin state store exposes persisted per-plugin state operations.
-import { closeOpenClawStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
+import { closeQuietCoreStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
 import {
   clearPluginStateDatabaseForTests,
   closePluginStateDatabase,
@@ -481,7 +481,7 @@ export function clearPluginStateStoreForTests(): void {
 export function resetPluginStateStoreForTests(options: { closeDatabase?: boolean } = {}): void {
   if (options.closeDatabase !== false) {
     closePluginStateDatabase();
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
   }
   namespaceOptionSignatures.clear();
 }

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import { getReplyPayloadMetadata } from "../reply-payload.js";
 import { markCompleteReplyConfig } from "./get-reply-fast-path.js";
 import { buildTestCtx } from "./test-ctx.js";
@@ -59,7 +59,7 @@ describe("maybeResolveNativeSlashCommandFastReply", () => {
       ctx,
       cfg: markCompleteReplyConfig({
         session: { store: "/tmp/quiet-core-bot-native-slash-sessions.json" },
-      } as OpenClawConfig),
+      } as QuietCoreConfig),
       agentId: "main",
       agentDir: "/tmp/agent",
       agentCfg: undefined,
@@ -121,7 +121,7 @@ describe("maybeResolveNativeSlashCommandFastReply", () => {
       ctx,
       cfg: markCompleteReplyConfig({
         session: { store: "/tmp/quiet-core-bot-text-slash-sessions.json" },
-      } as OpenClawConfig),
+      } as QuietCoreConfig),
       agentId: "dev",
       agentDir: "/tmp/agent",
       agentCfg: undefined,
@@ -174,7 +174,7 @@ describe("maybeResolveNativeSlashCommandFastReply", () => {
       ctx,
       cfg: markCompleteReplyConfig({
         session: { store: "/tmp/quiet-core-bot-external-text-slash-sessions.json" },
-      } as OpenClawConfig),
+      } as QuietCoreConfig),
       agentId: "dev",
       agentDir: "/tmp/agent",
       agentCfg: undefined,

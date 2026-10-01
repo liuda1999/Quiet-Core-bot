@@ -1,5 +1,5 @@
 // Qa Lab tests cover live gateway plugin behavior.
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const { startQaGatewayChild, startQaProviderServer } = vi.hoisted(() => ({
@@ -21,7 +21,7 @@ type GatewayOptions = {
   providerBaseUrl?: string;
   providerMode?: string;
   transportBaseUrl?: string;
-  mutateConfig?: (cfg: OpenClawConfig) => OpenClawConfig;
+  mutateConfig?: (cfg: QuietCoreConfig) => QuietCoreConfig;
 };
 
 function createStubTransport(baseUrl = "http://127.0.0.1:43123") {
@@ -33,7 +33,7 @@ function createStubTransport(baseUrl = "http://127.0.0.1:43123") {
           enabled: true,
           baseUrl,
           botUserId: "quiet-core-bot",
-          botDisplayName: "OpenClaw QA",
+          botDisplayName: "QuietCore QA",
           allowFrom: ["*"],
           pollTimeoutMs: 250,
         },

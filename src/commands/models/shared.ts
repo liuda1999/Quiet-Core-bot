@@ -9,7 +9,7 @@ import {
 } from "../../agents/model-selection.js";
 import { formatCliCommand } from "../../cli/command-format.js";
 import {
-  type OpenClawConfig,
+  type QuietCoreConfig,
   readConfigFileSnapshot,
   replaceConfigFile,
 } from "../../config/config.js";
@@ -52,7 +52,7 @@ export const formatMs = (value?: number | null) => {
 };
 
 /** Loads config from disk and throws a formatted error when validation fails. */
-export async function loadValidConfigOrThrow(): Promise<OpenClawConfig> {
+export async function loadValidConfigOrThrow(): Promise<QuietCoreConfig> {
   const snapshot = await readConfigFileSnapshot();
   if (!snapshot.valid) {
     const issues = formatConfigIssueLines(snapshot.issues, "-").join("\n");
@@ -63,13 +63,13 @@ export async function loadValidConfigOrThrow(): Promise<OpenClawConfig> {
 
 /** Runtime config snapshot supplied to model config mutators. */
 export type UpdateConfigContext = {
-  runtimeConfig: OpenClawConfig;
+  runtimeConfig: QuietCoreConfig;
 };
 
 /** Reads source config, applies a mutator, and writes only the source-form config. */
 export async function updateConfig(
-  mutator: (cfg: OpenClawConfig, context: UpdateConfigContext) => OpenClawConfig,
-): Promise<OpenClawConfig> {
+  mutator: (cfg: QuietCoreConfig, context: UpdateConfigContext) => QuietCoreConfig,
+): Promise<QuietCoreConfig> {
   const snapshot = await readConfigFileSnapshot();
   if (!snapshot.valid) {
     const issues = formatConfigIssueLines(snapshot.issues, "-").join("\n");
@@ -88,7 +88,7 @@ export async function updateConfig(
 }
 
 /** Resolves a CLI model reference through aliases and catalog provider aliases. */
-export function resolveModelTarget(params: { raw: string; cfg: OpenClawConfig }): {
+export function resolveModelTarget(params: { raw: string; cfg: QuietCoreConfig }): {
   provider: string;
   model: string;
 } {
@@ -109,7 +109,7 @@ export function resolveModelTarget(params: { raw: string; cfg: OpenClawConfig })
 
 function resolveAuthoredModelAliasTarget(params: {
   raw: string;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
 }): { provider: string; model: string } | undefined {
   const aliasIndex = buildModelAliasIndex({
     cfg: params.cfg,
@@ -125,7 +125,7 @@ function resolveAuthoredModelAliasTarget(params: {
 
 /** Resolves model reference strings to canonical provider/model keys. */
 export function resolveModelKeysFromEntries(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   entries: readonly string[];
 }): string[] {
   const aliasIndex = buildModelAliasIndex({
@@ -146,7 +146,7 @@ export function resolveModelKeysFromEntries(params: {
 
 /** Validates an optional agent id against configured agents. */
 export function resolveKnownAgentId(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   rawAgentId?: string | null;
 }): string | undefined {
   const raw = params.rawAgentId?.trim();
@@ -165,7 +165,7 @@ export function resolveKnownAgentId(params: {
 
 /** Resolves the selected model-command agent and its profile directory. */
 export function resolveModelsTargetAgent(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   rawAgentId?: string,
 ): {
   agentId: string;
@@ -244,11 +244,11 @@ export function mergePrimaryFallbackConfig(
 
 /** Applies a default text/image primary-model update and ensures the model entry exists. */
 export function applyDefaultModelPrimaryUpdate(params: {
-  cfg: OpenClawConfig;
-  resolveCfg?: OpenClawConfig;
+  cfg: QuietCoreConfig;
+  resolveCfg?: QuietCoreConfig;
   modelRaw: string;
   field: "model" | "imageModel";
-}): OpenClawConfig {
+}): QuietCoreConfig {
   const resolved =
     params.resolveCfg && params.resolveCfg !== params.cfg
       ? (resolveAuthoredModelAliasTarget({

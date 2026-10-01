@@ -3,7 +3,7 @@
 import type { ReplyPayload } from "../../auto-reply/reply-payload.js";
 import { resolveStorePath } from "../../config/sessions.js";
 import { loadSessionEntry } from "../../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { TtsAutoMode } from "../../config/types.tts.js";
 import { shouldAttemptTtsPayload } from "../../tts/tts-config.js";
 
@@ -17,7 +17,7 @@ function loadMessageActionTtsRuntime() {
 
 /** Reads the session-level TTS auto mode for a message-action send. */
 export function resolveMessageActionSessionTtsAuto(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   sessionKey?: string;
   agentId?: string;
 }): TtsAutoMode | undefined {
@@ -41,7 +41,7 @@ export function resolveMessageActionSessionTtsAuto(params: {
 /** Applies automatic TTS to a message-action send payload when config/session policy allows it. */
 export async function maybeApplyTtsToMessageActionSendPayload(params: {
   payload: ReplyPayload;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   channel: string;
   accountId?: string | null;
   agentId?: string;

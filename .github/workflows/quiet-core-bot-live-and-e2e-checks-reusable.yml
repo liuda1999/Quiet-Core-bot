@@ -1,4 +1,4 @@
-name: OpenClaw Live And E2E Checks (Reusable)
+name: QuietCore Live And E2E Checks (Reusable)
 
 on:
   workflow_dispatch:
@@ -34,7 +34,7 @@ on:
         default: 1
         type: number
       published_upgrade_survivor_baseline:
-        description: Published OpenClaw package baseline for the published-upgrade-survivor/update-migration Docker lanes
+        description: Published QuietCore package baseline for the published-upgrade-survivor/update-migration Docker lanes
         required: false
         default: quiet-core-bot@latest
         type: string
@@ -144,7 +144,7 @@ on:
         default: 1
         type: number
       published_upgrade_survivor_baseline:
-        description: Published OpenClaw package baseline for the published-upgrade-survivor/update-restart-auth/update-migration Docker lanes
+        description: Published QuietCore package baseline for the published-upgrade-survivor/update-restart-auth/update-migration Docker lanes
         required: false
         default: quiet-core-bot@latest
         type: string
@@ -350,7 +350,7 @@ jobs:
 
           if [[ -z "$trusted_reason" ]]; then
             echo "Ref '${INPUT_REF}' resolved to $selected_sha, which is not trusted for secret-bearing live/E2E checks." >&2
-            echo "Allowed refs must be reachable from an OpenClaw branch or release tag." >&2
+            echo "Allowed refs must be reachable from an QuietCore branch or release tag." >&2
             exit 1
           fi
 
@@ -788,7 +788,7 @@ jobs:
           node .release-harness/scripts/docker-e2e.mjs github-outputs "$plan_path" >> "$GITHUB_OUTPUT"
           echo "plan_json=$plan_path" >> "$GITHUB_OUTPUT"
 
-      - name: Download OpenClaw Docker E2E package
+      - name: Download QuietCore Docker E2E package
         if: contains(matrix.profiles, inputs.release_test_profile) && steps.plan.outputs.needs_package == '1'
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
@@ -1048,7 +1048,7 @@ jobs:
           echo "artifact_suffix=${suffix:-targeted}" >> "$GITHUB_OUTPUT"
           echo "plan_json=$plan_path" >> "$GITHUB_OUTPUT"
 
-      - name: Download OpenClaw Docker E2E package
+      - name: Download QuietCore Docker E2E package
         if: steps.plan.outputs.needs_package == '1'
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
@@ -1215,7 +1215,7 @@ jobs:
           node .release-harness/scripts/docker-e2e.mjs github-outputs "$plan_path" >> "$GITHUB_OUTPUT"
           echo "plan_json=$plan_path" >> "$GITHUB_OUTPUT"
 
-      - name: Download OpenClaw Docker E2E package
+      - name: Download QuietCore Docker E2E package
         if: steps.plan.outputs.needs_package == '1'
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
@@ -1350,14 +1350,14 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           install-bun: "true"
 
-      - name: Download current-run OpenClaw Docker E2E package
+      - name: Download current-run QuietCore Docker E2E package
         if: steps.plan.outputs.needs_package == '1' && inputs.package_artifact_name != '' && inputs.package_artifact_run_id == ''
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: ${{ inputs.package_artifact_name }}
           path: .artifacts/docker-e2e-package
 
-      - name: Download previous-run OpenClaw Docker E2E package
+      - name: Download previous-run QuietCore Docker E2E package
         if: steps.plan.outputs.needs_package == '1' && inputs.package_artifact_run_id != ''
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
@@ -1366,7 +1366,7 @@ jobs:
           run-id: ${{ inputs.package_artifact_run_id }}
           github-token: ${{ github.token }}
 
-      - name: Pack OpenClaw package for Docker E2E
+      - name: Pack QuietCore package for Docker E2E
         if: steps.plan.outputs.needs_package == '1' && inputs.package_artifact_name == '' && inputs.package_artifact_run_id == ''
         shell: bash
         run: |
@@ -1376,7 +1376,7 @@ jobs:
             --output-dir .artifacts/docker-e2e-package \
             --output-name quiet-core-bot-current.tgz
 
-      - name: Validate OpenClaw Docker E2E package
+      - name: Validate QuietCore Docker E2E package
         id: package
         if: steps.plan.outputs.needs_package == '1'
         shell: bash
@@ -1407,7 +1407,7 @@ jobs:
             echo "Docker E2E package SHA-256: \`$digest\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Upload OpenClaw Docker E2E package
+      - name: Upload QuietCore Docker E2E package
         if: steps.plan.outputs.needs_package == '1' && (inputs.package_artifact_name == '' || inputs.package_artifact_run_id != '')
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:

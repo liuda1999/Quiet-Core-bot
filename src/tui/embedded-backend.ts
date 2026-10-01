@@ -27,7 +27,7 @@ import {
   updateSessionGoalStatus,
 } from "../config/sessions.js";
 import { applySessionPatchProjection } from "../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { isChatStopCommandText } from "../gateway/chat-abort.js";
 import {
   projectRecentChatDisplayMessages,
@@ -119,7 +119,7 @@ const embeddedSessionStartupMigrationLog = {
   warn: (message: string) => logWarn(message, silentRuntime),
 };
 
-function hasProviderWildcardModelAllowlist(cfg: OpenClawConfig) {
+function hasProviderWildcardModelAllowlist(cfg: QuietCoreConfig) {
   const modelMaps = [
     cfg.agents?.defaults?.models,
     ...(cfg.agents?.list?.map((agent) => agent?.models) ?? []),
@@ -129,7 +129,7 @@ function hasProviderWildcardModelAllowlist(cfg: OpenClawConfig) {
   );
 }
 
-function resolveConfiguredReplaceModeCatalog(cfg: OpenClawConfig) {
+function resolveConfiguredReplaceModeCatalog(cfg: QuietCoreConfig) {
   if (cfg.models?.mode !== "replace") {
     return undefined;
   }
@@ -139,12 +139,12 @@ function resolveConfiguredReplaceModeCatalog(cfg: OpenClawConfig) {
   return buildConfiguredModelCatalog({ cfg });
 }
 
-function shouldLoadFullGatewayCatalogForReplaceMode(cfg: OpenClawConfig) {
+function shouldLoadFullGatewayCatalogForReplaceMode(cfg: QuietCoreConfig) {
   return cfg.models?.mode === "replace" && hasProviderWildcardModelAllowlist(cfg);
 }
 
 function ensureEmbeddedHistoryRuntimePluginsLoaded(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   sessionAgentId: string;
 }): { status: "warmed" } | { status: "failed"; error: string } {
   try {
@@ -159,7 +159,7 @@ function ensureEmbeddedHistoryRuntimePluginsLoaded(params: {
   }
 }
 
-async function loadEmbeddedTuiModelCatalog(cfg: OpenClawConfig) {
+async function loadEmbeddedTuiModelCatalog(cfg: QuietCoreConfig) {
   const configuredCatalog = resolveConfiguredReplaceModeCatalog(cfg);
   if (configuredCatalog !== undefined) {
     return configuredCatalog;

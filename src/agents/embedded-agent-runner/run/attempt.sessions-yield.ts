@@ -1,7 +1,7 @@
 /**
  * Handles sessions-yield interruption, persistence, and artifact cleanup.
  */
-import { isTranscriptOnlyOpenClawAssistantMessage } from "../../../shared/transcript-only-quiet-core-bot-assistant.js";
+import { isTranscriptOnlyQuietCoreAssistantMessage } from "../../../shared/transcript-only-quiet-core-bot-assistant.js";
 import type { AgentMessage } from "../../runtime/index.js";
 import { log } from "../logger.js";
 import { resolveEmbeddedAbortSettleTimeoutMs } from "./attempt.abort-settle-timeout.js";
@@ -225,7 +225,7 @@ export function stripSessionsYieldArtifacts(activeSession: {
         entry.type === "custom" ||
         entry.type === "label" ||
         entry.type === "session_info" ||
-        (entry.type === "message" && isTranscriptOnlyOpenClawAssistantMessage(entry.message)),
+        (entry.type === "message" && isTranscriptOnlyQuietCoreAssistantMessage(entry.message)),
     },
   );
 }

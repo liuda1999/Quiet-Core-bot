@@ -1,4 +1,4 @@
-name: OpenClaw Stable Main Closeout
+name: QuietCore Stable Main Closeout
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Stable OpenClaw tag to replay or repair, for example v2026.6.8 or v2026.6.8-2
+        description: Stable QuietCore tag to replay or repair, for example v2026.6.8 or v2026.6.8-2
         required: false
         type: string
       rollback_drill_id:
@@ -363,13 +363,13 @@ jobs:
           import { readFileSync } from "node:fs";
           const run = JSON.parse(readFileSync(process.argv[2], "utf8"));
           for (const [key, expected] of [
-            ["workflowName", "OpenClaw Release Publish"],
+            ["workflowName", "QuietCore Release Publish"],
             ["event", "workflow_dispatch"],
             ["status", "completed"],
             ["conclusion", "success"],
           ]) {
             if (run[key] !== expected) {
-              throw new Error(`OpenClaw Release Publish must have ${key}=${expected}, got ${run[key] ?? "<missing>"}.`);
+              throw new Error(`QuietCore Release Publish must have ${key}=${expected}, got ${run[key] ?? "<missing>"}.`);
             }
           }
           NODE

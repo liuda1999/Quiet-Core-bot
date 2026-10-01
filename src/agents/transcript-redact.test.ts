@@ -2,7 +2,7 @@
 // secrets do not persist in logs or replay artifacts.
 import type { AgentMessage } from "quiet-core-bot/plugin-sdk/agent-core";
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import * as loggingConfigModule from "../logging/config.js";
 import { redactTranscriptMessage } from "./transcript-redact.js";
 
@@ -19,13 +19,13 @@ function textMessage(text: string): AgentMessage {
   } as unknown as AgentMessage;
 }
 
-function cfg(mode: "tools" | "off", patterns?: string[]): OpenClawConfig {
+function cfg(mode: "tools" | "off", patterns?: string[]): QuietCoreConfig {
   return {
     logging: {
       redactSensitive: mode,
       ...(patterns ? { redactPatterns: patterns } : {}),
     },
-  } satisfies OpenClawConfig;
+  } satisfies QuietCoreConfig;
 }
 
 const EMAIL_PATTERN = String.raw`([\w]|[-.])+@([\w]|[-.])+\.\w+`;

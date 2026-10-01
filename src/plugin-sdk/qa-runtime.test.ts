@@ -12,14 +12,14 @@ import {
 } from "./qa-runtime.test-helpers.js";
 
 const loadBundledPluginPublicSurfaceModuleSync = vi.hoisted(() => vi.fn());
-const resolveOpenClawPackageRootSync = vi.hoisted(() => vi.fn());
+const resolveQuietCorePackageRootSync = vi.hoisted(() => vi.fn());
 
 vi.mock("./facade-runtime.js", () => ({
   loadBundledPluginPublicSurfaceModuleSync,
 }));
 
 vi.mock("../infra/quiet-core-bot-root.js", () => ({
-  resolveOpenClawPackageRootSync,
+  resolveQuietCorePackageRootSync,
 }));
 
 describe("plugin-sdk qa-runtime", () => {
@@ -30,7 +30,7 @@ describe("plugin-sdk qa-runtime", () => {
   beforeEach(() => {
     vi.resetModules();
     loadBundledPluginPublicSurfaceModuleSync.mockReset();
-    resolveOpenClawPackageRootSync.mockReset().mockReturnValue(null);
+    resolveQuietCorePackageRootSync.mockReset().mockReturnValue(null);
     delete process.env.QUIET_CORE_ENABLE_PRIVATE_QA_CLI;
     delete process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR;
   });
@@ -103,7 +103,7 @@ describe("plugin-sdk qa-runtime", () => {
       tempDirs,
       importRuntime: () => import("./qa-runtime.js"),
       loadBundledPluginPublicSurfaceModuleSync,
-      resolveOpenClawPackageRootSync,
+      resolveQuietCorePackageRootSync,
     });
   });
 

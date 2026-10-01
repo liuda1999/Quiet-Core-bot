@@ -1,10 +1,10 @@
 // Covers provider plugin registration and runtime composition.
 import { sortUniqueStrings } from "@quiet-core/normalization-core/string-normalization";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import type { PluginAutoEnableResult } from "../config/plugin-auto-enable.js";
 import type { PluginManifestRecord } from "./manifest-registry.js";
-import type { OpenClawPackageManifest } from "./manifest.js";
+import type { QuietCorePackageManifest } from "./manifest.js";
 import type { PluginMetadataSnapshot } from "./plugin-metadata-snapshot.types.js";
 import type { PluginRegistrySnapshot } from "./plugin-registry.js";
 import { createEmptyPluginRegistry } from "./registry-empty.js";
@@ -15,7 +15,7 @@ type ResolveCompatibleRuntimePluginRegistry =
   typeof import("./loader.js").resolveCompatibleRuntimePluginRegistry;
 type GetRuntimePluginRegistryForLoadOptions =
   typeof import("./loader.js").getRuntimePluginRegistryForLoadOptions;
-type LoadOpenClawPlugins = typeof import("./loader.js").loadOpenClawPlugins;
+type LoadQuietCorePlugins = typeof import("./loader.js").loadQuietCorePlugins;
 type IsPluginRegistryLoadInFlight = typeof import("./loader.js").isPluginRegistryLoadInFlight;
 type LoadPluginManifestRegistry =
   typeof import("./manifest-registry.js").loadPluginManifestRegistry;
@@ -27,7 +27,7 @@ type SetActivePluginRegistry = typeof import("./runtime.js").setActivePluginRegi
 const resolveRuntimePluginRegistryMock = vi.fn<ResolveRuntimePluginRegistry>();
 const getRuntimePluginRegistryForLoadOptionsMock = vi.fn<GetRuntimePluginRegistryForLoadOptions>();
 const resolveCompatibleRuntimePluginRegistryMock = vi.fn<ResolveCompatibleRuntimePluginRegistry>();
-const loadOpenClawPluginsMock = vi.fn<LoadOpenClawPlugins>();
+const loadQuietCorePluginsMock = vi.fn<LoadQuietCorePlugins>();
 const isPluginRegistryLoadInFlightMock = vi.fn<IsPluginRegistryLoadInFlight>((_) => false);
 const loadPluginManifestRegistryMock = vi.fn<LoadPluginManifestRegistry>();
 const loadPluginMetadataSnapshotMock = vi.fn<LoadPluginMetadataSnapshot>();
@@ -59,7 +59,7 @@ function createManifestProviderPlugin(params: {
   contracts?: PluginManifestRecord["contracts"];
   modelCatalog?: PluginManifestRecord["modelCatalog"];
   providerAuthAliases?: PluginManifestRecord["providerAuthAliases"];
-  packageManifest?: OpenClawPackageManifest;
+  packageManifest?: QuietCorePackageManifest;
 }): PluginManifestRecord {
   return {
     id: params.id,
@@ -350,7 +350,7 @@ function expectLastSetupRegistryCall(params: {
     entries?: Record<string, { enabled?: boolean }>;
   };
 }) {
-  const call = getLastMockCallArg(loadOpenClawPluginsMock, "Quiet Core bot plugin setup loader");
+  const call = getLastMockCallArg(loadQuietCorePluginsMock, "Quiet Core bot plugin setup loader");
   const options = expectRecordFields(call, {
     ...(params.onlyPluginIds !== undefined ? { onlyPluginIds: params.onlyPluginIds } : {}),
     ...(params.activate !== undefined ? { activate: params.activate } : {}),
@@ -380,7 +380,7 @@ function expectLastSetupRegistryLoad(params?: {
   env?: NodeJS.ProcessEnv;
   onlyPluginIds?: readonly string[];
 }) {
-  const call = getLastMockCallArg(loadOpenClawPluginsMock, "Quiet Core bot plugin setup loader");
+  const call = getLastMockCallArg(loadQuietCorePluginsMock, "Quiet Core bot plugin setup loader");
   expectRecordFields(call, {
     cache: false,
     activate: false,
@@ -402,7 +402,7 @@ function getLastResolvedPluginConfig() {
 
 function getLastSetupLoadedPluginConfig() {
   const call = expectRecordFields(
-    getLastMockCallArg(loadOpenClawPluginsMock, "Quiet Core bot plugin setup loader"),
+    getLastMockCallArg(loadQuietCorePluginsMock, "Quiet Core bot plugin setup loader"),
     {},
   );
   return (call.config ?? undefined) as
@@ -416,10 +416,10 @@ function getLastSetupLoadedPluginConfig() {
 }
 
 function createAutoEnabledProviderConfig() {
-  const rawConfig: OpenClawConfig = {
+  const rawConfig: QuietCoreConfig = {
     plugins: {},
   };
-  const autoEnabledConfig: OpenClawConfig = {
+  const autoEnabledConfig: QuietCoreConfig = {
     ...rawConfig,
     plugins: {
       entries: {
@@ -460,8 +460,8 @@ describe("resolvePluginProviders", () => {
       diagnostics: [],
     });
     vi.doMock("./loader.js", () => ({
-      loadOpenClawPlugins: (...args: Parameters<LoadOpenClawPlugins>) =>
-        loadOpenClawPluginsMock(...args),
+      loadQuietCorePlugins: (...args: Parameters<LoadQuietCorePlugins>) =>
+        loadQuietCorePluginsMock(...args),
       isPluginRegistryLoadInFlight: (...args: Parameters<IsPluginRegistryLoadInFlight>) =>
         isPluginRegistryLoadInFlightMock(...args),
       resolveCompatibleRuntimePluginRegistry: (
@@ -713,7 +713,7 @@ describe("resolvePluginProviders", () => {
     resolveRuntimePluginRegistryMock.mockReset();
     getRuntimePluginRegistryForLoadOptionsMock.mockReset();
     resolveCompatibleRuntimePluginRegistryMock.mockReset();
-    loadOpenClawPluginsMock.mockReset();
+    loadQuietCorePluginsMock.mockReset();
     isPluginRegistryLoadInFlightMock.mockReset();
     isPluginRegistryLoadInFlightMock.mockReturnValue(false);
     loadPluginMetadataSnapshotMock.mockReset();
@@ -730,12 +730,12 @@ describe("resolvePluginProviders", () => {
     getRuntimePluginRegistryForLoadOptionsMock.mockImplementation((...args) =>
       resolveRuntimePluginRegistryMock(...args),
     );
-    loadOpenClawPluginsMock.mockReturnValue(registry);
+    loadQuietCorePluginsMock.mockReturnValue(registry);
     loadPluginManifestRegistryMock.mockReset();
     applyPluginAutoEnableMock.mockReset();
     applyPluginAutoEnableMock.mockImplementation(
       (params): PluginAutoEnableResult => ({
-        config: params.config ?? ({} as OpenClawConfig),
+        config: params.config ?? ({} as QuietCoreConfig),
         changes: [],
         autoEnabledReasons: {},
       }),
@@ -1120,7 +1120,7 @@ describe("resolvePluginProviders", () => {
       includeUntrustedWorkspacePlugins: false,
     });
 
-    expect(loadOpenClawPluginsMock).not.toHaveBeenCalled();
+    expect(loadQuietCorePluginsMock).not.toHaveBeenCalled();
   });
 
   it("loads provider plugins from the auto-enabled config snapshot", () => {
@@ -1245,7 +1245,7 @@ describe("resolvePluginProviders", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       providerRefs: ["ollama-spark"],
       activate: true,
     });
@@ -1414,7 +1414,7 @@ describe("resolvePluginProviders", () => {
       mode: "setup",
     });
 
-    expect(loadOpenClawPluginsMock).not.toHaveBeenCalled();
+    expect(loadQuietCorePluginsMock).not.toHaveBeenCalled();
   });
 
   it("does not override explicitly disabled setup owners", () => {
@@ -1441,7 +1441,7 @@ describe("resolvePluginProviders", () => {
       mode: "setup",
     });
 
-    expect(loadOpenClawPluginsMock).not.toHaveBeenCalled();
+    expect(loadQuietCorePluginsMock).not.toHaveBeenCalled();
   });
 
   it("filters explicit setup owners through the untrusted workspace discovery gate", () => {
@@ -1465,7 +1465,7 @@ describe("resolvePluginProviders", () => {
     });
 
     expect(providers).toStrictEqual([]);
-    expect(loadOpenClawPluginsMock).not.toHaveBeenCalled();
+    expect(loadQuietCorePluginsMock).not.toHaveBeenCalled();
   });
 
   it("does not auto-activate untrusted workspace runtime owners when requested", () => {

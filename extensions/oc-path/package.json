@@ -2,7 +2,7 @@
   "name": "@quiet-core/oc-path",
   "version": "2026.6.11",
   "private": true,
-  "description": "OpenClaw oc:// workspace path plugin",
+  "description": "QuietCore oc:// workspace path plugin",
   "type": "module",
   "dependencies": {
     "commander": "14.0.3",

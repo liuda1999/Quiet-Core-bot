@@ -1,13 +1,13 @@
 /** Discovers plugin-declared environment variable names for channel credential setup. */
 import { uniqueStrings } from "@quiet-core/normalization-core/string-normalization";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { loadPluginMetadataSnapshot } from "../plugins/plugin-metadata-snapshot.js";
 import { appendUniqueEnvVarCandidates } from "../shared/env-var-candidates.js";
 export { isSafeChannelEnvVarTriggerName } from "./channel-env-var-names.js";
 
 type ChannelEnvVarLookupParams = {
   /** Config snapshot used to discover enabled/installed plugin manifests. */
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   /** Workspace root used for local plugin metadata discovery. */
   workspaceDir?: string;
   /** Env snapshot used by metadata loading; defaults to process env. */

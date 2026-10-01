@@ -1,6 +1,6 @@
 /** Applies agent compaction settings and small-context overflow guards. */
 import type { AgentCompactionMode } from "../config/types.agent-defaults.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { ContextEngineInfo } from "../context-engine/types.js";
 import { MIN_PROMPT_BUDGET_RATIO, MIN_PROMPT_BUDGET_TOKENS } from "./agent-compaction-constants.js";
 import { log } from "./embedded-agent-runner/logger.js";
@@ -45,7 +45,7 @@ type AgentSettingsManagerLike = {
 };
 
 /** Resolves the configured reserve-token floor for agent compaction. */
-function resolveCompactionReserveTokensFloor(cfg?: OpenClawConfig): number {
+function resolveCompactionReserveTokensFloor(cfg?: QuietCoreConfig): number {
   const raw = cfg?.agents?.defaults?.compaction?.reserveTokensFloor;
   if (typeof raw === "number" && Number.isFinite(raw) && raw >= 0) {
     return Math.floor(raw);
@@ -65,7 +65,7 @@ function resolveCompactionReserveTokensFloor(cfg?: OpenClawConfig): number {
  * two can never disagree about what the enforced floor is.
  */
 export function resolveCompactionReserveTokensFloorForContext(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   /** When known, the resolved context window budget for the current model. */
   contextTokenBudget?: number;
 }): number {
@@ -99,7 +99,7 @@ function toPositiveInt(value: unknown): number | undefined {
 /** Applies configured compaction reserve/keep-recent settings to an agent settings manager. */
 export function applyAgentCompactionSettingsFromConfig(params: {
   settingsManager: AgentSettingsManagerLike;
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   /** When known, the resolved context window budget for the current model. */
   contextTokenBudget?: number;
 }): {
@@ -170,7 +170,7 @@ export function applyAgentCompactionSettingsFromConfig(params: {
 }
 
 /** Resolve the compaction mode after provider-backed safeguard promotion. */
-export function resolveEffectiveCompactionMode(cfg?: OpenClawConfig): AgentCompactionMode {
+export function resolveEffectiveCompactionMode(cfg?: QuietCoreConfig): AgentCompactionMode {
   const compaction = cfg?.agents?.defaults?.compaction;
   if (compaction?.provider) {
     return "safeguard";

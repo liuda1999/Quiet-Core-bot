@@ -5,7 +5,7 @@ import { MAX_IMAGE_BYTES } from "@quiet-core/media-core/constants";
 import type { ImageContent } from "quiet-core-bot/plugin-sdk/llm";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createSolidPngBuffer } from "../../test/helpers/image-fixtures.js";
-import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-quiet-core-bot-dir.js";
+import { resolvePreferredQuietCoreTmpDir } from "../infra/tmp-quiet-core-bot-dir.js";
 import { escapeRegExp } from "../shared/regexp.js";
 import {
   buildCliArgs,
@@ -228,7 +228,7 @@ describe("buildCliArgs", () => {
 describe("writeCliImages", () => {
   it("uses stable hashed file paths so repeated image hydration reuses the same path", async () => {
     const workspaceDir = await fs.mkdtemp(
-      path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-cli-write-images-"),
+      path.join(resolvePreferredQuietCoreTmpDir(), "quiet-core-bot-cli-write-images-"),
     );
     const image: ImageContent = {
       type: "image",
@@ -251,7 +251,7 @@ describe("writeCliImages", () => {
       expect(first.paths).toStrictEqual([
         expect.stringMatching(
           new RegExp(
-            `^${escapeRegExp(`${resolvePreferredOpenClawTmpDir()}/quiet-core-bot-cli-images/`)}.*\\.png$`,
+            `^${escapeRegExp(`${resolvePreferredQuietCoreTmpDir()}/quiet-core-bot-cli-images/`)}.*\\.png$`,
           ),
         ),
       ]);
@@ -265,7 +265,7 @@ describe("writeCliImages", () => {
 
   it("uses the shared media extension map for image formats beyond the tiny builtin list", async () => {
     const workspaceDir = await fs.mkdtemp(
-      path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-cli-write-heic-"),
+      path.join(resolvePreferredQuietCoreTmpDir(), "quiet-core-bot-cli-write-heic-"),
     );
     const image: ImageContent = {
       type: "image",
@@ -289,7 +289,7 @@ describe("writeCliImages", () => {
 
   it("hydrates prompt media refs into codex image args through the helper seams", async () => {
     const tempDir = await fs.mkdtemp(
-      path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-cli-prompt-image-"),
+      path.join(resolvePreferredQuietCoreTmpDir(), "quiet-core-bot-cli-prompt-image-"),
     );
     const sourceImage = path.join(tempDir, "bb-image.png");
     await fs.writeFile(sourceImage, createSolidPngBuffer(1, 1, { r: 255, g: 255, b: 255 }));
@@ -335,7 +335,7 @@ describe("writeCliImages", () => {
 
   it("appends hydrated prompt media refs for stdin backends through the helper seams", async () => {
     const tempDir = await fs.mkdtemp(
-      path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-cli-prompt-image-generic-"),
+      path.join(resolvePreferredQuietCoreTmpDir(), "quiet-core-bot-cli-prompt-image-generic-"),
     );
     const sourceImage = path.join(tempDir, "claude-image.png");
     await fs.writeFile(sourceImage, createSolidPngBuffer(1, 1, { r: 255, g: 255, b: 255 }));
@@ -364,7 +364,7 @@ describe("writeCliImages", () => {
 
   it("appends Gemini prompt refs with @-prefixed image paths", async () => {
     const tempDir = await fs.mkdtemp(
-      path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-cli-prompt-image-gemini-"),
+      path.join(resolvePreferredQuietCoreTmpDir(), "quiet-core-bot-cli-prompt-image-gemini-"),
     );
     const explicitImage: ImageContent = {
       type: "image",
@@ -415,7 +415,7 @@ describe("writeCliImages", () => {
 
   it("prefers explicit images over prompt refs through the helper seams", async () => {
     const tempDir = await fs.mkdtemp(
-      path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-cli-explicit-images-"),
+      path.join(resolvePreferredQuietCoreTmpDir(), "quiet-core-bot-cli-explicit-images-"),
     );
     const sourceImage = path.join(tempDir, "ignored-prompt-image.png");
     await fs.writeFile(sourceImage, createSolidPngBuffer(1, 1, { r: 255, g: 255, b: 255 }));

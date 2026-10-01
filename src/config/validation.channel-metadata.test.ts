@@ -248,7 +248,7 @@ vi.mock("../channels/plugins/legacy-config.js", () => ({
 }));
 
 vi.mock("./zod-schema.js", () => ({
-  OpenClawSchema: {
+  QuietCoreSchema: {
     safeParse: (raw: unknown) => ({ success: true, data: raw }),
   },
 }));

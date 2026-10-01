@@ -41,7 +41,7 @@ describe("auth monitoring scripts", () => {
 
     expect(joined).not.toContain(privateHomePath);
     expect(joined).not.toContain(privateHostAlias);
-    expect(joined).toContain("Run on the OpenClaw host: ${SCRIPT_DIR}/mobile-reauth.sh");
+    expect(joined).toContain("Run on the QuietCore host: ${SCRIPT_DIR}/mobile-reauth.sh");
     for (const script of TERMUX_WIDGET_PATHS.map(readScript)) {
       expect(script).toContain('SERVER="${QUIET_CORE_SERVER:-quiet-core-bot-host}"');
     }

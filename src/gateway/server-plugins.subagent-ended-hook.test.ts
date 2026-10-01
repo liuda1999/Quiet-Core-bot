@@ -2,7 +2,7 @@
  * Tests plugin hook delivery when subagent sessions end.
  */
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { PluginRuntimeGatewayRequestScope } from "../plugins/runtime/gateway-request-scope.js";
 import type { GatewayRequestContext, GatewayRequestOptions } from "./server-methods/types.js";
 
@@ -20,13 +20,13 @@ vi.mock("./server-methods.js", () => ({
 type ServerPluginsModule = typeof import("./server-plugins.js");
 type GatewayRequestScopeModule = typeof import("../plugins/runtime/gateway-request-scope.js");
 
-function createTestCfg(): OpenClawConfig {
+function createTestCfg(): QuietCoreConfig {
   return {
     session: { mainKey: "agent:main:main", scope: "per-sender" },
-  } as unknown as OpenClawConfig;
+  } as unknown as QuietCoreConfig;
 }
 
-function createTestContext(label: string, cfg: OpenClawConfig): GatewayRequestContext {
+function createTestContext(label: string, cfg: QuietCoreConfig): GatewayRequestContext {
   return {
     label,
     getRuntimeConfig: () => cfg,

@@ -492,7 +492,7 @@ const CommitmentsSchema = z
   .strict()
   .optional();
 
-export const OpenClawSchema = z
+export const QuietCoreSchema = z
   .object({
     $schema: z.string().optional(),
     meta: z

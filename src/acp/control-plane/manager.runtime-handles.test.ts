@@ -10,7 +10,7 @@ import {
   installAcpSessionManagerTestLifecycle,
   mockCallArg,
   readySessionMeta,
-  type OpenClawConfig,
+  type QuietCoreConfig,
   type SessionAcpMeta,
 } from "./manager.test-helpers.js";
 
@@ -68,7 +68,7 @@ describe("AcpSessionManager runtime handles", () => {
           safeBins: ["git"],
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
     const denyCfg = {
       ...baseCfg,
       tools: {
@@ -77,7 +77,7 @@ describe("AcpSessionManager runtime handles", () => {
           safeBins: ["node"],
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     const manager = new AcpSessionManager();
     await manager.runTurn({

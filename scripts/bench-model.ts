@@ -1,4 +1,4 @@
-// Bench Model script supports OpenClaw repository automation.
+// Bench Model script supports QuietCore repository automation.
 import { pathToFileURL } from "node:url";
 import { completeSimple, type Model } from "quiet-core-bot/plugin-sdk/llm";
 import { parseStrictIntegerOption } from "./lib/dev-tooling-safety.ts";
@@ -86,7 +86,7 @@ function parseArgs(argv = process.argv.slice(2)): CliOptions {
 }
 
 function printUsage(): void {
-  console.log(`OpenClaw model latency benchmark
+  console.log(`QuietCore model latency benchmark
 
 Usage:
   node --import tsx scripts/bench-model.ts [options]

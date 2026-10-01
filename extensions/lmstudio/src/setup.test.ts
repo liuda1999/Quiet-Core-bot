@@ -1,6 +1,6 @@
 // Lmstudio tests cover setup plugin behavior.
 import { CUSTOM_LOCAL_AUTH_MARKER } from "quiet-core-bot/plugin-sdk/provider-auth";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/provider-auth";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/provider-auth";
 import type { ModelDefinitionConfig } from "quiet-core-bot/plugin-sdk/provider-model-shared";
 import { resolveAgentModelPrimaryValue } from "quiet-core-bot/plugin-sdk/provider-onboard";
 import {
@@ -70,7 +70,7 @@ function createModel(id: string, name = id): ModelDefinitionConfig {
   };
 }
 
-function buildConfig(): OpenClawConfig {
+function buildConfig(): QuietCoreConfig {
   return {
     models: {
       providers: {
@@ -86,13 +86,13 @@ function buildConfig(): OpenClawConfig {
 }
 
 function buildDiscoveryContext(params?: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   apiKey?: string;
   discoveryApiKey?: string;
   env?: NodeJS.ProcessEnv;
 }): ProviderCatalogContext {
   return {
-    config: params?.config ?? ({} as OpenClawConfig),
+    config: params?.config ?? ({} as QuietCoreConfig),
     env: params?.env ?? {},
     resolveProviderApiKey: () => ({
       apiKey: params?.apiKey,
@@ -108,7 +108,7 @@ function buildDiscoveryContext(params?: {
 }
 
 function buildNonInteractiveContext(params?: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   customBaseUrl?: string;
   customApiKey?: string;
   lmstudioApiKey?: string;
@@ -412,7 +412,7 @@ describe("lmstudio setup", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       customBaseUrl: "http://localhost:1234/api/v1/",
       customModelId: "qwen3-8b-instruct",
     });
@@ -527,7 +527,7 @@ describe("lmstudio setup", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       customBaseUrl: "http://localhost:1234/api/v1/",
       customApiKey: "",
       customModelId: "qwen3-8b-instruct",
@@ -598,7 +598,7 @@ describe("lmstudio setup", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       customBaseUrl: "http://localhost:1234/api/v1/",
       customApiKey: "",
       customModelId: "qwen3-8b-instruct",
@@ -658,7 +658,7 @@ describe("lmstudio setup", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       customBaseUrl: "http://localhost:1234/api/v1/",
       customApiKey: "",
       customModelId: "qwen3-8b-instruct",
@@ -732,7 +732,7 @@ describe("lmstudio setup", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       customBaseUrl: "http://localhost:1234/api/v1/",
       customModelId: "qwen3-8b-instruct",
       lmstudioApiKey: "fresh-cli-key",
@@ -971,7 +971,7 @@ describe("lmstudio setup", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const { prompter } = createQueuedWizardPrompterHarness([
       "http://localhost:1234/api/v1/",
       "",
@@ -1054,7 +1054,7 @@ describe("lmstudio setup", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const promptText = vi
       .fn()
       .mockResolvedValueOnce("http://localhost:1234/api/v1/")
@@ -1093,7 +1093,7 @@ describe("lmstudio setup", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const promptText = vi
       .fn()
       .mockResolvedValueOnce("http://localhost:1234/api/v1/")
@@ -1138,7 +1138,7 @@ describe("lmstudio setup", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const promptText = vi
       .fn()
       .mockResolvedValueOnce("http://localhost:1234/api/v1/")
@@ -1271,7 +1271,7 @@ describe("lmstudio setup", () => {
                 },
               },
             },
-          } as OpenClawConfig,
+          } as QuietCoreConfig,
         }),
       );
 
@@ -1316,7 +1316,7 @@ describe("lmstudio setup", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         env: {
           LMSTUDIO_DISCOVERY_TOKEN: "secretref-lmstudio-key",
           LMSTUDIO_PROXY_TOKEN: "proxy-token-from-env",
@@ -1355,7 +1355,7 @@ describe("lmstudio setup", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         env: {},
       }),
     );
@@ -1382,7 +1382,7 @@ describe("lmstudio setup", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         env: {},
       }),
     );
@@ -1409,7 +1409,7 @@ describe("lmstudio setup", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
       }),
     );
 
@@ -1440,7 +1440,7 @@ describe("lmstudio setup", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
       }),
     );
 
@@ -1471,7 +1471,7 @@ describe("lmstudio setup", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         env: {},
       }),
     );
@@ -1506,7 +1506,7 @@ describe("lmstudio setup", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
       }),
     );
 
@@ -1533,7 +1533,7 @@ describe("lmstudio setup", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
       }),
     );
 
@@ -1566,7 +1566,7 @@ describe("lmstudio setup", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
       }),
     );
 
@@ -1614,7 +1614,7 @@ describe("lmstudio setup", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       customBaseUrl: "http://localhost:1234/api/v1/",
       customModelId: "qwen3-8b-instruct",
     });

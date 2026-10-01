@@ -127,7 +127,7 @@ describe("gateway port resolution", () => {
 });
 
 describe("state + config path candidates", () => {
-  function expectOpenClawHomeDefaults(env: NodeJS.ProcessEnv): void {
+  function expectQuietCoreHomeDefaults(env: NodeJS.ProcessEnv): void {
     const configuredHome = env.QUIET_CORE_HOME;
     if (!configuredHome) {
       throw new Error("QUIET_CORE_HOME must be set for this assertion helper");
@@ -206,7 +206,7 @@ describe("state + config path candidates", () => {
     const env = {
       QUIET_CORE_HOME: "/srv/quiet-core-bot-home",
     } as NodeJS.ProcessEnv;
-    expectOpenClawHomeDefaults(env);
+    expectQuietCoreHomeDefaults(env);
   });
 
   it("prefers QUIET_CORE_HOME over HOME for default state/config locations", () => {
@@ -214,7 +214,7 @@ describe("state + config path candidates", () => {
       QUIET_CORE_HOME: "/srv/quiet-core-bot-home",
       HOME: "/home/other",
     } as NodeJS.ProcessEnv;
-    expectOpenClawHomeDefaults(env);
+    expectQuietCoreHomeDefaults(env);
   });
 
   it("returns only the new-brand config candidate", () => {

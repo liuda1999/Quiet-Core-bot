@@ -65,7 +65,7 @@ export const confirm = vi.fn().mockResolvedValue(true) as unknown as MockFn;
 const select = vi.fn().mockResolvedValue("node") as unknown as MockFn;
 const note = vi.fn() as unknown as MockFn;
 export const writeConfigFile = vi.fn().mockResolvedValue(undefined) as unknown as MockFn;
-const resolveOpenClawPackageRoot = vi.fn().mockResolvedValue(null) as unknown as MockFn;
+const resolveQuietCorePackageRoot = vi.fn().mockResolvedValue(null) as unknown as MockFn;
 const runGatewayUpdate = vi
   .fn()
   .mockResolvedValue(createGatewayUpdateResult()) as unknown as MockFn;
@@ -305,7 +305,7 @@ vi.mock("../skills/discovery/status.js", () => ({
 vi.mock("../plugins/loader.js", () => ({
   getRuntimePluginRegistryForLoadOptions: () => null,
   isPluginRegistryLoadInFlight: () => false,
-  loadOpenClawPlugins: () => createEmptyPluginRegistry(),
+  loadQuietCorePlugins: () => createEmptyPluginRegistry(),
   resolveCompatibleRuntimePluginRegistry: () => null,
   resolveRuntimePluginRegistry: () => null,
 }));
@@ -401,8 +401,8 @@ vi.mock("quiet-core-bot/plugin-sdk/runtime-env", () => ({
 }));
 
 vi.mock("../infra/quiet-core-bot-root.js", () => ({
-  resolveOpenClawPackageRoot,
-  resolveOpenClawPackageRootSync: vi.fn(() => "/tmp/quiet-core-bot"),
+  resolveQuietCorePackageRoot,
+  resolveQuietCorePackageRootSync: vi.fn(() => "/tmp/quiet-core-bot"),
 }));
 
 vi.mock("../infra/update-runner.js", () => ({
@@ -589,7 +589,7 @@ beforeEach(() => {
 
   readConfigFileSnapshot.mockReset();
   writeConfigFile.mockReset().mockResolvedValue(undefined);
-  resolveOpenClawPackageRoot.mockReset().mockResolvedValue(null);
+  resolveQuietCorePackageRoot.mockReset().mockResolvedValue(null);
   runGatewayUpdate.mockReset().mockResolvedValue(createGatewayUpdateResult());
   listPluginDoctorLegacyConfigRules.mockReset().mockReturnValue([]);
   runDoctorHealthContributions.mockReset().mockImplementation(defaultRunDoctorHealthContributions);

@@ -15,4 +15,4 @@ export {
   isLiveTestEnabled,
 } from "quiet-core-bot/plugin-sdk/test-env";
 export type { FetchMock, TempHomeEnv } from "quiet-core-bot/plugin-sdk/test-env";
-export type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+export type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";

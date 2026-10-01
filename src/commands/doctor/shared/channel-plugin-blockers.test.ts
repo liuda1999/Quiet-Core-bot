@@ -1,6 +1,6 @@
 // Channel plugin blocker tests cover doctor diagnostics for blocked channel plugin setup.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../config/types.quiet-core-bot.js";
 import * as manifestRegistry from "../../../plugins/manifest-registry.js";
 import {
   collectConfiguredChannelPluginBlockerWarnings,
@@ -117,7 +117,7 @@ describe("channel plugin blockers", () => {
           enabled: true,
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expect(hits).toEqual([
       {
@@ -766,7 +766,7 @@ describe("channel plugin blockers", () => {
       diagnostics: [],
     } as unknown as ReturnType<typeof manifestRegistry.loadPluginManifestRegistry>);
 
-    const sourceConfig: OpenClawConfig = {
+    const sourceConfig: QuietCoreConfig = {
       channels: {
         discord: {
           enabled: true,
@@ -807,7 +807,7 @@ describe("channel plugin blockers", () => {
       diagnostics: [],
     } as unknown as ReturnType<typeof manifestRegistry.loadPluginManifestRegistry>);
 
-    const sourceConfig: OpenClawConfig = {
+    const sourceConfig: QuietCoreConfig = {
       channels: {
         "workspace-chat": {
           enabled: true,

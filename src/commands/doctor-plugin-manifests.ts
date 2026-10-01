@@ -5,7 +5,7 @@ import { normalizeOptionalString } from "@quiet-core/normalization-core/string-c
 import { normalizeTrimmedStringList } from "@quiet-core/normalization-core/string-normalization";
 import { z } from "zod";
 import { note } from "../../packages/terminal-core/src/note.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { loadPluginManifestRegistry } from "../plugins/manifest-registry.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { shortenHomePath } from "../utils.js";
@@ -93,7 +93,7 @@ function buildLegacyManifestContractMigration(params: {
 
 /** Collects manifest rewrites needed to move legacy top-level capability keys under contracts. */
 export function collectLegacyPluginManifestContractMigrations(params?: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
   manifestRoots?: string[];
   workspaceDir?: string;
@@ -154,7 +154,7 @@ export function collectLegacyPluginManifestContractMigrations(params?: {
 
 /** Prompts and rewrites legacy plugin manifest contract fields when doctor repair is enabled. */
 export async function maybeRepairLegacyPluginManifestContracts(params: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
   manifestRoots?: string[];
   workspaceDir?: string;

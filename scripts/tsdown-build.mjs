@@ -489,7 +489,7 @@ export function tsdownBuildUsage() {
   return [
     "Usage: node scripts/tsdown-build.mjs [tsdown args...]",
     "",
-    "Builds OpenClaw with tsdown and validates emitted import diagnostics.",
+    "Builds QuietCore with tsdown and validates emitted import diagnostics.",
     "",
     "Options:",
     "  -h, --help  Show this help without starting tsdown.",

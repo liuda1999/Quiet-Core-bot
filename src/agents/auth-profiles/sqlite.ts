@@ -15,10 +15,10 @@ import {
 } from "../../infra/kysely-sync.js";
 import { requireNodeSqlite } from "../../infra/node-sqlite.js";
 import { resolveSqliteDatabaseFilePaths } from "../../infra/sqlite-files.js";
-import type { DB as OpenClawAgentKyselyDatabase } from "../../state/quiet-core-bot-agent-db.generated.js";
+import type { DB as QuietCoreAgentKyselyDatabase } from "../../state/quiet-core-bot-agent-db.generated.js";
 import {
-  runOpenClawAgentWriteTransaction,
-  type OpenClawAgentDatabase,
+  runQuietCoreAgentWriteTransaction,
+  type QuietCoreAgentDatabase,
 } from "../../state/quiet-core-bot-agent-db.js";
 import { QUIET_CORE_SQLITE_BUSY_TIMEOUT_MS } from "../../state/quiet-core-bot-state-db.js";
 import { resolveUserPath } from "../../utils.js";
@@ -26,7 +26,7 @@ import { resolveRegisteredAgentIdForDir } from "../agent-dir-registry.js";
 import { resolveDefaultAgentDir } from "../agent-scope-config.js";
 
 type AuthProfileDatabase = Pick<
-  OpenClawAgentKyselyDatabase,
+  QuietCoreAgentKyselyDatabase,
   "auth_profile_store" | "auth_profile_state"
 >;
 
@@ -125,7 +125,7 @@ function readAuthProfileJsonCellReadOnly(pathname: string, target: "store" | "st
 /** Reads the raw persisted secrets-store payload without coercing the schema. */
 export function readPersistedAuthProfileStoreRaw(
   agentDir?: string,
-  database?: OpenClawAgentDatabase,
+  database?: QuietCoreAgentDatabase,
 ): unknown {
   if (database) {
     const db = getAuthProfileKysely(database.db);
@@ -148,7 +148,7 @@ export function readPersistedAuthProfileStoreRaw(
 /** Reads the raw persisted runtime-state payload without coercing the schema. */
 export function readPersistedAuthProfileStateRaw(
   agentDir?: string,
-  database?: OpenClawAgentDatabase,
+  database?: QuietCoreAgentDatabase,
 ): unknown {
   if (database) {
     const db = getAuthProfileKysely(database.db);
@@ -172,9 +172,9 @@ export function readPersistedAuthProfileStateRaw(
 export function writePersistedAuthProfileStoreRaw(
   payload: unknown,
   agentDir?: string,
-  database?: OpenClawAgentDatabase,
+  database?: QuietCoreAgentDatabase,
 ): void {
-  const write = (target: OpenClawAgentDatabase) => {
+  const write = (target: QuietCoreAgentDatabase) => {
     const db = getAuthProfileKysely(target.db);
     executeSqliteQuerySync(
       target.db,
@@ -197,15 +197,15 @@ export function writePersistedAuthProfileStoreRaw(
     write(database);
     return;
   }
-  runOpenClawAgentWriteTransaction(write, resolveAuthProfileDatabaseOptions(agentDir));
+  runQuietCoreAgentWriteTransaction(write, resolveAuthProfileDatabaseOptions(agentDir));
 }
 
 /** Deletes the persisted secrets-store row while leaving runtime state intact. */
 export function deletePersistedAuthProfileStoreRaw(
   agentDir?: string,
-  database?: OpenClawAgentDatabase,
+  database?: QuietCoreAgentDatabase,
 ): void {
-  const remove = (target: OpenClawAgentDatabase) => {
+  const remove = (target: QuietCoreAgentDatabase) => {
     const db = getAuthProfileKysely(target.db);
     executeSqliteQuerySync(
       target.db,
@@ -216,16 +216,16 @@ export function deletePersistedAuthProfileStoreRaw(
     remove(database);
     return;
   }
-  runOpenClawAgentWriteTransaction(remove, resolveAuthProfileDatabaseOptions(agentDir));
+  runQuietCoreAgentWriteTransaction(remove, resolveAuthProfileDatabaseOptions(agentDir));
 }
 
 /** Writes or deletes the persisted runtime-state payload. */
 export function writePersistedAuthProfileStateRaw(
   payload: unknown,
   agentDir?: string,
-  database?: OpenClawAgentDatabase,
+  database?: QuietCoreAgentDatabase,
 ): void {
-  const write = (target: OpenClawAgentDatabase) => {
+  const write = (target: QuietCoreAgentDatabase) => {
     const db = getAuthProfileKysely(target.db);
     if (!payload) {
       executeSqliteQuerySync(
@@ -255,13 +255,13 @@ export function writePersistedAuthProfileStateRaw(
     write(database);
     return;
   }
-  runOpenClawAgentWriteTransaction(write, resolveAuthProfileDatabaseOptions(agentDir));
+  runQuietCoreAgentWriteTransaction(write, resolveAuthProfileDatabaseOptions(agentDir));
 }
 
 /** Runs an auth-profile database write transaction for store/state updates. */
 export function runAuthProfileWriteTransaction<T>(
   agentDir: string | undefined,
-  operation: (database: OpenClawAgentDatabase) => T,
+  operation: (database: QuietCoreAgentDatabase) => T,
 ): T {
-  return runOpenClawAgentWriteTransaction(operation, resolveAuthProfileDatabaseOptions(agentDir));
+  return runQuietCoreAgentWriteTransaction(operation, resolveAuthProfileDatabaseOptions(agentDir));
 }

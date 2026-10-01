@@ -4,7 +4,7 @@
  * to provider plugin doctor copy.
  */
 import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { buildProviderAuthDoctorHintWithPlugin } from "../../plugins/provider-runtime.runtime.js";
 import type { AuthProfileStore } from "./types.js";
 
@@ -23,7 +23,7 @@ function hasLegacyQwenPortalOAuthProfile(store: AuthProfileStore, profileId?: st
 
 /** Formats provider-specific auth doctor guidance for a profile/store. */
 export async function formatAuthDoctorHint(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   store: AuthProfileStore;
   provider: string;
   profileId?: string;

@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { HEARTBEAT_TOKEN } from "../auto-reply/tokens.js";
 import { loadCommitmentStore, saveCommitmentStore } from "../commitments/store.js";
 import type { CommitmentRecord, CommitmentStoreFile } from "../commitments/types.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { captureEnv, setTestEnvValue } from "../test-utils/env.js";
 import { getLastHeartbeatEvent, resetHeartbeatEventsForTest } from "./heartbeat-events.js";
 import {
@@ -92,7 +92,7 @@ describe("runHeartbeatOnce commitments", () => {
     return await withTempHeartbeatSandbox(async ({ tmpDir, storePath, replySpy }) => {
       setTestEnvValue("QUIET_CORE_STATE_DIR", tmpDir);
       const sessionKey = "agent:main:telegram:user-155462274";
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         agents: {
           defaults: {
             workspace: tmpDir,
@@ -183,7 +183,7 @@ describe("runHeartbeatOnce commitments", () => {
       async ({ tmpDir, storePath, replySpy }) => {
         setTestEnvValue("QUIET_CORE_STATE_DIR", tmpDir);
         const sessionKey = "agent:main:telegram:user-155462274";
-        const cfg: OpenClawConfig = {
+        const cfg: QuietCoreConfig = {
           agents: {
             defaults: {
               workspace: tmpDir,
@@ -270,7 +270,7 @@ describe("runHeartbeatOnce commitments", () => {
       async ({ tmpDir, storePath, replySpy }) => {
         setTestEnvValue("QUIET_CORE_STATE_DIR", tmpDir);
         const sessionKey = "agent:main:telegram:user-155462274";
-        const cfg: OpenClawConfig = {
+        const cfg: QuietCoreConfig = {
           agents: {
             defaults: {
               workspace: tmpDir,
@@ -349,7 +349,7 @@ describe("runHeartbeatOnce commitments", () => {
     await withTempHeartbeatSandbox(async ({ tmpDir, storePath }) => {
       setTestEnvValue("QUIET_CORE_STATE_DIR", tmpDir);
       const dueSessionKey = "agent:main:telegram:user-155462274";
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         agents: {
           defaults: {
             workspace: tmpDir,
@@ -404,7 +404,7 @@ describe("runHeartbeatOnce commitments", () => {
     await withTempHeartbeatSandbox(async ({ tmpDir, storePath, replySpy }) => {
       setTestEnvValue("QUIET_CORE_STATE_DIR", tmpDir);
       const sessionKey = "agent:main:telegram:user-155462274";
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         agents: {
           defaults: {
             workspace: tmpDir,
@@ -564,7 +564,7 @@ describe("runHeartbeatOnce commitments", () => {
       async ({ tmpDir, storePath, replySpy }) => {
         setTestEnvValue("QUIET_CORE_STATE_DIR", tmpDir);
         const sessionKey = "agent:main:telegram:user-155462274";
-        const cfg: OpenClawConfig = {
+        const cfg: QuietCoreConfig = {
           agents: {
             defaults: {
               workspace: tmpDir,

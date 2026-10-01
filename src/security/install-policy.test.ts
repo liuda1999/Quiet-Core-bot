@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   killPidIfAlive,
   readPidFile,
@@ -96,7 +96,7 @@ function baseRequest(sourcePath: string): InstallPolicyRequest {
   };
 }
 
-function configWithPolicy(scriptPath: string, env: Record<string, string>): OpenClawConfig {
+function configWithPolicy(scriptPath: string, env: Record<string, string>): QuietCoreConfig {
   return {
     security: {
       installPolicy: {
@@ -278,7 +278,7 @@ describe("runInstallPolicy", () => {
   });
 
   it("skips skill requests when targets only include plugins", async () => {
-    const config: OpenClawConfig = {
+    const config: QuietCoreConfig = {
       security: {
         installPolicy: {
           enabled: true,

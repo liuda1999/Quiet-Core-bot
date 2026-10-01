@@ -1,6 +1,6 @@
 // Verifies OpenAI model selections route between Quiet Core bot and Codex runtimes.
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   listOpenAIAuthProfileProvidersForAgentRuntime,
   openAIProviderUsesCodexRuntimeByDefault,
@@ -25,7 +25,7 @@ describe("OpenAI runtime routing policy", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     expect(openAIProviderUsesCodexRuntimeByDefault({ provider: "openai", config })).toBe(false);
     expect(
@@ -47,7 +47,7 @@ describe("OpenAI runtime routing policy", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     expect(openAIProviderUsesCodexRuntimeByDefault({ provider: "openai", config })).toBe(false);
   });
@@ -71,7 +71,7 @@ describe("OpenAI runtime routing policy", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     expect(
       resolveContextConfigProviderForRuntime({
@@ -107,7 +107,7 @@ describe("OpenAI runtime routing policy", () => {
           openai: ["openai:work", "openai:backup"],
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     expect(
       listOpenAIAuthProfileProvidersForAgentRuntime({
@@ -139,7 +139,7 @@ describe("OpenAI runtime routing policy", () => {
           openai: ["openai:work", "openai:backup"],
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     expect(
       listOpenAIAuthProfileProvidersForAgentRuntime({
@@ -157,7 +157,7 @@ describe("OpenAI runtime routing policy", () => {
           openai: ["openai:backup", "openai:work"],
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     expect(
       listOpenAIAuthProfileProvidersForAgentRuntime({
@@ -190,7 +190,7 @@ describe("OpenAI runtime routing policy", () => {
           openai: ["openai:work", "openai:backup"],
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     expect(
       listOpenAIAuthProfileProvidersForAgentRuntime({

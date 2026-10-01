@@ -12,7 +12,7 @@ import {
   renderSolidColorPngBase64,
 } from "../../test/helpers/live-image-probe.js";
 import { isLiveTestEnabled } from "../agents/live-test-helpers.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import type { ContextEngine } from "../context-engine/types.js";
 import { isTruthyEnvValue } from "../infra/env.js";
 import { extractFirstTextBlock } from "../shared/chat-message-content.js";
@@ -34,7 +34,7 @@ import {
   assertCronJobVisibleViaCli,
   buildLiveCronProbeMessage,
   createLiveCronProbeSpec,
-  runOpenClawCliJson,
+  runQuietCoreCliJson,
   type CronListJob,
 } from "./live-agent-probes.js";
 import { restoreLiveEnv, snapshotLiveEnv, type LiveEnvSnapshot } from "./live-env-test-helpers.js";
@@ -210,7 +210,7 @@ async function writeLiveGatewayConfig(params: {
   workspace: string;
 }): Promise<void> {
   parseModelKey(params.modelKey);
-  const cfg: OpenClawConfig = {
+  const cfg: QuietCoreConfig = {
     gateway: {
       mode: "local",
       port: params.port,
@@ -825,7 +825,7 @@ async function verifyCodexCronMcpProbe(params: {
     expectedSessionKey: params.sessionKey,
   });
   if (createdJob.id) {
-    await runOpenClawCliJson(
+    await runQuietCoreCliJson(
       [
         "cron",
         "rm",

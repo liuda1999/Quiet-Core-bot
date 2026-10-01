@@ -447,7 +447,7 @@ describe("policy commands", () => {
     ]);
   });
 
-  it("fails closed when the OpenClaw config is invalid", async () => {
+  it("fails closed when the QuietCore config is invalid", async () => {
     const configPath = join(workspaceDir, "quiet-core-bot.jsonc");
     vi.stubEnv("QUIET_CORE_CONFIG_PATH", configPath);
     await fs.writeFile(configPath, "{", "utf-8");

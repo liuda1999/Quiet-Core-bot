@@ -6,7 +6,7 @@
  */
 
 import { type ChildProcess, spawn } from "node:child_process";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import { runCommandWithTimeout } from "../process/exec.js";
 import { hasBinary } from "../skills/loading/config.js";
@@ -251,7 +251,7 @@ function createGmailWatcherCancellation(
  * Called automatically by the gateway if hooks.gmail is configured.
  */
 export async function startGmailWatcher(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   options: GmailWatcherStartOptions = {},
 ): Promise<GmailWatcherStartResult> {
   // Check if gmail hooks are configured

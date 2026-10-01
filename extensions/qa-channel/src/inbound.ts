@@ -1,6 +1,6 @@
 // Qa Channel plugin module implements inbound behavior.
 import { resolveStableChannelMessageIngress } from "quiet-core-bot/plugin-sdk/channel-ingress-runtime";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { resolveInboundRouteEnvelopeBuilderWithRuntime } from "quiet-core-bot/plugin-sdk/inbound-envelope";
 import {
   buildAgentMediaPayload,
@@ -106,7 +106,7 @@ export async function handleQaInbound(params: {
   });
   const toolCalls: QaBusToolCall[] = [];
   const { route, buildEnvelope } = resolveInboundRouteEnvelopeBuilderWithRuntime({
-    cfg: params.config as OpenClawConfig,
+    cfg: params.config as QuietCoreConfig,
     channel: params.channelId,
     accountId: params.account.accountId,
     peer: {
@@ -126,7 +126,7 @@ export async function handleQaInbound(params: {
     ? runtime.channel.mentions.matchesMentionPatterns(
         inbound.text,
         runtime.channel.mentions.buildMentionRegexes(
-          params.config as OpenClawConfig,
+          params.config as QuietCoreConfig,
           route.agentId,
         ),
       )
@@ -219,7 +219,7 @@ export async function handleQaInbound(params: {
   });
 
   await runtime.channel.inbound.dispatchReply({
-    cfg: params.config as OpenClawConfig,
+    cfg: params.config as QuietCoreConfig,
     channel: params.channelId,
     accountId: params.account.accountId,
     agentId: route.agentId,

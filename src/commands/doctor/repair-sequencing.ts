@@ -12,7 +12,7 @@ import {
 } from "../doctor-auth-flat-profiles.js";
 import { maybeRepairLegacyOAuthSidecarProfiles } from "../doctor-auth-oauth-sidecar.js";
 import {
-  maybeRepairManagedNpmOpenClawPeerLinks,
+  maybeRepairManagedNpmQuietCorePeerLinks,
   maybeRepairStaleManagedNpmBundledPlugins,
 } from "../doctor-plugin-registry.js";
 import { collectActiveToolSchemaProjectionWarnings } from "./shared/active-tool-schema-warnings.js";
@@ -88,7 +88,7 @@ export async function runDoctorRepairSequence(params: {
     env,
     prompter: { shouldRepair: true },
   });
-  await maybeRepairManagedNpmOpenClawPeerLinks({
+  await maybeRepairManagedNpmQuietCorePeerLinks({
     config: state.candidate,
     env,
     prompter: { shouldRepair: true },

@@ -4,13 +4,13 @@
  * The only persisted setting here is the Node package manager used by skill
  * installs; validation stays close to the CLI option handling.
  */
-import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../config/types.quiet-core-bot.js";
 import type { RuntimeEnv } from "../../../runtime.js";
 import type { OnboardOptions } from "../../onboard-types.js";
 
 /** Applies the non-interactive skills install options to the pending config. */
 export function applyNonInteractiveSkillsConfig(params: {
-  nextConfig: OpenClawConfig;
+  nextConfig: QuietCoreConfig;
   opts: OnboardOptions;
   runtime: RuntimeEnv;
 }) {

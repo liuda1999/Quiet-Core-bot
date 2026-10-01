@@ -2,7 +2,7 @@
 // tool context fallback, or configured plugin accounts.
 import { listChannelPlugins } from "../../channels/plugins/index.js";
 import type { ChannelPlugin } from "../../channels/plugins/types.plugin.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import {
   type OfficialExternalPluginRepairHint,
   resolveMissingOfficialExternalChannelPluginRepairHint,
@@ -47,7 +47,7 @@ function resolveKnownChannel(value?: string | null): MessageChannelId | undefine
 }
 
 function resolveAvailableKnownChannel(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   value?: string | null;
 }): MessageChannelId | undefined {
   const normalized = resolveKnownChannel(params.value);
@@ -73,7 +73,7 @@ function resolveAvailableKnownChannel(params: {
 }
 
 /** Checks whether a channel has a non-disabled config entry. */
-export function isConfiguredChannel(cfg: OpenClawConfig, channelId: string): boolean {
+export function isConfiguredChannel(cfg: QuietCoreConfig, channelId: string): boolean {
   const channels = cfg.channels;
   if (!channels || typeof channels !== "object" || Array.isArray(channels)) {
     return false;
@@ -86,7 +86,7 @@ export function isConfiguredChannel(cfg: OpenClawConfig, channelId: string): boo
 }
 
 function listConfiguredOfficialExternalRepairHints(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
 ): OfficialExternalPluginRepairHint[] {
   const channels = cfg.channels;
   if (!channels || typeof channels !== "object" || Array.isArray(channels)) {
@@ -152,7 +152,7 @@ function logChannelSelectionError(params: {
   );
 }
 
-async function isPluginConfigured(plugin: ChannelPlugin, cfg: OpenClawConfig): Promise<boolean> {
+async function isPluginConfigured(plugin: ChannelPlugin, cfg: QuietCoreConfig): Promise<boolean> {
   const accountIds = plugin.config.listAccountIds(cfg);
   if (accountIds.length === 0) {
     return false;
@@ -202,7 +202,7 @@ async function isPluginConfigured(plugin: ChannelPlugin, cfg: OpenClawConfig): P
 
 /** Lists deliverable channels with at least one enabled, configured account. */
 export async function listConfiguredMessageChannels(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
 ): Promise<MessageChannelId[]> {
   const channels: MessageChannelId[] = [];
   for (const plugin of listChannelPlugins()) {
@@ -218,7 +218,7 @@ export async function listConfiguredMessageChannels(
 
 /** Resolves the message action channel from explicit input, context fallback, or config. */
 export async function resolveMessageChannelSelection(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   channel?: string | null;
   fallbackChannel?: string | null;
 }): Promise<{

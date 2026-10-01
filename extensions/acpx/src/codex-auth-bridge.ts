@@ -97,7 +97,7 @@ async function resolveInstalledAcpPackageBinPath(
 }
 
 async function resolveInstalledCodexAcpBinPath(): Promise<string | undefined> {
-  // Keep OpenClaw's isolated CODEX_HOME wrapper, but launch the plugin-local
+  // Keep QuietCore's isolated CODEX_HOME wrapper, but launch the plugin-local
   // Codex ACP adapter when the package dependency is available.
   return await resolveInstalledAcpPackageBinPath(CODEX_ACP_PACKAGE, CODEX_ACP_BIN);
 }
@@ -246,7 +246,7 @@ const openClawWrapperArgs = new Set([
   ${quoteCommandPart(QUIET_CORE_GATEWAY_INSTANCE_ID_ARG)},
 ]);
 
-function readOpenClawWrapperArg(args, name) {
+function readQuietCoreWrapperArg(args, name) {
   const index = args.indexOf(name);
   if (index < 0) {
     return undefined;
@@ -266,7 +266,7 @@ function resolveStderrLogPath(args) {
   }
   const leaseId =
     process.env[${JSON.stringify(QUIET_CORE_ACPX_LEASE_ID_ENV)}] ||
-    readOpenClawWrapperArg(args, ${quoteCommandPart(QUIET_CORE_ACPX_LEASE_ID_ARG)}) ||
+    readQuietCoreWrapperArg(args, ${quoteCommandPart(QUIET_CORE_ACPX_LEASE_ID_ARG)}) ||
     "pid-" + process.pid;
   const fileName = stderrLogFileNamePrefix + "." + safeDiagnosticFilePart(leaseId) + ".log";
   return fileURLToPath(new URL("./" + fileName, import.meta.url));
@@ -366,7 +366,7 @@ function finishStderrLog() {
   writeRedactedStderrLog(text);
 }
 
-function stripOpenClawWrapperArgs(args) {
+function stripQuietCoreWrapperArgs(args) {
   const stripped = [];
   for (let index = 0; index < args.length; index += 1) {
     const value = args[index];
@@ -390,7 +390,7 @@ try {
   // Stderr capture is diagnostic-only; never break the ACP adapter.
 }
 
-const configuredArgs = stripOpenClawWrapperArgs(rawConfiguredArgs);
+const configuredArgs = stripQuietCoreWrapperArgs(rawConfiguredArgs);
 
 function resolveNpmCliPath() {
   const candidate = path.resolve(
@@ -577,7 +577,7 @@ const env = {
 function buildClaudeAcpWrapperScript(installedBinPath?: string): string {
   return buildAdapterWrapperScript({
     displayName: "Claude",
-    // This package is patched in OpenClaw; fallback must not float to an unpatched newer release.
+    // This package is patched in QuietCore; fallback must not float to an unpatched newer release.
     packageSpec: `${CLAUDE_ACP_PACKAGE}@${CLAUDE_ACP_PACKAGE_VERSION}`,
     binName: CLAUDE_ACP_BIN,
     installedBinPath,

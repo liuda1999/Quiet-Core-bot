@@ -166,7 +166,7 @@ export const EXPECTED_CODEX_STATUS_COMMAND_TEXT = [
 /** Returns true when text matches a known healthy Codex status response shape. */
 export function isExpectedCodexStatusCommandText(text: string): boolean {
   const normalized = text.toLowerCase();
-  const mentionsOpenClawStatus =
+  const mentionsQuietCoreStatus =
     normalized.includes("quiet-core-bot is running on") ||
     /openclaw\s+\S+\s+is running on/u.test(normalized) ||
     normalized.includes("quiet-core-bot status:") ||
@@ -220,7 +220,7 @@ export function isExpectedCodexStatusCommandText(text: string): boolean {
     isIdleReadyStatus ||
     isReadyStatus ||
     isOnlineIdleStatus ||
-    (mentionsOpenClawStatus && mentionsHarnessSession && mentionsModel)
+    (mentionsQuietCoreStatus && mentionsHarnessSession && mentionsModel)
   );
 }
 

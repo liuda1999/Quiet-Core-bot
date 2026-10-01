@@ -1,5 +1,5 @@
 // Memory Core tests cover embeddings plugin behavior.
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import type { EmbeddingProviderAdapter } from "quiet-core-bot/plugin-sdk/embedding-providers";
 import type { MemoryEmbeddingProviderAdapter } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-embeddings";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -8,11 +8,11 @@ import { createEmbeddingProvider, resolveEmbeddingProviderFallbackModel } from "
 const mockEmbeddingRegistry = vi.hoisted(() => ({
   genericAdapters: [] as EmbeddingProviderAdapter[],
   adapters: [] as MemoryEmbeddingProviderAdapter[],
-  genericLookupConfigs: [] as Array<OpenClawConfig | undefined>,
+  genericLookupConfigs: [] as Array<QuietCoreConfig | undefined>,
 }));
 
 vi.mock("quiet-core-bot/plugin-sdk/embedding-providers", () => ({
-  getEmbeddingProvider: (id: string, config?: OpenClawConfig) => {
+  getEmbeddingProvider: (id: string, config?: QuietCoreConfig) => {
     mockEmbeddingRegistry.genericLookupConfigs.push(config);
     return mockEmbeddingRegistry.genericAdapters.find((adapter) => adapter.id === id);
   },
@@ -52,7 +52,7 @@ function createOptions(provider: string) {
           "voyage",
         ],
       },
-    } as OpenClawConfig,
+    } as QuietCoreConfig,
     agentDir: "/tmp/quiet-core-bot-agent",
     provider,
     fallback: "none",

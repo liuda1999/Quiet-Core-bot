@@ -4,14 +4,14 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { beforeAll, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { createConfigRuntimeEnv } from "../config/env-vars.js";
 import type { PluginMetadataSnapshot } from "../plugins/plugin-metadata-snapshot.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import { saveAuthProfileStore } from "./auth-profiles/store.js";
 import { unsetEnv, withTempEnv } from "./models-config.e2e-harness.js";
 import {
-  planOpenClawModelsJsonWithDeps,
+  planQuietCoreModelsJsonWithDeps,
   resolveProvidersForModelsJsonWithDeps,
 } from "./models-config.plan.js";
 import type { ProviderConfig } from "./models-config.providers.secrets.js";
@@ -79,7 +79,7 @@ function createImplicitGoogleVertexProvider(): ProviderConfig {
 }
 
 async function resolveProvidersForConfigEnvTest(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   onResolveImplicitProviders: (env: NodeJS.ProcessEnv) => void;
 }) {
   // Config env vars are materialized into the discovery env before implicit
@@ -102,7 +102,7 @@ async function resolveProvidersForConfigEnvTest(params: {
   );
 }
 
-function createConfigEnvVarsConfig(): OpenClawConfig {
+function createConfigEnvVarsConfig(): QuietCoreConfig {
   return {
     models: { providers: {} },
     env: {
@@ -114,7 +114,7 @@ function createConfigEnvVarsConfig(): OpenClawConfig {
   };
 }
 
-async function resolveProvidersAndCaptureDiscoveryEnv(cfg: OpenClawConfig) {
+async function resolveProvidersAndCaptureDiscoveryEnv(cfg: QuietCoreConfig) {
   let discoveryEnv: NodeJS.ProcessEnv | undefined;
   const providers = await resolveProvidersForConfigEnvTest({
     cfg,
@@ -125,13 +125,13 @@ async function resolveProvidersAndCaptureDiscoveryEnv(cfg: OpenClawConfig) {
   return { discoveryEnv, providers };
 }
 
-let unauthenticatedProviderWritePlan: Awaited<ReturnType<typeof planOpenClawModelsJsonWithDeps>>;
+let unauthenticatedProviderWritePlan: Awaited<ReturnType<typeof planQuietCoreModelsJsonWithDeps>>;
 let unauthenticatedProviderParsed: { providers?: Record<string, unknown> };
 
 beforeAll(async () => {
   // Reused no-auth write plan proves generated providers stay serializable
   // even when discovery returns auth-only provider shells.
-  unauthenticatedProviderWritePlan = await planOpenClawModelsJsonWithDeps(
+  unauthenticatedProviderWritePlan = await planQuietCoreModelsJsonWithDeps(
     {
       cfg: { models: { providers: {} } },
       agentDir: "/tmp/quiet-core-bot-models-config-env-vars-test",
@@ -160,7 +160,7 @@ beforeAll(async () => {
 
 describe("models-config", () => {
   it("keeps the implicit provider catalog when explicit baseUrl is blank", async () => {
-    let observedConfig: OpenClawConfig | undefined;
+    let observedConfig: QuietCoreConfig | undefined;
     const providers = await resolveProvidersForModelsJsonWithDeps(
       {
         cfg: {
@@ -285,7 +285,7 @@ describe("models-config", () => {
       | Pick<PluginMetadataSnapshot, "index" | "manifestRegistry" | "owners">
       | undefined;
 
-    await planOpenClawModelsJsonWithDeps(
+    await planQuietCoreModelsJsonWithDeps(
       {
         cfg: { models: { providers: {} } },
         agentDir: "/tmp/quiet-core-bot-models-config-env-vars-test",
@@ -312,7 +312,7 @@ describe("models-config", () => {
   });
 
   it("treats empty replace-mode provider sets as authoritative", async () => {
-    const plan = await planOpenClawModelsJsonWithDeps(
+    const plan = await planQuietCoreModelsJsonWithDeps(
       {
         cfg: { models: { mode: "replace", providers: {} } },
         agentDir: "/tmp/quiet-core-bot-models-config-env-vars-test",
@@ -344,7 +344,7 @@ describe("models-config", () => {
         setupProviders: new Map(),
       },
     } as unknown as Pick<PluginMetadataSnapshot, "index" | "manifestRegistry" | "owners">;
-    const plan = await planOpenClawModelsJsonWithDeps(
+    const plan = await planQuietCoreModelsJsonWithDeps(
       {
         cfg: { models: { providers: {} } },
         agentDir: "/tmp/quiet-core-bot-models-config-env-vars-test",
@@ -384,7 +384,7 @@ describe("models-config", () => {
   });
 
   it("falls back to canonical env markers when provider runtime has no api-key policy", async () => {
-    const plan = await planOpenClawModelsJsonWithDeps(
+    const plan = await planQuietCoreModelsJsonWithDeps(
       {
         cfg: { models: { providers: {} } },
         agentDir: "/tmp/quiet-core-bot-models-config-env-vars-test",
@@ -410,7 +410,7 @@ describe("models-config", () => {
   });
 
   it("normalizes retired Gemini ids preserved from existing models.json rows", async () => {
-    const plan = await planOpenClawModelsJsonWithDeps(
+    const plan = await planQuietCoreModelsJsonWithDeps(
       {
         cfg: { models: { mode: "merge", providers: {} } },
         agentDir: "/tmp/quiet-core-bot-models-config-env-vars-test",
@@ -485,7 +485,7 @@ describe("models-config", () => {
         { filterExternalAuthProfiles: false, syncExternalCli: false },
       );
 
-      const plan = await planOpenClawModelsJsonWithDeps(
+      const plan = await planQuietCoreModelsJsonWithDeps(
         {
           cfg: {
             agents: {
@@ -541,7 +541,7 @@ describe("models-config", () => {
           QUIET_CORE_DISABLE_BUNDLED_PLUGINS: undefined,
         },
         async () =>
-          await planOpenClawModelsJsonWithDeps(
+          await planQuietCoreModelsJsonWithDeps(
             {
               cfg: {
                 agents: {

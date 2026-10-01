@@ -3,10 +3,10 @@ import {
   listMemoryHostPublicArtifacts,
   type MemoryPluginPublicArtifact,
 } from "quiet-core-bot/plugin-sdk/memory-host-core";
-import type { OpenClawConfig } from "../api.js";
+import type { QuietCoreConfig } from "../api.js";
 
 export async function listMemoryCorePublicArtifacts(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
 }): Promise<MemoryPluginPublicArtifact[]> {
   return await listMemoryHostPublicArtifacts(params);
 }

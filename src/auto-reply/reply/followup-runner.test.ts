@@ -5,7 +5,7 @@ import path from "node:path";
 import { DELIVERY_NO_REPLY_RUNTIME_CONTRACT } from "quiet-core-bot/plugin-sdk/agent-runtime-test-contracts";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { setCliSessionBinding } from "../../agents/cli-session.js";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import type { SessionEntry } from "../../config/sessions/types.js";
 import {
   createUserTurnTranscriptRecorder,
@@ -1026,7 +1026,7 @@ describe("createFollowupRunner auto fallback primary probes", () => {
 
 describe("createFollowupRunner runtime config", () => {
   it("routes queued followups through CLI runtime dispatch when the model selects a CLI backend", async () => {
-    const runtimeConfig: OpenClawConfig = {
+    const runtimeConfig: QuietCoreConfig = {
       agents: {
         defaults: {
           cliBackends: {
@@ -1118,7 +1118,7 @@ describe("createFollowupRunner runtime config", () => {
   });
 
   it("reuses CLI session bindings for queued room-event followups", async () => {
-    const runtimeConfig: OpenClawConfig = {
+    const runtimeConfig: QuietCoreConfig = {
       agents: {
         defaults: {
           cliBackends: {
@@ -1192,7 +1192,7 @@ describe("createFollowupRunner runtime config", () => {
   });
 
   it("stores queued room-event CLI sessions created from the first ambient run", async () => {
-    const runtimeConfig: OpenClawConfig = {
+    const runtimeConfig: QuietCoreConfig = {
       agents: {
         defaults: {
           cliBackends: {
@@ -1263,7 +1263,7 @@ describe("createFollowupRunner runtime config", () => {
   });
 
   it("does not replace queued room-event CLI session bindings when reuse fails", async () => {
-    const runtimeConfig: OpenClawConfig = {
+    const runtimeConfig: QuietCoreConfig = {
       agents: {
         defaults: {
           cliBackends: {
@@ -1333,7 +1333,7 @@ describe("createFollowupRunner runtime config", () => {
   });
 
   it("passes prepared media user turns to CLI runtime dispatch", async () => {
-    const runtimeConfig: OpenClawConfig = {
+    const runtimeConfig: QuietCoreConfig = {
       agents: {
         defaults: {
           cliBackends: {
@@ -1384,7 +1384,7 @@ describe("createFollowupRunner runtime config", () => {
   });
 
   it("disables routed delivery mirrors for CLI-owned followup payloads", async () => {
-    const runtimeConfig: OpenClawConfig = {
+    const runtimeConfig: QuietCoreConfig = {
       agents: {
         defaults: {
           cliBackends: {
@@ -1436,7 +1436,7 @@ describe("createFollowupRunner runtime config", () => {
     const realAgentEvents = await vi.importActual<typeof import("../../infra/agent-events.js")>(
       "../../infra/agent-events.js",
     );
-    const runtimeConfig: OpenClawConfig = {
+    const runtimeConfig: QuietCoreConfig = {
       agents: {
         defaults: {
           cliBackends: {
@@ -1494,7 +1494,7 @@ describe("createFollowupRunner runtime config", () => {
     const realAgentEvents = await vi.importActual<typeof import("../../infra/agent-events.js")>(
       "../../infra/agent-events.js",
     );
-    const runtimeConfig: OpenClawConfig = {
+    const runtimeConfig: QuietCoreConfig = {
       agents: {
         defaults: {
           cliBackends: {
@@ -1575,7 +1575,7 @@ describe("createFollowupRunner runtime config", () => {
         lifecyclePhases.push(phase);
       }
     });
-    const runtimeConfig: OpenClawConfig = {
+    const runtimeConfig: QuietCoreConfig = {
       agents: {
         defaults: {
           cliBackends: {
@@ -1871,7 +1871,7 @@ describe("createFollowupRunner runtime config", () => {
         lifecycleEvents.push(evt.data);
       }
     });
-    const runtimeConfig: OpenClawConfig = {
+    const runtimeConfig: QuietCoreConfig = {
       agents: {
         defaults: {
           cliBackends: {
@@ -1942,7 +1942,7 @@ describe("createFollowupRunner runtime config", () => {
   });
 
   it("uses the active runtime snapshot for queued embedded followup runs", async () => {
-    const sourceConfig: OpenClawConfig = {
+    const sourceConfig: QuietCoreConfig = {
       models: {
         providers: {
           openai: {
@@ -1957,7 +1957,7 @@ describe("createFollowupRunner runtime config", () => {
         },
       },
     };
-    const runtimeConfig: OpenClawConfig = {
+    const runtimeConfig: QuietCoreConfig = {
       models: {
         providers: {
           openai: {
@@ -2136,7 +2136,7 @@ describe("createFollowupRunner runtime config", () => {
   });
 
   it("resolves queued embedded followups before preflight helpers read config", async () => {
-    const sourceConfig: OpenClawConfig = {
+    const sourceConfig: QuietCoreConfig = {
       skills: {
         entries: {
           whisper: {
@@ -2149,7 +2149,7 @@ describe("createFollowupRunner runtime config", () => {
         },
       },
     };
-    const runtimeConfig: OpenClawConfig = {
+    const runtimeConfig: QuietCoreConfig = {
       skills: {
         entries: {
           whisper: {
@@ -2195,7 +2195,7 @@ describe("createFollowupRunner runtime config", () => {
       payloads: [],
       meta: {},
     });
-    const sourceConfig: OpenClawConfig = {};
+    const sourceConfig: QuietCoreConfig = {};
     const runner = createFollowupRunner({
       typing: createMockTypingController(),
       typingMode: "instant",
@@ -3855,7 +3855,7 @@ describe("createFollowupRunner messaging delivery and dedupe", () => {
                   },
                 },
               },
-            } as OpenClawConfig,
+            } as QuietCoreConfig,
           },
         }),
       ),

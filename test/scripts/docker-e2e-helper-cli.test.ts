@@ -425,7 +425,7 @@ describe("Docker E2E helper CLIs", () => {
           "    headSha: 'abc123',",
           "    status: 'completed',",
           "    url: 'https://github.com/liuda1999/Quiet-Core-bot/actions/runs/12345',",
-          "    workflowName: 'OpenClaw Live and E2E Checks',",
+          "    workflowName: 'QuietCore Live and E2E Checks',",
           "  }));",
           "  process.exit(0);",
           "}",

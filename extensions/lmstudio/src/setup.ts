@@ -6,7 +6,7 @@ import {
   ensureApiKeyFromEnvOrPrompt,
   hasConfiguredSecretInput,
   normalizeOptionalSecretInput,
-  type OpenClawConfig,
+  type QuietCoreConfig,
   type SecretInput,
   type SecretInputMode,
 } from "quiet-core-bot/plugin-sdk/provider-auth";
@@ -87,7 +87,7 @@ function resolveLmstudioSetupDefaultInferenceBaseUrl(env: NodeJS.ProcessEnv = pr
     : LMSTUDIO_DEFAULT_INFERENCE_BASE_URL;
 }
 
-function stripLmstudioStoredAuthConfig(cfg: OpenClawConfig): OpenClawConfig {
+function stripLmstudioStoredAuthConfig(cfg: QuietCoreConfig): QuietCoreConfig {
   const { profiles: _profiles, order: _order, ...restAuth } = cfg.auth ?? {};
   const nextProfiles = Object.fromEntries(
     Object.entries(cfg.auth?.profiles ?? {}).filter(
@@ -325,7 +325,7 @@ function isLmstudioDiscoveryConfigResolutionError(error: unknown): boolean {
 
 /** Preserves existing allowlist metadata and appends discovered LM Studio model refs. */
 function mergeDiscoveredLmstudioAllowlistEntries(params: {
-  existing?: NonNullable<NonNullable<OpenClawConfig["agents"]>["defaults"]>["models"];
+  existing?: NonNullable<NonNullable<QuietCoreConfig["agents"]>["defaults"]>["models"];
   discoveredModels: ModelDefinitionConfig[];
 }) {
   return withAgentModelAliases(
@@ -382,7 +382,7 @@ async function discoverLmstudioSetupModels(params: {
 
 /** Interactive LM Studio setup with connectivity and model-availability checks. */
 export async function promptAndConfigureLmstudioInteractive(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   agentDir?: string;
   prompter?: WizardPrompter;
   secretInputMode?: SecretInputMode;
@@ -567,7 +567,7 @@ export async function promptAndConfigureLmstudioInteractive(params: {
 /** Non-interactive setup path backed by the shared self-hosted helper. */
 export async function configureLmstudioNonInteractive(
   ctx: ProviderAuthMethodNonInteractiveContext,
-): Promise<OpenClawConfig | null> {
+): Promise<QuietCoreConfig | null> {
   const customBaseUrl = normalizeOptionalSecretInput(ctx.opts.customBaseUrl);
   const baseUrl = resolveLmstudioInferenceBase(
     customBaseUrl || resolveLmstudioSetupDefaultInferenceBaseUrl(),

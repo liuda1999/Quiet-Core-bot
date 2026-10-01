@@ -1,4 +1,4 @@
-// Label Open Issues script supports OpenClaw repository automation.
+// Label Open Issues script supports QuietCore repository automation.
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
@@ -768,7 +768,7 @@ async function classifyItem(
             {
               role: "system",
               content:
-                "You classify GitHub issues and pull requests for OpenClaw. Respond with JSON only, no extra text.",
+                "You classify GitHub issues and pull requests for QuietCore. Respond with JSON only, no extra text.",
             },
             {
               role: "user",
@@ -851,7 +851,7 @@ async function main() {
   }
   const openAITimeoutMs = resolveOpenAITimeoutMs();
 
-  logHeader("OpenClaw Issue Label Audit");
+  logHeader("QuietCore Issue Label Audit");
   logStep(`Mode: ${dryRun ? "dry-run" : "apply labels"}`);
   logStep(`Model: ${model}`);
   logStep(`OpenAI timeout: ${openAITimeoutMs}ms`);

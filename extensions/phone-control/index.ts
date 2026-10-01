@@ -1,4 +1,4 @@
-// Phone Control plugin entrypoint registers its OpenClaw integration.
+// Phone Control plugin entrypoint registers its QuietCore integration.
 import {
   asDateTimestampMs,
   resolveExpiresAtMsFromDurationMs,
@@ -11,8 +11,8 @@ import {
 } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import {
   definePluginEntry,
-  type OpenClawPluginApi,
-  type OpenClawPluginService,
+  type QuietCorePluginApi,
+  type QuietCorePluginService,
 } from "./runtime-api.js";
 
 type ArmGroup = "camera" | "screen" | "writes" | "all";
@@ -107,18 +107,18 @@ function formatDuration(ms: number): string {
   return `${d}d`;
 }
 
-function openArmStateStore(api: OpenClawPluginApi) {
+function openArmStateStore(api: QuietCorePluginApi) {
   return api.runtime.state.openKeyedStore<ArmStateFile>({
     namespace: ARM_STATE_NAMESPACE,
     maxEntries: 1,
   });
 }
 
-async function readArmState(api: OpenClawPluginApi): Promise<ArmStateFile | null> {
+async function readArmState(api: QuietCorePluginApi): Promise<ArmStateFile | null> {
   return (await openArmStateStore(api).lookup(ARM_STATE_KEY)) ?? null;
 }
 
-async function writeArmState(api: OpenClawPluginApi, state: ArmStateFile | null): Promise<void> {
+async function writeArmState(api: QuietCorePluginApi, state: ArmStateFile | null): Promise<void> {
   const store = openArmStateStore(api);
   if (!state) {
     await store.delete(ARM_STATE_KEY);
@@ -141,9 +141,9 @@ function hasPhoneControlAllowOverride(cfg: PhoneControlConfigView): boolean {
 }
 
 function patchConfigNodeLists(
-  cfg: OpenClawPluginApi["config"],
+  cfg: QuietCorePluginApi["config"],
   next: { allowCommands: string[]; denyCommands: string[] },
-): OpenClawPluginApi["config"] {
+): QuietCorePluginApi["config"] {
   return {
     ...cfg,
     gateway: {
@@ -158,7 +158,7 @@ function patchConfigNodeLists(
 }
 
 async function disarmNow(params: {
-  api: OpenClawPluginApi;
+  api: QuietCorePluginApi;
   reason: string;
 }): Promise<{ changed: boolean; restored: string[]; removed: string[] }> {
   const { api, reason } = params;
@@ -302,11 +302,11 @@ export default definePluginEntry({
   id: "phone-control",
   name: "Phone Control",
   description: "Temporary allowlist control for phone automation commands",
-  register(api: OpenClawPluginApi) {
+  register(api: QuietCorePluginApi) {
     let expiryInterval: ReturnType<typeof setInterval> | null = null;
     let initialExpiryTick: ReturnType<typeof setImmediate> | null = null;
 
-    const timerService: OpenClawPluginService = {
+    const timerService: QuietCorePluginService = {
       id: "phone-control-expiry",
       start: async (ctx) => {
         const tick = async () => {

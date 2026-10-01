@@ -2,7 +2,7 @@
  * Truncates oversized tool-result content in messages and transcripts.
  */
 import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { formatErrorMessage } from "../../infra/errors.js";
 import type { TextContent } from "../../llm/types.js";
 import { emitSessionTranscriptUpdate } from "../../sessions/transcript-events.js";
@@ -240,7 +240,7 @@ export function calculateMaxToolResultCharsWithCap(
 
 export function resolveLiveToolResultMaxChars(params: {
   contextWindowTokens: number;
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   agentId?: string | null;
 }): number {
   const configuredCap = resolveAgentContextLimits(params.cfg, params.agentId)?.toolResultMaxChars;

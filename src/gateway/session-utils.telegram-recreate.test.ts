@@ -12,7 +12,7 @@ import {
   updateLastRoute,
   updateSessionStore,
 } from "../config/sessions.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { createSuiteTempRootTracker } from "../test-helpers/temp-dir.js";
 import { listSessionsFromStore } from "./session-utils.js";
 
@@ -28,7 +28,7 @@ const cfg = {
   session: {
     dmScope: "per-channel-peer",
   },
-} satisfies Partial<OpenClawConfig> as OpenClawConfig;
+} satisfies Partial<QuietCoreConfig> as QuietCoreConfig;
 
 function createTelegramDirectContext(): MsgContext {
   return {

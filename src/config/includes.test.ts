@@ -26,7 +26,7 @@ function configPath(...parts: string[]) {
   return path.join(CONFIG_DIR, ...parts);
 }
 
-function etcOpenClawPath(...parts: string[]) {
+function etcQuietCorePath(...parts: string[]) {
   return path.join(ETC_QUIET_CORE_DIR, ...parts);
 }
 
@@ -84,7 +84,7 @@ describe("resolveConfigIncludes", () => {
   });
 
   it("rejects absolute path outside config directory (CWE-22)", () => {
-    const absolute = etcOpenClawPath("agents.json");
+    const absolute = etcQuietCorePath("agents.json");
     const files = { [absolute]: { list: [{ id: "main" }] } };
     const obj = { agents: { $include: absolute } };
     expectResolveIncludeError(() => resolve(obj, files), /escapes config directory/);
@@ -746,7 +746,7 @@ describe("QUIET_CORE_INCLUDE_ROOTS allowlist", () => {
   });
 
   it("still rejects include paths that fall outside every allowed root", () => {
-    const obj = { $include: etcOpenClawPath("agents.json") };
+    const obj = { $include: etcQuietCorePath("agents.json") };
     expect(() =>
       resolveConfigIncludes(obj, DEFAULT_BASE_PATH, createMockResolver({}), {
         allowedRoots: [SHARED_DIR],

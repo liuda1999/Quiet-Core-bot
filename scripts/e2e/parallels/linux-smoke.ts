@@ -1,5 +1,5 @@
 #!/usr/bin/env -S pnpm tsx
-// Linux Smoke script supports OpenClaw repository automation.
+// Linux Smoke script supports QuietCore repository automation.
 import { mkdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -44,7 +44,7 @@ import {
   buildCommonSmokeSummary,
   expectedPackageBuildCommit,
   expectedPackageTargetVersion,
-  extractLastOpenClawVersion,
+  extractLastQuietCoreVersion,
   packAndServeSmokeArtifact,
   printSmokeTargetSummary,
   SmokeRunController,
@@ -59,13 +59,13 @@ const BAD_PLUGIN_DIAGNOSTIC_MIN_VERSION = "2026.5.7";
 const APT_LOCK_RETRY_SECONDS = 900;
 const BOOTSTRAP_TIMEOUT_SECONDS = 1200;
 
-function parseOpenClawPackageVersion(value: string): string | null {
+function parseQuietCorePackageVersion(value: string): string | null {
   return value.match(/\b(\d{4}\.\d{1,2}\.\d{1,2}(?:-[A-Za-z0-9.]+)?)\b/u)?.[1] ?? null;
 }
 
-function compareOpenClawPackageVersions(left: string, right: string): number {
+function compareQuietCorePackageVersions(left: string, right: string): number {
   const parse = (value: string): [number, number, number] => {
-    const match = parseOpenClawPackageVersion(value)?.match(/^(\d{4})\.(\d+)\.(\d+)/u);
+    const match = parseQuietCorePackageVersion(value)?.match(/^(\d{4})\.(\d+)\.(\d+)/u);
     if (!match) {
       return [0, 0, 0];
     }
@@ -617,11 +617,11 @@ PY`);
   }
 
   private shouldExpectBadPluginDiagnostic(lane: "fresh" | "upgrade"): boolean {
-    const version = parseOpenClawPackageVersion(this.versionForLane(lane));
+    const version = parseQuietCorePackageVersion(this.versionForLane(lane));
     if (!version) {
       return true;
     }
-    return compareOpenClawPackageVersions(version, BAD_PLUGIN_DIAGNOSTIC_MIN_VERSION) >= 0;
+    return compareQuietCorePackageVersions(version, BAD_PLUGIN_DIAGNOSTIC_MIN_VERSION) >= 0;
   }
 
   private maybeInjectBadPluginFixture(lane: "fresh" | "upgrade"): void {
@@ -835,10 +835,10 @@ fi`,
   }
 
   private async extractLastVersion(phaseId: string): Promise<string> {
-    return await extractLastOpenClawVersion(
+    return await extractLastQuietCoreVersion(
       this.runDir,
       phaseId,
-      /(OpenClaw [^\r\n]+ \([0-9a-f]{7,}\))/g,
+      /(QuietCore [^\r\n]+ \([0-9a-f]{7,}\))/g,
     );
   }
 

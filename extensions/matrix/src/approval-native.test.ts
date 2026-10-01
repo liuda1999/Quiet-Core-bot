@@ -1,11 +1,11 @@
 // Matrix tests cover approval native plugin behavior.
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { describe, expect, it } from "vitest";
 import { matrixApprovalCapability } from "./approval-native.js";
 
 function buildConfig(
-  overrides?: Partial<NonNullable<NonNullable<OpenClawConfig["channels"]>["matrix"]>>,
-): OpenClawConfig {
+  overrides?: Partial<NonNullable<NonNullable<QuietCoreConfig["channels"]>["matrix"]>>,
+): QuietCoreConfig {
   return {
     channels: {
       matrix: {
@@ -20,7 +20,7 @@ function buildConfig(
         ...overrides,
       },
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
 describe("matrix approval capability", () => {

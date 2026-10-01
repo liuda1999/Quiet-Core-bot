@@ -2,8 +2,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import type { MigrationProviderContext } from "quiet-core-bot/plugin-sdk/plugin-entry";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/provider-auth";
-import { resolvePreferredOpenClawTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/provider-auth";
+import { resolvePreferredQuietCoreTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";
 
 const tempRoots = new Set<string>();
 
@@ -16,7 +16,7 @@ const logger = {
 
 export async function makeTempRoot() {
   const root = await fs.mkdtemp(
-    path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-migrate-claude-"),
+    path.join(resolvePreferredQuietCoreTmpDir(), "quiet-core-bot-migrate-claude-"),
   );
   tempRoots.add(root);
   return root;
@@ -35,11 +35,11 @@ export async function writeFile(filePath: string, content: string) {
 }
 
 export function makeConfigRuntime(
-  config: OpenClawConfig,
-  onWrite?: (next: OpenClawConfig) => void,
+  config: QuietCoreConfig,
+  onWrite?: (next: QuietCoreConfig) => void,
 ): NonNullable<MigrationProviderContext["runtime"]> {
-  const commitConfig = (next: OpenClawConfig) => {
-    for (const key of Object.keys(config) as Array<keyof OpenClawConfig>) {
+  const commitConfig = (next: QuietCoreConfig) => {
+    for (const key of Object.keys(config) as Array<keyof QuietCoreConfig>) {
       delete config[key];
     }
     Object.assign(config, next);
@@ -54,7 +54,7 @@ export function makeConfigRuntime(
         mutate,
       }: {
         afterWrite?: unknown;
-        mutate: (draft: OpenClawConfig, context: unknown) => Promise<unknown> | void;
+        mutate: (draft: QuietCoreConfig, context: unknown) => Promise<unknown> | void;
       }) => {
         const next = structuredClone(config);
         const result = await mutate(next, {
@@ -87,7 +87,7 @@ export function makeConfigRuntime(
         nextConfig,
       }: {
         afterWrite?: unknown;
-        nextConfig: OpenClawConfig;
+        nextConfig: QuietCoreConfig;
       }) => {
         commitConfig(nextConfig);
         return {
@@ -104,7 +104,7 @@ export function makeContext(params: {
   source: string;
   stateDir: string;
   workspaceDir: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   includeSecrets?: boolean;
   overwrite?: boolean;
   reportDir?: string;
@@ -118,7 +118,7 @@ export function makeContext(params: {
           workspace: params.workspaceDir,
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
   return {
     config,
     stateDir: params.stateDir,

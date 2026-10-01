@@ -6,7 +6,7 @@ import {
   clearPluginOwnedSessionState,
 } from "../config/sessions/session-accessor.js";
 import { resolveAllAgentSessionStoreTargetsSync } from "../config/sessions/targets.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { withPluginHostCleanupTimeout } from "./host-hook-cleanup-timeout.js";
 import {
   cleanupPluginSessionSchedulerJobs,
@@ -40,7 +40,7 @@ function shouldCleanPlugin(pluginId: string, filterPluginId?: string): boolean {
   return !filterPluginId || pluginId === filterPluginId;
 }
 
-function resolveExistingSessionStorePaths(cfg: OpenClawConfig): string[] {
+function resolveExistingSessionStorePaths(cfg: QuietCoreConfig): string[] {
   return [
     ...new Set(
       resolveAllAgentSessionStoreTargetsSync(cfg)
@@ -51,7 +51,7 @@ function resolveExistingSessionStorePaths(cfg: OpenClawConfig): string[] {
 }
 
 function createMemoizedCleanupSessionStorePathResolver(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
 ): ResolveCleanupSessionStorePaths {
   let paths: readonly string[] | undefined;
   return () => {
@@ -61,7 +61,7 @@ function createMemoizedCleanupSessionStorePathResolver(
 }
 
 function resolveCleanupSessionStorePaths(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   storePaths?: readonly string[];
   resolveStorePaths?: ResolveCleanupSessionStorePaths;
 }): readonly string[] {
@@ -73,7 +73,7 @@ function resolveCleanupSessionStorePaths(params: {
 }
 
 async function clearPluginOwnedSessionStores(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   pluginId?: string;
   sessionKey?: string;
   sessionEntrySlotKeys?: ReadonlySet<string>;
@@ -103,7 +103,7 @@ async function clearPluginOwnedSessionStores(params: {
 }
 
 async function clearPromotedSessionEntrySlotStores(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   pluginId?: string;
   sessionKey?: string;
   sessionEntrySlotKeys: ReadonlySet<string>;
@@ -156,7 +156,7 @@ function collectSessionEntrySlotKeys(
 /** Runs persistent and in-memory cleanup for a plugin, session, or host lifecycle event. */
 /** Runs cleanup callbacks for one plugin and returns failures instead of throwing. */
 export async function runPluginHostCleanup(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   registry?: PluginRegistry | null;
   pluginId?: string;
   reason: PluginHostCleanupReason;
@@ -370,7 +370,7 @@ function collectRestartPromotedSessionEntrySlotKeys(
 
 /** Cleans up plugin host state when a registry snapshot is replaced. */
 export async function cleanupReplacedPluginHostRegistry(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   previousRegistry?: PluginRegistry | null;
   nextRegistry?: PluginRegistry | null;
   shouldCleanup?: () => boolean;

@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { captureEnv, setTestEnvValue } from "../test-utils/env.js";
 import {
   configureCommitmentExtractionRuntime,
@@ -60,7 +60,7 @@ describe("commitment extraction runtime", () => {
     tmpDirs.length = 0;
   });
 
-  async function createConfig(): Promise<OpenClawConfig> {
+  async function createConfig(): Promise<QuietCoreConfig> {
     const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-commitment-runtime-"));
     tmpDirs.push(tmpDir);
     stateDirEnvSnapshot ??= captureEnv(["QUIET_CORE_STATE_DIR"]);
@@ -89,7 +89,7 @@ describe("commitment extraction runtime", () => {
   });
 
   it("keeps hidden extraction opt-in by default", () => {
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       commitments: {},
     };
     configureCommitmentExtractionRuntime({

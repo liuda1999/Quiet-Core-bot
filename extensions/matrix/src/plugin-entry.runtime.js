@@ -21,27 +21,27 @@ function normalizeLowercaseStringOrEmpty(value) {
   return typeof value === "string" ? value.toLowerCase() : "";
 }
 
-function hasTrustedOpenClawRootIndicator(packageRoot, packageJson) {
+function hasTrustedQuietCoreRootIndicator(packageRoot, packageJson) {
   const packageExports = packageJson?.exports ?? {};
   if (!Object.hasOwn(packageExports, "./plugin-sdk")) {
     return false;
   }
   const hasCliEntryExport = Object.hasOwn(packageExports, "./cli-entry");
-  const hasOpenClawBin =
+  const hasQuietCoreBin =
     (typeof packageJson?.bin === "string" &&
       normalizeLowercaseStringOrEmpty(packageJson.bin).includes("quiet-core-bot")) ||
     (typeof packageJson?.bin === "object" &&
       packageJson.bin !== null &&
       typeof packageJson.bin["quiet-core-bot"] === "string");
-  const hasOpenClawEntrypoint = fs.existsSync(path.join(packageRoot, "quiet-core-bot.mjs"));
-  return hasCliEntryExport || hasOpenClawBin || hasOpenClawEntrypoint;
+  const hasQuietCoreEntrypoint = fs.existsSync(path.join(packageRoot, "quiet-core-bot.mjs"));
+  return hasCliEntryExport || hasQuietCoreBin || hasQuietCoreEntrypoint;
 }
 
-function findOpenClawPackageRoot(startDir) {
+function findQuietCorePackageRoot(startDir) {
   let cursor = path.resolve(startDir);
   for (let i = 0; i < 12; i += 1) {
     const pkg = readPackageJson(cursor);
-    if (pkg?.name === "quiet-core-bot" && hasTrustedOpenClawRootIndicator(cursor, pkg)) {
+    if (pkg?.name === "quiet-core-bot" && hasTrustedQuietCoreRootIndicator(cursor, pkg)) {
       return { packageRoot: cursor, packageJson: pkg };
     }
     const parent = path.dirname(cursor);
@@ -78,7 +78,7 @@ function resolveBundledPluginRuntimeModulePath(moduleUrl, params) {
     }
   }
 
-  const location = findOpenClawPackageRoot(moduleDir);
+  const location = findQuietCorePackageRoot(moduleDir);
   if (location) {
     const { packageRoot } = location;
     const packageCandidates = [

@@ -215,7 +215,7 @@ describe("plugin update unchanged Docker E2E", () => {
       "quiet-core-bot update failed or timed out after ${update_timeout_seconds}s",
     );
     expect(script).toContain(
-      "updated OpenClaw entry failed or timed out after ${update_timeout_seconds}s",
+      "updated QuietCore entry failed or timed out after ${update_timeout_seconds}s",
     );
     expect(script.match(/quiet_core_bot_e2e_print_log \/tmp\/quiet-core-bot-update-corrupt-/g)).toHaveLength(8);
     expect(script).not.toContain("cat /tmp/quiet-core-bot-update-corrupt-");
@@ -229,7 +229,7 @@ describe("plugin update unchanged Docker E2E", () => {
           {
             pluginId: CORRUPT_PLUGIN_ID,
             status: "skipped",
-            message: `Disabled "${CORRUPT_PLUGIN_ID}" after plugin update failure; OpenClaw will continue without it. Failed to update ${CORRUPT_PLUGIN_ID}: registry timeout`,
+            message: `Disabled "${CORRUPT_PLUGIN_ID}" after plugin update failure; QuietCore will continue without it. Failed to update ${CORRUPT_PLUGIN_ID}: registry timeout`,
           },
         ],
       },

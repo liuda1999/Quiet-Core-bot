@@ -6,7 +6,7 @@ import { applyConfigEnvVars } from "./config-env-vars.js";
 import { resolveConfigEnvVars } from "./env-substitution.js";
 import { readConfigIncludeFileWithGuards, resolveConfigIncludes } from "./includes.js";
 import { resolveConfigPath, resolveIncludeRoots } from "./paths.js";
-import type { OpenClawConfig } from "./types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "./types.quiet-core-bot.js";
 
 const GATEWAY_DISPATCH_SHELL_ENV_EXPECTED_KEYS = [
   "QUIET_CORE_GATEWAY_TOKEN",
@@ -47,7 +47,7 @@ function cloneConfigValue(value: unknown): unknown {
   return out;
 }
 
-function projectGatewayDispatchConfig(value: unknown): OpenClawConfig {
+function projectGatewayDispatchConfig(value: unknown): QuietCoreConfig {
   if (!isPlainRecord(value)) {
     return {};
   }
@@ -57,11 +57,11 @@ function projectGatewayDispatchConfig(value: unknown): OpenClawConfig {
       projected[key] = cloneConfigValue(value[key]);
     }
   }
-  return projected as OpenClawConfig;
+  return projected as QuietCoreConfig;
 }
 
 // Main session keys are process-local; Gateway dispatch always sees the canonical main key.
-function applyGatewayDispatchSessionDefaults(config: OpenClawConfig): OpenClawConfig {
+function applyGatewayDispatchSessionDefaults(config: QuietCoreConfig): QuietCoreConfig {
   if (config.session?.mainKey === undefined) {
     return config;
   }
@@ -96,13 +96,13 @@ function resolveIncludesForGatewayDispatch(
 
 function resolveGatewayDispatchEnvVars(config: unknown, env: NodeJS.ProcessEnv): unknown {
   if (isPlainRecord(config) && Object.hasOwn(config, "env")) {
-    applyConfigEnvVars(config as OpenClawConfig, env);
+    applyConfigEnvVars(config as QuietCoreConfig, env);
   }
   return resolveConfigEnvVars(config, env, { onMissing: () => undefined });
 }
 
 function readRawGatewayDispatchConfig(options: GatewayDispatchConfigReadOptions = {}): {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   configPath: string;
 } {
   const env = options.env ?? process.env;
@@ -123,13 +123,13 @@ function readRawGatewayDispatchConfig(options: GatewayDispatchConfigReadOptions 
 
 export function readGatewayDispatchConfig(
   options: GatewayDispatchConfigReadOptions = {},
-): OpenClawConfig {
+): QuietCoreConfig {
   return readRawGatewayDispatchConfig(options).config;
 }
 
 export async function readGatewayDispatchConfigWithShellEnvFallback(
   options: GatewayDispatchConfigReadOptions = {},
-): Promise<OpenClawConfig> {
+): Promise<QuietCoreConfig> {
   const env = options.env ?? process.env;
   const firstRead = readRawGatewayDispatchConfig(options);
   const {

@@ -94,7 +94,7 @@ function barnacleIssueContext(
       sender: options.sender,
       issue: {
         number: 456,
-        title: "OpenClaw issue",
+        title: "QuietCore issue",
         body: "",
         author_association: "CONTRIBUTOR",
         user: {

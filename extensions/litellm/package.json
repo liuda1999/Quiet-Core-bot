@@ -2,7 +2,7 @@
   "name": "@quiet-core/litellm-provider",
   "version": "2026.6.11",
   "private": true,
-  "description": "OpenClaw LiteLLM provider plugin",
+  "description": "QuietCore LiteLLM provider plugin",
   "type": "module",
   "devDependencies": {
     "@quiet-core/plugin-sdk": "workspace:*"

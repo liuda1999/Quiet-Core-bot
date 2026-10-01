@@ -3,17 +3,17 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { captureEnv, deleteTestEnvValue, withEnv } from "../test-utils/env.js";
 import {
-  resetLegacyOpenClawEnvWarningForTest,
-  warnLegacyOpenClawEnvVars,
+  resetLegacyQuietCoreEnvWarningForTest,
+  warnLegacyQuietCoreEnvVars,
 } from "./env-deprecation.js";
 
-describe("warnLegacyOpenClawEnvVars", () => {
+describe("warnLegacyQuietCoreEnvVars", () => {
   let envSnapshot: ReturnType<typeof captureEnv>;
   let emitWarning: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
     envSnapshot = captureEnv(["NODE_ENV", "VITEST"]);
-    resetLegacyOpenClawEnvWarningForTest();
+    resetLegacyQuietCoreEnvWarningForTest();
     emitWarning = vi.spyOn(process, "emitWarning").mockImplementation(() => {});
     deleteTestEnvValue("NODE_ENV");
     deleteTestEnvValue("VITEST");
@@ -21,12 +21,12 @@ describe("warnLegacyOpenClawEnvVars", () => {
 
   afterEach(() => {
     emitWarning.mockRestore();
-    resetLegacyOpenClawEnvWarningForTest();
+    resetLegacyQuietCoreEnvWarningForTest();
     envSnapshot.restore();
   });
 
   it("warns with counts and prefixes instead of secret-shaped env names", () => {
-    warnLegacyOpenClawEnvVars({
+    warnLegacyQuietCoreEnvVars({
       CLAWDBOT_GATEWAY_TOKEN: "old-token",
       MOLTBOT_GATEWAY_PASSWORD: "old-password", // pragma: allowlist secret
       "CLAWDBOT_MALICIOUS\nforged": "old-value",
@@ -50,14 +50,14 @@ describe("warnLegacyOpenClawEnvVars", () => {
   });
 
   it("does not warn for current OPENCLAW names", () => {
-    warnLegacyOpenClawEnvVars({ QUIET_CORE_GATEWAY_TOKEN: "token" });
+    warnLegacyQuietCoreEnvVars({ QUIET_CORE_GATEWAY_TOKEN: "token" });
 
     expect(emitWarning).not.toHaveBeenCalled();
   });
 
   it("warns only once after a successful emit", () => {
-    warnLegacyOpenClawEnvVars({ CLAWDBOT_GATEWAY_TOKEN: "old-token" });
-    warnLegacyOpenClawEnvVars({ MOLTBOT_GATEWAY_TOKEN: "old-token" });
+    warnLegacyQuietCoreEnvVars({ CLAWDBOT_GATEWAY_TOKEN: "old-token" });
+    warnLegacyQuietCoreEnvVars({ MOLTBOT_GATEWAY_TOKEN: "old-token" });
 
     expect(emitWarning).toHaveBeenCalledOnce();
   });
@@ -69,16 +69,16 @@ describe("warnLegacyOpenClawEnvVars", () => {
       })
       .mockImplementationOnce(() => {});
 
-    expect(() => warnLegacyOpenClawEnvVars({ CLAWDBOT_GATEWAY_TOKEN: "old-token" })).toThrow(
+    expect(() => warnLegacyQuietCoreEnvVars({ CLAWDBOT_GATEWAY_TOKEN: "old-token" })).toThrow(
       "warning sink failed",
     );
-    warnLegacyOpenClawEnvVars({ CLAWDBOT_GATEWAY_TOKEN: "old-token" });
+    warnLegacyQuietCoreEnvVars({ CLAWDBOT_GATEWAY_TOKEN: "old-token" });
 
     expect(emitWarning).toHaveBeenCalledTimes(2);
   });
 
   it("suppresses warning noise based on the passed env", () => {
-    warnLegacyOpenClawEnvVars({
+    warnLegacyQuietCoreEnvVars({
       CLAWDBOT_GATEWAY_TOKEN: "old-token",
       VITEST: "true",
     });
@@ -88,7 +88,7 @@ describe("warnLegacyOpenClawEnvVars", () => {
 
   it("does not let process.env test flags suppress a synthetic env", () => {
     withEnv({ VITEST: "true" }, () => {
-      warnLegacyOpenClawEnvVars({ CLAWDBOT_GATEWAY_TOKEN: "old-token" });
+      warnLegacyQuietCoreEnvVars({ CLAWDBOT_GATEWAY_TOKEN: "old-token" });
 
       expect(emitWarning).toHaveBeenCalledOnce();
     });

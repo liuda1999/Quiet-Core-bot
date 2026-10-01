@@ -7,8 +7,8 @@ import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { makeTempWorkspace, writeWorkspaceFile } from "../test-helpers/workspace.js";
 import {
-  createOpenClawTestState,
-  type OpenClawTestState,
+  createQuietCoreTestState,
+  type QuietCoreTestState,
 } from "../test-utils/quiet-core-bot-test-state.js";
 import {
   DEFAULT_AGENTS_FILENAME,
@@ -30,10 +30,10 @@ import {
   type WorkspaceBootstrapFile,
 } from "./workspace.js";
 
-let testState: OpenClawTestState | undefined;
+let testState: QuietCoreTestState | undefined;
 
 beforeEach(async () => {
-  testState = await createOpenClawTestState({
+  testState = await createQuietCoreTestState({
     layout: "state-only",
     prefix: "quiet-core-bot-workspace-state-",
   });

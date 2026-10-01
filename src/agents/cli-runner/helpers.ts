@@ -18,10 +18,10 @@ import type { SourceReplyDeliveryMode } from "../../auto-reply/get-reply-options
 import type { ThinkLevel } from "../../auto-reply/thinking.js";
 import type { ChatType } from "../../channels/chat-type.js";
 import type { CliBackendConfig } from "../../config/types.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { privateFileStore } from "../../infra/private-file-store.js";
 import { tempWorkspace } from "../../infra/private-temp-workspace.js";
-import { resolvePreferredOpenClawTmpDir } from "../../infra/tmp-quiet-core-bot-dir.js";
+import { resolvePreferredQuietCoreTmpDir } from "../../infra/tmp-quiet-core-bot-dir.js";
 import type { ImageContent } from "../../llm/types.js";
 import { listRegisteredPluginAgentPromptGuidance } from "../../plugins/command-registry-state.js";
 import type { EmbeddedContextFile } from "../embedded-agent-helpers.js";
@@ -121,7 +121,7 @@ export function resolveCliRunQueueKey(params: {
 export function buildCliAgentSystemPrompt(params: {
   workspaceDir: string;
   cwd?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   defaultThinkLevel?: ThinkLevel;
   extraSystemPrompt?: string;
   sourceReplyDeliveryMode?: SourceReplyDeliveryMode;
@@ -284,14 +284,14 @@ function resolveCliImagePath(image: ImageContent): string {
     .update("\0")
     .update(image.data)
     .digest("hex");
-  return path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-cli-images", `${digest}${ext}`);
+  return path.join(resolvePreferredQuietCoreTmpDir(), "quiet-core-bot-cli-images", `${digest}${ext}`);
 }
 
 function resolveCliImageRoot(params: { backend: CliBackendConfig; workspaceDir: string }): string {
   if (params.backend.imagePathScope === "workspace") {
     return path.join(params.workspaceDir, ".quiet-core-bot-cli-images");
   }
-  return path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-cli-images");
+  return path.join(resolvePreferredQuietCoreTmpDir(), "quiet-core-bot-cli-images");
 }
 
 function appendImagePathsToPrompt(prompt: string, paths: string[], prefix = ""): string {
@@ -378,7 +378,7 @@ export async function writeCliSystemPromptFile(params: {
     return { cleanup: async () => {} };
   }
   const workspace = await tempWorkspace({
-    rootDir: resolvePreferredOpenClawTmpDir(),
+    rootDir: resolvePreferredQuietCoreTmpDir(),
     prefix: "quiet-core-bot-cli-system-prompt-",
   });
   const filePath = await workspace.write(

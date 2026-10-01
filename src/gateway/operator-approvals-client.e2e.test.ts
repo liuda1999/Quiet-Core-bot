@@ -5,7 +5,7 @@ import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { clearConfigCache, clearRuntimeConfigSnapshot } from "../config/config.js";
 import { clearSessionStoreCacheForTest } from "../config/sessions/store.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { captureEnv, deleteTestEnvValue, setTestEnvValue } from "../test-utils/env.js";
 import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import { ADMIN_SCOPE, APPROVALS_SCOPE } from "./method-scopes.js";
@@ -115,7 +115,7 @@ describe("operator approval gateway client runtime token source", () => {
         port,
         auth: { mode: "token", token },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     await requestExecApproval({ requester, id: "local-source-approval" });
     await withOperatorApprovalsGatewayClient(
@@ -138,7 +138,7 @@ describe("operator approval gateway client runtime token source", () => {
         remote: { url },
         auth: { mode: "token", token },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     await requestExecApproval({ requester, id: "remote-loopback-approval" });
     await expect(

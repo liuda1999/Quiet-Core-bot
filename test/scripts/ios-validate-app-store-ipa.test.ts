@@ -168,7 +168,7 @@ async function writeIpaFixture(root: string): Promise<string> {
   }
 
   addTree(path.join(root, "Payload"), "Payload");
-  const ipaPath = path.join(root, "OpenClaw.ipa");
+  const ipaPath = path.join(root, "QuietCore.ipa");
   const buffer = await zip.generateAsync({ type: "nodebuffer", compression: "DEFLATE" });
   writeFileSync(ipaPath, buffer);
   return ipaPath;
@@ -186,7 +186,7 @@ async function writeValidFixture(
 }> {
   const binDir = path.join(root, "bin");
   const payloadDir = path.join(root, "Payload");
-  const appDir = path.join(payloadDir, "OpenClaw.app");
+  const appDir = path.join(payloadDir, "QuietCore.app");
   const fixturesDir = path.join(root, "fixtures");
   mkdirSync(appDir, { recursive: true });
   mkdirSync(binDir, { recursive: true });
@@ -194,9 +194,9 @@ async function writeValidFixture(
 
   const infoBody = [
     plistString("CFBundleIdentifier", "ai.quiet-core-botfoundation.app"),
-    plistString("OpenClawPushMode", options.pushMode ?? "appStore"),
-    plistString("OpenClawPushRelayBaseURL", ""),
-    options.legacyKey ? plistString("OpenClawPushRelayProfile", "production") : "",
+    plistString("QuietCorePushMode", options.pushMode ?? "appStore"),
+    plistString("QuietCorePushRelayBaseURL", ""),
+    options.legacyKey ? plistString("QuietCorePushRelayProfile", "production") : "",
   ].join("");
   writeFileSync(path.join(appDir, "Info.plist"), plist(infoBody), "utf8");
   writeFileSync(path.join(appDir, "embedded.mobileprovision"), "fixture profile", "utf8");
@@ -223,7 +223,7 @@ async function writeValidFixture(
     profilePath,
     plist(
       [
-        plistString("Name", "OpenClaw App Store ai.quiet-core-botfoundation.app"),
+        plistString("Name", "QuietCore App Store ai.quiet-core-botfoundation.app"),
         plistArray("TeamIdentifier", ["FWJYW4S8P8"]),
         plistDict(
           "Entitlements",

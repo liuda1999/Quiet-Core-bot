@@ -47,7 +47,7 @@
 
 > 定位：**单用户、本地优先、常驻在线**的个人助理。不是多租户 SaaS，也不是单纯的聊天壳。
 
-> **独立衍生项目声明：** 本项目基于上游 **OpenClaw** 开源代码库改造而来，是一个**独立衍生项目**，已与上游**无依赖关系**：不跟踪上游版本、不向上游仓库提交、独立发布与维护。
+> **独立衍生项目声明：** 本项目基于上游 **QuietCore** 开源代码库改造而来，是一个**独立衍生项目**，已与上游**无依赖关系**：不跟踪上游版本、不向上游仓库提交、独立发布与维护。
 
 > **路径与迁移说明：** 本项目使用 `~/.quiet-core-bot` 作为状态目录、`~/.quiet-core-bot/quiet-core-bot.json` 作为配置文件。旧的 `.quiet-core-bot` / `.clawdbot` 状态目录与 `quiet-core-bot.json` / `clawdbot.json` 配置文件**不再自动迁移**到新品牌路径；如需沿用旧数据，请自行手动迁移。
 
@@ -477,7 +477,7 @@ Get-ScheduledTask -TaskName "Quiet Core Gateway" | Get-ScheduledTaskInfo
 
 - 本项目以 **MIT License** 发布，详见 [LICENSE](LICENSE)。
 - 第三方组件与许可声明见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
-- 本项目基于 **OpenClaw** 开源代码库进行重构与品牌化（Quiet Core bot），感谢原作者与社区贡献者。
+- 本项目基于 **QuietCore** 开源代码库进行重构与品牌化（Quiet Core bot），感谢原作者与社区贡献者。
 - 更多文档见仓库 [`docs/`](docs/) 目录。
 
 ---

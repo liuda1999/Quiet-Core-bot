@@ -20,11 +20,11 @@ x64 and ARM64 installers on Quiet Core bot releases.
 
 Download the latest stable installer from the [Quiet Core bot releases page](https://github.com/liuda1999/Quiet-Core-bot/releases):
 
-- [OpenClawCompanion-Setup-x64.exe](https://github.com/liuda1999/Quiet-Core-bot/releases/download/v2026.6.5/OpenClawCompanion-Setup-x64.exe)
-- [OpenClawCompanion-Setup-arm64.exe](https://github.com/liuda1999/Quiet-Core-bot/releases/download/v2026.6.5/OpenClawCompanion-Setup-arm64.exe)
-- [Checksums](https://github.com/liuda1999/Quiet-Core-bot/releases/download/v2026.6.5/OpenClawCompanion-SHA256SUMS.txt)
+- [QuietCoreCompanion-Setup-x64.exe](https://github.com/liuda1999/Quiet-Core-bot/releases/download/v2026.6.5/QuietCoreCompanion-Setup-x64.exe)
+- [QuietCoreCompanion-Setup-arm64.exe](https://github.com/liuda1999/Quiet-Core-bot/releases/download/v2026.6.5/QuietCoreCompanion-Setup-arm64.exe)
+- [Checksums](https://github.com/liuda1999/Quiet-Core-bot/releases/download/v2026.6.5/QuietCoreCompanion-SHA256SUMS.txt)
 
-If a download link above returns a 404, visit the [releases page](https://github.com/liuda1999/Quiet-Core-bot/releases) and look for the `OpenClawCompanion-Setup-*` assets on the latest release.
+If a download link above returns a 404, visit the [releases page](https://github.com/liuda1999/Quiet-Core-bot/releases) and look for the `QuietCoreCompanion-Setup-*` assets on the latest release.
 
 After install, launch **Quiet Core bot Companion** from the Start menu or the system
 tray. The installer also adds shortcuts for Gateway Setup, Chat, Settings,
@@ -47,7 +47,7 @@ Check for Updates, and uninstall.
 
 On first launch, Windows Hub opens setup when there is no usable saved Gateway.
 The fastest path is **Set up locally**, which provisions an app-owned
-`OpenClawGateway` WSL distro, installs the Gateway inside it, and pairs the app.
+`QuietCoreGateway` WSL distro, installs the Gateway inside it, and pairs the app.
 This does not export or mutate your existing Ubuntu distro.
 
 Choose **Advanced setup** or open the Connections tab when you already have a
@@ -262,7 +262,7 @@ Companion** from the Start menu.
 Open the setup log from Windows Hub or inspect:
 
 ```powershell
-notepad "$env:LOCALAPPDATA\OpenClawTray\Logs\Setup\easy-setup-latest.txt"
+notepad "$env:LOCALAPPDATA\QuietCoreTray\Logs\Setup\easy-setup-latest.txt"
 ```
 
 Common causes are disabled WSL, blocked virtualization, stale app-owned WSL

@@ -1,5 +1,5 @@
 #!/usr/bin/env -S node --import tsx
-// Release Check script supports OpenClaw repository automation.
+// Release Check script supports QuietCore repository automation.
 
 import { execFileSync } from "node:child_process";
 import {
@@ -101,7 +101,7 @@ const requiredPathGroups = [
 const forbiddenPrefixes = [
   ...LOCAL_BUILD_METADATA_DIST_PATHS,
   "dist-runtime/",
-  "dist/OpenClaw.app/",
+  "dist/QuietCore.app/",
   "dist/extensions/qa-channel/",
   "dist/extensions/qa-lab/",
   "dist/plugin-sdk/extensions/qa-channel/",
@@ -632,10 +632,10 @@ function runPackedPluginSdkTypescriptSmoke(tarballPath: string, tmpRoot: string)
     stdio: "inherit",
   });
 
-  const installedOpenClawRoot = join(consumerDir, "node_modules", "quiet-core-bot");
+  const installedQuietCoreRoot = join(consumerDir, "node_modules", "quiet-core-bot");
   const tscPath = [
     join(consumerDir, "node_modules", "typescript", "bin", "tsc"),
-    join(installedOpenClawRoot, "node_modules", "typescript", "bin", "tsc"),
+    join(installedQuietCoreRoot, "node_modules", "typescript", "bin", "tsc"),
   ].find((candidate) => existsSync(candidate));
   if (!tscPath) {
     throw new Error("release-check: packed plugin SDK TypeScript smoke could not find tsc.");

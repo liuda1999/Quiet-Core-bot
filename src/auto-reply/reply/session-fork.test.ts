@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { forkSessionEntryFromParent } from "./session-fork.js";
 
 const runtimeMocks = vi.hoisted(() => ({
@@ -65,7 +65,7 @@ describe("forkSessionEntryFromParent", () => {
 
     const result = await forkSessionEntryFromParent({
       agentId: "main",
-      config: { session: { store: configStorePath } } as OpenClawConfig,
+      config: { session: { store: configStorePath } } as QuietCoreConfig,
       fallbackEntry: { sessionId: "", updatedAt: 2 },
       parentSessionKey,
       sessionKey,

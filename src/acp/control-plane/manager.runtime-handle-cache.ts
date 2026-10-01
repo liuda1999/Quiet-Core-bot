@@ -9,7 +9,7 @@ import type {
   AcpRuntimeStatus,
 } from "@quiet-core/acp-core/runtime/types";
 import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { logVerbose } from "../../globals.js";
 import type { ActiveTurnState, SessionAcpMeta } from "./manager.types.js";
 import { normalizeActorKey, resolveRuntimeIdleTtlMs } from "./manager.utils.js";
@@ -44,7 +44,7 @@ export class ManagerRuntimeHandleCache {
   }
 
   /** Returns cache counters used by ACP manager observability snapshots. */
-  getObservabilitySnapshot(cfg: OpenClawConfig) {
+  getObservabilitySnapshot(cfg: QuietCoreConfig) {
     return {
       activeSessions: this.runtimeCache.size(),
       idleTtlMs: resolveRuntimeIdleTtlMs(cfg),
@@ -84,7 +84,7 @@ export class ManagerRuntimeHandleCache {
 
   /** Closes handles that exceeded the configured idle TTL without racing active turns. */
   async evictIdle(params: {
-    cfg: OpenClawConfig;
+    cfg: QuietCoreConfig;
     actorQueue: SessionActorQueue;
     activeTurnBySession: Map<string, ActiveTurnState>;
   }): Promise<void> {

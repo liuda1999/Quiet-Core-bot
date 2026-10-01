@@ -1,5 +1,5 @@
 // Lmstudio tests cover runtime plugin behavior.
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/provider-auth";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/provider-auth";
 import { CUSTOM_LOCAL_AUTH_MARKER } from "quiet-core-bot/plugin-sdk/provider-auth";
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { LMSTUDIO_LOCAL_API_KEY_PLACEHOLDER } from "./defaults.js";
@@ -29,7 +29,7 @@ function buildLmstudioConfig(overrides?: {
   apiKey?: unknown;
   headers?: unknown;
   auth?: "api-key";
-}): OpenClawConfig {
+}): QuietCoreConfig {
   return {
     models: {
       providers: {
@@ -43,7 +43,7 @@ function buildLmstudioConfig(overrides?: {
         },
       },
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
 describe("lmstudio-runtime", () => {

@@ -23,7 +23,7 @@ vi.mock("quiet-core-bot/plugin-sdk/ssrf-runtime", () => ({
 }));
 
 vi.mock("quiet-core-bot/plugin-sdk/temp-path", () => ({
-  resolvePreferredOpenClawTmpDir: () => qaTempPathState.preferredTmpDir,
+  resolvePreferredQuietCoreTmpDir: () => qaTempPathState.preferredTmpDir,
 }));
 
 vi.mock("./node-exec.js", () => ({
@@ -211,7 +211,7 @@ describe("buildQaRuntimeEnv", () => {
     expect(env.OPENAI_API_KEY).toBe("openai-explicit");
   });
 
-  it("preserves Codex CLI auth home for live frontier runs while sandboxing OpenClaw home", async () => {
+  it("preserves Codex CLI auth home for live frontier runs while sandboxing QuietCore home", async () => {
     const hostHome = await mkdtemp(path.join(os.tmpdir(), "qa-host-home-"));
     cleanups.push(async () => {
       await rm(hostHome, { recursive: true, force: true });
@@ -231,7 +231,7 @@ describe("buildQaRuntimeEnv", () => {
     expect(env.CODEX_HOME).toBe(codexHome);
   });
 
-  it("forwards host HOME for live Claude CLI runs while keeping OpenClaw home sandboxed", async () => {
+  it("forwards host HOME for live Claude CLI runs while keeping QuietCore home sandboxed", async () => {
     const hostHome = await mkdtemp(path.join(os.tmpdir(), "qa-host-home-"));
     cleanups.push(async () => {
       await rm(hostHome, { recursive: true, force: true });
@@ -250,7 +250,7 @@ describe("buildQaRuntimeEnv", () => {
     expect(env.QUIET_CORE_STATE_DIR).toBe("/tmp/quiet-core-bot-qa/state");
   });
 
-  it("can forward host HOME for browser-backed QA runs while keeping OpenClaw home sandboxed", async () => {
+  it("can forward host HOME for browser-backed QA runs while keeping QuietCore home sandboxed", async () => {
     const hostHome = await mkdtemp(path.join(os.tmpdir(), "qa-host-home-"));
     cleanups.push(async () => {
       await rm(hostHome, { recursive: true, force: true });

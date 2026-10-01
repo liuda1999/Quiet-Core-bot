@@ -2,8 +2,8 @@
 import { isRecord } from "@quiet-core/normalization-core/record-coerce";
 import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import {
-  loadOpenClawProviderIndex,
-  type OpenClawProviderIndexProvider,
+  loadQuietCoreProviderIndex,
+  type QuietCoreProviderIndexProvider,
 } from "../model-catalog/index.js";
 import { normalizePluginsConfig, resolveEffectiveEnableState } from "./config-state.js";
 import {
@@ -35,7 +35,7 @@ export type ProviderInstallCatalogEntry = ProviderAuthChoiceMetadata & {
 };
 
 type ProviderInstallCatalogParams = {
-  config?: import("../config/types.quiet-core-bot.js").OpenClawConfig;
+  config?: import("../config/types.quiet-core-bot.js").QuietCoreConfig;
   workspaceDir?: string;
   env?: NodeJS.ProcessEnv;
   includeUntrustedWorkspacePlugins?: boolean;
@@ -161,7 +161,7 @@ function resolveInstallInfoFromRegistryRecord(params: {
 }
 
 function resolveInstallInfoFromProviderIndex(
-  provider: OpenClawProviderIndexProvider,
+  provider: QuietCoreProviderIndexProvider,
 ): PluginPackageInstall | null {
   const install = provider.plugin.install;
   if (!install) {
@@ -232,7 +232,7 @@ function resolveProviderIndexInstallCatalogEntries(params: {
   seenChoiceIds: ReadonlySet<string>;
 }): ProviderInstallCatalogEntry[] {
   const entries: ProviderInstallCatalogEntry[] = [];
-  const index = loadOpenClawProviderIndex();
+  const index = loadQuietCoreProviderIndex();
   for (const provider of Object.values(index.providers)) {
     if (params.installedPluginIds.has(provider.plugin.id)) {
       continue;

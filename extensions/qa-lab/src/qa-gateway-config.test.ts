@@ -16,7 +16,7 @@ function createQaChannelTransportParams(baseUrl = "http://127.0.0.1:43124") {
           enabled: true,
           baseUrl,
           botUserId: "quiet-core-bot",
-          botDisplayName: "OpenClaw QA",
+          botDisplayName: "QuietCore QA",
           allowFrom: ["*"],
           pollTimeoutMs: 250,
         },

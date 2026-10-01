@@ -6,10 +6,10 @@
 import fs from "node:fs";
 import type { Insertable, Selectable, Updateable } from "kysely";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../infra/kysely-sync.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
 import {
-  openOpenClawStateDatabase,
-  runOpenClawStateWriteTransaction,
+  openQuietCoreStateDatabase,
+  runQuietCoreStateWriteTransaction,
 } from "../state/quiet-core-bot-state-db.js";
 import { normalizeDeliveryContext } from "../utils/delivery-context.shared.js";
 import { normalizeSubagentRunState } from "./subagent-delivery-state.js";
@@ -25,8 +25,8 @@ import type {
   SubagentRunRecord,
 } from "./subagent-registry.types.js";
 
-type SubagentRunsTable = OpenClawStateKyselyDatabase["subagent_runs"];
-type SubagentRegistryDatabase = Pick<OpenClawStateKyselyDatabase, "subagent_runs">;
+type SubagentRunsTable = QuietCoreStateKyselyDatabase["subagent_runs"];
+type SubagentRegistryDatabase = Pick<QuietCoreStateKyselyDatabase, "subagent_runs">;
 type SubagentRunSqliteRow = Selectable<SubagentRunsTable>;
 type SubagentRunSqliteInsert = Insertable<SubagentRunsTable>;
 type SubagentRunSqliteUpdate = Updateable<SubagentRunsTable>;
@@ -252,7 +252,7 @@ function subagentRunRecordToSqliteUpdate(values: SubagentRunSqliteInsert): Subag
 }
 
 function readSubagentRegistryRows(): SubagentRunSqliteRow[] {
-  const { db } = openOpenClawStateDatabase();
+  const { db } = openQuietCoreStateDatabase();
   const stateDb = getNodeSqliteKysely<SubagentRegistryDatabase>(db);
   return executeSqliteQuerySync(
     db,
@@ -281,7 +281,7 @@ export function readSubagentRunRecordFromSqlite(params: {
   if (!runId && !childSessionKey) {
     return null;
   }
-  const { db } = openOpenClawStateDatabase();
+  const { db } = openQuietCoreStateDatabase();
   const stateDb = getNodeSqliteKysely<SubagentRegistryDatabase>(db);
   if (runId) {
     const row = executeSqliteQuerySync(
@@ -344,7 +344,7 @@ export function loadSubagentRegistryFromSqlite(): Map<string, SubagentRunRecord>
 
 /** Saves the complete subagent run snapshot to sqlite and prunes rows not in the snapshot. */
 export function saveSubagentRegistryToSqlite(runs: Map<string, SubagentRunRecord>): void {
-  runOpenClawStateWriteTransaction(({ db }) => {
+  runQuietCoreStateWriteTransaction(({ db }) => {
     const stateDb = getNodeSqliteKysely<SubagentRegistryDatabase>(db);
     const runIds: string[] = [];
     for (const entry of runs.values()) {

@@ -2,7 +2,7 @@ import {
   runSessionStartupMigration,
   type SessionStartupMigrationLogger,
 } from "../config/sessions/startup-migration.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 
 type SessionMigrationDeps = Parameters<typeof runSessionStartupMigration>[0]["deps"];
 
@@ -15,7 +15,7 @@ type SessionMigrationDeps = Parameters<typeof runSessionStartupMigration>[0]["de
  * upgrade rather than requiring a manual `quiet-core-bot doctor` run.
  */
 export async function runStartupSessionMigration(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
   log: SessionStartupMigrationLogger;
   deps?: SessionMigrationDeps;

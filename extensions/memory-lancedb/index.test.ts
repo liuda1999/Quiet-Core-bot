@@ -3338,10 +3338,10 @@ describe("memory plugin e2e", () => {
     );
     expect(
       sanitizeForMemoryCapture(
-        "[Discord OpenClaw #dev channel id:456 +5m] Alice: I prefer dark mode",
+        "[Discord QuietCore #dev channel id:456 +5m] Alice: I prefer dark mode",
       ),
     ).toBe("I prefer dark mode");
-    expect(sanitizeForMemoryCapture("[Telegram OpenClaw id:-100] Alice: I prefer dark mode")).toBe(
+    expect(sanitizeForMemoryCapture("[Telegram QuietCore id:-100] Alice: I prefer dark mode")).toBe(
       "I prefer dark mode",
     );
     expect(sanitizeForMemoryCapture("[Signal Signal Group id:123] Bob (42): ping")).toBe("ping");

@@ -3,8 +3,8 @@ import { existsSync, readFileSync } from "node:fs";
 import { z } from "zod";
 import { isBlockedObjectKey } from "../infra/prototype-keys.js";
 import {
-  openOpenClawStateDatabase,
-  runOpenClawStateWriteTransaction,
+  openQuietCoreStateDatabase,
+  runQuietCoreStateWriteTransaction,
 } from "../state/quiet-core-bot-state-db.js";
 import { safeParseWithSchema } from "../utils/zod-parse.js";
 import { resolveCompatibilityHostVersion } from "../version.js";
@@ -289,7 +289,7 @@ function readPersistedInstalledPluginIndexFromSqlite(
     return null;
   }
   try {
-    const database = openOpenClawStateDatabase(
+    const database = openQuietCoreStateDatabase(
       resolveInstalledPluginIndexStateDatabaseOptions(options),
     );
     const row = database.db
@@ -320,7 +320,7 @@ function writePersistedInstalledPluginIndexToSqlite(
     installRecords: copySafeInstallRecords(index.installRecords) ?? {},
   };
   const now = Date.now();
-  runOpenClawStateWriteTransaction(({ db }) => {
+  runQuietCoreStateWriteTransaction(({ db }) => {
     db.prepare(
       `
         INSERT INTO installed_plugin_index (

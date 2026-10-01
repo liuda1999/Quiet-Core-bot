@@ -26,7 +26,7 @@ import { CONFIG_PATH } from "../config/paths.js";
 import { isPluginPackagingRuntimeOutputInvalidConfigSnapshot } from "../config/recovery-policy.js";
 import { redactConfigObject } from "../config/redact-snapshot.js";
 import { readBestEffortRuntimeConfigSchema } from "../config/runtime-schema.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   coerceSecretRef,
   isValidEnvSecretRefId,
@@ -205,7 +205,7 @@ function normalizeProviderCatalogModelsForConfigMutation(
 }
 
 function normalizeModelProviderRefsForConfigMutation(
-  providers: NonNullable<OpenClawConfig["models"]>["providers"] | undefined,
+  providers: NonNullable<QuietCoreConfig["models"]>["providers"] | undefined,
 ): unknown {
   if (!isPlainRecord(providers)) {
     return providers;
@@ -228,7 +228,7 @@ function normalizeModelProviderRefsForConfigMutation(
   return mutated ? nextProviders : providers;
 }
 
-function normalizeConfigMutationModelRefs(cfg: OpenClawConfig): OpenClawConfig {
+function normalizeConfigMutationModelRefs(cfg: QuietCoreConfig): QuietCoreConfig {
   const defaults = cfg.agents?.defaults;
   const agentList = cfg.agents?.list;
   const providers = cfg.models?.providers;
@@ -1605,7 +1605,7 @@ function buildSingleSetOperations(params: {
 }
 
 function collectDryRunRefs(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   operations: ConfigSetOperation[];
 }): SecretRef[] {
   const refsByKey = new Map<string, SecretRef>();
@@ -1656,7 +1656,7 @@ function collectDryRunRefs(params: {
 
 async function collectDryRunResolvabilityErrors(params: {
   refs: SecretRef[];
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
 }): Promise<ConfigSetDryRunError[]> {
   const failures: ConfigSetDryRunError[] = [];
   for (const ref of params.refs) {
@@ -1678,7 +1678,7 @@ async function collectDryRunResolvabilityErrors(params: {
 
 function collectDryRunStaticErrorsForSkippedExecRefs(params: {
   refs: SecretRef[];
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
 }): ConfigSetDryRunError[] {
   const failures: ConfigSetDryRunError[] = [];
   for (const ref of params.refs) {
@@ -1859,7 +1859,7 @@ async function loadConfigMutationSchema(): Promise<JsonSchemaRecord | undefined>
   }
 }
 
-function collectDryRunSchemaErrors(params: { config: OpenClawConfig }): ConfigSetDryRunError[] {
+function collectDryRunSchemaErrors(params: { config: QuietCoreConfig }): ConfigSetDryRunError[] {
   const validated = validateConfigObjectRawWithPlugins(params.config);
   if (validated.ok) {
     return [];
@@ -1871,7 +1871,7 @@ function collectDryRunSchemaErrors(params: { config: OpenClawConfig }): ConfigSe
 }
 
 function collectPluginIntegrationProviderErrors(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   operations: ConfigSetOperation[];
 }): ConfigSetDryRunError[] {
   const providers = params.config.secrets?.providers ?? {};
@@ -2043,7 +2043,7 @@ async function runConfigOperations(params: {
     root: next,
     operations,
   });
-  const nextConfig = normalizeConfigMutationModelRefs(next as OpenClawConfig);
+  const nextConfig = normalizeConfigMutationModelRefs(next as QuietCoreConfig);
   const normalizedExplicitSetPaths = explicitSetPaths.map(normalizeConfigMutationExplicitSetPath);
   const policyIssues = collectUnsupportedSecretRefPolicyIssues(nextConfig);
   const policyIssueLines = formatConfigIssueLines(policyIssues, "", { normalizeRoot: true }).map(

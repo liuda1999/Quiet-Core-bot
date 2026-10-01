@@ -10,9 +10,9 @@ const release = {
   isDraft: false,
   isPrerelease: false,
   assets: [
-    { name: "OpenClaw-2026.6.8.zip", digest: `sha256:${"a".repeat(64)}` },
-    { name: "OpenClaw-2026.6.8.dmg", digest: `sha256:${"b".repeat(64)}` },
-    { name: "OpenClaw-2026.6.8.dSYM.zip", digest: `sha256:${"c".repeat(64)}` },
+    { name: "QuietCore-2026.6.8.zip", digest: `sha256:${"a".repeat(64)}` },
+    { name: "QuietCore-2026.6.8.dmg", digest: `sha256:${"b".repeat(64)}` },
+    { name: "QuietCore-2026.6.8.dSYM.zip", digest: `sha256:${"c".repeat(64)}` },
   ],
 };
 const changelog =
@@ -116,7 +116,7 @@ describe("stable release closeout", () => {
     });
 
     expect(result.errors).toContain(
-      "GitHub release v2026.6.8 is missing required macOS asset(s): OpenClaw-2026.6.8.zip, OpenClaw-2026.6.8.dmg, OpenClaw-2026.6.8.dSYM.zip.",
+      "GitHub release v2026.6.8 is missing required macOS asset(s): QuietCore-2026.6.8.zip, QuietCore-2026.6.8.dmg, QuietCore-2026.6.8.dSYM.zip.",
     );
   });
 

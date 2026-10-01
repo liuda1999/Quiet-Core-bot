@@ -12,7 +12,7 @@ import {
   isTrustedProxyAddress,
   readRequestBodyWithLimit,
   resolveClientIp,
-  type OpenClawConfig,
+  type QuietCoreConfig,
 } from "./runtime-api.js";
 
 const INTERACTION_MAX_BODY_BYTES = 64 * 1024;
@@ -66,7 +66,7 @@ export function setInteractionCallbackUrl(accountId: string, url: string): void 
   callbackUrls.set(accountId, url);
 }
 
-type InteractionCallbackConfig = Pick<OpenClawConfig, "gateway" | "channels"> & {
+type InteractionCallbackConfig = Pick<QuietCoreConfig, "gateway" | "channels"> & {
   interactions?: {
     callbackBaseUrl?: string;
   };

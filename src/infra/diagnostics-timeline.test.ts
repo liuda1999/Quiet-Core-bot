@@ -3,7 +3,7 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   emitDiagnosticsTimelineEvent,
   isDiagnosticsTimelineEnabled,
@@ -96,9 +96,9 @@ describe("diagnostics timeline", () => {
     const { env } = await createTimelineEnv();
     const envWithoutFlag = { ...env };
     delete envWithoutFlag.QUIET_CORE_DIAGNOSTICS;
-    const configWithTimeline = { diagnostics: { flags: ["timeline"] } } as OpenClawConfig;
-    const configWithWildcard = { diagnostics: { flags: ["*"] } } as OpenClawConfig;
-    const configWithoutTimeline = { diagnostics: { flags: ["telegram.http"] } } as OpenClawConfig;
+    const configWithTimeline = { diagnostics: { flags: ["timeline"] } } as QuietCoreConfig;
+    const configWithWildcard = { diagnostics: { flags: ["*"] } } as QuietCoreConfig;
+    const configWithoutTimeline = { diagnostics: { flags: ["telegram.http"] } } as QuietCoreConfig;
 
     expect(isDiagnosticsTimelineEnabled({ config: configWithTimeline, env: envWithoutFlag })).toBe(
       true,
@@ -113,7 +113,7 @@ describe("diagnostics timeline", () => {
 
   it("lets false-like env diagnostics disable config-enabled timeline output", async () => {
     const { env } = await createTimelineEnv();
-    const configWithTimeline = { diagnostics: { flags: ["timeline"] } } as OpenClawConfig;
+    const configWithTimeline = { diagnostics: { flags: ["timeline"] } } as QuietCoreConfig;
 
     expect(
       isDiagnosticsTimelineEnabled({
@@ -164,7 +164,7 @@ describe("diagnostics timeline", () => {
       measureDiagnosticsTimelineSpan("runtimeDeps.stage", () => "ok", {
         phase: "startup",
         attributes: { pluginCount: 3 },
-        config: { diagnostics: { flags: ["timeline"] } } as OpenClawConfig,
+        config: { diagnostics: { flags: ["timeline"] } } as QuietCoreConfig,
         env: configOnlyEnv,
       }),
     ).resolves.toBe("ok");

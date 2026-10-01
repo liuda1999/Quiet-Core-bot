@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { clearRuntimeConfigSnapshot, setRuntimeConfigSnapshot } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { setBundledPluginsDirOverrideForTest } from "../plugins/bundled-dir.js";
 import { createPluginActivationSource, normalizePluginsConfig } from "../plugins/config-state.js";
 import {
@@ -592,7 +592,7 @@ describe("plugin-sdk facade runtime", () => {
 
     function createTestSnapshot(
       params: {
-        config?: OpenClawConfig;
+        config?: QuietCoreConfig;
         plugins?: SnapshotPluginRecord[];
       } = {},
     ): PluginMetadataSnapshot {
@@ -645,7 +645,7 @@ describe("plugin-sdk facade runtime", () => {
           demo: { enabled: true },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
     const matchedSnapshot = createTestSnapshot({
       config: configWithPaths,
       plugins: [

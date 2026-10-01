@@ -2,7 +2,7 @@
 import { monitorEventLoopDelay, performance } from "node:perf_hooks";
 import { getRuntimeConfig } from "../config/config.js";
 import { resolveAllAgentSessionStoreTargetsSync } from "../config/sessions/targets.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   areDiagnosticsEnabledForProcess,
   emitInternalDiagnosticEvent as emitDiagnosticEvent,
@@ -134,7 +134,7 @@ type SampleDiagnosticLiveness = (
 ) => DiagnosticLivenessSample | null;
 
 type StartDiagnosticHeartbeatOptions = {
-  getConfig?: () => OpenClawConfig;
+  getConfig?: () => QuietCoreConfig;
   emitMemorySample?: EmitDiagnosticMemorySample;
   sampleLiveness?: SampleDiagnosticLiveness;
   recoverStuckSession?: RecoverStuckSession;
@@ -147,7 +147,7 @@ type StartDiagnosticHeartbeatOptions = {
   listPendingExecApprovals?: () => readonly PendingExecApprovalHint[];
 };
 
-function resolveDiagnosticSessionStorePaths(config?: OpenClawConfig): string[] | undefined {
+function resolveDiagnosticSessionStorePaths(config?: QuietCoreConfig): string[] | undefined {
   if (!config) {
     return undefined;
   }
@@ -159,7 +159,7 @@ function resolveDiagnosticSessionStorePaths(config?: OpenClawConfig): string[] |
   }
 }
 
-function shouldWriteCriticalMemoryPressureBundle(config?: OpenClawConfig): boolean {
+function shouldWriteCriticalMemoryPressureBundle(config?: QuietCoreConfig): boolean {
   return config?.diagnostics?.memoryPressureSnapshot === true;
 }
 
@@ -194,7 +194,7 @@ async function recoverStuckSession(
     });
 }
 
-export function isStuckSessionRecoveryEnabled(config?: OpenClawConfig): boolean {
+export function isStuckSessionRecoveryEnabled(config?: QuietCoreConfig): boolean {
   return areDiagnosticsEnabledForProcess() && isDiagnosticsEnabled(config);
 }
 
@@ -481,7 +481,7 @@ function formatDiagnosticWorkLabels(work: DiagnosticWorkSnapshot): string {
   return parts.join(" ");
 }
 
-export function resolveStuckSessionWarnMs(config?: OpenClawConfig): number {
+export function resolveStuckSessionWarnMs(config?: QuietCoreConfig): number {
   const raw = config?.diagnostics?.stuckSessionWarnMs;
   if (typeof raw !== "number" || !Number.isFinite(raw)) {
     return DEFAULT_STUCK_SESSION_WARN_MS;
@@ -500,7 +500,7 @@ export function resolveStuckSessionWarnMs(config?: OpenClawConfig): number {
  * Explicit configuration is authoritative but clamped to the supported range so
  * a typo cannot either spam first-token waits or hide the stall forever.
  */
-export function resolveNoModelCallWarnMs(config?: OpenClawConfig): number {
+export function resolveNoModelCallWarnMs(config?: QuietCoreConfig): number {
   const raw = config?.diagnostics?.noModelCallWarnMs;
   if (typeof raw !== "number" || !Number.isFinite(raw)) {
     return DEFAULT_NO_MODEL_CALL_WARN_MS;
@@ -513,7 +513,7 @@ export function resolveNoModelCallWarnMs(config?: OpenClawConfig): number {
 }
 
 export function resolveStuckSessionAbortMs(
-  config: OpenClawConfig | undefined,
+  config: QuietCoreConfig | undefined,
   stuckSessionWarnMs: number,
 ): number {
   const raw = config?.diagnostics?.stuckSessionAbortMs;
@@ -547,7 +547,7 @@ function resolveStalledEmbeddedRunAbortMs(stuckSessionWarnMs: number): number {
  * (5 min floor / 3x the warn threshold), and aborting it mid-flight turns a slow
  * success into `LLM request timed out.`
  */
-function resolveMaxConfiguredProviderRequestTimeoutMs(config: OpenClawConfig | undefined): number {
+function resolveMaxConfiguredProviderRequestTimeoutMs(config: QuietCoreConfig | undefined): number {
   const providers = config?.models?.providers;
   if (!providers) {
     return 0;
@@ -1322,7 +1322,7 @@ export function logActiveRuns() {
 let heartbeatInterval: NodeJS.Timeout | null = null;
 
 export function startDiagnosticHeartbeat(
-  config?: OpenClawConfig,
+  config?: QuietCoreConfig,
   opts?: StartDiagnosticHeartbeatOptions,
 ) {
   if (!areDiagnosticsEnabledForProcess() || !isDiagnosticsEnabled(config)) {

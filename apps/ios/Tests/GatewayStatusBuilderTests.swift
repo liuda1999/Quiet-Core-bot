@@ -1,6 +1,6 @@
-import OpenClawKit
+import QuietCoreKit
 import Testing
-@testable import OpenClaw
+@testable import QuietCore
 
 @Suite struct GatewayStatusBuilderTests {
     @Test func pausedProblemKeepsErrorStatus() {

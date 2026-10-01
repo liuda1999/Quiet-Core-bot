@@ -1,7 +1,7 @@
 // image_generate tool tests cover provider/model selection, edit inputs,
 // background task handling, media saving, and duplicate-generation guards.
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 
 const taskRuntimeInternalMocks = vi.hoisted(() => {
   const mocks = {
@@ -743,7 +743,7 @@ describe("createImageGenerateTool", () => {
       size: 7,
       contentType: "image/png",
     });
-    const config: OpenClawConfig = {
+    const config: QuietCoreConfig = {
       agents: {
         defaults: {
           imageGenerationModel: {

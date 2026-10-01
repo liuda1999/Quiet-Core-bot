@@ -66,9 +66,9 @@ vendor/
 !apps/shared/
 !apps/shared/QuietCoreKit/
 !apps/shared/QuietCoreKit/Sources/
-!apps/shared/QuietCoreKit/Sources/OpenClawKit/
-!apps/shared/QuietCoreKit/Sources/OpenClawKit/Resources/
-!apps/shared/QuietCoreKit/Sources/OpenClawKit/Resources/tool-display.json
+!apps/shared/QuietCoreKit/Sources/QuietCoreKit/
+!apps/shared/QuietCoreKit/Sources/QuietCoreKit/Resources/
+!apps/shared/QuietCoreKit/Sources/QuietCoreKit/Resources/tool-display.json
 !apps/shared/QuietCoreKit/Tools/
 !apps/shared/QuietCoreKit/Tools/CanvasA2UI/
 !apps/shared/QuietCoreKit/Tools/CanvasA2UI/**

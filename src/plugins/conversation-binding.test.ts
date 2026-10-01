@@ -6,11 +6,11 @@ import type {
   SessionBindingAdapter,
   SessionBindingRecord,
 } from "../infra/outbound/session-binding-service.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
 import {
-  closeOpenClawStateDatabaseForTest,
-  openOpenClawStateDatabase,
-  runOpenClawStateWriteTransaction,
+  closeQuietCoreStateDatabaseForTest,
+  openQuietCoreStateDatabase,
+  runQuietCoreStateWriteTransaction,
 } from "../state/quiet-core-bot-state-db.js";
 import { createEmptyPluginRegistry } from "./registry-empty.js";
 import type { PluginRegistry } from "./registry.js";
@@ -20,7 +20,7 @@ const tempDirs: string[] = [];
 const tempRoot = makeTrackedTempDir("quiet-core-bot-plugin-binding", tempDirs);
 const previousStateDir = process.env.QUIET_CORE_STATE_DIR;
 
-type PluginBindingApprovalsDatabase = Pick<OpenClawStateKyselyDatabase, "plugin_binding_approvals">;
+type PluginBindingApprovalsDatabase = Pick<QuietCoreStateKyselyDatabase, "plugin_binding_approvals">;
 
 const sessionBindingState = vi.hoisted(() => {
   const records = new Map<string, SessionBindingRecord>();
@@ -158,7 +158,7 @@ function createAdapter(channel: string, accountId: string): SessionBindingAdapte
 }
 
 afterAll(() => {
-  closeOpenClawStateDatabaseForTest();
+  closeQuietCoreStateDatabaseForTest();
   if (previousStateDir == null) {
     delete process.env.QUIET_CORE_STATE_DIR;
   } else {
@@ -415,7 +415,7 @@ async function expectResolutionDoesNotWait(params: {
 }
 
 function clearPluginBindingApprovalRows(): void {
-  runOpenClawStateWriteTransaction(({ db }) => {
+  runQuietCoreStateWriteTransaction(({ db }) => {
     const approvalsDb = getNodeSqliteKysely<PluginBindingApprovalsDatabase>(db);
     executeSqliteQuerySync(db, approvalsDb.deleteFrom("plugin_binding_approvals"));
   });
@@ -427,7 +427,7 @@ function readPluginBindingApprovalRows(): Array<{
   plugin_id: string;
   plugin_root: string;
 }> {
-  const { db } = openOpenClawStateDatabase();
+  const { db } = openQuietCoreStateDatabase();
   const approvalsDb = getNodeSqliteKysely<PluginBindingApprovalsDatabase>(db);
   return executeSqliteQuerySync(
     db,
@@ -445,7 +445,7 @@ function insertPluginBindingApprovalRow(params: {
   accountId: string;
   pluginId: string;
 }): void {
-  runOpenClawStateWriteTransaction(({ db }) => {
+  runQuietCoreStateWriteTransaction(({ db }) => {
     const approvalsDb = getNodeSqliteKysely<PluginBindingApprovalsDatabase>(db);
     executeSqliteQuerySync(
       db,

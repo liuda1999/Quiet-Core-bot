@@ -3,7 +3,7 @@
  */
 import { stripInternalMetadataForDisplay } from "../../auto-reply/reply/display-text-sanitize.js";
 import { isSilentReplyPayloadText, SILENT_REPLY_TOKEN } from "../../auto-reply/tokens.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { ProviderRuntimeModel } from "../../plugins/provider-runtime-model.types.js";
 import {
   sanitizeProviderReplayHistoryWithPlugin,
@@ -20,7 +20,7 @@ import {
 } from "../../sessions/input-provenance.js";
 import {
   isReplayVisibleDeliveryMirrorAssistantMessage,
-  isTranscriptOnlyOpenClawAssistantMessage,
+  isTranscriptOnlyQuietCoreAssistantMessage,
 } from "../../shared/transcript-only-quiet-core-bot-assistant.js";
 import { stripStaleAssistantUsageBeforeLatestCompaction } from "../compaction-usage.js";
 import {
@@ -79,7 +79,7 @@ type ModelSnapshotEntry = {
 type AssistantReplayMessage = Extract<AgentMessage, { role: "assistant" }>;
 
 type ProviderReplayHookParams = {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   workspaceDir?: string;
   env?: NodeJS.ProcessEnv;
   provider: string;
@@ -281,7 +281,7 @@ export function normalizeAssistantReplayContent(messages: AgentMessage[]): Agent
       continue;
     }
     if (
-      isTranscriptOnlyOpenClawAssistantMessage(message) &&
+      isTranscriptOnlyQuietCoreAssistantMessage(message) &&
       !isReplayVisibleDeliveryMirrorAssistantMessage(message)
     ) {
       // Drop from the in-memory replay copy; the persisted JSONL keeps the
@@ -683,7 +683,7 @@ export async function sanitizeSessionHistory(params: {
   modelId?: string;
   provider?: string;
   allowedToolNames?: Iterable<string>;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   workspaceDir?: string;
   env?: NodeJS.ProcessEnv;
   model?: ProviderRuntimeModel;
@@ -882,7 +882,7 @@ export async function validateReplayTurns(params: {
   modelApi?: string | null;
   modelId?: string;
   provider?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   workspaceDir?: string;
   env?: NodeJS.ProcessEnv;
   model?: ProviderRuntimeModel;

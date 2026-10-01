@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { getRuntimeConfig, writeConfigFile } from "../config/config.js";
 import { withTempHome } from "../config/home-env.test-harness.js";
 import { withEnvAsync } from "../test-utils/env.js";
@@ -138,7 +138,7 @@ describe("secrets runtime snapshot gateway-auth integration", () => {
 
         const persistedConfig = JSON.parse(
           await fs.readFile(path.join(home, ".quiet-core-bot", "quiet-core-bot.json"), "utf8"),
-        ) as OpenClawConfig;
+        ) as QuietCoreConfig;
         expect(persistedConfig.gateway?.auth?.token).toEqual(initialTokenRef);
       });
     },

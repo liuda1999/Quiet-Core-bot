@@ -158,11 +158,11 @@ resolve_package_tgz() {
   PACK_DIR="$(mktemp -d "${TMPDIR:-/tmp}/quiet-core-bot-bun-pack.XXXXXX")"
   pack_json_file="$PACK_DIR/pack.json"
 
-  echo "==> Pack OpenClaw tarball"
+  echo "==> Pack QuietCore tarball"
   npm pack --ignore-scripts --json --pack-destination "$PACK_DIR" >"$pack_json_file"
   PACKAGE_TGZ="$(resolve_pack_tarball_path "$pack_json_file" "$PACK_DIR")"
   if [ -z "$PACKAGE_TGZ" ] || [ ! -f "$PACKAGE_TGZ" ]; then
-    echo "missing packed OpenClaw tarball" >&2
+    echo "missing packed QuietCore tarball" >&2
     exit 1
   fi
 }
@@ -194,7 +194,7 @@ main() {
   echo "==> Bun version"
   "$bun_path" --version
 
-  echo "==> Bun global install packed OpenClaw"
+  echo "==> Bun global install packed QuietCore"
   "$bun_path" install -g "$PACKAGE_TGZ" --no-progress
 
   quiet_core_bot_bin="$BUN_INSTALL/bin/quiet-core-bot"
@@ -206,10 +206,10 @@ main() {
     exit 1
   fi
 
-  echo "==> OpenClaw version through Bun global install"
+  echo "==> QuietCore version through Bun global install"
   run_with_timeout "$COMMAND_TIMEOUT_MS" "$quiet_core_bot_bin" --version
 
-  echo "==> OpenClaw image providers through Bun global install"
+  echo "==> QuietCore image providers through Bun global install"
   local providers_json
   providers_json="$(run_with_timeout "$COMMAND_TIMEOUT_MS" "$quiet_core_bot_bin" infer image providers --json)"
   QUIET_CORE_IMAGE_PROVIDERS_JSON="$providers_json" node scripts/e2e/lib/bun-global-install/assertions.mjs assert-image-providers

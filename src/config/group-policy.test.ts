@@ -1,6 +1,6 @@
 // Verifies group-policy normalization and runtime resolution.
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "./config.js";
+import type { QuietCoreConfig } from "./config.js";
 import {
   resolveChannelGroupPolicy,
   resolveChannelGroupRequireMention,
@@ -23,7 +23,7 @@ describe("resolveChannelGroupPolicy", () => {
           groupPolicy: "allowlist",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const policy = resolveChannelGroupPolicy({
       cfg,
@@ -45,7 +45,7 @@ describe("resolveChannelGroupPolicy", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const policy = resolveChannelGroupPolicy({
       cfg,
@@ -67,7 +67,7 @@ describe("resolveChannelGroupPolicy", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const policy = resolveChannelGroupPolicy({
       cfg,
@@ -90,7 +90,7 @@ describe("resolveChannelGroupPolicy", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const policy = resolveChannelGroupPolicy({
       cfg,
@@ -110,7 +110,7 @@ describe("resolveChannelGroupPolicy", () => {
           groupPolicy: "allowlist",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const policy = resolveChannelGroupPolicy({
       cfg,
@@ -130,7 +130,7 @@ describe("resolveChannelGroupPolicy", () => {
           groupPolicy: "allowlist",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const policy = resolveChannelGroupPolicy({
       cfg,
@@ -152,7 +152,7 @@ describe("resolveChannelGroupPolicy", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expect(
       resolveChannelGroupRequireMention({
@@ -184,7 +184,7 @@ describe("resolveChannelGroupPolicy", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const policy = resolveChannelGroupPolicy({
       cfg,
@@ -213,7 +213,7 @@ describe("resolveChannelGroupPolicy", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expect(
       resolveChannelGroupPolicy({

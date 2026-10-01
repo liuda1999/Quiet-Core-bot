@@ -1,6 +1,6 @@
 // Covers session delivery queue persistence state transitions.
 import { describe, expect, it } from "vitest";
-import { openOpenClawStateDatabase } from "../state/quiet-core-bot-state-db.js";
+import { openQuietCoreStateDatabase } from "../state/quiet-core-bot-state-db.js";
 import { withTempDir } from "../test-helpers/temp-dir.js";
 import {
   ackSessionDelivery,
@@ -11,7 +11,7 @@ import {
 
 describe("session-delivery queue storage", () => {
   function readSessionQueueStatus(tempDir: string, id: string): string | undefined {
-    const { db } = openOpenClawStateDatabase({
+    const { db } = openQuietCoreStateDatabase({
       env: { ...process.env, QUIET_CORE_STATE_DIR: tempDir },
     });
     const row = db

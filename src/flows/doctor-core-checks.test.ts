@@ -3,7 +3,7 @@ import { promises as fs } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { SkillStatusEntry } from "../skills/discovery/status.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import {
@@ -118,7 +118,7 @@ describe("CORE_HEALTH_CHECKS", () => {
     resetCoreHealthChecksForTest();
     mocks.loadModelCatalog.mockClear();
     mocks.loadModelCatalog.mockResolvedValue([]);
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       hooks: {
         gmail: {
           model: "openai/gpt-5.5",
@@ -233,7 +233,7 @@ describe("CORE_HEALTH_CHECKS", () => {
 
   it("converts unavailable skills into repair-capable health findings", async () => {
     const unavailableSkill = createSkill();
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       agents: {
         defaults: {
           workspace: "/tmp/quiet-core-bot-test-workspace",
@@ -359,7 +359,7 @@ describe("CORE_HEALTH_CHECKS", () => {
   });
 
   it("uses the read-only model catalog for hooks.gmail.model checks", async () => {
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       hooks: {
         gmail: {
           model: "openai/gpt-5.5",

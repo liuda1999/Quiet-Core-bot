@@ -8,7 +8,7 @@ import path from "node:path";
 import { uniqueStrings } from "@quiet-core/normalization-core/string-normalization";
 import { Type } from "typebox";
 import { resolveStateDir } from "../../config/paths.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import {
   type ResolvedTranscriptsAutoStartConfig,
   resolveTranscriptsConfig,
@@ -31,7 +31,7 @@ type TranscriptsLogger = {
 };
 
 type TranscriptsRuntimeContext = {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   stateDir: string;
   logger: TranscriptsLogger;
 };
@@ -404,7 +404,7 @@ async function statusTranscripts(ctx: TranscriptsRuntimeContext) {
 
 /** Create the agent-facing transcripts tool. */
 export function createTranscriptsTool(options?: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   stateDir?: string;
   logger?: TranscriptsLogger;
 }): AnyAgentTool {

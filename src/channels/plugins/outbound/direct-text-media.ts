@@ -5,7 +5,7 @@
  */
 import { sendTextMediaPayload } from "quiet-core-bot/plugin-sdk/reply-payload";
 import { chunkText } from "../../../auto-reply/chunk.js";
-import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../config/types.quiet-core-bot.js";
 import type { OutboundSendDeps } from "../../../infra/outbound/deliver.js";
 import { sanitizeForPlainText } from "../../../infra/outbound/sanitize-text.js";
 import type { OutboundMediaAccess } from "../../../media/load-options.js";
@@ -13,7 +13,7 @@ import { resolveChannelMediaMaxBytes } from "../media-limits.js";
 import type { ChannelOutboundAdapter } from "../types.adapters.js";
 
 type DirectSendOptions = {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   accountId?: string | null;
   replyToId?: string | null;
   mediaUrl?: string;
@@ -54,9 +54,9 @@ export {
  * Resolves an account-scoped channel media byte limit.
  */
 export function resolveScopedChannelMediaMaxBytes(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   accountId?: string | null;
-  resolveChannelLimitMb: (params: { cfg: OpenClawConfig; accountId: string }) => number | undefined;
+  resolveChannelLimitMb: (params: { cfg: QuietCoreConfig; accountId: string }) => number | undefined;
 }): number | undefined {
   return resolveChannelMediaMaxBytes({
     cfg: params.cfg,
@@ -69,7 +69,7 @@ export function resolveScopedChannelMediaMaxBytes(params: {
  * Builds a media byte-limit resolver for channels with `mediaMaxMb` config.
  */
 export function createScopedChannelMediaMaxBytesResolver(channel: string) {
-  return (params: { cfg: OpenClawConfig; accountId?: string | null }) =>
+  return (params: { cfg: QuietCoreConfig; accountId?: string | null }) =>
     resolveScopedChannelMediaMaxBytes({
       cfg: params.cfg,
       accountId: params.accountId,
@@ -94,14 +94,14 @@ export function createDirectTextMediaOutbound<
   channel: string;
   resolveSender: (deps: OutboundSendDeps | undefined) => DirectSendFn<TOpts, TResult>;
   resolveMaxBytes: (params: {
-    cfg: OpenClawConfig;
+    cfg: QuietCoreConfig;
     accountId?: string | null;
   }) => number | undefined;
   buildTextOptions: (params: DirectSendOptions) => TOpts;
   buildMediaOptions: (params: DirectSendOptions) => TOpts;
 }): ChannelOutboundAdapter {
   const sendDirect = async (sendParams: {
-    cfg: OpenClawConfig;
+    cfg: QuietCoreConfig;
     to: string;
     text: string;
     accountId?: string | null;

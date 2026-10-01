@@ -1,4 +1,4 @@
-// Legacy OpenClaw artifacts are recognized and renamed on first use so installs created
+// Legacy QuietCore artifacts are recognized and renamed on first use so installs created
 // before the quiet-core-bot rebrand keep their existing data instead of silently starting
 // from an empty database.
 import fs from "node:fs";

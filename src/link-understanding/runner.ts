@@ -2,7 +2,7 @@
 import { readResponseWithLimit } from "@quiet-core/media-core/read-response-with-limit";
 import type { MsgContext } from "../auto-reply/templating.js";
 import { applyTemplate } from "../auto-reply/templating.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { LinkModelConfig, LinkToolsConfig } from "../config/types.tools.js";
 import { logVerbose, shouldLogVerbose } from "../globals.js";
 import { fetchWithSsrFGuard, GUARDED_FETCH_MODE } from "../infra/net/fetch-guard.js";
@@ -191,7 +191,7 @@ async function runLinkEntries(params: {
  * Returns detected URLs even when processors are absent so callers can report discovery.
  */
 export async function runLinkUnderstanding(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   ctx: MsgContext;
   message?: string;
 }): Promise<LinkUnderstandingResult> {

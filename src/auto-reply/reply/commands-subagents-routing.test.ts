@@ -1,6 +1,6 @@
 // Tests subagent routing commands and active focus handoff.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import {
   getActivePluginRegistry,
   resetPluginRuntimeStateForTest,
@@ -176,7 +176,7 @@ describe("subagents command dispatch", () => {
     const cfg = {
       commands: { allowFrom: { "*": ["*"] } },
       channels: { telegram: { allowFrom: ["*"] } },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const ctx = {
       Provider: "telegram",
       Surface: "telegram",

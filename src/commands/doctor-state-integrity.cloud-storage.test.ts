@@ -94,7 +94,7 @@ describe("detectMacCloudSyncedStateDir", () => {
 
   it("anchors cloud detection to OS homedir when QUIET_CORE_HOME is overridden", () => {
     const stateDir = path.join(home, "Library", "CloudStorage", "iCloud Drive", ".quiet-core-bot");
-    const originalOpenClawHome = process.env.QUIET_CORE_HOME;
+    const originalQuietCoreHome = process.env.QUIET_CORE_HOME;
     process.env.QUIET_CORE_HOME = "/tmp/quiet-core-bot-home-override";
     const homedirSpy = vi.spyOn(os, "homedir").mockReturnValue(home);
     try {
@@ -108,10 +108,10 @@ describe("detectMacCloudSyncedStateDir", () => {
       });
     } finally {
       homedirSpy.mockRestore();
-      if (originalOpenClawHome === undefined) {
+      if (originalQuietCoreHome === undefined) {
         delete process.env.QUIET_CORE_HOME;
       } else {
-        process.env.QUIET_CORE_HOME = originalOpenClawHome;
+        process.env.QUIET_CORE_HOME = originalQuietCoreHome;
       }
     }
   });

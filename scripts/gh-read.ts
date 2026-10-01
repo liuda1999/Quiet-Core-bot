@@ -1,4 +1,4 @@
-// Gh Read script supports OpenClaw repository automation.
+// Gh Read script supports QuietCore repository automation.
 import { execFileSync, spawnSync } from "node:child_process";
 import { createPrivateKey, createSign } from "node:crypto";
 import { readFileSync } from "node:fs";

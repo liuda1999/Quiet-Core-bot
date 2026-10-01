@@ -177,7 +177,7 @@ jobs:
               echo "- Normal CI: skipped by rerun group"
             fi
             if [[ "$RERUN_GROUP" == "all" || "$RERUN_GROUP" == "performance" ]]; then
-              echo "- Product performance: \`OpenClaw Performance\` with \`target_ref=${TARGET_SHA}\`"
+              echo "- Product performance: \`QuietCore Performance\` with \`target_ref=${TARGET_SHA}\`"
             else
               echo "- Product performance: skipped by rerun group"
             fi
@@ -187,7 +187,7 @@ jobs:
               echo "- Plugin prerelease: skipped by rerun group"
             fi
             if [[ "$RERUN_GROUP" == "all" || "$RERUN_GROUP" == "release-checks" || "$RERUN_GROUP" == "install-smoke" || "$RERUN_GROUP" == "cross-os" || "$RERUN_GROUP" == "live-e2e" || "$RERUN_GROUP" == "package" || "$RERUN_GROUP" == "qa" || "$RERUN_GROUP" == "qa-parity" || "$RERUN_GROUP" == "qa-live" ]]; then
-              echo "- Release/live/Docker/package/QA: \`OpenClaw Release Checks\`"
+              echo "- Release/live/Docker/package/QA: \`QuietCore Release Checks\`"
             else
               echo "- Release/live/Docker/package/QA: skipped by rerun group"
             fi
@@ -201,7 +201,7 @@ jobs:
             elif [[ "$RERUN_GROUP" == "npm-telegram" ]]; then
               echo "- Package Telegram E2E: focused rerun requires \`release_package_spec\` or \`npm_telegram_package_spec\`"
             elif [[ "$RERUN_GROUP" == "all" || "$RERUN_GROUP" == "release-checks" || "$RERUN_GROUP" == "package" ]]; then
-              echo "- Package Telegram E2E: OpenClaw Release Checks Package Acceptance"
+              echo "- Package Telegram E2E: QuietCore Release Checks Package Acceptance"
             else
               echo "- Package Telegram E2E: skipped by rerun group"
             fi
@@ -880,7 +880,7 @@ jobs:
       url: ${{ steps.dispatch.outputs.url }}
       conclusion: ${{ steps.dispatch.outputs.conclusion }}
     steps:
-      - name: Dispatch and monitor OpenClaw Performance
+      - name: Dispatch and monitor QuietCore Performance
         id: dispatch
         env:
           GH_TOKEN: ${{ github.token }}
@@ -924,7 +924,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
           dispatch_id="full-release-validation-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
-          dispatch_run_name="OpenClaw Performance ${dispatch_id}"
+          dispatch_run_name="QuietCore Performance ${dispatch_id}"
 
           dispatch_output="$(gh_with_retry workflow run quiet-core-bot-performance.yml \
             --ref "$CHILD_WORKFLOW_REF" \
@@ -988,7 +988,7 @@ jobs:
           echo "url=${url}" >> "$GITHUB_OUTPUT"
           echo "conclusion=${conclusion}" >> "$GITHUB_OUTPUT"
           if [[ "$conclusion" != "success" ]]; then
-            echo "::error::OpenClaw Performance ended with ${conclusion}: ${url}"
+            echo "::error::QuietCore Performance ended with ${conclusion}: ${url}"
             gh_with_retry run view "$run_id" --json jobs --jq '.jobs[] | select(.conclusion != "success" and .conclusion != "skipped") | {name, conclusion, url}' || true
             exit 1
           fi

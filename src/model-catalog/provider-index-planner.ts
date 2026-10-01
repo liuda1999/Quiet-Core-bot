@@ -5,7 +5,7 @@ import type {
   ModelCatalogProvider,
   NormalizedModelCatalogRow,
 } from "@quiet-core/model-catalog-core/model-catalog-types";
-import type { OpenClawProviderIndex } from "./provider-index/index.js";
+import type { QuietCoreProviderIndex } from "./provider-index/index.js";
 
 // Provider-index planner converts ClawHub-style preview catalog entries into
 // normalized model rows for discovery before a plugin is installed.
@@ -33,7 +33,7 @@ function withPreviewStatusDefaults(providerCatalog: ModelCatalogProvider): Model
 }
 
 export function planProviderIndexModelCatalogRows(params: {
-  index: OpenClawProviderIndex;
+  index: QuietCoreProviderIndex;
   providerFilter?: string;
 }): ProviderIndexModelCatalogPlan {
   const providerFilter = params.providerFilter

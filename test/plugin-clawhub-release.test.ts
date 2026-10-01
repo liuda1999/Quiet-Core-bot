@@ -11,9 +11,9 @@ import {
 import { delimiter, join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
-  buildOpenClawReleaseClawHubPlan,
-  buildOpenClawReleaseClawHubRuntimeState,
-  parseOpenClawReleaseClawHubPlanArgs,
+  buildQuietCoreReleaseClawHubPlan,
+  buildQuietCoreReleaseClawHubRuntimeState,
+  parseQuietCoreReleaseClawHubPlanArgs,
 } from "../scripts/lib/quiet-core-bot-release-clawhub-plan.ts";
 import {
   collectClawHubPublishablePluginPackages,
@@ -871,7 +871,7 @@ describe("collectPluginClawHubReleasePlan", () => {
   });
 });
 
-describe("buildOpenClawReleaseClawHubPlan", () => {
+describe("buildQuietCoreReleaseClawHubPlan", () => {
   it("emits a dispatch plan that keeps ClawHub children on the release tag", async () => {
     const repoDir = createTempPluginRepo({
       extraExtensionIds: ["demo-two", "demo-three"],
@@ -919,7 +919,7 @@ describe("buildOpenClawReleaseClawHubPlan", () => {
       },
     });
 
-    const plan = await buildOpenClawReleaseClawHubPlan(
+    const plan = await buildQuietCoreReleaseClawHubPlan(
       {
         releaseTag: "v2026.4.1-beta.1",
         releasePublishBranch: "main",
@@ -998,7 +998,7 @@ describe("buildOpenClawReleaseClawHubPlan", () => {
       },
     });
 
-    const plan = await buildOpenClawReleaseClawHubPlan(
+    const plan = await buildQuietCoreReleaseClawHubPlan(
       {
         releaseTag: "v2026.4.1-beta.1",
         releasePublishBranch: "release/2026.4.1",
@@ -1036,7 +1036,7 @@ describe("buildOpenClawReleaseClawHubPlan", () => {
 
   it("rejects incompatible all-publishable plugin selection args", () => {
     expect(() =>
-      parseOpenClawReleaseClawHubPlanArgs([
+      parseQuietCoreReleaseClawHubPlanArgs([
         "--release-tag",
         "v2026.4.1-beta.1",
         "--release-publish-branch",
@@ -1052,9 +1052,9 @@ describe("buildOpenClawReleaseClawHubPlan", () => {
   });
 });
 
-describe("buildOpenClawReleaseClawHubRuntimeState", () => {
+describe("buildQuietCoreReleaseClawHubRuntimeState", () => {
   it("includes the normal ClawHub run in verifier args when the release waits for it", () => {
-    const state = buildOpenClawReleaseClawHubRuntimeState({
+    const state = buildQuietCoreReleaseClawHubRuntimeState({
       repository: "liuda1999/quiet-core-bot",
       waitForClawHub: true,
       forceSkipClawHub: false,
@@ -1071,7 +1071,7 @@ describe("buildOpenClawReleaseClawHubRuntimeState", () => {
   });
 
   it("includes a completed bootstrap run even when there is no normal ClawHub run", () => {
-    const state = buildOpenClawReleaseClawHubRuntimeState({
+    const state = buildQuietCoreReleaseClawHubRuntimeState({
       repository: "liuda1999/quiet-core-bot",
       waitForClawHub: false,
       forceSkipClawHub: false,
@@ -1088,7 +1088,7 @@ describe("buildOpenClawReleaseClawHubRuntimeState", () => {
   });
 
   it("skips ClawHub verification for non-awaited incomplete runs while keeping proof links", () => {
-    const state = buildOpenClawReleaseClawHubRuntimeState({
+    const state = buildQuietCoreReleaseClawHubRuntimeState({
       repository: "liuda1999/quiet-core-bot",
       waitForClawHub: false,
       forceSkipClawHub: false,
@@ -1107,7 +1107,7 @@ describe("buildOpenClawReleaseClawHubRuntimeState", () => {
   });
 
   it("keeps completed bootstrap run evidence when the normal ClawHub run is not awaited", () => {
-    const state = buildOpenClawReleaseClawHubRuntimeState({
+    const state = buildQuietCoreReleaseClawHubRuntimeState({
       repository: "liuda1999/quiet-core-bot",
       waitForClawHub: false,
       forceSkipClawHub: false,
@@ -1126,7 +1126,7 @@ describe("buildOpenClawReleaseClawHubRuntimeState", () => {
   });
 
   it("forces skip-clawhub after a failed child run even if ClawHub runs completed", () => {
-    const state = buildOpenClawReleaseClawHubRuntimeState({
+    const state = buildQuietCoreReleaseClawHubRuntimeState({
       repository: "liuda1999/quiet-core-bot",
       waitForClawHub: true,
       forceSkipClawHub: true,

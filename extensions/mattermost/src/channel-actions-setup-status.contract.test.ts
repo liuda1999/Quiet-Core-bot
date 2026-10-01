@@ -4,7 +4,7 @@ import {
   installChannelSetupContractSuite,
   installChannelStatusContractSuite,
 } from "quiet-core-bot/plugin-sdk/channel-test-helpers";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { describe, expect } from "vitest";
 import { mattermostPlugin, mattermostSetupPlugin } from "../channel-plugin-api.js";
 
@@ -23,7 +23,7 @@ describe("mattermost actions contract", () => {
               baseUrl: "https://chat.example.com",
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         expectedActions: ["send", "react"],
         expectedCapabilities: ["presentation"],
       },
@@ -38,7 +38,7 @@ describe("mattermost actions contract", () => {
               actions: { reactions: false },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         expectedActions: ["send"],
         expectedCapabilities: ["presentation"],
       },
@@ -50,7 +50,7 @@ describe("mattermost actions contract", () => {
               enabled: true,
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         expectedActions: [],
         expectedCapabilities: [],
       },
@@ -64,7 +64,7 @@ describe("mattermost setup contract", () => {
     cases: [
       {
         name: "default account stores token and normalized base URL",
-        cfg: {} as OpenClawConfig,
+        cfg: {} as QuietCoreConfig,
         input: {
           botToken: "test-token",
           httpUrl: "https://chat.example.com/",
@@ -82,7 +82,7 @@ describe("mattermost setup contract", () => {
       },
       {
         name: "missing credentials are rejected",
-        cfg: {} as OpenClawConfig,
+        cfg: {} as QuietCoreConfig,
         input: {
           httpUrl: "",
         },
@@ -107,7 +107,7 @@ describe("mattermost status contract", () => {
               baseUrl: "https://chat.example.com",
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         runtime: {
           accountId: "default",
           connected: true,

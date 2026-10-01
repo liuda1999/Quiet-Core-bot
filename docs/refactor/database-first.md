@@ -462,7 +462,7 @@ The branch already has a real shared SQLite base:
   workspace sidecars. The harness calls the SDK history compaction RPC for the
   tracked SDK session, and Quiet Core bot keeps durable session/transcript state in
   SQLite instead of compatibility marker files.
-- The shared Swift runtime (`OpenClawKit`) uses the same
+- The shared Swift runtime (`QuietCoreKit`) uses the same
   `state/quiet-core-bot.sqlite` rows for device identity and device auth. macOS app
   helpers import the shared SQLite helpers instead of owning a second JSON or
   SQLite path. A leftover legacy `identity/device.json` blocks identity creation
@@ -1387,7 +1387,7 @@ create` validates the written archive by default; `--no-verify` is the
   has a real agent-record owner.
 - Generated model catalog config is stored in typed global SQLite
   `agent_model_catalogs` rows keyed by agent directory. Runtime callers use
-  `ensureOpenClawModelCatalog`; there is no `models.json` compatibility API in
+  `ensureQuietCoreModelCatalog`; there is no `models.json` compatibility API in
   runtime code. The implementation writes SQLite and the embedded PI registry is
   hydrated from that stored payload without creating a `models.json` file.
 - QMD session transcript markdown export and `memory.qmd.sessions` config were

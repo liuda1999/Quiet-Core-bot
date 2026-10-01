@@ -2,7 +2,7 @@
 import os from "node:os";
 import path from "node:path";
 import { mapPluginConfigIssues } from "quiet-core-bot/plugin-sdk/extension-shared";
-import { buildPluginConfigSchema, z, type OpenClawPluginConfigSchema } from "../api.js";
+import { buildPluginConfigSchema, z, type QuietCorePluginConfigSchema } from "../api.js";
 
 export const WIKI_VAULT_MODES = ["isolated", "bridge", "unsafe-local"] as const;
 export const WIKI_RENDER_MODES = ["native", "obsidian"] as const;
@@ -182,7 +182,7 @@ const memoryWikiConfigSchemaBase = buildPluginConfigSchema(MemoryWikiConfigSourc
   },
 });
 
-export const memoryWikiConfigSchema: OpenClawPluginConfigSchema = memoryWikiConfigSchemaBase;
+export const memoryWikiConfigSchema: QuietCorePluginConfigSchema = memoryWikiConfigSchemaBase;
 
 function expandHomePath(inputPath: string, homedir: string): string {
   if (inputPath === "~") {

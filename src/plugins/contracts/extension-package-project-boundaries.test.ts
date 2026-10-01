@@ -124,7 +124,7 @@ function collectCoreReferenceFiles(relativeDir: string): string[] {
   });
 }
 
-function collectOpenClawRuntimeDirectImportFiles(relativeDir: string): string[] {
+function collectQuietCoreRuntimeDirectImportFiles(relativeDir: string): string[] {
   return collectCodeFiles(relativeDir).filter((file) => {
     const source = fs.readFileSync(resolve(REPO_ROOT, file), "utf8");
     return source.includes('"./quiet-core-bot-runtime.js"');
@@ -322,7 +322,7 @@ describe("opt-in extension package boundaries", () => {
     expect(collectCoreReferenceFiles("packages/memory-host-sdk/src")).toEqual([
       ...MEMORY_HOST_SDK_ALLOWED_CORE_BRIDGE_FILES,
     ]);
-    expect(collectOpenClawRuntimeDirectImportFiles("packages/memory-host-sdk/src")).toEqual([
+    expect(collectQuietCoreRuntimeDirectImportFiles("packages/memory-host-sdk/src")).toEqual([
       ...MEMORY_HOST_SDK_RUNTIME_ADAPTER_FILES,
     ]);
   });

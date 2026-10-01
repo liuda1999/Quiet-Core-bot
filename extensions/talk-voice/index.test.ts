@@ -1,12 +1,12 @@
 // Talk Voice tests cover index plugin behavior.
-import type { OpenClawPluginCommandDefinition } from "quiet-core-bot/plugin-sdk/core";
+import type { QuietCorePluginCommandDefinition } from "quiet-core-bot/plugin-sdk/core";
 import { describe, expect, it, vi } from "vitest";
 import type { PluginRuntime } from "./api.js";
 import register from "./index.js";
 
 function createHarness(initialConfig: Record<string, unknown>) {
   let config = initialConfig;
-  let command: OpenClawPluginCommandDefinition | undefined;
+  let command: QuietCorePluginCommandDefinition | undefined;
   const runtime = {
     config: {
       current: vi.fn(() => config),
@@ -39,7 +39,7 @@ function createHarness(initialConfig: Record<string, unknown>) {
   } as unknown as PluginRuntime;
   const api = {
     runtime,
-    registerCommand: vi.fn((definition: OpenClawPluginCommandDefinition) => {
+    registerCommand: vi.fn((definition: QuietCorePluginCommandDefinition) => {
       command = definition;
     }),
   };

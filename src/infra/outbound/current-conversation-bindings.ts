@@ -10,10 +10,10 @@ import { normalizeConversationText } from "../../acp/conversation-id.js";
 import { normalizeAnyChannelId } from "../../channels/registry.js";
 import { getActivePluginChannelRegistryFromState } from "../../plugins/runtime-channel-state.js";
 import { resolveAgentIdFromSessionKey } from "../../routing/session-key.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../../state/quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "../../state/quiet-core-bot-state-db.generated.js";
 import {
-  openOpenClawStateDatabase,
-  runOpenClawStateWriteTransaction,
+  openQuietCoreStateDatabase,
+  runQuietCoreStateWriteTransaction,
 } from "../../state/quiet-core-bot-state-db.js";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../kysely-sync.js";
 import { normalizeConversationRef } from "./session-binding-normalization.js";
@@ -29,7 +29,7 @@ const CURRENT_BINDINGS_ID_PREFIX = "generic:";
 const CURRENT_BINDING_CONVERSATION_KIND = "current";
 
 type CurrentConversationBindingDatabase = Pick<
-  OpenClawStateKyselyDatabase,
+  QuietCoreStateKyselyDatabase,
   "current_conversation_bindings"
 >;
 
@@ -82,7 +82,7 @@ function normalizePersistedBindingRecord(
 }
 
 function openBindingDatabase() {
-  return openOpenClawStateDatabase();
+  return openQuietCoreStateDatabase();
 }
 
 function bindingRowsToRecords(rows: Array<{ record_json: string }>): SessionBindingRecord[] {
@@ -127,7 +127,7 @@ function writePersistedBindings(): void {
     .filter((record) => !isBindingExpired(record))
     .toSorted((a, b) => a.bindingId.localeCompare(b.bindingId));
   const updatedAt = Date.now();
-  runOpenClawStateWriteTransaction(({ db }) => {
+  runQuietCoreStateWriteTransaction(({ db }) => {
     const bindingDb = getNodeSqliteKysely<CurrentConversationBindingDatabase>(db);
     executeSqliteQuerySync(db, bindingDb.deleteFrom("current_conversation_bindings"));
     if (records.length === 0) {
@@ -368,7 +368,7 @@ export const testing = {
     bindingsLoaded = false;
     bindingsByConversationKey.clear();
     if (params?.deletePersistedFile) {
-      runOpenClawStateWriteTransaction(
+      runQuietCoreStateWriteTransaction(
         ({ db }) => {
           const bindingDb = getNodeSqliteKysely<CurrentConversationBindingDatabase>(db);
           executeSqliteQuerySync(db, bindingDb.deleteFrom("current_conversation_bindings"));

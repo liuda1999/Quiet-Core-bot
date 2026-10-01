@@ -1,5 +1,5 @@
 // Tests shared channel draft chunking resolution exposed through plugin-sdk/channel-outbound.
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { describe, expect, it } from "vitest";
 import { resolveChannelDraftStreamingChunking } from "./channel-outbound.js";
 
@@ -17,7 +17,7 @@ describe("resolveChannelDraftStreamingChunking", () => {
   });
 
   it("clamps requested draft chunk sizes to the resolved text limit", () => {
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       channels: {
         discord: {
           textChunkLimit: 500,
@@ -46,7 +46,7 @@ describe("resolveChannelDraftStreamingChunking", () => {
   });
 
   it("prefers account draft chunking over channel defaults", () => {
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       channels: {
         telegram: {
           allowFrom: ["*"],

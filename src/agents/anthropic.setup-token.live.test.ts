@@ -24,7 +24,7 @@ import {
 import { isLiveTestEnabled } from "./live-test-helpers.js";
 import { getApiKeyForModel, requireApiKey } from "./model-auth.js";
 import { normalizeProviderId, parseModelRef } from "./model-selection.js";
-import { ensureOpenClawModelsJson } from "./models-config.js";
+import { ensureQuietCoreModelsJson } from "./models-config.js";
 
 const LIVE = isLiveTestEnabled();
 const SETUP_TOKEN_RAW = process.env.QUIET_CORE_LIVE_SETUP_TOKEN?.trim() ?? "";
@@ -190,7 +190,7 @@ describeLive("live anthropic setup-token", () => {
       const tokenSource = await resolveTokenSource();
       try {
         const cfg = getRuntimeConfig();
-        await ensureOpenClawModelsJson(cfg, tokenSource.agentDir);
+        await ensureQuietCoreModelsJson(cfg, tokenSource.agentDir);
 
         const authStorage = discoverAuthStorage(tokenSource.agentDir);
         const modelRegistry = discoverModels(authStorage, tokenSource.agentDir);

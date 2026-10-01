@@ -1,6 +1,6 @@
 /** Tests active/inactive decisions for gateway authentication SecretRef surfaces. */
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { evaluateGatewayAuthSurfaceStates } from "./runtime-gateway-auth-surfaces.js";
 
 const EMPTY_ENV = {} as NodeJS.ProcessEnv;
@@ -9,7 +9,7 @@ function envRef(id: string) {
   return { source: "env", provider: "default", id } as const;
 }
 
-function evaluate(config: OpenClawConfig, env: NodeJS.ProcessEnv = EMPTY_ENV) {
+function evaluate(config: QuietCoreConfig, env: NodeJS.ProcessEnv = EMPTY_ENV) {
   return evaluateGatewayAuthSurfaceStates({
     config,
     env,
@@ -34,7 +34,7 @@ describe("evaluateGatewayAuthSurfaceStates", () => {
           token: envRef("GW_AUTH_TOKEN"),
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expectGatewayState(states["gateway.auth.token"], {
       hasSecretRef: true,
@@ -52,7 +52,7 @@ describe("evaluateGatewayAuthSurfaceStates", () => {
             token: envRef("GW_AUTH_TOKEN"),
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       { QUIET_CORE_GATEWAY_TOKEN: "env-token" } as NodeJS.ProcessEnv,
     );
 
@@ -71,7 +71,7 @@ describe("evaluateGatewayAuthSurfaceStates", () => {
           token: envRef("GW_AUTH_TOKEN"),
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expectGatewayState(states["gateway.auth.token"], {
       hasSecretRef: true,
@@ -88,7 +88,7 @@ describe("evaluateGatewayAuthSurfaceStates", () => {
           password: envRef("GW_AUTH_PASSWORD"),
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expectGatewayState(states["gateway.auth.password"], {
       hasSecretRef: true,
@@ -105,7 +105,7 @@ describe("evaluateGatewayAuthSurfaceStates", () => {
           password: envRef("GW_AUTH_PASSWORD"),
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expectGatewayState(states["gateway.auth.password"], {
       hasSecretRef: true,
@@ -122,7 +122,7 @@ describe("evaluateGatewayAuthSurfaceStates", () => {
             password: envRef("GW_AUTH_PASSWORD"),
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       { QUIET_CORE_GATEWAY_TOKEN: "env-token" } as NodeJS.ProcessEnv,
     );
 
@@ -141,7 +141,7 @@ describe("evaluateGatewayAuthSurfaceStates", () => {
           token: envRef("GW_REMOTE_TOKEN"),
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expectGatewayState(states["gateway.remote.token"], {
       hasSecretRef: true,
@@ -160,7 +160,7 @@ describe("evaluateGatewayAuthSurfaceStates", () => {
           token: envRef("GW_REMOTE_TOKEN"),
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expectGatewayState(states["gateway.remote.token"], {
       hasSecretRef: true,
@@ -181,7 +181,7 @@ describe("evaluateGatewayAuthSurfaceStates", () => {
           token: envRef("GW_REMOTE_TOKEN"),
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expectGatewayState(states["gateway.remote.token"], {
       hasSecretRef: true,
@@ -198,7 +198,7 @@ describe("evaluateGatewayAuthSurfaceStates", () => {
           password: envRef("GW_REMOTE_PASSWORD"),
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expect(states["gateway.remote.password"].hasSecretRef).toBe(true);
     expect(states["gateway.remote.password"].active).toBe(true);
@@ -216,7 +216,7 @@ describe("evaluateGatewayAuthSurfaceStates", () => {
           password: envRef("GW_REMOTE_PASSWORD"),
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expectGatewayState(states["gateway.remote.password"], {
       hasSecretRef: true,
@@ -236,7 +236,7 @@ describe("evaluateGatewayAuthSurfaceStates", () => {
           password: envRef("GW_REMOTE_PASSWORD"),
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expectGatewayState(states["gateway.remote.password"], {
       hasSecretRef: true,

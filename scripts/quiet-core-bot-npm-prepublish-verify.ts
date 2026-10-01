@@ -1,5 +1,5 @@
 #!/usr/bin/env -S node --import tsx
-// Openclaw Npm Prepublish Verify script supports OpenClaw repository automation.
+// Openclaw Npm Prepublish Verify script supports QuietCore repository automation.
 
 import { mkdtempSync, readFileSync, realpathSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -19,7 +19,7 @@ type InstalledPackageJson = {
   version?: string;
 };
 
-export type OpenClawNpmPrepublishVerifyArgs =
+export type QuietCoreNpmPrepublishVerifyArgs =
   | {
       expectedVersion?: string;
       help: false;
@@ -35,9 +35,9 @@ export function openClawNpmPrepublishVerifyUsage(): string {
   return "Usage: node --import tsx scripts/quiet-core-bot-npm-prepublish-verify.ts <tarball.tgz> [expected-version]";
 }
 
-export function parseOpenClawNpmPrepublishVerifyArgs(
+export function parseQuietCoreNpmPrepublishVerifyArgs(
   argv: readonly string[],
-): OpenClawNpmPrepublishVerifyArgs {
+): QuietCoreNpmPrepublishVerifyArgs {
   const args = argv[0] === "--" ? argv.slice(1) : argv;
   const tarballPath = args[0]?.trim() ?? "";
   if (tarballPath === "--help" || tarballPath === "-h") {
@@ -76,7 +76,7 @@ function npmExec(args: string[], cwd: string): string {
 }
 
 function main(argv = process.argv.slice(2)): void {
-  const args = parseOpenClawNpmPrepublishVerifyArgs(argv);
+  const args = parseQuietCoreNpmPrepublishVerifyArgs(argv);
   if (args.help) {
     console.log(openClawNpmPrepublishVerifyUsage());
     return;

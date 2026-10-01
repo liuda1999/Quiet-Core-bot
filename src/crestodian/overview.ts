@@ -7,14 +7,14 @@ import {
 import {
   QUIET_CORE_DOCS_URL,
   QUIET_CORE_SOURCE_URL,
-  resolveOpenClawReferencePaths,
+  resolveQuietCoreReferencePaths,
 } from "../agents/docs-path.js";
 import {
   readConfigFileSnapshot,
   resolveConfigPath,
   resolveGatewayPort,
   type ConfigFileSnapshot,
-  type OpenClawConfig,
+  type QuietCoreConfig,
 } from "../config/config.js";
 import { resolveAgentModelPrimaryValue } from "../config/model-input.js";
 import { normalizeAgentId } from "../routing/session-key.js";
@@ -61,7 +61,7 @@ export type CrestodianOverview = {
   };
 };
 
-type OpenClawReferencePaths = Awaited<ReturnType<typeof resolveOpenClawReferencePaths>>;
+type QuietCoreReferencePaths = Awaited<ReturnType<typeof resolveQuietCoreReferencePaths>>;
 
 type GatewayConnectionDetails = {
   url: string;
@@ -74,12 +74,12 @@ type CrestodianOverviewDependencies = {
   resolveConfigPath?: typeof resolveConfigPath;
   resolveGatewayPort?: typeof resolveGatewayPort;
   buildGatewayConnectionDetails?: (input: {
-    config: OpenClawConfig;
+    config: QuietCoreConfig;
     configPath: string;
   }) => GatewayConnectionDetails;
   probeLocalCommand?: typeof probeLocalCommand;
   probeGatewayUrl?: typeof probeGatewayUrl;
-  resolveOpenClawReferencePaths?: typeof resolveOpenClawReferencePaths;
+  resolveQuietCoreReferencePaths?: typeof resolveQuietCoreReferencePaths;
 };
 
 function issueMessages(snapshot: ConfigFileSnapshot): string[] {
@@ -89,7 +89,7 @@ function issueMessages(snapshot: ConfigFileSnapshot): string[] {
   });
 }
 
-function buildAgentSummaries(cfg: OpenClawConfig): CrestodianAgentSummary[] {
+function buildAgentSummaries(cfg: QuietCoreConfig): CrestodianAgentSummary[] {
   const defaultAgentId = resolveDefaultAgentId(cfg);
   const entries = listAgentEntries(cfg);
   if (entries.length === 0) {
@@ -129,7 +129,7 @@ function buildAgentSummaries(cfg: OpenClawConfig): CrestodianAgentSummary[] {
   return summaries;
 }
 
-function resolveFastTestReferences(env: NodeJS.ProcessEnv): OpenClawReferencePaths | undefined {
+function resolveFastTestReferences(env: NodeJS.ProcessEnv): QuietCoreReferencePaths | undefined {
   if (env.QUIET_CORE_TEST_FAST !== "1") {
     return undefined;
   }
@@ -167,7 +167,7 @@ export async function loadCrestodianOverview(
   } catch (err) {
     gatewayError = err instanceof Error ? err.message : String(err);
   }
-  const resolveReferences = deps.resolveOpenClawReferencePaths ?? resolveOpenClawReferencePaths;
+  const resolveReferences = deps.resolveQuietCoreReferencePaths ?? resolveQuietCoreReferencePaths;
   const commandProbe = deps.probeLocalCommand ?? probeLocalCommand;
   const [codex, claude, gateway, references] = await Promise.all([
     // Probes run in parallel; each individual probe is timeout-bounded in probes.ts.

@@ -1,7 +1,7 @@
 // Covers message-action reply/thread inheritance, single-reply modes, and
 // outbound mirror route preparation.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import {
   prepareOutboundMirrorRoute,
   resolveAndApplyOutboundReplyToId,
@@ -29,7 +29,7 @@ const workspaceConfig = {
       botToken: "xoxb-test",
     },
   },
-} as OpenClawConfig;
+} as QuietCoreConfig;
 
 const forumConfig = {
   channels: {
@@ -37,7 +37,7 @@ const forumConfig = {
       botToken: "forum-test",
     },
   },
-} as OpenClawConfig;
+} as QuietCoreConfig;
 
 const defaultForumToolContext = {
   currentChannelId: "forum:123",

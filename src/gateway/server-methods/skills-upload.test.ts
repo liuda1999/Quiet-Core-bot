@@ -7,8 +7,8 @@ import path from "node:path";
 import JSZip from "jszip";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
-  createOpenClawTestState,
-  type OpenClawTestState,
+  createQuietCoreTestState,
+  type QuietCoreTestState,
 } from "../../test-utils/quiet-core-bot-test-state.js";
 import type { GatewayRequestHandlers } from "./types.js";
 
@@ -61,7 +61,7 @@ vi.mock("../../infra/replace-file.js", async (importOriginal) => {
 });
 
 let tempDirs: string[] = [];
-let testStates: OpenClawTestState[] = [];
+let testStates: QuietCoreTestState[] = [];
 
 type CallResult = {
   ok: boolean;
@@ -74,7 +74,7 @@ async function makeHarness(): Promise<{
   stateDir: string;
   workspaceDir: string;
 }> {
-  const testState = await createOpenClawTestState({
+  const testState = await createQuietCoreTestState({
     layout: "state-only",
     prefix: "quiet-core-bot-skill-upload-handler-",
   });

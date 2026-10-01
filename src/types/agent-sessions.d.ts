@@ -1,5 +1,5 @@
 // Declares extension points for agent session type augmentation.
-export type OpenClawAgentSessionSkillSourceAugmentation = never;
+export type QuietCoreAgentSessionSkillSourceAugmentation = never;
 
 declare module "quiet-core-bot/plugin-sdk/agent-sessions" {
   interface Skill {

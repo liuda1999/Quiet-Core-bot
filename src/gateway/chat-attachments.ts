@@ -4,7 +4,7 @@ import { estimateBase64DecodedBytes } from "@quiet-core/media-core/base64";
 import { MAX_IMAGE_BYTES } from "@quiet-core/media-core/constants";
 import { extensionForMime, mimeTypeFromFilePath } from "@quiet-core/media-core/mime";
 import { normalizeOptionalLowercaseString } from "@quiet-core/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import type { PromptImageOrderEntry } from "../media/prompt-image-order.js";
 import { sniffMimeFromBase64 } from "../media/sniff-mime-from-base64.js";
@@ -61,7 +61,7 @@ const TEXT_ONLY_OFFLOAD_LIMIT = 10;
 export const DEFAULT_CHAT_ATTACHMENT_MAX_MB = 20;
 
 /** Resolve the maximum decoded attachment size accepted for chat image inputs. */
-export function resolveChatAttachmentMaxBytes(cfg: OpenClawConfig): number {
+export function resolveChatAttachmentMaxBytes(cfg: QuietCoreConfig): number {
   const configured = cfg.agents?.defaults?.mediaMaxMb;
   const mb =
     typeof configured === "number" && Number.isFinite(configured) && configured > 0

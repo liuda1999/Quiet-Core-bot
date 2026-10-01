@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { resolveOpenClawPackageRootSync } from "../../infra/quiet-core-bot-root.js";
+import { resolveQuietCorePackageRootSync } from "../../infra/quiet-core-bot-root.js";
 
 const PRIVATE_QA_DIST_RELATIVE_PATH = path.join("dist", "plugin-sdk", "qa-lab.js");
 const SOURCE_CHECKOUT_MARKER_RELATIVE_PATHS = [".git", "pnpm-workspace.yaml"] as const;
@@ -17,14 +17,14 @@ function resolvePrivateQaSourceModuleSpecifier(params?: {
   cwd?: string;
   argv1?: string;
   moduleUrl?: string;
-  resolvePackageRootSync?: typeof resolveOpenClawPackageRootSync;
+  resolvePackageRootSync?: typeof resolveQuietCorePackageRootSync;
   existsSync?: typeof fs.existsSync;
 }): string | null {
   const env = params?.env ?? process.env;
   if (!isPrivateQaCliEnabled(env)) {
     return null;
   }
-  const resolvePackageRootSync = params?.resolvePackageRootSync ?? resolveOpenClawPackageRootSync;
+  const resolvePackageRootSync = params?.resolvePackageRootSync ?? resolveQuietCorePackageRootSync;
   const packageRoot = resolvePackageRootSync({
     argv1: params?.argv1 ?? process.argv[1],
     cwd: params?.cwd ?? process.cwd(),
@@ -60,7 +60,7 @@ export function loadPrivateQaCliModule(params?: {
   cwd?: string;
   argv1?: string;
   moduleUrl?: string;
-  resolvePackageRootSync?: typeof resolveOpenClawPackageRootSync;
+  resolvePackageRootSync?: typeof resolveQuietCorePackageRootSync;
   existsSync?: typeof fs.existsSync;
   importModule?: (specifier: string) => Promise<Record<string, unknown>>;
 }): Promise<Record<string, unknown>> {

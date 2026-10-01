@@ -1,5 +1,5 @@
 import { migrateOrphanedSessionKeys } from "../../infra/state-migrations.js";
-import type { OpenClawConfig } from "../types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../types.quiet-core-bot.js";
 
 export type SessionStartupMigrationLogger = {
   info: (message: string) => void;
@@ -14,7 +14,7 @@ export type SessionStartupMigrationLogger = {
  * legacy store states that still need operator attention.
  */
 export async function runSessionStartupMigration(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
   log: SessionStartupMigrationLogger;
   deps?: {

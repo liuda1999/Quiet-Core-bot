@@ -16,10 +16,10 @@ import { executeSqliteQuerySync, getNodeSqliteKysely } from "../infra/kysely-syn
 import type { ConversationRef } from "../infra/outbound/session-binding-service.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import { resolveGlobalMap, resolveGlobalSingleton } from "../shared/global-singleton.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
 import {
-  openOpenClawStateDatabase,
-  runOpenClawStateWriteTransaction,
+  openQuietCoreStateDatabase,
+  runQuietCoreStateWriteTransaction,
 } from "../state/quiet-core-bot-state-db.js";
 import type {
   PluginConversationBinding,
@@ -54,7 +54,7 @@ type PluginBindingApprovalEntry = {
 };
 
 type PluginBindingApprovalsState = { approvals: PluginBindingApprovalEntry[] };
-type PluginBindingApprovalsDatabase = Pick<OpenClawStateKyselyDatabase, "plugin_binding_approvals">;
+type PluginBindingApprovalsDatabase = Pick<QuietCoreStateKyselyDatabase, "plugin_binding_approvals">;
 
 type PluginBindingConversation = {
   channel: string;
@@ -335,7 +335,7 @@ function createApprovalRequestId(): string {
 }
 
 function openApprovalsDatabase() {
-  return openOpenClawStateDatabase();
+  return openQuietCoreStateDatabase();
 }
 
 function loadApprovalsFromDatabase(): PluginBindingApprovalsState {
@@ -380,7 +380,7 @@ async function persistApprovalEntry(entry: PluginBindingApprovalEntry): Promise<
   const writeApprovals = state.approvalsSaveChain
     .catch(() => undefined)
     .then(() => {
-      runOpenClawStateWriteTransaction(({ db }) => {
+      runQuietCoreStateWriteTransaction(({ db }) => {
         const approvalsDb = getNodeSqliteKysely<PluginBindingApprovalsDatabase>(db);
         executeSqliteQuerySync(
           db,

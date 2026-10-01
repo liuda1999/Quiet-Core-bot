@@ -112,7 +112,7 @@ vi.mock("../process/supervisor/index.js", () => ({
 
 let createExecTool: typeof import("./bash-tools.exec.js").createExecTool;
 let toToolDefinitions: typeof import("./agent-tool-definition-adapter.js").toToolDefinitions;
-let createOpenClawCodingTools: typeof import("./agent-tools.js").createOpenClawCodingTools;
+let createQuietCoreCodingTools: typeof import("./agent-tools.js").createQuietCoreCodingTools;
 const testExtensionContext = {} as ExtensionContext;
 
 function installResolveExecEnvHook(result: Record<string, string>) {
@@ -126,7 +126,7 @@ describe("exec resolve_exec_env hook wiring", () => {
   beforeAll(async () => {
     ({ createExecTool } = await import("./bash-tools.exec.js"));
     ({ toToolDefinitions } = await import("./agent-tool-definition-adapter.js"));
-    ({ createOpenClawCodingTools } = await import("./agent-tools.js"));
+    ({ createQuietCoreCodingTools } = await import("./agent-tools.js"));
   });
 
   beforeEach(() => {
@@ -334,7 +334,7 @@ describe("exec resolve_exec_env hook wiring", () => {
       }),
     };
 
-    const exec = createOpenClawCodingTools({
+    const exec = createQuietCoreCodingTools({
       agentId: "main",
       sessionKey: "agent:main:telegram:chat-1",
       cwd: process.cwd(),

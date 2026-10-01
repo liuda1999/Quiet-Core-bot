@@ -101,16 +101,16 @@ const commandSignalHandlers = new Map(
 function usage() {
   return `Usage: node scripts/e2e/kitchen-sink-rpc-walk.mjs
 
-Runs the external Kitchen Sink plugin RPC walk against a built OpenClaw entry.
+Runs the external Kitchen Sink plugin RPC walk against a built QuietCore entry.
 
 Environment:
-  QUIET_CORE_ENTRY                         Built OpenClaw entrypoint. Defaults to dist/index.mjs or dist/index.js.
+  QUIET_CORE_ENTRY                         Built QuietCore entrypoint. Defaults to dist/index.mjs or dist/index.js.
   QUIET_CORE_KITCHEN_SINK_NPM_SPEC         Plugin package spec. Default: npm:@quiet-core/kitchen-sink@latest.
   QUIET_CORE_KITCHEN_SINK_PLUGIN_ID        Plugin id. Default: quiet-core-bot-kitchen-sink-fixture.
   QUIET_CORE_KITCHEN_SINK_PERSONALITY      Plugin fixture personality. Default: conformance.
   QUIET_CORE_KITCHEN_SINK_RPC_PORT         Gateway loopback port. Default: OS-selected free port.
   QUIET_CORE_KITCHEN_SINK_RPC_READY_MS     Gateway readiness timeout.
-  QUIET_CORE_KITCHEN_SINK_RPC_COMMAND_MS   OpenClaw command timeout.
+  QUIET_CORE_KITCHEN_SINK_RPC_COMMAND_MS   QuietCore command timeout.
   QUIET_CORE_KITCHEN_SINK_RPC_INSTALL_MS   Plugin install timeout.
   QUIET_CORE_KITCHEN_SINK_RPC_CALL_MS      RPC call timeout.
   QUIET_CORE_KITCHEN_SINK_RPC_FETCH_MS     HTTP readiness probe timeout.
@@ -254,7 +254,7 @@ export async function resolveKitchenSinkRpcPort(env = process.env, options = {})
   return await (options.findAvailablePort ?? findAvailableLoopbackPort)();
 }
 
-function resolveOpenClawRunner() {
+function resolveQuietCoreRunner() {
   if (process.env.QUIET_CORE_ENTRY) {
     return {
       command: "node",
@@ -642,9 +642,9 @@ export function signalProcessGroup(
   }
 }
 
-async function runOpenClaw(runner, args, env, options = {}) {
+async function runQuietCore(runner, args, env, options = {}) {
   const config = resolveKitchenSinkRpcConfig(env);
-  const command = await resolveOpenClawCommand(runner, args, env, {
+  const command = await resolveQuietCoreCommand(runner, args, env, {
     stdio: ["ignore", "pipe", "pipe"],
   });
   return runCommand(command.command, command.args, {
@@ -660,7 +660,7 @@ async function runOpenClaw(runner, args, env, options = {}) {
   });
 }
 
-async function resolveOpenClawCommand(runner, args, env, options = {}) {
+async function resolveQuietCoreCommand(runner, args, env, options = {}) {
   if (runner.pnpm) {
     const { createPnpmRunnerSpawnSpec } = await import("../pnpm-runner.mjs");
     return createPnpmRunnerSpawnSpec({
@@ -916,7 +916,7 @@ async function rpcCall(method, params, options) {
 }
 
 async function loadCallGatewayModule(runner) {
-  if (!usesBuiltOpenClawEntry(runner)) {
+  if (!usesBuiltQuietCoreEntry(runner)) {
     return null;
   }
   callGatewayModulePromise ??= importCallGatewayModule();
@@ -939,7 +939,7 @@ async function rpcCallViaCli(method, params, options) {
   const config = resolveKitchenSinkRpcConfig(options.env);
   let stdout;
   try {
-    ({ stdout } = await runOpenClaw(
+    ({ stdout } = await runQuietCore(
       options.runner,
       [
         "gateway",
@@ -983,7 +983,7 @@ export function findDistCallGatewayModuleFiles(cwd = process.cwd()) {
     : [];
 }
 
-export function usesBuiltOpenClawEntry(runner, cwd = process.cwd(), env = process.env) {
+export function usesBuiltQuietCoreEntry(runner, cwd = process.cwd(), env = process.env) {
   if (runner?.pnpm || !runner?.baseArgs?.[0]) {
     return false;
   }
@@ -1276,7 +1276,7 @@ function configureKitchenSink(env, port) {
 
 async function startGateway(runner, port, env, logPath) {
   const log = fs.openSync(logPath, "w");
-  const command = await resolveOpenClawCommand(
+  const command = await resolveQuietCoreCommand(
     runner,
     ["gateway", "--port", String(port), "--bind", "loopback", "--allow-unconfigured"],
     env,
@@ -2555,7 +2555,7 @@ function isNonEmptyString(value) {
 
 export async function main() {
   const config = resolveKitchenSinkRpcConfig();
-  let runner = resolveOpenClawRunner();
+  let runner = resolveQuietCoreRunner();
   const port = await resolveKitchenSinkRpcPort();
   const { root, env } = makeEnv();
   const logPath = path.join(root, "gateway.log");
@@ -2573,23 +2573,23 @@ export async function main() {
   let sampleTimer;
   try {
     console.log(`Kitchen Sink RPC walk using ${PLUGIN_SPEC} via ${runner.label}`);
-    await runOpenClaw(runner, ["plugins", "install", PLUGIN_SPEC], env, {
+    await runQuietCore(runner, ["plugins", "install", PLUGIN_SPEC], env, {
       ...commandResourceOptions,
       requireResourceSample: true,
       resourceLabel: "plugins install",
       timeoutMs: config.installTimeoutMs,
     });
-    runner = resolveOpenClawRunner();
+    runner = resolveQuietCoreRunner();
     console.log(`Kitchen Sink RPC runtime runner: ${runner.label}`);
     configureKitchenSink(env, port);
-    await runOpenClaw(runner, ["plugins", "enable", PLUGIN_ID], env, {
+    await runQuietCore(runner, ["plugins", "enable", PLUGIN_ID], env, {
       ...commandResourceOptions,
       resourceLabel: "plugins enable",
       timeoutMs: 60000,
     });
     const inspect = parseJsonOutput(
       (
-        await runOpenClaw(runner, ["plugins", "inspect", PLUGIN_ID, "--runtime", "--json"], env, {
+        await runQuietCore(runner, ["plugins", "inspect", PLUGIN_ID, "--runtime", "--json"], env, {
           ...commandResourceOptions,
           resourceLabel: "plugins inspect",
         })

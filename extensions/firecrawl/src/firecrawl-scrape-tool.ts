@@ -1,6 +1,6 @@
 // Firecrawl plugin module implements firecrawl scrape tool behavior.
 import { optionalStringEnum } from "quiet-core-bot/plugin-sdk/channel-actions";
-import type { OpenClawPluginApi } from "quiet-core-bot/plugin-sdk/plugin-runtime";
+import type { QuietCorePluginApi } from "quiet-core-bot/plugin-sdk/plugin-runtime";
 import {
   jsonResult,
   readNonNegativeIntegerParam,
@@ -51,7 +51,7 @@ const FirecrawlScrapeToolSchema = Type.Object(
   { additionalProperties: false },
 );
 
-export function createFirecrawlScrapeTool(api: OpenClawPluginApi) {
+export function createFirecrawlScrapeTool(api: QuietCorePluginApi) {
   return {
     name: "firecrawl_scrape",
     label: "Firecrawl Scrape",

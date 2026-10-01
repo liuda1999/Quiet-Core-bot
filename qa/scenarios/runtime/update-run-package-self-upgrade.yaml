@@ -9,7 +9,7 @@ scenario:
     secondary:
       - runtime.gateway-restart
       - runtime.package-update
-  objective: Verify an agent can self-update an installed OpenClaw package from 2026.4.26 to latest by using the gateway update.run action, then recover through the forced restart.
+  objective: Verify an agent can self-update an installed QuietCore package from 2026.4.26 to latest by using the gateway update.run action, then recover through the forced restart.
   successCriteria:
     - The agent is explicitly instructed to use the gateway tool action update.run instead of shell package-manager commands.
     - The update request carries a restart note marker that can be observed after the gateway restart.
@@ -82,7 +82,7 @@ flow:
                       expr: "`channel:${config.channelId}`"
                     message:
                       expr: |-
-                        `Update-run self-upgrade QA check. The OpenClaw package under test was installed from quiet-core-bot@${config.sourceVersion} and must update itself to quiet-core-bot@${config.targetTag}. Use the gateway tool with action=update.run. Do not run npm, pnpm, bun, git pull, or shell package-manager commands yourself. Set note exactly to "${marker} update.run complete" and restartDelayMs to 0 so the post-restart channel message proves recovery.`
+                        `Update-run self-upgrade QA check. The QuietCore package under test was installed from quiet-core-bot@${config.sourceVersion} and must update itself to quiet-core-bot@${config.targetTag}. Use the gateway tool with action=update.run. Do not run npm, pnpm, bun, git pull, or shell package-manager commands yourself. Set note exactly to "${marker} update.run complete" and restartDelayMs to 0 so the post-restart channel message proves recovery.`
                     timeoutMs:
                       expr: liveTurnTimeoutMs(env, 180000)
               - call: waitForGatewayHealthy

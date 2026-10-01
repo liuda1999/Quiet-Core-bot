@@ -45,7 +45,7 @@ import { loadWorkspaceSkillEntries } from "../../skills/loading/workspace.js";
 import { getRemoteSkillEligibility } from "../../skills/runtime/remote.js";
 import {
   collectClawHubVerdictTargets,
-  fetchOpenClawSkillSecurityVerdicts,
+  fetchQuietCoreSkillSecurityVerdicts,
 } from "../../skills/security/clawhub-verdicts.js";
 import {
   applySkillProposal,
@@ -235,7 +235,7 @@ export const skillsHandlers: GatewayRequestHandlers = {
         respond(true, { schema: "openclaw.skills.security-verdicts.v1", items: [] }, undefined);
         return;
       }
-      const items = await fetchOpenClawSkillSecurityVerdicts(targets);
+      const items = await fetchQuietCoreSkillSecurityVerdicts(targets);
       respond(true, { schema: "openclaw.skills.security-verdicts.v1", items }, undefined);
     } catch (err) {
       respond(false, undefined, errorShape(ErrorCodes.UNAVAILABLE, formatErrorMessage(err)));

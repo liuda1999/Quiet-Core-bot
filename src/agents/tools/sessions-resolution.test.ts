@@ -1,7 +1,7 @@
 // Sessions resolution tests cover alias mapping, session-id lookup, visibility
 // verification, and requester-spawned access checks.
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import { GatewayClientRequestError } from "../../gateway/client.js";
 import { looksLikeSessionId } from "../../sessions/session-id.js";
 const callGatewayMock = vi.fn();
@@ -51,7 +51,7 @@ describe("resolveMainSessionAlias", () => {
   it("uses normalized main key and global alias for global scope", () => {
     const cfg = {
       session: { mainKey: " Primary ", scope: "global" },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expect(resolveMainSessionAlias(cfg)).toEqual({
       mainKey: "primary",
@@ -61,7 +61,7 @@ describe("resolveMainSessionAlias", () => {
   });
 
   it("falls back to per-sender defaults", () => {
-    expect(resolveMainSessionAlias({} as OpenClawConfig)).toEqual({
+    expect(resolveMainSessionAlias({} as QuietCoreConfig)).toEqual({
       mainKey: "main",
       alias: "main",
       scope: "per-sender",
@@ -72,7 +72,7 @@ describe("resolveMainSessionAlias", () => {
     const cfg = {
       session: { mainKey: "  work ", scope: "per-sender" },
       routing: { sessions: { mainKey: "legacy-main" } },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expect(resolveMainSessionAlias(cfg)).toEqual({
       mainKey: "work",

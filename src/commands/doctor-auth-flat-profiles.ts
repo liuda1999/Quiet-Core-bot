@@ -31,7 +31,7 @@ import { splitTrailingAuthProfile } from "../agents/model-ref-profile.js";
 import { formatCliCommand } from "../cli/command-format.js";
 import { resolveStateDir } from "../config/paths.js";
 import type { AuthProfileConfig } from "../config/types.auth.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { coerceSecretRef } from "../config/types.secrets.js";
 import { loadJsonFile } from "../infra/json-file.js";
 import { shortenHomePath } from "../utils.js";
@@ -108,7 +108,7 @@ function extractProviderFromModelRef(modelRef: string): string | undefined {
 }
 
 function collectLegacyConfigAuthProfileProviderHints(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
 ): ReadonlyMap<string, string> {
   const hints = new Map<string, string>();
   const conflicted = new Set<string>();
@@ -305,7 +305,7 @@ function listExistingAgentDirsFromState(env: NodeJS.ProcessEnv): string[] {
 }
 
 function listAuthProfileRepairCandidates(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   env: NodeJS.ProcessEnv,
 ): AuthProfileRepairCandidate[] {
   const candidates = new Map<string, AuthProfileRepairCandidate>();
@@ -325,7 +325,7 @@ function listAuthProfileRepairCandidates(
 }
 
 function listAuthProfileSqliteMigrationCandidates(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   env: NodeJS.ProcessEnv,
 ): AuthProfileSqliteMigrationCandidate[] {
   const candidates: AuthProfileSqliteMigrationCandidate[] = [];
@@ -416,7 +416,7 @@ function inferLegacyConfigAuthProfileMode(
   return undefined;
 }
 
-function coerceLegacyConfigAuthProfileStore(cfg: OpenClawConfig): AuthProfileStore | null {
+function coerceLegacyConfigAuthProfileStore(cfg: QuietCoreConfig): AuthProfileStore | null {
   const cfgRecord: Record<string, unknown> = cfg;
   const auth = isRecord(cfgRecord.auth) ? cfgRecord.auth : null;
   const profiles = auth && isRecord(auth.profiles) ? auth.profiles : null;
@@ -489,14 +489,14 @@ function coerceLegacyConfigAuthProfileStore(cfg: OpenClawConfig): AuthProfileSto
 
 function isDefaultAgentCandidate(
   candidate: AuthProfileSqliteMigrationCandidate,
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   env: NodeJS.ProcessEnv,
 ): boolean {
   return path.resolve(candidate.agentDir ?? "") === path.resolve(resolveDefaultAgentDir(cfg, env));
 }
 
 function stripImportedConfigAuthProfileCredentials(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   store: AuthProfileStore,
 ): boolean {
   const profiles = ensureConfigAuthProfiles(cfg);
@@ -777,7 +777,7 @@ function writeJsonFile(pathname: string, value: unknown): void {
  * unresolved sidecar secrets are kept in JSON so the sidecar migration can run first.
  */
 export async function maybeMigrateAuthProfileJsonStoresToSqlite(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   prompter: Pick<DoctorPrompter, "confirmAutoFix">;
   now?: () => number;
   env?: NodeJS.ProcessEnv;
@@ -1113,7 +1113,7 @@ function resolveAwsSdkAuthProfileMarkerStore(
     : null;
 }
 
-function ensureConfigAuthProfiles(config: OpenClawConfig): Record<string, AuthProfileConfig> {
+function ensureConfigAuthProfiles(config: QuietCoreConfig): Record<string, AuthProfileConfig> {
   const root = config as Record<string, unknown>;
   const auth = isRecord(root.auth) ? root.auth : {};
   if (root.auth !== auth) {
@@ -1141,7 +1141,7 @@ function removeAwsSdkProfileMarkers(raw: Record<string, unknown>, profileIds: st
  * credentials, and the runtime no longer treats them as stored secrets.
  */
 export async function maybeRepairLegacyFlatAuthProfileStores(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   prompter: DoctorPrompter;
   now?: () => number;
   env?: NodeJS.ProcessEnv;
@@ -1292,7 +1292,7 @@ function backupCanonicalApiKeyAlias(authPath: string, now: () => number): string
  * moving the alias into the canonical key slot.
  */
 export async function maybeRepairCanonicalApiKeyFieldAlias(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   prompter: DoctorPrompter;
   now?: () => number;
   env?: NodeJS.ProcessEnv;
@@ -1607,10 +1607,10 @@ function canonicalizeOpenAILastGood(
  * contain the same legacy profile.
  */
 export function maybeRepairOpenAICodexAuthConfig(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   options?: { profileIdMap?: ReadonlyMap<string, string> },
 ): {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   changes: string[];
   warnings: string[];
 } {
@@ -1685,7 +1685,7 @@ function resolveOpenAICodexAuthStoreRepair(
 
 /** Collects deterministic legacy-to-canonical OpenAI profile ids across all agent stores. */
 export function collectOpenAICodexAuthProfileStoreIdMap(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
 }): Map<string, string> {
   const env = params.env ?? process.env;
@@ -1724,7 +1724,7 @@ function backupOpenAIProviderUnification(authPath: string, now: () => number): s
  * Rewrites legacy OpenAI Codex auth profiles in JSON stores to the canonical OpenAI provider id.
  */
 export async function maybeRepairOpenAICodexAuthProfileStores(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   now?: () => number;
   env?: NodeJS.ProcessEnv;
 }): Promise<LegacyFlatAuthProfileRepairResult> {

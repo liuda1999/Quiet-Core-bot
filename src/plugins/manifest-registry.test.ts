@@ -9,7 +9,7 @@ import {
   __testing as manifestRegistryTesting,
   loadPluginManifestRegistry,
 } from "./manifest-registry.js";
-import type { OpenClawPackageManifest } from "./manifest.js";
+import type { QuietCorePackageManifest } from "./manifest.js";
 import { cleanupTrackedTempDirs, makeTrackedTempDir } from "./test-helpers/fs-fixtures.js";
 
 vi.unmock("../version.js");
@@ -36,7 +36,7 @@ function makeTempDir() {
   return makeTrackedTempDir("quiet-core-bot-manifest-registry", tempDirs);
 }
 
-function makeOpenClawDevSourceRoot() {
+function makeQuietCoreDevSourceRoot() {
   const root = makeTempDir();
   fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({ name: "quiet-core-bot" }), "utf-8");
   mkdirSafe(path.join(root, "src"));
@@ -80,7 +80,7 @@ function createPluginCandidate(params: {
   bundleFormat?: "codex" | "claude" | "cursor";
   packageName?: string;
   packageVersion?: string;
-  packageManifest?: OpenClawPackageManifest;
+  packageManifest?: QuietCorePackageManifest;
   packageDir?: string;
   bundledManifest?: PluginCandidate["bundledManifest"];
   bundledManifestPath?: string;
@@ -626,7 +626,7 @@ describe("loadPluginManifestRegistry", () => {
   });
 
   it("prefers dev source bundled plugins over installed globals with the same id", () => {
-    const devSourceRoot = makeOpenClawDevSourceRoot();
+    const devSourceRoot = makeQuietCoreDevSourceRoot();
     const bundledDir = path.join(devSourceRoot, "extensions", "codex");
     const globalDir = makeTempDir();
     const manifest = { id: "codex", configSchema: { type: "object" } };

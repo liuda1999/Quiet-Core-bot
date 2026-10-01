@@ -11,7 +11,7 @@ usage() {
   cat >&2 <<'EOF'
 Usage: resolve-quiet-core-bot-ref.sh --ref <ref> [--expected-sha <sha>] [--fallback-ok] [--github-output <file>]
 
-Fast-resolves OpenClaw branch and tag refs with git ls-remote. Full commit SHAs
+Fast-resolves QuietCore branch and tag refs with git ls-remote. Full commit SHAs
 are returned as fallback refs so callers can decide whether to run deeper
 reachability validation.
 EOF
@@ -205,5 +205,5 @@ if [[ "$FALLBACK_OK" -eq 1 ]]; then
   exit 0
 fi
 
-echo "Failed to resolve OpenClaw ref: ${REF}" >&2
+echo "Failed to resolve QuietCore ref: ${REF}" >&2
 exit 1

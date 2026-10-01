@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import type {
   OpenKeyedStoreOptions,
   PluginStateKeyedStore,
@@ -32,7 +32,7 @@ function createContext(): PluginDoctorStateMigrationContext {
 
 function createMigrationParams(stateDir: string) {
   return {
-    config: {} as OpenClawConfig,
+    config: {} as QuietCoreConfig,
     env: { QUIET_CORE_STATE_DIR: stateDir },
     stateDir,
     oauthDir: path.join(stateDir, "oauth"),

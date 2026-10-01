@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { StaleOpenClawUpdateLaunchdJob } from "../../daemon/launchd.js";
+import type { StaleQuietCoreUpdateLaunchdJob } from "../../daemon/launchd.js";
 import { createMockGatewayService } from "../../daemon/service.test-helpers.js";
 import type { PortConnections } from "../../infra/ports.js";
 import type { GatewayRestartHandoff } from "../../infra/restart-handoff.js";
@@ -33,8 +33,8 @@ const loadGatewayTlsRuntime = vi.fn(async (_cfg?: unknown) => ({
   fingerprintSha256: "sha256:11:22:33:44",
 }));
 const findExtraGatewayServices = vi.fn(async (_env?: unknown, _opts?: unknown) => []);
-const findStaleOpenClawUpdateLaunchdJobs = vi.fn<
-  (env?: NodeJS.ProcessEnv) => Promise<StaleOpenClawUpdateLaunchdJob[]>
+const findStaleQuietCoreUpdateLaunchdJobs = vi.fn<
+  (env?: NodeJS.ProcessEnv) => Promise<StaleQuietCoreUpdateLaunchdJob[]>
 >(async () => []);
 const inspectPortUsage = vi.fn(async (port: number) => ({
   port,
@@ -163,8 +163,8 @@ vi.mock("../../daemon/inspect.js", () => ({
 }));
 
 vi.mock("../../daemon/launchd.js", () => ({
-  findStaleOpenClawUpdateLaunchdJobs: (env?: NodeJS.ProcessEnv) =>
-    findStaleOpenClawUpdateLaunchdJobs(env),
+  findStaleQuietCoreUpdateLaunchdJobs: (env?: NodeJS.ProcessEnv) =>
+    findStaleQuietCoreUpdateLaunchdJobs(env),
 }));
 
 vi.mock("../../daemon/service-audit.js", () => ({
@@ -261,8 +261,8 @@ describe("gatherDaemonStatus", () => {
     callGatewayStatusProbe.mockClear();
     resolveGatewayProbeAuthSafeWithSecretInputsCalls.mockClear();
     createConfigIOCalls.mockClear();
-    findStaleOpenClawUpdateLaunchdJobs.mockReset();
-    findStaleOpenClawUpdateLaunchdJobs.mockResolvedValue([]);
+    findStaleQuietCoreUpdateLaunchdJobs.mockReset();
+    findStaleQuietCoreUpdateLaunchdJobs.mockResolvedValue([]);
     loadInstalledPluginIndexInstallRecords.mockClear();
     loadInstalledPluginIndexInstallRecords.mockResolvedValue({});
     loadGatewayTlsRuntime.mockClear();
@@ -552,7 +552,7 @@ describe("gatherDaemonStatus", () => {
           QUIET_CORE_LAUNCHD_LABEL: "ai.quiet-core-bot.manual-update.gateway",
         },
       });
-      findStaleOpenClawUpdateLaunchdJobs.mockResolvedValueOnce([
+      findStaleQuietCoreUpdateLaunchdJobs.mockResolvedValueOnce([
         {
           label: "ai.quiet-core-bot.update.2026.5.12",
           lastExitStatus: 127,
@@ -569,7 +569,7 @@ describe("gatherDaemonStatus", () => {
         deep: true,
       });
 
-      const staleScanEnv = findStaleOpenClawUpdateLaunchdJobs.mock.calls[0]?.[0];
+      const staleScanEnv = findStaleQuietCoreUpdateLaunchdJobs.mock.calls[0]?.[0];
       expect(staleScanEnv?.QUIET_CORE_STATE_DIR).toBe("/tmp/quiet-core-bot-daemon");
       expect(staleScanEnv?.QUIET_CORE_CONFIG_PATH).toBe("/tmp/quiet-core-bot-daemon/quiet-core-bot.json");
       expect(staleScanEnv?.QUIET_CORE_LAUNCHD_LABEL).toBe("ai.quiet-core-bot.manual-update.gateway");
@@ -594,7 +594,7 @@ describe("gatherDaemonStatus", () => {
     });
 
     expect(readGatewayRestartHandoffSync).not.toHaveBeenCalled();
-    expect(findStaleOpenClawUpdateLaunchdJobs).not.toHaveBeenCalled();
+    expect(findStaleQuietCoreUpdateLaunchdJobs).not.toHaveBeenCalled();
     expect(inspectPortConnections).not.toHaveBeenCalled();
   });
 

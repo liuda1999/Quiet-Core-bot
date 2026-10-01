@@ -13,7 +13,7 @@ import {
   OPENAI_PROVIDER_ID,
   resolveContextConfigProviderForRuntime,
 } from "../../agents/openai-routing.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { logVerbose } from "../../globals.js";
 import { createLazyImportLoader } from "../../shared/lazy-promise.js";
 import type { CommandHandler } from "./commands-types.js";
@@ -28,7 +28,7 @@ function loadCompactRuntime(): Promise<typeof import("./commands-compact.runtime
 function extractCompactInstructions(params: {
   rawBody?: string;
   ctx: import("../templating.js").MsgContext;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentId?: string;
   isGroup: boolean;
 }): string | undefined {
@@ -99,7 +99,7 @@ function isCodexNativeCompactionStartedResult(result: { result?: { details?: unk
 }
 
 function resolveManualCompactContextTokenBudget(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   provider?: string;
   model?: string;
   agentId: string;

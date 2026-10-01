@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import {
   resetGatewayModelPricingCacheForTest,
   setGatewayModelPricingForTest,
@@ -96,7 +96,7 @@ describe("usage-format", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     const cost = resolveModelCostConfig({
       provider: "test",
@@ -149,7 +149,7 @@ describe("usage-format", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     await fs.writeFile(
       path.join(agentDir, "models.json"),
@@ -208,7 +208,7 @@ describe("usage-format", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     setGatewayModelPricingForTest([
       {
@@ -268,7 +268,7 @@ describe("usage-format", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     expect(
       resolveModelCostConfig({
@@ -303,7 +303,7 @@ describe("usage-format", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     expect(
       resolveModelCostConfig({
@@ -334,7 +334,7 @@ describe("usage-format", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     expect(
       resolveModelCostConfig({
@@ -368,7 +368,7 @@ describe("usage-format", () => {
           "demo-structural": { models },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     expect(
       resolveModelCostConfig({
@@ -411,7 +411,7 @@ describe("usage-format", () => {
           "demo-replaced-cost": { models: [model] },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     expect(
       resolveModelCostConfig({
@@ -454,7 +454,7 @@ describe("usage-format", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     expect(
       resolveModelCostConfig({
@@ -489,7 +489,7 @@ describe("usage-format", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     expect(
       resolveModelCostConfig({
@@ -554,7 +554,7 @@ describe("usage-format", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     const before = resolveModelCostConfigFingerprint(config);
     metadataOnlyModel.cost = { input: 9, output: 8, cacheRead: 7, cacheWrite: 6 };

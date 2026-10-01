@@ -1,7 +1,7 @@
 // Video generation types describe requests, providers, and normalized media output.
 import type { MediaNormalizationEntry } from "../../packages/media-generation-core/src/normalization.js";
 import type { AuthProfileStore } from "../agents/auth-profiles/types.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 
 export type GeneratedVideoAsset = {
   /** Raw video bytes. Required for local delivery; omit when url is provided instead. */
@@ -55,7 +55,7 @@ export type VideoGenerationSourceAsset = {
 };
 
 export type VideoGenerationProviderConfiguredContext = {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   agentDir?: string;
 };
 
@@ -63,7 +63,7 @@ export type VideoGenerationRequest = {
   provider: string;
   model: string;
   prompt: string;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentDir?: string;
   authStore?: AuthProfileStore;
   timeoutMs?: number;
@@ -85,7 +85,7 @@ export type VideoGenerationRequest = {
 export type VideoGenerationModelCapabilitiesContext = {
   provider: string;
   model: string;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentDir?: string;
   authStore?: AuthProfileStore;
   timeoutMs?: number;

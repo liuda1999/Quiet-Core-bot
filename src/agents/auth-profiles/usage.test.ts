@@ -4,7 +4,7 @@
  * persistence hooks without contacting real providers.
  */
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { MAX_DATE_TIMESTAMP_MS } from "../../shared/number-coercion.js";
 import type { AuthProfileStore, ProfileUsageStats } from "./types.js";
 import {
@@ -714,7 +714,7 @@ describe("markAuthProfileFailure — active windows do not extend on retry", () 
     store: ReturnType<typeof makeStore>;
     now: number;
     reason: "rate_limit" | "billing" | "auth_permanent";
-    cfg?: OpenClawConfig;
+    cfg?: QuietCoreConfig;
   }): Promise<void> {
     const dateNowSpy = vi.spyOn(Date, "now").mockReturnValue(params.now);
     try {
@@ -889,7 +889,7 @@ describe("markAuthProfileFailure — active windows do not extend on retry", () 
             billingBackoffHours: 0.0166667,
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
     });
 
     expect(store.usageStats?.["anthropic:default"]?.disabledUntil).toBe(now + 60_000);

@@ -667,7 +667,7 @@ barrel when authoring new plugins. Core subpaths:
 | `quiet-core-bot/plugin-sdk/plugin-entry`  | Plugin registration primitives                           |
 | `quiet-core-bot/plugin-sdk/channel-core`  | Channel entry/build helpers                              |
 | `quiet-core-bot/plugin-sdk/core`          | Generic shared helpers and umbrella contract             |
-| `quiet-core-bot/plugin-sdk/config-schema` | Root `quiet-core-bot.json` Zod schema (`OpenClawSchema`) |
+| `quiet-core-bot/plugin-sdk/config-schema` | Root `quiet-core-bot.json` Zod schema (`QuietCoreSchema`) |
 
 Channel plugins pick from a family of narrow seams — `channel-setup`,
 `setup-runtime`, `setup-tools`, `channel-pairing`,
@@ -1122,7 +1122,7 @@ Recommended sequence:
    Decide what shared behavior core should own: policy, fallback, config merge,
    lifecycle, channel-facing semantics, and runtime helper shape.
 2. add typed plugin registration/runtime surfaces
-   Extend `OpenClawPluginApi` and/or `api.runtime` with the smallest useful
+   Extend `QuietCorePluginApi` and/or `api.runtime` with the smallest useful
    typed capability surface.
 3. wire core + channel/feature consumers
    Channels and feature plugins should consume the new capability through core,

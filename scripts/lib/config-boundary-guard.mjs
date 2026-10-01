@@ -323,7 +323,7 @@ export function collectDeprecatedInternalConfigApiViolations({
       {
         pattern:
           /ReturnType<typeof import\(["']quiet-core-bot\/plugin-sdk\/(?:config-runtime|memory-core-host-runtime-core)["']\)\.(?:loadConfig|writeConfigFile)>/,
-        replacement: "use OpenClawConfig or the explicit mutation helper type",
+        replacement: "use QuietCoreConfig or the explicit mutation helper type",
       },
     ];
     for (const guard of guards) {

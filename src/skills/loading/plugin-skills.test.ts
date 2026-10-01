@@ -7,7 +7,7 @@ import {
   testing as acpRuntimeTesting,
   registerAcpRuntimeBackend,
 } from "../../acp/runtime/registry.js";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import type { PluginManifestRegistry } from "../../plugins/manifest-registry.js";
 import { createTrackedTempDirs } from "../../test-utils/tracked-temp-dirs.js";
 import { testing } from "./plugin-skills.js";
@@ -229,7 +229,7 @@ describe("resolvePluginSkillDirs", () => {
             helper: { enabled: true },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
     });
 
     expect(dirs).toEqual(expectedDirs({ acpxRoot, helperRoot }));
@@ -256,7 +256,7 @@ describe("resolvePluginSkillDirs", () => {
             helper: { enabled: true },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
     });
 
     expect(dirs).toEqual([path.resolve(pluginRoot, "skills")]);
@@ -287,7 +287,7 @@ describe("resolvePluginSkillDirs", () => {
             helper: { enabled: true },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
     });
 
     expect(dirs).toStrictEqual([]);
@@ -308,7 +308,7 @@ describe("resolvePluginSkillDirs", () => {
 
     const dirs = resolvePluginSkillDirs({
       workspaceDir,
-      config: {} as OpenClawConfig,
+      config: {} as QuietCoreConfig,
       pluginSkillsDir,
     });
 
@@ -325,7 +325,7 @@ describe("resolvePluginSkillDirs", () => {
 
     const dirs = resolvePluginSkillDirs({
       workspaceDir: undefined,
-      config: {} as OpenClawConfig,
+      config: {} as QuietCoreConfig,
       pluginSkillsDir,
     });
 
@@ -355,7 +355,7 @@ describe("resolvePluginSkillDirs", () => {
             helper: { enabled: true },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
     });
 
     expect(dirs).toEqual([
@@ -385,7 +385,7 @@ describe("resolvePluginSkillDirs", () => {
             "helper-legacy": { enabled: true },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
     });
 
     expect(dirs).toEqual([path.resolve(pluginRoot, "skills")]);

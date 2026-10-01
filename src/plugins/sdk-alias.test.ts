@@ -53,7 +53,7 @@ function makeTempDir() {
   return dir;
 }
 
-function createTrustedOpenClawPackageFixture(version: string) {
+function createTrustedQuietCorePackageFixture(version: string) {
   const root = makeTempDir();
   fs.writeFileSync(path.join(root, "quiet-core-bot.mjs"), "export {};\n", "utf-8");
   fs.writeFileSync(
@@ -1459,9 +1459,9 @@ describe("plugin sdk alias helpers", () => {
     const acpRuntimeErrors = path.join(fixture.root, "dist", "acp-core", "runtime", "errors.js");
     mkdirSafeDir(path.dirname(acpRuntimeErrors));
     fs.writeFileSync(acpRuntimeErrors, "export {};\n", "utf-8");
-    const cwdWithoutOpenClawPackage = makeTempDir();
+    const cwdWithoutQuietCorePackage = makeTempDir();
 
-    const aliases = withCwd(cwdWithoutOpenClawPackage, () =>
+    const aliases = withCwd(cwdWithoutQuietCorePackage, () =>
       withEnv({ NODE_ENV: undefined }, () =>
         buildPluginLoaderAliasMap(sourcePluginEntry, undefined, undefined, "dist"),
       ),
@@ -1627,7 +1627,7 @@ describe("plugin sdk alias helpers", () => {
     // resolve to the fixture root — only the moduleUrl hint can bridge the gap.
     // Pass "" for argv1: undefined would trigger the STARTUP_ARGV1 default (the vitest
     // runner binary, inside the quiet-core-bot repo), which resolves before moduleUrl is checked.
-    // An empty string is falsy so resolveTrustedOpenClawRootFromArgvHint returns null,
+    // An empty string is falsy so resolveTrustedQuietCoreRootFromArgvHint returns null,
     // meaning only the moduleUrl hint can bridge the gap.
     const aliases = withCwd(externalPluginRoot, () =>
       withEnv({ NODE_ENV: undefined }, () =>
@@ -2311,7 +2311,7 @@ describe("buildPluginLoaderAliasMap memoization", () => {
 
 describe("buildPluginLoaderJitiOptions", () => {
   it("scopes jiti fs cache by Quiet Core bot package version and install metadata", () => {
-    const root = createTrustedOpenClawPackageFixture("1.2.3-beta.4");
+    const root = createTrustedQuietCorePackageFixture("1.2.3-beta.4");
     const tmpDir = path.join(root, "tmp");
 
     const fsCache = withEnv({ TMPDIR: tmpDir }, () =>
@@ -2325,7 +2325,7 @@ describe("buildPluginLoaderJitiOptions", () => {
   });
 
   it("preserves jiti's tmpdir guard when TMPDIR resolves to cwd", () => {
-    const root = createTrustedOpenClawPackageFixture("1.2.3-beta.4");
+    const root = createTrustedQuietCorePackageFixture("1.2.3-beta.4");
 
     const guardedFsCache = withEnv({ TMPDIR: root, JITI_RESPECT_TMPDIR_ENV: undefined }, () =>
       withCwd(root, () =>
@@ -2350,7 +2350,7 @@ describe("buildPluginLoaderJitiOptions", () => {
   });
 
   it("adds the versioned fs cache directory to plugin loader jiti options", () => {
-    const root = createTrustedOpenClawPackageFixture("2.0.0");
+    const root = createTrustedQuietCorePackageFixture("2.0.0");
     const tmpDir = path.join(root, "tmp");
 
     const options = withEnv({ TMPDIR: tmpDir }, () =>
@@ -2364,7 +2364,7 @@ describe("buildPluginLoaderJitiOptions", () => {
   });
 
   it("preserves jiti's fs cache environment opt-out", () => {
-    const root = createTrustedOpenClawPackageFixture("2.0.0");
+    const root = createTrustedQuietCorePackageFixture("2.0.0");
 
     const explicitOptOut = withEnv({ JITI_FS_CACHE: "false" }, () =>
       resolvePluginLoaderJitiFsCacheOption({

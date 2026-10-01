@@ -152,7 +152,7 @@ export async function buildConfigItems(params: {
           id: `manual:hooks:${sanitizeName(settingsPath)}`,
           source: settingsPath,
           message: "Claude hooks were found but are not enabled automatically.",
-          recommendation: "Review hook commands before recreating equivalent OpenClaw automation.",
+          recommendation: "Review hook commands before recreating equivalent QuietCore automation.",
         }),
       );
     }
@@ -174,7 +174,7 @@ export async function buildConfigItems(params: {
           source: settingsPath,
           message: "Claude environment defaults were found but are not copied automatically.",
           recommendation:
-            "Move non-secret values manually and store credentials through OpenClaw credential flows.",
+            "Move non-secret values manually and store credentials through QuietCore credential flows.",
         }),
       );
     }

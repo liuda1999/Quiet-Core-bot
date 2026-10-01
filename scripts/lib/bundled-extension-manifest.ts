@@ -1,4 +1,4 @@
-// Bundled Extension Manifest script supports OpenClaw repository automation.
+// Bundled Extension Manifest script supports QuietCore repository automation.
 import {
   MIN_HOST_VERSION_FORMAT,
   parseMinHostVersionRequirement,

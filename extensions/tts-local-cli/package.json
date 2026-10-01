@@ -2,7 +2,7 @@
   "name": "@quiet-core/tts-local-cli",
   "version": "2026.6.11",
   "private": true,
-  "description": "OpenClaw local CLI TTS plugin",
+  "description": "QuietCore local CLI TTS plugin",
   "type": "module",
   "devDependencies": {
     "@quiet-core/plugin-sdk": "workspace:*"

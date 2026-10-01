@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { resolveOpenClawPackageRootSync } from "../../infra/quiet-core-bot-root.js";
+import { resolveQuietCorePackageRootSync } from "../../infra/quiet-core-bot-root.js";
 import { runPluginPayloadSmokeCheck } from "./plugin-payload-validation.js";
 
 describe("runPluginPayloadSmokeCheck", () => {
@@ -31,7 +31,7 @@ describe("runPluginPayloadSmokeCheck", () => {
   }
 
   function resolveTestHostRoot(): string {
-    const hostRoot = resolveOpenClawPackageRootSync({
+    const hostRoot = resolveQuietCorePackageRootSync({
       argv1: process.argv[1],
       moduleUrl: import.meta.url,
       cwd: process.cwd(),
@@ -40,7 +40,7 @@ describe("runPluginPayloadSmokeCheck", () => {
     return hostRoot!;
   }
 
-  async function linkOpenClawPeerToHost(dir: string): Promise<void> {
+  async function linkQuietCorePeerToHost(dir: string): Promise<void> {
     await fs.mkdir(path.join(dir, "node_modules"), { recursive: true });
     await fs.symlink(resolveTestHostRoot(), path.join(dir, "node_modules", "quiet-core-bot"), "junction");
   }
@@ -344,7 +344,7 @@ describe("runPluginPayloadSmokeCheck", () => {
       },
       "export default {};\n",
     );
-    await linkOpenClawPeerToHost(dir);
+    await linkQuietCorePeerToHost(dir);
 
     const result = await runPluginPayloadSmokeCheck({
       records: { codex: { source: "npm", installPath: dir } },

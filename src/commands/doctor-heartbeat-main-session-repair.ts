@@ -12,7 +12,7 @@ import {
 } from "../config/sessions/paths.js";
 import { updateSessionStore } from "../config/sessions/store.js";
 import type { SessionEntry } from "../config/sessions/types.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { parseAgentSessionKey } from "../sessions/session-key-utils.js";
 
 type DoctorPrompterLike = {
@@ -250,7 +250,7 @@ export function clearTuiLastSessionPointers(params: {
  * prevents moving a newly-human main session.
  */
 export async function repairHeartbeatPoisonedMainSession(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   store: Record<string, SessionEntry>;
   absoluteStorePath: string;
   stateDir: string;

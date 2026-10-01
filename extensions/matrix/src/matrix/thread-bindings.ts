@@ -2,7 +2,7 @@
 import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { readJsonFileWithFallback } from "quiet-core-bot/plugin-sdk/json-store";
 import { resolveAgentIdFromSessionKey } from "quiet-core-bot/plugin-sdk/session-key-runtime";
 import { normalizeOptionalString } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
@@ -233,7 +233,7 @@ function buildMatrixBindingIntroText(params: {
 }
 
 async function sendBindingMessage(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   client: MatrixClient;
   accountId: string;
   roomId: string;
@@ -254,7 +254,7 @@ async function sendBindingMessage(params: {
 }
 
 async function sendFarewellMessage(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   client: MatrixClient;
   accountId: string;
   record: MatrixThreadBindingRecord;
@@ -289,7 +289,7 @@ async function sendFarewellMessage(params: {
 }
 
 export async function createMatrixThreadBindingManager(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   accountId: string;
   auth: MatrixAuth;
   client: MatrixClient;

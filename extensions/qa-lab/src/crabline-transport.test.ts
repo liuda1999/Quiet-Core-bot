@@ -18,7 +18,7 @@ function createSelection() {
 }
 
 describe("crabline transport", () => {
-  it("configures OpenClaw's Telegram plugin against a Crabline fake provider server", async () => {
+  it("configures QuietCore's Telegram plugin against a Crabline fake provider server", async () => {
     await withTempDir("qa-crabline-transport-", async (outputDir) => {
       const transport = await createQaCrablineTransportAdapter({
         outputDir,

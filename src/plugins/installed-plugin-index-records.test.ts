@@ -5,8 +5,8 @@ import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { PluginInstallRecord } from "../config/types.plugins.js";
 import {
-  closeOpenClawStateDatabaseForTest,
-  runOpenClawStateWriteTransaction,
+  closeQuietCoreStateDatabaseForTest,
+  runQuietCoreStateWriteTransaction,
 } from "../state/quiet-core-bot-state-db.js";
 import type { PluginCandidate } from "./discovery.js";
 import {
@@ -68,7 +68,7 @@ function updatePersistedInstallRecordsWithoutClearingCache(
   stateDir: string,
   records: Record<string, PluginInstallRecord>,
 ) {
-  runOpenClawStateWriteTransaction(
+  runQuietCoreStateWriteTransaction(
     ({ db }) => {
       db.prepare(
         `
@@ -84,7 +84,7 @@ function updatePersistedInstallRecordsWithoutClearingCache(
 }
 
 afterEach(() => {
-  closeOpenClawStateDatabaseForTest();
+  closeQuietCoreStateDatabaseForTest();
   vi.doUnmock("./installed-plugin-index-store.js");
   clearLoadInstalledPluginIndexInstallRecordsCache();
   for (const dir of tempDirs.splice(0)) {

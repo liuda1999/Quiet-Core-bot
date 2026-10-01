@@ -32,7 +32,7 @@ describe("Crestodian Docker E2E scripts", () => {
     expect(source).toContain("Fake Claude planner selected a typed model update.");
     expect(source).toContain("[crestodian] interpreted: set default model openai/gpt-5.2");
     expect(source).toContain("[crestodian] done: config.setDefaultModel");
-    expect(source).toContain("OpenClaw docs:");
+    expect(source).toContain("QuietCore docs:");
     expect(source).toContain("Crestodian planner Docker E2E passed");
   });
 

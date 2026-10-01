@@ -1,4 +1,4 @@
 /**
- * Preferred OpenClaw temp directory helper for Browser outputs.
+ * Preferred QuietCore temp directory helper for Browser outputs.
  */
-export { resolvePreferredOpenClawTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";
+export { resolvePreferredQuietCoreTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";

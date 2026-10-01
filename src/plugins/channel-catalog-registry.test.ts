@@ -42,7 +42,7 @@ async function loadWithMocks(params: {
     return params.loadRecords ? params.loadRecords(opts.env) : RECORDS;
   });
 
-  vi.doMock("./discovery.js", () => ({ discoverOpenClawPlugins: discoverSpy }));
+  vi.doMock("./discovery.js", () => ({ discoverQuietCorePlugins: discoverSpy }));
   vi.doMock("./installed-plugin-index-record-reader.js", () => ({
     loadInstalledPluginIndexInstallRecordsSync: loadRecordsSpy,
   }));

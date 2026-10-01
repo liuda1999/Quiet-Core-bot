@@ -1,6 +1,6 @@
 /**
  * ACPX process ownership checks and cleanup. The reaper only terminates
- * OpenClaw-owned wrapper trees after validating paths, packages, and lease ids.
+ * QuietCore-owned wrapper trees after validating paths, packages, and lease ids.
  */
 import { execFile } from "node:child_process";
 import { createRequire } from "node:module";
@@ -73,7 +73,7 @@ function resolvePackageRoot(packageName: string): string | undefined {
   }
 }
 
-function resolveOpenClawInstallRoot(pluginRoot: string): string {
+function resolveQuietCoreInstallRoot(pluginRoot: string): string {
   if (
     path.basename(pluginRoot) === "acpx" &&
     path.basename(path.dirname(pluginRoot)) === "extensions"
@@ -86,7 +86,7 @@ function resolveOpenClawInstallRoot(pluginRoot: string): string {
 
 function resolveOwnedAcpPackageRootCandidates(packageName: string): string[] {
   const pluginRoot = resolveAcpxPluginRoot(import.meta.url);
-  const openClawRoot = resolveOpenClawInstallRoot(pluginRoot);
+  const openClawRoot = resolveQuietCoreInstallRoot(pluginRoot);
   return [
     resolvePackageRoot(packageName),
     path.join(pluginRoot, "node_modules", packageName),
@@ -117,8 +117,8 @@ function commandWrapperBelongsToRoot(command: string, wrapperRoot: string | unde
   );
 }
 
-/** Check whether a command references an OpenClaw-generated ACPX wrapper path. */
-export function isOpenClawLeaseAwareAcpxProcessCommand(params: {
+/** Check whether a command references an QuietCore-generated ACPX wrapper path. */
+export function isQuietCoreLeaseAwareAcpxProcessCommand(params: {
   command: string | undefined;
   wrapperRoot?: string;
 }): boolean {
@@ -167,8 +167,8 @@ function liveCommandMatchesLeaseIdentity(params: {
   );
 }
 
-/** Check whether a command is owned by OpenClaw ACPX runtime packages or wrappers. */
-export function isOpenClawOwnedAcpxProcessCommand(params: {
+/** Check whether a command is owned by QuietCore ACPX runtime packages or wrappers. */
+export function isQuietCoreOwnedAcpxProcessCommand(params: {
   command: string | undefined;
   wrapperRoot?: string;
 }): boolean {
@@ -178,7 +178,7 @@ export function isOpenClawOwnedAcpxProcessCommand(params: {
   }
   const normalized = normalizePathLike(command);
   if (
-    isOpenClawLeaseAwareAcpxProcessCommand({
+    isQuietCoreLeaseAwareAcpxProcessCommand({
       command: normalized,
       wrapperRoot: params.wrapperRoot,
     })
@@ -305,8 +305,8 @@ async function terminatePids(
   return terminated;
 }
 
-/** Terminate one validated OpenClaw-owned ACPX wrapper process tree. */
-export async function cleanupOpenClawOwnedAcpxProcessTree(params: {
+/** Terminate one validated QuietCore-owned ACPX wrapper process tree. */
+export async function cleanupQuietCoreOwnedAcpxProcessTree(params: {
   rootPid?: number;
   rootCommand?: string;
   expectedLeaseId?: string;
@@ -328,7 +328,7 @@ export async function cleanupOpenClawOwnedAcpxProcessTree(params: {
 
   const listedTree = collectProcessTree(processes, rootPid);
   // Session-store PIDs are stale data. If the live process table cannot prove
-  // that this PID still belongs to an OpenClaw-owned wrapper, fail closed to
+  // that this PID still belongs to an QuietCore-owned wrapper, fail closed to
   // avoid killing an unrelated process after PID reuse.
   if (listedTree.length === 0) {
     return { inspectedPids: [], terminatedPids: [], skippedReason: "unverified-root" };
@@ -358,7 +358,7 @@ export async function cleanupOpenClawOwnedAcpxProcessTree(params: {
     };
   }
   if (
-    !isOpenClawOwnedAcpxProcessCommand({
+    !isQuietCoreOwnedAcpxProcessCommand({
       command: rootCommand,
       wrapperRoot: params.wrapperRoot,
     })
@@ -390,8 +390,8 @@ export async function cleanupOpenClawOwnedAcpxProcessTree(params: {
   };
 }
 
-/** Reap orphaned OpenClaw-owned ACPX wrapper trees during runtime startup. */
-export async function reapStaleOpenClawOwnedAcpxOrphans(params: {
+/** Reap orphaned QuietCore-owned ACPX wrapper trees during runtime startup. */
+export async function reapStaleQuietCoreOwnedAcpxOrphans(params: {
   wrapperRoot: string;
   deps?: AcpxProcessCleanupDeps;
 }): Promise<AcpxStartupReapResult> {
@@ -409,7 +409,7 @@ export async function reapStaleOpenClawOwnedAcpxOrphans(params: {
   const orphans = processes.filter(
     (processInfo) =>
       processInfo.ppid === 1 &&
-      isOpenClawOwnedAcpxProcessCommand({
+      isQuietCoreOwnedAcpxProcessCommand({
         command: processInfo.command,
         wrapperRoot: params.wrapperRoot,
       }),

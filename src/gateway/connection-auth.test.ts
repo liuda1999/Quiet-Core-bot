@@ -1,7 +1,7 @@
 // Gateway connection auth tests document token/password precedence for local,
 // remote, CLI override, env override, and config-secret connection flows.
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import {
   resolveGatewayConnectionAuth,
   type GatewayConnectionAuthOptions,
@@ -11,14 +11,14 @@ type ResolvedAuth = { token?: string; password?: string };
 
 type ConnectionAuthCase = {
   name: string;
-  cfgLocal: OpenClawConfig;
+  cfgLocal: QuietCoreConfig;
   env: NodeJS.ProcessEnv;
   options?: Partial<Omit<GatewayConnectionAuthOptions, "config" | "env">>;
   expected: ResolvedAuth;
 };
 
-function cfg(input: Partial<OpenClawConfig>): OpenClawConfig {
-  return input as OpenClawConfig;
+function cfg(input: Partial<QuietCoreConfig>): QuietCoreConfig {
+  return input as QuietCoreConfig;
 }
 
 function createRemoteModeConfig() {

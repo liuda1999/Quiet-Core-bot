@@ -1,5 +1,5 @@
 // Bundled Quiet Core bot provider index advertises pre-install provider metadata for model picker discovery.
-import type { OpenClawProviderIndex } from "./types.js";
+import type { QuietCoreProviderIndex } from "./types.js";
 
 // Quiet Core bot-owned preview metadata for providers whose plugins may not be
 // installed yet. Installed plugin manifests remain authoritative; this index is
@@ -13,4 +13,4 @@ import type { OpenClawProviderIndex } from "./types.js";
 export const QUIET_CORE_PROVIDER_INDEX = {
   version: 1,
   providers: {},
-} satisfies OpenClawProviderIndex;
+} satisfies QuietCoreProviderIndex;

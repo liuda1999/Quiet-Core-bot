@@ -67,7 +67,7 @@ Status: branch-local checkpoint, not release notes.
 - No retained-heap regression has been proven. The first heap-checkpoint sample
   grew by about 11M on disk across the scenario, which is worth comparing
   across repeated warm samples before calling it a leak.
-- The branch fixes OpenClaw artifact quality. `quiet-core-bot-rtt` has a paired
+- The branch fixes QuietCore artifact quality. `quiet-core-bot-rtt` has a paired
   importer branch for summary `rttMs` and gateway RSS metric ingestion;
   dashboard presentation of gateway RSS remains a later reporting decision.
 - Gitcrawl data was stale for the newest RTT window, so live `gh` history was

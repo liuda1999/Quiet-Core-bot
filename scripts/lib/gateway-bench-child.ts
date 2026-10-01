@@ -1,4 +1,4 @@
-// Gateway Bench Child script supports OpenClaw repository automation.
+// Gateway Bench Child script supports QuietCore repository automation.
 import { spawnSync, type ChildProcessWithoutNullStreams } from "node:child_process";
 import { resolveWindowsTaskkillPath } from "./windows-taskkill.mjs";
 

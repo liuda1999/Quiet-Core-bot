@@ -1,5 +1,5 @@
 // Firecrawl plugin module implements firecrawl client behavior.
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import {
   DEFAULT_CACHE_TTL_MINUTES,
   markdownToText,
@@ -74,7 +74,7 @@ async function readFirecrawlJsonResponse(
 }
 
 export type FirecrawlSearchParams = {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   query: string;
   count?: number;
   timeoutSeconds?: number;
@@ -84,7 +84,7 @@ export type FirecrawlSearchParams = {
 };
 
 export type FirecrawlScrapeParams = {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   url: string;
   extractMode: "markdown" | "text";
   access?: "credential" | "keyless";

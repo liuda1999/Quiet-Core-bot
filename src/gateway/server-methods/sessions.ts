@@ -63,7 +63,7 @@ import {
   preflightSessionTranscriptForManualCompact,
   trimSessionTranscriptForManualCompact,
 } from "../../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import {
   createInternalHookEvent,
   hasInternalHookListeners,
@@ -138,7 +138,7 @@ import { assertValidParams } from "./validation.js";
 const compactionCheckpointStore = createFileBackedCompactionCheckpointStore();
 
 function filterSessionStoreToConfiguredAgents(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   store: Record<string, SessionEntry>,
 ): Record<string, SessionEntry> {
   const configuredAgentIds = new Set(listConfiguredSessionStoreAgentIds(cfg));
@@ -254,7 +254,7 @@ function rejectPluginRuntimeDeleteMismatch(params: {
 
 function resolveGatewaySessionTargetFromKey(
   key: string,
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   opts?: { agentId?: string },
 ) {
   const target = resolveGatewaySessionStoreTarget({
@@ -267,7 +267,7 @@ function resolveGatewaySessionTargetFromKey(
 
 function loadSessionEntriesForTarget(params: {
   key: string;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentId?: string;
 }) {
   const target = resolveGatewaySessionStoreTargetWithStore({
@@ -351,7 +351,7 @@ function buildDashboardSessionKey(agentId: string): string {
   return `agent:${agentId}:dashboard:${randomUUID()}`;
 }
 
-function isAgentMainSessionKey(cfg: OpenClawConfig, sessionKey: string): boolean {
+function isAgentMainSessionKey(cfg: QuietCoreConfig, sessionKey: string): boolean {
   const parsed = parseAgentSessionKey(sessionKey);
   if (!parsed) {
     return false;
@@ -458,7 +458,7 @@ function resolveAbortSessionKey(params: {
 
 function resolveSessionKeyAgentId(
   sessionKey: string | undefined,
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
 ): string | undefined {
   const key = normalizeOptionalString(sessionKey);
   if (!key) {
@@ -474,7 +474,7 @@ function resolveSessionKeyAgentId(
 function sessionKeyBelongsToAgent(
   sessionKey: string | undefined,
   agentId: string,
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
 ): boolean {
   const key = normalizeOptionalString(sessionKey);
   if (cfg.session?.scope === "global" && key?.toLowerCase() === "global") {
@@ -485,7 +485,7 @@ function sessionKeyBelongsToAgent(
 }
 
 function resolveScopedAbortKey(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   key: string | undefined;
   agentId: string | undefined;
 }): string | undefined {
@@ -534,7 +534,7 @@ type RequestedGlobalAgentIdResolution =
   | { ok: false; error: ReturnType<typeof errorShape> };
 
 function resolveRequestedGlobalAgentId(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   key: string,
   explicitAgentId?: string,
 ): RequestedGlobalAgentIdResolution {

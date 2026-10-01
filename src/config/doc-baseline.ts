@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { sortUniqueStrings } from "@quiet-core/normalization-core/string-normalization";
-import { resolveOpenClawPackageRootSync } from "../infra/quiet-core-bot-root.js";
+import { resolveQuietCorePackageRootSync } from "../infra/quiet-core-bot-root.js";
 import { replaceFileAtomicSync } from "../infra/replace-file.js";
 import type { ConfigSchemaResponse } from "./schema.js";
 import { schemaHasChildren } from "./schema.shared.js";
@@ -113,7 +113,7 @@ function logConfigDocBaselineDebug(message: string): void {
 }
 
 function resolveRepoRoot(): string {
-  const fromPackage = resolveOpenClawPackageRootSync({
+  const fromPackage = resolveQuietCorePackageRootSync({
     cwd: path.dirname(fileURLToPath(import.meta.url)),
     moduleUrl: import.meta.url,
   });

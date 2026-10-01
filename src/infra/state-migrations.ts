@@ -20,7 +20,7 @@ import { saveSessionStore } from "../config/sessions.js";
 import { canonicalizeMainSessionAlias } from "../config/sessions/main-session.js";
 import { resolveAllAgentSessionStoreTargetsSync } from "../config/sessions/targets.js";
 import type { SessionScope } from "../config/sessions/types.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import {
   countPluginStateLiveEntries,
@@ -54,11 +54,11 @@ import {
   resolveAgentIdFromSessionKey,
 } from "../routing/session-key.js";
 import { normalizeSessionKeyPreservingOpaquePeerIds } from "../sessions/session-key-utils.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
 import {
-  detectOpenClawStateDatabaseSchemaMigrations,
-  repairOpenClawStateDatabaseSchema,
-  runOpenClawStateWriteTransaction,
+  detectQuietCoreStateDatabaseSchemaMigrations,
+  repairQuietCoreStateDatabaseSchema,
+  runQuietCoreStateWriteTransaction,
 } from "../state/quiet-core-bot-state-db.js";
 import { assertNoSymlinkParentsSync } from "./fs-safe-advanced.js";
 import { expandHomePrefix, resolveRequiredHomeDir } from "./home-dir.js";
@@ -197,19 +197,19 @@ type LegacyPluginStateSidecarRow = {
   expires_at: number | bigint | null;
 };
 
-type LegacyPluginStateImportDatabase = Pick<OpenClawStateKyselyDatabase, "plugin_state_entries">;
+type LegacyPluginStateImportDatabase = Pick<QuietCoreStateKyselyDatabase, "plugin_state_entries">;
 type LegacyVoiceWakeImportDatabase = Pick<
-  OpenClawStateKyselyDatabase,
+  QuietCoreStateKyselyDatabase,
   "voicewake_routing_config" | "voicewake_routing_routes" | "voicewake_triggers"
 >;
-type LegacyUpdateCheckImportDatabase = Pick<OpenClawStateKyselyDatabase, "update_check_state">;
-type LegacyConfigHealthImportDatabase = Pick<OpenClawStateKyselyDatabase, "config_health_entries">;
+type LegacyUpdateCheckImportDatabase = Pick<QuietCoreStateKyselyDatabase, "update_check_state">;
+type LegacyConfigHealthImportDatabase = Pick<QuietCoreStateKyselyDatabase, "config_health_entries">;
 type LegacyPluginBindingApprovalsImportDatabase = Pick<
-  OpenClawStateKyselyDatabase,
+  QuietCoreStateKyselyDatabase,
   "plugin_binding_approvals"
 >;
 type LegacyCurrentConversationBindingsImportDatabase = Pick<
-  OpenClawStateKyselyDatabase,
+  QuietCoreStateKyselyDatabase,
   "current_conversation_bindings"
 >;
 type SqliteBindRow = Record<string, SQLInputValue>;
@@ -1043,7 +1043,7 @@ async function migrateLegacyTaskRunsSidecar(params: {
     let importedTasks = 0;
     let importedDeliveryStates = 0;
     let skippedOrphanDeliveryStates = 0;
-    runOpenClawStateWriteTransaction(
+    runQuietCoreStateWriteTransaction(
       ({ db }) => {
         const taskColumns = [
           "runtime",
@@ -1176,7 +1176,7 @@ async function migrateLegacyFlowRunsSidecar(params: {
   try {
     const conflicts: string[] = [];
     let imported = 0;
-    runOpenClawStateWriteTransaction(
+    runQuietCoreStateWriteTransaction(
       ({ db }) => {
         const columns = [
           "shape",
@@ -1440,7 +1440,7 @@ async function migrateLegacyDeliveryQueues(params: {
     let skipped = 0;
     const conflicts: string[] = [];
     try {
-      runOpenClawStateWriteTransaction(
+      runQuietCoreStateWriteTransaction(
         ({ db }) => {
           const insert = db.prepare(
             `
@@ -1656,7 +1656,7 @@ function migrateLegacyVoiceWakeSettings(params: {
       let imported = false;
       let shouldArchive = false;
       try {
-        runOpenClawStateWriteTransaction(
+        runQuietCoreStateWriteTransaction(
           ({ db }) => {
             const stateDb = getNodeSqliteKysely<LegacyVoiceWakeImportDatabase>(db);
             const existing = executeSqliteQuerySync(
@@ -1728,7 +1728,7 @@ function migrateLegacyVoiceWakeSettings(params: {
       let imported = false;
       let shouldArchive = false;
       try {
-        runOpenClawStateWriteTransaction(
+        runQuietCoreStateWriteTransaction(
           ({ db }) => {
             const stateDb = getNodeSqliteKysely<LegacyVoiceWakeImportDatabase>(db);
             const existing = executeSqliteQueryTakeFirstSync(
@@ -1923,7 +1923,7 @@ function migrateLegacyUpdateCheckState(params: {
   let imported = false;
   let shouldArchive = false;
   try {
-    runOpenClawStateWriteTransaction(
+    runQuietCoreStateWriteTransaction(
       ({ db }) => {
         const stateDb = getNodeSqliteKysely<LegacyUpdateCheckImportDatabase>(db);
         const existing = executeSqliteQueryTakeFirstSync(
@@ -2097,7 +2097,7 @@ function migrateLegacyConfigHealth(params: {
   let importedCount = 0;
   let shouldArchive = entries.length === 0;
   try {
-    runOpenClawStateWriteTransaction(
+    runQuietCoreStateWriteTransaction(
       ({ db }) => {
         const stateDb = getNodeSqliteKysely<LegacyConfigHealthImportDatabase>(db);
         const existing = executeSqliteQuerySync(
@@ -2303,7 +2303,7 @@ function migrateLegacyPluginBindingApprovals(params: {
   let importedCount = 0;
   let shouldArchive = approvals.length === 0;
   try {
-    runOpenClawStateWriteTransaction(
+    runQuietCoreStateWriteTransaction(
       ({ db }) => {
         const stateDb = getNodeSqliteKysely<LegacyPluginBindingApprovalsImportDatabase>(db);
         const existing = executeSqliteQuerySync(
@@ -2527,7 +2527,7 @@ function migrateLegacyCurrentConversationBindings(params: {
   let importedCount = 0;
   let shouldArchive = records.length === 0;
   try {
-    runOpenClawStateWriteTransaction(
+    runQuietCoreStateWriteTransaction(
       ({ db }) => {
         const stateDb = getNodeSqliteKysely<LegacyCurrentConversationBindingsImportDatabase>(db);
         const existing = executeSqliteQuerySync(
@@ -2625,7 +2625,7 @@ async function migrateLegacyPluginStateSidecar(params: {
     let imported = 0;
     let skippedExpired = 0;
     const now = Date.now();
-    runOpenClawStateWriteTransaction(
+    runQuietCoreStateWriteTransaction(
       ({ db }) => {
         const stateDb = getNodeSqliteKysely<LegacyPluginStateImportDatabase>(db);
         for (const row of rows) {
@@ -3599,7 +3599,7 @@ export async function autoMigrateLegacyTaskStateSidecars(params: {
 }
 
 async function collectChannelLegacyStateMigrationPlans(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env: NodeJS.ProcessEnv;
   stateDir: string;
   oauthDir: string;
@@ -3629,7 +3629,7 @@ async function collectChannelLegacyStateMigrationPlans(params: {
 }
 
 async function collectPluginDoctorStateMigrationPlans(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env: NodeJS.ProcessEnv;
   stateDir: string;
   oauthDir: string;
@@ -3672,7 +3672,7 @@ function createPluginDoctorStateMigrationContext(
 }
 
 export async function detectLegacyStateMigrations(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
   homedir?: () => string;
 }): Promise<LegacyStateDetection> {
@@ -3734,7 +3734,7 @@ export async function detectLegacyStateMigrations(params: {
   const pluginInstallIndexPath = resolveLegacyInstalledPluginIndexStorePath({ stateDir });
   const hasPluginInstallIndex = fileExists(pluginInstallIndexPath);
   const debugProxyCaptureSidecar = detectLegacyDebugProxyCaptureSidecar(stateDir, env);
-  const stateSchemaMigrations = detectOpenClawStateDatabaseSchemaMigrations({
+  const stateSchemaMigrations = detectQuietCoreStateDatabaseSchemaMigrations({
     env: { ...env, QUIET_CORE_STATE_DIR: stateDir },
   });
   const taskRunsSidecarPath = resolveLegacyTaskRunsSidecarPath(stateDir);
@@ -4202,7 +4202,7 @@ export async function migrateLegacyAgentDir(
 
 async function runPluginDoctorStateMigrationPlans(params: {
   detected: LegacyStateDetection;
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
 }): Promise<{ changes: string[]; warnings: string[] }> {
   const changes: string[] = [];
   const warnings: string[] = [];
@@ -4422,14 +4422,14 @@ function migrateLegacyStateSchema(detected: LegacyStateDetection): {
   changes: string[];
   warnings: string[];
 } {
-  return repairOpenClawStateDatabaseSchema({
+  return repairQuietCoreStateDatabaseSchema({
     env: { ...process.env, QUIET_CORE_STATE_DIR: detected.stateDir },
   });
 }
 
 export async function runLegacyStateMigrations(params: {
   detected: LegacyStateDetection;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   now?: () => number;
   recoverCorruptTargetStore?: boolean;
 }): Promise<{ changes: string[]; warnings: string[] }> {
@@ -4483,13 +4483,13 @@ export async function runLegacyStateMigrations(params: {
     ? { changes: [], warnings: [] }
     : await runPluginDoctorStateMigrationPlans({
         detected,
-        config: params.config ?? ({} as OpenClawConfig),
+        config: params.config ?? ({} as QuietCoreConfig),
       });
   const sessions = await migrateLegacySessions(detected, now, {
     recoverCorruptTargetStore: params.recoverCorruptTargetStore,
   });
   const acpSessionMetadata = await migrateLegacyAcpSessionMetadata({
-    cfg: params.config ?? ({} as OpenClawConfig),
+    cfg: params.config ?? ({} as QuietCoreConfig),
     env: { ...process.env, QUIET_CORE_STATE_DIR: detected.stateDir },
     now,
   });
@@ -4553,7 +4553,7 @@ export async function runLegacyStateMigrations(params: {
  * Safe to run multiple times (idempotent). See #29683.
  */
 export async function migrateOrphanedSessionKeys(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
 }): Promise<{ changes: string[]; warnings: string[] }> {
   const changes: string[] = [];
@@ -4686,7 +4686,7 @@ export async function migrateOrphanedSessionKeys(params: {
 }
 
 async function migrateLegacyAcpSessionMetadata(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
   now?: () => number;
 }): Promise<{ changes: string[]; warnings: string[] }> {
@@ -4773,7 +4773,7 @@ function resolveStorePathFromTemplate(
 }
 
 export async function autoMigrateLegacyState(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
   homedir?: () => string;
   log?: MigrationLogger;
@@ -4798,7 +4798,7 @@ export async function autoMigrateLegacyState(params: {
     warnings: string[];
   } = { migrated: false, skipped: true, changes: [], warnings: [] };
   const stateDir = resolveStateDir(env, params.homedir ?? os.homedir);
-  const stateSchema = repairOpenClawStateDatabaseSchema({
+  const stateSchema = repairQuietCoreStateDatabaseSchema({
     env: { ...env, QUIET_CORE_STATE_DIR: stateDir },
   });
 

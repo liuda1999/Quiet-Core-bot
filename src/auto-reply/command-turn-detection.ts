@@ -1,6 +1,6 @@
 /** Fallback command-turn detection for mixed native/text channel metadata. */
 import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { isControlCommandMessage } from "./command-detection.js";
 import {
   isExplicitCommandTurn,
@@ -41,7 +41,7 @@ function hasCommandSourceMetadata(input: CommandTurnContextInput): boolean {
 /** Returns true when inbound metadata or command text identifies an explicit command turn. */
 export function isExplicitCommandTurnContext(
   input: CommandTurnContextInput,
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
 ): boolean {
   if (isExplicitCommandTurn(resolveCommandTurnContext(input))) {
     return true;

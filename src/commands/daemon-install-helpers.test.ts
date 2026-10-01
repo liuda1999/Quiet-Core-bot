@@ -14,7 +14,7 @@ const mocks = vi.hoisted(() => ({
   resolveSystemNodeInfo: vi.fn(),
   renderSystemNodeWarning: vi.fn(),
   buildServiceEnvironment: vi.fn(),
-  resolveOpenClawWrapperPath: vi.fn(),
+  resolveQuietCoreWrapperPath: vi.fn(),
   loadPluginManifestRegistry: vi.fn<
     (...args: unknown[]) => { diagnostics: unknown[]; plugins: unknown[] }
   >(() => ({
@@ -46,7 +46,7 @@ vi.mock("../daemon/runtime-paths.js", () => ({
 vi.mock("../daemon/program-args.js", () => ({
   QUIET_CORE_WRAPPER_ENV_KEY: "QUIET_CORE_WRAPPER",
   resolveGatewayProgramArguments: mocks.resolveGatewayProgramArguments,
-  resolveOpenClawWrapperPath: mocks.resolveOpenClawWrapperPath,
+  resolveQuietCoreWrapperPath: mocks.resolveQuietCoreWrapperPath,
 }));
 
 vi.mock("../daemon/service-env.js", () => ({
@@ -144,7 +144,7 @@ function mockNodeGatewayPlanFixture(
     ? params.workingDirectory
     : "/Users/me";
   mocks.resolvePreferredNodePath.mockResolvedValue("/opt/node");
-  mocks.resolveOpenClawWrapperPath.mockImplementation(async (value: string | undefined) =>
+  mocks.resolveQuietCoreWrapperPath.mockImplementation(async (value: string | undefined) =>
     value?.trim() ? path.resolve(value) : undefined,
   );
   mocks.resolveGatewayProgramArguments.mockResolvedValue({

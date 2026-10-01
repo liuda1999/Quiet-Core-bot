@@ -2,7 +2,7 @@
 // through deliverable message channels.
 import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
 import type { MsgContext } from "../auto-reply/templating.js";
-import type { OpenClawConfig } from "../config/types.js";
+import type { QuietCoreConfig } from "../config/types.js";
 import { logVerbose, shouldLogVerbose } from "../globals.js";
 import { isDeliverableMessageChannel } from "../utils/message-channel.js";
 
@@ -25,7 +25,7 @@ function formatEchoTranscript(transcript: string, format: string): string {
 /** Sends a best-effort transcript echo back to the originating deliverable chat. */
 export async function sendTranscriptEcho(params: {
   ctx: MsgContext;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   transcript: string;
   format?: string;
 }): Promise<void> {

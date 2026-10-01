@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Synchronizes GitHub label colors to the OpenClaw taxonomy policy.
+// Synchronizes GitHub label colors to the QuietCore taxonomy policy.
 import { execFileSync } from "node:child_process";
 
 const REPO = "liuda1999/quiet-core-bot";

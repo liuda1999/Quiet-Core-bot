@@ -8,7 +8,7 @@ import path from "node:path";
 import { CURRENT_SESSION_VERSION, SessionManager } from "quiet-core-bot/plugin-sdk/agent-sessions";
 import type { AssistantMessage } from "quiet-core-bot/plugin-sdk/llm";
 import { afterEach, describe, expect, test, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   captureCompactionCheckpointSnapshotAsync,
   cleanupCompactionCheckpointSnapshot,
@@ -82,11 +82,11 @@ async function makeTempSessionStore(prefix: string, sessionId = TEST_SESSION_ID)
   };
 }
 
-function checkpointConfig(storePath: string): OpenClawConfig {
+function checkpointConfig(storePath: string): QuietCoreConfig {
   return {
     session: { store: storePath },
     agents: { list: [{ id: MAIN_AGENT_ID, default: true }] },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
 async function writeSessionStore(

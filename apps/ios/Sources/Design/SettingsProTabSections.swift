@@ -1,21 +1,21 @@
-import OpenClawKit
+import QuietCoreKit
 import SwiftUI
 
 extension SettingsProTab {
     var settingsHeader: some View {
-        OpenClawAdaptiveHeaderRow(
+        QuietCoreAdaptiveHeaderRow(
             title: "Settings",
             subtitle: "Gateway, permissions, voice, and device controls.",
             titleFont: .title3.weight(.semibold),
             subtitleFont: .callout)
         {
             if let headerLeadingAction {
-                OpenClawSidebarHeaderLeadingSlot(action: headerLeadingAction)
+                QuietCoreSidebarHeaderLeadingSlot(action: headerLeadingAction)
             }
         } accessory: {
             EmptyView()
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
         .padding(.top, 6)
     }
 
@@ -35,7 +35,7 @@ extension SettingsProTab {
                         .foregroundStyle(.secondary)
                 }
             }
-            .padding(.horizontal, OpenClawProMetric.pagePadding)
+            .padding(.horizontal, QuietCoreProMetric.pagePadding)
         }
     }
 
@@ -62,7 +62,7 @@ extension SettingsProTab {
                         .padding(14)
                 }
             }
-            .padding(.horizontal, OpenClawProMetric.pagePadding)
+            .padding(.horizontal, QuietCoreProMetric.pagePadding)
         }
     }
 
@@ -109,7 +109,7 @@ extension SettingsProTab {
             self.gatewayActionButton(
                 title: "Reconnect",
                 icon: "arrow.triangle.2.circlepath",
-                color: OpenClawBrand.warn,
+                color: QuietCoreBrand.warn,
                 isBusy: self.isReconnectingGateway,
                 isDisabled: self.appModel.isAppleReviewDemoModeEnabled)
             {
@@ -119,7 +119,7 @@ extension SettingsProTab {
             self.gatewayActionButton(
                 title: "Diagnose",
                 icon: "cross.case",
-                color: OpenClawBrand.info,
+                color: QuietCoreBrand.info,
                 isBusy: self.isRefreshingGateway)
             {
                 Task { await self.runDiagnostics() }
@@ -134,7 +134,7 @@ extension SettingsProTab {
                 title: "Approvals",
                 detail: self.approvalsDetail,
                 route: .approvals,
-                color: self.pendingApproval == nil ? .secondary : OpenClawBrand.warn,
+                color: self.pendingApproval == nil ? .secondary : QuietCoreBrand.warn,
                 badgeValue: self.pendingApproval == nil ? nil : "1")
             self.settingsListRow(
                 icon: "person.2",
@@ -172,7 +172,7 @@ extension SettingsProTab {
                 detail: DeviceInfoHelper.openClawVersionString(),
                 route: .about)
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     func settingsListRow(
@@ -211,7 +211,7 @@ extension SettingsProTab {
 
     func destination(for route: SettingsRoute) -> some View {
         ZStack {
-            OpenClawProBackground()
+            QuietCoreProBackground()
             ScrollView {
                 VStack(alignment: .leading, spacing: 14) {
                     if self.headerLeadingAction != nil {
@@ -239,7 +239,7 @@ extension SettingsProTab {
                     }
                 }
                 .padding(.top, 18)
-                .padding(.bottom, OpenClawProMetric.bottomScrollInset)
+                .padding(.bottom, QuietCoreProMetric.bottomScrollInset)
             }
         }
         .navigationTitle(self.title(for: route))
@@ -248,19 +248,19 @@ extension SettingsProTab {
     }
 
     func routeHeader(for route: SettingsRoute) -> some View {
-        OpenClawAdaptiveHeaderRow(
+        QuietCoreAdaptiveHeaderRow(
             title: self.title(for: route),
             subtitle: self.subtitle(for: route),
             titleFont: .title3.weight(.semibold),
             subtitleFont: .callout)
         {
             if let headerLeadingAction {
-                OpenClawSidebarHeaderLeadingSlot(action: headerLeadingAction)
+                QuietCoreSidebarHeaderLeadingSlot(action: headerLeadingAction)
             }
         } accessory: {
             EmptyView()
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
         .padding(.top, 6)
     }
 
@@ -292,7 +292,7 @@ extension SettingsProTab {
             ProCard(radius: SettingsLayout.cardRadius) {
                 self.gatewayActions
             }
-            .padding(.horizontal, OpenClawProMetric.pagePadding)
+            .padding(.horizontal, QuietCoreProMetric.pagePadding)
 
             self.manualGatewayCard
             self.deviceIdentityCard
@@ -315,8 +315,8 @@ extension SettingsProTab {
                 value: self.notificationsNeedAttention
                     ? "Alerts Off"
                     : (self.pendingApproval == nil ? "clear" : "1 waiting"),
-                color: self.notificationsNeedAttention ? OpenClawBrand.warn :
-                    (self.pendingApproval == nil ? OpenClawBrand.ok : OpenClawBrand.warn))
+                color: self.notificationsNeedAttention ? QuietCoreBrand.warn :
+                    (self.pendingApproval == nil ? QuietCoreBrand.ok : QuietCoreBrand.warn))
 
             if self.notificationsNeedAttention {
                 self.approvalNotificationsWarningCard
@@ -330,13 +330,13 @@ extension SettingsProTab {
         ProCard(radius: SettingsLayout.cardRadius) {
             VStack(alignment: .leading, spacing: 12) {
                 HStack(alignment: .top, spacing: 12) {
-                    ProIconBadge(systemName: "bell.slash.fill", color: OpenClawBrand.warn)
+                    ProIconBadge(systemName: "bell.slash.fill", color: QuietCoreBrand.warn)
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Notifications are off")
                             .font(.subheadline.weight(.semibold))
                         Text(
                             """
-                            Enable Notifications to receive approval notifications while OpenClaw is not open.
+                            Enable Notifications to receive approval notifications while QuietCore is not open.
                             """)
                             .font(.caption)
                             .foregroundStyle(.secondary)
@@ -356,7 +356,7 @@ extension SettingsProTab {
                 }
             }
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     var approvalsReviewCard: some View {
@@ -375,7 +375,7 @@ extension SettingsProTab {
                     if let errorText = self.appModel.pendingExecApprovalPromptErrorText {
                         Text(errorText)
                             .font(.caption2.weight(.medium))
-                            .foregroundStyle(OpenClawBrand.danger)
+                            .foregroundStyle(QuietCoreBrand.danger)
                     }
 
                     HStack(spacing: 8) {
@@ -412,7 +412,7 @@ extension SettingsProTab {
                     .controlSize(.small)
                 } else {
                     HStack(spacing: 12) {
-                        ProIconBadge(systemName: "checkmark.shield.fill", color: OpenClawBrand.ok)
+                        ProIconBadge(systemName: "checkmark.shield.fill", color: QuietCoreBrand.ok)
                         VStack(alignment: .leading, spacing: 3) {
                             Text("No approvals waiting")
                                 .font(.subheadline.weight(.semibold))
@@ -425,7 +425,7 @@ extension SettingsProTab {
                 }
             }
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     var permissionsDestination: some View {
@@ -433,7 +433,7 @@ extension SettingsProTab {
             self.toggleCard(
                 icon: "camera",
                 title: "Camera",
-                detail: "Allow the gateway to request photos or video while OpenClaw is foregrounded.",
+                detail: "Allow the gateway to request photos or video while QuietCore is foregrounded.",
                 isOn: self.$cameraEnabled)
 
             self.locationModeCard
@@ -441,7 +441,7 @@ extension SettingsProTab {
             self.toggleCard(
                 icon: "lock.display",
                 title: "Keep Awake",
-                detail: "Keep the screen awake while OpenClaw is open.",
+                detail: "Keep the screen awake while QuietCore is open.",
                 isOn: self.$preventSleep)
 
             self.privacyAccessCard
@@ -455,7 +455,7 @@ extension SettingsProTab {
                 title: "Voice & Talk",
                 detail: self.appModel.talkMode.gatewayTalkVoiceModeTitle,
                 value: self.voiceDetail,
-                color: self.talkEnabled || self.voiceWakeEnabled ? OpenClawBrand.accent : .secondary)
+                color: self.talkEnabled || self.voiceWakeEnabled ? QuietCoreBrand.accent : .secondary)
 
             self.voiceFeatureCard
             self.talkVoiceSettingsCard
@@ -470,19 +470,19 @@ extension SettingsProTab {
                 title: "Health Check",
                 detail: "Run app, permission, and gateway-adjacent checks without editing setup.",
                 value: self.diagnosticsHealthValue,
-                color: self.gatewayDiagnosticConnected ? OpenClawBrand.ok : OpenClawBrand.warn)
+                color: self.gatewayDiagnosticConnected ? QuietCoreBrand.ok : QuietCoreBrand.warn)
 
             ProCard(radius: SettingsLayout.cardRadius) {
                 self.gatewayActionButton(
                     title: "Run Diagnostics",
                     icon: "cross.case",
-                    color: OpenClawBrand.info,
+                    color: QuietCoreBrand.info,
                     isBusy: self.isRefreshingGateway)
                 {
                     Task { await self.runDiagnostics() }
                 }
             }
-            .padding(.horizontal, OpenClawProMetric.pagePadding)
+            .padding(.horizontal, QuietCoreProMetric.pagePadding)
 
             self.diagnosticChecksCard
 
@@ -505,7 +505,7 @@ extension SettingsProTab {
             self.detailStatusCard(
                 icon: "hand.raised",
                 title: "Privacy",
-                detail: "Control what device context OpenClaw can expose to the gateway.",
+                detail: "Control what device context QuietCore can expose to the gateway.",
                 value: self.privacyDetail,
                 color: .secondary)
 
@@ -560,7 +560,7 @@ extension SettingsProTab {
                     HStack(alignment: .top, spacing: 10) {
                         Image(systemName: "network")
                             .font(.caption.weight(.semibold))
-                            .foregroundStyle(OpenClawBrand.accent)
+                            .foregroundStyle(QuietCoreBrand.accent)
                             .frame(width: 22, height: 22)
                         Text(self.notificationRelayDetail)
                             .font(.caption)
@@ -569,7 +569,7 @@ extension SettingsProTab {
                     }
                 }
             }
-            .padding(.horizontal, OpenClawProMetric.pagePadding)
+            .padding(.horizontal, QuietCoreProMetric.pagePadding)
         }
     }
 
@@ -577,10 +577,10 @@ extension SettingsProTab {
         VStack(alignment: .leading, spacing: 14) {
             self.detailStatusCard(
                 icon: "info.circle",
-                title: "OpenClaw",
+                title: "QuietCore",
                 detail: "iOS companion app",
                 value: DeviceInfoHelper.openClawVersionString(),
-                color: OpenClawBrand.accent)
+                color: QuietCoreBrand.accent)
 
             self.detailListCard {
                 self.detailRow("Version", value: DeviceInfoHelper.openClawVersionString())
@@ -633,7 +633,7 @@ extension SettingsProTab {
         ProCard(radius: SettingsLayout.cardRadius) {
             Toggle(isOn: isOn) {
                 HStack(spacing: 12) {
-                    ProIconBadge(systemName: icon, color: isOn.wrappedValue ? OpenClawBrand.accent : .secondary)
+                    ProIconBadge(systemName: icon, color: isOn.wrappedValue ? QuietCoreBrand.accent : .secondary)
                     VStack(alignment: .leading, spacing: 3) {
                         Text(title)
                             .font(.subheadline.weight(.semibold))
@@ -646,7 +646,7 @@ extension SettingsProTab {
             }
             .toggleStyle(.switch)
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     var locationModeCard: some View {
@@ -655,7 +655,7 @@ extension SettingsProTab {
                 HStack(spacing: 12) {
                     ProIconBadge(
                         systemName: "location",
-                        color: self.locationModeRaw == OpenClawLocationMode.off.rawValue ? .secondary : OpenClawBrand
+                        color: self.locationModeRaw == QuietCoreLocationMode.off.rawValue ? .secondary : QuietCoreBrand
                             .accent)
                     VStack(alignment: .leading, spacing: 3) {
                         Text("Location")
@@ -673,9 +673,9 @@ extension SettingsProTab {
                 }
 
                 Picker("Location", selection: self.$locationModeRaw) {
-                    Text("Off").tag(OpenClawLocationMode.off.rawValue)
-                    Text("While Using").tag(OpenClawLocationMode.whileUsing.rawValue)
-                    Text("Always").tag(OpenClawLocationMode.always.rawValue)
+                    Text("Off").tag(QuietCoreLocationMode.off.rawValue)
+                    Text("While Using").tag(QuietCoreLocationMode.whileUsing.rawValue)
+                    Text("Always").tag(QuietCoreLocationMode.always.rawValue)
                 }
                 .pickerStyle(.segmented)
                 .disabled(self.isChangingLocationMode)
@@ -683,11 +683,11 @@ extension SettingsProTab {
                 if let locationStatusText {
                     Text(locationStatusText)
                         .font(.caption2)
-                        .foregroundStyle(OpenClawBrand.warn)
+                        .foregroundStyle(QuietCoreBrand.warn)
                 }
             }
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     var agentSelectionCard: some View {
@@ -709,7 +709,7 @@ extension SettingsProTab {
                     .foregroundStyle(.secondary)
             }
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     var gatewaySetupCard: some View {
@@ -725,7 +725,7 @@ extension SettingsProTab {
                     self.gatewayActionButton(
                         title: "Scan QR",
                         icon: "qrcode.viewfinder",
-                        color: OpenClawBrand.accent,
+                        color: QuietCoreBrand.accent,
                         isBusy: self.connectingGatewayID != nil)
                     {
                         self.openGatewayQRScanner()
@@ -733,7 +733,7 @@ extension SettingsProTab {
                     self.gatewayActionButton(
                         title: "Connect",
                         icon: "bolt.horizontal.circle",
-                        color: OpenClawBrand.ok,
+                        color: QuietCoreBrand.ok,
                         isBusy: self.connectingGatewayID == "manual")
                     {
                         Task { await self.applySetupCodeAndConnect() }
@@ -749,11 +749,11 @@ extension SettingsProTab {
                 if let warning = self.tailnetWarningText {
                     Text(warning)
                         .font(.caption.weight(.semibold))
-                        .foregroundStyle(OpenClawBrand.warn)
+                        .foregroundStyle(QuietCoreBrand.warn)
                 }
             }
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     var discoveredGatewaysCard: some View {
@@ -775,7 +775,7 @@ extension SettingsProTab {
                 }
             }
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     func discoveredGatewayRow(_ gateway: GatewayDiscoveryModel.DiscoveredGateway) -> some View {
@@ -818,7 +818,7 @@ extension SettingsProTab {
                 self.gatewayActionButton(
                     title: "Connect Manual",
                     icon: "network",
-                    color: OpenClawBrand.accent,
+                    color: QuietCoreBrand.accent,
                     isBusy: self.connectingGatewayID == "manual")
                 {
                     Task { await self.connectManual() }
@@ -827,7 +827,7 @@ extension SettingsProTab {
                     || !self.manualPortIsValid)
             }
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     var gatewayAdvancedCard: some View {
@@ -850,7 +850,7 @@ extension SettingsProTab {
                 .controlSize(.small)
             }
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     var voiceFeatureCard: some View {
@@ -883,7 +883,7 @@ extension SettingsProTab {
                 }
             }
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     var talkVoiceSettingsCard: some View {
@@ -927,7 +927,7 @@ extension SettingsProTab {
                 }
             }
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     var shareSettingsCard: some View {
@@ -949,14 +949,14 @@ extension SettingsProTab {
                     .foregroundStyle(.secondary)
             }
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     var privacyAccessCard: some View {
         ProCard(radius: SettingsLayout.cardRadius) {
             PrivacyAccessSectionView()
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     var diagnosticsAdvancedCard: some View {
@@ -973,7 +973,7 @@ extension SettingsProTab {
                 }
             }
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     var deviceIdentityCard: some View {
@@ -984,7 +984,7 @@ extension SettingsProTab {
                 self.detailRow("Instance ID", value: self.instanceId)
             }
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     func gatewayProblemCard(_ problem: GatewayConnectionProblem) -> some View {
@@ -999,7 +999,7 @@ extension SettingsProTab {
                     self.showGatewayProblemDetails = true
                 })
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     func settingsToggle(
@@ -1040,7 +1040,7 @@ extension SettingsProTab {
 
     func settingsSwitchIndicator(isOn: Bool) -> some View {
         Capsule()
-            .fill(isOn ? OpenClawBrand.accent : Color.secondary.opacity(0.35))
+            .fill(isOn ? QuietCoreBrand.accent : Color.secondary.opacity(0.35))
             .frame(width: 52, height: 32)
             .overlay(alignment: isOn ? .trailing : .leading) {
                 Circle()

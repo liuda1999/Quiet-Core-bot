@@ -1,6 +1,6 @@
 // Legacy tools-by-sender tests cover doctor migration of sender-scoped tool config.
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../../../config/config.js";
+import type { QuietCoreConfig } from "../../../config/config.js";
 import {
   collectLegacyToolsBySenderWarnings,
   maybeRepairLegacyToolsBySenderKeys,
@@ -23,7 +23,7 @@ describe("doctor legacy toolsBySender helpers", () => {
           },
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expect(hits).toEqual([
       {
@@ -50,7 +50,7 @@ describe("doctor legacy toolsBySender helpers", () => {
           },
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expect(result.changes).toEqual([
       "- channels.whatsapp.groups.123@g.us.toolsBySender: migrated 1 legacy key to typed id: entries (owner (kept existing id:owner), alice -> id:alice).",

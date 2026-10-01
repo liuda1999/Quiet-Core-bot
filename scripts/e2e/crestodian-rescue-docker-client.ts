@@ -5,7 +5,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { handleCrestodianCommand } from "../../dist/auto-reply/reply/commands-crestodian.js";
 import { clearConfigCache } from "../../dist/config/config.js";
-import type { OpenClawConfig } from "../../dist/config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../dist/config/types.quiet-core-bot.js";
 import { runCrestodianRescueMessage } from "../../dist/crestodian/rescue-message.js";
 import { createE2eStateDir } from "./lib/temp-state-dir.ts";
 
@@ -17,7 +17,7 @@ function assert(condition: unknown, message: string): asserts condition {
   }
 }
 
-function makeParams(commandBody: string, cfg: OpenClawConfig, isGroup = false) {
+function makeParams(commandBody: string, cfg: QuietCoreConfig, isGroup = false) {
   return {
     cfg,
     command: {
@@ -38,7 +38,7 @@ function makeParams(commandBody: string, cfg: OpenClawConfig, isGroup = false) {
   } as Parameters<typeof handleCrestodianCommand>[0];
 }
 
-async function invoke(commandBody: string, cfg: OpenClawConfig, isGroup = false): Promise<string> {
+async function invoke(commandBody: string, cfg: QuietCoreConfig, isGroup = false): Promise<string> {
   const result: CommandResult = await handleCrestodianCommand(
     makeParams(commandBody, cfg, isGroup),
     true,
@@ -77,7 +77,7 @@ async function main() {
   });
   assert(denied.includes("sandboxing is active"), "sandboxed rescue was not denied");
 
-  const cfg: OpenClawConfig = {};
+  const cfg: QuietCoreConfig = {};
   const refusedTui = await invoke("/crestodian talk to agent", cfg);
   assert(
     refusedTui.includes("cannot open the local TUI"),
@@ -199,7 +199,7 @@ async function main() {
   assert(doctorApplied?.includes("[crestodian] done: doctor.fix"), "doctor fix did not apply");
   assert(doctorRuns.join(",") === "repair", "doctor repair dependency was not invoked once");
 
-  const updatedConfig = JSON.parse(await fs.readFile(configPath, "utf8")) as OpenClawConfig;
+  const updatedConfig = JSON.parse(await fs.readFile(configPath, "utf8")) as QuietCoreConfig;
   assert(
     updatedConfig.agents?.defaults?.model &&
       typeof updatedConfig.agents.defaults.model === "object" &&

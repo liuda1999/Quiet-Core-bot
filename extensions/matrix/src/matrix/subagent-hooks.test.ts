@@ -1,5 +1,5 @@
 // Matrix tests cover subagent hooks plugin behavior.
-import type { OpenClawPluginApi as MatrixEntryPluginApi } from "quiet-core-bot/plugin-sdk/channel-entry-contract";
+import type { QuietCorePluginApi as MatrixEntryPluginApi } from "quiet-core-bot/plugin-sdk/channel-entry-contract";
 import {
   getRequiredHookHandler,
   registerHookHandlersForTest,

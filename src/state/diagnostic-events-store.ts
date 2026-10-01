@@ -6,13 +6,13 @@
  * diagnostics must never break the caller.
  */
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../infra/kysely-sync.js";
-import type { DB as OpenClawStateKyselyDatabase } from "./quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "./quiet-core-bot-state-db.generated.js";
 import {
-  openOpenClawStateDatabase,
-  runOpenClawStateWriteTransaction,
+  openQuietCoreStateDatabase,
+  runQuietCoreStateWriteTransaction,
 } from "./quiet-core-bot-state-db.js";
 
-type DiagnosticEventsDatabase = Pick<OpenClawStateKyselyDatabase, "diagnostic_events">;
+type DiagnosticEventsDatabase = Pick<QuietCoreStateKyselyDatabase, "diagnostic_events">;
 
 /** One persisted diagnostic event row. */
 export type DiagnosticEventRecord = {
@@ -45,7 +45,7 @@ export function writeDiagnosticEvent(params: {
   try {
     const createdAt = params.createdAt ?? Date.now();
     const payloadJson = JSON.stringify(params.payload ?? {});
-    runOpenClawStateWriteTransaction(({ db }) => {
+    runQuietCoreStateWriteTransaction(({ db }) => {
       const stateDb = getNodeSqliteKysely<DiagnosticEventsDatabase>(db);
       executeSqliteQuerySync(
         db,
@@ -81,7 +81,7 @@ export function readDiagnosticEvents(params: {
     return [];
   }
   const limit = Math.max(1, Math.floor(params.limit ?? 50));
-  const { db } = openOpenClawStateDatabase();
+  const { db } = openQuietCoreStateDatabase();
   const stateDb = getNodeSqliteKysely<DiagnosticEventsDatabase>(db);
   const rows = executeSqliteQuerySync(
     db,
@@ -111,7 +111,7 @@ export function readDiagnosticEvent(params: {
   if (!scope || !eventKey) {
     return undefined;
   }
-  const { db } = openOpenClawStateDatabase();
+  const { db } = openQuietCoreStateDatabase();
   const stateDb = getNodeSqliteKysely<DiagnosticEventsDatabase>(db);
   const row = executeSqliteQuerySync(
     db,

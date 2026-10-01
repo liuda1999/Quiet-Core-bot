@@ -12,7 +12,7 @@ import {
   isToolAllowedByPolicyName,
 } from "../../../agents/tool-policy-match.js";
 import { mergeAlsoAllowPolicy, resolveToolProfilePolicy } from "../../../agents/tool-policy.js";
-import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../config/types.quiet-core-bot.js";
 import type {
   AgentToolsConfig,
   ToolPolicyConfig,
@@ -32,19 +32,19 @@ function loadChannelDoctorModule(): Promise<ChannelDoctorModule> {
   return channelDoctorModuleLoader.load();
 }
 
-function listAgentRecords(cfg: OpenClawConfig): Record<string, unknown>[] {
+function listAgentRecords(cfg: QuietCoreConfig): Record<string, unknown>[] {
   return Array.isArray(cfg.agents?.list) ? cfg.agents.list.filter(hasRecord) : [];
 }
 
-function hasChannels(cfg: OpenClawConfig): boolean {
+function hasChannels(cfg: QuietCoreConfig): boolean {
   return hasRecord(cfg.channels);
 }
 
-function hasPlugins(cfg: OpenClawConfig): boolean {
+function hasPlugins(cfg: QuietCoreConfig): boolean {
   return hasRecord(cfg.plugins);
 }
 
-function hasPluginLoadPaths(cfg: OpenClawConfig): boolean {
+function hasPluginLoadPaths(cfg: QuietCoreConfig): boolean {
   const plugins = cfg.plugins;
   if (!hasRecord(plugins)) {
     return false;
@@ -53,7 +53,7 @@ function hasPluginLoadPaths(cfg: OpenClawConfig): boolean {
   return hasRecord(load) && Array.isArray(load.paths) && load.paths.length > 0;
 }
 
-function hasSubagentAllowlistConfig(cfg: OpenClawConfig): boolean {
+function hasSubagentAllowlistConfig(cfg: QuietCoreConfig): boolean {
   if (Array.isArray(cfg.agents?.defaults?.subagents?.allowAgents)) {
     return true;
   }
@@ -78,7 +78,7 @@ function hasToolsBySenderKey(value: unknown): boolean {
   );
 }
 
-function hasConfiguredSafeBins(cfg: OpenClawConfig): boolean {
+function hasConfiguredSafeBins(cfg: QuietCoreConfig): boolean {
   const globalExec = cfg.tools?.exec;
   if (
     hasRecord(globalExec) &&
@@ -97,7 +97,7 @@ function hasConfiguredSafeBins(cfg: OpenClawConfig): boolean {
 
 type VisibleReplyPolicyProvenance = "default" | "global-explicit" | "group-explicit";
 function resolveMessageToolAvailability(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentId?: string;
   globalTools?: ToolsConfig;
   agentTools?: AgentToolsConfig;
@@ -146,7 +146,7 @@ function resolveMessageToolAvailability(params: {
 const SOURCE_REPLY_RUNTIME_MESSAGE_ALLOW = ["message"];
 
 function resolveSourceReplyMessageToolAvailability(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentId?: string;
   globalTools?: ToolsConfig;
   agentTools?: AgentToolsConfig;
@@ -157,7 +157,7 @@ function resolveSourceReplyMessageToolAvailability(params: {
   });
 }
 
-function sourceReplyRuntimeMayAllowMessageTool(cfg: OpenClawConfig): boolean {
+function sourceReplyRuntimeMayAllowMessageTool(cfg: QuietCoreConfig): boolean {
   const groupPolicy = resolveGroupVisibleReplyProvenance(cfg);
   if (groupPolicy.value === "message_tool") {
     return true;
@@ -169,7 +169,7 @@ function sourceReplyRuntimeMayAllowMessageTool(cfg: OpenClawConfig): boolean {
 }
 
 function collectMessageToolUnavailableTargets(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   options: { sourceReplyRuntimeGrant?: boolean } = {},
 ): string[] {
   const agents = listAgentRecords(cfg);
@@ -198,7 +198,7 @@ function collectMessageToolUnavailableTargets(
   });
 }
 
-function resolveGroupVisibleReplyProvenance(cfg: OpenClawConfig): {
+function resolveGroupVisibleReplyProvenance(cfg: QuietCoreConfig): {
   path: "messages.groupChat.visibleReplies" | "messages.visibleReplies";
   provenance: VisibleReplyPolicyProvenance;
   value: "automatic" | "message_tool";
@@ -234,7 +234,7 @@ function formatTargets(targets: string[]): string {
 }
 
 /** Warn when visible-reply policy selects message_tool but message is unavailable. */
-export function collectVisibleReplyToolPolicyWarnings(cfg: OpenClawConfig): string[] {
+export function collectVisibleReplyToolPolicyWarnings(cfg: QuietCoreConfig): string[] {
   const groupPolicy = resolveGroupVisibleReplyProvenance(cfg);
   const warnings: string[] = [];
   if (groupPolicy.value === "message_tool") {
@@ -275,7 +275,7 @@ function formatChannelList(channels: string[]): string {
 }
 
 /** Warn when routed channel agents lack the message tool required for channel actions. */
-export function collectChannelBoundMessageToolPolicyWarnings(cfg: OpenClawConfig): string[] {
+export function collectChannelBoundMessageToolPolicyWarnings(cfg: QuietCoreConfig): string[] {
   return collectChannelRouteTargets(cfg).flatMap((target) => {
     const agentTools = resolveAgentConfig(cfg, target.agentId)?.tools;
     const runtimeMayAllowMessage = sourceReplyRuntimeMayAllowMessageTool(cfg);
@@ -601,7 +601,7 @@ function collectInheritedByProviderConfiguredToolSectionWarnings(params: {
 }
 
 /** Warn when configured tool sections no longer widen restrictive tool profiles. */
-export function collectProfileConfiguredToolSectionWarnings(cfg: OpenClawConfig): string[] {
+export function collectProfileConfiguredToolSectionWarnings(cfg: QuietCoreConfig): string[] {
   const warnings: string[] = [];
   const globalTools = hasRecord(cfg.tools) ? cfg.tools : undefined;
   const globalAlsoAllow = Array.isArray(globalTools?.alsoAllow)
@@ -676,10 +676,10 @@ export type DoctorPreviewNotes = {
 };
 
 async function resolveDoctorChannelPreviewConfig(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env: NodeJS.ProcessEnv;
   allowExec?: boolean;
-}): Promise<{ cfg: OpenClawConfig; diagnostics: string[] }> {
+}): Promise<{ cfg: QuietCoreConfig; diagnostics: string[] }> {
   const [{ resolveCommandSecretRefsViaGateway }, { getConfiguredChannelsCommandSecretTargetIds }] =
     await Promise.all([
       import("../../../cli/command-secret-gateway.js"),
@@ -702,8 +702,8 @@ async function resolveDoctorChannelPreviewConfig(params: {
 
 /** Collect info and warning notes for doctor preview mode. */
 export async function collectDoctorPreviewNotes(params: {
-  cfg: OpenClawConfig;
-  activationSourceConfig?: OpenClawConfig;
+  cfg: QuietCoreConfig;
+  activationSourceConfig?: QuietCoreConfig;
   doctorFixCommand: string;
   env?: NodeJS.ProcessEnv;
   allowExec?: boolean;

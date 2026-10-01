@@ -1,4 +1,4 @@
-// Plugin Npm Release script supports OpenClaw repository automation.
+// Plugin Npm Release script supports QuietCore repository automation.
 import { execFileSync } from "node:child_process";
 import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";

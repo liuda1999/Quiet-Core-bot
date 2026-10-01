@@ -1,7 +1,7 @@
 /** Policy and execution pipeline for approved node-host system.run requests. */
 import crypto from "node:crypto";
 import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { GatewayClient } from "../gateway/client.js";
 import {
   describeInterpreterInlineEval,
@@ -142,7 +142,7 @@ const APPROVAL_SCRIPT_OPERAND_BINDING_DENIED_MESSAGE =
   "SYSTEM_RUN_DENIED: approval missing script operand binding";
 const APPROVAL_SCRIPT_OPERAND_DRIFT_DENIED_MESSAGE =
   "SYSTEM_RUN_DENIED: approval script operand changed before execution";
-type ExecToolConfig = NonNullable<NonNullable<OpenClawConfig["tools"]>["exec"]>;
+type ExecToolConfig = NonNullable<NonNullable<QuietCoreConfig["tools"]>["exec"]>;
 
 type EffectiveSystemRunExecPolicy = {
   agentExec: ExecToolConfig | undefined;
@@ -176,7 +176,7 @@ function normalizeDeniedReason(reason: string | null | undefined): SystemRunDeni
 }
 
 function resolveAgentExecConfig(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   agentId: string | undefined,
 ): ExecToolConfig | undefined {
   if (!agentId) {
@@ -194,7 +194,7 @@ function resolveAgentExecConfig(
 
 /** Resolves the effective exec security/ask policy for one system.run request. */
 export function resolveEffectiveSystemRunExecPolicy(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentId: string | undefined;
   defaultSecurity: ExecSecurity;
   defaultAsk: ExecAsk;
@@ -234,7 +234,7 @@ export function resolveEffectiveSystemRunExecPolicy(params: {
 
 async function resolveSystemRunAutoReviewer(params: {
   opts: HandleSystemRunInvokeOptions;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentId: string | undefined;
   agentExec: ExecToolConfig | undefined;
   globalExec: ExecToolConfig | undefined;
@@ -275,11 +275,11 @@ export type HandleSystemRunInvokeOptions = {
   sendInvokeResult: (result: SystemRunInvokeResult) => Promise<void>;
   sendExecFinishedEvent: (params: ExecFinishedEventParams) => Promise<void>;
   preferMacAppExecHost: boolean;
-  getRuntimeConfig?: () => OpenClawConfig;
+  getRuntimeConfig?: () => QuietCoreConfig;
   autoReviewer?: ExecAutoReviewer;
 };
 
-async function loadSystemRunConfig(opts: HandleSystemRunInvokeOptions): Promise<OpenClawConfig> {
+async function loadSystemRunConfig(opts: HandleSystemRunInvokeOptions): Promise<QuietCoreConfig> {
   if (opts.getRuntimeConfig) {
     return opts.getRuntimeConfig();
   }

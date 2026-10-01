@@ -5,7 +5,7 @@ import {
   type MessageReceiptPartKind,
   type MessageReceiptSourceResult,
 } from "quiet-core-bot/plugin-sdk/channel-outbound";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { resolveMarkdownTableMode } from "quiet-core-bot/plugin-sdk/markdown-table-runtime";
 import { kindFromMime } from "quiet-core-bot/plugin-sdk/media-runtime";
 import { resolveOutboundAttachmentFromUrl } from "quiet-core-bot/plugin-sdk/media-runtime";
@@ -21,7 +21,7 @@ import { markdownToSignalText, type SignalTextStyleRange } from "./format.js";
 import { resolveSignalRpcContext } from "./rpc-context.js";
 
 export type SignalSendOpts = {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   baseUrl?: string;
   account?: string;
   accountId?: string;

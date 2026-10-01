@@ -1,6 +1,6 @@
 // Verifies CLI runtime alias resolution and runtime model-ref equivalence.
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { testing as cliBackendsTesting } from "./cli-backends.js";
 import {
   createModelPickerVisibleProviderPredicate,
@@ -14,8 +14,8 @@ import {
 
 function createAnthropicAuthConfig(params: {
   order?: string[];
-  models?: NonNullable<NonNullable<OpenClawConfig["agents"]>["defaults"]>["models"];
-}): OpenClawConfig {
+  models?: NonNullable<NonNullable<QuietCoreConfig["agents"]>["defaults"]>["models"];
+}): QuietCoreConfig {
   // Auth order controls whether Anthropic execution is direct API or Claude
   // CLI-backed when no explicit runtime policy overrides it.
   return {
@@ -31,7 +31,7 @@ function createAnthropicAuthConfig(params: {
         models: params.models,
       },
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
 describe("resolveCliRuntimeExecutionProvider", () => {
@@ -147,7 +147,7 @@ describe("resolveCliRuntimeExecutionProvider", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         provider: "",
         modelId: "anthropic/opus-4.7",
       }),

@@ -140,9 +140,9 @@ the maintainer-only release runbook.
     required validation evidence. Stable npm publish also goes through
     `Quiet Core bot Release Publish`, reusing the successful preflight artifact via
     `preflight_run_id`. Stable Windows Hub
-    readiness requires the signed `OpenClawCompanion-Setup-x64.exe`,
-    `OpenClawCompanion-Setup-arm64.exe`, and
-    `OpenClawCompanion-SHA256SUMS.txt` assets on the Quiet Core bot GitHub release.
+    readiness requires the signed `QuietCoreCompanion-Setup-x64.exe`,
+    `QuietCoreCompanion-Setup-arm64.exe`, and
+    `QuietCoreCompanion-SHA256SUMS.txt` assets on the Quiet Core bot GitHub release.
     Pass the exact signed `openclaw/openclaw-windows-node` release tag as
     `windows_node_tag` and its candidate-approved installer digest map as
     `windows_node_installer_digests`; `Quiet Core bot Release Publish` keeps the
@@ -317,7 +317,7 @@ release state.
   canonical Quiet Core bot GitHub release, then re-downloads the promoted assets and
   verifies the manifest membership and hashes. The parent verifies the current
   x64, ARM64, and checksum asset contract before publication. Direct recovery
-  rejects unexpected `OpenClawCompanion-*` asset names before replacing the
+  rejects unexpected `QuietCoreCompanion-*` asset names before replacing the
   expected contract assets with the pinned source bytes. Manually dispatch
   `Windows Node Release` only for recovery, and always pass an exact tag, never
   `latest`, plus the explicit `expected_installer_digests` JSON map from the
@@ -748,7 +748,7 @@ gh workflow run quiet-core-bot-release-publish.yml \
   --ref release/YYYY.M.PATCH \
   -f tag=vYYYY.M.PATCH \
   -f windows_node_tag=vX.Y.Z \
-  -f windows_node_installer_digests='{"OpenClawCompanion-Setup-x64.exe":"sha256:<approved-x64-sha256>","OpenClawCompanion-Setup-arm64.exe":"sha256:<approved-arm64-sha256>"}' \
+  -f windows_node_installer_digests='{"QuietCoreCompanion-Setup-x64.exe":"sha256:<approved-x64-sha256>","QuietCoreCompanion-Setup-arm64.exe":"sha256:<approved-arm64-sha256>"}' \
   -f preflight_run_id=<successful-quiet-core-bot-npm-preflight-run-id> \
   -f full_release_validation_run_id=<successful-full-release-validation-run-id> \
   -f npm_dist_tag=beta
@@ -761,7 +761,7 @@ gh workflow run quiet-core-bot-release-publish.yml \
   --ref release/YYYY.M.PATCH \
   -f tag=vYYYY.M.PATCH \
   -f windows_node_tag=vX.Y.Z \
-  -f windows_node_installer_digests='{"OpenClawCompanion-Setup-x64.exe":"sha256:<approved-x64-sha256>","OpenClawCompanion-Setup-arm64.exe":"sha256:<approved-arm64-sha256>"}' \
+  -f windows_node_installer_digests='{"QuietCoreCompanion-Setup-x64.exe":"sha256:<approved-x64-sha256>","QuietCoreCompanion-Setup-arm64.exe":"sha256:<approved-arm64-sha256>"}' \
   -f preflight_run_id=<successful-quiet-core-bot-npm-preflight-run-id> \
   -f full_release_validation_run_id=<successful-full-release-validation-run-id> \
   -f npm_dist_tag=latest

@@ -3,7 +3,7 @@ import nodeFs from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import {
   setGatewayModelPricingForTest,
   clearGatewayModelPricingCacheState,
@@ -141,7 +141,7 @@ describe("session cost usage", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     await withStateDir(root, async () => {
       const summary = await loadCostUsageSummary({ days: 30, config });
@@ -182,7 +182,7 @@ describe("session cost usage", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     const costSpy = vi.spyOn(usageFormat, "resolveModelCostConfig");
     try {
@@ -289,7 +289,7 @@ describe("session cost usage", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     clearGatewayModelPricingCacheState();
     await withStateDir(root, async () => {
@@ -698,7 +698,7 @@ describe("session cost usage", () => {
             },
           },
         },
-      }) as unknown as OpenClawConfig;
+      }) as unknown as QuietCoreConfig;
 
     await withStateDir(root, async () => {
       await refreshCostUsageCache({ config: configFor(1, 1) });

@@ -9,7 +9,7 @@ import {
   isSourceCheckoutRoot,
   isDirectPostinstallInvocation,
   MAX_INSTALLED_DIST_SCAN_ENTRIES,
-  pruneOpenClawCompileCache,
+  pruneQuietCoreCompileCache,
   pruneInstalledPackageDist,
   pruneLegacyPluginRuntimeDepsState,
   pruneBundledPluginSourceNodeModules,
@@ -96,7 +96,7 @@ describe("bundled plugin postinstall", () => {
       removed.push(value);
     });
 
-    pruneOpenClawCompileCache({
+    pruneQuietCoreCompileCache({
       env: { NODE_COMPILE_CACHE: configuredBase },
       existsSync,
       readdirSync,
@@ -132,7 +132,7 @@ describe("bundled plugin postinstall", () => {
       }
     });
 
-    pruneOpenClawCompileCache({
+    pruneQuietCoreCompileCache({
       env: { NODE_COMPILE_CACHE: configuredBase },
       existsSync: vi.fn((value: string) => value === configuredBase),
       readdirSync: vi.fn(() => [
@@ -145,7 +145,7 @@ describe("bundled plugin postinstall", () => {
 
     expect(attempted).toEqual([firstCacheDir, secondCacheDir]);
     expect(warn).toHaveBeenCalledWith(
-      "[postinstall] could not prune OpenClaw compile cache: Error: locked",
+      "[postinstall] could not prune QuietCore compile cache: Error: locked",
     );
   });
 
@@ -165,7 +165,7 @@ describe("bundled plugin postinstall", () => {
       }
     });
 
-    pruneOpenClawCompileCache({
+    pruneQuietCoreCompileCache({
       env: { NODE_COMPILE_CACHE: base },
       existsSync: vi.fn((value: string) => value === base),
       readdirSync: vi.fn(() => [
@@ -186,7 +186,7 @@ describe("bundled plugin postinstall", () => {
     const rmSync = vi.fn();
     const err = Object.assign(new Error(`EACCES: ${base}`), { code: "EACCES" });
 
-    pruneOpenClawCompileCache({
+    pruneQuietCoreCompileCache({
       env: { NODE_COMPILE_CACHE: base },
       existsSync: vi.fn(() => true),
       readdirSync: vi.fn(() => {
@@ -620,7 +620,7 @@ describe("bundled plugin postinstall", () => {
     );
   });
 
-  it("resolves legacy plugin runtime deps roots from OpenClaw state env", () => {
+  it("resolves legacy plugin runtime deps roots from QuietCore state env", () => {
     expect(
       collectLegacyPluginRuntimeDepsStateRoots({
         env: {

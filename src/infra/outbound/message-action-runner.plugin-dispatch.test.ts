@@ -9,7 +9,7 @@ import type {
   ChannelMessageActionName,
   ChannelPlugin,
 } from "../../channels/plugins/types.js";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import { extractToolPayload } from "../../plugin-sdk/tool-payload.js";
 import { getActivePluginRegistry, setActivePluginRegistry } from "../../plugins/runtime.js";
 import { createTestRegistry } from "../../test-utils/channel-plugins.js";
@@ -341,7 +341,7 @@ describe("runMessageAction plugin dispatch", () => {
               enabled: true,
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         action: "pin",
         params: {
           channel: "actionhub",
@@ -357,7 +357,7 @@ describe("runMessageAction plugin dispatch", () => {
               enabled: true,
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         action: "list-pins",
         params: {
           channel: "actionhub",
@@ -394,7 +394,7 @@ describe("runMessageAction plugin dispatch", () => {
                 enabled: true,
               },
             },
-          } as OpenClawConfig,
+          } as QuietCoreConfig,
           action: "pin",
           params: {
             channel: "actionhub",
@@ -487,7 +487,7 @@ describe("runMessageAction plugin dispatch", () => {
             enabled: true,
           },
         },
-      } as OpenClawConfig;
+      } as QuietCoreConfig;
 
       setActivePluginRegistry(
         createTestRegistry([{ pluginId: "discord", source: "test", plugin: discordPlugin }]),
@@ -593,7 +593,7 @@ describe("runMessageAction plugin dispatch", () => {
               enabled: true,
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         action: "react",
         params: {
           channel: "gatewaychat",
@@ -697,7 +697,7 @@ describe("runMessageAction plugin dispatch", () => {
               enabled: true,
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         action: "react",
         params: {
           channel: "gatewaychat",
@@ -764,7 +764,7 @@ describe("runMessageAction plugin dispatch", () => {
               enabled: true,
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         action: "send",
         params: {
           channel: "gatewaychat",
@@ -857,7 +857,7 @@ describe("runMessageAction plugin dispatch", () => {
               enabled: true,
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         action: "broadcast",
         params: {
           channel: "gatewaychat",
@@ -922,7 +922,7 @@ describe("runMessageAction plugin dispatch", () => {
               enabled: true,
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         action: "broadcast",
         params: {
           channel: "gatewaychat",
@@ -985,7 +985,7 @@ describe("runMessageAction plugin dispatch", () => {
               enabled: true,
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         action: "send",
         params: {
           channel: "gatewaychat",
@@ -1067,7 +1067,7 @@ describe("runMessageAction plugin dispatch", () => {
               enabled: true,
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         action: "send",
         params: {
           channel: "gatewaydeliver",
@@ -1140,7 +1140,7 @@ describe("runMessageAction plugin dispatch", () => {
               auto: "tagged",
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         action: "send",
         params: {
           channel: "gatewaychat",
@@ -1217,7 +1217,7 @@ describe("runMessageAction plugin dispatch", () => {
               auto: "tagged",
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         action: "send",
         params: {
           channel: "localchat",
@@ -1300,7 +1300,7 @@ describe("runMessageAction plugin dispatch", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         action: "send",
         params: {
           channel: "policydest",
@@ -1376,7 +1376,7 @@ describe("runMessageAction plugin dispatch", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         action: "send",
         params: {
           channel: "policydest",
@@ -1467,7 +1467,7 @@ describe("runMessageAction plugin dispatch", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         action: "send",
         params: {
           channel: "policydest",
@@ -1549,7 +1549,7 @@ describe("runMessageAction plugin dispatch", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         action: "send",
         params: {
           channel: "policychat",
@@ -1622,7 +1622,7 @@ describe("runMessageAction plugin dispatch", () => {
             enabled: true,
           },
         },
-      } as OpenClawConfig;
+      } as QuietCoreConfig;
 
       const presentation = {
         blocks: [{ type: "text", text: "Presentation-only payload" }],
@@ -1701,7 +1701,7 @@ describe("runMessageAction plugin dispatch", () => {
               botToken: "tok",
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         action: "poll",
         params: {
           channel: "pollchat",
@@ -1790,7 +1790,7 @@ describe("runMessageAction plugin dispatch", () => {
               botToken: "tok",
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         action: "poll",
         params: {
           channel: "pollchat",
@@ -1899,7 +1899,7 @@ describe("runMessageAction plugin dispatch", () => {
               token: "tok",
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         action: "poll",
         params: {
           channel: "guildchat",
@@ -1986,7 +1986,7 @@ describe("runMessageAction plugin dispatch", () => {
         blocks: [{ type: "buttons", buttons: [{ label: "A", value: "a" }] }],
       };
       const result = await runMessageAction({
-        cfg: {} as OpenClawConfig,
+        cfg: {} as QuietCoreConfig,
         action: "send",
         params: {
           channel: "componentchat",
@@ -2012,7 +2012,7 @@ describe("runMessageAction plugin dispatch", () => {
     it("throws on invalid presentation JSON strings", async () => {
       await expect(
         runMessageAction({
-          cfg: {} as OpenClawConfig,
+          cfg: {} as QuietCoreConfig,
           action: "send",
           params: {
             channel: "componentchat",
@@ -2072,7 +2072,7 @@ describe("runMessageAction plugin dispatch", () => {
       {
         name: "uses defaultAccountId override",
         args: {
-          cfg: {} as OpenClawConfig,
+          cfg: {} as QuietCoreConfig,
           defaultAccountId: "ops",
         },
         expectedAccountId: "ops",
@@ -2084,7 +2084,7 @@ describe("runMessageAction plugin dispatch", () => {
             bindings: [
               { agentId: "agent-b", match: { channel: "accountchat", accountId: "account-b" } },
             ],
-          } as OpenClawConfig,
+          } as QuietCoreConfig,
           agentId: "agent-b",
         },
         expectedAccountId: "account-b",
@@ -2115,7 +2115,7 @@ describe("runMessageAction plugin dispatch", () => {
                 match: { channel: "accountchat", accountId: "agent-fallback" },
               },
             ],
-          } as OpenClawConfig,
+          } as QuietCoreConfig,
           agentId: "agent-b",
           target: "channel:C_TARGET",
         },

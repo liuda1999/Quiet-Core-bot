@@ -86,8 +86,8 @@ function runStopPackagedAppHarness(killZeroStatus: 0 | 1) {
   const toolsDir = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-package-stop-tools-"));
   tempDirs.push(root, toolsDir);
 
-  const appRoot = path.join(root, "dist", "OpenClaw.app");
-  const appBinary = path.join(appRoot, "Contents", "MacOS", "OpenClaw");
+  const appRoot = path.join(root, "dist", "QuietCore.app");
+  const appBinary = path.join(appRoot, "Contents", "MacOS", "QuietCore");
   const lsofPath = path.join(toolsDir, "lsof");
   const pgrepPath = path.join(toolsDir, "pgrep");
   const sleepPath = path.join(toolsDir, "sleep");
@@ -106,7 +106,7 @@ function runStopPackagedAppHarness(killZeroStatus: 0 | 1) {
   return runHelper(`
     set -euo pipefail
     APP_ROOT=${JSON.stringify(appRoot)}
-    PRODUCT=OpenClaw
+    PRODUCT=QuietCore
     PATH=${JSON.stringify(`${toolsDir}:/usr/bin:/bin`)}
     kill() {
       if [[ "\${1:-}" == "-0" ]]; then
@@ -123,7 +123,7 @@ function runSwiftCompatibilityHarness(buildConfig: "debug" | "release") {
   const root = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-package-swift-root-"));
   const toolsDir = mkdtempSync(path.join(tmpdir(), "quiet-core-bot-package-swift-tools-"));
   const developerDir = path.join(root, "Xcode.app", "Contents", "Developer");
-  const appRoot = path.join(root, "OpenClaw.app");
+  const appRoot = path.join(root, "QuietCore.app");
   const xcodeSelectPath = path.join(toolsDir, "xcode-select");
   tempDirs.push(root, toolsDir);
 
@@ -324,15 +324,15 @@ describe("package-mac-app plist stamping", () => {
     expect(result.stderr).toBe("");
   });
 
-  it("does not kill unrelated OpenClaw processes during packaging", () => {
+  it("does not kill unrelated QuietCore processes during packaging", () => {
     const script = readFileSync(scriptPath, "utf8");
     const stopBlock = script.slice(
       script.indexOf("running_packaged_app_pids()"),
       script.indexOf('echo "🔏 Signing bundle'),
     );
 
-    expect(script).not.toContain("killall -q OpenClaw");
-    expect(stopBlock).toContain('local app_binary="$APP_ROOT/Contents/MacOS/OpenClaw"');
+    expect(script).not.toContain("killall -q QuietCore");
+    expect(stopBlock).toContain('local app_binary="$APP_ROOT/Contents/MacOS/QuietCore"');
     expect(stopBlock).toContain('pgrep -x "$PRODUCT"');
     expect(stopBlock).toContain('grep -Fx "$app_binary"');
     expect(stopBlock).toContain(
@@ -344,7 +344,7 @@ describe("package-mac-app plist stamping", () => {
     const result = runStopPackagedAppHarness(0);
 
     expect(result.status).toBe(1);
-    expect(result.stderr).toContain("ERROR: Packaged OpenClaw bundle did not exit: 123");
+    expect(result.stderr).toContain("ERROR: Packaged QuietCore bundle did not exit: 123");
   });
 
   it("fails release packaging when the Swift compatibility library is missing", () => {
@@ -385,12 +385,12 @@ describe("package-mac-app plist stamping", () => {
     const script = readFileSync(scriptPath, "utf8");
     const openClawKitBlock = script.slice(
       script.indexOf(
-        'OPENCLAWKIT_BUNDLE="$(build_path_for_arch "$PRIMARY_ARCH")/$BUILD_CONFIG/OpenClawKit_OpenClawKit.bundle"',
+        'OPENCLAWKIT_BUNDLE="$(build_path_for_arch "$PRIMARY_ARCH")/$BUILD_CONFIG/QuietCoreKit_QuietCoreKit.bundle"',
       ),
       script.indexOf("running_packaged_app_pids()"),
     );
 
-    expect(openClawKitBlock).toContain("ERROR: OpenClawKit resource bundle not found");
+    expect(openClawKitBlock).toContain("ERROR: QuietCoreKit resource bundle not found");
     expect(openClawKitBlock).toContain("exit 1");
     expect(openClawKitBlock).not.toContain("WARN:");
     expect(openClawKitBlock).not.toContain("continuing");

@@ -1,4 +1,4 @@
-// Nextcloud Talk plugin entrypoint registers its OpenClaw integration.
+// Nextcloud Talk plugin entrypoint registers its QuietCore integration.
 import { defineBundledChannelEntry } from "quiet-core-bot/plugin-sdk/channel-entry-contract";
 
 export default defineBundledChannelEntry({

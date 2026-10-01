@@ -1,9 +1,9 @@
-// Cron Mcp Cleanup Seed script supports OpenClaw repository automation.
+// Cron Mcp Cleanup Seed script supports QuietCore repository automation.
 import fs from "node:fs/promises";
 import { createRequire } from "node:module";
 import os from "node:os";
 import path from "node:path";
-import { applyDockerOpenAiProviderConfig, type OpenClawConfig } from "./docker-openai-seed.ts";
+import { applyDockerOpenAiProviderConfig, type QuietCoreConfig } from "./docker-openai-seed.ts";
 
 const require = createRequire(import.meta.url);
 
@@ -113,7 +113,7 @@ async function main() {
           },
         },
       },
-    } satisfies OpenClawConfig,
+    } satisfies QuietCoreConfig,
     "sk-docker-cron-mcp-cleanup-test",
   );
 

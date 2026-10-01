@@ -3,11 +3,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { uniqueStrings } from "@quiet-core/normalization-core/string-normalization";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { isPathInside } from "../../infra/path-guards.js";
 import { resolveUserPath } from "../../utils.js";
 
-export function resolveAllowedSkillSymlinkTargetRealPaths(config?: OpenClawConfig): string[] {
+export function resolveAllowedSkillSymlinkTargetRealPaths(config?: QuietCoreConfig): string[] {
   const rawTargets = config?.skills?.load?.allowSymlinkTargets ?? [];
   const targetPaths = rawTargets
     .map((dir) => normalizeOptionalString(dir) ?? "")

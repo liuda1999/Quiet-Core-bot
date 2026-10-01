@@ -1,6 +1,6 @@
 // Context engine host compatibility tests cover doctor warnings for host/context mismatches.
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../config/types.quiet-core-bot.js";
 import { registerContextEngine } from "../../../context-engine/registry.js";
 import type { ContextEngine, ContextEngineHostCapability } from "../../../context-engine/types.js";
 import {
@@ -46,7 +46,7 @@ function registerEngine(requiredCapabilities: ContextEngineHostCapability[]): st
   return id;
 }
 
-function configWithEngine(engineId: string, cfg: OpenClawConfig = {}): OpenClawConfig {
+function configWithEngine(engineId: string, cfg: QuietCoreConfig = {}): QuietCoreConfig {
   return {
     ...cfg,
     plugins: {

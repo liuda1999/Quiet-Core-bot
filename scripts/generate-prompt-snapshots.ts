@@ -1,4 +1,4 @@
-// Generate Prompt Snapshots script supports OpenClaw repository automation.
+// Generate Prompt Snapshots script supports QuietCore repository automation.
 import { execFile } from "node:child_process";
 import fs from "node:fs/promises";
 import os from "node:os";

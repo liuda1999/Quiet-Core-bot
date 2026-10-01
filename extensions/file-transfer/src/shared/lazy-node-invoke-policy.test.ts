@@ -1,14 +1,14 @@
 // File Transfer tests cover lazy node invoke policy plugin behavior.
 import type {
-  OpenClawPluginNodeInvokePolicy,
-  OpenClawPluginNodeInvokePolicyContext,
+  QuietCorePluginNodeInvokePolicy,
+  QuietCorePluginNodeInvokePolicyContext,
 } from "quiet-core-bot/plugin-sdk/plugin-entry";
 import { describe, expect, it, vi } from "vitest";
 import { createLazyFileTransferNodeInvokePolicy } from "./lazy-node-invoke-policy.js";
 
 function createPolicyContext(
-  overrides: Partial<OpenClawPluginNodeInvokePolicyContext> = {},
-): OpenClawPluginNodeInvokePolicyContext {
+  overrides: Partial<QuietCorePluginNodeInvokePolicyContext> = {},
+): QuietCorePluginNodeInvokePolicyContext {
   return {
     nodeId: "node-1",
     command: "file.fetch",
@@ -21,7 +21,7 @@ function createPolicyContext(
       commands: ["file.fetch"],
     },
     client: null,
-    invokeNode: vi.fn<OpenClawPluginNodeInvokePolicyContext["invokeNode"]>(async () => ({
+    invokeNode: vi.fn<QuietCorePluginNodeInvokePolicyContext["invokeNode"]>(async () => ({
       ok: true,
       payload: { ok: true },
       payloadJSON: null,
@@ -32,7 +32,7 @@ function createPolicyContext(
 
 describe("lazy file-transfer node invoke policy", () => {
   it("exposes command metadata without loading the delegate", () => {
-    const loadPolicy = vi.fn<() => Promise<OpenClawPluginNodeInvokePolicy>>();
+    const loadPolicy = vi.fn<() => Promise<QuietCorePluginNodeInvokePolicy>>();
 
     const policy = createLazyFileTransferNodeInvokePolicy(loadPolicy);
 
@@ -41,16 +41,16 @@ describe("lazy file-transfer node invoke policy", () => {
   });
 
   it("loads and caches the delegate on first handle", async () => {
-    const invokeNode = vi.fn<OpenClawPluginNodeInvokePolicyContext["invokeNode"]>(async () => ({
+    const invokeNode = vi.fn<QuietCorePluginNodeInvokePolicyContext["invokeNode"]>(async () => ({
       ok: true,
       payload: { ok: true },
       payloadJSON: null,
     }));
-    const delegateHandle = vi.fn<OpenClawPluginNodeInvokePolicy["handle"]>(async (ctx) => {
+    const delegateHandle = vi.fn<QuietCorePluginNodeInvokePolicy["handle"]>(async (ctx) => {
       await ctx.invokeNode();
       return { ok: true, payload: { delegated: true } };
     });
-    const loadPolicy = vi.fn<() => Promise<OpenClawPluginNodeInvokePolicy>>(async () => ({
+    const loadPolicy = vi.fn<() => Promise<QuietCorePluginNodeInvokePolicy>>(async () => ({
       commands: ["file.fetch"],
       handle: delegateHandle,
     }));
@@ -71,7 +71,7 @@ describe("lazy file-transfer node invoke policy", () => {
   });
 
   it("fails closed when the delegate cannot load", async () => {
-    const invokeNode = vi.fn<OpenClawPluginNodeInvokePolicyContext["invokeNode"]>(async () => ({
+    const invokeNode = vi.fn<QuietCorePluginNodeInvokePolicyContext["invokeNode"]>(async () => ({
       ok: true,
       payload: { ok: true },
       payloadJSON: null,

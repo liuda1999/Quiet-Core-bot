@@ -1,7 +1,7 @@
 // Raft channel plugin wires the wake bridge into the canonical channel runtime.
 import { describeAccountSnapshot } from "quiet-core-bot/plugin-sdk/account-helpers";
 import { createChatChannelPlugin, type ChannelPlugin } from "quiet-core-bot/plugin-sdk/channel-core";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import {
   buildBaseChannelStatusSummary,
   createComputedAccountStatusAdapter,
@@ -44,7 +44,7 @@ export const raftPlugin: ChannelPlugin<ResolvedRaftAccount, RaftProbe> = createC
     configSchema: raftChannelConfigSchema,
     config: {
       listAccountIds: listRaftAccountIds,
-      resolveAccount: (cfg: OpenClawConfig, accountId?: string | null) =>
+      resolveAccount: (cfg: QuietCoreConfig, accountId?: string | null) =>
         resolveRaftAccount({ cfg, accountId }),
       defaultAccountId: resolveDefaultRaftAccountId,
       isConfigured: (account) => account.configured,

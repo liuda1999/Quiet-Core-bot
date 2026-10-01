@@ -6,7 +6,7 @@ import {
   isLegacyParentWritableUpdateDoctorPass,
   UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE_ENV,
 } from "../commands/doctor/shared/update-phase.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { buildGatewayConnectionDetails } from "../gateway/call.js";
 import type { UpdatePostInstallDoctorResult } from "../infra/update-doctor-result.js";
 import type { RuntimeEnv } from "../runtime.js";
@@ -18,7 +18,7 @@ import type { FlowContribution } from "./types.js";
 type DoctorFlowMode = "local" | "remote";
 
 type DoctorConfigResult = {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   path?: string;
   shouldWriteConfig?: boolean;
   sourceConfigValid?: boolean;
@@ -32,8 +32,8 @@ export type DoctorHealthFlowContext = {
   options: DoctorOptions;
   prompter: DoctorPrompter;
   configResult: DoctorConfigResult;
-  cfg: OpenClawConfig;
-  cfgForPersistence: OpenClawConfig;
+  cfg: QuietCoreConfig;
+  cfgForPersistence: QuietCoreConfig;
   sourceConfigValid: boolean;
   configPath: string;
   env?: NodeJS.ProcessEnv;
@@ -87,7 +87,7 @@ function isUpdateDoctorRun(env: NodeJS.ProcessEnv | Record<string, string | unde
   return value === "1" || value === "true";
 }
 
-function resolveDoctorMode(cfg: OpenClawConfig): DoctorFlowMode {
+function resolveDoctorMode(cfg: QuietCoreConfig): DoctorFlowMode {
   return cfg.gateway?.mode === "remote" ? "remote" : "local";
 }
 
@@ -674,7 +674,7 @@ async function runGatewayServicesHealth(ctx: DoctorHealthFlowContext): Promise<v
   const {
     noteMacLaunchAgentOverrides,
     noteMacLaunchctlGatewayEnvOverrides,
-    noteMacStaleOpenClawUpdateLaunchdJobs,
+    noteMacStaleQuietCoreUpdateLaunchdJobs,
   } = await import("../commands/doctor-platform-notes.js");
   await maybeScanExtraGatewayServices(ctx.options, ctx.runtime, ctx.prompter);
   await maybeRepairGatewayServiceConfig(
@@ -685,7 +685,7 @@ async function runGatewayServicesHealth(ctx: DoctorHealthFlowContext): Promise<v
     { allowExecSecretRefs: ctx.options.allowExec === true },
   );
   await noteMacLaunchAgentOverrides();
-  await noteMacStaleOpenClawUpdateLaunchdJobs();
+  await noteMacStaleQuietCoreUpdateLaunchdJobs();
   await noteMacLaunchctlGatewayEnvOverrides(ctx.cfg);
 }
 
@@ -848,7 +848,7 @@ async function runToolResultCapHealth(ctx: DoctorHealthFlowContext): Promise<voi
  * the result is a lower bound.
  */
 async function measureFixedPromptOverheadTokens(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentId?: string;
 }): Promise<number | undefined> {
   try {

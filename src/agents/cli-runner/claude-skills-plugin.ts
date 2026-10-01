@@ -5,7 +5,7 @@ import { accessSync } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
-import { resolvePreferredOpenClawTmpDir } from "../../infra/tmp-quiet-core-bot-dir.js";
+import { resolvePreferredQuietCoreTmpDir } from "../../infra/tmp-quiet-core-bot-dir.js";
 import type { SkillSnapshot } from "../../skills/types.js";
 import { cliBackendLog } from "./log.js";
 
@@ -104,7 +104,7 @@ export async function prepareClaudeCliSkillsPlugin(params: {
   }
 
   const tempDir = await fs.mkdtemp(
-    path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-claude-skills-"),
+    path.join(resolvePreferredQuietCoreTmpDir(), "quiet-core-bot-claude-skills-"),
   );
   const pluginDir = path.join(tempDir, QUIET_CORE_CLAUDE_PLUGIN_NAME);
   const manifestDir = path.join(pluginDir, ".claude-plugin");

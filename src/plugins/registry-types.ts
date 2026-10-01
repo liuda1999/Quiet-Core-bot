@@ -39,23 +39,23 @@ type ImageGenerationProviderPlugin = import("./types.js").ImageGenerationProvide
 type MediaUnderstandingProviderPlugin = import("./types.js").MediaUnderstandingProviderPlugin;
 type TranscriptSourceProvider = import("./types.js").TranscriptSourceProvider;
 type MusicGenerationProviderPlugin = import("./types.js").MusicGenerationProviderPlugin;
-type OpenClawPluginCliCommandDescriptor = import("./types.js").OpenClawPluginCliCommandDescriptor;
-type OpenClawPluginCliRegistrar = import("./types.js").OpenClawPluginCliRegistrar;
-type OpenClawPluginCommandDefinition = import("./types.js").OpenClawPluginCommandDefinition;
-type OpenClawPluginGatewayRuntimeScopeSurface =
-  import("./types.js").OpenClawPluginGatewayRuntimeScopeSurface;
-type OpenClawGatewayDiscoveryService = import("./types.js").OpenClawGatewayDiscoveryService;
-type OpenClawPluginHttpRouteAuth = import("./types.js").OpenClawPluginHttpRouteAuth;
-type OpenClawPluginHttpRouteHandler = import("./types.js").OpenClawPluginHttpRouteHandler;
-type OpenClawPluginHttpRouteUpgradeHandler =
-  import("./types.js").OpenClawPluginHttpRouteUpgradeHandler;
-type OpenClawPluginHttpRouteMatch = import("./types.js").OpenClawPluginHttpRouteMatch;
-type OpenClawPluginHostedMediaResolver = import("./types.js").OpenClawPluginHostedMediaResolver;
-type OpenClawPluginReloadRegistration = import("./types.js").OpenClawPluginReloadRegistration;
-type OpenClawPluginSecurityAuditCollector =
-  import("./types.js").OpenClawPluginSecurityAuditCollector;
-type OpenClawPluginService = import("./types.js").OpenClawPluginService;
-type OpenClawPluginToolFactory = import("./types.js").OpenClawPluginToolFactory;
+type QuietCorePluginCliCommandDescriptor = import("./types.js").QuietCorePluginCliCommandDescriptor;
+type QuietCorePluginCliRegistrar = import("./types.js").QuietCorePluginCliRegistrar;
+type QuietCorePluginCommandDefinition = import("./types.js").QuietCorePluginCommandDefinition;
+type QuietCorePluginGatewayRuntimeScopeSurface =
+  import("./types.js").QuietCorePluginGatewayRuntimeScopeSurface;
+type QuietCoreGatewayDiscoveryService = import("./types.js").QuietCoreGatewayDiscoveryService;
+type QuietCorePluginHttpRouteAuth = import("./types.js").QuietCorePluginHttpRouteAuth;
+type QuietCorePluginHttpRouteHandler = import("./types.js").QuietCorePluginHttpRouteHandler;
+type QuietCorePluginHttpRouteUpgradeHandler =
+  import("./types.js").QuietCorePluginHttpRouteUpgradeHandler;
+type QuietCorePluginHttpRouteMatch = import("./types.js").QuietCorePluginHttpRouteMatch;
+type QuietCorePluginHostedMediaResolver = import("./types.js").QuietCorePluginHostedMediaResolver;
+type QuietCorePluginReloadRegistration = import("./types.js").QuietCorePluginReloadRegistration;
+type QuietCorePluginSecurityAuditCollector =
+  import("./types.js").QuietCorePluginSecurityAuditCollector;
+type QuietCorePluginService = import("./types.js").QuietCorePluginService;
+type QuietCorePluginToolFactory = import("./types.js").QuietCorePluginToolFactory;
 type PluginConversationBindingResolvedEvent =
   import("./types.js").PluginConversationBindingResolvedEvent;
 type TypedPluginHookRegistration = import("./types.js").PluginHookRegistration;
@@ -76,7 +76,7 @@ type UnifiedModelCatalogProviderPlugin = import("./types.js").UnifiedModelCatalo
 export type PluginToolRegistration = {
   pluginId: string;
   pluginName?: string;
-  factory: OpenClawPluginToolFactory;
+  factory: QuietCorePluginToolFactory;
   names: string[];
   declaredNames?: string[];
   optional: boolean;
@@ -87,10 +87,10 @@ export type PluginToolRegistration = {
 export type PluginCliRegistration = {
   pluginId: string;
   pluginName?: string;
-  register: OpenClawPluginCliRegistrar;
+  register: QuietCorePluginCliRegistrar;
   parentPath: string[];
   commands: string[];
-  descriptors: OpenClawPluginCliCommandDescriptor[];
+  descriptors: QuietCorePluginCliCommandDescriptor[];
   source: string;
   rootDir?: string;
 };
@@ -99,11 +99,11 @@ export type PluginCliRegistration = {
 export type PluginHttpRouteRegistration = {
   pluginId?: string;
   path: string;
-  handler: OpenClawPluginHttpRouteHandler;
-  handleUpgrade?: OpenClawPluginHttpRouteUpgradeHandler;
-  auth: OpenClawPluginHttpRouteAuth;
-  match: OpenClawPluginHttpRouteMatch;
-  gatewayRuntimeScopeSurface?: OpenClawPluginGatewayRuntimeScopeSurface;
+  handler: QuietCorePluginHttpRouteHandler;
+  handleUpgrade?: QuietCorePluginHttpRouteUpgradeHandler;
+  auth: QuietCorePluginHttpRouteAuth;
+  match: QuietCorePluginHttpRouteMatch;
+  gatewayRuntimeScopeSurface?: QuietCorePluginGatewayRuntimeScopeSurface;
   gatewayMethodDispatchAllowed?: boolean;
   nodeCapability?: {
     surface: string;
@@ -115,7 +115,7 @@ export type PluginHttpRouteRegistration = {
 export type PluginHostedMediaResolverRegistration = {
   pluginId: string;
   pluginName?: string;
-  resolver: OpenClawPluginHostedMediaResolver;
+  resolver: QuietCorePluginHostedMediaResolver;
   source: string;
   rootDir?: string;
 };
@@ -239,7 +239,7 @@ export type PluginHookRegistration = {
 export type PluginServiceRegistration = {
   pluginId: string;
   pluginName?: string;
-  service: OpenClawPluginService;
+  service: QuietCorePluginService;
   source: string;
   origin: PluginOrigin;
   trustedOfficialInstall?: boolean;
@@ -249,7 +249,7 @@ export type PluginServiceRegistration = {
 export type PluginGatewayDiscoveryServiceRegistration = {
   pluginId: string;
   pluginName?: string;
-  service: OpenClawGatewayDiscoveryService;
+  service: QuietCoreGatewayDiscoveryService;
   source: string;
   rootDir?: string;
 };
@@ -257,7 +257,7 @@ export type PluginGatewayDiscoveryServiceRegistration = {
 export type PluginReloadRegistration = {
   pluginId: string;
   pluginName?: string;
-  registration: OpenClawPluginReloadRegistration;
+  registration: QuietCorePluginReloadRegistration;
   source: string;
   rootDir?: string;
 };
@@ -265,7 +265,7 @@ export type PluginReloadRegistration = {
 export type PluginNodeHostCommandRegistration = {
   pluginId: string;
   pluginName?: string;
-  command: import("./types.js").OpenClawPluginNodeHostCommand;
+  command: import("./types.js").QuietCorePluginNodeHostCommand;
   source: string;
   rootDir?: string;
 };
@@ -273,7 +273,7 @@ export type PluginNodeHostCommandRegistration = {
 export type PluginNodeInvokePolicyRegistration = {
   pluginId: string;
   pluginName?: string;
-  policy: import("./types.js").OpenClawPluginNodeInvokePolicy;
+  policy: import("./types.js").QuietCorePluginNodeInvokePolicy;
   pluginConfig?: Record<string, unknown>;
   source: string;
   rootDir?: string;
@@ -282,7 +282,7 @@ export type PluginNodeInvokePolicyRegistration = {
 export type PluginSecurityAuditCollectorRegistration = {
   pluginId: string;
   pluginName?: string;
-  collector: OpenClawPluginSecurityAuditCollector;
+  collector: QuietCorePluginSecurityAuditCollector;
   source: string;
   rootDir?: string;
 };
@@ -290,7 +290,7 @@ export type PluginSecurityAuditCollectorRegistration = {
 export type PluginCommandRegistration = {
   pluginId: string;
   pluginName?: string;
-  command: OpenClawPluginCommandDefinition;
+  command: QuietCorePluginCommandDefinition;
   source: string;
   rootDir?: string;
 };
@@ -496,9 +496,9 @@ export type PluginRegistryParams = {
 };
 
 export type PluginRegistrationMode = import("./types.js").PluginRegistrationMode;
-export type OpenClawPluginNodeHostCommand = import("./types.js").OpenClawPluginNodeHostCommand;
-export type OpenClawPluginToolContext = import("./types.js").OpenClawPluginToolContext;
-export type OpenClawPluginHttpRouteParams = import("./types.js").OpenClawPluginHttpRouteParams;
-export type OpenClawPluginHookOptions = import("./types.js").OpenClawPluginHookOptions;
+export type QuietCorePluginNodeHostCommand = import("./types.js").QuietCorePluginNodeHostCommand;
+export type QuietCorePluginToolContext = import("./types.js").QuietCorePluginToolContext;
+export type QuietCorePluginHttpRouteParams = import("./types.js").QuietCorePluginHttpRouteParams;
+export type QuietCorePluginHookOptions = import("./types.js").QuietCorePluginHookOptions;
 export type PluginHookHandlerMap = import("./types.js").PluginHookHandlerMap;
-export type OpenClawPluginApi = import("./types.js").OpenClawPluginApi;
+export type QuietCorePluginApi = import("./types.js").QuietCorePluginApi;

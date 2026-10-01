@@ -16,13 +16,13 @@ import { buildReplyPromptBodies } from "../../../src/auto-reply/reply/prompt-pre
 import type { TemplateContext } from "../../../src/auto-reply/templating.js";
 import { SILENT_REPLY_TOKEN } from "../../../src/auto-reply/tokens.js";
 import { normalizeChatType } from "../../../src/channels/chat-type.js";
-import type { OpenClawConfig } from "../../../src/config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../src/config/types.quiet-core-bot.js";
 import type {
   AnyAgentTool,
   EmbeddedRunAttemptParams,
 } from "../../../src/plugin-sdk/agent-harness-runtime.js";
 import { normalizeAgentRuntimeTools } from "../../../src/plugin-sdk/agent-harness-runtime.js";
-import { createOpenClawCodingTools } from "../../../src/plugin-sdk/agent-harness.js";
+import { createQuietCoreCodingTools } from "../../../src/plugin-sdk/agent-harness.js";
 import { resolveRelativeBundledPluginPublicModuleId } from "../../../src/test-utils/bundled-plugin-public-surface.js";
 import {
   CODEX_MODEL_PROMPT_FIXTURE_DIR,
@@ -240,7 +240,7 @@ const CODEX_PROMPT_SNAPSHOT_THREAD_CONFIG = {
   "features.code_mode_only": false,
 };
 
-const baseConfig: OpenClawConfig = {
+const baseConfig: QuietCoreConfig = {
   messages: {
     groupChat: {
       visibleReplies: "message_tool",
@@ -273,7 +273,7 @@ const baseConfig: OpenClawConfig = {
   },
 };
 
-const dynamicToolsConfig: OpenClawConfig = {
+const dynamicToolsConfig: QuietCoreConfig = {
   ...baseConfig,
   plugins: {
     enabled: true,
@@ -408,7 +408,7 @@ function createDynamicTools(params: {
   ctx: TemplateContext;
   trigger: "user" | "heartbeat";
 }): CodexDynamicToolSpec[] {
-  const tools = createOpenClawCodingTools({
+  const tools = createQuietCoreCodingTools({
     agentId: "main",
     workspaceDir: WORKSPACE_DIR,
     agentDir: AGENT_DIR,
@@ -441,7 +441,7 @@ function createDynamicTools(params: {
       includeBaseCodingTools: false,
       includeShellTools: false,
       includeChannelTools: false,
-      includeOpenClawTools: true,
+      includeQuietCoreTools: true,
       includePluginTools: false,
     },
   });
@@ -778,7 +778,7 @@ function readCodexTurnInputText(turnStartParams: { input?: unknown }): string {
   return firstText?.text ?? "";
 }
 
-function buildCodexOpenClawRuntimeContext(): string {
+function buildCodexQuietCoreRuntimeContext(): string {
   return [
     "Quiet Core bot runtime context for this turn:",
     "Treat this Quiet Core bot-provided context as supporting project/user reference for the current request.",
@@ -789,8 +789,8 @@ function buildCodexOpenClawRuntimeContext(): string {
   ].join("\n");
 }
 
-function prependCodexOpenClawRuntimeContext(prompt: string): string {
-  return [buildCodexOpenClawRuntimeContext(), "", "Current user request:", prompt].join("\n");
+function prependCodexQuietCoreRuntimeContext(prompt: string): string {
+  return [buildCodexQuietCoreRuntimeContext(), "", "Current user request:", prompt].join("\n");
 }
 
 function renderScenarioSnapshot(
@@ -802,7 +802,7 @@ function renderScenarioSnapshot(
     sessionKey: scenario.ctx.SessionKey ?? `agent:main:${scenario.id}`,
   });
   const appServer = codexApi.resolveCodexPromptSnapshotAppServerOptions();
-  const codexTurnPromptText = prependCodexOpenClawRuntimeContext(scenario.prompt);
+  const codexTurnPromptText = prependCodexQuietCoreRuntimeContext(scenario.prompt);
   const codexSnapshot = codexApi.buildCodexHarnessPromptSnapshot({
     attempt,
     cwd: WORKSPACE_DIR,

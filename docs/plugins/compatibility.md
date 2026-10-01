@@ -120,7 +120,7 @@ Current compatibility records include:
   `quiet-core-bot/plugin-sdk/channel-runtime`, `quiet-core-bot/plugin-sdk/command-auth`
   status builders, `quiet-core-bot/plugin-sdk/test-utils` (replaced by focused
   `quiet-core-bot/plugin-sdk/*` test subpaths), and the `ClawdbotConfig` /
-  `OpenClawSchemaType` type aliases
+  `QuietCoreSchemaType` type aliases
 - bundled plugin allowlist and enablement behavior
 - legacy provider/channel env-var manifest metadata
 - legacy provider plugin hooks and type aliases while providers move to

@@ -19,7 +19,7 @@ import {
   MemorySearchSchema,
 } from "./tools.shared.js";
 import {
-  asOpenClawConfig,
+  asQuietCoreConfig,
   createMemorySearchToolOrThrow,
   expectUnavailableMemorySearchDetails,
 } from "./tools.test-helpers.js";
@@ -136,9 +136,9 @@ describe("memory_search unavailable payloads", () => {
     expectUnavailableMemorySearchDetails(result.details, {
       error,
       warning:
-        "Memory search is unavailable because this OpenClaw Node runtime does not provide SQLite support.",
+        "Memory search is unavailable because this QuietCore Node runtime does not provide SQLite support.",
       action:
-        "Run OpenClaw with a Node runtime that includes node:sqlite, then retry memory_search.",
+        "Run QuietCore with a Node runtime that includes node:sqlite, then retry memory_search.",
     });
   });
 
@@ -489,7 +489,7 @@ describe("memory_search corpus labels", () => {
 
   it("uses explicit plugin context agent over synthetic active-memory session keys", async () => {
     const tool = createMemorySearchToolOrThrow({
-      config: asOpenClawConfig({
+      config: asQuietCoreConfig({
         agents: {
           list: [
             { id: "main", default: true, memorySearch: { enabled: false } },
@@ -507,7 +507,7 @@ describe("memory_search corpus labels", () => {
   });
 
   it("re-resolves config when executing a previously created tool", async () => {
-    const startupConfig = asOpenClawConfig({
+    const startupConfig = asQuietCoreConfig({
       agents: {
         defaults: {
           memorySearch: {
@@ -521,7 +521,7 @@ describe("memory_search corpus labels", () => {
         backend: "builtin",
       },
     });
-    const patchedConfig = asOpenClawConfig({
+    const patchedConfig = asQuietCoreConfig({
       agents: {
         defaults: {
           memorySearch: {

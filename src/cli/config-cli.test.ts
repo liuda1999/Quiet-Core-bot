@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { Command } from "commander";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { ConfigFileSnapshot, OpenClawConfig } from "../config/types.js";
+import type { ConfigFileSnapshot, QuietCoreConfig } from "../config/types.js";
 import type { PluginManifestRecord, PluginManifestRegistry } from "../plugins/manifest-registry.js";
 import type { PluginMetadataSnapshot } from "../plugins/plugin-metadata-snapshot.js";
 import { createCliRuntimeCapture, mockRuntimeModule } from "./test-runtime-capture.js";
@@ -18,7 +18,7 @@ import { createCliRuntimeCapture, mockRuntimeModule } from "./test-runtime-captu
 const mockReadConfigFileSnapshot = vi.fn<() => Promise<ConfigFileSnapshot>>();
 const mockWriteConfigFile = vi.fn<
   (
-    cfg: OpenClawConfig,
+    cfg: QuietCoreConfig,
     options?: { unsetPaths?: string[][]; explicitSetPaths?: string[][] },
   ) => Promise<void>
 >(async () => {});
@@ -34,11 +34,11 @@ vi.mock("../config/config.js", async (importOriginal) => {
     ...actual,
     readConfigFileSnapshot: () => mockReadConfigFileSnapshot(),
     writeConfigFile: (
-      cfg: OpenClawConfig,
+      cfg: QuietCoreConfig,
       options?: { unsetPaths?: string[][]; explicitSetPaths?: string[][] },
     ) => mockWriteConfigFile(cfg, options),
     replaceConfigFile: (params: {
-      nextConfig: OpenClawConfig;
+      nextConfig: QuietCoreConfig;
       writeOptions?: { unsetPaths?: string[][]; explicitSetPaths?: string[][] };
     }) => mockWriteConfigFile(params.nextConfig, params.writeOptions),
   };
@@ -75,8 +75,8 @@ vi.mock("../runtime.js", async () => {
 });
 
 function buildSnapshot(params: {
-  resolved: OpenClawConfig;
-  config: OpenClawConfig;
+  resolved: QuietCoreConfig;
+  config: QuietCoreConfig;
 }): ConfigFileSnapshot {
   return {
     path: "/tmp/quiet-core-bot.json",
@@ -94,7 +94,7 @@ function buildSnapshot(params: {
   };
 }
 
-function setSnapshot(resolved: OpenClawConfig, config: OpenClawConfig) {
+function setSnapshot(resolved: QuietCoreConfig, config: QuietCoreConfig) {
   mockReadConfigFileSnapshot.mockResolvedValueOnce(buildSnapshot({ resolved, config }));
 }
 
@@ -116,7 +116,7 @@ function writeSecurePluginEntrypoint(pathname: string, contents: string): void {
   fs.chmodSync(pathname, 0o644);
 }
 
-function withRuntimeDefaults(resolved: OpenClawConfig): OpenClawConfig {
+function withRuntimeDefaults(resolved: QuietCoreConfig): QuietCoreConfig {
   return {
     ...resolved,
     agents: {
@@ -337,12 +337,12 @@ async function runValidateJsonAndGetPayload() {
   };
 }
 
-function firstWrittenConfig(): OpenClawConfig {
+function firstWrittenConfig(): QuietCoreConfig {
   const written = firstMockArg(mockWriteConfigFile);
   if (!written) {
     throw new Error("expected written config");
   }
-  return written as OpenClawConfig;
+  return written as QuietCoreConfig;
 }
 
 function firstWriteConfigOptions():
@@ -444,7 +444,7 @@ describe("config cli", () => {
 
   describe("config set - issue #6070", () => {
     it("preserves existing config keys when setting a new value", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         agents: {
           list: [{ id: "main" }, { id: "oracle", workspace: "~/oracle-workspace" }],
         },
@@ -452,7 +452,7 @@ describe("config cli", () => {
         tools: { allow: ["group:fs"] },
         logging: { level: "debug" },
       };
-      const runtimeMerged: OpenClawConfig = {
+      const runtimeMerged: QuietCoreConfig = {
         ...withRuntimeDefaults(resolved),
       };
       setSnapshot(resolved, runtimeMerged);
@@ -470,7 +470,7 @@ describe("config cli", () => {
     });
 
     it("marks set paths explicit so default-equal writes persist", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         channels: {
           telegram: {
             botToken: "tok-abc",
@@ -485,7 +485,7 @@ describe("config cli", () => {
             dmPolicy: "pairing",
           },
         },
-      } as OpenClawConfig;
+      } as QuietCoreConfig;
       setSnapshot(resolved, runtimeMerged);
 
       await runConfigCommand(["config", "set", "channels.telegram.dmPolicy", "pairing"]);
@@ -497,7 +497,7 @@ describe("config cli", () => {
     });
 
     it("marks object set paths explicit so nested default-equal writes persist", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         channels: {
           telegram: {
             botToken: "tok-abc",
@@ -512,7 +512,7 @@ describe("config cli", () => {
             dmPolicy: "pairing",
           },
         },
-      } as OpenClawConfig;
+      } as QuietCoreConfig;
       setSnapshot(resolved, runtimeMerged);
 
       await runConfigCommand([
@@ -528,7 +528,7 @@ describe("config cli", () => {
     });
 
     it("does not inject runtime defaults into the written config", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
       };
       const runtimeMerged = {
@@ -542,7 +542,7 @@ describe("config cli", () => {
         } as never,
         messages: { ackReaction: "✅" } as never,
         sessions: { persistence: { enabled: true } } as never,
-      } as unknown as OpenClawConfig;
+      } as unknown as QuietCoreConfig;
       setSnapshot(resolved, runtimeMerged);
 
       await runConfigCommand(["config", "set", "gateway.auth.mode", "token"]);
@@ -559,7 +559,7 @@ describe("config cli", () => {
     });
 
     it("writes agents.defaults.videoGenerationModel.primary without disturbing sibling defaults", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         agents: {
           defaults: {
             model: "openai/gpt-5.4",
@@ -590,7 +590,7 @@ describe("config cli", () => {
     });
 
     it("normalizes retired Google Gemini model refs before writing config mutations", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         agents: {
           defaults: {
             model: {
@@ -623,7 +623,7 @@ describe("config cli", () => {
     });
 
     it("normalizes explicit model-map paths before writing config mutations", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         agents: {
           defaults: {
             models: {
@@ -652,7 +652,7 @@ describe("config cli", () => {
     });
 
     it("normalizes agent-list model refs before writing config mutations", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         agents: {
           list: [
             {
@@ -678,7 +678,7 @@ describe("config cli", () => {
     });
 
     it("normalizes provider catalog model refs before writing config mutations", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         models: {
           providers: {
             google: {
@@ -837,7 +837,7 @@ describe("config cli", () => {
     });
 
     it("rejects protected model map replacement unless explicitly requested", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         agents: {
           defaults: {
             models: {
@@ -864,7 +864,7 @@ describe("config cli", () => {
     });
 
     it("merges protected model map values with --merge", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         agents: {
           defaults: {
             models: {
@@ -905,7 +905,7 @@ describe("config cli", () => {
             },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as QuietCoreConfig;
       setSnapshot(resolved, resolved);
 
       await runConfigCommand([
@@ -927,7 +927,7 @@ describe("config cli", () => {
     });
 
     it("drops gateway.auth.password when switching mode to token", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: {
           auth: {
             mode: "password",
@@ -952,7 +952,7 @@ describe("config cli", () => {
     });
 
     it("drops gateway.auth.token when switching mode to password", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: {
           auth: {
             mode: "token",
@@ -975,7 +975,7 @@ describe("config cli", () => {
     });
 
     it("applies mode-based credential cleanup using the final batch result", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: {
           auth: {
             mode: "password",
@@ -1005,7 +1005,7 @@ describe("config cli", () => {
 
   describe("config get", () => {
     it("redacts sensitive values", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: {
           auth: {
             token: "super-secret-token",
@@ -1020,8 +1020,8 @@ describe("config cli", () => {
     });
 
     it("prints materialized subagent archive default", async () => {
-      const resolved: OpenClawConfig = {};
-      const config: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {};
+      const config: QuietCoreConfig = {
         agents: {
           defaults: {
             maxConcurrent: 4,
@@ -1042,7 +1042,7 @@ describe("config cli", () => {
 
   describe("config validate", () => {
     it("prints success and exits 0 when config is valid", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
       };
       setSnapshot(resolved, resolved);
@@ -1274,7 +1274,7 @@ describe("config cli", () => {
 
   describe("config set parsing flags", () => {
     it("falls back to raw string when parsing fails and strict mode is off", async () => {
-      const resolved: OpenClawConfig = { gateway: { port: 18789 } };
+      const resolved: QuietCoreConfig = { gateway: { port: 18789 } };
       setSnapshot(resolved, resolved);
 
       await runConfigCommand(["config", "set", "gateway.auth.mode", "{bad"]);
@@ -1314,7 +1314,7 @@ describe("config cli", () => {
     });
 
     it("accepts --strict-json with batch mode and applies batch payload", async () => {
-      const resolved: OpenClawConfig = { gateway: { port: 18789 } };
+      const resolved: QuietCoreConfig = { gateway: { port: 18789 } };
       setSnapshot(resolved, resolved);
 
       await runConfigCommand([
@@ -1363,7 +1363,7 @@ describe("config cli", () => {
 
   describe("config set builders and dry-run", () => {
     it("supports SecretRef builder mode without requiring a value argument", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
       };
       setSnapshot(resolved, resolved);
@@ -1391,13 +1391,13 @@ describe("config cli", () => {
 
     it("keeps numeric config set path segments as object keys for schema-backed Discord guild records", async () => {
       setConfigMutationShapeSchema();
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         channels: {
           discord: {
             enabled: true,
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as QuietCoreConfig;
       setSnapshot(resolved, resolved);
 
       await runConfigCommand([
@@ -1422,13 +1422,13 @@ describe("config cli", () => {
 
     it("keeps numeric config set path segments as object keys for other schema-backed records", async () => {
       setConfigMutationShapeSchema();
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         channels: {
           telegram: {
             enabled: true,
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as QuietCoreConfig;
       setSnapshot(resolved, resolved);
 
       await runConfigCommand([
@@ -1453,7 +1453,7 @@ describe("config cli", () => {
 
     it("still creates arrays for schema-backed numeric list indexes", async () => {
       setConfigMutationShapeSchema();
-      const resolved: OpenClawConfig = {};
+      const resolved: QuietCoreConfig = {};
       setSnapshot(resolved, resolved);
 
       await runConfigCommand(["config", "set", "agents.list.0.id", '"tech"', "--strict-json"]);
@@ -1467,7 +1467,7 @@ describe("config cli", () => {
     });
 
     it("fails early when unsupported mutable paths are assigned SecretRef objects (builder mode)", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
       };
       setSnapshot(resolved, resolved);
@@ -1492,7 +1492,7 @@ describe("config cli", () => {
     });
 
     it("fails early when parent-object writes include unsupported SecretRef objects", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
       };
       setSnapshot(resolved, resolved);
@@ -1513,7 +1513,7 @@ describe("config cli", () => {
     });
 
     it("supports provider builder mode under secrets.providers.<alias>", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
       };
       setSnapshot(resolved, resolved);
@@ -1561,7 +1561,7 @@ describe("config cli", () => {
     });
 
     it("runs resolvability checks in builder dry-run mode without writing", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
         secrets: {
           providers: {
@@ -1596,7 +1596,7 @@ describe("config cli", () => {
     });
 
     it("requires schema validation in JSON dry-run mode", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
       };
       setSnapshot(resolved, resolved);
@@ -1618,7 +1618,7 @@ describe("config cli", () => {
 
     it("dry-runs config patch channel fields against plugin-owned schemas", async () => {
       setExternalFeishuSchema();
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         channels: {
           feishu: {
             appId: "app-id",
@@ -1646,7 +1646,7 @@ describe("config cli", () => {
     });
 
     it("fails dry-run when unsupported mutable paths receive SecretRef objects in value/json mode", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
         secrets: {
           providers: {
@@ -1673,7 +1673,7 @@ describe("config cli", () => {
     });
 
     it("aggregates policy failures across batch entries", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
       };
       setSnapshot(resolved, resolved);
@@ -1694,7 +1694,7 @@ describe("config cli", () => {
     });
 
     it("does not duplicate policy errors in --dry-run --json mode for parent-object writes", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
       };
       setSnapshot(resolved, resolved);
@@ -1727,7 +1727,7 @@ describe("config cli", () => {
     });
 
     it("logs a dry-run note when value mode performs no validation checks", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
       };
       setSnapshot(resolved, resolved);
@@ -1741,7 +1741,7 @@ describe("config cli", () => {
     });
 
     it("supports batch mode for refs/providers in dry-run", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
         secrets: {
           providers: {
@@ -1764,7 +1764,7 @@ describe("config cli", () => {
     });
 
     it("skips exec SecretRef resolvability checks in dry-run by default", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
         secrets: {
           providers: {
@@ -1799,7 +1799,7 @@ describe("config cli", () => {
     });
 
     it("allows exec SecretRef resolvability checks in dry-run when --allow-exec is set", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
         secrets: {
           providers: {
@@ -1853,7 +1853,7 @@ describe("config cli", () => {
     });
 
     it("fails dry-run when skipped exec refs use an unconfigured provider", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
         secrets: {
           providers: {},
@@ -1881,7 +1881,7 @@ describe("config cli", () => {
     });
 
     it("fails dry-run when skipped exec refs use a provider with mismatched source", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
         secrets: {
           providers: {
@@ -1913,7 +1913,7 @@ describe("config cli", () => {
     });
 
     it("writes sibling SecretRef paths when target uses sibling-ref shape", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
         channels: {
           googlechat: {
@@ -1987,7 +1987,7 @@ describe("config cli", () => {
     });
 
     it("supports batch-file mode", async () => {
-      const resolved: OpenClawConfig = { gateway: { port: 18789 } };
+      const resolved: QuietCoreConfig = { gateway: { port: 18789 } };
       setSnapshot(resolved, resolved);
 
       const pathname = path.join(
@@ -2007,7 +2007,7 @@ describe("config cli", () => {
     });
 
     it("batch-file nested leaf updates preserve agents defaults and list siblings", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         agents: {
           defaults: {
             models: {
@@ -2088,7 +2088,7 @@ describe("config cli", () => {
             },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as QuietCoreConfig;
       setSnapshot(resolved, resolved);
 
       const pathname = path.join(
@@ -2161,7 +2161,7 @@ describe("config cli", () => {
             },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as QuietCoreConfig;
       setSnapshot(resolved, resolved);
 
       const pathname = writeTempJson5File("quiet-core-bot-config-patch-empty-object", {
@@ -2196,7 +2196,7 @@ describe("config cli", () => {
             mode: "socket",
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as QuietCoreConfig;
       setSnapshot(resolved, resolved);
 
       const pathname = writeTempJson5File("quiet-core-bot-config-patch-empty-merge", {
@@ -2224,7 +2224,7 @@ describe("config cli", () => {
             enabled: true,
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as QuietCoreConfig;
       setSnapshot(resolved, resolved);
 
       const pathname = writeTempJson5File("quiet-core-bot-config-patch-numeric-object-key", {
@@ -2261,7 +2261,7 @@ describe("config cli", () => {
             default: { source: "env" },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as QuietCoreConfig;
       setSnapshot(resolved, resolved);
 
       const pathname = path.join(
@@ -2302,7 +2302,7 @@ describe("config cli", () => {
           secrets: {
             providers: {},
           },
-        } as unknown as OpenClawConfig;
+        } as unknown as QuietCoreConfig;
         mockLoadPluginMetadataSnapshot.mockReturnValue(
           createPluginMetadataSnapshot({
             diagnostics: [],
@@ -2412,7 +2412,7 @@ describe("config cli", () => {
             },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as QuietCoreConfig;
       setSnapshot(resolved, resolved);
 
       const patch = writeTempJson5File("quiet-core-bot-config-plugin-disable", {
@@ -2445,7 +2445,7 @@ describe("config cli", () => {
             },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as QuietCoreConfig;
       setSnapshot(resolved, resolved);
 
       const patch = writeTempJson5File("quiet-core-bot-config-plugin-provider-ref", {
@@ -2478,7 +2478,7 @@ describe("config cli", () => {
             default: { source: "env" },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as QuietCoreConfig;
       setSnapshot(resolved, resolved);
 
       const pathname = path.join(
@@ -2523,7 +2523,7 @@ describe("config cli", () => {
             enabled: false,
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as QuietCoreConfig;
       setSnapshot(resolved, resolved);
       mockResolveSecretRefValue.mockRejectedValue(new Error("missing env var"));
 
@@ -2592,7 +2592,7 @@ describe("config cli", () => {
             },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as QuietCoreConfig;
       setSnapshot(resolved, resolved);
 
       const pathname = path.join(
@@ -2698,7 +2698,7 @@ describe("config cli", () => {
     });
 
     it("fails dry-run when a builder-assigned SecretRef is unresolved", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
         secrets: {
           providers: {
@@ -2728,7 +2728,7 @@ describe("config cli", () => {
     });
 
     it("emits structured JSON for --dry-run --json success", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
         secrets: {
           providers: {
@@ -2771,7 +2771,7 @@ describe("config cli", () => {
     });
 
     it("emits skipped exec metadata for --dry-run --json success", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
         secrets: {
           providers: {
@@ -2813,7 +2813,7 @@ describe("config cli", () => {
     });
 
     it("emits structured JSON for --dry-run --json failure", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
         secrets: {
           providers: {
@@ -2852,7 +2852,7 @@ describe("config cli", () => {
     });
 
     it("keeps distinct resolvability failures when messages are identical but refs differ", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
         secrets: {
           providers: {
@@ -2890,7 +2890,7 @@ describe("config cli", () => {
     });
 
     it("aggregates schema and resolvability failures in --dry-run --json mode", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
         secrets: {
           providers: {
@@ -2925,7 +2925,7 @@ describe("config cli", () => {
     });
 
     it("fails dry-run when provider updates make existing refs unresolvable", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
         secrets: {
           providers: {
@@ -2966,7 +2966,7 @@ describe("config cli", () => {
     });
 
     it("fails dry-run for nested provider edits that make existing refs unresolvable", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
         secrets: {
           providers: {
@@ -3041,7 +3041,7 @@ describe("config cli", () => {
     });
 
     it("rejects impractical array indexes for config set", async () => {
-      const resolved = { agents: { list: [] } } as unknown as OpenClawConfig;
+      const resolved = { agents: { list: [] } } as unknown as QuietCoreConfig;
       setSnapshot(resolved, resolved);
 
       await expect(
@@ -3052,7 +3052,7 @@ describe("config cli", () => {
     });
 
     it("rejects signed array indexes for config set", async () => {
-      const resolved = { agents: { list: [{ id: "main" }] } } as unknown as OpenClawConfig;
+      const resolved = { agents: { list: [{ id: "main" }] } } as unknown as QuietCoreConfig;
       setSnapshot(resolved, resolved);
 
       await expect(
@@ -3126,7 +3126,7 @@ describe("config cli", () => {
     });
 
     it("preserves valid bracket path forms", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         agents: { list: [{ id: "main" }, { id: "other" }] },
       };
       setSnapshot(resolved, resolved);
@@ -3149,7 +3149,7 @@ describe("config cli", () => {
             },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as QuietCoreConfig;
       setSnapshot(resolved, resolved);
 
       await runConfigCommand([
@@ -3174,7 +3174,7 @@ describe("config cli", () => {
 
   describe("config unset - issue #6070", () => {
     it("preserves existing config keys when unsetting a value", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         agents: { list: [{ id: "main" }] },
         gateway: { port: 18789 },
         tools: {
@@ -3183,7 +3183,7 @@ describe("config cli", () => {
         },
         logging: { level: "debug" },
       };
-      const runtimeMerged: OpenClawConfig = {
+      const runtimeMerged: QuietCoreConfig = {
         ...withRuntimeDefaults(resolved),
       };
       setSnapshot(resolved, runtimeMerged);
@@ -3205,12 +3205,12 @@ describe("config cli", () => {
     });
 
     it("removes only the specified array element", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         agents: {
           list: [{ id: "agent-a" }, { id: "agent-b" }, { id: "agent-c" }],
         },
       };
-      const runtimeMerged: OpenClawConfig = {
+      const runtimeMerged: QuietCoreConfig = {
         ...withRuntimeDefaults(resolved),
       };
       setSnapshot(resolved, runtimeMerged);
@@ -3224,7 +3224,7 @@ describe("config cli", () => {
     });
 
     it("preserves write-level unset handling for numeric object keys", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         channels: {
           discord: {
             guilds: {
@@ -3233,7 +3233,7 @@ describe("config cli", () => {
             },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as QuietCoreConfig;
       setSnapshot(resolved, resolved);
 
       await runConfigCommand(["config", "unset", "channels.discord.guilds.123"]);
@@ -3252,7 +3252,7 @@ describe("config cli", () => {
     });
 
     it("dry-runs an unset without writing the config file", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         agents: { list: [{ id: "main" }] },
         gateway: { port: 18789 },
         tools: {
@@ -3273,7 +3273,7 @@ describe("config cli", () => {
     });
 
     it("prints JSON for config unset dry-run", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         agents: { list: [{ id: "main" }] },
         gateway: { port: 18789 },
         tools: {
@@ -3300,7 +3300,7 @@ describe("config cli", () => {
     });
 
     it("prints structured JSON when unset dry-run misses a path", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
         tools: {
           profile: "coding",
@@ -3336,7 +3336,7 @@ describe("config cli", () => {
     });
 
     it("validates existing refs when unset dry-run removes all secret providers", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
         secrets: {
           providers: {
@@ -3374,7 +3374,7 @@ describe("config cli", () => {
     });
 
     it("validates existing refs when unset dry-run removes secret defaults", async () => {
-      const resolved: OpenClawConfig = {
+      const resolved: QuietCoreConfig = {
         gateway: { port: 18789 },
         secrets: {
           defaults: {
@@ -3393,7 +3393,7 @@ describe("config cli", () => {
             },
           },
         } as never,
-      } as OpenClawConfig;
+      } as QuietCoreConfig;
       setSnapshot(resolved, resolved);
       setSnapshot(resolved, resolved);
 
@@ -3433,7 +3433,7 @@ describe("config cli", () => {
 
   describe("config file", () => {
     it("prints the active config file path", async () => {
-      const resolved: OpenClawConfig = { gateway: { port: 18789 } };
+      const resolved: QuietCoreConfig = { gateway: { port: 18789 } };
       setSnapshot(resolved, resolved);
 
       await runConfigCommand(["config", "file"]);
@@ -3443,7 +3443,7 @@ describe("config cli", () => {
     });
 
     it("handles config file path with home directory", async () => {
-      const resolved: OpenClawConfig = { gateway: { port: 18789 } };
+      const resolved: QuietCoreConfig = { gateway: { port: 18789 } };
       const snapshot = buildSnapshot({ resolved, config: resolved });
       snapshot.path = "/home/user/.quiet-core-bot/quiet-core-bot.json";
       mockReadConfigFileSnapshot.mockResolvedValueOnce(snapshot);

@@ -84,13 +84,13 @@ describe("install.ps1 failure handling", () => {
     const booleanSuccessBody = extractFunctionBody(source, "Test-BooleanSuccessResult");
     expect(completeInstallBody).toMatch(/\$PSCommandPath/);
     expect(completeInstallBody).toMatch(/\bexit \$script:InstallExitCode\b/);
-    expect(completeInstallBody).toMatch(/\bthrow "OpenClaw installation failed with exit code/);
+    expect(completeInstallBody).toMatch(/\bthrow "QuietCore installation failed with exit code/);
     expect(booleanSuccessBody).toContain("$Results.Count -gt 0");
     expect(source).toContain("$installSucceeded = Test-BooleanSuccessResult -Results $mainResults");
   });
 
   it("runs npm install through the resolved command with quiet CI defaults", () => {
-    const npmInstallBody = extractFunctionBody(source, "Install-OpenClaw");
+    const npmInstallBody = extractFunctionBody(source, "Install-QuietCore");
     expect(npmInstallBody).toContain("$npmOutput = Invoke-NpmCommand -Arguments");
     expect(npmInstallBody).toContain('$env:NPM_CONFIG_LOGLEVEL = "error"');
     expect(npmInstallBody).toContain('$env:NPM_CONFIG_UPDATE_NOTIFIER = "false"');
@@ -119,8 +119,8 @@ describe("install.ps1 failure handling", () => {
 
   it("does not force npm or pnpm lifecycle scripts through cmd.exe", () => {
     const ensurePnpmBody = extractFunctionBody(source, "Ensure-Pnpm");
-    const npmInstallBody = extractFunctionBody(source, "Install-OpenClaw");
-    const gitInstallBody = extractFunctionBody(source, "Install-OpenClawFromGit");
+    const npmInstallBody = extractFunctionBody(source, "Install-QuietCore");
+    const gitInstallBody = extractFunctionBody(source, "Install-QuietCoreFromGit");
 
     expect(ensurePnpmBody).not.toContain("NPM_CONFIG_SCRIPT_SHELL");
     expect(npmInstallBody).not.toContain("NPM_CONFIG_SCRIPT_SHELL");
@@ -131,7 +131,7 @@ describe("install.ps1 failure handling", () => {
     const commandSafeBody = extractFunctionBody(source, "Invoke-CommandFromWindowsSafeDirectory");
     const npmCommandBody = extractFunctionBody(source, "Invoke-NpmCommand");
     const corepackCommandBody = extractFunctionBody(source, "Invoke-CorepackCommand");
-    const openClawPathBody = extractFunctionBody(source, "Ensure-OpenClawOnPath");
+    const openClawPathBody = extractFunctionBody(source, "Ensure-QuietCoreOnPath");
     const ensurePnpmBody = extractFunctionBody(source, "Ensure-Pnpm");
     const mainBody = extractFunctionBody(source, "Main");
 
@@ -152,13 +152,13 @@ describe("install.ps1 failure handling", () => {
     );
   });
 
-  it("rejects OpenClaw GitHub source targets for npm installs", () => {
-    const npmInstallBody = extractFunctionBody(source, "Install-OpenClaw");
-    const sourceTargetBody = extractFunctionBody(source, "Test-OpenClawSourcePackageInstallSpec");
+  it("rejects QuietCore GitHub source targets for npm installs", () => {
+    const npmInstallBody = extractFunctionBody(source, "Install-QuietCore");
+    const sourceTargetBody = extractFunctionBody(source, "Test-QuietCoreSourcePackageInstallSpec");
     expect(sourceTargetBody).toContain('$normalizedTag -eq "main"');
     expect(sourceTargetBody).toContain("^github:liuda1999/quiet-core-bot");
-    expect(npmInstallBody).toContain("Test-OpenClawSourcePackageInstallSpec -RequestedTag $Tag");
-    expect(npmInstallBody).toContain("npm installs do not support OpenClaw GitHub source targets");
+    expect(npmInstallBody).toContain("Test-QuietCoreSourcePackageInstallSpec -RequestedTag $Tag");
+    expect(npmInstallBody).toContain("npm installs do not support QuietCore GitHub source targets");
     expect(npmInstallBody).toContain("-InstallMethod git -Tag main");
   });
 
@@ -169,7 +169,7 @@ describe("install.ps1 failure handling", () => {
   });
 
   it("preserves the min-release-age probe status before raw npmrc detection", () => {
-    const npmInstallBody = extractFunctionBody(source, "Install-OpenClaw");
+    const npmInstallBody = extractFunctionBody(source, "Install-QuietCore");
     const probeStatusCapture = npmInstallBody.indexOf("$minReleaseAgeStatus = $LASTEXITCODE");
     const rawKeyProbe = npmInstallBody.indexOf("Test-NpmConfigRawKey -Key");
     expect(probeStatusCapture).toBeGreaterThan(-1);
@@ -187,7 +187,7 @@ describe("install.ps1 failure handling", () => {
   });
 
   it("preserves caller-relative local tarball install specs before safe-cwd npm calls", () => {
-    const resolveSpecBody = extractFunctionBody(source, "Resolve-NpmOpenClawInstallSpec");
+    const resolveSpecBody = extractFunctionBody(source, "Resolve-NpmQuietCoreInstallSpec");
     const localSpecBody = extractFunctionBody(source, "Resolve-LocalNpmPackageInstallSpec");
     const localPathBody = extractFunctionBody(source, "Resolve-LocalNpmPackagePath");
 
@@ -209,14 +209,14 @@ describe("install.ps1 failure handling", () => {
     const portableNodeRootBody = extractFunctionBody(source, "Get-PortableNodeRoot");
     const portableNodePathBody = extractFunctionBody(source, "Ensure-PortableNodeOnUserPath");
     const userPathBody = extractFunctionBody(source, "Add-ToUserPath");
-    const depsRootBody = extractFunctionBody(source, "Get-OpenClawDepsRoot");
+    const depsRootBody = extractFunctionBody(source, "Get-QuietCoreDepsRoot");
     const resolveNodeBody = extractFunctionBody(source, "Resolve-PortableNodeDownload");
     const expandNodeBody = extractFunctionBody(source, "Expand-PortableNodeArchive");
 
     expect(installNodeBody).toContain("Install-PortableNode");
     expect(installNodeBody).toContain("Portable Node.js bootstrap failed");
     expect(installNodeBody).toContain("Error: Could not install Node.js automatically.");
-    expect(depsRootBody).toContain("OpenClaw\\deps");
+    expect(depsRootBody).toContain("QuietCore\\deps");
     expect(portableNodeRootBody).toContain("portable-node");
     expect(portableNodeBody).toContain("Ensure-PortableNodeOnUserPath");
     expect(portableNodeBody).toContain(
@@ -253,7 +253,7 @@ describe("install.ps1 failure handling", () => {
     const usePortableGitBody = extractFunctionBody(source, "Use-PortableGitIfPresent");
     const ensureGitBody = extractFunctionBody(source, "Ensure-Git");
 
-    expect(portableGitRootBody).toContain("Get-OpenClawDepsRoot");
+    expect(portableGitRootBody).toContain("Get-QuietCoreDepsRoot");
     expect(portableGitPathEntriesBody).toContain("mingw64\\bin");
     expect(portableGitPathEntriesBody).toContain("usr\\bin");
     expect(portableGitPathEntriesBody).toContain("Split-Path -Parent $gitExe");
@@ -373,7 +373,7 @@ describe("install.ps1 failure handling", () => {
     const pnpmVersionBody = extractFunctionBody(source, "Get-RepoPnpmVersion");
     const pnpmVersionMatchBody = extractFunctionBody(source, "Test-PnpmCommandMatchesVersion");
     const ensurePnpmBody = extractFunctionBody(source, "Ensure-Pnpm");
-    const gitInstallBody = extractFunctionBody(source, "Install-OpenClawFromGit");
+    const gitInstallBody = extractFunctionBody(source, "Install-QuietCoreFromGit");
     const nodeOptionsBody = extractFunctionBody(source, "Resolve-NodeOptionsWithMinOldSpace");
     const mainBody = extractFunctionBody(source, "Main");
 
@@ -405,9 +405,9 @@ describe("install.ps1 failure handling", () => {
     expect(gitInstallBody.indexOf("git -C $RepoDir pull --rebase")).toBeLessThan(
       gitInstallBody.indexOf("Ensure-Pnpm -RepoDir $RepoDir"),
     );
-    expect(mainBody).toContain("$gitInstallResults = @(Install-OpenClawFromGit");
+    expect(mainBody).toContain("$gitInstallResults = @(Install-QuietCoreFromGit");
     expect(mainBody).toContain("Test-BooleanSuccessResult -Results $gitInstallResults");
-    expect(mainBody).toContain("$npmInstallResults = @(Install-OpenClaw)");
+    expect(mainBody).toContain("$npmInstallResults = @(Install-QuietCore)");
     expect(mainBody).toContain("Test-BooleanSuccessResult -Results $npmInstallResults");
     expect(gitInstallBody).toContain("Push-Location -LiteralPath $RepoDir");
     expect(gitInstallBody).toContain("$sourceInstallArgs = @(");
@@ -456,21 +456,21 @@ describe("install.ps1 failure handling", () => {
     expect(gitInstallBody).toContain('Write-Host "[!] pnpm build failed for the Git checkout"');
     expect(gitInstallBody).toContain('$entryPath = Join-Path $RepoDir "dist\\\\entry.js"');
     expect(gitInstallBody).toContain("Test-Path $entryPath");
-    expect(gitInstallBody).toContain('Write-Host "[!] OpenClaw build did not produce $entryPath"');
+    expect(gitInstallBody).toContain('Write-Host "[!] QuietCore build did not produce $entryPath"');
     expect(gitInstallBody).toContain('node ""$entryPath"" %*');
     expect(gitInstallBody).not.toContain("& $pnpmCommand -C $RepoDir install");
     expect(gitInstallBody).not.toContain('node ""$RepoDir\\\\dist\\\\entry.js"" %*');
   });
 
   it("cleans legacy git submodules only from the selected git checkout", () => {
-    const gitInstallBody = extractFunctionBody(source, "Install-OpenClawFromGit");
+    const gitInstallBody = extractFunctionBody(source, "Install-QuietCoreFromGit");
     const mainBody = extractFunctionBody(source, "Main");
     expect(gitInstallBody).toContain("Remove-LegacySubmodule -RepoDir $RepoDir");
     expect(mainBody).not.toContain("Remove-LegacySubmodule");
   });
 
   it("launches interactive onboarding outside Main's captured output", () => {
-    const interactiveCommandBody = extractFunctionBody(source, "Invoke-InteractiveOpenClawCommand");
+    const interactiveCommandBody = extractFunctionBody(source, "Invoke-InteractiveQuietCoreCommand");
     const mainBody = extractFunctionBody(source, "Main");
     expect(interactiveCommandBody).toContain("Start-Process");
     expect(interactiveCommandBody).toContain("-NoNewWindow");
@@ -479,7 +479,7 @@ describe("install.ps1 failure handling", () => {
     expect(interactiveCommandBody).toContain("$process.ExitCode -ne 0");
     expect(interactiveCommandBody).toContain("failed with exit code");
     expect(mainBody).toContain('Write-Host "Starting setup..." -ForegroundColor Cyan');
-    expect(mainBody).toContain("Invoke-InteractiveOpenClawCommand onboard");
+    expect(mainBody).toContain("Invoke-InteractiveQuietCoreCommand onboard");
   });
 
   runIfPowerShell("fails install when interactive onboarding exits non-zero", () => {
@@ -494,12 +494,12 @@ describe("install.ps1 failure handling", () => {
         "function Write-Banner { }",
         "function Ensure-ExecutionPolicy { return $true }",
         "function Check-Node { return $true }",
-        "function Check-ExistingOpenClaw { return $false }",
+        "function Check-ExistingQuietCore { return $false }",
         "function Get-NpmCommandPath { return 'npm.cmd' }",
-        "function Install-OpenClaw { return $true }",
-        "function Ensure-OpenClawOnPath { return $true }",
+        "function Install-QuietCore { return $true }",
+        "function Ensure-QuietCoreOnPath { return $true }",
         "function Add-ToUserPath { param([string]$Path) }",
-        "function Get-OpenClawCommandPath { return 'cmd.exe' }",
+        "function Get-QuietCoreCommandPath { return 'cmd.exe' }",
         "function Start-Process {",
         "  param([string]$FilePath, [string[]]$ArgumentList, [switch]$NoNewWindow, [switch]$Wait, [switch]$PassThru)",
         "  [pscustomobject]@{ ExitCode = 17 }",
@@ -563,7 +563,7 @@ describe("install.ps1 failure handling", () => {
     const result = runPowerShell(["-NoLogo", "-NoProfile", "-Command", command]);
 
     expect(result.status).toBe(0);
-    expect(result.stdout).toContain("caught=OpenClaw installation failed with exit code 1.");
+    expect(result.stdout).toContain("caught=QuietCore installation failed with exit code 1.");
     expect(result.stdout).toContain("alive-after-install");
   });
 
@@ -579,13 +579,13 @@ describe("install.ps1 failure handling", () => {
         "function Write-Banner { }",
         "function Ensure-ExecutionPolicy { return $true }",
         "function Check-Node { return $true }",
-        "function Check-ExistingOpenClaw { return $false }",
+        "function Check-ExistingQuietCore { return $false }",
         "function Get-NpmCommandPath { return $null }",
-        "function Install-OpenClawFromGit {",
+        "function Install-QuietCoreFromGit {",
         "  Write-Output 'pnpm stdout before failure'",
         "  return $false",
         "}",
-        "function Ensure-OpenClawOnPath { throw 'should not continue after failed git install' }",
+        "function Ensure-QuietCoreOnPath { throw 'should not continue after failed git install' }",
         "$InstallMethod = 'git'",
         "$GitDir = 'C:\\\\quiet-core-bot-test'",
         "$NoOnboard = $true",
@@ -655,12 +655,12 @@ describe("install.ps1 failure handling", () => {
         "function Write-Banner { }",
         "function Ensure-ExecutionPolicy { return $true }",
         "function Check-Node { return $true }",
-        "function Check-ExistingOpenClaw { return $false }",
+        "function Check-ExistingQuietCore { return $false }",
         "function Add-ToPath { param([string]$Path) }",
-        "function Install-OpenClaw { Write-Output 'npm stdout'; return $true }",
-        "function Ensure-OpenClawOnPath { return $true }",
+        "function Install-QuietCore { Write-Output 'npm stdout'; return $true }",
+        "function Ensure-QuietCoreOnPath { return $true }",
         "function Refresh-GatewayServiceIfLoaded { }",
-        "function Invoke-OpenClawCommand { return 'OpenClaw test-version' }",
+        "function Invoke-QuietCoreCommand { return 'QuietCore test-version' }",
         "$NoOnboard = $true",
         "$result = Main",
         "if ($result -is [array]) { throw 'Main returned an array' }",
@@ -695,15 +695,15 @@ describe("install.ps1 failure handling", () => {
         "function Write-Banner { }",
         "function Ensure-ExecutionPolicy { return $true }",
         "function Check-Node { return $true }",
-        "function Check-ExistingOpenClaw { return $false }",
+        "function Check-ExistingQuietCore { return $false }",
         "function Add-ToPath { param([string]$Path) }",
-        "function Install-OpenClaw {",
+        "function Install-QuietCore {",
         "  Write-Output 'native chatter'",
         "  return $true",
         "}",
-        "function Ensure-OpenClawOnPath { return $true }",
+        "function Ensure-QuietCoreOnPath { return $true }",
         "function Refresh-GatewayServiceIfLoaded { }",
-        "function Invoke-OpenClawCommand { return 'OpenClaw test-version' }",
+        "function Invoke-QuietCoreCommand { return 'QuietCore test-version' }",
         "$NoOnboard = $true",
         ...ENTRYPOINT_LINES,
         "",

@@ -1,4 +1,4 @@
-// Sync Plugin Versions script supports OpenClaw repository automation.
+// Sync Plugin Versions script supports QuietCore repository automation.
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
@@ -26,7 +26,7 @@ type SyncPluginVersionsOptions = {
 
 const QUIET_CORE_VERSION_RANGE_RE = /^>=\d{4}\.\d{1,2}\.\d{1,2}(?:[-.][^"\s]+)?$/u;
 
-function syncOpenClawDependencyRange(
+function syncQuietCoreDependencyRange(
   deps: Record<string, string> | undefined,
   targetVersion: string,
 ): boolean {
@@ -56,7 +56,7 @@ function syncPluginApiVersion(pkg: PackageJson, targetVersion: string): boolean 
   return true;
 }
 
-function syncBuildOpenClawVersion(pkg: PackageJson, targetVersion: string): boolean {
+function syncBuildQuietCoreVersion(pkg: PackageJson, targetVersion: string): boolean {
   const build = pkg["quiet-core-bot"]?.build;
   const current = build?.openclawVersion;
   if (!current) {
@@ -81,7 +81,7 @@ function ensureChangelogEntry(changelogPath: string, version: string, write: boo
   if (content.includes(`## ${version}`)) {
     return false;
   }
-  const entry = `## ${version}\n\n### Changes\n- Version alignment with core OpenClaw release numbers.\n\n`;
+  const entry = `## ${version}\n\n### Changes\n- Version alignment with core QuietCore release numbers.\n\n`;
   if (content.startsWith("# Changelog\n\n")) {
     const next = content.replace("# Changelog\n\n", `# Changelog\n\n${entry}`);
     if (write) {
@@ -138,18 +138,18 @@ export function syncPluginVersions(
     }
 
     const versionChanged = pkg.version !== targetVersion;
-    const devDependencyChanged = syncOpenClawDependencyRange(pkg.devDependencies, targetVersion);
-    const peerDependencyChanged = syncOpenClawDependencyRange(pkg.peerDependencies, targetVersion);
+    const devDependencyChanged = syncQuietCoreDependencyRange(pkg.devDependencies, targetVersion);
+    const peerDependencyChanged = syncQuietCoreDependencyRange(pkg.peerDependencies, targetVersion);
     // minHostVersion is a compatibility floor, not release alignment metadata.
     // Keep it stable unless the owning plugin intentionally raises it.
     const pluginApiChanged = syncPluginApiVersion(pkg, targetVersion);
-    const buildOpenClawVersionChanged = syncBuildOpenClawVersion(pkg, targetVersion);
+    const buildQuietCoreVersionChanged = syncBuildQuietCoreVersion(pkg, targetVersion);
     const packageChanged =
       versionChanged ||
       devDependencyChanged ||
       peerDependencyChanged ||
       pluginApiChanged ||
-      buildOpenClawVersionChanged;
+      buildQuietCoreVersionChanged;
     if (!packageChanged) {
       skipped.push(pkg.name);
       continue;

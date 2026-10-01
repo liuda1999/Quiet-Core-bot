@@ -6,7 +6,7 @@ export type JsonObject = Record<string, unknown>;
 /** Compatibility metadata extracted from an external plugin package. */
 export type ExternalPluginCompatibility = {
   pluginApiRange?: string;
-  builtWithOpenClawVersion?: string;
+  builtWithQuietCoreVersion?: string;
   pluginSdkVersion?: string;
   minGatewayVersion?: string;
 };
@@ -43,8 +43,8 @@ function normalizeOptionalString(value: unknown): string | undefined {
   return trimmed ? trimmed : undefined;
 }
 
-/** Read OpenClaw package.json blocks without trusting caller input shape. */
-function readOpenClawBlock(packageJson: unknown) {
+/** Read QuietCore package.json blocks without trusting caller input shape. */
+function readQuietCoreBlock(packageJson: unknown) {
   const root = isRecord(packageJson) ? packageJson : undefined;
   const openclaw = isRecord(root?.["quiet-core-bot"]) ? root["quiet-core-bot"] : undefined;
   const compat = isRecord(openclaw?.compat) ? openclaw.compat : undefined;
@@ -57,7 +57,7 @@ function readOpenClawBlock(packageJson: unknown) {
 export function normalizeExternalPluginCompatibility(
   packageJson: unknown,
 ): ExternalPluginCompatibility | undefined {
-  const { root, compat, build, install } = readOpenClawBlock(packageJson);
+  const { root, compat, build, install } = readQuietCoreBlock(packageJson);
   const version = normalizeOptionalString(root?.version);
   const minHostVersion = normalizeOptionalString(install?.minHostVersion);
   const compatibility: ExternalPluginCompatibility = {};
@@ -72,9 +72,9 @@ export function normalizeExternalPluginCompatibility(
     compatibility.minGatewayVersion = minGatewayVersion;
   }
 
-  const builtWithOpenClawVersion = normalizeOptionalString(build?.openclawVersion) ?? version;
-  if (builtWithOpenClawVersion) {
-    compatibility.builtWithOpenClawVersion = builtWithOpenClawVersion;
+  const builtWithQuietCoreVersion = normalizeOptionalString(build?.openclawVersion) ?? version;
+  if (builtWithQuietCoreVersion) {
+    compatibility.builtWithQuietCoreVersion = builtWithQuietCoreVersion;
   }
 
   const pluginSdkVersion = normalizeOptionalString(build?.pluginSdkVersion);
@@ -87,7 +87,7 @@ export function normalizeExternalPluginCompatibility(
 
 /** List missing required field paths for an external code plugin package.json. */
 export function listMissingExternalCodePluginFieldPaths(packageJson: unknown): string[] {
-  const { compat, build } = readOpenClawBlock(packageJson);
+  const { compat, build } = readQuietCoreBlock(packageJson);
   const missing: string[] = [];
   if (!normalizeOptionalString(compat?.pluginApi)) {
     missing.push("quiet-core-bot.compat.pluginApi");

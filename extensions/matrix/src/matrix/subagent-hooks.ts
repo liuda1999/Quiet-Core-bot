@@ -9,7 +9,7 @@ import {
   formatThreadBindingSpawnDisabledError,
   resolveThreadBindingSpawnPolicy,
 } from "quiet-core-bot/plugin-sdk/conversation-runtime";
-import type { OpenClawPluginApi } from "quiet-core-bot/plugin-sdk/core";
+import type { QuietCorePluginApi } from "quiet-core-bot/plugin-sdk/core";
 import { normalizeOptionalString } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { resolveMatrixTargetIdentity } from "./target-ids.js";
 import {
@@ -104,7 +104,7 @@ function resolveMatrixBindingDeliveryOrigin(
 }
 
 export async function handleMatrixSubagentSpawning(
-  api: OpenClawPluginApi,
+  api: QuietCorePluginApi,
   event: MatrixSubagentSpawningEvent,
 ): Promise<SpawningResult | undefined> {
   if (!event.threadRequested) {

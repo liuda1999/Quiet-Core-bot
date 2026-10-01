@@ -1,4 +1,4 @@
-// Write Plugin Sdk Entry Dts script supports OpenClaw repository automation.
+// Write Plugin Sdk Entry Dts script supports QuietCore repository automation.
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";

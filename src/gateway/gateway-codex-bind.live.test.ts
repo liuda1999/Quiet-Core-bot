@@ -8,7 +8,7 @@ import { renderCatFacePngBase64 } from "../../test/helpers/live-image-probe.js";
 import { isLiveTestEnabled } from "../agents/live-test-helpers.js";
 import type { ChannelOutboundContext } from "../channels/plugins/types.public.js";
 import { clearConfigCache, clearRuntimeConfigSnapshot } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { isTruthyEnvValue } from "../infra/env.js";
 import { getSessionBindingService } from "../infra/outbound/session-binding-service.js";
 import { resolveBundledPluginWorkspaceSourcePath } from "../plugins/bundled-plugin-metadata.js";
@@ -352,7 +352,7 @@ async function writeGatewayConfig(params: {
   workspace: string;
 }): Promise<void> {
   const modelProvider = params.modelProvider?.trim() || "codex";
-  const cfg: OpenClawConfig = {
+  const cfg: QuietCoreConfig = {
     gateway: {
       mode: "local",
       port: params.port,

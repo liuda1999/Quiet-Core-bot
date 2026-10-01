@@ -2,7 +2,7 @@
 #
 # Shared Docker E2E image.
 # `bare` is a clean Node/Git runner for install/update lanes. `functional`
-# installs the prepared OpenClaw npm tarball into /app for built-app lanes.
+# installs the prepared QuietCore npm tarball into /app for built-app lanes.
 
 FROM node:24-bookworm-slim@sha256:242549cd46785b480c832479a730f4f2a20865d61ea2e404fdb2a5c3d3b73ecf AS e2e-runner
 

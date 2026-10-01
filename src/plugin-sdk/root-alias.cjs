@@ -462,7 +462,7 @@ function getModuleLoader(tryNative) {
     interopDefault: true,
     fsCache: resolvePluginSdkJitiFsCacheOption(),
     // Prefer Node's native sync ESM loader for built dist/plugin-sdk/*.js files
-    // so local plugins do not create a second transpiled OpenClaw core graph.
+    // so local plugins do not create a second transpiled QuietCore core graph.
     tryNative,
     extensions: [".ts", ".tsx", ".mts", ".cts", ".mtsx", ".ctsx", ".js", ".mjs", ".cjs", ".json"],
   });

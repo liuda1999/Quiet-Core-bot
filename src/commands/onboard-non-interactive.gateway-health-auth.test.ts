@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { resolveGatewayHealthProbeToken } from "./onboard-non-interactive/local.js";
 
 async function withTempDir<T>(run: (dir: string) => Promise<T>): Promise<T> {
@@ -63,7 +63,7 @@ describe("resolveGatewayHealthProbeToken", () => {
             },
           },
         },
-      } as OpenClawConfig);
+      } as QuietCoreConfig);
 
       expect(resolved).toEqual({ token: "file-secret-token" });
     });
@@ -93,7 +93,7 @@ describe("resolveGatewayHealthProbeToken", () => {
             },
           },
         },
-      } as OpenClawConfig);
+      } as QuietCoreConfig);
 
       expect(resolved.token).toBeUndefined();
       expect(resolved.unresolvedRefReason).toBe(
@@ -117,7 +117,7 @@ describe("resolveGatewayHealthProbeToken", () => {
           },
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expect(resolved).toEqual({ password: "resolved-password" });
   });

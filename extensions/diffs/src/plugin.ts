@@ -3,9 +3,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { resolveLivePluginConfigObject } from "quiet-core-bot/plugin-sdk/plugin-config-runtime";
 import {
-  resolvePreferredOpenClawTmpDir,
-  type OpenClawConfig,
-  type OpenClawPluginApi,
+  resolvePreferredQuietCoreTmpDir,
+  type QuietCoreConfig,
+  type QuietCorePluginApi,
 } from "../api.js";
 import {
   resolveDiffsPluginDefaults,
@@ -19,21 +19,21 @@ import { createDiffsTool } from "./tool.js";
 
 const DIFFS_LANGUAGE_PACK_PLUGIN_ID = "diffs-language-pack";
 
-export function registerDiffsPlugin(api: OpenClawPluginApi): void {
+export function registerDiffsPlugin(api: QuietCorePluginApi): void {
   const store = new DiffArtifactStore({
-    rootDir: path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-diffs"),
+    rootDir: path.join(resolvePreferredQuietCoreTmpDir(), "quiet-core-bot-diffs"),
     logger: api.logger,
   });
   const resolveCurrentPluginConfig = () =>
     resolveLivePluginConfigObject(
       api.runtime.config?.current
-        ? () => api.runtime.config.current() as OpenClawConfig
+        ? () => api.runtime.config.current() as QuietCoreConfig
         : undefined,
       "diffs",
       api.pluginConfig as Record<string, unknown>,
     ) ?? {};
   const resolveCurrentAccessConfig = () => {
-    const currentConfig = (api.runtime.config?.current?.() ?? api.config) as OpenClawConfig;
+    const currentConfig = (api.runtime.config?.current?.() ?? api.config) as QuietCoreConfig;
     const pluginConfig = resolveCurrentPluginConfig();
     return {
       allowRemoteViewer: resolveDiffsPluginSecurity(pluginConfig).allowRemoteViewer,
@@ -77,8 +77,8 @@ export function registerDiffsPlugin(api: OpenClawPluginApi): void {
   }));
 }
 
-export function resolveDiffsLanguagePackAvailability(api: OpenClawPluginApi): boolean {
-  const currentConfig = (api.runtime.config?.current?.() ?? api.config) as OpenClawConfig;
+export function resolveDiffsLanguagePackAvailability(api: QuietCorePluginApi): boolean {
+  const currentConfig = (api.runtime.config?.current?.() ?? api.config) as QuietCoreConfig;
   const plugins = currentConfig.plugins;
   if (plugins?.enabled === false) {
     return false;

@@ -17,7 +17,7 @@ async function resolveComparablePath(target: string): Promise<string> {
   return await fs.realpath(target).catch(() => path.resolve(target));
 }
 
-async function detectOpenClawGitCheckout(root: string): Promise<"git" | "not-git" | "unknown"> {
+async function detectQuietCoreGitCheckout(root: string): Promise<"git" | "not-git" | "unknown"> {
   const res = await runCommandWithTimeout(["git", "-C", root, "rev-parse", "--show-toplevel"], {
     timeoutMs: 5000,
   }).catch(() => null);
@@ -63,7 +63,7 @@ export async function maybeOfferUpdateBeforeDoctor(params: {
     return { updated: false };
   }
 
-  const git = await detectOpenClawGitCheckout(params.root);
+  const git = await detectQuietCoreGitCheckout(params.root);
   if (git === "git") {
     const shouldUpdate = await params.confirm({
       message: "Update Quiet Core bot from git before running doctor?",

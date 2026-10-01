@@ -12,19 +12,19 @@ import {
   readStateDirDotEnvVars,
 } from "./env-vars.js";
 import { withEnvOverride, withTempHome, writeStateDirDotEnv } from "./test-helpers.js";
-import type { OpenClawConfig } from "./types.js";
+import type { QuietCoreConfig } from "./types.js";
 
 describe("config env vars", () => {
   it("applies env vars from env block when missing", async () => {
     await withEnvOverride({ OPENROUTER_API_KEY: undefined }, async () => {
-      applyConfigEnvVars({ env: { vars: { OPENROUTER_API_KEY: "config-key" } } } as OpenClawConfig);
+      applyConfigEnvVars({ env: { vars: { OPENROUTER_API_KEY: "config-key" } } } as QuietCoreConfig);
       expect(process.env.OPENROUTER_API_KEY).toBe("config-key");
     });
   });
 
   it("does not override existing env vars", async () => {
     await withEnvOverride({ OPENROUTER_API_KEY: "existing-key" }, async () => {
-      applyConfigEnvVars({ env: { vars: { OPENROUTER_API_KEY: "config-key" } } } as OpenClawConfig);
+      applyConfigEnvVars({ env: { vars: { OPENROUTER_API_KEY: "config-key" } } } as QuietCoreConfig);
       expect(process.env.OPENROUTER_API_KEY).toBe("existing-key");
     });
   });
@@ -32,7 +32,7 @@ describe("config env vars", () => {
   it("overrides only exact lower-precedence env values", () => {
     const config = {
       env: { vars: { OPENROUTER_API_KEY: "config-key" } },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const lowerPrecedenceEnv = { OPENROUTER_API_KEY: "shell-key" };
     const shellEnv = { OPENROUTER_API_KEY: "shell-key" };
     const changedEnv = { OPENROUTER_API_KEY: "changed-key" };
@@ -48,7 +48,7 @@ describe("config env vars", () => {
     const onLowerPrecedenceKeysReplaced = vi.fn();
     const env = { ZAI_API_KEY: "shell-key" };
 
-    applyConfigEnvVars({ env: { vars: { Z_AI_API_KEY: "config-key" } } } as OpenClawConfig, env, {
+    applyConfigEnvVars({ env: { vars: { Z_AI_API_KEY: "config-key" } } } as QuietCoreConfig, env, {
       lowerPrecedenceEnv: { ZAI_API_KEY: "shell-key" },
       onLowerPrecedenceKeysReplaced,
     });
@@ -66,7 +66,7 @@ describe("config env vars", () => {
       Z_AI_API_KEY: "invocation-key",
     };
 
-    applyConfigEnvVars({ env: { vars: { ZAI_API_KEY: "config-key" } } } as OpenClawConfig, env, {
+    applyConfigEnvVars({ env: { vars: { ZAI_API_KEY: "config-key" } } } as QuietCoreConfig, env, {
       lowerPrecedenceEnv: { ZAI_API_KEY: "shell-key" },
     });
 
@@ -79,7 +79,7 @@ describe("config env vars", () => {
   it("mirrors a higher-precedence canonical value into a config-declared alias", () => {
     const env = { ZAI_API_KEY: "invocation-key" };
 
-    applyConfigEnvVars({ env: { vars: { Z_AI_API_KEY: "config-key" } } } as OpenClawConfig, env);
+    applyConfigEnvVars({ env: { vars: { Z_AI_API_KEY: "config-key" } } } as QuietCoreConfig, env);
 
     expect(env).toEqual({
       ZAI_API_KEY: "invocation-key",
@@ -90,7 +90,7 @@ describe("config env vars", () => {
   it.runIf(process.platform !== "win32")("keeps unrelated POSIX env casing distinct", () => {
     const env = { FOO: "host-key" };
 
-    applyConfigEnvVars({ env: { vars: { foo: "config-key" } } } as OpenClawConfig, env);
+    applyConfigEnvVars({ env: { vars: { foo: "config-key" } } } as QuietCoreConfig, env);
 
     expect(env).toEqual({
       FOO: "host-key",
@@ -100,7 +100,7 @@ describe("config env vars", () => {
 
   it("applies env vars from env.vars when missing", async () => {
     await withEnvOverride({ GROQ_API_KEY: undefined }, async () => {
-      applyConfigEnvVars({ env: { vars: { GROQ_API_KEY: "gsk-config" } } } as OpenClawConfig);
+      applyConfigEnvVars({ env: { vars: { GROQ_API_KEY: "gsk-config" } } } as QuietCoreConfig);
       expect(process.env.GROQ_API_KEY).toBe("gsk-config");
     });
   });
@@ -128,7 +128,7 @@ describe("config env vars", () => {
     await withEnvOverride({ OPENROUTER_API_KEY: undefined }, async () => {
       const merged = createConfigRuntimeEnv({
         env: { vars: { OPENROUTER_API_KEY: "config-key" } },
-      } as OpenClawConfig);
+      } as QuietCoreConfig);
       expect(merged.OPENROUTER_API_KEY).toBe("config-key");
       expect(process.env.OPENROUTER_API_KEY).toBeUndefined();
     });
@@ -138,7 +138,7 @@ describe("config env vars", () => {
     const platformSpy = vi.spyOn(process, "platform", "get").mockReturnValue("win32");
     try {
       const merged = createConfigRuntimeEnv(
-        { env: { vars: { QUIET_CORE_LOAD_SHELL_ENV: "1" } } } as OpenClawConfig,
+        { env: { vars: { QUIET_CORE_LOAD_SHELL_ENV: "1" } } } as QuietCoreConfig,
         { Quiet_Core_Load_Shell_Env: "0" },
       );
 
@@ -176,7 +176,7 @@ describe("config env vars", () => {
             },
           },
         };
-        const entries = collectConfigRuntimeEnvVars(config as OpenClawConfig);
+        const entries = collectConfigRuntimeEnvVars(config as QuietCoreConfig);
         expect(entries.BASH_ENV).toBeUndefined();
         expect(entries.SHELL).toBeUndefined();
         expect(entries.HOME).toBeUndefined();
@@ -186,7 +186,7 @@ describe("config env vars", () => {
         expect(entries.quiet_core_allow_older_binary_destructive_actions).toBeUndefined();
         expect(entries.OPENROUTER_API_KEY).toBe("config-key");
 
-        applyConfigEnvVars(config as OpenClawConfig);
+        applyConfigEnvVars(config as QuietCoreConfig);
         expect(process.env.BASH_ENV).toBeUndefined();
         expect(process.env.SHELL).toBeUndefined();
         expect(process.env.HOME).toBeUndefined();
@@ -210,7 +210,7 @@ describe("config env vars", () => {
           "NOT-PORTABLE": "bad",
         },
       };
-      const entries = collectConfigRuntimeEnvVars(config as OpenClawConfig);
+      const entries = collectConfigRuntimeEnvVars(config as QuietCoreConfig);
       expect(entries.OPENROUTER_API_KEY).toBe("config-key");
       expect(entries[" BAD KEY"]).toBeUndefined();
       expect(entries["NOT-PORTABLE"]).toBeUndefined();
@@ -225,7 +225,7 @@ describe("config env vars", () => {
           BRAVE_API_KEY: "config-key",
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expect(entries.OPENROUTER_API_KEY).toBeUndefined();
     expect(entries.BRAVE_API_KEY).toBe("config-key");
@@ -237,7 +237,7 @@ describe("config env vars", () => {
         OPENROUTER_API_KEY: "${OPENROUTER_API_KEY}",
         BRAVE_API_KEY: "config-key",
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expect(entries.OPENROUTER_API_KEY).toBeUndefined();
     expect(entries.BRAVE_API_KEY).toBe("config-key");
@@ -254,7 +254,7 @@ describe("config env vars", () => {
         },
       },
       { OPENROUTER_API_KEY: "resolved-key" },
-    ) as OpenClawConfig;
+    ) as QuietCoreConfig;
 
     const entries = collectConfigRuntimeEnvVars(resolvedConfig);
 
@@ -272,7 +272,7 @@ describe("config env vars", () => {
         await fs.mkdir(stateDir, { recursive: true });
         await fs.writeFile(path.join(stateDir, ".env"), "BRAVE_API_KEY=from-dotenv\n", "utf-8");
 
-        const config: OpenClawConfig = {
+        const config: QuietCoreConfig = {
           tools: {
             web: {
               search: {
@@ -283,12 +283,12 @@ describe("config env vars", () => {
         };
 
         loadDotEnv({ quiet: true });
-        const first = resolveConfigEnvVars(config, process.env) as OpenClawConfig;
+        const first = resolveConfigEnvVars(config, process.env) as QuietCoreConfig;
         expect(first.tools?.web?.search?.apiKey).toBe("from-dotenv");
 
         delete process.env.BRAVE_API_KEY;
         loadDotEnv({ quiet: true });
-        const second = resolveConfigEnvVars(config, process.env) as OpenClawConfig;
+        const second = resolveConfigEnvVars(config, process.env) as QuietCoreConfig;
         expect(second.tools?.web?.search?.apiKey).toBe("from-dotenv");
       });
     });
@@ -353,7 +353,7 @@ describe("config env vars", () => {
                 MY_KEY: "from-config",
               },
             },
-          } as OpenClawConfig,
+          } as QuietCoreConfig,
         }).MY_KEY,
       ).toBe("from-config");
     });

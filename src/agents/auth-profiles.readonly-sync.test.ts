@@ -7,7 +7,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { closeOpenClawAgentDatabasesForTest } from "../state/quiet-core-bot-agent-db.js";
+import { closeQuietCoreAgentDatabasesForTest } from "../state/quiet-core-bot-agent-db.js";
 import { AUTH_STORE_VERSION } from "./auth-profiles/constants.js";
 import { externalCliDiscoveryScoped } from "./auth-profiles/external-cli-discovery.js";
 import { loadPersistedAuthProfileStore } from "./auth-profiles/persisted.js";
@@ -58,7 +58,7 @@ describe("auth profiles read-only external auth overlay", () => {
 
   afterEach(() => {
     clearRuntimeAuthProfileStoreSnapshots();
-    closeOpenClawAgentDatabasesForTest();
+    closeQuietCoreAgentDatabasesForTest();
     vi.clearAllMocks();
   });
 
@@ -117,7 +117,7 @@ describe("auth profiles read-only external auth overlay", () => {
       expect(persistedOpenAiProfile.provider).toBe("openai");
       expect(persistedOpenAiProfile.key).toBe("sk-test");
     } finally {
-      closeOpenClawAgentDatabasesForTest();
+      closeQuietCoreAgentDatabasesForTest();
       fs.rmSync(agentDir, { recursive: true, force: true });
     }
   });
@@ -161,7 +161,7 @@ describe("auth profiles read-only external auth overlay", () => {
       expect(externalAuthCall?.config).toBe(cfg);
       expect(externalAuthCall?.context?.config).toBe(cfg);
     } finally {
-      closeOpenClawAgentDatabasesForTest();
+      closeQuietCoreAgentDatabasesForTest();
       fs.rmSync(agentDir, { recursive: true, force: true });
     }
   });

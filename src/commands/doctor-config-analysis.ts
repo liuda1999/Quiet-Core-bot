@@ -5,8 +5,8 @@ import type { ZodIssue } from "zod";
 import { note } from "../../packages/terminal-core/src/note.js";
 import { CONFIG_PATH } from "../config/config.js";
 import { resolveAgentModelFallbackValues } from "../config/model-input.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
-import { OpenClawSchema } from "../config/zod-schema.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
+import { QuietCoreSchema } from "../config/zod-schema.js";
 import { isRecord } from "../utils.js";
 
 type UnrecognizedKeysIssue = ZodIssue & {
@@ -80,15 +80,15 @@ const STRIP_PROTECTED_KEYS: Record<string, Set<string>> = {
  * Doctor skips this while an update is in progress so partially written upgrade state is not
  * stripped before its migration can finish.
  */
-export function stripUnknownConfigKeys(config: OpenClawConfig): {
-  config: OpenClawConfig;
+export function stripUnknownConfigKeys(config: QuietCoreConfig): {
+  config: QuietCoreConfig;
   removed: string[];
 } {
   if (isUpdateInProgress()) {
     return { config, removed: [] };
   }
 
-  const parsed = OpenClawSchema.safeParse(config);
+  const parsed = QuietCoreSchema.safeParse(config);
   if (parsed.success) {
     return { config, removed: [] };
   }
@@ -129,7 +129,7 @@ export function stripUnknownConfigKeys(config: OpenClawConfig): {
 }
 
 /** Warns when legacy OpenCode provider overrides shadow the built-in catalog. */
-export function noteOpencodeProviderOverrides(cfg: OpenClawConfig): void {
+export function noteOpencodeProviderOverrides(cfg: QuietCoreConfig): void {
   const providers = cfg.models?.providers;
   if (!providers) {
     return;
@@ -185,7 +185,7 @@ function isImplicitFallbackClobber(model: unknown): boolean {
 }
 
 /** Collects warnings for agent model shapes that unintentionally drop default fallbacks. */
-export function collectImplicitFallbackClobberWarnings(cfg: OpenClawConfig): string[] {
+export function collectImplicitFallbackClobberWarnings(cfg: QuietCoreConfig): string[] {
   const defaultFallbacks = resolveAgentModelFallbackValues(cfg.agents?.defaults?.model);
   if (defaultFallbacks.length === 0) {
     return [];
@@ -216,7 +216,7 @@ export function collectImplicitFallbackClobberWarnings(cfg: OpenClawConfig): str
 }
 
 /** Emits doctor notes for model fallback clobber warnings. */
-export function noteImplicitFallbackClobberWarnings(cfg: OpenClawConfig): void {
+export function noteImplicitFallbackClobberWarnings(cfg: QuietCoreConfig): void {
   const warnings = collectImplicitFallbackClobberWarnings(cfg);
   if (warnings.length === 0) {
     return;

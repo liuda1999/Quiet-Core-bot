@@ -191,7 +191,7 @@ function unauthorizedHintForMessage(message: string): string | null {
   return null;
 }
 
-/** Creates the default Canvas CLI dependency bundle backed by the OpenClaw gateway CLI. */
+/** Creates the default Canvas CLI dependency bundle backed by the QuietCore gateway CLI. */
 export function createDefaultCanvasCliDependencies(): CanvasCliDependencies {
   const nodesCallOpts = (cmd: Command, defaults?: { timeoutMs?: number }) =>
     cmd
@@ -447,7 +447,7 @@ export function registerNodesCanvasCommands(nodes: Command, deps: CanvasCliDepen
           const { version, messageCount } = validateA2UIJsonl(jsonl);
           if (version === "v0.9") {
             throw new Error(
-              "Detected A2UI v0.9 JSONL (createSurface). OpenClaw currently supports v0.8 only.",
+              "Detected A2UI v0.9 JSONL (createSurface). QuietCore currently supports v0.8 only.",
             );
           }
           await invokeCanvas(deps, opts, "canvas.a2ui.pushJSONL", { jsonl });

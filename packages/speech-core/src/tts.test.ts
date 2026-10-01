@@ -1,7 +1,7 @@
 // Speech Core tests cover tts behavior.
 import { rmSync } from "node:fs";
 import path from "node:path";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { MAX_TIMER_TIMEOUT_MS } from "quiet-core-bot/plugin-sdk/number-runtime";
 import type { ReplyPayload } from "quiet-core-bot/plugin-sdk/reply-payload";
 import {
@@ -143,7 +143,7 @@ function installSpeechProviders(providers: SpeechProviderPlugin[]): void {
   );
 }
 
-function createTtsConfig(prefsName: string): OpenClawConfig {
+function createTtsConfig(prefsName: string): QuietCoreConfig {
   return {
     messages: {
       tts: {
@@ -358,7 +358,7 @@ describe("speech-core native voice-note routing", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     const runtimeConfig = {
       messages: {
         tts: {
@@ -371,7 +371,7 @@ describe("speech-core native voice-note routing", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     installSpeechProviders([
       createMockSpeechProvider("mock", {
         isConfigured: ({ providerConfig }) => providerConfig.apiKey === "resolved-minimax-key",
@@ -411,7 +411,7 @@ describe("speech-core native voice-note routing", () => {
             provider: "mock",
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       disableFallback: true,
     });
 
@@ -434,7 +434,7 @@ describe("speech-core native voice-note routing", () => {
             provider: "mock",
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       disableFallback: true,
     });
 
@@ -455,7 +455,7 @@ describe("speech-core native voice-note routing", () => {
             provider: "mock",
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       disableFallback: true,
     });
 
@@ -477,7 +477,7 @@ describe("speech-core native voice-note routing", () => {
             timeoutMs: 45_000,
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       disableFallback: true,
     });
 
@@ -504,7 +504,7 @@ describe("speech-core native voice-note routing", () => {
             provider: "mock",
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       disableFallback: true,
     });
 
@@ -544,7 +544,7 @@ describe("speech-core native voice-note routing", () => {
             prefsPath: "/tmp/quiet-core-bot-speech-core-voice-model-default-test.json",
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       disableFallback: true,
     });
 
@@ -590,7 +590,7 @@ describe("speech-core native voice-note routing", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       disableFallback: true,
     });
 
@@ -634,7 +634,7 @@ describe("speech-core native voice-note routing", () => {
             prefsPath: "/tmp/quiet-core-bot-speech-core-voice-model-fallback-test.json",
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
     });
 
     expect(result.success).toBe(true);
@@ -680,7 +680,7 @@ describe("speech-core native voice-note routing", () => {
             prefsPath: "/tmp/quiet-core-bot-speech-core-same-provider-voice-model-fallback-test.json",
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
     });
 
     expect(result.success).toBe(true);
@@ -725,7 +725,7 @@ describe("speech-core native voice-note routing", () => {
             prefsPath: "/tmp/quiet-core-bot-speech-core-realtime-voice-model-ignored-test.json",
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       disableFallback: true,
     });
 
@@ -768,7 +768,7 @@ describe("speech-core native voice-note routing", () => {
             prefsPath: "/tmp/quiet-core-bot-speech-core-supported-voice-model-provider-test.json",
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
     });
 
     expect(result.success).toBe(true);
@@ -796,7 +796,7 @@ describe("speech-core native voice-note routing", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       disableFallback: true,
     });
 
@@ -835,7 +835,7 @@ describe("speech-core native voice-note routing", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       disableFallback: true,
     });
 
@@ -864,7 +864,7 @@ describe("speech-core native voice-note routing", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       disableFallback: true,
     });
 
@@ -1020,7 +1020,7 @@ describe("speech-core native voice-note routing", () => {
   });
 
   it("selects persona preferred provider before config fallback", () => {
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       messages: {
         tts: {
           enabled: true,
@@ -1048,7 +1048,7 @@ describe("speech-core native voice-note routing", () => {
   });
 
   it("merges active persona provider binding into synthesis config", async () => {
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       messages: {
         tts: {
           enabled: true,
@@ -1361,7 +1361,7 @@ describe("speech-core per-agent TTS config", () => {
           },
         ],
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     const resolved = resolveTtsConfig(cfg, "reader");
 
@@ -1423,7 +1423,7 @@ describe("speech-core per-agent TTS config", () => {
           },
         ],
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     let mediaDir: string | undefined;
     try {
@@ -1472,7 +1472,7 @@ describe("speech-core per-agent TTS config", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const resolved = resolveTtsConfig(cfg, "reader");
 

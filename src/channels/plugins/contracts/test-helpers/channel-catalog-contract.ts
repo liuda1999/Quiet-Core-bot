@@ -6,7 +6,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { resolvePreferredOpenClawTmpDir } from "../../../../infra/tmp-quiet-core-bot-dir.js";
+import { resolvePreferredQuietCoreTmpDir } from "../../../../infra/tmp-quiet-core-bot-dir.js";
 import { getChannelPluginCatalogEntry, listChannelPluginCatalogEntries } from "../../catalog.js";
 
 type CatalogEntryMeta = {
@@ -65,7 +65,7 @@ export function describeBundledMetadataOnlyChannelCatalogContract(params: {
   describe(`${params.pluginId} bundled metadata-only channel catalog contract`, () => {
     it("includes the bundled metadata-only channel entry when the runtime entrypoint is omitted", () => {
       const workspaceDir = fs.mkdtempSync(
-        path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-bundled-catalog-"),
+        path.join(resolvePreferredQuietCoreTmpDir(), "quiet-core-bot-bundled-catalog-"),
       );
       const bundledDir = path.join(workspaceDir, ".quiet-core-bot", "extensions", params.pluginId);
       fs.mkdirSync(bundledDir, { recursive: true });
@@ -120,7 +120,7 @@ export function describeOfficialFallbackChannelCatalogContract(params: {
   describe(`${params.channelId} official fallback channel catalog contract`, () => {
     it("includes shipped official channel catalog entries when bundled metadata is omitted", () => {
       const dir = fs.mkdtempSync(
-        path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-official-catalog-"),
+        path.join(resolvePreferredQuietCoreTmpDir(), "quiet-core-bot-official-catalog-"),
       );
       const catalogPath = path.join(dir, "channel-catalog.json");
       fs.writeFileSync(
@@ -153,7 +153,7 @@ export function describeOfficialFallbackChannelCatalogContract(params: {
 
     it("lets external catalogs override shipped fallback channel metadata", () => {
       const dir = fs.mkdtempSync(
-        path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-fallback-catalog-"),
+        path.join(resolvePreferredQuietCoreTmpDir(), "quiet-core-bot-fallback-catalog-"),
       );
       const bundledDir = path.join(dir, "dist", "extensions", params.pluginId);
       const officialCatalogPath = path.join(dir, "channel-catalog.json");
@@ -230,7 +230,7 @@ export function describeOfficialFallbackChannelCatalogContract(params: {
 
     it("surfaces package-name drift in external channel catalog install metadata", () => {
       const dir = fs.mkdtempSync(
-        path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-drifted-catalog-"),
+        path.join(resolvePreferredQuietCoreTmpDir(), "quiet-core-bot-drifted-catalog-"),
       );
       const catalogPath = path.join(dir, "catalog.json");
       fs.writeFileSync(

@@ -93,7 +93,7 @@ import {
 import type {
   ChannelAccountSnapshot,
   ChatType,
-  OpenClawConfig,
+  QuietCoreConfig,
   ReplyPayload,
   RuntimeEnv,
 } from "./runtime-api.js";
@@ -135,7 +135,7 @@ export type MonitorMattermostOpts = {
   botToken?: string;
   baseUrl?: string;
   accountId?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   runtime?: RuntimeEnv;
   abortSignal?: AbortSignal;
   statusSink?: (patch: Partial<ChannelAccountSnapshot>) => void;
@@ -518,7 +518,7 @@ function buildMattermostWsUrl(baseUrl: string): string {
 export async function monitorMattermostProvider(opts: MonitorMattermostOpts = {}): Promise<void> {
   const core = getMattermostRuntime();
   const runtime = resolveRuntime(opts);
-  const cfg = (opts.config ?? core.config.current()) as OpenClawConfig;
+  const cfg = (opts.config ?? core.config.current()) as QuietCoreConfig;
   const account = resolveMattermostAccount({
     cfg,
     accountId: opts.accountId,
@@ -664,7 +664,7 @@ export async function monitorMattermostProvider(opts: MonitorMattermostOpts = {}
               message: post.message ?? "",
               props: post.props ?? undefined,
             },
-            ephemeral_text: `OpenClaw ignored this action for ${decision.roomLabel}.`,
+            ephemeral_text: `QuietCore ignored this action for ${decision.roomLabel}.`,
           },
         };
       },

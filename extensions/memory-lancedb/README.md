@@ -1,6 +1,6 @@
 # @quiet-core/memory-lancedb
 
-Official LanceDB-backed long-term memory plugin for OpenClaw.
+Official LanceDB-backed long-term memory plugin for QuietCore.
 
 This plugin adds persistent memory tools backed by LanceDB, vector search, auto-recall, and auto-capture.
 
@@ -29,4 +29,4 @@ Use the memory plugin docs for embedding provider setup, storage paths, indexing
 
 - Plugin id: `memory-lancedb`
 - Package: `@quiet-core/memory-lancedb`
-- Minimum OpenClaw host: `2026.4.10`
+- Minimum QuietCore host: `2026.4.10`

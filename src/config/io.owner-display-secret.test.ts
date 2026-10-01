@@ -4,7 +4,7 @@ import {
   type OwnerDisplaySecretRuntimeState,
   retainGeneratedOwnerDisplaySecret,
 } from "./io.owner-display-secret.js";
-import type { OpenClawConfig } from "./types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "./types.quiet-core-bot.js";
 
 function createState(): OwnerDisplaySecretRuntimeState {
   return {
@@ -21,7 +21,7 @@ describe("retainGeneratedOwnerDisplaySecret", () => {
         ownerDisplay: "hash",
         ownerDisplaySecret: "generated-owner-secret",
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = retainGeneratedOwnerDisplaySecret({
       config,
@@ -43,7 +43,7 @@ describe("retainGeneratedOwnerDisplaySecret", () => {
         ownerDisplay: "hash",
         ownerDisplaySecret: "existing-secret",
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = retainGeneratedOwnerDisplaySecret({
       config,

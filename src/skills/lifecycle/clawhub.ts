@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import {
   downloadClawHubGitHubSkillArchive,
   downloadClawHubSkillArchive,
@@ -230,7 +230,7 @@ type ClawHubInstallParams = {
   force?: boolean;
   forceInstall?: boolean;
   logger?: Logger;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
 };
 
 type TrackedUpdateTarget =
@@ -1110,7 +1110,7 @@ async function installArchiveResolution(params: {
   authority: "quiet-core-bot" | "third-party";
   force?: boolean;
   logger?: Logger;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
 }) {
   return await withExtractedArchiveRoot({
     archivePath: params.archivePath,
@@ -1158,7 +1158,7 @@ async function installGitHubResolution(params: {
   commit: string;
   force?: boolean;
   logger?: Logger;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
 }) {
   return await withExtractedArchiveRoot({
     archivePath: params.archivePath,
@@ -1454,7 +1454,7 @@ export async function installSkillFromClawHub(params: {
   force?: boolean;
   forceInstall?: boolean;
   logger?: Logger;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
 }): Promise<InstallClawHubSkillResult> {
   return await installRequestedSkillFromClawHub(params);
 }
@@ -1465,7 +1465,7 @@ export async function updateSkillsFromClawHub(params: {
   baseUrl?: string;
   forceInstall?: boolean;
   logger?: Logger;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
 }): Promise<UpdateClawHubSkillResult[]> {
   const lock = await readClawHubSkillsLockfile(params.workspaceDir);
   const slugs = params.slug

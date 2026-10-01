@@ -3,10 +3,10 @@
 import {
   applyProviderConfigWithDefaultModelPreset,
   type ModelDefinitionConfig,
-  type OpenClawConfig,
+  type QuietCoreConfig,
 } from "../../dist/plugin-sdk/provider-onboard.js";
 
-export type { OpenClawConfig };
+export type { QuietCoreConfig };
 
 const DOCKER_OPENAI_MODEL_REF = "openai/gpt-5.5";
 const DOCKER_OPENAI_BASE_URL =
@@ -28,9 +28,9 @@ const DOCKER_OPENAI_MODEL: ModelDefinitionConfig = {
 };
 
 export function applyDockerOpenAiProviderConfig(
-  config: OpenClawConfig,
+  config: QuietCoreConfig,
   apiKey: string,
-): OpenClawConfig {
+): QuietCoreConfig {
   const seededConfig = applyProviderConfigWithDefaultModelPreset(config, {
     providerId: "openai",
     api: "openai-responses",

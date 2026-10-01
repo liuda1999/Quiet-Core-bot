@@ -1,5 +1,5 @@
 #!/usr/bin/env -S node --import tsx
-// Openclaw Npm Postpublish Verify script supports OpenClaw repository automation.
+// Openclaw Npm Postpublish Verify script supports QuietCore repository automation.
 
 import { createPublicKey, verify as verifySignature } from "node:crypto";
 import {
@@ -99,7 +99,7 @@ export type PublishedInstallScenario = {
   expectedVersion: string;
 };
 
-export type OpenClawNpmPostpublishVerifyArgs =
+export type QuietCoreNpmPostpublishVerifyArgs =
   | {
       help: false;
       version: string;
@@ -113,9 +113,9 @@ export function openClawNpmPostpublishVerifyUsage(): string {
   return "Usage: node --import tsx scripts/quiet-core-bot-npm-postpublish-verify.ts <version>";
 }
 
-export function parseOpenClawNpmPostpublishVerifyArgs(
+export function parseQuietCoreNpmPostpublishVerifyArgs(
   argv: readonly string[],
-): OpenClawNpmPostpublishVerifyArgs {
+): QuietCoreNpmPostpublishVerifyArgs {
   const args = argv[0] === "--" ? argv.slice(1) : argv;
   const version = args[0]?.trim() ?? "";
   if (version === "--help" || version === "-h") {
@@ -1188,7 +1188,7 @@ function verifyScenario(version: string, scenario: PublishedInstallScenario): vo
 }
 
 async function main(argv = process.argv.slice(2)): Promise<void> {
-  const args = parseOpenClawNpmPostpublishVerifyArgs(argv);
+  const args = parseQuietCoreNpmPostpublishVerifyArgs(argv);
   if (args.help) {
     console.log(openClawNpmPostpublishVerifyUsage());
     return;

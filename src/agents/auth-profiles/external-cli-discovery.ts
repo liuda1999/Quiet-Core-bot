@@ -4,7 +4,7 @@
  * auth profile store loading.
  */
 import { normalizeTrimmedStringList } from "@quiet-core/normalization-core/string-normalization";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import {
   resolveExternalCliAuthScopeFromConfig,
   type ExternalCliAuthScope,
@@ -15,23 +15,23 @@ export type ExternalCliAuthDiscovery =
   | {
       mode: "none";
       allowKeychainPrompt?: false;
-      config?: OpenClawConfig;
+      config?: QuietCoreConfig;
     }
   | {
       mode: "existing";
       allowKeychainPrompt?: boolean;
-      config?: OpenClawConfig;
+      config?: QuietCoreConfig;
     }
   | {
       mode: "scoped";
       allowKeychainPrompt?: boolean;
-      config?: OpenClawConfig;
+      config?: QuietCoreConfig;
       providerIds?: Iterable<string>;
       profileIds?: Iterable<string>;
     };
 
 type ProviderAuthDiscoveryParams = {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   provider: string;
   profileId?: string;
   preferredProfile?: string;
@@ -39,12 +39,12 @@ type ProviderAuthDiscoveryParams = {
 };
 
 type ConfigStatusDiscoveryParams = {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   allowKeychainPrompt?: false;
 };
 
 type ProviderSetDiscoveryParams = {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   providers: Iterable<string>;
   allowKeychainPrompt?: false;
 };
@@ -55,7 +55,7 @@ function normalizeStringList(values: Iterable<string | undefined>): string[] {
 
 /** Disables external CLI auth discovery. */
 export function externalCliDiscoveryNone(params?: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
 }): ExternalCliAuthDiscovery {
   return {
     mode: "none",
@@ -66,7 +66,7 @@ export function externalCliDiscoveryNone(params?: {
 
 /** Allows external CLI auth discovery for specific providers and/or profiles. */
 export function externalCliDiscoveryScoped(params: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   providerIds?: Iterable<string>;
   profileIds?: Iterable<string>;
   allowKeychainPrompt?: boolean;
@@ -123,7 +123,7 @@ export function externalCliDiscoveryForProviders(
 }
 
 function externalCliDiscoveryFromScope(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   scope: ExternalCliAuthScope | undefined;
   allowKeychainPrompt: false;
 }): ExternalCliAuthDiscovery {

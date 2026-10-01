@@ -2,7 +2,7 @@
   "name": "@quiet-core/vllm-provider",
   "version": "2026.6.11",
   "private": true,
-  "description": "OpenClaw vLLM provider plugin",
+  "description": "QuietCore vLLM provider plugin",
   "type": "module",
   "devDependencies": {
     "@quiet-core/plugin-sdk": "workspace:*"

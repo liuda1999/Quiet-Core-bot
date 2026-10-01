@@ -4,7 +4,7 @@ set -euo pipefail
 usage() {
   cat <<'EOF'
 Usage:
-  scripts/ios-validate-app-store-ipa.sh --ipa apps/ios/build/app-store/OpenClaw-<version>.ipa
+  scripts/ios-validate-app-store-ipa.sh --ipa apps/ios/build/app-store/QuietCore-<version>.ipa
 
 Validates the exported iOS App Store IPA before App Store Connect upload.
 EOF
@@ -13,7 +13,7 @@ EOF
 IPA_PATH=""
 EXPECTED_TEAM_ID="FWJYW4S8P8"
 EXPECTED_BUNDLE_ID="ai.quiet-core-botfoundation.app"
-EXPECTED_PROFILE_NAME="OpenClaw App Store ai.quiet-core-botfoundation.app"
+EXPECTED_PROFILE_NAME="QuietCore App Store ai.quiet-core-botfoundation.app"
 EXPECTED_APP_GROUP="group.ai.quiet-core-botfoundation.app.shared"
 EXPECTED_PUSH_MODE="appStore"
 
@@ -159,13 +159,13 @@ assert_plist_empty_or_absent() {
 }
 
 assert_plist_string "${info_plist}" "CFBundleIdentifier" "${EXPECTED_BUNDLE_ID}" "bundle identifier mismatch"
-assert_plist_string "${info_plist}" "OpenClawPushMode" "${EXPECTED_PUSH_MODE}" "push mode mismatch"
-assert_plist_empty_or_absent "${info_plist}" "OpenClawPushRelayBaseURL" "push relay URL override"
-assert_plist_key_absent "${info_plist}" "OpenClawPushTransport" "legacy push transport"
-assert_plist_key_absent "${info_plist}" "OpenClawPushDistribution" "legacy push distribution"
-assert_plist_key_absent "${info_plist}" "OpenClawPushAPNsEnvironment" "legacy APNs environment"
-assert_plist_key_absent "${info_plist}" "OpenClawPushRelayProfile" "legacy relay profile"
-assert_plist_key_absent "${info_plist}" "OpenClawPushProofPolicy" "legacy proof policy"
+assert_plist_string "${info_plist}" "QuietCorePushMode" "${EXPECTED_PUSH_MODE}" "push mode mismatch"
+assert_plist_empty_or_absent "${info_plist}" "QuietCorePushRelayBaseURL" "push relay URL override"
+assert_plist_key_absent "${info_plist}" "QuietCorePushTransport" "legacy push transport"
+assert_plist_key_absent "${info_plist}" "QuietCorePushDistribution" "legacy push distribution"
+assert_plist_key_absent "${info_plist}" "QuietCorePushAPNsEnvironment" "legacy APNs environment"
+assert_plist_key_absent "${info_plist}" "QuietCorePushRelayProfile" "legacy relay profile"
+assert_plist_key_absent "${info_plist}" "QuietCorePushProofPolicy" "legacy proof policy"
 
 if ! "${CODESIGN_BIN}" -d --entitlements :- "${app_path}" >"${entitlements_plist}" 2>"${tmp_dir}/codesign.err"; then
   detail="$(<"${tmp_dir}/codesign.err")"

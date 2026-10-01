@@ -32,7 +32,7 @@ import { listOpenAIAuthProfileProvidersForAgentRuntime } from "../../agents/open
 import { resolveDefaultAgentWorkspaceDir } from "../../agents/workspace.js";
 import { getChannelPlugin } from "../../channels/plugins/index.js";
 import type { SessionEntry } from "../../config/sessions.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { getCurrentPluginMetadataSnapshot } from "../../plugins/current-plugin-metadata-snapshot.js";
 import { resolveAgentRuntimeLabel } from "../../status/agent-runtime-label.js";
 import type { ReplyPayload } from "../types.js";
@@ -97,7 +97,7 @@ function normalizeRuntimeChoiceId(runtime: string | undefined): string {
 }
 
 function buildRuntimeChoice(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   provider: string;
   runtime: string;
   cli?: boolean;
@@ -117,7 +117,7 @@ function buildRuntimeChoice(params: {
 }
 
 function buildDefaultRuntimeChoice(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentId?: string;
   provider: string;
   modelId?: string;
@@ -146,7 +146,7 @@ function addRuntimeChoice(
 }
 
 export async function buildModelsProviderData(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   agentId?: string,
   options: { view?: "default" | "all"; workspaceDir?: string } = {},
 ): Promise<ModelsProviderData> {
@@ -418,7 +418,7 @@ function parseModelsArgs(raw: string): ParsedModelsCommand {
 
 function resolveProviderLabel(params: {
   provider: string;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentId?: string;
   agentDir?: string;
   workspaceDir?: string;
@@ -451,7 +451,7 @@ function resolveProviderLabel(params: {
 export function formatModelsAvailableHeader(params: {
   provider: string;
   total: number;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentId?: string;
   agentDir?: string;
   workspaceDir?: string;
@@ -497,7 +497,7 @@ function buildProviderInfos(params: {
 }
 
 export async function resolveModelsCommandReply(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   commandBodyNormalized: string;
   surface?: string;
   currentModel?: string;

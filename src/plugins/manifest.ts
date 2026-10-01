@@ -1943,7 +1943,7 @@ export type PluginPackageInstall = {
   requiredPlatformPackages?: string[];
 };
 
-export type OpenClawPackageStartup = {
+export type QuietCorePackageStartup = {
   /**
    * Opt-in for channel plugins whose `setupEntry` fully covers the gateway
    * startup surface needed before the server starts listening.
@@ -1951,30 +1951,30 @@ export type OpenClawPackageStartup = {
   deferConfiguredChannelFullLoadUntilAfterListen?: boolean;
 };
 
-export type OpenClawPackageSetupFeatures = {
+export type QuietCorePackageSetupFeatures = {
   configPromotion?: boolean;
   legacyStateMigrations?: boolean;
   legacySessionSurfaces?: boolean;
 };
 
-export type OpenClawPackageCompat = {
+export type QuietCorePackageCompat = {
   pluginApi?: string;
 };
 
-export type OpenClawPackageManifest = {
+export type QuietCorePackageManifest = {
   extensions?: string[];
   runtimeExtensions?: string[];
   setupEntry?: string;
   runtimeSetupEntry?: string;
-  setupFeatures?: OpenClawPackageSetupFeatures;
+  setupFeatures?: QuietCorePackageSetupFeatures;
   plugin?: {
     id?: string;
     label?: string;
   };
   channel?: PluginPackageChannel;
-  compat?: OpenClawPackageCompat;
+  compat?: QuietCorePackageCompat;
   install?: PluginPackageInstall;
-  startup?: OpenClawPackageStartup;
+  startup?: QuietCorePackageStartup;
 };
 
 export const DEFAULT_PLUGIN_ENTRY_CANDIDATES = [
@@ -1998,11 +1998,11 @@ export type PackageManifest = {
   description?: string;
   dependencies?: Record<string, string>;
   optionalDependencies?: Record<string, string>;
-} & Partial<Record<ManifestKey, OpenClawPackageManifest>>;
+} & Partial<Record<ManifestKey, QuietCorePackageManifest>>;
 
 export function getPackageManifestMetadata(
   manifest: PackageManifest | undefined,
-): OpenClawPackageManifest | undefined {
+): QuietCorePackageManifest | undefined {
   if (!manifest) {
     return undefined;
   }
@@ -2012,18 +2012,18 @@ export function getPackageManifestMetadata(
 export function resolvePackageExtensionEntries(
   manifest: PackageManifest | undefined,
 ): PackageExtensionResolution {
-  const rawOpenClaw = manifest?.[MANIFEST_KEY] as unknown;
-  if (rawOpenClaw === undefined || rawOpenClaw === null) {
+  const rawQuietCore = manifest?.[MANIFEST_KEY] as unknown;
+  if (rawQuietCore === undefined || rawQuietCore === null) {
     return { status: "missing", entries: [] };
   }
-  if (!isRecord(rawOpenClaw)) {
+  if (!isRecord(rawQuietCore)) {
     return {
       status: "invalid",
       entries: [],
       error: 'package.json "quiet-core-bot" field must be an object',
     };
   }
-  const raw = rawOpenClaw.extensions;
+  const raw = rawQuietCore.extensions;
   if (raw === undefined || raw === null) {
     return { status: "missing", entries: [] };
   }

@@ -147,7 +147,7 @@ function createMatrixPostHealthySyncDecryptFailureTracker(params: {
 function formatMatrixSelfDecryptionHint(accountId: string): string {
   return (
     "matrix: failed to decrypt a message from this same Matrix user. " +
-    "This usually means another Matrix device did not share the room key, or another OpenClaw runtime is using the same account. " +
+    "This usually means another Matrix device did not share the room key, or another QuietCore runtime is using the same account. " +
     `Check 'quiet-core-bot matrix verify status --verbose --account ${accountId}' and 'quiet-core-bot matrix devices list --account ${accountId}'.`
   );
 }

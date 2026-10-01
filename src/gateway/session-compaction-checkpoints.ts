@@ -19,7 +19,7 @@ import { readFileRangeAsync } from "../config/sessions/file-range.js";
 import { streamSessionTranscriptLines } from "../config/sessions/transcript-stream.js";
 import { scanSessionTranscriptTree } from "../config/sessions/transcript-tree.js";
 import { CURRENT_SESSION_VERSION } from "../config/sessions/version.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import { resolveGatewaySessionStoreTarget } from "./session-utils.js";
 
@@ -94,7 +94,7 @@ export type RestoreCheckpointSessionParams = {
 };
 
 export type PersistSessionCompactionCheckpointParams = {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   sessionKey: string;
   sessionId: string;
   reason: SessionCompactionCheckpointReason;

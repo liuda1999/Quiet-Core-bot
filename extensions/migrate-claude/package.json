@@ -2,7 +2,7 @@
   "name": "@quiet-core/migrate-claude",
   "version": "2026.6.11",
   "private": true,
-  "description": "Claude to OpenClaw migration provider",
+  "description": "Claude to QuietCore migration provider",
   "type": "module",
   "devDependencies": {
     "@quiet-core/plugin-sdk": "workspace:*",

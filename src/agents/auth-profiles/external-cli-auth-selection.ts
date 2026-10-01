@@ -7,7 +7,7 @@ import {
   findNormalizedProviderValue,
   normalizeProviderId,
 } from "@quiet-core/model-catalog-core/provider-id";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { resolveCliRuntimeExecutionProvider } from "../model-runtime-aliases.js";
 import { resolveProviderIdForAuth } from "../provider-auth-aliases.js";
 import { CLAUDE_CLI_PROFILE_ID } from "./constants.js";
@@ -18,7 +18,7 @@ const CLAUDE_CLI_PROVIDER_ID = "claude-cli";
 /** Resolve external CLI overlay scope from the user's auth/model selection. */
 export function resolveExternalCliAuthOverlayScopeFromSelection(params: {
   provider: string;
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   agentId?: string;
   modelId?: string;
   workspaceDir?: string;
@@ -63,7 +63,7 @@ export function resolveExternalCliAuthOverlayScopeFromSelection(params: {
 
 function resolveExternalCliAuthScopeFromAuthSelection(params: {
   provider: string;
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   workspaceDir?: string;
   store?: AuthProfileStore;
   userLockedAuthProfileId?: string;
@@ -142,7 +142,7 @@ function resolveExternalCliAuthScopeFromAuthSelection(params: {
 
 function resolveConfiguredAuthProfileOrder(params: {
   provider: string;
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   workspaceDir?: string;
   store?: AuthProfileStore;
 }): string[] {
@@ -186,7 +186,7 @@ function resolveAuthProfileOrderEntries(params: {
 
 function resolveExternalCliProviderIdForCompatibleAuthProfile(params: {
   provider: string;
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   workspaceDir?: string;
   store?: AuthProfileStore;
   profileId: string;

@@ -8,8 +8,8 @@ import { uniqueValues } from "@quiet-core/normalization-core/string-normalizatio
 import { parseByteSize } from "../cli/parse-bytes.js";
 import type { CronConfig } from "../config/types.cron.js";
 import {
-  openOpenClawStateDatabase,
-  runOpenClawStateWriteTransaction,
+  openQuietCoreStateDatabase,
+  runQuietCoreStateWriteTransaction,
 } from "../state/quiet-core-bot-state-db.js";
 import type { CronRunLogEntry } from "./run-log-types.js";
 import {
@@ -155,7 +155,7 @@ export async function appendCronRunLog(params: {
   const next = prev
     .catch(() => undefined)
     .then(async () => {
-      runOpenClawStateWriteTransaction(({ db }) => {
+      runQuietCoreStateWriteTransaction(({ db }) => {
         insertCronRunLogEntry(db, storeKey, entry);
         if (params.opts?.keepLines !== false) {
           pruneCronRunLogRows(
@@ -186,7 +186,7 @@ export function readCronRunLogEntriesSync(params: {
   const limit = Math.max(1, Math.min(5000, Math.floor(params.limit ?? 200)));
   const storeKey = cronStoreKey(params.storePath);
   const jobId = params.jobId ? assertSafeCronRunLogJobId(params.jobId) : undefined;
-  const rows = readCronRunLogRows(openOpenClawStateDatabase().db, storeKey, jobId);
+  const rows = readCronRunLogRows(openQuietCoreStateDatabase().db, storeKey, jobId);
   return rows
     .map(parseStoredRunLogEntry)
     .filter((entry): entry is CronRunLogEntry => entry !== null)
@@ -293,7 +293,7 @@ export async function readCronRunLogEntriesPage(
   const deliveryStatuses = normalizeDeliveryStatuses(opts);
   const query = normalizeLowercaseStringOrEmpty(opts.query);
   const sortDir: CronRunLogSortDir = opts.sortDir === "asc" ? "asc" : "desc";
-  const db = openOpenClawStateDatabase().db;
+  const db = openQuietCoreStateDatabase().db;
   const storeKey = cronStoreKey(opts.storePath);
   const offset = Math.max(0, Math.floor(opts.offset ?? 0));
 

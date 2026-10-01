@@ -3,7 +3,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   clearCurrentPluginMetadataSnapshot,
   setCurrentPluginMetadataSnapshot,
@@ -573,7 +573,7 @@ describe("loadPluginRegistrySnapshotWithMetadata", () => {
       plugins: {
         load: { paths: "not-an-array" },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     expect(() => loadPluginRegistrySnapshotWithMetadata({ config, env })).not.toThrow();
   });

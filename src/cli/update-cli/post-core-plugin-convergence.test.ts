@@ -7,7 +7,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
   listManagedPluginNpmRoots: vi.fn(),
   repairMissingConfiguredPluginInstalls: vi.fn(),
-  relinkOpenClawPeerDependenciesInManagedNpmRoot: vi.fn(),
+  relinkQuietCorePeerDependenciesInManagedNpmRoot: vi.fn(),
   runPluginPayloadSmokeCheck: vi.fn(),
 }));
 
@@ -15,8 +15,8 @@ vi.mock("../../commands/doctor/shared/missing-configured-plugin-install.js", () 
   repairMissingConfiguredPluginInstalls: mocks.repairMissingConfiguredPluginInstalls,
 }));
 vi.mock("../../plugins/plugin-peer-link.js", () => ({
-  relinkOpenClawPeerDependenciesInManagedNpmRoot:
-    mocks.relinkOpenClawPeerDependenciesInManagedNpmRoot,
+  relinkQuietCorePeerDependenciesInManagedNpmRoot:
+    mocks.relinkQuietCorePeerDependenciesInManagedNpmRoot,
 }));
 vi.mock("../../plugins/npm-project-roots.js", () => ({
   listManagedPluginNpmRoots: mocks.listManagedPluginNpmRoots,
@@ -25,7 +25,7 @@ vi.mock("./plugin-payload-validation.js", () => ({
   runPluginPayloadSmokeCheck: mocks.runPluginPayloadSmokeCheck,
 }));
 
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { VERSION } from "../../version.js";
 import {
   convergenceWarningsToOutcomes,
@@ -46,7 +46,7 @@ describe("runPostCorePluginConvergence", () => {
       warnings: [],
       records: {},
     });
-    mocks.relinkOpenClawPeerDependenciesInManagedNpmRoot.mockResolvedValue({
+    mocks.relinkQuietCorePeerDependenciesInManagedNpmRoot.mockResolvedValue({
       checked: 0,
       attempted: 0,
       repaired: 0,
@@ -93,7 +93,7 @@ describe("runPostCorePluginConvergence", () => {
   }
 
   it("calls repair with QUIET_CORE_UPDATE_POST_CORE_CONVERGENCE=1 set", async () => {
-    const cfg = { plugins: { entries: {} } } as unknown as OpenClawConfig;
+    const cfg = { plugins: { entries: {} } } as unknown as QuietCoreConfig;
     await runPostCorePluginConvergence({
       cfg,
       env: { QUIET_CORE_UPDATE_IN_PROGRESS: "1" },
@@ -110,7 +110,7 @@ describe("runPostCorePluginConvergence", () => {
   });
 
   it("uses the candidate runtime version over a stale inherited host version", async () => {
-    const cfg = { plugins: { entries: {} } } as unknown as OpenClawConfig;
+    const cfg = { plugins: { entries: {} } } as unknown as QuietCoreConfig;
     await runPostCorePluginConvergence({
       cfg,
       env: { QUIET_CORE_COMPATIBILITY_HOST_VERSION: "2026.5.12" },
@@ -133,7 +133,7 @@ describe("runPostCorePluginConvergence", () => {
     const result = await runPostCorePluginConvergence({
       cfg: {
         plugins: { entries: { discord: { enabled: true } } },
-      } as unknown as OpenClawConfig,
+      } as unknown as QuietCoreConfig,
       env: {},
     });
     expect(result.errored).toBe(false);
@@ -148,7 +148,7 @@ describe("runPostCorePluginConvergence", () => {
       records: { discord: { source: "npm", installPath: "/p/discord" } },
     });
     const result = await runPostCorePluginConvergence({
-      cfg: { plugins: { entries: { discord: { enabled: true } } } } as unknown as OpenClawConfig,
+      cfg: { plugins: { entries: { discord: { enabled: true } } } } as unknown as QuietCoreConfig,
       env: {},
     });
     expect(result.installRecords).toEqual({
@@ -166,7 +166,7 @@ describe("runPostCorePluginConvergence", () => {
       "/tmp/quiet-core-bot-state/npm",
       "/tmp/quiet-core-bot-state/npm/projects/codex",
     ]);
-    mocks.relinkOpenClawPeerDependenciesInManagedNpmRoot
+    mocks.relinkQuietCorePeerDependenciesInManagedNpmRoot
       .mockResolvedValueOnce({
         checked: 0,
         attempted: 0,
@@ -181,15 +181,15 @@ describe("runPostCorePluginConvergence", () => {
       });
 
     const result = await runPostCorePluginConvergence({
-      cfg: { plugins: { entries: { codex: { enabled: true } } } } as unknown as OpenClawConfig,
+      cfg: { plugins: { entries: { codex: { enabled: true } } } } as unknown as QuietCoreConfig,
       env: { QUIET_CORE_STATE_DIR: "/tmp/quiet-core-bot-state" },
     });
 
-    expect(mocks.relinkOpenClawPeerDependenciesInManagedNpmRoot).toHaveBeenNthCalledWith(1, {
+    expect(mocks.relinkQuietCorePeerDependenciesInManagedNpmRoot).toHaveBeenNthCalledWith(1, {
       npmRoot: "/tmp/quiet-core-bot-state/npm",
       logger: {},
     });
-    expect(mocks.relinkOpenClawPeerDependenciesInManagedNpmRoot).toHaveBeenNthCalledWith(2, {
+    expect(mocks.relinkQuietCorePeerDependenciesInManagedNpmRoot).toHaveBeenNthCalledWith(2, {
       npmRoot: "/tmp/quiet-core-bot-state/npm/projects/codex",
       logger: {},
     });
@@ -197,7 +197,7 @@ describe("runPostCorePluginConvergence", () => {
       "Repaired Quiet Core bot host peer link(s) for 1 managed npm plugin package(s).",
     ]);
     expect(
-      mocks.relinkOpenClawPeerDependenciesInManagedNpmRoot.mock.invocationCallOrder[0],
+      mocks.relinkQuietCorePeerDependenciesInManagedNpmRoot.mock.invocationCallOrder[0],
     ).toBeLessThan(mocks.runPluginPayloadSmokeCheck.mock.invocationCallOrder[0]);
   });
 
@@ -205,7 +205,7 @@ describe("runPostCorePluginConvergence", () => {
     const baseline = { matrix: { source: "npm" as const, installPath: "/p/matrix" } };
     const cfg = {
       plugins: { entries: { matrix: { enabled: true } } },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     mocks.repairMissingConfiguredPluginInstalls.mockResolvedValue({
       changes: [],
       warnings: [],
@@ -245,7 +245,7 @@ describe("runPostCorePluginConvergence", () => {
     });
     const cfg = {
       plugins: { entries: { discord: { enabled: true }, brave: { enabled: true } } },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     const result = await runPostCorePluginConvergence({
       cfg,
@@ -287,7 +287,7 @@ describe("runPostCorePluginConvergence", () => {
     const result = await runPostCorePluginConvergence({
       cfg: {
         plugins: { entries: { discord: { enabled: true } } },
-      } as unknown as OpenClawConfig,
+      } as unknown as QuietCoreConfig,
       env: {},
     });
     expect(result.errored).toBe(false);
@@ -314,7 +314,7 @@ describe("runPostCorePluginConvergence", () => {
     const result = await runPostCorePluginConvergence({
       cfg: {
         plugins: { entries: { matrix: { enabled: true } } },
-      } as unknown as OpenClawConfig,
+      } as unknown as QuietCoreConfig,
       env: {},
     });
     expect(result.errored).toBe(false);
@@ -354,7 +354,7 @@ describe("runPostCorePluginConvergence", () => {
           deny: ["discord"],
           entries: { discord: { enabled: true } },
         },
-      } as unknown as OpenClawConfig,
+      } as unknown as QuietCoreConfig,
       env: {},
     });
     expect(result.errored).toBe(false);
@@ -384,7 +384,7 @@ describe("runPostCorePluginConvergence", () => {
     const result = await runPostCorePluginConvergence({
       cfg: {
         plugins: { entries: { brave: { enabled: true } } },
-      } as unknown as OpenClawConfig,
+      } as unknown as QuietCoreConfig,
       env: {},
     });
     expect(result.errored).toBe(true);
@@ -422,7 +422,7 @@ describe("runPostCorePluginConvergence", () => {
     const result = await runPostCorePluginConvergence({
       cfg: {
         plugins: { entries: { brave: { enabled: true } } },
-      } as unknown as OpenClawConfig,
+      } as unknown as QuietCoreConfig,
       env: {},
     });
     expect(result.errored).toBe(true);
@@ -450,7 +450,7 @@ describe("runPostCorePluginConvergence", () => {
     await runPostCorePluginConvergence({
       cfg: {
         plugins: { entries: { brave: { enabled: true } } },
-      } as unknown as OpenClawConfig,
+      } as unknown as QuietCoreConfig,
       env: {},
     });
     expect(mocks.runPluginPayloadSmokeCheck).toHaveBeenCalledTimes(1);
@@ -512,7 +512,7 @@ describe("filterRecordsToActive", () => {
     const filtered = filterRecordsToActive({
       cfg: {
         plugins: { enabled: true, entries: { enabled: { enabled: true } } },
-      } as unknown as OpenClawConfig,
+      } as unknown as QuietCoreConfig,
       records,
     });
     expect(filtered).toEqual(records);
@@ -532,7 +532,7 @@ describe("filterRecordsToActive", () => {
             "active-plugin": { enabled: true },
           },
         },
-      } as unknown as OpenClawConfig,
+      } as unknown as QuietCoreConfig,
       records,
     });
     expect(filtered).toEqual({
@@ -550,7 +550,7 @@ describe("filterRecordsToActive", () => {
           enabled: true,
           deny: ["denied"],
         },
-      } as unknown as OpenClawConfig,
+      } as unknown as QuietCoreConfig,
       records,
     });
     expect(filtered).toEqual({});
@@ -574,7 +574,7 @@ describe("filterRecordsToActive", () => {
           enabled: true,
           entries: { codex: { enabled: false } },
         },
-      } as unknown as OpenClawConfig,
+      } as unknown as QuietCoreConfig,
       records,
     });
     expect(filtered).toEqual(records);

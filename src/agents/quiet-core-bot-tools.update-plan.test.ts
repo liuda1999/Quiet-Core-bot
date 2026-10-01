@@ -1,27 +1,27 @@
 // Verifies update_plan registration gates and base Quiet Core bot tool inclusion policy.
 import { afterEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { setEmbeddedMode } from "../infra/embedded-mode.js";
 import { isToolWrappedWithBeforeToolCallHook } from "./agent-tools.before-tool-call.js";
-import { createOpenClawTools } from "./quiet-core-bot-tools.js";
-import { shouldIncludeUpdatePlanToolForOpenClawTools } from "./quiet-core-bot-tools.registration.js";
+import { createQuietCoreTools } from "./quiet-core-bot-tools.js";
+import { shouldIncludeUpdatePlanToolForQuietCoreTools } from "./quiet-core-bot-tools.registration.js";
 import { createUpdatePlanTool } from "./tools/update-plan-tool.js";
 
-type UpdatePlanGatingParams = Parameters<typeof shouldIncludeUpdatePlanToolForOpenClawTools>[0];
-type CreateOpenClawToolsOptions = NonNullable<Parameters<typeof createOpenClawTools>[0]>;
+type UpdatePlanGatingParams = Parameters<typeof shouldIncludeUpdatePlanToolForQuietCoreTools>[0];
+type CreateQuietCoreToolsOptions = NonNullable<Parameters<typeof createQuietCoreTools>[0]>;
 
 function expectUpdatePlanEnabled(params: UpdatePlanGatingParams, expected: boolean): void {
-  expect(shouldIncludeUpdatePlanToolForOpenClawTools(params)).toBe(expected);
+  expect(shouldIncludeUpdatePlanToolForQuietCoreTools(params)).toBe(expected);
 }
 
-function toolNames(tools: ReturnType<typeof createOpenClawTools>): string[] {
+function toolNames(tools: ReturnType<typeof createQuietCoreTools>): string[] {
   return tools.map((tool) => tool.name);
 }
 
-function createFastToolNames(options: CreateOpenClawToolsOptions): string[] {
+function createFastToolNames(options: CreateQuietCoreToolsOptions): string[] {
   // Disable unrelated dynamic surfaces so registration assertions stay deterministic.
   return toolNames(
-    createOpenClawTools({
+    createQuietCoreTools({
       disableMessageTool: true,
       disablePluginTools: true,
       wrapBeforeToolCallHook: false,
@@ -31,9 +31,9 @@ function createFastToolNames(options: CreateOpenClawToolsOptions): string[] {
 }
 
 function expectToolNamed(
-  tools: ReturnType<typeof createOpenClawTools>,
+  tools: ReturnType<typeof createQuietCoreTools>,
   name: string,
-): ReturnType<typeof createOpenClawTools>[number] {
+): ReturnType<typeof createQuietCoreTools>[number] {
   const tool = tools.find((candidate) => candidate.name === name);
   if (!tool) {
     throw new Error(`Expected tool ${name} to be registered`);
@@ -42,7 +42,7 @@ function expectToolNamed(
 }
 
 function openAiGpt5Params(
-  config: OpenClawConfig,
+  config: QuietCoreConfig,
   overrides: Partial<UpdatePlanGatingParams> = {},
 ): UpdatePlanGatingParams {
   // Common OpenAI GPT-5 selection used by model-aware update_plan gates.
@@ -65,33 +65,33 @@ describe("quiet-core-bot-tools update_plan gating", () => {
   });
 
   it("keeps update_plan disabled by default", () => {
-    expectUpdatePlanEnabled({ config: {} as OpenClawConfig }, false);
+    expectUpdatePlanEnabled({ config: {} as QuietCoreConfig }, false);
   });
 
   it("does not expose update_plan from default tool construction", () => {
     const defaultTools = createFastToolNames({
-      config: {} as OpenClawConfig,
+      config: {} as QuietCoreConfig,
       modelProvider: "anthropic",
       modelId: "claude-sonnet-4-6",
     });
     const emptyAllowlistParams = {
-      config: {} as OpenClawConfig,
+      config: {} as QuietCoreConfig,
       pluginToolAllowlist: [],
       modelProvider: "anthropic",
       modelId: "claude-sonnet-4-6",
     };
 
     expect(defaultTools).not.toContain("update_plan");
-    expect(shouldIncludeUpdatePlanToolForOpenClawTools(emptyAllowlistParams)).toBe(false);
+    expect(shouldIncludeUpdatePlanToolForQuietCoreTools(emptyAllowlistParams)).toBe(false);
   });
 
   it("wraps constructed tools with before-tool-call hooks by default", () => {
-    const tools = createOpenClawTools({
-      config: {} as OpenClawConfig,
+    const tools = createQuietCoreTools({
+      config: {} as QuietCoreConfig,
       disablePluginTools: true,
     });
-    const unwrappedTools = createOpenClawTools({
-      config: {} as OpenClawConfig,
+    const unwrappedTools = createQuietCoreTools({
+      config: {} as QuietCoreConfig,
       disablePluginTools: true,
       wrapBeforeToolCallHook: false,
     });
@@ -104,8 +104,8 @@ describe("quiet-core-bot-tools update_plan gating", () => {
 
   it("keeps message tool in embedded message-tool-only completions", () => {
     setEmbeddedMode(true);
-    const tools = createOpenClawTools({
-      config: {} as OpenClawConfig,
+    const tools = createQuietCoreTools({
+      config: {} as QuietCoreConfig,
       disablePluginTools: true,
       wrapBeforeToolCallHook: false,
       sourceReplyDeliveryMode: "message_tool_only",
@@ -116,10 +116,10 @@ describe("quiet-core-bot-tools update_plan gating", () => {
 
   it("requires explicit transcripts enablement before registering the transcripts tool", () => {
     const defaultTools = createFastToolNames({
-      config: {} as OpenClawConfig,
+      config: {} as QuietCoreConfig,
     });
     const enabledTools = createFastToolNames({
-      config: { transcripts: { enabled: true } } as OpenClawConfig,
+      config: { transcripts: { enabled: true } } as QuietCoreConfig,
     });
 
     expect(defaultTools).not.toContain("transcripts");
@@ -128,19 +128,19 @@ describe("quiet-core-bot-tools update_plan gating", () => {
 
   it("keeps explicitly allowed message tool in embedded completions", () => {
     setEmbeddedMode(true);
-    const fromRuntimeAllowlist = createOpenClawTools({
-      config: {} as OpenClawConfig,
+    const fromRuntimeAllowlist = createQuietCoreTools({
+      config: {} as QuietCoreConfig,
       disablePluginTools: true,
       pluginToolAllowlist: ["message"],
       wrapBeforeToolCallHook: false,
     });
-    const fromGlobalAlsoAllow = createOpenClawTools({
-      config: { tools: { profile: "minimal", alsoAllow: ["message"] } } as OpenClawConfig,
+    const fromGlobalAlsoAllow = createQuietCoreTools({
+      config: { tools: { profile: "minimal", alsoAllow: ["message"] } } as QuietCoreConfig,
       disablePluginTools: true,
       wrapBeforeToolCallHook: false,
     });
-    const denied = createOpenClawTools({
-      config: {} as OpenClawConfig,
+    const denied = createQuietCoreTools({
+      config: {} as QuietCoreConfig,
       disablePluginTools: true,
       pluginToolAllowlist: ["message"],
       pluginToolDenylist: ["message"],
@@ -155,10 +155,10 @@ describe("quiet-core-bot-tools update_plan gating", () => {
   it("keeps subagent spawn available for trusted embedded gateway-bound runs", () => {
     setEmbeddedMode(true);
     const defaultTools = createFastToolNames({
-      config: {} as OpenClawConfig,
+      config: {} as QuietCoreConfig,
     });
     const gatewayBoundTools = createFastToolNames({
-      config: {} as OpenClawConfig,
+      config: {} as QuietCoreConfig,
       allowGatewaySubagentBinding: true,
     });
 
@@ -175,7 +175,7 @@ describe("quiet-core-bot-tools update_plan gating", () => {
           planTool: true,
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expectUpdatePlanEnabled({ config }, true);
     expect(createUpdatePlanTool().displaySummary).toBe("Track short work plan.");
@@ -183,7 +183,7 @@ describe("quiet-core-bot-tools update_plan gating", () => {
 
   it("registers update_plan when the runtime allowlist explicitly requests it", () => {
     const tools = createFastToolNames({
-      config: {} as OpenClawConfig,
+      config: {} as QuietCoreConfig,
       pluginToolAllowlist: ["update_plan"],
       modelProvider: "anthropic",
       modelId: "claude-sonnet-4-6",
@@ -193,8 +193,8 @@ describe("quiet-core-bot-tools update_plan gating", () => {
   });
 
   it("includes update_plan when a config allowlist group includes it", () => {
-    const includeUpdatePlan = shouldIncludeUpdatePlanToolForOpenClawTools({
-      config: { tools: { allow: ["group:agents"] } } as OpenClawConfig,
+    const includeUpdatePlan = shouldIncludeUpdatePlanToolForQuietCoreTools({
+      config: { tools: { allow: ["group:agents"] } } as QuietCoreConfig,
       modelProvider: "anthropic",
       modelId: "claude-sonnet-4-6",
     });
@@ -203,8 +203,8 @@ describe("quiet-core-bot-tools update_plan gating", () => {
   });
 
   it("includes update_plan when a runtime allowlist group includes it", () => {
-    const includeUpdatePlan = shouldIncludeUpdatePlanToolForOpenClawTools({
-      config: {} as OpenClawConfig,
+    const includeUpdatePlan = shouldIncludeUpdatePlanToolForQuietCoreTools({
+      config: {} as QuietCoreConfig,
       pluginToolAllowlist: ["group:agents"],
       modelProvider: "anthropic",
       modelId: "claude-sonnet-4-6",
@@ -214,8 +214,8 @@ describe("quiet-core-bot-tools update_plan gating", () => {
   });
 
   it("respects deny policy for grouped allowlists", () => {
-    const includeUpdatePlan = shouldIncludeUpdatePlanToolForOpenClawTools({
-      config: {} as OpenClawConfig,
+    const includeUpdatePlan = shouldIncludeUpdatePlanToolForQuietCoreTools({
+      config: {} as QuietCoreConfig,
       pluginToolAllowlist: ["group:agents"],
       pluginToolDenylist: ["update_plan"],
       modelProvider: "anthropic",
@@ -232,7 +232,7 @@ describe("quiet-core-bot-tools update_plan gating", () => {
       agents: {
         list: [{ id: "main" }],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expectUpdatePlanEnabled(openAiGpt5Params(cfg), true);
   });
@@ -249,7 +249,7 @@ describe("quiet-core-bot-tools update_plan gating", () => {
         },
         list: [{ id: "main" }],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expectUpdatePlanEnabled(openAiGpt5Params(cfg), false);
   });
@@ -259,7 +259,7 @@ describe("quiet-core-bot-tools update_plan gating", () => {
       agents: {
         list: [{ id: "main" }],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expectUpdatePlanEnabled(
       openAiGpt5Params(cfg, { modelProvider: "anthropic", modelId: "claude-sonnet-4-6" }),
@@ -278,7 +278,7 @@ describe("quiet-core-bot-tools update_plan gating", () => {
         },
         list: [{ id: "main" }],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expectUpdatePlanEnabled(openAiGpt5Params(cfg), true);
   });
@@ -293,7 +293,7 @@ describe("quiet-core-bot-tools update_plan gating", () => {
         },
         list: [{ id: "main" }],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expectUpdatePlanEnabled(
       openAiGpt5Params(cfg, { modelProvider: "anthropic", modelId: "claude-sonnet-4-6" }),
@@ -317,7 +317,7 @@ describe("quiet-core-bot-tools update_plan gating", () => {
         },
         list: [{ id: "main" }],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expectUpdatePlanEnabled(openAiGpt5Params(cfg), false);
   });
@@ -340,7 +340,7 @@ describe("quiet-core-bot-tools update_plan gating", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expectUpdatePlanEnabled(openAiGpt5Params(cfg, { agentId: "research" }), true);
   });
@@ -365,7 +365,7 @@ describe("quiet-core-bot-tools update_plan gating", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expectUpdatePlanEnabled(openAiGpt5Params(cfg, { agentId: "main" }), false);
     expectUpdatePlanEnabled(openAiGpt5Params(cfg, { agentId: "research" }), true);

@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { readDiagnosticEvents } from "../state/diagnostic-events-store.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
+import { closeQuietCoreStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
 import { withEnv } from "../test-utils/env.js";
 import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import {
@@ -57,7 +57,7 @@ describe("writeAnnounceDropDiagnostic", () => {
   });
 
   afterEach(async () => {
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
     if (tempStateDir) {
       await removeTestTempPath(tempStateDir);
       tempStateDir = null;

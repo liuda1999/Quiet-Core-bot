@@ -9,7 +9,7 @@ scenario:
     secondary:
       - channels.discord-config
       - agents.create
-  objective: Verify Crestodian can bootstrap a fresh OpenClaw config, set the default model, create an agent, configure Discord through a SecretRef, validate config, and leave an audit trail.
+  objective: Verify Crestodian can bootstrap a fresh QuietCore config, set the default model, create an agent, configure Discord through a SecretRef, validate config, and leave an audit trail.
   successCriteria:
     - Crestodian reports missing config in an empty state dir.
     - Crestodian setup writes a workspace and default model.

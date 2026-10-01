@@ -1,7 +1,7 @@
 // Model set tests cover persisting default model/provider selections.
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import type { RuntimeEnv } from "../../runtime.js";
 
 const mocks = vi.hoisted(() => ({
@@ -48,7 +48,7 @@ describe("modelsSetCommand", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     const runtimeConfig = {
       agents: {
         defaults: {
@@ -57,7 +57,7 @@ describe("modelsSetCommand", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     mocks.readConfigFileSnapshot.mockResolvedValue({
       valid: true,
       hash: "config-hash",
@@ -90,7 +90,7 @@ describe("modelsSetCommand", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     const runtimeConfig = {
       agents: {
         defaults: {
@@ -100,7 +100,7 @@ describe("modelsSetCommand", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     mocks.readConfigFileSnapshot.mockResolvedValue({
       valid: true,
       hash: "config-hash",
@@ -132,7 +132,7 @@ describe("modelsSetCommand", () => {
           models: {},
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     mocks.readConfigFileSnapshot.mockResolvedValue({
       valid: true,
       hash: "config-hash",

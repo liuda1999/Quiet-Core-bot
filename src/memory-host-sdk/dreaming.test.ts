@@ -1,7 +1,7 @@
 // Memory host dreaming tests cover dreaming artifact persistence and lookup.
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import {
   formatMemoryDreamingDay,
   isSameMemoryDreamingDay,
@@ -92,7 +92,7 @@ describe("memory dreaming host helpers", () => {
           userTimezone: "America/Los_Angeles",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const resolved = resolveMemoryDreamingConfig({
       pluginConfig: {},
@@ -159,7 +159,7 @@ describe("memory dreaming host helpers", () => {
           { id: "gamma", workspace: "/workspace/shared" },
         ],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expect(resolveMemoryDreamingWorkspaces(cfg)).toEqual([
       {
@@ -181,7 +181,7 @@ describe("memory dreaming host helpers", () => {
           { id: "agi-cdo", workspace: "/workspace/agi-cdo" },
         ],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expect(
       resolveMemoryDreamingWorkspaces(cfg, {
@@ -211,7 +211,7 @@ describe("memory dreaming host helpers", () => {
           workspace: "/workspace",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expect(resolveMemoryDreamingWorkspaces(cfg)).toEqual([
       {
@@ -240,7 +240,7 @@ describe("memory dreaming host helpers", () => {
             memory: "memos-local-quiet-core-bot-plugin",
           },
         },
-      } as OpenClawConfig),
+      } as QuietCoreConfig),
     ).toBe("memos-local-quiet-core-bot-plugin");
   });
 
@@ -261,7 +261,7 @@ describe("memory dreaming host helpers", () => {
             },
           },
         },
-      } as OpenClawConfig),
+      } as QuietCoreConfig),
     ).toEqual({
       dreaming: {
         enabled: true,
@@ -287,7 +287,7 @@ describe("memory dreaming host helpers", () => {
             },
           },
         },
-      } as OpenClawConfig),
+      } as QuietCoreConfig),
     ).toEqual({
       dreaming: {
         enabled: true,
@@ -310,7 +310,7 @@ describe("memory dreaming host helpers", () => {
             },
           },
         },
-      } as OpenClawConfig),
+      } as QuietCoreConfig),
     ).toEqual({
       dreaming: {
         enabled: true,
@@ -326,7 +326,7 @@ describe("memory dreaming host helpers", () => {
             memory: "none",
           },
         },
-      } as OpenClawConfig),
+      } as QuietCoreConfig),
     ).toBe("memory-core");
 
     expect(
@@ -345,7 +345,7 @@ describe("memory dreaming host helpers", () => {
             },
           },
         },
-      } as OpenClawConfig),
+      } as QuietCoreConfig),
     ).toEqual({
       dreaming: {
         enabled: true,

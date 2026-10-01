@@ -1,16 +1,16 @@
 // Tests Quiet Core bot execution environment construction.
 import { describe, expect, it } from "vitest";
 import {
-  ensureOpenClawExecMarkerOnProcess,
-  markOpenClawExecEnv,
+  ensureQuietCoreExecMarkerOnProcess,
+  markQuietCoreExecEnv,
   QUIET_CORE_CLI_ENV_VALUE,
   QUIET_CORE_CLI_ENV_VAR,
 } from "./quiet-core-bot-exec-env.js";
 
-describe("markOpenClawExecEnv", () => {
+describe("markQuietCoreExecEnv", () => {
   it("returns a cloned env object with the exec marker set", () => {
     const env = { PATH: "/usr/bin", QUIET_CORE_CLI: "0" };
-    const marked = markOpenClawExecEnv(env);
+    const marked = markQuietCoreExecEnv(env);
 
     expect(marked).toEqual({
       PATH: "/usr/bin",
@@ -21,7 +21,7 @@ describe("markOpenClawExecEnv", () => {
   });
 });
 
-describe("ensureOpenClawExecMarkerOnProcess", () => {
+describe("ensureQuietCoreExecMarkerOnProcess", () => {
   it.each([
     {
       name: "mutates and returns the provided process env",
@@ -32,7 +32,7 @@ describe("ensureOpenClawExecMarkerOnProcess", () => {
       env: { PATH: "/usr/bin", [QUIET_CORE_CLI_ENV_VAR]: "0" } as NodeJS.ProcessEnv,
     },
   ])("$name", ({ env }) => {
-    expect(ensureOpenClawExecMarkerOnProcess(env)).toBe(env);
+    expect(ensureQuietCoreExecMarkerOnProcess(env)).toBe(env);
     expect(env[QUIET_CORE_CLI_ENV_VAR]).toBe(QUIET_CORE_CLI_ENV_VALUE);
   });
 
@@ -41,7 +41,7 @@ describe("ensureOpenClawExecMarkerOnProcess", () => {
     delete process.env[QUIET_CORE_CLI_ENV_VAR];
 
     try {
-      expect(ensureOpenClawExecMarkerOnProcess()).toBe(process.env);
+      expect(ensureQuietCoreExecMarkerOnProcess()).toBe(process.env);
       expect(process.env[QUIET_CORE_CLI_ENV_VAR]).toBe(QUIET_CORE_CLI_ENV_VALUE);
     } finally {
       if (previous === undefined) {

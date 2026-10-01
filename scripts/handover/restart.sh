@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# OpenClaw handover · restart the gateway (Docker or Node mode).
+# QuietCore handover · restart the gateway (Docker or Node mode).
 #
 # Usage: bash scripts/handover/restart.sh [docker|node]
 

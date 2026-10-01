@@ -59,7 +59,7 @@ async function collectStreamEvents<T>(stream: AsyncIterable<T>): Promise<T[]> {
   return events;
 }
 
-async function withTempOpenClawState<T>(run: (paths: { root: string }) => Promise<T>): Promise<T> {
+async function withTempQuietCoreState<T>(run: (paths: { root: string }) => Promise<T>): Promise<T> {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-ollama-cli-live-"));
   try {
     await fs.writeFile(
@@ -87,7 +87,7 @@ async function withTempOpenClawState<T>(run: (paths: { root: string }) => Promis
   }
 }
 
-async function runOpenClawCli(args: string[], env: NodeJS.ProcessEnv) {
+async function runQuietCoreCli(args: string[], env: NodeJS.ProcessEnv) {
   const hasBuiltEntry = ["entry.js", "entry.mjs"].some((entry) =>
     fsSync.existsSync(path.join(process.cwd(), "dist", entry)),
   );
@@ -160,8 +160,8 @@ function buildCliEnv(root: string): NodeJS.ProcessEnv {
 
 describe.skipIf(!LIVE)("ollama live", () => {
   it("runs infer model run through the local CLI path without static model discovery", async () => {
-    await withTempOpenClawState(async ({ root }) => {
-      const result = await runOpenClawCli(
+    await withTempQuietCoreState(async ({ root }) => {
+      const result = await runQuietCoreCli(
         [
           "infer",
           "model",
@@ -320,7 +320,7 @@ describe.skipIf(!LIVE)("ollama live", () => {
       }
 
       const result = (await tool.execute({
-        query: "OpenClaw documentation",
+        query: "QuietCore documentation",
         count: 1,
       })) as {
         provider?: string;

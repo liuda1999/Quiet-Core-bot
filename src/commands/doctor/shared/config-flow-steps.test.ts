@@ -1,6 +1,6 @@
 // Config-flow step tests cover doctor repair step ordering and mutation planning.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../../config/config.js";
+import type { QuietCoreConfig } from "../../../config/config.js";
 import type { DoctorConfigPreflightResult } from "../../doctor-config-preflight.js";
 
 const { migrateLegacyConfigMock, stripUnknownConfigKeysMock } = vi.hoisted(() => ({
@@ -38,7 +38,7 @@ function createLegacyStepResult(
 describe("doctor config flow steps", () => {
   beforeEach(() => {
     migrateLegacyConfigMock.mockReset();
-    migrateLegacyConfigMock.mockImplementation((config: OpenClawConfig) => ({
+    migrateLegacyConfigMock.mockImplementation((config: QuietCoreConfig) => ({
       config,
       changes: [],
     }));
@@ -151,7 +151,7 @@ describe("doctor config flow steps", () => {
     const result = applyUnknownConfigKeyStep({
       state: {
         cfg: {},
-        candidate: { bogus: true } as unknown as OpenClawConfig,
+        candidate: { bogus: true } as unknown as QuietCoreConfig,
         pendingChanges: false,
         fixHints: [],
       },
@@ -213,7 +213,7 @@ describe("doctor config flow steps", () => {
               },
             },
           },
-        } as unknown as OpenClawConfig,
+        } as unknown as QuietCoreConfig,
         pendingChanges: false,
         fixHints: [],
       },
@@ -279,7 +279,7 @@ describe("doctor config flow steps", () => {
               },
             },
           },
-        } as unknown as OpenClawConfig,
+        } as unknown as QuietCoreConfig,
         pendingChanges: false,
         fixHints: [],
       },
@@ -329,7 +329,7 @@ describe("doctor config flow steps", () => {
               },
             },
           },
-        } as unknown as OpenClawConfig,
+        } as unknown as QuietCoreConfig,
         pendingChanges: false,
         fixHints: [],
       },
@@ -381,7 +381,7 @@ describe("doctor config flow steps", () => {
               },
             },
           },
-        } as unknown as OpenClawConfig,
+        } as unknown as QuietCoreConfig,
         pendingChanges: false,
         fixHints: [],
       },
@@ -430,7 +430,7 @@ describe("doctor config flow steps", () => {
               },
             },
           },
-        } as unknown as OpenClawConfig,
+        } as unknown as QuietCoreConfig,
         pendingChanges: false,
         fixHints: [],
       },
@@ -480,7 +480,7 @@ describe("doctor config flow steps", () => {
               },
             },
           },
-        } as unknown as OpenClawConfig,
+        } as unknown as QuietCoreConfig,
         pendingChanges: false,
         fixHints: [],
       },

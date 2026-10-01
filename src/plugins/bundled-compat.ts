@@ -1,14 +1,14 @@
 /** Compatibility helpers that auto-enable bundled plugins for legacy and Vitest flows. */
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { PluginEntryConfig } from "../config/types.plugins.js";
 import { hasExplicitPluginConfig } from "./config-policy.js";
 import { normalizePluginId } from "./config-state.js";
 
 /** Returns config with selected bundled plugins explicitly enabled when compat rules require it. */
 export function withBundledPluginEnablementCompat(params: {
-  config: OpenClawConfig | undefined;
+  config: QuietCoreConfig | undefined;
   pluginIds: readonly string[];
-}): OpenClawConfig | undefined {
+}): QuietCoreConfig | undefined {
   const existingEntries = params.config?.plugins?.entries ?? {};
   const forcePluginsEnabled = params.config?.plugins?.enabled === false;
   const allow = params.config?.plugins?.allow;
@@ -61,10 +61,10 @@ export function withBundledPluginEnablementCompat(params: {
 
 /** Enables bundled plugins in Vitest when tests did not provide explicit plugin config. */
 export function withBundledPluginVitestCompat(params: {
-  config: OpenClawConfig | undefined;
+  config: QuietCoreConfig | undefined;
   pluginIds: readonly string[];
   env?: NodeJS.ProcessEnv;
-}): OpenClawConfig | undefined {
+}): QuietCoreConfig | undefined {
   const env = params.env ?? process.env;
   const isVitest = Boolean(env.VITEST);
   if (

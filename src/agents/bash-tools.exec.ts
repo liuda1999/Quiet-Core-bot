@@ -25,7 +25,7 @@ import {
   resolveExecModePolicy,
 } from "../infra/exec-approvals.js";
 import {
-  parseOpenClawChannelsLoginShellCommand,
+  parseQuietCoreChannelsLoginShellCommand,
   rejectUnsafeExecControlShellCommand,
 } from "../infra/exec-control-command-guard.js";
 import { resolveExecSafeBinRuntimePolicy } from "../infra/exec-safe-bin-runtime-policy.js";
@@ -1919,7 +1919,7 @@ export const execTool = createExecTool();
 
 /** Test-only seams for parser/preflight helpers. */
 export const testing = {
-  parseOpenClawChannelsLoginShellCommand,
+  parseQuietCoreChannelsLoginShellCommand,
   validateScriptFileForShellBleed,
 };
 export { testing as __testing };

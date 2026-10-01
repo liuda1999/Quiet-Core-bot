@@ -2,7 +2,7 @@
 // metadata before an embedded run starts.
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { ModelDefinitionConfig } from "../../../config/types.models.js";
-import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../config/types.quiet-core-bot.js";
 import type { ProviderRuntimeModel } from "../../../plugins/provider-runtime-model.types.js";
 import {
   recordProviderContextLimit,
@@ -138,7 +138,7 @@ describe("resolveEffectiveRuntimeModel", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     const result = resolveEffectiveRuntimeModel({
       cfg,
@@ -165,7 +165,7 @@ describe("resolveEffectiveRuntimeModel", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     const result = resolveEffectiveRuntimeModel({
       cfg,
@@ -191,7 +191,7 @@ describe("resolveEffectiveRuntimeModel", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     // The provider enforced 128K on a previous turn while the config still
     // declares 1M; the next turn must budget against 128K so compaction is

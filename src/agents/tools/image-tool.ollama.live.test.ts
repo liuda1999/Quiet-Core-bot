@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { createImageTool } from "./image-tool.js";
 
 const LIVE =
@@ -45,7 +45,7 @@ describe.skipIf(!LIVE)("image tool Ollama live", () => {
   it("describes a local image through a providerless configured Ollama image model", async () => {
     process.env.OLLAMA_API_KEY ||= "ollama-local";
     await withLiveImageWorkspace(async ({ agentDir, workspaceDir, imagePath }) => {
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         agents: {
           defaults: {
             imageModel: { primary: OLLAMA_IMAGE_MODEL },

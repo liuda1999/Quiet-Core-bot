@@ -19,7 +19,7 @@ import {
   resolveSessionTranscriptsDirForAgent,
 } from "../config/sessions/paths.js";
 import type { SessionEntry } from "../config/sessions/types.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import { stripEnvelope, stripMessageIdHints } from "../shared/chat-envelope.js";
 import { runTasksWithConcurrency } from "../utils/run-with-concurrency.js";
@@ -93,7 +93,7 @@ const logger = createSubsystemLogger("usage-cost-cache");
 type UsageCostRefreshState = {
   agentId?: string;
   cachePath: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   fullRefreshRequested: boolean;
   pendingSessionFiles: Set<string>;
   running: boolean;
@@ -161,7 +161,7 @@ type UsageCostCacheLockReadResult =
   | { state: "valid"; lock: UsageCostCacheLock }
   | { state: "malformed"; mtimeMs: number };
 
-function resolveUsageCostPricingFingerprint(config?: OpenClawConfig): string {
+function resolveUsageCostPricingFingerprint(config?: QuietCoreConfig): string {
   return resolveModelCostConfigFingerprint(config);
 }
 
@@ -1089,7 +1089,7 @@ type UsageCostResolver = (params: {
   model?: string;
 }) => ReturnType<typeof resolveModelCostConfig>;
 
-function createUsageCostResolver(config?: OpenClawConfig): UsageCostResolver {
+function createUsageCostResolver(config?: QuietCoreConfig): UsageCostResolver {
   const cache = new Map<string, ReturnType<typeof resolveModelCostConfig>>();
   return ({ provider, model }) => {
     const key = `${provider ?? ""}\0${model ?? ""}`;
@@ -1160,7 +1160,7 @@ async function* readJsonlRecords(
 
 async function scanTranscriptFile(params: {
   filePath: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   resolveCost?: UsageCostResolver;
   startOffset?: number;
   endOffset?: number;
@@ -1215,7 +1215,7 @@ async function scanTranscriptFile(params: {
 
 async function scanUsageFile(params: {
   filePath: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   resolveCost?: UsageCostResolver;
   startOffset?: number;
   endOffset?: number;
@@ -1311,7 +1311,7 @@ export async function loadCostUsageSummary(params?: {
   endMs?: number;
   /** @deprecated Use startMs/endMs. */
   days?: number;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   agentId?: string;
 }): Promise<CostUsageSummary> {
   const now = new Date();
@@ -1385,7 +1385,7 @@ export async function loadCostUsageSummary(params?: {
 
 async function scanUsageFileForCache(params: {
   file: UsageCostTranscriptFile;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   resolveCost?: UsageCostResolver;
   previous?: UsageCostCacheFileEntry;
   includeSessionSummary?: boolean;
@@ -1532,7 +1532,7 @@ async function scanUsageFileForCache(params: {
 }
 
 async function refreshCostUsageCacheForPath(params?: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   agentId?: string;
   cachePath?: string;
   maxFiles?: number;
@@ -1628,7 +1628,7 @@ async function refreshCostUsageCacheForPath(params?: {
 }
 
 export async function refreshCostUsageCache(params?: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   agentId?: string;
   maxFiles?: number;
   sessionFiles?: string[];
@@ -1640,7 +1640,7 @@ export async function refreshCostUsageCache(params?: {
 export async function loadCostUsageSummaryFromCache(params: {
   startMs: number;
   endMs: number;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   agentId?: string;
   requestRefresh?: boolean;
   refreshMode?: "background" | "sync-when-empty";
@@ -1701,7 +1701,7 @@ export async function loadSessionCostSummaryFromCache(params: {
   sessionId?: string;
   sessionEntry?: SessionEntry;
   sessionFile: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   agentId?: string;
   startMs?: number;
   endMs?: number;
@@ -1828,7 +1828,7 @@ export async function loadSessionCostSummaryFromCache(params: {
 
 export async function loadSessionCostSummariesFromCache(params: {
   sessions: Array<{ sessionId?: string; sessionFile: string }>;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   agentId?: string;
   startMs?: number;
   endMs?: number;
@@ -1917,7 +1917,7 @@ export async function loadSessionCostSummariesFromCache(params: {
 }
 
 export function requestCostUsageCacheRefresh(params?: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   agentId?: string;
   sessionFiles?: string[];
 }): void {
@@ -1945,7 +1945,7 @@ export function requestCostUsageCacheRefresh(params?: {
 function mergeUsageCostRefreshRequest(
   state: UsageCostRefreshState,
   params?: {
-    config?: OpenClawConfig;
+    config?: QuietCoreConfig;
     agentId?: string;
     sessionFiles?: string[];
   },
@@ -2123,7 +2123,7 @@ export async function loadSessionCostSummary(params: {
   sessionId?: string;
   sessionEntry?: SessionEntry;
   sessionFile?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   agentId?: string;
   startMs?: number;
   endMs?: number;
@@ -2438,7 +2438,7 @@ export async function loadSessionUsageTimeSeries(params: {
   sessionId?: string;
   sessionEntry?: SessionEntry;
   sessionFile?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   agentId?: string;
   maxPoints?: number;
 }): Promise<SessionUsageTimeSeries | null> {
@@ -2547,7 +2547,7 @@ export async function loadSessionLogs(params: {
   sessionId?: string;
   sessionEntry?: SessionEntry;
   sessionFile?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   agentId?: string;
   limit?: number;
 }): Promise<SessionLogEntry[] | null> {

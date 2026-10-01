@@ -13,7 +13,7 @@ import {
 } from "../config/sessions/transcript-write-context.js";
 import { defaultRuntime } from "../runtime.js";
 import { readDiagnosticEvents } from "../state/diagnostic-events-store.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
+import { closeQuietCoreStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
 import { withEnv, withEnvAsync } from "../test-utils/env.js";
 import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import {
@@ -91,7 +91,7 @@ describe("logAnnounceGiveUp", () => {
 
   afterEach(async () => {
     vi.useRealTimers();
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
     if (tempStateDir) {
       await removeTestTempPath(tempStateDir);
       tempStateDir = null;
@@ -247,7 +247,7 @@ describe("undelivered completion fallback notice", () => {
   });
 
   afterEach(async () => {
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
     if (tempStateDir) {
       await removeTestTempPath(tempStateDir);
       tempStateDir = null;
@@ -380,7 +380,7 @@ describe("delivered completion receipt (F2/C-K2-3)", () => {
   });
 
   afterEach(async () => {
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
     if (tempStateDir) {
       await removeTestTempPath(tempStateDir);
       tempStateDir = null;

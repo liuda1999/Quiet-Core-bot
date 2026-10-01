@@ -276,7 +276,7 @@ describe("qa tool coverage report", () => {
     );
   });
 
-  it("keeps searchable OpenClaw dynamic tool rows report-only by default", () => {
+  it("keeps searchable QuietCore dynamic tool rows report-only by default", () => {
     const report = buildQaToolCoverageReport({
       scenarios: [
         makeScenario("tool-searchable-web-search", "web-search", {
@@ -338,7 +338,7 @@ describe("qa tool coverage report", () => {
     );
   });
 
-  it("passes required OpenClaw dynamic tool coverage when both runtimes exercise the tool", () => {
+  it("passes required QuietCore dynamic tool coverage when both runtimes exercise the tool", () => {
     const report = buildQaToolCoverageReport({
       scenarios: [
         makeScenario("tool-web-search", "web-search", {
@@ -392,7 +392,7 @@ describe("qa tool coverage report", () => {
     expect(report.passingTools).toBe(1);
   });
 
-  it("passes required OpenClaw dynamic tool coverage when Codex reports a soft tool error", () => {
+  it("passes required QuietCore dynamic tool coverage when Codex reports a soft tool error", () => {
     const report = buildQaToolCoverageReport({
       scenarios: [
         makeScenario("tool-web-search", "web-search", {
@@ -452,7 +452,7 @@ describe("qa tool coverage report", () => {
     );
   });
 
-  it("fails required OpenClaw dynamic tool coverage when a runtime skips the tool", () => {
+  it("fails required QuietCore dynamic tool coverage when a runtime skips the tool", () => {
     const report = buildQaToolCoverageReport({
       scenarios: [
         makeScenario("tool-web-search", "web-search", {
@@ -505,7 +505,7 @@ describe("qa tool coverage report", () => {
     expect(report.failures).toEqual(["web-search missing codex tool call web_search"]);
   });
 
-  it("fails required OpenClaw dynamic tool coverage when the fixture failure mode is preserved", () => {
+  it("fails required QuietCore dynamic tool coverage when the fixture failure mode is preserved", () => {
     const report = buildQaToolCoverageReport({
       scenarios: [
         makeScenario("tool-web-search", "web-search", {

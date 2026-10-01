@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { runCommandWithTimeout } from "../process/exec.js";
 import { initializeGlobalHookRunner, resetGlobalHookRunner } from "./hook-runner-global.js";
 import { createMockPluginRegistry } from "./hooks.test-helpers.js";
@@ -62,7 +62,7 @@ function setupNativePluginInstallFixture() {
 }
 
 async function installFromFileWithWarnings(params: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   extensionsDir: string;
   filePath: string;
   dangerouslyForceUnsafeInstall?: boolean;
@@ -226,7 +226,7 @@ describe("installPluginFromPath", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     const result = await installPluginFromFile({
       config,
@@ -264,7 +264,7 @@ describe("installPluginFromPath", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     const { result, warnings } = await installFromFileWithWarnings({
       config,

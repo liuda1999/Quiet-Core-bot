@@ -474,7 +474,7 @@ private struct WatchControlSurfaceView: View {
         case "system":
             "System"
         default:
-            "OpenClaw"
+            "QuietCore"
         }
     }
 
@@ -615,7 +615,7 @@ private struct WatchClawAvatar: View {
                 .minimumScaleFactor(0.6)
                 .lineLimit(1)
         } else {
-            Image("OpenClawIcon")
+            Image("QuietCoreIcon")
                 .resizable()
                 .scaledToFit()
         }
@@ -901,7 +901,7 @@ private struct WatchActionCard: View {
     var body: some View {
         Button(action: self.action) {
             WatchStackCard(
-                label: "OpenClaw",
+                label: "QuietCore",
                 title: self.title,
                 subtitle: self.subtitle,
                 badge: nil)
@@ -995,7 +995,7 @@ private struct WatchChatBubble: View {
         case "system":
             "System"
         default:
-            "OpenClaw"
+            "QuietCore"
         }
     }
 }
@@ -1111,7 +1111,7 @@ private struct WatchChatComposer: View {
                 onSubmit: self.onSendMessage)
         } label: {
             HStack(spacing: 6) {
-                Text("Message OpenClaw")
+                Text("Message QuietCore")
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(.secondary)
                     .lineLimit(1)

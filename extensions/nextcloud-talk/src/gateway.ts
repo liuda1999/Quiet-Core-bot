@@ -6,7 +6,7 @@ import {
   clearAccountEntryFields,
   DEFAULT_ACCOUNT_ID,
   type ChannelPlugin,
-  type OpenClawConfig,
+  type QuietCoreConfig,
 } from "./channel-api.js";
 import { monitorNextcloudTalkProvider } from "./monitor-runtime.js";
 import { getNextcloudTalkRuntime } from "./runtime.js";
@@ -43,7 +43,7 @@ export const nextcloudTalkGatewayAdapter: NonNullable<
     });
   },
   logoutAccount: async ({ accountId, cfg }) => {
-    const nextCfg = { ...cfg } as OpenClawConfig;
+    const nextCfg = { ...cfg } as QuietCoreConfig;
     const nextSection = cfg.channels?.["nextcloud-talk"]
       ? { ...cfg.channels["nextcloud-talk"] }
       : undefined;
@@ -81,7 +81,7 @@ export const nextcloudTalkGatewayAdapter: NonNullable<
         const nextChannels = { ...nextCfg.channels } as Record<string, unknown>;
         delete nextChannels["nextcloud-talk"];
         if (Object.keys(nextChannels).length > 0) {
-          nextCfg.channels = nextChannels as OpenClawConfig["channels"];
+          nextCfg.channels = nextChannels as QuietCoreConfig["channels"];
         } else {
           delete nextCfg.channels;
         }

@@ -1,15 +1,15 @@
 import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 
 type ConfiguredModelProvider = NonNullable<
-  NonNullable<OpenClawConfig["models"]>["providers"]
+  NonNullable<QuietCoreConfig["models"]>["providers"]
 >[string];
 const OPENAI_COMPATIBLE_EMBEDDING_PROVIDER_ID = "openai-compatible";
 const OPENAI_COMPATIBLE_MODEL_APIS = new Set(["openai-completions", "openai-responses"]);
 
 function resolveConfiguredProviderConfig(
   providerId: string,
-  cfg?: OpenClawConfig,
+  cfg?: QuietCoreConfig,
 ): ConfiguredModelProvider | undefined {
   const providers = cfg?.models?.providers;
   if (!providers) {
@@ -27,7 +27,7 @@ function resolveConfiguredProviderConfig(
 /** Reads a configured provider's backing API id when runtime lookup should follow an alias. */
 export function readConfiguredProviderApiId(params: {
   providerId: string;
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   resolveApiProviderId?: (normalizedApiId: string) => string | undefined;
   resolveMissingApiProviderId?: (providerConfig: ConfiguredModelProvider) => string | undefined;
 }): string | undefined {
@@ -45,7 +45,7 @@ export function readConfiguredProviderApiId(params: {
 
 export function resolveConfiguredGenericEmbeddingProviderId(
   providerId: string,
-  cfg?: OpenClawConfig,
+  cfg?: QuietCoreConfig,
 ): string | undefined {
   return readConfiguredProviderApiId({
     providerId,

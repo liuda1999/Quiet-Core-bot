@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { installedPluginRoot } from "quiet-core-bot/plugin-sdk/test-fixtures";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { hashConfigIncludeRaw } from "../config/includes.js";
 import {
   listOfficialExternalPluginCatalogEntries,
@@ -68,7 +68,7 @@ function useProfileExtensionsDir(): string {
   return path.resolve(PROFILE_STATE_ROOT, "extensions");
 }
 
-function createEnabledPluginConfig(pluginId: string): OpenClawConfig {
+function createEnabledPluginConfig(pluginId: string): QuietCoreConfig {
   return {
     plugins: {
       entries: {
@@ -77,15 +77,15 @@ function createEnabledPluginConfig(pluginId: string): OpenClawConfig {
         },
       },
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
-function createEmptyPluginConfig(): OpenClawConfig {
+function createEmptyPluginConfig(): QuietCoreConfig {
   return {
     plugins: {
       entries: {},
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
 function createClawHubInstallResult(params: {
@@ -198,7 +198,7 @@ function primeNpmPluginFallback(pluginId = "demo") {
   return { cfg, enabledCfg };
 }
 
-function createPathHookPackInstalledConfig(tmpRoot: string): OpenClawConfig {
+function createPathHookPackInstalledConfig(tmpRoot: string): QuietCoreConfig {
   return {
     hooks: {
       internal: {
@@ -211,10 +211,10 @@ function createPathHookPackInstalledConfig(tmpRoot: string): OpenClawConfig {
         },
       },
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
-function createNpmHookPackInstalledConfig(): OpenClawConfig {
+function createNpmHookPackInstalledConfig(): QuietCoreConfig {
   return {
     hooks: {
       internal: {
@@ -226,7 +226,7 @@ function createNpmHookPackInstalledConfig(): OpenClawConfig {
         },
       },
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
 function createHookPackInstallResult(targetDir: string): {
@@ -248,7 +248,7 @@ function createHookPackInstallResult(targetDir: string): {
 }
 
 function primeHookPackNpmFallback() {
-  const cfg = {} as OpenClawConfig;
+  const cfg = {} as QuietCoreConfig;
   const installedCfg = createNpmHookPackInstalledConfig();
 
   loadConfig.mockReturnValue(cfg);
@@ -276,7 +276,7 @@ function primeBlockedNpmPluginInstall(params: {
   pluginId: string;
   code?: "security_scan_blocked" | "security_scan_failed";
 }) {
-  loadConfig.mockReturnValue({} as OpenClawConfig);
+  loadConfig.mockReturnValue({} as QuietCoreConfig);
   mockClawHubPackageNotFound(params.spec);
   installPluginFromNpmSpec.mockResolvedValue({
     ok: false,
@@ -288,10 +288,10 @@ function primeBlockedNpmPluginInstall(params: {
 function primeHookPackPathFallback(params: {
   tmpRoot: string;
   pluginInstallError: string;
-}): OpenClawConfig {
+}): QuietCoreConfig {
   const installedCfg = createPathHookPackInstalledConfig(params.tmpRoot);
 
-  loadConfig.mockReturnValue({} as OpenClawConfig);
+  loadConfig.mockReturnValue({} as QuietCoreConfig);
   installPluginFromPath.mockResolvedValueOnce({
     ok: false,
     error: params.pluginInstallError,
@@ -390,10 +390,10 @@ function persistedInstallRecord(pluginId: string, callIndex = 0): PersistedInsta
   return record;
 }
 
-function replaceConfigCall(callIndex = 0): { baseHash?: string; nextConfig?: OpenClawConfig } {
+function replaceConfigCall(callIndex = 0): { baseHash?: string; nextConfig?: QuietCoreConfig } {
   return mockCallArg(replaceConfigFile, callIndex) as {
     baseHash?: string;
-    nextConfig?: OpenClawConfig;
+    nextConfig?: QuietCoreConfig;
   };
 }
 
@@ -406,7 +406,7 @@ function runtimeLogsContain(fragment: string): boolean {
 }
 
 function primeBlockedPluginConfigMutation(
-  params: { blockHooks?: boolean; config?: OpenClawConfig } = {},
+  params: { blockHooks?: boolean; config?: QuietCoreConfig } = {},
 ): void {
   const configPath = path.join(process.cwd(), "quiet-core-bot.json5");
   const externalPluginsPath = path.join(
@@ -419,7 +419,7 @@ function primeBlockedPluginConfigMutation(
     "external-quiet-core-bot",
     "hooks.json5",
   );
-  const config = params.config ?? ({} as OpenClawConfig);
+  const config = params.config ?? ({} as QuietCoreConfig);
   const parsed = {
     plugins: { $include: externalPluginsPath },
     ...(params.blockHooks ? { hooks: { $include: externalHooksPath } } : {}),
@@ -457,7 +457,7 @@ function primeNestedPluginConfigMutation(tempRoot: string): void {
   const configPath = path.join(tempRoot, "quiet-core-bot.json5");
   const pluginsPath = path.join(tempRoot, "plugins.json5");
   const pluginsRaw = `${JSON.stringify({ entries: { $include: "./entries.json5" } }, null, 2)}\n`;
-  const config = { plugins: { entries: {} } } as OpenClawConfig;
+  const config = { plugins: { entries: {} } } as QuietCoreConfig;
   fs.writeFileSync(pluginsPath, pluginsRaw);
   loadConfig.mockReturnValue(config);
   readConfigFileSnapshotForWrite.mockResolvedValue({
@@ -490,7 +490,7 @@ function primeNestedPluginConfigMutation(tempRoot: string): void {
   });
 }
 
-function primeBlockedRootConfigMutation(config = {} as OpenClawConfig): void {
+function primeBlockedRootConfigMutation(config = {} as QuietCoreConfig): void {
   const configPath = path.join(process.cwd(), "quiet-core-bot.json5");
   loadConfig.mockReturnValue(config);
   readConfigFileSnapshotForWrite.mockResolvedValue({
@@ -517,7 +517,7 @@ function primeBlockedRootConfigMutation(config = {} as OpenClawConfig): void {
   });
 }
 
-function primeBlockedHookConfigMutation(config = {} as OpenClawConfig): void {
+function primeBlockedHookConfigMutation(config = {} as QuietCoreConfig): void {
   const configPath = path.join(process.cwd(), "quiet-core-bot.json5");
   const externalHooksPath = path.join(
     path.parse(process.cwd()).root,
@@ -632,7 +632,7 @@ describe("plugins cli install", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     primeBlockedPluginConfigMutation();
     installHooksFromNpmSpec.mockResolvedValue({
       ok: true,
@@ -771,7 +771,7 @@ describe("plugins cli install", () => {
             },
           },
         },
-      } as OpenClawConfig;
+      } as QuietCoreConfig;
       fs.mkdirSync(localPath);
       primeBlockedPluginConfigMutation();
       parseClawHubPluginSpec.mockReturnValue({ name: "demo-hooks" });
@@ -1165,7 +1165,7 @@ describe("plugins cli install", () => {
       plugins: {
         entries: {},
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const enabledCfg = {
       plugins: {
         entries: {
@@ -1174,7 +1174,7 @@ describe("plugins cli install", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     loadConfig.mockReturnValue(cfg);
     installPluginFromMarketplace.mockResolvedValue({
       ok: true,
@@ -1227,7 +1227,7 @@ describe("plugins cli install", () => {
       plugins: {
         entries: {},
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const enabledCfg = createEnabledPluginConfig("demo");
     loadConfig.mockReturnValue(cfg);
     parseClawHubPluginSpec.mockReturnValue({ name: "demo" });
@@ -1309,7 +1309,7 @@ describe("plugins cli install", () => {
           paths: ["/existing/plugin"],
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     loadConfig.mockReturnValue(cfg);
     findBundledPluginSourceMock.mockReturnValue({
       pluginId,
@@ -1330,7 +1330,7 @@ describe("plugins cli install", () => {
 
     const writtenConfig = writeConfigFile.mock.calls[
       writeConfigFile.mock.calls.length - 1
-    ]?.[0] as OpenClawConfig;
+    ]?.[0] as QuietCoreConfig;
     expect(writtenConfig.plugins?.entries?.[pluginId]).toBeUndefined();
     expect(writtenConfig.plugins?.load?.paths).toEqual(["/existing/plugin"]);
     const record = persistedInstallRecord(pluginId);
@@ -1354,7 +1354,7 @@ describe("plugins cli install", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const enabledCfg = createEnabledPluginConfig(pluginId);
     loadConfig.mockReturnValue(cfg);
     findBundledPluginSourceMock.mockReturnValue({
@@ -1385,7 +1385,7 @@ describe("plugins cli install", () => {
       plugins: {
         entries: {},
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const enabledCfg = createEnabledPluginConfig("demo");
 
     loadConfig.mockReturnValue(cfg);
@@ -1416,7 +1416,7 @@ describe("plugins cli install", () => {
       plugins: {
         entries: {},
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const enabledCfg = createEnabledPluginConfig("demo");
 
     loadConfig.mockReturnValue(cfg);
@@ -1875,7 +1875,7 @@ describe("plugins cli install", () => {
   });
 
   it("reports npm install failures without trying ClawHub when npm: prefix is used", async () => {
-    loadConfig.mockReturnValue({} as OpenClawConfig);
+    loadConfig.mockReturnValue({} as QuietCoreConfig);
     installPluginFromNpmSpec.mockResolvedValue({
       ok: false,
       error: "npm install failed",
@@ -1894,7 +1894,7 @@ describe("plugins cli install", () => {
   });
 
   it("adds a Git PATH hint when npm plugin dependency install cannot spawn git", async () => {
-    loadConfig.mockReturnValue({} as OpenClawConfig);
+    loadConfig.mockReturnValue({} as QuietCoreConfig);
     installPluginFromNpmSpec.mockResolvedValue({
       ok: false,
       error: [
@@ -1922,7 +1922,7 @@ describe("plugins cli install", () => {
   });
 
   it("does not resolve npm: prefixed bundled plugin ids through bundled installs", async () => {
-    loadConfig.mockReturnValue({ plugins: { load: { paths: [] } } } as OpenClawConfig);
+    loadConfig.mockReturnValue({ plugins: { load: { paths: [] } } } as QuietCoreConfig);
     installPluginFromNpmSpec.mockResolvedValue({
       ok: false,
       error: "Package not found on npm: memory-lancedb.",
@@ -1944,7 +1944,7 @@ describe("plugins cli install", () => {
   });
 
   it("rejects empty npm: prefix installs before resolver lookup", async () => {
-    loadConfig.mockReturnValue({} as OpenClawConfig);
+    loadConfig.mockReturnValue({} as QuietCoreConfig);
 
     await expect(runPluginsCommand(["plugins", "install", "npm:"])).rejects.toThrow("__exit__:1");
 
@@ -1983,7 +1983,7 @@ describe("plugins cli install", () => {
   });
 
   it("rejects --pin for git installs and points at git refs", async () => {
-    loadConfig.mockReturnValue({} as OpenClawConfig);
+    loadConfig.mockReturnValue({} as QuietCoreConfig);
 
     await expect(
       runPluginsCommand(["plugins", "install", "git:github.com/acme/demo", "--pin"]),
@@ -2024,7 +2024,7 @@ describe("plugins cli install", () => {
       plugins: {
         entries: {},
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const enabledCfg = createEnabledPluginConfig("demo");
     const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-plugin-link-"));
 
@@ -2089,7 +2089,7 @@ describe("plugins cli install", () => {
     const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-link-plugin-"));
     const pluginInstallError = "plugin blocked by security scan";
 
-    loadConfig.mockReturnValue({} as OpenClawConfig);
+    loadConfig.mockReturnValue({} as QuietCoreConfig);
     installPluginFromPath.mockResolvedValue({
       ok: false,
       error: pluginInstallError,
@@ -2172,7 +2172,7 @@ describe("plugins cli install", () => {
   });
 
   it("suggests update or --force when npm plugin install target already exists", async () => {
-    loadConfig.mockReturnValue({} as OpenClawConfig);
+    loadConfig.mockReturnValue({} as QuietCoreConfig);
     mockClawHubPackageNotFound("@example/lossless-claw");
     installPluginFromNpmSpec.mockResolvedValue({
       ok: false,
@@ -2197,7 +2197,7 @@ describe("plugins cli install", () => {
   it("does not append hook-pack fallback details for managed extensions boundary failures", async () => {
     const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-local-plugin-"));
 
-    loadConfig.mockReturnValue({} as OpenClawConfig);
+    loadConfig.mockReturnValue({} as QuietCoreConfig);
     installPluginFromPath.mockResolvedValue({
       ok: false,
       error: "Invalid path: must stay within extensions directory",
@@ -2228,7 +2228,7 @@ describe("plugins cli install", () => {
           paths: [],
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const enabledCfg = createEnabledPluginConfig("demo");
 
     loadConfig.mockReturnValue(cfg);
@@ -2287,7 +2287,7 @@ describe("plugins cli install", () => {
     const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-local-plugin-"));
     const pluginInstallError = "plugin security scan failed";
 
-    loadConfig.mockReturnValue({} as OpenClawConfig);
+    loadConfig.mockReturnValue({} as QuietCoreConfig);
     installPluginFromPath.mockResolvedValue({
       ok: false,
       error: pluginInstallError,
@@ -2309,7 +2309,7 @@ describe("plugins cli install", () => {
 
   it("does not fall back to hook pack for local path when dangerous force unsafe install is set", async () => {
     const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-local-plugin-"));
-    const cfg = {} as OpenClawConfig;
+    const cfg = {} as QuietCoreConfig;
     const pluginInstallError = "plugin blocked by security scan";
 
     loadConfig.mockReturnValue(cfg);
@@ -2338,7 +2338,7 @@ describe("plugins cli install", () => {
 
   it("does not fall back to hook pack for local path when security scan fails under dangerous force unsafe install", async () => {
     const localPluginDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-local-plugin-"));
-    const cfg = {} as OpenClawConfig;
+    const cfg = {} as QuietCoreConfig;
     const pluginInstallError = "plugin security scan failed";
 
     loadConfig.mockReturnValue(cfg);
@@ -2366,7 +2366,7 @@ describe("plugins cli install", () => {
   });
 
   it("does not fall back to hook pack for npm installs when dangerous force unsafe install is set", async () => {
-    const cfg = {} as OpenClawConfig;
+    const cfg = {} as QuietCoreConfig;
     const pluginInstallError = "plugin blocked by security scan";
 
     loadConfig.mockReturnValue(cfg);
@@ -2405,7 +2405,7 @@ describe("plugins cli install", () => {
   });
 
   it("does not fall back to hook pack for npm installs when security scan fails under dangerous force unsafe install", async () => {
-    const cfg = {} as OpenClawConfig;
+    const cfg = {} as QuietCoreConfig;
     const pluginInstallError = "plugin security scan failed";
 
     loadConfig.mockReturnValue(cfg);
@@ -2430,7 +2430,7 @@ describe("plugins cli install", () => {
 
   it("still falls back to local hook pack when dangerous force unsafe install is set for non-security errors", async () => {
     const localHookDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-local-hook-pack-"));
-    const cfg = {} as OpenClawConfig;
+    const cfg = {} as QuietCoreConfig;
     const installedCfg = {
       hooks: {
         internal: {
@@ -2442,7 +2442,7 @@ describe("plugins cli install", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     loadConfig.mockReturnValue(cfg);
     installPluginFromPath.mockResolvedValue({
@@ -2475,7 +2475,7 @@ describe("plugins cli install", () => {
   });
 
   it("still falls back to npm hook pack when dangerous force unsafe install is set for non-security errors", async () => {
-    const cfg = {} as OpenClawConfig;
+    const cfg = {} as QuietCoreConfig;
     const installedCfg = {
       hooks: {
         internal: {
@@ -2487,7 +2487,7 @@ describe("plugins cli install", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     loadConfig.mockReturnValue(cfg);
     installPluginFromClawHub.mockResolvedValue({

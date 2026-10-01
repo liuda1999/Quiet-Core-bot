@@ -32,7 +32,7 @@ function approvalRun(overrides: Record<string, unknown> = {}) {
     headBranch: "release/2026.6.21",
     status: "in_progress",
     url: "https://github.com/liuda1999/Quiet-Core-bot/actions/runs/123",
-    workflowName: "OpenClaw Release Publish",
+    workflowName: "QuietCore Release Publish",
     ...overrides,
   };
 }

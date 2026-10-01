@@ -206,7 +206,7 @@ async function createStatusServiceSummary(
     label: service.label,
     installed: Boolean(command) || runtime?.status === "running",
     loaded,
-    managedByOpenClaw: Boolean(command),
+    managedByQuietCore: Boolean(command),
     externallyManaged: !command && runtime?.status === "running",
     loadedText: service.loadedText,
     runtime,
@@ -693,8 +693,8 @@ vi.mock("../gateway/agent-list.js", () => ({
   listGatewayAgentsBasic: mocks.listGatewayAgentsBasic,
 }));
 vi.mock("../infra/quiet-core-bot-root.js", () => ({
-  resolveOpenClawPackageRoot: vi.fn().mockResolvedValue("/tmp/quiet-core-bot"),
-  resolveOpenClawPackageRootSync: vi.fn(() => "/tmp/quiet-core-bot"),
+  resolveQuietCorePackageRoot: vi.fn().mockResolvedValue("/tmp/quiet-core-bot"),
+  resolveQuietCorePackageRootSync: vi.fn(() => "/tmp/quiet-core-bot"),
 }));
 vi.mock("../infra/os-summary.js", () => ({
   resolveOsSummary: () => ({
@@ -882,7 +882,7 @@ vi.mock("./status.daemon.js", () => ({
       label: service.label,
       installed: Boolean(command) || runtimeValue?.status === "running",
       loaded,
-      managedByOpenClaw: Boolean(command),
+      managedByQuietCore: Boolean(command),
       externallyManaged: !command && runtimeValue?.status === "running",
       loadedText: loaded ? service.loadedText : service.notLoadedText,
       runtimeShort: runtimeValue?.pid ? `pid ${runtimeValue.pid}` : null,
@@ -897,7 +897,7 @@ vi.mock("./status.daemon.js", () => ({
       label: service.label,
       installed: Boolean(command) || runtimeLocal?.status === "running",
       loaded,
-      managedByOpenClaw: Boolean(command),
+      managedByQuietCore: Boolean(command),
       externallyManaged: !command && runtimeLocal?.status === "running",
       loadedText: loaded ? service.loadedText : service.notLoadedText,
       runtimeShort: runtimeLocal?.pid ? `pid ${runtimeLocal.pid}` : null,

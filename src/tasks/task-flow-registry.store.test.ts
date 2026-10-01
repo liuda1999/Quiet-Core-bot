@@ -3,11 +3,11 @@ import { statSync } from "node:fs";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../infra/kysely-sync.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
-import { openOpenClawStateDatabase } from "../state/quiet-core-bot-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "../state/quiet-core-bot-state-db.paths.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
+import { openQuietCoreStateDatabase } from "../state/quiet-core-bot-state-db.js";
+import { resolveQuietCoreStateSqlitePath } from "../state/quiet-core-bot-state-db.paths.js";
 import { withEnvAsync } from "../test-utils/env.js";
-import { withOpenClawTestState } from "../test-utils/quiet-core-bot-test-state.js";
+import { withQuietCoreTestState } from "../test-utils/quiet-core-bot-test-state.js";
 import {
   createManagedTaskFlow as createManagedTaskFlowOrNull,
   getTaskFlowById,
@@ -37,7 +37,7 @@ function createManagedTaskFlow(
   return flow;
 }
 
-type TaskFlowRegistryTestDatabase = Pick<OpenClawStateKyselyDatabase, "flow_runs">;
+type TaskFlowRegistryTestDatabase = Pick<QuietCoreStateKyselyDatabase, "flow_runs">;
 
 function createStoredFlow(): TaskFlowRecord {
   return {
@@ -62,7 +62,7 @@ function createStoredFlow(): TaskFlowRecord {
 }
 
 async function withFlowRegistryTempDir<T>(run: (root: string) => Promise<T>): Promise<T> {
-  return await withOpenClawTestState(
+  return await withQuietCoreTestState(
     {
       layout: "state-only",
       prefix: "quiet-core-bot-task-flow-store-",
@@ -160,7 +160,7 @@ describe("task-flow-registry store runtime", () => {
         status: "running",
       });
 
-      const database = openOpenClawStateDatabase();
+      const database = openQuietCoreStateDatabase();
       const db = getNodeSqliteKysely<TaskFlowRegistryTestDatabase>(database.db);
       executeSqliteQuerySync(
         database.db,
@@ -187,7 +187,7 @@ describe("task-flow-registry store runtime", () => {
         },
       });
 
-      const database = openOpenClawStateDatabase();
+      const database = openQuietCoreStateDatabase();
       const db = getNodeSqliteKysely<TaskFlowRegistryTestDatabase>(database.db);
       executeSqliteQuerySync(
         database.db,
@@ -312,7 +312,7 @@ describe("task-flow-registry store runtime", () => {
         waitJson: { kind: "task", taskId: "task-secured" },
       });
 
-      const databasePath = resolveOpenClawStateSqlitePath(process.env);
+      const databasePath = resolveQuietCoreStateSqlitePath(process.env);
       const registryDir = path.dirname(databasePath);
       expect(databasePath.endsWith(path.join("state", "quiet-core-bot.sqlite"))).toBe(true);
       expect(statSync(registryDir).mode & 0o777).toBe(0o700);

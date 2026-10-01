@@ -42,7 +42,7 @@ import {
   type SessionEntry,
   type SessionScope,
 } from "../../config/sessions/types.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { TtsAutoMode } from "../../config/types.tts.js";
 import {
   forgetActiveSessionForShutdown,
@@ -124,7 +124,7 @@ function resolveExplicitSessionEndReason(matchedResetTriggerLower?: string): Rep
 }
 
 function resolveSessionDefaultAccountId(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   channelRaw?: string;
   accountIdRaw?: string;
   persistedLastAccountId?: string;
@@ -179,7 +179,7 @@ export type SessionInitResult = {
 };
 
 export type InitSessionStateParams = {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   commandAuthorized: boolean;
   ctx: MsgContext;
   requestedSessionId?: string;
@@ -187,7 +187,7 @@ export type InitSessionStateParams = {
 };
 
 function resolveSessionConversationBindingContext(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   ctx: MsgContext,
 ): {
   channel: string;
@@ -213,7 +213,7 @@ function resolveSessionConversationBindingContext(
 }
 
 function resolveBoundConversationSessionKey(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   ctx: MsgContext;
   bindingContext?: {
     channel: string;

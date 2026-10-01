@@ -14,7 +14,7 @@ import {
 } from "../config/sessions.js";
 import { patchSessionEntry } from "../config/sessions/session-accessor.js";
 import { runDetachedFromOwnedSessionTranscriptWrites } from "../config/sessions/transcript-write-context.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { defaultRuntime } from "../runtime.js";
 import { writeAnnounceDropDiagnostic } from "./announce-idempotency.js";
 import { withSubagentOutcomeTiming } from "./subagent-announce-output.js";
@@ -532,7 +532,7 @@ export function reconcileOrphanedRestoredRuns(params: {
 }
 
 /** Resolves the completed subagent archive delay from config. */
-export function resolveArchiveAfterMs(cfg?: OpenClawConfig) {
+export function resolveArchiveAfterMs(cfg?: QuietCoreConfig) {
   const config = cfg ?? getRuntimeConfig();
   const minutes =
     config.agents?.defaults?.subagents?.archiveAfterMinutes ??

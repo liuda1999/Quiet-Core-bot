@@ -1,5 +1,5 @@
 /** Builds doctor/install repair hints for missing official external plugin owners. */
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { resolveConfiguredChannelPresencePolicy } from "./channel-plugin-ids.js";
 import {
   getOfficialExternalPluginCatalogEntry,
@@ -55,8 +55,8 @@ export function resolveOfficialExternalPluginRepairHint(
 
 /** Resolves a repair hint only when a missing configured channel is blocked by no plugin owner. */
 export function resolveMissingOfficialExternalChannelPluginRepairHint(params: {
-  config: OpenClawConfig;
-  activationSourceConfig?: OpenClawConfig;
+  config: QuietCoreConfig;
+  activationSourceConfig?: QuietCoreConfig;
   channelId: string;
   workspaceDir?: string;
   env?: NodeJS.ProcessEnv;

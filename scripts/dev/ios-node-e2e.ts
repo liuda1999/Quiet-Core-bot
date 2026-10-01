@@ -1,4 +1,4 @@
-// Ios Node E2E script supports OpenClaw repository automation.
+// Ios Node E2E script supports QuietCore repository automation.
 import { randomUUID } from "node:crypto";
 import {
   MIN_CLIENT_PROTOCOL_VERSION,
@@ -281,7 +281,7 @@ async function main() {
     {
       id: "system.notify",
       command: "system.notify",
-      params: { title: "OpenClaw E2E", body: `ios-node-e2e @ ${isoNow()}`, delivery: "system" },
+      params: { title: "QuietCore E2E", body: `ios-node-e2e @ ${isoNow()}`, delivery: "system" },
     },
     {
       id: "contacts.search",

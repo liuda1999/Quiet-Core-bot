@@ -1,6 +1,6 @@
 // Status scan config tests cover scan command config loading and cold-start resolution.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   loadStatusScanCommandConfig,
   resolveStatusScanColdStart,
@@ -105,7 +105,7 @@ describe("status.scan.config-shared", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     const sourceConfig = {
       models: {
         providers: {
@@ -115,7 +115,7 @@ describe("status.scan.config-shared", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     const resolvedConfig = structuredClone(loadedConfig);
     const resolveConfig = vi.fn(async () => ({ resolvedConfig, diagnostics: [] }));
 

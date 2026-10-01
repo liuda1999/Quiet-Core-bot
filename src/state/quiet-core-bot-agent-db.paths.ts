@@ -1,7 +1,7 @@
 // Agent database path helpers resolve per-agent persisted database paths.
 import path from "node:path";
 import { normalizeAgentId } from "../routing/session-key.js";
-import { resolveOpenClawStateSqliteDir } from "./quiet-core-bot-state-db.paths.js";
+import { resolveQuietCoreStateSqliteDir } from "./quiet-core-bot-state-db.paths.js";
 
 /**
  * Path helpers for per-agent SQLite state.
@@ -10,19 +10,19 @@ import { resolveOpenClawStateSqliteDir } from "./quiet-core-bot-state-db.paths.j
  * own private runtime tables while the shared registry can still discover them.
  */
 /** Inputs for resolving one agent SQLite path or directory. */
-export type OpenClawAgentSqlitePathOptions = {
+export type QuietCoreAgentSqlitePathOptions = {
   agentId: string;
   env?: NodeJS.ProcessEnv;
   path?: string;
 };
 
 /** Resolve the SQLite file for one normalized agent id. */
-export function resolveOpenClawAgentSqlitePath(options: OpenClawAgentSqlitePathOptions): string {
+export function resolveQuietCoreAgentSqlitePath(options: QuietCoreAgentSqlitePathOptions): string {
   const agentId = normalizeAgentId(options.agentId);
   return path.resolve(
     options.path ??
       path.join(
-        path.dirname(resolveOpenClawStateSqliteDir(options.env ?? process.env)),
+        path.dirname(resolveQuietCoreStateSqliteDir(options.env ?? process.env)),
         "agents",
         agentId,
         "agent",

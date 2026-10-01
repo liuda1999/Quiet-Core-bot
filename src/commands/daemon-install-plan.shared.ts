@@ -58,7 +58,7 @@ export function resolveDaemonNodeBinDir(nodePath?: string): string[] | undefined
   return [path.dirname(trimmed)];
 }
 
-function isOpenClawCommandBasename(basename: string, platform: NodeJS.Platform): boolean {
+function isQuietCoreCommandBasename(basename: string, platform: NodeJS.Platform): boolean {
   if (basename === "quiet-core-bot" || basename === "quiet-core-bot") {
     return true;
   }
@@ -97,7 +97,7 @@ function addUniquePathDir(dirs: string[], dir: string | undefined): void {
 }
 
 /** Resolve the Quiet Core bot CLI binary directory from argv/PATH for daemon PATH. */
-export function resolveDaemonOpenClawBinDir(
+export function resolveDaemonQuietCoreBinDir(
   params: {
     argv?: string[];
     env?: Record<string, string | undefined>;
@@ -117,7 +117,7 @@ export function resolveDaemonOpenClawBinDir(
   if (
     argv1 &&
     path.isAbsolute(argv1) &&
-    isOpenClawCommandBasename(path.basename(argv1), platform)
+    isQuietCoreCommandBasename(path.basename(argv1), platform)
   ) {
     addUniquePathDir(dirs, path.dirname(argv1));
   }
@@ -155,7 +155,7 @@ export function resolveDaemonServicePathDirs(params: {
   for (const dir of resolveDaemonNodeBinDir(params.nodePath) ?? []) {
     addUniquePathDir(dirs, dir);
   }
-  for (const dir of resolveDaemonOpenClawBinDir(params) ?? []) {
+  for (const dir of resolveDaemonQuietCoreBinDir(params) ?? []) {
     addUniquePathDir(dirs, dir);
   }
   return dirs.length > 0 ? dirs : undefined;

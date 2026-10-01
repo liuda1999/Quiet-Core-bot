@@ -11,7 +11,7 @@ Prepares local App Store release inputs without touching local signing overrides
 - writes apps/ios/build/AppStoreRelease.xcconfig with canonical bundle IDs
 - configures the release build for relay-backed APNs registration
 - configures manual App Store distribution signing with pinned provisioning profiles
-- regenerates apps/ios/OpenClaw.xcodeproj via xcodegen
+- regenerates apps/ios/QuietCore.xcodeproj via xcodegen
 EOF
 }
 
@@ -108,7 +108,7 @@ if [[ -z "${TEAM_ID}" ]]; then
 fi
 
 if [[ "${TEAM_ID}" != "${CANONICAL_TEAM_ID}" ]]; then
-  echo "iOS App Store release must use canonical OpenClaw Team ID ${CANONICAL_TEAM_ID}; got ${TEAM_ID}." >&2
+  echo "iOS App Store release must use canonical QuietCore Team ID ${CANONICAL_TEAM_ID}; got ${TEAM_ID}." >&2
   exit 1
 fi
 
@@ -149,7 +149,7 @@ QUIET_CORE_APP_BUNDLE_ID = ai.quiet-core-botfoundation.app
 QUIET_CORE_SHARE_BUNDLE_ID = ai.quiet-core-botfoundation.app.share
 QUIET_CORE_ACTIVITY_WIDGET_BUNDLE_ID = ai.quiet-core-botfoundation.app.activitywidget
 QUIET_CORE_WATCH_APP_BUNDLE_ID = ai.quiet-core-botfoundation.app.watchkitapp
-QUIET_CORE_CODE_SIGN_ENTITLEMENTS = Sources/OpenClawAppAttest.entitlements
+QUIET_CORE_CODE_SIGN_ENTITLEMENTS = Sources/QuietCoreAppAttest.entitlements
 QUIET_CORE_APNS_ENTITLEMENT_ENVIRONMENT = production
 QUIET_CORE_APP_ATTEST_ENVIRONMENT = production
 QUIET_CORE_PUSH_MODE = appStore

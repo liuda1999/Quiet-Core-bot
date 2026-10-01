@@ -9,7 +9,7 @@ import { runEmbeddedAttempt } from "../embedded-agent-runner/run/attempt.js";
 import type { AgentHarness } from "./types.js";
 
 /** Creates the built-in harness backed by the embedded Quiet Core bot agent runner. */
-export function createOpenClawAgentHarness(): AgentHarness {
+export function createQuietCoreAgentHarness(): AgentHarness {
   return {
     id: "quiet-core-bot",
     label: "Quiet Core bot embedded agent",

@@ -1,7 +1,7 @@
 // Qa Lab plugin module implements temp dir helper behavior.
 import {
   tempWorkspace,
-  resolvePreferredOpenClawTmpDir,
+  resolvePreferredQuietCoreTmpDir,
   type TempWorkspace,
 } from "quiet-core-bot/plugin-sdk/temp-path";
 
@@ -14,7 +14,7 @@ export function createTempDirHarness() {
     },
     makeTempDir: async (prefix: string) => {
       const dir = await tempWorkspace({
-        rootDir: resolvePreferredOpenClawTmpDir(),
+        rootDir: resolvePreferredQuietCoreTmpDir(),
         prefix,
       });
       tempDirs.push(dir);

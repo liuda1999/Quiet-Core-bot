@@ -9,8 +9,8 @@ import {
   extractAssistantVisibleText,
   extractFirstTextBlock,
 } from "../../shared/chat-message-content.js";
-import { isTranscriptOnlyOpenClawAssistantModel } from "../../shared/transcript-only-quiet-core-bot-assistant.js";
-import type { OpenClawConfig } from "../types.quiet-core-bot.js";
+import { isTranscriptOnlyQuietCoreAssistantModel } from "../../shared/transcript-only-quiet-core-bot-assistant.js";
+import type { QuietCoreConfig } from "../types.quiet-core-bot.js";
 import {
   resolveDefaultSessionStorePath,
   resolveSessionFilePath,
@@ -103,7 +103,7 @@ export { resolveSessionTranscriptFile } from "./transcript-file-resolve.js";
 
 function parseAssistantTranscriptText(
   line: string,
-  options?: { excludeTranscriptOnlyOpenClawAssistant?: boolean },
+  options?: { excludeTranscriptOnlyQuietCoreAssistant?: boolean },
 ): AssistantTranscriptText | undefined {
   const parsed = JSON.parse(line) as {
     id?: unknown;
@@ -116,8 +116,8 @@ function parseAssistantTranscriptText(
     return undefined;
   }
   if (
-    options?.excludeTranscriptOnlyOpenClawAssistant &&
-    isTranscriptOnlyOpenClawAssistantMessage(message)
+    options?.excludeTranscriptOnlyQuietCoreAssistant &&
+    isTranscriptOnlyQuietCoreAssistantMessage(message)
   ) {
     return undefined;
   }
@@ -134,11 +134,11 @@ function parseAssistantTranscriptText(
   };
 }
 
-function isTranscriptOnlyOpenClawAssistantMessage(message: {
+function isTranscriptOnlyQuietCoreAssistantMessage(message: {
   provider?: unknown;
   model?: unknown;
 }): boolean {
-  return isTranscriptOnlyOpenClawAssistantModel(message.provider, message.model);
+  return isTranscriptOnlyQuietCoreAssistantModel(message.provider, message.model);
 }
 
 function normalizeTranscriptTimestamp(value: unknown): number | undefined {
@@ -182,7 +182,7 @@ function parseRecentConversationText(line: string): SessionRecentConversationTex
   if (!message || (message.role !== "user" && message.role !== "assistant")) {
     return undefined;
   }
-  if (message.role === "assistant" && isTranscriptOnlyOpenClawAssistantMessage(message)) {
+  if (message.role === "assistant" && isTranscriptOnlyQuietCoreAssistantMessage(message)) {
     return undefined;
   }
   const text =
@@ -280,7 +280,7 @@ export async function readLatestAssistantTextFromSessionTranscript(
   for await (const line of streamSessionTranscriptLinesReverse(sessionFile)) {
     try {
       const assistantText = parseAssistantTranscriptText(line, {
-        excludeTranscriptOnlyOpenClawAssistant: true,
+        excludeTranscriptOnlyQuietCoreAssistant: true,
       });
       if (assistantText) {
         return assistantText;
@@ -330,7 +330,7 @@ export async function appendAssistantMessageToSessionTranscript(params: {
   /** Optional override for store path (mostly for tests). */
   storePath?: string;
   updateMode?: SessionTranscriptUpdateMode;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   beforeMessageWrite?: AssistantBeforeMessageWrite;
 }): Promise<SessionTranscriptAppendResult> {
   const sessionKey = params.sessionKey.trim();
@@ -390,7 +390,7 @@ export async function appendExactAssistantMessageToSessionTranscript(params: {
   idempotencyKey?: string;
   storePath?: string;
   updateMode?: SessionTranscriptUpdateMode;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   beforeMessageWrite?: AssistantBeforeMessageWrite;
 }): Promise<SessionTranscriptAppendResult> {
   const sessionKey = params.sessionKey.trim();
@@ -579,7 +579,7 @@ function extractAssistantMessageText(message: SessionTranscriptAssistantMessage)
 async function findLatestEquivalentAssistantMessageId(
   transcriptPath: string,
   message: SessionTranscriptAssistantMessage,
-  config?: OpenClawConfig,
+  config?: QuietCoreConfig,
 ): Promise<string | undefined> {
   const expectedText = extractAssistantMessageText(
     redactTranscriptMessage(message, config) as unknown as SessionTranscriptAssistantMessage,

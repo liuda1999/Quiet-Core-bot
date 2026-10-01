@@ -1,6 +1,6 @@
 // Invalid plugin config tests cover doctor diagnostics for malformed plugin configuration.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../config/types.quiet-core-bot.js";
 
 const validationMocks = vi.hoisted(() => ({
   validateConfigObjectWithPlugins: vi.fn(),
@@ -46,7 +46,7 @@ describe("doctor invalid plugin config repair", () => {
           },
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expect(result.changes).toEqual([
       "- plugins.entries: quarantined 1 invalid plugin config (community-feedback)",
@@ -84,7 +84,7 @@ describe("doctor invalid plugin config repair", () => {
           },
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expect(result.config.plugins?.entries?.["pack/one"]).toEqual({
       enabled: false,
@@ -114,7 +114,7 @@ describe("doctor invalid plugin config repair", () => {
           },
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expect(result.changes).toEqual([
       "- plugins.entries: quarantined 1 invalid plugin config (community-feedback)",
@@ -142,7 +142,7 @@ describe("doctor invalid plugin config repair", () => {
       gateway: {
         mode: "invalid",
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     expect(maybeRepairInvalidPluginConfig(cfg)).toEqual({ config: cfg, changes: [] });
   });

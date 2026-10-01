@@ -14,7 +14,7 @@ import { isSilentReplyPayloadText, SILENT_REPLY_TOKEN } from "../auto-reply/toke
 import { getLoadedChannelPluginForRead } from "../channels/plugins/registry-loaded-read.js";
 import type { ChannelId } from "../channels/plugins/types.public.js";
 import { routeFromConversationRef, routeToDeliveryFields } from "../channels/route-projection.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { isOutboundDeliveryError } from "../infra/outbound/deliver-types.js";
 import type { ConversationRef } from "../infra/outbound/session-binding-service.js";
 import { sourceDeliveryTargetsMatch } from "../infra/outbound/source-delivery-plan.js";
@@ -340,7 +340,7 @@ async function resolveActiveWakeWithRetries(
   return outcome;
 }
 
-export function resolveSubagentAnnounceTimeoutMs(cfg: OpenClawConfig): number {
+export function resolveSubagentAnnounceTimeoutMs(cfg: QuietCoreConfig): number {
   const configured = cfg.agents?.defaults?.subagents?.announceTimeoutMs;
   return clampTimerTimeoutMs(configured) ?? DEFAULT_SUBAGENT_ANNOUNCE_TIMEOUT_MS;
 }
@@ -850,7 +850,7 @@ function resolveGeneratedMediaCompletionLabel(params: {
 }
 
 async function deliverGeneratedMediaCompletionDirect(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   requesterSessionKey: string;
   directIdempotencyKey: string;
   deliveryTarget: {
@@ -986,7 +986,7 @@ function hasFailedSubagentNoOutputCompletion(events: readonly AgentInternalEvent
 }
 
 async function deliverTextCompletionDirect(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   requesterSessionKey: string;
   directIdempotencyKey: string;
   deliveryTarget: {

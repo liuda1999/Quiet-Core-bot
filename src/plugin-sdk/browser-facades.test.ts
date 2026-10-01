@@ -31,7 +31,7 @@ describe("plugin-sdk browser facades", () => {
 
     const browserProfiles = await import("./browser-profiles.js");
     const cfg = { enabled: true } as unknown as import("../config/config.js").BrowserConfig;
-    const rootConfig = { gateway: { port: 18789 } } as import("../config/config.js").OpenClawConfig;
+    const rootConfig = { gateway: { port: 18789 } } as import("../config/config.js").QuietCoreConfig;
 
     expect(browserProfiles.resolveBrowserConfig(cfg, rootConfig)).toBe(resolvedConfig);
     expect(browserProfiles.resolveProfile(resolvedConfig, "quiet-core-bot")).toBe(resolvedProfile);
@@ -77,7 +77,7 @@ describe("plugin-sdk browser facades", () => {
     const controlAuth = await import("./browser-control-auth.js");
     const cfg = {
       gateway: { auth: { token: "token-1" } },
-    } as import("../config/config.js").OpenClawConfig;
+    } as import("../config/config.js").QuietCoreConfig;
     const env = {} as NodeJS.ProcessEnv;
 
     expect(controlAuth.resolveBrowserControlAuth(cfg, env)).toBe(resolvedAuth);

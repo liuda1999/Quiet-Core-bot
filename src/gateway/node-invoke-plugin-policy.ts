@@ -7,9 +7,9 @@ import { resolvePluginApprovalTimeoutMs } from "../infra/plugin-approvals.js";
 import { getActiveRuntimePluginRegistry } from "../plugins/active-runtime-registry.js";
 import type { PluginRegistry } from "../plugins/registry-types.js";
 import type {
-  OpenClawPluginNodeInvokePolicyContext,
-  OpenClawPluginNodeInvokePolicyResult,
-  OpenClawPluginNodeInvokeTransportResult,
+  QuietCorePluginNodeInvokePolicyContext,
+  QuietCorePluginNodeInvokePolicyResult,
+  QuietCorePluginNodeInvokeTransportResult,
 } from "../plugins/types.js";
 import type { NodeSession } from "./node-registry.js";
 import { resolveApprovalRequestRecipientConnIds } from "./server-methods/approval-shared.js";
@@ -53,7 +53,7 @@ function createApprovalRuntime(params: {
   context: GatewayRequestContext;
   client: GatewayClient | null;
   pluginId: string;
-}): OpenClawPluginNodeInvokePolicyContext["approvals"] | undefined {
+}): QuietCorePluginNodeInvokePolicyContext["approvals"] | undefined {
   const manager = params.context.pluginApprovalManager;
   if (!manager) {
     return undefined;
@@ -127,7 +127,7 @@ export async function applyPluginNodeInvokePolicy(params: {
   params: unknown;
   timeoutMs?: number;
   idempotencyKey?: string;
-}): Promise<OpenClawPluginNodeInvokePolicyResult | null> {
+}): Promise<QuietCorePluginNodeInvokePolicyResult | null> {
   const registry = getActiveRuntimePluginRegistry();
   const entry = registry?.nodeInvokePolicies?.find((candidate) =>
     candidate.policy.commands.includes(params.command),
@@ -144,9 +144,9 @@ export async function applyPluginNodeInvokePolicy(params: {
     return null;
   }
 
-  const invokeNode: OpenClawPluginNodeInvokePolicyContext["invokeNode"] = async (
+  const invokeNode: QuietCorePluginNodeInvokePolicyContext["invokeNode"] = async (
     override = {},
-  ): Promise<OpenClawPluginNodeInvokeTransportResult> => {
+  ): Promise<QuietCorePluginNodeInvokeTransportResult> => {
     // Policies invoke the real node through this narrowed transport wrapper so
     // they can retry/override params without getting direct registry access.
     const res = await params.context.nodeRegistry.invoke({

@@ -3,10 +3,10 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { executeSqliteQueryTakeFirstSync, getNodeSqliteKysely } from "../infra/kysely-sync.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
 import {
-  closeOpenClawStateDatabaseForTest,
-  openOpenClawStateDatabase,
+  closeQuietCoreStateDatabaseForTest,
+  openQuietCoreStateDatabase,
 } from "../state/quiet-core-bot-state-db.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import {
@@ -15,12 +15,12 @@ import {
   readConfigFileSnapshot,
   readSourceConfigBestEffort,
 } from "./config.js";
-import { withTempHome, writeOpenClawConfig } from "./test-helpers.js";
+import { withTempHome, writeQuietCoreConfig } from "./test-helpers.js";
 
-type ConfigHealthDatabase = Pick<OpenClawStateKyselyDatabase, "config_health_entries">;
+type ConfigHealthDatabase = Pick<QuietCoreStateKyselyDatabase, "config_health_entries">;
 
 function readConfigHealthRow(env: NodeJS.ProcessEnv, configPath: string) {
-  const { db } = openOpenClawStateDatabase({ env });
+  const { db } = openQuietCoreStateDatabase({ env });
   const healthDb = getNodeSqliteKysely<ConfigHealthDatabase>(db);
   return executeSqliteQueryTakeFirstSync(
     db,
@@ -33,12 +33,12 @@ function readConfigHealthRow(env: NodeJS.ProcessEnv, configPath: string) {
 
 describe("readBestEffortConfig", () => {
   afterEach(() => {
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
   });
 
   it("can read snapshots without updating config observation state", async () => {
     await withTempHome(async (home) => {
-      const configPath = await writeOpenClawConfig(home, {
+      const configPath = await writeQuietCoreConfig(home, {
         gateway: { mode: "local" },
       });
 
@@ -61,7 +61,7 @@ describe("readBestEffortConfig", () => {
     await withTempHome(async (home) => {
       const key = "QUIET_CORE_ISOLATED_CONFIG_READ_TEST";
       await withEnvAsync({ [key]: undefined }, async () => {
-        await writeOpenClawConfig(home, {
+        await writeQuietCoreConfig(home, {
           env: { vars: { [key]: "from-config" } },
           gateway: { mode: "local" },
         });
@@ -77,7 +77,7 @@ describe("readBestEffortConfig", () => {
     await withTempHome(async (home) => {
       const key = "QUIET_CORE_GATEWAY_TOKEN";
       await withEnvAsync({ [key]: "shell-token" }, async () => {
-        await writeOpenClawConfig(home, {
+        await writeQuietCoreConfig(home, {
           env: { vars: { [key]: "config-token" } },
           gateway: { auth: { mode: "token", token: `\${${key}}` }, mode: "local" },
         });
@@ -97,7 +97,7 @@ describe("readBestEffortConfig", () => {
   it("resolves config env above normalized lower-precedence aliases in isolated snapshots", async () => {
     await withTempHome(async (home) => {
       await withEnvAsync({ ZAI_API_KEY: "shell-token", Z_AI_API_KEY: undefined }, async () => {
-        await writeOpenClawConfig(home, {
+        await writeQuietCoreConfig(home, {
           env: { vars: { Z_AI_API_KEY: "config-token" } },
           gateway: { auth: { mode: "token", token: "${ZAI_API_KEY}" }, mode: "local" },
         });
@@ -118,7 +118,7 @@ describe("readBestEffortConfig", () => {
   it("resolves config aliases from a higher-precedence canonical value in isolated snapshots", async () => {
     await withTempHome(async (home) => {
       await withEnvAsync({ ZAI_API_KEY: "invocation-token", Z_AI_API_KEY: undefined }, async () => {
-        await writeOpenClawConfig(home, {
+        await writeQuietCoreConfig(home, {
           env: { vars: { Z_AI_API_KEY: "config-token" } },
           gateway: { auth: { mode: "token", token: "${Z_AI_API_KEY}" }, mode: "local" },
         });
@@ -139,7 +139,7 @@ describe("readBestEffortConfig", () => {
     await withTempHome(async (home) => {
       const key = "QUIET_CORE_ISOLATED_BEST_EFFORT_CONFIG_TEST";
       await withEnvAsync({ [key]: undefined }, async () => {
-        await writeOpenClawConfig(home, {
+        await writeQuietCoreConfig(home, {
           env: { vars: { [key]: "from-config" } },
           gateway: { mode: "local" },
         });
@@ -183,7 +183,7 @@ describe("readBestEffortConfig", () => {
 
   it("does not restore suspicious direct edits from .bak during ordinary reads", async () => {
     await withTempHome(async (home) => {
-      const configPath = await writeOpenClawConfig(home, {
+      const configPath = await writeQuietCoreConfig(home, {
         meta: { lastTouchedAt: "2026-04-22T00:00:00.000Z" },
         update: { channel: "beta" },
         gateway: { mode: "local" },
@@ -204,7 +204,7 @@ describe("readBestEffortConfig", () => {
   // Skipped: requires the anthropic provider plugin defaults, which this standalone build does not ship.
   it.skip("reuses valid snapshots while preserving load-time defaults", async () => {
     await withTempHome(async (home) => {
-      await writeOpenClawConfig(home, {
+      await writeQuietCoreConfig(home, {
         auth: {
           profiles: {
             "anthropic:api": { provider: "anthropic", mode: "api_key" },
@@ -235,7 +235,7 @@ describe("readBestEffortConfig", () => {
   // Skipped: requires the anthropic provider plugin defaults, which this standalone build does not ship.
   it.skip("returns source and materialized config from one snapshot", async () => {
     await withTempHome(async (home) => {
-      await writeOpenClawConfig(home, {
+      await writeQuietCoreConfig(home, {
         auth: {
           profiles: {
             "anthropic:api": { provider: "anthropic", mode: "api_key" },
@@ -260,7 +260,7 @@ describe("readBestEffortConfig", () => {
 describe("readSourceConfigBestEffort", () => {
   it("preserves the authored source config without load-time defaults", async () => {
     await withTempHome(async (home) => {
-      await writeOpenClawConfig(home, {
+      await writeQuietCoreConfig(home, {
         auth: {
           profiles: {
             "anthropic:api": { provider: "anthropic", mode: "api_key" },

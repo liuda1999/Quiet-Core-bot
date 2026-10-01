@@ -74,10 +74,10 @@ function runCleanupFunction(fakePs: string) {
       cleanupFunction,
       'ROOT_DIR="/worktree"',
       'APP_BUNDLE=""',
-      'APP_EXECUTABLE_RELATIVE_PATH="Contents/MacOS/OpenClaw"',
-      'DEBUG_PROCESS_PATTERN="/worktree/apps/macos/.build/debug/OpenClaw"',
-      'LOCAL_PROCESS_PATTERN="/worktree/apps/macos/.build-local/debug/OpenClaw"',
-      'RELEASE_PROCESS_PATTERN="/worktree/apps/macos/.build/release/OpenClaw"',
+      'APP_EXECUTABLE_RELATIVE_PATH="Contents/MacOS/QuietCore"',
+      'DEBUG_PROCESS_PATTERN="/worktree/apps/macos/.build/debug/QuietCore"',
+      'LOCAL_PROCESS_PATTERN="/worktree/apps/macos/.build-local/debug/QuietCore"',
+      'RELEASE_PROCESS_PATTERN="/worktree/apps/macos/.build/release/QuietCore"',
       "kill() {",
       '  printf "%s\\n" "$*" >> "$QUIET_CORE_TEST_KILL_CALLS"',
       "  return 0",
@@ -295,14 +295,14 @@ describe("scripts/restart-mac.sh", () => {
 
     expect(script).toContain('fail "QUIET_CORE_APP_BUNDLE does not exist: ${APP_BUNDLE}"');
     expect(chooseBlock).toContain("canonicalize_app_bundle");
-    expect(chooseBlock.indexOf("${ROOT_DIR}/dist/OpenClaw.app")).toBeGreaterThan(-1);
-    expect(chooseBlock.indexOf("/Applications/OpenClaw.app")).toBeGreaterThan(-1);
-    expect(chooseBlock.indexOf("${ROOT_DIR}/dist/OpenClaw.app")).toBeLessThan(
-      chooseBlock.indexOf("/Applications/OpenClaw.app"),
+    expect(chooseBlock.indexOf("${ROOT_DIR}/dist/QuietCore.app")).toBeGreaterThan(-1);
+    expect(chooseBlock.indexOf("/Applications/QuietCore.app")).toBeGreaterThan(-1);
+    expect(chooseBlock.indexOf("${ROOT_DIR}/dist/QuietCore.app")).toBeLessThan(
+      chooseBlock.indexOf("/Applications/QuietCore.app"),
     );
   });
 
-  it("keeps restart cleanup scoped to known OpenClaw app and build paths", () => {
+  it("keeps restart cleanup scoped to known QuietCore app and build paths", () => {
     const script = readFileSync(restartScriptPath, "utf8");
     const cleanupBlock = script.slice(
       script.indexOf("kill_all_quiet-core-bot()"),
@@ -311,17 +311,17 @@ describe("scripts/restart-mac.sh", () => {
 
     expect(cleanupBlock).toContain("ps axww -o pid=,command=");
     expect(cleanupBlock).toContain(
-      '"${ROOT_DIR}/dist/OpenClaw.app/${APP_EXECUTABLE_RELATIVE_PATH}"',
+      '"${ROOT_DIR}/dist/QuietCore.app/${APP_EXECUTABLE_RELATIVE_PATH}"',
     );
-    expect(cleanupBlock).toContain('"/Applications/OpenClaw.app/${APP_EXECUTABLE_RELATIVE_PATH}"');
+    expect(cleanupBlock).toContain('"/Applications/QuietCore.app/${APP_EXECUTABLE_RELATIVE_PATH}"');
     expect(cleanupBlock).toContain('"${DEBUG_PROCESS_PATTERN}"');
     expect(cleanupBlock).toContain('"${LOCAL_PROCESS_PATTERN}"');
     expect(cleanupBlock).toContain('"${RELEASE_PROCESS_PATTERN}"');
     expect(cleanupBlock).not.toContain("APP_PROCESS_PATTERN");
     expect(cleanupBlock).not.toContain("pkill");
-    expect(cleanupBlock).not.toContain('pkill -x "OpenClaw"');
+    expect(cleanupBlock).not.toContain('pkill -x "QuietCore"');
     expect(cleanupBlock).not.toContain("pgrep");
-    expect(cleanupBlock).not.toContain('pgrep -x "OpenClaw"');
+    expect(cleanupBlock).not.toContain('pgrep -x "QuietCore"');
   });
 
   it("stops launchd supervision before killing app processes", () => {
@@ -355,10 +355,10 @@ describe("scripts/restart-mac.sh", () => {
   it("normalizes custom app bundle paths before process matching", () => {
     const root = mkdtempSync(join(tmpdir(), "quiet-core-bot-restart-mac-test-"));
     tempRoots.push(root);
-    const appBundle = join(root, "dist", "OpenClaw.app");
+    const appBundle = join(root, "dist", "QuietCore.app");
     mkdirSync(appBundle, { recursive: true });
 
-    const { result } = runCanonicalizeAppBundle(`${appBundle}/../OpenClaw.app/`);
+    const { result } = runCanonicalizeAppBundle(`${appBundle}/../QuietCore.app/`);
 
     expect(result.status).toBe(0);
     expect(result.stdout.trim()).toBe(realpathSync(appBundle));
@@ -369,7 +369,7 @@ describe("scripts/restart-mac.sh", () => {
     const { killCalls, result } = runCleanupFunction(
       [
         "#!/usr/bin/env bash",
-        "printf '%s\\n' '  321 /worktree/dist/OpenClaw.app/Contents/MacOS/OpenClaw --attach-only'",
+        "printf '%s\\n' '  321 /worktree/dist/QuietCore.app/Contents/MacOS/QuietCore --attach-only'",
       ].join("\n"),
     );
 
@@ -385,7 +385,7 @@ describe("scripts/restart-mac.sh", () => {
         "#!/usr/bin/env bash",
         'kill_count="$(wc -l < "$QUIET_CORE_TEST_KILL_CALLS" 2>/dev/null || echo 0)"',
         'if [[ "$kill_count" -lt 10 ]]; then',
-        "  printf '%s\\n' '  321 /worktree/dist/OpenClaw.app/Contents/MacOS/OpenClaw --attach-only'",
+        "  printf '%s\\n' '  321 /worktree/dist/QuietCore.app/Contents/MacOS/QuietCore --attach-only'",
         "fi",
       ].join("\n"),
     );
@@ -405,11 +405,11 @@ describe("scripts/restart-mac.sh", () => {
     expect(result.stderr).toBe("");
   });
 
-  it("does not kill unrelated OpenClaw app bundles", () => {
+  it("does not kill unrelated QuietCore app bundles", () => {
     const { killCalls, result } = runCleanupFunction(
       [
         "#!/usr/bin/env bash",
-        "printf '%s\\n' '  654 /tmp/Other/OpenClaw.app/Contents/MacOS/OpenClaw'",
+        "printf '%s\\n' '  654 /tmp/Other/QuietCore.app/Contents/MacOS/QuietCore'",
       ].join("\n"),
     );
 

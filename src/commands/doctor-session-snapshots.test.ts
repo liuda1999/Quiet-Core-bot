@@ -5,7 +5,7 @@ import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { saveSessionStore } from "../config/sessions/store.js";
 import type { SessionEntry } from "../config/sessions/types.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { Skill } from "../skills/loading/skill-contract.js";
 
 const note = vi.hoisted(() => vi.fn());
@@ -363,7 +363,7 @@ describe("doctor session snapshot stale runtime metadata", () => {
     });
 
     await noteSessionSnapshotHealth({
-      cfg: { session: { store: configuredStorePath } } as OpenClawConfig,
+      cfg: { session: { store: configuredStorePath } } as QuietCoreConfig,
       bundledSkillsDir,
       env: { QUIET_CORE_STATE_DIR: stateDir },
     });
@@ -400,7 +400,7 @@ describe("doctor session snapshot stale runtime metadata", () => {
       cfg: {
         session: { store: templatedStore },
         agents: { list: [{ id: "main" }, { id: "ops" }] },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       bundledSkillsDir,
       env: { QUIET_CORE_STATE_DIR: path.join(root, "state") },
     });

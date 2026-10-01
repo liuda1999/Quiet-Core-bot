@@ -3,7 +3,7 @@ import { normalizeStringEntries } from "@quiet-core/normalization-core/string-no
 import { normalizeAnyChannelId } from "../channels/registry.js";
 import { resolveAccountEntry } from "../routing/account-lookup.js";
 import { normalizeAccountId } from "../routing/session-key.js";
-import type { OpenClawConfig } from "./config.js";
+import type { QuietCoreConfig } from "./config.js";
 import type { SlackCapabilitiesConfig } from "./types.slack.js";
 import type { TelegramCapabilitiesConfig } from "./types.telegram.js";
 
@@ -48,7 +48,7 @@ function resolveAccountCapabilities(params: {
 
 /** Resolves normalized string capabilities for a channel/account config pair. */
 export function resolveChannelCapabilities(params: {
-  cfg?: Partial<OpenClawConfig>;
+  cfg?: Partial<QuietCoreConfig>;
   channel?: string | null;
   accountId?: string | null;
 }): string[] | undefined {

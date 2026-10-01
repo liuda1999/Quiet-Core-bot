@@ -1,7 +1,7 @@
 /** Shared config mutations used by interactive and non-interactive onboarding. */
 import { setConfigValueAtPath } from "../config/config-paths.js";
 import type { DmScope } from "../config/types.base.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { ToolProfileId } from "../config/types.tools.js";
 
 /** Default DM scoping selected during local onboarding. */
@@ -11,9 +11,9 @@ const ONBOARDING_DEFAULT_TOOLS_PROFILE: ToolProfileId = "coding";
 
 /** Applies local gateway/workspace defaults without overwriting explicit user defaults. */
 export function applyLocalSetupWorkspaceConfig(
-  baseConfig: OpenClawConfig,
+  baseConfig: QuietCoreConfig,
   workspaceDir: string,
-): OpenClawConfig {
+): QuietCoreConfig {
   return {
     ...baseConfig,
     agents: {
@@ -39,7 +39,7 @@ export function applyLocalSetupWorkspaceConfig(
 }
 
 /** Marks default agents to skip bootstrap file creation. */
-export function applySkipBootstrapConfig(cfg: OpenClawConfig): OpenClawConfig {
+export function applySkipBootstrapConfig(cfg: QuietCoreConfig): QuietCoreConfig {
   const next = structuredClone(cfg);
   setConfigValueAtPath(
     next as Record<string, unknown>,

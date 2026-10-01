@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { loadJsonFile } from "quiet-core-bot/plugin-sdk/json-store";
 import { resolveStateDir } from "quiet-core-bot/plugin-sdk/state-paths";
 import { resolveConfiguredMatrixAccountIds } from "./account-selection.js";
@@ -108,7 +108,7 @@ function detectLegacyBotSdkCryptoStore(cryptoRootDir: string): {
         detected: false,
         warning:
           `Legacy Matrix encrypted state path exists but is not a directory: ${cryptoRootDir}. ` +
-          "OpenClaw skipped automatic crypto migration for that path.",
+          "QuietCore skipped automatic crypto migration for that path.",
       };
     }
   } catch (err) {
@@ -116,7 +116,7 @@ function detectLegacyBotSdkCryptoStore(cryptoRootDir: string): {
       detected: false,
       warning:
         `Failed reading legacy Matrix encrypted state path (${cryptoRootDir}): ${String(err)}. ` +
-        "OpenClaw skipped automatic crypto migration for that path.",
+        "QuietCore skipped automatic crypto migration for that path.",
     };
   }
 
@@ -138,17 +138,17 @@ function detectLegacyBotSdkCryptoStore(cryptoRootDir: string): {
       detected: false,
       warning:
         `Failed scanning legacy Matrix encrypted state path (${cryptoRootDir}): ${String(err)}. ` +
-        "OpenClaw skipped automatic crypto migration for that path.",
+        "QuietCore skipped automatic crypto migration for that path.",
     };
   }
 }
 
-function resolveMatrixAccountIds(cfg: OpenClawConfig): string[] {
+function resolveMatrixAccountIds(cfg: QuietCoreConfig): string[] {
   return resolveConfiguredMatrixAccountIds(cfg);
 }
 
 function resolveLegacyMatrixFlatStorePlan(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env: NodeJS.ProcessEnv;
 }): MatrixLegacyCryptoPlan | { warning: string } | null {
   const legacy = resolveMatrixLegacyFlatStoragePaths(resolveStateDir(params.env, os.homedir));
@@ -200,7 +200,7 @@ function loadLegacyBotSdkMetadata(cryptoRootDir: string): MatrixLegacyBotSdkMeta
 }
 
 function resolveMatrixLegacyCryptoPlans(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env: NodeJS.ProcessEnv;
 }): Omit<MatrixLegacyCryptoDetection, "inspectorAvailable"> {
   const warnings: string[] = [];
@@ -263,7 +263,7 @@ function resolveMatrixLegacyCryptoPlans(params: {
 }
 
 export function detectLegacyMatrixCrypto(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
 }): MatrixLegacyCryptoDetection {
   const detection = resolveMatrixLegacyCryptoPlans({
@@ -287,7 +287,7 @@ export function detectLegacyMatrixCrypto(params: {
 }
 
 export async function autoPrepareLegacyMatrixCrypto(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
   log?: { info?: (message: string) => void; warn?: (message: string) => void };
   deps?: Partial<MatrixLegacyCryptoPrepareDeps>;
@@ -370,7 +370,7 @@ export async function autoPrepareLegacyMatrixCrypto(params: {
     if (!plan.deviceId) {
       warnings.push(
         `Legacy Matrix encrypted state detected at ${plan.legacyCryptoPath}, but no device ID was found for account "${plan.accountId}". ` +
-          `OpenClaw will continue, but old encrypted history cannot be recovered automatically.`,
+          `QuietCore will continue, but old encrypted history cannot be recovered automatically.`,
       );
       continue;
     }

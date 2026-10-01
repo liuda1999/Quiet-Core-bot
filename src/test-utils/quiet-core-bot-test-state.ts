@@ -14,9 +14,9 @@ type ConfigRuntimeResettable = typeof configRuntime & {
   resetConfigRuntimeState?: () => void;
 };
 
-type OpenClawTestStateLayout = "home" | "state-only" | "split";
+type QuietCoreTestStateLayout = "home" | "state-only" | "split";
 
-type OpenClawTestStateScenario =
+type QuietCoreTestStateScenario =
   | "empty"
   | "minimal"
   | "update-stable"
@@ -24,11 +24,11 @@ type OpenClawTestStateScenario =
   | "gateway-loopback"
   | "external-service";
 
-export type OpenClawTestStateOptions = {
+export type QuietCoreTestStateOptions = {
   prefix?: string;
   label?: string;
-  layout?: OpenClawTestStateLayout;
-  scenario?: OpenClawTestStateScenario;
+  layout?: QuietCoreTestStateLayout;
+  scenario?: QuietCoreTestStateScenario;
   agentEnv?: "clear" | "main";
   applyEnv?: boolean;
   env?: Record<string, string | undefined>;
@@ -38,7 +38,7 @@ export type OpenClawTestStateOptions = {
   };
 };
 
-export type OpenClawTestState = {
+export type QuietCoreTestState = {
   root: string;
   home: string;
   stateDir: string;
@@ -108,7 +108,7 @@ function resolveWindowsHomeEnv(
 
 function resolveLayout(
   root: string,
-  layout: OpenClawTestStateLayout,
+  layout: QuietCoreTestStateLayout,
 ): {
   home: string;
   stateDir: string;
@@ -144,7 +144,7 @@ function resolveLayout(
   };
 }
 
-function scenarioConfig(options: OpenClawTestStateOptions): Record<string, unknown> | undefined {
+function scenarioConfig(options: QuietCoreTestStateOptions): Record<string, unknown> | undefined {
   const scenario = options.scenario ?? "empty";
   if (scenario === "minimal" || scenario === "external-service") {
     return {};
@@ -201,7 +201,7 @@ function scenarioConfig(options: OpenClawTestStateOptions): Record<string, unkno
   return undefined;
 }
 
-function scenarioEnv(options: OpenClawTestStateOptions): Record<string, string | undefined> {
+function scenarioEnv(options: QuietCoreTestStateOptions): Record<string, string | undefined> {
   if ((options.scenario ?? "empty") === "external-service") {
     return {
       QUIET_CORE_SERVICE_REPAIR_POLICY: "external",
@@ -211,7 +211,7 @@ function scenarioEnv(options: OpenClawTestStateOptions): Record<string, string |
 }
 
 function buildEnvVars(params: {
-  layout: OpenClawTestStateLayout;
+  layout: QuietCoreTestStateLayout;
   home: string;
   stateDir: string;
   configPath: string;
@@ -264,9 +264,9 @@ async function writeJsonFile(filePath: string, value: unknown): Promise<string> 
   return filePath;
 }
 
-export async function createOpenClawTestState(
-  options: OpenClawTestStateOptions = {},
-): Promise<OpenClawTestState> {
+export async function createQuietCoreTestState(
+  options: QuietCoreTestStateOptions = {},
+): Promise<QuietCoreTestState> {
   const label = normalizeLabel(options.label ?? options.scenario);
   const prefix = options.prefix ?? `${DEFAULT_PREFIX}${label}-`;
   const root = await fs.mkdtemp(path.join(os.tmpdir(), prefix));
@@ -303,7 +303,7 @@ export async function createOpenClawTestState(
   const sessionsDir = (agentId = "main") =>
     path.join(paths.stateDir, "agents", agentId, "sessions");
 
-  const state: OpenClawTestState = {
+  const state: QuietCoreTestState = {
     root,
     ...paths,
     env,
@@ -366,11 +366,11 @@ export async function createOpenClawTestState(
   return state;
 }
 
-export async function withOpenClawTestState<T>(
-  options: OpenClawTestStateOptions,
-  fn: (state: OpenClawTestState) => Promise<T>,
+export async function withQuietCoreTestState<T>(
+  options: QuietCoreTestStateOptions,
+  fn: (state: QuietCoreTestState) => Promise<T>,
 ): Promise<T> {
-  const state = await createOpenClawTestState(options);
+  const state = await createQuietCoreTestState(options);
   try {
     return await fn(state);
   } finally {

@@ -1,7 +1,7 @@
 // Verifies quota suspension persists lane state and auto-resumes safely.
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { DEFAULT_CRON_MAX_CONCURRENT_RUNS } from "../config/cron-limits.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { CommandLane } from "../process/lanes.js";
 import { MAX_TIMER_TIMEOUT_MS } from "../shared/number-coercion.js";
 
@@ -24,7 +24,7 @@ vi.mock("./command/session.js", () => ({
   }),
 }));
 
-async function suspendLane(ttlMs: number, cfg: OpenClawConfig, laneId: CommandLane) {
+async function suspendLane(ttlMs: number, cfg: QuietCoreConfig, laneId: CommandLane) {
   // All cases exercise the public suspendSession path with fixed failure metadata.
   const { suspendSession } = await import("./session-suspension.js");
   await suspendSession({
@@ -53,7 +53,7 @@ describe("session suspension", () => {
     vi.useFakeTimers();
     const cfg = {
       agents: { defaults: { maxConcurrent: 4 } },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     await suspendLane(100, cfg, CommandLane.Main);
 
@@ -70,7 +70,7 @@ describe("session suspension", () => {
   it("auto-resumes cron lanes to the cron concurrency default", async () => {
     vi.useFakeTimers();
 
-    await suspendLane(100, {} as OpenClawConfig, CommandLane.CronNested);
+    await suspendLane(100, {} as QuietCoreConfig, CommandLane.CronNested);
 
     expect(commandQueueMocks.setCommandLaneConcurrency).toHaveBeenCalledWith(
       CommandLane.CronNested,
@@ -88,7 +88,7 @@ describe("session suspension", () => {
   it("auto-resumes cron lanes to configured and clamped cron concurrency", async () => {
     vi.useFakeTimers();
 
-    await suspendLane(100, { cron: { maxConcurrentRuns: 3 } } as OpenClawConfig, CommandLane.Cron);
+    await suspendLane(100, { cron: { maxConcurrentRuns: 3 } } as QuietCoreConfig, CommandLane.Cron);
     await vi.advanceTimersByTimeAsync(100);
 
     expect(commandQueueMocks.setCommandLaneConcurrency).toHaveBeenLastCalledWith(
@@ -96,7 +96,7 @@ describe("session suspension", () => {
       3,
     );
 
-    await suspendLane(100, { cron: { maxConcurrentRuns: 0 } } as OpenClawConfig, CommandLane.Cron);
+    await suspendLane(100, { cron: { maxConcurrentRuns: 0 } } as QuietCoreConfig, CommandLane.Cron);
     await vi.advanceTimersByTimeAsync(100);
 
     expect(commandQueueMocks.setCommandLaneConcurrency).toHaveBeenLastCalledWith(
@@ -111,7 +111,7 @@ describe("session suspension", () => {
     vi.setSystemTime(1_000);
     const setTimeoutSpy = vi.spyOn(globalThis, "setTimeout");
 
-    await suspendLane(Number.MAX_SAFE_INTEGER, {} as OpenClawConfig, CommandLane.Main);
+    await suspendLane(Number.MAX_SAFE_INTEGER, {} as QuietCoreConfig, CommandLane.Main);
 
     expect(setTimeoutSpy).toHaveBeenCalledWith(expect.any(Function), MAX_TIMER_TIMEOUT_MS);
     const patch = sessionStoreMocks.applySessionStoreEntryPatch.mock.calls[0]?.[0].patch as {

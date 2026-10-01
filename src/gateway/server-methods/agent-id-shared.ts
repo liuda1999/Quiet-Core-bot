@@ -2,7 +2,7 @@
 // and must reject unknown explicit ids consistently.
 import { ErrorCodes, errorShape } from "../../../packages/gateway-protocol/src/index.js";
 import { listAgentIds, resolveDefaultAgentId } from "../../agents/agent-scope.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { RespondFn } from "./types.js";
 
 /**
@@ -11,7 +11,7 @@ import type { RespondFn } from "./types.js";
 export function resolveAgentIdOrRespondError(params: {
   rawAgentId: unknown;
   respond: RespondFn;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   normalize: (rawAgentId: unknown) => string | undefined;
 }) {
   const knownAgents = listAgentIds(params.cfg);

@@ -1,8 +1,8 @@
-// Litellm plugin entrypoint registers its OpenClaw integration.
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+// Litellm plugin entrypoint registers its QuietCore integration.
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import {
   definePluginEntry,
-  type OpenClawPluginApi,
+  type QuietCorePluginApi,
   type ProviderAuthMethodNonInteractiveContext,
 } from "quiet-core-bot/plugin-sdk/plugin-entry";
 import {
@@ -17,9 +17,9 @@ import { buildLitellmProvider } from "./provider-catalog.js";
 const PROVIDER_ID = "litellm";
 
 function applyCustomBaseUrlForNonInteractiveSetup(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   customBaseUrl: unknown,
-): OpenClawConfig {
+): QuietCoreConfig {
   const baseUrl = normalizeOptionalSecretInput(customBaseUrl)?.replace(/\/+$/, "");
   if (!baseUrl) {
     return cfg;
@@ -45,7 +45,7 @@ export default definePluginEntry({
   id: PROVIDER_ID,
   name: "LiteLLM Provider",
   description: "Bundled LiteLLM provider plugin",
-  register(api: OpenClawPluginApi) {
+  register(api: QuietCorePluginApi) {
     const apiKeyAuth = createProviderApiKeyAuthMethod({
       providerId: PROVIDER_ID,
       methodId: "api-key",

@@ -1,7 +1,7 @@
 // Resolves diagnostics feature flags from config and environment.
 import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
 import { normalizeUniqueStringEntriesLower } from "@quiet-core/normalization-core/string-normalization";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 
 const DIAGNOSTICS_ENV = "QUIET_CORE_DIAGNOSTICS";
 
@@ -40,7 +40,7 @@ function uniqueFlags(flags: string[]): string[] {
 
 /** Resolves enabled diagnostic flags from config plus `QUIET_CORE_DIAGNOSTICS` overrides. */
 export function resolveDiagnosticFlags(
-  cfg?: OpenClawConfig,
+  cfg?: QuietCoreConfig,
   env: NodeJS.ProcessEnv = process.env,
 ): string[] {
   const configFlags = Array.isArray(cfg?.diagnostics?.flags) ? cfg?.diagnostics?.flags : [];
@@ -87,7 +87,7 @@ export function matchesDiagnosticFlag(flag: string, enabledFlags: string[]): boo
 /** Returns whether a diagnostic flag is enabled after config/env resolution. */
 export function isDiagnosticFlagEnabled(
   flag: string,
-  cfg?: OpenClawConfig,
+  cfg?: QuietCoreConfig,
   env: NodeJS.ProcessEnv = process.env,
 ): boolean {
   const flags = resolveDiagnosticFlags(cfg, env);

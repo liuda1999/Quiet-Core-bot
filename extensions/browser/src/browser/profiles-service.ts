@@ -11,7 +11,7 @@ import { getRuntimeConfig } from "../config/config.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { resolveUserPath } from "../utils.js";
 import { assertCdpEndpointAllowed } from "./cdp.helpers.js";
-import { resolveOpenClawUserDataDir } from "./chrome.js";
+import { resolveQuietCoreUserDataDir } from "./chrome.js";
 import { createBrowserProfileConfig, deleteBrowserProfileConfig } from "./config-mutations.js";
 import { parseHttpUrl, resolveProfile } from "./config.js";
 import {
@@ -173,7 +173,7 @@ export function createBrowserProfilesService(ctx: BrowserRouteContext) {
         // ignore
       }
 
-      const userDataDir = resolveOpenClawUserDataDir(name);
+      const userDataDir = resolveQuietCoreUserDataDir(name);
       const profileDir = path.dirname(userDataDir);
       if (fs.existsSync(profileDir)) {
         await movePathToTrash(profileDir);

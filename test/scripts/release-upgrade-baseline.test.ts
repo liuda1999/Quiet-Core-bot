@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  compareOpenClawVersions,
+  compareQuietCoreVersions,
   parseArgs,
   resolveDefaultReleaseUpgradeBaseline,
 } from "../../scripts/lib/release-upgrade-baseline.mjs";
@@ -66,7 +66,7 @@ describe("release upgrade baseline resolver", () => {
   });
 
   it("compares prerelease versions with semver ordering", () => {
-    expect(compareOpenClawVersions("2026.6.7-beta.2", "2026.6.7-beta.10")).toBeLessThan(0);
-    expect(compareOpenClawVersions("2026.6.7", "2026.6.7-beta.10")).toBeGreaterThan(0);
+    expect(compareQuietCoreVersions("2026.6.7-beta.2", "2026.6.7-beta.10")).toBeLessThan(0);
+    expect(compareQuietCoreVersions("2026.6.7", "2026.6.7-beta.10")).toBeGreaterThan(0);
   });
 });

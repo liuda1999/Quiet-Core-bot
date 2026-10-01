@@ -1,7 +1,7 @@
 // Tests execution approval policy matching and persistence.
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { DEFAULT_AGENT_ID } from "../routing/session-key.js";
 import {
   makeMockCommandResolution,
@@ -603,7 +603,7 @@ describe("exec approvals policy helpers", () => {
   });
 
   it("uses QUIET_CORE_STATE_DIR when reporting default host sources", () => {
-    const originalOpenClawStateDir = process.env.QUIET_CORE_STATE_DIR;
+    const originalQuietCoreStateDir = process.env.QUIET_CORE_STATE_DIR;
     const stateDir = path.join(process.cwd(), ".tmp-quiet-core-bot-state");
     process.env.QUIET_CORE_STATE_DIR = stateDir;
     try {
@@ -625,10 +625,10 @@ describe("exec approvals policy helpers", () => {
         `${path.join(stateDir, "exec-approvals.json")} defaults.security`,
       );
     } finally {
-      if (originalOpenClawStateDir === undefined) {
+      if (originalQuietCoreStateDir === undefined) {
         delete process.env.QUIET_CORE_STATE_DIR;
       } else {
-        process.env.QUIET_CORE_STATE_DIR = originalOpenClawStateDir;
+        process.env.QUIET_CORE_STATE_DIR = originalQuietCoreStateDir;
       }
     }
   });
@@ -794,7 +794,7 @@ describe("exec approvals policy helpers", () => {
         agents: {
           list: [{ id: "runner" }],
         },
-      } satisfies OpenClawConfig,
+      } satisfies QuietCoreConfig,
       approvals: {
         version: 1,
         agents: {
@@ -836,7 +836,7 @@ describe("exec approvals policy helpers", () => {
             ask: "off",
           },
         },
-      } satisfies OpenClawConfig,
+      } satisfies QuietCoreConfig,
       approvals: {
         version: 1,
         agents: {
@@ -880,7 +880,7 @@ describe("exec approvals policy helpers", () => {
             },
           ],
         },
-      } satisfies OpenClawConfig,
+      } satisfies QuietCoreConfig,
       approvals: {
         version: 1,
       },

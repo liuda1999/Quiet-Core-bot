@@ -101,7 +101,7 @@ async function main() {
   const promptLine = await fs.readFile(promptLogPath, "utf8");
   assert(promptLine.includes("User request:"), "fake Claude CLI did not receive planner prompt");
   assert(
-    promptLine.includes("OpenClaw docs:"),
+    promptLine.includes("QuietCore docs:"),
     "planner prompt did not include docs reference context",
   );
 

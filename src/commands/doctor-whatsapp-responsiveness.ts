@@ -3,7 +3,7 @@ import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { note } from "../../packages/terminal-core/src/note.js";
 import { formatCliCommand } from "../cli/command-format.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { StatusSummary } from "./status.types.js";
 
 type LocalTuiProcess = {
@@ -77,7 +77,7 @@ export function listLocalTuiProcesses(): LocalTuiProcess[] {
   return processes;
 }
 
-function hasWhatsappEnabled(cfg: OpenClawConfig): boolean {
+function hasWhatsappEnabled(cfg: QuietCoreConfig): boolean {
   const whatsapp = cfg.channels?.whatsapp;
   if (!whatsapp || whatsapp.enabled === false) {
     return false;
@@ -150,7 +150,7 @@ export async function terminateLocalTuiProcesses(params: {
 
 /** Emits WhatsApp responsiveness warnings and optionally stops contending local TUI clients. */
 export async function noteWhatsappResponsivenessHealth(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   status?: Pick<StatusSummary, "eventLoop"> | null;
   shouldRepair: boolean;
   listLocalTuiProcesses?: () => LocalTuiProcess[];

@@ -121,8 +121,8 @@ export default definePluginEntry({
 | `name`         | `string`                                                         | Yes      | -                   |
 | `description`  | `string`                                                         | Yes      | -                   |
 | `kind`         | `string`                                                         | No       | -                   |
-| `configSchema` | `OpenClawPluginConfigSchema \| () => OpenClawPluginConfigSchema` | No       | Empty object schema |
-| `register`     | `(api: OpenClawPluginApi) => void`                               | Yes      | -                   |
+| `configSchema` | `QuietCorePluginConfigSchema \| () => QuietCorePluginConfigSchema` | No       | Empty object schema |
+| `register`     | `(api: QuietCorePluginApi) => void`                               | Yes      | -                   |
 
 - `id` must match your `quiet-core-bot.plugin.json` manifest.
 - `kind` is for exclusive slots: `"memory"` or `"context-engine"`.
@@ -162,10 +162,10 @@ export default defineChannelPluginEntry({
 | `name`                | `string`                                                         | Yes      | -                   |
 | `description`         | `string`                                                         | Yes      | -                   |
 | `plugin`              | `ChannelPlugin`                                                  | Yes      | -                   |
-| `configSchema`        | `OpenClawPluginConfigSchema \| () => OpenClawPluginConfigSchema` | No       | Empty object schema |
+| `configSchema`        | `QuietCorePluginConfigSchema \| () => QuietCorePluginConfigSchema` | No       | Empty object schema |
 | `setRuntime`          | `(runtime: PluginRuntime) => void`                               | No       | -                   |
-| `registerCliMetadata` | `(api: OpenClawPluginApi) => void`                               | No       | -                   |
-| `registerFull`        | `(api: OpenClawPluginApi) => void`                               | No       | -                   |
+| `registerCliMetadata` | `(api: QuietCorePluginApi) => void`                               | No       | -                   |
+| `registerFull`        | `(api: QuietCorePluginApi) => void`                               | No       | -                   |
 
 - `setRuntime` is called during registration so you can store the runtime reference
   (typically via `createPluginRuntimeStore`). It is skipped during CLI metadata

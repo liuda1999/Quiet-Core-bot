@@ -1,6 +1,6 @@
 ---
 name: canvas
-description: "Present HTML on connected OpenClaw node canvases, navigate/eval/snapshot, and debug canvas host URLs."
+description: "Present HTML on connected QuietCore node canvases, navigate/eval/snapshot, and debug canvas host URLs."
 metadata: { "quiet-core-bot": { "emoji": "🖼️" } }
 ---
 

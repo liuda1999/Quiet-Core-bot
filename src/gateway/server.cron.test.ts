@@ -164,7 +164,7 @@ async function setupCronTestRun(params: {
 }
 
 type DirectCronState = GatewayCronState & {
-  getRuntimeConfig: () => import("../config/types.quiet-core-bot.js").OpenClawConfig;
+  getRuntimeConfig: () => import("../config/types.quiet-core-bot.js").QuietCoreConfig;
 };
 
 type CronBroadcast = (event: string, payload: unknown) => void;

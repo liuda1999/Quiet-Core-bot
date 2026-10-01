@@ -9,7 +9,7 @@ import {
   createSandboxSshConfig,
 } from "quiet-core-bot/plugin-sdk/test-fixtures";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import { captureFullEnv } from "../../test-utils/env.js";
 import type { SandboxConfig } from "./types.js";
 
@@ -42,7 +42,7 @@ async function createTempDir(prefix: string): Promise<string> {
   return dir;
 }
 
-function createConfig(): OpenClawConfig {
+function createConfig(): QuietCoreConfig {
   return {
     agents: {
       defaults: {

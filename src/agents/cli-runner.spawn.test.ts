@@ -287,7 +287,7 @@ async function withTempExecApprovalsFile(
   }
 }
 
-async function withTempOpenClawHome(run: (home: string) => Promise<void>): Promise<void> {
+async function withTempQuietCoreHome(run: (home: string) => Promise<void>): Promise<void> {
   const home = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-cli-home-"));
   try {
     await withEnvAsync({ QUIET_CORE_HOME: home }, async () => run(home));
@@ -2206,7 +2206,7 @@ ${JSON.stringify({
   });
 
   it("does not create exec approvals file while resolving Claude live policy", async () => {
-    await withTempOpenClawHome(async (home) => {
+    await withTempQuietCoreHome(async (home) => {
       const approvalsPath = path.join(home, ".quiet-core-bot", "exec-approvals.json");
       let stdoutListener: ((chunk: string) => void) | undefined;
       const stdin = {

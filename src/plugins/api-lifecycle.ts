@@ -1,5 +1,5 @@
 /** Tracks plugin API lifecycle callbacks registered during runtime activation. */
-import type { OpenClawPluginApi } from "./types.js";
+import type { QuietCorePluginApi } from "./types.js";
 
 type FunctionPropertyNames<T> = Extract<
   {
@@ -9,7 +9,7 @@ type FunctionPropertyNames<T> = Extract<
 >;
 
 /** Names of plugin API methods exposed on the Quiet Core bot plugin API. */
-export type PluginApiMethodName = FunctionPropertyNames<OpenClawPluginApi>;
+export type PluginApiMethodName = FunctionPropertyNames<QuietCorePluginApi>;
 
 /** Lifecycle policy for whether a plugin API method can be called after registration. */
 export type PluginApiLifecyclePolicy = {

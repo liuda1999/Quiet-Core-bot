@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Verifies `quiet-core-bot update` succeeds when a managed external plugin is corrupt.
-# The lane installs an older published OpenClaw package, corrupts an npm-managed
+# The lane installs an older published QuietCore package, corrupts an npm-managed
 # plugin payload, then updates to the prepared package artifact.
 set -euo pipefail
 

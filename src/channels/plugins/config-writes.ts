@@ -4,7 +4,7 @@
  * Applies shared config write authorization to concrete Quiet Core bot channel config.
  */
 import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import {
   authorizeConfigWriteShared,
   canBypassConfigWritePolicyShared,
@@ -41,7 +41,7 @@ function isInternalConfigWriteMessageChannel(channel?: string | null): boolean {
  * Resolves whether config writes are enabled for a channel/account scope.
  */
 export function resolveChannelConfigWrites(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   channelId?: ChannelId | null;
   accountId?: string | null;
 }): boolean {
@@ -52,7 +52,7 @@ export function resolveChannelConfigWrites(params: {
  * Authorizes a channel config write under origin and target policy.
  */
 export function authorizeConfigWrite(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   origin?: ConfigWriteScope;
   target?: ConfigWriteTarget;
   allowBypass?: boolean;

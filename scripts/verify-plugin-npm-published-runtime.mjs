@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // Verifies published plugin npm packages include built runtime entries and
-// metadata expected by OpenClaw.
+// metadata expected by QuietCore.
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";

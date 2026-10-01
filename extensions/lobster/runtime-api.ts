@@ -2,9 +2,9 @@
 export { definePluginEntry } from "quiet-core-bot/plugin-sdk/core";
 export type {
   AnyAgentTool,
-  OpenClawPluginApi,
-  OpenClawPluginToolContext,
-  OpenClawPluginToolFactory,
+  QuietCorePluginApi,
+  QuietCorePluginToolContext,
+  QuietCorePluginToolFactory,
 } from "quiet-core-bot/plugin-sdk/core";
 export {
   applyWindowsSpawnProgramPolicy,

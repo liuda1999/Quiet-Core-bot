@@ -18,7 +18,7 @@ export {
   resolveDefaultAgentId,
   resolveSessionTranscriptsDirForAgent,
   resolveStateDir,
-  type OpenClawConfig,
+  type QuietCoreConfig,
 } from "quiet-core-bot/plugin-sdk/memory-core-host-runtime-core";
 export {
   listMemoryFiles,

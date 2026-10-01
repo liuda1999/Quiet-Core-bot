@@ -1,7 +1,7 @@
 // Fallback configuration tests pin how embedded runs detect model fallback
 // availability from explicit overrides versus normal agent config.
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../config/types.quiet-core-bot.js";
 import { hasEmbeddedRunConfiguredModelFallbacks } from "./fallbacks.js";
 
 describe("hasEmbeddedRunConfiguredModelFallbacks", () => {
@@ -17,7 +17,7 @@ describe("hasEmbeddedRunConfiguredModelFallbacks", () => {
   it("treats explicit empty modelFallbacksOverride as disabling fallbacks", () => {
     // An explicit empty override is a caller decision, not a request to fall
     // back to defaults from the persisted Quiet Core bot config.
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       agents: {
         defaults: {
           model: {
@@ -35,7 +35,7 @@ describe("hasEmbeddedRunConfiguredModelFallbacks", () => {
   });
 
   it("falls back to normal agent/default model fallback config when no override is provided", () => {
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       agents: {
         defaults: {
           model: {

@@ -1,7 +1,7 @@
-// Verifies createOpenClawTools wires shared config and context into the TTS tool.
+// Verifies createQuietCoreTools wires shared config and context into the TTS tool.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
-import { testing, createOpenClawTools } from "./quiet-core-bot-tools.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
+import { testing, createQuietCoreTools } from "./quiet-core-bot-tools.js";
 import type { AnyAgentTool } from "./tools/common.js";
 
 const mocks = vi.hoisted(() => {
@@ -33,7 +33,7 @@ const mocks = vi.hoisted(() => {
 });
 
 vi.mock("./quiet-core-bot-plugin-tools.js", () => ({
-  resolveOpenClawPluginToolsForOptions: () => [],
+  resolveQuietCorePluginToolsForOptions: () => [],
 }));
 
 vi.mock("./quiet-core-bot-tools.nodes-workspace-guard.js", () => ({
@@ -142,7 +142,7 @@ function getTextToSpeechParams() {
   return calls[0]?.[0] as
     | {
         text?: string;
-        cfg?: OpenClawConfig;
+        cfg?: QuietCoreConfig;
         agentId?: string;
         channel?: string;
         accountId?: string;
@@ -150,7 +150,7 @@ function getTextToSpeechParams() {
     | undefined;
 }
 
-describe("createOpenClawTools TTS config wiring", () => {
+describe("createQuietCoreTools TTS config wiring", () => {
   beforeEach(() => {
     mocks.createCronToolOptions.mockClear();
     mocks.createImageGenerateToolOptions.mockClear();
@@ -172,12 +172,12 @@ describe("createOpenClawTools TTS config wiring", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     testing.setDepsForTest({ config: injectedConfig });
 
     try {
-      const tool = createOpenClawTools({
+      const tool = createQuietCoreTools({
         disableMessageTool: true,
         disablePluginTools: true,
       }).find((candidate) => candidate.name === "tts");
@@ -200,7 +200,7 @@ describe("createOpenClawTools TTS config wiring", () => {
     testing.setDepsForTest({ config: {} });
 
     try {
-      const tool = createOpenClawTools({
+      const tool = createQuietCoreTools({
         disableMessageTool: true,
         disablePluginTools: true,
       }).find((candidate) => candidate.name === "tts");
@@ -221,12 +221,12 @@ describe("createOpenClawTools TTS config wiring", () => {
       agents: {
         list: [{ id: "reader" }, { id: "main" }],
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     testing.setDepsForTest({ config: injectedConfig });
 
     try {
-      const tool = createOpenClawTools({
+      const tool = createQuietCoreTools({
         agentSessionKey: "agent:reader:telegram:chat:123",
         disableMessageTool: true,
         disablePluginTools: true,
@@ -259,12 +259,12 @@ describe("createOpenClawTools TTS config wiring", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     testing.setDepsForTest({ config: injectedConfig });
 
     try {
-      const tool = createOpenClawTools({
+      const tool = createQuietCoreTools({
         agentChannel: "feishu",
         agentAccountId: "feishu-main",
         disableMessageTool: true,
@@ -288,7 +288,7 @@ describe("createOpenClawTools TTS config wiring", () => {
   });
 });
 
-describe("createOpenClawTools media generation session wiring", () => {
+describe("createQuietCoreTools media generation session wiring", () => {
   beforeEach(() => {
     mocks.createImageGenerateToolOptions.mockClear();
     mocks.createMusicGenerateToolOptions.mockClear();
@@ -304,9 +304,9 @@ describe("createOpenClawTools media generation session wiring", () => {
           musicGenerationModel: { primary: "music-owner/model" },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
-    createOpenClawTools({
+    createQuietCoreTools({
       config,
       agentSessionKey: "agent:main:cron:daily-media",
       runSessionKey: "agent:main:cron:daily-media:run:run-123",
@@ -340,9 +340,9 @@ describe("createOpenClawTools media generation session wiring", () => {
           imageGenerationModel: { primary: "image-owner/model" },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
-    createOpenClawTools({
+    createQuietCoreTools({
       config,
       agentSessionKey: "agent:main:slack:channel:C123",
       runSessionKey: "agent:main:slack:channel:C123:run:run-123",
@@ -358,13 +358,13 @@ describe("createOpenClawTools media generation session wiring", () => {
   });
 });
 
-describe("createOpenClawTools session status route context wiring", () => {
+describe("createQuietCoreTools session status route context wiring", () => {
   beforeEach(() => {
     mocks.createSessionStatusToolOptions.mockClear();
   });
 
   it("passes the active live-run route into the session_status tool", () => {
-    createOpenClawTools({
+    createQuietCoreTools({
       agentSessionKey: "agent:main:discord:channel:1489550370136129537",
       runSessionKey: "agent:main:discord:channel:1489550370136129537",
       agentChannel: "webchat",
@@ -392,13 +392,13 @@ describe("createOpenClawTools session status route context wiring", () => {
   });
 });
 
-describe("createOpenClawTools cron context wiring", () => {
+describe("createQuietCoreTools cron context wiring", () => {
   beforeEach(() => {
     mocks.createCronToolOptions.mockClear();
   });
 
   it("passes preserved channel delivery context into the cron tool", async () => {
-    createOpenClawTools({
+    createQuietCoreTools({
       agentSessionKey: "agent:main:matrix:channel:!abcdef1234567890:example.org",
       agentChannel: "matrix",
       agentAccountId: "bot-a",
@@ -422,7 +422,7 @@ describe("createOpenClawTools cron context wiring", () => {
   });
 
   it("uses agent route context when auto-threading context is unavailable", async () => {
-    createOpenClawTools({
+    createQuietCoreTools({
       agentSessionKey: "agent:main:matrix:channel:!abcdef1234567890:example.org",
       agentChannel: "matrix",
       agentAccountId: "bot-a",
@@ -444,7 +444,7 @@ describe("createOpenClawTools cron context wiring", () => {
   });
 
   it("passes self-remove scope into the cron tool", async () => {
-    createOpenClawTools({
+    createQuietCoreTools({
       agentSessionKey: "agent:main:cron:job-current",
       cronSelfRemoveOnlyJobId: "job-current",
       disableMessageTool: true,

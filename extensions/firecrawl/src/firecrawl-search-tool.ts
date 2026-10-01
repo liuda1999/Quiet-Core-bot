@@ -1,5 +1,5 @@
 // Firecrawl plugin module implements firecrawl search tool behavior.
-import type { OpenClawPluginApi } from "quiet-core-bot/plugin-sdk/plugin-runtime";
+import type { QuietCorePluginApi } from "quiet-core-bot/plugin-sdk/plugin-runtime";
 import {
   jsonResult,
   readPositiveIntegerParam,
@@ -44,7 +44,7 @@ const FirecrawlSearchToolSchema = Type.Object(
   { additionalProperties: false },
 );
 
-export function createFirecrawlSearchTool(api: OpenClawPluginApi) {
+export function createFirecrawlSearchTool(api: QuietCorePluginApi) {
   return {
     name: "firecrawl_search",
     label: "Firecrawl Search",

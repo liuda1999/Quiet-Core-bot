@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { asNullableRecord } from "@quiet-core/normalization-core/record-coerce";
 import { normalizeTrimmedStringList } from "@quiet-core/normalization-core/string-normalization";
 import type { LegacyConfigRule } from "../config/legacy.shared.js";
-import type { OpenClawConfig } from "../config/types.js";
+import type { QuietCoreConfig } from "../config/types.js";
 import type {
   OpenKeyedStoreOptions,
   PluginStateKeyedStore,
@@ -34,12 +34,12 @@ type PluginDoctorContractModule = {
 };
 
 type PluginDoctorCompatibilityMutation = {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   changes: string[];
 };
 
 type PluginDoctorCompatibilityNormalizer = (params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
 }) => PluginDoctorCompatibilityMutation;
 
 type PluginDoctorContractEntry = {
@@ -62,7 +62,7 @@ export type PluginDoctorStateMigration = {
   id: string;
   label: string;
   detectLegacyState: (params: {
-    config: OpenClawConfig;
+    config: QuietCoreConfig;
     env: NodeJS.ProcessEnv;
     stateDir: string;
     oauthDir: string;
@@ -72,7 +72,7 @@ export type PluginDoctorStateMigration = {
     | PluginDoctorStateMigrationDetection
     | null;
   migrateLegacyState: (params: {
-    config: OpenClawConfig;
+    config: QuietCoreConfig;
     env: NodeJS.ProcessEnv;
     stateDir: string;
     oauthDir: string;
@@ -348,7 +348,7 @@ function loadPluginDoctorContractEntry(
 }
 
 function resolvePluginDoctorContracts(params?: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   workspaceDir?: string;
   env?: NodeJS.ProcessEnv;
   pluginIds?: readonly string[];
@@ -397,7 +397,7 @@ export function setPluginDoctorContractRegistryModuleLoaderFactoryForTest(
 }
 
 export function listPluginDoctorLegacyConfigRules(params?: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   workspaceDir?: string;
   env?: NodeJS.ProcessEnv;
   pluginIds?: readonly string[];
@@ -406,7 +406,7 @@ export function listPluginDoctorLegacyConfigRules(params?: {
 }
 
 export function listPluginDoctorSessionRouteStateOwners(params?: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   workspaceDir?: string;
   env?: NodeJS.ProcessEnv;
   pluginIds?: readonly string[];
@@ -423,7 +423,7 @@ export function listPluginDoctorSessionRouteStateOwners(params?: {
 }
 
 export function listPluginDoctorStateMigrationEntries(params?: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   workspaceDir?: string;
   env?: NodeJS.ProcessEnv;
   pluginIds?: readonly string[];
@@ -437,15 +437,15 @@ export function listPluginDoctorStateMigrationEntries(params?: {
 }
 
 export function applyPluginDoctorCompatibilityMigrations(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   params?: {
-    config?: OpenClawConfig;
+    config?: QuietCoreConfig;
     workspaceDir?: string;
     env?: NodeJS.ProcessEnv;
     pluginIds?: readonly string[];
   },
 ): {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   changes: string[];
 } {
   let nextCfg = cfg;

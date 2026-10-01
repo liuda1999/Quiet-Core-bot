@@ -14,7 +14,7 @@ import type { AgentIdentityFile } from "../agents/identity-file.js";
 import { identityHasValues, loadAgentIdentityFromWorkspace } from "../agents/identity-file.js";
 import { listRouteBindings } from "../config/bindings.js";
 import type { IdentityConfig } from "../config/types.base.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { normalizeAgentId } from "../routing/session-key.js";
 
 export type AgentSummary = {
@@ -33,7 +33,7 @@ export type AgentSummary = {
   isDefault: boolean;
 };
 
-type AgentEntry = NonNullable<NonNullable<OpenClawConfig["agents"]>["list"]>[number];
+type AgentEntry = NonNullable<NonNullable<QuietCoreConfig["agents"]>["list"]>[number];
 
 export type AgentIdentity = AgentIdentityFile;
 export { listAgentEntries };
@@ -44,7 +44,7 @@ export function findAgentEntryIndex(list: AgentEntry[], agentId: string): number
   return list.findIndex((entry) => normalizeAgentId(entry.id) === id);
 }
 
-function resolveAgentModel(cfg: OpenClawConfig, agentId: string) {
+function resolveAgentModel(cfg: QuietCoreConfig, agentId: string) {
   const entry = listAgentEntries(cfg).find(
     (agent) => normalizeAgentId(agent.id) === normalizeAgentId(agentId),
   );
@@ -65,7 +65,7 @@ export function loadAgentIdentity(workspace: string): AgentIdentity | null {
 }
 
 /** Build config-derived summaries for text/JSON agent listing. */
-export function buildAgentSummaries(cfg: OpenClawConfig): AgentSummary[] {
+export function buildAgentSummaries(cfg: QuietCoreConfig): AgentSummary[] {
   const defaultAgentId = normalizeAgentId(resolveDefaultAgentId(cfg));
   const configuredAgents = listAgentEntries(cfg);
   const orderedIds =
@@ -112,7 +112,7 @@ export function buildAgentSummaries(cfg: OpenClawConfig): AgentSummary[] {
 
 /** Add or update one agent entry while preserving the default-agent placeholder when needed. */
 export function applyAgentConfig(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   params: {
     agentId: string;
     name?: string;
@@ -121,7 +121,7 @@ export function applyAgentConfig(
     model?: string;
     identity?: IdentityConfig;
   },
-): OpenClawConfig {
+): QuietCoreConfig {
   const agentId = normalizeAgentId(params.agentId);
   const name = params.name?.trim();
   const list = listAgentEntries(cfg);
@@ -156,10 +156,10 @@ export function applyAgentConfig(
 
 /** Remove an agent and any config references that route or allow traffic to it. */
 export function pruneAgentConfig(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   agentId: string,
 ): {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   removedBindings: number;
   removedAllow: number;
 } {

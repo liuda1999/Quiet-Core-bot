@@ -10,8 +10,8 @@ export type {
   ChannelPlugin,
   ChatType,
   HistoryEntry,
-  OpenClawConfig,
-  OpenClawPluginApi,
+  QuietCoreConfig,
+  QuietCorePluginApi,
   PluginRuntime,
 } from "quiet-core-bot/plugin-sdk/core";
 export type { RuntimeEnv } from "quiet-core-bot/plugin-sdk/runtime";

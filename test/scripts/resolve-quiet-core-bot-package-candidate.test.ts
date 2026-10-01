@@ -11,7 +11,7 @@ import {
   ARTIFACT_TARBALL_SCAN_MAX_ENTRIES,
   assertExpectedSha256ForTest,
   cleanupPackageSourceWorktreeForTest,
-  cleanPackedOpenClawTarballsForTest,
+  cleanPackedQuietCoreTarballsForTest,
   downloadUrl,
   findSingleTarballForTest,
   loadTrustedPackageSource,
@@ -22,7 +22,7 @@ import {
   resolveNpmPackageCandidatePackRunner,
   runCommandForTest,
   signalChildProcessTree,
-  validateOpenClawPackageSpec,
+  validateQuietCorePackageSpec,
 } from "../../scripts/resolve-quiet-core-bot-package-candidate.mjs";
 
 function expectedTaskkillPath(): string {
@@ -110,7 +110,7 @@ afterEach(async () => {
 });
 
 describe("resolve-quiet-core-bot-package-candidate", () => {
-  it("accepts only OpenClaw release package specs for npm candidates", () => {
+  it("accepts only QuietCore release package specs for npm candidates", () => {
     for (const spec of [
       "quiet-core-bot@beta",
       "quiet-core-bot@alpha",
@@ -120,22 +120,22 @@ describe("resolve-quiet-core-bot-package-candidate", () => {
       "quiet-core-bot@2026.4.27-beta.2",
       "quiet-core-bot@2026.4.27-alpha.2",
     ]) {
-      expect(validateOpenClawPackageSpec(spec), spec).toBeUndefined();
+      expect(validateQuietCorePackageSpec(spec), spec).toBeUndefined();
     }
 
-    expect(() => validateOpenClawPackageSpec("@evil/quiet-core-bot@1.0.0")).toThrow(
+    expect(() => validateQuietCorePackageSpec("@evil/quiet-core-bot@1.0.0")).toThrow(
       "package_spec must be quiet-core-bot@alpha",
     );
-    expect(() => validateOpenClawPackageSpec("quiet-core-bot@canary")).toThrow(
+    expect(() => validateQuietCorePackageSpec("quiet-core-bot@canary")).toThrow(
       "package_spec must be quiet-core-bot@alpha",
     );
-    expect(() => validateOpenClawPackageSpec("quiet-core-bot@2026.04.27")).toThrow(
+    expect(() => validateQuietCorePackageSpec("quiet-core-bot@2026.04.27")).toThrow(
       "package_spec must be quiet-core-bot@alpha",
     );
-    expect(() => validateOpenClawPackageSpec("quiet-core-bot@npm:other-package")).toThrow(
+    expect(() => validateQuietCorePackageSpec("quiet-core-bot@npm:other-package")).toThrow(
       "package_spec must be quiet-core-bot@alpha",
     );
-    expect(() => validateOpenClawPackageSpec("quiet-core-bot@file:../other-package.tgz")).toThrow(
+    expect(() => validateQuietCorePackageSpec("quiet-core-bot@file:../other-package.tgz")).toThrow(
       "package_spec must be quiet-core-bot@alpha",
     );
   });
@@ -382,7 +382,7 @@ describe("resolve-quiet-core-bot-package-candidate", () => {
     for (const filename of unsafeFilenames) {
       await expect(
         moveNewestPackedTarballForTest(dir, JSON.stringify([{ filename }]), "quiet-core-bot-current.tgz"),
-      ).rejects.toThrow("npm pack reported unsafe OpenClaw tarball filename");
+      ).rejects.toThrow("npm pack reported unsafe QuietCore tarball filename");
     }
   });
 
@@ -398,7 +398,7 @@ describe("resolve-quiet-core-bot-package-candidate", () => {
           ["npm notice", filename].join("\n"),
           "quiet-core-bot-current.tgz",
         ),
-      ).rejects.toThrow("npm pack reported unsafe OpenClaw tarball filename");
+      ).rejects.toThrow("npm pack reported unsafe QuietCore tarball filename");
     }
   });
 
@@ -408,7 +408,7 @@ describe("resolve-quiet-core-bot-package-candidate", () => {
     await writeFile(path.join(dir, "quiet-core-bot-9999.1.1.tgz"), "stale");
     await writeFile(path.join(dir, "quiet-core-bot-C:evil.tgz"), "unsafe");
 
-    await cleanPackedOpenClawTarballsForTest(dir);
+    await cleanPackedQuietCoreTarballsForTest(dir);
     await writeFile(path.join(dir, "quiet-core-bot-2026.6.17.tgz"), "current");
 
     await expect(

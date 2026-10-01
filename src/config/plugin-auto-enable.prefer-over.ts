@@ -7,7 +7,7 @@ import { getChatChannelMeta, normalizeChatChannelId } from "../channels/registry
 import type { PluginManifestRegistry } from "../plugins/manifest-registry.js";
 import { isRecord, resolveConfigDir, resolveUserPath } from "../utils.js";
 import type { PluginAutoEnableCandidate } from "./plugin-auto-enable.types.js";
-import type { OpenClawConfig } from "./types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "./types.quiet-core-bot.js";
 
 type ExternalCatalogChannelEntry = {
   id: string;
@@ -128,13 +128,13 @@ function getPluginAutoEnableCandidateCacheKey(candidate: PluginAutoEnableCandida
 }
 
 export function shouldSkipPreferredPluginAutoEnable(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   entry: PluginAutoEnableCandidate;
   configured: readonly PluginAutoEnableCandidate[];
   env: NodeJS.ProcessEnv;
   registry: PluginManifestRegistry;
-  isPluginDenied: (config: OpenClawConfig, pluginId: string) => boolean;
-  isPluginExplicitlyDisabled: (config: OpenClawConfig, pluginId: string) => boolean;
+  isPluginDenied: (config: QuietCoreConfig, pluginId: string) => boolean;
+  isPluginExplicitlyDisabled: (config: QuietCoreConfig, pluginId: string) => boolean;
   preferOverCache: Map<string, string[]>;
 }): boolean {
   const getPreferredOverIds = (candidate: PluginAutoEnableCandidate): string[] => {

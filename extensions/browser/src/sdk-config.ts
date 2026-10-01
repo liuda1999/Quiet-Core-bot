@@ -12,7 +12,7 @@ export { mutateConfigFile, replaceConfigFile } from "quiet-core-bot/plugin-sdk/c
 export {
   type BrowserConfig,
   type BrowserProfileConfig,
-  type OpenClawConfig,
+  type QuietCoreConfig,
 } from "quiet-core-bot/plugin-sdk/config-contracts";
 export {
   normalizePluginsConfig,

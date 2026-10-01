@@ -1,4 +1,4 @@
-// Qa Matrix plugin entrypoint registers its OpenClaw integration.
+// Qa Matrix plugin entrypoint registers its QuietCore integration.
 import { definePluginEntry } from "quiet-core-bot/plugin-sdk/plugin-entry";
 
 export default definePluginEntry({

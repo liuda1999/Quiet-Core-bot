@@ -61,7 +61,7 @@ import {
   summarizeProcessSamples,
   tailFile,
   unwrapRpcPayload,
-  usesBuiltOpenClawEntry,
+  usesBuiltQuietCoreEntry,
   validateCliArgs,
   waitForGatewayReady,
 } from "../../scripts/e2e/kitchen-sink-rpc-walk.mjs";
@@ -998,17 +998,17 @@ describe("kitchen-sink RPC caller loading", () => {
   });
 
   it("uses built callGateway chunks for dist and packaged entries", () => {
-    expect(usesBuiltOpenClawEntry({ command: "node", baseArgs: ["dist/index.js"] })).toBe(true);
+    expect(usesBuiltQuietCoreEntry({ command: "node", baseArgs: ["dist/index.js"] })).toBe(true);
     expect(
-      usesBuiltOpenClawEntry({ command: "node", baseArgs: ["/app/quiet-core-bot.mjs"] }, "/repo", {
+      usesBuiltQuietCoreEntry({ command: "node", baseArgs: ["/app/quiet-core-bot.mjs"] }, "/repo", {
         QUIET_CORE_ENTRY: "/app/quiet-core-bot.mjs",
       }),
     ).toBe(true);
   });
 
   it("does not deep-import gateway TypeScript for source pnpm runners", () => {
-    expect(usesBuiltOpenClawEntry({ pnpm: true, baseArgs: ["quiet-core-bot"] })).toBe(false);
-    expect(usesBuiltOpenClawEntry({ command: "node", baseArgs: ["scripts/dev.mjs"] })).toBe(false);
+    expect(usesBuiltQuietCoreEntry({ pnpm: true, baseArgs: ["quiet-core-bot"] })).toBe(false);
+    expect(usesBuiltQuietCoreEntry({ command: "node", baseArgs: ["scripts/dev.mjs"] })).toBe(false);
   });
 
   it("finds only built callGateway chunks", () => {

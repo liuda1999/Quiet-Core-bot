@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { asOptionalRecord } from "@quiet-core/normalization-core/record-coerce";
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../../agents/agent-scope.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import {
   resolveMemoryDeepDreamingConfig,
   resolveMemoryLightDreamingConfig,
@@ -258,7 +258,7 @@ async function listWorkspaceDailyFiles(memoryDir: string): Promise<string[]> {
 }
 
 function resolveDreamingConfig(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
 ): Omit<
   DoctorMemoryDreamingPayload,
   | "shortTermCount"
@@ -681,7 +681,7 @@ function resolveDoctorMemoryTarget(
   context: GatewayRequestContext,
   params: unknown,
 ): {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentId: string;
   workspaceDir: string;
 } {

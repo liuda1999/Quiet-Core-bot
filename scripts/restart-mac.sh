@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-# Reset OpenClaw like Trimmy: kill running instances, rebuild, repackage, relaunch, verify.
+# Reset QuietCore like Trimmy: kill running instances, rebuild, repackage, relaunch, verify.
 
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "${ROOT_DIR}/scripts/lib/restart-mac-gateway.sh"
 APP_BUNDLE="${QUIET_CORE_APP_BUNDLE:-}"
-APP_EXECUTABLE_RELATIVE_PATH="Contents/MacOS/OpenClaw"
-DEBUG_PROCESS_PATTERN="${ROOT_DIR}/apps/macos/.build/debug/OpenClaw"
-LOCAL_PROCESS_PATTERN="${ROOT_DIR}/apps/macos/.build-local/debug/OpenClaw"
-RELEASE_PROCESS_PATTERN="${ROOT_DIR}/apps/macos/.build/release/OpenClaw"
+APP_EXECUTABLE_RELATIVE_PATH="Contents/MacOS/QuietCore"
+DEBUG_PROCESS_PATTERN="${ROOT_DIR}/apps/macos/.build/debug/QuietCore"
+LOCAL_PROCESS_PATTERN="${ROOT_DIR}/apps/macos/.build-local/debug/QuietCore"
+RELEASE_PROCESS_PATTERN="${ROOT_DIR}/apps/macos/.build/release/QuietCore"
 LAUNCH_AGENT="${HOME}/Library/LaunchAgents/ai.quiet-core-bot.mac.plist"
 LOCK_KEY="$(printf '%s' "${ROOT_DIR}" | shasum -a 256 | cut -c1-8)"
 LOCK_DIR="${TMPDIR:-/tmp}/quiet-core-bot-restart-${LOCK_KEY}"
@@ -168,8 +168,8 @@ known_quiet_core_bot_executables() {
     printf '%s\n' "${APP_BUNDLE}/${APP_EXECUTABLE_RELATIVE_PATH}"
   fi
   printf '%s\n' \
-    "${ROOT_DIR}/dist/OpenClaw.app/${APP_EXECUTABLE_RELATIVE_PATH}" \
-    "/Applications/OpenClaw.app/${APP_EXECUTABLE_RELATIVE_PATH}" \
+    "${ROOT_DIR}/dist/QuietCore.app/${APP_EXECUTABLE_RELATIVE_PATH}" \
+    "/Applications/QuietCore.app/${APP_EXECUTABLE_RELATIVE_PATH}" \
     "${DEBUG_PROCESS_PATTERN}" \
     "${LOCAL_PROCESS_PATTERN}" \
     "${RELEASE_PROCESS_PATTERN}"
@@ -200,9 +200,9 @@ stop_launch_agent() {
 
 # 1) Stop launchd supervision, then kill all running instances.
 stop_launch_agent
-log "==> Killing existing OpenClaw instances"
+log "==> Killing existing QuietCore instances"
 if ! kill_all_quiet-core-bot; then
-  fail "OpenClaw instances did not exit after cleanup attempts"
+  fail "QuietCore instances did not exit after cleanup attempts"
 fi
 
 # Bundle Gateway-hosted plugin assets.
@@ -210,7 +210,7 @@ run_step "bundle plugin assets" bash -lc "cd '${ROOT_DIR}' && pnpm plugins:asset
 
 # 2) Rebuild into the same path the packager consumes (.build).
 run_step "clean build cache" bash -lc "cd '${ROOT_DIR}/apps/macos' && rm -rf .build .build-swift .swiftpm 2>/dev/null || true"
-run_step "swift build" bash -lc "cd '${ROOT_DIR}/apps/macos' && swift build -q --product OpenClaw"
+run_step "swift build" bash -lc "cd '${ROOT_DIR}/apps/macos' && swift build -q --product QuietCore"
 
 if [ "$AUTO_DETECT_SIGNING" -eq 1 ]; then
   if check_signing_keys; then
@@ -244,20 +244,20 @@ choose_app_bundle() {
     return 0
   fi
 
-  if [[ -d "${ROOT_DIR}/dist/OpenClaw.app" ]]; then
-    APP_BUNDLE="$(cd "${ROOT_DIR}/dist/OpenClaw.app" && pwd -P)"
+  if [[ -d "${ROOT_DIR}/dist/QuietCore.app" ]]; then
+    APP_BUNDLE="$(cd "${ROOT_DIR}/dist/QuietCore.app" && pwd -P)"
     if [[ ! -d "${APP_BUNDLE}/Contents/Frameworks/Sparkle.framework" ]]; then
-      fail "dist/OpenClaw.app missing Sparkle after packaging"
+      fail "dist/QuietCore.app missing Sparkle after packaging"
     fi
     return 0
   fi
 
-  if [[ -d "/Applications/OpenClaw.app" ]]; then
-    APP_BUNDLE="$(cd "/Applications/OpenClaw.app" && pwd -P)"
+  if [[ -d "/Applications/QuietCore.app" ]]; then
+    APP_BUNDLE="$(cd "/Applications/QuietCore.app" && pwd -P)"
     return 0
   fi
 
-  fail "App bundle not found. Set QUIET_CORE_APP_BUNDLE to your installed OpenClaw.app"
+  fail "App bundle not found. Set QUIET_CORE_APP_BUNDLE to your installed QuietCore.app"
 }
 
 choose_app_bundle
@@ -312,7 +312,7 @@ run_step "launch app" env -i \
 # 5) Verify the app is alive.
 sleep 1.5
 if [[ -n "$(process_pids_matching "${APP_BUNDLE}/${APP_EXECUTABLE_RELATIVE_PATH}")" ]]; then
-  log "OK: OpenClaw is running."
+  log "OK: QuietCore is running."
 else
   fail "App exited immediately. Check ${LOG_PATH} or Console.app (User Reports)."
 fi

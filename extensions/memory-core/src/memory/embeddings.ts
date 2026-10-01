@@ -43,7 +43,7 @@ function createMissingLlamaCppProviderError(): Error {
       "Unknown memory embedding provider: local.",
       "Local GGUF embeddings are provided by the official llama.cpp provider plugin.",
       "Install it with: quiet-core-bot plugins install @quiet-core/llama-cpp-provider",
-      "Then restart OpenClaw and retry: quiet-core-bot memory status --deep",
+      "Then restart QuietCore and retry: quiet-core-bot memory status --deep",
     ].join("\n"),
   );
 }

@@ -3,7 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import {
   hasMeaningfulChannelConfig,
   listExplicitlyDisabledChannelIdsForConfig,
@@ -29,7 +29,7 @@ function makeTempStateDir() {
 }
 
 function expectPotentialConfiguredChannelCase(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env: NodeJS.ProcessEnv;
   expectedIds: string[];
   options?: Parameters<typeof listPotentialConfiguredChannelIds>[2];
@@ -77,7 +77,7 @@ describe("config presence", () => {
         slack: { botToken: "token" },
         discord: false,
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     expect(listExplicitlyDisabledChannelIdsForConfig(cfg)).toEqual(["matrix"]);
   });

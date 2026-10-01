@@ -943,7 +943,7 @@ describe("install-cli.sh", () => {
     }
   });
 
-  it("rejects OpenClaw GitHub source targets for npm installs", () => {
+  it("rejects QuietCore GitHub source targets for npm installs", () => {
     const result = runInstallCliShell(`
       set -euo pipefail
       source "${SCRIPT_PATH}"
@@ -952,7 +952,7 @@ describe("install-cli.sh", () => {
     `);
 
     expect(result.status).toBe(1);
-    expect(result.stdout).toContain("npm installs do not support OpenClaw GitHub source targets");
+    expect(result.stdout).toContain("npm installs do not support QuietCore GitHub source targets");
     expect(result.stdout).toContain("--install-method git --version main");
   });
 

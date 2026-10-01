@@ -1,7 +1,7 @@
 // Canvas tests cover copy a2ui plugin behavior.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { resolvePreferredOpenClawTmpDir, withTempWorkspace } from "quiet-core-bot/plugin-sdk/temp-path";
+import { resolvePreferredQuietCoreTmpDir, withTempWorkspace } from "quiet-core-bot/plugin-sdk/temp-path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { copyA2uiAssets } from "./copy-a2ui.mjs";
 
@@ -30,7 +30,7 @@ describe("canvas a2ui copy", () => {
 
   async function withA2uiFixture(run: (dir: string) => Promise<void>) {
     await withTempWorkspace(
-      { rootDir: resolvePreferredOpenClawTmpDir(), prefix: "quiet-core-bot-a2ui-" },
+      { rootDir: resolvePreferredQuietCoreTmpDir(), prefix: "quiet-core-bot-a2ui-" },
       async ({ dir }) => await run(dir),
     );
   }

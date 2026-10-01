@@ -4,7 +4,7 @@ import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { resolveWorkspaceAttestationPaths } from "../agents/workspace.js";
 import { loadSessionStore, resolveStorePath, saveSessionStore } from "../config/sessions.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { withStateDirEnv } from "../test-helpers/state-dir-env.js";
 import { baseConfigSnapshot, createTestRuntime } from "./test-runtime-config-helpers.js";
 
@@ -61,7 +61,7 @@ const runtime = createTestRuntime();
 
 async function arrangeAgentsDeleteTest(params: {
   stateDir: string;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   deletedAgentId?: string;
   sessions: Record<string, { sessionId: string; updatedAt: number }>;
 }) {
@@ -127,14 +127,14 @@ describe("agents delete command", () => {
   it("routes deletion through the Gateway when reachable", async () => {
     await withStateDirEnv("quiet-core-bot-agents-delete-gateway-", async ({ stateDir }) => {
       const now = Date.now();
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         agents: {
           list: [
             { id: "main", workspace: path.join(stateDir, "workspace-main") },
             { id: "ops", workspace: path.join(stateDir, "workspace-ops") },
           ],
         },
-      } satisfies OpenClawConfig;
+      } satisfies QuietCoreConfig;
       const sessions = {
         "agent:ops:main": { sessionId: "sess-ops-main", updatedAt: now + 1 },
         "agent:main:main": { sessionId: "sess-main", updatedAt: now + 2 },
@@ -170,14 +170,14 @@ describe("agents delete command", () => {
   it("falls back to local deletion when the optional Gateway probe needs credentials", async () => {
     await withStateDirEnv("quiet-core-bot-agents-delete-gateway-auth-", async ({ stateDir }) => {
       const now = Date.now();
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         agents: {
           list: [
             { id: "main", workspace: path.join(stateDir, "workspace-shared") },
             { id: "ops", workspace: path.join(stateDir, "workspace-shared") },
           ],
         },
-      } satisfies OpenClawConfig;
+      } satisfies QuietCoreConfig;
       await arrangeAgentsDeleteTest({
         stateDir,
         cfg,
@@ -214,14 +214,14 @@ describe("agents delete command", () => {
   it("purges deleted agent entries from the session store", async () => {
     await withStateDirEnv("quiet-core-bot-agents-delete-", async ({ stateDir }) => {
       const now = Date.now();
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         agents: {
           list: [
             { id: "main", workspace: path.join(stateDir, "workspace-main") },
             { id: "ops", workspace: path.join(stateDir, "workspace-ops") },
           ],
         },
-      } satisfies OpenClawConfig;
+      } satisfies QuietCoreConfig;
       const storePath = await arrangeAgentsDeleteTest({
         stateDir,
         cfg,
@@ -237,7 +237,7 @@ describe("agents delete command", () => {
       expect(runtime.exit).not.toHaveBeenCalled();
       expect(configMocks.replaceConfigFile).toHaveBeenCalledOnce();
       const replaceConfigFileCalls = configMocks.replaceConfigFile.mock.calls as unknown as Array<
-        [{ nextConfig: OpenClawConfig }]
+        [{ nextConfig: QuietCoreConfig }]
       >;
       expect(replaceConfigFileCalls[0]?.[0].nextConfig).toEqual({
         agents: { list: [{ id: "main", workspace: path.join(stateDir, "workspace-main") }] },
@@ -250,14 +250,14 @@ describe("agents delete command", () => {
 
   it("trashes workspace attestations during local deletion", async () => {
     await withStateDirEnv("quiet-core-bot-agents-delete-attestation-", async ({ stateDir }) => {
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         agents: {
           list: [
             { id: "main", workspace: path.join(stateDir, "workspace-main") },
             { id: "ops", workspace: path.join(stateDir, "workspace-ops") },
           ],
         },
-      } satisfies OpenClawConfig;
+      } satisfies QuietCoreConfig;
       await arrangeAgentsDeleteTest({
         stateDir,
         cfg,
@@ -287,7 +287,7 @@ describe("agents delete command", () => {
   it("purges legacy main-alias entries owned by the deleted default agent", async () => {
     await withStateDirEnv("quiet-core-bot-agents-delete-main-alias-", async ({ stateDir }) => {
       const now = Date.now();
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         agents: {
           list: [{ id: "ops", default: true, workspace: path.join(stateDir, "workspace-ops") }],
         },
@@ -322,7 +322,7 @@ describe("agents delete command", () => {
   it("preserves shared-store legacy default keys when deleting another agent", async () => {
     await withStateDirEnv("quiet-core-bot-agents-delete-shared-store-", async ({ stateDir }) => {
       const now = Date.now();
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         session: { store: path.join(stateDir, "sessions.json") },
         agents: {
           list: [
@@ -364,14 +364,14 @@ describe("agents delete command", () => {
       );
 
       const now = Date.now();
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         agents: {
           list: [
             { id: "main", workspace: sharedWorkspace },
             { id: "ops", workspace: sharedWorkspace },
           ],
         },
-      } satisfies OpenClawConfig;
+      } satisfies QuietCoreConfig;
       await arrangeAgentsDeleteTest({
         stateDir,
         cfg,
@@ -407,14 +407,14 @@ describe("agents delete command", () => {
       await fs.mkdir(childWorkspace, { recursive: true });
 
       const now = Date.now();
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         agents: {
           list: [
             { id: "main", workspace: sharedWorkspace },
             { id: "ops", workspace: childWorkspace },
           ],
         },
-      } satisfies OpenClawConfig;
+      } satisfies QuietCoreConfig;
       await arrangeAgentsDeleteTest({
         stateDir,
         cfg,
@@ -442,14 +442,14 @@ describe("agents delete command", () => {
       await fs.mkdir(childWorkspace, { recursive: true });
 
       const now = Date.now();
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         agents: {
           list: [
             { id: "main", workspace: childWorkspace },
             { id: "ops", workspace: sharedWorkspace },
           ],
         },
-      } satisfies OpenClawConfig;
+      } satisfies QuietCoreConfig;
       await arrangeAgentsDeleteTest({
         stateDir,
         cfg,
@@ -480,14 +480,14 @@ describe("agents delete command", () => {
         await fs.symlink(realWorkspace, aliasWorkspace, "dir");
 
         const now = Date.now();
-        const cfg: OpenClawConfig = {
+        const cfg: QuietCoreConfig = {
           agents: {
             list: [
               { id: "main", workspace: realWorkspace },
               { id: "ops", workspace: aliasWorkspace },
             ],
           },
-        } satisfies OpenClawConfig;
+        } satisfies QuietCoreConfig;
         await arrangeAgentsDeleteTest({
           stateDir,
           cfg,
@@ -519,14 +519,14 @@ describe("agents delete command", () => {
       await fs.mkdir(mainWorkspace, { recursive: true });
 
       const now = Date.now();
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         agents: {
           list: [
             { id: "main", workspace: mainWorkspace },
             { id: "ops", workspace: opsWorkspace },
           ],
         },
-      } satisfies OpenClawConfig;
+      } satisfies QuietCoreConfig;
       await arrangeAgentsDeleteTest({
         stateDir,
         cfg,

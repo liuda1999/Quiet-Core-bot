@@ -53,7 +53,7 @@ function resolvePostinstallTildePath(input, homeDir) {
   return input;
 }
 
-function resolvePostinstallOpenClawHomeDir(env, getHomedir = homedir) {
+function resolvePostinstallQuietCoreHomeDir(env, getHomedir = homedir) {
   const osHome = resolvePostinstallOsHomeDir(env, getHomedir);
   const override = env?.QUIET_CORE_HOME?.trim();
   return override ? pathResolve(resolvePostinstallTildePath(override, osHome)) : osHome;
@@ -330,7 +330,7 @@ const pathDelimiter = process.platform === "win32" ? ";" : ":";
 export function collectLegacyPluginRuntimeDepsStateRoots(params = {}) {
   const env = params.env ?? process.env;
   const getHomedir = params.homedir ?? homedir;
-  const openClawHome = resolvePostinstallOpenClawHomeDir(env, getHomedir);
+  const openClawHome = resolvePostinstallQuietCoreHomeDir(env, getHomedir);
   const stateRoots = [];
   const addStateRoot = (root) => {
     if (root) {
@@ -649,7 +649,7 @@ function isCompileCachePrunePermissionDenied(error) {
   return error?.code === "EACCES" || error?.code === "EPERM";
 }
 
-export function pruneOpenClawCompileCache(params = {}) {
+export function pruneQuietCoreCompileCache(params = {}) {
   const env = params.env ?? process.env;
   const pathExists = params.existsSync ?? existsSync;
   const readDir = params.readdirSync ?? readdirSync;
@@ -680,14 +680,14 @@ export function pruneOpenClawCompileCache(params = {}) {
           if (isCompileCachePrunePermissionDenied(error)) {
             continue;
           }
-          log.warn?.(`[postinstall] could not prune OpenClaw compile cache: ${String(error)}`);
+          log.warn?.(`[postinstall] could not prune QuietCore compile cache: ${String(error)}`);
         }
       }
     } catch (error) {
       if (isCompileCachePrunePermissionDenied(error)) {
         continue;
       }
-      log.warn?.(`[postinstall] could not prune OpenClaw compile cache: ${String(error)}`);
+      log.warn?.(`[postinstall] could not prune QuietCore compile cache: ${String(error)}`);
     }
   }
 }
@@ -700,7 +700,7 @@ export function runBundledPluginPostinstall(params = {}) {
   if (env?.[DISABLE_POSTINSTALL_ENV]?.trim()) {
     return;
   }
-  pruneOpenClawCompileCache({
+  pruneQuietCoreCompileCache({
     env,
     existsSync: pathExists,
     rmSync: params.rmSync,

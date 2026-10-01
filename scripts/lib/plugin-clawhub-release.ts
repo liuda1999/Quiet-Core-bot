@@ -1,4 +1,4 @@
-// Plugin Clawhub Release script supports OpenClaw repository automation.
+// Plugin Clawhub Release script supports QuietCore repository automation.
 import { execFileSync } from "node:child_process";
 import { resolve } from "node:path";
 import { validateExternalCodePluginPackageJson } from "../../packages/plugin-package-contract/src/index.ts";
@@ -519,7 +519,7 @@ async function hasClawHubTrustedPublisher(
           });
         }
 
-        return isOpenClawPluginTrustedPublisher(trustedPublisherDetail.trustedPublisher);
+        return isQuietCorePluginTrustedPublisher(trustedPublisherDetail.trustedPublisher);
       }
     } finally {
       request.clearTimeout();
@@ -557,7 +557,7 @@ async function delay(ms: number): Promise<void> {
   });
 }
 
-function isOpenClawPluginTrustedPublisher(value: unknown): boolean {
+function isQuietCorePluginTrustedPublisher(value: unknown): boolean {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     return false;
   }

@@ -2,7 +2,7 @@
   "name": "@quiet-core/workboard",
   "version": "2026.6.11",
   "private": true,
-  "description": "OpenClaw dashboard workboard plugin",
+  "description": "QuietCore dashboard workboard plugin",
   "type": "module",
   "dependencies": {
     "typebox": "1.1.39"

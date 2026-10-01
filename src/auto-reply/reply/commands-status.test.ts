@@ -73,7 +73,7 @@ vi.mock("../../infra/provider-usage.js", async (importOriginal) => {
 vi.mock("../../status/status-plugin-health.runtime.js", () => pluginHealthRuntimeMock);
 
 vi.mock("../../agents/harness/builtin-quiet-core-bot.js", () => ({
-  createOpenClawAgentHarness: () => ({
+  createQuietCoreAgentHarness: () => ({
     id: "quiet-core-bot",
     label: "Quiet Core bot Default",
     supports: () => ({ supported: true, priority: 0 }),

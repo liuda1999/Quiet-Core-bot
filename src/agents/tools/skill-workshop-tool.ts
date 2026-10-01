@@ -4,7 +4,7 @@
  * Exposes proposal create/update/review/apply actions while the workshop service owns persistence.
  */
 import { Type } from "typebox";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import {
   applySkillProposal,
   inspectSkillProposal,
@@ -126,7 +126,7 @@ const SkillWorkshopToolSchema = Type.Object(
 
 export type SkillWorkshopToolOptions = {
   workspaceDir: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   agentId?: string;
   origin?: SkillProposalOrigin;
 };

@@ -1,6 +1,6 @@
 import AVFAudio
 import Foundation
-import OpenClawKit
+import QuietCoreKit
 import Speech
 
 extension TalkModeManager {

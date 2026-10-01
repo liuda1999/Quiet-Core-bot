@@ -1,6 +1,6 @@
-# SearXNG OpenClaw plugin
+# SearXNG QuietCore plugin
 
-Official OpenClaw plugin for SearXNG.
+Official QuietCore plugin for SearXNG.
 
 ## Install
 
@@ -10,4 +10,4 @@ quiet-core-bot plugins install @quiet-core/searxng-plugin
 
 ## Docs
 
-See `docs/tools/searxng-search.md` in the OpenClaw repository, or the published docs at `https://github.com/liuda1999/Quiet-Core-bot/tools/searxng-search`.
+See `docs/tools/searxng-search.md` in the QuietCore repository, or the published docs at `https://github.com/liuda1999/Quiet-Core-bot/tools/searxng-search`.

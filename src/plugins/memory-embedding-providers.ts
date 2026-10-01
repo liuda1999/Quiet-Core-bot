@@ -1,6 +1,6 @@
 import type { EmbeddingInput } from "../../packages/memory-host-sdk/src/engine-embeddings.js";
 // Resolves plugin-provided memory embedding providers from config and registry.
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { SecretInput } from "../config/types.secrets.js";
 
 /** Chunk submitted to memory embedding batch processing. */
@@ -69,7 +69,7 @@ export type MemoryEmbeddingProvider = {
 
 /** Options passed to memory embedding provider adapters. */
 export type MemoryEmbeddingProviderCreateOptions = {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   agentDir?: string;
   provider?: string;
   fallback?: string;

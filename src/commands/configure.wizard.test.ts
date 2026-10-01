@@ -1,6 +1,6 @@
 // Configure wizard tests cover guided setup routing across gateway, auth, channels, skills, and search.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 
 const mocks = vi.hoisted(() => {
   const writeConfigFile = vi.fn();
@@ -37,11 +37,11 @@ const mocks = vi.hoisted(() => {
     summarizeExistingConfig: vi.fn(),
     promptAuthConfig: vi.fn(),
     promptGatewayConfig: vi.fn(),
-    promptRemoteGatewayConfig: vi.fn(async (cfg: OpenClawConfig) => ({
+    promptRemoteGatewayConfig: vi.fn(async (cfg: QuietCoreConfig) => ({
       ...cfg,
       gateway: { mode: "remote", remote: { url: "wss://gateway.example.test" } },
     })),
-    setupChannels: vi.fn(async (cfg: OpenClawConfig) => cfg),
+    setupChannels: vi.fn(async (cfg: QuietCoreConfig) => cfg),
   };
 });
 
@@ -96,7 +96,7 @@ vi.mock("../../packages/terminal-core/src/note.js", () => ({
 
 vi.mock("./onboard-helpers.js", () => ({
   DEFAULT_WORKSPACE: "~/.quiet-core-bot/workspace",
-  applyWizardMetadata: (cfg: OpenClawConfig) => cfg,
+  applyWizardMetadata: (cfg: QuietCoreConfig) => cfg,
   ensureWorkspaceAndSessions: vi.fn(),
   guardCancel: <T>(value: T) => value,
   printWizardHeader: mocks.printWizardHeader,
@@ -183,7 +183,7 @@ function createSearchProviderOption(overrides: Record<string, unknown>) {
 }
 
 function createEnabledWebSearchConfig(provider: string, pluginEntry: Record<string, unknown>) {
-  return (cfg: OpenClawConfig) => ({
+  return (cfg: QuietCoreConfig) => ({
     ...cfg,
     tools: {
       ...cfg.tools,
@@ -205,7 +205,7 @@ function createEnabledWebSearchConfig(provider: string, pluginEntry: Record<stri
   });
 }
 
-function setupBaseWizardState(config: OpenClawConfig = {}) {
+function setupBaseWizardState(config: QuietCoreConfig = {}) {
   mocks.readConfigFileSnapshot.mockResolvedValue({
     ...EMPTY_CONFIG_SNAPSHOT,
     config,
@@ -301,11 +301,11 @@ describe("runConfigureWizard", () => {
       },
     ]);
     mocks.setupSearch.mockReset();
-    mocks.setupSearch.mockImplementation(async (cfg: OpenClawConfig) => cfg);
+    mocks.setupSearch.mockImplementation(async (cfg: QuietCoreConfig) => cfg);
     mocks.promptAuthConfig.mockReset();
-    mocks.promptAuthConfig.mockImplementation(async (cfg: OpenClawConfig) => cfg);
+    mocks.promptAuthConfig.mockImplementation(async (cfg: QuietCoreConfig) => cfg);
     mocks.promptGatewayConfig.mockReset();
-    mocks.promptGatewayConfig.mockImplementation(async (cfg: OpenClawConfig) => ({
+    mocks.promptGatewayConfig.mockImplementation(async (cfg: QuietCoreConfig) => ({
       config: cfg,
       port: 18789,
     }));
@@ -413,7 +413,7 @@ describe("runConfigureWizard", () => {
 
   it("persists provider-owned web search config changes returned by setupSearch", async () => {
     setupBaseWizardState();
-    mocks.setupSearch.mockImplementation(async (cfg: OpenClawConfig) => {
+    mocks.setupSearch.mockImplementation(async (cfg: QuietCoreConfig) => {
       const configured = createEnabledWebSearchConfig("firecrawl", {
         enabled: true,
         config: { webSearch: { apiKey: "fc-entered-key" } },
@@ -468,7 +468,7 @@ describe("runConfigureWizard", () => {
 
   it("keeps web_search disabled when provider setup has no credential", async () => {
     setupBaseWizardState();
-    mocks.setupSearch.mockImplementation(async (cfg: OpenClawConfig) => ({
+    mocks.setupSearch.mockImplementation(async (cfg: QuietCoreConfig) => ({
       ...cfg,
       tools: {
         ...cfg.tools,
@@ -571,7 +571,7 @@ describe("runConfigureWizard", () => {
         credentialPath: "",
       }),
     ]);
-    mocks.setupSearch.mockImplementation(async (cfg: OpenClawConfig) =>
+    mocks.setupSearch.mockImplementation(async (cfg: QuietCoreConfig) =>
       createEnabledWebSearchConfig("duckduckgo", {
         enabled: true,
       })(cfg),
@@ -588,7 +588,7 @@ describe("runConfigureWizard", () => {
   });
 
   it("retries without dropping nested plugin config written during wizard flow (issue #64188)", async () => {
-    const baseConfig: OpenClawConfig = {
+    const baseConfig: QuietCoreConfig = {
       plugins: {
         entries: {
           "github-copilot": {

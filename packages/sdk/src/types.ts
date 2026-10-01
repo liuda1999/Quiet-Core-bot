@@ -16,8 +16,8 @@ export type GatewayEvent = {
   stateVersion?: unknown;
 };
 
-/** Minimal transport interface consumed by the OpenClaw SDK client. */
-export type OpenClawTransport = {
+/** Minimal transport interface consumed by the QuietCore SDK client. */
+export type QuietCoreTransport = {
   request<T = unknown>(
     method: string,
     params?: unknown,
@@ -28,7 +28,7 @@ export type OpenClawTransport = {
 };
 
 /** Transport variant that requires an explicit connection step. */
-export type ConnectableOpenClawTransport = OpenClawTransport & {
+export type ConnectableQuietCoreTransport = QuietCoreTransport & {
   connect(): Promise<void>;
 };
 
@@ -240,7 +240,7 @@ export type RunResult = {
 };
 
 /** Stable SDK event type taxonomy derived from raw Gateway events. */
-export type OpenClawEventType =
+export type QuietCoreEventType =
   | "run.created"
   | "run.queued"
   | "run.started"
@@ -271,11 +271,11 @@ export type OpenClawEventType =
   | "raw";
 
 /** Normalized SDK event with common run/session/task metadata. */
-export type OpenClawEvent<TData = unknown> = {
+export type QuietCoreEvent<TData = unknown> = {
   version: 1;
   id: string;
   ts: number;
-  type: OpenClawEventType;
+  type: QuietCoreEventType;
   runId?: string;
   sessionId?: string;
   sessionKey?: string;

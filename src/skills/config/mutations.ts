@@ -1,14 +1,14 @@
 // Skill config mutation helpers update persisted skill settings through config retries.
 import { mutateConfigFileWithRetry } from "../../config/config.js";
 import { REDACTED_SENTINEL } from "../../config/redact-snapshot.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { normalizeSecretInput } from "../../utils/normalize-secret-input.js";
 
 export function patchSkillConfigEntry(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   skillKey: string,
   patch: { enabled?: boolean; apiKey?: string; env?: Record<string, string> },
-): OpenClawConfig {
+): QuietCoreConfig {
   const entries = { ...cfg.skills?.entries };
   const current = entries[skillKey] ? { ...entries[skillKey] } : {};
   if (typeof patch.enabled === "boolean") {

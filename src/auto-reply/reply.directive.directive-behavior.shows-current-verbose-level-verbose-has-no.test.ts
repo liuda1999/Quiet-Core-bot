@@ -2,7 +2,7 @@
 import "./reply.directive.directive-behavior.e2e-mocks.js";
 import { describe, expect, it } from "vitest";
 import type { ModelAliasIndex } from "../agents/model-selection.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import type { SessionEntry } from "../config/sessions.js";
 import { installDirectiveBehaviorE2EHooks } from "./reply.directive.directive-behavior.e2e-harness.js";
 import { runEmbeddedAgentMock } from "./reply.directive.directive-behavior.e2e-mocks.js";
@@ -32,7 +32,7 @@ async function runDirectiveStatus(
         workspace: "/tmp/quiet-core-bot",
       },
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
   const effectiveSessionKey = overrides.sessionKey ?? sessionKey;
   const effectiveSessionEntry = overrides.sessionEntry ?? sessionEntry;
   const effectiveSessionStore = overrides.sessionStore ?? {
@@ -86,7 +86,7 @@ describe("directive behavior", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
     });
     expect(fastText).toContain("Current fast mode: auto (30 sec) (default: model)");
     expect(fastText).toContain("Options: on, off, auto (30 sec), default, status.");
@@ -126,7 +126,7 @@ describe("directive behavior", () => {
             node: "mac-1",
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
     });
     expect(execText).toContain(
       "Current exec defaults: host=gateway, effective=gateway, security=allowlist, ask=always, node=mac-1.",
@@ -151,7 +151,7 @@ describe("directive behavior", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
     });
 
     expect(statusText).toContain("Current fast mode: auto (30 sec) (default: model)");

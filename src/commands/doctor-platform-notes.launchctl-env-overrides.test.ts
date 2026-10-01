@@ -1,13 +1,13 @@
 // Doctor launchctl environment tests cover macOS gateway platform warnings for env overrides.
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import {
   collectMacGatewayPlatformWarnings,
   collectMacLaunchAgentOverrideWarning,
   collectMacLaunchctlGatewayEnvOverrideWarning,
-  collectMacStaleOpenClawUpdateLaunchdJobsWarning,
+  collectMacStaleQuietCoreUpdateLaunchdJobsWarning,
   noteMacLaunchctlGatewayEnvOverrides,
-  noteMacStaleOpenClawUpdateLaunchdJobs,
+  noteMacStaleQuietCoreUpdateLaunchdJobs,
 } from "./doctor-platform-notes.js";
 
 function requireNoteCall(noteFn: { mock: { calls: unknown[][] } }, index = 0): unknown[] {
@@ -29,7 +29,7 @@ describe("noteMacLaunchctlGatewayEnvOverrides", () => {
           token: "config-token",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const warning = await collectMacLaunchctlGatewayEnvOverrideWarning(cfg, {
       platform: "darwin",
@@ -53,7 +53,7 @@ describe("noteMacLaunchctlGatewayEnvOverrides", () => {
           token: "config-token",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     await noteMacLaunchctlGatewayEnvOverrides(cfg, { platform: "darwin", getenv, noteFn });
 
@@ -72,7 +72,7 @@ describe("noteMacLaunchctlGatewayEnvOverrides", () => {
   it("does nothing when config has no gateway credentials", async () => {
     const noteFn = vi.fn();
     const getenv = vi.fn(async () => "launchctl-token");
-    const cfg = {} as OpenClawConfig;
+    const cfg = {} as QuietCoreConfig;
 
     await noteMacLaunchctlGatewayEnvOverrides(cfg, { platform: "darwin", getenv, noteFn });
 
@@ -96,7 +96,7 @@ describe("noteMacLaunchctlGatewayEnvOverrides", () => {
           default: { source: "env" },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     await noteMacLaunchctlGatewayEnvOverrides(cfg, { platform: "darwin", getenv, noteFn });
 
@@ -114,7 +114,7 @@ describe("noteMacLaunchctlGatewayEnvOverrides", () => {
           token: "config-token",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     await noteMacLaunchctlGatewayEnvOverrides(cfg, { platform: "linux", getenv, noteFn });
 
@@ -123,7 +123,7 @@ describe("noteMacLaunchctlGatewayEnvOverrides", () => {
   });
 });
 
-describe("noteMacStaleOpenClawUpdateLaunchdJobs", () => {
+describe("noteMacStaleQuietCoreUpdateLaunchdJobs", () => {
   it("collects stale updater job cleanup guidance on macOS", async () => {
     const findJobs = vi.fn(async () => [
       {
@@ -139,7 +139,7 @@ describe("noteMacStaleOpenClawUpdateLaunchdJobs", () => {
       QUIET_CORE_LAUNCHD_LABEL: "ai.quiet-core-bot.manual-update.gateway",
     } as NodeJS.ProcessEnv;
 
-    const warning = await collectMacStaleOpenClawUpdateLaunchdJobsWarning({
+    const warning = await collectMacStaleQuietCoreUpdateLaunchdJobsWarning({
       platform: "darwin",
       findJobs,
       env,
@@ -166,7 +166,7 @@ describe("noteMacStaleOpenClawUpdateLaunchdJobs", () => {
     };
     const findJobs = vi.fn(async () => []);
 
-    await collectMacGatewayPlatformWarnings({} as OpenClawConfig, {
+    await collectMacGatewayPlatformWarnings({} as QuietCoreConfig, {
       platform: "darwin",
       service,
       findJobs,
@@ -194,7 +194,7 @@ describe("noteMacStaleOpenClawUpdateLaunchdJobs", () => {
     };
     const findJobs = vi.fn(async () => []);
 
-    await noteMacStaleOpenClawUpdateLaunchdJobs({
+    await noteMacStaleQuietCoreUpdateLaunchdJobs({
       platform: "darwin",
       service,
       findJobs,
@@ -225,7 +225,7 @@ describe("noteMacStaleOpenClawUpdateLaunchdJobs", () => {
       },
     ]);
 
-    await noteMacStaleOpenClawUpdateLaunchdJobs({
+    await noteMacStaleQuietCoreUpdateLaunchdJobs({
       platform: "darwin",
       service,
       findJobs,
@@ -249,7 +249,7 @@ describe("noteMacStaleOpenClawUpdateLaunchdJobs", () => {
     };
     const findJobs = vi.fn(async () => []);
 
-    await noteMacStaleOpenClawUpdateLaunchdJobs({
+    await noteMacStaleQuietCoreUpdateLaunchdJobs({
       platform: "darwin",
       service,
       findJobs,

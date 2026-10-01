@@ -5,7 +5,7 @@
  */
 import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { normalizeUniqueStringEntries } from "@quiet-core/normalization-core/string-normalization";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import {
   resolveAccountEntry,
   resolveNormalizedAccountEntry,
@@ -29,10 +29,10 @@ export function createAccountListHelpers(
       channelKeys?: readonly string[];
       envVars?: readonly string[];
     };
-    hasImplicitDefaultAccount?: (cfg: OpenClawConfig) => boolean;
+    hasImplicitDefaultAccount?: (cfg: QuietCoreConfig) => boolean;
   },
 ) {
-  function hasImplicitDefaultAccount(cfg: OpenClawConfig): boolean {
+  function hasImplicitDefaultAccount(cfg: QuietCoreConfig): boolean {
     // Legacy single-account configs and env-only setup imply the default account even when
     // channels.<id>.accounts is absent.
     if (options?.hasImplicitDefaultAccount?.(cfg)) {
@@ -52,7 +52,7 @@ export function createAccountListHelpers(
     return false;
   }
 
-  function resolveConfiguredDefaultAccountId(cfg: OpenClawConfig): string | undefined {
+  function resolveConfiguredDefaultAccountId(cfg: QuietCoreConfig): string | undefined {
     const channel = cfg.channels?.[channelKey] as Record<string, unknown> | undefined;
     const preferred = normalizeOptionalAccountId(
       typeof channel?.defaultAccount === "string" ? channel.defaultAccount : undefined,
@@ -71,7 +71,7 @@ export function createAccountListHelpers(
     return undefined;
   }
 
-  function listConfiguredAccountIds(cfg: OpenClawConfig): string[] {
+  function listConfiguredAccountIds(cfg: QuietCoreConfig): string[] {
     const channel = cfg.channels?.[channelKey];
     const accounts = (channel as Record<string, unknown> | undefined)?.accounts;
     if (!accounts || typeof accounts !== "object") {
@@ -85,7 +85,7 @@ export function createAccountListHelpers(
     return normalizeUniqueStringEntries(ids.map((id) => normalizeConfiguredAccountId(id)));
   }
 
-  function listAccountIds(cfg: OpenClawConfig): string[] {
+  function listAccountIds(cfg: QuietCoreConfig): string[] {
     return listCombinedAccountIds({
       configuredAccountIds: listConfiguredAccountIds(cfg),
       implicitAccountId: hasImplicitDefaultAccount(cfg) ? DEFAULT_ACCOUNT_ID : undefined,
@@ -93,7 +93,7 @@ export function createAccountListHelpers(
     });
   }
 
-  function resolveDefaultAccountId(cfg: OpenClawConfig): string {
+  function resolveDefaultAccountId(cfg: QuietCoreConfig): string {
     return resolveListedDefaultAccountId({
       accountIds: listAccountIds(cfg),
       configuredDefaultAccountId: resolveConfiguredDefaultAccountId(cfg),

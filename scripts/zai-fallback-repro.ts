@@ -1,4 +1,4 @@
-// Zai Fallback Repro script supports OpenClaw repository automation.
+// Zai Fallback Repro script supports QuietCore repository automation.
 import { spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { createReadStream } from "node:fs";

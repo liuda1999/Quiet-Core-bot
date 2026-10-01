@@ -4,7 +4,7 @@
 import { randomUUID } from "node:crypto";
 import fs from "node:fs";
 import * as path from "node:path";
-import { resolvePreferredOpenClawTmpDir } from "quiet-core-bot/plugin-sdk/security-runtime";
+import { resolvePreferredQuietCoreTmpDir } from "quiet-core-bot/plugin-sdk/security-runtime";
 import { asRecord, readStringValue } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 
 type CanvasSnapshotPayload = {
@@ -55,7 +55,7 @@ function resolveCanvasSnapshotId(id: string): string {
 }
 
 function resolveTempPathParts(opts: { ext: string; tmpDir?: string; id?: string }) {
-  const tmpDir = opts.tmpDir ?? resolvePreferredOpenClawTmpDir();
+  const tmpDir = opts.tmpDir ?? resolvePreferredQuietCoreTmpDir();
   if (!opts.tmpDir) {
     fs.mkdirSync(tmpDir, { recursive: true, mode: 0o700 });
   }

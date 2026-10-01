@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { tryReadJsonSync, writeJsonSync } from "../infra/json-files.js";
 
-type OpenClawPackageJson = {
+type QuietCorePackageJson = {
   exports?: Record<string, unknown>;
 };
 
@@ -58,7 +58,7 @@ function readPrivateLocalOnlyPluginSdkDistFileNames(distRoot: string): Set<strin
 
 function readPublicPluginSdkDistFileNames(distRoot: string): Set<string> | undefined {
   const packageRoot = path.dirname(path.resolve(distRoot));
-  const packageJson = tryReadJsonSync<OpenClawPackageJson>(path.join(packageRoot, "package.json"));
+  const packageJson = tryReadJsonSync<QuietCorePackageJson>(path.join(packageRoot, "package.json"));
   if (!packageJson || typeof packageJson !== "object" || Array.isArray(packageJson)) {
     return collectLegacyPublicPluginSdkDistFileNames(distRoot);
   }
@@ -149,7 +149,7 @@ function writeRuntimeModuleWrapper(sourcePath: string, targetPath: string): void
   fs.writeFileSync(targetPath, content, "utf8");
 }
 
-export function ensureOpenClawPluginSdkAlias(distRoot: string): void {
+export function ensureQuietCorePluginSdkAlias(distRoot: string): void {
   const pluginSdkDir = path.join(distRoot, "plugin-sdk");
   if (!fs.existsSync(pluginSdkDir)) {
     return;

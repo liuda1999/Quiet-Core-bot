@@ -10,7 +10,7 @@ import {
   type TestSnapshot,
 } from "./redact-snapshot.test-helpers.js";
 import { buildConfigSchema, type ConfigUiHints } from "./schema.js";
-import type { ConfigFileSnapshot, OpenClawConfig } from "./types.quiet-core-bot.js";
+import type { ConfigFileSnapshot, QuietCoreConfig } from "./types.quiet-core-bot.js";
 
 function expectNestedLevelPairValue(
   source: Record<string, Record<string, Record<string, unknown>>>,
@@ -612,7 +612,7 @@ describe("redactConfigSnapshot", () => {
           security: "full",
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
     const raw = JSON.stringify(sourceConfig);
     const runtimeConfig = materializeRuntimeConfig(structuredClone(sourceConfig), "snapshot");
     const snapshot = {

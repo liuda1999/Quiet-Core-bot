@@ -1,6 +1,6 @@
 /** Tests OAuth policy handling while collecting auth-profile secrets. */
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import {
   loadAuthStoreWithProfiles,
   setupSecretsRuntimeSnapshotTestHooks,
@@ -8,7 +8,7 @@ import {
 
 const { prepareSecretsRuntimeSnapshot } = setupSecretsRuntimeSnapshotTestHooks();
 
-function withAuthProfileMode(mode: "api_key" | "aws-sdk" | "oauth" | "token"): OpenClawConfig {
+function withAuthProfileMode(mode: "api_key" | "aws-sdk" | "oauth" | "token"): QuietCoreConfig {
   return {
     auth: {
       profiles: {
@@ -23,7 +23,7 @@ function withAuthProfileMode(mode: "api_key" | "aws-sdk" | "oauth" | "token"): O
         default: { source: "env" },
       },
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
 describe("secrets runtime oauth auth-profile SecretRef policy", () => {

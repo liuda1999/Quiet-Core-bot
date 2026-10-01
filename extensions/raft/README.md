@@ -1,5 +1,5 @@
-# Raft (OpenClaw plugin)
+# Raft (QuietCore plugin)
 
-Raft CLI wake bridge channel plugin for OpenClaw.
+Raft CLI wake bridge channel plugin for QuietCore.
 
 Docs: https://github.com/liuda1999/Quiet-Core-bot/channels/raft

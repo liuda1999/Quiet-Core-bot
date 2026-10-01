@@ -7,7 +7,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import {
   clearRuntimeConfigSnapshot,
   getRuntimeConfig,
-  type OpenClawConfig,
+  type QuietCoreConfig,
 } from "../config/config.js";
 import { callGateway as realCallGateway } from "../gateway/call.js";
 import { GatewayClient } from "../gateway/client.js";
@@ -18,8 +18,8 @@ import { onAgentEvent, type AgentEventPayload } from "../infra/agent-events.js";
 import { isTruthyEnvValue } from "../infra/env.js";
 import { clearCurrentPluginMetadataSnapshot } from "../plugins/current-plugin-metadata-snapshot.js";
 import {
-  createOpenClawTestState,
-  type OpenClawTestState,
+  createQuietCoreTestState,
+  type QuietCoreTestState,
 } from "../test-utils/quiet-core-bot-test-state.js";
 import { GATEWAY_CLIENT_MODES, GATEWAY_CLIENT_NAMES } from "../utils/message-channel.js";
 import { isLiveTestEnabled } from "./live-test-helpers.js";
@@ -54,7 +54,7 @@ type LiveSubagentModelConfig = {
   provider: "openai" | "google";
   requiredEnv: "OPENAI_API_KEY" | "GEMINI_API_KEY" | "GOOGLE_API_KEY";
 };
-type LiveSubagentModelProviders = NonNullable<NonNullable<OpenClawConfig["models"]>["providers"]>;
+type LiveSubagentModelProviders = NonNullable<NonNullable<QuietCoreConfig["models"]>["providers"]>;
 
 function resolveLiveSubagentModelConfig(): LiveSubagentModelConfig {
   const modelKey = process.env.QUIET_CORE_LIVE_SUBAGENT_E2E_MODEL?.trim() || "openai/gpt-5.5";
@@ -80,10 +80,10 @@ function liveSubagentConfig(
   port: number,
   token: string,
   options?: {
-    queue?: NonNullable<OpenClawConfig["messages"]>["queue"];
+    queue?: NonNullable<QuietCoreConfig["messages"]>["queue"];
     toolAllow?: string[];
   },
-): OpenClawConfig {
+): QuietCoreConfig {
   const providerConfig = resolveLiveSubagentModelConfig();
   const modelId = modelKey.replace(/^(openai|google)\//u, "");
   const providers: LiveSubagentModelProviders = {};
@@ -245,7 +245,7 @@ function createGatewayClient(params: {
 }
 
 describeLive("subagent announce live", () => {
-  let state: OpenClawTestState | undefined;
+  let state: QuietCoreTestState | undefined;
   let server: GatewayServer | undefined;
   let client: GatewayClient | undefined;
   let stopAgentEventCapture: (() => void) | undefined;
@@ -285,7 +285,7 @@ describeLive("subagent announce live", () => {
       const parentToken = `ISSUE_82913_PARENT_SAW_${nonce}`;
       const sessionKey = `agent:main:issue-82913-${nonce.toLowerCase()}`;
 
-      state = await createOpenClawTestState({
+      state = await createQuietCoreTestState({
         label: "subagent-issue-82913-live",
         layout: "split",
         env: {
@@ -479,7 +479,7 @@ describeLive("subagent announce live", () => {
         }),
       });
 
-      state = await createOpenClawTestState({
+      state = await createQuietCoreTestState({
         label: "subagent-announce-live",
         layout: "split",
         env: {
@@ -675,7 +675,7 @@ describeLive("subagent announce live", () => {
       const childTokens = [1, 2, 3].map((index) => `GEMINI_STRESS_${nonce}_${index}`);
       const parentToken = `GEMINI_STRESS_PARENT_${nonce}`;
 
-      state = await createOpenClawTestState({
+      state = await createQuietCoreTestState({
         label: "subagent-gemini-stress-live",
         layout: "split",
         env: {

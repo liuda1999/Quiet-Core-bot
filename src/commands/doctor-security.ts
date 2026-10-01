@@ -5,7 +5,7 @@ import { resolveDmAllowAuditState } from "../channels/message-access/dm-allow-st
 import { listReadOnlyChannelPluginsForConfig } from "../channels/plugins/read-only.js";
 import type { ChannelId } from "../channels/plugins/types.public.js";
 import { formatCliCommand } from "../cli/command-format.js";
-import type { OpenClawConfig, GatewayBindMode } from "../config/config.js";
+import type { QuietCoreConfig, GatewayBindMode } from "../config/config.js";
 import type { AgentConfig } from "../config/types.agents.js";
 import { hasConfiguredSecretInput, resolveSecretInputRef } from "../config/types.secrets.js";
 import { resolveGatewayAuthTokenSourceConflict } from "../gateway/auth-token-source-conflict.js";
@@ -25,7 +25,7 @@ import { discoverConfigSecretTargets } from "../secrets/target-registry.js";
 import { collectExecFilesystemPolicyDriftHits } from "../security/exec-filesystem-policy.js";
 import { resolveDefaultChannelAccountContext } from "./channel-account-context.js";
 
-function collectImplicitHeartbeatDirectPolicyWarnings(cfg: OpenClawConfig): string[] {
+function collectImplicitHeartbeatDirectPolicyWarnings(cfg: QuietCoreConfig): string[] {
   const warnings: string[] = [];
 
   const maybeWarn = (params: {
@@ -88,7 +88,7 @@ function execAskRank(value: ExecAsk): number {
   throw new Error("Unsupported exec ask value");
 }
 
-function collectExecPolicyConflictWarnings(cfg: OpenClawConfig): string[] {
+function collectExecPolicyConflictWarnings(cfg: QuietCoreConfig): string[] {
   const warnings: string[] = [];
   const approvals = loadExecApprovals();
   const defaultRequestedSecuritySource = "Quiet Core bot default (full)";
@@ -175,12 +175,12 @@ function collectExecPolicyConflictWarnings(cfg: OpenClawConfig): string[] {
   return warnings;
 }
 
-function collectDurableExecApprovalWarnings(cfg: OpenClawConfig): string[] {
+function collectDurableExecApprovalWarnings(cfg: QuietCoreConfig): string[] {
   void cfg;
   return [];
 }
 
-function collectExecFilesystemPolicyWarnings(cfg: OpenClawConfig): string[] {
+function collectExecFilesystemPolicyWarnings(cfg: QuietCoreConfig): string[] {
   return collectExecFilesystemPolicyDriftHits(cfg).map((hit) =>
     [
       `- ${hit.scopeLabel}: filesystem write tools are disabled, but exec is still available.`,
@@ -192,7 +192,7 @@ function collectExecFilesystemPolicyWarnings(cfg: OpenClawConfig): string[] {
   );
 }
 
-function collectPlaintextConfigSecretWarnings(cfg: OpenClawConfig): string[] {
+function collectPlaintextConfigSecretWarnings(cfg: QuietCoreConfig): string[] {
   const plaintextPaths: string[] = [];
   const defaults = cfg.secrets?.defaults;
 
@@ -239,7 +239,7 @@ function collectPlaintextConfigSecretWarnings(cfg: OpenClawConfig): string[] {
 
 /** Collects doctor security warnings without emitting terminal notes. */
 export async function collectSecurityWarnings(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   env: NodeJS.ProcessEnv = process.env,
 ): Promise<string[]> {
   const warnings: string[] = [];
@@ -437,7 +437,7 @@ export async function collectSecurityWarnings(
 }
 
 /** Emits security warnings plus the deep audit follow-up command. */
-export async function noteSecurityWarnings(cfg: OpenClawConfig) {
+export async function noteSecurityWarnings(cfg: QuietCoreConfig) {
   const warnings = await collectSecurityWarnings(cfg);
   const auditHint = `- Run: ${formatCliCommand("quiet-core-bot security audit --deep")}`;
 

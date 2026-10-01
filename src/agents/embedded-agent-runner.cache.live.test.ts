@@ -5,7 +5,7 @@ import path from "node:path";
 import type { AssistantMessage, Message, Tool } from "quiet-core-bot/plugin-sdk/llm";
 import { Type } from "typebox";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { deleteTestEnvValue, setTestEnvValue } from "../test-utils/env.js";
 import { runEmbeddedAgent } from "./embedded-agent-runner.js";
 import { compactEmbeddedAgentSessionDirect } from "./embedded-agent-runner/compact.runtime.js";
@@ -246,7 +246,7 @@ function buildEmbeddedRunnerConfig(
     modelAlias?: string;
     transport?: "sse" | "websocket";
   },
-): OpenClawConfig {
+): QuietCoreConfig {
   const provider = params.model.provider;
   const modelKey = `${provider}/${params.model.id}`;
   const providerBaseUrl =

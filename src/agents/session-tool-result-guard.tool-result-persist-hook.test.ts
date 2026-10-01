@@ -9,7 +9,7 @@ import {
   initializeGlobalHookRunner,
   resetGlobalHookRunner,
 } from "../plugins/hook-runner-global.js";
-import { loadOpenClawPlugins } from "../plugins/loader.js";
+import { loadQuietCorePlugins } from "../plugins/loader.js";
 import { guardSessionManager } from "./session-tool-result-guard-wrapper.js";
 
 const EMPTY_PLUGIN_SCHEMA = { type: "object", additionalProperties: false, properties: {} };
@@ -79,7 +79,7 @@ function initializeTempPlugin(params: { tmpPrefix: string; id: string; body: str
     id: params.id,
     body: params.body,
   });
-  const registry = loadOpenClawPlugins({
+  const registry = loadQuietCorePlugins({
     cache: false,
     workspaceDir: tmp,
     config: {
@@ -698,7 +698,7 @@ describe("tool_result_persist hook", () => {
 } };`,
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       workspaceDir: tmp,
       config: {

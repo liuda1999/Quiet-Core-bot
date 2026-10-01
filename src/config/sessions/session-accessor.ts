@@ -19,7 +19,7 @@ import type {
   SessionTranscriptUpdateTarget,
 } from "../../sessions/transcript-events.js";
 import { getRuntimeConfig } from "../io.js";
-import type { OpenClawConfig } from "../types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../types.quiet-core-bot.js";
 import { formatSessionArchiveTimestamp } from "./artifacts.js";
 import { extractGeneratedTranscriptSessionId } from "./generated-transcript-session-id.js";
 import { resolveAgentMainSessionKey } from "./main-session.js";
@@ -135,7 +135,7 @@ export type SessionAccessScope = {
 
 export type LogicalSessionAccessScope = {
   /** Runtime config whose session store rules define the logical session owner. */
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   /** Environment override used when resolving configured/discovered agent stores. */
   env?: NodeJS.ProcessEnv;
   /** Canonical or alias session key for the logical entry being read or written. */
@@ -227,7 +227,7 @@ export type TranscriptEvent = unknown;
 
 export type TranscriptMessageAppendOptions<TMessage> = {
   /** Runtime config used for message redaction and transcript header metadata. */
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   /** Working directory recorded in a newly created transcript header. */
   cwd?: string;
   /** How duplicate message idempotency keys are detected before append. */
@@ -274,7 +274,7 @@ export type SessionTranscriptTurnWriteContext = {
 
 export type SessionTranscriptTurnPersistOptions = {
   /** Runtime config used for lock settings, redaction, and header metadata. */
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   /** Working directory recorded in a newly created transcript header. */
   cwd?: string;
   /**
@@ -550,7 +550,7 @@ function isStorePathTemplate(store?: string): boolean {
 
 function resolveLogicalSessionStoreCandidates(params: {
   agentId: string;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
 }): SessionStoreTarget[] {
   const storeConfig = params.cfg.session?.store;
@@ -574,7 +574,7 @@ function resolveLogicalSessionStoreCandidates(params: {
 function buildLogicalSessionEntryCandidateKeys(params: {
   agentId: string;
   canonicalKey: string;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   requestedKey: string;
 }): string[] {
   const targets = new Set<string>();

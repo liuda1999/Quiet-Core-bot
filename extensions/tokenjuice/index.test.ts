@@ -3,17 +3,17 @@ import fs from "node:fs";
 import { createTestPluginApi } from "quiet-core-bot/plugin-sdk/plugin-test-api";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { tokenjuiceFactory, createTokenjuiceOpenClawEmbeddedExtension } = vi.hoisted(() => {
+const { tokenjuiceFactory, createTokenjuiceQuietCoreEmbeddedExtension } = vi.hoisted(() => {
   const tokenjuiceFactoryLocal = vi.fn();
-  const createTokenjuiceOpenClawEmbeddedExtensionLocal = vi.fn(() => tokenjuiceFactoryLocal);
+  const createTokenjuiceQuietCoreEmbeddedExtensionLocal = vi.fn(() => tokenjuiceFactoryLocal);
   return {
     tokenjuiceFactory: tokenjuiceFactoryLocal,
-    createTokenjuiceOpenClawEmbeddedExtension: createTokenjuiceOpenClawEmbeddedExtensionLocal,
+    createTokenjuiceQuietCoreEmbeddedExtension: createTokenjuiceQuietCoreEmbeddedExtensionLocal,
   };
 });
 
 vi.mock("./runtime-api.js", () => ({
-  createTokenjuiceOpenClawEmbeddedExtension,
+  createTokenjuiceQuietCoreEmbeddedExtension,
 }));
 
 import plugin from "./index.js";
@@ -21,7 +21,7 @@ import { createTokenjuiceAgentToolResultMiddleware } from "./tool-result-middlew
 
 describe("tokenjuice plugin", () => {
   beforeEach(() => {
-    createTokenjuiceOpenClawEmbeddedExtension.mockClear();
+    createTokenjuiceQuietCoreEmbeddedExtension.mockClear();
     tokenjuiceFactory.mockClear();
   });
 
@@ -33,7 +33,7 @@ describe("tokenjuice plugin", () => {
     expect(manifest.enabledByDefault).toBeUndefined();
   });
 
-  it("registers tokenjuice tool result middleware for the OpenClaw runtime", () => {
+  it("registers tokenjuice tool result middleware for the QuietCore runtime", () => {
     const registerAgentToolResultMiddleware = vi.fn();
 
     plugin.register(
@@ -48,7 +48,7 @@ describe("tokenjuice plugin", () => {
       }),
     );
 
-    expect(createTokenjuiceOpenClawEmbeddedExtension).toHaveBeenCalledTimes(1);
+    expect(createTokenjuiceQuietCoreEmbeddedExtension).toHaveBeenCalledTimes(1);
     expect(tokenjuiceFactory).toHaveBeenCalledTimes(1);
     const registration = registerAgentToolResultMiddleware.mock.calls[0];
     expect(typeof registration?.[0]).toBe("function");

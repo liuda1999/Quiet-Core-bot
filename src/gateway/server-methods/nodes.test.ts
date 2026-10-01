@@ -13,16 +13,16 @@ import {
 import { approveNodePairing, requestNodePairing } from "../../infra/node-pairing.js";
 import { resolvePairingPaths } from "../../infra/pairing-files.js";
 import {
-  createOpenClawTestState,
-  type OpenClawTestState,
+  createQuietCoreTestState,
+  type QuietCoreTestState,
 } from "../../test-utils/quiet-core-bot-test-state.js";
 import { nodeHandlers } from "./nodes.js";
 import type { GatewayRequestHandlerOptions } from "./types.js";
 
-const createdStates: OpenClawTestState[] = [];
+const createdStates: QuietCoreTestState[] = [];
 
-async function createState(label: string): Promise<OpenClawTestState> {
-  const state = await createOpenClawTestState({ label, layout: "state-only" });
+async function createState(label: string): Promise<QuietCoreTestState> {
+  const state = await createQuietCoreTestState({ label, layout: "state-only" });
   createdStates.push(state);
   return state;
 }

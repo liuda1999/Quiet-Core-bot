@@ -1,8 +1,8 @@
 // Doctor config analysis tests cover schema analysis, model fallback values, and issue generation.
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { resolveAgentModelFallbackValues } from "../config/model-input.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
-import { OpenClawSchema } from "../config/zod-schema.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
+import { QuietCoreSchema } from "../config/zod-schema.js";
 import {
   collectImplicitFallbackClobberWarnings,
   formatConfigPath,
@@ -61,7 +61,7 @@ describe("doctor config analysis helpers", () => {
     expect(result.removed).not.toContain("defaultModel");
     expect(result.removed).not.toContain("agents.list[0].description");
     expect(result.removed).not.toContain("agents.list[1].description");
-    expect(OpenClawSchema.safeParse({ defaultModel: "minimax/MiniMax-M2.7" }).success).toBe(false);
+    expect(QuietCoreSchema.safeParse({ defaultModel: "minimax/MiniMax-M2.7" }).success).toBe(false);
     expect(result.config).toMatchObject({
       defaultModel: "minimax/MiniMax-M2.7",
       mcp: {
@@ -150,13 +150,13 @@ describe("doctor config analysis helpers", () => {
 });
 
 describe("collectImplicitFallbackClobberWarnings", () => {
-  function buildConfig(overrides: { defaults?: unknown; list?: unknown[] }): OpenClawConfig {
+  function buildConfig(overrides: { defaults?: unknown; list?: unknown[] }): QuietCoreConfig {
     return {
       agents: {
         defaults: { model: overrides.defaults },
         list: overrides.list,
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
   }
 
   it("returns empty when defaults has no fallbacks", () => {
@@ -211,7 +211,7 @@ describe("collectImplicitFallbackClobberWarnings", () => {
         defaults: { model: { primary: "openai/gpt-5.5", fallbacks: ["openai/gpt-5.4"] } },
         list: { ops: { id: "ops", model: "openai/gpt-5.3" } },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     expect(collectImplicitFallbackClobberWarnings(cfg)).toEqual([]);
   });

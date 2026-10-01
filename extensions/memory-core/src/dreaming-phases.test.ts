@@ -2,7 +2,7 @@
 import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { RequestScopedSubagentRuntimeError } from "quiet-core-bot/plugin-sdk/error-runtime";
 import { resolveSessionTranscriptsDirForAgent } from "quiet-core-bot/plugin-sdk/memory-core-host-runtime-core";
 import {
@@ -32,7 +32,7 @@ const DREAMING_TEST_BASE_TIME = new Date("2026-04-05T10:00:00.000Z");
 const DREAMING_TEST_DAY = "2026-04-05";
 const EMPTY_SESSION_CONTENT_HASH =
   "75a11da44c802486bc6f65640aa48a730f0f684c5c07a42ba3cd1735eb3fb070";
-const LIGHT_DREAMING_TEST_CONFIG: OpenClawConfig = {
+const LIGHT_DREAMING_TEST_CONFIG: QuietCoreConfig = {
   plugins: {
     entries: {
       "memory-core": {
@@ -118,7 +118,7 @@ function requireFirstIngestionEntry(sessionIngestion: {
 }
 
 function createHarness(
-  config: OpenClawConfig,
+  config: QuietCoreConfig,
   workspaceDir?: string,
   subagent?: Parameters<typeof testing.runPhaseIfTriggered>[0]["subagent"],
 ) {
@@ -281,7 +281,7 @@ describe("memory-core dreaming phases", () => {
       "- Move backups to S3 Glacier.",
       "- Keep retention at 365 days.",
     ]);
-    const testConfig: OpenClawConfig = {
+    const testConfig: QuietCoreConfig = {
       ...LIGHT_DREAMING_TEST_CONFIG,
       agents: {
         defaults: {
@@ -346,7 +346,7 @@ describe("memory-core dreaming phases", () => {
       "- Move backups to S3 Glacier.",
       "- Keep retention at 365 days.",
     ]);
-    const testConfig: OpenClawConfig = {
+    const testConfig: QuietCoreConfig = {
       ...LIGHT_DREAMING_TEST_CONFIG,
       agents: {
         defaults: {
@@ -521,7 +521,7 @@ describe("memory-core dreaming phases", () => {
       "utf-8",
     );
     const subagent = createMockNarrativeSubagent("A later routing note finally took the page.");
-    const testConfig: OpenClawConfig = {
+    const testConfig: QuietCoreConfig = {
       agents: {
         defaults: {
           workspace: workspaceDir,
@@ -2840,7 +2840,7 @@ describe("memory-core dreaming phases", () => {
       "utf-8",
     );
 
-    const configForTest: OpenClawConfig = {
+    const configForTest: QuietCoreConfig = {
       plugins: {
         entries: {
           "memory-core": {

@@ -18,8 +18,8 @@ import {
   formatChromeCdpDiagnostic,
   isChromeCdpReady,
   isChromeReachable,
-  launchOpenClawChrome,
-  stopOpenClawChrome,
+  launchQuietCoreChrome,
+  stopQuietCoreChrome,
 } from "./chrome.js";
 import type { ResolvedBrowserProfile } from "./config.js";
 import { BrowserProfileUnavailableError } from "./errors.js";
@@ -79,16 +79,16 @@ function ensureOptionsKey(options?: BrowserEnsureOptions): string {
 
 function formatLocalPortOwnershipHint(profile: ResolvedBrowserProfile): string {
   const resetHint =
-    `If OpenClaw should own this local profile, run action=reset-profile profile=${profile.name} ` +
+    `If QuietCore should own this local profile, run action=reset-profile profile=${profile.name} ` +
     "to stop the conflicting process.";
   if (!profile.cdpIsLoopback) {
     return resetHint;
   }
   return (
     `${resetHint} If this port is an externally managed CDP service such as Browserless, ` +
-    `set browser.profiles.${profile.name}.attachOnly=true so OpenClaw attaches without trying ` +
+    `set browser.profiles.${profile.name}.attachOnly=true so QuietCore attaches without trying ` +
     "to manage the local process. For Browserless Docker, set EXTERNAL to the same WebSocket " +
-    "endpoint OpenClaw can reach via browser.profiles.<name>.cdpUrl."
+    "endpoint QuietCore can reach via browser.profiles.<name>.cdpUrl."
   );
 }
 
@@ -263,7 +263,7 @@ export function createProfileAvailability({
     const previousProfile = reconcile.previousProfile;
     resetManagedLaunchFailure(profileState);
     if (profileState.running) {
-      await stopOpenClawChrome(profileState.running).catch(() => {});
+      await stopQuietCoreChrome(profileState.running).catch(() => {});
       setProfileRunning(null);
     }
     if (getBrowserProfileCapabilities(previousProfile).usesChromeMcp) {
@@ -277,7 +277,7 @@ export function createProfileAvailability({
   };
 
   const waitForCdpReadyAfterLaunch = async (): Promise<void> => {
-    // launchOpenClawChrome() can return before Chrome is fully ready to serve /json/version + CDP WS.
+    // launchQuietCoreChrome() can return before Chrome is fully ready to serve /json/version + CDP WS.
     // If a follow-up call races ahead, we can hit PortInUseError trying to launch again on the same port.
     const deadlineMs =
       Date.now() + (state().resolved.localCdpReadyTimeoutMs ?? CDP_READY_AFTER_LAUNCH_WINDOW_MS);
@@ -327,7 +327,7 @@ export function createProfileAvailability({
   ) => {
     assertManagedLaunchNotCoolingDown(profile.name, profileState);
     try {
-      return await launchOpenClawChrome(current.resolved, profile, launchOptions);
+      return await launchQuietCoreChrome(current.resolved, profile, launchOptions);
     } catch (err) {
       recordManagedLaunchFailure(profileState, err);
       throw err;
@@ -361,7 +361,7 @@ export function createProfileAvailability({
           return;
         }
       }
-      // Browser control service can restart while a loopback OpenClaw browser is still
+      // Browser control service can restart while a loopback QuietCore browser is still
       // alive. Give that pre-existing browser one longer probe window before falling
       // back to local executable resolution.
       if (!attachOnly && !remoteCdp && profile.cdpIsLoopback && !profileState.running) {
@@ -386,7 +386,7 @@ export function createProfileAvailability({
         await waitForCdpReadyAfterLaunch();
         resetManagedLaunchFailure(profileState);
       } catch (err) {
-        await stopOpenClawChrome(launched).catch(() => {});
+        await stopQuietCoreChrome(launched).catch(() => {});
         setProfileRunning(null);
         recordManagedLaunchFailure(profileState, err);
         throw err;
@@ -429,7 +429,7 @@ export function createProfileAvailability({
       );
     }
 
-    await stopOpenClawChrome(profileState.running);
+    await stopQuietCoreChrome(profileState.running);
     setProfileRunning(null);
 
     const relaunched = await launchManagedChrome(profileState, current, launchOptions);
@@ -487,7 +487,7 @@ export function createProfileAvailability({
       }
       return { stopped: idleStop.stopped };
     }
-    await stopOpenClawChrome(profileState.running);
+    await stopQuietCoreChrome(profileState.running);
     setProfileRunning(null);
     return { stopped: true };
   };

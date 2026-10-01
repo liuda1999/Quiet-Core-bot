@@ -44,7 +44,7 @@ fi
 docker_e2e_build_or_reuse "$IMAGE_NAME" mcp-code-mode-gateway-live
 QUIET_CORE_TEST_STATE_SCRIPT_B64="$(docker_e2e_test_state_shell_b64 mcp-code-mode-gateway-live empty)"
 
-# The profile is only a credential source. Keep this lane's OpenClaw runtime
+# The profile is only a credential source. Keep this lane's QuietCore runtime
 # isolated from host/testbox mode flags that can change packaged behavior.
 unset QUIET_CORE_TESTBOX
 

@@ -10,7 +10,7 @@ import {
 } from "../../acp/persistent-bindings.types.js";
 import { resolveConfiguredBindingRecord } from "../../channels/plugins/binding-registry.js";
 import { listAcpBindings } from "../../config/bindings.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { getSessionBindingService } from "../../infra/outbound/session-binding-service.js";
 import { DEFAULT_ACCOUNT_ID, isAcpSessionKey } from "../../routing/session-key.js";
 
@@ -37,7 +37,7 @@ export const testing = {
 };
 
 function resolveResetTargetAccountId(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   channel: string;
   accountId?: string | null;
 }): string {
@@ -54,7 +54,7 @@ function resolveResetTargetAccountId(params: {
 }
 
 function resolveRawConfiguredAcpSessionKey(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   channel: string;
   accountId: string;
   conversationId: string;
@@ -102,7 +102,7 @@ function resolveRawConfiguredAcpSessionKey(params: {
 }
 
 export function resolveEffectiveResetTargetSessionKey(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   channel?: string | null;
   accountId?: string | null;
   conversationId?: string | null;

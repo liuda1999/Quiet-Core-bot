@@ -1,5 +1,5 @@
 #!/usr/bin/env -S node --import tsx
-// Telegram User Crabbox Proof script supports OpenClaw repository automation.
+// Telegram User Crabbox Proof script supports QuietCore repository automation.
 
 import {
   type ChildProcess,
@@ -182,7 +182,7 @@ const TELEGRAM_PROOF_CROP = {
 function usageText() {
   return [
     "Usage:",
-    "  node --import tsx scripts/e2e/telegram-user-crabbox-proof.ts [probe] [--text /status] [--expect OpenClaw]",
+    "  node --import tsx scripts/e2e/telegram-user-crabbox-proof.ts [probe] [--text /status] [--expect QuietCore]",
     "  node --import tsx scripts/e2e/telegram-user-crabbox-proof.ts start [--tdlib-url <url>]",
     "  node --import tsx scripts/e2e/telegram-user-crabbox-proof.ts send --session <session.json> --text <text>",
     "  node --import tsx scripts/e2e/telegram-user-crabbox-proof.ts run --session <session.json> -- <remote command>",
@@ -295,9 +295,9 @@ export function parseArgs(argvInput: string[]): Options {
     command,
     crabboxBin: trimToValue(process.env.QUIET_CORE_TELEGRAM_USER_CRABBOX_BIN) ?? "crabbox",
     desktopChatTitle:
-      trimToValue(process.env.QUIET_CORE_TELEGRAM_USER_DESKTOP_CHAT_TITLE) ?? "OpenClaw Testing",
+      trimToValue(process.env.QUIET_CORE_TELEGRAM_USER_DESKTOP_CHAT_TITLE) ?? "QuietCore Testing",
     dryRun: false,
-    expect: ["OpenClaw"],
+    expect: ["QuietCore"],
     gatewayPort: 19_879,
     idleTimeout: "60m",
     keepBox: false,
@@ -450,7 +450,7 @@ function repoRoot() {
     !fs.existsSync(path.join(cwd, "package.json")) ||
     !fs.existsSync(path.join(cwd, "scripts/e2e/mock-openai-server.mjs"))
   ) {
-    throw new Error("Run from the OpenClaw repo root.");
+    throw new Error("Run from the QuietCore repo root.");
   }
   return cwd;
 }
@@ -536,7 +536,7 @@ function gatewayEnv(params: { configPath: string; stateDir: string; sutToken: st
   };
 }
 
-export function createOpenClawGatewaySpawnSpec(params: {
+export function createQuietCoreGatewaySpawnSpec(params: {
   env: NodeJS.ProcessEnv;
   gatewayPort: number;
   repoRoot: string;
@@ -1176,7 +1176,7 @@ function writeSutConfig(params: {
 }
 
 type StartLocalSutDeps = {
-  createGatewaySpawnSpec?: typeof createOpenClawGatewaySpawnSpec;
+  createGatewaySpawnSpec?: typeof createQuietCoreGatewaySpawnSpec;
   drainUpdates?: typeof drainSutUpdates;
   spawnLoggedCommand?: typeof spawnLogged;
   waitForOutputReady?: typeof waitForOutput;
@@ -1200,7 +1200,7 @@ export async function startLocalSut(
   const writeConfig = deps.writeConfig ?? writeSutConfig;
   const spawnLoggedCommand = deps.spawnLoggedCommand ?? spawnLogged;
   const waitForOutputReady = deps.waitForOutputReady ?? waitForOutput;
-  const createGatewaySpawnSpec = deps.createGatewaySpawnSpec ?? createOpenClawGatewaySpawnSpec;
+  const createGatewaySpawnSpec = deps.createGatewaySpawnSpec ?? createQuietCoreGatewaySpawnSpec;
   let gateway: ReturnType<typeof spawnLogged> | undefined;
   let mock: ReturnType<typeof spawnLogged> | undefined;
   try {
@@ -1324,7 +1324,7 @@ async function startLocalSutDaemon(params: {
     await waitForLog(mockLog, /mock-openai listening/u, "mock-openai", 10_000);
 
     const gatewayEnvVars = gatewayEnv({ ...config, sutToken: params.sutToken });
-    const gatewaySpec = createOpenClawGatewaySpawnSpec({
+    const gatewaySpec = createQuietCoreGatewaySpawnSpec({
       env: gatewayEnvVars,
       gatewayPort: params.gatewayPort,
       repoRoot: params.repoRoot,

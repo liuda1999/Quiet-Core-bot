@@ -5,7 +5,7 @@ import path from "node:path";
 import { CURRENT_SESSION_VERSION } from "quiet-core-bot/plugin-sdk/agent-sessions";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { SessionEntry } from "../../config/sessions/types.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { ContextEngine } from "../../context-engine/types.js";
 import {
   resetCliCompactionTestDeps,
@@ -145,7 +145,7 @@ describe("runCliTurnCompactionLifecycle", () => {
     });
 
     const updatedEntry = await runCliTurnCompactionLifecycle({
-      cfg: {} as OpenClawConfig,
+      cfg: {} as QuietCoreConfig,
       sessionId,
       sessionKey,
       sessionEntry,
@@ -251,7 +251,7 @@ describe("runCliTurnCompactionLifecycle", () => {
     });
 
     const updatedEntry = await runCliTurnCompactionLifecycle({
-      cfg: {} as OpenClawConfig,
+      cfg: {} as QuietCoreConfig,
       sessionId,
       sessionKey,
       sessionEntry,
@@ -335,7 +335,7 @@ describe("runCliTurnCompactionLifecycle", () => {
     });
 
     const updatedEntry = await runCliTurnCompactionLifecycle({
-      cfg: {} as OpenClawConfig,
+      cfg: {} as QuietCoreConfig,
       sessionId,
       sessionKey,
       sessionEntry,
@@ -446,7 +446,7 @@ describe("runCliTurnCompactionLifecycle", () => {
     });
 
     const updatedEntry = await runCliTurnCompactionLifecycle({
-      cfg: {} as OpenClawConfig,
+      cfg: {} as QuietCoreConfig,
       sessionId,
       sessionKey,
       sessionEntry,
@@ -512,7 +512,7 @@ describe("runCliTurnCompactionLifecycle", () => {
     });
 
     await runCliTurnCompactionLifecycle({
-      cfg: {} as OpenClawConfig,
+      cfg: {} as QuietCoreConfig,
       sessionId,
       sessionKey,
       sessionEntry,
@@ -580,7 +580,7 @@ describe("runCliTurnCompactionLifecycle", () => {
 
     await expect(
       runCliTurnCompactionLifecycle({
-        cfg: {} as OpenClawConfig,
+        cfg: {} as QuietCoreConfig,
         sessionId,
         sessionKey,
         sessionEntry,
@@ -660,7 +660,7 @@ describe("runCliTurnCompactionLifecycle", () => {
     });
 
     const result = await runCliTurnCompactionLifecycle({
-      cfg: {} as OpenClawConfig,
+      cfg: {} as QuietCoreConfig,
       sessionId,
       sessionKey,
       sessionEntry,
@@ -732,7 +732,7 @@ describe("runCliTurnCompactionLifecycle", () => {
 
     await expect(
       runCliTurnCompactionLifecycle({
-        cfg: {} as OpenClawConfig,
+        cfg: {} as QuietCoreConfig,
         sessionId,
         sessionKey,
         sessionEntry,
@@ -826,7 +826,7 @@ describe("runCliTurnCompactionLifecycle", () => {
     });
 
     await runCliTurnCompactionLifecycle({
-      cfg: {} as OpenClawConfig,
+      cfg: {} as QuietCoreConfig,
       sessionId,
       sessionKey,
       sessionEntry,
@@ -907,7 +907,7 @@ describe("runCliTurnCompactionLifecycle", () => {
     });
 
     const updatedEntry = await runCliTurnCompactionLifecycle({
-      cfg: {} as OpenClawConfig,
+      cfg: {} as QuietCoreConfig,
       sessionId,
       sessionKey,
       sessionEntry,
@@ -993,7 +993,7 @@ describe("runCliTurnCompactionLifecycle", () => {
     });
 
     const updatedEntry = await runCliTurnCompactionLifecycle({
-      cfg: {} as OpenClawConfig,
+      cfg: {} as QuietCoreConfig,
       sessionId,
       sessionKey,
       sessionEntry,
@@ -1092,7 +1092,7 @@ describe("runCliTurnCompactionLifecycle", () => {
     });
 
     const updatedEntry = await runCliTurnCompactionLifecycle({
-      cfg: {} as OpenClawConfig,
+      cfg: {} as QuietCoreConfig,
       sessionId,
       sessionKey,
       sessionEntry,
@@ -1170,7 +1170,7 @@ describe("runCliTurnCompactionLifecycle", () => {
     });
 
     const updatedEntry = await runCliTurnCompactionLifecycle({
-      cfg: {} as OpenClawConfig,
+      cfg: {} as QuietCoreConfig,
       sessionId,
       sessionKey,
       sessionEntry,
@@ -1252,7 +1252,7 @@ describe("runCliTurnCompactionLifecycle", () => {
     });
 
     const updatedEntry = await runCliTurnCompactionLifecycle({
-      cfg: {} as OpenClawConfig,
+      cfg: {} as QuietCoreConfig,
       sessionId,
       sessionKey,
       sessionEntry,
@@ -1314,7 +1314,7 @@ describe("runCliTurnCompactionLifecycle", () => {
     });
 
     await runCliTurnCompactionLifecycle({
-      cfg: {} as OpenClawConfig,
+      cfg: {} as QuietCoreConfig,
       sessionId,
       sessionKey,
       sessionEntry,
@@ -1385,7 +1385,7 @@ describe("runCliTurnCompactionLifecycle", () => {
 
     vi.useFakeTimers();
     const pending = runCliTurnCompactionLifecycle({
-      cfg: { agents: { defaults: { compaction: { timeoutSeconds: 1 } } } } as OpenClawConfig,
+      cfg: { agents: { defaults: { compaction: { timeoutSeconds: 1 } } } } as QuietCoreConfig,
       sessionId,
       sessionKey,
       sessionEntry,
@@ -1464,7 +1464,7 @@ describe("runCliTurnCompactionLifecycle", () => {
     });
 
     const updatedEntry = await runCliTurnCompactionLifecycle({
-      cfg: {} as OpenClawConfig,
+      cfg: {} as QuietCoreConfig,
       sessionId,
       sessionKey,
       sessionEntry,
@@ -1529,7 +1529,7 @@ describe("runCliTurnCompactionLifecycle", () => {
     });
 
     await runCliTurnCompactionLifecycle({
-      cfg: {} as OpenClawConfig,
+      cfg: {} as QuietCoreConfig,
       sessionId,
       sessionKey,
       sessionEntry,
@@ -1605,7 +1605,7 @@ describe("runCliTurnCompactionLifecycle", () => {
     });
 
     await runCliTurnCompactionLifecycle({
-      cfg: {} as OpenClawConfig,
+      cfg: {} as QuietCoreConfig,
       sessionId,
       sessionKey,
       sessionEntry,
@@ -1686,7 +1686,7 @@ describe("runCliTurnCompactionLifecycle", () => {
 
       // Must resolve (no throw): the turn is not failed by a compaction no-op.
       const updatedEntry = await runCliTurnCompactionLifecycle({
-        cfg: {} as OpenClawConfig,
+        cfg: {} as QuietCoreConfig,
         sessionId,
         sessionKey,
         sessionEntry,
@@ -1752,7 +1752,7 @@ describe("runCliTurnCompactionLifecycle", () => {
 
     await expect(
       runCliTurnCompactionLifecycle({
-        cfg: {} as OpenClawConfig,
+        cfg: {} as QuietCoreConfig,
         sessionId,
         sessionKey,
         sessionEntry,

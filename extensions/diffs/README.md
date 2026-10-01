@@ -1,6 +1,6 @@
 # @quiet-core/diffs
 
-Read-only diff viewer plugin for **OpenClaw** agents.
+Read-only diff viewer plugin for **QuietCore** agents.
 
 ## Install
 
@@ -134,7 +134,7 @@ Explicit tool parameters still win over these defaults.
 
 - Plugin id: `diffs`
 - Package: `@quiet-core/diffs`
-- Minimum OpenClaw host: `2026.4.30`
+- Minimum QuietCore host: `2026.4.30`
 
 Security options:
 
@@ -187,10 +187,10 @@ Use the `diffs` tool in `file` mode for this before and after input. After it re
 Path: README.md
 
 Before:
-OpenClaw supports plugins.
+QuietCore supports plugins.
 
 After:
-OpenClaw supports plugins and hosted diff views.
+QuietCore supports plugins and hosted diff views.
 ```
 
 Do both:

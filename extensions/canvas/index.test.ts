@@ -1,5 +1,5 @@
 // Canvas tests cover index plugin behavior.
-import type { AnyAgentTool, OpenClawPluginApi } from "quiet-core-bot/plugin-sdk/plugin-entry";
+import type { AnyAgentTool, QuietCorePluginApi } from "quiet-core-bot/plugin-sdk/plugin-entry";
 import { createTestPluginApi } from "quiet-core-bot/plugin-sdk/plugin-test-api";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import canvasPlugin from "./index.js";
@@ -46,13 +46,13 @@ vi.mock("./src/tool.js", () => ({
 }));
 
 function registerCanvas() {
-  const routes: Array<Parameters<OpenClawPluginApi["registerHttpRoute"]>[0]> = [];
-  const services: Array<Parameters<OpenClawPluginApi["registerService"]>[0]> = [];
-  const resolvers: Array<Parameters<OpenClawPluginApi["registerHostedMediaResolver"]>[0]> = [];
-  const tools: Array<Parameters<OpenClawPluginApi["registerTool"]>[0]> = [];
+  const routes: Array<Parameters<QuietCorePluginApi["registerHttpRoute"]>[0]> = [];
+  const services: Array<Parameters<QuietCorePluginApi["registerService"]>[0]> = [];
+  const resolvers: Array<Parameters<QuietCorePluginApi["registerHostedMediaResolver"]>[0]> = [];
+  const tools: Array<Parameters<QuietCorePluginApi["registerTool"]>[0]> = [];
   const cliFeatures: Array<{
-    registrar: Parameters<OpenClawPluginApi["registerNodeCliFeature"]>[0];
-    opts: Parameters<OpenClawPluginApi["registerNodeCliFeature"]>[1];
+    registrar: Parameters<QuietCorePluginApi["registerNodeCliFeature"]>[0];
+    opts: Parameters<QuietCorePluginApi["registerNodeCliFeature"]>[1];
   }> = [];
   canvasPlugin.register?.(
     createTestPluginApi({

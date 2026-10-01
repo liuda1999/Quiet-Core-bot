@@ -3,8 +3,8 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
-  createOpenClawTestState,
-  type OpenClawTestState,
+  createQuietCoreTestState,
+  type QuietCoreTestState,
 } from "../test-utils/quiet-core-bot-test-state.js";
 
 const note = vi.hoisted(() => vi.fn());
@@ -33,11 +33,11 @@ function firstNoteCall(): [string, string] {
 }
 
 describe("noteSessionLockHealth", () => {
-  let state: OpenClawTestState;
+  let state: QuietCoreTestState;
 
   beforeEach(async () => {
     note.mockClear();
-    state = await createOpenClawTestState({
+    state = await createQuietCoreTestState({
       layout: "state-only",
       prefix: "quiet-core-bot-doctor-locks-",
     });

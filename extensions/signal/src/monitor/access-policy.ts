@@ -4,7 +4,7 @@ import {
   defineStableChannelIngressIdentity,
 } from "quiet-core-bot/plugin-sdk/channel-ingress-runtime";
 import { createChannelPairingChallengeIssuer } from "quiet-core-bot/plugin-sdk/channel-pairing";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { upsertChannelPairingRequest } from "quiet-core-bot/plugin-sdk/conversation-runtime";
 import {
   formatSignalSenderId,
@@ -116,7 +116,7 @@ export async function resolveSignalAccessState(params: {
   sender: SignalSender;
   groupId?: string;
   isGroup?: boolean;
-  cfg?: Pick<OpenClawConfig, "accessGroups" | "commands">;
+  cfg?: Pick<QuietCoreConfig, "accessGroups" | "commands">;
   hasControlCommand?: boolean;
   readStoreAllowFrom?: () => Promise<string[]>;
 }) {

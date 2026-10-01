@@ -113,7 +113,7 @@ function fileContainsText(file, needle) {
 
 function getInstallRecords() {
   const configPath = openClawConfigPath();
-  const config = readOpenClawConfig();
+  const config = readQuietCoreConfig();
   const allowLegacyCompat = process.env.QUIET_CORE_PACKAGE_ACCEPTANCE_LEGACY_COMPAT === "1";
   const index = readPluginInstallIndex({
     configPath,
@@ -129,18 +129,18 @@ function openClawConfigPath() {
   return path.join(process.env.HOME, ".quiet-core-bot", "quiet-core-bot.json");
 }
 
-function readOpenClawConfig() {
+function readQuietCoreConfig() {
   const configPath = openClawConfigPath();
-  return fs.existsSync(configPath) ? readRequiredOpenClawConfig() : {};
+  return fs.existsSync(configPath) ? readRequiredQuietCoreConfig() : {};
 }
 
-function readRequiredOpenClawConfig() {
+function readRequiredQuietCoreConfig() {
   const configPath = openClawConfigPath();
   try {
     return readJson(configPath);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    throw new Error(`failed to read OpenClaw config ${configPath}: ${message}`, { cause: error });
+    throw new Error(`failed to read QuietCore config ${configPath}: ${message}`, { cause: error });
   }
 }
 
@@ -155,7 +155,7 @@ function assertPluginRemoved(params) {
     throw new Error(`${params.pluginId} install record still present after uninstall`);
   }
 
-  const config = readOpenClawConfig();
+  const config = readQuietCoreConfig();
   if (config.plugins?.entries?.[params.pluginId]) {
     throw new Error(`${params.pluginId} config entry still present after uninstall`);
   }
@@ -746,7 +746,7 @@ function assertNpmPluginRemoved() {
   }
 }
 
-function assertInvalidOpenClawExtensionsRejected() {
+function assertInvalidQuietCoreExtensionsRejected() {
   const pluginId = "demo-plugin-invalid-metadata";
   for (const expected of ["quiet-core-bot.extensions[1]", "non-empty string"]) {
     assertTextFileIncludes(
@@ -1027,7 +1027,7 @@ const commands = {
   "plugin-npm": assertNpmPlugin,
   "plugin-npm-update": assertNpmPluginUpdateUnchanged,
   "plugin-npm-removed": assertNpmPluginRemoved,
-  "invalid-quiet-core-bot-extensions": assertInvalidOpenClawExtensionsRejected,
+  "invalid-quiet-core-bot-extensions": assertInvalidQuietCoreExtensionsRejected,
   "bundle-disabled": assertClaudeBundleDisabled,
   "bundle-inspect": assertClaudeBundleInspect,
   "slash-install": assertSlashInstall,

@@ -178,7 +178,7 @@ function detectLaunchdGatewayExecutionMarker(contents: string): Marker | null {
   return null;
 }
 
-function isOpenClawGatewayLaunchdService(label: string, contents: string): boolean {
+function isQuietCoreGatewayLaunchdService(label: string, contents: string): boolean {
   if (hasGatewayServiceMarker(contents)) {
     return true;
   }
@@ -188,7 +188,7 @@ function isOpenClawGatewayLaunchdService(label: string, contents: string): boole
   return label.startsWith("ai.quiet-core-bot.");
 }
 
-function isOpenClawGatewaySystemdService(name: string, contents: string): boolean {
+function isQuietCoreGatewaySystemdService(name: string, contents: string): boolean {
   if (hasGatewayServiceMarker(contents)) {
     return true;
   }
@@ -198,7 +198,7 @@ function isOpenClawGatewaySystemdService(name: string, contents: string): boolea
   return normalizeLowercaseStringOrEmpty(contents).includes("gateway");
 }
 
-function isOpenClawGatewayTaskName(name: string): boolean {
+function isQuietCoreGatewayTaskName(name: string): boolean {
   const normalized = normalizeLowercaseStringOrEmpty(name);
   if (!normalized) {
     return false;
@@ -213,7 +213,7 @@ function isOpenClawGatewayTaskName(name: string): boolean {
     return true;
   }
   // Historical task names must keep being recognized as managed gateway tasks,
-  // otherwise an installed pre-rebrand task (OpenClaw Gateway) or a
+  // otherwise an installed pre-rebrand task (QuietCore Gateway) or a
   // profile-suffixed rebrand task would be reported as a competing extra service.
   return /^(?:quiet-core-bot|quiet core(?: bot)?) gateway(?: \(.+\))?$/.test(stripped);
 }
@@ -316,7 +316,7 @@ async function scanLaunchdDir(params: {
     if (isIgnoredLaunchdLabel(label)) {
       continue;
     }
-    if (marker === "quiet-core-bot" && isOpenClawGatewayLaunchdService(label, contents)) {
+    if (marker === "quiet-core-bot" && isQuietCoreGatewayLaunchdService(label, contents)) {
       continue;
     }
     results.push({
@@ -335,13 +335,13 @@ async function scanLaunchdDir(params: {
 async function scanSystemdDir(params: {
   dir: string;
   scope: "user" | "system";
-  includeManagedOpenClaw?: boolean;
+  includeManagedQuietCore?: boolean;
 }): Promise<ExtraGatewayService[]> {
   const results: ExtraGatewayService[] = [];
   const candidates = await collectServiceFiles({
     dir: params.dir,
     extension: ".service",
-    isIgnoredName: params.includeManagedOpenClaw ? () => false : isIgnoredSystemdName,
+    isIgnoredName: params.includeManagedQuietCore ? () => false : isIgnoredSystemdName,
   });
 
   for (const { entry, name, fullPath, contents } of candidates) {
@@ -352,9 +352,9 @@ async function scanSystemdDir(params: {
       continue;
     }
     if (
-      !params.includeManagedOpenClaw &&
+      !params.includeManagedQuietCore &&
       marker === "quiet-core-bot" &&
-      isOpenClawGatewaySystemdService(name, contents)
+      isQuietCoreGatewaySystemdService(name, contents)
     ) {
       continue;
     }
@@ -383,7 +383,7 @@ export async function findSystemGatewayServices(): Promise<ExtraGatewayService[]
         ...(await scanSystemdDir({
           dir,
           scope: "system",
-          includeManagedOpenClaw: true,
+          includeManagedQuietCore: true,
         })),
       );
     }
@@ -531,7 +531,7 @@ export async function findExtraGatewayServices(
       if (!name) {
         continue;
       }
-      if (isOpenClawGatewayTaskName(name)) {
+      if (isQuietCoreGatewayTaskName(name)) {
         continue;
       }
       const lowerName = normalizeLowercaseStringOrEmpty(name);

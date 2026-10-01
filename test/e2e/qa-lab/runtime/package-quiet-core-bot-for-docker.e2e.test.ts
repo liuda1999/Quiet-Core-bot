@@ -8,7 +8,7 @@ import { MAX_TIMER_TIMEOUT_MS } from "@quiet-core/normalization-core/number-coer
 import { describe, expect, it, vi } from "vitest";
 import {
   buildPackageArtifacts,
-  packOpenClawPackageForDocker,
+  packQuietCorePackageForDocker,
   parseArgs,
   runCommandForTest,
 } from "../../../../scripts/package-quiet-core-bot-for-docker.mjs";
@@ -210,7 +210,7 @@ describe("package-quiet-core-bot-for-docker", () => {
 
   it("trims and restores the changelog around ignore-scripts package artifacts", async () => {
     const calls: string[] = [];
-    const tarball = await packOpenClawPackageForDocker("/repo", "/out", {
+    const tarball = await packQuietCorePackageForDocker("/repo", "/out", {
       prepareChangelog: async (cwd: string) => {
         calls.push(`prepare:${cwd}`);
       },
@@ -247,7 +247,7 @@ describe("package-quiet-core-bot-for-docker", () => {
       "quiet-core-bot-C:evil.tgz",
     ]) {
       await expect(
-        packOpenClawPackageForDocker("/repo", "/out", {
+        packQuietCorePackageForDocker("/repo", "/out", {
           prepareChangelog: async () => {},
           restoreChangelog: async () => {},
           runCaptureImpl: async () => `${filename}\n`,
@@ -262,7 +262,7 @@ describe("package-quiet-core-bot-for-docker", () => {
       fs.writeFileSync(path.join(outputDir, "quiet-core-bot-C:evil.tgz"), "");
       fs.writeFileSync(path.join(outputDir, String.raw`quiet-core-bot-nested\evil.tgz`), "");
       await expect(
-        packOpenClawPackageForDocker("/repo", outputDir, {
+        packQuietCorePackageForDocker("/repo", outputDir, {
           prepareChangelog: async () => {},
           restoreChangelog: async () => {},
           runCaptureImpl: async () => "npm notice\n",
@@ -270,7 +270,7 @@ describe("package-quiet-core-bot-for-docker", () => {
       ).rejects.toThrow("missing packed Quiet Core bot tarball");
 
       await expect(
-        packOpenClawPackageForDocker("/repo", outputDir, {
+        packQuietCorePackageForDocker("/repo", outputDir, {
           prepareChangelog: async () => {},
           restoreChangelog: async () => {},
           runCaptureImpl: async () => {
@@ -290,7 +290,7 @@ describe("package-quiet-core-bot-for-docker", () => {
       fs.writeFileSync(path.join(outputDir, "quiet-core-bot-9999.1.1.tgz"), "stale");
 
       await expect(
-        packOpenClawPackageForDocker("/repo", outputDir, {
+        packQuietCorePackageForDocker("/repo", outputDir, {
           prepareChangelog: async () => {},
           restoreChangelog: async () => {},
           runCaptureImpl: async () => {
@@ -313,7 +313,7 @@ describe("package-quiet-core-bot-for-docker", () => {
     const calls: string[] = [];
 
     await expect(
-      packOpenClawPackageForDocker("/repo", "/out", {
+      packQuietCorePackageForDocker("/repo", "/out", {
         prepareChangelog: async (cwd: string) => {
           calls.push(`prepare:${cwd}`);
         },

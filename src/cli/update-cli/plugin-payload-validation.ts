@@ -4,7 +4,7 @@ import path from "node:path";
 import type { PluginInstallRecord } from "../../config/types.plugins.js";
 import { resolvePackageExtensionEntries, type PackageManifest } from "../../plugins/manifest.js";
 import { validatePackageExtensionEntriesForInstall } from "../../plugins/package-entry-resolution.js";
-import { auditOpenClawPeerDependencyLink } from "../../plugins/plugin-peer-link.js";
+import { auditQuietCorePeerDependencyLink } from "../../plugins/plugin-peer-link.js";
 import { resolveUserPath } from "../../utils.js";
 
 export type PluginPayloadSmokeFailureReason =
@@ -103,8 +103,8 @@ export async function runPluginPayloadSmokeCheck(params: {
       continue;
     }
 
-    if (manifestDeclaresOpenClawPeer(manifest)) {
-      const peerIssue = await auditOpenClawPeerDependencyLink({
+    if (manifestDeclaresQuietCorePeer(manifest)) {
+      const peerIssue = await auditQuietCorePeerDependencyLink({
         packageDir: installPath,
         packageName: manifest.name ?? pluginId,
       });
@@ -170,7 +170,7 @@ export async function runPluginPayloadSmokeCheck(params: {
   return { checked, failures };
 }
 
-function manifestDeclaresOpenClawPeer(manifest: PackageManifest): boolean {
+function manifestDeclaresQuietCorePeer(manifest: PackageManifest): boolean {
   const peerDependencies = (manifest as { peerDependencies?: unknown }).peerDependencies;
   return (
     typeof peerDependencies === "object" &&

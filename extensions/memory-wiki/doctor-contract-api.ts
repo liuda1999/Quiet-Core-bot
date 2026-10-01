@@ -1,7 +1,7 @@
 // Memory Wiki doctor contract migrates shipped source-sync state.
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/plugin-entry";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/plugin-entry";
 import type { PluginDoctorStateMigration } from "quiet-core-bot/plugin-sdk/runtime-doctor";
 import { resolveMemoryWikiConfig, type MemoryWikiPluginConfig } from "./src/config.js";
 export { legacyConfigRules, normalizeCompatibilityConfig } from "./src/config-compat.js";
@@ -32,7 +32,7 @@ function resolveHomeDir(env: NodeJS.ProcessEnv): string | undefined {
   return env.HOME?.trim() || env.USERPROFILE?.trim() || undefined;
 }
 
-function readConfiguredPluginConfig(config: OpenClawConfig): MemoryWikiPluginConfig | undefined {
+function readConfiguredPluginConfig(config: QuietCoreConfig): MemoryWikiPluginConfig | undefined {
   const entries = config.plugins?.entries;
   const pluginEntry = isRecord(entries) ? entries["memory-wiki"] : undefined;
   if (!isRecord(pluginEntry) || !isRecord(pluginEntry.config)) {
@@ -42,7 +42,7 @@ function readConfiguredPluginConfig(config: OpenClawConfig): MemoryWikiPluginCon
 }
 
 function resolveConfiguredVaultRoots(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   env: NodeJS.ProcessEnv;
 }): string[] {
   const homeDir = resolveHomeDir(params.env);

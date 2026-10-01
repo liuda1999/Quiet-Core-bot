@@ -3,12 +3,12 @@
  */
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { resolveOpenClawAgentDir } from "./agent-dir-compat.js";
+import { resolveQuietCoreAgentDir } from "./agent-dir-compat.js";
 
-describe("resolveOpenClawAgentDir", () => {
+describe("resolveQuietCoreAgentDir", () => {
   it("keeps the shipped Pi env alias for deprecated plugin SDK callers", () => {
     expect(
-      resolveOpenClawAgentDir({
+      resolveQuietCoreAgentDir({
         PI_CODING_AGENT_DIR: "/tmp/quiet-core-bot-legacy-agent",
       }),
     ).toBe(path.resolve("/tmp/quiet-core-bot-legacy-agent"));
@@ -16,7 +16,7 @@ describe("resolveOpenClawAgentDir", () => {
 
   it("prefers the Quiet Core bot env override over the deprecated Pi alias", () => {
     expect(
-      resolveOpenClawAgentDir({
+      resolveQuietCoreAgentDir({
         QUIET_CORE_AGENT_DIR: "/tmp/quiet-core-bot-agent",
         PI_CODING_AGENT_DIR: "/tmp/quiet-core-bot-legacy-agent",
       }),

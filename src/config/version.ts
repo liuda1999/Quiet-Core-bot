@@ -4,7 +4,7 @@ import {
   normalizeLegacyDotBetaVersion,
 } from "../infra/semver-compare.js";
 
-type OpenClawVersion = {
+type QuietCoreVersion = {
   major: number;
   minor: number;
   patch: number;
@@ -15,7 +15,7 @@ type OpenClawVersion = {
 const VERSION_RE = /^v?(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?$/;
 
 /** Parses stable, prerelease, and legacy dot-beta Quiet Core bot versions. */
-export function parseOpenClawVersion(raw: string | null | undefined): OpenClawVersion | null {
+export function parseQuietCoreVersion(raw: string | null | undefined): QuietCoreVersion | null {
   if (!raw) {
     return null;
   }
@@ -35,20 +35,20 @@ export function parseOpenClawVersion(raw: string | null | undefined): OpenClawVe
   };
 }
 
-export function normalizeOpenClawVersionBase(raw: string | null | undefined): string | null {
-  const parsed = parseOpenClawVersion(raw);
+export function normalizeQuietCoreVersionBase(raw: string | null | undefined): string | null {
+  const parsed = parseQuietCoreVersion(raw);
   if (!parsed) {
     return null;
   }
   return `${parsed.major}.${parsed.minor}.${parsed.patch}`;
 }
 
-export function isSameOpenClawStableFamily(
+export function isSameQuietCoreStableFamily(
   a: string | null | undefined,
   b: string | null | undefined,
 ): boolean {
-  const parsedA = parseOpenClawVersion(a);
-  const parsedB = parseOpenClawVersion(b);
+  const parsedA = parseQuietCoreVersion(a);
+  const parsedB = parseQuietCoreVersion(b);
   if (!parsedA || !parsedB) {
     return false;
   }
@@ -62,12 +62,12 @@ export function isSameOpenClawStableFamily(
   );
 }
 
-export function compareOpenClawVersions(
+export function compareQuietCoreVersions(
   a: string | null | undefined,
   b: string | null | undefined,
 ): number | null {
-  const parsedA = parseOpenClawVersion(a);
-  const parsedB = parseOpenClawVersion(b);
+  const parsedA = parseQuietCoreVersion(a);
+  const parsedB = parseQuietCoreVersion(b);
   if (!parsedA || !parsedB) {
     return null;
   }
@@ -106,8 +106,8 @@ export function shouldWarnOnTouchedVersion(
   current: string | null | undefined,
   touched: string | null | undefined,
 ): boolean {
-  const parsedCurrent = parseOpenClawVersion(current);
-  const parsedTouched = parseOpenClawVersion(touched);
+  const parsedCurrent = parseQuietCoreVersion(current);
+  const parsedTouched = parseQuietCoreVersion(touched);
   if (
     parsedCurrent &&
     parsedTouched &&
@@ -119,14 +119,14 @@ export function shouldWarnOnTouchedVersion(
       return false;
     }
   }
-  if (isSameOpenClawStableFamily(current, touched)) {
+  if (isSameQuietCoreStableFamily(current, touched)) {
     return false;
   }
-  const cmp = compareOpenClawVersions(current, touched);
+  const cmp = compareQuietCoreVersions(current, touched);
   return cmp !== null && cmp < 0;
 }
 
-function releaseRank(version: OpenClawVersion): number {
+function releaseRank(version: QuietCoreVersion): number {
   if (version.prerelease?.length) {
     return 0;
   }

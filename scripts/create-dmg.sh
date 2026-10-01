@@ -187,7 +187,7 @@ if [[ "${SKIP_DMG_STYLE:-0}" != "1" ]]; then
   fi
 
   # Volume icon: reuse the app icon if available.
-  ICON_SRC="$ROOT_DIR/apps/macos/Sources/OpenClaw/Resources/OpenClaw.icns"
+  ICON_SRC="$ROOT_DIR/apps/macos/Sources/QuietCore/Resources/QuietCore.icns"
   if [[ -f "$ICON_SRC" ]]; then
     cp "$ICON_SRC" "$MOUNT_POINT/.VolumeIcon.icns"
     if command -v SetFile >/dev/null 2>&1; then

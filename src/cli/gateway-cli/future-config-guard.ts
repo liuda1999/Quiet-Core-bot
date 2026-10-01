@@ -8,7 +8,7 @@ import {
   resolveFutureConfigActionBlock,
 } from "../../config/future-version-guard.js";
 // Gateway-specific future-config actions shared by pre-bootstrap and runtime startup.
-import type { ConfigFileSnapshot, OpenClawConfig } from "../../config/types.js";
+import type { ConfigFileSnapshot, QuietCoreConfig } from "../../config/types.js";
 import type { RuntimeEnv } from "../../runtime.js";
 import type { GatewayRunOpts } from "./run-options.js";
 
@@ -17,7 +17,7 @@ export type GatewayRunPreBootstrapOptions = Pick<GatewayRunOpts, "force" | "rese
 type GatewayRunFutureConfigGuardParams = {
   opts: GatewayRunPreBootstrapOptions;
   snapshot?: ConfigFileSnapshot | null;
-  config?: Pick<OpenClawConfig, "env" | "meta"> | null;
+  config?: Pick<QuietCoreConfig, "env" | "meta"> | null;
 };
 
 function resolveGatewayRunFutureConfigBlock(params: GatewayRunFutureConfigGuardParams) {

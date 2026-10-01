@@ -1,6 +1,6 @@
 // Covers plugin config policy validation and ownership decisions.
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import {
   hasExplicitPluginConfig,
   isBundledChannelEnabledByChannelConfig,
@@ -43,7 +43,7 @@ describe("isBundledChannelEnabledByChannelConfig", () => {
         signal: { enabled: true },
         irc: { enabled: false },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expect(isBundledChannelEnabledByChannelConfig(cfg, "signal")).toBe(true);
     expect(isBundledChannelEnabledByChannelConfig(cfg, "irc")).toBe(false);

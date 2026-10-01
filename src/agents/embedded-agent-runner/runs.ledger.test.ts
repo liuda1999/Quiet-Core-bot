@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { listAgentRuns } from "../../state/agent-runs-store.js";
-import { closeOpenClawStateDatabaseForTest } from "../../state/quiet-core-bot-state-db.js";
+import { closeQuietCoreStateDatabaseForTest } from "../../state/quiet-core-bot-state-db.js";
 import {
   testing,
   clearActiveEmbeddedRun,
@@ -40,7 +40,7 @@ beforeEach(() => {
 
 afterEach(() => {
   testing.resetActiveEmbeddedRuns();
-  closeOpenClawStateDatabaseForTest();
+  closeQuietCoreStateDatabaseForTest();
   if (originalStateDir === undefined) {
     delete process.env["QUIET_CORE_STATE_DIR"];
   } else {

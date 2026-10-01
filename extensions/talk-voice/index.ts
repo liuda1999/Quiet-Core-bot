@@ -1,5 +1,5 @@
-// Talk Voice plugin entrypoint registers its OpenClaw integration.
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+// Talk Voice plugin entrypoint registers its QuietCore integration.
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
 import { parseStrictPositiveInteger } from "quiet-core-bot/plugin-sdk/number-runtime";
 import type { SpeechVoiceOption } from "quiet-core-bot/plugin-sdk/speech";
@@ -8,7 +8,7 @@ import {
   normalizeOptionalLowercaseString,
 } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { resolveActiveTalkProviderConfig } from "quiet-core-bot/plugin-sdk/talk-config-runtime";
-import { definePluginEntry, type OpenClawPluginApi } from "./api.js";
+import { definePluginEntry, type QuietCorePluginApi } from "./api.js";
 
 function mask(s: string, keep = 6): string {
   const trimmed = s.trim();
@@ -120,7 +120,7 @@ export default definePluginEntry({
   id: "talk-voice",
   name: "Talk Voice",
   description: "Command helpers for managing Talk voice configuration",
-  register(api: OpenClawPluginApi) {
+  register(api: QuietCorePluginApi) {
     api.registerCommand({
       name: "voice",
       nativeNames: {
@@ -134,7 +134,7 @@ export default definePluginEntry({
         const tokens = args.split(/\s+/).filter(Boolean);
         const action = normalizeLowercaseStringOrEmpty(tokens[0] ?? "status");
 
-        const cfg = api.runtime.config.current() as OpenClawConfig;
+        const cfg = api.runtime.config.current() as QuietCoreConfig;
         const active = resolveActiveTalkProviderConfig(cfg.talk);
         if (!active) {
           return {

@@ -11,7 +11,7 @@ import { parseStrictNonNegativeInteger } from "../infra/parse-finite-number.js";
  * Tests get worker-scoped temp state roots unless they explicitly provide
  * `QUIET_CORE_STATE_DIR`, which prevents parallel Vitest workers from sharing WAL files.
  */
-function resolveOpenClawStateRootDir(env: NodeJS.ProcessEnv): string {
+function resolveQuietCoreStateRootDir(env: NodeJS.ProcessEnv): string {
   if (env.QUIET_CORE_STATE_DIR?.trim()) {
     return resolveStateDir(env);
   }
@@ -31,11 +31,11 @@ function resolveOpenClawStateRootDir(env: NodeJS.ProcessEnv): string {
 }
 
 /** Resolve the directory that contains the shared state SQLite file. */
-export function resolveOpenClawStateSqliteDir(env: NodeJS.ProcessEnv = process.env): string {
-  return path.join(resolveOpenClawStateRootDir(env), "state");
+export function resolveQuietCoreStateSqliteDir(env: NodeJS.ProcessEnv = process.env): string {
+  return path.join(resolveQuietCoreStateRootDir(env), "state");
 }
 
 /** Resolve the shared state SQLite file path. */
-export function resolveOpenClawStateSqlitePath(env: NodeJS.ProcessEnv = process.env): string {
-  return path.join(resolveOpenClawStateSqliteDir(env), "quiet-core-bot.sqlite");
+export function resolveQuietCoreStateSqlitePath(env: NodeJS.ProcessEnv = process.env): string {
+  return path.join(resolveQuietCoreStateSqliteDir(env), "quiet-core-bot.sqlite");
 }

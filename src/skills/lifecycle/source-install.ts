@@ -4,7 +4,7 @@ import path from "node:path";
 import { redactSensitiveUrlLikeString } from "@quiet-core/net-policy/redact-sensitive-url";
 import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { sanitizeForLog } from "../../../packages/terminal-core/src/ansi.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { sanitizeHostExecEnv } from "../../infra/host-env-security.js";
 import { withTempDir } from "../../infra/install-source-utils.js";
 import { writeJson } from "../../infra/json-files.js";
@@ -202,7 +202,7 @@ async function installLocalSkillDir(params: {
   force?: boolean;
   timeoutMs?: number;
   logger?: Logger;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   git?: SkillSourceOrigin["git"];
 }): Promise<SkillSourceInstallResult> {
   const slug = await resolveSkillInstallSlug({
@@ -269,7 +269,7 @@ async function installGitSkill(params: {
   force?: boolean;
   timeoutMs?: number;
   logger?: Logger;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
 }): Promise<SkillSourceInstallResult> {
   const parsed = parseGitPluginSpec(params.spec);
   if (!parsed) {
@@ -362,7 +362,7 @@ async function installPathSkill(params: {
   force?: boolean;
   timeoutMs?: number;
   logger?: Logger;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
 }): Promise<SkillSourceInstallResult> {
   const sourceDir = resolveUserPath(params.spec);
   let stat;
@@ -406,7 +406,7 @@ export async function installSkillFromSource(params: {
   force?: boolean;
   timeoutMs?: number;
   logger?: Logger;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
 }): Promise<SkillSourceInstallResult> {
   const spec = params.spec.trim();
   if (spec.toLowerCase().startsWith("git:")) {

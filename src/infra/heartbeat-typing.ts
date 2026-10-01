@@ -1,7 +1,7 @@
 // Maintains heartbeat typing indicators while replies generate.
 import type { ChannelHeartbeatDeps, ChannelPlugin } from "../channels/plugins/types.public.js";
 import { createTypingCallbacks, type TypingCallbacks } from "../channels/typing.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 
 const DEFAULT_HEARTBEAT_TYPING_INTERVAL_SECONDS = 6;
 
@@ -20,7 +20,7 @@ type HeartbeatTypingTarget = {
 
 /** Create typing start/stop/keepalive callbacks for a heartbeat delivery target. */
 export function createHeartbeatTypingCallbacks(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   target: HeartbeatTypingTarget;
   plugin?: Pick<ChannelPlugin, "heartbeat">;
   deps?: ChannelHeartbeatDeps;

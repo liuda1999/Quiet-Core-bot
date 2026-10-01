@@ -7,12 +7,12 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { afterEach, beforeAll, describe, expect, it } from "vitest";
 import {
-  installOpenClawPluginSdkNativeResolver,
-  resetOpenClawPluginSdkNativeResolverForTest,
+  installQuietCorePluginSdkNativeResolver,
+  resetQuietCorePluginSdkNativeResolverForTest,
 } from "./plugin-sdk-native-resolver.js";
 
 afterEach(() => {
-  resetOpenClawPluginSdkNativeResolverForTest();
+  resetQuietCorePluginSdkNativeResolverForTest();
 });
 
 type NativeEsmLazyImportProbe = {
@@ -27,7 +27,7 @@ function writeJsonFile(targetPath: string, value: unknown): void {
   fs.writeFileSync(targetPath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
 
-function writeFakeOpenClawPackage(root: string): { distRoot: string; loaderModulePath: string } {
+function writeFakeQuietCorePackage(root: string): { distRoot: string; loaderModulePath: string } {
   writeJsonFile(path.join(root, "package.json"), {
     name: "quiet-core-bot",
     type: "module",
@@ -110,12 +110,12 @@ function addFakePluginSdkDistExport(root: string, subpath: string): string {
   return distPath;
 }
 
-describe("installOpenClawPluginSdkNativeResolver", () => {
+describe("installQuietCorePluginSdkNativeResolver", () => {
   it("resolves installed plugin SDK imports to the dev source root", () => {
     const stableRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-sdk-native-stable-"));
     const devRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-sdk-native-dev-source-"));
-    const { loaderModulePath } = writeFakeOpenClawPackage(stableRoot);
-    writeFakeOpenClawPackage(devRoot);
+    const { loaderModulePath } = writeFakeQuietCorePackage(stableRoot);
+    writeFakeQuietCorePackage(devRoot);
     fs.mkdirSync(path.join(devRoot, "src"), { recursive: true });
     fs.mkdirSync(path.join(devRoot, "extensions"), { recursive: true });
     const externalPluginEntry = writeExternalPluginEntry(path.join(stableRoot, "external-plugin"));
@@ -123,7 +123,7 @@ describe("installOpenClawPluginSdkNativeResolver", () => {
     process.env.QUIET_CORE_DEV_SOURCE_ROOT = devRoot;
 
     try {
-      const installedAliases = installOpenClawPluginSdkNativeResolver({
+      const installedAliases = installQuietCorePluginSdkNativeResolver({
         modulePath: loaderModulePath,
         pluginModulePath: externalPluginEntry,
       });
@@ -145,13 +145,13 @@ describe("installOpenClawPluginSdkNativeResolver", () => {
   it("resolves installed plugin SDK imports to an explicit dev source root", () => {
     const stableRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-sdk-native-stable-"));
     const devRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-sdk-native-dev-source-"));
-    const { loaderModulePath } = writeFakeOpenClawPackage(stableRoot);
-    writeFakeOpenClawPackage(devRoot);
+    const { loaderModulePath } = writeFakeQuietCorePackage(stableRoot);
+    writeFakeQuietCorePackage(devRoot);
     fs.mkdirSync(path.join(devRoot, "src"), { recursive: true });
     fs.mkdirSync(path.join(devRoot, "extensions"), { recursive: true });
     const externalPluginEntry = writeExternalPluginEntry(path.join(stableRoot, "external-plugin"));
 
-    const installedAliases = installOpenClawPluginSdkNativeResolver({
+    const installedAliases = installQuietCorePluginSdkNativeResolver({
       modulePath: loaderModulePath,
       pluginModulePath: externalPluginEntry,
       devSourceRoot: devRoot,
@@ -167,14 +167,14 @@ describe("installOpenClawPluginSdkNativeResolver", () => {
   it("updates native SDK aliases when the same plugin parent switches dev source roots", () => {
     const stableRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-sdk-native-stable-"));
     const devRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-sdk-native-dev-source-"));
-    const { loaderModulePath } = writeFakeOpenClawPackage(stableRoot);
-    writeFakeOpenClawPackage(devRoot);
+    const { loaderModulePath } = writeFakeQuietCorePackage(stableRoot);
+    writeFakeQuietCorePackage(devRoot);
     fs.mkdirSync(path.join(devRoot, "src"), { recursive: true });
     fs.mkdirSync(path.join(devRoot, "extensions"), { recursive: true });
     const externalPluginEntry = writeExternalPluginEntry(path.join(stableRoot, "external-plugin"));
     const requireFromPlugin = createRequire(externalPluginEntry);
 
-    installOpenClawPluginSdkNativeResolver({
+    installQuietCorePluginSdkNativeResolver({
       modulePath: loaderModulePath,
       pluginModulePath: externalPluginEntry,
     });
@@ -182,7 +182,7 @@ describe("installOpenClawPluginSdkNativeResolver", () => {
       fs.realpathSync(path.join(stableRoot, "dist", "plugin-sdk", "agent-runtime.js")),
     );
 
-    installOpenClawPluginSdkNativeResolver({
+    installQuietCorePluginSdkNativeResolver({
       modulePath: loaderModulePath,
       pluginModulePath: externalPluginEntry,
       devSourceRoot: devRoot,
@@ -196,15 +196,15 @@ describe("installOpenClawPluginSdkNativeResolver", () => {
   it("removes stale native SDK aliases when a later dev root omits a subpath", () => {
     const stableRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-sdk-native-stable-"));
     const devRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-sdk-native-dev-source-"));
-    const { loaderModulePath } = writeFakeOpenClawPackage(stableRoot);
-    writeFakeOpenClawPackage(devRoot);
+    const { loaderModulePath } = writeFakeQuietCorePackage(stableRoot);
+    writeFakeQuietCorePackage(devRoot);
     const stableExtraPath = addFakePluginSdkDistExport(stableRoot, "stable-extra");
     fs.mkdirSync(path.join(devRoot, "src"), { recursive: true });
     fs.mkdirSync(path.join(devRoot, "extensions"), { recursive: true });
     const externalPluginEntry = writeExternalPluginEntry(path.join(stableRoot, "external-plugin"));
     const requireFromPlugin = createRequire(externalPluginEntry);
 
-    installOpenClawPluginSdkNativeResolver({
+    installQuietCorePluginSdkNativeResolver({
       modulePath: loaderModulePath,
       pluginModulePath: externalPluginEntry,
     });
@@ -212,7 +212,7 @@ describe("installOpenClawPluginSdkNativeResolver", () => {
       fs.realpathSync(stableExtraPath),
     );
 
-    installOpenClawPluginSdkNativeResolver({
+    installQuietCorePluginSdkNativeResolver({
       modulePath: loaderModulePath,
       pluginModulePath: externalPluginEntry,
       devSourceRoot: devRoot,
@@ -223,13 +223,13 @@ describe("installOpenClawPluginSdkNativeResolver", () => {
 
   it("keeps native aliases on JS dist artifacts when source files exist", () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-sdk-native-source-resolver-"));
-    const { loaderModulePath } = writeFakeOpenClawPackage(root);
+    const { loaderModulePath } = writeFakeQuietCorePackage(root);
     const sourceChannelOutboundPath = path.join(root, "src", "plugin-sdk", "channel-outbound.ts");
     fs.mkdirSync(path.dirname(sourceChannelOutboundPath), { recursive: true });
     fs.writeFileSync(sourceChannelOutboundPath, "export const sourceOnly = true;\n", "utf8");
     const externalPluginEntry = writeExternalPluginEntry(path.join(root, "external-plugin"));
 
-    const installedAliases = installOpenClawPluginSdkNativeResolver({
+    const installedAliases = installQuietCorePluginSdkNativeResolver({
       modulePath: loaderModulePath,
       pluginModulePath: externalPluginEntry,
       pluginSdkResolution: "src",
@@ -244,7 +244,7 @@ describe("installOpenClawPluginSdkNativeResolver", () => {
 
   it("lets built external plugins resolve Quiet Core bot SDK subpaths with createRequire", () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-sdk-native-resolver-"));
-    const { distRoot, loaderModulePath } = writeFakeOpenClawPackage(root);
+    const { distRoot, loaderModulePath } = writeFakeQuietCorePackage(root);
     const externalPluginEntry = writeExternalPluginEntry(path.join(root, "external-plugin"));
 
     const distMode = fs.statSync(distRoot).mode;
@@ -253,7 +253,7 @@ describe("installOpenClawPluginSdkNativeResolver", () => {
     }
 
     try {
-      const installedAliases = installOpenClawPluginSdkNativeResolver({
+      const installedAliases = installQuietCorePluginSdkNativeResolver({
         modulePath: loaderModulePath,
         pluginModulePath: externalPluginEntry,
         pluginSdkResolution: "dist",
@@ -290,7 +290,7 @@ describe("installOpenClawPluginSdkNativeResolver", () => {
         'import fs from "node:fs";',
         'import path from "node:path";',
         'import { pathToFileURL } from "node:url";',
-        `import { installOpenClawPluginSdkNativeResolver, resetOpenClawPluginSdkNativeResolverForTest } from ${JSON.stringify(resolverModuleUrl)};`,
+        `import { installQuietCorePluginSdkNativeResolver, resetQuietCorePluginSdkNativeResolverForTest } from ${JSON.stringify(resolverModuleUrl)};`,
         `const root = ${JSON.stringify(root)};`,
         "const writeJson = (targetPath, value) => {",
         "  fs.mkdirSync(path.dirname(targetPath), { recursive: true });",
@@ -327,14 +327,14 @@ describe("installOpenClawPluginSdkNativeResolver", () => {
         '  "import { defineChannelMessageAdapter } from \\"quiet-core-bot/plugin-sdk/channel-outbound\\"; export const lazy = defineChannelMessageAdapter();\\n",',
         '  "utf8",',
         ");",
-        "installOpenClawPluginSdkNativeResolver({",
+        "installQuietCorePluginSdkNativeResolver({",
         "  modulePath: loaderModulePath,",
         "  pluginModulePath: entryPath,",
         '  pluginSdkResolution: "dist",',
         "});",
         "const module = await import(pathToFileURL(entryPath).href);",
         "const lazy = await module.loadLazy();",
-        "resetOpenClawPluginSdkNativeResolverForTest();",
+        "resetQuietCorePluginSdkNativeResolverForTest();",
         "console.log(`${module.eager}:${lazy.lazy}`);",
         "",
       ].join("\n"),
@@ -361,14 +361,14 @@ describe("installOpenClawPluginSdkNativeResolver", () => {
 
   it("does not resolve SDK aliases for parents outside registered plugin roots", () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-sdk-native-guard-"));
-    const { loaderModulePath } = writeFakeOpenClawPackage(root);
+    const { loaderModulePath } = writeFakeQuietCorePackage(root);
     const externalPluginEntry = writeExternalPluginEntry(path.join(root, "external-plugin"));
     const unrelatedRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-sdk-native-outside-"));
     const unrelatedEntry = path.join(unrelatedRoot, "runtime-api.js");
     fs.mkdirSync(path.dirname(unrelatedEntry), { recursive: true });
     fs.writeFileSync(unrelatedEntry, "export default {};\n", "utf8");
 
-    installOpenClawPluginSdkNativeResolver({
+    installQuietCorePluginSdkNativeResolver({
       modulePath: loaderModulePath,
       pluginModulePath: externalPluginEntry,
       pluginSdkResolution: "dist",
@@ -382,7 +382,7 @@ describe("installOpenClawPluginSdkNativeResolver", () => {
 
   it("resolves internal core packages only for Quiet Core bot-owned source parents", () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-sdk-native-core-internal-"));
-    const { loaderModulePath } = writeFakeOpenClawPackage(root);
+    const { loaderModulePath } = writeFakeQuietCorePackage(root);
     const normalizationSource = writeNormalizationCoreSource(root);
     const mediaCoreSource = writeInternalCorePackageSource(root, "media-core", "mime.ts");
     const acpCoreSource = writeInternalCorePackageSource(
@@ -396,7 +396,7 @@ describe("installOpenClawPluginSdkNativeResolver", () => {
     fs.mkdirSync(path.dirname(coreSourceParent), { recursive: true });
     fs.writeFileSync(coreSourceParent, "export default {};\n", "utf8");
 
-    const installedAliases = installOpenClawPluginSdkNativeResolver({
+    const installedAliases = installQuietCorePluginSdkNativeResolver({
       modulePath: loaderModulePath,
       pluginModulePath: externalPluginEntry,
       pluginSdkResolution: "dist",
@@ -428,13 +428,13 @@ describe("installOpenClawPluginSdkNativeResolver", () => {
 
   it("does not register source-only SDK subpaths for native resolution", () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-sdk-native-source-only-"));
-    const { loaderModulePath } = writeFakeOpenClawPackage(root);
+    const { loaderModulePath } = writeFakeQuietCorePackage(root);
     const sourceOnlyPath = path.join(root, "src", "plugin-sdk", "source-only.ts");
     fs.mkdirSync(path.dirname(sourceOnlyPath), { recursive: true });
     fs.writeFileSync(sourceOnlyPath, "export const sourceOnly = true;\n", "utf8");
     const externalPluginEntry = writeExternalPluginEntry(path.join(root, "external-plugin"));
 
-    const installedAliases = installOpenClawPluginSdkNativeResolver({
+    const installedAliases = installQuietCorePluginSdkNativeResolver({
       modulePath: loaderModulePath,
       pluginModulePath: externalPluginEntry,
       pluginSdkResolution: "src",
@@ -448,7 +448,7 @@ describe("installOpenClawPluginSdkNativeResolver", () => {
 
   it("scopes private SSRF SDK aliases to bundled local IPC native parents", () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-sdk-native-ssrf-"));
-    const { loaderModulePath } = writeFakeOpenClawPackage(root);
+    const { loaderModulePath } = writeFakeQuietCorePackage(root);
     const internalPath = path.join(root, "dist", "plugin-sdk", "ssrf-runtime-internal.js");
     fs.writeFileSync(internalPath, "export const ssrfInternal = true;\n", "utf8");
     const ollamaEntry = path.join(root, "dist", "extensions", "ollama", "index.js");
@@ -473,27 +473,27 @@ describe("installOpenClawPluginSdkNativeResolver", () => {
     fs.writeFileSync(runtimeBrowserEntry, "export default {};\n", "utf8");
     fs.writeFileSync(otherEntry, "export default {};\n", "utf8");
 
-    const installedAliases = installOpenClawPluginSdkNativeResolver({
+    const installedAliases = installQuietCorePluginSdkNativeResolver({
       modulePath: loaderModulePath,
       pluginModulePath: ollamaEntry,
       pluginSdkResolution: "dist",
     });
-    installOpenClawPluginSdkNativeResolver({
+    installQuietCorePluginSdkNativeResolver({
       modulePath: loaderModulePath,
       pluginModulePath: runtimeOllamaEntry,
       pluginSdkResolution: "dist",
     });
-    installOpenClawPluginSdkNativeResolver({
+    installQuietCorePluginSdkNativeResolver({
       modulePath: loaderModulePath,
       pluginModulePath: browserEntry,
       pluginSdkResolution: "dist",
     });
-    installOpenClawPluginSdkNativeResolver({
+    installQuietCorePluginSdkNativeResolver({
       modulePath: loaderModulePath,
       pluginModulePath: runtimeBrowserEntry,
       pluginSdkResolution: "dist",
     });
-    installOpenClawPluginSdkNativeResolver({
+    installQuietCorePluginSdkNativeResolver({
       modulePath: loaderModulePath,
       pluginModulePath: otherEntry,
       pluginSdkResolution: "dist",

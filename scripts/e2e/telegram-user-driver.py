@@ -244,7 +244,7 @@ class UserDriver:
             "api_id": int(api_id),
             "api_hash": api_hash,
             "system_language_code": "en",
-            "device_model": "OpenClaw Telegram User Driver",
+            "device_model": "QuietCore Telegram User Driver",
             "system_version": sys.platform,
             "application_version": "1",
             "enable_storage_optimizer": True,

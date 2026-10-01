@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { DEFAULT_CONTEXT_TOKENS } from "../agents/defaults.js";
 import type { PluginManifestRegistry } from "../plugins/manifest-registry.js";
 import { applyModelDefaults } from "./defaults.js";
-import type { OpenClawConfig } from "./types.js";
+import type { QuietCoreConfig } from "./types.js";
 import { validateConfigObjectWithPlugins } from "./validation.js";
 
 describe("applyModelDefaults", () => {
@@ -41,7 +41,7 @@ describe("applyModelDefaults", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
   }
 
   function buildMistralProviderConfig(overrides?: {
@@ -70,7 +70,7 @@ describe("applyModelDefaults", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
   }
 
   function buildCustomProviderManifestRegistry() {
@@ -113,7 +113,7 @@ describe("applyModelDefaults", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
     const next = applyModelDefaults(cfg);
 
     expect(next.agents?.defaults?.models?.["anthropic/claude-opus-4-8"]?.alias).toBe("opus");
@@ -129,7 +129,7 @@ describe("applyModelDefaults", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     const next = applyModelDefaults(cfg);
 
@@ -147,7 +147,7 @@ describe("applyModelDefaults", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     const next = applyModelDefaults(cfg);
 
@@ -169,7 +169,7 @@ describe("applyModelDefaults", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     const next = applyModelDefaults(cfg);
 
@@ -188,7 +188,7 @@ describe("applyModelDefaults", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     const next = applyModelDefaults(cfg);
 
@@ -211,7 +211,7 @@ describe("applyModelDefaults", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     const next = applyModelDefaults(cfg);
 
@@ -240,7 +240,7 @@ describe("applyModelDefaults", () => {
           },
         ],
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     const next = applyModelDefaults(cfg);
 
@@ -275,7 +275,7 @@ describe("applyModelDefaults", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     const next = applyModelDefaults(cfg);
 
@@ -304,7 +304,7 @@ describe("applyModelDefaults", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     const next = applyModelDefaults(cfg);
 
@@ -422,7 +422,7 @@ describe("applyModelDefaults", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     const next = applyModelDefaults(cfg);
     const provider = next.models?.providers?.anthropic;

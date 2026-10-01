@@ -9,11 +9,11 @@ scenario:
     secondary:
       - runtime.hosted-provider-turns
       - runtime.provider-specific-model-options
-  objective: Verify the OpenWebUI E2E probe exercises OpenClaw through OpenWebUI's OpenAI-compatible model and chat APIs.
+  objective: Verify the OpenWebUI E2E probe exercises QuietCore through OpenWebUI's OpenAI-compatible model and chat APIs.
   successCriteria:
     - Probe environment limits are parsed strictly and control-plane requests time out quickly.
     - Sign-in and model-list error bodies are bounded before diagnostics are emitted.
-    - Models mode authenticates and finds the OpenClaw model exposed by OpenWebUI.
+    - Models mode authenticates and finds the QuietCore model exposed by OpenWebUI.
     - Chat mode posts to `/api/chat/completions`, validates the expected nonce, and fails when the reply omits it.
   docsRefs:
     - docs/help/testing.md

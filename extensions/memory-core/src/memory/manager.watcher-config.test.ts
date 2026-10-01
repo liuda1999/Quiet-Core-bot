@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import type {
   MemorySearchConfig,
-  OpenClawConfig,
+  QuietCoreConfig,
 } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -211,8 +211,8 @@ describe("memory watcher config", () => {
     await fs.writeFile(path.join(extraDir, seedFile.name), seedFile.contents);
   }
 
-  function createWatcherConfig(overrides?: Partial<MemorySearchConfig>): OpenClawConfig {
-    const defaults: NonNullable<NonNullable<OpenClawConfig["agents"]>["defaults"]> = {
+  function createWatcherConfig(overrides?: Partial<MemorySearchConfig>): QuietCoreConfig {
+    const defaults: NonNullable<NonNullable<QuietCoreConfig["agents"]>["defaults"]> = {
       workspace: workspaceDir,
       memorySearch: {
         provider: "openai",
@@ -230,10 +230,10 @@ describe("memory watcher config", () => {
         defaults,
         list: [{ id: "main", default: true }],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
   }
 
-  async function expectWatcherManager(cfg: OpenClawConfig) {
+  async function expectWatcherManager(cfg: QuietCoreConfig) {
     const result = await getMemorySearchManager({ cfg, agentId: "main" });
     if (!result.manager) {
       throw new Error("manager missing");
@@ -504,7 +504,7 @@ describe("memory watcher config", () => {
 
   it("routes Linux directories through directory-only native watchers", async () => {
     // Node's Linux `fs.watch({ recursive: true })` watches every file via
-    // internal/fs/recursive_watch. OpenClaw watches directories only so
+    // internal/fs/recursive_watch. QuietCore watches directories only so
     // large file-heavy memory trees do not allocate per-file watchers.
     const originalPlatformValue = process.platform;
     try {

@@ -4,8 +4,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
-  closeOpenClawStateDatabaseForTest,
-  runOpenClawStateWriteTransaction,
+  closeQuietCoreStateDatabaseForTest,
+  runQuietCoreStateWriteTransaction,
 } from "../state/quiet-core-bot-state-db.js";
 import type { PluginCandidate } from "./discovery.js";
 import {
@@ -45,7 +45,7 @@ import { cleanupTrackedTempDirs, makeTrackedTempDir } from "./test-helpers/fs-fi
 const tempDirs: string[] = [];
 
 afterEach(() => {
-  closeOpenClawStateDatabaseForTest();
+  closeQuietCoreStateDatabaseForTest();
   clearPluginMetadataLifecycleCaches();
   cleanupTrackedTempDirs(tempDirs);
 });
@@ -826,7 +826,7 @@ describe("plugin registry facade", () => {
     await writePersistedInstalledPluginIndex(createPersistableIndex("first"), { stateDir });
     const first = loadPluginRegistrySnapshotWithMetadata({ stateDir, env });
     const external = createPersistableIndex("second-external");
-    runOpenClawStateWriteTransaction(
+    runQuietCoreStateWriteTransaction(
       ({ db }) => {
         db.prepare(
           `

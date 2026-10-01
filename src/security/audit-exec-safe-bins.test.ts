@@ -1,6 +1,6 @@
 // Covers safe-bin audit decisions for exec commands.
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { collectExecRuntimeFindings } from "./audit.js";
 
 function hasFinding(
@@ -46,7 +46,7 @@ describe("security audit exec safe-bin findings", () => {
             },
           ],
         },
-      } satisfies OpenClawConfig,
+      } satisfies QuietCoreConfig,
       expected: true,
     },
     {
@@ -79,7 +79,7 @@ describe("security audit exec safe-bin findings", () => {
             },
           ],
         },
-      } satisfies OpenClawConfig,
+      } satisfies QuietCoreConfig,
       expected: false,
     },
   ])(
@@ -100,7 +100,7 @@ describe("security audit exec safe-bin findings", () => {
             safeBins: ["jq"],
           },
         },
-      } satisfies OpenClawConfig,
+      } satisfies QuietCoreConfig,
       expected: true,
     },
     {
@@ -111,7 +111,7 @@ describe("security audit exec safe-bin findings", () => {
             safeBins: ["cut"],
           },
         },
-      } satisfies OpenClawConfig,
+      } satisfies QuietCoreConfig,
       expected: false,
     },
   ])(
@@ -146,7 +146,7 @@ describe("security audit exec safe-bin findings", () => {
           },
         ],
       },
-    } satisfies OpenClawConfig);
+    } satisfies QuietCoreConfig);
 
     const riskyFinding = requireFinding("tools.exec.safe_bin_trusted_dirs_risky", findings);
     expect(riskyFinding.severity).toBe("warn");
@@ -165,7 +165,7 @@ describe("security audit exec safe-bin findings", () => {
               safeBinTrustedDirs: ["/usr/libexec"],
             },
           },
-        } satisfies OpenClawConfig),
+        } satisfies QuietCoreConfig),
       ),
     ).toBe(false);
   });

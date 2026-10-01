@@ -1,5 +1,5 @@
 // Hook update helpers refresh installed hook records and config references.
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { buildNpmResolutionFields } from "../infra/install-source-utils.js";
 import {
   expectedIntegrityForUpdate,
@@ -32,7 +32,7 @@ export type HookPackUpdateOutcome = {
 
 /** Aggregate update result with the possibly updated config. */
 export type HookPackUpdateSummary = {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   changed: boolean;
   outcomes: HookPackUpdateOutcome[];
 };
@@ -74,7 +74,7 @@ function createHookPackUpdateIntegrityDriftHandler(params: {
 
 /** Update npm-installed hook packs and return config changes plus per-pack outcomes. */
 export async function updateNpmInstalledHookPacks(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   logger?: HookPackUpdateLogger;
   hookIds?: string[];
   dryRun?: boolean;

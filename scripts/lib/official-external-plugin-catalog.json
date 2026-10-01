@@ -2,7 +2,7 @@
   "entries": [
     {
       "name": "@quiet-core/acpx",
-      "description": "OpenClaw ACP runtime backend",
+      "description": "QuietCore ACP runtime backend",
       "source": "official",
       "kind": "plugin",
       "quiet-core-bot": {
@@ -19,7 +19,7 @@
     },
     {
       "name": "@quiet-core/diagnostics-otel",
-      "description": "OpenClaw diagnostics OpenTelemetry exporter",
+      "description": "QuietCore diagnostics OpenTelemetry exporter",
       "source": "official",
       "kind": "plugin",
       "quiet-core-bot": {
@@ -37,7 +37,7 @@
     },
     {
       "name": "@quiet-core/diagnostics-prometheus",
-      "description": "OpenClaw diagnostics Prometheus exporter",
+      "description": "QuietCore diagnostics Prometheus exporter",
       "source": "official",
       "kind": "plugin",
       "quiet-core-bot": {
@@ -55,7 +55,7 @@
     },
     {
       "name": "@quiet-core/diffs",
-      "description": "OpenClaw diff viewer plugin",
+      "description": "QuietCore diff viewer plugin",
       "source": "official",
       "kind": "plugin",
       "quiet-core-bot": {
@@ -72,7 +72,7 @@
     },
     {
       "name": "@quiet-core/diffs-language-pack",
-      "description": "OpenClaw diffs viewer syntax highlighting language pack",
+      "description": "QuietCore diffs viewer syntax highlighting language pack",
       "source": "official",
       "kind": "plugin",
       "quiet-core-bot": {
@@ -90,7 +90,7 @@
     },
     {
       "name": "@quiet-core/firecrawl-plugin",
-      "description": "OpenClaw Firecrawl plugin.",
+      "description": "QuietCore Firecrawl plugin.",
       "source": "official",
       "kind": "plugin",
       "quiet-core-bot": {
@@ -156,7 +156,7 @@
     },
     {
       "name": "@quiet-core/memory-lancedb",
-      "description": "OpenClaw LanceDB-backed long-term memory plugin with auto-recall/capture",
+      "description": "QuietCore LanceDB-backed long-term memory plugin with auto-recall/capture",
       "source": "official",
       "kind": "plugin",
       "quiet-core-bot": {
@@ -173,7 +173,7 @@
     },
     {
       "name": "@quiet-core/llama-cpp-provider",
-      "description": "OpenClaw llama.cpp embedding provider plugin",
+      "description": "QuietCore llama.cpp embedding provider plugin",
       "source": "official",
       "kind": "plugin",
       "quiet-core-bot": {
@@ -195,7 +195,7 @@
     },
     {
       "name": "@quiet-core/searxng-plugin",
-      "description": "OpenClaw SearXNG plugin",
+      "description": "QuietCore SearXNG plugin",
       "source": "official",
       "kind": "plugin",
       "quiet-core-bot": {
@@ -239,7 +239,7 @@
     },
     {
       "name": "@quiet-core/tokenjuice",
-      "description": "OpenClaw tokenjuice exec output compaction plugin",
+      "description": "QuietCore tokenjuice exec output compaction plugin",
       "source": "official",
       "kind": "plugin",
       "quiet-core-bot": {

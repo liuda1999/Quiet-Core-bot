@@ -11,7 +11,7 @@ import { hasErrnoCode } from "./errors.js";
 import type { NpmSpecResolution } from "./install-source-utils.js";
 import { readJson, readJsonIfExists, writeJson } from "./json-files.js";
 import type { ParsedRegistryNpmSpec } from "./npm-registry-spec.js";
-import { CORE_PACKAGE_NAMES, resolveOpenClawPackageRootSync } from "./quiet-core-bot-root.js";
+import { CORE_PACKAGE_NAMES, resolveQuietCorePackageRootSync } from "./quiet-core-bot-root.js";
 import { createSafeNpmInstallArgs, createSafeNpmInstallEnv } from "./safe-package-install.js";
 
 // Managed npm roots are private package roots used for installed plugins. This
@@ -31,7 +31,7 @@ type HostPackageManifest = {
   peerDependencies?: Record<string, string>;
 };
 
-type ManagedNpmRootOpenClawMetadata = {
+type ManagedNpmRootQuietCoreMetadata = {
   managedOverrides?: string[];
   managedPeerDependencies?: string[];
   [key: string]: unknown;
@@ -62,7 +62,7 @@ type ManagedNpmRootLogger = {
 
 type ManagedNpmRootRunCommand = typeof runCommandWithTimeout;
 
-type ManagedNpmRootOpenClawHostState = "none" | "managed-active-host" | "linked-active-host";
+type ManagedNpmRootQuietCoreHostState = "none" | "managed-active-host" | "linked-active-host";
 
 function readDependencyRecord(value: unknown): Record<string, string> {
   if (!isRecord(value)) {
@@ -120,12 +120,12 @@ function readManagedPeerDependencyKeys(value: unknown): string[] {
   return value.managedPeerDependencies.filter((key): key is string => typeof key === "string");
 }
 
-function buildManagedOpenClawMetadata(params: {
+function buildManagedQuietCoreMetadata(params: {
   current: unknown;
   managedOverrideKeys: string[];
   managedPeerDependencyKeys?: string[];
-}): ManagedNpmRootOpenClawMetadata | undefined {
-  const metadata: ManagedNpmRootOpenClawMetadata = isRecord(params.current)
+}): ManagedNpmRootQuietCoreMetadata | undefined {
+  const metadata: ManagedNpmRootQuietCoreMetadata = isRecord(params.current)
     ? { ...params.current }
     : {};
   if (params.managedOverrideKeys.length > 0) {
@@ -287,7 +287,7 @@ function applyManagedNpmRootOverrides(params: {
 }
 
 /** Read host Quiet Core bot pnpm overrides for reuse inside a managed npm root. */
-export async function readOpenClawManagedNpmRootOverrides(params?: {
+export async function readQuietCoreManagedNpmRootOverrides(params?: {
   argv1?: string;
   cwd?: string;
   moduleUrl?: string;
@@ -295,7 +295,7 @@ export async function readOpenClawManagedNpmRootOverrides(params?: {
 }): Promise<Record<string, unknown>> {
   const packageRoot =
     params?.packageRoot ??
-    resolveOpenClawPackageRootSync({
+    resolveQuietCorePackageRootSync({
       argv1: params?.argv1 ?? process.argv[1],
       moduleUrl: params?.moduleUrl ?? import.meta.url,
       cwd: params?.cwd ?? process.cwd(),
@@ -360,7 +360,7 @@ export async function upsertManagedNpmRootDependency(params: {
     dependencies: nextDependencies,
     managedDependencyNames,
   });
-  const openclawMetadata = buildManagedOpenClawMetadata({
+  const openclawMetadata = buildManagedQuietCoreMetadata({
     current: manifest["quiet-core-bot"],
     managedOverrideKeys,
     managedPeerDependencyKeys: [...managedDependencyNames].toSorted(),
@@ -854,7 +854,7 @@ export async function restoreManagedNpmRootPeerDependencySnapshot(params: {
   const managedOverrideKeys = currentManagedOverrideKeys
     .filter((key) => Object.hasOwn(overrides, key))
     .toSorted();
-  const openclawMetadata = buildManagedOpenClawMetadata({
+  const openclawMetadata = buildManagedQuietCoreMetadata({
     current: manifest["quiet-core-bot"],
     managedOverrideKeys,
     managedPeerDependencyKeys: params.snapshot.managedPeerDependencies.toSorted(),
@@ -929,7 +929,7 @@ export async function syncManagedNpmRootPeerDependencies(params: {
     managedDependencyNames: managedPeerDependencyNames,
   });
   const managedPeerDependencyKeys = [...managedPeerDependencyNames].toSorted();
-  const openclawMetadata = buildManagedOpenClawMetadata({
+  const openclawMetadata = buildManagedQuietCoreMetadata({
     current: manifest["quiet-core-bot"],
     managedOverrideKeys,
     managedPeerDependencyKeys,
@@ -957,7 +957,7 @@ export async function syncManagedNpmRootPeerDependencies(params: {
 }
 
 /** Remove stale managed-root quiet-core-bot peer installs while preserving active host links. */
-export async function repairManagedNpmRootOpenClawPeer(params: {
+export async function repairManagedNpmRootQuietCorePeer(params: {
   npmRoot: string;
   packageRoot?: string | null;
   timeoutMs?: number;
@@ -966,7 +966,7 @@ export async function repairManagedNpmRootOpenClawPeer(params: {
 }): Promise<boolean> {
   await fs.mkdir(params.npmRoot, { recursive: true });
 
-  const activeHostState = await readManagedNpmRootOpenClawHostState({
+  const activeHostState = await readManagedNpmRootQuietCoreHostState({
     npmRoot: params.npmRoot,
     packageRoot: params.packageRoot,
   });
@@ -978,7 +978,7 @@ export async function repairManagedNpmRootOpenClawPeer(params: {
   const manifest = await readManagedNpmRootManifest(manifestPath);
   const dependencies = readDependencyRecord(manifest.dependencies);
   const hasManifestDependency = "quiet-core-bot" in dependencies;
-  const hasLockDependency = await managedNpmRootLockfileHasOpenClawPeer(params.npmRoot);
+  const hasLockDependency = await managedNpmRootLockfileHasQuietCorePeer(params.npmRoot);
   const hasPackageDir = await pathExists(path.join(params.npmRoot, "node_modules", "quiet-core-bot"));
   const preserveActiveHostLink = activeHostState === "linked-active-host";
   if (!hasManifestDependency && !hasLockDependency && (!hasPackageDir || preserveActiveHostLink)) {
@@ -986,7 +986,7 @@ export async function repairManagedNpmRootOpenClawPeer(params: {
   }
 
   if (preserveActiveHostLink) {
-    await scrubManagedNpmRootOpenClawPeer({
+    await scrubManagedNpmRootQuietCorePeer({
       npmRoot: params.npmRoot,
       preservePackageDir: true,
     });
@@ -1036,17 +1036,17 @@ export async function repairManagedNpmRootOpenClawPeer(params: {
     );
   }
 
-  await scrubManagedNpmRootOpenClawPeer({ npmRoot: params.npmRoot });
+  await scrubManagedNpmRootQuietCorePeer({ npmRoot: params.npmRoot });
   return true;
 }
 
-async function readManagedNpmRootOpenClawHostState(params: {
+async function readManagedNpmRootQuietCoreHostState(params: {
   npmRoot: string;
   packageRoot?: string | null;
-}): Promise<ManagedNpmRootOpenClawHostState> {
+}): Promise<ManagedNpmRootQuietCoreHostState> {
   const packageRoot =
     params.packageRoot === undefined
-      ? resolveOpenClawPackageRootSync({
+      ? resolveQuietCorePackageRootSync({
           argv1: process.argv[1],
           moduleUrl: import.meta.url,
           cwd: process.cwd(),
@@ -1056,11 +1056,11 @@ async function readManagedNpmRootOpenClawHostState(params: {
     return "none";
   }
 
-  const managedOpenClawPackageDir = path.join(params.npmRoot, "node_modules", "quiet-core-bot");
+  const managedQuietCorePackageDir = path.join(params.npmRoot, "node_modules", "quiet-core-bot");
   const [hostPackageRoot, managedPackageRoot, managedPackageStat] = await Promise.all([
     realpathIfExists(packageRoot),
-    realpathIfExists(managedOpenClawPackageDir),
-    lstatIfExists(managedOpenClawPackageDir),
+    realpathIfExists(managedQuietCorePackageDir),
+    lstatIfExists(managedQuietCorePackageDir),
   ]);
   if (hostPackageRoot === null || hostPackageRoot !== managedPackageRoot) {
     return "none";
@@ -1068,7 +1068,7 @@ async function readManagedNpmRootOpenClawHostState(params: {
   return managedPackageStat?.isSymbolicLink() ? "linked-active-host" : "managed-active-host";
 }
 
-async function managedNpmRootLockfileHasOpenClawPeer(npmRoot: string): Promise<boolean> {
+async function managedNpmRootLockfileHasQuietCorePeer(npmRoot: string): Promise<boolean> {
   const lockPath = path.join(npmRoot, "package-lock.json");
   try {
     const parsed = JSON.parse(await fs.readFile(lockPath, "utf8")) as ManagedNpmRootLockfile;
@@ -1128,7 +1128,7 @@ async function pathExists(filePath: string): Promise<boolean> {
     });
 }
 
-async function scrubManagedNpmRootOpenClawPeer(params: {
+async function scrubManagedNpmRootQuietCorePeer(params: {
   npmRoot: string;
   preservePackageDir?: boolean;
 }): Promise<void> {

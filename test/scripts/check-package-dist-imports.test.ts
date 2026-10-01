@@ -44,7 +44,7 @@ describe("check-package-dist-imports", () => {
     const result = spawnSync("node", [CHECK_SCRIPT, root], { encoding: "utf8" });
 
     expect(result.status, result.stderr).toBe(0);
-    expect(result.stdout).toContain("OpenClaw package dist import closure passed.");
+    expect(result.stdout).toContain("QuietCore package dist import closure passed.");
   });
 
   it("rejects missing CommonJS require chunks", () => {

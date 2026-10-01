@@ -1,7 +1,7 @@
 import Foundation
-import OpenClawKit
+import QuietCoreKit
 import Testing
-@testable import OpenClaw
+@testable import QuietCore
 
 @MainActor
 @Suite struct TalkModeManagerTests {

@@ -4,13 +4,13 @@
  */
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { resolveOpenClawPluginToolInputs } from "./quiet-core-bot-tools.plugin-context.js";
+import { resolveQuietCorePluginToolInputs } from "./quiet-core-bot-tools.plugin-context.js";
 import { applyPluginToolDeliveryDefaults } from "./plugin-tool-delivery-defaults.js";
 import type { AnyAgentTool } from "./tools/common.js";
 
 describe("quiet-core-bot plugin tool context", () => {
   it("forwards trusted requester sender identity", () => {
-    const result = resolveOpenClawPluginToolInputs({
+    const result = resolveQuietCorePluginToolInputs({
       options: {
         config: {} as never,
         requesterSenderId: "trusted-sender",
@@ -21,7 +21,7 @@ describe("quiet-core-bot plugin tool context", () => {
   });
 
   it("forwards fs policy for plugin tool sandbox enforcement", () => {
-    const result = resolveOpenClawPluginToolInputs({
+    const result = resolveQuietCorePluginToolInputs({
       options: {
         config: {} as never,
         fsPolicy: { workspaceOnly: true },
@@ -32,7 +32,7 @@ describe("quiet-core-bot plugin tool context", () => {
   });
 
   it("forwards ephemeral sessionId", () => {
-    const result = resolveOpenClawPluginToolInputs({
+    const result = resolveQuietCorePluginToolInputs({
       options: {
         config: {} as never,
         agentSessionKey: "agent:main:telegram:direct:12345",
@@ -45,7 +45,7 @@ describe("quiet-core-bot plugin tool context", () => {
   });
 
   it("forwards runtime-owned active model metadata", () => {
-    const result = resolveOpenClawPluginToolInputs({
+    const result = resolveQuietCorePluginToolInputs({
       options: {
         config: {} as never,
         modelProvider: " local-provider ",
@@ -61,7 +61,7 @@ describe("quiet-core-bot plugin tool context", () => {
   });
 
   it("does not duplicate provider-qualified active model refs", () => {
-    const result = resolveOpenClawPluginToolInputs({
+    const result = resolveQuietCorePluginToolInputs({
       options: {
         config: {} as never,
         modelProvider: "openrouter",
@@ -78,7 +78,7 @@ describe("quiet-core-bot plugin tool context", () => {
 
   it("infers the default agent workspace when workspaceDir is omitted", () => {
     const workspaceDir = path.join(process.cwd(), "tmp-main-workspace");
-    const result = resolveOpenClawPluginToolInputs({
+    const result = resolveQuietCorePluginToolInputs({
       options: {
         config: {
           agents: {
@@ -111,7 +111,7 @@ describe("quiet-core-bot plugin tool context", () => {
         ],
       },
     } as never;
-    const result = resolveOpenClawPluginToolInputs({
+    const result = resolveQuietCorePluginToolInputs({
       options: {
         config,
         agentSessionKey: "agent:support:main",
@@ -134,7 +134,7 @@ describe("quiet-core-bot plugin tool context", () => {
         ],
       },
     } as never;
-    const result = resolveOpenClawPluginToolInputs({
+    const result = resolveQuietCorePluginToolInputs({
       options: {
         config,
         agentSessionKey: "explicit:user-session:active-memory:abc123",
@@ -148,7 +148,7 @@ describe("quiet-core-bot plugin tool context", () => {
   });
 
   it("forwards browser session wiring", () => {
-    const result = resolveOpenClawPluginToolInputs({
+    const result = resolveQuietCorePluginToolInputs({
       options: {
         config: {} as never,
         sandboxBrowserBridgeUrl: "http://127.0.0.1:9999",
@@ -163,7 +163,7 @@ describe("quiet-core-bot plugin tool context", () => {
   });
 
   it("forwards gateway subagent binding", () => {
-    const result = resolveOpenClawPluginToolInputs({
+    const result = resolveQuietCorePluginToolInputs({
       options: {
         config: {} as never,
         allowGatewaySubagentBinding: true,
@@ -174,7 +174,7 @@ describe("quiet-core-bot plugin tool context", () => {
   });
 
   it("forwards ambient deliveryContext", () => {
-    const result = resolveOpenClawPluginToolInputs({
+    const result = resolveQuietCorePluginToolInputs({
       options: {
         config: {} as never,
         agentChannel: "slack",

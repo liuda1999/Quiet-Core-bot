@@ -5,7 +5,7 @@
  */
 import { Type } from "typebox";
 import { getRuntimeConfig } from "../../config/config.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { parseImageGenerationModelRef } from "../../image-generation/model-ref.js";
 import {
   generateImage,
@@ -226,7 +226,7 @@ const ImageGenerateToolSchema = Type.Object({
 });
 
 export function resolveImageGenerationModelConfigForTool(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   workspaceDir?: string;
   agentDir?: string;
   authStore?: AuthProfileStore;
@@ -241,7 +241,7 @@ export function resolveImageGenerationModelConfigForTool(params: {
   });
 }
 
-function hasExplicitImageGenerationModelConfig(cfg?: OpenClawConfig): boolean {
+function hasExplicitImageGenerationModelConfig(cfg?: QuietCoreConfig): boolean {
   return hasToolModelConfig(coerceToolModelConfig(cfg?.agents?.defaults?.imageGenerationModel));
 }
 
@@ -399,7 +399,7 @@ function normalizeReferenceImages(args: Record<string, unknown>): string[] {
 }
 
 function resolveSelectedImageGenerationProvider(params: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   imageGenerationModelConfig: ToolModelConfig;
   modelOverride?: string;
 }): ImageGenerationProvider | undefined {
@@ -632,7 +632,7 @@ const defaultScheduleImageGenerateBackgroundWork = createDefaultMediaGenerateBac
 });
 
 async function executeImageGenerationJob(params: {
-  effectiveCfg: OpenClawConfig;
+  effectiveCfg: QuietCoreConfig;
   prompt: string;
   agentDir?: string;
   model?: string;
@@ -791,7 +791,7 @@ async function executeImageGenerationJob(params: {
 }
 
 export function createImageGenerateTool(options?: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   agentDir?: string;
   authProfileStore?: AuthProfileStore;
   agentSessionKey?: string;

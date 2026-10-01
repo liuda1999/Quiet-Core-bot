@@ -4,7 +4,7 @@ set -euo pipefail
 # Definition:
 #   Docker/package E2E proof for local channel plugin trust gating. The host
 #   mode builds or reuses the functional Docker image, then runs the container
-#   mode against the installed OpenClaw package.
+#   mode against the installed QuietCore package.
 #
 # Parameters:
 #   --container: run the in-container scenario. Host mode is the default.
@@ -22,7 +22,7 @@ Usage:
   bash scripts/e2e/channel-plugin-trust-docker.sh [--container]
 
 Description:
-  Proves the packaged OpenClaw CLI enforces local channel plugin trust for
+  Proves the packaged QuietCore CLI enforces local channel plugin trust for
   plugins.load.paths entries in a clean Docker/package environment.
 
 Options:

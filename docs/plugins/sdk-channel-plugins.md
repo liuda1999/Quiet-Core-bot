@@ -446,7 +446,7 @@ Use `resolveInboundMentionDecision({ facts, policy })` for mention gating.
       createChatChannelPlugin,
       createChannelPluginBase,
     } from "quiet-core-bot/plugin-sdk/channel-core";
-    import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/channel-core";
+    import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/channel-core";
     import { acmeChatApi } from "./client.js"; // your platform API client
 
     type ResolvedAccount = {
@@ -457,7 +457,7 @@ Use `resolveInboundMentionDecision({ facts, policy })` for mention gating.
     };
 
     function resolveAccount(
-      cfg: OpenClawConfig,
+      cfg: QuietCoreConfig,
       accountId?: string | null,
     ): ResolvedAccount {
       const section = (cfg.channels as Record<string, any>)?.["acme-chat"];

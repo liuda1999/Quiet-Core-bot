@@ -5,7 +5,7 @@ import { note } from "../../packages/terminal-core/src/note.js";
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
 import { resolveWorkspaceTemplateDir } from "../agents/workspace-templates.js";
 import { DEFAULT_HEARTBEAT_FILENAME } from "../agents/workspace.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { writeTextAtomic } from "../infra/json-files.js";
 import { shortenHomePath } from "../utils.js";
@@ -128,7 +128,7 @@ async function readCleanHeartbeatTemplate(): Promise<string> {
 
 /** Replaces known dirty heartbeat templates with the clean runtime template when repair is enabled. */
 export async function maybeRepairHeartbeatTemplate(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   shouldRepair: boolean;
 }): Promise<void> {
   const workspaceDir = resolveAgentWorkspaceDir(params.cfg, resolveDefaultAgentId(params.cfg));

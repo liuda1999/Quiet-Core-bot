@@ -14,7 +14,7 @@ import {
   configureSqliteConnectionPragmas,
   type SqliteWalMaintenance,
 } from "../infra/sqlite-wal.js";
-import { openOpenClawStateDatabase } from "../state/quiet-core-bot-state-db.js";
+import { openQuietCoreStateDatabase } from "../state/quiet-core-bot-state-db.js";
 import type {
   CaptureBlobRecord,
   CaptureEventRecord,
@@ -201,7 +201,7 @@ class DebugProxyCaptureStoreImpl {
       this.pathBased = opened.pathBased;
       return;
     }
-    const database = openOpenClawStateDatabase({ env: optionsOrDbPath.env });
+    const database = openQuietCoreStateDatabase({ env: optionsOrDbPath.env });
     this.db = database.db;
     this.dbPath = database.path;
     // Retain the shipped public property while shared-state blobs live in this DB.
@@ -820,7 +820,7 @@ function resolveDebugProxyCaptureStoreKey(
 ): string {
   return typeof optionsOrDbPath === "string"
     ? `legacy:${optionsOrDbPath}:${legacyBlobDir ?? ""}`
-    : `shared:${openOpenClawStateDatabase({ env: optionsOrDbPath.env }).path}`;
+    : `shared:${openQuietCoreStateDatabase({ env: optionsOrDbPath.env }).path}`;
 }
 
 function getDebugProxyCaptureStoreImpl(

@@ -12,7 +12,7 @@ import {
   GATEWAY_CLIENT_NAMES,
 } from "../../../packages/gateway-protocol/src/client-info.js";
 import { getRuntimeConfig, resolveGatewayPort } from "../../config/config.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { callGateway } from "../../gateway/call.js";
 import { resolveGatewayCredentialsFromConfig, trimToUndefined } from "../../gateway/credentials.js";
 import {
@@ -79,7 +79,7 @@ function canonicalizeToolGatewayWsUrl(raw: string): { origin: string; key: strin
   return { origin, key };
 }
 
-function resolveLocalGatewayUrlKeys(cfg: OpenClawConfig): Set<string> {
+function resolveLocalGatewayUrlKeys(cfg: QuietCoreConfig): Set<string> {
   const port = resolveGatewayPort(cfg);
   return new Set<string>([
     `ws://127.0.0.1:${port}`,
@@ -91,7 +91,7 @@ function resolveLocalGatewayUrlKeys(cfg: OpenClawConfig): Set<string> {
   ]);
 }
 
-function resolveConfiguredRemoteGatewayKey(cfg: OpenClawConfig): string | undefined {
+function resolveConfiguredRemoteGatewayKey(cfg: QuietCoreConfig): string | undefined {
   let remoteKey: string | undefined;
   const remoteUrl = normalizeOptionalString(cfg.gateway?.remote?.url) ?? "";
   if (remoteUrl) {
@@ -107,7 +107,7 @@ function resolveConfiguredRemoteGatewayKey(cfg: OpenClawConfig): string | undefi
 }
 
 function resolveDefaultGatewayTarget(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   envGatewayUrl?: string;
 }): GatewayOverrideTarget {
   if (params.envGatewayUrl) {
@@ -125,7 +125,7 @@ function resolveDefaultGatewayTarget(params: {
 }
 
 function validateGatewayUrlOverrideForAgentTools(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   urlOverride: string;
 }): { url: string; target: GatewayOverrideTarget } {
   const { cfg } = params;
@@ -150,7 +150,7 @@ function validateGatewayUrlOverrideForAgentTools(params: {
 }
 
 function resolveGatewayOverrideToken(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   target: GatewayOverrideTarget;
   explicitToken?: string;
 }): string | undefined {

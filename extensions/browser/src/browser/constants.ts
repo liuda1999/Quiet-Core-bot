@@ -8,7 +8,7 @@
 export const DEFAULT_QUIET_CORE_BROWSER_ENABLED = true;
 /** Default JavaScript evaluation permission for managed browser actions. */
 export const DEFAULT_BROWSER_EVALUATE_ENABLED = true;
-/** Default color for the managed OpenClaw browser profile. */
+/** Default color for the managed QuietCore browser profile. */
 export const DEFAULT_QUIET_CORE_BROWSER_COLOR = "#FF4500";
 /** Default managed profile name shown to users. */
 export const DEFAULT_QUIET_CORE_BROWSER_PROFILE_NAME = "quiet-core-bot";

@@ -1,6 +1,6 @@
 // Media read capability tests cover allowed roots and blocked file access.
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.js";
+import type { QuietCoreConfig } from "../config/types.js";
 import { getDefaultMediaLocalRoots } from "./local-roots.js";
 import { resolveAgentScopedOutboundMediaAccess } from "./read-capability.js";
 
@@ -29,7 +29,7 @@ describe("resolveAgentScopedOutboundMediaAccess", () => {
 
   it("preserves caller-provided workspaceDir from mediaAccess", () => {
     const result = resolveAgentScopedOutboundMediaAccess({
-      cfg: {} as OpenClawConfig,
+      cfg: {} as QuietCoreConfig,
       mediaAccess: { workspaceDir: "/tmp/media-workspace" },
     });
 
@@ -44,7 +44,7 @@ describe("resolveAgentScopedOutboundMediaAccess", () => {
 
   it("prefers explicit workspaceDir over mediaAccess.workspaceDir", () => {
     const result = resolveAgentScopedOutboundMediaAccess({
-      cfg: {} as OpenClawConfig,
+      cfg: {} as QuietCoreConfig,
       workspaceDir: "/tmp/explicit-workspace",
       mediaAccess: { workspaceDir: "/tmp/media-workspace" },
     });
@@ -65,7 +65,7 @@ describe("resolveAgentScopedOutboundMediaAccess", () => {
         tools: {
           fs: { workspaceOnly: true },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       workspaceDir,
       mediaSources: [`${workspaceDir}/report.html`],
     });
@@ -75,7 +75,7 @@ describe("resolveAgentScopedOutboundMediaAccess", () => {
   });
 
   it("does not enable host reads when sender group policy denies read", () => {
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       tools: {
         allow: ["read"],
       },
@@ -118,7 +118,7 @@ describe("resolveAgentScopedOutboundMediaAccess", () => {
         tools: {
           allow: ["read"],
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       sessionKey: "agent:main:slack:group:C123",
       groupChannel: "#incidents",
       groupSpace: "team-a",
@@ -140,7 +140,7 @@ describe("resolveAgentScopedOutboundMediaAccess", () => {
   });
 
   it("keeps host reads enabled when sender group policy allows read", () => {
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       tools: {
         allow: ["read"],
       },
@@ -176,7 +176,7 @@ describe("resolveAgentScopedOutboundMediaAccess", () => {
         tools: {
           allow: ["read"],
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       messageProvider: "requestchat",
       requesterSenderId: "trusted-user",
     });
@@ -203,7 +203,7 @@ describe("resolveAgentScopedOutboundMediaAccess", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       messageProvider: "requestchat",
       requesterSenderId: "dm-sender",
     });

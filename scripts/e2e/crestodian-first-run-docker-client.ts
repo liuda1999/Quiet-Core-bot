@@ -9,7 +9,7 @@ import {
   shouldStartOnboardingForFreshInstall,
 } from "../../dist/cli/run-main.js";
 import { clearConfigCache } from "../../dist/config/config.js";
-import type { OpenClawConfig } from "../../dist/config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../dist/config/types.quiet-core-bot.js";
 import { runCrestodian } from "../../dist/crestodian/crestodian.js";
 import type { RuntimeEnv } from "../../dist/runtime.js";
 import { createE2eStateDir } from "./lib/temp-state-dir.ts";
@@ -79,7 +79,7 @@ async function main() {
 
   assert(
     await shouldStartOnboardingForFreshInstall(["node", "quiet-core-bot"]),
-    "fresh bare OpenClaw invocation did not route to onboarding",
+    "fresh bare QuietCore invocation did not route to onboarding",
   );
   assert(
     shouldStartCrestodianForModernOnboard(["node", "quiet-core-bot", "onboard", "--modern"]),
@@ -131,7 +131,7 @@ async function main() {
     );
   }
 
-  const config = JSON.parse(await fs.readFile(configPath, "utf8")) as OpenClawConfig;
+  const config = JSON.parse(await fs.readFile(configPath, "utf8")) as QuietCoreConfig;
   assert(
     config.agents?.defaults?.workspace === spec.dockerDefaultWorkspace,
     "first-run setup did not write default workspace",

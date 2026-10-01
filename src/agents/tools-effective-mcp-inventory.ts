@@ -3,7 +3,7 @@
  * schema policy quarantines incompatible tools and emits notices instead of
  * silently hiding them.
  */
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { ProviderRuntimeModel } from "../plugins/provider-runtime-model.types.js";
 import { normalizeAgentRuntimeTools } from "./runtime-plan/tools.js";
 import {
@@ -62,7 +62,7 @@ function buildMcpToolInventoryEntries(
 /** Builds the runtime-compatible MCP tool inventory and quarantine notices. */
 export function buildRuntimeCompatibleMcpToolInventory(params: {
   tools: readonly AnyAgentTool[];
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   workspaceDir?: string;
   modelProvider?: string;
   modelId?: string;

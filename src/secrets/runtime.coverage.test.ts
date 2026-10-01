@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
 import type { AuthProfileStore } from "../agents/auth-profiles.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import type {
   PluginOrigin,
   PluginWebFetchProviderEntry,
@@ -24,7 +24,7 @@ function createCoverageWebSearchProvider(params: {
   order: number;
 }): PluginWebSearchProviderEntry {
   const credentialPath = `plugins.entries.${params.pluginId}.config.webSearch.apiKey`;
-  const readConfiguredCredential = (config?: OpenClawConfig): unknown =>
+  const readConfiguredCredential = (config?: QuietCoreConfig): unknown =>
     (config?.plugins?.entries?.[params.pluginId]?.config as { webSearch?: { apiKey?: unknown } })
       ?.webSearch?.apiKey;
   return {
@@ -58,7 +58,7 @@ function createCoverageWebFetchProvider(params: {
   envVar: string;
 }): PluginWebFetchProviderEntry {
   const credentialPath = `plugins.entries.${params.pluginId}.config.webFetch.apiKey`;
-  const readConfiguredCredential = (config?: OpenClawConfig): unknown =>
+  const readConfiguredCredential = (config?: QuietCoreConfig): unknown =>
     (config?.plugins?.entries?.[params.pluginId]?.config as { webFetch?: { apiKey?: unknown } })
       ?.webFetch?.apiKey;
   return {
@@ -360,7 +360,7 @@ function buildCoverageLoadablePluginOrigins(
   return origins;
 }
 
-function addCoveragePluginLoadPath(config: OpenClawConfig, pluginId: string): void {
+function addCoveragePluginLoadPath(config: QuietCoreConfig, pluginId: string): void {
   const loadPath = COVERAGE_CONFIG_PLUGIN_SOURCE_DIRS.get(pluginId);
   if (!loadPath) {
     return;
@@ -489,7 +489,7 @@ function batchUsesRuntimeWebToolsOnly(batch: readonly SecretRegistryEntry[]): bo
   );
 }
 
-function collectOpenClawCoverageEntries(options: {
+function collectQuietCoreCoverageEntries(options: {
   includePluginEntries: boolean;
 }): SecretRegistryEntry[] {
   return COVERAGE_REGISTRY_ENTRIES.filter(
@@ -500,8 +500,8 @@ function collectOpenClawCoverageEntries(options: {
   );
 }
 
-function applyConfigForOpenClawTarget(
-  config: OpenClawConfig,
+function applyConfigForQuietCoreTarget(
+  config: QuietCoreConfig,
   entry: SecretRegistryEntry,
   envId: string,
   wildcardToken: string,
@@ -692,7 +692,7 @@ function applyAuthStoreTarget(
 }
 
 async function prepareConfigCoverageSnapshot(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   env: NodeJS.ProcessEnv;
   loadablePluginOrigins?: ReadonlyMap<string, PluginOrigin>;
   includeRuntimeWebTools?: boolean;
@@ -745,7 +745,7 @@ async function prepareConfigCoverageSnapshot(params: {
 }
 
 async function prepareAuthCoverageSnapshot(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   env: NodeJS.ProcessEnv;
   agentDirs: string[];
   loadAuthStore: (agentDir?: string) => AuthProfileStore;
@@ -788,12 +788,12 @@ async function prepareAuthCoverageSnapshot(params: {
   };
 }
 
-async function expectOpenClawCoverageBatchResolved(
+async function expectQuietCoreCoverageBatchResolved(
   label: string,
   batch: readonly SecretRegistryEntry[],
 ): Promise<void> {
   logCoverageBatch(label, batch);
-  const config = {} as OpenClawConfig;
+  const config = {} as QuietCoreConfig;
   const env: Record<string, string> = {};
   for (const [index, entry] of batch.entries()) {
     const envId = toCoverageEnvRefId("QUIET_CORE_SECRET_TARGET", entry.id);
@@ -801,7 +801,7 @@ async function expectOpenClawCoverageBatchResolved(
     const expectedValue = `resolved-${entry.id}`;
     const wildcardToken = resolveCoverageWildcardToken(index);
     env[runtimeEnvId] = expectedValue;
-    applyConfigForOpenClawTarget(config, entry, envId, wildcardToken);
+    applyConfigForQuietCoreTarget(config, entry, envId, wildcardToken);
   }
   const snapshot = await prepareConfigCoverageSnapshot({
     config,
@@ -820,10 +820,10 @@ async function expectOpenClawCoverageBatchResolved(
 }
 
 const QUIET_CORE_CORE_COVERAGE_BATCHES = buildCoverageBatches(
-  collectOpenClawCoverageEntries({ includePluginEntries: false }),
+  collectQuietCoreCoverageEntries({ includePluginEntries: false }),
 );
 const QUIET_CORE_PLUGIN_COVERAGE_BATCHES = buildCoverageBatches(
-  collectOpenClawCoverageEntries({ includePluginEntries: true }),
+  collectQuietCoreCoverageEntries({ includePluginEntries: true }),
 );
 const AUTH_PROFILE_COVERAGE_BATCHES = buildCoverageBatches(
   COVERAGE_REGISTRY_ENTRIES.filter((entry) => entry.configFile === "auth-profiles.json"),
@@ -862,7 +862,7 @@ describe("secrets runtime target coverage", () => {
       batch.some((entry) => entry.id === "channels.googlechat.serviceAccount"),
     );
     if (googleChatBatch) {
-      await expectOpenClawCoverageBatchResolved("quiet-core-bot.json core", googleChatBatch);
+      await expectQuietCoreCoverageBatchResolved("quiet-core-bot.json core", googleChatBatch);
     }
   });
 
@@ -870,7 +870,7 @@ describe("secrets runtime target coverage", () => {
     test.each(QUIET_CORE_CORE_COVERAGE_BATCHES.map(toCoverageBatchCase))(
       "handles $name",
       async ({ batch }) => {
-        await expectOpenClawCoverageBatchResolved("quiet-core-bot.json core", batch);
+        await expectQuietCoreCoverageBatchResolved("quiet-core-bot.json core", batch);
       },
       RUNTIME_COVERAGE_TEST_TIMEOUT_MS,
     );
@@ -880,7 +880,7 @@ describe("secrets runtime target coverage", () => {
     test.each(QUIET_CORE_PLUGIN_COVERAGE_BATCHES.map(toCoverageBatchCase))(
       "handles $name",
       async ({ batch }) => {
-        await expectOpenClawCoverageBatchResolved("quiet-core-bot.json plugins", batch);
+        await expectQuietCoreCoverageBatchResolved("quiet-core-bot.json plugins", batch);
       },
       RUNTIME_COVERAGE_TEST_TIMEOUT_MS,
     );
@@ -902,7 +902,7 @@ describe("secrets runtime target coverage", () => {
           applyAuthStoreTarget(authStore, entry, envId, resolveCoverageWildcardToken(index));
         }
         const snapshot = await prepareAuthCoverageSnapshot({
-          config: {} as OpenClawConfig,
+          config: {} as QuietCoreConfig,
           env,
           agentDirs: ["/tmp/quiet-core-bot-agent-main"],
           loadAuthStore: () => authStore,

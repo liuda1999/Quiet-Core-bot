@@ -2,7 +2,7 @@
  * Test runtime factory for subagent announce delivery. It wires gateway,
  * session-store, queue, and hook behavior to caller-provided mocks.
  */
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { callGateway } from "../gateway/call.js";
 import type { dispatchGatewayMethodInProcess } from "../gateway/server-plugins.js";
 import type { EmbeddedAgentQueueMessageOptions } from "./embedded-agent-runner/run-state.js";
@@ -10,7 +10,7 @@ import type { EmbeddedAgentQueueMessageOutcome } from "./embedded-agent-runner/r
 
 type DeliveryRuntimeMockOptions = {
   callGateway: (request: unknown) => Promise<unknown>;
-  getRuntimeConfig: () => OpenClawConfig;
+  getRuntimeConfig: () => QuietCoreConfig;
   loadSessionStore: (storePath: string) => unknown;
   resolveAgentIdFromSessionKey: (sessionKey: string) => string;
   resolveMainSessionKey: (cfg: unknown) => string;

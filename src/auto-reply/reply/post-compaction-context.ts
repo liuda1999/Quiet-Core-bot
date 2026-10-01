@@ -5,7 +5,7 @@ import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/
 import { resolveAgentContextLimits } from "../../agents/agent-scope.js";
 import { resolveCronStyleNow } from "../../agents/current-time.js";
 import { formatDateStamp, resolveUserTimezone } from "../../agents/date-time.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { openRootFile } from "../../infra/boundary-file-read.js";
 
 const MAX_CONTEXT_CHARS = 1800;
@@ -48,7 +48,7 @@ function matchesSectionSet(sectionNames: string[], expectedSections: string[]): 
  * daily memory files instead of guessing based on training cutoff.
  */
 export type PostCompactionContextOptions = {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   agentId?: string;
   nowMs?: number;
 };

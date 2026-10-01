@@ -6,7 +6,7 @@ import {
   normalizeOptionalLowercaseString,
 } from "@quiet-core/normalization-core/string-coerce";
 import type { EventFrame } from "../../packages/gateway-protocol/src/index.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { GatewayClient } from "../gateway/client.js";
 import { extractFirstTextBlock } from "../shared/chat-message-content.js";
 import { VERSION } from "../version.js";
@@ -65,7 +65,7 @@ function clampPositiveInteger(value: number | undefined, fallback: number, max: 
 }
 
 /** Connects the MCP server surface to a Gateway client and queues channel events for polling. */
-export class OpenClawChannelBridge {
+export class QuietCoreChannelBridge {
   private gateway: GatewayClient | null = null;
   private readonly verbose: boolean;
   private readonly claudeChannelMode: ClaudeChannelMode;
@@ -86,7 +86,7 @@ export class OpenClawChannelBridge {
   private readySettled = false;
 
   constructor(
-    private readonly cfg: OpenClawConfig,
+    private readonly cfg: QuietCoreConfig,
     private readonly params: {
       gatewayUrl?: string;
       gatewayToken?: string;

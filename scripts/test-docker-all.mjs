@@ -1,5 +1,5 @@
 // Docker E2E aggregate scheduler.
-// Builds shared Docker images, prepares one OpenClaw npm tarball, assigns lanes
+// Builds shared Docker images, prepares one QuietCore npm tarball, assigns lanes
 // to bare/functional images, and runs lanes through weighted resource pools.
 import { spawn } from "node:child_process";
 import fs from "node:fs";
@@ -21,7 +21,7 @@ import {
   laneSummary,
   laneWeight,
   lanesNeedE2eImageKind,
-  lanesNeedOpenClawPackage,
+  lanesNeedQuietCorePackage,
   normalizeReleaseProfile,
   parseLaneSelection,
   parseLiveMode,
@@ -975,14 +975,14 @@ async function runDockerPreflight(baseEnv, options) {
   console.log(`==> Docker preflight run: ${elapsedSeconds}s`);
 }
 
-async function prepareOpenClawPackage(baseEnv, logDir) {
+async function prepareQuietCorePackage(baseEnv, logDir) {
   const existing = baseEnv.QUIET_CORE_CURRENT_PACKAGE_TGZ;
   if (existing) {
     const packageTgz = path.resolve(existing);
     baseEnv.QUIET_CORE_CURRENT_PACKAGE_TGZ = packageTgz;
     baseEnv.QUIET_CORE_BUNDLED_CHANNEL_HOST_BUILD = "0";
     baseEnv.QUIET_CORE_NPM_ONBOARD_HOST_BUILD = "0";
-    console.log(`==> OpenClaw package: ${packageTgz}`);
+    console.log(`==> QuietCore package: ${packageTgz}`);
     return;
   }
 
@@ -990,7 +990,7 @@ async function prepareOpenClawPackage(baseEnv, logDir) {
   await mkdir(packDir, { recursive: true });
   const packageTgz = path.join(packDir, "quiet-core-bot-current.tgz");
   await runForeground(
-    "Prepare OpenClaw package once",
+    "Prepare QuietCore package once",
     `node scripts/package-quiet-core-bot-for-docker.mjs --output-dir ${shellQuote(packDir)} --output-name quiet-core-bot-current.tgz`,
     baseEnv,
   );
@@ -998,7 +998,7 @@ async function prepareOpenClawPackage(baseEnv, logDir) {
   baseEnv.QUIET_CORE_CURRENT_PACKAGE_TGZ = packageTgz;
   baseEnv.QUIET_CORE_BUNDLED_CHANNEL_HOST_BUILD = "0";
   baseEnv.QUIET_CORE_NPM_ONBOARD_HOST_BUILD = "0";
-  console.log(`==> OpenClaw package: ${baseEnv.QUIET_CORE_CURRENT_PACKAGE_TGZ}`);
+  console.log(`==> QuietCore package: ${baseEnv.QUIET_CORE_CURRENT_PACKAGE_TGZ}`);
 }
 
 function e2eImageForLane(poolLane, baseEnv) {
@@ -1598,12 +1598,12 @@ async function main() {
       });
     },
   );
-  if (lanesNeedOpenClawPackage(scheduledLanes)) {
+  if (lanesNeedQuietCorePackage(scheduledLanes)) {
     await runPhase(phases, "prepare-quiet-core-bot-package", {}, async () => {
-      await prepareOpenClawPackage(baseEnv, logDir);
+      await prepareQuietCorePackage(baseEnv, logDir);
     });
   } else {
-    console.log("==> OpenClaw package: not needed for selected lanes");
+    console.log("==> QuietCore package: not needed for selected lanes");
   }
 
   if (buildEnabled) {

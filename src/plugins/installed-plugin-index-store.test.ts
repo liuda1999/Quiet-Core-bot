@@ -3,8 +3,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
-  closeOpenClawStateDatabaseForTest,
-  runOpenClawStateWriteTransaction,
+  closeQuietCoreStateDatabaseForTest,
+  runQuietCoreStateWriteTransaction,
 } from "../state/quiet-core-bot-state-db.js";
 import type { PluginCandidate } from "./discovery.js";
 import {
@@ -20,7 +20,7 @@ import { cleanupTrackedTempDirs, makeTrackedTempDir } from "./test-helpers/fs-fi
 const tempDirs: string[] = [];
 
 afterEach(() => {
-  closeOpenClawStateDatabaseForTest();
+  closeQuietCoreStateDatabaseForTest();
   cleanupTrackedTempDirs(tempDirs);
 });
 
@@ -174,7 +174,7 @@ function insertPersistedIndexRow(
     diagnosticsJson?: string;
   },
 ) {
-  runOpenClawStateWriteTransaction(
+  runQuietCoreStateWriteTransaction(
     ({ db }) => {
       db.prepare(
         `

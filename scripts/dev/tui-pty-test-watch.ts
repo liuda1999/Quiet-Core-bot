@@ -1,4 +1,4 @@
-// Tui Pty Test Watch script supports OpenClaw repository automation.
+// Tui Pty Test Watch script supports QuietCore repository automation.
 import { spawn, spawnSync } from "node:child_process";
 import { mkdir, open, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";

@@ -7,8 +7,8 @@ import { formatErrorMessage } from "../../infra/errors.js";
 import type { ExecApprovalRequest } from "../../infra/exec-approvals.js";
 import type { ReplyPayload } from "../types.js";
 import {
-  buildCurrentOpenClawCliCommand,
-  buildCurrentOpenClawCliExecEnv,
+  buildCurrentQuietCoreCliCommand,
+  buildCurrentQuietCoreCliExecEnv,
 } from "./commands-quiet-core-bot-cli.js";
 import {
   deliverPrivateCommandReply,
@@ -200,7 +200,7 @@ function buildDiagnosticsApprovalRequest(params: HandleCommandsParams): ExecAppr
 }
 
 function buildGatewayDiagnosticsExportJsonCommand(): string {
-  return buildCurrentOpenClawCliCommand(["gateway", "diagnostics", "export", "--json"]);
+  return buildCurrentQuietCoreCliCommand(["gateway", "diagnostics", "export", "--json"]);
 }
 
 async function deliverPrivateDiagnosticsReply(params: {
@@ -256,7 +256,7 @@ async function requestGatewayDiagnosticsExportApproval(
     });
     const result = await execTool.execute("chat-diagnostics-gateway-export", {
       command,
-      env: buildCurrentOpenClawCliExecEnv(),
+      env: buildCurrentQuietCoreCliExecEnv(),
       security: "allowlist",
       ask: "always",
       background: true,

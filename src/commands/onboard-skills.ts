@@ -5,7 +5,7 @@
  * records per-skill API keys entered during setup.
  */
 import { formatCliCommand } from "../cli/command-format.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { resolveBrewExecutable } from "../infra/brew.js";
 import { isContainerEnvironment } from "../infra/container-environment.js";
 import type { RuntimeEnv } from "../runtime.js";
@@ -58,11 +58,11 @@ function isBrewOnlyInstallableSkill(skill: {
 
 /** Runs the interactive skills setup step and returns the updated config. */
 export async function setupSkills(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   workspaceDir: string,
   runtime: RuntimeEnv,
   prompter: WizardPrompter,
-): Promise<OpenClawConfig> {
+): Promise<QuietCoreConfig> {
   const report = buildWorkspaceSkillStatus(workspaceDir, { config: cfg });
   const eligible = report.skills.filter((s) => s.eligible);
   const unsupportedOs = report.skills.filter(
@@ -115,7 +115,7 @@ export async function setupSkills(
       );
     }
   }
-  let next: OpenClawConfig = cfg;
+  let next: QuietCoreConfig = cfg;
   if (installable.length === 0 && missing.length === 0) {
     await prompter.note(
       [

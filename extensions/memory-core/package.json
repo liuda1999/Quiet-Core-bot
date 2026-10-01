@@ -2,7 +2,7 @@
   "name": "@quiet-core/memory-core",
   "version": "2026.6.11",
   "private": true,
-  "description": "OpenClaw core memory search plugin",
+  "description": "QuietCore core memory search plugin",
   "type": "module",
   "dependencies": {
     "chokidar": "5.0.0",

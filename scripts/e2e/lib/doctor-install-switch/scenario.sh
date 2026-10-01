@@ -27,7 +27,7 @@ tar -xzf "$package_tgz" -C "$git_root" --strip-components=1
   quiet_core_bot_e2e_maybe_timeout "${QUIET_CORE_E2E_NPM_INSTALL_TIMEOUT:-600s}" npm install --omit=optional --no-fund --no-audit >/tmp/quiet-core-bot-git-install.log 2>&1
   git init -q
   git config user.email "docker-e2e@quiet-core-bot.local"
-  git config user.name "OpenClaw Docker E2E"
+  git config user.name "QuietCore Docker E2E"
   git add -A --
   git commit -qm "test fixture"
 )

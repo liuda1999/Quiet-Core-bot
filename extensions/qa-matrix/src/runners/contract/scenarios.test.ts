@@ -16,15 +16,15 @@ const { createMatrixQaE2eeScenarioClient, runMatrixQaE2eeBootstrap, startMatrixQ
 const {
   formatMatrixQaCliCommand,
   redactMatrixQaCliOutput,
-  resolveMatrixQaOpenClawCliEntryPath,
-  runMatrixQaOpenClawCli,
-  startMatrixQaOpenClawCli,
+  resolveMatrixQaQuietCoreCliEntryPath,
+  runMatrixQaQuietCoreCli,
+  startMatrixQaQuietCoreCli,
 } = vi.hoisted(() => ({
   formatMatrixQaCliCommand: (args: string[]) => `quiet-core-bot ${args.join(" ")}`,
   redactMatrixQaCliOutput: (text: string) => text,
-  resolveMatrixQaOpenClawCliEntryPath: (cwd: string) => `${cwd}/dist/index.js`,
-  runMatrixQaOpenClawCli: vi.fn(),
-  startMatrixQaOpenClawCli: vi.fn(),
+  resolveMatrixQaQuietCoreCliEntryPath: (cwd: string) => `${cwd}/dist/index.js`,
+  runMatrixQaQuietCoreCli: vi.fn(),
+  startMatrixQaQuietCoreCli: vi.fn(),
 }));
 
 vi.mock("../../substrate/client.js", () => ({
@@ -40,9 +40,9 @@ vi.mock("../../substrate/fault-proxy.js", () => ({
 vi.mock("./scenario-runtime-cli.js", () => ({
   formatMatrixQaCliCommand,
   redactMatrixQaCliOutput,
-  resolveMatrixQaOpenClawCliEntryPath,
-  runMatrixQaOpenClawCli,
-  startMatrixQaOpenClawCli,
+  resolveMatrixQaQuietCoreCliEntryPath,
+  runMatrixQaQuietCoreCli,
+  startMatrixQaQuietCoreCli,
 }));
 
 import {
@@ -365,8 +365,8 @@ describe("matrix live qa scenarios", () => {
     createMatrixQaClient.mockReset();
     createMatrixQaE2eeScenarioClient.mockReset();
     runMatrixQaE2eeBootstrap.mockReset();
-    runMatrixQaOpenClawCli.mockReset();
-    startMatrixQaOpenClawCli.mockReset();
+    runMatrixQaQuietCoreCli.mockReset();
+    startMatrixQaQuietCoreCli.mockReset();
     startMatrixQaFaultProxy.mockReset();
   });
 
@@ -977,7 +977,7 @@ describe("matrix live qa scenarios", () => {
   it("merges default and scenario-requested Matrix topology once per run", () => {
     expect(
       scenarioTesting.buildMatrixQaTopologyForScenarios({
-        defaultRoomName: "OpenClaw Matrix QA run",
+        defaultRoomName: "QuietCore Matrix QA run",
         scenarios: [
           MATRIX_QA_SCENARIOS[0],
           {
@@ -1014,7 +1014,7 @@ describe("matrix live qa scenarios", () => {
           key: "main",
           kind: "group",
           members: ["driver", "observer", "sut"],
-          name: "OpenClaw Matrix QA run",
+          name: "QuietCore Matrix QA run",
           requireMention: true,
         },
         {
@@ -1037,7 +1037,7 @@ describe("matrix live qa scenarios", () => {
   it("rejects conflicting Matrix topology room definitions", () => {
     expect(() =>
       scenarioTesting.buildMatrixQaTopologyForScenarios({
-        defaultRoomName: "OpenClaw Matrix QA run",
+        defaultRoomName: "QuietCore Matrix QA run",
         scenarios: [
           {
             id: "matrix-thread-follow-up",
@@ -1082,7 +1082,7 @@ describe("matrix live qa scenarios", () => {
 
   it("provisions isolated encrypted rooms for each E2EE scenario", () => {
     const topology = scenarioTesting.buildMatrixQaTopologyForScenarios({
-      defaultRoomName: "OpenClaw Matrix QA run",
+      defaultRoomName: "QuietCore Matrix QA run",
       scenarios: [
         requireMatrixQaScenario("matrix-e2ee-basic-reply"),
         requireMatrixQaScenario("matrix-e2ee-thread-follow-up"),
@@ -1095,7 +1095,7 @@ describe("matrix live qa scenarios", () => {
         key: "main",
         kind: "group",
         members: ["driver", "observer", "sut"],
-        name: "OpenClaw Matrix QA run",
+        name: "QuietCore Matrix QA run",
         requireMention: true,
       },
       {
@@ -5826,7 +5826,7 @@ describe("matrix live qa scenarios", () => {
       });
       const kill = vi.fn();
       const endStdin = vi.fn();
-      startMatrixQaOpenClawCli.mockReturnValue({
+      startMatrixQaQuietCoreCli.mockReturnValue({
         args: ["matrix", "verify", "self", "--account", "cli"],
         endStdin,
         kill,
@@ -5836,7 +5836,7 @@ describe("matrix live qa scenarios", () => {
         writeStdin,
       });
       let cliAccountConfigDuringRun: Record<string, unknown> | null = null;
-      runMatrixQaOpenClawCli.mockImplementation(async ({ args, env, stdin }) => {
+      runMatrixQaQuietCoreCli.mockImplementation(async ({ args, env, stdin }) => {
         if (!cliAccountConfigDuringRun && env.QUIET_CORE_CONFIG_PATH) {
           const cliConfig = JSON.parse(
             await readFile(String(env.QUIET_CORE_CONFIG_PATH), "utf8"),
@@ -5922,8 +5922,8 @@ describe("matrix live qa scenarios", () => {
       expect(artifacts.sasEmoji).toEqual(["🐶 Dog"]);
       expect(artifacts.secondaryDeviceId).toBe("CLIDEVICE");
 
-      expect(startMatrixQaOpenClawCli).toHaveBeenCalledTimes(1);
-      expect(mockObjectArg(startMatrixQaOpenClawCli, "startMatrixQaOpenClawCli").args).toEqual([
+      expect(startMatrixQaQuietCoreCli).toHaveBeenCalledTimes(1);
+      expect(mockObjectArg(startMatrixQaQuietCoreCli, "startMatrixQaQuietCoreCli").args).toEqual([
         "matrix",
         "verify",
         "self",
@@ -5932,7 +5932,7 @@ describe("matrix live qa scenarios", () => {
         "--timeout-ms",
         "8000",
       ]);
-      expect(mockObjectArg(startMatrixQaOpenClawCli, "startMatrixQaOpenClawCli").timeoutMs).toBe(
+      expect(mockObjectArg(startMatrixQaQuietCoreCli, "startMatrixQaQuietCoreCli").timeoutMs).toBe(
         16_000,
       );
       expect(waitForOutput).toHaveBeenCalledTimes(2);
@@ -5942,7 +5942,7 @@ describe("matrix live qa scenarios", () => {
       expect(kill).toHaveBeenCalledTimes(1);
       const registrationRequest = mockObjectArg(registerWithToken, "registerWithToken");
       expect(registrationRequest?.deviceName).toBe(
-        "OpenClaw Matrix QA CLI Self Verification Owner",
+        "QuietCore Matrix QA CLI Self Verification Owner",
       );
       if (
         typeof registrationRequest.localpart !== "string" ||
@@ -5957,7 +5957,7 @@ describe("matrix live qa scenarios", () => {
       expect(registrationPassword.startsWith("matrix-qa-")).toBe(true);
       expect(registrationRequest?.registrationToken).toBe("registration-token");
       expect(loginWithPassword).toHaveBeenCalledWith({
-        deviceName: "OpenClaw Matrix QA CLI Self Verification Device",
+        deviceName: "QuietCore Matrix QA CLI Self Verification Device",
         password: "cli-owner-password",
         userId: "@cli-owner:matrix-qa.test",
       });
@@ -5970,8 +5970,8 @@ describe("matrix live qa scenarios", () => {
       expect(e2eeClientOptions.password).toBe("cli-owner-password");
       expect(e2eeClientOptions.scenarioId).toBe("matrix-e2ee-cli-self-verification");
       expect(e2eeClientOptions.userId).toBe("@cli-owner:matrix-qa.test");
-      expect(runMatrixQaOpenClawCli).toHaveBeenCalledTimes(2);
-      expect(runMatrixQaOpenClawCli.mock.calls.map(([params]) => params.args)).toEqual([
+      expect(runMatrixQaQuietCoreCli).toHaveBeenCalledTimes(2);
+      expect(runMatrixQaQuietCoreCli.mock.calls.map(([params]) => params.args)).toEqual([
         [
           "matrix",
           "verify",
@@ -5984,10 +5984,10 @@ describe("matrix live qa scenarios", () => {
         ],
         ["matrix", "verify", "status", "--account", "cli", "--json"],
       ]);
-      expect(mockObjectArg(runMatrixQaOpenClawCli, "runMatrixQaOpenClawCli").stdin).toBe(
+      expect(mockObjectArg(runMatrixQaQuietCoreCli, "runMatrixQaQuietCoreCli").stdin).toBe(
         "encoded-recovery-key\n",
       );
-      const cliEnv = mockObjectArg(startMatrixQaOpenClawCli, "startMatrixQaOpenClawCli")
+      const cliEnv = mockObjectArg(startMatrixQaQuietCoreCli, "startMatrixQaQuietCoreCli")
         .env as Record<string, unknown>;
       expect(cliEnv?.QUIET_CORE_STATE_DIR).toContain("quiet-core-bot-matrix-cli-qa-");
       expect(cliEnv?.QUIET_CORE_CONFIG_PATH).toContain("quiet-core-bot-matrix-cli-qa-");
@@ -6050,7 +6050,7 @@ describe("matrix live qa scenarios", () => {
         password: "cli-add-password",
         userId: "@cli-add:matrix-qa.test",
       });
-      runMatrixQaOpenClawCli.mockImplementation(async ({ args, env }) => {
+      runMatrixQaQuietCoreCli.mockImplementation(async ({ args, env }) => {
         if (env.QUIET_CORE_CONFIG_PATH) {
           const initialConfig = JSON.parse(
             await readFile(String(env.QUIET_CORE_CONFIG_PATH), "utf8"),
@@ -6138,7 +6138,7 @@ describe("matrix live qa scenarios", () => {
       expect(artifacts.verificationBootstrapAttempted).toBe(true);
       expect(artifacts.verificationBootstrapSuccess).toBe(true);
 
-      expect(runMatrixQaOpenClawCli.mock.calls.map(([params]) => params.args)).toEqual([
+      expect(runMatrixQaQuietCoreCli.mock.calls.map(([params]) => params.args)).toEqual([
         [
           "matrix",
           "account",
@@ -6154,7 +6154,7 @@ describe("matrix live qa scenarios", () => {
           "--password",
           "cli-add-password",
           "--device-name",
-          "OpenClaw Matrix QA CLI Account Add E2EE",
+          "QuietCore Matrix QA CLI Account Add E2EE",
           "--allow-private-network",
           "--enable-e2ee",
           "--json",
@@ -6170,7 +6170,7 @@ describe("matrix live qa scenarios", () => {
         ],
       ]);
       expect(mockObjectArg(registerWithToken, "registerWithToken").deviceName).toBe(
-        "OpenClaw Matrix QA CLI Account Add Owner",
+        "QuietCore Matrix QA CLI Account Add Owner",
       );
       expect(mockObjectArg(registerWithToken, "registerWithToken").registrationToken).toBe(
         "registration-token",
@@ -6198,7 +6198,7 @@ describe("matrix live qa scenarios", () => {
         userId: "@cli-setup:matrix-qa.test",
       });
       let initialAccountConfig: Record<string, unknown> | null = null;
-      runMatrixQaOpenClawCli.mockImplementation(async ({ args, env }) => {
+      runMatrixQaQuietCoreCli.mockImplementation(async ({ args, env }) => {
         if (!initialAccountConfig && env.QUIET_CORE_CONFIG_PATH) {
           const initialConfig = JSON.parse(
             await readFile(String(env.QUIET_CORE_CONFIG_PATH), "utf8"),
@@ -6301,12 +6301,12 @@ describe("matrix live qa scenarios", () => {
       expect(capturedInitialAccountConfig.password).toBe("cli-setup-password");
       expect(capturedInitialAccountConfig.startupVerification).toBe("off");
       expect(capturedInitialAccountConfig.userId).toBe("@cli-setup:matrix-qa.test");
-      expect(runMatrixQaOpenClawCli.mock.calls.map(([params]) => params.args)).toEqual([
+      expect(runMatrixQaQuietCoreCli.mock.calls.map(([params]) => params.args)).toEqual([
         ["matrix", "encryption", "setup", "--account", "cli-encryption-setup", "--json"],
         ["matrix", "verify", "status", "--account", "cli-encryption-setup", "--json"],
       ]);
       expect(mockObjectArg(registerWithToken, "registerWithToken").deviceName).toBe(
-        "OpenClaw Matrix QA CLI Encryption Setup Owner",
+        "QuietCore Matrix QA CLI Encryption Setup Owner",
       );
       expect(mockObjectArg(registerWithToken, "registerWithToken").registrationToken).toBe(
         "registration-token",
@@ -6342,7 +6342,7 @@ describe("matrix live qa scenarios", () => {
         userId: "@cli-idempotent:matrix-qa.test",
       });
       let initialAccountConfig: Record<string, unknown> | null = null;
-      runMatrixQaOpenClawCli.mockImplementation(async ({ args, env }) => {
+      runMatrixQaQuietCoreCli.mockImplementation(async ({ args, env }) => {
         if (!initialAccountConfig && env.QUIET_CORE_CONFIG_PATH) {
           const initialConfig = JSON.parse(
             await readFile(String(env.QUIET_CORE_CONFIG_PATH), "utf8"),
@@ -6427,12 +6427,12 @@ describe("matrix live qa scenarios", () => {
       expect(capturedInitialAccountConfig.password).toBe("cli-idempotent-password");
       expect(capturedInitialAccountConfig.startupVerification).toBe("off");
       expect(capturedInitialAccountConfig.userId).toBe("@cli-idempotent:matrix-qa.test");
-      expect(runMatrixQaOpenClawCli.mock.calls.map(([params]) => params.args)).toEqual([
+      expect(runMatrixQaQuietCoreCli.mock.calls.map(([params]) => params.args)).toEqual([
         ["matrix", "encryption", "setup", "--account", "cli-encryption-idempotent", "--json"],
         ["matrix", "encryption", "setup", "--account", "cli-encryption-idempotent", "--json"],
       ]);
       expect(mockObjectArg(registerWithToken, "registerWithToken").deviceName).toBe(
-        "OpenClaw Matrix QA CLI Encryption Idempotent Owner",
+        "QuietCore Matrix QA CLI Encryption Idempotent Owner",
       );
       expect(mockObjectArg(registerWithToken, "registerWithToken").registrationToken).toBe(
         "registration-token",
@@ -6501,7 +6501,7 @@ describe("matrix live qa scenarios", () => {
         .fn()
         .mockRejectedValue(new Error("quiet-core-bot matrix encryption setup exited 1"));
       const kill = vi.fn();
-      startMatrixQaOpenClawCli.mockReturnValue({
+      startMatrixQaQuietCoreCli.mockReturnValue({
         args: ["matrix", "encryption", "setup", "--account", "cli-encryption-failure", "--json"],
         kill,
         output,
@@ -6566,7 +6566,7 @@ describe("matrix live qa scenarios", () => {
           search: "",
         }),
       ).toBe(true);
-      expect(mockObjectArg(startMatrixQaOpenClawCli, "startMatrixQaOpenClawCli").args).toEqual([
+      expect(mockObjectArg(startMatrixQaQuietCoreCli, "startMatrixQaQuietCoreCli").args).toEqual([
         "matrix",
         "encryption",
         "setup",
@@ -6576,7 +6576,7 @@ describe("matrix live qa scenarios", () => {
       ]);
       expect(
         (
-          mockObjectArg(startMatrixQaOpenClawCli, "startMatrixQaOpenClawCli").env as Record<
+          mockObjectArg(startMatrixQaQuietCoreCli, "startMatrixQaQuietCoreCli").env as Record<
             string,
             unknown
           >
@@ -6586,7 +6586,7 @@ describe("matrix live qa scenarios", () => {
       expect(wait).toHaveBeenCalledTimes(1);
       expect(kill).toHaveBeenCalledTimes(1);
       expect(mockObjectArg(registerWithToken, "registerWithToken").deviceName).toBe(
-        "OpenClaw Matrix QA CLI Encryption Failure Owner",
+        "QuietCore Matrix QA CLI Encryption Failure Owner",
       );
       expect(mockObjectArg(registerWithToken, "registerWithToken").registrationToken).toBe(
         "registration-token",
@@ -6652,7 +6652,7 @@ describe("matrix live qa scenarios", () => {
         userId: "@cli-recovery:matrix-qa.test",
       });
       let initialAccountConfig: Record<string, unknown> | null = null;
-      runMatrixQaOpenClawCli.mockImplementation(async ({ args, env }) => {
+      runMatrixQaQuietCoreCli.mockImplementation(async ({ args, env }) => {
         if (!initialAccountConfig && env.QUIET_CORE_CONFIG_PATH) {
           const initialConfig = JSON.parse(
             await readFile(String(env.QUIET_CORE_CONFIG_PATH), "utf8"),
@@ -6748,7 +6748,7 @@ describe("matrix live qa scenarios", () => {
       expect(bootstrapOwnDeviceVerification).toHaveBeenCalledWith({
         allowAutomaticCrossSigningReset: false,
       });
-      expect(runMatrixQaOpenClawCli.mock.calls.map(([params]) => params.args)).toEqual([
+      expect(runMatrixQaQuietCoreCli.mock.calls.map(([params]) => params.args)).toEqual([
         [
           "matrix",
           "encryption",
@@ -6761,7 +6761,7 @@ describe("matrix live qa scenarios", () => {
         ],
       ]);
       expect(mockObjectArg(registerWithToken, "registerWithToken").deviceName).toBe(
-        "OpenClaw Matrix QA CLI Recovery Key Owner",
+        "QuietCore Matrix QA CLI Recovery Key Owner",
       );
       expect(mockObjectArg(registerWithToken, "registerWithToken").registrationToken).toBe(
         "registration-token",
@@ -6832,7 +6832,7 @@ describe("matrix live qa scenarios", () => {
         .fn()
         .mockRejectedValue(new Error("quiet-core-bot matrix encryption setup exited 1"));
       const kill = vi.fn();
-      startMatrixQaOpenClawCli.mockReturnValue({
+      startMatrixQaQuietCoreCli.mockReturnValue({
         args: [
           "matrix",
           "encryption",
@@ -6880,7 +6880,7 @@ describe("matrix live qa scenarios", () => {
       expect(artifacts.recoveryKeyRejected).toBe(true);
       expect(artifacts.setupSuccess).toBe(false);
 
-      expect(mockObjectArg(startMatrixQaOpenClawCli, "startMatrixQaOpenClawCli").args).toEqual([
+      expect(mockObjectArg(startMatrixQaQuietCoreCli, "startMatrixQaQuietCoreCli").args).toEqual([
         "matrix",
         "encryption",
         "setup",
@@ -6894,7 +6894,7 @@ describe("matrix live qa scenarios", () => {
       expect(wait).toHaveBeenCalledTimes(1);
       expect(kill).toHaveBeenCalledTimes(1);
       expect(mockObjectArg(registerWithToken, "registerWithToken").deviceName).toBe(
-        "OpenClaw Matrix QA CLI Invalid Recovery Key Owner",
+        "QuietCore Matrix QA CLI Invalid Recovery Key Owner",
       );
       expect(mockObjectArg(registerWithToken, "registerWithToken").registrationToken).toBe(
         "registration-token",
@@ -6928,7 +6928,7 @@ describe("matrix live qa scenarios", () => {
         password: "cli-multi-password",
         userId: "@cli-multi:matrix-qa.test",
       });
-      runMatrixQaOpenClawCli.mockImplementation(async ({ args, env }) => {
+      runMatrixQaQuietCoreCli.mockImplementation(async ({ args, env }) => {
         const configPath = String(env.QUIET_CORE_CONFIG_PATH);
         const config = JSON.parse(await readFile(configPath, "utf8")) as {
           channels: {
@@ -7007,11 +7007,11 @@ describe("matrix live qa scenarios", () => {
       expect(artifacts.setupSuccess).toBe(true);
       expect(artifacts.verificationBootstrapSuccess).toBe(true);
 
-      expect(runMatrixQaOpenClawCli.mock.calls.map(([params]) => params.args)).toEqual([
+      expect(runMatrixQaQuietCoreCli.mock.calls.map(([params]) => params.args)).toEqual([
         ["matrix", "encryption", "setup", "--account", "cli-multi-target", "--json"],
       ]);
       expect(mockObjectArg(registerWithToken, "registerWithToken").deviceName).toBe(
-        "OpenClaw Matrix QA CLI Multi Account Owner",
+        "QuietCore Matrix QA CLI Multi Account Owner",
       );
       expect(mockObjectArg(registerWithToken, "registerWithToken").registrationToken).toBe(
         "registration-token",
@@ -7127,7 +7127,7 @@ describe("matrix live qa scenarios", () => {
         }),
       };
       createMatrixQaE2eeScenarioClient.mockResolvedValueOnce(driverClient);
-      runMatrixQaOpenClawCli.mockImplementation(async ({ args, env }) => {
+      runMatrixQaQuietCoreCli.mockImplementation(async ({ args, env }) => {
         const joined = args.join(" ");
         if (joined === "matrix encryption setup --account cli-setup-gateway --json") {
           const configPath = String(env.QUIET_CORE_CONFIG_PATH);
@@ -7256,21 +7256,21 @@ describe("matrix live qa scenarios", () => {
       expect(finalGatewayAccount?.encryption).toBe(true);
       expect(finalGatewayAccount?.setupBootstrapMarker).toBe("preserved");
 
-      expect(runMatrixQaOpenClawCli.mock.calls.map(([params]) => params.args)).toEqual([
+      expect(runMatrixQaQuietCoreCli.mock.calls.map(([params]) => params.args)).toEqual([
         ["matrix", "encryption", "setup", "--account", "cli-setup-gateway", "--json"],
       ]);
       const registrationRequests = registerWithToken.mock.calls.map(([request]) => request);
       expect(
         registrationRequests.some(
           (request) =>
-            request.deviceName === "OpenClaw Matrix QA CLI Setup Gateway" &&
+            request.deviceName === "QuietCore Matrix QA CLI Setup Gateway" &&
             request.registrationToken === "registration-token",
         ),
       ).toBe(true);
       expect(
         registrationRequests.some(
           (request) =>
-            request.deviceName === "OpenClaw Matrix QA CLI Setup Driver" &&
+            request.deviceName === "QuietCore Matrix QA CLI Setup Driver" &&
             request.registrationToken === "registration-token",
         ),
       ).toBe(true);

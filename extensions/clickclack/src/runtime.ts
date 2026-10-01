@@ -1,5 +1,5 @@
 /**
- * Runtime store for host-provided OpenClaw services used by the ClickClack
+ * Runtime store for host-provided QuietCore services used by the ClickClack
  * bundled plugin.
  */
 import { createPluginRuntimeStore } from "quiet-core-bot/plugin-sdk/runtime-store";

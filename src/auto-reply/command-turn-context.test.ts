@@ -1,6 +1,6 @@
 /** Tests command-turn context normalization and source/kind conversions. */
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   createCommandTurnContext,
   isAuthorizedTextSlashCommandTurn,
@@ -11,7 +11,7 @@ import {
 } from "./command-turn-context.js";
 import { isExplicitCommandTurnContext } from "./command-turn-detection.js";
 
-const emptyConfig = {} as const satisfies OpenClawConfig;
+const emptyConfig = {} as const satisfies QuietCoreConfig;
 
 describe("resolveCommandTurnContext", () => {
   it("derives native command turns from legacy context fields", () => {

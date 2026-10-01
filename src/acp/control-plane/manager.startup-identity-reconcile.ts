@@ -4,7 +4,7 @@ import {
   isSessionIdentityPending,
   resolveSessionIdentityFromMeta,
 } from "@quiet-core/acp-core/runtime/session-identity";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { logVerbose } from "../../globals.js";
 import type {
   AcpSessionManagerDeps,
@@ -17,7 +17,7 @@ import type {
 
 /** Resolves pending ACP session identities opportunistically during manager startup. */
 export async function runManagerStartupIdentityReconcile(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   deps: Pick<AcpSessionManagerDeps, "listAcpSessions">;
   withSessionActor: WithManagerSessionActor;
   resolveSession: ResolveManagerSession;

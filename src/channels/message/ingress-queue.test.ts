@@ -4,28 +4,28 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../../infra/kysely-sync.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../../state/quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "../../state/quiet-core-bot-state-db.generated.js";
 import {
-  closeOpenClawStateDatabaseForTest,
-  openOpenClawStateDatabase,
+  closeQuietCoreStateDatabaseForTest,
+  openQuietCoreStateDatabase,
 } from "../../state/quiet-core-bot-state-db.js";
 import { createChannelIngressQueue, createStateDirEnv } from "./ingress-queue.js";
 
-type ChannelIngressTestDatabase = Pick<OpenClawStateKyselyDatabase, "channel_ingress_events">;
+type ChannelIngressTestDatabase = Pick<QuietCoreStateKyselyDatabase, "channel_ingress_events">;
 
 async function withTempState<T>(fn: (stateDir: string) => Promise<T>): Promise<T> {
   const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-ingress-queue-"));
   try {
     return await fn(stateDir);
   } finally {
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
     await fs.rm(stateDir, { recursive: true, force: true });
   }
 }
 
 describe("channel ingress queue", () => {
   afterEach(() => {
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
   });
 
   it("opens a custom state database without copying the full process env", async () => {
@@ -50,7 +50,7 @@ describe("channel ingress queue", () => {
       expect(Object.getPrototypeOf(env)).toBe(inheritedEnv);
       expect(Object.keys(env)).toEqual(["QUIET_CORE_STATE_DIR"]);
 
-      const database = openOpenClawStateDatabase({ env });
+      const database = openQuietCoreStateDatabase({ env });
       expect(database.path).toBe(path.join(stateDir, "state", "quiet-core-bot.sqlite"));
     });
   });
@@ -510,7 +510,7 @@ describe("channel ingress queue", () => {
       await queue.release("retry", { lastError: "stale retry text", releasedAt: 26 });
       await queue.complete("retry", { completedAt: 27 });
 
-      const database = openOpenClawStateDatabase({
+      const database = openQuietCoreStateDatabase({
         env: createStateDirEnv(stateDir),
       });
       const kysely = getNodeSqliteKysely<ChannelIngressTestDatabase>(database.db);

@@ -4,7 +4,7 @@
  * providers and profile ids relevant for the current agent.
  */
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { resolveExternalCliAuthScopeFromConfig } from "./auth-profiles/external-cli-scope.js";
 
 describe("external CLI auth scope", () => {
@@ -75,7 +75,7 @@ describe("external CLI auth scope", () => {
           },
         ],
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     const scope = resolveExternalCliAuthScopeFromConfig(cfg);
 

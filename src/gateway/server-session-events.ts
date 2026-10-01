@@ -18,7 +18,7 @@ import { hasTrackedActiveSessionRun } from "./server-methods/session-active-runs
 import { buildGatewaySessionEventFields } from "./session-event-payload.js";
 import { resolveSessionKeyForTranscriptFile } from "./session-transcript-key.js";
 import {
-  attachOpenClawTranscriptMeta,
+  attachQuietCoreTranscriptMeta,
   readSessionMessageCountAsync,
 } from "./session-transcript-readers.js";
 import {
@@ -173,7 +173,7 @@ async function handleTranscriptUpdateBroadcast(
     includeSession: true,
     hasActiveRun,
   });
-  const rawMessage = attachOpenClawTranscriptMeta(update.message, {
+  const rawMessage = attachQuietCoreTranscriptMeta(update.message, {
     ...(typeof update.messageId === "string" ? { id: update.messageId } : {}),
     ...(messageSeq !== undefined ? { seq: messageSeq } : {}),
   });

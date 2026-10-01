@@ -1,6 +1,6 @@
 // Onboard config test helpers build model/provider config fixtures for plugin tests.
 import type { ModelApi } from "../provider-model-shared.js";
-import type { OpenClawConfig } from "../testing.js";
+import type { QuietCoreConfig } from "../testing.js";
 
 export const EXPECTED_FALLBACKS = ["anthropic/claude-opus-4-5"] as const;
 
@@ -11,7 +11,7 @@ export function createLegacyProviderConfig(params: {
   modelName?: string;
   baseUrl?: string;
   apiKey?: string;
-}): OpenClawConfig {
+}): QuietCoreConfig {
   return {
     models: {
       providers: {
@@ -33,10 +33,10 @@ export function createLegacyProviderConfig(params: {
         },
       },
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
-export function createConfigWithFallbacks(): OpenClawConfig {
+export function createConfigWithFallbacks(): QuietCoreConfig {
   return {
     agents: {
       defaults: {

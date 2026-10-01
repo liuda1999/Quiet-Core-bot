@@ -17,12 +17,12 @@ vi.mock("../logging/subsystem.js", async (importOriginal) => {
   };
 });
 
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 
-function providerNoneConfig(): OpenClawConfig {
+function providerNoneConfig(): QuietCoreConfig {
   return {
     agents: { defaults: { memorySearch: { provider: "none" } } },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
 async function loadModule() {

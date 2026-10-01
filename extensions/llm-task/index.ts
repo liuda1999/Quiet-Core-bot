@@ -1,4 +1,4 @@
-// Llm Task plugin entrypoint registers its OpenClaw integration.
+// Llm Task plugin entrypoint registers its QuietCore integration.
 import { optionalPositiveIntegerSchema } from "quiet-core-bot/plugin-sdk/channel-actions";
 import { defineToolPlugin } from "quiet-core-bot/plugin-sdk/tool-plugin";
 import { Type } from "typebox";

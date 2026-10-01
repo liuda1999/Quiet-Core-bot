@@ -6,7 +6,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { withOwnedSessionTranscriptWrites } from "../../config/sessions/transcript-write-context.js";
-import { isTranscriptOnlyOpenClawAssistantMessage } from "../../shared/transcript-only-quiet-core-bot-assistant.js";
+import { isTranscriptOnlyQuietCoreAssistantMessage } from "../../shared/transcript-only-quiet-core-bot-assistant.js";
 import { prepareSessionManagerForRun } from "../embedded-agent-runner/session-manager-init.js";
 import { repairSessionFileIfNeeded } from "../session-file-repair.js";
 import {
@@ -1730,7 +1730,7 @@ describe("SessionManager.open", () => {
           entry.type === "custom" ||
           entry.type === "label" ||
           entry.type === "session_info" ||
-          (entry.type === "message" && isTranscriptOnlyOpenClawAssistantMessage(entry.message)),
+          (entry.type === "message" && isTranscriptOnlyQuietCoreAssistantMessage(entry.message)),
       }),
     ).toBe(1);
     expect(sessionManager.getLeafId()).toBe(baseAnswerId);

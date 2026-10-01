@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Plugin Boundary Report script supports OpenClaw repository automation.
+// Plugin Boundary Report script supports QuietCore repository automation.
 import { spawnSync } from "node:child_process";
 import { existsSync, lstatSync, readdirSync, readFileSync } from "node:fs";
 import { join, relative, resolve } from "node:path";

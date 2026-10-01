@@ -1,8 +1,8 @@
-import OpenClawKit
+import QuietCoreKit
 import SwiftUI
 import Testing
 import UIKit
-@testable import OpenClaw
+@testable import QuietCore
 
 @Suite struct SwiftUIRenderSmokeTests {
     @MainActor private static func host(_ view: some View, size: CGSize? = nil) -> UIWindow {
@@ -102,7 +102,7 @@ import UIKit
         let screens: [AnyView] = [
             AnyView(CommandCenterTab(openChat: {}, openSettings: {})),
             AnyView(IPadActivityScreen(openChat: {}, openSettings: {})),
-            AnyView(OpenClawDocsScreen()),
+            AnyView(QuietCoreDocsScreen()),
             AnyView(IPadWorkboardScreen(openChat: {}, openSettings: {})),
             AnyView(IPadSkillWorkshopScreen(openSettings: {})),
             AnyView(AgentProTab(directRoute: .agents)),

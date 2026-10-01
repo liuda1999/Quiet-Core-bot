@@ -1,5 +1,5 @@
 // Nextcloud Talk tests cover message actions plugin behavior.
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { CoreConfig } from "./types.js";
 
@@ -57,7 +57,7 @@ describe("nextcloudTalkMessageActions", () => {
       hoisted.listNextcloudTalkAccountIds.mockReturnValue([]);
 
       const result = nextcloudTalkMessageActions.describeMessageTool?.({
-        cfg: {} as OpenClawConfig,
+        cfg: {} as QuietCoreConfig,
       });
 
       expect(result).toBeNull();
@@ -68,7 +68,7 @@ describe("nextcloudTalkMessageActions", () => {
       hoisted.resolveNextcloudTalkAccount.mockReturnValue(unconfiguredAccount);
 
       const result = nextcloudTalkMessageActions.describeMessageTool?.({
-        cfg: {} as OpenClawConfig,
+        cfg: {} as QuietCoreConfig,
       });
 
       expect(result).toBeNull();
@@ -79,7 +79,7 @@ describe("nextcloudTalkMessageActions", () => {
       hoisted.resolveNextcloudTalkAccount.mockReturnValue(disabledAccount);
 
       const result = nextcloudTalkMessageActions.describeMessageTool?.({
-        cfg: {} as OpenClawConfig,
+        cfg: {} as QuietCoreConfig,
       });
 
       expect(result).toBeNull();
@@ -90,7 +90,7 @@ describe("nextcloudTalkMessageActions", () => {
       hoisted.resolveNextcloudTalkAccount.mockReturnValue(configuredAccount);
 
       const result = nextcloudTalkMessageActions.describeMessageTool?.({
-        cfg: {} as OpenClawConfig,
+        cfg: {} as QuietCoreConfig,
       });
 
       expect(result?.actions).toEqual(["send", "react"]);
@@ -100,7 +100,7 @@ describe("nextcloudTalkMessageActions", () => {
       hoisted.resolveNextcloudTalkAccount.mockReturnValue(configuredAccount);
 
       const result = nextcloudTalkMessageActions.describeMessageTool?.({
-        cfg: {} as OpenClawConfig,
+        cfg: {} as QuietCoreConfig,
         accountId: "work",
       });
 
@@ -116,7 +116,7 @@ describe("nextcloudTalkMessageActions", () => {
       hoisted.resolveNextcloudTalkAccount.mockReturnValue(disabledAccount);
 
       const result = nextcloudTalkMessageActions.describeMessageTool?.({
-        cfg: {} as OpenClawConfig,
+        cfg: {} as QuietCoreConfig,
         accountId: "work",
       });
 

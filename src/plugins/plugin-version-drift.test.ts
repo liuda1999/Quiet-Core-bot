@@ -1,6 +1,6 @@
 /** Tests plugin version drift detection between package, manifest, and install records. */
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.js";
+import type { QuietCoreConfig } from "../config/types.js";
 import type { PluginInstallRecord } from "../config/types.plugins.js";
 import {
   detectPluginVersionDrift,
@@ -228,14 +228,14 @@ describe("detectPluginVersionDrift", () => {
   });
 
   it("skips plugins that are explicitly disabled in config", () => {
-    const config: OpenClawConfig = {
+    const config: QuietCoreConfig = {
       plugins: {
         entries: {
           tokenjuice: { enabled: false },
           firecrawl: { enabled: true },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = detectPluginVersionDrift({
       gatewayVersion: "2026.5.4",
@@ -250,11 +250,11 @@ describe("detectPluginVersionDrift", () => {
   });
 
   it("skips plugins disabled by the global plugin activation policy", () => {
-    const config: OpenClawConfig = {
+    const config: QuietCoreConfig = {
       plugins: {
         enabled: false,
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = detectPluginVersionDrift({
       gatewayVersion: "2026.5.4",
@@ -277,7 +277,7 @@ describe("detectPluginVersionDrift", () => {
         plugins: {
           deny: ["tokenjuice"],
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
     });
     const notAllowed = detectPluginVersionDrift({
       gatewayVersion: "2026.5.4",
@@ -288,7 +288,7 @@ describe("detectPluginVersionDrift", () => {
         plugins: {
           allow: ["firecrawl"],
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
     });
 
     expect(denied.drifts).toEqual([]);
@@ -296,7 +296,7 @@ describe("detectPluginVersionDrift", () => {
   });
 
   it("includes plugins with no entry in config (default-enabled)", () => {
-    const config: OpenClawConfig = { plugins: { entries: {} } } as OpenClawConfig;
+    const config: QuietCoreConfig = { plugins: { entries: {} } } as QuietCoreConfig;
     const result = detectPluginVersionDrift({
       gatewayVersion: "2026.5.4",
       installRecords: {

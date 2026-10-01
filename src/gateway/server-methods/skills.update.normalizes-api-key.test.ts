@@ -1,7 +1,7 @@
 // Skill update tests protect API-key normalization so redacted config sentinels
 // do not overwrite existing secret values.
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import { REDACTED_SENTINEL } from "../../config/redact-snapshot.js";
 
 let writtenConfig: unknown = null;
@@ -23,11 +23,11 @@ vi.mock("../../config/config.js", () => {
     },
     mutateConfigFileWithRetry: async (params: {
       mutate: (
-        draft: OpenClawConfig,
+        draft: QuietCoreConfig,
         context: { snapshot: { path: string }; previousHash: string; attempt: number },
       ) => unknown;
     }) => {
-      const draft = structuredClone(loadedConfig) as OpenClawConfig;
+      const draft = structuredClone(loadedConfig) as QuietCoreConfig;
       const snapshot = { path: "/tmp/quiet-core-bot/config.json" };
       const result = await params.mutate(draft, {
         snapshot,

@@ -3,7 +3,7 @@
  * Verifies provider hooks, normalization, de-duping, and prioritized refs.
  */
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { Model } from "../llm/types.js";
 
 const providerRuntimeMocks = vi.hoisted(() => ({
@@ -75,7 +75,7 @@ describe("appendPrioritizedDynamicLiveModels", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await appendPrioritizedDynamicLiveModels({
       models: [model("anthropic", "claude-sonnet-4-6")],

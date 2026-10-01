@@ -10,7 +10,7 @@ import {
   requireNodeSqlite,
 } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-storage";
 import {
-  ensureOpenClawAgentDatabaseSchema,
+  ensureQuietCoreAgentDatabaseSchema,
   runSqliteImmediateTransactionSync,
 } from "quiet-core-bot/plugin-sdk/sqlite-runtime";
 import {
@@ -299,7 +299,7 @@ export function openMemoryDatabaseAtPath(
       databasePath: dbPath,
     });
     if (agentId) {
-      ensureOpenClawAgentDatabaseSchema(db, { agentId, path: dbPath, register: true });
+      ensureQuietCoreAgentDatabaseSchema(db, { agentId, path: dbPath, register: true });
     }
     return db;
   } catch (err) {

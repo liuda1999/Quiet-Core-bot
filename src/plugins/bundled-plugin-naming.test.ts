@@ -10,7 +10,7 @@ type PluginManifestShape = {
   id?: unknown;
 };
 
-type OpenClawPackageShape = {
+type QuietCorePackageShape = {
   name?: unknown;
   "quiet-core-bot"?: {
     install?: {
@@ -143,7 +143,7 @@ function readBundledPluginRecords(): BundledPluginRecord[] {
     }
 
     const manifest = readJsonFile(manifestPath) as PluginManifestShape;
-    const pkg = readJsonFile(packagePath) as OpenClawPackageShape;
+    const pkg = readJsonFile(packagePath) as QuietCorePackageShape;
     const manifestId = normalizeText(manifest.id);
     const packageName = normalizeText(pkg.name);
     if (!manifestId || !packageName) {

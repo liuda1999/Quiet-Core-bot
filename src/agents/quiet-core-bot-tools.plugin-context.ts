@@ -3,7 +3,7 @@
  *
  * Normalizes workspace, delivery, browser, sandbox, and active-model inputs before plugin tool invocation.
  */
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { normalizeDeliveryContext } from "../utils/delivery-context.js";
 import type { GatewayMessageChannel } from "../utils/message-channel.js";
 import { resolveAgentWorkspaceDir, resolveSessionAgentIds } from "./agent-scope.js";
@@ -12,7 +12,7 @@ import type { ToolFsPolicy } from "./tool-fs-policy.js";
 import { resolveWorkspaceRoot } from "./workspace-dir.js";
 
 /** Options provided by agent runtime callers when invoking Quiet Core bot plugin tools. */
-export type OpenClawPluginToolOptions = {
+export type QuietCorePluginToolOptions = {
   agentSessionKey?: string;
   agentChannel?: GatewayMessageChannel;
   agentAccountId?: string;
@@ -20,7 +20,7 @@ export type OpenClawPluginToolOptions = {
   agentThreadId?: string | number;
   agentDir?: string;
   workspaceDir?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   fsPolicy?: ToolFsPolicy;
   modelProvider?: string;
   modelId?: string;
@@ -39,11 +39,11 @@ export type OpenClawPluginToolOptions = {
 };
 
 /** Resolves plugin-tool context inputs from runtime options and config state. */
-export function resolveOpenClawPluginToolInputs(params: {
-  options?: OpenClawPluginToolOptions;
-  resolvedConfig?: OpenClawConfig;
-  runtimeConfig?: OpenClawConfig;
-  getRuntimeConfig?: () => OpenClawConfig | undefined;
+export function resolveQuietCorePluginToolInputs(params: {
+  options?: QuietCorePluginToolOptions;
+  resolvedConfig?: QuietCoreConfig;
+  runtimeConfig?: QuietCoreConfig;
+  getRuntimeConfig?: () => QuietCoreConfig | undefined;
 }) {
   const { options, resolvedConfig, runtimeConfig, getRuntimeConfig } = params;
   const { sessionAgentId } = resolveSessionAgentIds({

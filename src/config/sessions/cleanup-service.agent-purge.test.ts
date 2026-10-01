@@ -1,6 +1,6 @@
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../types.quiet-core-bot.js";
 import { purgeAgentSessionStoreEntries } from "./cleanup-service.js";
 
 const sessionAccessorMocks = vi.hoisted(() => ({
@@ -38,7 +38,7 @@ describe("purgeAgentSessionStoreEntries", () => {
           { id: "ops", workspace: "/workspace/ops" },
         ],
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     await purgeAgentSessionStoreEntries(cfg, "ops");
 

@@ -2,7 +2,7 @@
   "entries": [
     {
       "name": "@wecom/wecom-quiet-core-bot-plugin",
-      "description": "OpenClaw WeCom channel plugin by the Tencent WeCom team.",
+      "description": "QuietCore WeCom channel plugin by the Tencent WeCom team.",
       "source": "external",
       "kind": "channel",
       "quiet-core-bot": {
@@ -49,7 +49,7 @@
     },
     {
       "name": "quiet-core-bot-plugin-yuanbao",
-      "description": "OpenClaw Yuanbao channel plugin by the Tencent Yuanbao team.",
+      "description": "QuietCore Yuanbao channel plugin by the Tencent Yuanbao team.",
       "source": "external",
       "kind": "channel",
       "quiet-core-bot": {
@@ -99,7 +99,7 @@
     },
     {
       "name": "@tencent-weixin/quiet-core-bot-weixin",
-      "description": "OpenClaw Weixin channel plugin by the Tencent Weixin team.",
+      "description": "QuietCore Weixin channel plugin by the Tencent Weixin team.",
       "source": "external",
       "kind": "channel",
       "quiet-core-bot": {
@@ -142,7 +142,7 @@
     },
     {
       "name": "@zalo-platforms/quiet-core-bot-zaloclawbot",
-      "description": "OpenClaw Zalo ClawBot channel plugin by the Zalo Platforms team.",
+      "description": "QuietCore Zalo ClawBot channel plugin by the Zalo Platforms team.",
       "source": "external",
       "kind": "channel",
       "quiet-core-bot": {
@@ -184,7 +184,7 @@
     },
     {
       "name": "@quiet-core/clickclack",
-      "description": "OpenClaw ClickClack channel plugin",
+      "description": "QuietCore ClickClack channel plugin",
       "source": "official",
       "kind": "channel",
       "quiet-core-bot": {
@@ -219,7 +219,7 @@
     },
     {
       "name": "@quiet-core/irc",
-      "description": "OpenClaw IRC channel plugin",
+      "description": "QuietCore IRC channel plugin",
       "source": "official",
       "kind": "channel",
       "quiet-core-bot": {
@@ -259,7 +259,7 @@
     },
     {
       "name": "@quiet-core/mattermost",
-      "description": "OpenClaw Mattermost channel plugin",
+      "description": "QuietCore Mattermost channel plugin",
       "source": "official",
       "kind": "channel",
       "quiet-core-bot": {
@@ -287,7 +287,7 @@
     },
     {
       "name": "@quiet-core/matrix",
-      "description": "OpenClaw Matrix channel plugin",
+      "description": "QuietCore Matrix channel plugin",
       "source": "official",
       "kind": "channel",
       "quiet-core-bot": {
@@ -341,7 +341,7 @@
     },
     {
       "name": "@quiet-core/nextcloud-talk",
-      "description": "OpenClaw Nextcloud Talk channel plugin",
+      "description": "QuietCore Nextcloud Talk channel plugin",
       "source": "official",
       "kind": "channel",
       "quiet-core-bot": {
@@ -368,7 +368,7 @@
     },
     {
       "name": "@quiet-core/nostr",
-      "description": "OpenClaw Nostr channel plugin for NIP-04 encrypted DMs",
+      "description": "QuietCore Nostr channel plugin for NIP-04 encrypted DMs",
       "source": "official",
       "kind": "channel",
       "quiet-core-bot": {
@@ -391,7 +391,7 @@
     },
     {
       "name": "@quiet-core/signal",
-      "description": "OpenClaw Signal channel plugin",
+      "description": "QuietCore Signal channel plugin",
       "source": "official",
       "kind": "channel",
       "quiet-core-bot": {
@@ -431,7 +431,7 @@
     },
     {
       "name": "@quiet-core/synology-chat",
-      "description": "Synology Chat channel plugin for OpenClaw",
+      "description": "Synology Chat channel plugin for QuietCore",
       "source": "official",
       "kind": "channel",
       "quiet-core-bot": {
@@ -441,7 +441,7 @@
           "selectionLabel": "Synology Chat (Webhook)",
           "docsPath": "/channels/synology-chat",
           "docsLabel": "synology-chat",
-          "blurb": "Connect your Synology NAS Chat to OpenClaw with full agent capabilities.",
+          "blurb": "Connect your Synology NAS Chat to QuietCore with full agent capabilities.",
           "order": 90
         },
         "install": {
@@ -453,7 +453,7 @@
     },
     {
       "name": "@quiet-core/raft",
-      "description": "OpenClaw Raft channel plugin",
+      "description": "QuietCore Raft channel plugin",
       "source": "official",
       "kind": "channel",
       "quiet-core-bot": {
@@ -519,7 +519,7 @@
     },
     {
       "name": "@quiet-core/tlon",
-      "description": "OpenClaw Tlon/Urbit channel plugin",
+      "description": "QuietCore Tlon/Urbit channel plugin",
       "source": "official",
       "kind": "channel",
       "quiet-core-bot": {

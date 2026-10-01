@@ -1,4 +1,4 @@
-// Telegram Bot Api script supports OpenClaw repository automation.
+// Telegram Bot Api script supports QuietCore repository automation.
 import { readBoundedResponseText } from "../lib/bounded-response.ts";
 import { readPositiveIntEnv } from "./lib/env-limits.mjs";
 

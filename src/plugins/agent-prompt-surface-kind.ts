@@ -9,6 +9,6 @@ export function normalizeAgentPromptSurfaceKind(
 }
 
 /** True when a prompt surface targets the main Quiet Core bot prompt. */
-export function isOpenClawMainPromptSurface(surface: AgentPromptSurfaceKind): boolean {
+export function isQuietCoreMainPromptSurface(surface: AgentPromptSurfaceKind): boolean {
   return normalizeAgentPromptSurfaceKind(surface) === "openclaw_main";
 }

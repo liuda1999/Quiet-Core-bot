@@ -1,5 +1,5 @@
 import Foundation
-import OpenClawKit
+import QuietCoreKit
 import Speech
 
 enum TalkSpeechLocale {

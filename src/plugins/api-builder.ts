@@ -1,8 +1,8 @@
 // Builds plugin API objects from config, registries, and runtime helpers.
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
-import { attachPluginApiFacades, type OpenClawPluginApiWithoutFacades } from "./api-facades.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
+import { attachPluginApiFacades, type QuietCorePluginApiWithoutFacades } from "./api-facades.js";
 import type { PluginRuntime } from "./runtime/types.js";
-import type { OpenClawPluginApi, PluginLogger } from "./types.js";
+import type { QuietCorePluginApi, PluginLogger } from "./types.js";
 
 export type BuildPluginApiParams = {
   id: string;
@@ -11,15 +11,15 @@ export type BuildPluginApiParams = {
   description?: string;
   source: string;
   rootDir?: string;
-  registrationMode: OpenClawPluginApi["registrationMode"];
-  config: OpenClawConfig;
+  registrationMode: QuietCorePluginApi["registrationMode"];
+  config: QuietCoreConfig;
   pluginConfig?: Record<string, unknown>;
   runtime: PluginRuntime;
   logger: PluginLogger;
   resolvePath: (input: string) => string;
   handlers?: Partial<
     Pick<
-      OpenClawPluginApi,
+      QuietCorePluginApi,
       | "registerTool"
       | "registerHook"
       | "registerHttpRoute"
@@ -88,102 +88,102 @@ export type BuildPluginApiParams = {
   >;
 };
 
-const noopRegisterTool: OpenClawPluginApi["registerTool"] = () => {};
-const noopRegisterHook: OpenClawPluginApi["registerHook"] = () => {};
-const noopRegisterHttpRoute: OpenClawPluginApi["registerHttpRoute"] = () => {};
-const noopRegisterHostedMediaResolver: OpenClawPluginApi["registerHostedMediaResolver"] = () => {};
-const noopRegisterChannel: OpenClawPluginApi["registerChannel"] = () => {};
-const noopRegisterGatewayMethod: OpenClawPluginApi["registerGatewayMethod"] = () => {};
-const noopRegisterCli: OpenClawPluginApi["registerCli"] = () => {};
-const noopRegisterReload: OpenClawPluginApi["registerReload"] = () => {};
-const noopRegisterNodeHostCommand: OpenClawPluginApi["registerNodeHostCommand"] = () => {};
-const noopRegisterNodeInvokePolicy: OpenClawPluginApi["registerNodeInvokePolicy"] = () => {};
-const noopRegisterSecurityAuditCollector: OpenClawPluginApi["registerSecurityAuditCollector"] =
+const noopRegisterTool: QuietCorePluginApi["registerTool"] = () => {};
+const noopRegisterHook: QuietCorePluginApi["registerHook"] = () => {};
+const noopRegisterHttpRoute: QuietCorePluginApi["registerHttpRoute"] = () => {};
+const noopRegisterHostedMediaResolver: QuietCorePluginApi["registerHostedMediaResolver"] = () => {};
+const noopRegisterChannel: QuietCorePluginApi["registerChannel"] = () => {};
+const noopRegisterGatewayMethod: QuietCorePluginApi["registerGatewayMethod"] = () => {};
+const noopRegisterCli: QuietCorePluginApi["registerCli"] = () => {};
+const noopRegisterReload: QuietCorePluginApi["registerReload"] = () => {};
+const noopRegisterNodeHostCommand: QuietCorePluginApi["registerNodeHostCommand"] = () => {};
+const noopRegisterNodeInvokePolicy: QuietCorePluginApi["registerNodeInvokePolicy"] = () => {};
+const noopRegisterSecurityAuditCollector: QuietCorePluginApi["registerSecurityAuditCollector"] =
   () => {};
-const noopRegisterService: OpenClawPluginApi["registerService"] = () => {};
-const noopRegisterGatewayDiscoveryService: OpenClawPluginApi["registerGatewayDiscoveryService"] =
+const noopRegisterService: QuietCorePluginApi["registerService"] = () => {};
+const noopRegisterGatewayDiscoveryService: QuietCorePluginApi["registerGatewayDiscoveryService"] =
   () => {};
-const noopRegisterCliBackend: OpenClawPluginApi["registerCliBackend"] = () => {};
-const noopRegisterTextTransforms: OpenClawPluginApi["registerTextTransforms"] = () => {};
-const noopRegisterConfigMigration: OpenClawPluginApi["registerConfigMigration"] = () => {};
-const noopRegisterMigrationProvider: OpenClawPluginApi["registerMigrationProvider"] = () => {};
-const noopRegisterAutoEnableProbe: OpenClawPluginApi["registerAutoEnableProbe"] = () => {};
-const noopRegisterProvider: OpenClawPluginApi["registerProvider"] = () => {};
-const noopRegisterModelCatalogProvider: OpenClawPluginApi["registerModelCatalogProvider"] =
+const noopRegisterCliBackend: QuietCorePluginApi["registerCliBackend"] = () => {};
+const noopRegisterTextTransforms: QuietCorePluginApi["registerTextTransforms"] = () => {};
+const noopRegisterConfigMigration: QuietCorePluginApi["registerConfigMigration"] = () => {};
+const noopRegisterMigrationProvider: QuietCorePluginApi["registerMigrationProvider"] = () => {};
+const noopRegisterAutoEnableProbe: QuietCorePluginApi["registerAutoEnableProbe"] = () => {};
+const noopRegisterProvider: QuietCorePluginApi["registerProvider"] = () => {};
+const noopRegisterModelCatalogProvider: QuietCorePluginApi["registerModelCatalogProvider"] =
   () => {};
-const noopRegisterEmbeddingProvider: OpenClawPluginApi["registerEmbeddingProvider"] = () => {};
-const noopRegisterSpeechProvider: OpenClawPluginApi["registerSpeechProvider"] = () => {};
-const noopRegisterRealtimeTranscriptionProvider: OpenClawPluginApi["registerRealtimeTranscriptionProvider"] =
+const noopRegisterEmbeddingProvider: QuietCorePluginApi["registerEmbeddingProvider"] = () => {};
+const noopRegisterSpeechProvider: QuietCorePluginApi["registerSpeechProvider"] = () => {};
+const noopRegisterRealtimeTranscriptionProvider: QuietCorePluginApi["registerRealtimeTranscriptionProvider"] =
   () => {};
-const noopRegisterRealtimeVoiceProvider: OpenClawPluginApi["registerRealtimeVoiceProvider"] =
+const noopRegisterRealtimeVoiceProvider: QuietCorePluginApi["registerRealtimeVoiceProvider"] =
   () => {};
-const noopRegisterMediaUnderstandingProvider: OpenClawPluginApi["registerMediaUnderstandingProvider"] =
+const noopRegisterMediaUnderstandingProvider: QuietCorePluginApi["registerMediaUnderstandingProvider"] =
   () => {};
-const noopRegisterTranscriptsSourceProvider: OpenClawPluginApi["registerTranscriptSourceProvider"] =
+const noopRegisterTranscriptsSourceProvider: QuietCorePluginApi["registerTranscriptSourceProvider"] =
   () => {};
-const noopRegisterImageGenerationProvider: OpenClawPluginApi["registerImageGenerationProvider"] =
+const noopRegisterImageGenerationProvider: QuietCorePluginApi["registerImageGenerationProvider"] =
   () => {};
-const noopRegisterVideoGenerationProvider: OpenClawPluginApi["registerVideoGenerationProvider"] =
+const noopRegisterVideoGenerationProvider: QuietCorePluginApi["registerVideoGenerationProvider"] =
   () => {};
-const noopRegisterMusicGenerationProvider: OpenClawPluginApi["registerMusicGenerationProvider"] =
+const noopRegisterMusicGenerationProvider: QuietCorePluginApi["registerMusicGenerationProvider"] =
   () => {};
-const noopRegisterWebFetchProvider: OpenClawPluginApi["registerWebFetchProvider"] = () => {};
-const noopRegisterWebSearchProvider: OpenClawPluginApi["registerWebSearchProvider"] = () => {};
-const noopRegisterInteractiveHandler: OpenClawPluginApi["registerInteractiveHandler"] = () => {};
-const noopOnConversationBindingResolved: OpenClawPluginApi["onConversationBindingResolved"] =
+const noopRegisterWebFetchProvider: QuietCorePluginApi["registerWebFetchProvider"] = () => {};
+const noopRegisterWebSearchProvider: QuietCorePluginApi["registerWebSearchProvider"] = () => {};
+const noopRegisterInteractiveHandler: QuietCorePluginApi["registerInteractiveHandler"] = () => {};
+const noopOnConversationBindingResolved: QuietCorePluginApi["onConversationBindingResolved"] =
   () => {};
-const noopRegisterCommand: OpenClawPluginApi["registerCommand"] = () => {};
-const noopRegisterContextEngine: OpenClawPluginApi["registerContextEngine"] = () => {};
-const noopRegisterCompactionProvider: OpenClawPluginApi["registerCompactionProvider"] = () => {};
-const noopRegisterAgentHarness: OpenClawPluginApi["registerAgentHarness"] = () => {};
-const noopRegisterCodexAppServerExtensionFactory: OpenClawPluginApi["registerCodexAppServerExtensionFactory"] =
+const noopRegisterCommand: QuietCorePluginApi["registerCommand"] = () => {};
+const noopRegisterContextEngine: QuietCorePluginApi["registerContextEngine"] = () => {};
+const noopRegisterCompactionProvider: QuietCorePluginApi["registerCompactionProvider"] = () => {};
+const noopRegisterAgentHarness: QuietCorePluginApi["registerAgentHarness"] = () => {};
+const noopRegisterCodexAppServerExtensionFactory: QuietCorePluginApi["registerCodexAppServerExtensionFactory"] =
   () => {};
-const noopRegisterAgentToolResultMiddleware: OpenClawPluginApi["registerAgentToolResultMiddleware"] =
+const noopRegisterAgentToolResultMiddleware: QuietCorePluginApi["registerAgentToolResultMiddleware"] =
   () => {};
-const noopRegisterSessionExtension: OpenClawPluginApi["registerSessionExtension"] = () => {};
-const noopEnqueueNextTurnInjection: OpenClawPluginApi["enqueueNextTurnInjection"] = async (
+const noopRegisterSessionExtension: QuietCorePluginApi["registerSessionExtension"] = () => {};
+const noopEnqueueNextTurnInjection: QuietCorePluginApi["enqueueNextTurnInjection"] = async (
   injection,
 ) => ({ enqueued: false, id: "", sessionKey: injection.sessionKey });
-const noopRegisterTrustedToolPolicy: OpenClawPluginApi["registerTrustedToolPolicy"] = () => {};
-const noopRegisterToolMetadata: OpenClawPluginApi["registerToolMetadata"] = () => {};
-const noopRegisterControlUiDescriptor: OpenClawPluginApi["registerControlUiDescriptor"] = () => {};
-const noopRegisterRuntimeLifecycle: OpenClawPluginApi["registerRuntimeLifecycle"] = () => {};
-const noopRegisterAgentEventSubscription: OpenClawPluginApi["registerAgentEventSubscription"] =
+const noopRegisterTrustedToolPolicy: QuietCorePluginApi["registerTrustedToolPolicy"] = () => {};
+const noopRegisterToolMetadata: QuietCorePluginApi["registerToolMetadata"] = () => {};
+const noopRegisterControlUiDescriptor: QuietCorePluginApi["registerControlUiDescriptor"] = () => {};
+const noopRegisterRuntimeLifecycle: QuietCorePluginApi["registerRuntimeLifecycle"] = () => {};
+const noopRegisterAgentEventSubscription: QuietCorePluginApi["registerAgentEventSubscription"] =
   () => {};
-const noopEmitAgentEvent: OpenClawPluginApi["emitAgentEvent"] = () => ({
+const noopEmitAgentEvent: QuietCorePluginApi["emitAgentEvent"] = () => ({
   emitted: false,
   reason: "not wired",
 });
-const noopSetRunContext: OpenClawPluginApi["setRunContext"] = () => false;
-const noopGetRunContext: OpenClawPluginApi["getRunContext"] = () => undefined;
-const noopClearRunContext: OpenClawPluginApi["clearRunContext"] = () => {};
-const noopRegisterSessionSchedulerJob: OpenClawPluginApi["registerSessionSchedulerJob"] = () =>
+const noopSetRunContext: QuietCorePluginApi["setRunContext"] = () => false;
+const noopGetRunContext: QuietCorePluginApi["getRunContext"] = () => undefined;
+const noopClearRunContext: QuietCorePluginApi["clearRunContext"] = () => {};
+const noopRegisterSessionSchedulerJob: QuietCorePluginApi["registerSessionSchedulerJob"] = () =>
   undefined;
-const noopRegisterSessionAction: OpenClawPluginApi["registerSessionAction"] = () => {};
-const noopSendSessionAttachment: OpenClawPluginApi["sendSessionAttachment"] = async () => ({
+const noopRegisterSessionAction: QuietCorePluginApi["registerSessionAction"] = () => {};
+const noopSendSessionAttachment: QuietCorePluginApi["sendSessionAttachment"] = async () => ({
   ok: false,
   error: "not wired",
 });
-const noopScheduleSessionTurn: OpenClawPluginApi["scheduleSessionTurn"] = async () => undefined;
-const noopUnscheduleSessionTurnsByTag: OpenClawPluginApi["unscheduleSessionTurnsByTag"] =
+const noopScheduleSessionTurn: QuietCorePluginApi["scheduleSessionTurn"] = async () => undefined;
+const noopUnscheduleSessionTurnsByTag: QuietCorePluginApi["unscheduleSessionTurnsByTag"] =
   async () => ({ removed: 0, failed: 0 });
-const noopRegisterDetachedTaskRuntime: OpenClawPluginApi["registerDetachedTaskRuntime"] = () => {};
-const noopRegisterMemoryCapability: OpenClawPluginApi["registerMemoryCapability"] = () => {};
-const noopRegisterMemoryPromptSection: OpenClawPluginApi["registerMemoryPromptSection"] = () => {};
-const noopRegisterMemoryPromptSupplement: OpenClawPluginApi["registerMemoryPromptSupplement"] =
+const noopRegisterDetachedTaskRuntime: QuietCorePluginApi["registerDetachedTaskRuntime"] = () => {};
+const noopRegisterMemoryCapability: QuietCorePluginApi["registerMemoryCapability"] = () => {};
+const noopRegisterMemoryPromptSection: QuietCorePluginApi["registerMemoryPromptSection"] = () => {};
+const noopRegisterMemoryPromptSupplement: QuietCorePluginApi["registerMemoryPromptSupplement"] =
   () => {};
-const noopRegisterMemoryCorpusSupplement: OpenClawPluginApi["registerMemoryCorpusSupplement"] =
+const noopRegisterMemoryCorpusSupplement: QuietCorePluginApi["registerMemoryCorpusSupplement"] =
   () => {};
-const noopRegisterMemoryFlushPlan: OpenClawPluginApi["registerMemoryFlushPlan"] = () => {};
-const noopRegisterMemoryRuntime: OpenClawPluginApi["registerMemoryRuntime"] = () => {};
-const noopRegisterMemoryEmbeddingProvider: OpenClawPluginApi["registerMemoryEmbeddingProvider"] =
+const noopRegisterMemoryFlushPlan: QuietCorePluginApi["registerMemoryFlushPlan"] = () => {};
+const noopRegisterMemoryRuntime: QuietCorePluginApi["registerMemoryRuntime"] = () => {};
+const noopRegisterMemoryEmbeddingProvider: QuietCorePluginApi["registerMemoryEmbeddingProvider"] =
   () => {};
-const noopOn: OpenClawPluginApi["on"] = () => {};
+const noopOn: QuietCorePluginApi["on"] = () => {};
 
-export function buildPluginApi(params: BuildPluginApiParams): OpenClawPluginApi {
+export function buildPluginApi(params: BuildPluginApiParams): QuietCorePluginApi {
   const handlers = params.handlers ?? {};
   const registerCli = handlers.registerCli ?? noopRegisterCli;
-  const api: OpenClawPluginApiWithoutFacades = {
+  const api: QuietCorePluginApiWithoutFacades = {
     id: params.id,
     name: params.name,
     version: params.version,

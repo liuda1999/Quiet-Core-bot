@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-// Keeps the native OpenClawKit Canvas A2UI resources in sync with the plugin-owned bundle.
+// Keeps the native QuietCoreKit Canvas A2UI resources in sync with the plugin-owned bundle.
 import { spawnSync } from "node:child_process";
 import fs from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -19,7 +19,7 @@ export function getNativeA2uiResourcePaths(repoRoot = rootDir) {
       "shared",
       "QuietCoreKit",
       "Sources",
-      "OpenClawKit",
+      "QuietCoreKit",
       "Resources",
       "CanvasA2UI",
     ),

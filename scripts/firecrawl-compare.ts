@@ -1,4 +1,4 @@
-// Firecrawl Compare script supports OpenClaw repository automation.
+// Firecrawl Compare script supports QuietCore repository automation.
 import { pathToFileURL } from "node:url";
 import { fetchFirecrawlContent } from "../extensions/firecrawl/api.ts";
 import { formatErrorMessage } from "../src/infra/errors.ts";

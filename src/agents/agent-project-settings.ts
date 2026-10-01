@@ -1,5 +1,5 @@
 /** Prepares embedded-agent SettingsManager instances from project and plugin settings. */
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { PluginMetadataSnapshot } from "../plugins/plugin-metadata-snapshot.js";
 import {
   buildEmbeddedAgentSettingsSnapshot,
@@ -12,7 +12,7 @@ import { SettingsManager } from "./sessions/index.js";
 function createEmbeddedAgentSettingsManager(params: {
   cwd: string;
   agentDir: string;
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   pluginMetadataSnapshot?: PluginMetadataSnapshot;
 }): SettingsManager {
   const fileSettingsManager = SettingsManager.create(params.cwd, params.agentDir);
@@ -52,7 +52,7 @@ function createRuntimeEmbeddedAgentSettingsManager(
 export function createPreparedEmbeddedAgentSettingsManager(params: {
   cwd: string;
   agentDir: string;
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   pluginMetadataSnapshot?: PluginMetadataSnapshot;
   /** Resolved context window budget so reserve-token floor can be capped for small models. */
   contextTokenBudget?: number;

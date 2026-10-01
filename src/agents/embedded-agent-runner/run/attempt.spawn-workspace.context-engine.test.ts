@@ -5,7 +5,7 @@ import path from "node:path";
 import type { AgentMessage } from "quiet-core-bot/plugin-sdk/agent-core";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { HEARTBEAT_TRANSCRIPT_PROMPT } from "../../../auto-reply/heartbeat.js";
-import type { OpenClawConfig } from "../../../config/types.js";
+import type { QuietCoreConfig } from "../../../config/types.js";
 import { buildMemorySystemPromptAddition } from "../../../context-engine/delegate.js";
 import {
   clearMemoryPluginState,
@@ -257,14 +257,14 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
             tools: {
               toolSearch: true,
             },
-          } as OpenClawConfig,
+          } as QuietCoreConfig,
         },
       });
 
       toolSearchControlsCase = mockParams(
-        hoisted.createOpenClawCodingToolsMock,
+        hoisted.createQuietCoreCodingToolsMock,
         0,
-        "createOpenClawCodingTools options",
+        "createQuietCoreCodingTools options",
       );
     } finally {
       await cleanupTempPaths(setupTempPaths);
@@ -304,7 +304,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
           tools: {
             toolSearch: { enabled: true, mode: "directory" },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         clientTools: [
           {
             type: "function",
@@ -344,21 +344,21 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
       },
     });
 
-    expect(hoisted.createOpenClawCodingToolsMock).toHaveBeenCalledTimes(1);
+    expect(hoisted.createQuietCoreCodingToolsMock).toHaveBeenCalledTimes(1);
     const options = mockParams(
-      hoisted.createOpenClawCodingToolsMock,
+      hoisted.createQuietCoreCodingToolsMock,
       0,
-      "createOpenClawCodingTools options",
+      "createQuietCoreCodingTools options",
     );
     expect(options.includeToolSearchControls).toBe(true);
-    const optionsConfig = requireRecord(options.config, "createOpenClawCodingTools config");
+    const optionsConfig = requireRecord(options.config, "createQuietCoreCodingTools config");
     const toolsConfig = requireRecord(
       optionsConfig.tools,
-      "createOpenClawCodingTools tools config",
+      "createQuietCoreCodingTools tools config",
     );
     expect(toolsConfig.toolSearch).toEqual({
       enabled: true,
@@ -369,7 +369,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
   });
 
   it("keeps Tool Search controls off for lean message-tool-only delivery", async () => {
-    hoisted.createOpenClawCodingToolsMock.mockReturnValueOnce([
+    hoisted.createQuietCoreCodingToolsMock.mockReturnValueOnce([
       {
         name: "message",
         label: "Message",
@@ -403,15 +403,15 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
       },
     });
 
-    expect(hoisted.createOpenClawCodingToolsMock).toHaveBeenCalledTimes(1);
+    expect(hoisted.createQuietCoreCodingToolsMock).toHaveBeenCalledTimes(1);
     const options = mockParams(
-      hoisted.createOpenClawCodingToolsMock,
+      hoisted.createQuietCoreCodingToolsMock,
       0,
-      "createOpenClawCodingTools options",
+      "createQuietCoreCodingTools options",
     );
     expect(options.includeToolSearchControls).toBe(false);
     const sessionOptions = mockParams(
@@ -424,7 +424,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
   });
 
   it("quarantines unsupported tool schemas before creating the model session", async () => {
-    hoisted.createOpenClawCodingToolsMock.mockReturnValue([
+    hoisted.createQuietCoreCodingToolsMock.mockReturnValue([
       {
         name: "healthy_lookup",
         label: "Healthy Lookup",
@@ -458,7 +458,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
             codeMode: { enabled: false },
             toolSearch: false,
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
       },
       createSession: () => {
         const session = createDefaultEmbeddedSession();
@@ -513,7 +513,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
           agents: {
             list: [{ id: "ops", tools: { codeMode: true } }],
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         model: {
           api: "openai-chatgpt-responses",
           provider: "gateway",
@@ -1370,7 +1370,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
               bootstrapTotalMaxChars: 50,
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         prompt: "visible ask",
         transcriptPrompt: "visible ask",
       },
@@ -1392,7 +1392,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
   it("preserves bootstrap system context in the assembled system prompt", async () => {
     const seen: { prompt?: string; messages?: unknown[] } = {};
     hoisted.isWorkspaceBootstrapPendingMock.mockResolvedValueOnce(true);
-    hoisted.createOpenClawCodingToolsMock.mockImplementationOnce(() => [
+    hoisted.createQuietCoreCodingToolsMock.mockImplementationOnce(() => [
       { name: "read", execute: async () => "" },
     ]);
     hoisted.resolveBootstrapContextForRunMock.mockResolvedValueOnce({
@@ -2740,7 +2740,7 @@ describe("runEmbeddedAttempt context engine mid-turn precheck integration", () =
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
       },
     });
 
@@ -2788,7 +2788,7 @@ describe("runEmbeddedAttempt context engine mid-turn precheck integration", () =
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
       },
       sessionMessages: [seedMessage],
       sessionPrompt: async (session) => {
@@ -2885,7 +2885,7 @@ describe("runEmbeddedAttempt tool-result guard budget wiring", () => {
             },
             list: [{ id: "main" }],
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
       },
       createSession: () => {
         const session = createDefaultEmbeddedSession({ initialMessages: sessionMessages });

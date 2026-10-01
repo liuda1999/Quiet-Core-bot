@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { bundledPluginRootAt } from "quiet-core-bot/plugin-sdk/test-fixtures";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import type { PluginNpmIntegrityDriftParams } from "./install.js";
 
@@ -173,7 +173,7 @@ function createMarketplaceInstallConfig(params: {
   marketplaceSource: string;
   marketplacePlugin: string;
   marketplaceName?: string;
-}): OpenClawConfig {
+}): QuietCoreConfig {
   return {
     plugins: {
       installs: {
@@ -197,7 +197,7 @@ function createClawHubInstallConfig(params: {
   clawhubFamily: "bundle-plugin" | "code-plugin";
   clawhubChannel: "community" | "official" | "private";
   spec?: string;
-}): OpenClawConfig {
+}): QuietCoreConfig {
   return {
     plugins: {
       installs: {
@@ -220,7 +220,7 @@ function createGitInstallConfig(params: {
   spec: string;
   installPath: string;
   commit?: string;
-}): OpenClawConfig {
+}): QuietCoreConfig {
   return {
     plugins: {
       installs: {
@@ -240,7 +240,7 @@ function createBundledPathInstallConfig(params: {
   installPath: string;
   sourcePath?: string;
   spec?: string;
-}): OpenClawConfig {
+}): QuietCoreConfig {
   return {
     plugins: {
       load: { paths: params.loadPaths },
@@ -298,7 +298,7 @@ function createInstalledPackageDir(params: {
   return dir;
 }
 
-function createOpenClawPeerLinkFixtures(plugins: Array<{ pluginId: string; packageName: string }>) {
+function createQuietCorePeerLinkFixtures(plugins: Array<{ pluginId: string; packageName: string }>) {
   const peerTarget = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-peer-target-"));
   tempDirs.push(peerTarget);
   const installPaths = Object.fromEntries(
@@ -1217,7 +1217,7 @@ describe("updateNpmInstalledPlugins", () => {
       shasum: "same",
     });
     installPluginFromNpmSpecMock.mockRejectedValue(new Error("installer should not run"));
-    const config: OpenClawConfig = {
+    const config: QuietCoreConfig = {
       plugins: {
         installs: {
           "lossless-claw": {
@@ -1411,7 +1411,7 @@ describe("updateNpmInstalledPlugins", () => {
         },
       }),
     );
-    const config: OpenClawConfig = {
+    const config: QuietCoreConfig = {
       plugins: {
         installs: {
           codex: {
@@ -1502,7 +1502,7 @@ describe("updateNpmInstalledPlugins", () => {
       { pluginId: "codex", packageName: "@quiet-core/codex" },
       { pluginId: "discord", packageName: "@quiet-core/discord" },
     ];
-    const { installPaths, peerLinkPath, linkPeer } = createOpenClawPeerLinkFixtures(plugins);
+    const { installPaths, peerLinkPath, linkPeer } = createQuietCorePeerLinkFixtures(plugins);
     for (const { packageName } of plugins) {
       mockNpmViewMetadata({
         name: packageName,
@@ -1578,7 +1578,7 @@ describe("updateNpmInstalledPlugins", () => {
       { pluginId: "codex", packageName: "@quiet-core/codex" },
       { pluginId: "discord", packageName: "@quiet-core/discord" },
     ];
-    const { installPaths, peerLinkPath, linkPeer } = createOpenClawPeerLinkFixtures(plugins);
+    const { installPaths, peerLinkPath, linkPeer } = createQuietCorePeerLinkFixtures(plugins);
     linkPeer("brave");
     linkPeer("discord");
     mockNpmViewMetadata({
@@ -1640,7 +1640,7 @@ describe("updateNpmInstalledPlugins", () => {
       { pluginId: "brave", packageName: "@quiet-core/brave-plugin" },
       { pluginId: "codex", packageName: "@quiet-core/codex" },
     ];
-    const { installPaths, peerLinkPath, linkPeer } = createOpenClawPeerLinkFixtures(plugins);
+    const { installPaths, peerLinkPath, linkPeer } = createQuietCorePeerLinkFixtures(plugins);
     const brokenInstallPath = createInstalledPackageDir({
       name: "@quiet-core/broken-plugin",
       version: "2026.5.4",
@@ -1916,7 +1916,7 @@ describe("updateNpmInstalledPlugins", () => {
             },
           },
         },
-      } satisfies OpenClawConfig,
+      } satisfies QuietCoreConfig,
     },
     {
       source: "ClawHub",
@@ -1940,7 +1940,7 @@ describe("updateNpmInstalledPlugins", () => {
             },
           },
         },
-      } satisfies OpenClawConfig,
+      } satisfies QuietCoreConfig,
     },
     {
       source: "marketplace",
@@ -1961,7 +1961,7 @@ describe("updateNpmInstalledPlugins", () => {
             },
           },
         },
-      } satisfies OpenClawConfig,
+      } satisfies QuietCoreConfig,
     },
   ])("skips disabled $source installs before update network calls", async ({ config }) => {
     installPluginFromNpmSpecMock.mockRejectedValue(new Error("npm installer should not run"));
@@ -2393,7 +2393,7 @@ describe("updateNpmInstalledPlugins", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     const result = await updateNpmInstalledPlugins({
       config,
@@ -2437,7 +2437,7 @@ describe("updateNpmInstalledPlugins", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     const result = await updateNpmInstalledPlugins({
       config,
@@ -2493,7 +2493,7 @@ describe("updateNpmInstalledPlugins", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     const result = await updateNpmInstalledPlugins({
       config,
@@ -3673,7 +3673,7 @@ describe("updateNpmInstalledPlugins", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       pluginIds: ["context-engine"],
     });
 
@@ -4277,7 +4277,7 @@ describe("syncPluginsForUpdateChannel", () => {
       code: "package_not_found",
       error: "Package not found on ClawHub.",
     });
-    const config: OpenClawConfig = {
+    const config: QuietCoreConfig = {
       channels: {
         "legacy-chat": {
           enabled: true,
@@ -4429,7 +4429,7 @@ describe("syncPluginsForUpdateChannel", () => {
       code: "archive_integrity_mismatch",
       error: "ClawHub ClawPack integrity mismatch.",
     });
-    const config: OpenClawConfig = {
+    const config: QuietCoreConfig = {
       channels: {
         "legacy-chat": {
           enabled: true,
@@ -4549,7 +4549,7 @@ describe("syncPluginsForUpdateChannel", () => {
       ok: false,
       error: "package unavailable",
     });
-    const config: OpenClawConfig = {
+    const config: QuietCoreConfig = {
       channels: {
         "legacy-chat": {
           enabled: true,

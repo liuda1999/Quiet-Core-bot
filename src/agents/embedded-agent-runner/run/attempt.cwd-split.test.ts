@@ -52,7 +52,7 @@ describe("runEmbeddedAttempt cwd/workspace split", () => {
     expect(bootstrapCall?.workspaceDir).not.toBe("/tmp/task-repo");
     expect(bootstrapCall?.agentId).toBe("main");
 
-    const toolsCall = hoisted.createOpenClawCodingToolsMock.mock.calls[0]?.[0] as
+    const toolsCall = hoisted.createQuietCoreCodingToolsMock.mock.calls[0]?.[0] as
       | { cwd?: string; workspaceDir?: string; spawnWorkspaceDir?: string }
       | undefined;
     expect(toolsCall?.cwd).toBe(taskRepo);
@@ -77,7 +77,7 @@ describe("runEmbeddedAttempt cwd/workspace split", () => {
       },
     });
 
-    const toolsCall = hoisted.createOpenClawCodingToolsMock.mock.calls[0]?.[0] as
+    const toolsCall = hoisted.createQuietCoreCodingToolsMock.mock.calls[0]?.[0] as
       | { currentChannelId?: string; currentMessagingTarget?: string }
       | undefined;
     expect(toolsCall).toMatchObject({
@@ -105,6 +105,6 @@ describe("runEmbeddedAttempt cwd/workspace split", () => {
         },
       }),
     ).rejects.toThrow("cwd override is not supported");
-    expect(hoisted.createOpenClawCodingToolsMock).not.toHaveBeenCalled();
+    expect(hoisted.createQuietCoreCodingToolsMock).not.toHaveBeenCalled();
   });
 });

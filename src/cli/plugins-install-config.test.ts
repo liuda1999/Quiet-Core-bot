@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { bundledPluginRootAt, repoInstallSpec } from "quiet-core-bot/plugin-sdk/test-fixtures";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { hashConfigIncludeRaw } from "../config/includes.js";
 import type { ConfigWriteOptions } from "../config/io.js";
 import type { ConfigFileSnapshot } from "../config/types.quiet-core-bot.js";
@@ -76,10 +76,10 @@ function makeSnapshot(overrides: Partial<ConfigFileSnapshot> = {}): ConfigFileSn
     raw: '{ "plugins": {} }',
     parsed: { plugins: {} },
     sourceConfig: { plugins: {} } as ConfigFileSnapshot["sourceConfig"],
-    resolved: { plugins: {} } as OpenClawConfig,
+    resolved: { plugins: {} } as QuietCoreConfig,
     valid: false,
     runtimeConfig: { plugins: {} } as ConfigFileSnapshot["runtimeConfig"],
-    config: { plugins: {} } as OpenClawConfig,
+    config: { plugins: {} } as QuietCoreConfig,
     hash: "abc",
     issues: [{ path: "plugins.installs.discord", message: "stale path" }],
     warnings: [],
@@ -115,7 +115,7 @@ describe("loadConfigForInstall", () => {
   });
 
   it("returns the source config and base hash when the snapshot is valid", async () => {
-    const cfg = { plugins: { entries: { discord: { enabled: true } } } } as OpenClawConfig;
+    const cfg = { plugins: { entries: { discord: { enabled: true } } } } as QuietCoreConfig;
     readConfigFileSnapshotMock.mockResolvedValue(
       makeSnapshot({
         valid: true,
@@ -137,7 +137,7 @@ describe("loadConfigForInstall", () => {
   });
 
   it("returns valid source config unchanged", async () => {
-    const cfg = { plugins: {} } as OpenClawConfig;
+    const cfg = { plugins: {} } as QuietCoreConfig;
     readConfigFileSnapshotMock.mockResolvedValue(
       makeSnapshot({
         valid: true,
@@ -154,7 +154,7 @@ describe("loadConfigForInstall", () => {
   it("falls back to snapshot config for explicit bundled-plugin reinstall when issues match the known upgrade failure", async () => {
     const snapshotCfg = {
       plugins: { installs: { discord: { source: "path", installPath: "/gone" } } },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     readConfigFileSnapshotMock.mockResolvedValue(
       makeSnapshot({
         parsed: { plugins: { installs: { discord: {} } } },
@@ -180,7 +180,7 @@ describe("loadConfigForInstall", () => {
   it("allows versioned npm:-prefixed bundled-plugin reinstall recovery", async () => {
     const snapshotCfg = {
       plugins: { installs: { discord: { source: "path", installPath: "/gone" } } },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     readConfigFileSnapshotMock.mockResolvedValue(
       makeSnapshot({
         parsed: { plugins: { installs: { discord: {} } } },
@@ -243,7 +243,7 @@ describe("loadConfigForInstall", () => {
         load: { paths: ["/gone", "/keep"] },
       },
       channels: { discord: { token: "preserve-me" } },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     readConfigFileSnapshotMock.mockResolvedValue(
       makeSnapshot({
         parsed: { plugins: { installs: { discord: {} }, load: { paths: ["/gone", "/keep"] } } },
@@ -283,7 +283,7 @@ describe("loadConfigForInstall", () => {
   it("uses the canonical plugin install record to own a stale recovery load path", async () => {
     const snapshotCfg = {
       plugins: { load: { paths: ["/gone", "/keep"] } },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     loadInstalledPluginIndexInstallRecordsMock.mockResolvedValue({
       discord: { source: "npm", installPath: "/gone" },
     });
@@ -308,7 +308,7 @@ describe("loadConfigForInstall", () => {
         installs: { discord: { source: "npm", installPath: "/gone" } },
         load: { paths: ["/gone"] },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     loadInstalledPluginIndexInstallRecordsMock.mockResolvedValue({
       discord: { source: "npm", installPath: "/canonical" },
     });
@@ -337,7 +337,7 @@ describe("loadConfigForInstall", () => {
     const staleBundledPath = "/app/extensions/discord";
     const snapshotCfg = {
       plugins: { load: { paths: [staleBundledPath, "/keep"] } },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     listPersistedBundledPluginRecoveryLocationsMock.mockResolvedValue([
       {
         pluginId: "discord",
@@ -368,7 +368,7 @@ describe("loadConfigForInstall", () => {
       plugins: {
         load: { paths: [operatorCheckoutPath] },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     listPersistedBundledPluginRecoveryLocationsMock.mockResolvedValue([
       {
         pluginId: "discord",
@@ -404,7 +404,7 @@ describe("loadConfigForInstall", () => {
         installs: { discord: { source: "npm", installPath: 1 } },
         load: { paths: ["/gone"] },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     readConfigFileSnapshotMock.mockResolvedValue(
       makeSnapshot({
         parsed: { plugins: { installs: { discord: {} }, load: { paths: ["/gone"] } } },
@@ -424,7 +424,7 @@ describe("loadConfigForInstall", () => {
   it("rejects unattributed source-only runtime failures during official plugin recovery", async () => {
     const snapshotCfg = {
       plugins: { installs: { discord: { source: "npm", installPath: "/bad/discord" } } },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     readConfigFileSnapshotMock.mockResolvedValue(
       makeSnapshot({
         parsed: { plugins: { installs: { discord: {} } } },
@@ -454,7 +454,7 @@ describe("loadConfigForInstall", () => {
   it("allows Brave official plugin reinstall recovery from source-only runtime shadows", async () => {
     const snapshotCfg = {
       plugins: { installs: { brave: { source: "clawhub", installPath: "/bad/brave" } } },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     readConfigFileSnapshotMock.mockResolvedValue(
       makeSnapshot({
         parsed: { plugins: { installs: { brave: {} } } },
@@ -493,7 +493,7 @@ describe("loadConfigForInstall", () => {
   });
 
   it("allows explicit repo-checkout bundled-plugin reinstall recovery", async () => {
-    const snapshotCfg = { plugins: {} } as OpenClawConfig;
+    const snapshotCfg = { plugins: {} } as QuietCoreConfig;
     readConfigFileSnapshotMock.mockResolvedValue(
       makeSnapshot({
         config: snapshotCfg,
@@ -527,7 +527,7 @@ describe("loadConfigForInstall", () => {
     includeFileTargetsForWriteMock.mockReturnValue({
       [pluginsPath]: fs.realpathSync(pluginsPath),
     });
-    const snapshotCfg = { plugins: {} } as OpenClawConfig;
+    const snapshotCfg = { plugins: {} } as QuietCoreConfig;
     readConfigFileSnapshotMock.mockResolvedValue(
       makeSnapshot({
         path: configPath,
@@ -551,7 +551,7 @@ describe("loadConfigForInstall", () => {
       "external-quiet-core-bot",
       "plugins.json5",
     );
-    const snapshotCfg = { plugins: {} } as OpenClawConfig;
+    const snapshotCfg = { plugins: {} } as QuietCoreConfig;
     includeFileTargetsForWriteMock.mockReturnValue({
       [externalPluginsPath]: externalPluginsPath,
     });
@@ -583,7 +583,7 @@ describe("loadConfigForInstall", () => {
       makeSnapshot({
         path: configPath,
         parsed: { plugins: { $include: externalPluginsPath } },
-        config: { plugins: {} } as OpenClawConfig,
+        config: { plugins: {} } as QuietCoreConfig,
         issues: [{ path: "channels.discord", message: "unknown channel id: discord" }],
       }),
     );
@@ -599,7 +599,7 @@ describe("loadConfigForInstall", () => {
       "external-quiet-core-bot",
       "plugins.json5",
     );
-    const snapshotCfg = { plugins: {} } as OpenClawConfig;
+    const snapshotCfg = { plugins: {} } as QuietCoreConfig;
     includeFileTargetsForWriteMock.mockReturnValue({
       [externalPluginsPath]: externalPluginsPath,
     });
@@ -632,7 +632,7 @@ describe("loadConfigForInstall", () => {
       "external-quiet-core-bot",
       "plugins.json5",
     );
-    const snapshotCfg = { plugins: {} } as OpenClawConfig;
+    const snapshotCfg = { plugins: {} } as QuietCoreConfig;
     includeFileTargetsForWriteMock.mockReturnValue({
       [externalPluginsPath]: externalPluginsPath,
     });
@@ -657,7 +657,7 @@ describe("loadConfigForInstall", () => {
       "external-quiet-core-bot",
       "hooks.json5",
     );
-    const snapshotCfg = { hooks: { internal: {} } } as OpenClawConfig;
+    const snapshotCfg = { hooks: { internal: {} } } as QuietCoreConfig;
     includeFileTargetsForWriteMock.mockReturnValue({
       [externalHooksPath]: externalHooksPath,
     });
@@ -696,7 +696,7 @@ describe("loadConfigForInstall", () => {
     includeFileTargetsForWriteMock.mockReturnValue({
       [sharedPath]: fs.realpathSync(sharedPath),
     });
-    const snapshotCfg = { hooks: {}, plugins: {} } as OpenClawConfig;
+    const snapshotCfg = { hooks: {}, plugins: {} } as QuietCoreConfig;
     readConfigFileSnapshotMock.mockResolvedValue(
       makeSnapshot({
         path: configPath,
@@ -748,7 +748,7 @@ describe("loadConfigForInstall", () => {
       [sharedPath]: fs.realpathSync(sharedPath),
       [externalHooksPath]: fs.realpathSync(sharedPath),
     });
-    const snapshotCfg = { hooks: {}, plugins: {} } as OpenClawConfig;
+    const snapshotCfg = { hooks: {}, plugins: {} } as QuietCoreConfig;
     readConfigFileSnapshotMock.mockResolvedValue(
       makeSnapshot({
         path: configPath,
@@ -794,7 +794,7 @@ describe("loadConfigForInstall", () => {
     includeFileTargetsForWriteMock.mockReturnValue({
       [pluginsPath]: fs.realpathSync(pluginsPath),
     });
-    const snapshotCfg = { plugins: { entries: {} } } as OpenClawConfig;
+    const snapshotCfg = { plugins: { entries: {} } } as QuietCoreConfig;
     readConfigFileSnapshotMock.mockResolvedValue(
       makeSnapshot({
         path: configPath,
@@ -856,7 +856,7 @@ describe("loadConfigForInstall", () => {
       readConfigFileSnapshotMock.mockResolvedValue(
         makeSnapshot({
           parsed,
-          config: { plugins: {} } as OpenClawConfig,
+          config: { plugins: {} } as QuietCoreConfig,
           issues: [{ path: "channels.discord", message: "unknown channel id: discord" }],
         }),
       );
@@ -870,7 +870,7 @@ describe("loadConfigForInstall", () => {
   it.each(unsupportedPluginIncludeShapes)(
     "marks valid ambiguous installs through an unsupported $label as plugin-blocked",
     async ({ parsed, scope }) => {
-      const snapshotCfg = { plugins: {} } as OpenClawConfig;
+      const snapshotCfg = { plugins: {} } as QuietCoreConfig;
       readConfigFileSnapshotMock.mockResolvedValue(
         makeSnapshot({
           valid: true,
@@ -897,7 +897,7 @@ describe("loadConfigForInstall", () => {
   it.each(unsupportedPluginIncludeShapes)(
     "blocks valid known plugins through an unsupported $label",
     async ({ parsed }) => {
-      const snapshotCfg = { plugins: {} } as OpenClawConfig;
+      const snapshotCfg = { plugins: {} } as QuietCoreConfig;
       readConfigFileSnapshotMock.mockResolvedValue(
         makeSnapshot({
           valid: true,
@@ -943,7 +943,7 @@ describe("loadConfigForInstall", () => {
     readConfigFileSnapshotMock.mockResolvedValue(
       makeSnapshot({
         parsed: {},
-        config: {} as OpenClawConfig,
+        config: {} as QuietCoreConfig,
       }),
     );
 

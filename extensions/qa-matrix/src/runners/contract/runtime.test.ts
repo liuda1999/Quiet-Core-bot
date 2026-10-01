@@ -1,6 +1,6 @@
 // Qa Matrix tests cover runtime plugin behavior.
 import path from "node:path";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { MAX_TIMER_TIMEOUT_MS } from "quiet-core-bot/plugin-sdk/number-runtime";
 import { renderQaMarkdownReport } from "quiet-core-bot/plugin-sdk/qa-runtime";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -244,7 +244,7 @@ describe("matrix live qa runtime", () => {
   });
 
   it("injects a temporary Matrix account into the QA gateway config", () => {
-    const baseCfg: OpenClawConfig = {
+    const baseCfg: QuietCoreConfig = {
       plugins: {
         allow: ["memory-core", "qa-channel"],
         entries: {

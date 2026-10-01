@@ -7,7 +7,7 @@ import {
   listActiveMemoryPublicArtifacts,
   type MemoryPluginPublicArtifact,
 } from "quiet-core-bot/plugin-sdk/memory-host-core";
-import type { OpenClawConfig } from "../api.js";
+import type { QuietCoreConfig } from "../api.js";
 import type { ResolvedMemoryWikiConfig } from "./config.js";
 import { appendMemoryWikiLog } from "./log.js";
 import {
@@ -217,7 +217,7 @@ async function writeBridgeSourcePage(params: {
 
 export async function syncMemoryWikiBridgeSources(params: {
   config: ResolvedMemoryWikiConfig;
-  appConfig?: OpenClawConfig;
+  appConfig?: QuietCoreConfig;
 }): Promise<BridgeMemoryWikiResult> {
   await initializeMemoryWikiVault(params.config);
   if (

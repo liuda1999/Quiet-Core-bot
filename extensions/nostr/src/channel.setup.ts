@@ -1,6 +1,6 @@
 // Nostr plugin module implements channel.setup behavior.
 import { describeAccountSnapshot } from "quiet-core-bot/plugin-sdk/account-helpers";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import {
   createDelegatedSetupWizardProxy,
   createStandardChannelSetupStatus,
@@ -39,13 +39,13 @@ type ResolvedNostrSetupAccount = {
   config: NostrAccountConfig;
 };
 
-function getNostrConfig(cfg: OpenClawConfig): NostrAccountConfig | undefined {
+function getNostrConfig(cfg: QuietCoreConfig): NostrAccountConfig | undefined {
   return (cfg.channels as Record<string, unknown> | undefined)?.nostr as
     | NostrAccountConfig
     | undefined;
 }
 
-function listSetupNostrAccountIds(cfg: OpenClawConfig): string[] {
+function listSetupNostrAccountIds(cfg: QuietCoreConfig): string[] {
   const nostrCfg = getNostrConfig(cfg);
   const privateKey = typeof nostrCfg?.privateKey === "string" ? nostrCfg.privateKey.trim() : "";
   if (!privateKey) {
@@ -54,7 +54,7 @@ function listSetupNostrAccountIds(cfg: OpenClawConfig): string[] {
   return [resolveDefaultSetupNostrAccountId(cfg)];
 }
 
-function resolveDefaultSetupNostrAccountId(cfg: OpenClawConfig): string {
+function resolveDefaultSetupNostrAccountId(cfg: QuietCoreConfig): string {
   const configured = getNostrConfig(cfg)?.defaultAccount;
   return typeof configured === "string" && configured.trim()
     ? configured.trim()
@@ -62,7 +62,7 @@ function resolveDefaultSetupNostrAccountId(cfg: OpenClawConfig): string {
 }
 
 function resolveSetupNostrAccount(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   accountId?: string | null;
 }): ResolvedNostrSetupAccount {
   const nostrCfg = getNostrConfig(params.cfg);

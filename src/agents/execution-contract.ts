@@ -2,7 +2,7 @@
  * Resolves strict agentic execution contracts for provider/model pairs.
  */
 import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { resolveAgentExecutionContract, resolveSessionAgentIds } from "./agent-scope.js";
 
 /**
@@ -84,7 +84,7 @@ export function isStrictAgenticSupportedProviderModel(params: {
  * whether a turn represents planning, progress, or completion.
  */
 function resolveEffectiveExecutionContract(params: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   sessionKey?: string;
   agentId?: string | null;
   provider?: string | null;
@@ -115,7 +115,7 @@ function resolveEffectiveExecutionContract(params: {
 }
 
 export function isStrictAgenticExecutionContractActive(params: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   sessionKey?: string;
   agentId?: string | null;
   provider?: string | null;

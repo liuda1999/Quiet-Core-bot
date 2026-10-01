@@ -3,7 +3,7 @@
  *
  * Registers provider-specific stream functions and rewrites models that need Quiet Core bot-managed transport semantics.
  */
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { getApiProvider } from "../llm/api-registry.js";
 import type { Api, Model } from "../llm/types.js";
 import { wrapProviderSimpleCompletionStreamFn } from "../plugins/provider-runtime.js";
@@ -13,7 +13,7 @@ import { prepareGoogleSimpleCompletionModel } from "./google-simple-completion-s
 import { registerProviderStreamForModel } from "./provider-stream.js";
 import {
   buildTransportAwareSimpleStreamFn,
-  createOpenClawTransportStreamFnForModel,
+  createQuietCoreTransportStreamFnForModel,
   prepareTransportAwareSimpleModel,
   resolveTransportAwareSimpleApi,
 } from "./provider-transport-stream.js";
@@ -65,7 +65,7 @@ function resolveProviderSimpleCompletionApi(model: Model): Api {
     .join(":")}`;
 }
 
-function applyProviderSimpleCompletionWrapper(model: Model, cfg?: OpenClawConfig): Model {
+function applyProviderSimpleCompletionWrapper(model: Model, cfg?: QuietCoreConfig): Model {
   if (model.api.startsWith(PROVIDER_SIMPLE_COMPLETION_API_PREFIX)) {
     return model;
   }
@@ -99,7 +99,7 @@ function applyProviderSimpleCompletionWrapper(model: Model, cfg?: OpenClawConfig
 
 function prepareCodexSimpleTransportModel<TApi extends Api>(
   model: Model<TApi>,
-  cfg?: OpenClawConfig,
+  cfg?: QuietCoreConfig,
 ): Model | undefined {
   if (model.provider !== "openai" || model.api !== "openai-chatgpt-responses") {
     return undefined;
@@ -112,7 +112,7 @@ function prepareCodexSimpleTransportModel<TApi extends Api>(
     baseUrl: normalizeCodexResponsesBaseUrlForOpenAISdk(model.baseUrl),
   } as Model;
   const api = resolveTransportAwareSimpleApi(model.api);
-  const streamFn = createOpenClawTransportStreamFnForModel(transportModel, { cfg });
+  const streamFn = createQuietCoreTransportStreamFnForModel(transportModel, { cfg });
   if (!api || !streamFn) {
     return undefined;
   }
@@ -126,7 +126,7 @@ function prepareCodexSimpleTransportModel<TApi extends Api>(
 
 export function prepareModelForSimpleCompletion<TApi extends Api>(params: {
   model: Model<TApi>;
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
 }): Model {
   const { model, cfg } = params;
   // Only provider-owned custom APIs need runtime stream registration here.

@@ -79,7 +79,7 @@ run_macos_ci_mirror() {
   fi
 
   run_step swiftlint lint --config config/swiftlint.yml
-  run_step swiftformat --lint apps/macos/Sources --config config/swiftformat --exclude '**/OpenClawProtocol,**/HostEnvSecurityPolicy.generated.swift'
+  run_step swiftformat --lint apps/macos/Sources --config config/swiftformat --exclude '**/QuietCoreProtocol,**/HostEnvSecurityPolicy.generated.swift'
   run_step swift build --package-path apps/macos --configuration release
   run_step swift test --package-path apps/macos --parallel
 }

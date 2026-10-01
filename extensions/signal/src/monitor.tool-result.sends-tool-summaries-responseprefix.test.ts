@@ -1,6 +1,6 @@
 // Signal tests cover monitor.tool result.sends tool summaries responseprefix plugin behavior.
 import { expectPairingReplyText } from "quiet-core-bot/plugin-sdk/channel-test-helpers";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { resolveAgentRoute } from "quiet-core-bot/plugin-sdk/routing";
 import { normalizeE164 } from "quiet-core-bot/plugin-sdk/text-utility-runtime";
 import { describe, expect, it, vi } from "vitest";
@@ -32,7 +32,7 @@ type MonitorSignalProviderOptions = NonNullable<Parameters<typeof monitorSignalP
 
 async function runMonitorWithMocks(opts: MonitorSignalProviderOptions) {
   return monitorSignalProvider({
-    config: config as OpenClawConfig,
+    config: config as QuietCoreConfig,
     waitForTransportReady:
       waitForTransportReadyMock as MonitorSignalProviderOptions["waitForTransportReady"],
     ...opts,
@@ -64,7 +64,7 @@ async function receiveSignalPayloads(params: {
 
 function hasQueuedReactionEventFor(sender: string) {
   const route = resolveAgentRoute({
-    cfg: config as OpenClawConfig,
+    cfg: config as QuietCoreConfig,
     channel: "signal",
     accountId: "default",
     peer: { kind: "direct", id: normalizeE164(sender) },

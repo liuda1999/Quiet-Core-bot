@@ -12,8 +12,8 @@ import {
   testing,
 } from "./agent-runs-store.js";
 import {
-  closeOpenClawStateDatabaseForTest,
-  openOpenClawStateDatabase,
+  closeQuietCoreStateDatabaseForTest,
+  openQuietCoreStateDatabase,
 } from "./quiet-core-bot-state-db.js";
 
 const originalStateDir = process.env["QUIET_CORE_STATE_DIR"];
@@ -28,7 +28,7 @@ function insertAgentRun(row: {
   ownerPid?: number | null;
   ownerInstanceId?: string | null;
 }): void {
-  const database = openOpenClawStateDatabase();
+  const database = openQuietCoreStateDatabase();
   database.db
     .prepare(
       `INSERT INTO agent_runs (
@@ -49,7 +49,7 @@ function insertAgentRun(row: {
 }
 
 function readAgentRun(runId: string): Record<string, unknown> | undefined {
-  return openOpenClawStateDatabase()
+  return openQuietCoreStateDatabase()
     .db.prepare("SELECT * FROM agent_runs WHERE run_id = ?")
     .get(runId) as Record<string, unknown> | undefined;
 }
@@ -63,7 +63,7 @@ beforeEach(() => {
 
 afterEach(() => {
   testing.resetPendingTerminalWritesForTest();
-  closeOpenClawStateDatabaseForTest();
+  closeQuietCoreStateDatabaseForTest();
   if (originalStateDir === undefined) {
     delete process.env["QUIET_CORE_STATE_DIR"];
   } else {

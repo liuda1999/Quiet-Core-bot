@@ -3,7 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { runOpenClawStateWriteTransaction } from "../state/quiet-core-bot-state-db.js";
+import { runQuietCoreStateWriteTransaction } from "../state/quiet-core-bot-state-db.js";
 import {
   clearCurrentPluginMetadataSnapshot,
   setCurrentPluginMetadataSnapshot,
@@ -52,7 +52,7 @@ function tempStateDir(): string {
 }
 
 function touchPersistedIndex(stateDir: string, value = 1): void {
-  runOpenClawStateWriteTransaction(
+  runQuietCoreStateWriteTransaction(
     ({ db }) => {
       db.prepare(
         `

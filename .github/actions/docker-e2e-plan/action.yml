@@ -47,7 +47,7 @@ outputs:
     description: "1 when selected lanes require building the live Docker image."
     value: ${{ steps.plan.outputs.needs_live_image }}
   needs_package:
-    description: "1 when selected lanes require the OpenClaw package tarball."
+    description: "1 when selected lanes require the QuietCore package tarball."
     value: ${{ steps.plan.outputs.needs_package }}
   plan_json:
     description: Path to the generated plan JSON.
@@ -111,7 +111,7 @@ runs:
         node scripts/docker-e2e.mjs github-outputs "$plan_path" >> "$GITHUB_OUTPUT"
         echo "plan_json=$plan_path" >> "$GITHUB_OUTPUT"
 
-    - name: Download OpenClaw Docker E2E package
+    - name: Download QuietCore Docker E2E package
       if: inputs.hydrate-artifacts == 'true' && steps.plan.outputs.needs_package == '1'
       uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
       with:

@@ -1,6 +1,6 @@
 // Tests browser lifecycle cleanup after CLI and runtime shutdown paths.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "./config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "./config/types.quiet-core-bot.js";
 
 const closeTrackedBrowserTabsForSessions = vi.hoisted(() => vi.fn(async () => 0));
 
@@ -34,7 +34,7 @@ describe("cleanupBrowserSessionsForLifecycleEnd", () => {
   it("skips cleanup when root browser support is disabled", async () => {
     await expect(
       cleanupBrowserSessionsForLifecycleEnd({
-        cfg: { browser: { enabled: false } } as OpenClawConfig,
+        cfg: { browser: { enabled: false } } as QuietCoreConfig,
         sessionKeys: ["session-a"],
       }),
     ).resolves.toBeUndefined();
@@ -45,7 +45,7 @@ describe("cleanupBrowserSessionsForLifecycleEnd", () => {
   it("skips cleanup when the browser plugin entry is disabled", async () => {
     await expect(
       cleanupBrowserSessionsForLifecycleEnd({
-        cfg: { plugins: { entries: { browser: { enabled: false } } } } as OpenClawConfig,
+        cfg: { plugins: { entries: { browser: { enabled: false } } } } as QuietCoreConfig,
         sessionKeys: ["session-a"],
       }),
     ).resolves.toBeUndefined();

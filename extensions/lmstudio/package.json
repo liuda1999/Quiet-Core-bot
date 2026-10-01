@@ -2,7 +2,7 @@
   "name": "@quiet-core/lmstudio-provider",
   "version": "2026.6.11",
   "private": true,
-  "description": "OpenClaw LM Studio provider plugin",
+  "description": "QuietCore LM Studio provider plugin",
   "type": "module",
   "quiet-core-bot": {
     "extensions": [

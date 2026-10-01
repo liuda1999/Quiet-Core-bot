@@ -10,11 +10,11 @@ import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
-  closeOpenClawAgentDatabasesForTest,
-  openOpenClawAgentDatabase,
+  closeQuietCoreAgentDatabasesForTest,
+  openQuietCoreAgentDatabase,
 } from "../state/quiet-core-bot-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "../state/quiet-core-bot-state-db.paths.js";
+import { closeQuietCoreStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
+import { resolveQuietCoreStateSqlitePath } from "../state/quiet-core-bot-state-db.paths.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import { resolveAgentDir } from "./agent-scope.js";
 import { loadPersistedAuthProfileStore } from "./auth-profiles/persisted.js";
@@ -72,8 +72,8 @@ async function withAgentDirEnv(prefix: string, run: (agentDir: string) => void |
       async () => await run(agentDir),
     );
   } finally {
-    closeOpenClawAgentDatabasesForTest();
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreAgentDatabasesForTest();
+    closeQuietCoreStateDatabaseForTest();
     fs.rmSync(root, { recursive: true, force: true });
   }
 }
@@ -137,9 +137,9 @@ describe("auth profile sqlite store", () => {
   it("reads existing sqlite auth stores without registering shared state", async () => {
     await withAgentDirEnv("quiet-core-bot-auth-sqlite-readonly-", (agentDir) => {
       saveAuthProfileStore(apiKeyStore("sk-test"), agentDir);
-      closeOpenClawAgentDatabasesForTest();
-      closeOpenClawStateDatabaseForTest();
-      const stateDbPath = resolveOpenClawStateSqlitePath();
+      closeQuietCoreAgentDatabasesForTest();
+      closeQuietCoreStateDatabaseForTest();
+      const stateDbPath = resolveQuietCoreStateSqlitePath();
       fs.rmSync(path.dirname(stateDbPath), { recursive: true, force: true });
 
       const loaded = loadPersistedAuthProfileStore(agentDir);
@@ -152,7 +152,7 @@ describe("auth profile sqlite store", () => {
   it("waits for brief rollback-journal contention before reading persisted auth", async () => {
     await withAgentDirEnv("quiet-core-bot-auth-sqlite-contention-", async (agentDir) => {
       saveAuthProfileStore(apiKeyStore("sk-test"), agentDir);
-      closeOpenClawAgentDatabasesForTest();
+      closeQuietCoreAgentDatabasesForTest();
 
       const databasePath = resolveAuthProfileDatabasePath(agentDir);
       const setup = new DatabaseSync(databasePath);
@@ -223,7 +223,7 @@ describe("auth profile sqlite store", () => {
 
       saveAuthProfileStore(apiKeyStore("sk-test"), agentDir);
 
-      const database = openOpenClawAgentDatabase({
+      const database = openQuietCoreAgentDatabase({
         agentId: "coder",
         path: resolveAuthProfileDatabasePath(agentDir),
       });

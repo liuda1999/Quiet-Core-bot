@@ -9,7 +9,7 @@ import {
 } from "../plugin-sdk/agent-harness.js";
 import { listAgentToolResultMiddlewares } from "../plugins/agent-tool-result-middleware.js";
 import { listCodexAppServerExtensionFactories } from "../plugins/codex-app-server-extension-factory.js";
-import { loadOpenClawPlugins } from "../plugins/loader.js";
+import { loadQuietCorePlugins } from "../plugins/loader.js";
 import {
   cleanupTempPluginTestEnvironment,
   createTempPluginDir,
@@ -87,7 +87,7 @@ describe("agent tool result middleware", () => {
       onlyPluginIds: ["tool-result-middleware"],
     };
 
-    loadOpenClawPlugins(options);
+    loadQuietCorePlugins(options);
     expect(listAgentToolResultMiddlewares("codex")).toHaveLength(1);
     expect(listAgentToolResultMiddlewares("quiet-core-bot")).toHaveLength(0);
 
@@ -96,7 +96,7 @@ describe("agent tool result middleware", () => {
 
     // The second load proves manifest-backed discovery can restore middleware
     // after the active in-memory registry has been reset.
-    loadOpenClawPlugins(options);
+    loadQuietCorePlugins(options);
     const runner = createAgentToolResultMiddlewareRunner({ runtime: "codex" });
     const result = await runner.applyToolResultMiddleware({
       threadId: "thread-1",
@@ -128,7 +128,7 @@ describe("agent tool result middleware", () => {
 } };`,
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       onlyPluginIds: ["tool-result-middleware"],
       config: {
         plugins: {
@@ -171,7 +171,7 @@ describe("agent tool result middleware", () => {
 
     // Installed plugins can register Codex middleware only when explicitly
     // enabled and when their manifest declares the targeted runtime contract.
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       workspaceDir: tmp,
       onlyPluginIds: ["tool-result-middleware"],
       config: {
@@ -211,7 +211,7 @@ export default { id: "tool-result-middleware", register(api) {
 } };`,
     });
 
-    loadOpenClawPlugins({
+    loadQuietCorePlugins({
       onlyPluginIds: ["tool-result-middleware"],
       config: {
         plugins: {
@@ -486,7 +486,7 @@ export default { id: "tool-result-middleware", register(api) {
       },
     };
 
-    loadOpenClawPlugins({ config });
+    loadQuietCorePlugins({ config });
     expect(listAgentToolResultMiddlewares("codex")).toHaveLength(0);
     setRuntimeConfigSnapshot(config);
 
@@ -542,7 +542,7 @@ export default { id: "tool-result-middleware", register(api) {
 } };`,
     });
 
-    loadOpenClawPlugins({
+    loadQuietCorePlugins({
       onlyPluginIds: ["bundled-tool-result-middleware"],
       config: {
         plugins: {
@@ -614,7 +614,7 @@ describe("Codex app-server extension factories", () => {
       onlyPluginIds: ["codex-ext"],
     };
 
-    loadOpenClawPlugins(options);
+    loadQuietCorePlugins(options);
     expect(listCodexAppServerExtensionFactories()).toHaveLength(1);
 
     resetActivePluginRegistryForTest();
@@ -622,7 +622,7 @@ describe("Codex app-server extension factories", () => {
 
     // Factories are cached like middleware so app-server startup can recover
     // them after registry resets without reinterpreting arbitrary paths.
-    loadOpenClawPlugins(options);
+    loadQuietCorePlugins(options);
     const runner = createCodexAppServerToolResultExtensionRunner({});
     const result = await runner.applyToolResultExtensions({
       threadId: "thread-1",
@@ -655,7 +655,7 @@ describe("Codex app-server extension factories", () => {
 
     // Embedded app-server hooks are core-facing: external plugin paths cannot
     // install factories even with a matching manifest contract.
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       workspaceDir: tmp,
       onlyPluginIds: ["codex-ext"],
       config: {
@@ -688,7 +688,7 @@ describe("Codex app-server extension factories", () => {
 } };`,
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       onlyPluginIds: ["codex-ext"],
       config: {
         plugins: {
@@ -728,7 +728,7 @@ describe("Codex app-server extension factories", () => {
 } };`,
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       onlyPluginIds: ["codex-ext"],
       config: {
         plugins: {

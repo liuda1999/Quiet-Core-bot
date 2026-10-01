@@ -1,4 +1,4 @@
-# OpenClaw Android Versioning
+# QuietCore Android Versioning
 
 Android release builds use pinned app metadata instead of auto-bumping `build.gradle.kts`.
 

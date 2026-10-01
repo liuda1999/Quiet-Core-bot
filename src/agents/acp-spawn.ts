@@ -53,7 +53,7 @@ import {
   resolveSessionTranscriptRuntimeTarget,
 } from "../config/sessions/session-accessor.js";
 import type { SessionAcpMeta, SessionEntry } from "../config/sessions/types.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { callGateway } from "../gateway/call.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { resolveEventSessionRoutingPolicy } from "../infra/event-session-routing.js";
@@ -234,7 +234,7 @@ export const ACP_SPAWN_SESSION_ACCEPTED_NOTE =
   "thread-bound ACP session stays active after this task; continue in-thread for follow-ups.";
 
 export function resolveAcpSpawnRuntimePolicyError(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   requesterSessionKey?: string;
   requesterSandboxed?: boolean;
   sandbox?: SpawnAcpSandboxMode;
@@ -365,7 +365,7 @@ function resolveAcpSessionMode(mode: SpawnAcpMode): AcpRuntimeSessionMode {
 }
 
 function isHeartbeatEnabledForSessionAgent(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   sessionKey?: string;
 }): boolean {
   if (!areHeartbeatsEnabled()) {
@@ -403,9 +403,9 @@ function isHeartbeatEnabledForSessionAgent(params: {
 }
 
 function resolveHeartbeatConfigForAgent(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentId: string;
-}): NonNullable<NonNullable<OpenClawConfig["agents"]>["defaults"]>["heartbeat"] {
+}): NonNullable<NonNullable<QuietCoreConfig["agents"]>["defaults"]>["heartbeat"] {
   const defaults = params.cfg.agents?.defaults?.heartbeat;
   const overrides = resolveAgentConfig(params.cfg, params.agentId)?.heartbeat;
   if (!defaults && !overrides) {
@@ -418,7 +418,7 @@ function resolveHeartbeatConfigForAgent(params: {
 }
 
 function hasSessionLocalHeartbeatRelayRoute(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   parentSessionKey: string;
   requesterAgentId: string;
 }): boolean {
@@ -458,7 +458,7 @@ function hasSessionLocalHeartbeatRelayRoute(params: {
 
 function resolveTargetAcpAgentId(params: {
   requestedAgentId?: string;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
 }): { ok: true; agentId: string; configAgentId?: string } | { ok: false; error: string } {
   const requested = normalizeOptionalAgentId(params.requestedAgentId);
   if (requested) {
@@ -500,7 +500,7 @@ function resolveTargetAcpAgentId(params: {
   };
 }
 
-function isExplicitlyAllowedAcpAgent(cfg: OpenClawConfig, agentId: string): boolean {
+function isExplicitlyAllowedAcpAgent(cfg: QuietCoreConfig, agentId: string): boolean {
   return (cfg.acp?.allowedAgents ?? []).some((entry) => {
     if (entry.trim() === "*") {
       return true;
@@ -510,7 +510,7 @@ function isExplicitlyAllowedAcpAgent(cfg: OpenClawConfig, agentId: string): bool
   });
 }
 
-function resolveConfiguredAcpSubagentTargetIds(cfg: OpenClawConfig): string[] {
+function resolveConfiguredAcpSubagentTargetIds(cfg: QuietCoreConfig): string[] {
   const ids = new Set<string>(listAgentIds(cfg));
   for (const agent of cfg.agents?.list ?? []) {
     if (agent.runtime?.type !== "acp") {
@@ -582,7 +582,7 @@ export async function resolveRuntimeCwdForAcpSpawn(params: {
 }
 
 function resolveRequesterInternalSessionKey(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   requesterSessionKey?: string;
 }): string {
   const { mainKey, alias } = resolveMainSessionAlias(params.cfg);
@@ -629,7 +629,7 @@ async function persistAcpSpawnSessionFileBestEffort(params: {
 }
 
 function resolveConversationRefForThreadBinding(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   channel?: string;
   accountId?: string;
   to?: string;
@@ -649,7 +649,7 @@ function resolveConversationRefForThreadBinding(params: {
 }
 
 function resolveAcpSpawnChannelAccountId(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   channel?: string;
   accountId?: string;
 }): string | undefined {
@@ -667,7 +667,7 @@ function resolveAcpSpawnChannelAccountId(params: {
 }
 
 function prepareAcpThreadBinding(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   channel?: string;
   accountId?: string;
   to?: string;
@@ -766,7 +766,7 @@ function prepareAcpThreadBinding(params: {
 }
 
 function resolveAcpSpawnRequesterState(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   parentSessionKey?: string;
   requesterAgentId: string;
   targetAgentId: string;
@@ -819,7 +819,7 @@ function resolveAcpSpawnRequesterState(params: {
 }
 
 function resolveAcpSubagentEnvelopeState(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   requesterSessionKey?: string;
   requesterAgentId: string;
   targetAgentId: string;
@@ -954,7 +954,7 @@ function sessionEntryIsOwnedByRequester(params: {
 }
 
 function validateAcpResumeSessionOwnership(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   targetAgentId: string;
   requesterSessionKey?: string;
   resumeSessionId?: string;
@@ -1010,7 +1010,7 @@ function resolveAcpRuntimeTimeoutSeconds(runTimeoutSeconds?: number): number | u
 }
 
 function resolveAcpSpawnRuntimeOptions(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   targetAgentId: string;
   configAgentId?: string;
   model?: string;
@@ -1062,7 +1062,7 @@ function resolveAcpSpawnRuntimeOptions(params: {
 }
 
 async function initializeAcpSpawnRuntime(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   sessionKey: string;
   targetAgentId: string;
   runtimeMode: AcpRuntimeSessionMode;
@@ -1112,7 +1112,7 @@ async function initializeAcpSpawnRuntime(params: {
 }
 
 async function bindPreparedAcpThread(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   sessionKey: string;
   targetAgentId: string;
   label?: string;
@@ -1191,7 +1191,7 @@ async function bindPreparedAcpThread(params: {
 }
 
 function resolveAcpSpawnBootstrapDeliveryPlan(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   spawnMode: SpawnAcpMode;
   requestThreadBinding: boolean;
   effectiveStreamToParent: boolean;

@@ -1,4 +1,4 @@
-import OpenClawKit
+import QuietCoreKit
 import SwiftUI
 
 struct AgentProTab: View {
@@ -6,7 +6,7 @@ struct AgentProTab: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.scenePhase) var scenePhase
     let directRoute: AgentRoute?
-    let headerLeadingAction: OpenClawSidebarHeaderAction?
+    let headerLeadingAction: QuietCoreSidebarHeaderAction?
     let headerTitle: String
     let openSettings: (() -> Void)?
     @State var navigationPath: [AgentRoute] = []
@@ -104,8 +104,8 @@ struct AgentProTab: View {
 
         var color: Color {
             switch self {
-            case .online: OpenClawBrand.ok
-            case .ready: OpenClawBrand.info
+            case .online: QuietCoreBrand.ok
+            case .ready: QuietCoreBrand.info
             }
         }
     }
@@ -126,7 +126,7 @@ struct AgentProTab: View {
 
     init(
         directRoute: AgentRoute? = nil,
-        headerLeadingAction: OpenClawSidebarHeaderAction? = nil,
+        headerLeadingAction: QuietCoreSidebarHeaderAction? = nil,
         headerTitle: String = "Agents",
         openSettings: (() -> Void)? = nil)
     {
@@ -159,7 +159,7 @@ struct AgentProTab: View {
     private var overviewNavigation: some View {
         NavigationStack(path: self.$navigationPath) {
             ZStack {
-                OpenClawProBackground()
+                QuietCoreProBackground()
                 ScrollView {
                     VStack(alignment: .leading, spacing: 18) {
                         self.rosterHeader

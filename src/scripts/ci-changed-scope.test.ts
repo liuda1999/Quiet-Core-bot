@@ -179,7 +179,7 @@ describe("detectChangedScope", () => {
       runControlUiI18n: false,
     });
     expect(
-      detectChangedScope(["apps/macos-mlx-tts/Sources/OpenClawMLXTTSHelper/main.swift"]),
+      detectChangedScope(["apps/macos-mlx-tts/Sources/QuietCoreMLXTTSHelper/main.swift"]),
     ).toEqual({
       runNode: false,
       runMacos: true,
@@ -255,7 +255,7 @@ describe("detectChangedScope", () => {
 
   it("runs the iOS build but not macOS for generated protocol model-only changes", () => {
     expect(
-      detectChangedScope(["apps/shared/QuietCoreKit/Sources/OpenClawProtocol/GatewayModels.swift"]),
+      detectChangedScope(["apps/shared/QuietCoreKit/Sources/QuietCoreProtocol/GatewayModels.swift"]),
     ).toEqual({
       runNode: false,
       runMacos: false,

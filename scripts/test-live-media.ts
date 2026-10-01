@@ -1,4 +1,4 @@
-// Test Live Media script supports OpenClaw repository automation.
+// Test Live Media script supports QuietCore repository automation.
 
 import { pathToFileURL } from "node:url";
 import { formatErrorMessage } from "../src/infra/errors.ts";

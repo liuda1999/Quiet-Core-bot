@@ -7,14 +7,14 @@ import {
 } from "quiet-core-bot/plugin-sdk/plugin-test-runtime";
 import { DEFAULT_ACCOUNT_ID } from "quiet-core-bot/plugin-sdk/setup";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig, OpenClawPluginApi } from "../runtime-api.js";
+import type { QuietCoreConfig, QuietCorePluginApi } from "../runtime-api.js";
 
 const resolveMattermostAccount = vi.hoisted(() => vi.fn());
 const normalizeMattermostBaseUrl = vi.hoisted(() => vi.fn((value: string | undefined) => value));
 const hasConfiguredSecretInput = vi.hoisted(() => vi.fn((value: unknown) => Boolean(value)));
 
 vi.mock("./setup.accounts.runtime.js", () => ({
-  listMattermostAccountIds: vi.fn((cfg: OpenClawConfig) => {
+  listMattermostAccountIds: vi.fn((cfg: QuietCoreConfig) => {
     const accounts = cfg.channels?.mattermost?.accounts;
     const ids = accounts ? Object.keys(accounts) : [];
     return ids.length > 0 ? ids : [DEFAULT_ACCOUNT_ID];
@@ -48,15 +48,15 @@ vi.mock("./setup.secret-input.runtime.js", () => ({
 }));
 
 function createApi(
-  registrationMode: OpenClawPluginApi["registrationMode"],
+  registrationMode: QuietCorePluginApi["registrationMode"],
   registerHttpRoute = vi.fn(),
-): OpenClawPluginApi {
+): QuietCorePluginApi {
   return createTestPluginApi({
     id: "mattermost",
     name: "Mattermost",
     source: "test",
     config: {},
-    runtime: {} as OpenClawPluginApi["runtime"],
+    runtime: {} as QuietCorePluginApi["runtime"],
     registrationMode,
     registerHttpRoute,
   });
@@ -74,7 +74,7 @@ describe("mattermost setup", () => {
     ({ isMattermostConfigured, resolveMattermostAccountWithSecrets, mattermostSetupAdapter } =
       await import("./setup-core.js"));
     plugin = {
-      register(api: OpenClawPluginApi) {
+      register(api: QuietCorePluginApi) {
         if (api.registrationMode === "full") {
           api.registerHttpRoute({
             path: "/api/channels/mattermost/command",
@@ -266,7 +266,7 @@ describe("mattermost setup", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
     });
 
     expect(configured).toBe(true);
@@ -291,7 +291,7 @@ describe("mattermost setup", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       accountId: undefined,
     });
 
@@ -305,7 +305,7 @@ describe("mattermost setup", () => {
           channels: {
             mattermost: {},
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         accountId: "default",
       } as never),
     ).toBe(true);
@@ -323,7 +323,7 @@ describe("mattermost setup", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         accountId: "default",
       } as never),
     ).toBe(false);
@@ -335,14 +335,14 @@ describe("mattermost setup", () => {
 
     expect(
       mattermostSetupWizard.envShortcut?.isAvailable?.({
-        cfg: { channels: { mattermost: {} } } as OpenClawConfig,
+        cfg: { channels: { mattermost: {} } } as QuietCoreConfig,
         accountId: "default",
       } as never),
     ).toBe(true);
 
     expect(
       mattermostSetupWizard.envShortcut?.isAvailable?.({
-        cfg: { channels: { mattermost: {} } } as OpenClawConfig,
+        cfg: { channels: { mattermost: {} } } as QuietCoreConfig,
         accountId: "work",
       } as never),
     ).toBe(false);
@@ -351,7 +351,7 @@ describe("mattermost setup", () => {
   it("keeps env shortcut as a no-op patch for the selected account", () => {
     expect(
       mattermostSetupWizard.envShortcut?.apply?.({
-        cfg: { channels: { mattermost: { enabled: false } } } as OpenClawConfig,
+        cfg: { channels: { mattermost: { enabled: false } } } as QuietCoreConfig,
         accountId: "default",
       } as never),
     ).toEqual({
@@ -384,7 +384,7 @@ describe("mattermost setup", () => {
 
     const result = await runSetupWizardConfigure({
       configure: adapter.configure,
-      cfg: { channels: { mattermost: {} } } as OpenClawConfig,
+      cfg: { channels: { mattermost: {} } } as QuietCoreConfig,
       prompter: queued.prompter,
       options: { secretInputMode: "plaintext" as const },
     });

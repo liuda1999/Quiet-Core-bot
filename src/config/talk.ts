@@ -12,7 +12,7 @@ import type {
   TalkProviderConfig,
   TalkRealtimeConfig,
 } from "./types.gateway.js";
-import type { OpenClawConfig } from "./types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "./types.quiet-core-bot.js";
 import { coerceSecretRef } from "./types.secrets.js";
 
 function normalizeTalkSecretInput(value: unknown): TalkProviderConfig["apiKey"] | undefined {
@@ -203,7 +203,7 @@ export function normalizeTalkSection(value: TalkConfig | undefined): TalkConfig 
 }
 
 /** Return a config copy with `talk` normalized when a valid Talk section is present. */
-export function normalizeTalkConfig(config: OpenClawConfig): OpenClawConfig {
+export function normalizeTalkConfig(config: QuietCoreConfig): QuietCoreConfig {
   if (!config.talk) {
     return config;
   }

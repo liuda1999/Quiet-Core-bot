@@ -18,18 +18,18 @@ const moduleLoaders: PluginModuleLoaderCache = new Map();
 const loadedFacadeModules = new Map<string, unknown>();
 const loadedFacadePluginIds = new Set<string>();
 let facadeLoaderSourceTransformFactory: PluginModuleLoaderFactory | undefined;
-let cachedOpenClawPackageRoot: string | undefined;
+let cachedQuietCorePackageRoot: string | undefined;
 
-function getOpenClawPackageRoot() {
-  if (cachedOpenClawPackageRoot) {
-    return cachedOpenClawPackageRoot;
+function getQuietCorePackageRoot() {
+  if (cachedQuietCorePackageRoot) {
+    return cachedQuietCorePackageRoot;
   }
-  cachedOpenClawPackageRoot =
+  cachedQuietCorePackageRoot =
     resolveLoaderPackageRoot({
       modulePath: fileURLToPath(import.meta.url),
       moduleUrl: import.meta.url,
     }) ?? fileURLToPath(new URL("../..", import.meta.url));
-  return cachedOpenClawPackageRoot;
+  return cachedQuietCorePackageRoot;
 }
 
 function resolveFacadeModuleLocation(params: {
@@ -41,7 +41,7 @@ function resolveFacadeModuleLocation(params: {
   return resolveBundledFacadeModuleLocation({
     ...params,
     currentModulePath: CURRENT_MODULE_PATH,
-    packageRoot: getOpenClawPackageRoot(),
+    packageRoot: getQuietCorePackageRoot(),
     bundledPluginsDir,
   });
 }
@@ -145,7 +145,7 @@ export function loadFacadeModuleAtLocationSync<T extends object>(params: {
     absolutePath: location.modulePath,
     rootPath: location.boundaryRoot,
     boundaryLabel:
-      location.boundaryRoot === getOpenClawPackageRoot()
+      location.boundaryRoot === getQuietCorePackageRoot()
         ? "Quiet Core bot package root"
         : (() => {
             const bundledDir = resolveBundledPluginsDir();
@@ -226,7 +226,7 @@ export async function loadBundledPluginPublicSurfaceModule<T extends object>(par
     absolutePath: preparedLocation.modulePath,
     rootPath: preparedLocation.boundaryRoot,
     boundaryLabel:
-      preparedLocation.boundaryRoot === getOpenClawPackageRoot()
+      preparedLocation.boundaryRoot === getQuietCorePackageRoot()
         ? "Quiet Core bot package root"
         : "plugin root",
     rejectHardlinks: false,
@@ -266,7 +266,7 @@ export function resetFacadeLoaderStateForTest(): void {
   loadedFacadePluginIds.clear();
   moduleLoaders.clear();
   facadeLoaderSourceTransformFactory = undefined;
-  cachedOpenClawPackageRoot = undefined;
+  cachedQuietCorePackageRoot = undefined;
 }
 
 /** Override source transform loader creation for facade-loader tests. */

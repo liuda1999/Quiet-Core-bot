@@ -3,15 +3,15 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { formatCliCommand } from "../cli/command-format.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
 import {
-  closeOpenClawStateDatabaseForTest,
-  openOpenClawStateDatabase,
-  runOpenClawStateWriteTransaction,
+  closeQuietCoreStateDatabaseForTest,
+  openQuietCoreStateDatabase,
+  runQuietCoreStateWriteTransaction,
 } from "../state/quiet-core-bot-state-db.js";
 import {
-  createOpenClawTestState,
-  type OpenClawTestState,
+  createQuietCoreTestState,
+  type QuietCoreTestState,
 } from "../test-utils/quiet-core-bot-test-state.js";
 import {
   executeSqliteQuerySync,
@@ -39,7 +39,7 @@ vi.mock("./quiet-core-bot-root.js", async () => {
   const actual = await vi.importActual<typeof import("./quiet-core-bot-root.js")>("./quiet-core-bot-root.js");
   return {
     ...actual,
-    resolveOpenClawPackageRoot: vi.fn(),
+    resolveQuietCorePackageRoot: vi.fn(),
   };
 });
 
@@ -92,7 +92,7 @@ vi.mock("./update-managed-service-handoff.js", () => ({
 
 const UPDATE_CHECK_STATE_KEY = "default";
 
-type UpdateCheckStateDatabase = Pick<OpenClawStateKyselyDatabase, "update_check_state">;
+type UpdateCheckStateDatabase = Pick<QuietCoreStateKyselyDatabase, "update_check_state">;
 type PersistedUpdateCheckState = {
   lastCheckedAt?: string;
   lastNotifiedVersion?: string;
@@ -115,9 +115,9 @@ function presentString(value: string | null): string | undefined {
 
 describe("update-startup", () => {
   let tempDir: string;
-  let testState: OpenClawTestState;
+  let testState: QuietCoreTestState;
 
-  let resolveOpenClawPackageRoot: (typeof import("./quiet-core-bot-root.js"))["resolveOpenClawPackageRoot"];
+  let resolveQuietCorePackageRoot: (typeof import("./quiet-core-bot-root.js"))["resolveQuietCorePackageRoot"];
   let checkUpdateStatus: (typeof import("./update-check.js"))["checkUpdateStatus"];
   let resolveNpmChannelTag: (typeof import("./update-check.js"))["resolveNpmChannelTag"];
   let runCommandWithTimeout: (typeof import("../process/exec.js"))["runCommandWithTimeout"];
@@ -136,7 +136,7 @@ describe("update-startup", () => {
   }
 
   function readPersistedUpdateCheckState(): PersistedUpdateCheckState | null {
-    const { db } = openOpenClawStateDatabase();
+    const { db } = openQuietCoreStateDatabase();
     const stateDb = getNodeSqliteKysely<UpdateCheckStateDatabase>(db);
     const row = executeSqliteQueryTakeFirstSync(
       db,
@@ -166,7 +166,7 @@ describe("update-startup", () => {
   }
 
   function writePersistedUpdateCheckState(state: PersistedUpdateCheckState): void {
-    runOpenClawStateWriteTransaction(({ db }) => {
+    runQuietCoreStateWriteTransaction(({ db }) => {
       const stateDb = getNodeSqliteKysely<UpdateCheckStateDatabase>(db);
       executeSqliteQuerySync(
         db,
@@ -198,7 +198,7 @@ describe("update-startup", () => {
   beforeEach(async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-01-17T10:00:00Z"));
-    testState = await createOpenClawTestState({
+    testState = await createQuietCoreTestState({
       layout: "state-only",
       prefix: "quiet-core-bot-update-check-suite-",
       env: {
@@ -218,7 +218,7 @@ describe("update-startup", () => {
 
     // Perf: load mocked modules once (after timers/env are set up).
     if (!loaded) {
-      ({ resolveOpenClawPackageRoot } = await import("./quiet-core-bot-root.js"));
+      ({ resolveQuietCorePackageRoot } = await import("./quiet-core-bot-root.js"));
       ({ checkUpdateStatus, resolveNpmChannelTag } = await import("./update-check.js"));
       ({ runCommandWithTimeout } = await import("../process/exec.js"));
       ({
@@ -229,7 +229,7 @@ describe("update-startup", () => {
       } = await import("./update-startup.js"));
       loaded = true;
     }
-    vi.mocked(resolveOpenClawPackageRoot).mockClear();
+    vi.mocked(resolveQuietCorePackageRoot).mockClear();
     vi.mocked(checkUpdateStatus).mockClear();
     vi.mocked(resolveNpmChannelTag).mockClear();
     vi.mocked(runCommandWithTimeout).mockClear();
@@ -248,7 +248,7 @@ describe("update-startup", () => {
 
   afterEach(async () => {
     vi.useRealTimers();
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
     await testState.cleanup();
     resetUpdateAvailableStateForTest();
   });
@@ -259,7 +259,7 @@ describe("update-startup", () => {
   }
 
   function mockPackageInstallStatus() {
-    vi.mocked(resolveOpenClawPackageRoot).mockResolvedValue("/opt/quiet-core-bot");
+    vi.mocked(resolveQuietCorePackageRoot).mockResolvedValue("/opt/quiet-core-bot");
     vi.mocked(checkUpdateStatus).mockResolvedValue({
       root: "/opt/quiet-core-bot",
       installKind: "package",
@@ -604,7 +604,7 @@ describe("update-startup", () => {
     expect(startManagedServiceUpdateHandoffMock).not.toHaveBeenCalled();
     expect(scheduleGatewaySigusr1RestartMock).not.toHaveBeenCalled();
     expect(detectRespawnSupervisorMock).toHaveBeenCalledWith(process.env, process.platform, {
-      includeLinuxOpenClawGatewayServiceMarker: true,
+      includeLinuxQuietCoreGatewayServiceMarker: true,
     });
     const [argv, options] = requireFirstRunCommandCall();
     expect(argv).toEqual([
@@ -688,7 +688,7 @@ describe("update-startup", () => {
 
     expect(runCommandWithTimeout).not.toHaveBeenCalled();
     expect(detectRespawnSupervisorMock).toHaveBeenCalledWith(process.env, process.platform, {
-      includeLinuxOpenClawGatewayServiceMarker: true,
+      includeLinuxQuietCoreGatewayServiceMarker: true,
     });
     expect(startManagedServiceUpdateHandoffMock).toHaveBeenCalledWith(
       expect.objectContaining({

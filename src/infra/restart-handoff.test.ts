@@ -3,10 +3,10 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
 import {
-  closeOpenClawStateDatabaseForTest,
-  openOpenClawStateDatabase,
+  closeQuietCoreStateDatabaseForTest,
+  openQuietCoreStateDatabase,
 } from "../state/quiet-core-bot-state-db.js";
 import {
   executeSqliteQuerySync,
@@ -22,7 +22,7 @@ import {
 import type { GatewayRestartHandoff } from "./restart-handoff.js";
 
 const tempDirs: string[] = [];
-type GatewayRestartHandoffDatabase = Pick<OpenClawStateKyselyDatabase, "gateway_restart_handoff">;
+type GatewayRestartHandoffDatabase = Pick<QuietCoreStateKyselyDatabase, "gateway_restart_handoff">;
 
 function createHandoffEnv(): NodeJS.ProcessEnv {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-restart-handoff-"));
@@ -38,7 +38,7 @@ function legacyHandoffPath(env: NodeJS.ProcessEnv): string {
 }
 
 function readHandoffRow(env: NodeJS.ProcessEnv) {
-  const { db } = openOpenClawStateDatabase({ env });
+  const { db } = openQuietCoreStateDatabase({ env });
   const stateDb = getNodeSqliteKysely<GatewayRestartHandoffDatabase>(db);
   return executeSqliteQueryTakeFirstSync(
     db,
@@ -81,7 +81,7 @@ function insertHandoffRow(
     restartTraceLastAt?: number | null;
   },
 ) {
-  const { db } = openOpenClawStateDatabase({ env });
+  const { db } = openQuietCoreStateDatabase({ env });
   const stateDb = getNodeSqliteKysely<GatewayRestartHandoffDatabase>(db);
   const now = Date.now();
   executeSqliteQuerySync(
@@ -118,7 +118,7 @@ function expectWrittenHandoff(
 
 describe("gateway restart handoff", () => {
   afterEach(() => {
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
     for (const dir of tempDirs.splice(0)) {
       fs.rmSync(dir, { force: true, recursive: true });
     }

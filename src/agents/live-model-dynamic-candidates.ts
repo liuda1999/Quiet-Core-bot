@@ -8,7 +8,7 @@ import {
   normalizeProviderId,
 } from "@quiet-core/model-catalog-core/provider-id";
 import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { Model } from "../llm/types.js";
 import type {
   prepareProviderDynamicModel,
@@ -61,7 +61,7 @@ function liveModelKey(provider: string, id: string): string | null {
  */
 export async function appendPrioritizedDynamicLiveModels(params: {
   models: Model[];
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   agentDir: string;
   workspaceDir?: string;
   env?: NodeJS.ProcessEnv;

@@ -1,7 +1,7 @@
 /** Prepares queued follow-up payloads for source-channel delivery. */
 import type { MessagingToolSend } from "../../agents/embedded-agent-messaging.types.js";
 import type { ReplyToMode } from "../../config/types.base.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { stripHeartbeatToken } from "../heartbeat.js";
 import {
   copyReplyPayloadMetadata,
@@ -32,7 +32,7 @@ function hasReplyPayloadMedia(payload: ReplyPayload): boolean {
 
 /** Strips heartbeat tokens, applies threading, and dedupes message-tool sends. */
 export function resolveFollowupDeliveryPayloads(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   payloads: ReplyPayload[];
   messageProvider?: string;
   originatingAccountId?: string;

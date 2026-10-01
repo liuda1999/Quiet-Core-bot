@@ -1,6 +1,6 @@
 // Hook policy tests cover allow/deny decisions from hook configuration.
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { resolveHookEnableState, resolveHookEntries } from "./policy.js";
 import type { HookEntry, HookSource } from "./types.js";
 
@@ -38,7 +38,7 @@ describe("hook policy", () => {
 
     it("allows workspace hooks when explicitly enabled", () => {
       const entry = makeHookEntry("workspace-hook", "quiet-core-bot-workspace");
-      const config: OpenClawConfig = {
+      const config: QuietCoreConfig = {
         hooks: {
           internal: {
             entries: {

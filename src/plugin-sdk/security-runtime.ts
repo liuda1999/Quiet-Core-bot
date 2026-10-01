@@ -140,6 +140,6 @@ export {
   resolveWritablePathWithinRoot,
 } from "../infra/root-paths.js";
 export { writeViaSiblingTempPath } from "../infra/fs-safe-advanced.js";
-export { resolvePreferredOpenClawTmpDir } from "../infra/tmp-quiet-core-bot-dir.js";
+export { resolvePreferredQuietCoreTmpDir } from "../infra/tmp-quiet-core-bot-dir.js";
 export { redactSensitiveText } from "../logging/redact.js";
 export { safeEqualSecret } from "../security/secret-equal.js";

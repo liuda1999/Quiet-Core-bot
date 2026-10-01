@@ -17,16 +17,16 @@ import {
   type SqliteWalMaintenance,
 } from "../infra/sqlite-wal.js";
 import { normalizeAgentId } from "../routing/session-key.js";
-import type { DB as OpenClawAgentKyselyDatabase } from "./quiet-core-bot-agent-db.generated.js";
-import { resolveOpenClawAgentSqlitePath } from "./quiet-core-bot-agent-db.paths.js";
+import type { DB as QuietCoreAgentKyselyDatabase } from "./quiet-core-bot-agent-db.generated.js";
+import { resolveQuietCoreAgentSqlitePath } from "./quiet-core-bot-agent-db.paths.js";
 import { QUIET_CORE_AGENT_SCHEMA_SQL } from "./quiet-core-bot-agent-schema.generated.js";
-import type { DB as OpenClawStateKyselyDatabase } from "./quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "./quiet-core-bot-state-db.generated.js";
 import {
   QUIET_CORE_SQLITE_BUSY_TIMEOUT_MS,
-  runOpenClawStateWriteTransaction,
-  type OpenClawStateDatabaseOptions,
+  runQuietCoreStateWriteTransaction,
+  type QuietCoreStateDatabaseOptions,
 } from "./quiet-core-bot-state-db.js";
-export { resolveOpenClawAgentSqlitePath } from "./quiet-core-bot-agent-db.paths.js";
+export { resolveQuietCoreAgentSqlitePath } from "./quiet-core-bot-agent-db.paths.js";
 
 /**
  * Per-agent SQLite database lifecycle and shared-state registration.
@@ -40,7 +40,7 @@ const QUIET_CORE_AGENT_DB_DIR_MODE = 0o700;
 const QUIET_CORE_AGENT_DB_FILE_MODE = 0o600;
 
 /** Open per-agent SQLite database handle plus lifecycle maintenance. */
-export type OpenClawAgentDatabase = {
+export type QuietCoreAgentDatabase = {
   agentId: string;
   db: DatabaseSync;
   path: string;
@@ -48,14 +48,14 @@ export type OpenClawAgentDatabase = {
 };
 
 /** Options for resolving and opening one agent database. */
-export type OpenClawAgentDatabaseOptions = OpenClawStateDatabaseOptions & {
+export type QuietCoreAgentDatabaseOptions = QuietCoreStateDatabaseOptions & {
   agentId: string;
 };
 
-type OpenClawAgentMetadataDatabase = Pick<OpenClawAgentKyselyDatabase, "schema_meta">;
-type OpenClawAgentRegistryDatabase = Pick<OpenClawStateKyselyDatabase, "agent_databases">;
+type QuietCoreAgentMetadataDatabase = Pick<QuietCoreAgentKyselyDatabase, "schema_meta">;
+type QuietCoreAgentRegistryDatabase = Pick<QuietCoreStateKyselyDatabase, "agent_databases">;
 
-const cachedDatabases = new Map<string, OpenClawAgentDatabase>();
+const cachedDatabases = new Map<string, QuietCoreAgentDatabase>();
 
 type ExistingSchemaMeta = {
   agentId: string | null;
@@ -71,12 +71,12 @@ function assertSupportedAgentSchemaVersion(db: DatabaseSync, pathname: string): 
   }
 }
 
-function ensureOpenClawAgentDatabasePermissions(
+function ensureQuietCoreAgentDatabasePermissions(
   pathname: string,
-  options: OpenClawAgentDatabaseOptions,
+  options: QuietCoreAgentDatabaseOptions,
 ): void {
   const dir = path.dirname(pathname);
-  const defaultPath = resolveOpenClawAgentSqlitePath({
+  const defaultPath = resolveQuietCoreAgentSqlitePath({
     agentId: options.agentId,
     env: options.env,
   });
@@ -141,7 +141,7 @@ function ensureAgentSchema(db: DatabaseSync, agentId: string, pathname: string):
   assertSupportedAgentSchemaVersion(db, pathname);
   assertExistingSchemaOwner(readExistingSchemaMeta(db), agentId, pathname);
   db.exec(QUIET_CORE_AGENT_SCHEMA_SQL);
-  const kysely = getNodeSqliteKysely<OpenClawAgentMetadataDatabase>(db);
+  const kysely = getNodeSqliteKysely<QuietCoreAgentMetadataDatabase>(db);
   db.exec(`PRAGMA user_version = ${QUIET_CORE_AGENT_SCHEMA_VERSION};`);
   const now = Date.now();
   executeSqliteQuerySync(
@@ -170,16 +170,16 @@ function ensureAgentSchema(db: DatabaseSync, agentId: string, pathname: string):
 }
 
 /** Initialize agent schema/ownership metadata on an independently managed connection. */
-export function ensureOpenClawAgentDatabaseSchema(
+export function ensureQuietCoreAgentDatabaseSchema(
   db: DatabaseSync,
-  options: OpenClawAgentDatabaseOptions & { register?: boolean },
+  options: QuietCoreAgentDatabaseOptions & { register?: boolean },
 ): void {
   const agentId = normalizeAgentId(options.agentId);
   const databaseOptions = { ...options, agentId };
-  const pathname = resolveOpenClawAgentSqlitePath(databaseOptions);
-  ensureOpenClawAgentDatabasePermissions(pathname, databaseOptions);
+  const pathname = resolveQuietCoreAgentSqlitePath(databaseOptions);
+  ensureQuietCoreAgentDatabasePermissions(pathname, databaseOptions);
   ensureAgentSchema(db, agentId, pathname);
-  ensureOpenClawAgentDatabasePermissions(pathname, databaseOptions);
+  ensureQuietCoreAgentDatabasePermissions(pathname, databaseOptions);
   if (options.register === true) {
     registerAgentDatabase({ agentId, path: pathname, env: options.env });
   }
@@ -197,9 +197,9 @@ function registerAgentDatabase(params: {
     sizeBytes = null;
   }
   const lastSeenAt = Date.now();
-  runOpenClawStateWriteTransaction(
+  runQuietCoreStateWriteTransaction(
     (database) => {
-      const db = getNodeSqliteKysely<OpenClawAgentRegistryDatabase>(database.db);
+      const db = getNodeSqliteKysely<QuietCoreAgentRegistryDatabase>(database.db);
       executeSqliteQuerySync(
         database.db,
         db
@@ -225,12 +225,12 @@ function registerAgentDatabase(params: {
 }
 
 /** Open or return a cached per-agent database after schema and owner validation. */
-export function openOpenClawAgentDatabase(
-  options: OpenClawAgentDatabaseOptions,
-): OpenClawAgentDatabase {
+export function openQuietCoreAgentDatabase(
+  options: QuietCoreAgentDatabaseOptions,
+): QuietCoreAgentDatabase {
   const agentId = normalizeAgentId(options.agentId);
   const databaseOptions = { ...options, agentId };
-  const pathname = resolveOpenClawAgentSqlitePath(databaseOptions);
+  const pathname = resolveQuietCoreAgentSqlitePath(databaseOptions);
   const cached = cachedDatabases.get(pathname);
   if (cached?.db.isOpen) {
     if (cached.agentId !== agentId) {
@@ -251,7 +251,7 @@ export function openOpenClawAgentDatabase(
   // Rename a pre-rebrand `openclaw-agent.sqlite` onto the current filename so agent
   // memory and auth rows written by earlier releases are preserved across upgrades.
   migrateLegacyAgentDatabaseFile(pathname);
-  ensureOpenClawAgentDatabasePermissions(pathname, databaseOptions);
+  ensureQuietCoreAgentDatabasePermissions(pathname, databaseOptions);
   const sqlite = requireNodeSqlite();
   const db = new sqlite.DatabaseSync(pathname);
   const walMaintenance = (() => {
@@ -272,7 +272,7 @@ export function openOpenClawAgentDatabase(
       throw err;
     }
   })();
-  ensureOpenClawAgentDatabasePermissions(pathname, databaseOptions);
+  ensureQuietCoreAgentDatabasePermissions(pathname, databaseOptions);
   const database = { agentId, db, path: pathname, walMaintenance };
   cachedDatabases.set(pathname, database);
   registerAgentDatabase({ agentId, path: pathname, env: options.env });
@@ -280,18 +280,18 @@ export function openOpenClawAgentDatabase(
 }
 
 /** Run a synchronous immediate transaction against an agent database. */
-export function runOpenClawAgentWriteTransaction<T>(
-  operation: (database: OpenClawAgentDatabase) => T,
-  options: OpenClawAgentDatabaseOptions,
+export function runQuietCoreAgentWriteTransaction<T>(
+  operation: (database: QuietCoreAgentDatabase) => T,
+  options: QuietCoreAgentDatabaseOptions,
 ): T {
-  const database = openOpenClawAgentDatabase(options);
+  const database = openQuietCoreAgentDatabase(options);
   const result = runSqliteImmediateTransactionSync(database.db, () => operation(database));
-  ensureOpenClawAgentDatabasePermissions(database.path, options);
+  ensureQuietCoreAgentDatabasePermissions(database.path, options);
   return result;
 }
 
 /** Close cached agent databases so tests can remove temp dirs and reopen cleanly. */
-export function closeOpenClawAgentDatabasesForTest(): void {
+export function closeQuietCoreAgentDatabasesForTest(): void {
   for (const database of cachedDatabases.values()) {
     database.walMaintenance.close();
     clearNodeSqliteKyselyCacheForDatabase(database.db);

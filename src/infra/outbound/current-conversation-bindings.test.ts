@@ -5,10 +5,10 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { setActivePluginRegistry } from "../../plugins/runtime.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../../state/quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "../../state/quiet-core-bot-state-db.generated.js";
 import {
-  closeOpenClawStateDatabaseForTest,
-  runOpenClawStateWriteTransaction,
+  closeQuietCoreStateDatabaseForTest,
+  runQuietCoreStateWriteTransaction,
 } from "../../state/quiet-core-bot-state-db.js";
 import { createTestRegistry } from "../../test-utils/channel-plugins.js";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../kysely-sync.js";
@@ -24,7 +24,7 @@ import {
 import type { SessionBindingRecord } from "./session-binding.types.js";
 
 type CurrentConversationBindingDatabase = Pick<
-  OpenClawStateKyselyDatabase,
+  QuietCoreStateKyselyDatabase,
   "current_conversation_bindings"
 >;
 
@@ -63,7 +63,7 @@ function buildConversationKey(ref: SessionBindingRecord["conversation"]): string
 }
 
 function seedPersistedBinding(record: SessionBindingRecord): void {
-  runOpenClawStateWriteTransaction(({ db }) => {
+  runQuietCoreStateWriteTransaction(({ db }) => {
     const bindingDb = getNodeSqliteKysely<CurrentConversationBindingDatabase>(db);
     executeSqliteQuerySync(
       db,
@@ -127,7 +127,7 @@ describe("generic current-conversation bindings", () => {
     testing.resetCurrentConversationBindingsForTests({
       deletePersistedFile: true,
     });
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
     if (previousStateDir == null) {
       delete process.env.QUIET_CORE_STATE_DIR;
     } else {

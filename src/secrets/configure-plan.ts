@@ -1,7 +1,7 @@
 /** Builds the interactive `quiet-core-bot secrets configure` target list and apply plan. */
 import { isDeepStrictEqual } from "node:util";
 import type { AuthProfileStore } from "../agents/auth-profiles/types.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   resolveSecretInputRef,
   type SecretProviderConfig,
@@ -42,7 +42,7 @@ export type ConfigureProviderChanges = {
   deletes: string[];
 };
 
-function getSecretProviders(config: OpenClawConfig): Record<string, SecretProviderConfig> {
+function getSecretProviders(config: QuietCoreConfig): Record<string, SecretProviderConfig> {
   if (!isRecord(config.secrets?.providers)) {
     return {};
   }
@@ -50,7 +50,7 @@ function getSecretProviders(config: OpenClawConfig): Record<string, SecretProvid
 }
 
 /** Builds configure candidates for the current Quiet Core bot config only. */
-export function buildConfigureCandidates(config: OpenClawConfig): ConfigureCandidate[] {
+export function buildConfigureCandidates(config: QuietCoreConfig): ConfigureCandidate[] {
   return buildConfigureCandidatesForScope({ config });
 }
 
@@ -80,14 +80,14 @@ function resolveAuthProfileProvider(
 
 /** Builds configure candidates for Quiet Core bot config plus an optional auth-profile scope. */
 export function buildConfigureCandidatesForScope(params: {
-  config: OpenClawConfig;
-  authoredOpenClawConfig?: OpenClawConfig;
+  config: QuietCoreConfig;
+  authoredQuietCoreConfig?: QuietCoreConfig;
   authProfiles?: {
     agentId: string;
     store: AuthProfileStore;
   };
 }): ConfigureCandidate[] {
-  const authoredConfig = params.authoredOpenClawConfig ?? params.config;
+  const authoredConfig = params.authoredQuietCoreConfig ?? params.config;
 
   const hasPathInAuthoredConfig = (pathSegments: string[]): boolean =>
     hasPath(authoredConfig, pathSegments);
@@ -196,8 +196,8 @@ function hasPath(root: unknown, segments: string[]): boolean {
 
 /** Computes provider upserts/deletes between original and edited config. */
 export function collectConfigureProviderChanges(params: {
-  original: OpenClawConfig;
-  next: OpenClawConfig;
+  original: QuietCoreConfig;
+  next: QuietCoreConfig;
 }): ConfigureProviderChanges {
   const originalProviders = getSecretProviders(params.original);
   const nextProviders = getSecretProviders(params.next);

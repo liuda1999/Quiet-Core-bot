@@ -7,7 +7,7 @@ import EventKit
 import Foundation
 import Network
 import Observation
-import OpenClawKit
+import QuietCoreKit
 import os
 import Photos
 import ReplayKit
@@ -879,7 +879,7 @@ extension GatewayConnectionController {
         if manualClientId?.isEmpty == false {
             return manualClientId!
         }
-        return "openclaw-ios"
+        return "quiet-core-ios"
     }
 
     private func resolveManualPort(host: String, port: Int, useTLS: Bool) -> Int? {
@@ -910,8 +910,8 @@ extension GatewayConnectionController {
 
     private func currentCaps() -> [String] {
         var caps = [
-            OpenClawCapability.canvas.rawValue,
-            OpenClawCapability.screen.rawValue,
+            QuietCoreCapability.canvas.rawValue,
+            QuietCoreCapability.screen.rawValue,
         ]
 
         // Default-on: if the key doesn't exist yet, treat it as enabled.
@@ -919,26 +919,26 @@ extension GatewayConnectionController {
             UserDefaults.standard.object(forKey: "camera.enabled") == nil
                 ? true
                 : UserDefaults.standard.bool(forKey: "camera.enabled")
-        if cameraEnabled { caps.append(OpenClawCapability.camera.rawValue) }
+        if cameraEnabled { caps.append(QuietCoreCapability.camera.rawValue) }
 
         let voiceWakeEnabled = UserDefaults.standard.bool(forKey: VoiceWakePreferences.enabledKey)
-        if voiceWakeEnabled { caps.append(OpenClawCapability.voiceWake.rawValue) }
+        if voiceWakeEnabled { caps.append(QuietCoreCapability.voiceWake.rawValue) }
 
         let locationModeRaw = UserDefaults.standard.string(forKey: "location.enabledMode") ?? "off"
-        let locationMode = OpenClawLocationMode(rawValue: locationModeRaw) ?? .off
-        if locationMode != .off { caps.append(OpenClawCapability.location.rawValue) }
+        let locationMode = QuietCoreLocationMode(rawValue: locationModeRaw) ?? .off
+        if locationMode != .off { caps.append(QuietCoreCapability.location.rawValue) }
 
-        caps.append(OpenClawCapability.device.rawValue)
-        caps.append(OpenClawCapability.talk.rawValue)
+        caps.append(QuietCoreCapability.device.rawValue)
+        caps.append(QuietCoreCapability.talk.rawValue)
         if WatchMessagingService.isSupportedOnDevice() {
-            caps.append(OpenClawCapability.watch.rawValue)
+            caps.append(QuietCoreCapability.watch.rawValue)
         }
-        caps.append(OpenClawCapability.photos.rawValue)
-        caps.append(OpenClawCapability.contacts.rawValue)
-        caps.append(OpenClawCapability.calendar.rawValue)
-        caps.append(OpenClawCapability.reminders.rawValue)
+        caps.append(QuietCoreCapability.photos.rawValue)
+        caps.append(QuietCoreCapability.contacts.rawValue)
+        caps.append(QuietCoreCapability.calendar.rawValue)
+        caps.append(QuietCoreCapability.reminders.rawValue)
         if Self.motionAvailable() {
-            caps.append(OpenClawCapability.motion.rawValue)
+            caps.append(QuietCoreCapability.motion.rawValue)
         }
 
         return caps
@@ -946,58 +946,58 @@ extension GatewayConnectionController {
 
     private func currentCommands() -> [String] {
         var commands: [String] = [
-            OpenClawCanvasCommand.present.rawValue,
-            OpenClawCanvasCommand.hide.rawValue,
-            OpenClawCanvasCommand.navigate.rawValue,
-            OpenClawCanvasCommand.evalJS.rawValue,
-            OpenClawCanvasCommand.snapshot.rawValue,
-            OpenClawCanvasA2UICommand.push.rawValue,
-            OpenClawCanvasA2UICommand.pushJSONL.rawValue,
-            OpenClawCanvasA2UICommand.reset.rawValue,
-            OpenClawScreenCommand.record.rawValue,
-            OpenClawSystemCommand.notify.rawValue,
-            OpenClawChatCommand.push.rawValue,
-            OpenClawTalkCommand.pttStart.rawValue,
-            OpenClawTalkCommand.pttStop.rawValue,
-            OpenClawTalkCommand.pttCancel.rawValue,
-            OpenClawTalkCommand.pttOnce.rawValue,
+            QuietCoreCanvasCommand.present.rawValue,
+            QuietCoreCanvasCommand.hide.rawValue,
+            QuietCoreCanvasCommand.navigate.rawValue,
+            QuietCoreCanvasCommand.evalJS.rawValue,
+            QuietCoreCanvasCommand.snapshot.rawValue,
+            QuietCoreCanvasA2UICommand.push.rawValue,
+            QuietCoreCanvasA2UICommand.pushJSONL.rawValue,
+            QuietCoreCanvasA2UICommand.reset.rawValue,
+            QuietCoreScreenCommand.record.rawValue,
+            QuietCoreSystemCommand.notify.rawValue,
+            QuietCoreChatCommand.push.rawValue,
+            QuietCoreTalkCommand.pttStart.rawValue,
+            QuietCoreTalkCommand.pttStop.rawValue,
+            QuietCoreTalkCommand.pttCancel.rawValue,
+            QuietCoreTalkCommand.pttOnce.rawValue,
         ]
 
         let caps = Set(self.currentCaps())
-        if caps.contains(OpenClawCapability.camera.rawValue) {
-            commands.append(OpenClawCameraCommand.list.rawValue)
-            commands.append(OpenClawCameraCommand.snap.rawValue)
-            commands.append(OpenClawCameraCommand.clip.rawValue)
+        if caps.contains(QuietCoreCapability.camera.rawValue) {
+            commands.append(QuietCoreCameraCommand.list.rawValue)
+            commands.append(QuietCoreCameraCommand.snap.rawValue)
+            commands.append(QuietCoreCameraCommand.clip.rawValue)
         }
-        if caps.contains(OpenClawCapability.location.rawValue) {
-            commands.append(OpenClawLocationCommand.get.rawValue)
+        if caps.contains(QuietCoreCapability.location.rawValue) {
+            commands.append(QuietCoreLocationCommand.get.rawValue)
         }
-        if caps.contains(OpenClawCapability.device.rawValue) {
-            commands.append(OpenClawDeviceCommand.status.rawValue)
-            commands.append(OpenClawDeviceCommand.info.rawValue)
+        if caps.contains(QuietCoreCapability.device.rawValue) {
+            commands.append(QuietCoreDeviceCommand.status.rawValue)
+            commands.append(QuietCoreDeviceCommand.info.rawValue)
         }
-        if caps.contains(OpenClawCapability.watch.rawValue) {
-            commands.append(OpenClawWatchCommand.status.rawValue)
-            commands.append(OpenClawWatchCommand.notify.rawValue)
+        if caps.contains(QuietCoreCapability.watch.rawValue) {
+            commands.append(QuietCoreWatchCommand.status.rawValue)
+            commands.append(QuietCoreWatchCommand.notify.rawValue)
         }
-        if caps.contains(OpenClawCapability.photos.rawValue) {
-            commands.append(OpenClawPhotosCommand.latest.rawValue)
+        if caps.contains(QuietCoreCapability.photos.rawValue) {
+            commands.append(QuietCorePhotosCommand.latest.rawValue)
         }
-        if caps.contains(OpenClawCapability.contacts.rawValue) {
-            commands.append(OpenClawContactsCommand.search.rawValue)
-            commands.append(OpenClawContactsCommand.add.rawValue)
+        if caps.contains(QuietCoreCapability.contacts.rawValue) {
+            commands.append(QuietCoreContactsCommand.search.rawValue)
+            commands.append(QuietCoreContactsCommand.add.rawValue)
         }
-        if caps.contains(OpenClawCapability.calendar.rawValue) {
-            commands.append(OpenClawCalendarCommand.events.rawValue)
-            commands.append(OpenClawCalendarCommand.add.rawValue)
+        if caps.contains(QuietCoreCapability.calendar.rawValue) {
+            commands.append(QuietCoreCalendarCommand.events.rawValue)
+            commands.append(QuietCoreCalendarCommand.add.rawValue)
         }
-        if caps.contains(OpenClawCapability.reminders.rawValue) {
-            commands.append(OpenClawRemindersCommand.list.rawValue)
-            commands.append(OpenClawRemindersCommand.add.rawValue)
+        if caps.contains(QuietCoreCapability.reminders.rawValue) {
+            commands.append(QuietCoreRemindersCommand.list.rawValue)
+            commands.append(QuietCoreRemindersCommand.add.rawValue)
         }
-        if caps.contains(OpenClawCapability.motion.rawValue) {
-            commands.append(OpenClawMotionCommand.activity.rawValue)
-            commands.append(OpenClawMotionCommand.pedometer.rawValue)
+        if caps.contains(QuietCoreCapability.motion.rawValue) {
+            commands.append(QuietCoreMotionCommand.activity.rawValue)
+            commands.append(QuietCoreMotionCommand.pedometer.rawValue)
         }
 
         return commands

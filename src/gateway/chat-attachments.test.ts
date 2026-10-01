@@ -24,7 +24,7 @@ vi.mock("../media/store.js", async (importOriginal) => {
 });
 
 import { MAX_IMAGE_BYTES } from "@quiet-core/media-core/constants";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   type ChatAttachment,
   DEFAULT_CHAT_ATTACHMENT_MAX_MB,
@@ -241,7 +241,7 @@ describe("parseMessageWithAttachments", () => {
       parseMessageWithAttachments(
         "x",
         [{ type: "image", mimeType: "image/png", fileName: "huge.png", content: big }],
-        { maxBytes: resolveChatAttachmentMaxBytes({} as OpenClawConfig), log: { warn: () => {} } },
+        { maxBytes: resolveChatAttachmentMaxBytes({} as QuietCoreConfig), log: { warn: () => {} } },
       ),
     ).rejects.toThrow(/image exceeds size limit/i);
     expect(saveMediaBufferMock).not.toHaveBeenCalled();
@@ -466,8 +466,8 @@ describe("resolveChatAttachmentMaxBytes", () => {
   const MB = 1024 * 1024;
   const DEFAULT_BYTES = DEFAULT_CHAT_ATTACHMENT_MAX_MB * MB;
 
-  const cfgWithMediaMaxMb = (value: unknown): OpenClawConfig =>
-    ({ agents: { defaults: { mediaMaxMb: value } } }) as unknown as OpenClawConfig;
+  const cfgWithMediaMaxMb = (value: unknown): QuietCoreConfig =>
+    ({ agents: { defaults: { mediaMaxMb: value } } }) as unknown as QuietCoreConfig;
 
   it("honours a configured agents.defaults.mediaMaxMb", () => {
     expect(resolveChatAttachmentMaxBytes(cfgWithMediaMaxMb(10))).toBe(10 * MB);
@@ -475,8 +475,8 @@ describe("resolveChatAttachmentMaxBytes", () => {
   });
 
   it("falls back to DEFAULT_CHAT_ATTACHMENT_MAX_MB when unset", () => {
-    expect(resolveChatAttachmentMaxBytes({} as OpenClawConfig)).toBe(DEFAULT_BYTES);
-    expect(resolveChatAttachmentMaxBytes({ agents: {} } as unknown as OpenClawConfig)).toBe(
+    expect(resolveChatAttachmentMaxBytes({} as QuietCoreConfig)).toBe(DEFAULT_BYTES);
+    expect(resolveChatAttachmentMaxBytes({ agents: {} } as unknown as QuietCoreConfig)).toBe(
       DEFAULT_BYTES,
     );
   });

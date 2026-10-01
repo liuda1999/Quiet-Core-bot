@@ -17,13 +17,13 @@ import {
 } from "../agents/tool-policy.js";
 import type { AnyAgentTool } from "../agents/tools/common.js";
 import { getRuntimeConfig } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { routeLogsToStderr } from "../logging/console.js";
 import { ensureStandalonePluginToolRegistryLoaded, resolvePluginTools } from "../plugins/tools.js";
 import { connectToolsMcpServerToStdio, createToolsMcpServer } from "./tools-stdio-server.js";
 
-function resolvePluginToolPolicy(config: OpenClawConfig): {
+function resolvePluginToolPolicy(config: QuietCoreConfig): {
   toolAllowlist?: string[];
   toolDenylist?: string[];
 } {
@@ -40,7 +40,7 @@ function resolvePluginToolPolicy(config: OpenClawConfig): {
   };
 }
 
-function resolveTools(config: OpenClawConfig): AnyAgentTool[] {
+function resolveTools(config: QuietCoreConfig): AnyAgentTool[] {
   const pluginToolPolicy = resolvePluginToolPolicy(config);
   const runtimeRegistry = ensureStandalonePluginToolRegistryLoaded({
     context: { config },
@@ -56,7 +56,7 @@ function resolveTools(config: OpenClawConfig): AnyAgentTool[] {
 
 export function createPluginToolsMcpServer(
   params: {
-    config?: OpenClawConfig;
+    config?: QuietCoreConfig;
     tools?: AnyAgentTool[];
   } = {},
 ): Server {

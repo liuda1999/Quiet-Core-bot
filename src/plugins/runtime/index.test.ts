@@ -7,7 +7,7 @@ import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "../../agents/defaults.js";
 import {
   resetConfigRuntimeState,
   setRuntimeConfigSnapshot,
-  type OpenClawConfig,
+  type QuietCoreConfig,
 } from "../../config/config.js";
 import { onAgentEvent } from "../../infra/agent-events.js";
 import {
@@ -233,7 +233,7 @@ describe("plugin runtime command execution", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig);
+    } as unknown as QuietCoreConfig);
 
     const runtime = createPluginRuntime();
     const policy = runtime.agent.resolveThinkingPolicy({
@@ -396,7 +396,7 @@ describe("plugin runtime command execution", () => {
       api: "openai-responses",
       baseUrl: "https://workspace-cloud.example/v1",
     };
-    const cfg = { plugins: { allow: ["workspace-cloud"] } } as OpenClawConfig;
+    const cfg = { plugins: { allow: ["workspace-cloud"] } } as QuietCoreConfig;
     runtimeModelAuthMocks.getApiKeyForModel.mockResolvedValue({
       apiKey: "model-key",
       source: "workspace cloud credentials",

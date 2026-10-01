@@ -19,10 +19,10 @@ export type {
   AcpSessionUpdateTag,
 } from "@quiet-core/acp-core/runtime/types";
 export type {
-  OpenClawPluginApi,
-  OpenClawPluginConfigSchema,
-  OpenClawPluginService,
-  OpenClawPluginServiceContext,
+  QuietCorePluginApi,
+  QuietCorePluginConfigSchema,
+  QuietCorePluginService,
+  QuietCorePluginServiceContext,
   PluginLogger,
 } from "../plugins/types.js";
 export type {

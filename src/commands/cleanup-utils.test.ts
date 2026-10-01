@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, test, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import {
@@ -26,7 +26,7 @@ describe("buildCleanupPlan", () => {
       },
     };
     const plan = buildCleanupPlan({
-      cfg: cfg as unknown as OpenClawConfig,
+      cfg: cfg as unknown as QuietCoreConfig,
       stateDir: path.join(tmpRoot, "quiet-core-bot-state"),
       configPath: path.join(tmpRoot, "quiet-core-bot-state", "quiet-core-bot.json"),
       oauthDir: path.join(tmpRoot, "quiet-core-bot-oauth"),
@@ -55,7 +55,7 @@ describe("buildCleanupPlan", () => {
       },
       async () => {
         const plan = buildCleanupPlan({
-          cfg: cfg as unknown as OpenClawConfig,
+          cfg: cfg as unknown as QuietCoreConfig,
           stateDir,
           configPath: path.join(stateDir, "quiet-core-bot.json"),
           oauthDir: path.join(stateDir, "credentials"),

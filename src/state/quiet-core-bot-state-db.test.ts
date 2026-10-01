@@ -13,19 +13,19 @@ import {
 import { requireNodeSqlite } from "../infra/node-sqlite.js";
 import { listOpenFileDescriptorsForPath } from "../infra/open-file-descriptors.test-support.js";
 import { readSqliteNumberPragma } from "../infra/sqlite-pragma.test-support.js";
-import type { DB as OpenClawStateKyselyDatabase } from "./quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "./quiet-core-bot-state-db.generated.js";
 import {
-  closeOpenClawStateDatabaseForTest,
-  openOpenClawStateDatabase,
-  runOpenClawStateWriteTransaction,
+  closeQuietCoreStateDatabaseForTest,
+  openQuietCoreStateDatabase,
+  runQuietCoreStateWriteTransaction,
 } from "./quiet-core-bot-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "./quiet-core-bot-state-db.paths.js";
+import { resolveQuietCoreStateSqlitePath } from "./quiet-core-bot-state-db.paths.js";
 import {
   collectSqliteSchemaShape,
   createSqliteSchemaShapeFromSql,
 } from "./sqlite-schema-shape.test-support.js";
 
-type StateDbTestDatabase = Pick<OpenClawStateKyselyDatabase, "diagnostic_events" | "schema_meta">;
+type StateDbTestDatabase = Pick<QuietCoreStateKyselyDatabase, "diagnostic_events" | "schema_meta">;
 
 function createTempStateDir(): string {
   return fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-state-db-"));
@@ -44,7 +44,7 @@ function statfsFixture(type: number): ReturnType<typeof fs.statfsSync> {
 }
 
 afterEach(() => {
-  closeOpenClawStateDatabaseForTest();
+  closeQuietCoreStateDatabaseForTest();
   vi.restoreAllMocks();
 });
 
@@ -52,14 +52,14 @@ describe("quiet-core-bot state database", () => {
   it("resolves under the shared state database directory", () => {
     const stateDir = createTempStateDir();
 
-    expect(resolveOpenClawStateSqlitePath({ QUIET_CORE_STATE_DIR: stateDir })).toBe(
+    expect(resolveQuietCoreStateSqlitePath({ QUIET_CORE_STATE_DIR: stateDir })).toBe(
       path.join(stateDir, "state", "quiet-core-bot.sqlite"),
     );
   });
 
   it("keeps test default state under a worker-sharded temp directory", () => {
     expect(
-      resolveOpenClawStateSqlitePath({
+      resolveQuietCoreStateSqlitePath({
         VITEST: "true",
         VITEST_WORKER_ID: "7",
       } as NodeJS.ProcessEnv),
@@ -70,7 +70,7 @@ describe("quiet-core-bot state database", () => {
 
   it("creates the shared state schema from the committed SQL shape", () => {
     const stateDir = createTempStateDir();
-    const database = openOpenClawStateDatabase({
+    const database = openQuietCoreStateDatabase({
       env: { QUIET_CORE_STATE_DIR: stateDir },
     });
 
@@ -84,7 +84,7 @@ describe("quiet-core-bot state database", () => {
     const databasePath = path.join(createTempStateDir(), "quiet-core-bot.sqlite");
     fs.writeFileSync(databasePath, "not a sqlite database");
 
-    expect(() => openOpenClawStateDatabase({ path: databasePath })).toThrow(
+    expect(() => openQuietCoreStateDatabase({ path: databasePath })).toThrow(
       "file is not a database",
     );
     expect(listOpenFileDescriptorsForPath(databasePath)).toEqual([]);
@@ -92,11 +92,11 @@ describe("quiet-core-bot state database", () => {
 
   it("migrates requester and executor attribution for existing cross-agent tasks", () => {
     const stateDir = createTempStateDir();
-    const database = openOpenClawStateDatabase({
+    const database = openQuietCoreStateDatabase({
       env: { QUIET_CORE_STATE_DIR: stateDir },
     });
     const databasePath = database.path;
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
 
     const { DatabaseSync } = requireNodeSqlite();
     const legacyDb = new DatabaseSync(databasePath);
@@ -169,7 +169,7 @@ describe("quiet-core-bot state database", () => {
       );
     legacyDb.close();
 
-    const reopened = openOpenClawStateDatabase({
+    const reopened = openQuietCoreStateDatabase({
       env: { QUIET_CORE_STATE_DIR: stateDir },
     });
     const columns = reopened.db.prepare("PRAGMA table_info(task_runs)").all() as Array<{
@@ -236,9 +236,9 @@ describe("quiet-core-bot state database", () => {
         200,
         200,
       );
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
 
-    const currentReopened = openOpenClawStateDatabase({
+    const currentReopened = openQuietCoreStateDatabase({
       env: { QUIET_CORE_STATE_DIR: stateDir },
     });
     expect(
@@ -257,11 +257,11 @@ describe("quiet-core-bot state database", () => {
 
   it("rolls back the requester attribution column when its backfill fails", () => {
     const stateDir = createTempStateDir();
-    const database = openOpenClawStateDatabase({
+    const database = openQuietCoreStateDatabase({
       env: { QUIET_CORE_STATE_DIR: stateDir },
     });
     const databasePath = database.path;
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
 
     const { DatabaseSync } = requireNodeSqlite();
     const legacyDb = new DatabaseSync(databasePath);
@@ -309,7 +309,7 @@ describe("quiet-core-bot state database", () => {
     legacyDb.close();
 
     expect(() =>
-      openOpenClawStateDatabase({
+      openQuietCoreStateDatabase({
         env: { QUIET_CORE_STATE_DIR: stateDir },
       }),
     ).toThrow(/blocked task attribution repair/);
@@ -324,7 +324,7 @@ describe("quiet-core-bot state database", () => {
     interruptedDb.exec("DROP TRIGGER reject_task_attribution_repair");
     interruptedDb.close();
 
-    const reopened = openOpenClawStateDatabase({
+    const reopened = openQuietCoreStateDatabase({
       env: { QUIET_CORE_STATE_DIR: stateDir },
     });
     expect(
@@ -383,7 +383,7 @@ describe("quiet-core-bot state database", () => {
     ).run(path.join(stateDir, "cron", "jobs.json"), "legacy-job", jobJson, 456);
     db.close();
 
-    const database = openOpenClawStateDatabase({
+    const database = openQuietCoreStateDatabase({
       env: { QUIET_CORE_STATE_DIR: stateDir },
     });
 
@@ -455,7 +455,7 @@ describe("quiet-core-bot state database", () => {
     );
     db.close();
 
-    const database = openOpenClawStateDatabase({
+    const database = openQuietCoreStateDatabase({
       env: { QUIET_CORE_STATE_DIR: stateDir },
     });
 
@@ -541,7 +541,7 @@ describe("quiet-core-bot state database", () => {
     );
     db.close();
 
-    const database = openOpenClawStateDatabase({
+    const database = openQuietCoreStateDatabase({
       env: { QUIET_CORE_STATE_DIR: stateDir },
     });
 
@@ -577,7 +577,7 @@ describe("quiet-core-bot state database", () => {
 
   it("configures durable SQLite connection pragmas", () => {
     const stateDir = createTempStateDir();
-    const database = openOpenClawStateDatabase({
+    const database = openQuietCoreStateDatabase({
       env: { QUIET_CORE_STATE_DIR: stateDir },
     });
 
@@ -596,7 +596,7 @@ describe("quiet-core-bot state database", () => {
     const stateDir = createTempStateDir();
     const statfs = vi.spyOn(fs, "statfsSync").mockReturnValue(statfsFixture(0x6969));
 
-    const database = openOpenClawStateDatabase({
+    const database = openQuietCoreStateDatabase({
       env: { QUIET_CORE_STATE_DIR: stateDir },
     });
 
@@ -609,7 +609,7 @@ describe("quiet-core-bot state database", () => {
 
   it("records durable schema metadata", () => {
     const stateDir = createTempStateDir();
-    const database = openOpenClawStateDatabase({
+    const database = openQuietCoreStateDatabase({
       env: { QUIET_CORE_STATE_DIR: stateDir },
     });
     const stateDb = getNodeSqliteKysely<StateDbTestDatabase>(database.db);
@@ -632,7 +632,7 @@ describe("quiet-core-bot state database", () => {
     db.close();
 
     expect(() =>
-      openOpenClawStateDatabase({
+      openQuietCoreStateDatabase({
         env: { QUIET_CORE_STATE_DIR: stateDir },
       }),
     ).toThrow(/newer schema version 2/);
@@ -644,7 +644,7 @@ describe("quiet-core-bot state database", () => {
       `quiet-core-bot-explicit-state-${process.pid}-${Date.now()}.sqlite`,
     );
 
-    expect(() => openOpenClawStateDatabase({ path: databasePath })).not.toThrow();
+    expect(() => openQuietCoreStateDatabase({ path: databasePath })).not.toThrow();
     expect(fs.existsSync(databasePath)).toBe(true);
   });
 
@@ -660,12 +660,12 @@ describe("quiet-core-bot state database", () => {
       `second-${process.pid}-${Date.now()}.sqlite`,
     );
 
-    const first = openOpenClawStateDatabase({ path: firstPath });
-    const second = openOpenClawStateDatabase({ path: secondPath });
+    const first = openQuietCoreStateDatabase({ path: firstPath });
+    const second = openQuietCoreStateDatabase({ path: secondPath });
 
     expect(first.db.isOpen).toBe(true);
     expect(second.db.isOpen).toBe(true);
-    expect(openOpenClawStateDatabase({ path: firstPath })).toBe(first);
+    expect(openQuietCoreStateDatabase({ path: firstPath })).toBe(first);
     expect(readSqliteNumberPragma(first.db, "user_version")).toBe(1);
   });
 
@@ -683,8 +683,8 @@ describe("quiet-core-bot state database", () => {
           import os from "node:os";
           import path from "node:path";
           import {
-            closeOpenClawStateDatabaseForTest,
-            openOpenClawStateDatabase,
+            closeQuietCoreStateDatabaseForTest,
+            openQuietCoreStateDatabase,
           } from ${JSON.stringify(moduleUrl)};
 
           const root = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-state-db-relative-"));
@@ -696,14 +696,14 @@ describe("quiet-core-bot state database", () => {
           try {
             process.chdir(firstDir);
             const firstPath = path.resolve("state.sqlite");
-            const first = openOpenClawStateDatabase({ path: "state.sqlite" });
+            const first = openQuietCoreStateDatabase({ path: "state.sqlite" });
             first.db
               .prepare("INSERT INTO diagnostic_events (scope, event_key, payload_json, created_at) VALUES (?, ?, ?, ?)")
               .run("relative-path", "first", "{}", 1);
 
             process.chdir(secondDir);
             const secondPath = path.resolve("state.sqlite");
-            const second = openOpenClawStateDatabase({ path: "state.sqlite" });
+            const second = openQuietCoreStateDatabase({ path: "state.sqlite" });
             second.db
               .prepare("INSERT INTO diagnostic_events (scope, event_key, payload_json, created_at) VALUES (?, ?, ?, ?)")
               .run("relative-path", "second", "{}", 2);
@@ -719,7 +719,7 @@ describe("quiet-core-bot state database", () => {
             }));
           } finally {
             process.chdir(previousCwd);
-            closeOpenClawStateDatabaseForTest();
+            closeQuietCoreStateDatabaseForTest();
           }
         `,
       ],
@@ -744,7 +744,7 @@ describe("quiet-core-bot state database", () => {
     const stateDir = createTempStateDir();
     const options = { env: { QUIET_CORE_STATE_DIR: stateDir } };
 
-    runOpenClawStateWriteTransaction((database) => {
+    runQuietCoreStateWriteTransaction((database) => {
       const stateDb = getNodeSqliteKysely<StateDbTestDatabase>(database.db);
       executeSqliteQuerySync(
         database.db,
@@ -756,7 +756,7 @@ describe("quiet-core-bot state database", () => {
         }),
       );
       expect(() =>
-        runOpenClawStateWriteTransaction((inner) => {
+        runQuietCoreStateWriteTransaction((inner) => {
           const innerDb = getNodeSqliteKysely<StateDbTestDatabase>(inner.db);
           executeSqliteQuerySync(
             inner.db,
@@ -772,7 +772,7 @@ describe("quiet-core-bot state database", () => {
       ).toThrow("rollback nested");
     }, options);
 
-    const database = openOpenClawStateDatabase(options);
+    const database = openQuietCoreStateDatabase(options);
     const stateDb = getNodeSqliteKysely<StateDbTestDatabase>(database.db);
     expect(
       executeSqliteQuerySync(
@@ -791,13 +791,13 @@ describe("quiet-core-bot state database", () => {
     const options = { env: { QUIET_CORE_STATE_DIR: stateDir } };
 
     expect(() =>
-      runOpenClawStateWriteTransaction(async () => {
+      runQuietCoreStateWriteTransaction(async () => {
         return "not sync";
       }, options),
     ).toThrow("must be synchronous");
 
     expect(() =>
-      runOpenClawStateWriteTransaction((database) => {
+      runQuietCoreStateWriteTransaction((database) => {
         const stateDb = getNodeSqliteKysely<StateDbTestDatabase>(database.db);
         executeSqliteQuerySync(
           database.db,

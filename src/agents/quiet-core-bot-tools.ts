@@ -7,7 +7,7 @@ import { normalizeOptionalString } from "@quiet-core/normalization-core/string-c
 import type { SourceReplyDeliveryMode } from "../auto-reply/get-reply-options.types.js";
 import type { InboundEventKind } from "../channels/inbound-event/kind.js";
 import { selectApplicableRuntimeConfig } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { callGateway } from "../gateway/call.js";
 import { isEmbeddedMode } from "../infra/embedded-mode.js";
 import { getActiveSecretsRuntimeConfigSnapshot } from "../secrets/runtime-state.js";
@@ -23,7 +23,7 @@ import {
   wrapToolWithBeforeToolCallHook,
 } from "./agent-tools.before-tool-call.js";
 import type { AuthProfileStore } from "./auth-profiles/types.js";
-import { resolveOpenClawPluginToolsForOptions } from "./quiet-core-bot-plugin-tools.js";
+import { resolveQuietCorePluginToolsForOptions } from "./quiet-core-bot-plugin-tools.js";
 import {
   isToolExplicitlyAllowedByFactoryPolicy,
   mergeFactoryPolicyList,
@@ -32,8 +32,8 @@ import {
 } from "./quiet-core-bot-tools.media-factory-plan.js";
 import { applyNodesToolWorkspaceGuard } from "./quiet-core-bot-tools.nodes-workspace-guard.js";
 import {
-  collectPresentOpenClawTools,
-  shouldIncludeUpdatePlanToolForOpenClawTools,
+  collectPresentQuietCoreTools,
+  shouldIncludeUpdatePlanToolForQuietCoreTools,
 } from "./quiet-core-bot-tools.registration.js";
 import type { SandboxFsBridge } from "./sandbox/fs-bridge.js";
 import type { SpawnedToolContext } from "./spawned-context.js";
@@ -71,18 +71,18 @@ import { createVideoGenerateTool } from "./tools/video-generate-tool.js";
 import { createWebFetchTool, createWebSearchTool } from "./tools/web-tools.js";
 import { resolveWorkspaceRoot } from "./workspace-dir.js";
 
-type OpenClawToolsDeps = {
+type QuietCoreToolsDeps = {
   callGateway: typeof callGateway;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
 };
 
-const defaultOpenClawToolsDeps: OpenClawToolsDeps = {
+const defaultQuietCoreToolsDeps: QuietCoreToolsDeps = {
   callGateway,
 };
 
-let openClawToolsDeps: OpenClawToolsDeps = defaultOpenClawToolsDeps;
+let openClawToolsDeps: QuietCoreToolsDeps = defaultQuietCoreToolsDeps;
 
-export function createOpenClawTools(
+export function createQuietCoreTools(
   options?: {
     sandboxBrowserBridgeUrl?: string;
     allowHostBrowserControl?: boolean;
@@ -106,7 +106,7 @@ export function createOpenClawTools(
     sandboxFsBridge?: SandboxFsBridge;
     fsPolicy?: ToolFsPolicy;
     sandboxed?: boolean;
-    config?: OpenClawConfig;
+    config?: QuietCoreConfig;
     pluginToolAllowlist?: string[];
     pluginToolDenylist?: string[];
     /** Effective caller tool surface to persist on isolated cron agentTurn jobs. */
@@ -405,7 +405,7 @@ export function createOpenClawTools(
   const effectiveCallGateway = embedded
     ? createEmbeddedCallGateway()
     : openClawToolsDeps.callGateway;
-  const includeUpdatePlanTool = shouldIncludeUpdatePlanToolForOpenClawTools({
+  const includeUpdatePlanTool = shouldIncludeUpdatePlanToolForQuietCoreTools({
     config: resolvedConfig,
     agentSessionKey: options?.agentSessionKey,
     agentId: options?.requesterAgentIdOverride,
@@ -435,7 +435,7 @@ export function createOpenClawTools(
           }),
         ]),
     ...(messageTool && includeMessageTool ? [messageTool] : []),
-    ...collectPresentOpenClawTools([heartbeatTool]),
+    ...collectPresentQuietCoreTools([heartbeatTool]),
     createTtsTool({
       agentChannel: options?.agentChannel,
       config: resolvedConfig,
@@ -443,7 +443,7 @@ export function createOpenClawTools(
       agentAccountId: options?.agentAccountId,
     }),
     ...(includeTranscriptsTool ? [createTranscriptsTool({ config: resolvedConfig })] : []),
-    ...collectPresentOpenClawTools([imageGenerateTool, musicGenerateTool, videoGenerateTool]),
+    ...collectPresentQuietCoreTools([imageGenerateTool, musicGenerateTool, videoGenerateTool]),
     ...(embedded
       ? []
       : [
@@ -556,7 +556,7 @@ export function createOpenClawTools(
         threadId: options?.currentThreadTs ?? options?.agentThreadId,
       },
     }),
-    ...collectPresentOpenClawTools([webSearchTool, webFetchTool, imageTool, pdfTool]),
+    ...collectPresentQuietCoreTools([webSearchTool, webFetchTool, imageTool, pdfTool]),
   ];
   options?.recordToolPrepStage?.("quiet-core-bot-tools:core-tool-list");
   let allTools = tools;
@@ -567,7 +567,7 @@ export function createOpenClawTools(
     }
     allTools = [
       ...tools,
-      ...resolveOpenClawPluginToolsForOptions({
+      ...resolveQuietCorePluginToolsForOptions({
         options,
         resolvedConfig,
         existingToolNames,
@@ -602,13 +602,13 @@ export function createOpenClawTools(
 
 export const testing = {
   resolveOptionalMediaToolFactoryPlan,
-  setDepsForTest(overrides?: Partial<OpenClawToolsDeps>) {
+  setDepsForTest(overrides?: Partial<QuietCoreToolsDeps>) {
     openClawToolsDeps = overrides
       ? {
-          ...defaultOpenClawToolsDeps,
+          ...defaultQuietCoreToolsDeps,
           ...overrides,
         }
-      : defaultOpenClawToolsDeps;
+      : defaultQuietCoreToolsDeps;
   },
 };
 export { testing as __testing };

@@ -3,14 +3,14 @@ import fs from "node:fs";
 import fsPromises from "node:fs/promises";
 import path from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   onInternalDiagnosticEvent,
   resetDiagnosticEventsForTest,
   type DiagnosticSecurityEvent,
 } from "../infra/diagnostic-events.js";
 import { safePathSegmentHashed } from "../infra/install-safe-path.js";
-import { resolveOpenClawPackageRootSync } from "../infra/quiet-core-bot-root.js";
+import { resolveQuietCorePackageRootSync } from "../infra/quiet-core-bot-root.js";
 import { runCommandWithTimeout } from "../process/exec.js";
 import { initializeGlobalHookRunner, resetGlobalHookRunner } from "./hook-runner-global.js";
 import { createMockPluginRegistry } from "./hooks.test-helpers.js";
@@ -41,7 +41,7 @@ vi.mock("../process/exec.js", () => ({
 }));
 
 vi.mock("../infra/quiet-core-bot-root.js", () => ({
-  resolveOpenClawPackageRootSync: vi.fn(),
+  resolveQuietCorePackageRootSync: vi.fn(),
 }));
 
 const resolveCompatibilityHostVersionMock = vi.fn();
@@ -267,7 +267,7 @@ function setupInstallPluginFromDirFixture(params?: {
 async function installFromDirWithWarnings(params: {
   pluginDir: string;
   extensionsDir: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   dangerouslyForceUnsafeInstall?: boolean;
   trustedSourceLinkedOfficialInstall?: boolean;
   mode?: "install" | "update";
@@ -390,7 +390,7 @@ process.stdin.on("end", () => {
   return { scriptPath, logPath };
 }
 
-function configWithInstallPolicy(scriptPath: string, logPath: string): OpenClawConfig {
+function configWithInstallPolicy(scriptPath: string, logPath: string): QuietCoreConfig {
   return {
     security: {
       installPolicy: {
@@ -487,7 +487,7 @@ function mockSuccessfulManagedNpmInstall(params: { packageName: string; version?
 async function installFromArchiveWithWarnings(params: {
   archivePath: string;
   extensionsDir: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   dangerouslyForceUnsafeInstall?: boolean;
   trustedSourceLinkedOfficialInstall?: boolean;
 }) {
@@ -1890,7 +1890,7 @@ describe("installPluginFromArchive", () => {
       filter: (entryPath) =>
         !path.relative(sourcePluginDir, entryPath).split(path.sep).includes("node_modules"),
     });
-    vi.mocked(resolveOpenClawPackageRootSync).mockReturnValue(process.cwd());
+    vi.mocked(resolveQuietCorePackageRootSync).mockReturnValue(process.cwd());
 
     const scanResult = await installSecurityScan.scanPackageInstallSource({
       extensions: ["./index.ts"],
@@ -1941,7 +1941,7 @@ describe("installPluginFromArchive", () => {
       bundleFormat: "codex",
       name: "Policy Source Bundle",
     });
-    const config: OpenClawConfig = {
+    const config: QuietCoreConfig = {
       security: {
         installPolicy: {
           enabled: false,
@@ -4022,8 +4022,8 @@ describe("installPluginFromDir", () => {
   });
 });
 
-describe("linkOpenClawPeerDependencies (via installPluginFromDir)", () => {
-  const resolveRootMock = vi.mocked(resolveOpenClawPackageRootSync);
+describe("linkQuietCorePeerDependencies (via installPluginFromDir)", () => {
+  const resolveRootMock = vi.mocked(resolveQuietCorePackageRootSync);
 
   function writePluginWithPeerDeps(
     pluginDir: string,
@@ -4165,7 +4165,7 @@ describe("linkOpenClawPeerDependencies (via installPluginFromDir)", () => {
     expect(fs.lstatSync(symlinkPath).isSymbolicLink()).toBe(true);
   });
 
-  it("rejects when resolveOpenClawPackageRootSync returns null", async () => {
+  it("rejects when resolveQuietCorePackageRootSync returns null", async () => {
     const { pluginDir, extensionsDir } = setupPluginInstallDirs();
     resolveRootMock.mockReturnValue(null);
 

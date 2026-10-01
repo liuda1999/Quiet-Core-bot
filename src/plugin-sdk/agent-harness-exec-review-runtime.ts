@@ -5,7 +5,7 @@
 // the broad harness barrel.
 
 export async function reviewExecRequestWithConfiguredModel(params: {
-  cfg?: import("../config/types.quiet-core-bot.js").OpenClawConfig;
+  cfg?: import("../config/types.quiet-core-bot.js").QuietCoreConfig;
   agentId?: string;
   reviewer?: unknown;
   input: import("../infra/exec-auto-review.js").ExecAutoReviewInput;

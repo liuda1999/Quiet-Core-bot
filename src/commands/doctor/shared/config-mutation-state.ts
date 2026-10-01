@@ -1,11 +1,11 @@
 // Shared doctor state helpers for previewing or applying config mutations.
-import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../config/types.quiet-core-bot.js";
 
 export type DoctorConfigMutationState = {
   /** Config currently used for command execution. */
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   /** Best candidate config after pending doctor mutations. */
-  candidate: OpenClawConfig;
+  candidate: QuietCoreConfig;
   /** True when candidate differs from the persisted/effective config path. */
   pendingChanges: boolean;
   /** User-facing fix hints printed when preview mode leaves changes unapplied. */
@@ -14,7 +14,7 @@ export type DoctorConfigMutationState = {
 
 export type DoctorConfigMutationResult = {
   /** Candidate config after the mutation. */
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   /** User-facing change lines; empty means no mutation should be applied. */
   changes: string[];
 };

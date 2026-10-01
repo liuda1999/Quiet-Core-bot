@@ -17,7 +17,7 @@ import {
   resolveAgentWorkspaceDir,
   resolveGlobalSingleton,
   resolveStateDir,
-  type OpenClawConfig,
+  type QuietCoreConfig,
 } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
 import {
   buildSessionEntry,
@@ -203,7 +203,7 @@ function getQmdUpdateQueueState(): QmdUpdateQueueState {
 
 function normalizeHanBm25Query(query: string): string {
   const trimmed = query.trim();
-  // Keep Han/CJK BM25 queries intact so OpenClaw search semantics match direct qmd search.
+  // Keep Han/CJK BM25 queries intact so QuietCore search semantics match direct qmd search.
   return trimmed;
 }
 
@@ -380,7 +380,7 @@ type QmdMcporterAcrossCollectionsParams =
 
 export class QmdMemoryManager implements MemorySearchManager {
   static async create(params: {
-    cfg: OpenClawConfig;
+    cfg: QuietCoreConfig;
     agentId: string;
     resolved: ResolvedMemoryBackendConfig;
     mode?: QmdManagerMode;
@@ -1837,7 +1837,7 @@ export class QmdMemoryManager implements MemorySearchManager {
       this.watchPressureWarning,
       count,
       "paths",
-      "Large QMD collections can make OpenClaw run out of file watchers or open files.",
+      "Large QMD collections can make QuietCore run out of file watchers or open files.",
       "Remove large collections, or set memorySearch.sync.watch to false and refresh memory manually or with sync.intervalMinutes.",
       (message) => log.warn(message),
     );
@@ -3583,7 +3583,7 @@ export class QmdMemoryManager implements MemorySearchManager {
 }
 
 function resolveQmdManagerRuntimeConfig(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   agentId: string,
 ): QmdManagerRuntimeConfig {
   return {

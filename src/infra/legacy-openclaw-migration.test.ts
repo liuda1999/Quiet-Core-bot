@@ -1,4 +1,4 @@
-// Covers the pre-rebrand OpenClaw file/directory renames that preserve existing data.
+// Covers the pre-rebrand QuietCore file/directory renames that preserve existing data.
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -27,7 +27,7 @@ afterEach(() => {
   }
 });
 
-describe("legacy OpenClaw sqlite migration", () => {
+describe("legacy QuietCore sqlite migration", () => {
   it("renames the legacy database and its sidecars onto the current filename", () => {
     const dir = makeTempDir();
     const legacyPath = path.join(dir, LEGACY_STATE_SQLITE_FILENAME);
@@ -84,7 +84,7 @@ describe("legacy OpenClaw sqlite migration", () => {
   });
 });
 
-describe("legacy OpenClaw state directory migration", () => {
+describe("legacy QuietCore state directory migration", () => {
   it("renames the legacy state directory when the current one is absent", () => {
     const root = makeTempDir();
     const legacyDir = path.join(root, LEGACY_STATE_DIR_NAME);

@@ -468,7 +468,7 @@ describe("gateway bonjour advertiser", () => {
     expect(
       handler?.(
         new Error(
-          "Can't probe for a service which is announced already. Received announcing for service OpenClaw Gateway._quiet-core-bot._tcp.local.",
+          "Can't probe for a service which is announced already. Received announcing for service QuietCore Gateway._quiet-core-bot._tcp.local.",
         ),
       ),
     ).toBe(true);
@@ -787,12 +787,12 @@ describe("gateway bonjour advertiser", () => {
     });
 
     await vi.advanceTimersByTimeAsync(10_000);
-    listenerMap.get("name-change")?.("test-host (OpenClaw) (2)");
+    listenerMap.get("name-change")?.("test-host (QuietCore) (2)");
 
     await vi.advanceTimersByTimeAsync(15_000);
 
     expect(createService).toHaveBeenCalledTimes(1);
-    expectWarnContaining('name conflict resolved; newName="test-host (OpenClaw) (2)"');
+    expectWarnContaining('name conflict resolved; newName="test-host (QuietCore) (2)"');
 
     await vi.advanceTimersByTimeAsync(20_000);
 
@@ -894,7 +894,7 @@ describe("gateway bonjour advertiser", () => {
     });
 
     const [gatewayCall] = createService.mock.calls as Array<[ServiceCall]>;
-    expect(gatewayCall?.[0]?.name).toBe("Mac (OpenClaw)");
+    expect(gatewayCall?.[0]?.name).toBe("Mac (QuietCore)");
     expect(gatewayCall?.[0]?.domain).toBe("local");
     expect(gatewayCall?.[0]?.hostname).toBe("Mac");
     expect((gatewayCall?.[0]?.txt as Record<string, string>)?.lanHost).toBe("Mac.local");
@@ -942,7 +942,7 @@ describe("gateway bonjour advertiser", () => {
     const serviceName = gatewayCall?.[0]?.name as string;
     const hostname = gatewayCall?.[0]?.hostname as string;
 
-    expectDnsLabelByteLength(`${reportedHostname} (OpenClaw)`, 64);
+    expectDnsLabelByteLength(`${reportedHostname} (QuietCore)`, 64);
     expect(hostname).toBe(reportedHostname);
     expectDnsLabelWithinLimit(serviceName);
 
@@ -976,7 +976,7 @@ describe("gateway bonjour advertiser", () => {
   });
 
   it("truncates multi-byte hostname within DNS label byte limit", async () => {
-    // 21 CJK characters = 63 bytes in UTF-8, adding " (OpenClaw)" pushes over
+    // 21 CJK characters = 63 bytes in UTF-8, adding " (QuietCore)" pushes over
     const cjkHostname = "你".repeat(21);
     enableAdvertiserUnitMode(cjkHostname);
 

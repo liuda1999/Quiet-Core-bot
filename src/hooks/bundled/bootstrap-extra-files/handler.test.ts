@@ -2,13 +2,13 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../../../config/config.js";
+import type { QuietCoreConfig } from "../../../config/config.js";
 import { makeTempWorkspace, writeWorkspaceFile } from "../../../test-helpers/workspace.js";
 import type { AgentBootstrapHookContext } from "../../hooks.js";
 import { createHookEvent } from "../../hooks.js";
 import handler from "./handler.js";
 
-function createBootstrapExtraConfig(paths: string[]): OpenClawConfig {
+function createBootstrapExtraConfig(paths: string[]): QuietCoreConfig {
   return {
     hooks: {
       internal: {
@@ -25,7 +25,7 @@ function createBootstrapExtraConfig(paths: string[]): OpenClawConfig {
 
 async function createBootstrapContext(params: {
   workspaceDir: string;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   sessionKey: string;
   rootFiles: Array<{ name: string; content: string }>;
 }): Promise<AgentBootstrapHookContext> {

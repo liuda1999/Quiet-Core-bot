@@ -1,4 +1,4 @@
-// Android Version script supports OpenClaw repository automation.
+// Android Version script supports QuietCore repository automation.
 import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { parseReleaseVersion } from "./npm-publish-plan.mjs";

@@ -1,5 +1,5 @@
-project("OpenClaw.xcodeproj")
-scheme("OpenClawUITests")
+project("QuietCore.xcodeproj")
+scheme("QuietCoreUITests")
 configuration("Debug")
 
 # The Fastfile screenshot lane resolves concrete device names from the installed

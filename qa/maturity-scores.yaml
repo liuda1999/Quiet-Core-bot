@@ -1459,7 +1459,7 @@ surfaces:
           reason: none
           human_override: false
   - id: quiet-core-bot-app-sdk
-    name: OpenClaw App SDK
+    name: QuietCore App SDK
     family: core
     level:
       id: alpha

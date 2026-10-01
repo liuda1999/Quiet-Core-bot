@@ -34,10 +34,10 @@ export function installDebugProxyTestResetHooks() {
 
   afterEach(async () => {
     const { closeDebugProxyCaptureStore } = await import("quiet-core-bot/plugin-sdk/proxy-capture");
-    const { closeOpenClawStateDatabaseForTest } =
+    const { closeQuietCoreStateDatabaseForTest } =
       await import("quiet-core-bot/plugin-sdk/sqlite-runtime-testing");
     closeDebugProxyCaptureStore();
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
     globalThis.fetch = originalFetch;
     vi.restoreAllMocks();
     restoreDebugProxyEnv(priorProxyEnv);

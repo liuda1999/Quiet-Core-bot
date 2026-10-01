@@ -1,4 +1,4 @@
-// Ios Version script supports OpenClaw repository automation.
+// Ios Version script supports QuietCore repository automation.
 import { resolveIosVersion } from "./lib/ios-version.ts";
 import { parseVersionQueryArgs } from "./lib/version-script-args.ts";
 

@@ -7,8 +7,8 @@ import { defaultRuntime, type RuntimeEnv } from "../runtime.js";
 import * as controlUiFsRuntime from "./control-ui-assets.fs.runtime.js";
 import {
   CORE_PACKAGE_NAMES,
-  resolveOpenClawPackageRoot,
-  resolveOpenClawPackageRootSync,
+  resolveQuietCorePackageRoot,
+  resolveQuietCorePackageRootSync,
 } from "./quiet-core-bot-root.js";
 
 const CONTROL_UI_DIST_PATH_SEGMENTS = ["dist", "control-ui", "index.html"] as const;
@@ -104,7 +104,7 @@ export async function resolveControlUiDistIndexPath(
     }
   }
 
-  const packageRoot = await resolveOpenClawPackageRoot({ argv1: normalized, moduleUrl });
+  const packageRoot = await resolveQuietCorePackageRoot({ argv1: normalized, moduleUrl });
   if (packageRoot) {
     return path.join(packageRoot, "dist", "control-ui", "index.html");
   }
@@ -215,7 +215,7 @@ export function resolveControlUiRootSync(opts: ControlUiRootResolveOptions = {})
       return null;
     }
   })();
-  const packageRoot = resolveOpenClawPackageRootSync({
+  const packageRoot = resolveQuietCorePackageRootSync({
     argv1,
     moduleUrl: opts.moduleUrl,
     cwd,
@@ -262,7 +262,7 @@ export function isPackageProvenControlUiRootSync(
 ): boolean {
   const argv1 = opts.argv1 ?? process.argv[1];
   const cwd = opts.cwd ?? process.cwd();
-  const packageRoot = resolveOpenClawPackageRootSync({
+  const packageRoot = resolveQuietCorePackageRootSync({
     argv1,
     moduleUrl: opts.moduleUrl,
     cwd,

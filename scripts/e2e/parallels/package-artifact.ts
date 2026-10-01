@@ -1,4 +1,4 @@
-// Package Artifact script supports OpenClaw repository automation.
+// Package Artifact script supports QuietCore repository automation.
 import { randomUUID } from "node:crypto";
 import { copyFile, mkdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -39,7 +39,7 @@ function resolveNpmPackTarballFilename(value: unknown): string {
   return filename;
 }
 
-export function resolveOpenClawRegistryVersion(specOrAlias: string): string {
+export function resolveQuietCoreRegistryVersion(specOrAlias: string): string {
   const rawValue = specOrAlias.trim();
   const value = rawValue.startsWith("quiet-core-bot@") ? rawValue.slice("quiet-core-bot@".length) : rawValue;
   if (!value) {
@@ -124,7 +124,7 @@ async function ensureCurrentBuildUnlocked(input: {
   }
 }
 
-export async function packOpenClaw(input: {
+export async function packQuietCore(input: {
   destination: string;
   packageSpec?: string;
   requireControlUi?: boolean;

@@ -1,5 +1,5 @@
 #!/usr/bin/env -S node --import tsx
-// Code Mode Namespace Live script supports OpenClaw repository automation.
+// Code Mode Namespace Live script supports QuietCore repository automation.
 import { performance } from "node:perf_hooks";
 import { pathToFileURL } from "node:url";
 import { Type } from "typebox";

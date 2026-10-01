@@ -41,7 +41,7 @@ import {
   setRuntimeConfigSnapshot,
 } from "../config/config.js";
 import { resolveAgentModelPrimaryValue } from "../config/model-input.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { callGateway, randomIdempotencyKey } from "../gateway/call.js";
 import { buildGatewayConnectionDetailsWithResolvers } from "../gateway/connection-details.js";
 import { isLoopbackHost } from "../gateway/net.js";
@@ -494,14 +494,14 @@ function resolveSelectedProviderFromModelRef(modelRef: string | undefined): stri
   return resolveModelRefOverride(modelRef).provider;
 }
 
-function getAuthProfileIdsForProvider(cfg: OpenClawConfig, providerId: string): string[] {
+function getAuthProfileIdsForProvider(cfg: QuietCoreConfig, providerId: string): string[] {
   const agentDir = resolveAgentDir(cfg, resolveDefaultAgentId(cfg));
   const store = loadAuthProfileStoreForRuntime(agentDir);
   return listProfilesForProvider(store, providerId);
 }
 
 function providerHasGenericConfig(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   providerId: string;
   envVars?: string[];
 }): boolean {
@@ -594,7 +594,7 @@ function resolveModelRefOverride(raw: string | undefined): { provider?: string; 
 
 async function canonicalizeModelRunRef(params: {
   raw: string | undefined;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   preserveAuthProfile: boolean;
 }): Promise<string | undefined> {
   return await canonicalizeCaseOnlyCatalogModelRef({
@@ -1508,7 +1508,7 @@ async function runTtsConvert(params: {
 }
 
 function resolveTtsProviderForAuthHydration(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   provider?: string;
   modelId?: string;
   channelId?: string;
@@ -1523,10 +1523,10 @@ function resolveTtsProviderForAuthHydration(params: {
 }
 
 async function injectTtsAuthProfileApiKey(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   provider?: string;
   channelId?: string;
-}): Promise<OpenClawConfig> {
+}): Promise<QuietCoreConfig> {
   if (!params.provider) {
     return params.cfg;
   }
@@ -1612,7 +1612,7 @@ type ExistingTtsProviderConfig =
     });
 
 function resolveExistingTtsProviderConfig(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   providerId: string;
   channelId?: string;
 }): ExistingTtsProviderConfig | undefined {
@@ -1640,7 +1640,7 @@ function resolveExistingTtsProviderConfig(params: {
 }
 
 function resolveExistingTtsProviderConfigInTts(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   tts: unknown;
   providerId: string;
 }): TtsProviderConfigLocation | undefined {
@@ -1682,7 +1682,7 @@ const TTS_CONFIG_RESERVED_KEYS = new Set([
 ]);
 
 function resolveDirectTtsProviderConfig(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   tts: unknown;
   providerId: string;
 }): TtsProviderConfigLocation | undefined {
@@ -1704,7 +1704,7 @@ function resolveDirectTtsProviderConfig(params: {
 }
 
 function resolveChannelTtsConfigForAuthHydration(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   channelId?: string;
 }): { channelKey: string; tts: unknown } | undefined {
   const channels = params.cfg.channels;
@@ -1925,8 +1925,8 @@ async function resolveLocalCapabilityRuntimeConfig(params: {
   allowedPaths?: Set<string>;
   forcedActivePaths?: Set<string>;
   optionalActivePaths?: Set<string>;
-  config?: OpenClawConfig;
-}): Promise<OpenClawConfig> {
+  config?: QuietCoreConfig;
+}): Promise<QuietCoreConfig> {
   const cfg = params.config ?? getRuntimeConfig();
   const { effectiveConfig } = await resolveCommandConfigWithSecrets({
     config: cfg,
@@ -1942,7 +1942,7 @@ async function resolveLocalCapabilityRuntimeConfig(params: {
   return effectiveConfig;
 }
 
-function pinRuntimeConfigSnapshot(config: OpenClawConfig): void {
+function pinRuntimeConfigSnapshot(config: QuietCoreConfig): void {
   const sourceConfig = getRuntimeConfigSourceSnapshot();
   if (sourceConfig) {
     setRuntimeConfigSnapshot(config, sourceConfig);

@@ -1,7 +1,7 @@
 // Model auth tests cover provider auth status, expiry, and display helpers.
 import { MAX_DATE_TIMESTAMP_MS } from "@quiet-core/normalization-core/number-coercion";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import type { ProviderPlugin } from "../../plugins/types.js";
 import type { RuntimeEnv } from "../../runtime.js";
 
@@ -84,7 +84,7 @@ vi.mock("../../agents/auth-profiles/usage.js", () => ({
 
 vi.mock("../../plugins/provider-auth-helpers.js", () => ({
   applyAuthProfileConfig: (
-    cfg: OpenClawConfig,
+    cfg: QuietCoreConfig,
     params: {
       profileId: string;
       provider: string;
@@ -92,7 +92,7 @@ vi.mock("../../plugins/provider-auth-helpers.js", () => ({
       email?: string;
       displayName?: string;
     },
-  ): OpenClawConfig => ({
+  ): QuietCoreConfig => ({
     ...cfg,
     auth: {
       ...cfg.auth,
@@ -215,7 +215,7 @@ vi.mock("../../plugins/provider-auth-choice-helpers.js", async (importOriginal) 
       );
     }),
     applyProviderAuthConfigPatch: vi.fn(
-      (cfg: OpenClawConfig, patch: unknown, options?: { replaceDefaultModels?: boolean }) => {
+      (cfg: QuietCoreConfig, patch: unknown, options?: { replaceDefaultModels?: boolean }) => {
         const merged = mergePatch(cfg, patch);
         if (!options?.replaceDefaultModels) {
           return merged;
@@ -236,7 +236,7 @@ vi.mock("../../plugins/provider-auth-choice-helpers.js", async (importOriginal) 
           : merged;
       },
     ),
-    applyDefaultModel: vi.fn((cfg: OpenClawConfig, model: string) => ({
+    applyDefaultModel: vi.fn((cfg: QuietCoreConfig, model: string) => ({
       ...cfg,
       agents: {
         ...cfg.agents,
@@ -343,8 +343,8 @@ function createProvider(params: {
 
 describe("modelsAuthLoginCommand", () => {
   let restoreStdin: (() => void) | null = null;
-  let currentConfig: OpenClawConfig;
-  let lastUpdatedConfig: OpenClawConfig | null;
+  let currentConfig: QuietCoreConfig;
+  let lastUpdatedConfig: QuietCoreConfig | null;
   let runProviderAuth: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
@@ -383,7 +383,7 @@ describe("modelsAuthLoginCommand", () => {
     });
     mocks.loadValidConfigOrThrow.mockImplementation(async () => currentConfig);
     mocks.updateConfig.mockImplementation(
-      async (mutator: (cfg: OpenClawConfig) => OpenClawConfig) => {
+      async (mutator: (cfg: QuietCoreConfig) => QuietCoreConfig) => {
         lastUpdatedConfig = mutator(currentConfig);
         currentConfig = lastUpdatedConfig;
         return lastUpdatedConfig;
@@ -433,10 +433,10 @@ describe("modelsAuthLoginCommand", () => {
       },
     };
     const originalConfig = currentConfig;
-    mocks.resolveAgentDir.mockImplementation((_cfg: OpenClawConfig, agentId: string) =>
+    mocks.resolveAgentDir.mockImplementation((_cfg: QuietCoreConfig, agentId: string) =>
       agentId === "coder" ? "/tmp/quiet-core-bot/agents/coder" : "/tmp/quiet-core-bot/agents/main",
     );
-    mocks.resolveAgentWorkspaceDir.mockImplementation((_cfg: OpenClawConfig, agentId: string) =>
+    mocks.resolveAgentWorkspaceDir.mockImplementation((_cfg: QuietCoreConfig, agentId: string) =>
       agentId === "coder" ? "/tmp/quiet-core-bot/workspaces/coder" : "/tmp/quiet-core-bot/workspace",
     );
     return originalConfig;

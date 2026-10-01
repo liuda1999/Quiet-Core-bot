@@ -1,4 +1,4 @@
-// Comfy plugin entrypoint registers its OpenClaw integration.
+// Comfy plugin entrypoint registers its QuietCore integration.
 import { definePluginEntry } from "quiet-core-bot/plugin-sdk/plugin-entry";
 import { buildComfyImageGenerationProvider } from "./image-generation-provider.js";
 import { buildComfyMusicGenerationProvider } from "./music-generation-provider.js";

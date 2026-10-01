@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { collectInstallPolicyHealthLines } from "./doctor-install-policy.js";
 
 const tempDirs: string[] = [];
@@ -21,7 +21,7 @@ async function writePolicyScript(dir: string, response: string): Promise<string>
   return scriptPath;
 }
 
-function configWithPolicy(scriptPath: string): OpenClawConfig {
+function configWithPolicy(scriptPath: string): QuietCoreConfig {
   return {
     security: {
       installPolicy: {

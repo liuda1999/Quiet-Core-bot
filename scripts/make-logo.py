@@ -1,4 +1,4 @@
-"""Generate OpenClaw logo assets from a single source image.
+"""Generate QuietCore logo assets from a single source image.
 
 Reads the source dragon image, removes the white background (border flood-fill
 so internal whites such as teeth are preserved), then writes every existing
@@ -158,7 +158,7 @@ def main() -> None:
     # --- macOS (opaque) ---
     mac = ROOT / "apps" / "macos"
     write(mac / "Icon.icon" / "Assets" / "quiet-core-bot-mac.png", flatten(base, 1024))
-    write_icns(base, mac / "Sources" / "OpenClaw" / "Resources" / "OpenClaw.icns")
+    write_icns(base, mac / "Sources" / "QuietCore" / "Resources" / "QuietCore.icns")
 
     # --- iOS AppIcon (opaque, exact filenames from Contents.json) ---
     ios = ROOT / "apps" / "ios" / "Sources" / "Assets.xcassets"
@@ -166,7 +166,7 @@ def main() -> None:
     for size in (20, 29, 40, 48, 55, 57, 58, 60, 66, 76, 80, 87, 88, 92, 100,
                  102, 108, 114, 120, 152, 167, 172, 180, 196, 216, 234, 258, 1024):
         write(appicon / f"{size}.png", flatten(base, size))
-    write(ios / "OpenClawIcon.imageset" / "quiet-core-bot-icon.png", base.resize((180, 180), Image.LANCZOS))
+    write(ios / "QuietCoreIcon.imageset" / "quiet-core-bot-icon.png", base.resize((180, 180), Image.LANCZOS))
 
     # --- watchOS ---
     watch = ROOT / "apps" / "ios" / "WatchApp" / "Assets.xcassets"
@@ -180,7 +180,7 @@ def main() -> None:
         "watch-marketing-1024.png": 1024,
     }.items():
         write(watch / "AppIcon.appiconset" / name, flatten(base, size))
-    write(watch / "OpenClawIcon.imageset" / "quiet-core-bot-icon.png", base.resize((180, 180), Image.LANCZOS))
+    write(watch / "QuietCoreIcon.imageset" / "quiet-core-bot-icon.png", base.resize((180, 180), Image.LANCZOS))
 
     # --- Android (legacy opaque + adaptive foreground transparent) ---
     res = ROOT / "apps" / "android" / "app" / "src" / "main" / "res"

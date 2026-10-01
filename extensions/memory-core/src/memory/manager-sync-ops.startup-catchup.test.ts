@@ -6,7 +6,7 @@ import type { DatabaseSync } from "node:sqlite";
 import { emitSessionTranscriptUpdate } from "quiet-core-bot/plugin-sdk/agent-harness-runtime";
 import {
   resolveSessionTranscriptsDirForAgent,
-  type OpenClawConfig,
+  type QuietCoreConfig,
   type ResolvedMemorySearchConfig,
 } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
 import type {
@@ -60,7 +60,7 @@ const MEMORY_CORE_TRANSCRIPT_UPDATE_SUBSCRIBER_KEY = Symbol.for(
 type SourceStateRow = { path: string; hash: string; mtime: number; size: number };
 
 class SessionStartupCatchupHarness extends MemoryManagerSyncOps {
-  protected readonly cfg = {} as OpenClawConfig;
+  protected readonly cfg = {} as QuietCoreConfig;
   protected readonly agentId = "main";
   protected readonly workspaceDir = "/tmp/quiet-core-bot-test-workspace";
   protected readonly settings = {

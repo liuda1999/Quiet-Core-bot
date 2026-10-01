@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# ClawDock - Docker helpers for OpenClaw
-# Inspired by Simon Willison's "Running OpenClaw in Docker"
+# ClawDock - Docker helpers for QuietCore
+# Inspired by Simon Willison's "Running QuietCore in Docker"
 # https://til.simonwillison.net/llms/quiet-core-bot-docker
 #
 # Installation:
@@ -38,7 +38,7 @@ _cmd() {
 # =============================================================================
 CLAWDOCK_CONFIG="${HOME}/.clawdock/config"
 
-# Common paths to check for OpenClaw
+# Common paths to check for QuietCore
 CLAWDOCK_COMMON_PATHS=(
   "${HOME}/quiet-core-bot"
   "${HOME}/workspace/quiet-core-bot"
@@ -132,7 +132,7 @@ _clawdock_ensure_dir() {
 
   if [[ -n "$found_path" ]]; then
     echo ""
-    echo "🐉 Found OpenClaw at: $found_path"
+    echo "🐉 Found QuietCore at: $found_path"
     echo -n "   Use this location? [Y/n] "
     read -r response
     if [[ "$response" =~ ^[Nn] ]]; then
@@ -144,7 +144,7 @@ _clawdock_ensure_dir() {
     CLAWDOCK_DIR="$found_path"
   else
     echo ""
-    echo "❌ OpenClaw not found in common locations."
+    echo "❌ QuietCore not found in common locations."
     echo ""
     echo "Clone it first:"
     echo ""
@@ -299,7 +299,7 @@ clawdock-cli() {
 clawdock-update() {
   _clawdock_ensure_dir || return 1
 
-  echo "🔄 Updating OpenClaw..."
+  echo "🔄 Updating QuietCore..."
 
   echo ""
   echo "📥 Pulling latest source..."
@@ -472,7 +472,7 @@ clawdock-approve() {
 
 # Show all available clawdock helper commands
 clawdock-help() {
-  echo -e "\n${_CLR_BOLD}${_CLR_CYAN}🐉 ClawDock - Docker Helpers for OpenClaw${_CLR_RESET}\n"
+  echo -e "\n${_CLR_BOLD}${_CLR_CYAN}🐉 ClawDock - Docker Helpers for QuietCore${_CLR_RESET}\n"
 
   echo -e "${_CLR_BOLD}${_CLR_MAGENTA}⚡ Basic Operations${_CLR_RESET}"
   echo -e "  $(_cmd clawdock-start)       ${_CLR_DIM}Start the gateway${_CLR_RESET}"

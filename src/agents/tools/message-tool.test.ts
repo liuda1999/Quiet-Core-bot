@@ -11,14 +11,14 @@ import { resetDiagnosticSessionStateForTest } from "../../logging/diagnostic-ses
 import { wrapToolWithBeforeToolCallHook } from "../agent-tools.before-tool-call.js";
 import { CRITICAL_THRESHOLD } from "../tool-loop-detection.js";
 type CreateMessageTool = typeof import("./message-tool.js").createMessageTool;
-type CreateOpenClawTools = typeof import("../quiet-core-bot-tools.js").createOpenClawTools;
+type CreateQuietCoreTools = typeof import("../quiet-core-bot-tools.js").createQuietCoreTools;
 type ResetPluginRuntimeStateForTest =
   typeof import("../../plugins/runtime.js").resetPluginRuntimeStateForTest;
 type SetActivePluginRegistry = typeof import("../../plugins/runtime.js").setActivePluginRegistry;
 type CreateTestRegistry = typeof import("../../test-utils/channel-plugins.js").createTestRegistry;
 
 let createMessageTool: CreateMessageTool;
-let createOpenClawTools: CreateOpenClawTools;
+let createQuietCoreTools: CreateQuietCoreTools;
 let resetPluginRuntimeStateForTest: ResetPluginRuntimeStateForTest;
 let setActivePluginRegistry: SetActivePluginRegistry;
 let createTestRegistry: CreateTestRegistry;
@@ -315,7 +315,7 @@ beforeAll(async () => {
     await import("../../plugins/runtime.js"));
   ({ createTestRegistry } = await import("../../test-utils/channel-plugins.js"));
   ({ createMessageTool } = await import("./message-tool.js"));
-  ({ createOpenClawTools } = await import("../quiet-core-bot-tools.js"));
+  ({ createQuietCoreTools } = await import("../quiet-core-bot-tools.js"));
 });
 
 beforeEach(() => {
@@ -499,8 +499,8 @@ describe("message tool secret scoping", () => {
     );
   });
 
-  it("forwards source reply delivery mode through createOpenClawTools", () => {
-    const tool = createOpenClawTools({
+  it("forwards source reply delivery mode through createQuietCoreTools", () => {
+    const tool = createQuietCoreTools({
       config: {} as never,
       sourceReplyDeliveryMode: "message_tool_only",
     }).find((candidate) => candidate.name === "message");
@@ -1163,7 +1163,7 @@ describe("message tool agent routing", () => {
     expect(call?.toolContext?.replyToMode).toBe("off");
   });
 
-  it("forwards agentThreadId through createOpenClawTools to the message tool", async () => {
+  it("forwards agentThreadId through createQuietCoreTools to the message tool", async () => {
     mockSendResult({ channel: "slack", to: "channel:C123" });
     const plugin = createChannelPlugin({
       id: "slack",
@@ -1174,7 +1174,7 @@ describe("message tool agent routing", () => {
     });
     setActivePluginRegistry(createTestRegistry([{ pluginId: "slack", source: "test", plugin }]));
 
-    const tool = createOpenClawTools({
+    const tool = createQuietCoreTools({
       agentSessionKey: "agent:main:slack:channel:c123:thread:111.222",
       config: {} as never,
       agentChannel: "slack",
@@ -1197,7 +1197,7 @@ describe("message tool agent routing", () => {
     expect(call?.toolContext?.replyToMode).toBe("all");
   });
 
-  it("forwards the routable target through createOpenClawTools to the message tool", async () => {
+  it("forwards the routable target through createQuietCoreTools to the message tool", async () => {
     mockSendResult({ channel: "slack", to: "user:U123" });
     const plugin = createChannelPlugin({
       id: "slack",
@@ -1208,7 +1208,7 @@ describe("message tool agent routing", () => {
     });
     setActivePluginRegistry(createTestRegistry([{ pluginId: "slack", source: "test", plugin }]));
 
-    const tool = createOpenClawTools({
+    const tool = createQuietCoreTools({
       config: {} as never,
       agentChannel: "slack",
       currentChannelId: "D123",

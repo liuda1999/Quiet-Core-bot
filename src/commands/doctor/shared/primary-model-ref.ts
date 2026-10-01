@@ -2,10 +2,10 @@ import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "../../../agents/defaults.js";
 import { parseModelRef } from "../../../agents/model-selection-normalize.js";
 import { resolveAgentModelPrimaryValue } from "../../../config/model-input.js";
 import type { AgentModelConfig } from "../../../config/types.agents-shared.js";
-import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../config/types.quiet-core-bot.js";
 
 export function resolveDoctorPrimaryModelRef(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   agentModel?: AgentModelConfig,
 ): { provider: string; model: string } {
   const raw =

@@ -7,7 +7,7 @@ import {
   resolveControlUiDistIndexHealth,
   resolveControlUiDistIndexPathForRoot,
 } from "../infra/control-ui-assets.js";
-import { resolveOpenClawPackageRoot } from "../infra/quiet-core-bot-root.js";
+import { resolveQuietCorePackageRoot } from "../infra/quiet-core-bot-root.js";
 import { runCommandWithTimeout } from "../process/exec.js";
 import type { RuntimeEnv } from "../runtime.js";
 import type { DoctorPrompter } from "./doctor-prompter.js";
@@ -41,7 +41,7 @@ export async function detectUiProtocolFreshnessIssues(
 ): Promise<readonly UiProtocolFreshnessIssue[]> {
   const root =
     opts.root ??
-    (await resolveOpenClawPackageRoot({
+    (await resolveQuietCorePackageRoot({
       moduleUrl: import.meta.url,
       argv1: opts.argv1 ?? process.argv[1],
       cwd: opts.cwd ?? process.cwd(),

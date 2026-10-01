@@ -1,18 +1,18 @@
 // Channel plugin helper tests cover shared plugin helper behavior and edge cases.
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import {
   buildAccountScopedDmSecurityPolicy,
   formatPairingApproveHint,
   parseOptionalDelimitedEntries,
 } from "./helpers.js";
 
-function cfgWithChannel(channelKey: string, accounts?: Record<string, unknown>): OpenClawConfig {
+function cfgWithChannel(channelKey: string, accounts?: Record<string, unknown>): QuietCoreConfig {
   return {
     channels: {
       [channelKey]: accounts ? { accounts } : {},
     },
-  } as unknown as OpenClawConfig;
+  } as unknown as QuietCoreConfig;
 }
 
 describe("buildAccountScopedDmSecurityPolicy", () => {
@@ -119,7 +119,7 @@ describe("buildAccountScopedDmSecurityPolicy", () => {
               },
             },
           },
-        } as unknown as OpenClawConfig,
+        } as unknown as QuietCoreConfig,
         channelKey: "demo-root",
         accountId: "work",
         fallbackAccountId: "default",

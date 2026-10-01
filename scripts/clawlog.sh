@@ -49,17 +49,17 @@ STYLE_JSON=false
 # Function to show usage
 show_usage() {
     cat << EOF
-clawlog - OpenClaw Logging Utility
+clawlog - QuietCore Logging Utility
 
 USAGE:
     clawlog [OPTIONS]
 
 DESCRIPTION:
-    View OpenClaw logs with full details (bypasses Apple's privacy redaction).
+    View QuietCore logs with full details (bypasses Apple's privacy redaction).
     Requires sudo access configured for /usr/bin/log command.
 
 LOG FLOW ARCHITECTURE:
-    OpenClaw logs flow through the macOS unified log (subsystem: ai.quiet-core-bot).
+    QuietCore logs flow through the macOS unified log (subsystem: ai.quiet-core-bot).
 
 LOG CATEGORIES (examples):
     • voicewake           - Voice wake detection/test harness

@@ -12,11 +12,11 @@ import {
 } from "./launchd-plist.js";
 import {
   installLaunchAgent,
-  disableCurrentOpenClawUpdateLaunchdJob,
-  disableOpenClawUpdateLaunchdJob,
-  findStaleOpenClawUpdateLaunchdJobs,
+  disableCurrentQuietCoreUpdateLaunchdJob,
+  disableQuietCoreUpdateLaunchdJob,
+  findStaleQuietCoreUpdateLaunchdJobs,
   parseLaunchctlPrint,
-  parseLaunchctlListOpenClawUpdateJobs,
+  parseLaunchctlListQuietCoreUpdateJobs,
   readLaunchAgentProgramArguments,
   readLaunchAgentRuntime,
   repairLaunchAgentBootstrap,
@@ -464,7 +464,7 @@ describe("launchd runtime state", () => {
 
 describe("launchctl list detection", () => {
   it("parses stale Quiet Core bot updater jobs from launchctl list", () => {
-    const jobs = parseLaunchctlListOpenClawUpdateJobs(
+    const jobs = parseLaunchctlListQuietCoreUpdateJobs(
       [
         "123 0 ai.quiet-core-bot.gateway",
         "- 127 ai.quiet-core-bot.update.2026.5.12",
@@ -497,7 +497,7 @@ describe("launchctl list detection", () => {
     async () => {
       state.listOutput = "- 127 ai.quiet-core-bot.update.2026.5.12\n";
 
-      const jobs = await findStaleOpenClawUpdateLaunchdJobs();
+      const jobs = await findStaleQuietCoreUpdateLaunchdJobs();
 
       expect(jobs).toEqual([
         {
@@ -517,7 +517,7 @@ describe("launchctl list detection", () => {
         "913 0 ai.quiet-core-bot.manual-update.custom-label",
       ].join("\n");
 
-      const jobs = await findStaleOpenClawUpdateLaunchdJobs({
+      const jobs = await findStaleQuietCoreUpdateLaunchdJobs({
         QUIET_CORE_PROFILE: "manual-update.profile",
         QUIET_CORE_LAUNCHD_LABEL: "ai.quiet-core-bot.manual-update.custom-label",
         QUIET_CORE_SERVICE_MARKER: GATEWAY_SERVICE_MARKER,
@@ -537,7 +537,7 @@ describe("launchctl list detection", () => {
     "disables the current legacy updater launchd job",
     async () => {
       await expect(
-        disableCurrentOpenClawUpdateLaunchdJob({
+        disableCurrentQuietCoreUpdateLaunchdJob({
           LAUNCH_JOB_LABEL: "ai.quiet-core-bot.update.2026.5.12",
         }),
       ).resolves.toBe(true);
@@ -555,7 +555,7 @@ describe("launchctl list detection", () => {
     "disables the current manual updater launchd job",
     async () => {
       await expect(
-        disableCurrentOpenClawUpdateLaunchdJob({
+        disableCurrentQuietCoreUpdateLaunchdJob({
           LAUNCH_JOB_LABEL: "ai.quiet-core-bot.manual-update.1717168800",
         }),
       ).resolves.toBe(true);
@@ -573,7 +573,7 @@ describe("launchctl list detection", () => {
     "disables the current legacy updater launchd job from Quiet Core bot label env",
     async () => {
       await expect(
-        disableCurrentOpenClawUpdateLaunchdJob({
+        disableCurrentQuietCoreUpdateLaunchdJob({
           QUIET_CORE_LAUNCHD_LABEL: "ai.quiet-core-bot.update.2026.5.12",
         }),
       ).resolves.toBe(true);
@@ -590,7 +590,7 @@ describe("launchctl list detection", () => {
     "does not let non-update launchd markers mask the Quiet Core bot update label",
     async () => {
       await expect(
-        disableCurrentOpenClawUpdateLaunchdJob({
+        disableCurrentQuietCoreUpdateLaunchdJob({
           XPC_SERVICE_NAME: "0",
           QUIET_CORE_LAUNCHD_LABEL: "ai.quiet-core-bot.update.2026.5.12",
         }),
@@ -608,7 +608,7 @@ describe("launchctl list detection", () => {
     "does not disable the current gateway launchd job",
     async () => {
       await expect(
-        disableCurrentOpenClawUpdateLaunchdJob({
+        disableCurrentQuietCoreUpdateLaunchdJob({
           LAUNCH_JOB_LABEL: "ai.quiet-core-bot.gateway",
         }),
       ).resolves.toBe(false);
@@ -621,7 +621,7 @@ describe("launchctl list detection", () => {
     "does not disable profile-specific gateway launchd jobs that look like updater labels",
     async () => {
       await expect(
-        disableCurrentOpenClawUpdateLaunchdJob({
+        disableCurrentQuietCoreUpdateLaunchdJob({
           LAUNCH_JOB_LABEL: "ai.quiet-core-bot.update.2026.5.12",
           QUIET_CORE_PROFILE: "update.2026.5.12",
         }),
@@ -635,7 +635,7 @@ describe("launchctl list detection", () => {
     "does not disable profile-specific gateway launchd jobs that look like manual updater labels",
     async () => {
       await expect(
-        disableCurrentOpenClawUpdateLaunchdJob({
+        disableCurrentQuietCoreUpdateLaunchdJob({
           LAUNCH_JOB_LABEL: "ai.quiet-core-bot.manual-update.1717168800",
           QUIET_CORE_PROFILE: "manual-update.1717168800",
         }),
@@ -649,7 +649,7 @@ describe("launchctl list detection", () => {
     "does not disable custom gateway launchd labels under the manual-update prefix",
     async () => {
       await expect(
-        disableCurrentOpenClawUpdateLaunchdJob({
+        disableCurrentQuietCoreUpdateLaunchdJob({
           LAUNCH_JOB_LABEL: "ai.quiet-core-bot.manual-update.gateway",
         }),
       ).resolves.toBe(false);
@@ -662,7 +662,7 @@ describe("launchctl list detection", () => {
     "does not disable custom gateway launchd labels that look like updater labels",
     async () => {
       await expect(
-        disableCurrentOpenClawUpdateLaunchdJob({
+        disableCurrentQuietCoreUpdateLaunchdJob({
           LAUNCH_JOB_LABEL: "ai.quiet-core-bot.update.2026.5.12",
           QUIET_CORE_LAUNCHD_LABEL: "ai.quiet-core-bot.update.2026.5.12",
           QUIET_CORE_SERVICE_MARKER: "quiet-core-bot",
@@ -675,7 +675,7 @@ describe("launchctl list detection", () => {
   );
 
   it.runIf(process.platform === "darwin")("disables explicit legacy updater jobs", async () => {
-    await expect(disableOpenClawUpdateLaunchdJob("ai.quiet-core-bot.update.2026.5.12")).resolves.toBe(
+    await expect(disableQuietCoreUpdateLaunchdJob("ai.quiet-core-bot.update.2026.5.12")).resolves.toBe(
       true,
     );
 
@@ -688,7 +688,7 @@ describe("launchctl list detection", () => {
 
   it.runIf(process.platform === "darwin")("disables explicit manual updater jobs", async () => {
     await expect(
-      disableOpenClawUpdateLaunchdJob("ai.quiet-core-bot.manual-update.1717168800"),
+      disableQuietCoreUpdateLaunchdJob("ai.quiet-core-bot.manual-update.1717168800"),
     ).resolves.toBe(true);
 
     const domain = typeof process.getuid === "function" ? `gui/${process.getuid()}` : "gui/501";

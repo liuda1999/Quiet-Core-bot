@@ -3,9 +3,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import { afterAll, beforeAll, beforeEach, vi } from "vitest";
-import { openOpenClawStateDatabase } from "../../state/quiet-core-bot-state-db.js";
+import { openQuietCoreStateDatabase } from "../../state/quiet-core-bot-state-db.js";
 import { removeTestTempPathSync } from "../../test-utils/session-state-cleanup.js";
-import { resolvePreferredOpenClawTmpDir } from "../tmp-quiet-core-bot-dir.js";
+import { resolvePreferredQuietCoreTmpDir } from "../tmp-quiet-core-bot-dir.js";
 import type { DeliverFn, RecoveryLogger } from "./delivery-queue.js";
 
 /** Installs Vitest hooks that provide a fresh delivery-queue state dir per case. */
@@ -16,7 +16,7 @@ export function installDeliveryQueueTmpDirHooks(): { readonly tmpDir: () => stri
 
   beforeAll(() => {
     fixtureRoot = fs.mkdtempSync(
-      path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-dq-suite-"),
+      path.join(resolvePreferredQuietCoreTmpDir(), "quiet-core-bot-dq-suite-"),
     );
   });
 
@@ -41,7 +41,7 @@ export function installDeliveryQueueTmpDirHooks(): { readonly tmpDir: () => stri
 }
 
 export function readQueuedEntry(tmpDir: string, id: string): Record<string, unknown> {
-  const { db } = openOpenClawStateDatabase({
+  const { db } = openQuietCoreStateDatabase({
     env: { ...process.env, QUIET_CORE_STATE_DIR: tmpDir },
   });
   const row = db
@@ -56,7 +56,7 @@ export function readQueuedEntry(tmpDir: string, id: string): Record<string, unkn
 }
 
 export function readQueuedEntries(tmpDir: string): Record<string, unknown>[] {
-  const { db } = openOpenClawStateDatabase({
+  const { db } = openQuietCoreStateDatabase({
     env: { ...process.env, QUIET_CORE_STATE_DIR: tmpDir },
   });
   const rows = db
@@ -105,7 +105,7 @@ export function setQueuedEntryState(
   if (state.recoveryState !== undefined) {
     entry.recoveryState = state.recoveryState;
   }
-  const { db } = openOpenClawStateDatabase({
+  const { db } = openQuietCoreStateDatabase({
     env: { ...process.env, QUIET_CORE_STATE_DIR: tmpDir },
   });
   db.prepare(

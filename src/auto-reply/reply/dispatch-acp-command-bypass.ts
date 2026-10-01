@@ -1,5 +1,5 @@
 // Detects ACP commands that should bypass normal agent dispatch.
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { hasControlCommand } from "../command-detection.js";
 import { isCommandEnabled } from "../commands-registry-list.js";
 import { maybeResolveTextAlias } from "../commands-registry-normalize.js";
@@ -15,13 +15,13 @@ function isAcpCommandCandidate(text: string): boolean {
   return /^\/acp(?:\s|$)/i.test(text);
 }
 
-function isLocalCommandCandidate(text: string, cfg: OpenClawConfig): boolean {
+function isLocalCommandCandidate(text: string, cfg: QuietCoreConfig): boolean {
   return hasControlCommand(text, cfg);
 }
 
 export function shouldBypassAcpDispatchForCommand(
   ctx: FinalizedMsgContext,
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
 ): boolean {
   const candidate = resolveCommandContextText(ctx);
   if (!candidate) {

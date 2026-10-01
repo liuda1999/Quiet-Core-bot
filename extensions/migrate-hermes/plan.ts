@@ -145,7 +145,7 @@ export async function buildHermesPlan(ctx: MigrationProviderContext): Promise<Mi
       : []),
     ...(source.archivePaths.length > 0
       ? [
-          "Some Hermes files are archive-only. They will be copied into the migration report for manual review, not loaded into OpenClaw.",
+          "Some Hermes files are archive-only. They will be copied into the migration report for manual review, not loaded into QuietCore.",
         ]
       : []),
     ...(items.some((item) => item.kind === "manual")

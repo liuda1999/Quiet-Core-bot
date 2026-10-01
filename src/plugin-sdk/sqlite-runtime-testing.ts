@@ -1,10 +1,10 @@
 // Private local-only SQLite lifecycle helpers for first-party tests.
 
 export {
-  closeOpenClawAgentDatabasesForTest,
-  openOpenClawAgentDatabase,
+  closeQuietCoreAgentDatabasesForTest,
+  openQuietCoreAgentDatabase,
 } from "../state/quiet-core-bot-agent-db.js";
 export {
-  closeOpenClawStateDatabaseForTest,
-  openOpenClawStateDatabase,
+  closeQuietCoreStateDatabaseForTest,
+  openQuietCoreStateDatabase,
 } from "../state/quiet-core-bot-state-db.js";

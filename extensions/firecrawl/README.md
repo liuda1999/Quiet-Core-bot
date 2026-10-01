@@ -1,8 +1,8 @@
-# OpenClaw Firecrawl Plugin
+# QuietCore Firecrawl Plugin
 
-Official OpenClaw plugin for Firecrawl.
+Official QuietCore plugin for Firecrawl.
 
-Install from OpenClaw:
+Install from QuietCore:
 
 ```bash
 quiet-core-bot plugins install @quiet-core/firecrawl-plugin

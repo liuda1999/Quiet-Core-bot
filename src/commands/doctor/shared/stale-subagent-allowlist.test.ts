@@ -1,6 +1,6 @@
 // Stale subagent allowlist tests cover doctor warnings for obsolete subagent allowlists.
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../config/types.quiet-core-bot.js";
 import {
   collectStaleSubagentAllowlistWarnings,
   maybeRepairStaleSubagentAllowlists,
@@ -26,7 +26,7 @@ describe("stale subagent allowlist doctor repair", () => {
           { id: "planner" },
         ],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expect(scanStaleSubagentAllowlistReferences(cfg)).toStrictEqual([
       {
@@ -63,7 +63,7 @@ describe("stale subagent allowlist doctor repair", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expect(scanStaleSubagentAllowlistReferences(cfg)).toStrictEqual([
       {
@@ -92,7 +92,7 @@ describe("stale subagent allowlist doctor repair", () => {
           { id: "planner" },
         ],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = maybeRepairStaleSubagentAllowlists(cfg);
 

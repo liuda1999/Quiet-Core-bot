@@ -1,4 +1,4 @@
-// Qa Parity Report script supports OpenClaw repository automation.
+// Qa Parity Report script supports QuietCore repository automation.
 import { runQaParityReportCommand } from "../extensions/qa-lab/src/cli.runtime.ts";
 import { booleanFlag, parseFlagArgs, stringFlag } from "./lib/arg-utils.mjs";
 

@@ -1,6 +1,6 @@
 /** Cancellation path for active ACP turns and idle runtime handles. */
 import type { AcpRuntime, AcpRuntimeHandle } from "@quiet-core/acp-core/runtime/types";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import {
   type AcpRuntimeError,
   toAcpRuntimeError,
@@ -17,7 +17,7 @@ import { normalizeActorKey, requireReadySessionMeta } from "./manager.utils.js";
 
 /** Cancels either the active ACP turn or the idle runtime handle for a session. */
 export async function runManagerCancelSession(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   sessionKey: string;
   reason?: string;
   activeTurnBySession: Map<string, ActiveTurnState>;

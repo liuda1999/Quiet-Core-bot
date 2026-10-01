@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import type { checkQmdBinaryAvailability as checkQmdBinaryAvailabilityFn } from "../memory-host-sdk/engine-qmd.js";
 import type { DoctorPrompter } from "./doctor-prompter.js";
 
@@ -147,7 +147,7 @@ function firstNoteMessage(): string {
 }
 
 describe("noteMemorySearchHealth", () => {
-  const cfg = {} as OpenClawConfig;
+  const cfg = {} as QuietCoreConfig;
 
   async function expectNoWarningWithConfiguredRemoteApiKey(provider: string) {
     resolveMemorySearchConfig.mockReturnValue({
@@ -175,7 +175,7 @@ describe("noteMemorySearchHealth", () => {
     getActiveMemorySearchManager.mockReset();
     resolveActiveMemoryBackendConfig.mockReset();
     resolveActiveMemoryBackendConfig.mockImplementation(
-      ({ cfg: cfgLocal }: { cfg: OpenClawConfig }) =>
+      ({ cfg: cfgLocal }: { cfg: QuietCoreConfig }) =>
         cfgLocal.memory?.backend === "qmd"
           ? { backend: "qmd", qmd: cfgLocal.memory.qmd ?? {} }
           : { backend: "builtin" },
@@ -340,7 +340,7 @@ describe("noteMemorySearchHealth", () => {
         slots: { memory: "memory-lancedb" },
         entries: { "memory-lancedb": { enabled: true, config: { dbPath: ".quiet-core-bot/memory" } } },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     await noteMemorySearchHealth(cfgWithLancedb, {});
 
@@ -358,7 +358,7 @@ describe("noteMemorySearchHealth", () => {
     });
     const cfgWithSlotOnly = {
       plugins: { slots: { memory: "memory-lancedb" } },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     await noteMemorySearchHealth(cfgWithSlotOnly, {});
 
@@ -378,7 +378,7 @@ describe("noteMemorySearchHealth", () => {
         slots: { memory: "memory-lancedb" },
         entries: { "memory-lancedb": { enabled: false } },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     await noteMemorySearchHealth(cfgWithDisabledLancedb, {});
 
@@ -398,7 +398,7 @@ describe("noteMemorySearchHealth", () => {
         slots: { memory: "memory-lancedb" },
         entries: { "memory-lancedb": {} },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     await noteMemorySearchHealth(cfgWithPlaceholderEntry, {});
 
@@ -460,7 +460,7 @@ describe("noteMemorySearchHealth", () => {
   });
 
   it("does not warn when QMD backend is active", async () => {
-    const qmdCfg = { memory: { backend: "qmd", qmd: { command: "qmd" } } } as OpenClawConfig;
+    const qmdCfg = { memory: { backend: "qmd", qmd: { command: "qmd" } } } as QuietCoreConfig;
     resolveMemorySearchConfig.mockReturnValue({
       provider: "auto",
       local: {},
@@ -478,7 +478,7 @@ describe("noteMemorySearchHealth", () => {
   });
 
   it("warns when QMD backend is active but the qmd binary is unavailable", async () => {
-    const qmdCfg = { memory: { backend: "qmd", qmd: { command: "qmd" } } } as OpenClawConfig;
+    const qmdCfg = { memory: { backend: "qmd", qmd: { command: "qmd" } } } as QuietCoreConfig;
     checkQmdBinaryAvailability.mockResolvedValueOnce({
       available: false,
       reason: "binary",
@@ -501,7 +501,7 @@ describe("noteMemorySearchHealth", () => {
   });
 
   it("treats legacy QMD unavailable results without a reason as binary failures", async () => {
-    const qmdCfg = { memory: { backend: "qmd", qmd: { command: "qmd" } } } as OpenClawConfig;
+    const qmdCfg = { memory: { backend: "qmd", qmd: { command: "qmd" } } } as QuietCoreConfig;
     checkQmdBinaryAvailability.mockResolvedValueOnce({
       available: false,
       error: "spawn qmd ENOENT",
@@ -523,7 +523,7 @@ describe("noteMemorySearchHealth", () => {
   });
 
   it("warns with a workspace-specific fix when the QMD probe cwd is missing", async () => {
-    const qmdCfg = { memory: { backend: "qmd", qmd: { command: "qmd" } } } as OpenClawConfig;
+    const qmdCfg = { memory: { backend: "qmd", qmd: { command: "qmd" } } } as QuietCoreConfig;
     checkQmdBinaryAvailability.mockResolvedValueOnce({
       available: false,
       reason: "workspace-cwd",
@@ -810,7 +810,7 @@ describe("noteMemorySearchHealth", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     resolveMemorySearchConfig.mockReturnValue({
       provider: "localEmbeddings",
       model: "text-embedding-bge-m3",
@@ -836,7 +836,7 @@ describe("noteMemorySearchHealth", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     resolveMemorySearchConfig.mockReturnValue({
       provider: "openai",
       model: "text-embedding-3-small",
@@ -1011,7 +1011,7 @@ describe("noteMemorySearchHealth", () => {
 });
 
 describe("memory recall doctor integration", () => {
-  const cfg = {} as OpenClawConfig;
+  const cfg = {} as QuietCoreConfig;
 
   beforeEach(() => {
     note.mockClear();

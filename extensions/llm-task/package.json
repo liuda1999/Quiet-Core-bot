@@ -2,7 +2,7 @@
   "name": "@quiet-core/llm-task",
   "version": "2026.6.11",
   "private": true,
-  "description": "OpenClaw JSON-only LLM task plugin",
+  "description": "QuietCore JSON-only LLM task plugin",
   "type": "module",
   "dependencies": {
     "typebox": "1.1.39"

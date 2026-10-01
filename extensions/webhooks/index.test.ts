@@ -1,14 +1,14 @@
 // Webhooks tests cover index plugin behavior.
 import { createTestPluginApi } from "quiet-core-bot/plugin-sdk/plugin-test-api";
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawPluginApi } from "./api.js";
+import type { QuietCorePluginApi } from "./api.js";
 import plugin from "./index.js";
 
 function createApi(params?: {
-  pluginConfig?: OpenClawPluginApi["pluginConfig"];
-  registerHttpRoute?: OpenClawPluginApi["registerHttpRoute"];
-  logger?: OpenClawPluginApi["logger"];
-}): OpenClawPluginApi {
+  pluginConfig?: QuietCorePluginApi["pluginConfig"];
+  registerHttpRoute?: QuietCorePluginApi["registerHttpRoute"];
+  logger?: QuietCorePluginApi["logger"];
+}): QuietCorePluginApi {
   return createTestPluginApi({
     id: "webhooks",
     name: "Webhooks",
@@ -20,7 +20,7 @@ function createApi(params?: {
           bindSession: vi.fn(({ sessionKey }: { sessionKey: string }) => ({ sessionKey })),
         },
       },
-    } as unknown as OpenClawPluginApi["runtime"],
+    } as unknown as QuietCorePluginApi["runtime"],
     registerHttpRoute: params?.registerHttpRoute ?? vi.fn(),
     logger:
       params?.logger ??
@@ -29,7 +29,7 @@ function createApi(params?: {
         warn: vi.fn(),
         error: vi.fn(),
         debug: vi.fn(),
-      } as OpenClawPluginApi["logger"]),
+      } as QuietCorePluginApi["logger"]),
   });
 }
 
@@ -38,7 +38,7 @@ function requireFirstRouteRegistration(mock: ReturnType<typeof vi.fn>) {
   if (!call) {
     throw new Error("expected webhook route registration");
   }
-  return call[0] as Parameters<OpenClawPluginApi["registerHttpRoute"]>[0];
+  return call[0] as Parameters<QuietCorePluginApi["registerHttpRoute"]>[0];
 }
 
 describe("webhooks plugin registration", () => {

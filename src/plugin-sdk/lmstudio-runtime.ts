@@ -2,7 +2,7 @@
 import type {
   ModelDefinitionConfig,
   ModelProviderConfig,
-  OpenClawConfig,
+  QuietCoreConfig,
 } from "../config/types.js";
 import {
   createLazyFacadeValue as createLazyFacadeRuntimeValue,
@@ -84,7 +84,7 @@ type FacadeModule = {
   }) => Promise<FetchLmstudioModelsResult>;
   mapLmstudioWireEntry: (entry: LmstudioModelWire) => LmstudioModelBase | null;
   discoverLmstudioModels: (params?: {
-    config?: OpenClawConfig;
+    config?: QuietCoreConfig;
     baseUrl?: string;
     apiKey?: string;
     headers?: Record<string, string>;
@@ -96,18 +96,18 @@ type FacadeModule = {
     headers?: Record<string, string>;
   }) => Record<string, string> | undefined;
   resolveLmstudioConfiguredApiKey: (params: {
-    config?: OpenClawConfig;
+    config?: QuietCoreConfig;
     env?: NodeJS.ProcessEnv;
     path?: string;
   }) => Promise<string | undefined>;
   resolveLmstudioProviderHeaders: (params: {
-    config?: OpenClawConfig;
+    config?: QuietCoreConfig;
     env?: NodeJS.ProcessEnv;
     headers?: unknown;
     path?: string;
   }) => Promise<Record<string, string> | undefined>;
   resolveLmstudioRequestContext: (params: {
-    config?: OpenClawConfig;
+    config?: QuietCoreConfig;
     env?: NodeJS.ProcessEnv;
     headers?: unknown;
     providerHeaders?: unknown;
@@ -117,7 +117,7 @@ type FacadeModule = {
     headers?: Record<string, string>;
   }>;
   resolveLmstudioRuntimeApiKey: (params: {
-    config?: OpenClawConfig;
+    config?: QuietCoreConfig;
     agentDir?: string;
     env?: NodeJS.ProcessEnv;
     headers?: unknown;

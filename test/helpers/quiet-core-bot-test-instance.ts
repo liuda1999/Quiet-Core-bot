@@ -9,13 +9,13 @@ import {
   RUNTIME_POSTBUILD_STAMP_FILE,
 } from "../../scripts/lib/local-build-metadata-paths.mjs";
 import {
-  createOpenClawTestState,
-  type OpenClawTestState,
-  type OpenClawTestStateOptions,
+  createQuietCoreTestState,
+  type QuietCoreTestState,
+  type QuietCoreTestStateOptions,
 } from "../../src/test-utils/quiet-core-bot-test-state.js";
 import { sleep } from "../../src/utils.js";
 
-export type OpenClawTestInstanceOptions = {
+export type QuietCoreTestInstanceOptions = {
   name: string;
   cwd?: string;
   port?: number;
@@ -23,20 +23,20 @@ export type OpenClawTestInstanceOptions = {
   hookToken?: string;
   config?: Record<string, unknown>;
   env?: Record<string, string | undefined>;
-  state?: Omit<OpenClawTestStateOptions, "applyEnv" | "gateway" | "env">;
+  state?: Omit<QuietCoreTestStateOptions, "applyEnv" | "gateway" | "env">;
   gatewayArgs?: string[];
   startTimeoutMs?: number;
   stopTimeoutMs?: number;
 };
 
-export type OpenClawTestInstanceCommandResult = {
+export type QuietCoreTestInstanceCommandResult = {
   code: number | null;
   signal: NodeJS.Signals | null;
   stdout: string;
   stderr: string;
 };
 
-export type OpenClawTestInstance = {
+export type QuietCoreTestInstance = {
   name: string;
   port: number;
   url: string;
@@ -45,7 +45,7 @@ export type OpenClawTestInstance = {
   homeDir: string;
   stateDir: string;
   configPath: string;
-  state: OpenClawTestState;
+  state: QuietCoreTestState;
   stdout: string[];
   stderr: string[];
   child?: ChildProcessWithoutNullStreams;
@@ -54,7 +54,7 @@ export type OpenClawTestInstance = {
   cli: (
     args: string[],
     options?: { timeoutMs?: number },
-  ) => Promise<OpenClawTestInstanceCommandResult>;
+  ) => Promise<QuietCoreTestInstanceCommandResult>;
   startGateway: () => Promise<void>;
   stopGateway: () => Promise<void>;
   logs: () => string;
@@ -73,7 +73,7 @@ type BoundedStringLog = string[] & {
   truncated?: boolean;
 };
 
-type OpenClawTestChildProcess = Pick<ChildProcessWithoutNullStreams, "kill" | "pid">;
+type QuietCoreTestChildProcess = Pick<ChildProcessWithoutNullStreams, "kill" | "pid">;
 
 function createBoundedStringLog(): string[] {
   const log = [] as BoundedStringLog;
@@ -154,7 +154,7 @@ async function prepareGatewayEntrypoint(cwd: string): Promise<string[]> {
     cwd,
     env: { ...process.env, VITEST: "1" },
     stdio: ["ignore", "pipe", "pipe"],
-    detached: shouldUseOpenClawTestProcessGroup(),
+    detached: shouldUseQuietCoreTestProcessGroup(),
   });
   child.stdout?.setEncoding("utf8");
   child.stderr?.setEncoding("utf8");
@@ -170,7 +170,7 @@ async function prepareGatewayEntrypoint(cwd: string): Promise<string[]> {
   ]);
 
   if (completed === null) {
-    signalOpenClawTestProcess(child, "SIGKILL");
+    signalQuietCoreTestProcess(child, "SIGKILL");
     throw new Error(`timeout preparing gateway entrypoint\n${formatLogs(stdout, stderr)}`);
   }
   if (completed.code !== 0) {
@@ -320,14 +320,14 @@ function createInstanceEnv(params: {
   return env;
 }
 
-export async function createOpenClawTestInstance(
-  options: OpenClawTestInstanceOptions,
-): Promise<OpenClawTestInstance> {
+export async function createQuietCoreTestInstance(
+  options: QuietCoreTestInstanceOptions,
+): Promise<QuietCoreTestInstance> {
   const cwd = options.cwd ?? process.cwd();
   const port = options.port ?? (await getFreePort());
   const gatewayToken = options.gatewayToken ?? `gateway-${options.name}-${randomUUID()}`;
   const hookToken = options.hookToken ?? `token-${options.name}-${randomUUID()}`;
-  const state = await createOpenClawTestState({
+  const state = await createQuietCoreTestState({
     label: options.name,
     layout: "home",
     ...options.state,
@@ -357,7 +357,7 @@ export async function createOpenClawTestInstance(
   let child: ChildProcessWithoutNullStreams | undefined;
   let cleaned = false;
 
-  const instance: OpenClawTestInstance = {
+  const instance: QuietCoreTestInstance = {
     name: options.name,
     port,
     url: `ws://127.0.0.1:${port}`,
@@ -404,7 +404,7 @@ export async function createOpenClawTestInstance(
           cwd,
           env,
           stdio: ["ignore", "pipe", "pipe"],
-          detached: shouldUseOpenClawTestProcessGroup(),
+          detached: shouldUseQuietCoreTestProcessGroup(),
         },
       );
 
@@ -432,7 +432,7 @@ export async function createOpenClawTestInstance(
       }
       if (!hasChildExited(child) && !child.killed) {
         try {
-          signalOpenClawTestProcess(child, "SIGTERM");
+          signalQuietCoreTestProcess(child, "SIGTERM");
         } catch {
           // ignore
         }
@@ -443,7 +443,7 @@ export async function createOpenClawTestInstance(
       );
       if (!exited && !hasChildExited(child) && !child.killed) {
         try {
-          signalOpenClawTestProcess(child, "SIGKILL");
+          signalQuietCoreTestProcess(child, "SIGKILL");
         } catch {
           // ignore
         }
@@ -472,7 +472,7 @@ async function runCommand(params: {
   cwd: string;
   env: NodeJS.ProcessEnv;
   timeoutMs: number;
-}): Promise<OpenClawTestInstanceCommandResult> {
+}): Promise<QuietCoreTestInstanceCommandResult> {
   const [command, ...args] = params.args;
   if (!command) {
     throw new Error("missing command");
@@ -483,7 +483,7 @@ async function runCommand(params: {
     cwd: params.cwd,
     env: params.env,
     stdio: ["ignore", "pipe", "pipe"],
-    detached: shouldUseOpenClawTestProcessGroup(),
+    detached: shouldUseQuietCoreTestProcessGroup(),
   });
   child.stdout?.setEncoding("utf8");
   child.stderr?.setEncoding("utf8");
@@ -498,7 +498,7 @@ async function runCommand(params: {
     sleep(params.timeoutMs).then(() => null),
   ]);
   if (completed === null) {
-    signalOpenClawTestProcess(child, "SIGKILL");
+    signalQuietCoreTestProcess(child, "SIGKILL");
     await waitForGatewayExit(child, GATEWAY_STOP_TIMEOUT_MS);
     throw new Error(
       `command timed out after ${params.timeoutMs}ms: ${params.args.join(" ")}\n${formatLogs(stdout, stderr)}`,
@@ -511,16 +511,16 @@ async function runCommand(params: {
   };
 }
 
-function shouldUseOpenClawTestProcessGroup(): boolean {
+function shouldUseQuietCoreTestProcessGroup(): boolean {
   return process.platform !== "win32";
 }
 
-function signalOpenClawTestProcess(
-  child: OpenClawTestChildProcess,
+function signalQuietCoreTestProcess(
+  child: QuietCoreTestChildProcess,
   signal: NodeJS.Signals,
   killProcess: (pid: number, signal: NodeJS.Signals) => boolean = process.kill,
 ): void {
-  if (shouldUseOpenClawTestProcessGroup() && typeof child.pid === "number") {
+  if (shouldUseQuietCoreTestProcessGroup() && typeof child.pid === "number") {
     try {
       killProcess(-child.pid, signal);
       return;
@@ -536,6 +536,6 @@ export const testing = {
   createBoundedStringLog,
   formatLogs,
   hasChildExited,
-  signalOpenClawTestProcess,
+  signalQuietCoreTestProcess,
   waitForPortOpen,
 };

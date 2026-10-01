@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-# OpenClaw Installer for macOS and Linux
+# QuietCore Installer for macOS and Linux
 # Usage: curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash
 
 BOLD='\033[1m'
@@ -15,7 +15,7 @@ ERROR='\033[38;2;230;57;70m'        # coral-mid     #e63946
 MUTED='\033[38;2;90;100;128m'       # text-muted    #5a6480
 NC='\033[0m' # No Color
 
-DEFAULT_TAGLINE="All your chats, one OpenClaw."
+DEFAULT_TAGLINE="All your chats, one QuietCore."
 NODE_DEFAULT_MAJOR=24
 NODE_MIN_MAJOR=22
 NODE_MIN_MINOR=19
@@ -265,7 +265,7 @@ print_gum_status() {
 print_installer_banner() {
     if [[ -n "$GUM" ]]; then
         local title tagline hint card
-        title="$("$GUM" style --foreground "#ff4d4d" --bold "🐉 OpenClaw Installer")"
+        title="$("$GUM" style --foreground "#ff4d4d" --bold "🐉 QuietCore Installer")"
         tagline="$("$GUM" style --foreground "#8892b0" "$TAGLINE")"
         hint="$("$GUM" style --foreground "#5a6480" "modern installer mode")"
         card="$(printf '%s\n%s\n%s' "$title" "$tagline" "$hint")"
@@ -275,7 +275,7 @@ print_installer_banner() {
     fi
 
     echo -e "${ACCENT}${BOLD}"
-    echo "  🐉 OpenClaw Installer"
+    echo "  🐉 QuietCore Installer"
     echo -e "${NC}${INFO}  ${TAGLINE}${NC}"
     echo ""
 }
@@ -885,11 +885,11 @@ run_npm_global_install() {
         local log_quoted=""
         printf -v cmd_quoted '%q ' "${cmd[@]}"
         printf -v log_quoted '%q' "$log"
-        run_with_spinner "Installing OpenClaw package" bash -c "${cmd_quoted}>${log_quoted} 2>&1"
+        run_with_spinner "Installing QuietCore package" bash -c "${cmd_quoted}>${log_quoted} 2>&1"
         return $?
     fi
 
-    ui_info "Installing OpenClaw package"
+    ui_info "Installing QuietCore package"
     "${cmd[@]}" >"$log" 2>&1
 }
 
@@ -982,7 +982,7 @@ install_quiet_core_bot_npm() {
             attempted_build_tool_fix=true
             ui_info "Retrying npm install after build tools setup"
             if run_npm_global_install "$spec" "$log"; then
-                ui_success "OpenClaw npm package installed"
+                ui_success "QuietCore npm package installed"
                 return 0
             fi
         fi
@@ -1002,7 +1002,7 @@ install_quiet_core_bot_npm() {
             ui_warn "npm left stale directory; cleaning and retrying"
             cleanup_npm_quiet_core_bot_paths
             if run_npm_global_install "$spec" "$log"; then
-                ui_success "OpenClaw npm package installed"
+                ui_success "QuietCore npm package installed"
                 return 0
             fi
             return 1
@@ -1012,7 +1012,7 @@ install_quiet_core_bot_npm() {
             conflict="$(extract_quiet_core_bot_conflict_path "$log" || true)"
             if [[ -n "$conflict" ]] && cleanup_quiet_core_bot_bin_conflict "$conflict"; then
                 if run_npm_global_install "$spec" "$log"; then
-                    ui_success "OpenClaw npm package installed"
+                    ui_success "QuietCore npm package installed"
                     return 0
                 fi
                 return 1
@@ -1025,7 +1025,7 @@ install_quiet_core_bot_npm() {
         fi
         return 1
     fi
-    ui_success "OpenClaw npm package installed"
+    ui_success "QuietCore npm package installed"
     return 0
 }
 
@@ -1169,7 +1169,7 @@ HELP=0
 
 print_usage() {
     cat <<EOF
-OpenClaw installer (macOS + Linux)
+QuietCore installer (macOS + Linux)
 
 Usage:
   curl -fsSL --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- [options]
@@ -1330,7 +1330,7 @@ choose_install_method_interactive() {
 
     if [[ -n "$GUM" ]] && gum_is_tty; then
         local header selection
-        header="Detected OpenClaw checkout in: ${detected_checkout}
+        header="Detected QuietCore checkout in: ${detected_checkout}
 Choose install method"
         selection="$("$GUM" choose \
             --header "$header" \
@@ -1353,7 +1353,7 @@ Choose install method"
 
     local choice=""
     choice="$(prompt_choice "$(cat <<EOF
-${WARN}→${NC} Detected a OpenClaw source checkout in: ${INFO}${detected_checkout}${NC}
+${WARN}→${NC} Detected a QuietCore source checkout in: ${INFO}${detected_checkout}${NC}
 Choose install method:
   1) Update this checkout (git) and use it
   2) Install global via npm (migrate away from git)
@@ -1967,7 +1967,7 @@ fix_npm_permissions() {
     ui_info "Configuring npm for user-local installs"
     mkdir -p "$HOME/.npm-global"
     npm config set prefix "$HOME/.npm-global"
-    ui_warn "Avoid sudo npm i -g for future OpenClaw updates; use npm i -g quiet-core-bot@latest so npm keeps using this user prefix instead of a different global prefix."
+    ui_warn "Avoid sudo npm i -g for future QuietCore updates; use npm i -g quiet-core-bot@latest so npm keeps using this user prefix instead of a different global prefix."
 
     persist_shell_path_prepend "$HOME/.npm-global/bin" "\$HOME/.npm-global/bin" || true
 
@@ -1994,10 +1994,10 @@ ensure_quiet_core_bot_bin_link() {
     return 0
 }
 
-# Check for existing OpenClaw installation
+# Check for existing QuietCore installation
 check_existing_quiet-core-bot() {
     if [[ -n "$(type -P quiet-core-bot 2>/dev/null || true)" ]]; then
-        ui_info "Existing OpenClaw installation detected, upgrading"
+        ui_info "Existing QuietCore installation detected, upgrading"
         return 0
     fi
     return 1
@@ -2410,8 +2410,8 @@ warn_duplicate_quiet_core_bot_global_installs() {
         return 0
     fi
 
-    ui_warn "Multiple OpenClaw global installs detected"
-    echo "  Different Node/npm environments can run different OpenClaw versions."
+    ui_warn "Multiple QuietCore global installs detected"
+    echo "  Different Node/npm environments can run different QuietCore versions."
 
     local active_node active_npm active_quiet-core-bot
     active_node="$(command -v node 2>/dev/null || true)"
@@ -2619,9 +2619,9 @@ install_quiet_core_bot_from_git() {
     local repo_url="https://github.com/liuda1999/Quiet-Core-bot.git"
 
     if [[ -d "$repo_dir/.git" ]]; then
-        ui_info "Installing OpenClaw from git checkout: ${repo_dir}"
+        ui_info "Installing QuietCore from git checkout: ${repo_dir}"
     else
-        ui_info "Installing OpenClaw from GitHub (${repo_url})"
+        ui_info "Installing QuietCore from GitHub (${repo_url})"
     fi
 
     if ! check_git; then
@@ -2633,7 +2633,7 @@ install_quiet_core_bot_from_git() {
 
     if [[ ! -d "$repo_dir" ]]; then
         mkdir -p "$(dirname "$repo_dir")"
-        run_quiet_step "Cloning OpenClaw" git clone "$repo_url" "$repo_dir"
+        run_quiet_step "Cloning QuietCore" git clone "$repo_url" "$repo_dir"
     fi
 
     local git_ref
@@ -2655,7 +2655,7 @@ install_quiet_core_bot_from_git() {
     if ! run_quiet_step "Building UI" run_pnpm -C "$repo_dir" ui:build; then
         ui_warn "UI build failed; continuing (CLI may still work)"
     fi
-    run_quiet_step "Building OpenClaw" run_pnpm -C "$repo_dir" build
+    run_quiet_step "Building QuietCore" run_pnpm -C "$repo_dir" build
 
     ensure_user_local_bin_on_path
 
@@ -2665,11 +2665,11 @@ set -euo pipefail
 exec node "${repo_dir}/dist/entry.js" "\$@"
 EOF
     chmod +x "$HOME/.local/bin/quiet-core-bot"
-    ui_success "OpenClaw wrapper installed to \$HOME/.local/bin/quiet-core-bot"
+    ui_success "QuietCore wrapper installed to \$HOME/.local/bin/quiet-core-bot"
     ui_info "This checkout uses pnpm — run pnpm install (or corepack pnpm install) for deps"
 }
 
-# Install OpenClaw
+# Install QuietCore
 resolve_beta_version() {
     local beta=""
     beta="$(npm view quiet-core-bot dist-tags.beta 2>/dev/null || true)"
@@ -2762,7 +2762,7 @@ install_quiet-core-bot() {
     fi
 
     if is_quiet_core_bot_source_package_install_spec "${QUIET_CORE_VERSION}"; then
-        ui_error "npm installs do not support OpenClaw GitHub source targets like '${QUIET_CORE_VERSION}'."
+        ui_error "npm installs do not support QuietCore GitHub source targets like '${QUIET_CORE_VERSION}'."
         ui_info "Use --install-method git --version main for the moving main checkout, or use latest, beta, an exact version, or a built .tgz package."
         return 1
     fi
@@ -2772,9 +2772,9 @@ install_quiet-core-bot() {
         resolved_version="$(npm view "${package_name}@${QUIET_CORE_VERSION}" version 2>/dev/null || true)"
     fi
     if [[ -n "$resolved_version" ]]; then
-        ui_info "Installing OpenClaw v${resolved_version}"
+        ui_info "Installing QuietCore v${resolved_version}"
     else
-        ui_info "Installing OpenClaw (${QUIET_CORE_VERSION})"
+        ui_info "Installing QuietCore (${QUIET_CORE_VERSION})"
     fi
     local install_spec=""
     install_spec="$(resolve_package_install_spec "${package_name}" "${QUIET_CORE_VERSION}")"
@@ -2795,7 +2795,7 @@ install_quiet-core-bot() {
 
     ensure_quiet_core_bot_bin_link || true
 
-    ui_success "OpenClaw installed"
+    ui_success "QuietCore installed"
 }
 
 # Run doctor for migrations (safe, non-interactive)
@@ -3016,7 +3016,7 @@ verify_installation() {
         return 1
     fi
 
-    run_quiet_step "Checking OpenClaw version" "$claw" --version || return 1
+    run_quiet_step "Checking QuietCore version" "$claw" --version || return 1
 
     if is_gateway_daemon_loaded "$claw"; then
         run_quiet_step "Checking gateway service" "$claw" gateway status --deep || {
@@ -3055,7 +3055,7 @@ main() {
 
     if [[ -z "$INSTALL_METHOD" && -n "$detected_checkout" ]]; then
         if ! is_promptable; then
-            ui_info "Found OpenClaw checkout but no TTY; defaulting to npm install"
+            ui_info "Found QuietCore checkout but no TTY; defaulting to npm install"
             INSTALL_METHOD="npm"
         else
             local selected_method=""
@@ -3112,7 +3112,7 @@ main() {
         exit 1
     fi
 
-    ui_stage "Installing OpenClaw"
+    ui_stage "Installing QuietCore"
 
     local final_git_dir=""
     if [[ "$INSTALL_METHOD" == "git" ]]; then
@@ -3145,7 +3145,7 @@ main() {
         # Step 4: npm permissions (Linux)
         fix_npm_permissions
 
-        # Step 5: OpenClaw
+        # Step 5: QuietCore
         install_quiet-core-bot
     fi
 
@@ -3186,9 +3186,9 @@ main() {
 
     echo ""
     if [[ -n "$installed_version" ]]; then
-        ui_celebrate "🐉 OpenClaw installed successfully (${installed_version})!"
+        ui_celebrate "🐉 QuietCore installed successfully (${installed_version})!"
     else
-        ui_celebrate "🐉 OpenClaw installed successfully!"
+        ui_celebrate "🐉 QuietCore installed successfully!"
     fi
     if [[ "$is_upgrade" == "true" ]]; then
         local update_messages=(

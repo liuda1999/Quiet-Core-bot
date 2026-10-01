@@ -4,7 +4,7 @@
  * Custom OpenAI-compatible base URLs intentionally bypass Codex-runtime defaults.
  */
 import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 
 /** Canonical provider id for OpenAI-hosted model routes. */
 export const OPENAI_PROVIDER_ID = "openai";
@@ -31,7 +31,7 @@ function isOfficialOpenAIBaseUrl(baseUrl: unknown): boolean {
   }
 }
 
-function resolveOpenAIProviderConfig(config: OpenClawConfig | undefined) {
+function resolveOpenAIProviderConfig(config: QuietCoreConfig | undefined) {
   const providers = config?.models?.providers;
   if (!providers) {
     return undefined;
@@ -48,7 +48,7 @@ function resolveOpenAIProviderConfig(config: OpenClawConfig | undefined) {
   return undefined;
 }
 
-function openAIProviderUsesCustomBaseUrl(config: OpenClawConfig | undefined): boolean {
+function openAIProviderUsesCustomBaseUrl(config: QuietCoreConfig | undefined): boolean {
   return !isOfficialOpenAIBaseUrl(resolveOpenAIProviderConfig(config)?.baseUrl);
 }
 
@@ -61,7 +61,7 @@ export function isOpenAIProvider(provider: string | undefined): boolean {
 /** Returns whether OpenAI should use the Codex runtime default for this config. */
 export function openAIProviderUsesCodexRuntimeByDefault(params: {
   provider?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
 }): boolean {
   return isOpenAIProvider(params.provider) && !openAIProviderUsesCustomBaseUrl(params.config);
 }
@@ -83,7 +83,7 @@ export function listOpenAIAuthProfileProvidersForAgentRuntime(params: {
   provider: string;
   harnessRuntime?: string;
   agentHarnessId?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
 }): string[] {
   if (!isOpenAIProvider(params.provider)) {
     return [params.provider];
@@ -98,7 +98,7 @@ export function resolveOpenAIRuntimeProvider(params: {
   agentHarnessId?: string;
   authProfileProvider?: string;
   authProfileId?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   workspaceDir?: string;
 }): string {
   return isOpenAIProvider(params.provider) ? OPENAI_PROVIDER_ID : params.provider;
@@ -111,7 +111,7 @@ export function resolveSelectedOpenAIRuntimeProvider(params: {
   agentHarnessId?: string;
   authProfileProvider?: string;
   authProfileId?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   workspaceDir?: string;
 }): string {
   return isOpenAIProvider(params.provider) ? OPENAI_PROVIDER_ID : params.provider;
@@ -121,7 +121,7 @@ export function resolveSelectedOpenAIRuntimeProvider(params: {
 export function resolveContextConfigProviderForRuntime(params: {
   provider: string;
   runtimeId?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
 }): string {
   return isOpenAIProvider(params.provider) ? OPENAI_PROVIDER_ID : params.provider;
 }

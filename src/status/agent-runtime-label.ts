@@ -6,7 +6,7 @@ import {
 import { sanitizeTerminalText } from "../../packages/terminal-core/src/safe-text.js";
 import { isCliProvider } from "../agents/model-selection.js";
 import type { SessionEntry } from "../config/sessions/types.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 
 // Status runtime labels turn harness/provider/session state into a short
 // operator-facing name, sanitizing any persisted ACP/backend text.
@@ -19,7 +19,7 @@ const AGENT_RUNTIME_LABELS: Readonly<Record<string, string>> = {
 };
 
 export function resolveAgentRuntimeLabel(args: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   sessionEntry?: Pick<
     SessionEntry,
     "acp" | "agentRuntimeOverride" | "agentHarnessId" | "modelProvider" | "providerOverride"

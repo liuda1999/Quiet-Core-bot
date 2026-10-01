@@ -10,7 +10,7 @@ import type {
 import { formatCliCommand } from "../cli/command-format.js";
 import type { ChannelChoice } from "../commands/onboard-types.js";
 import type { DmPolicy } from "../config/types.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../routing/session-key.js";
 import { t } from "../wizard/i18n/index.js";
 import type { WizardPrompter, WizardSelectOption } from "../wizard/prompts.js";
@@ -66,7 +66,7 @@ export async function promptConfiguredAction(params: {
 
 /** Selects the account to remove/update when a channel supports multiple accounts. */
 export async function promptRemovalAccountId(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   prompter: WizardPrompter;
   label: string;
   channel: ChannelChoice;
@@ -95,12 +95,12 @@ export async function promptRemovalAccountId(params: {
 
 /** Optionally configures DM access policies for selected channel setup adapters. */
 export async function maybeConfigureDmPolicies(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   selection: ChannelChoice[];
   prompter: WizardPrompter;
   accountIdsByChannel?: Map<ChannelChoice, string>;
   resolveAdapter?: (channel: ChannelChoice) => ChannelSetupWizardAdapter | undefined;
-}): Promise<OpenClawConfig> {
+}): Promise<QuietCoreConfig> {
   const { selection, prompter, accountIdsByChannel } = params;
   const resolve = params.resolveAdapter ?? (() => undefined);
   const dmPolicies = selection

@@ -90,16 +90,16 @@ describe("check-quiet-core-bot-package-tarball", () => {
     const unknown = spawnSync("node", [CHECK_SCRIPT, "--tag"], { encoding: "utf8" });
 
     expect(unknown.status).not.toBe(0);
-    expect(unknown.stderr).toContain("Unknown OpenClaw package tarball check option: --tag");
-    expect(unknown.stderr).not.toContain("OpenClaw package tarball does not exist");
+    expect(unknown.stderr).toContain("Unknown QuietCore package tarball check option: --tag");
+    expect(unknown.stderr).not.toContain("QuietCore package tarball does not exist");
 
     const extra = spawnSync("node", [CHECK_SCRIPT, "quiet-core-bot.tgz", "extra"], {
       encoding: "utf8",
     });
 
     expect(extra.status).not.toBe(0);
-    expect(extra.stderr).toContain("Unexpected OpenClaw package tarball check argument: extra");
-    expect(extra.stderr).not.toContain("OpenClaw package tarball does not exist");
+    expect(extra.stderr).toContain("Unexpected QuietCore package tarball check argument: extra");
+    expect(extra.stderr).not.toContain("QuietCore package tarball does not exist");
   });
 
   it.runIf(process.platform !== "win32")(
@@ -155,7 +155,7 @@ describe("check-quiet-core-bot-package-tarball", () => {
 
         expect(result.status, result.stderr).toBe(0);
         expect(result.stderr).toContain("legacy inventory references omitted private QA");
-        expect(result.stdout).toContain("OpenClaw package tarball integrity passed.");
+        expect(result.stdout).toContain("QuietCore package tarball integrity passed.");
       },
       "2026.4.25-beta.10",
     );
@@ -214,7 +214,7 @@ describe("check-quiet-core-bot-package-tarball", () => {
         const result = spawnSync("node", [CHECK_SCRIPT, tarball], { encoding: "utf8" });
 
         expect(result.status, result.stderr).toBe(0);
-        expect(result.stdout).toContain("OpenClaw package tarball integrity passed.");
+        expect(result.stdout).toContain("QuietCore package tarball integrity passed.");
       },
     );
   });
@@ -246,7 +246,7 @@ describe("check-quiet-core-bot-package-tarball", () => {
         const result = spawnSync("node", [CHECK_SCRIPT, tarball], { encoding: "utf8" });
 
         expect(result.status, result.stderr).toBe(0);
-        expect(result.stdout).toContain("OpenClaw package tarball integrity passed.");
+        expect(result.stdout).toContain("QuietCore package tarball integrity passed.");
       },
       "2026.4.27",
     );
@@ -349,7 +349,7 @@ describe("check-quiet-core-bot-package-tarball", () => {
         const result = spawnSync("node", [CHECK_SCRIPT, tarball], { encoding: "utf8" });
 
         expect(result.status, result.stderr).toBe(0);
-        expect(result.stdout).toContain("OpenClaw package tarball integrity passed.");
+        expect(result.stdout).toContain("QuietCore package tarball integrity passed.");
       },
       "2026.4.27",
     );
@@ -366,7 +366,7 @@ describe("check-quiet-core-bot-package-tarball", () => {
         const result = spawnSync("node", [CHECK_SCRIPT, tarball], { encoding: "utf8" });
 
         expect(result.status, result.stderr).toBe(0);
-        expect(result.stdout).toContain("OpenClaw package tarball integrity passed.");
+        expect(result.stdout).toContain("QuietCore package tarball integrity passed.");
       },
       "2026.4.27",
     );
@@ -475,7 +475,7 @@ describe("check-quiet-core-bot-package-tarball", () => {
         expect(result.stderr).toContain(
           "legacy package includes local build metadata tar entry dist/.runtime-postbuildstamp",
         );
-        expect(result.stdout).toContain("OpenClaw package tarball integrity passed.");
+        expect(result.stdout).toContain("QuietCore package tarball integrity passed.");
       },
       "2026.4.26",
     );

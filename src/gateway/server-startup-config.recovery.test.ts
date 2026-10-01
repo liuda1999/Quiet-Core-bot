@@ -1,12 +1,12 @@
 // Startup config recovery tests cover prepared snapshots, plugin metadata,
 // auto-enable behavior, model defaults, and recovery diagnostics.
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { ConfigFileSnapshot, ModelDefinitionConfig, OpenClawConfig } from "../config/types.js";
+import type { ConfigFileSnapshot, ModelDefinitionConfig, QuietCoreConfig } from "../config/types.js";
 import type { PluginMetadataSnapshot } from "../plugins/plugin-metadata-snapshot.js";
 import { buildTestConfigSnapshot } from "./test-helpers.config-snapshots.js";
 
 const applyPluginAutoEnable = vi.hoisted(() =>
-  vi.fn((params: { config: OpenClawConfig }) => ({
+  vi.fn((params: { config: QuietCoreConfig }) => ({
     config: params.config,
     changes: [] as string[],
     autoEnabledReasons: {} as Record<string, string[]>,
@@ -72,7 +72,7 @@ vi.mock("../config/paths.js", () => ({
 }));
 
 vi.mock("../config/runtime-overrides.js", () => ({
-  applyConfigOverrides: vi.fn((config: OpenClawConfig) => config),
+  applyConfigOverrides: vi.fn((config: QuietCoreConfig) => config),
 }));
 
 vi.mock("../config/mutate.js", () => ({
@@ -80,7 +80,7 @@ vi.mock("../config/mutate.js", () => ({
 }));
 
 vi.mock("../config/plugin-auto-enable.js", () => ({
-  applyPluginAutoEnable: (params: { config: OpenClawConfig }) => applyPluginAutoEnable(params),
+  applyPluginAutoEnable: (params: { config: QuietCoreConfig }) => applyPluginAutoEnable(params),
 }));
 
 let loadGatewayStartupConfigSnapshot: typeof import("./server-startup-config.js").loadGatewayStartupConfigSnapshot;
@@ -94,7 +94,7 @@ const validConfig = {
   gateway: {
     mode: "local",
   },
-} as OpenClawConfig;
+} as QuietCoreConfig;
 
 function testModel(id: string, name: string): ModelDefinitionConfig {
   return {
@@ -116,7 +116,7 @@ function testModel(id: string, name: string): ModelDefinitionConfig {
 function buildSnapshot(params: {
   valid: boolean;
   raw: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
 }): ConfigFileSnapshot {
   return buildTestConfigSnapshot({
     path: configPath,
@@ -124,7 +124,7 @@ function buildSnapshot(params: {
     raw: params.raw,
     parsed: params.config ?? null,
     valid: params.valid,
-    config: params.config ?? ({} as OpenClawConfig),
+    config: params.config ?? ({} as QuietCoreConfig),
     issues: params.valid ? [] : [{ path: "gateway.mode", message: "Expected 'local' or 'remote'" }],
     legacyIssues: [],
   });
@@ -139,8 +139,8 @@ function buildDefaultSnapshot(): ConfigFileSnapshot {
 }
 
 function buildRuntimeSnapshot(
-  sourceConfig: OpenClawConfig,
-  runtimeConfig: OpenClawConfig = sourceConfig,
+  sourceConfig: QuietCoreConfig,
+  runtimeConfig: QuietCoreConfig = sourceConfig,
 ): ConfigFileSnapshot {
   return {
     ...buildTestConfigSnapshot({
@@ -187,7 +187,7 @@ async function expectStartupResult(params: {
   });
 }
 
-function expectPluginAutoEnableFor(config: OpenClawConfig) {
+function expectPluginAutoEnableFor(config: QuietCoreConfig) {
   expect(applyPluginAutoEnable).toHaveBeenCalledWith({
     config,
     env: process.env,
@@ -195,7 +195,7 @@ function expectPluginAutoEnableFor(config: OpenClawConfig) {
   });
 }
 
-function mockRuntimeAutoEnable(config: OpenClawConfig) {
+function mockRuntimeAutoEnable(config: QuietCoreConfig) {
   applyPluginAutoEnable.mockReturnValueOnce({
     config,
     changes: [telegramAutoEnableChange],
@@ -210,7 +210,7 @@ function expectRuntimeOnlyAutoEnableLogged(log: ReturnType<typeof testStartupLog
 
 function withRuntimeConfig(
   snapshot: ConfigFileSnapshot,
-  runtimeConfig: OpenClawConfig,
+  runtimeConfig: QuietCoreConfig,
 ): ConfigFileSnapshot {
   return {
     ...snapshot,
@@ -221,7 +221,7 @@ function withRuntimeConfig(
 
 function buildInvalidConfigSnapshot(params: {
   rawConfig: unknown;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   issues: ConfigFileSnapshot["issues"];
   warnings?: ConfigFileSnapshot["warnings"];
   legacyIssues?: ConfigFileSnapshot["legacyIssues"];
@@ -232,7 +232,7 @@ function buildInvalidConfigSnapshot(params: {
     raw: `${JSON.stringify(params.rawConfig)}\n`,
     parsed: params.rawConfig,
     valid: false,
-    config: params.config ?? (params.rawConfig as OpenClawConfig),
+    config: params.config ?? (params.rawConfig as QuietCoreConfig),
     issues: params.issues,
     warnings: params.warnings,
     legacyIssues: params.legacyIssues ?? [],
@@ -331,7 +331,7 @@ describe("gateway startup config validation", () => {
           browser: { enabled: false },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const runtimeConfig = {
       ...sourceConfig,
       plugins: {
@@ -347,7 +347,7 @@ describe("gateway startup config validation", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const snapshot = buildRuntimeSnapshot(sourceConfig, runtimeConfig);
     mockStartupSnapshot(snapshot);
     const log = testStartupLog();
@@ -409,13 +409,13 @@ describe("gateway startup config validation", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     const autoEnabledConfig = {
       ...sourceConfig,
       channels: {
         telegram: { enabled: true },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     const initialSnapshot = buildRuntimeSnapshot(sourceConfig);
     mockStartupSnapshot(initialSnapshot);
     mockRuntimeAutoEnable(autoEnabledConfig);
@@ -452,13 +452,13 @@ describe("gateway startup config validation", () => {
         },
       },
       gateway: { mode: "local" },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     const autoEnabledConfig = {
       ...sourceConfig,
       plugins: {
         allow: ["telegram"],
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     const snapshot = buildRuntimeSnapshot(sourceConfig);
     mockStartupSnapshot(snapshot);
     mockRuntimeAutoEnable(autoEnabledConfig);
@@ -488,7 +488,7 @@ describe("gateway startup config validation", () => {
     const rawConfig = pluginSlotRawConfig("local");
     const invalidSnapshot = buildInvalidConfigSnapshot({
       rawConfig,
-      config: rawConfig as OpenClawConfig,
+      config: rawConfig as QuietCoreConfig,
       issues: [
         {
           path: "plugins.slots.memory",
@@ -518,7 +518,7 @@ describe("gateway startup config validation", () => {
     const rawConfig = pluginSlotRawConfig("invalid");
     const invalidSnapshot = buildInvalidConfigSnapshot({
       rawConfig,
-      config: rawConfig as unknown as OpenClawConfig,
+      config: rawConfig as unknown as QuietCoreConfig,
       issues: [
         {
           path: "plugins.slots.memory",
@@ -547,7 +547,7 @@ describe("gateway startup config validation", () => {
       rawConfig: {
         heartbeat: { model: "anthropic/claude-3-5-haiku-20241022", every: "30m" },
       },
-      config: {} as OpenClawConfig,
+      config: {} as QuietCoreConfig,
       issues: [
         {
           path: "heartbeat",
@@ -575,7 +575,7 @@ describe("gateway startup config validation", () => {
     const rawConfig = enabledPluginRawConfig("local");
     const invalidSnapshot = buildInvalidConfigSnapshot({
       rawConfig,
-      config: rawConfig as OpenClawConfig,
+      config: rawConfig as QuietCoreConfig,
       issues: [
         {
           path: "plugins.entries.feishu",
@@ -592,7 +592,7 @@ describe("gateway startup config validation", () => {
     const rawConfig = enabledPluginRawConfig("invalid");
     const invalidSnapshot = buildInvalidConfigSnapshot({
       rawConfig,
-      config: rawConfig as unknown as OpenClawConfig,
+      config: rawConfig as unknown as QuietCoreConfig,
       issues: [
         {
           path: "gateway.mode",
@@ -637,7 +637,7 @@ describe("gateway startup config validation", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     const invalidSnapshot = buildInvalidConfigSnapshot({
       rawConfig: config,
       config,

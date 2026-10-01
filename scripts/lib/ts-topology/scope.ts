@@ -1,4 +1,4 @@
-// Scope script supports OpenClaw repository automation.
+// Scope script supports QuietCore repository automation.
 import fs from "node:fs";
 import path from "node:path";
 import { BUNDLED_PLUGIN_PATH_PREFIX } from "../bundled-plugin-paths.mjs";
@@ -128,7 +128,7 @@ export function createPluginSdkScope(_repoRoot: string): TopologyScope {
     importSpecifier:
       entrypoint === "index" ? "quiet-core-bot/plugin-sdk" : `quiet-core-bot/plugin-sdk/${entrypoint}`,
   }));
-  return buildScopeFromEntrypoints("plugin-sdk", "OpenClaw plugin-sdk public surface", entrypoints);
+  return buildScopeFromEntrypoints("plugin-sdk", "QuietCore plugin-sdk public surface", entrypoints);
 }
 
 export function createFilesystemPublicSurfaceScope(

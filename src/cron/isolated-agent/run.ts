@@ -15,7 +15,7 @@ import {
 } from "../../config/config.js";
 import { resolveAgentModelPrimaryValue } from "../../config/model-input.js";
 import type { AgentDefaultsConfig } from "../../config/types.agent-defaults.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import {
   assertAgentRunLifecycleGenerationCurrent,
   claimAgentRunContext,
@@ -169,7 +169,7 @@ async function loadRuntimePlugins() {
   return await runtimePluginsLoader.load();
 }
 
-function hasConfiguredAuthProfiles(cfg: OpenClawConfig): boolean {
+function hasConfiguredAuthProfiles(cfg: QuietCoreConfig): boolean {
   return (
     Boolean(cfg.auth?.profiles && Object.keys(cfg.auth.profiles).length > 0) ||
     Boolean(cfg.auth?.order && Object.keys(cfg.auth.order).length > 0)
@@ -372,7 +372,7 @@ function canPromptForMessageTool(params: {
 
 /** Exported for #91613 keyless-inherited delivery-context regression coverage. */
 export async function resolveCronDeliveryContext(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   job: CronJob;
   agentId: string;
 }) {
@@ -466,7 +466,7 @@ async function loadUsageFormatRuntime() {
 }
 
 type RunCronAgentTurnParams = {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   deps: CliDeps;
   job: CronJob;
   message: string;
@@ -493,7 +493,7 @@ type WithRunSession = (
 
 type PreparedCronRunContext = {
   input: RunCronAgentTurnParams;
-  cfgWithAgentDefaults: OpenClawConfig;
+  cfgWithAgentDefaults: QuietCoreConfig;
   agentId: string;
   agentCfg: AgentDefaultsConfig;
   agentDir: string;
@@ -533,7 +533,7 @@ type CronPreparationResult =
   | { ok: true; context: PreparedCronRunContext }
   | { ok: false; result: RunCronAgentTurnResult };
 
-function resolveCronActiveRuntimeConfig(cfg: OpenClawConfig): OpenClawConfig {
+function resolveCronActiveRuntimeConfig(cfg: QuietCoreConfig): QuietCoreConfig {
   const runtimeConfig = getRuntimeConfigSnapshot();
   const runtimeSourceConfig = getRuntimeConfigSourceSnapshot();
   if (!runtimeConfig || !runtimeSourceConfig) {
@@ -573,7 +573,7 @@ async function prepareCronRunContext(params: {
     defaults: runtimeCfg.agents?.defaults,
     agentConfigOverride,
   });
-  const cfgWithAgentDefaults: OpenClawConfig = {
+  const cfgWithAgentDefaults: QuietCoreConfig = {
     ...runtimeCfg,
     agents: Object.assign({}, runtimeCfg.agents, { defaults: agentCfg }),
   };
@@ -1372,7 +1372,7 @@ async function disposeCronRunContext(params: {
 
 /** Runs one isolated cron agent turn, including setup, execution, delivery, and persistence. */
 export async function runCronIsolatedAgentTurn(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   deps: CliDeps;
   job: CronJob;
   message: string;

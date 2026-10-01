@@ -6,7 +6,7 @@
  */
 import type { ApiKeyCredential } from "../../../agents/auth-profiles/types.js";
 import { formatCliCommand } from "../../../cli/command-format.js";
-import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../config/types.quiet-core-bot.js";
 import type { SecretInput } from "../../../config/types.secrets.js";
 import { formatErrorMessage } from "../../../infra/errors.js";
 import { resolveManifestDeprecatedProviderAuthChoice } from "../../../plugins/provider-auth-choices.js";
@@ -35,12 +35,12 @@ type ResolvedNonInteractiveApiKey = NonNullable<
 
 /** Applies a local non-interactive auth choice to the pending Quiet Core bot config. */
 export async function applyNonInteractiveAuthChoice(params: {
-  nextConfig: OpenClawConfig;
+  nextConfig: QuietCoreConfig;
   authChoice: AuthChoice;
   opts: OnboardOptions;
   runtime: RuntimeEnv;
-  baseConfig: OpenClawConfig;
-}): Promise<OpenClawConfig | null> {
+  baseConfig: QuietCoreConfig;
+}): Promise<QuietCoreConfig | null> {
   const { opts, runtime, baseConfig } = params;
   let authChoice = normalizeApiKeyTokenProviderAuthChoice({
     authChoice: params.authChoice,

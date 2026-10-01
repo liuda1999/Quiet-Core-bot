@@ -115,7 +115,7 @@ function stripPrimaryPackageAlias(spec: string): string {
     : normalized;
 }
 
-function isPnpmOpenClawSourceInstallSpec(spec: string): boolean {
+function isPnpmQuietCoreSourceInstallSpec(spec: string): boolean {
   const target = stripPrimaryPackageAlias(spec);
   return (
     /^github:/i.test(target) ||
@@ -901,7 +901,7 @@ export function globalInstallArgs(
       "add",
       "-g",
       ...(installPrefix ? ["--global-dir", installPrefix] : []),
-      ...(isPnpmOpenClawSourceInstallSpec(spec) ? [PNPM_QUIET_CORE_BUILD_ALLOWLIST_FLAG] : []),
+      ...(isPnpmQuietCoreSourceInstallSpec(spec) ? [PNPM_QUIET_CORE_BUILD_ALLOWLIST_FLAG] : []),
       spec,
     ];
   }

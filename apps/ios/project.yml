@@ -1,6 +1,6 @@
-name: OpenClaw
+name: QuietCore
 options:
-  bundleIdPrefix: ai.openclawfoundation
+  bundleIdPrefix: ai.quiet-core-botfoundation
   deploymentTarget:
     iOS: "18.0"
   xcodeVersion: "16.0"
@@ -20,39 +20,39 @@ packages:
     exactVersion: 147.0.0
 
 schemes:
-  OpenClaw:
+  QuietCore:
     shared: true
     build:
       targets:
-        OpenClaw: all
+        QuietCore: all
     test:
       targets:
-        - OpenClawTests
-        - OpenClawLogicTests
-  OpenClawLogicTests:
+        - QuietCoreTests
+        - QuietCoreLogicTests
+  QuietCoreLogicTests:
     shared: true
     build:
       targets:
-        OpenClawLogicTests: all
+        QuietCoreLogicTests: all
     test:
       targets:
-        - OpenClawLogicTests
-  OpenClawUITests:
+        - QuietCoreLogicTests
+  QuietCoreUITests:
     shared: true
     build:
       targets:
-        OpenClawUITests: all
+        QuietCoreUITests: all
     test:
       targets:
-        - OpenClawUITests
-  OpenClawWatchApp:
+        - QuietCoreUITests
+  QuietCoreWatchApp:
     shared: true
     build:
       targets:
-        OpenClawWatchApp: all
+        QuietCoreWatchApp: all
 
 targets:
-  OpenClaw:
+  QuietCore:
     type: application
     platform: iOS
     configFiles:
@@ -61,18 +61,18 @@ targets:
     sources:
       - path: Sources
     dependencies:
-      - target: OpenClawShareExtension
+      - target: QuietCoreShareExtension
         embed: true
-      - target: OpenClawActivityWidget
+      - target: QuietCoreActivityWidget
         embed: true
       # A companion watch application belongs in the standard Watch bundle location.
       # PlugIns is for extension products and breaks paired watch installation.
-      - target: OpenClawWatchApp
+      - target: QuietCoreWatchApp
       - package: QuietCoreKit
       - package: QuietCoreKit
-        product: OpenClawChatUI
+        product: QuietCoreChatUI
       - package: QuietCoreKit
-        product: OpenClawProtocol
+        product: QuietCoreProtocol
       - package: Swabble
         product: SwabbleKit
       - package: WebRTC
@@ -120,27 +120,27 @@ targets:
         ENABLE_APP_INTENTS_METADATA_GENERATION: NO
       configs:
         Debug:
-          QUIET_CORE_CODE_SIGN_ENTITLEMENTS: Sources/OpenClaw.entitlements
+          QUIET_CORE_CODE_SIGN_ENTITLEMENTS: Sources/QuietCore.entitlements
           QUIET_CORE_APNS_ENTITLEMENT_ENVIRONMENT: development
           QUIET_CORE_PUSH_MODE: localSandbox
           QUIET_CORE_PUSH_RELAY_BASE_URL: ""
         Release:
-          QUIET_CORE_CODE_SIGN_ENTITLEMENTS: Sources/OpenClaw.entitlements
+          QUIET_CORE_CODE_SIGN_ENTITLEMENTS: Sources/QuietCore.entitlements
           QUIET_CORE_APNS_ENTITLEMENT_ENVIRONMENT: production
           QUIET_CORE_PUSH_MODE: localProduction
           QUIET_CORE_PUSH_RELAY_BASE_URL: ""
     info:
       path: Sources/Info.plist
       properties:
-        CFBundleDisplayName: OpenClaw
+        CFBundleDisplayName: QuietCore
         CFBundleIconName: AppIcon
         CFBundleURLTypes:
-          - CFBundleURLName: ai.openclawfoundation.app
+          - CFBundleURLName: ai.quiet-core-botfoundation.app
             CFBundleURLSchemes:
               - openclaw
         CFBundleShortVersionString: "$(QUIET_CORE_MARKETING_VERSION)"
-        OpenClawCanonicalVersion: "$(QUIET_CORE_IOS_VERSION)"
-        OpenClawAppGroupIdentifier: "$(QUIET_CORE_APP_GROUP_ID)"
+        QuietCoreCanonicalVersion: "$(QUIET_CORE_IOS_VERSION)"
+        QuietCoreAppGroupIdentifier: "$(QUIET_CORE_APP_GROUP_ID)"
         CFBundleVersion: "$(QUIET_CORE_BUILD_VERSION)"
         UILaunchScreen: {}
         UIApplicationSceneManifest:
@@ -150,34 +150,34 @@ targets:
           - remote-notification
         BGTaskSchedulerPermittedIdentifiers:
           - "$(QUIET_CORE_APP_BUNDLE_ID).bgrefresh"
-        NSLocalNetworkUsageDescription: OpenClaw discovers and connects to your OpenClaw gateway on the local network.
+        NSLocalNetworkUsageDescription: QuietCore discovers and connects to your QuietCore gateway on the local network.
         NSAppTransportSecurity:
           NSAllowsArbitraryLoadsInWebContent: true
           NSAllowsLocalNetworking: true
         NSBonjourServices:
-          - _openclaw-gw._tcp
-        NSCameraUsageDescription: OpenClaw can capture photos or short video clips when requested via the gateway.
-        NSCalendarsUsageDescription: OpenClaw uses your calendars to show events and scheduling context when you enable calendar access.
-        NSCalendarsFullAccessUsageDescription: OpenClaw uses your calendars to show events and scheduling context when you enable calendar access.
-        NSCalendarsWriteOnlyAccessUsageDescription: OpenClaw uses your calendars to add events when you enable calendar access.
-        NSContactsUsageDescription: OpenClaw uses your contacts so you can search and reference people while using the assistant.
-        NSLocationWhenInUseUsageDescription: OpenClaw uses your location when you allow location sharing.
-        NSLocationAlwaysAndWhenInUseUsageDescription: OpenClaw can share your location in the background when you enable Always.
-        NSMicrophoneUsageDescription: OpenClaw uses the microphone for realtime chat, voice wake, and push-to-talk.
-        NSMotionUsageDescription: OpenClaw may use motion data to support device-aware interactions and automations.
-        NSPhotoLibraryUsageDescription: OpenClaw needs photo library access when you choose existing photos to share with your assistant.
-        NSRemindersFullAccessUsageDescription: OpenClaw uses your reminders to list, add, and complete tasks when you enable reminders access.
-        NSSpeechRecognitionUsageDescription: OpenClaw uses on-device speech recognition for talk mode and voice wake.
+          - _quiet-core-gw._tcp
+        NSCameraUsageDescription: QuietCore can capture photos or short video clips when requested via the gateway.
+        NSCalendarsUsageDescription: QuietCore uses your calendars to show events and scheduling context when you enable calendar access.
+        NSCalendarsFullAccessUsageDescription: QuietCore uses your calendars to show events and scheduling context when you enable calendar access.
+        NSCalendarsWriteOnlyAccessUsageDescription: QuietCore uses your calendars to add events when you enable calendar access.
+        NSContactsUsageDescription: QuietCore uses your contacts so you can search and reference people while using the assistant.
+        NSLocationWhenInUseUsageDescription: QuietCore uses your location when you allow location sharing.
+        NSLocationAlwaysAndWhenInUseUsageDescription: QuietCore can share your location in the background when you enable Always.
+        NSMicrophoneUsageDescription: QuietCore uses the microphone for realtime chat, voice wake, and push-to-talk.
+        NSMotionUsageDescription: QuietCore may use motion data to support device-aware interactions and automations.
+        NSPhotoLibraryUsageDescription: QuietCore needs photo library access when you choose existing photos to share with your assistant.
+        NSRemindersFullAccessUsageDescription: QuietCore uses your reminders to list, add, and complete tasks when you enable reminders access.
+        NSSpeechRecognitionUsageDescription: QuietCore uses on-device speech recognition for talk mode and voice wake.
         NSSupportsLiveActivities: true
         ITSAppUsesNonExemptEncryption: false
-        OpenClawPushMode: "$(QUIET_CORE_PUSH_MODE)"
-        OpenClawPushRelayBaseURL: "$(QUIET_CORE_PUSH_RELAY_BASE_URL)"
+        QuietCorePushMode: "$(QUIET_CORE_PUSH_MODE)"
+        QuietCorePushRelayBaseURL: "$(QUIET_CORE_PUSH_RELAY_BASE_URL)"
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
           - UIInterfaceOrientationPortraitUpsideDown
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
-  OpenClawShareExtension:
+  QuietCoreShareExtension:
     type: app-extension
     platform: iOS
     configFiles:
@@ -191,7 +191,7 @@ targets:
     settings:
       base:
         CODE_SIGN_IDENTITY: "$(QUIET_CORE_CODE_SIGN_IDENTITY)"
-        CODE_SIGN_ENTITLEMENTS: ShareExtension/OpenClawShareExtension.entitlements
+        CODE_SIGN_ENTITLEMENTS: ShareExtension/QuietCoreShareExtension.entitlements
         CODE_SIGN_STYLE: "$(QUIET_CORE_CODE_SIGN_STYLE)"
         DEVELOPMENT_TEAM: "$(QUIET_CORE_DEVELOPMENT_TEAM)"
         ENABLE_APPINTENTS_METADATA: NO
@@ -204,9 +204,9 @@ targets:
     info:
       path: ShareExtension/Info.plist
       properties:
-        CFBundleDisplayName: OpenClaw Share
+        CFBundleDisplayName: QuietCore Share
         CFBundleShortVersionString: "$(QUIET_CORE_MARKETING_VERSION)"
-        OpenClawAppGroupIdentifier: "$(QUIET_CORE_APP_GROUP_ID)"
+        QuietCoreAppGroupIdentifier: "$(QUIET_CORE_APP_GROUP_ID)"
         CFBundleVersion: "$(QUIET_CORE_BUILD_VERSION)"
         NSExtension:
           NSExtensionPointIdentifier: com.apple.share-services
@@ -218,7 +218,7 @@ targets:
               NSExtensionActivationSupportsImageWithMaxCount: 10
               NSExtensionActivationSupportsMovieWithMaxCount: 1
 
-  OpenClawActivityWidget:
+  QuietCoreActivityWidget:
     type: app-extension
     platform: iOS
     configFiles:
@@ -226,7 +226,7 @@ targets:
       Release: Signing.xcconfig
     sources:
       - path: ActivityWidget
-      - path: Sources/LiveActivity/OpenClawActivityAttributes.swift
+      - path: Sources/LiveActivity/QuietCoreActivityAttributes.swift
     dependencies:
       - sdk: WidgetKit.framework
       - sdk: ActivityKit.framework
@@ -244,14 +244,14 @@ targets:
     info:
       path: ActivityWidget/Info.plist
       properties:
-        CFBundleDisplayName: OpenClaw Activity
+        CFBundleDisplayName: QuietCore Activity
         CFBundleShortVersionString: "$(QUIET_CORE_MARKETING_VERSION)"
         CFBundleVersion: "$(QUIET_CORE_BUILD_VERSION)"
         NSSupportsLiveActivities: true
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
 
-  OpenClawWatchApp:
+  QuietCoreWatchApp:
     type: application
     platform: watchOS
     deploymentTarget: "11.0"
@@ -284,13 +284,13 @@ targets:
     info:
       path: WatchApp/Info.plist
       properties:
-        CFBundleDisplayName: OpenClaw
+        CFBundleDisplayName: QuietCore
         CFBundleShortVersionString: "$(QUIET_CORE_MARKETING_VERSION)"
         CFBundleVersion: "$(QUIET_CORE_BUILD_VERSION)"
         WKCompanionAppBundleIdentifier: "$(QUIET_CORE_APP_BUNDLE_ID)"
         WKApplication: true
 
-  OpenClawTests:
+  QuietCoreTests:
     type: bundle.unit-test
     platform: iOS
     configFiles:
@@ -301,7 +301,7 @@ targets:
         excludes:
           - Logic
     dependencies:
-      - target: OpenClaw
+      - target: QuietCore
       - package: Swabble
         product: SwabbleKit
       - sdk: AppIntents.framework
@@ -314,16 +314,16 @@ targets:
         ENABLE_APP_INTENTS_METADATA_GENERATION: NO
         SWIFT_VERSION: "6.0"
         SWIFT_STRICT_CONCURRENCY: complete
-        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/OpenClaw.app/OpenClaw"
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/QuietCore.app/QuietCore"
         BUNDLE_LOADER: "$(TEST_HOST)"
     info:
       path: Tests/Info.plist
       properties:
-        CFBundleDisplayName: OpenClawTests
+        CFBundleDisplayName: QuietCoreTests
         CFBundleShortVersionString: "$(QUIET_CORE_MARKETING_VERSION)"
         CFBundleVersion: "$(QUIET_CORE_BUILD_VERSION)"
 
-  OpenClawLogicTests:
+  QuietCoreLogicTests:
     type: bundle.unit-test
     platform: iOS
     configFiles:
@@ -346,11 +346,11 @@ targets:
     info:
       path: Tests/Info.plist
       properties:
-        CFBundleDisplayName: OpenClawLogicTests
+        CFBundleDisplayName: QuietCoreLogicTests
         CFBundleShortVersionString: "$(QUIET_CORE_MARKETING_VERSION)"
         CFBundleVersion: "$(QUIET_CORE_BUILD_VERSION)"
 
-  OpenClawUITests:
+  QuietCoreUITests:
     type: bundle.ui-testing
     platform: iOS
     configFiles:
@@ -359,7 +359,7 @@ targets:
     sources:
       - path: UITests
     dependencies:
-      - target: OpenClaw
+      - target: QuietCore
     settings:
       base:
         CODE_SIGN_IDENTITY: "$(QUIET_CORE_CODE_SIGN_IDENTITY)"
@@ -370,11 +370,11 @@ targets:
         SUPPORTED_PLATFORMS: "iphonesimulator iphoneos"
         SUPPORTS_MACCATALYST: NO
         SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
-        TEST_TARGET_NAME: OpenClaw
+        TEST_TARGET_NAME: QuietCore
         SWIFT_VERSION: "5.0"
     info:
       path: UITests/Info.plist
       properties:
-        CFBundleDisplayName: OpenClawUITests
+        CFBundleDisplayName: QuietCoreUITests
         CFBundleShortVersionString: "$(QUIET_CORE_MARKETING_VERSION)"
         CFBundleVersion: "$(QUIET_CORE_BUILD_VERSION)"

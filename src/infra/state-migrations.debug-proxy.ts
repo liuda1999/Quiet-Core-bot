@@ -4,8 +4,8 @@ import fs from "node:fs";
 import path from "node:path";
 import type { DatabaseSync, SQLInputValue } from "node:sqlite";
 import { gunzipSync } from "node:zlib";
-import { runOpenClawStateWriteTransaction } from "../state/quiet-core-bot-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "../state/quiet-core-bot-state-db.paths.js";
+import { runQuietCoreStateWriteTransaction } from "../state/quiet-core-bot-state-db.js";
+import { resolveQuietCoreStateSqlitePath } from "../state/quiet-core-bot-state-db.paths.js";
 import { requireNodeSqlite } from "./node-sqlite.js";
 
 const DEBUG_PROXY_SQLITE_SIDECAR_SUFFIXES = ["", "-shm", "-wal", "-journal"] as const;
@@ -119,7 +119,7 @@ export function detectLegacyDebugProxyCaptureSidecar(
   const paths = resolveLegacyDebugProxyCapturePaths(stateDir, env);
   if (
     path.resolve(paths.sourcePath) ===
-    path.resolve(resolveOpenClawStateSqlitePath({ ...env, QUIET_CORE_STATE_DIR: stateDir }))
+    path.resolve(resolveQuietCoreStateSqlitePath({ ...env, QUIET_CORE_STATE_DIR: stateDir }))
   ) {
     return { ...paths, hasLegacy: false };
   }
@@ -401,7 +401,7 @@ export function migrateLegacyDebugProxyCaptureSidecar(params: {
   }
 
   try {
-    runOpenClawStateWriteTransaction(
+    runQuietCoreStateWriteTransaction(
       ({ db }) => {
         const selectBlob = db.prepare(
           `SELECT encoding, size_bytes AS sizeBytes, sha256, data

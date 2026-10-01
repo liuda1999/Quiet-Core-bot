@@ -1,5 +1,5 @@
 /** Factory for image providers with OpenAI-compatible generation/edit endpoints. */
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { isProviderApiKeyConfigured } from "quiet-core-bot/plugin-sdk/provider-auth";
 import { resolveApiKeyForProvider } from "quiet-core-bot/plugin-sdk/provider-auth-runtime";
 import {
@@ -23,7 +23,7 @@ import type {
 
 // Factory for providers that expose OpenAI-style /images/generations and
 // /images/edits endpoints while still allowing provider-specific bodies.
-type ModelProviderConfig = NonNullable<NonNullable<OpenClawConfig["models"]>["providers"]>[string];
+type ModelProviderConfig = NonNullable<NonNullable<QuietCoreConfig["models"]>["providers"]>[string];
 
 /** OpenAI-compatible image endpoint mode. */
 export type OpenAiCompatibleImageRequestMode = "generate" | "edit";
@@ -87,7 +87,7 @@ export type OpenAiCompatibleImageProviderOptions = {
 };
 
 function readProviderConfig(
-  cfg: OpenClawConfig | undefined,
+  cfg: QuietCoreConfig | undefined,
   providerConfigKey: string,
 ): ModelProviderConfig | undefined {
   return cfg?.models?.providers?.[providerConfigKey];

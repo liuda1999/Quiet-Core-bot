@@ -1,6 +1,6 @@
 // Legacy web-search migration tests cover doctor repair of old web search config.
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../../../config/config.js";
+import type { QuietCoreConfig } from "../../../config/config.js";
 import {
   listLegacyWebSearchConfigPaths,
   migrateLegacyWebSearchConfig,
@@ -8,7 +8,7 @@ import {
 
 describe("legacy web search config", () => {
   it("migrates legacy provider config through bundled web search ownership metadata", () => {
-    const res = migrateLegacyWebSearchConfig<OpenClawConfig>({
+    const res = migrateLegacyWebSearchConfig<QuietCoreConfig>({
       tools: {
         web: {
           search: {
@@ -68,10 +68,10 @@ describe("legacy web search config", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
     const original = structuredClone(input);
 
-    const res = migrateLegacyWebSearchConfig<OpenClawConfig>(input);
+    const res = migrateLegacyWebSearchConfig<QuietCoreConfig>(input);
 
     expect(res.config.plugins?.entries?.xai?.config?.webSearch).toEqual({
       apiKey: "xai-key",
@@ -81,7 +81,7 @@ describe("legacy web search config", () => {
   });
 
   it("preserves unrelated record-valued web search config", () => {
-    const res = migrateLegacyWebSearchConfig<OpenClawConfig>({
+    const res = migrateLegacyWebSearchConfig<QuietCoreConfig>({
       tools: {
         web: {
           search: {
@@ -110,7 +110,7 @@ describe("legacy web search config", () => {
   });
 
   it("drops dangerous record keys while preserving unrelated web search config", () => {
-    const res = migrateLegacyWebSearchConfig<OpenClawConfig>({
+    const res = migrateLegacyWebSearchConfig<QuietCoreConfig>({
       tools: {
         web: {
           search: {

@@ -29,7 +29,7 @@ function createPlugin(
     id: string;
     packageName: string;
     manifest?: Record<string, unknown>;
-    packageOpenClaw?: Record<string, unknown>;
+    packageQuietCore?: Record<string, unknown>;
   },
 ) {
   const pluginDir = path.join(repoRoot, "extensions", params.id);
@@ -41,7 +41,7 @@ function createPlugin(
   });
   writeJson(path.join(pluginDir, "package.json"), {
     name: params.packageName,
-    ...(params.packageOpenClaw ? { "quiet-core-bot": params.packageOpenClaw } : {}),
+    ...(params.packageQuietCore ? { "quiet-core-bot": params.packageQuietCore } : {}),
   });
   return pluginDir;
 }
@@ -78,7 +78,7 @@ function createTlonSkillPlugin(repoRoot: string, skillPath = "node_modules/@tlon
     id: "tlon",
     packageName: "@quiet-core/tlon",
     manifest: { skills: [skillPath] },
-    packageOpenClaw: { extensions: ["./index.ts"] },
+    packageQuietCore: { extensions: ["./index.ts"] },
   });
 }
 
@@ -102,7 +102,7 @@ describe("copyBundledPluginMetadata", () => {
       id: "acpx",
       packageName: "@quiet-core/acpx",
       manifest: { skills: ["./skills"] },
-      packageOpenClaw: { extensions: ["./index.ts"] },
+      packageQuietCore: { extensions: ["./index.ts"] },
     });
     fs.mkdirSync(path.join(pluginDir, "skills", "acp-router"), { recursive: true });
     fs.writeFileSync(
@@ -145,7 +145,7 @@ describe("copyBundledPluginMetadata", () => {
           },
         },
       },
-      packageOpenClaw: { extensions: ["./index.ts"] },
+      packageQuietCore: { extensions: ["./index.ts"] },
     });
     fs.mkdirSync(path.join(repoRoot, "src", "config"), { recursive: true });
     fs.writeFileSync(
@@ -291,7 +291,7 @@ describe("copyBundledPluginMetadata", () => {
       id: "diffs",
       packageName: "@quiet-core/diffs",
       manifest: { skills: ["./skills"] },
-      packageOpenClaw: { extensions: ["./index.ts"] },
+      packageQuietCore: { extensions: ["./index.ts"] },
     });
     fs.mkdirSync(path.join(pluginDir, "skills", "diffs"), { recursive: true });
     fs.writeFileSync(path.join(pluginDir, "skills", "diffs", "SKILL.md"), "# Diffs\n", "utf8");
@@ -391,7 +391,7 @@ describe("copyBundledPluginMetadata", () => {
     createPlugin(repoRoot, {
       id: "qa-lab",
       packageName: "@quiet-core/qa-lab",
-      packageOpenClaw: { extensions: ["./index.ts"] },
+      packageQuietCore: { extensions: ["./index.ts"] },
     });
     const staleDistDir = path.join(repoRoot, "dist", "extensions", "qa-lab");
     fs.mkdirSync(staleDistDir, { recursive: true });
@@ -415,7 +415,7 @@ describe("copyBundledPluginMetadata", () => {
       name: "skips metadata for optional bundled clusters only when explicitly disabled",
       pluginId: "acpx",
       packageName: "@quiet-core/acpx-plugin",
-      packageOpenClaw: { extensions: ["./index.ts"] },
+      packageQuietCore: { extensions: ["./index.ts"] },
       env: excludeOptionalEnv,
       expectedExists: false,
     },
@@ -423,19 +423,19 @@ describe("copyBundledPluginMetadata", () => {
       name: "removes externalized optional plugin metadata from the core dist",
       pluginId: "whatsapp",
       packageName: "@quiet-core/whatsapp",
-      packageOpenClaw: {
+      packageQuietCore: {
         extensions: ["./index.ts"],
         install: { npmSpec: "@quiet-core/whatsapp" },
       },
       env: {},
       expectedExists: false,
     },
-  ] as const)("$name", ({ pluginId, packageName, packageOpenClaw, env, expectedExists }) => {
+  ] as const)("$name", ({ pluginId, packageName, packageQuietCore, env, expectedExists }) => {
     const repoRoot = makeRepoRoot(`quiet-core-bot-bundled-plugin-${pluginId}-`);
     createPlugin(repoRoot, {
       id: pluginId,
       packageName,
-      packageOpenClaw,
+      packageQuietCore,
     });
 
     copyBundledPluginMetadataWithEnv({ repoRoot, env });
@@ -448,7 +448,7 @@ describe("copyBundledPluginMetadata", () => {
     createPlugin(repoRoot, {
       id: "qqbot",
       packageName: "@quiet-core/qqbot",
-      packageOpenClaw: {
+      packageQuietCore: {
         extensions: ["./index.ts"],
         setupEntry: "./setup-entry.ts",
       },

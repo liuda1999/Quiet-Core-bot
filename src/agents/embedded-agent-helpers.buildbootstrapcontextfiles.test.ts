@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import {
   buildBootstrapContextFiles,
   DEFAULT_BOOTSTRAP_MAX_CHARS,
@@ -269,7 +269,7 @@ describe("buildBootstrapContextFiles", () => {
 
 type BootstrapLimitResolverCase = {
   name: "bootstrapMaxChars" | "bootstrapTotalMaxChars";
-  resolve: (cfg?: OpenClawConfig, agentId?: string | null) => number;
+  resolve: (cfg?: QuietCoreConfig, agentId?: string | null) => number;
   defaultValue: number;
 };
 
@@ -297,7 +297,7 @@ describe("bootstrap limit resolvers", () => {
     for (const resolver of BOOTSTRAP_LIMIT_RESOLVERS) {
       const cfg = {
         agents: { defaults: { [resolver.name]: 12345 } },
-      } as OpenClawConfig;
+      } as QuietCoreConfig;
       expect(resolver.resolve(cfg)).toBe(12345);
     }
   });
@@ -309,7 +309,7 @@ describe("bootstrap limit resolvers", () => {
           defaults: { [resolver.name]: 12345 },
           list: [{ id: "worker", [resolver.name]: 6789 }],
         },
-      } as OpenClawConfig;
+      } as QuietCoreConfig;
       expect(resolver.resolve(cfg, "worker")).toBe(6789);
     }
   });
@@ -321,7 +321,7 @@ describe("bootstrap limit resolvers", () => {
           defaults: { [resolver.name]: 12345 },
           list: [{ id: "worker" }],
         },
-      } as OpenClawConfig;
+      } as QuietCoreConfig;
       expect(resolver.resolve(cfg, "worker")).toBe(12345);
     }
   });
@@ -330,7 +330,7 @@ describe("bootstrap limit resolvers", () => {
     for (const resolver of BOOTSTRAP_LIMIT_RESOLVERS) {
       const cfg = {
         agents: { defaults: { [resolver.name]: -1 } },
-      } as OpenClawConfig;
+      } as QuietCoreConfig;
       expect(resolver.resolve(cfg)).toBe(resolver.defaultValue);
     }
   });
@@ -346,17 +346,17 @@ describe("resolveBootstrapPromptTruncationWarningMode", () => {
     expect(
       resolveBootstrapPromptTruncationWarningMode({
         agents: { defaults: { bootstrapPromptTruncationWarning: "off" } },
-      } as OpenClawConfig),
+      } as QuietCoreConfig),
     ).toBe("off");
     expect(
       resolveBootstrapPromptTruncationWarningMode({
         agents: { defaults: { bootstrapPromptTruncationWarning: "once" } },
-      } as OpenClawConfig),
+      } as QuietCoreConfig),
     ).toBe("once");
     expect(
       resolveBootstrapPromptTruncationWarningMode({
         agents: { defaults: { bootstrapPromptTruncationWarning: "always" } },
-      } as OpenClawConfig),
+      } as QuietCoreConfig),
     ).toBe("always");
   });
 
@@ -364,7 +364,7 @@ describe("resolveBootstrapPromptTruncationWarningMode", () => {
     expect(
       resolveBootstrapPromptTruncationWarningMode({
         agents: { defaults: { bootstrapPromptTruncationWarning: "invalid" } },
-      } as unknown as OpenClawConfig),
+      } as unknown as QuietCoreConfig),
     ).toBe(DEFAULT_BOOTSTRAP_PROMPT_TRUNCATION_WARNING_MODE);
   });
 });

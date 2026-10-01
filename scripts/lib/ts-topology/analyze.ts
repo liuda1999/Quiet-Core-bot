@@ -1,4 +1,4 @@
-// Analyze script supports OpenClaw repository automation.
+// Analyze script supports QuietCore repository automation.
 import path from "node:path";
 import ts from "typescript";
 import {

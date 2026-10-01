@@ -6,13 +6,13 @@ import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanupTempDirs, makeTempDir } from "../test/helpers/temp-dir.js";
 import {
-  buildOpenClawCompileCacheRespawnPlan,
+  buildQuietCoreCompileCacheRespawnPlan,
   isNodeVersionAffectedByCompileCacheDeadlock,
   isSourceCheckoutInstallRoot,
-  resolveOpenClawCompileCacheDirectory,
+  resolveQuietCoreCompileCacheDirectory,
   resolveEntryInstallRoot,
-  runOpenClawCompileCacheRespawnPlan,
-  shouldEnableOpenClawCompileCache,
+  runQuietCoreCompileCacheRespawnPlan,
+  shouldEnableQuietCoreCompileCache,
 } from "./entry.compile-cache.js";
 
 function requireFirstMockCall(mock: { mock: { calls: unknown[][] } }, label: string): unknown[] {
@@ -49,7 +49,7 @@ describe("entry compile cache", () => {
     await fs.writeFile(path.join(root, "src", "entry.ts"), "export {};\n", "utf8");
 
     expect(
-      shouldEnableOpenClawCompileCache({
+      shouldEnableQuietCoreCompileCache({
         env: {},
         installRoot: root,
       }),
@@ -60,7 +60,7 @@ describe("entry compile cache", () => {
     const root = makeTempDir(tempDirs, "quiet-core-bot-compile-cache-package-");
 
     expect(
-      shouldEnableOpenClawCompileCache({
+      shouldEnableQuietCoreCompileCache({
         env: {},
         installRoot: root,
         nodeVersion: "24.15.0",
@@ -68,7 +68,7 @@ describe("entry compile cache", () => {
       }),
     ).toBe(true);
     expect(
-      shouldEnableOpenClawCompileCache({
+      shouldEnableQuietCoreCompileCache({
         env: { NODE_DISABLE_COMPILE_CACHE: "1" },
         installRoot: root,
         nodeVersion: "24.15.0",
@@ -82,7 +82,7 @@ describe("entry compile cache", () => {
     const packageJsonPath = path.join(root, "package.json");
     await fs.writeFile(packageJsonPath, '{"version":"2026.4.29"}\n', "utf8");
 
-    const directory = resolveOpenClawCompileCacheDirectory({
+    const directory = resolveQuietCoreCompileCacheDirectory({
       env: { NODE_COMPILE_CACHE: path.join(root, ".node-cache") },
       installRoot: root,
     });
@@ -97,7 +97,7 @@ describe("entry compile cache", () => {
     await fs.mkdir(path.join(root, "src"), { recursive: true });
     await fs.writeFile(path.join(root, "src", "entry.ts"), "export {};\n", "utf8");
 
-    const plan = buildOpenClawCompileCacheRespawnPlan({
+    const plan = buildQuietCoreCompileCacheRespawnPlan({
       currentFile: path.join(root, "dist", "entry.js"),
       env: { NODE_COMPILE_CACHE: "/tmp/quiet-core-bot-cache" },
       execArgv: ["--no-warnings"],
@@ -123,7 +123,7 @@ describe("entry compile cache", () => {
     await fs.mkdir(path.join(root, "src"), { recursive: true });
     await fs.writeFile(path.join(root, "src", "entry.ts"), "export {};\n", "utf8");
 
-    const plan = buildOpenClawCompileCacheRespawnPlan({
+    const plan = buildQuietCoreCompileCacheRespawnPlan({
       currentFile: entryFile,
       env: { NODE_COMPILE_CACHE: "/tmp/quiet-core-bot-cache" },
       execPath: "/usr/bin/node",
@@ -140,7 +140,7 @@ describe("entry compile cache", () => {
     await fs.mkdir(path.join(root, "src"), { recursive: true });
     await fs.writeFile(path.join(root, "src", "entry.ts"), "export {};\n", "utf8");
 
-    const plan = buildOpenClawCompileCacheRespawnPlan({
+    const plan = buildQuietCoreCompileCacheRespawnPlan({
       currentFile: entryFile,
       env: { NODE_COMPILE_CACHE: "/tmp/quiet-core-bot-cache" },
       execPath: "/usr/bin/node",
@@ -155,7 +155,7 @@ describe("entry compile cache", () => {
     const root = makeTempDir(tempDirs, "quiet-core-bot-compile-cache-package-respawn-");
 
     expect(
-      buildOpenClawCompileCacheRespawnPlan({
+      buildQuietCoreCompileCacheRespawnPlan({
         currentFile: path.join(root, "dist", "entry.js"),
         env: { NODE_COMPILE_CACHE: "/tmp/quiet-core-bot-cache" },
         installRoot: root,
@@ -169,7 +169,7 @@ describe("entry compile cache", () => {
     const root = makeTempDir(tempDirs, "quiet-core-bot-compile-cache-package-win24-");
     const entryFile = path.join(root, "dist", "entry.js");
 
-    const plan = buildOpenClawCompileCacheRespawnPlan({
+    const plan = buildQuietCoreCompileCacheRespawnPlan({
       currentFile: entryFile,
       env: { NODE_COMPILE_CACHE: "/tmp/quiet-core-bot-cache" },
       execArgv: ["--no-warnings"],
@@ -197,7 +197,7 @@ describe("entry compile cache", () => {
     await fs.writeFile(path.join(root, "src", "entry.ts"), "export {};\n", "utf8");
 
     expect(
-      buildOpenClawCompileCacheRespawnPlan({
+      buildQuietCoreCompileCacheRespawnPlan({
         currentFile: path.join(root, "dist", "entry.js"),
         env: {
           NODE_COMPILE_CACHE: "/tmp/quiet-core-bot-cache",
@@ -215,7 +215,7 @@ describe("entry compile cache", () => {
     const exit = vi.fn();
     const writeError = vi.fn();
 
-    runOpenClawCompileCacheRespawnPlan(
+    runQuietCoreCompileCacheRespawnPlan(
       {
         command: "/usr/bin/node",
         args: ["/repo/quiet-core-bot/dist/entry.js", "status"],
@@ -258,7 +258,7 @@ describe("entry compile cache", () => {
     const spawn = vi.fn(() => child);
     const exit = vi.fn();
 
-    runOpenClawCompileCacheRespawnPlan(
+    runQuietCoreCompileCacheRespawnPlan(
       {
         command: "/usr/bin/node",
         args: ["/repo/quiet-core-bot/dist/entry.js"],
@@ -288,7 +288,7 @@ describe("entry compile cache", () => {
     let onSignal: ((signal: NodeJS.Signals) => void) | undefined;
 
     try {
-      runOpenClawCompileCacheRespawnPlan(
+      runQuietCoreCompileCacheRespawnPlan(
         {
           command: "/usr/bin/node",
           args: ["/repo/quiet-core-bot/dist/entry.js"],
@@ -328,7 +328,7 @@ describe("entry compile cache", () => {
   it("disables compile cache for early Node 24.x versions on Windows", () => {
     const root = makeTempDir(tempDirs, "quiet-core-bot-compile-cache-node24-");
     expect(
-      shouldEnableOpenClawCompileCache({
+      shouldEnableQuietCoreCompileCache({
         env: {},
         installRoot: root,
         nodeVersion: "24.1.0",
@@ -336,7 +336,7 @@ describe("entry compile cache", () => {
       }),
     ).toBe(false);
     expect(
-      shouldEnableOpenClawCompileCache({
+      shouldEnableQuietCoreCompileCache({
         env: {},
         installRoot: root,
         nodeVersion: "24.14.0",
@@ -348,7 +348,7 @@ describe("entry compile cache", () => {
   it("keeps compile cache enabled for early Node 24.x on non-Windows packaged installs", () => {
     const root = makeTempDir(tempDirs, "quiet-core-bot-compile-cache-node24-nonwin-");
     expect(
-      shouldEnableOpenClawCompileCache({
+      shouldEnableQuietCoreCompileCache({
         env: {},
         installRoot: root,
         nodeVersion: "24.1.0",
@@ -356,7 +356,7 @@ describe("entry compile cache", () => {
       }),
     ).toBe(true);
     expect(
-      shouldEnableOpenClawCompileCache({
+      shouldEnableQuietCoreCompileCache({
         env: {},
         installRoot: root,
         nodeVersion: "24.14.0",
@@ -368,7 +368,7 @@ describe("entry compile cache", () => {
   it("keeps compile cache enabled for Node 24.15+ and other majors on Windows", () => {
     const root = makeTempDir(tempDirs, "quiet-core-bot-compile-cache-node2415-");
     expect(
-      shouldEnableOpenClawCompileCache({
+      shouldEnableQuietCoreCompileCache({
         env: {},
         installRoot: root,
         nodeVersion: "24.15.0",
@@ -376,7 +376,7 @@ describe("entry compile cache", () => {
       }),
     ).toBe(true);
     expect(
-      shouldEnableOpenClawCompileCache({
+      shouldEnableQuietCoreCompileCache({
         env: {},
         installRoot: root,
         nodeVersion: "22.22.0",
@@ -384,7 +384,7 @@ describe("entry compile cache", () => {
       }),
     ).toBe(true);
     expect(
-      shouldEnableOpenClawCompileCache({
+      shouldEnableQuietCoreCompileCache({
         env: {},
         installRoot: root,
         nodeVersion: "25.0.0",

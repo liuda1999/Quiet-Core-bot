@@ -3,7 +3,7 @@
  */
 import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
 import { sanitizeForLog } from "../../packages/terminal-core/src/ansi.js";
-import { resolveOpenClawMcpTransportAlias } from "../config/mcp-config-normalize.js";
+import { resolveQuietCoreMcpTransportAlias } from "../config/mcp-config-normalize.js";
 import { logWarn } from "../logger.js";
 import {
   describeHttpMcpServerLaunchConfig,
@@ -136,7 +136,7 @@ function getRequestedTransportAlias(rawServer: unknown): HttpMcpTransportType | 
   ) {
     return "";
   }
-  return resolveOpenClawMcpTransportAlias((rawServer as { type?: string }).type) ?? "";
+  return resolveQuietCoreMcpTransportAlias((rawServer as { type?: string }).type) ?? "";
 }
 
 function resolveHttpTransportConfig(

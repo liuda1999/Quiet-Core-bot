@@ -13,7 +13,7 @@ import {
 } from "@quiet-core/normalization-core/string-coerce";
 import { DEFAULT_SUBAGENT_MAX_SPAWN_DEPTH } from "../config/agent-limits.js";
 import { loadSessionStore, resolveStorePath } from "../config/sessions.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   isAcpSessionKey,
   isSubagentSessionKey,
@@ -115,7 +115,7 @@ function findEntryBySessionId(
 
 function resolveSessionCapabilityEntry(params: {
   sessionKey: string;
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   store?: SessionCapabilityStore;
 }): SessionCapabilityEntry | undefined {
   if (params.store) {
@@ -137,7 +137,7 @@ function resolveSessionCapabilityEntry(params: {
 export function resolveSubagentCapabilityStore(
   sessionKey: string | undefined | null,
   opts?: {
-    cfg?: OpenClawConfig;
+    cfg?: QuietCoreConfig;
     store?: SessionCapabilityStore;
   },
 ): SessionCapabilityStore | undefined {
@@ -197,7 +197,7 @@ export function resolveSubagentCapabilities(params: { depth: number; maxSpawnDep
 function isStoredSubagentEnvelopeSession(
   params: {
     sessionKey: string;
-    cfg?: OpenClawConfig;
+    cfg?: QuietCoreConfig;
     store?: SessionCapabilityStore;
     entry?: SessionCapabilityEntry;
   },
@@ -253,7 +253,7 @@ function isStoredSubagentEnvelopeSession(
 export function isSubagentEnvelopeSession(
   sessionKey: string | undefined | null,
   opts?: {
-    cfg?: OpenClawConfig;
+    cfg?: QuietCoreConfig;
     store?: SessionCapabilityStore;
     entry?: SessionCapabilityEntry;
   },
@@ -284,7 +284,7 @@ export function isSubagentEnvelopeSession(
 export function resolveStoredSubagentCapabilities(
   sessionKey: string | undefined | null,
   opts?: {
-    cfg?: OpenClawConfig;
+    cfg?: QuietCoreConfig;
     store?: SessionCapabilityStore;
   },
 ) {
@@ -337,7 +337,7 @@ export function resolveStoredSubagentCapabilities(
 export function resolveStoredSubagentInheritedToolDenylist(
   sessionKey: string | undefined | null,
   opts?: {
-    cfg?: OpenClawConfig;
+    cfg?: QuietCoreConfig;
     store?: SessionCapabilityStore;
   },
 ): string[] {
@@ -358,7 +358,7 @@ export function resolveStoredSubagentInheritedToolDenylist(
 export function resolveStoredSubagentInheritedToolAllowlist(
   sessionKey: string | undefined | null,
   opts?: {
-    cfg?: OpenClawConfig;
+    cfg?: QuietCoreConfig;
     store?: SessionCapabilityStore;
   },
 ): string[] {

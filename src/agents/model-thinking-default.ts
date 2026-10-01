@@ -8,7 +8,7 @@ import {
   normalizeOptionalLowercaseString,
 } from "@quiet-core/normalization-core/string-coerce";
 import { resolveThinkingDefaultForModel } from "../auto-reply/thinking.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { ModelCatalogEntry } from "./model-catalog.types.js";
 import { legacyModelKey, modelKey, normalizeProviderId } from "./model-selection-normalize.js";
 import { normalizeModelSelection } from "./model-selection-resolve.js";
@@ -18,7 +18,7 @@ type ThinkLevel = "off" | "minimal" | "low" | "medium" | "high" | "xhigh" | "ada
 
 /** Resolves the default thinking level for a provider/model pair. */
 export function resolveThinkingDefault(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   provider: string;
   model: string;
   catalog?: ModelCatalogEntry[];
@@ -106,7 +106,7 @@ export function resolveThinkingDefault(params: {
 
 /** Resolves thinking default after loading runtime catalog only when needed. */
 export async function resolveThinkingDefaultWithRuntimeCatalog(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   provider: string;
   model: string;
   loadModelCatalog: () => Promise<ModelCatalogEntry[]>;

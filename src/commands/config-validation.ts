@@ -3,7 +3,7 @@ import { formatCliCommand } from "../cli/command-format.js";
 import { formatPluginPackagingRuntimeOutputRecoveryHint } from "../cli/config-recovery-hints.js";
 import {
   type ConfigFileSnapshot,
-  type OpenClawConfig,
+  type QuietCoreConfig,
   readConfigFileSnapshot,
 } from "../config/config.js";
 import { formatConfigIssueLines } from "../config/issue-format.js";
@@ -58,6 +58,6 @@ export async function requireValidConfigFileSnapshot(
 export async function requireValidConfigSnapshot(
   runtime: RuntimeEnv,
   opts?: { includeCompatibilityAdvisory?: boolean },
-): Promise<OpenClawConfig | null> {
+): Promise<QuietCoreConfig | null> {
   return (await requireValidConfigFileSnapshot(runtime, opts))?.config ?? null;
 }

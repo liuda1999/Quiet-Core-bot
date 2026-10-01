@@ -1,5 +1,5 @@
 #!/usr/bin/env -S pnpm tsx
-// Windows Smoke script supports OpenClaw repository automation.
+// Windows Smoke script supports QuietCore repository automation.
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { windowsAgentWorkspaceScript } from "./agent-workspace.ts";
@@ -41,14 +41,14 @@ import {
 import {
   psSingleQuote,
   windowsAgentTurnConfigPatchScript,
-  windowsOpenClawResolver,
+  windowsQuietCoreResolver,
   windowsScopedEnvFunction,
 } from "./powershell.ts";
 import {
   buildCommonSmokeSummary,
   expectedPackageBuildCommit,
   expectedPackageTargetVersion,
-  extractLastOpenClawVersion,
+  extractLastQuietCoreVersion,
   packAndServeSmokeArtifact,
   printSmokeTargetSummary,
   SmokeRunController,
@@ -116,7 +116,7 @@ const defaultOptions = (): WindowsOptions => ({
   vmName: "Windows 11",
 });
 
-const windowsPortableGitPathScript = `$portableGit = Join-Path (Join-Path (Join-Path $env:LOCALAPPDATA 'OpenClaw\\deps') 'portable-git') ''
+const windowsPortableGitPathScript = `$portableGit = Join-Path (Join-Path (Join-Path $env:LOCALAPPDATA 'QuietCore\\deps') 'portable-git') ''
 $env:PATH = "$portableGit\\cmd;$portableGit\\mingw64\\bin;$portableGit\\usr\\bin;$env:PATH"
 where.exe git.exe`;
 
@@ -452,7 +452,7 @@ class WindowsSmoke extends SmokeRunController<WindowsOptions> {
     script: string,
     options: { check?: boolean; timeoutMs?: number } = {},
   ): string {
-    return this.guest.powershell(`${windowsOpenClawResolver}\n${script}`, options);
+    return this.guest.powershell(`${windowsQuietCoreResolver}\n${script}`, options);
   }
 
   private restoreSnapshot(): void {
@@ -532,8 +532,8 @@ class WindowsSmoke extends SmokeRunController<WindowsOptions> {
     throw new Error("Windows guest did not become ready");
   }
 
-  private logGuestPreflight(cleanOpenClaw: boolean): void {
-    const cleanScript = cleanOpenClaw
+  private logGuestPreflight(cleanQuietCore: boolean): void {
+    const cleanScript = cleanQuietCore
       ? "npm.cmd uninstall -g quiet-core-bot --no-fund --no-audit --loglevel=error 2>$null; $global:LASTEXITCODE = 0"
       : "";
     this.guestPowerShell(
@@ -555,7 +555,7 @@ ${cleanScript}`,
 $script = Invoke-RestMethod -Uri ${psSingleQuote(this.options.installUrl)} -TimeoutSec 120
 & ([scriptblock]::Create($script))${versionArg} -NoOnboard
 if ($LASTEXITCODE -ne 0) { throw "installer failed with exit code $LASTEXITCODE" }
-Invoke-OpenClaw --version
+Invoke-QuietCore --version
       if ($LASTEXITCODE -ne 0) { throw "quiet-core-bot --version failed with exit code $LASTEXITCODE" }`,
       this.remainingPhaseTimeoutMs(WINDOWS_PACKAGE_INSTALL_TIMEOUT_MS) ??
         WINDOWS_PACKAGE_INSTALL_TIMEOUT_MS,
@@ -574,7 +574,7 @@ $tgz = Join-Path $env:TEMP ${psSingleQuote(tempName)}
 curl.exe -fsSL --connect-timeout 10 --max-time 120 --retry 2 --retry-delay 2 ${psSingleQuote(tgzUrl)} -o $tgz
 npm.cmd install -g $tgz --no-fund --no-audit --loglevel=error
 if ($LASTEXITCODE -ne 0) { throw "npm install failed with exit code $LASTEXITCODE" }
-Invoke-OpenClaw --version
+Invoke-QuietCore --version
       if ($LASTEXITCODE -ne 0) { throw "quiet-core-bot --version failed with exit code $LASTEXITCODE" }`,
       this.remainingPhaseTimeoutMs(WINDOWS_PACKAGE_INSTALL_TIMEOUT_MS) ??
         WINDOWS_PACKAGE_INSTALL_TIMEOUT_MS,
@@ -596,7 +596,7 @@ Invoke-OpenClaw --version
   }
 
   private verifyVersionContains(needle: string): void {
-    const version = this.guestPowerShell("Invoke-OpenClaw --version");
+    const version = this.guestPowerShell("Invoke-QuietCore --version");
     if (!version.includes(needle)) {
       throw new Error(`version mismatch: expected substring ${needle}`);
     }
@@ -613,7 +613,7 @@ Invoke-OpenClaw --version
       `$ErrorActionPreference = 'Continue'
 $PSNativeCommandUseErrorActionPreference = $false
 Set-Item -Path ('Env:' + ${psSingleQuote(this.auth.apiKeyEnv)}) -Value ${psSingleQuote(this.auth.apiKeyValue)}
-Invoke-OpenClaw onboard --non-interactive --mode local --auth-choice ${psSingleQuote(this.auth.authChoice)} --secret-input-mode ref --gateway-port 18789 --gateway-bind loopback --install-daemon --skip-skills --skip-health --accept-risk --json
+Invoke-QuietCore onboard --non-interactive --mode local --auth-choice ${psSingleQuote(this.auth.authChoice)} --secret-input-mode ref --gateway-port 18789 --gateway-bind loopback --install-daemon --skip-skills --skip-health --accept-risk --json
 if ($LASTEXITCODE -ne 0) { throw "quiet-core-bot onboard failed with exit code $LASTEXITCODE" }
 ${this.windowsPluginIsolationScript()}`,
       720_000,
@@ -641,7 +641,7 @@ ${this.windowsPluginIsolationScript()}`,
       },
       label,
       onLaunchRetry: warn,
-      script: `${windowsOpenClawResolver}\n${script}`,
+      script: `${windowsQuietCoreResolver}\n${script}`,
       timeoutMs: this.remainingPhaseTimeoutMs(timeoutMs) ?? timeoutMs,
       vmName: this.options.vmName,
     });
@@ -659,14 +659,14 @@ if ($null -eq $config.update) {
 $config.update | Add-Member -Force -MemberType NoteProperty -Name channel -Value 'dev'
 $config | ConvertTo-Json -Depth 100 | Set-Content -Path $configPath -Encoding utf8
 ${windowsScopedEnvFunction}
-$script:OpenClawUpdateExit = 0
+$script:QuietCoreUpdateExit = 0
 Invoke-WithScopedEnv @{ QUIET_CORE_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS = '1'; QUIET_CORE_DISABLE_BUNDLED_PLUGINS = '1' } {
-  Invoke-OpenClaw update --channel dev --yes --json
-  $script:OpenClawUpdateExit = $LASTEXITCODE
+  Invoke-QuietCore update --channel dev --yes --json
+  $script:QuietCoreUpdateExit = $LASTEXITCODE
 }
-if ($script:OpenClawUpdateExit -ne 0) { throw "quiet-core-bot update failed with exit code $script:OpenClawUpdateExit" }
-Invoke-OpenClaw --version
-Invoke-OpenClaw update status --json`,
+if ($script:QuietCoreUpdateExit -ne 0) { throw "quiet-core-bot update failed with exit code $script:QuietCoreUpdateExit" }
+Invoke-QuietCore --version
+Invoke-QuietCore update status --json`,
       { timeoutMs: this.updateTimeoutSeconds * 1000 },
     );
   }
@@ -674,7 +674,7 @@ Invoke-OpenClaw update status --json`,
   private verifyDevChannelUpdate(): void {
     const status = this.guestPowerShell(
       `${windowsPortableGitPathScript}
-Invoke-OpenClaw update status --json`,
+Invoke-QuietCore update status --json`,
     );
     for (const needle of ['"installKind": "git"', '"value": "dev"', '"branch": "main"']) {
       if (!status.includes(needle)) {
@@ -688,7 +688,7 @@ Invoke-OpenClaw update status --json`,
       `gateway-${action}`,
       `$ErrorActionPreference = 'Continue'
 $PSNativeCommandUseErrorActionPreference = $false
-Invoke-OpenClaw gateway ${action}
+Invoke-QuietCore gateway ${action}
 if ($LASTEXITCODE -ne 0) { throw "gateway ${action} failed with exit code $LASTEXITCODE" }`,
       420_000,
     );
@@ -701,7 +701,7 @@ if ($LASTEXITCODE -ne 0) { throw "gateway ${action} failed with exit code $LASTE
     const start = Date.now();
     while (Date.now() < deadline) {
       const probe = this.guestPowerShell(
-        "Invoke-OpenClaw gateway probe --url ws://127.0.0.1:18789 --timeout 30000 --json",
+        "Invoke-QuietCore gateway probe --url ws://127.0.0.1:18789 --timeout 30000 --json",
         { check: false, timeoutMs: 60_000 },
       );
       if (/"ok"\s*:\s*true/.test(probe)) {
@@ -711,7 +711,7 @@ if ($LASTEXITCODE -ne 0) { throw "gateway ${action} failed with exit code $LASTE
         warn(
           `gateway-reachable recovery: gateway start after ${Math.floor((Date.now() - start) / 1000)}s`,
         );
-        this.guestPowerShell("Invoke-OpenClaw gateway start", {
+        this.guestPowerShell("Invoke-QuietCore gateway start", {
           check: false,
           timeoutMs: 120_000,
         });
@@ -725,11 +725,11 @@ if ($LASTEXITCODE -ne 0) { throw "gateway ${action} failed with exit code $LASTE
   }
 
   private showGatewayStatusCompat(): void {
-    const help = this.guestPowerShell("Invoke-OpenClaw gateway status --help", {
+    const help = this.guestPowerShell("Invoke-QuietCore gateway status --help", {
       check: false,
     });
     const suffix = help.includes("--require-rpc") ? "--deep --require-rpc" : "--deep";
-    this.guestPowerShell(`Invoke-OpenClaw gateway status ${suffix}`);
+    this.guestPowerShell(`Invoke-QuietCore gateway status ${suffix}`);
   }
 
   private verifyTurn(): Promise<void> {
@@ -763,7 +763,7 @@ for ($attempt = 1; $attempt -le 2; $attempt++) {
     '${resolveParallelsModelTimeoutSeconds("windows")}',
     '--json'
   )
-  $output = Invoke-OpenClaw @args 2>&1
+  $output = Invoke-QuietCore @args 2>&1
   $agentExitCode = $LASTEXITCODE
   if ($null -ne $output) { $output | ForEach-Object { $_ } }
   if ($agentExitCode -eq 0 -and ($output | Out-String) -match '"finalAssistant(Raw|Visible)Text":\\s*"OK"') {
@@ -789,7 +789,7 @@ if (-not $agentOk) { throw 'quiet-core-bot agent finished without OK response' }
   }
 
   private async extractLastVersion(phaseName: string): Promise<string> {
-    return await extractLastOpenClawVersion(this.runDir, phaseName, /OpenClaw\s+([0-9][^\s]*)/gi);
+    return await extractLastQuietCoreVersion(this.runDir, phaseName, /QuietCore\s+([0-9][^\s]*)/gi);
   }
 
   protected async writeSummary(): Promise<string> {

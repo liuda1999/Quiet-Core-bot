@@ -32,7 +32,7 @@ import type {
 } from "./runtime-api.js";
 
 const DEFAULT_BOT_ID = "quiet-core-bot";
-const DEFAULT_BOT_NAME = "OpenClaw QA";
+const DEFAULT_BOT_NAME = "QuietCore QA";
 
 type QaBusEventSeed =
   | {

@@ -5,8 +5,8 @@ export type {
   ChannelDirectoryEntry,
   ChatType,
   HistoryEntry,
-  OpenClawConfig,
-  OpenClawPluginApi,
+  QuietCoreConfig,
+  QuietCorePluginApi,
   ReplyPayload,
 } from "quiet-core-bot/plugin-sdk/core";
 export type { RuntimeEnv } from "quiet-core-bot/plugin-sdk/runtime";

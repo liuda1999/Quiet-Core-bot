@@ -13,7 +13,7 @@ import {
 } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import type { ResolvedMattermostAccount } from "./accounts.js";
 import type { MattermostChannel } from "./client.js";
-import type { OpenClawConfig } from "./runtime-api.js";
+import type { QuietCoreConfig } from "./runtime-api.js";
 import { isDangerousNameMatchingEnabled, resolveAllowlistMatchSimple } from "./runtime-api.js";
 
 const MATTERMOST_USER_NAME_KIND =
@@ -140,7 +140,7 @@ type MattermostCommandDenyReason = Extract<
 
 export async function resolveMattermostMonitorInboundAccess(params: {
   account: ResolvedMattermostAccount;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   senderId: string;
   senderName: string;
   channelId: string;
@@ -241,7 +241,7 @@ function resolveMattermostCommandDenyReason(params: {
 
 export async function authorizeMattermostCommandInvocation(params: {
   account: ResolvedMattermostAccount;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   senderId: string;
   senderName: string;
   channelId: string;

@@ -71,7 +71,7 @@ on:
         default: ""
         type: string
       published_upgrade_survivor_baseline:
-        description: Published OpenClaw package baseline for the published-upgrade-survivor Docker lane
+        description: Published QuietCore package baseline for the published-upgrade-survivor Docker lane
         required: false
         default: quiet-core-bot@latest
         type: string
@@ -166,7 +166,7 @@ on:
         default: ""
         type: string
       published_upgrade_survivor_baseline:
-        description: Published OpenClaw package baseline for the published-upgrade-survivor Docker lane
+        description: Published QuietCore package baseline for the published-upgrade-survivor Docker lane
         required: false
         default: quiet-core-bot@latest
         type: string

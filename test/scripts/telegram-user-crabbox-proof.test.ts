@@ -9,7 +9,7 @@ import { MAX_TIMER_TIMEOUT_MS } from "@quiet-core/normalization-core/number-coer
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   COMMAND_TIMEOUT_MS,
-  createOpenClawGatewaySpawnSpec,
+  createQuietCoreGatewaySpawnSpec,
   parseArgs,
   readLogTail,
   readTelegramUserProofLogTailBytes,
@@ -93,7 +93,7 @@ describe("telegram user Crabbox proof log polling", () => {
     const fakePnpm = path.join(root, "pnpm.cjs");
     fs.writeFileSync(fakePnpm, "#!/usr/bin/env node\n", { mode: 0o755 });
 
-    const spec = createOpenClawGatewaySpawnSpec({
+    const spec = createQuietCoreGatewaySpawnSpec({
       env: { ...process.env, QUIET_CORE_TELEGRAM_PROOF_SENTINEL: "1" },
       gatewayPort: 19042,
       nodeExecPath: "/opt/node/bin/node",
@@ -162,8 +162,8 @@ describe("telegram user Crabbox proof log polling", () => {
       parseArgs(["--output-dir", ".artifacts/one", "--output-dir", ".artifacts/two"]),
     ).toThrow("--output-dir was provided more than once");
 
-    expect(parseArgs(["--expect", "OpenClaw", "--expect", "ready"]).expect).toEqual([
-      "OpenClaw",
+    expect(parseArgs(["--expect", "QuietCore", "--expect", "ready"]).expect).toEqual([
+      "QuietCore",
       "ready",
     ]);
   });

@@ -3,7 +3,7 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createBundledBrowserPluginFixture } from "../../test/helpers/browser-bundled-plugin-fixture.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { clearPluginLoaderCache } from "../plugins/loader.js";
 import { resetPluginRuntimeStateForTest } from "../plugins/runtime.js";
 import { loadGatewayStartupPlugins } from "./server-plugin-bootstrap.js";
@@ -44,7 +44,7 @@ describe("loadGatewayStartupPlugins browser plugin integration", () => {
         plugins: {
           allow: ["browser"],
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       workspaceDir: process.cwd(),
       log: createTestLog(),
       coreGatewayHandlers: {},

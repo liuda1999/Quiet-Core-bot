@@ -3,7 +3,7 @@
  *
  * Bridges old DM allowlist/pairing behavior to channel ingress access decisions.
  */
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   expandAllowFromWithAccessGroups,
   type AccessGroupMembershipResolver,
@@ -21,7 +21,7 @@ export type { AccessGroupMembershipResolver } from "../plugin-sdk/access-groups.
 
 /** Runtime hooks needed by the legacy direct-DM access resolver. */
 export type DirectDmCommandAuthorizationRuntime = {
-  shouldComputeCommandAuthorized: (rawBody: string, cfg: OpenClawConfig) => boolean;
+  shouldComputeCommandAuthorized: (rawBody: string, cfg: QuietCoreConfig) => boolean;
   /** @deprecated Command authorization is resolved by channel ingress. Kept for runtime injection compatibility. */
   resolveCommandAuthorizedFromAuthorizers?: (params: {
     useAccessGroups: boolean;
@@ -64,7 +64,7 @@ function toLegacyDmReasonCode(reasonCode: string): DmGroupAccessReasonCode {
  * @deprecated Use `resolveChannelMessageIngress` from `quiet-core-bot/plugin-sdk/channel-ingress-runtime`.
  */
 export async function resolveInboundDirectDmAccessWithRuntime(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   channel: ChannelId;
   accountId: string;
   dmPolicy?: string | null;

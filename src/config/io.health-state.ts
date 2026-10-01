@@ -1,9 +1,9 @@
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../infra/kysely-sync.js";
 // Stores config health fingerprints in shared SQLite state.
-import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
 import {
-  openOpenClawStateDatabase,
-  runOpenClawStateWriteTransaction,
+  openQuietCoreStateDatabase,
+  runQuietCoreStateWriteTransaction,
 } from "../state/quiet-core-bot-state-db.js";
 
 export type ConfigHealthFingerprint = {
@@ -32,7 +32,7 @@ export type ConfigHealthState = {
   entries?: Record<string, ConfigHealthEntry>;
 };
 
-type ConfigHealthDatabase = Pick<OpenClawStateKyselyDatabase, "config_health_entries">;
+type ConfigHealthDatabase = Pick<QuietCoreStateKyselyDatabase, "config_health_entries">;
 
 export type ConfigHealthStateDeps = {
   env: NodeJS.ProcessEnv;
@@ -71,7 +71,7 @@ function formatConfigHealthStateError(error: unknown): string {
 
 export function readConfigHealthStateFromStore(deps: ConfigHealthStateDeps): ConfigHealthState {
   try {
-    const database = openOpenClawStateDatabase({ env: resolveConfigHealthStateEnv(deps) });
+    const database = openQuietCoreStateDatabase({ env: resolveConfigHealthStateEnv(deps) });
     const healthDb = getNodeSqliteKysely<ConfigHealthDatabase>(database.db);
     const rows = executeSqliteQuerySync(
       database.db,
@@ -112,7 +112,7 @@ export function writeConfigHealthStateToStore(
       return;
     }
     const updatedAtMs = Date.now();
-    runOpenClawStateWriteTransaction(
+    runQuietCoreStateWriteTransaction(
       ({ db }) => {
         const healthDb = getNodeSqliteKysely<ConfigHealthDatabase>(db);
         executeSqliteQuerySync(

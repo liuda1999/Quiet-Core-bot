@@ -1,7 +1,7 @@
 // Gateway probe target resolver.
 // Chooses local or remote probe mode from gateway config and URL availability.
 import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 
 // Probe target resolution converts configured gateway mode into the actual
 // reachable target. Remote mode falls back to local probing when no remote URL
@@ -13,7 +13,7 @@ export type GatewayProbeTargetResolution = {
 };
 
 /** Resolves whether gateway probe commands should target local or remote gateway. */
-export function resolveGatewayProbeTarget(cfg: OpenClawConfig): GatewayProbeTargetResolution {
+export function resolveGatewayProbeTarget(cfg: QuietCoreConfig): GatewayProbeTargetResolution {
   const gatewayMode = cfg.gateway?.mode === "remote" ? "remote" : "local";
   const remoteUrlRaw = normalizeOptionalString(cfg.gateway?.remote?.url) ?? "";
   const remoteUrlMissing = gatewayMode === "remote" && !remoteUrlRaw;

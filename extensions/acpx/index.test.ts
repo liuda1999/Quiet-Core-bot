@@ -1,5 +1,5 @@
 // ACPX tests cover index plugin behavior.
-import type { OpenClawPluginApi } from "quiet-core-bot/plugin-sdk/plugin-entry";
+import type { QuietCorePluginApi } from "quiet-core-bot/plugin-sdk/plugin-entry";
 import { createTestPluginApi } from "quiet-core-bot/plugin-sdk/plugin-test-api";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import setupPlugin from "./setup-api.js";
@@ -19,7 +19,7 @@ vi.mock("quiet-core-bot/plugin-sdk/acp-runtime-backend", () => ({
 
 import plugin from "./index.js";
 
-type AcpxAutoEnableProbe = Parameters<OpenClawPluginApi["registerAutoEnableProbe"]>[0];
+type AcpxAutoEnableProbe = Parameters<QuietCorePluginApi["registerAutoEnableProbe"]>[0];
 
 function registerAcpxAutoEnableProbe(): AcpxAutoEnableProbe {
   const probes: AcpxAutoEnableProbe[] = [];

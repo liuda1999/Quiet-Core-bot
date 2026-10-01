@@ -4,11 +4,11 @@ import os from "node:os";
 import path from "node:path";
 import { MAX_TIMER_TIMEOUT_MS } from "@quiet-core/normalization-core/number-coercion";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { loggingState } from "../logging/state.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { readDiagnosticEvents } from "../state/diagnostic-events-store.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
+import { closeQuietCoreStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import {
   agentCliCommand,
@@ -58,7 +58,7 @@ const jsonRuntime = {
   exit: vi.fn(),
 };
 
-function mockConfig(storePath: string, overrides?: Partial<OpenClawConfig>) {
+function mockConfig(storePath: string, overrides?: Partial<QuietCoreConfig>) {
   const config = {
     agents: {
       defaults: {
@@ -81,7 +81,7 @@ function mockConfig(storePath: string, overrides?: Partial<OpenClawConfig>) {
 
 async function withTempStore(
   fn: (ctx: { dir: string; store: string }) => Promise<void>,
-  overrides?: Partial<OpenClawConfig>,
+  overrides?: Partial<QuietCoreConfig>,
 ) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-agent-cli-"));
   const store = path.join(dir, "sessions.json");
@@ -2108,7 +2108,7 @@ describe("embedded fallback diagnostics", () => {
 
   afterEach(() => {
     vi.clearAllMocks();
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
     fs.rmSync(stateDir, { recursive: true, force: true });
   });
 

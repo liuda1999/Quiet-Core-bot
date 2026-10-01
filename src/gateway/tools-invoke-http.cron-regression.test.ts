@@ -71,7 +71,7 @@ vi.mock("../agents/quiet-core-bot-tools.js", () => {
     },
   ];
   return {
-    createOpenClawTools: () => tools,
+    createQuietCoreTools: () => tools,
   };
 });
 

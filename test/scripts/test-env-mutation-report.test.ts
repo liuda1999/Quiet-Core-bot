@@ -69,7 +69,7 @@ delete process.env.QUIET_CORE_STATE_DIR;
 }
 
 describe("collectTestEnvMutationReport", () => {
-  it("reports active OpenClaw env mutations while ignoring strings and non-test files", () => {
+  it("reports active QuietCore env mutations while ignoring strings and non-test files", () => {
     const report = collectTestEnvMutationReport({ repoRoot: makeEnvMutationFixture() });
 
     expect(
@@ -111,7 +111,7 @@ describe("collectTestEnvMutationReport", () => {
 
     const rendered = renderTestEnvMutationReport(report, { includeAllowed: true });
 
-    expect(rendered).toContain("OpenClaw test env mutation report");
+    expect(rendered).toContain("QuietCore test env mutation report");
     expect(rendered).toContain("Findings: 9 active in 3 file(s), 2 allowed in 1 file(s)");
     expect(rendered).toContain("- src/example.test.ts (7)");
     expect(rendered).toContain("L2 QUIET_CORE_STATE_DIR assign process.env");

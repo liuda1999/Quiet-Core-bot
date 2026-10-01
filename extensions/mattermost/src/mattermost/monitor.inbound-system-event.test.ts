@@ -2,7 +2,7 @@
 import { createInboundDebouncer } from "quiet-core-bot/plugin-sdk/channel-inbound-debounce";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { monitorMattermostProvider } from "./monitor.js";
-import type { OpenClawConfig, RuntimeEnv } from "./runtime-api.js";
+import type { QuietCoreConfig, RuntimeEnv } from "./runtime-api.js";
 
 class FakeWebSocket {
   public readonly sent: string[] = [];
@@ -141,7 +141,7 @@ vi.mock("./runtime-api.js", async () => {
 });
 
 function createRuntimeCore(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   routeOverride?: {
     accountId?: string;
     agentId?: string;
@@ -336,7 +336,7 @@ function createRuntimeCore(
   };
 }
 
-const testConfig: OpenClawConfig = {
+const testConfig: QuietCoreConfig = {
   channels: {
     mattermost: {
       enabled: true,
@@ -503,7 +503,7 @@ describe("mattermost inbound user posts", () => {
       stop: vi.fn(async () => {}),
     };
     mockState.createMattermostDraftStream.mockReturnValue(draftStream);
-    const progressConfig: OpenClawConfig = {
+    const progressConfig: QuietCoreConfig = {
       channels: {
         mattermost: {
           enabled: true,
@@ -607,7 +607,7 @@ describe("mattermost inbound user posts", () => {
     const socket = new FakeWebSocket();
     const abortController = new AbortController();
     mockState.abortController = abortController;
-    const inlineCommandConfig: OpenClawConfig = {
+    const inlineCommandConfig: QuietCoreConfig = {
       commands: { useAccessGroups: true },
       channels: {
         mattermost: {
@@ -683,7 +683,7 @@ describe("mattermost inbound user posts", () => {
     const socket = new FakeWebSocket();
     const abortController = new AbortController();
     mockState.abortController = abortController;
-    const directConfig: OpenClawConfig = {
+    const directConfig: QuietCoreConfig = {
       channels: {
         mattermost: {
           enabled: true,
@@ -810,7 +810,7 @@ describe("mattermost inbound user posts", () => {
     const socket = new FakeWebSocket();
     const abortController = new AbortController();
     mockState.abortController = abortController;
-    const channelTypeConfig: OpenClawConfig = {
+    const channelTypeConfig: QuietCoreConfig = {
       channels: {
         mattermost: {
           enabled: true,
@@ -869,7 +869,7 @@ describe("mattermost inbound user posts", () => {
     const socket = new FakeWebSocket();
     const abortController = new AbortController();
     mockState.abortController = abortController;
-    const mentionConfig: OpenClawConfig = {
+    const mentionConfig: QuietCoreConfig = {
       commands: { useAccessGroups: false },
       messages: { inbound: { debounceMs: 60_000 } },
       channels: {
@@ -961,7 +961,7 @@ describe("mattermost inbound user posts", () => {
     const socket = new FakeWebSocket();
     const abortController = new AbortController();
     mockState.abortController = abortController;
-    const directConfig: OpenClawConfig = {
+    const directConfig: QuietCoreConfig = {
       channels: {
         mattermost: {
           enabled: true,
@@ -1037,7 +1037,7 @@ describe("mattermost inbound user posts", () => {
     const socket = new FakeWebSocket();
     const abortController = new AbortController();
     mockState.abortController = abortController;
-    const directConfig: OpenClawConfig = {
+    const directConfig: QuietCoreConfig = {
       session: { dmScope: "per-channel-peer" },
       channels: {
         mattermost: {

@@ -4,7 +4,7 @@ import path from "node:path";
 import { isRecord } from "@quiet-core/normalization-core/record-coerce";
 import { note } from "../../packages/terminal-core/src/note.js";
 import { formatCliCommand } from "../cli/command-format.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { saveJsonFile } from "../infra/json-file.js";
 import { tryReadJsonSync } from "../infra/json-files.js";
 import type { BundledPluginSource } from "../plugins/bundled-sources.js";
@@ -17,8 +17,8 @@ import { loadInstalledPluginIndex } from "../plugins/installed-plugin-index.js";
 import { hasRetainedManagedNpmInstallMarker } from "../plugins/managed-npm-retention.js";
 import { listManagedPluginNpmRootsSync } from "../plugins/npm-project-roots.js";
 import {
-  auditOpenClawPeerDependenciesInManagedNpmRoot,
-  relinkOpenClawPeerDependenciesInManagedNpmRoot,
+  auditQuietCorePeerDependenciesInManagedNpmRoot,
+  relinkQuietCorePeerDependenciesInManagedNpmRoot,
 } from "../plugins/plugin-peer-link.js";
 import { refreshPluginRegistry } from "../plugins/plugin-registry.js";
 import {
@@ -36,7 +36,7 @@ import {
 
 type PluginRegistryDoctorRepairParams = Omit<PluginRegistryInstallMigrationParams, "config"> &
   InstalledPluginIndexRecordStoreOptions & {
-    config: OpenClawConfig;
+    config: QuietCoreConfig;
     prompter: Pick<DoctorPrompter, "shouldRepair">;
   };
 
@@ -323,13 +323,13 @@ export async function maybeRepairStaleLocalBundledPluginInstallRecords(
 }
 
 /** Relinks managed npm plugin packages to the current Quiet Core bot host packages. */
-export async function maybeRepairManagedNpmOpenClawPeerLinks(
+export async function maybeRepairManagedNpmQuietCorePeerLinks(
   params: PluginRegistryDoctorRepairParams,
 ): Promise<boolean> {
   const npmRoots = listManagedPluginNpmRoots(params);
   if (!params.prompter.shouldRepair) {
     const audits = await Promise.all(
-      npmRoots.map((npmRoot) => auditOpenClawPeerDependenciesInManagedNpmRoot({ npmRoot })),
+      npmRoots.map((npmRoot) => auditQuietCorePeerDependenciesInManagedNpmRoot({ npmRoot })),
     );
     const issues = audits.flatMap((audit) => audit.issues);
     if (issues.length > 0) {
@@ -352,7 +352,7 @@ export async function maybeRepairManagedNpmOpenClawPeerLinks(
   };
   const results = await Promise.all(
     npmRoots.map((npmRoot) =>
-      relinkOpenClawPeerDependenciesInManagedNpmRoot({
+      relinkQuietCorePeerDependenciesInManagedNpmRoot({
         npmRoot,
         logger,
       }),
@@ -398,7 +398,7 @@ async function loadInstallRecordsWithoutPluginIds(
  */
 export async function maybeRepairPluginRegistryState(
   params: PluginRegistryDoctorRepairParams,
-): Promise<OpenClawConfig> {
+): Promise<QuietCoreConfig> {
   const preflight = preflightPluginRegistryInstallMigration(params);
   for (const warning of preflight.deprecationWarnings) {
     note(warning, "Plugin registry");
@@ -421,7 +421,7 @@ export async function maybeRepairPluginRegistryState(
   const removedStaleManagedNpmBundledPlugins = maybeRepairStaleManagedNpmBundledPlugins(params);
   const removedStaleLocalBundledPluginIds =
     await maybeRepairStaleLocalBundledPluginInstallRecords(params);
-  const repairedManagedNpmOpenClawPeerLinks = await maybeRepairManagedNpmOpenClawPeerLinks(params);
+  const repairedManagedNpmQuietCorePeerLinks = await maybeRepairManagedNpmQuietCorePeerLinks(params);
   const stalePluginIdsToRemove = [
     ...new Set([
       ...(removedStaleManagedNpmBundledPlugins ? staleManagedNpmBundledPluginIds : []),
@@ -468,7 +468,7 @@ export async function maybeRepairPluginRegistryState(
     preflight.action === "skip-existing" ||
     removedStaleManagedNpmBundledPlugins ||
     removedStaleLocalBundledPluginIds.length > 0 ||
-    repairedManagedNpmOpenClawPeerLinks
+    repairedManagedNpmQuietCorePeerLinks
   ) {
     const index = await refreshPluginRegistry({
       ...migrationParams,

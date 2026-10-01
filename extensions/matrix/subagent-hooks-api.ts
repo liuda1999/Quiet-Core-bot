@@ -1,5 +1,5 @@
 // Matrix API module exposes the plugin public contract.
-import type { OpenClawPluginApi } from "quiet-core-bot/plugin-sdk/channel-entry-contract";
+import type { QuietCorePluginApi } from "quiet-core-bot/plugin-sdk/channel-entry-contract";
 
 type MatrixSubagentHooksModule = typeof import("./src/matrix/subagent-hooks.js");
 
@@ -10,7 +10,7 @@ function loadMatrixSubagentHooksModule() {
   return matrixSubagentHooksPromise;
 }
 
-export function registerMatrixSubagentHooks(api: OpenClawPluginApi): void {
+export function registerMatrixSubagentHooks(api: QuietCorePluginApi): void {
   api.on("subagent_ended", async (event) => {
     const { handleMatrixSubagentEnded } = await loadMatrixSubagentHooksModule();
     await handleMatrixSubagentEnded(event);

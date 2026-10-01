@@ -1,5 +1,5 @@
 // Web search runtime types describe search provider factories and dependencies.
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type {
   PluginWebSearchProviderEntry,
 } from "../plugins/web-provider-types.js";
@@ -7,7 +7,7 @@ import type { RuntimeWebSearchMetadata } from "../secrets/runtime-web-tools.type
 
 // Shared web_search runtime contracts. Keep these in a types-only module so
 // provider registries and callers can import them without loading runtime code.
-type WebSearchConfig = NonNullable<OpenClawConfig["tools"]>["web"] extends infer Web
+type WebSearchConfig = NonNullable<QuietCoreConfig["tools"]>["web"] extends infer Web
   ? Web extends { search?: infer Search }
     ? Search
     : undefined
@@ -15,7 +15,7 @@ type WebSearchConfig = NonNullable<OpenClawConfig["tools"]>["web"] extends infer
 
 /** Provider/tool resolution inputs for web_search. */
 export type ResolveWebSearchDefinitionParams = {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   agentDir?: string;
   sandboxed?: boolean;
   runtimeWebSearch?: RuntimeWebSearchMetadata;
@@ -38,7 +38,7 @@ export type RunWebSearchResult = {
 
 /** List-provider query parameters. */
 export type ListWebSearchProvidersParams = {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
 };
 
 export type RuntimeWebSearchProviderEntry = PluginWebSearchProviderEntry;

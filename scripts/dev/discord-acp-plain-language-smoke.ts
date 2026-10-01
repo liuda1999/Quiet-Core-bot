@@ -1,5 +1,5 @@
 #!/usr/bin/env bun
-// Discord Acp Plain Language Smoke script supports OpenClaw repository automation.
+// Discord Acp Plain Language Smoke script supports QuietCore repository automation.
 import { execFile } from "node:child_process";
 // Manual ACP thread smoke for plain-language routing.
 // Keep this script available for regression/debug validation. Do not delete.
@@ -327,7 +327,7 @@ function usage(): string {
     "Usage: bun scripts/dev/discord-acp-plain-language-smoke.ts " +
     "--channel <discord-channel-id> [--token <driver-token> | --driver webhook --bot-token <bot-token> | --driver quiet-core-bot] [options]\n\n" +
     "Manual live smoke only (not CI). Sends a plain-language instruction in Discord and verifies:\n" +
-    "1) OpenClaw spawned an ACP thread binding\n" +
+    "1) QuietCore spawned an ACP thread binding\n" +
     "2) agent replied in that bound thread with the expected ACK token\n\n" +
     "Options:\n" +
     "  --channel <id>               Parent Discord channel id (required)\n" +
@@ -341,8 +341,8 @@ function usage(): string {
     "  --instruction <text>         Custom instruction template (optional)\n" +
     "  --timeout-ms <n>             Total timeout in ms (default: 240000)\n" +
     "  --poll-ms <n>                Poll interval in ms (default: 1500)\n" +
-    "  --state-dir <p>              Override OpenClaw state dir for plugin-state polling\n" +
-    "  --quiet-core-bot-bin <path>        OpenClaw CLI binary for driver=quiet-core-bot (default: quiet-core-bot)\n" +
+    "  --state-dir <p>              Override QuietCore state dir for plugin-state polling\n" +
+    "  --quiet-core-bot-bin <path>        QuietCore CLI binary for driver=quiet-core-bot (default: quiet-core-bot)\n" +
     "  --json                       Emit JSON output\n" +
     "\n" +
     "Environment fallbacks:\n" +
@@ -1047,7 +1047,7 @@ async function run(argv = process.argv.slice(2)): Promise<SuccessResult | Failur
         ok: false,
         stage: "wait-ack",
         smokeId,
-        error: `Thread bound (${threadId}) but timed out waiting for ACK token "${ackToken}" from OpenClaw.`,
+        error: `Thread bound (${threadId}) but timed out waiting for ACK token "${ackToken}" from QuietCore.`,
         diagnostics: {
           bindingCandidates: [
             {

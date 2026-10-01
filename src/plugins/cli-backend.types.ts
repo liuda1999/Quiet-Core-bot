@@ -1,6 +1,6 @@
 /** Type contracts for plugin-owned CLI backend integrations. */
 import type { CliBackendConfig } from "../config/types.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { ContextEngineHostCapability } from "../context-engine/types.js";
 
 export type PluginTextReplacement = {
@@ -21,7 +21,7 @@ export type CliBundleMcpMode =
   | "gemini-system-settings";
 
 export type CliBackendPrepareExecutionContext = {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   workspaceDir: string;
   agentDir?: string;
   provider: string;
@@ -49,7 +49,7 @@ export type CliBackendThinkingLevel =
 export type CliBackendExecutionMode = "agent" | "side-question";
 
 export type CliBackendResolveExecutionArgsContext = {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   workspaceDir: string;
   provider: string;
   modelId: string;
@@ -71,7 +71,7 @@ export type CliBackendNativeToolMode = "none" | "always-on";
 export type CliBackendSideQuestionToolMode = "disabled";
 
 export type CliBackendNormalizeConfigContext = {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   backendId: string;
   agentId?: string;
 };
@@ -142,7 +142,7 @@ export type CliBackendPlugin = {
    * the generic CLI runner or prompt builder.
    */
   transformSystemPrompt?: (ctx: {
-    config?: OpenClawConfig;
+    config?: QuietCoreConfig;
     workspaceDir?: string;
     provider: string;
     modelId: string;

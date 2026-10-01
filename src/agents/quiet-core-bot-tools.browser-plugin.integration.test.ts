@@ -1,9 +1,9 @@
 // Verifies Quiet Core bot plugin tools are resolved with browser/runtime context.
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { resetConfigRuntimeState, setRuntimeConfigSnapshot } from "../config/config.js";
 import { activateSecretsRuntimeSnapshot, clearSecretsRuntimeSnapshot } from "../secrets/runtime.js";
-import { resolveOpenClawPluginToolsForOptions } from "./quiet-core-bot-plugin-tools.js";
+import { resolveQuietCorePluginToolsForOptions } from "./quiet-core-bot-plugin-tools.js";
 
 const hoisted = vi.hoisted(() => ({
   resolvePluginTools: vi.fn(),
@@ -22,7 +22,7 @@ function firstResolvePluginToolsParams(): Record<string, unknown> {
   return call[0] as Record<string, unknown>;
 }
 
-describe("createOpenClawTools browser plugin integration", () => {
+describe("createQuietCoreTools browser plugin integration", () => {
   afterEach(() => {
     hoisted.resolvePluginTools.mockReset();
     clearSecretsRuntimeSnapshot();
@@ -50,9 +50,9 @@ describe("createOpenClawTools browser plugin integration", () => {
       plugins: {
         allow: ["browser"],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
-    const tools = resolveOpenClawPluginToolsForOptions({
+    const tools = resolveQuietCorePluginToolsForOptions({
       options: { config },
       resolvedConfig: config,
     });
@@ -72,9 +72,9 @@ describe("createOpenClawTools browser plugin integration", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
-    const tools = resolveOpenClawPluginToolsForOptions({
+    const tools = resolveQuietCorePluginToolsForOptions({
       options: { config },
       resolvedConfig: config,
     });
@@ -105,20 +105,20 @@ describe("createOpenClawTools browser plugin integration", () => {
       ];
     });
 
-    const tools = resolveOpenClawPluginToolsForOptions({
+    const tools = resolveQuietCorePluginToolsForOptions({
       options: {
         config: {
           plugins: {
             allow: ["browser"],
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         fsPolicy: { workspaceOnly: true },
       },
       resolvedConfig: {
         plugins: {
           allow: ["browser"],
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
     });
 
     const browserTool = tools.find((tool) => tool.name === "browser");
@@ -137,9 +137,9 @@ describe("createOpenClawTools browser plugin integration", () => {
       plugins: {
         allow: ["browser"],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
-    resolveOpenClawPluginToolsForOptions({
+    resolveQuietCorePluginToolsForOptions({
       options: { config, allowGatewaySubagentBinding: true },
       resolvedConfig: config,
     });
@@ -171,9 +171,9 @@ describe("createOpenClawTools browser plugin integration", () => {
       plugins: {
         allow: ["xai"],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
-    resolveOpenClawPluginToolsForOptions({
+    resolveQuietCorePluginToolsForOptions({
       options: {
         config,
         authProfileStore: {
@@ -208,9 +208,9 @@ describe("createOpenClawTools browser plugin integration", () => {
       plugins: {
         allow: ["browser"],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
-    resolveOpenClawPluginToolsForOptions({
+    resolveQuietCorePluginToolsForOptions({
       options: {
         config,
         pluginToolAllowlist: ["*"],
@@ -231,12 +231,12 @@ describe("createOpenClawTools browser plugin integration", () => {
       plugins: {
         allow: ["old-plugin"],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const staleRuntimeConfig = {
       plugins: {
         allow: ["old-plugin"],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const resolvedRunConfig = {
       plugins: {
         allow: ["browser"],
@@ -246,10 +246,10 @@ describe("createOpenClawTools browser plugin integration", () => {
           planTool: true,
         },
       },
-    } as OpenClawConfig;
-    let capturedRuntimeConfig: OpenClawConfig | undefined;
+    } as QuietCoreConfig;
+    let capturedRuntimeConfig: QuietCoreConfig | undefined;
     hoisted.resolvePluginTools.mockImplementation((params: unknown) => {
-      capturedRuntimeConfig = (params as { context?: { runtimeConfig?: OpenClawConfig } }).context
+      capturedRuntimeConfig = (params as { context?: { runtimeConfig?: QuietCoreConfig } }).context
         ?.runtimeConfig;
       return [];
     });
@@ -271,7 +271,7 @@ describe("createOpenClawTools browser plugin integration", () => {
       },
     });
 
-    resolveOpenClawPluginToolsForOptions({
+    resolveQuietCorePluginToolsForOptions({
       options: { config: resolvedRunConfig },
       resolvedConfig: resolvedRunConfig,
     });
@@ -284,7 +284,7 @@ describe("createOpenClawTools browser plugin integration", () => {
       plugins: {
         allow: ["old-plugin"],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const explicitConfig = {
       plugins: {
         allow: ["browser"],
@@ -294,15 +294,15 @@ describe("createOpenClawTools browser plugin integration", () => {
           planTool: true,
         },
       },
-    } as OpenClawConfig;
-    let capturedRuntimeConfig: OpenClawConfig | undefined;
-    let getRuntimeConfig: (() => OpenClawConfig | undefined) | undefined;
+    } as QuietCoreConfig;
+    let capturedRuntimeConfig: QuietCoreConfig | undefined;
+    let getRuntimeConfig: (() => QuietCoreConfig | undefined) | undefined;
     hoisted.resolvePluginTools.mockImplementation((params: unknown) => {
       const context = (
         params as {
           context?: {
-            runtimeConfig?: OpenClawConfig;
-            getRuntimeConfig?: () => OpenClawConfig | undefined;
+            runtimeConfig?: QuietCoreConfig;
+            getRuntimeConfig?: () => QuietCoreConfig | undefined;
           };
         }
       ).context;
@@ -312,7 +312,7 @@ describe("createOpenClawTools browser plugin integration", () => {
     });
     setRuntimeConfigSnapshot(pinnedRuntimeConfig);
 
-    resolveOpenClawPluginToolsForOptions({
+    resolveQuietCorePluginToolsForOptions({
       options: { config: explicitConfig },
       resolvedConfig: explicitConfig,
     });
@@ -326,29 +326,29 @@ describe("createOpenClawTools browser plugin integration", () => {
       plugins: {
         allow: ["memory-core"],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const firstRuntimeConfig = {
       plugins: {
         allow: ["memory-core"],
         entries: { "memory-core": { enabled: true } },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const nextRuntimeConfig = {
       plugins: {
         allow: ["memory-core"],
         entries: { "memory-core": { enabled: false } },
       },
-    } as OpenClawConfig;
-    let getRuntimeConfig: (() => OpenClawConfig | undefined) | undefined;
+    } as QuietCoreConfig;
+    let getRuntimeConfig: (() => QuietCoreConfig | undefined) | undefined;
     hoisted.resolvePluginTools.mockImplementation((params: unknown) => {
       getRuntimeConfig = (
-        params as { context?: { getRuntimeConfig?: () => OpenClawConfig | undefined } }
+        params as { context?: { getRuntimeConfig?: () => QuietCoreConfig | undefined } }
       ).context?.getRuntimeConfig;
       return [];
     });
     setRuntimeConfigSnapshot(firstRuntimeConfig, sourceConfig);
 
-    resolveOpenClawPluginToolsForOptions({
+    resolveQuietCorePluginToolsForOptions({
       options: { config: sourceConfig },
       resolvedConfig: sourceConfig,
     });

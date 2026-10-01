@@ -3,7 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "quiet-core-bot/plugin-sdk/account-id";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import {
   requiresExplicitMatrixDefaultAccount,
   resolveMatrixDefaultOrOnlyAccountId,
@@ -56,7 +56,7 @@ function resolveLegacyMatrixCredentialsPath(env: NodeJS.ProcessEnv): string {
 
 function shouldReadLegacyCredentialsForAccount(accountId?: string | null): boolean {
   const normalizedAccountId = normalizeAccountId(accountId);
-  const cfg = getMatrixRuntime().config.current() as OpenClawConfig;
+  const cfg = getMatrixRuntime().config.current() as QuietCoreConfig;
   if (!cfg.channels?.matrix || typeof cfg.channels.matrix !== "object") {
     return normalizedAccountId === DEFAULT_ACCOUNT_ID;
   }

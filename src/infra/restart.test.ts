@@ -36,7 +36,7 @@ vi.mock("../config/paths.js", () => ({
 
 const { testing, cleanStaleGatewayProcessesSync, findGatewayPidsOnPortSync } =
   await import("./restart-stale-pids.js");
-const { triggerOpenClawRestart } = await import("./restart.js");
+const { triggerQuietCoreRestart } = await import("./restart.js");
 
 let currentTimeMs = 0;
 const envSnapshot = captureFullEnv();
@@ -199,7 +199,7 @@ describe.runIf(process.platform !== "win32")("cleanStaleGatewayProcessesSync", (
   });
 });
 
-describe("triggerOpenClawRestart", () => {
+describe("triggerQuietCoreRestart", () => {
   it("does not kickstart after bootstrap registers an unloaded LaunchAgent", () => {
     setPlatform("darwin");
     withEnv(
@@ -219,7 +219,7 @@ describe("triggerOpenClawRestart", () => {
           return { error: undefined, status: 1, stdout: "" };
         });
 
-        const result = triggerOpenClawRestart();
+        const result = triggerQuietCoreRestart();
 
         expect(result).toEqual({
           ok: true,
@@ -255,7 +255,7 @@ describe("triggerOpenClawRestart", () => {
           return { error: undefined, status: 1, stdout: "" };
         });
 
-        const result = triggerOpenClawRestart();
+        const result = triggerQuietCoreRestart();
 
         expect(result).toEqual({
           ok: true,

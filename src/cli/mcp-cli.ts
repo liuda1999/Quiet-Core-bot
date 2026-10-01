@@ -29,9 +29,9 @@ import {
   updateConfiguredMcpServer,
   updateConfiguredMcpServerTools,
 } from "../config/mcp-config.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { formatErrorMessage } from "../infra/errors.js";
-import { serveOpenClawChannelMcp } from "../mcp/channel-server.js";
+import { serveQuietCoreChannelMcp } from "../mcp/channel-server.js";
 import { defaultRuntime } from "../runtime.js";
 import { formatCliCommand } from "./command-format.js";
 import { resolveGatewayAuthOptions } from "./gateway-secret-options.js";
@@ -302,7 +302,7 @@ async function collectMcpDoctorIssues(params: {
   name: string;
   server: Record<string, unknown>;
   probe: boolean;
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   path: string;
 }): Promise<McpDoctorIssue[]> {
   const issues: McpDoctorIssue[] = [];
@@ -403,7 +403,7 @@ async function collectMcpDoctorIssues(params: {
 }
 
 async function probeMcpServerIssue(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   name: string;
   server: Record<string, unknown>;
 }): Promise<McpDoctorIssue | null> {
@@ -523,9 +523,9 @@ function formatMcpProbeResult(
 }
 
 function buildMcpProbeConfig(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   servers: Record<string, Record<string, unknown>>;
-}): OpenClawConfig {
+}): QuietCoreConfig {
   return {
     ...params.config,
     mcp: {
@@ -536,7 +536,7 @@ function buildMcpProbeConfig(params: {
 }
 
 async function probeMcpServersOrFail(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   servers: Record<string, Record<string, unknown>>;
   path: string;
 }): Promise<ReturnType<typeof formatMcpProbeResult>> {
@@ -598,7 +598,7 @@ export function registerMcpCli(program: Command) {
         ) {
           throw new Error('Invalid --claude-channel-mode value. Use "auto", "on", or "off".');
         }
-        await serveOpenClawChannelMcp({
+        await serveQuietCoreChannelMcp({
           gatewayUrl: opts.url as string | undefined,
           gatewayToken,
           gatewayPassword,

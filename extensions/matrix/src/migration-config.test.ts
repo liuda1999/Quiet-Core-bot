@@ -1,6 +1,6 @@
 // Matrix tests cover migration config plugin behavior.
 import path from "node:path";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { withTempHome } from "quiet-core-bot/plugin-sdk/test-env";
 import { describe, expect, it } from "vitest";
 import { resolveMatrixMigrationAccountTarget } from "./migration-config.js";
@@ -12,7 +12,7 @@ import {
   writeMatrixCredentials,
 } from "./test-helpers.js";
 
-function resolveOpsTarget(cfg: OpenClawConfig, env = process.env) {
+function resolveOpsTarget(cfg: QuietCoreConfig, env = process.env) {
   return resolveMatrixMigrationAccountTarget({
     cfg,
     env,
@@ -40,7 +40,7 @@ describe("resolveMatrixMigrationAccountTarget", () => {
         accessToken: MATRIX_OPS_ACCESS_TOKEN,
       });
 
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         channels: {
           matrix: {
             accounts: {
@@ -71,7 +71,7 @@ describe("resolveMatrixMigrationAccountTarget", () => {
         deviceId: "DEVICE-OLD",
       });
 
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         channels: {
           matrix: {
             accounts: {
@@ -104,7 +104,7 @@ describe("resolveMatrixMigrationAccountTarget", () => {
         deviceId: "DEVICE-OLD",
       });
 
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         channels: {
           matrix: {
             accounts: {
@@ -132,7 +132,7 @@ describe("resolveMatrixMigrationAccountTarget", () => {
         accessToken: MATRIX_OPS_ACCESS_TOKEN,
       });
 
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         channels: {
           matrix: {
             homeserver: MATRIX_TEST_HOMESERVER,
@@ -157,7 +157,7 @@ describe("resolveMatrixMigrationAccountTarget", () => {
 
   it("does not inherit the base access token for non-default accounts", async () => {
     await withTempHome(async () => {
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         channels: {
           matrix: {
             homeserver: MATRIX_TEST_HOMESERVER,
@@ -182,7 +182,7 @@ describe("resolveMatrixMigrationAccountTarget", () => {
   it("does not inherit the global Matrix access token for non-default accounts", async () => {
     await withTempHome(
       async () => {
-        const cfg: OpenClawConfig = {
+        const cfg: QuietCoreConfig = {
           channels: {
             matrix: {
               accounts: {
@@ -209,7 +209,7 @@ describe("resolveMatrixMigrationAccountTarget", () => {
 
   it("uses the same scoped env token encoding as runtime account auth", async () => {
     await withTempHome(async () => {
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         channels: {
           matrix: {
             accounts: {

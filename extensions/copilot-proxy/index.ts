@@ -1,4 +1,4 @@
-// Copilot Proxy plugin entrypoint registers its OpenClaw integration.
+// Copilot Proxy plugin entrypoint registers its QuietCore integration.
 import { normalizeStringEntries, uniqueStrings } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import {
   definePluginEntry,

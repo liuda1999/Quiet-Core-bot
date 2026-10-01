@@ -9,7 +9,7 @@ import {
 import { resolveBrewPathDirs } from "./brew.js";
 import { isTruthyEnvValue } from "./env.js";
 
-type EnsureOpenClawPathOpts = {
+type EnsureQuietCorePathOpts = {
   /** Executable whose directory should stay first for shebang-compatible child processes. */
   execPath?: string;
   /** Working directory used only when project-local bin fallback is explicitly enabled. */
@@ -76,7 +76,7 @@ function mergePath(params: { existing: string; prepend?: string[]; append?: stri
 }
 
 function candidateBinDirs(
-  opts: EnsureOpenClawPathOpts,
+  opts: EnsureQuietCorePathOpts,
   existingPathParts: ReadonlySet<string>,
 ): { prepend: string[]; append: string[] } {
   const execPath = opts.execPath ?? process.execPath;
@@ -156,7 +156,7 @@ function candidateBinDirs(
  * Best-effort PATH bootstrap so skills that require the `quiet-core-bot` CLI can run
  * under launchd/minimal environments (and inside the macOS app bundle).
  */
-export function ensureOpenClawCliOnPath(opts: EnsureOpenClawPathOpts = {}) {
+export function ensureQuietCoreCliOnPath(opts: EnsureQuietCorePathOpts = {}) {
   if (isTruthyEnvValue(process.env.QUIET_CORE_PATH_BOOTSTRAPPED)) {
     return;
   }

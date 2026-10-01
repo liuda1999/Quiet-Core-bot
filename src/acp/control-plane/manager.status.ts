@@ -6,7 +6,7 @@ import type {
   AcpRuntimeHandle,
   AcpRuntimeStatus,
 } from "@quiet-core/acp-core/runtime/types";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { withAcpRuntimeErrorBoundary } from "../runtime/errors.js";
 import type {
   AcpSessionStatus,
@@ -19,7 +19,7 @@ import { resolveRuntimeOptionsFromMeta } from "./runtime-options.js";
 
 /** Reads a fresh ACP session status and reconciles runtime identifiers from the status response. */
 export async function runManagerGetSessionStatus(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   sessionKey: string;
   signal?: AbortSignal;
   throwIfAborted: (signal?: AbortSignal) => void;

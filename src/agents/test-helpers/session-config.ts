@@ -3,12 +3,12 @@
  *
  * Shared builders for agent/session tests that need configured session scope.
  */
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 
 /** Builds a per-sender session config with optional targeted overrides. */
 export function createPerSenderSessionConfig(
-  overrides: Partial<NonNullable<OpenClawConfig["session"]>> = {},
-): NonNullable<OpenClawConfig["session"]> {
+  overrides: Partial<NonNullable<QuietCoreConfig["session"]>> = {},
+): NonNullable<QuietCoreConfig["session"]> {
   return {
     mainKey: "main",
     scope: "per-sender",

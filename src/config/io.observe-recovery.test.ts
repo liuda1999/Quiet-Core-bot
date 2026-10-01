@@ -6,10 +6,10 @@ import path from "node:path";
 import JSON5 from "json5";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { executeSqliteQueryTakeFirstSync, getNodeSqliteKysely } from "../infra/kysely-sync.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
 import {
-  closeOpenClawStateDatabaseForTest,
-  openOpenClawStateDatabase,
+  closeQuietCoreStateDatabaseForTest,
+  openQuietCoreStateDatabase,
 } from "../state/quiet-core-bot-state-db.js";
 import { createConfigIO } from "./io.js";
 import {
@@ -23,7 +23,7 @@ import {
 import type { ConfigFileSnapshot } from "./types.js";
 
 const CONFIG_CLOBBER_SNAPSHOT_LIMIT = 32;
-type ConfigHealthDatabase = Pick<OpenClawStateKyselyDatabase, "config_health_entries">;
+type ConfigHealthDatabase = Pick<QuietCoreStateKyselyDatabase, "config_health_entries">;
 
 describe("config observe recovery", () => {
   let fixtureRoot = "";
@@ -48,16 +48,16 @@ describe("config observe recovery", () => {
   });
 
   afterAll(async () => {
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
     await fsp.rm(fixtureRoot, { recursive: true, force: true });
   });
 
   afterEach(() => {
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
   });
 
   function readConfigHealthRow(home: string, configPath: string) {
-    const { db } = openOpenClawStateDatabase({ env: { HOME: home } as NodeJS.ProcessEnv });
+    const { db } = openQuietCoreStateDatabase({ env: { HOME: home } as NodeJS.ProcessEnv });
     const healthDb = getNodeSqliteKysely<ConfigHealthDatabase>(db);
     return executeSqliteQueryTakeFirstSync(
       db,

@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { resolveMemoryFlushContextWindowTokens } from "../auto-reply/reply/memory-flush.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { refreshContextWindowCache, resetContextWindowCacheForTest } from "./context.js";
 
 describe("OpenCode Go context metadata", () => {
@@ -9,7 +9,7 @@ describe("OpenCode Go context metadata", () => {
   });
 
   it("warms the provider-owned context window without writing model config", async () => {
-    const cfg: OpenClawConfig = {};
+    const cfg: QuietCoreConfig = {};
 
     await refreshContextWindowCache(cfg);
 

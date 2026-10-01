@@ -33,12 +33,12 @@ function findStep(name: string): WorkflowStep {
   return step as WorkflowStep;
 }
 
-describe("OpenClaw performance workflow", () => {
+describe("QuietCore performance workflow", () => {
   it("uses an optional dispatch identifier to name parent-owned runs", () => {
     const workflow = readFileSync(WORKFLOW, "utf8");
 
     expect(workflow).toContain(
-      "run-name: ${{ inputs.dispatch_id != '' && format('OpenClaw Performance {0}', inputs.dispatch_id) || 'OpenClaw Performance' }}",
+      "run-name: ${{ inputs.dispatch_id != '' && format('QuietCore Performance {0}', inputs.dispatch_id) || 'QuietCore Performance' }}",
     );
     expect(workflow).toContain("dispatch_id:");
     expect(workflow).toContain("Optional parent workflow dispatch identifier");
@@ -53,8 +53,8 @@ describe("OpenClaw performance workflow", () => {
   });
 
   it("resolves dispatch target refs before checkout", () => {
-    const resolveTarget = findStep("Resolve OpenClaw target ref");
-    const checkout = findStep("Checkout OpenClaw");
+    const resolveTarget = findStep("Resolve QuietCore target ref");
+    const checkout = findStep("Checkout QuietCore");
 
     expect(resolveTarget.id).toBe("target");
     expect(resolveTarget.if).toBe("steps.lane.outputs.run == 'true'");

@@ -7,7 +7,7 @@ import {
   resolveStoredSessionKeyForAgentStore,
 } from "../../gateway/session-store-key.js";
 import { normalizeAgentId } from "../../routing/session-key.js";
-import type { OpenClawConfig } from "../types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../types.quiet-core-bot.js";
 import { resolveStorePath } from "./paths.js";
 import { listSessionEntries } from "./session-accessor.js";
 import {
@@ -32,7 +32,7 @@ function loadGatewayStoreEntries(storePath: string): Record<string, SessionEntry
 }
 
 function mergeSessionEntryIntoCombined(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   combined: Record<string, SessionEntry>;
   entry: SessionEntry;
   agentId: string;
@@ -74,7 +74,7 @@ function mergeSessionEntryIntoCombined(params: {
 
 /** Loads and canonicalizes session entries for gateway views across one or more agent stores. */
 export function loadCombinedSessionStoreForGateway(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   opts: { agentId?: string; configuredAgentsOnly?: boolean } = {},
 ): {
   storePath: string;

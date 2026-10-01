@@ -1,11 +1,11 @@
 import Foundation
-import OpenClawChatUI
-import OpenClawKit
-import OpenClawProtocol
+import QuietCoreChatUI
+import QuietCoreKit
+import QuietCoreProtocol
 import OSLog
 
-struct IOSGatewayChatTransport: OpenClawChatTransport {
-    static let logger = Logger(subsystem: "ai.openclawfoundation.app", category: "ios.chat.transport")
+struct IOSGatewayChatTransport: QuietCoreChatTransport {
+    static let logger = Logger(subsystem: "ai.quiet-core-botfoundation.app", category: "ios.chat.transport")
     static let defaultChatSendTimeoutMs = 30000
     private let gateway: GatewayNodeSession
 
@@ -34,7 +34,7 @@ struct IOSGatewayChatTransport: OpenClawChatTransport {
         var sessionKey: String
         var message: String
         var thinking: String
-        var attachments: [OpenClawChatAttachmentPayload]?
+        var attachments: [QuietCoreChatAttachmentPayload]?
         var timeoutMs: Int
         var idempotencyKey: String
     }
@@ -82,7 +82,7 @@ struct IOSGatewayChatTransport: OpenClawChatTransport {
         message: String,
         thinking: String,
         idempotencyKey: String,
-        attachments: [OpenClawChatAttachmentPayload]) throws -> String
+        attachments: [QuietCoreChatAttachmentPayload]) throws -> String
     {
         let params = ChatSendParams(
             sessionKey: sessionKey,
@@ -145,14 +145,14 @@ struct IOSGatewayChatTransport: OpenClawChatTransport {
     func createSession(
         key: String,
         label: String?,
-        parentSessionKey: String?) async throws -> OpenClawChatCreateSessionResponse
+        parentSessionKey: String?) async throws -> QuietCoreChatCreateSessionResponse
     {
         let json = try Self.makeCreateSessionParamsJSON(
             key: key,
             label: label,
             parentSessionKey: parentSessionKey)
         let res = try await self.gateway.request(method: "sessions.create", paramsJSON: json, timeoutSeconds: 15)
-        return try JSONDecoder().decode(OpenClawChatCreateSessionResponse.self, from: res)
+        return try JSONDecoder().decode(QuietCoreChatCreateSessionResponse.self, from: res)
     }
 
     func abortRun(sessionKey: String, runId: String) async throws {
@@ -160,10 +160,10 @@ struct IOSGatewayChatTransport: OpenClawChatTransport {
         _ = try await self.gateway.request(method: "chat.abort", paramsJSON: json, timeoutSeconds: 10)
     }
 
-    func listSessions(limit: Int?) async throws -> OpenClawChatSessionsListResponse {
+    func listSessions(limit: Int?) async throws -> QuietCoreChatSessionsListResponse {
         let json = try Self.makeListSessionsParamsJSON(limit: limit)
         let res = try await self.gateway.request(method: "sessions.list", paramsJSON: json, timeoutSeconds: 15)
-        return try JSONDecoder().decode(OpenClawChatSessionsListResponse.self, from: res)
+        return try JSONDecoder().decode(QuietCoreChatSessionsListResponse.self, from: res)
     }
 
     func setActiveSessionKey(_ sessionKey: String) async throws {
@@ -186,10 +186,10 @@ struct IOSGatewayChatTransport: OpenClawChatTransport {
         _ = try await self.gateway.request(method: "sessions.compact", paramsJSON: json, timeoutSeconds: 10)
     }
 
-    func requestHistory(sessionKey: String) async throws -> OpenClawChatHistoryPayload {
+    func requestHistory(sessionKey: String) async throws -> QuietCoreChatHistoryPayload {
         let json = try Self.makeHistoryParamsJSON(sessionKey: sessionKey)
         let res = try await self.gateway.request(method: "chat.history", paramsJSON: json, timeoutSeconds: 15)
-        return try JSONDecoder().decode(OpenClawChatHistoryPayload.self, from: res)
+        return try JSONDecoder().decode(QuietCoreChatHistoryPayload.self, from: res)
     }
 
     func sendMessage(
@@ -197,7 +197,7 @@ struct IOSGatewayChatTransport: OpenClawChatTransport {
         message: String,
         thinking: String,
         idempotencyKey: String,
-        attachments: [OpenClawChatAttachmentPayload]) async throws -> OpenClawChatSendResponse
+        attachments: [QuietCoreChatAttachmentPayload]) async throws -> QuietCoreChatSendResponse
     {
         let startLogMessage =
             "chat.send start sessionKey=\(sessionKey) "
@@ -213,7 +213,7 @@ struct IOSGatewayChatTransport: OpenClawChatTransport {
             attachments: attachments)
         do {
             let res = try await self.gateway.request(method: "chat.send", paramsJSON: json, timeoutSeconds: 35)
-            let decoded = try JSONDecoder().decode(OpenClawChatSendResponse.self, from: res)
+            let decoded = try JSONDecoder().decode(QuietCoreChatSendResponse.self, from: res)
             Self.logger.info("chat.send ok runId=\(decoded.runId, privacy: .public)")
             GatewayDiagnostics.log("chat.send ok runId=\(decoded.runId) status=\(decoded.status)")
             return decoded
@@ -253,10 +253,10 @@ struct IOSGatewayChatTransport: OpenClawChatTransport {
     func requestHealth(timeoutMs: Int) async throws -> Bool {
         let seconds = max(1, Int(ceil(Double(timeoutMs) / 1000.0)))
         let res = try await self.gateway.request(method: "health", paramsJSON: nil, timeoutSeconds: seconds)
-        return (try? JSONDecoder().decode(OpenClawGatewayHealthOK.self, from: res))?.ok ?? true
+        return (try? JSONDecoder().decode(QuietCoreGatewayHealthOK.self, from: res))?.ok ?? true
     }
 
-    func events() -> AsyncStream<OpenClawChatTransportEvent> {
+    func events() -> AsyncStream<QuietCoreChatTransportEvent> {
         AsyncStream { continuation in
             let task = Task {
                 let stream = await self.gateway.subscribeServerEvents()
@@ -274,7 +274,7 @@ struct IOSGatewayChatTransport: OpenClawChatTransport {
         }
     }
 
-    static func mapEventFrame(_ evt: EventFrame) -> OpenClawChatTransportEvent? {
+    static func mapEventFrame(_ evt: EventFrame) -> QuietCoreChatTransportEvent? {
         switch evt.event {
         case "tick":
             return .tick
@@ -284,13 +284,13 @@ struct IOSGatewayChatTransport: OpenClawChatTransport {
             guard let payload = evt.payload else { return nil }
             let ok = (try? GatewayPayloadDecoding.decode(
                 payload,
-                as: OpenClawGatewayHealthOK.self))?.ok ?? true
+                as: QuietCoreGatewayHealthOK.self))?.ok ?? true
             return .health(ok: ok)
         case "chat":
             guard let payload = evt.payload else { return nil }
             guard let chatPayload = try? GatewayPayloadDecoding.decode(
                 payload,
-                as: OpenClawChatEventPayload.self)
+                as: QuietCoreChatEventPayload.self)
             else {
                 return nil
             }
@@ -299,7 +299,7 @@ struct IOSGatewayChatTransport: OpenClawChatTransport {
             guard let payload = evt.payload else { return nil }
             guard let message = try? GatewayPayloadDecoding.decode(
                 payload,
-                as: OpenClawSessionMessageEventPayload.self)
+                as: QuietCoreSessionMessageEventPayload.self)
             else {
                 return nil
             }
@@ -308,7 +308,7 @@ struct IOSGatewayChatTransport: OpenClawChatTransport {
             guard let payload = evt.payload else { return nil }
             guard let agentPayload = try? GatewayPayloadDecoding.decode(
                 payload,
-                as: OpenClawAgentEventPayload.self)
+                as: QuietCoreAgentEventPayload.self)
             else {
                 return nil
             }

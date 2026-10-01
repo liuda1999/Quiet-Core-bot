@@ -6,7 +6,7 @@
 import os from "node:os";
 import path from "node:path";
 import { addTimerTimeoutGraceMs } from "@quiet-core/normalization-core/number-coercion";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { ToolLoopDetectionConfig } from "../config/types.tools.js";
 import {
   diagnosticErrorCategory,
@@ -101,7 +101,7 @@ export type ToolOutcomeObserver = (observation: ToolOutcomeObservation) => void;
 
 export type HookContext = {
   agentId?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   /** Tool execution cwd for host-derived path facts. */
   cwd?: string;
   /** Host workspace used to resolve relative tool params for diagnostics only. */

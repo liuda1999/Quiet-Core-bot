@@ -908,7 +908,7 @@ Per-user sharing is more secure as only the chat participants can access the fil
 
 ### Files stored location
 
-Uploaded files are stored in a `/OpenClawShared/` folder in the configured SharePoint site's default document library.
+Uploaded files are stored in a `/QuietCoreShared/` folder in the configured SharePoint site's default document library.
 
 ## Polls (Adaptive Cards)
 

@@ -1,8 +1,8 @@
 // Device Pair plugin module implements notify behavior.
-import type { OpenClawPluginService } from "quiet-core-bot/plugin-sdk/core";
+import type { QuietCorePluginService } from "quiet-core-bot/plugin-sdk/core";
 import { listDevicePairing } from "quiet-core-bot/plugin-sdk/device-bootstrap";
 import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
-import type { OpenClawPluginApi } from "quiet-core-bot/plugin-sdk/plugin-entry";
+import type { QuietCorePluginApi } from "quiet-core-bot/plugin-sdk/plugin-entry";
 import type { PluginStateKeyedStore } from "quiet-core-bot/plugin-sdk/plugin-state-runtime";
 import { normalizeOptionalString } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import {
@@ -80,7 +80,7 @@ export function formatPendingRequests(pending: PendingPairingRequest[]): string 
 }
 
 function openNotifySubscriberStore(
-  api: OpenClawPluginApi,
+  api: QuietCorePluginApi,
 ): PluginStateKeyedStore<NotifySubscription> {
   return api.runtime.state.openKeyedStore<NotifySubscription>({
     namespace: DEVICE_PAIR_NOTIFY_SUBSCRIBER_NAMESPACE,
@@ -89,7 +89,7 @@ function openNotifySubscriberStore(
 }
 
 function openNotifySeenRequestStore(
-  api: OpenClawPluginApi,
+  api: QuietCorePluginApi,
 ): PluginStateKeyedStore<NotifySeenRequest> {
   return api.runtime.state.openKeyedStore<NotifySeenRequest>({
     namespace: DEVICE_PAIR_NOTIFY_SEEN_REQUEST_NAMESPACE,
@@ -98,7 +98,7 @@ function openNotifySeenRequestStore(
   });
 }
 
-async function readNotifyState(api: OpenClawPluginApi): Promise<NotifyStateFile> {
+async function readNotifyState(api: QuietCorePluginApi): Promise<NotifyStateFile> {
   const subscriberStore = openNotifySubscriberStore(api);
   const seenRequestStore = openNotifySeenRequestStore(api);
   const [subscriberEntries, seenRequestEntries] = await Promise.all([
@@ -122,7 +122,7 @@ async function readNotifyState(api: OpenClawPluginApi): Promise<NotifyStateFile>
   return { subscribers, notifiedRequestIds };
 }
 
-async function writeNotifyState(api: OpenClawPluginApi, state: NotifyStateFile): Promise<void> {
+async function writeNotifyState(api: QuietCorePluginApi, state: NotifyStateFile): Promise<void> {
   const subscriberStore = openNotifySubscriberStore(api);
   const nextSubscribers = new Map(
     state.subscribers.map((subscriber) => [notifySubscriberStoreKey(subscriber), subscriber]),
@@ -252,7 +252,7 @@ function shouldNotifySubscriberForRequest(
 }
 
 async function notifySubscriber(params: {
-  api: OpenClawPluginApi;
+  api: QuietCorePluginApi;
   subscriber: NotifySubscription;
   text: string;
 }): Promise<boolean> {
@@ -265,7 +265,7 @@ async function notifySubscriber(params: {
   return false;
 }
 
-async function notifyPendingPairingRequests(params: { api: OpenClawPluginApi }): Promise<void> {
+async function notifyPendingPairingRequests(params: { api: QuietCorePluginApi }): Promise<void> {
   const state = await readNotifyState(params.api);
   const pairing = await listDevicePairing();
   const pending: PendingPairingRequest[] = pairing.pending;
@@ -326,7 +326,7 @@ async function notifyPendingPairingRequests(params: { api: OpenClawPluginApi }):
 }
 
 export async function armPairNotifyOnce(params: {
-  api: OpenClawPluginApi;
+  api: QuietCorePluginApi;
   ctx: {
     channel: string;
     senderId?: string;
@@ -358,7 +358,7 @@ export async function armPairNotifyOnce(params: {
 }
 
 export async function handleNotifyCommand(params: {
-  api: OpenClawPluginApi;
+  api: QuietCorePluginApi;
   ctx: {
     channel: string;
     senderId?: string;
@@ -435,7 +435,7 @@ export async function handleNotifyCommand(params: {
   return { text: "Usage: /pair notify on|off|once|status" };
 }
 
-export function createPairingNotifierService(api: OpenClawPluginApi): OpenClawPluginService {
+export function createPairingNotifierService(api: QuietCorePluginApi): QuietCorePluginService {
   let notifyInterval: ReturnType<typeof setInterval> | null = null;
 
   return {

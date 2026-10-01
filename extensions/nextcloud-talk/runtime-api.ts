@@ -11,7 +11,7 @@ export type {
   DmPolicy,
   GroupPolicy,
   GroupToolPolicyConfig,
-  OpenClawConfig,
+  QuietCoreConfig,
 } from "quiet-core-bot/plugin-sdk/config-contracts";
 export {
   GROUP_POLICY_BLOCKED_LABEL,

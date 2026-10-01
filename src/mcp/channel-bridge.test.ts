@@ -1,6 +1,6 @@
 // Channel MCP bridge tests cover request bridging between MCP and channel APIs.
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { OpenClawChannelBridge } from "./channel-bridge.js";
+import { QuietCoreChannelBridge } from "./channel-bridge.js";
 import type { QueueEvent, WaitFilter } from "./channel-shared.js";
 
 const ONE_MINUTE_MS = 60 * 1_000;
@@ -41,13 +41,13 @@ type BridgeInternals = {
 };
 
 function makeBridge(verbose = false): BridgeInternals {
-  return new OpenClawChannelBridge({} as never, {
+  return new QuietCoreChannelBridge({} as never, {
     claudeChannelMode: "off",
     verbose,
   }) as unknown as BridgeInternals;
 }
 
-describe("OpenClawChannelBridge — pendingClaudePermissions / pendingApprovals memory bounds", () => {
+describe("QuietCoreChannelBridge — pendingClaudePermissions / pendingApprovals memory bounds", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     vi.setSystemTime(0);

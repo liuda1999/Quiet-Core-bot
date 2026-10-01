@@ -9,7 +9,7 @@ import {
 } from "../agents/auth-profiles/sqlite.js";
 import { saveAuthProfileStore } from "../agents/auth-profiles/store.js";
 import type { AuthProfileStore } from "../agents/auth-profiles/types.js";
-import { closeOpenClawAgentDatabasesForTest } from "../state/quiet-core-bot-agent-db.js";
+import { closeQuietCoreAgentDatabasesForTest } from "../state/quiet-core-bot-agent-db.js";
 import { runSecretsAudit } from "./audit.js";
 
 type AuditFixture = {
@@ -49,7 +49,7 @@ async function writeJsonFile(filePath: string, value: unknown): Promise<void> {
 }
 
 async function removeAuthStore(fixture: AuditFixture): Promise<void> {
-  closeOpenClawAgentDatabasesForTest();
+  closeQuietCoreAgentDatabasesForTest();
   await fs.rm(fixture.authStorePath, { force: true });
 }
 
@@ -262,7 +262,7 @@ describe("secrets audit", () => {
   });
 
   afterEach(async () => {
-    closeOpenClawAgentDatabasesForTest();
+    closeQuietCoreAgentDatabasesForTest();
     await fs.rm(fixture.rootDir, { recursive: true, force: true });
   });
 

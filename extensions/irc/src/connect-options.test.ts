@@ -10,7 +10,7 @@ describe("buildIrcConnectOptions", () => {
       tls: true,
       nick: "quiet-core-bot",
       username: "quiet-core-bot",
-      realname: "OpenClaw Bot",
+      realname: "QuietCore Bot",
       password: "server-pass",
       config: {
         nickserv: {
@@ -33,7 +33,7 @@ describe("buildIrcConnectOptions", () => {
       tls: true,
       nick: "quiet-core-bot",
       username: "quiet-core-bot",
-      realname: "OpenClaw Bot",
+      realname: "QuietCore Bot",
       password: "server-pass",
       nickserv: {
         enabled: true,

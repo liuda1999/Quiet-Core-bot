@@ -2,9 +2,9 @@ import Foundation
 import os
 
 enum GatewaySettingsStore {
-    private static let gatewayService = "ai.openclawfoundation.app.gateway"
-    private static let nodeService = "ai.openclawfoundation.app.node"
-    private static let talkService = "ai.openclawfoundation.app.talk"
+    private static let gatewayService = "ai.quiet-core-botfoundation.app.gateway"
+    private static let nodeService = "ai.quiet-core-botfoundation.app.node"
+    private static let talkService = "ai.quiet-core-botfoundation.app.talk"
 
     private static let instanceIdDefaultsKey = "node.instanceId"
     private static let preferredGatewayStableIDDefaultsKey = "gateway.preferredStableID"
@@ -466,8 +466,8 @@ enum GatewayDiagnostics {
         }
     }
 
-    private static let logger = Logger(subsystem: "ai.openclawfoundation.app", category: "GatewayDiag")
-    private static let queue = DispatchQueue(label: "ai.openclawfoundation.app.gateway.diagnostics")
+    private static let logger = Logger(subsystem: "ai.quiet-core-botfoundation.app", category: "GatewayDiag")
+    private static let queue = DispatchQueue(label: "ai.quiet-core-botfoundation.app.gateway.diagnostics")
     private static let maxLogBytes: Int64 = 512 * 1024
     private static let keepLogBytes: Int64 = 256 * 1024
     private static let logSizeCheckEveryWrites = 50
@@ -499,7 +499,7 @@ enum GatewayDiagnostics {
 
     private static var fileURL: URL? {
         FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first?
-            .appendingPathComponent("openclaw-gateway.log")
+            .appendingPathComponent("quiet-core-gateway.log")
     }
 
     private static func truncateLogIfNeeded(url: URL) {

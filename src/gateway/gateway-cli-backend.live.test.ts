@@ -8,7 +8,7 @@ import { resolveCliBackendConfig, resolveCliBackendLiveTest } from "../agents/cl
 import { isLiveTestEnabled } from "../agents/live-test-helpers.js";
 import { shouldSkipLiveProviderDrift } from "../agents/live-test-provider-drift.js";
 import { parseModelRef } from "../agents/model-selection.js";
-import { clearRuntimeConfigSnapshot, type OpenClawConfig } from "../config/config.js";
+import { clearRuntimeConfigSnapshot, type QuietCoreConfig } from "../config/config.js";
 import { isTruthyEnvValue } from "../infra/env.js";
 import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import {
@@ -121,7 +121,7 @@ function resolveCliBackendAgentAttemptTimeouts(): CliBackendAgentAttemptTimeouts
 
 function openAiProviderConfigForCodexCli(
   modelKey: string,
-): NonNullable<NonNullable<OpenClawConfig["models"]>["providers"]>["openai"] {
+): NonNullable<NonNullable<QuietCoreConfig["models"]>["providers"]>["openai"] {
   const parsed = parseModelRef(modelKey, DEFAULT_PROVIDER);
   const modelId = parsed?.model?.trim() || "gpt-5.5";
   return {
@@ -386,8 +386,8 @@ describeLive("gateway live (cli backend)", () => {
         cliArgs = withClaudeMcpConfigOverrides(baseCliArgs, mcpConfigPath);
       }
 
-      const cfg: OpenClawConfig = {};
-      const cfgWithCliBackends = cfg as OpenClawConfig & {
+      const cfg: QuietCoreConfig = {};
+      const cfgWithCliBackends = cfg as QuietCoreConfig & {
         agents?: {
           defaults?: {
             cliBackends?: Record<string, Record<string, unknown>>;

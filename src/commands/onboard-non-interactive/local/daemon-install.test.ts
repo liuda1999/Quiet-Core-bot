@@ -1,6 +1,6 @@
 // Non-interactive daemon install tests cover gateway service planning, token resolution, and systemd handling.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../../config/config.js";
+import type { QuietCoreConfig } from "../../../config/config.js";
 import { installGatewayDaemonNonInteractive } from "./daemon-install.js";
 
 const buildGatewayInstallPlan = vi.hoisted(() => vi.fn());
@@ -69,7 +69,7 @@ describe("installGatewayDaemonNonInteractive", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       opts: { installDaemon: true },
       runtime,
       port: 18789,
@@ -91,7 +91,7 @@ describe("installGatewayDaemonNonInteractive", () => {
     const runtime = { log: vi.fn(), error: vi.fn(), exit: vi.fn() };
 
     await installGatewayDaemonNonInteractive({
-      nextConfig: {} as OpenClawConfig,
+      nextConfig: {} as QuietCoreConfig,
       opts: { installDaemon: true },
       runtime,
       port: 18789,
@@ -119,7 +119,7 @@ describe("installGatewayDaemonNonInteractive", () => {
 
     try {
       const result = await installGatewayDaemonNonInteractive({
-        nextConfig: {} as OpenClawConfig,
+        nextConfig: {} as QuietCoreConfig,
         opts: { installDaemon: true },
         runtime,
         port: 18789,

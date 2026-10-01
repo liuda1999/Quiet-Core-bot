@@ -8,8 +8,8 @@ import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { resolveOAuthDir } from "../../config/paths.js";
-import { closeOpenClawAgentDatabasesForTest } from "../../state/quiet-core-bot-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../../state/quiet-core-bot-state-db.js";
+import { closeQuietCoreAgentDatabasesForTest } from "../../state/quiet-core-bot-agent-db.js";
+import { closeQuietCoreStateDatabaseForTest } from "../../state/quiet-core-bot-state-db.js";
 import { withEnvAsync } from "../../test-utils/env.js";
 import { AUTH_STORE_VERSION } from "./constants.js";
 import { loadPersistedAuthProfileStore } from "./persisted.js";
@@ -66,8 +66,8 @@ async function withAuthProfileTestState<T>(
         }),
     );
   } finally {
-    closeOpenClawAgentDatabasesForTest();
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreAgentDatabasesForTest();
+    closeQuietCoreStateDatabaseForTest();
     fs.rmSync(stateDir, { recursive: true, force: true });
   }
 }

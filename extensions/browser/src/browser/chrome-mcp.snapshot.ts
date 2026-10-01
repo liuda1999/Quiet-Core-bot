@@ -1,7 +1,7 @@
 /**
  * Chrome MCP snapshot conversion helpers.
  *
- * Converts chrome-devtools-mcp structured snapshots into OpenClaw ARIA nodes
+ * Converts chrome-devtools-mcp structured snapshots into QuietCore ARIA nodes
  * and compact AI snapshots with stable refs and duplicate tracking.
  */
 import { normalizeLowercaseStringOrEmpty } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
@@ -82,7 +82,7 @@ function registerRef(
   return undefined;
 }
 
-/** Flatten a Chrome MCP snapshot tree into OpenClaw ARIA-style nodes. */
+/** Flatten a Chrome MCP snapshot tree into QuietCore ARIA-style nodes. */
 export function flattenChromeMcpSnapshotToAriaNodes(
   root: ChromeMcpSnapshotNode,
   limit = 500,

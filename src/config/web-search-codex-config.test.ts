@@ -6,10 +6,10 @@ import { validateConfigObjectRaw } from "./validation.js";
 
 describe("web search Codex native config validation", () => {
   it("accepts tools.web.search.openaiCodex", async () => {
-    const { OpenClawSchema: freshOpenClawSchema } = await importFreshModule<
+    const { QuietCoreSchema: freshQuietCoreSchema } = await importFreshModule<
       typeof import("./zod-schema.js")
     >(import.meta.url, "./zod-schema.js?scope=web-search-codex");
-    const result = freshOpenClawSchema.safeParse({
+    const result = freshQuietCoreSchema.safeParse({
       tools: {
         web: {
           search: {

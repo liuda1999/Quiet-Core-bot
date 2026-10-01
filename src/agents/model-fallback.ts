@@ -7,7 +7,7 @@ import {
   resolveAgentModelFallbackValues,
   resolveAgentModelPrimaryValue,
 } from "../config/model-input.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { emitFailoverEvent } from "../infra/diagnostic-events.js";
 import { formatErrorMessage, toErrorObject } from "../infra/errors.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
@@ -87,7 +87,7 @@ import {
 const log = createSubsystemLogger("model-fallback");
 
 function hasExactConfiguredProviderModel(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   provider: string;
   model: string;
 }): boolean {
@@ -105,7 +105,7 @@ function hasExactConfiguredProviderModel(params: {
   return false;
 }
 
-function hasConfiguredProvider(params: { cfg?: OpenClawConfig; provider: string }): boolean {
+function hasConfiguredProvider(params: { cfg?: QuietCoreConfig; provider: string }): boolean {
   const normalizedProvider = normalizeProviderId(params.provider);
   if (!params.cfg || !normalizedProvider) {
     return false;
@@ -116,7 +116,7 @@ function hasConfiguredProvider(params: { cfg?: OpenClawConfig; provider: string 
 }
 
 function allowPluginModelNormalizationForRef(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   provider: string;
   model: string;
 }): boolean {
@@ -172,7 +172,7 @@ export type ModelFallbackRunOptions = {
 };
 
 type ModelFallbackRuntimeContext = {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   agentId?: string;
   sessionKey?: string;
   resolveAgentHarnessRuntimeOverride?: (provider: string, model: string) => string | undefined;
@@ -502,7 +502,7 @@ function sameModelCandidate(a: ModelCandidate, b: ModelCandidate): boolean {
   return a.provider === b.provider && a.model === b.model;
 }
 
-function isCliAgentRuntime(runtime: string | undefined, cfg: OpenClawConfig | undefined): boolean {
+function isCliAgentRuntime(runtime: string | undefined, cfg: QuietCoreConfig | undefined): boolean {
   const normalized = normalizeOptionalString(runtime);
   if (!normalized) {
     return false;
@@ -666,7 +666,7 @@ function throwFallbackFailureSummary(params: {
   formatAttempt: (attempt: FallbackAttempt) => string;
   soonestCooldownExpiry?: number | null;
   attribution?: FailoverAttribution;
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   agentDir?: string;
 }): never {
   if (params.attempts.length <= 1 && params.lastError) {
@@ -704,7 +704,7 @@ function resolveFallbackSoonestCooldownExpiry(params: {
   authRuntime: ModelFallbackAuthRuntime | null;
   authStore: AuthProfileStore | null;
   agentDir?: string;
-  cfg: OpenClawConfig | undefined;
+  cfg: QuietCoreConfig | undefined;
   candidates: ModelCandidate[];
 }): number | null {
   if (!params.authRuntime || !params.authStore) {
@@ -744,7 +744,7 @@ function resolveFallbackSoonestCooldownExpiry(params: {
 
 export function resolveImageFallbackCandidates(
   params: {
-    cfg: OpenClawConfig | undefined;
+    cfg: QuietCoreConfig | undefined;
     defaultProvider: string;
     modelOverride?: string;
   } & ModelManifestNormalizationContext,
@@ -800,7 +800,7 @@ export function resolveImageFallbackCandidates(
   return candidates;
 }
 
-export function resolveImageFallbackDefaultProvider(cfg: OpenClawConfig | undefined): string {
+export function resolveImageFallbackDefaultProvider(cfg: QuietCoreConfig | undefined): string {
   const configuredPrimary = resolveAgentModelPrimaryValue(cfg?.agents?.defaults?.imageModel);
   if (configuredPrimary?.trim()) {
     const aliasIndex = buildModelAliasIndex({
@@ -829,7 +829,7 @@ export const testing = {
 
 export function resolveModelCandidateChain(
   params: {
-    cfg: OpenClawConfig | undefined;
+    cfg: QuietCoreConfig | undefined;
     provider: string;
     model: string;
     /** Optional explicit fallbacks list; when provided (even empty), replaces agents.defaults.model.fallbacks. */
@@ -866,7 +866,7 @@ function cloneModelCandidate(candidate: ModelCandidate): ModelCandidate {
 
 function resolveFallbackCandidateCacheKey(
   params: {
-    cfg: OpenClawConfig | undefined;
+    cfg: QuietCoreConfig | undefined;
     provider: string;
     model: string;
     fallbacksOverride?: string[];
@@ -920,7 +920,7 @@ function resolveFallbackCandidateCacheKey(
   });
 }
 
-function resolveFallbackCandidateModelProviderCacheParts(cfg: OpenClawConfig | undefined): unknown {
+function resolveFallbackCandidateModelProviderCacheParts(cfg: QuietCoreConfig | undefined): unknown {
   const providers = cfg?.models?.providers;
   if (!providers) {
     return undefined;
@@ -938,7 +938,7 @@ function resolveFallbackCandidateModelProviderCacheParts(cfg: OpenClawConfig | u
 
 function resolveFallbackCandidatesUncached(
   params: {
-    cfg: OpenClawConfig | undefined;
+    cfg: QuietCoreConfig | undefined;
     provider: string;
     model: string;
     /** Optional explicit fallbacks list; when provided (even empty), replaces agents.defaults.model.fallbacks. */
@@ -1278,7 +1278,7 @@ function resolveCooldownDecision(params: {
 }
 
 type RunWithModelFallbackParams<T> = {
-  cfg: OpenClawConfig | undefined;
+  cfg: QuietCoreConfig | undefined;
   provider: string;
   model: string;
   runId?: string;
@@ -1887,7 +1887,7 @@ async function runWithModelFallbackInternal<T>(
 }
 
 export async function runWithImageModelFallback<T>(params: {
-  cfg: OpenClawConfig | undefined;
+  cfg: QuietCoreConfig | undefined;
   modelOverride?: string;
   run: (provider: string, model: string) => Promise<T>;
   onError?: ModelFallbackErrorHandler;

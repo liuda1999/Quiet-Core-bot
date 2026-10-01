@@ -3,9 +3,9 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { loadPersistedAuthProfileStore } from "../agents/auth-profiles/persisted.js";
-import { closeOpenClawAgentDatabasesForTest } from "../state/quiet-core-bot-agent-db.js";
+import { closeQuietCoreAgentDatabasesForTest } from "../state/quiet-core-bot-agent-db.js";
 import { withEnvAsync } from "./env.js";
-import { createOpenClawTestState, withOpenClawTestState } from "./quiet-core-bot-test-state.js";
+import { createQuietCoreTestState, withQuietCoreTestState } from "./quiet-core-bot-test-state.js";
 
 async function expectPathMissing(targetPath: string): Promise<void> {
   try {
@@ -20,11 +20,11 @@ async function expectPathMissing(targetPath: string): Promise<void> {
 describe("quiet-core-bot test state", () => {
   it("creates an isolated home layout with spawn env and restores process env", async () => {
     const previousHome = process.env.HOME;
-    const previousOpenClawHome = process.env.QUIET_CORE_HOME;
+    const previousQuietCoreHome = process.env.QUIET_CORE_HOME;
     const previousStateDir = process.env.QUIET_CORE_STATE_DIR;
     const previousConfigPath = process.env.QUIET_CORE_CONFIG_PATH;
 
-    const state = await createOpenClawTestState({
+    const state = await createQuietCoreTestState({
       label: "unit",
       scenario: "minimal",
     });
@@ -46,7 +46,7 @@ describe("quiet-core-bot test state", () => {
     }
 
     expect(process.env.HOME).toBe(previousHome);
-    expect(process.env.QUIET_CORE_HOME).toBe(previousOpenClawHome);
+    expect(process.env.QUIET_CORE_HOME).toBe(previousQuietCoreHome);
     expect(process.env.QUIET_CORE_STATE_DIR).toBe(previousStateDir);
     expect(process.env.QUIET_CORE_CONFIG_PATH).toBe(previousConfigPath);
     await expectPathMissing(state.root);
@@ -55,7 +55,7 @@ describe("quiet-core-bot test state", () => {
   it("supports state-only layout without overriding HOME", async () => {
     const previousHome = process.env.HOME;
 
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         scenario: "empty",
@@ -72,7 +72,7 @@ describe("quiet-core-bot test state", () => {
 
   it("clears inherited agent-dir overrides by default", async () => {
     await withEnvAsync({ QUIET_CORE_AGENT_DIR: "/tmp/outside-quiet-core-bot-agent" }, async () => {
-      const state = await createOpenClawTestState({
+      const state = await createQuietCoreTestState({
         layout: "state-only",
       });
 
@@ -89,7 +89,7 @@ describe("quiet-core-bot test state", () => {
   });
 
   it("allows explicit agent-dir overrides when a test needs them", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         env: {
           QUIET_CORE_AGENT_DIR: "/tmp/explicit-quiet-core-bot-agent",
@@ -103,7 +103,7 @@ describe("quiet-core-bot test state", () => {
   });
 
   it("can route agent-dir env vars to the isolated main agent store", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         agentEnv: "main",
       },
@@ -115,7 +115,7 @@ describe("quiet-core-bot test state", () => {
   });
 
   it("writes scenario configs and auth profile stores", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         scenario: "update-stable",
       },
@@ -146,14 +146,14 @@ describe("quiet-core-bot test state", () => {
         } finally {
           // Release the cached agent SQLite handles so Windows can delete the
           // temp root (the open -wal/-shm files otherwise report EBUSY).
-          closeOpenClawAgentDatabasesForTest();
+          closeQuietCoreAgentDatabasesForTest();
         }
       },
     );
   });
 
   it("creates upgrade survivor fixture state", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         scenario: "upgrade-survivor",
       },
@@ -169,7 +169,7 @@ describe("quiet-core-bot test state", () => {
   it("keeps external-service env scoped to the fixture", async () => {
     const previousPolicy = process.env.QUIET_CORE_SERVICE_REPAIR_POLICY;
 
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         scenario: "external-service",
       },

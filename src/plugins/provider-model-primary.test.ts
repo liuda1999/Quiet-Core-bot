@@ -1,6 +1,6 @@
 /** Verifies primary provider model selection across plugin model metadata. */
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { applyPrimaryModel } from "./provider-model-primary.js";
 
 describe("applyPrimaryModel", () => {
@@ -20,7 +20,7 @@ describe("applyPrimaryModel", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const next = applyPrimaryModel(cfg, "google/gemini-3-pro-preview");
 

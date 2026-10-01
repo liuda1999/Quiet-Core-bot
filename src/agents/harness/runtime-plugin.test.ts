@@ -1,6 +1,6 @@
 // Verifies plugin loading needed before agent harness selection.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 
 const mocks = vi.hoisted(() => ({
   ensurePluginRegistryLoaded: vi.fn(),
@@ -40,7 +40,7 @@ describe("ensureSelectedAgentHarnessPlugin", () => {
         config,
       }: {
         trigger: { kind: "agentHarness"; runtime: string };
-        config?: OpenClawConfig;
+        config?: QuietCoreConfig;
       }) => {
         const pluginId = trigger.runtime;
         const allow = config?.plugins?.allow ?? [];
@@ -84,7 +84,7 @@ describe("ensureSelectedAgentHarnessPlugin", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       agentHarnessRuntimeOverride: "codex",
       workspaceDir: "/tmp/workspace",
     });
@@ -111,7 +111,7 @@ describe("ensureSelectedAgentHarnessPlugin", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       workspaceDir: "/tmp/workspace",
     });
 
@@ -138,7 +138,7 @@ describe("ensureSelectedAgentHarnessPlugin", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       workspaceDir: "/tmp/workspace",
     });
 
@@ -174,7 +174,7 @@ describe("ensureSelectedAgentHarnessPlugin", () => {
             "custom-harness-plugin": { enabled: true },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       agentHarnessRuntimeOverride: "custom-harness",
       workspaceDir: "/tmp/workspace",
     });
@@ -237,7 +237,7 @@ describe("ensureSelectedAgentHarnessPlugin", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       workspaceDir: "/tmp/workspace",
     });
 
@@ -255,7 +255,7 @@ describe("ensureSelectedAgentHarnessPlugin", () => {
             codex: { enabled: true },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       workspaceDir: "/tmp/workspace",
     });
 
@@ -289,7 +289,7 @@ describe("ensureSelectedAgentHarnessPlugin", () => {
             openai: { enabled: true },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       workspaceDir: "/tmp/workspace",
     });
 
@@ -320,7 +320,7 @@ describe("ensureSelectedAgentHarnessPlugin", () => {
         plugins: {
           slots: { memory: "workspace-memory" },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       workspaceDir: "/tmp/workspace",
     });
 
@@ -365,7 +365,7 @@ describe("ensureSelectedAgentHarnessPlugin", () => {
             codex: { enabled: true },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       workspaceDir: "/tmp/workspace",
     });
 
@@ -399,7 +399,7 @@ describe("ensureSelectedAgentHarnessPlugin", () => {
             telegram: { enabled: true },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       workspaceDir: "/tmp/workspace",
     });
 
@@ -443,7 +443,7 @@ describe("ensureSelectedAgentHarnessPlugin", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       workspaceDir: "/tmp/workspace",
     });
 
@@ -465,7 +465,7 @@ describe("ensureSelectedAgentHarnessPlugin", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       workspaceDir: "/tmp/workspace",
     });
 

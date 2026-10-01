@@ -2,7 +2,7 @@
   "name": "@quiet-core/policy",
   "version": "2026.6.11",
   "private": true,
-  "description": "OpenClaw policy doctor checks for workspace conformance",
+  "description": "QuietCore policy doctor checks for workspace conformance",
   "type": "module",
   "dependencies": {
     "json5": "2.2.3"

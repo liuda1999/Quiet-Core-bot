@@ -2,7 +2,7 @@
 import { CHANNEL_APPROVAL_NATIVE_RUNTIME_CONTEXT_CAPABILITY } from "quiet-core-bot/plugin-sdk/approval-handler-adapter-runtime";
 import type { ChannelRuntimeSurface } from "quiet-core-bot/plugin-sdk/channel-contract";
 import { registerChannelRuntimeContext } from "quiet-core-bot/plugin-sdk/channel-runtime-context";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import type { SignalReactionNotificationMode } from "quiet-core-bot/plugin-sdk/config-contracts";
 import {
   detectMime,
@@ -56,7 +56,7 @@ export type MonitorSignalOpts = {
   abortSignal?: AbortSignal;
   account?: string;
   accountId?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   baseUrl?: string;
   channelRuntime?: ChannelRuntimeSurface;
   autoStart?: boolean;
@@ -355,7 +355,7 @@ async function fetchAttachment(params: {
 }
 
 async function deliverReplies(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   replies: ReplyPayload[];
   target: string;
   baseUrl: string;

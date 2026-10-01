@@ -4,8 +4,8 @@ import {
   CONFIG_COMMAND_MAX_BUFFER_BYTES,
   CONFIG_COMMAND_TIMEOUT_MS,
   isReleaseBefore,
-  resolveUpgradeSurvivorOpenClawCommand,
-  runUpgradeSurvivorOpenClawStep,
+  resolveUpgradeSurvivorQuietCoreCommand,
+  runUpgradeSurvivorQuietCoreStep,
 } from "../../scripts/e2e/lib/upgrade-survivor/config-recipe.mjs";
 
 describe("upgrade survivor config recipe command resolution", () => {
@@ -20,7 +20,7 @@ describe("upgrade survivor config recipe command resolution", () => {
 
   it("wraps Windows quiet-core-bot npm shims through cmd.exe", () => {
     expect(
-      resolveUpgradeSurvivorOpenClawCommand(
+      resolveUpgradeSurvivorQuietCoreCommand(
         ["config", "set", "models.providers.openai", '{"apiKey":"sk test"}', "--strict-json"],
         {
           comSpec: String.raw`C:\Windows\System32\cmd.exe`,
@@ -44,7 +44,7 @@ describe("upgrade survivor config recipe command resolution", () => {
 
   it("keeps POSIX quiet-core-bot invocations direct", () => {
     expect(
-      resolveUpgradeSurvivorOpenClawCommand(["config", "validate"], {
+      resolveUpgradeSurvivorQuietCoreCommand(["config", "validate"], {
         platform: "linux",
       }),
     ).toEqual({
@@ -61,7 +61,7 @@ describe("upgrade survivor config recipe command resolution", () => {
       code: "ETIMEDOUT",
     });
 
-    const outcome = runUpgradeSurvivorOpenClawStep(
+    const outcome = runUpgradeSurvivorQuietCoreStep(
       {
         argv: ["config", "validate"],
         id: "validate",
@@ -82,7 +82,7 @@ describe("upgrade survivor config recipe command resolution", () => {
     );
 
     expect(calls).toHaveLength(1);
-    const expectedInvocation = resolveUpgradeSurvivorOpenClawCommand(["config", "validate"]);
+    const expectedInvocation = resolveUpgradeSurvivorQuietCoreCommand(["config", "validate"]);
     expect(calls[0]).toMatchObject({
       args: expectedInvocation.args,
       command: expectedInvocation.command,

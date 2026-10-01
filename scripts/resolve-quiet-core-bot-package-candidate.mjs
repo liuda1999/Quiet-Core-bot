@@ -157,7 +157,7 @@ function validateOutputName(value) {
   }
 }
 
-function resolvePackedOpenClawTarballFilename(value) {
+function resolvePackedQuietCoreTarballFilename(value) {
   const filename = typeof value === "string" ? value.trim() : "";
   if (
     !/^quiet-core-bot-[A-Za-z0-9._-]+\.tgz$/u.test(filename) ||
@@ -166,13 +166,13 @@ function resolvePackedOpenClawTarballFilename(value) {
     filename !== path.win32.basename(filename)
   ) {
     throw new Error(
-      `npm pack reported unsafe OpenClaw tarball filename: ${JSON.stringify(filename)}`,
+      `npm pack reported unsafe QuietCore tarball filename: ${JSON.stringify(filename)}`,
     );
   }
   return filename;
 }
 
-export function validateOpenClawPackageSpec(spec) {
+export function validateQuietCorePackageSpec(spec) {
   if (!QUIET_CORE_PACKAGE_SPEC_RE.test(spec)) {
     throw new Error(
       `package_spec must be quiet-core-bot@alpha, quiet-core-bot@beta, quiet-core-bot@latest, or an exact Quiet Core bot release version; got: ${spec}`,
@@ -181,7 +181,7 @@ export function validateOpenClawPackageSpec(spec) {
 }
 
 export function resolveNpmPackageCandidatePackRunner(packageSpec, outputDir, params = {}) {
-  validateOpenClawPackageSpec(packageSpec);
+  validateQuietCorePackageSpec(packageSpec);
   return resolveNpmRunner({
     comSpec: params.comSpec,
     env: params.env,
@@ -605,7 +605,7 @@ async function resolveTrustedRepoRef(ref) {
   }
 
   throw new Error(
-    `package_ref ${ref} resolved to ${selectedSha}, which is not reachable from an OpenClaw branch or release tag`,
+    `package_ref ${ref} resolved to ${selectedSha}, which is not reachable from an QuietCore branch or release tag`,
   );
 }
 
@@ -663,7 +663,7 @@ async function moveNewestPackedTarball(outputDir, packOutput, outputName) {
     const packedFilename =
       parsed.find((entry) => typeof entry?.filename === "string")?.filename ?? "";
     if (packedFilename) {
-      filename = resolvePackedOpenClawTarballFilename(packedFilename);
+      filename = resolvePackedQuietCoreTarballFilename(packedFilename);
     }
   }
   if (!filename) {
@@ -676,7 +676,7 @@ async function moveNewestPackedTarball(outputDir, packOutput, outputName) {
           trimmed.includes("/") ||
           trimmed.includes("\\"))
       ) {
-        filename = resolvePackedOpenClawTarballFilename(trimmed);
+        filename = resolvePackedQuietCoreTarballFilename(trimmed);
       }
     }
   }
@@ -685,7 +685,7 @@ async function moveNewestPackedTarball(outputDir, packOutput, outputName) {
     filename = entries
       .filter((entry) => {
         try {
-          return resolvePackedOpenClawTarballFilename(entry) === entry;
+          return resolvePackedQuietCoreTarballFilename(entry) === entry;
         } catch {
           return false;
         }
@@ -694,7 +694,7 @@ async function moveNewestPackedTarball(outputDir, packOutput, outputName) {
       .at(-1);
   }
   if (!filename) {
-    throw new Error(`npm pack produced no OpenClaw tarball in ${outputDir}`);
+    throw new Error(`npm pack produced no QuietCore tarball in ${outputDir}`);
   }
   const packed = path.join(outputDir, filename);
   const target = path.join(outputDir, outputName);
@@ -707,7 +707,7 @@ async function moveNewestPackedTarball(outputDir, packOutput, outputName) {
 
 export const moveNewestPackedTarballForTest = moveNewestPackedTarball;
 
-async function cleanPackedOpenClawTarballs(outputDir) {
+async function cleanPackedQuietCoreTarballs(outputDir) {
   let entries;
   try {
     entries = await fs.readdir(outputDir);
@@ -722,7 +722,7 @@ async function cleanPackedOpenClawTarballs(outputDir) {
     entries
       .filter((entry) => {
         try {
-          return resolvePackedOpenClawTarballFilename(entry) === entry;
+          return resolvePackedQuietCoreTarballFilename(entry) === entry;
         } catch {
           return false;
         }
@@ -731,7 +731,7 @@ async function cleanPackedOpenClawTarballs(outputDir) {
   );
 }
 
-export const cleanPackedOpenClawTarballsForTest = cleanPackedOpenClawTarballs;
+export const cleanPackedQuietCoreTarballsForTest = cleanPackedQuietCoreTarballs;
 
 function normalizeUrlHostname(hostname) {
   return hostname.replace(/^\[/u, "").replace(/\]$/u, "").replace(/\.+$/u, "").toLowerCase();
@@ -1489,7 +1489,7 @@ async function resolveCandidate(options) {
       const npmPackRunner = resolveNpmPackageCandidatePackRunner(options.packageSpec, outputDir, {
         env: process.env,
       });
-      await cleanPackedOpenClawTarballs(outputDir);
+      await cleanPackedQuietCoreTarballs(outputDir);
       const packOutput = await run(npmPackRunner.command, npmPackRunner.args, {
         capture: true,
         env: npmPackRunner.env,
@@ -1555,13 +1555,13 @@ async function resolveCandidate(options) {
 
   const artifactSha256 = typeof artifactMetadata.sha256 === "string" ? artifactMetadata.sha256 : "";
   const digest = await assertExpectedSha256(target, options.packageSha256 || artifactSha256);
-  console.error(`Checking OpenClaw package tarball: ${target}`);
+  console.error(`Checking QuietCore package tarball: ${target}`);
   const checkStartedAt = Date.now();
   await run("node", ["scripts/check-quiet-core-bot-package-tarball.mjs", target], {
     timeoutMs: 5 * 60 * 1000,
   });
   console.error(
-    `OpenClaw package tarball check finished in ${Math.round((Date.now() - checkStartedAt) / 1000)}s`,
+    `QuietCore package tarball check finished in ${Math.round((Date.now() - checkStartedAt) / 1000)}s`,
   );
   const pkg = await readPackageJson(target);
   if (!packageSourceSha) {

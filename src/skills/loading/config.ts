@@ -4,7 +4,7 @@ import {
   normalizeOptionalString,
 } from "@quiet-core/normalization-core/string-coerce";
 import { normalizeStringEntries } from "@quiet-core/normalization-core/string-normalization";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { SkillConfig } from "../../config/types.skills.js";
 import {
   evaluateRuntimeEligibility,
@@ -23,7 +23,7 @@ const DEFAULT_CONFIG_VALUES: Record<string, boolean> = {
 /** Platform helpers re-exported for skill loading callers and tests. */
 export { hasBinary };
 
-export function resolveSkillsInstallPreferences(config?: OpenClawConfig): SkillsInstallPreferences {
+export function resolveSkillsInstallPreferences(config?: QuietCoreConfig): SkillsInstallPreferences {
   const raw = config?.skills?.install;
   const preferBrew = raw?.preferBrew ?? true;
   const manager = normalizeLowercaseStringOrEmpty(normalizeOptionalString(raw?.nodeManager));
@@ -34,12 +34,12 @@ export function resolveSkillsInstallPreferences(config?: OpenClawConfig): Skills
   return { preferBrew, nodeManager };
 }
 
-export function isConfigPathTruthy(config: OpenClawConfig | undefined, pathStr: string): boolean {
+export function isConfigPathTruthy(config: QuietCoreConfig | undefined, pathStr: string): boolean {
   return isConfigPathTruthyWithDefaults(config, pathStr, DEFAULT_CONFIG_VALUES);
 }
 
 export function resolveSkillConfig(
-  config: OpenClawConfig | undefined,
+  config: QuietCoreConfig | undefined,
   skillKey: string,
 ): SkillConfig | undefined {
   const skills = config?.skills?.entries;
@@ -70,7 +70,7 @@ function isBundledSkill(entry: SkillEntry): boolean {
   return BUNDLED_SOURCES.has(resolveSkillSource(entry.skill));
 }
 
-export function resolveBundledAllowlist(config?: OpenClawConfig): ReadonlySet<string> | undefined {
+export function resolveBundledAllowlist(config?: QuietCoreConfig): ReadonlySet<string> | undefined {
   return normalizeAllowlist(config?.skills?.allowBundled);
 }
 
@@ -87,7 +87,7 @@ export function isBundledSkillAllowed(entry: SkillEntry, allowlist?: ReadonlySet
 
 export function shouldIncludeSkill(params: {
   entry: SkillEntry;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   bundledAllowlist: ReadonlySet<string> | undefined;
   eligibility?: SkillEligibilityContext;
 }): boolean {

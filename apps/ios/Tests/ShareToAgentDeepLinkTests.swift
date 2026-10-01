@@ -1,10 +1,10 @@
 import Foundation
-import OpenClawKit
+import QuietCoreKit
 import Testing
 
 @Suite struct ShareToAgentDeepLinkTests {
-    @Test func appGroupIdentifierUsesCanonicalOpenClawGroup() {
-        #expect(OpenClawAppGroup.canonicalIdentifier == "group.ai.openclawfoundation.app.shared")
+    @Test func appGroupIdentifierUsesCanonicalQuietCoreGroup() {
+        #expect(QuietCoreAppGroup.canonicalIdentifier == "group.ai.quiet-core-botfoundation.app.shared")
     }
 
     @Test func buildMessageIncludesSharedFields() {

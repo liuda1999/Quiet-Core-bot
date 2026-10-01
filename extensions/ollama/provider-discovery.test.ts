@@ -2,7 +2,7 @@
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { clearLiveCatalogCacheForTests } from "quiet-core-bot/plugin-sdk/provider-catalog-shared";
 import type { ModelDefinitionConfig } from "quiet-core-bot/plugin-sdk/provider-onboard";
 import { withFetchPreconnect } from "quiet-core-bot/plugin-sdk/test-env";
@@ -59,7 +59,7 @@ describe("Ollama provider", () => {
   }
 
   async function runOllamaCatalog(params: {
-    config?: OpenClawConfig;
+    config?: QuietCoreConfig;
     env?: NodeJS.ProcessEnv;
     resolveProviderApiKey?: () => { apiKey: string | undefined; discoveryApiKey?: string };
   }) {

@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { withTempDir } from "../../test-helpers/temp-dir.js";
 import type { MsgContext } from "../templating.js";
 import { resolveCurrentTurnImages } from "./current-turn-images.js";
@@ -44,7 +44,7 @@ describe("resolveCurrentTurnImages", () => {
           MediaType: "image/jpeg",
           MediaTypes: ["image/jpeg"],
         } satisfies MsgContext,
-        cfg: {} as OpenClawConfig,
+        cfg: {} as QuietCoreConfig,
       });
 
       expect(result).toStrictEqual({

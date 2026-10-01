@@ -2,7 +2,7 @@
 #
 # Shared Docker E2E image resolver/builder.
 # Suite-specific scripts call this to resolve overrides, reuse pulled images, or
-# build the runner/functional images with the prepared OpenClaw package tarball.
+# build the runner/functional images with the prepared QuietCore package tarball.
 
 DOCKER_E2E_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="${ROOT_DIR:-$(cd "$DOCKER_E2E_LIB_DIR/../.." && pwd)}"

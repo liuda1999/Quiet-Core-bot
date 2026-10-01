@@ -5,7 +5,7 @@ import { Socket, type AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { closeOpenClawStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
+import { closeQuietCoreStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
 import type { DebugProxySettings } from "./env.js";
 import { assertDebugProxyDirectUpstreamAllowed, startDebugProxyServer } from "./proxy-server.js";
 import { closeDebugProxyCaptureStore } from "./store.sqlite.js";
@@ -15,7 +15,7 @@ const originalStateDir = process.env.QUIET_CORE_STATE_DIR;
 
 async function cleanupTestDirs(): Promise<void> {
   closeDebugProxyCaptureStore();
-  closeOpenClawStateDatabaseForTest();
+  closeQuietCoreStateDatabaseForTest();
   if (originalStateDir === undefined) {
     delete process.env.QUIET_CORE_STATE_DIR;
   } else {

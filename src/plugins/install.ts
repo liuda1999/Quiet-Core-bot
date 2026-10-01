@@ -5,7 +5,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { satisfiesPluginApiRange } from "../infra/clawhub.js";
 import { packageNameMatchesId } from "../infra/install-safe-path.js";
 import {
@@ -21,8 +21,8 @@ import {
   listMissingRequiredPlatformPackages,
   readManagedNpmRootInstalledDependency,
   readManagedNpmRootPeerDependencySnapshot,
-  readOpenClawManagedNpmRootOverrides,
-  repairManagedNpmRootOpenClawPeer,
+  readQuietCoreManagedNpmRootOverrides,
+  repairManagedNpmRootQuietCorePeer,
   removeManagedNpmRootDependency,
   resolveManagedNpmRootDependencySpec,
   restoreManagedNpmRootPeerDependencySnapshot,
@@ -31,7 +31,7 @@ import {
   type ManagedNpmRootInstalledDependency,
 } from "../infra/npm-managed-root.js";
 import {
-  compareOpenClawReleaseVersions,
+  compareQuietCoreReleaseVersions,
   formatPrereleaseResolutionError,
   isExactSemverVersion,
   isPrereleaseSemverVersion,
@@ -40,7 +40,7 @@ import {
   validateRegistryNpmSpec,
   type ParsedRegistryNpmSpec,
 } from "../infra/npm-registry-spec.js";
-import { installedPackageNeedsOpenClawPeerLinkRepair } from "../infra/package-update-utils.js";
+import { installedPackageNeedsQuietCorePeerLinkRepair } from "../infra/package-update-utils.js";
 import {
   createSafeNpmInstallArgs,
   createSafeNpmInstallEnv,
@@ -69,14 +69,14 @@ import {
 import { hasRetainedManagedNpmInstallMarker } from "./managed-npm-retention.js";
 import {
   resolvePackageExtensionEntries,
-  type OpenClawPackageManifest,
+  type QuietCorePackageManifest,
   type PackageManifest as PluginPackageManifest,
 } from "./manifest.js";
 import { resolvePackagePluginApiRange } from "./package-compat.js";
 import { validatePackageExtensionEntriesForInstall } from "./package-entry-resolution.js";
 import {
-  linkOpenClawPeerDependencies,
-  relinkOpenClawPeerDependenciesInManagedNpmRoot,
+  linkQuietCorePeerDependencies,
+  relinkQuietCorePeerDependenciesInManagedNpmRoot,
 } from "./plugin-peer-link.js";
 import {
   emitPluginAuditSecurityEvent,
@@ -106,7 +106,7 @@ type PackageManifest = PluginPackageManifest & {
 };
 type PluginInstallRuntime = Awaited<ReturnType<typeof loadPluginInstallRuntime>>;
 
-function formatUnresolvedOpenClawPeerLinkError(packageName: string): string {
+function formatUnresolvedQuietCorePeerLinkError(packageName: string): string {
   return `Installed plugin ${packageName} declares quiet-core-bot as a peer dependency, but Quiet Core bot could not create a plugin-local node_modules/quiet-core-bot link. Run from a packaged Quiet Core bot install or reinstall Quiet Core bot, then retry.`;
 }
 
@@ -167,10 +167,10 @@ export type InstallPluginResult =
 
 type PluginInstallFailureResult = Extract<InstallPluginResult, { ok: false }>;
 
-function validateOpenClawPackageCompatibility(params: {
+function validateQuietCorePackageCompatibility(params: {
   pluginId: string;
   currentHostVersion: string;
-  packageMetadata?: OpenClawPackageManifest;
+  packageMetadata?: QuietCorePackageManifest;
 }): PluginInstallFailureResult | null {
   const pluginApiRangeCheck = resolvePackagePluginApiRange(params.packageMetadata);
   if (!pluginApiRangeCheck.ok) {
@@ -192,10 +192,10 @@ function validateOpenClawPackageCompatibility(params: {
   return null;
 }
 
-function validateOpenClawPackageInstallCompatibility(params: {
+function validateQuietCorePackageInstallCompatibility(params: {
   runtime: PluginInstallRuntime;
   pluginId: string;
-  packageMetadata?: OpenClawPackageManifest;
+  packageMetadata?: QuietCorePackageManifest;
 }): PluginInstallFailureResult | null {
   const currentHostVersion = params.runtime.resolveCompatibilityHostVersion();
   const minHostVersionCheck = params.runtime.checkMinHostVersion({
@@ -224,7 +224,7 @@ function validateOpenClawPackageInstallCompatibility(params: {
     };
   }
 
-  return validateOpenClawPackageCompatibility({
+  return validateQuietCorePackageCompatibility({
     pluginId: params.pluginId,
     currentHostVersion,
     packageMetadata: params.packageMetadata,
@@ -265,7 +265,7 @@ type PluginInstallPolicyRequest = {
 
 const defaultLogger: PluginInstallLogger = {};
 
-function ensureOpenClawExtensions(params: { manifest: PackageManifest }):
+function ensureQuietCoreExtensions(params: { manifest: PackageManifest }):
   | {
       ok: true;
       entries: string[];
@@ -312,7 +312,7 @@ function isNpmPackageNotFoundMessage(error: string): boolean {
 }
 
 function compareNpmSemver(a: string, b: string): number {
-  const releaseCmp = compareOpenClawReleaseVersions(a, b);
+  const releaseCmp = compareQuietCoreReleaseVersions(a, b);
   if (releaseCmp !== null) {
     return releaseCmp;
   }
@@ -455,10 +455,10 @@ function validateNpmResolutionCompatibility(params: {
   expectedPluginId?: string;
   resolution: NpmSpecResolution;
 }): PluginInstallFailureResult | null {
-  return validateOpenClawPackageInstallCompatibility({
+  return validateQuietCorePackageInstallCompatibility({
     runtime: params.runtime,
     pluginId: params.expectedPluginId ?? params.resolution.name ?? params.parsedSpec.name,
-    packageMetadata: params.resolution.packageOpenClaw as OpenClawPackageManifest | undefined,
+    packageMetadata: params.resolution.packageQuietCore as QuietCorePackageManifest | undefined,
   });
 }
 
@@ -617,7 +617,7 @@ async function rollbackManagedNpmPluginInstall(params: {
         npmRoot: params.npmRoot,
         snapshot: params.snapshot,
       });
-      await relinkOpenClawPeerDependenciesInManagedNpmRoot({
+      await relinkQuietCorePeerDependenciesInManagedNpmRoot({
         npmRoot: params.npmRoot,
         logger: params.logger,
       });
@@ -740,7 +740,7 @@ async function rollbackManagedNpmPluginInstall(params: {
   }
   if (params.packageName !== "quiet-core-bot") {
     try {
-      await repairManagedNpmRootOpenClawPeer({
+      await repairManagedNpmRootQuietCorePeer({
         npmRoot: params.npmRoot,
         timeoutMs: params.timeoutMs,
         logger: params.logger,
@@ -752,7 +752,7 @@ async function rollbackManagedNpmPluginInstall(params: {
     }
   }
   try {
-    await relinkOpenClawPeerDependenciesInManagedNpmRoot({
+    await relinkQuietCorePeerDependenciesInManagedNpmRoot({
       npmRoot: params.npmRoot,
       logger: params.logger,
     });
@@ -932,7 +932,7 @@ async function shouldCopyManagedNpmRollbackSnapshotEntry(params: {
   }
 
   const relativeParts = path.relative(params.nodeModulesDir, params.sourcePath).split(path.sep);
-  const isPluginLocalOpenClawPeer =
+  const isPluginLocalQuietCorePeer =
     (relativeParts.length === 3 &&
       relativeParts[1] === "node_modules" &&
       relativeParts[2] === "quiet-core-bot") ||
@@ -940,7 +940,7 @@ async function shouldCopyManagedNpmRollbackSnapshotEntry(params: {
       relativeParts[0]?.startsWith("@") &&
       relativeParts[2] === "node_modules" &&
       relativeParts[3] === "quiet-core-bot");
-  if (!isPluginLocalOpenClawPeer) {
+  if (!isPluginLocalQuietCorePeer) {
     return true;
   }
 
@@ -1240,7 +1240,7 @@ async function resolveManagedNpmGenerationUseForInstall(params: {
 }
 
 function resolveRequiredPlatformPackageNames(
-  packageMetadata?: OpenClawPackageManifest,
+  packageMetadata?: QuietCorePackageManifest,
 ): { ok: true; packageNames: string[] } | { ok: false; error: string } {
   const raw = packageMetadata?.install?.requiredPlatformPackages as unknown;
   if (raw === undefined) {
@@ -1430,17 +1430,17 @@ async function installPluginFromManagedNpmRoot(
   ): Promise<InstallPluginResult> => {
     logger.info?.(`Installing ${params.displaySpec} into ${npmRoot}…`);
     if (params.packageName !== "quiet-core-bot") {
-      const repairedOpenClawPeer = await repairManagedNpmRootOpenClawPeer({
+      const repairedQuietCorePeer = await repairManagedNpmRootQuietCorePeer({
         npmRoot,
         timeoutMs,
         logger,
       });
-      if (repairedOpenClawPeer) {
+      if (repairedQuietCorePeer) {
         logger.info?.(`Repaired stale quiet-core-bot peer dependency in ${npmRoot}`);
       }
     }
     let preInstallRootPackageNames = await listManagedNpmRootPackageNames(npmRoot);
-    const managedOverrides = await readOpenClawManagedNpmRootOverrides();
+    const managedOverrides = await readQuietCoreManagedNpmRootOverrides();
     const rollbackPeerDependencySnapshot = await readManagedNpmRootPeerDependencySnapshot({
       npmRoot,
     });
@@ -1720,17 +1720,17 @@ async function installPluginFromManagedNpmRoot(
       }
     }
     if (params.packageName !== "quiet-core-bot") {
-      const repairedOpenClawPeer = await repairManagedNpmRootOpenClawPeer({
+      const repairedQuietCorePeer = await repairManagedNpmRootQuietCorePeer({
         npmRoot,
         timeoutMs,
         logger,
       });
-      if (repairedOpenClawPeer) {
+      if (repairedQuietCorePeer) {
         logger.info?.(`Repaired stale quiet-core-bot peer dependency in ${npmRoot} after npm install`);
       }
     }
     try {
-      await relinkOpenClawPeerDependenciesInManagedNpmRoot({
+      await relinkQuietCorePeerDependenciesInManagedNpmRoot({
         npmRoot,
         logger,
       });
@@ -1740,10 +1740,10 @@ async function installPluginFromManagedNpmRoot(
         error: `Failed to repair quiet-core-bot peer links after npm install: ${String(error)}`,
       });
     }
-    if (installedPackageNeedsOpenClawPeerLinkRepair(installRoot)) {
+    if (installedPackageNeedsQuietCorePeerLinkRepair(installRoot)) {
       return await rollbackFailedManagedNpmInstall({
         ok: false,
-        error: formatUnresolvedOpenClawPeerLinkError(params.packageName),
+        error: formatUnresolvedQuietCorePeerLinkError(params.packageName),
       });
     }
 
@@ -2281,7 +2281,7 @@ async function installBundleFromSourceDir(
   const packageMetadata = packageManifestResult.manifest
     ? runtime.getPackageManifestMetadata(packageManifestResult.manifest)
     : undefined;
-  const compatibilityError = validateOpenClawPackageInstallCompatibility({
+  const compatibilityError = validateQuietCorePackageInstallCompatibility({
     runtime,
     pluginId,
     packageMetadata,
@@ -2376,7 +2376,7 @@ async function detectNativePackageInstallSource(packageDir: string): Promise<boo
 
   try {
     const manifest = await runtime.readJsonFile<PackageManifest>(manifestPath);
-    return ensureOpenClawExtensions({ manifest }).ok;
+    return ensureQuietCoreExtensions({ manifest }).ok;
   } catch {
     return false;
   }
@@ -2400,7 +2400,7 @@ async function validatePackagePluginInstallSource(params: {
   allowSourceTypeScriptEntries?: boolean;
   dangerouslyForceUnsafeInstall?: boolean;
   trustedSourceLinkedOfficialInstall?: boolean;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   installPolicyRequest?: PluginInstallPolicyRequest;
   logger: PluginInstallLogger;
   mode: "install" | "update";
@@ -2466,7 +2466,7 @@ async function validatePackagePluginInstallSource(params: {
   }
 
   const packageMetadata = params.runtime.getPackageManifestMetadata(manifest);
-  const compatibilityError = validateOpenClawPackageInstallCompatibility({
+  const compatibilityError = validateQuietCorePackageInstallCompatibility({
     runtime: params.runtime,
     pluginId,
     packageMetadata,
@@ -2475,7 +2475,7 @@ async function validatePackagePluginInstallSource(params: {
     return compatibilityError;
   }
 
-  const extensionsResult = ensureOpenClawExtensions({
+  const extensionsResult = ensureQuietCoreExtensions({
     manifest,
   });
   if (!extensionsResult.ok) {
@@ -2561,7 +2561,7 @@ async function scanAndLinkInstalledPackage(params: {
   mode?: "install" | "update";
   requestKind?: PluginInstallPolicyRequest["kind"];
   requestedSpecifier?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   source?: InstallPolicySource;
   logger: PluginInstallLogger;
 }): Promise<Extract<InstallPluginResult, { ok: false }> | null> {
@@ -2597,7 +2597,7 @@ async function scanAndLinkInstalledPackage(params: {
   if (scanResult) {
     return scanResult;
   }
-  const peerLinkRepair = await linkOpenClawPeerDependencies({
+  const peerLinkRepair = await linkQuietCorePeerDependencies({
     installedDir: params.installedDir,
     peerDependencies: params.peerDependencies,
     logger: params.logger,
@@ -2605,7 +2605,7 @@ async function scanAndLinkInstalledPackage(params: {
   if (peerLinkRepair.skipped > 0) {
     return {
       ok: false,
-      error: formatUnresolvedOpenClawPeerLinkError(params.pluginId),
+      error: formatUnresolvedQuietCorePeerLinkError(params.pluginId),
     };
   }
   return null;
@@ -2883,7 +2883,7 @@ export async function installPluginFromDir(
 }
 
 export async function installPluginFromFile(params: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   filePath: string;
   dangerouslyForceUnsafeInstall?: boolean;
   extensionsDir?: string;

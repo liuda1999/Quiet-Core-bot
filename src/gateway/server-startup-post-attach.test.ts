@@ -11,7 +11,7 @@ import type {
   PluginHookGatewayStartEvent,
 } from "../plugins/hook-types.js";
 import type { PluginServicesHandle } from "../plugins/services.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
+import { closeQuietCoreStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
 import { withEnvAsync } from "../test-utils/env.js";
 
 const hoisted = vi.hoisted(() => {
@@ -62,7 +62,7 @@ const hoisted = vi.hoisted(() => {
     allowed: true,
     inCatalog: true,
   }));
-  const ensureOpenClawModelsJson = vi.fn(async () => {});
+  const ensureQuietCoreModelsJson = vi.fn(async () => {});
   const ensureRuntimePluginsLoaded = vi.fn();
   const clearCurrentProviderAuthState = vi.fn();
   const warmCurrentProviderAuthStateOffMainThread = vi.fn(
@@ -101,7 +101,7 @@ const hoisted = vi.hoisted(() => {
     resolveHooksGmailModel,
     loadModelCatalog,
     getModelRefStatus,
-    ensureOpenClawModelsJson,
+    ensureQuietCoreModelsJson,
     ensureRuntimePluginsLoaded,
     clearCurrentProviderAuthState,
     warmCurrentProviderAuthStateOffMainThread,
@@ -205,7 +205,7 @@ vi.mock("../agents/model-selection.js", () => ({
 }));
 
 vi.mock("../agents/models-config.js", () => ({
-  ensureOpenClawModelsJson: hoisted.ensureOpenClawModelsJson,
+  ensureQuietCoreModelsJson: hoisted.ensureQuietCoreModelsJson,
 }));
 
 vi.mock("../agents/runtime-plugins.js", () => ({
@@ -299,7 +299,7 @@ function firstGatewayStartCall(
 
 describe("startGatewayPostAttachRuntime", () => {
   beforeEach(() => {
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
     vi.stubEnv("QUIET_CORE_SKIP_CHANNELS", "0");
     vi.stubEnv("QUIET_CORE_SKIP_PROVIDERS", "0");
     hoisted.startPluginServices.mockClear();
@@ -348,8 +348,8 @@ describe("startGatewayPostAttachRuntime", () => {
       allowed: true,
       inCatalog: true,
     });
-    hoisted.ensureOpenClawModelsJson.mockReset();
-    hoisted.ensureOpenClawModelsJson.mockResolvedValue(undefined);
+    hoisted.ensureQuietCoreModelsJson.mockReset();
+    hoisted.ensureQuietCoreModelsJson.mockResolvedValue(undefined);
     hoisted.ensureRuntimePluginsLoaded.mockReset();
     hoisted.clearCurrentProviderAuthState.mockClear();
     hoisted.warmCurrentProviderAuthStateOffMainThread.mockReset();
@@ -362,7 +362,7 @@ describe("startGatewayPostAttachRuntime", () => {
   });
 
   afterEach(() => {
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
     vi.useRealTimers();
     vi.unstubAllEnvs();
   });
@@ -573,7 +573,7 @@ describe("startGatewayPostAttachRuntime", () => {
         expect(hoisted.refreshLatestUpdateRestartSentinel).not.toHaveBeenCalled();
       });
     } finally {
-      closeOpenClawStateDatabaseForTest();
+      closeQuietCoreStateDatabaseForTest();
       fs.rmSync(stateDir, { recursive: true, force: true });
     }
   });
@@ -600,7 +600,7 @@ describe("startGatewayPostAttachRuntime", () => {
         expect(hoisted.refreshLatestUpdateRestartSentinel).toHaveBeenCalledOnce();
       });
     } finally {
-      closeOpenClawStateDatabaseForTest();
+      closeQuietCoreStateDatabaseForTest();
       fs.rmSync(stateDir, { recursive: true, force: true });
     }
   });
@@ -623,7 +623,7 @@ describe("startGatewayPostAttachRuntime", () => {
         } as NodeJS.ProcessEnv),
       ).toBe(true);
     } finally {
-      closeOpenClawStateDatabaseForTest();
+      closeQuietCoreStateDatabaseForTest();
       fs.rmSync(stateDir, { recursive: true, force: true });
     }
   });
@@ -659,7 +659,7 @@ describe("startGatewayPostAttachRuntime", () => {
         existsSync.mockRestore();
       }
     } finally {
-      closeOpenClawStateDatabaseForTest();
+      closeQuietCoreStateDatabaseForTest();
       fs.rmSync(stateDir, { recursive: true, force: true });
     }
   });

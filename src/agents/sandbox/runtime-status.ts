@@ -9,7 +9,7 @@ import {
   canonicalizeMainSessionAlias,
   resolveAgentMainSessionKey,
 } from "../../config/sessions/main-session.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { resolveSessionAgentId } from "../agent-scope.js";
 import { auditSandboxToolPolicyBlock } from "../tool-policy-audit.js";
 import { resolveSandboxConfigForAgent } from "./config.js";
@@ -30,7 +30,7 @@ function shouldSandboxSession(cfg: SandboxConfig, sessionKey: string, mainSessio
 }
 
 function resolveMainSessionKeyForSandbox(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   agentId: string;
 }): string {
   if (params.cfg?.session?.scope === "global") {
@@ -43,7 +43,7 @@ function resolveMainSessionKeyForSandbox(params: {
 }
 
 function resolveComparableSessionKeyForSandbox(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   agentId: string;
   sessionKey: string;
 }): string {
@@ -56,7 +56,7 @@ function resolveComparableSessionKeyForSandbox(params: {
 
 /** Resolves sandbox mode, effective session scope, and tool policy for a session. */
 export function resolveSandboxRuntimeStatus(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   sessionKey?: string;
 }): {
   agentId: string;
@@ -134,7 +134,7 @@ function shellEscapeSingleArg(value: string): string {
 
 /** Formats the user-facing denial message when sandbox tool policy blocks a tool. */
 export function formatSandboxToolPolicyBlockedMessage(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   sessionKey?: string;
   toolName: string;
   audit?: boolean;

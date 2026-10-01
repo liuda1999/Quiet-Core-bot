@@ -12,7 +12,7 @@ import {
 } from "@quiet-core/normalization-core/string-coerce";
 import { normalizeTrimmedStringList } from "@quiet-core/normalization-core/string-normalization";
 import { isTruthyEnvValue } from "../infra/env.js";
-import { listOpenClawPluginManifestMetadata } from "../plugins/manifest-metadata-scan.js";
+import { listQuietCorePluginManifestMetadata } from "../plugins/manifest-metadata-scan.js";
 import { asBoolean } from "../utils/boolean.js";
 import type { RuntimeVersionEnv } from "../version.js";
 import { resolveRuntimeServiceVersion } from "../version.js";
@@ -221,7 +221,7 @@ const BUILT_IN_PROVIDER_ENDPOINT_FALLBACKS: readonly ManifestProviderEndpointCac
   },
 ];
 
-function formatOpenClawUserAgent(version: string): string {
+function formatQuietCoreUserAgent(version: string): string {
   return `${QUIET_CORE_ATTRIBUTION_ORIGINATOR}/${version}`;
 }
 
@@ -359,7 +359,7 @@ function readManifestProviderRequests(
 
 function collectManifestProviderEndpoints(): ManifestProviderEndpointCacheEntry[] {
   const entries: ManifestProviderEndpointCacheEntry[] = [];
-  for (const { manifest } of listOpenClawPluginManifestMetadata()) {
+  for (const { manifest } of listQuietCorePluginManifestMetadata()) {
     entries.push(...readManifestProviderEndpoints(manifest));
   }
   return entries;
@@ -367,7 +367,7 @@ function collectManifestProviderEndpoints(): ManifestProviderEndpointCacheEntry[
 
 function collectManifestProviderRequests(): Map<string, ManifestProviderRequestCacheEntry> {
   const entries = new Map<string, ManifestProviderRequestCacheEntry>();
-  for (const { manifest } of listOpenClawPluginManifestMetadata()) {
+  for (const { manifest } of listQuietCorePluginManifestMetadata()) {
     for (const [provider, request] of readManifestProviderRequests(manifest)) {
       entries.set(provider, request);
     }
@@ -593,7 +593,7 @@ function buildOpenAIAttributionPolicy(
     headers: {
       originator: QUIET_CORE_ATTRIBUTION_ORIGINATOR,
       version: identity.version,
-      "User-Agent": formatOpenClawUserAgent(identity.version),
+      "User-Agent": formatQuietCoreUserAgent(identity.version),
     },
   };
 }
@@ -613,7 +613,7 @@ function buildXaiAttributionPolicy(
     headers: {
       originator: QUIET_CORE_ATTRIBUTION_ORIGINATOR,
       version: identity.version,
-      "User-Agent": formatOpenClawUserAgent(identity.version),
+      "User-Agent": formatQuietCoreUserAgent(identity.version),
     },
   };
 }

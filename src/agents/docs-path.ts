@@ -3,12 +3,12 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { resolveOpenClawPackageRoot } from "../infra/quiet-core-bot-root.js";
+import { resolveQuietCorePackageRoot } from "../infra/quiet-core-bot-root.js";
 
 export const QUIET_CORE_DOCS_URL = "https://github.com/liuda1999/Quiet-Core-bot";
 export const QUIET_CORE_SOURCE_URL = "https://github.com/liuda1999/Quiet-Core-bot";
 
-type ResolveOpenClawReferencePathParams = {
+type ResolveQuietCoreReferencePathParams = {
   workspaceDir?: string;
   argv1?: string;
   cwd?: string;
@@ -24,7 +24,7 @@ function isGitCheckout(rootDir: string): boolean {
 }
 
 /** Resolve a usable local docs directory, preferring the active workspace. */
-async function resolveOpenClawDocsPath(params: {
+async function resolveQuietCoreDocsPath(params: {
   workspaceDir?: string;
   argv1?: string;
   cwd?: string;
@@ -38,7 +38,7 @@ async function resolveOpenClawDocsPath(params: {
     }
   }
 
-  const packageRoot = await resolveOpenClawPackageRoot({
+  const packageRoot = await resolveQuietCorePackageRoot({
     cwd: params.cwd,
     argv1: params.argv1,
     moduleUrl: params.moduleUrl,
@@ -52,10 +52,10 @@ async function resolveOpenClawDocsPath(params: {
 }
 
 /** Resolve the package root only when it is a Git checkout. */
-async function resolveOpenClawSourcePath(
-  params: ResolveOpenClawReferencePathParams,
+async function resolveQuietCoreSourcePath(
+  params: ResolveQuietCoreReferencePathParams,
 ): Promise<string | null> {
-  const packageRoot = await resolveOpenClawPackageRoot({
+  const packageRoot = await resolveQuietCorePackageRoot({
     cwd: params.cwd,
     argv1: params.argv1,
     moduleUrl: params.moduleUrl,
@@ -67,15 +67,15 @@ async function resolveOpenClawSourcePath(
 }
 
 /** Resolve docs and source roots concurrently for prompt/reference injection. */
-export async function resolveOpenClawReferencePaths(
-  params: ResolveOpenClawReferencePathParams,
+export async function resolveQuietCoreReferencePaths(
+  params: ResolveQuietCoreReferencePathParams,
 ): Promise<{
   docsPath: string | null;
   sourcePath: string | null;
 }> {
   const [docsPath, sourcePath] = await Promise.all([
-    resolveOpenClawDocsPath(params),
-    resolveOpenClawSourcePath(params),
+    resolveQuietCoreDocsPath(params),
+    resolveQuietCoreSourcePath(params),
   ]);
   return { docsPath, sourcePath };
 }

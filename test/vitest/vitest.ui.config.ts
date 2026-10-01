@@ -17,7 +17,7 @@ export function createUiVitestConfig(
     env,
     exclude,
     excludeUnitFastTests: false,
-    includeOpenClawRuntimeSetup: false,
+    includeQuietCoreRuntimeSetup: false,
     isolate: false,
     name: options?.name ?? "ui",
     setupFiles: ["ui/src/test-helpers/lit-warnings.setup.ts"],

@@ -86,7 +86,7 @@ describe("bonjour plugin entry", () => {
     expect(mocks.runtimeModuleLoaded).toHaveBeenCalledTimes(1);
     expect(mocks.startGatewayBonjourAdvertiser).toHaveBeenCalledWith(
       {
-        instanceName: "Dev Box (OpenClaw)",
+        instanceName: "Dev Box (QuietCore)",
         gatewayPort: 3210,
         gatewayTlsEnabled: true,
         gatewayTlsFingerprintSha256: "abc123",

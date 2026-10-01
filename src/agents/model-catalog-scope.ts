@@ -6,7 +6,7 @@ import {
   normalizeProviderId,
 } from "@quiet-core/model-catalog-core/provider-id";
 import { normalizeUniqueSingleOrTrimmedStringList } from "@quiet-core/normalization-core/string-normalization";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 
 // Scope refs feed provider discovery and model catalog lookups. Keep the
 // ordering deterministic so prompt/cache inputs do not drift across runs.
@@ -42,7 +42,7 @@ function providerConfigDeclaresModel(
 
 /** Resolves provider/model refs used to scope model catalog discovery. */
 export function resolveModelCatalogScope(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   provider: string;
   model: string;
 }): { providerRefs: string[]; modelRefs: string[] } {

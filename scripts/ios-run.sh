@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 IOS_DIR="${ROOT_DIR}/apps/ios"
 
-APP_NAME="${IOS_APP_NAME:-OpenClaw}"
+APP_NAME="${IOS_APP_NAME:-QuietCore}"
 CONFIGURATION="${IOS_CONFIGURATION:-Debug}"
 DERIVED_DATA_DIR="${IOS_DERIVED_DATA_DIR:-${IOS_DIR}/build/DerivedData}"
 IOS_DESTINATION="${IOS_DEST:-platform=iOS Simulator,name=iPhone 17}"
@@ -115,8 +115,8 @@ cd "${IOS_DIR}"
 "${XCODEGEN_BIN}" generate
 if [[ "${push_sandbox_simulator}" == "1" ]]; then
   "${XCODEBUILD_BIN}" \
-    -project OpenClaw.xcodeproj \
-    -scheme OpenClaw \
+    -project QuietCore.xcodeproj \
+    -scheme QuietCore \
     -destination "${IOS_DESTINATION}" \
     -configuration "${CONFIGURATION}" \
     -derivedDataPath "${DERIVED_DATA_DIR}" \
@@ -124,8 +124,8 @@ if [[ "${push_sandbox_simulator}" == "1" ]]; then
     "${xcodebuild_overrides[@]}"
 else
   "${XCODEBUILD_BIN}" \
-    -project OpenClaw.xcodeproj \
-    -scheme OpenClaw \
+    -project QuietCore.xcodeproj \
+    -scheme QuietCore \
     -destination "${IOS_DESTINATION}" \
     -configuration "${CONFIGURATION}" \
     -derivedDataPath "${DERIVED_DATA_DIR}" \

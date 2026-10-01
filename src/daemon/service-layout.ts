@@ -81,7 +81,7 @@ async function isSourceCheckoutRoot(candidate: string): Promise<boolean> {
   );
 }
 
-async function resolveOpenClawPackageRoot(entrypoint: string): Promise<string | undefined> {
+async function resolveQuietCorePackageRoot(entrypoint: string): Promise<string | undefined> {
   let current = path.dirname(path.resolve(entrypoint));
   // Installed dist entrypoints can sit several levels below package root in
   // pnpm layouts; bound the walk to avoid scanning arbitrary filesystem depth.
@@ -114,7 +114,7 @@ export async function summarizeGatewayServiceLayout(
     tryRealpath(sourcePath),
     tryRealpath(entrypoint),
   ]);
-  const packageRoot = entrypointReal ? await resolveOpenClawPackageRoot(entrypointReal) : undefined;
+  const packageRoot = entrypointReal ? await resolveQuietCorePackageRoot(entrypointReal) : undefined;
   const packageRootReal = await tryRealpath(packageRoot);
   const packageVersion = packageRoot
     ? ((await readPackageVersion(packageRoot)) ?? undefined)

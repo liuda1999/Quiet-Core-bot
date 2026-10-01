@@ -19,7 +19,7 @@ export type NpmSpecResolution = {
   integrity?: string;
   shasum?: string;
   resolvedAt?: string;
-  packageOpenClaw?: Record<string, unknown>;
+  packageQuietCore?: Record<string, unknown>;
 };
 
 /** Flattened npm resolution fields stored on install results and diagnostics. */
@@ -73,7 +73,7 @@ function normalizeNpmViewMetadata(value: unknown): NpmSpecResolution | null {
     integrity:
       normalizeOptionalString(rec["dist.integrity"]) ?? normalizeOptionalString(dist.integrity),
     shasum: normalizeOptionalString(rec["dist.shasum"]) ?? normalizeOptionalString(dist.shasum),
-    ...(isRecord(rec["quiet-core-bot"]) ? { packageOpenClaw: rec["quiet-core-bot"] } : {}),
+    ...(isRecord(rec["quiet-core-bot"]) ? { packageQuietCore: rec["quiet-core-bot"] } : {}),
   };
 }
 

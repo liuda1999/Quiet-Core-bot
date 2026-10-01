@@ -8,7 +8,7 @@ import { importFreshModule } from "quiet-core-bot/plugin-sdk/test-fixtures";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import type { PluginModuleLoaderFactory } from "../plugins/plugin-module-loader-cache.js";
 import type { PluginRuntime } from "../plugins/runtime/types.js";
-import type { OpenClawPluginApi, PluginRegistrationMode } from "../plugins/types.js";
+import type { QuietCorePluginApi, PluginRegistrationMode } from "../plugins/types.js";
 import { withMockedWindowsPlatform } from "../test-utils/vitest-spies.js";
 import {
   defineBundledChannelEntry,
@@ -48,13 +48,13 @@ function writeJson(targetPath: string, value: unknown): void {
   fs.writeFileSync(targetPath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
 
-function createApi(registrationMode: PluginRegistrationMode): OpenClawPluginApi {
+function createApi(registrationMode: PluginRegistrationMode): QuietCorePluginApi {
   return {
     registrationMode,
     runtime: { registrationMode } as unknown as PluginRuntime,
     registerChannel: vi.fn(),
     registerTool: vi.fn(),
-  } as unknown as OpenClawPluginApi;
+  } as unknown as QuietCorePluginApi;
 }
 
 function writeBundledChannelFixture(params: {
@@ -104,8 +104,8 @@ function writeBundledChannelFixture(params: {
 function createBundledChannelEntry(params: {
   importerPath: string;
   pluginId: string;
-  registerCliMetadata?: (api: OpenClawPluginApi) => void;
-  registerFull?: (api: OpenClawPluginApi) => void;
+  registerCliMetadata?: (api: QuietCorePluginApi) => void;
+  registerFull?: (api: QuietCorePluginApi) => void;
 }) {
   return defineBundledChannelEntry({
     id: params.pluginId,
@@ -130,8 +130,8 @@ describe("defineBundledChannelEntry", () => {
       pluginId,
       runtimeMarker,
     });
-    const registerCliMetadata = vi.fn<(api: OpenClawPluginApi) => void>();
-    const registerFull = vi.fn<(api: OpenClawPluginApi) => void>((api) => {
+    const registerCliMetadata = vi.fn<(api: QuietCorePluginApi) => void>();
+    const registerFull = vi.fn<(api: QuietCorePluginApi) => void>((api) => {
       api.registerTool(
         {
           name: "channel_tool",
@@ -170,8 +170,8 @@ describe("defineBundledChannelEntry", () => {
       pluginId,
       runtimeMarker,
     });
-    const registerCliMetadata = vi.fn<(api: OpenClawPluginApi) => void>();
-    const registerFull = vi.fn<(api: OpenClawPluginApi) => void>();
+    const registerCliMetadata = vi.fn<(api: QuietCorePluginApi) => void>();
+    const registerFull = vi.fn<(api: QuietCorePluginApi) => void>();
     const entry = createBundledChannelEntry({
       importerPath,
       pluginId,
@@ -198,8 +198,8 @@ describe("defineBundledChannelEntry", () => {
       pluginId,
       runtimeMarker,
     });
-    const registerCliMetadata = vi.fn<(api: OpenClawPluginApi) => void>();
-    const registerFull = vi.fn<(api: OpenClawPluginApi) => void>();
+    const registerCliMetadata = vi.fn<(api: QuietCorePluginApi) => void>();
+    const registerFull = vi.fn<(api: QuietCorePluginApi) => void>();
     const entry = createBundledChannelEntry({
       importerPath,
       pluginId,
@@ -226,7 +226,7 @@ describe("defineBundledChannelSetupEntry", () => {
     const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-bundled-setup-entry-"));
     tempDirs.push(tempRoot);
     const runtimeMarker = path.join(tempRoot, "runtime-loaded");
-    const setupRuntimeRegister = vi.fn<(api: OpenClawPluginApi) => void>();
+    const setupRuntimeRegister = vi.fn<(api: QuietCorePluginApi) => void>();
     const pluginId = "bundled-setup-runtime";
     const { importerPath } = writeBundledChannelFixture({
       pluginRoot: path.join(tempRoot, "dist", "extensions", pluginId),

@@ -1,5 +1,5 @@
 // Qa Matrix plugin module implements scenario runtime cli behavior.
-import { spawn as startOpenClawCliProcess, spawnSync } from "node:child_process";
+import { spawn as startQuietCoreCliProcess, spawnSync } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { existsSync } from "node:fs";
 import { chmod, mkdir, mkdtemp, rm, stat, writeFile } from "node:fs/promises";
@@ -7,7 +7,7 @@ import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
 import { redactSensitiveText } from "quiet-core-bot/plugin-sdk/logging-core";
-import { resolvePreferredOpenClawTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";
+import { resolvePreferredQuietCoreTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";
 import { resolveMatrixQaWindowsSystem32ExePath } from "../../windows-system-tools.js";
 
 export type MatrixQaCliRunResult = {
@@ -64,7 +64,7 @@ export function formatMatrixQaCliCommand(args: string[]) {
   return `openclaw ${redactMatrixQaCliArgs(args).join(" ")}`;
 }
 
-export function resolveMatrixQaOpenClawCliEntryPath(cwd: string): string {
+export function resolveMatrixQaQuietCoreCliEntryPath(cwd: string): string {
   const mjsEntryPath = path.join(cwd, "dist", "index.mjs");
   if (existsSync(mjsEntryPath)) {
     return mjsEntryPath;
@@ -106,7 +106,7 @@ function formatMatrixQaCliTimeoutError(result: MatrixQaCliRunResult, timeoutMs: 
 }
 
 function killMatrixQaCliChild(
-  child: ReturnType<typeof startOpenClawCliProcess>,
+  child: ReturnType<typeof startQuietCoreCliProcess>,
   signal: NodeJS.Signals,
   runTaskkill: typeof spawnSync = spawnSync,
 ): void {
@@ -146,7 +146,7 @@ function killMatrixQaCliChild(
 }
 
 function isMatrixQaCliChildProcessGroupRunning(
-  child: ReturnType<typeof startOpenClawCliProcess>,
+  child: ReturnType<typeof startQuietCoreCliProcess>,
 ): boolean {
   if (process.platform === "win32" || !child.pid) {
     return false;
@@ -159,7 +159,7 @@ function isMatrixQaCliChildProcessGroupRunning(
   }
 }
 
-export function startMatrixQaOpenClawCli(params: {
+export function startMatrixQaQuietCoreCli(params: {
   allowNonZero?: boolean;
   args: string[];
   cwd?: string;
@@ -168,7 +168,7 @@ export function startMatrixQaOpenClawCli(params: {
   timeoutMs: number;
 }): MatrixQaCliSession {
   const cwd = params.cwd ?? process.cwd();
-  const distEntryPath = resolveMatrixQaOpenClawCliEntryPath(cwd);
+  const distEntryPath = resolveMatrixQaQuietCoreCliEntryPath(cwd);
   const stdout: Buffer[] = [];
   const stderr: Buffer[] = [];
   let closed = false;
@@ -185,7 +185,7 @@ export function startMatrixQaOpenClawCli(params: {
       }
     | undefined;
 
-  const child = startOpenClawCliProcess(process.execPath, [distEntryPath, ...params.args], {
+  const child = startQuietCoreCliProcess(process.execPath, [distEntryPath, ...params.args], {
     cwd,
     detached: process.platform !== "win32",
     env: params.env,
@@ -363,7 +363,7 @@ export function startMatrixQaOpenClawCli(params: {
   };
 }
 
-export async function runMatrixQaOpenClawCli(params: {
+export async function runMatrixQaQuietCoreCli(params: {
   allowNonZero?: boolean;
   args: string[];
   cwd?: string;
@@ -371,7 +371,7 @@ export async function runMatrixQaOpenClawCli(params: {
   stdin?: string;
   timeoutMs: number;
 }): Promise<MatrixQaCliRunResult> {
-  return await startMatrixQaOpenClawCli(params).wait();
+  return await startMatrixQaQuietCoreCli(params).wait();
 }
 
 async function assertMatrixQaPrivatePathMode(pathToCheck: string, label: string) {
@@ -384,7 +384,7 @@ async function assertMatrixQaPrivatePathMode(pathToCheck: string, label: string)
   }
 }
 
-export async function createMatrixQaOpenClawCliRuntime(params: {
+export async function createMatrixQaQuietCoreCliRuntime(params: {
   accountId: string;
   accessToken: string;
   artifactLabel: string;
@@ -396,7 +396,7 @@ export async function createMatrixQaOpenClawCliRuntime(params: {
   userId: string;
 }) {
   const rootDir = await mkdtemp(
-    path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-matrix-cli-qa-"),
+    path.join(resolvePreferredQuietCoreTmpDir(), "quiet-core-bot-matrix-cli-qa-"),
   );
   const artifactDir = path.join(
     params.outputDir,
@@ -468,7 +468,7 @@ export async function createMatrixQaOpenClawCliRuntime(params: {
       args: string[],
       opts: { allowNonZero?: boolean; stdin?: string; timeoutMs: number },
     ): Promise<MatrixQaCliRunResult> =>
-      await runMatrixQaOpenClawCli({
+      await runMatrixQaQuietCoreCli({
         allowNonZero: opts.allowNonZero,
         args,
         env,
@@ -476,7 +476,7 @@ export async function createMatrixQaOpenClawCliRuntime(params: {
         timeoutMs: opts.timeoutMs,
       }),
     start: (args: string[], opts: { allowNonZero?: boolean; timeoutMs: number }) =>
-      startMatrixQaOpenClawCli({
+      startMatrixQaQuietCoreCli({
         allowNonZero: opts.allowNonZero,
         args,
         env,

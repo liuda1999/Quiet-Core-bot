@@ -1,6 +1,6 @@
 // Context-engine registry owns engine registration, resolution, compatibility, and quarantine.
 import { sanitizeForLog } from "../../packages/terminal-core/src/ansi.js";
-import type { OpenClawConfig } from "../config/types.js";
+import type { QuietCoreConfig } from "../config/types.js";
 import { defaultSlotIdForKey } from "../plugins/slots.js";
 import { resolveGlobalSingleton } from "../shared/global-singleton.js";
 import {
@@ -26,7 +26,7 @@ import type {
  * without fragile workarounds.
  */
 export type ContextEngineFactoryContext = {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   agentDir?: string;
   workspaceDir?: string;
 };
@@ -904,7 +904,7 @@ export type ResolveContextEngineOptions = {
  * Throws only when the default engine itself cannot be resolved.
  */
 export async function resolveContextEngine(
-  config?: OpenClawConfig,
+  config?: QuietCoreConfig,
   options?: ResolveContextEngineOptions,
 ): Promise<ContextEngine> {
   const slotValue = config?.plugins?.slots?.contextEngine;

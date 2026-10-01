@@ -963,7 +963,7 @@ function escapeTableCell(value: string): string {
 
 export function renderQaConfidenceMarkdownReport(report: QaConfidenceReport): string {
   const lines = [
-    `# OpenClaw QA Confidence Report - ${report.profile}`,
+    `# QuietCore QA Confidence Report - ${report.profile}`,
     "",
     `- Generated at: ${report.generatedAt}`,
     `- Verdict: ${report.pass ? "pass" : "fail"}`,
@@ -1277,7 +1277,7 @@ export function renderQaConfidenceSelfTestMarkdownReport(
   summary: QaConfidenceSelfTestSummary,
 ): string {
   const lines = [
-    "# OpenClaw QA Confidence Self-Test",
+    "# QuietCore QA Confidence Self-Test",
     "",
     `- Generated at: ${summary.generatedAt}`,
     `- Verdict: ${summary.pass ? "pass" : "fail"}`,

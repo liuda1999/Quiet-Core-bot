@@ -2,7 +2,7 @@
 import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
 import { normalizeOptionalLowercaseString } from "@quiet-core/normalization-core/string-coerce";
 import { uniqueStrings } from "@quiet-core/normalization-core/string-normalization";
-import type { OpenClawConfig } from "../config/types.js";
+import type { QuietCoreConfig } from "../config/types.js";
 import { normalizePluginsConfig } from "./config-state.js";
 import {
   hasExplicitManifestOwnerTrust,
@@ -60,7 +60,7 @@ export type PluginActivationPlan = {
 
 type ResolveManifestActivationPlanParams = {
   trigger: PluginActivationPlannerTrigger;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   workspaceDir?: string;
   env?: NodeJS.ProcessEnv;
   origin?: PluginOrigin;

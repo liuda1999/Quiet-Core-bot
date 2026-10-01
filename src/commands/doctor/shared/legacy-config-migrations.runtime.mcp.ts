@@ -6,7 +6,7 @@ import {
 } from "../../../config/legacy.shared.js";
 import {
   isKnownCliMcpTypeAlias,
-  resolveOpenClawMcpTransportAlias,
+  resolveQuietCoreMcpTransportAlias,
 } from "../../../config/mcp-config-normalize.js";
 import { isRecord } from "./legacy-config-record-shared.js";
 
@@ -37,7 +37,7 @@ export const LEGACY_CONFIG_MIGRATIONS_RUNTIME_MCP: LegacyConfigMigrationSpec[] =
           continue;
         }
         const rawType = typeof rawServer.type === "string" ? rawServer.type : "";
-        const alias = resolveOpenClawMcpTransportAlias(rawServer.type);
+        const alias = resolveQuietCoreMcpTransportAlias(rawServer.type);
         if (typeof rawServer.transport !== "string" && alias) {
           rawServer.transport = alias;
           changes.push(`Moved mcp.servers.${serverName}.type "${rawType}" → transport "${alias}".`);

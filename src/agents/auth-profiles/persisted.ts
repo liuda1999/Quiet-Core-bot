@@ -9,7 +9,7 @@ import { uniqueStrings } from "@quiet-core/normalization-core/string-normalizati
 import { resolveOAuthPath } from "../../config/paths.js";
 import { coerceSecretRef } from "../../config/types.secrets.js";
 import { loadJsonFile } from "../../infra/json-file.js";
-import type { OpenClawAgentDatabase } from "../../state/quiet-core-bot-agent-db.js";
+import type { QuietCoreAgentDatabase } from "../../state/quiet-core-bot-agent-db.js";
 import { asBoolean } from "../../utils/boolean.js";
 import { AUTH_STORE_VERSION, log } from "./constants.js";
 import { isLegacyOAuthRef } from "./legacy-oauth-ref.js";
@@ -40,7 +40,7 @@ type LegacyAuthStore = Record<string, AuthProfileCredential>;
 
 type LoadPersistedAuthProfileStoreOptions = {
   allowKeychainPrompt?: boolean;
-  database?: OpenClawAgentDatabase;
+  database?: QuietCoreAgentDatabase;
 };
 
 type CredentialRejectReason = "non_object" | "invalid_type" | "missing_provider";

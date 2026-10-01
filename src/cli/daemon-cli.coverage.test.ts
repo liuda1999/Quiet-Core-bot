@@ -85,7 +85,7 @@ vi.mock("../gateway/probe-auth.js", () => ({
 vi.mock("../daemon/program-args.js", () => ({
   QUIET_CORE_WRAPPER_ENV_KEY: "QUIET_CORE_WRAPPER",
   resolveGatewayProgramArguments: (opts: unknown) => resolveGatewayProgramArguments(opts),
-  resolveOpenClawWrapperPath: async (value: string | undefined) => value?.trim() || undefined,
+  resolveQuietCoreWrapperPath: async (value: string | undefined) => value?.trim() || undefined,
 }));
 
 vi.mock("../daemon/service.js", async () => {

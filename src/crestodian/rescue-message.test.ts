@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { CommandContext } from "../auto-reply/reply/commands-types.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import { resolveUserPath, shortenHomePath } from "../utils.js";
@@ -148,7 +148,7 @@ function requireFirstMockCall<T>(mock: { mock: { calls: T[][] } }, label: string
 
 async function runRescue(
   commandBody: string,
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   ctx = commandContext(),
   deps?: Parameters<typeof runCrestodianRescueMessage>[0]["deps"],
 ) {
@@ -192,7 +192,7 @@ describe("Crestodian rescue message", () => {
   });
 
   it("refuses TUI handoff from remote rescue", async () => {
-    const cfg: OpenClawConfig = { crestodian: { rescue: { enabled: true } } };
+    const cfg: QuietCoreConfig = { crestodian: { rescue: { enabled: true } } };
     const deps = {
       runTui: vi.fn(async () => {
         throw new Error("remote rescue must not open the TUI");
@@ -209,7 +209,7 @@ describe("Crestodian rescue message", () => {
   });
 
   it("refuses plugin install from remote rescue", async () => {
-    const cfg: OpenClawConfig = { crestodian: { rescue: { enabled: true } } };
+    const cfg: QuietCoreConfig = { crestodian: { rescue: { enabled: true } } };
     const deps = {
       runPluginInstall: vi.fn(async () => {
         throw new Error("remote rescue must not install plugins");
@@ -228,7 +228,7 @@ describe("Crestodian rescue message", () => {
   });
 
   it("allows plugin list and search from remote rescue", async () => {
-    const cfg: OpenClawConfig = { crestodian: { rescue: { enabled: true } } };
+    const cfg: QuietCoreConfig = { crestodian: { rescue: { enabled: true } } };
     const deps = {
       runPluginsList: vi.fn(async (runtime: RuntimeEnv) => {
         runtime.log("plugin rows");
@@ -256,7 +256,7 @@ describe("Crestodian rescue message", () => {
 
   it("queues and applies persistent writes through conversational approval", async () => {
     await withRescueStateDir("models-", async (tempDir) => {
-      const cfg: OpenClawConfig = { crestodian: { rescue: { enabled: true } } };
+      const cfg: QuietCoreConfig = { crestodian: { rescue: { enabled: true } } };
       await expect(
         runRescue("/crestodian set default model openai/gpt-5.2", cfg),
       ).resolves.toContain("Reply /crestodian yes to apply");
@@ -280,7 +280,7 @@ describe("Crestodian rescue message", () => {
 
   it("queues and applies gateway restart through conversational approval", async () => {
     await withRescueStateDir("gateway-", async (tempDir) => {
-      const cfg: OpenClawConfig = { crestodian: { rescue: { enabled: true } } };
+      const cfg: QuietCoreConfig = { crestodian: { rescue: { enabled: true } } };
       const deps = { runGatewayRestart: vi.fn(async () => {}) };
 
       await expect(
@@ -308,7 +308,7 @@ describe("Crestodian rescue message", () => {
       vi.useFakeTimers();
       vi.setSystemTime(new Date(8_640_000_000_000_000));
       try {
-        const cfg: OpenClawConfig = { crestodian: { rescue: { enabled: true } } };
+        const cfg: QuietCoreConfig = { crestodian: { rescue: { enabled: true } } };
 
         await expect(
           runRescue("/crestodian restart gateway", cfg, commandContext()),
@@ -325,7 +325,7 @@ describe("Crestodian rescue message", () => {
 
   it("rejects pending rescue approvals with invalid persisted expiry", async () => {
     await withRescueStateDir("invalid-expiry-", async (tempDir) => {
-      const cfg: OpenClawConfig = { crestodian: { rescue: { enabled: true } } };
+      const cfg: QuietCoreConfig = { crestodian: { rescue: { enabled: true } } };
       const deps = { runGatewayRestart: vi.fn(async () => {}) };
 
       await expect(
@@ -351,7 +351,7 @@ describe("Crestodian rescue message", () => {
 
   it("queues and applies agent creation through conversational approval", async () => {
     await withRescueStateDir("agent-", async (tempDir) => {
-      const cfg: OpenClawConfig = { crestodian: { rescue: { enabled: true } } };
+      const cfg: QuietCoreConfig = { crestodian: { rescue: { enabled: true } } };
       const deps = { runAgentsAdd: vi.fn(async () => {}) };
       // The plan and the applied params both render the resolved workspace path, which
       // is platform-dependent ("/tmp/work" resolves to a drive path on Windows).

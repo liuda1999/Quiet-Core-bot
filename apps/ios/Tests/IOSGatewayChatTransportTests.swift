@@ -1,8 +1,8 @@
 import Foundation
-import OpenClawKit
-import OpenClawProtocol
+import QuietCoreKit
+import QuietCoreProtocol
 import Testing
-@testable import OpenClaw
+@testable import QuietCore
 
 @Suite struct IOSGatewayChatTransportTests {
     private func object(from json: String) throws -> [String: Any] {

@@ -58,13 +58,13 @@ describe.sequential("scripts/ios-configure-signing.sh", () => {
     cleanupTempDirs(tempDirs);
   });
 
-  it("uses the canonical app bundle ID for the canonical OpenClaw team", () => {
+  it("uses the canonical app bundle ID for the canonical QuietCore team", () => {
     const stdout = runConfigureSigning("FWJYW4S8P8");
     const generated = readGeneratedSigning();
 
     expect(stdout).toContain("team=FWJYW4S8P8 app=ai.quiet-core-botfoundation.app");
     expect(generated).toContain("QUIET_CORE_DEVELOPMENT_TEAM = FWJYW4S8P8");
-    expect(generated).toContain("QUIET_CORE_CODE_SIGN_ENTITLEMENTS = Sources/OpenClaw.entitlements");
+    expect(generated).toContain("QUIET_CORE_CODE_SIGN_ENTITLEMENTS = Sources/QuietCore.entitlements");
     expect(generated).toContain("QUIET_CORE_APP_BUNDLE_ID = ai.quiet-core-botfoundation.app");
     expect(generated).toContain("QUIET_CORE_SHARE_BUNDLE_ID = ai.quiet-core-botfoundation.app.share");
     expect(generated).toContain("QUIET_CORE_APP_GROUP_ID = group.ai.quiet-core-botfoundation.app.shared");

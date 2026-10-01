@@ -13,7 +13,7 @@ import {
 } from "../tasks/task-registry.js";
 import type { TaskRecord } from "../tasks/task-registry.types.js";
 import { captureEnv } from "../test-utils/env.js";
-import { withOpenClawTestState } from "../test-utils/quiet-core-bot-test-state.js";
+import { withQuietCoreTestState } from "../test-utils/quiet-core-bot-test-state.js";
 import { flowsCancelCommand, flowsListCommand, flowsShowCommand } from "./flows.js";
 
 vi.mock("../config/config.js", () => ({
@@ -63,7 +63,7 @@ function createRuntime(): TestRuntime {
 }
 
 async function withTaskFlowCommandStateDir(run: (root: string) => Promise<void>): Promise<void> {
-  await withOpenClawTestState(
+  await withQuietCoreTestState(
     {
       layout: "state-only",
       prefix: "quiet-core-bot-flows-command-",

@@ -1,6 +1,6 @@
 // Exercises the full commitment extraction-to-follow-up chain.
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { runHeartbeatOnce } from "../infra/heartbeat-runner.js";
 import { installHeartbeatRunnerTestRuntime } from "../infra/heartbeat-runner.test-harness.js";
 import {
@@ -36,7 +36,7 @@ describe("commitments full-chain integration", () => {
     await withTempHeartbeatSandbox(async ({ tmpDir, storePath, replySpy }) => {
       await withEnvAsync({ QUIET_CORE_STATE_DIR: tmpDir }, async () => {
         const sessionKey = "agent:main:telegram:user-155462274";
-        const cfg: OpenClawConfig = {
+        const cfg: QuietCoreConfig = {
           agents: {
             defaults: {
               workspace: tmpDir,

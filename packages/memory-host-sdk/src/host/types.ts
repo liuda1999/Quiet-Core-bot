@@ -39,7 +39,7 @@ export type MemorySyncProgressUpdate = {
 };
 
 export type MemorySessionSyncTarget = {
-  /** Owning OpenClaw agent. Omit only when the active manager scope already supplies it. */
+  /** Owning QuietCore agent. Omit only when the active manager scope already supplies it. */
   agentId?: string;
   /** Storage-neutral transcript/session identity. */
   sessionId: string;
@@ -54,7 +54,7 @@ export type MemorySyncParams = {
   sessions?: MemorySessionSyncTarget[];
   /**
    * @deprecated Use `sessions` with `{ agentId, sessionId, sessionKey? }`.
-   * During the deprecation window only canonical OpenClaw transcript paths are accepted.
+   * During the deprecation window only canonical QuietCore transcript paths are accepted.
    */
   sessionFiles?: string[];
   progress?: (update: MemorySyncProgressUpdate) => void;

@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import {
   buildTalkTestProviderConfig,
@@ -49,7 +49,7 @@ afterEach(async () => {
 });
 
 describe("resolveCommandSecretRefsViaGateway", () => {
-  function makeTalkProviderApiKeySecretRefConfig(envKey: string): OpenClawConfig {
+  function makeTalkProviderApiKeySecretRefConfig(envKey: string): QuietCoreConfig {
     return buildTalkTestProviderConfig({ source: "env", provider: "default", id: envKey });
   }
 
@@ -97,7 +97,7 @@ describe("resolveCommandSecretRefsViaGateway", () => {
   }
 
   async function createExecProviderConfig(refId: string): Promise<{
-    config: OpenClawConfig;
+    config: QuietCoreConfig;
     markerPath: string;
   }> {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-command-secret-exec-"));
@@ -135,7 +135,7 @@ describe("resolveCommandSecretRefsViaGateway", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
     };
   }
 
@@ -252,7 +252,7 @@ describe("resolveCommandSecretRefsViaGateway", () => {
   it("returns config unchanged when no target SecretRefs are configured", async () => {
     const config = {
       ...buildTalkTestProviderConfig("plain"), // pragma: allowlist secret
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     const result = await resolveCommandSecretRefsViaGateway({
       config,
       commandName: "memory status",
@@ -277,7 +277,7 @@ describe("resolveCommandSecretRefsViaGateway", () => {
           },
         ],
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     const result = await resolveCommandSecretRefsViaGateway({
       config,
@@ -395,7 +395,7 @@ describe("resolveCommandSecretRefsViaGateway", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         commandName: "message",
         targetIds: new Set(["channels.discord.accounts.*.token"]),
         allowedPaths: new Set(["channels.discord.accounts.ops.token"]),
@@ -497,7 +497,7 @@ describe("resolveCommandSecretRefsViaGateway", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         commandName: "message",
         targetIds: new Set(["channels.discord.accounts.*.token"]),
         allowedPaths: new Set(["channels.discord.accounts.ops.token"]),
@@ -559,7 +559,7 @@ describe("resolveCommandSecretRefsViaGateway", () => {
                   },
                 },
               },
-            } as unknown as OpenClawConfig,
+            } as unknown as QuietCoreConfig,
             commandName: "infer web search",
             targetIds: new Set(["plugins.entries.firecrawl.config.webSearch.apiKey"]),
             allowedPaths: new Set(["plugins.entries.firecrawl.config.webSearch.apiKey"]),
@@ -606,7 +606,7 @@ describe("resolveCommandSecretRefsViaGateway", () => {
               default: { source: "env" },
             },
           },
-        } as unknown as OpenClawConfig,
+        } as unknown as QuietCoreConfig,
         commandName: "memory status",
         targetIds: new Set(["talk.providers.*.apiKey"]),
       });
@@ -727,7 +727,7 @@ describe("resolveCommandSecretRefsViaGateway", () => {
                 },
               },
             },
-          } as OpenClawConfig,
+          } as QuietCoreConfig,
           commandName: "doctor preview",
           targetIds: new Set(["talk.providers.*.apiKey"]),
           mode: "read_only_status",
@@ -774,7 +774,7 @@ describe("resolveCommandSecretRefsViaGateway", () => {
                 },
               },
             },
-          } as unknown as OpenClawConfig,
+          } as unknown as QuietCoreConfig,
           commandName: "agent",
           targetIds: new Set(["plugins.entries.google.config.webSearch.apiKey"]),
         });
@@ -819,7 +819,7 @@ describe("resolveCommandSecretRefsViaGateway", () => {
                 },
               },
             },
-          } as unknown as OpenClawConfig,
+          } as unknown as QuietCoreConfig,
           commandName: "agent",
           targetIds: new Set(["plugins.entries.firecrawl.config.webFetch.apiKey"]),
         });
@@ -854,7 +854,7 @@ describe("resolveCommandSecretRefsViaGateway", () => {
               },
             },
           },
-        } as unknown as OpenClawConfig,
+        } as unknown as QuietCoreConfig,
         commandName: "infer web fetch",
         targetIds: new Set(["tools.web.fetch.firecrawl.apiKey"]),
       });
@@ -884,7 +884,7 @@ describe("resolveCommandSecretRefsViaGateway", () => {
               },
             },
           },
-        } as unknown as OpenClawConfig,
+        } as unknown as QuietCoreConfig,
         commandName: "infer web search",
         targetIds: new Set(["tools.web.search.apiKey"]),
         forcedActivePaths: new Set(["tools.web.search.apiKey"]),
@@ -930,7 +930,7 @@ describe("resolveCommandSecretRefsViaGateway", () => {
                 },
               },
             },
-          } as unknown as OpenClawConfig,
+          } as unknown as QuietCoreConfig,
           commandName: "infer web fetch",
           targetIds: new Set(["plugins.entries.firecrawl.config.webSearch.apiKey"]),
           allowedPaths: new Set(["plugins.entries.firecrawl.config.webSearch.apiKey"]),
@@ -988,7 +988,7 @@ describe("resolveCommandSecretRefsViaGateway", () => {
                 },
               },
             },
-          } as unknown as OpenClawConfig,
+          } as unknown as QuietCoreConfig,
           commandName: "infer web fetch",
           targetIds: new Set(["plugins.entries.firecrawl.config.webSearch.apiKey"]),
           allowedPaths: new Set(["plugins.entries.firecrawl.config.webSearch.apiKey"]),
@@ -1031,7 +1031,7 @@ describe("resolveCommandSecretRefsViaGateway", () => {
               },
             },
           },
-        } as unknown as OpenClawConfig,
+        } as unknown as QuietCoreConfig,
         commandName: "infer web search",
         targetIds: new Set(["models.providers.*.apiKey"]),
         allowedPaths: new Set(["models.providers.google.apiKey"]),
@@ -1075,7 +1075,7 @@ describe("resolveCommandSecretRefsViaGateway", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         commandName: "agent",
         targetIds: new Set(["plugins.entries.google.config.webSearch.apiKey"]),
       });
@@ -1230,7 +1230,7 @@ describe("resolveCommandSecretRefsViaGateway", () => {
           },
         ],
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     const result = await resolveCommandSecretRefsViaGateway({
       config,
@@ -1359,7 +1359,7 @@ describe("resolveCommandSecretRefsViaGateway", () => {
               password: { source: "env", provider: "default", id: gatewayEnvKey },
             },
           },
-        } as unknown as OpenClawConfig,
+        } as unknown as QuietCoreConfig,
         commandName: "status",
         targetIds: new Set(["talk.providers.*.apiKey"]),
         mode: "read_only_status",

@@ -281,7 +281,7 @@ export function renderBlockedSecuritySensitiveComment({ headSha, changes }) {
     "",
     "### Security-sensitive changes are blocked",
     "",
-    "OpenClaw does not accept security-sensitive file changes through PRs unless a repository admin or security explicitly authorizes the current head SHA.",
+    "QuietCore does not accept security-sensitive file changes through PRs unless a repository admin or security explicitly authorizes the current head SHA.",
     "",
     "Detected security-sensitive changes:",
     ...renderChangedFileLines(changes),

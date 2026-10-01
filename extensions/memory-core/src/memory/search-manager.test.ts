@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
 import type { checkQmdBinaryAvailability as checkQmdBinaryAvailabilityFn } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-qmd";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -150,14 +150,14 @@ function createQmdCfg(
   agentId: string,
   workspace = "/tmp/workspace",
   qmd: Record<string, unknown> = {},
-): OpenClawConfig {
+): QuietCoreConfig {
   return {
     memory: { backend: "qmd", qmd },
     agents: { list: [{ id: agentId, default: true, workspace }] },
   };
 }
 
-function createBuiltinCfg(agentId: string): OpenClawConfig {
+function createBuiltinCfg(agentId: string): QuietCoreConfig {
   return {
     agents: {
       defaults: {
@@ -177,7 +177,7 @@ function createBuiltinCfg(agentId: string): OpenClawConfig {
       },
       list: [{ id: agentId, default: true, workspace: "/tmp/workspace" }],
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
 function requireManager(result: SearchManagerResult): SearchManager {
@@ -221,8 +221,8 @@ function qmdCreateParams(index = 0): Record<string, unknown> {
 
 async function expectPendingQmdReplacement(params: {
   agentId: string;
-  firstCfg: OpenClawConfig;
-  secondCfg: OpenClawConfig;
+  firstCfg: QuietCoreConfig;
+  secondCfg: QuietCoreConfig;
   firstAvailability: { command: string; cwd: string };
   secondAvailability: { command: string; cwd: string };
 }) {
@@ -522,7 +522,7 @@ describe("getMemorySearchManager caching", () => {
     const cfg = {
       memory: { backend: "qmd", qmd: {} },
       agents: { list: [{ id: agentId, default: true, workspace }] },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     try {
       await getMemorySearchManager({ cfg, agentId });
@@ -629,7 +629,7 @@ describe("getMemorySearchManager caching", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const firstPrimary = createManagerMock({
       backend: "qmd",
       provider: "qmd",
@@ -740,7 +740,7 @@ describe("getMemorySearchManager caching", () => {
     const secondCfg = {
       ...createQmdCfg(agentId),
       session: { store: "/tmp/alternate-session-store.json" },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const createGate = createDeferred<QmdManagerInstance>();
     createQmdManagerMock.mockImplementationOnce(async () => await createGate.promise);
 

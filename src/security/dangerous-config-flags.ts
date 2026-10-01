@@ -1,6 +1,6 @@
 // Collects dangerous config flag findings across agents and runtime config.
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { collectPluginConfigContractMatches } from "../plugins/config-contract-matches.js";
 import { resolvePluginConfigContractsById } from "../plugins/config-contracts.js";
 import { isRecord } from "../utils.js";
@@ -12,7 +12,7 @@ import { collectEnabledInsecureOrDangerousFlagsFromCurrentSnapshot } from "./dan
  * Plugin flags use current metadata when requested, then fall back to resolving manifest contracts.
  */
 export function collectEnabledInsecureOrDangerousFlags(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   options: { preferCurrentPluginMetadataSnapshot?: boolean } = {},
 ): string[] {
   const pluginEntries = cfg.plugins?.entries;

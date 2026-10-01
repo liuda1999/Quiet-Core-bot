@@ -1,6 +1,6 @@
 #!/usr/bin/env -S pnpm tsx
 import { spawn } from "node:child_process";
-// Npm Update Smoke script supports OpenClaw repository automation.
+// Npm Update Smoke script supports QuietCore repository automation.
 import { randomUUID } from "node:crypto";
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { copyFile, readFile, rm } from "node:fs/promises";
@@ -14,10 +14,10 @@ import {
 import {
   die,
   ensureValue,
-  extractLastOpenClawVersionFromLog,
+  extractLastQuietCoreVersionFromLog,
   isLikelyMacosDesktopHome,
   makeTempDir,
-  packOpenClaw,
+  packQuietCore,
   packageBuildCommitFromTgz,
   packageVersionFromTgz,
   parseMacosDsclUserHomeLine,
@@ -27,7 +27,7 @@ import {
   repoRoot,
   resolveHostIp,
   resolveLatestVersion,
-  resolveOpenClawRegistryVersion,
+  resolveQuietCoreRegistryVersion,
   resolveProviderAuth,
   resolveWindowsProviderAuth,
   run,
@@ -510,12 +510,12 @@ function openClawVersionFamily(version: string): string {
   return /^(\d{4}\.\d{1,2}\.\d{1,2})(?:[-.]|$)/u.exec(version.trim())?.[1] ?? "";
 }
 
-function parseOpenClawPackageSpecVersion(spec: string): string {
+function parseQuietCorePackageSpecVersion(spec: string): string {
   const value = spec.trim();
   if (!value) {
     return "";
   }
-  return resolveOpenClawRegistryVersion(value) || "";
+  return resolveQuietCoreRegistryVersion(value) || "";
 }
 
 function readString(value: unknown): string {
@@ -816,7 +816,7 @@ export class NpmUpdateSmoke {
       return;
     }
     if (!this.options.updateTarget || this.options.updateTarget === "local-main") {
-      this.artifact = await packOpenClaw({
+      this.artifact = await packQuietCore({
         destination: this.tgzDir,
         requireControlUi: true,
       });
@@ -838,7 +838,7 @@ export class NpmUpdateSmoke {
     this.updateTargetEffective = this.options.updateTarget;
     this.updateExpectedNeedle = this.isExplicitPackageTarget(this.updateTargetEffective)
       ? ""
-      : resolveOpenClawRegistryVersion(this.updateTargetEffective) || this.updateTargetEffective;
+      : resolveQuietCoreRegistryVersion(this.updateTargetEffective) || this.updateTargetEffective;
     const metadata = this.resolveRegistryPackageMetadata(this.updateTargetEffective);
     this.updateTargetPackageVersion = metadata.version;
     this.updateTargetBuildCommit =
@@ -1340,8 +1340,8 @@ export class NpmUpdateSmoke {
     ) {
       return;
     }
-    const baseline = resolveOpenClawRegistryVersion(this.packageSpec);
-    const target = resolveOpenClawRegistryVersion(this.options.updateTarget);
+    const baseline = resolveQuietCoreRegistryVersion(this.packageSpec);
+    const target = resolveQuietCoreRegistryVersion(this.options.updateTarget);
     if (baseline && target && baseline === target) {
       die(
         `--update-target ${this.options.updateTarget} resolves to quiet-core-bot@${target}, same as baseline ${this.packageSpec}; publish or choose a newer --update-target before running VM update coverage`,
@@ -1357,7 +1357,7 @@ export class NpmUpdateSmoke {
   }
 
   private async extractLastVersion(logPath: string): Promise<string> {
-    return await extractLastOpenClawVersionFromLog(logPath);
+    return await extractLastQuietCoreVersionFromLog(logPath);
   }
 
   private dumpLogTail(logPath: string): void {
@@ -1397,7 +1397,7 @@ export class NpmUpdateSmoke {
       return;
     }
     if (this.options.betaValidation) {
-      const version = resolveOpenClawRegistryVersion(this.options.betaValidation);
+      const version = resolveQuietCoreRegistryVersion(this.options.betaValidation);
       if (!version) {
         die(`could not resolve beta validation target: ${this.options.betaValidation}`);
       }
@@ -1409,14 +1409,14 @@ export class NpmUpdateSmoke {
       this.options.updateTarget !== "local-main" &&
       !this.isExplicitPackageTarget(this.options.updateTarget)
     ) {
-      const version = resolveOpenClawRegistryVersion(this.options.updateTarget);
+      const version = resolveQuietCoreRegistryVersion(this.options.updateTarget);
       if (version) {
         this.options.updateTarget = version;
       }
     }
 
     if (this.options.freshTargetSpec) {
-      const version = resolveOpenClawRegistryVersion(this.options.freshTargetSpec);
+      const version = resolveQuietCoreRegistryVersion(this.options.freshTargetSpec);
       this.freshTargetSpec = version ? `quiet-core-bot@${version}` : this.options.freshTargetSpec;
     }
   }
@@ -1428,8 +1428,8 @@ export class NpmUpdateSmoke {
     const candidateVersion =
       this.targetTarballVersion ||
       (this.freshTargetSpec
-        ? parseOpenClawPackageSpecVersion(this.freshTargetSpec)
-        : parseOpenClawPackageSpecVersion(this.options.updateTarget));
+        ? parseQuietCorePackageSpecVersion(this.freshTargetSpec)
+        : parseQuietCorePackageSpecVersion(this.options.updateTarget));
     const targetFamily = openClawVersionFamily(candidateVersion);
     if (!targetFamily) {
       return;

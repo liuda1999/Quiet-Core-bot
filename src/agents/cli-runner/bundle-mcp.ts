@@ -7,7 +7,7 @@ import os from "node:os";
 import path from "node:path";
 import { applyMergePatch } from "../../config/merge-patch.js";
 import type { CliBackendConfig } from "../../config/types.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { tryReadJson } from "../../infra/json-files.js";
 import { extractMcpServerMap, type BundleMcpConfig } from "../../plugins/bundle-mcp.js";
 import type { CliBundleMcpMode } from "../../plugins/types.js";
@@ -51,7 +51,7 @@ function sortJsonValue(value: unknown): unknown {
   );
 }
 
-function normalizeOpenClawLoopbackUrl(value: string): string {
+function normalizeQuietCoreLoopbackUrl(value: string): string {
   const match =
     /^(http:\/\/(?:127\.0\.0\.1|localhost|\[::1\])):\d+(\/mcp)$/.exec(value.trim()) ?? undefined;
   if (!match) {
@@ -72,7 +72,7 @@ function canonicalizeBundleMcpConfigForResume(config: BundleMcpConfig): BundleMc
         name,
         sortJsonValue({
           ...server,
-          url: normalizeOpenClawLoopbackUrl(server.url),
+          url: normalizeQuietCoreLoopbackUrl(server.url),
         }),
       ];
     }),
@@ -84,7 +84,7 @@ function canonicalizeBundleMcpConfigForResume(config: BundleMcpConfig): BundleMc
 
 const QUIET_CORE_MCP_ENV_TEMPLATE_PATTERN = /\$\{(QUIET_CORE_MCP_[A-Z0-9_]+)\}/g;
 
-function resolveOpenClawMcpEnvTemplates(value: unknown, env?: Record<string, string>): unknown {
+function resolveQuietCoreMcpEnvTemplates(value: unknown, env?: Record<string, string>): unknown {
   if (!env) {
     return value;
   }
@@ -94,13 +94,13 @@ function resolveOpenClawMcpEnvTemplates(value: unknown, env?: Record<string, str
     });
   }
   if (Array.isArray(value)) {
-    return value.map((entry) => resolveOpenClawMcpEnvTemplates(entry, env));
+    return value.map((entry) => resolveQuietCoreMcpEnvTemplates(entry, env));
   }
   if (!isRecord(value)) {
     return value;
   }
   return Object.fromEntries(
-    Object.entries(value).map(([key, entry]) => [key, resolveOpenClawMcpEnvTemplates(entry, env)]),
+    Object.entries(value).map(([key, entry]) => [key, resolveQuietCoreMcpEnvTemplates(entry, env)]),
   );
 }
 
@@ -148,7 +148,7 @@ async function prepareModeSpecificBundleMcpConfig(params: {
 
   const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-cli-mcp-"));
   const mcpConfigPath = path.join(tempDir, "mcp.json");
-  const runtimeConfig = resolveOpenClawMcpEnvTemplates(
+  const runtimeConfig = resolveQuietCoreMcpEnvTemplates(
     params.mergedConfig,
     params.env,
   ) as BundleMcpConfig;
@@ -178,7 +178,7 @@ export async function prepareCliBundleMcpConfig(params: {
   mode?: CliBundleMcpMode;
   backend: CliBackendConfig;
   workspaceDir: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   additionalConfig?: BundleMcpConfig;
   env?: Record<string, string>;
   warn?: (message: string) => void;

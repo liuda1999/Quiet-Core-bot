@@ -192,7 +192,7 @@ describe("AcpxRuntime fresh reset wrapper", () => {
     );
   });
 
-  it("normalizes OpenClaw Codex model ids for ACP startup", async () => {
+  it("normalizes QuietCore Codex model ids for ACP startup", async () => {
     const baseStore: TestSessionStore = {
       load: vi.fn(async () => undefined),
       save: vi.fn(async () => {}),
@@ -225,7 +225,7 @@ describe("AcpxRuntime fresh reset wrapper", () => {
     });
   });
 
-  it("strips the OpenClaw Anthropic provider prefix for Claude ACP startup", async () => {
+  it("strips the QuietCore Anthropic provider prefix for Claude ACP startup", async () => {
     const baseStore: TestSessionStore = {
       load: vi.fn(async () => undefined),
       save: vi.fn(async () => {}),
@@ -259,7 +259,7 @@ describe("AcpxRuntime fresh reset wrapper", () => {
     });
   });
 
-  it("keeps Claude ACP model ids intact after stripping the OpenClaw provider prefix", () => {
+  it("keeps Claude ACP model ids intact after stripping the QuietCore provider prefix", () => {
     expect(testing.normalizeClaudeAcpModelOverride("anthropic/claude-sonnet-4-6")).toBe(
       "claude-sonnet-4-6",
     );
@@ -598,7 +598,7 @@ describe("AcpxRuntime fresh reset wrapper", () => {
     });
   });
 
-  it("disables delegate prompt timeout for OpenClaw-managed turns", async () => {
+  it("disables delegate prompt timeout for QuietCore-managed turns", async () => {
     const baseStore: TestSessionStore = {
       load: vi.fn(async () => ({
         acpxRecordId: "agent:codex:acp:test",
@@ -1163,7 +1163,7 @@ describe("AcpxRuntime fresh reset wrapper", () => {
     expect(baseStore["load"]).toHaveBeenCalledOnce();
   });
 
-  it("cleans up OpenClaw-owned ACPX process trees after close", async () => {
+  it("cleans up QuietCore-owned ACPX process trees after close", async () => {
     const baseStore: TestSessionStore = {
       load: vi.fn(async () => ({
         acpxRecordId: "agent:codex:acp:binding:test",

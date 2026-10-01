@@ -10,7 +10,7 @@ import type { RuntimeEnv } from "quiet-core-bot/plugin-sdk/runtime-env";
 import { CONFIG_DIR, extractArchive, resolveBrewExecutable } from "quiet-core-bot/plugin-sdk/setup-tools";
 import { fetchWithSsrFGuard } from "quiet-core-bot/plugin-sdk/ssrf-runtime";
 import { normalizeLowercaseStringOrEmpty } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
-import { resolvePreferredOpenClawTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";
+import { resolvePreferredQuietCoreTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";
 
 export type ReleaseAsset = {
   name?: string;
@@ -324,7 +324,7 @@ export async function installSignalCliFromRelease(
     };
   }
 
-  const tmpDir = await fs.mkdtemp(path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-signal-"));
+  const tmpDir = await fs.mkdtemp(path.join(resolvePreferredQuietCoreTmpDir(), "quiet-core-bot-signal-"));
   const archivePath = path.join(tmpDir, asset.name);
 
   runtime.log(`Downloading signal-cli ${version} (${asset.name})…`);

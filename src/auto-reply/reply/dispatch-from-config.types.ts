@@ -1,5 +1,5 @@
 // Shared type contracts for dispatch-from-config runtime execution.
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { SourceReplyDeliveryMode } from "../get-reply-options.types.js";
 import type { FinalizedMsgContext } from "../templating.js";
 import type { FormatAbortReplyText, TryFastAbortFromMessage } from "./abort.runtime-types.js";
@@ -21,7 +21,7 @@ export type DispatchFromConfigResult = {
 
 export type DispatchFromConfigParams = {
   ctx: FinalizedMsgContext;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   dispatcher: ReplyDispatcher;
   replyOptions?: Omit<InternalGetReplyOptions, "onBlockReply">;
   replyResolver?: InternalGetReplyFromConfig;
@@ -29,7 +29,7 @@ export type DispatchFromConfigParams = {
   fastAbortResolver?: TryFastAbortFromMessage;
   formatAbortReplyTextResolver?: FormatAbortReplyText;
   /** Optional patch applied to the already loaded config before reply resolution. */
-  configOverride?: OpenClawConfig;
+  configOverride?: QuietCoreConfig;
 };
 
 export type DispatchReplyFromConfig = (

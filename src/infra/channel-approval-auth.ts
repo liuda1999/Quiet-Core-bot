@@ -1,6 +1,6 @@
 // Authorizes chat approval commands against channel approval policy.
 import { getChannelPlugin, resolveChannelApprovalCapability } from "../channels/plugins/index.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { isImplicitSameChatApprovalAuthorization } from "../plugin-sdk/approval-auth-helpers.js";
 import { normalizeMessageChannel } from "../utils/message-channel.js";
 
@@ -12,7 +12,7 @@ type ApprovalCommandAuthorization = {
 
 /** Resolves whether a chat `/approve` command is authorized by channel-specific approval policy. */
 export function resolveApprovalCommandAuthorization(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   channel?: string | null;
   accountId?: string | null;
   senderId?: string | null;

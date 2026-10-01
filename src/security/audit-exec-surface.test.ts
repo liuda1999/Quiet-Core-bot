@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { saveExecApprovals } from "../infra/exec-approvals.js";
 import { captureEnv } from "../test-utils/env.js";
 import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
@@ -99,7 +99,7 @@ describe("security audit exec surface findings", () => {
           },
         },
       },
-    } satisfies OpenClawConfig);
+    } satisfies QuietCoreConfig);
 
     const finding = findings.find(
       (entry) => entry.checkId === "agents.claude_cli.permission_mode_overridden_by_yolo",
@@ -127,7 +127,7 @@ describe("security audit exec surface findings", () => {
           },
         },
       },
-    } satisfies OpenClawConfig);
+    } satisfies QuietCoreConfig);
 
     expect(
       hasFinding("agents.claude_cli.permission_mode_overridden_by_yolo", "warn", findings),
@@ -150,7 +150,7 @@ describe("security audit exec surface findings", () => {
           },
         },
       },
-    } satisfies OpenClawConfig);
+    } satisfies QuietCoreConfig);
 
     expect(
       hasFinding("agents.claude_cli.permission_mode_overridden_by_yolo", "warn", findings),
@@ -170,7 +170,7 @@ describe("security audit exec surface findings", () => {
           },
         },
       },
-    } satisfies OpenClawConfig);
+    } satisfies QuietCoreConfig);
 
     expect(
       hasFinding("agents.claude_cli.permission_mode_overridden_by_yolo", "warn", findings),
@@ -190,7 +190,7 @@ describe("security audit exec surface findings", () => {
           },
         },
       },
-    } satisfies OpenClawConfig);
+    } satisfies QuietCoreConfig);
 
     expect(
       hasFinding("agents.claude_cli.permission_mode_overridden_by_yolo", "warn", findings),
@@ -211,7 +211,7 @@ describe("security audit exec surface findings", () => {
           },
         },
       },
-    } satisfies OpenClawConfig);
+    } satisfies QuietCoreConfig);
 
     expect(
       hasFinding("agents.claude_cli.permission_mode_overridden_by_yolo", "warn", findings),
@@ -239,7 +239,7 @@ describe("security audit exec surface findings", () => {
           agents: {
             list: [{ id: "ops" }],
           },
-        } satisfies OpenClawConfig),
+        } satisfies QuietCoreConfig),
       ),
     ).toBe(true);
   });
@@ -264,7 +264,7 @@ describe("security audit exec surface findings", () => {
               strictInlineEval: true,
             },
           },
-        } satisfies OpenClawConfig),
+        } satisfies QuietCoreConfig),
       ),
     ).toBe(false);
   });
@@ -282,7 +282,7 @@ describe("security audit exec surface findings", () => {
           host: "gateway",
         },
       },
-    } satisfies OpenClawConfig);
+    } satisfies QuietCoreConfig);
 
     expect(hasFinding("security.exposure.open_channels_with_exec", "warn", findings)).toBe(true);
   });
@@ -299,7 +299,7 @@ describe("security audit exec surface findings", () => {
           security: "full",
         },
       },
-    } satisfies OpenClawConfig);
+    } satisfies QuietCoreConfig);
 
     expect(hasFinding("tools.exec.security_full_configured", "critical", findings)).toBe(true);
     expect(hasFinding("security.exposure.open_channels_with_exec", "critical", findings)).toBe(
@@ -313,7 +313,7 @@ describe("security audit exec surface findings", () => {
         allow: ["read", "exec", "process"],
         deny: ["write", "edit", "apply_patch"],
       },
-    } satisfies OpenClawConfig);
+    } satisfies QuietCoreConfig);
 
     const finding = requireFinding("tools.exec.fs_tools_disabled_but_exec_enabled", findings);
     expect(finding.severity).toBe("warn");
@@ -336,7 +336,7 @@ describe("security audit exec surface findings", () => {
         allow: ["read", "exec", "process"],
         deny: ["write", "edit", "apply_patch"],
       },
-    } satisfies OpenClawConfig);
+    } satisfies QuietCoreConfig);
 
     expect(hasFinding("tools.exec.fs_tools_disabled_but_exec_enabled", "warn", findings)).toBe(
       false,

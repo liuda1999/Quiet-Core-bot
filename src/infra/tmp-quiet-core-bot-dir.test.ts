@@ -2,9 +2,9 @@
 import { constants as fsConstants } from "node:fs";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { POSIX_QUIET_CORE_TMP_DIR, resolvePreferredOpenClawTmpDir } from "./tmp-quiet-core-bot-dir.js";
+import { POSIX_QUIET_CORE_TMP_DIR, resolvePreferredQuietCoreTmpDir } from "./tmp-quiet-core-bot-dir.js";
 
-type TmpDirOptions = NonNullable<Parameters<typeof resolvePreferredOpenClawTmpDir>[0]>;
+type TmpDirOptions = NonNullable<Parameters<typeof resolvePreferredQuietCoreTmpDir>[0]>;
 
 function fallbackTmp(uid = 501) {
   return path.join("/var/fallback", `quiet-core-bot-${uid}`);
@@ -53,7 +53,7 @@ function resolveWithReadOnlyTmpFallback(params: {
   chmodSync?: NonNullable<TmpDirOptions["chmodSync"]>;
   warn?: NonNullable<TmpDirOptions["warn"]>;
 }) {
-  return resolvePreferredOpenClawTmpDir({
+  return resolvePreferredQuietCoreTmpDir({
     accessSync: readOnlyTmpAccessSync(),
     lstatSync: vi.fn((target: string) => {
       if (target === POSIX_QUIET_CORE_TMP_DIR) {
@@ -135,7 +135,7 @@ function resolveWithMocks(params: {
   const mkdirSync = vi.fn();
   const getuid = vi.fn(() => uid);
   const tmpdir = vi.fn(() => params.tmpdirPath ?? "/var/fallback");
-  const resolved = resolvePreferredOpenClawTmpDir({
+  const resolved = resolvePreferredQuietCoreTmpDir({
     accessSync,
     chmodSync,
     lstatSync: wrappedLstatSync,
@@ -150,7 +150,7 @@ function resolveWithMocks(params: {
   return { resolved, accessSync, lstatSync: wrappedLstatSync, mkdirSync, tmpdir };
 }
 
-describe("resolvePreferredOpenClawTmpDir", () => {
+describe("resolvePreferredQuietCoreTmpDir", () => {
   it("prefers /tmp/quiet-core-bot when it already exists and is writable", () => {
     const lstatSync: NonNullable<TmpDirOptions["lstatSync"]> = vi.fn(() => ({
       isDirectory: () => true,
@@ -318,7 +318,7 @@ describe("resolvePreferredOpenClawTmpDir", () => {
     const tmpdirPath = "/var/fallback";
     const fallbackPath = path.join(tmpdirPath, "quiet-core-bot");
 
-    const resolved = resolvePreferredOpenClawTmpDir({
+    const resolved = resolvePreferredQuietCoreTmpDir({
       accessSync: vi.fn((target: string) => {
         if (target === "/tmp") {
           throw new Error("read-only");
@@ -423,7 +423,7 @@ describe("resolvePreferredOpenClawTmpDir", () => {
       return secureDirStat();
     });
 
-    const resolved = resolvePreferredOpenClawTmpDir({
+    const resolved = resolvePreferredQuietCoreTmpDir({
       accessSync: vi.fn(),
       lstatSync,
       chmodSync,
@@ -473,7 +473,7 @@ describe("resolvePreferredOpenClawTmpDir", () => {
       return secureDirStat();
     });
 
-    const resolved = resolvePreferredOpenClawTmpDir({
+    const resolved = resolvePreferredQuietCoreTmpDir({
       accessSync: vi.fn(),
       lstatSync,
       chmodSync,
@@ -513,7 +513,7 @@ describe("resolvePreferredOpenClawTmpDir", () => {
 
   it("throws when the fallback directory cannot be created", () => {
     expect(() =>
-      resolvePreferredOpenClawTmpDir({
+      resolvePreferredQuietCoreTmpDir({
         accessSync: readOnlyTmpAccessSync(),
         lstatSync: vi.fn((target: string) => {
           if (target === POSIX_QUIET_CORE_TMP_DIR || target === fallbackTmp()) {
@@ -550,7 +550,7 @@ describe("resolvePreferredOpenClawTmpDir", () => {
     const chmodSync = vi.fn();
     const tmpdir = vi.fn(() => "C:\\Users\\u\\AppData\\Local\\Temp");
 
-    const result = resolvePreferredOpenClawTmpDir({
+    const result = resolvePreferredQuietCoreTmpDir({
       platform: "win32",
       accessSync,
       lstatSync,
@@ -567,7 +567,7 @@ describe("resolvePreferredOpenClawTmpDir", () => {
   });
 
   it("still uses the POSIX preferred path on non-Windows platforms when available", () => {
-    const result = resolvePreferredOpenClawTmpDir({
+    const result = resolvePreferredQuietCoreTmpDir({
       platform: "linux",
       accessSync: vi.fn(),
       lstatSync: vi.fn(() => secureDirStat()),

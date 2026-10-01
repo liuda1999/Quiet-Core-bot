@@ -22,7 +22,7 @@ function issue(overrides: Partial<UiProtocolFreshnessIssue> = {}): UiProtocolFre
   } as UiProtocolFreshnessIssue;
 }
 
-async function createOpenClawRoot(): Promise<string> {
+async function createQuietCoreRoot(): Promise<string> {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-doctor-ui-"));
   tempRoots.push(root);
   await fs.writeFile(path.join(root, "package.json"), JSON.stringify({ name: "quiet-core-bot" }));
@@ -89,7 +89,7 @@ describe("UI protocol freshness health mapping", () => {
   });
 
   it("does not report stale assets when git finds no schema changes", async () => {
-    const root = await createOpenClawRoot();
+    const root = await createQuietCoreRoot();
     const schemaPath = path.join(root, "packages/gateway-protocol/src/schema.ts");
     const uiIndexPath = path.join(root, "dist/control-ui/index.html");
     await touch(uiIndexPath, new Date("2026-01-01T00:00:00.000Z"));
@@ -106,7 +106,7 @@ describe("UI protocol freshness health mapping", () => {
   });
 
   it("does not report stale assets when git history is unavailable", async () => {
-    const root = await createOpenClawRoot();
+    const root = await createQuietCoreRoot();
     const schemaPath = path.join(root, "packages/gateway-protocol/src/schema.ts");
     const uiIndexPath = path.join(root, "dist/control-ui/index.html");
     await touch(uiIndexPath, new Date("2026-01-01T00:00:00.000Z"));

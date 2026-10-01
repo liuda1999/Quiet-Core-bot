@@ -1,7 +1,7 @@
 /**
  * Canvas plugin config parsing, enablement, and schema metadata.
  */
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import {
   normalizePluginsConfig,
   resolveEffectiveEnableState,
@@ -62,7 +62,7 @@ export function parseCanvasPluginConfig(value: unknown): CanvasPluginConfig {
 }
 
 /** Returns whether the bundled Canvas plugin is effectively enabled. */
-export function isCanvasPluginEnabled(config?: OpenClawConfig): boolean {
+export function isCanvasPluginEnabled(config?: QuietCoreConfig): boolean {
   if (!config) {
     return true;
   }
@@ -77,7 +77,7 @@ export function isCanvasPluginEnabled(config?: OpenClawConfig): boolean {
 
 /** Resolves Canvas host config from plugin config or root config. */
 export function resolveCanvasHostConfig(params: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   pluginConfig?: Record<string, unknown>;
 }): CanvasHostConfig {
   const pluginConfig =
@@ -87,7 +87,7 @@ export function resolveCanvasHostConfig(params: {
 }
 
 /** Returns whether the Canvas hosted route/server surface should be active. */
-export function isCanvasHostEnabled(config?: OpenClawConfig): boolean {
+export function isCanvasHostEnabled(config?: QuietCoreConfig): boolean {
   if (isTruthyEnvValue(process.env.QUIET_CORE_SKIP_CANVAS_HOST)) {
     return false;
   }
@@ -112,7 +112,7 @@ export const canvasConfigSchema: CanvasPluginConfigSchema = {
     },
     "host.root": {
       label: "Canvas Host Root Directory",
-      help: "Directory to serve. Defaults to the OpenClaw state canvas directory.",
+      help: "Directory to serve. Defaults to the QuietCore state canvas directory.",
       advanced: true,
     },
     "host.port": {

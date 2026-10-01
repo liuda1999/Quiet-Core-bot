@@ -267,7 +267,7 @@ Security boundary notes:
 
 - Sandbox media validation allows absolute temp paths only under the Quiet Core bot-managed temp root.
 - Arbitrary host tmp paths are not treated as trusted media roots.
-- Plugin/extension code should use Quiet Core bot temp helpers (`resolvePreferredOpenClawTmpDir`, `buildRandomTempFilePath`, `withTempDownloadPath`) rather than raw `os.tmpdir()` defaults when handling media files.
+- Plugin/extension code should use Quiet Core bot temp helpers (`resolvePreferredQuietCoreTmpDir`, `buildRandomTempFilePath`, `withTempDownloadPath`) rather than raw `os.tmpdir()` defaults when handling media files.
 - Enforcement reference points:
   - temp root resolver: `src/infra/tmp-quiet-core-bot-dir.ts`
   - SDK temp helpers: `src/plugin-sdk/temp-path.ts`

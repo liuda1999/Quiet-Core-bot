@@ -179,7 +179,7 @@ import {
   onTrustedInternalDiagnosticEvent,
   runWithDiagnosticTraceContext,
 } from "quiet-core-bot/plugin-sdk/plugin-test-runtime";
-import type { OpenClawPluginServiceContext } from "../api.js";
+import type { QuietCorePluginServiceContext } from "../api.js";
 import { emitDiagnosticEvent } from "../api.js";
 import { createDiagnosticsOtelService } from "./service.js";
 
@@ -221,13 +221,13 @@ type OtelContextFlags = {
   metrics?: boolean;
   logs?: boolean;
   protocol?: NonNullable<
-    NonNullable<OpenClawPluginServiceContext["config"]["diagnostics"]>["otel"]
+    NonNullable<QuietCorePluginServiceContext["config"]["diagnostics"]>["otel"]
   >["protocol"];
   logsExporter?: NonNullable<
-    NonNullable<OpenClawPluginServiceContext["config"]["diagnostics"]>["otel"]
+    NonNullable<QuietCorePluginServiceContext["config"]["diagnostics"]>["otel"]
   >["logsExporter"];
   captureContent?: NonNullable<
-    NonNullable<OpenClawPluginServiceContext["config"]["diagnostics"]>["otel"]
+    NonNullable<QuietCorePluginServiceContext["config"]["diagnostics"]>["otel"]
   >["captureContent"];
 };
 function createOtelContext(
@@ -240,7 +240,7 @@ function createOtelContext(
     logsExporter,
     captureContent,
   }: OtelContextFlags = {},
-): OpenClawPluginServiceContext {
+): QuietCorePluginServiceContext {
   return {
     config: {
       diagnostics: {
@@ -266,7 +266,7 @@ function createOtelContext(
   };
 }
 
-function createTraceOnlyContext(endpoint: string): OpenClawPluginServiceContext {
+function createTraceOnlyContext(endpoint: string): QuietCorePluginServiceContext {
   return createOtelContext(endpoint, { traces: true });
 }
 

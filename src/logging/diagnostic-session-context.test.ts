@@ -4,8 +4,8 @@ import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { saveCronStore } from "../cron/store.js";
 import {
-  createOpenClawTestState,
-  type OpenClawTestState,
+  createQuietCoreTestState,
+  type QuietCoreTestState,
 } from "../test-utils/quiet-core-bot-test-state.js";
 import {
   formatCronSessionDiagnosticFields,
@@ -16,7 +16,7 @@ import {
 } from "./diagnostic-session-context.js";
 
 let tempDir: string | undefined;
-let testState: OpenClawTestState | undefined;
+let testState: QuietCoreTestState | undefined;
 
 function writeJsonl(filePath: string, rows: unknown[]) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
@@ -25,7 +25,7 @@ function writeJsonl(filePath: string, rows: unknown[]) {
 
 describe("diagnostic session context", () => {
   beforeEach(async () => {
-    testState = await createOpenClawTestState({
+    testState = await createQuietCoreTestState({
       layout: "state-only",
       prefix: "quiet-core-bot-diagnostic-session-",
     });

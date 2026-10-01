@@ -7,8 +7,8 @@ import { AUTH_STORE_VERSION } from "../agents/auth-profiles/constants.js";
 import { loadPersistedAuthProfileStore } from "../agents/auth-profiles/persisted.js";
 import { saveAuthProfileStore } from "../agents/auth-profiles/store.js";
 import { formatCliCommand } from "../cli/command-format.js";
-import { closeOpenClawAgentDatabasesForTest } from "../state/quiet-core-bot-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
+import { closeQuietCoreAgentDatabasesForTest } from "../state/quiet-core-bot-agent-db.js";
+import { closeQuietCoreStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import { baseConfigSnapshot, createTestRuntime } from "./test-runtime-config-helpers.js";
 
@@ -140,8 +140,8 @@ describe("agents add command", () => {
     try {
       await withEnvAsync({ QUIET_CORE_STATE_DIR: root }, async () => await run(root));
     } finally {
-      closeOpenClawAgentDatabasesForTest();
-      closeOpenClawStateDatabaseForTest();
+      closeQuietCoreAgentDatabasesForTest();
+      closeQuietCoreStateDatabaseForTest();
       await fs.rm(root, { recursive: true, force: true });
     }
   }

@@ -6,7 +6,7 @@ import type { AgentMessage } from "quiet-core-bot/plugin-sdk/agent-core";
 import type { ExtensionAPI, ExtensionContext } from "quiet-core-bot/plugin-sdk/agent-sessions";
 import type { Model } from "quiet-core-bot/plugin-sdk/llm";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import {
   clearCompactionProviders,
   registerCompactionProvider,
@@ -629,7 +629,7 @@ describe("compaction-safeguard runtime registry", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     buildEmbeddedExtensionFactories({
       cfg,

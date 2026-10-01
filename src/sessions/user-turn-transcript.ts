@@ -3,7 +3,7 @@ import path from "node:path";
 import { mimeTypeFromFilePath } from "@quiet-core/media-core/mime";
 import type { AgentMessage } from "../../packages/agent-core/src/types.js";
 import { persistSessionTranscriptTurn } from "../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { applyInputProvenanceToUserMessage, normalizeInputProvenance } from "./input-provenance.js";
 import type {
   PersistedUserTurnMediaInput,
@@ -40,7 +40,7 @@ type AppendUserTurnTranscriptMessageParams = {
   agentId?: string;
   sessionKey?: string;
   cwd?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   updateMode?: UserTurnTranscriptUpdateMode;
   beforeMessageWrite?: UserTurnBeforeMessageWrite;
 };
@@ -403,7 +403,7 @@ export async function persistUserTurnTranscript(
     },
     {
       ...(params.cwd ? { cwd: params.cwd } : {}),
-      ...(params.config ? { config: params.config as OpenClawConfig } : {}),
+      ...(params.config ? { config: params.config as QuietCoreConfig } : {}),
       updateMode: params.updateMode ?? "inline",
       messages: [
         {
@@ -446,7 +446,7 @@ async function appendFileTargetUserTurnTranscript(params: {
     ...target,
     message: params.message,
     updateMode: params.updateMode,
-    ...(config ? { config: config as OpenClawConfig } : {}),
+    ...(config ? { config: config as QuietCoreConfig } : {}),
     ...(params.beforeMessageWrite ? { beforeMessageWrite: params.beforeMessageWrite } : {}),
   });
   return appended

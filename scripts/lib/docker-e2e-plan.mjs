@@ -311,7 +311,7 @@ export function lanesNeedE2eImageKind(poolLanes, kind) {
   return poolLanes.some((poolLane) => poolLane.e2eImageKind === kind);
 }
 
-export function lanesNeedOpenClawPackage(poolLanes) {
+export function lanesNeedQuietCorePackage(poolLanes) {
   return poolLanes.some((poolLane) => poolLane.e2eImageKind);
 }
 
@@ -391,7 +391,7 @@ function buildPlanJson(params) {
       e2eImage: imageKinds.length > 0,
       functionalImage: imageKinds.includes("functional"),
       liveImage: scheduledLanes.some((poolLane) => poolLane.needsLiveImage),
-      package: lanesNeedOpenClawPackage(scheduledLanes),
+      package: lanesNeedQuietCorePackage(scheduledLanes),
     },
     profile: params.profile,
     releaseProfile: params.releaseProfile,

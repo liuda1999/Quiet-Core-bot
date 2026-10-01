@@ -205,7 +205,7 @@ describe("telegram user credential IO", () => {
       groupId: "-100123",
       sutToken: "sut-token",
       testerUserId: "8709353529",
-      testerUsername: "OpenClawTestUser",
+      testerUsername: "QuietCoreTestUser",
       telegramApiId: "123456",
       telegramApiHash: "api-hash-\u00e9",
       tdlibDatabaseEncryptionKey: "db-key",

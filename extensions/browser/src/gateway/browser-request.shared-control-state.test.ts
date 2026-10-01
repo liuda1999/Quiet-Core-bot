@@ -1,11 +1,11 @@
 // Browser tests cover browser request.shared control state plugin behavior.
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { getFreePort } from "../browser/test-port.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 
 const mocks = vi.hoisted(() => ({
-  runtimeConfig: {} as OpenClawConfig,
-  runtimeSourceConfig: null as OpenClawConfig | null,
+  runtimeConfig: {} as QuietCoreConfig,
+  runtimeSourceConfig: null as QuietCoreConfig | null,
   ensureBrowserControlAuth: vi.fn(async () => ({ auth: {} })),
   resolveBrowserControlAuth: vi.fn(() => ({})),
   shouldAutoGenerateBrowserAuth: vi.fn(() => false),
@@ -39,11 +39,11 @@ vi.mock("../browser/chrome.js", () => ({
   formatChromeCdpDiagnostic: vi.fn(() => "not reachable"),
   isChromeCdpReady: mocks.isChromeCdpReady,
   isChromeReachable: mocks.isChromeReachable,
-  launchOpenClawChrome: vi.fn(async () => {
+  launchQuietCoreChrome: vi.fn(async () => {
     throw new Error("launch should not be needed for status");
   }),
-  resolveOpenClawUserDataDir: vi.fn(() => "/tmp/quiet-core-bot-browser"),
-  stopOpenClawChrome: vi.fn(async () => {}),
+  resolveQuietCoreUserDataDir: vi.fn(() => "/tmp/quiet-core-bot-browser"),
+  stopQuietCoreChrome: vi.fn(async () => {}),
 }));
 
 vi.mock("../browser/pw-ai-state.js", () => ({
@@ -60,7 +60,7 @@ function browserConfig(params: {
   executablePath?: string;
   headless?: boolean;
   noSandbox?: boolean;
-}): OpenClawConfig {
+}): QuietCoreConfig {
   return {
     gateway: {
       port: params.gatewayPort,

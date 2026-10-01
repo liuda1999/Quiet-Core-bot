@@ -1,7 +1,7 @@
 /** Updates installed plugins across npm, ClawHub, marketplace, Git, and bundled bridge sources. */
 import path from "node:path";
 import { isRecord } from "@quiet-core/normalization-core/record-coerce";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { PluginInstallRecord } from "../config/types.plugins.js";
 import { parseClawHubPluginSpec } from "../infra/clawhub-spec.js";
 import { satisfiesPluginApiRange } from "../infra/clawhub.js";
@@ -9,16 +9,16 @@ import { unscopedPackageName } from "../infra/install-safe-path.js";
 import type { NpmSpecResolution } from "../infra/install-source-utils.js";
 import { createNpmMetadataEnv, resolveNpmSpecMetadata } from "../infra/install-source-utils.js";
 import {
-  compareOpenClawReleaseVersions,
+  compareQuietCoreReleaseVersions,
   isExactSemverVersion,
-  isOpenClawOrgNpmSpec,
+  isQuietCoreOrgNpmSpec,
   isPrereleaseSemverVersion,
   isPrereleaseResolutionAllowed,
   parseRegistryNpmSpec,
 } from "../infra/npm-registry-spec.js";
 import {
   expectedIntegrityForUpdate,
-  installedPackageNeedsOpenClawPeerLinkRepair,
+  installedPackageNeedsQuietCorePeerLinkRepair,
   readInstalledPackagePeerDependencies,
   readInstalledPackageVersion,
 } from "../infra/package-update-utils.js";
@@ -66,7 +66,7 @@ import {
   resolveOfficialExternalPluginInstall,
 } from "./official-external-plugin-catalog.js";
 import { resolvePackagePluginApiRange } from "./package-compat.js";
-import { linkOpenClawPeerDependencies } from "./plugin-peer-link.js";
+import { linkQuietCorePeerDependencies } from "./plugin-peer-link.js";
 import { defaultSlotIdForKey } from "./slots.js";
 
 /** Logger surface used by plugin update flows. */
@@ -98,7 +98,7 @@ export type PluginUpdateOutcome = {
 };
 
 export type PluginUpdateSummary = {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   changed: boolean;
   outcomes: PluginUpdateOutcome[];
 };
@@ -122,7 +122,7 @@ export type PluginChannelSyncSummary = {
 };
 
 export type PluginChannelSyncResult = {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   changed: boolean;
   summary: PluginChannelSyncSummary;
 };
@@ -310,7 +310,7 @@ function expectedIntegrityForNpmUpdate(params: {
 }
 
 function compareNpmSemverForUpdate(left: string, right: string): number {
-  const releaseCmp = compareOpenClawReleaseVersions(left, right);
+  const releaseCmp = compareQuietCoreReleaseVersions(left, right);
   if (releaseCmp !== null) {
     return releaseCmp;
   }
@@ -445,7 +445,7 @@ async function expectedIntegrityForNpmFallback(params: {
 
 function isNpmMetadataCompatibleWithCurrentHost(metadata: NpmSpecResolution): boolean {
   const hostVersion = resolveCompatibilityHostVersion();
-  const installMetadata = metadata.packageOpenClaw?.install;
+  const installMetadata = metadata.packageQuietCore?.install;
   const minHostVersionCheck = checkMinHostVersion({
     currentVersion: hostVersion,
     minHostVersion: isRecord(installMetadata) ? installMetadata.minHostVersion : undefined,
@@ -453,7 +453,7 @@ function isNpmMetadataCompatibleWithCurrentHost(metadata: NpmSpecResolution): bo
   if (!minHostVersionCheck.ok) {
     return false;
   }
-  const pluginApiRangeCheck = resolvePackagePluginApiRange(metadata.packageOpenClaw);
+  const pluginApiRangeCheck = resolvePackagePluginApiRange(metadata.packageQuietCore);
   if (!pluginApiRangeCheck.ok) {
     return false;
   }
@@ -465,7 +465,7 @@ function isNpmMetadataCompatibleWithCurrentHost(metadata: NpmSpecResolution): bo
 }
 
 function isBundledVersionNewer(bundledVersion: string, installedVersion: string): boolean {
-  const releaseCmp = compareOpenClawReleaseVersions(bundledVersion, installedVersion);
+  const releaseCmp = compareQuietCoreReleaseVersions(bundledVersion, installedVersion);
   if (releaseCmp !== null) {
     return releaseCmp > 0;
   }
@@ -627,7 +627,7 @@ function resolveBridgeInstallRecord(params: {
 }
 
 function isBridgeChannelEnabledByConfig(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   bridge: ExternalizedBundledPluginBridge;
 }): boolean {
   const channels = params.config.channels;
@@ -647,7 +647,7 @@ function isBridgeChannelEnabledByConfig(params: {
 }
 
 function isExternalizedBundledPluginEnabled(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   bridge: ExternalizedBundledPluginBridge;
 }): boolean {
   const normalized = normalizePluginsConfig(params.config.plugins);
@@ -687,7 +687,7 @@ function shouldFallbackClawHubBridgeToNpm(params: {
   result: { ok: false; code?: string };
   npmSpec?: string;
 }): boolean {
-  if (!isOpenClawOrgNpmSpec(params.npmSpec)) {
+  if (!isQuietCoreOrgNpmSpec(params.npmSpec)) {
     return false;
   }
   return (
@@ -1012,7 +1012,7 @@ function replacePluginIdInList(
   return next;
 }
 
-function migratePluginConfigId(cfg: OpenClawConfig, fromId: string, toId: string): OpenClawConfig {
+function migratePluginConfigId(cfg: QuietCoreConfig, fromId: string, toId: string): QuietCoreConfig {
   const plugins = cfg.plugins;
   if (fromId === toId || !plugins) {
     return cfg;
@@ -1074,7 +1074,7 @@ function migratePluginConfigId(cfg: OpenClawConfig, fromId: string, toId: string
   return nextPlugins === plugins ? cfg : { ...cfg, plugins: nextPlugins };
 }
 
-function withoutPluginInstallRecord(cfg: OpenClawConfig, pluginId: string): OpenClawConfig {
+function withoutPluginInstallRecord(cfg: QuietCoreConfig, pluginId: string): QuietCoreConfig {
   const installs = cfg.plugins?.installs;
   if (!installs || !Object.hasOwn(installs, pluginId)) {
     return cfg;
@@ -1127,9 +1127,9 @@ function removeDisabledPluginIdFromList(
 }
 
 function resetDisabledPluginSlots(
-  slots: NonNullable<OpenClawConfig["plugins"]>["slots"] | undefined,
+  slots: NonNullable<QuietCoreConfig["plugins"]>["slots"] | undefined,
   pluginId: string,
-): NonNullable<OpenClawConfig["plugins"]>["slots"] | undefined {
+): NonNullable<QuietCoreConfig["plugins"]>["slots"] | undefined {
   if (!slots) {
     return slots;
   }
@@ -1149,7 +1149,7 @@ function resetDisabledPluginSlots(
   return next;
 }
 
-function disablePluginConfigEntry(config: OpenClawConfig, pluginId: string): OpenClawConfig {
+function disablePluginConfigEntry(config: QuietCoreConfig, pluginId: string): QuietCoreConfig {
   const pluginsConfig = config.plugins ?? {};
   const existingEntry = pluginsConfig.entries?.[pluginId];
   return {
@@ -1170,8 +1170,8 @@ function disablePluginConfigEntry(config: OpenClawConfig, pluginId: string): Ope
   };
 }
 
-async function repairOpenClawPeerLinksForNpmInstalls(params: {
-  config: OpenClawConfig;
+async function repairQuietCorePeerLinksForNpmInstalls(params: {
+  config: QuietCoreConfig;
   logger: PluginUpdateLogger;
 }): Promise<boolean> {
   let repaired = false;
@@ -1192,7 +1192,7 @@ async function repairOpenClawPeerLinksForNpmInstalls(params: {
       continue;
     }
 
-    if (!installedPackageNeedsOpenClawPeerLinkRepair(installPath)) {
+    if (!installedPackageNeedsQuietCorePeerLinkRepair(installPath)) {
       continue;
     }
 
@@ -1203,7 +1203,7 @@ async function repairOpenClawPeerLinksForNpmInstalls(params: {
 
     try {
       const warnings: string[] = [];
-      const peerLinkRepair = await linkOpenClawPeerDependencies({
+      const peerLinkRepair = await linkQuietCorePeerDependencies({
         installedDir: installPath,
         peerDependencies,
         logger: {
@@ -1217,7 +1217,7 @@ async function repairOpenClawPeerLinksForNpmInstalls(params: {
         );
         continue;
       }
-      repaired = !installedPackageNeedsOpenClawPeerLinkRepair(installPath) || repaired;
+      repaired = !installedPackageNeedsQuietCorePeerLinkRepair(installPath) || repaired;
     } catch (err) {
       params.logger.warn?.(
         `Could not repair quiet-core-bot peer link for "${pluginId}" at ${installPath}: ${String(err)}`,
@@ -1228,7 +1228,7 @@ async function repairOpenClawPeerLinksForNpmInstalls(params: {
 }
 
 export async function updateNpmInstalledPlugins(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   logger?: PluginUpdateLogger;
   pluginIds?: string[];
   skipIds?: Set<string>;
@@ -1533,7 +1533,7 @@ export async function updateNpmInstalledPlugins(params: {
           currentVersion &&
           !bypassTrustedOfficialUnchangedNpmCheck &&
           isNpmMetadataCompatibleWithCurrentHost(metadataResult.metadata) &&
-          !installedPackageNeedsOpenClawPeerLinkRepair(installPath) &&
+          !installedPackageNeedsQuietCorePeerLinkRepair(installPath) &&
           shouldSkipUnchangedNpmInstall({
             currentVersion,
             record,
@@ -2159,7 +2159,7 @@ export async function updateNpmInstalledPlugins(params: {
 
   if (ranNpmInstaller) {
     changed =
-      (await repairOpenClawPeerLinksForNpmInstalls({
+      (await repairQuietCorePeerLinksForNpmInstalls({
         config: next,
         logger,
       })) || changed;
@@ -2169,7 +2169,7 @@ export async function updateNpmInstalledPlugins(params: {
 }
 
 export async function syncPluginsForUpdateChannel(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   channel: UpdateChannel;
   workspaceDir?: string;
   env?: NodeJS.ProcessEnv;

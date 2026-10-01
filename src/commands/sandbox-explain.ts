@@ -21,7 +21,7 @@ import {
   resolveStorePath,
 } from "../config/sessions.js";
 import { loadSessionEntry } from "../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   buildAgentMainSessionKey,
   normalizeAgentId,
@@ -41,7 +41,7 @@ type SandboxExplainOptions = {
 const SANDBOX_DOCS_URL = "https://github.com/liuda1999/Quiet-Core-bot/sandbox";
 
 function normalizeExplainSessionKey(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentId: string;
   session?: string;
 }): string {
@@ -67,7 +67,7 @@ function normalizeExplainSessionKey(params: {
 }
 
 function inferProviderFromSessionKey(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   sessionKey: string;
 }): string | undefined {
   const parsed = parseAgentSessionKey(params.sessionKey);
@@ -99,7 +99,7 @@ function inferProviderFromSessionKey(params: {
 }
 
 function resolveActiveChannel(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentId: string;
   sessionKey: string;
 }): string | undefined {

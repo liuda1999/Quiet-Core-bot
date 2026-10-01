@@ -7,7 +7,7 @@ import {
   resolveAgentWorkspaceDir,
   resolveGlobalSingleton,
   resolveMemorySearchSyncConfig,
-  type OpenClawConfig,
+  type QuietCoreConfig,
 } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
 import {
   checkQmdBinaryAvailability,
@@ -150,7 +150,7 @@ function clearQmdManagerOpenFailure(scopeKey: string, identityKey: string): void
 }
 
 export async function getMemorySearchManager(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentId: string;
   purpose?: MemorySearchManagerPurpose;
 }): Promise<MemorySearchManagerResult> {
@@ -318,7 +318,7 @@ export async function getMemorySearchManager(params: {
 
 async function getBuiltinMemorySearchManagerAfterQmdFailure(
   params: {
-    cfg: OpenClawConfig;
+    cfg: QuietCoreConfig;
     agentId: string;
     purpose?: MemorySearchManagerPurpose;
   },
@@ -338,7 +338,7 @@ async function getBuiltinMemorySearchManagerAfterQmdFailure(
 }
 
 async function getBuiltinMemorySearchManager(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentId: string;
   purpose?: MemorySearchManagerPurpose;
 }): Promise<MemorySearchManagerResult> {
@@ -425,7 +425,7 @@ export async function closeAllMemorySearchManagers(): Promise<void> {
 }
 
 export async function closeMemorySearchManager(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentId: string;
 }): Promise<void> {
   const normalizedAgentId = normalizeAgentId(params.agentId);
@@ -670,7 +670,7 @@ function buildQmdManagerIdentityKey(
 }
 
 function resolveQmdManagerRuntimeConfig(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   agentId: string,
 ): QmdManagerRuntimeConfig {
   return {

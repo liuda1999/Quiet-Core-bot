@@ -1,5 +1,5 @@
 /** Type contracts for plugin-contributed embedding providers. */
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { SecretInput } from "../config/types.secrets.js";
 
 /** Input accepted by embedding providers, including multimodal inline-data parts. */
@@ -57,7 +57,7 @@ export type EmbeddingProvider = {
 
 /** Options passed to embedding provider adapters when creating providers. */
 export type EmbeddingProviderCreateOptions = {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   agentDir?: string;
   provider?: string;
   remote?: {

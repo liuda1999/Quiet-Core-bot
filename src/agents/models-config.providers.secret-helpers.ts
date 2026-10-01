@@ -2,7 +2,7 @@
  * Resolves configured provider secrets from env, profiles, and SecretRefs.
  */
 import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { coerceSecretRef, resolveSecretInputRef } from "../config/types.secrets.js";
 import { normalizeOptionalSecretInput } from "../utils/normalize-secret-input.js";
 import type { AuthProfileStore } from "./auth-profiles/types.js";
@@ -23,7 +23,7 @@ import { resolveProviderIdForAuth } from "./provider-auth-aliases.js";
  * lookups into provider apiKey/header values while preserving non-printable
  * markers for secrets managed outside plain environment variables.
  */
-type ModelsConfig = NonNullable<OpenClawConfig["models"]>;
+type ModelsConfig = NonNullable<QuietCoreConfig["models"]>;
 /** Provider config entry from the canonical Quiet Core bot models config. */
 export type ProviderConfig = NonNullable<ModelsConfig["providers"]>[string];
 

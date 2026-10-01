@@ -2,9 +2,9 @@
 import { isRecord } from "../utils.js";
 
 type ConfigMcpServers = Record<string, Record<string, unknown>>;
-type OpenClawMcpHttpTransport = "sse" | "streamable-http";
+type QuietCoreMcpHttpTransport = "sse" | "streamable-http";
 
-const CLI_MCP_TYPE_TO_QUIET_CORE_TRANSPORT: Record<string, OpenClawMcpHttpTransport | "stdio"> = {
+const CLI_MCP_TYPE_TO_QUIET_CORE_TRANSPORT: Record<string, QuietCoreMcpHttpTransport | "stdio"> = {
   http: "streamable-http",
   "streamable-http": "streamable-http",
   sse: "sse",
@@ -16,9 +16,9 @@ function normalizeMcpString(value: unknown): string {
 }
 
 /** Maps CLI-native MCP type aliases to Quiet Core bot HTTP transport names. */
-export function resolveOpenClawMcpTransportAlias(
+export function resolveQuietCoreMcpTransportAlias(
   value: unknown,
-): OpenClawMcpHttpTransport | undefined {
+): QuietCoreMcpHttpTransport | undefined {
   const mapped = CLI_MCP_TYPE_TO_QUIET_CORE_TRANSPORT[normalizeMcpString(value)];
   return mapped === "sse" || mapped === "streamable-http" ? mapped : undefined;
 }
@@ -38,7 +38,7 @@ export function canonicalizeConfiguredMcpServer(
   server: Record<string, unknown>,
 ): Record<string, unknown> {
   const next = { ...server };
-  const transportAlias = resolveOpenClawMcpTransportAlias(next.type);
+  const transportAlias = resolveQuietCoreMcpTransportAlias(next.type);
   // `transport` is Quiet Core bot's canonical field; legacy `type` only fills a gap.
   if (typeof next.transport !== "string" && transportAlias) {
     next.transport = transportAlias;

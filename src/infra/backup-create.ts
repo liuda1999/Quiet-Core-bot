@@ -15,7 +15,7 @@ import {
   resolveBackupPlanFromDisk,
 } from "../commands/backup-shared.js";
 import { isPathWithin } from "../commands/cleanup-utils.js";
-import { resolveOpenClawStateSqlitePath } from "../state/quiet-core-bot-state-db.paths.js";
+import { resolveQuietCoreStateSqlitePath } from "../state/quiet-core-bot-state-db.paths.js";
 import { resolveHomeDir, resolveUserPath } from "../utils.js";
 import { resolveRuntimeServiceVersion } from "../version.js";
 import { isVolatileBackupPath } from "./backup-volatile-filter.js";
@@ -633,7 +633,7 @@ async function createStateSqliteBackupPlan(params: {
   // tempDir outside stateDir, and this ordering prevents future overlap from
   // making backup discover one of its own staged SQLite files.
   const globalStateSqlitePath = path.resolve(
-    resolveOpenClawStateSqlitePath({
+    resolveQuietCoreStateSqlitePath({
       ...process.env,
       QUIET_CORE_STATE_DIR: params.stateDir,
     }),

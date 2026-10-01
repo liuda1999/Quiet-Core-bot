@@ -3,7 +3,7 @@
 import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { resolveAgentAvatar } from "../../agents/identity-avatar.js";
 import { resolveAgentIdentity } from "../../agents/identity.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { OutboundIdentity } from "./identity-types.js";
 
 export type { OutboundIdentity } from "./identity-types.js";
@@ -27,7 +27,7 @@ export function normalizeOutboundIdentity(
 
 /** Resolves an agent's configured identity into channel-safe outbound metadata. */
 export function resolveAgentOutboundIdentity(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   agentId: string,
 ): OutboundIdentity | undefined {
   const agentIdentity = resolveAgentIdentity(cfg, agentId);

@@ -1,5 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/bash
-# OpenClaw Auth Widget for Termux
+# QuietCore Auth Widget for Termux
 # Place in ~/.shortcuts/ for Termux:Widget
 #
 # This widget checks auth status and helps with re-auth if needed.
@@ -9,7 +9,7 @@
 SERVER="${QUIET_CORE_SERVER:-quiet-core-bot-host}"
 
 # Check auth status
-termux-toast "Checking OpenClaw auth..."
+termux-toast "Checking QuietCore auth..."
 
 STATUS=$(ssh "$SERVER" '$HOME/quiet-core-bot/scripts/claude-auth-status.sh simple' 2>&1)
 EXIT_CODE=$?
@@ -69,7 +69,7 @@ case "$STATUS" in
                 termux-toast "Run: ssh $SERVER '$HOME/quiet-core-bot/scripts/mobile-reauth.sh'"
                 ;;
             *)
-                termux-toast "Warning: OpenClaw won't work until re-auth"
+                termux-toast "Warning: QuietCore won't work until re-auth"
                 ;;
         esac
         ;;

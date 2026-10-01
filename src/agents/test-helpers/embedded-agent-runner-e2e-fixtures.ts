@@ -7,7 +7,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import type { AssistantMessage } from "quiet-core-bot/plugin-sdk/llm";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { buildAttemptReplayMetadata } from "../embedded-agent-runner/run/incomplete-turn.js";
 import type { EmbeddedRunAttemptResult } from "../embedded-agent-runner/run/types.js";
 
@@ -37,7 +37,7 @@ export async function cleanupEmbeddedAgentRunnerTestWorkspace(
   await fs.rm(workspace.tempRoot, { recursive: true, force: true });
 }
 
-export function createEmbeddedAgentRunnerOpenAiConfig(modelIds: string[]): OpenClawConfig {
+export function createEmbeddedAgentRunnerOpenAiConfig(modelIds: string[]): QuietCoreConfig {
   return {
     models: {
       providers: {

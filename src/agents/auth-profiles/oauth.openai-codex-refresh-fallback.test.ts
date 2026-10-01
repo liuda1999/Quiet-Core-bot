@@ -8,7 +8,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { resetFileLockStateForTest } from "../../infra/file-lock.js";
-import { closeOpenClawAgentDatabasesForTest } from "../../state/quiet-core-bot-agent-db.js";
+import { closeQuietCoreAgentDatabasesForTest } from "../../state/quiet-core-bot-agent-db.js";
 import { captureEnv, setTestEnvValue } from "../../test-utils/env.js";
 import {
   OAUTH_AGENT_ENV_KEYS,
@@ -176,12 +176,12 @@ describe("resolveApiKeyForProfile openai refresh fallback", () => {
   afterEach(async () => {
     resetFileLockStateForTest();
     clearRuntimeAuthProfileStoreSnapshots();
-    closeOpenClawAgentDatabasesForTest();
+    closeQuietCoreAgentDatabasesForTest();
     envSnapshot.restore();
   });
 
   afterAll(async () => {
-    closeOpenClawAgentDatabasesForTest();
+    closeQuietCoreAgentDatabasesForTest();
     await fs.rm(tempRoot, { recursive: true, force: true });
   });
 

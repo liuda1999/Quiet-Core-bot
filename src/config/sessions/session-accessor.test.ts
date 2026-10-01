@@ -4,7 +4,7 @@ import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { SessionManager } from "../../agents/sessions/session-manager.js";
 import { onSessionTranscriptUpdate } from "../../sessions/transcript-events.js";
-import type { OpenClawConfig } from "../types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../types.quiet-core-bot.js";
 import {
   applyRestartRecoveryLifecycle,
   appendTranscriptMessage,
@@ -233,7 +233,7 @@ describe("session accessor file-backed seam", () => {
           { id: "ops", workspace: path.join(tempDir, "ops") },
         ],
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
     const now = Date.now();
     fs.writeFileSync(
       storePath,
@@ -758,7 +758,7 @@ describe("session accessor file-backed seam", () => {
         store: path.join(stateDir, "agents", "{agentId}", "sessions", "sessions.json"),
       },
       agents: { list: [{ id: "retired-agent", default: true }] },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
     const configuredStorePath = path.join(
       stateDir,
       "agents",

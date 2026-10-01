@@ -1,10 +1,10 @@
-// Synology Chat plugin entrypoint registers its OpenClaw integration.
+// Synology Chat plugin entrypoint registers its QuietCore integration.
 import { defineBundledChannelEntry } from "quiet-core-bot/plugin-sdk/channel-entry-contract";
 
 export default defineBundledChannelEntry({
   id: "synology-chat",
   name: "Synology Chat",
-  description: "Native Synology Chat channel plugin for OpenClaw",
+  description: "Native Synology Chat channel plugin for QuietCore",
   importMetaUrl: import.meta.url,
   plugin: {
     specifier: "./channel-plugin-api.js",

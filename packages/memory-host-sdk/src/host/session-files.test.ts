@@ -3,7 +3,7 @@ import fsSync from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { closeOpenClawStateDatabaseUnder } from "../../../../src/state/quiet-core-bot-state-db.js";
+import { closeQuietCoreStateDatabaseUnder } from "../../../../src/state/quiet-core-bot-state-db.js";
 import { clearConfigCache, clearRuntimeConfigSnapshot } from "./quiet-core-bot-runtime-session.js";
 import {
   buildSessionEntry,
@@ -56,7 +56,7 @@ beforeAll(() => {
 afterAll(() => {
   // Release cached SQLite handles under the fixture before removing it; Windows
   // reports EPERM/EBUSY while those files stay open.
-  closeOpenClawStateDatabaseUnder(fixtureRoot);
+  closeQuietCoreStateDatabaseUnder(fixtureRoot);
   fsSync.rmSync(fixtureRoot, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
 });
 
@@ -525,7 +525,7 @@ describe("sessionPathForFile", () => {
 });
 
 describe("memory session sync targets", () => {
-  it("parses deprecated canonical OpenClaw transcript paths into sync identity", () => {
+  it("parses deprecated canonical QuietCore transcript paths into sync identity", () => {
     const sessionFile = path.join(tmpDir, "agents", "main", "sessions", "active.jsonl");
     fsSync.mkdirSync(path.dirname(sessionFile), { recursive: true });
 

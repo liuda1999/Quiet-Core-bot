@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { resetLogger, setLoggerOverride } from "../../logging/logger.js";
 import { loggingState } from "../../logging/state.js";
 import {
@@ -102,7 +102,7 @@ function createWorkspacePluginRegistry(workspaceDir: string): PluginManifestRegi
 
 function createWorkspacePluginMetadataSnapshot(params: {
   workspaceDir: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   manifestRegistry: PluginManifestRegistry;
 }): PluginMetadataSnapshot {
   const policyHash = resolveInstalledPluginIndexPolicyHash(params.config);
@@ -148,7 +148,7 @@ function createWorkspacePluginMetadataSnapshot(params: {
   };
 }
 
-function setWorkspacePluginMetadataSnapshot(workspaceDir: string, config?: OpenClawConfig): void {
+function setWorkspacePluginMetadataSnapshot(workspaceDir: string, config?: QuietCoreConfig): void {
   const manifestRegistry = createWorkspacePluginRegistry(workspaceDir);
   setCurrentPluginMetadataSnapshot(
     createWorkspacePluginMetadataSnapshot({

@@ -270,13 +270,13 @@ Permission enforcement for bridged Quiet Core bot tools happens **inside the
 tool wrapper**, not via the SDK's `onPermissionRequest` callback. The
 same `wrapToolWithBeforeToolCallHook` that PI uses
 (`src/agents/pi-tools.before-tool-call.ts`) is applied by
-`createOpenClawCodingTools` to every coding tool: loop detection,
+`createQuietCoreCodingTools` to every coding tool: loop detection,
 trusted plugin policies, before-tool-call hooks, and two-phase plugin
 approvals via the gateway (`plugin.approval.request`) all run with the
 exact same code path as native PI attempts.
 
 To let that wrapper own the decision, the SDK Tool returned by
-`convertOpenClawToolToSdkTool` is marked with:
+`convertQuietCoreToolToSdkTool` is marked with:
 
 - `overridesBuiltInTool: true` — replaces the Copilot CLI's built-in
   tool of the same name (edit, read, write, bash, …) so every tool
@@ -303,7 +303,7 @@ displaces every built-in.
 
 For the wrapped-tool layer to make policy decisions equivalent to PI,
 the harness forwards the full PI attempt-tool context to
-`createOpenClawCodingTools` — identity (`senderIsOwner`,
+`createQuietCoreCodingTools` — identity (`senderIsOwner`,
 `memberRoleIds`, `ownerOnlyToolAllowlist`, …), channel/routing
 (`groupId`, `currentChannelId`, `replyToMode`, message-tool toggles),
 auth (`authProfileStore`), run identity

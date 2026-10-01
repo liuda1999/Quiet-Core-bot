@@ -11,7 +11,7 @@ import {
 } from "../infra/host-env-security.js";
 import { containsEnvVarReference } from "./env-substitution.js";
 import { ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS_ENV } from "./future-version-guard.js";
-import type { OpenClawConfig } from "./types.js";
+import type { QuietCoreConfig } from "./types.js";
 
 function isBlockedConfigEnvVar(key: string): boolean {
   return (
@@ -27,7 +27,7 @@ export function isConfigRuntimeEnvVarAllowed(key: string, value: string): boolea
   return Boolean(value.trim()) && !isBlockedConfigEnvVar(key) && !containsEnvVarReference(value);
 }
 
-function collectConfigEnvVarsByTarget(cfg?: OpenClawConfig): Record<string, string> {
+function collectConfigEnvVarsByTarget(cfg?: QuietCoreConfig): Record<string, string> {
   const envConfig = cfg?.env;
   if (!envConfig) {
     return {};
@@ -131,19 +131,19 @@ export function cloneEnvWithPlatformSemantics(env: NodeJS.ProcessEnv): NodeJS.Pr
 }
 
 /** Collects config env vars safe to inject into runtime process environments. */
-export function collectConfigRuntimeEnvVars(cfg?: OpenClawConfig): Record<string, string> {
+export function collectConfigRuntimeEnvVars(cfg?: QuietCoreConfig): Record<string, string> {
   return collectConfigEnvVarsByTarget(cfg);
 }
 
 /** Collects config env vars safe to persist into managed service environments. */
-export function collectConfigServiceEnvVars(cfg?: OpenClawConfig): Record<string, string> {
+export function collectConfigServiceEnvVars(cfg?: QuietCoreConfig): Record<string, string> {
   // Runtime and service envs intentionally share filtering until a target-specific contract exists.
   return collectConfigEnvVarsByTarget(cfg);
 }
 
 /** Builds a cloned environment with config env vars applied without mutating the base env. */
 export function createConfigRuntimeEnv(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   baseEnv: NodeJS.ProcessEnv = process.env,
 ): NodeJS.ProcessEnv {
   const env = cloneEnvWithPlatformSemantics(baseEnv);
@@ -153,7 +153,7 @@ export function createConfigRuntimeEnv(
 
 /** Applies config env vars to an environment without overwriting existing non-empty values. */
 export function applyConfigEnvVars(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   env: NodeJS.ProcessEnv = process.env,
   options: {
     lowerPrecedenceEnv?: Readonly<Record<string, string>>;

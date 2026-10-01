@@ -1,10 +1,10 @@
-name: OpenClaw Cross-OS Release Checks (Reusable)
+name: QuietCore Cross-OS Release Checks (Reusable)
 
 on:
   workflow_dispatch:
     inputs:
       ref:
-        description: Public OpenClaw ref to validate (tag, branch, or full commit SHA)
+        description: Public QuietCore ref to validate (tag, branch, or full commit SHA)
         required: true
         default: main
         type: string
@@ -57,7 +57,7 @@ on:
         default: ""
         type: string
       candidate_artifact_name:
-        description: Optional current-run artifact name containing the candidate OpenClaw tarball
+        description: Optional current-run artifact name containing the candidate QuietCore tarball
         required: false
         default: ""
         type: string
@@ -72,7 +72,7 @@ on:
         default: ""
         type: string
       candidate_version:
-        description: Optional candidate OpenClaw package version
+        description: Optional candidate QuietCore package version
         required: false
         default: ""
         type: string
@@ -99,7 +99,7 @@ on:
         default: false
         type: boolean
       ref:
-        description: Public OpenClaw ref to validate (tag, branch, or full commit SHA)
+        description: Public QuietCore ref to validate (tag, branch, or full commit SHA)
         required: true
         type: string
       workflow_ref:
@@ -141,7 +141,7 @@ on:
         default: ""
         type: string
       candidate_artifact_name:
-        description: Optional current-run artifact name containing the candidate OpenClaw tarball
+        description: Optional current-run artifact name containing the candidate QuietCore tarball
         required: false
         default: ""
         type: string
@@ -156,7 +156,7 @@ on:
         default: ""
         type: string
       candidate_version:
-        description: Optional candidate OpenClaw package version
+        description: Optional candidate QuietCore package version
         required: false
         default: ""
         type: string

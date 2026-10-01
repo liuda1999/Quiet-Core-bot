@@ -1,7 +1,7 @@
 // Docker backend manager tests cover runtime image matching and removal error
 // handling for sandbox and browser containers.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 
 const dockerMocks = vi.hoisted(() => ({
   dockerContainerState: vi.fn(),
@@ -23,7 +23,7 @@ vi.mock("./docker.js", async () => {
 
 const { dockerSandboxBackendManager } = await import("./docker-backend.js");
 
-function createConfig(): OpenClawConfig {
+function createConfig(): QuietCoreConfig {
   return {
     agents: {
       defaults: {

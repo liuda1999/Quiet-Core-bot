@@ -2,7 +2,7 @@
   "name": "@quiet-core/comfy-provider",
   "version": "2026.6.11",
   "private": true,
-  "description": "OpenClaw ComfyUI provider plugin",
+  "description": "QuietCore ComfyUI provider plugin",
   "type": "module",
   "devDependencies": {
     "@quiet-core/plugin-sdk": "workspace:*"

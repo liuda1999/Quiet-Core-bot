@@ -3,11 +3,11 @@ import type { DatabaseSync } from "node:sqlite";
 import type { Insertable, Selectable } from "kysely";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../infra/kysely-sync.js";
 import { normalizeSqliteNumber } from "../infra/sqlite-number.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
 import {
-  closeOpenClawStateDatabase,
-  openOpenClawStateDatabase,
-  runOpenClawStateWriteTransaction,
+  closeQuietCoreStateDatabase,
+  openQuietCoreStateDatabase,
+  runQuietCoreStateWriteTransaction,
 } from "../state/quiet-core-bot-state-db.js";
 import type { TaskFlowRegistryStoreSnapshot } from "./task-flow-registry.store.types.js";
 import {
@@ -20,8 +20,8 @@ import {
 import { parseDeliveryContextJson } from "./task-registry.sqlite.shared.js";
 import { parseTaskNotifyPolicy } from "./task-registry.types.js";
 
-type FlowRunsTable = OpenClawStateKyselyDatabase["flow_runs"];
-type FlowRegistryStoreDatabase = Pick<OpenClawStateKyselyDatabase, "flow_runs">;
+type FlowRunsTable = QuietCoreStateKyselyDatabase["flow_runs"];
+type FlowRegistryStoreDatabase = Pick<QuietCoreStateKyselyDatabase, "flow_runs">;
 
 type FlowRegistryRow = Selectable<FlowRunsTable> & {
   sync_mode: string | null;
@@ -195,7 +195,7 @@ function upsertFlowRow(db: DatabaseSync, row: Insertable<FlowRunsTable>): void {
 }
 
 function openFlowRegistryDatabase(): FlowRegistryDatabase {
-  const database = openOpenClawStateDatabase();
+  const database = openQuietCoreStateDatabase();
   const pathname = database.path;
   if (cachedDatabase && cachedDatabase.path === pathname && cachedDatabase.db.isOpen) {
     return cachedDatabase;
@@ -212,7 +212,7 @@ function openFlowRegistryDatabase(): FlowRegistryDatabase {
 
 function withWriteTransaction(write: (database: FlowRegistryDatabase) => void) {
   const database = openFlowRegistryDatabase();
-  runOpenClawStateWriteTransaction(() => {
+  runQuietCoreStateWriteTransaction(() => {
     write(database);
   });
 }
@@ -257,5 +257,5 @@ export function deleteTaskFlowRegistryRecordFromSqlite(flowId: string) {
 
 export function closeTaskFlowRegistryDatabase() {
   cachedDatabase = null;
-  closeOpenClawStateDatabase();
+  closeQuietCoreStateDatabase();
 }

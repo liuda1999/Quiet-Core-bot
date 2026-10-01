@@ -1,4 +1,4 @@
-// Packed Plugin Sdk Type Smoke script supports OpenClaw repository automation.
+// Packed Plugin Sdk Type Smoke script supports QuietCore repository automation.
 type PublicPluginSdkModules = [
   typeof import("quiet-core-bot/plugin-sdk"),
   typeof import("quiet-core-bot/plugin-sdk/channel-entry-contract"),

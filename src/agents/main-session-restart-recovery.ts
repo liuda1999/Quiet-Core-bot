@@ -17,7 +17,7 @@ import {
   resolveSessionTranscriptPathInDir,
 } from "../config/sessions.js";
 import { applyRestartRecoveryLifecycle } from "../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { callGateway } from "../gateway/call.js";
 import { readSessionMessagesAsync } from "../gateway/session-transcript-readers.js";
 import { resolveGatewaySessionStoreTarget } from "../gateway/session-utils.js";
@@ -130,8 +130,8 @@ function resolveEntryTranscriptLockPaths(params: {
 }
 
 export async function markRestartAbortedMainSessions(params: {
-  cfg?: OpenClawConfig;
-  additionalCfgs?: Iterable<OpenClawConfig | undefined>;
+  cfg?: QuietCoreConfig;
+  additionalCfgs?: Iterable<QuietCoreConfig | undefined>;
   stateDir?: string;
   sessionKeys?: Iterable<string>;
   sessionIds?: Iterable<string>;
@@ -176,7 +176,7 @@ export async function markRestartAbortedMainSessions(params: {
       : { ...process.env, QUIET_CORE_STATE_DIR: params.stateDir };
   const stateDir = resolveStateDir(env);
   const configs = [params.cfg, ...(params.additionalCfgs ?? [])].filter(
-    (cfg): cfg is OpenClawConfig => Boolean(cfg),
+    (cfg): cfg is QuietCoreConfig => Boolean(cfg),
   );
   for (const cfg of configs) {
     try {
@@ -309,7 +309,7 @@ export async function markRestartAbortedMainSessions(params: {
 }
 
 export async function markStartupOrphanedMainSessionsForRecovery(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   stateDir?: string;
   activeSessionIds?: Iterable<string>;
   activeSessionKeys?: Iterable<string>;
@@ -485,7 +485,7 @@ async function markSessionFailed(params: {
 }
 
 async function sendUnresumableSessionNotice(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   entry: SessionEntry;
   reason: string;
   sessionKey: string;
@@ -540,7 +540,7 @@ async function sendUnresumableSessionNotice(params: {
 }
 
 function resolveRestartRecoveryDeliveryContext(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   entry: SessionEntry;
   includeSessionDeliveryFallback?: boolean;
   sessionKey: string;
@@ -574,7 +574,7 @@ function resolveRestartRecoveryDeliveryContext(params: {
 }
 
 async function resumeMainSession(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   entry: SessionEntry;
   storePath: string;
   sessionKey: string;
@@ -711,7 +711,7 @@ export async function markRestartAbortedMainSessionsFromLocks(params: {
 }
 
 function isRoutableRecoveryStore(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   sessionKey: string;
   storePath: string;
 }): boolean {
@@ -734,7 +734,7 @@ function isRoutableRecoveryStore(params: {
 }
 
 async function recoverStore(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   storePath: string;
   resumedSessionKeys: Set<string>;
   activeSessionIds?: Iterable<string>;
@@ -872,7 +872,7 @@ async function recoverStore(params: {
 }
 
 async function resolveRestartRecoveryStorePaths(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   stateDir?: string;
 }): Promise<string[]> {
   const storePaths = new Set<string>();
@@ -891,7 +891,7 @@ async function resolveRestartRecoveryStorePaths(params: {
 
 export async function recoverRestartAbortedMainSessions(
   params: {
-    cfg?: OpenClawConfig;
+    cfg?: QuietCoreConfig;
     stateDir?: string;
     resumedSessionKeys?: Set<string>;
     activeSessionIds?: Iterable<string>;
@@ -924,7 +924,7 @@ export async function recoverRestartAbortedMainSessions(
 
 export async function recoverStartupOrphanedMainSessions(
   params: {
-    cfg?: OpenClawConfig;
+    cfg?: QuietCoreConfig;
     stateDir?: string;
     activeSessionIds?: Iterable<string>;
     activeSessionKeys?: Iterable<string>;
@@ -957,7 +957,7 @@ export async function recoverStartupOrphanedMainSessions(
 
 export function scheduleRestartAbortedMainSessionRecovery(
   params: {
-    cfg?: OpenClawConfig;
+    cfg?: QuietCoreConfig;
     delayMs?: number;
     maxRetries?: number;
     stateDir?: string;

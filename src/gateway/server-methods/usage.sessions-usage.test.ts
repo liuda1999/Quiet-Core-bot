@@ -4,7 +4,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { withEnvAsync } from "../../test-utils/env.js";
 
 vi.mock("../../config/config.js", () => {
@@ -122,7 +122,7 @@ const TEST_RUNTIME_CONFIG = {
 
 async function runSessionsUsage(
   params: Record<string, unknown>,
-  config: OpenClawConfig = TEST_RUNTIME_CONFIG,
+  config: QuietCoreConfig = TEST_RUNTIME_CONFIG,
 ) {
   const respond = vi.fn();
   await usageHandlers["sessions.usage"]({
@@ -439,7 +439,7 @@ describe("sessions.usage", () => {
   });
 
   it("keeps global session entries in requested-agent usage lookups", async () => {
-    const config: OpenClawConfig = {
+    const config: QuietCoreConfig = {
       agents: {
         list: [{ id: "main", default: true }, { id: "opus" }],
       },

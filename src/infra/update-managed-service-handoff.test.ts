@@ -5,12 +5,12 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
 import {
-  closeOpenClawStateDatabaseForTest,
-  openOpenClawStateDatabase,
+  closeQuietCoreStateDatabaseForTest,
+  openQuietCoreStateDatabase,
 } from "../state/quiet-core-bot-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "../state/quiet-core-bot-state-db.paths.js";
+import { resolveQuietCoreStateSqlitePath } from "../state/quiet-core-bot-state-db.paths.js";
 import {
   executeSqliteQuerySync,
   executeSqliteQueryTakeFirstSync,
@@ -39,10 +39,10 @@ vi.mock("node:child_process", async () => {
 });
 
 const tempDirs = new Set<string>();
-type GatewayRestartSentinelDatabase = Pick<OpenClawStateKyselyDatabase, "gateway_restart_sentinel">;
+type GatewayRestartSentinelDatabase = Pick<QuietCoreStateKyselyDatabase, "gateway_restart_sentinel">;
 
 afterEach(async () => {
-  closeOpenClawStateDatabaseForTest();
+  closeQuietCoreStateDatabaseForTest();
   spawnMock.mockClear();
   await Promise.all([...tempDirs].map((dir) => fs.rm(dir, { recursive: true, force: true })));
   tempDirs.clear();
@@ -58,7 +58,7 @@ async function pathExists(filePath: string): Promise<boolean> {
 }
 
 function writeRestartSentinelRow(env: NodeJS.ProcessEnv, sentinel: unknown): void {
-  const { db } = openOpenClawStateDatabase({ env });
+  const { db } = openQuietCoreStateDatabase({ env });
   const stateDb = getNodeSqliteKysely<GatewayRestartSentinelDatabase>(db);
   const payload =
     sentinel && typeof sentinel === "object" && (sentinel as { version?: unknown }).version === 1
@@ -108,7 +108,7 @@ function writeRestartSentinelRow(env: NodeJS.ProcessEnv, sentinel: unknown): voi
 }
 
 function readRestartSentinelPayload(env: NodeJS.ProcessEnv): unknown {
-  const { db } = openOpenClawStateDatabase({ env });
+  const { db } = openQuietCoreStateDatabase({ env });
   const stateDb = getNodeSqliteKysely<GatewayRestartSentinelDatabase>(db);
   const row = executeSqliteQueryTakeFirstSync(
     db,
@@ -172,7 +172,7 @@ async function runHelperWithExistingSentinel(params: {
         ...helperParams,
         parentPid: process.pid,
         parentExitTimeoutMs: 1,
-        stateDatabasePath: resolveOpenClawStateSqlitePath(env),
+        stateDatabasePath: resolveQuietCoreStateSqlitePath(env),
         logPath: path.join(tmpDir, "handoff.log"),
         sensitivePaths: [],
       },
@@ -198,7 +198,7 @@ async function runHelperWithExistingSentinel(params: {
 
 async function createLegacyRestartSentinelTable(env: NodeJS.ProcessEnv): Promise<void> {
   const sqlite = await import("node:sqlite");
-  const stateDatabasePath = resolveOpenClawStateSqlitePath(env);
+  const stateDatabasePath = resolveQuietCoreStateSqlitePath(env);
   await fs.mkdir(path.dirname(stateDatabasePath), { recursive: true });
   const db = new sqlite.DatabaseSync(stateDatabasePath);
   try {
@@ -270,7 +270,7 @@ async function runHelperWithCommand(params: {
         parentExitTimeoutMs: 5000,
         cwd: tmpDir,
         commandArgv: params.commandArgv,
-        stateDatabasePath: resolveOpenClawStateSqlitePath({ QUIET_CORE_STATE_DIR: tmpDir }),
+        stateDatabasePath: resolveQuietCoreStateSqlitePath({ QUIET_CORE_STATE_DIR: tmpDir }),
         logPath: path.join(tmpDir, "handoff.log"),
         sensitivePaths: [],
         ...(params.serviceRecovery ? { serviceRecovery: params.serviceRecovery } : {}),
@@ -601,7 +601,7 @@ describe("managed service update handoff", () => {
       },
     });
     if (process.platform !== "win32") {
-      const mode = (await fs.stat(resolveOpenClawStateSqlitePath(env))).mode & 0o777;
+      const mode = (await fs.stat(resolveQuietCoreStateSqlitePath(env))).mode & 0o777;
       expect(mode).toBe(0o600);
     }
   });

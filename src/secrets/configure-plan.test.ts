@@ -1,6 +1,6 @@
 /** Tests secrets configure plan generation and target validation. */
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import {
   TALK_TEST_PROVIDER_API_KEY_PATH,
   TALK_TEST_PROVIDER_ID,
@@ -28,7 +28,7 @@ describe("secrets configure plan helpers", () => {
           botToken: "token", // pragma: allowlist secret
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const candidates = buildConfigureCandidates(config);
     const paths = candidates.map((entry) => entry.path);
@@ -44,7 +44,7 @@ describe("secrets configure plan helpers", () => {
           legacy: { source: "env" },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const next = {
       secrets: {
         providers: {
@@ -52,7 +52,7 @@ describe("secrets configure plan helpers", () => {
           modern: { source: "env" },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const changes = collectConfigureProviderChanges({ original, next });
     expect(Object.keys(changes.upserts).toSorted()).toEqual(["default", "modern"]);
@@ -61,7 +61,7 @@ describe("secrets configure plan helpers", () => {
 
   it("discovers auth-profiles candidates for the selected agent scope", () => {
     const candidates = buildConfigureCandidatesForScope({
-      config: {} as OpenClawConfig,
+      config: {} as QuietCoreConfig,
       authProfiles: {
         agentId: "main",
         store: {
@@ -99,7 +99,7 @@ describe("secrets configure plan helpers", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       authProfiles: {
         agentId: "main",
         store: {
@@ -150,12 +150,12 @@ describe("secrets configure plan helpers", () => {
           },
           apiKey: "demo-talk-key", // pragma: allowlist secret
         },
-      } as OpenClawConfig,
-      authoredOpenClawConfig: {
+      } as QuietCoreConfig,
+      authoredQuietCoreConfig: {
         talk: {
           apiKey: "demo-talk-key", // pragma: allowlist secret
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
     });
 
     const normalized = candidates.find((entry) => entry.path === TALK_TEST_PROVIDER_API_KEY_PATH);

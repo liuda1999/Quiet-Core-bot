@@ -1,4 +1,4 @@
-// OC Path plugin entrypoint registers its OpenClaw integration.
+// OC Path plugin entrypoint registers its QuietCore integration.
 import { definePluginEntry } from "quiet-core-bot/plugin-sdk/plugin-entry";
 import { registerOcPathCli } from "./cli-registration.js";
 

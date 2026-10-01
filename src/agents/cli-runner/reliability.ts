@@ -4,7 +4,7 @@
 import path from "node:path";
 import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
 import type { CliBackendConfig } from "../../config/types.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { AGENT_LANE_SUBAGENT } from "../lanes.js";
 import {
   CLI_FRESH_WATCHDOG_DEFAULTS,
@@ -97,7 +97,7 @@ export function resolveCliNoOutputTimeoutMs(params: {
 }
 
 export function resolveCliRunTimeoutOverrideMs(params: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   lane?: string;
   timeoutMs: number;
   runTimeoutOverrideMs?: number;

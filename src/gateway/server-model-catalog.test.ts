@@ -2,7 +2,7 @@
  * Gateway server model catalog tests.
  */
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { createDeferred } from "../test-utils/deferred.js";
 import type { GatewayModelChoice } from "./server-model-catalog.js";
 import {
@@ -19,7 +19,7 @@ function model(id: string): GatewayModelChoice {
   return { id, name: id, provider: "openai" } as GatewayModelChoice;
 }
 
-const getConfig = () => ({}) as OpenClawConfig;
+const getConfig = () => ({}) as QuietCoreConfig;
 
 function createRefreshingCatalogLoader(
   firstCatalog: GatewayModelChoice[],

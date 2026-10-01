@@ -33,9 +33,9 @@ function setPackageRoot(root: string, name = "quiet-core-bot") {
 }
 
 function expectResolvedPackageRoot(
-  syncResolver: typeof import("./quiet-core-bot-root.js").resolveOpenClawPackageRootSync,
-  asyncResolver: typeof import("./quiet-core-bot-root.js").resolveOpenClawPackageRoot,
-  opts: Parameters<typeof import("./quiet-core-bot-root.js").resolveOpenClawPackageRootSync>[0],
+  syncResolver: typeof import("./quiet-core-bot-root.js").resolveQuietCorePackageRootSync,
+  asyncResolver: typeof import("./quiet-core-bot-root.js").resolveQuietCorePackageRoot,
+  opts: Parameters<typeof import("./quiet-core-bot-root.js").resolveQuietCorePackageRootSync>[0],
   expected: string | null,
 ) {
   expect(syncResolver(opts)).toBe(expected);
@@ -106,21 +106,21 @@ vi.mock("./quiet-core-bot-root.fs.runtime.js", () => ({
   openClawRootFs: mockFsPromisesModule(),
 }));
 
-describe("resolveOpenClawPackageRoot", () => {
-  let resolveOpenClawPackageRoot: typeof import("./quiet-core-bot-root.js").resolveOpenClawPackageRoot;
-  let resolveOpenClawPackageRootSync: typeof import("./quiet-core-bot-root.js").resolveOpenClawPackageRootSync;
-  let clearOpenClawPackageRootCaches: typeof import("./quiet-core-bot-root.js").testing.clearOpenClawPackageRootCaches;
+describe("resolveQuietCorePackageRoot", () => {
+  let resolveQuietCorePackageRoot: typeof import("./quiet-core-bot-root.js").resolveQuietCorePackageRoot;
+  let resolveQuietCorePackageRootSync: typeof import("./quiet-core-bot-root.js").resolveQuietCorePackageRootSync;
+  let clearQuietCorePackageRootCaches: typeof import("./quiet-core-bot-root.js").testing.clearQuietCorePackageRootCaches;
 
   beforeAll(async () => {
     ({
-      resolveOpenClawPackageRoot,
-      resolveOpenClawPackageRootSync,
-      testing: { clearOpenClawPackageRootCaches },
+      resolveQuietCorePackageRoot,
+      resolveQuietCorePackageRootSync,
+      testing: { clearQuietCorePackageRootCaches },
     } = await import("./quiet-core-bot-root.js"));
   });
 
   beforeEach(() => {
-    clearOpenClawPackageRootCaches();
+    clearQuietCorePackageRootCaches();
     state.entries.clear();
     state.realpaths.clear();
     state.realpathErrors.clear();
@@ -239,8 +239,8 @@ describe("resolveOpenClawPackageRoot", () => {
   ])("$name", async ({ setup }) => {
     const { opts, expected } = setup();
     await expectResolvedPackageRoot(
-      resolveOpenClawPackageRootSync,
-      resolveOpenClawPackageRoot,
+      resolveQuietCorePackageRootSync,
+      resolveQuietCorePackageRoot,
       opts,
       expected,
     );

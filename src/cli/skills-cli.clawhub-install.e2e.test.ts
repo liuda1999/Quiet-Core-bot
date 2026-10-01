@@ -15,7 +15,7 @@ async function readRequestBody(req: IncomingMessage): Promise<string> {
   return Buffer.concat(chunks).toString("utf8");
 }
 
-async function spawnOpenClaw(
+async function spawnQuietCore(
   args: string[],
   options: { cwd: string; env: NodeJS.ProcessEnv },
 ): Promise<{ status: number | null; stdout: string; stderr: string }> {
@@ -108,7 +108,7 @@ describe("quiet-core-bot skills install ClawHub GitHub-backed E2E", () => {
     const registry = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
     const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-clawhub-cli-e2e-"));
     try {
-      const result = await spawnOpenClaw(["skills", "install", "aiq-deploy", "--global"], {
+      const result = await spawnQuietCore(["skills", "install", "aiq-deploy", "--global"], {
         cwd: process.cwd(),
         env: {
           ...process.env,

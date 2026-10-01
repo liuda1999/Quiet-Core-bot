@@ -4,7 +4,7 @@ import {
   transformConfigFileWithRetry,
   validateConfigObjectWithPlugins,
 } from "../../config/config.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { setPluginEnabledInConfig } from "../../plugins/toggle-config.js";
 
 export class AutoReplyConfigMutationError extends Error {}
@@ -19,7 +19,7 @@ export function formatAutoReplyConfigMutationError(error: unknown): string | nul
 function assertValidConfig(
   next: Record<string, unknown>,
   action: string,
-): { config: OpenClawConfig } {
+): { config: QuietCoreConfig } {
   const validated = validateConfigObjectWithPlugins(next);
   if (!validated.ok) {
     const issue = validated.issues[0];
@@ -74,7 +74,7 @@ export async function setPluginEnabledFromCommand(params: {
   pluginId: string;
   enabled: boolean;
   action: "enable" | "disable";
-}): Promise<OpenClawConfig> {
+}): Promise<QuietCoreConfig> {
   const committed = await transformConfigFileWithRetry({
     afterWrite: { mode: "auto" },
     transform: (currentConfig) => {
@@ -100,7 +100,7 @@ type AllowlistConfigEditResult =
 type MaybePromise<T> = T | Promise<T>;
 
 type ApplyAllowlistConfigEdit = (params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   parsedConfig: Record<string, unknown>;
   accountId?: string | null;
   scope: "dm" | "group";
@@ -110,7 +110,7 @@ type ApplyAllowlistConfigEdit = (params: {
 
 /** Applies a channel allowlist edit through a plugin-provided config mutation hook. */
 export async function applyAllowlistConfigMutation(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   accountId?: string | null;
   scope: "dm" | "group";
   action: "add" | "remove";

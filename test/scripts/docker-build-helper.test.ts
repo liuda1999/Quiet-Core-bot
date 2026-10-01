@@ -1908,7 +1908,7 @@ grep -qx -- "QUIET_CORE_E2E_COMMAND_TIMEOUT=23s" "$TMPDIR/package-args"
 
       expect(result.status).toBe(2);
       expect(result.stderr).toContain(`invalid ${envName}: ${value}`);
-      expect(result.stderr).not.toContain("OpenClaw package tarball does not exist");
+      expect(result.stderr).not.toContain("QuietCore package tarball does not exist");
     },
   );
 
@@ -1921,7 +1921,7 @@ grep -qx -- "QUIET_CORE_E2E_COMMAND_TIMEOUT=23s" "$TMPDIR/package-args"
     const pluginCorrupt = readFileSync(PLUGIN_UPDATE_CORRUPT_SCENARIO_PATH, "utf8");
 
     expect(multiNode).toContain(
-      'quiet_core_bot_e2e_install_package "$ARTIFACTS/install-a.log" "OpenClaw package under node-A prefix" "$NPM_PREFIX_A"',
+      'quiet_core_bot_e2e_install_package "$ARTIFACTS/install-a.log" "QuietCore package under node-A prefix" "$NPM_PREFIX_A"',
     );
     expect(updateChannel).toContain(
       'quiet_core_bot_e2e_maybe_timeout "${QUIET_CORE_E2E_NPM_INSTALL_TIMEOUT:-600s}" npm install --omit=optional --no-fund --no-audit',
@@ -1968,7 +1968,7 @@ grep -qx -- "QUIET_CORE_E2E_COMMAND_TIMEOUT=23s" "$TMPDIR/package-args"
     }
   });
 
-  it("wraps package-backed scenario OpenClaw CLI calls with the shared timeout helper", () => {
+  it("wraps package-backed scenario QuietCore CLI calls with the shared timeout helper", () => {
     const paths = [
       LIVE_PLUGIN_TOOL_DOCKER_E2E_PATH,
       NPM_ONBOARD_CHANNEL_AGENT_DOCKER_E2E_PATH,
@@ -2206,7 +2206,7 @@ fi
     }
   });
 
-  it("bounds upgrade survivor foreground OpenClaw CLI calls", () => {
+  it("bounds upgrade survivor foreground QuietCore CLI calls", () => {
     const runner = readFileSync(UPGRADE_SURVIVOR_DOCKER_E2E_PATH, "utf8");
     const publishedRunner = readFileSync(UPGRADE_SURVIVOR_RUN_SCRIPT, "utf8");
     const updateRestartAuth = readFileSync(UPGRADE_SURVIVOR_UPDATE_RESTART_AUTH_PATH, "utf8");

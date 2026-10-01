@@ -7,10 +7,10 @@ import { executeSqliteQueryTakeFirstSync, getNodeSqliteKysely } from "../infra/k
 import { readPersistedInstalledPluginIndex } from "../plugins/installed-plugin-index-store.js";
 import type { PluginManifestRegistry } from "../plugins/manifest-registry.js";
 import { clearLoadPluginMetadataSnapshotMemo } from "../plugins/plugin-metadata-snapshot.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
 import {
-  closeOpenClawStateDatabaseForTest,
-  openOpenClawStateDatabase,
+  closeQuietCoreStateDatabaseForTest,
+  openQuietCoreStateDatabase,
 } from "../state/quiet-core-bot-state-db.js";
 import { createSuiteTempRootTracker } from "../test-helpers/temp-dir.js";
 import { withEnvAsync } from "../test-utils/env.js";
@@ -26,10 +26,10 @@ import {
   writeConfigFile,
 } from "./io.js";
 import { ConfigMutationConflictError } from "./mutation-conflict.js";
-import type { ConfigFileSnapshot, OpenClawConfig } from "./types.quiet-core-bot.js";
+import type { ConfigFileSnapshot, QuietCoreConfig } from "./types.quiet-core-bot.js";
 
 const CONFIG_CLOBBER_SNAPSHOT_LIMIT = 32;
-type ConfigHealthDatabase = Pick<OpenClawStateKyselyDatabase, "config_health_entries">;
+type ConfigHealthDatabase = Pick<QuietCoreStateKyselyDatabase, "config_health_entries">;
 
 // Mock the plugin manifest registry so we can register a fake channel whose
 // AJV JSON Schema carries a `default` value.  This lets the #56772 regression
@@ -107,7 +107,7 @@ describe("config io write", () => {
   });
 
   afterEach(() => {
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
     resetConfigRuntimeState();
     clearLoadPluginMetadataSnapshotMemo();
     mockMaintainConfigBackups.mockReset();
@@ -115,13 +115,13 @@ describe("config io write", () => {
   });
 
   afterAll(async () => {
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
     resetConfigRuntimeState();
     await suiteRootTracker.cleanup();
   });
 
   function readConfigHealthRow(home: string, configPath: string) {
-    const { db } = openOpenClawStateDatabase({ env: { HOME: home } as NodeJS.ProcessEnv });
+    const { db } = openQuietCoreStateDatabase({ env: { HOME: home } as NodeJS.ProcessEnv });
     const healthDb = getNodeSqliteKysely<ConfigHealthDatabase>(db);
     return executeSqliteQueryTakeFirstSync(
       db,
@@ -1213,7 +1213,7 @@ describe("config io write", () => {
         { baseSnapshot },
       );
 
-      const persisted = JSON.parse(await fs.readFile(configPath, "utf-8")) as OpenClawConfig;
+      const persisted = JSON.parse(await fs.readFile(configPath, "utf-8")) as QuietCoreConfig;
       expect(persisted.agents?.defaults?.params).toEqual({
         transport: "sse",
         openaiWsWarmup: false,
@@ -1406,7 +1406,7 @@ describe("config io write", () => {
       const sourceConfig = {
         env: { QUIET_CORE_CONFIG_PATH: configuredNextPath },
         gateway: { mode: "local" },
-      } satisfies OpenClawConfig;
+      } satisfies QuietCoreConfig;
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(configPath, `${JSON.stringify(sourceConfig, null, 2)}\n`, "utf-8");
       const io = createFastConfigIO(home);
@@ -1424,7 +1424,7 @@ describe("config io write", () => {
       const sourceConfig = {
         env: { QUIET_CORE_CONFIG_PATH: configuredNextPath },
         gateway: { mode: "local" },
-      } satisfies OpenClawConfig;
+      } satisfies QuietCoreConfig;
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(configPath, `${JSON.stringify(sourceConfig, null, 2)}\n`, "utf-8");
       await fs.writeFile(
@@ -1458,10 +1458,10 @@ describe("config io write", () => {
         },
       );
 
-      const initialConfig = JSON.parse(await fs.readFile(configPath, "utf-8")) as OpenClawConfig;
+      const initialConfig = JSON.parse(await fs.readFile(configPath, "utf-8")) as QuietCoreConfig;
       const persisted = JSON.parse(
         await fs.readFile(configuredNextPath, "utf-8"),
-      ) as OpenClawConfig;
+      ) as QuietCoreConfig;
       expect(initialConfig.gateway?.mode).toBe("local");
       expect(persisted.gateway?.mode).toBe("remote");
     });
@@ -1496,10 +1496,10 @@ describe("config io write", () => {
 
       const expectedConfig = JSON.parse(
         await fs.readFile(expectedConfigPath, "utf-8"),
-      ) as OpenClawConfig;
+      ) as QuietCoreConfig;
       const activeConfig = JSON.parse(
         await fs.readFile(activeConfigPath, "utf-8"),
-      ) as OpenClawConfig;
+      ) as QuietCoreConfig;
       expect(expectedConfig.gateway?.mode).toBe("local");
       expect(activeConfig.gateway?.mode).toBe("remote");
     });
@@ -2464,7 +2464,7 @@ describe("config io write", () => {
     await withSuiteHome(async (home) => {
       const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
       await fs.mkdir(path.dirname(configPath), { recursive: true });
-      const initialConfig = { gateway: { mode: "local", port: 18789 } } satisfies OpenClawConfig;
+      const initialConfig = { gateway: { mode: "local", port: 18789 } } satisfies QuietCoreConfig;
       const initialRaw = `${JSON.stringify(initialConfig, null, 2)}\n`;
       await fs.writeFile(configPath, initialRaw, "utf-8");
 
@@ -2492,7 +2492,7 @@ describe("config io write", () => {
     await withSuiteHome(async (home) => {
       const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
       await fs.mkdir(path.dirname(configPath), { recursive: true });
-      const initialConfig = { gateway: { mode: "local", port: 18789 } } satisfies OpenClawConfig;
+      const initialConfig = { gateway: { mode: "local", port: 18789 } } satisfies QuietCoreConfig;
       await fs.writeFile(configPath, `${JSON.stringify(initialConfig, null, 2)}\n`, "utf-8");
       const baseSnapshot = {
         path: configPath,
@@ -2526,7 +2526,7 @@ describe("config io write", () => {
             ),
           ).rejects.toThrow(/runtime snapshot refresh failed: synthetic refresh failure/);
 
-          const persisted = JSON.parse(await fs.readFile(configPath, "utf-8")) as OpenClawConfig;
+          const persisted = JSON.parse(await fs.readFile(configPath, "utf-8")) as QuietCoreConfig;
           expect(persisted.gateway).toEqual({ mode: "local", port: 19001 });
         });
       } finally {
@@ -2588,7 +2588,7 @@ describe("config io write", () => {
             },
           },
         },
-      } satisfies OpenClawConfig;
+      } satisfies QuietCoreConfig;
       const initialRaw = `${JSON.stringify(initialConfig, null, 2)}\n`;
       await fs.writeFile(configPath, initialRaw, "utf-8");
 
@@ -2628,7 +2628,7 @@ describe("config io write", () => {
     await withSuiteHome(async (home) => {
       const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
       const initialRaw = `${JSON.stringify({ gateway: { mode: "local" } }, null, 2)}\n`;
-      let observedSource: OpenClawConfig | undefined;
+      let observedSource: QuietCoreConfig | undefined;
 
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(configPath, initialRaw, "utf-8");
@@ -2667,7 +2667,7 @@ describe("config io write", () => {
         ...process.env,
         QUIET_CORE_CONFIG_PATH: configPath,
       } as NodeJS.ProcessEnv;
-      let observedSource: OpenClawConfig | undefined;
+      let observedSource: QuietCoreConfig | undefined;
 
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(configPath, initialRaw, "utf-8");
@@ -2699,7 +2699,7 @@ describe("config io write", () => {
     await withSuiteHome(async (home) => {
       const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
       const envKey = "QUIET_CORE_TEST_RUNTIME_ROLLBACK_ENV";
-      const initialConfig = { gateway: { mode: "local", port: 18789 } } satisfies OpenClawConfig;
+      const initialConfig = { gateway: { mode: "local", port: 18789 } } satisfies QuietCoreConfig;
       const initialRaw = `${JSON.stringify(initialConfig, null, 2)}\n`;
 
       await fs.mkdir(path.dirname(configPath), { recursive: true });
@@ -2740,7 +2740,7 @@ describe("config io write", () => {
     await withSuiteHome(async (home) => {
       const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
       const nextConfigPath = path.join(home, ".quiet-core-bot", "next.json");
-      const initialConfig = { gateway: { mode: "local", port: 18789 } } satisfies OpenClawConfig;
+      const initialConfig = { gateway: { mode: "local", port: 18789 } } satisfies QuietCoreConfig;
       const initialRaw = `${JSON.stringify(initialConfig, null, 2)}\n`;
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(configPath, initialRaw, "utf-8");
@@ -2780,7 +2780,7 @@ describe("config io write", () => {
     await withSuiteHome(async (home) => {
       const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
       const otherConfigPath = path.join(home, ".quiet-core-bot", "other.json");
-      const initialConfig = { gateway: { mode: "local", port: 18789 } } satisfies OpenClawConfig;
+      const initialConfig = { gateway: { mode: "local", port: 18789 } } satisfies QuietCoreConfig;
       const initialRaw = `${JSON.stringify(initialConfig, null, 2)}\n`;
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(configPath, initialRaw, "utf-8");
@@ -2880,7 +2880,7 @@ describe("config io write", () => {
             explicitSetPaths: [["plugins", "entries", "demo", "config"]],
           });
 
-          const persisted = JSON.parse(await fs.readFile(configPath, "utf-8")) as OpenClawConfig;
+          const persisted = JSON.parse(await fs.readFile(configPath, "utf-8")) as QuietCoreConfig;
           expect(persisted.plugins?.entries?.demo?.config).toStrictEqual({ mode: "auto" });
         });
       } finally {
@@ -2923,7 +2923,7 @@ describe("config io write", () => {
 
       try {
         // Plugin is enabled but missing required "token" — validation fails without skip.
-        const cfg: OpenClawConfig = {
+        const cfg: QuietCoreConfig = {
           agents: { list: [{ id: "main", default: true }] },
           plugins: { entries: { "strict-plugin": { enabled: true } } },
         };
@@ -2936,7 +2936,7 @@ describe("config io write", () => {
             /Config validation failed/,
           );
           await expect(
-            writeConfigFile({ agents: { list: "not-array" } } as unknown as OpenClawConfig, {
+            writeConfigFile({ agents: { list: "not-array" } } as unknown as QuietCoreConfig, {
               skipPluginValidation: true,
             }),
           ).rejects.toThrow(/Config validation failed/);
@@ -2978,7 +2978,7 @@ describe("config io write", () => {
         { baseSnapshot: snapshot },
       );
 
-      const persisted = JSON.parse(await fs.readFile(configPath, "utf-8")) as OpenClawConfig;
+      const persisted = JSON.parse(await fs.readFile(configPath, "utf-8")) as QuietCoreConfig;
       expect(persisted.logging?.file).toBe("~/quiet-core-bot-upgrade-survivor/gateway.jsonl");
       expect(persisted.logging?.level).toBe("debug");
     });

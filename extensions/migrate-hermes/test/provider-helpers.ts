@@ -2,8 +2,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import type { MigrationProviderContext } from "quiet-core-bot/plugin-sdk/plugin-entry";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/provider-auth";
-import { resolvePreferredOpenClawTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/provider-auth";
+import { resolvePreferredQuietCoreTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";
 
 const tempRoots = new Set<string>();
 const TEMP_ROOT_PREFIX = "quiet-core-bot-migrate-hermes-";
@@ -18,7 +18,7 @@ const logger: MigrationProviderContext["logger"] = {
 };
 
 export async function makeTempRoot() {
-  const root = await fs.mkdtemp(path.join(resolvePreferredOpenClawTmpDir(), TEMP_ROOT_PREFIX));
+  const root = await fs.mkdtemp(path.join(resolvePreferredQuietCoreTmpDir(), TEMP_ROOT_PREFIX));
   tempRoots.add(root);
   return root;
 }
@@ -34,11 +34,11 @@ export async function writeFile(filePath: string, content: string) {
 }
 
 export function makeConfigRuntime(
-  config: OpenClawConfig,
-  onWrite?: (next: OpenClawConfig) => void,
+  config: QuietCoreConfig,
+  onWrite?: (next: QuietCoreConfig) => void,
 ): NonNullable<MigrationProviderContext["runtime"]> {
-  const commitConfig = (next: OpenClawConfig) => {
-    (Object.keys(config) as Array<keyof OpenClawConfig>).forEach((key) => delete config[key]);
+  const commitConfig = (next: QuietCoreConfig) => {
+    (Object.keys(config) as Array<keyof QuietCoreConfig>).forEach((key) => delete config[key]);
     Object.assign(config, next);
     onWrite?.(next);
   };
@@ -51,7 +51,7 @@ export function makeConfigRuntime(
         mutate,
       }: {
         afterWrite?: unknown;
-        mutate: (draft: OpenClawConfig, context: unknown) => Promise<unknown> | void;
+        mutate: (draft: QuietCoreConfig, context: unknown) => Promise<unknown> | void;
       }) => {
         const next = structuredClone(config);
         const result = await mutate(next, {
@@ -72,7 +72,7 @@ export function makeConfigRuntime(
         nextConfig,
       }: {
         afterWrite?: unknown;
-        nextConfig: OpenClawConfig;
+        nextConfig: QuietCoreConfig;
       }) => {
         commitConfig(nextConfig);
         return { afterWrite, followUp: { mode: "auto", requiresRestart: false }, nextConfig };
@@ -85,10 +85,10 @@ export function makeContext(params: {
   source: string;
   stateDir: string;
   workspaceDir: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   includeSecrets?: boolean;
   overwrite?: boolean;
-  model?: NonNullable<NonNullable<OpenClawConfig["agents"]>["defaults"]>["model"];
+  model?: NonNullable<NonNullable<QuietCoreConfig["agents"]>["defaults"]>["model"];
   reportDir?: string;
   runtime?: MigrationProviderContext["runtime"];
 }): MigrationProviderContext {
@@ -101,7 +101,7 @@ export function makeContext(params: {
           ...(params.model !== undefined ? { model: params.model } : {}),
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
   return {
     config,
     stateDir: params.stateDir,

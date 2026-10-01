@@ -1,12 +1,12 @@
 // Workboard plugin module implements tools behavior.
 import { jsonResult, readStringParam } from "quiet-core-bot/plugin-sdk/core";
-import type { AnyAgentTool, OpenClawPluginApi } from "quiet-core-bot/plugin-sdk/plugin-entry";
-import type { OpenClawPluginToolContext } from "quiet-core-bot/plugin-sdk/plugin-entry";
+import type { AnyAgentTool, QuietCorePluginApi } from "quiet-core-bot/plugin-sdk/plugin-entry";
+import type { QuietCorePluginToolContext } from "quiet-core-bot/plugin-sdk/plugin-entry";
 import { Type } from "typebox";
 import { WorkboardStore } from "./store.js";
 import type { WorkboardCard } from "./types.js";
 
-function contextOwner(ctx: OpenClawPluginToolContext | undefined): string {
+function contextOwner(ctx: QuietCorePluginToolContext | undefined): string {
   const record = (ctx ?? {}) as Record<string, unknown>;
   return (
     (typeof record.agentId === "string" && record.agentId) ||
@@ -186,8 +186,8 @@ const CardIdSchema = Type.Object(
 );
 
 export function createWorkboardTools(params: {
-  api: OpenClawPluginApi;
-  context?: OpenClawPluginToolContext;
+  api: QuietCorePluginApi;
+  context?: QuietCorePluginToolContext;
   store?: WorkboardStore;
 }): AnyAgentTool[] {
   const store = params.store ?? WorkboardStore.openSqlite();

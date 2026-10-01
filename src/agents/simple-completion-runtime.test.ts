@@ -1,7 +1,7 @@
 // Simple completion runtime tests cover model resolution, provider auth, and
 // one-shot completion wiring before requests reach the shared LLM stream path.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { Model } from "../llm/types.js";
 
 // Hoisted mocks keep Vitest module replacement stable while the implementation
@@ -559,7 +559,7 @@ describe("prepareSimpleCompletionModelForAgent", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     hoisted.resolveModelAsyncMock.mockResolvedValueOnce({
       model: {
         provider: "openai",

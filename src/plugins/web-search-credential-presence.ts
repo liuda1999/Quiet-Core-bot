@@ -1,5 +1,5 @@
 // Checks web-search credential presence from config and plugin metadata.
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { loadManifestMetadataSnapshot } from "./manifest-contract-eligibility.js";
 import type { PluginManifestRecord } from "./manifest-registry.js";
 
@@ -23,7 +23,7 @@ function hasConfiguredSearchCredentialCandidate(searchConfig: unknown): boolean 
   );
 }
 
-function hasConfiguredPluginWebSearchCandidate(config: OpenClawConfig): boolean {
+function hasConfiguredPluginWebSearchCandidate(config: QuietCoreConfig): boolean {
   const entries = isRecord(config.plugins?.entries) ? config.plugins.entries : undefined;
   if (!entries) {
     return false;
@@ -35,7 +35,7 @@ function hasConfiguredPluginWebSearchCandidate(config: OpenClawConfig): boolean 
 }
 
 function hasManifestWebSearchEnvCredentialCandidate(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
   origin?: PluginManifestRecord["origin"];
 }): boolean {
@@ -62,7 +62,7 @@ function hasManifestWebSearchEnvCredentialCandidate(params: {
 }
 
 export function hasConfiguredWebSearchCredential(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
   searchConfig?: Record<string, unknown>;
   origin?: PluginManifestRecord["origin"];

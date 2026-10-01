@@ -1,6 +1,6 @@
 /** Converts live or stored session routing into cron delivery config. */
 import { extractDeliveryInfo } from "../config/sessions/delivery-info.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   normalizeDeliveryContext,
   type DeliveryContext,
@@ -31,7 +31,7 @@ export function cronDeliveryFromContext(context?: DeliveryContext): CronDelivery
 
 /** Recovers delivery context from a stored session key captured when the cron job was created. */
 export function resolveCronStoredDeliveryContext(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   sessionKey?: string;
 }): DeliveryContext | undefined {
   const sessionKey = params.sessionKey?.trim();
@@ -48,7 +48,7 @@ export function resolveCronStoredDeliveryContext(params: {
 
 /** Resolves initial cron delivery, preferring the live context before falling back to session storage. */
 export function resolveCronCreationDelivery(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   currentDeliveryContext?: DeliveryContext;
   agentSessionKey?: string;
 }): CronDelivery | null {

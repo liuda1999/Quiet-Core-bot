@@ -13,7 +13,7 @@ import {
   validateCronUpdateParams,
   validateWakeParams,
 } from "../../../packages/gateway-protocol/src/index.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { resolveCronDeliveryPreviews } from "../../cron/delivery-preview.js";
 import { assertCronDeliveryInputNonBlankFields } from "../../cron/delivery-target-validation.js";
 import { normalizeCronJobCreate, normalizeCronJobPatch } from "../../cron/normalize.js";
@@ -66,11 +66,11 @@ function compactCronListJob(job: CronJob) {
   };
 }
 
-async function listConfiguredAnnounceChannelIds(cfg: OpenClawConfig): Promise<string[]> {
+async function listConfiguredAnnounceChannelIds(cfg: QuietCoreConfig): Promise<string[]> {
   return await listConfiguredMessageChannels(cfg);
 }
 
-function hasExplicitChannelConfigEntry(cfg: OpenClawConfig): boolean {
+function hasExplicitChannelConfigEntry(cfg: QuietCoreConfig): boolean {
   const channels = cfg.channels;
   if (!channels || typeof channels !== "object" || Array.isArray(channels)) {
     return false;
@@ -87,7 +87,7 @@ function hasExplicitChannelConfigEntry(cfg: OpenClawConfig): boolean {
 }
 
 async function assertConfiguredAnnounceChannel(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   channel?: string;
   field: "delivery.channel" | "delivery.failureDestination.channel";
 }) {
@@ -155,7 +155,7 @@ function assertCompatibleAnnounceTarget(params: {
 }
 
 async function assertValidCronAnnounceDelivery(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   delivery?: CronDelivery;
 }) {
   if (params.delivery && (params.delivery.mode ?? "announce") === "announce") {
@@ -200,7 +200,7 @@ async function assertValidCronAnnounceDelivery(params: {
   }
 }
 
-async function assertValidCronCreateDelivery(cfg: OpenClawConfig, jobCreate: CronJobCreate) {
+async function assertValidCronCreateDelivery(cfg: QuietCoreConfig, jobCreate: CronJobCreate) {
   await assertValidCronAnnounceDelivery({
     cfg,
     delivery: jobCreate.delivery,
@@ -208,7 +208,7 @@ async function assertValidCronCreateDelivery(cfg: OpenClawConfig, jobCreate: Cro
 }
 
 async function assertValidCronUpdatePatch(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   defaultAgentId?: string;
   currentJob: CronJob;
   patch: CronJobPatch;

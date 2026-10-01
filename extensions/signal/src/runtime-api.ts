@@ -4,9 +4,9 @@
 export type { ChannelMessageActionAdapter } from "quiet-core-bot/plugin-sdk/channel-contract";
 export { buildChannelConfigSchema, SignalConfigSchema } from "../config-api.js";
 export { PAIRING_APPROVED_MESSAGE } from "quiet-core-bot/plugin-sdk/channel-status";
-import type { OpenClawConfig as RuntimeOpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
-export type { RuntimeOpenClawConfig as OpenClawConfig };
-export type { OpenClawPluginApi, PluginRuntime } from "quiet-core-bot/plugin-sdk/core";
+import type { QuietCoreConfig as RuntimeQuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+export type { RuntimeQuietCoreConfig as QuietCoreConfig };
+export type { QuietCorePluginApi, PluginRuntime } from "quiet-core-bot/plugin-sdk/core";
 export type { ChannelPlugin } from "quiet-core-bot/plugin-sdk/core";
 export {
   DEFAULT_ACCOUNT_ID,

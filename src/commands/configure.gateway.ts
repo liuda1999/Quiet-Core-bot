@@ -9,7 +9,7 @@ import { note } from "../../packages/terminal-core/src/note.js";
 import { formatPortRangeHint } from "../cli/error-format.js";
 import { parsePort } from "../cli/shared/parse-port.js";
 import { resolveGatewayPort } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { isValidEnvSecretRefId, type SecretInput } from "../config/types.secrets.js";
 import {
   maybeAddTailnetOriginToControlUiAllowedOrigins,
@@ -41,10 +41,10 @@ function validateGatewayPortInput(value: unknown): string | undefined {
 
 /** Prompt for local Gateway network/auth settings and return config plus call token. */
 export async function promptGatewayConfig(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   runtime: RuntimeEnv,
 ): Promise<{
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   port: number;
   token?: string;
 }> {

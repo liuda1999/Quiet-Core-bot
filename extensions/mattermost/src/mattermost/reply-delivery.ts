@@ -1,5 +1,5 @@
 // Mattermost plugin module implements reply delivery behavior.
-import type { OpenClawConfig, PluginRuntime } from "quiet-core-bot/plugin-sdk/core";
+import type { QuietCoreConfig, PluginRuntime } from "quiet-core-bot/plugin-sdk/core";
 import { getAgentScopedMediaLocalRoots } from "quiet-core-bot/plugin-sdk/media-runtime";
 import {
   deliverTextOrMediaReply,
@@ -22,7 +22,7 @@ type SendMattermostMessage = (
   to: string,
   text: string,
   opts: {
-    cfg: OpenClawConfig;
+    cfg: QuietCoreConfig;
     accountId?: string;
     mediaUrl?: string;
     mediaLocalRoots?: readonly string[];
@@ -90,7 +90,7 @@ export type MattermostReplyDeliveryOutcome = "reasoning_skipped" | "empty" | "te
 
 export async function deliverMattermostReplyPayload(params: {
   core: PluginRuntime;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   payload: ReplyPayload;
   to: string;
   accountId: string;

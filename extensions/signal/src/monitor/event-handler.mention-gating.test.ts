@@ -1,6 +1,6 @@
 // Signal tests cover event handler.mention gating plugin behavior.
 import { buildDispatchInboundCaptureMock } from "quiet-core-bot/plugin-sdk/channel-contract-testing";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import type { MsgContext } from "quiet-core-bot/plugin-sdk/reply-runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -107,7 +107,7 @@ function createSignalConfig(params: { requireMention: boolean; mentionPattern?: 
         groups: { "*": { requireMention: params.requireMention } },
       },
     },
-  } as unknown as OpenClawConfig;
+  } as unknown as QuietCoreConfig;
 }
 
 async function expectSkippedGroupHistory(opts: GroupEventOpts, expectedBody: string) {
@@ -161,7 +161,7 @@ describe("signal mention gating", () => {
               groups: { g1: {} },
             },
           },
-        } as unknown as OpenClawConfig,
+        } as unknown as QuietCoreConfig,
         groupPolicy: "allowlist",
         groupAllowFrom: ["group:g1"],
       }),

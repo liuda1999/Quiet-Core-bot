@@ -1,6 +1,6 @@
 // Document extractor runtime helpers choose lazy extraction adapters by media type.
 import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type {
   DocumentExtractionRequest,
   DocumentExtractionResult,
@@ -8,14 +8,14 @@ import type {
 import { resolvePluginDocumentExtractors } from "../plugins/document-extractors.runtime.js";
 import { createConfigScopedPromiseLoader } from "../plugins/plugin-cache-primitives.js";
 
-const documentExtractorLoader = createConfigScopedPromiseLoader((config?: OpenClawConfig) =>
+const documentExtractorLoader = createConfigScopedPromiseLoader((config?: QuietCoreConfig) =>
   resolvePluginDocumentExtractors(config ? { config } : undefined),
 );
 
 /** Runs the first matching plugin document extractor and tags successful results with its extractor id. */
 export async function extractDocumentContent(
   params: DocumentExtractionRequest & {
-    config?: OpenClawConfig;
+    config?: QuietCoreConfig;
   },
 ): Promise<(DocumentExtractionResult & { extractor: string }) | null> {
   const mimeType = normalizeLowercaseStringOrEmpty(params.mimeType);

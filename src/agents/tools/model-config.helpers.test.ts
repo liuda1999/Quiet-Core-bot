@@ -1,7 +1,7 @@
 // Model config helper tests cover provider auth detection across config and
 // stored agent auth profiles for reusable media tools.
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import type { AuthProfileCredential, AuthProfileStore } from "../auth-profiles/types.js";
 import {
   hasDirectProviderApiKeyAuthForTool,
@@ -27,7 +27,7 @@ const codexSubstitute = {
 const openAiKeep = { kind: "keep", ref: `openai/${MODEL}` } satisfies Decision;
 const drop = { kind: "drop" } satisfies Decision;
 
-const openAiRefCfg: OpenClawConfig = {
+const openAiRefCfg: QuietCoreConfig = {
   models: {
     providers: {
       openai: {
@@ -99,7 +99,7 @@ describe("hasProviderAuthForTool", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expect(hasProviderAuthForTool({ provider: "hatchery", cfg })).toBe(true);
   });
@@ -170,7 +170,7 @@ describe("resolveOpenAiImageMediaCandidate", () => {
   });
 
   it("honors auth order when choosing between direct OpenAI and Codex media", () => {
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       auth: {
         order: {
           openai: ["openai:chatgpt"],
@@ -187,7 +187,7 @@ describe("resolveOpenAiImageMediaCandidate", () => {
   });
 
   it("drops Codex media when auth order excludes subscription-style auth", () => {
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       auth: {
         order: {
           openai: ["openai:api-key"],

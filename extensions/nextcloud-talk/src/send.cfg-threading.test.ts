@@ -4,7 +4,7 @@ import {
   createSendCfgThreadingRuntime,
   expectProvidedCfgSkipsRuntimeLoad,
 } from "quiet-core-bot/plugin-sdk/channel-test-helpers";
-import type { OpenClawConfig as CoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig as CoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const hoisted = vi.hoisted(() => ({

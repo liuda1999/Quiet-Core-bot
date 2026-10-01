@@ -128,7 +128,7 @@ import {
 } from "./runtime-snapshot.js";
 export { projectConfigOntoRuntimeSourceSnapshot } from "./runtime-source-projection.js";
 import { resolveShellEnvExpectedKeys } from "./shell-env-expected-keys.js";
-import type { OpenClawConfig, ConfigFileSnapshot, LegacyConfigIssue } from "./types.js";
+import type { QuietCoreConfig, ConfigFileSnapshot, LegacyConfigIssue } from "./types.js";
 import {
   validateConfigObjectRawWithPlugins,
   validateConfigObjectWithPlugins,
@@ -171,7 +171,7 @@ const loggedInvalidConfigs = new Set<string>();
 const warnedFutureTouchedVersions = new Set<string>();
 
 export type ParseConfigJson5Result = { ok: true; parsed: unknown } | { ok: false; error: string };
-export type ConfigWriteResult = { persistedHash: string; persistedConfig: OpenClawConfig };
+export type ConfigWriteResult = { persistedHash: string; persistedConfig: QuietCoreConfig };
 const configWritePostCommitRollback = Symbol("configWritePostCommitRollback");
 type InternalConfigWriteResult = ConfigWriteResult & {
   [configWritePostCommitRollback]?: () => void;
@@ -208,7 +208,7 @@ export type ConfigWriteOptions = {
    * Internal companion for explicitSetPaths after a wrapper has projected a
    * runtime-shaped config back onto the authored source shape.
    */
-  explicitSetValueSource?: OpenClawConfig;
+  explicitSetValueSource?: QuietCoreConfig;
   /**
    * Internal fast path for callers that already hold a fresh config snapshot.
    * Avoids rereading the full config just to prepare an immediate write.
@@ -268,7 +268,7 @@ export type ConfigWriteOptions = {
    * Internal hook used by the exported runtime-aware writer after validation
    * has produced the exact source config that will be committed.
    */
-  preCommitRuntimePreflight?: (sourceConfig: OpenClawConfig) => Promise<unknown>;
+  preCommitRuntimePreflight?: (sourceConfig: QuietCoreConfig) => Promise<unknown>;
   /** Internal snapshot-time hashes for include files that mutation writers may update directly. */
   includeFileHashesForWrite?: Record<string, string>;
   /** Internal snapshot-time canonical targets for include files that mutation writers may update. */
@@ -414,11 +414,11 @@ async function rollbackConfigFileWriteIfUnchanged(params: {
   return true;
 }
 
-function coerceConfig(value: unknown): OpenClawConfig {
+function coerceConfig(value: unknown): QuietCoreConfig {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
     return {};
   }
-  return value as OpenClawConfig;
+  return value as QuietCoreConfig;
 }
 
 function hasConfigMeta(value: unknown): boolean {
@@ -929,8 +929,8 @@ export type ConfigSnapshotReadOptions = {
   lowerPrecedenceEnv?: Readonly<Record<string, string>>;
   recoverSuspicious?: boolean;
   allowSuspiciousRecovery?: (
-    candidate: OpenClawConfig,
-    current: OpenClawConfig,
+    candidate: QuietCoreConfig,
+    current: QuietCoreConfig,
   ) => boolean | Promise<boolean>;
   skipPluginValidation?: boolean;
   preservedLegacyRootKeys?: readonly string[];
@@ -952,11 +952,11 @@ function warnOnConfigMiskeys(raw: unknown, logger: Pick<typeof console, "warn">)
   }
 }
 
-function stampConfigVersion(cfg: OpenClawConfig, version?: string): OpenClawConfig {
+function stampConfigVersion(cfg: QuietCoreConfig, version?: string): QuietCoreConfig {
   return stampConfigWriteMetadata(cfg, new Date().toISOString(), version);
 }
 
-function warnIfConfigFromFuture(cfg: OpenClawConfig, logger: Pick<typeof console, "warn">): void {
+function warnIfConfigFromFuture(cfg: QuietCoreConfig, logger: Pick<typeof console, "warn">): void {
   const touched = cfg.meta?.lastTouchedVersion;
   if (!touched) {
     return;
@@ -1264,7 +1264,7 @@ function resolveConfigForRead(
 ): ConfigReadResolution {
   // Apply config.env to process.env BEFORE substitution so ${VAR} can reference config-defined vars.
   if (resolvedIncludes && typeof resolvedIncludes === "object" && "env" in resolvedIncludes) {
-    applyConfigEnvVars(resolvedIncludes as OpenClawConfig, env, { lowerPrecedenceEnv });
+    applyConfigEnvVars(resolvedIncludes as QuietCoreConfig, env, { lowerPrecedenceEnv });
   }
 
   // Collect missing env var references as warnings instead of throwing,
@@ -1317,8 +1317,8 @@ export type ReadConfigFileSnapshotWithPluginMetadataResult = {
 };
 
 export type BestEffortConfigSnapshot = {
-  config: OpenClawConfig;
-  sourceConfig: OpenClawConfig;
+  config: QuietCoreConfig;
+  sourceConfig: QuietCoreConfig;
 };
 
 function createConfigFileSnapshot(params: {
@@ -1326,9 +1326,9 @@ function createConfigFileSnapshot(params: {
   exists: boolean;
   raw: string | null;
   parsed: unknown;
-  sourceConfig: OpenClawConfig;
+  sourceConfig: QuietCoreConfig;
   valid: boolean;
-  runtimeConfig: OpenClawConfig;
+  runtimeConfig: QuietCoreConfig;
   hash?: string;
   issues: ConfigFileSnapshot["issues"];
   warnings: ConfigFileSnapshot["warnings"];
@@ -1391,7 +1391,7 @@ export function createConfigIO(
     return snapshot;
   }
 
-  function finalizeLoadedRuntimeConfig(cfg: OpenClawConfig): OpenClawConfig {
+  function finalizeLoadedRuntimeConfig(cfg: QuietCoreConfig): QuietCoreConfig {
     const duplicates = findDuplicateAgentDirs(cfg, {
       env: deps.env,
       homedir: deps.homedir,
@@ -1501,9 +1501,9 @@ export function createConfigIO(
   }
 
   function retainRuntimeOnlyShippedPluginInstallConfigRecords(
-    config: OpenClawConfig,
+    config: QuietCoreConfig,
     sourceRaw: unknown,
-  ): OpenClawConfig {
+  ): QuietCoreConfig {
     const installRecords = extractShippedPluginInstallConfigRecords(sourceRaw);
     if (Object.keys(installRecords).length === 0) {
       return config;
@@ -1521,7 +1521,7 @@ export function createConfigIO(
     effectiveConfigRaw: unknown;
     env: NodeJS.ProcessEnv;
   }): {
-    load: (config: OpenClawConfig) => PluginMetadataSnapshot;
+    load: (config: QuietCoreConfig) => PluginMetadataSnapshot;
     getSnapshot: () => PluginMetadataSnapshot | undefined;
   } {
     let pluginMetadataSnapshot: PluginMetadataSnapshot | undefined;
@@ -1551,7 +1551,7 @@ export function createConfigIO(
     };
   }
 
-  function resolveRuntimePreflightSourceConfig(candidate: OpenClawConfig): OpenClawConfig {
+  function resolveRuntimePreflightSourceConfig(candidate: QuietCoreConfig): QuietCoreConfig {
     const env = { ...deps.env } as NodeJS.ProcessEnv;
     const resolvedIncludes = resolveConfigIncludesForRead(candidate, configPath, {
       ...deps,
@@ -1620,7 +1620,7 @@ export function createConfigIO(
     return false;
   }
 
-  function resolveSuspiciousRecoveryBackupCandidate(parsed: unknown): OpenClawConfig | null {
+  function resolveSuspiciousRecoveryBackupCandidate(parsed: unknown): QuietCoreConfig | null {
     try {
       const candidateEnv = cloneEnvWithPlatformSemantics(deps.env);
       const candidateDeps = { ...deps, env: candidateEnv };
@@ -1652,7 +1652,7 @@ export function createConfigIO(
     }
   }
 
-  function loadConfigLocal(options: { skipSuspiciousRecovery?: boolean } = {}): OpenClawConfig {
+  function loadConfigLocal(options: { skipSuspiciousRecovery?: boolean } = {}): QuietCoreConfig {
     try {
       maybeLoadDotEnvForConfig(deps.env);
       const envBeforeRead = snapshotEnv(deps.env);
@@ -1714,7 +1714,7 @@ export function createConfigIO(
         return {};
       }
       const preValidationDuplicates = findDuplicateAgentDirs(
-        validationConfigRaw as OpenClawConfig,
+        validationConfigRaw as QuietCoreConfig,
         {
           env: deps.env,
           homedir: deps.homedir,
@@ -1833,8 +1833,8 @@ export function createConfigIO(
       recoverSuspicious?: boolean;
       skipSuspiciousRecovery?: boolean;
       allowSuspiciousRecovery?: (
-        candidate: OpenClawConfig,
-        current: OpenClawConfig,
+        candidate: QuietCoreConfig,
+        current: QuietCoreConfig,
       ) => boolean | Promise<boolean>;
     } = {},
   ): Promise<ReadConfigFileSnapshotInternalResult> {
@@ -1864,7 +1864,7 @@ export function createConfigIO(
 
     let fallbackRaw: string | null = null;
     let fallbackParsed: unknown = {};
-    let fallbackSourceConfig: OpenClawConfig = {};
+    let fallbackSourceConfig: QuietCoreConfig = {};
     let fallbackHash = hashConfigRaw(null);
     let fallbackEnvSnapshotForRestore: Record<string, string | undefined> | undefined;
     const includeFileHashesForWrite: Record<string, string> = {};
@@ -2021,7 +2021,7 @@ export function createConfigIO(
         !containsConfigIncludeDirective(effectiveParsed)
       ) {
         const allowSuspiciousRecovery = options.allowSuspiciousRecovery;
-        let recoveryCandidate: OpenClawConfig | null = null;
+        let recoveryCandidate: QuietCoreConfig | null = null;
         const recovery = await deps.measure("config.snapshot.read.recover-suspicious", () =>
           maybeRecoverSuspiciousConfigReadWithDeps({
             deps,
@@ -2235,11 +2235,11 @@ export function createConfigIO(
     };
   }
 
-  async function readBestEffortConfigLocal(): Promise<OpenClawConfig> {
+  async function readBestEffortConfigLocal(): Promise<QuietCoreConfig> {
     return (await readBestEffortConfigSnapshotLocal()).config;
   }
 
-  async function readSourceConfigBestEffortLocal(): Promise<OpenClawConfig> {
+  async function readSourceConfigBestEffortLocal(): Promise<QuietCoreConfig> {
     maybeLoadDotEnvForConfig(deps.env);
     const exists = deps.fs.existsSync(configPath);
     if (!exists) {
@@ -2268,7 +2268,7 @@ export function createConfigIO(
   }
 
   async function writeConfigFileLocal(
-    cfg: OpenClawConfig,
+    cfg: QuietCoreConfig,
     options: ConfigWriteOptions = {},
   ): Promise<InternalConfigWriteResult> {
     options.assertConfigPathForWrite?.();
@@ -2345,14 +2345,14 @@ export function createConfigIO(
       }
     }
 
-    persistCandidate = applyUnsetPathsForWrite(persistCandidate as OpenClawConfig, unsetPaths);
+    persistCandidate = applyUnsetPathsForWrite(persistCandidate as QuietCoreConfig, unsetPaths);
 
     const envForRestore = options.envSnapshotForRestore ?? deps.env;
     const validationSourceCandidate = containsConfigIncludeDirective(persistCandidate)
       ? restoreEnvVarRefs(persistCandidate, snapshot.parsed, envForRestore)
       : persistCandidate;
     const validationCandidate = containsConfigIncludeDirective(validationSourceCandidate)
-      ? resolveRuntimePreflightSourceConfig(validationSourceCandidate as OpenClawConfig)
+      ? resolveRuntimePreflightSourceConfig(validationSourceCandidate as QuietCoreConfig)
       : validationSourceCandidate;
     const validated = validateConfigObjectRawWithPlugins(validationCandidate, {
       env: deps.env,
@@ -2385,7 +2385,7 @@ export function createConfigIO(
     // persisted to disk (issue #56772).
     // Apply legacy web-search normalization so that migration results are still
     // persisted even though we bypass validated.config.
-    let cfgToWrite = persistCandidate as OpenClawConfig;
+    let cfgToWrite = persistCandidate as QuietCoreConfig;
     try {
       if (deps.fs.existsSync(configPath)) {
         const currentRaw = await deps.fs.promises.readFile(configPath, "utf-8");
@@ -2399,7 +2399,7 @@ export function createConfigIO(
             cfgToWrite,
             parsedRes.parsed,
             envForRestore,
-          ) as OpenClawConfig;
+          ) as QuietCoreConfig;
           collectChangedPaths(configBeforeIdentityRestore, cfgToWrite, "", identityRestoredPaths);
         }
       }
@@ -2426,14 +2426,14 @@ export function createConfigIO(
             envRefMap,
             changedPaths,
             identityRestoredPaths,
-          ) as OpenClawConfig)
+          ) as QuietCoreConfig)
         : cfgToWrite;
     const tildeRestoredOutputConfig = restoreAuthoredTildePathsForWrite(
       outputConfigBase,
       snapshot.parsed,
       undefined,
       deps.homedir(),
-    ) as OpenClawConfig;
+    ) as QuietCoreConfig;
     const outputConfig = applyUnsetPathsForWrite(tildeRestoredOutputConfig, unsetPaths);
     // Do NOT apply runtime defaults when writing - user config should only contain
     // explicitly set values. Runtime defaults are applied when loading (issue #6070).
@@ -2567,7 +2567,7 @@ export function createConfigIO(
 
     const preCommitRuntimePreflight =
       options.preCommitRuntimePreflight ??
-      (async (sourceConfig: OpenClawConfig) => {
+      (async (sourceConfig: QuietCoreConfig) => {
         await preflightRuntimeSnapshotWrite({
           nextSourceConfig: sourceConfig,
           refreshOptions: options.runtimeRefresh,
@@ -2691,7 +2691,7 @@ export function loadConfig(options?: {
   skipPluginValidation?: boolean;
   pin?: boolean;
   skipShellEnvFallback?: boolean;
-}): OpenClawConfig {
+}): QuietCoreConfig {
   const loadFresh = () =>
     createConfigIO({
       ...(options?.skipPluginValidation ? { pluginValidation: "skip" as const } : {}),
@@ -2710,7 +2710,7 @@ export function getRuntimeConfig(options?: {
   skipPluginValidation?: boolean;
   pin?: boolean;
   skipShellEnvFallback?: boolean;
-}): OpenClawConfig {
+}): QuietCoreConfig {
   return loadConfig(options);
 }
 
@@ -2718,7 +2718,7 @@ export async function readBestEffortConfig(options?: {
   isolateEnv?: boolean;
   observe?: boolean;
   skipPluginValidation?: boolean;
-}): Promise<OpenClawConfig> {
+}): Promise<QuietCoreConfig> {
   return await createConfigIO({
     ...(options?.isolateEnv ? { env: cloneEnvWithPlatformSemantics(process.env) } : {}),
     ...(options?.observe === false ? { observe: false } : {}),
@@ -2734,7 +2734,7 @@ export async function readBestEffortConfigSnapshot(options?: {
   ).readBestEffortConfigSnapshot();
 }
 
-export async function readSourceConfigBestEffort(): Promise<OpenClawConfig> {
+export async function readSourceConfigBestEffort(): Promise<QuietCoreConfig> {
   return await createConfigIO().readSourceConfigBestEffort();
 }
 
@@ -2825,7 +2825,7 @@ export async function readSourceConfigSnapshotForWrite(): Promise<ReadConfigFile
 }
 
 export async function writeConfigFile(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   options: ConfigWriteOptions = {},
 ): Promise<ConfigWriteResult> {
   options.assertConfigPathForWrite?.();
@@ -2908,7 +2908,7 @@ export async function writeConfigFile(
   // phantom paths under plugins.entries.* on every save — incorrectly
   // triggering a `plugins`-scoped restart of the gateway for changes that
   // never touched any plugin entry.
-  let canonicalSourceConfig: OpenClawConfig = nextCfg;
+  let canonicalSourceConfig: QuietCoreConfig = nextCfg;
   const envBeforeCanonicalRead = snapshotEnv(process.env);
   let envAfterCanonicalRead;
   try {

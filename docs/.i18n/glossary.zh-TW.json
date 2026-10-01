@@ -72,8 +72,8 @@
     "target": "Nostr"
   },
   {
-    "source": "OpenClaw",
-    "target": "OpenClaw"
+    "source": "QuietCore",
+    "target": "QuietCore"
   },
   {
     "source": "Pi",

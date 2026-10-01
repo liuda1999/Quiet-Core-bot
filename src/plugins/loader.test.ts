@@ -57,8 +57,8 @@ import { warnWhenAllowlistIsOpen } from "./loader-provenance.js";
 import {
   testing,
   clearPluginLoaderCache,
-  loadOpenClawPluginCliRegistry,
-  loadOpenClawPlugins,
+  loadQuietCorePluginCliRegistry,
+  loadQuietCorePlugins,
   type PluginLoadOptions,
   PluginLoadReentryError,
   resolveRuntimePluginRegistry,
@@ -93,7 +93,7 @@ import {
   registerMemoryPromptSupplement,
   resolveMemoryFlushPlan,
 } from "./memory-state.js";
-import { ensureOpenClawPluginSdkAlias } from "./plugin-sdk-dist-alias.js";
+import { ensureQuietCorePluginSdkAlias } from "./plugin-sdk-dist-alias.js";
 import { createEmptyPluginRegistry } from "./registry.js";
 import {
   getActivePluginRegistry,
@@ -272,7 +272,7 @@ function writeBundledPlugin(params: {
   return { bundledDir, plugin };
 }
 
-function makeOpenClawDevSourceRoot() {
+function makeQuietCoreDevSourceRoot() {
   const root = makeTempDir();
   fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({ name: "quiet-core-bot" }), "utf-8");
   mkdirSafe(path.join(root, "src"));
@@ -310,7 +310,7 @@ function loadBundledMemoryPluginRegistry(options?: {
 }) {
   if (!options && cachedBundledMemoryDir) {
     process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR = cachedBundledMemoryDir;
-    return loadOpenClawPlugins({
+    return loadQuietCorePlugins({
       cache: false,
       workspaceDir: cachedBundledMemoryDir,
       config: {
@@ -360,7 +360,7 @@ function loadBundledMemoryPluginRegistry(options?: {
   }
   process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR = bundledDir;
 
-  return loadOpenClawPlugins({
+  return loadQuietCorePlugins({
     cache: false,
     workspaceDir: bundledDir,
     config: {
@@ -386,7 +386,7 @@ function setupBundledTelegramPlugin() {
   process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR = cachedBundledTelegramDir;
 }
 
-function expectTelegramLoaded(registry: ReturnType<typeof loadOpenClawPlugins>) {
+function expectTelegramLoaded(registry: ReturnType<typeof loadQuietCorePlugins>) {
   const telegram = registry.plugins.find((entry) => entry.id === "telegram");
   expect(telegram?.status).toBe("loaded");
   expect(registry.channels.map((entry) => entry.plugin.id)).toContain("telegram");
@@ -396,10 +396,10 @@ function loadRegistryFromSinglePlugin(params: {
   plugin: TempPlugin;
   pluginConfig?: Record<string, unknown>;
   includeWorkspaceDir?: boolean;
-  options?: Omit<Parameters<typeof loadOpenClawPlugins>[0], "cache" | "workspaceDir" | "config">;
+  options?: Omit<Parameters<typeof loadQuietCorePlugins>[0], "cache" | "workspaceDir" | "config">;
 }) {
   const pluginConfig = params.pluginConfig ?? {};
-  return loadOpenClawPlugins({
+  return loadQuietCorePlugins({
     cache: false,
     ...(params.includeWorkspaceDir === false ? {} : { workspaceDir: params.plugin.dir }),
     ...params.options,
@@ -414,9 +414,9 @@ function loadRegistryFromSinglePlugin(params: {
 
 function loadRegistryFromAllowedPlugins(
   plugins: TempPlugin[],
-  options?: Omit<Parameters<typeof loadOpenClawPlugins>[0], "cache" | "config">,
+  options?: Omit<Parameters<typeof loadQuietCorePlugins>[0], "cache" | "config">,
 ) {
-  return loadOpenClawPlugins({
+  return loadQuietCorePlugins({
     cache: false,
     ...options,
     config: {
@@ -687,7 +687,7 @@ function createEscapingEntryFixture(params: { id: string; sourceBody: string }) 
 }
 
 function resolveLoadedPluginSource(
-  registry: ReturnType<typeof loadOpenClawPlugins>,
+  registry: ReturnType<typeof loadQuietCorePlugins>,
   pluginId: string,
 ) {
   return fs.realpathSync(registry.plugins.find((entry) => entry.id === pluginId)?.source ?? "");
@@ -695,8 +695,8 @@ function resolveLoadedPluginSource(
 
 function expectCachePartitionByPluginSource(params: {
   pluginId: string;
-  loadFirst: () => ReturnType<typeof loadOpenClawPlugins>;
-  loadSecond: () => ReturnType<typeof loadOpenClawPlugins>;
+  loadFirst: () => ReturnType<typeof loadQuietCorePlugins>;
+  loadSecond: () => ReturnType<typeof loadQuietCorePlugins>;
   expectedFirstSource: string;
   expectedSecondSource: string;
 }) {
@@ -713,8 +713,8 @@ function expectCachePartitionByPluginSource(params: {
 }
 
 function expectCacheMissThenHit(params: {
-  loadFirst: () => ReturnType<typeof loadOpenClawPlugins>;
-  loadVariant: () => ReturnType<typeof loadOpenClawPlugins>;
+  loadFirst: () => ReturnType<typeof loadQuietCorePlugins>;
+  loadVariant: () => ReturnType<typeof loadQuietCorePlugins>;
 }) {
   const first = params.loadFirst();
   const second = params.loadVariant();
@@ -1012,7 +1012,7 @@ function expectEscapingEntryRejected(params: {
     throw err;
   }
 
-  const registry = loadOpenClawPlugins({
+  const registry = loadQuietCorePlugins({
     cache: false,
     config: {
       plugins: {
@@ -1071,7 +1071,7 @@ afterAll(() => {
   cachedBundledMemoryDir = "";
 });
 
-describe("loadOpenClawPlugins", () => {
+describe("loadQuietCorePlugins", () => {
   it("emits loader startup trace timings for normal plugin load and register", () => {
     useNoBundledPlugins();
     const plugin = writePlugin({
@@ -1152,7 +1152,7 @@ describe("loadOpenClawPlugins", () => {
     // Case 3: config.env.vars participates in the same effective env as config IO.
     delete probe.envConfigProbeResult;
     withEnv({ ENV_CONFIG_PROBE_SECRET: undefined }, () => {
-      loadOpenClawPlugins({
+      loadQuietCorePlugins({
         cache: false,
         workspaceDir: plugin.dir,
         config: {
@@ -1210,7 +1210,7 @@ describe("loadOpenClawPlugins", () => {
     });
     const { details, startupTrace } = createStartupTraceRecorder();
 
-    loadOpenClawPlugins({
+    loadQuietCorePlugins({
       cache: false,
       config: {
         plugins: {
@@ -1376,7 +1376,7 @@ describe("loadOpenClawPlugins", () => {
     const manifestRegistry = loadPluginManifestRegistry({ config });
     fs.rmSync(path.join(plugin.dir, "quiet-core-bot.plugin.json"));
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       config,
       manifestRegistry,
@@ -1407,7 +1407,7 @@ describe("loadOpenClawPlugins", () => {
     );
 
     const registry = withEnv({ QUIET_CORE_STATE_DIR: stateDir }, () =>
-      loadOpenClawPlugins({
+      loadQuietCorePlugins({
         cache: false,
         config: {
           plugins: {
@@ -1435,9 +1435,9 @@ describe("loadOpenClawPlugins", () => {
     fs.writeFileSync(path.join(pluginSdkDir, "core.js"), "export const core = 1;\n", "utf8");
     fs.writeFileSync(path.join(aliasDir, "sentinel.txt"), "keep\n", "utf8");
 
-    ensureOpenClawPluginSdkAlias(distRoot);
+    ensureQuietCorePluginSdkAlias(distRoot);
     fs.writeFileSync(path.join(pluginSdkDir, "core.js"), "export const core = 2;\n", "utf8");
-    ensureOpenClawPluginSdkAlias(distRoot);
+    ensureQuietCorePluginSdkAlias(distRoot);
 
     expect(fs.existsSync(path.join(aliasDir, "sentinel.txt"))).toBe(true);
     expect(fs.readFileSync(path.join(aliasDir, "core.js"), "utf8")).toContain("core.js");
@@ -1485,7 +1485,7 @@ describe("loadOpenClawPlugins", () => {
       "utf8",
     );
 
-    ensureOpenClawPluginSdkAlias(distRoot);
+    ensureQuietCorePluginSdkAlias(distRoot);
 
     const aliasPackage = JSON.parse(
       fs.readFileSync(path.join(aliasRoot, "package.json"), "utf8"),
@@ -1529,7 +1529,7 @@ describe("loadOpenClawPlugins", () => {
       "utf8",
     );
 
-    ensureOpenClawPluginSdkAlias(distRoot);
+    ensureQuietCorePluginSdkAlias(distRoot);
 
     const aliasPackage = JSON.parse(
       fs.readFileSync(path.join(aliasRoot, "package.json"), "utf8"),
@@ -1562,7 +1562,7 @@ describe("loadOpenClawPlugins", () => {
     });
     process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR = bundledDir;
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       config: {
         plugins: {
@@ -1590,7 +1590,7 @@ describe("loadOpenClawPlugins", () => {
       "export const normalizeLowercaseStringOrEmpty = (value) => String(value).toLowerCase();\n",
       "utf-8",
     );
-    ensureOpenClawPluginSdkAlias(path.join(packageRoot, "dist"));
+    ensureQuietCorePluginSdkAlias(path.join(packageRoot, "dist"));
     fs.writeFileSync(
       path.join(pluginRoot, "index.js"),
       [
@@ -1634,7 +1634,7 @@ describe("loadOpenClawPlugins", () => {
     );
     process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR = bundledDir;
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       config: {
         plugins: {
@@ -1692,7 +1692,7 @@ describe("loadOpenClawPlugins", () => {
           },
         },
       } satisfies PluginLoadConfig,
-      assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+      assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
         expectTelegramLoaded(registry);
       },
     },
@@ -1708,7 +1708,7 @@ describe("loadOpenClawPlugins", () => {
           enabled: true,
         },
       } satisfies PluginLoadConfig,
-      assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+      assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
         expectTelegramLoaded(registry);
       },
     },
@@ -1724,7 +1724,7 @@ describe("loadOpenClawPlugins", () => {
           allow: ["browser"],
         },
       } satisfies PluginLoadConfig,
-      assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+      assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
         const telegram = registry.plugins.find((entry) => entry.id === "telegram");
         expect(telegram?.status).toBe("loaded");
         expect(telegram?.error).toBeUndefined();
@@ -1745,7 +1745,7 @@ describe("loadOpenClawPlugins", () => {
           },
         },
       } satisfies PluginLoadConfig,
-      assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+      assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
         const telegram = registry.plugins.find((entry) => entry.id === "telegram");
         expect(telegram?.status).toBe("disabled");
         expect(telegram?.error).toBe("disabled in config");
@@ -1755,7 +1755,7 @@ describe("loadOpenClawPlugins", () => {
     "handles bundled telegram plugin enablement and override rules: $name",
     ({ config, assert }) => {
       setupBundledTelegramPlugin();
-      const registry = loadOpenClawPlugins({
+      const registry = loadQuietCorePlugins({
         cache: false,
         workspaceDir: cachedBundledTelegramDir,
         config,
@@ -1781,7 +1781,7 @@ describe("loadOpenClawPlugins", () => {
       env: {},
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       workspaceDir: cachedBundledTelegramDir,
       config: autoEnabled.config,
@@ -1813,7 +1813,7 @@ describe("loadOpenClawPlugins", () => {
       env: {},
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       workspaceDir: cachedBundledTelegramDir,
       config: autoEnabled.config,
@@ -1844,7 +1844,7 @@ describe("loadOpenClawPlugins", () => {
       },
     } satisfies PluginLoadConfig;
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       workspaceDir: cachedBundledTelegramDir,
       config: {
@@ -1885,7 +1885,7 @@ describe("loadOpenClawPlugins", () => {
       },
     } satisfies PluginLoadConfig;
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       workspaceDir: bundledDir,
       config,
@@ -1932,7 +1932,7 @@ describe("loadOpenClawPlugins", () => {
 };`,
         });
 
-        const registry = loadOpenClawPlugins({
+        const registry = loadQuietCorePlugins({
           cache: false,
           workspaceDir: plugin.dir,
           config: {
@@ -1969,7 +1969,7 @@ describe("loadOpenClawPlugins", () => {
 };`,
         });
 
-        const registry = loadOpenClawPlugins({
+        const registry = loadQuietCorePlugins({
           cache: false,
           workspaceDir: plugin.dir,
           config: {
@@ -2010,7 +2010,7 @@ describe("loadOpenClawPlugins", () => {
 };`,
         });
 
-        const registry = loadOpenClawPlugins({
+        const registry = loadQuietCorePlugins({
           cache: false,
           workspaceDir: plugin.dir,
           config: {
@@ -2052,7 +2052,7 @@ describe("loadOpenClawPlugins", () => {
 };`,
         });
 
-        const registry = loadOpenClawPlugins({
+        const registry = loadQuietCorePlugins({
           cache: false,
           workspaceDir: plugin.dir,
           config: {
@@ -2086,7 +2086,7 @@ describe("loadOpenClawPlugins", () => {
 };`,
         });
 
-        const registry = loadOpenClawPlugins({
+        const registry = loadQuietCorePlugins({
           cache: false,
           workspaceDir: plugin.dir,
           coreGatewayMethodNames: ["config.openFile"],
@@ -2123,7 +2123,7 @@ describe("loadOpenClawPlugins", () => {
 };`,
         });
 
-        const registry = loadOpenClawPlugins({
+        const registry = loadQuietCorePlugins({
           cache: false,
           config: {
             plugins: {
@@ -2249,7 +2249,7 @@ describe("loadOpenClawPlugins", () => {
 module.exports = { id: "skipped-scoped-only", register() { throw new Error("skipped plugin should not load"); } };`,
         });
 
-        const registry = loadOpenClawPlugins({
+        const registry = loadQuietCorePlugins({
           cache: false,
           config: {
             plugins: {
@@ -2276,7 +2276,7 @@ module.exports = { id: "skipped-scoped-only", register() { throw new Error("skip
 module.exports = { id: "manifest-only-plugin", register() { throw new Error("manifest-only snapshot should not register"); } };`,
         });
 
-        const registry = loadOpenClawPlugins({
+        const registry = loadQuietCorePlugins({
           cache: false,
           activate: false,
           loadModules: false,
@@ -2325,7 +2325,7 @@ module.exports = { id: "manifest-surfaces-plugin", register() { throw new Error(
           "utf-8",
         );
 
-        const registry = loadOpenClawPlugins({
+        const registry = loadQuietCorePlugins({
           cache: false,
           activate: false,
           loadModules: false,
@@ -2378,7 +2378,7 @@ module.exports = { id: "manifest-surfaces-plugin", register() { throw new Error(
           "utf-8",
         );
 
-        const registry = loadOpenClawPlugins({
+        const registry = loadQuietCorePlugins({
           cache: false,
           activate: false,
           loadModules: false,
@@ -2417,7 +2417,7 @@ throw new Error("boom after import");
 module.exports = { id: "throws-after-import", register() {} };`,
         });
 
-        const registry = loadOpenClawPlugins({
+        const registry = loadQuietCorePlugins({
           cache: false,
           activate: false,
           config: {
@@ -2448,7 +2448,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
         Reflect.set(
           globalThis,
           reenterFnMarker,
-          (options: Parameters<typeof loadOpenClawPlugins>[0]) => loadOpenClawPlugins(options),
+          (options: Parameters<typeof loadQuietCorePlugins>[0]) => loadQuietCorePlugins(options),
         );
         const pluginDir = makeTempDir();
         const pluginFile = path.join(pluginDir, "reentrant-snapshot.cjs");
@@ -2462,7 +2462,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
               allow: ["reentrant-snapshot"],
             },
           },
-        } satisfies Parameters<typeof loadOpenClawPlugins>[0];
+        } satisfies Parameters<typeof loadQuietCorePlugins>[0];
         writePlugin({
           id: "reentrant-snapshot",
           dir: pluginDir,
@@ -2483,7 +2483,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
 };`,
         });
 
-        const registry = loadOpenClawPlugins(nestedOptions);
+        const registry = loadQuietCorePlugins(nestedOptions);
 
         try {
           const reentryError = Reflect.get(globalThis, marker) as
@@ -2526,7 +2526,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
               allow: ["runtime-registry-reentry"],
             },
           },
-        } satisfies Parameters<typeof loadOpenClawPlugins>[0];
+        } satisfies Parameters<typeof loadQuietCorePlugins>[0];
         writePlugin({
           id: "runtime-registry-reentry",
           dir: pluginDir,
@@ -2540,7 +2540,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
 };`,
         });
 
-        const registry = loadOpenClawPlugins(nestedOptions);
+        const registry = loadQuietCorePlugins(nestedOptions);
 
         try {
           expect(Reflect.get(globalThis, marker)).toBe("undefined");
@@ -2575,12 +2575,12 @@ module.exports = { id: "throws-after-import", register() {} };`,
           },
         };
 
-        const full = loadOpenClawPlugins(options);
-        const scoped = loadOpenClawPlugins({
+        const full = loadQuietCorePlugins(options);
+        const scoped = loadQuietCorePlugins({
           ...options,
           onlyPluginIds: ["allowed-cache-scope"],
         });
-        const scopedAgain = loadOpenClawPlugins({
+        const scopedAgain = loadQuietCorePlugins({
           ...options,
           onlyPluginIds: ["allowed-cache-scope"],
         });
@@ -2607,7 +2607,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
         setActivePluginRegistry(previousRegistry, "existing-registry");
         resetGlobalHookRunner();
 
-        const scoped = loadOpenClawPlugins({
+        const scoped = loadQuietCorePlugins({
           cache: false,
           activate: false,
           workspaceDir: plugin.dir,
@@ -2643,7 +2643,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
       body: `module.exports = { id: "extra-empty-scope", register() {} };`,
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       activate: false,
       config: {
@@ -2668,10 +2668,10 @@ module.exports = { id: "throws-after-import", register() {} };`,
 
     const discovery = await import("./discovery.js");
     const manifestRegistry = await import("./manifest-registry.js");
-    const discoverySpy = vi.spyOn(discovery, "discoverOpenClawPlugins");
+    const discoverySpy = vi.spyOn(discovery, "discoverQuietCorePlugins");
     const manifestSpy = vi.spyOn(manifestRegistry, "loadPluginManifestRegistry");
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       activate: false,
       config: {
@@ -2710,7 +2710,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
     });
     clearPluginCommands();
 
-    const scoped = loadOpenClawPlugins({
+    const scoped = loadQuietCorePlugins({
       cache: false,
       activate: false,
       workspaceDir: plugin.dir,
@@ -2727,7 +2727,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
     expect(scoped.commands.map((entry) => entry.command.name)).toEqual(["pair"]);
     expect(getPluginCommandSpecs("telegram")).toStrictEqual([]);
 
-    const active = loadOpenClawPlugins({
+    const active = loadQuietCorePlugins({
       cache: false,
       workspaceDir: plugin.dir,
       config: {
@@ -2769,7 +2769,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
       };`,
     });
 
-    loadOpenClawPlugins({
+    loadQuietCorePlugins({
       cache: false,
       workspaceDir: plugin.dir,
       config: {
@@ -2782,7 +2782,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
     });
     expect(listRegisteredAgentHarnessIdsForTest()).toEqual(["codex"]);
 
-    loadOpenClawPlugins({
+    loadQuietCorePlugins({
       cache: false,
       workspaceDir: makeTempDir(),
       config: {
@@ -2810,7 +2810,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
       };`,
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       workspaceDir: plugin.dir,
       config: {
@@ -2848,7 +2848,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
     });
 
     clearInternalHooks();
-    const scoped = loadOpenClawPlugins({
+    const scoped = loadQuietCorePlugins({
       cache: false,
       activate: false,
       workspaceDir: plugin.dir,
@@ -2903,8 +2903,8 @@ module.exports = { id: "throws-after-import", register() {} };`,
       onlyPluginIds: ["internal-hook-reload"],
     };
 
-    loadOpenClawPlugins(loadOptions);
-    loadOpenClawPlugins(loadOptions);
+    loadQuietCorePlugins(loadOptions);
+    loadQuietCorePlugins(loadOptions);
 
     const event = createInternalHookEvent("gateway", "startup", "gateway:startup");
     await triggerInternalHook(event);
@@ -2946,7 +2946,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
 
     clearInternalHooks();
 
-    loadOpenClawPlugins({
+    loadQuietCorePlugins({
       cache: false,
       workspaceDir: plugin.dir,
       config: {
@@ -3028,7 +3028,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
     clearPluginCommands();
     clearPluginInteractiveHandlers();
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       workspaceDir: plugin.dir,
       config: {
@@ -3077,7 +3077,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
 
     clearInternalHooks();
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       workspaceDir: plugin.dir,
       config: {
@@ -3120,7 +3120,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
       };`,
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       workspaceDir: plugin.dir,
       config: {
@@ -3202,7 +3202,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
     process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR = bundledDir;
     delete process.env.QUIET_CORE_DISABLE_BUNDLED_PLUGINS;
 
-    const scoped = loadOpenClawPlugins({
+    const scoped = loadQuietCorePlugins({
       cache: false,
       activate: false,
       config: {
@@ -3282,7 +3282,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
       };`,
     });
 
-    const scoped = loadOpenClawPlugins({
+    const scoped = loadQuietCorePlugins({
       cache: false,
       activate: false,
       workspaceDir: plugin.dir,
@@ -3330,7 +3330,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
       contracts: { embeddingProviders: ["snapshot"] },
     });
 
-    const scoped = loadOpenClawPlugins({
+    const scoped = loadQuietCorePlugins({
       cache: false,
       activate: false,
       workspaceDir: plugin.dir,
@@ -3377,7 +3377,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
       contracts: { embeddingProviders: ["shared"] },
     });
 
-    const scoped = loadOpenClawPlugins({
+    const scoped = loadQuietCorePlugins({
       cache: false,
       activate: false,
       workspaceDir: plugin.dir,
@@ -3421,7 +3421,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
       contracts: { embeddingProviders: ["failed"] },
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       workspaceDir: plugin.dir,
       config: {
@@ -3481,7 +3481,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
       };`,
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       workspaceDir: plugin.dir,
       config: {
@@ -3528,7 +3528,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
       };`,
     });
 
-    const scoped = loadOpenClawPlugins({
+    const scoped = loadQuietCorePlugins({
       cache: false,
       activate: false,
       workspaceDir: plugin.dir,
@@ -3573,7 +3573,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
       };`,
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       workspaceDir: plugin.dir,
       config: {
@@ -3623,15 +3623,15 @@ module.exports = { id: "throws-after-import", register() {} };`,
         },
       },
       onlyPluginIds: ["cached-detached-runtime"],
-    } satisfies Parameters<typeof loadOpenClawPlugins>[0];
+    } satisfies Parameters<typeof loadQuietCorePlugins>[0];
 
-    loadOpenClawPlugins(loadOptions);
+    loadQuietCorePlugins(loadOptions);
     expect(getDetachedTaskLifecycleRuntimeRegistration()?.pluginId).toBe("cached-detached-runtime");
 
     clearDetachedTaskLifecycleRuntimeRegistration();
     expect(getDetachedTaskLifecycleRuntimeRegistration()).toBeUndefined();
 
-    loadOpenClawPlugins(loadOptions);
+    loadQuietCorePlugins(loadOptions);
 
     expect(getDetachedTaskLifecycleRuntimeRegistration()?.pluginId).toBe("cached-detached-runtime");
   });
@@ -3667,9 +3667,9 @@ module.exports = { id: "throws-after-import", register() {} };`,
         },
       },
       onlyPluginIds: ["cached-command-interactive"],
-    } satisfies Parameters<typeof loadOpenClawPlugins>[0];
+    } satisfies Parameters<typeof loadQuietCorePlugins>[0];
 
-    loadOpenClawPlugins(loadOptions);
+    loadQuietCorePlugins(loadOptions);
     expect(getPluginCommandSpecs()).toEqual([
       { name: "hue", description: "Control Hue lights", acceptsArgs: false },
     ]);
@@ -3682,7 +3682,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
     commitPluginInteractiveCallbackDedupe(dedupeKey, 1_000);
     expect(claimPluginInteractiveCallbackDedupe(dedupeKey, 1_001)).toBe(false);
 
-    loadOpenClawPlugins(loadOptions);
+    loadQuietCorePlugins(loadOptions);
     expect(claimPluginInteractiveCallbackDedupe(dedupeKey, 1_002)).toBe(false);
 
     clearPluginCommands();
@@ -3690,7 +3690,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
     expect(getPluginCommandSpecs()).toStrictEqual([]);
     expect(resolvePluginInteractiveNamespaceMatch("telegram", "hue:on")).toBeNull();
 
-    loadOpenClawPlugins(loadOptions);
+    loadQuietCorePlugins(loadOptions);
 
     expect(getPluginCommandSpecs()).toEqual([
       { name: "hue", description: "Control Hue lights", acceptsArgs: false },
@@ -3706,7 +3706,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
     useNoBundledPlugins();
     registerDetachedTaskLifecycleRuntime("stale-runtime", createDetachedTaskRuntimeStub("stale"));
 
-    loadOpenClawPlugins({
+    loadQuietCorePlugins({
       cache: false,
       config: {
         plugins: {
@@ -3772,14 +3772,14 @@ module.exports = { id: "throws-after-import", register() {} };`,
       },
     ];
 
-    const first = loadOpenClawPlugins(options);
+    const first = loadQuietCorePlugins(options);
     await expect(listActiveMemoryPublicArtifacts({ cfg: {} as never })).resolves.toEqual(
       expectedArtifacts,
     );
 
     clearMemoryPluginState();
 
-    const second = loadOpenClawPlugins(options);
+    const second = loadQuietCorePlugins(options);
     expect(second).toBe(first);
     await expect(listActiveMemoryPublicArtifacts({ cfg: {} as never })).resolves.toEqual(
       expectedArtifacts,
@@ -3831,7 +3831,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
         slots: { memory: "capability-survives-memory" },
       },
     };
-    loadOpenClawPlugins({
+    loadQuietCorePlugins({
       cache: false,
       workspaceDir: memoryPlugin.dir,
       config: activateConfig,
@@ -3855,7 +3855,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
     // Simulate what resolvePluginWebSearchProviders and similar read-only paths do:
     // load plugins again with activate:false. Each per-plugin snapshot/rollback must
     // preserve the previously registered memory capability.
-    loadOpenClawPlugins({
+    loadQuietCorePlugins({
       cache: false,
       activate: false,
       workspaceDir: memoryPlugin.dir,
@@ -3896,7 +3896,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
       },
     };
 
-    const snapshot = loadOpenClawPlugins({
+    const snapshot = loadQuietCorePlugins({
       activate: false,
       cache: false,
       workspaceDir: plugin.dir,
@@ -3906,7 +3906,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
     expect(snapshot.providers.map((entry) => entry.provider.id)).toEqual(["discovery-provider"]);
     expect(snapshot.tools.flatMap((entry) => entry.names)).toContain("discovery_tool");
 
-    loadOpenClawPlugins({
+    loadQuietCorePlugins({
       cache: false,
       workspaceDir: plugin.dir,
       config,
@@ -3933,7 +3933,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
       };`,
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       activate: false,
       cache: false,
       workspaceDir: plugin.dir,
@@ -3974,7 +3974,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
     });
     updatePluginManifest(plugin, { contracts: { tools: ["manifest_tool"] } });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       activate: false,
       cache: false,
       workspaceDir: plugin.dir,
@@ -4027,15 +4027,15 @@ module.exports = { id: "throws-after-import", register() {} };`,
       onlyPluginIds: ["snapshot-cache"],
     };
 
-    const first = loadOpenClawPlugins(options);
-    const second = loadOpenClawPlugins(options);
+    const first = loadQuietCorePlugins(options);
+    const second = loadQuietCorePlugins(options);
 
     expect(second).toBe(first);
     expect((globalThis as Record<string, unknown>)[marker]).toBe(1);
     expect(first.commands.map((entry) => entry.command.name)).toEqual(["snapshot-command"]);
     expect(getPluginCommandSpecs()).toStrictEqual([]);
 
-    const active = loadOpenClawPlugins({
+    const active = loadQuietCorePlugins({
       workspaceDir: plugin.dir,
       config: options.config,
       onlyPluginIds: ["snapshot-cache"],
@@ -4075,7 +4075,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
       },
     };
 
-    loadOpenClawPlugins({
+    loadQuietCorePlugins({
       workspaceDir: plugin.dir,
       config,
       runtimeOptions: {
@@ -4118,13 +4118,13 @@ module.exports = { id: "throws-after-import", register() {} };`,
       },
     };
 
-    const gatewayBindable = loadOpenClawPlugins({
+    const gatewayBindable = loadQuietCorePlugins({
       ...options,
       runtimeOptions: {
         allowGatewaySubagentBinding: true,
       },
     });
-    const defaultMode = loadOpenClawPlugins(options);
+    const defaultMode = loadQuietCorePlugins(options);
 
     expect(defaultMode).toBe(gatewayBindable);
     expect((globalThis as Record<string, unknown>)[marker]).toBe(1);
@@ -4149,13 +4149,13 @@ module.exports = { id: "throws-after-import", register() {} };`,
       },
     };
 
-    const first = loadOpenClawPlugins(options);
+    const first = loadQuietCorePlugins(options);
     expectGlobalHookRunner(getGlobalHookRunner());
 
     resetGlobalHookRunner();
     expect(getGlobalHookRunner()).toBeNull();
 
-    const second = loadOpenClawPlugins(options);
+    const second = loadQuietCorePlugins(options);
     expect(second).toBe(first);
     expectGlobalHookRunner(getGlobalHookRunner());
 
@@ -4179,7 +4179,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
       } };`,
     });
 
-    const gatewayRegistry = loadOpenClawPlugins({
+    const gatewayRegistry = loadQuietCorePlugins({
       workspaceDir: gatewayPlugin.dir,
       config: {
         plugins: {
@@ -4204,7 +4204,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
       expect(getGlobalPluginRegistry()).toBe(gatewayRegistry);
       expect(expectGlobalHookRunner(getGlobalHookRunner()).hasHooks("subagent_ended")).toBe(true);
 
-      const defaultRegistry = loadOpenClawPlugins({
+      const defaultRegistry = loadQuietCorePlugins({
         workspaceDir: defaultPlugin.dir,
         config: {
           plugins: {
@@ -4249,7 +4249,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
       } };`,
     });
 
-    loadOpenClawPlugins({
+    loadQuietCorePlugins({
       workspaceDir: firstPlugin.dir,
       config: {
         plugins: {
@@ -4263,7 +4263,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
 
     // A second activation retires the unpinned first registry entirely; its
     // hooks must drop instead of dispatching stale config closures.
-    loadOpenClawPlugins({
+    loadQuietCorePlugins({
       workspaceDir: secondPlugin.dir,
       config: {
         plugins: {
@@ -4313,7 +4313,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
           expectedFirstSource: pluginA.file,
           expectedSecondSource: pluginB.file,
           loadFirst: () =>
-            loadOpenClawPlugins({
+            loadQuietCorePlugins({
               ...options,
               env: {
                 ...process.env,
@@ -4321,7 +4321,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
               },
             }),
           loadSecond: () =>
-            loadOpenClawPlugins({
+            loadQuietCorePlugins({
               ...options,
               env: {
                 ...process.env,
@@ -4370,7 +4370,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
           expectedFirstSource: pluginA.file,
           expectedSecondSource: pluginB.file,
           loadFirst: () =>
-            loadOpenClawPlugins({
+            loadQuietCorePlugins({
               ...options,
               env: {
                 ...process.env,
@@ -4381,7 +4381,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
               },
             }),
           loadSecond: () =>
-            loadOpenClawPlugins({
+            loadQuietCorePlugins({
               ...options,
               env: {
                 ...process.env,
@@ -4445,7 +4445,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
         const secondHome = makeTempDir();
         return {
           loadFirst: () =>
-            loadOpenClawPlugins({
+            loadQuietCorePlugins({
               ...options,
               env: {
                 ...process.env,
@@ -4456,7 +4456,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
               },
             }),
           loadVariant: () =>
-            loadOpenClawPlugins({
+            loadQuietCorePlugins({
               ...options,
               env: {
                 ...process.env,
@@ -4492,9 +4492,9 @@ module.exports = { id: "throws-after-import", register() {} };`,
         };
 
         return {
-          loadFirst: () => loadOpenClawPlugins(options),
+          loadFirst: () => loadQuietCorePlugins(options),
           loadVariant: () =>
-            loadOpenClawPlugins({
+            loadQuietCorePlugins({
               ...options,
               pluginSdkResolution: "workspace" as PluginSdkResolutionPreference,
             }),
@@ -4524,9 +4524,9 @@ module.exports = { id: "throws-after-import", register() {} };`,
         };
 
         return {
-          loadFirst: () => loadOpenClawPlugins(options),
+          loadFirst: () => loadQuietCorePlugins(options),
           loadVariant: () =>
-            loadOpenClawPlugins({
+            loadQuietCorePlugins({
               ...options,
               runtimeOptions: {
                 allowGatewaySubagentBinding: true,
@@ -4553,7 +4553,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
     );
 
     const loadWithStateDir = (stateDir: string) =>
-      loadOpenClawPlugins({
+      loadQuietCorePlugins({
         env: {
           ...process.env,
           QUIET_CORE_STATE_DIR: stateDir,
@@ -4597,7 +4597,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
       body: `module.exports = { id: "tilde-bundled", register() {} };`,
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       env: {
         ...process.env,
         HOME: homeDir,
@@ -4631,7 +4631,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
       body: `module.exports = { id: "quiet-core-bot-home-demo", register() {} };`,
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       env: {
         ...process.env,
         HOME: ignoredHome,
@@ -4781,7 +4781,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
     });
 
     expect(() =>
-      loadOpenClawPlugins({
+      loadQuietCorePlugins({
         cache: false,
         throwOnLoadError: true,
         config: {
@@ -4919,7 +4919,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
     }
   });
 } };`,
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           const channel = registry.channels.find((entry) => entry.plugin.id === "demo");
           expect(channel?.plugin.id).toBe("demo");
         },
@@ -4965,7 +4965,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
     }
   });
 } };`,
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           expect(countMatching(registry.channels, (entry) => entry.plugin.id === "demo")).toBe(1);
           expect(
             registry.channels.find((entry) => entry.plugin.id === "demo")?.plugin.meta?.label,
@@ -4978,7 +4978,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
         body: `module.exports = { id: "context-engine-malformed", register(api) {
   api.registerContextEngine({ id: "broken-context" });
 } };`,
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           expectRegistryErrorDiagnostic({
             registry,
             pluginId: "context-engine-malformed",
@@ -4993,7 +4993,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
         body: `module.exports = { id: "context-engine-core-collision", register(api) {
   api.registerContextEngine("legacy", () => ({}));
 } };`,
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           expectRegistryErrorDiagnostic({
             registry,
             pluginId: "context-engine-core-collision",
@@ -5007,7 +5007,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
         body: `module.exports = { id: "compaction-provider-malformed", register(api) {
   api.registerCompactionProvider({ id: "broken-compaction", label: "Broken" });
 } };`,
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           expectRegistryErrorDiagnostic({
             registry,
             pluginId: "compaction-provider-malformed",
@@ -5022,7 +5022,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
         body: `module.exports = { id: "memory-prompt-supplement-malformed", register(api) {
   api.registerMemoryPromptSupplement({ id: "broken-memory-prompt" });
 } };`,
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           expectRegistryErrorDiagnostic({
             registry,
             pluginId: "memory-prompt-supplement-malformed",
@@ -5037,7 +5037,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
         body: `module.exports = { id: "cli-missing-metadata", register(api) {
   api.registerCli(() => {});
 } };`,
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           expect(registry.cliRegistrars).toHaveLength(0);
           expectRegistryErrorDiagnostic({
             registry,
@@ -5060,7 +5060,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
     ],
   });
 } };`,
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           expect(registry.cliRegistrars).toHaveLength(1);
           expect(registry.cliRegistrars[0]?.parentPath).toEqual(["nodes"]);
           expect(registry.cliRegistrars[0]?.commands).toEqual(["demo-node"]);
@@ -5124,7 +5124,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
         buildBody: (ownerId: string) => `module.exports = { id: "${ownerId}", register(api) {
   api.registerHook("gateway:startup", () => {}, { name: "shared-hook" });
 } };`,
-        selectCount: (registry: ReturnType<typeof loadOpenClawPlugins>) =>
+        selectCount: (registry: ReturnType<typeof loadQuietCorePlugins>) =>
           countMatching(registry.hooks, (entry) => entry.entry.hook.name === "shared-hook"),
         duplicateMessage: "hook already registered: shared-hook (hook-owner-a)",
         assert: expectDuplicateRegistrationResult,
@@ -5136,7 +5136,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
         buildBody: (ownerId: string) => `module.exports = { id: "${ownerId}", register(api) {
   api.registerService({ id: "shared-service", start() {} });
 } };`,
-        selectCount: (registry: ReturnType<typeof loadOpenClawPlugins>) =>
+        selectCount: (registry: ReturnType<typeof loadQuietCorePlugins>) =>
           countMatching(registry.services, (entry) => entry.service.id === "shared-service"),
         duplicateMessage: "service already registered: shared-service (service-owner-a)",
         assert: expectDuplicateRegistrationResult,
@@ -5148,13 +5148,13 @@ module.exports = { id: "throws-after-import", register() {} };`,
         buildBody: (ownerId: string) => `module.exports = { id: "${ownerId}", register(api) {
   api.registerGatewayDiscoveryService({ id: "shared-discovery", advertise() {} });
 } };`,
-        selectCount: (registry: ReturnType<typeof loadOpenClawPlugins>) =>
+        selectCount: (registry: ReturnType<typeof loadQuietCorePlugins>) =>
           registry.gatewayDiscoveryServices.filter(
             (entry) => entry.service.id === "shared-discovery",
           ).length,
         duplicateMessage:
           "gateway discovery service already registered: shared-discovery (discovery-owner-a)",
-        assertPrimaryOwner: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assertPrimaryOwner: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           expect(
             registry.plugins.find((entry) => entry.id === "discovery-owner-a")
               ?.gatewayDiscoveryServiceIds,
@@ -5172,7 +5172,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
         selectCount: () => 1,
         duplicateMessage:
           "context engine already registered: shared-context-engine-loader-test (plugin:context-engine-owner-a)",
-        assertPrimaryOwner: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assertPrimaryOwner: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           expect(
             registry.plugins.find((entry) => entry.id === "context-engine-owner-a")
               ?.contextEngineIds,
@@ -5187,10 +5187,10 @@ module.exports = { id: "throws-after-import", register() {} };`,
         buildBody: (ownerId: string) => `module.exports = { id: "${ownerId}", register(api) {
   api.registerCli(() => {}, { commands: ["shared-cli"] });
 } };`,
-        selectCount: (registry: ReturnType<typeof loadOpenClawPlugins>) =>
+        selectCount: (registry: ReturnType<typeof loadQuietCorePlugins>) =>
           registry.cliRegistrars.length,
         duplicateMessage: "cli command already registered: shared-cli (cli-owner-a)",
-        assertPrimaryOwner: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assertPrimaryOwner: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           expect(registry.cliRegistrars[0]?.pluginId).toBe("cli-owner-a");
         },
         assert: expectDuplicateRegistrationResult,
@@ -5337,7 +5337,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
 } };`,
           }),
         ],
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           expect(
             registry.httpRoutes.find((entry) => entry.pluginId === "http-route-missing-auth"),
           ).toBeUndefined();
@@ -5359,7 +5359,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
 } };`,
           }),
         ],
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           const routes = registry.httpRoutes.filter(
             (entry) => entry.pluginId === "http-route-replace-self",
           );
@@ -5386,7 +5386,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
 } };`,
           }),
         ],
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           const route = registry.httpRoutes.find((entry) => entry.path === "/demo");
           expect(route?.pluginId).toBe("http-route-owner-a");
           expectDiagnosticContaining({
@@ -5407,7 +5407,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
 } };`,
           }),
         ],
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           const routes = registry.httpRoutes.filter(
             (entry) => entry.pluginId === "http-route-overlap",
           );
@@ -5431,7 +5431,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
 } };`,
           }),
         ],
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           const routes = registry.httpRoutes.filter(
             (entry) => entry.pluginId === "http-route-overlap-same-auth",
           );
@@ -5453,7 +5453,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
       body: `module.exports = { id: "config-disable", register() {} };`,
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       config: {
         plugins: {
@@ -5537,7 +5537,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
       "utf-8",
     );
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       config: {
         channels: {
@@ -5586,7 +5586,7 @@ module.exports = { id: "throws-after-import", register() {} };`,
       "utf-8",
     );
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       config: {
         plugins: {
@@ -5658,7 +5658,7 @@ module.exports = {
       },
     };
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       config,
     });
@@ -5669,7 +5669,7 @@ module.exports = {
       "disabled",
     );
 
-    const broadSetupRegistry = loadOpenClawPlugins({
+    const broadSetupRegistry = loadQuietCorePlugins({
       cache: false,
       config,
       includeSetupOnlyChannelPlugins: true,
@@ -5682,7 +5682,7 @@ module.exports = {
       broadSetupRegistry.plugins.find((entry) => entry.id === "lazy-channel-plugin")?.status,
     ).toBe("disabled");
 
-    const scopedSetupRegistry = loadOpenClawPlugins({
+    const scopedSetupRegistry = loadQuietCorePlugins({
       cache: false,
       config,
       includeSetupOnlyChannelPlugins: true,
@@ -5741,7 +5741,7 @@ module.exports = {
       "utf-8",
     );
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       workspaceDir,
       includeSetupOnlyChannelPlugins: true,
@@ -5807,7 +5807,7 @@ module.exports = {
       "utf-8",
     );
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       workspaceDir,
       includeSetupOnlyChannelPlugins: true,
@@ -5876,7 +5876,7 @@ module.exports = {
       "utf-8",
     );
 
-    const scopedSetupRegistry = loadOpenClawPlugins({
+    const scopedSetupRegistry = loadQuietCorePlugins({
       cache: false,
       config: {
         plugins: {
@@ -5941,7 +5941,7 @@ module.exports = {
       "utf-8",
     );
 
-    const scopedSetupRegistry = loadOpenClawPlugins({
+    const scopedSetupRegistry = loadQuietCorePlugins({
       cache: false,
       config: {
         plugins: {
@@ -6027,7 +6027,7 @@ module.exports = {
         "utf-8",
       );
 
-      const scopedSetupRegistry = loadOpenClawPlugins({
+      const scopedSetupRegistry = loadQuietCorePlugins({
         cache: false,
         config: {
           plugins: {
@@ -6112,7 +6112,7 @@ module.exports = {
         "utf-8",
       );
 
-      const scopedSetupRegistry = loadOpenClawPlugins({
+      const scopedSetupRegistry = loadQuietCorePlugins({
         cache: false,
         config: {
           plugins: {
@@ -6181,7 +6181,7 @@ module.exports = {
       "utf-8",
     );
 
-    const scopedSetupRegistry = loadOpenClawPlugins({
+    const scopedSetupRegistry = loadQuietCorePlugins({
       cache: false,
       config: {
         channels: {
@@ -6218,7 +6218,7 @@ module.exports = {
         configured: false,
       },
       load: ({ pluginDir }: { pluginDir: string }) =>
-        loadOpenClawPlugins({
+        loadQuietCorePlugins({
           cache: false,
           config: {
             plugins: {
@@ -6249,7 +6249,7 @@ module.exports = {
         useBundledSetupEntryContract: true,
       },
       load: ({ pluginDir }: { pluginDir: string }) =>
-        loadOpenClawPlugins({
+        loadQuietCorePlugins({
           cache: false,
           config: {
             plugins: {
@@ -6279,7 +6279,7 @@ module.exports = {
         configured: false,
       },
       load: ({ pluginDir }: { pluginDir: string }) =>
-        loadOpenClawPlugins({
+        loadQuietCorePlugins({
           cache: false,
           config: {
             plugins: {
@@ -6304,7 +6304,7 @@ module.exports = {
         useBundledSetupEntryContract: true,
       },
       load: ({ pluginDir }: { pluginDir: string }) =>
-        loadOpenClawPlugins({
+        loadQuietCorePlugins({
           cache: false,
           config: {
             plugins: {
@@ -6330,7 +6330,7 @@ module.exports = {
         splitBundledSetupSecrets: true,
       },
       load: ({ pluginDir }: { pluginDir: string }) =>
-        loadOpenClawPlugins({
+        loadQuietCorePlugins({
           cache: false,
           config: {
             plugins: {
@@ -6357,7 +6357,7 @@ module.exports = {
         bundledSetupRuntimeMarker: path.join(makeTempDir(), "setup-runtime-applied.txt"),
       },
       load: ({ pluginDir }: { pluginDir: string }) =>
-        loadOpenClawPlugins({
+        loadQuietCorePlugins({
           cache: false,
           config: {
             plugins: {
@@ -6385,7 +6385,7 @@ module.exports = {
         bundledSetupRuntimeRoutePath: "/setup-runtime-route",
       },
       load: ({ pluginDir }: { pluginDir: string }) =>
-        loadOpenClawPlugins({
+        loadQuietCorePlugins({
           cache: false,
           preferSetupRuntimeForChannelPlugins: true,
           config: {
@@ -6420,7 +6420,7 @@ module.exports = {
         bundledFullRuntimeMarker: path.join(makeTempDir(), "bundled-runtime-applied.txt"),
       },
       load: ({ pluginDir }: { pluginDir: string }) =>
-        loadOpenClawPlugins({
+        loadQuietCorePlugins({
           cache: false,
           config: {
             plugins: {
@@ -6447,7 +6447,7 @@ module.exports = {
         bundledSetupRuntimeMarker: path.join(makeTempDir(), "external-setup-runtime-applied.txt"),
       },
       load: ({ pluginDir }: { pluginDir: string }) =>
-        loadOpenClawPlugins({
+        loadQuietCorePlugins({
           cache: false,
           preferSetupRuntimeForChannelPlugins: true,
           config: {
@@ -6479,7 +6479,7 @@ module.exports = {
         configured: true,
       },
       load: ({ pluginDir }: { pluginDir: string }) =>
-        loadOpenClawPlugins({
+        loadQuietCorePlugins({
           cache: false,
           preferSetupRuntimeForChannelPlugins: true,
           config: {
@@ -6568,7 +6568,7 @@ module.exports = {
       requireBundledFullRuntimeBeforeLoad: true,
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       config: {
         plugins: {
@@ -6601,7 +6601,7 @@ module.exports = {
       body: `module.exports = { id: "setup-runtime-helper-test", register() {} };`,
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       config: {
         plugins: {
@@ -6641,7 +6641,7 @@ module.exports = {
       body: `module.exports = { id: "setup-runtime-route-helper-test", register() {} };`,
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       preferSetupRuntimeForChannelPlugins: true,
       config: {
@@ -6686,7 +6686,7 @@ module.exports = {
       bundledSetupRuntimeLateRoutePath: "/setup-runtime-late-route",
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       preferSetupRuntimeForChannelPlugins: true,
       config: {
@@ -6728,7 +6728,7 @@ module.exports = {
       bundledFullRuntimeMarker: runtimeMarker,
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       config: {
         plugins: {
@@ -6763,7 +6763,7 @@ module.exports = {
       bundledFullRuntimeMarker: runtimeMarker,
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       config: {
         plugins: {
@@ -6833,7 +6833,7 @@ module.exports = {
       "utf-8",
     );
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       config: {
         plugins: {
@@ -6923,7 +6923,7 @@ module.exports = {
 } };`,
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       config: {
         plugins: {
@@ -7044,7 +7044,7 @@ module.exports = {
 } };`,
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       config: {
         plugins: {
@@ -7131,7 +7131,7 @@ module.exports = {
         QUIET_CORE_DISABLE_BUNDLED_PLUGINS: undefined,
       },
       () =>
-        loadOpenClawPlugins({
+        loadQuietCorePlugins({
           cache: false,
           preferBuiltPluginArtifacts: true,
           onlyPluginIds: ["startup-artifact-test"],
@@ -7202,7 +7202,7 @@ module.exports = {
         QUIET_CORE_DISABLE_BUNDLED_PLUGINS: undefined,
       },
       () =>
-        loadOpenClawPlugins({
+        loadQuietCorePlugins({
           cache: false,
           preferBuiltPluginArtifacts: true,
           onlyPluginIds: ["startup-package-artifact-test"],
@@ -7266,7 +7266,7 @@ module.exports = {
       "utf-8",
     );
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       preferBuiltPluginArtifacts: true,
       config: {
@@ -7329,7 +7329,7 @@ module.exports = {
       "utf-8",
     );
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       preferBuiltPluginArtifacts: true,
       config: {
@@ -7391,7 +7391,7 @@ module.exports = {
       "utf-8",
     );
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       preferBuiltPluginArtifacts: true,
       config: {
@@ -7458,7 +7458,7 @@ module.exports = {
       return;
     }
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       preferBuiltPluginArtifacts: true,
       config: {
@@ -7846,7 +7846,7 @@ module.exports = {
               QUIET_CORE_BUNDLED_PLUGINS_DIR: undefined,
             },
             () =>
-              loadOpenClawPlugins({
+              loadQuietCorePlugins({
                 cache: false,
                 config: {
                   plugins: {
@@ -7857,7 +7857,7 @@ module.exports = {
               }),
           );
         },
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           const a = registry.plugins.find((entry) => entry.id === "memory-a");
           const b = registry.plugins.find((entry) => entry.id === "memory-b");
           expect(b?.status).toBe("loaded");
@@ -7912,7 +7912,7 @@ module.exports = {
           );
           process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR = bundledDir;
 
-          return loadOpenClawPlugins({
+          return loadQuietCorePlugins({
             cache: false,
             config: {
               plugins: {
@@ -7926,7 +7926,7 @@ module.exports = {
             },
           });
         },
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           const a = registry.plugins.find((entry) => entry.id === "memory-a");
           const b = registry.plugins.find((entry) => entry.id === "memory-b");
           expect(a?.status).toBe("disabled");
@@ -7940,7 +7940,7 @@ module.exports = {
         loadRegistry: () => {
           const { selectedId } = setupBundledDreamingMemoryPlugins();
 
-          return loadOpenClawPlugins({
+          return loadQuietCorePlugins({
             cache: false,
             config: {
               plugins: {
@@ -7953,7 +7953,7 @@ module.exports = {
             },
           });
         },
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           const core = registry.plugins.find((entry) => entry.id === "memory-core");
           const lance = registry.plugins.find((entry) => entry.id === "memory-lancedb");
           expect(core?.status).toBe("loaded");
@@ -7969,7 +7969,7 @@ module.exports = {
             coreBody: `throw new Error("manifest-only snapshot should not import memory-core");`,
           });
 
-          return loadOpenClawPlugins({
+          return loadQuietCorePlugins({
             cache: false,
             activate: false,
             loadModules: false,
@@ -7984,7 +7984,7 @@ module.exports = {
             },
           });
         },
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           const core = registry.plugins.find((entry) => entry.id === "memory-core");
           const lance = registry.plugins.find((entry) => entry.id === "memory-lancedb");
           expect(core?.status).toBe("loaded");
@@ -7999,7 +7999,7 @@ module.exports = {
             coreBody: `throw new Error("denied memory-core should not load");`,
           });
 
-          return loadOpenClawPlugins({
+          return loadQuietCorePlugins({
             cache: false,
             config: {
               plugins: {
@@ -8013,7 +8013,7 @@ module.exports = {
             },
           });
         },
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           const core = registry.plugins.find((entry) => entry.id === "memory-core");
           const lance = registry.plugins.find((entry) => entry.id === "memory-lancedb");
           expect(core?.status).toBe("disabled");
@@ -8028,7 +8028,7 @@ module.exports = {
             coreBody: `throw new Error("disabled memory-core should not load");`,
           });
 
-          return loadOpenClawPlugins({
+          return loadQuietCorePlugins({
             cache: false,
             config: {
               plugins: {
@@ -8042,7 +8042,7 @@ module.exports = {
             },
           });
         },
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           const core = registry.plugins.find((entry) => entry.id === "memory-core");
           const lance = registry.plugins.find((entry) => entry.id === "memory-lancedb");
           expect(core?.status).toBe("disabled");
@@ -8058,7 +8058,7 @@ module.exports = {
             coreBody: `throw new Error("non-memory selected slot should not load memory-core");`,
           });
 
-          return loadOpenClawPlugins({
+          return loadQuietCorePlugins({
             cache: false,
             config: {
               plugins: {
@@ -8071,7 +8071,7 @@ module.exports = {
             },
           });
         },
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           const core = registry.plugins.find((entry) => entry.id === "memory-core");
           const selected = registry.plugins.find((entry) => entry.id === "memory-lancedb");
           expect(core?.status).toBe("disabled");
@@ -8121,7 +8121,7 @@ module.exports = {
           );
           process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR = bundledDir;
 
-          return loadOpenClawPlugins({
+          return loadQuietCorePlugins({
             cache: false,
             config: {
               plugins: {
@@ -8135,7 +8135,7 @@ module.exports = {
             },
           });
         },
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           const core = registry.plugins.find((entry) => entry.id === "memory-core");
           const lance = registry.plugins.find((entry) => entry.id === "memory-lancedb");
           expect(core?.status).toBe("loaded");
@@ -8184,7 +8184,7 @@ module.exports = {
           );
           process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR = bundledDir;
 
-          return loadOpenClawPlugins({
+          return loadQuietCorePlugins({
             cache: false,
             config: {
               plugins: {
@@ -8198,7 +8198,7 @@ module.exports = {
             },
           });
         },
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           const core = registry.plugins.find((entry) => entry.id === "memory-core");
           const lance = registry.plugins.find((entry) => entry.id === "memory-lancedb");
           expect(core?.status).toBe("disabled");
@@ -8228,7 +8228,7 @@ module.exports = {
           );
           process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR = bundledDir;
 
-          return loadOpenClawPlugins({
+          return loadQuietCorePlugins({
             cache: false,
             config: {
               plugins: {
@@ -8241,7 +8241,7 @@ module.exports = {
             },
           });
         },
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           const core = registry.plugins.find((entry) => entry.id === "memory-core");
           expect(core?.status).toBe("disabled");
         },
@@ -8260,7 +8260,7 @@ module.exports = {
               QUIET_CORE_BUNDLED_PLUGINS_DIR: undefined,
             },
             () =>
-              loadOpenClawPlugins({
+              loadQuietCorePlugins({
                 cache: false,
                 config: {
                   plugins: {
@@ -8271,7 +8271,7 @@ module.exports = {
               }),
           );
         },
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           const entry = registry.plugins.find((item) => item.id === "memory-off");
           expect(entry?.status).toBe("disabled");
         },
@@ -8284,7 +8284,7 @@ module.exports = {
   it("loads dreaming sidecar metadata through a restrictive selected-memory allowlist", async () => {
     const { selectedId } = setupBundledDreamingMemoryPlugins();
 
-    const registry = await loadOpenClawPluginCliRegistry({
+    const registry = await loadQuietCorePluginCliRegistry({
       cache: false,
       config: {
         plugins: {
@@ -8320,7 +8320,7 @@ module.exports = {
             body: simplePluginBody("shadow"),
           });
 
-          return loadOpenClawPlugins({
+          return loadQuietCorePlugins({
             cache: false,
             config: {
               plugins: {
@@ -8355,7 +8355,7 @@ module.exports = {
               filename: "index.cjs",
             });
 
-            return loadOpenClawPlugins({
+            return loadQuietCorePlugins({
               cache: false,
               config: {
                 plugins: {
@@ -8401,7 +8401,7 @@ module.exports = {
               { stateDir },
             );
 
-            return loadOpenClawPlugins({
+            return loadQuietCorePlugins({
               cache: false,
               config: {
                 plugins: {
@@ -8425,7 +8425,7 @@ module.exports = {
         pluginId: "demo-dev-source-duplicate",
         bundledFilename: "index.cjs",
         loadRegistry: () => {
-          const devSourceRoot = makeOpenClawDevSourceRoot();
+          const devSourceRoot = makeQuietCoreDevSourceRoot();
           const bundledPluginsDir = path.join(devSourceRoot, "extensions");
           writeBundledPlugin({
             id: "demo-dev-source-duplicate",
@@ -8453,7 +8453,7 @@ module.exports = {
                 { stateDir },
               );
 
-              return loadOpenClawPlugins({
+              return loadQuietCorePlugins({
                 cache: false,
                 config: {
                   plugins: {
@@ -8519,7 +8519,7 @@ module.exports = {
               "utf-8",
             );
 
-            return loadOpenClawPlugins({
+            return loadQuietCorePlugins({
               cache: false,
               config: {
                 plugins: {
@@ -8576,7 +8576,7 @@ module.exports = {
             id: "warn-open-allow-config",
             body: simplePluginBody("warn-open-allow-config"),
           });
-          return loadOpenClawPlugins({
+          return loadQuietCorePlugins({
             cache: false,
             logger: createWarningLogger(warnings),
             config: {
@@ -8597,7 +8597,7 @@ module.exports = {
             id: "warn-open-allow-workspace",
           });
           return (warnings: string[]) =>
-            loadOpenClawPlugins({
+            loadQuietCorePlugins({
               cache: false,
               workspaceDir,
               logger: createWarningLogger(warnings),
@@ -8634,7 +8634,7 @@ module.exports = {
       id: "warn-mismatch-allow-plugin",
     });
     const warnings: string[] = [];
-    loadOpenClawPlugins({
+    loadQuietCorePlugins({
       cache: false,
       workspaceDir,
       logger: createWarningLogger(warnings),
@@ -8664,7 +8664,7 @@ module.exports = {
       id: "warn-partial-allow-plugin",
     });
     const warnings: string[] = [];
-    loadOpenClawPlugins({
+    loadQuietCorePlugins({
       cache: false,
       workspaceDir,
       logger: createWarningLogger(warnings),
@@ -8702,7 +8702,7 @@ module.exports = {
       id: "warn-noise-workspace-plugin",
     });
     const warnings: string[] = [];
-    loadOpenClawPlugins({
+    loadQuietCorePlugins({
       cache: false,
       workspaceDir,
       logger: createWarningLogger(warnings),
@@ -8733,7 +8733,7 @@ module.exports = {
       id: "warn-open-allow-remediation",
     });
     const warnings: string[] = [];
-    loadOpenClawPlugins({
+    loadQuietCorePlugins({
       cache: false,
       workspaceDir,
       logger: createWarningLogger(warnings),
@@ -8768,7 +8768,7 @@ module.exports = {
       });
 
       const warnings: string[] = [];
-      const registry = loadOpenClawPlugins({
+      const registry = loadQuietCorePlugins({
         cache: false,
         logger: createWarningLogger(warnings),
         config: {
@@ -8845,7 +8845,7 @@ module.exports = {
             id: "workspace-helper",
           });
 
-          return loadOpenClawPlugins({
+          return loadQuietCorePlugins({
             cache: false,
             workspaceDir,
             config: {
@@ -8855,7 +8855,7 @@ module.exports = {
             },
           });
         },
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           expectPluginOriginAndStatus({
             registry,
             pluginId: "workspace-helper",
@@ -8874,7 +8874,7 @@ module.exports = {
             id: "workspace-helper",
           });
 
-          return loadOpenClawPlugins({
+          return loadQuietCorePlugins({
             cache: false,
             workspaceDir,
             config: {
@@ -8885,7 +8885,7 @@ module.exports = {
             },
           });
         },
-        assert: (registry: ReturnType<typeof loadOpenClawPlugins>) => {
+        assert: (registry: ReturnType<typeof loadQuietCorePlugins>) => {
           expectPluginOriginAndStatus({
             registry,
             pluginId: "workspace-helper",
@@ -8909,7 +8909,7 @@ module.exports = {
             id: "shadowed",
           });
 
-          return loadOpenClawPlugins({
+          return loadQuietCorePlugins({
             cache: false,
             workspaceDir,
             config: {
@@ -8957,7 +8957,7 @@ module.exports = {
       "utf-8",
     );
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       workspaceDir: bundledDir,
       config: {
@@ -8985,7 +8985,7 @@ module.exports = {
       filename: "unscoped.cjs",
     });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       config: {
         plugins: {
@@ -9017,7 +9017,7 @@ module.exports = {
             });
 
             const warnings: string[] = [];
-            const registry = loadOpenClawPlugins({
+            const registry = loadQuietCorePlugins({
               cache: false,
               logger: createWarningLogger(warnings),
               config: {
@@ -9046,7 +9046,7 @@ module.exports = {
             });
 
             const warnings: string[] = [];
-            const registry = loadOpenClawPlugins({
+            const registry = loadQuietCorePlugins({
               cache: false,
               logger: createWarningLogger(warnings),
               config: {
@@ -9065,7 +9065,7 @@ module.exports = {
         loadRegistry: () => {
           const { plugin, env } = createEnvResolvedPluginFixture("tracked-load-path");
           const warnings: string[] = [];
-          const registry = loadOpenClawPlugins({
+          const registry = loadQuietCorePlugins({
             cache: false,
             logger: createWarningLogger(warnings),
             env,
@@ -9091,7 +9091,7 @@ module.exports = {
         loadRegistry: () => {
           const { plugin, env } = createEnvResolvedPluginFixture("tracked-install-path");
           const warnings: string[] = [];
-          const registry = loadOpenClawPlugins({
+          const registry = loadQuietCorePlugins({
             cache: false,
             logger: createWarningLogger(warnings),
             env,
@@ -9164,7 +9164,7 @@ module.exports = {
           );
 
           const warnings: string[] = [];
-          const registry = loadOpenClawPlugins({
+          const registry = loadQuietCorePlugins({
             cache: false,
             logger: createWarningLogger(warnings),
             env: {
@@ -9238,7 +9238,7 @@ module.exports = {
       setRuntimeConfigSnapshot(runtimeConfig, sourceConfig);
 
       const warnings: string[] = [];
-      const registry = loadOpenClawPlugins({
+      const registry = loadQuietCorePlugins({
         cache: false,
         logger: createWarningLogger(warnings),
         config: runtimeConfig,
@@ -9316,7 +9316,7 @@ module.exports = {
     }
 
     process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR = bundledDir;
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       workspaceDir: bundledDir,
       config: {
@@ -9386,7 +9386,7 @@ module.exports = {
     });
 
     const registry = withEnv({ QUIET_CORE_BUNDLED_PLUGINS_DIR: "/nonexistent/bundled/plugins" }, () =>
-      loadOpenClawPlugins({
+      loadQuietCorePlugins({
         cache: false,
         workspaceDir: plugin.dir,
         config: {
@@ -9435,7 +9435,7 @@ module.exports = {
       const registry = withEnv(
         { QUIET_CORE_BUNDLED_PLUGINS_DIR: "/nonexistent/bundled/plugins" },
         () =>
-          loadOpenClawPlugins({
+          loadQuietCorePlugins({
             cache: false,
             workspaceDir: plugin.dir,
             config: {
@@ -9486,7 +9486,7 @@ module.exports = {
       });
 
       const warnings: string[] = [];
-      const registry = loadOpenClawPlugins({
+      const registry = loadQuietCorePlugins({
         activate: false,
         cache: false,
         logger: createWarningLogger(warnings),
@@ -9531,7 +9531,7 @@ export const runtimeValue = helperValue;`,
       "utf-8",
     );
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       workspaceDir: plugin.dir,
       config: {

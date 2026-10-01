@@ -25,7 +25,7 @@ import {
 } from "../../agents/model-catalog-visibility.js";
 import type { ModelCatalogEntry } from "../../agents/model-catalog.types.js";
 import { resolveDefaultAgentWorkspaceDir } from "../../agents/workspace.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { isSecretRef } from "../../config/types.secrets.js";
 import type { GatewayRequestContext } from "./types.js";
 
@@ -133,7 +133,7 @@ function profileHasReadOnlyAvailableAuth(params: {
 function hasReadOnlyAvailableProfileAuth(params: {
   provider: string;
   modelApi?: string;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   store: AuthProfileStore;
 }): ModelsListAvailability {
   const now = Date.now();
@@ -164,7 +164,7 @@ function hasReadOnlyAvailableProfileAuth(params: {
 }
 
 function createModelsListProviderAuthChecker(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentId: string;
   workspaceDir: string;
 }): ModelsListProviderAuthChecker {
@@ -224,7 +224,7 @@ async function buildPublicModelsListEntry(params: {
 
 async function buildPublicModelsListEntries(params: {
   catalog: ModelCatalogEntry[];
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentId: string;
   workspaceDir: string;
 }): Promise<ModelsListEntry[]> {

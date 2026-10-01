@@ -5,12 +5,12 @@ import {
   resolveOAuthDir,
   resolveStateDir,
 } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { buildCleanupPlan } from "./cleanup-utils.js";
 
 /** Build the cleanup plan for the current runtime config/state/credential paths on disk. */
 export function resolveCleanupPlanFromDisk(): {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   stateDir: string;
   configPath: string;
   oauthDir: string;

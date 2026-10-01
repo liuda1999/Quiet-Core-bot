@@ -15,7 +15,7 @@ const WEB_PROVIDER_SECRET_CONFIGS = [
 
 type WebProviderSecretConfig = (typeof WEB_PROVIDER_SECRET_CONFIGS)[number];
 
-function createPluginOpenClawConfigSecretTargetEntry(
+function createPluginQuietCoreConfigSecretTargetEntry(
   pluginId: string,
   configPath: string,
 ): SecretTargetRegistryEntry {
@@ -59,7 +59,7 @@ function listBundledWebProviderSecretTargetRegistryEntries(
         hasWebProviderContract(record, config.contract) &&
         hasSensitiveConfigHint(record, config.configPath)
       ) {
-        entries.push(createPluginOpenClawConfigSecretTargetEntry(record.id, config.configPath));
+        entries.push(createPluginQuietCoreConfigSecretTargetEntry(record.id, config.configPath));
       }
     }
   }
@@ -74,7 +74,7 @@ function listBundledPluginConfigSecretTargetRegistryEntries(
   for (const record of bundledPlugins) {
     const secretInputs = record.configContracts?.secretInputs?.paths ?? [];
     for (const secretInput of secretInputs) {
-      const entry = createPluginOpenClawConfigSecretTargetEntry(record.id, secretInput.path);
+      const entry = createPluginQuietCoreConfigSecretTargetEntry(record.id, secretInput.path);
       const key = `${entry.configFile}:${entry.pathPattern}`;
       if (seen.has(key)) {
         continue;

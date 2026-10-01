@@ -2,7 +2,7 @@
 # Reproduces the multi-node-install update bug.
 #
 # Sets up two independent Node installations inside a Docker container, installs
-# OpenClaw under node-A, registers the gateway service pointing at node-A, then
+# QuietCore under node-A, registers the gateway service pointing at node-A, then
 # switches PATH so node-B comes first and runs `quiet-core-bot update`. Verifies that:
 #
 # 1. The update targets the wrong install root (node-B npm prefix) or produces
@@ -98,7 +98,7 @@ NODE_B_VERSION="$("$NODE_B" --version)"
 echo "node-B: $NODE_B ($NODE_B_VERSION)"
 
 echo ""
-echo "── Step 2: Install OpenClaw under node-A ──"
+echo "── Step 2: Install QuietCore under node-A ──"
 
 # Use node-A to install quiet-core-bot with npm prefix A.
 export npm_config_prefix="$NPM_PREFIX_A"
@@ -108,8 +108,8 @@ export npm_config_fund=false
 export npm_config_audit=false
 export PATH="$NPM_PREFIX_A/bin:$NODE_A_DIR:$PATH"
 
-echo "Installing OpenClaw package under node-A prefix: $NPM_PREFIX_A"
-quiet_core_bot_e2e_install_package "$ARTIFACTS/install-a.log" "OpenClaw package under node-A prefix" "$NPM_PREFIX_A"
+echo "Installing QuietCore package under node-A prefix: $NPM_PREFIX_A"
+quiet_core_bot_e2e_install_package "$ARTIFACTS/install-a.log" "QuietCore package under node-A prefix" "$NPM_PREFIX_A"
 echo "Installed. Checking quiet-core-bot location..."
 
 QUIET_CORE_A="$(command -v quiet-core-bot)"
@@ -368,7 +368,7 @@ echo ""
 # Check 1: Did the baked node path change from A to B?
 if [ "$BAKED_NODE_AFTER" = "$NODE_B" ] && [ "$BAKED_NODE_BEFORE" != "$NODE_B" ]; then
   echo "BUG CONFIRMED: Gateway service now points at node-B ($NODE_B)"
-  echo "   but OpenClaw package is still under node-A prefix ($PACKAGE_ROOT_A)."
+  echo "   but QuietCore package is still under node-A prefix ($PACKAGE_ROOT_A)."
   echo "   The gateway will use node-B to run an entrypoint that may reference"
   echo "   node-A dependencies or may not exist under node-B global prefix."
 elif [ "$BAKED_NODE_AFTER" = "$BAKED_NODE_BEFORE" ]; then
@@ -377,11 +377,11 @@ else
   echo "CHANGED: Node path changed from $BAKED_NODE_BEFORE to $BAKED_NODE_AFTER"
 fi
 
-# Check 2: Is the OpenClaw package installed under node-B npm prefix?
+# Check 2: Is the QuietCore package installed under node-B npm prefix?
 if [ -f "$NPM_PREFIX_B/lib/node_modules/quiet-core-bot/package.json" ]; then
-  echo "WARNING: OpenClaw was ALSO installed under node-B prefix (split install)"
+  echo "WARNING: QuietCore was ALSO installed under node-B prefix (split install)"
 else
-  echo "OK: OpenClaw is NOT under node-B prefix (expected: only under node-A)"
+  echo "OK: QuietCore is NOT under node-B prefix (expected: only under node-A)"
 fi
 
 # Check 3: Does the entrypoint in the unit file actually exist?
@@ -397,7 +397,7 @@ fi
 
 # Check 4: Were there any warnings about split install in the update output?
 if [ -f "$ARTIFACTS/update.err" ]; then
-  if grep -qi "Shell OpenClaw root differs" "$ARTIFACTS/update.err" 2>/dev/null; then
+  if grep -qi "Shell QuietCore root differs" "$ARTIFACTS/update.err" 2>/dev/null; then
     echo "OK: Update warned about split root"
   fi
   if grep -qi "Managed gateway service Node" "$ARTIFACTS/update.err" 2>/dev/null; then

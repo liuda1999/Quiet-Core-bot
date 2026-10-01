@@ -340,7 +340,7 @@ describe("test-install-sh-docker", () => {
         "set -euo pipefail",
         'case "${1:-}" in',
         "  --version)",
-        "    printf 'OpenClaw v2026.6.21-beta.1\\r\\n'",
+        "    printf 'QuietCore v2026.6.21-beta.1\\r\\n'",
         "    ;;",
         "  --help)",
         "    printf 'usage\\n'",
@@ -361,7 +361,7 @@ describe("test-install-sh-docker", () => {
         [
           "set -euo pipefail",
           "source scripts/docker/install-sh-common/cli-verify.sh",
-          "printf 'parsed=%s\\n' \"$(extract_quiet_core_bot_semver 'OpenClaw v2026.6.21-beta.1+build.7')\"",
+          "printf 'parsed=%s\\n' \"$(extract_quiet_core_bot_semver 'QuietCore v2026.6.21-beta.1+build.7')\"",
           "verify_installed_cli quiet-core-bot 2026.6.21-beta.1",
         ].join("\n"),
       ],
@@ -589,7 +589,7 @@ describe("test-install-sh-docker", () => {
     expect(workflow).toContain(
       "git for-each-ref --format='%(refname:short)' --contains \"$selected_sha\" refs/remotes/origin",
     );
-    expect(workflow).toContain("reachable from an OpenClaw branch or release tag");
+    expect(workflow).toContain("reachable from an QuietCore branch or release tag");
   });
 
   it("prints package size audits for release smoke tarballs", () => {

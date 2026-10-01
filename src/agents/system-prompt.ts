@@ -42,8 +42,8 @@ import {
   normalizeStructuredPromptSection,
 } from "./prompt-cache-stability.js";
 import {
-  buildOpenClawToolFallbackText,
-  shouldRenderOpenClawToolWorkflowHints,
+  buildQuietCoreToolFallbackText,
+  shouldRenderQuietCoreToolWorkflowHints,
 } from "./prompt-surface.js";
 import { sanitizeForPromptLiteral } from "./sanitize-for-prompt.js";
 import {
@@ -856,7 +856,7 @@ export function buildAgentSystemPrompt(params: {
     toolLines.push(summary ? `- ${name}: ${summary}` : `- ${name}`);
   }
   const toolSchemaDirectoryPrompt = params.toolSchemaDirectoryPrompt?.trim();
-  const renderOpenClawToolWorkflowHints = shouldRenderOpenClawToolWorkflowHints({
+  const renderQuietCoreToolWorkflowHints = shouldRenderQuietCoreToolWorkflowHints({
     surface: promptSurface,
     hasToolList: toolLines.length > 0,
   });
@@ -987,7 +987,7 @@ export function buildAgentSystemPrompt(params: {
     toolLines,
     toolSchemaDirectoryPrompt,
     capabilityToolNames: [...availableTools].toSorted(),
-    renderOpenClawToolWorkflowHints,
+    renderQuietCoreToolWorkflowHints,
     hasGateway,
     readToolName,
     execToolName,
@@ -1031,7 +1031,7 @@ export function buildAgentSystemPrompt(params: {
       "Available tools are policy-filtered. Names are case-sensitive; call exactly as listed.",
       toolLines.length > 0
         ? toolLines.join("\n")
-        : buildOpenClawToolFallbackText({
+        : buildQuietCoreToolFallbackText({
             surface: promptSurface,
             execToolName,
             processToolName,
@@ -1040,7 +1040,7 @@ export function buildAgentSystemPrompt(params: {
         ? ["", "### Deferred Tool Schemas", toolSchemaDirectoryPrompt]
         : []),
       "TOOLS.md is usage guidance, not availability.",
-      ...(renderOpenClawToolWorkflowHints
+      ...(renderQuietCoreToolWorkflowHints
         ? [
             `For long waits, avoid rapid poll loops: use ${execToolName} with enough yieldMs or ${processToolName}(action=poll, timeout=<ms>).`,
             "Larger work: use `sessions_spawn`; completion is push-based.",
@@ -1060,7 +1060,7 @@ export function buildAgentSystemPrompt(params: {
               : []),
           ]
         : []),
-      ...(renderOpenClawToolWorkflowHints
+      ...(renderQuietCoreToolWorkflowHints
         ? [
             availableTools.has("sessions_yield")
               ? "Do not poll `subagents list` / `sessions_list` in a loop; use `sessions_yield` when waiting for spawned sub-agent completion events, and check status only on-demand (for intervention, debugging, or when explicitly asked)."

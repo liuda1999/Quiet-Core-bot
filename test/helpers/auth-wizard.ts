@@ -69,7 +69,7 @@ export function createAuthTestLifecycle(envKeys: string[]): AuthTestLifecycle {
 }
 
 /** Return QUIET_CORE_AGENT_DIR or fail the test clearly. */
-export function requireOpenClawAgentDir(): string {
+export function requireQuietCoreAgentDir(): string {
   const agentDir = process.env.QUIET_CORE_AGENT_DIR;
   if (!agentDir) {
     throw new Error("QUIET_CORE_AGENT_DIR not set");

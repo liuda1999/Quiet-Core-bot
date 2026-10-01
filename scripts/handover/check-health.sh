@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# OpenClaw handover · health probe.
+# QuietCore handover · health probe.
 #
 # Checks the liveness (/healthz) and readiness (/readyz) endpoints and, when a
 # local build/CLI is available, the richer `quiet-core-bot health` / `gateway status`

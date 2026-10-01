@@ -58,7 +58,7 @@ export function createPolicyDataAuthChecks(deps: PolicyDoctorCheckDeps): readonl
     id: CHECK_IDS.policySecretsUnmanagedProvider,
     kind: "plugin",
     description:
-      "OpenClaw config SecretRefs use configured secret providers when policy requires managed providers.",
+      "QuietCore config SecretRefs use configured secret providers when policy requires managed providers.",
     source: "policy",
     async detect(ctx) {
       return findingsForCheck(await evaluatePolicy(ctx), CHECK_IDS.policySecretsUnmanagedProvider);
@@ -68,7 +68,7 @@ export function createPolicyDataAuthChecks(deps: PolicyDoctorCheckDeps): readonl
     id: CHECK_IDS.policySecretsDeniedProviderSource,
     kind: "plugin",
     description:
-      "OpenClaw config secret providers and SecretRefs do not use sources denied by policy.",
+      "QuietCore config secret providers and SecretRefs do not use sources denied by policy.",
     source: "policy",
     async detect(ctx) {
       return findingsForCheck(
@@ -90,7 +90,7 @@ export function createPolicyDataAuthChecks(deps: PolicyDoctorCheckDeps): readonl
   const policyAuthProfileInvalidMetadataCheck: HealthCheck = {
     id: CHECK_IDS.policyAuthProfileInvalidMetadata,
     kind: "plugin",
-    description: "OpenClaw config auth profiles declare required provider and mode metadata.",
+    description: "QuietCore config auth profiles declare required provider and mode metadata.",
     source: "policy",
     async detect(ctx) {
       return findingsForCheck(
@@ -102,7 +102,7 @@ export function createPolicyDataAuthChecks(deps: PolicyDoctorCheckDeps): readonl
   const policyAuthProfileUnapprovedModeCheck: HealthCheck = {
     id: CHECK_IDS.policyAuthProfileUnapprovedMode,
     kind: "plugin",
-    description: "OpenClaw config auth profile modes stay within the policy allowlist.",
+    description: "QuietCore config auth profile modes stay within the policy allowlist.",
     source: "policy",
     async detect(ctx) {
       return findingsForCheck(await evaluatePolicy(ctx), CHECK_IDS.policyAuthProfileUnapprovedMode);

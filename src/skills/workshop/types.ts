@@ -1,5 +1,5 @@
 // Workshop types define generated skill draft, policy, and config contracts.
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { SkillScanFinding } from "../security/scanner.js";
 
 /** Schema id for persisted skill workshop proposal records. */
@@ -114,7 +114,7 @@ export type SkillProposalSupportFileInput = {
 
 export type SkillProposalCreateInput = {
   workspaceDir: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   name: string;
   description: string;
   content: string;
@@ -127,7 +127,7 @@ export type SkillProposalCreateInput = {
 
 export type SkillProposalUpdateInput = {
   workspaceDir: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   skillName: string;
   description?: string;
   content: string;
@@ -140,7 +140,7 @@ export type SkillProposalUpdateInput = {
 
 export type SkillProposalReviseInput = {
   workspaceDir: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   proposalId: string;
   content: string;
   supportFiles?: SkillProposalSupportFileInput[];
@@ -151,7 +151,7 @@ export type SkillProposalReviseInput = {
 
 export type SkillProposalActionInput = {
   workspaceDir: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   proposalId: string;
   reason?: string;
 };

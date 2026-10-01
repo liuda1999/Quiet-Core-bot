@@ -7,14 +7,14 @@ import {
   executeSqliteQueryTakeFirstSync,
   getNodeSqliteKysely,
 } from "../infra/kysely-sync.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
 import {
-  closeOpenClawStateDatabase,
-  openOpenClawStateDatabase,
+  closeQuietCoreStateDatabase,
+  openQuietCoreStateDatabase,
 } from "../state/quiet-core-bot-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "../state/quiet-core-bot-state-db.paths.js";
+import { resolveQuietCoreStateSqlitePath } from "../state/quiet-core-bot-state-db.paths.js";
 import { captureEnv } from "../test-utils/env.js";
-import { withOpenClawTestState } from "../test-utils/quiet-core-bot-test-state.js";
+import { withQuietCoreTestState } from "../test-utils/quiet-core-bot-test-state.js";
 import {
   createManagedTaskFlow as createManagedTaskFlowOrNull,
   resetTaskFlowRegistryForTests,
@@ -69,7 +69,7 @@ function createManagedTaskFlow(
   return flow;
 }
 type TaskRegistryTestDatabase = Pick<
-  OpenClawStateKyselyDatabase,
+  QuietCoreStateKyselyDatabase,
   "task_delivery_state" | "task_runs"
 >;
 
@@ -195,7 +195,7 @@ describe("task-registry store runtime", () => {
   });
 
   it("rejects corrupt persisted task rows during sqlite restore", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       { layout: "state-only", prefix: "quiet-core-bot-task-store-corrupt-" },
       async () => {
         resetTaskRegistryForTests();
@@ -211,7 +211,7 @@ describe("task-registry store runtime", () => {
           notifyPolicy: "silent",
         });
 
-        const database = openOpenClawStateDatabase();
+        const database = openQuietCoreStateDatabase();
         const db = getNodeSqliteKysely<TaskRegistryTestDatabase>(database.db);
         executeSqliteQuerySync(
           database.db,
@@ -224,7 +224,7 @@ describe("task-registry store runtime", () => {
   });
 
   it("drops invalid requester origins during sqlite restore", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       { layout: "state-only", prefix: "quiet-core-bot-task-store-invalid-origin-" },
       async () => {
         resetTaskRegistryForTests();
@@ -243,7 +243,7 @@ describe("task-registry store runtime", () => {
           },
         });
 
-        const database = openOpenClawStateDatabase();
+        const database = openQuietCoreStateDatabase();
         const db = getNodeSqliteKysely<TaskRegistryTestDatabase>(database.db);
         executeSqliteQuerySync(
           database.db,
@@ -522,7 +522,7 @@ describe("task-registry store runtime", () => {
   });
 
   it("persists executor and requester agent ids in sqlite task rows", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       { layout: "state-only", prefix: "quiet-core-bot-task-agent-id-" },
       async () => {
         const created = createTaskRecord({
@@ -538,7 +538,7 @@ describe("task-registry store runtime", () => {
           deliveryStatus: "pending",
         });
 
-        const database = openOpenClawStateDatabase();
+        const database = openQuietCoreStateDatabase();
         const db = getNodeSqliteKysely<TaskRegistryTestDatabase>(database.db);
         const row = executeSqliteQueryTakeFirstSync(
           database.db,
@@ -566,7 +566,7 @@ describe("task-registry store runtime", () => {
   });
 
   it("persists requester origin atomically when creating sqlite tasks", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       { layout: "state-only", prefix: "quiet-core-bot-task-create-origin-" },
       async () => {
         const created = createTaskRecord({
@@ -674,7 +674,7 @@ describe("task-registry store runtime", () => {
   });
 
   it("prunes stale sqlite delivery state while retaining current rows", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       { layout: "state-only", prefix: "quiet-core-bot-task-delivery-prune-" },
       async () => {
         const taskA = createStoredTask();
@@ -719,7 +719,7 @@ describe("task-registry store runtime", () => {
   });
 
   it("prunes large sqlite snapshots without binding every task id at once", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       { layout: "state-only", prefix: "quiet-core-bot-task-large-prune-" },
       async () => {
         const tasks = new Map<string, TaskRecord>();
@@ -757,7 +757,7 @@ describe("task-registry store runtime", () => {
   });
 
   it("reopens after the shared state database is closed", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       { layout: "state-only", prefix: "quiet-core-bot-task-store-" },
       async () => {
         const task = createStoredTask();
@@ -766,7 +766,7 @@ describe("task-registry store runtime", () => {
           deliveryStates: new Map(),
         });
 
-        closeOpenClawStateDatabase();
+        closeQuietCoreStateDatabase();
 
         const restored = loadTaskRegistryStateFromSqlite();
         expect(restored.tasks.get(task.taskId)).toEqual(task);
@@ -778,7 +778,7 @@ describe("task-registry store runtime", () => {
     if (process.platform === "win32") {
       return;
     }
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       { layout: "state-only", prefix: "quiet-core-bot-task-store-" },
       async () => {
         createTaskRecord({
@@ -793,7 +793,7 @@ describe("task-registry store runtime", () => {
           notifyPolicy: "silent",
         });
 
-        const databasePath = resolveOpenClawStateSqlitePath(process.env);
+        const databasePath = resolveQuietCoreStateSqlitePath(process.env);
         const registryDir = path.dirname(databasePath);
         expect(databasePath.endsWith(path.join("state", "quiet-core-bot.sqlite"))).toBe(true);
         expect(statSync(registryDir).mode & 0o777).toBe(0o700);

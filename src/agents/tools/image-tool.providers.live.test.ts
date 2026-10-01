@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import type { ModelApi } from "../../config/types.models.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { resizeToJpeg } from "../../media/media-services.js";
 import { encodePngRgba, fillPixel } from "../../media/png-encode.js";
 import {
@@ -123,7 +123,7 @@ function isSkippableLiveError(error: unknown): boolean {
   );
 }
 
-function createLiveConfig(testCase: LiveProviderCase): OpenClawConfig {
+function createLiveConfig(testCase: LiveProviderCase): QuietCoreConfig {
   return {
     agents: {
       defaults: {

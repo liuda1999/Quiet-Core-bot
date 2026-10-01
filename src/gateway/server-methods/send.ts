@@ -23,7 +23,7 @@ import {
   getRuntimeConfigSourceSnapshot,
   selectApplicableRuntimeConfig,
 } from "../../config/runtime-snapshot.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { resolveOutboundChannelPlugin } from "../../infra/outbound/channel-resolution.js";
 import { resolveMessageChannelSelection } from "../../infra/outbound/channel-selection.js";
 import {
@@ -168,8 +168,8 @@ async function resolveRequestedChannel(params: {
   rejectWebchatAsInternalOnly?: boolean;
 }): Promise<
   | {
-      cfg: OpenClawConfig;
-      sourceCfg: OpenClawConfig;
+      cfg: QuietCoreConfig;
+      sourceCfg: QuietCoreConfig;
       channel: string;
     }
   | {
@@ -213,8 +213,8 @@ async function resolveInternalDeliveryChannel(
 ): Promise<
   | {
       kind: "ready";
-      cfg: OpenClawConfig;
-      sourceCfg: OpenClawConfig;
+      cfg: QuietCoreConfig;
+      sourceCfg: QuietCoreConfig;
       channel: string;
     }
   | {
@@ -240,7 +240,7 @@ async function resolveInternalDeliveryChannel(
 function resolveGatewayOutboundTarget(params: {
   channel: string;
   to: string;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   accountId?: string;
 }):
   | {
@@ -268,9 +268,9 @@ function resolveGatewayOutboundTarget(params: {
 }
 
 function resolveMessageActionRuntimeConfig(params: {
-  cfg: OpenClawConfig;
-  sourceCfg: OpenClawConfig;
-}): OpenClawConfig {
+  cfg: QuietCoreConfig;
+  sourceCfg: QuietCoreConfig;
+}): QuietCoreConfig {
   const runtimeConfig = getRuntimeConfigSnapshot();
   const runtimeSourceConfig = getRuntimeConfigSourceSnapshot();
   if (!runtimeConfig || !runtimeSourceConfig) {

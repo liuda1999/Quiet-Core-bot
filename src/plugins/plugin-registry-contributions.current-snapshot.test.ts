@@ -1,6 +1,6 @@
 // Verifies current plugin registry contribution snapshots.
 import { afterEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   clearCurrentPluginMetadataSnapshot,
   setCurrentPluginMetadataSnapshot,
@@ -46,7 +46,7 @@ function createManifest(id: string): PluginManifestRecord {
 }
 
 function createSnapshot(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   workspaceDir: string;
   registryDiagnostics?: PluginMetadataSnapshot["registryDiagnostics"];
 }): PluginMetadataSnapshot {
@@ -97,7 +97,7 @@ function createSnapshot(params: {
 
 describe("loadPluginManifestRegistryForPluginRegistry current snapshot", () => {
   it("reuses compatible current manifest metadata", () => {
-    const config: OpenClawConfig = {};
+    const config: QuietCoreConfig = {};
     const env = {
       HOME: "/tmp/quiet-core-bot-test-home",
       QUIET_CORE_DISABLE_BUNDLED_PLUGINS: "1",
@@ -143,7 +143,7 @@ describe("loadPluginManifestRegistryForPluginRegistry current snapshot", () => {
   });
 
   it("does not reuse current metadata for explicit registry inputs or diagnostics", () => {
-    const config: OpenClawConfig = {};
+    const config: QuietCoreConfig = {};
     const env = {
       HOME: "/tmp/quiet-core-bot-test-home",
       QUIET_CORE_DISABLE_BUNDLED_PLUGINS: "1",

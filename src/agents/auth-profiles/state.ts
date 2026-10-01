@@ -9,7 +9,7 @@ import { asFiniteNumber } from "@quiet-core/normalization-core/number-coercion";
 import { isRecord } from "@quiet-core/normalization-core/record-coerce";
 import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import { normalizeTrimmedStringList } from "@quiet-core/normalization-core/string-normalization";
-import type { OpenClawAgentDatabase } from "../../state/quiet-core-bot-agent-db.js";
+import type { QuietCoreAgentDatabase } from "../../state/quiet-core-bot-agent-db.js";
 import { AUTH_STORE_VERSION } from "./constants.js";
 import { readPersistedAuthProfileStateRaw, writePersistedAuthProfileStateRaw } from "./sqlite.js";
 import type {
@@ -192,7 +192,7 @@ export function mergeAuthProfileState(
 /** Loads persisted auth profile runtime state from SQLite. */
 export function loadPersistedAuthProfileState(
   agentDir?: string,
-  database?: OpenClawAgentDatabase,
+  database?: QuietCoreAgentDatabase,
 ): AuthProfileState {
   return coerceAuthProfileState(readPersistedAuthProfileStateRaw(agentDir, database));
 }

@@ -1,7 +1,7 @@
 // Channel MCP tools expose channel operations through an MCP server.
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import type { OpenClawChannelBridge } from "./channel-bridge.js";
+import type { QuietCoreChannelBridge } from "./channel-bridge.js";
 import {
   extractAttachmentsFromMessage,
   resolveMessageId,
@@ -30,7 +30,7 @@ export function getChannelMcpCapabilities(claudeChannelMode: "off" | "on" | "aut
 }
 
 /** Register all channel MCP tools against a server instance. */
-export function registerChannelMcpTools(server: McpServer, bridge: OpenClawChannelBridge): void {
+export function registerChannelMcpTools(server: McpServer, bridge: QuietCoreChannelBridge): void {
   server.tool(
     "conversations_list",
     "List Quiet Core bot channel-backed conversations available through session routes.",

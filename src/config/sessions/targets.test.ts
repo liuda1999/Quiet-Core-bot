@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { withTempHome } from "quiet-core-bot/plugin-sdk/test-env";
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config.js";
+import type { QuietCoreConfig } from "../config.js";
 import { resolveStorePath } from "./paths.js";
 import {
   resolveAgentSessionStoreTargetsSync,
@@ -31,7 +31,7 @@ async function createAgentSessionStores(
   return storePaths;
 }
 
-function createCustomRootCfg(customRoot: string, defaultAgentId = "ops"): OpenClawConfig {
+function createCustomRootCfg(customRoot: string, defaultAgentId = "ops"): QuietCoreConfig {
   return {
     session: {
       store: path.join(customRoot, "agents", "{agentId}", "sessions", "sessions.json"),
@@ -74,7 +74,7 @@ function expectTargetsToContainStores(
 describe("resolveSessionStoreTargets", () => {
   it("resolves all configured agent stores", async () => {
     await withTempHome(async () => {
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         session: {
           store: "~/.quiet-core-bot/agents/{agentId}/sessions/sessions.json",
         },
@@ -100,7 +100,7 @@ describe("resolveSessionStoreTargets", () => {
 
   it("includes configured ACP harness stores for all-agent session views", async () => {
     await withTempHome(async () => {
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         session: {
           store: "~/.quiet-core-bot/agents/{agentId}/sessions/sessions.json",
         },
@@ -144,7 +144,7 @@ describe("resolveSessionStoreTargets", () => {
   });
 
   it("dedupes shared store paths for --all-agents", () => {
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       session: {
         store: "/tmp/shared-sessions.json",
       },
@@ -159,7 +159,7 @@ describe("resolveSessionStoreTargets", () => {
   });
 
   it("rejects unknown agent ids", () => {
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       agents: {
         list: [{ id: "main", default: true }, { id: "work" }],
       },
@@ -218,7 +218,7 @@ describe("resolveAllAgentSessionStoreTargetsSync", () => {
       const stateDir = path.join(home, ".quiet-core-bot");
       const storePaths = await createAgentSessionStores(stateDir, ["ops", "retired"]);
 
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         agents: {
           list: [{ id: "ops", default: true }],
         },
@@ -270,7 +270,7 @@ describe("resolveAllAgentSessionStoreTargetsSync", () => {
         ...process.env,
         QUIET_CORE_STATE_DIR: envStateDir,
       };
-      const cfg: OpenClawConfig = {};
+      const cfg: QuietCoreConfig = {};
       const mainStorePath = await resolveRealStorePath(mainSessionsDir);
       const retiredStorePath = await resolveRealStorePath(retiredSessionsDir);
 
@@ -344,7 +344,7 @@ describe("resolveAllAgentSessionStoreTargetsSync", () => {
       await fs.writeFile(path.join(mainSessionsDir, "sessions.json"), "{}", "utf8");
       await fs.writeFile(path.join(junkSessionsDir, "sessions.json"), "{}", "utf8");
 
-      const cfg: OpenClawConfig = {};
+      const cfg: QuietCoreConfig = {};
       const mainStorePath = await resolveRealStorePath(mainSessionsDir);
       const targets = resolveAllAgentSessionStoreTargetsSync(cfg, { env: process.env });
 

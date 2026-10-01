@@ -1,6 +1,6 @@
 // Defines and sanitizes runtime diagnostic event payloads.
 import { randomUUID } from "node:crypto";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { TalkBrain, TalkEventType, TalkMode, TalkTransport } from "../talk/talk-events.js";
 import {
   formatDiagnosticTraceparent,
@@ -918,7 +918,7 @@ function getDiagnosticEventsState(): DiagnosticEventsGlobalState {
 }
 
 /** Returns whether diagnostics are enabled for a loaded config; missing config defaults enabled. */
-export function isDiagnosticsEnabled(config?: OpenClawConfig): boolean {
+export function isDiagnosticsEnabled(config?: QuietCoreConfig): boolean {
   return config?.diagnostics?.enabled !== false;
 }
 

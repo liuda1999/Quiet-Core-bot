@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { closeOpenClawStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
+import { closeQuietCoreStateDatabaseForTest } from "../state/quiet-core-bot-state-db.js";
 import { createConfigIO } from "./io.js";
 
 const shellEnvMocks = vi.hoisted(() => ({
@@ -33,7 +33,7 @@ async function withConfig(run: (params: { home: string; configPath: string }) =>
     await run({ home, configPath });
   } finally {
     // Windows keeps the state SQLite handle open, which makes the temp-home removal fail EBUSY.
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
     await fs.rm(home, { recursive: true, force: true });
   }
 }

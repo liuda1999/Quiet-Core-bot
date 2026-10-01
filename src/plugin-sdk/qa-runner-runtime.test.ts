@@ -15,14 +15,14 @@ import {
 const loadPluginManifestRegistry = vi.hoisted(() => vi.fn());
 const loadBundledPluginPublicSurfaceModuleSync = vi.hoisted(() => vi.fn());
 const tryLoadActivatedBundledPluginPublicSurfaceModuleSync = vi.hoisted(() => vi.fn());
-const resolveOpenClawPackageRootSync = vi.hoisted(() => vi.fn());
+const resolveQuietCorePackageRootSync = vi.hoisted(() => vi.fn());
 
 vi.mock("../plugins/manifest-registry.js", () => ({
   loadPluginManifestRegistry,
 }));
 
 vi.mock("../infra/quiet-core-bot-root.js", () => ({
-  resolveOpenClawPackageRootSync,
+  resolveQuietCorePackageRootSync,
 }));
 
 vi.mock("./facade-runtime.js", () => ({
@@ -60,7 +60,7 @@ describe("plugin-sdk qa-runner-runtime", () => {
     });
     loadBundledPluginPublicSurfaceModuleSync.mockReset();
     tryLoadActivatedBundledPluginPublicSurfaceModuleSync.mockReset();
-    resolveOpenClawPackageRootSync.mockReset().mockReturnValue(null);
+    resolveQuietCorePackageRootSync.mockReset().mockReturnValue(null);
     delete process.env.QUIET_CORE_ENABLE_PRIVATE_QA_CLI;
     delete process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR;
   });
@@ -95,13 +95,13 @@ describe("plugin-sdk qa-runner-runtime", () => {
       tempDirs,
       importRuntime: () => import("./qa-runner-runtime.js"),
       loadBundledPluginPublicSurfaceModuleSync,
-      resolveOpenClawPackageRootSync,
+      resolveQuietCorePackageRootSync,
     });
   });
 
   it("loads bundled plugin test APIs with the private QA source tree override", async () => {
     const sourceRoot = makePrivateQaSourceRoot(tempDirs, "quiet-core-bot-qa-test-api-root-");
-    resolveOpenClawPackageRootSync.mockReturnValue(sourceRoot);
+    resolveQuietCorePackageRootSync.mockReturnValue(sourceRoot);
 
     const testApi = { marker: "matrix-test-api" };
     loadBundledPluginPublicSurfaceModuleSync.mockReturnValue(testApi);
@@ -197,7 +197,7 @@ describe("plugin-sdk qa-runner-runtime", () => {
 
   it("prefers the source bundled tree for private qa discovery in repo checkouts", async () => {
     const sourceRoot = makePrivateQaSourceRoot(tempDirs, "quiet-core-bot-qa-runner-root-");
-    resolveOpenClawPackageRootSync.mockReturnValue(sourceRoot);
+    resolveQuietCorePackageRootSync.mockReturnValue(sourceRoot);
 
     const register = vi.fn((qa: Command) => qa);
     loadPluginManifestRegistry.mockReturnValue({

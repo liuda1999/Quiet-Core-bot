@@ -17,7 +17,7 @@ export {
 export type {
   FallbackAttempt,
   GeneratedVideoAsset,
-  OpenClawConfig,
+  QuietCoreConfig,
   VideoGenerationIgnoredOverride,
   VideoGenerationMode,
   VideoGenerationModeCapabilities,

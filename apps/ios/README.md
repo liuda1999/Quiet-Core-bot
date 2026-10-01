@@ -1,6 +1,6 @@
-# OpenClaw iOS (Super Alpha)
+# QuietCore iOS (Super Alpha)
 
-This iOS app is super-alpha and internal-use only. The first public App Store release targets iPhone and connects to an OpenClaw Gateway as a `role: node`.
+This iOS app is super-alpha and internal-use only. The first public App Store release targets iPhone and connects to an QuietCore Gateway as a `role: node`.
 
 ## Distribution Status
 
@@ -29,11 +29,11 @@ pnpm install
 ./scripts/ios-configure-signing.sh
 cd apps/ios
 xcodegen generate
-open OpenClaw.xcodeproj
+open QuietCore.xcodeproj
 ```
 
 3. In Xcode:
-   - Scheme: `OpenClaw`
+   - Scheme: `QuietCore`
    - Destination: connected iPhone (recommended for real behavior)
    - Build configuration: `Debug`
    - Run (`Product` -> `Run`)
@@ -55,19 +55,19 @@ Prereqs:
 - `pnpm`
 - `xcodegen`
 - `fastlane`
-- Apple account signed into Xcode for the canonical OpenClaw team (`FWJYW4S8P8`)
-- Fastlane Apple Developer Portal session for the canonical OpenClaw team when creating bundle IDs or enabling services
+- Apple account signed into Xcode for the canonical QuietCore team (`FWJYW4S8P8`)
+- Fastlane Apple Developer Portal session for the canonical QuietCore team when creating bundle IDs or enabling services
 - Release-owner access to the encrypted signing repo password (`MATCH_PASSWORD`)
-- App Store Connect app already created for `ai.openclawfoundation.app`
+- App Store Connect app already created for `ai.quiet-core-botfoundation.app`
 - App Store Connect API key set up in Keychain via `scripts/ios-app-store-connect-keychain-setup.sh` when auto-resolving a build number or uploading to App Store Connect
 
 Release behavior:
 
-- Local development uses the canonical `ai.openclawfoundation.app*` bundle IDs when the OpenClaw team is available, and unique `ai.openclawfoundation.app.test.*` bundle IDs only for non-canonical fallback teams.
-- App Store release uses canonical `ai.openclawfoundation.app*` bundle IDs through a temporary generated xcconfig in `apps/ios/build/AppStoreRelease.xcconfig`.
+- Local development uses the canonical `ai.quiet-core-botfoundation.app*` bundle IDs when the QuietCore team is available, and unique `ai.quiet-core-botfoundation.app.test.*` bundle IDs only for non-canonical fallback teams.
+- App Store release uses canonical `ai.quiet-core-botfoundation.app*` bundle IDs through a temporary generated xcconfig in `apps/ios/build/AppStoreRelease.xcconfig`.
 - App Store release uses manual `Apple Distribution` signing with profile names pinned in `apps/ios/Config/AppStoreSigning.json`.
 - Fastlane owns one-time Developer Portal setup, encrypted `match` signing sync to the repo/branch pinned in `apps/ios/Config/AppStoreSigning.json`, and release handling.
-- App Store release also switches the app to `OpenClawPushMode=appStore`, which derives relay transport, official distribution, the canonical production relay, production APNs, production relay profile, `appleStrict` proof, and the App-Attest-capable entitlement file.
+- App Store release also switches the app to `QuietCorePushMode=appStore`, which derives relay transport, official distribution, the canonical production relay, production APNs, production relay profile, `appleStrict` proof, and the App-Attest-capable entitlement file.
 - `pnpm ios:release:upload` generates App Store screenshots, uploads release notes, and attaches `apps/ios/APP-REVIEW-NOTES.md` as a rendered PDF before archiving and uploading the IPA.
 - The release archive is validated before upload by inspecting the exported IPA's signed entitlements, embedded App Store profile, and push mode. The upload fails if the IPA is not an App Store production relay build.
 - App Review submission is manual in App Store Connect. The release lane uploads a build, public metadata, and the App Review PDF attachment, but it does not submit for review or upload the App Store Connect `Notes` field.
@@ -152,10 +152,10 @@ scripts/ios-app-store-connect-keychain-setup.sh \
 This should create `apps/ios/fastlane/.env` with non-secret App Store Connect variables while the private key stays in Keychain.
 
 3. Confirm the App Store Connect app and Apple Developer identifiers/capabilities exist for:
-   - `ai.openclawfoundation.app`
-   - `ai.openclawfoundation.app.share`
-   - `ai.openclawfoundation.app.activitywidget`
-   - `ai.openclawfoundation.app.watchkitapp`
+   - `ai.quiet-core-botfoundation.app`
+   - `ai.quiet-core-botfoundation.app.share`
+   - `ai.quiet-core-botfoundation.app.activitywidget`
+   - `ai.quiet-core-botfoundation.app.watchkitapp`
 
    The main app and share extension must both be associated with the App Group pinned in `apps/ios/Config/AppStoreSigning.json`. The main app must also have App Attest enabled.
 
@@ -180,14 +180,14 @@ pnpm ios:release:upload
    - generates deterministic App Store screenshots
    - uploads release notes, screenshots, and the App Review PDF attachment to the editable App Store version
    - generates `apps/ios/build/AppStoreRelease.xcconfig`
-   - archives `OpenClaw`
+   - archives `QuietCore`
    - validates the exported IPA's push mode, signed entitlements, and embedded App Store profile
    - uploads the IPA to App Store Connect for TestFlight/App Review use
    - leaves App Review submission for a maintainer to complete manually
 
 7. Expected outputs after a successful run:
-   - `apps/ios/build/app-store/OpenClaw-<version>.ipa`
-   - `apps/ios/build/app-store/OpenClaw-<version>.app.dSYM.zip`
+   - `apps/ios/build/app-store/QuietCore-<version>.ipa`
+   - `apps/ios/build/app-store/QuietCore-<version>.app.dSYM.zip`
    - Fastlane log line like `Uploaded iOS App Store build: version=<version> short=<short> build=<build>`
 
 8. If this is a fresh clone on a maintainer machine that already works elsewhere, it is OK to copy the non-secret `apps/ios/fastlane/.env` from another trusted local clone on the same Mac. The Keychain-backed private key remains machine-local and is not stored in the repo.
@@ -237,16 +237,16 @@ See `apps/ios/VERSIONING.md` for the detailed spec.
 ## APNs Expectations For Local/Manual Builds
 
 - The app calls `registerForRemoteNotifications()` at launch.
-- `apps/ios/Sources/OpenClaw.entitlements` derives `aps-environment` from the active build configuration/signing override.
-- App Attest relay builds use `apps/ios/Sources/OpenClawAppAttest.entitlements`; local/direct builds do not require App Attest provisioning.
+- `apps/ios/Sources/QuietCore.entitlements` derives `aps-environment` from the active build configuration/signing override.
+- App Attest relay builds use `apps/ios/Sources/QuietCoreAppAttest.entitlements`; local/direct builds do not require App Attest provisioning.
 - APNs token registration to gateway happens only after gateway connection (`push.apns.register`).
-- Local/manual Debug builds default to `OpenClawPushMode=localSandbox`, direct APNs registration, and a development `aps-environment` entitlement. Local/manual Release builds default to `OpenClawPushMode=localProduction` and direct production APNs registration.
+- Local/manual Debug builds default to `QuietCorePushMode=localSandbox`, direct APNs registration, and a development `aps-environment` entitlement. Local/manual Release builds default to `QuietCorePushMode=localProduction` and direct production APNs registration.
 - Your selected team/profile must support Push Notifications for the app bundle ID you are signing.
 - If push capability or provisioning is wrong, APNs registration fails at runtime (check Xcode logs for `APNs registration failed`).
 - The gateway host also needs direct APNs auth configured separately with `QUIET_CORE_APNS_TEAM_ID`, `QUIET_CORE_APNS_KEY_ID`, and either `QUIET_CORE_APNS_PRIVATE_KEY_P8` or `QUIET_CORE_APNS_PRIVATE_KEY_PATH`.
 - Recommended gateway-host storage for the APNs `.p8` file is `~/.openclaw/credentials/apns/AuthKey_<KEYID>.p8` with restrictive permissions, then point `QUIET_CORE_APNS_PRIVATE_KEY_PATH` at that file.
 - `apps/ios/fastlane/.env` only covers App Store Connect / Fastlane auth; it does not provide gateway APNs credentials for local direct-push testing.
-- Debug builds default to sandbox APNs through `OpenClawPushMode=localSandbox`; Release builds default to production APNs through `OpenClawPushMode=localProduction`.
+- Debug builds default to sandbox APNs through `QuietCorePushMode=localSandbox`; Release builds default to production APNs through `QuietCorePushMode=localProduction`.
 
 ## APNs Expectations For Official Builds
 
@@ -278,7 +278,7 @@ See `apps/ios/VERSIONING.md` for the detailed spec.
   - Production APNs credentials and raw official-build APNs tokens stay in the relay deployment,
     not on the gateway.
 
-This exists to keep the hosted relay limited to genuine OpenClaw official builds and to ensure a
+This exists to keep the hosted relay limited to genuine QuietCore official builds and to ensure a
 gateway can only send pushes for iOS devices that paired with that gateway.
 
 ## What Works Now (Concrete)
@@ -292,7 +292,7 @@ gateway can only send pushes for iOS devices that paired with that gateway.
 
 ## Computer Use Relationship
 
-The iOS app is not a Codex Computer Use backend. Computer Use and `cua-driver mcp` are macOS desktop-control paths; iOS exposes device capabilities as OpenClaw node commands through the gateway. Agents can drive the iPhone canvas, camera, screen, location, voice, and other node capabilities with `node.invoke`, subject to iOS foreground/background limits.
+The iOS app is not a Codex Computer Use backend. Computer Use and `cua-driver mcp` are macOS desktop-control paths; iOS exposes device capabilities as QuietCore node commands through the gateway. Agents can drive the iPhone canvas, camera, screen, location, voice, and other node capabilities with `node.invoke`, subject to iOS foreground/background limits.
 
 ## Location Automation Use Case (Testing)
 
@@ -360,7 +360,7 @@ Automatic wake/reconnect hardening:
 5. If network path is unclear:
    - switch to manual host/port + TLS in Gateway Advanced settings
 6. In Xcode console, filter for subsystem/category signals:
-   - `ai.openclawfoundation.app`
+   - `ai.quiet-core-botfoundation.app`
    - `GatewayDiag`
    - `APNs registration failed`
 7. Validate background expectations:

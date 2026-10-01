@@ -7,7 +7,7 @@ import {
   sanitizeInlineImageBase64,
   sanitizeInlineImageDataUrlForStorage,
 } from "@quiet-core/media-core/inline-image-data-url";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { readLoggingConfig } from "../logging/config.js";
 import {
   getDefaultRedactPatterns,
@@ -20,7 +20,7 @@ function resolveTranscriptRedactPatterns(patterns?: string[]) {
   return patterns && patterns.length > 0 ? [...patterns, ...getDefaultRedactPatterns()] : undefined;
 }
 
-function redactTranscriptOptions(cfg?: OpenClawConfig) {
+function redactTranscriptOptions(cfg?: QuietCoreConfig) {
   const configuredLogging = readLoggingConfig();
   const mode = cfg?.logging?.redactSensitive ?? configuredLogging?.redactSensitive;
   const patterns = resolveTranscriptRedactPatterns(
@@ -35,11 +35,11 @@ function redactTranscriptOptions(cfg?: OpenClawConfig) {
   };
 }
 
-function isTranscriptRedactionDisabled(cfg?: OpenClawConfig): boolean {
+function isTranscriptRedactionDisabled(cfg?: QuietCoreConfig): boolean {
   return (cfg?.logging?.redactSensitive ?? readLoggingConfig()?.redactSensitive) === "off";
 }
 
-function redactTranscriptText(value: string, cfg?: OpenClawConfig): string {
+function redactTranscriptText(value: string, cfg?: QuietCoreConfig): string {
   if (cfg?.logging?.redactSensitive === "off") {
     return value;
   }
@@ -49,7 +49,7 @@ function redactTranscriptText(value: string, cfg?: OpenClawConfig): string {
 function redactTranscriptStructuredFieldValue(
   key: string,
   value: string,
-  cfg?: OpenClawConfig,
+  cfg?: QuietCoreConfig,
 ): string {
   if (cfg?.logging?.redactSensitive === "off") {
     return value;
@@ -507,7 +507,7 @@ function sanitizeOpenAICompletionsToolSignature(value: string): string | undefin
 
 function redactTranscriptStructuredValue(
   value: unknown,
-  cfg?: OpenClawConfig,
+  cfg?: QuietCoreConfig,
   fieldKey?: string,
   seen: WeakSet<object> = new WeakSet<object>(),
   preserveImageDataUrlFields = false,
@@ -677,7 +677,7 @@ function redactTranscriptStructuredValue(
 }
 
 /** Return a redacted transcript message according to logging config. */
-export function redactTranscriptMessage(message: AgentMessage, cfg?: OpenClawConfig): AgentMessage {
+export function redactTranscriptMessage(message: AgentMessage, cfg?: QuietCoreConfig): AgentMessage {
   if (isTranscriptRedactionDisabled(cfg)) {
     return message;
   }

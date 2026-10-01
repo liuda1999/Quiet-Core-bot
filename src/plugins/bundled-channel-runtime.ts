@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { resolveBundledPluginGeneratedPath } from "./bundled-plugin-metadata.js";
 import type { PluginManifestRecord } from "./manifest-registry.js";
-import type { OpenClawPackageManifest } from "./manifest.js";
+import type { QuietCorePackageManifest } from "./manifest.js";
 import { loadPluginManifestRegistryForPluginRegistry } from "./plugin-registry.js";
 
 type BundledChannelEntryPathPair = {
@@ -25,7 +25,7 @@ export type BundledChannelPluginMetadata = {
     id: string;
     channels?: readonly string[];
   };
-  packageManifest?: OpenClawPackageManifest;
+  packageManifest?: QuietCorePackageManifest;
   rootDir: string;
 };
 

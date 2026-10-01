@@ -1,6 +1,6 @@
 // Rejects config files written by unsupported future versions.
 import { VERSION } from "../version.js";
-import type { ConfigFileSnapshot, OpenClawConfig } from "./types.js";
+import type { ConfigFileSnapshot, QuietCoreConfig } from "./types.js";
 import { shouldWarnOnTouchedVersion } from "./version.js";
 
 /** Override env var for intentional older-binary destructive config actions. */
@@ -19,7 +19,7 @@ export type FutureConfigActionBlock = {
 type FutureConfigGuardParams = {
   action: string;
   snapshot?: Pick<ConfigFileSnapshot, "config" | "sourceConfig"> | null;
-  config?: Pick<OpenClawConfig, "meta"> | null;
+  config?: Pick<QuietCoreConfig, "meta"> | null;
   currentVersion?: string;
   env?: Record<string, string | undefined>;
 };

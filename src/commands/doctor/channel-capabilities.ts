@@ -3,7 +3,7 @@ import { getBundledChannelPlugin } from "../../channels/plugins/bundled.js";
 import type { ChannelDmAllowFromMode } from "../../channels/plugins/dm-access.js";
 import { getChannelPlugin } from "../../channels/plugins/index.js";
 import { normalizeAnyChannelId } from "../../channels/registry.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { findBundledPackageChannelMetadata } from "../../plugins/bundled-package-channel-metadata.js";
 import type { PluginPackageChannelDoctorCapabilities } from "../../plugins/manifest.js";
 
@@ -84,7 +84,7 @@ function readResolvedAccountId(account: unknown): string | undefined {
 /** Resolve configured and runtime account ids through the channel plugin's own semantics. */
 export function resolveDoctorChannelAccountIds(
   channelName: string,
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   configuredAccountIds: string[],
 ): DoctorChannelAccountIds | undefined {
   const channelId = normalizeAnyChannelId(channelName);

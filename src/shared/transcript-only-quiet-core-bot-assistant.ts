@@ -6,7 +6,7 @@ const TRANSCRIPT_ONLY_QUIET_CORE_ASSISTANT_MODELS = new Set<string>([
   "gateway-injected",
 ]);
 
-export function isTranscriptOnlyOpenClawAssistantModel(provider: unknown, model: unknown): boolean {
+export function isTranscriptOnlyQuietCoreAssistantModel(provider: unknown, model: unknown): boolean {
   return (
     provider === "quiet-core-bot" &&
     typeof model === "string" &&
@@ -14,18 +14,18 @@ export function isTranscriptOnlyOpenClawAssistantModel(provider: unknown, model:
   );
 }
 
-export function isTranscriptOnlyOpenClawAssistantMessage(message: unknown): boolean {
+export function isTranscriptOnlyQuietCoreAssistantMessage(message: unknown): boolean {
   if (!message || typeof message !== "object" || Array.isArray(message)) {
     return false;
   }
   const entry = message as { role?: unknown; provider?: unknown; model?: unknown };
   return (
     entry.role === "assistant" &&
-    isTranscriptOnlyOpenClawAssistantModel(entry.provider, entry.model)
+    isTranscriptOnlyQuietCoreAssistantModel(entry.provider, entry.model)
   );
 }
 
-export function isOpenClawDeliveryMirrorAssistantMessage(message: unknown): boolean {
+export function isQuietCoreDeliveryMirrorAssistantMessage(message: unknown): boolean {
   if (!message || typeof message !== "object" || Array.isArray(message)) {
     return false;
   }
@@ -50,7 +50,7 @@ const REPLAY_VISIBLE_DELIVERY_MIRROR_KINDS = new Set<string>([
 ]);
 
 export function isReplayVisibleDeliveryMirrorAssistantMessage(message: unknown): boolean {
-  if (!isOpenClawDeliveryMirrorAssistantMessage(message)) {
+  if (!isQuietCoreDeliveryMirrorAssistantMessage(message)) {
     return false;
   }
   const marker = (message as { openclawDeliveryMirror?: { kind?: unknown } })

@@ -18,10 +18,10 @@ import {
   type SqliteWalMaintenance,
 } from "../infra/sqlite-wal.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
-import type { DB as OpenClawStateKyselyDatabase } from "./quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "./quiet-core-bot-state-db.generated.js";
 import {
-  resolveOpenClawStateSqliteDir,
-  resolveOpenClawStateSqlitePath,
+  resolveQuietCoreStateSqliteDir,
+  resolveQuietCoreStateSqlitePath,
 } from "./quiet-core-bot-state-db.paths.js";
 import { QUIET_CORE_STATE_SCHEMA_SQL } from "./quiet-core-bot-state-schema.generated.js";
 
@@ -39,26 +39,26 @@ const QUIET_CORE_STATE_DIR_MODE = 0o700;
 const QUIET_CORE_STATE_FILE_MODE = 0o600;
 
 /** Open shared SQLite database handle plus WAL maintenance lifecycle. */
-export type OpenClawStateDatabase = {
+export type QuietCoreStateDatabase = {
   db: DatabaseSync;
   path: string;
   walMaintenance: SqliteWalMaintenance;
 };
 
 /** Options for resolving or overriding the shared state database path. */
-export type OpenClawStateDatabaseOptions = {
+export type QuietCoreStateDatabaseOptions = {
   env?: NodeJS.ProcessEnv;
   path?: string;
 };
 
-export type OpenClawStateDatabaseSchemaMigration = {
+export type QuietCoreStateDatabaseSchemaMigration = {
   kind: "agent-databases-composite-primary-key";
   path: string;
 };
 
-const cachedDatabases = new Map<string, OpenClawStateDatabase>();
+const cachedDatabases = new Map<string, QuietCoreStateDatabase>();
 
-type OpenClawStateMetadataDatabase = Pick<OpenClawStateKyselyDatabase, "schema_meta">;
+type QuietCoreStateMetadataDatabase = Pick<QuietCoreStateKyselyDatabase, "schema_meta">;
 
 function assertSupportedSchemaVersion(db: DatabaseSync, pathname: string): void {
   const userVersion = readSqliteUserVersion(db);
@@ -87,11 +87,11 @@ function bestEffortChmodSync(target: string, mode: number): void {
   stateDbLog.warn(`skipped permission hardening for ${target}: ${String(result.error)}`);
 }
 
-function ensureOpenClawStatePermissions(pathname: string, env: NodeJS.ProcessEnv): void {
+function ensureQuietCoreStatePermissions(pathname: string, env: NodeJS.ProcessEnv): void {
   const dir = path.dirname(pathname);
-  const defaultDir = resolveOpenClawStateSqliteDir(env);
+  const defaultDir = resolveQuietCoreStateSqliteDir(env);
   const isDefaultStateDatabase =
-    path.resolve(pathname) === path.resolve(resolveOpenClawStateSqlitePath(env));
+    path.resolve(pathname) === path.resolve(resolveQuietCoreStateSqlitePath(env));
   if (isDefaultStateDatabase && dir !== defaultDir) {
     throw new Error(
       `Quiet Core bot state database path resolved outside its state dir: ${pathname}`,
@@ -257,9 +257,9 @@ function assertCanonicalStateSchemaShape(db: DatabaseSync, pathname: string): vo
   );
 }
 
-export function detectOpenClawStateDatabaseSchemaMigrations(
-  options: OpenClawStateDatabaseOptions = {},
-): OpenClawStateDatabaseSchemaMigration[] {
+export function detectQuietCoreStateDatabaseSchemaMigrations(
+  options: QuietCoreStateDatabaseOptions = {},
+): QuietCoreStateDatabaseSchemaMigration[] {
   const pathname = resolveDatabasePath(options);
   if (!existsSync(pathname)) {
     return [];
@@ -275,7 +275,7 @@ export function detectOpenClawStateDatabaseSchemaMigrations(
   }
 }
 
-export function repairOpenClawStateDatabaseSchema(options: OpenClawStateDatabaseOptions = {}): {
+export function repairQuietCoreStateDatabaseSchema(options: QuietCoreStateDatabaseOptions = {}): {
   changes: string[];
   warnings: string[];
 } {
@@ -284,7 +284,7 @@ export function repairOpenClawStateDatabaseSchema(options: OpenClawStateDatabase
   if (!existsSync(pathname)) {
     return { changes: [], warnings: [] };
   }
-  ensureOpenClawStatePermissions(pathname, env);
+  ensureQuietCoreStatePermissions(pathname, env);
   const sqlite = requireNodeSqlite();
   const db = new sqlite.DatabaseSync(pathname);
   db.exec(`PRAGMA busy_timeout = ${QUIET_CORE_SQLITE_BUSY_TIMEOUT_MS};`);
@@ -306,7 +306,7 @@ export function repairOpenClawStateDatabaseSchema(options: OpenClawStateDatabase
     };
   } finally {
     db.close();
-    ensureOpenClawStatePermissions(pathname, env);
+    ensureQuietCoreStatePermissions(pathname, env);
   }
 }
 
@@ -830,7 +830,7 @@ function ensureSchema(db: DatabaseSync, pathname: string): void {
   ensureAdditiveStateColumns(db);
   db.exec(`PRAGMA user_version = ${QUIET_CORE_STATE_SCHEMA_VERSION};`);
   const now = Date.now();
-  const kysely = getNodeSqliteKysely<OpenClawStateMetadataDatabase>(db);
+  const kysely = getNodeSqliteKysely<QuietCoreStateMetadataDatabase>(db);
   executeSqliteQuerySync(
     db,
     kysely
@@ -856,14 +856,14 @@ function ensureSchema(db: DatabaseSync, pathname: string): void {
   );
 }
 
-function resolveDatabasePath(options: OpenClawStateDatabaseOptions = {}): string {
-  return path.resolve(options.path ?? resolveOpenClawStateSqlitePath(options.env ?? process.env));
+function resolveDatabasePath(options: QuietCoreStateDatabaseOptions = {}): string {
+  return path.resolve(options.path ?? resolveQuietCoreStateSqlitePath(options.env ?? process.env));
 }
 
 /** Open or return a cached shared state database after schema and migration checks. */
-export function openOpenClawStateDatabase(
-  options: OpenClawStateDatabaseOptions = {},
-): OpenClawStateDatabase {
+export function openQuietCoreStateDatabase(
+  options: QuietCoreStateDatabaseOptions = {},
+): QuietCoreStateDatabase {
   const env = options.env ?? process.env;
   const pathname = resolveDatabasePath(options);
   const cached = cachedDatabases.get(pathname);
@@ -880,7 +880,7 @@ export function openOpenClawStateDatabase(
   // Rename a pre-rebrand `openclaw.sqlite` onto the current filename before creating a
   // fresh database, so upgrades keep the rows written by earlier releases.
   migrateLegacyStateDatabaseFile(pathname);
-  ensureOpenClawStatePermissions(pathname, env);
+  ensureQuietCoreStatePermissions(pathname, env);
   const sqlite = requireNodeSqlite();
   const db = new sqlite.DatabaseSync(pathname);
   const walMaintenance = (() => {
@@ -901,21 +901,21 @@ export function openOpenClawStateDatabase(
       throw err;
     }
   })();
-  ensureOpenClawStatePermissions(pathname, env);
+  ensureQuietCoreStatePermissions(pathname, env);
   const database = { db, path: pathname, walMaintenance };
   cachedDatabases.set(pathname, database);
   return database;
 }
 
 /** Run a synchronous immediate transaction against the shared state database. */
-export function runOpenClawStateWriteTransaction<T>(
-  operation: (database: OpenClawStateDatabase) => T,
-  options: OpenClawStateDatabaseOptions = {},
+export function runQuietCoreStateWriteTransaction<T>(
+  operation: (database: QuietCoreStateDatabase) => T,
+  options: QuietCoreStateDatabaseOptions = {},
 ): T {
-  const database = openOpenClawStateDatabase(options);
+  const database = openQuietCoreStateDatabase(options);
   const result = runSqliteImmediateTransactionSync(database.db, () => operation(database));
   try {
-    ensureOpenClawStatePermissions(database.path, options.env ?? process.env);
+    ensureQuietCoreStatePermissions(database.path, options.env ?? process.env);
   } catch {
     // The write already committed; permission hardening is best-effort here so
     // callers never retry an operation that is durable in SQLite.
@@ -923,7 +923,7 @@ export function runOpenClawStateWriteTransaction<T>(
   return result;
 }
 
-function closeCachedStateDatabase(database: OpenClawStateDatabase): void {
+function closeCachedStateDatabase(database: QuietCoreStateDatabase): void {
   database.walMaintenance.close();
   clearNodeSqliteKyselyCacheForDatabase(database.db);
   if (database.db.isOpen) {
@@ -937,7 +937,7 @@ function isPathInsideDirectory(rootDir: string, candidatePath: string): boolean 
 }
 
 /** Close all cached shared state database handles. */
-export function closeOpenClawStateDatabase(): void {
+export function closeQuietCoreStateDatabase(): void {
   for (const database of cachedDatabases.values()) {
     closeCachedStateDatabase(database);
   }
@@ -952,7 +952,7 @@ export function closeOpenClawStateDatabase(): void {
  * directory removal fail. Only handles inside the removed tree are released so
  * unrelated callers keep working with their own handles.
  */
-export function closeOpenClawStateDatabaseUnder(rootDir: string): void {
+export function closeQuietCoreStateDatabaseUnder(rootDir: string): void {
   const resolvedRoot = path.resolve(rootDir);
   for (const [pathname, database] of [...cachedDatabases]) {
     if (!isPathInsideDirectory(resolvedRoot, path.resolve(pathname))) {
@@ -964,9 +964,9 @@ export function closeOpenClawStateDatabaseUnder(rootDir: string): void {
 }
 
 /** Test whether any cached shared state database handle is still open. */
-export function isOpenClawStateDatabaseOpen(): boolean {
+export function isQuietCoreStateDatabaseOpen(): boolean {
   return Array.from(cachedDatabases.values()).some((database) => database.db.isOpen);
 }
 
 /** Test alias for closing shared state handles from teardown code. */
-export const closeOpenClawStateDatabaseForTest = closeOpenClawStateDatabase;
+export const closeQuietCoreStateDatabaseForTest = closeQuietCoreStateDatabase;

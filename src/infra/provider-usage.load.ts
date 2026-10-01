@@ -1,5 +1,5 @@
 // Loads provider usage snapshots from built-in and plugin providers.
-import { getRuntimeConfig, type OpenClawConfig } from "../config/config.js";
+import { getRuntimeConfig, type QuietCoreConfig } from "../config/config.js";
 import { resolveProviderUsageSnapshotWithPlugin } from "../plugins/provider-runtime.js";
 import { resolveFetch } from "./fetch.js";
 import { resolveProxyFetchFromEnv } from "./net/proxy-fetch.js";
@@ -38,7 +38,7 @@ type UsageSummaryOptions = {
   auth?: ProviderAuth[];
   agentDir?: string;
   workspaceDir?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
   fetch?: typeof fetch;
   skipPluginAuthWithoutCredentialSource?: boolean;
@@ -46,7 +46,7 @@ type UsageSummaryOptions = {
 
 async function fetchProviderUsageSnapshot(params: {
   auth: ProviderAuth;
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   env: NodeJS.ProcessEnv;
   agentDir?: string;
   workspaceDir?: string;

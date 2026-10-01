@@ -1,5 +1,5 @@
 import Foundation
-import OpenClawKit
+import QuietCoreKit
 import os
 import UIKit
 import UniformTypeIdentifiers
@@ -17,7 +17,7 @@ final class ShareViewController: UIViewController {
         var attachments: [ShareAttachment]
     }
 
-    private let logger = Logger(subsystem: "ai.openclawfoundation.app", category: "ShareExtension")
+    private let logger = Logger(subsystem: "ai.quiet-core-botfoundation.app", category: "ShareExtension")
     private var statusLabel: UILabel?
     private let draftTextView = UITextView()
     private let sendButton = UIButton(type: .system)
@@ -49,7 +49,7 @@ final class ShareViewController: UIViewController {
         self.draftTextView.textContainerInset = UIEdgeInsets(top: 12, left: 10, bottom: 12, right: 10)
 
         self.sendButton.translatesAutoresizingMaskIntoConstraints = false
-        self.sendButton.setTitle("Send to OpenClaw", for: .normal)
+        self.sendButton.setTitle("Send to QuietCore", for: .normal)
         self.sendButton.titleLabel?.font = .preferredFont(forTextStyle: .headline)
         self.sendButton.addTarget(self, action: #selector(self.handleSendTap), for: .touchUpInside)
         self.sendButton.isEnabled = false
@@ -134,13 +134,13 @@ final class ShareViewController: UIViewController {
             self.sendButton.isEnabled = false
             self.cancelButton.isEnabled = false
         }
-        self.showStatus("Sending to OpenClaw gateway…")
+        self.showStatus("Sending to QuietCore gateway…")
         ShareGatewayRelaySettings.saveLastEvent("Sending to gateway…")
         do {
             try await self.sendMessageToGateway(trimmed, attachments: self.pendingAttachments)
             ShareGatewayRelaySettings.saveLastEvent(
                 "Sent to gateway (\(trimmed.count) chars, \(self.pendingAttachments.count) attachment(s)).")
-            self.showStatus("Sent to OpenClaw.")
+            self.showStatus("Sent to QuietCore.")
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
                 self.extensionContext?.completeRequest(returningItems: nil)
             }
@@ -159,13 +159,13 @@ final class ShareViewController: UIViewController {
     private func sendMessageToGateway(_ message: String, attachments: [ShareAttachment]) async throws {
         guard let config = ShareGatewayRelaySettings.loadConfig() else {
             throw NSError(
-                domain: "OpenClawShare",
+                domain: "QuietCoreShare",
                 code: 10,
-                userInfo: [NSLocalizedDescriptionKey: "OpenClaw is not connected to a gateway yet."])
+                userInfo: [NSLocalizedDescriptionKey: "QuietCore is not connected to a gateway yet."])
         }
         guard let url = URL(string: config.gatewayURLString) else {
             throw NSError(
-                domain: "OpenClawShare",
+                domain: "QuietCoreShare",
                 code: 11,
                 userInfo: [NSLocalizedDescriptionKey: "Invalid saved gateway URL."])
         }
@@ -183,7 +183,7 @@ final class ShareViewController: UIViewController {
                 permissions: [:],
                 clientId: clientId,
                 clientMode: "node",
-                clientDisplayName: "OpenClaw Share",
+                clientDisplayName: "QuietCore Share",
                 deviceIdentityProfile: .shareExtension,
                 includeDeviceIdentity: true)
         }
@@ -194,7 +194,7 @@ final class ShareViewController: UIViewController {
                 token: config.token,
                 bootstrapToken: nil,
                 password: config.password,
-                connectOptions: makeOptions("openclaw-ios"),
+                connectOptions: makeOptions("quiet-core-ios"),
                 sessionBox: nil,
                 onConnected: {},
                 onDisconnected: { _ in },
@@ -202,7 +202,7 @@ final class ShareViewController: UIViewController {
                     BridgeInvokeResponse(
                         id: req.id,
                         ok: false,
-                        error: OpenClawNodeError(
+                        error: QuietCoreNodeError(
                             code: .invalidRequest,
                             message: "share extension does not support node invoke"))
                 })
@@ -222,7 +222,7 @@ final class ShareViewController: UIViewController {
                     BridgeInvokeResponse(
                         id: req.id,
                         ok: false,
-                        error: OpenClawNodeError(
+                        error: QuietCoreNodeError(
                             code: .invalidRequest,
                             message: "share extension does not support node invoke"))
                 })
@@ -261,7 +261,7 @@ final class ShareViewController: UIViewController {
         let data = try JSONEncoder().encode(params)
         guard let json = String(data: data, encoding: .utf8) else {
             throw NSError(
-                domain: "OpenClawShare",
+                domain: "QuietCoreShare",
                 code: 12,
                 userInfo: [NSLocalizedDescriptionKey: "Failed to encode chat payload."])
         }
@@ -272,7 +272,7 @@ final class ShareViewController: UIViewController {
         let eventData = try JSONEncoder().encode(NodeEventParams(event: "agent.request", payloadJSON: json))
         guard let nodeEventParams = String(data: eventData, encoding: .utf8) else {
             throw NSError(
-                domain: "OpenClawShare",
+                domain: "QuietCoreShare",
                 code: 13,
                 userInfo: [NSLocalizedDescriptionKey: "Failed to encode node event payload."])
         }

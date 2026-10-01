@@ -1,4 +1,4 @@
-// OpenClaw bundle MCP tools Docker harness.
+// QuietCore bundle MCP tools Docker harness.
 // Imports packaged dist modules so tool materialization is verified against the
 // npm tarball installed in the functional image.
 import { randomUUID } from "node:crypto";
@@ -12,7 +12,7 @@ import {
 } from "../../dist/agents/agent-bundle-mcp-runtime.js";
 import { applyFinalEffectiveToolPolicy } from "../../dist/agents/embedded-agent-runner/effective-tool-policy.js";
 import { splitSdkTools } from "../../dist/agents/embedded-agent-runner/tool-split.js";
-import type { OpenClawConfig } from "../../dist/config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../dist/config/types.quiet-core-bot.js";
 import { getPluginToolMeta } from "../../dist/plugins/tools.js";
 import { createE2eStateDir } from "./lib/temp-state-dir.ts";
 
@@ -34,7 +34,7 @@ import { McpServer } from ${JSON.stringify(sdkMcpServerPath)};
 import { StdioServerTransport } from ${JSON.stringify(sdkStdioServerPath)};
 
 const server = new McpServer({ name: "agent-bundle-mcp-tools-probe", version: "1.0.0" });
-server.tool("docker_probe", "Docker OpenClaw MCP tool availability probe", async () => ({
+server.tool("docker_probe", "Docker QuietCore MCP tool availability probe", async () => ({
   content: [{ type: "text", text: "agent-bundle-mcp-tools-ok" }],
 }));
 
@@ -46,7 +46,7 @@ await server.connect(new StdioServerTransport());
 
 function applyPolicy(params: {
   tools: Awaited<ReturnType<typeof materializeBundleMcpToolsForRun>>["tools"];
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
 }) {
   const warnings: string[] = [];
   return {
@@ -73,7 +73,7 @@ async function main() {
   await fs.mkdir(probeDir, { recursive: true });
   await writeProbeServer(serverPath);
 
-  const cfg: OpenClawConfig = {
+  const cfg: QuietCoreConfig = {
     tools: {
       profile: "coding",
     },

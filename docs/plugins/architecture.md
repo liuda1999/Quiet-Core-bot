@@ -314,13 +314,13 @@ That same pattern should be preferred for future capabilities.
 A company plugin should feel cohesive from the outside. If Quiet Core bot has shared contracts for models, speech, realtime transcription, realtime voice, media understanding, image generation, video generation, web fetch, and web search, a vendor can own all of its surfaces in one place:
 
 ```ts
-import type { OpenClawPluginDefinition } from "quiet-core-bot/plugin-sdk/plugin-entry";
+import type { QuietCorePluginDefinition } from "quiet-core-bot/plugin-sdk/plugin-entry";
 import {
   describeImageWithModel,
   transcribeOpenAiCompatibleAudio,
 } from "quiet-core-bot/plugin-sdk/media-understanding";
 
-const plugin: OpenClawPluginDefinition = {
+const plugin: QuietCorePluginDefinition = {
   id: "exampleai",
   name: "ExampleAI",
   register(api) {
@@ -396,7 +396,7 @@ Need a concrete rollout checklist? See [Capability Cookbook](/tools/capability-c
 
 ## Contracts and enforcement
 
-The plugin API surface is intentionally typed and centralized in `OpenClawPluginApi`. That contract defines the supported registration points and the runtime helpers a plugin may rely on.
+The plugin API surface is intentionally typed and centralized in `QuietCorePluginApi`. That contract defines the supported registration points and the runtime helpers a plugin may rely on.
 
 Why this matters:
 
@@ -434,7 +434,7 @@ The practical effect is that Quiet Core bot knows, up front, which plugin owns w
     - vendor-specific policy hidden in core
     - one-off plugin escape hatches that bypass the registry
     - channel code reaching straight into a vendor implementation
-    - ad hoc runtime objects that are not part of `OpenClawPluginApi` or `api.runtime`
+    - ad hoc runtime objects that are not part of `QuietCorePluginApi` or `api.runtime`
 
   </Tab>
 </Tabs>

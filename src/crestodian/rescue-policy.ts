@@ -1,5 +1,5 @@
 // Crestodian rescue policy gates remote writes by owner, DM, sandbox, and YOLO posture.
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { normalizeAgentId } from "../routing/session-key.js";
 
 /**
@@ -29,7 +29,7 @@ type CrestodianRescueDecision =
     };
 
 type CrestodianRescuePolicyInput = {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentId?: string;
   senderIsOwner: boolean;
   isDirectMessage: boolean;
@@ -39,7 +39,7 @@ function resolvePendingTtlMinutes(value: unknown): number {
   return typeof value === "number" && Number.isFinite(value) && value > 0 ? value : 15;
 }
 
-function resolveAgentEntry(cfg: OpenClawConfig, agentId?: string) {
+function resolveAgentEntry(cfg: QuietCoreConfig, agentId?: string) {
   if (!agentId) {
     return undefined;
   }
@@ -49,12 +49,12 @@ function resolveAgentEntry(cfg: OpenClawConfig, agentId?: string) {
   );
 }
 
-function resolveScopedExecConfig(cfg: OpenClawConfig, agentId?: string) {
+function resolveScopedExecConfig(cfg: QuietCoreConfig, agentId?: string) {
   return resolveAgentEntry(cfg, agentId)?.tools?.exec;
 }
 
 function resolveScopedSandboxMode(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   agentId?: string,
 ): "off" | "non-main" | "all" {
   return (
@@ -62,7 +62,7 @@ function resolveScopedSandboxMode(
   );
 }
 
-function isYoloHostPosture(cfg: OpenClawConfig, agentId?: string): boolean {
+function isYoloHostPosture(cfg: QuietCoreConfig, agentId?: string): boolean {
   const scopedExec = resolveScopedExecConfig(cfg, agentId);
   const globalExec = cfg.tools?.exec;
   const security = scopedExec?.security ?? globalExec?.security ?? "full";

@@ -1,11 +1,11 @@
-// Filesystem script supports OpenClaw repository automation.
+// Filesystem script supports QuietCore repository automation.
 import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { access, mkdir, open, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { repoRoot } from "./host-command.ts";
 
 const DEFAULT_TEXT_FILE_TAIL_BYTES = 4 * 1024 * 1024;
-const QUIET_CORE_VERSION_PATTERN = /OpenClaw\s+([0-9][^\s]*)/gi;
+const QUIET_CORE_VERSION_PATTERN = /QuietCore\s+([0-9][^\s]*)/gi;
 
 export async function exists(filePath: string): Promise<boolean> {
   try {
@@ -43,7 +43,7 @@ export async function readTextFileTail(
   }
 }
 
-export async function extractLastOpenClawVersionFromLog(
+export async function extractLastQuietCoreVersionFromLog(
   logPath: string,
   pattern = QUIET_CORE_VERSION_PATTERN,
   maxBytes = DEFAULT_TEXT_FILE_TAIL_BYTES,

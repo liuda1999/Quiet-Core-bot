@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../../config/config.js";
+import type { QuietCoreConfig } from "../../../config/config.js";
 import {
   collectDoctorPreviewNotes,
   collectChannelBoundMessageToolPolicyWarnings,
@@ -44,14 +44,14 @@ const activeToolSchemaState = vi.hoisted(() => ({
 
 const commandSecretState = vi.hoisted(() => ({
   targetIds: new Set<string>(),
-  resolvedConfig: undefined as OpenClawConfig | undefined,
+  resolvedConfig: undefined as QuietCoreConfig | undefined,
   diagnostics: [] as string[],
 }));
 
 const tempRoots = new Set<string>();
 
 vi.mock("../../../cli/command-secret-gateway.js", () => ({
-  resolveCommandSecretRefsViaGateway: vi.fn(async (params: { config: OpenClawConfig }) => ({
+  resolveCommandSecretRefsViaGateway: vi.fn(async (params: { config: QuietCoreConfig }) => ({
     resolvedConfig: commandSecretState.resolvedConfig ?? params.config,
     diagnostics: commandSecretState.diagnostics,
     targetStatesByPath: {},
@@ -355,7 +355,7 @@ describe("doctor preview warnings", () => {
             },
           },
         },
-      } as unknown as OpenClawConfig,
+      } as unknown as QuietCoreConfig,
       doctorFixCommand: "quiet-core-bot doctor --fix",
       env: { CODEX_HOME: codexHome, HOME: root },
     });
@@ -397,7 +397,7 @@ describe("doctor preview warnings", () => {
           botToken: { source: "env", provider: "default", id: "TELEGRAM_BOT_TOKEN" },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     const resolvedConfig = {
       channels: {
         telegram: {
@@ -405,7 +405,7 @@ describe("doctor preview warnings", () => {
           allowFrom: ["@alice"],
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     commandSecretState.targetIds = new Set(["channels.telegram.botToken"]);
     commandSecretState.resolvedConfig = resolvedConfig;
     commandSecretState.diagnostics = [
@@ -449,7 +449,7 @@ describe("doctor preview warnings", () => {
             botToken: { source: "exec", provider: "default", id: "telegram/bot-token" },
           },
         },
-      } as unknown as OpenClawConfig,
+      } as unknown as QuietCoreConfig,
       doctorFixCommand: "quiet-core-bot doctor --fix",
       env: {},
       allowExec: true,
@@ -481,7 +481,7 @@ describe("doctor preview warnings", () => {
             },
           },
         },
-      } as unknown as OpenClawConfig,
+      } as unknown as QuietCoreConfig,
       doctorFixCommand: "quiet-core-bot doctor --fix",
     });
 
@@ -1102,7 +1102,7 @@ describe("doctor preview warnings", () => {
       tools: {
         profile: "coding" as const,
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     expect(collectVisibleReplyToolPolicyWarnings(cfg)).toStrictEqual([]);
     expect(collectChannelBoundMessageToolPolicyWarnings(cfg)).toStrictEqual([]);
@@ -1138,7 +1138,7 @@ describe("doctor preview warnings", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     expectWarningsContaining(collectVisibleReplyToolPolicyWarnings(cfg), [
       'messages.groupChat.visibleReplies is set to "message_tool"',
@@ -1178,7 +1178,7 @@ describe("doctor preview warnings", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     expect(collectVisibleReplyToolPolicyWarnings(cfg)).toStrictEqual([]);
     expect(collectChannelBoundMessageToolPolicyWarnings(cfg)).toStrictEqual([]);

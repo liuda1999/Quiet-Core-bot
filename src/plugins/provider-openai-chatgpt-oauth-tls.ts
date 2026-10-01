@@ -4,7 +4,7 @@ import { resolveTimerTimeoutMs } from "@quiet-core/normalization-core/number-coe
 import { asNullableObjectRecord } from "@quiet-core/normalization-core/record-coerce";
 import { note } from "../../packages/terminal-core/src/note.js";
 import { formatCliCommand } from "../cli/command-format.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 
 const TLS_CERT_ERROR_CODES = new Set([
   "UNABLE_TO_GET_ISSUER_CERT_LOCALLY",
@@ -79,7 +79,7 @@ function resolveCertBundlePath(): string | null {
   return path.join(prefix, "etc", "openssl@3", "cert.pem");
 }
 
-function hasOpenAICodexOAuthProfile(cfg: OpenClawConfig): boolean {
+function hasOpenAICodexOAuthProfile(cfg: QuietCoreConfig): boolean {
   const profiles = cfg.auth?.profiles;
   if (!profiles) {
     return false;
@@ -90,7 +90,7 @@ function hasOpenAICodexOAuthProfile(cfg: OpenClawConfig): boolean {
 }
 
 export function shouldRunOpenAIOAuthTlsPrerequisites(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   deep?: boolean;
 }): boolean {
   if (params.deep === true) {
@@ -155,7 +155,7 @@ export function formatOpenAIOAuthTlsPreflightFix(
 }
 
 export async function noteOpenAIOAuthTlsPrerequisites(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   deep?: boolean;
 }): Promise<void> {
   if (!shouldRunOpenAIOAuthTlsPrerequisites(params)) {

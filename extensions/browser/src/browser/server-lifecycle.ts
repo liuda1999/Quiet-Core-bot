@@ -1,7 +1,7 @@
 /**
  * Browser server lifecycle helpers for profile shutdown.
  */
-import { stopOpenClawChrome } from "./chrome.js";
+import { stopQuietCoreChrome } from "./chrome.js";
 import {
   type BrowserServerState,
   createBrowserRouteContext,
@@ -26,7 +26,7 @@ export async function stopKnownBrowserProfiles(params: {
       try {
         const runtime = current.profiles.get(name);
         if (runtime?.running) {
-          await stopOpenClawChrome(runtime.running);
+          await stopQuietCoreChrome(runtime.running);
           runtime.running = null;
           continue;
         }

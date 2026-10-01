@@ -17,7 +17,7 @@ const CIAO_SELF_PROBE_MESSAGE_RE =
 // Node surfaces this as a SystemError mentioning the libuv syscall by name.
 const CIAO_INTERFACE_ENUMERATION_FAILURE_RE = /\bUV_INTERFACE_ADDRESSES\b/u;
 
-/** Known ciao process-level errors that OpenClaw handles specially. */
+/** Known ciao process-level errors that QuietCore handles specially. */
 export type CiaoProcessErrorClassification =
   | { kind: "cancellation"; formatted: string }
   | { kind: "interface-assertion"; formatted: string }

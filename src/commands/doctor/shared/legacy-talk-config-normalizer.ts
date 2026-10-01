@@ -2,7 +2,7 @@
 import { isDeepStrictEqual } from "node:util";
 import { isRecord } from "@quiet-core/normalization-core/record-coerce";
 import { normalizeTalkSection } from "../../../config/talk.js";
-import type { OpenClawConfig } from "../../../config/types.js";
+import type { QuietCoreConfig } from "../../../config/types.js";
 
 function buildLegacyTalkProviderCompat(
   talk: Record<string, unknown>,
@@ -18,7 +18,7 @@ function buildLegacyTalkProviderCompat(
 
 function buildLegacyRealtimeTalkCompat(
   talk: Record<string, unknown>,
-  normalizedTalk: NonNullable<OpenClawConfig["talk"]>,
+  normalizedTalk: NonNullable<QuietCoreConfig["talk"]>,
 ): Record<string, unknown> | undefined {
   if (talk.realtime !== undefined) {
     return undefined;
@@ -38,12 +38,12 @@ function buildLegacyRealtimeTalkCompat(
   if (normalizedTalk.providers !== undefined) {
     compat.providers = normalizedTalk.providers;
   }
-  return normalizeTalkSection({ realtime: compat } as OpenClawConfig["talk"])?.realtime;
+  return normalizeTalkSection({ realtime: compat } as QuietCoreConfig["talk"])?.realtime;
 }
 
 function removeDerivedRealtimeSpeakerVoice(
   rawTalk: Record<string, unknown>,
-  normalizedTalk: NonNullable<OpenClawConfig["talk"]>,
+  normalizedTalk: NonNullable<QuietCoreConfig["talk"]>,
 ): void {
   const rawRealtime = rawTalk.realtime;
   const normalizedRealtime = normalizedTalk.realtime;
@@ -63,13 +63,13 @@ function removeDerivedRealtimeSpeakerVoice(
 }
 
 /** Normalize legacy Talk provider/realtime fields into current talk.providers and talk.realtime. */
-export function normalizeLegacyTalkConfig(cfg: OpenClawConfig, changes: string[]): OpenClawConfig {
+export function normalizeLegacyTalkConfig(cfg: QuietCoreConfig, changes: string[]): QuietCoreConfig {
   const rawTalk = cfg.talk;
   if (!isRecord(rawTalk)) {
     return cfg;
   }
 
-  const normalizedTalk = normalizeTalkSection(rawTalk as OpenClawConfig["talk"]) ?? {};
+  const normalizedTalk = normalizeTalkSection(rawTalk as QuietCoreConfig["talk"]) ?? {};
   const legacyProviderCompat = buildLegacyTalkProviderCompat(rawTalk);
   if (legacyProviderCompat) {
     normalizedTalk.providers = {

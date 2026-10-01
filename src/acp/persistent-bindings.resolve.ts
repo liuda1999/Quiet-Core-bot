@@ -3,7 +3,7 @@ import {
   resolveConfiguredBindingRecord,
   resolveConfiguredBindingRecordBySessionKey,
 } from "../channels/plugins/binding-registry.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   resolveConfiguredAcpBindingSpecFromRecord,
   toResolvedConfiguredAcpBinding,
@@ -13,7 +13,7 @@ import {
 
 /** Resolves a configured ACP binding for a concrete channel conversation. */
 export function resolveConfiguredAcpBindingRecord(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   channel: string;
   accountId: string;
   conversationId: string;
@@ -25,7 +25,7 @@ export function resolveConfiguredAcpBindingRecord(params: {
 
 /** Resolves the configured ACP binding spec that owns a generated session key. */
 export function resolveConfiguredAcpBindingSpecBySessionKey(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   sessionKey: string;
 }): ConfiguredAcpBindingSpec | null {
   const resolved = resolveConfiguredBindingRecordBySessionKey(params);

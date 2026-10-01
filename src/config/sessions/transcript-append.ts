@@ -9,9 +9,9 @@ import {
   resolveSessionWriteLockOptions,
 } from "../../agents/session-write-lock.js";
 import { redactTranscriptMessage } from "../../agents/transcript-redact.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { redactSecrets } from "../../logging/redact.js";
-import { isTranscriptOnlyOpenClawAssistantMessage } from "../../shared/transcript-only-quiet-core-bot-assistant.js";
+import { isTranscriptOnlyQuietCoreAssistantMessage } from "../../shared/transcript-only-quiet-core-bot-assistant.js";
 import { createSessionTranscriptHeader } from "./transcript-header.js";
 import {
   appendJsonlEntry,
@@ -428,7 +428,7 @@ export type AppendSessionTranscriptMessageParams<TMessage = unknown> = {
   idempotencyLookup?: "scan" | "caller-checked";
   /** Runs under the transcript write lock after idempotency replay checks and before append. */
   prepareMessageAfterIdempotencyCheck?: (message: TMessage) => TMessage | undefined;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   /** Internal owned-batch hook for publishing a newly created transcript header. */
   onHeaderCreated?: (serializedHeader: string) => void;
 };
@@ -577,7 +577,7 @@ export async function runSessionTranscriptAppendTransaction<T>(
 }
 
 type AppendSessionTranscriptEventParams = {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   event: unknown;
   transcriptPath: string;
 };
@@ -694,7 +694,7 @@ async function appendSessionTranscriptMessageLocked<TMessage>(
     ...(shouldRawAppend ? {} : { parentId: leafInfo.leafId ?? null }),
     timestamp: resolveTimestampMsToIsoString(now),
     message: finalMessage,
-    ...(leafInfo.appendMode === "side" && isTranscriptOnlyOpenClawAssistantMessage(finalMessage)
+    ...(leafInfo.appendMode === "side" && isTranscriptOnlyQuietCoreAssistantMessage(finalMessage)
       ? { appendMode: "side" as const }
       : {}),
   };

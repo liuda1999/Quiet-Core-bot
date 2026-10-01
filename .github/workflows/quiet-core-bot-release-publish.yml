@@ -1,4 +1,4 @@
-name: OpenClaw Release Publish
+name: QuietCore Release Publish
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       preflight_run_id:
-        description: Successful OpenClaw NPM Release preflight run id, required when publish_quiet_core_bot_npm=true
+        description: Successful QuietCore NPM Release preflight run id, required when publish_quiet_core_bot_npm=true
         required: false
         type: string
       full_release_validation_run_id:
@@ -16,7 +16,7 @@ on:
         required: false
         type: string
       windows_node_tag:
-        description: Exact quiet-core-bot-windows-node release tag, required for stable OpenClaw publish
+        description: Exact quiet-core-bot-windows-node release tag, required for stable QuietCore publish
         required: false
         type: string
       windows_node_installer_digests:
@@ -28,7 +28,7 @@ on:
         required: false
         type: string
       npm_dist_tag:
-        description: npm dist-tag for the OpenClaw package
+        description: npm dist-tag for the QuietCore package
         required: true
         default: beta
         type: choice
@@ -37,7 +37,7 @@ on:
           - beta
           - latest
       plugin_publish_scope:
-        description: Plugin publish scope to run before OpenClaw publish
+        description: Plugin publish scope to run before QuietCore publish
         required: true
         default: all-publishable
         type: choice
@@ -49,7 +49,7 @@ on:
         required: false
         type: string
       publish_quiet_core_bot_npm:
-        description: Publish the OpenClaw npm package after plugin npm succeeds; ClawHub may still run
+        description: Publish the QuietCore npm package after plugin npm succeeds; ClawHub may still run
         required: true
         default: true
         type: boolean
@@ -111,11 +111,11 @@ jobs:
             exit 1
           fi
           if [[ "${RELEASE_TAG}" == *"-alpha."* && "${RELEASE_NPM_DIST_TAG}" != "alpha" ]]; then
-            echo "Alpha prerelease tags must publish OpenClaw to npm dist-tag alpha." >&2
+            echo "Alpha prerelease tags must publish QuietCore to npm dist-tag alpha." >&2
             exit 1
           fi
           if [[ "${RELEASE_TAG}" == *"-beta."* && "${RELEASE_NPM_DIST_TAG}" != "beta" ]]; then
-            echo "Beta prerelease tags must publish OpenClaw to npm dist-tag beta." >&2
+            echo "Beta prerelease tags must publish QuietCore to npm dist-tag beta." >&2
             exit 1
           fi
           if [[ "${PUBLISH_QUIET_CORE_NPM}" == "true" && -z "${PREFLIGHT_RUN_ID}" ]]; then
@@ -135,11 +135,11 @@ jobs:
             exit 1
           fi
           if [[ "${PUBLISH_QUIET_CORE_NPM}" == "true" && "${stable_release}" == "true" && -z "${WINDOWS_NODE_TAG}" ]]; then
-            echo "Stable OpenClaw publish requires an explicit windows_node_tag." >&2
+            echo "Stable QuietCore publish requires an explicit windows_node_tag." >&2
             exit 1
           fi
           if [[ "${PUBLISH_QUIET_CORE_NPM}" == "true" && "${stable_release}" == "true" && -z "${WINDOWS_NODE_INSTALLER_DIGESTS}" ]]; then
-            echo "Stable OpenClaw publish requires candidate-approved windows_node_installer_digests." >&2
+            echo "Stable QuietCore publish requires candidate-approved windows_node_installer_digests." >&2
             exit 1
           fi
           tideclaw_alpha_publish=false
@@ -151,7 +151,7 @@ jobs:
             exit 1
           fi
           if [[ "${PUBLISH_QUIET_CORE_NPM}" == "true" && "${PLUGIN_PUBLISH_SCOPE}" != "all-publishable" ]]; then
-            echo "publish_quiet_core_bot_npm=true requires plugin_publish_scope=all-publishable so every publishable official plugin is released with OpenClaw." >&2
+            echo "publish_quiet_core_bot_npm=true requires plugin_publish_scope=all-publishable so every publishable official plugin is released with QuietCore." >&2
             exit 1
           fi
           if [[ "${PLUGIN_PUBLISH_SCOPE}" == "selected" && -z "${PLUGINS}" ]]; then
@@ -192,17 +192,17 @@ jobs:
             exit 1
           fi
           if [[ "$(printf '%s' "${source_json}" | jq -r '.isDraft')" == "true" ]]; then
-            echo "Stable OpenClaw publish requires a published Windows source release." >&2
+            echo "Stable QuietCore publish requires a published Windows source release." >&2
             exit 1
           fi
           if [[ "$(printf '%s' "${source_json}" | jq -r '.isPrerelease')" == "true" ]]; then
-            echo "Stable OpenClaw publish requires a non-prerelease Windows source release." >&2
+            echo "Stable QuietCore publish requires a non-prerelease Windows source release." >&2
             exit 1
           fi
 
           required_assets=(
-            "OpenClawCompanion-Setup-x64.exe"
-            "OpenClawCompanion-Setup-arm64.exe"
+            "QuietCoreCompanion-Setup-x64.exe"
+            "QuietCoreCompanion-Setup-arm64.exe"
           )
           required_assets_json="$(printf '%s\n' "${required_assets[@]}" | jq -R . | jq -sc .)"
           if ! approved_installer_digests="$(printf '%s' "${APPROVED_INSTALLER_DIGESTS}" | jq -ce --argjson names "${required_assets_json}" '
@@ -237,7 +237,7 @@ jobs:
           echo "installer_digests=${approved_installer_digests}" >> "$GITHUB_OUTPUT"
           echo "- Windows Node source release: prevalidated \`${WINDOWS_NODE_TAG}\`" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Download OpenClaw npm preflight manifest
+      - name: Download QuietCore npm preflight manifest
         id: preflight_artifact
         if: ${{ inputs.publish_quiet_core_bot_npm }}
         env:
@@ -309,7 +309,7 @@ jobs:
         id: ref
         run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
-      - name: Validate OpenClaw npm preflight manifest
+      - name: Validate QuietCore npm preflight manifest
         id: manifest
         if: ${{ inputs.publish_quiet_core_bot_npm }}
         env:
@@ -321,7 +321,7 @@ jobs:
           preflight_dir="${RUNNER_TEMP}/quiet-core-bot-npm-preflight-manifest"
           manifest="${preflight_dir}/preflight-manifest.json"
           if [[ ! -f "$manifest" ]]; then
-            echo "OpenClaw npm preflight manifest is missing." >&2
+            echo "QuietCore npm preflight manifest is missing." >&2
             ls -la "$preflight_dir" >&2 || true
             exit 1
           fi
@@ -459,7 +459,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
   publish:
-    name: Publish plugins, then OpenClaw
+    name: Publish plugins, then QuietCore
     needs: [resolve_release_target]
     runs-on: ubuntu-latest
     timeout-minutes: 120
@@ -839,7 +839,7 @@ jobs:
             CLAWHUB_REGISTRY="${CLAWHUB_REGISTRY:-https://clawhub.ai}" \
               node --import tsx scripts/quiet-core-bot-release-clawhub-plan.ts "${plan_args[@]}" > "${clawhub_plan_path}"
 
-            echo "Resolved OpenClaw release ClawHub dispatch plan:"
+            echo "Resolved QuietCore release ClawHub dispatch plan:"
             cat "${clawhub_plan_path}"
 
             clawhub_workflow_ref="$(jq -r '.clawHubWorkflowRef' "${clawhub_plan_path}")"
@@ -953,21 +953,21 @@ jobs:
             local actual_companion_assets actual_digest asset_name expected_companion_assets expected_digest expected_hash expected_installer_names manifest_dir manifest_json manifest_path release_json
             # Add future promoted installer names, such as MSIX x64/ARM64, here.
             local -a installer_assets=(
-              "OpenClawCompanion-Setup-x64.exe"
-              "OpenClawCompanion-Setup-arm64.exe"
+              "QuietCoreCompanion-Setup-x64.exe"
+              "QuietCoreCompanion-Setup-arm64.exe"
             )
             local -a required_assets=(
               "${installer_assets[@]}"
-              "OpenClawCompanion-SHA256SUMS.txt"
+              "QuietCoreCompanion-SHA256SUMS.txt"
             )
 
             release_json="$(gh release view "${RELEASE_TAG}" --repo "$GITHUB_REPOSITORY" --json assets,url)"
             expected_companion_assets="$(printf '%s\n' "${required_assets[@]}" | jq -R . | jq -sc 'sort')"
             actual_companion_assets="$(printf '%s' "${release_json}" | jq -c '
-              [.assets[]? | select(.name | startswith("OpenClawCompanion-")) | .name] | sort
+              [.assets[]? | select(.name | startswith("QuietCoreCompanion-")) | .name] | sort
             ')"
             if [[ "${actual_companion_assets}" != "${expected_companion_assets}" ]]; then
-              echo "Stable release OpenClawCompanion asset names do not exactly match the current contract." >&2
+              echo "Stable release QuietCoreCompanion asset names do not exactly match the current contract." >&2
               return 1
             fi
             for asset_name in "${required_assets[@]}"; do
@@ -978,12 +978,12 @@ jobs:
             done
 
             manifest_dir="${RUNNER_TEMP}/quiet-core-bot-windows-release-contract"
-            manifest_path="${manifest_dir}/OpenClawCompanion-SHA256SUMS.txt"
+            manifest_path="${manifest_dir}/QuietCoreCompanion-SHA256SUMS.txt"
             rm -rf "${manifest_dir}"
             mkdir -p "${manifest_dir}"
             gh release download "${RELEASE_TAG}" \
               --repo "$GITHUB_REPOSITORY" \
-              --pattern "OpenClawCompanion-SHA256SUMS.txt" \
+              --pattern "QuietCoreCompanion-SHA256SUMS.txt" \
               --dir "${manifest_dir}"
             if ! manifest_json="$(jq -Rsc '
               split("\n") as $lines |
@@ -1057,7 +1057,7 @@ jobs:
               --dir "${download_dir}"
 
             if [[ ! -d "${download_dir}/dependency-evidence" ]]; then
-              echo "Dependency evidence is missing from OpenClaw npm preflight artifact." >&2
+              echo "Dependency evidence is missing from QuietCore npm preflight artifact." >&2
               find "${download_dir}" -maxdepth 2 -type f -print >&2 || true
               exit 1
             fi
@@ -1245,7 +1245,7 @@ jobs:
             `- plugin npm publish: https://github.com/${process.env.RELEASE_REPO}/actions/runs/${process.env.PLUGIN_NPM_RUN_ID}`,
             process.env.CLAWHUB_LINE,
             process.env.CLAWHUB_BOOTSTRAP_LINE,
-            `- OpenClaw npm publish: https://github.com/${process.env.RELEASE_REPO}/actions/runs/${process.env.QUIET_CORE_NPM_RUN_ID}`,
+            `- QuietCore npm publish: https://github.com/${process.env.RELEASE_REPO}/actions/runs/${process.env.QUIET_CORE_NPM_RUN_ID}`,
             process.env.TELEGRAM_LINE,
             ...(process.env.WINDOWS_LINE ? [process.env.WINDOWS_LINE] : []),
           ].join("\n");
@@ -1268,9 +1268,9 @@ jobs:
             echo "- Release approval: this workflow job"
             echo "- Plugin npm and ClawHub publish: dispatched in parallel"
             if [[ "${PUBLISH_QUIET_CORE_NPM}" == "true" ]]; then
-              echo "- OpenClaw npm publish: starts after plugin npm succeeds"
+              echo "- QuietCore npm publish: starts after plugin npm succeeds"
             else
-              echo "- OpenClaw npm publish: skipped by input"
+              echo "- QuietCore npm publish: skipped by input"
             fi
             if is_stable_release && [[ "${PUBLISH_QUIET_CORE_NPM}" == "true" ]]; then
               echo "- Windows Hub promotion: required before the GitHub release can be published"
@@ -1355,7 +1355,7 @@ jobs:
               -f npm_dist_tag="${RELEASE_NPM_DIST_TAG}")"
             echo "- Quiet Core bot npm run ID: \`${quiet_core_bot_npm_run_id}\`" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "- OpenClaw npm publish: skipped by input" >> "$GITHUB_STEP_SUMMARY"
+            echo "- QuietCore npm publish: skipped by input" >> "$GITHUB_STEP_SUMMARY"
           fi
 
           clawhub_result=""

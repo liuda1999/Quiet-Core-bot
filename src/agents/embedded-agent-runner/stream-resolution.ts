@@ -33,7 +33,7 @@ export function resetEmbeddedAgentBaseStreamFnCacheForTest(): void {
   embeddedAgentBaseStreamFnCache = new WeakMap<object, StreamFn | undefined>();
 }
 
-function isDefaultOpenClawStreamFnForModel(
+function isDefaultQuietCoreStreamFnForModel(
   model: EmbeddedRunAttemptParams["model"],
   streamFn: StreamFn | undefined,
 ): boolean {
@@ -56,14 +56,14 @@ function isOpenAICodexResponsesModel(model: EmbeddedRunAttemptParams["model"]): 
   return model.provider === "openai" && model.api === "openai-chatgpt-responses";
 }
 
-function resolveOpenClawNativeCodexResponsesStreamFn(params: {
+function resolveQuietCoreNativeCodexResponsesStreamFn(params: {
   model: EmbeddedRunAttemptParams["model"];
   currentStreamFn: StreamFn | undefined;
 }): StreamFn | undefined {
   if (!isOpenAICodexResponsesModel(params.model)) {
     return undefined;
   }
-  if (!isDefaultOpenClawStreamFnForModel(params.model, params.currentStreamFn)) {
+  if (!isDefaultQuietCoreStreamFnForModel(params.model, params.currentStreamFn)) {
     return undefined;
   }
   return openClawNativeCodexResponsesStreamFnForTest ?? params.currentStreamFn ?? streamSimple;
@@ -82,14 +82,14 @@ export function describeEmbeddedAgentStreamStrategy(params: {
     return "anthropic-vertex";
   }
   if (
-    resolveOpenClawNativeCodexResponsesStreamFn({
+    resolveQuietCoreNativeCodexResponsesStreamFn({
       model: params.model,
       currentStreamFn: params.currentStreamFn,
     })
   ) {
     return "quiet-core-bot-native-codex-responses";
   }
-  if (isDefaultOpenClawStreamFnForModel(params.model, params.currentStreamFn)) {
+  if (isDefaultQuietCoreStreamFnForModel(params.model, params.currentStreamFn)) {
     return createBoundaryAwareStreamFnForModel(params.model)
       ? `boundary-aware:${params.model.api}`
       : "stream-simple";
@@ -149,7 +149,7 @@ export function resolveEmbeddedAgentStreamFn(params: {
     return createAnthropicVertexStreamFnForModel(params.model);
   }
 
-  const openClawNativeCodexResponsesStreamFn = resolveOpenClawNativeCodexResponsesStreamFn({
+  const openClawNativeCodexResponsesStreamFn = resolveQuietCoreNativeCodexResponsesStreamFn({
     model: params.model,
     currentStreamFn: params.currentStreamFn,
   });
@@ -173,7 +173,7 @@ export function resolveEmbeddedAgentStreamFn(params: {
   }
 
   if (
-    isDefaultOpenClawStreamFnForModel(params.model, params.currentStreamFn) ||
+    isDefaultQuietCoreStreamFnForModel(params.model, params.currentStreamFn) ||
     hasResolvedRuntimeApiKey(params.resolvedApiKey)
   ) {
     const boundaryAwareStreamFn = createBoundaryAwareStreamFnForModel(params.model);
@@ -213,10 +213,10 @@ export function resolveEmbeddedAgentStreamFn(params: {
 }
 
 export const testing = {
-  setOpenClawNativeCodexResponsesStreamFnForTest(streamFn: StreamFn | undefined): void {
+  setQuietCoreNativeCodexResponsesStreamFnForTest(streamFn: StreamFn | undefined): void {
     openClawNativeCodexResponsesStreamFnForTest = streamFn;
   },
-  resetOpenClawNativeCodexResponsesStreamFnForTest(): void {
+  resetQuietCoreNativeCodexResponsesStreamFnForTest(): void {
     openClawNativeCodexResponsesStreamFnForTest = undefined;
   },
 };

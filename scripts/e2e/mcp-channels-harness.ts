@@ -1,6 +1,6 @@
 // Shared MCP-channel Docker E2E harness helpers.
 // The mounted test harness imports packaged dist modules so bridge assertions run
-// against the OpenClaw npm tarball installed in the functional image.
+// against the QuietCore npm tarball installed in the functional image.
 import process from "node:process";
 import { setTimeout as delay } from "node:timers/promises";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";

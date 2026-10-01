@@ -31,8 +31,8 @@ export async function doctorCommand(runtime?: RuntimeEnv, options: DoctorOptions
   printWizardHeader(effectiveRuntime);
   intro("Quiet Core bot doctor");
 
-  const { resolveOpenClawPackageRoot } = await import("../infra/quiet-core-bot-root.js");
-  const root = await resolveOpenClawPackageRoot({
+  const { resolveQuietCorePackageRoot } = await import("../infra/quiet-core-bot-root.js");
+  const root = await resolveQuietCorePackageRoot({
     moduleUrl: import.meta.url,
     argv1: process.argv[1],
     cwd: process.cwd(),

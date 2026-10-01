@@ -18,7 +18,7 @@ vi.mock("quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation", async (i
   };
 });
 
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
 import { closeAllMemorySearchManagers, getMemorySearchManager } from "./index.js";
 import { resetFtsOnlyDegradationWarningForTest } from "./manager.js";
 
@@ -49,7 +49,7 @@ describe("memory fts-only degradation warning", () => {
     }
   });
 
-  function createFtsOnlyConfig(): OpenClawConfig {
+  function createFtsOnlyConfig(): QuietCoreConfig {
     return {
       memory: { backend: "builtin" },
       agents: {
@@ -64,7 +64,7 @@ describe("memory fts-only degradation warning", () => {
         },
         list: [{ id: "main", default: true }],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
   }
 
   it("warns once when provider=none degrades memory search to FTS-only", async () => {

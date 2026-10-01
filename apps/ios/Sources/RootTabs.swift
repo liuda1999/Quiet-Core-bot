@@ -1,5 +1,5 @@
-import OpenClawKit
-import OpenClawProtocol
+import QuietCoreKit
+import QuietCoreProtocol
 import SwiftUI
 import UIKit
 
@@ -45,7 +45,7 @@ struct RootTabs: View {
 
     private static var initialTab: AppTab {
         let arguments = ProcessInfo.processInfo.arguments
-        guard let flagIndex = arguments.firstIndex(of: "--openclaw-initial-tab") else {
+        guard let flagIndex = arguments.firstIndex(of: "--quiet-core-initial-tab") else {
             return .control
         }
         let valueIndex = arguments.index(after: flagIndex)
@@ -76,7 +76,7 @@ struct RootTabs: View {
 
     private static var requestedInitialSidebarDestination: SidebarDestination? {
         let arguments = ProcessInfo.processInfo.arguments
-        guard let flagIndex = arguments.firstIndex(of: "--openclaw-initial-destination") else {
+        guard let flagIndex = arguments.firstIndex(of: "--quiet-core-initial-destination") else {
             return nil
         }
         let valueIndex = arguments.index(after: flagIndex)
@@ -91,7 +91,7 @@ struct RootTabs: View {
 
     private static var initialChatSessionKey: String? {
         let arguments = ProcessInfo.processInfo.arguments
-        guard let flagIndex = arguments.firstIndex(of: "--openclaw-chat-session") else {
+        guard let flagIndex = arguments.firstIndex(of: "--quiet-core-chat-session") else {
             return nil
         }
         let valueIndex = arguments.index(after: flagIndex)
@@ -122,7 +122,7 @@ struct RootTabs: View {
             self.rootLifecycle(
                 self.rootOverlays(
                     self.tabContent
-                        .tint(OpenClawBrand.accent))))
+                        .tint(QuietCoreBrand.accent))))
     }
 
     @ViewBuilder
@@ -209,7 +209,7 @@ struct RootTabs: View {
             self.sidebarDetailNavigationShell
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
-        .background(OpenClawProBackground())
+        .background(QuietCoreProBackground())
     }
 
     private func sidebarDrawerContent(sidebarWidth: CGFloat) -> some View {
@@ -256,11 +256,11 @@ struct RootTabs: View {
 
     private var sidebarIdentityHeader: some View {
         HStack(spacing: 10) {
-            OpenClawProMark(size: 30, shadowRadius: 3)
+            QuietCoreProMark(size: 30, shadowRadius: 3)
                 .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 2) {
-                Text("OpenClaw")
+                Text("QuietCore")
                     .font(.headline.weight(.semibold))
                     .foregroundStyle(.primary)
                     .lineLimit(1)
@@ -289,7 +289,7 @@ struct RootTabs: View {
             self.sidebarHorizontalSeparator
         }
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("OpenClaw \(self.sidebarGatewayStatusTitle)")
+        .accessibilityLabel("QuietCore \(self.sidebarGatewayStatusTitle)")
     }
 
     private var sidebarGatewayStatusTitle: String {
@@ -317,7 +317,7 @@ struct RootTabs: View {
             }
         }
         .listStyle(.sidebar)
-        .tint(OpenClawBrand.accent)
+        .tint(QuietCoreBrand.accent)
         .scrollContentBackground(.hidden)
         .background(Color(uiColor: .systemBackground))
     }
@@ -357,11 +357,11 @@ struct RootTabs: View {
     private var sidebarGatewayStatusColor: Color {
         switch self.gatewayStatus {
         case .connected:
-            OpenClawBrand.ok
+            QuietCoreBrand.ok
         case .connecting:
-            OpenClawBrand.accent
+            QuietCoreBrand.accent
         case .error:
-            OpenClawBrand.warn
+            QuietCoreBrand.warn
         case .disconnected:
             .secondary
         }
@@ -381,10 +381,10 @@ struct RootTabs: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         .buttonStyle(.plain)
-        .foregroundStyle(destination == self.selectedSidebarDestination ? OpenClawBrand.accent : .primary)
+        .foregroundStyle(destination == self.selectedSidebarDestination ? QuietCoreBrand.accent : .primary)
         .listRowBackground(
             destination == self.selectedSidebarDestination
-                ? OpenClawBrand.accent.opacity(0.12)
+                ? QuietCoreBrand.accent.opacity(0.12)
                 : Color.clear)
         .listRowSeparator(.hidden, edges: .all)
     }
@@ -464,7 +464,7 @@ struct RootTabs: View {
                 openSettings: { self.selectSidebarDestination(.gateway) })
                 .id(self.selectedSidebarDestination.id)
         case .docs:
-            OpenClawDocsScreen(
+            QuietCoreDocsScreen(
                 headerLeadingAction: self.sidebarHeaderLeadingAction,
                 gatewayAction: { self.selectSidebarDestination(.gateway) })
         case .settings:
@@ -527,7 +527,7 @@ struct RootTabs: View {
             layoutMode: self.isSidebarDrawerLayout ? .drawer : .split)
     }
 
-    private var sidebarHeaderLeadingAction: OpenClawSidebarHeaderAction? {
+    private var sidebarHeaderLeadingAction: QuietCoreSidebarHeaderAction? {
         guard Self.shouldShowSidebarRevealInDestinationHeader(
             isSidebarVisible: self.isSidebarVisible,
             layoutMode: self.isSidebarDrawerLayout ? .drawer : .split)
@@ -535,13 +535,13 @@ struct RootTabs: View {
             return nil
         }
         if self.isSidebarVisible {
-            return OpenClawSidebarHeaderAction(
+            return QuietCoreSidebarHeaderAction(
                 systemName: "sidebar.left",
                 accessibilityLabel: "Hide Sidebar",
                 accessibilityIdentifier: Self.sidebarHideButtonAccessibilityIdentifier,
                 action: { self.hideSidebar() })
         }
-        return OpenClawSidebarHeaderAction(
+        return QuietCoreSidebarHeaderAction(
             systemName: "sidebar.left",
             accessibilityLabel: "Show Sidebar",
             accessibilityIdentifier: Self.sidebarShowButtonAccessibilityIdentifier,
@@ -558,7 +558,7 @@ struct RootTabs: View {
         .frame(width: 44, height: 44)
         .contentShape(Rectangle())
         .buttonStyle(.plain)
-        .foregroundStyle(OpenClawBrand.accent)
+        .foregroundStyle(QuietCoreBrand.accent)
         .accessibilityLabel("Hide Sidebar")
         .accessibilityIdentifier(Self.sidebarHideButtonAccessibilityIdentifier)
     }
@@ -853,7 +853,7 @@ struct RootTabs: View {
                 activeAgentCaption: "Routes chat and talk",
                 agentCount: agents.count,
                 agents: Array(agents.prefix(6)),
-                footer: "OpenClaw only runs phone-side capabilities while the app is connected and permitted.")
+                footer: "QuietCore only runs phone-side capabilities while the app is connected and permitted.")
         case .connecting:
             return RootTabsHomeCanvasPayload(
                 gatewayState: "connecting",
@@ -871,7 +871,7 @@ struct RootTabs: View {
         case .error, .disconnected:
             return RootTabsHomeCanvasPayload(
                 gatewayState: self.gatewayStatus == .error ? "error" : "offline",
-                eyebrow: self.gatewayStatus == .error ? "Gateway needs attention" : "OpenClaw iOS",
+                eyebrow: self.gatewayStatus == .error ? "Gateway needs attention" : "QuietCore iOS",
                 title: "Pair a gateway",
                 subtitle:
                 "Connect this phone as a local node for chat, realtime voice, share intake, and approved device tools.",
@@ -882,7 +882,7 @@ struct RootTabs: View {
                 agentCount: agents.count,
                 agents: Array(agents.prefix(4)),
                 footer:
-                "Use Settings to scan a pairing QR code or paste a setup code from your OpenClaw gateway.")
+                "Use Settings to scan a pairing QR code or paste a setup code from your QuietCore gateway.")
         }
     }
 

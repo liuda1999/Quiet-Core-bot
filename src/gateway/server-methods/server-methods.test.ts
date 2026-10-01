@@ -12,7 +12,7 @@ import { GATEWAY_CLIENT_IDS } from "../../../packages/gateway-protocol/src/clien
 import { validateExecApprovalRequestParams } from "../../../packages/gateway-protocol/src/index.js";
 import { STREAM_ERROR_FALLBACK_TEXT } from "../../agents/stream-message-shared.js";
 import { HEARTBEAT_PROMPT } from "../../auto-reply/heartbeat.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { registerLegacyContextEngine } from "../../context-engine/legacy.registration.js";
 import {
   clearContextEngineRuntimeQuarantine,
@@ -746,7 +746,7 @@ describe("injectTimestamp", () => {
           userTimezone: "America/New_York",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expect(injectTimestamp("cache sensitive prompt", timestampOptsFromConfig(cfg))).toBe(
       "cache sensitive prompt",
@@ -2280,17 +2280,17 @@ describe("timestampOptsFromConfig", () => {
   it("keeps timestamp injection enabled for upgraded configs unless explicitly disabled", () => {
     const upgradedConfigWithExistingDefaults = {
       agents: { defaults: { userTimezone: "America/Chicago" } },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     // Existing user configs do not store envelopeTimestamp; omission remains
     // the shipped default even when other agent defaults are present, so no
     // config migration is needed for this broadened use of the setting.
-    expect(timestampOptsFromConfig({} as OpenClawConfig).includeTimestamp).toBe(true);
+    expect(timestampOptsFromConfig({} as QuietCoreConfig).includeTimestamp).toBe(true);
     expect(timestampOptsFromConfig(upgradedConfigWithExistingDefaults).includeTimestamp).toBe(true);
     expect(
       timestampOptsFromConfig({
         agents: { defaults: { envelopeTimestamp: "off" } },
-      } as OpenClawConfig).includeTimestamp,
+      } as QuietCoreConfig).includeTimestamp,
     ).toBe(false);
   });
 });
@@ -2543,7 +2543,7 @@ describe("exec approval handlers", () => {
     });
   }
 
-  function createExecApprovalFixture(opts?: { config?: OpenClawConfig }) {
+  function createExecApprovalFixture(opts?: { config?: QuietCoreConfig }) {
     const manager = new ExecApprovalManager();
     const handlers = createExecApprovalHandlers(manager);
     const broadcasts: Array<{ event: string; payload: unknown }> = [];
@@ -4581,7 +4581,7 @@ describe("gateway healthHandlers.health cache freshness", () => {
     try {
       const contextEngine = await resolveContextEngine({
         plugins: { slots: { contextEngine: engineId } },
-      } as OpenClawConfig);
+      } as QuietCoreConfig);
       await contextEngine.assemble({ sessionId: "s1", messages: [] });
 
       const cached = {

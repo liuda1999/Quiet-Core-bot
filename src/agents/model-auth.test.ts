@@ -31,7 +31,7 @@ vi.mock("../plugins/plugin-registry.js", () => ({
 }));
 
 vi.mock("../plugins/manifest-metadata-scan.js", () => ({
-  listOpenClawPluginManifestMetadata: () => [
+  listQuietCorePluginManifestMetadata: () => [
     {
       pluginDir: "/bundled/anthropic-vertex",
       origin: "bundled",

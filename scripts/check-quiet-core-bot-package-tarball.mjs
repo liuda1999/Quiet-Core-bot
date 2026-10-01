@@ -33,11 +33,11 @@ function parseArgs(argv) {
     throw new Error(usage());
   }
   if (tarball.startsWith("-")) {
-    throw new Error(`Unknown OpenClaw package tarball check option: ${tarball}`);
+    throw new Error(`Unknown QuietCore package tarball check option: ${tarball}`);
   }
   const extraArg = args[1]?.trim();
   if (extraArg) {
-    throw new Error(`Unexpected OpenClaw package tarball check argument: ${extraArg}`);
+    throw new Error(`Unexpected QuietCore package tarball check argument: ${extraArg}`);
   }
   return { help: false, tarball };
 }
@@ -55,7 +55,7 @@ if (cliArgs.help) {
 
 const { tarball } = cliArgs;
 if (!fs.existsSync(tarball)) {
-  fail(`OpenClaw package tarball does not exist: ${tarball}`);
+  fail(`QuietCore package tarball does not exist: ${tarball}`);
 }
 
 const phaseTimingsEnabled = process.env.QUIET_CORE_PACKAGE_TARBALL_CHECK_TIMINGS !== "0";
@@ -343,11 +343,11 @@ errors.push(
 
 if (errors.length > 0) {
   fs.rmSync(extractDir, { recursive: true, force: true });
-  fail(`OpenClaw package tarball integrity failed:\n${errors.join("\n")}`);
+  fail(`QuietCore package tarball integrity failed:\n${errors.join("\n")}`);
 }
 
 for (const warning of warnings) {
-  console.warn(`OpenClaw package tarball integrity warning: ${warning}`);
+  console.warn(`QuietCore package tarball integrity warning: ${warning}`);
 }
 fs.rmSync(extractDir, { recursive: true, force: true });
-console.log("OpenClaw package tarball integrity passed.");
+console.log("QuietCore package tarball integrity passed.");

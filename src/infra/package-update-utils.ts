@@ -57,7 +57,7 @@ export function readInstalledPackagePeerDependencies(dir: string): Record<string
 }
 
 /** Return true when an installed package needs an quiet-core-bot peer link repair. */
-export function installedPackageNeedsOpenClawPeerLinkRepair(dir: string): boolean {
+export function installedPackageNeedsQuietCorePeerLinkRepair(dir: string): boolean {
   const peerDependencies = readInstalledPackagePeerDependencies(dir);
   if (!Object.hasOwn(peerDependencies, "quiet-core-bot")) {
     return false;

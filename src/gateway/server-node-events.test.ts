@@ -2,7 +2,7 @@
 // delivery metadata, pairing state, and outbound payload lifecycle events.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { PROTOCOL_VERSION } from "../../packages/gateway-protocol/src/index.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { NodeRegistry } from "./node-registry.js";
 import type { GatewayWsClient } from "./server/ws-types.js";
 import type { loadSessionEntry as loadSessionEntryType } from "./session-utils.js";
@@ -23,7 +23,7 @@ const buildSessionLookup = (
     parentSessionKey?: string;
   } = {},
 ): ReturnType<typeof loadSessionEntryType> => ({
-  cfg: { session: { mainKey: "agent:main:main" } } as OpenClawConfig,
+  cfg: { session: { mainKey: "agent:main:main" } } as QuietCoreConfig,
   storePath: "/tmp/sessions.json",
   store: {} as ReturnType<typeof loadSessionEntryType>["store"],
   entry: {
@@ -118,7 +118,7 @@ const runtimeMocks = vi.hoisted(() => ({
   resolveOutboundTarget: vi.fn(({ to }: { to: string }) => ({ ok: true, to })),
   resolveSessionAgentId: vi.fn(() => "main"),
   resolveSessionModelRef: vi.fn(
-    (_cfg: OpenClawConfig, entry?: { model?: string; modelProvider?: string }) => ({
+    (_cfg: QuietCoreConfig, entry?: { model?: string; modelProvider?: string }) => ({
       provider: entry?.modelProvider ?? "test-provider",
       model: entry?.model ?? "default-model",
     }),

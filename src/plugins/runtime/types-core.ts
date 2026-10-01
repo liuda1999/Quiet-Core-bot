@@ -49,12 +49,12 @@ type RuntimeMutateConfigFileParams<T = void> = {
   afterWrite: RuntimeConfigAfterWrite;
   writeOptions?: RuntimeWriteConfigOptions;
   mutate: (
-    draft: import("../../config/types.quiet-core-bot.js").OpenClawConfig,
+    draft: import("../../config/types.quiet-core-bot.js").QuietCoreConfig,
     context: RuntimeConfigMutationContext,
   ) => Promise<T | void> | T | void;
 };
 type RuntimeReplaceConfigFileParams = {
-  nextConfig: import("../../config/types.quiet-core-bot.js").OpenClawConfig;
+  nextConfig: import("../../config/types.quiet-core-bot.js").QuietCoreConfig;
   baseHash?: string;
   afterWrite: RuntimeConfigAfterWrite;
   writeOptions?: RuntimeWriteConfigOptions;
@@ -181,7 +181,7 @@ export type PluginRuntimeCore = {
   version: string;
   config: {
     /** Current process runtime config snapshot. Prefer config passed into the active call path. */
-    current: () => DeepReadonly<import("../../config/types.quiet-core-bot.js").OpenClawConfig>;
+    current: () => DeepReadonly<import("../../config/types.quiet-core-bot.js").QuietCoreConfig>;
     /**
      * Persist a focused config mutation. Callers must choose the post-write
      * behavior explicitly so the gateway can hot-reload, restart, or defer.
@@ -202,7 +202,7 @@ export type PluginRuntimeCore = {
      * plugins and repo code are blocked from using this by the
      * deprecated-internal-config-api architecture guard.
      */
-    loadConfig: () => import("../../config/types.quiet-core-bot.js").OpenClawConfig;
+    loadConfig: () => import("../../config/types.quiet-core-bot.js").QuietCoreConfig;
     /**
      * @deprecated Use mutateConfigFile() or replaceConfigFile() with an
      * explicit afterWrite intent so restart behavior stays under host control.
@@ -210,7 +210,7 @@ export type PluginRuntimeCore = {
      * deprecated-internal-config-api architecture guard.
      */
     writeConfigFile: (
-      cfg: import("../../config/types.quiet-core-bot.js").OpenClawConfig,
+      cfg: import("../../config/types.quiet-core-bot.js").QuietCoreConfig,
       options?: RuntimeWriteConfigOptions & { afterWrite?: RuntimeConfigAfterWrite },
     ) => Promise<void>;
   };
@@ -223,7 +223,7 @@ export type PluginRuntimeCore = {
     resolveAgentWorkspaceDir: typeof import("../../agents/agent-scope.js").resolveAgentWorkspaceDir;
     resolveAgentIdentity: typeof import("../../agents/identity.js").resolveAgentIdentity;
     resolveThinkingDefault: (params: {
-      cfg: import("../../config/types.quiet-core-bot.js").OpenClawConfig;
+      cfg: import("../../config/types.quiet-core-bot.js").QuietCoreConfig;
       provider: string;
       model: string;
       catalog?: import("../../agents/model-catalog.types.js").ModelCatalogEntry[];
@@ -403,19 +403,19 @@ export type PluginRuntimeCore = {
     /** Resolve auth for a model. Only provider/model, optional cfg, and workspaceDir are used. */
     getApiKeyForModel: (params: {
       model: import("quiet-core-bot/plugin-sdk/llm").Model<import("quiet-core-bot/plugin-sdk/llm").Api>;
-      cfg?: import("../../config/types.quiet-core-bot.js").OpenClawConfig;
+      cfg?: import("../../config/types.quiet-core-bot.js").QuietCoreConfig;
       workspaceDir?: string;
     }) => Promise<import("../../agents/model-auth-runtime-shared.js").ResolvedProviderAuth>;
     /** Resolve request-ready auth for a model, including provider runtime exchanges. */
     getRuntimeAuthForModel: (params: {
       model: import("quiet-core-bot/plugin-sdk/llm").Model<import("quiet-core-bot/plugin-sdk/llm").Api>;
-      cfg?: import("../../config/types.quiet-core-bot.js").OpenClawConfig;
+      cfg?: import("../../config/types.quiet-core-bot.js").QuietCoreConfig;
       workspaceDir?: string;
     }) => Promise<import("./model-auth-types.js").ResolvedProviderRuntimeAuth>;
     /** Resolve auth for a provider by name. Only provider, optional cfg, and workspaceDir are used. */
     resolveApiKeyForProvider: (params: {
       provider: string;
-      cfg?: import("../../config/types.quiet-core-bot.js").OpenClawConfig;
+      cfg?: import("../../config/types.quiet-core-bot.js").QuietCoreConfig;
       workspaceDir?: string;
     }) => Promise<import("../../agents/model-auth-runtime-shared.js").ResolvedProviderAuth>;
   };

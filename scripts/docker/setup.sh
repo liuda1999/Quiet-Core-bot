@@ -775,7 +775,7 @@ echo "==> Fixing data-directory permissions"
 # Use -xdev to restrict chown to the config-dir mount only — without it,
 # the recursive chown would cross into the workspace bind mount and rewrite
 # ownership of all user project files on Linux hosts.
-# After fixing the config dir, only the OpenClaw metadata subdirectory
+# After fixing the config dir, only the QuietCore metadata subdirectory
 # (.quiet-core-bot/) inside the workspace gets chowned, not the user's project files.
 run_prestart_gateway --user root --entrypoint sh quiet-core-bot-gateway -c \
   'find /home/node/.quiet-core-bot -xdev -exec chown node:node {} +; \
@@ -894,7 +894,7 @@ YAML
 fi
 
 if [[ -n "$SANDBOX_ENABLED" ]]; then
-  # Enable sandbox in OpenClaw config.
+  # Enable sandbox in QuietCore config.
   sandbox_config_ok=true
   if ! run_runtime_cli current no-deps \
     config set agents.defaults.sandbox.mode "non-main" >/dev/null; then

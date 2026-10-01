@@ -2,7 +2,7 @@
  * Collects configured native harness runtime ids from model provider config.
  */
 import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { isRecord } from "../utils.js";
 import { QUIET_CORE_AGENT_RUNTIME_ID, isDefaultAgentRuntimeId } from "./agent-runtime-id.js";
 import { normalizeOptionalAgentRuntimeId } from "./agent-runtime-id.js";
@@ -71,7 +71,7 @@ function parseConfiguredModelRef(
 }
 
 function resolveConfiguredModelHarnessRuntime(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   includeImplicitRuntimePreferences: boolean;
   modelRef: string;
   agentId?: string;
@@ -93,7 +93,7 @@ function resolveConfiguredModelHarnessRuntime(params: {
   return isSelectablePluginRuntime(runtime) ? runtime : undefined;
 }
 
-function pushConfiguredModelRuntimeIds(config: OpenClawConfig, runtimes: Set<string>): void {
+function pushConfiguredModelRuntimeIds(config: QuietCoreConfig, runtimes: Set<string>): void {
   for (const providerConfig of Object.values(config.models?.providers ?? {})) {
     const providerRuntime = normalizeConfiguredRuntimeId(providerConfig?.agentRuntime?.id);
     if (isSelectablePluginRuntime(providerRuntime)) {
@@ -130,7 +130,7 @@ function pushConfiguredModelRuntimeIds(config: OpenClawConfig, runtimes: Set<str
 }
 
 function pushConfiguredAgentModelRuntimeIds(
-  config: OpenClawConfig,
+  config: QuietCoreConfig,
   runtimes: Set<string>,
   includeImplicitRuntimePreferences: boolean,
 ): void {
@@ -182,7 +182,7 @@ export type ConfiguredAgentHarnessRuntimeOptions = {
 
 /** Lists configured plugin harness runtime ids referenced by agent/model config. */
 export function collectConfiguredAgentHarnessRuntimes(
-  config: OpenClawConfig,
+  config: QuietCoreConfig,
   options: ConfiguredAgentHarnessRuntimeOptions = {},
 ): string[] {
   const runtimes = new Set<string>();

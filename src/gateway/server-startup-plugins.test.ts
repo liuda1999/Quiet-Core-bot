@@ -2,7 +2,7 @@
  * Gateway startup plugin bootstrap tests.
  */
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { PluginManifestRegistry } from "../plugins/manifest-registry.js";
 import type { PluginMetadataSnapshot } from "../plugins/plugin-metadata-snapshot.js";
 
@@ -100,7 +100,7 @@ const loadPluginLookUpTable = vi.hoisted(() =>
     metrics: pluginLookUpTableMetrics,
   })),
 );
-const resolveOpenClawPackageRootSync = vi.hoisted(() => vi.fn((_params: unknown) => "/package"));
+const resolveQuietCorePackageRootSync = vi.hoisted(() => vi.fn((_params: unknown) => "/package"));
 const runChannelPluginStartupMaintenance = vi.hoisted(() =>
   vi.fn(async (_params: unknown) => undefined),
 );
@@ -124,7 +124,7 @@ vi.mock("../config/plugin-auto-enable.js", () => ({
 }));
 
 vi.mock("../infra/quiet-core-bot-root.js", () => ({
-  resolveOpenClawPackageRootSync: (params: unknown) => resolveOpenClawPackageRootSync(params),
+  resolveQuietCorePackageRootSync: (params: unknown) => resolveQuietCorePackageRootSync(params),
 }));
 
 vi.mock("../plugins/plugin-lookup-table.js", () => ({
@@ -192,16 +192,16 @@ function mockDeferredSlackStartupPlugins(): void {
   });
 }
 
-function slackConfig(): OpenClawConfig {
+function slackConfig(): QuietCoreConfig {
   return {
     channels: {
       slack: { enabled: true, token: "token" },
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
 async function prepareBootstrapWithRuntimeConfig(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   options: {
     loadRuntimePlugins?: boolean;
     loadSetupRuntimePlugins?: boolean;
@@ -249,7 +249,7 @@ describe("prepareGatewayPluginBootstrap startup plugins", () => {
       },
       metrics: pluginLookUpTableMetrics,
     });
-    resolveOpenClawPackageRootSync.mockClear().mockReturnValue("/package");
+    resolveQuietCorePackageRootSync.mockClear().mockReturnValue("/package");
     runChannelPluginStartupMaintenance.mockClear();
     runStartupSessionMigration.mockClear();
   });
@@ -263,7 +263,7 @@ describe("prepareGatewayPluginBootstrap startup plugins", () => {
       plugins: {
         allow: ["bench-plugin"],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const activationConfig = {
       channels: {
         telegram: {
@@ -279,7 +279,7 @@ describe("prepareGatewayPluginBootstrap startup plugins", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const runtimeConfig = {
       channels: {
         telegram: {
@@ -305,7 +305,7 @@ describe("prepareGatewayPluginBootstrap startup plugins", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     applyPluginAutoEnable.mockReturnValueOnce({
       config: activationConfig,
       changes: [],
@@ -329,9 +329,9 @@ describe("prepareGatewayPluginBootstrap startup plugins", () => {
       manifestRegistry: pluginManifestRegistry,
     });
     const lookupInput = firstCallArg<{
-      activationSourceConfig?: OpenClawConfig;
+      activationSourceConfig?: QuietCoreConfig;
       metadataSnapshot?: PluginMetadataSnapshot;
-      config?: OpenClawConfig;
+      config?: QuietCoreConfig;
     }>(loadPluginLookUpTable);
     expect(lookupInput.activationSourceConfig).toBe(sourceConfig);
     expect(lookupInput.metadataSnapshot).toBe(pluginMetadataSnapshot);
@@ -348,8 +348,8 @@ describe("prepareGatewayPluginBootstrap startup plugins", () => {
     });
 
     const startupInput = firstCallArg<{
-      activationSourceConfig?: OpenClawConfig;
-      cfg?: OpenClawConfig;
+      activationSourceConfig?: QuietCoreConfig;
+      cfg?: QuietCoreConfig;
       baseMethods?: string[];
       coreGatewayMethodNames?: string[];
     }>(loadGatewayStartupPlugins);
@@ -412,7 +412,7 @@ describe("prepareGatewayPluginBootstrap startup plugins", () => {
           telegram: { enabled: true },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await prepareBootstrapWithRuntimeConfig(cfg);
     expect(result.startupPluginIds).toEqual([]);
@@ -422,7 +422,7 @@ describe("prepareGatewayPluginBootstrap startup plugins", () => {
 
     expect(loadPluginLookUpTable).not.toHaveBeenCalled();
     const startupInput = firstCallArg<{
-      cfg?: OpenClawConfig;
+      cfg?: QuietCoreConfig;
       pluginIds?: string[];
       pluginLookUpTable?: unknown;
       preferSetupRuntimeForChannelPlugins?: boolean;
@@ -457,7 +457,7 @@ describe("loadGatewayStartupPluginRuntime memory provider diagnostics", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       workspaceDir: "/workspace",
       log,
       baseMethods: ["ping"],
@@ -482,7 +482,7 @@ describe("loadGatewayStartupPluginRuntime memory provider diagnostics", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       workspaceDir: "/workspace",
       log,
       baseMethods: ["ping"],
@@ -509,7 +509,7 @@ describe("warnUnregisteredConfiguredMemoryEmbeddingProviders", () => {
     warnUnregisteredConfiguredMemoryEmbeddingProviders({
       config: {
         agents: { defaults: { memorySearch: { provider: "openai" } } },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       pluginRegistry: registry([]),
       log,
     });
@@ -524,7 +524,7 @@ describe("warnUnregisteredConfiguredMemoryEmbeddingProviders", () => {
     warnUnregisteredConfiguredMemoryEmbeddingProviders({
       config: {
         agents: { defaults: { memorySearch: { provider: "openai" } } },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       pluginRegistry: registry(["openai"]),
       log,
     });
@@ -538,7 +538,7 @@ describe("warnUnregisteredConfiguredMemoryEmbeddingProviders", () => {
     warnUnregisteredConfiguredMemoryEmbeddingProviders({
       config: {
         agents: { defaults: { memorySearch: { provider: "openai", fallback: "ollama" } } },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       pluginRegistry: registry(["openai"]),
       log,
     });
@@ -553,7 +553,7 @@ describe("warnUnregisteredConfiguredMemoryEmbeddingProviders", () => {
     warnUnregisteredConfiguredMemoryEmbeddingProviders({
       config: {
         agents: { defaults: { memorySearch: { provider: "openai", fallback: "ollama" } } },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       pluginRegistry: registry(["openai", "ollama"]),
       log,
     });
@@ -567,7 +567,7 @@ describe("warnUnregisteredConfiguredMemoryEmbeddingProviders", () => {
     warnUnregisteredConfiguredMemoryEmbeddingProviders({
       config: {
         agents: { defaults: { memorySearch: { provider: "generic-embed" } } },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       pluginRegistry: registry([], { embeddingProviderIds: ["generic-embed"] }),
       log,
     });
@@ -581,7 +581,7 @@ describe("warnUnregisteredConfiguredMemoryEmbeddingProviders", () => {
     warnUnregisteredConfiguredMemoryEmbeddingProviders({
       config: {
         agents: { defaults: { memorySearch: { provider: "openai-compatible" } } },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       pluginRegistry: registry([]),
       log,
     });
@@ -604,7 +604,7 @@ describe("warnUnregisteredConfiguredMemoryEmbeddingProviders", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       pluginRegistry: registry([]),
       log,
     });
@@ -618,7 +618,7 @@ describe("warnUnregisteredConfiguredMemoryEmbeddingProviders", () => {
     warnUnregisteredConfiguredMemoryEmbeddingProviders({
       config: {
         agents: { defaults: { memorySearch: { provider: "none", fallback: "openai" } } },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       pluginRegistry: registry([]),
       log,
     });
@@ -633,14 +633,14 @@ describe("warnUnregisteredConfiguredMemoryEmbeddingProviders", () => {
       config: {
         agents: { defaults: { memorySearch: { provider: "openai", fallback: "ollama" } } },
         plugins: { slots: { memory: "none" } },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       pluginRegistry: registry([]),
       log,
     });
     expect(log.warn).not.toHaveBeenCalled();
   });
 
-  function customOllamaConfig(source: "provider" | "fallback" = "provider"): OpenClawConfig {
+  function customOllamaConfig(source: "provider" | "fallback" = "provider"): QuietCoreConfig {
     const memorySearch =
       source === "provider"
         ? { provider: "ollama-5080" }
@@ -656,7 +656,7 @@ describe("warnUnregisteredConfiguredMemoryEmbeddingProviders", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
   }
 
   it.each([
@@ -718,7 +718,7 @@ describe("warnUnregisteredConfiguredMemoryEmbeddingProviders", () => {
             },
           ],
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       pluginRegistry: registry([]),
       log,
     });
@@ -740,7 +740,7 @@ describe("warnUnregisteredConfiguredMemoryEmbeddingProviders", () => {
             },
           ],
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       pluginRegistry: registry([]),
       log,
     });

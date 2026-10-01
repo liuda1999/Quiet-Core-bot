@@ -1,5 +1,5 @@
 // Lmstudio tests cover index plugin behavior.
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/plugin-entry";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/plugin-entry";
 import { capturePluginRegistration } from "quiet-core-bot/plugin-sdk/plugin-test-runtime";
 import { CUSTOM_LOCAL_AUTH_MARKER } from "quiet-core-bot/plugin-sdk/provider-auth";
 import type { ModelProviderConfig } from "quiet-core-bot/plugin-sdk/provider-model-shared";
@@ -168,7 +168,7 @@ describe("lmstudio plugin", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     expect(
       provider?.augmentModelCatalog?.({

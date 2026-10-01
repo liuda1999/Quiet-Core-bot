@@ -1,5 +1,5 @@
 import Darwin
-import OpenClawKit
+import QuietCoreKit
 import SwiftUI
 import UserNotifications
 
@@ -125,9 +125,9 @@ enum SettingsNotificationStatus: Equatable {
     var color: Color {
         switch self {
         case .allowed:
-            OpenClawBrand.ok
+            QuietCoreBrand.ok
         case .notAllowed, .unknown:
-            OpenClawBrand.warn
+            QuietCoreBrand.warn
         case .checking, .notSet:
             .secondary
         }
@@ -243,18 +243,18 @@ extension SettingsProTab {
 private struct SettingsGatewayStatesPreview: View {
     var body: some View {
         ZStack {
-            OpenClawProBackground()
+            QuietCoreProBackground()
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     self.stateSection("Connected") {
                         self.gatewayStatusCard(
                             title: "Gateway online",
-                            detail: "Connected to openclaw-gateway.tailnet.ts.net.",
+                            detail: "Connected to quiet-core-gateway.tailnet.ts.net.",
                             value: "online",
-                            color: OpenClawBrand.ok)
+                            color: QuietCoreBrand.ok)
                         self.gatewayFactsCard(
                             address: "100.88.41.20:18789",
-                            server: "openclaw-gateway",
+                            server: "quiet-core-gateway",
                             discovered: "3",
                             agent: "Aiden")
                     }
@@ -264,7 +264,7 @@ private struct SettingsGatewayStatesPreview: View {
                             title: "Checking gateway",
                             detail: "Refreshing connection, discovery, and device trust state.",
                             value: "loading",
-                            color: OpenClawBrand.accent)
+                            color: QuietCoreBrand.accent)
                         self.gatewayActionsCard(isBusy: true)
                     }
 
@@ -287,10 +287,10 @@ private struct SettingsGatewayStatesPreview: View {
                             title: "Tailscale warning",
                             detail: "Tailscale is off on this device. Turn it on, then try again.",
                             value: "network",
-                            color: OpenClawBrand.warn)
+                            color: QuietCoreBrand.warn)
                     }
                 }
-                .padding(.horizontal, OpenClawProMetric.pagePadding)
+                .padding(.horizontal, QuietCoreProMetric.pagePadding)
                 .padding(.vertical, 18)
             }
         }
@@ -400,7 +400,7 @@ private struct SettingsGatewayStatesPreview: View {
         kind: .pairingRequired,
         owner: .gateway,
         title: "Pairing required",
-        message: "Run /pair approve in your OpenClaw chat before this iPad can connect.",
+        message: "Run /pair approve in your QuietCore chat before this iPad can connect.",
         actionCommand: "/pair approve req-ipad-preview",
         requestId: "req-ipad-preview",
         retryable: false,

@@ -11,17 +11,17 @@ import {
   executeSqliteQueryTakeFirstSync,
   getNodeSqliteKysely,
 } from "../../src/infra/kysely-sync.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../../src/state/quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "../../src/state/quiet-core-bot-state-db.generated.js";
 import {
-  closeOpenClawStateDatabaseForTest,
-  openOpenClawStateDatabase,
+  closeQuietCoreStateDatabaseForTest,
+  openQuietCoreStateDatabase,
 } from "../../src/state/quiet-core-bot-state-db.js";
 import { registerStopChildBehaviorTests } from "./bench-gateway-child-test-support.js";
 
-type GatewayRestartIntentDatabase = Pick<OpenClawStateKyselyDatabase, "gateway_restart_intent">;
+type GatewayRestartIntentDatabase = Pick<QuietCoreStateKyselyDatabase, "gateway_restart_intent">;
 
 function readRestartIntentRow(env: NodeJS.ProcessEnv) {
-  const { db } = openOpenClawStateDatabase({ env });
+  const { db } = openQuietCoreStateDatabase({ env });
   const stateDb = getNodeSqliteKysely<GatewayRestartIntentDatabase>(db);
   return executeSqliteQueryTakeFirstSync(
     db,
@@ -52,7 +52,7 @@ describe("gateway restart benchmark script", () => {
 
   it("prints help without running benchmark cases", () => {
     expect(helpResult.status).toBe(0);
-    expect(helpResult.stdout).toContain("OpenClaw Gateway restart benchmark");
+    expect(helpResult.stdout).toContain("QuietCore Gateway restart benchmark");
     expect(helpResult.stdout).toContain("--restarts <n>");
     expect(helpResult.stdout).toContain("Timeout for initial startup and each restart");
     expect(helpResult.stdout).toContain("--post-ready-delay-ms <ms>");
@@ -739,7 +739,7 @@ node    1234 user   12u  IPv4    0t0      TCP localhost:1234
         reason: "gateway-restart-bench",
       });
     } finally {
-      closeOpenClawStateDatabaseForTest();
+      closeQuietCoreStateDatabaseForTest();
       fs.rmSync(root, { force: true, recursive: true });
     }
   });

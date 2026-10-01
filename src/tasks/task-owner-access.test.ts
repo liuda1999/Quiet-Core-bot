@@ -1,7 +1,7 @@
 // Verifies requester and owner access checks for task records.
 import { afterEach, describe, expect, it } from "vitest";
 import { captureEnv } from "../test-utils/env.js";
-import { withOpenClawTestState } from "../test-utils/quiet-core-bot-test-state.js";
+import { withQuietCoreTestState } from "../test-utils/quiet-core-bot-test-state.js";
 import {
   findLatestTaskForRelatedSessionKeyForOwner,
   findTaskByRunIdForOwner,
@@ -30,7 +30,7 @@ afterEach(() => {
 });
 
 async function withTaskRegistryTempDir<T>(run: () => Promise<T> | T): Promise<T> {
-  return await withOpenClawTestState(
+  return await withQuietCoreTestState(
     {
       layout: "state-only",
       prefix: "quiet-core-bot-task-owner-access-",

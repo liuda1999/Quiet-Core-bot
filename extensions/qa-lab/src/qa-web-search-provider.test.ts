@@ -27,12 +27,12 @@ describe("qa-lab web search provider", () => {
     }
 
     const result = await tool.execute({
-      query: "OpenClaw runtime parity fixed query",
+      query: "QuietCore runtime parity fixed query",
       count: 2,
     });
 
     expect(result).toMatchObject({
-      query: "OpenClaw runtime parity fixed query",
+      query: "QuietCore runtime parity fixed query",
       results: [
         {
           url: "https://github.com/liuda1999/Quiet-Core-bot/qa-lab/search-fixture/1",

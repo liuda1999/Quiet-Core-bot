@@ -6,41 +6,41 @@
   "appGroupId": "group.ai.quiet-core-botfoundation.app.shared",
   "targets": [
     {
-      "target": "OpenClaw",
-      "displayName": "OpenClaw",
+      "target": "QuietCore",
+      "displayName": "QuietCore",
       "bundleId": "ai.quiet-core-botfoundation.app",
       "platform": "IOS",
       "profileKey": "QUIET_CORE_APP_PROFILE",
-      "profileName": "OpenClaw App Store ai.quiet-core-botfoundation.app",
+      "profileName": "QuietCore App Store ai.quiet-core-botfoundation.app",
       "capabilities": ["PUSH_NOTIFICATIONS", "APP_GROUPS", "APP_ATTEST"],
       "appGroups": ["group.ai.quiet-core-botfoundation.app.shared"]
     },
     {
-      "target": "OpenClawShareExtension",
-      "displayName": "OpenClaw Share",
+      "target": "QuietCoreShareExtension",
+      "displayName": "QuietCore Share",
       "bundleId": "ai.quiet-core-botfoundation.app.share",
       "platform": "IOS",
       "profileKey": "QUIET_CORE_SHARE_PROFILE",
-      "profileName": "OpenClaw App Store ai.quiet-core-botfoundation.app.share",
+      "profileName": "QuietCore App Store ai.quiet-core-botfoundation.app.share",
       "capabilities": ["APP_GROUPS"],
       "appGroups": ["group.ai.quiet-core-botfoundation.app.shared"]
     },
     {
-      "target": "OpenClawActivityWidget",
-      "displayName": "OpenClaw Activity Widget",
+      "target": "QuietCoreActivityWidget",
+      "displayName": "QuietCore Activity Widget",
       "bundleId": "ai.quiet-core-botfoundation.app.activitywidget",
       "platform": "IOS",
       "profileKey": "QUIET_CORE_ACTIVITY_WIDGET_PROFILE",
-      "profileName": "OpenClaw App Store ai.quiet-core-botfoundation.app.activitywidget",
+      "profileName": "QuietCore App Store ai.quiet-core-botfoundation.app.activitywidget",
       "capabilities": []
     },
     {
-      "target": "OpenClawWatchApp",
-      "displayName": "OpenClaw Watch App",
+      "target": "QuietCoreWatchApp",
+      "displayName": "QuietCore Watch App",
       "bundleId": "ai.quiet-core-botfoundation.app.watchkitapp",
       "platform": "IOS",
       "profileKey": "QUIET_CORE_WATCH_APP_PROFILE",
-      "profileName": "OpenClaw App Store ai.quiet-core-botfoundation.app.watchkitapp",
+      "profileName": "QuietCore App Store ai.quiet-core-botfoundation.app.watchkitapp",
       "capabilities": []
     }
   ]

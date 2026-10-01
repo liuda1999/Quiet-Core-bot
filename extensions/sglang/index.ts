@@ -1,7 +1,7 @@
-// Sglang plugin entrypoint registers its OpenClaw integration.
+// Sglang plugin entrypoint registers its QuietCore integration.
 import {
   definePluginEntry,
-  type OpenClawPluginApi,
+  type QuietCorePluginApi,
   type ProviderAuthMethodNonInteractiveContext,
 } from "quiet-core-bot/plugin-sdk/plugin-entry";
 import { buildProviderReplayFamilyHooks } from "quiet-core-bot/plugin-sdk/provider-model-shared";
@@ -23,7 +23,7 @@ export default definePluginEntry({
   id: "sglang",
   name: "SGLang Provider",
   description: "Bundled SGLang provider plugin",
-  register(api: OpenClawPluginApi) {
+  register(api: QuietCorePluginApi) {
     api.registerProvider({
       id: PROVIDER_ID,
       label: "SGLang",

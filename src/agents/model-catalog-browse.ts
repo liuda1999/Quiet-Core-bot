@@ -5,7 +5,7 @@ import {
   clampTimerTimeoutMs,
   resolveTimerTimeoutMs,
 } from "@quiet-core/normalization-core/number-coercion";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { ModelCatalogEntry } from "./model-catalog.types.js";
 import { parseConfiguredModelVisibilityEntries } from "./model-selection-shared.js";
 
@@ -20,7 +20,7 @@ export type ModelCatalogBrowseView = "default" | "configured" | "all";
 
 /** True when a browse view cannot be answered from read-only cached catalog entries. */
 export function modelCatalogBrowseRequiresFullDiscovery(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   view?: ModelCatalogBrowseView;
 }): boolean {
   const view = params.view ?? "default";
@@ -40,7 +40,7 @@ function resolveModelCatalogBrowseTimeoutMs(value: number | undefined): number {
 
 /** Loads catalog entries for browse views, using read-only discovery unless full catalog is required. */
 export async function loadModelCatalogForBrowse(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   view?: ModelCatalogBrowseView;
   loadCatalog: (params: { readOnly: boolean }) => Promise<ModelCatalogEntry[]>;
   timeoutMs?: number;

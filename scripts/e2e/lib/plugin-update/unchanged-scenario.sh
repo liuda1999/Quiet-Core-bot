@@ -4,7 +4,7 @@ set -euo pipefail
 source scripts/lib/quiet-core-bot-e2e-instance.sh
 
 quiet_core_bot_e2e_eval_test_state_from_b64 "${QUIET_CORE_TEST_STATE_SCRIPT_B64:?missing QUIET_CORE_TEST_STATE_SCRIPT_B64}"
-quiet_core_bot_e2e_install_package /tmp/quiet-core-bot-install.log "mounted OpenClaw package" /tmp/npm-prefix
+quiet_core_bot_e2e_install_package /tmp/quiet-core-bot-install.log "mounted QuietCore package" /tmp/npm-prefix
 
 package_root="$(quiet_core_bot_e2e_package_root /tmp/npm-prefix)"
 entry="$(quiet_core_bot_e2e_package_entrypoint "$package_root")"

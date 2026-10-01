@@ -2,7 +2,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const manifestMocks = vi.hoisted(() => ({
-  listOpenClawPluginManifestMetadata: vi.fn(),
+  listQuietCorePluginManifestMetadata: vi.fn(),
   loadPluginManifest: vi.fn(),
   loadPluginManifestRegistry: vi.fn(),
 }));
@@ -15,7 +15,7 @@ const providerMocks = vi.hoisted(() => ({
 }));
 
 vi.mock("../../plugins/manifest-metadata-scan.js", () => ({
-  listOpenClawPluginManifestMetadata: manifestMocks.listOpenClawPluginManifestMetadata,
+  listQuietCorePluginManifestMetadata: manifestMocks.listQuietCorePluginManifestMetadata,
 }));
 
 vi.mock("../../plugins/manifest.js", async (importOriginal) => ({
@@ -60,7 +60,7 @@ function setManifestPlugins(plugins: unknown[]) {
       return [`/fixtures/${id}`, plugin];
     }),
   );
-  manifestMocks.listOpenClawPluginManifestMetadata.mockReturnValue(
+  manifestMocks.listQuietCorePluginManifestMetadata.mockReturnValue(
     [...byPluginDir].map(([pluginDir, plugin]) => ({
       pluginDir,
       manifest: plugin,
@@ -113,7 +113,7 @@ function createMistralManifestPlugin(overrides?: {
 }
 
 beforeEach(() => {
-  manifestMocks.listOpenClawPluginManifestMetadata.mockReset();
+  manifestMocks.listQuietCorePluginManifestMetadata.mockReset();
   manifestMocks.loadPluginManifest.mockReset();
   manifestMocks.loadPluginManifestRegistry.mockReset();
   providerMocks.normalizePluginDiscoveryResult.mockReset();
@@ -139,7 +139,7 @@ describe("resolveBundledStaticCatalogModel", () => {
       "mistral-medium-3-5",
     );
     expect(resolveModel({ provider: "mistral", modelId: "missing" })).toBeUndefined();
-    expect(manifestMocks.listOpenClawPluginManifestMetadata).toHaveBeenCalledTimes(1);
+    expect(manifestMocks.listQuietCorePluginManifestMetadata).toHaveBeenCalledTimes(1);
   });
 
   it("synthesizes a runtime model from an exact bundled static manifest catalog row", () => {

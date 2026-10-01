@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { resolvePreferredOpenClawTmpDir } from "./tmp-quiet-core-bot-dir.js";
+import { resolvePreferredQuietCoreTmpDir } from "./tmp-quiet-core-bot-dir.js";
 
 // IPC contract between package update parents and the post-install doctor child.
 export const UPDATE_POST_INSTALL_DOCTOR_RESULT_PATH_ENV =
@@ -31,13 +31,13 @@ export type UpdatePostInstallDoctorResult = {
 
 export function createUpdatePostInstallDoctorResultPath(): string {
   return path.join(
-    resolvePreferredOpenClawTmpDir(),
+    resolvePreferredQuietCoreTmpDir(),
     `quiet-core-bot-update-doctor-${process.pid}-${randomUUID()}.json`,
   );
 }
 
 function resolveSafeUpdatePostInstallDoctorResultPath(resultPath: string): string {
-  const tempRoot = path.resolve(resolvePreferredOpenClawTmpDir());
+  const tempRoot = path.resolve(resolvePreferredQuietCoreTmpDir());
   const resolvedPath = path.resolve(resultPath);
   if (
     path.dirname(resolvedPath) !== tempRoot ||

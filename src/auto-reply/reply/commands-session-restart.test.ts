@@ -25,7 +25,7 @@ const mocks = vi.hoisted(() => ({
   scheduleGatewaySigusr1Restart: vi.fn((_opts?: ScheduleGatewayRestartArgs) => ({
     scheduled: true,
   })),
-  triggerOpenClawRestart: vi.fn(() => ({ ok: true, method: "launchctl" })),
+  triggerQuietCoreRestart: vi.fn(() => ({ ok: true, method: "launchctl" })),
 }));
 
 vi.mock("../../config/commands.flags.js", () => ({
@@ -68,7 +68,7 @@ vi.mock("../../infra/restart-sentinel.js", async () => {
 
 vi.mock("../../infra/restart.js", () => ({
   scheduleGatewaySigusr1Restart: mocks.scheduleGatewaySigusr1Restart,
-  triggerOpenClawRestart: mocks.triggerOpenClawRestart,
+  triggerQuietCoreRestart: mocks.triggerQuietCoreRestart,
 }));
 
 const { handleRestartCommand } = await import("./commands-session.js");
@@ -118,8 +118,8 @@ describe("handleRestartCommand", () => {
     mocks.formatDoctorNonInteractiveHint.mockClear();
     mocks.writeRestartSentinel.mockClear();
     mocks.scheduleGatewaySigusr1Restart.mockClear();
-    mocks.triggerOpenClawRestart.mockReset();
-    mocks.triggerOpenClawRestart.mockReturnValue({ ok: true, method: "launchctl" });
+    mocks.triggerQuietCoreRestart.mockReset();
+    mocks.triggerQuietCoreRestart.mockReturnValue({ ok: true, method: "launchctl" });
   });
 
   it("writes a routed restart sentinel before restarting from chat", async () => {
@@ -147,7 +147,7 @@ describe("handleRestartCommand", () => {
       mode: "gateway.restart",
       reason: "/restart",
     });
-    expect(mocks.triggerOpenClawRestart).toHaveBeenCalledTimes(1);
+    expect(mocks.triggerQuietCoreRestart).toHaveBeenCalledTimes(1);
   });
 
   it("prepares the routed sentinel only when SIGUSR1 restart emits", async () => {
@@ -158,7 +158,7 @@ describe("handleRestartCommand", () => {
 
       expect(result?.reply?.text).toContain("SIGUSR1");
       expect(mocks.writeRestartSentinel).not.toHaveBeenCalled();
-      expect(mocks.triggerOpenClawRestart).not.toHaveBeenCalled();
+      expect(mocks.triggerQuietCoreRestart).not.toHaveBeenCalled();
 
       const scheduledArgs = mocks.scheduleGatewaySigusr1Restart.mock.calls.at(-1)?.[0];
       await scheduledArgs?.emitHooks?.beforeEmit?.();
@@ -200,7 +200,7 @@ describe("handleRestartCommand", () => {
 
     expect(result).toEqual({ shouldContinue: false });
     expect(mocks.writeRestartSentinel).not.toHaveBeenCalled();
-    expect(mocks.triggerOpenClawRestart).not.toHaveBeenCalled();
+    expect(mocks.triggerQuietCoreRestart).not.toHaveBeenCalled();
   });
 
   it("does not restart when the sentinel cannot be written", async () => {
@@ -209,11 +209,11 @@ describe("handleRestartCommand", () => {
     const result = await handleRestartCommand(restartCommandParams(), true);
 
     expect(result?.reply?.text).toContain("could not persist");
-    expect(mocks.triggerOpenClawRestart).not.toHaveBeenCalled();
+    expect(mocks.triggerQuietCoreRestart).not.toHaveBeenCalled();
   });
 
   it("clears the success sentinel when fallback restart fails", async () => {
-    mocks.triggerOpenClawRestart.mockReturnValueOnce({
+    mocks.triggerQuietCoreRestart.mockReturnValueOnce({
       ok: false,
       method: "launchctl",
     });

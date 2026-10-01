@@ -1,5 +1,5 @@
 // Normalizes installed plugin config and install records.
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { PluginInstallRecord } from "../config/types.plugins.js";
 import { buildNpmResolutionFields, type NpmSpecResolution } from "../infra/install-source-utils.js";
 import { parseRegistryNpmSpec } from "../infra/npm-registry-spec.js";
@@ -36,9 +36,9 @@ export function resolveNpmInstallRecordSpec(params: {
 
 /** Records or updates a plugin install record in Quiet Core bot config. */
 export function recordPluginInstall(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   update: PluginInstallUpdate,
-): OpenClawConfig {
+): QuietCoreConfig {
   const { pluginId, ...record } = update;
   const installs = {
     ...cfg.plugins?.installs,

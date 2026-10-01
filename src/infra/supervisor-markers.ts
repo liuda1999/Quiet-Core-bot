@@ -23,7 +23,7 @@ export const SUPERVISOR_HINT_ENV_VARS = [
 export type RespawnSupervisor = "launchd" | "systemd" | "schtasks";
 
 export interface DetectRespawnSupervisorOptions {
-  includeLinuxOpenClawGatewayServiceMarker?: boolean;
+  includeLinuxQuietCoreGatewayServiceMarker?: boolean;
 }
 
 function hasAnyHint(env: NodeJS.ProcessEnv, keys: readonly string[]): boolean {
@@ -33,7 +33,7 @@ function hasAnyHint(env: NodeJS.ProcessEnv, keys: readonly string[]): boolean {
   });
 }
 
-function hasOpenClawGatewayServiceMarker(env: NodeJS.ProcessEnv): boolean {
+function hasQuietCoreGatewayServiceMarker(env: NodeJS.ProcessEnv): boolean {
   const marker = env.QUIET_CORE_SERVICE_MARKER?.trim();
   return (
     (marker === "quiet-core-bot" || marker === "quiet-core-bot") &&
@@ -64,8 +64,8 @@ export function detectRespawnSupervisor(
   }
   if (platform === "linux") {
     return hasAnyHint(env, SUPERVISOR_HINTS.systemd) ||
-      (options.includeLinuxOpenClawGatewayServiceMarker === true &&
-        hasOpenClawGatewayServiceMarker(env))
+      (options.includeLinuxQuietCoreGatewayServiceMarker === true &&
+        hasQuietCoreGatewayServiceMarker(env))
       ? "systemd"
       : null;
   }

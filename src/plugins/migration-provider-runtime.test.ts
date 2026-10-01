@@ -1,6 +1,6 @@
 // Covers migration provider runtime hooks supplied by plugins.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { PluginRegistry } from "./registry-types.js";
 import { createEmptyPluginRegistry } from "./registry.js";
 
@@ -141,7 +141,7 @@ describe("migration provider runtime", () => {
     }));
 
     ensureStandaloneMigrationProviderRegistryLoaded({
-      cfg: { plugins: { enabled: false } } as OpenClawConfig,
+      cfg: { plugins: { enabled: false } } as QuietCoreConfig,
     });
 
     const standaloneParams = requireMockCallArg(
@@ -153,7 +153,7 @@ describe("migration provider runtime", () => {
       loadOptions?: {
         activate?: unknown;
         onlyPluginIds?: unknown;
-        config?: OpenClawConfig;
+        config?: QuietCoreConfig;
       };
     };
     expect(standaloneParams.surface).toBe("active");
@@ -169,7 +169,7 @@ describe("migration provider runtime", () => {
   it("loads configured external migration-provider plugins from manifest contracts", () => {
     const cfg = {
       plugins: { entries: { "external-migration": { enabled: true } } },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const provider = createMigrationProvider("external-import");
     const active = createEmptyPluginRegistry();
     const loaded = createEmptyPluginRegistry();
@@ -232,7 +232,7 @@ describe("migration provider runtime", () => {
       "loadPluginManifestRegistry",
     ) as {
       index?: MockPluginIndex;
-      config?: OpenClawConfig;
+      config?: QuietCoreConfig;
       env?: NodeJS.ProcessEnv;
       includeDisabled?: unknown;
     };
@@ -295,7 +295,7 @@ describe("migration provider runtime", () => {
       "loadPluginManifestRegistry",
     ) as {
       index?: MockPluginIndex;
-      config?: OpenClawConfig;
+      config?: QuietCoreConfig;
       env?: NodeJS.ProcessEnv;
       includeDisabled?: unknown;
       workspaceDir?: unknown;

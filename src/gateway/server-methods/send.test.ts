@@ -33,7 +33,7 @@ const mocks = vi.hoisted(() => ({
     }>
   >(async () => ({ messageId: "poll-1" })),
   getChannelPlugin: vi.fn(),
-  loadOpenClawPlugins: vi.fn(),
+  loadQuietCorePlugins: vi.fn(),
   applyPluginAutoEnable: vi.fn(),
   getRuntimeConfigSnapshot: vi.fn(),
   getRuntimeConfigSourceSnapshot: vi.fn(),
@@ -111,7 +111,7 @@ vi.mock("../../config/runtime-snapshot.js", async () => {
 });
 
 vi.mock("../../plugins/loader.js", () => ({
-  loadOpenClawPlugins: mocks.loadOpenClawPlugins,
+  loadQuietCorePlugins: mocks.loadQuietCorePlugins,
   resolveRuntimePluginRegistry: vi.fn(),
 }));
 
@@ -225,7 +225,7 @@ async function runMessageActionRequest(
   return { respond };
 }
 
-async function withTempOpenClawStateDir<T>(test: (stateDir: string) => Promise<T>): Promise<T> {
+async function withTempQuietCoreStateDir<T>(test: (stateDir: string) => Promise<T>): Promise<T> {
   const envSnapshot = captureEnv(["QUIET_CORE_STATE_DIR"]);
   const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "gateway-send-state-"));
   setTestEnvValue("QUIET_CORE_STATE_DIR", stateDir);
@@ -837,7 +837,7 @@ describe("gateway send mirroring", () => {
   it("materializes buffer-only gateway sends before outbound delivery", async () => {
     mockDeliverySuccess("m-buffer-media");
 
-    await withTempOpenClawStateDir(async () => {
+    await withTempQuietCoreStateDir(async () => {
       const { respond } = await runSend({
         to: "+15551234567",
         mediaUrl: "buffer://message-send/attachment",
@@ -2504,7 +2504,7 @@ describe("gateway send mirroring", () => {
       "send-test-message-action-buffer-materialize",
     );
 
-    await withTempOpenClawStateDir(async () => {
+    await withTempQuietCoreStateDir(async () => {
       const { respond } = await runMessageActionRequest(
         {
           channel: "telegram",

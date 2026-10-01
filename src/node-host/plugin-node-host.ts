@@ -1,5 +1,5 @@
 /** Plugin node-host bridge for loading plugin registry commands and dispatching node capabilities. */
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { getActivePluginRegistry } from "../plugins/runtime.js";
 
 /**
@@ -19,7 +19,7 @@ async function loadPluginRegistryLoaderModule() {
 
 /** Ensure plugin registry data is loaded before node-host command dispatch. */
 export async function ensureNodeHostPluginRegistry(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
 }): Promise<void> {
   (await loadPluginRegistryLoaderModule()).ensurePluginRegistryLoaded({

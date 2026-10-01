@@ -12,7 +12,7 @@
             android:permission="${applicationId}.permission.RUN_VOICE_E2E"
             android:exported="false">
             <intent-filter>
-                <action android:name="ai.openclaw.app.debug.RUN_VOICE_E2E" />
+                <action android:name="ai.quietcore.app.debug.RUN_VOICE_E2E" />
             </intent-filter>
         </receiver>
         <service

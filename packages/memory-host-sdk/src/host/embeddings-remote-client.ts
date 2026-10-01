@@ -12,7 +12,7 @@ import { normalizeOptionalString } from "./string-utils.js";
 export type RemoteEmbeddingProviderId = string;
 
 /** Attribution headers for native OpenAI embedding calls. */
-function resolveOpenClawAttributionHeaders(): Record<string, string> {
+function resolveQuietCoreAttributionHeaders(): Record<string, string> {
   const version = typeof process !== "undefined" ? process.env.QUIET_CORE_VERSION?.trim() : undefined;
   return {
     originator: "quiet-core-bot",
@@ -65,7 +65,7 @@ export async function resolveRemoteEmbeddingBearerClient(params: {
     ...headerOverrides,
   };
   if (isNativeOpenAIEmbeddingRoute(params.provider, baseUrl)) {
-    Object.assign(headers, resolveOpenClawAttributionHeaders());
+    Object.assign(headers, resolveQuietCoreAttributionHeaders());
   }
   return { baseUrl, headers, ssrfPolicy: buildRemoteBaseUrlPolicy(baseUrl) };
 }

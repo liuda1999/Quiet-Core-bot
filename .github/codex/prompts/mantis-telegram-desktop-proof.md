@@ -1,6 +1,6 @@
 # Mantis Telegram Desktop Proof Agent
 
-You are Mantis running native Telegram Desktop visual proof for an OpenClaw PR.
+You are Mantis running native Telegram Desktop visual proof for an QuietCore PR.
 
 Goal: inspect the pull request, decide whether it has an honest
 Telegram-visible before/after behavior, then either run native Telegram Desktop
@@ -115,7 +115,7 @@ than Telegram-visible behavior`. Use this manifest shape and do not create
    skill with `$QUIET_CORE_TELEGRAM_USER_PROOF_CMD`; do not run
    `pnpm qa:telegram-user:crabbox` directly. The proof command comes from the
    trusted workflow checkout while the current directory controls which
-   baseline or candidate OpenClaw build is tested. Use
+   baseline or candidate QuietCore build is tested. Use
    `$QUIET_CORE_TELEGRAM_USER_DRIVER_SCRIPT`, the workflow-provided `crabbox`
    binary, and the workflow-provided local `ffmpeg`/`ffprobe`; do not generate,
    install, or patch replacement proof tooling during the run. Use the same

@@ -4,7 +4,7 @@ import {
   resolveStoredModelOverride,
   type ModelsProviderData,
 } from "quiet-core-bot/plugin-sdk/command-auth-native";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/core";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/core";
 import { parseStrictInteger } from "quiet-core-bot/plugin-sdk/number-runtime";
 import { normalizeProviderId } from "quiet-core-bot/plugin-sdk/provider-model-shared";
 import { loadSessionStore, resolveStorePath } from "quiet-core-bot/plugin-sdk/session-store-runtime";
@@ -234,7 +234,7 @@ export function buildMattermostAllowedModelRefs(data: ModelsProviderData): Set<s
 }
 
 export function resolveMattermostModelPickerCurrentModel(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   route: { agentId: string; sessionKey: string };
   data: ModelsProviderData;
   skipCache?: boolean;

@@ -4,7 +4,7 @@ import path from "node:path";
 import { isRecord } from "@quiet-core/normalization-core/record-coerce";
 import type { PluginInstallRecord } from "../config/types.plugins.js";
 import { tryReadJsonSync } from "../infra/json-files.js";
-import { openOpenClawStateDatabase } from "../state/quiet-core-bot-state-db.js";
+import { openQuietCoreStateDatabase } from "../state/quiet-core-bot-state-db.js";
 import { resolveDefaultPluginNpmDir, validatePluginId } from "./install-paths.js";
 import {
   getInstalledPluginIndexInstallRecordsCache,
@@ -269,7 +269,7 @@ function readPersistedInstalledPluginIndexForRecords(
     return tryReadJsonSync(options.filePath);
   }
   try {
-    const database = openOpenClawStateDatabase(
+    const database = openQuietCoreStateDatabase(
       resolveInstalledPluginIndexStateDatabaseOptions(options),
     );
     const row = database.db

@@ -18,8 +18,8 @@ const { prepareAcpxCodexAuthConfigMock } = vi.hoisted(() => ({
     async ({ pluginConfig }: { pluginConfig: unknown }) => pluginConfig,
   ),
 }));
-const { cleanupOpenClawOwnedAcpxProcessTreeMock } = vi.hoisted(() => ({
-  cleanupOpenClawOwnedAcpxProcessTreeMock: vi.fn(
+const { cleanupQuietCoreOwnedAcpxProcessTreeMock } = vi.hoisted(() => ({
+  cleanupQuietCoreOwnedAcpxProcessTreeMock: vi.fn(
     async (): Promise<{
       inspectedPids: number[];
       terminatedPids: number[];
@@ -30,8 +30,8 @@ const { cleanupOpenClawOwnedAcpxProcessTreeMock } = vi.hoisted(() => ({
     }),
   ),
 }));
-const { reapStaleOpenClawOwnedAcpxOrphansMock } = vi.hoisted(() => ({
-  reapStaleOpenClawOwnedAcpxOrphansMock: vi.fn(
+const { reapStaleQuietCoreOwnedAcpxOrphansMock } = vi.hoisted(() => ({
+  reapStaleQuietCoreOwnedAcpxOrphansMock: vi.fn(
     async (): Promise<{
       inspectedPids: number[];
       terminatedPids: number[];
@@ -91,12 +91,12 @@ vi.mock("./codex-auth-bridge.js", () => ({
 }));
 
 vi.mock("./process-reaper.js", () => ({
-  cleanupOpenClawOwnedAcpxProcessTree: cleanupOpenClawOwnedAcpxProcessTreeMock,
-  reapStaleOpenClawOwnedAcpxOrphans: reapStaleOpenClawOwnedAcpxOrphansMock,
+  cleanupQuietCoreOwnedAcpxProcessTree: cleanupQuietCoreOwnedAcpxProcessTreeMock,
+  reapStaleQuietCoreOwnedAcpxOrphans: reapStaleQuietCoreOwnedAcpxOrphansMock,
 }));
 
 import { getAcpRuntimeBackend } from "../runtime-api.js";
-import type { OpenClawPluginServiceContext } from "../runtime-api.js";
+import type { QuietCorePluginServiceContext } from "../runtime-api.js";
 import { openAcpxProcessLeaseStateStore, type AcpxProcessLease } from "./process-lease.js";
 import {
   createAcpxRuntimeService as createRealAcpxRuntimeService,
@@ -135,8 +135,8 @@ afterEach(async () => {
   resetPluginStateStoreForTests();
   runtimeRegistry.clear();
   prepareAcpxCodexAuthConfigMock.mockClear();
-  cleanupOpenClawOwnedAcpxProcessTreeMock.mockClear();
-  reapStaleOpenClawOwnedAcpxOrphansMock.mockClear();
+  cleanupQuietCoreOwnedAcpxProcessTreeMock.mockClear();
+  reapStaleQuietCoreOwnedAcpxOrphansMock.mockClear();
   acpxRuntimeConstructorMock.mockClear();
   createAgentRegistryMock.mockClear();
   createFileSessionStoreMock.mockClear();
@@ -148,7 +148,7 @@ afterEach(async () => {
   }
 });
 
-function createServiceContext(workspaceDir: string): OpenClawPluginServiceContext {
+function createServiceContext(workspaceDir: string): QuietCorePluginServiceContext {
   return {
     workspaceDir,
     stateDir: path.join(workspaceDir, ".quiet-core-bot-plugin-state"),
@@ -162,7 +162,7 @@ function createServiceContext(workspaceDir: string): OpenClawPluginServiceContex
   };
 }
 
-function createOpenKeyedStore(ctx: OpenClawPluginServiceContext) {
+function createOpenKeyedStore(ctx: QuietCorePluginServiceContext) {
   const env = { ...process.env, QUIET_CORE_STATE_DIR: ctx.stateDir };
   return <T>(options: OpenKeyedStoreOptions) =>
     createPluginStateKeyedStoreForTests<T>("acpx", {
@@ -172,7 +172,7 @@ function createOpenKeyedStore(ctx: OpenClawPluginServiceContext) {
 }
 
 function createAcpxRuntimeService(
-  ctx: OpenClawPluginServiceContext,
+  ctx: QuietCorePluginServiceContext,
   params: Parameters<typeof createRealAcpxRuntimeService>[0] = {},
 ) {
   return createRealAcpxRuntimeService({
@@ -181,14 +181,14 @@ function createAcpxRuntimeService(
   });
 }
 
-function openGatewayInstanceStore(ctx: OpenClawPluginServiceContext) {
+function openGatewayInstanceStore(ctx: QuietCorePluginServiceContext) {
   return createOpenKeyedStore(ctx)<AcpxGatewayInstanceRecord>({
     namespace: ACPX_GATEWAY_INSTANCE_NAMESPACE,
     maxEntries: ACPX_GATEWAY_INSTANCE_MAX_ENTRIES,
   });
 }
 
-function openProcessLeaseStore(ctx: OpenClawPluginServiceContext) {
+function openProcessLeaseStore(ctx: QuietCorePluginServiceContext) {
   return openAcpxProcessLeaseStateStore(createOpenKeyedStore(ctx));
 }
 
@@ -398,7 +398,7 @@ describe("createAcpxRuntimeService", () => {
       state: "open",
     };
     await openProcessLeaseStore(ctx).register(lease.leaseId, lease);
-    cleanupOpenClawOwnedAcpxProcessTreeMock.mockResolvedValueOnce({
+    cleanupQuietCoreOwnedAcpxProcessTreeMock.mockResolvedValueOnce({
       inspectedPids: [101, 102],
       terminatedPids: [101, 102],
     });
@@ -409,14 +409,14 @@ describe("createAcpxRuntimeService", () => {
 
     await service.start(ctx);
 
-    expect(cleanupOpenClawOwnedAcpxProcessTreeMock).toHaveBeenCalledWith({
+    expect(cleanupQuietCoreOwnedAcpxProcessTreeMock).toHaveBeenCalledWith({
       rootPid: 101,
       expectedLeaseId: "lease-1",
       expectedGatewayInstanceId: "gw-test",
       wrapperRoot,
       deps: processCleanupDeps,
     });
-    expect(ctx.logger.info).toHaveBeenCalledWith("reaped 2 stale OpenClaw-owned ACPX processes");
+    expect(ctx.logger.info).toHaveBeenCalledWith("reaped 2 stale QuietCore-owned ACPX processes");
 
     await service.stop?.(ctx);
   });
@@ -444,7 +444,7 @@ describe("createAcpxRuntimeService", () => {
       state: "open",
     };
     await openProcessLeaseStore(ctx).register(lease.leaseId, lease);
-    reapStaleOpenClawOwnedAcpxOrphansMock.mockResolvedValueOnce({
+    reapStaleQuietCoreOwnedAcpxOrphansMock.mockResolvedValueOnce({
       inspectedPids: [201, 202],
       terminatedPids: [201, 202],
     });
@@ -455,12 +455,12 @@ describe("createAcpxRuntimeService", () => {
 
     await service.start(ctx);
 
-    expect(cleanupOpenClawOwnedAcpxProcessTreeMock).not.toHaveBeenCalled();
-    expect(reapStaleOpenClawOwnedAcpxOrphansMock).toHaveBeenCalledWith({
+    expect(cleanupQuietCoreOwnedAcpxProcessTreeMock).not.toHaveBeenCalled();
+    expect(reapStaleQuietCoreOwnedAcpxOrphansMock).toHaveBeenCalledWith({
       wrapperRoot,
       deps: processCleanupDeps,
     });
-    expect(ctx.logger.info).toHaveBeenCalledWith("reaped 2 stale OpenClaw-owned ACPX processes");
+    expect(ctx.logger.info).toHaveBeenCalledWith("reaped 2 stale QuietCore-owned ACPX processes");
     await expect(openProcessLeaseStore(ctx).lookup("lease-pending")).resolves.toBeUndefined();
 
     await service.stop?.(ctx);
@@ -476,7 +476,7 @@ describe("createAcpxRuntimeService", () => {
 
     await service.start(ctx);
 
-    expect(cleanupOpenClawOwnedAcpxProcessTreeMock).not.toHaveBeenCalled();
+    expect(cleanupQuietCoreOwnedAcpxProcessTreeMock).not.toHaveBeenCalled();
     expect(ctx.logger.warn).not.toHaveBeenCalled();
 
     await service.stop?.(ctx);

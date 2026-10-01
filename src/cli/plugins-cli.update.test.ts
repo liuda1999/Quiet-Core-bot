@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { Command } from "commander";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { hashConfigIncludeRaw } from "../config/includes.js";
 import {
   loadConfig,
@@ -29,7 +29,7 @@ function createTrackedPluginConfig(params: {
   pluginId: string;
   spec: string;
   resolvedName?: string;
-}): OpenClawConfig {
+}): QuietCoreConfig {
   return {
     plugins: {
       installs: {
@@ -41,7 +41,7 @@ function createTrackedPluginConfig(params: {
         },
       },
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
 function expectRestartNoticeLogged() {
@@ -62,12 +62,12 @@ function expectSingleCallParams(mockFn: ReturnType<typeof vi.fn>) {
 }
 
 function primeUpdateConfigSnapshot(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   configPath?: string;
-  loadedConfig?: OpenClawConfig;
+  loadedConfig?: QuietCoreConfig;
   parsed?: Record<string, unknown>;
-  runtimeConfig?: OpenClawConfig;
-  sourceConfig?: OpenClawConfig;
+  runtimeConfig?: QuietCoreConfig;
+  sourceConfig?: QuietCoreConfig;
   valid?: boolean;
   includeFileHashesForWrite?: Record<string, string>;
   includeFileTargetsForWrite?: Record<string, string>;
@@ -103,7 +103,7 @@ function primeUpdateConfigSnapshot(params: {
   });
 }
 
-function primeBlockedUpdateConfig(section: "hooks" | "plugins", config: OpenClawConfig): void {
+function primeBlockedUpdateConfig(section: "hooks" | "plugins", config: QuietCoreConfig): void {
   const externalPath = path.join(
     path.parse(process.cwd()).root,
     "external-quiet-core-bot",
@@ -179,7 +179,7 @@ describe("plugins cli update", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const nextConfig = {
       hooks: {
         internal: {
@@ -192,7 +192,7 @@ describe("plugins cli update", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     primeUpdateConfigSnapshot({
       config: cfg,
@@ -254,7 +254,7 @@ describe("plugins cli update", () => {
           alpha: { enabled: true },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const snapshotConfig = {
       hooks: {
         internal: {
@@ -272,7 +272,7 @@ describe("plugins cli update", () => {
           alpha: { enabled: false },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const installRecords = {
       alpha: {
         source: "npm",
@@ -302,12 +302,12 @@ describe("plugins cli update", () => {
       },
     });
     setInstalledPluginIndexInstallRecords(installRecords);
-    updateNpmInstalledPlugins.mockImplementation(async (params: { config: OpenClawConfig }) => ({
+    updateNpmInstalledPlugins.mockImplementation(async (params: { config: QuietCoreConfig }) => ({
       config: params.config,
       changed: false,
       outcomes: [],
     }));
-    updateNpmInstalledHookPacks.mockImplementation(async (params: { config: OpenClawConfig }) => ({
+    updateNpmInstalledHookPacks.mockImplementation(async (params: { config: QuietCoreConfig }) => ({
       config: params.config,
       changed: false,
       outcomes: [],
@@ -407,7 +407,7 @@ describe("plugins cli update", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     primeBlockedUpdateConfig("hooks", cfg);
 
     await expect(runPluginsCommand(["plugins", "update", "--all"])).rejects.toThrow("__exit__:1");
@@ -421,7 +421,7 @@ describe("plugins cli update", () => {
   });
 
   it("allows index-only legacy id migration when an included plugins section has no references", async () => {
-    const cfg = { plugins: {} } as OpenClawConfig;
+    const cfg = { plugins: {} } as QuietCoreConfig;
     const pluginRecords = createTrackedPluginConfig({
       pluginId: "voice-call",
       spec: "@quiet-core/voice-call@1.0.0",
@@ -437,7 +437,7 @@ describe("plugins cli update", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     primeBlockedUpdateConfig("plugins", cfg);
     setInstalledPluginIndexInstallRecords(pluginRecords ?? {});
     updateNpmInstalledPlugins.mockResolvedValue({
@@ -471,7 +471,7 @@ describe("plugins cli update", () => {
           [pluginId]: { enabled: true },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const pluginRecords = {
       [pluginId]: {
         source: "git",
@@ -485,7 +485,7 @@ describe("plugins cli update", () => {
         ...cfg.plugins,
         installs: pluginRecords,
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     primeBlockedUpdateConfig("plugins", cfg);
     setInstalledPluginIndexInstallRecords(pluginRecords);
     updateNpmInstalledPlugins.mockResolvedValue({
@@ -509,7 +509,7 @@ describe("plugins cli update", () => {
           "voice-call": { enabled: true },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     primeBlockedUpdateConfig("plugins", cfg);
     setInstalledPluginIndexInstallRecords({
       "voice-call": {
@@ -567,7 +567,7 @@ describe("plugins cli update", () => {
             "voice-call": { enabled: true },
           },
         },
-      } as OpenClawConfig;
+      } as QuietCoreConfig;
       primeBlockedUpdateConfig("plugins", cfg);
       setInstalledPluginIndexInstallRecords({
         "voice-call": record,
@@ -591,11 +591,11 @@ describe("plugins cli update", () => {
       "external-quiet-core-bot",
       "plugins.json5",
     );
-    const cfg = { plugins: {} } as OpenClawConfig;
+    const cfg = { plugins: {} } as QuietCoreConfig;
     primeUpdateConfigSnapshot({
       config: cfg,
       parsed: { plugins: { $include: externalPath } },
-      sourceConfig: { plugins: { $include: externalPath } } as unknown as OpenClawConfig,
+      sourceConfig: { plugins: { $include: externalPath } } as unknown as QuietCoreConfig,
       includeFileTargetsForWrite: {
         [externalPath]: externalPath,
       },
@@ -641,7 +641,7 @@ describe("plugins cli update", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     primeBlockedUpdateConfig("plugins", cfg);
 
     await expect(runPluginsCommand(["plugins", "update", "demo-hooks"])).rejects.toThrow(
@@ -667,7 +667,7 @@ describe("plugins cli update", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     primeBlockedUpdateConfig("plugins", cfg);
     setInstalledPluginIndexInstallRecords(cfg.plugins?.installs ?? {});
     updateNpmInstalledPlugins.mockResolvedValue({
@@ -690,7 +690,7 @@ describe("plugins cli update", () => {
           demo: { enabled: true },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     primeBlockedUpdateConfig("plugins", cfg);
     setInstalledPluginIndexInstallRecords({
       demo: {
@@ -789,7 +789,7 @@ describe("plugins cli update", () => {
           legacy: legacyRecord,
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const pluginsRaw = `${JSON.stringify(cfg.plugins, null, 2)}\n`;
     const nextInstallRecords = {
       alpha: updatedIndexedRecord,
@@ -815,7 +815,7 @@ describe("plugins cli update", () => {
         plugins: {
           installs: nextInstallRecords,
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       changed: true,
       outcomes: [{ pluginId: "alpha", status: "updated", message: "Updated alpha." }],
     });
@@ -869,7 +869,7 @@ describe("plugins cli update", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     primeUpdateConfigSnapshot({
       config: cfg,
       configPath,
@@ -904,7 +904,7 @@ describe("plugins cli update", () => {
       plugins: {
         installs: {},
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     await expect(runPluginsCommand(["plugins", "update"])).rejects.toThrow("__exit__:1");
 
@@ -917,7 +917,7 @@ describe("plugins cli update", () => {
       plugins: {
         installs: {},
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     await runPluginsCommand(["plugins", "update", "--all"]);
 
@@ -990,7 +990,7 @@ describe("plugins cli update", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const nextConfig = {
       plugins: {
         installs: {
@@ -1000,17 +1000,17 @@ describe("plugins cli update", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const runtimeConfig = {
       ...cfg,
       messages: {
         ackReactionScope: "group-mentions",
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const nextRuntimeConfig = {
       ...nextConfig,
       messages: runtimeConfig.messages,
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     primeUpdateConfigSnapshot({
       config: cfg,
       runtimeConfig,
@@ -1072,7 +1072,7 @@ describe("plugins cli update", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const nextConfig = {
       plugins: {
         installs: {
@@ -1086,7 +1086,7 @@ describe("plugins cli update", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     loadConfig.mockReturnValue(cfg);
     setInstalledPluginIndexInstallRecords(cfg.plugins?.installs ?? {});
     updateNpmInstalledPlugins.mockResolvedValue({
@@ -1130,7 +1130,7 @@ describe("plugins cli update", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     loadConfig.mockReturnValue(cfg);
     updateNpmInstalledPlugins.mockResolvedValue({
       config: cfg,

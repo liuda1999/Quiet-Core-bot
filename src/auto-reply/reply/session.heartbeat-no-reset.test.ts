@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import { loadSessionStore, saveSessionStore } from "../../config/sessions/store.js";
 import type { SessionEntry } from "../../config/sessions/types.js";
 import type { MsgContext } from "../templating.js";
@@ -25,7 +25,7 @@ describe("initSessionState - heartbeat should not trigger session reset", () => 
     await fs.rm(tempDir, { recursive: true, force: true });
   });
 
-  const createBaseConfig = (): OpenClawConfig => ({
+  const createBaseConfig = (): QuietCoreConfig => ({
     agents: {
       defaults: {
         workspace: tempDir,

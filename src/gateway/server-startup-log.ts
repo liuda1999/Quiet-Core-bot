@@ -12,7 +12,7 @@ import {
   resolveConfiguredModelRef,
 } from "../agents/model-selection-shared.js";
 import { resolveThinkingDefault } from "../agents/model-thinking-default.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { getResolvedLoggerSettings } from "../logging.js";
 import { collectEnabledInsecureOrDangerousFlagsFromCurrentSnapshot } from "../security/dangerous-config-flags-current.js";
 
@@ -28,7 +28,7 @@ type StartupThinkLevel =
 
 /** Emit startup summary lines after Gateway bind and plugin loading complete. */
 export async function logGatewayStartup(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   bindHost: string;
   bindHosts?: string[];
   port: number;
@@ -93,7 +93,7 @@ function normalizeStartupThinkLevel(value: unknown): StartupThinkLevel | undefin
 
 /** Resolve explicit thinking overrides from agent defaults and per-model config. */
 function resolveExplicitStartupThinking(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   provider: string;
   model: string;
   defaultAgentThinking: unknown;
@@ -123,7 +123,7 @@ function isConfiguredReasoningDisabled(params: {
 
 /** Format model thinking and fast-mode details for the Gateway startup banner. */
 export function formatAgentModelStartupDetails(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   provider: string;
   model: string;
 }): string {

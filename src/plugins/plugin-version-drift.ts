@@ -1,5 +1,5 @@
 // Detects plugin version drift between config, manifests, and installs.
-import type { OpenClawConfig } from "../config/types.js";
+import type { QuietCoreConfig } from "../config/types.js";
 import type { PluginInstallRecord } from "../config/types.plugins.js";
 import { parseClawHubPluginSpec } from "../infra/clawhub-spec.js";
 import { parseRegistryNpmSpec } from "../infra/npm-registry-spec.js";
@@ -55,7 +55,7 @@ function normalizeVersion(value: string): string {
   return value.replace(/-\d+$/, "");
 }
 
-function isPluginEnabled(config: OpenClawConfig | undefined, pluginId: string): boolean {
+function isPluginEnabled(config: QuietCoreConfig | undefined, pluginId: string): boolean {
   const normalizedPluginConfig = normalizePluginsConfig(config?.plugins);
   return resolveEffectiveEnableState({
     id: pluginId,
@@ -93,7 +93,7 @@ function shouldCompareOfficialInstallToGateway(params: {
  *   `version` field of the installed quiet-core-bot package.json).
  * @param params.installRecords The full set of recorded plugin installs (as
  *   produced by `loadInstalledPluginIndexInstallRecords`).
- * @param params.config The merged daemon-side OpenClawConfig (optional).
+ * @param params.config The merged daemon-side QuietCoreConfig (optional).
  *   Plugins inactive under the effective activation policy are skipped.
  *
  * The returned `drifts` list is sorted by `pluginId` for stable output.
@@ -101,7 +101,7 @@ function shouldCompareOfficialInstallToGateway(params: {
 export function detectPluginVersionDrift(params: {
   gatewayVersion: string;
   installRecords: Record<string, PluginInstallRecord>;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
 }): PluginVersionDriftReport {
   const { gatewayVersion, installRecords, config } = params;
   const normalizedGateway = normalizeVersion(gatewayVersion);

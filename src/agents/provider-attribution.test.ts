@@ -120,7 +120,7 @@ vi.mock("../plugins/plugin-registry.js", () => ({
 }));
 
 vi.mock("../plugins/manifest-metadata-scan.js", () => ({
-  listOpenClawPluginManifestMetadata: () =>
+  listQuietCorePluginManifestMetadata: () =>
     providerEndpointPlugins.map((manifest, index) => ({
       pluginDir: `provider-endpoint-fixture-${index}`,
       manifest,

@@ -89,7 +89,7 @@ validate_baseline_package_spec() {
   if [[ "$spec" =~ ^quiet-core-bot@(alpha|beta|latest|[0-9]{4}\.[1-9][0-9]*\.[1-9][0-9]*(-[1-9][0-9]*|-(alpha|beta)\.[1-9][0-9]*)?)$ ]]; then
     return 0
   fi
-  echo "QUIET_CORE_UPGRADE_SURVIVOR_BASELINE must be quiet-core-bot@latest, quiet-core-bot@beta, quiet-core-bot@alpha, an exact OpenClaw release version, or a bare release version; got: $spec" >&2
+  echo "QUIET_CORE_UPGRADE_SURVIVOR_BASELINE must be quiet-core-bot@latest, quiet-core-bot@beta, quiet-core-bot@alpha, an exact QuietCore release version, or a bare release version; got: $spec" >&2
   return 1
 }
 

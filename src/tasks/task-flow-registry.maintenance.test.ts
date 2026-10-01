@@ -1,7 +1,7 @@
 // Covers maintenance reconciliation for managed task-flow records.
 import { afterEach, describe, expect, it } from "vitest";
 import { captureEnv } from "../test-utils/env.js";
-import { withOpenClawTestState } from "../test-utils/quiet-core-bot-test-state.js";
+import { withQuietCoreTestState } from "../test-utils/quiet-core-bot-test-state.js";
 import { createRunningTaskRun as createRunningTaskRunOrNull } from "./task-executor.js";
 import {
   createFlowRecord as createFlowRecordOrNull,
@@ -56,7 +56,7 @@ function createRunningTaskRun(
 async function withTaskFlowMaintenanceStateDir(
   run: (root: string) => Promise<void>,
 ): Promise<void> {
-  await withOpenClawTestState(
+  await withQuietCoreTestState(
     {
       layout: "state-only",
       prefix: "quiet-core-bot-task-flow-maintenance-",

@@ -5,14 +5,14 @@ import path from "node:path";
 import type { AuthProfileStore } from "../agents/auth-profiles/types.js";
 import { formatCliCommand } from "../cli/command-format.js";
 import { collectDurableServiceEnvVarSources } from "../config/state-dir-dotenv.js";
-import type { OpenClawConfig } from "../config/types.js";
+import type { QuietCoreConfig } from "../config/types.js";
 import { resolveSecretInputRef, type SecretRef } from "../config/types.secrets.js";
 import { resolveGatewayLaunchAgentLabel } from "../daemon/constants.js";
 import { resolveGatewayStateDir, resolveGatewayTaskScriptPath } from "../daemon/paths.js";
 import {
   QUIET_CORE_WRAPPER_ENV_KEY,
   resolveGatewayProgramArguments,
-  resolveOpenClawWrapperPath,
+  resolveQuietCoreWrapperPath,
 } from "../daemon/program-args.js";
 import {
   addServiceEnvPlanEntries,
@@ -169,7 +169,7 @@ type ExecSecretRefPassEnvSource = {
 
 function collectConfigSecretRefServiceEnvVars(params: {
   env: Record<string, string | undefined>;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   durableEnvironment: Record<string, string | undefined>;
   warn?: DaemonInstallWarnFn;
 }): Record<string, string> {
@@ -221,7 +221,7 @@ function collectConfigSecretRefServiceEnvVars(params: {
 
 function collectExecSecretRefPassEnvServiceEnvVars(params: {
   env: Record<string, string | undefined>;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   authStore?: AuthProfileStore;
   durableEnvironment: Record<string, string | undefined>;
   warn?: DaemonInstallWarnFn;
@@ -321,7 +321,7 @@ function collectExecSecretRefPassEnvServiceEnvVars(params: {
 
 function collectPluginConfigSecretRefs(params: {
   env: Record<string, string | undefined>;
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
 }): SecretRef[] {
   const context = createResolverContext({
     sourceConfig: params.config,
@@ -512,7 +512,7 @@ function resolveGatewayInstallWorkingDirectory(params: {
 
 async function buildGatewayInstallEnvironment(params: {
   env: Record<string, string | undefined>;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   authStore?: AuthProfileStore;
   warn?: DaemonInstallWarnFn;
   serviceEnvironment: Record<string, string | undefined>;
@@ -610,7 +610,7 @@ export async function buildGatewayInstallPlan(params: {
   platform?: NodeJS.Platform;
   warn?: DaemonInstallWarnFn;
   /** Full config to extract env vars from (env vars + inline env keys). */
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   authStore?: AuthProfileStore;
   existingEnvironmentValueSources?: Record<
     string,
@@ -636,7 +636,7 @@ export async function buildGatewayInstallPlan(params: {
   }
   const wrapperPath = wrapperPointsAtWindowsTaskScript
     ? undefined
-    : await resolveOpenClawWrapperPath(wrapperInput);
+    : await resolveQuietCoreWrapperPath(wrapperInput);
   const serviceInputEnv: Record<string, string | undefined> = wrapperPath
     ? { ...params.env, [QUIET_CORE_WRAPPER_ENV_KEY]: wrapperPath }
     : wrapperPointsAtWindowsTaskScript

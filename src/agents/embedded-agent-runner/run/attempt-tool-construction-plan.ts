@@ -2,7 +2,7 @@
  * Plans which core, bundle MCP, and bundle LSP tools an attempt should build.
  */
 import { TOOL_NAME_SEPARATOR } from "../../agent-bundle-mcp-names.js";
-import type { OpenClawCodingToolConstructionPlan } from "../../agent-tools.js";
+import type { QuietCoreCodingToolConstructionPlan } from "../../agent-tools.js";
 import { isToolAllowedByPolicyName } from "../../tool-policy-match.js";
 import {
   buildPluginToolGroups,
@@ -16,7 +16,7 @@ const BASE_CODING_TOOL_FACTORY_NAMES = new Set(["edit", "read", "write"]);
 
 const SHELL_CODING_TOOL_FACTORY_NAMES = new Set(["apply_patch", "exec", "process"]);
 
-// Names here must be emitted directly by createOpenClawTools(). Catalog entries
+// Names here must be emitted directly by createQuietCoreTools(). Catalog entries
 // backed by plugin registration, such as browser/x_search/code_execution, stay
 // out of this set so narrow allowlists still materialize plugin tools.
 const QUIET_CORE_TOOL_FACTORY_NAMES = new Set([
@@ -50,25 +50,25 @@ const QUIET_CORE_TOOL_FACTORY_NAMES = new Set([
   "web_search",
 ]);
 
-const ALL_CODING_TOOL_CONSTRUCTION_PLAN: OpenClawCodingToolConstructionPlan = {
+const ALL_CODING_TOOL_CONSTRUCTION_PLAN: QuietCoreCodingToolConstructionPlan = {
   includeBaseCodingTools: true,
   includeShellTools: true,
   includeChannelTools: true,
-  includeOpenClawTools: true,
+  includeQuietCoreTools: true,
   includePluginTools: true,
 };
 
-const NO_CODING_TOOL_CONSTRUCTION_PLAN: OpenClawCodingToolConstructionPlan = {
+const NO_CODING_TOOL_CONSTRUCTION_PLAN: QuietCoreCodingToolConstructionPlan = {
   includeBaseCodingTools: false,
   includeShellTools: false,
   includeChannelTools: false,
-  includeOpenClawTools: false,
+  includeQuietCoreTools: false,
   includePluginTools: false,
 };
 
 function cloneCodingToolConstructionPlan(
-  plan: OpenClawCodingToolConstructionPlan,
-): OpenClawCodingToolConstructionPlan {
+  plan: QuietCoreCodingToolConstructionPlan,
+): QuietCoreCodingToolConstructionPlan {
   return { ...plan };
 }
 
@@ -150,7 +150,7 @@ export function mergeForcedEmbeddedAttemptToolsAllow(
 
 function resolveCodingToolConstructionPlanForAllowlist(
   toolsAllow?: string[],
-): OpenClawCodingToolConstructionPlan {
+): QuietCoreCodingToolConstructionPlan {
   if (!toolsAllow) {
     return cloneCodingToolConstructionPlan(ALL_CODING_TOOL_CONSTRUCTION_PLAN);
   }
@@ -166,7 +166,7 @@ function resolveCodingToolConstructionPlanForAllowlist(
     BASE_CODING_TOOL_FACTORY_NAMES.has(name),
   );
   const includeShellTools = normalized.some((name) => SHELL_CODING_TOOL_FACTORY_NAMES.has(name));
-  const includeOpenClawTools = normalized.some((name) => QUIET_CORE_TOOL_FACTORY_NAMES.has(name));
+  const includeQuietCoreTools = normalized.some((name) => QUIET_CORE_TOOL_FACTORY_NAMES.has(name));
   const includePluginTools = normalized.some(
     (name) =>
       name === "group:plugins" ||
@@ -180,7 +180,7 @@ function resolveCodingToolConstructionPlanForAllowlist(
     includeBaseCodingTools,
     includeShellTools,
     includeChannelTools,
-    includeOpenClawTools,
+    includeQuietCoreTools,
     includePluginTools,
   };
 }
@@ -199,7 +199,7 @@ export function resolveEmbeddedAttemptToolConstructionPlan(params: {
   constructTools: boolean;
   includeCoreTools: boolean;
   runtimeToolAllowlist?: string[];
-  codingToolConstructionPlan: OpenClawCodingToolConstructionPlan;
+  codingToolConstructionPlan: QuietCoreCodingToolConstructionPlan;
 } {
   if (params.disableTools === true || params.isRawModelRun === true) {
     return {
@@ -215,7 +215,7 @@ export function resolveEmbeddedAttemptToolConstructionPlan(params: {
   const includeCoreTools =
     codingToolConstructionPlan.includeBaseCodingTools ||
     codingToolConstructionPlan.includeShellTools ||
-    codingToolConstructionPlan.includeOpenClawTools;
+    codingToolConstructionPlan.includeQuietCoreTools;
   const constructTools =
     includeCoreTools ||
     codingToolConstructionPlan.includeChannelTools ||

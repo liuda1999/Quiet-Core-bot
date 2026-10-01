@@ -7,7 +7,7 @@ import {
   releasePinnedPluginChannelRegistry,
   setActivePluginRegistry,
 } from "../../plugins/runtime.js";
-import { closeOpenClawStateDatabaseForTest } from "../../state/quiet-core-bot-state-db.js";
+import { closeQuietCoreStateDatabaseForTest } from "../../state/quiet-core-bot-state-db.js";
 import { createTestRegistry } from "../../test-utils/channel-plugins.js";
 import { createTrackedTempDirs } from "../../test-utils/tracked-temp-dirs.js";
 import {
@@ -137,7 +137,7 @@ describe("session binding service", () => {
 
   afterEach(async () => {
     testing.resetSessionBindingAdaptersForTests();
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
     if (previousStateDir == null) {
       delete process.env.QUIET_CORE_STATE_DIR;
     } else {

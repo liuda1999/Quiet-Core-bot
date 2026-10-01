@@ -343,7 +343,7 @@ Before bot authorization, receive must apply the shared Quiet Core bot echo poli
 when the channel can decode message origin metadata:
 
 ```typescript
-function shouldDropOpenClawEcho(params: {
+function shouldDropQuietCoreEcho(params: {
   origin?: MessageOrigin;
   isBotAuthor: boolean;
   isRoomish: boolean;
@@ -953,7 +953,7 @@ Core policy:
 - Update package exports, entrypoint inventory, generated API baselines, and
   plugin SDK docs.
 - Include `MessageOrigin`, origin encode/decode hooks, and the shared
-  `shouldDropOpenClawEcho` predicate in the channel-outbound SDK surface.
+  `shouldDropQuietCoreEcho` predicate in the channel-outbound SDK surface.
 - Keep compatibility wrappers for old subpaths.
 - Mark reply-named SDK helpers as deprecated in docs after bundled plugins are
   migrated.
@@ -994,7 +994,7 @@ Unit tests:
 - Failure classification policy.
 - Receive ack policy sequencing.
 - Relation mapping for reply, followup, system, and broadcast sends.
-- Gateway-failure origin factory and `shouldDropOpenClawEcho` predicate.
+- Gateway-failure origin factory and `shouldDropQuietCoreEcho` predicate.
 - Origin preservation through payload normalization, chunking, durable queue
   serialization, and recovery.
 

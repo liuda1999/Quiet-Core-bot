@@ -1,4 +1,4 @@
-import OpenClawKit
+import QuietCoreKit
 import SwiftUI
 
 struct SettingsProTab: View {
@@ -11,7 +11,7 @@ struct SettingsProTab: View {
     @AppStorage("node.displayName") var displayName: String = "iOS Node"
     @AppStorage("node.instanceId") var instanceId: String = UUID().uuidString
     @AppStorage("camera.enabled") var cameraEnabled: Bool = true
-    @AppStorage("location.enabledMode") var locationModeRaw: String = OpenClawLocationMode.off.rawValue
+    @AppStorage("location.enabledMode") var locationModeRaw: String = QuietCoreLocationMode.off.rawValue
     @AppStorage("screen.preventSleep") var preventSleep: Bool = true
     @AppStorage("talk.enabled") var talkEnabled: Bool = false
     @AppStorage(TalkModeProviderSelection.storageKey) var talkProviderSelectionRaw: String =
@@ -52,7 +52,7 @@ struct SettingsProTab: View {
     @State var showResetOnboardingAlert = false
     @State var suppressCredentialPersist = false
     @State var locationStatusText: String?
-    @State var previousLocationModeRaw: String = OpenClawLocationMode.off.rawValue
+    @State var previousLocationModeRaw: String = QuietCoreLocationMode.off.rawValue
     @State var notificationStatus: SettingsNotificationStatus = .checking
     @State var isRequestingNotificationAuthorization = false
     @State var showNotificationRelayDisclosure = false
@@ -62,13 +62,13 @@ struct SettingsProTab: View {
     @State private var navigationPath: [SettingsRoute] = []
     let initialRoute: SettingsRoute?
     let directRoute: SettingsRoute?
-    let headerLeadingAction: OpenClawSidebarHeaderAction?
+    let headerLeadingAction: QuietCoreSidebarHeaderAction?
     let onRouteChange: ((SettingsRoute?) -> Void)?
 
     init(
         initialRoute: SettingsRoute? = nil,
         directRoute: SettingsRoute? = nil,
-        headerLeadingAction: OpenClawSidebarHeaderAction? = nil,
+        headerLeadingAction: QuietCoreSidebarHeaderAction? = nil,
         onRouteChange: ((SettingsRoute?) -> Void)? = nil)
     {
         self.initialRoute = initialRoute
@@ -95,7 +95,7 @@ struct SettingsProTab: View {
     private var settingsNavigationStack: some View {
         NavigationStack(path: self.$navigationPath) {
             ZStack {
-                OpenClawProBackground()
+                QuietCoreProBackground()
                 ScrollView {
                     VStack(alignment: .leading, spacing: 18) {
                         self.settingsHeader
@@ -226,7 +226,7 @@ struct SettingsProTab: View {
             } message: {
                 Text(self.scannerError ?? "")
             }
-            .alert("Enable OpenClaw Hosted Push Relay?", isPresented: self.$showNotificationRelayDisclosure) {
+            .alert("Enable QuietCore Hosted Push Relay?", isPresented: self.$showNotificationRelayDisclosure) {
                     Button("Continue") {
                         self.requestNotificationAuthorizationFromSettings()
                     }

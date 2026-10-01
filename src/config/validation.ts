@@ -54,14 +54,14 @@ import {
 } from "./channel-config-metadata.js";
 import { shouldSuppressMissingCodexPluginDiagnostics } from "./codex-plugin-diagnostics.js";
 import { materializeRuntimeConfig } from "./materialize.js";
-import type { OpenClawConfig, ConfigValidationIssue } from "./types.js";
+import type { QuietCoreConfig, ConfigValidationIssue } from "./types.js";
 import { coerceSecretRef } from "./types.secrets.js";
 import {
   type DmPolicyAllowFromViolation,
   evaluateDmPolicyAllowFromDependency,
   isBuiltInModelProviderOverlayId,
 } from "./zod-schema.core.js";
-import { OpenClawSchema } from "./zod-schema.js";
+import { QuietCoreSchema } from "./zod-schema.js";
 
 const LEGACY_REMOVED_PLUGIN_IDS = new Set([
   "google-antigravity-auth",
@@ -104,7 +104,7 @@ function stripDeprecatedValidationKeys(raw: unknown): unknown {
   };
 }
 
-function materializeBundledModelProviderOverlays(config: OpenClawConfig): OpenClawConfig {
+function materializeBundledModelProviderOverlays(config: QuietCoreConfig): QuietCoreConfig {
   const providers = config.models?.providers;
   if (!providers) {
     return config;
@@ -382,7 +382,7 @@ type ChannelDmPolicyDependencyWarningOptions = {
   dmAllowFromModes?: ReadonlyMap<string, ChannelDmAllowFromMode>;
 };
 
-function hasChannelDmPolicyDependencyWarningCandidates(config: OpenClawConfig): boolean {
+function hasChannelDmPolicyDependencyWarningCandidates(config: QuietCoreConfig): boolean {
   if (!config.channels || !isRecord(config.channels)) {
     return false;
   }
@@ -407,7 +407,7 @@ function hasChannelDmPolicyDependencyWarningCandidates(config: OpenClawConfig): 
  * are skipped because their config shape does not match this warning's top-level paths.
  */
 function collectChannelDmPolicyDependencyWarnings(
-  config: OpenClawConfig,
+  config: QuietCoreConfig,
   options: ChannelDmPolicyDependencyWarningOptions = {},
 ): ConfigValidationIssue[] {
   if (!config.channels || !isRecord(config.channels)) {
@@ -462,7 +462,7 @@ function collectChannelDmPolicyDependencyWarnings(
   return warnings;
 }
 
-function collectRawBundledChannelConfigIssues(config: OpenClawConfig): ConfigValidationIssue[] {
+function collectRawBundledChannelConfigIssues(config: QuietCoreConfig): ConfigValidationIssue[] {
   if (!config.channels || !isRecord(config.channels)) {
     return [];
   }
@@ -976,7 +976,7 @@ function isWorkspaceAvatarPath(value: string, workspaceDir: string): boolean {
   return isPathWithinRoot(workspaceRoot, resolved);
 }
 
-function validateIdentityAvatar(config: OpenClawConfig): ConfigValidationIssue[] {
+function validateIdentityAvatar(config: QuietCoreConfig): ConfigValidationIssue[] {
   const agents = config.agents?.list;
   if (!Array.isArray(agents) || agents.length === 0) {
     return [];
@@ -1026,7 +1026,7 @@ function validateIdentityAvatar(config: OpenClawConfig): ConfigValidationIssue[]
   return issues;
 }
 
-function validateGatewayTailscaleBind(config: OpenClawConfig): ConfigValidationIssue[] {
+function validateGatewayTailscaleBind(config: QuietCoreConfig): ConfigValidationIssue[] {
   const tailscaleMode = config.gateway?.tailscale?.mode ?? "off";
   if (tailscaleMode !== "serve" && tailscaleMode !== "funnel") {
     return [];
@@ -1053,7 +1053,7 @@ function validateGatewayTailscaleBind(config: OpenClawConfig): ConfigValidationI
   ];
 }
 
-function validateGatewayTailscaleAuth(config: OpenClawConfig): ConfigValidationIssue[] {
+function validateGatewayTailscaleAuth(config: QuietCoreConfig): ConfigValidationIssue[] {
   const tailscaleMode = config.gateway?.tailscale?.mode ?? "off";
   if (!isUnsafeGatewayTailscaleNoAuth({ authMode: config.gateway?.auth?.mode, tailscaleMode })) {
     return [];
@@ -1078,13 +1078,13 @@ export function validateConfigObjectRaw(
     validateBundledChannels?: boolean;
     preservedLegacyRootKeys?: readonly string[];
   },
-): { ok: true; config: OpenClawConfig } | { ok: false; issues: ConfigValidationIssue[] } {
+): { ok: true; config: QuietCoreConfig } | { ok: false; issues: ConfigValidationIssue[] } {
   const normalizedRaw = stripPreservedLegacyRootKeysForValidation(
     stripDeprecatedValidationKeys(raw),
     opts?.preservedLegacyRootKeys,
   );
   const policyIssues = collectUnsupportedSecretRefPolicyIssues(normalizedRaw);
-  const validated = OpenClawSchema.safeParse(normalizedRaw);
+  const validated = QuietCoreSchema.safeParse(normalizedRaw);
   if (!validated.success) {
     const schemaIssues = validated.error.issues.map((issue) => mapZodIssueToConfigIssue(issue));
     return {
@@ -1092,7 +1092,7 @@ export function validateConfigObjectRaw(
       issues: mergeUnsupportedMutableSecretRefIssues(policyIssues, schemaIssues),
     };
   }
-  const validatedConfig = materializeBundledModelProviderOverlays(validated.data as OpenClawConfig);
+  const validatedConfig = materializeBundledModelProviderOverlays(validated.data as QuietCoreConfig);
   const channelIssues =
     policyIssues.length > 0 || opts?.validateBundledChannels
       ? collectRawBundledChannelConfigIssues(validatedConfig)
@@ -1142,7 +1142,7 @@ export function validateConfigObject(
     manifestRegistry?: Pick<PluginMetadataSnapshot, "manifestRegistry">["manifestRegistry"];
     sourceRaw?: unknown;
   },
-): { ok: true; config: OpenClawConfig } | { ok: false; issues: ConfigValidationIssue[] } {
+): { ok: true; config: QuietCoreConfig } | { ok: false; issues: ConfigValidationIssue[] } {
   const result = validateConfigObjectRaw(raw, opts);
   if (!result.ok) {
     return result;
@@ -1158,7 +1158,7 @@ export function validateConfigObject(
 type ValidateConfigWithPluginsResult =
   | {
       ok: true;
-      config: OpenClawConfig;
+      config: QuietCoreConfig;
       warnings: ConfigValidationIssue[];
     }
   | {
@@ -1172,7 +1172,7 @@ type ValidateConfigWithPluginsParams = {
   pluginValidation?: "full" | "skip";
   pluginMetadataSnapshot?: Pick<PluginMetadataSnapshot, "manifestRegistry">;
   loadPluginMetadataSnapshot?: (
-    config: OpenClawConfig,
+    config: QuietCoreConfig,
   ) => Pick<PluginMetadataSnapshot, "manifestRegistry">;
   sourceRaw?: unknown;
   preservedLegacyRootKeys?: readonly string[];
@@ -1278,7 +1278,7 @@ function validateConfigObjectWithPluginsBase(
     >;
   };
 
-  let compatConfig: OpenClawConfig | null | undefined;
+  let compatConfig: QuietCoreConfig | null | undefined;
   let compatPluginIds: ReadonlySet<string> | null = null;
   let compatPluginIdsResolved = false;
   let registryDiagnosticsPushed = false;
@@ -1355,7 +1355,7 @@ function validateConfigObjectWithPluginsBase(
     return compatPluginIds;
   };
 
-  const ensureCompatConfig = (): OpenClawConfig => {
+  const ensureCompatConfig = (): QuietCoreConfig => {
     if (compatConfig !== undefined) {
       return compatConfig ?? config;
     }

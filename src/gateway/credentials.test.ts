@@ -1,18 +1,18 @@
 // Gateway credentials tests cover config/env/secret-ref resolution for local and
 // remote gateway auth values.
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import {
   resolveGatewayCredentialsFromConfig,
   resolveGatewayCredentialsFromValues,
 } from "./credentials.js";
 
-function cfg(input: Partial<OpenClawConfig>): OpenClawConfig {
-  return input as OpenClawConfig;
+function cfg(input: Partial<QuietCoreConfig>): QuietCoreConfig {
+  return input as QuietCoreConfig;
 }
 
 type ResolveFromConfigInput = Parameters<typeof resolveGatewayCredentialsFromConfig>[0];
-type GatewayConfig = NonNullable<OpenClawConfig["gateway"]>;
+type GatewayConfig = NonNullable<QuietCoreConfig["gateway"]>;
 type ResolveFromConfigOverrides = Partial<Omit<ResolveFromConfigInput, "cfg" | "env">>;
 
 const DEFAULT_GATEWAY_AUTH = { token: "config-token", password: "config-password" }; // pragma: allowlist secret
@@ -27,7 +27,7 @@ function envSecretRef(id: string) {
   return { source: "env", provider: "default", id } as const;
 }
 
-function cfgWithDefaultEnvSecretProvider(gateway: GatewayConfig): OpenClawConfig {
+function cfgWithDefaultEnvSecretProvider(gateway: GatewayConfig): QuietCoreConfig {
   return {
     gateway,
     secrets: {
@@ -35,11 +35,11 @@ function cfgWithDefaultEnvSecretProvider(gateway: GatewayConfig): OpenClawConfig
         default: { source: "env" },
       },
     },
-  } as unknown as OpenClawConfig;
+  } as unknown as QuietCoreConfig;
 }
 
 function resolveGatewayCredentialsWithEmptyEnv(
-  config: OpenClawConfig,
+  config: QuietCoreConfig,
   overrides: ResolveFromConfigOverrides = {},
 ) {
   return resolveGatewayCredentialsFromConfig({
@@ -443,7 +443,7 @@ describe("resolveGatewayCredentialsFromConfig", () => {
           default: { source: "env" },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
   }
 
   it("ignores unresolved local token ref in remote-only mode when local auth mode is token", () => {

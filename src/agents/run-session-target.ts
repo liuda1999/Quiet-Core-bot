@@ -4,7 +4,7 @@ import {
   resolveSessionTranscriptRuntimeTarget,
   type SessionTranscriptRuntimeTarget,
 } from "../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { resolveAgentIdFromSessionKey } from "../routing/session-key.js";
 
 /** Identifies a run transcript target without naming the current storage artifact. */
@@ -22,7 +22,7 @@ export type ResolvedAgentRunSessionTarget = SessionTranscriptRuntimeTarget;
 /** Resolves the active file-backed target used by current run/session internals. */
 export async function resolveAgentRunSessionTarget(params: {
   agentId?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   sessionFile?: string;
   sessionId: string;
   sessionKey?: string;

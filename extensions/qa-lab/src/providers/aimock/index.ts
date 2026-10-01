@@ -1,4 +1,4 @@
-// Qa Lab plugin entrypoint registers its OpenClaw integration.
+// Qa Lab plugin entrypoint registers its QuietCore integration.
 import { createMockQaProviderDefinition } from "../shared/mock-provider-definition.js";
 
 export const aimockProviderDefinition = createMockQaProviderDefinition({

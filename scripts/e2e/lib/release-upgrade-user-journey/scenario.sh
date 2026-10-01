@@ -147,7 +147,7 @@ quiet-core-bot release-upgrade ping >"$PLUGIN_CLI_BEFORE_LOG" 2>&1
 node scripts/e2e/lib/release-scenarios/assertions.mjs assert-file-contains "$PLUGIN_CLI_BEFORE_LOG" "release-upgrade-plugin:pong"
 node scripts/e2e/lib/release-user-journey/assertions.mjs configure-clickclack "http://127.0.0.1:$CLICKCLACK_PORT"
 
-quiet_core_bot_e2e_install_package "$CANDIDATE_INSTALL_LOG" "candidate OpenClaw package"
+quiet_core_bot_e2e_install_package "$CANDIDATE_INSTALL_LOG" "candidate QuietCore package"
 package_root="$(quiet_core_bot_e2e_package_root)"
 entry="$(quiet_core_bot_e2e_package_entrypoint "$package_root")"
 quiet_core_bot_e2e_enable_quiet_core_bot_cli_timeout

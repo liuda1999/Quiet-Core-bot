@@ -6,7 +6,7 @@ import process from "node:process";
 import { promisify } from "node:util";
 import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
 import { danger, shouldLogVerbose } from "../globals.js";
-import { markOpenClawExecEnv } from "../infra/quiet-core-bot-exec-env.js";
+import { markQuietCoreExecEnv } from "../infra/quiet-core-bot-exec-env.js";
 import { resolveTimerTimeoutMs } from "../shared/number-coercion.js";
 import {
   decodeWindowsOutputBuffer,
@@ -335,7 +335,7 @@ export function resolveCommandEnv(params: {
       resolvedEnv.npm_config_fund = "false";
     }
   }
-  return markOpenClawExecEnv(resolvedEnv);
+  return markQuietCoreExecEnv(resolvedEnv);
 }
 
 export async function runCommandWithTimeout(

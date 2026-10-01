@@ -60,7 +60,7 @@ function pathsEqualForProbe(actual, expected) {
   return normalizePathForProbe(actual) === normalizePathForProbe(expected);
 }
 
-function resolveOpenClawEntry() {
+function resolveQuietCoreEntry() {
   if (process.env.QUIET_CORE_ENTRY) {
     return process.env.QUIET_CORE_ENTRY;
   }
@@ -73,7 +73,7 @@ function resolveOpenClawEntry() {
 }
 
 function readPluginsList() {
-  const entry = resolveOpenClawEntry();
+  const entry = resolveQuietCoreEntry();
   const timeoutMs = readPositiveIntEnv(
     "QUIET_CORE_BUNDLED_PLUGIN_LIST_TIMEOUT_MS",
     DEFAULT_PLUGIN_LIST_TIMEOUT_MS,

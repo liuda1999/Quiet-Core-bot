@@ -2,7 +2,7 @@
   "name": "@quiet-core/memory-wiki",
   "version": "2026.6.11",
   "private": true,
-  "description": "OpenClaw persistent wiki plugin",
+  "description": "QuietCore persistent wiki plugin",
   "type": "module",
   "dependencies": {
     "typebox": "1.1.39",

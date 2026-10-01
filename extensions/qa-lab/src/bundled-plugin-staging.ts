@@ -411,11 +411,11 @@ export async function createQaBundledPluginsDir(params: {
     repoRoot: params.repoRoot,
     stagedRoot,
   });
-  const stagedOpenClawPackageDir = path.join(stagedRoot, "node_modules", "quiet-core-bot");
-  await fs.mkdir(stagedOpenClawPackageDir, { recursive: true });
+  const stagedQuietCorePackageDir = path.join(stagedRoot, "node_modules", "quiet-core-bot");
+  await fs.mkdir(stagedQuietCorePackageDir, { recursive: true });
   await fs.copyFile(
     path.join(params.repoRoot, "package.json"),
-    path.join(stagedOpenClawPackageDir, "package.json"),
+    path.join(stagedQuietCorePackageDir, "package.json"),
   );
   const stagedTreeName = resolveQaStagedBundledTreeName(params.repoRoot);
   const stagedTreeRoot = path.join(stagedRoot, stagedTreeName);
@@ -451,7 +451,7 @@ export async function createQaBundledPluginsDir(params: {
   }
   await symlinkQaStagedDirEntry({
     sourcePath: path.join(stagedRoot, "dist"),
-    targetPath: path.join(stagedOpenClawPackageDir, "dist"),
+    targetPath: path.join(stagedQuietCorePackageDir, "dist"),
     directory: true,
   });
   return {

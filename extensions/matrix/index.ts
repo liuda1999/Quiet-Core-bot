@@ -1,7 +1,7 @@
-// Matrix plugin entrypoint registers its OpenClaw integration.
+// Matrix plugin entrypoint registers its QuietCore integration.
 import {
   defineBundledChannelEntry,
-  type OpenClawPluginApi,
+  type QuietCorePluginApi,
 } from "quiet-core-bot/plugin-sdk/channel-entry-contract";
 import { registerMatrixCliMetadata } from "./cli-metadata.js";
 import { registerMatrixSubagentHooks } from "./subagent-hooks-api.js";
@@ -15,7 +15,7 @@ function loadMatrixHandlersRuntimeModule() {
   return matrixHandlersRuntimePromise;
 }
 
-export function registerMatrixFullRuntime(api: OpenClawPluginApi): void {
+export function registerMatrixFullRuntime(api: QuietCorePluginApi): void {
   api.registerGatewayMethod("matrix.verify.recoveryKey", async (ctx) => {
     const { handleVerifyRecoveryKey } = await loadMatrixHandlersRuntimeModule();
     await handleVerifyRecoveryKey(ctx);

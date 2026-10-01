@@ -20,7 +20,7 @@ import {
   resolveGatewayPort,
   resolveStateDir,
 } from "../../config/paths.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { hasConfiguredSecretInput } from "../../config/types.secrets.js";
 import { GATEWAY_SERVICE_RUNTIME_PID_ENV } from "../../daemon/constants.js";
 import {
@@ -193,7 +193,7 @@ function shouldBlockGatewayBindWithoutExplicitAuth(params: {
   );
 }
 
-async function maybeLogPendingControlUiBuild(cfg: OpenClawConfig): Promise<void> {
+async function maybeLogPendingControlUiBuild(cfg: QuietCoreConfig): Promise<void> {
   if (cfg.gateway?.controlUi?.enabled === false) {
     return;
   }
@@ -250,12 +250,12 @@ async function readGatewayStartupConfig(params: {
   opts: GatewayRunOpts;
   startupTrace: ReturnType<typeof createGatewayCliStartupTrace>;
 }): Promise<{
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   snapshot: ConfigFileSnapshot | null;
   startupConfigSnapshotRead?: ReadConfigFileSnapshotWithPluginMetadataResult;
 }> {
   const { readConfigFileSnapshotWithPluginMetadata } = await import("../../config/config.js");
-  let blockedRecoveryConfig: OpenClawConfig | null = null;
+  let blockedRecoveryConfig: QuietCoreConfig | null = null;
   const snapshotRead: ReadConfigFileSnapshotWithPluginMetadataResult | null =
     await params.startupTrace.measure("cli.config-snapshot", () =>
       readConfigFileSnapshotWithPluginMetadata({
@@ -302,7 +302,7 @@ type GatewayRunShellEnvFallbackPlan =
     };
 
 async function resolveGatewayRunShellEnvFallbackPlan(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
 ): Promise<GatewayRunShellEnvFallbackPlan> {
   const { createConfigRuntimeEnv } = await import("../../config/env-vars.js");
   const {

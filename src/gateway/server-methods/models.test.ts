@@ -2,10 +2,10 @@
 // validation errors, and protocol response shapes.
 import { describe, expect, it, vi } from "vitest";
 import { ErrorCodes } from "../../../packages/gateway-protocol/src/index.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { createDeferred } from "../../test-utils/deferred.js";
 import { withEnvAsync } from "../../test-utils/env.js";
-import { withOpenClawTestState } from "../../test-utils/quiet-core-bot-test-state.js";
+import { withQuietCoreTestState } from "../../test-utils/quiet-core-bot-test-state.js";
 import { expectGatewayErrorResponse } from "./gateway-response.test-helpers.js";
 import { modelsHandlers } from "./models.js";
 import type { RespondFn } from "./types.js";
@@ -24,7 +24,7 @@ const withoutOpenAIEnvAuth = async <T>(run: () => Promise<T>): Promise<T> =>
 function requestModelsList(params: {
   view: "configured" | "all";
   respond?: ReturnType<typeof vi.fn>;
-  runtimeConfig?: OpenClawConfig;
+  runtimeConfig?: QuietCoreConfig;
   loadGatewayModelCatalog: () => Promise<Array<Record<string, unknown>>>;
   reqId?: string;
 }) {
@@ -41,7 +41,7 @@ function requestModelsList(params: {
     client: null,
     isWebchatConnect: () => false,
     context: {
-      getRuntimeConfig: () => params.runtimeConfig ?? ({} as OpenClawConfig),
+      getRuntimeConfig: () => params.runtimeConfig ?? ({} as QuietCoreConfig),
       loadGatewayModelCatalog: params.loadGatewayModelCatalog,
       logGateway: {
         debug: vi.fn(),
@@ -65,7 +65,7 @@ describe("models.list", () => {
             },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as QuietCoreConfig;
 
       vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
       try {
@@ -117,7 +117,7 @@ describe("models.list", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
     try {
@@ -230,7 +230,7 @@ describe("models.list", () => {
           vllm: { apiKey: "test-key" },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     const loadConfiguredCatalog = vi.fn(() => Promise.resolve(catalog));
     const { request: configuredRequest, respond: configuredRespond } = requestModelsList({
@@ -279,7 +279,7 @@ describe("models.list", () => {
   });
 
   it("marks legacy OpenAI Codex aliases available through ChatGPT OAuth", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-models-list-codex-alias-",
@@ -355,7 +355,7 @@ describe("models.list", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     const { request, respond } = requestModelsList({
       view: "all",
@@ -391,7 +391,7 @@ describe("models.list", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     const { request, respond } = requestModelsList({
       view: "all",
@@ -413,7 +413,7 @@ describe("models.list", () => {
   });
 
   it("does not mark catalog rows available from expired OAuth profiles", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-models-list-expired-profile-",
@@ -461,7 +461,7 @@ describe("models.list", () => {
   });
 
   it("marks env SecretRef-backed auth profiles available", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-models-list-env-profile-",
@@ -515,7 +515,7 @@ describe("models.list", () => {
   });
 
   it("keeps non-env SecretRef-backed auth profile availability unknown", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-models-list-file-profile-",
@@ -577,7 +577,7 @@ describe("models.list", () => {
       },
       { name: "managed-marker", apiKey: "secretref-managed" },
     ] as const) {
-      await withOpenClawTestState(
+      await withQuietCoreTestState(
         {
           layout: "state-only",
           prefix: `quiet-core-bot-models-list-provider-${fixture.name}-profile-`,
@@ -618,7 +618,7 @@ describe("models.list", () => {
                 },
               },
             },
-          } as unknown as OpenClawConfig;
+          } as unknown as QuietCoreConfig;
 
           const { request, respond } = requestModelsList({
             view: "all",

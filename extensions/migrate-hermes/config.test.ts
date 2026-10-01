@@ -1,6 +1,6 @@
 // Migrate Hermes tests cover config plugin behavior.
 import path from "node:path";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/provider-auth";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/provider-auth";
 import { afterEach, describe, expect, it } from "vitest";
 import { buildHermesMigrationProvider } from "./provider.js";
 import {
@@ -112,7 +112,7 @@ describe("Hermes migration config mapping", () => {
     const stateDir = path.join(root, "state");
     const config = {
       agents: { defaults: { workspace: workspaceDir } },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     await writeFile(
       path.join(source, "config.yaml"),
       [

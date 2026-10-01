@@ -30,10 +30,10 @@ vi.mock("node:fs", async (importOriginal) => {
 
 const fs = await import("node:fs");
 const {
-  closeOpenClawStateDatabaseForTest,
-  openOpenClawStateDatabase,
-  repairOpenClawStateDatabaseSchema,
-  runOpenClawStateWriteTransaction,
+  closeQuietCoreStateDatabaseForTest,
+  openQuietCoreStateDatabase,
+  repairQuietCoreStateDatabaseSchema,
+  runQuietCoreStateWriteTransaction,
 } = await import("./quiet-core-bot-state-db.js");
 
 function chmodError(code: string): Error {
@@ -53,7 +53,7 @@ describe("state database permission hardening without chmod support", () => {
     chmodFailHook.error = undefined;
     chmodFailHook.calls = 0;
     chmodFailHook.failProbe = true;
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
     if (stateDir) {
       fs.rmSync(stateDir, { recursive: true, force: true });
       stateDir = undefined;
@@ -64,7 +64,7 @@ describe("state database permission hardening without chmod support", () => {
     stateDir = fs.mkdtempSync(join(tmpdir(), "quiet-core-bot-state-chmod-"));
     chmodFailHook.error = enotsupError();
 
-    const database = openOpenClawStateDatabase({ env: { QUIET_CORE_STATE_DIR: stateDir } });
+    const database = openQuietCoreStateDatabase({ env: { QUIET_CORE_STATE_DIR: stateDir } });
 
     expect(database.db.isOpen).toBe(true);
     // Hardening ran and failed; the failure must stay non-fatal.
@@ -77,18 +77,18 @@ describe("state database permission hardening without chmod support", () => {
     chmodFailHook.error = chmodError("EPERM");
     chmodFailHook.failProbe = false;
 
-    expect(() => openOpenClawStateDatabase({ env: { QUIET_CORE_STATE_DIR: stateDir } })).toThrow(
+    expect(() => openQuietCoreStateDatabase({ env: { QUIET_CORE_STATE_DIR: stateDir } })).toThrow(
       /EPERM/,
     );
   });
 
   it("opens when EPERM leaves existing permissions restrictive", () => {
     stateDir = fs.mkdtempSync(join(tmpdir(), "quiet-core-bot-state-chmod-"));
-    openOpenClawStateDatabase({ env: { QUIET_CORE_STATE_DIR: stateDir } });
-    closeOpenClawStateDatabaseForTest();
+    openQuietCoreStateDatabase({ env: { QUIET_CORE_STATE_DIR: stateDir } });
+    closeQuietCoreStateDatabaseForTest();
     chmodFailHook.error = chmodError("EPERM");
 
-    const database = openOpenClawStateDatabase({ env: { QUIET_CORE_STATE_DIR: stateDir } });
+    const database = openQuietCoreStateDatabase({ env: { QUIET_CORE_STATE_DIR: stateDir } });
 
     expect(database.db.isOpen).toBe(true);
   });
@@ -98,7 +98,7 @@ describe("state database permission hardening without chmod support", () => {
     fs.chmodSync(stateDir, 0o755);
     chmodFailHook.error = chmodError("EPERM");
 
-    const database = openOpenClawStateDatabase({ env: { QUIET_CORE_STATE_DIR: stateDir } });
+    const database = openQuietCoreStateDatabase({ env: { QUIET_CORE_STATE_DIR: stateDir } });
 
     expect(database.db.isOpen).toBe(true);
   });
@@ -109,20 +109,20 @@ describe("state database permission hardening without chmod support", () => {
     stateDir = fs.mkdtempSync(join(tmpdir(), "quiet-core-bot-state-chmod-"));
     chmodFailHook.error = chmodError("EACCES");
 
-    expect(() => openOpenClawStateDatabase({ env: { QUIET_CORE_STATE_DIR: stateDir } })).toThrow(
+    expect(() => openQuietCoreStateDatabase({ env: { QUIET_CORE_STATE_DIR: stateDir } })).toThrow(
       /EACCES/,
     );
   });
 
   it("repairs the schema when chmodSync throws ENOTSUP", () => {
     stateDir = fs.mkdtempSync(join(tmpdir(), "quiet-core-bot-state-chmod-"));
-    openOpenClawStateDatabase({ env: { QUIET_CORE_STATE_DIR: stateDir } });
-    closeOpenClawStateDatabaseForTest();
+    openQuietCoreStateDatabase({ env: { QUIET_CORE_STATE_DIR: stateDir } });
+    closeQuietCoreStateDatabaseForTest();
 
     chmodFailHook.error = enotsupError();
 
     expect(() =>
-      repairOpenClawStateDatabaseSchema({ env: { QUIET_CORE_STATE_DIR: stateDir } }),
+      repairQuietCoreStateDatabaseSchema({ env: { QUIET_CORE_STATE_DIR: stateDir } }),
     ).not.toThrow();
   });
 
@@ -131,7 +131,7 @@ describe("state database permission hardening without chmod support", () => {
     chmodFailHook.error = enotsupError();
     const options = { env: { QUIET_CORE_STATE_DIR: stateDir } };
 
-    const result = runOpenClawStateWriteTransaction((database) => {
+    const result = runQuietCoreStateWriteTransaction((database) => {
       expect(database.db.isOpen).toBe(true);
       return "committed";
     }, options);

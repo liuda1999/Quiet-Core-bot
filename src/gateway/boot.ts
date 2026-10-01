@@ -20,7 +20,7 @@ import {
 import { resolveStorePath } from "../config/sessions/paths.js";
 import { loadSessionStore, updateSessionStore } from "../config/sessions/store.js";
 import type { SessionEntry } from "../config/sessions/types.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import { type RuntimeEnv, defaultRuntime } from "../runtime.js";
@@ -102,7 +102,7 @@ async function loadBootFile(
 }
 
 function snapshotSessionMapping(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   sessionKey: string;
 }): SessionMappingSnapshot {
   const agentId = resolveAgentIdFromSessionKey(params.sessionKey);
@@ -164,7 +164,7 @@ async function restoreSessionMapping(
 }
 
 export async function runBootOnce(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   deps: CliDeps;
   workspaceDir: string;
   agentId?: string;

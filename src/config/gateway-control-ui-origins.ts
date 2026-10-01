@@ -1,6 +1,6 @@
 // Resolves allowed Control UI origins for gateway access.
 import { DEFAULT_GATEWAY_PORT } from "./paths.js";
-import type { OpenClawConfig } from "./types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "./types.quiet-core-bot.js";
 
 /** Non-loopback gateway bind modes that require explicit Control UI allowed origins. */
 export type GatewayNonLoopbackBindMode = "lan" | "tailnet" | "custom" | "auto";
@@ -51,7 +51,7 @@ export function buildDefaultControlUiAllowedOrigins(params: {
 
 /** Seeds safe default Control UI origins before non-loopback gateway startup validation. */
 export function ensureControlUiAllowedOriginsForNonLoopbackBind(
-  config: OpenClawConfig,
+  config: QuietCoreConfig,
   opts?: {
     defaultPort?: number;
     requireControlUiEnabled?: boolean;
@@ -69,7 +69,7 @@ export function ensureControlUiAllowedOriginsForNonLoopbackBind(
     isContainerEnvironment?: () => boolean;
   },
 ): {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   seededOrigins: string[] | null;
   bind: GatewayNonLoopbackBindMode | null;
 } {

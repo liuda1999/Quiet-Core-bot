@@ -965,7 +965,7 @@ function renderMaturityScorecard({
   const lines = [
     ...frontmatter(
       "Maturity scorecard",
-      "OpenClaw release readiness scores for product areas, integrations, and supported workflows.",
+      "QuietCore release readiness scores for product areas, integrations, and supported workflows.",
     ),
     "# Maturity scorecard",
     "",
@@ -978,7 +978,7 @@ function renderMaturityScorecard({
     "",
     "## What this page is for",
     "",
-    "Use this page to answer one question: which OpenClaw surfaces are credible choices for a release, and what evidence supports that judgment? Coverage comes from deterministic QA evidence; quality and completeness are maintained as reviewed maturity scores.",
+    "Use this page to answer one question: which QuietCore surfaces are credible choices for a release, and what evidence supports that judgment? Coverage comes from deterministic QA evidence; quality and completeness are maintained as reviewed maturity scores.",
     "",
     "## At a glance",
     "",
@@ -1032,7 +1032,7 @@ function renderTaxonomy({
   const lines = [
     ...frontmatter(
       "Maturity taxonomy",
-      "Detailed reference for the product areas and checks behind the OpenClaw maturity scorecard.",
+      "Detailed reference for the product areas and checks behind the QuietCore maturity scorecard.",
     ),
     "# Maturity taxonomy",
     "",

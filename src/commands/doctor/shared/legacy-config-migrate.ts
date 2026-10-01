@@ -1,11 +1,11 @@
 // Validating legacy config migration wrapper used by doctor config flow.
-import type { OpenClawConfig } from "../../../config/types.js";
+import type { QuietCoreConfig } from "../../../config/types.js";
 import { validateConfigObjectWithPlugins } from "../../../config/validation.js";
 import { applyLegacyDoctorMigrations } from "./legacy-config-compat.js";
 
 /** Apply legacy migrations and validate the resulting Quiet Core bot config shape when possible. */
 export function migrateLegacyConfig(raw: unknown): {
-  config: OpenClawConfig | null;
+  config: QuietCoreConfig | null;
   changes: string[];
   partiallyValid?: boolean;
 } {
@@ -16,7 +16,7 @@ export function migrateLegacyConfig(raw: unknown): {
   const validated = validateConfigObjectWithPlugins(next);
   if (!validated.ok) {
     changes.push("Migration applied; other validation issues remain — run doctor to review.");
-    return { config: next as OpenClawConfig, changes, partiallyValid: true };
+    return { config: next as QuietCoreConfig, changes, partiallyValid: true };
   }
   return { config: validated.config, changes };
 }

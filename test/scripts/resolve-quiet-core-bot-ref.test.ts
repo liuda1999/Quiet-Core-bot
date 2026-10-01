@@ -1,4 +1,4 @@
-// Resolve OpenClaw ref tests cover the release workflow ref resolver script.
+// Resolve QuietCore ref tests cover the release workflow ref resolver script.
 import { execFileSync, spawnSync } from "node:child_process";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";

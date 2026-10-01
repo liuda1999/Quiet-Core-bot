@@ -3,8 +3,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { resetLogger, setLoggerOverride } from "../../../logging/logger.js";
 import { loggingState } from "../../../logging/state.js";
 import {
-  createOpenClawTestState,
-  type OpenClawTestState,
+  createQuietCoreTestState,
+  type QuietCoreTestState,
 } from "../../../test-utils/quiet-core-bot-test-state.js";
 import {
   legacyOAuthSidecarInternalTestUtils,
@@ -12,7 +12,7 @@ import {
   loadLegacyOAuthSidecarMaterial,
 } from "./legacy-oauth-sidecar.js";
 
-const states: OpenClawTestState[] = [];
+const states: QuietCoreTestState[] = [];
 
 function setPlatform(value: NodeJS.Platform): () => void {
   const descriptor = Object.getOwnPropertyDescriptor(process, "platform");
@@ -25,11 +25,11 @@ function setPlatform(value: NodeJS.Platform): () => void {
 }
 
 async function writeLegacySidecarThatNeedsKeychain(): Promise<{
-  state: OpenClawTestState;
+  state: QuietCoreTestState;
   ref: { source: "quiet-core-bot-credentials"; provider: "openai-codex"; id: string };
   profileId: string;
 }> {
-  const state = await createOpenClawTestState({
+  const state = await createQuietCoreTestState({
     layout: "state-only",
     prefix: "quiet-core-bot-legacy-oauth-keychain-warn-",
     env: {
@@ -89,7 +89,7 @@ describe("loadLegacyOAuthSidecarMaterial keychain-only headless warning", () => 
     resetLogger();
   });
 
-  function envWithoutVitestSignals(state: OpenClawTestState): NodeJS.ProcessEnv {
+  function envWithoutVitestSignals(state: QuietCoreTestState): NodeJS.ProcessEnv {
     const env: NodeJS.ProcessEnv = { ...state.env };
     delete env.VITEST;
     delete env.VITEST_WORKER_ID;

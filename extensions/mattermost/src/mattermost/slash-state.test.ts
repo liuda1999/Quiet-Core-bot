@@ -1,6 +1,6 @@
 // Mattermost tests cover slash state plugin behavior.
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig, RuntimeEnv } from "../runtime-api.js";
+import type { QuietCoreConfig, RuntimeEnv } from "../runtime-api.js";
 import type { ResolvedMattermostAccount } from "./accounts.js";
 import type { MattermostRegisteredCommand } from "./slash-commands.js";
 import {
@@ -44,7 +44,7 @@ const slashApi = {
     exit: () => {},
   },
 } satisfies {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   runtime: RuntimeEnv;
 };
 

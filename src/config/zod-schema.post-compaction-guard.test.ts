@@ -1,11 +1,11 @@
 // Guards post-compaction config schema behavior against regressions.
 import { describe, expect, it } from "vitest";
 import { ToolsSchema } from "./zod-schema.agent-runtime.js";
-import { OpenClawSchema } from "./zod-schema.js";
+import { QuietCoreSchema } from "./zod-schema.js";
 
-describe("OpenClawSchema tools.loopDetection.postCompactionGuard validation", () => {
+describe("QuietCoreSchema tools.loopDetection.postCompactionGuard validation", () => {
   it("accepts tools.loopDetection.postCompactionGuard configuration", () => {
-    const result = OpenClawSchema.safeParse({
+    const result = QuietCoreSchema.safeParse({
       tools: {
         loopDetection: {
           enabled: true,
@@ -19,7 +19,7 @@ describe("OpenClawSchema tools.loopDetection.postCompactionGuard validation", ()
   });
 
   it("accepts an empty postCompactionGuard object", () => {
-    const result = OpenClawSchema.safeParse({
+    const result = QuietCoreSchema.safeParse({
       tools: {
         loopDetection: {
           postCompactionGuard: {},
@@ -30,7 +30,7 @@ describe("OpenClawSchema tools.loopDetection.postCompactionGuard validation", ()
   });
 
   it("rejects unknown keys under tools.loopDetection.postCompactionGuard", () => {
-    const result = OpenClawSchema.safeParse({
+    const result = QuietCoreSchema.safeParse({
       tools: {
         loopDetection: {
           postCompactionGuard: {
@@ -44,7 +44,7 @@ describe("OpenClawSchema tools.loopDetection.postCompactionGuard validation", ()
   });
 
   it("rejects non-positive windowSize", () => {
-    const result = OpenClawSchema.safeParse({
+    const result = QuietCoreSchema.safeParse({
       tools: {
         loopDetection: {
           postCompactionGuard: {
@@ -57,7 +57,7 @@ describe("OpenClawSchema tools.loopDetection.postCompactionGuard validation", ()
   });
 
   it("rejects non-integer windowSize", () => {
-    const result = OpenClawSchema.safeParse({
+    const result = QuietCoreSchema.safeParse({
       tools: {
         loopDetection: {
           postCompactionGuard: {
@@ -79,9 +79,9 @@ describe("OpenClawSchema tools.loopDetection.postCompactionGuard validation", ()
   });
 });
 
-describe("OpenClawSchema tools.loopDetection.singleStepConcurrent validation (A17/A23)", () => {
+describe("QuietCoreSchema tools.loopDetection.singleStepConcurrent validation (A17/A23)", () => {
   it("accepts a valid singleStepConcurrent configuration", () => {
-    const result = OpenClawSchema.safeParse({
+    const result = QuietCoreSchema.safeParse({
       tools: {
         loopDetection: {
           singleStepConcurrent: {
@@ -96,7 +96,7 @@ describe("OpenClawSchema tools.loopDetection.singleStepConcurrent validation (A1
   });
 
   it("accepts singleStepConcurrent defaults shape (all optional)", () => {
-    const result = OpenClawSchema.safeParse({
+    const result = QuietCoreSchema.safeParse({
       tools: {
         loopDetection: {
           singleStepConcurrent: {},
@@ -107,7 +107,7 @@ describe("OpenClawSchema tools.loopDetection.singleStepConcurrent validation (A1
   });
 
   it("accepts only callers enabled without thresholds", () => {
-    const result = OpenClawSchema.safeParse({
+    const result = QuietCoreSchema.safeParse({
       tools: {
         loopDetection: {
           singleStepConcurrent: { enabled: true },
@@ -118,7 +118,7 @@ describe("OpenClawSchema tools.loopDetection.singleStepConcurrent validation (A1
   });
 
   it("rejects unknown keys under singleStepConcurrent", () => {
-    const result = OpenClawSchema.safeParse({
+    const result = QuietCoreSchema.safeParse({
       tools: {
         loopDetection: {
           singleStepConcurrent: {
@@ -132,7 +132,7 @@ describe("OpenClawSchema tools.loopDetection.singleStepConcurrent validation (A1
   });
 
   it("rejects criticalThreshold >= breakerThreshold", () => {
-    const result = OpenClawSchema.safeParse({
+    const result = QuietCoreSchema.safeParse({
       tools: {
         loopDetection: {
           singleStepConcurrent: {
@@ -147,7 +147,7 @@ describe("OpenClawSchema tools.loopDetection.singleStepConcurrent validation (A1
   });
 
   it("rejects equal critical and breaker thresholds", () => {
-    const result = OpenClawSchema.safeParse({
+    const result = QuietCoreSchema.safeParse({
       tools: {
         loopDetection: {
           singleStepConcurrent: {
@@ -161,7 +161,7 @@ describe("OpenClawSchema tools.loopDetection.singleStepConcurrent validation (A1
   });
 
   it("rejects non-positive thresholds", () => {
-    const result = OpenClawSchema.safeParse({
+    const result = QuietCoreSchema.safeParse({
       tools: {
         loopDetection: {
           singleStepConcurrent: {
@@ -175,7 +175,7 @@ describe("OpenClawSchema tools.loopDetection.singleStepConcurrent validation (A1
   });
 
   it("rejects non-integer thresholds", () => {
-    const result = OpenClawSchema.safeParse({
+    const result = QuietCoreSchema.safeParse({
       tools: {
         loopDetection: {
           singleStepConcurrent: {

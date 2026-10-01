@@ -54,13 +54,13 @@ const QUIET_CORE_MANUAL_UPDATE_LAUNCHD_LABEL_PATTERN = /^ai\.quiet-core-bot\.man
 const LAUNCH_AGENT_STOP_PORT_RELEASE_TIMEOUT_MS = LAUNCH_AGENT_EXIT_TIMEOUT_SECONDS * 1_000;
 const LAUNCH_AGENT_STOP_PORT_RELEASE_POLL_MS = 100;
 
-export type StaleOpenClawUpdateLaunchdJob = {
+export type StaleQuietCoreUpdateLaunchdJob = {
   label: string;
   pid?: number;
   lastExitStatus?: number;
 };
 
-function normalizeOpenClawUpdateLaunchdLabel(label: unknown): string | null {
+function normalizeQuietCoreUpdateLaunchdLabel(label: unknown): string | null {
   if (typeof label !== "string") {
     return null;
   }
@@ -88,7 +88,7 @@ function isCurrentGatewayLaunchdLabel(label: string, env: NodeJS.ProcessEnv): bo
   return Boolean(configuredLabel && label === configuredLabel);
 }
 
-function resolveCurrentOpenClawUpdateLaunchdJobLabel(
+function resolveCurrentQuietCoreUpdateLaunchdJobLabel(
   env: NodeJS.ProcessEnv = process.env,
 ): string | null {
   for (const label of [
@@ -97,7 +97,7 @@ function resolveCurrentOpenClawUpdateLaunchdJobLabel(
     env.XPC_SERVICE_NAME,
     env.QUIET_CORE_LAUNCHD_LABEL,
   ]) {
-    const normalized = normalizeOpenClawUpdateLaunchdLabel(label);
+    const normalized = normalizeQuietCoreUpdateLaunchdLabel(label);
     if (normalized) {
       if (isCurrentGatewayLaunchdLabel(normalized, env)) {
         continue;
@@ -339,10 +339,10 @@ async function execLaunchctl(
   return await execFileUtf8(file, fileArgs, isWindows ? { windowsHide: true } : {});
 }
 
-export function parseLaunchctlListOpenClawUpdateJobs(
+export function parseLaunchctlListQuietCoreUpdateJobs(
   output: string,
-): StaleOpenClawUpdateLaunchdJob[] {
-  const jobs: StaleOpenClawUpdateLaunchdJob[] = [];
+): StaleQuietCoreUpdateLaunchdJob[] {
+  const jobs: StaleQuietCoreUpdateLaunchdJob[] = [];
   for (const rawLine of output.split(/\r?\n/)) {
     const line = rawLine.trim();
     if (!line) {
@@ -350,7 +350,7 @@ export function parseLaunchctlListOpenClawUpdateJobs(
     }
     const parts = line.split(/\s+/);
     const [pidRaw, statusRaw, ...labelParts] = parts;
-    const label = normalizeOpenClawUpdateLaunchdLabel(labelParts.join(" "));
+    const label = normalizeQuietCoreUpdateLaunchdLabel(labelParts.join(" "));
     if (!label) {
       continue;
     }
@@ -365,9 +365,9 @@ export function parseLaunchctlListOpenClawUpdateJobs(
   return jobs.toSorted((a, b) => a.label.localeCompare(b.label));
 }
 
-export async function findStaleOpenClawUpdateLaunchdJobs(
+export async function findStaleQuietCoreUpdateLaunchdJobs(
   env: NodeJS.ProcessEnv = process.env,
-): Promise<StaleOpenClawUpdateLaunchdJob[]> {
+): Promise<StaleQuietCoreUpdateLaunchdJob[]> {
   if (process.platform !== "darwin") {
     return [];
   }
@@ -377,13 +377,13 @@ export async function findStaleOpenClawUpdateLaunchdJobs(
   }
   // Never report the active gateway label as stale even when a wrapper exposes
   // update-like launchd metadata through the current environment.
-  return parseLaunchctlListOpenClawUpdateJobs(result.stdout).filter(
+  return parseLaunchctlListQuietCoreUpdateJobs(result.stdout).filter(
     (job) => !isCurrentGatewayLaunchdLabel(job.label, env),
   );
 }
 
-export async function disableOpenClawUpdateLaunchdJob(label: string): Promise<boolean> {
-  const normalizedLabel = normalizeOpenClawUpdateLaunchdLabel(label);
+export async function disableQuietCoreUpdateLaunchdJob(label: string): Promise<boolean> {
+  const normalizedLabel = normalizeQuietCoreUpdateLaunchdLabel(label);
   if (process.platform !== "darwin" || !normalizedLabel) {
     return false;
   }
@@ -392,14 +392,14 @@ export async function disableOpenClawUpdateLaunchdJob(label: string): Promise<bo
   return result.code === 0;
 }
 
-export async function disableCurrentOpenClawUpdateLaunchdJob(
+export async function disableCurrentQuietCoreUpdateLaunchdJob(
   env: NodeJS.ProcessEnv = process.env,
 ): Promise<boolean> {
-  const label = resolveCurrentOpenClawUpdateLaunchdJobLabel(env);
+  const label = resolveCurrentQuietCoreUpdateLaunchdJobLabel(env);
   if (!label) {
     return false;
   }
-  return await disableOpenClawUpdateLaunchdJob(label);
+  return await disableQuietCoreUpdateLaunchdJob(label);
 }
 
 function parseGatewayPortFromProgramArguments(

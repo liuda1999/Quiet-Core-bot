@@ -11,7 +11,7 @@ import {
   HEARTBEAT_EXTERNAL_RUN_FAILURE_TEXT,
 } from "../auto-reply/reply/agent-runner-failure-copy.js";
 import { markReplyPayloadForSourceSuppressionDelivery } from "../auto-reply/types.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { getLastHeartbeatEvent, resetHeartbeatEventsForTest } from "./heartbeat-events.js";
 import { runHeartbeatOnce, type HeartbeatDeps } from "./heartbeat-runner.js";
 import { installHeartbeatRunnerTestRuntime } from "./heartbeat-runner.test-harness.js";
@@ -39,7 +39,7 @@ describe("runHeartbeatOnce heartbeat response tool", () => {
     modelRuntimeId?: string;
     model?: string;
     target?: "telegram" | "last";
-  }): OpenClawConfig {
+  }): QuietCoreConfig {
     return {
       agents: {
         defaults: {
@@ -70,7 +70,7 @@ describe("runHeartbeatOnce heartbeat response tool", () => {
         },
       },
       session: { store: params.storePath },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
   }
 
   function createDeps(params: {
@@ -87,7 +87,7 @@ describe("runHeartbeatOnce heartbeat response tool", () => {
 
   function expectTelegramSend(
     sendTelegram: ReturnType<typeof vi.fn>,
-    params: { text: string; cfg: OpenClawConfig },
+    params: { text: string; cfg: QuietCoreConfig },
   ) {
     expect(sendTelegram).toHaveBeenCalledTimes(1);
     expect(sendTelegram.mock.calls).toEqual([
@@ -162,7 +162,7 @@ describe("runHeartbeatOnce heartbeat response tool", () => {
       beforeSeed?: (params: {
         tmpDir: string;
         storePath: string;
-        cfg: OpenClawConfig;
+        cfg: QuietCoreConfig;
       }) => Promise<void>;
     } = {},
   ) {

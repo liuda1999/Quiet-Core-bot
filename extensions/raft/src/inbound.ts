@@ -102,7 +102,7 @@ export async function dispatchRaftWake(params: {
           dispatchReplyWithBufferedBlockDispatcher:
             channelRuntime.reply.dispatchReplyWithBufferedBlockDispatcher,
           // Raft's bridge only transports wake hints. The agent owns CLI delivery
-          // after it reads the pending Raft messages, so OpenClaw must not emit a
+          // after it reads the pending Raft messages, so QuietCore must not emit a
           // duplicate synthetic reply through the channel dispatcher.
           delivery: {
             deliver: async () => ({ visibleReplySent: false }),

@@ -7,7 +7,7 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { Worker } from "node:worker_threads";
 import { hashRuntimeConfigValue } from "../config/runtime-snapshot.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { toErrorObject } from "../infra/errors.js";
 import {
   listAgentIds,
@@ -67,7 +67,7 @@ type ProviderAuthWarmRuntimeAuthLookup = {
 };
 
 type ProviderAuthWarmWorkerRunner = (params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   runtimeAuthStores?: ProviderAuthWarmRuntimeAuthStore[];
   runtimeAuthLookups?: ProviderAuthWarmRuntimeAuthLookup[];
   omitFalseProviderAuth?: boolean;
@@ -79,13 +79,13 @@ type ProviderAuthWarmWorkerRunner = (params: {
 const PROVIDER_AUTH_WARM_WORKER_TIMEOUT_MS = 120_000;
 const PROVIDER_AUTH_WARM_CANCEL_POLL_MS = 25;
 
-const configFingerprintCache = new WeakMap<OpenClawConfig, string>();
+const configFingerprintCache = new WeakMap<QuietCoreConfig, string>();
 /** Clears process-current warmed provider auth state. */
 export { clearCurrentProviderAuthState };
 
 function resolvePreparedStateForCaller(params: {
   states: ReadonlyMap<string, PreparedProviderAuthState> | null;
-  cfg: OpenClawConfig | undefined;
+  cfg: QuietCoreConfig | undefined;
   callerAgentId: string | undefined;
 }): PreparedProviderAuthState | null {
   if (!params.states) {
@@ -101,7 +101,7 @@ function resolvePreparedStateForCaller(params: {
   return params.states.get(resolveDefaultAgentId(params.cfg)) ?? null;
 }
 
-function resolveProviderAuthConfigFingerprint(cfg: OpenClawConfig | undefined): string | null {
+function resolveProviderAuthConfigFingerprint(cfg: QuietCoreConfig | undefined): string | null {
   if (!cfg) {
     return null;
   }
@@ -118,7 +118,7 @@ function resolveProviderAuthConfigFingerprint(cfg: OpenClawConfig | undefined): 
 export async function hasAuthForModelProvider(params: {
   provider: string;
   modelApi?: string;
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   workspaceDir?: string;
   agentDir?: string;
   agentId?: string;
@@ -220,7 +220,7 @@ export async function hasAuthForModelProvider(params: {
 
 /** Creates a cached provider-auth checker bound to one agent/runtime context. */
 export function createProviderAuthChecker(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   workspaceDir?: string;
   agentDir?: string;
   agentId?: string;
@@ -275,7 +275,7 @@ function serializeProviderAuthStates(
 }
 
 function resolveProviderConfigApi(
-  cfg: OpenClawConfig | undefined,
+  cfg: QuietCoreConfig | undefined,
   provider: string,
 ): string | undefined {
   const providers = cfg?.models?.providers ?? {};
@@ -291,7 +291,7 @@ function resolveProviderConfigApi(
 }
 
 function shouldOmitFalsePreparedAuthForProcessSyntheticProvider(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   provider: string;
   runtimeAuthLookup: RuntimeProviderAuthLookup;
 }): boolean {
@@ -308,7 +308,7 @@ function shouldOmitFalsePreparedAuthForProcessSyntheticProvider(params: {
 
 /** Builds a provider auth snapshot for every configured agent. */
 export async function buildCurrentProviderAuthStateSnapshot(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   options: {
     isCancelled?: () => boolean;
     readOnlyAuthStore?: boolean;
@@ -456,7 +456,7 @@ function createProviderAuthWarmPresenceStore(store: AuthProfileStore): AuthProfi
 }
 
 function collectProviderAuthWarmRuntimeAuthStores(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
 ): ProviderAuthWarmRuntimeAuthStore[] {
   const entries: ProviderAuthWarmRuntimeAuthStore[] = [];
   const seen = new Set<string | undefined>();
@@ -482,7 +482,7 @@ function collectProviderAuthWarmRuntimeAuthStores(
   return entries;
 }
 
-function collectProviderAuthWarmRuntimeAuthLookups(cfg: OpenClawConfig): {
+function collectProviderAuthWarmRuntimeAuthLookups(cfg: QuietCoreConfig): {
   entries: ProviderAuthWarmRuntimeAuthLookup[];
   omitFalseProviderAuth: boolean;
 } {
@@ -502,7 +502,7 @@ function collectProviderAuthWarmRuntimeAuthLookups(cfg: OpenClawConfig): {
 }
 
 function runProviderAuthWarmWorker(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   runtimeAuthStores?: ProviderAuthWarmRuntimeAuthStore[];
   runtimeAuthLookups?: ProviderAuthWarmRuntimeAuthLookup[];
   omitFalseProviderAuth?: boolean;
@@ -606,7 +606,7 @@ function runProviderAuthWarmWorker(params: {
 
 /** Warms process-current provider auth state in a worker thread. */
 export async function warmCurrentProviderAuthStateOffMainThread(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   options: {
     isCancelled?: () => boolean;
     timeoutMs?: number;

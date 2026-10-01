@@ -1,6 +1,6 @@
 import Contacts
 import Foundation
-import OpenClawKit
+import QuietCoreKit
 
 final class ContactsService: ContactsServicing {
     private static var payloadKeys: [CNKeyDescriptor] {
@@ -14,7 +14,7 @@ final class ContactsService: ContactsServicing {
         ]
     }
 
-    func search(params: OpenClawContactsSearchParams) async throws -> OpenClawContactsSearchPayload {
+    func search(params: QuietCoreContactsSearchParams) async throws -> QuietCoreContactsSearchPayload {
         let store = try await Self.authorizedStore()
 
         let limit = max(1, min(params.limit ?? 25, 200))
@@ -36,10 +36,10 @@ final class ContactsService: ContactsServicing {
         let sliced = Array(contacts.prefix(limit))
         let payload = sliced.map { Self.payload(from: $0) }
 
-        return OpenClawContactsSearchPayload(contacts: payload)
+        return QuietCoreContactsSearchPayload(contacts: payload)
     }
 
-    func add(params: OpenClawContactsAddParams) async throws -> OpenClawContactsAddPayload {
+    func add(params: QuietCoreContactsAddParams) async throws -> QuietCoreContactsAddPayload {
         let store = try await Self.authorizedStore()
 
         let givenName = params.givenName?.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -64,7 +64,7 @@ final class ContactsService: ContactsServicing {
                 phoneNumbers: phoneNumbers,
                 emails: emails)
             {
-                return OpenClawContactsAddPayload(contact: Self.payload(from: existing))
+                return QuietCoreContactsAddPayload(contact: Self.payload(from: existing))
             }
         }
 
@@ -94,7 +94,7 @@ final class ContactsService: ContactsServicing {
             contact
         }
 
-        return OpenClawContactsAddPayload(contact: Self.payload(from: persisted))
+        return QuietCoreContactsAddPayload(contact: Self.payload(from: persisted))
     }
 
     private static func ensureAuthorization(status: CNAuthorizationStatus) async -> Bool {
@@ -191,8 +191,8 @@ final class ContactsService: ContactsServicing {
         return normalized.isEmpty ? trimmed : normalized
     }
 
-    private static func payload(from contact: CNContact) -> OpenClawContactPayload {
-        OpenClawContactPayload(
+    private static func payload(from contact: CNContact) -> QuietCoreContactPayload {
+        QuietCoreContactPayload(
             identifier: contact.identifier,
             displayName: CNContactFormatter.string(from: contact, style: .fullName)
                 ?? "\(contact.givenName) \(contact.familyName)".trimmingCharacters(in: .whitespacesAndNewlines),

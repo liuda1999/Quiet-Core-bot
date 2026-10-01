@@ -57,7 +57,7 @@ function isProcessAlive(pid: number): boolean {
   }
 }
 
-function writeStallingOpenClaw(
+function writeStallingQuietCore(
   root: string,
   options: {
     gatewayDescendantMarkerPath?: string;
@@ -112,7 +112,7 @@ function writeStallingOpenClaw(
   return scriptPath;
 }
 
-function writeLeakingStartupOpenClaw(root: string): string {
+function writeLeakingStartupQuietCore(root: string): string {
   const scriptPath = path.join(root, "fake-leaking-quiet-core-bot.mjs");
   fs.writeFileSync(
     scriptPath,
@@ -132,7 +132,7 @@ function writeLeakingStartupOpenClaw(root: string): string {
   return scriptPath;
 }
 
-function writeSignaledStartupOpenClaw(root: string): string {
+function writeSignaledStartupQuietCore(root: string): string {
   const scriptPath = path.join(root, "fake-signaled-quiet-core-bot.mjs");
   fs.writeFileSync(
     scriptPath,
@@ -155,7 +155,7 @@ function writeSignaledStartupOpenClaw(root: string): string {
   return scriptPath;
 }
 
-function writeNoisySecretsConfigureOpenClaw(root: string): string {
+function writeNoisySecretsConfigureQuietCore(root: string): string {
   const scriptPath = path.join(root, "fake-noisy-secrets-configure-quiet-core-bot.mjs");
   fs.writeFileSync(
     scriptPath,
@@ -176,7 +176,7 @@ function writeNoisySecretsConfigureOpenClaw(root: string): string {
 
 function runProofHarness(
   root: string,
-  fakeOpenClaw: string,
+  fakeQuietCore: string,
   mode: "start" | "startup-fails" | "status",
   envOverrides: NodeJS.ProcessEnv = {},
 ) {
@@ -185,7 +185,7 @@ function runProofHarness(
     encoding: "utf8",
     env: {
       ...process.env,
-      QUIET_CORE_ENTRY: fakeOpenClaw,
+      QUIET_CORE_ENTRY: fakeQuietCore,
       QUIET_CORE_SECRET_PROOF_READY_MS: "60",
       QUIET_CORE_SECRET_PROOF_RPC_MS: "1000",
       ...envOverrides,
@@ -207,7 +207,7 @@ describe("secret provider integration proof harness", () => {
     fs.writeFileSync(fakePnpm, "#!/usr/bin/env node\n", { mode: 0o755 });
     const proof = await import(`${pathToFileURL(proofScriptPath).href}?case=${Date.now()}`);
 
-    const command = await proof.resolveOpenClawCommand(
+    const command = await proof.resolveQuietCoreCommand(
       ["gateway", "status"],
       { ...process.env, QUIET_CORE_SECRET_PROOF_SENTINEL: "1" },
       {
@@ -225,8 +225,8 @@ describe("secret provider integration proof harness", () => {
 
   it("keeps stalled startup health probes inside the ready deadline", async () => {
     const root = makeTempDir();
-    const fakeOpenClaw = writeStallingOpenClaw(root);
-    const result = runProofHarness(root, fakeOpenClaw, "start");
+    const fakeQuietCore = writeStallingQuietCore(root);
+    const result = runProofHarness(root, fakeQuietCore, "start");
 
     expect(result.error).toBeUndefined();
     expect(result.status).toBe(0);
@@ -237,8 +237,8 @@ describe("secret provider integration proof harness", () => {
 
   it("fails fast when startup exits by signal", () => {
     const root = makeTempDir();
-    const fakeOpenClaw = writeSignaledStartupOpenClaw(root);
-    const result = runProofHarness(root, fakeOpenClaw, "start", {
+    const fakeQuietCore = writeSignaledStartupQuietCore(root);
+    const result = runProofHarness(root, fakeQuietCore, "start", {
       QUIET_CORE_SECRET_PROOF_READY_MS: "2000",
     });
 
@@ -252,10 +252,10 @@ describe("secret provider integration proof harness", () => {
   it("kills a stalled startup gateway before returning a readiness failure", async () => {
     const root = makeTempDir();
     const markerPath = path.join(root, "gateway-marker.txt");
-    const fakeOpenClaw = writeStallingOpenClaw(root, {
+    const fakeQuietCore = writeStallingQuietCore(root, {
       gatewayDescendantMarkerPath: markerPath,
     });
-    const result = runProofHarness(root, fakeOpenClaw, "start", {
+    const result = runProofHarness(root, fakeQuietCore, "start", {
       QUIET_CORE_SECRET_PROOF_TEARDOWN_GRACE_MS: "100",
     });
 
@@ -394,11 +394,11 @@ describe("secret provider integration proof harness", () => {
 
   it.runIf(process.platform !== "win32")("bounds captured PTY configure output", async () => {
     const root = makeTempDir();
-    const fakeOpenClaw = writeNoisySecretsConfigureOpenClaw(root);
+    const fakeQuietCore = writeNoisySecretsConfigureQuietCore(root);
     const previousLimit = process.env.QUIET_CORE_SECRET_PROOF_OUTPUT_BYTES;
     const previousEntry = process.env.QUIET_CORE_ENTRY;
     process.env.QUIET_CORE_SECRET_PROOF_OUTPUT_BYTES = "128";
-    process.env.QUIET_CORE_ENTRY = fakeOpenClaw;
+    process.env.QUIET_CORE_ENTRY = fakeQuietCore;
     try {
       const proof = await import(
         `${pathToFileURL(proofScriptPath).href}?case=pty-output-${Date.now()}`
@@ -408,7 +408,7 @@ describe("secret provider integration proof harness", () => {
         .runPtySecretsConfigurePreset({
           env: {
             ...process.env,
-            QUIET_CORE_ENTRY: fakeOpenClaw,
+            QUIET_CORE_ENTRY: fakeQuietCore,
           },
         })
         .catch((caught: unknown) => caught);
@@ -437,7 +437,7 @@ describe("secret provider integration proof harness", () => {
     "cleans PTY configure descendants before timeout failure",
     async () => {
       const root = makeTempDir();
-      const fakeOpenClaw = path.join(root, "fake-quiet-core-bot-pty-timeout.mjs");
+      const fakeQuietCore = path.join(root, "fake-quiet-core-bot-pty-timeout.mjs");
       const descendantPidPath = path.join(root, "descendant.pid");
       const readyPath = path.join(root, "ready");
       let descendantPid = 0;
@@ -450,7 +450,7 @@ describe("secret provider integration proof harness", () => {
         "setInterval(() => {}, 1000);",
       ].join("\n");
       fs.writeFileSync(
-        fakeOpenClaw,
+        fakeQuietCore,
         [
           "#!/usr/bin/env node",
           "import childProcess from 'node:child_process';",
@@ -465,7 +465,7 @@ describe("secret provider integration proof harness", () => {
         ].join("\n"),
         { mode: 0o755 },
       );
-      process.env.QUIET_CORE_ENTRY = fakeOpenClaw;
+      process.env.QUIET_CORE_ENTRY = fakeQuietCore;
       const proof = await import(
         `${pathToFileURL(proofScriptPath).href}?case=pty-timeout-${Date.now()}`
       );
@@ -475,7 +475,7 @@ describe("secret provider integration proof harness", () => {
           {
             env: {
               ...process.env,
-              QUIET_CORE_ENTRY: fakeOpenClaw,
+              QUIET_CORE_ENTRY: fakeQuietCore,
             },
           },
           { timeoutKillGraceMs: 50, timeoutMs: 2_000 },
@@ -956,8 +956,8 @@ describe("secret provider integration proof harness", () => {
 
   it("detects startup secret leaks after the retained output cap", () => {
     const root = makeTempDir();
-    const fakeOpenClaw = writeLeakingStartupOpenClaw(root);
-    const result = runProofHarness(root, fakeOpenClaw, "startup-fails", {
+    const fakeQuietCore = writeLeakingStartupQuietCore(root);
+    const result = runProofHarness(root, fakeQuietCore, "startup-fails", {
       QUIET_CORE_SECRET_PROOF_OUTPUT_BYTES: "128",
     });
 
@@ -970,8 +970,8 @@ describe("secret provider integration proof harness", () => {
 
   it("keeps stalled managed status probes inside the ready deadline", async () => {
     const root = makeTempDir();
-    const fakeOpenClaw = writeStallingOpenClaw(root);
-    const result = runProofHarness(root, fakeOpenClaw, "status");
+    const fakeQuietCore = writeStallingQuietCore(root);
+    const result = runProofHarness(root, fakeQuietCore, "status");
 
     expect(result.error).toBeUndefined();
     expect(result.status).toBe(0);

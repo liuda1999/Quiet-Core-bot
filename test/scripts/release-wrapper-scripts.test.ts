@@ -29,7 +29,7 @@ describe("release wrapper scripts", () => {
     }
   });
 
-  it("loads the OpenClaw ClawHub plan CLI and validates required arguments before planning", () => {
+  it("loads the QuietCore ClawHub plan CLI and validates required arguments before planning", () => {
     const result = runTsxScript("scripts/quiet-core-bot-release-clawhub-plan.ts", [
       "--release-tag",
       "v2026.6.21-beta.1",

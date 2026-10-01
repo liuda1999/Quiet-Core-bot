@@ -5,7 +5,7 @@ import path from "node:path";
 import { bundledDistPluginFile } from "quiet-core-bot/plugin-sdk/test-fixtures";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { PluginInstallRecord } from "../config/types.plugins.js";
-import { discoverOpenClawPlugins } from "./discovery.js";
+import { discoverQuietCorePlugins } from "./discovery.js";
 import { listBuiltRuntimeEntryCandidates } from "./package-entrypoints.js";
 import {
   cleanupTrackedTempDirs,
@@ -40,7 +40,7 @@ function countMatching<T>(items: readonly T[], predicate: (item: T) => boolean):
   return count;
 }
 
-function withOpenClawPackageArgv<T>(packageRoot: string, fn: () => T): T {
+function withQuietCorePackageArgv<T>(packageRoot: string, fn: () => T): T {
   mkdirSafe(path.join(packageRoot, "bin"));
   fs.writeFileSync(path.join(packageRoot, "package.json"), '{"name":"quiet-core-bot"}\n', "utf-8");
   const originalArgv = process.argv;
@@ -123,13 +123,13 @@ function buildBundledDiscoveryEnv(stateDir: string): NodeJS.ProcessEnv {
 
 async function discoverWithStateDir(
   stateDir: string,
-  params: Parameters<typeof discoverOpenClawPlugins>[0],
+  params: Parameters<typeof discoverQuietCorePlugins>[0],
 ) {
-  return discoverOpenClawPlugins({ ...params, env: buildDiscoveryEnv(stateDir) });
+  return discoverQuietCorePlugins({ ...params, env: buildDiscoveryEnv(stateDir) });
 }
 
-function discoverWithEnv(params: Parameters<typeof discoverOpenClawPlugins>[0]) {
-  return discoverOpenClawPlugins(params);
+function discoverWithEnv(params: Parameters<typeof discoverQuietCorePlugins>[0]) {
+  return discoverQuietCorePlugins(params);
 }
 
 function writePluginPackageManifest(params: {
@@ -368,7 +368,7 @@ function expectCandidateFields(
 }
 
 function expectCandidatePresence(
-  result: Awaited<ReturnType<typeof discoverOpenClawPlugins>>,
+  result: Awaited<ReturnType<typeof discoverQuietCorePlugins>>,
   params: { present?: readonly string[]; absent?: readonly string[] },
 ) {
   const ids = result.candidates.map((candidate) => candidate.idHint);
@@ -466,7 +466,7 @@ afterEach(() => {
   cleanupTrackedTempDirs(tempDirs);
 });
 
-describe("discoverOpenClawPlugins", () => {
+describe("discoverQuietCorePlugins", () => {
   it("discovers global and workspace extensions", async () => {
     const stateDir = makeTempDir();
     const workspaceDir = path.join(stateDir, "workspace");
@@ -641,7 +641,7 @@ describe("discoverOpenClawPlugins", () => {
       packageName: "@quiet-core/stray-workspace-plugin",
     });
 
-    const result = discoverOpenClawPlugins({
+    const result = discoverQuietCorePlugins({
       workspaceDir,
       env: buildDiscoveryEnv(stateDir),
     });
@@ -663,7 +663,7 @@ describe("discoverOpenClawPlugins", () => {
       pluginId: "tilde-workspace",
     });
 
-    const result = discoverOpenClawPlugins({
+    const result = discoverQuietCorePlugins({
       workspaceDir: "~/workspace",
       env: {
         ...buildDiscoveryEnv(stateDir),
@@ -721,8 +721,8 @@ describe("discoverOpenClawPlugins", () => {
     );
     fs.writeFileSync(path.join(extensionDir, "quiet-core-bot.plugin.json"), '{"id":"twitch"}\n', "utf-8");
 
-    const result = withOpenClawPackageArgv(packageRoot, () =>
-      discoverOpenClawPlugins({ env: buildDiscoveryEnv(stateDir) }),
+    const result = withQuietCorePackageArgv(packageRoot, () =>
+      discoverQuietCorePlugins({ env: buildDiscoveryEnv(stateDir) }),
     );
 
     expect(result.diagnostics.map((entry) => entry.message).join("\n")).not.toContain(
@@ -750,8 +750,8 @@ describe("discoverOpenClawPlugins", () => {
       pluginId: "real-plugin",
     });
 
-    const { candidates, diagnostics } = withOpenClawPackageArgv(packageRoot, () =>
-      discoverOpenClawPlugins({
+    const { candidates, diagnostics } = withQuietCorePackageArgv(packageRoot, () =>
+      discoverQuietCorePlugins({
         env: {
           ...buildDiscoveryEnv(stateDir),
           QUIET_CORE_DISABLE_BUNDLED_PLUGINS: undefined,
@@ -773,8 +773,8 @@ describe("discoverOpenClawPlugins", () => {
     writePluginManifest({ pluginDir: bundledPluginDir, id: "feishu" });
     writePluginEntry(path.join(bundledPluginDir, "index.js"));
 
-    const { candidates, diagnostics } = withOpenClawPackageArgv(packageRoot, () =>
-      discoverOpenClawPlugins({
+    const { candidates, diagnostics } = withQuietCorePackageArgv(packageRoot, () =>
+      discoverQuietCorePlugins({
         extraPaths: [bundledPluginDir],
         env: {
           ...buildDiscoveryEnv(stateDir),
@@ -809,8 +809,8 @@ describe("discoverOpenClawPlugins", () => {
     writePluginEntry(path.join(bundledPluginDir, "index.js"));
     writePluginEntry(path.join(legacyPluginDir, "index.js"));
 
-    const { candidates, diagnostics } = withOpenClawPackageArgv(packageRoot, () =>
-      discoverOpenClawPlugins({
+    const { candidates, diagnostics } = withQuietCorePackageArgv(packageRoot, () =>
+      discoverQuietCorePlugins({
         extraPaths: [legacyPluginDir],
         env: {
           ...buildDiscoveryEnv(stateDir),
@@ -852,8 +852,8 @@ describe("discoverOpenClawPlugins", () => {
     const sourceEntryPath = path.join(sourcePluginDir, "src", "index.ts");
     const bundledEntryPath = path.join(bundledPluginDir, "index.js");
 
-    const { candidates, diagnostics } = withOpenClawPackageArgv(packageRoot, () =>
-      discoverOpenClawPlugins({
+    const { candidates, diagnostics } = withQuietCorePackageArgv(packageRoot, () =>
+      discoverQuietCorePlugins({
         env: {
           ...buildDiscoveryEnv(stateDir),
           QUIET_CORE_DISABLE_BUNDLED_PLUGINS: undefined,
@@ -905,8 +905,8 @@ describe("discoverOpenClawPlugins", () => {
     mockLinuxMountInfo([]);
     const bundledEntryPath = path.join(bundledPluginDir, "index.js");
 
-    const { candidates, diagnostics } = withOpenClawPackageArgv(packageRoot, () =>
-      discoverOpenClawPlugins({
+    const { candidates, diagnostics } = withQuietCorePackageArgv(packageRoot, () =>
+      discoverQuietCorePlugins({
         env: {
           ...buildDiscoveryEnv(stateDir),
           QUIET_CORE_DISABLE_BUNDLED_PLUGINS: undefined,
@@ -1223,7 +1223,7 @@ describe("discoverOpenClawPlugins", () => {
     writePluginManifest({ pluginDir: installedPluginDir, id: "discord" });
     writePluginEntry(path.join(installedPluginDir, "src", "index.ts"));
 
-    const result = discoverOpenClawPlugins({
+    const result = discoverQuietCorePlugins({
       env: buildDiscoveryEnvWithOverrides(stateDir, {
         QUIET_CORE_BUNDLED_PLUGINS_DIR: bundledDir,
       }),
@@ -1269,7 +1269,7 @@ describe("discoverOpenClawPlugins", () => {
     writePluginEntry(path.join(packageDir, "dist", "two.js"));
 
     const realpathSync = vi.spyOn(fs, "realpathSync");
-    const { candidates } = discoverOpenClawPlugins({
+    const { candidates } = discoverQuietCorePlugins({
       env: buildDiscoveryEnv(stateDir),
     });
 
@@ -1300,7 +1300,7 @@ describe("discoverOpenClawPlugins", () => {
       const canonicalPackageDir = fs.realpathSync(realPackageDir);
 
       const realpathSync = vi.spyOn(fs, "realpathSync");
-      const { candidates } = discoverOpenClawPlugins({
+      const { candidates } = discoverQuietCorePlugins({
         extraPaths: [linkedPackageDir, canonicalPackageDir],
         env: buildDiscoveryEnv(stateDir),
       });
@@ -1549,7 +1549,7 @@ describe("discoverOpenClawPlugins", () => {
     writePluginEntry(path.join(pluginDir, "src", "index.ts"));
     writePluginEntry(path.join(pluginDir, "dist", "index.js"));
 
-    const { candidates } = discoverOpenClawPlugins({
+    const { candidates } = discoverQuietCorePlugins({
       workspaceDir,
       env: buildDiscoveryEnv(stateDir),
     });
@@ -1569,7 +1569,7 @@ describe("discoverOpenClawPlugins", () => {
       compatPluginApi: ">=2026.5.27-beta.2",
     });
 
-    const { candidates, diagnostics } = discoverOpenClawPlugins({
+    const { candidates, diagnostics } = discoverQuietCorePlugins({
       env: buildDiscoveryEnvWithOverrides(stateDir, {
         QUIET_CORE_COMPATIBILITY_HOST_VERSION: "2026.5.27-beta.1",
       }),
@@ -1605,7 +1605,7 @@ describe("discoverOpenClawPlugins", () => {
     );
     writePluginEntry(path.join(pluginDir, "index.js"));
 
-    const { candidates, diagnostics } = discoverOpenClawPlugins({
+    const { candidates, diagnostics } = discoverQuietCorePlugins({
       env: buildDiscoveryEnvWithOverrides(stateDir, {
         QUIET_CORE_COMPATIBILITY_HOST_VERSION: "2026.5.27",
       }),
@@ -1639,7 +1639,7 @@ describe("discoverOpenClawPlugins", () => {
       "utf-8",
     );
 
-    const { candidates, diagnostics } = discoverOpenClawPlugins({
+    const { candidates, diagnostics } = discoverQuietCorePlugins({
       env: buildDiscoveryEnvWithOverrides(stateDir, {
         QUIET_CORE_COMPATIBILITY_HOST_VERSION: "2026.5.27-beta.1",
       }),
@@ -1667,7 +1667,7 @@ describe("discoverOpenClawPlugins", () => {
       compatPluginApi: ">=2026.5.27-beta.1",
     });
 
-    const { candidates, diagnostics } = discoverOpenClawPlugins({
+    const { candidates, diagnostics } = discoverQuietCorePlugins({
       env: buildDiscoveryEnvWithOverrides(stateDir, {
         QUIET_CORE_COMPATIBILITY_HOST_VERSION: "2026.5.27-beta.1",
       }),
@@ -1696,7 +1696,7 @@ describe("discoverOpenClawPlugins", () => {
     writePluginManifest({ pluginDir, id: "downloadable" });
     writePluginEntry(path.join(pluginDir, "index.ts"));
 
-    const { candidates } = discoverOpenClawPlugins({
+    const { candidates } = discoverQuietCorePlugins({
       env: buildDiscoveryEnvWithOverrides(stateDir, {
         QUIET_CORE_BUNDLED_PLUGINS_DIR: bundledDir,
       }),
@@ -1723,7 +1723,7 @@ describe("discoverOpenClawPlugins", () => {
     writePluginManifest({ pluginDir, id: "downloadable" });
     writePluginEntry(path.join(pluginDir, "index.js"));
 
-    const { candidates, diagnostics } = discoverOpenClawPlugins({
+    const { candidates, diagnostics } = discoverQuietCorePlugins({
       env: buildDiscoveryEnvWithOverrides(stateDir, {
         QUIET_CORE_BUNDLED_PLUGINS_DIR: bundledDir,
       }),
@@ -1779,7 +1779,7 @@ describe("discoverOpenClawPlugins", () => {
     writePluginManifest({ pluginDir: sourceOnlyPluginDir, id: "downloadable" });
     writePluginEntry(path.join(sourceOnlyPluginDir, "index.ts"));
 
-    const { candidates } = discoverOpenClawPlugins({
+    const { candidates } = discoverQuietCorePlugins({
       env: buildDiscoveryEnvWithOverrides(stateDir, {
         QUIET_CORE_BUNDLED_PLUGINS_DIR: bundledDir,
       }),
@@ -1872,7 +1872,7 @@ describe("discoverOpenClawPlugins", () => {
       "utf-8",
     );
 
-    const { candidates } = discoverOpenClawPlugins({
+    const { candidates } = discoverQuietCorePlugins({
       workspaceDir,
       env: buildDiscoveryEnv(stateDir),
     });
@@ -2314,8 +2314,8 @@ describe("discoverOpenClawPlugins", () => {
       fs.writeFileSync(path.join(packDir, "index.ts"), "export default function () {}", "utf-8");
       fs.chmodSync(packDir, 0o777);
 
-      const result = withOpenClawPackageArgv(packageRoot, () =>
-        discoverOpenClawPlugins({
+      const result = withQuietCorePackageArgv(packageRoot, () =>
+        discoverQuietCorePlugins({
           env: { ...process.env, ...buildBundledDiscoveryEnv(stateDir) },
         }),
       );
@@ -2368,7 +2368,7 @@ describe("discoverOpenClawPlugins", () => {
     fs.chmodSync(blockedDir, 0o777);
 
     try {
-      const result = discoverOpenClawPlugins({
+      const result = discoverQuietCorePlugins({
         env: {
           ...buildDiscoveryEnv(stateDir),
           QUIET_CORE_PLUGINS_PATHS: blockedDir,
@@ -2396,7 +2396,7 @@ describe("discoverOpenClawPlugins", () => {
       fs.chmodSync(pluginDir, 0o777);
 
       try {
-        const result = discoverOpenClawPlugins({
+        const result = discoverQuietCorePlugins({
           extraPaths: [pluginDir],
           env: {
             ...buildDiscoveryEnv(stateDir),
@@ -2471,7 +2471,7 @@ describe("discoverOpenClawPlugins", () => {
       QUIET_CORE_DISABLE_BUNDLED_PLUGINS: undefined,
       QUIET_CORE_BUNDLED_PLUGINS_DIR: bundledDir,
     };
-    const first = withOpenClawPackageArgv(packageRoot, () =>
+    const first = withQuietCorePackageArgv(packageRoot, () =>
       discoverWithEnv({ workspaceDir: workspaceA, env }),
     );
     expectCandidatePresence(first, {
@@ -2479,7 +2479,7 @@ describe("discoverOpenClawPlugins", () => {
       absent: ["workspace-b-plugin"],
     });
 
-    const second = withOpenClawPackageArgv(packageRoot, () =>
+    const second = withQuietCorePackageArgv(packageRoot, () =>
       discoverWithEnv({ workspaceDir: workspaceB, env }),
     );
     expectCandidatePresence(second, {

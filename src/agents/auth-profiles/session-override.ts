@@ -4,7 +4,7 @@
  * across new sessions, compactions, provider changes, and cooldowns.
  */
 import type { SessionEntry } from "../../config/sessions/types.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { createLazyImportLoader } from "../../shared/lazy-promise.js";
 import {
   isConfiguredAwsSdkAuthProfileForProvider,
@@ -27,7 +27,7 @@ function loadSessionAccessor() {
 // Current session overrides are only valid when the selected provider can use
 // that profile, including configured aws-sdk profiles without stored secrets.
 function isProfileForProvider(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   providers: readonly string[];
   profileId: string;
   store: ReturnType<typeof ensureAuthProfileStore>;
@@ -94,7 +94,7 @@ export async function clearSessionAuthProfileOverride(params: {
 
 /** Resolves and optionally rotates the session auth-profile override. */
 export async function resolveSessionAuthProfileOverride(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   provider: string;
   agentDir: string;
   sessionEntry?: SessionEntry;

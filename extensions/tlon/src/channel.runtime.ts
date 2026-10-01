@@ -2,7 +2,7 @@
 import crypto from "node:crypto";
 import type { ChannelAccountSnapshot } from "quiet-core-bot/plugin-sdk/channel-contract";
 import type { ChannelOutboundAdapter } from "quiet-core-bot/plugin-sdk/channel-send-result";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import type { ChannelPlugin } from "quiet-core-bot/plugin-sdk/core";
 import { monitorTlonProvider } from "./monitor/index.js";
 import { tlonSetupWizard } from "./setup-surface.js";
@@ -92,7 +92,7 @@ async function createHttpPokeApi(params: {
 }
 
 function resolveOutboundContext(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   accountId?: string | null;
   to: string;
 }) {

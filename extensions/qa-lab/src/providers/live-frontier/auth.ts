@@ -1,5 +1,5 @@
 // Qa Lab plugin module implements auth behavior.
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import {
   applyAuthProfileConfig,
   coerceSecretRef,
@@ -57,14 +57,14 @@ function isQaLiveOfficialOpenAiBaseUrl(baseUrl: unknown): boolean {
   }
 }
 
-function qaLiveOpenAiUsesCodexByDefault(cfg: OpenClawConfig): boolean {
+function qaLiveOpenAiUsesCodexByDefault(cfg: QuietCoreConfig): boolean {
   return isQaLiveOfficialOpenAiBaseUrl(
     resolveQaLiveProviderConfig({ cfg, providerId: "openai" })?.baseUrl,
   );
 }
 
 function expandQaLiveApiKeyProviderIds(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   providerIds: readonly string[];
 }) {
   const expanded = new Set(normalizeQaLiveProviderIds(params.providerIds));
@@ -77,7 +77,7 @@ function expandQaLiveApiKeyProviderIds(params: {
 function resolveQaLiveEnvApiKey(params: {
   providerId: string;
   env: NodeJS.ProcessEnv;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
 }) {
   const resolved = resolveEnvApiKey(params.providerId, params.env, { config: params.cfg });
   if (resolved?.apiKey) {
@@ -95,7 +95,7 @@ function resolveQaLiveEnvApiKey(params: {
 function resolveQaLiveConfiguredApiKey(params: {
   providerId: string;
   env: NodeJS.ProcessEnv;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
 }) {
   const providerConfig = resolveQaLiveProviderConfig(params);
   const apiKey = providerConfig?.apiKey;
@@ -129,12 +129,12 @@ function resolveQaLiveConfiguredApiKey(params: {
 function resolveQaLiveApiKey(params: {
   providerId: string;
   env: NodeJS.ProcessEnv;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
 }) {
   return resolveQaLiveEnvApiKey(params) ?? resolveQaLiveConfiguredApiKey(params);
 }
 
-function resolveQaLiveProviderConfig(params: { cfg: OpenClawConfig; providerId: string }) {
+function resolveQaLiveProviderConfig(params: { cfg: QuietCoreConfig; providerId: string }) {
   const providers = params.cfg.models?.providers;
   if (!providers) {
     return undefined;
@@ -145,12 +145,12 @@ function resolveQaLiveProviderConfig(params: { cfg: OpenClawConfig; providerId: 
   );
 }
 
-function hasQaLiveStagedApiKeyProfile(params: { cfg: OpenClawConfig; providerId: string }) {
+function hasQaLiveStagedApiKeyProfile(params: { cfg: QuietCoreConfig; providerId: string }) {
   return Boolean(params.cfg.auth?.profiles?.[buildQaLiveApiKeyProfileId(params.providerId)]);
 }
 
 function qaLiveRequiresCodexAuth(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   providerIds: readonly string[];
   env: NodeJS.ProcessEnv;
 }) {
@@ -188,10 +188,10 @@ function resolveQaLiveAnthropicSetupToken(env: NodeJS.ProcessEnv = process.env) 
 }
 
 export async function stageQaLiveAnthropicSetupToken(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   stateDir: string;
   env?: NodeJS.ProcessEnv;
-}): Promise<OpenClawConfig> {
+}): Promise<QuietCoreConfig> {
   const resolved = resolveQaLiveAnthropicSetupToken(params.env);
   if (!resolved) {
     return params.cfg;
@@ -215,12 +215,12 @@ export async function stageQaLiveAnthropicSetupToken(params: {
 }
 
 export async function stageQaLiveApiKeyProfiles(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   stateDir: string;
   providerIds: readonly string[];
   env?: NodeJS.ProcessEnv;
   agentIds?: readonly string[];
-}): Promise<OpenClawConfig> {
+}): Promise<QuietCoreConfig> {
   const env = params.env ?? process.env;
   const providerIds = uniqueStrings(normalizeStringEntries(params.providerIds)).toSorted();
   const profiles: Record<
@@ -269,7 +269,7 @@ export async function stageQaLiveApiKeyProfiles(params: {
 }
 
 export function assertQaLiveCodexAuthAvailable(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   providerIds: readonly string[];
   env?: NodeJS.ProcessEnv;
   readCodexCredentials?: typeof readCodexCliCredentialsCached;
@@ -298,7 +298,7 @@ export function assertQaLiveCodexAuthAvailable(params: {
     [
       "QA live-frontier cannot run Codex-backed OpenAI models inside an isolated QA agent because no portable Codex auth is available.",
       "Set OPENAI_API_KEY or QUIET_CORE_LIVE_OPENAI_KEY for an API-key fallback, or set CODEX_HOME to a logged-in Codex CLI home.",
-      "Host OpenClaw OAuth refresh profiles are not copied into QA temp stores.",
+      "Host QuietCore OAuth refresh profiles are not copied into QA temp stores.",
     ].join(" "),
   );
 }

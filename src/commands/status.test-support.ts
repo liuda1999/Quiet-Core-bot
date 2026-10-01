@@ -74,7 +74,7 @@ export const baseStatusOverviewScanFields = {
 const baseStatusGatewayService = {
   label: "LaunchAgent",
   installed: true,
-  managedByOpenClaw: true,
+  managedByQuietCore: true,
   loadedText: "loaded",
   runtimeShort: "running",
 };

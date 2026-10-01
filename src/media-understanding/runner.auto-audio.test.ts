@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.js";
+import type { QuietCoreConfig } from "../config/types.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import { clearMediaUnderstandingBinaryCacheForTests, runCapability } from "./runner.js";
 import { withAudioFixture } from "./runner.test-utils.js";
@@ -40,7 +40,7 @@ function createOpenAiAudioProvider(
   });
 }
 
-function createOpenAiAudioCfg(extra?: Partial<OpenClawConfig>): OpenClawConfig {
+function createOpenAiAudioCfg(extra?: Partial<QuietCoreConfig>): QuietCoreConfig {
   return {
     models: {
       providers: {
@@ -51,7 +51,7 @@ function createOpenAiAudioCfg(extra?: Partial<OpenClawConfig>): OpenClawConfig {
       },
     },
     ...extra,
-  } as unknown as OpenClawConfig;
+  } as unknown as QuietCoreConfig;
 }
 
 async function createMockExecutable(dir: string, name: string) {
@@ -62,7 +62,7 @@ async function createMockExecutable(dir: string, name: string) {
 
 async function runAutoAudioCase(params: {
   transcribeAudio: (req: AudioTranscriptionRequest) => Promise<{ text: string; model: string }>;
-  cfgExtra?: Partial<OpenClawConfig>;
+  cfgExtra?: Partial<QuietCoreConfig>;
 }) {
   let runResult: Awaited<ReturnType<typeof runCapability>> | undefined;
   await withAudioFixture("quiet-core-bot-auto-audio", async ({ ctx, media, cache }) => {
@@ -147,7 +147,7 @@ describe("runCapability auto audio entries", () => {
                 },
               },
             },
-          } as unknown as OpenClawConfig,
+          } as unknown as QuietCoreConfig,
           ctx,
           attachments: cache,
           media,
@@ -213,7 +213,7 @@ describe("runCapability auto audio entries", () => {
               },
             },
           },
-        } as unknown as OpenClawConfig,
+        } as unknown as QuietCoreConfig,
         ctx,
         attachments: cache,
         media,
@@ -263,7 +263,7 @@ describe("runCapability auto audio entries", () => {
             },
           },
         },
-      } as unknown as OpenClawConfig;
+      } as unknown as QuietCoreConfig;
 
       runResult = await runCapability({
         capability: "audio",
@@ -392,7 +392,7 @@ describe("runCapability auto audio entries", () => {
             },
           },
         },
-      } as Partial<OpenClawConfig>,
+      } as Partial<QuietCoreConfig>,
     });
 
     expect(requireCapabilityOutput(result, 0).text).toBe("ok");
@@ -450,7 +450,7 @@ describe("runCapability auto audio entries", () => {
                   },
                 },
               },
-            } as unknown as OpenClawConfig;
+            } as unknown as QuietCoreConfig;
 
             runResult = await runCapability({
               capability: "audio",

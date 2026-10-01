@@ -1,7 +1,7 @@
 /**
  * Shared run helpers for retry limits, model reporting, and final text.
  */
-import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../config/types.quiet-core-bot.js";
 import { generateSecureToken } from "../../../infra/secure-random.js";
 import type { AssistantMessage } from "../../../llm/types.js";
 import { extractAssistantTextForPhase } from "../../../shared/chat-message-content.js";
@@ -46,15 +46,15 @@ export const MAX_SAME_MODEL_RATE_LIMIT_RETRIES = 3;
 const SAME_MODEL_RATE_LIMIT_BACKOFF_STEP_MS = 10_000;
 const SAME_MODEL_RATE_LIMIT_MAX_BACKOFF_MS = 60_000;
 
-export function resolveOverloadFailoverBackoffMs(cfg?: OpenClawConfig): number {
+export function resolveOverloadFailoverBackoffMs(cfg?: QuietCoreConfig): number {
   return cfg?.auth?.cooldowns?.overloadedBackoffMs ?? DEFAULT_OVERLOAD_FAILOVER_BACKOFF_MS;
 }
 
-export function resolveOverloadProfileRotationLimit(cfg?: OpenClawConfig): number {
+export function resolveOverloadProfileRotationLimit(cfg?: QuietCoreConfig): number {
   return cfg?.auth?.cooldowns?.overloadedProfileRotations ?? DEFAULT_MAX_OVERLOAD_PROFILE_ROTATIONS;
 }
 
-export function resolveRateLimitProfileRotationLimit(cfg?: OpenClawConfig): number {
+export function resolveRateLimitProfileRotationLimit(cfg?: QuietCoreConfig): number {
   return (
     cfg?.auth?.cooldowns?.rateLimitedProfileRotations ?? DEFAULT_MAX_RATE_LIMIT_PROFILE_ROTATIONS
   );
@@ -111,7 +111,7 @@ const MAX_RUN_RETRY_ITERATIONS = 160;
 // Defensive guard for the outer run loop across all retry branches.
 export function resolveMaxRunRetryIterations(
   profileCandidateCount: number,
-  cfg?: OpenClawConfig,
+  cfg?: QuietCoreConfig,
   agentId?: string,
 ): number {
   const configRetries =

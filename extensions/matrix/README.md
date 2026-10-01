@@ -1,11 +1,11 @@
-# OpenClaw Matrix
+# QuietCore Matrix
 
-Official OpenClaw channel plugin for Matrix rooms and direct messages.
+Official QuietCore channel plugin for Matrix rooms and direct messages.
 
-Install from OpenClaw:
+Install from QuietCore:
 
 ```bash
 quiet-core-bot plugin add @quiet-core/matrix
 ```
 
-Configure the Matrix homeserver and bot credentials in OpenClaw. The plugin lets agents join configured rooms, receive messages, and reply through Matrix.
+Configure the Matrix homeserver and bot credentials in QuietCore. The plugin lets agents join configured rooms, receive messages, and reply through Matrix.

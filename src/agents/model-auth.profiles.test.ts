@@ -4,9 +4,9 @@ import os from "node:os";
 import path from "node:path";
 import type { Model } from "quiet-core-bot/plugin-sdk/llm";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { withEnvAsync } from "../test-utils/env.js";
-import { withOpenClawTestState } from "../test-utils/quiet-core-bot-test-state.js";
+import { withQuietCoreTestState } from "../test-utils/quiet-core-bot-test-state.js";
 import {
   clearRuntimeAuthProfileStoreSnapshots,
   ensureAuthProfileStore,
@@ -152,7 +152,7 @@ vi.mock("./model-auth-env-vars.js", () => {
     bedrock: "amazon-bedrock",
     "aws-bedrock": "amazon-bedrock",
   };
-  const resolveMockProviderAuthEvidence = (params?: { config?: OpenClawConfig }) => {
+  const resolveMockProviderAuthEvidence = (params?: { config?: QuietCoreConfig }) => {
     const evidence = {
       "google-vertex": [
         {
@@ -186,7 +186,7 @@ vi.mock("./model-auth-env-vars.js", () => {
   };
   return {
     listKnownProviderEnvApiKeyNames: () => [...new Set(Object.values(candidates).flat())],
-    resolveProviderEnvAuthLookupMaps: (params?: { config?: OpenClawConfig }) => ({
+    resolveProviderEnvAuthLookupMaps: (params?: { config?: QuietCoreConfig }) => ({
       aliasMap,
       envCandidateMap: candidates,
       authEvidenceMap: resolveMockProviderAuthEvidence(params),
@@ -370,7 +370,7 @@ function buildDemoLocalStore(keys: string[]) {
   };
 }
 
-function buildDemoLocalProviderCfg(apiKey: string): OpenClawConfig {
+function buildDemoLocalProviderCfg(apiKey: string): QuietCoreConfig {
   return {
     models: {
       providers: {
@@ -401,7 +401,7 @@ async function resolveDemoLocalApiKey(params: {
 
 describe("getApiKeyForModel", () => {
   it("reads oauth auth-profiles entries from auth-profiles.json via explicit profile", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-oauth-",
@@ -512,7 +512,7 @@ describe("getApiKeyForModel", () => {
   });
 
   it("uses the config default agent dir when resolving provider profiles", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-auth-agent-dir-",
@@ -549,7 +549,7 @@ describe("getApiKeyForModel", () => {
           "configured",
         );
 
-        const cfg: OpenClawConfig = {
+        const cfg: QuietCoreConfig = {
           agents: {
             list: [
               {
@@ -569,7 +569,7 @@ describe("getApiKeyForModel", () => {
   });
 
   it("reports the config default agent dir when provider auth is missing", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-auth-missing-agent-dir-",
@@ -580,7 +580,7 @@ describe("getApiKeyForModel", () => {
       },
       async (state) => {
         const configuredAgentDir = state.agentDir("configured");
-        const cfg: OpenClawConfig = {
+        const cfg: QuietCoreConfig = {
           agents: {
             list: [
               {
@@ -600,7 +600,7 @@ describe("getApiKeyForModel", () => {
   });
 
   it("uses OpenAI OAuth when it is configured for the provider", async () => {
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-auth-",
@@ -641,7 +641,7 @@ describe("getApiKeyForModel", () => {
       expires: createUsableOAuthExpiry(),
     });
 
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-auth-scope-",
@@ -673,7 +673,7 @@ describe("getApiKeyForModel", () => {
       expires: createUsableOAuthExpiry(),
     });
 
-    await withOpenClawTestState(
+    await withQuietCoreTestState(
       {
         layout: "state-only",
         prefix: "quiet-core-bot-auth-claude-cli-",
@@ -781,7 +781,7 @@ describe("getApiKeyForModel", () => {
     const credentialsPath = path.join(tempDir, "credentials.json");
     await fs.writeFile(credentialsPath, "{}", "utf8");
 
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       plugins: {
         allow: ["workspace-cloud"],
       },
@@ -882,12 +882,12 @@ describe("getApiKeyForModel", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     await expect(
       hasAuthForModelProvider({
         provider: "amazon-bedrock",
-        cfg: {} as OpenClawConfig,
+        cfg: {} as QuietCoreConfig,
         env: {},
         store,
       }),

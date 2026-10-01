@@ -1,6 +1,6 @@
-project: OpenClaw.xcodeproj
+project: QuietCore.xcodeproj
 schemes:
-  - OpenClaw
+  - QuietCore
 retain_codable_properties: true
 retain_swift_ui_previews: true
 retain_objc_accessible: true

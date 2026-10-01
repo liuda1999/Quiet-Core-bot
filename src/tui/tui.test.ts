@@ -1,7 +1,7 @@
 // Covers core TUI state transitions and backend event rendering.
 import { EventEmitter } from "node:events";
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { MAX_TIMER_TIMEOUT_MS } from "../infra/parse-finite-number.js";
 import { MALFORMED_STREAMING_FRAGMENT_ERROR_MESSAGE } from "../shared/assistant-error-format.js";
 import { withEnv } from "../test-utils/env.js";
@@ -78,7 +78,7 @@ describe("resolveTuiFooterHostLabel", () => {
   });
 
   it("renders only remote hosts when explicitly enabled", () => {
-    const config = { tui: { footer: { showRemoteHost: true } } } satisfies OpenClawConfig;
+    const config = { tui: { footer: { showRemoteHost: true } } } satisfies QuietCoreConfig;
 
     expect(
       resolveTuiFooterHostLabel({
@@ -300,7 +300,7 @@ describe("resolveTuiSessionKey", () => {
 });
 
 describe("resolveInitialTuiAgentId", () => {
-  const cfg: OpenClawConfig = {
+  const cfg: QuietCoreConfig = {
     agents: {
       list: [
         { id: "main", workspace: "/tmp/quiet-core-bot" },

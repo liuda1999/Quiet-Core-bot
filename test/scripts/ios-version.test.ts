@@ -46,7 +46,7 @@ describe("resolveIosVersion", () => {
   it("prints selected fields from the CLI", () => {
     const rootDir = writeIosFixture({
       version: "2026.4.6",
-      changelog: "# OpenClaw iOS Changelog\n\n## 2026.4.6\n\nStable notes.\n",
+      changelog: "# QuietCore iOS Changelog\n\n## 2026.4.6\n\nStable notes.\n",
     });
     const result = spawnSync(
       process.execPath,
@@ -99,7 +99,7 @@ describe("resolveIosVersion", () => {
   it("parses pinned release versions and derives Apple marketing fields", () => {
     const rootDir = writeIosFixture({
       version: "2026.4.6",
-      changelog: "# OpenClaw iOS Changelog\n\n## 2026.4.6\n\nStable notes.\n",
+      changelog: "# QuietCore iOS Changelog\n\n## 2026.4.6\n\nStable notes.\n",
     });
 
     expect(resolveIosVersion(rootDir)).toEqual({
@@ -116,7 +116,7 @@ describe("resolveIosVersion", () => {
   it("rejects semver-only versions", () => {
     const rootDir = writeIosFixture({
       version: "1.2.3",
-      changelog: "# OpenClaw iOS Changelog\n\n## Unreleased\n\nNotes.\n",
+      changelog: "# QuietCore iOS Changelog\n\n## Unreleased\n\nNotes.\n",
     });
 
     expect(() => resolveIosVersion(rootDir)).toThrow(
@@ -127,7 +127,7 @@ describe("resolveIosVersion", () => {
   it("rejects prerelease suffixes in the pinned iOS version file", () => {
     const rootDir = writeIosFixture({
       version: "2026.4.6-beta.1",
-      changelog: "# OpenClaw iOS Changelog\n\n## Unreleased\n\nNotes.\n",
+      changelog: "# QuietCore iOS Changelog\n\n## Unreleased\n\nNotes.\n",
     });
 
     expect(() => resolveIosVersion(rootDir)).toThrow(
@@ -175,7 +175,7 @@ describe("gateway version normalization", () => {
     const rootDir = writeIosFixture({
       version: "2026.4.6",
       packageVersion: "2026.4.7-beta.5",
-      changelog: "# OpenClaw iOS Changelog\n\n## Unreleased\n\nNotes.\n",
+      changelog: "# QuietCore iOS Changelog\n\n## Unreleased\n\nNotes.\n",
     });
 
     expect(resolveGatewayVersionForIosRelease(rootDir)).toEqual({
@@ -189,7 +189,7 @@ describe("renderIosVersionXcconfig", () => {
   it("renders checked-in defaults from the pinned iOS version", () => {
     const rootDir = writeIosFixture({
       version: "2026.4.8",
-      changelog: "# OpenClaw iOS Changelog\n\n## 2026.4.8\n\nNotes.\n",
+      changelog: "# QuietCore iOS Changelog\n\n## 2026.4.8\n\nNotes.\n",
     });
     const version = resolveIosVersion(rootDir);
 
@@ -203,7 +203,7 @@ describe("release note extraction", () => {
   it("extracts exact pinned version sections first", () => {
     const rootDir = writeIosFixture({
       version: "2026.4.6",
-      changelog: `# OpenClaw iOS Changelog
+      changelog: `# QuietCore iOS Changelog
 
 ## Unreleased
 
@@ -223,7 +223,7 @@ Draft notes.
   it("falls back to Unreleased when the release section does not exist yet", () => {
     const rootDir = writeIosFixture({
       version: "2026.4.6",
-      changelog: `# OpenClaw iOS Changelog
+      changelog: `# QuietCore iOS Changelog
 
 ## Unreleased
 
@@ -242,7 +242,7 @@ Draft notes.
   it("extracts markdown bodies without the version heading", () => {
     expect(
       extractChangelogSection(
-        `# OpenClaw iOS Changelog\n\n## 2026.4.6 - 2026-04-06\n\nLine one.\n\n## 2026.4.5\n`,
+        `# QuietCore iOS Changelog\n\n## 2026.4.6 - 2026-04-06\n\nLine one.\n\n## 2026.4.5\n`,
         "2026.4.6",
       ),
     ).toBe("Line one.");

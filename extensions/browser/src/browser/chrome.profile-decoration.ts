@@ -1,5 +1,5 @@
 /**
- * OpenClaw-managed Chrome profile decoration.
+ * QuietCore-managed Chrome profile decoration.
  *
  * Applies a stable profile name, color, download directory, and clean-exit
  * markers to the managed Chrome profile's Local State and Preferences files.
@@ -112,7 +112,7 @@ export function isProfileDecorated(
  * Best-effort profile decoration (name + lobster-orange). Chrome preference keys
  * vary by version; we keep this conservative and idempotent.
  */
-export function decorateOpenClawProfile(
+export function decorateQuietCoreProfile(
   userDataDir: string,
   opts?: { name?: string; color?: string; downloadDir?: string },
 ) {

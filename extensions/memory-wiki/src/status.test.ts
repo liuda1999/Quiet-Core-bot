@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../api.js";
+import type { QuietCoreConfig } from "../api.js";
 import { resolveMemoryWikiConfig } from "./config.js";
 import { renderWikiMarkdown } from "./markdown.js";
 import {
@@ -32,7 +32,7 @@ async function resolveBridgeMissingArtifactsStatus() {
       agents: {
         list: [{ id: "main", default: true, workspace: "/tmp/workspace" }],
       },
-    } as OpenClawConfig,
+    } as QuietCoreConfig,
     listPublicArtifacts: async () => [],
     pathExists: async () => true,
     resolveCommand: async () => null,

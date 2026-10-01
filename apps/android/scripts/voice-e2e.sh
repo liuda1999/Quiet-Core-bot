@@ -3,10 +3,10 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 ANDROID_DIR="$ROOT_DIR/apps/android"
-PACKAGE_NAME="ai.openclaw.app"
+PACKAGE_NAME="ai.quietcore.app"
 RECEIVER="$PACKAGE_NAME/.VoiceE2eReceiver"
-RUN_ACTION="ai.openclaw.app.debug.RUN_VOICE_E2E"
-OPEN_ACTION="ai.openclaw.app.debug.OPEN_VOICE_E2E"
+RUN_ACTION="ai.quietcore.app.debug.RUN_VOICE_E2E"
+OPEN_ACTION="ai.quietcore.app.debug.OPEN_VOICE_E2E"
 PORT=18789
 HOST="127.0.0.1"
 MODE="both"
@@ -96,7 +96,7 @@ export ANDROID_HOME="${ANDROID_HOME:-/opt/homebrew/share/android-commandlinetool
 export ANDROID_SDK_ROOT="${ANDROID_SDK_ROOT:-$ANDROID_HOME}"
 export PATH="/opt/homebrew/opt/openjdk@17/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
 
-ARTIFACT_DIR="/tmp/openclaw-android-voice-e2e-$(date +%Y%m%d-%H%M%S)"
+ARTIFACT_DIR="/tmp/quiet-core-android-voice-e2e-$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$ARTIFACT_DIR"
 
 cleanup_gateway() {
@@ -220,7 +220,7 @@ case "$MODE" in
 esac
 
 adb logcat -d -v time |
-  rg -i 'OpenClaw|TalkMode|MicCapture|AudioRecord|SpeechRecognizer|realtime|talk.session|appendAudio|transcript|Talk failed|Transcription failed|Speech network|VoiceE2E' |
+  rg -i 'QuietCore|TalkMode|MicCapture|AudioRecord|SpeechRecognizer|realtime|talk.session|appendAudio|transcript|Talk failed|Transcription failed|Speech network|VoiceE2E' |
   tail -250 >"$ARTIFACT_DIR/logcat.txt" || true
 
 if [[ "$CLEANUP" -eq 1 ]]; then

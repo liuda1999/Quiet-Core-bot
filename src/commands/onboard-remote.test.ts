@@ -1,6 +1,6 @@
 // Onboard remote tests cover remote gateway prompts, Bonjour discovery, and remote config mutation.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import type { GatewayBonjourBeacon } from "../infra/bonjour-discovery.js";
 import { captureEnv } from "../test-utils/env.js";
 import type { WizardPrompter } from "../wizard/prompts.js";
@@ -66,7 +66,7 @@ describe("promptRemoteGatewayConfig", () => {
     selectResponses: Partial<Record<string, string>>;
     confirm: boolean;
   }) {
-    const cfg = {} as OpenClawConfig;
+    const cfg = {} as QuietCoreConfig;
     const prompter = createPrompter({
       confirm: vi.fn(async () => params.confirm),
       select: createSelectPrompter(params.selectResponses),
@@ -171,7 +171,7 @@ describe("promptRemoteGatewayConfig", () => {
       text,
     });
 
-    const next = await promptRemoteGatewayConfig({} as OpenClawConfig, prompter);
+    const next = await promptRemoteGatewayConfig({} as QuietCoreConfig, prompter);
 
     expect(next.gateway?.mode).toBe("remote");
     expect(next.gateway?.remote?.url).toBe(manualUrl);
@@ -270,7 +270,7 @@ describe("promptRemoteGatewayConfig", () => {
       text,
     });
 
-    const next = await promptRemoteGatewayConfig({} as OpenClawConfig, prompter);
+    const next = await promptRemoteGatewayConfig({} as QuietCoreConfig, prompter);
 
     expect(next.gateway?.remote?.url).toBe("ws://127.0.0.1:18789");
     expect(vi.mocked(select).mock.calls.map(([params]) => params.message)).not.toContain(
@@ -349,7 +349,7 @@ describe("promptRemoteGatewayConfig", () => {
       return (params.options[0]?.value ?? "") as never;
     });
 
-    const cfg = {} as OpenClawConfig;
+    const cfg = {} as QuietCoreConfig;
     const prompter = createPrompter({
       confirm: vi.fn(async () => false),
       select,
@@ -394,7 +394,7 @@ describe("promptRemoteGatewayConfig", () => {
 
     const cfg = {
       gateway: { remote: { token: "preexisting-remote-token" } },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const prompter = createPrompter({ confirm, select, text });
 
     const next = await promptRemoteGatewayConfig(cfg, prompter);
@@ -432,7 +432,7 @@ describe("promptRemoteGatewayConfig", () => {
 
     const cfg = {
       gateway: { remote: { password: "preexisting-remote-password" } },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const prompter = createPrompter({ confirm, select, text });
 
     const next = await promptRemoteGatewayConfig(cfg, prompter);

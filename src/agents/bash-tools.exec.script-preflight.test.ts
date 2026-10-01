@@ -29,7 +29,7 @@ const isWin = process.platform === "win32";
 
 const describeNonWin = isWin ? describe.skip : describe;
 const describeWin = isWin ? describe : describe.skip;
-const parseOpenClawChannelsLoginShellCommand = testing.parseOpenClawChannelsLoginShellCommand;
+const parseQuietCoreChannelsLoginShellCommand = testing.parseQuietCoreChannelsLoginShellCommand;
 const validateExecScriptPreflight = testing.validateScriptFileForShellBleed;
 const createPreflightTool = () =>
   createExecTool({ host: "gateway", security: "full", ask: "on-miss" });
@@ -75,14 +75,14 @@ async function expectSymlinkSwapDuringPreflightToAvoidErrors(params: {
 describe("exec interactive Quiet Core bot channel login guard", () => {
   it("recognizes direct and package-runner channel login commands before execution", () => {
     expect(
-      parseOpenClawChannelsLoginShellCommand("quiet-core-bot channels login --channel whatsapp"),
+      parseQuietCoreChannelsLoginShellCommand("quiet-core-bot channels login --channel whatsapp"),
     ).toBe(true);
     expect(
-      parseOpenClawChannelsLoginShellCommand(
+      parseQuietCoreChannelsLoginShellCommand(
         "pnpm exec quiet-core-bot channels login --channel whatsapp --verbose",
       ),
     ).toBe(true);
-    expect(parseOpenClawChannelsLoginShellCommand("quiet-core-bot channels status --deep")).toBe(
+    expect(parseQuietCoreChannelsLoginShellCommand("quiet-core-bot channels status --deep")).toBe(
       false,
     );
   });
@@ -94,28 +94,28 @@ describe("exec interactive Quiet Core bot channel login guard", () => {
       tool.execute("call-quiet-core-bot-channel-login", {
         command: "quiet-core-bot channels login --channel whatsapp --verbose",
       }),
-    ).rejects.toThrow(/exec cannot run interactive OpenClaw channel login commands/);
+    ).rejects.toThrow(/exec cannot run interactive QuietCore channel login commands/);
     await expect(
       tool.execute("call-wrapped-quiet-core-bot-channel-login", {
         command:
           "sudo -u quiet-core-bot bash -lc 'quiet-core-bot channels login --channel whatsapp'",
       }),
-    ).rejects.toThrow(/exec cannot run interactive OpenClaw channel login commands/);
+    ).rejects.toThrow(/exec cannot run interactive QuietCore channel login commands/);
     await expect(
       tool.execute("call-clustered-sudo-channel-login", {
         command: "sudo -EH bash -lc 'quiet-core-bot channels login --channel whatsapp'",
       }),
-    ).rejects.toThrow(/exec cannot run interactive OpenClaw channel login commands/);
+    ).rejects.toThrow(/exec cannot run interactive QuietCore channel login commands/);
     await expect(
       tool.execute("call-deep-env-channel-login", {
         command: "env env env env env env quiet-core-bot channels login --channel whatsapp",
       }),
-    ).rejects.toThrow(/exec cannot run interactive OpenClaw channel login commands/);
+    ).rejects.toThrow(/exec cannot run interactive QuietCore channel login commands/);
     await expect(
       tool.execute("call-env-s-trailing-channel-login", {
         command: "env -S 'quiet-core-bot channels' login --channel whatsapp",
       }),
-    ).rejects.toThrow(/exec cannot run interactive OpenClaw channel login commands/);
+    ).rejects.toThrow(/exec cannot run interactive QuietCore channel login commands/);
   });
 });
 

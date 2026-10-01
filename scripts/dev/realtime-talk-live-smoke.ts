@@ -1,4 +1,4 @@
-// Realtime Talk Live Smoke script supports OpenClaw repository automation.
+// Realtime Talk Live Smoke script supports QuietCore repository automation.
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -277,7 +277,7 @@ async function smokeOpenAIBackendBridge(apiKey: string): Promise<SmokeResult> {
       model: OPENAI_REALTIME_MODEL,
       voice: OPENAI_REALTIME_VOICE,
     },
-    instructions: "OpenClaw backend realtime live smoke. Do not speak yet.",
+    instructions: "QuietCore backend realtime live smoke. Do not speak yet.",
     onAudio: () => {},
     onClearAudio: () => {},
     onEvent: (event) => {
@@ -464,7 +464,7 @@ async function createGoogleLiveToken(apiKey: string): Promise<string> {
               prebuiltVoiceConfig: { voiceName: GOOGLE_REALTIME_VOICE },
             },
           },
-          systemInstruction: "OpenClaw browser Talk live smoke.",
+          systemInstruction: "QuietCore browser Talk live smoke.",
           inputAudioTranscription: {},
           outputAudioTranscription: {},
         },

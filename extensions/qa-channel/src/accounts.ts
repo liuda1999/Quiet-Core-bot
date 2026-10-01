@@ -39,7 +39,7 @@ export function resolveQaChannelAccount(params: {
   const enabled = baseEnabled && merged.enabled !== false;
   const baseUrl = merged.baseUrl?.trim() ?? "";
   const botUserId = merged.botUserId?.trim() || "quiet-core-bot";
-  const botDisplayName = merged.botDisplayName?.trim() || "OpenClaw QA";
+  const botDisplayName = merged.botDisplayName?.trim() || "QuietCore QA";
   return {
     accountId,
     enabled,

@@ -1,5 +1,5 @@
 import Testing
-@testable import OpenClaw
+@testable import QuietCore
 
 @Suite struct CameraControllerErrorTests {
     @Test func errorDescriptionsAreStable() {

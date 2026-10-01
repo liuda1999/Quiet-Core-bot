@@ -39,7 +39,7 @@ vi.mock("../infra/ports.js", () => ({
 }));
 
 vi.mock("../infra/tmp-quiet-core-bot-dir.js", () => ({
-  resolvePreferredOpenClawTmpDir: () => "/tmp/quiet-core-bot-browser-test",
+  resolvePreferredQuietCoreTmpDir: () => "/tmp/quiet-core-bot-browser-test",
 }));
 
 // Shrink long launch/bootstrap timeouts so tests don't wait 15s for
@@ -58,13 +58,13 @@ vi.mock("./cdp-timeouts.js", async () => {
 });
 
 import {
-  buildOpenClawChromeLaunchArgs,
+  buildQuietCoreChromeLaunchArgs,
   getChromeWebSocketUrl,
   isChromeCdpReady,
   isChromeReachable,
-  launchOpenClawChrome,
-  resolveOpenClawUserDataDir,
-  stopOpenClawChrome,
+  launchQuietCoreChrome,
+  resolveQuietCoreUserDataDir,
+  stopQuietCoreChrome,
 } from "./chrome.js";
 import type { ResolvedBrowserConfig, ResolvedBrowserProfile } from "./config.js";
 
@@ -72,10 +72,10 @@ const CHROME_TEST_WS_MAX_PAYLOAD_BYTES = 1024 * 1024;
 
 /**
  * Covers the parts of chrome.ts that the mainline chrome.test.ts does
- * not exercise: launchOpenClawChrome (with child_process.spawn mocked),
+ * not exercise: launchQuietCoreChrome (with child_process.spawn mocked),
  * canRunCdpHealthCommand all branches, canOpenWebSocket failure,
- * stopOpenClawChrome SIGKILL fallback, fs.exists() catch, default
- * profile name, buildOpenClawChromeLaunchArgs branches, and friends.
+ * stopQuietCoreChrome SIGKILL fallback, fs.exists() catch, default
+ * profile name, buildQuietCoreChromeLaunchArgs branches, and friends.
  */
 
 type FakeProc = EventEmitter & {
@@ -271,7 +271,7 @@ async function withMockChromeCdpServer(params: {
               id: message.id,
               result: {
                 product: "Chrome/Mock",
-                userAgent: "OpenClawTest",
+                userAgent: "QuietCoreTest",
               },
             }),
           );
@@ -312,19 +312,19 @@ describe("chrome.ts internal", () => {
     registerManagedProxyBrowserCdpBypassMock.mockImplementation(() => undefined);
   });
 
-  describe("resolveOpenClawUserDataDir", () => {
+  describe("resolveQuietCoreUserDataDir", () => {
     it("falls back to the default profile name when none is supplied", () => {
-      const dir = resolveOpenClawUserDataDir();
+      const dir = resolveQuietCoreUserDataDir();
       expect(dir.endsWith(path.join("quiet-core-bot", "user-data"))).toBe(true);
     });
 
     it("respects an explicit profile name", () => {
-      const dir = resolveOpenClawUserDataDir("my-profile");
+      const dir = resolveQuietCoreUserDataDir("my-profile");
       expect(dir.endsWith(path.join("my-profile", "user-data"))).toBe(true);
     });
   });
 
-  describe("buildOpenClawChromeLaunchArgs branches", () => {
+  describe("buildQuietCoreChromeLaunchArgs branches", () => {
     const baseResolved = (overrides: Partial<ResolvedBrowserConfig> = {}): ResolvedBrowserConfig =>
       ({
         headless: false,
@@ -347,7 +347,7 @@ describe("chrome.ts internal", () => {
     } as unknown as ResolvedBrowserProfile;
 
     it("toggles headless args", () => {
-      const args = buildOpenClawChromeLaunchArgs({
+      const args = buildQuietCoreChromeLaunchArgs({
         resolved: baseResolved({ headless: false }),
         profile: { ...baseProfile, headless: true, headlessSource: "profile" },
         userDataDir: "/tmp/foo",
@@ -357,7 +357,7 @@ describe("chrome.ts internal", () => {
     });
 
     it("lets profile headless=false override global headless=true", () => {
-      const args = buildOpenClawChromeLaunchArgs({
+      const args = buildQuietCoreChromeLaunchArgs({
         resolved: baseResolved({ headless: true, headlessSource: "config" }),
         profile: { ...baseProfile, headless: false, headlessSource: "profile" },
         userDataDir: "/tmp/foo",
@@ -367,7 +367,7 @@ describe("chrome.ts internal", () => {
     });
 
     it("lets a request headless override beat env and profile headed settings", () => {
-      const args = buildOpenClawChromeLaunchArgs({
+      const args = buildQuietCoreChromeLaunchArgs({
         resolved: baseResolved({ headless: false, headlessSource: "config" }),
         profile: { ...baseProfile, headless: false, headlessSource: "profile" },
         userDataDir: "/tmp/foo",
@@ -379,7 +379,7 @@ describe("chrome.ts internal", () => {
     });
 
     it("adds headless args for Linux local managed profiles without a display", () => {
-      const args = buildOpenClawChromeLaunchArgs({
+      const args = buildQuietCoreChromeLaunchArgs({
         resolved: baseResolved(),
         profile: baseProfile,
         userDataDir: "/tmp/foo",
@@ -391,7 +391,7 @@ describe("chrome.ts internal", () => {
     });
 
     it("does not apply Linux no-display fallback to remote profiles", () => {
-      const args = buildOpenClawChromeLaunchArgs({
+      const args = buildQuietCoreChromeLaunchArgs({
         resolved: baseResolved(),
         profile: {
           ...baseProfile,
@@ -408,7 +408,7 @@ describe("chrome.ts internal", () => {
     });
 
     it("toggles no-sandbox args", () => {
-      const args = buildOpenClawChromeLaunchArgs({
+      const args = buildQuietCoreChromeLaunchArgs({
         resolved: baseResolved({ noSandbox: true }),
         profile: baseProfile,
         userDataDir: "/tmp/foo",
@@ -421,7 +421,7 @@ describe("chrome.ts internal", () => {
       const originalPlatform = process.platform;
       Object.defineProperty(process, "platform", { value: "linux" });
       try {
-        const args = buildOpenClawChromeLaunchArgs({
+        const args = buildQuietCoreChromeLaunchArgs({
           resolved: baseResolved(),
           profile: baseProfile,
           userDataDir: "/tmp/foo",
@@ -433,7 +433,7 @@ describe("chrome.ts internal", () => {
     });
 
     it("propagates extraArgs", () => {
-      const args = buildOpenClawChromeLaunchArgs({
+      const args = buildQuietCoreChromeLaunchArgs({
         resolved: baseResolved({
           extraArgs: ["--proxy-server=http://localhost:3128", "--mute-audio"],
         }),
@@ -446,7 +446,7 @@ describe("chrome.ts internal", () => {
     });
 
     it("launches managed Chrome direct by default", () => {
-      const args = buildOpenClawChromeLaunchArgs({
+      const args = buildQuietCoreChromeLaunchArgs({
         resolved: baseResolved(),
         profile: baseProfile,
         userDataDir: "/tmp/foo",
@@ -460,7 +460,7 @@ describe("chrome.ts internal", () => {
       // Make existsSync throw ONLY for Local State / Preferences checks
       // — other candidate-executable probes still return true so
       // resolveBrowserExecutable succeeds and we actually reach the
-      // exists() invocation inside launchOpenClawChrome.
+      // exists() invocation inside launchQuietCoreChrome.
       let prefsProbeCount = 0;
       const existsSpy = vi.spyOn(fs, "existsSync").mockImplementation((p) => {
         const s = String(p);
@@ -498,7 +498,7 @@ describe("chrome.ts internal", () => {
             noSandbox: true,
             extraArgs: [],
           } as unknown as ResolvedBrowserConfig;
-          const running = await launchOpenClawChrome(resolved, profile);
+          const running = await launchQuietCoreChrome(resolved, profile);
           expect(running.pid).toBe(4242);
           running.proc.kill?.("SIGTERM");
         },
@@ -507,7 +507,7 @@ describe("chrome.ts internal", () => {
     });
   });
 
-  describe("launchOpenClawChrome", () => {
+  describe("launchQuietCoreChrome", () => {
     let tmpDir = "";
 
     beforeEach(async () => {
@@ -548,7 +548,7 @@ describe("chrome.ts internal", () => {
         cdpUrl: "http://example.com:19222",
         cdpIsLoopback: false,
       } as unknown as ResolvedBrowserProfile;
-      await expect(launchOpenClawChrome(makeResolved(), profile)).rejects.toThrow(
+      await expect(launchQuietCoreChrome(makeResolved(), profile)).rejects.toThrow(
         /is remote; cannot launch local Chrome/,
       );
       expect(spawnMock).not.toHaveBeenCalled();
@@ -559,7 +559,7 @@ describe("chrome.ts internal", () => {
       // path is set, then mock existsSync to return false for everything.
       vi.spyOn(fs, "existsSync").mockReturnValue(false);
       const profile = makeProfile(51111);
-      await expect(launchOpenClawChrome(makeResolved(), profile)).rejects.toThrow(
+      await expect(launchQuietCoreChrome(makeResolved(), profile)).rejects.toThrow(
         /No supported browser found/,
       );
       expect(ensurePortAvailableMock).toHaveBeenCalledWith(51111, "127.0.0.1");
@@ -581,7 +581,7 @@ describe("chrome.ts internal", () => {
         });
         const profile = { ...makeProfile(51111), cdpUrl };
 
-        await expect(launchOpenClawChrome(makeResolved(), profile)).rejects.toThrow(portBusy);
+        await expect(launchQuietCoreChrome(makeResolved(), profile)).rejects.toThrow(portBusy);
         expect(ensurePortAvailableMock.mock.calls).toEqual([
           [51111, "127.0.0.1"],
           [51111, configuredProbeHost],
@@ -624,7 +624,7 @@ describe("chrome.ts internal", () => {
         run: async (baseUrl) => {
           const port = new URL(baseUrl).port;
           const profile = makeProfile(Number(port));
-          const running = await launchOpenClawChrome(makeResolved(), profile);
+          const running = await launchQuietCoreChrome(makeResolved(), profile);
           expect(running.pid).toBe(4242);
           expect(spawnCalls).toBeGreaterThanOrEqual(1);
           const spawnOptions = requireSpawnOptions();
@@ -683,7 +683,7 @@ describe("chrome.ts internal", () => {
         run: async (baseUrl) => {
           const port = new URL(baseUrl).port;
           const profile = makeProfile(Number(port));
-          const running = await launchOpenClawChrome(
+          const running = await launchQuietCoreChrome(
             makeResolved({ localLaunchTimeoutMs: 1 }),
             profile,
           );
@@ -742,7 +742,7 @@ describe("chrome.ts internal", () => {
         run: async (baseUrl) => {
           const port = new URL(baseUrl).port;
           const profile = makeProfile(Number(port));
-          const running = await launchOpenClawChrome(
+          const running = await launchQuietCoreChrome(
             makeResolved({ localLaunchTimeoutMs: 1 }),
             profile,
           );
@@ -776,7 +776,7 @@ describe("chrome.ts internal", () => {
               ...makeResolved(),
               executablePath: "/tmp/global-chrome",
             } as ResolvedBrowserConfig;
-            const running = await launchOpenClawChrome(resolved, profile);
+            const running = await launchQuietCoreChrome(resolved, profile);
             expect(effectiveSpawnCommand(requireSpawnCall())).toBe("/tmp/profile-chrome");
             running.proc.kill?.("SIGTERM");
           },
@@ -840,14 +840,14 @@ describe("chrome.ts internal", () => {
         run: async (baseUrl) => {
           const port = Number(new URL(baseUrl).port);
           const profile = { ...makeProfile(port), executablePath: "/tmp/profile-chrome" };
-          const userDataDir = resolveOpenClawUserDataDir(profile.name);
+          const userDataDir = resolveQuietCoreUserDataDir(profile.name);
           await fsp.mkdir(userDataDir, { recursive: true });
           await fsp.writeFile(path.join(userDataDir, "SingletonCookie"), "cookie");
           await fsp.writeFile(path.join(userDataDir, "SingletonSocket"), "socket");
           await fsp.symlink("remote-host-535", path.join(userDataDir, "SingletonLock"));
 
           try {
-            const running = await launchOpenClawChrome(
+            const running = await launchQuietCoreChrome(
               makeResolved({ localLaunchTimeoutMs: 20 }),
               profile,
             );
@@ -921,7 +921,7 @@ describe("chrome.ts internal", () => {
               cdpUrl: baseUrl,
               executablePath,
             } as ResolvedBrowserProfile;
-            const userDataDir = resolveOpenClawUserDataDir(profile.name);
+            const userDataDir = resolveQuietCoreUserDataDir(profile.name);
             mockLinuxManagedChromeOwnership({
               pid: stalePid,
               port,
@@ -937,7 +937,7 @@ describe("chrome.ts internal", () => {
             );
 
             try {
-              const running = await launchOpenClawChrome(makeResolved(), profile);
+              const running = await launchQuietCoreChrome(makeResolved(), profile);
               expect(running.proc).toBe(fakeProc);
               expect(ensurePortAvailableMock).toHaveBeenCalledTimes(2);
               expect(killSpy).toHaveBeenCalledWith(stalePid, "SIGTERM");
@@ -999,7 +999,7 @@ describe("chrome.ts internal", () => {
                 cdpUrl: baseUrl,
                 executablePath,
               } as ResolvedBrowserProfile;
-              const userDataDir = resolveOpenClawUserDataDir(`${profile.name}-${testCase.pid}`);
+              const userDataDir = resolveQuietCoreUserDataDir(`${profile.name}-${testCase.pid}`);
               const profileWithUniqueName = {
                 ...profile,
                 name: `${profile.name}-${testCase.pid}`,
@@ -1020,7 +1020,7 @@ describe("chrome.ts internal", () => {
 
               try {
                 await expect(
-                  launchOpenClawChrome(makeResolved(), profileWithUniqueName),
+                  launchQuietCoreChrome(makeResolved(), profileWithUniqueName),
                 ).rejects.toThrow("Port is already in use.");
                 expect(killSpy).not.toHaveBeenCalledWith(testCase.pid, "SIGTERM");
                 expect(spawnMock).not.toHaveBeenCalled();
@@ -1045,12 +1045,12 @@ describe("chrome.ts internal", () => {
       const killSpy = vi.spyOn(process, "kill");
 
       const profile = makeProfile(55554);
-      const userDataDir = resolveOpenClawUserDataDir(profile.name);
+      const userDataDir = resolveQuietCoreUserDataDir(profile.name);
       await fsp.mkdir(userDataDir, { recursive: true });
       await fsp.symlink("remote-host-43210", path.join(userDataDir, "SingletonLock"));
 
       try {
-        await expect(launchOpenClawChrome(makeResolved(), profile)).rejects.toThrow(
+        await expect(launchQuietCoreChrome(makeResolved(), profile)).rejects.toThrow(
           "Port is already in use.",
         );
         expect(killSpy).not.toHaveBeenCalledWith(43210, "SIGTERM");
@@ -1095,7 +1095,7 @@ describe("chrome.ts internal", () => {
           extraArgs: [],
         } as unknown as ResolvedBrowserConfig;
         const profile = makeProfile(55555);
-        await expect(launchOpenClawChrome(resolved, profile)).rejects.toThrow(
+        await expect(launchQuietCoreChrome(resolved, profile)).rejects.toThrow(
           /Failed to start Chrome CDP/,
         );
         expect(fakeProc.kill).toHaveBeenCalledWith("SIGKILL");
@@ -1127,14 +1127,14 @@ describe("chrome.ts internal", () => {
       };
       const profile = makeProfile(55556);
 
-      await expect(launchOpenClawChrome(resolved, profile)).rejects.toThrow(
+      await expect(launchQuietCoreChrome(resolved, profile)).rejects.toThrow(
         /Failed to start Chrome CDP/,
       );
       expect(fakeProc.kill).toHaveBeenCalledWith("SIGKILL");
     });
   });
 
-  describe("stopOpenClawChrome SIGKILL fallback", () => {
+  describe("stopQuietCoreChrome SIGKILL fallback", () => {
     it("escalates to SIGKILL when CDP keeps reporting reachable past the deadline", async () => {
       vi.stubGlobal(
         "fetch",
@@ -1144,8 +1144,8 @@ describe("chrome.ts internal", () => {
         } as unknown as Response),
       );
       const proc = makeFakeProc();
-      await stopOpenClawChrome(
-        { proc, cdpPort: 12345 } as unknown as Parameters<typeof stopOpenClawChrome>[0],
+      await stopQuietCoreChrome(
+        { proc, cdpPort: 12345 } as unknown as Parameters<typeof stopQuietCoreChrome>[0],
         1,
       );
       expect(proc.kill).toHaveBeenNthCalledWith(1, "SIGTERM");
@@ -1403,7 +1403,7 @@ describe("chrome.ts internal", () => {
     });
   });
 
-  describe("launchOpenClawChrome remaining branches", () => {
+  describe("launchQuietCoreChrome remaining branches", () => {
     it("skips decoration entirely when the profile is already decorated", async () => {
       // Covers the `needsDecorate` false branch by writing a real,
       // properly-shaped Local State + Preferences pair that matches
@@ -1414,7 +1414,7 @@ describe("chrome.ts internal", () => {
         const profileName = path.basename(stageDir);
         const colorHex = "#FF4500";
         const colorInt = ((0xff << 24) | 0xff4500) >> 0;
-        const userDataDir = path.join(resolveOpenClawUserDataDir(profileName));
+        const userDataDir = path.join(resolveQuietCoreUserDataDir(profileName));
         await fsp.mkdir(path.join(userDataDir, "Default"), { recursive: true });
         await fsp.writeFile(
           path.join(userDataDir, "Local State"),
@@ -1465,14 +1465,14 @@ describe("chrome.ts internal", () => {
               noSandbox: true,
               extraArgs: [],
             } as unknown as ResolvedBrowserConfig;
-            const running = await launchOpenClawChrome(resolved, profile);
+            const running = await launchQuietCoreChrome(resolved, profile);
             expect(running.pid).toBe(4242);
             running.proc.kill?.("SIGTERM");
           },
         });
       } finally {
         await fsp.rm(stageDir, { recursive: true, force: true });
-        const staged = resolveOpenClawUserDataDir(path.basename(stageDir));
+        const staged = resolveQuietCoreUserDataDir(path.basename(stageDir));
         await fsp.rm(staged, { recursive: true, force: true }).catch(() => {});
       }
     });
@@ -1510,7 +1510,7 @@ describe("chrome.ts internal", () => {
             noSandbox: true,
             extraArgs: [],
           } as unknown as ResolvedBrowserConfig;
-          const running = await launchOpenClawChrome(resolved, profile);
+          const running = await launchQuietCoreChrome(resolved, profile);
           expect(running.pid).toBe(4242);
           running.proc.kill?.("SIGTERM");
         },
@@ -1563,7 +1563,7 @@ describe("chrome.ts internal", () => {
       } as unknown as ResolvedBrowserConfig;
       let message = "";
       try {
-        await launchOpenClawChrome(resolved, profile);
+        await launchQuietCoreChrome(resolved, profile);
       } catch (err) {
         message = err instanceof Error ? err.message : String(err);
       }
@@ -1609,7 +1609,7 @@ describe("chrome.ts internal", () => {
         } as unknown as ResolvedBrowserConfig;
         let caught: unknown;
         try {
-          await launchOpenClawChrome(resolved, profile);
+          await launchQuietCoreChrome(resolved, profile);
         } catch (e) {
           caught = e;
         }
@@ -1663,7 +1663,7 @@ describe("chrome.ts internal", () => {
             noSandbox: true,
             extraArgs: [],
           } as unknown as ResolvedBrowserConfig;
-          const running = await launchOpenClawChrome(resolved, profile);
+          const running = await launchQuietCoreChrome(resolved, profile);
           expect(spawnCount).toBe(2);
           expect(running.proc).toBe(runtimeProc);
           running.proc.kill?.("SIGTERM");
@@ -1717,7 +1717,7 @@ describe("chrome.ts internal", () => {
             noSandbox: true,
             extraArgs: [],
           } as unknown as ResolvedBrowserConfig;
-          const running = await launchOpenClawChrome(resolved, profile);
+          const running = await launchQuietCoreChrome(resolved, profile);
           expect(callCount).toBe(2);
           expect(running.proc).toBe(runtimeProc);
           running.proc.kill?.("SIGTERM");
@@ -1725,9 +1725,9 @@ describe("chrome.ts internal", () => {
       });
     });
 
-    it("logs a warning when decorateOpenClawProfile throws and still returns a running Chrome", async () => {
+    it("logs a warning when decorateQuietCoreProfile throws and still returns a running Chrome", async () => {
       // Covers the decoration catch branch (log.warn).
-      const { decorateOpenClawProfile } = await import("./chrome.profile-decoration.js");
+      const { decorateQuietCoreProfile } = await import("./chrome.profile-decoration.js");
       vi.spyOn(fs, "existsSync").mockImplementation((p) => {
         const s = String(p);
         if (
@@ -1743,7 +1743,7 @@ describe("chrome.ts internal", () => {
         return false;
       });
       const decorationSpy = vi
-        .spyOn({ decorateOpenClawProfile }, "decorateOpenClawProfile")
+        .spyOn({ decorateQuietCoreProfile }, "decorateQuietCoreProfile")
         .mockImplementation(() => {
           throw new Error("decoration blew up");
         });
@@ -1772,7 +1772,7 @@ describe("chrome.ts internal", () => {
             noSandbox: true,
             extraArgs: [],
           } as unknown as ResolvedBrowserConfig;
-          const running = await launchOpenClawChrome(resolved, profile);
+          const running = await launchQuietCoreChrome(resolved, profile);
           expect(running.pid).toBe(4242);
           running.proc.kill?.("SIGTERM");
         },
@@ -1818,7 +1818,7 @@ describe("chrome.ts internal", () => {
             noSandbox: true,
             extraArgs: [],
           } as unknown as ResolvedBrowserConfig;
-          const running = await launchOpenClawChrome(resolved, profile);
+          const running = await launchQuietCoreChrome(resolved, profile);
           expect(running.pid).toBe(-1);
           running.proc.kill?.("SIGTERM");
         },
@@ -1826,7 +1826,7 @@ describe("chrome.ts internal", () => {
     });
   });
 
-  describe("launchOpenClawChrome managed-proxy CDP bypass", () => {
+  describe("launchQuietCoreChrome managed-proxy CDP bypass", () => {
     const makeLoopbackProfile = (cdpPort: number): ResolvedBrowserProfile =>
       ({
         name: "quiet-core-bot-bypass",
@@ -1872,7 +1872,7 @@ describe("chrome.ts internal", () => {
         run: async (baseUrl) => {
           const port = Number(new URL(baseUrl).port);
           const profile = { ...makeLoopbackProfile(port), cdpUrl: baseUrl };
-          const running = await launchOpenClawChrome(makeResolved(), profile);
+          const running = await launchQuietCoreChrome(makeResolved(), profile);
           expect(registerManagedProxyBrowserCdpBypassMock).toHaveBeenCalledWith(baseUrl);
           expect(registerManagedProxyBrowserCdpBypassMock).toHaveBeenCalledWith(
             `${baseUrl}/json/version`,
@@ -1894,7 +1894,7 @@ describe("chrome.ts internal", () => {
       vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("ECONNREFUSED")));
 
       const profile = makeLoopbackProfile(54323);
-      await expect(launchOpenClawChrome(makeResolved(), profile)).rejects.toThrow(
+      await expect(launchQuietCoreChrome(makeResolved(), profile)).rejects.toThrow(
         /Failed to start Chrome CDP/,
       );
       expect(registerManagedProxyBrowserCdpBypassMock).toHaveBeenCalledWith(profile.cdpUrl);
@@ -1914,10 +1914,10 @@ describe("chrome.ts internal", () => {
       });
       const profile = makeLoopbackProfile(54324);
       const { BrowserProfileUnavailableError } = await import("./errors.js");
-      await expect(launchOpenClawChrome(makeResolved(), profile)).rejects.toBeInstanceOf(
+      await expect(launchQuietCoreChrome(makeResolved(), profile)).rejects.toBeInstanceOf(
         BrowserProfileUnavailableError,
       );
-      await expect(launchOpenClawChrome(makeResolved(), profile)).rejects.toThrow(
+      await expect(launchQuietCoreChrome(makeResolved(), profile)).rejects.toThrow(
         /blocked by proxy\.loopbackMode/,
       );
       expect(spawnMock).not.toHaveBeenCalled();
@@ -1925,7 +1925,7 @@ describe("chrome.ts internal", () => {
 
     it("does not register a bypass for a remote attachOnly CDP URL (loopback gate)", async () => {
       stubExecutableAndPrefsExist();
-      // For this test we want launchOpenClawChrome to reject before any
+      // For this test we want launchQuietCoreChrome to reject before any
       // spawn — but the rejection should come from the cdpIsLoopback guard,
       // which fires before the bypass registration. Verify that the guard
       // path never reaches registerManagedProxyBrowserCdpBypass.
@@ -1936,7 +1936,7 @@ describe("chrome.ts internal", () => {
         cdpUrl: "http://browserless.example.com:19222",
         cdpIsLoopback: false,
       } as unknown as ResolvedBrowserProfile;
-      await expect(launchOpenClawChrome(makeResolved(), remoteProfile)).rejects.toThrow(
+      await expect(launchQuietCoreChrome(makeResolved(), remoteProfile)).rejects.toThrow(
         /is remote; cannot launch local Chrome/,
       );
       expect(registerManagedProxyBrowserCdpBypassMock).not.toHaveBeenCalled();

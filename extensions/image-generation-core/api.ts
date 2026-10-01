@@ -27,5 +27,5 @@ export type {
   ImageGenerationResolution,
   ImageGenerationResult,
   ImageGenerationSourceImage,
-  OpenClawConfig,
+  QuietCoreConfig,
 } from "quiet-core-bot/plugin-sdk/image-generation-core";

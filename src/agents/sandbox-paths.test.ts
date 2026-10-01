@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { describe, expect, it, vi } from "vitest";
-import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-quiet-core-bot-dir.js";
+import { resolvePreferredQuietCoreTmpDir } from "../infra/tmp-quiet-core-bot-dir.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import { resolveAllowedManagedMediaPath, resolveSandboxedMediaSource } from "./sandbox-paths.js";
 
@@ -44,7 +44,7 @@ async function withManagedMediaRoot<T>(run: (ctx: { stateDir: string }) => Promi
   }
 }
 
-async function withOutsideHardlinkInOpenClawTmp<T>(
+async function withOutsideHardlinkInQuietCoreTmp<T>(
   params: {
     openClawTmpDir: string;
     hardlinkPrefix: string;
@@ -87,7 +87,7 @@ async function withOutsideHardlinkInOpenClawTmp<T>(
 }
 
 describe("resolveSandboxedMediaSource", () => {
-  const openClawTmpDir = resolvePreferredOpenClawTmpDir();
+  const openClawTmpDir = resolvePreferredQuietCoreTmpDir();
 
   // Group 1: /tmp paths (the bug fix)
   it.each([
@@ -320,7 +320,7 @@ describe("resolveSandboxedMediaSource", () => {
     if (process.platform === "win32") {
       return;
     }
-    await withOutsideHardlinkInOpenClawTmp(
+    await withOutsideHardlinkInQuietCoreTmp(
       {
         openClawTmpDir,
         hardlinkPrefix: "sandbox-media-hardlink",
@@ -337,7 +337,7 @@ describe("resolveSandboxedMediaSource", () => {
     if (process.platform === "win32") {
       return;
     }
-    await withOutsideHardlinkInOpenClawTmp(
+    await withOutsideHardlinkInQuietCoreTmp(
       {
         openClawTmpDir,
         hardlinkPrefix: "sandbox-media-hardlink-target",

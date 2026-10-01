@@ -122,7 +122,7 @@ describe("env test utils", () => {
   it("createPathResolutionEnv clears leaked path overrides before applying explicit ones", () => {
     const homeDir = path.join(path.sep, "tmp", "quiet-core-bot-home");
     const resolvedHomeDir = path.resolve(homeDir);
-    const previousOpenClawHome = process.env.QUIET_CORE_HOME;
+    const previousQuietCoreHome = process.env.QUIET_CORE_HOME;
     const previousStateDir = process.env.QUIET_CORE_STATE_DIR;
     const previousBundledDir = process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR;
     process.env.QUIET_CORE_HOME = "/srv/quiet-core-bot-home";
@@ -139,7 +139,7 @@ describe("env test utils", () => {
       expect(env.QUIET_CORE_BUNDLED_PLUGINS_DIR).toBeUndefined();
       expect(env.QUIET_CORE_STATE_DIR).toBe("~/state");
     } finally {
-      restoreEnvKey("QUIET_CORE_HOME", previousOpenClawHome);
+      restoreEnvKey("QUIET_CORE_HOME", previousQuietCoreHome);
       restoreEnvKey("QUIET_CORE_STATE_DIR", previousStateDir);
       restoreEnvKey("QUIET_CORE_BUNDLED_PLUGINS_DIR", previousBundledDir);
     }
@@ -148,7 +148,7 @@ describe("env test utils", () => {
   it("withPathResolutionEnv only applies the explicit path env inside the callback", () => {
     const homeDir = path.join(path.sep, "tmp", "quiet-core-bot-home");
     const resolvedHomeDir = path.resolve(homeDir);
-    const previousOpenClawHome = process.env.QUIET_CORE_HOME;
+    const previousQuietCoreHome = process.env.QUIET_CORE_HOME;
     process.env.QUIET_CORE_HOME = "/srv/quiet-core-bot-home";
 
     try {
@@ -157,7 +157,7 @@ describe("env test utils", () => {
         { QUIET_CORE_BUNDLED_PLUGINS_DIR: "~/bundled" },
         (env) => ({
           processHome: process.env.HOME,
-          processOpenClawHome: process.env.QUIET_CORE_HOME,
+          processQuietCoreHome: process.env.QUIET_CORE_HOME,
           processBundledDir: process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR,
           envBundledDir: env.QUIET_CORE_BUNDLED_PLUGINS_DIR,
         }),
@@ -165,13 +165,13 @@ describe("env test utils", () => {
 
       expect(seen).toEqual({
         processHome: resolvedHomeDir,
-        processOpenClawHome: undefined,
+        processQuietCoreHome: undefined,
         processBundledDir: "~/bundled",
         envBundledDir: "~/bundled",
       });
       expect(process.env.QUIET_CORE_HOME).toBe("/srv/quiet-core-bot-home");
     } finally {
-      restoreEnvKey("QUIET_CORE_HOME", previousOpenClawHome);
+      restoreEnvKey("QUIET_CORE_HOME", previousQuietCoreHome);
     }
   });
 });

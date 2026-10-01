@@ -1,6 +1,6 @@
 // Covers managed task-flow creation, lookup, ownership, and state transitions.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { withOpenClawTestState } from "../test-utils/quiet-core-bot-test-state.js";
+import { withQuietCoreTestState } from "../test-utils/quiet-core-bot-test-state.js";
 import {
   createFlowRecord as createFlowRecordOrNull,
   createTaskFlowForTask as createTaskFlowForTaskOrNull,
@@ -48,7 +48,7 @@ function createTaskFlowForTask(
 }
 
 async function withFlowRegistryTempDir<T>(run: () => Promise<T>): Promise<T> {
-  return await withOpenClawTestState(
+  return await withQuietCoreTestState(
     { layout: "state-only", prefix: "quiet-core-bot-task-flow-registry-" },
     async () => {
       resetTaskFlowRegistryForTests();

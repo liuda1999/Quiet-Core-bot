@@ -8,10 +8,10 @@ import {
   listPotentialConfiguredChannelIds,
 } from "../../../channels/config-presence.js";
 import { listRawChannelPluginCatalogEntries } from "../../../channels/plugins/catalog.js";
-import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../config/types.quiet-core-bot.js";
 import type { PluginInstallRecord } from "../../../config/types.plugins.js";
 import { parseClawHubPluginSpec } from "../../../infra/clawhub-spec.js";
-import { isOpenClawOrgNpmSpec, parseRegistryNpmSpec } from "../../../infra/npm-registry-spec.js";
+import { isQuietCoreOrgNpmSpec, parseRegistryNpmSpec } from "../../../infra/npm-registry-spec.js";
 import {
   normalizeUpdateChannel,
   resolveRegistryUpdateChannel,
@@ -98,7 +98,7 @@ function shouldFallbackClawHubToNpm(params: {
   result: { ok: false; code?: string };
   npmSpec?: string;
 }): boolean {
-  if (!isOpenClawOrgNpmSpec(params.npmSpec)) {
+  if (!isQuietCoreOrgNpmSpec(params.npmSpec)) {
     return false;
   }
   return (
@@ -127,7 +127,7 @@ function addConfiguredPluginId(ids: Set<string>, value: unknown): void {
   }
 }
 
-function addConfiguredAgentRuntimePluginIds(ids: Set<string>, cfg: OpenClawConfig): void {
+function addConfiguredAgentRuntimePluginIds(ids: Set<string>, cfg: QuietCoreConfig): void {
   for (const runtime of collectConfiguredRuntimePluginIds(cfg)) {
     addConfiguredPluginId(ids, runtime);
   }
@@ -135,7 +135,7 @@ function addConfiguredAgentRuntimePluginIds(ids: Set<string>, cfg: OpenClawConfi
 
 function addConfiguredMemoryEmbeddingProviderPluginIds(
   ids: Set<string>,
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
 ): void {
   const configuredProviderIds = collectConfiguredMemoryEmbeddingProviderIds(cfg);
   if (configuredProviderIds.size === 0) {
@@ -151,7 +151,7 @@ function addConfiguredMemoryEmbeddingProviderPluginIds(
   }
 }
 
-function addConfiguredSpeechProviderPluginIds(ids: Set<string>, cfg: OpenClawConfig): void {
+function addConfiguredSpeechProviderPluginIds(ids: Set<string>, cfg: QuietCoreConfig): void {
   for (const pluginId of resolveOfficialExternalProviderContractPluginIds({
     contract: "speechProviders",
     providerIds: collectConfiguredSpeechProviderIds(cfg),
@@ -160,7 +160,7 @@ function addConfiguredSpeechProviderPluginIds(ids: Set<string>, cfg: OpenClawCon
   }
 }
 
-function addConfiguredWebFetchProviderPluginIds(ids: Set<string>, cfg: OpenClawConfig): void {
+function addConfiguredWebFetchProviderPluginIds(ids: Set<string>, cfg: QuietCoreConfig): void {
   const webFetch = cfg.tools?.web?.fetch;
   if (webFetch?.enabled === false) {
     return;
@@ -179,7 +179,7 @@ function addConfiguredWebFetchProviderPluginIds(ids: Set<string>, cfg: OpenClawC
 
 function addEnvWebFetchProviderPluginIds(
   ids: Set<string>,
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   env?: NodeJS.ProcessEnv,
 ): void {
   if (cfg.tools?.web?.fetch?.enabled === false) {
@@ -193,7 +193,7 @@ function addEnvWebFetchProviderPluginIds(
   }
 }
 
-function collectConfiguredPluginIds(cfg: OpenClawConfig, env?: NodeJS.ProcessEnv): Set<string> {
+function collectConfiguredPluginIds(cfg: QuietCoreConfig, env?: NodeJS.ProcessEnv): Set<string> {
   const ids = new Set<string>();
   const plugins = asObjectRecord(cfg.plugins);
   if (plugins?.enabled === false) {
@@ -230,7 +230,7 @@ function collectConfiguredPluginIds(cfg: OpenClawConfig, env?: NodeJS.ProcessEnv
   return ids;
 }
 
-function collectBlockedPluginIds(cfg: OpenClawConfig): Set<string> {
+function collectBlockedPluginIds(cfg: QuietCoreConfig): Set<string> {
   const ids = new Set<string>();
   const deny = cfg.plugins?.deny;
   if (Array.isArray(deny)) {
@@ -249,7 +249,7 @@ function collectBlockedPluginIds(cfg: OpenClawConfig): Set<string> {
   return ids;
 }
 
-function collectConfiguredChannelIds(cfg: OpenClawConfig, env?: NodeJS.ProcessEnv): Set<string> {
+function collectConfiguredChannelIds(cfg: QuietCoreConfig, env?: NodeJS.ProcessEnv): Set<string> {
   const ids = new Set<string>();
   if (asObjectRecord(cfg.plugins)?.enabled === false) {
     return ids;
@@ -272,7 +272,7 @@ function collectConfiguredChannelIds(cfg: OpenClawConfig, env?: NodeJS.ProcessEn
 }
 
 function collectEffectiveConfiguredChannelOwnerPluginIds(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env: NodeJS.ProcessEnv;
   snapshot: PluginMetadataSnapshot;
   configuredChannelIds: ReadonlySet<string>;
@@ -304,7 +304,7 @@ function collectEffectiveConfiguredChannelOwnerPluginIds(params: {
 }
 
 function collectDownloadableInstallCandidates(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
   missingPluginIds: ReadonlySet<string>;
   configuredPluginIds?: ReadonlySet<string>;
@@ -484,7 +484,7 @@ function addLegacyNpmDeclarationInstallCandidate(params: {
 }
 
 function collectLegacyNpmDeclarationInstallCandidates(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
   configuredPluginIds: ReadonlySet<string>;
   missingPluginIds: ReadonlySet<string>;
@@ -533,7 +533,7 @@ function collectLegacyNpmDeclarationInstallCandidates(params: {
 }
 
 function collectUpdateDeferredPluginIds(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env: NodeJS.ProcessEnv;
   configuredPluginIds: ReadonlySet<string>;
   configuredChannelIds: ReadonlySet<string>;
@@ -620,7 +620,7 @@ function isConfiguredPluginRepairTarget(params: {
 }
 
 function collectOfficialReplacementInstallCandidates(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env: NodeJS.ProcessEnv;
   repairablePluginIds: ReadonlySet<string>;
   configuredPluginIds: ReadonlySet<string>;
@@ -1165,7 +1165,7 @@ export type RepairMissingPluginInstallsResult = {
 
 /** Repair missing installs inferred from the current Quiet Core bot config. */
 export async function repairMissingConfiguredPluginInstalls(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
   /**
    * Optional pre-seeded records. When provided, this map is used instead of
@@ -1188,7 +1188,7 @@ export async function repairMissingConfiguredPluginInstalls(params: {
 
 /** Repair missing installs for an explicit plugin/channel id set. */
 export async function repairMissingPluginInstallsForIds(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   pluginIds: Iterable<string>;
   channelIds?: Iterable<string>;
   blockedPluginIds?: Iterable<string>;
@@ -1216,7 +1216,7 @@ export async function repairMissingPluginInstallsForIds(params: {
 }
 
 async function repairMissingPluginInstalls(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   pluginIds: ReadonlySet<string>;
   channelIds: ReadonlySet<string>;
   blockedPluginIds?: ReadonlySet<string>;

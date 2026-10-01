@@ -72,7 +72,7 @@ import {
 import { getPluginToolMeta } from "../../../plugins/tools.js";
 import { isSubagentSessionKey } from "../../../routing/session-key.js";
 import { annotateInterSessionPromptText } from "../../../sessions/input-provenance.js";
-import { isTranscriptOnlyOpenClawAssistantMessage } from "../../../shared/transcript-only-quiet-core-bot-assistant.js";
+import { isTranscriptOnlyQuietCoreAssistantMessage } from "../../../shared/transcript-only-quiet-core-bot-assistant.js";
 import { resolveSkillsPromptForRun } from "../../../skills/loading/workspace.js";
 import { resolveEmbeddedRunSkillEntries } from "../../../skills/runtime/embedded-run-entries.js";
 import {
@@ -111,7 +111,7 @@ import {
 } from "../../agent-tool-definition-adapter.js";
 import { recordStructuredReplayTrustForToolCall } from "../../agent-tools.before-tool-call.js";
 import {
-  createOpenClawCodingTools,
+  createQuietCoreCodingTools,
   resolveProcessToolScopeKey,
   resolveToolLoopDetectionConfig,
 } from "../../agent-tools.js";
@@ -155,7 +155,7 @@ import {
 } from "../../code-mode.js";
 import { resolveUserTimezone } from "../../date-time.js";
 import { DEFAULT_CONTEXT_TOKENS } from "../../defaults.js";
-import { resolveOpenClawReferencePaths } from "../../docs-path.js";
+import { resolveQuietCoreReferencePaths } from "../../docs-path.js";
 import {
   isCloudCodeAssistFormatError,
   resolveBootstrapMaxChars,
@@ -739,7 +739,7 @@ function removeTrailingMidTurnPrecheckAssistantError(params: {
           entry.type === "custom" ||
           entry.type === "label" ||
           entry.type === "session_info" ||
-          (entry.type === "message" && isTranscriptOnlyOpenClawAssistantMessage(entry.message)),
+          (entry.type === "message" && isTranscriptOnlyQuietCoreAssistantMessage(entry.message)),
       },
     ) > 0;
   if (removedActiveError && !removedPersistedError) {
@@ -1282,7 +1282,7 @@ export async function runEmbeddedAttempt(
     const toolsRaw = !shouldConstructTools
       ? []
       : (() => {
-          const allTools = createOpenClawCodingTools({
+          const allTools = createQuietCoreCodingTools({
             agentId: sessionAgentId,
             ...buildEmbeddedAttemptToolRunContext({ ...params, trace: runTrace }),
             messageChannel: params.messageChannel,
@@ -1978,7 +1978,7 @@ export async function runEmbeddedAttempt(
     // When toolsAllow is set, use minimal prompt and strip skills catalog
     const effectivePromptMode = params.toolsAllow?.length ? ("minimal" as const) : promptMode;
     const effectiveSkillsPrompt = params.toolsAllow?.length ? undefined : skillsPrompt;
-    const openClawReferences = await resolveOpenClawReferencePaths({
+    const openClawReferences = await resolveQuietCoreReferencePaths({
       workspaceDir: effectiveWorkspace,
       argv1: process.argv[1],
       cwd: effectiveCwd,

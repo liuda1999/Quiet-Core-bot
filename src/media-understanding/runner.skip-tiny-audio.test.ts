@@ -2,7 +2,7 @@
 // transcription runs.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { MsgContext } from "../auto-reply/templating.js";
-import type { OpenClawConfig } from "../config/types.js";
+import type { QuietCoreConfig } from "../config/types.js";
 import { MIN_AUDIO_FILE_BYTES } from "./defaults.js";
 import type {
   createMediaAttachmentCache,
@@ -53,7 +53,7 @@ const AUDIO_CAPABILITY_CFG = {
       },
     },
   },
-} as unknown as OpenClawConfig;
+} as unknown as QuietCoreConfig;
 
 async function runAudioCapabilityWithTranscriber(params: {
   ctx: MsgContext;

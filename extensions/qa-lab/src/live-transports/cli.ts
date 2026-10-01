@@ -14,7 +14,7 @@ function createBlockedQaRunnerCliRegistration(params: {
         .description(params.description ?? `Run the ${params.commandName} live QA lane`)
         .action(() => {
           throw new Error(
-            `QA runner "${params.commandName}" is installed but not active. Enable or allow plugin "${params.pluginId}" in your OpenClaw config, then try again.`,
+            `QA runner "${params.commandName}" is installed but not active. Enable or allow plugin "${params.pluginId}" in your QuietCore config, then try again.`,
           );
         });
     },

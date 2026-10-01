@@ -3,7 +3,7 @@
  *
  * Defines setup/allowlist approval hooks used by pairing flows.
  */
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { RuntimeEnv } from "../../runtime.js";
 
 /**
@@ -13,7 +13,7 @@ export type ChannelPairingAdapter = {
   idLabel: string;
   normalizeAllowEntry?: (entry: string) => string;
   notifyApproval?: (params: {
-    cfg: OpenClawConfig;
+    cfg: QuietCoreConfig;
     id: string;
     accountId?: string;
     runtime?: RuntimeEnv;

@@ -13,7 +13,7 @@ import {
   resolveAgentDir,
   resolveSessionTranscriptsDirForAgent,
   resolveUserPath,
-  type OpenClawConfig,
+  type QuietCoreConfig,
   type ResolvedMemorySearchConfig,
 } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
 import {
@@ -293,7 +293,7 @@ function createSessionSyncYield(total: number): () => Promise<void> {
 }
 
 export abstract class MemoryManagerSyncOps {
-  protected abstract readonly cfg: OpenClawConfig;
+  protected abstract readonly cfg: QuietCoreConfig;
   protected abstract readonly agentId: string;
   protected abstract readonly workspaceDir: string;
   protected abstract readonly settings: ResolvedMemorySearchConfig;
@@ -987,7 +987,7 @@ export abstract class MemoryManagerSyncOps {
       this.memoryWatchPressureWarning,
       count,
       unit,
-      "Large memory folders or extraPaths can make OpenClaw run out of file watchers or open files.",
+      "Large memory folders or extraPaths can make QuietCore run out of file watchers or open files.",
       "Remove large extraPaths, or set memorySearch.sync.watch to false and refresh memory manually or with sync.intervalMinutes.",
       (message) => log.warn(message),
     );

@@ -1,6 +1,6 @@
 // Crestodian overview tests cover summary output for rescue diagnostics.
 import { describe, expect, it } from "vitest";
-import type { ConfigFileSnapshot, OpenClawConfig } from "../config/config.js";
+import type { ConfigFileSnapshot, QuietCoreConfig } from "../config/config.js";
 import {
   formatCrestodianOverview,
   formatCrestodianStartupMessage,
@@ -9,7 +9,7 @@ import {
 
 describe("loadCrestodianOverview", () => {
   it("summarizes config, agents, model, tools, and gateway", async () => {
-    const runtimeConfig: OpenClawConfig = {
+    const runtimeConfig: QuietCoreConfig = {
       agents: {
         defaults: { model: { primary: "openai/gpt-5.2" } },
         list: [

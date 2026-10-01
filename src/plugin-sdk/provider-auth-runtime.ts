@@ -7,7 +7,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { ensureAuthProfileStore } from "../agents/auth-profiles/store.js";
 import { resolveApiKeyForProvider as resolveModelApiKeyForProvider } from "../agents/model-auth.js";
 import { normalizeProviderId } from "../agents/model-selection.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { resolveTimerTimeoutMs } from "../shared/number-coercion.js";
 
 export { resolveEnvApiKey } from "../agents/model-auth-env.js";
@@ -44,7 +44,7 @@ export type ProviderAuthProfileMetadata = {
 
 export function resolveProviderAuthProfileMetadata(params: {
   provider: string;
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   profileId?: string;
   agentDir?: string;
 }): ProviderAuthProfileMetadata {

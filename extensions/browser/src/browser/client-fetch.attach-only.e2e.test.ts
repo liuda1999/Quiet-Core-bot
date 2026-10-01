@@ -73,9 +73,9 @@ describe("browser client fetch attachOnly diagnostics", () => {
       );
       expect(thrown).toBeInstanceOf(Error);
       const message = thrown instanceof Error ? thrown.message : String(thrown);
-      expect(message).toContain("browser profile is external to OpenClaw");
-      expect(message).toContain("Restarting the OpenClaw gateway will not launch it");
-      expect(message).not.toContain("Restart the OpenClaw gateway");
+      expect(message).toContain("browser profile is external to QuietCore");
+      expect(message).toContain("Restarting the QuietCore gateway will not launch it");
+      expect(message).not.toContain("Restart the QuietCore gateway");
       expect(message).not.toContain("Do NOT retry the browser tool");
     } finally {
       for (const socket of sockets) {

@@ -149,7 +149,7 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
 
     expect(result.status).not.toBe(0);
     expect(result.stdout).not.toContain("value=");
-    expect(result.stderr).toContain("Invalid OpenClaw test-state base64 payload");
+    expect(result.stderr).toContain("Invalid QuietCore test-state base64 payload");
   });
 
   it("fails when the test-state payload decodes to an empty script", () => {
@@ -595,7 +595,7 @@ describe("scripts/lib/quiet-core-bot-e2e-instance.sh", () => {
       expect(result.status).toBe(124);
       expect(elapsedMs).toBeLessThan(4_000);
       expect(result.stderr).toContain("using Node watchdog");
-      expect(result.stderr).toContain("OpenClaw E2E command timed out after 200ms");
+      expect(result.stderr).toContain("QuietCore E2E command timed out after 200ms");
     } finally {
       fs.rmSync(tempDir, { force: true, recursive: true });
     }
@@ -967,7 +967,7 @@ exit 1
     }
   });
 
-  it("wraps logged OpenClaw E2E commands with the configured timeout", () => {
+  it("wraps logged QuietCore E2E commands with the configured timeout", () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-e2e-instance-run-logged-"));
     const logLabel = path.basename(tempDir);
     const logDir = path.join(tempDir, "logs");
@@ -1134,7 +1134,7 @@ exit 1
     }
   });
 
-  it("wraps package-installed OpenClaw CLI calls with the configured timeout", () => {
+  it("wraps package-installed QuietCore CLI calls with the configured timeout", () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-e2e-instance-quiet-core-bot-cli-"));
     try {
       const timeoutArgsPath = path.join(tempDir, "timeout-args.txt");

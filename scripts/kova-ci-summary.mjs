@@ -60,7 +60,7 @@ function renderSummary(reportLocal, options) {
       .map(([status, count]) => `${status}: ${value(count)}`)
       .join(", ") || "unknown";
 
-  lines.push(`# OpenClaw Performance Report`);
+  lines.push(`# QuietCore Performance Report`);
   lines.push("");
   lines.push(`- Lane: ${options.lane}`);
   lines.push(`- Run: ${value(reportLocal.runId)}`);

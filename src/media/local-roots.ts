@@ -8,8 +8,8 @@ import {
   resolveEffectiveToolFsWorkspaceOnly,
 } from "../agents/tool-fs-policy.js";
 import { resolveStateDir } from "../config/paths.js";
-import type { OpenClawConfig } from "../config/types.js";
-import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-quiet-core-bot-dir.js";
+import type { QuietCoreConfig } from "../config/types.js";
+import { resolvePreferredQuietCoreTmpDir } from "../infra/tmp-quiet-core-bot-dir.js";
 import { resolveConfigDir } from "../utils.js";
 import { resolveLocalMediaPath } from "./local-media-path.js";
 
@@ -23,7 +23,7 @@ function resolveCachedPreferredTmpDir(): string {
   if (!cachedPreferredTmpDir) {
     // Temp-root discovery can hit platform/env state; keep one process-local
     // snapshot so media root lists stay stable during a run.
-    cachedPreferredTmpDir = resolvePreferredOpenClawTmpDir();
+    cachedPreferredTmpDir = resolvePreferredQuietCoreTmpDir();
   }
   return cachedPreferredTmpDir;
 }
@@ -56,7 +56,7 @@ export function getDefaultMediaLocalRoots(): readonly string[] {
 
 /** Adds the active agent workspace to the default media roots without exposing all agent state. */
 export function getAgentScopedMediaLocalRoots(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   agentId?: string,
 ): readonly string[] {
   const roots = buildMediaLocalRoots(resolveStateDir(), resolveConfigDir());
@@ -100,7 +100,7 @@ export function appendLocalMediaParentRoots(
 
 /** Resolves outbound media roots, expanding for local sources only when filesystem policy allows it. */
 export function getAgentScopedMediaLocalRootsForSources(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentId?: string;
   mediaSources?: readonly string[];
 }): readonly string[] {

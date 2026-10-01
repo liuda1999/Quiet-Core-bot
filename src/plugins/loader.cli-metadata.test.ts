@@ -5,9 +5,9 @@ import { pathToFileURL } from "node:url";
 import { afterAll, afterEach, describe, expect, it } from "vitest";
 import {
   defineBundledChannelEntry,
-  type OpenClawPluginApi,
+  type QuietCorePluginApi,
 } from "../plugin-sdk/channel-entry-contract.js";
-import { loadOpenClawPluginCliRegistry, loadOpenClawPlugins } from "./loader.js";
+import { loadQuietCorePluginCliRegistry, loadQuietCorePlugins } from "./loader.js";
 import {
   cleanupPluginLoaderFixturesForTest,
   EMPTY_PLUGIN_SCHEMA,
@@ -49,7 +49,7 @@ describe("plugin loader CLI metadata", () => {
       });
       const errors: string[] = [];
 
-      const registry = await loadOpenClawPluginCliRegistry({
+      const registry = await loadQuietCorePluginCliRegistry({
         cache: false,
         logger: {
           info: () => {},
@@ -105,7 +105,7 @@ describe("plugin loader CLI metadata", () => {
     });
 
     const warnings: string[] = [];
-    const registry = await loadOpenClawPluginCliRegistry({
+    const registry = await loadQuietCorePluginCliRegistry({
       env: { ...process.env, QUIET_CORE_STATE_DIR: stateDir },
       logger: {
         info: () => {},
@@ -167,7 +167,7 @@ describe("plugin loader CLI metadata", () => {
       "utf-8",
     );
 
-    const registry = await loadOpenClawPluginCliRegistry({
+    const registry = await loadQuietCorePluginCliRegistry({
       config: {
         plugins: {
           load: { paths: [plugin.file] },
@@ -276,7 +276,7 @@ module.exports = {
       "utf-8",
     );
 
-    const registry = await loadOpenClawPluginCliRegistry({
+    const registry = await loadQuietCorePluginCliRegistry({
       config: {
         plugins: {
           load: { paths: [pluginDir] },
@@ -338,7 +338,7 @@ module.exports = {
       "utf-8",
     );
 
-    const registry = await loadOpenClawPluginCliRegistry({
+    const registry = await loadQuietCorePluginCliRegistry({
       config: {
         plugins: {
           allow: ["bundled-skip-channel"],
@@ -425,7 +425,7 @@ module.exports = {
       "utf-8",
     );
 
-    const registry = await loadOpenClawPluginCliRegistry({
+    const registry = await loadQuietCorePluginCliRegistry({
       config: {
         plugins: {
           allow: ["bundled-cli-channel"],
@@ -489,7 +489,7 @@ module.exports = {
       "utf-8",
     );
 
-    const registry = await loadOpenClawPluginCliRegistry({
+    const registry = await loadQuietCorePluginCliRegistry({
       config: {
         plugins: {
           allow: ["bundled-skip-provider"],
@@ -590,7 +590,7 @@ module.exports = {
       "utf-8",
     );
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       config: {
         plugins: {
@@ -690,7 +690,7 @@ module.exports = {
       "utf-8",
     );
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       activate: false,
       cache: false,
       config: {
@@ -795,7 +795,7 @@ module.exports = {
       "utf-8",
     );
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       activate: false,
       cache: false,
       forceFullRuntimeForChannelPlugins: true,
@@ -885,7 +885,7 @@ module.exports = {
 
     entry.register({
       registrationMode: "discovery",
-      runtime: {} as OpenClawPluginApi["runtime"],
+      runtime: {} as QuietCorePluginApi["runtime"],
       registerChannel: (registration) => {
         const plugin = "plugin" in registration ? registration.plugin : registration;
         channels.push(plugin.id);
@@ -893,7 +893,7 @@ module.exports = {
       registerCli: (_register, options) => {
         commands.push(...(options?.descriptors ?? []).map((descriptor) => descriptor.name));
       },
-    } as OpenClawPluginApi);
+    } as QuietCorePluginApi);
 
     expect(channels).toEqual(["bundled-discovery-cli"]);
     expect(fs.existsSync(runtimeMarker)).toBe(true);
@@ -929,7 +929,7 @@ module.exports = {
 };`,
     });
 
-    const registry = await loadOpenClawPluginCliRegistry({
+    const registry = await loadQuietCorePluginCliRegistry({
       cache: false,
       config: {
         plugins: {
@@ -976,7 +976,7 @@ module.exports = {
 };`,
     });
 
-    const registry = await loadOpenClawPluginCliRegistry({
+    const registry = await loadQuietCorePluginCliRegistry({
       config: {
         plugins: {
           load: { paths: [plugin.file] },
@@ -1027,7 +1027,7 @@ module.exports = {
       "utf-8",
     );
 
-    const registry = await loadOpenClawPluginCliRegistry({
+    const registry = await loadQuietCorePluginCliRegistry({
       config: {
         plugins: {
           load: { paths: [plugin.file] },
@@ -1067,7 +1067,7 @@ module.exports = {
 };`,
     });
 
-    const registry = await loadOpenClawPluginCliRegistry({
+    const registry = await loadQuietCorePluginCliRegistry({
       config: {
         plugins: {
           load: { paths: [plugin.file] },

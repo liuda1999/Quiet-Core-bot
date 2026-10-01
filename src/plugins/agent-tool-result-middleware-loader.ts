@@ -1,5 +1,5 @@
 // Loads agent tool result middleware from plugin runtime surfaces.
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import { getLoadedRuntimePluginRegistry } from "./active-runtime-registry.js";
 import type {
@@ -18,7 +18,7 @@ import {
   type PluginActivationConfigSource,
 } from "./config-state.js";
 import { isPluginEnabledByDefaultForPlatform } from "./default-enablement.js";
-import { loadOpenClawPlugins } from "./loader.js";
+import { loadQuietCorePlugins } from "./loader.js";
 import {
   loadPluginManifestRegistry,
   type PluginManifestRecord,
@@ -30,8 +30,8 @@ import { getActivePluginRegistry } from "./runtime.js";
 const log = createSubsystemLogger("plugins/agent-tool-result-middleware");
 
 async function resolveRuntimeConfigContext(): Promise<{
-  config: OpenClawConfig;
-  activationSourceConfig: OpenClawConfig;
+  config: QuietCoreConfig;
+  activationSourceConfig: QuietCoreConfig;
 }> {
   const { getRuntimeConfig, getRuntimeConfigSourceSnapshot } = await import("../config/config.js");
   const config = getRuntimeConfig();
@@ -44,7 +44,7 @@ async function resolveRuntimeConfigContext(): Promise<{
 function listMiddlewareOwnerPluginIds(params: {
   manifestRegistry: PluginManifestRegistry;
   runtime: AgentToolResultMiddlewareRuntime;
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   pluginsConfig: NormalizedPluginsConfig;
   activationSource: PluginActivationConfigSource;
 }): string[] {
@@ -72,7 +72,7 @@ function listMiddlewareOwnerPluginIds(params: {
 
 function canLazyLoadMiddlewareOwner(params: {
   record: PluginManifestRecord;
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   pluginsConfig: NormalizedPluginsConfig;
   activationSource: PluginActivationConfigSource;
 }): boolean {
@@ -123,8 +123,8 @@ function registryHasMiddlewareOwners(params: {
 
 export async function loadAgentToolResultMiddlewaresForRuntime(params: {
   runtime: AgentToolResultMiddlewareRuntime;
-  config?: OpenClawConfig;
-  activationSourceConfig?: OpenClawConfig;
+  config?: QuietCoreConfig;
+  activationSourceConfig?: QuietCoreConfig;
   workspaceDir?: string;
   env?: NodeJS.ProcessEnv;
   manifestRegistry?: PluginManifestRegistry;
@@ -182,7 +182,7 @@ export async function loadAgentToolResultMiddlewaresForRuntime(params: {
         runtime: params.runtime,
       })
         ? loadedRegistry
-        : loadOpenClawPlugins({
+        : loadQuietCorePlugins({
             config,
             workspaceDir: params.workspaceDir,
             env,

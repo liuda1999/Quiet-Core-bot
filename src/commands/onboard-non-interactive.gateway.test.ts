@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { MigrationApplyResult, MigrationPlan } from "../plugins/types.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { makeTempWorkspace } from "../test-helpers/workspace.js";
@@ -11,7 +11,7 @@ import { createThrowingRuntime } from "./onboard-non-interactive.test-helpers.js
 import type { installGatewayDaemonNonInteractive } from "./onboard-non-interactive/local/daemon-install.js";
 
 const ensureWorkspaceAndSessionsMock = vi.fn(async (..._args: unknown[]) => {});
-const testConfigStore = new Map<string, OpenClawConfig>();
+const testConfigStore = new Map<string, QuietCoreConfig>();
 type InstallGatewayDaemonResult = Awaited<ReturnType<typeof installGatewayDaemonNonInteractive>>;
 const installGatewayDaemonNonInteractiveMock = vi.hoisted(() =>
   vi.fn(async (): Promise<InstallGatewayDaemonResult> => ({ installed: true })),
@@ -64,7 +64,7 @@ function resolveTestConfigPath() {
 }
 
 // oxlint-disable-next-line typescript/no-unnecessary-type-parameters -- Test helper lets assertions ascribe stored config shape.
-function readTestConfig<T = OpenClawConfig>(): T {
+function readTestConfig<T = QuietCoreConfig>(): T {
   return (testConfigStore.get(resolveTestConfigPath()) ?? {}) as T;
 }
 
@@ -99,7 +99,7 @@ vi.mock("../config/io.js", () => ({
 }));
 
 const capturedReplaceConfigFileCalls: Array<{
-  nextConfig: OpenClawConfig;
+  nextConfig: QuietCoreConfig;
   writeOptions?: { allowConfigSizeDrop?: boolean; unsetPaths?: string[][] };
 }> = [];
 
@@ -108,13 +108,13 @@ vi.mock("../config/config.js", () => ({
     nextConfig,
     writeOptions,
   }: {
-    nextConfig: OpenClawConfig;
+    nextConfig: QuietCoreConfig;
     writeOptions?: { allowConfigSizeDrop?: boolean; unsetPaths?: string[][] };
   }) => {
     capturedReplaceConfigFileCalls.push({ nextConfig, ...(writeOptions ? { writeOptions } : {}) });
     testConfigStore.set(resolveTestConfigPath(), nextConfig);
   },
-  resolveGatewayPort: (cfg: OpenClawConfig) => cfg.gateway?.port ?? 18789,
+  resolveGatewayPort: (cfg: QuietCoreConfig) => cfg.gateway?.port ?? 18789,
 }));
 
 vi.mock("./onboard-helpers.js", () => {
@@ -245,7 +245,7 @@ type EnsureWorkspaceOptions = {
 };
 
 type MigrationPlanCall = {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   includeSecrets?: boolean;
   overwrite?: boolean;
   source?: string;
@@ -262,7 +262,7 @@ type GatewayHealthCall = {
 };
 
 type HealthCommandCall = GatewayHealthCall & {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
 };
 
 async function expectLocalJsonSetupFailure(stateDir: string, runtimeWithCapture: RuntimeEnv) {
@@ -429,7 +429,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
         agents: { list: seededAgents, defaults: { workspace } },
         bindings: seededBindings,
         gateway: { mode: "local", port: 18789, auth: { mode: "token", token: "seed_tok" } },
-      } as OpenClawConfig);
+      } as QuietCoreConfig);
 
       await runNonInteractiveSetup(
         {
@@ -468,7 +468,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
             },
           },
         },
-      } as OpenClawConfig);
+      } as QuietCoreConfig);
 
       await runNonInteractiveSetup(
         {
@@ -695,7 +695,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
           mode: "remote",
           remote: { url: `ws://127.0.0.1:${port}`, token },
         },
-      } as OpenClawConfig);
+      } as QuietCoreConfig);
 
       await runNonInteractiveSetup(
         {
@@ -735,7 +735,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
           mode: "remote",
           remote: { url: `ws://127.0.0.1:${port}`, token },
         },
-      } as OpenClawConfig);
+      } as QuietCoreConfig);
 
       await runNonInteractiveSetup(
         {

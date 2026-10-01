@@ -1,5 +1,5 @@
 /**
- * OpenClaw-managed Chrome lifecycle and CDP helpers.
+ * QuietCore-managed Chrome lifecycle and CDP helpers.
  *
  * Builds launch args, starts/stops managed Chrome, probes CDP readiness, and
  * resolves WebSocket endpoints for browser control.
@@ -17,7 +17,7 @@ import { prepareOomScoreAdjustedSpawn } from "quiet-core-bot/plugin-sdk/process-
 import { normalizeOptionalString } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import type { SsrFPolicy } from "../infra/net/ssrf.js";
 import { ensurePortAvailable } from "../infra/ports.js";
-import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-quiet-core-bot-dir.js";
+import { resolvePreferredQuietCoreTmpDir } from "../infra/tmp-quiet-core-bot-dir.js";
 import { redactToolPayloadText } from "../logging/redact.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import { CONFIG_DIR } from "../utils.js";
@@ -57,7 +57,7 @@ import {
   resolveBrowserExecutableForPlatform,
 } from "./chrome.executables.js";
 import {
-  decorateOpenClawProfile,
+  decorateQuietCoreProfile,
   ensureProfileCleanExit,
   isProfileDecorated,
 } from "./chrome.profile-decoration.js";
@@ -107,7 +107,7 @@ export {
   resolveBrowserExecutableForPlatform,
 } from "./chrome.executables.js";
 export {
-  decorateOpenClawProfile,
+  decorateQuietCoreProfile,
   ensureProfileCleanExit,
   isProfileDecorated,
 } from "./chrome.profile-decoration.js";
@@ -642,7 +642,7 @@ async function ensureManagedChromePortAvailable(
     }
   };
 
-  // Chromium tries IPv4 loopback first, while OpenClaw polls the configured endpoint.
+  // Chromium tries IPv4 loopback first, while QuietCore polls the configured endpoint.
   // Probe both so neither Chrome's bind nor the later readiness check can be captured.
   try {
     await ensureProbeHostsAvailable();
@@ -700,7 +700,7 @@ export type RunningChrome = {
   /**
    * @deprecated CDP managed-proxy bypasses are scoped at exact request URLs.
    * Kept so older in-memory callers can pass stale RunningChrome objects
-   * through stopOpenClawChrome without type churn.
+   * through stopQuietCoreChrome without type churn.
    */
   releaseCdpProxyBypass?: () => void;
 };
@@ -715,8 +715,8 @@ function resolveBrowserExecutable(
   );
 }
 
-/** Resolve the user-data-dir path for a managed OpenClaw Chrome profile. */
-export function resolveOpenClawUserDataDir(profileName = DEFAULT_QUIET_CORE_BROWSER_PROFILE_NAME) {
+/** Resolve the user-data-dir path for a managed QuietCore Chrome profile. */
+export function resolveQuietCoreUserDataDir(profileName = DEFAULT_QUIET_CORE_BROWSER_PROFILE_NAME) {
   return path.join(CONFIG_DIR, "browser", profileName, "user-data");
 }
 
@@ -724,8 +724,8 @@ function cdpUrlForPort(cdpPort: number) {
   return `http://127.0.0.1:${cdpPort}`;
 }
 
-/** Build Chrome launch arguments for the managed OpenClaw browser. */
-export function buildOpenClawChromeLaunchArgs(params: {
+/** Build Chrome launch arguments for the managed QuietCore browser. */
+export function buildQuietCoreChromeLaunchArgs(params: {
   resolved: ResolvedBrowserConfig;
   profile: ResolvedBrowserProfile;
   userDataDir: string;
@@ -888,8 +888,8 @@ export async function isChromeCdpReady(
   return diagnostic.ok;
 }
 
-/** Launch or attach to the managed OpenClaw Chrome profile. */
-export async function launchOpenClawChrome(
+/** Launch or attach to the managed QuietCore Chrome profile. */
+export async function launchQuietCoreChrome(
   resolved: ResolvedBrowserConfig,
   profile: ResolvedBrowserProfile,
   launchOptions: ManagedBrowserHeadlessOptions = {},
@@ -920,7 +920,7 @@ export async function launchOpenClawChrome(
     );
   }
 
-  const userDataDir = resolveOpenClawUserDataDir(profile.name);
+  const userDataDir = resolveQuietCoreUserDataDir(profile.name);
   await ensureManagedChromePortAvailable(resolved, profile, userDataDir);
 
   const exe = resolveBrowserExecutable(resolved, profile);
@@ -942,7 +942,7 @@ export async function launchOpenClawChrome(
 
   // First launch to create preference files if missing, then decorate and relaunch.
   const spawnOnce = () => {
-    const args = buildOpenClawChromeLaunchArgs({
+    const args = buildQuietCoreChromeLaunchArgs({
       resolved,
       profile,
       userDataDir,
@@ -954,7 +954,7 @@ export async function launchOpenClawChrome(
       HOME: os.homedir(),
     };
     if (process.platform === "linux") {
-      const chromiumStateDir = path.join(resolvePreferredOpenClawTmpDir(), ".chromium");
+      const chromiumStateDir = path.join(resolvePreferredQuietCoreTmpDir(), ".chromium");
       env.XDG_CONFIG_HOME ??= chromiumStateDir;
       env.XDG_CACHE_HOME ??= chromiumStateDir;
     }
@@ -1008,7 +1008,7 @@ export async function launchOpenClawChrome(
 
   if (needsDecorate) {
     try {
-      decorateOpenClawProfile(userDataDir, {
+      decorateQuietCoreProfile(userDataDir, {
         name: profile.name,
         color: profile.color,
         downloadDir: DEFAULT_DOWNLOAD_DIR,
@@ -1130,7 +1130,7 @@ export async function launchOpenClawChrome(
 }
 
 /** Stop a managed Chrome process and wait for shutdown. */
-export async function stopOpenClawChrome(
+export async function stopQuietCoreChrome(
   running: RunningChrome,
   timeoutMs = CHROME_STOP_TIMEOUT_MS,
 ) {

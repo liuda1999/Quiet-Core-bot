@@ -6,7 +6,7 @@ import { sanitizeTerminalText } from "../../packages/terminal-core/src/safe-text
 import { formatCliCommand } from "../cli/command-format.js";
 import { quoteCliArg } from "../cli/quote-cli-arg.js";
 import { resolveStateDir } from "../config/paths.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { callGateway } from "../gateway/call.js";
 import {
   listApprovedPairedDeviceRoles,
@@ -121,7 +121,7 @@ function normalizeLocalPairedDevice(device: PairedDevice): DoctorPairedDevice {
 }
 
 async function loadDoctorPairingSnapshot(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   healthOk: boolean;
 }): Promise<DoctorPairingSnapshot | null> {
   if (params.healthOk) {
@@ -491,7 +491,7 @@ function formatPairingStoreReadIssue(error: JsonFileReadError): string {
  * pairing state when the gateway is down.
  */
 export async function noteDevicePairingHealth(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   healthOk: boolean;
 }): Promise<void> {
   let snapshot: DoctorPairingSnapshot | null;

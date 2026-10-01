@@ -175,7 +175,7 @@ function createQaChannelConfig(params: { baseUrl: string; allowFrom?: string[] }
       "qa-channel": {
         baseUrl: params.baseUrl,
         botUserId: "quiet-core-bot",
-        botDisplayName: "OpenClaw QA",
+        botDisplayName: "QuietCore QA",
         allowFrom: params.allowFrom,
       },
     },

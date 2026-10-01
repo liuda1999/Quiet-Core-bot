@@ -3,7 +3,7 @@
  */
 export { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
 export { readConfigFileSnapshot } from "../config/config.js";
-export type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+export type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 export {
   configValidationIssuesToHealthFindings,
   registerCoreHealthChecks,

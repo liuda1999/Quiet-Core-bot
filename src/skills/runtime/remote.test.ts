@@ -4,7 +4,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { NodeRegistry } from "../../gateway/node-registry.js";
 import { getSkillsSnapshotVersion, resetSkillsRefreshForTest } from "./refresh.js";
 import {
@@ -16,7 +16,7 @@ import {
   setSkillsRemoteRegistry,
 } from "./remote.js";
 
-function createRemoteSkillWorkspace(bin: string): { cfg: OpenClawConfig; workspaceDir: string } {
+function createRemoteSkillWorkspace(bin: string): { cfg: QuietCoreConfig; workspaceDir: string } {
   const workspaceDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-remote-skills-"));
   fs.mkdirSync(path.join(workspaceDir, "remote-skill"), { recursive: true });
   fs.writeFileSync(
@@ -39,7 +39,7 @@ function createRemoteSkillWorkspace(bin: string): { cfg: OpenClawConfig; workspa
           workspace: workspaceDir,
         },
       },
-    } satisfies OpenClawConfig,
+    } satisfies QuietCoreConfig,
   };
 }
 
@@ -257,7 +257,7 @@ describe("skills-remote", () => {
             workspace: workspaceDir,
           },
         },
-      } satisfies OpenClawConfig;
+      } satisfies QuietCoreConfig;
       const invokeCalls: string[] = [];
       setSkillsRemoteRegistry({
         listConnected: () => [],
@@ -325,7 +325,7 @@ describe("skills-remote", () => {
             workspace: workspaceDir,
           },
         },
-      } satisfies OpenClawConfig;
+      } satisfies QuietCoreConfig;
       let connId = "conn-old";
       const connectivityCalls: string[] = [];
       const invokeCalls: string[] = [];
@@ -424,7 +424,7 @@ describe("skills-remote", () => {
             workspace: workspaceDir,
           },
         },
-      } satisfies OpenClawConfig;
+      } satisfies QuietCoreConfig;
       recordRemoteNodeInfo({
         nodeId,
         displayName: "Remote Mac",

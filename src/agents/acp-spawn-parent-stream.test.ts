@@ -1,6 +1,6 @@
 /** Tests ACP child-to-parent stream relay notices, routing, and log path resolution. */
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { mergeMockedModule } from "../test-utils/vitest-module-mocks.js";
 
 const enqueueSystemEventMock = vi.fn();
@@ -59,7 +59,7 @@ const progressCommentaryDeliveryContext = {
   threadId: 1122,
 };
 
-function progressModeConfig(acp?: OpenClawConfig["acp"]): OpenClawConfig {
+function progressModeConfig(acp?: QuietCoreConfig["acp"]): QuietCoreConfig {
   return {
     ...(acp ? { acp } : {}),
     channels: {

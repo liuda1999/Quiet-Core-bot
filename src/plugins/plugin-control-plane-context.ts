@@ -1,5 +1,5 @@
 /** Tracks control-plane plugin metadata context during registry and status operations. */
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { hashJson } from "./installed-plugin-index-hash.js";
 import { resolveInstalledPluginIndexPolicyHash } from "./installed-plugin-index-policy.js";
 import type { InstalledPluginIndex } from "./installed-plugin-index.js";
@@ -22,7 +22,7 @@ export type PluginControlPlaneContext = {
 
 /** Parameters used to resolve plugin discovery roots and load paths. */
 export type ResolvePluginDiscoveryContextParams = {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
   workspaceDir?: string;
   loadPaths?: readonly string[];
@@ -37,7 +37,7 @@ export type ResolvePluginControlPlaneContextParams = ResolvePluginDiscoveryConte
 };
 
 function resolveConfiguredPluginLoadPaths(
-  config: OpenClawConfig | undefined,
+  config: QuietCoreConfig | undefined,
 ): readonly string[] | undefined {
   const paths = config?.plugins?.load?.paths;
   return Array.isArray(paths) ? paths : undefined;

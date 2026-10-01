@@ -1,4 +1,4 @@
-// Snapshots script supports OpenClaw repository automation.
+// Snapshots script supports QuietCore repository automation.
 import { die, run } from "./host-command.ts";
 import type { Mode } from "./types.ts";
 import type { SnapshotInfo } from "./types.ts";

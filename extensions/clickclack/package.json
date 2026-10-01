@@ -1,7 +1,7 @@
 {
   "name": "@quiet-core/clickclack",
   "version": "2026.6.11",
-  "description": "OpenClaw ClickClack channel plugin",
+  "description": "QuietCore ClickClack channel plugin",
   "type": "module",
   "exports": {
     ".": "./dist/index.js",

@@ -8,7 +8,7 @@ import { Command } from "commander";
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { TEST_BUNDLED_RUNTIME_SIDECAR_PATHS } from "../../test/helpers/bundled-runtime-sidecars.js";
 import type { PluginInstallRecord } from "../config/types.plugins.js";
-import type { OpenClawConfig, ConfigFileSnapshot } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig, ConfigFileSnapshot } from "../config/types.quiet-core-bot.js";
 import { GATEWAY_SERVICE_RUNTIME_PID_ENV } from "../daemon/constants.js";
 import { writePackageDistInventory } from "../infra/package-dist-inventory.js";
 import { isBetaTag } from "../infra/update-channels.js";
@@ -49,7 +49,7 @@ const pathExists = vi.fn();
 const syncPluginsForUpdateChannel = vi.fn();
 const updateNpmInstalledPlugins = vi.fn();
 const loadInstalledPluginIndexInstallRecords = vi.fn(
-  async (params: { config?: OpenClawConfig } = {}) => params.config?.plugins?.installs ?? {},
+  async (params: { config?: QuietCoreConfig } = {}) => params.config?.plugins?.installs ?? {},
 );
 const checkShellCompletionStatus = vi.fn();
 const ensureCompletionCacheExists = vi.fn();
@@ -58,7 +58,7 @@ const legacyConfigRepairMocks = vi.hoisted(() => ({
   repairLegacyConfigForUpdateChannel: vi.fn(),
 }));
 const launchdUpdateCleanupMocks = vi.hoisted(() => ({
-  disableCurrentOpenClawUpdateLaunchdJob: vi.fn(async () => false),
+  disableCurrentQuietCoreUpdateLaunchdJob: vi.fn(async () => false),
 }));
 const nodeVersionSatisfiesEngine = vi.fn();
 const execFile = vi.fn((...args: unknown[]) => {
@@ -100,8 +100,8 @@ vi.mock("../infra/update-runner.js", () => ({
 }));
 
 vi.mock("../infra/quiet-core-bot-root.js", () => ({
-  resolveOpenClawPackageRoot: vi.fn(),
-  resolveOpenClawPackageRootSync: vi.fn(() => process.cwd()),
+  resolveQuietCorePackageRoot: vi.fn(),
+  resolveQuietCorePackageRootSync: vi.fn(() => process.cwd()),
 }));
 
 vi.mock("../config/config.js", () => ({
@@ -313,8 +313,8 @@ vi.mock("../daemon/service.js", () => ({
 
 vi.mock("../daemon/launchd.js", async (importOriginal) => ({
   ...(await importOriginal<typeof import("../daemon/launchd.js")>()),
-  disableCurrentOpenClawUpdateLaunchdJob:
-    launchdUpdateCleanupMocks.disableCurrentOpenClawUpdateLaunchdJob,
+  disableCurrentQuietCoreUpdateLaunchdJob:
+    launchdUpdateCleanupMocks.disableCurrentQuietCoreUpdateLaunchdJob,
 }));
 
 vi.mock("../infra/ports.js", () => ({
@@ -362,7 +362,7 @@ vi.mock("../runtime.js", () => ({
 }));
 
 const { runGatewayUpdate } = await import("../infra/update-runner.js");
-const { resolveOpenClawPackageRoot } = await import("../infra/quiet-core-bot-root.js");
+const { resolveQuietCorePackageRoot } = await import("../infra/quiet-core-bot-root.js");
 const {
   mutateConfigFileWithRetry,
   readConfigFileSnapshot,
@@ -414,7 +414,7 @@ describe("update-cli", () => {
     return dir;
   };
 
-  const baseConfig = {} as OpenClawConfig;
+  const baseConfig = {} as QuietCoreConfig;
   const baseSnapshot: ConfigFileSnapshot = {
     path: "/tmp/quiet-core-bot-config.json",
     exists: true,
@@ -445,7 +445,7 @@ describe("update-cli", () => {
   };
 
   const mockPackageInstallStatus = (root: string) => {
-    vi.mocked(resolveOpenClawPackageRoot).mockResolvedValue(root);
+    vi.mocked(resolveQuietCorePackageRoot).mockResolvedValue(root);
     vi.mocked(checkUpdateStatus).mockResolvedValue({
       root,
       installKind: "package",
@@ -475,7 +475,7 @@ describe("update-cli", () => {
   const packagePackCommandCall = () =>
     commandCalls().find(([argv]) => argv[0] === "npm" && argv[1] === "pack");
 
-  const stripOpenClawPackageAlias = (spec: string) => {
+  const stripQuietCorePackageAlias = (spec: string) => {
     const trimmed = spec.trim();
     return trimmed.toLowerCase().startsWith("quiet-core-bot@")
       ? trimmed.slice("quiet-core-bot@".length)
@@ -483,7 +483,7 @@ describe("update-cli", () => {
   };
 
   const isNpmGitPackageSpec = (spec: string) => {
-    const target = stripOpenClawPackageAlias(spec);
+    const target = stripQuietCorePackageAlias(spec);
     const [repo] = target.split("#", 1);
     const isGitHubShorthand =
       Boolean(repo) &&
@@ -540,14 +540,14 @@ describe("update-cli", () => {
 
   const syncPluginCall = (index = 0) => {
     const calls = syncPluginsForUpdateChannel.mock.calls as unknown as Array<
-      [{ channel?: string; config?: OpenClawConfig }]
+      [{ channel?: string; config?: QuietCoreConfig }]
     >;
     return calls[index]?.[0];
   };
 
   const npmPluginUpdateCall = (index = 0) => {
     const calls = updateNpmInstalledPlugins.mock.calls as unknown as Array<
-      [{ config?: OpenClawConfig; timeoutMs?: number }]
+      [{ config?: QuietCoreConfig; timeoutMs?: number }]
     >;
     return calls[index]?.[0];
   };
@@ -560,7 +560,7 @@ describe("update-cli", () => {
   const setupConfigMutationWithRetryMock = () => {
     vi.mocked(mutateConfigFileWithRetry).mockImplementation(async (params) => {
       const snapshot = await readConfigFileSnapshot();
-      const nextConfig = structuredClone(snapshot.sourceConfig) as OpenClawConfig;
+      const nextConfig = structuredClone(snapshot.sourceConfig) as QuietCoreConfig;
       await params.mutate(nextConfig, {
         snapshot,
         previousHash: snapshot.hash ?? null,
@@ -747,7 +747,7 @@ describe("update-cli", () => {
       return child;
     });
     vi.mocked(defaultRuntime.exit).mockImplementation(() => {});
-    vi.mocked(resolveOpenClawPackageRoot).mockResolvedValue(process.cwd());
+    vi.mocked(resolveQuietCorePackageRoot).mockResolvedValue(process.cwd());
     vi.mocked(readConfigFileSnapshot).mockResolvedValue(baseSnapshot);
     vi.mocked(readSourceConfigBestEffort).mockResolvedValue(baseSnapshot.config);
     setupConfigMutationWithRetryMock();
@@ -888,8 +888,8 @@ describe("update-cli", () => {
         repaired: false,
       }),
     );
-    launchdUpdateCleanupMocks.disableCurrentOpenClawUpdateLaunchdJob.mockReset();
-    launchdUpdateCleanupMocks.disableCurrentOpenClawUpdateLaunchdJob.mockResolvedValue(false);
+    launchdUpdateCleanupMocks.disableCurrentQuietCoreUpdateLaunchdJob.mockReset();
+    launchdUpdateCleanupMocks.disableCurrentQuietCoreUpdateLaunchdJob.mockResolvedValue(false);
     confirm.mockResolvedValue(false);
     select.mockResolvedValue("stable");
     vi.mocked(runGatewayUpdate).mockResolvedValue(makeOkUpdateResult());
@@ -943,7 +943,7 @@ describe("update-cli", () => {
       await expect(updateCommand({ yes: true })).rejects.toThrow("QUIET_CORE_NIX_MODE=1");
     });
 
-    expect(launchdUpdateCleanupMocks.disableCurrentOpenClawUpdateLaunchdJob).toHaveBeenCalledOnce();
+    expect(launchdUpdateCleanupMocks.disableCurrentQuietCoreUpdateLaunchdJob).toHaveBeenCalledOnce();
     expect(runGatewayUpdate).not.toHaveBeenCalled();
     expect(replaceConfigFile).not.toHaveBeenCalled();
     expect(updateNpmInstalledPlugins).not.toHaveBeenCalled();
@@ -1150,7 +1150,7 @@ describe("update-cli", () => {
           dmPolicy: "pairing",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     let capturedRecords: unknown;
     let capturedSourceConfig: unknown;
     vi.mocked(readConfigFileSnapshot).mockResolvedValue({
@@ -1506,10 +1506,10 @@ describe("update-cli", () => {
     vi.mocked(readConfigFileSnapshot).mockResolvedValue({
       ...baseSnapshot,
       parsed: { update: { channel: "stable" } },
-      resolved: { update: { channel: "stable" } } as OpenClawConfig,
-      sourceConfig: { update: { channel: "stable" } } as OpenClawConfig,
-      runtimeConfig: { update: { channel: "stable" } } as OpenClawConfig,
-      config: { update: { channel: "stable" } } as OpenClawConfig,
+      resolved: { update: { channel: "stable" } } as QuietCoreConfig,
+      sourceConfig: { update: { channel: "stable" } } as QuietCoreConfig,
+      runtimeConfig: { update: { channel: "stable" } } as QuietCoreConfig,
+      config: { update: { channel: "stable" } } as QuietCoreConfig,
       hash: "stable-hash",
     });
 
@@ -1546,10 +1546,10 @@ describe("update-cli", () => {
     vi.mocked(readConfigFileSnapshot).mockResolvedValueOnce({
       ...baseSnapshot,
       parsed: { update: { channel: "stable" } },
-      resolved: { update: { channel: "stable" } } as OpenClawConfig,
-      sourceConfig: { update: { channel: "stable" } } as OpenClawConfig,
-      runtimeConfig: { update: { channel: "stable" } } as OpenClawConfig,
-      config: { update: { channel: "stable" } } as OpenClawConfig,
+      resolved: { update: { channel: "stable" } } as QuietCoreConfig,
+      sourceConfig: { update: { channel: "stable" } } as QuietCoreConfig,
+      runtimeConfig: { update: { channel: "stable" } } as QuietCoreConfig,
+      config: { update: { channel: "stable" } } as QuietCoreConfig,
       hash: "stable-hash",
     });
     const newerSnapshot = {
@@ -1561,19 +1561,19 @@ describe("update-cli", () => {
       resolved: {
         meta: { lastTouchedVersion: "2026.4.30" },
         update: { channel: "stable" },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       sourceConfig: {
         meta: { lastTouchedVersion: "2026.4.30" },
         update: { channel: "stable" },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       runtimeConfig: {
         meta: { lastTouchedVersion: "2026.4.30" },
         update: { channel: "stable" },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       config: {
         meta: { lastTouchedVersion: "2026.4.30" },
         update: { channel: "stable" },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       hash: "newer-hash",
     };
     vi.mocked(mutateConfigFileWithRetry).mockImplementationOnce(async (params) => {
@@ -1714,7 +1714,7 @@ describe("update-cli", () => {
   it("keeps json update output successful when post-core plugin updates warn", async () => {
     updateNpmInstalledPlugins.mockImplementationOnce(
       async (params: {
-        config: OpenClawConfig;
+        config: QuietCoreConfig;
         onIntegrityDrift?: (drift: {
           pluginId: string;
           spec: string;
@@ -1794,7 +1794,7 @@ describe("update-cli", () => {
           demo: { enabled: true },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     vi.mocked(readConfigFileSnapshot).mockResolvedValue({
       ...baseSnapshot,
       parsed: config,
@@ -1998,7 +1998,7 @@ describe("update-cli", () => {
         expect(runRestartScript).not.toHaveBeenCalled();
         expect(runDaemonRestart).not.toHaveBeenCalled();
         expect(
-          launchdUpdateCleanupMocks.disableCurrentOpenClawUpdateLaunchdJob,
+          launchdUpdateCleanupMocks.disableCurrentQuietCoreUpdateLaunchdJob,
         ).not.toHaveBeenCalled();
 
         const logs = vi.mocked(defaultRuntime.log).mock.calls.map((call) => String(call[0]));
@@ -2017,7 +2017,7 @@ describe("update-cli", () => {
         expect(defaultRuntime.exit).not.toHaveBeenCalledWith(1);
         expect(runGatewayUpdate).not.toHaveBeenCalled();
         expect(
-          launchdUpdateCleanupMocks.disableCurrentOpenClawUpdateLaunchdJob,
+          launchdUpdateCleanupMocks.disableCurrentQuietCoreUpdateLaunchdJob,
         ).not.toHaveBeenCalled();
       },
     },
@@ -2054,11 +2054,11 @@ describe("update-cli", () => {
     vi.mocked(readConfigFileSnapshot).mockResolvedValue({
       ...baseSnapshot,
       valid: false,
-      config: {} as OpenClawConfig,
+      config: {} as QuietCoreConfig,
     });
     vi.mocked(readSourceConfigBestEffort).mockResolvedValue({
       update: { channel: "dev" },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     await updateStatusCommand({ json: true });
 
@@ -2113,7 +2113,7 @@ describe("update-cli", () => {
       prepare: async () => {
         vi.mocked(readConfigFileSnapshot).mockResolvedValue({
           ...baseSnapshot,
-          config: { update: { channel: "beta" } } as OpenClawConfig,
+          config: { update: { channel: "beta" } } as QuietCoreConfig,
         });
       },
       expectedChannel: "beta" as const,
@@ -2163,7 +2163,7 @@ describe("update-cli", () => {
     mockPackageInstallStatus(tempDir);
     vi.mocked(readConfigFileSnapshot).mockResolvedValue({
       ...baseSnapshot,
-      config: { update: { channel: "beta" } } as OpenClawConfig,
+      config: { update: { channel: "beta" } } as QuietCoreConfig,
     });
     vi.mocked(resolveNpmChannelTag).mockResolvedValue({
       tag: "latest",
@@ -2576,7 +2576,7 @@ describe("update-cli", () => {
       readPackageName.mockResolvedValue("quiet-core-bot");
       readPackageVersion.mockResolvedValue("1.0.0");
       resolveGlobalManager.mockResolvedValue("npm");
-      vi.mocked(resolveOpenClawPackageRoot).mockResolvedValue(process.cwd());
+      vi.mocked(resolveQuietCorePackageRoot).mockResolvedValue(process.cwd());
       await run();
       expectPackageInstallSpec(expectedSpec);
     },
@@ -3489,7 +3489,7 @@ describe("update-cli", () => {
       pid: 4242,
       state: "running",
     });
-    launchdUpdateCleanupMocks.disableCurrentOpenClawUpdateLaunchdJob.mockResolvedValue(true);
+    launchdUpdateCleanupMocks.disableCurrentQuietCoreUpdateLaunchdJob.mockResolvedValue(true);
     pathExists.mockImplementation(async (candidate: string) => {
       try {
         await fs.access(candidate);
@@ -3522,7 +3522,7 @@ describe("update-cli", () => {
     await updateCommand({ yes: true });
 
     const cleanupOrder =
-      launchdUpdateCleanupMocks.disableCurrentOpenClawUpdateLaunchdJob.mock.invocationCallOrder[0];
+      launchdUpdateCleanupMocks.disableCurrentQuietCoreUpdateLaunchdJob.mock.invocationCallOrder[0];
     const serviceStopOrder = serviceStop.mock.invocationCallOrder[0];
     expect(requireValue(cleanupOrder, "launchd updater cleanup order")).toBeLessThan(
       requireValue(serviceStopOrder, "service stop order"),
@@ -4321,7 +4321,7 @@ describe("update-cli", () => {
           streaming: "block",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const migratedConfig = {
       channels: {
         slack: {
@@ -4336,7 +4336,7 @@ describe("update-cli", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     vi.mocked(readConfigFileSnapshot)
       .mockResolvedValueOnce({
         ...baseSnapshot,
@@ -4451,7 +4451,7 @@ describe("update-cli", () => {
           nativeStreaming: false,
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     vi.mocked(readConfigFileSnapshot).mockResolvedValueOnce({
       ...baseSnapshot,
       parsed: legacyConfigWithInclude,
@@ -4492,7 +4492,7 @@ describe("update-cli", () => {
           nativeStreaming: false,
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     vi.mocked(readConfigFileSnapshot).mockResolvedValueOnce({
       ...baseSnapshot,
       parsed: legacyConfig,
@@ -4520,7 +4520,7 @@ describe("update-cli", () => {
 
     expect(replaceConfigFile).not.toHaveBeenCalled();
     expect(runCommandWithTimeout).not.toHaveBeenCalled();
-    expect(launchdUpdateCleanupMocks.disableCurrentOpenClawUpdateLaunchdJob).not.toHaveBeenCalled();
+    expect(launchdUpdateCleanupMocks.disableCurrentQuietCoreUpdateLaunchdJob).not.toHaveBeenCalled();
     expect(defaultRuntime.exit).toHaveBeenCalledWith(1);
   });
 
@@ -4584,11 +4584,11 @@ describe("update-cli", () => {
   it("refreshes post-doctor config before post-update plugin sync", async () => {
     const tempDir = createCaseDir("quiet-core-bot-update");
     mockPackageInstallStatus(tempDir);
-    const preUpdateConfig = { update: { channel: "stable" } } as OpenClawConfig;
+    const preUpdateConfig = { update: { channel: "stable" } } as QuietCoreConfig;
     const postDoctorConfig = {
       update: { channel: "stable" },
       meta: { lastTouchedVersion: "2026.5.14" },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     vi.mocked(readConfigFileSnapshot)
       .mockResolvedValueOnce({
         ...baseSnapshot,
@@ -4627,12 +4627,12 @@ describe("update-cli", () => {
     await updateCommand({ yes: true });
 
     const syncConfig = syncPluginCall()?.config as
-      | (OpenClawConfig & { meta?: { lastTouchedVersion?: string } })
+      | (QuietCoreConfig & { meta?: { lastTouchedVersion?: string } })
       | undefined;
     const lastWrite = lastReplaceConfigCall() as
       | {
           baseHash?: string;
-          nextConfig?: OpenClawConfig & { meta?: { lastTouchedVersion?: string } };
+          nextConfig?: QuietCoreConfig & { meta?: { lastTouchedVersion?: string } };
         }
       | undefined;
     expect(syncConfig?.meta?.lastTouchedVersion).toBe("2026.5.14");
@@ -4651,11 +4651,11 @@ describe("update-cli", () => {
           dmPolicy: "pairing",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const postDoctorConfig = {
       update: { channel: "stable" },
       meta: { lastTouchedVersion: "2026.5.14" },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     await fs.mkdir(tempDir, { recursive: true });
     await fs.writeFile(`${configPath}.pre-update`, `${JSON.stringify(preUpdateConfig)}\n`, "utf-8");
     await fs.writeFile(`${configPath}.bak`, `${JSON.stringify(postDoctorConfig)}\n`, "utf-8");
@@ -4696,12 +4696,12 @@ describe("update-cli", () => {
     );
 
     const syncConfig = syncPluginCall()?.config as
-      | (OpenClawConfig & { meta?: { lastTouchedVersion?: string } })
+      | (QuietCoreConfig & { meta?: { lastTouchedVersion?: string } })
       | undefined;
     const lastWrite = lastReplaceConfigCall() as
       | {
           baseHash?: string;
-          nextConfig?: OpenClawConfig & {
+          nextConfig?: QuietCoreConfig & {
             meta?: { lastTouchedVersion?: string };
             channels?: { whatsapp?: { enabled?: boolean; dmPolicy?: string } };
           };
@@ -4734,7 +4734,7 @@ describe("update-cli", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const postDoctorConfig = {
       update: { channel: "stable" },
       channels: {
@@ -4747,7 +4747,7 @@ describe("update-cli", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     await fs.mkdir(tempDir, { recursive: true });
     await fs.writeFile(`${configPath}.pre-update`, `${JSON.stringify(preUpdateConfig)}\n`, "utf-8");
     await fs.writeFile(configPath, `${JSON.stringify(postDoctorConfig)}\n`, "utf-8");
@@ -4787,7 +4787,7 @@ describe("update-cli", () => {
     );
 
     const syncConfig = syncPluginCall()?.config as
-      | (OpenClawConfig & {
+      | (QuietCoreConfig & {
           channels?: {
             modelByChannel?: Record<string, Record<string, string>>;
           };
@@ -4795,7 +4795,7 @@ describe("update-cli", () => {
       | undefined;
     const lastWrite = lastReplaceConfigCall() as
       | {
-          nextConfig?: OpenClawConfig & {
+          nextConfig?: QuietCoreConfig & {
             channels?: {
               modelByChannel?: Record<string, Record<string, string>>;
             };
@@ -4823,13 +4823,13 @@ describe("update-cli", () => {
           dmPolicy: "pairing",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const currentPreUpdateConfig = {
       update: { channel: "stable" },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const postDoctorConfig = {
       update: { channel: "stable" },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     await fs.mkdir(tempDir, { recursive: true });
     await fs.writeFile(
       `${configPath}.pre-update`,
@@ -4888,10 +4888,10 @@ describe("update-cli", () => {
           dmPolicy: "pairing",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const postDoctorConfig = {
       update: { channel: "stable" },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const updateStartedAtMs = Date.now();
     const staleTime = new Date(updateStartedAtMs - 60_000);
     await fs.mkdir(tempDir, { recursive: true });
@@ -4955,10 +4955,10 @@ describe("update-cli", () => {
           dmPolicy: "pairing",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const postDoctorConfig = {
       update: { channel: "stable" },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     await fs.mkdir(tempDir, { recursive: true });
     await fs.writeFile(`${configPath}.pre-update`, `${JSON.stringify(preUpdateConfig)}\n`, "utf-8");
     await fs.writeFile(configPath, `${JSON.stringify(postDoctorConfig)}\n`, "utf-8");
@@ -5035,10 +5035,10 @@ describe("update-cli", () => {
           dmPolicy: "pairing",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const postDoctorConfig = {
       update: { channel: "stable" },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     await fs.mkdir(tempDir, { recursive: true });
     await fs.writeFile(`${configPath}.pre-update`, `${JSON.stringify(preUpdateConfig)}\n`, "utf-8");
     await fs.writeFile(`${configPath}.bak`, `${JSON.stringify(preUpdateConfig)}\n`, "utf-8");
@@ -5100,7 +5100,7 @@ describe("update-cli", () => {
           token: "resolved-secret",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const authoredPreUpdateConfig = {
       update: { channel: "stable" },
       channels: {
@@ -5109,11 +5109,11 @@ describe("update-cli", () => {
           token: "${WHATSAPP_TOKEN}",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const postDoctorConfig = {
       update: { channel: "stable" },
       meta: { lastTouchedVersion: "2026.5.14" },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     await fs.mkdir(tempDir, { recursive: true });
     await fs.writeFile(
       sourceConfigPath,
@@ -5158,11 +5158,11 @@ describe("update-cli", () => {
     );
 
     const syncConfig = syncPluginCall()?.config as
-      | (OpenClawConfig & { channels?: { whatsapp?: { token?: string } } })
+      | (QuietCoreConfig & { channels?: { whatsapp?: { token?: string } } })
       | undefined;
     const lastWrite = lastReplaceConfigCall() as
       | {
-          nextConfig?: OpenClawConfig & {
+          nextConfig?: QuietCoreConfig & {
             channels?: { whatsapp?: { token?: string } };
           };
         }
@@ -5184,11 +5184,11 @@ describe("update-cli", () => {
     const preUpdateConfig = {
       update: { channel: "stable" },
       channels: { $include: "./channels.json5" },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const postDoctorConfig = {
       update: { channel: "stable" },
       channels: {},
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     await fs.mkdir(tempDir, { recursive: true });
     await fs.writeFile(channelsPath, `${JSON.stringify(includedChannels)}\n`, "utf-8");
     await fs.writeFile(`${configPath}.bak`, `${JSON.stringify(preUpdateConfig)}\n`, "utf-8");
@@ -5230,11 +5230,11 @@ describe("update-cli", () => {
     );
 
     const syncConfig = syncPluginCall()?.config as
-      | (OpenClawConfig & { channels?: { whatsapp?: { token?: string } } })
+      | (QuietCoreConfig & { channels?: { whatsapp?: { token?: string } } })
       | undefined;
     const lastWrite = lastReplaceConfigCall() as
       | {
-          nextConfig?: OpenClawConfig & {
+          nextConfig?: QuietCoreConfig & {
             channels?: { $include?: string };
           };
         }
@@ -5252,10 +5252,10 @@ describe("update-cli", () => {
           enabled: true,
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const postDoctorConfig = {
       update: { channel: "stable" },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     await fs.mkdir(tempDir, { recursive: true });
     await fs.writeFile(configPath, `${JSON.stringify(postDoctorConfig)}\n`, "utf-8");
     await fs.writeFile(`${configPath}.pre-update`, `${JSON.stringify(staleConfig)}\n`, "utf-8");
@@ -5311,7 +5311,7 @@ describe("update-cli", () => {
     } as const;
     const sourceConfig = {
       plugins: {},
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     loadInstalledPluginIndexInstallRecords.mockResolvedValueOnce(pluginInstallRecords);
     vi.mocked(readConfigFileSnapshot).mockResolvedValue({
       ...baseSnapshot,
@@ -5329,7 +5329,7 @@ describe("update-cli", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
     });
     syncPluginsForUpdateChannel.mockResolvedValue({
       changed: false,
@@ -5371,10 +5371,10 @@ describe("update-cli", () => {
     vi.mocked(readConfigFileSnapshot).mockResolvedValue({
       ...baseSnapshot,
       parsed: { update: { channel: "stable" } },
-      resolved: { update: { channel: "stable" } } as OpenClawConfig,
-      sourceConfig: { update: { channel: "stable" } } as OpenClawConfig,
-      runtimeConfig: { update: { channel: "stable" } } as OpenClawConfig,
-      config: { update: { channel: "stable" } } as OpenClawConfig,
+      resolved: { update: { channel: "stable" } } as QuietCoreConfig,
+      sourceConfig: { update: { channel: "stable" } } as QuietCoreConfig,
+      runtimeConfig: { update: { channel: "stable" } } as QuietCoreConfig,
+      config: { update: { channel: "stable" } } as QuietCoreConfig,
     });
     vi.mocked(runGatewayUpdate).mockResolvedValue(
       makeOkUpdateResult({
@@ -5404,7 +5404,7 @@ describe("update-cli", () => {
     const persistedConfig = replaceConfigCall()?.nextConfig;
     expect(persistedConfig?.update?.channel).toBe("dev");
     const syncCall = syncPluginCall() as
-      | { channel?: string; config?: OpenClawConfig; workspaceDir?: string }
+      | { channel?: string; config?: QuietCoreConfig; workspaceDir?: string }
       | undefined;
     expect(syncCall?.channel).toBe("dev");
     expect(syncCall?.config?.update?.channel).toBe("dev");
@@ -6261,11 +6261,11 @@ describe("update-cli", () => {
     const preDoctorConfig = {
       update: { channel: "stable" },
       plugins: { entries: { pre: { enabled: true } } },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const postDoctorConfig = {
       update: { channel: "beta" },
       plugins: { entries: { post: { enabled: true } } },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const preDoctorSnapshot: ConfigFileSnapshot = {
       ...baseSnapshot,
       sourceConfig: preDoctorConfig,
@@ -6293,7 +6293,7 @@ describe("update-cli", () => {
       .mockResolvedValueOnce(postDoctorSnapshot);
     loadInstalledPluginIndexInstallRecords.mockResolvedValueOnce(postDoctorRecords);
     syncPluginsForUpdateChannel.mockImplementationOnce(
-      async (params: { config?: OpenClawConfig }) => ({
+      async (params: { config?: QuietCoreConfig }) => ({
         changed: true,
         config: params.config ?? baseConfig,
         summary: {
@@ -6337,10 +6337,10 @@ describe("update-cli", () => {
           dmPolicy: "pairing",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const postDoctorConfig = {
       meta: { lastTouchedVersion: "2026.6.18" },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const postDoctorSnapshot: ConfigFileSnapshot = {
       ...baseSnapshot,
       sourceConfig: postDoctorConfig,
@@ -6378,8 +6378,8 @@ describe("update-cli", () => {
   });
 
   it("updateFinalizeCommand reapplies requested channel against post-doctor config", async () => {
-    const preDoctorConfig = { update: { channel: "stable" } } as OpenClawConfig;
-    const postDoctorConfig = { update: { channel: "beta" } } as OpenClawConfig;
+    const preDoctorConfig = { update: { channel: "stable" } } as QuietCoreConfig;
+    const postDoctorConfig = { update: { channel: "beta" } } as QuietCoreConfig;
     const preDoctorSnapshot: ConfigFileSnapshot = {
       ...baseSnapshot,
       sourceConfig: preDoctorConfig,
@@ -6413,7 +6413,7 @@ describe("update-cli", () => {
   });
 
   it("updateFinalizeCommand converges on the effective channel from env without persisting update.channel", async () => {
-    const noChannelConfig = {} as OpenClawConfig;
+    const noChannelConfig = {} as QuietCoreConfig;
     const noChannelSnapshot: ConfigFileSnapshot = {
       ...baseSnapshot,
       sourceConfig: noChannelConfig,

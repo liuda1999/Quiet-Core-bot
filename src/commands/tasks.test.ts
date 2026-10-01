@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { resetConfigRuntimeState } from "../config/config.js";
 import { saveCronStore } from "../cron/store.js";
 import type { RuntimeEnv } from "../runtime.js";
-import { closeOpenClawAgentDatabasesForTest } from "../state/quiet-core-bot-agent-db.js";
+import { closeQuietCoreAgentDatabasesForTest } from "../state/quiet-core-bot-agent-db.js";
 import { resetDetachedTaskLifecycleRuntimeForTests } from "../tasks/detached-task-runtime.js";
 import {
   createManagedTaskFlow as createManagedTaskFlowOrNull,
@@ -19,8 +19,8 @@ import {
 } from "../tasks/task-registry.js";
 import * as taskRegistryMaintenance from "../tasks/task-registry.maintenance.js";
 import type { TaskRecord } from "../tasks/task-registry.types.js";
-import { withOpenClawTestState } from "../test-utils/quiet-core-bot-test-state.js";
-import type { OpenClawTestState } from "../test-utils/quiet-core-bot-test-state.js";
+import { withQuietCoreTestState } from "../test-utils/quiet-core-bot-test-state.js";
+import type { QuietCoreTestState } from "../test-utils/quiet-core-bot-test-state.js";
 import {
   tasksAuditCommand,
   tasksCancelCommand,
@@ -83,9 +83,9 @@ const zeroTaskAuditCounts = {
 };
 
 async function withTaskCommandStateDir(
-  run: (state: OpenClawTestState) => Promise<void>,
+  run: (state: QuietCoreTestState) => Promise<void>,
 ): Promise<void> {
-  await withOpenClawTestState(
+  await withQuietCoreTestState(
     { layout: "state-only", prefix: "quiet-core-bot-tasks-command-" },
     async (state) => {
       taskRegistryMaintenance.stopTaskRegistryMaintenance();
@@ -95,7 +95,7 @@ async function withTaskCommandStateDir(
       resetTaskRegistryDeliveryRuntimeForTests();
       resetTaskRegistryForTests({ persist: false });
       resetTaskFlowRegistryForTests({ persist: false });
-      closeOpenClawAgentDatabasesForTest();
+      closeQuietCoreAgentDatabasesForTest();
       try {
         await run(state);
       } finally {
@@ -106,7 +106,7 @@ async function withTaskCommandStateDir(
         resetTaskRegistryDeliveryRuntimeForTests();
         resetTaskRegistryForTests({ persist: false });
         resetTaskFlowRegistryForTests({ persist: false });
-        closeOpenClawAgentDatabasesForTest();
+        closeQuietCoreAgentDatabasesForTest();
       }
     },
   );
@@ -126,7 +126,7 @@ describe("tasks commands", () => {
     resetTaskRegistryDeliveryRuntimeForTests();
     resetTaskRegistryForTests({ persist: false });
     resetTaskFlowRegistryForTests({ persist: false });
-    closeOpenClawAgentDatabasesForTest();
+    closeQuietCoreAgentDatabasesForTest();
     mocks.callGateway.mockReset();
   });
 

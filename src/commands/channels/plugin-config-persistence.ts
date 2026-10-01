@@ -1,18 +1,18 @@
 import { commitConfigWithPendingPluginInstalls } from "../../cli/plugins-install-record-commit.js";
 import { refreshPluginRegistryAfterConfigMutation } from "../../cli/plugins-registry-refresh.js";
 import { replaceConfigFile } from "../../config/config.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { RuntimeEnv } from "../../runtime.js";
 
 export async function persistResolvedChannelPluginConfig(params: {
   resolved: {
-    cfg: OpenClawConfig;
+    cfg: QuietCoreConfig;
     configChanged: boolean;
     pluginInstalled: boolean;
   };
   baseHash?: string;
   runtime: RuntimeEnv;
-}): Promise<OpenClawConfig> {
+}): Promise<QuietCoreConfig> {
   if (!params.resolved.configChanged) {
     return params.resolved.cfg;
   }

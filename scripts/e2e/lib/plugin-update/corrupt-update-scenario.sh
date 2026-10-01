@@ -19,7 +19,7 @@ export QUIET_CORE_NO_PROMPT=1
 
 baseline="${QUIET_CORE_UPDATE_CORRUPT_PLUGIN_BASELINE:-quiet-core-bot@latest}"
 update_timeout_seconds="$(quiet_core_bot_e2e_read_positive_int_env QUIET_CORE_UPDATE_CORRUPT_PLUGIN_TIMEOUT_SECONDS 900)"
-echo "Installing baseline OpenClaw package: $baseline"
+echo "Installing baseline QuietCore package: $baseline"
 if ! quiet_core_bot_e2e_maybe_timeout "${QUIET_CORE_E2E_NPM_INSTALL_TIMEOUT:-600s}" npm install -g --prefix /tmp/npm-prefix --omit=optional "$baseline" >/tmp/quiet-core-bot-update-corrupt-baseline-install.log 2>&1; then
   quiet_core_bot_e2e_print_log /tmp/quiet-core-bot-update-corrupt-baseline-install.log >&2
   exit 1
@@ -56,7 +56,7 @@ if [ -f "$plugin_dir/package.json" ]; then
   exit 1
 fi
 
-echo "Updating OpenClaw with corrupt plugin present..."
+echo "Updating QuietCore with corrupt plugin present..."
 set +e
 quiet_core_bot_e2e_maybe_timeout "${update_timeout_seconds}s" \
   node "$entry" update \
@@ -91,7 +91,7 @@ if [ "$update_status" -ne 0 ]; then
   post_core_status=$?
   set -e
   if [ "$post_core_status" -ne 0 ]; then
-    echo "updated OpenClaw entry failed or timed out after ${update_timeout_seconds}s during post-core plugin verification" >&2
+    echo "updated QuietCore entry failed or timed out after ${update_timeout_seconds}s during post-core plugin verification" >&2
     quiet_core_bot_e2e_print_log /tmp/quiet-core-bot-update-corrupt-plugin-post-core.err >&2
     quiet_core_bot_e2e_print_log /tmp/quiet-core-bot-update-corrupt-plugin-post-core.stdout >&2
     quiet_core_bot_e2e_print_log /tmp/quiet-core-bot-update-corrupt-plugin-post-core.json >&2

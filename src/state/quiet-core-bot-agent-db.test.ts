@@ -8,22 +8,22 @@ import { executeSqliteQueryTakeFirstSync, getNodeSqliteKysely } from "../infra/k
 import { requireNodeSqlite } from "../infra/node-sqlite.js";
 import { listOpenFileDescriptorsForPath } from "../infra/open-file-descriptors.test-support.js";
 import { readSqliteNumberPragma } from "../infra/sqlite-pragma.test-support.js";
-import type { DB as OpenClawAgentKyselyDatabase } from "./quiet-core-bot-agent-db.generated.js";
+import type { DB as QuietCoreAgentKyselyDatabase } from "./quiet-core-bot-agent-db.generated.js";
 import {
-  closeOpenClawAgentDatabasesForTest,
-  openOpenClawAgentDatabase,
-  resolveOpenClawAgentSqlitePath,
+  closeQuietCoreAgentDatabasesForTest,
+  openQuietCoreAgentDatabase,
+  resolveQuietCoreAgentSqlitePath,
 } from "./quiet-core-bot-agent-db.js";
 import {
-  closeOpenClawStateDatabaseForTest,
-  openOpenClawStateDatabase,
+  closeQuietCoreStateDatabaseForTest,
+  openQuietCoreStateDatabase,
 } from "./quiet-core-bot-state-db.js";
 import {
   collectSqliteSchemaShape,
   createSqliteSchemaShapeFromSql,
 } from "./sqlite-schema-shape.test-support.js";
 
-type AgentDbTestDatabase = Pick<OpenClawAgentKyselyDatabase, "schema_meta">;
+type AgentDbTestDatabase = Pick<QuietCoreAgentKyselyDatabase, "schema_meta">;
 
 type RegisteredAgentDatabaseRow = {
   agent_id: string;
@@ -37,7 +37,7 @@ function createTempStateDir(): string {
 }
 
 function listRegisteredAgentDatabasesForTest(options: { env?: NodeJS.ProcessEnv } = {}) {
-  const rows = openOpenClawStateDatabase(options)
+  const rows = openQuietCoreStateDatabase(options)
     .db.prepare(
       "SELECT agent_id, path, schema_version, size_bytes FROM agent_databases ORDER BY agent_id, path",
     )
@@ -51,8 +51,8 @@ function listRegisteredAgentDatabasesForTest(options: { env?: NodeJS.ProcessEnv 
 }
 
 afterEach(() => {
-  closeOpenClawAgentDatabasesForTest();
-  closeOpenClawStateDatabaseForTest();
+  closeQuietCoreAgentDatabasesForTest();
+  closeQuietCoreStateDatabaseForTest();
 });
 
 describe("quiet-core-bot agent database", () => {
@@ -60,7 +60,7 @@ describe("quiet-core-bot agent database", () => {
     const stateDir = createTempStateDir();
 
     expect(
-      resolveOpenClawAgentSqlitePath({
+      resolveQuietCoreAgentSqlitePath({
         agentId: "Worker-1",
         env: { QUIET_CORE_STATE_DIR: stateDir },
       }),
@@ -69,7 +69,7 @@ describe("quiet-core-bot agent database", () => {
 
   it("keeps test default state under a worker-sharded temp directory", () => {
     expect(
-      resolveOpenClawAgentSqlitePath({
+      resolveQuietCoreAgentSqlitePath({
         agentId: "main",
         env: {
           VITEST: "true",
@@ -91,7 +91,7 @@ describe("quiet-core-bot agent database", () => {
 
   it("creates the per-agent schema and registers it globally", () => {
     const stateDir = createTempStateDir();
-    const database = openOpenClawAgentDatabase({
+    const database = openQuietCoreAgentDatabase({
       agentId: "worker-1",
       env: { QUIET_CORE_STATE_DIR: stateDir },
     });
@@ -122,7 +122,7 @@ describe("quiet-core-bot agent database", () => {
     fs.writeFileSync(databasePath, "not a sqlite database");
 
     expect(() =>
-      openOpenClawAgentDatabase({
+      openQuietCoreAgentDatabase({
         agentId: "worker-1",
         env: { QUIET_CORE_STATE_DIR: stateDir },
         path: databasePath,
@@ -135,12 +135,12 @@ describe("quiet-core-bot agent database", () => {
     const stateDir = createTempStateDir();
     const env = { QUIET_CORE_STATE_DIR: stateDir };
     const relocatedPath = path.join(stateDir, "relocated", "worker-1.sqlite");
-    const relocated = openOpenClawAgentDatabase({
+    const relocated = openQuietCoreAgentDatabase({
       agentId: "worker-1",
       env,
       path: relocatedPath,
     });
-    const defaultDatabase = openOpenClawAgentDatabase({
+    const defaultDatabase = openQuietCoreAgentDatabase({
       agentId: "worker-1",
       env,
     });
@@ -184,7 +184,7 @@ describe("quiet-core-bot agent database", () => {
     legacyDb.close();
 
     expect(() =>
-      openOpenClawAgentDatabase({
+      openQuietCoreAgentDatabase({
         agentId: "worker-1",
         env,
       }),
@@ -206,12 +206,12 @@ describe("quiet-core-bot agent database", () => {
           import os from "node:os";
           import path from "node:path";
           import {
-            closeOpenClawAgentDatabasesForTest,
-            openOpenClawAgentDatabase,
+            closeQuietCoreAgentDatabasesForTest,
+            openQuietCoreAgentDatabase,
           } from ${JSON.stringify(agentModuleUrl)};
           import {
-            closeOpenClawStateDatabaseForTest,
-            openOpenClawStateDatabase,
+            closeQuietCoreStateDatabaseForTest,
+            openQuietCoreStateDatabase,
           } from ${JSON.stringify(stateModuleUrl)};
 
           const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-agent-db-state-"));
@@ -224,14 +224,14 @@ describe("quiet-core-bot agent database", () => {
           const previousCwd = process.cwd();
           try {
             process.chdir(firstDir);
-            const first = openOpenClawAgentDatabase({
+            const first = openQuietCoreAgentDatabase({
               agentId: "worker-1",
               env,
               path: "agent.sqlite",
             });
 
             process.chdir(secondDir);
-            const second = openOpenClawAgentDatabase({
+            const second = openQuietCoreAgentDatabase({
               agentId: "worker-1",
               env,
               path: "agent.sqlite",
@@ -241,7 +241,7 @@ describe("quiet-core-bot agent database", () => {
               sameHandle: first === second,
               firstFileExists: fs.existsSync(path.join(firstDir, "agent.sqlite")),
               secondFileExists: fs.existsSync(path.join(secondDir, "agent.sqlite")),
-              registeredPaths: openOpenClawStateDatabase({ env }).db
+              registeredPaths: openQuietCoreStateDatabase({ env }).db
                 .prepare("SELECT path FROM agent_databases WHERE agent_id = ? ORDER BY path")
                 .all("worker-1")
                 .map((entry) => entry.path),
@@ -249,8 +249,8 @@ describe("quiet-core-bot agent database", () => {
             }));
           } finally {
             process.chdir(previousCwd);
-            closeOpenClawAgentDatabasesForTest();
-            closeOpenClawStateDatabaseForTest();
+            closeQuietCoreAgentDatabasesForTest();
+            closeQuietCoreStateDatabaseForTest();
           }
         `,
       ],
@@ -275,23 +275,23 @@ describe("quiet-core-bot agent database", () => {
     const env = { QUIET_CORE_STATE_DIR: stateDir };
     const databasePath = path.join(stateDir, "relocated", "shared.sqlite");
 
-    openOpenClawAgentDatabase({
+    openQuietCoreAgentDatabase({
       agentId: "worker-1",
       env,
       path: databasePath,
     });
 
     expect(() =>
-      openOpenClawAgentDatabase({
+      openQuietCoreAgentDatabase({
         agentId: "worker-2",
         env,
         path: databasePath,
       }),
     ).toThrow(/already open for agent worker-1/);
 
-    closeOpenClawAgentDatabasesForTest();
+    closeQuietCoreAgentDatabasesForTest();
     expect(() =>
-      openOpenClawAgentDatabase({
+      openQuietCoreAgentDatabase({
         agentId: "worker-2",
         env,
         path: databasePath,
@@ -303,21 +303,21 @@ describe("quiet-core-bot agent database", () => {
     const stateDir = createTempStateDir();
     const env = { QUIET_CORE_STATE_DIR: stateDir };
     const databasePath = path.join(stateDir, "state", "quiet-core-bot.sqlite");
-    const stateDatabase = openOpenClawStateDatabase({
+    const stateDatabase = openQuietCoreStateDatabase({
       env,
       path: databasePath,
     });
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
 
     expect(() =>
-      openOpenClawAgentDatabase({
+      openQuietCoreAgentDatabase({
         agentId: "worker-1",
         env,
         path: stateDatabase.path,
       }),
     ).toThrow(/schema role global/);
 
-    const reopenedStateDatabase = openOpenClawStateDatabase({
+    const reopenedStateDatabase = openQuietCoreStateDatabase({
       env,
       path: databasePath,
     });
@@ -333,7 +333,7 @@ describe("quiet-core-bot agent database", () => {
     fs.chmodSync(parentDir, 0o755);
     const databasePath = path.join(parentDir, "worker-1.sqlite");
 
-    openOpenClawAgentDatabase({
+    openQuietCoreAgentDatabase({
       agentId: "worker-1",
       env,
       path: databasePath,
@@ -344,7 +344,7 @@ describe("quiet-core-bot agent database", () => {
 
   it("configures durable SQLite connection pragmas", () => {
     const stateDir = createTempStateDir();
-    const database = openOpenClawAgentDatabase({
+    const database = openQuietCoreAgentDatabase({
       agentId: "worker-1",
       env: { QUIET_CORE_STATE_DIR: stateDir },
     });
@@ -362,7 +362,7 @@ describe("quiet-core-bot agent database", () => {
 
   it("records durable per-agent schema metadata", () => {
     const stateDir = createTempStateDir();
-    const database = openOpenClawAgentDatabase({
+    const database = openQuietCoreAgentDatabase({
       agentId: "worker-1",
       env: { QUIET_CORE_STATE_DIR: stateDir },
     });
@@ -396,7 +396,7 @@ describe("quiet-core-bot agent database", () => {
     db.close();
 
     expect(() =>
-      openOpenClawAgentDatabase({
+      openQuietCoreAgentDatabase({
         agentId: "worker-1",
         env: { QUIET_CORE_STATE_DIR: stateDir },
       }),

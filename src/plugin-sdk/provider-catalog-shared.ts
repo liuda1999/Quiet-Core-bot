@@ -15,7 +15,7 @@ import {
 import { normalizeConfiguredProviderCatalogModelId } from "../agents/model-ref-shared.js";
 import { resolveProviderRequestCapabilities } from "../agents/provider-attribution.js";
 import type { ModelDefinitionConfig } from "../config/types.models.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { ModelProviderConfig } from "./provider-model-shared.js";
 
 export type { ProviderCatalogContext, ProviderCatalogResult } from "../plugins/types.js";
@@ -248,7 +248,7 @@ function normalizeConfiguredCatalogModelInput(
 }
 
 function resolveConfiguredProviderModels(
-  config: OpenClawConfig | undefined,
+  config: QuietCoreConfig | undefined,
   providerId: string,
 ): ModelDefinitionConfig[] {
   const providers = config?.models?.providers;
@@ -271,7 +271,7 @@ function resolveConfiguredProviderModels(
  */
 export function readConfiguredProviderCatalogEntries(params: {
   /** Runtime config containing optional user-defined provider model rows. */
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   /** Provider id used to locate configured model rows. */
   providerId: string;
   /** Provider id to publish on emitted catalog entries when it differs from lookup id. */

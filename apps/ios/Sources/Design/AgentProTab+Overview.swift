@@ -1,11 +1,11 @@
-import OpenClawKit
-import OpenClawProtocol
+import QuietCoreKit
+import QuietCoreProtocol
 import SwiftUI
 
 extension AgentProTab {
     var rosterHeader: some View {
         VStack(alignment: .leading, spacing: 10) {
-            OpenClawAdaptiveHeaderRow(
+            QuietCoreAdaptiveHeaderRow(
                 title: self.headerTitle,
                 subtitle: "\(self.sortedAgents.count) total",
                 titleFont: .system(size: 28, weight: .bold),
@@ -13,7 +13,7 @@ extension AgentProTab {
                 subtitleLineLimit: 1)
             {
                 if let headerLeadingAction {
-                    OpenClawSidebarHeaderLeadingSlot(action: headerLeadingAction)
+                    QuietCoreSidebarHeaderLeadingSlot(action: headerLeadingAction)
                 }
             } accessory: {
                 HStack(spacing: 10) {
@@ -53,7 +53,7 @@ extension AgentProTab {
                     .transition(.move(edge: .top).combined(with: .opacity))
             }
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
         .padding(.top, 6)
     }
 
@@ -61,12 +61,12 @@ extension AgentProTab {
     private var gatewayPillButton: some View {
         if let openSettings {
             Button(action: openSettings) {
-                OpenClawGatewayCompactPill()
+                QuietCoreGatewayCompactPill()
             }
             .buttonStyle(.plain)
             .accessibilityHint("Opens Settings / Gateway")
         } else {
-            OpenClawGatewayCompactPill()
+            QuietCoreGatewayCompactPill()
         }
     }
 
@@ -109,7 +109,7 @@ extension AgentProTab {
                         .frame(width: AgentLayout.filterHeight, height: AgentLayout.filterHeight)
                 }
             }
-            .padding(.horizontal, OpenClawProMetric.pagePadding)
+            .padding(.horizontal, QuietCoreProMetric.pagePadding)
         }
     }
 
@@ -134,7 +134,7 @@ extension AgentProTab {
                 }
             }
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     var operationsSection: some View {
@@ -146,7 +146,7 @@ extension AgentProTab {
                     title: "Skills",
                     value: self.skillsValue,
                     detail: self.skillsDetail,
-                    color: self.gatewayConnected ? OpenClawBrand.accent : .secondary,
+                    color: self.gatewayConnected ? QuietCoreBrand.accent : .secondary,
                     route: .skills)
                 self.metricTile(
                     icon: "externaldrive.connected.to.line.below",
@@ -167,16 +167,16 @@ extension AgentProTab {
                     title: "Usage",
                     value: self.usageValue,
                     detail: self.usageDetail,
-                    color: self.gatewayConnected ? OpenClawBrand.accent : .secondary,
+                    color: self.gatewayConnected ? QuietCoreBrand.accent : .secondary,
                     route: .usage)
             }
-            .padding(.horizontal, OpenClawProMetric.pagePadding)
+            .padding(.horizontal, QuietCoreProMetric.pagePadding)
 
             if let overviewErrorText {
                 Text(overviewErrorText)
                     .font(.caption)
-                    .foregroundStyle(OpenClawBrand.warn)
-                    .padding(.horizontal, OpenClawProMetric.pagePadding)
+                    .foregroundStyle(QuietCoreBrand.warn)
+                    .padding(.horizontal, QuietCoreProMetric.pagePadding)
             }
         }
     }
@@ -196,7 +196,7 @@ extension AgentProTab {
                 }
                 .buttonStyle(.plain)
             }
-            .padding(.horizontal, OpenClawProMetric.pagePadding)
+            .padding(.horizontal, QuietCoreProMetric.pagePadding)
         }
     }
 
@@ -225,7 +225,7 @@ extension AgentProTab {
                     }
                 }
             }
-            .padding(.horizontal, OpenClawProMetric.pagePadding)
+            .padding(.horizontal, QuietCoreProMetric.pagePadding)
         }
     }
 
@@ -290,7 +290,7 @@ extension AgentProTab {
                     .font(.caption.weight(.bold))
             }
             .buttonStyle(.plain)
-            .foregroundStyle(isActive ? OpenClawBrand.accent : .primary)
+            .foregroundStyle(isActive ? QuietCoreBrand.accent : .primary)
             .frame(width: AgentLayout.actionButtonSize, height: AgentLayout.actionButtonSize)
             .background {
                 Circle()
@@ -491,7 +491,7 @@ extension AgentProTab {
         HStack(spacing: 12) {
             ProIconBadge(
                 systemName: job.enabled ? "clock.arrow.circlepath" : "pause.circle",
-                color: job.enabled ? OpenClawBrand.accent : .secondary)
+                color: job.enabled ? QuietCoreBrand.accent : .secondary)
             VStack(alignment: .leading, spacing: 3) {
                 Text(job.name)
                     .font(.subheadline.weight(.semibold))
@@ -504,7 +504,7 @@ extension AgentProTab {
             Spacer(minLength: 8)
             Text(self.cronJobState(job))
                 .font(.caption2.weight(.semibold))
-                .foregroundStyle(job.enabled ? OpenClawBrand.accent : .secondary)
+                .foregroundStyle(job.enabled ? QuietCoreBrand.accent : .secondary)
                 .lineLimit(1)
         }
         .padding(.vertical, 10)
@@ -648,7 +648,7 @@ extension AgentProTab {
 
     var instancesColor: Color {
         guard self.gatewayConnected else { return .secondary }
-        return (self.overview?.presence.isEmpty == false) ? OpenClawBrand.accent : .secondary
+        return (self.overview?.presence.isEmpty == false) ? QuietCoreBrand.accent : .secondary
     }
 
     var cronValue: String {
@@ -672,7 +672,7 @@ extension AgentProTab {
 
     var cronColor: Color {
         guard self.gatewayConnected else { return .secondary }
-        return self.overview?.cronStatus?.enabled == true ? OpenClawBrand.accent : .secondary
+        return self.overview?.cronStatus?.enabled == true ? QuietCoreBrand.accent : .secondary
     }
 
     var usageValue: String {
@@ -721,7 +721,7 @@ extension AgentProTab {
 
     var dreamingColor: Color {
         guard self.gatewayConnected else { return .secondary }
-        return self.overview?.dreaming?.enabled == true ? OpenClawBrand.accent : .secondary
+        return self.overview?.dreaming?.enabled == true ? QuietCoreBrand.accent : .secondary
     }
 
     var recentCronJobs: [CronJob] {

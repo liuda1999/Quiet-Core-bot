@@ -4,7 +4,7 @@ import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { describe, expect, test, vi } from "vitest";
 import { z } from "zod";
 import { shouldRetryInitialMcpGatewayConnect } from "./channel-bridge.js";
-import { createOpenClawChannelMcpServer, OpenClawChannelBridge } from "./channel-server.js";
+import { createQuietCoreChannelMcpServer, QuietCoreChannelBridge } from "./channel-server.js";
 import { extractAttachmentsFromMessage } from "./channel-shared.js";
 
 const ClaudeChannelNotificationSchema = z.object({
@@ -24,7 +24,7 @@ const ClaudePermissionNotificationSchema = z.object({
 });
 
 async function connectMcpWithoutGateway(params?: { claudeChannelMode?: "auto" | "on" | "off" }) {
-  const serverHarness = await createOpenClawChannelMcpServer({
+  const serverHarness = await createQuietCoreChannelMcpServer({
     claudeChannelMode: params?.claudeChannelMode ?? "auto",
     config: {} as never,
     verbose: false,
@@ -44,7 +44,7 @@ async function connectMcpWithoutGateway(params?: { claudeChannelMode?: "auto" | 
 }
 
 function attachReadyGateway(
-  bridge: OpenClawChannelBridge,
+  bridge: QuietCoreChannelBridge,
   gatewayRequest: ReturnType<typeof vi.fn>,
 ) {
   (
@@ -191,7 +191,7 @@ describe("quiet-core-bot channel mcp server", () => {
           }
           throw new Error(`unexpected gateway method ${method}`);
         });
-        const bridge = new OpenClawChannelBridge({} as never, {
+        const bridge = new QuietCoreChannelBridge({} as never, {
           claudeChannelMode: "off",
           verbose: false,
         });
@@ -229,7 +229,7 @@ describe("quiet-core-bot channel mcp server", () => {
           }
           throw new Error(`unexpected gateway method ${method}`);
         });
-        const bridge = new OpenClawChannelBridge({} as never, {
+        const bridge = new QuietCoreChannelBridge({} as never, {
           claudeChannelMode: "off",
           verbose: false,
         });
@@ -403,7 +403,7 @@ describe("quiet-core-bot channel mcp server", () => {
     });
 
     test("sendMessage normalizes route metadata for gateway send", async () => {
-      const bridge = new OpenClawChannelBridge({} as never, {
+      const bridge = new QuietCoreChannelBridge({} as never, {
         claudeChannelMode: "off",
         verbose: false,
       });
@@ -437,7 +437,7 @@ describe("quiet-core-bot channel mcp server", () => {
     });
 
     test("gets one conversation through sessions.describe without broad listing", async () => {
-      const bridge = new OpenClawChannelBridge({} as never, {
+      const bridge = new QuietCoreChannelBridge({} as never, {
         claudeChannelMode: "off",
         verbose: false,
       });
@@ -474,7 +474,7 @@ describe("quiet-core-bot channel mcp server", () => {
     });
 
     test("lists routed sessions from deliveryContext without mirrored route fields", async () => {
-      const bridge = new OpenClawChannelBridge({} as never, {
+      const bridge = new QuietCoreChannelBridge({} as never, {
         claudeChannelMode: "off",
         verbose: false,
       });
@@ -514,7 +514,7 @@ describe("quiet-core-bot channel mcp server", () => {
     });
 
     test("swallows notification send errors after channel replies are matched", async () => {
-      const bridge = new OpenClawChannelBridge({} as never, {
+      const bridge = new QuietCoreChannelBridge({} as never, {
         claudeChannelMode: "on",
         verbose: false,
       });

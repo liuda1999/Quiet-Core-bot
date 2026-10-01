@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../../config/config.js";
+import type { QuietCoreConfig } from "../../../config/config.js";
 import { readCronRunLogEntriesSync } from "../../../cron/run-log.js";
 import {
   loadCronJobsStoreWithConfigJobs,
@@ -12,7 +12,7 @@ import {
   resolveCronQuarantinePath,
   saveCronStore,
 } from "../../../cron/store.js";
-import { runOpenClawStateWriteTransaction } from "../../../state/quiet-core-bot-state-db.js";
+import { runQuietCoreStateWriteTransaction } from "../../../state/quiet-core-bot-state-db.js";
 import {
   collectLegacyWhatsAppCrontabHealthWarning,
   maybeRepairLegacyCronStore,
@@ -48,7 +48,7 @@ function makePrompter(confirmResult = true) {
   };
 }
 
-function createCronConfig(storePath: string): OpenClawConfig {
+function createCronConfig(storePath: string): QuietCoreConfig {
   return {
     cron: {
       store: storePath,
@@ -123,7 +123,7 @@ function insertEarlySQLiteCronRow(
 ) {
   const schedule = requireRecord(job.schedule, "cron schedule");
   const payload = requireRecord(job.payload, "cron payload");
-  runOpenClawStateWriteTransaction(({ db }) => {
+  runQuietCoreStateWriteTransaction(({ db }) => {
     db.prepare(
       `INSERT INTO cron_jobs (
         store_key, job_id, name, enabled, created_at_ms, updated_at,
@@ -1000,7 +1000,7 @@ describe("maybeRepairLegacyCronStore", () => {
       }),
     ]);
 
-    const cfg = { cron: { store: storePath } } as OpenClawConfig;
+    const cfg = { cron: { store: storePath } } as QuietCoreConfig;
     await maybeRepairLegacyCronStore({
       cfg,
       options: {},
@@ -1038,7 +1038,7 @@ describe("maybeRepairLegacyCronStore", () => {
       }),
     ]);
 
-    const cfg = { cron: { store: storePath } } as OpenClawConfig;
+    const cfg = { cron: { store: storePath } } as QuietCoreConfig;
     await maybeRepairLegacyCronStore({
       cfg,
       options: {},

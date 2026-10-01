@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { updateSessionStore } from "../config/sessions/store.js";
 import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import { buildSubagentList } from "./subagent-list.js";
@@ -35,7 +35,7 @@ describe("buildSubagentList", () => {
     const cfg = {
       commands: { text: true },
       channels: { whatsapp: { allowFrom: ["*"] } },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const list = buildSubagentList({
       cfg,
       runs: [],
@@ -63,7 +63,7 @@ describe("buildSubagentList", () => {
     const cfg = {
       commands: { text: true },
       channels: { whatsapp: { allowFrom: ["*"] } },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const list = buildSubagentList({
       cfg,
       runs: [run],
@@ -94,7 +94,7 @@ describe("buildSubagentList", () => {
     const cfg = {
       commands: { text: true },
       channels: { whatsapp: { allowFrom: ["*"] } },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const list = buildSubagentList({
       cfg,
@@ -136,7 +136,7 @@ describe("buildSubagentList", () => {
     const cfg = {
       commands: { text: true },
       channels: { whatsapp: { allowFrom: ["*"] } },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const list = buildSubagentList({
       cfg,
       runs: [orchestratorRun],
@@ -179,7 +179,7 @@ describe("buildSubagentList", () => {
     const cfg = {
       commands: { text: true },
       channels: { whatsapp: { allowFrom: ["*"] } },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const list = buildSubagentList({
       cfg,
@@ -218,7 +218,7 @@ describe("buildSubagentList", () => {
       commands: { text: true },
       channels: { whatsapp: { allowFrom: ["*"] } },
       session: { store: storePath },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     // Prompt/cache usage is separate from visible IO so operators can spot
     // cache-heavy sessions without misreading it as assistant output.
     const list = buildSubagentList({
@@ -249,7 +249,7 @@ describe("buildSubagentList", () => {
     const cfg = {
       commands: { text: true },
       channels: { whatsapp: { allowFrom: ["*"] } },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const list = buildSubagentList({
       cfg,
@@ -292,7 +292,7 @@ describe("buildSubagentList", () => {
     const cfg = {
       commands: { text: true },
       channels: { whatsapp: { allowFrom: ["*"] } },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const list = buildSubagentList({
       cfg,

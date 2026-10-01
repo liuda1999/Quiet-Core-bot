@@ -1,4 +1,4 @@
-// OpenClaw NPM Publish tests cover publish wrapper argument safety.
+// QuietCore NPM Publish tests cover publish wrapper argument safety.
 import { spawnSync } from "node:child_process";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";

@@ -9,10 +9,10 @@ import {
   browserSecurityAuditCollectors,
   registerBrowserPlugin,
 } from "./plugin-registration.js";
-import type { OpenClawPluginApi } from "./runtime-api.js";
+import type { QuietCorePluginApi } from "./runtime-api.js";
 import setupPlugin from "./setup-api.js";
 
-type BrowserAutoEnableProbe = Parameters<OpenClawPluginApi["registerAutoEnableProbe"]>[0];
+type BrowserAutoEnableProbe = Parameters<QuietCorePluginApi["registerAutoEnableProbe"]>[0];
 
 const runtimeApiMocks = vi.hoisted(() => ({
   createBrowserPluginService: vi.fn(() => ({ id: "browser-control", start: vi.fn() })),
@@ -72,7 +72,7 @@ function createApi() {
     name: "Browser",
     source: "test",
     config: {},
-    runtime: {} as OpenClawPluginApi["runtime"],
+    runtime: {} as QuietCorePluginApi["runtime"],
     registerCli,
     registerGatewayMethod,
     registerService,
@@ -233,7 +233,7 @@ describe("browser plugin", () => {
       descriptors: [
         {
           name: "browser",
-          description: "Manage OpenClaw's dedicated browser (Chrome/Chromium)",
+          description: "Manage QuietCore's dedicated browser (Chrome/Chromium)",
           hasSubcommands: true,
         },
       ],

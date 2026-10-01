@@ -3,7 +3,7 @@
 import type { AgentMessage } from "quiet-core-bot/plugin-sdk/agent-core";
 import { SessionManager } from "quiet-core-bot/plugin-sdk/agent-sessions";
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { guardSessionManager } from "./session-tool-result-guard-wrapper.js";
 import { sanitizeToolUseResultPairing } from "./session-transcript-repair.js";
 
@@ -191,7 +191,7 @@ describe("guardSessionManager integration", () => {
         redactSensitive: "tools",
         redactPatterns: [String.raw`([\w]|[-.])+@([\w]|[-.])+\.\w+`],
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
     const sm = guardSessionManager(SessionManager.inMemory(), { config: cfg });
     const appendMessage = sm.appendMessage.bind(sm) as unknown as (message: AgentMessage) => void;
 

@@ -6,7 +6,7 @@ import {
   clearRuntimeConfigSnapshot,
   setRuntimeConfigSnapshot,
 } from "../../config/runtime-snapshot.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { clearPluginMetadataLifecycleCaches } from "../../plugins/plugin-metadata-lifecycle.js";
 import { captureEnv, withPathResolutionEnv } from "../../test-utils/env.js";
 import { createFixtureSuite } from "../../test-utils/fixture-suite.js";
@@ -120,7 +120,7 @@ function envSkillSnapshot(name: string, metadata: SkillEntry["metadata"]): Skill
   };
 }
 
-function rawSkillApiKeyRefConfig(skillName: string): OpenClawConfig {
+function rawSkillApiKeyRefConfig(skillName: string): QuietCoreConfig {
   return {
     skills: {
       entries: {
@@ -136,7 +136,7 @@ function rawSkillApiKeyRefConfig(skillName: string): OpenClawConfig {
   };
 }
 
-function resolvedSkillApiKeyConfig(skillName: string, apiKey: string): OpenClawConfig {
+function resolvedSkillApiKeyConfig(skillName: string, apiKey: string): QuietCoreConfig {
   return {
     skills: {
       entries: {
@@ -287,7 +287,7 @@ describe("buildWorkspaceSkillCommandSpecs", () => {
           "compound-bundle": { enabled: true },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     // Prime plugin discovery before the bundle exists; clear the lifecycle cache
     // below to model the install/reload boundary that exposes new plugin files.
@@ -580,7 +580,7 @@ describe("applySkillEnvOverrides", () => {
       primaryEnv: "ENV_KEY",
       requires: { env: ["ENV_KEY"] },
     });
-    const config: OpenClawConfig = {
+    const config: QuietCoreConfig = {
       skills: {
         entries: {
           [skillName]: {

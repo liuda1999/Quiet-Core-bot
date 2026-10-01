@@ -147,7 +147,7 @@ async function applyMidTurnPrecheckGuardToContext(
   return await agent.transformContext?.(contextForNextCall, new AbortController().signal);
 }
 
-function expectOpenClawTruncation(text: string): void {
+function expectQuietCoreTruncation(text: string): void {
   expect(text).toContain(CONTEXT_LIMIT_TRUNCATION_NOTICE);
   expect(text).toMatch(
     /\[\.\.\. \d+ more characters truncated; rerun with narrower args if needed\]$/,
@@ -219,7 +219,7 @@ describe("installToolResultContextGuard", () => {
     expect(transformed).not.toBe(contextForNextCall);
     const newResultText = getToolResultText(transformed[0]);
     expect(newResultText.length).toBeLessThan(5_000);
-    expectOpenClawTruncation(newResultText);
+    expectQuietCoreTruncation(newResultText);
     expect(getToolResultText(contextForNextCall[0])).toBe("z".repeat(5_000));
   });
 
@@ -236,7 +236,7 @@ describe("installToolResultContextGuard", () => {
     const transformed = (await applyGuardToContext(agent, contextForNextCall)) as AgentMessage[];
 
     expect(transformed).not.toBe(contextForNextCall);
-    expectOpenClawTruncation(getToolResultText(transformed[0]));
+    expectQuietCoreTruncation(getToolResultText(transformed[0]));
   });
 
   it("handles legacy role=tool string outputs with truncation wording", async () => {
@@ -247,7 +247,7 @@ describe("installToolResultContextGuard", () => {
     const newResultText = getToolResultText(transformed[0]);
 
     expect(typeof (transformed[0] as { content?: unknown }).content).toBe("string");
-    expectOpenClawTruncation(newResultText);
+    expectQuietCoreTruncation(newResultText);
   });
 
   it("drops oversized tool-result details when truncating once", async () => {
@@ -260,7 +260,7 @@ describe("installToolResultContextGuard", () => {
     const result = transformed[0] as { details?: unknown };
     const newResultText = getToolResultText(transformed[0]);
 
-    expectOpenClawTruncation(newResultText);
+    expectQuietCoreTruncation(newResultText);
     expect(result.details).toBeUndefined();
     const originalDetails = (contextForNextCall[0] as { details?: { truncation?: unknown } })
       .details;
@@ -326,7 +326,7 @@ describe("installToolResultContextGuard", () => {
       100_000,
     )) as AgentMessage[];
 
-    expectOpenClawTruncation(getToolResultText(transformed[0]));
+    expectQuietCoreTruncation(getToolResultText(transformed[0]));
   });
 
   it("raises a structured mid-turn precheck signal after a new tool result overflows", async () => {

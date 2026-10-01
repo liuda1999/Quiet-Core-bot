@@ -13,7 +13,7 @@ const QUIET_CORE_BETA_VERSION_RE =
 const DIST_TAG_RE = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
 
 /** Parsed monthly patch Quiet Core bot release version used for channel-aware ordering. */
-type OpenClawReleaseVersion = {
+type QuietCoreReleaseVersion = {
   channel: "alpha" | "beta" | "stable";
   year: number;
   month: number;
@@ -101,7 +101,7 @@ function parseRegistryNpmSpecInternal(
         selector,
         selectorKind: "exact-version",
         selectorIsPrerelease:
-          Boolean(exactVersionMatch[4]) && !isOpenClawStableCorrectionVersion(selector),
+          Boolean(exactVersionMatch[4]) && !isQuietCoreStableCorrectionVersion(selector),
       },
     };
   }
@@ -130,7 +130,7 @@ export function parseRegistryNpmSpec(rawSpec: string): ParsedRegistryNpmSpec | n
 }
 
 /** Returns whether a user-provided npm spec resolves to the official Quiet Core bot npm scope. */
-export function isOpenClawOrgNpmSpec(rawSpec: string | undefined): boolean {
+export function isQuietCoreOrgNpmSpec(rawSpec: string | undefined): boolean {
   const parsed = rawSpec ? parseRegistryNpmSpec(rawSpec) : null;
   return parsed?.name.startsWith("@quiet-core/") === true;
 }
@@ -147,7 +147,7 @@ export function isExactSemverVersion(value: string): boolean {
 }
 
 /** Parses Quiet Core bot's monthly patch stable/alpha/beta/correction version format. */
-function parseOpenClawReleaseVersion(value: string): OpenClawReleaseVersion | null {
+function parseQuietCoreReleaseVersion(value: string): QuietCoreReleaseVersion | null {
   const trimmed = value.trim();
   const candidates = [
     { match: QUIET_CORE_STABLE_VERSION_RE.exec(trimmed), channel: "stable" as const },
@@ -201,15 +201,15 @@ function parseOpenClawReleaseVersion(value: string): OpenClawReleaseVersion | nu
 }
 
 /** Returns whether a version is an Quiet Core bot monthly patch stable correction release. */
-export function isOpenClawStableCorrectionVersion(value: string): boolean {
-  const parsed = parseOpenClawReleaseVersion(value);
+export function isQuietCoreStableCorrectionVersion(value: string): boolean {
+  const parsed = parseQuietCoreReleaseVersion(value);
   return parsed?.channel === "stable" && parsed.correctionNumber !== undefined;
 }
 
 /** Compares Quiet Core bot monthly patch release versions across alpha, beta, stable, and corrections. */
-export function compareOpenClawReleaseVersions(left: string, right: string): number | null {
-  const parsedLeft = parseOpenClawReleaseVersion(left);
-  const parsedRight = parseOpenClawReleaseVersion(right);
+export function compareQuietCoreReleaseVersions(left: string, right: string): number | null {
+  const parsedLeft = parseQuietCoreReleaseVersion(left);
+  const parsedRight = parseQuietCoreReleaseVersion(right);
   if (!parsedLeft || !parsedRight) {
     return null;
   }
@@ -239,7 +239,7 @@ export function compareOpenClawReleaseVersions(left: string, right: string): num
 export function isPrereleaseSemverVersion(value: string): boolean {
   const trimmed = value.trim();
   const match = EXACT_SEMVER_VERSION_RE.exec(trimmed);
-  return Boolean(match?.[4]) && !isOpenClawStableCorrectionVersion(trimmed);
+  return Boolean(match?.[4]) && !isQuietCoreStableCorrectionVersion(trimmed);
 }
 
 /**

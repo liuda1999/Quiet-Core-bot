@@ -1,6 +1,6 @@
 // Matrix tests cover outbound plugin behavior.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../runtime-api.js";
+import type { QuietCoreConfig } from "../runtime-api.js";
 
 const mocks = vi.hoisted(() => ({
   sendMessageMatrix: vi.fn(),
@@ -70,7 +70,7 @@ describe("matrixOutbound cfg threading", () => {
           accessToken: "resolved-token",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     await matrixOutbound.sendText!({
       cfg,
@@ -98,7 +98,7 @@ describe("matrixOutbound cfg threading", () => {
           accessToken: "resolved-token",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     await matrixOutbound.sendMedia!({
       cfg,
@@ -127,7 +127,7 @@ describe("matrixOutbound cfg threading", () => {
           accessToken: "resolved-token",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const matrix = vi.fn(async () => ({
       messageId: "evt-injected",
       roomId: "!room:example",
@@ -160,7 +160,7 @@ describe("matrixOutbound cfg threading", () => {
           accessToken: "resolved-token",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     await matrixOutbound.sendPoll!({
       cfg,
@@ -248,7 +248,7 @@ describe("matrixOutbound cfg threading", () => {
           accessToken: "resolved-token",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const presentationContent = {
       version: 1,
@@ -302,7 +302,7 @@ describe("matrixOutbound cfg threading", () => {
           accessToken: "resolved-token",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const presentationContent = {
       version: 1,
@@ -342,7 +342,7 @@ describe("matrixOutbound cfg threading", () => {
           accessToken: "resolved-token",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const presentationContent = {
       version: 1,
@@ -386,7 +386,7 @@ describe("matrixOutbound cfg threading", () => {
           accessToken: "resolved-token",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     await matrixOutbound.sendPayload!({
       cfg,
@@ -424,7 +424,7 @@ describe("matrixOutbound cfg threading", () => {
           accessToken: "resolved-token",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     await matrixOutbound.sendPayload!({
       cfg,
@@ -473,7 +473,7 @@ describe("matrixOutbound cfg threading", () => {
           accessToken: "regression-token",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     await matrixOutbound.sendPayload!({
       cfg,

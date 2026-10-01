@@ -2,10 +2,10 @@
 import type { DatabaseSync } from "node:sqlite";
 import type { Insertable, Selectable } from "kysely";
 import { getNodeSqliteKysely } from "../../infra/kysely-sync.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../../state/quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "../../state/quiet-core-bot-state-db.generated.js";
 
-type CronJobsTable = OpenClawStateKyselyDatabase["cron_jobs"];
-type CronStoreDatabase = Pick<OpenClawStateKyselyDatabase, "cron_jobs">;
+type CronJobsTable = QuietCoreStateKyselyDatabase["cron_jobs"];
+type CronStoreDatabase = Pick<QuietCoreStateKyselyDatabase, "cron_jobs">;
 
 /** Read shape for rows in the cron_jobs SQLite table. */
 export type CronJobRow = Selectable<CronJobsTable>;

@@ -1,11 +1,11 @@
 // Onboard config tests cover workspace, bootstrap, and local setup config mutations.
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { applyLocalSetupWorkspaceConfig } from "./onboard-config.js";
 
 describe("applyLocalSetupWorkspaceConfig", () => {
   it("sets secure dmScope default when unset", () => {
-    const baseConfig: OpenClawConfig = {};
+    const baseConfig: QuietCoreConfig = {};
     const result = applyLocalSetupWorkspaceConfig(baseConfig, "/tmp/workspace");
 
     expect(result.session?.dmScope).toBe("per-channel-peer");
@@ -15,7 +15,7 @@ describe("applyLocalSetupWorkspaceConfig", () => {
   });
 
   it("preserves existing dmScope when already configured", () => {
-    const baseConfig: OpenClawConfig = {
+    const baseConfig: QuietCoreConfig = {
       session: {
         dmScope: "main",
       },
@@ -26,7 +26,7 @@ describe("applyLocalSetupWorkspaceConfig", () => {
   });
 
   it("preserves explicit non-main dmScope values", () => {
-    const baseConfig: OpenClawConfig = {
+    const baseConfig: QuietCoreConfig = {
       session: {
         dmScope: "per-account-channel-peer",
       },
@@ -37,7 +37,7 @@ describe("applyLocalSetupWorkspaceConfig", () => {
   });
 
   it("preserves an explicit tools.profile when already configured", () => {
-    const baseConfig: OpenClawConfig = {
+    const baseConfig: QuietCoreConfig = {
       tools: {
         profile: "full",
       },
@@ -48,7 +48,7 @@ describe("applyLocalSetupWorkspaceConfig", () => {
   });
 
   it("preserves agents.list and bindings on onboard rerun (quiet-core-bot#84692)", () => {
-    const baseConfig: OpenClawConfig = {
+    const baseConfig: QuietCoreConfig = {
       agents: {
         list: [
           { id: "alpha", model: "anthropic/claude-3-5-sonnet" },
@@ -62,7 +62,7 @@ describe("applyLocalSetupWorkspaceConfig", () => {
           match: { channel: "discord", peer: { kind: "direct", id: "user-1" } },
         },
       ],
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = applyLocalSetupWorkspaceConfig(baseConfig, "/tmp/workspace");
 

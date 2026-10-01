@@ -1,7 +1,7 @@
 /**
  * Selects and invokes native agent harnesses for embedded run attempts.
  */
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import {
   createChildDiagnosticTraceContext,
   createDiagnosticTraceContext,
@@ -35,7 +35,7 @@ import {
   normalizeToolName,
   resolveToolProfilePolicy,
 } from "../tool-policy.js";
-import { createOpenClawAgentHarness } from "./builtin-quiet-core-bot.js";
+import { createQuietCoreAgentHarness } from "./builtin-quiet-core-bot.js";
 import { MissingAgentHarnessError } from "./errors.js";
 import { runAgentHarnessLifecycleAttempt } from "./lifecycle.js";
 import {
@@ -120,7 +120,7 @@ function listPluginAgentHarnesses(): AgentHarness[] {
 export function resolveAvailableAgentHarnessPolicy(params: {
   provider?: string;
   modelId?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   agentId?: string;
   sessionKey?: string;
   env?: NodeJS.ProcessEnv;
@@ -156,7 +156,7 @@ function compareHarnessSupport(
 export function selectAgentHarness(params: {
   provider: string;
   modelId?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   agentId?: string;
   sessionKey?: string;
   agentHarnessId?: string;
@@ -168,7 +168,7 @@ export function selectAgentHarness(params: {
 function selectAgentHarnessDecision(params: {
   provider: string;
   modelId?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   agentId?: string;
   sessionKey?: string;
   agentHarnessId?: string;
@@ -187,7 +187,7 @@ function selectAgentHarnessDecision(params: {
   // Quiet Core bot's built-in harness is intentionally not part of the plugin candidate list. Explicit plugin
   // runtimes fail closed; only `auto` may route an unmatched turn to Quiet Core bot.
   const pluginHarnesses = listPluginAgentHarnesses();
-  const openClawHarness = createOpenClawAgentHarness();
+  const openClawHarness = createQuietCoreAgentHarness();
   const runtime = policy.runtime;
   if (runtime === "quiet-core-bot") {
     return buildSelectionDecision({

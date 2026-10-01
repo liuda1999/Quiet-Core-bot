@@ -2,22 +2,22 @@ import com.android.build.api.variant.impl.VariantOutputImpl
 import java.util.Properties
 
 val dnsjavaInetAddressResolverService = "META-INF/services/java.net.spi.InetAddressResolverProvider"
-val openClawAndroidVersionFile = rootProject.file("Config/Version.properties")
-val openClawAndroidVersionProperties =
+val quietCoreAndroidVersionFile = rootProject.file("Config/Version.properties")
+val quietCoreAndroidVersionProperties =
   Properties().apply {
-    if (!openClawAndroidVersionFile.isFile) {
+    if (!quietCoreAndroidVersionFile.isFile) {
       error("Missing Android version properties. Run `pnpm android:version:sync`.")
     }
-    openClawAndroidVersionFile.inputStream().use(::load)
+    quietCoreAndroidVersionFile.inputStream().use(::load)
   }
 
-fun requireOpenClawAndroidVersionProperty(name: String): String =
-  openClawAndroidVersionProperties.getProperty(name)?.trim()?.takeIf { it.isNotEmpty() }
+fun requireQuietCoreAndroidVersionProperty(name: String): String =
+  quietCoreAndroidVersionProperties.getProperty(name)?.trim()?.takeIf { it.isNotEmpty() }
     ?: error("Missing $name in Config/Version.properties. Run `pnpm android:version:sync`.")
 
-val openClawAndroidVersionName = requireOpenClawAndroidVersionProperty("QUIET_CORE_ANDROID_VERSION_NAME")
-val openClawAndroidVersionCode =
-  requireOpenClawAndroidVersionProperty("QUIET_CORE_ANDROID_VERSION_CODE").toIntOrNull()
+val quietCoreAndroidVersionName = requireQuietCoreAndroidVersionProperty("QUIET_CORE_ANDROID_VERSION_NAME")
+val quietCoreAndroidVersionCode =
+  requireQuietCoreAndroidVersionProperty("QUIET_CORE_ANDROID_VERSION_CODE").toIntOrNull()
     ?: error("QUIET_CORE_ANDROID_VERSION_CODE must be an integer in Config/Version.properties.")
 
 val androidStoreFile = providers.gradleProperty("QUIET_CORE_ANDROID_STORE_FILE").orNull?.takeIf { it.isNotBlank() }
@@ -58,7 +58,7 @@ plugins {
 }
 
 android {
-  namespace = "ai.openclaw.app"
+  namespace = "ai.quietcore.app"
   compileSdk = 36
 
   // Release signing is local-only; keep the keystore path and passwords out of the repo.
@@ -75,7 +75,7 @@ android {
 
   sourceSets {
     getByName("main") {
-      assets.directories.add("../../shared/QuietCoreKit/Sources/OpenClawKit/Resources")
+      assets.directories.add("../../shared/QuietCoreKit/Sources/QuietCoreKit/Resources")
     }
   }
 
@@ -83,8 +83,8 @@ android {
     applicationId = "ai.openclaw.app"
     minSdk = 31
     targetSdk = 36
-    versionCode = openClawAndroidVersionCode
-    versionName = openClawAndroidVersionName
+    versionCode = quietCoreAndroidVersionCode
+    versionName = quietCoreAndroidVersionName
     ndk {
       // Support all major ABIs — native libs are tiny (~47 KB per ABI)
       abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
@@ -166,9 +166,9 @@ androidComponents {
         val flavorName = variant.flavorName?.takeIf { it.isNotBlank() }
         val outputFileName =
           if (flavorName == null) {
-            "openclaw-$versionName-$buildType.apk"
+            "quiet-core-$versionName-$buildType.apk"
           } else {
-            "openclaw-$versionName-$flavorName-$buildType.apk"
+            "quiet-core-$versionName-$flavorName-$buildType.apk"
           }
         output.outputFileName = outputFileName
       }

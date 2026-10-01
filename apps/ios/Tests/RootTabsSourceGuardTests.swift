@@ -11,7 +11,7 @@ struct RootTabsSourceGuardTests {
         #expect(source.contains("Show Sidebar"))
         #expect(source.contains("shouldShowSidebarRevealInDestinationHeader"))
         #expect(source.contains("layoutMode: self.isSidebarDrawerLayout ? .drawer : .split"))
-        #expect(componentSource.contains("OpenClawSidebarHeaderLeadingSlot"))
+        #expect(componentSource.contains("QuietCoreSidebarHeaderLeadingSlot"))
         #expect(componentSource.contains(".frame(width: 44, height: 44, alignment: .center)"))
         #expect(source.contains(".safeAreaPadding(.top, 8)"))
         #expect(source.contains("Self.sidebarShowButtonAccessibilityIdentifier"))
@@ -81,8 +81,8 @@ struct RootTabsSourceGuardTests {
         #expect(!source.contains("sidebarDeviceMenu"))
         #expect(sidebarColumn.contains("self.sidebarIdentityHeader"))
         #expect(source.contains("private var sidebarIdentityHeader: some View"))
-        #expect(source.contains("OpenClawProMark(size: 30"))
-        #expect(source.contains("Text(\"OpenClaw\")"))
+        #expect(source.contains("QuietCoreProMark(size: 30"))
+        #expect(source.contains("Text(\"QuietCore\")"))
         #expect(source.contains("private var sidebarGatewayStatusTitle: String"))
         #expect(source.contains("private var sidebarGatewayStatusColor: Color"))
         #expect(!sidebarColumn.contains("activeAgent"))
@@ -139,13 +139,13 @@ struct RootTabsSourceGuardTests {
         #expect(sidebarDetail.contains("headerTitle: \"Dreaming\""))
         #expect(sidebarDetail.contains("headerTitle: \"Usage\""))
         #expect(sidebarDetail.contains("headerTitle: \"Cron Jobs\""))
-        #expect(!sidebarDetail.contains("headerTitle: \"OpenClaw\""))
-        #expect(agentOverviewSource.contains("OpenClawAdaptiveHeaderRow("))
+        #expect(!sidebarDetail.contains("headerTitle: \"QuietCore\""))
+        #expect(agentOverviewSource.contains("QuietCoreAdaptiveHeaderRow("))
         #expect(agentOverviewSource.contains("title: self.headerTitle"))
-        #expect(!agentOverviewSource.contains("Text(\"OpenClaw\")"))
-        #expect(docsSource.contains("OpenClawAdaptiveHeaderRow("))
+        #expect(!agentOverviewSource.contains("Text(\"QuietCore\")"))
+        #expect(docsSource.contains("QuietCoreAdaptiveHeaderRow("))
         #expect(docsSource.contains("title: \"Docs\""))
-        #expect(!docsSource.contains("Text(\"OpenClaw Docs\")"))
+        #expect(!docsSource.contains("Text(\"QuietCore Docs\")"))
     }
 
     @Test func `agents direct route keeps single sidebar control`() throws {
@@ -161,8 +161,8 @@ struct RootTabsSourceGuardTests {
         #expect(destinationsSource.contains("self.directHeader(\n                        for: .usage"))
         #expect(destinationsSource.contains("self.directHeader(\n                        for: .cron"))
         #expect(destinationsSource.contains("self.directRoute == route ? self.headerLeadingAction : nil"))
-        #expect(nodesSource.contains("OpenClawSidebarHeaderLeadingSlot(action: headerLeadingAction)"))
-        #expect(dreamingSource.contains("OpenClawSidebarHeaderLeadingSlot(action: headerLeadingAction)"))
+        #expect(nodesSource.contains("QuietCoreSidebarHeaderLeadingSlot(action: headerLeadingAction)"))
+        #expect(dreamingSource.contains("QuietCoreSidebarHeaderLeadingSlot(action: headerLeadingAction)"))
     }
 
     @Test func `routed headers use shared adaptive layout`() throws {
@@ -174,24 +174,24 @@ struct RootTabsSourceGuardTests {
         let agentOverviewSource = try String(contentsOf: Self.agentProTabOverviewSourceURL(), encoding: .utf8)
         let settingsSource = try String(contentsOf: Self.settingsProTabSectionsSourceURL(), encoding: .utf8)
 
-        #expect(componentsSource.contains("struct OpenClawAdaptiveHeaderRow<Leading: View, Accessory: View>: View"))
+        #expect(componentsSource.contains("struct QuietCoreAdaptiveHeaderRow<Leading: View, Accessory: View>: View"))
         #expect(componentsSource.contains("ViewThatFits(in: .horizontal)"))
         #expect(componentsSource.contains("private var stackedLayout: some View"))
         #expect(componentsSource.contains(".layoutPriority(1)"))
         #expect(componentsSource.contains(".fixedSize(horizontal: true, vertical: false)"))
-        #expect(featureChromeSource.contains("OpenClawAdaptiveHeaderRow("))
-        #expect(docsSource.contains("OpenClawAdaptiveHeaderRow("))
-        #expect(overviewSource.contains("OpenClawAdaptiveHeaderRow("))
-        #expect(chatSource.contains("OpenClawAdaptiveHeaderRow("))
-        #expect(agentOverviewSource.contains("OpenClawAdaptiveHeaderRow("))
-        #expect(settingsSource.contains("OpenClawAdaptiveHeaderRow("))
+        #expect(featureChromeSource.contains("QuietCoreAdaptiveHeaderRow("))
+        #expect(docsSource.contains("QuietCoreAdaptiveHeaderRow("))
+        #expect(overviewSource.contains("QuietCoreAdaptiveHeaderRow("))
+        #expect(chatSource.contains("QuietCoreAdaptiveHeaderRow("))
+        #expect(agentOverviewSource.contains("QuietCoreAdaptiveHeaderRow("))
+        #expect(settingsSource.contains("QuietCoreAdaptiveHeaderRow("))
     }
 
     @Test func `phone hub keeps docs as destination only`() throws {
         let source = try String(contentsOf: Self.phoneHubSourceURL(), encoding: .utf8)
 
         #expect(source.contains("case .docs:"))
-        #expect(source.contains("OpenClawDocsScreen("))
+        #expect(source.contains("QuietCoreDocsScreen("))
         #expect(source.contains("headerLeadingAction: self.phoneDetailBackAction"))
         #expect(source.contains("gatewayAction: { self.openRootDestination(.gateway) }"))
         #expect(!source.contains("Label(\"Docs\", systemImage: \"book\")"))
@@ -240,9 +240,9 @@ struct RootTabsSourceGuardTests {
 
         #expect(source.contains("private var gatewayActionRow: some View"))
         #expect(source.contains("self.openRootDestination(.gateway)"))
-        #expect(source.contains("private var phoneDetailBackAction: OpenClawSidebarHeaderAction"))
+        #expect(source.contains("private var phoneDetailBackAction: QuietCoreSidebarHeaderAction"))
         #expect(source.contains("accessibilityLabel: \"Back to Control\""))
-        #expect(source.contains("accessibilityIdentifier: \"OpenClawPhoneDetailBackButton\""))
+        #expect(source.contains("accessibilityIdentifier: \"QuietCorePhoneDetailBackButton\""))
         #expect(source.contains(".navigationBarBackButtonHidden(true)"))
         #expect(source.contains(".toolbar(.hidden, for: .navigationBar)"))
         #expect(source.matches(of: /headerLeadingAction: self\.phoneDetailBackAction/).count == 10)
@@ -456,7 +456,7 @@ struct RootTabsSourceGuardTests {
         #expect(appModelSource.contains("return IOSGatewayChatTransport(gateway: self.operatorSession)"))
         #expect(activitySource.contains("IPadSidebarScreenChrome("))
         #expect(!taskSource.contains("struct IPadActivityScreen"))
-        #expect(!taskSource.contains("import OpenClawChatUI"))
+        #expect(!taskSource.contains("import QuietCoreChatUI"))
         #expect(projectSource.contains("IPadActivityScreen.swift in Sources"))
     }
 
@@ -466,8 +466,8 @@ struct RootTabsSourceGuardTests {
         let projectSource = try String(contentsOf: Self.xcodeProjectSourceURL(), encoding: .utf8)
 
         #expect(chromeSource.contains("struct IPadSidebarScreenChrome<Content: View>: View"))
-        #expect(chromeSource.contains("OpenClawSidebarHeaderLeadingSlot(action: headerLeadingAction)"))
-        #expect(chromeSource.contains("OpenClawGatewayCompactPill()"))
+        #expect(chromeSource.contains("QuietCoreSidebarHeaderLeadingSlot(action: headerLeadingAction)"))
+        #expect(chromeSource.contains("QuietCoreGatewayCompactPill()"))
         #expect(!taskSource.contains("struct IPadSidebarScreenChrome"))
         #expect(projectSource.contains("IPadSidebarScreenChrome.swift in Sources"))
     }
@@ -508,7 +508,7 @@ struct RootTabsSourceGuardTests {
         #expect(overviewSource.contains("Button(action: self.openSettings)"))
         #expect(overviewSource.contains(".accessibilityHint(\"Opens Settings / Gateway\")"))
         #expect(agentSource.contains("let openSettings: (() -> Void)?"))
-        #expect(agentOverviewSource.contains("OpenClawGatewayCompactPill()"))
+        #expect(agentOverviewSource.contains("QuietCoreGatewayCompactPill()"))
         #expect(agentOverviewSource.contains("Button(action: openSettings)"))
         #expect(rootSource
             .matches(of: /AgentProTab\([\s\S]*?openSettings: \{ self\.selectSidebarDestination\(\.gateway\) \}/)
@@ -598,7 +598,7 @@ struct RootTabsSourceGuardTests {
         #expect(actionsSource.contains("await TCPProbe.probe(host: trimmed, port: port"))
         #expect(actionsSource.contains("Check Tailscale or LAN."))
         #expect(actionsSource.contains("Tailscale is off on this device. Turn it on, then try again."))
-        #expect(actionsSource.contains("Run /pair approve in your OpenClaw chat"))
+        #expect(actionsSource.contains("Run /pair approve in your QuietCore chat"))
         #expect(actionsSource.contains("self.resetOnboarding()"))
         #expect(actionsSource.contains("self.gatewayController.trustRotatedGatewayCertificate(from: problem)"))
         #expect(actionsSource.contains("await self.retryGatewayConnectionFromProblem()"))
@@ -648,7 +648,7 @@ struct RootTabsSourceGuardTests {
         #expect(supportSource.contains("self.stateSection(\"Error\")"))
         #expect(supportSource.contains("GatewayProblemBanner("))
         #expect(supportSource.contains("kind: .pairingRequired"))
-        #expect(supportSource.contains("Run /pair approve in your OpenClaw chat"))
+        #expect(supportSource.contains("Run /pair approve in your QuietCore chat"))
         #expect(supportSource.contains("Tailscale is off on this device. Turn it on, then try again."))
         #expect(supportSource.contains("self.previewButton(\"Scan QR\""))
         #expect(supportSource.contains("self.previewButton(\"Connect\""))
@@ -695,7 +695,7 @@ struct RootTabsSourceGuardTests {
         URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
             .deletingLastPathComponent()
-            .appendingPathComponent("Sources/Design/OpenClawProComponents.swift")
+            .appendingPathComponent("Sources/Design/QuietCoreProComponents.swift")
     }
 
     private static func commandCenterSourceURL() -> URL {
@@ -810,7 +810,7 @@ struct RootTabsSourceGuardTests {
         URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
             .deletingLastPathComponent()
-            .appendingPathComponent("Sources/Design/OpenClawDocsScreen.swift")
+            .appendingPathComponent("Sources/Design/QuietCoreDocsScreen.swift")
     }
 
     private static func settingsProTabSectionsSourceURL() -> URL {
@@ -838,7 +838,7 @@ struct RootTabsSourceGuardTests {
         URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
             .deletingLastPathComponent()
-            .appendingPathComponent("Sources/OpenClawApp.swift")
+            .appendingPathComponent("Sources/QuietCoreApp.swift")
     }
 
     private static func notificationPermissionGuidanceDialogSourceURL() -> URL {
@@ -888,14 +888,14 @@ struct RootTabsSourceGuardTests {
             .deletingLastPathComponent()
             .deletingLastPathComponent()
             .deletingLastPathComponent()
-            .appendingPathComponent("shared/QuietCoreKit/Sources/OpenClawChatUI/ChatView+Previews.swift")
+            .appendingPathComponent("shared/QuietCoreKit/Sources/QuietCoreChatUI/ChatView+Previews.swift")
     }
 
     private static func xcodeProjectSourceURL() -> URL {
         URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()
             .deletingLastPathComponent()
-            .appendingPathComponent("OpenClaw.xcodeproj/project.pbxproj")
+            .appendingPathComponent("QuietCore.xcodeproj/project.pbxproj")
     }
 
     private static func extract(_ source: String, from start: String, to end: String) throws -> String {

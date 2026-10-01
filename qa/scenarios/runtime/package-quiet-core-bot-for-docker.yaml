@@ -9,7 +9,7 @@ scenario:
     secondary:
       - cli.package-manager-installs
       - runtime.package-update
-  objective: Exercise bounded OpenClaw package artifact generation through QA Lab evidence.
+  objective: Exercise bounded QuietCore package artifact generation through QA Lab evidence.
   successCriteria:
     - Package artifact output flags are parsed strictly.
     - The Docker package path uses the single bounded build-all step before npm pack.

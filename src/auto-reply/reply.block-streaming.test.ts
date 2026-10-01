@@ -1,6 +1,6 @@
 /** Tests block streaming behavior for auto-reply output delivery. */
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { withFastReplyConfig } from "./reply/get-reply-fast-path.js";
 import { loadGetReplyModuleForTest } from "./reply/get-reply.test-loader.js";
 import { createMockTypingController } from "./reply/reply.test-helpers.js";
@@ -104,7 +104,7 @@ function createTelegramMessage(messageSid: string): MsgContext {
   };
 }
 
-function createReplyConfig(streamMode?: "block"): OpenClawConfig {
+function createReplyConfig(streamMode?: "block"): QuietCoreConfig {
   return withFastReplyConfig({
     agents: {
       defaults: {
@@ -119,7 +119,7 @@ function createReplyConfig(streamMode?: "block"): OpenClawConfig {
       },
     },
     session: { store: "/tmp/sessions.json" },
-  } as OpenClawConfig);
+  } as QuietCoreConfig);
 }
 
 function createContinueDirectivesResult() {

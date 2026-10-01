@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import {
   resolveDaemonInstallRuntimeInputs,
   resolveDaemonNodeBinDir,
-  resolveDaemonOpenClawBinDir,
+  resolveDaemonQuietCoreBinDir,
   resolveDaemonServicePathDirs,
   resolveGatewayDevMode,
 } from "./daemon-install-plan.shared.js";
@@ -47,10 +47,10 @@ describe("resolveDaemonNodeBinDir", () => {
   });
 });
 
-describe("resolveDaemonOpenClawBinDir", () => {
+describe("resolveDaemonQuietCoreBinDir", () => {
   it("uses the active quiet-core-bot command directory", () => {
     expect(
-      resolveDaemonOpenClawBinDir({
+      resolveDaemonQuietCoreBinDir({
         argv: ["node", "/Users/testuser/.npm-global/bin/quiet-core-bot", "gateway", "install"],
         env: { PATH: "" },
         platform: "darwin",
@@ -74,7 +74,7 @@ describe("resolveDaemonOpenClawBinDir", () => {
     ]);
 
     expect(
-      resolveDaemonOpenClawBinDir({
+      resolveDaemonQuietCoreBinDir({
         argv: [
           "node",
           "/Users/testuser/.npm-global/lib/node_modules/quiet-core-bot/quiet-core-bot.mjs",
@@ -92,7 +92,7 @@ describe("resolveDaemonOpenClawBinDir", () => {
 
   it("ignores unrelated quiet-core-bot commands elsewhere on PATH", () => {
     expect(
-      resolveDaemonOpenClawBinDir({
+      resolveDaemonQuietCoreBinDir({
         argv: ["node", "/opt/quiet-core-bot/quiet-core-bot.mjs", "gateway", "install"],
         env: { PATH: "/Users/testuser/.npm-global/bin" },
         platform: "darwin",

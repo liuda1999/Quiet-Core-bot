@@ -327,7 +327,7 @@ vi.mock("../plugins/loader.js", async () => {
     await vi.importActual<typeof import("../plugins/loader.js")>("../plugins/loader.js");
   return {
     ...actual,
-    loadOpenClawPlugins: () => getTestPluginRegistry(),
+    loadQuietCorePlugins: () => getTestPluginRegistry(),
   };
 });
 process.env.QUIET_CORE_SKIP_CHANNELS = "1";

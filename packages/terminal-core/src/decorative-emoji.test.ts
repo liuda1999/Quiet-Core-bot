@@ -64,8 +64,8 @@ describe("decorative emoji terminal helpers", () => {
     };
 
     expect(decorativeEmoji("🦞", badTerminal)).toBe("");
-    expect(decorativePrefix("🦞", "OpenClaw", badTerminal)).toBe("OpenClaw");
-    expect(decorativePrefix("🦞", "OpenClaw", goodTerminal)).toBe("🦞 OpenClaw");
+    expect(decorativePrefix("🦞", "QuietCore", badTerminal)).toBe("QuietCore");
+    expect(decorativePrefix("🦞", "QuietCore", goodTerminal)).toBe("🦞 QuietCore");
   });
 
   it("strips decorative emoji from curated terminal text only when unsupported", () => {

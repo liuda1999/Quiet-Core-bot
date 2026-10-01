@@ -10,7 +10,7 @@ import {
   isCliProvider,
 } from "../agents/model-selection.js";
 import { resolveAgentModelPrimaryValue } from "../config/model-input.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 
 type SessionDisplayModelRow = {
   key: string;
@@ -42,7 +42,7 @@ function parseModelRef(raw: string, defaultProvider: string): SessionDisplayMode
 }
 
 function resolveAgentPrimaryModel(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   agentId: string | undefined,
 ): string | undefined {
   if (!agentId) {
@@ -73,7 +73,7 @@ function normalizeStoredOverrideModel(params: {
   };
 }
 
-function resolveDefaultModelRef(cfg: OpenClawConfig, agentId?: string): SessionDisplayModelRef {
+function resolveDefaultModelRef(cfg: QuietCoreConfig, agentId?: string): SessionDisplayModelRef {
   const primary =
     resolveAgentPrimaryModel(cfg, agentId) ??
     resolveAgentModelPrimaryValue(cfg.agents?.defaults?.model) ??
@@ -83,7 +83,7 @@ function resolveDefaultModelRef(cfg: OpenClawConfig, agentId?: string): SessionD
 
 /** Resolves default display values for a session table scoped to an agent. */
 export function resolveSessionDisplayDefaults(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   agentId?: string,
 ): SessionDisplayDefaults {
   return {
@@ -92,7 +92,7 @@ export function resolveSessionDisplayDefaults(
 }
 
 function normalizeCliRuntimeDisplayRef(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   ref: SessionDisplayModelRef,
   defaultRef: SessionDisplayModelRef,
 ): SessionDisplayModelRef {
@@ -128,7 +128,7 @@ function normalizeCliRuntimeDisplayRef(
 
 /** Resolves only the model id to show for a session row. */
 export function resolveSessionDisplayModel(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   row: SessionDisplayModelRow,
 ): string {
   return resolveSessionDisplayModelRef(cfg, row).model;
@@ -136,7 +136,7 @@ export function resolveSessionDisplayModel(
 
 /** Resolves provider/model display metadata for a session row. */
 export function resolveSessionDisplayModelRef(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   row: SessionDisplayModelRow,
 ): SessionDisplayModelRef {
   const agentId = row.key.startsWith("agent:") ? row.key.split(":")[1] : undefined;

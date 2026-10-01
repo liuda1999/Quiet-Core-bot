@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Verifies doctor/daemon repair switches service entrypoints between package and
-# git installs. Both fixtures come from the same prepared OpenClaw npm tarball.
+# git installs. Both fixtures come from the same prepared QuietCore npm tarball.
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"

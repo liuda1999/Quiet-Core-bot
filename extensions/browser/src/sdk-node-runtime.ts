@@ -21,7 +21,7 @@ export type {
   NodeSession,
 } from "quiet-core-bot/plugin-sdk/gateway-runtime";
 export { runCommandWithRuntime } from "quiet-core-bot/plugin-sdk/cli-runtime";
-export type { OpenClawPluginService } from "quiet-core-bot/plugin-sdk/plugin-entry";
+export type { QuietCorePluginService } from "quiet-core-bot/plugin-sdk/plugin-entry";
 export {
   startLazyPluginServiceModule,
   type LazyPluginServiceHandle,

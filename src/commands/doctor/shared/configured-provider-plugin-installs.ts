@@ -1,7 +1,7 @@
 // Resolves official provider plugins implied by configured auth and model selections.
 import { collectConfiguredModelRefs } from "@quiet-core/model-catalog-core/configured-model-refs";
 import { normalizeNullableString as normalizeId } from "@quiet-core/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../config/types.quiet-core-bot.js";
 import {
   resolveOfficialExternalProviderContractPluginIds,
   resolveOfficialExternalProviderPluginIds,
@@ -10,7 +10,7 @@ import {
 import { resolveProviderInstallCatalogEntries } from "../../../plugins/provider-install-catalog.js";
 import { asObjectRecord } from "./object.js";
 
-function collectConfiguredProviderIds(cfg: OpenClawConfig): Set<string> {
+function collectConfiguredProviderIds(cfg: QuietCoreConfig): Set<string> {
   const ids = new Set<string>();
   const add = (value: unknown) => {
     const id = normalizeId(value);
@@ -48,7 +48,7 @@ function collectConfiguredProviderIds(cfg: OpenClawConfig): Set<string> {
   return ids;
 }
 
-function collectConfiguredMediaProviderIds(cfg: OpenClawConfig): Set<string> {
+function collectConfiguredMediaProviderIds(cfg: QuietCoreConfig): Set<string> {
   const ids = new Set<string>();
   const add = (value: unknown) => {
     const id = normalizeId(value);
@@ -74,7 +74,7 @@ function collectConfiguredMediaProviderIds(cfg: OpenClawConfig): Set<string> {
 
 /** Lists external provider plugins implied by configured auth profiles and model refs. */
 export function collectConfiguredProviderPluginIds(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
 }): string[] {
   const configuredProviderIds = collectConfiguredProviderIds(params.cfg);

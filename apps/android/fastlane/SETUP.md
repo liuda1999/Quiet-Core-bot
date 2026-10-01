@@ -1,4 +1,4 @@
-# fastlane setup (OpenClaw Android)
+# fastlane setup (QuietCore Android)
 
 Install:
 
@@ -6,7 +6,7 @@ Install:
 brew install fastlane
 ```
 
-Create a Google Play service account JSON key with Google Play Developer API access, then grant that service account access to the OpenClaw app in Play Console.
+Create a Google Play service account JSON key with Google Play Developer API access, then grant that service account access to the QuietCore app in Play Console.
 
 Recommended local auth:
 
@@ -17,7 +17,7 @@ GOOGLE_PLAY_JSON_KEY=/absolute/path/to/google-play-service-account.json
 Optional app targeting:
 
 ```bash
-GOOGLE_PLAY_PACKAGE_NAME=ai.openclaw.app
+GOOGLE_PLAY_PACKAGE_NAME=ai.quietcore.app
 ```
 
 Android release signing uses the same private `apps-signing` repository and `MATCH_PASSWORD` secret as iOS, but with Android-specific encrypted assets. Pull the shared upload key before release validation:
@@ -65,7 +65,7 @@ pnpm android:release:archive
 Generate deterministic Google Play screenshots:
 
 ```bash
-ANDROID_SCREENSHOT_AVD=OpenClaw_QA_API35 pnpm android:screenshots
+ANDROID_SCREENSHOT_AVD=QuietCore_QA_API35 pnpm android:screenshots
 ```
 
 If exactly one ADB device is already connected, `pnpm android:screenshots`

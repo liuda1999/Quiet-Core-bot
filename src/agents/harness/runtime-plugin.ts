@@ -1,7 +1,7 @@
 /**
  * Ensures runtime plugins required by selected native harnesses are installed.
  */
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { withActivatedPluginIds } from "../../plugins/activation-context.js";
 import { resolveManifestActivationPlan } from "../../plugins/activation-planner.js";
 import { resolveEffectivePluginActivationState } from "../../plugins/config-state.js";
@@ -34,13 +34,13 @@ function dedupePluginIds(values: readonly string[]): string[] {
   return result;
 }
 
-function restrictiveAllowlistOmitsPlugin(config: OpenClawConfig | undefined, pluginId: string) {
+function restrictiveAllowlistOmitsPlugin(config: QuietCoreConfig | undefined, pluginId: string) {
   const allow = config?.plugins?.allow ?? [];
   return allow.length > 0 && !allow.includes(pluginId);
 }
 
 function resolveSelectedMemoryPluginIds(params: {
-  config: OpenClawConfig | undefined;
+  config: QuietCoreConfig | undefined;
   workspaceDir: string;
 }): string[] {
   const registry = loadPluginRegistrySnapshot({
@@ -73,7 +73,7 @@ function resolveSelectedMemoryPluginIds(params: {
 function resolveHarnessPluginIds(params: {
   runtime: string;
   provider: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   workspaceDir: string;
 }): string[] {
   const activationPlan = resolveManifestActivationPlan({
@@ -129,10 +129,10 @@ function resolveHarnessPluginIds(params: {
 }
 
 function withRuntimePluginIdsAllowed(params: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   requiredPluginId: string;
   pluginIds: readonly string[];
-}): OpenClawConfig | undefined {
+}): QuietCoreConfig | undefined {
   if (params.pluginIds.length === 0) {
     return params.config;
   }
@@ -153,7 +153,7 @@ function withRuntimePluginIdsAllowed(params: {
 export async function ensureSelectedAgentHarnessPlugin(params: {
   provider: string;
   modelId: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   agentId?: string;
   sessionKey?: string;
   agentHarnessRuntimeOverride?: string;

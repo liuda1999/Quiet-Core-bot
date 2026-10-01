@@ -17,7 +17,7 @@ describe("qa channel transport", () => {
           enabled: true,
           baseUrl: "http://127.0.0.1:43123",
           botUserId: "quiet-core-bot",
-          botDisplayName: "OpenClaw QA",
+          botDisplayName: "QuietCore QA",
           allowFrom: ["*"],
           pollTimeoutMs: 250,
         },

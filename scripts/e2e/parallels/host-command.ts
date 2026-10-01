@@ -1,4 +1,4 @@
-// Host Command script supports OpenClaw repository automation.
+// Host Command script supports QuietCore repository automation.
 import { spawn, spawnSync, type SpawnOptions, type SpawnSyncReturns } from "node:child_process";
 import { createWriteStream } from "node:fs";
 import path from "node:path";

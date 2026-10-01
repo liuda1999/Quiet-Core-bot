@@ -1,7 +1,7 @@
 // Matrix tests cover legacy state plugin behavior.
 import fs from "node:fs";
 import path from "node:path";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { withTempHome } from "quiet-core-bot/plugin-sdk/test-env";
 import { describe, expect, it } from "vitest";
 import { autoMigrateLegacyMatrixState, detectLegacyMatrixState } from "./legacy-state.js";
@@ -18,7 +18,7 @@ describe("matrix legacy state migration", () => {
       writeFile(path.join(stateDir, "matrix", "bot-storage.json"), '{"next_batch":"s1"}');
       writeFile(path.join(stateDir, "matrix", "crypto", "store.db"), "crypto");
 
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         channels: {
           matrix: {
             homeserver: "https://matrix.example.org",
@@ -61,7 +61,7 @@ describe("matrix legacy state migration", () => {
         ),
       );
 
-      const cfg: OpenClawConfig = {
+      const cfg: QuietCoreConfig = {
         channels: {
           matrix: {
             homeserver: "https://matrix.example.org",

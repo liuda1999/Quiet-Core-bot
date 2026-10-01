@@ -1,5 +1,5 @@
 import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   lookupCachedContextTokens,
   lookupCachedContextWindow,
@@ -19,8 +19,8 @@ export type ModelsConfig = {
 };
 
 export type ContextTokenResolutionParams = {
-  cfg?: OpenClawConfig;
-  sourceCfg?: OpenClawConfig | null;
+  cfg?: QuietCoreConfig;
+  sourceCfg?: QuietCoreConfig | null;
   provider?: string;
   model?: string;
   contextTokensOverride?: number;
@@ -72,7 +72,7 @@ function resolveProviderModelRef(params: {
 }
 
 function resolveConfiguredProviderContextTokens(
-  cfg: OpenClawConfig | null | undefined,
+  cfg: QuietCoreConfig | null | undefined,
   provider: string,
   model: string,
 ): ConfiguredContextTokens | undefined {

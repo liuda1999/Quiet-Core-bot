@@ -12,7 +12,7 @@ import {
   uniqueValues,
 } from "@quiet-core/normalization-core/string-normalization";
 import { Type } from "typebox";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { getPluginToolMeta, type PluginToolMcpMeta } from "../plugins/tools.js";
 import {
   isToolWrappedWithBeforeToolCallHook,
@@ -100,8 +100,8 @@ export type ToolSearchConfig = {
 
 /** Per-run/session context used by Tool Search control tools. */
 export type ToolSearchToolContext = {
-  config?: OpenClawConfig;
-  runtimeConfig?: OpenClawConfig;
+  config?: QuietCoreConfig;
+  runtimeConfig?: QuietCoreConfig;
   agentId?: string;
   sessionKey?: string;
   sessionId?: string;
@@ -424,7 +424,7 @@ const catalogFingerprints = new WeakMap<ToolSearchCatalogSession, string>();
 const catalogToolIdentities = new WeakMap<object, number>();
 let nextCatalogToolIdentity = 1;
 
-function readToolSearchConfig(config?: OpenClawConfig): Record<string, unknown> {
+function readToolSearchConfig(config?: QuietCoreConfig): Record<string, unknown> {
   const tools = isRecord(config?.tools) ? config.tools : undefined;
   const toolSearch = tools?.toolSearch;
   if (toolSearch === true) {
@@ -458,7 +458,7 @@ function resolveMinCodeTimeoutMs(): number {
   return toolSearchMinCodeTimeoutMsForTest ?? 1000;
 }
 
-export function resolveToolSearchConfig(config?: OpenClawConfig): ToolSearchConfig {
+export function resolveToolSearchConfig(config?: QuietCoreConfig): ToolSearchConfig {
   const raw = readToolSearchConfig(config);
   const rawMode = typeof raw.mode === "string" ? raw.mode : "code";
   const requestedMode: ToolSearchMode =
@@ -889,7 +889,7 @@ export function createToolSearchCatalogRef(): ToolSearchCatalogRef {
 /** Replace visible tools with Tool Search controls and register hidden catalog entries. */
 export function applyToolSearchCatalog(params: {
   tools: AnyAgentTool[];
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   sessionId?: string;
   sessionKey?: string;
   agentId?: string;
@@ -916,7 +916,7 @@ export function applyToolSearchCatalog(params: {
 /** Keep tool names discoverable while deferring heavyweight JSON schemas behind describe/call. */
 export function applyToolSchemaDirectoryCatalog(params: {
   tools: AnyAgentTool[];
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   sessionId?: string;
   sessionKey?: string;
   agentId?: string;
@@ -1003,7 +1003,7 @@ export function resolveToolSearchCatalogTool(
 /** Move client-provided tools into an existing Tool Search catalog. */
 export function addClientToolsToToolSearchCatalog(params: {
   tools: ToolDefinition[];
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   sessionId?: string;
   sessionKey?: string;
   agentId?: string;

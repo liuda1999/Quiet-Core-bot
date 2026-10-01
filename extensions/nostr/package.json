@@ -1,7 +1,7 @@
 {
   "name": "@quiet-core/nostr",
   "version": "2026.6.11",
-  "description": "OpenClaw Nostr channel plugin for NIP-04 encrypted direct messages.",
+  "description": "QuietCore Nostr channel plugin for NIP-04 encrypted direct messages.",
   "repository": {
     "type": "git",
     "url": "https://github.com/liuda1999/Quiet-Core-bot"

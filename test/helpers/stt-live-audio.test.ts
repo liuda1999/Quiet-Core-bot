@@ -1,6 +1,6 @@
 // STT live audio tests validate live speech-to-text audio fixtures.
 import {
-  expectOpenClawLiveTranscriptMarker,
+  expectQuietCoreLiveTranscriptMarker,
   normalizeTranscriptForMatch,
   QUIET_CORE_LIVE_TRANSCRIPT_MARKER_RE,
 } from "quiet-core-bot/plugin-sdk/provider-test-contracts";
@@ -18,6 +18,6 @@ describe("normalizeTranscriptForMatch", () => {
     expect(normalizeTranscriptForMatch("OpenCL xAI realtime transcription")).toMatch(
       QUIET_CORE_LIVE_TRANSCRIPT_MARKER_RE,
     );
-    expectOpenClawLiveTranscriptMarker("OpenClar integration OK");
+    expectQuietCoreLiveTranscriptMarker("OpenClar integration OK");
   });
 });

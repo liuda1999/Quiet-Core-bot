@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { describe, expect, it, vi } from "vitest";
-import { resolvePreferredOpenClawTmpDir } from "../../../infra/tmp-quiet-core-bot-dir.js";
+import { resolvePreferredQuietCoreTmpDir } from "../../../infra/tmp-quiet-core-bot-dir.js";
 import { createHostSandboxFsBridge } from "../../test-helpers/host-sandbox-fs-bridge.js";
 import { createUnsafeMountedSandbox } from "../../test-helpers/unsafe-mounted-sandbox.js";
 import {
@@ -107,10 +107,10 @@ describe("detectImageReferences", () => {
 
   it("ignores temporary Quiet Core bot CLI image cache paths", () => {
     expectNoImageReferences(
-      `Prior turn wrote ${path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-cli-images", "stale.jpg")}`,
+      `Prior turn wrote ${path.join(resolvePreferredQuietCoreTmpDir(), "quiet-core-bot-cli-images", "stale.jpg")}`,
     );
     expectNoImageReferences(
-      `[media attached: ${path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-cli-images", "stale.jpg")} (image/jpeg)]`,
+      `[media attached: ${path.join(resolvePreferredQuietCoreTmpDir(), "quiet-core-bot-cli-images", "stale.jpg")} (image/jpeg)]`,
     );
     expectNoImageReferences(
       `Prior turn wrote ${path.join(os.tmpdir(), "quiet-core-bot", "quiet-core-bot-cli-images", "stale.jpg")}`,

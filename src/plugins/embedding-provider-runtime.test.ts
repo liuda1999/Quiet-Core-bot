@@ -1,6 +1,6 @@
 // Covers embedding provider runtime hooks supplied by plugins.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   clearEmbeddingProviders,
   registerEmbeddingProvider,
@@ -92,7 +92,7 @@ describe("embedding provider runtime resolution", () => {
           },
         },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     expect(runtimeModule.getEmbeddingProvider("tenant-embeddings", cfg)?.id).toBe(
       "openai-compatible",

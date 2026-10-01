@@ -5,19 +5,19 @@
 import PackageDescription
 
 let package = Package(
-    name: "OpenClawMLXTTS",
+    name: "QuietCoreMLXTTS",
     platforms: [
         .macOS(.v15),
     ],
     products: [
-        .executable(name: "openclaw-mlx-tts", targets: ["OpenClawMLXTTSHelper"]),
+        .executable(name: "quiet-core-mlx-tts", targets: ["QuietCoreMLXTTSHelper"]),
     ],
     dependencies: [
         .package(url: "https://github.com/Blaizzy/mlx-audio-swift", revision: "fc4fe22dc41c053062e647a4e3db9142193670d2"),
     ],
     targets: [
         .executableTarget(
-            name: "OpenClawMLXTTSHelper",
+            name: "QuietCoreMLXTTSHelper",
             dependencies: [
                 .product(name: "MLXAudioTTS", package: "mlx-audio-swift"),
             ],

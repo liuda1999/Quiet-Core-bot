@@ -639,7 +639,7 @@ describe("ci workflow guards", () => {
         type: "string",
       },
       ref: {
-        description: "OpenClaw branch, tag, or SHA containing the maturity score source",
+        description: "QuietCore branch, tag, or SHA containing the maturity score source",
         required: true,
         type: "string",
       },

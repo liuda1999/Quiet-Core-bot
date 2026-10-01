@@ -1,7 +1,7 @@
 // Memory Core tests cover manager sync ops.interval plugin behavior.
 import type { DatabaseSync } from "node:sqlite";
 import type {
-  OpenClawConfig,
+  QuietCoreConfig,
   ResolvedMemorySearchConfig,
 } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
 import type { MemorySource } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-storage";
@@ -19,7 +19,7 @@ type MemoryIndexEntry = {
 };
 
 class IntervalSyncHarness extends MemoryManagerSyncOps {
-  protected readonly cfg = {} as OpenClawConfig;
+  protected readonly cfg = {} as QuietCoreConfig;
   protected readonly agentId = "main";
   protected readonly workspaceDir = "/tmp/quiet-core-bot-memory-interval-test";
   protected readonly settings: ResolvedMemorySearchConfig;

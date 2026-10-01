@@ -1,4 +1,4 @@
-// Tsx Name Repro script supports OpenClaw repository automation.
+// Tsx Name Repro script supports QuietCore repository automation.
 import "../../src/logging/subsystem.js";
 
 console.log("tsx-name-repro: loaded logging/subsystem");

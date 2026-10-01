@@ -1,5 +1,5 @@
 // PDF extraction helpers read PDF text through configured document extraction.
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type {
   DocumentExtractedImage,
   DocumentExtractionResult,
@@ -19,7 +19,7 @@ export async function extractPdfContent(params: {
   minTextChars: number;
   password?: string;
   pageNumbers?: number[];
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   onImageExtractionError?: (error: unknown) => void;
 }): Promise<PdfExtractedContent> {
   const extracted = await extractDocumentContent({

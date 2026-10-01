@@ -2,7 +2,7 @@
   "name": "@quiet-core/ollama-provider",
   "version": "2026.6.11",
   "private": true,
-  "description": "OpenClaw Ollama provider plugin",
+  "description": "QuietCore Ollama provider plugin",
   "type": "module",
   "dependencies": {
     "typebox": "1.1.39"

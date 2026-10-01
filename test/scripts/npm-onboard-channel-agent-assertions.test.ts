@@ -257,7 +257,7 @@ describe("npm onboard channel agent assertions", () => {
       "telegram",
       { configuredChannels: ["telegram"] },
       [
-        "# OpenClaw status",
+        "# QuietCore status",
         "",
         "# Overview",
         "OS macOS",
@@ -279,7 +279,7 @@ describe("npm onboard channel agent assertions", () => {
       "telegram",
       { configuredChannels: ["telegram"] },
       [
-        "# OpenClaw status",
+        "# QuietCore status",
         "",
         "# Overview",
         "OS macOS",
@@ -302,7 +302,7 @@ describe("npm onboard channel agent assertions", () => {
     const result = runStatusAssert(
       "telegram",
       { configuredChannels: ["telegram"] },
-      `# OpenClaw status\n${"x".repeat(128)}`,
+      `# QuietCore status\n${"x".repeat(128)}`,
       { QUIET_CORE_NPM_ONBOARD_STATUS_TEXT_MAX_BYTES: "64" },
     );
 

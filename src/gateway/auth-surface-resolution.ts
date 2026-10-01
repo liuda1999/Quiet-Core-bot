@@ -1,6 +1,6 @@
 // Gateway auth surface resolver.
 // Centralizes credential precedence for probes and interactive clients.
-import type { OpenClawConfig } from "../config/types.js";
+import type { QuietCoreConfig } from "../config/types.js";
 import { hasConfiguredSecretInput } from "../config/types.secrets.js";
 import { trimToUndefined, type ExplicitGatewayAuth } from "./credentials.js";
 import { resolveConfiguredSecretInputString } from "./resolve-configured-secret-input-string.js";
@@ -20,7 +20,7 @@ type ResolvedGatewayCredential = {
 };
 
 async function resolveGatewayCredential(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   env: NodeJS.ProcessEnv;
   diagnostics: string[];
   path: GatewayCredentialPath;
@@ -50,7 +50,7 @@ function withDiagnostics<T extends object>(params: {
 
 /** Resolves best-effort credentials for non-mutating local/remote gateway probes. */
 export async function resolveGatewayProbeSurfaceAuth(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
   surface: "local" | "remote";
 }): Promise<{ token?: string; password?: string; diagnostics?: string[] }> {
@@ -153,7 +153,7 @@ export async function resolveGatewayProbeSurfaceAuth(params: {
 
 /** Resolves credentials for client paths that must either authenticate or explain the failure. */
 export async function resolveGatewayInteractiveSurfaceAuth(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
   explicitAuth?: ExplicitGatewayAuth;
   suppressEnvAuthFallback?: boolean;

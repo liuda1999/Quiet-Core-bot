@@ -7,13 +7,13 @@ export type MatrixManagedDeviceInfo = {
 
 export type MatrixDeviceHealthSummary = {
   currentDeviceId: string | null;
-  staleOpenClawDevices: MatrixManagedDeviceInfo[];
-  currentOpenClawDevices: MatrixManagedDeviceInfo[];
+  staleQuietCoreDevices: MatrixManagedDeviceInfo[];
+  currentQuietCoreDevices: MatrixManagedDeviceInfo[];
 };
 
-const QUIET_CORE_DEVICE_NAME_PREFIX = "OpenClaw ";
+const QUIET_CORE_DEVICE_NAME_PREFIX = "QuietCore ";
 
-export function isOpenClawManagedMatrixDevice(displayName: string | null | undefined): boolean {
+export function isQuietCoreManagedMatrixDevice(displayName: string | null | undefined): boolean {
   return displayName?.startsWith(QUIET_CORE_DEVICE_NAME_PREFIX) === true;
 }
 
@@ -22,11 +22,11 @@ export function summarizeMatrixDeviceHealth(
 ): MatrixDeviceHealthSummary {
   const currentDeviceId = devices.find((device) => device.current)?.deviceId ?? null;
   const openClawDevices = devices.filter((device) =>
-    isOpenClawManagedMatrixDevice(device.displayName),
+    isQuietCoreManagedMatrixDevice(device.displayName),
   );
   return {
     currentDeviceId,
-    staleOpenClawDevices: openClawDevices.filter((device) => !device.current),
-    currentOpenClawDevices: openClawDevices.filter((device) => device.current),
+    staleQuietCoreDevices: openClawDevices.filter((device) => !device.current),
+    currentQuietCoreDevices: openClawDevices.filter((device) => device.current),
   };
 }

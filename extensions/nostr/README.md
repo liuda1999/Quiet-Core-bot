@@ -1,10 +1,10 @@
 # @quiet-core/nostr
 
-Nostr DM channel plugin for OpenClaw using NIP-04 encrypted direct messages.
+Nostr DM channel plugin for QuietCore using NIP-04 encrypted direct messages.
 
 ## Overview
 
-This extension adds Nostr as a messaging channel to OpenClaw. It enables your bot to:
+This extension adds Nostr as a messaging channel to QuietCore. It enables your bot to:
 
 - Receive encrypted DMs from Nostr users
 - Send encrypted responses back

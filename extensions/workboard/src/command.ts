@@ -1,5 +1,5 @@
 // Workboard plugin module implements command behavior.
-import type { OpenClawPluginApi } from "../api.js";
+import type { QuietCorePluginApi } from "../api.js";
 import { resolveWorkboardCardByIdOrPrefix } from "./card-lookup.js";
 import { dispatchAndStartWorkboardCards, type WorkboardSubagentRuntime } from "./dispatcher.js";
 import type { WorkboardStore } from "./store.js";
@@ -142,7 +142,7 @@ export async function handleWorkboardCommand(params: {
 }
 
 export function registerWorkboardCommand(params: {
-  api: OpenClawPluginApi;
+  api: QuietCorePluginApi;
   store: WorkboardStore;
 }): void {
   params.api.registerCommand({

@@ -1,4 +1,4 @@
-// OpenClaw SDK tests cover transport behavior.
+// QuietCore SDK tests cover transport behavior.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { GatewayClientTransport } from "./transport.js";
 

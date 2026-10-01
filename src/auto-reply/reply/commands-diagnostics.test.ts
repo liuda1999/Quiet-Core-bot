@@ -1,6 +1,6 @@
 // Tests diagnostics command output and runtime diagnostic toggles.
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import { clearPluginCommands } from "../../plugins/commands.js";
 import type { MsgContext } from "../templating.js";
 import { createDiagnosticsCommandHandler } from "./commands-diagnostics.js";
@@ -47,7 +47,7 @@ function buildDiagnosticsParams(
   overrides: Partial<HandleCommandsParams> = {},
 ): HandleCommandsParams {
   return {
-    cfg: { commands: { text: true } } as OpenClawConfig,
+    cfg: { commands: { text: true } } as QuietCoreConfig,
     ctx: {
       Provider: "whatsapp",
       Surface: "whatsapp",

@@ -4,7 +4,7 @@ import path from "node:path";
 import { note } from "../../packages/terminal-core/src/note.js";
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
 import { DEFAULT_AGENTS_FILENAME } from "../agents/workspace.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import {
   CANONICAL_ROOT_MEMORY_FILENAME,
@@ -230,7 +230,7 @@ export async function migrateLegacyRootMemoryFile(
 }
 
 /** Emits workspace root-memory health warnings. */
-export async function noteWorkspaceMemoryHealth(cfg: OpenClawConfig): Promise<void> {
+export async function noteWorkspaceMemoryHealth(cfg: QuietCoreConfig): Promise<void> {
   try {
     const agentId = resolveDefaultAgentId(cfg);
     const workspaceDir = resolveAgentWorkspaceDir(cfg, agentId);
@@ -247,7 +247,7 @@ export async function noteWorkspaceMemoryHealth(cfg: OpenClawConfig): Promise<vo
 
 /** Prompts to merge legacy root memory into canonical memory when both files exist. */
 export async function maybeRepairWorkspaceMemoryHealth(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   prompter: DoctorPrompter;
 }): Promise<void> {
   try {

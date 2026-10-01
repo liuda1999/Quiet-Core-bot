@@ -35,7 +35,7 @@ export {
   resolveUserPath,
   truncateUtf16Safe,
 } from "./host/quiet-core-bot-runtime-io.js";
-export type { OpenClawConfig } from "./host/quiet-core-bot-runtime-config.js";
+export type { QuietCoreConfig } from "./host/quiet-core-bot-runtime-config.js";
 export type { SessionSendPolicyConfig } from "./host/quiet-core-bot-runtime-config.js";
 export type { SecretInput } from "./host/quiet-core-bot-runtime-config.js";
 export type {

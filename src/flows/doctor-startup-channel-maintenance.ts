@@ -1,6 +1,6 @@
 // Doctor startup channel maintenance runs channel plugin startup repairs.
 import { runChannelPluginStartupMaintenance } from "../channels/plugins/lifecycle-startup.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 
 // Doctor wrapper for plugin startup maintenance repairs.
 type DoctorStartupMaintenanceRuntime = {
@@ -12,7 +12,7 @@ type ChannelPluginStartupMaintenanceRunner = typeof runChannelPluginStartupMaint
 
 /** Runs channel plugin startup maintenance when doctor fix mode explicitly permits repairs. */
 export async function maybeRunDoctorStartupChannelMaintenance(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
   runChannelPluginStartupMaintenance?: ChannelPluginStartupMaintenanceRunner;
   runtime: DoctorStartupMaintenanceRuntime;

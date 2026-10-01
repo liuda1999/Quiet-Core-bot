@@ -1,7 +1,7 @@
 /**
  * Resolves hook-selected model state and pre-model attachments for a run.
  */
-import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../config/types.quiet-core-bot.js";
 import type { ProviderRuntimeModel } from "../../../plugins/provider-runtime-model.types.js";
 import type {
   PluginHookBeforeAgentStartResult,
@@ -136,7 +136,7 @@ export function buildBeforeModelResolveAttachments(
  * limit as the guard.
  */
 export function resolveEffectiveRuntimeModel(params: {
-  cfg: OpenClawConfig | undefined;
+  cfg: QuietCoreConfig | undefined;
   provider: string;
   contextConfigProvider?: string;
   modelId: string;

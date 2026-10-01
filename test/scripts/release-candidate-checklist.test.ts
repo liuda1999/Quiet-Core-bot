@@ -233,25 +233,25 @@ describe("release candidate checklist", () => {
       ]),
       workflowRef: "release/2026.5.14",
       windowsNodeInstallerDigests: JSON.stringify({
-        "OpenClawCompanion-Setup-x64.exe": `sha256:${"a".repeat(64)}`,
-        "OpenClawCompanion-Setup-arm64.exe": `sha256:${"b".repeat(64)}`,
+        "QuietCoreCompanion-Setup-x64.exe": `sha256:${"a".repeat(64)}`,
+        "QuietCoreCompanion-Setup-arm64.exe": `sha256:${"b".repeat(64)}`,
       }),
     };
 
     expect(buildPublishCommand(options)).toContain("'windows_node_tag=v0.6.3'");
     expect(buildPublishCommand(options)).toContain(
-      `'windows_node_installer_digests={"OpenClawCompanion-Setup-x64.exe":"sha256:${"a".repeat(64)}","OpenClawCompanion-Setup-arm64.exe":"sha256:${"b".repeat(64)}"}'`,
+      `'windows_node_installer_digests={"QuietCoreCompanion-Setup-x64.exe":"sha256:${"a".repeat(64)}","QuietCoreCompanion-Setup-arm64.exe":"sha256:${"b".repeat(64)}"}'`,
     );
   });
 
   it("validates the stable Windows source release and immutable installer digests", async () => {
     const assets = [
       {
-        name: "OpenClawCompanion-Setup-x64.exe",
+        name: "QuietCoreCompanion-Setup-x64.exe",
         digest: `sha256:${"a".repeat(64)}`,
       },
       {
-        name: "OpenClawCompanion-Setup-arm64.exe",
+        name: "QuietCoreCompanion-Setup-arm64.exe",
         digest: `sha256:${"b".repeat(64)}`,
       },
     ];
@@ -284,35 +284,35 @@ describe("release candidate checklist", () => {
     [{ tag_name: "v0.6.4" }, "Windows source release tag mismatch: expected v0.6.3, got v0.6.4"],
     [
       { assets: [] },
-      "must contain exactly one required asset OpenClawCompanion-Setup-x64.exe; found 0",
+      "must contain exactly one required asset QuietCoreCompanion-Setup-x64.exe; found 0",
     ],
     [
       {
         assets: [
           {
-            name: "OpenClawCompanion-Setup-x64.exe",
+            name: "QuietCoreCompanion-Setup-x64.exe",
             digest: `sha256:${"a".repeat(64)}`,
           },
           {
-            name: "OpenClawCompanion-Setup-x64.exe",
+            name: "QuietCoreCompanion-Setup-x64.exe",
             digest: `sha256:${"c".repeat(64)}`,
           },
           {
-            name: "OpenClawCompanion-Setup-arm64.exe",
+            name: "QuietCoreCompanion-Setup-arm64.exe",
             digest: `sha256:${"b".repeat(64)}`,
           },
         ],
       },
-      "must contain exactly one required asset OpenClawCompanion-Setup-x64.exe; found 2",
+      "must contain exactly one required asset QuietCoreCompanion-Setup-x64.exe; found 2",
     ],
     [
       {
         assets: [
-          { name: "OpenClawCompanion-Setup-x64.exe", digest: "" },
-          { name: "OpenClawCompanion-Setup-arm64.exe", digest: `sha256:${"b".repeat(64)}` },
+          { name: "QuietCoreCompanion-Setup-x64.exe", digest: "" },
+          { name: "QuietCoreCompanion-Setup-arm64.exe", digest: `sha256:${"b".repeat(64)}` },
         ],
       },
-      "asset OpenClawCompanion-Setup-x64.exe is missing its SHA-256 digest",
+      "asset QuietCoreCompanion-Setup-x64.exe is missing its SHA-256 digest",
     ],
   ])("rejects an invalid stable Windows source release", async (override, message) => {
     const fetchImpl = vi.fn(async () => {
@@ -323,11 +323,11 @@ describe("release candidate checklist", () => {
         html_url: "https://github.com/openclaw/openclaw-windows-node/releases/tag/v0.6.3",
         assets: [
           {
-            name: "OpenClawCompanion-Setup-x64.exe",
+            name: "QuietCoreCompanion-Setup-x64.exe",
             digest: `sha256:${"a".repeat(64)}`,
           },
           {
-            name: "OpenClawCompanion-Setup-arm64.exe",
+            name: "QuietCoreCompanion-Setup-arm64.exe",
             digest: `sha256:${"b".repeat(64)}`,
           },
         ],
@@ -380,7 +380,7 @@ describe("release candidate checklist", () => {
         "--plugins",
         "@quiet-core/diffs",
       ]),
-    ).toThrow("release candidates publish OpenClaw with --plugin-publish-scope all-publishable");
+    ).toThrow("release candidates publish QuietCore with --plugin-publish-scope all-publishable");
   });
 
   it("extracts a workflow run id from gh dispatch output", () => {

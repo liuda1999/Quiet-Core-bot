@@ -1,4 +1,4 @@
-// Bench Cli Startup script supports OpenClaw repository automation.
+// Bench Cli Startup script supports QuietCore repository automation.
 import { spawn } from "node:child_process";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import os from "node:os";
@@ -1117,7 +1117,7 @@ function parseOptions(): CliOptions {
 }
 
 function printUsage(): void {
-  console.log(`OpenClaw CLI benchmark
+  console.log(`QuietCore CLI benchmark
 
 Usage:
   pnpm tsx scripts/bench-cli-startup.ts [options]

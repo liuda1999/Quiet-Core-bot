@@ -6,7 +6,7 @@ import {
   normalizeConfiguredMcpServers,
 } from "./mcp-config-normalize.js";
 import { replaceConfigFile } from "./mutate.js";
-import type { OpenClawConfig } from "./types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "./types.quiet-core-bot.js";
 import { validateConfigObjectWithPlugins } from "./validation.js";
 
 type ConfigMcpServers = ReturnType<typeof normalizeConfiguredMcpServers>;
@@ -15,7 +15,7 @@ type ConfigMcpReadResult =
   | {
       ok: true;
       path: string;
-      config: OpenClawConfig;
+      config: QuietCoreConfig;
       mcpServers: ConfigMcpServers;
       baseHash?: string;
     }
@@ -25,7 +25,7 @@ type ConfigMcpWriteResult =
   | {
       ok: true;
       path: string;
-      config: OpenClawConfig;
+      config: QuietCoreConfig;
       mcpServers: ConfigMcpServers;
       removed?: boolean;
       updated?: boolean;

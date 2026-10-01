@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import type { CliBackendConfig } from "../config/types.js";
 import { captureEnv, deleteTestEnvValue, setTestEnvValue } from "../test-utils/env.js";
 import {
@@ -25,7 +25,7 @@ import type {
 const E2E_TIMEOUT_MS = 30_000;
 
 type BundleMcpFixture = {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   envSnapshot: ReturnType<typeof captureEnv>;
   fakeClaudePath: string;
   fakeClaudePidPath?: string;
@@ -97,7 +97,7 @@ async function createBundleMcpFixture(params: {
   }
   await writeClaudeBundle({ pluginRoot, serverScriptPath });
 
-  const config: OpenClawConfig = {
+  const config: QuietCoreConfig = {
     agents: {
       defaults: {
         workspace: workspaceDir,
@@ -139,7 +139,7 @@ function buildTestBackend(params: {
 
 async function prepareBundleMcpExecutionContext(params: {
   backend: CliBackendConfig;
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   model: string;
   prompt: string;
   runId: string;

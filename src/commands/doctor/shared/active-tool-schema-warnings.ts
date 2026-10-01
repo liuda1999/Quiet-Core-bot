@@ -6,7 +6,7 @@ import {
   resolveAgentDir,
   resolveAgentWorkspaceDir,
 } from "../../../agents/agent-scope.js";
-import { createOpenClawCodingTools } from "../../../agents/agent-tools.js";
+import { createQuietCoreCodingTools } from "../../../agents/agent-tools.js";
 import { resolveModel } from "../../../agents/embedded-agent-runner/model.js";
 import { normalizeAgentRuntimeTools } from "../../../agents/runtime-plan/tools.js";
 import {
@@ -14,7 +14,7 @@ import {
   type RuntimeToolSchemaDiagnostic,
 } from "../../../agents/tool-schema-projection.js";
 import type { AnyAgentTool } from "../../../agents/tools/common.js";
-import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../config/types.quiet-core-bot.js";
 import { formatErrorMessage } from "../../../infra/errors.js";
 import { extractModelCompat } from "../../../plugins/provider-model-compat.js";
 import type { ProviderRuntimeModel } from "../../../plugins/provider-runtime-model.types.js";
@@ -22,7 +22,7 @@ import { getPluginToolMeta } from "../../../plugins/tools.js";
 import { resolveDoctorPrimaryModelRef } from "./primary-model-ref.js";
 
 function resolveRuntimeModelContext(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentDir: string;
   workspaceDir: string;
   provider: string;
@@ -99,7 +99,7 @@ function readPluginId(tool: AnyAgentTool | undefined): string | undefined {
 
 /** Collect per-agent warnings for active plugin tools rejected by runtime schema projection. */
 export function collectActiveToolSchemaProjectionWarnings(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
 }): string[] {
   if (params.cfg.plugins?.enabled === false) {
@@ -129,9 +129,9 @@ export function collectActiveToolSchemaProjectionWarnings(params: {
         ),
       );
     }
-    let tools: ReturnType<typeof createOpenClawCodingTools>;
+    let tools: ReturnType<typeof createQuietCoreCodingTools>;
     try {
-      tools = createOpenClawCodingTools({
+      tools = createQuietCoreCodingTools({
         agentId,
         agentDir,
         workspaceDir,

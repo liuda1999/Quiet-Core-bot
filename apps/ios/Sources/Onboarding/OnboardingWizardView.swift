@@ -1,6 +1,6 @@
 import Combine
 import CoreImage
-import OpenClawKit
+import QuietCoreKit
 import PhotosUI
 import SwiftUI
 import UIKit
@@ -56,7 +56,7 @@ struct OnboardingWizardView: View {
     @State private var gatewayToken: String = ""
     @State private var gatewayPassword: String = ""
     @State private var connectMessage: String?
-    @State private var statusLine: String = "In your OpenClaw chat, run /pair qr, then scan the code here."
+    @State private var statusLine: String = "In your QuietCore chat, run /pair qr, then scan the code here."
     @State private var connectingGatewayID: String?
     @State private var issue: GatewayConnectionIssue = .none
     @State private var didMarkCompleted = false
@@ -385,7 +385,7 @@ struct OnboardingWizardView: View {
 
     private func onboardingSwitchIndicator(isOn: Bool) -> some View {
         Capsule()
-            .fill(isOn ? OpenClawBrand.accent : Color.secondary.opacity(0.35))
+            .fill(isOn ? QuietCoreBrand.accent : Color.secondary.opacity(0.35))
             .frame(width: 52, height: 32)
             .overlay(alignment: isOn ? .trailing : .leading) {
                 Circle()
@@ -547,9 +547,9 @@ struct OnboardingWizardView: View {
                     Text(
                         "Approve this device on the gateway.\n"
                             + "1) `\(commandLine)`\n"
-                            + "2) `/pair approve` in your OpenClaw chat\n"
+                            + "2) `/pair approve` in your QuietCore chat\n"
                             + "\(requestLine)\n"
-                            + "OpenClaw will also retry automatically when you return to this app.")
+                            + "QuietCore will also retry automatically when you return to this app.")
                 }
             }
 
@@ -582,7 +582,7 @@ struct OnboardingWizardView: View {
 
             Image(systemName: "checkmark.circle.fill")
                 .font(.system(size: 64))
-                .foregroundStyle(OpenClawBrand.ok)
+                .foregroundStyle(QuietCoreBrand.ok)
                 .padding(.bottom, 20)
 
             Text("Connected")
@@ -606,7 +606,7 @@ struct OnboardingWizardView: View {
             Button {
                 self.onClose()
             } label: {
-                Text("Open OpenClaw")
+                Text("Open QuietCore")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
@@ -872,7 +872,7 @@ extension OnboardingWizardView {
     private func advanceFromIntro() {
         OnboardingStateStore.markFirstRunIntroSeen()
         self.requestLocalNetworkAccess(reason: "onboarding_continue")
-        self.statusLine = "In your OpenClaw chat, run /pair qr, then scan the code here."
+        self.statusLine = "In your QuietCore chat, run /pair qr, then scan the code here."
         self.step = .welcome
     }
 
@@ -935,7 +935,7 @@ extension OnboardingWizardView {
         let hasToken = !self.gatewayToken.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         let hasPassword = !self.gatewayPassword.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         if !hasSavedGateway, !hasToken, !hasPassword {
-            self.statusLine = "No saved pairing found. In your OpenClaw chat, run /pair qr, then scan the code here."
+            self.statusLine = "No saved pairing found. In your QuietCore chat, run /pair qr, then scan the code here."
         }
     }
 

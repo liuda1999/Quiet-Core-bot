@@ -117,7 +117,7 @@ import {
   resolveModelRefFromString,
 } from "../model-selection.js";
 import { resolveThinkingDefault } from "../model-thinking-default.js";
-import { ensureOpenClawModelsJson } from "../models-config.js";
+import { ensureQuietCoreModelsJson } from "../models-config.js";
 import {
   OPENAI_PROVIDER_ID,
   listOpenAIAuthProfileProvidersForAgentRuntime,
@@ -1204,7 +1204,7 @@ async function runEmbeddedAgentInternal(
         modelResolution ??= firstModelResolution;
       }
       if (!modelResolution) {
-        await ensureOpenClawModelsJson(params.config, agentDir, {
+        await ensureQuietCoreModelsJson(params.config, agentDir, {
           workspaceDir: resolvedWorkspace,
         });
         for (const candidateProvider of modelResolutionProviders) {
@@ -1287,7 +1287,7 @@ async function runEmbeddedAgentInternal(
       startupStages.mark("model-resolution");
       notifyExecutionPhase("model_resolution", { provider, model: modelId });
 
-      const pluginHarnessNeedsOpenClawAuthBootstrap =
+      const pluginHarnessNeedsQuietCoreAuthBootstrap =
         pluginHarnessOwnsTransport &&
         provider === OPENAI_PROVIDER_ID &&
         effectiveModel.api === "openai-chatgpt-responses";
@@ -1314,7 +1314,7 @@ async function runEmbeddedAgentInternal(
       let noExternalAuthStore: AuthProfileStore | undefined;
       if (
         !pluginHarnessOwnsTransport &&
-        !pluginHarnessNeedsOpenClawAuthBootstrap &&
+        !pluginHarnessNeedsQuietCoreAuthBootstrap &&
         !piExternalCliAuthScope.providerIds
       ) {
         noExternalAuthStore = ensureAuthProfileStoreWithoutExternalProfiles(agentDir, {
@@ -1332,9 +1332,9 @@ async function runEmbeddedAgentInternal(
         });
       }
       const authStore =
-        pluginHarnessOwnsTransport && !pluginHarnessNeedsOpenClawAuthBootstrap
+        pluginHarnessOwnsTransport && !pluginHarnessNeedsQuietCoreAuthBootstrap
           ? createEmptyAuthProfileStore()
-          : pluginHarnessNeedsOpenClawAuthBootstrap
+          : pluginHarnessNeedsQuietCoreAuthBootstrap
             ? ensureAuthProfileStore(agentDir, {
                 externalCliProviderIds: [OPENAI_PROVIDER_ID],
                 allowKeychainPrompt: false,
@@ -1349,7 +1349,7 @@ async function runEmbeddedAgentInternal(
                   allowKeychainPrompt: false,
                 }));
       const attemptAuthProfileStore =
-        pluginHarnessOwnsTransport && !pluginHarnessNeedsOpenClawAuthBootstrap
+        pluginHarnessOwnsTransport && !pluginHarnessNeedsQuietCoreAuthBootstrap
           ? ensureAuthProfileStoreWithoutExternalProfiles(agentDir, {
               allowKeychainPrompt: false,
             })
@@ -1639,14 +1639,14 @@ async function runEmbeddedAgentInternal(
         return false;
       };
       const advanceAttemptAuthProfile =
-        pluginHarnessOwnsTransport && !pluginHarnessNeedsOpenClawAuthBootstrap
+        pluginHarnessOwnsTransport && !pluginHarnessNeedsQuietCoreAuthBootstrap
           ? advancePluginHarnessAuthProfile
           : advanceAuthProfile;
 
       // Plugin harnesses own their model transport/auth. Running Quiet Core bot's generic
       // auth bootstrap here can turn synthetic provider markers into real
       // vendor-token refresh attempts before the plugin gets control.
-      if (!pluginHarnessOwnsTransport || pluginHarnessNeedsOpenClawAuthBootstrap) {
+      if (!pluginHarnessOwnsTransport || pluginHarnessNeedsQuietCoreAuthBootstrap) {
         await initializeAuthProfile();
       } else if (lockedProfileId) {
         lastProfileId = lockedProfileId;

@@ -4,7 +4,7 @@
  */
 
 import { readFile } from "node:fs/promises";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import type { describeImageFile as DescribeImageFileFn } from "quiet-core-bot/plugin-sdk/media-understanding-runtime";
 import type { saveMediaBuffer as SaveMediaBufferFn } from "../sdk-setup-tools.js";
 import type { normalizeBrowserScreenshot as NormalizeBrowserScreenshotFn } from "./screenshot.js";
@@ -15,7 +15,7 @@ export const DEFAULT_BROWSER_SCREENSHOT_DESCRIPTION_PROMPT =
 
 /** Input context for browser screenshot image understanding. */
 export type BrowserScreenshotDescriptionContext = {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   filePath: string;
   agentDir?: string;
   workspaceDir?: string;

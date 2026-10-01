@@ -1,7 +1,7 @@
 // Probe auth tests cover safe credential resolution, unresolved-secret warnings,
 // local/remote target selection, and redacted auth payload handling.
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import {
   resolveGatewayProbeAuthSafe,
   resolveGatewayProbeAuthSafeWithSecretInputs,
@@ -25,7 +25,7 @@ function tokenAuthConfig(id: string) {
   } as const;
 }
 
-function configWithDefaultEnvProvider(gateway: NonNullable<OpenClawConfig["gateway"]>) {
+function configWithDefaultEnvProvider(gateway: NonNullable<QuietCoreConfig["gateway"]>) {
   return {
     gateway,
     secrets: {
@@ -33,10 +33,10 @@ function configWithDefaultEnvProvider(gateway: NonNullable<OpenClawConfig["gatew
         default: { source: "env" },
       },
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
-function resolveSafeProbeAuth(cfg: OpenClawConfig, mode: "local" | "remote" = "local") {
+function resolveSafeProbeAuth(cfg: QuietCoreConfig, mode: "local" | "remote" = "local") {
   return resolveGatewayProbeAuthSafe({
     cfg,
     mode,
@@ -44,7 +44,7 @@ function resolveSafeProbeAuth(cfg: OpenClawConfig, mode: "local" | "remote" = "l
   });
 }
 
-function expectUnresolvedProbeTokenWarning(cfg: OpenClawConfig) {
+function expectUnresolvedProbeTokenWarning(cfg: QuietCoreConfig) {
   const result = resolveSafeProbeAuth(cfg);
 
   expect(result.auth).toStrictEqual({});
@@ -60,7 +60,7 @@ describe("resolveGatewayProbeAuthSafe", () => {
           token: "token-value",
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expect(result).toEqual({
       auth: {
@@ -100,7 +100,7 @@ describe("resolveGatewayProbeAuthSafe", () => {
           password: "remote-password", // pragma: allowlist secret
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expect(result).toEqual({
       auth: EMPTY_PROBE_AUTH,
@@ -132,7 +132,7 @@ describe("resolveGatewayProbeTarget", () => {
         gateway: {
           mode: "remote",
         },
-      } as OpenClawConfig),
+      } as QuietCoreConfig),
     ).toEqual({
       gatewayMode: "remote",
       mode: "local",
@@ -149,7 +149,7 @@ describe("resolveGatewayProbeTarget", () => {
             url: "wss://gateway.example",
           },
         },
-      } as OpenClawConfig),
+      } as QuietCoreConfig),
     ).toEqual({
       gatewayMode: "remote",
       mode: "remote",

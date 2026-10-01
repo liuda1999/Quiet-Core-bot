@@ -135,7 +135,7 @@ jobs:
         if: env.QUIET_CORE_GH_TOKEN == ''
         run: echo "QUIET_CORE_GH_TOKEN is not configured; installer verification passed, skipping website sync."
 
-      - name: Checkout OpenClaw
+      - name: Checkout QuietCore
         if: env.QUIET_CORE_GH_TOKEN != ''
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:

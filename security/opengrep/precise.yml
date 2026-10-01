@@ -287,7 +287,7 @@ rules:
     languages:
       - typescript
       - javascript
-    message: Sandbox tmp-path validation trusts any os.tmpdir() path instead of constraining paths to the active sandbox root or OpenClaw-managed temp roots.
+    message: Sandbox tmp-path validation trusts any os.tmpdir() path instead of constraining paths to the active sandbox root or QuietCore-managed temp roots.
     severity: ERROR
     patterns:
       - pattern-either:
@@ -3578,7 +3578,7 @@ rules:
       - typescript
       - javascript
     severity: WARNING
-    message: Workspace dotenv loading should not be followed by reads of OpenClaw bundled trust-root env vars; block them in the workspace loader instead.
+    message: Workspace dotenv loading should not be followed by reads of QuietCore bundled trust-root env vars; block them in the workspace loader instead.
     patterns:
       - pattern-either:
           - pattern: |
@@ -3829,7 +3829,7 @@ rules:
       source-rule-id: quiet-core-bot-dashboard-auth-query-credentials
     paths:
       include:
-        - apps/macos/Sources/OpenClaw/**/*.swift
+        - apps/macos/Sources/QuietCore/**/*.swift
     pattern-regex: \bqueryItems\s*\.\s*append\s*\(\s*URLQueryItem\s*\(\s*name:\s*"(?:token|password)"
   - id: ghsa-rhfg-j8jq-7v2h.quiet-core-bot.extension-configurable-baseurl-raw-fetch-bypasses-ssrf-guard
     languages:

@@ -24,7 +24,7 @@ beforeEach(() => {
   vi.clearAllMocks();
 });
 
-function localOpenClawProfile(): Parameters<typeof createProfileResetOps>[0]["profile"] {
+function localQuietCoreProfile(): Parameters<typeof createProfileResetOps>[0]["profile"] {
   return {
     name: "quiet-core-bot",
     cdpUrl: "http://127.0.0.1:18800",
@@ -38,10 +38,10 @@ function localOpenClawProfile(): Parameters<typeof createProfileResetOps>[0]["pr
   };
 }
 
-function createLocalOpenClawResetOps(
+function createLocalQuietCoreResetOps(
   params: Omit<Parameters<typeof createProfileResetOps>[0], "profile">,
 ) {
-  return createProfileResetOps({ profile: localOpenClawProfile(), ...params });
+  return createProfileResetOps({ profile: localQuietCoreProfile(), ...params });
 }
 
 function createStatelessResetOps(profile: Parameters<typeof createProfileResetOps>[0]["profile"]) {
@@ -50,14 +50,14 @@ function createStatelessResetOps(profile: Parameters<typeof createProfileResetOp
     getProfileState: () => ({ profile: {} as never, running: null }),
     stopRunningBrowser: vi.fn(async () => ({ stopped: false })),
     isHttpReachable: vi.fn(async () => false),
-    resolveOpenClawUserDataDir: (name: string) => `/tmp/${name}`,
+    resolveQuietCoreUserDataDir: (name: string) => `/tmp/${name}`,
   });
 }
 
 describe("createProfileResetOps", () => {
   it("rejects remote non-extension profiles", async () => {
     const ops = createStatelessResetOps({
-      ...localOpenClawProfile(),
+      ...localQuietCoreProfile(),
       name: "remote",
       cdpUrl: "https://browserless.example/chrome",
       cdpHost: "browserless.example",
@@ -81,11 +81,11 @@ describe("createProfileResetOps", () => {
       running: { pid: 1 } as never,
     }));
 
-    const ops = createLocalOpenClawResetOps({
+    const ops = createLocalQuietCoreResetOps({
       getProfileState,
       stopRunningBrowser,
       isHttpReachable,
-      resolveOpenClawUserDataDir: () => profileDir,
+      resolveQuietCoreUserDataDir: () => profileDir,
     });
 
     const result = await ops.resetProfile();
@@ -108,11 +108,11 @@ describe("createProfileResetOps", () => {
     fs.mkdirSync(profileDir, { recursive: true });
 
     const stopRunningBrowser = vi.fn(async () => ({ stopped: false }));
-    const ops = createLocalOpenClawResetOps({
+    const ops = createLocalQuietCoreResetOps({
       getProfileState: () => ({ profile: {} as never, running: null }),
       stopRunningBrowser,
       isHttpReachable: vi.fn(async () => true),
-      resolveOpenClawUserDataDir: () => profileDir,
+      resolveQuietCoreUserDataDir: () => profileDir,
     });
 
     await ops.resetProfile();

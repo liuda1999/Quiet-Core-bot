@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# OpenClaw handover · environment preflight.
+# QuietCore handover · environment preflight.
 #
 # Verifies the toolchain needed to build/deploy this checkout. Read-only: it
 # installs nothing and changes no config.
@@ -34,7 +34,7 @@ ok()   { printf '[ OK ]    %s\n' "$*"; }
 warn() { printf '[ WARN ]  %s\n' "$*"; }
 bad()  { printf '[ MISS ]  %s\n' "$*"; missing=$((missing + 1)); }
 
-echo "OpenClaw handover preflight"
+echo "QuietCore handover preflight"
 echo "repo root: $ROOT_DIR"
 echo "mode:      $MODE"
 echo

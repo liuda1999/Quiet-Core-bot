@@ -54,7 +54,7 @@ describe("detectRespawnSupervisor", () => {
     expect(detectRespawnSupervisor(gatewayServiceEnv, "linux")).toBeNull();
     expect(
       detectRespawnSupervisor(gatewayServiceEnv, "linux", {
-        includeLinuxOpenClawGatewayServiceMarker: true,
+        includeLinuxQuietCoreGatewayServiceMarker: true,
       }),
     ).toBe("systemd");
     expect(
@@ -64,7 +64,7 @@ describe("detectRespawnSupervisor", () => {
           QUIET_CORE_SERVICE_KIND: "worker",
         },
         "linux",
-        { includeLinuxOpenClawGatewayServiceMarker: true },
+        { includeLinuxQuietCoreGatewayServiceMarker: true },
       ),
     ).toBeNull();
     expect(
@@ -74,7 +74,7 @@ describe("detectRespawnSupervisor", () => {
           QUIET_CORE_SERVICE_KIND: "gateway",
         },
         "linux",
-        { includeLinuxOpenClawGatewayServiceMarker: true },
+        { includeLinuxQuietCoreGatewayServiceMarker: true },
       ),
     ).toBeNull();
   });

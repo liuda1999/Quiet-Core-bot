@@ -1,7 +1,7 @@
 // Memory Core tests cover generic embedding provider.integration plugin behavior.
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import type { AddressInfo } from "node:net";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import {
   clearEmbeddingProviders,
   clearMemoryEmbeddingProviders,
@@ -106,7 +106,7 @@ function createMemoryEmbeddingOptions(overrides?: {
       plugins: {
         enabled: false,
       },
-    } as OpenClawConfig,
+    } as QuietCoreConfig,
     agentDir: "/tmp/quiet-core-bot-agent",
     provider: overrides?.provider ?? "openai-compatible",
     fallback: "none",

@@ -112,11 +112,11 @@ function compareVersions(left: string | undefined, right: string): number {
 }
 
 function formatPinnedOldRemediation(pluginVersion: string, hostVersion: string) {
-  return `Codex plugin version ${pluginVersion} is older than OpenClaw ${hostVersion}. Run "quiet-core-bot plugins update codex" or unpin codex, then rerun "quiet-core-bot doctor --fix".`;
+  return `Codex plugin version ${pluginVersion} is older than QuietCore ${hostVersion}. Run "quiet-core-bot plugins update codex" or unpin codex, then rerun "quiet-core-bot doctor --fix".`;
 }
 
 function formatPinnedNewRemediation(pluginVersion: string, hostVersion: string) {
-  return `Codex plugin version ${pluginVersion} requires a newer OpenClaw host than ${hostVersion}. Upgrade OpenClaw or install a codex plugin version pinned to ${hostVersion}.`;
+  return `Codex plugin version ${pluginVersion} requires a newer QuietCore host than ${hostVersion}. Upgrade QuietCore or install a codex plugin version pinned to ${hostVersion}.`;
 }
 
 function collectStaleLegacyRuntimePins(config: unknown): string[] {

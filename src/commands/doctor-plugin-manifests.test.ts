@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { cleanupTrackedTempDirs } from "../plugins/test-helpers/fs-fixtures.js";
 import type { RuntimeEnv } from "../runtime.js";
 import {
@@ -21,7 +21,7 @@ function makeTrustedBundledPluginsDir() {
   return dir;
 }
 
-function configWithPluginLoadPath(pluginRoot: string): OpenClawConfig {
+function configWithPluginLoadPath(pluginRoot: string): QuietCoreConfig {
   return {
     plugins: {
       load: {

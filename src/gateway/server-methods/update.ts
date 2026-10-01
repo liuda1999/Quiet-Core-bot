@@ -11,9 +11,9 @@ import { isRestartEnabled } from "../../config/commands.flags.js";
 import { readConfigFileSnapshot } from "../../config/config.js";
 import { IndependentBuildUpdateError } from "../../config/independent-build-guard.js";
 import { extractDeliveryInfo } from "../../config/sessions.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { GATEWAY_SERVICE_KIND, GATEWAY_SERVICE_MARKER } from "../../daemon/constants.js";
-import { resolveOpenClawPackageRoot } from "../../infra/quiet-core-bot-root.js";
+import { resolveQuietCorePackageRoot } from "../../infra/quiet-core-bot-root.js";
 import { readPackageVersion } from "../../infra/package-json.js";
 import { type RestartSentinelPayload, writeRestartSentinel } from "../../infra/restart-sentinel.js";
 import { scheduleGatewaySigusr1Restart } from "../../infra/restart.js";
@@ -72,7 +72,7 @@ async function readPreUpdateConfigForPostCoreFinalize(): Promise<
   return {
     sourceConfig: snapshot.sourceConfig,
     authoredConfig: isRecord(snapshot.parsed)
-      ? (snapshot.parsed as OpenClawConfig)
+      ? (snapshot.parsed as QuietCoreConfig)
       : snapshot.sourceConfig,
   };
 }
@@ -179,7 +179,7 @@ export const updateHandlers: GatewayRequestHandlers = {
       const configChannel = normalizeUpdateChannel(config.update?.channel);
       const invocationCwd = tryResolveProcessCwd();
       const root =
-        (await resolveOpenClawPackageRoot({
+        (await resolveQuietCorePackageRoot({
           moduleUrl: import.meta.url,
           argv1: process.argv[1],
           ...(invocationCwd ? { cwd: invocationCwd } : {}),

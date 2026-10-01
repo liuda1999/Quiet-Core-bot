@@ -62,7 +62,7 @@ import type { MsgContext, TemplateContext } from "../../auto-reply/templating.js
 import { resolveSessionFilePath, updateSessionStoreEntry } from "../../config/sessions.js";
 import { resolveMirroredTranscriptText } from "../../config/sessions/transcript-mirror.js";
 import { CURRENT_SESSION_VERSION } from "../../config/sessions/version.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import {
   claimAgentRunContext,
   clearAgentRunContext,
@@ -390,7 +390,7 @@ async function handleChatMetadataRequest({
 }
 
 async function buildChatMetadataResult(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   context: GatewayRequestContext;
   agentId: string;
   preloadedModelCatalog?: ModelCatalogEntry[];
@@ -419,7 +419,7 @@ async function buildChatMetadataResult(params: {
 }
 
 async function buildChatStartupMetadataResult(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   context: GatewayRequestContext;
   agentId: string;
   modelCatalog: ModelCatalogEntry[] | undefined;
@@ -685,7 +685,7 @@ function buildActiveChatSendDedupeKey(params: {
 }
 
 function validateChatSelectedAgent(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   requestedSessionKey: string;
   agentId?: string;
 }): { ok: true; agentId?: string } | { ok: false; error: string } {
@@ -720,7 +720,7 @@ function validateChatSelectedAgent(params: {
 }
 
 function resolveRequestedChatAgentId(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   requestedSessionKey: string;
   agentId?: string;
 }): string | undefined {
@@ -1428,7 +1428,7 @@ function shouldPassThroughManagedInboundPdfOffloadRef(ref: OffloadedRef): boolea
 async function prestageMediaPathOffloads(params: {
   offloadedRefs: OffloadedRef[];
   includeImageRefs?: boolean;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   sessionKey: string;
   agentId: string;
 }): Promise<{ paths: string[]; types: string[]; workspaceDir?: string }> {
@@ -1855,7 +1855,7 @@ async function appendAssistantTranscriptMessage(params: {
     runId: string;
   };
   ttsSupplement?: GatewayInjectedTtsSupplementMarker;
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
 }): Promise<TranscriptAppendResult> {
   const transcriptPath = resolveTranscriptPath({
     sessionId: params.sessionId,
@@ -2535,7 +2535,7 @@ function sendGlobalAwareNodeChatPayload(params: {
   payload: unknown;
 }) {
   const deliveryKeys = resolveGlobalAwareNodeChatDeliveryKeys({
-    cfg: params.context.getRuntimeConfig?.() ?? ({} as OpenClawConfig),
+    cfg: params.context.getRuntimeConfig?.() ?? ({} as QuietCoreConfig),
     sessionKey: params.sessionKey,
     agentId: params.agentId,
   });
@@ -2545,7 +2545,7 @@ function sendGlobalAwareNodeChatPayload(params: {
 }
 
 function resolveGlobalAwareNodeChatDeliveryKeys(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   sessionKey: string;
   agentId?: string;
 }): string[] {
@@ -2647,7 +2647,7 @@ async function handleChatHistoryRequest({
   };
   const agentIdOverride = normalizeOptionalText((params as { agentId?: string }).agentId);
   const requestedAgentId = resolveRequestedChatAgentId({
-    cfg: (context as { getRuntimeConfig?: () => OpenClawConfig }).getRuntimeConfig?.(),
+    cfg: (context as { getRuntimeConfig?: () => QuietCoreConfig }).getRuntimeConfig?.(),
     requestedSessionKey: sessionKey,
     agentId: agentIdOverride,
   });
@@ -2872,7 +2872,7 @@ export const chatHandlers: GatewayRequestHandlers = {
     };
     const agentIdOverride = normalizeOptionalText((params as { agentId?: string }).agentId);
     const requestedAgentId = resolveRequestedChatAgentId({
-      cfg: (context as { getRuntimeConfig?: () => OpenClawConfig }).getRuntimeConfig?.(),
+      cfg: (context as { getRuntimeConfig?: () => QuietCoreConfig }).getRuntimeConfig?.(),
       requestedSessionKey: sessionKey,
       agentId: agentIdOverride,
     });
@@ -3235,7 +3235,7 @@ export const chatHandlers: GatewayRequestHandlers = {
     const agentIdOverride = normalizeOptionalText(p.agentId);
     const clientRunId = p.idempotencyKey;
     const requestedAgentId = resolveRequestedChatAgentId({
-      cfg: (context as { getRuntimeConfig?: () => OpenClawConfig }).getRuntimeConfig?.(),
+      cfg: (context as { getRuntimeConfig?: () => QuietCoreConfig }).getRuntimeConfig?.(),
       requestedSessionKey: rawSessionKey,
       agentId: agentIdOverride,
     });
@@ -5120,7 +5120,7 @@ export const chatHandlers: GatewayRequestHandlers = {
     // Load session to find transcript file
     const rawSessionKey = p.sessionKey;
     const requestedAgentId = resolveRequestedChatAgentId({
-      cfg: (context as { getRuntimeConfig?: () => OpenClawConfig }).getRuntimeConfig?.(),
+      cfg: (context as { getRuntimeConfig?: () => QuietCoreConfig }).getRuntimeConfig?.(),
       requestedSessionKey: rawSessionKey,
       agentId: p.agentId,
     });

@@ -10,7 +10,7 @@ import {
   type ImageMetadata,
 } from "rastermill";
 import { resolveSystemBin } from "../infra/resolve-system-bin.js";
-import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-quiet-core-bot-dir.js";
+import { resolvePreferredQuietCoreTmpDir } from "../infra/tmp-quiet-core-bot-dir.js";
 
 export type { ImageMetadata, ImageProbe };
 
@@ -60,7 +60,7 @@ export function createImageProcessor() {
       outputPixels: MAX_IMAGE_INPUT_PIXELS,
     },
     temp: {
-      rootDir: resolvePreferredOpenClawTmpDir(),
+      rootDir: resolvePreferredQuietCoreTmpDir(),
       prefix: "quiet-core-bot-img-",
     },
     commandResolver: (command) =>

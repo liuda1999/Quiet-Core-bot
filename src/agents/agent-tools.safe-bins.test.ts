@@ -7,13 +7,13 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import type { ExecApprovalsResolved } from "../infra/exec-approvals.js";
 import type { SafeBinProfileFixture } from "../infra/exec-safe-bin-policy.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import { resetProcessRegistryForTests } from "./bash-process-registry.js";
 
-let createOpenClawCodingTools: typeof import("./agent-tools.js").createOpenClawCodingTools;
+let createQuietCoreCodingTools: typeof import("./agent-tools.js").createQuietCoreCodingTools;
 
 const { mockExecApprovals, supervisorSpawnMock } = vi.hoisted(() => {
   const execApprovals = {
@@ -83,7 +83,7 @@ beforeAll(async () => {
       QUIET_CORE_BUNDLED_PLUGINS_DIR: path.join(os.tmpdir(), "quiet-core-bot-test-no-bundled-extensions"),
     },
     async () => {
-      ({ createOpenClawCodingTools } = await import("./agent-tools.js"));
+      ({ createQuietCoreCodingTools } = await import("./agent-tools.js"));
     },
   );
 });
@@ -118,7 +118,7 @@ vi.mock("./channel-tools.js", () => ({
 }));
 
 vi.mock("./quiet-core-bot-tools.js", () => ({
-  createOpenClawTools: () => [],
+  createQuietCoreTools: () => [],
 }));
 
 vi.mock("./bash-tools.exec-host-shared.js", async () => {
@@ -195,7 +195,7 @@ async function createSafeBinsExecTool(params: {
     fs.writeFileSync(path.join(tmpDir, file.name), file.contents, "utf8");
   }
 
-  const cfg: OpenClawConfig = {
+  const cfg: QuietCoreConfig = {
     tools: {
       exec: {
         host: "gateway",
@@ -207,7 +207,7 @@ async function createSafeBinsExecTool(params: {
     },
   };
 
-  const tools = createOpenClawCodingTools({
+  const tools = createQuietCoreCodingTools({
     config: cfg,
     exec: {
       notifyOnExit: false,
@@ -248,7 +248,7 @@ async function withSafeBinsExecTool(
   }
 }
 
-describe("createOpenClawCodingTools safeBins", () => {
+describe("createQuietCoreCodingTools safeBins", () => {
   it("threads tools.exec.safeBins into exec allowlist checks", async () => {
     await withSafeBinsExecTool(
       {

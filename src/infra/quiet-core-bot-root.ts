@@ -110,7 +110,7 @@ function candidateDirsFromArgv1(argv1: string): string[] {
   return [...deduped];
 }
 
-export async function resolveOpenClawPackageRoot(opts: {
+export async function resolveQuietCorePackageRoot(opts: {
   cwd?: string;
   argv1?: string;
   moduleUrl?: string;
@@ -132,7 +132,7 @@ export async function resolveOpenClawPackageRoot(opts: {
   return null;
 }
 
-export function resolveOpenClawPackageRootSync(opts: {
+export function resolveQuietCorePackageRootSync(opts: {
   cwd?: string;
   argv1?: string;
   moduleUrl?: string;
@@ -193,7 +193,7 @@ function createPackageRootCacheKey(candidates: readonly string[]): string {
 }
 
 export const testing = {
-  clearOpenClawPackageRootCaches(): void {
+  clearQuietCorePackageRootCaches(): void {
     packageNameCache.clear();
     packageRootCache.clear();
     argv1CandidateCache.clear();

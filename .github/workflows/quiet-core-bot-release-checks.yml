@@ -1,4 +1,4 @@
-name: OpenClaw Release Checks
+name: QuietCore Release Checks
 
 on:
   workflow_dispatch:
@@ -215,7 +215,7 @@ jobs:
             exit 0
           fi
 
-          echo "Ref '${RELEASE_REF}' resolved to ${SELECTED_SHA}, but that commit is not reachable from an OpenClaw branch or release tag." >&2
+          echo "Ref '${RELEASE_REF}' resolved to ${SELECTED_SHA}, but that commit is not reachable from an QuietCore branch or release tag." >&2
           echo "Secret-bearing release checks only run repository-owned branch/tag history, not arbitrary unreferenced commits." >&2
           exit 1
 

@@ -2,7 +2,7 @@ import path from "node:path";
 import { resolveStorePath } from "../../config/sessions/paths.js";
 import { updateSessionStore } from "../../config/sessions/store.js";
 import { mergeSessionEntry, type SessionEntry } from "../../config/sessions/types.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { createLazyImportLoader } from "../../shared/lazy-promise.js";
 
 /**
@@ -30,14 +30,14 @@ export type ParentForkDecision =
 type ParentForkDecisionParams = {
   parentEntry: SessionEntry;
   agentId?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   storePath?: string;
 };
 
 type ForkSessionFromParentParams = {
   parentEntry: SessionEntry;
   agentId: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   sessionsDir?: string;
 };
 
@@ -103,7 +103,7 @@ function formatParentForkTooLargeMessage(params: {
 
 function resolveParentForkStorePath(params: {
   agentId?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   storePath?: string;
 }): string {
   return (
@@ -113,7 +113,7 @@ function resolveParentForkStorePath(params: {
 
 function resolveParentForkSessionsDir(params: {
   agentId: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   sessionsDir?: string;
 }): string {
   return params.sessionsDir ?? path.dirname(resolveParentForkStorePath(params));

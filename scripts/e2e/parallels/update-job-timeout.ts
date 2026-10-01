@@ -1,4 +1,4 @@
-// Update Job Timeout script supports OpenClaw repository automation.
+// Update Job Timeout script supports QuietCore repository automation.
 import { resolveTimerTimeoutMs } from "@quiet-core/normalization-core/number-coercion";
 
 interface TimedUpdateJobOptions {

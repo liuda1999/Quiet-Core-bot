@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# OpenClaw handover · build + start the gateway with Docker Compose.
+# QuietCore handover · build + start the gateway with Docker Compose.
 #
 # Idempotent: safe to re-run after a code change (it rebuilds the image).
 # Secrets come from .env (git-ignored, NOT shipped in this package).

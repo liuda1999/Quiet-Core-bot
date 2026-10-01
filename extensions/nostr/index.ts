@@ -1,9 +1,9 @@
-// Nostr plugin entrypoint registers its OpenClaw integration.
+// Nostr plugin entrypoint registers its QuietCore integration.
 import {
   defineBundledChannelEntry,
   loadBundledEntryExportSync,
 } from "quiet-core-bot/plugin-sdk/channel-entry-contract";
-import type { OpenClawConfig, PluginRuntime, ResolvedNostrAccount } from "./api.js";
+import type { QuietCoreConfig, PluginRuntime, ResolvedNostrAccount } from "./api.js";
 
 function createNostrProfileHttpHandler() {
   return loadBundledEntryExportSync<
@@ -47,7 +47,7 @@ export default defineBundledChannelEntry({
     const httpHandler = createNostrProfileHttpHandler()({
       getConfigProfile: (accountId: string) => {
         const runtime = getNostrRuntime();
-        const cfg = runtime.config.current() as OpenClawConfig;
+        const cfg = runtime.config.current() as QuietCoreConfig;
         const account = resolveNostrAccount({ cfg, accountId });
         return account.profile;
       },
@@ -72,7 +72,7 @@ export default defineBundledChannelEntry({
       },
       getAccountInfo: (accountId: string) => {
         const runtime = getNostrRuntime();
-        const cfg = runtime.config.current() as OpenClawConfig;
+        const cfg = runtime.config.current() as QuietCoreConfig;
         const account = resolveNostrAccount({ cfg, accountId });
         if (!account.configured || !account.publicKey) {
           return null;

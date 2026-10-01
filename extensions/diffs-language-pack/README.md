@@ -1,6 +1,6 @@
 # @quiet-core/diffs-language-pack
 
-Official extended syntax highlighting pack for the OpenClaw Diffs plugin.
+Official extended syntax highlighting pack for the QuietCore Diffs plugin.
 
 The base `@quiet-core/diffs` plugin ships a curated language set. Install this package when you want the full Shiki language catalog available in rendered diff viewers and diff image/PDF output.
 
@@ -27,4 +27,4 @@ Install `@quiet-core/diffs` first, then install this language pack. The language
 
 - Plugin id: `diffs-language-pack`
 - Package: `@quiet-core/diffs-language-pack`
-- Minimum OpenClaw host: `2026.5.27`
+- Minimum QuietCore host: `2026.5.27`

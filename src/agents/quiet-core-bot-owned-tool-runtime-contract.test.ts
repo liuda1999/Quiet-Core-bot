@@ -1,8 +1,8 @@
 // Verifies Quiet Core bot-owned tool hooks preserve adjusted params and telemetry.
 import type { AgentTool } from "quiet-core-bot/plugin-sdk/agent-core";
 import {
-  installOpenClawOwnedToolHooks,
-  resetOpenClawOwnedToolHooks,
+  installQuietCoreOwnedToolHooks,
+  resetQuietCoreOwnedToolHooks,
   textToolResult,
 } from "quiet-core-bot/plugin-sdk/agent-runtime-test-contracts";
 import type { ExtensionContext } from "quiet-core-bot/plugin-sdk/agent-sessions";
@@ -107,13 +107,13 @@ async function waitForAfterToolCall(hooks: {
 
 describe("Quiet Core bot-owned tool runtime contract - embedded agent adapter", () => {
   afterEach(() => {
-    resetOpenClawOwnedToolHooks();
+    resetQuietCoreOwnedToolHooks();
   });
 
   it("preserves partially adjusted before_tool_call params through execution and after_tool_call", async () => {
     const adjustedParams = { mode: "safe" };
     const mergedParams = { command: "pwd", mode: "safe" };
-    const hooks = installOpenClawOwnedToolHooks({ adjustedParams });
+    const hooks = installQuietCoreOwnedToolHooks({ adjustedParams });
     const execute = vi.fn(async () => textToolResult("done", { ok: true }));
     const tool = wrapToolWithBeforeToolCallHook(createContractTool("exec", execute), {
       agentId: "agent-1",
@@ -174,7 +174,7 @@ describe("Quiet Core bot-owned tool runtime contract - embedded agent adapter", 
   it("reports embedded agent dynamic tool execution errors through after_tool_call", async () => {
     const adjustedParams = { timeoutSec: 1 };
     const mergedParams = { command: "false", timeoutSec: 1 };
-    const hooks = installOpenClawOwnedToolHooks({ adjustedParams });
+    const hooks = installQuietCoreOwnedToolHooks({ adjustedParams });
     const execute = vi.fn(async () => {
       throw new Error("tool failed");
     });
@@ -233,7 +233,7 @@ describe("Quiet Core bot-owned tool runtime contract - embedded agent adapter", 
   });
 
   it("commits successful embedded agent messaging text, media, and target telemetry", async () => {
-    const hooks = installOpenClawOwnedToolHooks();
+    const hooks = installQuietCoreOwnedToolHooks();
     const execute = vi.fn(async () => textToolResult("sent", { deliveryStatus: "sent" }));
     const tool = wrapToolWithBeforeToolCallHook(createContractTool("message", execute), {
       agentId: "agent-1",
@@ -312,7 +312,7 @@ describe("Quiet Core bot-owned tool runtime contract - embedded agent adapter", 
   });
 
   it("fails closed when before_tool_call blocks an embedded agent dynamic tool", async () => {
-    const hooks = installOpenClawOwnedToolHooks({ blockReason: "blocked by policy" });
+    const hooks = installQuietCoreOwnedToolHooks({ blockReason: "blocked by policy" });
     const execute = vi.fn(async () => textToolResult("should not run"));
     const tool = wrapToolWithBeforeToolCallHook(createContractTool("message", execute), {
       agentId: "agent-1",

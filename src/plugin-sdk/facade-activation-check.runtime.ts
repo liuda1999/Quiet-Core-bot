@@ -11,7 +11,7 @@ import {
   getRuntimeConfigSnapshot,
   getRuntimeConfigSourceSnapshot,
 } from "../config/runtime-snapshot.js";
-import type { OpenClawConfig } from "../config/types.js";
+import type { QuietCoreConfig } from "../config/types.js";
 import { resolveBundledPluginsDir } from "../plugins/bundled-dir.js";
 import {
   createPluginActivationSource,
@@ -32,7 +32,7 @@ const ALWAYS_ALLOWED_RUNTIME_DIR_NAMES = new Set([
   "media-understanding-core",
   "speech-core",
 ]);
-const EMPTY_FACADE_BOUNDARY_CONFIG: OpenClawConfig = {};
+const EMPTY_FACADE_BOUNDARY_CONFIG: QuietCoreConfig = {};
 
 /** Minimal manifest shape needed to decide whether a bundled facade may load. */
 export type FacadePluginManifestLike = Pick<
@@ -46,7 +46,7 @@ type FacadeModuleLocation = {
 };
 
 function readFacadeBoundaryConfigSafely(): {
-  rawConfig: OpenClawConfig;
+  rawConfig: QuietCoreConfig;
 } {
   try {
     const sourceSnapshot = getRuntimeConfigSourceSnapshot();
@@ -65,7 +65,7 @@ function readFacadeBoundaryConfigSafely(): {
     const parsed = JSON5.parse(raw);
     const rawConfig =
       parsed && typeof parsed === "object"
-        ? (parsed as OpenClawConfig)
+        ? (parsed as QuietCoreConfig)
         : EMPTY_FACADE_BOUNDARY_CONFIG;
     return { rawConfig };
   } catch {
@@ -296,7 +296,7 @@ export function resolveBundledPluginPublicSurfaceAccess(params: {
 export function evaluateBundledPluginPublicSurfaceAccess(params: {
   params: { dirName: string; artifactBasename: string };
   manifestRecord: FacadePluginManifestLike;
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   normalizedPluginsConfig: ReturnType<typeof normalizePluginsConfig>;
   activationSource: ReturnType<typeof createPluginActivationSource>;
   autoEnabledReasons: Record<string, string[]>;

@@ -1,6 +1,6 @@
 // Doctor sandbox tests cover warnings when sandbox mode is enabled without Docker availability.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import type { RuntimeEnv } from "../runtime.js";
 import type { DoctorPrompter } from "./doctor-prompter.js";
 import type { DoctorRepairMode } from "./doctor-repair-mode.js";
@@ -62,7 +62,7 @@ describe("maybeRepairSandboxImages", () => {
     migrateLegacySandboxRegistryFiles.mockResolvedValue([]);
   });
 
-  function createSandboxConfig(mode: "off" | "all" | "non-main"): OpenClawConfig {
+  function createSandboxConfig(mode: "off" | "all" | "non-main"): QuietCoreConfig {
     return {
       agents: {
         defaults: {
@@ -74,7 +74,7 @@ describe("maybeRepairSandboxImages", () => {
     };
   }
 
-  function createSandboxConfigWithDockerNetwork(network: string): OpenClawConfig {
+  function createSandboxConfigWithDockerNetwork(network: string): QuietCoreConfig {
     return {
       agents: {
         defaults: {

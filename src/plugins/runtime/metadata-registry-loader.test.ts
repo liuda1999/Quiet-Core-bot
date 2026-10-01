@@ -4,7 +4,7 @@ import type { PluginLoadOptions } from "../loader.js";
 
 const loadConfigMock = vi.fn();
 const applyPluginAutoEnableMock = vi.fn();
-const loadOpenClawPluginsMock = vi.fn();
+const loadQuietCorePluginsMock = vi.fn();
 
 let loadPluginMetadataRegistrySnapshot: typeof import("./metadata-registry-loader.js").loadPluginMetadataRegistrySnapshot;
 
@@ -18,7 +18,7 @@ vi.mock("../../config/plugin-auto-enable.js", () => ({
 }));
 
 vi.mock("../loader.js", () => ({
-  loadOpenClawPlugins: (...args: unknown[]) => loadOpenClawPluginsMock(...args),
+  loadQuietCorePlugins: (...args: unknown[]) => loadQuietCorePluginsMock(...args),
 }));
 
 vi.mock("../../agents/agent-scope.js", () => ({
@@ -26,11 +26,11 @@ vi.mock("../../agents/agent-scope.js", () => ({
   resolveDefaultAgentId: () => "default",
 }));
 
-function getOnlyLoadOpenClawPluginsOptions(): PluginLoadOptions {
-  expect(loadOpenClawPluginsMock).toHaveBeenCalledTimes(1);
-  const options = loadOpenClawPluginsMock.mock.calls[0]?.[0];
+function getOnlyLoadQuietCorePluginsOptions(): PluginLoadOptions {
+  expect(loadQuietCorePluginsMock).toHaveBeenCalledTimes(1);
+  const options = loadQuietCorePluginsMock.mock.calls[0]?.[0];
   if (!options || typeof options !== "object") {
-    throw new Error("expected loadOpenClawPlugins to receive plugin load options");
+    throw new Error("expected loadQuietCorePlugins to receive plugin load options");
   }
   return options as PluginLoadOptions;
 }
@@ -43,14 +43,14 @@ describe("loadPluginMetadataRegistrySnapshot", () => {
   beforeEach(() => {
     loadConfigMock.mockReset();
     applyPluginAutoEnableMock.mockReset();
-    loadOpenClawPluginsMock.mockReset();
+    loadQuietCorePluginsMock.mockReset();
     loadConfigMock.mockReturnValue({ plugins: {} });
     applyPluginAutoEnableMock.mockImplementation((params: { config: unknown }) => ({
       config: params.config,
       changes: [],
       autoEnabledReasons: {},
     }));
-    loadOpenClawPluginsMock.mockReturnValue({ plugins: [], diagnostics: [] });
+    loadQuietCorePluginsMock.mockReturnValue({ plugins: [], diagnostics: [] });
   });
 
   it("defaults to a non-activating validate snapshot", () => {
@@ -62,7 +62,7 @@ describe("loadPluginMetadataRegistrySnapshot", () => {
       onlyPluginIds: ["demo"],
     });
 
-    const loadOptions = getOnlyLoadOpenClawPluginsOptions();
+    const loadOptions = getOnlyLoadQuietCorePluginsOptions();
     expect(loadOptions).toMatchObject({
       config: { plugins: {} },
       activationSourceConfig: { plugins: { allow: ["demo"] } },
@@ -85,7 +85,7 @@ describe("loadPluginMetadataRegistrySnapshot", () => {
       loadModules: false,
     });
 
-    const loadOptions = getOnlyLoadOpenClawPluginsOptions();
+    const loadOptions = getOnlyLoadQuietCorePluginsOptions();
     expect(loadOptions).toMatchObject({
       config: { plugins: {} },
       activationSourceConfig: { plugins: {} },
@@ -114,7 +114,7 @@ describe("loadPluginMetadataRegistrySnapshot", () => {
       workspaceDir: "/workspace",
     });
 
-    expect(getOnlyLoadOpenClawPluginsOptions()).toMatchObject({
+    expect(getOnlyLoadQuietCorePluginsOptions()).toMatchObject({
       config: { plugins: {} },
       activationSourceConfig: { plugins: {} },
       autoEnabledReasons: {},
@@ -157,7 +157,7 @@ describe("loadPluginMetadataRegistrySnapshot", () => {
     });
 
     expect(applyPluginAutoEnableMock).not.toHaveBeenCalled();
-    expect(getOnlyLoadOpenClawPluginsOptions()).toEqual({
+    expect(getOnlyLoadQuietCorePluginsOptions()).toEqual({
       config: { plugins: { allow: ["compat-provider"] } },
       activationSourceConfig: { plugins: { allow: ["raw-plugin"] } },
       autoEnabledReasons: {},
@@ -179,7 +179,7 @@ describe("loadPluginMetadataRegistrySnapshot", () => {
       onlyPluginIds: [],
     });
 
-    const loadOptions = getOnlyLoadOpenClawPluginsOptions();
+    const loadOptions = getOnlyLoadQuietCorePluginsOptions();
     expect(loadOptions).toMatchObject({
       config: { plugins: {} },
       activationSourceConfig: { plugins: {} },

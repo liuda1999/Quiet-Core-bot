@@ -1,12 +1,12 @@
 import Foundation
 import Network
-import OpenClawKit
+import QuietCoreKit
 
 final class NetworkStatusService: @unchecked Sendable {
-    func currentStatus(timeoutMs: Int = 1500) async -> OpenClawNetworkStatusPayload {
+    func currentStatus(timeoutMs: Int = 1500) async -> QuietCoreNetworkStatusPayload {
         await withCheckedContinuation { cont in
             let monitor = NWPathMonitor()
-            let queue = DispatchQueue(label: "ai.openclawfoundation.app.network-status")
+            let queue = DispatchQueue(label: "ai.quiet-core-botfoundation.app.network-status")
             let state = NetworkStatusState()
 
             monitor.pathUpdateHandler = { path in
@@ -25,29 +25,29 @@ final class NetworkStatusService: @unchecked Sendable {
         }
     }
 
-    private static func payload(from path: NWPath) -> OpenClawNetworkStatusPayload {
-        let status: OpenClawNetworkPathStatus = switch path.status {
+    private static func payload(from path: NWPath) -> QuietCoreNetworkStatusPayload {
+        let status: QuietCoreNetworkPathStatus = switch path.status {
         case .satisfied: .satisfied
         case .requiresConnection: .requiresConnection
         case .unsatisfied: .unsatisfied
         @unknown default: .unsatisfied
         }
 
-        var interfaces: [OpenClawNetworkInterfaceType] = []
+        var interfaces: [QuietCoreNetworkInterfaceType] = []
         if path.usesInterfaceType(.wifi) { interfaces.append(.wifi) }
         if path.usesInterfaceType(.cellular) { interfaces.append(.cellular) }
         if path.usesInterfaceType(.wiredEthernet) { interfaces.append(.wired) }
         if interfaces.isEmpty { interfaces.append(.other) }
 
-        return OpenClawNetworkStatusPayload(
+        return QuietCoreNetworkStatusPayload(
             status: status,
             isExpensive: path.isExpensive,
             isConstrained: path.isConstrained,
             interfaces: interfaces)
     }
 
-    private static func fallbackPayload() -> OpenClawNetworkStatusPayload {
-        OpenClawNetworkStatusPayload(
+    private static func fallbackPayload() -> QuietCoreNetworkStatusPayload {
+        QuietCoreNetworkStatusPayload(
             status: .unsatisfied,
             isExpensive: false,
             isConstrained: false,

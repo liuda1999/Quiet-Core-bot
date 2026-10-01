@@ -48,9 +48,9 @@ function runGit(args: string[], cwd?: string, env: NodeJS.ProcessEnv = {}) {
     cwd,
     env: {
       ...process.env,
-      GIT_AUTHOR_NAME: "OpenClaw Test",
+      GIT_AUTHOR_NAME: "QuietCore Test",
       GIT_AUTHOR_EMAIL: "test@example.com",
-      GIT_COMMITTER_NAME: "OpenClaw Test",
+      GIT_COMMITTER_NAME: "QuietCore Test",
       GIT_COMMITTER_EMAIL: "test@example.com",
       GIT_CONFIG_COUNT: "1",
       GIT_CONFIG_KEY_0: "commit.gpgsign",
@@ -175,9 +175,9 @@ describe("scripts/android-release-signing.mjs", () => {
       const workspace = path.join(materializedDir, "apps-signing");
       const env = {
         MATCH_PASSWORD,
-        GIT_AUTHOR_NAME: "OpenClaw Test",
+        GIT_AUTHOR_NAME: "QuietCore Test",
         GIT_AUTHOR_EMAIL: "test@example.com",
-        GIT_COMMITTER_NAME: "OpenClaw Test",
+        GIT_COMMITTER_NAME: "QuietCore Test",
         GIT_COMMITTER_EMAIL: "test@example.com",
         GIT_CONFIG_COUNT: "1",
         GIT_CONFIG_KEY_0: "commit.gpgsign",

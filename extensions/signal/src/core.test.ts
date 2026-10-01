@@ -3,7 +3,7 @@ import {
   createMessageReceiptFromOutboundResults,
   verifyChannelMessageAdapterCapabilityProofs,
 } from "quiet-core-bot/plugin-sdk/channel-outbound";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { createPluginSetupWizardStatus } from "quiet-core-bot/plugin-sdk/plugin-test-runtime";
 import { describe, expect, it, vi } from "vitest";
 import { signalPlugin } from "./channel.js";
@@ -203,7 +203,7 @@ describe("probeSignal", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       accountOverrides: {},
     });
 
@@ -242,7 +242,7 @@ describe("signal outbound", () => {
               enabled: true,
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         accountId: "default",
         payload: {
           text: "Approval required.",
@@ -283,7 +283,7 @@ describe("signal outbound", () => {
       proofs: {
         text: async () => {
           const result = await signalPlugin.message?.send?.text?.({
-            cfg: {} as OpenClawConfig,
+            cfg: {} as QuietCoreConfig,
             to: "signal:+15555550123",
             text: "hello",
             deps,
@@ -299,7 +299,7 @@ describe("signal outbound", () => {
         },
         media: async () => {
           const result = await signalPlugin.message?.send?.media?.({
-            cfg: {} as OpenClawConfig,
+            cfg: {} as QuietCoreConfig,
             to: "signal:+15555550123",
             text: "image",
             mediaUrl: "https://example.com/image.png",
@@ -441,7 +441,7 @@ describe("signal setup parsing", () => {
   });
 
   it("uses configured defaultAccount for omitted DM policy account context", () => {
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       channels: {
         signal: {
           defaultAccount: "work",
@@ -471,7 +471,7 @@ describe("signal setup parsing", () => {
   });
 
   it('writes open policy state to the named account and stores inherited allowFrom with "*"', () => {
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       channels: {
         signal: {
           allowFrom: ["+15555550123"],

@@ -7,7 +7,7 @@ import {
 } from "./chat-display-projection.js";
 import { resolveTranscriptPathForComparison } from "./session-transcript-path.js";
 import {
-  attachOpenClawTranscriptMeta,
+  attachQuietCoreTranscriptMeta,
   readRecentSessionMessagesWithStatsAsync,
   readSessionMessagesWithSourceAsync,
 } from "./session-transcript-readers.js";
@@ -258,7 +258,7 @@ export class SessionHistorySseState {
     } else {
       this.rawTranscriptSeq += 1;
     }
-    const nextMessage = attachOpenClawTranscriptMeta(update.message, {
+    const nextMessage = attachQuietCoreTranscriptMeta(update.message, {
       ...(typeof update.messageId === "string" ? { id: update.messageId } : {}),
       seq: this.rawTranscriptSeq,
     });
@@ -284,7 +284,7 @@ export class SessionHistorySseState {
         const emittedMessage: SessionHistoryMessage =
           isMessageToolMirrorMessage(projectedMessage) ||
           resolveMessageSeq(projectedMessage) === undefined
-            ? (attachOpenClawTranscriptMeta(projectedMessage, {
+            ? (attachQuietCoreTranscriptMeta(projectedMessage, {
                 seq: this.rawTranscriptSeq,
               }) as SessionHistoryMessage)
             : projectedMessage;

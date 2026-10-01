@@ -9,11 +9,11 @@ struct TalkProTab: View {
     @AppStorage("talk.background.enabled") private var talkBackgroundEnabled: Bool = false
     @State private var showPermissionPrompt = false
     @State private var showTalkIssueDetails = false
-    let headerLeadingAction: OpenClawSidebarHeaderAction?
+    let headerLeadingAction: QuietCoreSidebarHeaderAction?
     var openSettings: () -> Void
 
     init(
-        headerLeadingAction: OpenClawSidebarHeaderAction? = nil,
+        headerLeadingAction: QuietCoreSidebarHeaderAction? = nil,
         openSettings: @escaping () -> Void)
     {
         self.headerLeadingAction = headerLeadingAction
@@ -47,7 +47,7 @@ struct TalkProTab: View {
                                 onShowDetails: {
                                     self.showTalkIssueDetails = true
                                 })
-                                .padding(.horizontal, OpenClawProMetric.pagePadding)
+                                .padding(.horizontal, QuietCoreProMetric.pagePadding)
                         }
                         self.voiceHeroCard
                         self.conversationCard
@@ -95,9 +95,9 @@ struct TalkProTab: View {
     private var header: some View {
         HStack(alignment: .center, spacing: 11) {
             if let headerLeadingAction {
-                OpenClawSidebarHeaderLeadingSlot(action: headerLeadingAction)
+                QuietCoreSidebarHeaderLeadingSlot(action: headerLeadingAction)
             }
-            OpenClawProMark(size: 31, shadowRadius: 9)
+            QuietCoreProMark(size: 31, shadowRadius: 9)
             VStack(alignment: .leading, spacing: 2) {
                 Text("Talk")
                     .font(.system(size: 27, weight: .bold, design: .rounded))
@@ -109,7 +109,7 @@ struct TalkProTab: View {
             Spacer(minLength: 8)
             self.statusChip
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     private var statusChip: some View {
@@ -169,7 +169,7 @@ struct TalkProTab: View {
                 .disabled(self.state.primaryAction == .waiting)
             }
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     private var conversationCard: some View {
@@ -189,7 +189,7 @@ struct TalkProTab: View {
                 self.infoRow(icon: self.state.icon, title: "Runtime", value: self.appModel.talkMode.statusText)
             }
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     private var voiceModeCard: some View {
@@ -198,7 +198,7 @@ struct TalkProTab: View {
                 self.cardHeader(
                     title: "Voice mode",
                     value: "Settings ›",
-                    color: OpenClawBrand.accent,
+                    color: QuietCoreBrand.accent,
                     action: self.openSettings)
                     .padding(.horizontal, 12)
                     .padding(.top, 11)
@@ -224,7 +224,7 @@ struct TalkProTab: View {
                 self.infoRow(icon: "globe", title: "Speech language", value: self.speechLocaleText)
             }
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     private var controlsCard: some View {
@@ -253,7 +253,7 @@ struct TalkProTab: View {
                 .buttonStyle(.plain)
             }
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     private func controlToggleRow(_ title: String, isOn: Binding<Bool>) -> some View {
@@ -495,7 +495,7 @@ struct TalkProState: Equatable {
         if self.isSpeaking { return "Speaking" }
         if self.isListening { return "Listening" }
         if self.normalizedStatus.contains("connecting") { return "Connecting" }
-        if self.normalizedStatus.contains("thinking") { return "Asking OpenClaw" }
+        if self.normalizedStatus.contains("thinking") { return "Asking QuietCore" }
         if self.isEnabled { return "Ready to talk" }
         return "Talk is off"
     }
@@ -550,12 +550,12 @@ struct TalkProState: Equatable {
         if !self.gatewayConnected { return .secondary }
         switch self.permissionState {
         case .requestFailed, .loadFailed:
-            return OpenClawBrand.danger
+            return QuietCoreBrand.danger
         case .missingScope, .requestingUpgrade, .upgradeRequested, .apiKeyMissing:
-            return OpenClawBrand.warn
+            return QuietCoreBrand.warn
         default:
-            if !self.isConfigLoaded { return OpenClawBrand.warn }
-            return self.isEnabled ? OpenClawBrand.ok : OpenClawBrand.accentHot
+            if !self.isConfigLoaded { return QuietCoreBrand.warn }
+            return self.isEnabled ? QuietCoreBrand.ok : QuietCoreBrand.accentHot
         }
     }
 
@@ -597,12 +597,12 @@ struct TalkProState: Equatable {
     var primaryButtonFill: AnyShapeStyle {
         switch self.primaryAction {
         case .stop:
-            AnyShapeStyle(OpenClawBrand.danger)
+            AnyShapeStyle(QuietCoreBrand.danger)
         case .waiting:
-            AnyShapeStyle(OpenClawBrand.warn.opacity(0.72))
+            AnyShapeStyle(QuietCoreBrand.warn.opacity(0.72))
         default:
             AnyShapeStyle(LinearGradient(
-                colors: [self.color.opacity(0.95), OpenClawBrand.accent],
+                colors: [self.color.opacity(0.95), QuietCoreBrand.accent],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing))
         }

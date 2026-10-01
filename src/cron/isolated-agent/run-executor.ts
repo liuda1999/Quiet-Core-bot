@@ -8,7 +8,7 @@ import { wrapUntrustedPromptDataBlock } from "../../agents/sanitize-for-prompt.j
 import { normalizeToolName } from "../../agents/tool-policy.js";
 import type { ThinkLevel, VerboseLevel } from "../../auto-reply/thinking.js";
 import type { AgentDefaultsConfig } from "../../config/types.agent-defaults.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { SourceDeliveryPlan } from "../../infra/outbound/source-delivery-plan.js";
 import { createLazyImportLoader } from "../../shared/lazy-promise.js";
 import type { SkillSnapshot } from "../../skills/types.js";
@@ -179,8 +179,8 @@ export type CronExecutionResult = {
 
 /** Creates the model-fallback executor for one isolated cron prompt run. */
 export function createCronPromptExecutor(params: {
-  cfg: OpenClawConfig;
-  cfgWithAgentDefaults: OpenClawConfig;
+  cfg: QuietCoreConfig;
+  cfgWithAgentDefaults: QuietCoreConfig;
   job: CronJob;
   agentId: string;
   agentDir: string;
@@ -460,8 +460,8 @@ export function createCronPromptExecutor(params: {
 
 /** Executes an isolated cron prompt, including live model-switch and interim-ack retries. */
 export async function executeCronRun(params: {
-  cfg: OpenClawConfig;
-  cfgWithAgentDefaults: OpenClawConfig;
+  cfg: QuietCoreConfig;
+  cfgWithAgentDefaults: QuietCoreConfig;
   job: CronJob;
   agentId: string;
   agentDir: string;

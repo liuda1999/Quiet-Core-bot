@@ -19,7 +19,7 @@ function makeRepoRoot(prefix: string): string {
   return makeTrackedTempDir(prefix, tempDirs);
 }
 
-function createOpenClawRoot(params: {
+function createQuietCoreRoot(params: {
   prefix: string;
   hasExtensions?: boolean;
   hasSrc?: boolean;
@@ -264,7 +264,7 @@ describe("resolveBundledPluginsDir", () => {
       },
     ],
   ] as const)("%s", (_name, layout, expectation) => {
-    const repoRoot = createOpenClawRoot(layout);
+    const repoRoot = createQuietCoreRoot(layout);
     if (expectation.expectedRelativeDir === path.join("dist-runtime", "extensions")) {
       seedBundledPluginTree(repoRoot, path.join("dist", "extensions"));
       seedBundledPluginTree(repoRoot, path.join("dist-runtime", "extensions"));
@@ -282,7 +282,7 @@ describe("resolveBundledPluginsDir", () => {
   });
 
   it("falls back to source extensions when dist trees exist but do not contain real plugin manifests", () => {
-    const repoRoot = createOpenClawRoot({
+    const repoRoot = createQuietCoreRoot({
       prefix: "quiet-core-bot-bundled-dir-incomplete-built-",
       hasExtensions: true,
       hasSrc: true,
@@ -304,7 +304,7 @@ describe("resolveBundledPluginsDir", () => {
   });
 
   it("uses source extensions in pnpm workspace mirrors without git metadata", () => {
-    const repoRoot = createOpenClawRoot({
+    const repoRoot = createQuietCoreRoot({
       prefix: "quiet-core-bot-bundled-dir-source-mirror-",
       hasExtensions: true,
       hasSrc: true,
@@ -319,7 +319,7 @@ describe("resolveBundledPluginsDir", () => {
   });
 
   it("keeps built bundled plugins for git-looking trees without pnpm workspace metadata", () => {
-    const repoRoot = createOpenClawRoot({
+    const repoRoot = createQuietCoreRoot({
       prefix: "quiet-core-bot-bundled-dir-git-no-pnpm-",
       hasExtensions: true,
       hasSrc: true,
@@ -338,7 +338,7 @@ describe("resolveBundledPluginsDir", () => {
   });
 
   it("reports missing pnpm workspace deps for source checkouts", () => {
-    const repoRoot = createOpenClawRoot({
+    const repoRoot = createQuietCoreRoot({
       prefix: "quiet-core-bot-bundled-dir-source-deps-",
       hasExtensions: true,
       hasSrc: true,
@@ -364,7 +364,7 @@ describe("resolveBundledPluginsDir", () => {
   });
 
   it("returns a stable empty bundled plugin directory when bundled plugins are disabled", () => {
-    const repoRoot = createOpenClawRoot({
+    const repoRoot = createQuietCoreRoot({
       prefix: "quiet-core-bot-bundled-dir-disabled-",
       hasExtensions: true,
       hasSrc: true,
@@ -400,7 +400,7 @@ describe("resolveBundledPluginsDir", () => {
   });
 
   it("ignores an existing override under an argv1-derived fake package root", () => {
-    const installedRoot = createOpenClawRoot({
+    const installedRoot = createQuietCoreRoot({
       prefix: "quiet-core-bot-bundled-dir-argv-override-reject-",
       hasDistExtensions: true,
     });
@@ -440,7 +440,7 @@ describe("resolveBundledPluginsDir", () => {
   });
 
   it("does not let VITEST add cwd to bundled plugin resolution candidates", () => {
-    const cwdRepoRoot = createOpenClawRoot({
+    const cwdRepoRoot = createQuietCoreRoot({
       prefix: "quiet-core-bot-bundled-dir-vitest-cwd-",
       hasExtensions: true,
       hasSrc: true,
@@ -480,7 +480,7 @@ describe("resolveBundledPluginsDir", () => {
   });
 
   it("falls back to argv root when an existing rejected override is unrelated", () => {
-    const installedRoot = createOpenClawRoot({
+    const installedRoot = createQuietCoreRoot({
       prefix: "quiet-core-bot-bundled-dir-rejected-override-argv-",
       hasDistExtensions: true,
     });
@@ -503,7 +503,7 @@ describe("resolveBundledPluginsDir", () => {
   });
 
   it("does not resolve bundled plugins from cwd when argv1 is not a package root", () => {
-    const cwdRepoRoot = createOpenClawRoot({
+    const cwdRepoRoot = createQuietCoreRoot({
       prefix: "quiet-core-bot-bundled-dir-untrusted-cwd-",
       hasExtensions: true,
       hasSrc: true,
@@ -533,12 +533,12 @@ describe("resolveBundledPluginsDir", () => {
     {
       name: "prefers the running CLI package root over an unrelated cwd checkout",
       createScenario: () => {
-        const installedRoot = createOpenClawRoot({
+        const installedRoot = createQuietCoreRoot({
           prefix: "quiet-core-bot-bundled-dir-installed-",
           hasDistExtensions: true,
         });
         seedBundledPluginTree(installedRoot, path.join("dist", "extensions"));
-        const cwdRepoRoot = createOpenClawRoot({
+        const cwdRepoRoot = createQuietCoreRoot({
           prefix: "quiet-core-bot-bundled-dir-cwd-",
           hasExtensions: true,
           hasSrc: true,
@@ -554,7 +554,7 @@ describe("resolveBundledPluginsDir", () => {
     {
       name: "falls back to the running installed package when the override path is stale",
       createScenario: () => {
-        const installedRoot = createOpenClawRoot({
+        const installedRoot = createQuietCoreRoot({
           prefix: "quiet-core-bot-bundled-dir-override-",
           hasDistExtensions: true,
         });

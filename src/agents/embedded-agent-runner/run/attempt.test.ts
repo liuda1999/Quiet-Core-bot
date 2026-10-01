@@ -5,7 +5,7 @@ import { streamSimple } from "../../../llm/stream.js";
 vi.mock("../context-engine-capabilities.js", () => ({
   resolveContextEngineCapabilities: async () => ({ llm: undefined }),
 }));
-import type { OpenClawConfig } from "../../../config/config.js";
+import type { QuietCoreConfig } from "../../../config/config.js";
 import { addSession, resetProcessRegistryForTests } from "../../bash-process-registry.js";
 import { createProcessSessionFixture } from "../../bash-process-registry.test-helpers.js";
 import { wrapPluginSystemContextSection } from "../../hook-system-context-boundary.js";
@@ -627,7 +627,7 @@ describe("resolveEmbeddedAgentStreamFn", () => {
 
 describe("resolveAttemptFsWorkspaceOnly", () => {
   it("uses global tools.fs.workspaceOnly when agent has no override", () => {
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       tools: {
         fs: { workspaceOnly: true },
       },
@@ -642,7 +642,7 @@ describe("resolveAttemptFsWorkspaceOnly", () => {
   });
 
   it("prefers agent-specific tools.fs.workspaceOnly override", () => {
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       tools: {
         fs: { workspaceOnly: true },
       },
@@ -3270,7 +3270,7 @@ describe("buildAfterTurnRuntimeContext", () => {
       const legacy = buildAfterTurnRuntimeContext({
         attempt: {
           sessionId: "session-123",
-          config: {} as OpenClawConfig,
+          config: {} as QuietCoreConfig,
           skillsSnapshot: undefined,
           provider: "openai",
           modelId: "gpt-5.4",
@@ -3308,7 +3308,7 @@ describe("buildAfterTurnRuntimeContext", () => {
         messageProvider: "slack",
         agentAccountId: "acct-1",
         authProfileId: "openai:p1",
-        config: {} as OpenClawConfig,
+        config: {} as QuietCoreConfig,
         skillsSnapshot: undefined,
         provider: "openai",
         modelId: "gpt-5.4",
@@ -3347,7 +3347,7 @@ describe("buildAfterTurnRuntimeContext", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         skillsSnapshot: undefined,
         provider: "openai",
         modelId: "gpt-5.4",
@@ -3385,7 +3385,7 @@ describe("buildAfterTurnRuntimeContext", () => {
         messageProvider: "slack",
         agentAccountId: "acct-1",
         authProfileId: "openai:p1",
-        config: { plugins: { slots: { contextEngine: "lossless-claw" } } } as OpenClawConfig,
+        config: { plugins: { slots: { contextEngine: "lossless-claw" } } } as QuietCoreConfig,
         skillsSnapshot: undefined,
         provider: "openai",
         modelId: "gpt-5.4",
@@ -3429,7 +3429,7 @@ describe("buildAfterTurnRuntimeContext", () => {
         messageProvider: "slack",
         agentAccountId: "acct-1",
         authProfileId: "openai:p1",
-        config: { plugins: { slots: { contextEngine: "lossless-claw" } } } as OpenClawConfig,
+        config: { plugins: { slots: { contextEngine: "lossless-claw" } } } as QuietCoreConfig,
         skillsSnapshot: undefined,
         provider: "openai",
         modelId: "gpt-5.4",
@@ -3460,7 +3460,7 @@ describe("buildAfterTurnRuntimeContext", () => {
         currentThreadTs: "thread-9",
         currentMessageId: "msg-42",
         authProfileId: "openai:p1",
-        config: {} as OpenClawConfig,
+        config: {} as QuietCoreConfig,
         skillsSnapshot: undefined,
         senderId: "user-123",
         provider: "openai",

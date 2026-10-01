@@ -17,7 +17,7 @@ import {
 import { toErrorObject } from "../../../infra/errors.js";
 import { createSubsystemLogger } from "../../../logging/subsystem.js";
 import { resolveGlobalSingleton } from "../../../shared/global-singleton.js";
-import { isTranscriptOnlyOpenClawAssistantMessage } from "../../../shared/transcript-only-quiet-core-bot-assistant.js";
+import { isTranscriptOnlyQuietCoreAssistantMessage } from "../../../shared/transcript-only-quiet-core-bot-assistant.js";
 import { isSessionWriteLockAcquireError } from "../../session-write-lock-error.js";
 import type { acquireSessionWriteLock } from "../../session-write-lock.js";
 import type {
@@ -215,10 +215,10 @@ function parsePromptReleasedMessageLine(
     if (!isJsonRecord(message)) {
       return undefined;
     }
-    const isOpenClawTranscriptOnlyAssistant = isTranscriptOnlyOpenClawAssistantMessage(message);
+    const isQuietCoreTranscriptOnlyAssistant = isTranscriptOnlyQuietCoreAssistantMessage(message);
     if (
       typeof message.role !== "string" ||
-      (!options?.allowAnyMessage && !isOpenClawTranscriptOnlyAssistant)
+      (!options?.allowAnyMessage && !isQuietCoreTranscriptOnlyAssistant)
     ) {
       return undefined;
     }

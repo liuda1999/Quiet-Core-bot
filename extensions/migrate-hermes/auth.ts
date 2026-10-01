@@ -21,7 +21,7 @@ import {
   updateAuthProfileStoreWithLock,
   type AuthProfileStore,
   type OAuthCredential,
-  type OpenClawConfig,
+  type QuietCoreConfig,
   type ProviderAuthResult,
 } from "quiet-core-bot/plugin-sdk/provider-auth";
 import {
@@ -47,7 +47,7 @@ const OPENAI_DEFAULT_MODEL = "openai/gpt-5.5";
 const HERMES_AUTH_DISPLAY_NAME = "Hermes import";
 
 type AgentDefaultModelConfigs = NonNullable<
-  NonNullable<NonNullable<OpenClawConfig["agents"]>["defaults"]>["models"]
+  NonNullable<NonNullable<QuietCoreConfig["agents"]>["defaults"]>["models"]
 >;
 type AgentDefaultModelConfigEntry = AgentDefaultModelConfigs[string];
 
@@ -203,9 +203,9 @@ function mergeModelConfigEntry(
 }
 
 function applyOAuthModelConfigsToConfig(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   result: ProviderAuthResult,
-): OpenClawConfig {
+): QuietCoreConfig {
   const patchModels = readProviderAuthModelConfigs(result);
   const existingModels = cfg.agents?.defaults?.models ?? {};
   const models: AgentDefaultModelConfigs = result.replaceDefaultModels
@@ -363,9 +363,9 @@ export async function buildAuthItems(params: {
         id: "manual:legacy-hermes-auth-json",
         source: params.source.authPath ?? "auth.json",
         message:
-          "Hermes auth.json contains legacy OAuth credentials. OpenClaw no longer imports those into live auth during Hermes migration.",
+          "Hermes auth.json contains legacy OAuth credentials. QuietCore no longer imports those into live auth during Hermes migration.",
         recommendation:
-          "Run quiet-core-bot models auth login --provider openai after migration, or run quiet-core-bot doctor --fix for existing OpenClaw legacy auth state.",
+          "Run quiet-core-bot models auth login --provider openai after migration, or run quiet-core-bot doctor --fix for existing QuietCore legacy auth state.",
       }),
     );
   }

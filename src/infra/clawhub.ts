@@ -34,7 +34,7 @@ export type ClawHubPackageChannel = "official" | "community" | "private";
 // Keep aligned with @quiet-core/plugin-package-contract ExternalPluginCompatibility.
 export type ClawHubPackageCompatibility = {
   pluginApiRange?: string;
-  builtWithOpenClawVersion?: string;
+  builtWithQuietCoreVersion?: string;
   pluginSdkVersion?: string;
   minGatewayVersion?: string;
 };
@@ -537,13 +537,13 @@ function shouldPreservePluginApiPrereleaseFloor(target: string): boolean {
 }
 
 function normalizePluginApiVersionForComparator(version: string, target: string): string {
-  const normalizedCorrection = normalizeOpenClawNumericCorrectionForPluginApi(version);
+  const normalizedCorrection = normalizeQuietCoreNumericCorrectionForPluginApi(version);
   if (normalizedCorrection) {
     return normalizedCorrection;
   }
   return shouldPreservePluginApiPrereleaseFloor(target)
     ? version
-    : normalizeOpenClawReleaseSuffixForPluginApi(version);
+    : normalizeQuietCoreReleaseSuffixForPluginApi(version);
 }
 
 function satisfiesComparator(version: string, token: string): boolean {
@@ -605,13 +605,13 @@ const QUIET_CORE_RELEASE_SUFFIX_PATTERN =
   /^[vV]?(\d{4}\.[1-9]\d?\.[1-9]\d*)(?:-\d+|-(?:alpha|beta|rc)\.\d+)$/i;
 const QUIET_CORE_NUMERIC_CORRECTION_PATTERN = /^[vV]?(\d{4}\.[1-9]\d?\.[1-9]\d*)-\d+$/;
 
-function normalizeOpenClawNumericCorrectionForPluginApi(
+function normalizeQuietCoreNumericCorrectionForPluginApi(
   pluginApiVersion: string,
 ): string | undefined {
   return QUIET_CORE_NUMERIC_CORRECTION_PATTERN.exec(pluginApiVersion.trim())?.[1];
 }
 
-function normalizeOpenClawReleaseSuffixForPluginApi(pluginApiVersion: string): string {
+function normalizeQuietCoreReleaseSuffixForPluginApi(pluginApiVersion: string): string {
   const match = QUIET_CORE_RELEASE_SUFFIX_PATTERN.exec(pluginApiVersion.trim());
   return match?.[1] ?? pluginApiVersion;
 }

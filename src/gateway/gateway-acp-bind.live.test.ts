@@ -32,7 +32,7 @@ import {
   assertLiveImageProbeReply,
   buildLiveCronProbeMessage,
   createLiveCronProbeSpec,
-  runOpenClawCliJson,
+  runQuietCoreCliJson,
   shouldRunLiveImageProbe,
 } from "./live-agent-probes.js";
 import { restoreLiveEnv, snapshotLiveEnv, type LiveEnvSnapshot } from "./live-env-test-helpers.js";
@@ -1074,7 +1074,7 @@ describeLive("gateway live (ACP bind)", () => {
           }
           throw new Error(`acp cron cli verify did not create job ${lastCronProbeName}`);
         }
-        await runOpenClawCliJson(
+        await runQuietCoreCliJson(
           ["cron", "rm", cronJobId, "--json", "--url", `ws://127.0.0.1:${port}`, "--token", token],
           process.env,
         );

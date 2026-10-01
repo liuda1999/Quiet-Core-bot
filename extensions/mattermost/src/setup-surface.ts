@@ -1,6 +1,6 @@
 // Mattermost plugin module implements setup surface behavior.
 import { DEFAULT_ACCOUNT_ID } from "quiet-core-bot/plugin-sdk/account-id";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import {
   applySetupAccountConfigPatch,
   createStandardChannelSetupStatus,
@@ -128,7 +128,7 @@ export const mattermostSetupWizard: ChannelSetupWizard = {
         }),
     },
   ],
-  disable: (cfg: OpenClawConfig) => ({
+  disable: (cfg: QuietCoreConfig) => ({
     ...cfg,
     channels: {
       ...cfg.channels,

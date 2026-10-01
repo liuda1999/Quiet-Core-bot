@@ -1,7 +1,7 @@
 // Covers agent harness selection, fallback behavior, and compaction routing.
 import type { Model } from "quiet-core-bot/plugin-sdk/llm";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import { QUIET_CORE_EMBEDDED_CONTEXT_ENGINE_HOST } from "../../context-engine/host-compat.js";
 import type { ContextEngine } from "../../context-engine/types.js";
 import { testing as cliBackendsTesting } from "../cli-backends.js";
@@ -33,7 +33,7 @@ const compactAuthMocks = vi.hoisted(() => ({
 }));
 
 vi.mock("./builtin-quiet-core-bot.js", () => ({
-  createOpenClawAgentHarness: (): AgentHarness => ({
+  createQuietCoreAgentHarness: (): AgentHarness => ({
     id: "quiet-core-bot",
     label: "Quiet Core bot embedded agent",
     contextEngineHostCapabilities: QUIET_CORE_EMBEDDED_CONTEXT_ENGINE_HOST.capabilities,
@@ -94,7 +94,7 @@ afterEach(() => {
   }
 });
 
-function createAttemptParams(config?: OpenClawConfig): EmbeddedRunAttemptParams {
+function createAttemptParams(config?: QuietCoreConfig): EmbeddedRunAttemptParams {
   return {
     prompt: "hello",
     sessionId: "session-1",
@@ -195,7 +195,7 @@ function registerSuccessfulCodexHarness(): void {
   );
 }
 
-function groupSenderDenyAllConfig(): OpenClawConfig {
+function groupSenderDenyAllConfig(): QuietCoreConfig {
   // Mirrors Telegram sender policy shape used when selection must preserve
   // channel/group sender tool constraints across fallback attempts.
   return {
@@ -210,10 +210,10 @@ function groupSenderDenyAllConfig(): OpenClawConfig {
         },
       },
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
-function groupDenyAllConfig(): OpenClawConfig {
+function groupDenyAllConfig(): QuietCoreConfig {
   return {
     channels: {
       telegram: {
@@ -224,10 +224,10 @@ function groupDenyAllConfig(): OpenClawConfig {
         },
       },
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
-function providerRuntimeConfig(provider: string, runtime: string): OpenClawConfig {
+function providerRuntimeConfig(provider: string, runtime: string): QuietCoreConfig {
   return {
     models: {
       providers: {
@@ -238,14 +238,14 @@ function providerRuntimeConfig(provider: string, runtime: string): OpenClawConfi
         },
       },
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
 function agentModelRuntimeConfig(
   modelRef: string,
   runtime: string,
   agentId?: string,
-): OpenClawConfig {
+): QuietCoreConfig {
   if (agentId) {
     return {
       agents: {
@@ -254,7 +254,7 @@ function agentModelRuntimeConfig(
           { id: agentId, models: { [modelRef]: { agentRuntime: { id: runtime } } } },
         ],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
   }
   return {
     agents: {
@@ -264,7 +264,7 @@ function agentModelRuntimeConfig(
         },
       },
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
 describe("runAgentHarnessAttempt", () => {
@@ -495,23 +495,23 @@ describe("runAgentHarnessAttempt", () => {
   it.each([
     {
       name: "narrow allowlist",
-      config: { tools: { allow: ["message"] } } as OpenClawConfig,
+      config: { tools: { allow: ["message"] } } as QuietCoreConfig,
     },
     {
       name: "specific denylist",
-      config: { tools: { deny: ["exec"] } } as OpenClawConfig,
+      config: { tools: { deny: ["exec"] } } as QuietCoreConfig,
     },
     {
       name: "narrow profile",
-      config: { tools: { profile: "coding" } } as OpenClawConfig,
+      config: { tools: { profile: "coding" } } as QuietCoreConfig,
     },
   ])("marks plugin side questions restricted for a $name", ({ config }) => {
     expect(resolvePluginHarnessPolicyToolsAllow(createAttemptParams(config))).toEqual([]);
   });
 
   it.each([
-    { name: "full tool profile", config: { tools: { profile: "full" } } as OpenClawConfig },
-    { name: "explicit empty allowlist", config: { tools: { allow: [] } } as OpenClawConfig },
+    { name: "full tool profile", config: { tools: { profile: "full" } } as QuietCoreConfig },
+    { name: "explicit empty allowlist", config: { tools: { allow: [] } } as QuietCoreConfig },
   ])("leaves plugin side questions unrestricted for an $name", ({ config }) => {
     expect(resolvePluginHarnessPolicyToolsAllow(createAttemptParams(config))).toBeUndefined();
   });
@@ -706,7 +706,7 @@ describe("selectAgentHarness", () => {
           agentRuntime: { id: "codex" },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expect(
       selectAgentHarness({
@@ -719,7 +719,7 @@ describe("selectAgentHarness", () => {
 
   it("ignores legacy agent CLI runtime aliases for OpenAI agent model runs", async () => {
     registerSuccessfulCodexHarness();
-    const config: OpenClawConfig = {
+    const config: QuietCoreConfig = {
       agents: {
         defaults: {
           agentRuntime: { id: "claude-cli" },
@@ -843,7 +843,7 @@ describe("selectAgentHarness", () => {
               },
             },
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
       }),
     ).resolves.toEqual({ ok: true, compacted: false });
     expect(compact).toHaveBeenCalledTimes(1);
@@ -1136,7 +1136,7 @@ describe("selectAgentHarness", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expect(() =>
       selectAgentHarness({

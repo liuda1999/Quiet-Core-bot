@@ -13,9 +13,9 @@ export {
   type DiagnosticEventPayload,
   type DiagnosticTraceContext,
 } from "quiet-core-bot/plugin-sdk/diagnostic-runtime";
-export { emptyPluginConfigSchema, type OpenClawPluginApi } from "quiet-core-bot/plugin-sdk/plugin-entry";
+export { emptyPluginConfigSchema, type QuietCorePluginApi } from "quiet-core-bot/plugin-sdk/plugin-entry";
 export type {
-  OpenClawPluginService,
-  OpenClawPluginServiceContext,
+  QuietCorePluginService,
+  QuietCorePluginServiceContext,
 } from "quiet-core-bot/plugin-sdk/plugin-entry";
 export { redactSensitiveText } from "quiet-core-bot/plugin-sdk/security-runtime";

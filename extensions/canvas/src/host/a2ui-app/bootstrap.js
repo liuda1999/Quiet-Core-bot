@@ -226,7 +226,7 @@ const openclawTheme = {
   },
 };
 
-class OpenClawA2UIHost extends LitElement {
+class QuietCoreA2UIHost extends LitElement {
   static properties = {
     surfaces: { state: true },
     pendingAction: { state: true },
@@ -592,5 +592,5 @@ class OpenClawA2UIHost extends LitElement {
 }
 
 if (!customElements.get("quiet-core-bot-a2ui-host")) {
-  customElements.define("quiet-core-bot-a2ui-host", OpenClawA2UIHost);
+  customElements.define("quiet-core-bot-a2ui-host", QuietCoreA2UIHost);
 }

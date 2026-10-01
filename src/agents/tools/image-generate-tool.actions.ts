@@ -3,7 +3,7 @@
  *
  * Handles provider listing, task status, and duplicate-guard output for the image generation tool.
  */
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { listRuntimeImageGenerationProviders } from "../../image-generation/runtime.js";
 import type { ImageGenerationProvider } from "../../image-generation/types.js";
 import type { AuthProfileStore } from "../auth-profiles/types.js";
@@ -70,7 +70,7 @@ function summarizeImageGenerationCapabilities(provider: ImageGenerationProvider)
 
 /** Builds the image-generation provider listing result shown to the agent. */
 export function createImageGenerateListActionResult(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   workspaceDir?: string;
   agentDir?: string;
   authStore?: AuthProfileStore;

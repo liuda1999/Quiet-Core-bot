@@ -101,9 +101,9 @@ const prepareDeps = {
   createMcpLoopbackServerConfig,
   resolveMcpLoopbackBearerToken,
   resolveMcpLoopbackScopedTools,
-  resolveOpenClawReferencePaths: async (
-    params: Parameters<typeof import("../docs-path.js").resolveOpenClawReferencePaths>[0],
-  ) => (await import("../docs-path.js")).resolveOpenClawReferencePaths(params),
+  resolveQuietCoreReferencePaths: async (
+    params: Parameters<typeof import("../docs-path.js").resolveQuietCoreReferencePaths>[0],
+  ) => (await import("../docs-path.js")).resolveQuietCoreReferencePaths(params),
   prepareClaudeCliSkillsPlugin,
   claudeCliSessionTranscriptHasContent,
   claudeCliSessionTranscriptHasOrphanedToolUse,
@@ -638,7 +638,7 @@ export async function prepareCliRunContext(
     );
   }
   let openClawHistoryMessages: unknown[] | undefined;
-  const loadOpenClawHistoryMessages = async () => {
+  const loadQuietCoreHistoryMessages = async () => {
     openClawHistoryMessages ??= await loadCliSessionHistoryMessages({
       sessionId: params.sessionId,
       sessionFile: params.sessionFile,
@@ -657,7 +657,7 @@ export async function prepareCliRunContext(
       });
   const openClawReferences = isSideQuestion
     ? { docsPath: null, sourcePath: null }
-    : await prepareDeps.resolveOpenClawReferencePaths({
+    : await prepareDeps.resolveQuietCoreReferencePaths({
         workspaceDir,
         argv1: process.argv[1],
         cwd,
@@ -728,7 +728,7 @@ export async function prepareCliRunContext(
       const hookResult = await resolvePromptBuildHookResult({
         config: params.config ?? getRuntimeConfig(),
         prompt: params.prompt,
-        messages: await loadOpenClawHistoryMessages(),
+        messages: await loadQuietCoreHistoryMessages(),
         hookCtx: {
           runId: params.runId,
           agentId: sessionAgentId,
@@ -798,9 +798,9 @@ export async function prepareCliRunContext(
   const rawTranscriptReseedReason = reusableCliSession.sessionId
     ? "session-expired"
     : reusableCliSession.invalidatedReason;
-  const shouldPrepareOpenClawHistoryPrompt =
+  const shouldPrepareQuietCoreHistoryPrompt =
     !isSideQuestion && (!reusableCliSession.sessionId || allowRawTranscriptReseed);
-  const openClawHistoryPrompt = shouldPrepareOpenClawHistoryPrompt
+  const openClawHistoryPrompt = shouldPrepareQuietCoreHistoryPrompt
     ? buildCliSessionHistoryPrompt({
         messages: await loadCliSessionReseedMessages({
           sessionId: params.sessionId,

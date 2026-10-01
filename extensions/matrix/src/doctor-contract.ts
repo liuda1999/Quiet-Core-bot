@@ -3,7 +3,7 @@ import type {
   ChannelDoctorConfigMutation,
   ChannelDoctorLegacyConfigRule,
 } from "quiet-core-bot/plugin-sdk/channel-contract";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import {
   hasLegacyFlatAllowPrivateNetworkAlias,
   migrateLegacyFlatAllowPrivateNetworkAlias,
@@ -167,7 +167,7 @@ export const legacyConfigRules: ChannelDoctorLegacyConfigRule[] = [
 export function normalizeCompatibilityConfig({
   cfg,
 }: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
 }): ChannelDoctorConfigMutation {
   const channels = isRecord(cfg.channels) ? cfg.channels : null;
   const matrix = isRecord(channels?.matrix) ? channels.matrix : null;
@@ -280,7 +280,7 @@ export function normalizeCompatibilityConfig({
       ...cfg,
       channels: {
         ...cfg.channels,
-        matrix: updatedMatrix as NonNullable<OpenClawConfig["channels"]>["matrix"],
+        matrix: updatedMatrix as NonNullable<QuietCoreConfig["channels"]>["matrix"],
       },
     },
     changes,

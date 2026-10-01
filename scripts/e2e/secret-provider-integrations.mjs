@@ -276,7 +276,7 @@ function parseJsonObjectsFromMixedOutput(text) {
   return objects;
 }
 
-function resolveOpenClawRunner() {
+function resolveQuietCoreRunner() {
   if (process.env.QUIET_CORE_ENTRY) {
     return {
       command: "node",
@@ -318,7 +318,7 @@ function makeEnv(name) {
     QUIET_CORE_PROFILE: serviceProfile,
     QUIET_CORE_LAUNCHD_LABEL: `ai.quiet-core-bot.${serviceProfile}`,
     QUIET_CORE_SYSTEMD_UNIT: `quiet-core-bot-gateway-${serviceProfile}.service`,
-    QUIET_CORE_WINDOWS_TASK_NAME: `OpenClaw Gateway (${serviceProfile})`,
+    QUIET_CORE_WINDOWS_TASK_NAME: `QuietCore Gateway (${serviceProfile})`,
     NO_COLOR: "1",
     PNPM_HOME:
       process.env.PNPM_HOME ??
@@ -516,16 +516,16 @@ function runCommand(command, args, options = {}) {
   });
 }
 
-async function runOpenClaw(args, env, options = {}) {
-  const command = await resolveOpenClawCommand(args, env, options);
+async function runQuietCore(args, env, options = {}) {
+  const command = await resolveQuietCoreCommand(args, env, options);
   return await runCommand(command.command, command.args, {
     ...options,
     ...command.options,
   });
 }
 
-export async function resolveOpenClawCommand(args, env, options = {}) {
-  const runner = options.runner ?? resolveOpenClawRunner();
+export async function resolveQuietCoreCommand(args, env, options = {}) {
+  const runner = options.runner ?? resolveQuietCoreRunner();
   const stdio = options.stdio ?? ["pipe", "pipe", "pipe"];
   if (runner.pnpm) {
     const { createPnpmRunnerSpawnSpec } = await import("../pnpm-runner.mjs");
@@ -862,14 +862,14 @@ function serviceManagerEnv(source) {
   return {
     ...source,
     // systemd/launchd discover user service definitions from the real account
-    // home, while OpenClaw state/config below remain pinned to the proof root.
+    // home, while QuietCore state/config below remain pinned to the proof root.
     HOME: hostHome,
     USERPROFILE: hostHome,
   };
 }
 
 async function startGateway(envCtx, port, token = TOKEN_V1) {
-  const command = await resolveOpenClawCommand(
+  const command = await resolveQuietCoreCommand(
     ["gateway", "run", "--port", String(port), "--bind", "loopback", "--allow-unconfigured"],
     envCtx.env,
     {
@@ -1093,7 +1093,7 @@ async function gatewayCall(env, port, token, method, params = {}, options = {}) 
     `${Date.now()}-${gatewayClientStateCounter++}`,
   );
   fs.mkdirSync(clientStateDir, { recursive: true });
-  return await runOpenClaw(
+  return await runQuietCore(
     [
       "gateway",
       "call",
@@ -1147,7 +1147,7 @@ async function expectReloadMayCloseForAuthChange(env, port, token) {
 }
 
 async function expectGatewayStartupFails(envCtx, port, reason) {
-  const command = await resolveOpenClawCommand(
+  const command = await resolveQuietCoreCommand(
     ["gateway", "run", "--port", String(port), "--bind", "loopback", "--allow-unconfigured"],
     envCtx.env,
     {
@@ -1216,7 +1216,7 @@ async function expectGatewayStartupFails(envCtx, port, reason) {
 async function uninstallManagedGateway(env) {
   let lastResult;
   for (let attempt = 1; attempt <= 2; attempt += 1) {
-    lastResult = await runOpenClaw(["gateway", "uninstall", "--json"], env, {
+    lastResult = await runQuietCore(["gateway", "uninstall", "--json"], env, {
       timeoutMs: 60000,
       allowFailure: true,
     });
@@ -1242,7 +1242,7 @@ async function waitForManagedGatewayStatus(env, token) {
   let lastError;
   while (Date.now() - started < READY_TIMEOUT_MS) {
     try {
-      lastResult = await runOpenClaw(
+      lastResult = await runQuietCore(
         [
           "gateway",
           "status",
@@ -1456,7 +1456,7 @@ async function p7AuthProfileSecretRefPersistsAndResolves() {
       },
     });
     const callsBefore = readJson(storePath).calls;
-    const result = await runOpenClaw(
+    const result = await runQuietCore(
       [
         "models",
         "status",
@@ -1531,7 +1531,7 @@ async function p8ManagedServiceEnvProof() {
     try {
       const callsBeforeInstall = readJson(envCtx.env.PROOF_SECRET_STORE_PATH).calls;
       installAttempted = true;
-      const install = await runOpenClaw(
+      const install = await runQuietCore(
         ["gateway", "install", "--force", "--port", String(port), "--json"],
         managerEnv,
         { timeoutMs: 120000 },
@@ -1757,7 +1757,7 @@ async function p12OpenAiLiveProof() {
         },
       });
       const callsBefore = readJson(storePath).calls;
-      const result = await runOpenClaw(
+      const result = await runQuietCore(
         [
           "models",
           "status",
@@ -1805,7 +1805,7 @@ async function p12OpenAiLiveProof() {
 
 async function runPtySecretsConfigurePreset(envCtx, options = {}) {
   const { spawn } = await import("@lydell/node-pty");
-  const command = await resolveOpenClawCommand(
+  const command = await resolveQuietCoreCommand(
     ["secrets", "configure", "--providers-only", "--apply", "--yes", "--allow-exec", "--json"],
     envCtx.env,
   );
@@ -1985,7 +1985,7 @@ async function p14ConfigPatchValidation() {
         },
       },
     };
-    const valid = await runOpenClaw(
+    const valid = await runQuietCore(
       ["config", "patch", "--stdin", "--dry-run", "--allow-exec", "--json"],
       envCtx.env,
       { input: JSON.stringify(validPatch), timeoutMs: 60000 },
@@ -2006,7 +2006,7 @@ async function p14ConfigPatchValidation() {
         },
       },
     };
-    const invalid = await runOpenClaw(
+    const invalid = await runQuietCore(
       ["config", "patch", "--stdin", "--dry-run", "--allow-exec", "--json"],
       envCtx.env,
       { input: JSON.stringify(invalidPatch), timeoutMs: 60000, allowFailure: true },
@@ -2025,7 +2025,7 @@ async function p14ConfigPatchValidation() {
 async function p15ModelsAuthCliScope() {
   const envCtx = makeEnv("p15");
   try {
-    const help = await runOpenClaw(["models", "auth", "paste-api-key", "--help"], envCtx.env, {
+    const help = await runQuietCore(["models", "auth", "paste-api-key", "--help"], envCtx.env, {
       timeoutMs: 30000,
     });
     const text = help.stdout;
@@ -2063,12 +2063,12 @@ async function p16DiagnosticsNoLeak() {
 async function p17StaticMetadataAlignment() {
   const envCtx = makeEnv("p17");
   try {
-    const schema = await runOpenClaw(["config", "schema"], envCtx.env, { timeoutMs: 60000 });
+    const schema = await runQuietCore(["config", "schema"], envCtx.env, { timeoutMs: 60000 });
     const schemaText = schema.stdout;
     if (!schemaText.includes("pluginIntegration") || !schemaText.includes("integrationId")) {
       throw new Error("config schema does not expose pluginIntegration metadata");
     }
-    const secretsHelp = await runOpenClaw(["secrets", "configure", "--help"], envCtx.env, {
+    const secretsHelp = await runQuietCore(["secrets", "configure", "--help"], envCtx.env, {
       timeoutMs: 30000,
     });
     if (
@@ -2089,7 +2089,7 @@ async function p17StaticMetadataAlignment() {
 }
 
 async function main() {
-  console.log(`[info] runner=${resolveOpenClawRunner().label}`);
+  console.log(`[info] runner=${resolveQuietCoreRunner().label}`);
   console.log(`[info] results=${RESULTS_PATH}`);
   let runError;
   try {
@@ -2152,7 +2152,7 @@ async function main() {
   } finally {
     writeJson(RESULTS_PATH, {
       generatedAt: new Date().toISOString(),
-      runner: resolveOpenClawRunner().label,
+      runner: resolveQuietCoreRunner().label,
       results,
     });
   }

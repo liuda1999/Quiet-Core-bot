@@ -5,7 +5,7 @@ import type { PluginManifestRegistry } from "./manifest-registry.js";
 const mocks = vi.hoisted(() => {
   const loadManifestRegistry = vi.fn();
   return {
-    discoverOpenClawPlugins: vi.fn(() => ({ candidates: [], diagnostics: [] })),
+    discoverQuietCorePlugins: vi.fn(() => ({ candidates: [], diagnostics: [] })),
     loadBundledManifestRegistry: vi.fn(),
     loadPluginManifestRegistryForInstalledIndex: loadManifestRegistry,
     loadPluginManifestRegistryForPluginRegistry: loadManifestRegistry,
@@ -14,7 +14,7 @@ const mocks = vi.hoisted(() => {
 });
 
 vi.mock("./discovery.js", () => ({
-  discoverOpenClawPlugins: mocks.discoverOpenClawPlugins,
+  discoverQuietCorePlugins: mocks.discoverQuietCorePlugins,
 }));
 
 vi.mock("./manifest-registry.js", () => ({
@@ -86,8 +86,8 @@ function createPluginRecord(
 
 describe("resolvePluginConfigContractsById", () => {
   beforeEach(() => {
-    mocks.discoverOpenClawPlugins.mockReset();
-    mocks.discoverOpenClawPlugins.mockReturnValue({ candidates: [], diagnostics: [] });
+    mocks.discoverQuietCorePlugins.mockReset();
+    mocks.discoverQuietCorePlugins.mockReturnValue({ candidates: [], diagnostics: [] });
     mocks.loadBundledManifestRegistry.mockReset();
     mocks.loadBundledManifestRegistry.mockReturnValue(createRegistry([]));
     mocks.loadPluginManifestRegistryForInstalledIndex.mockReset();

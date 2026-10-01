@@ -1,5 +1,5 @@
 // Memory Core tests cover index plugin behavior.
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import type { MemoryPluginRuntime } from "quiet-core-bot/plugin-sdk/memory-core-host-runtime-core";
 import { createTestPluginApi } from "quiet-core-bot/plugin-sdk/plugin-test-api";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -90,7 +90,7 @@ describe("memory-core plugin runtime registration", () => {
 
   it("wires scoped memory search cleanup through the lazy runtime", async () => {
     const runtime = registerMemoryCoreRuntime();
-    const cfg = {} as OpenClawConfig;
+    const cfg = {} as QuietCoreConfig;
 
     await runtime.closeMemorySearchManager?.({ cfg, agentId: "main" });
 
@@ -106,7 +106,7 @@ describe("buildMemoryFlushPlan", () => {
         timeFormat: "12",
       },
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 
   it("replaces YYYY-MM-DD using user timezone and appends current time", () => {
     const plan = buildMemoryFlushPlan({

@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { withTempHome as withTempHomeBase } from "quiet-core-bot/plugin-sdk/test-env";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { CronJob } from "./types.js";
 
 /** Runs a test callback with an isolated Quiet Core bot home for cron tests. */
@@ -37,9 +37,9 @@ export async function writeSessionStoreEntries(
 export function makeCfg(
   home: string,
   storePath: string,
-  overrides: Partial<OpenClawConfig> = {},
-): OpenClawConfig {
-  const base: OpenClawConfig = {
+  overrides: Partial<QuietCoreConfig> = {},
+): QuietCoreConfig {
+  const base: QuietCoreConfig = {
     agents: {
       defaults: {
         model: "anthropic/claude-opus-4-6",
@@ -47,7 +47,7 @@ export function makeCfg(
       },
     },
     session: { store: storePath, mainKey: "main" },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
   return { ...base, ...overrides };
 }
 

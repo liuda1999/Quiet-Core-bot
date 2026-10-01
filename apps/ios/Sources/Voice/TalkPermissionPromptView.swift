@@ -35,7 +35,7 @@ struct TalkPermissionPromptView: View {
             HStack(alignment: .top, spacing: 12) {
                 Image(systemName: self.iconSystemName)
                     .font(.title3.weight(.semibold))
-                    .foregroundStyle(self.requestIsPending ? OpenClawBrand.warn : OpenClawBrand.accent)
+                    .foregroundStyle(self.requestIsPending ? QuietCoreBrand.warn : QuietCoreBrand.accent)
                     .frame(width: 28, height: 28)
 
                 VStack(alignment: .leading, spacing: 6) {
@@ -51,7 +51,7 @@ struct TalkPermissionPromptView: View {
             if let failureMessage = self.state.failureMessage {
                 Label(failureMessage, systemImage: "exclamationmark.triangle.fill")
                     .font(.footnote)
-                    .foregroundStyle(OpenClawBrand.danger)
+                    .foregroundStyle(QuietCoreBrand.danger)
                     .fixedSize(horizontal: false, vertical: true)
             }
 
@@ -99,7 +99,7 @@ struct TalkPermissionPromptView: View {
         .overlay {
             if self.style == .card || self.style == .sheet {
                 RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .stroke(OpenClawBrand.accent.opacity(0.20), lineWidth: 1)
+                    .stroke(QuietCoreBrand.accent.opacity(0.20), lineWidth: 1)
             }
         }
         .task(id: self.pollTaskKey) {

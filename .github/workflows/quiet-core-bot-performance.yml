@@ -1,6 +1,6 @@
-name: OpenClaw Performance
+name: QuietCore Performance
 
-run-name: ${{ inputs.dispatch_id != '' && format('OpenClaw Performance {0}', inputs.dispatch_id) || 'OpenClaw Performance' }}
+run-name: ${{ inputs.dispatch_id != '' && format('QuietCore Performance {0}', inputs.dispatch_id) || 'QuietCore Performance' }}
 
 on:
   schedule:
@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       target_ref:
-        description: OpenClaw ref to benchmark; defaults to the workflow ref
+        description: QuietCore ref to benchmark; defaults to the workflow ref
         required: false
         default: ""
         type: string
@@ -151,7 +151,7 @@ jobs:
             echo "present=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Resolve OpenClaw target ref
+      - name: Resolve QuietCore target ref
         id: target
         if: steps.lane.outputs.run == 'true'
         env:
@@ -169,17 +169,17 @@ jobs:
 
           encoded_ref="$(node -e 'process.stdout.write(encodeURIComponent(process.argv[1]))' "$requested")"
           if ! resolved_sha="$(gh api "repos/${GITHUB_REPOSITORY}/commits/${encoded_ref}" --jq '.sha')"; then
-            echo "::error::Unable to resolve OpenClaw target_ref '${requested}'." >&2
+            echo "::error::Unable to resolve QuietCore target_ref '${requested}'." >&2
             exit 1
           fi
           if [[ ! "$resolved_sha" =~ ^[0-9a-f]{40}$ ]]; then
-            echo "::error::OpenClaw target_ref '${requested}' resolved to invalid SHA '${resolved_sha}'." >&2
+            echo "::error::QuietCore target_ref '${requested}' resolved to invalid SHA '${resolved_sha}'." >&2
             exit 1
           fi
           echo "checkout_ref=${resolved_sha}" >> "$GITHUB_OUTPUT"
           echo "tested_ref=${requested}" >> "$GITHUB_OUTPUT"
 
-      - name: Checkout OpenClaw
+      - name: Checkout QuietCore
         if: steps.lane.outputs.run == 'true'
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
@@ -460,7 +460,7 @@ jobs:
             echo "Previous source performance baseline has no source directory." >> "$GITHUB_STEP_SUMMARY"
           fi
 
-      - name: Run OpenClaw source performance probes
+      - name: Run QuietCore source performance probes
         if: ${{ steps.lane.outputs.run == 'true' && matrix.lane == 'mock-provider' }}
         shell: bash
         run: |
@@ -473,7 +473,7 @@ jobs:
           mkdir -p "$SOURCE_PERF_DIR/mock-hello"
           if ! node -e "const fs=require('node:fs'); const scripts=require('./package.json').scripts||{}; process.exit(scripts['test:gateway:cpu-scenarios'] && scripts['test:extensions:memory'] && scripts.quiet-core-bot && fs.existsSync('scripts/bench-cli-startup.ts') && fs.existsSync('scripts/profile-extension-memory.mjs') ? 0 : 1)"; then
             cat > "$SOURCE_PERF_DIR/index.md" <<EOF
-          # OpenClaw Source Performance
+          # QuietCore Source Performance
 
           Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)
 
@@ -687,7 +687,7 @@ jobs:
             echo "No clawgrit report changes to publish."
             exit 0
           fi
-          git -C "$reports_root" commit -m "perf: add OpenClaw ${LANE_ID} report ${TESTED_SHA::12}"
+          git -C "$reports_root" commit -m "perf: add QuietCore ${LANE_ID} report ${TESTED_SHA::12}"
           for attempt in 1 2 3 4 5; do
             if git -C "$reports_root" push origin HEAD:main; then
               exit 0

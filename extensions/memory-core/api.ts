@@ -1,5 +1,5 @@
 // Memory Core API module exposes the plugin public contract.
-export type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+export type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 export type {
   MemoryEmbeddingProbeResult,
   MemoryProviderStatus,

@@ -5,7 +5,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { closeOpenClawStateDatabaseForTest } from "../../state/quiet-core-bot-state-db.js";
+import { closeQuietCoreStateDatabaseForTest } from "../../state/quiet-core-bot-state-db.js";
 import { withEnvAsync } from "../../test-utils/env.js";
 import { removeTestTempPath } from "../../test-utils/session-state-cleanup.js";
 import { testing as subagentAnnounceOutputTesting } from "../subagent-announce-output.js";
@@ -94,7 +94,7 @@ describe("subagents tool", () => {
 
     afterEach(async () => {
       subagentAnnounceOutputTesting.setDepsForTest();
-      closeOpenClawStateDatabaseForTest();
+      closeQuietCoreStateDatabaseForTest();
       if (tempStateDir) {
         await removeTestTempPath(tempStateDir);
         tempStateDir = null;

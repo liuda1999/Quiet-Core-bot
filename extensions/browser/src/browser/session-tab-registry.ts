@@ -1,5 +1,5 @@
 /**
- * In-memory registry that associates browser tabs with OpenClaw sessions for
+ * In-memory registry that associates browser tabs with QuietCore sessions for
  * cleanup on session end or idle sweeps.
  */
 import {

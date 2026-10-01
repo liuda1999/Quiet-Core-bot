@@ -1,4 +1,4 @@
-import OpenClawKit
+import QuietCoreKit
 import SwiftUI
 
 struct GatewayQuickSetupSheet: View {

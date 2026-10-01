@@ -1,6 +1,6 @@
 /** Tests command-scoped secret resolution from active runtime snapshots. */
 import { afterEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { resolveCommandSecretsFromActiveRuntimeSnapshot } from "./runtime-command-secrets.js";
 import { createEmptyRuntimeWebToolsMetadata } from "./runtime-fast-path.js";
 import { activateSecretsRuntimeSnapshotState } from "./runtime-state.js";
@@ -31,7 +31,7 @@ const forcedFallbackConfig = {
       },
     },
   },
-} as OpenClawConfig;
+} as QuietCoreConfig;
 const forcedWebProviderConfig = {
   tools: {
     web: {
@@ -54,12 +54,12 @@ const forcedWebProviderConfig = {
       },
     },
   },
-} as OpenClawConfig;
+} as QuietCoreConfig;
 
 discoverConfigSecretTargetsByIds(forcedFallbackConfig, new Set([firecrawlPath]));
 
 function activateMinimalSecretsRuntimeSnapshot(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   env: Record<string, string | undefined>;
 }) {
   const snapshot = {

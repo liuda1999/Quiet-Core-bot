@@ -2,7 +2,7 @@
  * Shared harness builders for gateway config method tests.
  */
 import { vi, type Mock } from "vitest";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { GatewayRequestHandlerOptions } from "./types.js";
 
 type UnknownMock = Mock<(...args: unknown[]) => unknown>;
@@ -29,7 +29,7 @@ function createGatewayLog(): GatewayLogMocks {
 }
 
 /** Creates a complete config snapshot shape for tests that exercise config writes. */
-export function createConfigWriteSnapshot(config: OpenClawConfig) {
+export function createConfigWriteSnapshot(config: QuietCoreConfig) {
   return {
     snapshot: {
       path: "/tmp/quiet-core-bot.json",

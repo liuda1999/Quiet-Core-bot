@@ -216,7 +216,7 @@ function Write-RestartLog {
   }
 }
 
-function Join-OpenClawProcessArguments {
+function Join-QuietCoreProcessArguments {
   param([string[]]$Arguments)
   ($Arguments | ForEach-Object {
     if ($_ -match "\\s") {
@@ -227,7 +227,7 @@ function Join-OpenClawProcessArguments {
   }) -join " "
 }
 
-function Invoke-OpenClawSchtasksWithTimeout {
+function Invoke-QuietCoreSchtasksWithTimeout {
   param(
     [string[]]$Arguments,
     [int]$TimeoutSeconds
@@ -236,7 +236,7 @@ function Invoke-OpenClawSchtasksWithTimeout {
   try {
     $startInfo = [System.Diagnostics.ProcessStartInfo]::new()
     $startInfo.FileName = "schtasks.exe"
-    $startInfo.Arguments = Join-OpenClawProcessArguments -Arguments $Arguments
+    $startInfo.Arguments = Join-QuietCoreProcessArguments -Arguments $Arguments
     $startInfo.UseShellExecute = $false
     $startInfo.RedirectStandardOutput = $true
     $startInfo.RedirectStandardError = $true
@@ -264,7 +264,7 @@ function Invoke-OpenClawSchtasksWithTimeout {
   }
 }
 
-function Get-OpenClawScheduledTaskState {
+function Get-QuietCoreScheduledTaskState {
   param([string]$TaskName)
   try {
     $task = Get-ScheduledTask -TaskName $TaskName -ErrorAction Stop
@@ -287,7 +287,7 @@ function Get-OpenClawScheduledTaskState {
   return "Unknown"
 }
 
-function Get-OpenClawListenerPids {
+function Get-QuietCoreListenerPids {
   param([int]$Port)
   $listenerPids = @()
 
@@ -315,7 +315,7 @@ function Get-OpenClawListenerPids {
   $listenerPids | Sort-Object -Unique
 }
 
-function Invoke-OpenClawStartupLauncher {
+function Invoke-QuietCoreStartupLauncher {
   $launcherPath = ${quotedLauncherPath}
   if (-not (Test-Path -LiteralPath $launcherPath)) {
     Write-RestartLog "quiet-core-bot restart startup launcher missing source=update path=$launcherPath"
@@ -336,9 +336,9 @@ $taskName = ${quotedTaskName}
 $port = ${port}
 Write-RestartLog "quiet-core-bot restart attempt source=update target=$taskName"
 
-$taskState = Get-OpenClawScheduledTaskState -TaskName $taskName
+$taskState = Get-QuietCoreScheduledTaskState -TaskName $taskName
 if ($taskState -eq "Running") {
-  $endStatus = Invoke-OpenClawSchtasksWithTimeout -Arguments @("/End", "/TN", $taskName) -TimeoutSeconds 10
+  $endStatus = Invoke-QuietCoreSchtasksWithTimeout -Arguments @("/End", "/TN", $taskName) -TimeoutSeconds 10
   if ($endStatus -ne 0) {
     Write-RestartLog "quiet-core-bot restart schtasks end did not complete cleanly source=update status=$endStatus"
   }
@@ -347,7 +347,7 @@ if ($taskState -eq "Running") {
 }
 
 for ($attempt = 1; $attempt -le 10; $attempt++) {
-  $listeners = @(Get-OpenClawListenerPids -Port $port)
+  $listeners = @(Get-QuietCoreListenerPids -Port $port)
   if ($listeners.Count -eq 0) {
     break
   }
@@ -367,9 +367,9 @@ for ($attempt = 1; $attempt -le 10; $attempt++) {
   Start-Sleep -Seconds 1
 }
 
-$status = Invoke-OpenClawSchtasksWithTimeout -Arguments @("/Run", "/TN", $taskName) -TimeoutSeconds 30
+$status = Invoke-QuietCoreSchtasksWithTimeout -Arguments @("/Run", "/TN", $taskName) -TimeoutSeconds 30
 if ($status -ne 0) {
-  $status = Invoke-OpenClawStartupLauncher
+  $status = Invoke-QuietCoreStartupLauncher
 }
 if ($status -eq 0) {
   Write-RestartLog "quiet-core-bot restart done source=update"

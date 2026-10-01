@@ -1,6 +1,6 @@
 // Tests status command defaults for thinking and reasoning display.
 import { beforeAll, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 
 vi.mock("../../agents/fast-mode.js", () => ({
   resolveFastModeState: () => ({ mode: false, enabled: false, source: "default" }),
@@ -37,7 +37,7 @@ vi.mock("./queue.js", async () => {
 
 const { buildStatusReply } = await import("./commands-status.js");
 
-async function buildKiraStatusReply(cfg: OpenClawConfig) {
+async function buildKiraStatusReply(cfg: QuietCoreConfig) {
   return await buildStatusReply({
     cfg,
     command: {
@@ -68,7 +68,7 @@ describe("buildStatusReply", () => {
       channels: {
         whatsapp: { allowFrom: ["*"] },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
   });
 
   it("shows per-agent thinkingDefault in the status card", async () => {
@@ -89,7 +89,7 @@ describe("buildStatusReply", () => {
       channels: {
         whatsapp: { allowFrom: ["*"] },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const reply = await buildKiraStatusReply(cfg);
 
@@ -119,7 +119,7 @@ describe("buildStatusReply", () => {
       channels: {
         whatsapp: { allowFrom: ["*"] },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const reply = await buildKiraStatusReply(cfg);
 
@@ -146,7 +146,7 @@ describe("buildStatusReply", () => {
       channels: {
         whatsapp: { allowFrom: ["*"] },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const reply = await buildKiraStatusReply(cfg);
 
@@ -175,7 +175,7 @@ describe("buildStatusReply", () => {
       channels: {
         whatsapp: { allowFrom: ["*"] },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const reply = await buildKiraStatusReply(cfg);
 
@@ -205,7 +205,7 @@ describe("buildStatusReply", () => {
       channels: {
         whatsapp: { allowFrom: ["*"] },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const reply = await buildKiraStatusReply(cfg);
 

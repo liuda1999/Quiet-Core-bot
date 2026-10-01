@@ -3,7 +3,7 @@
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import { withEnv } from "../../test-utils/env.js";
 import {
   hasGenerationToolAvailability,
@@ -18,7 +18,7 @@ import {
 // tests cover the real bundled contract loader.
 vi.mock("../../media/channel-inbound-roots.js", () => ({
   resolveChannelInboundAttachmentRootsForChannel: (params: {
-    cfg?: OpenClawConfig;
+    cfg?: QuietCoreConfig;
     channelId?: string | null;
     accountId?: string | null;
   }) => {

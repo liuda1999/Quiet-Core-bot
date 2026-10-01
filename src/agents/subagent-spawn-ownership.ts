@@ -3,7 +3,7 @@
  *
  * Resolves which session controls spawn state, thread binding, and completion delivery.
  */
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   resolveDisplaySessionKey,
   resolveInternalSessionKey,
@@ -19,7 +19,7 @@ export type SubagentSpawnOwnership = {
 
 /** Normalizes requester/completion owner aliases into internal and display session keys. */
 export function resolveSubagentSpawnOwnership(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentSessionKey?: string;
   completionOwnerKey?: string;
 }): SubagentSpawnOwnership {

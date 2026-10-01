@@ -1,4 +1,4 @@
-// Control Ui Mock Dev script supports OpenClaw repository automation.
+// Control Ui Mock Dev script supports QuietCore repository automation.
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createServer, type Plugin, type ViteDevServer } from "vite";
@@ -429,7 +429,7 @@ function createChatPickerScenario(): ControlUiMockGatewayScenario {
   });
   return {
     assistantAgentId: "quiet-core-bot-mock",
-    assistantName: "OpenClaw mock",
+    assistantName: "QuietCore mock",
     defaultAgentId: "quiet-core-bot-mock",
     historyMessages: buildScrollableChatHistory(baseTime),
     methodResponses: {

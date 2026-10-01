@@ -8,7 +8,7 @@ import type { ChatType } from "../../../channels/chat-type.js";
 import type { InboundEventKind } from "../../../channels/inbound-event/kind.js";
 import type { SessionEntry } from "../../../config/sessions.js";
 import type { ReplyToMode } from "../../../config/types.base.js";
-import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../config/types.quiet-core-bot.js";
 import type { PromptImageOrderEntry } from "../../../media/prompt-image-order.js";
 import type { PluginHookChannelContext } from "../../../plugins/hook-types.js";
 import type { InputProvenance } from "../../../sessions/input-provenance.js";
@@ -116,7 +116,7 @@ export type FollowupRun = {
     workspaceDir: string;
     /** Task working directory for runtime execution. Defaults to workspaceDir. */
     cwd?: string;
-    config: OpenClawConfig;
+    config: QuietCoreConfig;
     skillsSnapshot?: SkillSnapshot;
     provider: string;
     model: string;
@@ -184,7 +184,7 @@ export function completeFollowupRunLifecycle(run: Pick<FollowupRun, "queuedLifec
 }
 
 export type ResolveQueueSettingsParams = {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   channel?: string;
   sessionEntry?: SessionEntry;
   inlineMode?: QueueMode;

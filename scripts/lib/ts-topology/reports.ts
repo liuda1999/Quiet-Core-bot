@@ -1,4 +1,4 @@
-// Reports script supports OpenClaw repository automation.
+// Reports script supports QuietCore repository automation.
 import type { ReportModule, TopologyEnvelope, TopologyRecord } from "./types.js";
 
 function canonicalExportName(record: TopologyRecord): string {

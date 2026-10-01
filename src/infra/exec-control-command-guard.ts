@@ -36,26 +36,26 @@ function normalizeCommandBaseName(token: string | undefined): string {
   return base.replace(/\.(?:cmd|exe)$/u, "");
 }
 
-function isOpenClawCliCommandName(token: string | undefined): boolean {
+function isQuietCoreCliCommandName(token: string | undefined): boolean {
   const name = normalizeCommandBaseName(token);
   return name === "quiet-core-bot" || name === "quiet-core-bot";
 }
 
-function stripOpenClawPackageRunner(argv: string[]): string[] {
+function stripQuietCorePackageRunner(argv: string[]): string[] {
   const commandName = normalizeCommandBaseName(argv[0]);
-  if (isOpenClawCliCommandName(argv[0])) {
+  if (isQuietCoreCliCommandName(argv[0])) {
     return argv;
   }
   if (
     (commandName === "pnpm" || commandName === "npm" || commandName === "yarn") &&
-    isOpenClawCliCommandName(argv[1])
+    isQuietCoreCliCommandName(argv[1])
   ) {
     return argv.slice(1);
   }
   if (
     (commandName === "pnpm" || commandName === "npm" || commandName === "yarn") &&
     (argv[1] === "exec" || argv[1] === "dlx" || argv[1] === "run") &&
-    isOpenClawCliCommandName(argv[2])
+    isQuietCoreCliCommandName(argv[2])
   ) {
     return argv.slice(2);
   }
@@ -75,21 +75,21 @@ function stripOpenClawPackageRunner(argv: string[]): string[] {
         idx += 1;
       }
     }
-    if (isOpenClawCliCommandName(argv[idx])) {
+    if (isQuietCoreCliCommandName(argv[idx])) {
       return argv.slice(idx);
     }
   }
   return argv;
 }
 
-export function parseOpenClawChannelsLoginShellCommand(raw: string): boolean {
+export function parseQuietCoreChannelsLoginShellCommand(raw: string): boolean {
   const argv = splitShellArgs(raw);
   if (!argv) {
     return false;
   }
-  const openclawArgv = stripOpenClawPackageRunner(argv);
+  const openclawArgv = stripQuietCorePackageRunner(argv);
   return (
-    isOpenClawCliCommandName(openclawArgv[0]) &&
+    isQuietCoreCliCommandName(openclawArgv[0]) &&
     (openclawArgv[1] === "channels" || openclawArgv[1] === "channel") &&
     openclawArgv[2] === "login"
   );
@@ -118,7 +118,7 @@ export async function detectUnsafeExecControlShellCommand(
     if (parseExecApprovalShellCommand(candidate)) {
       return "approve";
     }
-    if (parseOpenClawChannelsLoginShellCommand(candidate)) {
+    if (parseQuietCoreChannelsLoginShellCommand(candidate)) {
       return "channel-login";
     }
   }

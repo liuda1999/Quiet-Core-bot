@@ -26,7 +26,7 @@
 | 6 | `check-env.sh` 实际执行 | 在制作机运行 | ✅ 通过（exit 0）：正确报告 repo 文件、Node v24.16.0、docker 29.8.0 + compose 5.5.1、pnpm 缺失警告、`.env` 缺失警告 |
 | 7 | `docker compose config` | 包内 `docker-compose.yml`（含 override 模板校验） | ✅ 通过（exit 0，语法与变量插值合法） |
 | 8 | **无真实密钥** | 自研扫描器（正则库）扫描全量文本文件，覆盖 `sk-`/`sk-ant-`/`xox*`/`ghp_`/`AKIA`/`AIza`/Telegram token/含密码 DSN/PEM 私钥块 | ✅ **通过**：命中均为**测试夹具与文档示例**（如 `sk-quiet-core-bot-release-check`、`sk-docker-cron-mcp-cleanup-test`、`C:\Users\Test\...`、`/Users/user/...`），**未发现任何真实凭据** |
-| 9 | **无本机绝对路径泄漏** | 同上（含 `C:\Users\<user>` 与 `/Users/<user>/` 模式） | ✅ 通过：包内不出现本包制作机的路径（`E:\OpenClaw\...`）；制作者已在打包前移除源码文档中唯一一处本机路径示例 |
+| 9 | **无本机绝对路径泄漏** | 同上（含 `C:\Users\<user>` 与 `/Users/<user>/` 模式） | ✅ 通过：包内不出现本包制作机的路径（`E:\QuietCore\...`）；制作者已在打包前移除源码文档中唯一一处本机路径示例 |
 | 10 | 交接文档与包内文件一致 | 解析 `HANDOVER.md` 中 64 处仓库相对路径引用并逐一核对 | ✅ 通过（剩余“未命中”项均为**通配符写法**如 `src/**/*.test.ts`，或**运行期生成**文件如 `docker-compose.extra.yml`，已在文档中说明） |
 | 11 | `.env.example` 完整 | 人工核对分组 | ✅ 存在且覆盖认证/provider/渠道/工具/语音（约 3.8 KB），无需新建 |
 

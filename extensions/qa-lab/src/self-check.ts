@@ -1,7 +1,7 @@
 // Qa Lab plugin module implements self check behavior.
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { renderQaMarkdownReport } from "quiet-core-bot/plugin-sdk/qa-runtime";
 import { createQaArtifactRunId } from "./artifact-run-id.js";
 import type { QaBusState } from "./bus-state.js";
@@ -33,7 +33,7 @@ export function resolveQaSelfCheckOutputPath(params?: { outputPath?: string; rep
 
 export async function runQaSelfCheckAgainstState(params: {
   state: QaBusState;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   transportId?: QaTransportId;
   outputPath?: string;
   repoRoot?: string;
@@ -79,7 +79,7 @@ export async function runQaSelfCheckAgainstState(params: {
     }
   });
   const report = renderQaMarkdownReport({
-    title: "OpenClaw QA E2E Self-Check",
+    title: "QuietCore QA E2E Self-Check",
     startedAt,
     finishedAt,
     checks,

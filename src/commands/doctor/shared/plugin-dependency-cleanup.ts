@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { resolveStateDir } from "../../../config/paths.js";
-import { resolveOpenClawPackageRootSync } from "../../../infra/quiet-core-bot-root.js";
+import { resolveQuietCorePackageRootSync } from "../../../infra/quiet-core-bot-root.js";
 import { resolveConfigDir, resolveUserPath } from "../../../utils.js";
 import { removeStalePluginRuntimeSymlinks } from "./plugin-runtime-symlinks.js";
 
@@ -182,7 +182,7 @@ function collectExplicitStageTargets(env: NodeJS.ProcessEnv): CleanupTarget[] {
   }));
 }
 
-async function hasOpenClawRenameResidue(root: string): Promise<boolean> {
+async function hasQuietCoreRenameResidue(root: string): Promise<boolean> {
   const nodeModulesRoot = path.join(root, "node_modules");
   if (await isFile(path.join(nodeModulesRoot, ".quiet-core-bot-rename-tmp"))) {
     return true;
@@ -217,7 +217,7 @@ async function hasExplicitStageDebrisProof(root: string): Promise<boolean> {
   if (children.some((childPath) => isRuntimeDependencyMarkerName(path.basename(childPath)))) {
     return true;
   }
-  return await hasOpenClawRenameResidue(root);
+  return await hasQuietCoreRenameResidue(root);
 }
 
 function filterLegacyStaleRootCandidates(
@@ -329,7 +329,7 @@ async function collectLegacyPluginDependencyTargetEntries(
 ): Promise<CleanupTarget[]> {
   const packageRoot =
     options.packageRoot ??
-    resolveOpenClawPackageRootSync({
+    resolveQuietCorePackageRootSync({
       argv1: process.argv[1],
       moduleUrl: import.meta.url,
       cwd: process.cwd(),
@@ -395,7 +395,7 @@ export async function cleanupLegacyPluginDependencyState(params: {
   const warnings: string[] = [];
   const packageRoot =
     params.packageRoot ??
-    resolveOpenClawPackageRootSync({
+    resolveQuietCorePackageRootSync({
       argv1: process.argv[1],
       moduleUrl: import.meta.url,
       cwd: process.cwd(),

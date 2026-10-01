@@ -1,6 +1,6 @@
 // Plugin config tests cover plugin config command parsing and output formatting.
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { setPluginEnabledInConfig } from "./plugins-config.js";
 
 describe("setPluginEnabledInConfig", () => {
@@ -11,7 +11,7 @@ describe("setPluginEnabledInConfig", () => {
           alpha: { enabled: false, custom: "x" },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const next = setPluginEnabledInConfig(config, "alpha", true);
 
@@ -22,7 +22,7 @@ describe("setPluginEnabledInConfig", () => {
   });
 
   it("creates a plugin entry when it does not exist", () => {
-    const config = {} as OpenClawConfig;
+    const config = {} as QuietCoreConfig;
 
     const next = setPluginEnabledInConfig(config, "beta", false);
 
@@ -46,7 +46,7 @@ describe("setPluginEnabledInConfig", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const disabled = setPluginEnabledInConfig(config, "signal", false);
     expect(disabled.channels?.signal).toEqual({

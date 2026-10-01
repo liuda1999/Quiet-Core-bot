@@ -8,7 +8,7 @@ import {
   getOrCreateSessionMcpRuntime,
 } from "../../agents/agent-bundle-mcp-tools.js";
 import * as bootstrapCache from "../../agents/bootstrap-cache.js";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import type { SessionEntry } from "../../config/sessions.js";
 import { formatZonedTimestamp } from "../../infra/format-time/format-datetime.ts";
 import {
@@ -516,7 +516,7 @@ describe("initSessionState thread forking", () => {
 
     const cfg = {
       session: { store: storePath },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const threadSessionKey = "agent:main:slack:channel:c1:thread:123";
     const threadLabel = "Slack thread #general: starter";
@@ -612,7 +612,7 @@ describe("initSessionState thread forking", () => {
 
     const cfg = {
       session: { store: storePath },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const first = await initSessionState({
       ctx: {
@@ -694,7 +694,7 @@ describe("initSessionState thread forking", () => {
 
     const cfg = {
       session: { store: storePath },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const threadSessionKey = "agent:main:slack:channel:c1:thread:456";
     const result = await initSessionState({
@@ -751,7 +751,7 @@ describe("initSessionState thread forking", () => {
 
     const cfg = {
       session: { store: storePath },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const threadSessionKey = "agent:main:slack:channel:c1:thread:estimated";
     const result = await initSessionState({
@@ -784,7 +784,7 @@ describe("initSessionState thread forking", () => {
 
     const cfg = {
       session: { store: storePath },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -806,7 +806,7 @@ describe("initSessionState thread forking", () => {
 
     const cfg = {
       session: { store: storePath },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     setActivePluginRegistry(createSessionConversationTestRegistry());
     try {
@@ -831,7 +831,7 @@ describe("initSessionState RawBody", () => {
   it("uses RawBody for command extraction and reset triggers when Body contains wrapped context", async () => {
     const root = await makeCaseDir("quiet-core-bot-rawbody-");
     const storePath = path.join(root, "sessions.json");
-    const cfg = { session: { store: storePath } } as OpenClawConfig;
+    const cfg = { session: { store: storePath } } as QuietCoreConfig;
 
     const statusResult = await initSessionState({
       ctx: {
@@ -868,7 +868,7 @@ describe("initSessionState RawBody", () => {
         store: storePath,
         resetTriggers: ["/new"],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const ctx = {
       RawBody: "/NEW KeepThisCase",
@@ -933,7 +933,7 @@ describe("initSessionState RawBody", () => {
         store: storePath,
         resetTriggers: ["/new"],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -992,7 +992,7 @@ describe("initSessionState RawBody", () => {
         store: storePath,
         resetTriggers: ["/new"],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -1048,7 +1048,7 @@ describe("initSessionState RawBody", () => {
 
     const cfg = {
       session: { store: storePath },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -1110,7 +1110,7 @@ describe("initSessionState RawBody", () => {
 
     const cfg = {
       session: { store: storePath },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -1174,7 +1174,7 @@ describe("initSessionState RawBody", () => {
         ChatType: "channel",
         SessionKey: sessionKey,
       },
-      cfg: { session: { store: storePath } } as OpenClawConfig,
+      cfg: { session: { store: storePath } } as QuietCoreConfig,
       commandAuthorized: true,
     });
 
@@ -1209,7 +1209,7 @@ describe("initSessionState RawBody", () => {
 
     const cfg = {
       session: { store: storePath },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -1259,7 +1259,7 @@ describe("initSessionState RawBody", () => {
 
     const cfg = {
       session: { store: storePath },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -1314,7 +1314,7 @@ describe("initSessionState RawBody", () => {
           allowFrom: ["*"],
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -1358,7 +1358,7 @@ describe("initSessionState RawBody", () => {
           allowFrom: ["*"],
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -1418,7 +1418,7 @@ describe("initSessionState RawBody", () => {
           allowFrom: ["*"],
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -1462,7 +1462,7 @@ describe("initSessionState RawBody", () => {
           allowFrom: ["*"],
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -1520,7 +1520,7 @@ describe("initSessionState RawBody", () => {
           allowFrom: ["*"],
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     sessionBindingTesting.resetSessionBindingAdaptersForTests();
     registerSessionBindingAdapter({
@@ -1605,7 +1605,7 @@ describe("initSessionState RawBody", () => {
           allowFrom: ["*"],
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -1633,7 +1633,7 @@ describe("initSessionState RawBody", () => {
     const targetSessionKey = "agent:main:main";
     const cfg = {
       session: { store: storePath },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     setMinimalCurrentConversationBindingRegistryForTests();
     registerCurrentConversationBindingAdapterForTest({
@@ -1693,7 +1693,7 @@ describe("initSessionState RawBody", () => {
         },
       });
 
-      const cfg = {} as OpenClawConfig;
+      const cfg = {} as QuietCoreConfig;
       const result = await initSessionState({
         ctx: {
           Body: "hello",
@@ -1787,7 +1787,7 @@ describe("initSessionState RawBody", () => {
       },
       cfg: {
         session: { store: storePath },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       commandAuthorized: true,
     });
 
@@ -1829,7 +1829,7 @@ describe("initSessionState reset policy", () => {
       sessionKey: existingSessionId,
     });
 
-    const cfg = { session: { store: storePath } } as OpenClawConfig;
+    const cfg = { session: { store: storePath } } as QuietCoreConfig;
     const result = await initSessionState({
       ctx: { Body: "hello", SessionKey: sessionKey },
       cfg,
@@ -1867,7 +1867,7 @@ describe("initSessionState reset policy", () => {
       },
     });
 
-    const cfg = { session: { store: storePath } } as OpenClawConfig;
+    const cfg = { session: { store: storePath } } as QuietCoreConfig;
     const result = await initSessionState({
       ctx: { Body: "hello", SessionKey: sessionKey },
       cfg,
@@ -1897,7 +1897,7 @@ describe("initSessionState reset policy", () => {
         store: storePath,
         reset: { mode: "daily", atHour: 4, idleMinutes: 30 },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = await initSessionState({
       ctx: { Body: "hello", SessionKey: sessionKey },
       cfg,
@@ -1927,7 +1927,7 @@ describe("initSessionState reset policy", () => {
         store: storePath,
         reset: { mode: "daily", atHour: 4, idleMinutes: 30 },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = await initSessionState({
       ctx: { Body: "hello", SessionKey: sessionKey, Provider: "internal", Surface: "internal" },
       cfg,
@@ -1958,7 +1958,7 @@ describe("initSessionState reset policy", () => {
         store: storePath,
         reset: { mode: "daily", atHour: 4, idleMinutes: 30 },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = await initSessionState({
       ctx: { Body: "hello", SessionKey: sessionKey, Provider: "internal", Surface: "internal" },
       cfg,
@@ -1990,7 +1990,7 @@ describe("initSessionState reset policy", () => {
         store: storePath,
         reset: { mode: "daily", atHour: 4, idleMinutes: 30 },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = await initSessionState({
       ctx: { Body: "hello", SessionKey: sessionKey, Provider: "internal", Surface: "internal" },
       cfg,
@@ -2026,7 +2026,7 @@ describe("initSessionState reset policy", () => {
         store: storePath,
         reset: { mode: "idle", idleMinutes: 30 },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = await initSessionState({
       ctx: { Body: "hello", SessionKey: sessionKey },
       cfg,
@@ -2064,7 +2064,7 @@ describe("initSessionState reset policy", () => {
       },
     });
 
-    const cfg = { session: { store: storePath } } as OpenClawConfig;
+    const cfg = { session: { store: storePath } } as QuietCoreConfig;
     const result = await initSessionState({
       ctx: { Body: "hello", SessionKey: sessionKey },
       cfg,
@@ -2163,7 +2163,7 @@ describe("initSessionState reset policy", () => {
       transcriptMtimeMs: now + scenario.transcriptMtimeOffsetMs,
     });
 
-    const cfg = { session: { store: storePath } } as OpenClawConfig;
+    const cfg = { session: { store: storePath } } as QuietCoreConfig;
     const result = await initSessionState({
       ctx: { Body: "hello", SessionKey: scenario.sessionKey },
       cfg,
@@ -2209,7 +2209,7 @@ describe("initSessionState reset policy", () => {
         store: storePath,
         reset: { mode: "daily", atHour: 4, idleMinutes: 30 },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = await initSessionState({
       ctx: {
         Body: "/reset soft",
@@ -2249,7 +2249,7 @@ describe("initSessionState reset policy", () => {
         store: storePath,
         reset: { mode: "daily", atHour: 4, idleMinutes: 30 },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = await initSessionState({
       ctx: {
         Body: "/reset: soft",
@@ -2289,7 +2289,7 @@ describe("initSessionState reset policy", () => {
         store: storePath,
         reset: { mode: "daily", atHour: 4, idleMinutes: 30 },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = await initSessionState({
       ctx: {
         Body: "/reset soft\nre-read persona files",
@@ -2331,7 +2331,7 @@ describe("initSessionState reset policy", () => {
         CommandBody: body,
         SessionKey: sessionKey,
       },
-      cfg: { session: { store: storePath } } as OpenClawConfig,
+      cfg: { session: { store: storePath } } as QuietCoreConfig,
       commandAuthorized: true,
     });
 
@@ -2360,7 +2360,7 @@ describe("initSessionState reset policy", () => {
         store: storePath,
         reset: { mode: "daily", atHour: 4, idleMinutes: 30 },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = await initSessionState({
       ctx: {
         Body: "/reset soft",
@@ -2403,7 +2403,7 @@ describe("initSessionState reset policy", () => {
         reset: { mode: "daily", atHour: 4 },
         resetByType: { thread: { mode: "idle", idleMinutes: 180 } },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = await initSessionState({
       ctx: { Body: "reply", SessionKey: sessionKey, ThreadLabel: "Slack thread" },
       cfg,
@@ -2433,7 +2433,7 @@ describe("initSessionState reset policy", () => {
         store: storePath,
         resetByType: { thread: { mode: "idle", idleMinutes: 180 } },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = await initSessionState({
       ctx: { Body: "reply", SessionKey: sessionKey, ThreadLabel: "Discord thread" },
       cfg,
@@ -2463,7 +2463,7 @@ describe("initSessionState reset policy", () => {
         store: storePath,
         resetByType: { thread: { mode: "idle", idleMinutes: 60 } },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = await initSessionState({
       ctx: { Body: "hello", SessionKey: sessionKey },
       cfg,
@@ -2493,7 +2493,7 @@ describe("initSessionState reset policy", () => {
         store: storePath,
         idleMinutes: 240,
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = await initSessionState({
       ctx: { Body: "hello", SessionKey: sessionKey },
       cfg,
@@ -2528,7 +2528,7 @@ describe("initSessionState browser tab cleanup", () => {
         store: storePath,
         reset: { mode: "daily", atHour: 4, idleMinutes: 30 },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = await initSessionState({
       ctx: { Body: "hello", SessionKey: sessionKey },
       cfg,
@@ -2562,7 +2562,7 @@ describe("initSessionState browser tab cleanup", () => {
         store: storePath,
         reset: { mode: "daily", atHour: 4, idleMinutes: 30 },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = await initSessionState({
       ctx: { Body: "hello", SessionKey: sessionKey },
       cfg,
@@ -2592,7 +2592,7 @@ describe("initSessionState browser tab cleanup", () => {
         store: storePath,
         reset: { mode: "daily", atHour: 4, idleMinutes: 30 },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = await initSessionState({
       ctx: { Body: "hello", SessionKey: sessionKey },
       cfg,
@@ -2617,7 +2617,7 @@ describe("initSessionState browser tab cleanup", () => {
 
     const cfg = {
       session: { store: storePath, idleMinutes: 999 },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = await initSessionState({
       ctx: {
         Body: "/new",
@@ -2643,7 +2643,7 @@ describe("initSessionState browser tab cleanup", () => {
 
     const cfg = {
       session: { store: storePath, idleMinutes: 999 },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = await initSessionState({
       ctx: {
         Body: "hello",
@@ -2680,7 +2680,7 @@ describe("initSessionState channel reset overrides", () => {
         resetByType: { direct: { mode: "idle", idleMinutes: 10 } },
         resetByChannel: { discord: { mode: "idle", idleMinutes: 10080 } },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -2711,7 +2711,7 @@ describe("initSessionState reset triggers in WhatsApp groups", () => {
     });
   }
 
-  function makeCfg(params: { storePath: string; allowFrom: string[] }): OpenClawConfig {
+  function makeCfg(params: { storePath: string; allowFrom: string[] }): QuietCoreConfig {
     return {
       session: { store: params.storePath, idleMinutes: 999 },
       channels: {
@@ -2720,7 +2720,7 @@ describe("initSessionState reset triggers in WhatsApp groups", () => {
           groupPolicy: "open",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
   }
 
   it("applies WhatsApp group reset authorization across sender variants", async () => {
@@ -2859,7 +2859,7 @@ describe("initSessionState reset triggers in Slack channels", () => {
     });
     const cfg = {
       session: { store: storePath, idleMinutes: 999 },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -2935,7 +2935,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
 
       const cfg = {
         session: { store: storePath, idleMinutes: 999 },
-      } as OpenClawConfig;
+      } as QuietCoreConfig;
 
       const result = await initSessionState({
         ctx: {
@@ -3000,7 +3000,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
         },
         cfg: {
           session: { store: storePath, idleMinutes: 999 },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         commandAuthorized: true,
       });
 
@@ -3063,7 +3063,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
 
       const cfg = {
         session: { store: storePath, idleMinutes: 999 },
-      } as OpenClawConfig;
+      } as QuietCoreConfig;
 
       const result = await initSessionState({
         ctx: {
@@ -3134,7 +3134,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
 
       const cfg = {
         session: { store: storePath, idleMinutes: 999 },
-      } as OpenClawConfig;
+      } as QuietCoreConfig;
 
       const result = await initSessionState({
         ctx: {
@@ -3192,7 +3192,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
 
       const cfg = {
         session: { store: storePath, idleMinutes: 999 },
-      } as OpenClawConfig;
+      } as QuietCoreConfig;
 
       const result = await initSessionState({
         ctx: {
@@ -3266,7 +3266,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       commandAuthorized: true,
     });
 
@@ -3336,7 +3336,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
 
       const cfg = {
         session: { store: storePath, idleMinutes: 999 },
-      } as OpenClawConfig;
+      } as QuietCoreConfig;
 
       const result = await initSessionState({
         ctx: {
@@ -3432,7 +3432,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
 
       const cfg = {
         session: { store: storePath, idleMinutes: 999 },
-      } as OpenClawConfig;
+      } as QuietCoreConfig;
 
       const result = await initSessionState({
         ctx: {
@@ -3471,7 +3471,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
 
     const cfg = {
       session: { store: storePath, idleMinutes: 999 },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -3516,7 +3516,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
 
     const cfg = {
       session: { store: storePath, idleMinutes: 999 },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -3551,7 +3551,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
 
     const cfg = {
       session: { store: storePath, idleMinutes: 999 },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -3587,7 +3587,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
 
     const cfg = {
       session: { store: storePath, idleMinutes: 999 },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -3635,7 +3635,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
       });
       await fs.writeFile(transcriptPath, '{"type":"message"}\n', "utf8");
 
-      const cfg = { session: { store: storePath } } as OpenClawConfig;
+      const cfg = { session: { store: storePath } } as QuietCoreConfig;
       const result = await initSessionState({
         ctx: {
           Body: "hello",
@@ -3696,7 +3696,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
       });
       await fs.writeFile(transcriptPath, '{"type":"message"}\n', "utf8");
 
-      const cfg = { session: { store: storePath } } as OpenClawConfig;
+      const cfg = { session: { store: storePath } } as QuietCoreConfig;
       const result = await initSessionState({
         ctx: {
           Body: "hello",
@@ -3738,7 +3738,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
         store: storePath,
         reset: { mode: "idle", idleMinutes: 1 },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     await writeSessionStoreFast(storePath, {
       [sessionKey]: {
@@ -3783,7 +3783,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
         store: storePath,
         reset: { mode: "idle", idleMinutes: 1 },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     await writeSessionStoreFast(storePath, {
       [sessionKey]: {
@@ -3826,7 +3826,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
 
     const cfg = {
       session: { store: storePath, idleMinutes: 0 },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -3862,7 +3862,7 @@ describe("drainFormattedSystemEvents", () => {
       enqueueSystemEvent("Model switched.", { sessionKey: "agent:main:main" });
 
       const result = await drainFormattedSystemEvents({
-        cfg: {} as OpenClawConfig,
+        cfg: {} as QuietCoreConfig,
         sessionKey: "agent:main:main",
         isMainSession: true,
         isNewSession: false,
@@ -3882,7 +3882,7 @@ describe("drainFormattedSystemEvents", () => {
     ]);
 
     const result = await drainFormattedSystemEvents({
-      cfg: { channels: {} } as OpenClawConfig,
+      cfg: { channels: {} } as QuietCoreConfig,
       sessionKey: "agent:main:main",
       isMainSession: true,
       isNewSession: true,
@@ -3907,7 +3907,7 @@ describe("drainFormattedSystemEvents", () => {
       enqueueSystemEvent("Model switched.", { sessionKey: "agent:main:main" });
 
       const result = await drainFormattedSystemEvents({
-        cfg: {} as OpenClawConfig,
+        cfg: {} as QuietCoreConfig,
         sessionKey: "agent:main:main",
         isMainSession: true,
         isNewSession: false,
@@ -3931,7 +3931,7 @@ describe("drainFormattedSystemEvents", () => {
       });
 
       const result = await drainFormattedSystemEvents({
-        cfg: {} as OpenClawConfig,
+        cfg: {} as QuietCoreConfig,
         sessionKey: "agent:main:main",
         isMainSession: true,
         isNewSession: false,
@@ -4544,7 +4544,7 @@ describe("persistSessionUsageUpdate", () => {
       },
     });
 
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       models: {
         providers: {
           openai: {
@@ -4742,7 +4742,7 @@ describe("persistSessionUsageUpdate", () => {
             },
           },
         },
-      } satisfies OpenClawConfig,
+      } satisfies QuietCoreConfig,
       usage: { input: 5_107, output: 1_827, cacheRead: 1_536, cacheWrite: 0 },
       lastCallUsage: { input: 5_107, output: 1_827, cacheRead: 1_536, cacheWrite: 0 },
       providerUsed: "openai",
@@ -4758,7 +4758,7 @@ describe("persistSessionUsageUpdate", () => {
 describe("initSessionState stale threadId fallback", () => {
   it("does not inherit lastThreadId from a previous thread interaction in non-thread sessions", async () => {
     const storePath = await createStorePath("stale-thread-");
-    const cfg = { session: { store: storePath } } as OpenClawConfig;
+    const cfg = { session: { store: storePath } } as QuietCoreConfig;
 
     // First interaction: inside a DM topic (thread session)
     const threadResult = await initSessionState({
@@ -4788,7 +4788,7 @@ describe("initSessionState stale threadId fallback", () => {
 
   it("preserves explicit transport thread routing in non-thread sessions", async () => {
     const storePath = await createStorePath("transport-thread-");
-    const cfg = { session: { store: storePath } } as OpenClawConfig;
+    const cfg = { session: { store: storePath } } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -4809,7 +4809,7 @@ describe("initSessionState stale threadId fallback", () => {
 
   it("preserves lastThreadId within the same thread session", async () => {
     const storePath = await createStorePath("preserve-thread-");
-    const cfg = { session: { store: storePath } } as OpenClawConfig;
+    const cfg = { session: { store: storePath } } as QuietCoreConfig;
 
     // First message in thread
     await initSessionState({
@@ -4855,7 +4855,7 @@ describe("initSessionState dmScope delivery migration", () => {
     });
     const cfg = {
       session: { store: storePath, dmScope: "per-channel-peer" },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -4902,7 +4902,7 @@ describe("initSessionState dmScope delivery migration", () => {
     });
     const cfg = {
       session: { store: storePath, dmScope: "per-channel-peer" },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     await initSessionState({
       ctx: {
@@ -4961,7 +4961,7 @@ describe("initSessionState internal channel routing preservation", () => {
         },
       },
     });
-    const cfg = { session: { store: storePath } } as OpenClawConfig;
+    const cfg = { session: { store: storePath } } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -5025,7 +5025,7 @@ describe("initSessionState internal channel routing preservation", () => {
         updatedAt: Date.now(),
       },
     });
-    const cfg = { session: { store: storePath } } as OpenClawConfig;
+    const cfg = { session: { store: storePath } } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -5067,7 +5067,7 @@ describe("initSessionState internal channel routing preservation", () => {
         },
       },
     });
-    const cfg = { session: { store: storePath } } as OpenClawConfig;
+    const cfg = { session: { store: storePath } } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -5114,7 +5114,7 @@ describe("initSessionState internal channel routing preservation", () => {
         },
       },
     });
-    const cfg = { session: { store: storePath } } as OpenClawConfig;
+    const cfg = { session: { store: storePath } } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -5153,7 +5153,7 @@ describe("initSessionState internal channel routing preservation", () => {
     });
     const cfg = {
       session: { store: storePath, dmScope: "per-channel-peer" },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -5187,7 +5187,7 @@ describe("initSessionState internal channel routing preservation", () => {
     });
     const cfg = {
       session: { store: storePath, dmScope: "per-channel-peer" },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -5222,7 +5222,7 @@ describe("initSessionState internal channel routing preservation", () => {
         },
       },
     });
-    const cfg = { session: { store: storePath } } as OpenClawConfig;
+    const cfg = { session: { store: storePath } } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -5244,7 +5244,7 @@ describe("initSessionState internal channel routing preservation", () => {
   it("uses session key channel hint when first turn is internal webchat", async () => {
     const storePath = await createStorePath("session-key-channel-hint-");
     const sessionKey = "agent:main:telegram:group:98765";
-    const cfg = { session: { store: storePath } } as OpenClawConfig;
+    const cfg = { session: { store: storePath } } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -5262,7 +5262,7 @@ describe("initSessionState internal channel routing preservation", () => {
 
   it("keeps internal route when there is no persisted external fallback", async () => {
     const storePath = await createStorePath("no-external-fallback-");
-    const cfg = { session: { store: storePath } } as OpenClawConfig;
+    const cfg = { session: { store: storePath } } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -5281,7 +5281,7 @@ describe("initSessionState internal channel routing preservation", () => {
 
   it("keeps webchat channel for webchat/main sessions", async () => {
     const storePath = await createStorePath("preserve-webchat-main-");
-    const cfg = { session: { store: storePath } } as OpenClawConfig;
+    const cfg = { session: { store: storePath } } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -5313,7 +5313,7 @@ describe("initSessionState internal channel routing preservation", () => {
         },
       },
     });
-    const cfg = { session: { store: storePath } } as OpenClawConfig;
+    const cfg = { session: { store: storePath } } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -5346,7 +5346,7 @@ describe("initSessionState internal channel routing preservation", () => {
         },
       },
     });
-    const cfg = { session: { store: storePath } } as OpenClawConfig;
+    const cfg = { session: { store: storePath } } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {
@@ -5374,7 +5374,7 @@ describe("initSessionState internal channel routing preservation", () => {
           defaultAccount: "work",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const result = await initSessionState({
       ctx: {

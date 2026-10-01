@@ -3,7 +3,7 @@
  */
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { resetConfigRuntimeState, setRuntimeConfigSnapshot } from "../config/config.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import {
   resolveStorePath,
   saveSessionStore,
@@ -99,7 +99,7 @@ async function withSingleRowCacheStore(
   run: (context: SingleRowCacheContext) => Promise<void>,
 ): Promise<void> {
   await withStateDirEnv(statePrefix, async () => {
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       agents: {
         list: [
           {
@@ -110,7 +110,7 @@ async function withSingleRowCacheStore(
         ],
         defaults: { model: { primary: TEST_MODEL } },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     setRuntimeConfigSnapshot(cfg, cfg);
     await run({
       now: Math.floor(Date.now() / 1_000) * 1_000 + 100,
@@ -250,7 +250,7 @@ describe("single gateway session row child-session cache", () => {
         const store: Record<string, SessionEntry> = {
           "agent:main:discord:channel:parent": parentSession("parent", now),
         };
-        const cfg: OpenClawConfig = {
+        const cfg: QuietCoreConfig = {
           agents: {
             list: [
               {
@@ -261,7 +261,7 @@ describe("single gateway session row child-session cache", () => {
             ],
             defaults: { model: { primary: TEST_MODEL } },
           },
-        } as OpenClawConfig;
+        } as QuietCoreConfig;
 
         const syncListed = listSessionsFromStore({
           cfg,

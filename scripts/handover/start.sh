@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# OpenClaw handover · start / stop / restart / status for BOTH run modes.
+# QuietCore handover · start / stop / restart / status for BOTH run modes.
 #
 # Usage:
 #   bash scripts/handover/start.sh  [docker|node]   # default: docker

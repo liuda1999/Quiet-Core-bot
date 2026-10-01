@@ -1,5 +1,5 @@
 import Foundation
-import OpenClawKit
+import QuietCoreKit
 import Testing
 
 private let iOSSilenceTimeoutMs = 900

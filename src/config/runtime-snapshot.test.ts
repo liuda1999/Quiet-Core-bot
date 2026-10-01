@@ -14,7 +14,7 @@ import {
   setRuntimeConfigSnapshot,
   setRuntimeConfigSnapshotRefreshHandler,
 } from "./runtime-snapshot.js";
-import type { OpenClawConfig } from "./types.js";
+import type { QuietCoreConfig } from "./types.js";
 
 function resetRuntimeConfigState(): void {
   setRuntimeConfigSnapshotRefreshHandler(null);
@@ -29,7 +29,7 @@ describe("runtime snapshot state", () => {
   it("pins the first successful load in memory until the snapshot is cleared", () => {
     let freshPort = 18789;
     let loadCount = 0;
-    const loadFresh = (): OpenClawConfig => {
+    const loadFresh = (): QuietCoreConfig => {
       loadCount += 1;
       return { gateway: { port: freshPort } };
     };
@@ -47,7 +47,7 @@ describe("runtime snapshot state", () => {
   });
 
   it("returns the source snapshot when runtime snapshot is active", () => {
-    const sourceConfig: OpenClawConfig = {
+    const sourceConfig: QuietCoreConfig = {
       models: {
         providers: {
           openai: {
@@ -58,7 +58,7 @@ describe("runtime snapshot state", () => {
         },
       },
     };
-    const runtimeConfig: OpenClawConfig = {
+    const runtimeConfig: QuietCoreConfig = {
       models: {
         providers: {
           openai: {
@@ -75,8 +75,8 @@ describe("runtime snapshot state", () => {
   });
 
   it("tracks snapshot metadata and cache keys across runtime refreshes", () => {
-    const firstConfig: OpenClawConfig = { gateway: { port: 18789 } };
-    const secondConfig: OpenClawConfig = { gateway: { port: 19001 } };
+    const firstConfig: QuietCoreConfig = { gateway: { port: 18789 } };
+    const secondConfig: QuietCoreConfig = { gateway: { port: 19001 } };
 
     setRuntimeConfigSnapshot(firstConfig);
     const firstMetadata = getRuntimeConfigSnapshotMetadata();
@@ -95,7 +95,7 @@ describe("runtime snapshot state", () => {
   });
 
   it("selects runtime config only when input still matches the runtime source", () => {
-    const sourceConfig: OpenClawConfig = {
+    const sourceConfig: QuietCoreConfig = {
       models: {
         providers: {
           openai: {
@@ -106,7 +106,7 @@ describe("runtime snapshot state", () => {
         },
       },
     };
-    const runtimeConfig: OpenClawConfig = {
+    const runtimeConfig: QuietCoreConfig = {
       models: {
         providers: {
           openai: {
@@ -117,7 +117,7 @@ describe("runtime snapshot state", () => {
         },
       },
     };
-    const scopedResolvedConfig: OpenClawConfig = {
+    const scopedResolvedConfig: QuietCoreConfig = {
       ...runtimeConfig,
       tools: {
         experimental: {
@@ -152,10 +152,10 @@ describe("runtime snapshot state", () => {
 
   it("refreshes both snapshots from disk after a write when source + runtime snapshots exist", async () => {
     const notifyCommittedWrite = vi.fn();
-    const loadFreshConfig = vi.fn<() => OpenClawConfig>(() => ({
+    const loadFreshConfig = vi.fn<() => QuietCoreConfig>(() => ({
       gateway: { auth: { mode: "token" } },
     }));
-    const nextSourceConfig: OpenClawConfig = {
+    const nextSourceConfig: QuietCoreConfig = {
       gateway: { auth: { mode: "token" } },
       models: {
         providers: {
@@ -223,7 +223,7 @@ describe("runtime snapshot state", () => {
 
   it("keeps the last-known-good runtime snapshot active while specialized refresh is pending", async () => {
     const notifyCommittedWrite = vi.fn();
-    const loadFreshConfig = vi.fn<() => OpenClawConfig>(() => ({
+    const loadFreshConfig = vi.fn<() => QuietCoreConfig>(() => ({
       gateway: { auth: { mode: "token" } },
     }));
     let releaseRefresh: (() => void) | undefined;
@@ -298,7 +298,7 @@ describe("runtime snapshot state", () => {
   });
 
   it("notifies registered write listeners with committed runtime snapshots", () => {
-    const seen: Array<{ configPath: string; runtimeConfig: OpenClawConfig }> = [];
+    const seen: Array<{ configPath: string; runtimeConfig: QuietCoreConfig }> = [];
     const unsubscribe = registerRuntimeConfigWriteListener((event) => {
       seen.push({
         configPath: event.configPath,

@@ -3,17 +3,17 @@
  *
  * Maps runtime/session surfaces to the fallback tool text and workflow hints that belong in prompts.
  */
-import { isOpenClawMainPromptSurface } from "../plugins/agent-prompt-surface-kind.js";
+import { isQuietCoreMainPromptSurface } from "../plugins/agent-prompt-surface-kind.js";
 import type { AgentPromptSurfaceKind } from "../plugins/types.js";
 import { isAcpSessionKey, isSubagentSessionKey } from "../routing/session-key.js";
 
 /** Builds fallback tool guidance when a runtime cannot render the structured tool list. */
-export function buildOpenClawToolFallbackText(params: {
+export function buildQuietCoreToolFallbackText(params: {
   surface: AgentPromptSurfaceKind;
   execToolName: string;
   processToolName: string;
 }): string {
-  if (isOpenClawMainPromptSurface(params.surface)) {
+  if (isQuietCoreMainPromptSurface(params.surface)) {
     return [
       "Quiet Core bot lists the standard tools above. This runtime enables:",
       "- grep: search file contents for patterns",
@@ -40,11 +40,11 @@ export function buildOpenClawToolFallbackText(params: {
 }
 
 /** Returns whether the main Quiet Core bot prompt should include workflow hints around the tool list. */
-export function shouldRenderOpenClawToolWorkflowHints(params: {
+export function shouldRenderQuietCoreToolWorkflowHints(params: {
   surface: AgentPromptSurfaceKind;
   hasToolList: boolean;
 }): boolean {
-  return isOpenClawMainPromptSurface(params.surface);
+  return isQuietCoreMainPromptSurface(params.surface);
 }
 
 /** Maps a session key to the prompt surface used for tool guidance and runtime behavior. */

@@ -188,7 +188,7 @@ describe("Hermes migration file and skill items", () => {
     expect(plannedLogs?.status).toBe("planned");
     expect(plan.items.find((item) => item.id === "archive:auth.json")).toBeUndefined();
     expect(plan.warnings).toEqual([
-      "Some Hermes files are archive-only. They will be copied into the migration report for manual review, not loaded into OpenClaw.",
+      "Some Hermes files are archive-only. They will be copied into the migration report for manual review, not loaded into QuietCore.",
     ]);
 
     const result = await provider.apply(makeContext({ source, stateDir, workspaceDir, reportDir }));

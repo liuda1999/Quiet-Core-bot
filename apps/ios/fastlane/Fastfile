@@ -9,7 +9,7 @@ require "digest/md5"
 
 default_platform(:ios)
 
-APP_STORE_APP_IDENTIFIER = "ai.openclawfoundation.app"
+APP_STORE_APP_IDENTIFIER = "ai.quiet-core-botfoundation.app"
 DEFAULT_APP_STORE_CONNECT_KEYCHAIN_SERVICE = "openclaw-app-store-connect-key"
 DEFAULT_SNAPSHOT_DEVICE_FAMILIES = [
   {
@@ -377,7 +377,7 @@ def capture_watch_screenshot
   output_dir = File.join(ios_root, "fastlane", "screenshots", "en-US")
   output_path = File.join(output_dir, "#{device_name}-01-now-face.png")
   derived_data_path = File.join(ios_root, "build", "WatchScreenshotDerivedData")
-  app_path = File.join(derived_data_path, "Build", "Products", "Debug-watchsimulator", "OpenClawWatchApp.app")
+  app_path = File.join(derived_data_path, "Build", "Products", "Debug-watchsimulator", "QuietCoreWatchApp.app")
 
   FileUtils.mkdir_p(output_dir)
   Dir[File.join(output_dir, "Apple Watch*-*.png")].each { |path| FileUtils.rm_f(path) }
@@ -389,9 +389,9 @@ def capture_watch_screenshot
     xcodebuild_shell_join([
       "xcodebuild",
       "-project",
-      File.join(ios_root, "OpenClaw.xcodeproj"),
+      File.join(ios_root, "QuietCore.xcodeproj"),
       "-scheme",
-      "OpenClawWatchApp",
+      "QuietCoreWatchApp",
       "-configuration",
       "Debug",
       "-destination",
@@ -1135,11 +1135,11 @@ end
 
 def build_app_store_release(context)
   version = context[:version]
-  project_path = File.join(ios_root, "OpenClaw.xcodeproj")
+  project_path = File.join(ios_root, "QuietCore.xcodeproj")
   output_directory = File.join(ios_root, "build", "app-store")
-  archive_path = File.join(output_directory, "OpenClaw-#{version}.xcarchive")
+  archive_path = File.join(output_directory, "QuietCore-#{version}.xcarchive")
   export_options_path = File.join(output_directory, "ExportOptions.plist")
-  output_name = "OpenClaw-#{version}.ipa"
+  output_name = "QuietCore-#{version}.ipa"
   expected_ipa_path = File.join(output_directory, output_name)
 
   FileUtils.mkdir_p(output_directory)
@@ -1153,7 +1153,7 @@ def build_app_store_release(context)
       "-project",
       project_path,
       "-scheme",
-      "OpenClaw",
+      "QuietCore",
       "-configuration",
       "Release",
       "-destination",
@@ -1367,7 +1367,7 @@ platform :ios do
       api_key: api_key,
       force: true,
       app_version: version_metadata[:short_version],
-      copyright: "2026 OpenClaw",
+      copyright: "2026 QuietCore",
       primary_category: "PRODUCTIVITY",
       secondary_category: "UTILITIES",
       metadata_path: metadata_path,
@@ -1405,8 +1405,8 @@ platform :ios do
     sh(shell_join(["xcodegen", "generate", "--spec", File.join(ios_root, "project.yml"), "--project", ios_root]))
 
     capture_ios_screenshots(
-      project: File.join(ios_root, "OpenClaw.xcodeproj"),
-      scheme: "OpenClawUITests",
+      project: File.join(ios_root, "QuietCore.xcodeproj"),
+      scheme: "QuietCoreUITests",
       configuration: "Debug",
       devices: snapshot_devices,
       languages: ["en-US"],

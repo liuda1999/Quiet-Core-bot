@@ -4,7 +4,7 @@ import type { ChannelConfigUiHint } from "quiet-core-bot/plugin-sdk/core";
 export const ircChannelConfigUiHints = {
   "": {
     label: "IRC",
-    help: "IRC channel provider configuration and compatibility settings for classic IRC transport workflows. Use this section when bridging legacy chat infrastructure into OpenClaw.",
+    help: "IRC channel provider configuration and compatibility settings for classic IRC transport workflows. Use this section when bridging legacy chat infrastructure into QuietCore.",
   },
   dmPolicy: {
     label: "IRC DM Policy",

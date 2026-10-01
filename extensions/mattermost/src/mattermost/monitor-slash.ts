@@ -9,7 +9,7 @@ import {
 import {
   listSkillCommandsForAgents,
   parseTcpPort,
-  type OpenClawConfig,
+  type QuietCoreConfig,
   type RuntimeEnv,
 } from "./runtime-api.js";
 import {
@@ -25,7 +25,7 @@ import {
 import { activateSlashCommands } from "./slash-state.js";
 
 function buildSlashCommands(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   runtime: RuntimeEnv;
   nativeSkills: boolean;
 }): MattermostCommandSpec[] {
@@ -134,7 +134,7 @@ async function registerSlashCommandsAcrossTeams(params: {
 
 export async function registerMattermostMonitorSlashCommands(params: {
   client: MattermostClient;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   runtime: RuntimeEnv;
   account: ResolvedMattermostAccount;
   baseUrl: string;

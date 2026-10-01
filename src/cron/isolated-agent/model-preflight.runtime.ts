@@ -2,7 +2,7 @@
 import { normalizeProviderId } from "@quiet-core/model-catalog-core/provider-id";
 import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
 import type { ModelProviderConfig } from "../../config/types.models.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { fetchWithSsrFGuard } from "../../infra/net/fetch-guard.js";
 import type { SsrFPolicy } from "../../infra/net/ssrf.js";
 
@@ -38,7 +38,7 @@ type CachedEndpointPreflightResult = {
 const preflightCache = new Map<string, CachedEndpointPreflightResult>();
 
 function resolveProviderConfig(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   provider: string,
 ): ModelProviderConfig | undefined {
   const providers = cfg.models?.providers;
@@ -180,7 +180,7 @@ async function probeLocalProviderEndpoint(params: {
 
 /** Checks local model-provider reachability before a scheduled cron run starts. */
 export async function preflightCronModelProvider(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   provider: string;
   model: string;
   nowMs?: number;

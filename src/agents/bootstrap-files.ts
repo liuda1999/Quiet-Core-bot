@@ -6,7 +6,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { normalizeOptionalString } from "@quiet-core/normalization-core/string-coerce";
 import type { AgentContextInjection } from "../config/types.agent-defaults.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { resolveUserPath } from "../utils.js";
 import { resolveAgentConfig, resolveSessionAgentIds } from "./agent-scope.js";
 import { getOrLoadBootstrapFiles } from "./bootstrap-cache.js";
@@ -62,7 +62,7 @@ export function resetBootstrapWarningCacheForTest(): void {
 
 /** Resolves the effective bootstrap injection mode for a session agent. */
 export function resolveContextInjectionMode(
-  config?: OpenClawConfig,
+  config?: QuietCoreConfig,
   agentId?: string | null,
 ): AgentContextInjection {
   const agentMode =
@@ -216,7 +216,7 @@ function applyContextModeFilter(params: {
 }
 
 function shouldExcludeHeartbeatBootstrapFile(params: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   sessionKey?: string;
   sessionId?: string;
   agentId?: string;
@@ -288,7 +288,7 @@ async function isWorkspaceSetupCompletedForContext(workspaceDir: string): Promis
 /** Resolves hook-adjusted, session-filtered bootstrap files for a run. */
 export async function resolveBootstrapFilesForRun(params: {
   workspaceDir: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   sessionKey?: string;
   sessionId?: string;
   agentId?: string;
@@ -338,7 +338,7 @@ export async function resolveBootstrapFilesForRun(params: {
 /** Resolves both raw bootstrap metadata and bounded context files for a run. */
 export async function resolveBootstrapContextForRun(params: {
   workspaceDir: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   sessionKey?: string;
   sessionId?: string;
   agentId?: string;
@@ -358,7 +358,7 @@ export async function resolveBootstrapContextForRun(params: {
 export function buildBootstrapContextForFiles(
   bootstrapFiles: WorkspaceBootstrapFile[],
   params: {
-    config?: OpenClawConfig;
+    config?: QuietCoreConfig;
     agentId?: string | null;
     warn?: (message: string) => void;
   },

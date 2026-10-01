@@ -3,7 +3,7 @@
  * Keeps discovery loads, config backoff, and token cache reset behavior
  * shared across module reloads and runtime seams.
  */
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { createLazyImportLoader, type LazyPromiseLoader } from "../shared/lazy-promise.js";
 import {
   MODEL_CONFIGURED_CONTEXT_TOKEN_CACHE,
@@ -17,7 +17,7 @@ type ContextWindowRuntimeState = {
   generation: number;
   loadPromise: Promise<void> | null;
   loadGeneration: number | null;
-  configuredConfig: OpenClawConfig | undefined;
+  configuredConfig: QuietCoreConfig | undefined;
   configLoadFailures: number;
   nextConfigLoadAttemptAtMs: number;
   // Released gateways may still import this stable runtime path after an

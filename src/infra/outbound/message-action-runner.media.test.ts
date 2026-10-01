@@ -7,7 +7,7 @@ import { Type } from "typebox";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { jsonResult } from "../../agents/tools/common.js";
 import type { ChannelPlugin } from "../../channels/plugins/types.js";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import { MEDIA_MAX_BYTES } from "../../media/store.js";
 import { loadWebMedia } from "../../media/web-media.js";
 import { getActivePluginRegistry, setActivePluginRegistry } from "../../plugins/runtime.js";
@@ -15,7 +15,7 @@ import {
   createChannelTestPluginBase,
   createTestRegistry,
 } from "../../test-utils/channel-plugins.js";
-import { resolvePreferredOpenClawTmpDir } from "../tmp-quiet-core-bot-dir.js";
+import { resolvePreferredQuietCoreTmpDir } from "../tmp-quiet-core-bot-dir.js";
 import { runMessageAction } from "./message-action-runner.js";
 
 const onePixelPng = Buffer.from(
@@ -67,7 +67,7 @@ const workspaceConfig = {
       appToken: "xapp-test",
     },
   },
-} as OpenClawConfig;
+} as QuietCoreConfig;
 
 function firstMockArg(
   mock: { mock: { calls: readonly unknown[][] } },
@@ -90,7 +90,7 @@ async function withSandbox(test: (sandboxDir: string) => Promise<void>) {
   }
 }
 
-async function withTempOpenClawStateDir<T>(test: (stateDir: string) => Promise<T>): Promise<T> {
+async function withTempQuietCoreStateDir<T>(test: (stateDir: string) => Promise<T>): Promise<T> {
   const previous = process.env.QUIET_CORE_STATE_DIR;
   const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "msg-runner-state-"));
   process.env.QUIET_CORE_STATE_DIR = stateDir;
@@ -107,7 +107,7 @@ async function withTempOpenClawStateDir<T>(test: (stateDir: string) => Promise<T
 }
 
 const runDrySend = (params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   actionParams: Record<string, unknown>;
   sandboxRoot?: string;
 }) =>
@@ -181,7 +181,7 @@ async function expectSandboxMediaRewrite(params: {
 }
 
 async function runAttachmentRemoteMediaAction(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   action: "sendAttachment" | "upload-file";
 }) {
   return runMessageAction({
@@ -328,7 +328,7 @@ describe("runMessageAction media behavior", () => {
       ]),
     );
 
-    await withTempOpenClawStateDir(async () => {
+    await withTempQuietCoreStateDir(async () => {
       const result = await runMessageAction({
         cfg: workspaceConfig,
         action: "send",
@@ -370,7 +370,7 @@ describe("runMessageAction media behavior", () => {
       ]),
     );
 
-    await withTempOpenClawStateDir(async (stateDir) => {
+    await withTempQuietCoreStateDir(async (stateDir) => {
       await expect(
         runMessageAction({
           cfg: workspaceConfig,
@@ -401,7 +401,7 @@ describe("runMessageAction media behavior", () => {
       ]),
     );
 
-    await withTempOpenClawStateDir(async () => {
+    await withTempQuietCoreStateDir(async () => {
       await expect(
         runMessageAction({
           cfg: workspaceConfig,
@@ -431,7 +431,7 @@ describe("runMessageAction media behavior", () => {
       ]),
     );
 
-    await withTempOpenClawStateDir(async (stateDir) => {
+    await withTempQuietCoreStateDir(async (stateDir) => {
       const result = await runDrySend({
         cfg: workspaceConfig,
         actionParams: {
@@ -573,7 +573,7 @@ describe("runMessageAction media behavior", () => {
           password: "test-password",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const attachmentPlugin: ChannelPlugin = {
       id: "attachmentchat",
       meta: {
@@ -635,7 +635,7 @@ describe("runMessageAction media behavior", () => {
     }
 
     async function expectRejectsLocalAbsolutePathWithoutSandbox(params: {
-      cfg?: OpenClawConfig;
+      cfg?: QuietCoreConfig;
       action: "sendAttachment" | "setGroupIcon";
       target: string;
       mediaField?: "media" | "mediaUrl" | "fileUrl";
@@ -879,7 +879,7 @@ describe("runMessageAction media behavior", () => {
           enabled: true,
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const handleActionMock = vi.fn();
     const replyPlugin: ChannelPlugin = {
       id: "replychat",
@@ -1173,7 +1173,7 @@ describe("runMessageAction media behavior", () => {
     it("rewrites plugin-owned sandbox media params and preserves mxc URLs", async () => {
       await withSandbox(async (sandboxDir) => {
         const result = await runMessageAction({
-          cfg: {} as OpenClawConfig,
+          cfg: {} as QuietCoreConfig,
           action: "set-profile",
           params: {
             channel: "profile-demo",
@@ -1199,7 +1199,7 @@ describe("runMessageAction media behavior", () => {
         const result = await runMessageAction({
           cfg: {
             tools: { fs: { workspaceOnly: false } },
-          } as OpenClawConfig,
+          } as QuietCoreConfig,
           action: "set-profile",
           params: {
             channel: "profile-demo",
@@ -1220,7 +1220,7 @@ describe("runMessageAction media behavior", () => {
       await withSandbox(async (sandboxDir) => {
         const avatarUrl = "data:text/plain;base64,SGVsbG8=";
         const result = await runMessageAction({
-          cfg: {} as OpenClawConfig,
+          cfg: {} as QuietCoreConfig,
           action: "send",
           dryRun: true,
           params: {
@@ -1411,7 +1411,7 @@ describe("runMessageAction media behavior", () => {
     );
 
     it("allows media paths under preferred Quiet Core bot tmp root", async () => {
-      const tmpRoot = resolvePreferredOpenClawTmpDir();
+      const tmpRoot = resolvePreferredQuietCoreTmpDir();
       await fs.mkdir(tmpRoot, { recursive: true });
       const sandboxDir = await fs.mkdtemp(path.join(os.tmpdir(), "msg-sandbox-"));
       try {
@@ -1434,7 +1434,7 @@ describe("runMessageAction media behavior", () => {
           throw new Error("expected send result");
         }
         expect(result.sendResult?.mediaUrl).toBe(path.resolve(tmpFile));
-        const hostTmpOutsideOpenClaw = path.join(os.tmpdir(), "outside-quiet-core-bot", "test-media.png");
+        const hostTmpOutsideQuietCore = path.join(os.tmpdir(), "outside-quiet-core-bot", "test-media.png");
         await expect(
           runMessageAction({
             cfg: workspaceConfig,
@@ -1442,7 +1442,7 @@ describe("runMessageAction media behavior", () => {
             params: {
               channel: "workspace",
               target: "12345678",
-              media: hostTmpOutsideOpenClaw,
+              media: hostTmpOutsideQuietCore,
               message: "",
             },
             sandboxRoot: sandboxDir,

@@ -1,6 +1,6 @@
 // Qa Lab plugin module implements qa transport behavior.
 import { setTimeout as sleep } from "node:timers/promises";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { resolveTimerTimeoutMs } from "quiet-core-bot/plugin-sdk/number-runtime";
 import type { QaProviderMode } from "./model-selection.js";
 import { extractQaFailureReplyText } from "./reply-failure.js";
@@ -35,7 +35,7 @@ export type QaTransportReportParams = {
   isolatedWorkers?: boolean;
 };
 
-export type QaTransportGatewayConfig = Pick<OpenClawConfig, "channels" | "messages">;
+export type QaTransportGatewayConfig = Pick<QuietCoreConfig, "channels" | "messages">;
 
 export type QaTransportState = {
   reset: () => void | Promise<void>;
@@ -66,7 +66,7 @@ type QaTransportCommonCapabilities = {
   executeGenericAction: (params: {
     action: QaTransportActionName;
     args: Record<string, unknown>;
-    cfg: OpenClawConfig;
+    cfg: QuietCoreConfig;
     accountId?: string | null;
   }) => Promise<unknown>;
   waitForReady: (params: {
@@ -179,7 +179,7 @@ export type QaTransportAdapter = {
   handleAction: (params: {
     action: QaTransportActionName;
     args: Record<string, unknown>;
-    cfg: OpenClawConfig;
+    cfg: QuietCoreConfig;
     accountId?: string | null;
   }) => Promise<unknown>;
   createReportNotes: (params: QaTransportReportParams) => string[];
@@ -239,7 +239,7 @@ export abstract class QaStateBackedTransportAdapter implements QaTransportAdapte
   abstract handleAction: (params: {
     action: QaTransportActionName;
     args: Record<string, unknown>;
-    cfg: OpenClawConfig;
+    cfg: QuietCoreConfig;
     accountId?: string | null;
   }) => Promise<unknown>;
   abstract createReportNotes: (params: QaTransportReportParams) => string[];

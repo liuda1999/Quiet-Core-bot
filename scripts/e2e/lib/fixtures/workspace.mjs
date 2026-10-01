@@ -27,7 +27,7 @@ function writeOpenWebUiWorkspace() {
     process.env.QUIET_CORE_WORKSPACE_DIR || path.join(process.env.HOME, ".quiet-core-bot", "workspace");
   write(
     path.join(workspace, "IDENTITY.md"),
-    "# Identity\n\n- Name: OpenClaw\n- Purpose: Open WebUI Docker compatibility smoke test assistant.\n",
+    "# Identity\n\n- Name: QuietCore\n- Purpose: Open WebUI Docker compatibility smoke test assistant.\n",
   );
   writeJson(path.join(workspace, ".quiet-core-bot", "workspace-state.json"), {
     version: 1,

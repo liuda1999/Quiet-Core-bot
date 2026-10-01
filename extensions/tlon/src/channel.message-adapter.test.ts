@@ -1,7 +1,7 @@
 // Tlon tests cover channel.message adapter plugin behavior.
 import { verifyChannelMessageAdapterCapabilityProofs } from "quiet-core-bot/plugin-sdk/channel-outbound";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../runtime-api.js";
+import type { QuietCoreConfig } from "../runtime-api.js";
 
 const mocks = vi.hoisted(() => ({
   sendText: vi.fn(),
@@ -25,7 +25,7 @@ const cfg = {
       code: "lidlut-tabwed-pillex-ridrup",
     },
   },
-} as OpenClawConfig;
+} as QuietCoreConfig;
 
 describe("tlon channel message adapter", () => {
   beforeEach(() => {

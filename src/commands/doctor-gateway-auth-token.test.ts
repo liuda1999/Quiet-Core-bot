@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { withTempHome, writeStateDirDotEnv } from "../config/test-helpers.js";
 import { shouldRequireGatewayTokenForInstall } from "../gateway/auth-install-policy.js";
 import { withEnvAsync } from "../test-utils/env.js";
@@ -12,7 +12,7 @@ import { resolveGatewayInstallToken } from "./gateway-install-token.js";
 
 const envVar = (...parts: string[]) => parts.join("_");
 
-function createExecGatewayTokenConfig(markerPath: string): OpenClawConfig {
+function createExecGatewayTokenConfig(markerPath: string): QuietCoreConfig {
   return {
     gateway: {
       auth: {
@@ -40,7 +40,7 @@ function createExecGatewayTokenConfig(markerPath: string): OpenClawConfig {
         },
       },
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
 describe("resolveGatewayAuthTokenForService", () => {
@@ -52,7 +52,7 @@ describe("resolveGatewayAuthTokenForService", () => {
             token: "config-token",
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       {} as NodeJS.ProcessEnv,
     );
 
@@ -76,7 +76,7 @@ describe("resolveGatewayAuthTokenForService", () => {
             default: { source: "env" },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       {
         CUSTOM_GATEWAY_TOKEN: "resolved-token",
       } as NodeJS.ProcessEnv,
@@ -98,7 +98,7 @@ describe("resolveGatewayAuthTokenForService", () => {
             default: { source: "env" },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       {
         CUSTOM_GATEWAY_TOKEN: "resolved-token",
       } as NodeJS.ProcessEnv,
@@ -157,7 +157,7 @@ describe("resolveGatewayAuthTokenForService", () => {
             default: { source: "env" },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       {
         QUIET_CORE_GATEWAY_TOKEN: "env-fallback-token",
       } as NodeJS.ProcessEnv,
@@ -183,7 +183,7 @@ describe("resolveGatewayAuthTokenForService", () => {
             default: { source: "env" },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       {
         CUSTOM_GATEWAY_TOKEN: "   ",
         QUIET_CORE_GATEWAY_TOKEN: "env-fallback-token",
@@ -210,7 +210,7 @@ describe("resolveGatewayAuthTokenForService", () => {
             default: { source: "env" },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       {} as NodeJS.ProcessEnv,
     );
 
@@ -230,7 +230,7 @@ describe("shouldRequireGatewayTokenForInstall", () => {
             mode: "token",
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       {} as NodeJS.ProcessEnv,
     );
     expect(required).toBe(true);
@@ -244,7 +244,7 @@ describe("shouldRequireGatewayTokenForInstall", () => {
             mode: "password",
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       {} as NodeJS.ProcessEnv,
     );
     expect(required).toBe(false);
@@ -260,7 +260,7 @@ describe("shouldRequireGatewayTokenForInstall", () => {
             gateway: {
               auth: {},
             },
-          } as OpenClawConfig,
+          } as QuietCoreConfig,
           process.env,
         );
         expect(required).toBe(true);
@@ -285,7 +285,7 @@ describe("shouldRequireGatewayTokenForInstall", () => {
             default: { source: "env" },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       {} as NodeJS.ProcessEnv,
     );
     expect(required).toBe(false);
@@ -302,7 +302,7 @@ describe("shouldRequireGatewayTokenForInstall", () => {
             QUIET_CORE_GATEWAY_PASSWORD: "configured-password", // pragma: allowlist secret
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       {} as NodeJS.ProcessEnv,
     );
     expect(required).toBe(false);
@@ -319,7 +319,7 @@ describe("shouldRequireGatewayTokenForInstall", () => {
           gateway: {
             auth: {},
           },
-        } as OpenClawConfig,
+        } as QuietCoreConfig,
         process.env,
       );
       expect(required).toBe(false);
@@ -332,7 +332,7 @@ describe("shouldRequireGatewayTokenForInstall", () => {
         gateway: {
           auth: {},
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       {} as NodeJS.ProcessEnv,
     );
     expect(required).toBe(true);
@@ -345,7 +345,7 @@ describe("shouldRequireGatewayTokenForInstall", () => {
           auth: { mode: "none" },
           tailscale: { mode: "serve" },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       env: {} as NodeJS.ProcessEnv,
     });
 

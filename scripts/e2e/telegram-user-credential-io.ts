@@ -1,4 +1,4 @@
-// Telegram User Credential Io script supports OpenClaw repository automation.
+// Telegram User Credential Io script supports QuietCore repository automation.
 import { spawn, spawnSync } from "node:child_process";
 import { readBoundedResponseText } from "../lib/bounded-response.ts";
 import { resolveWindowsTaskkillPath } from "../lib/windows-taskkill.mjs";

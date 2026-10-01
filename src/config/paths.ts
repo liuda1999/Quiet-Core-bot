@@ -5,7 +5,7 @@ import path from "node:path";
 import { resolveHomeRelativePath, resolveRequiredHomeDir } from "../infra/home-dir.js";
 import { LEGACY_STATE_DIR_NAME, renameLegacyStateDir } from "../infra/legacy-openclaw-migration.js";
 import { parseTcpPort } from "../infra/tcp-port.js";
-import type { OpenClawConfig } from "./types.js";
+import type { QuietCoreConfig } from "./types.js";
 
 /**
  * Nix mode detection: When QUIET_CORE_NIX_MODE=1, the gateway is running under Nix.
@@ -305,7 +305,7 @@ function parseGatewayPortEnvValue(raw: string | undefined): number | null {
 }
 
 export function resolveGatewayPort(
-  cfg?: OpenClawConfig,
+  cfg?: QuietCoreConfig,
   env: NodeJS.ProcessEnv = process.env,
 ): number {
   const envRaw = env.QUIET_CORE_GATEWAY_PORT?.trim();

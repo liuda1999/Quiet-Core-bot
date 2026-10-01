@@ -5,8 +5,8 @@ import { PassThrough } from "node:stream";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { createPinnedLookup } from "../infra/net/ssrf.js";
 import {
-  createOpenClawTestState,
-  type OpenClawTestState,
+  createQuietCoreTestState,
+  type QuietCoreTestState,
 } from "../test-utils/quiet-core-bot-test-state.js";
 import { saveMediaSource, setMediaStoreNetworkDepsForTest } from "./store.js";
 
@@ -118,10 +118,10 @@ async function expectRedirectSaveFailure(expectedMessage: string) {
 }
 
 describe("media store redirects", () => {
-  let testState: OpenClawTestState;
+  let testState: QuietCoreTestState;
 
   beforeAll(async () => {
-    testState = await createOpenClawTestState({
+    testState = await createQuietCoreTestState({
       layout: "state-only",
       prefix: "quiet-core-bot-media-store-redirect-",
     });

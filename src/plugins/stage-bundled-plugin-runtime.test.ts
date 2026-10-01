@@ -6,7 +6,7 @@ import { bundledDistPluginFile } from "quiet-core-bot/plugin-sdk/test-fixtures";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { stageBundledPluginRuntime } from "../../scripts/stage-bundled-plugin-runtime.mjs";
 import { withMockedWindowsPlatform, withRestoredMocks } from "../test-utils/vitest-spies.js";
-import { discoverOpenClawPlugins } from "./discovery.js";
+import { discoverQuietCorePlugins } from "./discovery.js";
 import { loadPluginManifestRegistry } from "./manifest-registry.js";
 import { cleanupTrackedTempDirs, makeTrackedTempDir } from "./test-helpers/fs-fixtures.js";
 
@@ -516,7 +516,7 @@ describe("stageBundledPluginRuntime", () => {
       QUIET_CORE_DISABLE_BUNDLED_PLUGINS: undefined,
       QUIET_CORE_BUNDLED_PLUGINS_DIR: runtimeExtensionsDir,
     };
-    const discovery = discoverOpenClawPlugins({
+    const discovery = discoverQuietCorePlugins({
       env,
     });
     const manifestRegistry = loadPluginManifestRegistry({

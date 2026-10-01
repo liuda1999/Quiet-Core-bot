@@ -2,7 +2,7 @@
   "name": "@quiet-core/web-readability-plugin",
   "version": "2026.6.11",
   "private": true,
-  "description": "OpenClaw local Readability web extraction plugin",
+  "description": "QuietCore local Readability web extraction plugin",
   "type": "module",
   "dependencies": {
     "@mozilla/readability": "0.6.0",

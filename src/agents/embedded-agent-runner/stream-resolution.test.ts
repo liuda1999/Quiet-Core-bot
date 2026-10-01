@@ -51,7 +51,7 @@ async function expectStreamResultRecord(
 }
 
 afterEach(() => {
-  testing.resetOpenClawNativeCodexResponsesStreamFnForTest();
+  testing.resetQuietCoreNativeCodexResponsesStreamFnForTest();
 });
 
 describe("describeEmbeddedAgentStreamStrategy", () => {
@@ -157,7 +157,7 @@ describe("resolveEmbeddedAgentStreamFn", () => {
     // Codex OAuth models use the Quiet Core bot native transport, with prompt-cache
     // markers stripped before the harness sees system prompt text.
     const nativeStreamFn = vi.fn(async (_model, context, options) => ({ context, options }));
-    testing.setOpenClawNativeCodexResponsesStreamFnForTest(nativeStreamFn as never);
+    testing.setQuietCoreNativeCodexResponsesStreamFnForTest(nativeStreamFn as never);
     const streamFn = resolveEmbeddedAgentStreamFn({
       currentStreamFn: undefined,
       sessionId: "session-1",
@@ -411,7 +411,7 @@ describe("resolveEmbeddedAgentStreamFn", () => {
 
   it("injects the resolved run api key into the Quiet Core bot native Codex Responses fallback", async () => {
     const nativeStreamFn = vi.fn(async (_model, _context, options) => options);
-    testing.setOpenClawNativeCodexResponsesStreamFnForTest(nativeStreamFn as never);
+    testing.setQuietCoreNativeCodexResponsesStreamFnForTest(nativeStreamFn as never);
     const streamFn = resolveEmbeddedAgentStreamFn({
       currentStreamFn: undefined,
       sessionId: "session-1",
@@ -436,7 +436,7 @@ describe("resolveEmbeddedAgentStreamFn", () => {
     const authStorage = {
       getApiKey: vi.fn(async () => "stored-bearer-token"),
     };
-    testing.setOpenClawNativeCodexResponsesStreamFnForTest(nativeStreamFn as never);
+    testing.setQuietCoreNativeCodexResponsesStreamFnForTest(nativeStreamFn as never);
     const streamFn = resolveEmbeddedAgentStreamFn({
       currentStreamFn: undefined,
       sessionId: "session-1",
@@ -459,7 +459,7 @@ describe("resolveEmbeddedAgentStreamFn", () => {
   it("forwards the run abort signal into the Quiet Core bot native fallback when callers omit one", async () => {
     const nativeStreamFn = vi.fn(async (_model, _context, options) => options);
     const runSignal = new AbortController().signal;
-    testing.setOpenClawNativeCodexResponsesStreamFnForTest(nativeStreamFn as never);
+    testing.setQuietCoreNativeCodexResponsesStreamFnForTest(nativeStreamFn as never);
     const streamFn = resolveEmbeddedAgentStreamFn({
       currentStreamFn: undefined,
       sessionId: "session-1",
@@ -484,7 +484,7 @@ describe("resolveEmbeddedAgentStreamFn", () => {
     const nativeStreamFn = vi.fn(async (_model, _context, options) => options);
     const runSignal = new AbortController().signal;
     const explicitSignal = new AbortController().signal;
-    testing.setOpenClawNativeCodexResponsesStreamFnForTest(nativeStreamFn as never);
+    testing.setQuietCoreNativeCodexResponsesStreamFnForTest(nativeStreamFn as never);
     const streamFn = resolveEmbeddedAgentStreamFn({
       currentStreamFn: undefined,
       sessionId: "session-1",
@@ -509,7 +509,7 @@ describe("resolveEmbeddedAgentStreamFn", () => {
   it("forwards the run signal on the sync Quiet Core bot native fallback path without auth credentials", async () => {
     const nativeStreamFn = vi.fn(async (_model, _context, options) => options);
     const runSignal = new AbortController().signal;
-    testing.setOpenClawNativeCodexResponsesStreamFnForTest(nativeStreamFn as never);
+    testing.setQuietCoreNativeCodexResponsesStreamFnForTest(nativeStreamFn as never);
     const streamFn = resolveEmbeddedAgentStreamFn({
       currentStreamFn: undefined,
       sessionId: "session-1",
@@ -530,7 +530,7 @@ describe("resolveEmbeddedAgentStreamFn", () => {
 
   it("strips cache boundary markers on the Quiet Core bot native fallback path", async () => {
     const nativeStreamFn = vi.fn(async (_model, context, _options) => context);
-    testing.setOpenClawNativeCodexResponsesStreamFnForTest(nativeStreamFn as never);
+    testing.setQuietCoreNativeCodexResponsesStreamFnForTest(nativeStreamFn as never);
     const streamFn = resolveEmbeddedAgentStreamFn({
       currentStreamFn: undefined,
       sessionId: "session-1",

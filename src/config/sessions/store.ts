@@ -18,7 +18,7 @@ import {
 import type { DeliveryContext } from "../../utils/delivery-context.types.js";
 import { getFileStatSnapshot } from "../cache-utils.js";
 import { getRuntimeConfig } from "../io.js";
-import type { OpenClawConfig } from "../types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../types.quiet-core-bot.js";
 import { formatSessionArchiveTimestamp } from "./artifacts.js";
 import {
   pruneUnreferencedSessionArtifacts,
@@ -321,7 +321,7 @@ export type SessionEntryLifecycleMutationResult = {
 
 export type DeletedAgentSessionEntryPurgeParams = {
   /** Runtime config used to preserve legacy default-agent key ownership rules. */
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   /** Deleted agent whose session entries should be purged. */
   agentId: string;
   /** Agent id represented by the current store path for legacy unscoped keys. */

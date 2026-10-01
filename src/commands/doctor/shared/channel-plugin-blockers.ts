@@ -2,7 +2,7 @@
 import { normalizeOptionalLowercaseString } from "@quiet-core/normalization-core/string-coerce";
 import { sanitizeForLog } from "../../../../packages/terminal-core/src/ansi.js";
 import { listExplicitlyDisabledChannelIdsForConfig } from "../../../channels/config-presence.js";
-import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../config/types.quiet-core-bot.js";
 import {
   hasExplicitChannelConfig,
   listExplicitConfiguredChannelIdsForConfig,
@@ -40,9 +40,9 @@ type ChannelPluginBlockerHit = {
 
 /** Find configured channel ids whose backing plugins cannot activate. */
 export function scanConfiguredChannelPluginBlockers(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   env: NodeJS.ProcessEnv = process.env,
-  activationSourceConfig: OpenClawConfig = cfg,
+  activationSourceConfig: QuietCoreConfig = cfg,
 ): ChannelPluginBlockerHit[] {
   const explicitChannelIds = listExplicitConfiguredChannelIdsForConfig(cfg)
     .map((channelId) => normalizeOptionalLowercaseString(channelId))
@@ -221,9 +221,9 @@ type ChannelOwnerState = {
 function resolveConfiguredChannelOwnerState(params: {
   plugin: PluginManifestRecord;
   channelId: string;
-  sourceConfig: OpenClawConfig;
+  sourceConfig: QuietCoreConfig;
   sourcePluginsConfig: ReturnType<typeof normalizePluginsConfig>;
-  effectiveConfig: OpenClawConfig;
+  effectiveConfig: QuietCoreConfig;
   effectivePluginsConfig: ReturnType<typeof normalizePluginsConfig>;
 }): ChannelOwnerState {
   const bundledChannelConfigured =

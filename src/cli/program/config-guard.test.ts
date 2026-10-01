@@ -97,7 +97,7 @@ describe("ensureConfigReady", () => {
     });
   }
 
-  function useTempOpenClawHome(): string {
+  function useTempQuietCoreHome(): string {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-config-guard-"));
     tempRoots.push(root);
     setTestEnvValue("QUIET_CORE_HOME", root);
@@ -131,7 +131,7 @@ describe("ensureConfigReady", () => {
     for (const root of tempRoots.splice(0)) {
       fs.rmSync(root, { recursive: true, force: true });
     }
-    useTempOpenClawHome();
+    useTempQuietCoreHome();
     readConfigFileSnapshotMock.mockResolvedValue(makeSnapshot());
     loadAndMaybeMigrateDoctorConfigMock.mockImplementation(async () => ({
       snapshot: makeSnapshot(),
@@ -182,7 +182,7 @@ describe("ensureConfigReady", () => {
   });
 
   it("runs doctor flow when lightweight startup detection finds legacy state", async () => {
-    const root = useTempOpenClawHome();
+    const root = useTempQuietCoreHome();
     writeLegacyTaskSidecarMarker(root);
 
     await runEnsureConfigReady(["agent"]);
@@ -196,7 +196,7 @@ describe("ensureConfigReady", () => {
   });
 
   it("runs doctor flow when lightweight startup detection finds a pending SQLite archive", async () => {
-    const root = useTempOpenClawHome();
+    const root = useTempQuietCoreHome();
     writePendingTaskSidecarArchiveMarker(root);
 
     await runEnsureConfigReady(["agent"]);
@@ -210,7 +210,7 @@ describe("ensureConfigReady", () => {
   });
 
   it("runs doctor flow for legacy sessions without task sidecars", async () => {
-    const root = useTempOpenClawHome();
+    const root = useTempQuietCoreHome();
     fs.mkdirSync(path.join(root, ".quiet-core-bot", "sessions"), { recursive: true });
 
     await runEnsureConfigReady(["agent"]);
@@ -219,7 +219,7 @@ describe("ensureConfigReady", () => {
   });
 
   it("runs doctor flow before agent commands when the legacy plugin install index exists", async () => {
-    const root = useTempOpenClawHome();
+    const root = useTempQuietCoreHome();
     writeStateMarker(root, "plugins/installs.json");
 
     await runEnsureConfigReady(["agent"]);
@@ -247,7 +247,7 @@ describe("ensureConfigReady", () => {
     ["iMessage catchup cursor", "imessage/catchup/default__37a8eec1ce19.json"],
     ["WhatsApp root auth", "credentials/creds.json"],
   ])("runs doctor flow for bundled channel legacy state: %s", async (_label, relativePath) => {
-    const root = useTempOpenClawHome();
+    const root = useTempQuietCoreHome();
     writeStateMarker(root, relativePath);
 
     await runEnsureConfigReady(["agent"]);
@@ -272,7 +272,7 @@ describe("ensureConfigReady", () => {
     // Behavior change (intentional): `status` is read-only and no longer triggers the implicit
     // legacy-state migration, even when a custom `session.store` is configured. Legacy session
     // data is read directly instead of being migrated/merged as a side effect of a read.
-    const root = useTempOpenClawHome();
+    const root = useTempQuietCoreHome();
     const customStore = path.join(root, "sessions", "sessions.json");
     const snapshot = {
       ...makeSnapshot(),
@@ -418,7 +418,7 @@ describe("ensureConfigReady", () => {
   });
 
   it("runs doctor migration flow only once per module instance", async () => {
-    writeLegacyTaskSidecarMarker(useTempOpenClawHome());
+    writeLegacyTaskSidecarMarker(useTempQuietCoreHome());
     const runtimeA = makeRuntime();
     const runtimeB = makeRuntime();
 
@@ -428,13 +428,13 @@ describe("ensureConfigReady", () => {
   });
 
   it("still runs doctor flow when stdout suppression is enabled", async () => {
-    writeLegacyTaskSidecarMarker(useTempOpenClawHome());
+    writeLegacyTaskSidecarMarker(useTempQuietCoreHome());
     await runEnsureConfigReady(["message"], true);
     expect(loadAndMaybeMigrateDoctorConfigMock).toHaveBeenCalledTimes(1);
   });
 
   it("prevents preflight note noise when suppression is enabled", async () => {
-    writeLegacyTaskSidecarMarker(useTempOpenClawHome());
+    writeLegacyTaskSidecarMarker(useTempQuietCoreHome());
     loadAndMaybeMigrateDoctorConfigMock.mockImplementation(async () => {
       note("Doctor warnings", "Config warnings");
       return {
@@ -449,7 +449,7 @@ describe("ensureConfigReady", () => {
   });
 
   it("allows preflight note noise when suppression is not enabled", async () => {
-    writeLegacyTaskSidecarMarker(useTempOpenClawHome());
+    writeLegacyTaskSidecarMarker(useTempQuietCoreHome());
     loadAndMaybeMigrateDoctorConfigMock.mockImplementation(async () => {
       note("Doctor warnings", "Config warnings");
       return {
@@ -464,7 +464,7 @@ describe("ensureConfigReady", () => {
   });
 
   it("does not suppress unrelated concurrent stdout writes while suppressing preflight notes", async () => {
-    writeLegacyTaskSidecarMarker(useTempOpenClawHome());
+    writeLegacyTaskSidecarMarker(useTempQuietCoreHome());
     let releasePreflight: (() => void) | undefined;
     let preflightStarted: (() => void) | undefined;
     const preflightStartedPromise = new Promise<void>((resolve) => {

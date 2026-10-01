@@ -1,6 +1,6 @@
 // Doctor browser facade tests cover legacy browser residue detection and browser doctor repair wiring.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import {
   detectLegacyClawdBrowserProfileResidue,
   maybeArchiveLegacyClawdBrowserProfileResidue,
@@ -32,7 +32,7 @@ describe("doctor browser facade", () => {
       noteChromeMcpBrowserReadiness: delegate,
     });
 
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       browser: {
         defaultProfile: "user",
       },
@@ -60,7 +60,7 @@ describe("doctor browser facade", () => {
       noteChromeMcpBrowserReadiness: vi.fn(),
       detectLegacyClawdBrowserProfileResidue: detect,
     });
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       browser: {
         profiles: {
           openclaw: { color: "#FF4500" },
@@ -87,7 +87,7 @@ describe("doctor browser facade", () => {
       maybeArchiveLegacyClawdBrowserProfileResidue: cleanup,
     });
 
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       browser: {
         profiles: {
           openclaw: { color: "#FF4500" },

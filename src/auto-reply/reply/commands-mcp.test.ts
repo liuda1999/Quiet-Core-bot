@@ -1,6 +1,6 @@
 // Tests MCP command configuration, listing, and enablement behavior.
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import { withTempHome } from "../../config/home-env.test-harness.js";
 import { createCommandWorkspaceHarness } from "./commands-filesystem.test-support.js";
 import { handleMcpCommand } from "./commands-mcp.js";
@@ -45,7 +45,7 @@ function expectMcpResult<T>(result: T | null): T {
   return result;
 }
 
-function buildCfg(): OpenClawConfig {
+function buildCfg(): QuietCoreConfig {
   return {
     commands: {
       text: true,

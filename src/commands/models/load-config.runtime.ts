@@ -4,5 +4,5 @@ export {
   getRuntimeConfig,
   getRuntimeConfigSourceSnapshot,
   setRuntimeConfigSnapshot,
-  type OpenClawConfig,
+  type QuietCoreConfig,
 } from "../../config/config.js";

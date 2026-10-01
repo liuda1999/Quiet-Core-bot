@@ -17,7 +17,7 @@ import {
 import {
   getPackageManifestMetadata,
   loadPluginManifest,
-  type OpenClawPackageManifest,
+  type QuietCorePackageManifest,
   type PackageManifest,
   type PluginManifest,
 } from "./manifest.js";
@@ -49,7 +49,7 @@ export type BundledPluginMetadata = {
   packageName?: string;
   packageVersion?: string;
   packageDescription?: string;
-  packageManifest?: OpenClawPackageManifest;
+  packageManifest?: QuietCorePackageManifest;
   manifest: PluginManifest;
 };
 

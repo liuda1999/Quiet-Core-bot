@@ -5,11 +5,11 @@ import {
   hasMeaningfulChannelConfigShallow,
   resolveChannelConfigRecord,
 } from "./channel-configured-shared.js";
-import type { OpenClawConfig } from "./types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "./types.quiet-core-bot.js";
 
 /** Resolves whether a channel has enough config, env, or plugin state to be considered setup. */
 export function isChannelConfigured(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   channelId: string,
   env: NodeJS.ProcessEnv = process.env,
 ): boolean {

@@ -4,7 +4,7 @@
  */
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Duplex } from "node:stream";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import type { RuntimeEnv } from "quiet-core-bot/plugin-sdk/runtime-env";
 import { isCanvasHostEnabled, resolveCanvasHostConfig } from "./config.js";
 import { A2UI_PATH, CANVAS_HOST_PATH, CANVAS_WS_PATH, handleA2uiHttpRequest } from "./host/a2ui.js";
@@ -19,7 +19,7 @@ export type CanvasHttpRouteHandler = {
 
 /** Creates a lazily initialized Canvas HTTP/WebSocket route handler. */
 export function createCanvasHttpRouteHandler(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   pluginConfig?: Record<string, unknown>;
   runtime: RuntimeEnv;
   allowInTests?: boolean;

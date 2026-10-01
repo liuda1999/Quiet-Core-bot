@@ -1,5 +1,5 @@
 /**
- * Persistent lease store for ACPX wrapper processes. Leases let OpenClaw attach
+ * Persistent lease store for ACPX wrapper processes. Leases let QuietCore attach
  * gateway/session identity to spawned ACP processes and clean them up later.
  */
 import { randomUUID, createHash } from "node:crypto";

@@ -1,5 +1,5 @@
 import Testing
-@testable import OpenClaw
+@testable import QuietCore
 
 @Suite struct TalkProStateTests {
     @Test func disabledTalkWithoutLoadedConfigCanStartAndRetryLoad() {

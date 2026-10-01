@@ -7,8 +7,8 @@ import { resolveAuthProfileDatabasePath } from "../agents/auth-profiles/sqlite.j
 import { saveAuthProfileStore } from "../agents/auth-profiles/store.js";
 import type { AuthProfileStore } from "../agents/auth-profiles/types.js";
 import {
-  closeOpenClawAgentDatabasesForTest,
-  openOpenClawAgentDatabase,
+  closeQuietCoreAgentDatabasesForTest,
+  openQuietCoreAgentDatabase,
 } from "../state/quiet-core-bot-agent-db.js";
 import {
   buildTalkTestProviderConfig,
@@ -285,7 +285,7 @@ describe("secrets apply", () => {
 
   afterEach(async () => {
     clearSecretsRuntimeSnapshot();
-    closeOpenClawAgentDatabasesForTest();
+    closeQuietCoreAgentDatabasesForTest();
     await fs.rm(fixture.rootDir, { recursive: true, force: true });
   });
 
@@ -604,7 +604,7 @@ describe("secrets apply", () => {
     const result = await runSecretsApply({ plan, env: fixture.env, write: true });
 
     expect(result.changedFiles).toContain(coderStorePath);
-    const database = openOpenClawAgentDatabase({
+    const database = openQuietCoreAgentDatabase({
       agentId: "coder",
       path: coderStorePath,
     });

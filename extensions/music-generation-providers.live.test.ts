@@ -3,7 +3,7 @@ import {
   resolveApiKeyForProvider,
   resolveDefaultAgentDir,
 } from "quiet-core-bot/plugin-sdk/agent-runtime";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import {
   registerProviderPlugin,
   requireRegisteredProvider,
@@ -80,7 +80,7 @@ const CASES: LiveProviderCase[] = [
   .filter((entry) => (providerFilter ? providerFilter.has(entry.providerId) : true))
   .toSorted((left, right) => left.providerId.localeCompare(right.providerId));
 
-function withPluginsEnabled(cfg: OpenClawConfig): OpenClawConfig {
+function withPluginsEnabled(cfg: QuietCoreConfig): QuietCoreConfig {
   return {
     ...cfg,
     plugins: {

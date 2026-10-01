@@ -1,4 +1,4 @@
-// Npm Update Scripts script supports OpenClaw repository automation.
+// Npm Update Scripts script supports QuietCore repository automation.
 import { posixAgentWorkspaceScript, windowsAgentWorkspaceScript } from "./agent-workspace.ts";
 import { shellQuote } from "./host-command.ts";
 import {
@@ -9,7 +9,7 @@ import {
 import {
   psSingleQuote,
   windowsAgentTurnConfigPatchScript,
-  windowsOpenClawResolver,
+  windowsQuietCoreResolver,
   windowsScopedEnvFunction,
 } from "./powershell.ts";
 import {
@@ -27,7 +27,7 @@ export interface NpmUpdateScriptInput {
 const windowsStalePostSwapImportRegex = String.raw`node_modules\\quiet-core-bot\\dist\\[^\\]+-[A-Za-z0-9_-]+\.js`;
 const macosGuestPath =
   "/opt/homebrew/bin:/opt/homebrew/opt/node/bin:/usr/local/bin:/usr/local/sbin:/opt/homebrew/sbin:/usr/bin:/bin:/usr/sbin:/sbin";
-const macosOpenClawCommand = '"$QUIET_CORE_BIN"';
+const macosQuietCoreCommand = '"$QUIET_CORE_BIN"';
 
 function posixModelProviderConfigCommands(
   command: string,
@@ -120,35 +120,35 @@ fi`;
 }
 
 function windowsUpdateWithBundledPluginsDisabled(input: NpmUpdateScriptInput): string {
-  return `$script:OpenClawUpdateExit = 0
+  return `$script:QuietCoreUpdateExit = 0
 $updateOutput = Invoke-WithScopedEnv @{ QUIET_CORE_DISABLE_BUNDLED_PLUGINS = '1'; QUIET_CORE_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS = '1' } {
-  Invoke-OpenClaw update --tag ${psSingleQuote(input.updateTarget)} --yes --json --no-restart 2>&1
-  $script:OpenClawUpdateExit = $LASTEXITCODE
+  Invoke-QuietCore update --tag ${psSingleQuote(input.updateTarget)} --yes --json --no-restart 2>&1
+  $script:QuietCoreUpdateExit = $LASTEXITCODE
 }
-$updateExit = $script:OpenClawUpdateExit
+$updateExit = $script:QuietCoreUpdateExit
 $updateOutput`;
 }
 
 function windowsGatewayReadyScript(): string {
-  return `function Wait-OpenClawGateway {
+  return `function Wait-QuietCoreGateway {
   $deadline = (Get-Date).AddSeconds(180)
   $attempt = 0
   while ((Get-Date) -lt $deadline) {
-    Invoke-OpenClaw gateway status --deep --require-rpc --timeout 15000
+    Invoke-QuietCore gateway status --deep --require-rpc --timeout 15000
     if ($LASTEXITCODE -eq 0) { return }
     $attempt += 1
     if ($attempt -eq 4) {
-      Invoke-OpenClaw gateway start *>&1 | Out-Host
+      Invoke-QuietCore gateway start *>&1 | Out-Host
     }
     Start-Sleep -Seconds 5
   }
   throw "gateway did not become ready after update"
 }
-Invoke-OpenClaw gateway restart *>&1 | Out-Host
+Invoke-QuietCore gateway restart *>&1 | Out-Host
 if ($LASTEXITCODE -ne 0) {
   "gateway restart exited with code $LASTEXITCODE; probing readiness before failing" | Out-Host
 }
-Wait-OpenClawGateway`;
+Wait-QuietCoreGateway`;
 }
 
 function windowsAssertAgentOkScript(input: NpmUpdateScriptInput): string {
@@ -164,7 +164,7 @@ for ($attempt = 1; $attempt -le 2; $attempt++) {
   $sessionsDir = Join-Path $env:USERPROFILE '.quiet-core-bot\\agents\\main\\sessions'
   $sessionPath = Join-Path $sessionsDir "$sessionId.jsonl"
   Remove-Item $sessionPath -Force -ErrorAction SilentlyContinue
-  $output = Invoke-OpenClaw agent --local --agent main --session-id $sessionId --model ${psSingleQuote(input.auth.modelId)} --message 'Reply with exact ASCII text OK only.' --thinking off --timeout ${resolveParallelsModelTimeoutSeconds("windows")} --json 2>&1
+  $output = Invoke-QuietCore agent --local --agent main --session-id $sessionId --model ${psSingleQuote(input.auth.modelId)} --message 'Reply with exact ASCII text OK only.' --thinking off --timeout ${resolveParallelsModelTimeoutSeconds("windows")} --json 2>&1
   $agentExitCode = $LASTEXITCODE
   if ($null -ne $output) { $output | ForEach-Object { $_ } }
   if ($agentExitCode -eq 0 -and ($output | Out-String) -match '"finalAssistant(Raw|Visible)Text":\\s*"OK"') {
@@ -256,41 +256,41 @@ wait_for_gateway() {
 scrub_future_plugin_entries
 stop_quiet_core_bot_gateway_processes
 QUIET_CORE_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS=1 QUIET_CORE_DISABLE_BUNDLED_PLUGINS=1 "$QUIET_CORE_BIN" update --tag ${shellQuote(input.updateTarget)} --yes --json --no-restart
-${posixVersionCheck(macosOpenClawCommand, input.expectedNeedle)}
+${posixVersionCheck(macosQuietCoreCommand, input.expectedNeedle)}
 start_openclaw_gateway
 wait_for_gateway
 "$QUIET_CORE_BIN" models set ${shellQuote(input.auth.modelId)}
-${posixModelProviderConfigCommands(macosOpenClawCommand, input.auth.modelId, "macos")}
+${posixModelProviderConfigCommands(macosQuietCoreCommand, input.auth.modelId, "macos")}
 "$QUIET_CORE_BIN" config set agents.defaults.skipBootstrap true --strict-json
 "$QUIET_CORE_BIN" config set tools.profile minimal
 ${posixAgentWorkspaceScript("Parallels npm update smoke test assistant.")}
-${posixAssertAgentOkScript(macosOpenClawCommand, input, "macos", "parallels-npm-update-macos")}`;
+${posixAssertAgentOkScript(macosQuietCoreCommand, input, "macos", "parallels-npm-update-macos")}`;
 }
 
 export function windowsUpdateScript(input: NpmUpdateScriptInput): string {
   return `$ErrorActionPreference = 'Stop'
 $PSNativeCommandUseErrorActionPreference = $false
-${windowsOpenClawResolver}
+${windowsQuietCoreResolver}
 ${windowsScopedEnvFunction}
 function Remove-FuturePluginEntries {
   $configPath = Join-Path $env:USERPROFILE '.quiet-core-bot\\quiet-core-bot.json'
   if (-not (Test-Path $configPath)) { return }
   try { $config = Get-Content $configPath -Raw | ConvertFrom-Json } catch { return }
-  $plugins = Get-OpenClawJsonProperty $config 'plugins'
+  $plugins = Get-QuietCoreJsonProperty $config 'plugins'
   if ($null -eq $plugins) { return }
-  $entries = Get-OpenClawJsonProperty $plugins 'entries'
+  $entries = Get-QuietCoreJsonProperty $plugins 'entries'
   if ($null -ne $entries) {
     foreach ($pluginId in @('feishu', 'whatsapp', 'openai')) {
-      Remove-OpenClawJsonProperty $entries $pluginId
+      Remove-QuietCoreJsonProperty $entries $pluginId
     }
   }
-  $allow = Get-OpenClawJsonProperty $plugins 'allow'
+  $allow = Get-QuietCoreJsonProperty $plugins 'allow'
   if ($allow -is [array]) {
-    Set-OpenClawJsonProperty $plugins 'allow' @($allow | Where-Object { $_ -notin @('feishu', 'whatsapp', 'openai') })
+    Set-QuietCoreJsonProperty $plugins 'allow' @($allow | Where-Object { $_ -notin @('feishu', 'whatsapp', 'openai') })
   }
   $config | ConvertTo-Json -Depth 100 | Set-Content -Path $configPath -Encoding UTF8
 }
-function Get-OpenClawJsonProperty {
+function Get-QuietCoreJsonProperty {
   param([object]$Object, [string]$Name)
   if ($null -eq $Object) { return $null }
   if ($Object -is [System.Collections.IDictionary]) { return $Object[$Name] }
@@ -298,7 +298,7 @@ function Get-OpenClawJsonProperty {
   if ($null -eq $property) { return $null }
   return $property.Value
 }
-function Set-OpenClawJsonProperty {
+function Set-QuietCoreJsonProperty {
   param([object]$Object, [string]$Name, [object]$Value)
   if ($Object -is [System.Collections.IDictionary]) {
     $Object[$Name] = $Value
@@ -311,7 +311,7 @@ function Set-OpenClawJsonProperty {
   }
   $Object | Add-Member -NotePropertyName $Name -NotePropertyValue $Value
 }
-function Remove-OpenClawJsonProperty {
+function Remove-QuietCoreJsonProperty {
   param([object]$Object, [string]$Name)
   if ($null -eq $Object) { return }
   if ($Object -is [System.Collections.IDictionary]) {
@@ -322,8 +322,8 @@ function Remove-OpenClawJsonProperty {
     $Object.PSObject.Properties.Remove($Name)
   }
 }
-function Stop-OpenClawGatewayProcesses {
-  Invoke-OpenClaw gateway stop *>&1 | Out-Host
+function Stop-QuietCoreGatewayProcesses {
+  Invoke-QuietCore gateway stop *>&1 | Out-Host
   Get-CimInstance Win32_Process -ErrorAction SilentlyContinue |
     Where-Object { $_.CommandLine -match 'quiet-core-bot.*gateway' } |
     ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }
@@ -333,7 +333,7 @@ function Stop-OpenClawGatewayProcesses {
   Start-Sleep -Seconds 2
 }
 Remove-FuturePluginEntries
-Stop-OpenClawGatewayProcesses
+Stop-QuietCoreGatewayProcesses
 ${windowsUpdateWithBundledPluginsDisabled(input)}
 if ($updateExit -ne 0) {
   $updateText = $updateOutput | Out-String
@@ -457,7 +457,7 @@ function windowsVersionCheck(expectedNeedle: string): string {
   if (!expectedNeedle) {
     return `$versionDeadline = (Get-Date).AddSeconds(60)
 while ($true) {
-  $version = Invoke-OpenClaw --version
+  $version = Invoke-QuietCore --version
   $version
   if ($LASTEXITCODE -eq 0) { break }
   if ((Get-Date) -ge $versionDeadline) { throw "quiet-core-bot --version failed with exit code $LASTEXITCODE" }
@@ -468,7 +468,7 @@ while ($true) {
   const mismatch = psSingleQuote(`version mismatch: expected ${expectedNeedle}`);
   return `$versionDeadline = (Get-Date).AddSeconds(60)
 while ($true) {
-  $version = Invoke-OpenClaw --version
+  $version = Invoke-QuietCore --version
   $version
   if ($LASTEXITCODE -eq 0 -and (($version | Out-String) -like ${expectedPattern})) { break }
   if ((Get-Date) -ge $versionDeadline) {

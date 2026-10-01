@@ -1,6 +1,6 @@
 // Stale plugin config tests cover doctor cleanup and warnings for obsolete plugin config.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../../config/config.js";
+import type { QuietCoreConfig } from "../../../config/config.js";
 import type { PluginInstallRecord } from "../../../config/types.plugins.js";
 import type { PluginManifestRecord } from "../../../plugins/manifest-registry.js";
 import * as manifestRegistry from "../../../plugins/manifest-registry.js";
@@ -61,7 +61,7 @@ describe("doctor stale plugin config helpers", () => {
           acpx: { enabled: true },
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expect(hits).toEqual([
       {
@@ -92,7 +92,7 @@ describe("doctor stale plugin config helpers", () => {
           acpx: { enabled: true },
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expect(result.changes).toEqual([
       "- plugins.allow: removed 1 stale plugin id (acpx)",
@@ -114,7 +114,7 @@ describe("doctor stale plugin config helpers", () => {
           contextEngine: "missing-engine",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const hits = scanStalePluginConfig(cfg);
     expect(hits).toEqual([
@@ -152,7 +152,7 @@ describe("doctor stale plugin config helpers", () => {
             contextEngine: "legacy",
           },
         },
-      } as OpenClawConfig),
+      } as QuietCoreConfig),
     ).toStrictEqual([]);
   });
 
@@ -191,7 +191,7 @@ describe("doctor stale plugin config helpers", () => {
           allowFrom: ["+15555550123"],
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expect(result.changes).toEqual([
       "- plugins.allow: removed 1 stale plugin id (acpx)",
@@ -256,7 +256,7 @@ describe("doctor stale plugin config helpers", () => {
           },
         ],
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expect(result.changes).toEqual([
       "- plugins.allow: removed 1 stale plugin id (missing-chat-plugin)",
@@ -288,7 +288,7 @@ describe("doctor stale plugin config helpers", () => {
           botToken: "typo",
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expect(scanStalePluginConfig(cfg)).toStrictEqual([]);
     expect(maybeRepairStalePluginConfig(cfg)).toEqual({ config: cfg, changes: [] });
@@ -308,7 +308,7 @@ describe("doctor stale plugin config helpers", () => {
           enabled: true,
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expect(scanStalePluginConfig(cfg)).toStrictEqual([]);
     expect(maybeRepairStalePluginConfig(cfg)).toEqual({ config: cfg, changes: [] });
@@ -330,7 +330,7 @@ describe("doctor stale plugin config helpers", () => {
           enabled: true,
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
 
     expect(result.changes).toEqual([
       "- channels: removed 1 stale channel config (missing-chat-plugin)",
@@ -353,7 +353,7 @@ describe("doctor stale plugin config helpers", () => {
           acpx: { enabled: true },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     const hits = scanStalePluginConfig(cfg);
     expect(hits).toEqual([
@@ -399,7 +399,7 @@ describe("doctor stale plugin config helpers", () => {
           acpx: { enabled: true },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expect(scanStalePluginConfig(cfg)).toEqual([
       {
@@ -427,7 +427,7 @@ describe("doctor stale plugin config helpers", () => {
           codex: { enabled: false },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expect(scanStalePluginConfig(cfg)).toEqual([]);
     expect(maybeRepairStalePluginConfig(cfg)).toEqual({ config: cfg, changes: [] });
@@ -456,7 +456,7 @@ describe("doctor stale plugin config helpers", () => {
           codex: {},
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expect(scanStalePluginConfig(cfg)).toEqual([
       {
@@ -483,7 +483,7 @@ describe("doctor stale plugin config helpers", () => {
           codex: { enabled: true },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expect(scanStalePluginConfig(cfg)).toEqual([
       {
@@ -503,7 +503,7 @@ describe("doctor stale plugin config helpers", () => {
           acpx: { enabled: true },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     expect(scanStalePluginConfig(cfg)).toEqual([
       {

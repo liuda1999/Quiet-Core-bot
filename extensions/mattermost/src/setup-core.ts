@@ -1,7 +1,7 @@
 // Mattermost plugin module implements setup core behavior.
 import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "quiet-core-bot/plugin-sdk/account-id";
 import type { ChannelSetupAdapter } from "quiet-core-bot/plugin-sdk/channel-setup";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import {
   applyAccountNameToChannelSection,
   applySetupAccountConfigPatch,
@@ -23,7 +23,7 @@ export function isMattermostConfigured(account: ResolvedMattermostAccount): bool
   return tokenConfigured && Boolean(account.baseUrl);
 }
 
-export function resolveMattermostAccountWithSecrets(cfg: OpenClawConfig, accountId: string) {
+export function resolveMattermostAccountWithSecrets(cfg: QuietCoreConfig, accountId: string) {
   return resolveMattermostAccount({
     cfg,
     accountId,
@@ -32,11 +32,11 @@ export function resolveMattermostAccountWithSecrets(cfg: OpenClawConfig, account
 }
 
 export function applyMattermostSetupConfigPatch(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   accountId: string;
   name?: string;
   patch: Record<string, unknown>;
-}): OpenClawConfig {
+}): QuietCoreConfig {
   const namedConfig = applyAccountNameToChannelSection({
     cfg: params.cfg,
     channelKey: channel,

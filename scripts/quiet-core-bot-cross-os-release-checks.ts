@@ -1019,7 +1019,7 @@ async function runUpgradeLane(params) {
     let usedWindowsPackagedUpgradeTimeoutFallback = false;
     await runTimedLanePhase(lane, "update", async () => {
       try {
-        updateResult = await runOpenClaw({
+        updateResult = await runQuietCore({
           lane,
           env: updateEnv,
           args: updateArgs,
@@ -1078,7 +1078,7 @@ async function runUpgradeLane(params) {
       })
     ) {
       await runTimedLanePhase(lane, "update-status", async () => {
-        await runOpenClaw({
+        await runQuietCore({
           lane,
           env: updateEnv,
           args: ["update", "status", "--json"],
@@ -1384,7 +1384,7 @@ async function runDevUpdateSuite(params) {
     const updatedShell = await verifyFreshShellCommand({
       lane,
       env,
-      expectedNeedle: "OpenClaw",
+      expectedNeedle: "QuietCore",
       logPath: join(params.logsDir, "dev-update-shell.log"),
     });
 
@@ -2647,7 +2647,7 @@ export function dashboardHtmlMarkerStatus(html: string): {
   ready: boolean;
   title: boolean;
 } {
-  const title = html.includes("<title>OpenClaw Control</title>");
+  const title = html.includes("<title>QuietCore Control</title>");
   const app = html.includes("<quiet-core-bot-app></quiet-core-bot-app>");
   return { app, ready: title && app, title };
 }
@@ -3110,7 +3110,7 @@ function ensureLocalNpmShim(lane) {
 
 async function runOnboard(params) {
   await withAllocatedGatewayPort(params.lane, async () => {
-    await runOpenClaw({
+    await runQuietCore({
       lane: params.lane,
       env: params.env,
       args: buildReleaseOnboardArgs({
@@ -3234,7 +3234,7 @@ async function waitForGateway(params) {
   while (Date.now() < deadline) {
     let result;
     try {
-      result = await runOpenClaw({
+      result = await runQuietCore({
         lane: params.lane,
         env: params.env,
         args: statusArgs,
@@ -3262,7 +3262,7 @@ function gatewayReadyDeadlineMs() {
 
 async function resolveGatewayStatusArgs(lane, env, logPath) {
   try {
-    const help = await runOpenClaw({
+    const help = await runQuietCore({
       lane,
       env,
       args: ["gateway", "status", "--help"],
@@ -3278,7 +3278,7 @@ async function resolveGatewayStatusArgs(lane, env, logPath) {
 }
 
 async function runModelsSet(params) {
-  await runOpenClaw({
+  await runQuietCore({
     lane: params.lane,
     env: params.env,
     args: ["models", "set", params.providerConfig.model],
@@ -3287,7 +3287,7 @@ async function runModelsSet(params) {
   });
   const providerConfigOverride = buildReleaseProviderConfigOverride(params.providerConfig);
   if (providerConfigOverride) {
-    await runOpenClaw({
+    await runQuietCore({
       lane: params.lane,
       env: params.env,
       args: [
@@ -3302,7 +3302,7 @@ async function runModelsSet(params) {
       timeoutMs: 2 * 60 * 1000,
     });
   }
-  await runOpenClaw({
+  await runQuietCore({
     lane: params.lane,
     env: params.env,
     args: [
@@ -3315,21 +3315,21 @@ async function runModelsSet(params) {
     logPath: params.logPath,
     timeoutMs: 2 * 60 * 1000,
   });
-  await runOpenClaw({
+  await runQuietCore({
     lane: params.lane,
     env: params.env,
     args: buildCrossOsReleaseSmokeMemorySlotConfigArgs(),
     logPath: params.logPath,
     timeoutMs: 2 * 60 * 1000,
   });
-  await runOpenClaw({
+  await runQuietCore({
     lane: params.lane,
     env: params.env,
     args: ["config", "set", "agents.defaults.skipBootstrap", "true", "--strict-json"],
     logPath: params.logPath,
     timeoutMs: 2 * 60 * 1000,
   });
-  await runOpenClaw({
+  await runQuietCore({
     lane: params.lane,
     env: params.env,
     args: ["config", "set", "tools.profile", CROSS_OS_RELEASE_SMOKE_TOOLS_PROFILE],
@@ -3344,7 +3344,7 @@ async function runAgentTurn(params) {
     const sessionId = buildCrossOsReleaseAgentSessionId(params.label, attempt);
     try {
       const logOffset = readLogFileSize(params.logPath);
-      const result = await runOpenClaw({
+      const result = await runQuietCore({
         lane: params.lane,
         env: params.env,
         args: buildReleaseAgentTurnArgs(sessionId),
@@ -3730,7 +3730,7 @@ async function runCleanup(cleanupFns) {
   }
 }
 
-async function runOpenClaw(params) {
+async function runQuietCore(params) {
   return runCommand(process.execPath, [installedEntryPath(params.lane.prefixDir), ...params.args], {
     cwd: params.lane.homeDir,
     env: params.env,

@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import {
   OPENCLAW_CRABLINE_DEFAULT_CHANNEL,
-  resolveOpenClawCrablineChannelDriverSelection,
+  resolveQuietCoreCrablineChannelDriverSelection,
 } from "@openclaw/crabline";
 import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
 import { parseStrictPositiveInteger } from "quiet-core-bot/plugin-sdk/number-runtime";
@@ -911,7 +911,7 @@ export async function runQaSuiteCommand(opts: QaSuiteCommandOptions) {
   }
   const channelDriverSelection =
     channelDriver === "crabline"
-      ? resolveOpenClawCrablineChannelDriverSelection({
+      ? resolveQuietCoreCrablineChannelDriverSelection({
           channel: resolveQaSuiteScenarioChannel({
             defaultChannel: OPENCLAW_CRABLINE_DEFAULT_CHANNEL,
             explicitChannel: opts.channel,

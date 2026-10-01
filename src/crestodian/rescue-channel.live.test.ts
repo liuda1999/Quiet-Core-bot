@@ -5,7 +5,7 @@ import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { CommandContext } from "../auto-reply/reply/commands-types.js";
 import { clearConfigCache } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { runCrestodianRescueMessage } from "./rescue-message.js";
 
 const originalStateDir = process.env.QUIET_CORE_STATE_DIR;
@@ -38,7 +38,7 @@ function commandContext(channel = process.env.QUIET_CORE_LIVE_CRESTODIAN_CHANNEL
 
 async function runRescue(params: {
   commandBody: string;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   ctx?: CommandContext;
 }) {
   const ctx = params.ctx ?? commandContext();
@@ -83,7 +83,7 @@ describeLive("Crestodian live rescue channel smoke", () => {
       ),
     );
 
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       crestodian: { rescue: { enabled: true } },
       tools: { exec: { security: "full", ask: "off" } },
     };
@@ -98,7 +98,7 @@ describeLive("Crestodian live rescue channel smoke", () => {
       "Default model: openai/gpt-5.5",
     );
 
-    const config = JSON.parse(await fs.readFile(configPath, "utf8")) as OpenClawConfig;
+    const config = JSON.parse(await fs.readFile(configPath, "utf8")) as QuietCoreConfig;
     const defaultModel = config.agents?.defaults?.model;
     if (!defaultModel || typeof defaultModel !== "object") {
       throw new Error("expected default model object");

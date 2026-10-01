@@ -1,7 +1,7 @@
 // Post-install migration tests cover migration prompts and command guidance.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createWizardPrompter } from "../../test/helpers/wizard-prompter.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { createNonExitingRuntime } from "../runtime.js";
 import type { WizardPrompter } from "./prompts.js";
 
@@ -75,13 +75,13 @@ function setTTY(isTTY: boolean): void {
 }
 
 function buildBaseArgs(overrides: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   prompter?: WizardPrompter;
   installedPluginIds?: readonly string[];
   nonInteractive?: boolean;
 }) {
   return {
-    config: overrides.config ?? ({} as OpenClawConfig),
+    config: overrides.config ?? ({} as QuietCoreConfig),
     runtime: createNonExitingRuntime(),
     prompter: overrides.prompter ?? createWizardPrompter(),
     installedPluginIds: overrides.installedPluginIds ?? ["codex"],
@@ -111,7 +111,7 @@ describe("offerPostInstallMigrations", () => {
   });
 
   it("returns early when no plugins were installed in this onboarding step", async () => {
-    const config = { plugins: { entries: { codex: { enabled: true } } } } as OpenClawConfig;
+    const config = { plugins: { entries: { codex: { enabled: true } } } } as QuietCoreConfig;
     const result = await offerPostInstallMigrations(
       buildBaseArgs({ config, installedPluginIds: [] }),
     );
@@ -202,7 +202,7 @@ describe("offerPostInstallMigrations", () => {
           },
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     migrateDefaultCommand.mockResolvedValueOnce({
       providerId: "codex",
       source: "/home/user/.codex",

@@ -16,7 +16,7 @@ import {
 import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
 import type { CommandEntry } from "../../packages/gateway-protocol/src/index.js";
 import { resolveAgentIdByWorkspacePath, resolveDefaultAgentId } from "../agents/agent-scope.js";
-import { getRuntimeConfig, type OpenClawConfig } from "../config/config.js";
+import { getRuntimeConfig, type QuietCoreConfig } from "../config/config.js";
 import { isChatStopCommandText } from "../gateway/chat-abort.js";
 import { registerUncaughtExceptionHandler } from "../infra/unhandled-rejections.js";
 import { getWindowsSystem32ExePath } from "../infra/windows-install-roots.js";
@@ -94,7 +94,7 @@ const OPENAI_CODEX_PROVIDER = "openai";
 
 type RunTuiOptions = TuiOptions & {
   backend?: TuiBackend;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   title?: string;
 };
 
@@ -195,7 +195,7 @@ export function resolveTuiSessionKey(params: {
 }
 
 export function resolveTuiFooterHostLabel(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   connectionUrl: string;
 }): string | null {
   if (params.config.tui?.footer?.showRemoteHost !== true) {
@@ -205,7 +205,7 @@ export function resolveTuiFooterHostLabel(params: {
 }
 
 export function resolveInitialTuiAgentId(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   fallbackAgentId: string;
   initialSessionInput?: string;
   cwd?: string;
@@ -520,7 +520,7 @@ export function resolveTuiCtrlCAction(params: {
   return resolveCtrlCAction(params);
 }
 
-function resolveEmptySessionInfoDefaults(config: OpenClawConfig): SessionInfo {
+function resolveEmptySessionInfoDefaults(config: QuietCoreConfig): SessionInfo {
   return {
     verboseLevel: config.agents?.defaults?.verboseDefault,
   };

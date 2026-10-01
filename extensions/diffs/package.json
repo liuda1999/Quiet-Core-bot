@@ -1,7 +1,7 @@
 {
   "name": "@quiet-core/diffs",
   "version": "2026.6.11",
-  "description": "OpenClaw read-only diff viewer plugin and file renderer for agents.",
+  "description": "QuietCore read-only diff viewer plugin and file renderer for agents.",
   "repository": {
     "type": "git",
     "url": "https://github.com/liuda1999/Quiet-Core-bot"

@@ -2,7 +2,7 @@
 // recovery-state markers, and failed-entry moves.
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { openOpenClawStateDatabase } from "../../state/quiet-core-bot-state-db.js";
+import { openQuietCoreStateDatabase } from "../../state/quiet-core-bot-state-db.js";
 import {
   ackDelivery,
   enqueueDelivery,
@@ -20,7 +20,7 @@ describe("delivery-queue storage", () => {
     enqueueDelivery(params, rootDir);
 
   function readStatus(id: string): string | undefined {
-    const { db } = openOpenClawStateDatabase({
+    const { db } = openQuietCoreStateDatabase({
       env: { ...process.env, QUIET_CORE_STATE_DIR: tmpDir() },
     });
     const row = db

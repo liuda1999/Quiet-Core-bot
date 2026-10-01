@@ -9,19 +9,19 @@ import {
   getRuntimeConfigSnapshot,
   getRuntimeConfigSourceSnapshot,
 } from "../config/runtime-snapshot.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { resolvePluginTools } from "../plugins/tools.js";
 import { normalizeDeliveryContext } from "../utils/delivery-context.js";
 import { resolveApiKeyForProfile, resolveAuthProfileOrder } from "./auth-profiles.js";
 import type { AuthProfileStore } from "./auth-profiles/types.js";
 import {
-  resolveOpenClawPluginToolInputs,
-  type OpenClawPluginToolOptions,
+  resolveQuietCorePluginToolInputs,
+  type QuietCorePluginToolOptions,
 } from "./quiet-core-bot-tools.plugin-context.js";
 import { applyPluginToolDeliveryDefaults } from "./plugin-tool-delivery-defaults.js";
 import type { AnyAgentTool } from "./tools/common.js";
 
-type ResolveOpenClawPluginToolsOptions = OpenClawPluginToolOptions & {
+type ResolveQuietCorePluginToolsOptions = QuietCorePluginToolOptions & {
   pluginToolAllowlist?: string[];
   pluginToolDenylist?: string[];
   currentChannelId?: string;
@@ -41,8 +41,8 @@ type ResolveOpenClawPluginToolsOptions = OpenClawPluginToolOptions & {
 };
 
 function resolveApplicablePluginRuntimeConfig(
-  inputConfig?: OpenClawConfig,
-): OpenClawConfig | undefined {
+  inputConfig?: QuietCoreConfig,
+): QuietCoreConfig | undefined {
   const runtimeConfig = getRuntimeConfigSnapshot() ?? undefined;
   if (!runtimeConfig) {
     return inputConfig;
@@ -62,9 +62,9 @@ function resolveApplicablePluginRuntimeConfig(
 }
 
 /** Resolves plugin tools for an agent run and applies delivery-context defaults. */
-export function resolveOpenClawPluginToolsForOptions(params: {
-  options?: ResolveOpenClawPluginToolsOptions;
-  resolvedConfig?: OpenClawConfig;
+export function resolveQuietCorePluginToolsForOptions(params: {
+  options?: ResolveQuietCorePluginToolsOptions;
+  resolvedConfig?: QuietCoreConfig;
   existingToolNames?: Set<string>;
 }): AnyAgentTool[] {
   if (params.options?.disablePluginTools) {
@@ -111,7 +111,7 @@ export function resolveOpenClawPluginToolsForOptions(params: {
         return undefined;
       }
     : undefined;
-  const pluginToolInputs = resolveOpenClawPluginToolInputs({
+  const pluginToolInputs = resolveQuietCorePluginToolInputs({
     options: params.options,
     resolvedConfig: params.resolvedConfig,
     runtimeConfig: resolveCurrentRuntimeConfig(),

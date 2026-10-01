@@ -14,20 +14,20 @@ import {
 } from "./chrome.executables.js";
 import {
   clearStaleChromeSingletonLocks,
-  decorateOpenClawProfile,
+  decorateQuietCoreProfile,
   diagnoseChromeCdp,
   ensureProfileCleanExit,
   findChromeExecutableLinux,
   findChromeExecutableMac,
   findChromeExecutableWindows,
   formatChromeCdpDiagnostic,
-  buildOpenClawChromeLaunchArgs,
+  buildQuietCoreChromeLaunchArgs,
   getChromeWebSocketUrl,
   isProfileDecorated,
   isChromeCdpReady,
   isChromeReachable,
   resolveBrowserExecutableForPlatform,
-  stopOpenClawChrome,
+  stopQuietCoreChrome,
 } from "./chrome.js";
 import {
   DEFAULT_QUIET_CORE_BROWSER_COLOR,
@@ -38,7 +38,7 @@ import { DEFAULT_DOWNLOAD_DIR } from "./paths.js";
 
 const CHROME_TEST_WS_MAX_PAYLOAD_BYTES = 1024 * 1024;
 
-type StopChromeTarget = Parameters<typeof stopOpenClawChrome>[0];
+type StopChromeTarget = Parameters<typeof stopQuietCoreChrome>[0];
 type ChromeCdpDiagnostic = Awaited<ReturnType<typeof diagnoseChromeCdp>>;
 
 function expectFailedChromeCdpDiagnostic(
@@ -121,7 +121,7 @@ async function withMockChromeCdpServer(params: {
 }
 
 async function stopChromeWithProc(proc: ReturnType<typeof makeChromeTestProc>, timeoutMs: number) {
-  await stopOpenClawChrome(
+  await stopQuietCoreChrome(
     {
       proc,
       cdpPort: 12345,
@@ -169,7 +169,7 @@ describe("browser chrome profile decoration", () => {
 
   it("writes expected name + signed ARGB seed to Chrome prefs", async () => {
     const userDataDir = await createUserDataDir();
-    decorateOpenClawProfile(userDataDir, { color: DEFAULT_QUIET_CORE_BROWSER_COLOR });
+    decorateQuietCoreProfile(userDataDir, { color: DEFAULT_QUIET_CORE_BROWSER_COLOR });
 
     const expectedSignedArgb = ((0xff << 24) | 0xff4500) >> 0;
 
@@ -202,7 +202,7 @@ describe("browser chrome profile decoration", () => {
 
   it("writes managed download prefs when a download dir is provided", async () => {
     const userDataDir = await createUserDataDir();
-    decorateOpenClawProfile(userDataDir, {
+    decorateQuietCoreProfile(userDataDir, {
       color: DEFAULT_QUIET_CORE_BROWSER_COLOR,
       downloadDir: DEFAULT_DOWNLOAD_DIR,
     });
@@ -227,7 +227,7 @@ describe("browser chrome profile decoration", () => {
 
   it("treats missing managed download prefs as undecorated when required", async () => {
     const userDataDir = await createUserDataDir();
-    decorateOpenClawProfile(userDataDir, { color: DEFAULT_QUIET_CORE_BROWSER_COLOR });
+    decorateQuietCoreProfile(userDataDir, { color: DEFAULT_QUIET_CORE_BROWSER_COLOR });
 
     expect(
       isProfileDecorated(
@@ -241,7 +241,7 @@ describe("browser chrome profile decoration", () => {
 
   it("best-effort writes name when color is invalid", async () => {
     const userDataDir = await createUserDataDir();
-    decorateOpenClawProfile(userDataDir, { color: "lobster-orange" });
+    decorateQuietCoreProfile(userDataDir, { color: "lobster-orange" });
     const def = await readDefaultProfileFromLocalState(userDataDir);
 
     expect(def.name).toBe(DEFAULT_QUIET_CORE_BROWSER_PROFILE_NAME);
@@ -258,7 +258,7 @@ describe("browser chrome profile decoration", () => {
       "utf-8",
     );
 
-    decorateOpenClawProfile(userDataDir, { color: DEFAULT_QUIET_CORE_BROWSER_COLOR });
+    decorateQuietCoreProfile(userDataDir, { color: DEFAULT_QUIET_CORE_BROWSER_COLOR });
 
     const localState = await readJson(path.join(userDataDir, "Local State"));
     expect(typeof localState.profile).toBe("object");
@@ -277,8 +277,8 @@ describe("browser chrome profile decoration", () => {
 
   it("is idempotent when rerun on an existing profile", async () => {
     const userDataDir = await createUserDataDir();
-    decorateOpenClawProfile(userDataDir, { color: DEFAULT_QUIET_CORE_BROWSER_COLOR });
-    decorateOpenClawProfile(userDataDir, { color: DEFAULT_QUIET_CORE_BROWSER_COLOR });
+    decorateQuietCoreProfile(userDataDir, { color: DEFAULT_QUIET_CORE_BROWSER_COLOR });
+    decorateQuietCoreProfile(userDataDir, { color: DEFAULT_QUIET_CORE_BROWSER_COLOR });
 
     const prefs = await readJson(path.join(userDataDir, "Default", "Preferences"));
     const profile = prefs.profile as Record<string, unknown>;
@@ -871,20 +871,20 @@ describe("browser chrome helpers", () => {
     );
   });
 
-  it("stopOpenClawChrome no-ops when process is already killed", async () => {
+  it("stopQuietCoreChrome no-ops when process is already killed", async () => {
     const proc = makeChromeTestProc({ killed: true });
     await stopChromeWithProc(proc, 10);
     expect(proc.kill).not.toHaveBeenCalled();
   });
 
-  it("stopOpenClawChrome sends SIGTERM and returns once CDP is down", async () => {
+  it("stopQuietCoreChrome sends SIGTERM and returns once CDP is down", async () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("down")));
     const proc = makeChromeTestProc();
     await stopChromeWithProc(proc, 10);
     expect(proc.kill).toHaveBeenCalledWith("SIGTERM");
   });
 
-  it("stopOpenClawChrome escalates to SIGKILL when CDP stays reachable", async () => {
+  it("stopQuietCoreChrome escalates to SIGKILL when CDP stays reachable", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -898,7 +898,7 @@ describe("browser chrome helpers", () => {
     expect(proc.kill).toHaveBeenNthCalledWith(2, "SIGKILL");
   });
 
-  it("stopOpenClawChrome releases the managed-proxy CDP bypass exactly once on a double stop", async () => {
+  it("stopQuietCoreChrome releases the managed-proxy CDP bypass exactly once on a double stop", async () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("down")));
     const proc = makeChromeTestProc();
     const release = vi.fn();
@@ -907,12 +907,12 @@ describe("browser chrome helpers", () => {
       cdpPort: 12345,
       releaseCdpProxyBypass: release,
     } as unknown as StopChromeTarget;
-    await stopOpenClawChrome(running, 10);
-    await stopOpenClawChrome(running, 10);
+    await stopQuietCoreChrome(running, 10);
+    await stopQuietCoreChrome(running, 10);
     expect(release).toHaveBeenCalledOnce();
   });
 
-  it("stopOpenClawChrome still releases the bypass when the SIGKILL fallback fires", async () => {
+  it("stopQuietCoreChrome still releases the bypass when the SIGKILL fallback fires", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -927,13 +927,13 @@ describe("browser chrome helpers", () => {
       cdpPort: 12345,
       releaseCdpProxyBypass: release,
     } as unknown as StopChromeTarget;
-    await stopOpenClawChrome(running, 1);
+    await stopQuietCoreChrome(running, 1);
     expect(proc.kill).toHaveBeenNthCalledWith(1, "SIGTERM");
     expect(proc.kill).toHaveBeenNthCalledWith(2, "SIGKILL");
     expect(release).toHaveBeenCalledOnce();
   });
 
-  it("stopOpenClawChrome swallows a throw from the bypass release callback", async () => {
+  it("stopQuietCoreChrome swallows a throw from the bypass release callback", async () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("down")));
     const proc = makeChromeTestProc();
     const release = vi.fn(() => {
@@ -944,7 +944,7 @@ describe("browser chrome helpers", () => {
       cdpPort: 12345,
       releaseCdpProxyBypass: release,
     } as unknown as StopChromeTarget;
-    await expect(stopOpenClawChrome(running, 10)).resolves.toBeUndefined();
+    await expect(stopQuietCoreChrome(running, 10)).resolves.toBeUndefined();
     expect(release).toHaveBeenCalledOnce();
   });
 });
@@ -998,7 +998,7 @@ describe("chrome executables", () => {
 
 describe("browser chrome launch args", () => {
   it("does not force an about:blank tab at startup", () => {
-    const args = buildOpenClawChromeLaunchArgs({
+    const args = buildQuietCoreChromeLaunchArgs({
       resolved: {
         enabled: true,
         controlPort: 18791,

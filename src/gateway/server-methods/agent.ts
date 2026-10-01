@@ -73,7 +73,7 @@ import {
   updateSessionStore,
 } from "../../config/sessions.js";
 import { resolveMaintenanceConfigFromInput } from "../../config/sessions/store-maintenance.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import {
   assertAgentRunLifecycleGenerationCurrent,
   claimAgentRunContext,
@@ -175,7 +175,7 @@ import type {
 const RESET_COMMAND_RE = /^\/(new|reset)(?:\s+([\s\S]*))?$/i;
 
 type AgentSendSessionLifecycleTransition = {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   sessionKey: string;
   sessionId: string;
   storePath: string;
@@ -324,7 +324,7 @@ function buildBareSessionResetResponse(params: {
 }
 
 async function deliverBareSessionResetResult(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   context: GatewayRequestHandlerOptions["context"];
   reason: "new" | "reset";
   sessionId?: string;
@@ -393,7 +393,7 @@ async function deliverBareSessionResetResult(params: {
 }
 
 async function resolveBareSessionResetResult(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   context: GatewayRequestHandlerOptions["context"];
   reason: "new" | "reset";
   sessionId?: string;
@@ -481,11 +481,11 @@ async function resolveBareSessionResetResult(params: {
 }
 
 function loadBareSessionResetDeliverySession(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   sessionKey: string;
   agentId?: string;
 }): {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   entry?: SessionEntry;
   agentId: string;
 } {
@@ -591,7 +591,7 @@ function resolveGatewayAgentTaskTrackingMode(params: {
 }
 
 async function registerPluginSubagentRunFromGateway(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   runId: string;
   childSessionKey: string;
   task: string;
@@ -1598,7 +1598,7 @@ export const agentHandlers: GatewayRequestHandlers = {
       let resolvedSessionId = requestedSessionId;
       let sessionEntry: SessionEntry | undefined;
       let bestEffortDeliver = requestedBestEffortDeliver ?? false;
-      let cfgForAgent: OpenClawConfig | undefined;
+      let cfgForAgent: QuietCoreConfig | undefined;
       let resolvedSessionKey = requestedSessionKey;
       let resolvedSessionAgentId: string | undefined;
       let isNewSession = false;

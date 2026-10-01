@@ -15,7 +15,7 @@ const { createTempDir } = createScriptTestHarness();
 
 function writeDocsFixture(root: string): void {
   fs.mkdirSync(path.join(root, "docs"), { recursive: true });
-  fs.writeFileSync(path.join(root, "README.md"), "# OpenClaw\n", "utf8");
+  fs.writeFileSync(path.join(root, "README.md"), "# QuietCore\n", "utf8");
   fs.writeFileSync(path.join(root, "docs", "guide.mdx"), "# Guide\n", "utf8");
 }
 

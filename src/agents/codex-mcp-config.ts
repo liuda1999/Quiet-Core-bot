@@ -29,7 +29,7 @@ export type {
   LoadCodexBundleMcpThreadConfigParams,
 } from "./codex-mcp-config.types.js";
 
-function isOpenClawLoopbackMcpServer(name: string, server: BundleMcpServerConfig): boolean {
+function isQuietCoreLoopbackMcpServer(name: string, server: BundleMcpServerConfig): boolean {
   return (
     name === "quiet-core-bot" &&
     typeof server.url === "string" &&
@@ -76,7 +76,7 @@ export function normalizeCodexMcpServerConfig(
   const defaultToolsApprovalMode = resolveCodexDefaultToolsApprovalMode(server);
   if (defaultToolsApprovalMode) {
     next.default_tools_approval_mode = defaultToolsApprovalMode;
-  } else if (isOpenClawLoopbackMcpServer(name, server)) {
+  } else if (isQuietCoreLoopbackMcpServer(name, server)) {
     // Quiet Core bot's loopback MCP exposes local tools; Codex should ask for approval
     // unless plugin metadata explicitly selected another approval mode.
     next.default_tools_approval_mode = "approve";

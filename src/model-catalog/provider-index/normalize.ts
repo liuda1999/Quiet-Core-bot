@@ -10,11 +10,11 @@ import { parseRegistryNpmSpec } from "../../infra/npm-registry-spec.js";
 import { isBlockedObjectKey } from "../../infra/prototype-keys.js";
 import { isRecord } from "../../utils.js";
 import type {
-  OpenClawProviderIndex,
-  OpenClawProviderIndexPluginInstall,
-  OpenClawProviderIndexPlugin,
-  OpenClawProviderIndexProviderAuthChoice,
-  OpenClawProviderIndexProvider,
+  QuietCoreProviderIndex,
+  QuietCoreProviderIndexPluginInstall,
+  QuietCoreProviderIndexPlugin,
+  QuietCoreProviderIndexProviderAuthChoice,
+  QuietCoreProviderIndexProvider,
 } from "./types.js";
 
 // Provider-index normalization accepts generated discovery metadata from the
@@ -26,7 +26,7 @@ function normalizeSafeKey(value: unknown): string {
   return key && !isBlockedObjectKey(key) ? key : "";
 }
 
-function normalizeInstall(value: unknown): OpenClawProviderIndexPluginInstall | undefined {
+function normalizeInstall(value: unknown): QuietCoreProviderIndexPluginInstall | undefined {
   if (!isRecord(value)) {
     return undefined;
   }
@@ -55,7 +55,7 @@ function normalizeInstall(value: unknown): OpenClawProviderIndexPluginInstall | 
   };
 }
 
-function normalizePlugin(value: unknown): OpenClawProviderIndexPlugin | undefined {
+function normalizePlugin(value: unknown): QuietCoreProviderIndexPlugin | undefined {
   if (!isRecord(value)) {
     return undefined;
   }
@@ -100,7 +100,7 @@ function normalizePreviewCatalog(params: {
 
 function normalizeOnboardingScopes(
   value: unknown,
-): OpenClawProviderIndexProviderAuthChoice["onboardingScopes"] | undefined {
+): QuietCoreProviderIndexProviderAuthChoice["onboardingScopes"] | undefined {
   const scopes = normalizeUniqueTrimmedStringList(value).filter(
     (scope): scope is "text-inference" | "image-generation" | "music-generation" =>
       scope === "text-inference" || scope === "image-generation" || scope === "music-generation",
@@ -110,7 +110,7 @@ function normalizeOnboardingScopes(
 
 function normalizeAssistantVisibility(
   value: unknown,
-): OpenClawProviderIndexProviderAuthChoice["assistantVisibility"] | undefined {
+): QuietCoreProviderIndexProviderAuthChoice["assistantVisibility"] | undefined {
   return value === "visible" || value === "manual-only" ? value : undefined;
 }
 
@@ -118,7 +118,7 @@ function normalizeAuthChoice(params: {
   providerId: string;
   providerName: string;
   value: unknown;
-}): OpenClawProviderIndexProviderAuthChoice | undefined {
+}): QuietCoreProviderIndexProviderAuthChoice | undefined {
   if (!isRecord(params.value)) {
     return undefined;
   }
@@ -161,20 +161,20 @@ function normalizeAuthChoices(params: {
   providerId: string;
   providerName: string;
   value: unknown;
-}): readonly OpenClawProviderIndexProviderAuthChoice[] | undefined {
+}): readonly QuietCoreProviderIndexProviderAuthChoice[] | undefined {
   if (!Array.isArray(params.value)) {
     return undefined;
   }
   const choices = params.value
     .map((value) => normalizeAuthChoice({ ...params, value }))
-    .filter((choice): choice is OpenClawProviderIndexProviderAuthChoice => Boolean(choice));
+    .filter((choice): choice is QuietCoreProviderIndexProviderAuthChoice => Boolean(choice));
   return choices.length > 0 ? choices : undefined;
 }
 
 function normalizeProvider(
   rawProviderId: string,
   value: unknown,
-): OpenClawProviderIndexProvider | undefined {
+): QuietCoreProviderIndexProvider | undefined {
   if (!isRecord(value)) {
     return undefined;
   }
@@ -213,14 +213,14 @@ function normalizeProvider(
   };
 }
 
-export function normalizeOpenClawProviderIndex(value: unknown): OpenClawProviderIndex | undefined {
+export function normalizeQuietCoreProviderIndex(value: unknown): QuietCoreProviderIndex | undefined {
   if (!isRecord(value) || value.version !== QUIET_CORE_PROVIDER_INDEX_VERSION) {
     return undefined;
   }
   if (!isRecord(value.providers)) {
     return undefined;
   }
-  const providers: Record<string, OpenClawProviderIndexProvider> = {};
+  const providers: Record<string, QuietCoreProviderIndexProvider> = {};
   for (const [rawProviderId, rawProvider] of Object.entries(value.providers)) {
     const providerId = normalizeModelCatalogProviderId(rawProviderId);
     // Provider ids become object keys, so blocked keys are dropped before

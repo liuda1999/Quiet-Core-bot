@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { applyPluginAutoEnable } from "../config/plugin-auto-enable.js";
-import { clearPluginLoaderCache, loadOpenClawPlugins } from "./loader.js";
+import { clearPluginLoaderCache, loadQuietCorePlugins } from "./loader.js";
 import { resetPluginRuntimeStateForTest } from "./runtime.js";
 
 const tempDirs: string[] = [];
@@ -121,7 +121,7 @@ describe("plugin loader preferOver activation", () => {
     };
     const autoEnabled = applyPluginAutoEnable({ config: rawConfig, env });
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       config: autoEnabled.config,
       activationSourceConfig: rawConfig,
@@ -160,7 +160,7 @@ describe("plugin loader preferOver activation", () => {
       QUIET_CORE_BUNDLED_PLUGINS_DIR: bundledRoot,
     };
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       config: {
         channels: { qqbot: { appId: "app", clientSecret: "secret" } },

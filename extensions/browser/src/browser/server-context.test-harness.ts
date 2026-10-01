@@ -74,13 +74,13 @@ export function makeBrowserServerState(params?: {
   };
 }
 
-/** Mocks a launched OpenClaw Chrome process with the supplied pid. */
+/** Mocks a launched QuietCore Chrome process with the supplied pid. */
 export function mockLaunchedChrome(
-  launchOpenClawChrome: { mockResolvedValue: (value: RunningChrome) => unknown },
+  launchQuietCoreChrome: { mockResolvedValue: (value: RunningChrome) => unknown },
   pid: number,
 ) {
   const proc = new EventEmitter() as unknown as ChildProcessWithoutNullStreams;
-  launchOpenClawChrome.mockResolvedValue({
+  launchQuietCoreChrome.mockResolvedValue({
     pid,
     exe: { kind: "chromium", path: "/usr/bin/chromium" },
     userDataDir: "/tmp/quiet-core-bot-test",

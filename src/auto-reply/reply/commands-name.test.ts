@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { getSessionEntry, updateSessionStore, upsertSessionEntry } from "../../config/sessions.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { buildBuiltinChatCommands } from "../commands-registry.shared.js";
 import { takeCommandSessionMetadataChanges } from "./command-session-metadata.js";
 import { loadCommandHandlers } from "./commands-handlers.runtime.js";
@@ -31,7 +31,7 @@ function buildNameParams(
 ): HandleCommandsParams {
   const activeSessionKey = overrides.sessionKey ?? sessionKey;
   return {
-    cfg: {} as OpenClawConfig,
+    cfg: {} as QuietCoreConfig,
     ctx: {
       Provider: "web",
       Surface: "web",

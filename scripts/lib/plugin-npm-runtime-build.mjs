@@ -146,7 +146,7 @@ export function resolvePluginNpmRuntimePackageFiles(plan) {
   return [...merged];
 }
 
-function normalizeOpenClawPeerRange(value) {
+function normalizeQuietCorePeerRange(value) {
   const normalized = normalizePackageEntry(value);
   if (!normalized) {
     return "";
@@ -156,19 +156,19 @@ function normalizeOpenClawPeerRange(value) {
     : `>=${normalized}`;
 }
 
-function resolveOpenClawPeerRange(packageJson, rootPackageJson) {
+function resolveQuietCorePeerRange(packageJson, rootPackageJson) {
   return (
-    normalizeOpenClawPeerRange(packageJson["quiet-core-bot"]?.compat?.pluginApi) ||
-    normalizeOpenClawPeerRange(packageJson.peerDependencies?.["quiet-core-bot"]) ||
-    normalizeOpenClawPeerRange(packageJson["quiet-core-bot"]?.build?.openclawVersion) ||
-    normalizeOpenClawPeerRange(rootPackageJson?.version) ||
-    normalizeOpenClawPeerRange(packageJson.version)
+    normalizeQuietCorePeerRange(packageJson["quiet-core-bot"]?.compat?.pluginApi) ||
+    normalizeQuietCorePeerRange(packageJson.peerDependencies?.["quiet-core-bot"]) ||
+    normalizeQuietCorePeerRange(packageJson["quiet-core-bot"]?.build?.openclawVersion) ||
+    normalizeQuietCorePeerRange(rootPackageJson?.version) ||
+    normalizeQuietCorePeerRange(packageJson.version)
   );
 }
 
-/** Resolve package peer dependency metadata for the OpenClaw plugin API. */
+/** Resolve package peer dependency metadata for the QuietCore plugin API. */
 export function resolvePluginNpmRuntimePackagePeerMetadata(plan) {
-  const openclawPeerRange = resolveOpenClawPeerRange(plan.packageJson, plan.rootPackageJson);
+  const openclawPeerRange = resolveQuietCorePeerRange(plan.packageJson, plan.rootPackageJson);
   if (!openclawPeerRange) {
     throw new Error(
       `cannot infer quiet-core-bot peerDependency range for ${plan.pluginDir}; set quiet-core-bot.compat.pluginApi or package version`,
@@ -176,7 +176,7 @@ export function resolvePluginNpmRuntimePackagePeerMetadata(plan) {
   }
   const existingPeerDependencies = getStringRecord(plan.packageJson.peerDependencies);
   const existingPeerDependenciesMeta = getRecord(plan.packageJson.peerDependenciesMeta);
-  const existingOpenClawMeta = getRecord(existingPeerDependenciesMeta["quiet-core-bot"]);
+  const existingQuietCoreMeta = getRecord(existingPeerDependenciesMeta["quiet-core-bot"]);
   return {
     peerDependencies: {
       ...existingPeerDependencies,
@@ -185,7 +185,7 @@ export function resolvePluginNpmRuntimePackagePeerMetadata(plan) {
     peerDependenciesMeta: {
       ...existingPeerDependenciesMeta,
       "quiet-core-bot": {
-        ...existingOpenClawMeta,
+        ...existingQuietCoreMeta,
         optional: true,
       },
     },

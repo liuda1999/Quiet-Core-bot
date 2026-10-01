@@ -2,7 +2,7 @@
 import { normalizeOptionalString } from "../../../../packages/normalization-core/src/string-coerce.js";
 import { note } from "../../../../packages/terminal-core/src/note.js";
 import { formatCliCommand } from "../../../cli/command-format.js";
-import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../config/types.quiet-core-bot.js";
 import {
   loadCronQuarantineFile,
   loadCronJobsStoreWithConfigJobs,
@@ -74,7 +74,7 @@ export type LegacyCronRepairResult = {
 };
 
 async function loadLegacyCronRepairState(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   onlyIfLegacyDetected?: boolean;
 }): Promise<LegacyCronRepairState | null> {
   const storePath = resolveCronJobsStorePath(params.cfg.cron?.store);
@@ -128,7 +128,7 @@ async function loadLegacyCronRepairState(params: {
 }
 
 async function applyLegacyCronStoreRepair(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   state: LegacyCronRepairState;
   normalized?: ReturnType<typeof normalizeStoredCronJobs>;
 }): Promise<LegacyCronRepairResult> {
@@ -216,7 +216,7 @@ async function applyLegacyCronStoreRepair(params: {
 }
 
 export async function repairLegacyCronStoreWithoutPrompt(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
 }): Promise<LegacyCronRepairResult> {
   const storePath = resolveCronJobsStorePath(normalizeOptionalString(params.cfg.cron?.store));
   let state: LegacyCronRepairState | null;
@@ -250,7 +250,7 @@ function noteLegacyCronRepairResult(result: LegacyCronRepairResult): void {
 
 /** Inspect cron storage and optionally repair legacy JSON/SQLite/payload shapes. */
 export async function maybeRepairLegacyCronStore(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   options: DoctorOptions;
   prompter: Pick<DoctorPrompter, "confirm">;
 }) {

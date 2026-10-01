@@ -2,7 +2,7 @@
  * Signal reactions via signal-cli JSON-RPC API
  */
 
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { requireRuntimeConfig } from "quiet-core-bot/plugin-sdk/plugin-config-runtime";
 import { normalizeLowercaseStringOrEmpty } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import { resolveSignalAccount } from "./accounts.js";
@@ -10,7 +10,7 @@ import { signalRpcRequest } from "./client-adapter.js";
 import { resolveSignalRpcContext } from "./rpc-context.js";
 
 export type SignalReactionOpts = {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   baseUrl?: string;
   account?: string;
   accountId?: string;

@@ -39,7 +39,7 @@ const mocks = vi.hoisted(() => ({
   maybeScanExtraGatewayServices: vi.fn().mockResolvedValue(undefined),
   noteMacLaunchAgentOverrides: vi.fn(),
   noteMacLaunchctlGatewayEnvOverrides: vi.fn(),
-  noteMacStaleOpenClawUpdateLaunchdJobs: vi.fn(),
+  noteMacStaleQuietCoreUpdateLaunchdJobs: vi.fn(),
   gatewaySecretInputPathCanWin: vi.fn(),
   readGatewaySecretInputValue: vi.fn((..._args: unknown[]) => undefined as string | undefined),
   checkGatewayHealth: vi.fn(async () => ({
@@ -148,7 +148,7 @@ vi.mock("../gateway/call.js", () => ({
 vi.mock("../commands/doctor-platform-notes.js", () => ({
   noteMacLaunchAgentOverrides: mocks.noteMacLaunchAgentOverrides,
   noteMacLaunchctlGatewayEnvOverrides: mocks.noteMacLaunchctlGatewayEnvOverrides,
-  noteMacStaleOpenClawUpdateLaunchdJobs: mocks.noteMacStaleOpenClawUpdateLaunchdJobs,
+  noteMacStaleQuietCoreUpdateLaunchdJobs: mocks.noteMacStaleQuietCoreUpdateLaunchdJobs,
 }));
 
 vi.mock("../gateway/credentials-secret-inputs.js", async (importOriginal) => {
@@ -340,7 +340,7 @@ describe("doctor health contributions", () => {
     mocks.maybeScanExtraGatewayServices.mockResolvedValue(undefined);
     mocks.noteMacLaunchAgentOverrides.mockClear();
     mocks.noteMacLaunchctlGatewayEnvOverrides.mockClear();
-    mocks.noteMacStaleOpenClawUpdateLaunchdJobs.mockClear();
+    mocks.noteMacStaleQuietCoreUpdateLaunchdJobs.mockClear();
     mocks.gatewaySecretInputPathCanWin.mockClear();
     mocks.gatewaySecretInputPathCanWin.mockReset();
     mocks.readGatewaySecretInputValue.mockClear();

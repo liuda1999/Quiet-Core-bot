@@ -16,7 +16,7 @@ import {
   fetchRegistryJson,
   normalizeInstalledBinaryVersion,
   openClawNpmPostpublishVerifyUsage,
-  parseOpenClawNpmPostpublishVerifyArgs,
+  parseQuietCoreNpmPostpublishVerifyArgs,
   resolveInstalledBinaryCommandInvocation,
   resolveInstalledBinaryPath,
   retryNpmRegistryProvenanceRead,
@@ -26,26 +26,26 @@ import {
 
 const INSTALLED_ROOT_DIST_JS_FILE_SCAN_LIMIT = 10_000;
 
-describe("parseOpenClawNpmPostpublishVerifyArgs", () => {
+describe("parseQuietCoreNpmPostpublishVerifyArgs", () => {
   it("supports help and package-manager separators", () => {
-    expect(parseOpenClawNpmPostpublishVerifyArgs(["--help"])).toEqual({
+    expect(parseQuietCoreNpmPostpublishVerifyArgs(["--help"])).toEqual({
       help: true,
       version: "",
     });
-    expect(parseOpenClawNpmPostpublishVerifyArgs(["--", "2026.3.23"])).toEqual({
+    expect(parseQuietCoreNpmPostpublishVerifyArgs(["--", "2026.3.23"])).toEqual({
       help: false,
       version: "2026.3.23",
     });
   });
 
   it("rejects missing, option-like, and extra arguments before verification", () => {
-    expect(() => parseOpenClawNpmPostpublishVerifyArgs([])).toThrow(
+    expect(() => parseQuietCoreNpmPostpublishVerifyArgs([])).toThrow(
       openClawNpmPostpublishVerifyUsage(),
     );
-    expect(() => parseOpenClawNpmPostpublishVerifyArgs(["--tag"])).toThrow(
+    expect(() => parseQuietCoreNpmPostpublishVerifyArgs(["--tag"])).toThrow(
       "Unknown quiet-core-bot npm postpublish verifier option: --tag",
     );
-    expect(() => parseOpenClawNpmPostpublishVerifyArgs(["2026.3.23", "extra"])).toThrow(
+    expect(() => parseQuietCoreNpmPostpublishVerifyArgs(["2026.3.23", "extra"])).toThrow(
       "Unexpected quiet-core-bot npm postpublish verifier argument: extra",
     );
   });

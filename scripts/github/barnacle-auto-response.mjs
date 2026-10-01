@@ -30,7 +30,7 @@ const rules = [
     label: "r: false-positive",
     close: true,
     message:
-      "Closing this because it looks like a false positive or reclassification-only report rather than an actionable OpenClaw bug. If this is still a real issue, please open a fresh report with concrete reproduction steps and current-version details.",
+      "Closing this because it looks like a false positive or reclassification-only report rather than an actionable QuietCore bug. If this is still a real issue, please open a fresh report with concrete reproduction steps and current-version details.",
   },
   {
     label: "r: no-ci-pr",
@@ -63,7 +63,7 @@ const rules = [
     close: true,
     commentTriggers: ["bluebubbles", "blue bubbles"],
     message:
-      "BlueBubbles is deprecated and no longer ships as a bundled OpenClaw channel. Use iMessage via `imsg` instead: https://github.com/liuda1999/Quiet-Core-bot/channels/imessage. If this needs to stay BlueBubbles-backed, publish it as a third-party plugin on ClawHub instead of adding it back to core.",
+      "BlueBubbles is deprecated and no longer ships as a bundled QuietCore channel. Use iMessage via `imsg` instead: https://github.com/liuda1999/Quiet-Core-bot/channels/imessage. If this needs to stay BlueBubbles-backed, publish it as a third-party plugin on ClawHub instead of adding it back to core.",
   },
   {
     label: "r: moltbook",
@@ -72,7 +72,7 @@ const rules = [
     lockReason: "off-topic",
     commentTriggers: ["moltbook"],
     message:
-      "OpenClaw is not affiliated with Moltbook, and issues related to Moltbook should not be submitted here.",
+      "QuietCore is not affiliated with Moltbook, and issues related to Moltbook should not be submitted here.",
   },
 ];
 
@@ -115,7 +115,7 @@ export const managedLabelSpecs = {
   },
   "r: moltbook": {
     color: "B60205",
-    description: "Auto-close and lock: Moltbook is off-topic for OpenClaw.",
+    description: "Auto-close and lock: Moltbook is off-topic for QuietCore.",
   },
   "r: spam": {
     color: "B60205",
@@ -257,7 +257,7 @@ const candidateActionRules = [
     label: candidateLabels.lowSignalDocs,
     close: true,
     message:
-      "Closing this PR because the docs-only change is too low-signal for the core repo. Please reopen or resubmit with a concrete OpenClaw docs gap and linked context.",
+      "Closing this PR because the docs-only change is too low-signal for the core repo. Please reopen or resubmit with a concrete QuietCore docs gap and linked context.",
   },
   {
     label: candidateLabels.testOnlyNoBug,
@@ -275,7 +275,7 @@ const candidateActionRules = [
     label: candidateLabels.blankTemplate,
     close: true,
     message:
-      "Closing this PR because the template is mostly blank and does not describe a concrete OpenClaw problem, fix, or test plan. Please reopen or resubmit with the missing context filled in.",
+      "Closing this PR because the template is mostly blank and does not describe a concrete QuietCore problem, fix, or test plan. Please reopen or resubmit with the missing context filled in.",
   },
 ];
 

@@ -2,7 +2,7 @@
   "name": "@quiet-core/browser-plugin",
   "version": "2026.6.11",
   "private": true,
-  "description": "OpenClaw browser tool plugin",
+  "description": "QuietCore browser tool plugin",
   "type": "module",
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.29.0",

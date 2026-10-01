@@ -6,7 +6,7 @@ import {
 } from "@quiet-core/normalization-core/string-coerce";
 import type { CliDeps } from "../cli/deps.types.js";
 import type { CronFailureDestinationConfig } from "../config/types.cron.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   resolveCronDeliveryPlan,
   resolveFailureDestination,
@@ -29,7 +29,7 @@ type CronLogger = {
 
 type CronAgentResolver = (requested?: string | null) => {
   agentId: string;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
 };
 
 type CronWebhookTarget = {

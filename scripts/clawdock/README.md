@@ -2,7 +2,7 @@
 
 Stop typing `docker-compose` commands. Just type `clawdock-start`.
 
-Inspired by Simon Willison's [Running OpenClaw in Docker](https://til.simonwillison.net/llms/quiet-core-bot-docker).
+Inspired by Simon Willison's [Running QuietCore in Docker](https://til.simonwillison.net/llms/quiet-core-bot-docker).
 
 - [Quickstart](#quickstart)
 - [Available Commands](#available-commands)
@@ -49,7 +49,7 @@ If you previously installed ClawDock from `scripts/shell-helpers/clawdock-helper
 clawdock-help
 ```
 
-On first command, ClawDock auto-detects your OpenClaw directory:
+On first command, ClawDock auto-detects your QuietCore directory:
 
 - Checks common paths (`~/quiet-core-bot`, `~/workspace/quiet-core-bot`, etc.)
 - If found, asks you to confirm
@@ -98,7 +98,7 @@ clawdock-approve <request-id>
 | Command                   | Description                                    |
 | ------------------------- | ---------------------------------------------- |
 | `clawdock-shell`          | Interactive shell inside the gateway container |
-| `clawdock-cli <command>`  | Run OpenClaw CLI commands                      |
+| `clawdock-cli <command>`  | Run QuietCore CLI commands                      |
 | `clawdock-exec <command>` | Execute arbitrary commands in the container    |
 
 ### Web UI & Devices
@@ -129,8 +129,8 @@ clawdock-approve <request-id>
 | ---------------------- | ----------------------------------------- |
 | `clawdock-health`      | Run gateway health check                  |
 | `clawdock-token`       | Display the gateway authentication token  |
-| `clawdock-cd`          | Jump to the OpenClaw project directory    |
-| `clawdock-config`      | Open the OpenClaw config directory        |
+| `clawdock-cd`          | Jump to the QuietCore project directory    |
+| `clawdock-config`      | Open the QuietCore config directory        |
 | `clawdock-show-config` | Print config files with redacted values   |
 | `clawdock-workspace`   | Open the workspace directory              |
 | `clawdock-help`        | Show all available commands with examples |
@@ -200,18 +200,18 @@ volumes:
 
 This means:
 
-- `~/.quiet-core-bot/.env` is available inside the container at `/home/node/.quiet-core-bot/.env` — OpenClaw loads it automatically as the global env fallback
+- `~/.quiet-core-bot/.env` is available inside the container at `/home/node/.quiet-core-bot/.env` — QuietCore loads it automatically as the global env fallback
 - `~/.quiet-core-bot/quiet-core-bot.json` is available at `/home/node/.quiet-core-bot/quiet-core-bot.json` — the gateway watches it and hot-reloads most changes
-- `~/.quiet-core-bot-auth-profile-secrets` is available at `/home/node/.config/quiet-core-bot` — OpenClaw stores the auth-profile encryption key there
-- Downloadable external plugin packages and install records live under the mounted OpenClaw home
-- Bundled OpenClaw channel plugins, such as Discord when present in the image,
+- `~/.quiet-core-bot-auth-profile-secrets` is available at `/home/node/.config/quiet-core-bot` — QuietCore stores the auth-profile encryption key there
+- Downloadable external plugin packages and install records live under the mounted QuietCore home
+- Bundled QuietCore channel plugins, such as Discord when present in the image,
   should normally load from the image-matched bundled copy. Avoid installing
   pinned `@quiet-core/*` channel packages into the mounted home unless you
   deliberately want an external npm override.
 - No need to add API keys to `docker-compose.yml` or configure anything inside the container
 - Keys survive `clawdock-update`, `clawdock-rebuild`, and `clawdock-clean` because they live on the host
 
-The project `.env` feeds Docker Compose directly (gateway token, image name, ports). The `~/.quiet-core-bot/.env` feeds the OpenClaw process inside the container.
+The project `.env` feeds Docker Compose directly (gateway token, image name, ports). The `~/.quiet-core-bot/.env` feeds the QuietCore process inside the container.
 
 ### Example `~/.quiet-core-bot/.env`
 
@@ -236,7 +236,7 @@ QUIET_CORE_IMAGE=quiet-core-bot:local
 
 ### Env Precedence
 
-OpenClaw loads env vars in this order (highest wins, never overrides existing):
+QuietCore loads env vars in this order (highest wins, never overrides existing):
 
 1. **Process environment** — `docker-compose.yml` `environment:` block (gateway token, session keys)
 2. **`.env` in CWD** — project root `.env` (Docker infra vars)
@@ -246,7 +246,7 @@ OpenClaw loads env vars in this order (highest wins, never overrides existing):
 
 ## Common Workflows
 
-### Update OpenClaw
+### Update QuietCore
 
 > **Important:** `quiet-core-bot update` does not work inside Docker.
 > The container runs as a non-root user with a source-built image, so `npm i -g` fails with EACCES.
@@ -333,7 +333,7 @@ clawdock-fix-token
 This will:
 
 1. Read the token from your `.env` file
-2. Configure it in the OpenClaw config
+2. Configure it in the QuietCore config
 3. Restart the gateway
 4. Verify the configuration
 
@@ -349,7 +349,7 @@ docker ps
 
 - Docker and Docker Compose installed
 - Bash or Zsh shell
-- OpenClaw project (run `scripts/docker/setup.sh`)
+- QuietCore project (run `scripts/docker/setup.sh`)
 
 ## Development
 

@@ -4,11 +4,11 @@ import { randomUUID } from "node:crypto";
 import fs from "node:fs";
 import { access, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import type { OpenClawCrablineChannelDriverSelection } from "@openclaw/crabline";
+import type { QuietCoreCrablineChannelDriverSelection } from "@openclaw/crabline";
 import { sleep } from "quiet-core-bot/plugin-sdk/runtime-env";
 import { appendRegularFile } from "quiet-core-bot/plugin-sdk/security-runtime";
 import { uniqueStrings } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
-import { resolvePreferredOpenClawTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";
+import { resolvePreferredQuietCoreTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";
 import type { QaProviderMode } from "./model-selection.js";
 import { resolveQaForwardedLiveEnv, resolveQaLiveProviderConfigPath } from "./providers/env.js";
 import { DEFAULT_QA_LIVE_PROVIDER_MODE, getQaProvider } from "./providers/index.js";
@@ -80,7 +80,7 @@ type QaMultipassPlan = {
   fastMode?: boolean;
   thinkingDefault?: string;
   runtimePair?: [RuntimeId, RuntimeId];
-  channelDriverSelection?: OpenClawCrablineChannelDriverSelection;
+  channelDriverSelection?: QuietCoreCrablineChannelDriverSelection;
   enabledPluginIds?: string[];
   scenarioIds: string[];
   forwardedEnv: Record<string, string>;
@@ -245,7 +245,7 @@ export function createQaMultipassPlan(params: {
   scenarioIds?: string[];
   concurrency?: number;
   runtimePair?: [RuntimeId, RuntimeId];
-  channelDriverSelection?: OpenClawCrablineChannelDriverSelection;
+  channelDriverSelection?: QuietCoreCrablineChannelDriverSelection;
   enabledPluginIds?: string[];
   image?: string;
   cpus?: number;
@@ -575,7 +575,7 @@ export async function runQaMultipass(params: {
   scenarioIds?: string[];
   concurrency?: number;
   runtimePair?: [RuntimeId, RuntimeId];
-  channelDriverSelection?: OpenClawCrablineChannelDriverSelection;
+  channelDriverSelection?: QuietCoreCrablineChannelDriverSelection;
   enabledPluginIds?: string[];
   image?: string;
   cpus?: number;
@@ -586,7 +586,7 @@ export async function runQaMultipass(params: {
   await mkdir(plan.outputDir, { recursive: true });
   await writeFile(
     plan.hostLogPath,
-    `# OpenClaw QA Multipass host log\nvmName=${plan.vmName}\noutputDir=${plan.outputDir}\n\n`,
+    `# QuietCore QA Multipass host log\nvmName=${plan.vmName}\noutputDir=${plan.outputDir}\n\n`,
     "utf8",
   );
   await writeFile(
@@ -614,7 +614,7 @@ export async function runQaMultipass(params: {
   }
 
   const hostTransferDirPath = await fs.promises.mkdtemp(
-    path.join(resolvePreferredOpenClawTmpDir(), `${plan.vmName}-qa-suite-`),
+    path.join(resolvePreferredQuietCoreTmpDir(), `${plan.vmName}-qa-suite-`),
   );
   const hostTransferScriptPath = path.join(hostTransferDirPath, "guest-run.sh");
   await writeFile(hostTransferScriptPath, renderQaMultipassGuestScript(plan), {

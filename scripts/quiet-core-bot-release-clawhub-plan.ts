@@ -1,14 +1,14 @@
 #!/usr/bin/env -S node --import tsx
-// OpenClaw release ClawHub plan CLI emits release workflow routing as JSON.
+// QuietCore release ClawHub plan CLI emits release workflow routing as JSON.
 
 import { pathToFileURL } from "node:url";
 import {
-  buildOpenClawReleaseClawHubPlan,
-  parseOpenClawReleaseClawHubPlanArgs,
+  buildQuietCoreReleaseClawHubPlan,
+  parseQuietCoreReleaseClawHubPlanArgs,
 } from "./lib/quiet-core-bot-release-clawhub-plan.ts";
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
-  const args = parseOpenClawReleaseClawHubPlanArgs(process.argv.slice(2));
-  const plan = await buildOpenClawReleaseClawHubPlan(args);
+  const args = parseQuietCoreReleaseClawHubPlanArgs(process.argv.slice(2));
+  const plan = await buildQuietCoreReleaseClawHubPlan(args);
   console.log(JSON.stringify(plan, null, 2));
 }

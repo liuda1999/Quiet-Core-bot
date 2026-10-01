@@ -53,9 +53,9 @@ private struct NotificationPermissionGuidanceCard: View {
                     .font(.headline)
                 Text(
                     """
-                    Exec approvals can only be reviewed while OpenClaw is open and connected.
+                    Exec approvals can only be reviewed while QuietCore is open and connected.
 
-                    Enable Notifications to receive approval notifications while OpenClaw is not open.
+                    Enable Notifications to receive approval notifications while QuietCore is not open.
                     """)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -91,7 +91,7 @@ private struct NotificationPermissionGuidanceCard: View {
             .frame(maxWidth: .infinity)
         }
         .padding(18)
-        .proPanelSurface(tint: OpenClawBrand.warn, radius: 20, isProminent: true)
+        .proPanelSurface(tint: QuietCoreBrand.warn, radius: 20, isProminent: true)
     }
 }
 

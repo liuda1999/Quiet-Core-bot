@@ -1,8 +1,8 @@
-// Mcp Channels Seed script supports OpenClaw repository automation.
+// Mcp Channels Seed script supports QuietCore repository automation.
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { applyDockerOpenAiProviderConfig, type OpenClawConfig } from "./docker-openai-seed.ts";
+import { applyDockerOpenAiProviderConfig, type QuietCoreConfig } from "./docker-openai-seed.ts";
 
 async function main() {
   const stateDir = process.env.QUIET_CORE_STATE_DIR?.trim() || path.join(os.homedir(), ".quiet-core-bot");
@@ -34,7 +34,7 @@ async function main() {
       plugins: {
         enabled: false,
       },
-    } satisfies OpenClawConfig,
+    } satisfies QuietCoreConfig,
     "sk-docker-smoke-test",
   );
 

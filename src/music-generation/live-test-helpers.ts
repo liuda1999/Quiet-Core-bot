@@ -1,5 +1,5 @@
 // Live-test helpers for music generation provider configuration.
-import type { OpenClawConfig } from "../config/types.js";
+import type { QuietCoreConfig } from "../config/types.js";
 import {
   parseLiveCsvFilter,
   parseProviderModelMap,
@@ -30,7 +30,7 @@ export function parseCsvFilter(raw?: string): Set<string> | null {
 }
 
 /** Resolve configured provider/model refs from the musicGenerationModel defaults. */
-export function resolveConfiguredLiveMusicModels(cfg: OpenClawConfig): Map<string, string> {
+export function resolveConfiguredLiveMusicModels(cfg: QuietCoreConfig): Map<string, string> {
   return resolveConfiguredLiveProviderModels(cfg.agents?.defaults?.musicGenerationModel);
 }
 

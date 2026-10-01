@@ -450,7 +450,7 @@ function normalizeOwnerProcessArg(arg: string): string {
   return arg.trim().replaceAll("\\", "/").toLowerCase();
 }
 
-function isOpenClawSessionOwnerArgv(args: string[]): boolean {
+function isQuietCoreSessionOwnerArgv(args: string[]): boolean {
   const normalized = args.map(normalizeOwnerProcessArg).filter(Boolean);
   if (normalized.length === 0) {
     return false;
@@ -478,9 +478,9 @@ function isOpenClawSessionOwnerArgv(args: string[]): boolean {
     "src/entry.ts",
     "src/index.ts",
   ];
-  const hasOpenClawCommandToken = normalized.some((arg) => arg === "gateway" || arg === "agent");
+  const hasQuietCoreCommandToken = normalized.some((arg) => arg === "gateway" || arg === "agent");
   return normalized.some(
-    (arg) => entryCandidates.some((entry) => arg.endsWith(entry)) && hasOpenClawCommandToken,
+    (arg) => entryCandidates.some((entry) => arg.endsWith(entry)) && hasQuietCoreCommandToken,
   );
 }
 
@@ -554,7 +554,7 @@ function inspectLockPayload(
   };
 }
 
-function shouldTreatAsNonOpenClawOwner(params: {
+function shouldTreatAsNonQuietCoreOwner(params: {
   payload: LockFilePayload | null;
   inspected: LockInspectionDetails;
   heldByThisProcess: boolean;
@@ -577,7 +577,7 @@ function shouldTreatAsNonOpenClawOwner(params: {
   if (!args || args.every((arg) => !arg.trim())) {
     return false;
   }
-  return !isOpenClawSessionOwnerArgv(args);
+  return !isQuietCoreSessionOwnerArgv(args);
 }
 
 function lockInspectionNeedsMtimeStaleFallback(details: LockInspectionDetails): boolean {
@@ -773,7 +773,7 @@ function inspectLockPayloadForSession(params: {
   }
 
   if (
-    shouldTreatAsNonOpenClawOwner({
+    shouldTreatAsNonQuietCoreOwner({
       payload: params.payload,
       inspected,
       heldByThisProcess: params.heldByThisProcess,

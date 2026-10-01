@@ -224,7 +224,7 @@ exit 1
     const script = readFileSync(SCRIPT_PATH, "utf8");
 
     expect(script).toContain("--beta-validation [target]");
-    expect(script).toContain("resolveOpenClawRegistryVersion");
+    expect(script).toContain("resolveQuietCoreRegistryVersion");
     expect(script).toContain("this.options.updateTarget = version");
     expect(script).toContain("this.options.freshTargetSpec = `quiet-core-bot@${version}`");
     expect(script).toContain("runFreshTargetInstalls");
@@ -648,14 +648,14 @@ exit 1
     const commands = decodedCommands.join("\n---\n");
     const payloads = inputs.join("\n---\n");
     expect(commands).toContain("$pidPath");
-    expect(commands).toContain("function Write-OpenClawUtf8File");
+    expect(commands).toContain("function Write-QuietCoreUtf8File");
     expect(commands).toContain("[System.Text.UTF8Encoding]::new($false)");
-    expect(payloads).toContain("Write-OpenClawUtf8File $exitPath '0'");
-    expect(payloads).toContain("Write-OpenClawUtf8File $donePath 'done'");
-    expect(payloads).toContain("Write-OpenClawUtf8File $pidPath ([string]$PID)");
+    expect(payloads).toContain("Write-QuietCoreUtf8File $exitPath '0'");
+    expect(payloads).toContain("Write-QuietCoreUtf8File $donePath 'done'");
+    expect(payloads).toContain("Write-QuietCoreUtf8File $pidPath ([string]$PID)");
     expect(commands).toContain('cmd.exe /d /s /c start "" /b powershell.exe');
     expect(commands).toContain("icacls.exe $runDir /inheritance:r");
-    expect(commands).toContain("Stop-OpenClawBackgroundProcessTree ([int]$backgroundPid)");
+    expect(commands).toContain("Stop-QuietCoreBackgroundProcessTree ([int]$backgroundPid)");
     expect(commands).toContain(
       'Get-CimInstance Win32_Process -Filter "ParentProcessId=$ProcessId"',
     );
@@ -695,7 +695,7 @@ exit 1
     ).rejects.toThrow("windows background marker smuggle timed out");
 
     expect(decodedCommands.join("\n")).toContain(
-      "Stop-OpenClawBackgroundProcessTree ([int]$backgroundPid)",
+      "Stop-QuietCoreBackgroundProcessTree ([int]$backgroundPid)",
     );
   });
 
@@ -743,7 +743,7 @@ exit 1
 
     expect(pollCount).toBe(1);
     expect(output.join("")).toContain("first chunk");
-    expect(decodedCommands.join("\n")).not.toContain("Stop-OpenClawBackgroundProcessTree");
+    expect(decodedCommands.join("\n")).not.toContain("Stop-QuietCoreBackgroundProcessTree");
     expect(decodedCommands.join("\n")).toContain(
       "Remove-Item -Path $scriptPath, $logPath, $donePath, $exitPath, $pidPath",
     );
@@ -856,7 +856,7 @@ exit 7
     expect(script).toContain("scrub_future_plugin_entries");
     expect(script).toContain("delete plugins.entries.feishu");
     expect(script).toContain("delete plugins.entries.whatsapp");
-    expect(script).toContain("Remove-FuturePluginEntries\nStop-OpenClawGatewayProcesses");
+    expect(script).toContain("Remove-FuturePluginEntries\nStop-QuietCoreGatewayProcesses");
     expect(script).toContain("scrub_future_plugin_entries\nstop_quiet_core_bot_gateway_processes");
     expect(script).toContain("Invoke-WithScopedEnv @{ QUIET_CORE_DISABLE_BUNDLED_PLUGINS = '1'");
     expect(macosScript).toContain('QUIET_CORE_BIN="$(resolve_required_command quiet-core-bot)"');
@@ -881,11 +881,11 @@ exit 7
       updateTarget: "2026.5.3-beta.2",
     });
 
-    const updateIndex = script.indexOf("Invoke-OpenClaw update --tag");
+    const updateIndex = script.indexOf("Invoke-QuietCore update --tag");
     const scopedIndex = script.indexOf("Invoke-WithScopedEnv @{ QUIET_CORE_DISABLE_BUNDLED_PLUGINS");
-    const versionIndex = script.indexOf("Invoke-OpenClaw --version", scopedIndex);
-    const restartIndex = script.indexOf("Invoke-OpenClaw gateway restart");
-    const agentIndex = script.indexOf("Invoke-OpenClaw agent --local");
+    const versionIndex = script.indexOf("Invoke-QuietCore --version", scopedIndex);
+    const restartIndex = script.indexOf("Invoke-QuietCore gateway restart");
+    const agentIndex = script.indexOf("Invoke-QuietCore agent --local");
 
     expect(updateIndex).toBeGreaterThanOrEqual(0);
     expect(scopedIndex).toBeGreaterThanOrEqual(0);

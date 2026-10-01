@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { loadAuthProfileStoreWithoutExternalProfiles } from "../agents/auth-profiles.js";
-import type { ConfigFileSnapshot, OpenClawConfig } from "../config/types.js";
+import type { ConfigFileSnapshot, QuietCoreConfig } from "../config/types.js";
 import { measureDiagnosticsTimelineSpan } from "../infra/diagnostics-timeline.js";
 import type { PreparedSecretsRuntimeSnapshot, SecretResolverWarning } from "../secrets/runtime.js";
 import { KNOWN_WEAK_GATEWAY_TOKEN_PLACEHOLDERS } from "./known-weak-gateway-secrets.js";
@@ -33,12 +33,12 @@ type GatewayStartupLogMock = {
 };
 
 type GatewayStartupStateEmitterMock = ReturnType<
-  typeof vi.fn<(code: string, message: string, cfg: OpenClawConfig) => void>
+  typeof vi.fn<(code: string, message: string, cfg: QuietCoreConfig) => void>
 >;
 
 const RESOLVED_GATEWAY_TOKEN = "resolved-gateway-token";
 
-function gatewayTokenConfig(config: OpenClawConfig): OpenClawConfig {
+function gatewayTokenConfig(config: QuietCoreConfig): QuietCoreConfig {
   return {
     ...config,
     gateway: {
@@ -52,11 +52,11 @@ function gatewayTokenConfig(config: OpenClawConfig): OpenClawConfig {
   };
 }
 
-function asConfig(value: unknown): OpenClawConfig {
-  return value as OpenClawConfig;
+function asConfig(value: unknown): QuietCoreConfig {
+  return value as QuietCoreConfig;
 }
 
-function buildSnapshot(config: OpenClawConfig): ConfigFileSnapshot {
+function buildSnapshot(config: QuietCoreConfig): ConfigFileSnapshot {
   const raw = `${JSON.stringify(config, null, 2)}\n`;
   return buildTestConfigSnapshot({
     path: "/tmp/quiet-core-bot-startup-secrets-test.json",
@@ -70,7 +70,7 @@ function buildSnapshot(config: OpenClawConfig): ConfigFileSnapshot {
   });
 }
 
-function preparedSnapshot(config: OpenClawConfig): PreparedSecretsRuntimeSnapshot {
+function preparedSnapshot(config: QuietCoreConfig): PreparedSecretsRuntimeSnapshot {
   return {
     sourceConfig: config,
     config,
@@ -91,7 +91,7 @@ function preparedSnapshot(config: OpenClawConfig): PreparedSecretsRuntimeSnapsho
 }
 
 function preparedSnapshotWithGatewayToken(
-  config: OpenClawConfig,
+  config: QuietCoreConfig,
   token = RESOLVED_GATEWAY_TOKEN,
 ): PreparedSecretsRuntimeSnapshot {
   return {
@@ -151,7 +151,7 @@ function runtimeSecretsActivatorForTest(params: {
 function runtimeSecretsActivatorOptionsForTest() {
   return {
     logSecrets: mockLogSecretsForTest(),
-    emitStateEvent: vi.fn<(code: string, message: string, cfg: OpenClawConfig) => void>(),
+    emitStateEvent: vi.fn<(code: string, message: string, cfg: QuietCoreConfig) => void>(),
   };
 }
 
@@ -262,7 +262,7 @@ function createGatewayStartupSecretsRuntimeHarness(prefix: string) {
   };
 }
 
-async function activateImportedStartupConfig(config: OpenClawConfig) {
+async function activateImportedStartupConfig(config: QuietCoreConfig) {
   const { createRuntimeSecretsActivator: createActivator } =
     await import("./server-startup-config.js");
   return await createActivator(runtimeSecretsActivatorOptionsForTest())(
@@ -295,7 +295,7 @@ function expectBootstrapAuthResolvedGatewayToken(
 
 async function expectImportedStartupConfigUsesFullSecretsRuntime(
   harness: ReturnType<typeof createGatewayStartupSecretsRuntimeHarness>,
-  config: OpenClawConfig,
+  config: QuietCoreConfig,
 ): Promise<void> {
   harness.install();
 
@@ -634,7 +634,7 @@ describe("gateway startup config secret preflight", () => {
     });
     expect(typeof result.config.gateway).toBe("object");
     const preflightInput = callArg<{
-      config?: OpenClawConfig;
+      config?: QuietCoreConfig;
       loadAuthStore?: unknown;
     }>(prepareRuntimeSecretsSnapshot);
     expect(preflightInput.config?.channels).toBeUndefined();
@@ -671,7 +671,7 @@ describe("gateway startup config secret preflight", () => {
     expect(result.auth.mode).toBe("password");
     expect(result.auth.password).toBe("override-password");
     const preflightInput = callArg<{
-      config?: OpenClawConfig;
+      config?: QuietCoreConfig;
       loadAuthStore?: unknown;
     }>(prepareRuntimeSecretsSnapshot);
     expect(preflightInput.config?.gateway?.auth?.mode).toBe("password");
@@ -693,7 +693,7 @@ describe("gateway startup config secret preflight", () => {
     expect(result.auth.token).toBe("startup-test-token");
     expect(prepareRuntimeSecretsSnapshot).toHaveBeenCalledTimes(1);
     const preflightInput = callArg<{
-      config?: OpenClawConfig;
+      config?: QuietCoreConfig;
       loadAuthStore?: unknown;
     }>(prepareRuntimeSecretsSnapshot);
     expect(preflightInput.config?.gateway?.auth?.token).toBe("startup-test-token");

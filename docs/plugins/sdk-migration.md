@@ -277,7 +277,7 @@ releases.
 
     | Need | Import |
     | --- | --- |
-    | Config types such as `OpenClawConfig` | `quiet-core-bot/plugin-sdk/config-contracts` |
+    | Config types such as `QuietCoreConfig` | `quiet-core-bot/plugin-sdk/config-contracts` |
     | Already-loaded config assertions and plugin-entry config lookup | `quiet-core-bot/plugin-sdk/plugin-config-runtime` |
     | Current runtime snapshot reads | `quiet-core-bot/plugin-sdk/runtime-config-snapshot` |
     | Config writes | `quiet-core-bot/plugin-sdk/config-mutation` |
@@ -506,7 +506,7 @@ releases.
   | --- | --- | --- |
   | `plugin-sdk/plugin-entry` | Canonical plugin entry helper | `definePluginEntry` |
   | `plugin-sdk/core` | Legacy umbrella re-export for channel entry definitions/builders | `defineChannelPluginEntry`, `createChatChannelPlugin` |
-  | `plugin-sdk/config-schema` | Root config schema export | `OpenClawSchema` |
+  | `plugin-sdk/config-schema` | Root config schema export | `QuietCoreSchema` |
   | `plugin-sdk/provider-entry` | Single-provider entry helper | `defineSingleProviderPluginEntry` |
   | `plugin-sdk/channel-core` | Focused channel entry definitions and builders | `defineChannelPluginEntry`, `defineSetupPluginEntry`, `createChatChannelPlugin`, `createChannelPluginBase` |
   | `plugin-sdk/setup` | Shared setup wizard helpers | Setup translator, allowlist prompts, setup status builders |
@@ -954,15 +954,15 @@ canonical replacement.
     list in `contracts.agentToolResultMiddleware`.
   </Accordion>
 
-  <Accordion title="OpenClawSchemaType alias → OpenClawConfig">
-    `OpenClawSchemaType` re-exported from `quiet-core-bot/plugin-sdk` is now a
-    one-line alias for `OpenClawConfig`. Prefer the canonical name.
+  <Accordion title="QuietCoreSchemaType alias → QuietCoreConfig">
+    `QuietCoreSchemaType` re-exported from `quiet-core-bot/plugin-sdk` is now a
+    one-line alias for `QuietCoreConfig`. Prefer the canonical name.
 
     ```typescript
     // Before
-    import type { OpenClawSchemaType } from "quiet-core-bot/plugin-sdk";
+    import type { QuietCoreSchemaType } from "quiet-core-bot/plugin-sdk";
     // After
-    import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-schema";
+    import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-schema";
     ```
 
   </Accordion>

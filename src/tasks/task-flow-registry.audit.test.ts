@@ -1,7 +1,7 @@
 // Covers managed task-flow audit summaries and stale-flow classification.
 import { afterEach, describe, expect, it } from "vitest";
 import { captureEnv } from "../test-utils/env.js";
-import { withOpenClawTestState } from "../test-utils/quiet-core-bot-test-state.js";
+import { withQuietCoreTestState } from "../test-utils/quiet-core-bot-test-state.js";
 import { createRunningTaskRun as createRunningTaskRunOrNull } from "./task-executor.js";
 import {
   listTaskFlowAuditFindings,
@@ -59,7 +59,7 @@ function requireFinding(
 }
 
 async function withTaskFlowAuditStateDir(run: (root: string) => Promise<void>): Promise<void> {
-  await withOpenClawTestState(
+  await withQuietCoreTestState(
     {
       layout: "state-only",
       prefix: "quiet-core-bot-task-flow-audit-",

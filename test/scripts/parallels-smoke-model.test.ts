@@ -23,7 +23,7 @@ import {
 } from "@quiet-core/normalization-core/number-coercion";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import {
-  extractLastOpenClawVersionFromLog,
+  extractLastQuietCoreVersionFromLog,
   isLikelyMacosDesktopHome,
   modelProviderConfigBatchJson,
   parseMacosDsclUserHomeLine,
@@ -251,7 +251,7 @@ describe("Parallels smoke model selection", () => {
         ["Quiet Core bot 0.0.1", "x".repeat(4096), "Quiet Core bot 2026.6.7"].join("\n"),
       );
 
-      await expect(extractLastOpenClawVersionFromLog(logPath, undefined, 128)).resolves.toBe(
+      await expect(extractLastQuietCoreVersionFromLog(logPath, undefined, 128)).resolves.toBe(
         "2026.6.7",
       );
     } finally {
@@ -1051,7 +1051,7 @@ if (isPrlctl) {
     const script = readFileSync(TS_PATHS.linux, "utf8");
 
     expect(script).toContain('BAD_PLUGIN_DIAGNOSTIC_MIN_VERSION = "2026.5.7"');
-    expect(script).toContain("parseOpenClawPackageVersion");
+    expect(script).toContain("parseQuietCorePackageVersion");
     expect(script).toContain("maybeInjectBadPluginFixture");
     expect(script).toContain("maybeVerifyBadPluginDiagnostic");
     expect(script).toContain("Skipping bad plugin diagnostic fixture");
@@ -1402,9 +1402,9 @@ if (isPrlctl) {
     const script = readFileSync(TS_PATHS.npmUpdateScripts, "utf8");
 
     expect(script).not.toContain("ConvertFrom-Json -AsHashtable");
-    expect(script).toContain("function Get-OpenClawJsonProperty");
-    expect(script).toContain("function Remove-OpenClawJsonProperty");
-    expect(script).toContain("Remove-OpenClawJsonProperty $entries $pluginId");
+    expect(script).toContain("function Get-QuietCoreJsonProperty");
+    expect(script).toContain("function Remove-QuietCoreJsonProperty");
+    expect(script).toContain("Remove-QuietCoreJsonProperty $entries $pluginId");
   });
 
   it("keeps aggregate update guest scripts isolated from the npm-update orchestrator", () => {
@@ -1446,7 +1446,7 @@ if (isPrlctl) {
     expect(macos).toContain('const guestNode = "node"');
     expect(macos).toContain('const guestNpm = "npm"');
     expect(macos).toContain("$(npm root -g)/openclaw/quiet-core-bot.mjs");
-    expect(macos).toContain("guestOpenClawEntryExec");
+    expect(macos).toContain("guestQuietCoreEntryExec");
     expect(macos).not.toContain('const guestQuiet Core bot = "/opt/homebrew/bin/openclaw"');
     expect(macos).not.toContain('const guestNode = "/opt/homebrew/bin/node"');
     expect(macos).not.toContain('const guestNpm = "/opt/homebrew/bin/npm"');
@@ -1477,7 +1477,7 @@ if (isPrlctl) {
     expect(transports).toContain('if exist "${windowsDonePath}"');
     expect(transports).toContain('type "%WINDIR%\\\\Temp\\\\${guestRunDir}\\\\run.log"');
     expect(transports).toContain("WINDOWS_BACKGROUND_LOG_MAX_BYTES");
-    expect(transports).toContain("Write-OpenClawUtf8File $pidPath ([string]$PID)");
+    expect(transports).toContain("Write-QuietCoreUtf8File $pidPath ([string]$PID)");
     expect(transports).toContain('launch.stdout.includes("started")');
     expect(transports).toContain("waitForWindowsBackgroundMaterialized");
   });
@@ -2150,7 +2150,7 @@ setInterval(() => {}, 1000);
     expect(windows).toContain(
       "Invoke-WithScopedEnv @{ QUIET_CORE_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS",
     );
-    expect(windows).toContain("$script:OpenClawUpdateExit = $LASTEXITCODE");
+    expect(windows).toContain("$script:QuietCoreUpdateExit = $LASTEXITCODE");
     expect(windows).not.toContain("$env:QUIET_CORE_DISABLE_BUNDLED_PLUGINS = '1'");
   });
 
@@ -2168,17 +2168,17 @@ setInterval(() => {}, 1000);
     const powershell = readFileSync(TS_PATHS.powershell, "utf8");
     const windows = readFileSync(TS_PATHS.windows, "utf8");
 
-    expect(powershell).toContain("windowsOpenClawResolver");
+    expect(powershell).toContain("windowsQuietCoreResolver");
     expect(powershell).toContain("QUIET_CORE_PARALLELS_AGENT_RUNTIME_POLICY_SUPPORTED");
     expect(powershell).toContain("Programs\\nodejs");
     expect(powershell).toContain('selectedModelEntry.agentRuntime = { id: "openclaw" }');
     expect(powershell).toContain("delete selectedModelEntry.agentRuntime");
     expect(powershell).toContain("delete providerEntry.agentRuntime");
-    expect(powershell).toContain("Resolve-OpenClawCommand");
+    expect(powershell).toContain("Resolve-QuietCoreCommand");
     expect(powershell).toContain("npm\\node_modules\\openclaw\\quiet-core-bot.mjs");
     expect(powershell).toContain("$ErrorActionPreference = 'Continue'");
     expect(powershell).toContain("$PSNativeCommandUseErrorActionPreference = $false");
-    expect(windows).toContain("windowsOpenClawResolver");
+    expect(windows).toContain("windowsQuietCoreResolver");
     expect(windows).toContain("Invoke-Quiet Core bot gateway");
     expect(windows).not.toContain("Join-Path $env:APPDATA 'npm\\\\quiet-core-bot.cmd'");
   });

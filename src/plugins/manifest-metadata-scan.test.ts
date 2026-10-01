@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { writePersistedInstalledPluginIndexSync } from "./installed-plugin-index-store.js";
-import { listOpenClawPluginManifestMetadata } from "./manifest-metadata-scan.js";
+import { listQuietCorePluginManifestMetadata } from "./manifest-metadata-scan.js";
 
 const tempRoots: string[] = [];
 
@@ -19,7 +19,7 @@ function writeJson(filePath: string, value: unknown): void {
   fs.writeFileSync(filePath, JSON.stringify(value, null, 2), "utf8");
 }
 
-describe("listOpenClawPluginManifestMetadata", () => {
+describe("listQuietCorePluginManifestMetadata", () => {
   afterEach(() => {
     for (const root of tempRoots.splice(0)) {
       fs.rmSync(root, { recursive: true, force: true });
@@ -71,7 +71,7 @@ describe("listOpenClawPluginManifestMetadata", () => {
       { stateDir: path.join(home, ".quiet-core-bot") },
     );
 
-    const records = listOpenClawPluginManifestMetadata({
+    const records = listQuietCorePluginManifestMetadata({
       QUIET_CORE_HOME: home,
       QUIET_CORE_BUNDLED_PLUGINS_DIR: bundledRoot,
     });

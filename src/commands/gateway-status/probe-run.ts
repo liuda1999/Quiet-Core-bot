@@ -3,7 +3,7 @@ import {
   normalizeOptionalString,
   readStringValue,
 } from "@quiet-core/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../../config/types.js";
+import type { QuietCoreConfig } from "../../config/types.js";
 import { probeGateway } from "../../gateway/probe.js";
 import {
   discoverGatewayBeacons,
@@ -31,7 +31,7 @@ export type GatewayStatusProbedTarget = {
 
 /** Probes configured, explicit, and optionally SSH-discovered gateway targets. */
 export async function runGatewayStatusProbePass(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   opts: {
     token?: string;
     password?: string;

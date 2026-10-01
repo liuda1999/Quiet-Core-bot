@@ -13,7 +13,7 @@ import {
   hasBundledPluginContractSnapshotCapabilities,
 } from "./contracts/inventory/bundled-capability-metadata.js";
 import { pluginTestRepoRoot as repoRoot } from "./generated-plugin-test-helpers.js";
-import type { OpenClawPackageManifest } from "./manifest.js";
+import type { QuietCorePackageManifest } from "./manifest.js";
 import type { PluginManifest } from "./manifest.js";
 
 function listGitExtensionPackagePaths(extensionsDir: string): string[] | null {
@@ -49,7 +49,7 @@ function readManifestRecords(): PluginManifest[] {
   return listExtensionPackagePaths(extensionsDir)
     .filter((packagePath) => {
       const packageJson = JSON.parse(fs.readFileSync(packagePath, "utf-8")) as {
-        "quiet-core-bot"?: OpenClawPackageManifest;
+        "quiet-core-bot"?: QuietCorePackageManifest;
       };
       return normalizeBundledPluginStringList(packageJson["quiet-core-bot"]?.extensions).length > 0;
     })

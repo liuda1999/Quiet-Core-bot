@@ -1,6 +1,6 @@
 /** Chooses which source family should back a model-list invocation. */
 import type { NormalizedModelCatalogRow } from "@quiet-core/model-catalog-core/model-catalog-types";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { PluginMetadataSnapshot } from "../../plugins/plugin-metadata-snapshot.types.js";
 import { createLazyImportLoader } from "../../shared/lazy-promise.js";
 
@@ -71,7 +71,7 @@ export async function planAllModelListSources(params: {
   all?: boolean;
   enableCascade?: boolean;
   providerFilter?: string;
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   metadataSnapshot?: PluginMetadataSnapshot;
   dependencies?: Partial<ModelListSourcePlanDependencies>;
 }): Promise<ModelListSourcePlan> {

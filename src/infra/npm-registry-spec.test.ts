@@ -1,11 +1,11 @@
 // Tests npm registry spec parsing for packages, tags, and versions.
 import { describe, expect, it } from "vitest";
 import {
-  compareOpenClawReleaseVersions,
+  compareQuietCoreReleaseVersions,
   formatPrereleaseResolutionError,
   isExactSemverVersion,
-  isOpenClawOrgNpmSpec,
-  isOpenClawStableCorrectionVersion,
+  isQuietCoreOrgNpmSpec,
+  isQuietCoreStableCorrectionVersion,
   isPrereleaseSemverVersion,
   isPrereleaseResolutionAllowed,
   parseRegistryNpmSpec,
@@ -147,7 +147,7 @@ describe("npm registry spec parsing helpers", () => {
     { spec: "npm:@quiet-core/voice-call", expected: false },
     { spec: undefined, expected: false },
   ])("detects Quiet Core bot-org npm specs for %s", ({ spec, expected }) => {
-    expect(isOpenClawOrgNpmSpec(spec)).toBe(expected);
+    expect(isQuietCoreOrgNpmSpec(spec)).toBe(expected);
   });
 
   it.each([
@@ -175,7 +175,7 @@ describe("npm registry spec parsing helpers", () => {
     { value: "1.2.3-1", expected: false },
     { value: "2026.2.30-1", expected: true },
   ])("detects Quiet Core bot stable correction versions for %s", ({ value, expected }) => {
-    expect(isOpenClawStableCorrectionVersion(value)).toBe(expected);
+    expect(isQuietCoreStableCorrectionVersion(value)).toBe(expected);
   });
 
   it.each([
@@ -185,7 +185,7 @@ describe("npm registry spec parsing helpers", () => {
     { left: "2026.5.3-beta.3", right: "2026.5.3-alpha.9", expected: 1 },
     { left: "1.2.3-1", right: "1.2.3", expected: null },
   ])("compares Quiet Core bot release versions for %s and %s", ({ left, right, expected }) => {
-    expect(compareOpenClawReleaseVersions(left, right)).toBe(expected);
+    expect(compareQuietCoreReleaseVersions(left, right)).toBe(expected);
   });
 });
 

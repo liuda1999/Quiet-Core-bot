@@ -36,10 +36,10 @@ describe("tmp-quiet-core-bot-dir browser-safe import", () => {
       plugins: [nodeShimPlugin],
       stdin: {
         contents: `
-          import { POSIX_QUIET_CORE_TMP_DIR, resolvePreferredOpenClawTmpDir } from "./src/infra/tmp-quiet-core-bot-dir.ts";
+          import { POSIX_QUIET_CORE_TMP_DIR, resolvePreferredQuietCoreTmpDir } from "./src/infra/tmp-quiet-core-bot-dir.ts";
           globalThis.${resultKey} = {
             posixTmpDir: POSIX_QUIET_CORE_TMP_DIR,
-            resolverType: typeof resolvePreferredOpenClawTmpDir,
+            resolverType: typeof resolvePreferredQuietCoreTmpDir,
           };
         `,
         loader: "ts",

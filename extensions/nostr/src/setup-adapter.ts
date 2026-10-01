@@ -1,6 +1,6 @@
 // Nostr plugin module implements setup adapter behavior.
 import type { ChannelSetupAdapter } from "quiet-core-bot/plugin-sdk/channel-setup";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { DEFAULT_ACCOUNT_ID } from "quiet-core-bot/plugin-sdk/routing";
 import { patchTopLevelChannelConfigSection, splitSetupEntries } from "quiet-core-bot/plugin-sdk/setup";
 import { uniqueStrings } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
@@ -31,7 +31,7 @@ export function parseRelayUrls(raw: string): { relays: string[]; error?: string 
 }
 
 export function createNostrSetupAdapter(params: {
-  resolveAccountId: (cfg: OpenClawConfig, accountId?: string | null) => string;
+  resolveAccountId: (cfg: QuietCoreConfig, accountId?: string | null) => string;
   validatePrivateKey: (privateKey: string) => boolean;
 }): ChannelSetupAdapter {
   return {

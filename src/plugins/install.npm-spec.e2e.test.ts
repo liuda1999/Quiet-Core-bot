@@ -7,7 +7,7 @@ import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { afterEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { resolvePluginNpmProjectDir } from "./install-paths.js";
 import { installPluginFromNpmSpec, PLUGIN_INSTALL_ERROR_CODE } from "./install.js";
 
@@ -53,7 +53,7 @@ async function makeTempDir(label: string): Promise<string> {
   return dir;
 }
 
-function configWithInstalledPackageTreeBlockPolicy(): OpenClawConfig {
+function configWithInstalledPackageTreeBlockPolicy(): QuietCoreConfig {
   return {
     security: {
       installPolicy: {
@@ -351,12 +351,12 @@ describe("installPluginFromNpmSpec e2e", () => {
     const rootDir = await makeTempDir("npm-plugin-compatible-version-e2e");
     const npmRoot = path.join(rootDir, "managed-npm");
     const packageName = `compatible-plugin-${crypto.randomUUID().replace(/-/g, "").slice(0, 12)}`;
-    const compatibleOpenClaw = {
+    const compatibleQuietCore = {
       extensions: ["./dist/index.js"],
       install: { minHostVersion: ">=2026.4.25" },
       compat: { pluginApi: ">=2026.5.10-beta.1" },
     };
-    const incompatibleOpenClaw = {
+    const incompatibleQuietCore = {
       extensions: ["./dist/index.js"],
       install: { minHostVersion: ">=2026.4.25" },
       compat: { pluginApi: ">=2026.5.27" },
@@ -367,14 +367,14 @@ describe("installPluginFromNpmSpec e2e", () => {
         pluginId: packageName,
         version: "2026.5.26",
         rootDir,
-        "quiet-core-bot": compatibleOpenClaw,
+        "quiet-core-bot": compatibleQuietCore,
       }),
       await packPlugin({
         packageName,
         pluginId: packageName,
         version: "2026.5.27",
         rootDir,
-        "quiet-core-bot": incompatibleOpenClaw,
+        "quiet-core-bot": incompatibleQuietCore,
       }),
     ];
     const registry = await startStaticRegistry([{ packageName, latest: "2026.5.27", versions }]);
@@ -473,11 +473,11 @@ describe("installPluginFromNpmSpec e2e", () => {
     ) as {
       packages?: Record<string, unknown>;
     };
-    const rawOpenClawLockEntry = rawLock.packages?.["node_modules/quiet-core-bot"] as
+    const rawQuietCoreLockEntry = rawLock.packages?.["node_modules/quiet-core-bot"] as
       | { peer?: unknown; version?: unknown }
       | undefined;
-    expect(rawOpenClawLockEntry?.peer).toBe(true);
-    expect(rawOpenClawLockEntry?.version).toBe("2026.0.0");
+    expect(rawQuietCoreLockEntry?.peer).toBe(true);
+    expect(rawQuietCoreLockEntry?.version).toBe("2026.0.0");
 
     const result = await installPluginFromNpmSpec({
       spec: `${packageName}@1.0.0`,

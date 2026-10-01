@@ -41,7 +41,7 @@ function expectConfiguredChannelPluginIdsParams(expected: {
   expect(params?.workspaceDir).toBe(expected.workspaceDir);
 }
 
-function expectLoadOpenClawPluginsCall(
+function expectLoadQuietCorePluginsCall(
   callIndex: number,
   expected: {
     config?: unknown;
@@ -52,7 +52,7 @@ function expectLoadOpenClawPluginsCall(
     workspaceDir?: string;
   },
 ) {
-  const params = mocks.loadOpenClawPlugins.mock.calls[callIndex]?.[0] as
+  const params = mocks.loadQuietCorePlugins.mock.calls[callIndex]?.[0] as
     | {
         config?: unknown;
         activationSourceConfig?: unknown;
@@ -79,7 +79,7 @@ function expectLoadOpenClawPluginsCall(
 }
 
 const mocks = vi.hoisted(() => ({
-  loadOpenClawPlugins: vi.fn<typeof import("../plugins/loader.js").loadOpenClawPlugins>(),
+  loadQuietCorePlugins: vi.fn<typeof import("../plugins/loader.js").loadQuietCorePlugins>(),
   resolveCompatibleRuntimePluginRegistry:
     vi.fn<typeof import("../plugins/loader.js").resolveCompatibleRuntimePluginRegistry>(),
   resolveRuntimePluginRegistry:
@@ -103,8 +103,8 @@ let ensurePluginRegistryLoaded: typeof import("./plugin-registry.js").ensurePlug
 let resetPluginRegistryLoadedForTests: typeof import("./plugin-registry.js").testing.resetPluginRegistryLoadedForTests;
 
 vi.mock("../plugins/loader.js", () => ({
-  loadOpenClawPlugins: (...args: Parameters<typeof mocks.loadOpenClawPlugins>) =>
-    mocks.loadOpenClawPlugins(...args),
+  loadQuietCorePlugins: (...args: Parameters<typeof mocks.loadQuietCorePlugins>) =>
+    mocks.loadQuietCorePlugins(...args),
   resolveCompatibleRuntimePluginRegistry: (
     ...args: Parameters<typeof mocks.resolveCompatibleRuntimePluginRegistry>
   ) => mocks.resolveCompatibleRuntimePluginRegistry(...args),
@@ -185,7 +185,7 @@ describe("ensurePluginRegistryLoaded", () => {
   });
 
   beforeEach(() => {
-    mocks.loadOpenClawPlugins.mockReset();
+    mocks.loadQuietCorePlugins.mockReset();
     mocks.resolveCompatibleRuntimePluginRegistry.mockReset();
     mocks.resolveRuntimePluginRegistry.mockReset();
     mocks.getActivePluginRegistry.mockReset();
@@ -248,8 +248,8 @@ describe("ensurePluginRegistryLoaded", () => {
       config: autoEnabledConfig,
       workspaceDir: "/tmp/workspace",
     });
-    expect(mocks.loadOpenClawPlugins).toHaveBeenCalledTimes(1);
-    expectLoadOpenClawPluginsCall(0, {
+    expect(mocks.loadQuietCorePlugins).toHaveBeenCalledTimes(1);
+    expectLoadQuietCorePluginsCall(0, {
       config: autoEnabledConfig,
       activationSourceConfig: autoEnabledConfig,
       autoEnabledReasons: {
@@ -282,12 +282,12 @@ describe("ensurePluginRegistryLoaded", () => {
     ensurePluginRegistryLoaded({ scope: "configured-channels" });
     ensurePluginRegistryLoaded({ scope: "channels" });
 
-    expect(mocks.loadOpenClawPlugins).toHaveBeenCalledTimes(2);
-    expectLoadOpenClawPluginsCall(0, {
+    expect(mocks.loadQuietCorePlugins).toHaveBeenCalledTimes(2);
+    expectLoadQuietCorePluginsCall(0, {
       onlyPluginIds: ["demo-channel-a"],
       throwOnLoadError: true,
     });
-    expectLoadOpenClawPluginsCall(1, {
+    expectLoadQuietCorePluginsCall(1, {
       onlyPluginIds: ["demo-channel-a", "demo-channel-b"],
       throwOnLoadError: true,
     });
@@ -316,8 +316,8 @@ describe("ensurePluginRegistryLoaded", () => {
 
     ensurePluginRegistryLoaded({ scope: "all" });
 
-    expect(mocks.loadOpenClawPlugins).toHaveBeenCalledTimes(1);
-    expectLoadOpenClawPluginsCall(0, {
+    expect(mocks.loadQuietCorePlugins).toHaveBeenCalledTimes(1);
+    expectLoadQuietCorePluginsCall(0, {
       config,
       onlyPluginIds: ["demo"],
       throwOnLoadError: true,
@@ -350,8 +350,8 @@ describe("ensurePluginRegistryLoaded", () => {
 
     ensurePluginRegistryLoaded({ scope: "configured-channels" });
 
-    expect(mocks.loadOpenClawPlugins).toHaveBeenCalledTimes(1);
-    expectLoadOpenClawPluginsCall(0, {
+    expect(mocks.loadQuietCorePlugins).toHaveBeenCalledTimes(1);
+    expectLoadQuietCorePluginsCall(0, {
       config: activatedConfig,
       activationSourceConfig: activatedConfig,
       onlyPluginIds: ["demo-channel-a"],
@@ -389,8 +389,8 @@ describe("ensurePluginRegistryLoaded", () => {
     } as never);
     ensurePluginRegistryLoaded({ scope: "configured-channels" });
 
-    expect(mocks.loadOpenClawPlugins).toHaveBeenCalledTimes(1);
-    expectLoadOpenClawPluginsCall(0, {
+    expect(mocks.loadQuietCorePlugins).toHaveBeenCalledTimes(1);
+    expectLoadQuietCorePluginsCall(0, {
       config: activatedConfig,
       activationSourceConfig: activatedConfig,
       onlyPluginIds: ["demo-channel-a"],

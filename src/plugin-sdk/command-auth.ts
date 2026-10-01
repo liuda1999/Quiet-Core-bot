@@ -10,7 +10,7 @@ import {
   buildHelpMessage as buildHelpMessageCompat,
 } from "../auto-reply/command-status-builders.js";
 import type { ChannelId } from "../channels/plugins/types.public.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   expandAllowFromWithAccessGroups,
   type AccessGroupMembershipResolver,
@@ -116,7 +116,7 @@ export type { StoredModelOverride } from "../auto-reply/reply/stored-model-overr
  * @deprecated Use `resolveChannelMessageIngress` from `quiet-core-bot/plugin-sdk/channel-ingress-runtime`.
  */
 export type ResolveSenderCommandAuthorizationParams = {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   rawBody: string;
   isGroup: boolean;
   dmPolicy: string;
@@ -128,7 +128,7 @@ export type ResolveSenderCommandAuthorizationParams = {
   accountId?: string;
   resolveAccessGroupMembership?: AccessGroupMembershipResolver;
   readAllowFromStore: () => Promise<string[]>;
-  shouldComputeCommandAuthorized: (rawBody: string, cfg: OpenClawConfig) => boolean;
+  shouldComputeCommandAuthorized: (rawBody: string, cfg: QuietCoreConfig) => boolean;
   /** @deprecated Command authorization is resolved by channel ingress. Kept for runtime injection compatibility. */
   resolveCommandAuthorizedFromAuthorizers?: (params: {
     useAccessGroups: boolean;
@@ -142,7 +142,7 @@ export type ResolveSenderCommandAuthorizationParams = {
  * @deprecated Use `resolveChannelMessageIngress` from `quiet-core-bot/plugin-sdk/channel-ingress-runtime`.
  */
 export type CommandAuthorizationRuntime = {
-  shouldComputeCommandAuthorized: (rawBody: string, cfg: OpenClawConfig) => boolean;
+  shouldComputeCommandAuthorized: (rawBody: string, cfg: QuietCoreConfig) => boolean;
   resolveCommandAuthorizedFromAuthorizers: (params: {
     useAccessGroups: boolean;
     authorizers: Array<{ configured: boolean; allowed: boolean }>;

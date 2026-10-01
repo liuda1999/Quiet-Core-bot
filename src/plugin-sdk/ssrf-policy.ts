@@ -14,7 +14,7 @@ import type {
   ChannelDoctorConfigMutation,
   ChannelDoctorLegacyConfigRule,
 } from "./channel-contract.js";
-import type { OpenClawConfig } from "./config-runtime.js";
+import type { QuietCoreConfig } from "./config-runtime.js";
 
 export { isPrivateIpAddress, mergeSsrFPolicies };
 export type { SsrFPolicy };
@@ -132,7 +132,7 @@ function hasLegacyAllowPrivateNetworkInAccounts(value: unknown): boolean {
 /** Build doctor rules that migrate legacy private-network aliases for one channel config. */
 export function createLegacyPrivateNetworkDoctorContract(params: { channelKey: string }): {
   legacyConfigRules: ChannelDoctorLegacyConfigRule[];
-  normalizeCompatibilityConfig: (params: { cfg: OpenClawConfig }) => ChannelDoctorConfigMutation;
+  normalizeCompatibilityConfig: (params: { cfg: QuietCoreConfig }) => ChannelDoctorConfigMutation;
 } {
   const pathPrefix = `channels.${params.channelKey}`;
   return {
@@ -203,7 +203,7 @@ export function createLegacyPrivateNetworkDoctorContract(params: { channelKey: s
           channels: {
             ...cfg.channels,
             [params.channelKey]: updatedChannel,
-          } as OpenClawConfig["channels"],
+          } as QuietCoreConfig["channels"],
         },
         changes,
       };

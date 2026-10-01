@@ -48,7 +48,7 @@ export {
   /** @deprecated Use getRuntimeConfig(), or pass the already loaded config through the call path. */
   loadConfig,
 } from "../../../../src/config/config.js";
-export type { OpenClawConfig } from "../../../../src/config/config.js";
+export type { QuietCoreConfig } from "../../../../src/config/config.js";
 export { resolveStateDir } from "../../../../src/config/paths.js";
 export {
   isCompactionCheckpointTranscriptFileName,
@@ -144,7 +144,7 @@ export type {
   MemoryPluginRuntime,
   MemoryPromptSectionBuilder,
 } from "../../../../src/plugins/memory-state.js";
-export type { OpenClawPluginApi } from "../../../../src/plugins/types.js";
+export type { QuietCorePluginApi } from "../../../../src/plugins/types.js";
 
 // Shared session/text utilities.
 export { defaultRuntime } from "../../../../src/runtime.js";

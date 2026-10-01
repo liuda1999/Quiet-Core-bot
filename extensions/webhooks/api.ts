@@ -1,7 +1,7 @@
 // Webhooks API module exposes the plugin public contract.
 export {
   definePluginEntry,
-  type OpenClawPluginApi,
+  type QuietCorePluginApi,
   type PluginLogger,
   type PluginRuntime,
 } from "quiet-core-bot/plugin-sdk/core";

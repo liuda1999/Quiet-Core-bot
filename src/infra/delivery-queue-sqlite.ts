@@ -1,6 +1,6 @@
 // Stores durable delivery queue entries in SQLite.
-import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
-import { openOpenClawStateDatabase } from "../state/quiet-core-bot-state-db.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
+import { openQuietCoreStateDatabase } from "../state/quiet-core-bot-state-db.js";
 import {
   executeSqliteQuerySync,
   executeSqliteQueryTakeFirstSync,
@@ -10,7 +10,7 @@ import {
 // Generic durable delivery queue storage shared by session and outbound queues.
 // Queue-specific wrappers own payload shape; this layer owns SQLite state.
 type QueueStatus = "pending" | "failed";
-type DeliveryQueueDatabase = Pick<OpenClawStateKyselyDatabase, "delivery_queue_entries">;
+type DeliveryQueueDatabase = Pick<QuietCoreStateKyselyDatabase, "delivery_queue_entries">;
 
 /** Indexed metadata extracted from queue payloads for diagnostics and recovery. */
 export type DeliveryQueueRowMetadata = {
@@ -44,7 +44,7 @@ type QueueRow = {
 };
 
 function openStateDatabase(stateDir?: string) {
-  return openOpenClawStateDatabase({
+  return openQuietCoreStateDatabase({
     env: stateDir ? { ...process.env, QUIET_CORE_STATE_DIR: stateDir } : process.env,
   });
 }

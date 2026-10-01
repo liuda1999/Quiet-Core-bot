@@ -3,7 +3,7 @@
  */
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { ConfigWriteNotification } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { consumeGatewaySigusr1RestartIntent } from "../infra/restart.js";
 import {
   pinActivePluginChannelRegistry,
@@ -25,7 +25,7 @@ import {
 } from "./server-reload-handlers.js";
 
 type GmailWatcherRestartParams = {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   log: {
     info: (msg: string) => void;
     warn: (msg: string) => void;
@@ -55,13 +55,13 @@ const hoisted = vi.hoisted(() => ({
   activeEmbeddedRunSessionIds: [] as string[],
   activeEmbeddedRunSessionKeys: [] as string[],
   markRestartAbortedMainSessions: vi.fn(async (_params: unknown) => ({ marked: 1, skipped: 0 })),
-  runtimeConfig: { value: { session: { store: "/tmp/active-sessions.json" } } as OpenClawConfig },
+  runtimeConfig: { value: { session: { store: "/tmp/active-sessions.json" } } as QuietCoreConfig },
   reloadEvents: [] as string[],
-  loadModelCatalog: vi.fn(async (_params: { config: OpenClawConfig }) => []),
+  loadModelCatalog: vi.fn(async (_params: { config: QuietCoreConfig }) => []),
   resetModelCatalogCache: vi.fn(() => {}),
-  refreshContextWindowCache: vi.fn(async (_cfg: OpenClawConfig) => {}),
+  refreshContextWindowCache: vi.fn(async (_cfg: QuietCoreConfig) => {}),
   clearCurrentProviderAuthState: vi.fn(() => {}),
-  warmCurrentProviderAuthStateOffMainThread: vi.fn(async (_cfg: OpenClawConfig) => {}),
+  warmCurrentProviderAuthStateOffMainThread: vi.fn(async (_cfg: QuietCoreConfig) => {}),
   disposeAllSessionMcpRuntimes: vi.fn(async () => {}),
 }));
 
@@ -119,7 +119,7 @@ vi.mock("../config/config.js", () => ({
 }));
 
 vi.mock("../agents/model-catalog.js", () => ({
-  loadModelCatalog: (params: { config: OpenClawConfig }) => {
+  loadModelCatalog: (params: { config: QuietCoreConfig }) => {
     hoisted.reloadEvents.push("load-model-catalog");
     return hoisted.loadModelCatalog(params);
   },
@@ -130,7 +130,7 @@ vi.mock("../agents/model-catalog.js", () => ({
 }));
 
 vi.mock("../agents/context.js", () => ({
-  refreshContextWindowCache: async (cfg: OpenClawConfig) => {
+  refreshContextWindowCache: async (cfg: QuietCoreConfig) => {
     hoisted.reloadEvents.push("refresh-context-window");
     await hoisted.refreshContextWindowCache(cfg);
   },
@@ -141,7 +141,7 @@ vi.mock("../agents/model-provider-auth.js", () => ({
     hoisted.reloadEvents.push("clear-provider-auth");
     hoisted.clearCurrentProviderAuthState();
   },
-  warmCurrentProviderAuthStateOffMainThread: async (cfg: OpenClawConfig) => {
+  warmCurrentProviderAuthStateOffMainThread: async (cfg: QuietCoreConfig) => {
     hoisted.reloadEvents.push("warm-provider-auth");
     await hoisted.warmCurrentProviderAuthStateOffMainThread(cfg);
   },
@@ -248,7 +248,7 @@ describe("gateway hot reload model state", () => {
       createHealthMonitor: () => null,
     });
 
-    const nextConfig = { plugins: { enabled: true } } as OpenClawConfig;
+    const nextConfig = { plugins: { enabled: true } } as QuietCoreConfig;
     await applyHotReload(
       {
         changedPaths: ["plugins.enabled"],
@@ -287,7 +287,7 @@ describe("gateway hot reload model state", () => {
 
   it("disposes cached MCP runtimes on MCP config hot reloads", async () => {
     const { applyHotReload } = createReloadHandlersForTest();
-    const nextConfig = { mcp: { servers: {} } } as OpenClawConfig;
+    const nextConfig = { mcp: { servers: {} } } as QuietCoreConfig;
 
     await applyHotReload(
       {
@@ -316,7 +316,7 @@ describe("gateway hot reload model state", () => {
     const { applyHotReload } = createReloadHandlersForTest();
     const nextConfig = {
       agents: { defaults: { workspace: "/tmp/next-workspace" } },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     await applyHotReload(
       {
@@ -355,8 +355,8 @@ describe("gateway hot reload model state", () => {
     },
   ])("refreshes context metadata when a workspace change $label", async (testCase) => {
     const { applyHotReload } = createReloadHandlersForTest();
-    const previousConfig = testCase.previousConfig as OpenClawConfig;
-    const nextConfig = testCase.nextConfig as OpenClawConfig;
+    const previousConfig = testCase.previousConfig as QuietCoreConfig;
+    const nextConfig = testCase.nextConfig as QuietCoreConfig;
     const changedPaths = diffConfigPaths(previousConfig, nextConfig);
     expect(changedPaths).toEqual([testCase.expectedPath]);
 
@@ -1076,7 +1076,7 @@ describe("gateway Gmail hot reload handlers", () => {
     };
   }
 
-  function createGmailConfig(account: string): OpenClawConfig {
+  function createGmailConfig(account: string): QuietCoreConfig {
     return {
       gateway: { reload: { debounceMs: 0 } },
       hooks: { enabled: true, gmail: { account } },
@@ -1270,7 +1270,7 @@ describe("gateway Gmail hot reload handlers", () => {
       logCron: { error: vi.fn() },
       logReload: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
       channelManager: {} as never,
-      activateRuntimeSecrets: vi.fn(async (config: OpenClawConfig) => ({
+      activateRuntimeSecrets: vi.fn(async (config: QuietCoreConfig) => ({
         sourceConfig: config,
         config,
         authStores: [],
@@ -1310,7 +1310,7 @@ describe("gateway Gmail hot reload handlers", () => {
       current: null,
     };
     const initialConfig = createGmailConfig("old@example.com");
-    const nextConfig: OpenClawConfig = {
+    const nextConfig: QuietCoreConfig = {
       ...createGmailConfig("next@example.com"),
       models: { providers: {} },
     };
@@ -1380,7 +1380,7 @@ describe("gateway Gmail hot reload handlers", () => {
       logCron: { error: vi.fn() },
       logReload,
       channelManager: {} as never,
-      activateRuntimeSecrets: vi.fn(async (config: OpenClawConfig) => ({
+      activateRuntimeSecrets: vi.fn(async (config: QuietCoreConfig) => ({
         sourceConfig: config,
         config,
         authStores: [],
@@ -1485,7 +1485,7 @@ describe("gateway Gmail hot reload handlers", () => {
       logCron: { error: vi.fn() },
       logReload: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
       channelManager: {} as never,
-      activateRuntimeSecrets: vi.fn(async (config: OpenClawConfig) => {
+      activateRuntimeSecrets: vi.fn(async (config: QuietCoreConfig) => {
         secretsEntered?.();
         await releaseSecretsPromise;
         return {

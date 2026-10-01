@@ -8,7 +8,7 @@ import {
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { updateSessionStore, type SessionEntry } from "../../config/sessions.js";
 import { withTempConfig } from "../../gateway/test-temp-config.js";
-import { resolvePreferredOpenClawTmpDir } from "../../infra/tmp-quiet-core-bot-dir.js";
+import { resolvePreferredQuietCoreTmpDir } from "../../infra/tmp-quiet-core-bot-dir.js";
 import { createOutboundTestPlugin, createTestRegistry } from "../../test-utils/channel-plugins.js";
 import {
   resolveAttachmentDelivery,
@@ -21,7 +21,7 @@ import { createPluginRegistry } from "../registry.js";
 import { setActivePluginRegistry } from "../runtime.js";
 import type { PluginRuntime } from "../runtime/types.js";
 import { createPluginRecord } from "../status.test-helpers.js";
-import type { OpenClawPluginApi } from "../types.js";
+import type { QuietCorePluginApi } from "../types.js";
 
 const workflowMocks = vi.hoisted(() => ({
   getChannelPlugin: vi.fn(),
@@ -62,7 +62,7 @@ async function withSessionStore(
   run: (params: { stateDir: string; storePath: string; filePath: string }) => Promise<void>,
 ) {
   const stateDir = await fs.mkdtemp(
-    path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-session-attachments-"),
+    path.join(resolvePreferredQuietCoreTmpDir(), "quiet-core-bot-session-attachments-"),
   );
   const storePath = path.join(stateDir, "sessions.json");
   const filePath = path.join(stateDir, "x.txt");
@@ -143,7 +143,7 @@ describe("plugin session attachments", () => {
     workflowMocks.sendMessage.mockReset();
     setActivePluginRegistry(createEmptyPluginRegistry());
     clearPluginLoaderCache();
-    delete (globalThis as { proofAttachmentApi?: OpenClawPluginApi }).proofAttachmentApi;
+    delete (globalThis as { proofAttachmentApi?: QuietCorePluginApi }).proofAttachmentApi;
     delete (globalThis as { proofAttachmentLog?: unknown[] }).proofAttachmentLog;
   });
 
@@ -467,7 +467,7 @@ describe("plugin session attachments", () => {
       mockSuccessfulAttachmentDelivery();
 
       const { config, registry } = createPluginRegistryFixture({ session: { store: storePath } });
-      let capturedApi: OpenClawPluginApi | undefined;
+      let capturedApi: QuietCorePluginApi | undefined;
       registerTestPlugin({
         registry,
         config,
@@ -514,7 +514,7 @@ describe("plugin session attachments", () => {
           },
         } as unknown as PluginRuntime,
       });
-      let capturedApi: OpenClawPluginApi | undefined;
+      let capturedApi: QuietCorePluginApi | undefined;
       registerTestPlugin({
         registry,
         config: registrationConfig,
@@ -554,7 +554,7 @@ describe("plugin session attachments", () => {
           },
         } as unknown as PluginRuntime,
       });
-      let capturedApi: OpenClawPluginApi | undefined;
+      let capturedApi: QuietCorePluginApi | undefined;
       registerTestPlugin({
         registry,
         config: registrationConfig,

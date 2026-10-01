@@ -14,7 +14,7 @@ type CreateSessionsSpawnTool =
   (typeof import("./tools/sessions-spawn-tool.js"))["createSessionsSpawnTool"];
 type SubagentRegistryTesting = (typeof import("./subagent-registry.js"))["testing"];
 type SubagentSpawnTesting = (typeof import("./subagent-spawn.js"))["testing"];
-type CreateOpenClawToolsOpts = Parameters<CreateSessionsSpawnTool>[0];
+type CreateQuietCoreToolsOpts = Parameters<CreateSessionsSpawnTool>[0];
 type GatewayRequest = { method?: string; params?: unknown; timeoutMs?: number };
 type AgentWaitCall = { runId?: string; timeoutMs?: number };
 type TestSessionEntry = {
@@ -188,7 +188,7 @@ export function setSessionsSpawnAnnounceFlowOverride(next: RunSubagentAnnounceFl
   hoisted.state.runSubagentAnnounceFlowOverride = next;
 }
 
-export async function getSessionsSpawnTool(opts: CreateOpenClawToolsOpts) {
+export async function getSessionsSpawnTool(opts: CreateQuietCoreToolsOpts) {
   // Lazily installs test deps before constructing the real sessions_spawn tool.
   if (!cachedSubagentSpawnTesting || !cachedSubagentRegistryTesting) {
     const [{ testing: subagentSpawnTesting }, { testing: subagentRegistryTesting }] =

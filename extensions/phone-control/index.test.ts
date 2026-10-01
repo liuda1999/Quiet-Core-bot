@@ -14,9 +14,9 @@ import { createTestPluginApi } from "quiet-core-bot/plugin-sdk/plugin-test-api";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import registerPhoneControl from "./index.js";
 import type {
-  OpenClawPluginApi,
-  OpenClawPluginCommandDefinition,
-  OpenClawPluginService,
+  QuietCorePluginApi,
+  QuietCorePluginCommandDefinition,
+  QuietCorePluginService,
   PluginCommandContext,
 } from "./runtime-api.js";
 
@@ -27,10 +27,10 @@ function createApi(params: {
   stateDir: string;
   getConfig: () => Record<string, unknown>;
   writeConfig: (next: Record<string, unknown>) => Promise<void>;
-  registerCommand: (command: OpenClawPluginCommandDefinition) => void;
-  registerService?: (service: OpenClawPluginService) => void;
-  openKeyedStore?: OpenClawPluginApi["runtime"]["state"]["openKeyedStore"];
-}): OpenClawPluginApi {
+  registerCommand: (command: QuietCorePluginCommandDefinition) => void;
+  registerService?: (service: QuietCorePluginService) => void;
+  openKeyedStore?: QuietCorePluginApi["runtime"]["state"]["openKeyedStore"];
+}): QuietCorePluginApi {
   return createTestPluginApi({
     id: "phone-control",
     name: "phone-control",
@@ -72,7 +72,7 @@ function createApi(params: {
         replaceConfigFile: ({ nextConfig }: { nextConfig: unknown }) =>
           params.writeConfig(nextConfig as Record<string, unknown>),
       },
-    } as unknown as OpenClawPluginApi["runtime"],
+    } as unknown as QuietCorePluginApi["runtime"],
     registerCommand: params.registerCommand,
     ...(params.registerService ? { registerService: params.registerService } : {}),
   });
@@ -108,7 +108,7 @@ function createPhoneControlConfig(): Record<string, unknown> {
 function createMockOpenKeyedStore(params: {
   lookup: ReturnType<typeof vi.fn>;
   delete?: ReturnType<typeof vi.fn>;
-}): OpenClawPluginApi["runtime"]["state"]["openKeyedStore"] {
+}): QuietCorePluginApi["runtime"]["state"]["openKeyedStore"] {
   return <T>() => {
     const store: PluginStateKeyedStore<T> = {
       register: vi.fn(async () => {}),
@@ -126,7 +126,7 @@ function createMockOpenKeyedStore(params: {
 
 async function withRegisteredPhoneControl(
   run: (params: {
-    command: OpenClawPluginCommandDefinition;
+    command: QuietCorePluginCommandDefinition;
     writeConfigFile: ReturnType<typeof vi.fn>;
     getConfig: () => Record<string, unknown>;
   }) => Promise<void>,
@@ -138,7 +138,7 @@ async function withRegisteredPhoneControl(
       config = next;
     });
 
-    let command: OpenClawPluginCommandDefinition | undefined;
+    let command: QuietCorePluginCommandDefinition | undefined;
     registerPhoneControl.register(
       createApi({
         stateDir,
@@ -367,7 +367,7 @@ describe("phone-control plugin", () => {
     const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), PHONE_CONTROL_STATE_PREFIX));
     try {
       const lookup = vi.fn(async () => undefined);
-      let service: OpenClawPluginService | undefined;
+      let service: QuietCorePluginService | undefined;
 
       registerPhoneControl.register(
         createApi({
@@ -434,7 +434,7 @@ describe("phone-control plugin", () => {
         removedFromDeny: [...WRITE_COMMANDS],
       }));
       const removeState = vi.fn(async () => true);
-      let service: OpenClawPluginService | undefined;
+      let service: QuietCorePluginService | undefined;
 
       registerPhoneControl.register(
         createApi({

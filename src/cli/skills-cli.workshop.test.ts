@@ -4,14 +4,14 @@ import path from "node:path";
 import { Command } from "commander";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
-  createOpenClawTestState,
-  type OpenClawTestState,
+  createQuietCoreTestState,
+  type QuietCoreTestState,
 } from "../test-utils/quiet-core-bot-test-state.js";
 import { createTrackedTempDirs } from "../test-utils/tracked-temp-dirs.js";
 import { registerSkillsCli } from "./skills-cli.js";
 
 const tempDirs = createTrackedTempDirs();
-let testState: OpenClawTestState;
+let testState: QuietCoreTestState;
 let stateDir = "";
 
 const mocks = vi.hoisted(() => {
@@ -92,7 +92,7 @@ describe("skills workshop cli", () => {
   };
 
   beforeEach(async () => {
-    testState = await createOpenClawTestState({
+    testState = await createQuietCoreTestState({
       layout: "state-only",
       prefix: "quiet-core-bot-skills-cli-workshop-state-",
     });

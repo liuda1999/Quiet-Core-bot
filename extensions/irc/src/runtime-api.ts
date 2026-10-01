@@ -3,7 +3,7 @@
 
 export type { BaseProbeResult } from "quiet-core-bot/plugin-sdk/channel-contract";
 export type { ChannelPlugin } from "quiet-core-bot/plugin-sdk/channel-core";
-export type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+export type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 export type { PluginRuntime } from "quiet-core-bot/plugin-sdk/runtime-store";
 export type { RuntimeEnv } from "quiet-core-bot/plugin-sdk/runtime";
 export type {

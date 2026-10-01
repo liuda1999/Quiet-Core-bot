@@ -8,10 +8,10 @@ import path from "node:path";
 import type { Insertable, Selectable, Updateable } from "kysely";
 import { z } from "zod";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../../infra/kysely-sync.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../../state/quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "../../state/quiet-core-bot-state-db.generated.js";
 import {
-  openOpenClawStateDatabase,
-  runOpenClawStateWriteTransaction,
+  openQuietCoreStateDatabase,
+  runQuietCoreStateWriteTransaction,
 } from "../../state/quiet-core-bot-state-db.js";
 import { safeParseJsonWithSchema } from "../../utils/zod-parse.js";
 import { acquireSessionWriteLock } from "../session-write-lock.js";
@@ -71,8 +71,8 @@ type ShardedRegistryRead<T extends RegistryEntry> = {
 
 type LegacyRegistryKind = "containers" | "browsers";
 type SandboxRegistryKind = "container" | "browser";
-type SandboxRegistryTable = OpenClawStateKyselyDatabase["sandbox_registry_entries"];
-type SandboxRegistryDatabase = Pick<OpenClawStateKyselyDatabase, "sandbox_registry_entries">;
+type SandboxRegistryTable = QuietCoreStateKyselyDatabase["sandbox_registry_entries"];
+type SandboxRegistryDatabase = Pick<QuietCoreStateKyselyDatabase, "sandbox_registry_entries">;
 type SandboxRegistryRow = Selectable<SandboxRegistryTable>;
 type SandboxRegistryInsert = Insertable<SandboxRegistryTable>;
 type SandboxRegistryUpdate = Updateable<SandboxRegistryTable>;
@@ -231,7 +231,7 @@ function rowToUpdate(row: SandboxRegistryInsert): SandboxRegistryUpdate {
 }
 
 function readRegistryRows(kind: SandboxRegistryKind): SandboxRegistryRow[] {
-  const { db } = openOpenClawStateDatabase();
+  const { db } = openQuietCoreStateDatabase();
   const stateDb = getSandboxRegistryKysely(db);
   return executeSqliteQuerySync(
     db,
@@ -247,7 +247,7 @@ function readRegistryRow(
   kind: SandboxRegistryKind,
   containerName: string,
 ): SandboxRegistryRow | null {
-  const { db } = openOpenClawStateDatabase();
+  const { db } = openQuietCoreStateDatabase();
   const stateDb = getSandboxRegistryKysely(db);
   return (
     executeSqliteQuerySync(
@@ -263,7 +263,7 @@ function readRegistryRow(
 }
 
 function insertRegistryRowIfMissing(row: SandboxRegistryInsert): void {
-  runOpenClawStateWriteTransaction(({ db }) => {
+  runQuietCoreStateWriteTransaction(({ db }) => {
     const stateDb = getSandboxRegistryKysely(db);
     executeSqliteQuerySync(
       db,
@@ -313,7 +313,7 @@ function readRegistryRowFromDb(
 }
 
 function removeRegistryRow(kind: SandboxRegistryKind, containerName: string): void {
-  runOpenClawStateWriteTransaction(({ db }) => {
+  runQuietCoreStateWriteTransaction(({ db }) => {
     const stateDb = getSandboxRegistryKysely(db);
     executeSqliteQuerySync(
       db,
@@ -690,7 +690,7 @@ export async function readRegistryEntry(
 
 /** Creates or updates one sandbox runtime registry entry, preserving immutable creation fields. */
 export async function updateRegistry(entry: SandboxRegistryEntry) {
-  runOpenClawStateWriteTransaction(({ db }) => {
+  runQuietCoreStateWriteTransaction(({ db }) => {
     const existingRow = readRegistryRowFromDb(db, "container", entry.containerName);
     const existing = existingRow ? rowToContainerEntry(existingRow) : null;
     insertRegistryRow(db, containerEntryToRow(entry, existing));
@@ -713,7 +713,7 @@ export async function readBrowserRegistry(): Promise<SandboxBrowserRegistry> {
 
 /** Creates or updates one browser sandbox registry entry, preserving immutable creation fields. */
 export async function updateBrowserRegistry(entry: SandboxBrowserRegistryEntry) {
-  runOpenClawStateWriteTransaction(({ db }) => {
+  runQuietCoreStateWriteTransaction(({ db }) => {
     const existingRow = readRegistryRowFromDb(db, "browser", entry.containerName);
     const existing = existingRow ? rowToBrowserEntry(existingRow) : null;
     insertRegistryRow(db, browserEntryToRow(entry, existing));

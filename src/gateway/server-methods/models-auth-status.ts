@@ -26,7 +26,7 @@ import {
   warmCurrentProviderAuthStateOffMainThread,
 } from "../../agents/model-provider-auth.js";
 import { resolveProviderIdForAuth } from "../../agents/provider-auth-aliases.js";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import { isSecretRef } from "../../config/types.secrets.js";
 import type { UsageWindow } from "../../infra/provider-usage.types.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
@@ -284,7 +284,7 @@ export function aggregateOAuthStatus(
  * for a working auth path. They can still show up with real status if the
  * profile store has an entry for them.
  */
-function resolveConfiguredProviders(cfg: OpenClawConfig): {
+function resolveConfiguredProviders(cfg: QuietCoreConfig): {
   providers: string[];
   expectsOAuth: Set<string>;
 } {

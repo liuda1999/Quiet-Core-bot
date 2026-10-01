@@ -1,8 +1,8 @@
-// Tlon plugin entrypoint registers its OpenClaw integration.
+// Tlon plugin entrypoint registers its QuietCore integration.
 import type { ReplyPayload } from "quiet-core-bot/plugin-sdk/reply-runtime";
 import type { RuntimeEnv } from "quiet-core-bot/plugin-sdk/runtime";
 import { asFiniteNumber } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
-import type { OpenClawConfig } from "../../runtime-api.js";
+import type { QuietCoreConfig } from "../../runtime-api.js";
 import { createLoggerBackedRuntime } from "../../runtime-api.js";
 import { getTlonRuntime } from "../runtime.js";
 import { createSettingsManager, type TlonSettingsStore } from "../settings.js";
@@ -60,7 +60,7 @@ function readNumber(record: Record<string, unknown> | null, key: string): number
 
 export async function monitorTlonProvider(opts: MonitorTlonOpts = {}): Promise<void> {
   const core = getTlonRuntime();
-  const cfg = core.config.current() as OpenClawConfig;
+  const cfg = core.config.current() as QuietCoreConfig;
   if (cfg.channels?.tlon?.enabled === false) {
     return;
   }
@@ -446,7 +446,7 @@ export async function monitorTlonProvider(opts: MonitorTlonOpts = {}): Promise<v
       if (senders.size > 0 && !senders.has(senderShip)) {
         runtime.log?.(
           `[tlon] ⚠️ SECURITY: Multiple users sharing DM session. ` +
-            `Configure "session.dmScope: per-channel-peer" in OpenClaw config.`,
+            `Configure "session.dmScope: per-channel-peer" in QuietCore config.`,
         );
 
         if (!sharedSessionWarningSent && effectiveOwnerShip) {
@@ -454,7 +454,7 @@ export async function monitorTlonProvider(opts: MonitorTlonOpts = {}): Promise<v
           const warningMsg =
             `⚠️ Security Warning: Multiple users are sharing a DM session with this bot. ` +
             `This can leak conversation context between users.\n\n` +
-            `Fix: Add to your OpenClaw config:\n` +
+            `Fix: Add to your QuietCore config:\n` +
             `session:\n  dmScope: "per-channel-peer"\n\n` +
             `Docs: https://github.com/liuda1999/Quiet-Core-bot/concepts/session#secure-dm-mode`;
 

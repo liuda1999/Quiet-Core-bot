@@ -24,9 +24,9 @@ import {
   asDateTimestampMs,
   resolveExpiresAtMsFromDurationMs,
 } from "@quiet-core/normalization-core/number-coercion";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { toErrorObject } from "../../infra/errors.js";
-import { resolveOpenClawPackageRootSync } from "../../infra/quiet-core-bot-root.js";
+import { resolveQuietCorePackageRootSync } from "../../infra/quiet-core-bot-root.js";
 import { privateFileStoreSync } from "../../infra/private-file-store.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
 import { hasGlobalHooks } from "../../plugins/hook-runner-global.js";
@@ -101,7 +101,7 @@ export type NativeHookRelayRegistration = {
   agentId?: string;
   sessionId: string;
   sessionKey?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   runId: string;
   channelId?: string;
   allowedEvents: readonly NativeHookRelayEvent[];
@@ -128,7 +128,7 @@ export type RegisterNativeHookRelayParams = {
   agentId?: string;
   sessionId: string;
   sessionKey?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   runId: string;
   channelId?: string;
   allowedEvents?: readonly NativeHookRelayEvent[];
@@ -557,7 +557,7 @@ export function buildNativeHookRelayCommand(params: {
   nodeExecutable?: string;
 }): string {
   const timeoutMs = normalizePositiveInteger(params.timeoutMs, DEFAULT_RELAY_TIMEOUT_MS);
-  const executable = params.executable ?? resolveOpenClawCliExecutable();
+  const executable = params.executable ?? resolveQuietCoreCliExecutable();
   const argv =
     executable === "quiet-core-bot"
       ? ["quiet-core-bot"]
@@ -2137,12 +2137,12 @@ function truncateText(value: string, maxLength: number): string {
   return `${value.slice(0, Math.max(0, maxLength - 3))}...`;
 }
 
-function resolveOpenClawCliExecutable(): string {
+function resolveQuietCoreCliExecutable(): string {
   const envPath = process.env.QUIET_CORE_CLI_PATH?.trim();
   if (envPath && existsSync(envPath)) {
     return envPath;
   }
-  const packageRoot = resolveOpenClawPackageRootSync({
+  const packageRoot = resolveQuietCorePackageRootSync({
     moduleUrl: import.meta.url,
     argv1: process.argv[1],
     cwd: process.cwd(),

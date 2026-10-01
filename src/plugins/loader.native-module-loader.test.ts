@@ -116,7 +116,7 @@ describe("createPluginModuleLoader", () => {
   it("loads bundled JavaScript without creating a module loader", async () => {
     const sourceLoaderCalls = mockSourceLoaderCalls();
 
-    const { loadOpenClawPlugins } = await importFreshModule<typeof import("./loader.js")>(
+    const { loadQuietCorePlugins } = await importFreshModule<typeof import("./loader.js")>(
       import.meta.url,
       "./loader.js?scope=native-module-loader",
     );
@@ -124,7 +124,7 @@ describe("createPluginModuleLoader", () => {
     const pluginRoot = writeBundledPluginFixture("demo");
     process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR = pluginRoot;
 
-    loadOpenClawPlugins({
+    loadQuietCorePlugins({
       cache: false,
       installRecords: {},
       workspaceDir: pluginRoot,
@@ -146,7 +146,7 @@ describe("createPluginModuleLoader", () => {
   it("loads packaged JavaScript without creating a module loader", async () => {
     const sourceLoaderCalls = mockSourceLoaderCalls();
 
-    const { loadOpenClawPlugins } = await importFreshModule<typeof import("./loader.js")>(
+    const { loadQuietCorePlugins } = await importFreshModule<typeof import("./loader.js")>(
       import.meta.url,
       "./loader.js?scope=packaged-native-module-loader",
     );
@@ -154,7 +154,7 @@ describe("createPluginModuleLoader", () => {
     const pluginRoot = writePackagedPluginFixture("npm-demo");
     process.env.QUIET_CORE_BUNDLED_PLUGINS_DIR = makeTempDir();
 
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       installRecords: {},
       onlyPluginIds: ["npm-demo"],

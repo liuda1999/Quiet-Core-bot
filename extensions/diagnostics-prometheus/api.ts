@@ -6,9 +6,9 @@ export type {
 export { isInternalDiagnosticEventMetadata } from "quiet-core-bot/plugin-sdk/diagnostic-runtime";
 export {
   emptyPluginConfigSchema,
-  type OpenClawPluginApi,
-  type OpenClawPluginHttpRouteHandler,
-  type OpenClawPluginService,
-  type OpenClawPluginServiceContext,
+  type QuietCorePluginApi,
+  type QuietCorePluginHttpRouteHandler,
+  type QuietCorePluginService,
+  type QuietCorePluginServiceContext,
 } from "quiet-core-bot/plugin-sdk/plugin-entry";
 export { redactSensitiveText } from "quiet-core-bot/plugin-sdk/security-runtime";

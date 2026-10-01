@@ -1,4 +1,4 @@
-// Diagnostics Prometheus plugin entrypoint registers its OpenClaw integration.
+// Diagnostics Prometheus plugin entrypoint registers its QuietCore integration.
 import { definePluginEntry } from "quiet-core-bot/plugin-sdk/plugin-entry";
 import { createDiagnosticsPrometheusExporter } from "./src/service.js";
 
@@ -7,7 +7,7 @@ const exporter = createDiagnosticsPrometheusExporter();
 export default definePluginEntry({
   id: "diagnostics-prometheus",
   name: "Diagnostics Prometheus",
-  description: "Expose OpenClaw diagnostics metrics in Prometheus text format",
+  description: "Expose QuietCore diagnostics metrics in Prometheus text format",
   register(api) {
     api.registerService(exporter.service);
     api.registerHttpRoute({

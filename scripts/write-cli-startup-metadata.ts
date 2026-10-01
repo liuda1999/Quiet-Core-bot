@@ -1,11 +1,11 @@
-// Write Cli Startup Metadata script supports OpenClaw repository automation.
+// Write Cli Startup Metadata script supports QuietCore repository automation.
 import { spawn, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import type { RootHelpRenderOptions } from "../src/cli/program/root-help.js";
-import type { OpenClawConfig } from "../src/config/config.js";
+import type { QuietCoreConfig } from "../src/config/config.js";
 import { resolveWindowsTaskkillPath } from "./lib/windows-taskkill.mjs";
 
 function dedupe(values: string[]): string[] {
@@ -388,7 +388,7 @@ function createIsolatedRootHelpRenderContext(
     QUIET_CORE_DISABLE_BUNDLED_PLUGINS: "",
     QUIET_CORE_STATE_DIR: stateDir,
   };
-  const config: OpenClawConfig = {
+  const config: QuietCoreConfig = {
     agents: {
       defaults: {
         workspace: workspaceDir,

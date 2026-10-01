@@ -94,8 +94,8 @@ function createDeps(
     maybeRestoreLegacyMatrixBackup: vi.fn(async () => createLegacyCryptoRestoreResult()),
     summarizeMatrixDeviceHealth: vi.fn(() => ({
       currentDeviceId: null,
-      staleOpenClawDevices: [] as MatrixManagedDeviceInfo[],
-      currentOpenClawDevices: [] as MatrixManagedDeviceInfo[],
+      staleQuietCoreDevices: [] as MatrixManagedDeviceInfo[],
+      currentQuietCoreDevices: [] as MatrixManagedDeviceInfo[],
     })),
     syncMatrixOwnProfile: vi.fn(async () => createProfileSyncResult()),
     ensureMatrixStartupVerification: vi.fn(async () =>
@@ -213,10 +213,10 @@ describe("runMatrixStartupMaintenance", () => {
     params.auth.encryption = true;
     vi.mocked(deps.summarizeMatrixDeviceHealth).mockReturnValue({
       currentDeviceId: null,
-      staleOpenClawDevices: [
-        { deviceId: "DEV123", displayName: "OpenClaw Device", current: false },
+      staleQuietCoreDevices: [
+        { deviceId: "DEV123", displayName: "QuietCore Device", current: false },
       ],
-      currentOpenClawDevices: [],
+      currentQuietCoreDevices: [],
     });
     vi.mocked(deps.ensureMatrixStartupVerification).mockResolvedValue(
       createStartupVerificationOutcome("pending"),
@@ -233,7 +233,7 @@ describe("runMatrixStartupMaintenance", () => {
     await runMatrixStartupMaintenance(params, deps);
 
     expect(params.logger.warn).toHaveBeenCalledWith(
-      "matrix: stale OpenClaw devices detected for @bot:example.org: DEV123. Run 'quiet-core-bot matrix devices prune-stale --account ops' to keep encrypted-room trust healthy.",
+      "matrix: stale QuietCore devices detected for @bot:example.org: DEV123. Run 'quiet-core-bot matrix devices prune-stale --account ops' to keep encrypted-room trust healthy.",
     );
     expect(params.logger.info).toHaveBeenCalledWith(
       "matrix: device not verified — run 'quiet-core-bot matrix verify device <key>' to enable E2EE",

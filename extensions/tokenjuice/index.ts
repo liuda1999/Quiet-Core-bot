@@ -1,4 +1,4 @@
-// Tokenjuice plugin entrypoint registers its OpenClaw integration.
+// Tokenjuice plugin entrypoint registers its QuietCore integration.
 import { definePluginEntry } from "quiet-core-bot/plugin-sdk/plugin-entry";
 import { createTokenjuiceAgentToolResultMiddleware } from "./tool-result-middleware.js";
 

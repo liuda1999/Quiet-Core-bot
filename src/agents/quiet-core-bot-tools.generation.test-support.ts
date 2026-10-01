@@ -1,6 +1,6 @@
 // Shared registration assertions for optional media-generation Quiet Core bot tools.
 import { describe, expect, it } from "vitest";
-import { collectPresentOpenClawTools } from "./quiet-core-bot-tools.registration.js";
+import { collectPresentQuietCoreTools } from "./quiet-core-bot-tools.registration.js";
 import { textResult, type AnyAgentTool } from "./tools/common.js";
 
 function stubAgentTool(name: string): AnyAgentTool {
@@ -16,7 +16,7 @@ function stubAgentTool(name: string): AnyAgentTool {
   };
 }
 
-export function describeOpenClawGenerationToolRegistration(params: {
+export function describeQuietCoreGenerationToolRegistration(params: {
   suiteName: string;
   toolName: string;
   toolLabel: string;
@@ -25,11 +25,11 @@ export function describeOpenClawGenerationToolRegistration(params: {
     it(`registers ${params.toolName} when ${params.toolLabel} is present`, () => {
       const tool = stubAgentTool(params.toolName);
 
-      expect(collectPresentOpenClawTools([tool])).toEqual([tool]);
+      expect(collectPresentQuietCoreTools([tool])).toEqual([tool]);
     });
 
     it(`omits ${params.toolName} when ${params.toolLabel} is absent`, () => {
-      expect(collectPresentOpenClawTools([null]).map((tool) => tool.name)).not.toContain(
+      expect(collectPresentQuietCoreTools([null]).map((tool) => tool.name)).not.toContain(
         params.toolName,
       );
     });

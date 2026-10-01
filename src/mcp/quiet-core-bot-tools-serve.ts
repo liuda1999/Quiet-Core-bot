@@ -11,26 +11,26 @@ import { createCronTool } from "../agents/tools/cron-tool.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { connectToolsMcpServerToStdio, createToolsMcpServer } from "./tools-stdio-server.js";
 
-export function resolveOpenClawToolsForMcp(): AnyAgentTool[] {
+export function resolveQuietCoreToolsForMcp(): AnyAgentTool[] {
   return [createCronTool({ creatorToolAllowlist: [{ name: "cron" }] })];
 }
 
-function createOpenClawToolsMcpServer(
+function createQuietCoreToolsMcpServer(
   params: {
     tools?: AnyAgentTool[];
   } = {},
 ): Server {
-  const tools = params.tools ?? resolveOpenClawToolsForMcp();
+  const tools = params.tools ?? resolveQuietCoreToolsForMcp();
   return createToolsMcpServer({ name: "quiet-core-bot-tools", tools });
 }
 
-async function serveOpenClawToolsMcp(): Promise<void> {
-  const server = createOpenClawToolsMcpServer();
+async function serveQuietCoreToolsMcp(): Promise<void> {
+  const server = createQuietCoreToolsMcpServer();
   await connectToolsMcpServerToStdio(server);
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
-  serveOpenClawToolsMcp().catch((err: unknown) => {
+  serveQuietCoreToolsMcp().catch((err: unknown) => {
     process.stderr.write(`quiet-core-bot-tools-serve: ${formatErrorMessage(err)}\n`);
     process.exit(1);
   });

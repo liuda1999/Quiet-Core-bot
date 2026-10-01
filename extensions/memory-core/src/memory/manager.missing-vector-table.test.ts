@@ -3,9 +3,9 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
 import { loadSqliteVecExtension } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-storage";
-import { resolveOpenClawAgentSqlitePath } from "quiet-core-bot/plugin-sdk/sqlite-runtime";
+import { resolveQuietCoreAgentSqlitePath } from "quiet-core-bot/plugin-sdk/sqlite-runtime";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import "./embedding.test-mocks.js";
 import { closeAllMemorySearchManagers, getMemorySearchManager } from "./index.js";
@@ -27,7 +27,7 @@ describe("memory index without a vector table", () => {
     await fs.mkdir(path.join(workspaceDir, "memory"), { recursive: true });
     await fs.writeFile(path.join(workspaceDir, "MEMORY.md"), "Alpha topic\n\nKeep this note.");
     vi.stubEnv("QUIET_CORE_STATE_DIR", path.join(workspaceDir, "state"));
-    indexPath = resolveOpenClawAgentSqlitePath({ agentId: "main" });
+    indexPath = resolveQuietCoreAgentSqlitePath({ agentId: "main" });
   });
 
   afterEach(async () => {
@@ -62,7 +62,7 @@ describe("memory index without a vector table", () => {
         },
         list: [{ id: "main", default: true }],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = await getMemorySearchManager({ cfg, agentId: "main" });
     if (!result.manager) {
       throw new Error(result.error ?? "manager missing");

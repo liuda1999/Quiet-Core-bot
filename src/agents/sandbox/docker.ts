@@ -171,7 +171,7 @@ export function execDockerRaw(
 }
 
 import { formatCliCommand } from "../../cli/command-format.js";
-import { markOpenClawExecEnv } from "../../infra/quiet-core-bot-exec-env.js";
+import { markQuietCoreExecEnv } from "../../infra/quiet-core-bot-exec-env.js";
 import { defaultRuntime } from "../../runtime.js";
 import {
   computeSandboxConfigHash,
@@ -461,7 +461,7 @@ export function buildSandboxCreateArgs(params: {
       `Suspicious configured sandbox environment variables: ${envSanitization.warnings.join(", ")}`,
     );
   }
-  for (const [key, value] of Object.entries(markOpenClawExecEnv(envSanitization.allowed))) {
+  for (const [key, value] of Object.entries(markQuietCoreExecEnv(envSanitization.allowed))) {
     args.push("--env", `${key}=${value}`);
   }
   for (const cap of params.cfg.capDrop) {

@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../api.js";
+import type { QuietCoreConfig } from "../api.js";
 import { compileMemoryWikiVault } from "./compile.js";
 import type { MemoryWikiPluginConfig } from "./config.js";
 import { renderWikiMarkdown } from "./markdown.js";
@@ -99,15 +99,15 @@ async function createQueryVault(options?: {
   });
 }
 
-function createAppConfig(): OpenClawConfig {
+function createAppConfig(): QuietCoreConfig {
   return {
     agents: {
       list: [{ id: "main", default: true }],
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
-function createSessionVisibilityAppConfig(): OpenClawConfig {
+function createSessionVisibilityAppConfig(): QuietCoreConfig {
   return {
     agents: {
       defaults: { sandbox: { sessionToolsVisibility: "all" } },
@@ -116,7 +116,7 @@ function createSessionVisibilityAppConfig(): OpenClawConfig {
     tools: {
       sessions: { visibility: "self" },
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
 function mockSessionTranscriptStore() {
@@ -300,7 +300,7 @@ describe("searchMemoryWiki", () => {
           "# Maintainer: Brad Groux",
           "",
           "## Agent Card",
-          "- Maintainer lane: CEO; Microsoft-facing OpenClaw maintainer",
+          "- Maintainer lane: CEO; Microsoft-facing QuietCore maintainer",
           "",
           "## AI Notes",
           "- Main sample theme is Microsoft ecosystem adoption: Teams, M365, Azure, Foundry, tenants, and pilots.",
@@ -973,7 +973,7 @@ describe("searchMemoryWiki", () => {
       agents: {
         list: [{ id: "main", default: true }, { id: "secondary" }],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     loadCombinedSessionStoreForGatewayMock.mockReturnValue({
       storePath: "(test)",
       store: {

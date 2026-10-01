@@ -1,7 +1,7 @@
 // Covers agent directory resolution across config and environment overrides.
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { findDuplicateAgentDirs } from "./agent-dirs.js";
-import type { OpenClawConfig } from "./types.js";
+import type { QuietCoreConfig } from "./types.js";
 
 afterEach(() => {
   vi.unstubAllEnvs();
@@ -16,7 +16,7 @@ describe("resolveEffectiveAgentDir via findDuplicateAgentDirs", () => {
     // since they have different IDs.  Instead we just verify no crash and
     // that the env flows through by checking a two-agent config produces
     // distinct dirs (no duplicates).
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       agents: {
         list: [{ id: "alpha" }, { id: "beta" }],
       },
@@ -35,7 +35,7 @@ describe("resolveEffectiveAgentDir via findDuplicateAgentDirs", () => {
     // Force two agents to the same explicit agentDir to verify the path
     // that doesn't use the default — then test the default path by
     // checking that a single-agent config resolves without duplicates.
-    const cfg: OpenClawConfig = {};
+    const cfg: QuietCoreConfig = {};
 
     const env = {
       QUIET_CORE_HOME: "/srv/quiet-core-bot-home",

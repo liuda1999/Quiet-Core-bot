@@ -5,11 +5,11 @@
  */
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { resolveOpenClawPackageRootSync } from "../../infra/quiet-core-bot-root.js";
+import { resolveQuietCorePackageRootSync } from "../../infra/quiet-core-bot-root.js";
 import { resolveBundledPluginsDir } from "../../plugins/bundled-dir.js";
 
 const QUIET_CORE_PACKAGE_ROOT =
-  resolveOpenClawPackageRootSync({
+  resolveQuietCorePackageRootSync({
     argv1: process.argv[1],
     cwd: process.cwd(),
     moduleUrl: import.meta.url.startsWith("file:") ? import.meta.url : undefined,

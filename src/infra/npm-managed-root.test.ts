@@ -10,10 +10,10 @@ import { createSuiteTempRootTracker } from "../test-helpers/temp-dir.js";
 import { captureEnv } from "../test-utils/env.js";
 import {
   listMissingRequiredPlatformPackages,
-  repairManagedNpmRootOpenClawPeer,
+  repairManagedNpmRootQuietCorePeer,
   removeManagedNpmRootDependency,
   readManagedNpmRootInstalledDependency,
-  readOpenClawManagedNpmRootOverrides,
+  readQuietCoreManagedNpmRootOverrides,
   resolveManagedNpmRootDependencySpec,
   restoreManagedNpmRootPeerDependencySnapshot,
   syncManagedNpmRootPeerDependencies,
@@ -540,7 +540,7 @@ describe("managed npm root", () => {
       axios: "1.16.0",
       "node-domexception": "npm:@nolyfill/domexception@1.0.28",
     });
-    await expect(readOpenClawManagedNpmRootOverrides()).resolves.toEqual(expectedOverrides);
+    await expect(readQuietCoreManagedNpmRootOverrides()).resolves.toEqual(expectedOverrides);
   });
 
   it("resolves workspace pnpm overrides from packaged dist chunks", async () => {
@@ -562,7 +562,7 @@ describe("managed npm root", () => {
     );
 
     await expect(
-      readOpenClawManagedNpmRootOverrides({
+      readQuietCoreManagedNpmRootOverrides({
         moduleUrl: pathToFileURL(path.join(packageRoot, "dist", "install-AbCdEf.js")).toString(),
         cwd: path.join(packageRoot, "dist"),
       }),
@@ -604,7 +604,7 @@ describe("managed npm root", () => {
       ].join("\n"),
     );
 
-    await expect(readOpenClawManagedNpmRootOverrides({ packageRoot })).resolves.toEqual({
+    await expect(readQuietCoreManagedNpmRootOverrides({ packageRoot })).resolves.toEqual({
       "managed-runtime": "3.1024.0",
       nested: {
         "optional-runtime": "2.0.0",
@@ -1354,7 +1354,7 @@ describe("managed npm root", () => {
     );
 
     const runCommand = vi.fn().mockResolvedValue(successfulSpawn);
-    await expect(repairManagedNpmRootOpenClawPeer({ npmRoot, runCommand })).resolves.toBe(true);
+    await expect(repairManagedNpmRootQuietCorePeer({ npmRoot, runCommand })).resolves.toBe(true);
     expect(runCommand).toHaveBeenCalledTimes(1);
     const [repairArgs, rawRepairOptions] = requireFirstMockCall(runCommand, "repair command");
     const repairOptions = requireCommandOptions(rawRepairOptions, "repair");
@@ -1443,7 +1443,7 @@ describe("managed npm root", () => {
 
     const runCommand = vi.fn().mockResolvedValue(successfulSpawn);
     await expect(
-      repairManagedNpmRootOpenClawPeer({
+      repairManagedNpmRootQuietCorePeer({
         npmRoot,
         packageRoot: hostPackageRoot,
         runCommand,
@@ -1538,7 +1538,7 @@ describe("managed npm root", () => {
 
     const runCommand = vi.fn().mockResolvedValue(successfulSpawn);
     await expect(
-      repairManagedNpmRootOpenClawPeer({
+      repairManagedNpmRootQuietCorePeer({
         npmRoot,
         packageRoot: hostPackageRoot,
         runCommand,

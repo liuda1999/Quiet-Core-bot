@@ -1,4 +1,4 @@
-name: OpenClaw NPM Release
+name: QuietCore NPM Release
 
 on:
   workflow_dispatch:
@@ -21,7 +21,7 @@ on:
         required: false
         type: string
       release_publish_run_id:
-        description: Approved OpenClaw Release Publish workflow run id
+        description: Approved QuietCore Release Publish workflow run id
         required: false
         type: string
       npm_dist_tag:
@@ -433,7 +433,7 @@ jobs:
             fi
           fi
           if [[ -z "${RELEASE_PUBLISH_RUN_ID// }" && "${GITHUB_ACTOR}" == "github-actions[bot]" ]]; then
-            echo "Workflow-dispatched real publish requires release_publish_run_id from the approved OpenClaw Release Publish workflow." >&2
+            echo "Workflow-dispatched real publish requires release_publish_run_id from the approved QuietCore Release Publish workflow." >&2
             exit 1
           fi
 
@@ -446,16 +446,16 @@ jobs:
           set -euo pipefail
           if [[ -z "${RELEASE_PUBLISH_RUN_ID// }" ]]; then
             if [[ "${GITHUB_ACTOR}" == "github-actions[bot]" ]]; then
-              echo "OpenClaw npm publish dispatched by another workflow must include release_publish_run_id." >&2
+              echo "QuietCore npm publish dispatched by another workflow must include release_publish_run_id." >&2
               exit 1
             fi
-            echo "Direct OpenClaw npm publish; relying on this workflow's npm-release environment approval."
+            echo "Direct QuietCore npm publish; relying on this workflow's npm-release environment approval."
             exit 0
           fi
           direct_recovery=false
           if [[ "${GITHUB_ACTOR}" != "github-actions[bot]" ]]; then
             direct_recovery=true
-            echo "Direct OpenClaw npm recovery with release_publish_run_id; relying on this workflow's npm-release environment approval."
+            echo "Direct QuietCore npm recovery with release_publish_run_id; relying on this workflow's npm-release environment approval."
           fi
           RUN_JSON="$(gh run view "$RELEASE_PUBLISH_RUN_ID" --repo "$GITHUB_REPOSITORY" --json workflowName,headBranch,event,status,conclusion,url)"
           printf '%s' "$RUN_JSON" | DIRECT_RELEASE_RECOVERY="${direct_recovery}" node scripts/validate-release-publish-approval.mjs
@@ -544,7 +544,7 @@ jobs:
         run: |
           set -euo pipefail
           RUN_JSON="$(gh run view "$PREFLIGHT_RUN_ID" --repo "$GITHUB_REPOSITORY" --json workflowName,headBranch,event,conclusion,url)"
-          printf '%s' "$RUN_JSON" | node -e 'const fs = require("node:fs"); const run = JSON.parse(fs.readFileSync(0, "utf8")); const checks = [["workflowName", "OpenClaw NPM Release"], ["event", "workflow_dispatch"], ["conclusion", "success"]]; for (const [key, expected] of checks) { if (run[key] !== expected) { console.error(`Referenced npm preflight run ${process.env.PREFLIGHT_RUN_ID} must have ${key}=${expected}, got ${run[key] ?? "<missing>"}.`); process.exit(1); } } console.log(`Using npm preflight run ${process.env.PREFLIGHT_RUN_ID} from ${run.headBranch}: ${run.url}`);'
+          printf '%s' "$RUN_JSON" | node -e 'const fs = require("node:fs"); const run = JSON.parse(fs.readFileSync(0, "utf8")); const checks = [["workflowName", "QuietCore NPM Release"], ["event", "workflow_dispatch"], ["conclusion", "success"]]; for (const [key, expected] of checks) { if (run[key] !== expected) { console.error(`Referenced npm preflight run ${process.env.PREFLIGHT_RUN_ID} must have ${key}=${expected}, got ${run[key] ?? "<missing>"}.`); process.exit(1); } } console.log(`Using npm preflight run ${process.env.PREFLIGHT_RUN_ID} from ${run.headBranch}: ${run.url}`);'
 
       - name: Verify full release validation run metadata
         if: ${{ inputs.full_release_validation_run_id != '' }}

@@ -11,7 +11,7 @@ import {
 import { getLoadedChannelPlugin } from "../channels/plugins/index.js";
 import { resolveSessionConversation } from "../channels/plugins/session-conversation.js";
 import { resolveChannelGroupToolsPolicy } from "../config/group-policy.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { AgentToolsConfig } from "../config/types.tools.js";
 import { logWarn } from "../logger.js";
 import { normalizeAgentId } from "../routing/session-key.js";
@@ -82,7 +82,7 @@ function mergeConfiguredSubagentAllow(
 
 /** Resolve sub-agent tool policy from stored session capabilities. */
 export function resolveSubagentToolPolicyForSession(
-  cfg: OpenClawConfig | undefined,
+  cfg: QuietCoreConfig | undefined,
   sessionKey: string,
   opts?: {
     store?: SessionCapabilityStore;
@@ -114,7 +114,7 @@ export function resolveSubagentToolPolicyForSession(
 
 /** Resolve the tool policy inherited from a parent sub-agent session. */
 export function resolveInheritedToolPolicyForSession(
-  cfg: OpenClawConfig | undefined,
+  cfg: QuietCoreConfig | undefined,
   sessionKey: string | undefined | null,
   opts?: {
     store?: SessionCapabilityStore;
@@ -147,7 +147,7 @@ export function filterToolsByPolicy(tools: AnyAgentTool[], policy?: SandboxToolP
 
 /** Resolve the shared profile, scope, extra, and sandbox policy layers. */
 export function resolveConfiguredToolPolicies(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentTools?: AgentToolsConfig;
   sandboxMode?: "off" | "non-main" | "all";
   agentId?: string | null;
@@ -307,7 +307,7 @@ export function resolveTrustedGroupId(params: {
   });
 }
 
-function resolveExplicitProfileAlsoAllow(tools?: OpenClawConfig["tools"]): string[] | undefined {
+function resolveExplicitProfileAlsoAllow(tools?: QuietCoreConfig["tools"]): string[] | undefined {
   return Array.isArray(tools?.alsoAllow) ? tools.alsoAllow : undefined;
 }
 
@@ -322,7 +322,7 @@ type ImplicitProfileGrantDetection = {
 };
 
 function detectImplicitProfileGrants(params: {
-  globalTools?: OpenClawConfig["tools"];
+  globalTools?: QuietCoreConfig["tools"];
   agentTools?: AgentToolsConfig;
   includeGlobalSections: boolean;
 }): ImplicitProfileGrantDetection | undefined {
@@ -355,7 +355,7 @@ function formatToolListForWarning(toolNames: string[]): string {
 
 /** Resolve the layered global, provider, agent, and profile tool policies. */
 export function resolveEffectiveToolPolicy(params: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   sessionKey?: string;
   agentId?: string;
   modelProvider?: string;
@@ -444,7 +444,7 @@ export function resolveEffectiveToolPolicy(params: {
 
 /** Resolve group-scoped tool policy after validating session provenance. */
 export function resolveGroupToolPolicy(params: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   sessionKey?: string;
   spawnedBy?: string | null;
   messageProvider?: string;

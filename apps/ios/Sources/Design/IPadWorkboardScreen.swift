@@ -1,4 +1,4 @@
-import OpenClawKit
+import QuietCoreKit
 import SwiftUI
 
 struct IPadWorkboardScreen: View {
@@ -20,12 +20,12 @@ struct IPadWorkboardScreen: View {
     @State private var busyCardID: String?
     @State private var dispatchSummaryText: String?
     @State private var presentedSheet: IPadWorkboardSheet?
-    let headerLeadingAction: OpenClawSidebarHeaderAction?
+    let headerLeadingAction: QuietCoreSidebarHeaderAction?
     let openChat: () -> Void
     let openSettings: () -> Void
 
     init(
-        headerLeadingAction: OpenClawSidebarHeaderAction? = nil,
+        headerLeadingAction: QuietCoreSidebarHeaderAction? = nil,
         openChat: @escaping () -> Void,
         openSettings: @escaping () -> Void = {})
     {
@@ -81,22 +81,22 @@ struct IPadWorkboardScreen: View {
                 icon: "tray.full",
                 title: "Cards",
                 value: "\(self.cards.count)",
-                color: OpenClawBrand.accent),
+                color: QuietCoreBrand.accent),
             ProMetric(
                 icon: "figure.run",
                 title: "Running",
                 value: "\(self.cards.count(where: { $0.status == "running" }))",
-                color: OpenClawBrand.ok),
+                color: QuietCoreBrand.ok),
             ProMetric(
                 icon: "exclamationmark.triangle",
                 title: "Blocked",
                 value: "\(self.cards.count(where: { $0.status == "blocked" }))",
-                color: OpenClawBrand.warn),
+                color: QuietCoreBrand.warn),
         ]
     }
 
     private var controlsCard: some View {
-        ProCard(radius: OpenClawProMetric.cardRadius) {
+        ProCard(radius: QuietCoreProMetric.cardRadius) {
             VStack(alignment: .leading, spacing: 12) {
                 self.boardScopeMenu
                 HStack(spacing: 8) {
@@ -128,7 +128,7 @@ struct IPadWorkboardScreen: View {
                     }
                     .pickerStyle(.segmented)
                     .controlSize(.small)
-                    .tint(OpenClawBrand.accent)
+                    .tint(QuietCoreBrand.accent)
                 }
 
                 HStack(spacing: 8) {
@@ -161,20 +161,20 @@ struct IPadWorkboardScreen: View {
                 if let dispatchSummaryText {
                     Text(dispatchSummaryText)
                         .font(.caption2)
-                        .foregroundStyle(OpenClawBrand.accent)
+                        .foregroundStyle(QuietCoreBrand.accent)
                 }
                 if let errorText {
                     Text(errorText)
                         .font(.caption2)
-                        .foregroundStyle(OpenClawBrand.warn)
+                        .foregroundStyle(QuietCoreBrand.warn)
                 }
             }
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     private var compactQueueControls: some View {
-        ProCard(radius: OpenClawProMetric.cardRadius) {
+        ProCard(radius: QuietCoreProMetric.cardRadius) {
             VStack(alignment: .leading, spacing: 9) {
                 HStack(alignment: .firstTextBaseline, spacing: 10) {
                     Text("\(self.filteredCards.count) cards")
@@ -210,16 +210,16 @@ struct IPadWorkboardScreen: View {
                 if let dispatchSummaryText {
                     Text(dispatchSummaryText)
                         .font(.caption2)
-                        .foregroundStyle(OpenClawBrand.accent)
+                        .foregroundStyle(QuietCoreBrand.accent)
                 }
                 if let errorText {
                     Text(errorText)
                         .font(.caption2)
-                        .foregroundStyle(OpenClawBrand.warn)
+                        .foregroundStyle(QuietCoreBrand.warn)
                 }
             }
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     private var compactRefreshButton: some View {
@@ -315,20 +315,20 @@ struct IPadWorkboardScreen: View {
                 .frame(height: 30)
                 .background(
                     self.selectedStatus == status
-                        ? OpenClawBrand.accent.opacity(0.12)
+                        ? QuietCoreBrand.accent.opacity(0.12)
                         : Color.primary.opacity(0.06),
                     in: Capsule())
                 .overlay {
                     Capsule()
                         .strokeBorder(
                             self.selectedStatus == status
-                                ? OpenClawBrand.accent.opacity(0.42)
+                                ? QuietCoreBrand.accent.opacity(0.42)
                                 : Color.primary.opacity(0.08),
                             lineWidth: 1)
                 }
         }
         .buttonStyle(.plain)
-        .foregroundStyle(self.selectedStatus == status ? OpenClawBrand.accent : .primary)
+        .foregroundStyle(self.selectedStatus == status ? QuietCoreBrand.accent : .primary)
         .accessibilityLabel("Show \(IPadWorkboardDefaults.label(for: status)) cards")
     }
 
@@ -420,14 +420,14 @@ struct IPadWorkboardScreen: View {
                         .frame(width: 282)
                 }
             }
-            .padding(.horizontal, OpenClawProMetric.pagePadding)
+            .padding(.horizontal, QuietCoreProMetric.pagePadding)
             .padding(.bottom, 12)
         }
         .scrollIndicators(.visible)
     }
 
     private var compactCardsPanel: some View {
-        ProCard(padding: 0, radius: OpenClawProMetric.cardRadius) {
+        ProCard(padding: 0, radius: QuietCoreProMetric.cardRadius) {
             VStack(spacing: 0) {
                 ProPanelHeader(
                     title: "Queue",
@@ -470,7 +470,7 @@ struct IPadWorkboardScreen: View {
                 }
             }
         }
-        .padding(.horizontal, OpenClawProMetric.pagePadding)
+        .padding(.horizontal, QuietCoreProMetric.pagePadding)
     }
 
     private var createCardSheet: some View {
@@ -486,7 +486,7 @@ struct IPadWorkboardScreen: View {
             if let errorText {
                 Section {
                     Text(errorText)
-                        .foregroundStyle(OpenClawBrand.warn)
+                        .foregroundStyle(QuietCoreBrand.warn)
                 }
             }
         }
@@ -906,7 +906,7 @@ struct IPadWorkboardKanbanColumn: View {
     let archive: (IPadWorkboardCard) -> Void
 
     var body: some View {
-        ProCard(padding: 0, radius: OpenClawProMetric.cardRadius) {
+        ProCard(padding: 0, radius: QuietCoreProMetric.cardRadius) {
             VStack(spacing: 0) {
                 ProPanelHeader(
                     title: IPadWorkboardDefaults.label(for: self.status),
@@ -1034,11 +1034,11 @@ private struct IPadWorkboardKanbanCard: View {
 
     private var color: Color {
         switch self.card.status {
-        case "running": OpenClawBrand.ok
-        case "review": OpenClawBrand.accent
-        case "blocked": OpenClawBrand.warn
+        case "running": QuietCoreBrand.ok
+        case "review": QuietCoreBrand.accent
+        case "blocked": QuietCoreBrand.warn
         case "done": .secondary
-        default: OpenClawBrand.accentHot
+        default: QuietCoreBrand.accentHot
         }
     }
 
@@ -1095,7 +1095,7 @@ struct IPadWorkboardQueueRow: View {
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .foregroundStyle(OpenClawBrand.accent)
+            .foregroundStyle(QuietCoreBrand.accent)
             .disabled(self.isBusy)
             .accessibilityLabel("Card Actions")
         }
@@ -1106,10 +1106,10 @@ struct IPadWorkboardQueueRow: View {
         }
         .swipeActions(edge: .leading, allowsFullSwipe: true) {
             Button("Inspect", action: self.inspect)
-                .tint(OpenClawBrand.accent)
+                .tint(QuietCoreBrand.accent)
             if self.card.sessionKey?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false {
                 Button("Open", action: self.openSession)
-                    .tint(OpenClawBrand.ok)
+                    .tint(QuietCoreBrand.ok)
             }
         }
         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
@@ -1117,7 +1117,7 @@ struct IPadWorkboardQueueRow: View {
                 Button(IPadWorkboardDefaults.label(for: nextStatus)) {
                     self.move(nextStatus)
                 }
-                .tint(OpenClawBrand.accentHot)
+                .tint(QuietCoreBrand.accentHot)
             }
             Button(self.card.metadata?.archivedAt == nil ? "Archive" : "Unarchive", action: self.archive)
                 .tint(.secondary)
@@ -1159,11 +1159,11 @@ struct IPadWorkboardQueueRow: View {
 
     private var color: Color {
         switch self.card.status {
-        case "running": OpenClawBrand.ok
-        case "review": OpenClawBrand.accent
-        case "blocked": OpenClawBrand.warn
+        case "running": QuietCoreBrand.ok
+        case "review": QuietCoreBrand.accent
+        case "blocked": QuietCoreBrand.warn
         case "done": .secondary
-        default: OpenClawBrand.accentHot
+        default: QuietCoreBrand.accentHot
         }
     }
 

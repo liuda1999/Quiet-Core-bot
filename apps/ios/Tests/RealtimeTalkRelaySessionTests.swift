@@ -1,8 +1,8 @@
 import Foundation
-import OpenClawKit
-import OpenClawProtocol
+import QuietCoreKit
+import QuietCoreProtocol
 import Testing
-@testable import OpenClaw
+@testable import QuietCore
 
 @MainActor
 private final class UnusedPCMStreamingAudioPlayer: PCMStreamingAudioPlaying {

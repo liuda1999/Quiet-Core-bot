@@ -15,7 +15,7 @@ import {
   type CompletionShell,
 } from "../cli/completion-runtime.js";
 import type { HealthFinding, HealthRepairEffect } from "../flows/health-checks.js";
-import { resolveOpenClawPackageRoot } from "../infra/quiet-core-bot-root.js";
+import { resolveQuietCorePackageRoot } from "../infra/quiet-core-bot-root.js";
 import type { RuntimeEnv } from "../runtime.js";
 import type { DoctorPrompter } from "./doctor-prompter.js";
 
@@ -44,7 +44,7 @@ function formatCompletionReloadNote(
 async function generateCompletionCache(
   options: ShellCompletionStatusOptions = {},
 ): Promise<boolean> {
-  const root = await resolveOpenClawPackageRoot({
+  const root = await resolveQuietCorePackageRoot({
     moduleUrl: import.meta.url,
     argv1: process.argv[1],
     cwd: process.cwd(),

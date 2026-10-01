@@ -59,7 +59,7 @@ export function createTerminalPresentationContractTool(params: {
   );
 }
 
-export function installOpenClawOwnedToolHooks(params?: {
+export function installQuietCoreOwnedToolHooks(params?: {
   adjustedParams?: Record<string, unknown>;
   blockReason?: string;
 }) {
@@ -84,7 +84,7 @@ export function installOpenClawOwnedToolHooks(params?: {
 
 /**
  * Installs only the Codex app-server `tool_result` middleware fixture.
- * Pair with `installOpenClawOwnedToolHooks()` when a test asserts before/after hook behavior.
+ * Pair with `installQuietCoreOwnedToolHooks()` when a test asserts before/after hook behavior.
  */
 export function installCodexToolResultMiddleware(
   handler: (event: AgentToolResultMiddlewareEvent) => AgentToolResult<unknown>,
@@ -105,7 +105,7 @@ export function installCodexToolResultMiddleware(
   return { middleware };
 }
 
-export function resetOpenClawOwnedToolHooks(): void {
+export function resetQuietCoreOwnedToolHooks(): void {
   resetGlobalHookRunner();
   resetPluginRuntimeStateForTest();
   resetAdjustedParamsByToolCallIdForTests();

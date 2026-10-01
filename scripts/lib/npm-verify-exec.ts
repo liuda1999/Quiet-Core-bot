@@ -1,4 +1,4 @@
-// Npm Verify Exec script supports OpenClaw repository automation.
+// Npm Verify Exec script supports QuietCore repository automation.
 import { execFileSync } from "node:child_process";
 
 export type NpmVerifyCommandInvocation = {

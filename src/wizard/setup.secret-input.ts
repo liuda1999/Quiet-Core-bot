@@ -1,9 +1,9 @@
 // Secret input helpers collect and validate credentials during setup.
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { normalizeSecretInputString, resolveSecretInputRef } from "../config/types.secrets.js";
 import { resolveSecretRefString } from "../secrets/resolve.js";
 
-type SecretDefaults = NonNullable<OpenClawConfig["secrets"]>["defaults"];
+type SecretDefaults = NonNullable<QuietCoreConfig["secrets"]>["defaults"];
 
 // Secret input resolver accepts literal setup values or SecretRef-shaped values
 // and reports path-specific errors for onboarding forms.
@@ -15,7 +15,7 @@ function formatSecretResolutionError(error: unknown): string {
 }
 
 export async function resolveSetupSecretInputString(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   value: unknown;
   path: string;
   defaults?: SecretDefaults;

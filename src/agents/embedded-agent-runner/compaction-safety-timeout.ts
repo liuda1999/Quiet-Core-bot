@@ -5,7 +5,7 @@ import {
   clampTimerTimeoutMs,
   finiteSecondsToTimerSafeMilliseconds,
 } from "@quiet-core/normalization-core/number-coercion";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { CompactResult, ContextEngine } from "../../context-engine/types.js";
 import { withTimeout } from "../../node-host/with-timeout.js";
 import type { StreamFn } from "../runtime/index.js";
@@ -70,7 +70,7 @@ function composeAbortSignals(...signals: Array<AbortSignal | undefined>): {
   };
 }
 
-export function resolveCompactionTimeoutMs(cfg?: OpenClawConfig): number {
+export function resolveCompactionTimeoutMs(cfg?: QuietCoreConfig): number {
   return (
     finiteSecondsToTimerSafeMilliseconds(cfg?.agents?.defaults?.compaction?.timeoutSeconds, {
       floorSeconds: true,
@@ -85,7 +85,7 @@ export function resolveCompactionTimeoutMs(cfg?: OpenClawConfig): number {
  * attempt already auto-compacted: silently skipping it would make the configured
  * budget unobservable.
  */
-export function isCompactionTimeoutConfigured(cfg?: OpenClawConfig): boolean {
+export function isCompactionTimeoutConfigured(cfg?: QuietCoreConfig): boolean {
   return (
     finiteSecondsToTimerSafeMilliseconds(cfg?.agents?.defaults?.compaction?.timeoutSeconds, {
       floorSeconds: true,
@@ -100,7 +100,7 @@ export function isCompactionTimeoutConfigured(cfg?: OpenClawConfig): boolean {
  * attributed to the compaction budget (`Compaction timed out`) rather than to an
  * unrelated provider transport limit.
  */
-export function resolveCompactionProviderTimeoutMs(cfg?: OpenClawConfig): number {
+export function resolveCompactionProviderTimeoutMs(cfg?: QuietCoreConfig): number {
   const budgetMs = resolveCompactionTimeoutMs(cfg);
   return clampTimerTimeoutMs(budgetMs + COMPACTION_PROVIDER_TIMEOUT_GRACE_MS) ?? budgetMs;
 }

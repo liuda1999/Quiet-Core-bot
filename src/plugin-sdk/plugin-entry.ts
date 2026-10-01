@@ -1,5 +1,5 @@
 // Plugin entry contracts define the manifest-facing hooks implemented by plugin packages.
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { emptyPluginConfigSchema } from "../plugins/config-schema.js";
 import { createCachedLazyValueGetter } from "./lazy-value.js";
 
@@ -18,32 +18,32 @@ export type MigrationPlan = import("../plugins/types.js").MigrationPlan;
 export type MigrationProviderContext = import("../plugins/types.js").MigrationProviderContext;
 export type MigrationProviderPlugin = import("../plugins/types.js").MigrationProviderPlugin;
 export type MigrationSummary = import("../plugins/types.js").MigrationSummary;
-export type OpenClawPluginApi = import("../plugins/types.js").OpenClawPluginApi;
-export type OpenClawPluginCommandDefinition =
-  import("../plugins/types.js").OpenClawPluginCommandDefinition;
-export type OpenClawPluginConfigSchema = import("../plugins/types.js").OpenClawPluginConfigSchema;
-export type OpenClawPluginDefinition = import("../plugins/types.js").OpenClawPluginDefinition;
-export type OpenClawPluginHttpRouteHandler =
-  import("../plugins/types.js").OpenClawPluginHttpRouteHandler;
-export type OpenClawPluginNodeHostCommand =
-  import("../plugins/types.js").OpenClawPluginNodeHostCommand;
-export type OpenClawPluginNodeInvokePolicy =
-  import("../plugins/types.js").OpenClawPluginNodeInvokePolicy;
-export type OpenClawPluginNodeInvokePolicyContext =
-  import("../plugins/types.js").OpenClawPluginNodeInvokePolicyContext;
-export type OpenClawPluginNodeInvokePolicyResult =
-  import("../plugins/types.js").OpenClawPluginNodeInvokePolicyResult;
-export type OpenClawPluginReloadRegistration =
-  import("../plugins/types.js").OpenClawPluginReloadRegistration;
-export type OpenClawPluginSecurityAuditCollector =
-  import("../plugins/types.js").OpenClawPluginSecurityAuditCollector;
-export type OpenClawPluginSecurityAuditContext =
-  import("../plugins/types.js").OpenClawPluginSecurityAuditContext;
-export type OpenClawPluginService = import("../plugins/types.js").OpenClawPluginService;
-export type OpenClawPluginServiceContext =
-  import("../plugins/types.js").OpenClawPluginServiceContext;
-export type OpenClawPluginToolContext = import("../plugins/types.js").OpenClawPluginToolContext;
-export type OpenClawPluginToolFactory = import("../plugins/types.js").OpenClawPluginToolFactory;
+export type QuietCorePluginApi = import("../plugins/types.js").QuietCorePluginApi;
+export type QuietCorePluginCommandDefinition =
+  import("../plugins/types.js").QuietCorePluginCommandDefinition;
+export type QuietCorePluginConfigSchema = import("../plugins/types.js").QuietCorePluginConfigSchema;
+export type QuietCorePluginDefinition = import("../plugins/types.js").QuietCorePluginDefinition;
+export type QuietCorePluginHttpRouteHandler =
+  import("../plugins/types.js").QuietCorePluginHttpRouteHandler;
+export type QuietCorePluginNodeHostCommand =
+  import("../plugins/types.js").QuietCorePluginNodeHostCommand;
+export type QuietCorePluginNodeInvokePolicy =
+  import("../plugins/types.js").QuietCorePluginNodeInvokePolicy;
+export type QuietCorePluginNodeInvokePolicyContext =
+  import("../plugins/types.js").QuietCorePluginNodeInvokePolicyContext;
+export type QuietCorePluginNodeInvokePolicyResult =
+  import("../plugins/types.js").QuietCorePluginNodeInvokePolicyResult;
+export type QuietCorePluginReloadRegistration =
+  import("../plugins/types.js").QuietCorePluginReloadRegistration;
+export type QuietCorePluginSecurityAuditCollector =
+  import("../plugins/types.js").QuietCorePluginSecurityAuditCollector;
+export type QuietCorePluginSecurityAuditContext =
+  import("../plugins/types.js").QuietCorePluginSecurityAuditContext;
+export type QuietCorePluginService = import("../plugins/types.js").QuietCorePluginService;
+export type QuietCorePluginServiceContext =
+  import("../plugins/types.js").QuietCorePluginServiceContext;
+export type QuietCorePluginToolContext = import("../plugins/types.js").QuietCorePluginToolContext;
+export type QuietCorePluginToolFactory = import("../plugins/types.js").QuietCorePluginToolFactory;
 export type PluginLogger = import("../plugins/types.js").PluginLogger;
 export type ProviderAugmentModelCatalogContext =
   import("../plugins/types.js").ProviderAugmentModelCatalogContext;
@@ -134,10 +134,10 @@ export type UnifiedModelCatalogProviderContext =
   import("../plugins/types.js").UnifiedModelCatalogProviderContext;
 export type UnifiedModelCatalogProviderPlugin =
   import("../plugins/types.js").UnifiedModelCatalogProviderPlugin;
-export type OpenClawGatewayDiscoveryAdvertiseContext =
-  import("../plugins/types.js").OpenClawGatewayDiscoveryAdvertiseContext;
-export type OpenClawGatewayDiscoveryService =
-  import("../plugins/types.js").OpenClawGatewayDiscoveryService;
+export type QuietCoreGatewayDiscoveryAdvertiseContext =
+  import("../plugins/types.js").QuietCoreGatewayDiscoveryAdvertiseContext;
+export type QuietCoreGatewayDiscoveryService =
+  import("../plugins/types.js").QuietCoreGatewayDiscoveryService;
 export type SpeechProviderPlugin = import("../plugins/types.js").SpeechProviderPlugin;
 export type PluginCommandContext = import("../plugins/types.js").PluginCommandContext;
 export type PluginCommandResult = import("../plugins/types.js").PluginCommandResult;
@@ -207,7 +207,7 @@ export type {
   UnifiedModelCatalogKind,
   UnifiedModelCatalogSource,
 } from "@quiet-core/model-catalog-core/model-catalog-types";
-export type { OpenClawConfig };
+export type { QuietCoreConfig };
 
 export {
   buildJsonPluginConfigSchema,
@@ -225,12 +225,12 @@ type DefinePluginEntryOptions = {
    * manifest `kind`. Runtime-entry `kind` remains only as a compatibility
    * fallback for older plugins.
    */
-  kind?: OpenClawPluginDefinition["kind"];
-  configSchema?: OpenClawPluginConfigSchema | (() => OpenClawPluginConfigSchema);
-  reload?: OpenClawPluginDefinition["reload"];
-  nodeHostCommands?: OpenClawPluginDefinition["nodeHostCommands"];
-  securityAuditCollectors?: OpenClawPluginDefinition["securityAuditCollectors"];
-  register: (api: OpenClawPluginApi) => void;
+  kind?: QuietCorePluginDefinition["kind"];
+  configSchema?: QuietCorePluginConfigSchema | (() => QuietCorePluginConfigSchema);
+  reload?: QuietCorePluginDefinition["reload"];
+  nodeHostCommands?: QuietCorePluginDefinition["nodeHostCommands"];
+  securityAuditCollectors?: QuietCorePluginDefinition["securityAuditCollectors"];
+  register: (api: QuietCorePluginApi) => void;
 };
 
 /** Normalized object shape that Quiet Core bot loads from a plugin entry module. */
@@ -238,10 +238,10 @@ type DefinedPluginEntry = {
   id: string;
   name: string;
   description: string;
-  configSchema: OpenClawPluginConfigSchema;
-  register: NonNullable<OpenClawPluginDefinition["register"]>;
+  configSchema: QuietCorePluginConfigSchema;
+  register: NonNullable<QuietCorePluginDefinition["register"]>;
 } & Pick<
-  OpenClawPluginDefinition,
+  QuietCorePluginDefinition,
   "kind" | "reload" | "nodeHostCommands" | "securityAuditCollectors"
 >;
 

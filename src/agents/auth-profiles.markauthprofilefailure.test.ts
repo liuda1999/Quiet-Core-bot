@@ -7,7 +7,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import { closeOpenClawAgentDatabasesForTest } from "../state/quiet-core-bot-agent-db.js";
+import { closeQuietCoreAgentDatabasesForTest } from "../state/quiet-core-bot-agent-db.js";
 
 vi.mock("./cli-credentials.js", () => ({
   readClaudeCliCredentialsCached: () => null,
@@ -41,7 +41,7 @@ beforeAll(() => {
 
 afterAll(() => {
   clearRuntimeAuthProfileStoreSnapshots();
-  closeOpenClawAgentDatabasesForTest();
+  closeQuietCoreAgentDatabasesForTest();
   fs.rmSync(tempRoot, { recursive: true, force: true });
 });
 

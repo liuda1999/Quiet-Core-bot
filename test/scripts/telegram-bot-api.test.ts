@@ -31,14 +31,14 @@ describe("Telegram Bot API helper", () => {
 
   it("returns successful Bot API results", async () => {
     const fetchImpl = vi.fn().mockResolvedValue(
-      new Response(JSON.stringify({ ok: true, result: { username: "OpenClawBot" } }), {
+      new Response(JSON.stringify({ ok: true, result: { username: "QuietCoreBot" } }), {
         status: 200,
       }),
     );
 
     await expect(
       telegramBotApi("test-token", "getMe", {}, { baseUrl: "https://telegram.test", fetchImpl }),
-    ).resolves.toEqual({ username: "OpenClawBot" });
+    ).resolves.toEqual({ username: "QuietCoreBot" });
     expect(fetchImpl).toHaveBeenCalledWith(
       "https://telegram.test/bottest-token/getMe",
       expect.objectContaining({

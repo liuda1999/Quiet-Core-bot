@@ -3,7 +3,7 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import { clearRuntimeAuthProfileStoreSnapshots } from "./auth-profiles.js";
 import { clearCurrentProviderAuthState } from "./model-provider-auth.js";
@@ -44,7 +44,7 @@ describe("provider auth warm worker", () => {
               },
             },
           },
-        } as unknown as OpenClawConfig;
+        } as unknown as QuietCoreConfig;
         const result = await runProviderAuthWarmWorkerInput({
           cfg,
           runtimeAuthStores: [

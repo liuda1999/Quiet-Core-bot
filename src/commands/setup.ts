@@ -9,7 +9,7 @@ import JSON5 from "json5";
 import { z } from "zod";
 import { formatCliCommand } from "../cli/command-format.js";
 import type { OptionalBootstrapFileName } from "../config/types.agent-defaults.js";
-import type { OpenClawConfig } from "../config/types.js";
+import type { QuietCoreConfig } from "../config/types.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { defaultRuntime } from "../runtime.js";
 import { createLazyImportLoader } from "../shared/lazy-promise.js";
@@ -40,7 +40,7 @@ type SetupCommandDeps = {
   mkdir?: (dir: string, options: { recursive: true }) => Promise<unknown>;
   resolveSessionTranscriptsDir?: () => string | Promise<string>;
   replaceConfigFile?: (params: {
-    nextConfig: OpenClawConfig;
+    nextConfig: QuietCoreConfig;
     afterWrite: { mode: "auto" };
   }) => Promise<unknown>;
 };
@@ -97,7 +97,7 @@ async function ensureDefaultAgentWorkspace(
   return ensureAgentWorkspace(params);
 }
 
-async function writeDefaultConfigFile(config: OpenClawConfig): Promise<void> {
+async function writeDefaultConfigFile(config: QuietCoreConfig): Promise<void> {
   const { replaceConfigFile } = await loadConfigIOModule();
   await replaceConfigFile({
     nextConfig: config,
@@ -125,12 +125,12 @@ async function resolveDefaultSessionTranscriptsDir(): Promise<string> {
 
 async function readConfigFileRaw(configPath: string): Promise<{
   exists: boolean;
-  parsed: OpenClawConfig;
+  parsed: QuietCoreConfig;
 }> {
   try {
     const raw = await fs.readFile(configPath, "utf-8");
     const parsed = safeParseWithSchema(JsonRecordSchema, JSON5.parse(raw));
-    return { exists: true, parsed: (parsed ?? {}) as OpenClawConfig };
+    return { exists: true, parsed: (parsed ?? {}) as QuietCoreConfig };
   } catch {
     // Missing or malformed config should not block setup; setup writes only the
     // minimal defaults it owns and leaves deeper repair to doctor/onboard.
@@ -158,7 +158,7 @@ export async function setupCommand(
   const workspace =
     desiredWorkspace ?? defaults.workspace ?? (await resolveDefaultAgentWorkspaceDir(deps));
 
-  const next: OpenClawConfig = {
+  const next: QuietCoreConfig = {
     ...cfg,
     agents: {
       ...cfg.agents,

@@ -40,7 +40,7 @@ import { formatCliCommand } from "../../cli/command-format.js";
 import { parseDurationMs } from "../../cli/parse-duration.js";
 import { logConfigUpdated } from "../../config/logging.js";
 import { normalizeAgentModelRefForConfig } from "../../config/model-input.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { isRemoteEnvironment } from "../../infra/remote-env.js";
 import {
   applyProviderAuthConfigPatch,
@@ -200,7 +200,7 @@ function validateOpenAICodexApiKeyInput(value: string): string | undefined {
 }
 
 type ResolvedModelsAuthContext = {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   agentDir: string;
   workspaceDir: string;
   providers: ProviderPlugin[];
@@ -242,7 +242,7 @@ function mergeSetupProviders(
 
 function preferSetupAuthProviders(params: {
   providers: readonly ProviderPlugin[];
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   workspaceDir: string;
   requestedProvider?: string;
 }): ProviderPlugin[] {
@@ -416,7 +416,7 @@ async function pickProviderTokenMethod(params: {
 async function persistProviderAuthResult(params: {
   result: ProviderAuthResult;
   profiles?: ProviderAuthResult["profiles"];
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   agentDir: string;
   runtime: RuntimeEnv;
   prompter: ReturnType<typeof createClackPrompter>;
@@ -492,7 +492,7 @@ async function persistProviderAuthResult(params: {
 }
 
 function resolveConfiguredAuthSelectionForProvider(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   provider: string,
 ): { createIfMissing: boolean; order?: string[] } {
   const providerAuthKey = resolveProviderIdForAuth(provider, { config: cfg });
@@ -516,7 +516,7 @@ function resolveConfiguredAuthSelectionForProvider(
 }
 
 async function runProviderAuthMethod(params: {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   agentDir: string;
   workspaceDir: string;
   provider: ProviderPlugin;

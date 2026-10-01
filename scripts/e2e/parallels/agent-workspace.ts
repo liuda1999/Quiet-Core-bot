@@ -1,4 +1,4 @@
-// Agent Workspace script supports OpenClaw repository automation.
+// Agent Workspace script supports QuietCore repository automation.
 export function posixAgentWorkspaceScript(purpose: string): string {
   return `set -eu
 workspace="\${QUIET_CORE_WORKSPACE_DIR:-$HOME/.quiet-core-bot/workspace}"
@@ -6,7 +6,7 @@ mkdir -p "$workspace/.quiet-core-bot"
 cat > "$workspace/IDENTITY.md" <<'IDENTITY_EOF'
 # Identity
 
-- Name: OpenClaw
+- Name: QuietCore
 - Purpose: ${purpose}
 IDENTITY_EOF
 cat > "$workspace/.quiet-core-bot/workspace-state.json" <<'STATE_EOF'
@@ -26,7 +26,7 @@ New-Item -ItemType Directory -Path $stateDir -Force | Out-Null
 @'
 # Identity
 
-- Name: OpenClaw
+- Name: QuietCore
 - Purpose: ${purpose}
 '@ | Set-Content -Path (Join-Path $workspace 'IDENTITY.md') -Encoding UTF8
 @'

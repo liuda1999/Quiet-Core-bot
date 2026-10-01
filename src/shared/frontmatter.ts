@@ -28,7 +28,7 @@ export function parseFrontmatterBool(value: string | undefined, fallback: boolea
 }
 
 /** Parses the JSON5 Quiet Core bot manifest block embedded inside a string frontmatter field. */
-export function resolveOpenClawManifestBlock(params: {
+export function resolveQuietCoreManifestBlock(params: {
   frontmatter: Record<string, unknown>;
   key?: string;
 }): Record<string, unknown> | undefined {
@@ -57,7 +57,7 @@ export function resolveOpenClawManifestBlock(params: {
   }
 }
 
-export type OpenClawManifestRequires = {
+export type QuietCoreManifestRequires = {
   /** All binaries that must be available. */
   bins: string[];
   /** Alternative binaries where any one match is enough. */
@@ -69,9 +69,9 @@ export type OpenClawManifestRequires = {
 };
 
 /** Extracts normalized runtime requirement lists from an Quiet Core bot manifest block. */
-export function resolveOpenClawManifestRequires(
+export function resolveQuietCoreManifestRequires(
   metadataObj: Record<string, unknown>,
-): OpenClawManifestRequires | undefined {
+): QuietCoreManifestRequires | undefined {
   const requiresRaw =
     typeof metadataObj.requires === "object" && metadataObj.requires !== null
       ? (metadataObj.requires as Record<string, unknown>)
@@ -88,7 +88,7 @@ export function resolveOpenClawManifestRequires(
 }
 
 /** Parses manifest install entries with a caller-owned parser and drops unsupported specs. */
-export function resolveOpenClawManifestInstall<T>(
+export function resolveQuietCoreManifestInstall<T>(
   metadataObj: Record<string, unknown>,
   parseInstallSpec: (input: unknown) => T | undefined,
 ): T[] {
@@ -99,11 +99,11 @@ export function resolveOpenClawManifestInstall<T>(
 }
 
 /** Extracts normalized OS allowlist entries from an Quiet Core bot manifest block. */
-export function resolveOpenClawManifestOs(metadataObj: Record<string, unknown>): string[] {
+export function resolveQuietCoreManifestOs(metadataObj: Record<string, unknown>): string[] {
   return normalizeStringList(metadataObj.os);
 }
 
-export type ParsedOpenClawManifestInstallBase = {
+export type ParsedQuietCoreManifestInstallBase = {
   /** Original install entry for caller-specific parsing. */
   raw: Record<string, unknown>;
   /** Normalized install kind accepted by the caller. */
@@ -117,10 +117,10 @@ export type ParsedOpenClawManifestInstallBase = {
 };
 
 /** Parses kind/type plus common install fields shared by package-manager install specs. */
-export function parseOpenClawManifestInstallBase(
+export function parseQuietCoreManifestInstallBase(
   input: unknown,
   allowedKinds: readonly string[],
-): ParsedOpenClawManifestInstallBase | undefined {
+): ParsedQuietCoreManifestInstallBase | undefined {
   if (!input || typeof input !== "object") {
     return undefined;
   }
@@ -132,7 +132,7 @@ export function parseOpenClawManifestInstallBase(
     return undefined;
   }
 
-  const spec: ParsedOpenClawManifestInstallBase = {
+  const spec: ParsedQuietCoreManifestInstallBase = {
     raw,
     kind,
   };
@@ -150,9 +150,9 @@ export function parseOpenClawManifestInstallBase(
 }
 
 /** Copies optional common install fields onto a caller-specific install spec object. */
-export function applyOpenClawManifestInstallCommonFields<
+export function applyQuietCoreManifestInstallCommonFields<
   T extends { id?: string; label?: string; bins?: string[] },
->(spec: T, parsed: Pick<ParsedOpenClawManifestInstallBase, "id" | "label" | "bins">): T {
+>(spec: T, parsed: Pick<ParsedQuietCoreManifestInstallBase, "id" | "label" | "bins">): T {
   if (parsed.id) {
     spec.id = parsed.id;
   }

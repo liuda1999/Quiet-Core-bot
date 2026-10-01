@@ -5,7 +5,7 @@ import {
 } from "@quiet-core/normalization-core/string-coerce";
 import { resolveChannelGroupRequireMention } from "../../config/group-policy.js";
 import type { GroupKeyResolution, SessionEntry } from "../../config/sessions.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { createLazyImportLoader } from "../../shared/lazy-promise.js";
 import type { SilentReplyPolicy } from "../../shared/silent-reply-policy.js";
 import { isInternalMessageChannel } from "../../utils/message-channel.js";
@@ -63,7 +63,7 @@ function normalizeDiscordSlug(value?: string | null) {
 }
 
 function resolveDiscordGuilds(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   accountId?: string | null,
 ): Record<string, DiscordGroupConfig> | undefined {
   const discord = cfg.channels?.discord as DiscordConfigWithGuilds | undefined;
@@ -120,7 +120,7 @@ function resolveDiscordChannelEntry(
 }
 
 function resolveDiscordRequireMentionFallback(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   channel: string;
   groupId?: string | null;
   groupChannel?: string | null;
@@ -146,7 +146,7 @@ function resolveDiscordRequireMentionFallback(params: {
 
 /** Resolves whether a group/channel turn requires an explicit mention. */
 export async function resolveGroupRequireMention(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   ctx: TemplateContext;
   groupResolution?: GroupKeyResolution;
 }): Promise<boolean> {
@@ -343,7 +343,7 @@ export function resolveGroupSilentReplyBehavior(params: {
 
 /** Builds the channel-specific group intro injected into the system prompt. */
 export function buildGroupIntro(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   sessionCtx: TemplateContext;
   sessionEntry?: SessionEntry;
   defaultActivation: "always" | "mention";

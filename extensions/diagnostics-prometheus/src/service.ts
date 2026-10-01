@@ -3,8 +3,8 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import type {
   DiagnosticEventMetadata,
   DiagnosticEventPayload,
-  OpenClawPluginHttpRouteHandler,
-  OpenClawPluginService,
+  QuietCorePluginHttpRouteHandler,
+  QuietCorePluginService,
 } from "../api.js";
 import { isInternalDiagnosticEventMetadata, redactSensitiveText } from "../api.js";
 
@@ -992,7 +992,7 @@ function recordDiagnosticEvent(
   }
 }
 
-function createMetricsHandler(store: PrometheusMetricStore): OpenClawPluginHttpRouteHandler {
+function createMetricsHandler(store: PrometheusMetricStore): QuietCorePluginHttpRouteHandler {
   return (req: IncomingMessage, res: ServerResponse) => {
     if (req.method !== "GET" && req.method !== "HEAD") {
       res.statusCode = 405;
@@ -1048,7 +1048,7 @@ export function createDiagnosticsPrometheusExporter() {
       unsubscribe = undefined;
       store.reset();
     },
-  } satisfies OpenClawPluginService;
+  } satisfies QuietCorePluginService;
 
   return {
     handler: createMetricsHandler(store),

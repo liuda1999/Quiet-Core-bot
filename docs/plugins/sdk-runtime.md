@@ -430,7 +430,7 @@ two-party event loops that do not go through the shared inbound reply runner.
       marginModules: 4, // 0-16
     });
     const pngQrDataUrl = await api.runtime.media.renderQrPngDataUrl("https://github.com/liuda1999/Quiet-Core-bot");
-    const tmpRoot = resolvePreferredOpenClawTmpDir();
+    const tmpRoot = resolvePreferredQuietCoreTmpDir();
     const pngQrFile = await api.runtime.media.writeQrPngTempFile("https://github.com/liuda1999/Quiet-Core-bot", {
       tmpRoot,
       dirPrefix: "my-plugin-qr-",
@@ -664,7 +664,7 @@ Beyond `api.runtime`, the API object also provides:
 <ParamField path="api.name" type="string">
   Plugin display name.
 </ParamField>
-<ParamField path="api.config" type="OpenClawConfig">
+<ParamField path="api.config" type="QuietCoreConfig">
   Current config snapshot (active in-memory runtime snapshot when available).
 </ParamField>
 <ParamField path="api.pluginConfig" type="Record<string, unknown>">

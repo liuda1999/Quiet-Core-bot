@@ -20,7 +20,7 @@ const mocks = vi.hoisted(() => {
   };
   return {
     runtime,
-    serveOpenClawChannelMcp: vi.fn(),
+    serveQuietCoreChannelMcp: vi.fn(),
     clearMcpOAuthCredentials: vi.fn(),
     readMcpOAuthCredentialsStatus: vi.fn(),
     runMcpOAuthLogin: vi.fn(),
@@ -30,7 +30,7 @@ const mocks = vi.hoisted(() => {
 const defaultRuntime = mocks.runtime;
 const mockLog = defaultRuntime.log;
 const mockError = defaultRuntime.error;
-const serveOpenClawChannelMcp = mocks.serveOpenClawChannelMcp;
+const serveQuietCoreChannelMcp = mocks.serveQuietCoreChannelMcp;
 const clearMcpOAuthCredentials = mocks.clearMcpOAuthCredentials;
 const readMcpOAuthCredentialsStatus = mocks.readMcpOAuthCredentialsStatus;
 const runMcpOAuthLogin = mocks.runMcpOAuthLogin;
@@ -40,7 +40,7 @@ vi.mock("../runtime.js", () => ({
 }));
 
 vi.mock("../mcp/channel-server.js", () => ({
-  serveOpenClawChannelMcp: mocks.serveOpenClawChannelMcp,
+  serveQuietCoreChannelMcp: mocks.serveQuietCoreChannelMcp,
 }));
 
 vi.mock("../agents/mcp-oauth.js", () => ({
@@ -711,7 +711,7 @@ describe("mcp cli", () => {
         "--verbose",
       ]);
 
-      expect(serveOpenClawChannelMcp).toHaveBeenCalledWith({
+      expect(serveQuietCoreChannelMcp).toHaveBeenCalledWith({
         gatewayUrl: "ws://127.0.0.1:18789",
         gatewayToken: "secret-token",
         gatewayPassword: undefined,

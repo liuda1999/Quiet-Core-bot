@@ -90,9 +90,9 @@ describe("proxy cli runtime", () => {
 
   afterEach(async () => {
     const { closeDebugProxyCaptureStore } = await import("../proxy-capture/store.sqlite.js");
-    const { closeOpenClawStateDatabaseForTest } = await import("../state/quiet-core-bot-state-db.js");
+    const { closeQuietCoreStateDatabaseForTest } = await import("../state/quiet-core-bot-state-db.js");
     closeDebugProxyCaptureStore();
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
     vi.restoreAllMocks();
     vi.resetModules();
     process.exitCode = undefined;

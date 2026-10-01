@@ -1,7 +1,7 @@
 // Covers Quiet Core bot CLI PATH construction.
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { ensureOpenClawCliOnPath } from "./path-env.js";
+import { ensureQuietCoreCliOnPath } from "./path-env.js";
 
 const state = vi.hoisted(() => ({
   dirs: new Set<string>(),
@@ -45,7 +45,7 @@ vi.mock("./env.js", () => ({
   isTruthyEnvValue: (value?: string) => value === "1" || value === "true",
 }));
 
-describe("ensureOpenClawCliOnPath", () => {
+describe("ensureQuietCoreCliOnPath", () => {
   const envKeys = [
     "PATH",
     "QUIET_CORE_PATH_BOOTSTRAPPED",
@@ -95,7 +95,7 @@ describe("ensureOpenClawCliOnPath", () => {
     platform: NodeJS.Platform;
     allowProjectLocalBin?: boolean;
   }) {
-    ensureOpenClawCliOnPath(params);
+    ensureQuietCoreCliOnPath(params);
     return (process.env.PATH ?? "").split(path.delimiter);
   }
 
@@ -155,7 +155,7 @@ describe("ensureOpenClawCliOnPath", () => {
   it("is idempotent", () => {
     process.env.PATH = "/bin";
     process.env.QUIET_CORE_PATH_BOOTSTRAPPED = "1";
-    ensureOpenClawCliOnPath({
+    ensureQuietCoreCliOnPath({
       execPath: "/tmp/does-not-matter",
       cwd: "/tmp",
       homeDir: "/tmp",

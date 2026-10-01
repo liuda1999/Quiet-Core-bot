@@ -15,7 +15,7 @@ import { parseConfigJson5, resolveConfigSnapshotHash } from "../../config/io.js"
 import { applyMergePatch } from "../../config/merge-patch.js";
 import { normalizeConfigPatchReplacePaths } from "../../config/patch-replace-paths.js";
 import { extractDeliveryInfo } from "../../config/sessions.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { GatewayClientRequestError } from "../../gateway/client.js";
 import {
   buildRestartSuccessContinuation,
@@ -398,9 +398,9 @@ function assertGatewayConfigMutationAllowed(params: {
   // Block writes that newly enable any dangerous config flag.
   // Uses the same flag enumeration as `quiet-core-bot security audit`.
   const currentFlags = new Set(
-    collectEnabledInsecureOrDangerousFlags(params.currentConfig as OpenClawConfig),
+    collectEnabledInsecureOrDangerousFlags(params.currentConfig as QuietCoreConfig),
   );
-  const nextFlags = collectEnabledInsecureOrDangerousFlags(nextConfig as OpenClawConfig);
+  const nextFlags = collectEnabledInsecureOrDangerousFlags(nextConfig as QuietCoreConfig);
   const newlyEnabled = nextFlags.filter((f) => !currentFlags.has(f));
   if (newlyEnabled.length > 0) {
     throw new Error(
@@ -447,7 +447,7 @@ const GatewayToolSchema = Type.Object({
 
 export function createGatewayTool(opts?: {
   agentSessionKey?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
 }): AnyAgentTool {
   return {
     label: "Gateway",

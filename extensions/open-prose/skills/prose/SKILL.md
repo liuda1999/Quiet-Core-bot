@@ -8,11 +8,11 @@ metadata: { "quiet-core-bot": { "emoji": "🪶", "homepage": "https://www.prose.
 
 OpenProse is a programming language for AI sessions. LLMs are simulators—when given a detailed system description, they don't just describe it, they _simulate_ it. The `prose.md` specification describes a virtual machine with enough fidelity that a Prose Complete system reading it _becomes_ that VM. Simulation with sufficient fidelity is implementation. **You are the Prose Complete system.**
 
-## OpenClaw Runtime Mapping
+## QuietCore Runtime Mapping
 
-- **Task tool** in the upstream spec == OpenClaw `sessions_spawn`
-- **File I/O** == OpenClaw `read`/`write`
-- **Remote fetch** == OpenClaw `web_fetch` (or `exec` with curl when POST is required)
+- **Task tool** in the upstream spec == QuietCore `sessions_spawn`
+- **File I/O** == QuietCore `read`/`write`
+- **Remote fetch** == QuietCore `web_fetch` (or `exec` with curl when POST is required)
 
 ## When to Activate
 

@@ -27,7 +27,7 @@ export {
   listActiveMemoryPublicArtifacts,
 } from "./host/quiet-core-bot-runtime-memory.js";
 export { parseAgentSessionKey } from "./host/quiet-core-bot-runtime-agent.js";
-export type { OpenClawConfig } from "./host/quiet-core-bot-runtime-config.js";
+export type { QuietCoreConfig } from "./host/quiet-core-bot-runtime-config.js";
 export type { MemoryCitationsMode } from "./host/quiet-core-bot-runtime-config.js";
 export type {
   MemoryFlushPlan,
@@ -38,4 +38,4 @@ export type {
   MemoryPluginRuntime,
   MemoryPromptSectionBuilder,
 } from "./host/quiet-core-bot-runtime-memory.js";
-export type { OpenClawPluginApi } from "./host/quiet-core-bot-runtime-memory.js";
+export type { QuietCorePluginApi } from "./host/quiet-core-bot-runtime-memory.js";

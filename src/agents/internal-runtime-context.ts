@@ -263,7 +263,7 @@ export function hasInternalRuntimeContext(text: string): boolean {
   );
 }
 
-function isOpenClawRuntimeContextCustomMessage(message: unknown): boolean {
+function isQuietCoreRuntimeContextCustomMessage(message: unknown): boolean {
   if (!message || typeof message !== "object") {
     return false;
   }
@@ -275,10 +275,10 @@ function isOpenClawRuntimeContextCustomMessage(message: unknown): boolean {
 
 /** Remove all structured runtime-context custom messages. */
 export function stripRuntimeContextCustomMessages<T>(messages: T[]): T[] {
-  if (!messages.some(isOpenClawRuntimeContextCustomMessage)) {
+  if (!messages.some(isQuietCoreRuntimeContextCustomMessage)) {
     return messages;
   }
-  return messages.filter((message) => !isOpenClawRuntimeContextCustomMessage(message));
+  return messages.filter((message) => !isQuietCoreRuntimeContextCustomMessage(message));
 }
 
 function isUserMessage(message: unknown): boolean {
@@ -289,22 +289,22 @@ function isUserMessage(message: unknown): boolean {
 
 /** Keeps only current-turn runtime context positioned immediately before the active user. */
 export function stripHistoricalRuntimeContextCustomMessages<T>(messages: T[]): T[] {
-  if (!messages.some(isOpenClawRuntimeContextCustomMessage)) {
+  if (!messages.some(isQuietCoreRuntimeContextCustomMessage)) {
     return messages;
   }
   const lastUserIndex = messages.findLastIndex(isUserMessage);
   if (lastUserIndex === -1) {
-    return messages.filter((message) => !isOpenClawRuntimeContextCustomMessage(message));
+    return messages.filter((message) => !isQuietCoreRuntimeContextCustomMessage(message));
   }
   const currentRuntimeContextIndexes = new Set<number>();
   for (let index = lastUserIndex - 1; index >= 0; index -= 1) {
-    if (!isOpenClawRuntimeContextCustomMessage(messages[index])) {
+    if (!isQuietCoreRuntimeContextCustomMessage(messages[index])) {
       break;
     }
     currentRuntimeContextIndexes.add(index);
   }
   return messages.filter((message, index) => {
-    if (!isOpenClawRuntimeContextCustomMessage(message)) {
+    if (!isQuietCoreRuntimeContextCustomMessage(message)) {
       return true;
     }
     return currentRuntimeContextIndexes.has(index);

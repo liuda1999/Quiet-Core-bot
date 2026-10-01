@@ -3,7 +3,7 @@
  */
 import { statSync } from "node:fs";
 import path from "node:path";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { PluginMetadataSnapshot } from "../../plugins/plugin-metadata-snapshot.types.js";
 import {
   resolveRuntimeExternalAuthProviderRefs,
@@ -29,7 +29,7 @@ type DiscoveryStores = {
 
 type DiscoverCachedAgentStoresOptions = {
   agentDir: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   inheritedAuthDir?: string;
   workspaceDir?: string;
 };

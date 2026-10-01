@@ -1,7 +1,7 @@
 [
   {
-    "source": "OpenClaw",
-    "target": "OpenClaw"
+    "source": "QuietCore",
+    "target": "QuietCore"
   },
   {
     "source": "macOS platform notes",
@@ -1152,12 +1152,12 @@
     "target": "Agent runtime architecture"
   },
   {
-    "source": "OpenClaw agent runtime workflow",
-    "target": "OpenClaw agent runtime workflow"
+    "source": "QuietCore agent runtime workflow",
+    "target": "QuietCore agent runtime workflow"
   },
   {
-    "source": "OpenClaw agent runtime architecture",
-    "target": "OpenClaw agent runtime architecture"
+    "source": "QuietCore agent runtime architecture",
+    "target": "QuietCore agent runtime architecture"
   },
   {
     "source": "Install and Configure Plugins",

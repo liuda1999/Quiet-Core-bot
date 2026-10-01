@@ -5,7 +5,7 @@ import { getChannelPlugin } from "../../channels/plugins/index.js";
 import type { ChannelThreadingAdapter } from "../../channels/plugins/types.core.js";
 import { normalizeAnyChannelId } from "../../channels/registry.js";
 import type { ReplyToMode } from "../../config/types.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { DEFAULT_ACCOUNT_ID } from "../../routing/account-id.js";
 import {
   copyReplyPayloadMetadata,
@@ -34,7 +34,7 @@ function normalizeReplyToModeChatType(
 
 /** Resolve configured reply-to mode from channel and chat-type config. */
 export function resolveConfiguredReplyToMode(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   channel?: OriginatingChannelType,
   chatType?: string | null,
 ): ReplyToMode {
@@ -63,7 +63,7 @@ export function resolveConfiguredReplyToMode(
 
 /** Resolve reply-to mode using channel threading adapter override when present. */
 export function resolveReplyToModeWithThreading(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   threading: ChannelThreadingAdapter | undefined,
   params: {
     channel?: OriginatingChannelType;
@@ -81,7 +81,7 @@ export function resolveReplyToModeWithThreading(
 
 /** Resolve effective reply-to mode for a channel/account/chat tuple. */
 export function resolveReplyToMode(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   channel?: OriginatingChannelType,
   accountId?: string | null,
   chatType?: string | null,
@@ -101,7 +101,7 @@ export function resolveReplyToMode(
 
 /** Resolve the account that routed reply delivery will use when none is explicit. */
 export function resolveReplyDeliveryAccountId(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   channel?: OriginatingChannelType,
   accountId?: string | null,
 ): string | undefined {

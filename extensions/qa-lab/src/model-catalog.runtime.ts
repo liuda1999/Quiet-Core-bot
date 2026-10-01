@@ -2,7 +2,7 @@
 import { spawn } from "node:child_process";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { resolvePreferredOpenClawTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";
+import { resolvePreferredQuietCoreTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";
 import {
   appendQaChildOutput,
   appendQaChildOutputTail,
@@ -175,7 +175,7 @@ async function waitForProcessTreeExit(pid: number | undefined, timeoutMs: number
 
 export async function loadQaRunnerModelOptions(params: { repoRoot: string; signal?: AbortSignal }) {
   const tempRoot = await fs.mkdtemp(
-    path.join(resolvePreferredOpenClawTmpDir(), "quiet-core-bot-qa-model-catalog-"),
+    path.join(resolvePreferredQuietCoreTmpDir(), "quiet-core-bot-qa-model-catalog-"),
   );
   const workspaceDir = path.join(tempRoot, "workspace");
   const stateDir = path.join(tempRoot, "state");

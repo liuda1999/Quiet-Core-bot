@@ -1,5 +1,5 @@
 #!/usr/bin/env -S pnpm tsx
-// Macos Smoke script supports OpenClaw repository automation.
+// Macos Smoke script supports QuietCore repository automation.
 import { readFile, rm } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -8,13 +8,13 @@ import {
   die,
   ensureValue,
   currentRunningSnapshotInfo,
-  extractLastOpenClawVersionFromLog,
+  extractLastQuietCoreVersionFromLog,
   makeTempDir,
   isLikelyMacosDesktopHome,
   packageBuildCommitFromTgz,
   packageVersionFromTgz,
   parseMacosDsclUserHomeLine,
-  packOpenClaw,
+  packQuietCore,
   parseMode,
   parseProvider,
   modelProviderConfigBatchJson,
@@ -108,9 +108,9 @@ interface MacosSummary {
 
 const guestPath =
   "/opt/homebrew/bin:/opt/homebrew/opt/node/bin:/usr/local/bin:/usr/local/sbin:/opt/homebrew/sbin:/usr/bin:/bin:/usr/sbin:/sbin";
-const guestOpenClaw = "quiet-core-bot";
-const guestOpenClawEntry = '"$(npm root -g)/quiet-core-bot/quiet-core-bot.mjs"';
-const guestOpenClawEntryRunner = `node ${guestOpenClawEntry}`;
+const guestQuietCore = "quiet-core-bot";
+const guestQuietCoreEntry = '"$(npm root -g)/quiet-core-bot/quiet-core-bot.mjs"';
+const guestQuietCoreEntryRunner = `node ${guestQuietCoreEntry}`;
 const guestNode = "node";
 const guestNpm = "npm";
 
@@ -360,7 +360,7 @@ class MacosSmoke {
       say(`Run logs: ${this.runDir}`);
 
       if (await this.needsHostTgz()) {
-        this.artifact = await packOpenClaw({
+        this.artifact = await packQuietCore({
           destination: this.tgzDir,
           packageSpec: this.options.targetPackageSpec,
           requireControlUi: true,
@@ -458,8 +458,8 @@ class MacosSmoke {
       },
       guest: this.guest,
       guestNode,
-      guestOpenClaw,
-      guestOpenClawEntry,
+      guestQuietCore,
+      guestQuietCoreEntry,
       runDir: this.runDir,
       vmName: this.options.vmName,
     });
@@ -607,7 +607,7 @@ class MacosSmoke {
     return this.guest.exec(args, options);
   }
 
-  private guestOpenClawEntryExec(
+  private guestQuietCoreEntryExec(
     args: string[],
     options: { check?: boolean; env?: Record<string, string> } = {},
   ): string {
@@ -816,7 +816,7 @@ curl -fsSL --connect-timeout 10 --max-time 120 --retry 2 --retry-delay 2 ${shell
         this.options.installUrl,
       )} -o /tmp/quiet-core-bot-install.sh
 bash /tmp/quiet-core-bot-install.sh --version ${shellQuote(this.installVersion)}
-${guestOpenClaw} --version`,
+${guestQuietCore} --version`,
     );
   }
 
@@ -834,7 +834,7 @@ for attempt in 1 2; do
   echo "npm install attempt $attempt failed; retrying in 5s" >&2
   sleep 5
 done
-${guestOpenClaw} --version`);
+${guestQuietCore} --version`);
       return;
     }
     if (!this.artifact || !this.server) {
@@ -846,7 +846,7 @@ curl -fsSL --connect-timeout 10 --max-time 120 --retry 2 --retry-delay 2 ${shell
       tgzUrl,
     )} -o /tmp/${tempName}
 ${guestNpm} install -g /tmp/${tempName}
-${guestOpenClaw} --version`);
+${guestQuietCore} --version`);
   }
 
   private async verifyTargetVersion(): Promise<void> {
@@ -864,7 +864,7 @@ ${guestOpenClaw} --version`);
   }
 
   private verifyVersionContains(needle: string): void {
-    const version = this.guestExec([guestOpenClaw, "--version"]);
+    const version = this.guestExec([guestQuietCore, "--version"]);
     if (!version.includes(needle)) {
       throw new Error(`version mismatch: expected substring ${needle}`);
     }
@@ -897,7 +897,7 @@ fi`);
     this.guestExec([
       "/usr/bin/env",
       `${this.auth.apiKeyEnv}=${this.auth.apiKeyValue}`,
-      guestOpenClaw,
+      guestQuietCore,
       "onboard",
       "--non-interactive",
       "--mode",
@@ -953,14 +953,14 @@ const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
 config.update = { ...(config.update || {}), channel: "dev" };
 fs.writeFileSync(configPath, JSON.stringify(config, null, 2) + "\\n");
 JS
-/usr/bin/env NODE_OPTIONS=--max-old-space-size=8192 QUIET_CORE_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS=1 QUIET_CORE_DISABLE_BUNDLED_PLUGINS=1 ${guestOpenClawEntryRunner} update --channel dev --yes --json
-${guestOpenClawEntryRunner} --version
-${guestOpenClawEntryRunner} update status --json`,
+/usr/bin/env NODE_OPTIONS=--max-old-space-size=8192 QUIET_CORE_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS=1 QUIET_CORE_DISABLE_BUNDLED_PLUGINS=1 ${guestQuietCoreEntryRunner} update --channel dev --yes --json
+${guestQuietCoreEntryRunner} --version
+${guestQuietCoreEntryRunner} update status --json`,
     );
   }
 
   private verifyDevChannelUpdate(): void {
-    const status = this.guestOpenClawEntryExec(["update", "status", "--json"]);
+    const status = this.guestQuietCoreEntryExec(["update", "status", "--json"]);
     for (const needle of ['"installKind": "git"', '"value": "dev"', '"branch": "main"']) {
       if (!status.includes(needle)) {
         throw new Error(`dev update status missing ${needle}`);
@@ -983,14 +983,14 @@ trap '' HUP
         `${this.auth.apiKeyEnv}=${this.auth.apiKeyValue}`,
       )} QUIET_CORE_HOME=${shellQuote(home)} QUIET_CORE_STATE_DIR=${shellQuote(`${home}/.quiet-core-bot`)} QUIET_CORE_CONFIG_PATH=${shellQuote(
         `${home}/.quiet-core-bot/quiet-core-bot.json`,
-      )} ${guestOpenClawEntryRunner} gateway run --bind loopback --port 18789 --force </dev/null >/tmp/quiet-core-bot-parallels-macos-gateway.log 2>&1 &
+      )} ${guestQuietCoreEntryRunner} gateway run --bind loopback --port 18789 --force </dev/null >/tmp/quiet-core-bot-parallels-macos-gateway.log 2>&1 &
 sleep 1`,
     );
   }
 
   private verifyGateway(): void {
     for (let attempt = 1; attempt <= 8; attempt++) {
-      const result = this.guestOpenClaw(
+      const result = this.guestQuietCore(
         ["gateway", "status", "--deep", "--require-rpc", "--timeout", "15000"],
         false,
       );
@@ -1006,16 +1006,16 @@ sleep 1`,
   }
 
   private showGatewayStatusCompat(): void {
-    const help = this.guestExec([guestOpenClaw, "gateway", "status", "--help"], { check: false });
+    const help = this.guestExec([guestQuietCore, "gateway", "status", "--help"], { check: false });
     const args = help.includes("--require-rpc")
       ? ["gateway", "status", "--deep", "--require-rpc"]
       : ["gateway", "status", "--deep"];
-    if (!this.guestOpenClaw(args, false)) {
+    if (!this.guestQuietCore(args, false)) {
       throw new Error("gateway status failed");
     }
   }
 
-  private guestOpenClaw(args: string[], check: boolean): boolean {
+  private guestQuietCore(args: string[], check: boolean): boolean {
     const result = run(
       "prlctl",
       [
@@ -1032,7 +1032,7 @@ sleep 1`,
               `PATH=${guestPath}`,
             ]
           : ["--current-user", "/usr/bin/env", `PATH=${guestPath}`]),
-        guestOpenClaw,
+        guestQuietCore,
         ...args,
       ],
       { check: false, quiet: true, timeoutMs: this.remainingPhaseTimeoutMs() },
@@ -1050,7 +1050,7 @@ sleep 1`,
 deadline=$((SECONDS + 120))
 while [ $SECONDS -lt $deadline ]; do
   if curl -fsSL --connect-timeout 2 --max-time 5 http://127.0.0.1:18789/ >/tmp/quiet-core-bot-dashboard-smoke.html 2>/dev/null; then
-    if grep -F '<title>OpenClaw Control</title>' /tmp/quiet-core-bot-dashboard-smoke.html >/dev/null &&
+    if grep -F '<title>QuietCore Control</title>' /tmp/quiet-core-bot-dashboard-smoke.html >/dev/null &&
       grep -F '<quiet-core-bot-app></quiet-core-bot-app>' /tmp/quiet-core-bot-dashboard-smoke.html >/dev/null; then
       asset_paths="$(
         sed -nE 's/.*<(script|link)[^>]*(src|href)=["'"'"']([^"'"'"']+)["'"'"'].*/\3/p' /tmp/quiet-core-bot-dashboard-smoke.html |
@@ -1094,7 +1094,7 @@ exit 1`);
   }
 
   private verifyTurn(): void {
-    this.guestOpenClawEntryExec(["models", "set", this.auth.modelId]);
+    this.guestQuietCoreEntryExec(["models", "set", this.auth.modelId]);
     const modelProviderConfigBatch = modelProviderConfigBatchJson(
       this.auth.modelId,
       "macos",
@@ -1105,17 +1105,17 @@ exit 1`);
 cat >"$provider_config_batch" <<'JSON'
 ${modelProviderConfigBatch}
 JSON
-${guestOpenClawEntryRunner} config set --batch-file "$provider_config_batch" --strict-json
+${guestQuietCoreEntryRunner} config set --batch-file "$provider_config_batch" --strict-json
 rm -f "$provider_config_batch"`);
     }
-    this.guestOpenClawEntryExec([
+    this.guestQuietCoreEntryExec([
       "config",
       "set",
       "agents.defaults.skipBootstrap",
       "true",
       "--strict-json",
     ]);
-    this.guestOpenClawEntryExec(["config", "set", "tools.profile", "minimal"]);
+    this.guestQuietCoreEntryExec(["config", "set", "tools.profile", "minimal"]);
     this.restrictAgentTurnPlugins();
     this.guestSh(
       `${posixAgentWorkspaceScript("Parallels macOS smoke test assistant.")}
@@ -1127,7 +1127,7 @@ for attempt in 1 2; do
   rm -f "$HOME/.quiet-core-bot/agents/main/sessions/$session_id.jsonl"
   output_file="$(mktemp)"
   set +e
-  /usr/bin/env ${shellQuote(`${this.auth.apiKeyEnv}=${this.auth.apiKeyValue}`)} ${guestOpenClawEntryRunner} agent --local --agent main --session-id "$session_id" --message ${shellQuote(
+  /usr/bin/env ${shellQuote(`${this.auth.apiKeyEnv}=${this.auth.apiKeyValue}`)} ${guestQuietCoreEntryRunner} agent --local --agent main --session-id "$session_id" --message ${shellQuote(
     "Reply with exact ASCII text OK only.",
   )} --thinking off --timeout ${this.modelTimeoutSeconds} --json >"$output_file" 2>&1
   rc=$?
@@ -1167,7 +1167,7 @@ fi`,
   private ensureDiscordGatewayReady(): void {
     this.startManualGatewayIfNeeded();
     this.verifyGateway();
-    const status = this.guestOpenClawEntryExec(["channels", "status", "--probe", "--json"]);
+    const status = this.guestQuietCoreEntryExec(["channels", "status", "--probe", "--json"]);
     if (!status.includes('"discord"')) {
       throw new Error("Discord channel unavailable after gateway restart");
     }
@@ -1198,7 +1198,7 @@ fi`,
   }
 
   private async extractLastVersion(phaseName: string): Promise<string> {
-    return await extractLastOpenClawVersionFromLog(path.join(this.runDir, `${phaseName}.log`));
+    return await extractLastQuietCoreVersionFromLog(path.join(this.runDir, `${phaseName}.log`));
   }
 
   private upgradeSummaryLabel(): string {

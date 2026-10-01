@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# OpenClaw handover · stop the gateway (Docker or Node mode).
+# QuietCore handover · stop the gateway (Docker or Node mode).
 # Thin wrapper around scripts/handover/start.sh so every documented command works
 # standalone. See start.sh for mode handling.
 #

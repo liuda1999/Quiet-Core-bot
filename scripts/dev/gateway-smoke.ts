@@ -1,4 +1,4 @@
-// Gateway Smoke script supports OpenClaw repository automation.
+// Gateway Smoke script supports QuietCore repository automation.
 import { fileURLToPath } from "node:url";
 import {
   MIN_CLIENT_PROTOCOL_VERSION,

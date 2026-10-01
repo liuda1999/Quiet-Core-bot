@@ -7,7 +7,7 @@ import { VERSION } from "../version.js";
 import { createConfigIO } from "./io.js";
 import { normalizeExecSafeBinProfilesInConfig } from "./normalize-exec-safe-bin.js";
 import { withTempHome } from "./test-helpers.js";
-import type { OpenClawConfig } from "./types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "./types.quiet-core-bot.js";
 
 async function writeConfig(
   home: string,
@@ -49,7 +49,7 @@ describe("config io paths", () => {
           },
         },
       },
-    } as OpenClawConfig);
+    } as QuietCoreConfig);
     whatsappSharedAccessDefaults = migrated.config.channels?.whatsapp?.accounts?.default;
   });
 

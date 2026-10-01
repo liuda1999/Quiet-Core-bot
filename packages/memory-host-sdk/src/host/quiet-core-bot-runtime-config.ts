@@ -18,7 +18,7 @@ export type {
   MemoryQmdMcporterConfig,
   MemoryQmdSearchMode,
   MemorySearchConfig,
-  OpenClawConfig,
+  QuietCoreConfig,
   SecretInput,
   SessionSendPolicyConfig,
 } from "./quiet-core-bot-runtime.js";

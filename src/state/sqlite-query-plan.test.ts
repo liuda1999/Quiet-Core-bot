@@ -5,12 +5,12 @@ import path from "node:path";
 import type { DatabaseSync } from "node:sqlite";
 import { afterEach, describe, expect, it } from "vitest";
 import {
-  closeOpenClawAgentDatabasesForTest,
-  openOpenClawAgentDatabase,
+  closeQuietCoreAgentDatabasesForTest,
+  openQuietCoreAgentDatabase,
 } from "./quiet-core-bot-agent-db.js";
 import {
-  closeOpenClawStateDatabaseForTest,
-  openOpenClawStateDatabase,
+  closeQuietCoreStateDatabaseForTest,
+  openQuietCoreStateDatabase,
 } from "./quiet-core-bot-state-db.js";
 
 function createTempStateDir(): string {
@@ -49,14 +49,14 @@ function expectPlanIncludes(params: {
 }
 
 afterEach(() => {
-  closeOpenClawAgentDatabasesForTest();
-  closeOpenClawStateDatabaseForTest();
+  closeQuietCoreAgentDatabasesForTest();
+  closeQuietCoreStateDatabaseForTest();
 });
 
 describe("sqlite hot query plans", () => {
   it("uses shared state indexes for list and queue queries", () => {
     const stateDir = createTempStateDir();
-    const database = openOpenClawStateDatabase({
+    const database = openQuietCoreStateDatabase({
       env: { QUIET_CORE_STATE_DIR: stateDir },
     });
 
@@ -160,7 +160,7 @@ describe("sqlite hot query plans", () => {
 
   it("uses per-agent cache indexes for session metadata and expiry scans", () => {
     const stateDir = createTempStateDir();
-    const database = openOpenClawAgentDatabase({
+    const database = openQuietCoreAgentDatabase({
       agentId: "worker-1",
       env: { QUIET_CORE_STATE_DIR: stateDir },
     });

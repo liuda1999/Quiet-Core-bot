@@ -1,7 +1,7 @@
 // Model picker provider catalog tests cover catalog-driven provider options.
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { ModelDefinitionConfig } from "../config/types.models.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { ProviderPlugin } from "../plugins/types.js";
 
 function textModel(id: string, name: string): ModelDefinitionConfig {
@@ -133,7 +133,7 @@ describe("loadPreferredProviderPickerCatalog", () => {
     providersRuntimeMocks.resolvePluginProviders.mockReturnValue([liveProvider]);
 
     const rows = await loadPreferredProviderPickerCatalog({
-      cfg: {} as OpenClawConfig,
+      cfg: {} as QuietCoreConfig,
       preferredProvider: "nvidia",
       env: { NVIDIA_API_KEY: "nvapi-test" },
     });

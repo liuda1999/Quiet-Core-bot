@@ -133,7 +133,7 @@ vi.mock("../../commands/daemon-install-helpers.js", () => ({
 
 vi.mock("../../daemon/program-args.js", () => ({
   QUIET_CORE_WRAPPER_ENV_KEY: "QUIET_CORE_WRAPPER",
-  resolveOpenClawWrapperPath: async (value: string | undefined) => value?.trim() || undefined,
+  resolveQuietCoreWrapperPath: async (value: string | undefined) => value?.trim() || undefined,
 }));
 
 vi.mock("./shared.js", () => ({

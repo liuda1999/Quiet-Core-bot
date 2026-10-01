@@ -166,9 +166,9 @@ function commitTinyGitRepo(cwd: string): void {
     env: {
       ...process.env,
       GIT_AUTHOR_EMAIL: "test@example.com",
-      GIT_AUTHOR_NAME: "OpenClaw Test",
+      GIT_AUTHOR_NAME: "QuietCore Test",
       GIT_COMMITTER_EMAIL: "test@example.com",
-      GIT_COMMITTER_NAME: "OpenClaw Test",
+      GIT_COMMITTER_NAME: "QuietCore Test",
     },
     stdio: "ignore",
   });
@@ -2837,7 +2837,7 @@ describe("scripts/test-projects changed-target routing", () => {
   it("skips app-only changes because app tests are separate from Vitest lanes", () => {
     expect(
       buildVitestRunPlans(["--changed", "origin/main"], process.cwd(), () => [
-        "apps/macos/OpenClaw/AppDelegate.swift",
+        "apps/macos/QuietCore/AppDelegate.swift",
       ]),
     ).toStrictEqual([]);
   });

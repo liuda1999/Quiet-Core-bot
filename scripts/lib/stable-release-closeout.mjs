@@ -142,9 +142,9 @@ export function verifyStableMainCloseout(params) {
 
   const macAssetVersion = version;
   const expectedMacAssets = [
-    `OpenClaw-${macAssetVersion}.zip`,
-    `OpenClaw-${macAssetVersion}.dmg`,
-    `OpenClaw-${macAssetVersion}.dSYM.zip`,
+    `QuietCore-${macAssetVersion}.zip`,
+    `QuietCore-${macAssetVersion}.dmg`,
+    `QuietCore-${macAssetVersion}.dSYM.zip`,
   ];
   const assetNames = new Set(readReleaseAssets(params.release).map((asset) => asset.name));
   const missingMacAssets = expectedMacAssets.filter((asset) => !assetNames.has(asset));

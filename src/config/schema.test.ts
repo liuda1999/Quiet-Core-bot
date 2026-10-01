@@ -4,7 +4,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { buildConfigSchema, lookupConfigSchema } from "./schema.js";
 import { applyDerivedTags, CONFIG_TAGS, deriveTagsForPath } from "./schema.tags.js";
 import { ToolsSchema } from "./zod-schema.agent-runtime.js";
-import { OpenClawSchema } from "./zod-schema.js";
+import { QuietCoreSchema } from "./zod-schema.js";
 import {
   DiscordConfigSchema,
   SlackConfigSchema,
@@ -132,7 +132,7 @@ describe("config schema", () => {
   });
 
   it("accepts qmd query rerank override", () => {
-    const result = OpenClawSchema.safeParse({
+    const result = QuietCoreSchema.safeParse({
       memory: {
         backend: "qmd",
         qmd: {
@@ -175,7 +175,7 @@ describe("config schema", () => {
 
   it("rejects empty Codex MCP agent scopes", () => {
     expect(() =>
-      OpenClawSchema.parse({
+      QuietCoreSchema.parse({
         mcp: {
           servers: {
             scoped: {
@@ -188,7 +188,7 @@ describe("config schema", () => {
       }),
     ).toThrow();
     expect(() =>
-      OpenClawSchema.parse({
+      QuietCoreSchema.parse({
         mcp: {
           servers: {
             scoped: {
@@ -201,7 +201,7 @@ describe("config schema", () => {
       }),
     ).toThrow();
     expect(() =>
-      OpenClawSchema.parse({
+      QuietCoreSchema.parse({
         mcp: {
           servers: {
             scoped: {
@@ -217,7 +217,7 @@ describe("config schema", () => {
 
   it("validates MCP OAuth client metadata URLs against the SDK contract", () => {
     expect(() =>
-      OpenClawSchema.parse({
+      QuietCoreSchema.parse({
         mcp: {
           servers: {
             docs: {
@@ -237,7 +237,7 @@ describe("config schema", () => {
       "https://client.example.com/",
     ]) {
       expect(() =>
-        OpenClawSchema.parse({
+        QuietCoreSchema.parse({
           mcp: {
             servers: {
               docs: {
@@ -254,7 +254,7 @@ describe("config schema", () => {
   });
 
   it("accepts stdio transport for command-bearing MCP servers", () => {
-    const result = OpenClawSchema.safeParse({
+    const result = QuietCoreSchema.safeParse({
       mcp: {
         servers: {
           myTool: {
@@ -271,7 +271,7 @@ describe("config schema", () => {
   it("rejects unsupported transport values for MCP servers", () => {
     for (const transport of ["tcp", "websocket", "grpc", ""]) {
       expect(() =>
-        OpenClawSchema.parse({
+        QuietCoreSchema.parse({
           mcp: {
             servers: {
               bad: {
@@ -286,7 +286,7 @@ describe("config schema", () => {
   });
 
   it("rejects stdio transport for URL-only MCP servers (command required)", () => {
-    const result = OpenClawSchema.safeParse({
+    const result = QuietCoreSchema.safeParse({
       mcp: {
         servers: {
           bad: {
@@ -300,7 +300,7 @@ describe("config schema", () => {
   });
 
   it("rejects stdio transport with whitespace-only command", () => {
-    const result = OpenClawSchema.safeParse({
+    const result = QuietCoreSchema.safeParse({
       mcp: {
         servers: {
           bad: {
@@ -570,7 +570,7 @@ describe("config schema", () => {
   });
 
   it("keeps per-agent model overrides limited to model selection", () => {
-    const result = OpenClawSchema.safeParse({
+    const result = QuietCoreSchema.safeParse({
       agents: {
         list: [
           {
@@ -588,7 +588,7 @@ describe("config schema", () => {
   });
 
   it("rejects per-agent subagent model timeout config", () => {
-    const result = OpenClawSchema.safeParse({
+    const result = QuietCoreSchema.safeParse({
       agents: {
         list: [
           {
@@ -615,7 +615,7 @@ describe("config schema", () => {
     });
     expect(tools?.exec?.commandHighlighting).toBe(false);
 
-    const config = OpenClawSchema.parse({
+    const config = QuietCoreSchema.parse({
       agents: {
         list: [
           {
@@ -647,7 +647,7 @@ describe("config schema", () => {
       primary: "openrouter/anthropic/claude-sonnet-4-6",
     });
 
-    const config = OpenClawSchema.parse({
+    const config = QuietCoreSchema.parse({
       agents: {
         list: [
           {
@@ -677,7 +677,7 @@ describe("config schema", () => {
     ).toBe(false);
 
     expect(
-      OpenClawSchema.safeParse({
+      QuietCoreSchema.safeParse({
         agents: {
           list: [
             {
@@ -738,7 +738,7 @@ describe("config schema", () => {
   });
 
   it("accepts install policy exec config in the runtime zod schema", () => {
-    const parsed = OpenClawSchema.parse({
+    const parsed = QuietCoreSchema.parse({
       security: {
         installPolicy: {
           enabled: true,
@@ -825,7 +825,7 @@ describe("config schema", () => {
   });
 
   it("accepts WhatsApp Web Baileys socket timing in the runtime zod schema", () => {
-    const parsed = OpenClawSchema.parse({
+    const parsed = QuietCoreSchema.parse({
       web: {
         whatsapp: {
           keepAliveIntervalMs: 15_000,

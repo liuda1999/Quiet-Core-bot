@@ -3,7 +3,7 @@ import {
   resolveApiKeyForProvider,
   resolveDefaultAgentDir,
 } from "quiet-core-bot/plugin-sdk/agent-runtime";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import {
   registerProviderPlugin,
   requireRegisteredProvider,
@@ -157,7 +157,7 @@ function readPositiveIntegerEnv(raw: string | undefined, fallback: number): numb
   return Number.isFinite(value) && value > 0 ? value : fallback;
 }
 
-function withPluginsEnabled(cfg: OpenClawConfig): OpenClawConfig {
+function withPluginsEnabled(cfg: QuietCoreConfig): QuietCoreConfig {
   return {
     ...cfg,
     plugins: {

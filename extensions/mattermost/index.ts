@@ -1,12 +1,12 @@
-// Mattermost plugin entrypoint registers its OpenClaw integration.
+// Mattermost plugin entrypoint registers its QuietCore integration.
 import {
   defineBundledChannelEntry,
   loadBundledEntryExportSync,
 } from "quiet-core-bot/plugin-sdk/channel-entry-contract";
-import type { OpenClawPluginApi } from "quiet-core-bot/plugin-sdk/channel-entry-contract";
+import type { QuietCorePluginApi } from "quiet-core-bot/plugin-sdk/channel-entry-contract";
 
-function registerSlashCommandRoute(api: OpenClawPluginApi): void {
-  const register = loadBundledEntryExportSync<(api: OpenClawPluginApi) => void>(import.meta.url, {
+function registerSlashCommandRoute(api: QuietCorePluginApi): void {
+  const register = loadBundledEntryExportSync<(api: QuietCorePluginApi) => void>(import.meta.url, {
     specifier: "./slash-route-api.js",
     exportName: "registerSlashCommandRoute",
   });

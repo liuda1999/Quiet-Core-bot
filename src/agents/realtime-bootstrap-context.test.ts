@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { resolveRealtimeBootstrapContextInstructions } from "./realtime-bootstrap-context.js";
 
 const tempDirs: string[] = [];
@@ -14,14 +14,14 @@ async function makeWorkspace(): Promise<string> {
   return dir;
 }
 
-function makeConfig(workspaceDir: string): OpenClawConfig {
+function makeConfig(workspaceDir: string): QuietCoreConfig {
   // Bootstrap context resolves files through the configured default agent workspace.
   return {
     agents: {
       defaults: { workspace: workspaceDir },
       list: [{ id: "main", default: true }],
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
 afterEach(async () => {

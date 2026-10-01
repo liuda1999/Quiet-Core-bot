@@ -16,7 +16,7 @@ type SecureDirStat = {
 };
 
 /** Injectable filesystem/platform hooks for resolving the preferred temp root in tests. */
-export type ResolvePreferredOpenClawTmpDirOptions = {
+export type ResolvePreferredQuietCoreTmpDirOptions = {
   accessSync?: (path: string, mode?: number) => void;
   chmodSync?: (path: string, mode: number) => void;
   getuid?: () => number | undefined;
@@ -37,8 +37,8 @@ function isNodeErrorWithCode(err: unknown, code: string): err is MaybeNodeError 
 }
 
 /** Resolves a safe Quiet Core bot temp root, falling back to user-scoped os.tmpdir paths when needed. */
-export function resolvePreferredOpenClawTmpDir(
-  options: ResolvePreferredOpenClawTmpDirOptions = {},
+export function resolvePreferredQuietCoreTmpDir(
+  options: ResolvePreferredQuietCoreTmpDirOptions = {},
 ): string {
   const accessMode = fs.constants.W_OK | fs.constants.X_OK;
   const accessSync = options.accessSync ?? fs.accessSync;

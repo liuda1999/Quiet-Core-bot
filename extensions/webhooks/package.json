@@ -2,7 +2,7 @@
   "name": "@quiet-core/webhooks",
   "version": "2026.6.11",
   "private": true,
-  "description": "OpenClaw webhook bridge plugin",
+  "description": "QuietCore webhook bridge plugin",
   "type": "module",
   "devDependencies": {
     "@quiet-core/plugin-sdk": "workspace:*"

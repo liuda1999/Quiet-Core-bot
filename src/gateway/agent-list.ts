@@ -6,7 +6,7 @@ import { normalizeOptionalString } from "@quiet-core/normalization-core/string-c
 import { resolveDefaultAgentId } from "../agents/agent-scope.js";
 import { resolveStateDir } from "../config/paths.js";
 import type { SessionScope } from "../config/sessions.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { normalizeAgentId, normalizeMainKey } from "../routing/session-key.js";
 
 type GatewayAgentListRow = {
@@ -28,7 +28,7 @@ function listExistingAgentIdsFromDisk(): string[] {
   }
 }
 
-export function listGatewayAgentIds(cfg: OpenClawConfig): string[] {
+export function listGatewayAgentIds(cfg: QuietCoreConfig): string[] {
   const ids = new Set<string>();
   const defaultId = normalizeAgentId(resolveDefaultAgentId(cfg));
   ids.add(defaultId);
@@ -53,7 +53,7 @@ export function listGatewayAgentIds(cfg: OpenClawConfig): string[] {
 }
 
 /** Lists gateway-visible agent ids with default/main session metadata. */
-export function listGatewayAgentsBasic(cfg: OpenClawConfig): {
+export function listGatewayAgentsBasic(cfg: QuietCoreConfig): {
   defaultId: string;
   mainKey: string;
   scope: SessionScope;

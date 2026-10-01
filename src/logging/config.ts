@@ -4,10 +4,10 @@ import { isRecord as isObjectRecord } from "@quiet-core/normalization-core/recor
 import JSON5 from "json5";
 import { getCommandPathWithRootOptions } from "../cli/argv.js";
 import { resolveConfigPath } from "../config/paths.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 
 // Lightweight logging-config reader used before the full config runtime is safe to load.
-type LoggingConfig = OpenClawConfig["logging"];
+type LoggingConfig = QuietCoreConfig["logging"];
 
 let cachedLoggingConfig:
   | {

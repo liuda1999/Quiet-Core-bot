@@ -4,7 +4,7 @@ import path from "node:path";
 import { theme } from "../../packages/terminal-core/src/theme.js";
 import { assertConfigWriteAllowedInCurrentMode, readConfigFileSnapshot } from "../config/config.js";
 import { resolveStateDir } from "../config/paths.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   tracePluginLifecyclePhase,
   tracePluginLifecyclePhaseAsync,
@@ -62,7 +62,7 @@ export async function runPluginUninstallCommand(
     () => readConfigFileSnapshot(),
     { command: "uninstall" },
   );
-  const sourceConfig = (snapshot.sourceConfig ?? snapshot.config) as OpenClawConfig;
+  const sourceConfig = (snapshot.sourceConfig ?? snapshot.config) as QuietCoreConfig;
   const installRecords = await tracePluginLifecyclePhaseAsync(
     "install records load",
     () => loadInstalledPluginIndexInstallRecords(),

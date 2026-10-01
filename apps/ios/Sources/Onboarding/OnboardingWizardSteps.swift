@@ -7,15 +7,15 @@ struct OnboardingIntroStep: View {
         VStack(spacing: 0) {
             Spacer()
 
-            OpenClawProMark(size: 64, shadowRadius: 14)
+            QuietCoreProMark(size: 64, shadowRadius: 14)
                 .padding(.bottom, 18)
 
-            Text("Welcome to OpenClaw")
+            Text("Welcome to QuietCore")
                 .font(.largeTitle.weight(.bold))
                 .multilineTextAlignment(.center)
                 .padding(.bottom, 10)
 
-            Text("Turn this device into a secure OpenClaw node for chat, voice, camera, and device tools.")
+            Text("Turn this device into a secure QuietCore node for chat, voice, camera, and device tools.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -25,7 +25,7 @@ struct OnboardingIntroStep: View {
             VStack(alignment: .leading, spacing: 14) {
                 Label("Connect to your gateway", systemImage: "link")
                 Label("Choose device permissions", systemImage: "hand.raised")
-                Label("Use OpenClaw from your phone", systemImage: "message.fill")
+                Label("Use QuietCore from your phone", systemImage: "message.fill")
             }
             .font(.subheadline.weight(.semibold))
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -40,7 +40,7 @@ struct OnboardingIntroStep: View {
             HStack(alignment: .top, spacing: 12) {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .font(.title3.weight(.semibold))
-                    .foregroundStyle(OpenClawBrand.warn)
+                    .foregroundStyle(QuietCoreBrand.warn)
                     .frame(width: 24)
                     .padding(.top, 2)
 
@@ -48,7 +48,7 @@ struct OnboardingIntroStep: View {
                     Text("Security notice")
                         .font(.headline)
                     Text(
-                        "The connected OpenClaw agent can use device capabilities you enable, "
+                        "The connected QuietCore agent can use device capabilities you enable, "
                             + "such as camera, microphone, photos, contacts, calendar, and location. "
                             + "Continue only if you trust the gateway and agent you connect to.")
                         .font(.footnote)
@@ -98,7 +98,7 @@ struct OnboardingWelcomeStep: View {
                 .font(.largeTitle.weight(.bold))
                 .padding(.bottom, 8)
 
-            Text("Scan a QR code from your OpenClaw gateway or continue with manual setup.")
+            Text("Scan a QR code from your QuietCore gateway or continue with manual setup.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -107,7 +107,7 @@ struct OnboardingWelcomeStep: View {
             VStack(alignment: .leading, spacing: 8) {
                 Text("How to pair")
                     .font(.headline)
-                Text("In your OpenClaw chat, run")
+                Text("In your QuietCore chat, run")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                 Text("/pair qr")
@@ -177,7 +177,7 @@ struct OnboardingModeRow: View {
                 }
                 Spacer()
                 Image(systemName: self.selected ? "checkmark.circle.fill" : "circle")
-                    .foregroundStyle(self.selected ? OpenClawBrand.accent : Color.secondary)
+                    .foregroundStyle(self.selected ? QuietCoreBrand.accent : Color.secondary)
             }
             .contentShape(Rectangle())
         }

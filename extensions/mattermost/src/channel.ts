@@ -16,7 +16,7 @@ import {
   createAttachedChannelResultAdapter,
   type ChannelOutboundAdapter,
 } from "quiet-core-bot/plugin-sdk/channel-send-result";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { createChannelDirectoryAdapter } from "quiet-core-bot/plugin-sdk/directory-runtime";
 import { buildPassiveProbedChannelStatusSummary } from "quiet-core-bot/plugin-sdk/extension-shared";
 import {
@@ -301,7 +301,7 @@ function normalizeMattermostThreadId(value: string | number | undefined): string
 }
 
 function buildMattermostThreadingToolContext(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   accountId?: string | null;
   context: ChannelThreadingContext;
   hasRepliedRef?: { value: boolean };
@@ -893,7 +893,7 @@ export const mattermostPlugin: ChannelPlugin<ResolvedMattermostAccount> = create
   pairing: {
     text: {
       idLabel: "mattermostUserId",
-      message: "OpenClaw: your access has been approved.",
+      message: "QuietCore: your access has been approved.",
       normalizeAllowEntry: (entry) => normalizeAllowEntry(entry),
       notify: createLoggedPairingApprovalNotifier(
         ({ id }) => `[mattermost] User ${id} approved for pairing`,

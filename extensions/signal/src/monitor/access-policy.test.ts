@@ -1,5 +1,5 @@
 // Signal tests cover access policy plugin behavior.
-import type { AccessGroupsConfig, OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { AccessGroupsConfig, QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { describe, expect, it, vi } from "vitest";
 import { handleSignalDirectMessageAccess, resolveSignalAccessState } from "./access-policy.js";
 
@@ -38,7 +38,7 @@ async function resolveGroupAccess(params: {
 
 function accessGroupsConfig(
   accessGroups: AccessGroupsConfig | undefined,
-): Pick<OpenClawConfig, "accessGroups"> | undefined {
+): Pick<QuietCoreConfig, "accessGroups"> | undefined {
   return accessGroups ? { accessGroups } : undefined;
 }
 

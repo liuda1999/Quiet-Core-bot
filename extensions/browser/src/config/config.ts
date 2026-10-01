@@ -9,5 +9,5 @@ export {
   replaceConfigFile,
   type BrowserConfig,
   type BrowserProfileConfig,
-  type OpenClawConfig,
+  type QuietCoreConfig,
 } from "../sdk-config.js";

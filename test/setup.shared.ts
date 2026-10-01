@@ -132,7 +132,7 @@ async function assertResolvedPathsStayInTempRoot(): Promise<void> {
     const stateDbPaths = await vi.importActual<
       typeof import("../src/state/quiet-core-bot-state-db.paths.js")
     >("../src/state/quiet-core-bot-state-db.paths.js");
-    check("stateSqlitePath", stateDbPaths.resolveOpenClawStateSqlitePath());
+    check("stateSqlitePath", stateDbPaths.resolveQuietCoreStateSqlitePath());
   } catch {
     // See above.
   }

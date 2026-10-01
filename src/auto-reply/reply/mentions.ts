@@ -10,7 +10,7 @@ import type { ChannelId } from "../../channels/plugins/channel-id.types.js";
 import { getLoadedChannelPluginById } from "../../channels/plugins/registry-loaded.js";
 import type { ChannelPlugin } from "../../channels/plugins/types.plugin.js";
 import { normalizeAnyChannelId } from "../../channels/registry.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
 import { compileConfigRegexes, type ConfigRegexRejectReason } from "../../security/config-regex.js";
 import { escapeRegExp } from "../../utils.js";
@@ -112,7 +112,7 @@ function compileMentionPatternsCached(params: {
   return cacheMentionRegexes(params.cache, cacheKey, compiled.regexes);
 }
 
-function resolveMentionPatterns(cfg: OpenClawConfig | undefined, agentId?: string): string[] {
+function resolveMentionPatterns(cfg: QuietCoreConfig | undefined, agentId?: string): string[] {
   if (!cfg) {
     return [];
   }
@@ -131,7 +131,7 @@ function resolveMentionPatterns(cfg: OpenClawConfig | undefined, agentId?: strin
 
 /** Builds mention regexes from config, agent identity, and channel policy. */
 export function buildMentionRegexes(
-  cfg: OpenClawConfig | undefined,
+  cfg: QuietCoreConfig | undefined,
   agentId?: string,
   options?: BuildMentionRegexesOptions,
 ): RegExp[] {
@@ -207,7 +207,7 @@ export function stripStructuralPrefixes(text: string): string {
 export function stripMentions(
   text: string,
   ctx: MsgContext,
-  cfg: OpenClawConfig | undefined,
+  cfg: QuietCoreConfig | undefined,
   agentId?: string,
 ): string {
   let result = text;

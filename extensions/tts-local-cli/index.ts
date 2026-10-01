@@ -1,4 +1,4 @@
-// Tts Local Cli plugin entrypoint registers its OpenClaw integration.
+// Tts Local Cli plugin entrypoint registers its QuietCore integration.
 import { definePluginEntry } from "quiet-core-bot/plugin-sdk/plugin-entry";
 import { buildCliSpeechProvider } from "./speech-provider.js";
 

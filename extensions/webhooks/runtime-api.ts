@@ -13,4 +13,4 @@ export {
   type WebhookInFlightLimiter,
 } from "quiet-core-bot/plugin-sdk/webhook-ingress";
 export { resolveConfiguredSecretInputString } from "quiet-core-bot/plugin-sdk/secret-input-runtime";
-export type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+export type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";

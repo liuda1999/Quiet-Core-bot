@@ -4,7 +4,7 @@
  * Keeps optional tool gating separate from tool construction so config and execution contracts decide exposure.
  */
 import { uniqueStrings } from "@quiet-core/normalization-core/string-normalization";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { isStrictAgenticExecutionContractActive } from "./execution-contract.js";
 import { isToolAllowedByPolicyName } from "./tool-policy-match.js";
 import type { AnyAgentTool } from "./tools/common.js";
@@ -16,15 +16,15 @@ import type { AnyAgentTool } from "./tools/common.js";
  * assemble candidate tools first, then filter by config and execution contract.
  */
 /** Drops disabled optional tools while preserving candidate order. */
-export function collectPresentOpenClawTools(
+export function collectPresentQuietCoreTools(
   candidates: readonly (AnyAgentTool | null | undefined)[],
 ): AnyAgentTool[] {
   return candidates.filter((tool): tool is AnyAgentTool => tool !== null && tool !== undefined);
 }
 
 /** Resolves the default update_plan switch from explicit config or strict execution contract. */
-function isUpdatePlanToolEnabledForOpenClawTools(params: {
-  config?: OpenClawConfig;
+function isUpdatePlanToolEnabledForQuietCoreTools(params: {
+  config?: QuietCoreConfig;
   agentSessionKey?: string;
   agentId?: string | null;
   modelProvider?: string;
@@ -43,12 +43,12 @@ function isUpdatePlanToolEnabledForOpenClawTools(params: {
   });
 }
 
-function mergeOpenClawToolPolicyList(...lists: Array<string[] | undefined>): string[] | undefined {
+function mergeQuietCoreToolPolicyList(...lists: Array<string[] | undefined>): string[] | undefined {
   const merged = lists.flatMap((list) => (Array.isArray(list) ? list : []));
   return merged.length > 0 ? uniqueStrings(merged) : undefined;
 }
 
-function isToolExplicitlyAllowedByOpenClawToolPolicy(params: {
+function isToolExplicitlyAllowedByQuietCoreToolPolicy(params: {
   toolName: string;
   allowlist?: string[];
   denylist?: string[];
@@ -63,8 +63,8 @@ function isToolExplicitlyAllowedByOpenClawToolPolicy(params: {
 }
 
 /** Decides whether update_plan should be included in the assembled Quiet Core bot tool set. */
-export function shouldIncludeUpdatePlanToolForOpenClawTools(params: {
-  config?: OpenClawConfig;
+export function shouldIncludeUpdatePlanToolForQuietCoreTools(params: {
+  config?: QuietCoreConfig;
   agentSessionKey?: string;
   agentId?: string | null;
   modelProvider?: string;
@@ -72,22 +72,22 @@ export function shouldIncludeUpdatePlanToolForOpenClawTools(params: {
   pluginToolAllowlist?: string[];
   pluginToolDenylist?: string[];
 }): boolean {
-  const allowlist = mergeOpenClawToolPolicyList(
+  const allowlist = mergeQuietCoreToolPolicyList(
     params.config?.tools?.allow,
     params.config?.tools?.alsoAllow,
     params.pluginToolAllowlist,
   );
-  const denylist = mergeOpenClawToolPolicyList(
+  const denylist = mergeQuietCoreToolPolicyList(
     params.config?.tools?.deny,
     params.pluginToolDenylist,
   );
   return (
-    isToolExplicitlyAllowedByOpenClawToolPolicy({
+    isToolExplicitlyAllowedByQuietCoreToolPolicy({
       toolName: "update_plan",
       allowlist,
       denylist,
     }) ||
-    isUpdatePlanToolEnabledForOpenClawTools({
+    isUpdatePlanToolEnabledForQuietCoreTools({
       config: params.config,
       agentSessionKey: params.agentSessionKey,
       agentId: params.agentId,

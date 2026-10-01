@@ -15,13 +15,13 @@ import {
 import { createScriptTestHarness } from "./test-helpers.js";
 
 const { createTempDir } = createScriptTestHarness();
-const originalOpenClawCodexRepo = process.env.QUIET_CORE_CODEX_REPO;
+const originalQuietCoreCodexRepo = process.env.QUIET_CORE_CODEX_REPO;
 
 afterEach(() => {
-  if (originalOpenClawCodexRepo === undefined) {
+  if (originalQuietCoreCodexRepo === undefined) {
     delete process.env.QUIET_CORE_CODEX_REPO;
   } else {
-    process.env.QUIET_CORE_CODEX_REPO = originalOpenClawCodexRepo;
+    process.env.QUIET_CORE_CODEX_REPO = originalQuietCoreCodexRepo;
   }
 });
 
@@ -143,16 +143,16 @@ describe("codex app-server protocol source resolver", () => {
 
   it("finds the primary checkout sibling from a git worktree", async () => {
     const parentDir = createTempDir("quiet-core-bot-protocol-source-parent-");
-    const primaryOpenClaw = path.join(parentDir, "quiet-core-bot");
+    const primaryQuietCore = path.join(parentDir, "quiet-core-bot");
     const codexRepo = path.join(parentDir, "codex");
     const worktreeRoot = createTempDir("quiet-core-bot-protocol-source-worktree-");
-    fs.mkdirSync(path.join(primaryOpenClaw, ".git", "worktrees", "codex-harness"), {
+    fs.mkdirSync(path.join(primaryQuietCore, ".git", "worktrees", "codex-harness"), {
       recursive: true,
     });
     fs.mkdirSync(worktreeRoot, { recursive: true });
     fs.writeFileSync(
       path.join(worktreeRoot, ".git"),
-      `gitdir: ${path.join(primaryOpenClaw, ".git", "worktrees", "codex-harness")}\n`,
+      `gitdir: ${path.join(primaryQuietCore, ".git", "worktrees", "codex-harness")}\n`,
     );
     createProtocolSchema(codexRepo);
     delete process.env.QUIET_CORE_CODEX_REPO;

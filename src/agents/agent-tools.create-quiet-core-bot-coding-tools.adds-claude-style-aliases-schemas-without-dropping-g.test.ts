@@ -10,7 +10,7 @@ import type { AgentTool, AgentToolResult } from "quiet-core-bot/plugin-sdk/agent
 import { Type } from "typebox";
 import { describe, expect, it, vi } from "vitest";
 import * as windowsEncoding from "../infra/windows-encoding.js";
-import { createOpenClawReadTool, createSandboxedReadTool } from "./agent-tools.read.js";
+import { createQuietCoreReadTool, createSandboxedReadTool } from "./agent-tools.read.js";
 import { createHostSandboxFsBridge } from "./test-helpers/host-sandbox-fs-bridge.js";
 
 function extractToolText(result: unknown): string {
@@ -32,7 +32,7 @@ function extractToolText(result: unknown): string {
   return textBlock?.text ?? "";
 }
 
-describe("createOpenClawCodingTools read behavior", () => {
+describe("createQuietCoreCodingTools read behavior", () => {
   it("uses host decoding only for host-backed sandbox paths", async () => {
     const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-sbx-encoding-"));
     await fs.writeFile(path.join(tmpDir, "notes.txt"), "hello", "utf8");
@@ -206,7 +206,7 @@ describe("createOpenClawCodingTools read behavior", () => {
       .fn()
       .mockResolvedValueOnce(readResult)
       .mockRejectedValueOnce(new Error("Offset 2 is beyond end of file (1 lines total)"));
-    const readTool = createOpenClawReadTool({
+    const readTool = createQuietCoreReadTool({
       name: "read",
       label: "read",
       description: "test read",
@@ -227,7 +227,7 @@ describe("createOpenClawCodingTools read behavior", () => {
   });
 
   it("keeps unrelated read failures loud", async () => {
-    const readTool = createOpenClawReadTool({
+    const readTool = createQuietCoreReadTool({
       name: "read",
       label: "read",
       description: "test read",
@@ -272,8 +272,8 @@ describe("createOpenClawCodingTools read behavior", () => {
       execute: vi.fn(async () => readResult),
     };
 
-    const wrapped = createOpenClawReadTool(
-      baseRead as unknown as Parameters<typeof createOpenClawReadTool>[0],
+    const wrapped = createQuietCoreReadTool(
+      baseRead as unknown as Parameters<typeof createQuietCoreReadTool>[0],
     );
     const result = await wrapped.execute("read-strip-1", { path: "demo.txt", limit: 1 });
 

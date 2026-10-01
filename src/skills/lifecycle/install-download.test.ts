@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { Readable } from "node:stream";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawTestState } from "../../test-utils/quiet-core-bot-test-state.js";
+import type { QuietCoreTestState } from "../../test-utils/quiet-core-bot-test-state.js";
 import { resolveSkillToolsRootDir } from "../runtime/tools-dir.js";
 import { createInstallDownloadTestState } from "../test-support/install-download-test-utils.js";
 import {
@@ -144,7 +144,7 @@ function mockTarExtractionFlow(params: {
 }
 
 let workspaceDir = "";
-let testState: OpenClawTestState | undefined;
+let testState: QuietCoreTestState | undefined;
 beforeAll(async () => {
   testState = await createInstallDownloadTestState();
   workspaceDir = testState.workspaceDir;

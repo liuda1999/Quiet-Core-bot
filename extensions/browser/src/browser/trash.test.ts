@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const resolvePreferredOpenClawTmpDirMock = vi.hoisted(() => vi.fn(() => "/tmp/quiet-core-bot"));
+const resolvePreferredQuietCoreTmpDirMock = vi.hoisted(() => vi.fn(() => "/tmp/quiet-core-bot"));
 const realMkdirSync = fs.mkdirSync.bind(fs);
 const realMkdtempSync = fs.mkdtempSync.bind(fs);
 const realRmSync = fs.rmSync.bind(fs);
@@ -12,7 +12,7 @@ const realWriteFileSync = fs.writeFileSync.bind(fs);
 const realRealpathSyncNative = fs.realpathSync.native.bind(fs.realpathSync);
 
 vi.mock("quiet-core-bot/plugin-sdk/temp-path", () => ({
-  resolvePreferredOpenClawTmpDir: resolvePreferredOpenClawTmpDirMock,
+  resolvePreferredQuietCoreTmpDir: resolvePreferredQuietCoreTmpDirMock,
 }));
 
 function mockTrashContainer(...suffixes: string[]) {
@@ -38,8 +38,8 @@ describe("browser trash", () => {
     tmpDir = path.join(testRoot, "tmp");
     realMkdirSync(path.join(homeDir, ".Trash"), { recursive: true, mode: 0o700 });
     realMkdirSync(tmpDir, { recursive: true, mode: 0o700 });
-    resolvePreferredOpenClawTmpDirMock.mockReset();
-    resolvePreferredOpenClawTmpDirMock.mockReturnValue(tmpDir);
+    resolvePreferredQuietCoreTmpDirMock.mockReset();
+    resolvePreferredQuietCoreTmpDirMock.mockReturnValue(tmpDir);
     vi.spyOn(Date, "now").mockReturnValue(123);
     vi.spyOn(os, "homedir").mockReturnValue(homeDir);
     vi.spyOn(os, "tmpdir").mockReturnValue(tmpDir);

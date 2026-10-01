@@ -2,7 +2,7 @@
 // reconciliation, commit hooks, and retry budget deferral.
 import { MAX_DATE_TIMESTAMP_MS } from "@quiet-core/normalization-core/number-coercion";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { openOpenClawStateDatabase } from "../../state/quiet-core-bot-state-db.js";
+import { openQuietCoreStateDatabase } from "../../state/quiet-core-bot-state-db.js";
 import { attachOutboundDeliveryCommitHook } from "./delivery-commit-hooks.js";
 import {
   enqueueDelivery,
@@ -38,7 +38,7 @@ function expectMockMessageContaining(mock: { mock: { calls: unknown[][] } }, exp
 }
 
 function readOutboundQueueStatus(tmpDir: string, id: string): string | undefined {
-  const { db } = openOpenClawStateDatabase({
+  const { db } = openQuietCoreStateDatabase({
     env: { ...process.env, QUIET_CORE_STATE_DIR: tmpDir },
   });
   const row = db

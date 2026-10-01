@@ -11,15 +11,15 @@ import {
   unchangedPendingPluginInstallRecordIds,
 } from "../../cli/plugins-install-record-commit.js";
 import { replaceConfigFile } from "../../config/config.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 
 /** Commits a non-interactive onboard config update with pending plugin records handled first. */
 export async function commitNonInteractiveOnboardConfig(params: {
-  nextConfig: OpenClawConfig;
-  baseConfig: OpenClawConfig;
+  nextConfig: QuietCoreConfig;
+  baseConfig: QuietCoreConfig;
   baseHash?: string;
   reset?: boolean;
-}): Promise<OpenClawConfig> {
+}): Promise<QuietCoreConfig> {
   // Ordinary onboard reruns must preserve existing agents.list / bindings.
   // Only explicit --reset may allow a config size drop; see quiet-core-bot#84692.
   const allowConfigSizeDrop = params.reset === true;

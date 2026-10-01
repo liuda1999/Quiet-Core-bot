@@ -1,9 +1,9 @@
 /** Applies workspace plugin allow/deny config before manifest records reach control-plane decisions. */
 import { normalizeOptionalLowercaseString } from "@quiet-core/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { PluginManifestRecord } from "./manifest-registry.js";
 
-type PluginEntriesConfig = NonNullable<NonNullable<OpenClawConfig["plugins"]>["entries"]>;
+type PluginEntriesConfig = NonNullable<NonNullable<QuietCoreConfig["plugins"]>["entries"]>;
 
 /** Normalizes plugin ids used in config allow/deny/entry lists. */
 export function normalizePluginConfigId(id: unknown): string {
@@ -34,7 +34,7 @@ function findPluginConfigEntry(
 
 /** Resolves whether workspace plugin config allows one plugin manifest record. */
 export function isWorkspacePluginAllowedByConfig(params: {
-  config: OpenClawConfig | undefined;
+  config: QuietCoreConfig | undefined;
   isImplicitlyAllowed?: (pluginId: string) => boolean;
   plugin: PluginManifestRecord;
 }): boolean {

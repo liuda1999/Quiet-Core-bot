@@ -12,8 +12,8 @@ import { resolveFutureConfigActionBlock } from "../../config/future-version-guar
 import { readConfigFileSnapshotForWrite } from "../../config/io.js";
 import { replaceConfigFile } from "../../config/mutate.js";
 import { resolveGatewayPort } from "../../config/paths.js";
-import type { OpenClawConfig } from "../../config/types.js";
-import { QUIET_CORE_WRAPPER_ENV_KEY, resolveOpenClawWrapperPath } from "../../daemon/program-args.js";
+import type { QuietCoreConfig } from "../../config/types.js";
+import { QUIET_CORE_WRAPPER_ENV_KEY, resolveQuietCoreWrapperPath } from "../../daemon/program-args.js";
 import { readEmbeddedGatewayToken } from "../../daemon/service-audit.js";
 import { resolveGatewayService } from "../../daemon/service.js";
 import type { GatewayServiceCommandConfig } from "../../daemon/service.js";
@@ -128,7 +128,7 @@ export async function runDaemonInstall(opts: DaemonInstallOptions) {
   let wrapperPath: string | undefined;
   if (opts.wrapper !== undefined) {
     try {
-      wrapperPath = await resolveOpenClawWrapperPath(opts.wrapper);
+      wrapperPath = await resolveQuietCoreWrapperPath(opts.wrapper);
       if (!wrapperPath) {
         fail("Invalid --wrapper");
         return;
@@ -189,7 +189,7 @@ export async function runDaemonInstall(opts: DaemonInstallOptions) {
   });
   if (!wrapperPath) {
     try {
-      wrapperPath = await resolveOpenClawWrapperPath(installEnv[QUIET_CORE_WRAPPER_ENV_KEY]);
+      wrapperPath = await resolveQuietCoreWrapperPath(installEnv[QUIET_CORE_WRAPPER_ENV_KEY]);
     } catch (err) {
       fail(`Invalid ${QUIET_CORE_WRAPPER_ENV_KEY}: ${String(err)}`);
       return;
@@ -307,7 +307,7 @@ async function getGatewayServiceAutoRefreshMessage(params: {
   wrapperPath?: string;
   existingEnvironment?: Record<string, string | undefined>;
   existingEnvironmentValueSources?: GatewayServiceCommandConfig["environmentValueSources"];
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
 }): Promise<string | undefined> {
   try {
     const currentCommand = params.currentCommand;

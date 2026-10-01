@@ -4,7 +4,7 @@
  */
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Duplex } from "node:stream";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { definePluginEntry, type AnyAgentTool } from "quiet-core-bot/plugin-sdk/plugin-entry";
 import { canvasConfigSchema, isCanvasHostEnabled } from "./src/config.js";
 import { A2UI_PATH, CANVAS_HOST_PATH, CANVAS_WS_PATH } from "./src/host/a2ui-shared.js";
@@ -22,7 +22,7 @@ const CANVAS_NODE_COMMANDS = [
 ];
 
 function createLazyCanvasTool(params: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   workspaceDir?: string;
 }): AnyAgentTool {
   let toolPromise: Promise<AnyAgentTool> | undefined;

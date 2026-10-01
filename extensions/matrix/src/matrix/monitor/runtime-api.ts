@@ -5,7 +5,7 @@
 export type { NormalizedLocation } from "quiet-core-bot/plugin-sdk/channel-inbound";
 export type { PluginRuntime, RuntimeLogger } from "quiet-core-bot/plugin-sdk/plugin-runtime";
 export type { BlockReplyContext, ReplyPayload } from "quiet-core-bot/plugin-sdk/reply-runtime";
-export type { MarkdownTableMode, OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+export type { MarkdownTableMode, QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 export type { RuntimeEnv } from "quiet-core-bot/plugin-sdk/runtime";
 export {
   addAllowlistUserEntriesFromConfigEntry,

@@ -5,7 +5,7 @@ import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalLowercaseString,
 } from "@quiet-core/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { AssistantMessage } from "../../llm/types.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
 import {
@@ -1325,7 +1325,7 @@ export function classifyAssistantFailoverReason(
 export function formatAssistantErrorText(
   msg: AssistantMessage,
   opts?: {
-    cfg?: OpenClawConfig;
+    cfg?: QuietCoreConfig;
     sessionKey?: string;
     provider?: string;
     model?: string;
@@ -1569,7 +1569,7 @@ export function isRawAssistantErrorPassthrough(params: {
 export function formatUserFacingAssistantErrorText(
   msg: AssistantMessage,
   opts?: {
-    cfg?: OpenClawConfig;
+    cfg?: QuietCoreConfig;
     sessionKey?: string;
     provider?: string;
     model?: string;

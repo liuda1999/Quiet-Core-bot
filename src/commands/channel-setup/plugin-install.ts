@@ -2,13 +2,13 @@
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../../agents/agent-scope.js";
 import type { ChannelPluginCatalogEntry } from "../../channels/plugins/catalog.js";
 import { applyPluginAutoEnable } from "../../config/plugin-auto-enable.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
 import {
   resolveConfiguredChannelPluginIds,
   resolveDiscoverableScopedChannelPluginIds,
 } from "../../plugins/channel-plugin-ids.js";
-import { loadOpenClawPlugins } from "../../plugins/loader.js";
+import { loadQuietCorePlugins } from "../../plugins/loader.js";
 import { createPluginLoaderLogger } from "../../plugins/logger.js";
 import type { PluginRegistry } from "../../plugins/registry.js";
 import type { RuntimeEnv } from "../../runtime.js";
@@ -21,7 +21,7 @@ import {
 import { getTrustedChannelPluginCatalogEntry } from "./trusted-catalog.js";
 
 type InstallResult = {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   installed: boolean;
   pluginId?: string;
   status: OnboardingPluginInstallStatus;
@@ -42,7 +42,7 @@ function toOnboardingPluginInstallEntry(
 
 /** Install or reuse the plugin package required by a trusted channel catalog entry. */
 export async function ensureChannelSetupPluginInstalled(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   entry: ChannelPluginCatalogEntry;
   prompter: WizardPrompter;
   runtime: RuntimeEnv;
@@ -70,7 +70,7 @@ export async function ensureChannelSetupPluginInstalled(params: {
 }
 
 function loadChannelSetupPluginRegistry(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   runtime: RuntimeEnv;
   workspaceDir?: string;
   onlyPluginIds?: string[];
@@ -91,7 +91,7 @@ function loadChannelSetupPluginRegistry(params: {
       env: process.env,
     });
   const log = createSubsystemLogger("plugins");
-  return loadOpenClawPlugins({
+  return loadQuietCorePlugins({
     config: resolvedConfig,
     activationSourceConfig: params.cfg,
     autoEnabledReasons: autoEnabled.autoEnabledReasons,
@@ -106,7 +106,7 @@ function loadChannelSetupPluginRegistry(params: {
 }
 
 function resolveScopedChannelPluginId(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   channel: string;
   pluginId?: string;
   workspaceDir?: string;
@@ -124,7 +124,7 @@ function resolveScopedChannelPluginId(params: {
 }
 
 function resolveUniqueManifestScopedChannelPluginId(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   channel: string;
   workspaceDir?: string;
 }): string | undefined {
@@ -139,7 +139,7 @@ function resolveUniqueManifestScopedChannelPluginId(params: {
 
 /** Load an inactive setup-plugin registry snapshot for resolving a channel without side effects. */
 export function loadChannelSetupPluginRegistrySnapshotForChannel(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   runtime: RuntimeEnv;
   channel: string;
   pluginId?: string;

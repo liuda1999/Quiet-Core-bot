@@ -2,7 +2,7 @@
 import type { Model } from "quiet-core-bot/plugin-sdk/llm";
 import { streamSimple } from "quiet-core-bot/plugin-sdk/llm";
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { applyExtraParamsToAgent } from "./embedded-agent-runner.js";
 import { isLiveTestEnabled } from "./live-test-helpers.js";
 import { isLiveAuthDrift, isLiveBillingDrift } from "./live-test-provider-drift.js";
@@ -32,7 +32,7 @@ describeLive("embedded agent extra params (live)", () => {
       maxTokens: 128_000,
     };
 
-    const cfg: OpenClawConfig = {
+    const cfg: QuietCoreConfig = {
       agents: {
         defaults: {
           models: {

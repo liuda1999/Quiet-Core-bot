@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# OpenClaw handover · show gateway logs (Docker or Node mode).
+# QuietCore handover · show gateway logs (Docker or Node mode).
 #
 # Usage:
 #   bash scripts/handover/logs.sh [docker|node] [--follow] [--tail N]

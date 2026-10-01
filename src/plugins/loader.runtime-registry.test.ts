@@ -9,7 +9,7 @@ import {
   testing,
   clearPluginLoaderCache,
   clearPluginRegistryLoadCache,
-  loadOpenClawPlugins,
+  loadQuietCorePlugins,
   resolveRuntimePluginRegistry,
 } from "./loader.js";
 import { resetPluginLoaderTestStateForTest } from "./loader.test-fixtures.js";
@@ -88,7 +88,7 @@ function requireMemoryEmbeddingProvider(providerId: string) {
   return provider;
 }
 
-function makeOpenClawDevSourceRoot(): string {
+function makeQuietCoreDevSourceRoot(): string {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-loader-dev-source-"));
   fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({ name: "quiet-core-bot" }), "utf-8");
   fs.mkdirSync(path.join(root, "src"), { recursive: true });
@@ -322,7 +322,7 @@ describe("getCompatibleActivePluginRegistry", () => {
   });
 
   it("separates dev source root precedence in the loader cache key", () => {
-    const devSourceRoot = makeOpenClawDevSourceRoot();
+    const devSourceRoot = makeQuietCoreDevSourceRoot();
     try {
       const baseOptions = {
         config: {
@@ -721,10 +721,10 @@ describe("resolveRuntimePluginRegistry", () => {
         },
         workspaceDir: "/tmp/workspace-a",
       };
-      const fullRegistry = loadOpenClawPlugins(loadOptions);
+      const fullRegistry = loadQuietCorePlugins(loadOptions);
 
-      loadOpenClawPlugins({ ...loadOptions, onlyPluginIds: ["alpha"] });
-      loadOpenClawPlugins({ ...loadOptions, onlyPluginIds: ["bravo"] });
+      loadQuietCorePlugins({ ...loadOptions, onlyPluginIds: ["alpha"] });
+      loadQuietCorePlugins({ ...loadOptions, onlyPluginIds: ["bravo"] });
 
       expect(resolveRuntimePluginRegistry(loadOptions)).toBe(fullRegistry);
     } finally {
@@ -790,7 +790,7 @@ describe("clearPluginLoaderCache", () => {
   });
 });
 
-describe("loadOpenClawPlugins active runtime clearing", () => {
+describe("loadQuietCorePlugins active runtime clearing", () => {
   it("clears plugin-owned global providers before activating a new registry", () => {
     registerEmbeddingProvider({
       id: "stale-embedding",
@@ -806,7 +806,7 @@ describe("loadOpenClawPlugins active runtime clearing", () => {
       create: async () => ({ provider: null }),
     });
 
-    loadOpenClawPlugins({ onlyPluginIds: [] });
+    loadQuietCorePlugins({ onlyPluginIds: [] });
 
     expect(getEmbeddingProvider("stale-embedding")).toBeUndefined();
     expect(getCompactionProvider("stale-compaction")).toBeUndefined();
@@ -839,10 +839,10 @@ describe("clearPluginRegistryLoadCache", () => {
       },
       workspaceDir: "/tmp/workspace-a",
     };
-    const registry = loadOpenClawPlugins(loadOptions);
+    const registry = loadQuietCorePlugins(loadOptions);
 
     clearPluginRegistryLoadCache();
 
-    expect(loadOpenClawPlugins(loadOptions)).not.toBe(registry);
+    expect(loadQuietCorePlugins(loadOptions)).not.toBe(registry);
   });
 });

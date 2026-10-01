@@ -8,9 +8,9 @@ import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import "./test-helpers/fast-coding-tools.js";
 import "./test-helpers/fast-quiet-core-bot-tools.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { createCanonicalFixtureSkill } from "../skills/test-support/test-helpers.js";
-import { createOpenClawCodingTools } from "./agent-tools.js";
+import { createQuietCoreCodingTools } from "./agent-tools.js";
 import { expectReadWriteEditTools, getTextContent } from "./test-helpers/agent-tools-fs-helpers.js";
 import { createAgentToolsSandboxContext } from "./test-helpers/agent-tools-sandbox-context.js";
 import { createHostSandboxFsBridge } from "./test-helpers/host-sandbox-fs-bridge.js";
@@ -30,7 +30,7 @@ async function withTempDir<T>(prefix: string, fn: (dir: string) => Promise<T>) {
 }
 
 function createExecTool(workspaceDir: string) {
-  const tools = createOpenClawCodingTools({
+  const tools = createQuietCoreCodingTools({
     workspaceDir,
     exec: { host: "gateway", ask: "off", security: "full" },
   });
@@ -66,7 +66,7 @@ describe("workspace path resolution", () => {
   it("uses cwd for coding filesystem tools while workspaceDir remains the agent workspace", async () => {
     await withTempDir("quiet-core-bot-agent-ws-", async (workspaceDir) => {
       await withTempDir("quiet-core-bot-task-cwd-", async (cwd) => {
-        const tools = createOpenClawCodingTools({ workspaceDir, cwd });
+        const tools = createQuietCoreCodingTools({ workspaceDir, cwd });
         const { readTool, writeTool } = expectReadWriteEditTools(tools);
 
         await fs.writeFile(path.join(cwd, "task.txt"), "task cwd read ok", "utf8");
@@ -85,7 +85,7 @@ describe("workspace path resolution", () => {
       await withTempDir("quiet-core-bot-cwd-", async (otherDir) => {
         const cwdSpy = vi.spyOn(process, "cwd").mockReturnValue(otherDir);
         try {
-          const tools = createOpenClawCodingTools({ workspaceDir });
+          const tools = createQuietCoreCodingTools({ workspaceDir });
           const { readTool, writeTool, editTool } = expectReadWriteEditTools(tools);
 
           const readFile = "read.txt";
@@ -126,7 +126,7 @@ describe("workspace path resolution", () => {
 
         const cwdSpy = vi.spyOn(process, "cwd").mockReturnValue(otherDir);
         try {
-          const tools = createOpenClawCodingTools({ workspaceDir });
+          const tools = createQuietCoreCodingTools({ workspaceDir });
           const { editTool } = expectReadWriteEditTools(tools);
 
           await editTool.execute("ws-edit-delete", {
@@ -150,7 +150,7 @@ describe("workspace path resolution", () => {
 
         const cwdSpy = vi.spyOn(process, "cwd").mockReturnValue(otherDir);
         try {
-          const tools = createOpenClawCodingTools({ workspaceDir });
+          const tools = createQuietCoreCodingTools({ workspaceDir });
           const { editTool } = expectReadWriteEditTools(tools);
 
           await editTool.execute("ws-edit-batch", {
@@ -194,8 +194,8 @@ describe("workspace path resolution", () => {
 
   it("rejects @-prefixed absolute paths outside workspace when workspaceOnly is enabled", async () => {
     await withTempDir("quiet-core-bot-ws-", async (workspaceDir) => {
-      const cfg: OpenClawConfig = { tools: { fs: { workspaceOnly: true } } };
-      const tools = createOpenClawCodingTools({ workspaceDir, config: cfg });
+      const cfg: QuietCoreConfig = { tools: { fs: { workspaceOnly: true } } };
+      const tools = createQuietCoreCodingTools({ workspaceDir, config: cfg });
       const { readTool } = expectReadWriteEditTools(tools);
 
       const outsideAbsolute = path.resolve(path.parse(workspaceDir).root, "outside-quiet-core-bot.txt");
@@ -210,8 +210,8 @@ describe("workspace path resolution", () => {
       return;
     }
     await withTempDir("quiet-core-bot-ws-", async (workspaceDir) => {
-      const cfg: OpenClawConfig = { tools: { fs: { workspaceOnly: true } } };
-      const tools = createOpenClawCodingTools({ workspaceDir, config: cfg });
+      const cfg: QuietCoreConfig = { tools: { fs: { workspaceOnly: true } } };
+      const tools = createQuietCoreCodingTools({ workspaceDir, config: cfg });
       const { readTool, writeTool } = expectReadWriteEditTools(tools);
       const outsidePath = path.join(
         path.dirname(workspaceDir),
@@ -254,8 +254,8 @@ describe("workspace path resolution", () => {
         await fs.mkdir(realDir, { recursive: true });
         await fs.symlink(realDir, aliasDir);
 
-        const cfg: OpenClawConfig = { tools: { fs: { workspaceOnly: true } } };
-        const tools = createOpenClawCodingTools({ workspaceDir, config: cfg });
+        const cfg: QuietCoreConfig = { tools: { fs: { workspaceOnly: true } } };
+        const tools = createQuietCoreCodingTools({ workspaceDir, config: cfg });
         const { writeTool } = expectReadWriteEditTools(tools);
 
         await writeTool.execute("ws-write-symlink-parent", {
@@ -281,8 +281,8 @@ describe("workspace path resolution", () => {
         await fs.symlink(realDir, aliasDir);
         await fs.writeFile(targetPath, "old memory\n", "utf8");
 
-        const cfg: OpenClawConfig = { tools: { fs: { workspaceOnly: true } } };
-        const tools = createOpenClawCodingTools({ workspaceDir, config: cfg });
+        const cfg: QuietCoreConfig = { tools: { fs: { workspaceOnly: true } } };
+        const tools = createQuietCoreCodingTools({ workspaceDir, config: cfg });
         const { editTool } = expectReadWriteEditTools(tools);
 
         await editTool.execute("ws-edit-symlink-parent", {
@@ -306,8 +306,8 @@ describe("workspace path resolution", () => {
         await fs.mkdir(outsideDir, { recursive: true });
         await fs.symlink(outsideDir, aliasDir);
 
-        const cfg: OpenClawConfig = { tools: { fs: { workspaceOnly: true } } };
-        const tools = createOpenClawCodingTools({ workspaceDir, config: cfg });
+        const cfg: QuietCoreConfig = { tools: { fs: { workspaceOnly: true } } };
+        const tools = createQuietCoreCodingTools({ workspaceDir, config: cfg });
         const { writeTool } = expectReadWriteEditTools(tools);
 
         await expect(
@@ -332,8 +332,8 @@ describe("workspace path resolution", () => {
         await fs.writeFile(targetPath, "original\n", "utf8");
         await fs.symlink(targetPath, linkPath);
 
-        const cfg: OpenClawConfig = { tools: { fs: { workspaceOnly: true } } };
-        const tools = createOpenClawCodingTools({ workspaceDir, config: cfg });
+        const cfg: QuietCoreConfig = { tools: { fs: { workspaceOnly: true } } };
+        const tools = createQuietCoreCodingTools({ workspaceDir, config: cfg });
         const { writeTool } = expectReadWriteEditTools(tools);
 
         await expect(
@@ -364,8 +364,8 @@ describe("workspace path resolution", () => {
       await fs.writeFile(siblingFile, "sibling skill", "utf8");
       await fs.writeFile(outsideFile, "outside secret", "utf8");
 
-      const cfg: OpenClawConfig = { tools: { fs: { workspaceOnly: true } } };
-      const tools = createOpenClawCodingTools({
+      const cfg: QuietCoreConfig = { tools: { fs: { workspaceOnly: true } } };
+      const tools = createQuietCoreCodingTools({
         workspaceDir,
         config: cfg,
         skillsSnapshot: {
@@ -425,8 +425,8 @@ describe("workspace path resolution", () => {
       await fs.writeFile(outsideFile, "outside secret", "utf8");
       await fs.symlink(outsideFile, linkPath);
 
-      const cfg: OpenClawConfig = { tools: { fs: { workspaceOnly: true } } };
-      const tools = createOpenClawCodingTools({
+      const cfg: QuietCoreConfig = { tools: { fs: { workspaceOnly: true } } };
+      const tools = createQuietCoreCodingTools({
         workspaceDir,
         config: cfg,
         skillsSnapshot: {
@@ -468,7 +468,7 @@ describe("sandboxed workspace paths", () => {
         await fs.writeFile(path.join(sandboxDir, testFile), "sandbox read", "utf8");
         await fs.writeFile(path.join(workspaceDir, testFile), "workspace read", "utf8");
 
-        const tools = createOpenClawCodingTools({ workspaceDir, sandbox });
+        const tools = createQuietCoreCodingTools({ workspaceDir, sandbox });
         const { readTool, writeTool, editTool } = expectReadWriteEditTools(tools);
 
         const result = await readTool?.execute("sbx-read", { path: testFile });

@@ -35,7 +35,7 @@ describe("pinIosVersion", () => {
   it("pins an explicit iOS release version and syncs generated artifacts", () => {
     const rootDir = writeIosFixture({
       version: "2026.4.6",
-      changelog: `# OpenClaw iOS Changelog
+      changelog: `# QuietCore iOS Changelog
 
 ## Unreleased
 
@@ -74,7 +74,7 @@ describe("pinIosVersion", () => {
     const rootDir = writeIosFixture({
       version: "2026.4.6",
       packageVersion: "2026.4.10-beta.3",
-      changelog: `# OpenClaw iOS Changelog
+      changelog: `# QuietCore iOS Changelog
 
 ## Unreleased
 
@@ -99,7 +99,7 @@ describe("pinIosVersion", () => {
   it("can skip syncing checked-in artifacts when requested", () => {
     const rootDir = writeIosFixture({
       version: "2026.4.6",
-      changelog: `# OpenClaw iOS Changelog
+      changelog: `# QuietCore iOS Changelog
 
 ## Unreleased
 

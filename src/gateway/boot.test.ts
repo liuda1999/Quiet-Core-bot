@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { SessionScope } from "../config/sessions/types.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 
 const agentCommand = vi.fn();
 
@@ -101,7 +101,7 @@ describe("runBootOnce", () => {
   const runBootAndReturnCall = async (
     params: {
       content?: string;
-      cfg?: OpenClawConfig;
+      cfg?: QuietCoreConfig;
       agentId?: string;
     } = {},
   ): Promise<Record<string, unknown>> => {

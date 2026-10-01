@@ -3,7 +3,7 @@ import fs from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { isBunRuntime } from "../../daemon/runtime-binary.js";
-import { resolveOpenClawPackageRootSync } from "../../infra/quiet-core-bot-root.js";
+import { resolveQuietCorePackageRootSync } from "../../infra/quiet-core-bot-root.js";
 
 const requireFromHere = createRequire(import.meta.url);
 const QUIET_CORE_CLI_ENTRY_BASENAMES = new Set(["quiet-core-bot", "quiet-core-bot.mjs"]);
@@ -23,11 +23,11 @@ function quoteShellArg(value: string): string {
   return `'${value.replaceAll("'", "'\\''")}'`;
 }
 
-function isOpenClawCliLauncherEntry(entry: string): boolean {
+function isQuietCoreCliLauncherEntry(entry: string): boolean {
   return QUIET_CORE_CLI_ENTRY_BASENAMES.has(path.basename(entry));
 }
 
-function isOpenClawPackageEntry(entry: string, packageRoot: string): boolean {
+function isQuietCorePackageEntry(entry: string, packageRoot: string): boolean {
   const relativeEntry = path.relative(path.resolve(packageRoot), path.resolve(entry));
   return QUIET_CORE_PACKAGE_ENTRY_PATHS.has(relativeEntry);
 }
@@ -61,16 +61,16 @@ function resolveTrustedTsxLoader(packageRoot: string): string | null {
   }
 }
 
-function resolveCurrentOpenClawCliArgvPrefix(): string[] {
+function resolveCurrentQuietCoreCliArgvPrefix(): string[] {
   const entry = process.argv[1]?.trim();
-  if (entry && entry !== process.execPath && isOpenClawCliLauncherEntry(entry)) {
+  if (entry && entry !== process.execPath && isQuietCoreCliLauncherEntry(entry)) {
     return [process.execPath, ...process.execArgv, entry];
   }
-  const entryPackageRoot = entry ? resolveOpenClawPackageRootSync({ argv1: entry }) : null;
-  if (entry && entryPackageRoot && isOpenClawPackageEntry(entry, entryPackageRoot)) {
+  const entryPackageRoot = entry ? resolveQuietCorePackageRootSync({ argv1: entry }) : null;
+  if (entry && entryPackageRoot && isQuietCorePackageEntry(entry, entryPackageRoot)) {
     return [process.execPath, ...process.execArgv, entry];
   }
-  const packageRoot = resolveOpenClawPackageRootSync({
+  const packageRoot = resolveQuietCorePackageRootSync({
     argv1: entry,
     cwd: safeCwd(),
     moduleUrl: import.meta.url,
@@ -82,12 +82,12 @@ function resolveCurrentOpenClawCliArgvPrefix(): string[] {
 }
 
 /** Reconstructs the current Quiet Core bot CLI invocation with extra args. */
-export function buildCurrentOpenClawCliArgv(args: string[]): string[] {
-  return [...resolveCurrentOpenClawCliArgvPrefix(), ...args];
+export function buildCurrentQuietCoreCliArgv(args: string[]): string[] {
+  return [...resolveCurrentQuietCoreCliArgvPrefix(), ...args];
 }
 
 /** Clears test-runner env inherited by harness-hosted gateways before spawning the CLI. */
-export function buildCurrentOpenClawCliExecEnv(
+export function buildCurrentQuietCoreCliExecEnv(
   env: NodeJS.ProcessEnv = process.env,
 ): Record<string, string> | undefined {
   const overrides: Record<string, string> = {};
@@ -100,6 +100,6 @@ export function buildCurrentOpenClawCliExecEnv(
 }
 
 /** Builds a shell-quoted command string for rerunning the current Quiet Core bot CLI. */
-export function buildCurrentOpenClawCliCommand(args: string[]): string {
-  return buildCurrentOpenClawCliArgv(args).map(quoteShellArg).join(" ");
+export function buildCurrentQuietCoreCliCommand(args: string[]): string {
+  return buildCurrentQuietCoreCliArgv(args).map(quoteShellArg).join(" ");
 }

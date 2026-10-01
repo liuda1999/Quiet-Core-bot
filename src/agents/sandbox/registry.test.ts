@@ -37,7 +37,7 @@ vi.mock("./constants.js", () => ({
   SANDBOX_BROWSERS_DIR,
 }));
 
-import { closeOpenClawStateDatabaseForTest } from "../../state/quiet-core-bot-state-db.js";
+import { closeQuietCoreStateDatabaseForTest } from "../../state/quiet-core-bot-state-db.js";
 import { deleteTestEnvValue, setTestEnvValue } from "../../test-utils/env.js";
 import { hashTextSha256 } from "./hash.js";
 import {
@@ -64,7 +64,7 @@ async function seedMalformedBrowserRegistry(payload: string) {
 }
 
 afterEach(async () => {
-  closeOpenClawStateDatabaseForTest();
+  closeQuietCoreStateDatabaseForTest();
   await fs.rm(path.join(TEST_STATE_DIR, "state"), { recursive: true, force: true });
   await fs.rm(SANDBOX_CONTAINERS_DIR, { recursive: true, force: true });
   await fs.rm(SANDBOX_BROWSERS_DIR, { recursive: true, force: true });
@@ -75,7 +75,7 @@ afterEach(async () => {
 });
 
 afterAll(async () => {
-  closeOpenClawStateDatabaseForTest();
+  closeQuietCoreStateDatabaseForTest();
   await fs.rm(TEST_STATE_DIR, { recursive: true, force: true });
   if (PREVIOUS_QUIET_CORE_STATE_DIR === undefined) {
     deleteTestEnvValue("QUIET_CORE_STATE_DIR");

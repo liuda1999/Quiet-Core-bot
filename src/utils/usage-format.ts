@@ -8,7 +8,7 @@ import { resolveDefaultAgentDir } from "../agents/agent-scope-config.js";
 import { modelKey, normalizeModelRef, normalizeProviderId } from "../agents/model-selection.js";
 import type { NormalizedUsage } from "../agents/usage.js";
 import type { ModelDefinitionConfig, ModelProviderConfig } from "../config/types.models.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   getGatewayModelPricingCacheFingerprint,
   getGatewayModelPricingCacheMeta,
@@ -375,7 +375,7 @@ function loadModelsJsonCostIndex(options?: {
 function findConfiguredProviderCost(params: {
   provider?: string;
   model?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   allowPluginNormalization?: boolean;
 }): ModelCostConfig | undefined {
   const key = toResolvedModelKey(params);
@@ -624,7 +624,7 @@ function withStableConfiguredCosts(
  * indicator. Token counts are stable; costs can be resolved at query time using
  * the current gateway pricing, so cache freshness does not depend on it.
  */
-export function resolveModelCostConfigFingerprint(config?: OpenClawConfig): string {
+export function resolveModelCostConfigFingerprint(config?: QuietCoreConfig): string {
   const stableProviders = withStableConfiguredCosts(config?.models?.providers);
   // Only include the gateway pricing cache when it is populated. The in-memory
   // cache is empty immediately after a gateway restart; including an empty
@@ -650,7 +650,7 @@ export function resolveModelCostConfigFingerprint(config?: OpenClawConfig): stri
 export function resolveModelCostConfig(params: {
   provider?: string;
   model?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   allowPluginNormalization?: boolean;
 }): ModelCostConfig | undefined {
   const rawKey = toDirectModelKey(params);

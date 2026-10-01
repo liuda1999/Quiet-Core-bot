@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Deploy OpenClaw to Kubernetes.
+# Deploy QuietCore to Kubernetes.
 #
 # Secrets are generated in a temp directory and applied server-side.
 # No secret material is ever written to the repo checkout.
@@ -31,7 +31,7 @@ if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
   cat <<'HELP'
 Usage: ./scripts/k8s/deploy.sh [OPTION]
 
-  (no args)        Deploy OpenClaw (creates secret from env if needed)
+  (no args)        Deploy QuietCore (creates secret from env if needed)
   --create-secret  Create or update the K8s Secret from env vars without deploying
   --show-token     Print the gateway token after deploy or secret creation
   --delete         Delete the namespace and all resources

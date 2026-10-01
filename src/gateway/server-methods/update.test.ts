@@ -1,7 +1,7 @@
 // Update method tests cover update.run/status, restart sentinel metadata,
 // managed-service handoff, restart scheduling, and delivery context preservation.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { ConfigFileSnapshot, OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { ConfigFileSnapshot, QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { RestartSentinelPayload } from "../../infra/restart-sentinel.js";
 import type { RespawnSupervisor } from "../../infra/supervisor-markers.js";
 import type { UpdateInstallSurface, UpdateRunResult } from "../../infra/update-runner.js";
@@ -87,7 +87,7 @@ vi.mock("../../infra/quiet-core-bot-root.js", async () => {
   );
   return {
     ...actual,
-    resolveOpenClawPackageRoot: async () => "/tmp/quiet-core-bot",
+    resolveQuietCorePackageRoot: async () => "/tmp/quiet-core-bot",
   };
 });
 
@@ -188,11 +188,11 @@ beforeEach(() => {
     exists: true,
     raw: "{}",
     parsed: {},
-    resolved: {} as OpenClawConfig,
-    sourceConfig: {} as OpenClawConfig,
+    resolved: {} as QuietCoreConfig,
+    sourceConfig: {} as QuietCoreConfig,
     valid: true,
-    config: {} as OpenClawConfig,
-    runtimeConfig: {} as OpenClawConfig,
+    config: {} as QuietCoreConfig,
+    runtimeConfig: {} as QuietCoreConfig,
     issues: [],
     warnings: [],
     legacyIssues: [],
@@ -729,7 +729,7 @@ describe("update.run post-core plugin finalize", () => {
           enabled: true,
         },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     readConfigFileSnapshotMock.mockResolvedValueOnce({
       path: "/tmp/quiet-core-bot.json",
       exists: true,
@@ -755,7 +755,7 @@ describe("update.run post-core plugin finalize", () => {
     const [finalizeParams] = firstMockCall(
       runPostCoreFinalizeAfterGatewayUpdateMock,
       "post-core finalize",
-    ) as [{ preUpdateConfig?: { sourceConfig?: OpenClawConfig; authoredConfig?: OpenClawConfig } }];
+    ) as [{ preUpdateConfig?: { sourceConfig?: QuietCoreConfig; authoredConfig?: QuietCoreConfig } }];
     expect(finalizeParams.preUpdateConfig).toEqual({
       sourceConfig: preUpdateConfig,
       authoredConfig: preUpdateConfig,

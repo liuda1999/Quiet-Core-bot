@@ -1,7 +1,7 @@
 {
   "name": "@quiet-core/irc",
   "version": "2026.6.11",
-  "description": "OpenClaw IRC channel plugin",
+  "description": "QuietCore IRC channel plugin",
   "type": "module",
   "devDependencies": {
     "@quiet-core/plugin-sdk": "workspace:*"

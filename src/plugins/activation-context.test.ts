@@ -4,14 +4,14 @@ import {
   createPluginMetadataSnapshot,
   makeRegistry,
 } from "../config/plugin-auto-enable.test-helpers.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   clearCurrentPluginMetadataSnapshot,
   setCurrentPluginMetadataSnapshot,
 } from "./current-plugin-metadata-snapshot.js";
 
 const applyPluginAutoEnableMock = vi.hoisted(() =>
-  vi.fn((params: { config?: OpenClawConfig }) => ({
+  vi.fn((params: { config?: QuietCoreConfig }) => ({
     config: params.config,
     changes: [],
     autoEnabledReasons: {},

@@ -3,11 +3,11 @@ import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-quiet-core-bot-dir.js";
+import { resolvePreferredQuietCoreTmpDir } from "../infra/tmp-quiet-core-bot-dir.js";
 import { buildRandomTempFilePath, withTempDownloadPath } from "./temp-path.js";
 
 function expectPathInsideTmpRoot(resultPath: string) {
-  const tmpRoot = fsSync.realpathSync(resolvePreferredOpenClawTmpDir());
+  const tmpRoot = fsSync.realpathSync(resolvePreferredQuietCoreTmpDir());
   let resolved = path.resolve(resultPath);
   try {
     resolved = path.join(fsSync.realpathSync(path.dirname(resultPath)), path.basename(resultPath));
@@ -84,7 +84,7 @@ describe("withTempDownloadPath", () => {
     if (expectedBasename) {
       expect(path.basename(capturedPath)).toBe(expectedBasename);
     } else {
-      expect(capturedPath).toContain(path.join(resolvePreferredOpenClawTmpDir(), "line-media-"));
+      expect(capturedPath).toContain(path.join(resolvePreferredQuietCoreTmpDir(), "line-media-"));
     }
     if (expectCleanup) {
       let statError: NodeJS.ErrnoException | undefined;

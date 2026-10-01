@@ -1,5 +1,5 @@
 // Qa Matrix helper module supports config behavior.
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { normalizeStringEntries, uniqueStrings } from "quiet-core-bot/plugin-sdk/string-coerce-runtime";
 import type { MatrixQaProvisionedTopology } from "./topology.js";
 
@@ -41,7 +41,7 @@ type MatrixQaToolConfigOverrides = {
 };
 
 type MatrixQaAudioConfigOverrides = NonNullable<
-  NonNullable<NonNullable<OpenClawConfig["tools"]>["media"]>["audio"]
+  NonNullable<NonNullable<QuietCoreConfig["tools"]>["media"]>["audio"]
 >;
 
 type MatrixQaGroupConfigOverrides = {
@@ -151,7 +151,7 @@ type MatrixQaGroupSnapshot = {
 };
 
 type MatrixQaGroupEntry = Omit<MatrixQaGroupSnapshot, "roomId">;
-type MatrixQaChannelConfig = NonNullable<OpenClawConfig["channels"]>["matrix"];
+type MatrixQaChannelConfig = NonNullable<QuietCoreConfig["channels"]>["matrix"];
 type MatrixQaChannelAccountConfig = NonNullable<
   NonNullable<MatrixQaChannelConfig>["accounts"]
 >[string];
@@ -566,7 +566,7 @@ export function summarizeMatrixQaConfigSnapshot(snapshot: MatrixQaConfigSnapshot
 }
 
 export function buildMatrixQaConfig(
-  baseCfg: OpenClawConfig,
+  baseCfg: QuietCoreConfig,
   params: {
     driverAccessToken?: string;
     driverUserId: string;
@@ -580,7 +580,7 @@ export function buildMatrixQaConfig(
     sutUserId: string;
     topology: MatrixQaProvisionedTopology;
   },
-): OpenClawConfig {
+): QuietCoreConfig {
   const pluginAllow = uniqueStrings([...(baseCfg.plugins?.allow ?? []), "matrix"]);
   const snapshot = buildMatrixQaConfigSnapshot({
     driverUserId: params.driverUserId,

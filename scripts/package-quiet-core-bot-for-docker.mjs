@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Builds the OpenClaw package artifact used by Docker E2E.
+// Builds the QuietCore package artifact used by Docker E2E.
 // The script owns the build/inventory/pack sequence so local scheduler, shell
 // helpers, and GitHub Actions all prepare the exact same npm tarball.
 import { spawn } from "node:child_process";
@@ -104,7 +104,7 @@ function validateOutputName(value) {
   }
 }
 
-function resolvePackedOpenClawFileName(value) {
+function resolvePackedQuietCoreFileName(value) {
   const filename = value.trim();
   if (
     !filename.endsWith(".tgz") ||
@@ -121,7 +121,7 @@ function resolvePackedOpenClawFileName(value) {
     filename !== path.basename(filename) ||
     filename !== path.win32.basename(filename)
   ) {
-    throw new Error(`npm pack reported unsafe OpenClaw tarball filename: ${filename}`);
+    throw new Error(`npm pack reported unsafe QuietCore tarball filename: ${filename}`);
   }
   return filename;
 }
@@ -338,7 +338,7 @@ function run(command, args, cwd, options = {}) {
 
 const PACKAGE_ARTIFACT_BUILD_STEPS = [
   {
-    label: "Building OpenClaw package artifacts",
+    label: "Building QuietCore package artifacts",
     command: "node",
     args: ["scripts/build-all.mjs"],
   },
@@ -368,10 +368,10 @@ async function runCapture(command, args, cwd, options = {}) {
   return await run(command, args, cwd, { ...options, captureStdout: true });
 }
 
-async function newestOpenClawTarball(outputDir, packOutput) {
+async function newestQuietCoreTarball(outputDir, packOutput) {
   let fromOutput = "";
   for (const line of packOutput.split(/\r?\n/u)) {
-    const filename = resolvePackedOpenClawFileName(line);
+    const filename = resolvePackedQuietCoreFileName(line);
     if (filename) {
       fromOutput = filename;
     }
@@ -384,7 +384,7 @@ async function newestOpenClawTarball(outputDir, packOutput) {
   const packed = entries
     .filter((entry) => {
       try {
-        return resolvePackedOpenClawFileName(entry) === entry;
+        return resolvePackedQuietCoreFileName(entry) === entry;
       } catch {
         return false;
       }
@@ -392,12 +392,12 @@ async function newestOpenClawTarball(outputDir, packOutput) {
     .toSorted()
     .at(-1);
   if (!packed) {
-    throw new Error(`missing packed OpenClaw tarball in ${outputDir}`);
+    throw new Error(`missing packed QuietCore tarball in ${outputDir}`);
   }
   return path.join(outputDir, packed);
 }
 
-async function cleanPackedOpenClawTarballs(outputDir) {
+async function cleanPackedQuietCoreTarballs(outputDir) {
   let entries;
   try {
     entries = await fs.readdir(outputDir);
@@ -412,7 +412,7 @@ async function cleanPackedOpenClawTarballs(outputDir) {
     entries
       .filter((entry) => {
         try {
-          return resolvePackedOpenClawFileName(entry) === entry;
+          return resolvePackedQuietCoreFileName(entry) === entry;
         } catch {
           return false;
         }
@@ -421,15 +421,15 @@ async function cleanPackedOpenClawTarballs(outputDir) {
   );
 }
 
-export async function packOpenClawPackageForDocker(sourceDir, outputDir, options = {}) {
+export async function packQuietCorePackageForDocker(sourceDir, outputDir, options = {}) {
   const runCaptureImpl = options.runCaptureImpl ?? runCapture;
   const prepareChangelog = options.prepareChangelog ?? preparePackageChangelog;
   const restoreChangelog = options.restoreChangelog ?? restorePackageChangelog;
-  console.error("==> Packing OpenClaw package");
+  console.error("==> Packing QuietCore package");
   await prepareChangelog(sourceDir);
   let packOutput;
   try {
-    await cleanPackedOpenClawTarballs(outputDir);
+    await cleanPackedQuietCoreTarballs(outputDir);
     packOutput = await runCaptureImpl(
       "npm",
       ["pack", "--silent", "--ignore-scripts", "--pack-destination", outputDir],
@@ -445,7 +445,7 @@ export async function packOpenClawPackageForDocker(sourceDir, outputDir, options
   } finally {
     await restoreChangelog(sourceDir);
   }
-  return await newestOpenClawTarball(outputDir, packOutput);
+  return await newestQuietCoreTarball(outputDir, packOutput);
 }
 
 async function main() {
@@ -461,7 +461,7 @@ async function main() {
     await buildPackageArtifacts(sourceDir);
   }
 
-  console.error("==> Writing OpenClaw package inventory");
+  console.error("==> Writing QuietCore package inventory");
   await run(
     "node",
     [
@@ -480,7 +480,7 @@ async function main() {
     },
   );
 
-  let tarball = await packOpenClawPackageForDocker(sourceDir, outputDir);
+  let tarball = await packQuietCorePackageForDocker(sourceDir, outputDir);
 
   if (options.outputName) {
     const target = path.join(outputDir, options.outputName);
@@ -491,7 +491,7 @@ async function main() {
     }
   }
 
-  console.error("==> Checking OpenClaw package tarball");
+  console.error("==> Checking QuietCore package tarball");
   const checkStartedAt = Date.now();
   await run(
     "node",
@@ -505,7 +505,7 @@ async function main() {
     },
   );
   console.error(
-    `==> OpenClaw package tarball check finished in ${Math.round((Date.now() - checkStartedAt) / 1000)}s`,
+    `==> QuietCore package tarball check finished in ${Math.round((Date.now() - checkStartedAt) / 1000)}s`,
   );
 
   process.stdout.write(`${tarball}\n`);

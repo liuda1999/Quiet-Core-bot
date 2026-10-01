@@ -1,6 +1,6 @@
 # @quiet-core/llama-cpp-provider
 
-Official llama.cpp embedding provider for OpenClaw.
+Official llama.cpp embedding provider for QuietCore.
 
 This plugin runs local GGUF embedding models through `node-llama-cpp`.
 
@@ -24,4 +24,4 @@ Face model URI, or HTTPS model URL.
 
 - Plugin id: `llama-cpp`
 - Package: `@quiet-core/llama-cpp-provider`
-- Minimum OpenClaw host: `2026.6.2`
+- Minimum QuietCore host: `2026.6.2`

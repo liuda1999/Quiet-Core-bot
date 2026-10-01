@@ -26,10 +26,10 @@ export type {
   AcpSessionUpdateTag,
 } from "quiet-core-bot/plugin-sdk/acp-runtime-backend";
 export type {
-  OpenClawPluginApi,
-  OpenClawPluginConfigSchema,
-  OpenClawPluginService,
-  OpenClawPluginServiceContext,
+  QuietCorePluginApi,
+  QuietCorePluginConfigSchema,
+  QuietCorePluginService,
+  QuietCorePluginServiceContext,
   PluginLogger,
 } from "quiet-core-bot/plugin-sdk/core";
 export type {

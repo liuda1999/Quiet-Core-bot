@@ -2,7 +2,7 @@
 // agent config, session keys, and environment fallback.
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { resolveRunWorkspaceDir } from "./workspace-run.js";
 
 describe("resolveRunWorkspaceDir", () => {
@@ -26,7 +26,7 @@ describe("resolveRunWorkspaceDir", () => {
         defaults: { workspace: defaultWorkspace },
         list: [{ id: "research", workspace: researchWorkspace }],
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     const result = resolveRunWorkspaceDir({
       workspaceDir: undefined,
@@ -46,7 +46,7 @@ describe("resolveRunWorkspaceDir", () => {
       agents: {
         defaults: { workspace: defaultWorkspace },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     const result = resolveRunWorkspaceDir({
       workspaceDir: "   ",
@@ -118,7 +118,7 @@ describe("resolveRunWorkspaceDir", () => {
           { id: "research", workspace: researchWorkspace, default: true },
         ],
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     expect(() =>
       resolveRunWorkspaceDir({
@@ -135,7 +135,7 @@ describe("resolveRunWorkspaceDir", () => {
       agents: {
         defaults: { workspace: fallbackWorkspace },
       },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
 
     const result = resolveRunWorkspaceDir({
       workspaceDir: undefined,

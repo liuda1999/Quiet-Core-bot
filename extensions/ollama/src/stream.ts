@@ -13,7 +13,7 @@ import type {
 } from "quiet-core-bot/plugin-sdk/llm";
 import { createAssistantMessageEventStream, streamSimple } from "quiet-core-bot/plugin-sdk/llm";
 import type {
-  OpenClawConfig,
+  QuietCoreConfig,
   ProviderRuntimeModel,
   ProviderWrapStreamFnContext,
 } from "quiet-core-bot/plugin-sdk/plugin-entry";
@@ -159,7 +159,7 @@ export function resolveOllamaBaseUrlForRun(params: {
 }
 
 export function resolveConfiguredOllamaProviderConfig(params: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   providerId?: string;
 }) {
   const providerId = params.providerId?.trim();
@@ -219,7 +219,7 @@ export function isOllamaCompatProvider(model: {
 }
 
 export function resolveOllamaCompatNumCtxEnabled(params: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   providerId?: string;
 }): boolean {
   return resolveConfiguredOllamaProviderConfig(params)?.injectNumCtxForOpenAICompat ?? true;
@@ -227,7 +227,7 @@ export function resolveOllamaCompatNumCtxEnabled(params: {
 
 export function shouldInjectOllamaCompatNumCtx(params: {
   model: { api?: string; provider?: string; baseUrl?: string };
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   providerId?: string;
 }): boolean {
   if (params.model.api !== "openai-completions") {

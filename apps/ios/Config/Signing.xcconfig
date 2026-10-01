@@ -6,11 +6,11 @@ QUIET_CORE_IOS_SELECTED_TEAM = $(QUIET_CORE_IOS_DEFAULT_TEAM)
 QUIET_CORE_DEVELOPMENT_TEAM = $(QUIET_CORE_IOS_SELECTED_TEAM)
 QUIET_CORE_CODE_SIGN_STYLE = Automatic
 QUIET_CORE_CODE_SIGN_IDENTITY = Apple Development
-QUIET_CORE_CODE_SIGN_ENTITLEMENTS = Sources/OpenClaw.entitlements
-QUIET_CORE_APP_BUNDLE_ID = ai.openclawfoundation.app
-QUIET_CORE_APP_GROUP_ID = group.ai.openclawfoundation.app.shared
-QUIET_CORE_WATCH_APP_BUNDLE_ID = ai.openclawfoundation.app.watchkitapp
-QUIET_CORE_ACTIVITY_WIDGET_BUNDLE_ID = ai.openclawfoundation.app.activitywidget
+QUIET_CORE_CODE_SIGN_ENTITLEMENTS = Sources/QuietCore.entitlements
+QUIET_CORE_APP_BUNDLE_ID = ai.quiet-core-botfoundation.app
+QUIET_CORE_APP_GROUP_ID = group.ai.quiet-core-botfoundation.app.shared
+QUIET_CORE_WATCH_APP_BUNDLE_ID = ai.quiet-core-botfoundation.app.watchkitapp
+QUIET_CORE_ACTIVITY_WIDGET_BUNDLE_ID = ai.quiet-core-botfoundation.app.activitywidget
 QUIET_CORE_ACTIVITY_WIDGET_PROFILE =
 QUIET_CORE_WATCH_APP_PROFILE =
 

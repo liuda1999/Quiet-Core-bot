@@ -433,7 +433,7 @@ Broadcast groups work alongside existing routing:
 ### Config schema
 
 ```typescript
-interface OpenClawConfig {
+interface QuietCoreConfig {
   broadcast?: {
     strategy?: "parallel" | "sequential";
     [peerId: string]: string[];

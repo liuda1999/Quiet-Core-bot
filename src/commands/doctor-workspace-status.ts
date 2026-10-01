@@ -2,7 +2,7 @@
 import { note } from "../../packages/terminal-core/src/note.js";
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
 import { formatCliCommand } from "../cli/command-format.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   resolvePluginVersionDriftUpdateCommand,
   type PluginVersionDriftReport,
@@ -88,7 +88,7 @@ function notePluginVersionDrift(drift: PluginVersionDriftReport | undefined) {
 }
 
 /** Emits workspace, skills, plugin, and TaskFlow recovery status notes for doctor. */
-export function noteWorkspaceStatus(cfg: OpenClawConfig, options: NoteWorkspaceStatusOptions = {}) {
+export function noteWorkspaceStatus(cfg: QuietCoreConfig, options: NoteWorkspaceStatusOptions = {}) {
   const workspaceDir = resolveAgentWorkspaceDir(cfg, resolveDefaultAgentId(cfg));
   const skillsReport = buildWorkspaceSkillStatus(workspaceDir, { config: cfg });
   const platformIncompatibleCount = skillsReport.skills.filter(

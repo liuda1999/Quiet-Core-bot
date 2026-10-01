@@ -1,5 +1,5 @@
 /** Type contract for the generated installed plugin index persisted on disk. */
-import type { OpenClawConfig } from "../config/types.js";
+import type { QuietCoreConfig } from "../config/types.js";
 import type { PluginInstallRecord } from "../config/types.plugins.js";
 import type { PluginCompatCode } from "./compat/registry.js";
 import type { PluginCandidate, PluginDiscoveryResult } from "./discovery.js";
@@ -144,7 +144,7 @@ export type InstalledPluginIndex = {
 };
 
 export type LoadInstalledPluginIndexParams = {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   workspaceDir?: string;
   env?: NodeJS.ProcessEnv;
   stateDir?: string;

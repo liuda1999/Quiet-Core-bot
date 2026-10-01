@@ -370,7 +370,7 @@ async function runCommand(command: string, args: readonly string[], options: Com
   }
 }
 
-async function installOpenClawPackage(prefix: string, env: MatrixEnv) {
+async function installQuietCorePackage(prefix: string, env: MatrixEnv) {
   const packageTgz = env.QUIET_CORE_CURRENT_PACKAGE_TGZ;
   assertProbe(packageTgz, "QUIET_CORE_CURRENT_PACKAGE_TGZ is required");
   const installLog = "/tmp/quiet-core-bot-plugin-lifecycle-install.log";
@@ -497,7 +497,7 @@ export async function runPluginLifecycleMatrix() {
   fs.rmSync(npmPrefix, { recursive: true, force: true });
 
   try {
-    await installOpenClawPackage(npmPrefix, env);
+    await installQuietCorePackage(npmPrefix, env);
     const entry = packageEntrypoint(npmPrefix);
     const matrixEnv: MatrixEnv = {
       ...env,

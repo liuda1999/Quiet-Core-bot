@@ -1,5 +1,5 @@
 import Observation
-import OpenClawKit
+import QuietCoreKit
 import UIKit
 import WebKit
 
@@ -183,7 +183,7 @@ final class ScreenController {
 
     func snapshotBase64(
         maxWidth: CGFloat? = nil,
-        format: OpenClawCanvasSnapshotFormat,
+        format: QuietCoreCanvasSnapshotFormat,
         quality: Double? = nil) async throws -> String
     {
         let image = try await self.snapshotImage(maxWidth: maxWidth)
@@ -249,7 +249,7 @@ final class ScreenController {
         subdirectory: String)
         -> URL?
     {
-        let bundle = OpenClawKitResources.bundle
+        let bundle = QuietCoreKitResources.bundle
         return bundle.url(forResource: name, withExtension: ext, subdirectory: subdirectory)
             ?? bundle.url(forResource: name, withExtension: ext)
     }

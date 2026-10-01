@@ -18,11 +18,11 @@ import {
   resetConfigRuntimeState,
   setRuntimeConfigSnapshotRefreshHandler,
 } from "./runtime-snapshot.js";
-import type { ConfigFileSnapshot, OpenClawConfig } from "./types.js";
+import type { ConfigFileSnapshot, QuietCoreConfig } from "./types.js";
 
 type MockValidationIssue = { path: string; message: string };
 type MockValidationResult =
-  | { ok: true; config: OpenClawConfig; warnings: MockValidationIssue[] }
+  | { ok: true; config: QuietCoreConfig; warnings: MockValidationIssue[] }
   | { ok: false; issues: MockValidationIssue[]; warnings: MockValidationIssue[] };
 
 const ioMocks = vi.hoisted(() => {
@@ -36,7 +36,7 @@ const ioMocks = vi.hoisted(() => {
 });
 const validationMocks = vi.hoisted(() => ({
   validateConfigObjectWithPlugins: vi.fn(
-    (config: OpenClawConfig): MockValidationResult => ({
+    (config: QuietCoreConfig): MockValidationResult => ({
       ok: true,
       config,
       warnings: [],
@@ -65,8 +65,8 @@ function createSnapshot(params: {
   hash: string;
   path?: string;
   parsed?: unknown;
-  sourceConfig: OpenClawConfig;
-  runtimeConfig?: OpenClawConfig;
+  sourceConfig: QuietCoreConfig;
+  runtimeConfig?: QuietCoreConfig;
 }): ConfigFileSnapshot {
   const runtimeConfig = (params.runtimeConfig ??
     params.sourceConfig) as ConfigFileSnapshot["config"];
@@ -116,7 +116,7 @@ describe("config mutate helpers", () => {
     vi.clearAllMocks();
     resetConfigRuntimeState();
     validationMocks.validateConfigObjectWithPlugins.mockImplementation(
-      (config: OpenClawConfig) => ({
+      (config: QuietCoreConfig) => ({
         ok: true,
         config,
         warnings: [],
@@ -255,7 +255,7 @@ describe("config mutate helpers", () => {
       new ConfigMutationConflictError("stale", { currentHash: fresh.hash ?? null }),
     );
 
-    const transform = vi.fn((config: OpenClawConfig) => ({ nextConfig: config }));
+    const transform = vi.fn((config: QuietCoreConfig) => ({ nextConfig: config }));
 
     await expect(
       transformConfigFileWithRetry({
@@ -295,7 +295,7 @@ describe("config mutate helpers", () => {
           ownedConfigPathForWrite: fresh.path,
         },
       });
-    const transform = vi.fn((config: OpenClawConfig) => ({ nextConfig: config }));
+    const transform = vi.fn((config: QuietCoreConfig) => ({ nextConfig: config }));
 
     await expect(
       transformConfigFileWithRetry({
@@ -797,7 +797,7 @@ describe("config mutate helpers", () => {
     };
     const nextConfig = {
       plugins: { entries: { demo: { enabled: true } } },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
     ioMocks.readConfigFileSnapshotForWrite
       .mockResolvedValueOnce({
         snapshot,
@@ -862,7 +862,7 @@ describe("config mutate helpers", () => {
     };
     const nextConfig = {
       plugins: { entries: { demo: { enabled: true } } },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
     ioMocks.readConfigFileSnapshotForWrite
       .mockResolvedValueOnce({
         snapshot,
@@ -1138,7 +1138,7 @@ describe("config mutate helpers", () => {
       snapshot: refreshedSnapshot,
       writeOptions: { expectedConfigPath: configPath },
     });
-    const nextConfig: OpenClawConfig = {
+    const nextConfig: QuietCoreConfig = {
       plugins: {
         entries: {
           "strict-plugin": { enabled: true },
@@ -1197,7 +1197,7 @@ describe("config mutate helpers", () => {
     });
     const nextConfig = {
       plugins: { entries: { demo: { enabled: true } } },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
     ioMocks.readConfigFileSnapshotForWrite.mockResolvedValue({
       snapshot: createSnapshot({
         hash: "hash-include-allowed-root-refreshed",
@@ -1818,7 +1818,7 @@ describe("config mutate helpers", () => {
       parsed: { plugins: { $include: "./config/plugins.json5" } },
       sourceConfig: { plugins: { entries: { old: oldEntry } } },
     });
-    const observedSources: OpenClawConfig[] = [];
+    const observedSources: QuietCoreConfig[] = [];
 
     try {
       setRuntimeConfigSnapshotRefreshHandler({
@@ -1892,7 +1892,7 @@ describe("config mutate helpers", () => {
         plugins: { entries: {} },
       },
     });
-    const observedSources: OpenClawConfig[] = [];
+    const observedSources: QuietCoreConfig[] = [];
 
     try {
       setRuntimeConfigSnapshotRefreshHandler({
@@ -2158,7 +2158,7 @@ describe("config mutate helpers", () => {
           "strict-plugin": { enabled: "yes" },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
     validationMocks.validateConfigObjectWithPlugins.mockReturnValue({
       ok: false,
       issues: [
@@ -2233,7 +2233,7 @@ describe("config mutate helpers", () => {
     const home = await suiteRootTracker.make("injected-root-runtime-preflight");
     const configPath = path.join(home, ".quiet-core-bot", "quiet-core-bot.json");
     await fs.mkdir(path.dirname(configPath), { recursive: true });
-    const initialConfig = { gateway: { mode: "local" } } satisfies OpenClawConfig;
+    const initialConfig = { gateway: { mode: "local" } } satisfies QuietCoreConfig;
     const initialRaw = `${JSON.stringify(initialConfig, null, 2)}\n`;
     await fs.writeFile(configPath, initialRaw, "utf-8");
     const snapshot = createSnapshot({
@@ -2249,8 +2249,8 @@ describe("config mutate helpers", () => {
           token: { source: "exec", provider: "execmain", id: "gateway/token" },
         },
       },
-    } as OpenClawConfig;
-    const injectedWrite = vi.fn(async (config: OpenClawConfig, options?: ConfigWriteOptions) => {
+    } as QuietCoreConfig;
+    const injectedWrite = vi.fn(async (config: QuietCoreConfig, options?: ConfigWriteOptions) => {
       await options?.preCommitRuntimePreflight?.(config);
       await fs.writeFile(configPath, `${JSON.stringify(config, null, 2)}\n`, "utf-8");
       return { persistedHash: "hash-written", persistedConfig: config };

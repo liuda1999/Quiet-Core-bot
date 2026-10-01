@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { createOpenClawTestInstance, testing } from "./quiet-core-bot-test-instance.js";
+import { createQuietCoreTestInstance, testing } from "./quiet-core-bot-test-instance.js";
 
 async function expectPathMissing(targetPath: string): Promise<void> {
   try {
@@ -51,7 +51,7 @@ describe("quiet-core-bot test instance", () => {
     };
     const killProcess = vi.fn(() => true);
 
-    testing.signalOpenClawTestProcess(child, "SIGKILL", killProcess);
+    testing.signalQuietCoreTestProcess(child, "SIGKILL", killProcess);
 
     if (process.platform === "win32") {
       expect(killProcess).not.toHaveBeenCalled();
@@ -64,7 +64,7 @@ describe("quiet-core-bot test instance", () => {
 
   it("creates isolated config and spawn env without mutating process env", async () => {
     const previousHome = process.env.HOME;
-    const inst = await createOpenClawTestInstance({
+    const inst = await createQuietCoreTestInstance({
       name: "instance-unit",
       gatewayToken: "gateway-token",
       hookToken: "hook-token",

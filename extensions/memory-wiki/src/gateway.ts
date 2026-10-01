@@ -2,7 +2,7 @@
 import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
 import { resolveDefaultAgentId } from "quiet-core-bot/plugin-sdk/memory-host-core";
 import { readPositiveIntegerParam } from "quiet-core-bot/plugin-sdk/param-readers";
-import type { OpenClawConfig, OpenClawPluginApi } from "../api.js";
+import type { QuietCoreConfig, QuietCorePluginApi } from "../api.js";
 import { applyMemoryWikiMutation, normalizeMemoryWikiMutationInput } from "./apply.js";
 import { compileMemoryWikiVault } from "./compile.js";
 import {
@@ -32,7 +32,7 @@ const WRITE_SCOPE = "operator.write" as const;
 const ADMIN_SCOPE = "operator.admin" as const;
 const LOCAL_FILE_INGEST_SCOPE = ADMIN_SCOPE;
 type GatewayMethodContext = Parameters<
-  Parameters<OpenClawPluginApi["registerGatewayMethod"]>[1]
+  Parameters<QuietCorePluginApi["registerGatewayMethod"]>[1]
 >[0];
 type GatewayRespond = GatewayMethodContext["respond"];
 
@@ -79,7 +79,7 @@ function respondError(respond: GatewayRespond, error: unknown) {
 
 function resolveGatewayAgentId(
   requestParams: Record<string, unknown>,
-  appConfig: OpenClawConfig | undefined,
+  appConfig: QuietCoreConfig | undefined,
 ): string | undefined {
   return (
     readStringParam(requestParams, "agentId") ??
@@ -89,15 +89,15 @@ function resolveGatewayAgentId(
 
 async function syncImportedSourcesIfNeeded(
   config: ResolvedMemoryWikiConfig,
-  appConfig?: OpenClawConfig,
+  appConfig?: QuietCoreConfig,
 ) {
   await syncMemoryWikiImportedSources({ config, appConfig });
 }
 
 export function registerMemoryWikiGatewayMethods(params: {
-  api: OpenClawPluginApi;
+  api: QuietCorePluginApi;
   config: ResolvedMemoryWikiConfig;
-  appConfig?: OpenClawConfig;
+  appConfig?: QuietCoreConfig;
 }) {
   const { api, config, appConfig } = params;
 

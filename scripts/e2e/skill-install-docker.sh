@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Installs a prepared OpenClaw npm tarball in Docker and proves live ClawHub
+# Installs a prepared QuietCore npm tarball in Docker and proves live ClawHub
 # skill install works while uploaded archive installs stay disabled.
 set -euo pipefail
 

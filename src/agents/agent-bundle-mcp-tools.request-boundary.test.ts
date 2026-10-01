@@ -1,6 +1,6 @@
 /** Tests configured MCP tools survive policy/splitting to the outbound request boundary. */
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   createBundleMcpToolRuntime,
   materializeBundleMcpToolsForRun,
@@ -77,7 +77,7 @@ function makeConfiguredRuntime(
 }
 
 async function buildConfiguredMcpToolNamesAtRequestBoundary(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
 }): Promise<string[]> {
   const runtime = await createBundleMcpToolRuntime({
     workspaceDir: "/workspace",

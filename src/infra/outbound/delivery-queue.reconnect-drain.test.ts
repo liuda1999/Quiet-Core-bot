@@ -1,8 +1,8 @@
 // Covers reconnect-triggered queue drain selection, active claims, backoff
 // bypass, and concurrent drain suppression.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
-import { openOpenClawStateDatabase } from "../../state/quiet-core-bot-state-db.js";
+import type { QuietCoreConfig } from "../../config/config.js";
+import { openQuietCoreStateDatabase } from "../../state/quiet-core-bot-state-db.js";
 import {
   type DeliverFn,
   drainPendingDeliveries,
@@ -22,7 +22,7 @@ import {
   setQueuedEntryState,
 } from "./delivery-queue.test-helpers.js";
 
-const stubCfg = {} as OpenClawConfig;
+const stubCfg = {} as QuietCoreConfig;
 const NO_LISTENER_ERROR = "No active DirectChat listener";
 
 function normalizeReconnectAccountIdForTest(accountId?: string | null): string {
@@ -63,7 +63,7 @@ function expectLogMessageWith(logFn: ReturnType<typeof vi.fn>, text: string): vo
 }
 
 function readOutboundQueueStatus(tmpDir: string, id: string): string | undefined {
-  const { db } = openOpenClawStateDatabase({
+  const { db } = openQuietCoreStateDatabase({
     env: { ...process.env, QUIET_CORE_STATE_DIR: tmpDir },
   });
   const row = db

@@ -1,6 +1,6 @@
 // Workshop config helpers resolve skill workshop settings from Quiet Core bot config.
 import { asNullableRecord } from "@quiet-core/normalization-core/record-coerce";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 
 /** Runtime configuration for the skill workshop proposal flow. */
 export type SkillWorkshopConfig = {
@@ -37,7 +37,7 @@ function readApprovalPolicy(value: unknown, fallback: SkillWorkshopConfig["appro
   return value === "auto" ? "auto" : fallback;
 }
 
-export function resolveSkillWorkshopConfig(config?: OpenClawConfig): SkillWorkshopConfig {
+export function resolveSkillWorkshopConfig(config?: QuietCoreConfig): SkillWorkshopConfig {
   const raw = asNullableRecord(config?.skills?.workshop) ?? {};
   const autonomous = asNullableRecord(raw.autonomous) ?? {};
   return {

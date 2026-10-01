@@ -5,7 +5,7 @@
  */
 import { estimateBase64DecodedBytes } from "@quiet-core/media-core/base64";
 import { normalizeLowercaseStringOrEmpty } from "@quiet-core/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { AssistantMessage } from "../../llm/types.js";
 import { extractAssistantText } from "../embedded-agent-utils.js";
 import { isMinimaxVlmProvider } from "../minimax-vlm.js";
@@ -142,7 +142,7 @@ export function coerceImageAssistantText(params: {
 }
 
 /** Reads imageModel defaults from config into the shared tool model config shape. */
-export function coerceImageModelConfig(cfg?: OpenClawConfig): ImageModelConfig {
+export function coerceImageModelConfig(cfg?: QuietCoreConfig): ImageModelConfig {
   return coerceToolModelConfig(cfg?.agents?.defaults?.imageModel);
 }
 
@@ -173,7 +173,7 @@ function modelIdMatchesProviderlessRef(params: {
   return false;
 }
 
-function findConfiguredImageModelMatches(params: { cfg?: OpenClawConfig; ref: string }): string[] {
+function findConfiguredImageModelMatches(params: { cfg?: QuietCoreConfig; ref: string }): string[] {
   const providers = params.cfg?.models?.providers;
   if (!providers || typeof providers !== "object") {
     return [];
@@ -200,7 +200,7 @@ function findConfiguredImageModelMatches(params: { cfg?: OpenClawConfig; ref: st
 }
 
 function resolveProviderlessConfiguredImageModelRef(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   ref: string;
 }): string {
   const ref = params.ref.trim();
@@ -224,7 +224,7 @@ function resolveProviderlessConfiguredImageModelRef(params: {
 
 /** Resolves providerless configured image model refs against configured provider models. */
 export function resolveConfiguredImageModelRefs(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   imageModelConfig: ImageModelConfig;
 }): ImageModelConfig {
   const primary = params.imageModelConfig.primary?.trim();
@@ -249,7 +249,7 @@ export function resolveConfiguredImageModelRefs(params: {
 
 /** Returns the configured vision-capable model for a provider, if present. */
 export function resolveProviderVisionModelFromConfig(params: {
-  cfg?: OpenClawConfig;
+  cfg?: QuietCoreConfig;
   provider: string;
 }): string | null {
   if (isMinimaxVlmProvider(params.provider)) {

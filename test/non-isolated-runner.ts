@@ -141,7 +141,7 @@ function runCleanupActions(actions: CleanupAction[]): unknown {
   return firstError;
 }
 
-function resetOpenClawGlobalRunState(): void {
+function resetQuietCoreGlobalRunState(): void {
   const cleanupActions: CleanupAction[] = [];
   const globalStore = globalThis as Record<PropertyKey, unknown>;
   const embeddedRunState = globalStore[EMBEDDED_RUN_STATE] as EmbeddedRunStateForTest | undefined;
@@ -201,7 +201,7 @@ function resetOpenClawGlobalRunState(): void {
   replyRunState?.waitersByKey?.clear();
 }
 
-export default class OpenClawNonIsolatedRunner extends TestRunner {
+export default class QuietCoreNonIsolatedRunner extends TestRunner {
   override onCollectStart(file: { filepath: string }) {
     super.onCollectStart(file);
     restoreRealTimers();
@@ -245,7 +245,7 @@ export default class OpenClawNonIsolatedRunner extends TestRunner {
     vi.unstubAllEnvs();
     restoreSharedTestHomeAfterEnvUnstub(testHome);
     vi.clearAllMocks();
-    resetOpenClawGlobalRunState();
+    resetQuietCoreGlobalRunState();
     vi.resetModules();
     this.moduleRunner?.mocker?.reset?.();
     resetEvaluatedModules(this.workerState.evaluatedModules as EvaluatedModules, true);

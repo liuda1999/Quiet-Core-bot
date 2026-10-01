@@ -53,7 +53,7 @@ const coreTools = [
   stubTool("pdf"),
 ];
 
-const createOpenClawToolsMock = vi.fn(
+const createQuietCoreToolsMock = vi.fn(
   (options?: { enableHeartbeatTool?: boolean; recordToolPrepStage?: (name: string) => void }) => {
     options?.recordToolPrepStage?.("quiet-core-bot-tools:test-helper");
     return coreTools
@@ -65,7 +65,7 @@ const createOpenClawToolsMock = vi.fn(
 // Preserve action enums for tools whose tests assert schema/inventory behavior without paying the
 // cost of constructing the real tool bundle.
 vi.mock("../quiet-core-bot-tools.js", () => ({
-  createOpenClawTools: createOpenClawToolsMock,
+  createQuietCoreTools: createQuietCoreToolsMock,
   testing: {
     setDepsForTest: () => {},
   },

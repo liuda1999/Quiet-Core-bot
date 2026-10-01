@@ -1,4 +1,4 @@
-## OpenClaw Android App
+## QuietCore Android App
 
 Status: **extremely alpha**. The app is actively being rebuilt from the ground up.
 
@@ -72,7 +72,7 @@ pnpm android:screenshots
 To make screenshot capture own emulator startup, pass a named AVD:
 
 ```bash
-ANDROID_SCREENSHOT_AVD=OpenClaw_QA_API35 pnpm android:screenshots
+ANDROID_SCREENSHOT_AVD=QuietCore_QA_API35 pnpm android:screenshots
 ```
 
 The screenshot script uses one connected ADB device when available. If none is
@@ -82,8 +82,8 @@ the screenshots, then shuts down the emulator it started.
 
 `pnpm android:release:archive` builds signed release artifacts into `apps/android/build/release-artifacts/` and writes `.sha256` checksum files:
 
-- Play build: `openclaw-<version>-play-release.aab`
-- Third-party build: `openclaw-<version>-third-party-release.apk`
+- Play build: `quiet-core-<version>-play-release.aab`
+- Third-party build: `quiet-core-<version>-third-party-release.apk`
 
 `pnpm android:bundle:release` is an alias for the same Fastlane archive lane.
 
@@ -203,7 +203,7 @@ This app is native Kotlin + Jetpack Compose.
 - For Compose UI edits: use Android Studio **Live Edit** on a debug build (works on physical devices; project `minSdk=31` already meets API requirement).
 - For many non-structural code/resource changes: use Android Studio **Apply Changes**.
 - For structural/native/manifest/Gradle changes: do full reinstall (`pnpm android:run`).
-- Canvas web content already supports live reload when loaded from Gateway `__openclaw__/canvas/` (see `docs/platforms/android.md`).
+- Canvas web content already supports live reload when loaded from Gateway `__quiet_core__/canvas/` (see `docs/platforms/android.md`).
 
 ## Connect / Pair
 
@@ -252,7 +252,7 @@ Why these matter:
 - The Play build removes these behind the `play` flavor.
 - Photo library access is also removed from the Play build. Use third-party builds for `photos.latest`.
 
-Current OpenClaw Android implication:
+Current QuietCore Android implication:
 
 - APK / sideload build can keep SMS, Call Log, and recent-photo features.
 - Google Play build excludes SMS send/search, Call Log search, and recent-photo access unless the product is intentionally positioned and approved under the relevant policy exception.
@@ -293,7 +293,7 @@ Pre-req checklist:
 4) Open the app **Screen** tab and keep it active during the run (canvas/A2UI commands require the canvas WebView attached there).
 5) Grant runtime permissions for capabilities you expect to pass (camera/mic/location/notification listener/location, etc.).
 6) No interactive system dialogs should be pending before test start.
-7) Canvas host is enabled and reachable from the device for remote Canvas checks (do not run gateway with `QUIET_CORE_SKIP_CANVAS_HOST=1`; startup logs should include `canvas host mounted at .../__openclaw__/`).
+7) Canvas host is enabled and reachable from the device for remote Canvas checks (do not run gateway with `QUIET_CORE_SKIP_CANVAS_HOST=1`; startup logs should include `canvas host mounted at .../__quiet_core__/`).
 8) Local operator test client pairing is approved. If first run fails with `pairing required`, preview the latest pending request, approve the printed request ID, then rerun:
 9) For A2UI checks, keep the app on **Screen** tab; the node uses its bundled app-owned A2UI page for message application.
 
@@ -311,7 +311,7 @@ pnpm android:test:integration
 
 Optional overrides:
 
-- `QUIET_CORE_ANDROID_GATEWAY_URL=ws://...` (default: from your local OpenClaw config)
+- `QUIET_CORE_ANDROID_GATEWAY_URL=ws://...` (default: from your local QuietCore config)
 - `QUIET_CORE_ANDROID_GATEWAY_TOKEN=...`
 - `QUIET_CORE_ANDROID_GATEWAY_PASSWORD=...`
 - `QUIET_CORE_ANDROID_NODE_ID=...` or `QUIET_CORE_ANDROID_NODE_NAME=...`

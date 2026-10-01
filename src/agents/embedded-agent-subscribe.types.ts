@@ -8,7 +8,7 @@ import type {
 import type { HeartbeatToolResponse } from "../auto-reply/heartbeat-tool-response.js";
 import type { ReplyPayload } from "../auto-reply/reply-payload.js";
 import type { ReasoningLevel, ThinkLevel, VerboseLevel } from "../auto-reply/thinking.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { HookRunner } from "../plugins/hooks.js";
 import type { BlockReplyPayload } from "./embedded-agent-payloads.js";
 import type { EmbeddedRunReplayState } from "./embedded-agent-runner/replay-state.js";
@@ -107,7 +107,7 @@ export type SubscribeEmbeddedAgentSessionParams = {
    * change final output.
    */
   suppressLiveStreamOutput?: boolean;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   sessionKey?: string;
   /** Current transport channel resolved for this run. */
   currentChannelId?: string;

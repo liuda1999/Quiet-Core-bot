@@ -4,12 +4,12 @@ import fs from "node:fs";
 import path from "node:path";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../infra/kysely-sync.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
-import type { DB as OpenClawStateKyselyDatabase } from "./quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "./quiet-core-bot-state-db.generated.js";
 import {
-  openOpenClawStateDatabase,
-  runOpenClawStateWriteTransaction,
+  openQuietCoreStateDatabase,
+  runQuietCoreStateWriteTransaction,
 } from "./quiet-core-bot-state-db.js";
-import { resolveOpenClawStateSqliteDir } from "./quiet-core-bot-state-db.paths.js";
+import { resolveQuietCoreStateSqliteDir } from "./quiet-core-bot-state-db.paths.js";
 
 /**
  * Durable run ledger (`agent_runs`).
@@ -60,7 +60,7 @@ const processInstanceId = randomUUID();
 /** Set once a process sweeps the ledger so run starts do not rescan every time. */
 let sweptThisProcess = false;
 
-type AgentRunsKyselyDatabase = Pick<OpenClawStateKyselyDatabase, "agent_runs">;
+type AgentRunsKyselyDatabase = Pick<QuietCoreStateKyselyDatabase, "agent_runs">;
 
 function toNullableText(value: string | undefined): string | null {
   const trimmed = value?.trim();
@@ -112,7 +112,7 @@ export function recordAgentRunStarted(params: {
     maybeSweepStaleAgentRuns();
     const now = Date.now();
     const startedAt = params.startedAt ?? now;
-    runOpenClawStateWriteTransaction(({ db }) => {
+    runQuietCoreStateWriteTransaction(({ db }) => {
       const kysely = getNodeSqliteKysely<AgentRunsKyselyDatabase>(db);
       executeSqliteQuerySync(
         db,
@@ -203,7 +203,7 @@ function writeAgentRunEndedRow(params: {
     throw new Error("database is locked");
   }
   const now = Date.now();
-  runOpenClawStateWriteTransaction(({ db }) => {
+  runQuietCoreStateWriteTransaction(({ db }) => {
     const kysely = getNodeSqliteKysely<AgentRunsKyselyDatabase>(db);
     executeSqliteQuerySync(
       db,
@@ -244,7 +244,7 @@ let forcedTerminalWriteFailures = 0;
 const PENDING_TERMINAL_WRITE_FILE = "agent-runs-pending-terminal-writes.json";
 
 function resolvePendingTerminalWriteFile(): string {
-  return path.join(resolveOpenClawStateSqliteDir(process.env), PENDING_TERMINAL_WRITE_FILE);
+  return path.join(resolveQuietCoreStateSqliteDir(process.env), PENDING_TERMINAL_WRITE_FILE);
 }
 
 function isTerminalRunStatus(value: unknown): value is AgentRunTerminalStatus {
@@ -450,7 +450,7 @@ export function sweepStaleAgentRuns(params?: {
   const reason = params?.reason ?? "gateway restart";
   const ownerAlive = params?.isOwnerAlive ?? isProcessAlive;
   try {
-    return runOpenClawStateWriteTransaction(({ db }) => {
+    return runQuietCoreStateWriteTransaction(({ db }) => {
       const kysely = getNodeSqliteKysely<AgentRunsKyselyDatabase>(db);
       const runningRows = executeSqliteQuerySync(
         db,
@@ -505,7 +505,7 @@ export function listAgentRuns(params?: ListAgentRunsParams): AgentRunLedgerEntry
     maybeSweepStaleAgentRuns();
     const sessionKey = params?.sessionKey?.trim();
     const limit = clampLimit(params?.limit);
-    const db = openOpenClawStateDatabase().db;
+    const db = openQuietCoreStateDatabase().db;
     const kysely = getNodeSqliteKysely<AgentRunsKyselyDatabase>(db);
     let query = kysely
       .selectFrom("agent_runs")

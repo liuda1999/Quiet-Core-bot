@@ -13,7 +13,7 @@ Restart the Gateway after installing or updating the plugin.
 ## What this is
 
 - Lobster is a standalone workflow shell (typed JSON-first pipelines + approvals/resume).
-- This plugin integrates Lobster with OpenClaw _without core changes_.
+- This plugin integrates Lobster with QuietCore _without core changes_.
 
 ## Enable
 
@@ -38,15 +38,15 @@ Enable it in an agent allowlist:
 }
 ```
 
-## Using `quiet-core-bot.invoke` (Lobster → OpenClaw tools)
+## Using `quiet-core-bot.invoke` (Lobster → QuietCore tools)
 
-Some Lobster pipelines may include a `quiet-core-bot.invoke` step to call back into OpenClaw tools/plugins (for example: `gog` for Google Workspace, `gh` for GitHub, `message.send`, etc.).
+Some Lobster pipelines may include a `quiet-core-bot.invoke` step to call back into QuietCore tools/plugins (for example: `gog` for Google Workspace, `gh` for GitHub, `message.send`, etc.).
 
-For this to work, the OpenClaw Gateway must expose the tool bridge endpoint and the target tool must be allowed by policy:
+For this to work, the QuietCore Gateway must expose the tool bridge endpoint and the target tool must be allowed by policy:
 
-- OpenClaw provides an HTTP endpoint: `POST /tools/invoke`.
+- QuietCore provides an HTTP endpoint: `POST /tools/invoke`.
 - The request is gated by **gateway auth** (e.g. `Authorization: Bearer …` when token auth is enabled).
-- The invoked tool is gated by **tool policy** (global + per-agent + provider + group policy). If the tool is not allowed, OpenClaw returns `404 Tool not available`.
+- The invoked tool is gated by **tool policy** (global + per-agent + provider + group policy). If the tool is not allowed, QuietCore returns `404 Tool not available`.
 
 ### Allowlisting recommended
 
@@ -90,4 +90,4 @@ Notes:
 - Plugin id: `lobster`
 - Tool: `lobster`
 - Package: `@quiet-core/lobster`
-- Minimum OpenClaw host: `2026.4.25`
+- Minimum QuietCore host: `2026.4.25`

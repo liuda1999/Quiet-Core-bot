@@ -1,6 +1,6 @@
 // Browser residue doctor tests cover detection of stale browser state.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { CORE_HEALTH_CHECKS } from "./doctor-core-checks.js";
 import type { HealthRepairContext } from "./health-checks.js";
 
@@ -46,7 +46,7 @@ describe("browser clawd profile residue health check", () => {
 
   it("reports legacy clawd profile residue through doctor lint", async () => {
     browserMocks.detectLegacyClawdBrowserProfileResidue.mockResolvedValueOnce(residue);
-    const cfg: OpenClawConfig = { browser: { profiles: { openclaw: { color: "#FF4500" } } } };
+    const cfg: QuietCoreConfig = { browser: { profiles: { openclaw: { color: "#FF4500" } } } };
     const check = requireBrowserResidueCheck();
 
     const findings = await check.detect({
@@ -75,7 +75,7 @@ describe("browser clawd profile residue health check", () => {
       changes: ["Archived legacy clawd managed browser profile residue."],
       warnings: [],
     });
-    const cfg: OpenClawConfig = { browser: { profiles: { openclaw: { color: "#FF4500" } } } };
+    const cfg: QuietCoreConfig = { browser: { profiles: { openclaw: { color: "#FF4500" } } } };
     const check = requireBrowserResidueCheck();
     const ctx: HealthRepairContext = {
       mode: "fix",

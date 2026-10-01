@@ -3,15 +3,15 @@
 import PackageDescription
 
 let package = Package(
-    name: "OpenClawKit",
+    name: "QuietCoreKit",
     platforms: [
         .iOS(.v18),
         .macOS(.v15),
     ],
     products: [
-        .library(name: "OpenClawProtocol", targets: ["OpenClawProtocol"]),
-        .library(name: "OpenClawKit", targets: ["OpenClawKit"]),
-        .library(name: "OpenClawChatUI", targets: ["OpenClawChatUI"]),
+        .library(name: "QuietCoreProtocol", targets: ["QuietCoreProtocol"]),
+        .library(name: "QuietCoreKit", targets: ["QuietCoreKit"]),
+        .library(name: "QuietCoreChatUI", targets: ["QuietCoreChatUI"]),
     ],
     traits: [
         .trait(name: "Talk", description: "ElevenLabs cloud TTS / talk support"),
@@ -22,18 +22,18 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "OpenClawProtocol",
-            path: "Sources/OpenClawProtocol",
+            name: "QuietCoreProtocol",
+            path: "Sources/QuietCoreProtocol",
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency"),
             ]),
         .target(
-            name: "OpenClawKit",
+            name: "QuietCoreKit",
             dependencies: [
-                "OpenClawProtocol",
+                "QuietCoreProtocol",
                 .product(name: "ElevenLabsKit", package: "ElevenLabsKit", condition: .when(traits: ["Talk"])),
             ],
-            path: "Sources/OpenClawKit",
+            path: "Sources/QuietCoreKit",
             resources: [
                 .process("Resources"),
             ],
@@ -41,18 +41,18 @@ let package = Package(
                 .enableUpcomingFeature("StrictConcurrency"),
             ]),
         .target(
-            name: "OpenClawChatUI",
+            name: "QuietCoreChatUI",
             dependencies: [
-                "OpenClawKit",
+                "QuietCoreKit",
             ],
-            path: "Sources/OpenClawChatUI",
+            path: "Sources/QuietCoreChatUI",
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency"),
             ]),
         .testTarget(
-            name: "OpenClawKitTests",
-            dependencies: ["OpenClawKit", "OpenClawChatUI"],
-            path: "Tests/OpenClawKitTests",
+            name: "QuietCoreKitTests",
+            dependencies: ["QuietCoreKit", "QuietCoreChatUI"],
+            path: "Tests/QuietCoreKitTests",
             swiftSettings: [
                 .enableUpcomingFeature("StrictConcurrency"),
                 .enableExperimentalFeature("SwiftTesting"),

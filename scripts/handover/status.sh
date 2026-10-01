@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# OpenClaw handover · show gateway status (Docker or Node mode).
+# QuietCore handover · show gateway status (Docker or Node mode).
 #
 # Usage: bash scripts/handover/status.sh [docker|node]
 

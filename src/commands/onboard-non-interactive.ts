@@ -8,7 +8,7 @@ import { formatCliCommand } from "../cli/command-format.js";
 import { replaceConfigFile } from "../config/config.js";
 import { readConfigFileSnapshot } from "../config/io.js";
 import { logConfigUpdated } from "../config/logging.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { defaultRuntime } from "../runtime.js";
 import { createNonInteractiveLoggingPrompter } from "./non-interactive-prompter.js";
@@ -20,7 +20,7 @@ import type { OnboardOptions } from "./onboard-types.js";
 async function runNonInteractiveMigrationImport(params: {
   opts: OnboardOptions;
   runtime: RuntimeEnv;
-  baseConfig: OpenClawConfig;
+  baseConfig: QuietCoreConfig;
   baseHash?: string;
 }) {
   const providerId = params.opts.importFrom?.trim();
@@ -77,7 +77,7 @@ export async function runNonInteractiveSetup(
     return;
   }
 
-  const baseConfig: OpenClawConfig = snapshot.valid
+  const baseConfig: QuietCoreConfig = snapshot.valid
     ? snapshot.exists
       ? (snapshot.sourceConfig ?? snapshot.config)
       : {}

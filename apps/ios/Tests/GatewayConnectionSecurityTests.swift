@@ -1,8 +1,8 @@
 import Foundation
 import Network
-import OpenClawKit
+import QuietCoreKit
 import Testing
-@testable import OpenClaw
+@testable import QuietCore
 
 @Suite(.serialized) struct GatewayConnectionSecurityTests {
     @MainActor
@@ -17,7 +17,7 @@ import Testing
         gatewayPort: Int?,
         fingerprint: String?) -> GatewayDiscoveryModel.DiscoveredGateway
     {
-        let endpoint: NWEndpoint = .service(name: "Test", type: "_openclaw-gw._tcp", domain: "local.", interface: nil)
+        let endpoint: NWEndpoint = .service(name: "Test", type: "_quiet-core-gw._tcp", domain: "local.", interface: nil)
         return GatewayDiscoveryModel.DiscoveredGateway(
             name: "Test",
             endpoint: endpoint,

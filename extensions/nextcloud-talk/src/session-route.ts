@@ -1,10 +1,10 @@
 // Nextcloud Talk plugin module implements session route behavior.
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { buildOutboundBaseSessionKey } from "quiet-core-bot/plugin-sdk/routing";
 import { stripNextcloudTalkTargetPrefix } from "./normalize.js";
 
 type NextcloudTalkOutboundSessionRouteParams = {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentId: string;
   accountId?: string | null;
   target: string;

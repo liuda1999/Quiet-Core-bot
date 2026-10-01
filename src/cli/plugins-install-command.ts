@@ -7,7 +7,7 @@ import {
   assertConfigWriteAllowedInCurrentMode,
   readConfigFileSnapshotForWrite,
 } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   installHooksFromNpmSpec,
   installHooksFromPath,
@@ -196,9 +196,9 @@ function hasValidBundledPluginConfig(params: {
 }
 
 function prepareConfigForDisabledBundledInstall(
-  config: OpenClawConfig,
+  config: QuietCoreConfig,
   pluginId: string,
-): OpenClawConfig {
+): QuietCoreConfig {
   const entries = config.plugins?.entries ?? {};
   const { [pluginId]: _removedEntry, ...nextEntries } = entries;
   return {
@@ -652,7 +652,7 @@ function extractMissingPluginLoadPath(issue: { path?: string; message?: string }
 }
 
 function collectRequestedPluginInstallPaths(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   installRecords: Awaited<ReturnType<typeof loadInstalledPluginIndexInstallRecords>>,
   request: PluginInstallRequestContext,
   env: NodeJS.ProcessEnv = process.env,
@@ -697,11 +697,11 @@ async function collectRequestedPluginLocationBridgePaths(
 }
 
 function removeOwnedMissingPluginLoadPaths(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   issues: readonly { path?: string; message?: string }[],
   ownedLoadPaths: ReadonlySet<string>,
   env: NodeJS.ProcessEnv = process.env,
-): OpenClawConfig {
+): QuietCoreConfig {
   const missingPaths = new Set<string>();
   for (const issue of issues) {
     const missingPath = extractMissingPluginLoadPath(issue);
@@ -736,7 +736,7 @@ function removeOwnedMissingPluginLoadPaths(
 }
 
 async function resolveRequestedPluginInstallPaths(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   issues: readonly { path?: string; message?: string }[],
   request: PluginInstallRequestContext,
   env: NodeJS.ProcessEnv = process.env,

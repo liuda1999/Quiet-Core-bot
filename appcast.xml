@@ -42,7 +42,7 @@
 </ul>
 <p><a href="https://github.com/liuda1999/Quiet-Core-bot/blob/main/CHANGELOG.md">View full changelog</a></p>
 ]]></description>
-            <enclosure url="https://github.com/liuda1999/Quiet-Core-bot/releases/download/v2026.6.8/OpenClaw-2026.6.8.zip" length="55815364" type="application/octet-stream" sparkle:edSignature="hLJ14xg6+DMFrXViIW3Njs++OPIGO+RWH9h+mPCSzXPAkKyYUGvtOLu1qEKvvfC8rs5FGgW/w4zDLfD2azqiBA=="/>
+            <enclosure url="https://github.com/liuda1999/Quiet-Core-bot/releases/download/v2026.6.8/QuietCore-2026.6.8.zip" length="55815364" type="application/octet-stream" sparkle:edSignature="hLJ14xg6+DMFrXViIW3Njs++OPIGO+RWH9h+mPCSzXPAkKyYUGvtOLu1qEKvvfC8rs5FGgW/w4zDLfD2azqiBA=="/>
         </item>
         <item>
             <title>2026.6.5</title>
@@ -122,7 +122,7 @@
 </ul>
 <p><a href="https://github.com/liuda1999/Quiet-Core-bot/blob/main/CHANGELOG.md">View full changelog</a></p>
 ]]></description>
-            <enclosure url="https://github.com/liuda1999/Quiet-Core-bot/releases/download/v2026.6.5/OpenClaw-2026.6.5.zip" length="55725877" type="application/octet-stream" sparkle:edSignature="EKr7gCfpEVStis9HSADJk1CWYbmH2MHMqSgNfZvLbBFCBWmk3pjBJS6K2qkxkq5lIbTj4H+Lo7Iri6ip/xTGDA=="/>
+            <enclosure url="https://github.com/liuda1999/Quiet-Core-bot/releases/download/v2026.6.5/QuietCore-2026.6.5.zip" length="55725877" type="application/octet-stream" sparkle:edSignature="EKr7gCfpEVStis9HSADJk1CWYbmH2MHMqSgNfZvLbBFCBWmk3pjBJS6K2qkxkq5lIbTj4H+Lo7Iri6ip/xTGDA=="/>
         </item>
         <item>
             <title>2026.6.1</title>
@@ -249,7 +249,7 @@
 </ul>
 <p><a href="https://github.com/liuda1999/Quiet-Core-bot/blob/main/CHANGELOG.md">View full changelog</a></p>
 ]]></description>
-            <enclosure url="https://github.com/liuda1999/Quiet-Core-bot/releases/download/v2026.6.1/OpenClaw-2026.6.1.zip" length="55062100" type="application/octet-stream" sparkle:edSignature="PVp8E2HBCvikB/0LCr36lFEyHPAzoFA2ScT6LW27FlzvP+m4r1AEuVN2UrtgWlpkGSsn4Eav0kPJe32u4ObNBw=="/>
+            <enclosure url="https://github.com/liuda1999/Quiet-Core-bot/releases/download/v2026.6.1/QuietCore-2026.6.1.zip" length="55062100" type="application/octet-stream" sparkle:edSignature="PVp8E2HBCvikB/0LCr36lFEyHPAzoFA2ScT6LW27FlzvP+m4r1AEuVN2UrtgWlpkGSsn4Eav0kPJe32u4ObNBw=="/>
         </item>
     </channel>
 </rss>

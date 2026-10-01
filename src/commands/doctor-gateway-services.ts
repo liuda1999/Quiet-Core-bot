@@ -9,7 +9,7 @@ import {
   normalizeOptionalString,
 } from "@quiet-core/normalization-core/string-coerce";
 import { note } from "../../packages/terminal-core/src/note.js";
-import { replaceConfigFile, type OpenClawConfig } from "../config/config.js";
+import { replaceConfigFile, type QuietCoreConfig } from "../config/config.js";
 import { resolveGatewayPort, resolveIsNixMode } from "../config/paths.js";
 import { resolveSecretInputRef } from "../config/types.secrets.js";
 import {
@@ -99,7 +99,7 @@ function resolveGatewayServiceWrapperPath(
 }
 
 async function buildExpectedGatewayServicePlan(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   command: GatewayServiceCommandConfig;
   serviceInstallEnv: NodeJS.ProcessEnv;
   port: number;
@@ -119,7 +119,7 @@ async function buildExpectedGatewayServicePlan(params: {
 }
 
 async function buildGatewayServiceAuditInputs(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   command: GatewayServiceCommandConfig;
   serviceInstallEnv: NodeJS.ProcessEnv;
 }) {
@@ -398,7 +398,7 @@ async function cleanupLegacyLinuxUserServices(
  * updates during updater repair mode instead of immediately installing them.
  */
 export async function maybeRepairGatewayServiceConfig(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   mode: "local" | "remote",
   runtime: RuntimeEnv,
   prompter: DoctorPrompter,
@@ -639,7 +639,7 @@ export async function maybeRepairGatewayServiceConfig(
     !configuredGatewayToken &&
     gatewayTokenForRepair
   ) {
-    const nextCfg: OpenClawConfig = {
+    const nextCfg: QuietCoreConfig = {
       ...cfg,
       gateway: {
         ...cfg.gateway,

@@ -14,7 +14,7 @@ const WORKFLOW_PATH = ".github/workflows/website-installer-sync.yml";
 describe("website installer sync workflow", () => {
   const workflow = readFileSync(WORKFLOW_PATH, "utf8");
 
-  it("treats all website installer scripts as OpenClaw-owned inputs", () => {
+  it("treats all website installer scripts as QuietCore-owned inputs", () => {
     for (const path of ["scripts/install.sh", "scripts/install-cli.sh", "scripts/install.ps1"]) {
       expect(workflow).toContain(path);
       expect(detectInstallSmokeScope([path]).runFullInstallSmoke).toBe(true);

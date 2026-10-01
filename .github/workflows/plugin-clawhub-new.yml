@@ -13,11 +13,11 @@ on:
         default: ""
         type: string
       release_publish_run_id:
-        description: Approved OpenClaw Release Publish workflow run id
+        description: Approved QuietCore Release Publish workflow run id
         required: false
         type: string
       release_publish_branch:
-        description: Branch name of the approving OpenClaw Release Publish workflow run
+        description: Branch name of the approving QuietCore Release Publish workflow run
         required: false
         type: string
       dry_run:
@@ -274,12 +274,12 @@ jobs:
           )"
           printf '%s\n' "${help_output}"
           if ! grep -Fq "Usage: clawhub package trusted-publisher set" <<<"${help_output}"; then
-            echo "::error::CLAW-277 03 - Split OpenClaw plugin ClawHub publishing into OIDC release and token bootstrap workflows requires ${CLAWHUB_CLI_PACKAGE} to expose 'package trusted-publisher set' before token bootstrap publish can run. The pinned CLI returned parent help or no set command, so this workflow is stopping before creating a ClawHub package row."
+            echo "::error::CLAW-277 03 - Split QuietCore plugin ClawHub publishing into OIDC release and token bootstrap workflows requires ${CLAWHUB_CLI_PACKAGE} to expose 'package trusted-publisher set' before token bootstrap publish can run. The pinned CLI returned parent help or no set command, so this workflow is stopping before creating a ClawHub package row."
             exit 1
           fi
           for required_flag in --repository --workflow-filename; do
             if ! grep -Fq -- "${required_flag}" <<<"${help_output}"; then
-              echo "::error::CLAW-277 03 - Split OpenClaw plugin ClawHub publishing into OIDC release and token bootstrap workflows requires ${CLAWHUB_CLI_PACKAGE} trusted-publisher set help to include ${required_flag}."
+              echo "::error::CLAW-277 03 - Split QuietCore plugin ClawHub publishing into OIDC release and token bootstrap workflows requires ${CLAWHUB_CLI_PACKAGE} trusted-publisher set help to include ${required_flag}."
               exit 1
             fi
           done

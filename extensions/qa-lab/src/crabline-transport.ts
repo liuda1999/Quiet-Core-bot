@@ -4,11 +4,11 @@ import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 import {
   OPENCLAW_CRABLINE_MANIFEST_PATH,
-  startOpenClawCrablineAdapter,
-  type OpenClawCrablineChannelDriverSelection,
-  type StartedOpenClawCrablineAdapter,
+  startQuietCoreCrablineAdapter,
+  type QuietCoreCrablineChannelDriverSelection,
+  type StartedQuietCoreCrablineAdapter,
 } from "@openclaw/crabline";
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
 import { fetchWithSsrFGuard } from "quiet-core-bot/plugin-sdk/ssrf-runtime";
 import { createQaBusState, type QaBusState } from "./bus-state.js";
@@ -95,7 +95,7 @@ async function waitForCrablineReady(params: {
 }
 
 async function postCrablineInbound(params: {
-  adapter: StartedOpenClawCrablineAdapter;
+  adapter: StartedQuietCoreCrablineAdapter;
   providerBody: Record<string, unknown>;
 }) {
   const { response, release } = await fetchWithSsrFGuard({
@@ -123,7 +123,7 @@ async function postCrablineInbound(params: {
 }
 
 function createCrablineState(params: {
-  adapter: StartedOpenClawCrablineAdapter;
+  adapter: StartedQuietCoreCrablineAdapter;
   state: QaBusState;
 }): QaCrablineTransportState {
   const baseState = params.state;
@@ -216,13 +216,13 @@ function createCrablineState(params: {
 }
 
 class QaCrablineTransport extends QaStateBackedTransportAdapter {
-  readonly #adapter: StartedOpenClawCrablineAdapter;
-  readonly #selection: OpenClawCrablineChannelDriverSelection;
+  readonly #adapter: StartedQuietCoreCrablineAdapter;
+  readonly #selection: QuietCoreCrablineChannelDriverSelection;
   readonly #state: QaCrablineTransportState;
 
   constructor(params: {
-    adapter: StartedOpenClawCrablineAdapter;
-    selection: OpenClawCrablineChannelDriverSelection;
+    adapter: StartedQuietCoreCrablineAdapter;
+    selection: QuietCoreCrablineChannelDriverSelection;
     state: QaCrablineTransportState;
   }) {
     super({
@@ -260,14 +260,14 @@ class QaCrablineTransport extends QaStateBackedTransportAdapter {
   handleAction = async (_params: {
     action: QaTransportActionName;
     args: Record<string, unknown>;
-    cfg: OpenClawConfig;
+    cfg: QuietCoreConfig;
     accountId?: string | null;
   }) => {
     throw new Error(`Crabline fake-provider transport does not support ${_params.action} yet.`);
   };
 
   createReportNotes = (_params: QaTransportReportParams) => [
-    `Runs OpenClaw's ${this.#selection.channel} channel plugin against a Crabline fake provider server.`,
+    `Runs QuietCore's ${this.#selection.channel} channel plugin against a Crabline fake provider server.`,
     "No live channel service or external credential lease is required.",
   ];
 
@@ -278,7 +278,7 @@ class QaCrablineTransport extends QaStateBackedTransportAdapter {
 
 export async function createQaCrablineTransportAdapter(params: {
   outputDir: string;
-  selection: OpenClawCrablineChannelDriverSelection;
+  selection: QuietCoreCrablineChannelDriverSelection;
   state?: QaBusState;
 }) {
   const recorderPath = path.join(
@@ -288,7 +288,7 @@ export async function createQaCrablineTransportAdapter(params: {
     `${params.selection.channel}-fake-provider.jsonl`,
   );
   await fs.mkdir(path.dirname(recorderPath), { recursive: true });
-  const adapter = await startOpenClawCrablineAdapter({
+  const adapter = await startQuietCoreCrablineAdapter({
     channel: params.selection.channel,
     openclawConfig: {},
     recorderPath,

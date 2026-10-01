@@ -16,13 +16,13 @@ import {
   readStringParam,
 } from "quiet-core-bot/plugin-sdk/channel-actions";
 import { readFiniteNumberParam, readPositiveIntegerParam } from "quiet-core-bot/plugin-sdk/param-readers";
-import type { AnyAgentTool, OpenClawConfig } from "quiet-core-bot/plugin-sdk/plugin-entry";
-import { resolvePreferredOpenClawTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";
+import type { AnyAgentTool, QuietCoreConfig } from "quiet-core-bot/plugin-sdk/plugin-entry";
+import { resolvePreferredQuietCoreTmpDir } from "quiet-core-bot/plugin-sdk/temp-path";
 import { normalizeCanvasSnapshotFileExtension, parseCanvasSnapshotPayload } from "./cli-helpers.js";
 import { CanvasToolSchema } from "./tool-schema.js";
 
 type CanvasToolOptions = {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   workspaceDir?: string;
 };
 
@@ -47,7 +47,7 @@ async function resolveNodeId(
 }
 
 async function writeBase64ToTempFile(params: { base64: string; ext: string }): Promise<string> {
-  const dir = resolvePreferredOpenClawTmpDir();
+  const dir = resolvePreferredQuietCoreTmpDir();
   await fs.mkdir(dir, { recursive: true, mode: 0o700 });
   const ext = `.${normalizeCanvasSnapshotFileExtension(params.ext)}`;
   const filePath = path.join(dir, `quiet-core-bot-canvas-snapshot-${randomUUID()}${ext}`);
@@ -80,7 +80,7 @@ async function readJsonlFromPath(jsonlPath: string, workspaceDir?: string): Prom
 }
 
 function resolveCanvasImageSanitizationLimits(
-  config?: OpenClawConfig,
+  config?: QuietCoreConfig,
 ): CanvasImageSanitizationLimits {
   const configured = config?.agents?.defaults?.imageMaxDimensionPx;
   if (typeof configured !== "number" || !Number.isFinite(configured)) {

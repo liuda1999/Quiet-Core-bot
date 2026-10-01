@@ -16,7 +16,7 @@ import {
   readGatewayDispatchConfig,
   readGatewayDispatchConfigWithShellEnvFallback,
 } from "../config/gateway-dispatch-config.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   callGateway,
   isGatewayCredentialsRequiredError,
@@ -244,7 +244,7 @@ function loadAgentSessionModule(): Promise<AgentSessionModule> {
   return agentSessionModulePromise;
 }
 
-async function loadRuntimeConfig(): Promise<OpenClawConfig> {
+async function loadRuntimeConfig(): Promise<QuietCoreConfig> {
   runtimeConfigModulePromise ??= import("../config/io.js");
   const { getRuntimeConfig } = await runtimeConfigModulePromise;
   return getRuntimeConfig();
@@ -368,7 +368,7 @@ async function resolveAgentMessageOpts(opts: AgentCliOpts): Promise<AgentDispatc
   return { ...rest, message };
 }
 
-function parseTimeoutSeconds(opts: { cfg: OpenClawConfig; timeout?: string }) {
+function parseTimeoutSeconds(opts: { cfg: QuietCoreConfig; timeout?: string }) {
   const raw =
     opts.timeout !== undefined
       ? parseStrictNonNegativeInteger(opts.timeout)
@@ -390,7 +390,7 @@ function resolveGatewayAgentTimeoutMs(timeoutSeconds: number): number {
 
 async function getGatewayDispatchConfig(options?: {
   skipShellEnvFallback?: boolean;
-}): Promise<OpenClawConfig> {
+}): Promise<QuietCoreConfig> {
   // Scoped gateway turns need core agent/session/gateway fields only. The
   // running gateway owns plugin validation and plugin metadata freshness.
   if (options?.skipShellEnvFallback === false) {
@@ -674,7 +674,7 @@ async function abortAcceptedGatewayAgentRunWithGatewayCall(params: {
   signal: AgentCliSignal | undefined;
   runtime: RuntimeEnv;
   gatewayIdentity: AgentGatewayCallIdentity;
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
 }): Promise<void> {
   const request: GatewayRequestFunction = async <T = Record<string, unknown>>(
     method: string,
@@ -989,7 +989,7 @@ async function agentViaGatewayCommand(
   let activeConnectionAbortAttempted = false;
   let activeConnectionAbortSucceeded = false;
   let response: GatewayAgentResponse | undefined;
-  const dispatchGatewayAgentCall = async (activeCfg: OpenClawConfig) =>
+  const dispatchGatewayAgentCall = async (activeCfg: QuietCoreConfig) =>
     await withProgress(
       {
         label: "Waiting for agent reply…",

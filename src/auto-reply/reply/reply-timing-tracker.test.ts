@@ -1,11 +1,11 @@
 // Tests reply profiler flag detection and timing tracker output.
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { createReplyTimingTracker, isReplyProfilerEnabled } from "./reply-timing-tracker.js";
 
 describe("isReplyProfilerEnabled", () => {
   it("matches global and reply profiler diagnostic flags", () => {
-    const cfg = { diagnostics: { flags: ["reply.profiler"] } } as OpenClawConfig;
+    const cfg = { diagnostics: { flags: ["reply.profiler"] } } as QuietCoreConfig;
     expect(isReplyProfilerEnabled({ config: cfg, env: {} as NodeJS.ProcessEnv })).toBe(true);
     expect(
       isReplyProfilerEnabled({

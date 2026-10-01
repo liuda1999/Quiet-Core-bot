@@ -20,7 +20,7 @@ async function withPackageManagerRoot<T>(
   });
 }
 
-async function writePublishedOpenClawRoot(root: string): Promise<void> {
+async function writePublishedQuietCoreRoot(root: string): Promise<void> {
   await fs.mkdir(root, { recursive: true });
   await fs.writeFile(
     path.join(root, "package.json"),
@@ -97,7 +97,7 @@ describe("detectPackageManager", () => {
     await withTempDir({ prefix: "quiet-core-bot-detect-pm-pnpm-direct-" }, async (base) => {
       const nodeModulesRoot = path.join(base, "pnpm-global", "node_modules");
       const packageRoot = path.join(nodeModulesRoot, "quiet-core-bot");
-      await writePublishedOpenClawRoot(packageRoot);
+      await writePublishedQuietCoreRoot(packageRoot);
       await fs.writeFile(path.join(nodeModulesRoot, ".modules.yaml"), "layoutVersion: 5", "utf8");
 
       await expect(detectPackageManager(packageRoot)).resolves.toBe("pnpm");
@@ -114,7 +114,7 @@ describe("detectPackageManager", () => {
         "node_modules",
         "quiet-core-bot",
       );
-      await writePublishedOpenClawRoot(packageRoot);
+      await writePublishedQuietCoreRoot(packageRoot);
       await fs.writeFile(path.join(nodeModulesRoot, ".modules.yaml"), "layoutVersion: 5", "utf8");
 
       await expect(detectPackageManager(packageRoot)).resolves.toBe("pnpm");
@@ -126,7 +126,7 @@ describe("detectPackageManager", () => {
       const bunInstall = path.join(base, "bun-home");
       await withEnvAsync({ BUN_INSTALL: bunInstall }, async () => {
         const packageRoot = path.join(bunInstall, "install", "global", "node_modules", "quiet-core-bot");
-        await writePublishedOpenClawRoot(packageRoot);
+        await writePublishedQuietCoreRoot(packageRoot);
 
         await expect(detectPackageManager(packageRoot)).resolves.toBe("bun");
       });

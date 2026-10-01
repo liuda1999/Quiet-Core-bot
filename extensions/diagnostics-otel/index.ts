@@ -1,4 +1,4 @@
-// Diagnostics Otel plugin entrypoint registers its OpenClaw integration.
+// Diagnostics Otel plugin entrypoint registers its QuietCore integration.
 import { definePluginEntry } from "quiet-core-bot/plugin-sdk/plugin-entry";
 import { createDiagnosticsOtelService } from "./src/service.js";
 

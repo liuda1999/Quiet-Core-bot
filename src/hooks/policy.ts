@@ -1,5 +1,5 @@
 // Hook policy helpers decide when hooks may run for a configured event.
-import type { OpenClawConfig, HookConfig } from "../config/config.js";
+import type { QuietCoreConfig, HookConfig } from "../config/config.js";
 import { resolveHookKey } from "./frontmatter.js";
 import type { HookEntry, HookSource } from "./types.js";
 
@@ -63,7 +63,7 @@ function getHookSourcePolicy(source: HookSource): HookSourcePolicy {
 
 /** Resolve explicit per-hook config by hook key. */
 export function resolveHookConfig(
-  config: OpenClawConfig | undefined,
+  config: QuietCoreConfig | undefined,
   hookKey: string,
 ): HookConfig | undefined {
   const hooks = config?.hooks?.internal?.entries;
@@ -80,7 +80,7 @@ export function resolveHookConfig(
 /** Resolve whether a hook is enabled before runtime requirement checks. */
 export function resolveHookEnableState(params: {
   entry: HookEntry;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   hookConfig?: HookConfig;
 }): HookEnableState {
   const { entry, config } = params;

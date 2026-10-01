@@ -10,7 +10,7 @@ type LegacyEnvPrefix = (typeof LEGACY_ENV_PREFIXES)[number];
 let warned = false;
 
 /** Emits a one-time warning when ignored legacy CLAWDBOT_/MOLTBOT_ env vars are present. */
-export function warnLegacyOpenClawEnvVars(env: NodeJS.ProcessEnv = process.env): void {
+export function warnLegacyQuietCoreEnvVars(env: NodeJS.ProcessEnv = process.env): void {
   if (warned || isVitestRuntimeEnv(env)) {
     return;
   }
@@ -45,6 +45,6 @@ export function warnLegacyOpenClawEnvVars(env: NodeJS.ProcessEnv = process.env):
 }
 
 /** Resets the one-shot legacy env warning latch for tests. */
-export function resetLegacyOpenClawEnvWarningForTest(): void {
+export function resetLegacyQuietCoreEnvWarningForTest(): void {
   warned = false;
 }

@@ -3,7 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { captureEnv, deleteTestEnvValue, setTestEnvValue } from "../test-utils/env.js";
 import {
   clearCurrentPluginMetadataSnapshot,
@@ -13,7 +13,7 @@ import {
 import { resolveInstalledPluginIndexPolicyHash } from "./installed-plugin-index-policy.js";
 import { writePersistedInstalledPluginIndexSync } from "./installed-plugin-index-store.js";
 import type { InstalledPluginIndex } from "./installed-plugin-index.js";
-import { listOpenClawPluginManifestMetadata } from "./manifest-metadata-scan.js";
+import { listQuietCorePluginManifestMetadata } from "./manifest-metadata-scan.js";
 import { normalizeProviderModelIdWithManifest } from "./manifest-model-id-normalization.js";
 import { clearPluginMetadataLifecycleCaches } from "./plugin-metadata-lifecycle.js";
 import type { PluginMetadataSnapshot } from "./plugin-metadata-snapshot.js";
@@ -100,7 +100,7 @@ function createCurrentSnapshot(params: {
   manifestHash: string;
   prefix: string;
   workspaceDir?: string;
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
 }): PluginMetadataSnapshot {
   const config = params.config ?? {};
   const policyHash = resolveInstalledPluginIndexPolicyHash(config);
@@ -260,7 +260,7 @@ describe("manifest model id normalization", () => {
   });
 
   it("reuses current metadata when callers omit config", () => {
-    const config: OpenClawConfig = { plugins: { allow: ["normalizer"] } };
+    const config: QuietCoreConfig = { plugins: { allow: ["normalizer"] } };
     setCurrentPluginMetadataSnapshot(
       createCurrentSnapshot({
         manifestHash: "alpha",
@@ -338,8 +338,8 @@ describe("manifest model id normalization", () => {
 
     const readFileSyncSpy = vi.spyOn(fs, "readFileSync");
 
-    expect(listOpenClawPluginManifestMetadata(process.env)).toHaveLength(1);
-    expect(listOpenClawPluginManifestMetadata(process.env)).toHaveLength(1);
+    expect(listQuietCorePluginManifestMetadata(process.env)).toHaveLength(1);
+    expect(listQuietCorePluginManifestMetadata(process.env)).toHaveLength(1);
 
     const manifestReads = readFileSyncSpy.mock.calls.filter(
       ([filePath]) => String(filePath) === manifestPath,

@@ -2,10 +2,10 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 // Covers restart sentinel persistence, summaries, and messages.
-import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
 import {
-  closeOpenClawStateDatabaseForTest,
-  openOpenClawStateDatabase,
+  closeQuietCoreStateDatabaseForTest,
+  openQuietCoreStateDatabase,
 } from "../state/quiet-core-bot-state-db.js";
 import { withTempDir } from "../test-helpers/temp-dir.js";
 import { withEnvAsync } from "../test-utils/env.js";
@@ -39,15 +39,15 @@ async function withRestartSentinelStateDir(run: () => Promise<void>): Promise<vo
     try {
       await withEnvAsync({ QUIET_CORE_STATE_DIR: tempDir }, run);
     } finally {
-      closeOpenClawStateDatabaseForTest();
+      closeQuietCoreStateDatabaseForTest();
     }
   });
 }
 
-type GatewayRestartSentinelDatabase = Pick<OpenClawStateKyselyDatabase, "gateway_restart_sentinel">;
+type GatewayRestartSentinelDatabase = Pick<QuietCoreStateKyselyDatabase, "gateway_restart_sentinel">;
 
 function readSentinelRow() {
-  const { db } = openOpenClawStateDatabase();
+  const { db } = openQuietCoreStateDatabase();
   const stateDb = getNodeSqliteKysely<GatewayRestartSentinelDatabase>(db);
   return executeSqliteQueryTakeFirstSync(
     db,
@@ -59,7 +59,7 @@ function readSentinelRow() {
 }
 
 function insertSentinelRow(values: { version?: number; payloadJson: string }) {
-  const { db } = openOpenClawStateDatabase();
+  const { db } = openQuietCoreStateDatabase();
   const stateDb = getNodeSqliteKysely<GatewayRestartSentinelDatabase>(db);
   executeSqliteQuerySync(
     db,

@@ -2,7 +2,7 @@
  * Conversation-binding key resolver shared by plugin commands and reply/session actions.
  * Binding keys must use canonical routing ids so focus/unfocus targets survive aliases and hints.
  */
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   resolveCommandConversationResolution,
   type ResolveCommandConversationResolutionInput,
@@ -21,7 +21,7 @@ type ResolveConversationBindingContextInput = Omit<
   ResolveCommandConversationResolutionInput,
   "includePlacementHint"
 > & {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
 };
 
 /**

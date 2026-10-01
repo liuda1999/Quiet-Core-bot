@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { runEmbeddedAgent } from "../agents/embedded-agent.js";
 import { loadModelCatalog } from "../agents/model-catalog.js";
 import { BASE_THINKING_LEVELS } from "../auto-reply/thinking.shared.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { PluginProviderRegistration } from "../plugins/registry.js";
 import { resetPluginRuntimeStateForTest, setActivePluginRegistry } from "../plugins/runtime.js";
 import { createTestRegistry } from "../test-utils/channel-plugins.js";
@@ -64,7 +64,7 @@ function mockDeterministicModelCatalog() {
   ]);
 }
 
-const OPENAI_PI_RUNTIME_CONFIG: Partial<OpenClawConfig> = {
+const OPENAI_PI_RUNTIME_CONFIG: Partial<QuietCoreConfig> = {
   models: {
     providers: {
       openai: {

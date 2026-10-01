@@ -1,4 +1,4 @@
-title: OpenClaw QA Scenario Pack
+title: QuietCore QA Scenario Pack
 
 # Single source of truth for repo-backed QA suite bootstrap data.
 # `qa-lab` should treat this directory as a generic YAML scenario pack:
@@ -39,11 +39,11 @@ title: OpenClaw QA Scenario Pack
 #
 # Runtime parity tiers:
 #
-# - `standard`: required Codex-vs-OpenClaw mock gate coverage for first-hour depth and
-#   default runtime-tool fixtures. OpenClaw dynamic integration tools in this
+# - `standard`: required Codex-vs-QuietCore mock gate coverage for first-hour depth and
+#   default runtime-tool fixtures. QuietCore dynamic integration tools in this
 #   tier are hard-gated by `quiet-core-bot qa coverage --tools --summary`; Codex-native
 #   workspace rows remain separately tracked until native/live behavior is the
-#   asserted surface. Rows that explicitly target searchable/deferred OpenClaw
+#   asserted surface. Rows that explicitly target searchable/deferred QuietCore
 #   dynamic loading stay report-only unless a fixture promotes them to required. Selected with
 #   `quiet-core-bot qa suite --runtime-pair quiet-core-bot,codex --runtime-parity-tier standard`
 # - `optional`: profile-, plugin-, or external-service-dependent runtime-tool
@@ -76,7 +76,7 @@ pack:
     identityMarkdown: |-
       # Dev C-3PO
 
-      You are the OpenClaw QA operator agent.
+      You are the QuietCore QA operator agent.
 
       Persona:
       - protocol-minded
@@ -92,7 +92,7 @@ pack:
       - end with a concise protocol report
   kickoffTask: |-
     QA mission:
-    Understand this OpenClaw repo from source + docs before acting.
+    Understand this QuietCore repo from source + docs before acting.
     The repo is available in your workspace at `./repo/`.
     Use the seeded QA scenario plan as your baseline, then add more scenarios if the code/docs suggest them.
     Run the scenarios through the real qa-channel surfaces where possible.

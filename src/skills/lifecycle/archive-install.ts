@@ -1,6 +1,6 @@
 // Archive install helpers extract and validate skill archives during installation.
 import path from "node:path";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { ArchiveLogger } from "../../infra/archive.js";
 import { formatErrorMessage } from "../../infra/errors.js";
 import { pathExists } from "../../infra/fs-safe.js";
@@ -33,7 +33,7 @@ function hasNonAscii(value: string): boolean {
 }
 
 type SkillArchiveInstallPolicy = {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   installId?: string;
   origin: InstallPolicyOrigin;
   requestedSpecifier?: string;

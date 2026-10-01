@@ -37,10 +37,10 @@ export function writeAndroidFixture(params: {
     "utf8",
   );
   const releaseNotes =
-    "OpenClaw is now available on Android.\n\nConnect to your OpenClaw Gateway.\n";
+    "QuietCore is now available on Android.\n\nConnect to your QuietCore Gateway.\n";
   fs.writeFileSync(
     path.join(rootDir, "apps", "android", "CHANGELOG.md"),
-    params.changelog ?? `# OpenClaw Android Changelog\n\n## Unreleased\n\n${releaseNotes}`,
+    params.changelog ?? `# QuietCore Android Changelog\n\n## Unreleased\n\n${releaseNotes}`,
     "utf8",
   );
   fs.writeFileSync(

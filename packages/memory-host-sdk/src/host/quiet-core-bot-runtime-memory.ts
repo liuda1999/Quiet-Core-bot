@@ -28,5 +28,5 @@ export type {
   MemoryPluginPublicArtifactsProvider,
   MemoryPluginRuntime,
   MemoryPromptSectionBuilder,
-  OpenClawPluginApi,
+  QuietCorePluginApi,
 } from "./quiet-core-bot-runtime.js";

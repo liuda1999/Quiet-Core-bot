@@ -1,6 +1,6 @@
 // LLM slug generator tests cover generated hook names and collision behavior.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 
 const runEmbeddedAgentMock = vi.fn();
 
@@ -8,7 +8,7 @@ vi.mock("../agents/agent-scope.js", () => ({
   resolveDefaultAgentId: vi.fn(() => "main"),
   resolveAgentWorkspaceDir: vi.fn(() => "/tmp/quiet-core-bot-agent"),
   resolveAgentDir: vi.fn(() => "/tmp/quiet-core-bot-agent/.quiet-core-bot-agent"),
-  resolveAgentEffectiveModelPrimary: vi.fn((cfg: OpenClawConfig) => {
+  resolveAgentEffectiveModelPrimary: vi.fn((cfg: QuietCoreConfig) => {
     const model = cfg.agents?.defaults?.model;
     if (typeof model === "string") {
       return model;
@@ -46,7 +46,7 @@ describe("generateSlugViaLLM", () => {
   it("keeps the helper default timeout when no agent timeout is configured", async () => {
     await generateSlugViaLLM({
       sessionContent: "hello",
-      cfg: {} as OpenClawConfig,
+      cfg: {} as QuietCoreConfig,
     });
 
     expect(runEmbeddedAgentMock).toHaveBeenCalledOnce();
@@ -58,7 +58,7 @@ describe("generateSlugViaLLM", () => {
   it("marks the run lane-local so internal-helper failures do not poison shared profile health (#71709)", async () => {
     await generateSlugViaLLM({
       sessionContent: "hello",
-      cfg: {} as OpenClawConfig,
+      cfg: {} as QuietCoreConfig,
     });
 
     expect(runEmbeddedAgentMock).toHaveBeenCalledOnce();
@@ -74,7 +74,7 @@ describe("generateSlugViaLLM", () => {
             timeoutSeconds: 500,
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
     });
 
     expect(runEmbeddedAgentMock).toHaveBeenCalledOnce();
@@ -108,7 +108,7 @@ describe("generateSlugViaLLM", () => {
             },
           },
         },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
     });
 
     expect(runEmbeddedAgentMock).toHaveBeenCalledOnce();
@@ -130,7 +130,7 @@ describe("generateSlugViaLLM", () => {
     await expect(
       generateSlugViaLLM({
         sessionContent: "hello",
-        cfg: {} as OpenClawConfig,
+        cfg: {} as QuietCoreConfig,
       }),
     ).resolves.toBeNull();
   });
@@ -148,7 +148,7 @@ describe("generateSlugViaLLM", () => {
     await expect(
       generateSlugViaLLM({
         sessionContent: "hello",
-        cfg: {} as OpenClawConfig,
+        cfg: {} as QuietCoreConfig,
       }),
     ).resolves.toBeNull();
   });
@@ -161,7 +161,7 @@ describe("generateSlugViaLLM", () => {
     await expect(
       generateSlugViaLLM({
         sessionContent: "hello",
-        cfg: {} as OpenClawConfig,
+        cfg: {} as QuietCoreConfig,
       }),
     ).resolves.toBe("auth-refresh");
   });
@@ -174,7 +174,7 @@ describe("generateSlugViaLLM", () => {
     await expect(
       generateSlugViaLLM({
         sessionContent: "hello",
-        cfg: {} as OpenClawConfig,
+        cfg: {} as QuietCoreConfig,
       }),
     ).resolves.toBe("12345678901234567890123456789");
   });

@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { ChannelPlugin } from "../channels/plugins/types.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
 import {
   applySecurityFixConfigMutations,
@@ -141,7 +141,7 @@ describe("security fix", () => {
         channels: {
           whatsapp: params.whatsapp,
         },
-      } satisfies OpenClawConfig,
+      } satisfies QuietCoreConfig,
       env: process.env,
       channelPlugins: [createWhatsAppConfigFixTestPlugin(params.allowFromStore)],
     });
@@ -173,7 +173,7 @@ describe("security fix", () => {
         imessage: { groupPolicy: "open" },
       },
       logging: { redactSensitive: "off" },
-    } satisfies OpenClawConfig;
+    } satisfies QuietCoreConfig;
     const fixed = await applySecurityFixConfigMutations({
       cfg,
       env: process.env,
@@ -295,7 +295,7 @@ describe("security fix", () => {
       configPath,
       cfg: {
         channels: { whatsapp: { groupPolicy: "open" } },
-      } as OpenClawConfig,
+      } as QuietCoreConfig,
       includePaths: [includePath],
     });
 

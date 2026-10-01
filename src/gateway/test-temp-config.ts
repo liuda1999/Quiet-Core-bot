@@ -8,7 +8,7 @@ import {
   resetConfigRuntimeState,
   setRuntimeConfigSnapshot,
 } from "../config/config.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { clearSecretsRuntimeSnapshot } from "../secrets/runtime.js";
 
 function withStableOwnerDisplaySecretForTest(cfg: unknown): unknown {
@@ -40,7 +40,7 @@ export async function withTempConfig(params: {
 }): Promise<void> {
   const prevConfigPath = process.env.QUIET_CORE_CONFIG_PATH;
 
-  const testConfig = withStableOwnerDisplaySecretForTest(params.cfg) as OpenClawConfig;
+  const testConfig = withStableOwnerDisplaySecretForTest(params.cfg) as QuietCoreConfig;
   const dir = await mkdtemp(path.join(os.tmpdir(), params.prefix ?? "quiet-core-bot-test-config-"));
   const configPath = path.join(dir, "quiet-core-bot.json");
 

@@ -1,8 +1,8 @@
 // Covers provider install catalog entries from plugin metadata.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-type LoadOpenClawProviderIndex =
-  typeof import("../model-catalog/index.js").loadOpenClawProviderIndex;
+type LoadQuietCoreProviderIndex =
+  typeof import("../model-catalog/index.js").loadQuietCoreProviderIndex;
 type LoadPluginRegistrySnapshot = typeof import("./plugin-registry.js").loadPluginRegistrySnapshot;
 type ResolveManifestProviderAuthChoices =
   typeof import("./provider-auth-choices.js").resolveManifestProviderAuthChoices;
@@ -13,8 +13,8 @@ type InstalledPluginInstallRecordInfo =
   import("./installed-plugin-index.js").InstalledPluginInstallRecordInfo;
 type InstalledPluginIndexRecord = import("./installed-plugin-index.js").InstalledPluginIndexRecord;
 
-const loadOpenClawProviderIndex = vi.hoisted(() =>
-  vi.fn<LoadOpenClawProviderIndex>(() => ({ version: 1, providers: {} })),
+const loadQuietCoreProviderIndex = vi.hoisted(() =>
+  vi.fn<LoadQuietCoreProviderIndex>(() => ({ version: 1, providers: {} })),
 );
 vi.mock("../model-catalog/index.js", async () => {
   const actual = await vi.importActual<typeof import("../model-catalog/index.js")>(
@@ -22,7 +22,7 @@ vi.mock("../model-catalog/index.js", async () => {
   );
   return {
     ...actual,
-    loadOpenClawProviderIndex,
+    loadQuietCoreProviderIndex,
   };
 });
 
@@ -135,7 +135,7 @@ function mockVllmAuthChoice() {
 describe("provider install catalog", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    loadOpenClawProviderIndex.mockReturnValue({ version: 1, providers: {} });
+    loadQuietCoreProviderIndex.mockReturnValue({ version: 1, providers: {} });
     loadPluginRegistrySnapshot.mockReturnValue({
       version: 1,
       hostContractVersion: "test",
@@ -497,7 +497,7 @@ describe("provider install catalog", () => {
   });
 
   it("surfaces provider-index install metadata when the provider plugin is not installed", () => {
-    loadOpenClawProviderIndex.mockReturnValue({
+    loadQuietCoreProviderIndex.mockReturnValue({
       version: 1,
       providers: {
         moonshot: {
@@ -695,7 +695,7 @@ describe("provider install catalog", () => {
   });
 
   it("surfaces provider-index ClawHub install metadata as the preferred source", () => {
-    loadOpenClawProviderIndex.mockReturnValue({
+    loadQuietCoreProviderIndex.mockReturnValue({
       version: 1,
       providers: {
         moonshot: {
@@ -790,7 +790,7 @@ describe("provider install catalog", () => {
       ],
       diagnostics: [],
     });
-    loadOpenClawProviderIndex.mockReturnValue({
+    loadQuietCoreProviderIndex.mockReturnValue({
       version: 1,
       providers: {
         moonshot: {
@@ -846,7 +846,7 @@ describe("provider install catalog", () => {
       ],
       diagnostics: [],
     });
-    loadOpenClawProviderIndex.mockReturnValue({
+    loadQuietCoreProviderIndex.mockReturnValue({
       version: 1,
       providers: {
         groq: {

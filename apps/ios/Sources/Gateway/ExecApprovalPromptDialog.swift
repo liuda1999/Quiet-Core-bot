@@ -90,7 +90,7 @@ private struct ExecApprovalPromptCard: View {
             if let errorText = self.normalized(self.errorText) {
                 Text(errorText)
                     .font(.footnote)
-                    .foregroundStyle(OpenClawBrand.danger)
+                    .foregroundStyle(QuietCoreBrand.danger)
             }
 
             if self.isResolving {
@@ -148,7 +148,7 @@ private struct ExecApprovalPromptCard: View {
             .frame(maxWidth: .infinity)
         }
         .padding(18)
-        .proPanelSurface(tint: OpenClawBrand.accentHot, radius: 20, isProminent: true)
+        .proPanelSurface(tint: QuietCoreBrand.accentHot, radius: 20, isProminent: true)
     }
 
     private func normalized(_ value: String?) -> String? {

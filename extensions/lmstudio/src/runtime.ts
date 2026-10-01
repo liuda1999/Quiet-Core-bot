@@ -5,7 +5,7 @@ import {
   isNonSecretApiKeyMarker,
   normalizeApiKeyConfig,
   normalizeOptionalSecretInput,
-  type OpenClawConfig,
+  type QuietCoreConfig,
 } from "quiet-core-bot/plugin-sdk/provider-auth";
 import { resolveApiKeyForProvider } from "quiet-core-bot/plugin-sdk/provider-auth-runtime";
 import { resolveConfiguredSecretInputString } from "quiet-core-bot/plugin-sdk/secret-input-runtime";
@@ -72,7 +72,7 @@ function shouldSuppressResolvedRuntimeApiKeyForHeaderAuth(
 }
 
 export async function resolveLmstudioConfiguredApiKey(params: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
   path?: string;
   allowUnresolved?: boolean;
@@ -142,7 +142,7 @@ export async function resolveLmstudioConfiguredApiKey(params: {
 }
 
 export async function resolveLmstudioProviderHeaders(params: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   env?: NodeJS.ProcessEnv;
   headers?: unknown;
   path?: string;
@@ -183,7 +183,7 @@ export async function resolveLmstudioProviderHeaders(params: {
  * Use this as the standard auth setup step before discovery or model load calls.
  */
 export async function resolveLmstudioRequestContext(params: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   agentDir?: string;
   env?: NodeJS.ProcessEnv;
   providerHeaders?: unknown;
@@ -210,7 +210,7 @@ export async function resolveLmstudioRequestContext(params: {
  * Resolves LM Studio runtime API key from config.
  */
 export async function resolveLmstudioRuntimeApiKey(params: {
-  config?: OpenClawConfig;
+  config?: QuietCoreConfig;
   agentDir?: string;
   env?: NodeJS.ProcessEnv;
   headers?: unknown;

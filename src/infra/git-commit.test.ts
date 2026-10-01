@@ -51,7 +51,7 @@ async function makeFakeGitRepo(
   }
 }
 
-async function makeFakeOpenClawPackage(root: string) {
+async function makeFakeQuietCorePackage(root: string) {
   await fs.mkdir(path.join(root, "src"), { recursive: true });
   await fs.writeFile(path.join(root, "package.json"), JSON.stringify({ name: "quiet-core-bot" }));
 }
@@ -86,7 +86,7 @@ describe("git commit resolution", () => {
     const repoRoot = path.join(temp, "quiet-core-bot");
     const repoCommit = "abcdef0123456789abcdef0123456789abcdef01";
     await makeFakeGitRepo(repoRoot, { head: `${repoCommit}\n` });
-    await makeFakeOpenClawPackage(repoRoot);
+    await makeFakeQuietCorePackage(repoRoot);
 
     const otherRepo = path.join(temp, "other");
     const otherCommit = "1234567890abcdef1234567890abcdef12345678";
@@ -104,7 +104,7 @@ describe("git commit resolution", () => {
     const repoRoot = path.join(temp, "quiet-core-bot");
     const repoCommit = "abcdef0123456789abcdef0123456789abcdef01";
     await makeFakeGitRepo(repoRoot, { head: `${repoCommit}\n` });
-    await makeFakeOpenClawPackage(repoRoot);
+    await makeFakeQuietCorePackage(repoRoot);
     const entryModuleUrl = pathToFileURL(path.join(repoRoot, "src", "entry.ts")).href;
 
     expect(
@@ -167,7 +167,7 @@ describe("git commit resolution", () => {
     const repoRoot = path.join(temp, "quiet-core-bot");
     const repoCommit = "abcdef0123456789abcdef0123456789abcdef01";
     await makeFakeGitRepo(repoRoot, { head: `${repoCommit}\n` });
-    await makeFakeOpenClawPackage(repoRoot);
+    await makeFakeQuietCorePackage(repoRoot);
 
     expect(resolveCommitHash({ moduleUrl: "not-a-file-url", cwd: repoRoot, env: {} })).toBe(
       repoCommit.slice(0, 7),

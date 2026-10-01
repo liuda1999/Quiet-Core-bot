@@ -1,5 +1,5 @@
 // Ollama provider module implements model/runtime integration.
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/provider-auth";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/provider-auth";
 import {
   isKnownEnvApiKeyMarker,
   isNonSecretApiKeyMarker,
@@ -32,7 +32,7 @@ export type OllamaEmbeddingProvider = {
 };
 
 type OllamaEmbeddingOptions = {
-  config: OpenClawConfig;
+  config: QuietCoreConfig;
   agentDir?: string;
   provider?: string;
   remote?: {

@@ -8,4 +8,4 @@ export {
   createTestRegistry,
   setActivePluginRegistry,
 } from "quiet-core-bot/plugin-sdk/plugin-test-runtime";
-export type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
+export type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";

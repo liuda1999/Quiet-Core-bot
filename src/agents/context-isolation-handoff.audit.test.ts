@@ -30,10 +30,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { forkSessionFromParent } from "../auto-reply/reply/session-fork.js";
 import { CURRENT_SESSION_VERSION } from "../config/sessions/version.js";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../infra/kysely-sync.js";
-import type { DB as OpenClawStateDatabase } from "../state/quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateDatabase } from "../state/quiet-core-bot-state-db.generated.js";
 import {
-  closeOpenClawStateDatabaseForTest,
-  openOpenClawStateDatabase,
+  closeQuietCoreStateDatabaseForTest,
+  openQuietCoreStateDatabase,
 } from "../state/quiet-core-bot-state-db.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import { removeTestTempPath } from "../test-utils/session-state-cleanup.js";
@@ -155,7 +155,7 @@ describe("Task 3 · subagent context isolation and handoff", () => {
     subagentAnnounceOutputTesting.setDepsForTest(undefined);
     // Release the sqlite handle before removing the temp state dir (Windows keeps
     // an open database file locked, which would hang the recursive removal).
-    closeOpenClawStateDatabaseForTest();
+    closeQuietCoreStateDatabaseForTest();
     await removeTestTempPath(tempDir);
   });
 
@@ -312,8 +312,8 @@ describe("Task 3 · subagent context isolation and handoff", () => {
         ]),
       );
 
-      const { db } = openOpenClawStateDatabase();
-      const stateDb = getNodeSqliteKysely<Pick<OpenClawStateDatabase, "subagent_runs">>(db);
+      const { db } = openQuietCoreStateDatabase();
+      const stateDb = getNodeSqliteKysely<Pick<QuietCoreStateDatabase, "subagent_runs">>(db);
       const rows = executeSqliteQuerySync(
         db,
         stateDb

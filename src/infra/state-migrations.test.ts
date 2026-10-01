@@ -3,12 +3,12 @@ import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { resolveChannelAllowFromPath } from "../pairing/pairing-store.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
+import type { DB as QuietCoreStateKyselyDatabase } from "../state/quiet-core-bot-state-db.generated.js";
 import {
-  closeOpenClawStateDatabaseForTest,
-  openOpenClawStateDatabase,
+  closeQuietCoreStateDatabaseForTest,
+  openQuietCoreStateDatabase,
 } from "../state/quiet-core-bot-state-db.js";
 import { createTrackedTempDirs } from "../test-utils/tracked-temp-dirs.js";
 import {
@@ -33,7 +33,7 @@ vi.mock("../channels/plugins/bundled.js", () => {
     }
   }
 
-  function resolveChatAppAccountId(cfg: OpenClawConfig): string {
+  function resolveChatAppAccountId(cfg: QuietCoreConfig): string {
     const channel = (cfg.channels as Record<string, { defaultAccount?: string }> | undefined)
       ?.chatapp;
     return channel?.defaultAccount ?? "default";
@@ -75,7 +75,7 @@ vi.mock("../channels/plugins/bundled.js", () => {
               ];
         });
       },
-      ({ cfg, env }: { cfg: OpenClawConfig; env: NodeJS.ProcessEnv }) => {
+      ({ cfg, env }: { cfg: QuietCoreConfig; env: NodeJS.ProcessEnv }) => {
         const root = env.QUIET_CORE_STATE_DIR;
         if (!root) {
           return [];
@@ -96,11 +96,11 @@ vi.mock("../channels/plugins/bundled.js", () => {
 
 const tempDirs = createTrackedTempDirs();
 
-type UpdateCheckStateDatabase = Pick<OpenClawStateKyselyDatabase, "update_check_state">;
-type ConfigHealthDatabase = Pick<OpenClawStateKyselyDatabase, "config_health_entries">;
-type PluginBindingApprovalsDatabase = Pick<OpenClawStateKyselyDatabase, "plugin_binding_approvals">;
+type UpdateCheckStateDatabase = Pick<QuietCoreStateKyselyDatabase, "update_check_state">;
+type ConfigHealthDatabase = Pick<QuietCoreStateKyselyDatabase, "config_health_entries">;
+type PluginBindingApprovalsDatabase = Pick<QuietCoreStateKyselyDatabase, "plugin_binding_approvals">;
 type CurrentConversationBindingsDatabase = Pick<
-  OpenClawStateKyselyDatabase,
+  QuietCoreStateKyselyDatabase,
   "current_conversation_bindings"
 >;
 
@@ -126,7 +126,7 @@ function readUpdateCheckState(env: NodeJS.ProcessEnv):
       auto_install_id: string | null;
     }
   | undefined {
-  const { db } = openOpenClawStateDatabase({ env });
+  const { db } = openQuietCoreStateDatabase({ env });
   const stateDb = getNodeSqliteKysely<UpdateCheckStateDatabase>(db);
   return executeSqliteQueryTakeFirstSync(
     db,
@@ -148,7 +148,7 @@ function readConfigHealthRows(env: NodeJS.ProcessEnv): Array<{
   last_promoted_good_json: string | null;
   last_observed_suspicious_signature: string | null;
 }> {
-  const { db } = openOpenClawStateDatabase({ env });
+  const { db } = openQuietCoreStateDatabase({ env });
   const stateDb = getNodeSqliteKysely<ConfigHealthDatabase>(db);
   return executeSqliteQuerySync(
     db,
@@ -173,7 +173,7 @@ function readCurrentConversationBindingRows(env: NodeJS.ProcessEnv): Array<{
   conversation_id: string;
   record_json: string;
 }> {
-  const { db } = openOpenClawStateDatabase({ env });
+  const { db } = openQuietCoreStateDatabase({ env });
   const stateDb = getNodeSqliteKysely<CurrentConversationBindingsDatabase>(db);
   return executeSqliteQuerySync(
     db,
@@ -200,7 +200,7 @@ function readPluginBindingApprovalRows(env: NodeJS.ProcessEnv): Array<{
   plugin_name: string | null;
   approved_at: number;
 }> {
-  const { db } = openOpenClawStateDatabase({ env });
+  const { db } = openQuietCoreStateDatabase({ env });
   const stateDb = getNodeSqliteKysely<PluginBindingApprovalsDatabase>(db);
   return executeSqliteQuerySync(
     db,
@@ -223,7 +223,7 @@ function insertCurrentConversationBindingRow(
     recordJson: string;
   },
 ): void {
-  const { db } = openOpenClawStateDatabase({ env });
+  const { db } = openQuietCoreStateDatabase({ env });
   const stateDb = getNodeSqliteKysely<CurrentConversationBindingsDatabase>(db);
   executeSqliteQuerySync(
     db,
@@ -249,7 +249,7 @@ function insertCurrentConversationBindingRow(
   );
 }
 
-function createConfig(): OpenClawConfig {
+function createConfig(): QuietCoreConfig {
   return {
     agents: {
       list: [{ id: "worker-1", default: true }],
@@ -266,7 +266,7 @@ function createConfig(): OpenClawConfig {
         },
       },
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 }
 
 function createEnv(stateDir: string): NodeJS.ProcessEnv {
@@ -328,7 +328,7 @@ async function createLegacyStateFixture(params?: { includePreKey?: boolean }) {
 
 afterEach(async () => {
   vi.useRealTimers();
-  closeOpenClawStateDatabaseForTest();
+  closeQuietCoreStateDatabaseForTest();
   await tempDirs.cleanup();
 });
 
@@ -513,7 +513,7 @@ describe("state migrations", () => {
     expect(result.changes).toContain(
       "Migrated 2 session delivery queue entries → shared SQLite state",
     );
-    const { db } = openOpenClawStateDatabase({ env });
+    const { db } = openQuietCoreStateDatabase({ env });
     const rows = db
       .prepare(
         "SELECT queue_name, id, status, channel, target, retry_count FROM delivery_queue_entries ORDER BY queue_name, id",
@@ -1057,7 +1057,7 @@ describe("state migrations", () => {
       "utf8",
     );
 
-    const { db } = openOpenClawStateDatabase({ env });
+    const { db } = openQuietCoreStateDatabase({ env });
     db.prepare(
       `
         INSERT INTO delivery_queue_entries (

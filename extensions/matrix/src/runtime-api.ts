@@ -39,7 +39,7 @@ export { logTypingFailure } from "quiet-core-bot/plugin-sdk/channel-outbound";
 export { resolveAckReaction } from "quiet-core-bot/plugin-sdk/channel-feedback";
 export type { ChannelSetupInput } from "quiet-core-bot/plugin-sdk/setup";
 export type {
-  OpenClawConfig,
+  QuietCoreConfig,
   ContextVisibilityMode,
   DmPolicy,
   GroupPolicy,

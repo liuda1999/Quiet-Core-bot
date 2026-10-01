@@ -39,7 +39,7 @@ export type DeviceAuthTokenRecord = {
   scopes?: string[];
 };
 
-// The package stays reusable by depending on host callbacks for OpenClaw-owned
+// The package stays reusable by depending on host callbacks for QuietCore-owned
 // state: device keys, token storage, proxy routing, logging, and TLS formatting.
 export type GatewayClientHostDeps = {
   loadOrCreateDeviceIdentity?: () => DeviceIdentity | undefined;
@@ -554,7 +554,7 @@ export class GatewayClient {
 
   constructor(opts: GatewayClientOptions) {
     this.deps = {
-      // Defaults keep the package inert outside OpenClaw; device signing throws
+      // Defaults keep the package inert outside QuietCore; device signing throws
       // only when a caller actually supplies a device identity without host deps.
       loadOrCreateDeviceIdentity: opts.hostDeps?.loadOrCreateDeviceIdentity ?? (() => undefined),
       signDevicePayload:

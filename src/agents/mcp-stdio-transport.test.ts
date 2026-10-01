@@ -3,7 +3,7 @@ import type { SpawnOptions } from "node:child_process";
 import { EventEmitter } from "node:events";
 import { PassThrough } from "node:stream";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { OpenClawStdioClientTransport } from "./mcp-stdio-transport.js";
+import { QuietCoreStdioClientTransport } from "./mcp-stdio-transport.js";
 
 const spawnMock = vi.hoisted(() => vi.fn());
 const killProcessTreeMock = vi.hoisted(() => vi.fn());
@@ -29,7 +29,7 @@ class MockChildProcess extends EventEmitter {
   stderr = new PassThrough();
 }
 
-describe("OpenClawStdioClientTransport", () => {
+describe("QuietCoreStdioClientTransport", () => {
   afterEach(() => {
     vi.useRealTimers();
     spawnMock.mockReset();
@@ -43,7 +43,7 @@ describe("OpenClawStdioClientTransport", () => {
     const child = new MockChildProcess();
     spawnMock.mockReturnValue(child);
 
-    const transport = new OpenClawStdioClientTransport({
+    const transport = new QuietCoreStdioClientTransport({
       command: "npx",
       args: ["-y", "example-mcp"],
       env: { EXAMPLE: "1" },
@@ -82,7 +82,7 @@ describe("OpenClawStdioClientTransport", () => {
     const child = new MockChildProcess();
     spawnMock.mockReturnValue(child);
 
-    const transport = new OpenClawStdioClientTransport({ command: "npx" });
+    const transport = new QuietCoreStdioClientTransport({ command: "npx" });
     const started = transport.start();
     child.emit("spawn");
     await started;
@@ -101,7 +101,7 @@ describe("OpenClawStdioClientTransport", () => {
     const child = new MockChildProcess();
     spawnMock.mockReturnValue(child);
 
-    const transport = new OpenClawStdioClientTransport({ command: "npx" });
+    const transport = new QuietCoreStdioClientTransport({ command: "npx" });
     const started = transport.start();
     child.emit("spawn");
     await started;
@@ -126,7 +126,7 @@ describe("OpenClawStdioClientTransport", () => {
     const child = new MockChildProcess();
     spawnMock.mockReturnValue(child);
 
-    const transport = new OpenClawStdioClientTransport({ command: "npx" });
+    const transport = new QuietCoreStdioClientTransport({ command: "npx" });
     const started = transport.start();
     child.emit("spawn");
     await started;
@@ -143,7 +143,7 @@ describe("OpenClawStdioClientTransport", () => {
     const child = new MockChildProcess();
     spawnMock.mockReturnValue(child);
 
-    const transport = new OpenClawStdioClientTransport({ command: "npx" });
+    const transport = new QuietCoreStdioClientTransport({ command: "npx" });
     const onmessage = vi.fn();
     Object.assign(transport, { onmessage });
     const started = transport.start();
@@ -176,7 +176,7 @@ describe("OpenClawStdioClientTransport", () => {
     child.stdin = brokenStdin;
     spawnMock.mockReturnValue(child);
 
-    const transport = new OpenClawStdioClientTransport({ command: "npx" });
+    const transport = new QuietCoreStdioClientTransport({ command: "npx" });
     const started = transport.start();
     child.emit("spawn");
     await started;
@@ -195,7 +195,7 @@ describe("OpenClawStdioClientTransport", () => {
     child.stdin = brokenStdin;
     spawnMock.mockReturnValue(child);
 
-    const transport = new OpenClawStdioClientTransport({ command: "npx" });
+    const transport = new QuietCoreStdioClientTransport({ command: "npx" });
     const started = transport.start();
     child.emit("spawn");
     await started;

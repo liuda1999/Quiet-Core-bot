@@ -1,6 +1,6 @@
 // Tests group prompt helpers and lazy runtime loading for group metadata.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import { resetPluginRuntimeStateForTest } from "../../plugins/runtime.js";
 import * as groups from "./groups.js";
 
@@ -81,7 +81,7 @@ describe("group runtime loading", () => {
     expect(telegramContext).not.toContain("Avoid Markdown tables");
     expect(
       isolatedGroups.buildGroupIntro({
-        cfg: {} as OpenClawConfig,
+        cfg: {} as QuietCoreConfig,
         sessionCtx: { Provider: "whatsapp" },
         defaultActivation: "mention",
         silentToken: "NO_REPLY",
@@ -233,7 +233,7 @@ describe("group runtime loading", () => {
               },
             },
           },
-        } as unknown as OpenClawConfig,
+        } as unknown as QuietCoreConfig,
         ctx: {
           Provider: "slack",
           From: "slack:channel:C123",
@@ -264,7 +264,7 @@ describe("group runtime loading", () => {
               },
             },
           },
-        } as unknown as OpenClawConfig,
+        } as unknown as QuietCoreConfig,
         ctx: {
           Provider: "discord",
           From: "discord:channel:C1",
@@ -297,7 +297,7 @@ describe("group runtime loading", () => {
               },
             },
           },
-        } as unknown as OpenClawConfig,
+        } as unknown as QuietCoreConfig,
         ctx: {
           Provider: "discord",
           From: "discord:channel:C1",

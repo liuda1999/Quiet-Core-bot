@@ -1,6 +1,6 @@
 // Channel setup tests cover setup flow prompts and config output.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   makeCatalogEntry,
   makeChannelSetupEntries,
@@ -448,7 +448,7 @@ describe("setupChannels workspace shadow exclusion", () => {
         configured: false,
         statusLines: [],
       })),
-      configure: vi.fn(async ({ cfg }: { cfg: OpenClawConfig }) => ({
+      configure: vi.fn(async ({ cfg }: { cfg: QuietCoreConfig }) => ({
         cfg: {
           ...cfg,
           channels: {

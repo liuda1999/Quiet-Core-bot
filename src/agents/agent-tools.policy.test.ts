@@ -7,7 +7,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
+import type { QuietCoreConfig } from "../config/config.js";
 import { createWarnLogCapture } from "../logging/test-helpers/warn-log-capture.js";
 import {
   filterToolsByPolicy,
@@ -57,7 +57,7 @@ describe("agent-tools.policy", () => {
 });
 
 describe("resolveGroupToolPolicy group context validation", () => {
-  const cfg: OpenClawConfig = {
+  const cfg: QuietCoreConfig = {
     channels: {
       whatsapp: {
         groups: {
@@ -135,7 +135,7 @@ describe("resolveGroupToolPolicy group context validation", () => {
   });
 
   it("keeps specific session group policy ahead of trusted parent caller groupId", () => {
-    const scopedCfg: OpenClawConfig = {
+    const scopedCfg: QuietCoreConfig = {
       channels: {
         whatsapp: {
           groups: {
@@ -174,7 +174,7 @@ describe("resolveGroupToolPolicy group context validation", () => {
           },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     const policy = resolveGroupToolPolicy({
       config: channelCfg,
@@ -190,7 +190,7 @@ describe("resolveGroupToolPolicy group context validation", () => {
 describe("resolveSubagentToolPolicyForSession", () => {
   const baseCfg = {
     agents: { defaults: { subagents: { maxSpawnDepth: 2 } } },
-  } as unknown as OpenClawConfig;
+  } as unknown as QuietCoreConfig;
 
   it("uses stored leaf role for flat depth-1 session keys", () => {
     const storePath = path.join(
@@ -220,7 +220,7 @@ describe("resolveSubagentToolPolicyForSession", () => {
       session: {
         store: storePath,
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     const policy = resolveSubagentToolPolicyForSession(cfg, "agent:main:subagent:flat-leaf");
     expect(isToolAllowedByPolicyName("sessions_spawn", policy)).toBe(false);
@@ -258,7 +258,7 @@ describe("resolveSubagentToolPolicyForSession", () => {
       session: {
         store: storePath,
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     const policy = resolveInheritedToolPolicyForSession(cfg, "agent:main:subagent:limited");
     expect(isToolAllowedByPolicyName("exec", policy)).toBe(false);
@@ -295,7 +295,7 @@ describe("resolveSubagentToolPolicyForSession", () => {
       session: {
         store: storePath,
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     const policy = resolveInheritedToolPolicyForSession(cfg, "agent:main:subagent:limited");
     expect(isToolAllowedByPolicyName("sessions_spawn", policy)).toBe(true);
@@ -342,7 +342,7 @@ describe("resolveSubagentToolPolicyForSession", () => {
       session: {
         store: storePath,
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     const subagentPolicy = resolveSubagentToolPolicyForSession(cfg, "agent:main:subagent:limited");
     const inheritedPolicy = resolveInheritedToolPolicyForSession(
@@ -380,7 +380,7 @@ describe("resolveSubagentToolPolicyForSession", () => {
       session: {
         store: storePath,
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     const policy = resolveInheritedToolPolicyForSession(cfg, "agent:main:acp:limited");
     expect(isToolAllowedByPolicyName("custom_plugin_tool", policy)).toBe(true);
@@ -398,7 +398,7 @@ describe("resolveEffectiveToolPolicy", () => {
           "openrouter/anthropic/claude-sonnet": { deny: ["read"] },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     expect(
       resolveEffectiveToolPolicy({
@@ -416,7 +416,7 @@ describe("resolveEffectiveToolPolicy", () => {
           "anthropic/claude-sonnet": { deny: ["exec"] },
         },
       },
-    } as unknown as OpenClawConfig;
+    } as unknown as QuietCoreConfig;
 
     expect(
       resolveEffectiveToolPolicy({
@@ -433,7 +433,7 @@ describe("resolveEffectiveToolPolicy", () => {
         profile: "messaging",
         exec: { host: "sandbox" },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = resolveEffectiveToolPolicy({ config: cfg });
     expect(result.profileAlsoAllow).toBeUndefined();
   });
@@ -444,7 +444,7 @@ describe("resolveEffectiveToolPolicy", () => {
         profile: "messaging",
         fs: { workspaceOnly: false },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = resolveEffectiveToolPolicy({ config: cfg });
     expect(result.profileAlsoAllow).toBeUndefined();
   });
@@ -456,7 +456,7 @@ describe("resolveEffectiveToolPolicy", () => {
         alsoAllow: ["web_search"],
         exec: { host: "sandbox" },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = resolveEffectiveToolPolicy({ config: cfg });
     expect(result.profileAlsoAllow).toEqual(["web_search"]);
   });
@@ -476,7 +476,7 @@ describe("resolveEffectiveToolPolicy", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = resolveEffectiveToolPolicy({ config: cfg, agentId: "coder" });
     expect(result.profileAlsoAllow).toBeUndefined();
   });
@@ -497,7 +497,7 @@ describe("resolveEffectiveToolPolicy", () => {
           },
         ],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = resolveEffectiveToolPolicy({ config: cfg, agentId: "messenger" });
     expect(result.profileAlsoAllow).toEqual(["image"]);
     expect(result.profileAlsoAllow).not.toContain("exec");
@@ -523,7 +523,7 @@ describe("resolveEffectiveToolPolicy", () => {
             },
           ],
         },
-      } as OpenClawConfig;
+      } as QuietCoreConfig;
 
       resolveEffectiveToolPolicy({ config: cfg, agentId: "sage" });
 
@@ -548,7 +548,7 @@ describe("resolveEffectiveToolPolicy", () => {
             },
           ],
         },
-      } as OpenClawConfig;
+      } as QuietCoreConfig;
 
       resolveEffectiveToolPolicy({ config: cfg, agentId: "sage" });
 
@@ -578,7 +578,7 @@ describe("resolveEffectiveToolPolicy", () => {
             },
           ],
         },
-      } as OpenClawConfig;
+      } as QuietCoreConfig;
 
       resolveEffectiveToolPolicy({ config: cfg, agentId: "echo" });
 
@@ -602,7 +602,7 @@ describe("resolveEffectiveToolPolicy", () => {
         alsoAllow: ["exec", "process"],
         exec: { host: "sandbox" },
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
     const result = resolveEffectiveToolPolicy({ config: cfg });
     expect(result.profileAlsoAllow).toEqual(["exec", "process"]);
   });

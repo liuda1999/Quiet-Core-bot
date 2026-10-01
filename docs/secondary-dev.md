@@ -876,7 +876,7 @@ packages/                         # workspace 共享库包（21 个）
 | macOS 应用     | `apps/macos/`                      | macOS 原生应用（开发、签名、打包）                                                                                                  | `Package.swift`、`README.md`                                                      |
 | iOS 应用       | `apps/ios/`                        | iOS 原生应用（Super Alpha，XcodeGen 项目）                                                                                          | `project.yml`、`README.md`、`version.json`                                        |
 | Android 应用   | `apps/android/`                    | Android 原生应用（Gradle 构建）                                                                                                     | `gradlew`、`style.md`                                                             |
-| 共享 Swift 库  | `apps/shared/`                     | macOS/iOS 共享组件（OpenClawKit）                                                                                                   | `QuietCoreKit/`                                                                   |
+| 共享 Swift 库  | `apps/shared/`                     | macOS/iOS 共享组件（QuietCoreKit）                                                                                                   | `QuietCoreKit/`                                                                   |
 | 项目文档       | `docs/`                            | 按主题分类的完整文档（CLI / 渠道 / Provider / 工具 / 安装 / 概念，681 个 .md）                                                      | `docs.json`、`cli/index.md`、`channels/index.md`                                  |
 | 构建/CI 脚本   | `scripts/`                         | 构建、安装、PR 流程、K8s 部署、QA 测试脚本（835 个文件）                                                                            | `build-all.mjs`、`install.sh`、`k8s/deploy.sh`、`qa-e2e.ts`                       |
 | 内置技能       | `skills/`                          | 52 个内置技能包，每个含 SKILL.md 声明                                                                                               | `github/SKILL.md`、`tmux/SKILL.md`、`skill-creator/SKILL.md`                      |
@@ -1151,12 +1151,12 @@ flowchart LR
 
 ### 4.3 组件树
 
-下图展示 `ui/` 中基于 Lit 的组件层级。根组件 `OpenClawApp`（`ui/src/ui/app.ts`）是一个 `LitElement`，通过 `app-render.ts` 渲染不同 Tab 视图，并通过 `controllers/*` 与 Gateway 交互。
+下图展示 `ui/` 中基于 Lit 的组件层级。根组件 `QuietCoreApp`（`ui/src/ui/app.ts`）是一个 `LitElement`，通过 `app-render.ts` 渲染不同 Tab 视图，并通过 `controllers/*` 与 Gateway 交互。
 
 ```mermaid
 flowchart TB
     Main[main.ts<br/>入口 + Service Worker]
-    Main --> App[OpenClawApp<br/>app.ts · LitElement]
+    Main --> App[QuietCoreApp<br/>app.ts · LitElement]
 
     App --> GatewayClient[GatewayBrowserClient<br/>gateway.ts]
     App --> Theme[theme.ts<br/>主题解析]
@@ -1243,7 +1243,7 @@ flowchart TB
 
 **组件树说明**
 
-- **根组件 `OpenClawApp`**（`ui/src/ui/app.ts`）继承 `LitElement`，使用 `@state` 装饰器管理视图状态；它将大量行为拆分到 `app-*.ts` 模块（lifecycle、gateway、settings、scroll、chat、channels、render、tool-stream、native-bridge），自身只做组合。
+- **根组件 `QuietCoreApp`**（`ui/src/ui/app.ts`）继承 `LitElement`，使用 `@state` 装饰器管理视图状态；它将大量行为拆分到 `app-*.ts` 模块（lifecycle、gateway、settings、scroll、chat、channels、render、tool-stream、native-bridge），自身只做组合。
 - **`app-render.ts` 是渲染分发器**：根据当前 Tab 调用 `views/*` 中对应的渲染函数（overview、chat、channels、sessions、cron、mcp、agents、skills、usage、workboard、config、logs、nodes、dreaming、debug 等）。
 - **`controllers/` 是状态层**：每个控制器（chat、sessions、models、channels、agents、cron、logs、config、skills、workboard、nodes、devices、usage、health、presence）封装对应 Gateway 方法的调用与本地状态，组件通过控制器与 Gateway 交互而非直接 fetch。
 - **`gateway.ts` 提供浏览器端 Gateway 客户端**：实现 WebSocket 连接、设备身份签名（`device-identity.ts`）、令牌存储（`device-auth.ts`）、连接错误细节解析（`ConnectErrorDetailCodes`）。
@@ -1278,7 +1278,7 @@ flowchart TB
 | logging    | `src/logging/`    | 日志系统：基于 tslog 的结构化日志、密钥脱敏、级别控制、子系统日志器、控制台过滤、诊断事件                                                                                                           | `logger.ts`→`Logger`、`redact.ts`、`levels.ts`、`config.ts`、`state.ts`、`subsystem.ts`、`console.ts`                                                                                                |
 | media      | `src/media/`      | 媒体处理：音频 MIME/扩展名归一化、媒体获取、解析、QR 图像、媒体存储                                                                                                                                 | `audio.ts`→`VOICE_MESSAGE_*`、`fetch.ts`、`parse.ts`、`qr-image.ts`、`store.ts`                                                                                                                      |
 | secrets    | `src/secrets/`    | 密钥管理：跨配置/认证库/env 文件的迁移计划、应用、审计、共享工具、路径工具、provider env vars                                                                                                       | `apply.ts`、`plan.ts`、`audit.ts`、`shared.ts`、`config-io.ts`、`path-utils.ts`                                                                                                                      |
-| skills     | `src/skills/`     | 技能系统：技能契约类型、发现（agent 过滤、bins、聊天命令）、加载（frontmatter、bundled、workspace）、生命周期（安装/解压/clawhub）、运行时（cron 快照、远程、会话快照、工具派发）、安全扫描、工作坊 | `types.ts`→`Skill`/`OpenClawSkillMetadata`/`SkillInstallSpec`、`discovery/`、`loading/skill-contract.ts`、`lifecycle/install.ts`、`runtime/refresh.ts`、`security/scanner.ts`、`workshop/service.ts` |
+| skills     | `src/skills/`     | 技能系统：技能契约类型、发现（agent 过滤、bins、聊天命令）、加载（frontmatter、bundled、workspace）、生命周期（安装/解压/clawhub）、运行时（cron 快照、远程、会话快照、工具派发）、安全扫描、工作坊 | `types.ts`→`Skill`/`QuietCoreSkillMetadata`/`SkillInstallSpec`、`discovery/`、`loading/skill-contract.ts`、`lifecycle/install.ts`、`runtime/refresh.ts`、`security/scanner.ts`、`workshop/service.ts` |
 | tools      | `src/tools/`      | 工具协议：描述符定义、可用性评估、工具计划构建、协议描述符转换、执行器引用格式化、诊断                                                                                                              | `index.ts`→`buildToolPlan`/`defineToolDescriptor`/`evaluateToolAvailability`/`toToolProtocolDescriptor`、`planner.ts`、`protocol.ts`、`availability.ts`、`types.ts`                                  |
 | tts        | `src/tts/`        | 文字转语音：TTS 运行时门面、配置解析、provider 顺序、人格、最大长度、自动模式、合成与流式、电话语音、指令解析                                                                                       | `tts.ts`（barrel）、`tts-core.ts`、`tts-config.ts`、`tts-types.ts`、`directives.ts`                                                                                                                  |
 | acp        | `src/acp/`        | Agent Client Protocol：stdio 服务器桥接 ACP 客户端到 Gateway、客户端、命令、策略、翻译器、SQLite 事件账本、类型                                                                                     | `server.ts`→ACP stdio server、`client.ts`、`translator.ts`→`AcpGatewayAgent`、`policy.ts`、`event-ledger.ts`、`types.ts`                                                                             |
@@ -1291,7 +1291,7 @@ flowchart TB
 | 文件      | 位置                     | 职责                                                                                                                                    | 关键导出/内容                                                                                                         |
 | --------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
 | main      | `ui/src/main.ts`         | UI 入口：加载 app、同步公共资源链接、注册/注销 Service Worker                                                                           | `syncDocumentPublicAssetLinks`、SW 注册逻辑                                                                           |
-| app       | `ui/src/ui/app.ts`       | 根 LitElement 组件 `OpenClawApp`：组合 lifecycle/gateway/settings/scroll/chat/channels/render/native-bridge 等模块，管理 `AppViewState` | `OpenClawApp` 类、`@state` 视图状态                                                                                   |
+| app       | `ui/src/ui/app.ts`       | 根 LitElement 组件 `QuietCoreApp`：组合 lifecycle/gateway/settings/scroll/chat/channels/render/native-bridge 等模块，管理 `AppViewState` | `QuietCoreApp` 类、`@state` 视图状态                                                                                   |
 | app-chat  | `ui/src/ui/app-chat.ts`  | 聊天行为：草稿变更、发送、中止、输入历史、队列重试/steer、附件元数据                                                                    | `handleSendChat`、`handleAbortChat`、`handleChatDraftChange`、`handleChatInputHistoryKey`                             |
 | views/mcp | `ui/src/ui/views/mcp.ts` | MCP 视图：渲染 MCP 服务器表格（transport/auth/launch/toolFilter/parallel/TLS）、配置保存/应用                                           | `McpViewProps`、`summarizeServer`                                                                                     |
 | gateway   | `ui/src/ui/gateway.ts`   | 浏览器端 Gateway 客户端：WebSocket 连接、设备身份签名、令牌存储、连接错误细节、重试                                                     | `GatewayBrowserClient`、`GatewayRequestError`、`GatewayEventFrame`、`GatewayResponseFrame`、`ConnectErrorDetailCodes` |
@@ -1343,7 +1343,7 @@ flowchart TB
 | crestodian             | `src/crestodian/`             | `crestodian.ts`、`tui-backend.ts`、`rescue-policy.ts`、`rescue-message.ts`、`probes.ts`、`dialogue.ts`、`overview.ts`、`operations.ts`、`audit.ts`、`assistant.ts`、`assistant-prompts.ts`、`assistant-backends.ts`                                                          | Crestodian 救援助手：rescue 策略与消息、探针、对话、概览、操作、审计、助手提示与后端、TUI 后端（CrestodianTuiBackend）。环境变量 `QUIET_CORE_LIVE_CRESTODIAN_RESCUE_CHANNEL` 控制实时渠道                                                                                                                   |
 | realtime-transcription | `src/realtime-transcription/` | `websocket-session.ts`                                                                                                                                                                                                                                                       | 实时转录 WebSocket 会话：resolveConnection 处理连接建立                                                                                                                                                                                                                                                     |
 | interactive            | `src/interactive/`            | `payload.ts`                                                                                                                                                                                                                                                                 | 交互式回复/展示载荷：MessagePresentation / InteractiveReply 类型族、normalizeInteractiveReply、presentationToInteractiveReply、renderMessagePresentationFallbackText                                                                                                                                        |
-| mcp                    | `src/mcp/`                    | `channel-bridge.ts`→`OpenClawChannelBridge`、`channel-server.ts`、`channel-tools.ts`、`channel-shared.ts`、`quiet-core-bot-tools-serve.ts`、`plugin-tools-serve.ts`、`plugin-tools-handlers.ts`、`tools-stdio-server.ts`                                                     | MCP 桥接与服务：OpenClawChannelBridge（Gateway↔MCP 通道桥）、channel-server（MCP 渠道服务端）、quiet-core-bot-tools-serve（Quiet Core bot 工具暴露为 MCP）、plugin-tools-serve（插件工具 MCP 服务）、stdio 工具服务端                                                                                       |
+| mcp                    | `src/mcp/`                    | `channel-bridge.ts`→`QuietCoreChannelBridge`、`channel-server.ts`、`channel-tools.ts`、`channel-shared.ts`、`quiet-core-bot-tools-serve.ts`、`plugin-tools-serve.ts`、`plugin-tools-handlers.ts`、`tools-stdio-server.ts`                                                     | MCP 桥接与服务：QuietCoreChannelBridge（Gateway↔MCP 通道桥）、channel-server（MCP 渠道服务端）、quiet-core-bot-tools-serve（Quiet Core bot 工具暴露为 MCP）、plugin-tools-serve（插件工具 MCP 服务）、stdio 工具服务端                                                                                       |
 | security               | `src/security/`               | `audit.ts`、`fix.ts`、`test-temp-cases.ts`→`AsyncTempCaseFactory`                                                                                                                                                                                                            | 安全审计与修复、测试用例工厂                                                                                                                                                                                                                                                                                |
 | chat                   | `src/chat/`                   | `canvas-render.ts`、`tool-content.ts`                                                                                                                                                                                                                                        | Canvas 渲染、工具内容呈现                                                                                                                                                                                                                                                                                   |
 | compat                 | `src/compat/`                 | `legacy-names.ts`                                                                                                                                                                                                                                                            | 遗留命名兼容                                                                                                                                                                                                                                                                                                |
@@ -1471,7 +1471,7 @@ flowchart TB
 - `applyRuntimeControls(params)` — 应用运行时控制
 - `runtimeOptionCommandServices()` — 运行时选项命令服务
 
-##### OpenClawChannelBridge MCP 桥接（`src/mcp/channel-bridge.ts`）
+##### QuietCoreChannelBridge MCP 桥接（`src/mcp/channel-bridge.ts`）
 
 - `handleGatewayEvent(event)` — Gateway 事件桥接到 MCP
 - `handleSessionMessageEvent(payload)` — 会话消息事件桥接
@@ -1531,7 +1531,7 @@ flowchart TB
 | 多渠道路由      | 渠道配置 / 入站消息                                     | `src/channels/ids.ts`、`src/channels/allow-from.ts`、`src/channels/session.ts`、`src/channels/registry.ts`、`src/agents/agent-scope.ts`                         | `normalizeChatChannelId` 归一化渠道；`mergeDmAllowFromSources` / `isSenderIdAllowed` 执行 allowFrom 与配对策略；`recordInboundSession` 写入 session store 并更新最近路由；`resolveSessionAgentId` / `resolveDefaultAgentId` 绑定 Agent。                                                                                                                                                               |
 | Cron 调度       | `CronService.start` / 定时器触发                        | `src/cron/service.ts`、`src/cron/service/ops.ts`、`src/cron/service/timer.ts`、`src/cron/schedule.ts`                                                           | `CronService` 门面委托 `service/ops.ts`；`run`/`enqueueRun` → `executeJobCoreWithTimeout` → `executeJobCore` 按 `sessionTarget` 分流到 `executeMainSessionCronJob` 或 `executeDetachedCronJob`，最终调用 `agentCommand`；`armTimer` 基于 `computeJobNextRunAtMs` 重排下一次唤醒。                                                                                                                      |
 | TUI 交互        | `quiet-core-bot tui`                                    | `src/tui/tui.ts`、`src/tui/tui-backend.ts`、`src/tui/tui-command-handlers.ts`、`src/tui/tui-event-handlers.ts`                                                  | `runTui` 读取 `getRuntimeConfig`，按 `opts.local`/`opts.backend` 选择本地运行或 Gateway RPC 后端；用户输入经 `createEditorSubmitHandler` 提交，事件处理器把 Agent 事件投影到 `ChatLog`/`CustomEditor` 组件，断线由 `resolveGatewayDisconnectState` 处理。                                                                                                                                              |
-| 插件加载        | Gateway/CLI 启动 / `loadOpenClawPlugins`                | `src/plugins/loader.ts`、`src/plugins/discovery.ts`、`src/plugins/manifest-registry.ts`、`src/plugins/api-builder.ts`、`src/plugins/api-facades.ts`             | `loadOpenClawPlugins` 解析 `PluginLoadOptions` → `resolvePluginLoadCacheContext` 命中缓存或新建 → `discoverOpenClawPlugins` 发现候选 → `loadPluginManifestRegistry` 读取 manifest → `createPluginModuleLoader` 加载运行时模块 → `buildPluginApi` + `attachPluginApiFacades` 注入 SDK → `activatePluginRegistry` 注册命令/钩子/渠道。                                                                   |
+| 插件加载        | Gateway/CLI 启动 / `loadQuietCorePlugins`                | `src/plugins/loader.ts`、`src/plugins/discovery.ts`、`src/plugins/manifest-registry.ts`、`src/plugins/api-builder.ts`、`src/plugins/api-facades.ts`             | `loadQuietCorePlugins` 解析 `PluginLoadOptions` → `resolvePluginLoadCacheContext` 命中缓存或新建 → `discoverQuietCorePlugins` 发现候选 → `loadPluginManifestRegistry` 读取 manifest → `createPluginModuleLoader` 加载运行时模块 → `buildPluginApi` + `attachPluginApiFacades` 注入 SDK → `activatePluginRegistry` 注册命令/钩子/渠道。                                                                   |
 
 > 上述 8 条链路在源码中通过 `createLazyImportLoader`、动态 `import()` 与 `startupTrace.measure` 串接，二次开发时建议沿着 `createGatewayStartupTrace` 的 `mark`/`measure` 标注定位耗时阶段。
 
@@ -1622,7 +1622,7 @@ sequenceDiagram
 
 #### 5.2.3 Gateway 启动与插件加载链
 
-补充绘制 Gateway 启动时配置加载、插件引导、服务器监听的交织顺序，帮助理解"为什么插件钩子在 listen 之前就必须就绪"。对应源码：`src/cli/gateway-cli/run.ts` 的 `runGatewayCommand`、`src/gateway/server.impl.ts` 的 `startGatewayServer`、`src/plugins/loader.ts` 的 `loadOpenClawPlugins`。
+补充绘制 Gateway 启动时配置加载、插件引导、服务器监听的交织顺序，帮助理解"为什么插件钩子在 listen 之前就必须就绪"。对应源码：`src/cli/gateway-cli/run.ts` 的 `runGatewayCommand`、`src/gateway/server.impl.ts` 的 `startGatewayServer`、`src/plugins/loader.ts` 的 `loadQuietCorePlugins`。
 
 ```mermaid
 sequenceDiagram
@@ -1630,7 +1630,7 @@ sequenceDiagram
     participant RGC as runGatewayCommand
     participant SRV as startGatewayServer
     participant CFG as StartupConfig
-    participant PLG as loadOpenClawPlugins
+    participant PLG as loadQuietCorePlugins
     participant CH as Channel Runtime
     participant WS as WS/HTTP Server
 
@@ -1640,8 +1640,8 @@ sequenceDiagram
     SRV->>CFG: loadGatewayStartupConfigSnapshot
     CFG-->>SRV: configSnapshot (含 pluginMetadataSnapshot)
     SRV->>CFG: prepareGatewayStartupConfig (auth/TLS)
-    SRV->>PLG: loadOpenClawPlugins (bootstrap)
-    PLG->>PLG: discoverOpenClawPlugins → manifest → module loader
+    SRV->>PLG: loadQuietCorePlugins (bootstrap)
+    PLG->>PLG: discoverQuietCorePlugins → manifest → module loader
     PLG->>PLG: buildPluginApi / attachPluginApiFacades
     PLG-->>SRV: PluginRegistry (commands/hooks/channels)
     SRV->>CH: pinActivePluginChannelRegistry
@@ -1715,7 +1715,7 @@ sequenceDiagram
 | 多渠道路由   | `recordInboundSession` / `isSenderIdAllowed`           | `src/channels/session.ts` / `src/channels/allow-from.ts`                  |
 | Cron 调度    | `CronService.run` / `executeJobCoreWithTimeout`        | `src/cron/service.ts` / `src/cron/service/timer.ts`                       |
 | TUI 交互     | `runTui`                                               | `src/tui/tui.ts`                                                          |
-| 插件加载     | `loadOpenClawPlugins`                                  | `src/plugins/loader.ts`                                                   |
+| 插件加载     | `loadQuietCorePlugins`                                  | `src/plugins/loader.ts`                                                   |
 
 > 注：本章所有函数名、文件路径均来自 `quiet-core-bot-2026.6.11` 源码实际符号，未做臆造；如需查看具体实现细节，按上表路径在仓库中检索即可。
 
@@ -1991,7 +1991,7 @@ sequenceDiagram
         WP->>U: 逐步高级配置
         WP-->>WZ: GatewayWizardSettings
     end
-    WZ->>OC: buildOnboardConfig (组装 OpenClawConfig)
+    WZ->>OC: buildOnboardConfig (组装 QuietCoreConfig)
     WZ->>WZ: buildPluginCompatibilitySnapshotNotices
     WZ->>U: 显示安全提示 + 插件兼容性通知
     WZ->>WZ: writeWizardConfigFile(config)
@@ -2873,7 +2873,7 @@ flowchart TB
     Gateway[Gateway Server<br/>WebSocket + HTTP]
 
     subgraph Web["Web Control UI（ui/ · Lit）"]
-        WebApp[OpenClawApp<br/>app.ts]
+        WebApp[QuietCoreApp<br/>app.ts]
         WebApp --> WebViews["views/*<br/>overview/chat/channels/sessions/<br/>cron/mcp/agents/skills/usage/<br/>workboard/config/logs/nodes/<br/>dreaming/debug/..."]
     end
 
@@ -2913,7 +2913,7 @@ flowchart TB
 
 #### 7.2.1 Web Control UI 视图
 
-Web Control UI 由根组件 `OpenClawApp`（`ui/src/ui/app.ts`）通过 `app-render.ts` 按 Tab 分发到 `ui/src/ui/views/*` 渲染。默认由 Gateway 在 `http://127.0.0.1:18789/` 提供（`gateway.controlUi.basePath` 可覆盖），TLS 启用时为 `https://`。访问需通过 Gateway 认证（shared-secret token/password、Tailscale Serve 或 trusted-proxy）。
+Web Control UI 由根组件 `QuietCoreApp`（`ui/src/ui/app.ts`）通过 `app-render.ts` 按 Tab 分发到 `ui/src/ui/views/*` 渲染。默认由 Gateway 在 `http://127.0.0.1:18789/` 提供（`gateway.controlUi.basePath` 可覆盖），TLS 启用时为 `https://`。访问需通过 Gateway 认证（shared-secret token/password、Tailscale Serve 或 trusted-proxy）。
 
 | 视图名                   | 入口文件                             | Tab/路径   | 说明                                                                       |
 | ------------------------ | ------------------------------------ | ---------- | -------------------------------------------------------------------------- |
@@ -2963,7 +2963,7 @@ TUI（`quiet-core-bot tui`）支持 Gateway 模式（连接远端 `--url ws://<h
 
 > **iOS 能力说明**：iOS App 以 `role: node` 连接 Gateway，通过 `node.invoke` 暴露设备能力（camera/canvas/screen/location/contacts/calendar/photos/motion/notifications）。前台优先，后台 `canvas.*`/`camera.*`/`screen.*`/`talk.*` 受限。推送通过 APNs（本地直连）或托管 Relay（App Store 构建，`https://ios-push-relay.openclaw.ai`）。Computer Use 不走 iOS，iOS 仅作节点能力提供方。
 
-> **Android 结构说明**：`apps/android/app/src/main/java/ai/openclaw/app/` 下按 `chat/`、`gateway/`、`node/`、`protocol/`、`tools/`、`ui/`、`voice/` 分包。UI 层 `ui/chat/`（ChatComposer/ChatMarkdown/ChatMessageListCard/ChatTimeline）、`ui/design/`（ClawComponents/ClawNavigation/ClawTheme/ClawSurfaces）、`ui/` 根屏幕（RootScreen/ConnectTab/ChatSheet/VoiceTab/CanvasScreen/SessionsScreen/SettingsSheet 等）。节点能力处理器在 `node/`（CalendarHandler/CameraHandler/ContactsHandler/LocationHandler/NotificationsHandler/PhotosHandler 等）。双 flavor：`play`（Play Store，含 CallLogHandler/SmsHandler）与 `thirdParty`（第三方构建，不含敏感功能）。
+> **Android 结构说明**：`apps/android/app/src/main/java/ai/quietcore/app/` 下按 `chat/`、`gateway/`、`node/`、`protocol/`、`tools/`、`ui/`、`voice/` 分包。UI 层 `ui/chat/`（ChatComposer/ChatMarkdown/ChatMessageListCard/ChatTimeline）、`ui/design/`（ClawComponents/ClawNavigation/ClawTheme/ClawSurfaces）、`ui/` 根屏幕（RootScreen/ConnectTab/ChatSheet/VoiceTab/CanvasScreen/SessionsScreen/SettingsSheet 等）。节点能力处理器在 `node/`（CalendarHandler/CameraHandler/ContactsHandler/LocationHandler/NotificationsHandler/PhotosHandler 等）。双 flavor：`play`（Play Store，含 CallLogHandler/SmsHandler）与 `thirdParty`（第三方构建，不含敏感功能）。
 
 ### 7.3 UI 组件目录
 
@@ -3091,7 +3091,7 @@ TUI 通过配置项与斜杠命令定制显示：
 
 #### 7.5.3 原生 App 定制
 
-- **Android**：`apps/android/app/src/main/res/values/themes.xml` 与 `values-night/themes.xml`（日/夜主题），`ui/design/ClawTheme.kt`（Compose 主题），`OpenClawTheme.kt`，`AppearanceThemeMode.kt`（外观模式），字体 Manrope（`res/font/`）。
+- **Android**：`apps/android/app/src/main/res/values/themes.xml` 与 `values-night/themes.xml`（日/夜主题），`ui/design/ClawTheme.kt`（Compose 主题），`QuietCoreTheme.kt`，`AppearanceThemeMode.kt`（外观模式），字体 Manrope（`res/font/`）。
 - **iOS/macOS**：SwiftUI 主题，`apps/macos/Sources/` 与 `apps/ios/Sources/` 各自实现，共享 `apps/shared/QuietCoreKit/`。
 
 ---
@@ -3483,9 +3483,9 @@ TUI 通过配置项与斜杠命令定制显示：
 | Agent Pro Nodes Destination    | `Design/AgentProNodesDestination.swift`                                                                                | 节点目标                      |
 | Agent Pro Dreaming Destination | `Design/AgentProDreamingDestination.swift`                                                                             | 梦境目标                      |
 | Settings Channels Destination  | `Design/SettingsChannelsDestination.swift`                                                                             | 渠道目标                      |
-| Quiet Core bot Docs Screen     | `Design/OpenClawDocsScreen.swift`                                                                                      | 文档屏幕                      |
-| Quiet Core bot Pro Components  | `Design/OpenClawProComponents.swift`                                                                                   | Pro 组件                      |
-| Quiet Core bot Brand           | `Design/OpenClawBrand.swift`                                                                                           | 品牌                          |
+| Quiet Core bot Docs Screen     | `Design/QuietCoreDocsScreen.swift`                                                                                      | 文档屏幕                      |
+| Quiet Core bot Pro Components  | `Design/QuietCoreProComponents.swift`                                                                                   | Pro 组件                      |
+| Quiet Core bot Brand           | `Design/QuietCoreBrand.swift`                                                                                           | 品牌                          |
 | Command Center Support         | `Design/CommandCenterSupport.swift`                                                                                    | 命令中心支持                  |
 
 ###### G.2 iPad 屏幕(文档完全未列 iPad 专属屏幕)
@@ -3568,16 +3568,16 @@ TUI 通过配置项与斜杠命令定制显示：
 
 | 组件                                  | 文件                                                | 用途          |
 | ------------------------------------- | --------------------------------------------------- | ------------- |
-| Quiet Core bot Live Activity          | `ActivityWidget/OpenClawLiveActivity.swift`         | Live Activity |
-| Quiet Core bot Activity Widget Bundle | `ActivityWidget/OpenClawActivityWidgetBundle.swift` | Widget Bundle |
+| Quiet Core bot Live Activity          | `ActivityWidget/QuietCoreLiveActivity.swift`         | Live Activity |
+| Quiet Core bot Activity Widget Bundle | `ActivityWidget/QuietCoreActivityWidgetBundle.swift` | Widget Bundle |
 | Live Activity Manager                 | `LiveActivity/LiveActivityManager.swift`            | 管理器        |
-| Quiet Core bot Activity Attributes    | `LiveActivity/OpenClawActivityAttributes.swift`     | 属性          |
+| Quiet Core bot Activity Attributes    | `LiveActivity/QuietCoreActivityAttributes.swift`     | 属性          |
 
 ###### G.8 Apple Watch(文档完全未列)
 
 | 组件                          | 文件                                               | 用途             |
 | ----------------------------- | -------------------------------------------------- | ---------------- |
-| Quiet Core bot Watch App      | `WatchApp/Sources/OpenClawWatchApp.swift`          | Watch 应用入口   |
+| Quiet Core bot Watch App      | `WatchApp/Sources/QuietCoreWatchApp.swift`          | Watch 应用入口   |
 | Watch Inbox View              | `WatchApp/Sources/WatchInboxView.swift`            | Watch 收件箱     |
 | Watch Inbox Store             | `WatchApp/Sources/WatchInboxStore.swift`           | Watch 收件箱存储 |
 | Watch Connectivity Receiver   | `WatchApp/Sources/WatchConnectivityReceiver.swift` | Watch 连接接收器 |
@@ -3704,7 +3704,7 @@ TUI 通过配置项与斜杠命令定制显示：
 | Claw Preview          | `ui/design/ClawPreview.kt`    | 预览            |
 | Claw Navigation       | `ui/design/ClawNavigation.kt` | 导航            |
 | Claw Components       | `ui/design/ClawComponents.kt` | 组件            |
-| Quiet Core bot Theme  | `ui/OpenClawTheme.kt`         | 主题            |
+| Quiet Core bot Theme  | `ui/QuietCoreTheme.kt`         | 主题            |
 | Mobile UI Tokens      | `ui/MobileUiTokens.kt`        | 移动端 UI Token |
 | Appearance Theme Mode | `AppearanceThemeMode.kt`      | 外观模式        |
 
@@ -3961,9 +3961,9 @@ TUI 通过配置项与斜杠命令定制显示：
 
 文档完全未列:
 
-- **Live Activity**:`OpenClawLiveActivity`、`OpenClawActivityWidgetBundle`、`LiveActivityManager`、`OpenClawActivityAttributes`(Dynamic Island/Lock Screen 实时活动)
+- **Live Activity**:`QuietCoreLiveActivity`、`QuietCoreActivityWidgetBundle`、`LiveActivityManager`、`QuietCoreActivityAttributes`(Dynamic Island/Lock Screen 实时活动)
 - **Apple Watch 应用**:
-  - Watch 端:`OpenClawWatchApp`、`WatchInboxView`、`WatchInboxStore`、`WatchConnectivityReceiver`
+  - Watch 端:`QuietCoreWatchApp`、`WatchInboxView`、`WatchInboxStore`、`WatchConnectivityReceiver`
   - iOS 端:`WatchMessagingService`、`WatchMessagingPayloadCodec`、`WatchConnectivityTransport`、`WatchReplyCoordinator`
 
 ##### 8. iOS Share Extension

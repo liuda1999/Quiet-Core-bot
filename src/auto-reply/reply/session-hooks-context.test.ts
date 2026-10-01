@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/config.js";
+import type { QuietCoreConfig } from "../../config/config.js";
 import type { SessionEntry } from "../../config/sessions.js";
 import type { HookRunner } from "../../plugins/hooks.js";
 import { initSessionState } from "./session.js";
@@ -111,7 +111,7 @@ async function createStoredSession(params: {
   return { storePath, transcriptPath };
 }
 
-type SessionResetConfig = NonNullable<NonNullable<OpenClawConfig["session"]>["reset"]>;
+type SessionResetConfig = NonNullable<NonNullable<QuietCoreConfig["session"]>["reset"]>;
 
 async function initStoredSessionState(params: {
   prefix: string;
@@ -127,7 +127,7 @@ async function initStoredSessionState(params: {
       store: storePath,
       ...(params.reset ? { reset: params.reset } : {}),
     },
-  } as OpenClawConfig;
+  } as QuietCoreConfig;
 
   await initSessionState({
     ctx: { Body: "hello", SessionKey: params.sessionKey },
@@ -187,7 +187,7 @@ describe("session hook context wiring", () => {
     const sessionKey = "agent:main:telegram:direct:123";
     const storePath = await createStorePath("quiet-core-bot-session-hook-start");
     await writeStore(storePath, {});
-    const cfg = { session: { store: storePath } } as OpenClawConfig;
+    const cfg = { session: { store: storePath } } as QuietCoreConfig;
 
     await initSessionState({
       ctx: { Body: "hello", SessionKey: sessionKey },
@@ -208,7 +208,7 @@ describe("session hook context wiring", () => {
       sessionKey,
       sessionId: "old-session",
     });
-    const cfg = { session: { store: storePath } } as OpenClawConfig;
+    const cfg = { session: { store: storePath } } as QuietCoreConfig;
 
     await initSessionState({
       ctx: { Body: "/new", SessionKey: sessionKey },
@@ -244,7 +244,7 @@ describe("session hook context wiring", () => {
       sessionId: "reset-session",
       text: "reset me",
     });
-    const cfg = { session: { store: storePath } } as OpenClawConfig;
+    const cfg = { session: { store: storePath } } as QuietCoreConfig;
 
     await initSessionState({
       ctx: { Body: "/reset", SessionKey: sessionKey },
@@ -269,7 +269,7 @@ describe("session hook context wiring", () => {
         store: storePath,
         resetTriggers: ["/fresh"],
       },
-    } as OpenClawConfig;
+    } as QuietCoreConfig;
 
     await initSessionState({
       ctx: { Body: "/fresh", SessionKey: sessionKey },

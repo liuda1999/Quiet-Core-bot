@@ -44,19 +44,19 @@ type MockedSendNodeEvent = Mock<HandleSystemRunInvokeOptions["sendNodeEvent"]>;
 
 describe("handleSystemRunInvoke mac app exec host routing", () => {
   let sharedFixtureRoot = "";
-  let sharedOpenClawHome = "";
+  let sharedQuietCoreHome = "";
   let sharedRuntimeBinDir = "";
   let sharedFixtureId = 0;
-  let previousOpenClawHome: string | undefined;
+  let previousQuietCoreHome: string | undefined;
   const sharedRuntimeBins = new Set<string>();
 
   beforeAll(() => {
     sharedFixtureRoot = fs.realpathSync(
       fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-node-host-fixtures-")),
     );
-    sharedOpenClawHome = path.join(sharedFixtureRoot, "quiet-core-bot-home");
+    sharedQuietCoreHome = path.join(sharedFixtureRoot, "quiet-core-bot-home");
     sharedRuntimeBinDir = path.join(sharedFixtureRoot, "bin");
-    fs.mkdirSync(sharedOpenClawHome, { recursive: true });
+    fs.mkdirSync(sharedQuietCoreHome, { recursive: true });
     fs.mkdirSync(sharedRuntimeBinDir, { recursive: true });
   });
 
@@ -73,18 +73,18 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
   }
 
   beforeEach(() => {
-    previousOpenClawHome = process.env.QUIET_CORE_HOME;
-    process.env.QUIET_CORE_HOME = sharedOpenClawHome;
+    previousQuietCoreHome = process.env.QUIET_CORE_HOME;
+    process.env.QUIET_CORE_HOME = sharedQuietCoreHome;
     fs.rmSync(resolveExecApprovalsPath(), { force: true });
     clearRuntimeConfigSnapshot();
   });
 
   afterEach(() => {
     clearRuntimeConfigSnapshot();
-    if (previousOpenClawHome === undefined) {
+    if (previousQuietCoreHome === undefined) {
       delete process.env.QUIET_CORE_HOME;
     } else {
-      process.env.QUIET_CORE_HOME = previousOpenClawHome;
+      process.env.QUIET_CORE_HOME = previousQuietCoreHome;
     }
   });
 
@@ -317,7 +317,7 @@ describe("handleSystemRunInvoke mac app exec host routing", () => {
     approvals: Parameters<typeof saveExecApprovals>[0];
     run: (ctx: { tempHome: string }) => Promise<T>;
   }): Promise<T> {
-    const tempHome = sharedOpenClawHome;
+    const tempHome = sharedQuietCoreHome;
     return await withEnvAsync({ QUIET_CORE_HOME: tempHome }, async () => {
       saveExecApprovals(params.approvals);
       return await params.run({ tempHome });

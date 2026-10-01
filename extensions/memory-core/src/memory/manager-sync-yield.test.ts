@@ -4,7 +4,7 @@ import path from "node:path";
 import type { DatabaseSync } from "node:sqlite";
 import {
   resolveSessionTranscriptsDirForAgent,
-  type OpenClawConfig,
+  type QuietCoreConfig,
   type ResolvedMemorySearchConfig,
 } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-foundation";
 import type { MemorySource } from "quiet-core-bot/plugin-sdk/memory-core-host-engine-storage";
@@ -78,7 +78,7 @@ function createDbMock(): DatabaseSync {
 }
 
 class SessionSyncYieldHarness extends MemoryManagerSyncOps {
-  protected readonly cfg = {} as OpenClawConfig;
+  protected readonly cfg = {} as QuietCoreConfig;
   protected readonly agentId = "main";
   protected readonly workspaceDir = "/tmp/quiet-core-bot-test-workspace";
   protected readonly settings = {

@@ -4,7 +4,7 @@
  * It validates daemon runtime options, resolves gateway auth inputs, and then
  * delegates the platform-specific service install.
  */
-import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../config/types.quiet-core-bot.js";
 import { resolveGatewayService } from "../../../daemon/service.js";
 import { isSystemdUserServiceAvailable } from "../../../daemon/systemd.js";
 import { formatErrorMessage } from "../../../infra/errors.js";
@@ -17,7 +17,7 @@ import { ensureSystemdUserLingerNonInteractive } from "../../systemd-linger.js";
 
 /** Installs the managed gateway daemon when non-interactive setup requested it. */
 export async function installGatewayDaemonNonInteractive(params: {
-  nextConfig: OpenClawConfig;
+  nextConfig: QuietCoreConfig;
   opts: OnboardOptions;
   runtime: RuntimeEnv;
   port: number;

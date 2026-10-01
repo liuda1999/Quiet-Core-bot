@@ -1286,7 +1286,7 @@ function openClawEntryArgs(): string[] {
   return ["quiet-core-bot.mjs"];
 }
 
-function spawnOpenClaw(args: string[], env: NodeJS.ProcessEnv): ChildProcess {
+function spawnQuietCore(args: string[], env: NodeJS.ProcessEnv): ChildProcess {
   return spawn(process.execPath, [...openClawEntryArgs(), ...args], {
     detached: process.platform !== "win32",
     env,
@@ -1818,7 +1818,7 @@ async function main() {
       );
     }
 
-    const child = spawnOpenClaw(buildQaArgs(options), buildQaEnv(exportPort));
+    const child = spawnQuietCore(buildQaArgs(options), buildQaEnv(exportPort));
     const cleanupSignalRelay = relayParentSignalsToChild(child);
     child.stdout?.on("data", (chunk) => {
       stdoutDiagnosticLogs.append(chunk);

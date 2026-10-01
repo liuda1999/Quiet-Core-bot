@@ -1,5 +1,5 @@
 // Memory Core plugin module implements session search visibility behavior.
-import type { OpenClawConfig } from "quiet-core-bot/plugin-sdk/memory-core-host-runtime-core";
+import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/memory-core-host-runtime-core";
 import type { MemorySearchResult } from "quiet-core-bot/plugin-sdk/memory-core-host-runtime-files";
 import { resolveSessionAgentId } from "quiet-core-bot/plugin-sdk/memory-host-core";
 import {
@@ -19,12 +19,12 @@ function normalizeAgentIdForCompare(value: string | undefined): string | undefin
   return value?.trim().toLowerCase() || undefined;
 }
 
-function isGlobalSessionKeyForSharedScope(cfg: OpenClawConfig, key: string): boolean {
+function isGlobalSessionKeyForSharedScope(cfg: QuietCoreConfig, key: string): boolean {
   return cfg.session?.scope === "global" && key.trim().toLowerCase() === "global";
 }
 
 function filterSessionKeysByScopedAgent(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   keys: string[];
   scopedAgentId: string | undefined;
 }): string[] {
@@ -45,7 +45,7 @@ function filterSessionKeysByScopedAgent(params: {
 }
 
 export async function filterMemorySearchHitsBySessionVisibility(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   agentId?: string;
   requesterSessionKey: string | undefined;
   sandboxed: boolean;

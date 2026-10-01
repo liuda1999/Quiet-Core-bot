@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Builds OpenClaw packages and plugin SDK artifacts with cache-aware orchestration.
+// Builds QuietCore packages and plugin SDK artifacts with cache-aware orchestration.
 
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -248,7 +248,7 @@ export function buildAllUsage() {
   return [
     "Usage: node scripts/build-all.mjs [profile]",
     "",
-    "Builds OpenClaw artifacts for the selected profile.",
+    "Builds QuietCore artifacts for the selected profile.",
     "",
     "Profiles:",
     ...Object.keys(BUILD_ALL_PROFILES).map((profile) => `  ${profile}`),

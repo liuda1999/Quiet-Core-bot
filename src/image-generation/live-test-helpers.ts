@@ -1,6 +1,6 @@
 /** Helpers for selecting image-generation providers and models in live tests. */
 import { normalizeOptionalLowercaseString } from "@quiet-core/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   parseLiveCsvFilter,
   parseProviderModelMap,
@@ -42,7 +42,7 @@ export function parseCsvFilter(raw?: string): Set<string> | null {
   return parseLiveCsvFilter(raw, { lowercase: false });
 }
 
-export function resolveConfiguredLiveImageModels(cfg: OpenClawConfig): Map<string, string> {
+export function resolveConfiguredLiveImageModels(cfg: QuietCoreConfig): Map<string, string> {
   return resolveConfiguredLiveProviderModels(cfg.agents?.defaults?.imageGenerationModel);
 }
 

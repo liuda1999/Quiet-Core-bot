@@ -96,7 +96,7 @@ cat >"${tmp_file}" <<EOF
 // QUIET_CORE_IOS_WATCH_APP_PROFILE
 QUIET_CORE_CODE_SIGN_STYLE = ${code_sign_style}
 QUIET_CORE_CODE_SIGN_IDENTITY = ${code_sign_identity}
-QUIET_CORE_CODE_SIGN_ENTITLEMENTS = Sources/OpenClaw.entitlements
+QUIET_CORE_CODE_SIGN_ENTITLEMENTS = Sources/QuietCore.entitlements
 QUIET_CORE_DEVELOPMENT_TEAM = ${team_id}
 // Keep legacy key for compatibility with older signing config paths.
 QUIET_CORE_IOS_SELECTED_TEAM = ${team_id}

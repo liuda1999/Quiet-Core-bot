@@ -1,6 +1,6 @@
 // Non-interactive gateway config tests cover port, bind, auth token, and SecretRef preservation behavior.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../config/types.quiet-core-bot.js";
 import { withEnv } from "../../../test-utils/env.js";
 import type { OnboardOptions } from "../../onboard-types.js";
 import { applyNonInteractiveGatewayConfig } from "./gateway-config.js";
@@ -35,19 +35,19 @@ const SAMPLE_SECRET_REF = {
   id: "QUIET_CORE_GATEWAY_TOKEN_REF",
 };
 
-function createTokenConfig(token: unknown): OpenClawConfig {
+function createTokenConfig(token: unknown): QuietCoreConfig {
   return {
     gateway: { auth: { mode: "token", token } },
-  } as unknown as OpenClawConfig;
+  } as unknown as QuietCoreConfig;
 }
 
 function applyGatewayConfig({
-  nextConfig = {} as OpenClawConfig,
+  nextConfig = {} as QuietCoreConfig,
   opts = baseOpts,
   runtime = createRuntime(),
   env = {},
 }: {
-  nextConfig?: OpenClawConfig;
+  nextConfig?: QuietCoreConfig;
   opts?: OnboardOptions;
   runtime?: ReturnType<typeof createRuntime>;
   env?: Record<string, string | undefined>;

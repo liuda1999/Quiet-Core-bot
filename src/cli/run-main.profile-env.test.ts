@@ -53,7 +53,7 @@ vi.mock("../infra/runtime-guard.js", () => ({
 }));
 
 vi.mock("../infra/path-env.js", () => ({
-  ensureOpenClawCliOnPath: vi.fn(),
+  ensureQuietCoreCliOnPath: vi.fn(),
 }));
 
 vi.mock("./route.js", () => ({

@@ -18,15 +18,15 @@ import {
 import { createSuiteTempRootTracker } from "./test-helpers/fs-fixtures.js";
 
 const runCommandWithTimeoutMock = vi.fn();
-const resolveOpenClawPackageRootSyncMock = vi.fn();
+const resolveQuietCorePackageRootSyncMock = vi.fn();
 
 vi.mock("../process/exec.js", () => ({
   runCommandWithTimeout: (...args: unknown[]) => runCommandWithTimeoutMock(...args),
 }));
 
 vi.mock("../infra/quiet-core-bot-root.js", () => ({
-  resolveOpenClawPackageRootSync: (...args: unknown[]) =>
-    resolveOpenClawPackageRootSyncMock(...args),
+  resolveQuietCorePackageRootSync: (...args: unknown[]) =>
+    resolveQuietCorePackageRootSyncMock(...args),
 }));
 
 vi.resetModules();
@@ -302,7 +302,7 @@ type MockNpmPackage = {
   versions?: string[];
   installedVersion?: string;
   installedIntegrity?: string;
-  materializesRootOpenClaw?: boolean;
+  materializesRootQuietCore?: boolean;
   skipLockfileEntry?: boolean;
   packArchivePath?: string;
   packTarballName?: string;
@@ -327,7 +327,7 @@ function writeNpmRootPackageLock(params: {
       version: pkg.installedVersion ?? pkg.version,
       integrity: pkg.installedIntegrity ?? pkg.integrity ?? "sha512-plugin-test",
     };
-    if (pkg.materializesRootOpenClaw) {
+    if (pkg.materializesRootQuietCore) {
       lockPackages["node_modules/quiet-core-bot"] = {
         peer: true,
         version: "2026.5.3",
@@ -380,7 +380,7 @@ function readTextFileTree(dir: string, rootDir = dir): Record<string, string> {
   );
 }
 
-function prunePluginLocalOpenClawPeerLinks(npmRoot: string) {
+function prunePluginLocalQuietCorePeerLinks(npmRoot: string) {
   const nodeModulesDir = path.join(npmRoot, "node_modules");
   if (!fs.existsSync(nodeModulesDir)) {
     return;
@@ -503,7 +503,7 @@ function mockNpmViewAndInstallMany(packages: MockNpmPackage[]) {
           dependencies?: Record<string, string>;
         };
         const installedPackages: MockNpmPackage[] = [];
-        prunePluginLocalOpenClawPeerLinks(npmRoot);
+        prunePluginLocalQuietCorePeerLinks(npmRoot);
         for (const packageName of Object.keys(manifest.dependencies ?? {})) {
           if (packageName === "quiet-core-bot") {
             const openclawRoot = path.join(npmRoot, "node_modules", "quiet-core-bot");
@@ -536,7 +536,7 @@ function mockNpmViewAndInstallMany(packages: MockNpmPackage[]) {
             npmRoot,
             version: pkg.installedVersion ?? pkg.version,
           });
-          if (pkg.materializesRootOpenClaw) {
+          if (pkg.materializesRootQuietCore) {
             const openclawRoot = path.join(npmRoot, "node_modules", "quiet-core-bot");
             fs.mkdirSync(openclawRoot, { recursive: true });
             fs.writeFileSync(
@@ -603,28 +603,28 @@ afterAll(() => {
 
 beforeEach(() => {
   runCommandWithTimeoutMock.mockReset();
-  resolveOpenClawPackageRootSyncMock.mockReset();
+  resolveQuietCorePackageRootSyncMock.mockReset();
   const hostRoot = suiteTempRootTracker.makeTempDir();
   fs.writeFileSync(
     path.join(hostRoot, "package.json"),
     `${JSON.stringify({ name: "quiet-core-bot", version: "0.0.0-test" }, null, 2)}\n`,
     "utf8",
   );
-  resolveOpenClawPackageRootSyncMock.mockReturnValue(hostRoot);
+  resolveQuietCorePackageRootSyncMock.mockReturnValue(hostRoot);
   vi.unstubAllEnvs();
   process.env.NPM_CONFIG_GLOBALCONFIG = npmGlobalConfigPath;
 });
 
 beforeAll(async () => {
   runCommandWithTimeoutMock.mockReset();
-  resolveOpenClawPackageRootSyncMock.mockReset();
+  resolveQuietCorePackageRootSyncMock.mockReset();
   const hostRoot = suiteTempRootTracker.makeTempDir();
   fs.writeFileSync(
     path.join(hostRoot, "package.json"),
     `${JSON.stringify({ name: "quiet-core-bot", version: "0.0.0-test" }, null, 2)}\n`,
     "utf8",
   );
-  resolveOpenClawPackageRootSyncMock.mockReturnValue(hostRoot);
+  resolveQuietCorePackageRootSyncMock.mockReturnValue(hostRoot);
   process.env.NPM_CONFIG_GLOBALCONFIG = npmGlobalConfigPath;
 
   const stateDir = suiteTempRootTracker.makeTempDir();
@@ -682,14 +682,14 @@ beforeAll(async () => {
 
 beforeAll(async () => {
   runCommandWithTimeoutMock.mockReset();
-  resolveOpenClawPackageRootSyncMock.mockReset();
+  resolveQuietCorePackageRootSyncMock.mockReset();
   const hostRoot = suiteTempRootTracker.makeTempDir();
   fs.writeFileSync(
     path.join(hostRoot, "package.json"),
     `${JSON.stringify({ name: "quiet-core-bot", version: "0.0.0-test" }, null, 2)}\n`,
     "utf8",
   );
-  resolveOpenClawPackageRootSyncMock.mockReturnValue(hostRoot);
+  resolveQuietCorePackageRootSyncMock.mockReturnValue(hostRoot);
   process.env.NPM_CONFIG_GLOBALCONFIG = npmGlobalConfigPath;
 
   const stateDir = suiteTempRootTracker.makeTempDir();
@@ -1747,7 +1747,7 @@ describe("installPluginFromNpmSpec", () => {
     const npmRoot = path.join(stateDir, "npm");
     const warnings: string[] = [];
 
-    resolveOpenClawPackageRootSyncMock.mockReturnValue(null);
+    resolveQuietCorePackageRootSyncMock.mockReturnValue(null);
     mockNpmViewAndInstall({
       spec: "@quiet-core/codex@2026.5.7",
       packageName: "@quiet-core/codex",
@@ -2118,7 +2118,7 @@ describe("installPluginFromNpmSpec", () => {
         pluginId: "required-peer-plugin",
         npmRoot,
         peerDependencies: { "quiet-core-bot": "^2026.0.0" },
-        materializesRootOpenClaw: true,
+        materializesRootQuietCore: true,
       });
 
       const result = await installPluginFromNpmSpec({
@@ -2289,7 +2289,7 @@ describe("installPluginFromNpmSpec", () => {
       "utf-8",
     );
 
-    resolveOpenClawPackageRootSyncMock.mockReturnValue(hostPackageRoot);
+    resolveQuietCorePackageRootSyncMock.mockReturnValue(hostPackageRoot);
     mockNpmViewAndInstall({
       spec: "@xdarkicex/quiet-core-bot-memory-libravdb@1.4.69",
       packageName: "@xdarkicex/quiet-core-bot-memory-libravdb",
@@ -2487,7 +2487,7 @@ describe("installPluginFromNpmSpec", () => {
       `${JSON.stringify({ name: "quiet-core-bot", version: "0.0.0-test" }, null, 2)}\n`,
       "utf8",
     );
-    resolveOpenClawPackageRootSyncMock.mockReturnValue(hostRoot);
+    resolveQuietCorePackageRootSyncMock.mockReturnValue(hostRoot);
     const installedDir = writeInstalledNpmPlugin({
       npmRoot: npmProjectRoot,
       packageName: "@quiet-core/codex",
@@ -2627,7 +2627,7 @@ describe("installPluginFromNpmSpec", () => {
       ].join("\n"),
       "utf8",
     );
-    resolveOpenClawPackageRootSyncMock.mockReturnValue(hostRoot);
+    resolveQuietCorePackageRootSyncMock.mockReturnValue(hostRoot);
     mockNpmViewAndInstall({
       spec: "@quiet-core/voice-call@0.0.1",
       packageName: "@quiet-core/voice-call",

@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { withTempHome } from "../../config/home-env.test-harness.js";
-import type { OpenClawConfig } from "../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import { expectObjectFields, mockFirstObjectArg } from "../../test-utils/mock-call-assertions.js";
 import { createCommandWorkspaceHarness } from "./commands-filesystem.test-support.js";
 import { handlePluginsCommand } from "./commands-plugins.js";
@@ -65,7 +65,7 @@ function buildPluginsParams(
   commandBodyNormalized: string,
   workspaceDir: string,
   options: {
-    cfg?: OpenClawConfig;
+    cfg?: QuietCoreConfig;
     gatewayClientScopes?: string[];
     omitGatewayClientScopes?: boolean;
     senderIsOwner?: boolean;
@@ -117,7 +117,7 @@ describe("handleCommands /plugins install", () => {
   });
 
   it("passes the active config to npm install policy preflight", async () => {
-    const policyConfig: OpenClawConfig = {
+    const policyConfig: QuietCoreConfig = {
       commands: {
         text: true,
         plugins: true,

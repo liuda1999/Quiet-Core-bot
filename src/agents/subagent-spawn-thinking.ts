@@ -4,7 +4,7 @@
  */
 import { asOptionalObjectRecord } from "@quiet-core/normalization-core/record-coerce";
 import { normalizeThinkLevel } from "../auto-reply/thinking.shared.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 
 function readString(value: Record<string, unknown>, key: string): string | undefined {
   const raw = value[key];
@@ -13,7 +13,7 @@ function readString(value: Record<string, unknown>, key: string): string | undef
 
 /** Resolves subagent thinking override and initial session patch from caller/agent config. */
 export function resolveSubagentThinkingOverride(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   requesterAgentConfig?: unknown;
   targetAgentConfig?: unknown;
   thinkingOverrideRaw?: string;

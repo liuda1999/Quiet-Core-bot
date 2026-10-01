@@ -2,7 +2,7 @@
 import { note } from "../../packages/terminal-core/src/note.js";
 import { formatCliCommand } from "../cli/command-format.js";
 import { resolveGatewayPort } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import {
   resolveGatewayLaunchAgentLabel,
   resolveNodeLaunchAgentLabel,
@@ -161,7 +161,7 @@ function renderEstablishedGatewayConnections(connections: PortConnection[]): str
 }
 
 async function maybeReportEstablishedGatewayClients(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   deep: boolean;
   port?: number;
 }): Promise<void> {
@@ -185,7 +185,7 @@ async function maybeReportEstablishedGatewayClients(params: {
  * services, report port conflicts, or restart unhealthy supervision when policy allows.
  */
 export async function maybeRepairGatewayDaemon(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   runtime: RuntimeEnv;
   prompter: DoctorPrompter;
   options: DoctorOptions;

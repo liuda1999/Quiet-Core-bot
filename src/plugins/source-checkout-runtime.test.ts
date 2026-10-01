@@ -2,7 +2,7 @@
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { setBundledPluginsDirOverrideForTest } from "./bundled-dir.js";
-import { loadOpenClawPlugins } from "./loader.js";
+import { loadQuietCorePlugins } from "./loader.js";
 
 describe("source checkout bundled plugin runtime", () => {
   beforeEach(() => {
@@ -14,7 +14,7 @@ describe("source checkout bundled plugin runtime", () => {
   });
 
   it("loads enabled bundled plugins from source checkout", () => {
-    const registry = loadOpenClawPlugins({
+    const registry = loadQuietCorePlugins({
       cache: false,
       onlyPluginIds: ["tokenjuice"],
       config: {

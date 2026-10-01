@@ -84,7 +84,7 @@ export type SurfaceConfigEntry = {
 };
 
 /** Top-level Quiet Core bot config as read from user/project config files. */
-export type OpenClawConfig = {
+export type QuietCoreConfig = {
   /** JSON schema URL used by editors and generated config files. */
   $schema?: string;
   meta?: {
@@ -237,13 +237,13 @@ export type OpenClawConfig = {
 };
 
 /** Config input shape accepted before model provider defaults are fully materialized. */
-export type OpenClawConfigInput = Omit<OpenClawConfig, "models"> & {
+export type QuietCoreConfigInput = Omit<QuietCoreConfig, "models"> & {
   models?: ModelsConfigInput;
 };
 
 declare const openClawConfigStateBrand: unique symbol;
 
-type BrandedConfigState<TState extends string> = OpenClawConfig & {
+type BrandedConfigState<TState extends string> = QuietCoreConfig & {
   readonly [openClawConfigStateBrand]?: TState;
 };
 

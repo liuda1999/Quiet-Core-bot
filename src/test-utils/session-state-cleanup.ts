@@ -6,8 +6,8 @@ import { clearSessionStoreCaches } from "../config/sessions/store-cache.js";
 import { drainSessionStoreWriterQueuesForTest } from "../config/sessions/store-writer-state.js";
 import { drainFileLockStateForTest } from "../infra/file-lock.js";
 import {
-  closeOpenClawStateDatabase,
-  closeOpenClawStateDatabaseUnder,
+  closeQuietCoreStateDatabase,
+  closeQuietCoreStateDatabaseUnder,
 } from "../state/quiet-core-bot-state-db.js";
 
 /** Busy-style errno codes Windows reports while a tracked file is still open. */
@@ -49,7 +49,7 @@ export async function removeTestTempPath(target: string): Promise<void> {
       if (!isBusyCleanupError(error)) {
         throw error;
       }
-      closeOpenClawStateDatabaseUnder(target);
+      closeQuietCoreStateDatabaseUnder(target);
     }
   }
   throw lastError instanceof Error ? lastError : new Error(cleanupErrorMessage(target));
@@ -67,7 +67,7 @@ export function removeTestTempPathSync(target: string): void {
       if (!isBusyCleanupError(error)) {
         throw error;
       }
-      closeOpenClawStateDatabaseUnder(target);
+      closeQuietCoreStateDatabaseUnder(target);
     }
   }
   throw lastError instanceof Error ? lastError : new Error(cleanupErrorMessage(target));
@@ -109,5 +109,5 @@ export async function cleanupSessionStateForTest(): Promise<void> {
   // Release cached state database handles before callers delete temp homes: an
   // open SQLite handle keeps the .sqlite/-wal/-shm files locked, which makes the
   // Windows temp-home fs.rm retry indefinitely instead of settling.
-  closeOpenClawStateDatabase();
+  closeQuietCoreStateDatabase();
 }

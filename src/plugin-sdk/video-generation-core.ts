@@ -18,7 +18,7 @@ export type {
   VideoGenerationSourceAsset,
   VideoGenerationTransformCapabilities,
 } from "../video-generation/types.js";
-export type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
+export type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 
 export { describeFailoverError, isFailoverError } from "../agents/failover-error.js";
 export {

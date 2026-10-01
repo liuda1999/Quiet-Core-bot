@@ -6,7 +6,7 @@ import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
 } from "@quiet-core/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.js";
+import type { QuietCoreConfig } from "../config/types.js";
 import type { TtsAutoMode, TtsConfig, TtsMode } from "../config/types.tts.js";
 import { normalizeAccountId, normalizeAgentId } from "../routing/session-key.js";
 import { resolveConfigDir, resolveUserPath } from "../utils.js";
@@ -41,7 +41,7 @@ function deepMergeDefined(base: unknown, override: unknown): unknown {
 }
 
 function resolveAgentTtsOverride(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   agentId: string | undefined,
 ): TtsConfig | undefined {
   if (!agentId || !Array.isArray(cfg.agents?.list)) {
@@ -86,7 +86,7 @@ function asObjectRecord(value: unknown): Record<string, unknown> | undefined {
 }
 
 function resolveChannelConfig(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   channelId: string | undefined,
 ): Record<string, unknown> | undefined {
   if (!isPlainObject(cfg.channels)) {
@@ -106,14 +106,14 @@ function resolveChannelConfig(
 }
 
 function resolveChannelTtsOverride(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   context: TtsConfigResolutionContext,
 ): TtsConfig | undefined {
   return asTtsConfig(resolveChannelConfig(cfg, context.channelId)?.tts);
 }
 
 function resolveAccountTtsOverride(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   context: TtsConfigResolutionContext,
 ): TtsConfig | undefined {
   const channelConfig = resolveChannelConfig(cfg, context.channelId);
@@ -124,7 +124,7 @@ function resolveAccountTtsOverride(
 
 /** Resolve effective TTS config after applying global, agent, channel, and account layers. */
 export function resolveEffectiveTtsConfig(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   contextOrAgentId?: string | TtsConfigResolutionContext,
 ): TtsConfig {
   const context = resolveTtsConfigContext(contextOrAgentId);
@@ -141,7 +141,7 @@ export function resolveEffectiveTtsConfig(
 
 /** Resolve the configured TTS mode, defaulting to final-answer synthesis. */
 export function resolveConfiguredTtsMode(
-  cfg: OpenClawConfig,
+  cfg: QuietCoreConfig,
   contextOrAgentId?: string | TtsConfigResolutionContext,
 ): TtsMode {
   return resolveEffectiveTtsConfig(cfg, contextOrAgentId).mode ?? "final";
@@ -181,7 +181,7 @@ function readTtsPrefsAutoMode(prefsPath: string): TtsAutoMode | undefined {
 
 /** Return whether this payload should attempt TTS based on session, prefs, and config. */
 export function shouldAttemptTtsPayload(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   ttsAuto?: string;
   agentId?: string;
   channelId?: string;
@@ -207,7 +207,7 @@ export function shouldAttemptTtsPayload(params: {
 
 /** Return whether TTS directive markup should be stripped from user-visible text. */
 export function shouldCleanTtsDirectiveText(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   ttsAuto?: string;
   agentId?: string;
   channelId?: string;

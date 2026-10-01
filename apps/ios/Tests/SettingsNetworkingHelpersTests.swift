@@ -1,5 +1,5 @@
 import Testing
-@testable import OpenClaw
+@testable import QuietCore
 
 @Suite struct SettingsNetworkingHelpersTests {
     @Test func diagnosticsIssuesNameEachReviewerVisibleCheck() {

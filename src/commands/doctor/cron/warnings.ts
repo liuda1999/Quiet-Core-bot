@@ -5,7 +5,7 @@ import { normalizeOptionalString } from "../../../../packages/normalization-core
 import { note } from "../../../../packages/terminal-core/src/note.js";
 import { formatCliCommand } from "../../../cli/command-format.js";
 import { resolveAgentModelPrimaryValue } from "../../../config/model-input.js";
-import type { OpenClawConfig } from "../../../config/types.quiet-core-bot.js";
+import type { QuietCoreConfig } from "../../../config/types.quiet-core-bot.js";
 import { shortenHomePath } from "../../../utils.js";
 
 type CrontabReader = () => Promise<{ stdout?: unknown; stderr?: unknown }>;
@@ -64,7 +64,7 @@ function formatProviderCounts(counts: Map<string, number>): string {
 
 /** Emit a note when cron jobs pin models instead of inheriting the default model. */
 export function noteCronModelOverrides(params: {
-  cfg: OpenClawConfig;
+  cfg: QuietCoreConfig;
   jobs: Array<Record<string, unknown>>;
   storePath: string;
 }) {
