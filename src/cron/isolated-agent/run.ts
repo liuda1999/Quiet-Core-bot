@@ -870,7 +870,7 @@ async function prepareCronRunContext(params: {
 
   markCronSessionPreRun({ entry: cronSession.sessionEntry, provider, model });
   try {
-    await persistSessionEntry();
+    await persistSessionEntry({ inFlight: true });
   } catch (err) {
     logWarn(`[cron:${input.job.id}] Failed to persist pre-run session entry: ${String(err)}`);
   }

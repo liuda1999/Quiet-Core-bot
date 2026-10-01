@@ -579,7 +579,7 @@ export async function executeCronRun(params: {
       try {
         // Persist the switched model before retrying so later delivery/session
         // metadata agrees with the model that actually handled the run.
-        await params.persistSessionEntry();
+        await params.persistSessionEntry({ inFlight: true });
       } catch (persistErr) {
         logWarn(
           `[cron:${params.job.id}] Failed to persist model switch session entry: ${String(persistErr)}`,

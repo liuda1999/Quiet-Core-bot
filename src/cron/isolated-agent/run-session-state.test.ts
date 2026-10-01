@@ -104,6 +104,49 @@ describe("createPersistCronSessionEntry", () => {
     expect(cronSession.store["agent:main:cron:shell-only"]?.sessionFile).toBeUndefined();
   });
 
+  it("keeps resume handles for in-flight persists so a restart cannot orphan the transcript", async () => {
+    const pendingTranscriptPath = path.join(
+      os.tmpdir(),
+      `quiet-core-bot-inflight-cron-${crypto.randomUUID()}.jsonl`,
+    );
+    const cronSession = makeCronSession(
+      makeSessionEntry({
+        sessionFile: pendingTranscriptPath,
+        label: "Cron: long-task",
+        status: "running",
+      }),
+    );
+    const updateSessionStore = vi.fn(
+      async (_storePath, update: (store: Record<string, SessionEntry>) => void) => {
+        const store: Record<string, SessionEntry> = {};
+        update(store);
+        expect(store["agent:main:cron:long-task"]).toEqual({
+          sessionId: "run-session-id",
+          sessionFile: pendingTranscriptPath,
+          label: "Cron: long-task",
+          status: "running",
+          updatedAt: 1000,
+          systemSent: true,
+        });
+      },
+    );
+
+    const persist = createPersistCronSessionEntry({
+      isFastTestEnv: false,
+      cronSession,
+      agentSessionKey: "agent:main:cron:long-task",
+      updateSessionStore,
+    });
+
+    // The transcript is written as the run progresses, so the pre-run write must
+    // not drop the handles: a process that dies mid-run would otherwise leave the
+    // already-written transcript unreferenced.
+    await persist({ inFlight: true });
+
+    expect(cronSession.store["agent:main:cron:long-task"]?.sessionId).toBe("run-session-id");
+    expect(cronSession.store["agent:main:cron:long-task"]?.sessionFile).toBe(pendingTranscriptPath);
+  });
+
   it("restores resumable cron fields once the transcript exists", async () => {
     const transcriptPath = await createTranscriptFile();
     const cronSession = makeCronSession(

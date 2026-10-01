@@ -23,8 +23,13 @@ type UpdateSessionStore = (
   update: (store: MutableSessionStore) => void,
 ) => Promise<void>;
 
-/** Persists the currently selected mutable cron session entry to the session store. */
-export type PersistCronSessionEntry = () => Promise<void>;
+/**
+ * Persists the currently selected mutable cron session entry to the session store.
+ *
+ * `inFlight: true` marks a write made while the run is still executing, where the
+ * transcript is being written or is about to be.
+ */
+export type PersistCronSessionEntry = (opts?: { inFlight?: boolean }) => Promise<void>;
 
 function cronTranscriptExists(entry: SessionEntry): boolean {
   const sessionFile = entry.sessionFile?.trim();
@@ -57,11 +62,17 @@ export function createPersistCronSessionEntry(params: {
   agentSessionKey: string;
   updateSessionStore: UpdateSessionStore;
 }): PersistCronSessionEntry {
-  return async () => {
+  return async (opts) => {
     if (params.isFastTestEnv) {
       return;
     }
+    // Only drop resume handles once a run has *finished* without producing a
+    // transcript. Applying this to in-flight writes stripped sessionId/
+    // sessionFile while the transcript was still being written, so a process
+    // that died mid-run left an entry with no handles pointing at the file it
+    // had already written — the transcript became unreferenced.
     const persistedEntry =
+      !opts?.inFlight &&
       isCronSessionKey(params.agentSessionKey) &&
       params.cronSession.sessionEntry.sessionId &&
       !cronTranscriptExists(params.cronSession.sessionEntry)
@@ -133,7 +144,7 @@ export async function persistCronSkillsSnapshotIfChanged(params: {
     updatedAt: params.nowMs,
     skillsSnapshot: params.skillsSnapshot,
   };
-  await params.persistSessionEntry();
+  await params.persistSessionEntry({ inFlight: true });
 }
 
 /** Records the selected provider/model before a cron run starts. */
