@@ -396,12 +396,10 @@ tokens. Backend-only realtime voice providers can also run through the generic
 Gateway relay transport, which keeps provider credentials on the Gateway.
 </Note>
 
-For maintainer live verification, run
-`OPENAI_API_KEY=... GEMINI_API_KEY=... node --import tsx scripts/dev/realtime-talk-live-smoke.ts`.
-The smoke also covers OpenAI backend/WebRTC paths; the Google leg mints the same
-constrained Live API token shape used by Control UI Talk, opens the browser
-WebSocket endpoint, sends the initial setup payload, and waits for
-`setupComplete`.
+For maintainer live verification, run the Google Live constrained-token path
+end to end: mint the same constrained Live API token shape used by Control UI
+Talk, open the browser WebSocket endpoint, send the initial setup payload, and
+wait for `setupComplete`.
 
 ## Advanced configuration
 

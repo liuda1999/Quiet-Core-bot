@@ -32,15 +32,15 @@ changing config.
 
 ## Quick choice
 
-| Goal                                                   | Use                                                      | Notes                                                                 |
-| ------------------------------------------------------ | -------------------------------------------------------- | --------------------------------------------------------------------- |
-| ChatGPT/Codex subscription with native Codex runtime   | `openai/gpt-5.5`                                         | Default OpenAI agent setup. Sign in with Codex auth.                  |
-| Direct API-key billing for agent models                | `openai/gpt-5.5` plus a Codex-compatible API-key profile | Use `auth.order.openai` to place the backup after subscription auth.  |
-| Direct API-key billing through explicit Quiet Core bot | `openai/gpt-5.5` plus provider/model runtime `quiet-core-bot`  | Select a normal `openai` API-key profile.                             |
-| Latest ChatGPT Instant API alias                       | `openai/chat-latest`                                     | Direct API-key only. Moving alias for experiments, not the default.   |
-| ChatGPT/Codex subscription auth through Quiet Core bot | `openai/gpt-5.5` plus provider/model runtime `quiet-core-bot`  | Select an `openai` OAuth profile for the compatibility route.         |
-| Image generation or editing                            | `openai/gpt-image-2`                                     | Works with either `OPENAI_API_KEY` or OpenAI Codex OAuth.             |
-| Transparent-background images                          | `openai/gpt-image-1.5`                                   | Use `outputFormat=png` or `webp` and `openai.background=transparent`. |
+| Goal                                                   | Use                                                           | Notes                                                                 |
+| ------------------------------------------------------ | ------------------------------------------------------------- | --------------------------------------------------------------------- |
+| ChatGPT/Codex subscription with native Codex runtime   | `openai/gpt-5.5`                                              | Default OpenAI agent setup. Sign in with Codex auth.                  |
+| Direct API-key billing for agent models                | `openai/gpt-5.5` plus a Codex-compatible API-key profile      | Use `auth.order.openai` to place the backup after subscription auth.  |
+| Direct API-key billing through explicit Quiet Core bot | `openai/gpt-5.5` plus provider/model runtime `quiet-core-bot` | Select a normal `openai` API-key profile.                             |
+| Latest ChatGPT Instant API alias                       | `openai/chat-latest`                                          | Direct API-key only. Moving alias for experiments, not the default.   |
+| ChatGPT/Codex subscription auth through Quiet Core bot | `openai/gpt-5.5` plus provider/model runtime `quiet-core-bot` | Select an `openai` OAuth profile for the compatibility route.         |
+| Image generation or editing                            | `openai/gpt-image-2`                                          | Works with either `OPENAI_API_KEY` or OpenAI Codex OAuth.             |
+| Transparent-background images                          | `openai/gpt-image-1.5`                                        | Use `outputFormat=png` or `webp` and `openai.background=transparent`. |
 
 ## Naming map
 
@@ -743,11 +743,7 @@ Legacy `plugins.entries.openai.config.personality` is still read as a compatibil
     OpenAI Realtime API. The Gateway mints that client secret with the selected
     `openai` API-key auth profile or configured OpenAI Platform API key. Gateway
     relay and Voice Call backend realtime WebSocket bridges use the same
-    API-key-only auth path for native OpenAI endpoints. Maintainer live
-    verification is available with
-    `OPENAI_API_KEY=... GEMINI_API_KEY=... node --import tsx scripts/dev/realtime-talk-live-smoke.ts`;
-    the OpenAI legs verify both the backend WebSocket bridge and the browser
-    WebRTC SDP exchange without logging secrets.
+    API-key-only auth path for native OpenAI endpoints.
     </Note>
 
   </Accordion>
