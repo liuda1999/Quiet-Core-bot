@@ -1915,49 +1915,6 @@ function formatRunNextLabel(nextRunAtMs: number, nowMs = Date.now()) {
   return nextRunAtMs > nowMs ? t("cron.runEntry.next", { rel }) : t("cron.runEntry.due", { rel });
 }
 
-function renderJobState(job: CronJob) {
-  const rawStatus = resolveCronJobLastRunStatus(job);
-  const statusClass =
-    rawStatus === "ok"
-      ? "cron-job-status-ok"
-      : rawStatus === "error"
-        ? "cron-job-status-error"
-        : rawStatus === "skipped"
-          ? "cron-job-status-skipped"
-          : "cron-job-status-na";
-  const statusLabel =
-    rawStatus === "ok"
-      ? t("cron.runs.runStatusOk")
-      : rawStatus === "error"
-        ? t("cron.runs.runStatusError")
-        : rawStatus === "skipped"
-          ? t("cron.runs.runStatusSkipped")
-          : t("cron.runs.runStatusUnknown");
-  const nextRunAtMs = job.state?.nextRunAtMs;
-  const lastRunAtMs = job.state?.lastRunAtMs;
-
-  return html`
-    <div class="cron-job-state">
-      <div class="cron-job-state-row">
-        <span class="cron-job-state-key">${t("cron.jobState.status")}</span>
-        <span class=${`cron-job-status-pill ${statusClass}`}>${statusLabel}</span>
-      </div>
-      <div class="cron-job-state-row">
-        <span class="cron-job-state-key">${t("cron.jobState.next")}</span>
-        <span class="cron-job-state-value" title=${formatMs(nextRunAtMs)}>
-          ${formatStateRelative(nextRunAtMs)}
-        </span>
-      </div>
-      <div class="cron-job-state-row">
-        <span class="cron-job-state-key">${t("cron.jobState.last")}</span>
-        <span class="cron-job-state-value" title=${formatMs(lastRunAtMs)}>
-          ${formatStateRelative(lastRunAtMs)}
-        </span>
-      </div>
-    </div>
-  `;
-}
-
 function runStatusLabel(value: string): string {
   switch (value) {
     case "ok":
