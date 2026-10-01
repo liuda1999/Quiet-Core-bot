@@ -940,6 +940,13 @@ async function finishPreparedManualRun(
         {
           status: coreResult.status,
           error: coreResult.error,
+          // Manual runs must forward the execution-error classifier: without it
+          // `applyJobResult` cannot fold a delivery-only failure
+          // (errorKind="delivery-target") into an ok execution status, so
+          // `cron run` kept reporting success-with-undelivered-output as a job
+          // failure and escalated `consecutiveErrors` / backoff / failure
+          // alerts for work that actually completed.
+          errorKind: coreResult.errorKind,
           diagnostics: coreResult.diagnostics,
           delivered: coreResult.delivered,
           provider: coreResult.provider,

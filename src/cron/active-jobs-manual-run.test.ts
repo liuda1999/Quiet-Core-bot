@@ -65,11 +65,11 @@ function createManualIsolatedJob(id: string): CronJob {
   };
 }
 
-async function createManualRunHarness(jobId: string) {
+async function createManualRunHarness(jobId: string, jobOverride?: CronJob) {
   const store = await makeStorePath();
   await writeCronStoreSnapshot({
     storePath: store.storePath,
-    jobs: [createManualIsolatedJob(jobId)],
+    jobs: [jobOverride ?? createManualIsolatedJob(jobId)],
   });
 
   const entered = createDeferred<void>();
@@ -112,6 +112,50 @@ describe("cron activeJobIds — manual-run mark/clear", () => {
       await runPromise;
 
       expect(isCronJobActive("manual-isolated-ok")).toBe(false);
+    } finally {
+      cron.stop();
+      await store.cleanup();
+    }
+  });
+
+  // Regression: the manual-run path (cron.run() → finishPreparedManualRun) did
+  // not forward the execution-error classifier to applyJobResult, so a
+  // delivery-only failure (agent turn completed, outbound target unresolvable)
+  // was recorded as an execution error: lastStatus/lastRunStatus flipped to
+  // "error", lastError was populated and consecutiveErrors escalated — feeding
+  // error backoff and failure alerts for work that had already succeeded. The
+  // scheduled path already forwarded errorKind; the manual path must match.
+  it("folds delivery-only failures into ok state for manual runs", async () => {
+    const jobId = "manual-delivery-target-only";
+    const { cron, entered, release, store } = await createManualRunHarness(jobId, {
+      ...createManualIsolatedJob(jobId),
+      delivery: { mode: "announce", channel: "last" },
+    });
+
+    try {
+      await cron.start();
+
+      const runPromise = cron.run(jobId, "force");
+      await entered.promise;
+
+      release.resolve({
+        status: "error",
+        error: "Channel is required (no configured channels detected).",
+        errorKind: "delivery-target",
+        delivered: false,
+      });
+      await runPromise;
+
+      const job = cron.getJob(jobId);
+      expect(job?.state.lastRunStatus).toBe("ok");
+      expect(job?.state.lastStatus).toBe("ok");
+      expect(job?.state.lastError).toBeUndefined();
+      expect(job?.state.consecutiveErrors ?? 0).toBe(0);
+      // The delivery failure stays visible instead of being swallowed.
+      expect(job?.state.lastDeliveryStatus).toBe("not-delivered");
+      expect(job?.state.lastDeliveryError).toBe(
+        "Channel is required (no configured channels detected).",
+      );
     } finally {
       cron.stop();
       await store.cleanup();
