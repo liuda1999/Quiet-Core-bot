@@ -58,13 +58,11 @@ vi.mock("node:fs", async () => {
   const mockedFs = {
     ...actual,
     readFileSync: vi.fn((filePath: string) => {
+      const normalizedPath = filePath.replaceAll("\\", "/");
       for (const [suffix, contents] of hoisted.exportHtmlTemplateContents) {
-        if (filePath.endsWith(suffix)) {
+        if (normalizedPath.endsWith(suffix)) {
           return contents;
         }
-      }
-      if (filePath.includes("/export-html/")) {
-        return actual.readFileSync(filePath, "utf8");
       }
       return actual.readFileSync(filePath, "utf8");
     }),
@@ -86,8 +84,9 @@ vi.mock("node:fs/promises", async () => {
       if (filePath === "/tmp/target-store/session.jsonl") {
         return hoisted.sessionTranscriptContent;
       }
+      const normalizedPath = filePath.replaceAll("\\", "/");
       for (const [suffix, contents] of hoisted.exportHtmlTemplateContents) {
-        if (filePath.endsWith(suffix)) {
+        if (normalizedPath.endsWith(suffix)) {
           return contents;
         }
       }
@@ -484,7 +483,9 @@ describe("buildExportSessionReply", () => {
       flag: "wx",
     });
     expect(writeFilePath(1)).toBe(expectedSuffix);
-    expect(reply.text).toContain("📄 File: quiet-core-bot-session-session--2026-05-05T10-11-12-2.html");
+    expect(reply.text).toContain(
+      "📄 File: quiet-core-bot-session-session--2026-05-05T10-11-12-2.html",
+    );
   });
 
   it("preserves replacement text with dollar sequences", async () => {
