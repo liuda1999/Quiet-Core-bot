@@ -184,6 +184,16 @@ export function applyModelDefaults(
       if (nextProvider !== provider) {
         mutated = true;
       }
+      // A provider-level window is the documented inheritance source for model
+      // entries that declare none. Going straight to the global default used to
+      // silently shadow it (a provider `contextWindow: 131072` was materialized
+      // as 200000), which then fed the wrong window into compaction thresholds
+      // and prompt-budget math.
+      const providerContextWindow = isPositiveNumber(normalizedProvider.contextTokens)
+        ? normalizedProvider.contextTokens
+        : isPositiveNumber(normalizedProvider.contextWindow)
+          ? normalizedProvider.contextWindow
+          : undefined;
       let providerMutated = false;
       const nextModels = models.map((model) => {
         const raw = model as ModelDefinitionLike;
@@ -220,7 +230,7 @@ export function applyModelDefaults(
 
         const contextWindow = isPositiveNumber(raw.contextWindow)
           ? raw.contextWindow
-          : DEFAULT_CONTEXT_TOKENS;
+          : (providerContextWindow ?? DEFAULT_CONTEXT_TOKENS);
         if (raw.contextWindow !== contextWindow) {
           modelMutated = true;
         }

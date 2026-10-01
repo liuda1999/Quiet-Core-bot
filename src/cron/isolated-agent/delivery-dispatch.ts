@@ -936,6 +936,10 @@ export async function dispatchCronDelivery(
       status: "error",
       error: formatDeliveryTargetError(error),
       errorKind: "delivery-target",
+      // The agent turn completed; only the outbound send failed. Marking the
+      // delivery as attempted-but-not-delivered lets the service layer record
+      // this as a delivery failure instead of an execution failure.
+      delivered: false,
       summary,
       outputText,
       deliveryAttempted,
@@ -1260,6 +1264,8 @@ export async function dispatchCronDelivery(
           summary,
           outputText,
           error: String(err),
+          errorKind: "delivery-target",
+          delivered: false,
           deliveryAttempted,
           ...params.telemetry,
         });

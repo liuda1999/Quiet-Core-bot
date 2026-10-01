@@ -1,5 +1,6 @@
 /** Cron timer loop, execution, catch-up, and run-result state transitions. */
 import { resolveFailoverReasonFromError } from "../../agents/failover-error.js";
+import { resolveCronMaxConcurrentRuns } from "../../config/cron-limits.js";
 import { loadSessionEntry } from "../../config/sessions/session-accessor.js";
 import type { CronConfig, CronRetryOn } from "../../config/types.cron.js";
 import { formatErrorMessage } from "../../infra/errors.js";
@@ -349,11 +350,11 @@ export function maybeNotifyIsolatedAgentSetupTimeout(
 }
 
 function resolveRunConcurrency(state: CronServiceState): number {
-  const raw = state.deps.cronConfig?.maxConcurrentRuns;
-  if (typeof raw !== "number" || !Number.isFinite(raw)) {
-    return 1;
-  }
-  return Math.max(1, Math.floor(raw));
+  // Delegate to the shared resolver so the scheduler and the gateway command
+  // lane (`applyGatewayLaneConcurrency`) can never disagree about the default
+  // when `cron.maxConcurrentRuns` is unset: a local `?? 1` fallback here used to
+  // report 1 while the documented default — and the cron lane — was 8.
+  return resolveCronMaxConcurrentRuns(state.deps.cronConfig);
 }
 
 function resolveMainSessionCronDeliveryContext(
@@ -656,6 +657,7 @@ export function applyJobResult(
   result: {
     status: CronRunStatus;
     error?: string;
+    errorKind?: CronRunOutcome["errorKind"];
     diagnostics?: CronRunOutcome["diagnostics"];
     delivered?: boolean;
     provider?: string;
@@ -677,19 +679,37 @@ export function applyJobResult(
       job.state.lastRunAtMs = saved;
     }
   };
+  // A `delivery-target` error means the agent turn itself completed and only
+  // the outbound send failed (e.g. `delivery.mode=announce` with no configured
+  // channel). Folding that into the execution status used to mark the job
+  // `error`, escalate `consecutiveErrors` (and therefore error backoff, up to
+  // 60 minutes) and page failure alerts for work that actually succeeded.
+  // Record it as an execution success and keep the failure visible through
+  // `lastDeliveryStatus` / `lastDeliveryError`.
+  const deliveryOnlyFailure = result.status === "error" && result.errorKind === "delivery-target";
+  const runStatus: CronRunStatus = deliveryOnlyFailure ? "ok" : result.status;
   job.state.runningAtMs = undefined;
   job.state.lastRunAtMs = result.startedAt;
-  job.state.lastRunStatus = result.status;
-  job.state.lastStatus = result.status;
+  job.state.lastRunStatus = runStatus;
+  job.state.lastStatus = runStatus;
   job.state.lastDurationMs = Math.max(0, result.endedAt - result.startedAt);
-  job.state.lastError = result.error;
+  job.state.lastError = deliveryOnlyFailure ? undefined : result.error;
   job.state.lastDiagnostics = normalizeCronRunDiagnostics(result.diagnostics);
   job.state.lastDiagnosticSummary = summarizeCronRunDiagnostics(job.state.lastDiagnostics);
   job.state.lastErrorReason =
-    result.status === "error" && typeof result.error === "string"
+    runStatus === "error" && typeof result.error === "string"
       ? (resolveFailoverReasonFromError(result.error, result.provider) ?? undefined)
       : undefined;
-  if (result.status === "error") {
+  if (deliveryOnlyFailure) {
+    state.deps.log.warn(
+      {
+        jobId: job.id,
+        jobName: job.name,
+        error: result.error,
+      },
+      "cron: run completed but delivery failed; keeping execution status ok",
+    );
+  } else if (runStatus === "error") {
     state.deps.log.warn(
       {
         jobId: job.id,
@@ -702,7 +722,7 @@ export function applyJobResult(
   }
   const deliveryState = resolveDeliveryState({
     job,
-    runStatus: result.status,
+    runStatus,
     delivered: result.delivered,
     error: result.error,
     globalFailureDestination: state.deps.cronConfig?.failureDestination,
@@ -722,7 +742,7 @@ export function applyJobResult(
   // separate counter so opt-in skip alerts do not affect retry behavior.
   const previousConsecutiveErrors = job.state.consecutiveErrors ?? 0;
   const alertConfig = resolveFailureAlert(state, job);
-  if (result.status === "error") {
+  if (runStatus === "error") {
     job.state.consecutiveErrors = (job.state.consecutiveErrors ?? 0) + 1;
     job.state.consecutiveSkipped = 0;
     maybeEmitFailureAlert(state, {
@@ -733,7 +753,7 @@ export function applyJobResult(
       provider: result.provider,
       consecutiveCount: job.state.consecutiveErrors,
     });
-  } else if (result.status === "skipped") {
+  } else if (runStatus === "skipped") {
     job.state.consecutiveErrors = 0;
     job.state.consecutiveSkipped = (job.state.consecutiveSkipped ?? 0) + 1;
     if (alertConfig?.includeSkipped) {
@@ -754,6 +774,9 @@ export function applyJobResult(
     job.state.lastFailureAlertAtMs = undefined;
   }
 
+  // Deliberately keyed on the raw `result.status`: a one-shot whose delivery
+  // failed is retired but *kept* so the undelivered output and the delivery
+  // error remain inspectable instead of being deleted with the job.
   const shouldDelete =
     job.schedule.kind === "at" && job.deleteAfterRun === true && result.status === "ok";
   const retryDisabledHeartbeatOneShot = shouldRetryDisabledHeartbeatOneShot(job, result);
@@ -791,11 +814,14 @@ export function applyJobResult(
             "cron: disabling one-shot job after disabled heartbeat retries",
           );
         }
-      } else if (result.status === "ok" || result.status === "skipped") {
+      } else if (runStatus === "ok" || runStatus === "skipped") {
         // One-shot done or skipped: disable to prevent tight-loop (#11452).
+        // A delivery-only failure lands here too: the work is done, so the job
+        // is retired rather than retried, but it is kept (see `shouldDelete`)
+        // so the delivery error stays inspectable.
         job.enabled = false;
         job.state.nextRunAtMs = undefined;
-      } else if (result.status === "error") {
+      } else if (runStatus === "error") {
         const retryDecision = resolveTransientCronRetryDecision({
           cronConfig: state.deps.cronConfig,
           error: result.error,
@@ -836,7 +862,7 @@ export function applyJobResult(
           );
         }
       }
-    } else if (result.status === "error" && isJobEnabled(job)) {
+    } else if (runStatus === "error" && isJobEnabled(job)) {
       const retryDecision = resolveTransientCronRetryDecision({
         cronConfig: state.deps.cronConfig,
         error: result.error,
@@ -975,6 +1001,7 @@ function applyOutcomeToStoredJob(state: CronServiceState, result: TimedCronRunOu
       applyJobResult(state, result.job, {
         status: result.status,
         error: result.error,
+        errorKind: result.errorKind,
         diagnostics: result.diagnostics,
         delivered: result.delivered,
         provider: result.provider,
@@ -998,6 +1025,7 @@ function applyOutcomeToStoredJob(state: CronServiceState, result: TimedCronRunOu
   const shouldDelete = applyJobResult(state, job, {
     status: result.status,
     error: result.error,
+    errorKind: result.errorKind,
     diagnostics: result.diagnostics,
     delivered: result.delivered,
     provider: result.provider,
@@ -2151,6 +2179,7 @@ async function executeDetachedCronJob(
   return {
     status: res.status,
     error: res.error,
+    errorKind: res.errorKind,
     summary: res.summary,
     delivered: res.delivered,
     deliveryAttempted: res.deliveryAttempted,

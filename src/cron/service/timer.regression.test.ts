@@ -2320,6 +2320,9 @@ describe("cron service timer regressions", () => {
       storePath: store.storePath,
       log: noopLogger,
       nowMs: () => scheduledAt,
+      // Pinned to 1 so the second due job stays unclaimed; the scenario under
+      // test is the stopped-timer release of an *unclaimed* reservation.
+      cronConfig: { maxConcurrentRuns: 1 },
       enqueueSystemEvent: vi.fn(),
       requestHeartbeat: vi.fn(),
       runIsolatedAgentJob: async () => {
