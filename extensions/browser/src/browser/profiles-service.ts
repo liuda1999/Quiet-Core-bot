@@ -166,7 +166,7 @@ export function createBrowserProfilesService(ctx: BrowserRouteContext) {
     let deleted = false;
     const resolved = resolveProfile(state.resolved, name);
 
-    if (resolved?.cdpIsLoopback && resolved.driver === "openclaw") {
+    if (resolved?.cdpIsLoopback && resolved.driver === "quiet-core-bot") {
       try {
         await ctx.forProfile(name).stopRunningBrowser();
       } catch {

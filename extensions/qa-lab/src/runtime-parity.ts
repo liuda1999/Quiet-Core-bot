@@ -1065,15 +1065,15 @@ export async function runRuntimeParityScenario(params: {
   const openclaw = await params.runCell("quiet-core-bot");
   const codex = await params.runCell("codex");
   const drift = classifyRuntimeParityCells({
-    openclaw: quiet-core-bot.cell,
+    openclaw: openclaw.cell,
     codex: codex.cell,
-    openclawScenarioStatus: quiet-core-bot.scenarioStatus,
+    openclawScenarioStatus: openclaw.scenarioStatus,
     codexScenarioStatus: codex.scenarioStatus,
   });
   return {
     scenarioId: params.scenarioId,
     cells: {
-      openclaw: quiet-core-bot.cell,
+      openclaw: openclaw.cell,
       codex: codex.cell,
     },
     drift: drift.drift,

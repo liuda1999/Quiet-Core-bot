@@ -4,9 +4,9 @@ import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 import {
   OPENCLAW_CRABLINE_MANIFEST_PATH,
-  startQuietCoreCrablineAdapter,
-  type QuietCoreCrablineChannelDriverSelection,
-  type StartedQuietCoreCrablineAdapter,
+  startOpenClawCrablineAdapter,
+  type OpenClawCrablineChannelDriverSelection,
+  type StartedOpenClawCrablineAdapter,
 } from "@openclaw/crabline";
 import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
 import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
@@ -95,7 +95,7 @@ async function waitForCrablineReady(params: {
 }
 
 async function postCrablineInbound(params: {
-  adapter: StartedQuietCoreCrablineAdapter;
+  adapter: StartedOpenClawCrablineAdapter;
   providerBody: Record<string, unknown>;
 }) {
   const { response, release } = await fetchWithSsrFGuard({
@@ -123,7 +123,7 @@ async function postCrablineInbound(params: {
 }
 
 function createCrablineState(params: {
-  adapter: StartedQuietCoreCrablineAdapter;
+  adapter: StartedOpenClawCrablineAdapter;
   state: QaBusState;
 }): QaCrablineTransportState {
   const baseState = params.state;
@@ -216,13 +216,13 @@ function createCrablineState(params: {
 }
 
 class QaCrablineTransport extends QaStateBackedTransportAdapter {
-  readonly #adapter: StartedQuietCoreCrablineAdapter;
-  readonly #selection: QuietCoreCrablineChannelDriverSelection;
+  readonly #adapter: StartedOpenClawCrablineAdapter;
+  readonly #selection: OpenClawCrablineChannelDriverSelection;
   readonly #state: QaCrablineTransportState;
 
   constructor(params: {
-    adapter: StartedQuietCoreCrablineAdapter;
-    selection: QuietCoreCrablineChannelDriverSelection;
+    adapter: StartedOpenClawCrablineAdapter;
+    selection: OpenClawCrablineChannelDriverSelection;
     state: QaCrablineTransportState;
   }) {
     super({
@@ -278,7 +278,7 @@ class QaCrablineTransport extends QaStateBackedTransportAdapter {
 
 export async function createQaCrablineTransportAdapter(params: {
   outputDir: string;
-  selection: QuietCoreCrablineChannelDriverSelection;
+  selection: OpenClawCrablineChannelDriverSelection;
   state?: QaBusState;
 }) {
   const recorderPath = path.join(
@@ -288,7 +288,7 @@ export async function createQaCrablineTransportAdapter(params: {
     `${params.selection.channel}-fake-provider.jsonl`,
   );
   await fs.mkdir(path.dirname(recorderPath), { recursive: true });
-  const adapter = await startQuietCoreCrablineAdapter({
+  const adapter = await startOpenClawCrablineAdapter({
     channel: params.selection.channel,
     openclawConfig: {},
     recorderPath,

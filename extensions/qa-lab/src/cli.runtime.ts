@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import {
   OPENCLAW_CRABLINE_DEFAULT_CHANNEL,
-  resolveQuietCoreCrablineChannelDriverSelection,
+  resolveOpenClawCrablineChannelDriverSelection,
 } from "@openclaw/crabline";
 import { formatErrorMessage } from "quiet-core-bot/plugin-sdk/error-runtime";
 import { parseStrictPositiveInteger } from "quiet-core-bot/plugin-sdk/number-runtime";
@@ -258,8 +258,8 @@ function normalizeQaOptionalModelRef(input: string | undefined) {
 }
 
 function normalizeQaRuntimeId(value: string): RuntimeId | undefined {
-  if (value === "openclaw" || value === "pi") {
-    return "openclaw";
+  if (value === "quiet-core-bot" || value === "openclaw" || value === "pi") {
+    return "quiet-core-bot";
   }
   if (value === "codex") {
     return "codex";
@@ -277,16 +277,16 @@ function parseQaRuntimePair(value: string | undefined): [RuntimeId, RuntimeId] |
     .filter(Boolean)
     .map(normalizeQaRuntimeId);
   if (runtimes.length !== 2) {
-    throw new Error('--runtime-pair must use exactly two runtimes, e.g. "openclaw,codex".');
+    throw new Error('--runtime-pair must use exactly two runtimes, e.g. "quiet-core-bot,codex".');
   }
   const [left, right] = runtimes;
   if (!left || !right) {
-    throw new Error('--runtime-pair only supports "openclaw" and "codex".');
+    throw new Error('--runtime-pair only supports "quiet-core-bot" and "codex".');
   }
   if (left === right) {
     throw new Error("--runtime-pair must compare two different runtimes.");
   }
-  return ["openclaw", "codex"];
+  return ["quiet-core-bot", "codex"];
 }
 
 function parseQaRuntimeParityTierFilters(input: string[] | undefined): QaRuntimeParityTier[] {
@@ -911,7 +911,7 @@ export async function runQaSuiteCommand(opts: QaSuiteCommandOptions) {
   }
   const channelDriverSelection =
     channelDriver === "crabline"
-      ? resolveQuietCoreCrablineChannelDriverSelection({
+      ? resolveOpenClawCrablineChannelDriverSelection({
           channel: resolveQaSuiteScenarioChannel({
             defaultChannel: OPENCLAW_CRABLINE_DEFAULT_CHANNEL,
             explicitChannel: opts.channel,
@@ -1258,9 +1258,9 @@ export async function runQaJsonlReplayCommand(opts: {
   providerMode?: QaProviderModeInput;
 }) {
   const repoRoot = path.resolve(opts.repoRoot ?? process.cwd());
-  const runtimePair = parseQaRuntimePair(opts.runtimePair) ?? ["openclaw", "codex"];
-  if (runtimePair[0] !== "openclaw" || runtimePair[1] !== "codex") {
-    throw new Error('--runtime-pair for jsonl-replay must be "openclaw,codex".');
+  const runtimePair = parseQaRuntimePair(opts.runtimePair) ?? ["quiet-core-bot", "codex"];
+  if (runtimePair[0] !== "quiet-core-bot" || runtimePair[1] !== "codex") {
+    throw new Error('--runtime-pair for jsonl-replay must be "quiet-core-bot,codex".');
   }
   const providerMode = normalizeQaProviderMode(opts.providerMode ?? "mock-openai");
   if (providerMode !== "mock-openai") {

@@ -5,7 +5,7 @@ import type {
   AgentToolResultMiddlewareEvent,
   QuietCoreAgentToolResult,
 } from "quiet-core-bot/plugin-sdk/agent-harness";
-import { createTokenjuiceQuietCoreEmbeddedExtension } from "./runtime-api.js";
+import { createTokenjuiceOpenClawEmbeddedExtension } from "./runtime-api.js";
 
 type TokenjuiceToolResultHandler = (
   event: {
@@ -124,7 +124,7 @@ function normalizeDetails(
 
 export function createTokenjuiceAgentToolResultMiddleware(): AgentToolResultMiddleware {
   const handlers: TokenjuiceToolResultHandler[] = [];
-  createTokenjuiceQuietCoreEmbeddedExtension()({
+  createTokenjuiceOpenClawEmbeddedExtension()({
     on(event, handler) {
       if (event === "tool_result") {
         handlers.push(handler as TokenjuiceToolResultHandler);

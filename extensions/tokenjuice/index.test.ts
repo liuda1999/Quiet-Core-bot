@@ -3,17 +3,17 @@ import fs from "node:fs";
 import { createTestPluginApi } from "quiet-core-bot/plugin-sdk/plugin-test-api";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { tokenjuiceFactory, createTokenjuiceQuietCoreEmbeddedExtension } = vi.hoisted(() => {
+const { tokenjuiceFactory, createTokenjuiceOpenClawEmbeddedExtension } = vi.hoisted(() => {
   const tokenjuiceFactoryLocal = vi.fn();
-  const createTokenjuiceQuietCoreEmbeddedExtensionLocal = vi.fn(() => tokenjuiceFactoryLocal);
+  const createTokenjuiceOpenClawEmbeddedExtensionLocal = vi.fn(() => tokenjuiceFactoryLocal);
   return {
     tokenjuiceFactory: tokenjuiceFactoryLocal,
-    createTokenjuiceQuietCoreEmbeddedExtension: createTokenjuiceQuietCoreEmbeddedExtensionLocal,
+    createTokenjuiceOpenClawEmbeddedExtension: createTokenjuiceOpenClawEmbeddedExtensionLocal,
   };
 });
 
 vi.mock("./runtime-api.js", () => ({
-  createTokenjuiceQuietCoreEmbeddedExtension,
+  createTokenjuiceOpenClawEmbeddedExtension,
 }));
 
 import plugin from "./index.js";
@@ -21,7 +21,7 @@ import { createTokenjuiceAgentToolResultMiddleware } from "./tool-result-middlew
 
 describe("tokenjuice plugin", () => {
   beforeEach(() => {
-    createTokenjuiceQuietCoreEmbeddedExtension.mockClear();
+    createTokenjuiceOpenClawEmbeddedExtension.mockClear();
     tokenjuiceFactory.mockClear();
   });
 
@@ -48,7 +48,7 @@ describe("tokenjuice plugin", () => {
       }),
     );
 
-    expect(createTokenjuiceQuietCoreEmbeddedExtension).toHaveBeenCalledTimes(1);
+    expect(createTokenjuiceOpenClawEmbeddedExtension).toHaveBeenCalledTimes(1);
     expect(tokenjuiceFactory).toHaveBeenCalledTimes(1);
     const registration = registerAgentToolResultMiddleware.mock.calls[0];
     expect(typeof registration?.[0]).toBe("function");
