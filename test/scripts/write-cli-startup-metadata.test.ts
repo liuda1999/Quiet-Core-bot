@@ -546,4 +546,63 @@ describe("write-cli-startup-metadata", () => {
     expect(nodesRenderCount).toBe(3);
     expect(written.nodesHelpText).toContain("quiet-core-bot nodes 3");
   });
+
+  // Regression: the baked help bundles embed the CLI banner, and that banner
+  // carries the build commit. The other signatures only track source files, so
+  // a rebuild after a commit used to early-return and keep serving the previous
+  // checkout's commit in `--help` output.
+  it("regenerates baked help when the build commit changes", async () => {
+    const tempRoot = createTempDir("quiet-core-bot-startup-metadata-commit-");
+    const distDir = path.join(tempRoot, "dist");
+    const extensionsDir = path.join(tempRoot, "extensions");
+    const outputPath = path.join(distDir, "cli-startup-metadata.json");
+    let browserRenderCount = 0;
+
+    writeStartupMetadataSourceSignatureFixture(tempRoot);
+    writeFixtureFile(distDir, "root-help-fixture.js", "export function outputRootHelp() {}\n");
+
+    const writeMetadata = async (): Promise<void> => {
+      await writeCliStartupMetadata({
+        distDir,
+        outputPath,
+        extensionsDir,
+        sourceRootDir: tempRoot,
+        renderBundledRootHelpText: async () => "Usage: quiet-core-bot\n",
+        renderSourceBrowserHelpText: () => {
+          browserRenderCount += 1;
+          return "Usage: quiet-core-bot browser\n";
+        },
+        renderSourceSecretsHelpText: () => "Usage: quiet-core-bot secrets\n",
+        renderSourceNodesHelpText: () => "Usage: quiet-core-bot nodes\n",
+        renderSourceSubcommandHelpTextRecord: () => ({
+          doctor: "Usage: quiet-core-bot doctor\n",
+          gateway: "Usage: quiet-core-bot gateway\n",
+          models: "Usage: quiet-core-bot models\n",
+          plugins: "Usage: quiet-core-bot plugins\n",
+          sessions: "Usage: quiet-core-bot sessions\n",
+          tasks: "Usage: quiet-core-bot tasks\n",
+        }),
+      });
+    };
+
+    await writeMetadata();
+    const written = JSON.parse(readFileSync(outputPath, "utf8")) as Record<string, unknown>;
+    expect(Object.hasOwn(written, "commitSignature")).toBe(true);
+
+    await writeMetadata();
+    expect(browserRenderCount).toBe(1);
+
+    writeFileSync(
+      outputPath,
+      `${JSON.stringify({ ...written, commitSignature: "stale-commit" }, null, 2)}\n`,
+      "utf8",
+    );
+    await writeMetadata();
+    expect(browserRenderCount).toBe(2);
+
+    const regenerated = JSON.parse(readFileSync(outputPath, "utf8")) as {
+      commitSignature: unknown;
+    };
+    expect(regenerated.commitSignature).toBe(written.commitSignature);
+  });
 });

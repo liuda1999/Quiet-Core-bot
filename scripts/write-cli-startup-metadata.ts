@@ -53,6 +53,57 @@ const CORE_CHANNEL_ORDER = [
 ] as const;
 const generatorSignature = createHash("sha1").update(readFileSync(scriptPath)).digest("hex");
 
+/**
+ * Commit identity that the rendered help banner bakes into its text. The source
+ * signatures above cannot see a commit change on their own, so a rebuild after
+ * a commit used to hit the early-return guard and keep serving the help text
+ * (and its banner commit) from the previous checkout.
+ *
+ * Resolved in the same order the render path uses so the signature always
+ * describes what actually gets baked: the render runs with a sanitized env that
+ * drops GIT_COMMIT/GIT_SHA, so the live commit wins and `dist/build-info.json`
+ * (the packaged-install source) is only a fallback. Reading the env override
+ * first here would sign a different value than the one baked in.
+ */
+function resolveBuildCommitSignature(resolvedDistDir: string): string | null {
+  return (
+    formatCommitSignature(readGitHeadCommit()) ??
+    formatCommitSignature(readBuildInfoCommit(resolvedDistDir))
+  );
+}
+
+function formatCommitSignature(value: string | null | undefined): string | null {
+  const match = value?.match(/[0-9a-fA-F]{7,40}/);
+  return match ? match[0].slice(0, 7).toLowerCase() : null;
+}
+
+function readBuildInfoCommit(resolvedDistDir: string): string | null {
+  try {
+    const parsed = JSON.parse(
+      readFileSync(path.join(resolvedDistDir, "build-info.json"), "utf8"),
+    ) as { commit?: unknown };
+    return typeof parsed.commit === "string" ? parsed.commit : null;
+  } catch {
+    return null;
+  }
+}
+
+function readGitHeadCommit(): string | null {
+  try {
+    const result = spawnSync("git", ["rev-parse", "HEAD"], {
+      cwd: rootDir,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    });
+    if (result.status !== 0) {
+      return null;
+    }
+    return (result.stdout ?? "").trim() || null;
+  } catch {
+    return null;
+  }
+}
+
 type ExtensionChannelEntry = {
   id: string;
   order: number;
@@ -283,7 +334,8 @@ export function readBundledChannelCatalog(
     try {
       const raw = readFileSync(packageJsonPath, "utf8");
       signature.update(`${dirEntry.name}\0${raw}\0`);
-      const parsed = JSON.parse(raw) as { "quiet-core-bot"?: {
+      const parsed = JSON.parse(raw) as {
+        "quiet-core-bot"?: {
           channel?: {
             id?: unknown;
             order?: unknown;
@@ -783,11 +835,13 @@ export async function writeCliStartupMetadata(options?: {
     existsSync(bundledPluginsDir) ? bundledPluginsDir : resolvedExtensionsDir,
   );
   const channelOptions = dedupe([...CORE_CHANNEL_ORDER, ...channelCatalog.ids]);
+  const commitSignature = resolveBuildCommitSignature(resolvedDistDir);
 
   try {
     const existing = JSON.parse(readFileSync(resolvedOutputPath, "utf8")) as {
       rootHelpBundleSignature?: unknown;
       generatorSignature?: unknown;
+      commitSignature?: unknown;
       browserHelpSourceSignature?: unknown;
       secretsHelpSourceSignature?: unknown;
       nodesHelpSourceSignature?: unknown;
@@ -802,6 +856,7 @@ export async function writeCliStartupMetadata(options?: {
       bundleIdentity &&
       existing.rootHelpBundleSignature === bundleIdentity.signature &&
       existing.generatorSignature === generatorSignature &&
+      existing.commitSignature === commitSignature &&
       existing.browserHelpSourceSignature === browserHelpSourceSignature &&
       existing.secretsHelpSourceSignature === secretsHelpSourceSignature &&
       existing.nodesHelpSourceSignature === nodesHelpSourceSignature &&
@@ -882,6 +937,7 @@ export async function writeCliStartupMetadata(options?: {
       {
         generatedBy: "scripts/write-cli-startup-metadata.ts",
         generatorSignature,
+        commitSignature,
         channelOptions,
         channelCatalogSignature: channelCatalog.signature,
         rootHelpBundleSignature: bundleIdentity?.signature ?? null,
