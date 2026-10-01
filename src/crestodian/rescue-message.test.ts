@@ -7,6 +7,7 @@ import type { CommandContext } from "../auto-reply/reply/commands-types.js";
 import type { OpenClawConfig } from "../config/types.quiet-core-bot.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { withEnvAsync } from "../test-utils/env.js";
+import { resolveUserPath, shortenHomePath } from "../utils.js";
 import { extractCrestodianRescueMessage, runCrestodianRescueMessage } from "./rescue-message.js";
 
 let tempRoot = "";
@@ -216,7 +217,12 @@ describe("Crestodian rescue message", () => {
     };
 
     await expect(
-      runRescue("/crestodian plugin install clawhub:quiet-core-bot-demo", cfg, commandContext(), deps),
+      runRescue(
+        "/crestodian plugin install clawhub:quiet-core-bot-demo",
+        cfg,
+        commandContext(),
+        deps,
+      ),
     ).resolves.toContain("cannot install plugins from a message channel");
     expect(deps.runPluginInstall).not.toHaveBeenCalled();
   });
@@ -347,11 +353,20 @@ describe("Crestodian rescue message", () => {
     await withRescueStateDir("agent-", async (tempDir) => {
       const cfg: OpenClawConfig = { crestodian: { rescue: { enabled: true } } };
       const deps = { runAgentsAdd: vi.fn(async () => {}) };
+      // The plan and the applied params both render the resolved workspace path, which
+      // is platform-dependent ("/tmp/work" resolves to a drive path on Windows).
+      const workspaceInput = "/tmp/work";
+      const resolvedWorkspace = resolveUserPath(workspaceInput);
 
       await expect(
-        runRescue("/crestodian create agent work workspace /tmp/work", cfg, commandContext(), deps),
+        runRescue(
+          `/crestodian create agent work workspace ${workspaceInput}`,
+          cfg,
+          commandContext(),
+          deps,
+        ),
       ).resolves.toBe(
-        "Plan: create agent work with workspace /tmp/work. Reply /crestodian yes to apply.",
+        `Plan: create agent work with workspace ${shortenHomePath(resolvedWorkspace)}. Reply /crestodian yes to apply.`,
       );
       await expect(runRescue("/crestodian yes", cfg, commandContext(), deps)).resolves.toContain(
         "[crestodian] done: agents.create",
@@ -368,7 +383,7 @@ describe("Crestodian rescue message", () => {
       ];
       expect(agentParams).toEqual({
         name: "work",
-        workspace: "/tmp/work",
+        workspace: resolvedWorkspace,
         nonInteractive: true,
       });
       expect(agentRuntime).toBeTypeOf("object");
@@ -389,7 +404,7 @@ describe("Crestodian rescue message", () => {
       expect(audit.details?.channel).toBe("whatsapp");
       expect(audit.details?.senderId).toBe("user:owner");
       expect(audit.details?.agentId).toBe("work");
-      expect(audit.details?.workspace).toBe("/tmp/work");
+      expect(audit.details?.workspace).toBe(resolvedWorkspace);
     });
   });
 });

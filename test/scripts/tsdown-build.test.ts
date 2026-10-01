@@ -715,8 +715,15 @@ describe("runTsdownBuildInvocation", () => {
     );
 
     expect(result.timedOut).toBe(true);
-    expect(result.status).toBeNull();
-    expect(result.signal).toBe("SIGTERM");
+    if (process.platform === "win32") {
+      // Windows has no POSIX signals: the tree is torn down with taskkill, so the
+      // child reports an exit code (observed as 1) instead of a termination signal.
+      expect(result.status).not.toBeNull();
+      expect(result.signal).toBeNull();
+    } else {
+      expect(result.status).toBeNull();
+      expect(result.signal).toBe("SIGTERM");
+    }
     expect(output.chunks.join("")).toContain("timeout after 50ms");
   });
 
