@@ -2559,6 +2559,9 @@ export const ja_JP: TranslationMap = {
       saveChanges: "変更を保存",
       addJob: "ジョブを追加",
       cancel: "キャンセル",
+      saveSuccess: "ジョブを保存しました。",
+      addSuccess: "ジョブを作成しました。",
+      validationFailed: "強調表示されたフィールドを修正して、もう一度お試しください。",
     },
     jobList: {
       allJobs: "すべてのジョブ",
@@ -2570,6 +2573,7 @@ export const ja_JP: TranslationMap = {
       disable: "無効にする",
       enable: "有効にする",
       run: "実行",
+      runIfDue: "期限到来時に実行",
       history: "履歴",
       remove: "削除",
     },

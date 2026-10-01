@@ -1,6 +1,6 @@
 // Control UI test helper supports modal dialog setup.
 import { expect } from "vitest";
-import type { OpenClawModalDialog } from "../ui/components/modal-dialog.ts";
+import type { QuietCoreBotModalDialog } from "../ui/components/modal-dialog.ts";
 
 type DialogMethodName = "showModal" | "close";
 type DialogDescriptorSnapshot = Record<DialogMethodName, PropertyDescriptor | undefined>;
@@ -43,7 +43,7 @@ export function installDialogPolyfill(): () => void {
 }
 
 export async function getRenderedModalDialog(container: HTMLElement) {
-  const modal = container.querySelector<OpenClawModalDialog>("quiet-core-bot-modal-dialog");
+  const modal = container.querySelector<QuietCoreBotModalDialog>("quiet-core-bot-modal-dialog");
   expect(modal).toBeInstanceOf(HTMLElement);
   if (!modal) {
     throw new Error("Expected quiet-core-bot-modal-dialog");

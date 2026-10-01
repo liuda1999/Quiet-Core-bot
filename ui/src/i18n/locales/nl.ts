@@ -2559,6 +2559,9 @@ export const nl: TranslationMap = {
       saveChanges: "Wijzigingen opslaan",
       addJob: "Taak toevoegen",
       cancel: "Annuleren",
+      saveSuccess: "Taak succesvol opgeslagen.",
+      addSuccess: "Taak succesvol aangemaakt.",
+      validationFailed: "Corrigeer de gemarkeerde velden en probeer het opnieuw.",
     },
     jobList: {
       allJobs: "alle taken",
@@ -2570,6 +2573,7 @@ export const nl: TranslationMap = {
       disable: "Uitschakelen",
       enable: "Inschakelen",
       run: "Uitvoeren",
+      runIfDue: "Uitvoeren indien verschuldigd",
       history: "Historie",
       remove: "Verwijderen",
     },

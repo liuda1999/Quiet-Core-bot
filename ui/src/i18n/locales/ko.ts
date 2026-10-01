@@ -2537,6 +2537,9 @@ export const ko: TranslationMap = {
       saveChanges: "변경 사항 저장",
       addJob: "작업 추가",
       cancel: "취소",
+      saveSuccess: "작업이 저장되었습니다.",
+      addSuccess: "작업이 생성되었습니다.",
+      validationFailed: "강조된 필드를 수정한 후 다시 시도하세요.",
     },
     jobList: {
       allJobs: "모든 작업",
@@ -2548,6 +2551,7 @@ export const ko: TranslationMap = {
       disable: "비활성화",
       enable: "활성화",
       run: "실행",
+      runIfDue: "예정된 경우 실행",
       history: "기록",
       remove: "제거",
     },

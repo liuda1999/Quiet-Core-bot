@@ -2558,6 +2558,9 @@ export const tr: TranslationMap = {
       saveChanges: "Değişiklikleri kaydet",
       addJob: "İş ekle",
       cancel: "İptal",
+      saveSuccess: "Görev başarıyla kaydedildi.",
+      addSuccess: "Görev başarıyla oluşturuldu.",
+      validationFailed: "Lütfen vurgulanan alanları düzeltip tekrar deneyin.",
     },
     jobList: {
       allJobs: "tüm işler",
@@ -2569,6 +2572,7 @@ export const tr: TranslationMap = {
       disable: "Devre dışı bırak",
       enable: "Etkinleştir",
       run: "Çalıştır",
+      runIfDue: "Zamanı gelmişse çalıştır",
       history: "Geçmiş",
       remove: "Kaldır",
     },

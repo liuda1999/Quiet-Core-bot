@@ -39,7 +39,9 @@ describe("Control UI Vite config", () => {
 
   it("keeps specific tsconfig aliases ahead of broad package aliases", () => {
     const aliases = resolveTsconfigPathAliasesForVite();
-    const netPolicyIpIndex = aliases.findIndex((alias) => alias.find === "@quiet-core/net-policy/ip");
+    const netPolicyIpIndex = aliases.findIndex(
+      (alias) => alias.find === "@quiet-core/net-policy/ip",
+    );
     const netPolicyPackageIndex = aliases.findIndex(
       (alias) => alias.find === "@quiet-core/net-policy",
     );
@@ -48,7 +50,7 @@ describe("Control UI Vite config", () => {
         alias.find instanceof RegExp &&
         alias.replacement.includes(path.join("packages", "net-policy", "src", "$1")),
     );
-    const broadOpenClawWildcardIndex = aliases.findIndex(
+    const broadQuietCoreBotWildcardIndex = aliases.findIndex(
       (alias) =>
         alias.find instanceof RegExp && alias.replacement.includes(path.join("extensions", "$1")),
     );
@@ -56,9 +58,9 @@ describe("Control UI Vite config", () => {
     expect(netPolicyIpIndex).toBeGreaterThanOrEqual(0);
     expect(netPolicyWildcardIndex).toBeGreaterThanOrEqual(0);
     expect(netPolicyPackageIndex).toBeGreaterThanOrEqual(0);
-    expect(broadOpenClawWildcardIndex).toBeGreaterThanOrEqual(0);
+    expect(broadQuietCoreBotWildcardIndex).toBeGreaterThanOrEqual(0);
     expect(netPolicyIpIndex).toBeLessThan(netPolicyPackageIndex);
-    expect(netPolicyWildcardIndex).toBeLessThan(broadOpenClawWildcardIndex);
+    expect(netPolicyWildcardIndex).toBeLessThan(broadQuietCoreBotWildcardIndex);
   });
 
   it("uses a browser-safe redactor for shared tool display imports", async () => {

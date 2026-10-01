@@ -8,10 +8,12 @@ afterEach(() => {
   document.querySelector(".control-ui-floating-tooltip")?.remove();
 });
 
-describe("OpenClawApp tooltip lifecycle", () => {
+describe("QuietCoreBotApp tooltip lifecycle", () => {
   it("clears the active floating tooltip when the app disconnects", async () => {
-    const { OpenClawApp } = await import("./app.ts");
-    const app = document.createElement("quiet-core-bot-app") as InstanceType<typeof OpenClawApp>;
+    const { QuietCoreBotApp } = await import("./app.ts");
+    const app = document.createElement("quiet-core-bot-app") as InstanceType<
+      typeof QuietCoreBotApp
+    >;
     const button = document.createElement("button");
     button.title = "Refresh files";
     app.append(button);

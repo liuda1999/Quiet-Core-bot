@@ -2558,6 +2558,9 @@ export const pt_BR: TranslationMap = {
       saveChanges: "Salvar alterações",
       addJob: "Adicionar tarefa",
       cancel: "Cancelar",
+      saveSuccess: "Tarefa salva com sucesso.",
+      addSuccess: "Tarefa criada com sucesso.",
+      validationFailed: "Corrija os campos destacados e tente novamente.",
     },
     jobList: {
       allJobs: "todas as tarefas",
@@ -2569,6 +2572,7 @@ export const pt_BR: TranslationMap = {
       disable: "Desativar",
       enable: "Ativar",
       run: "Executar",
+      runIfDue: "Executar se vencido",
       history: "Histórico",
       remove: "Remover",
     },

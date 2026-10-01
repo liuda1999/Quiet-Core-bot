@@ -3,10 +3,10 @@
 import { describe, expect, it, vi } from "vitest";
 import type { SidebarContent } from "./sidebar-content.ts";
 
-describe("OpenClawApp full-message sidebar upgrade", () => {
+describe("QuietCoreBotApp full-message sidebar upgrade", () => {
   async function createApp() {
     await import("./app.ts");
-    return document.createElement("quiet-core-bot-app") as import("./app.ts").OpenClawApp;
+    return document.createElement("quiet-core-bot-app") as import("./app.ts").QuietCoreBotApp;
   }
 
   it("defaults canvas embeds to strict sandbox before bootstrap config loads", async () => {

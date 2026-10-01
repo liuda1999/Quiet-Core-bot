@@ -2564,6 +2564,9 @@ export const it: TranslationMap = {
       saveChanges: "Salva modifiche",
       addJob: "Aggiungi processo",
       cancel: "Annulla",
+      saveSuccess: "Attività salvata correttamente.",
+      addSuccess: "Attività creata correttamente.",
+      validationFailed: "Correggi i campi evidenziati e riprova.",
     },
     jobList: {
       allJobs: "tutti i processi",
@@ -2575,6 +2578,7 @@ export const it: TranslationMap = {
       disable: "Disabilita",
       enable: "Abilita",
       run: "Esegui",
+      runIfDue: "Esegui se scaduto",
       history: "Cronologia",
       remove: "Rimuovi",
     },

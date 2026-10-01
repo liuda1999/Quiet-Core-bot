@@ -2,7 +2,7 @@
 
 import { html, nothing, render } from "lit";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawFilePreviewModal } from "./file-preview-modal.ts";
+import type { QuietCoreBotFilePreviewModal } from "./file-preview-modal.ts";
 import "./file-preview-modal.ts";
 
 let container: HTMLDivElement;
@@ -33,7 +33,9 @@ async function renderPreview(query = "") {
     container,
   );
 
-  const modal = container.querySelector<OpenClawFilePreviewModal>("quiet-core-bot-file-preview-modal");
+  const modal = container.querySelector<QuietCoreBotFilePreviewModal>(
+    "quiet-core-bot-file-preview-modal",
+  );
   expect(modal).toBeInstanceOf(HTMLElement);
   if (!modal) {
     throw new Error("expected file preview modal");
@@ -42,7 +44,7 @@ async function renderPreview(query = "") {
   return modal;
 }
 
-function shadowText(modal: OpenClawFilePreviewModal): string {
+function shadowText(modal: QuietCoreBotFilePreviewModal): string {
   return modal.shadowRoot?.textContent ?? "";
 }
 

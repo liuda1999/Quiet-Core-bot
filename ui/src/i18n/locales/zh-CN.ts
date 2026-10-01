@@ -2503,6 +2503,9 @@ export const zh_CN: TranslationMap = {
       saveChanges: "保存更改",
       addJob: "添加任务",
       cancel: "取消",
+      saveSuccess: "任务保存成功。",
+      addSuccess: "任务创建成功。",
+      validationFailed: "请修正标红的字段后重试。",
     },
     jobList: {
       allJobs: "所有任务",
@@ -2514,6 +2517,7 @@ export const zh_CN: TranslationMap = {
       disable: "禁用",
       enable: "启用",
       run: "运行",
+      runIfDue: "到期运行",
       history: "历史",
       remove: "删除",
     },

@@ -8,7 +8,7 @@ const { realtimeTalkCtor, startMock, stopMock } = vi.hoisted(() => ({
   stopMock: vi.fn(),
 }));
 
-describe("OpenClawApp Talk controls", () => {
+describe("QuietCoreBotApp Talk controls", () => {
   beforeEach(() => {
     vi.resetModules();
     vi.doMock("./chat/realtime-talk.ts", () => ({
@@ -27,8 +27,8 @@ describe("OpenClawApp Talk controls", () => {
   });
 
   it("retries Talk immediately when the previous session is already in error state", async () => {
-    const { OpenClawApp } = await import("./app.ts");
-    const app = Object.create(OpenClawApp.prototype) as {
+    const { QuietCoreBotApp } = await import("./app.ts");
+    const app = Object.create(QuietCoreBotApp.prototype) as {
       client: unknown;
       connected: boolean;
       realtimeTalkActive: boolean;
@@ -52,7 +52,7 @@ describe("OpenClawApp Talk controls", () => {
       sessionKey: { value: "main", writable: true },
     });
 
-    await OpenClawApp.prototype.toggleRealtimeTalk.call(app as never);
+    await QuietCoreBotApp.prototype.toggleRealtimeTalk.call(app as never);
 
     expect(staleStop).toHaveBeenCalledOnce();
     expect(realtimeTalkCtor).toHaveBeenCalledOnce();
@@ -65,8 +65,8 @@ describe("OpenClawApp Talk controls", () => {
   });
 
   it("preserves unrelated errors when retrying Talk", async () => {
-    const { OpenClawApp } = await import("./app.ts");
-    const app = Object.create(OpenClawApp.prototype) as {
+    const { QuietCoreBotApp } = await import("./app.ts");
+    const app = Object.create(QuietCoreBotApp.prototype) as {
       chatError: string | null;
       client: unknown;
       connected: boolean;
@@ -93,15 +93,15 @@ describe("OpenClawApp Talk controls", () => {
       sessionKey: { value: "main", writable: true },
     });
 
-    await OpenClawApp.prototype.toggleRealtimeTalk.call(app as never);
+    await QuietCoreBotApp.prototype.toggleRealtimeTalk.call(app as never);
 
     expect(app.lastError).toBe("current gateway failure");
     expect(app.chatError).toBe("current chat failure");
   });
 
   it("accumulates Talk transcripts as ordered conversation turns", async () => {
-    const { OpenClawApp } = await import("./app.ts");
-    const app = Object.create(OpenClawApp.prototype) as {
+    const { QuietCoreBotApp } = await import("./app.ts");
+    const app = Object.create(QuietCoreBotApp.prototype) as {
       client: unknown;
       connected: boolean;
       lastError: string | null;
@@ -126,7 +126,7 @@ describe("OpenClawApp Talk controls", () => {
       sessionKey: { value: "main", writable: true },
     });
 
-    await OpenClawApp.prototype.toggleRealtimeTalk.call(app as never);
+    await QuietCoreBotApp.prototype.toggleRealtimeTalk.call(app as never);
     const callbacks = realtimeTalkCtor.mock.calls[0]?.[2] as
       | {
           onTranscript?: (entry: {
@@ -151,8 +151,8 @@ describe("OpenClawApp Talk controls", () => {
 
   it("keeps Talk startup failures on the dedicated Talk error surface", async () => {
     startMock.mockRejectedValueOnce(new Error("voice provider missing"));
-    const { OpenClawApp } = await import("./app.ts");
-    const app = Object.create(OpenClawApp.prototype) as {
+    const { QuietCoreBotApp } = await import("./app.ts");
+    const app = Object.create(QuietCoreBotApp.prototype) as {
       chatError: string | null;
       client: unknown;
       connected: boolean;
@@ -179,7 +179,7 @@ describe("OpenClawApp Talk controls", () => {
       sessionKey: { value: "main", writable: true },
     });
 
-    await OpenClawApp.prototype.toggleRealtimeTalk.call(app as never);
+    await QuietCoreBotApp.prototype.toggleRealtimeTalk.call(app as never);
 
     expect(app.realtimeTalkStatus).toBe("error");
     expect(app.realtimeTalkDetail).toBe("voice provider missing");
@@ -228,8 +228,8 @@ describe("OpenClawApp Talk controls", () => {
         },
       })
       .mockRejectedValueOnce(new Error("talk.catalog unavailable"));
-    const { OpenClawApp } = await import("./app.ts");
-    const app = Object.create(OpenClawApp.prototype) as {
+    const { QuietCoreBotApp } = await import("./app.ts");
+    const app = Object.create(QuietCoreBotApp.prototype) as {
       client: { request: typeof request };
       connected: boolean;
       realtimeTalkCatalogProviders: unknown[] | null;
@@ -248,19 +248,19 @@ describe("OpenClawApp Talk controls", () => {
       },
     });
 
-    await OpenClawApp.prototype.fetchRealtimeTalkCatalog.call(app as never);
+    await QuietCoreBotApp.prototype.fetchRealtimeTalkCatalog.call(app as never);
     expect(app.realtimeTalkCatalogProviders).toMatchObject([{ id: "plugin-realtime" }]);
     expect(app.realtimeTalkOptions).toEqual({ provider: "plugin-realtime", transport: "" });
 
-    await OpenClawApp.prototype.fetchRealtimeTalkCatalog.call(app as never);
+    await QuietCoreBotApp.prototype.fetchRealtimeTalkCatalog.call(app as never);
     expect(app.realtimeTalkCatalogProviders).toBeNull();
     expect(app.realtimeTalkOptions).toEqual({ provider: "plugin-realtime", transport: "" });
   });
 
   it("clears a Talk provider removed by a successful catalog refresh", async () => {
     const request = vi.fn().mockResolvedValueOnce({ realtime: { providers: [] } });
-    const { OpenClawApp } = await import("./app.ts");
-    const app = Object.create(OpenClawApp.prototype) as {
+    const { QuietCoreBotApp } = await import("./app.ts");
+    const app = Object.create(QuietCoreBotApp.prototype) as {
       client: { request: typeof request };
       connected: boolean;
       realtimeTalkCatalogProviders: unknown[] | null;
@@ -276,7 +276,7 @@ describe("OpenClawApp Talk controls", () => {
       },
     });
 
-    await OpenClawApp.prototype.fetchRealtimeTalkCatalog.call(app as never);
+    await QuietCoreBotApp.prototype.fetchRealtimeTalkCatalog.call(app as never);
 
     expect(app.realtimeTalkCatalogProviders).toEqual([]);
     expect(app.realtimeTalkOptions).toEqual({ provider: "", transport: "" });

@@ -9,7 +9,7 @@ export type FilePreviewModalFile = {
   contents: string;
 };
 
-export class OpenClawFilePreviewModal extends LitElement {
+export class QuietCoreBotFilePreviewModal extends LitElement {
   @property({ attribute: false }) files: FilePreviewModalFile[] = [];
   @property() activePath = "";
   @property() query = "";
@@ -595,7 +595,7 @@ function fileKind(path: string): string {
 }
 
 if (!customElements.get("quiet-core-bot-file-preview-modal")) {
-  customElements.define("quiet-core-bot-file-preview-modal", OpenClawFilePreviewModal);
+  customElements.define("quiet-core-bot-file-preview-modal", QuietCoreBotFilePreviewModal);
 }
 
 const CODE_EXTENSIONS = new Set([
@@ -638,6 +638,6 @@ function iconForFile(path: string) {
 
 declare global {
   interface HTMLElementTagNameMap {
-    "quiet-core-bot-file-preview-modal": OpenClawFilePreviewModal;
+    "quiet-core-bot-file-preview-modal": QuietCoreBotFilePreviewModal;
   }
 }

@@ -2482,6 +2482,9 @@ export const en: TranslationMap = {
       saveChanges: "Save changes",
       addJob: "Add job",
       cancel: "Cancel",
+      saveSuccess: "Job saved successfully.",
+      addSuccess: "Job created successfully.",
+      validationFailed: "Please fix the highlighted fields and try again.",
     },
     jobList: {
       allJobs: "all jobs",
@@ -2493,6 +2496,7 @@ export const en: TranslationMap = {
       disable: "Disable",
       enable: "Enable",
       run: "Run",
+      runIfDue: "Run if due",
       history: "History",
       remove: "Remove",
     },

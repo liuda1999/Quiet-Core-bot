@@ -2551,6 +2551,9 @@ export const id: TranslationMap = {
       saveChanges: "Simpan perubahan",
       addJob: "Tambahkan tugas",
       cancel: "Batal",
+      saveSuccess: "Tugas berhasil disimpan.",
+      addSuccess: "Tugas berhasil dibuat.",
+      validationFailed: "Perbaiki kolom yang ditandai lalu coba lagi.",
     },
     jobList: {
       allJobs: "semua tugas",
@@ -2562,6 +2565,7 @@ export const id: TranslationMap = {
       disable: "Nonaktifkan",
       enable: "Aktifkan",
       run: "Jalankan",
+      runIfDue: "Jalankan jika jatuh tempo",
       history: "Riwayat",
       remove: "Hapus",
     },

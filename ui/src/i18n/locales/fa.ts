@@ -2551,6 +2551,9 @@ export const fa: TranslationMap = {
       saveChanges: "ذخیره تغییرات",
       addJob: "افزودن کار",
       cancel: "لغو",
+      saveSuccess: "کار با موفقیت ذخیره شد.",
+      addSuccess: "کار با موفقیت ایجاد شد.",
+      validationFailed: "لطفاً فیلدهای مشخص‌شده را اصلاح کرده و دوباره تلاش کنید.",
     },
     jobList: {
       allJobs: "همه کارها",
@@ -2562,6 +2565,7 @@ export const fa: TranslationMap = {
       disable: "غیرفعال کردن",
       enable: "فعال کردن",
       run: "اجرا",
+      runIfDue: "در صورت سررسید اجرا کن",
       history: "تاریخچه",
       remove: "حذف",
     },

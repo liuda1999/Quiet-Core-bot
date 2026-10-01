@@ -13,7 +13,7 @@ const FOCUSABLE_SELECTOR = [
   "[tabindex]:not([tabindex='-1'])",
 ].join(",");
 
-export class OpenClawModalDialog extends LitElement {
+export class QuietCoreBotModalDialog extends LitElement {
   @property() label = "";
   @property() description = "";
 
@@ -270,11 +270,11 @@ export class OpenClawModalDialog extends LitElement {
 }
 
 if (!customElements.get("quiet-core-bot-modal-dialog")) {
-  customElements.define("quiet-core-bot-modal-dialog", OpenClawModalDialog);
+  customElements.define("quiet-core-bot-modal-dialog", QuietCoreBotModalDialog);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    "quiet-core-bot-modal-dialog": OpenClawModalDialog;
+    "quiet-core-bot-modal-dialog": QuietCoreBotModalDialog;
   }
 }

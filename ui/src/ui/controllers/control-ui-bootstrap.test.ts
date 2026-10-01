@@ -91,7 +91,7 @@ describe("loadControlUiBootstrapConfig", () => {
     await loadControlUiBootstrapConfig(state);
 
     const fetchCall = requireFetchCall(fetchMock);
-    expect(fetchCall.url).toBe(`/openclaw${CONTROL_UI_BOOTSTRAP_CONFIG_PATH}`);
+    expect(fetchCall.url).toBe(`/quiet-core-bot${CONTROL_UI_BOOTSTRAP_CONFIG_PATH}`);
     expect(fetchCall.init.method).toBe("GET");
     expect(state.assistantName).toBe("Ops");
     expect(state.assistantAvatar).toBe("O");
@@ -288,7 +288,7 @@ describe("loadControlUiBootstrapConfig", () => {
     await loadControlUiBootstrapConfig(state);
 
     const fetchCall = requireFetchCall(fetchMock);
-    expect(fetchCall.url).toBe(`/openclaw${CONTROL_UI_BOOTSTRAP_CONFIG_PATH}`);
+    expect(fetchCall.url).toBe(`/quiet-core-bot${CONTROL_UI_BOOTSTRAP_CONFIG_PATH}`);
     expect(fetchCall.init.method).toBe("GET");
 
     vi.unstubAllGlobals();
@@ -313,7 +313,7 @@ describe("loadControlUiBootstrapConfig", () => {
     await loadControlUiBootstrapConfig(state);
 
     const fetchCall = requireFetchCall(fetchMock);
-    expect(fetchCall.url).toBe(`/openclaw${CONTROL_UI_BOOTSTRAP_CONFIG_PATH}`);
+    expect(fetchCall.url).toBe(`/quiet-core-bot${CONTROL_UI_BOOTSTRAP_CONFIG_PATH}`);
     expect(fetchCall.init.method).toBe("GET");
     expect(fetchCall.headers.Accept).toBe("application/json");
     expect(fetchCall.headers.Authorization).toBe("Bearer session-token");

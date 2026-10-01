@@ -133,7 +133,8 @@ describe("loadSettings default gateway URL derivation", () => {
     expect(settings.gatewayUrl).toBe("wss://gateway.example:8443/quiet-core-bot");
     expect(settings.token).toBe("");
     expect(settings.sessionKey).toBe("agent");
-    const scopedKey = "quiet-core-bot.control.settings.v1:wss://gateway.example:8443/quiet-core-bot";
+    const scopedKey =
+      "quiet-core-bot.control.settings.v1:wss://gateway.example:8443/quiet-core-bot";
     expect(JSON.parse(localStorage.getItem(scopedKey) ?? "{}")).toEqual({
       gatewayUrl: "wss://gateway.example:8443/quiet-core-bot",
       theme: "claw",
@@ -337,7 +338,7 @@ describe("loadSettings default gateway URL derivation", () => {
       textScale: 100,
     });
 
-    const scopedKey = `openclaw.control.settings.v1:${gwUrl}`;
+    const scopedKey = `quiet-core-bot.control.settings.v1:${gwUrl}`;
     const persisted = JSON.parse(localStorage.getItem(scopedKey) ?? "{}") as Record<
       string,
       unknown
@@ -355,7 +356,7 @@ describe("loadSettings default gateway URL derivation", () => {
 
     const gwUrl = expectedGatewayUrl("");
     localStorage.setItem(
-      `openclaw.control.settings.v1:${gwUrl}`,
+      `quiet-core-bot.control.settings.v1:${gwUrl}`,
       JSON.stringify({
         gatewayUrl: gwUrl,
         textScale: 123,
@@ -374,7 +375,7 @@ describe("loadSettings default gateway URL derivation", () => {
 
     const gwUrl = expectedGatewayUrl("");
     localStorage.setItem(
-      `openclaw.control.settings.v1:${gwUrl}`,
+      `quiet-core-bot.control.settings.v1:${gwUrl}`,
       JSON.stringify({
         gatewayUrl: gwUrl,
         chatAutoScroll: "off",
@@ -383,7 +384,7 @@ describe("loadSettings default gateway URL derivation", () => {
     expect(loadSettings().chatAutoScroll).toBe("off");
 
     localStorage.setItem(
-      `openclaw.control.settings.v1:${gwUrl}`,
+      `quiet-core-bot.control.settings.v1:${gwUrl}`,
       JSON.stringify({
         gatewayUrl: gwUrl,
         chatAutoScroll: "disabled",
@@ -459,7 +460,7 @@ describe("loadSettings default gateway URL derivation", () => {
       borderRadius: 50,
     });
 
-    const scopedKey = `openclaw.control.settings.v1:${gwUrl}`;
+    const scopedKey = `quiet-core-bot.control.settings.v1:${gwUrl}`;
     const persisted = JSON.parse(localStorage.getItem(scopedKey) ?? "{}") as Record<
       string,
       unknown
@@ -510,7 +511,7 @@ describe("loadSettings default gateway URL derivation", () => {
 
     const gwUrl = expectedGatewayUrl("");
     localStorage.setItem(
-      `openclaw.control.settings.v1:${gwUrl}`,
+      `quiet-core-bot.control.settings.v1:${gwUrl}`,
       JSON.stringify({
         gatewayUrl: gwUrl,
         theme: "custom",
@@ -582,7 +583,7 @@ describe("loadSettings default gateway URL derivation", () => {
     });
 
     const gwUrl = expectedGatewayUrl("");
-    const scopedKey = `openclaw.control.settings.v1:wss://gateway.example:8443`;
+    const scopedKey = `quiet-core-bot.control.settings.v1:wss://gateway.example:8443`;
 
     // Pre-seed sessionsByGateway with 11 stale gateway entries so the next
     // saveSettings call pushes the total to 12 and triggers the cap (10).

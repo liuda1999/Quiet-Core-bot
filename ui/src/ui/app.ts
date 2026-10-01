@@ -203,7 +203,7 @@ function resolveOnboardingMode(): boolean {
   return normalized === "1" || normalized === "true" || normalized === "yes" || normalized === "on";
 }
 
-export class OpenClawApp extends LitElement {
+export class QuietCoreBotApp extends LitElement {
   readonly i18nController = new I18nController(this);
   clientInstanceId = generateUUID();
   connectGeneration = 0;
@@ -580,7 +580,8 @@ export class OpenClawApp extends LitElement {
   @state() cronJobsTotal = 0;
   @state() cronJobsHasMore = false;
   @state() cronJobsNextOffset: number | null = null;
-  @state() cronJobsLimit = 50;
+  @state() cronJobsLimit = 20;
+  @state() cronJobsPage = 0;
   @state() cronJobsQuery = "";
   @state() cronJobsEnabledFilter: import("./types.js").CronJobsEnabledFilter = "all";
   @state() cronJobsScheduleKindFilter: import("./controllers/cron.js").CronJobsScheduleKindFilter =
@@ -591,17 +592,20 @@ export class OpenClawApp extends LitElement {
   @state() cronJobsSortDir: import("./types.js").CronSortDir = "asc";
   @state() cronStatus: CronStatus | null = null;
   @state() cronError: string | null = null;
+  @state() cronToast: { tone: "success" | "error"; message: string } | null = null;
   @state() cronForm: CronFormState = { ...DEFAULT_CRON_FORM };
   @state() cronFormCollapsed = true;
   @state() cronFieldErrors: import("./controllers/cron.js").CronFieldErrors = {};
   @state() cronEditingJobId: string | null = null;
   @state() cronRunsJobId: string | null = null;
+  @state() cronRunsLoading = false;
   @state() cronRunsLoadingMore = false;
   @state() cronRuns: CronRunLogEntry[] = [];
   @state() cronRunsTotal = 0;
   @state() cronRunsHasMore = false;
   @state() cronRunsNextOffset: number | null = null;
-  @state() cronRunsLimit = 50;
+  @state() cronRunsLimit = 20;
+  @state() cronRunsPage = 0;
   @state() cronRunsScope: import("./types.js").CronRunScope = "all";
   @state() cronRunsStatuses: import("./types.js").CronRunsStatusValue[] = [];
   @state() cronRunsDeliveryStatuses: import("./types.js").CronDeliveryStatus[] = [];
@@ -1656,5 +1660,5 @@ export class OpenClawApp extends LitElement {
 }
 
 if (!customElements.get("quiet-core-bot-app")) {
-  customElements.define("quiet-core-bot-app", OpenClawApp);
+  customElements.define("quiet-core-bot-app", QuietCoreBotApp);
 }

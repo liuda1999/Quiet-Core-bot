@@ -76,6 +76,8 @@ import {
   loadCronJobsPage,
   loadCronRuns,
   loadMoreCronRuns,
+  setCronJobsPage,
+  setCronRunsPage,
   toggleCronJob,
   runCronJob,
   removeCronJob,
@@ -216,6 +218,31 @@ import { buildSettingsPanelCards } from "./views/settings-panel.specs.ts";
 import { renderSettingsPanel } from "./views/settings-panel.ts";
 
 let pendingUpdate: (() => void) | undefined;
+let cronToastTimer: number | undefined;
+let cronRunHistoryHighlightTimer: number | undefined;
+
+const CRON_RUN_HISTORY_ID = "cron-run-history";
+
+// The run-history card lives below the job list, so it is usually off-screen
+// when the operator clicks a job's "history" action. Scroll it into view and
+// flash a highlight so the (already re-rendered) card is unmistakable.
+function revealCronRunHistory() {
+  if (typeof document === "undefined") {
+    return;
+  }
+  const card = document.getElementById(CRON_RUN_HISTORY_ID);
+  if (!card) {
+    return;
+  }
+  if (typeof card.scrollIntoView === "function") {
+    card.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  card.classList.add("cron-card--highlight");
+  clearTimeout(cronRunHistoryHighlightTimer);
+  cronRunHistoryHighlightTimer = window.setTimeout(() => {
+    document.getElementById(CRON_RUN_HISTORY_ID)?.classList.remove("cron-card--highlight");
+  }, 1600);
+}
 
 const notifyLazyViewChanged = () => pendingUpdate?.();
 
@@ -572,7 +599,7 @@ function resolveDreamingNextCycle(
 
 let clawhubSearchTimer: ReturnType<typeof setTimeout> | null = null;
 
-const UPDATE_BANNER_DISMISS_KEY = "openclaw:control-ui:update-banner-dismissed:v1";
+const UPDATE_BANNER_DISMISS_KEY = "quiet-core-bot:control-ui:update-banner-dismissed:v1";
 const CRON_THINKING_SUGGESTIONS = ["off", "minimal", "low", "medium", "high"];
 const CRON_TIMEZONE_SUGGESTIONS = [
   "UTC",
@@ -2893,6 +2920,8 @@ export function renderApp(state: AppViewState) {
                 jobsLoadingMore: state.cronJobsLoadingMore,
                 jobsTotal: state.cronJobsTotal,
                 jobsHasMore: state.cronJobsHasMore,
+                jobsLimit: state.cronJobsLimit,
+                jobsPage: state.cronJobsPage,
                 jobsQuery: state.cronJobsQuery,
                 jobsEnabledFilter: state.cronJobsEnabledFilter,
                 jobsScheduleKindFilter: state.cronJobsScheduleKindFilter,
@@ -2901,6 +2930,7 @@ export function renderApp(state: AppViewState) {
                 jobsSortDir: state.cronJobsSortDir,
                 editingJobId: state.cronEditingJobId,
                 error: state.cronError,
+                toast: state.cronToast,
                 busy: state.cronBusy,
                 form: state.cronForm,
                 cronFormCollapsed: state.cronFormCollapsed,
@@ -2913,6 +2943,9 @@ export function renderApp(state: AppViewState) {
                 runs: state.cronRuns,
                 runsTotal: state.cronRunsTotal,
                 runsHasMore: state.cronRunsHasMore,
+                runsLimit: state.cronRunsLimit,
+                runsPage: state.cronRunsPage,
+                runsLoading: state.cronRunsLoading,
                 runsLoadingMore: state.cronRunsLoadingMore,
                 runsScope: state.cronRunsScope,
                 runsStatuses: state.cronRunsStatuses,
@@ -2938,9 +2971,19 @@ export function renderApp(state: AppViewState) {
                     const saved = await addCronJob(state);
                     if (saved) {
                       state.cronFormCollapsed = true;
+                      clearTimeout(cronToastTimer);
+                      cronToastTimer = window.setTimeout(() => {
+                        state.cronToast = null;
+                        requestHostUpdate?.();
+                      }, 3000);
                     }
                     requestHostUpdate?.();
                   })();
+                },
+                onDismissToast: () => {
+                  clearTimeout(cronToastTimer);
+                  state.cronToast = null;
+                  requestHostUpdate?.();
                 },
                 onEdit: (job) => {
                   state.cronFormCollapsed = false;
@@ -2970,10 +3013,15 @@ export function renderApp(state: AppViewState) {
                 },
                 onLoadRuns: runUiTask(async (jobId) => {
                   updateCronRunsFilter(state, { cronRunsScope: "job" });
+                  // Reveal the run-history card right away so the operator sees
+                  // the loading state and the scoped results instead of an
+                  // off-screen update that looks like nothing happened.
+                  revealCronRunHistory();
                   await loadCronRuns(state, jobId);
                 }),
                 onLoadMoreJobs: () =>
                   void loadCronJobsPage(state, { append: true, tableFilters: true }),
+                onJobsPageChange: (page) => void setCronJobsPage(state, page),
                 onJobsFiltersChange: runUiTask(async (patch) => {
                   updateCronJobsFilter(state, patch);
                   const shouldReload =
@@ -2999,6 +3047,7 @@ export function renderApp(state: AppViewState) {
                   await loadCronJobsPage(state, { append: false, tableFilters: true });
                 }),
                 onLoadMoreRuns: () => void loadMoreCronRuns(state),
+                onRunsPageChange: (page) => void setCronRunsPage(state, page),
                 onRunsFiltersChange: runUiTask(async (patch) => {
                   updateCronRunsFilter(state, patch);
                   if (state.cronRunsScope === "all") {

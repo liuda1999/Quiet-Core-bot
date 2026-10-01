@@ -2514,6 +2514,9 @@ export const th: TranslationMap = {
       saveChanges: "บันทึกการเปลี่ยนแปลง",
       addJob: "เพิ่มงาน",
       cancel: "ยกเลิก",
+      saveSuccess: "บันทึกงานสำเร็จแล้ว",
+      addSuccess: "สร้างงานสำเร็จแล้ว",
+      validationFailed: "โปรดแก้ไขช่องที่ไฮไลต์แล้วลองอีกครั้ง",
     },
     jobList: {
       allJobs: "ทุกงาน",
@@ -2525,6 +2528,7 @@ export const th: TranslationMap = {
       disable: "ปิดใช้งาน",
       enable: "เปิดใช้งาน",
       run: "รัน",
+      runIfDue: "เรียกใช้เมื่อถึงกำหนด",
       history: "ประวัติ",
       remove: "ลบ",
     },

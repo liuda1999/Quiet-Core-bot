@@ -2567,6 +2567,9 @@ export const es: TranslationMap = {
       saveChanges: "Guardar cambios",
       addJob: "Agregar tarea",
       cancel: "Cancelar",
+      saveSuccess: "Tarea guardada correctamente.",
+      addSuccess: "Tarea creada correctamente.",
+      validationFailed: "Corrige los campos resaltados e inténtalo de nuevo.",
     },
     jobList: {
       allJobs: "todas las tareas",
@@ -2578,6 +2581,7 @@ export const es: TranslationMap = {
       disable: "Deshabilitar",
       enable: "Habilitar",
       run: "Ejecutar",
+      runIfDue: "Ejecutar si toca",
       history: "Historial",
       remove: "Eliminar",
     },

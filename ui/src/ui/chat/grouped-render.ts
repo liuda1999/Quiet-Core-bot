@@ -752,7 +752,7 @@ function renderMessageMeta(meta: GroupMeta | null) {
   `;
 }
 
-const SKIP_DELETE_CONFIRM_KEY = "openclaw:skipDeleteConfirm";
+const SKIP_DELETE_CONFIRM_KEY = "quiet-core-bot:skipDeleteConfirm";
 const DELETE_CONFIRM_VIEWPORT_MARGIN_PX = 8;
 const DELETE_CONFIRM_TRIGGER_GAP_PX = 6;
 

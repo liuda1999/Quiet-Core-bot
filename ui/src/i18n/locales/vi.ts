@@ -2543,6 +2543,9 @@ export const vi: TranslationMap = {
       saveChanges: "Lưu thay đổi",
       addJob: "Thêm tác vụ",
       cancel: "Hủy",
+      saveSuccess: "Đã lưu tác vụ thành công.",
+      addSuccess: "Đã tạo tác vụ thành công.",
+      validationFailed: "Vui lòng sửa các trường được đánh dấu và thử lại.",
     },
     jobList: {
       allJobs: "tất cả tác vụ",
@@ -2554,6 +2557,7 @@ export const vi: TranslationMap = {
       disable: "Tắt",
       enable: "Bật",
       run: "Chạy",
+      runIfDue: "Chạy khi đến hạn",
       history: "Lịch sử",
       remove: "Xóa",
     },

@@ -63,6 +63,7 @@ export type CronState = {
   cronJobsHasMore: boolean;
   cronJobsNextOffset: number | null;
   cronJobsLimit: number;
+  cronJobsPage: number;
   cronJobsQuery: string;
   cronJobsEnabledFilter: CronJobsEnabledFilter;
   cronJobsScheduleKindFilter: CronJobsScheduleKindFilter;
@@ -71,17 +72,20 @@ export type CronState = {
   cronJobsSortDir: CronSortDir;
   cronStatus: CronStatus | null;
   cronError: string | null;
+  cronToast: { tone: "success" | "error"; message: string } | null;
   cronForm: CronFormState;
   cronFormCollapsed: boolean;
   cronFieldErrors: CronFieldErrors;
   cronEditingJobId: string | null;
   cronRunsJobId: string | null;
+  cronRunsLoading: boolean;
   cronRunsLoadingMore: boolean;
   cronRuns: CronRunLogEntry[];
   cronRunsTotal: number;
   cronRunsHasMore: boolean;
   cronRunsNextOffset: number | null;
   cronRunsLimit: number;
+  cronRunsPage: number;
   cronRunsScope: CronRunScope;
   cronRunsStatuses: CronRunsStatusValue[];
   cronRunsDeliveryStatuses: CronDeliveryStatus[];
@@ -237,10 +241,10 @@ export async function loadCronModelSuggestions(state: CronModelSuggestionsState)
 async function withCronBusy(
   state: CronState,
   run: (client: GatewayBrowserClient) => Promise<void>,
-) {
+): Promise<boolean> {
   const client = state.client;
   if (!client || !state.connected || state.cronBusy) {
-    return;
+    return false;
   }
   state.cronBusy = true;
   state.cronError = null;
@@ -251,6 +255,7 @@ async function withCronBusy(
   } finally {
     state.cronBusy = false;
   }
+  return true;
 }
 
 function normalizeCronPageMeta(params: {
@@ -293,12 +298,13 @@ async function drainPendingCronJobsReload(state: CronState) {
 
 export async function loadCronJobsPage(
   state: CronState,
-  opts?: { append?: boolean; tableFilters?: boolean },
+  opts?: { append?: boolean; tableFilters?: boolean; page?: number },
 ) {
   if (!state.client || !state.connected) {
     return;
   }
   const append = opts?.append === true;
+  const page = typeof opts?.page === "number" ? opts.page : state.cronJobsPage;
   if (state.cronLoading || state.cronJobsLoadingMore) {
     if (!append) {
       state.cronJobsReloadPending = true;
@@ -316,7 +322,10 @@ export async function loadCronJobsPage(
   }
   state.cronError = null;
   try {
-    const offset = append ? Math.max(0, state.cronJobsNextOffset ?? state.cronJobs.length) : 0;
+    const offset = append
+      ? Math.max(0, state.cronJobsNextOffset ?? state.cronJobs.length)
+      : Math.max(0, page * state.cronJobsLimit);
+    state.cronJobsPage = page;
     const res = await state.client.request<CronJobsListResult>("cron.list", {
       includeDisabled: state.cronJobsEnabledFilter === "all",
       limit: state.cronJobsLimit,
@@ -386,6 +395,7 @@ export function updateCronJobsFilter(
   state.cronJobsLastStatusFilter = patch.cronJobsLastStatusFilter ?? state.cronJobsLastStatusFilter;
   state.cronJobsSortBy = patch.cronJobsSortBy ?? state.cronJobsSortBy;
   state.cronJobsSortDir = patch.cronJobsSortDir ?? state.cronJobsSortDir;
+  state.cronJobsPage = 0;
 }
 
 export function getVisibleCronJobs(
@@ -557,7 +567,9 @@ function jobToForm(job: CronJob, prev: CronFormState): CronFormState {
     failureAlertAccountId:
       failureAlert && typeof failureAlert === "object" ? (failureAlert.accountId ?? "") : "",
     timeoutSeconds:
-      payload?.kind === "agentTurn" && typeof payload.timeoutSeconds === "number"
+      payload?.kind === "agentTurn" &&
+      typeof payload.timeoutSeconds === "number" &&
+      payload.timeoutSeconds > 0
         ? String(payload.timeoutSeconds)
         : "",
   };
@@ -578,6 +590,27 @@ function jobToForm(job: CronJob, prev: CronFormState): CronFormState {
   }
 
   return normalizeCronFormState(next);
+}
+
+const CRON_SCHEDULE_FORM_KEYS = [
+  "scheduleKind",
+  "scheduleAt",
+  "everyAmount",
+  "everyUnit",
+  "cronExpr",
+  "cronTz",
+  "scheduleExact",
+  "staggerAmount",
+  "staggerUnit",
+] as const satisfies ReadonlyArray<keyof CronFormState>;
+
+// Re-sending an unchanged schedule re-runs the gateway's schedule validation,
+// which rejects an already-fired one-shot ("schedule.at is in the past") even
+// when the edit does not touch the schedule. Compare the form against the
+// values the job itself maps to so an untouched schedule is left out of the patch.
+function didCronScheduleChange(form: CronFormState, job: CronJob): boolean {
+  const baseline = jobToForm(job, form);
+  return CRON_SCHEDULE_FORM_KEYS.some((key) => baseline[key] !== form[key]);
 }
 
 function buildCronSchedule(form: CronFormState) {
@@ -700,8 +733,9 @@ function buildFailureAlert(form: CronFormState, existingChannel?: string) {
 }
 
 export async function addCronJob(state: CronState): Promise<boolean> {
+  const wasEditing = state.cronEditingJobId !== null;
   let saved = false;
-  await withCronBusy(state, async (client) => {
+  const ran = await withCronBusy(state, async (client) => {
     const form = normalizeCronFormState(state.cronForm);
     if (form !== state.cronForm) {
       state.cronForm = form;
@@ -739,8 +773,13 @@ export async function addCronJob(state: CronState): Promise<boolean> {
             mode: selectedDeliveryMode,
             channel:
               selectedDeliveryMode === "announce"
-                ? normalizePersistedDeliveryChannel(form.deliveryChannel, {
-                    preserveLastOnUpdate: Boolean(editingJob?.delivery?.channel),
+                ? // Send the chosen channel explicitly, including the "last"
+                  // sentinel. The gateway requires an explicit channel for
+                  // announce delivery whenever multiple channels are configured,
+                  // so dropping an implicit "last" makes create/update fail
+                  // validation with "delivery.channel is required ...".
+                  normalizePersistedDeliveryChannel(form.deliveryChannel, {
+                    preserveLastOnUpdate: true,
                   })
                 : undefined,
             to: form.deliveryTo.trim() || undefined,
@@ -780,6 +819,13 @@ export async function addCronJob(state: CronState): Promise<boolean> {
       throw new Error(t("cron.errors.nameRequiredShort"));
     }
     if (state.cronEditingJobId) {
+      // Leave the schedule out of the patch unless the user actually changed
+      // it. Re-sending an unchanged one-shot "at" that already fired makes the
+      // gateway reject the whole update ("schedule.at is in the past"), which
+      // blocked unrelated edits such as renaming or disabling the job.
+      if (editingJob && !didCronScheduleChange(form, editingJob)) {
+        delete job.schedule;
+      }
       await client.request("cron.update", {
         id: state.cronEditingJobId,
         patch: job,
@@ -793,6 +839,19 @@ export async function addCronJob(state: CronState): Promise<boolean> {
     await loadCronStatus(state);
     saved = true;
   });
+  if (!ran) {
+    return saved;
+  }
+  if (saved) {
+    state.cronToast = {
+      tone: "success",
+      message: wasEditing ? t("cron.form.saveSuccess") : t("cron.form.addSuccess"),
+    };
+  } else if (state.cronError) {
+    state.cronToast = { tone: "error", message: state.cronError };
+  } else if (hasCronFormErrors(state.cronFieldErrors)) {
+    state.cronToast = { tone: "error", message: t("cron.form.validationFailed") };
+  }
   return saved;
 }
 
@@ -829,7 +888,7 @@ export async function removeCronJob(state: CronState, job: CronJob) {
 export async function loadCronRuns(
   state: CronState,
   jobId: string | null,
-  opts?: { append?: boolean },
+  opts?: { append?: boolean; page?: number },
 ): Promise<CronRunsLoadStatus> {
   if (!state.client || !state.connected) {
     return "skipped";
@@ -841,14 +900,20 @@ export async function loadCronRuns(
     return "skipped";
   }
   const append = opts?.append === true;
+  const page = typeof opts?.page === "number" ? opts.page : state.cronRunsPage;
   if (append && !state.cronRunsHasMore) {
     return "skipped";
   }
   try {
     if (append) {
       state.cronRunsLoadingMore = true;
+    } else {
+      state.cronRunsLoading = true;
     }
-    const offset = append ? Math.max(0, state.cronRunsNextOffset ?? state.cronRuns.length) : 0;
+    const offset = append
+      ? Math.max(0, state.cronRunsNextOffset ?? state.cronRuns.length)
+      : Math.max(0, page * state.cronRunsLimit);
+    state.cronRunsPage = page;
     const res = await state.client.request<CronRunsResult>("cron.runs", {
       scope,
       id: scope === "job" ? (activeJobId ?? undefined) : undefined,
@@ -886,6 +951,8 @@ export async function loadCronRuns(
   } finally {
     if (append) {
       state.cronRunsLoadingMore = false;
+    } else {
+      state.cronRunsLoading = false;
     }
   }
 }
@@ -895,6 +962,24 @@ export async function loadMoreCronRuns(state: CronState) {
     return;
   }
   await loadCronRuns(state, state.cronRunsJobId, { append: true });
+}
+
+export async function setCronJobsPage(state: CronState, page: number) {
+  const totalPages = Math.max(1, Math.ceil(state.cronJobsTotal / state.cronJobsLimit));
+  const clamped = Math.max(0, Math.min(page, totalPages - 1));
+  if (clamped === state.cronJobsPage) {
+    return;
+  }
+  await loadCronJobsPage(state, { page: clamped, tableFilters: true });
+}
+
+export async function setCronRunsPage(state: CronState, page: number) {
+  const totalPages = Math.max(1, Math.ceil(state.cronRunsTotal / state.cronRunsLimit));
+  const clamped = Math.max(0, Math.min(page, totalPages - 1));
+  if (clamped === state.cronRunsPage) {
+    return;
+  }
+  await loadCronRuns(state, state.cronRunsJobId, { page: clamped });
 }
 
 export function updateCronRunsFilter(
@@ -929,6 +1014,7 @@ export function updateCronRunsFilter(
     state.cronRunsQuery = patch.cronRunsQuery;
   }
   state.cronRunsSortDir = patch.cronRunsSortDir ?? state.cronRunsSortDir;
+  state.cronRunsPage = 0;
 }
 
 export function startCronEdit(state: CronState, job: CronJob) {

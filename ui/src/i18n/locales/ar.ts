@@ -2533,6 +2533,9 @@ export const ar: TranslationMap = {
       saveChanges: "حفظ التغييرات",
       addJob: "إضافة مهمة",
       cancel: "إلغاء",
+      saveSuccess: "تم حفظ المهمة بنجاح.",
+      addSuccess: "تم إنشاء المهمة بنجاح.",
+      validationFailed: "يرجى تصحيح الحقول المميزة والمحاولة مرة أخرى.",
     },
     jobList: {
       allJobs: "كل المهام",
@@ -2544,6 +2547,7 @@ export const ar: TranslationMap = {
       disable: "تعطيل",
       enable: "تفعيل",
       run: "تشغيل",
+      runIfDue: "تشغيل عند الاستحقاق",
       history: "السجل",
       remove: "إزالة",
     },

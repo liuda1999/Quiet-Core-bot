@@ -4,12 +4,15 @@ import { DEFAULT_CRON_FORM } from "../app-defaults.ts";
 import {
   addCronJob,
   cancelCronEdit,
+  hasCronFormErrors,
   loadCronModelSuggestions,
   loadCronJobsPage,
   loadCronRuns,
   loadMoreCronRuns,
   normalizeCronFormState,
   runCronJob,
+  setCronJobsPage,
+  setCronRunsPage,
   startCronEdit,
   startCronClone,
   updateCronJobsFilter,
@@ -33,6 +36,7 @@ function createState(overrides: Partial<CronState> = {}): CronState {
     cronJobsHasMore: false,
     cronJobsNextOffset: null,
     cronJobsLimit: 50,
+    cronJobsPage: 0,
     cronJobsQuery: "",
     cronJobsEnabledFilter: "all",
     cronJobsScheduleKindFilter: "all",
@@ -41,17 +45,20 @@ function createState(overrides: Partial<CronState> = {}): CronState {
     cronJobsSortDir: "asc",
     cronStatus: null,
     cronError: null,
+    cronToast: null,
     cronForm: { ...DEFAULT_CRON_FORM },
     cronFormCollapsed: false,
     cronFieldErrors: {},
     cronEditingJobId: null,
     cronRunsJobId: null,
+    cronRunsLoading: false,
     cronRunsLoadingMore: false,
     cronRuns: [],
     cronRunsTotal: 0,
     cronRunsHasMore: false,
     cronRunsNextOffset: null,
     cronRunsLimit: 50,
+    cronRunsPage: 0,
     cronRunsScope: "all",
     cronRunsStatuses: [],
     cronRunsDeliveryStatuses: [],
@@ -244,7 +251,7 @@ describe("cron controller", () => {
     });
   });
 
-  it('omits delivery.channel when the form still uses the "last" sentinel', async () => {
+  it('sends delivery.channel="last" explicitly when the form uses the "last" sentinel', async () => {
     const request = vi.fn(async (method: string, _payload?: unknown) => {
       if (method === "cron.add") {
         return { id: "job-last-add" };
@@ -279,10 +286,8 @@ describe("cron controller", () => {
     const addCall = findRequestCall(request.mock.calls, "cron.add");
     expectRecordFields(requireRecord(requestPayload(addCall).delivery, "delivery"), {
       mode: "announce",
+      channel: "last",
     });
-    expect(
-      (addCall[1] as { delivery?: { channel?: string } } | undefined)?.delivery?.channel,
-    ).toBeUndefined();
   });
 
   it("forwards lightContext in cron payload", async () => {
@@ -641,7 +646,7 @@ describe("cron controller", () => {
     expect(patch).not.toHaveProperty("payload");
   });
 
-  it('keeps implicit announce delivery implicit when editing a job that shows "last" in the form', async () => {
+  it('sends delivery.channel="last" when editing a job that shows "last" in the form', async () => {
     const request = vi.fn(async (method: string, _payload?: unknown) => {
       if (method === "cron.update") {
         return { id: "job-implicit-delivery" };
@@ -682,11 +687,8 @@ describe("cron controller", () => {
     expectRecordFields(requireRecord(requestPatch(updateCall).delivery, "delivery"), {
       mode: "announce",
       to: "123",
+      channel: "last",
     });
-    expect(
-      (updateCall[1] as { patch?: { delivery?: { channel?: string } } } | undefined)?.patch
-        ?.delivery?.channel,
-    ).toBeUndefined();
   });
 
   it('sends delivery.channel="last" when editing clears an explicit channel back to implicit-last', async () => {
@@ -1200,6 +1202,94 @@ describe("cron controller", () => {
     });
   });
 
+  it("sets a success toast after adding a new job", async () => {
+    const request = vi.fn(async (method: string) => {
+      if (method === "cron.add") return { id: "job-new" };
+      if (method === "cron.list") return { jobs: [], total: 0, hasMore: false, nextOffset: null };
+      if (method === "cron.status") return { enabled: true, jobs: 0, nextWakeAtMs: null };
+      return {};
+    });
+    const state = createState({
+      client: { request } as unknown as CronState["client"],
+      cronForm: {
+        ...DEFAULT_CRON_FORM,
+        name: "new job",
+        scheduleKind: "cron",
+        cronExpr: "0 * * * *",
+        payloadKind: "agentTurn",
+        payloadText: "hello",
+      },
+    });
+
+    await addCronJob(state);
+
+    expect(state.cronToast).toEqual({ tone: "success", message: "Job created successfully." });
+  });
+
+  it("sets a save-success toast after editing an existing job", async () => {
+    const request = vi.fn(async (method: string) => {
+      if (method === "cron.update") return {};
+      if (method === "cron.list") return { jobs: [], total: 0, hasMore: false, nextOffset: null };
+      if (method === "cron.status") return { enabled: true, jobs: 0, nextWakeAtMs: null };
+      return {};
+    });
+    const state = createState({
+      client: { request } as unknown as CronState["client"],
+      cronEditingJobId: "job-1",
+      cronJobs: [
+        {
+          id: "job-1",
+          name: "old name",
+          enabled: true,
+          createdAtMs: 0,
+          updatedAtMs: 0,
+          schedule: { kind: "cron", expr: "0 6 * * *" },
+          sessionTarget: "isolated",
+          wakeMode: "now",
+          payload: { kind: "agentTurn", message: "ping" },
+        },
+      ],
+      cronForm: {
+        ...DEFAULT_CRON_FORM,
+        name: "edited name",
+        scheduleKind: "cron",
+        cronExpr: "0 6 * * *",
+        payloadKind: "agentTurn",
+        payloadText: "ping",
+        sessionTarget: "isolated",
+        wakeMode: "now",
+      },
+    });
+
+    await addCronJob(state);
+
+    expect(state.cronToast).toEqual({ tone: "success", message: "Job saved successfully." });
+    expect(state.cronEditingJobId).toBeNull();
+  });
+
+  it("sets an error toast when the save request throws", async () => {
+    const request = vi.fn(async () => {
+      throw new Error("boom");
+    });
+    const state = createState({
+      client: { request } as unknown as CronState["client"],
+      cronForm: {
+        ...DEFAULT_CRON_FORM,
+        name: "failing job",
+        scheduleKind: "cron",
+        cronExpr: "0 * * * *",
+        payloadKind: "agentTurn",
+        payloadText: "hello",
+      },
+    });
+
+    const saved = await addCronJob(state);
+
+    expect(saved).toBe(false);
+    expect(state.cronToast?.tone).toBe("error");
+    expect(state.cronToast?.message).toContain("boom");
+  });
+
   it("canceling edit resets form to defaults and clears edit mode", () => {
     const state = createState();
     const job = {
@@ -1619,5 +1709,234 @@ describe("cron controller", () => {
     await runCronJob(state, job, "due");
 
     expect(request).toHaveBeenCalledWith("cron.run", { id: "job-due", mode: "due" });
+  });
+
+  it("setCronJobsPage loads the requested page with correct offset", async () => {
+    const request = vi.fn(async (method: string, payload?: unknown) => {
+      if (method === "cron.list") {
+        const listPayload = requireRecord(payload, "cron.list payload");
+        expect(listPayload.limit).toBe(20);
+        expect(listPayload.offset).toBe(40);
+        return { jobs: [], total: 55, hasMore: false, nextOffset: null };
+      }
+      return {};
+    });
+    const state = createState({
+      client: { request } as unknown as CronState["client"],
+      cronJobsLimit: 20,
+      cronJobsTotal: 55,
+      cronJobsPage: 0,
+    });
+
+    await setCronJobsPage(state, 2);
+
+    expect(state.cronJobsPage).toBe(2);
+    expect(request).toHaveBeenCalledTimes(1);
+  });
+
+  it("setCronJobsPage clamps page to the last available page", async () => {
+    const request = vi.fn(async (method: string, payload?: unknown) => {
+      if (method === "cron.list") {
+        const listPayload = requireRecord(payload, "cron.list payload");
+        expect(listPayload.offset).toBe(40);
+        return { jobs: [], total: 55, hasMore: false, nextOffset: null };
+      }
+      return {};
+    });
+    const state = createState({
+      client: { request } as unknown as CronState["client"],
+      cronJobsLimit: 20,
+      cronJobsTotal: 55,
+      cronJobsPage: 0,
+    });
+
+    await setCronJobsPage(state, 999);
+
+    expect(state.cronJobsPage).toBe(2);
+  });
+
+  it("setCronJobsPage is a no-op when the target page equals the current page", async () => {
+    const request = vi.fn();
+    const state = createState({
+      client: { request } as unknown as CronState["client"],
+      cronJobsLimit: 20,
+      cronJobsTotal: 55,
+      cronJobsPage: 1,
+    });
+
+    await setCronJobsPage(state, 1);
+
+    expect(request).not.toHaveBeenCalled();
+    expect(state.cronJobsPage).toBe(1);
+  });
+
+  it("setCronRunsPage loads the requested runs page", async () => {
+    const request = vi.fn(async (method: string, payload?: unknown) => {
+      if (method === "cron.runs") {
+        const runsPayload = requireRecord(payload, "cron.runs payload");
+        expect(runsPayload.limit).toBe(20);
+        expect(runsPayload.offset).toBe(20);
+        return { entries: [], total: 42, hasMore: false, nextOffset: null };
+      }
+      return {};
+    });
+    const state = createState({
+      client: { request } as unknown as CronState["client"],
+      cronRunsLimit: 20,
+      cronRunsTotal: 42,
+      cronRunsPage: 0,
+      cronRunsScope: "job",
+      cronRunsJobId: "job-1",
+    });
+
+    await setCronRunsPage(state, 1);
+
+    expect(state.cronRunsPage).toBe(1);
+    expect(request).toHaveBeenCalledTimes(1);
+  });
+
+  it("setCronRunsPage is a no-op when the target page equals the current page", async () => {
+    const request = vi.fn();
+    const state = createState({
+      client: { request } as unknown as CronState["client"],
+      cronRunsLimit: 20,
+      cronRunsTotal: 42,
+      cronRunsPage: 1,
+      cronRunsScope: "job",
+      cronRunsJobId: "job-1",
+    });
+
+    await setCronRunsPage(state, 1);
+
+    expect(request).not.toHaveBeenCalled();
+    expect(state.cronRunsPage).toBe(1);
+  });
+
+  it("editing a job with a zero timeout keeps the form submittable", async () => {
+    const request = vi.fn(async (method: string) => {
+      if (method === "cron.update") return {};
+      if (method === "cron.list") return { jobs: [], total: 0, hasMore: false, nextOffset: null };
+      if (method === "cron.status") return { enabled: true, jobs: 0, nextWakeAtMs: null };
+      return {};
+    });
+    const job = {
+      id: "job-zero-timeout",
+      name: "zero timeout",
+      enabled: true,
+      createdAtMs: 0,
+      updatedAtMs: 0,
+      schedule: { kind: "cron" as const, expr: "0 6 * * *" },
+      sessionTarget: "isolated" as const,
+      wakeMode: "now" as const,
+      payload: { kind: "agentTurn" as const, message: "hi", timeoutSeconds: 0 },
+    };
+    const state = createState({
+      client: { request } as unknown as CronState["client"],
+      cronJobs: [job as never],
+    });
+
+    startCronEdit(state, job as never);
+
+    // A stored 0-second timeout must not surface as a form error, otherwise the
+    // Save button stays disabled and the user gets no feedback at all.
+    expect(state.cronFieldErrors).toEqual({});
+    expect(state.cronForm.timeoutSeconds).toBe("");
+
+    const saved = await addCronJob(state);
+    expect(saved).toBe(true);
+    const patch = requestPatch(findRequestCall(request.mock.calls, "cron.update"));
+    expect("timeoutSeconds" in requireRecord(patch.payload, "payload")).toBe(false);
+  });
+
+  it("omits the schedule when editing a one-shot job whose time already passed", async () => {
+    const request = vi.fn(async (method: string) => {
+      if (method === "cron.update") return {};
+      if (method === "cron.list") return { jobs: [], total: 0, hasMore: false, nextOffset: null };
+      if (method === "cron.status") return { enabled: true, jobs: 0, nextWakeAtMs: null };
+      return {};
+    });
+    const job = {
+      id: "job-past-at",
+      name: "past one shot",
+      enabled: true,
+      createdAtMs: 0,
+      updatedAtMs: 0,
+      schedule: { kind: "at" as const, at: "2026-10-01T02:18:00.000Z" },
+      sessionTarget: "isolated" as const,
+      wakeMode: "now" as const,
+      payload: { kind: "agentTurn" as const, message: "once" },
+    };
+    const state = createState({
+      client: { request } as unknown as CronState["client"],
+      cronJobs: [job as never],
+    });
+
+    startCronEdit(state, job as never);
+    const saved = await addCronJob(state);
+
+    expect(saved).toBe(true);
+    const patch = requestPatch(findRequestCall(request.mock.calls, "cron.update"));
+    // Re-sending the stale "at" would make the gateway reject the whole update.
+    expect("schedule" in patch).toBe(false);
+    expect(state.cronToast?.tone).toBe("success");
+  });
+
+  it("still sends the schedule when the editor changes it", async () => {
+    const request = vi.fn(async (method: string) => {
+      if (method === "cron.update") return {};
+      if (method === "cron.list") return { jobs: [], total: 0, hasMore: false, nextOffset: null };
+      if (method === "cron.status") return { enabled: true, jobs: 0, nextWakeAtMs: null };
+      return {};
+    });
+    const job = {
+      id: "job-edit-schedule",
+      name: "reschedule me",
+      enabled: true,
+      createdAtMs: 0,
+      updatedAtMs: 0,
+      schedule: { kind: "cron" as const, expr: "0 6 * * *" },
+      sessionTarget: "isolated" as const,
+      wakeMode: "now" as const,
+      payload: { kind: "agentTurn" as const, message: "hi" },
+    };
+    const state = createState({
+      client: { request } as unknown as CronState["client"],
+      cronJobs: [job as never],
+    });
+
+    startCronEdit(state, job as never);
+    state.cronForm.cronExpr = "0 9 * * *";
+    const saved = await addCronJob(state);
+
+    expect(saved).toBe(true);
+    const patch = requestPatch(findRequestCall(request.mock.calls, "cron.update"));
+    expect(requireRecord(patch.schedule, "schedule").expr).toBe("0 9 * * *");
+  });
+
+  it("flags the first run-history load as loading and clears it afterwards", async () => {
+    let resolveRuns: ((value: unknown) => void) | undefined;
+    const request = vi.fn(
+      (method: string) =>
+        new Promise((resolve) => {
+          if (method === "cron.runs") {
+            resolveRuns = resolve;
+            return;
+          }
+          resolve({});
+        }),
+    );
+    const state = createState({
+      client: { request } as unknown as CronState["client"],
+      cronRunsScope: "job",
+      cronRunsJobId: "job-1",
+    });
+
+    const pending = loadCronRuns(state, "job-1");
+    expect(state.cronRunsLoading).toBe(true);
+
+    resolveRuns?.({ entries: [], total: 0, hasMore: false, nextOffset: null });
+    await pending;
+
+    expect(state.cronRunsLoading).toBe(false);
   });
 });

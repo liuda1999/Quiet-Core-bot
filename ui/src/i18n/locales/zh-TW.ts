@@ -2511,6 +2511,9 @@ export const zh_TW: TranslationMap = {
       saveChanges: "儲存變更",
       addJob: "新增工作",
       cancel: "取消",
+      saveSuccess: "任務儲存成功。",
+      addSuccess: "任務建立成功。",
+      validationFailed: "請修正標示的欄位後再試一次。",
     },
     jobList: {
       allJobs: "所有工作",
@@ -2522,6 +2525,7 @@ export const zh_TW: TranslationMap = {
       disable: "停用",
       enable: "啟用",
       run: "執行",
+      runIfDue: "到期時執行",
       history: "記錄",
       remove: "移除",
     },

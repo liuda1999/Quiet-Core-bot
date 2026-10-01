@@ -36,6 +36,8 @@ export type CronProps = {
   jobs: CronJob[];
   jobsTotal: number;
   jobsHasMore: boolean;
+  jobsLimit: number;
+  jobsPage: number;
   jobsQuery: string;
   jobsEnabledFilter: CronJobsEnabledFilter;
   jobsScheduleKindFilter: CronJobsScheduleKindFilter;
@@ -43,6 +45,7 @@ export type CronProps = {
   jobsSortBy: CronJobsSortBy;
   jobsSortDir: CronSortDir;
   error: string | null;
+  toast: { tone: "success" | "error"; message: string } | null;
   busy: boolean;
   form: CronFormState;
   fieldErrors: CronFieldErrors;
@@ -56,6 +59,9 @@ export type CronProps = {
   runs: CronRunLogEntry[];
   runsTotal: number;
   runsHasMore: boolean;
+  runsLimit: number;
+  runsPage: number;
+  runsLoading: boolean;
   runsLoadingMore: boolean;
   runsScope: CronRunScope;
   runsStatuses: CronRunsStatusValue[];
@@ -72,6 +78,7 @@ export type CronProps = {
   onFormChange: (patch: Partial<CronFormState>) => void;
   onRefresh: () => void;
   onAdd: () => void;
+  onDismissToast?: () => void;
   onEdit: (job: CronJob) => void;
   onClone: (job: CronJob) => void;
   onCancelEdit: () => void;
@@ -83,6 +90,7 @@ export type CronProps = {
   onQuickCreate?: () => void;
   onLoadRuns: (jobId: string) => void;
   onLoadMoreJobs: () => void;
+  onJobsPageChange: (page: number) => void;
   onJobsFiltersChange: (patch: {
     cronJobsQuery?: string;
     cronJobsEnabledFilter?: CronJobsEnabledFilter;
@@ -93,6 +101,7 @@ export type CronProps = {
   }) => void | Promise<void>;
   onJobsFiltersReset: () => void | Promise<void>;
   onLoadMoreRuns: () => void;
+  onRunsPageChange: (page: number) => void;
   onRunsFiltersChange: (patch: {
     cronRunsScope?: CronRunScope;
     cronRunsStatuses?: CronRunsStatusValue[];
@@ -401,7 +410,6 @@ export function renderCron(props: CronProps) {
       ? () => props.onToggleFormCollapsed?.(false)
       : null;
   const hasActiveJobsFilters =
-    props.jobsQuery.trim().length > 0 ||
     props.jobsEnabledFilter !== "all" ||
     props.jobsScheduleKindFilter !== "all" ||
     props.jobsLastStatusFilter !== "all" ||
@@ -409,7 +417,6 @@ export function renderCron(props: CronProps) {
     props.jobsSortDir !== "asc";
   const hasActiveRunsFilters =
     props.runsScope !== "all" ||
-    props.runsQuery.trim().length > 0 ||
     props.runsStatuses.length > 0 ||
     props.runsDeliveryStatuses.length > 0 ||
     props.runsSortDir !== "desc";
@@ -458,9 +465,30 @@ export function renderCron(props: CronProps) {
         >
           ${props.loading ? t("cron.summary.refreshing") : t("cron.summary.refresh")}
         </button>
-        ${props.error ? html`<span class="muted">${props.error}</span>` : nothing}
+        ${props.error && !props.toast
+          ? html`<span class="muted cron-error">${props.error}</span>`
+          : nothing}
       </div>
     </section>
+
+    ${props.toast && formCollapsed
+      ? html`<div
+          class=${`callout ${props.toast.tone} cron-toast`}
+          role="status"
+          aria-live="polite"
+        >
+          <span class="cron-toast__message">${props.toast.message}</span>
+          ${props.onDismissToast
+            ? html`<button
+                class="btn btn--ghost cron-toast__dismiss"
+                @click=${props.onDismissToast}
+                aria-label=${t("common.dismiss")}
+              >
+                ${t("common.dismiss")}
+              </button>`
+            : nothing}
+        </div>`
+      : nothing}
 
     <section class=${`cron-workspace ${formCollapsed ? "cron-workspace--form-collapsed" : ""}`}>
       <div class="cron-workspace-main">
@@ -480,6 +508,19 @@ export function renderCron(props: CronProps) {
               })}
             </div>
           </div>
+          <div class="cron-search-bar">
+            <label class="field cron-filter-search">
+              <span>${t("cron.jobs.searchJobs")}</span>
+              <input
+                .value=${props.jobsQuery}
+                placeholder=${t("cron.jobs.searchPlaceholder")}
+                @input=${(e: Event) =>
+                  props.onJobsFiltersChange({
+                    cronJobsQuery: (e.target as HTMLInputElement).value,
+                  })}
+              />
+            </label>
+          </div>
           <details class="cron-filter-panel" ?open=${hasActiveJobsFilters}>
             <summary class="cron-filter-panel__summary">
               <span>${t("sessionsView.filters")}</span>
@@ -488,17 +529,6 @@ export function renderCron(props: CronProps) {
                 : nothing}
             </summary>
             <div class="filters cron-filter-panel__body">
-              <label class="field cron-filter-search">
-                <span>${t("cron.jobs.searchJobs")}</span>
-                <input
-                  .value=${props.jobsQuery}
-                  placeholder=${t("cron.jobs.searchPlaceholder")}
-                  @input=${(e: Event) =>
-                    props.onJobsFiltersChange({
-                      cronJobsQuery: (e.target as HTMLInputElement).value,
-                    })}
-                />
-              </label>
               <label class="field">
                 <span>${t("cron.jobs.enabled")}</span>
                 <select
@@ -610,26 +640,20 @@ export function renderCron(props: CronProps) {
                 </div>
               `
             : html`
-                <div class="list" style="margin-top: 12px;">
+                <div class="list" style="margin-top: 12px; gap: 12px;">
                   ${props.jobs.map((job) => renderJob(job, props))}
                 </div>
               `}
-          ${props.jobsHasMore
-            ? html`
-                <div class="row" style="margin-top: 12px">
-                  <button
-                    class="btn"
-                    ?disabled=${props.loading || props.jobsLoadingMore}
-                    @click=${props.onLoadMoreJobs}
-                  >
-                    ${props.jobsLoadingMore ? t("cron.jobs.loading") : t("cron.jobs.loadMore")}
-                  </button>
-                </div>
-              `
-            : nothing}
+          ${renderPagination({
+            page: props.jobsPage,
+            pageSize: props.jobsLimit ?? 20,
+            total: props.jobsTotal,
+            loading: props.loading || props.jobsLoadingMore,
+            onPageChange: props.onJobsPageChange,
+          })}
         </section>
 
-        <section class="card">
+        <section class="card" id="cron-run-history">
           <div
             class="row"
             style="justify-content: space-between; align-items: flex-start; gap: 12px;"
@@ -648,6 +672,19 @@ export function renderCron(props: CronProps) {
                 total: String(props.runsTotal),
               })}
             </div>
+          </div>
+          <div class="cron-search-bar">
+            <label class="field cron-run-filter-search">
+              <span>${t("cron.runs.searchRuns")}</span>
+              <input
+                .value=${props.runsQuery}
+                placeholder=${t("cron.runs.searchPlaceholder")}
+                @input=${(e: Event) =>
+                  props.onRunsFiltersChange({
+                    cronRunsQuery: (e.target as HTMLInputElement).value,
+                  })}
+              />
+            </label>
           </div>
           <details class="cron-filter-panel" ?open=${hasActiveRunsFilters}>
             <summary class="cron-filter-panel__summary">
@@ -672,17 +709,6 @@ export function renderCron(props: CronProps) {
                       ${t("cron.runs.selectedJob")}
                     </option>
                   </select>
-                </label>
-                <label class="field cron-run-filter-search">
-                  <span>${t("cron.runs.searchRuns")}</span>
-                  <input
-                    .value=${props.runsQuery}
-                    placeholder=${t("cron.runs.searchPlaceholder")}
-                    @input=${(e: Event) =>
-                      props.onRunsFiltersChange({
-                        cronRunsQuery: (e.target as HTMLInputElement).value,
-                      })}
-                  />
                 </label>
                 <label class="field">
                   <span>${t("cron.jobs.sort")}</span>
@@ -738,31 +764,40 @@ export function renderCron(props: CronProps) {
               </div>
             </div>
           </details>
-          ${props.runsScope === "job" && props.runsJobId == null
+          ${props.runsLoading
             ? html`
-                <div class="muted" style="margin-top: 12px">${t("cron.runs.selectJobHint")}</div>
-              `
-            : runs.length === 0
-              ? html`
-                  <div class="muted" style="margin-top: 12px">${t("cron.runs.noMatching")}</div>
-                `
-              : html`
-                  <div class="list" style="margin-top: 12px;">
-                    ${runs.map((entry) => renderRun(entry, props.basePath, props.onNavigateToChat))}
-                  </div>
-                `}
-          ${(props.runsScope === "all" || props.runsJobId != null) && props.runsHasMore
-            ? html`
-                <div class="row" style="margin-top: 12px">
-                  <button
-                    class="btn"
-                    ?disabled=${props.runsLoadingMore}
-                    @click=${props.onLoadMoreRuns}
-                  >
-                    ${props.runsLoadingMore ? t("cron.jobs.loading") : t("cron.runs.loadMore")}
-                  </button>
+                <div
+                  class="muted cron-runs-loading"
+                  role="status"
+                  aria-live="polite"
+                  style="margin-top: 12px"
+                >
+                  ${t("common.loading")}
                 </div>
               `
+            : props.runsScope === "job" && props.runsJobId == null
+              ? html`
+                  <div class="muted" style="margin-top: 12px">${t("cron.runs.selectJobHint")}</div>
+                `
+              : runs.length === 0
+                ? html`
+                    <div class="muted" style="margin-top: 12px">${t("cron.runs.noMatching")}</div>
+                  `
+                : html`
+                    <div class="list" style="margin-top: 12px; gap: 12px;">
+                      ${runs.map((entry) =>
+                        renderRun(entry, props.basePath, props.onNavigateToChat),
+                      )}
+                    </div>
+                  `}
+          ${props.runsScope === "all" || props.runsJobId != null
+            ? renderPagination({
+                page: props.runsPage,
+                pageSize: props.runsLimit ?? 20,
+                total: props.runsTotal,
+                loading: props.runsLoadingMore,
+                onPageChange: props.onRunsPageChange,
+              })
             : nothing}
         </section>
       </div>
@@ -1491,6 +1526,17 @@ export function renderCron(props: CronProps) {
                     `
                   : nothing}
               </div>
+              ${props.toast
+                ? html`
+                    <div
+                      class=${`cron-form-save-status ${props.toast.tone}`}
+                      role="status"
+                      aria-live="polite"
+                    >
+                      ${props.toast.message}
+                    </div>
+                  `
+                : nothing}
             </section>
           </div>
         `
@@ -1604,110 +1650,186 @@ function renderFieldError(message?: string, id?: string) {
   return html`<div id=${ifDefined(id)} class="cron-help cron-error">${t(message)}</div>`;
 }
 
+function renderPagination(params: {
+  page: number;
+  pageSize: number;
+  total: number;
+  loading: boolean;
+  onPageChange: (page: number) => void;
+}) {
+  const { page, pageSize, total, loading, onPageChange } = params;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const currentPage = Math.max(0, Math.min(page, totalPages - 1));
+  const start = total === 0 ? 0 : currentPage * pageSize + 1;
+  const end = Math.min((currentPage + 1) * pageSize, total);
+
+  const pageNumbers: number[] = [];
+  const maxVisible = 5;
+  let startPage = Math.max(0, currentPage - Math.floor(maxVisible / 2));
+  const endPage = Math.min(totalPages - 1, startPage + maxVisible - 1);
+  startPage = Math.max(0, endPage - maxVisible + 1);
+  for (let i = startPage; i <= endPage; i++) {
+    pageNumbers.push(i);
+  }
+
+  return html`
+    <div class="cron-pagination">
+      <div class="cron-pagination__info">${total > 0 ? `${start}-${end} / ${total}` : "0 / 0"}</div>
+      <div class="cron-pagination__controls">
+        <button
+          class="btn"
+          ?disabled=${loading || currentPage <= 0}
+          @click=${() => onPageChange(currentPage - 1)}
+        >
+          ‹
+        </button>
+        ${startPage > 0
+          ? html`
+              <button class="btn" ?disabled=${loading} @click=${() => onPageChange(0)}>1</button>
+              ${startPage > 1 ? html`<span class="cron-pagination__ellipsis">…</span>` : nothing}
+            `
+          : nothing}
+        ${pageNumbers.map(
+          (p) => html`
+            <button
+              class=${`btn ${p === currentPage ? "cron-pagination__page--active" : ""}`}
+              ?disabled=${loading}
+              @click=${() => onPageChange(p)}
+            >
+              ${p + 1}
+            </button>
+          `,
+        )}
+        ${endPage < totalPages - 1
+          ? html`
+              ${endPage < totalPages - 2
+                ? html`<span class="cron-pagination__ellipsis">…</span>`
+                : nothing}
+              <button class="btn" ?disabled=${loading} @click=${() => onPageChange(totalPages - 1)}>
+                ${totalPages}
+              </button>
+            `
+          : nothing}
+        <button
+          class="btn"
+          ?disabled=${loading || currentPage >= totalPages - 1}
+          @click=${() => onPageChange(currentPage + 1)}
+        >
+          ›
+        </button>
+      </div>
+    </div>
+  `;
+}
+
 function renderJob(job: CronJob, props: CronProps) {
   const isSelected = props.runsJobId === job.id;
-  const itemClass = `list-item list-item-clickable cron-job${isSelected ? " list-item-selected" : ""}`;
+  const itemClass = `list-item cron-job${isSelected ? " list-item-selected" : ""}`;
+  const rawStatus = resolveCronJobLastRunStatus(job);
+  const statusClass =
+    rawStatus === "ok"
+      ? "cron-job-status-ok"
+      : rawStatus === "error"
+        ? "cron-job-status-error"
+        : rawStatus === "skipped"
+          ? "cron-job-status-skipped"
+          : "cron-job-status-na";
+  const statusLabel =
+    rawStatus === "ok"
+      ? t("cron.runs.runStatusOk")
+      : rawStatus === "error"
+        ? t("cron.runs.runStatusError")
+        : rawStatus === "skipped"
+          ? t("cron.runs.runStatusSkipped")
+          : t("cron.runs.runStatusUnknown");
+  const nextRunAtMs = job.state?.nextRunAtMs;
+  const lastRunAtMs = job.state?.lastRunAtMs;
   const selectAnd = (action: () => void) => {
     props.onLoadRuns(job.id);
     action();
   };
   return html`
-    <div class=${itemClass} @click=${() => props.onLoadRuns(job.id)}>
-      <div class="cron-job-header">
-        <div class="list-main">
+    <details class=${itemClass} @click=${() => props.onLoadRuns(job.id)}>
+      <summary class="cron-job-summary">
+        <div class="cron-job-summary__main">
           <div class="list-title">${job.name}</div>
           <div class="list-sub">${formatCronSchedule(job)}</div>
-          ${job.agentId
-            ? html`<div class="muted cron-job-agent">
-                ${t("cron.jobDetail.agent")}: ${job.agentId}
-              </div>`
-            : nothing}
         </div>
-        <div class="list-meta">${renderJobState(job)}</div>
-      </div>
-      ${renderJobPayload(job)}
-      <div class="cron-job-footer">
-        <div class="chip-row cron-job-chips">
+        <div class="cron-job-summary__meta">
           <span class=${`chip ${job.enabled ? "chip-ok" : "chip-danger"}`}>
             ${job.enabled ? t("cron.jobList.enabled") : t("cron.jobList.disabled")}
           </span>
-          <span class="chip">${job.sessionTarget}</span>
-          <span class="chip">${job.wakeMode}</span>
+          <span class=${`cron-job-status-pill ${statusClass}`}>${statusLabel}</span>
+          <span class="muted">
+            ${t("cron.jobState.next")}: ${formatStateRelative(nextRunAtMs)}
+          </span>
         </div>
-        <div class="row cron-job-actions">
-          <button
-            class="btn"
-            ?disabled=${props.busy}
-            @click=${(event: Event) => {
-              event.stopPropagation();
-              selectAnd(() => props.onEdit(job));
-            }}
-          >
-            ${t("cron.jobList.edit")}
-          </button>
-          <button
-            class="btn"
-            ?disabled=${props.busy}
-            @click=${(event: Event) => {
-              event.stopPropagation();
-              selectAnd(() => props.onClone(job));
-            }}
-          >
-            ${t("cron.jobList.clone")}
-          </button>
-          <button
-            class="btn"
-            ?disabled=${props.busy}
-            @click=${(event: Event) => {
-              event.stopPropagation();
-              selectAnd(() => props.onToggle(job, !job.enabled));
-            }}
-          >
-            ${job.enabled ? t("cron.jobList.disable") : t("cron.jobList.enable")}
-          </button>
-          <button
-            class="btn"
-            ?disabled=${props.busy}
-            @click=${(event: Event) => {
-              event.stopPropagation();
-              selectAnd(() => props.onRun(job, "force"));
-            }}
-          >
-            ${t("cron.jobList.run")}
-          </button>
-          <button
-            class="btn"
-            ?disabled=${props.busy}
-            @click=${(event: Event) => {
-              event.stopPropagation();
-              selectAnd(() => props.onRun(job, "due"));
-            }}
-          >
-            Run if due
-          </button>
-          <button
-            class="btn"
-            ?disabled=${props.busy}
-            @click=${(event: Event) => {
-              event.stopPropagation();
-              props.onLoadRuns(job.id);
-            }}
-          >
-            ${t("cron.jobList.history")}
-          </button>
-          <button
-            class="btn danger"
-            ?disabled=${props.busy}
-            @click=${(event: Event) => {
-              event.stopPropagation();
-              selectAnd(() => props.onRemove(job));
-            }}
-          >
-            ${t("cron.jobList.remove")}
-          </button>
+      </summary>
+      <div class="cron-job-detail" @click=${stopPropagationForInteractive}>
+        ${renderJobPayload(job)}
+        <div class="cron-job-footer">
+          <div class="chip-row cron-job-chips">
+            <span class="chip">${job.sessionTarget}</span>
+            <span class="chip">${job.wakeMode}</span>
+            ${job.agentId
+              ? html`<span class="chip">${t("cron.jobDetail.agent")}: ${job.agentId}</span>`
+              : nothing}
+            ${typeof lastRunAtMs === "number"
+              ? html`<span class="chip">
+                  ${t("cron.jobState.last")}: ${formatStateRelative(lastRunAtMs)}
+                </span>`
+              : nothing}
+          </div>
+          <div class="row cron-job-actions">
+            <button
+              class="btn"
+              ?disabled=${props.busy}
+              @click=${() => selectAnd(() => props.onEdit(job))}
+            >
+              ${t("cron.jobList.edit")}
+            </button>
+            <button
+              class="btn"
+              ?disabled=${props.busy}
+              @click=${() => selectAnd(() => props.onClone(job))}
+            >
+              ${t("cron.jobList.clone")}
+            </button>
+            <button
+              class="btn"
+              ?disabled=${props.busy}
+              @click=${() => selectAnd(() => props.onToggle(job, !job.enabled))}
+            >
+              ${job.enabled ? t("cron.jobList.disable") : t("cron.jobList.enable")}
+            </button>
+            <button
+              class="btn"
+              ?disabled=${props.busy}
+              @click=${() => selectAnd(() => props.onRun(job, "force"))}
+            >
+              ${t("cron.jobList.run")}
+            </button>
+            <button
+              class="btn"
+              ?disabled=${props.busy}
+              @click=${() => selectAnd(() => props.onRun(job, "due"))}
+            >
+              ${t("cron.jobList.runIfDue")}
+            </button>
+            <button class="btn" ?disabled=${props.busy} @click=${() => props.onLoadRuns(job.id)}>
+              ${t("cron.jobList.history")}
+            </button>
+            <button
+              class="btn danger"
+              ?disabled=${props.busy}
+              @click=${() => selectAnd(() => props.onRemove(job))}
+            >
+              ${t("cron.jobList.remove")}
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </details>
   `;
 }
 
@@ -1883,63 +2005,78 @@ function renderRun(
         ? `${usage.input_tokens} in / ${usage.output_tokens} out`
         : null;
   const bodySource = entry.summary || entry.error || t("cron.runEntry.noSummary");
-  const showErrorInMeta = Boolean(entry.error) && Boolean(entry.summary);
+  const statusClass =
+    entry.status === "ok"
+      ? "cron-job-status-ok"
+      : entry.status === "error"
+        ? "cron-job-status-error"
+        : entry.status === "skipped"
+          ? "cron-job-status-skipped"
+          : "cron-job-status-na";
   return html`
-    <div class="list-item cron-run-entry">
-      <div class="cron-run-entry__header">
-        <div class="list-main cron-run-entry__main">
-          <div class="list-title cron-run-entry__title">
-            ${entry.jobName ?? entry.jobId}
-            <span class="muted"> · ${status}</span>
-          </div>
-          <div class="chip-row" style="margin-top: 4px;">
+    <details class="list-item cron-run-entry">
+      <summary class="cron-run-entry__summary">
+        <div class="cron-run-entry__summary-main">
+          <div class="list-title cron-run-entry__title">${entry.jobName ?? entry.jobId}</div>
+        </div>
+        <div class="cron-run-entry__summary-meta">
+          <span class=${`cron-job-status-pill ${statusClass}`}>${status}</span>
+          <span class="muted">${formatMs(entry.ts)}</span>
+          <span class="muted">${entry.durationMs ?? 0}ms</span>
+        </div>
+      </summary>
+      <div class="cron-run-entry__body">
+        <div class="cron-run-entry__meta">
+          <div class="chip-row" style="margin: 8px 0;">
             <span class="chip">${delivery}</span>
             ${entry.model ? html`<span class="chip">${entry.model}</span>` : nothing}
             ${entry.provider ? html`<span class="chip">${entry.provider}</span>` : nothing}
             ${usageSummary ? html`<span class="chip">${usageSummary}</span>` : nothing}
           </div>
-        </div>
-        <div class="list-meta cron-run-entry__meta">
-          <div>${formatMs(entry.ts)}</div>
           ${typeof entry.runAtMs === "number"
-            ? html`<div class="muted">${t("cron.runEntry.runAt")} ${formatMs(entry.runAtMs)}</div>`
-            : nothing}
-          <div class="muted">${entry.durationMs ?? 0}ms</div>
-          ${typeof entry.nextRunAtMs === "number"
-            ? html`<div class="muted">${formatRunNextLabel(entry.nextRunAtMs)}</div>`
-            : nothing}
-          ${chatUrl
-            ? html`<div>
-                <a
-                  class="session-link"
-                  href=${chatUrl}
-                  @click=${(e: MouseEvent) => {
-                    if (
-                      e.defaultPrevented ||
-                      e.button !== 0 ||
-                      e.metaKey ||
-                      e.ctrlKey ||
-                      e.shiftKey ||
-                      e.altKey
-                    ) {
-                      return;
-                    }
-                    if (onNavigateToChat && entry.sessionKey) {
-                      e.preventDefault();
-                      onNavigateToChat(entry.sessionKey);
-                    }
-                  }}
-                  >${t("cron.runEntry.openRunChat")}</a
-                >
+            ? html`<div class="muted" style="margin-bottom: 4px;">
+                ${t("cron.runEntry.runAt")} ${formatMs(entry.runAtMs)}
               </div>`
             : nothing}
-          ${showErrorInMeta ? html`<div class="muted">${entry.error}</div>` : nothing}
-          ${entry.deliveryError ? html`<div class="muted">${entry.deliveryError}</div>` : nothing}
+          ${typeof entry.nextRunAtMs === "number"
+            ? html`<div class="muted" style="margin-bottom: 4px;">
+                ${formatRunNextLabel(entry.nextRunAtMs)}
+              </div>`
+            : nothing}
+        </div>
+        ${entry.error ? html`<div class="muted cron-error">${entry.error}</div>` : nothing}
+        ${entry.deliveryError
+          ? html`<div class="muted cron-error">${entry.deliveryError}</div>`
+          : nothing}
+        ${chatUrl
+          ? html`<div style="margin: 4px 0;">
+              <a
+                class="session-link"
+                href=${chatUrl}
+                @click=${(e: MouseEvent) => {
+                  if (
+                    e.defaultPrevented ||
+                    e.button !== 0 ||
+                    e.metaKey ||
+                    e.ctrlKey ||
+                    e.shiftKey ||
+                    e.altKey
+                  ) {
+                    return;
+                  }
+                  if (onNavigateToChat && entry.sessionKey) {
+                    e.preventDefault();
+                    onNavigateToChat(entry.sessionKey);
+                  }
+                }}
+                >${t("cron.runEntry.openRunChat")}</a
+              >
+            </div>`
+          : nothing}
+        <div class="cron-run-entry__content chat-text" @click=${stopPropagationForInteractive}>
+          ${unsafeHTML(toSanitizedMarkdownHtml(bodySource))}
         </div>
       </div>
-      <div class="cron-run-entry__body chat-text">
-        ${unsafeHTML(toSanitizedMarkdownHtml(bodySource))}
-      </div>
-    </div>
+    </details>
   `;
 }

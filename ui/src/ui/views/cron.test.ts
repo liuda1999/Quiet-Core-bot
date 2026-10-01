@@ -29,6 +29,8 @@ function createProps(overrides: Partial<CronProps> = {}): CronProps {
     jobs: [],
     jobsTotal: 0,
     jobsHasMore: false,
+    jobsLimit: 20,
+    jobsPage: 0,
     jobsQuery: "",
     jobsEnabledFilter: "all",
     jobsScheduleKindFilter: "all",
@@ -36,6 +38,7 @@ function createProps(overrides: Partial<CronProps> = {}): CronProps {
     jobsSortBy: "nextRunAtMs",
     jobsSortDir: "asc",
     error: null,
+    toast: null,
     busy: false,
     form: { ...DEFAULT_CRON_FORM },
     fieldErrors: {},
@@ -47,6 +50,9 @@ function createProps(overrides: Partial<CronProps> = {}): CronProps {
     runs: [],
     runsTotal: 0,
     runsHasMore: false,
+    runsLimit: 20,
+    runsPage: 0,
+    runsLoading: false,
     runsLoadingMore: false,
     runsScope: "all",
     runsStatuses: [],
@@ -71,9 +77,11 @@ function createProps(overrides: Partial<CronProps> = {}): CronProps {
     onRemove: () => undefined,
     onLoadRuns: () => undefined,
     onLoadMoreJobs: () => undefined,
+    onJobsPageChange: () => undefined,
     onJobsFiltersChange: () => undefined,
     onJobsFiltersReset: () => undefined,
     onLoadMoreRuns: () => undefined,
+    onRunsPageChange: () => undefined,
     onRunsFiltersChange: () => undefined,
     ...overrides,
   };
@@ -268,7 +276,7 @@ describe("cron view", () => {
 
     getElement(container, ".list-item-selected", HTMLElement);
 
-    const row = getElement(container, ".list-item-clickable", HTMLElement);
+    const row = getElement(container, ".cron-job summary", HTMLElement);
     row.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     expect(onLoadRuns).toHaveBeenCalledWith("job-1");
 
@@ -302,7 +310,7 @@ describe("cron view", () => {
       "Latest runs for Daily ping.",
     );
 
-    const summaries = Array.from(runHistoryCard.querySelectorAll(".cron-run-entry__body")).map(
+    const summaries = Array.from(runHistoryCard.querySelectorAll(".cron-run-entry__content")).map(
       (el) => (el.textContent ?? "").trim(),
     );
     expect(summaries[0]).toBe("newer run");
@@ -505,7 +513,7 @@ describe("cron view", () => {
     row.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     expect(onLoadRuns).toHaveBeenCalledWith("job-md");
 
-    const runBody = container.querySelector(".cron-run-entry__body.chat-text");
+    const runBody = container.querySelector(".cron-run-entry__content.chat-text");
     expect(runBody?.querySelector("strong")?.textContent).toBe("markdown");
     expect(runBody?.querySelectorAll("table")).toHaveLength(1);
   });
@@ -528,10 +536,12 @@ describe("cron view", () => {
       container,
     );
 
-    expect(container.querySelector(".cron-run-entry__body")?.textContent?.trim()).toBe(
+    expect(container.querySelector(".cron-run-entry__content")?.textContent?.trim()).toBe(
       "Failed with markdown",
     );
-    expect(container.querySelector(".cron-run-entry__body strong")?.textContent).toBe("markdown");
+    expect(container.querySelector(".cron-run-entry__content strong")?.textContent).toBe(
+      "markdown",
+    );
   });
 
   it("treats empty run summaries as absent when an error exists", () => {
@@ -553,10 +563,12 @@ describe("cron view", () => {
       container,
     );
 
-    expect(container.querySelector(".cron-run-entry__body")?.textContent?.trim()).toBe(
+    expect(container.querySelector(".cron-run-entry__content")?.textContent?.trim()).toBe(
       "Failed with markdown",
     );
-    expect(container.querySelector(".cron-run-entry__body strong")?.textContent).toBe("markdown");
+    expect(container.querySelector(".cron-run-entry__content strong")?.textContent).toBe(
+      "markdown",
+    );
   });
 
   it("wires the Edit action and shows save/cancel controls when editing", () => {
@@ -899,5 +911,335 @@ describe("cron view", () => {
       "cron-model-suggestions",
       "cron-thinking-suggestions",
     ]);
+  });
+
+  it("renders jobs pagination with page info and navigable page buttons", () => {
+    const container = document.createElement("div");
+    const onJobsPageChange = vi.fn();
+    render(
+      renderCron(
+        createProps({
+          jobs: [createJob("job-1"), createJob("job-2")],
+          jobsTotal: 55,
+          jobsLimit: 20,
+          jobsPage: 1,
+          onJobsPageChange,
+        }),
+      ),
+      container,
+    );
+
+    const pagination = container.querySelector(".cron-pagination");
+    expect(pagination).not.toBeNull();
+    const info = pagination?.querySelector(".cron-pagination__info")?.textContent?.trim();
+    expect(info).toBe("21-40 / 55");
+
+    const pageButtons = Array.from(pagination?.querySelectorAll("button") ?? []);
+    const pageNumbers = pageButtons
+      .map((btn) => btn.textContent?.trim())
+      .filter((text) => text && /^\d+$/.test(text));
+    expect(pageNumbers).toContain("1");
+    expect(pageNumbers).toContain("2");
+    expect(pageNumbers).toContain("3");
+
+    const activeButton = pagination?.querySelector(".cron-pagination__page--active");
+    expect(activeButton?.textContent?.trim()).toBe("2");
+  });
+
+  it("wires jobs page change callback when a page button is clicked", () => {
+    const container = document.createElement("div");
+    const onJobsPageChange = vi.fn();
+    render(
+      renderCron(
+        createProps({
+          jobs: [createJob("job-1")],
+          jobsTotal: 60,
+          jobsLimit: 20,
+          jobsPage: 0,
+          onJobsPageChange,
+        }),
+      ),
+      container,
+    );
+
+    const pagination = container.querySelector(".cron-pagination");
+    const page3Button = Array.from(pagination?.querySelectorAll("button") ?? []).find(
+      (btn) => btn.textContent?.trim() === "3",
+    );
+    expect(page3Button).toBeInstanceOf(HTMLButtonElement);
+    page3Button?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+    expect(onJobsPageChange).toHaveBeenCalledWith(2);
+  });
+
+  it("renders runs pagination with page info", () => {
+    const container = document.createElement("div");
+    render(
+      renderCron(
+        createProps({
+          runsScope: "all",
+          runs: [
+            { ts: 1, jobId: "job-1", status: "ok", summary: "run 1" },
+            { ts: 2, jobId: "job-1", status: "ok", summary: "run 2" },
+          ],
+          runsTotal: 25,
+          runsLimit: 20,
+          runsPage: 0,
+        }),
+      ),
+      container,
+    );
+
+    const cards = Array.from(container.querySelectorAll(".card"));
+    const runHistoryCard = cards.find(
+      (card) => card.querySelector(".card-title")?.textContent?.trim() === "Run history",
+    );
+    const pagination = runHistoryCard?.querySelector(".cron-pagination");
+    expect(pagination).not.toBeNull();
+    const info = pagination?.querySelector(".cron-pagination__info")?.textContent?.trim();
+    expect(info).toBe("1-20 / 25");
+  });
+
+  it("wires runs page change callback when a page button is clicked", () => {
+    const container = document.createElement("div");
+    const onRunsPageChange = vi.fn();
+    render(
+      renderCron(
+        createProps({
+          runsScope: "all",
+          runs: [{ ts: 1, jobId: "job-1", status: "ok", summary: "run 1" }],
+          runsTotal: 45,
+          runsLimit: 20,
+          runsPage: 0,
+          onRunsPageChange,
+        }),
+      ),
+      container,
+    );
+
+    const cards = Array.from(container.querySelectorAll(".card"));
+    const runHistoryCard = cards.find(
+      (card) => card.querySelector(".card-title")?.textContent?.trim() === "Run history",
+    );
+    const pagination = runHistoryCard?.querySelector(".cron-pagination");
+    const page2Button = Array.from(pagination?.querySelectorAll("button") ?? []).find(
+      (btn) => btn.textContent?.trim() === "2",
+    );
+    page2Button?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+    expect(onRunsPageChange).toHaveBeenCalledWith(1);
+  });
+
+  it("renders job entries as collapsible details with a summary header", () => {
+    const container = document.createElement("div");
+    render(
+      renderCron(
+        createProps({
+          jobs: [createJob("job-collapsible")],
+        }),
+      ),
+      container,
+    );
+
+    const job = container.querySelector(".cron-job");
+    expect(job?.tagName).toBe("DETAILS");
+    expect(job?.hasAttribute("open")).toBe(false);
+
+    const summary = job?.querySelector("summary.cron-job-summary");
+    expect(summary).not.toBeNull();
+    expect(summary?.querySelector(".list-title")?.textContent?.trim()).toBe("Daily ping");
+
+    const detail = job?.querySelector(".cron-job-detail");
+    expect(detail).not.toBeNull();
+  });
+
+  it("renders run entries as collapsible details with a summary header", () => {
+    const container = document.createElement("div");
+    render(
+      renderCron(
+        createProps({
+          runsScope: "all",
+          runs: [
+            {
+              ts: Date.now(),
+              jobId: "job-1",
+              status: "ok",
+              summary: "collapsible run",
+            },
+          ],
+        }),
+      ),
+      container,
+    );
+
+    const runEntry = container.querySelector(".cron-run-entry");
+    expect(runEntry?.tagName).toBe("DETAILS");
+    expect(runEntry?.hasAttribute("open")).toBe(false);
+
+    const summary = runEntry?.querySelector("summary.cron-run-entry__summary");
+    expect(summary).not.toBeNull();
+
+    const body = runEntry?.querySelector(".cron-run-entry__body");
+    expect(body).not.toBeNull();
+  });
+
+  it("keeps job and run search boxes outside the collapsible filter panel", () => {
+    const container = document.createElement("div");
+    render(
+      renderCron(
+        createProps({
+          jobs: [createJob("job-search")],
+          jobsQuery: "daily",
+          runsScope: "all",
+          runsQuery: "summary",
+        }),
+      ),
+      container,
+    );
+
+    const filterPanels = container.querySelectorAll(".cron-filter-panel");
+    const searchInputs = container.querySelectorAll(".cron-search-bar input");
+
+    expect(searchInputs.length).toBeGreaterThanOrEqual(2);
+
+    for (const input of Array.from(searchInputs)) {
+      const insideFilter = input.closest(".cron-filter-panel");
+      expect(insideFilter).toBeNull();
+    }
+
+    for (const panel of Array.from(filterPanels)) {
+      expect(panel.querySelector(".cron-search-bar")).toBeNull();
+    }
+  });
+
+  it("does not render a toast when none is active", () => {
+    const container = document.createElement("div");
+    render(renderCron(createProps({ toast: null })), container);
+
+    expect(container.querySelector(".cron-toast")).toBeNull();
+  });
+
+  it("renders a success toast with the confirmation message", () => {
+    const container = document.createElement("div");
+    render(
+      renderCron(
+        createProps({
+          toast: { tone: "success", message: "Job saved successfully." },
+        }),
+      ),
+      container,
+    );
+
+    const toast = container.querySelector(".cron-toast");
+    expect(toast).not.toBeNull();
+    expect(toast?.classList.contains("success")).toBe(true);
+    expect(toast?.getAttribute("role")).toBe("status");
+    expect(toast?.querySelector(".cron-toast__message")?.textContent?.trim()).toBe(
+      "Job saved successfully.",
+    );
+  });
+
+  it("renders an error toast", () => {
+    const container = document.createElement("div");
+    render(
+      renderCron(
+        createProps({
+          toast: { tone: "error", message: "Something failed." },
+        }),
+      ),
+      container,
+    );
+
+    const toast = container.querySelector(".cron-toast");
+    expect(toast?.classList.contains("error")).toBe(true);
+    expect(toast?.querySelector(".cron-toast__message")?.textContent?.trim()).toBe(
+      "Something failed.",
+    );
+  });
+
+  it("wires the toast dismiss callback when the dismiss button is clicked", () => {
+    const container = document.createElement("div");
+    const onDismissToast = vi.fn();
+    render(
+      renderCron(
+        createProps({
+          toast: { tone: "success", message: "Job saved successfully." },
+          onDismissToast,
+        }),
+      ),
+      container,
+    );
+
+    const dismissButton = container.querySelector(".cron-toast__dismiss");
+    expect(dismissButton).toBeInstanceOf(HTMLButtonElement);
+    dismissButton?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+    expect(onDismissToast).toHaveBeenCalledTimes(1);
+  });
+
+  it("shows save feedback inline while the edit form is open", () => {
+    const container = document.createElement("div");
+    render(
+      renderCron(
+        createProps({
+          cronFormCollapsed: false,
+          editingJobId: "job-1",
+          toast: { tone: "error", message: "schedule.at is in the past" },
+        }),
+      ),
+      container,
+    );
+
+    const inline = container.querySelector(".cron-form-save-status");
+    expect(inline).not.toBeNull();
+    expect(inline?.classList.contains("error")).toBe(true);
+    expect(inline?.textContent?.trim()).toBe("schedule.at is in the past");
+    // The page-level toast is suppressed while the form is open so the message
+    // shows once, right next to the Save button the user is looking at.
+    expect(container.querySelector(".cron-toast")).toBeNull();
+  });
+
+  it("keeps the page-level toast when the form is collapsed", () => {
+    const container = document.createElement("div");
+    render(
+      renderCron(
+        createProps({
+          toast: { tone: "success", message: "Job saved successfully." },
+        }),
+      ),
+      container,
+    );
+
+    expect(container.querySelector(".cron-toast")).not.toBeNull();
+    expect(container.querySelector(".cron-form-save-status")).toBeNull();
+  });
+
+  it("exposes the run-history card with a stable id and a loading state", () => {
+    const container = document.createElement("div");
+    render(renderCron(createProps({ runsScope: "all", runsLoading: true })), container);
+
+    const card = container.querySelector("#cron-run-history");
+    expect(card).not.toBeNull();
+    const loading = card?.querySelector(".cron-runs-loading");
+    expect(loading?.getAttribute("role")).toBe("status");
+    expect(loading?.textContent?.trim()).toBe("Loading…");
+  });
+
+  it("replaces the loading hint with the run list once loading finishes", () => {
+    const container = document.createElement("div");
+    render(
+      renderCron(
+        createProps({
+          runsScope: "all",
+          runsLoading: false,
+          runs: [{ ts: 1, jobId: "job-1", status: "ok", summary: "run 1" }],
+        }),
+      ),
+      container,
+    );
+
+    const card = container.querySelector("#cron-run-history");
+    expect(card?.querySelector(".cron-runs-loading")).toBeNull();
+    expect(card?.querySelectorAll(".cron-run-entry").length).toBe(1);
   });
 });

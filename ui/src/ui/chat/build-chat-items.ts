@@ -241,9 +241,9 @@ function sourceMessageId(message: unknown): string | null {
   if (!record) {
     return null;
   }
-  const openclawId = asRecord(record["__openclaw"])?.id;
-  if (typeof openclawId === "string" && openclawId.trim()) {
-    return openclawId.trim();
+  const quietCoreBotId = asRecord(record["__openclaw"])?.id;
+  if (typeof quietCoreBotId === "string" && quietCoreBotId.trim()) {
+    return quietCoreBotId.trim();
   }
   const messageId = typeof record.messageId === "string" ? record.messageId.trim() : "";
   if (messageId) {

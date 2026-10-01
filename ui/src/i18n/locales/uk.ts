@@ -2557,6 +2557,9 @@ export const uk: TranslationMap = {
       saveChanges: "Зберегти зміни",
       addJob: "Додати завдання",
       cancel: "Скасувати",
+      saveSuccess: "Завдання успішно збережено.",
+      addSuccess: "Завдання успішно створено.",
+      validationFailed: "Виправте виділені поля та спробуйте ще раз.",
     },
     jobList: {
       allJobs: "усі завдання",
@@ -2568,6 +2571,7 @@ export const uk: TranslationMap = {
       disable: "Вимкнути",
       enable: "Увімкнути",
       run: "Запустити",
+      runIfDue: "Запустити, якщо настав час",
       history: "Історія",
       remove: "Видалити",
     },

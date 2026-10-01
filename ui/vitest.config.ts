@@ -27,11 +27,19 @@ const workspaceSourceAliases = [
     replacement: path.resolve(repoRoot, "packages/model-catalog-core/src/$1.ts"),
   },
   {
+    find: /^@quiet-core\/model-catalog-core\/(.+)$/u,
+    replacement: path.resolve(repoRoot, "packages/model-catalog-core/src/$1.ts"),
+  },
+  {
     find: "@quiet-core/model-catalog-core",
     replacement: path.resolve(repoRoot, "packages/model-catalog-core/src/index.ts"),
   },
   {
     find: /^@openclaw\/normalization-core\/(.+)$/u,
+    replacement: path.resolve(repoRoot, "packages/normalization-core/src/$1"),
+  },
+  {
+    find: /^@quiet-core\/normalization-core\/(.+)$/u,
     replacement: path.resolve(repoRoot, "packages/normalization-core/src/$1"),
   },
   {
@@ -43,11 +51,19 @@ const workspaceSourceAliases = [
     replacement: path.resolve(repoRoot, "packages/media-core/src/$1"),
   },
   {
+    find: /^@quiet-core\/media-core\/(.+)$/u,
+    replacement: path.resolve(repoRoot, "packages/media-core/src/$1"),
+  },
+  {
     find: "@quiet-core/media-core",
     replacement: path.resolve(repoRoot, "packages/media-core/src/index.ts"),
   },
   {
     find: /^@openclaw\/net-policy\/(.+)$/u,
+    replacement: path.resolve(repoRoot, "packages/net-policy/src/$1"),
+  },
+  {
+    find: /^@quiet-core\/net-policy\/(.+)$/u,
     replacement: path.resolve(repoRoot, "packages/net-policy/src/$1"),
   },
   {
