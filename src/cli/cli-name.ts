@@ -12,7 +12,7 @@ const CLI_PREFIX_RE = new RegExp(
   `^(?:((?:pnpm|npm|bunx|npx)\\s+))?(${DEFAULT_CLI_NAME}|${LEGACY_CLI_NAME})\\b`,
 );
 
-/** Resolve the displayed CLI binary name from argv, falling back to `openclaw`. */
+/** Resolve the displayed CLI binary name from argv, falling back to `quiet-core-bot`. */
 export function resolveCliName(argv: string[] = process.argv): string {
   const argv1 = argv[1];
   if (!argv1) {

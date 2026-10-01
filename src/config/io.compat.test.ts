@@ -74,7 +74,9 @@ describe("config io paths", () => {
         env: { QUIET_CORE_HOME: path.join(home, "svc-home") } as NodeJS.ProcessEnv,
         homedir: () => path.join(home, "ignored-home"),
       });
-      expect(io.configPath).toBe(path.join(home, "svc-home", ".quiet-core-bot", "quiet-core-bot.json"));
+      expect(io.configPath).toBe(
+        path.join(home, "svc-home", ".quiet-core-bot", "quiet-core-bot.json"),
+      );
     });
   });
 
@@ -158,8 +160,8 @@ describe("config io paths", () => {
       expect(logger.warn).toHaveBeenCalledWith(
         [
           `Your Quiet Core bot config was written by version 9999.1.1, but this command is running ${VERSION}.`,
-          "Check: `quiet-core-bot --version`, `which openclaw`, and `quiet-core-bot gateway status --deep`.",
-          "If unexpected, update PATH so `openclaw` points to the version you want, or reinstall the Gateway service from that same Quiet Core bot install.",
+          "Check: `quiet-core-bot --version`, `which quiet-core-bot`, and `quiet-core-bot gateway status --deep`.",
+          "If unexpected, update PATH so `quiet-core-bot` points to the version you want, or reinstall the Gateway service from that same Quiet Core bot install.",
         ].join("\n"),
       );
     });

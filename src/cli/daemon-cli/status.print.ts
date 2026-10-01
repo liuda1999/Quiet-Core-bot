@@ -238,7 +238,7 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean; d
       );
       defaultRuntime.error(
         warnText(
-          "Check `quiet-core-bot --version`, `which openclaw`, and `quiet-core-bot gateway status --deep`; if this mismatch is unexpected, update PATH so `openclaw` points to the version you want, or reinstall the Gateway service from that same Quiet Core bot install.",
+          "Check `quiet-core-bot --version`, `which quiet-core-bot`, and `quiet-core-bot gateway status --deep`; if this mismatch is unexpected, update PATH so `quiet-core-bot` points to the version you want, or reinstall the Gateway service from that same Quiet Core Bot install.",
         ),
       );
     }
