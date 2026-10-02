@@ -95,8 +95,8 @@ describe("relaunchGatewayScheduledTask", () => {
     const unref = vi.fn();
     let seenCommandArg = "";
     spawnMock.mockImplementation((_file: string, args: string[]) => {
-      seenCommandArg = args[3];
-      createdScriptPaths.add(decodeCmdPathArg(args[3]));
+      seenCommandArg = args[args.length - 1];
+      createdScriptPaths.add(decodeCmdPathArg(seenCommandArg));
       return { unref };
     });
 
@@ -109,7 +109,22 @@ describe("relaunchGatewayScheduledTask", () => {
     expect(result.tried).toContain(`${cmdExePath} /d /s /c ${seenCommandArg}`);
     const spawnCall = requireFirstMockCall(spawnMock, "restart helper spawn");
     expect(spawnCall[0]).toBe(cmdExePath);
-    expect(spawnCall[1]).toStrictEqual(["/d", "/s", "/c", seenCommandArg]);
+    // The helper must be launched through `start` so a detached cmd.exe does not
+    // share the gateway console and get torn down when the gateway exits.
+    expect(spawnCall[1]).toStrictEqual([
+      "/d",
+      "/s",
+      "/c",
+      "start",
+      "",
+      "/min",
+      cmdExePath,
+      "/d",
+      "/s",
+      "/c",
+      seenCommandArg,
+    ]);
+    expect(spawnCall[1]).toContain("start");
     expect(spawnCall[2]).toStrictEqual({
       detached: true,
       stdio: "ignore",
@@ -123,16 +138,19 @@ describe("relaunchGatewayScheduledTask", () => {
     }
     expect(fs.statSync(scriptPath).isFile()).toBe(true);
     const script = fs.readFileSync(scriptPath, "utf8");
-    expect(script).toContain("timeout /t 1 /nobreak >nul");
     expect(script).toContain("gateway-restart.log");
     expect(script).toContain(
       'quiet-core-bot restart attempt source=windows-task-handoff target="Quiet Core Gateway (work)"',
     );
-    expect(script).toContain(
-      `powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "(Get-ScheduledTask -TaskName 'Quiet Core Gateway (work)' -ErrorAction SilentlyContinue).State" 2>nul | findstr /I /C:"Running" >nul 2>&1`,
-    );
+    // The helper runs detached without standard handles, so every probe must be
+    // cmd-native: PowerShell pipelines hang and `timeout` returns instantly there.
+    expect(script).not.toContain("powershell");
+    expect(script).not.toContain("timeout /t");
+    expect(script).toContain('schtasks /Query /TN "Quiet Core Gateway (work)" >nul 2>&1');
+    expect(script).toContain("if errorlevel 1 goto fallback");
+    expect(script).toContain("ping -n 2 127.0.0.1 >nul");
     expect(script).toContain('schtasks /Run /TN "Quiet Core Gateway (work)" >>');
-    expect(script.indexOf("powershell.exe -NoProfile")).toBeLessThan(
+    expect(script.indexOf('schtasks /Query /TN "Quiet Core Gateway (work)"')).toBeLessThan(
       script.indexOf('schtasks /Run /TN "Quiet Core Gateway (work)"'),
     );
     expect(script).toContain('del "%~f0" >nul 2>&1');
@@ -140,7 +158,7 @@ describe("relaunchGatewayScheduledTask", () => {
 
   it("prefers QUIET_CORE_WINDOWS_TASK_NAME overrides", () => {
     spawnMock.mockImplementation((_file: string, args: string[]) => {
-      createdScriptPaths.add(decodeCmdPathArg(args[3]));
+      createdScriptPaths.add(decodeCmdPathArg(args[args.length - 1]));
       return { unref: vi.fn() };
     });
 
@@ -154,9 +172,9 @@ describe("relaunchGatewayScheduledTask", () => {
     expect(script).toContain('schtasks /Run /TN "Quiet Core bot Gateway (custom)" >>');
   });
 
-  it("escapes custom task names in the PowerShell running-task probe", () => {
+  it("escapes custom task names in the schtasks probes", () => {
     spawnMock.mockImplementation((_file: string, args: string[]) => {
-      createdScriptPaths.add(decodeCmdPathArg(args[3]));
+      createdScriptPaths.add(decodeCmdPathArg(args[args.length - 1]));
       return { unref: vi.fn() };
     });
 
@@ -166,9 +184,8 @@ describe("relaunchGatewayScheduledTask", () => {
 
     const scriptPath = [...createdScriptPaths][0];
     const script = fs.readFileSync(scriptPath, "utf8");
-    expect(script).toContain(
-      "-Command \"(Get-ScheduledTask -TaskName 'Quiet Core bot Gateway (Bob''s work)' -ErrorAction SilentlyContinue).State\"",
-    );
+    expect(script).toContain(`schtasks /Query /TN "Quiet Core bot Gateway (Bob's work)" >nul 2>&1`);
+    expect(script).toContain(`schtasks /Run /TN "Quiet Core bot Gateway (Bob's work)" >>`);
   });
 
   it("returns failed when the helper cannot be spawned", () => {
@@ -198,12 +215,24 @@ describe("relaunchGatewayScheduledTask", () => {
     if (!Array.isArray(commandArgs)) {
       throw new Error("expected cmd.exe argument array");
     }
-    const commandArg = commandArgs[3];
+    const commandArg = commandArgs[commandArgs.length - 1];
     if (typeof commandArg !== "string") {
       throw new Error("expected quoted restart helper path");
     }
     expect(spawnCall[0]).toBe(getWindowsCmdExePath());
-    expect(commandArgs).toStrictEqual(["/d", "/s", "/c", commandArg]);
+    expect(commandArgs).toStrictEqual([
+      "/d",
+      "/s",
+      "/c",
+      "start",
+      "",
+      "/min",
+      getWindowsCmdExePath(),
+      "/d",
+      "/s",
+      "/c",
+      commandArg,
+    ]);
     expect(commandArg.startsWith('"')).toBe(true);
     expect(commandArg.endsWith('"')).toBe(true);
     expect(commandArg).toContain("&");
@@ -222,7 +251,7 @@ describe("relaunchGatewayScheduledTask", () => {
     resolveTaskScriptPathMock.mockReturnValue(taskScriptPath);
 
     spawnMock.mockImplementation((_file: string, args: string[]) => {
-      createdScriptPaths.add(decodeCmdPathArg(args[3]));
+      createdScriptPaths.add(decodeCmdPathArg(args[args.length - 1]));
       return { unref: vi.fn() };
     });
 
@@ -233,7 +262,74 @@ describe("relaunchGatewayScheduledTask", () => {
     const script = fs.readFileSync(scriptPath, "utf8");
     expect(script).toContain(`schtasks /Query /TN`);
     expect(script).toContain(":fallback");
+    expect(script).toContain("goto fallback_missing");
     expect(script).toContain(`start "" /min ${getWindowsCmdExePath()} /d /c`);
     expect(script).toContain(taskScriptPath);
+    // The fallback launches the task script and then reports the failure tail.
+    expect(script.indexOf('start "" /min')).toBeLessThan(script.indexOf(":cleanup_failed"));
+    expect(script).toContain("goto cleanup_failed");
+  });
+
+  it("records a failure marker with reason and last schtasks exit code when retries are exhausted", () => {
+    spawnMock.mockImplementation((_file: string, args: string[]) => {
+      createdScriptPaths.add(decodeCmdPathArg(args[args.length - 1]));
+      return { unref: vi.fn() };
+    });
+
+    relaunchGatewayScheduledTask({ QUIET_CORE_PROFILE: "work" });
+
+    const scriptPath = [...createdScriptPaths][0];
+    const script = fs.readFileSync(scriptPath, "utf8");
+    // The retry limit sets a reason and captures the last `schtasks /Run` code.
+    expect(script).toContain(
+      'if %attempts% GEQ 12 set "restartReason=schtasks run retry limit reached target="Quiet Core Gateway (work)""',
+    );
+    expect(script).toContain('set "lastRunExit=%errorlevel%"');
+    expect(script).toContain(
+      "quiet-core-bot restart failed source=windows-task-handoff reason=%restartReason% last_run_exit=%lastRunExit%",
+    );
+  });
+
+  it("states a failure reason when no task script is available", () => {
+    resolveTaskScriptPathMock.mockReturnValue("");
+
+    spawnMock.mockImplementation((_file: string, args: string[]) => {
+      createdScriptPaths.add(decodeCmdPathArg(args[args.length - 1]));
+      return { unref: vi.fn() };
+    });
+
+    relaunchGatewayScheduledTask({ QUIET_CORE_PROFILE: "work" });
+
+    const scriptPath = [...createdScriptPaths][0];
+    const script = fs.readFileSync(scriptPath, "utf8");
+    expect(script).toContain('set "restartReason=task script path not configured"');
+    expect(script).not.toContain("goto fallback_missing");
+    expect(script).toContain("quiet-core-bot restart failed source=windows-task-handoff");
+  });
+
+  it("always closes with exactly one terminal restart marker", () => {
+    spawnMock.mockImplementation((_file: string, args: string[]) => {
+      createdScriptPaths.add(decodeCmdPathArg(args[args.length - 1]));
+      return { unref: vi.fn() };
+    });
+
+    relaunchGatewayScheduledTask({ QUIET_CORE_PROFILE: "work" });
+
+    const scriptPath = [...createdScriptPaths][0];
+    const script = fs.readFileSync(scriptPath, "utf8");
+    expect(script).toContain("quiet-core-bot restart finished source=windows-task-handoff");
+    expect(script).toContain(
+      "quiet-core-bot restart failed source=windows-task-handoff reason=%restartReason% last_run_exit=%lastRunExit%",
+    );
+    // Failure tail jumps over the success tail so a run emits exactly one of them.
+    const failedIndex = script.indexOf("quiet-core-bot restart failed source=windows-task-handoff");
+    const finishedIndex = script.indexOf(
+      "quiet-core-bot restart finished source=windows-task-handoff",
+    );
+    expect(failedIndex).toBeGreaterThan(-1);
+    expect(finishedIndex).toBeGreaterThan(failedIndex);
+    expect(script.slice(failedIndex, finishedIndex)).toContain("goto teardown");
+    expect(script.includes("restart finished") || script.includes("restart failed")).toBe(true);
+    expect(script).toContain('del "%~f0" >nul 2>&1');
   });
 });
