@@ -16,15 +16,16 @@ disagrees with `git` in your working copy, trust `git`.
 | Upstream remote          | _(none configured in this checkout)_ — this project started from the upstream quiet-core-bot codebase: https://github.com/liuda1999/Quiet-Core-bot |
 | Package manager          | `pnpm@11.2.2` (see `packageManager` in `package.json`)                                                                                             |
 | Node engine              | `>=22.19.0` (Node 24 recommended)                                                                                                                  |
-| Build machine            | Windows 10/11, `x64`, Node `v24.16.0`, pnpm **not installed** locally (invoke via `npx pnpm`)                                                      |
+| Build machine            | Windows 10/11, `x64`, Node `v24.16.0`, pnpm `11.2.2` installed locally                                                                             |
 
 ## Rebrand notes
 
 - Product/CLI surface is `Quiet Core bot` / `quiet-core-bot`; the launcher is `quiet-core-bot.mjs`.
-- State directory is `~/.quiet-core-bot` with `quiet-core-bot.json`; the pre-rebrand
-  `~/.quiet-core-bot` directory is still read as a fallback until the new directory is
-  actually initialized, and migration is available via
-  `node scripts/migrate-state-dir.ts` (dry-run by default).
+- State directory is `~/.quiet-core-bot` with `quiet-core-bot.json`. On the first
+  startup after an upgrade, a pre-rebrand `~/.openclaw` state directory (with
+  `openclaw.sqlite` / `openclaw-agent.sqlite`) is renamed onto the new names by
+  `src/config/paths.ts` and `src/infra/legacy-openclaw-migration.ts`; only the default
+  home-relative location is migrated, and an existing `~/.quiet-core-bot` always wins.
 - The `QUIET_CORE_` environment-variable prefix and the internal `@quiet-core/*`
   workspace package ids are intentionally unchanged so running services and
   plugin SDK import specifiers keep working.
