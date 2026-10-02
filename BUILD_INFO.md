@@ -7,7 +7,7 @@ disagrees with `git` in your working copy, trust `git`.
 | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Project                  | `quiet-core-bot`                                                                                                                                   |
 | Product name             | Quiet Core bot                                                                                                                                     |
-| Version (`package.json`) | `0.1.1`                                                                                                                                            |
+| Version (`package.json`) | `0.1.2`                                                                                                                                            |
 | Git branch               | `master`                                                                                                                                           |
 | Git commit               | `f29ceed49fea28898b1ccefc1f59ca4e4612cb1a` (`f29ceed4`)                                                                                            |
 | Commit date              | `2026-09-25 14:54:51 +0800`                                                                                                                        |

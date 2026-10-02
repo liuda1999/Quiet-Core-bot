@@ -2,6 +2,23 @@
 
 Docs: https://github.com/liuda1999/Quiet-Core-bot
 
+## 0.1.2
+
+### 亮点
+
+- **发布元数据一致：** `npm-shrinkwrap.json` 根包版本与 `package.json` 同步，`deps:shrinkwrap:root:check` 不再因版本漂移失败。
+- **CI 门禁不再依赖本仓库不存在的上游基建：** 缺少密钥或外部仓库时改为输出 notice 并跳过，而不是让检查变红。
+
+### 修复
+
+- **发布元数据（release）：** `npm-shrinkwrap.json` 的根包与 `packages[""]` 版本此前停留在 `0.1.0`，与 `package.json` 不一致，现已随版本统一。
+- **文档校验（ci/docs）：** `docs.yml` 移除对 `quiet-core-bot/clawhub` 的检出步骤——该仓库不存在（404），导致 push 到 `main` 时 `Docs` 工作流必然失败；文档校验改为仅依赖本仓库自身，`test/scripts/ci-workflow-guards` 的对应用例同步更新。
+- **插件 NPM 发布门禁（ci/plugin-npm-release）：** 移除 `push` 触发、仅保留手动 `workflow_dispatch`。此前任何改动 `extensions/**` 的提交都会触发插件元数据校验，而仓库内插件版本统一为 `0.1.0`，与该校验要求的日历版本规范 `YYYY.M.PATCH` 不符，必然失败。
+- **缺少上游密钥时优雅跳过（ci）：**
+  - `docker-release.yml`：缺少 `DOCKERHUB_USERNAME` / `DOCKERHUB_TOKEN` 时不再以 error 退出，改为 notice 并通过 `has_dockerhub=false` 让镜像构建、清单与证明校验作业整体跳过。
+  - `control-ui-locale-refresh.yml`：`plan` 作业探测翻译服务密钥，缺失时 18 个语言刷新作业整体跳过。
+  - `docs-translate-trigger-release.yml`：缺少 `QUIET_CORE_DOCS_SYNC_TOKEN` 时跳过翻译调度，与 `docs-sync-publish` 既有的空令牌跳过模式保持一致。
+
 ## 0.1.1
 
 ### 亮点
