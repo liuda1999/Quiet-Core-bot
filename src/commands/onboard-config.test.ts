@@ -1,7 +1,10 @@
 // Onboard config tests cover workspace, bootstrap, and local setup config mutations.
 import { describe, expect, it } from "vitest";
 import type { QuietCoreConfig } from "../config/config.js";
-import { applyLocalSetupWorkspaceConfig } from "./onboard-config.js";
+import {
+  applyLocalSetupWorkspaceConfig,
+  applyMemorySearchDefaultsConfig,
+} from "./onboard-config.js";
 
 describe("applyLocalSetupWorkspaceConfig", () => {
   it("sets secure dmScope default when unset", () => {
@@ -69,5 +72,19 @@ describe("applyLocalSetupWorkspaceConfig", () => {
     expect(result.agents?.list).toHaveLength(2);
     expect(result.agents?.list?.map((a) => a.id)).toEqual(["alpha", "beta"]);
     expect(result.bindings).toEqual(baseConfig.bindings);
+  });
+});
+
+describe("applyMemorySearchDefaultsConfig", () => {
+  it("pins memory search to FTS-only when the auth backend cannot embed", () => {
+    const result = applyMemorySearchDefaultsConfig({}, "custom-api-key");
+
+    expect(result.agents?.defaults?.memorySearch?.provider).toBe("none");
+  });
+
+  it("leaves memory search unset when the auth backend serves embeddings", () => {
+    const result = applyMemorySearchDefaultsConfig({}, "ollama");
+
+    expect(result.agents?.defaults?.memorySearch?.provider).toBeUndefined();
   });
 });

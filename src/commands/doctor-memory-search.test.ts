@@ -338,7 +338,9 @@ describe("noteMemorySearchHealth", () => {
     const cfgWithLancedb = {
       plugins: {
         slots: { memory: "memory-lancedb" },
-        entries: { "memory-lancedb": { enabled: true, config: { dbPath: ".quiet-core-bot/memory" } } },
+        entries: {
+          "memory-lancedb": { enabled: true, config: { dbPath: ".quiet-core-bot/memory" } },
+        },
       },
     } as unknown as QuietCoreConfig;
 
@@ -1139,7 +1141,8 @@ describe("memory recall doctor integration", () => {
     });
     repairDreamingArtifacts.mockResolvedValueOnce({
       changed: true,
-      archiveDir: "/tmp/agent-default/workspace/.quiet-core-bot-repair/dreaming/2026-04-11T21-35-00-000Z",
+      archiveDir:
+        "/tmp/agent-default/workspace/.quiet-core-bot-repair/dreaming/2026-04-11T21-35-00-000Z",
       archivedDreamsDiary: false,
       archivedSessionCorpus: true,
       archivedSessionIngestion: true,

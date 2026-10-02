@@ -48,15 +48,17 @@ See [Active Memory](/concepts/active-memory) for the activation model, plugin-ow
 
 | Key        | Type      | Default          | Description                                                                                                                                                                                                                                                                                 |
 | ---------- | --------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `provider` | `string`  | `"openai"`       | Embedding adapter ID such as `bedrock`, `deepinfra`, `gemini`, `github-copilot`, `local`, `mistral`, `ollama`, `openai`, `openai-compatible`, or `voyage`; may also be a configured `models.providers.<id>` whose `api` points at a memory embedding adapter or OpenAI-compatible model API |
+| `provider` | `string`  | `"none"`         | Embedding adapter ID such as `bedrock`, `deepinfra`, `gemini`, `github-copilot`, `local`, `mistral`, `ollama`, `openai`, `openai-compatible`, or `voyage`; may also be a configured `models.providers.<id>` whose `api` points at a memory embedding adapter or OpenAI-compatible model API |
 | `model`    | `string`  | provider default | Embedding model name                                                                                                                                                                                                                                                                        |
 | `fallback` | `string`  | `"none"`         | Fallback adapter ID when the primary fails                                                                                                                                                                                                                                                  |
 | `enabled`  | `boolean` | `true`           | Enable or disable memory search                                                                                                                                                                                                                                                             |
 
-When `provider` is not set, Quiet Core bot uses OpenAI embeddings. Set `provider`
-explicitly to use Gemini, Voyage, Mistral, DeepInfra, Bedrock, GitHub Copilot,
-Ollama, a local GGUF model, or an OpenAI-compatible `/v1/embeddings` endpoint.
-Legacy configs that still say `provider: "auto"` resolve to `openai`.
+When `provider` is not set, memory search runs in FTS-only mode: keyword search
+works with no embedding service and no API key. Set `provider` explicitly to
+enable semantic search with Gemini, Voyage, Mistral, DeepInfra, Bedrock,
+GitHub Copilot, Ollama, a local GGUF model, or an OpenAI-compatible
+`/v1/embeddings` endpoint. Legacy configs that still say `provider: "auto"`
+resolve to the same default (`none`).
 
 <Warning>
 Changing the embedding provider, model, provider settings, sources, scope,

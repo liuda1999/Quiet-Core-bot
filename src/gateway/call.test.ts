@@ -1465,6 +1465,25 @@ describe("callGateway error details", () => {
     expect(transportError.reason).toBe("no close reason");
   });
 
+  it("points at the device approval commands when the gateway closes with 1008", async () => {
+    startMode = "close";
+    closeCode = 1008;
+    closeReason = "pairing required: device is asking for more scopes than currently approved";
+    setLocalLoopbackGatewayConfig();
+
+    let err: Error | null = null;
+    try {
+      await callGateway({ method: "health" });
+    } catch (caught) {
+      err = caught as Error;
+    }
+
+    expect(err?.message).toContain("gateway closed (1008");
+    expect(err?.message).toContain("quiet-core-bot devices list");
+    expect(err?.message).toContain("quiet-core-bot devices approve <requestId>");
+    expect(isGatewayTransportError(err)).toBe(true);
+  });
+
   it("keeps the request alive through internally retried startup-unavailable handshakes", async () => {
     startMode = "startup-retry-then-hello";
     setLocalLoopbackGatewayConfig();

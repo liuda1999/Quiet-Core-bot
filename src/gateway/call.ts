@@ -810,6 +810,15 @@ function formatGatewayCloseError(
       "\n- Gateway crashed or was terminated unexpectedly" +
       "\nRun `quiet-core-bot doctor` for diagnostics.";
   }
+  // 1008 with a pairing reason means this device asked for more access than it
+  // currently has approved; tell the operator exactly how to approve it.
+  if (code === 1008) {
+    message +=
+      "\n\nFix: this device is not approved for the requested access yet." +
+      "\n- List pending requests: quiet-core-bot devices list" +
+      "\n- Approve the requestId shown above: quiet-core-bot devices approve <requestId>" +
+      "\n- Preview the newest pending request first: quiet-core-bot devices approve --latest";
+  }
   return message;
 }
 

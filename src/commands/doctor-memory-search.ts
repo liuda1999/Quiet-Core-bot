@@ -467,6 +467,22 @@ export async function noteMemorySearchHealth(
     return;
   }
 
+  if (provider === "none") {
+    note(
+      [
+        "Memory search is running in FTS-only mode (keyword search, no embeddings).",
+        "",
+        "Fix (pick one):",
+        `- Use local GGUF embeddings: ${formatCliCommand("quiet-core-bot config set agents.defaults.memorySearch.provider local")}`,
+        `- Or use an OpenAI-compatible embeddings endpoint: ${formatCliCommand("quiet-core-bot config set agents.defaults.memorySearch.provider openai-compatible")}`,
+        "",
+        `Verify: ${formatCliCommand("quiet-core-bot memory status --deep")}`,
+      ].join("\n"),
+      "Memory search",
+    );
+    return;
+  }
+
   if (provider === "local") {
     const suggestedRemoteProvider = resolveSuggestedRemoteMemoryProvider();
     if (opts?.gatewayMemoryProbe?.checked && opts.gatewayMemoryProbe.ready) {

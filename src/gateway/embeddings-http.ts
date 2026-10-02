@@ -129,6 +129,12 @@ async function createConfiguredEmbeddingProvider(params: {
 }): Promise<MemoryEmbeddingProvider> {
   const providerId =
     params.provider === "auto" ? DEFAULT_MEMORY_EMBEDDING_PROVIDER : params.provider;
+  if (!providerId || providerId === "none") {
+    throw new Error(
+      "No embedding provider is configured. Set agents.defaults.memorySearch.provider " +
+        "(ollama, local, or openai-compatible) to enable /v1/embeddings.",
+    );
+  }
   // Prefer memory-specific adapters because they understand query/document
   // input types; generic embedding adapters are adapted only as a fallback.
   const createWithAdapter = async (adapter: MemoryEmbeddingProviderAdapter) => {

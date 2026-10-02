@@ -38,6 +38,31 @@ export function applyLocalSetupWorkspaceConfig(
   };
 }
 
+/** Auth choices whose backend can also serve memory embeddings. */
+const ONBOARDING_EMBEDDING_AUTH_CHOICES = new Set(["ollama", "lmstudio"]);
+
+/**
+ * Pins memory search to FTS-only when the selected auth backend cannot serve
+ * embeddings, so a fresh install can always search its workspace instead of
+ * failing closed on a default provider that was never installed.
+ */
+export function applyMemorySearchDefaultsConfig(
+  cfg: QuietCoreConfig,
+  authChoice: string | undefined,
+): QuietCoreConfig {
+  const normalized = authChoice?.trim().toLowerCase();
+  if (normalized && ONBOARDING_EMBEDDING_AUTH_CHOICES.has(normalized)) {
+    return cfg;
+  }
+  const next = structuredClone(cfg);
+  setConfigValueAtPath(
+    next as Record<string, unknown>,
+    ["agents", "defaults", "memorySearch", "provider"],
+    "none",
+  );
+  return next;
+}
+
 /** Marks default agents to skip bootstrap file creation. */
 export function applySkipBootstrapConfig(cfg: QuietCoreConfig): QuietCoreConfig {
   const next = structuredClone(cfg);

@@ -13,8 +13,8 @@ chunks and searching them using embeddings, keywords, or both.
 
 ## Quick start
 
-Memory search uses OpenAI embeddings by default. To use another embedding
-backend, set a provider explicitly:
+Memory search runs in FTS-only keyword mode by default, so it works without an
+embedding service. To enable semantic (vector) search, set a provider explicitly:
 
 ```json5
 {
@@ -48,12 +48,13 @@ for indexed chunks. Configure those with `memorySearch.queryInputType` and
 | ----------------- | ------------------- | ------------- | ----------------------------- |
 | Bedrock           | `bedrock`           | No            | Uses AWS credential chain     |
 | DeepInfra         | `deepinfra`         | Yes           | Default: `BAAI/bge-m3`        |
+| FTS-only          | `none`              | No            | Default: keyword search only  |
 | Gemini            | `gemini`            | Yes           | Supports image/audio indexing |
 | GitHub Copilot    | `github-copilot`    | No            | Uses Copilot subscription     |
 | Local             | `local`             | No            | GGUF model, ~0.6 GB download  |
 | Mistral           | `mistral`           | Yes           |                               |
 | Ollama            | `ollama`            | No            | Local/self-hosted             |
-| OpenAI            | `openai`            | Yes           | Default                       |
+| OpenAI            | `openai`            | Yes           | Semantic (vector) search      |
 | OpenAI-compatible | `openai-compatible` | Usually       | Generic `/v1/embeddings`      |
 | Voyage            | `voyage`            | Yes           |                               |
 

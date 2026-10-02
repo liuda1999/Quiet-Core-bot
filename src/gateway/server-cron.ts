@@ -135,7 +135,8 @@ export function buildGatewayCronService(params: {
 }): GatewayCronState {
   const cronLogger = getChildLogger({ module: "cron" });
   const storePath = resolveCronJobsStorePath(params.cfg.cron?.store);
-  const cronEnabled = process.env.QUIET_CORE_SKIP_CRON !== "1" && params.cfg.cron?.enabled !== false;
+  const cronEnabled =
+    process.env.QUIET_CORE_SKIP_CRON !== "1" && params.cfg.cron?.enabled !== false;
 
   const findAgentEntry = (cfg: QuietCoreConfig, agentId: string) =>
     Array.isArray(cfg.agents?.list)
@@ -495,6 +496,9 @@ export function buildGatewayCronService(params: {
           ...result,
           status: job.delivery?.bestEffort ? result.status : "error",
           error: job.delivery?.bestEffort ? result.error : error,
+          // The command itself ran; only the announce failed. Classify it as a
+          // delivery-only failure so applyJobResult keeps the job status "ok".
+          errorKind: job.delivery?.bestEffort ? undefined : "delivery-target",
           deliveryAttempted: true,
           delivered: false,
           delivery: {
