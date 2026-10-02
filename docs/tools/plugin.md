@@ -229,7 +229,7 @@ Quiet Core bot recognizes two plugin formats:
 
 | Format                       | How it loads                                                                       | Use when                                                                    |
 | ---------------------------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| Native Quiet Core bot plugin | `quiet-core-bot.plugin.json` plus a runtime module loaded in process                     | You are installing or building Quiet Core bot-specific runtime capabilities |
+| Native Quiet Core bot plugin | `quiet-core-bot.plugin.json` plus a runtime module loaded in process               | You are installing or building Quiet Core bot-specific runtime capabilities |
 | Compatible bundle            | Codex, Claude, or Cursor plugin layout mapped into Quiet Core bot plugin inventory | You are reusing compatible skills, commands, hooks, or bundle metadata      |
 
 Both formats appear in `quiet-core-bot plugins list`, `quiet-core-bot plugins inspect`,

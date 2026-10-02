@@ -34,7 +34,7 @@ directly to existing Quiet Core bot channel conversations, use
 | ----------------------------------------------------------------------------------------------------- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Bind or control Codex in the current conversation                                                     | `/codex bind`, `/codex threads`       | Native Codex app-server path when the `codex` plugin is enabled; includes bound chat replies, image forwarding, model/fast/permissions, stop, and steer controls. ACP is an explicit fallback |
 | Run Claude Code, Gemini CLI, explicit Codex ACP, or another external harness _through_ Quiet Core bot | This page                             | Chat-bound sessions, `/acp spawn`, `sessions_spawn({ runtime: "acp" })`, background tasks, runtime controls                                                                                   |
-| Expose an Quiet Core bot Gateway session _as_ an ACP server for an editor or client                   | [`quiet-core-bot acp`](/cli/acp)            | Bridge mode. IDE/client talks ACP to Quiet Core bot over stdio/WebSocket                                                                                                                      |
+| Expose an Quiet Core bot Gateway session _as_ an ACP server for an editor or client                   | [`quiet-core-bot acp`](/cli/acp)      | Bridge mode. IDE/client talks ACP to Quiet Core bot over stdio/WebSocket                                                                                                                      |
 | Reuse a local AI CLI as a text-only fallback model                                                    | [CLI Backends](/gateway/cli-backends) | Not ACP. No Quiet Core bot tools, no ACP controls, no harness runtime                                                                                                                         |
 
 ## Does this work out of the box?
@@ -95,21 +95,21 @@ should call those tools directly.
 With the `acpx` backend, use these harness ids as `/acp spawn <id>`
 or `sessions_spawn({ runtime: "acp", agentId: "<id>" })` targets:
 
-| Harness id | Typical backend                                      | Notes                                                                               |
-| ---------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| `claude`   | Claude Code ACP adapter                              | Requires Claude Code auth on the host.                                              |
-| `codex`    | Codex ACP adapter                                    | Explicit ACP fallback only when native `/codex` is unavailable or ACP is requested. |
-| `copilot`  | GitHub Copilot ACP adapter                           | Requires Copilot CLI/runtime auth.                                                  |
-| `cursor`   | Cursor CLI ACP (`cursor-agent acp`)                  | Override the acpx command if a local install exposes a different ACP entrypoint.    |
-| `droid`    | Factory Droid CLI                                    | Requires Factory/Droid auth or `FACTORY_API_KEY` in the harness environment.        |
-| `gemini`   | Gemini CLI ACP adapter                               | Requires Gemini CLI auth or API key setup.                                          |
-| `iflow`    | iFlow CLI                                            | Adapter availability and model control depend on the installed CLI.                 |
-| `kilocode` | Kilo Code CLI                                        | Adapter availability and model control depend on the installed CLI.                 |
-| `kimi`     | Kimi/Moonshot CLI                                    | Requires Kimi/Moonshot auth on the host.                                            |
-| `kiro`     | Kiro CLI                                             | Adapter availability and model control depend on the installed CLI.                 |
-| `opencode` | OpenCode ACP adapter                                 | Requires OpenCode CLI/provider auth.                                                |
+| Harness id       | Typical backend                                            | Notes                                                                               |
+| ---------------- | ---------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `claude`         | Claude Code ACP adapter                                    | Requires Claude Code auth on the host.                                              |
+| `codex`          | Codex ACP adapter                                          | Explicit ACP fallback only when native `/codex` is unavailable or ACP is requested. |
+| `copilot`        | GitHub Copilot ACP adapter                                 | Requires Copilot CLI/runtime auth.                                                  |
+| `cursor`         | Cursor CLI ACP (`cursor-agent acp`)                        | Override the acpx command if a local install exposes a different ACP entrypoint.    |
+| `droid`          | Factory Droid CLI                                          | Requires Factory/Droid auth or `FACTORY_API_KEY` in the harness environment.        |
+| `gemini`         | Gemini CLI ACP adapter                                     | Requires Gemini CLI auth or API key setup.                                          |
+| `iflow`          | iFlow CLI                                                  | Adapter availability and model control depend on the installed CLI.                 |
+| `kilocode`       | Kilo Code CLI                                              | Adapter availability and model control depend on the installed CLI.                 |
+| `kimi`           | Kimi/Moonshot CLI                                          | Requires Kimi/Moonshot auth on the host.                                            |
+| `kiro`           | Kiro CLI                                                   | Adapter availability and model control depend on the installed CLI.                 |
+| `opencode`       | OpenCode ACP adapter                                       | Requires OpenCode CLI/provider auth.                                                |
 | `quiet-core-bot` | Quiet Core bot Gateway bridge through `quiet-core-bot acp` | Lets an ACP-aware harness talk back to an Quiet Core bot Gateway session.           |
-| `qwen`     | Qwen Code / Qwen CLI                                 | Requires Qwen-compatible auth on the host.                                          |
+| `qwen`           | Qwen Code / Qwen CLI                                       | Requires Qwen-compatible auth on the host.                                          |
 
 Custom acpx agent aliases can be configured in acpx itself, but Quiet Core bot
 policy still checks `acp.allowedAgents` and any

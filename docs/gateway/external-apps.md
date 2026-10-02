@@ -30,7 +30,7 @@ results, cancel work, or inspect Gateway resources.
 | ---------------------------------------- | ------ | --------------------------------------------------------------------------------------------- |
 | [Gateway protocol](/gateway/protocol)    | Ready  | WebSocket transport, connect handshake, auth scopes, protocol versioning, and events.         |
 | [Gateway RPC reference](/reference/rpc)  | Ready  | Current Gateway methods for agents, sessions, tasks, models, tools, artifacts, and approvals. |
-| [`quiet-core-bot agent`](/cli/agent)           | Ready  | One-shot script integration when shelling out to the CLI is enough.                           |
+| [`quiet-core-bot agent`](/cli/agent)     | Ready  | One-shot script integration when shelling out to the CLI is enough.                           |
 | [`quiet-core-bot message`](/cli/message) | Ready  | Sending messages or channel actions from scripts.                                             |
 
 The source tree contains internal package work for a future client library, but

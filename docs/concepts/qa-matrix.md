@@ -72,7 +72,7 @@ The selected profile decides which scenarios run.
 | `media`         | Image, audio, video, PDF, EPUB attachment coverage.                                                                                                                                                                                  |
 | `e2ee-smoke`    | Minimum E2EE coverage - basic encrypted reply, thread follow-up, bootstrap success.                                                                                                                                                  |
 | `e2ee-deep`     | Exhaustive E2EE state-loss, backup, key, and recovery scenarios.                                                                                                                                                                     |
-| `e2ee-cli`      | `quiet-core-bot matrix encryption setup` and `verify *` CLI scenarios driven through the QA harness.                                                                                                                                       |
+| `e2ee-cli`      | `quiet-core-bot matrix encryption setup` and `verify *` CLI scenarios driven through the QA harness.                                                                                                                                 |
 
 The exact mapping lives in `extensions/qa-matrix/src/runners/contract/scenario-catalog.ts`.
 

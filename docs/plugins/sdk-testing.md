@@ -168,7 +168,11 @@ import type {
   ChannelGatewayContext,
 } from "quiet-core-bot/plugin-sdk/channel-contract";
 import type { QuietCoreConfig } from "quiet-core-bot/plugin-sdk/config-contracts";
-import type { MockFn, PluginRuntime, RuntimeEnv } from "quiet-core-bot/plugin-sdk/plugin-test-runtime";
+import type {
+  MockFn,
+  PluginRuntime,
+  RuntimeEnv,
+} from "quiet-core-bot/plugin-sdk/plugin-test-runtime";
 ```
 
 ## Testing target resolution

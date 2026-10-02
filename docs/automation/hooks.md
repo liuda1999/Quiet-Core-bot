@@ -82,7 +82,10 @@ my-hook/
 name: my-hook
 description: "Short description of what this hook does"
 metadata:
-  { "quiet-core-bot": { "emoji": "🔗", "events": ["command:new"], "requires": { "bins": ["node"] } } }
+  {
+    "quiet-core-bot":
+      { "emoji": "🔗", "events": ["command:new"], "requires": { "bins": ["node"] } },
+  }
 ---
 
 # My Hook

@@ -166,8 +166,8 @@ shorthand values.
 
 ## Path-related env vars
 
-| Variable                 | Purpose                                                                                                                                                                                                                                                   |
-| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Variable                   | Purpose                                                                                                                                                                                                                                                   |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `QUIET_CORE_HOME`          | Override the home directory used for internal Quiet Core bot path defaults (`~/.quiet-core-bot/`, agent dirs, sessions, credentials, installer onboarding, and the default dev checkout). Useful when running Quiet Core bot as a dedicated service user. |
 | `QUIET_CORE_STATE_DIR`     | Override the state directory (default `~/.quiet-core-bot`).                                                                                                                                                                                               |
 | `QUIET_CORE_CONFIG_PATH`   | Override the config file path (default `~/.quiet-core-bot/quiet-core-bot.json`).                                                                                                                                                                          |
@@ -175,8 +175,8 @@ shorthand values.
 
 ## Logging
 
-| Variable                         | Purpose                                                                                                                                                                                      |
-| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Variable                           | Purpose                                                                                                                                                                                      |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `QUIET_CORE_LOG_LEVEL`             | Override log level for both file and console (e.g. `debug`, `trace`). Takes precedence over `logging.level` and `logging.consoleLevel` in config. Invalid values are ignored with a warning. |
 | `QUIET_CORE_DEBUG_MODEL_TRANSPORT` | Emit targeted model request/response timing diagnostics at `info` level without enabling global debug logs.                                                                                  |
 | `QUIET_CORE_DEBUG_MODEL_PAYLOAD`   | Model payload diagnostics: `summary`, `tools`, or `full-redacted`. `full-redacted` is capped and redacted but may include prompt/message text.                                               |

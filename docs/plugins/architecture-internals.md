@@ -662,11 +662,11 @@ Notes:
 Use narrow SDK subpaths instead of the monolithic `quiet-core-bot/plugin-sdk` root
 barrel when authoring new plugins. Core subpaths:
 
-| Subpath                             | Purpose                                                  |
-| ----------------------------------- | -------------------------------------------------------- |
-| `quiet-core-bot/plugin-sdk/plugin-entry`  | Plugin registration primitives                           |
-| `quiet-core-bot/plugin-sdk/channel-core`  | Channel entry/build helpers                              |
-| `quiet-core-bot/plugin-sdk/core`          | Generic shared helpers and umbrella contract             |
+| Subpath                                   | Purpose                                                   |
+| ----------------------------------------- | --------------------------------------------------------- |
+| `quiet-core-bot/plugin-sdk/plugin-entry`  | Plugin registration primitives                            |
+| `quiet-core-bot/plugin-sdk/channel-core`  | Channel entry/build helpers                               |
+| `quiet-core-bot/plugin-sdk/core`          | Generic shared helpers and umbrella contract              |
 | `quiet-core-bot/plugin-sdk/config-schema` | Root `quiet-core-bot.json` Zod schema (`QuietCoreSchema`) |
 
 Channel plugins pick from a family of narrow seams — `channel-setup`,

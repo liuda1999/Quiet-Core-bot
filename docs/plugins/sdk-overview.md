@@ -452,7 +452,7 @@ cover CLI and Gateway-backed install or update paths.
 | `api.description`        | `string?`                 | Plugin description (optional)                                                               |
 | `api.source`             | `string`                  | Plugin source path                                                                          |
 | `api.rootDir`            | `string?`                 | Plugin root directory (optional)                                                            |
-| `api.config`             | `QuietCoreConfig`          | Current config snapshot (active in-memory runtime snapshot when available)                  |
+| `api.config`             | `QuietCoreConfig`         | Current config snapshot (active in-memory runtime snapshot when available)                  |
 | `api.pluginConfig`       | `Record<string, unknown>` | Plugin-specific config from `plugins.entries.<id>.config`                                   |
 | `api.runtime`            | `PluginRuntime`           | [Runtime helpers](/plugins/sdk-runtime)                                                     |
 | `api.logger`             | `PluginLogger`            | Scoped logger (`debug`, `info`, `warn`, `error`)                                            |

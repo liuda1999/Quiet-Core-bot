@@ -76,8 +76,8 @@ defaults write ai.quiet-core-bot.mac quiet-core-bot.nixMode -bool true
 
 Quiet Core bot reads JSON5 config from `QUIET_CORE_CONFIG_PATH` and stores mutable data in `QUIET_CORE_STATE_DIR`. When running under Nix, set these explicitly to Nix-managed locations so runtime state and config stay out of the immutable store.
 
-| Variable               | Default                                                 |
-| ---------------------- | ------------------------------------------------------- |
+| Variable                 | Default                                                 |
+| ------------------------ | ------------------------------------------------------- |
 | `QUIET_CORE_HOME`        | `HOME` / `USERPROFILE` / `os.homedir()`                 |
 | `QUIET_CORE_STATE_DIR`   | `~/.quiet-core-bot`                                     |
 | `QUIET_CORE_CONFIG_PATH` | `$github.com/openclaw/nix-openclaw/quiet-core-bot.json` |

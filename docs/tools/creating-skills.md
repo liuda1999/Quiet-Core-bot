@@ -132,7 +132,8 @@ Gate your skill so it only loads when its dependencies are available:
 ---
 name: gemini-search
 description: Search using Gemini CLI.
-metadata: { "quiet-core-bot": { "requires": { "bins": ["gemini"] }, "primaryEnv": "GEMINI_API_KEY" } }
+metadata:
+  { "quiet-core-bot": { "requires": { "bins": ["gemini"] }, "primaryEnv": "GEMINI_API_KEY" } }
 ---
 ```
 

@@ -116,7 +116,7 @@ harness options in Quiet Core bot config, and use the CLI only for Codex auth:
 | Sign in with ChatGPT/Codex OAuth       | `quiet-core-bot models auth login --provider openai`                             | CLI auth profile                         |
 | Add API-key backup for Codex runs      | `openai:*` API-key profile listed after subscription auth in `auth.order.openai` | CLI auth profile + Quiet Core bot config |
 | Fail closed when Codex is unavailable  | Provider or model `agentRuntime.id: "codex"`                                     | Quiet Core bot model/provider config     |
-| Use direct OpenAI API traffic          | Provider or model `agentRuntime.id: "quiet-core-bot"` with normal OpenAI auth          | Quiet Core bot model/provider config     |
+| Use direct OpenAI API traffic          | Provider or model `agentRuntime.id: "quiet-core-bot"` with normal OpenAI auth    | Quiet Core bot model/provider config     |
 | Tune app-server behavior               | `plugins.entries.codex.config.appServer.*`                                       | Codex plugin config                      |
 | Enable native Codex plugin apps        | `plugins.entries.codex.config.codexPlugins.*`                                    | Codex plugin config                      |
 | Enable Codex Computer Use              | `plugins.entries.codex.config.computerUse.*`                                     | Codex plugin config                      |
@@ -219,13 +219,13 @@ Common command routing:
 | Send Codex feedback only                              | `/codex diagnostics [note]`                                                                           |
 | Start an ACP/acpx task                                | ACP/acpx session commands, not `/codex`                                                               |
 
-| Use case                                             | Configure                                                              | Verify                                    | Notes                                       |
-| ---------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------- | ------------------------------------------- |
-| ChatGPT/Codex subscription with native Codex runtime | `openai/gpt-*` plus enabled `codex` plugin                             | `/status` shows `Runtime: OpenAI Codex`   | Recommended path                            |
-| Fail closed if Codex is unavailable                  | Provider or model `agentRuntime.id: "codex"`                           | Turn fails instead of embedded fallback   | Use for Codex-only deployments              |
+| Use case                                             | Configure                                                                    | Verify                                    | Notes                                       |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------- | ----------------------------------------- | ------------------------------------------- |
+| ChatGPT/Codex subscription with native Codex runtime | `openai/gpt-*` plus enabled `codex` plugin                                   | `/status` shows `Runtime: OpenAI Codex`   | Recommended path                            |
+| Fail closed if Codex is unavailable                  | Provider or model `agentRuntime.id: "codex"`                                 | Turn fails instead of embedded fallback   | Use for Codex-only deployments              |
 | Direct OpenAI API-key traffic through Quiet Core bot | Provider or model `agentRuntime.id: "quiet-core-bot"` and normal OpenAI auth | `/status` shows Quiet Core bot runtime    | Use only when Quiet Core bot is intentional |
-| Legacy config                                        | legacy Codex GPT refs                                                  | `quiet-core-bot doctor --fix` rewrites it | Do not write new config this way            |
-| ACP/acpx Codex adapter                               | ACP `sessions_spawn({ runtime: "acp" })`                               | ACP task/session status                   | Separate from native Codex harness          |
+| Legacy config                                        | legacy Codex GPT refs                                                        | `quiet-core-bot doctor --fix` rewrites it | Do not write new config this way            |
+| ACP/acpx Codex adapter                               | ACP `sessions_spawn({ runtime: "acp" })`                                     | ACP task/session status                   | Separate from native Codex harness          |
 
 `agents.defaults.imageModel` follows the same prefix split. Use `openai/gpt-*`
 for the normal OpenAI route and `codex/gpt-*` only when image understanding

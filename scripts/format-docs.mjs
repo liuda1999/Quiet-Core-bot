@@ -3,7 +3,6 @@
 // Formats docs Markdown/MDX and repairs Mintlify accordion indentation.
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { repairMintlifyAccordionIndentation } from "./lib/mintlify-accordion.mjs";
@@ -199,7 +198,13 @@ export function repairFiles(root, files) {
 }
 
 function copyDocsToTemp(root, files) {
-  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "quiet-core-bot-docs-format-"));
+  // Keep the scratch copy inside the repository: oxfmt resolves its
+  // `ignorePatterns` against the repository root, so a copy living outside the
+  // repo silently escapes patterns like "CLAUDE.md" and reports false format
+  // issues for files the write pass intentionally leaves untouched.
+  const scratchRoot = path.join(root, ".artifacts");
+  fs.mkdirSync(scratchRoot, { recursive: true });
+  const tempRoot = fs.mkdtempSync(path.join(scratchRoot, "format-docs-check-"));
   for (const relativePath of files) {
     const source = path.join(root, relativePath);
     const target = path.join(tempRoot, relativePath);

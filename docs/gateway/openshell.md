@@ -133,20 +133,20 @@ If you edit files on the host outside Quiet Core bot after the initial seed, the
 
 All OpenShell config lives under `plugins.entries.openshell.config`:
 
-| Key                       | Type                     | Default       | Description                                           |
-| ------------------------- | ------------------------ | ------------- | ----------------------------------------------------- |
-| `mode`                    | `"mirror"` or `"remote"` | `"mirror"`    | Workspace sync mode                                   |
-| `command`                 | `string`                 | `"openshell"` | Path or name of the `openshell` CLI                   |
-| `from`                    | `string`                 | `"quiet-core-bot"`  | Sandbox source for first-time create                  |
-| `gateway`                 | `string`                 | —             | OpenShell gateway name (`--gateway`)                  |
-| `gatewayEndpoint`         | `string`                 | —             | OpenShell gateway endpoint URL (`--gateway-endpoint`) |
-| `policy`                  | `string`                 | —             | OpenShell policy ID for sandbox creation              |
-| `providers`               | `string[]`               | `[]`          | Provider names to attach when sandbox is created      |
-| `gpu`                     | `boolean`                | `false`       | Request GPU resources                                 |
-| `autoProviders`           | `boolean`                | `true`        | Pass `--auto-providers` during sandbox create         |
-| `remoteWorkspaceDir`      | `string`                 | `"/sandbox"`  | Primary writable workspace inside the sandbox         |
-| `remoteAgentWorkspaceDir` | `string`                 | `"/agent"`    | Agent workspace mount path (for read-only access)     |
-| `timeoutSeconds`          | `number`                 | `120`         | Timeout for `openshell` CLI operations                |
+| Key                       | Type                     | Default            | Description                                           |
+| ------------------------- | ------------------------ | ------------------ | ----------------------------------------------------- |
+| `mode`                    | `"mirror"` or `"remote"` | `"mirror"`         | Workspace sync mode                                   |
+| `command`                 | `string`                 | `"openshell"`      | Path or name of the `openshell` CLI                   |
+| `from`                    | `string`                 | `"quiet-core-bot"` | Sandbox source for first-time create                  |
+| `gateway`                 | `string`                 | —                  | OpenShell gateway name (`--gateway`)                  |
+| `gatewayEndpoint`         | `string`                 | —                  | OpenShell gateway endpoint URL (`--gateway-endpoint`) |
+| `policy`                  | `string`                 | —                  | OpenShell policy ID for sandbox creation              |
+| `providers`               | `string[]`               | `[]`               | Provider names to attach when sandbox is created      |
+| `gpu`                     | `boolean`                | `false`            | Request GPU resources                                 |
+| `autoProviders`           | `boolean`                | `true`             | Pass `--auto-providers` during sandbox create         |
+| `remoteWorkspaceDir`      | `string`                 | `"/sandbox"`       | Primary writable workspace inside the sandbox         |
+| `remoteAgentWorkspaceDir` | `string`                 | `"/agent"`         | Agent workspace mount path (for read-only access)     |
+| `timeoutSeconds`          | `number`                 | `120`              | Timeout for `openshell` CLI operations                |
 
 Sandbox-level settings (`mode`, `scope`, `workspaceAccess`) are configured under
 `agents.defaults.sandbox` as with any backend. See

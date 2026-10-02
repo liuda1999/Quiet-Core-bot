@@ -115,14 +115,14 @@ export default definePluginEntry({
 });
 ```
 
-| Field          | Type                                                             | Required | Default             |
-| -------------- | ---------------------------------------------------------------- | -------- | ------------------- |
-| `id`           | `string`                                                         | Yes      | -                   |
-| `name`         | `string`                                                         | Yes      | -                   |
-| `description`  | `string`                                                         | Yes      | -                   |
-| `kind`         | `string`                                                         | No       | -                   |
+| Field          | Type                                                               | Required | Default             |
+| -------------- | ------------------------------------------------------------------ | -------- | ------------------- |
+| `id`           | `string`                                                           | Yes      | -                   |
+| `name`         | `string`                                                           | Yes      | -                   |
+| `description`  | `string`                                                           | Yes      | -                   |
+| `kind`         | `string`                                                           | No       | -                   |
 | `configSchema` | `QuietCorePluginConfigSchema \| () => QuietCorePluginConfigSchema` | No       | Empty object schema |
-| `register`     | `(api: QuietCorePluginApi) => void`                               | Yes      | -                   |
+| `register`     | `(api: QuietCorePluginApi) => void`                                | Yes      | -                   |
 
 - `id` must match your `quiet-core-bot.plugin.json` manifest.
 - `kind` is for exclusive slots: `"memory"` or `"context-engine"`.
@@ -156,16 +156,16 @@ export default defineChannelPluginEntry({
 });
 ```
 
-| Field                 | Type                                                             | Required | Default             |
-| --------------------- | ---------------------------------------------------------------- | -------- | ------------------- |
-| `id`                  | `string`                                                         | Yes      | -                   |
-| `name`                | `string`                                                         | Yes      | -                   |
-| `description`         | `string`                                                         | Yes      | -                   |
-| `plugin`              | `ChannelPlugin`                                                  | Yes      | -                   |
+| Field                 | Type                                                               | Required | Default             |
+| --------------------- | ------------------------------------------------------------------ | -------- | ------------------- |
+| `id`                  | `string`                                                           | Yes      | -                   |
+| `name`                | `string`                                                           | Yes      | -                   |
+| `description`         | `string`                                                           | Yes      | -                   |
+| `plugin`              | `ChannelPlugin`                                                    | Yes      | -                   |
 | `configSchema`        | `QuietCorePluginConfigSchema \| () => QuietCorePluginConfigSchema` | No       | Empty object schema |
-| `setRuntime`          | `(runtime: PluginRuntime) => void`                               | No       | -                   |
-| `registerCliMetadata` | `(api: QuietCorePluginApi) => void`                               | No       | -                   |
-| `registerFull`        | `(api: QuietCorePluginApi) => void`                               | No       | -                   |
+| `setRuntime`          | `(runtime: PluginRuntime) => void`                                 | No       | -                   |
+| `registerCliMetadata` | `(api: QuietCorePluginApi) => void`                                | No       | -                   |
+| `registerFull`        | `(api: QuietCorePluginApi) => void`                                | No       | -                   |
 
 - `setRuntime` is called during registration so you can store the runtime reference
   (typically via `createPluginRuntimeStore`). It is skipped during CLI metadata

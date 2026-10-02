@@ -147,7 +147,7 @@ the install instead.
 | Source      | Use when                                                                      | Example                                                              |
 | ----------- | ----------------------------------------------------------------------------- | -------------------------------------------------------------------- |
 | ClawHub     | You want Quiet Core bot-native discovery, scan summaries, versions, and hints | `quiet-core-bot plugins install clawhub:<package>`                   |
-| npmjs.com   | You already ship JavaScript packages or need npm dist-tags/private registry   | `quiet-core-bot plugins install npm:@acme/quiet-core-bot-plugin`           |
+| npmjs.com   | You already ship JavaScript packages or need npm dist-tags/private registry   | `quiet-core-bot plugins install npm:@acme/quiet-core-bot-plugin`     |
 | git         | You want a branch, tag, or commit from a repository                           | `quiet-core-bot plugins install git:github.com/<owner>/<repo>@<ref>` |
 | local path  | You are developing or testing a plugin on the same machine                    | `quiet-core-bot plugins install --link ./my-plugin`                  |
 | npm pack    | You are proving a local package artifact through npm install semantics        | `quiet-core-bot plugins install npm-pack:<path.tgz>`                 |

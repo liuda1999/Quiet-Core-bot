@@ -217,14 +217,14 @@ If you can't use the Teams CLI, you can set up the bot manually through the Azur
 1. Go to [Create Azure Bot](https://portal.azure.com/#create/Microsoft.AzureBot)
 2. Fill in the **Basics** tab:
 
-   | Field              | Value                                                    |
-   | ------------------ | -------------------------------------------------------- |
+   | Field              | Value                                                          |
+   | ------------------ | -------------------------------------------------------------- |
    | **Bot handle**     | Your bot name, e.g., `quiet-core-bot-msteams` (must be unique) |
-   | **Subscription**   | Select your Azure subscription                           |
-   | **Resource group** | Create new or use existing                               |
-   | **Pricing tier**   | **Free** for dev/testing                                 |
-   | **Type of App**    | **Single Tenant** (recommended - see note below)         |
-   | **Creation type**  | **Create new Microsoft App ID**                          |
+   | **Subscription**   | Select your Azure subscription                                 |
+   | **Resource group** | Create new or use existing                                     |
+   | **Pricing tier**   | **Free** for dev/testing                                       |
+   | **Type of App**    | **Single Tenant** (recommended - see note below)               |
+   | **Creation type**  | **Create new Microsoft App ID**                                |
 
 <Warning>
 Creation of new multi-tenant bots was deprecated after 2025-07-31. Use **Single Tenant** for new bots.

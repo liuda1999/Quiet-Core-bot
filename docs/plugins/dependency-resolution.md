@@ -155,7 +155,7 @@ not a supported way to prepare bundled plugin dependencies.
 
 | Install shape                        | Bundled plugin location               | Dependency owner                                                       |
 | ------------------------------------ | ------------------------------------- | ---------------------------------------------------------------------- |
-| `npm install -g quiet-core-bot`            | Built runtime tree inside the package | Quiet Core bot package and explicit plugin install/update/doctor flows |
+| `npm install -g quiet-core-bot`      | Built runtime tree inside the package | Quiet Core bot package and explicit plugin install/update/doctor flows |
 | Git checkout plus `pnpm install`     | `extensions/<id>` workspace packages  | The pnpm workspace, including each plugin package's own dependencies   |
 | `quiet-core-bot plugins install ...` | Managed npm project/git/ClawHub root  | The plugin install/update flow                                         |
 

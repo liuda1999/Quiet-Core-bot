@@ -425,8 +425,8 @@ Sends a verification request from this Quiet Core bot account. `--own-user` requ
 
 For lower-level lifecycle handling - typically while shadowing inbound requests from another client - these commands act on a specific request `<id>` (printed by `verify list` and `verify request`):
 
-| Command                                    | Purpose                                                             |
-| ------------------------------------------ | ------------------------------------------------------------------- |
+| Command                                          | Purpose                                                             |
+| ------------------------------------------------ | ------------------------------------------------------------------- |
 | `quiet-core-bot matrix verify accept <id>`       | Accept an inbound request                                           |
 | `quiet-core-bot matrix verify start <id>`        | Start the SAS flow                                                  |
 | `quiet-core-bot matrix verify sas <id>`          | Print the SAS emoji or decimals                                     |

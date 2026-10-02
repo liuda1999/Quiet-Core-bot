@@ -96,7 +96,7 @@ describe("format-docs", () => {
     );
   });
 
-  it("uses repository paths in write mode and temporary paths in check mode", () => {
+  it("uses repository paths in write mode and repo-local scratch paths in check mode", () => {
     const root = createTempDir("quiet-core-bot-format-docs-mode-");
     writeDocsFixture(root);
     const oxfmtFileArgs: string[][] = [];
@@ -143,7 +143,9 @@ describe("format-docs", () => {
 
     expect(oxfmtFileArgs[0]).toEqual(["README.md", "docs/guide.mdx"]);
     expect(oxfmtFileArgs[1]?.every((filePath) => path.isAbsolute(filePath))).toBe(true);
-    expect(oxfmtFileArgs[1]?.every((filePath) => filePath.startsWith(root))).toBe(false);
+    // The check scratch copy stays inside the repository so oxfmt keeps applying
+    // repository-relative ignorePatterns (a copy outside the repo escapes them).
+    expect(oxfmtFileArgs[1]?.every((filePath) => filePath.startsWith(root))).toBe(true);
   });
 
   it("keeps single oversized docs in their own command chunk", () => {
