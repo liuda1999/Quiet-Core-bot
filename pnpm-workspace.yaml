@@ -124,7 +124,7 @@ allowBuilds:
   "@openclaw/fs-safe": true
   "@google/genai": true
   "@lydell/node-pty": true
-  "@matrix-org/matrix-sdk-crypto-nodejs": true
+  "@matrix-org/matrix-sdk-crypto-nodejs": false
   "@tloncorp/api": true
   "@tloncorp/tlon-skill": true
   authenticate-pam: true

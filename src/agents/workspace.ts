@@ -142,7 +142,7 @@ async function loadTemplate(name: string): Promise<string> {
       }
     }
     throw new Error(
-      `Missing workspace template: ${name} (${triedPaths.join(", ")}). Ensure workspace templates are packaged.`,
+      `${MISSING_WORKSPACE_TEMPLATE_PREFIX} ${name} (${triedPaths.join(", ")}). Ensure workspace templates are packaged.`,
     );
   })();
 
@@ -151,6 +151,20 @@ async function loadTemplate(name: string): Promise<string> {
     return await pending;
   } catch (error) {
     workspaceTemplateCache.delete(name);
+    throw error;
+  }
+}
+
+const MISSING_WORKSPACE_TEMPLATE_PREFIX = "Missing workspace template:";
+
+/** Loads an optional bootstrap template, returning null when the template is not shipped. */
+async function loadTemplateIfPresent(name: string): Promise<string | null> {
+  try {
+    return await loadTemplate(name);
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith(MISSING_WORKSPACE_TEMPLATE_PREFIX)) {
+      return null;
+    }
     throw error;
   }
 }
@@ -334,9 +348,14 @@ async function workspaceProfileLooksConfigured(params: {
   includeGitEvidence?: boolean;
 }): Promise<boolean> {
   const profileFileDiffs = await Promise.all(
-    WORKSPACE_ONBOARDING_PROFILE_FILENAMES.map(async (fileName) =>
-      fileContentDiffersFromTemplate(path.join(params.dir, fileName), await loadTemplate(fileName)),
-    ),
+    WORKSPACE_ONBOARDING_PROFILE_FILENAMES.map(async (fileName) => {
+      const template = await loadTemplateIfPresent(fileName);
+      // An unshipped template cannot be compared; treat the file as user-owned.
+      return (
+        template === null ||
+        (await fileContentDiffersFromTemplate(path.join(params.dir, fileName), template))
+      );
+    }),
   );
   return (
     profileFileDiffs.some(Boolean) ||
@@ -371,9 +390,15 @@ async function workspaceRequiredBootstrapLooksCustomized(
     return false;
   }
   const fileDiffs = await Promise.all(
-    fileNames.map(async (fileName) =>
-      fileContentDiffersFromTemplate(path.join(dir, fileName), await loadTemplate(fileName)),
-    ),
+    fileNames.map(async (fileName) => {
+      const template = OPTIONAL_BOOTSTRAP_FILENAMES.has(fileName)
+        ? await loadTemplateIfPresent(fileName)
+        : await loadTemplate(fileName);
+      return (
+        template === null ||
+        (await fileContentDiffersFromTemplate(path.join(dir, fileName), template))
+      );
+    }),
   );
   return fileDiffs.some(Boolean);
 }
@@ -590,7 +615,10 @@ async function collectGeneratedBootstrapHashes(dir: string): Promise<Map<string,
   for (const fileName of fileNames) {
     try {
       const content = await fs.readFile(path.join(dir, fileName), "utf-8");
-      if (content === (await loadTemplate(fileName))) {
+      const template = OPTIONAL_BOOTSTRAP_FILENAMES.has(fileName)
+        ? await loadTemplateIfPresent(fileName)
+        : await loadTemplate(fileName);
+      if (template !== null && content === template) {
         hashes.set(fileName, createHash("sha256").update(content).digest("hex"));
       }
     } catch {
@@ -923,11 +951,7 @@ export async function ensureAgentWorkspace(params?: {
   }
 
   const agentsTemplate = await loadTemplate(DEFAULT_AGENTS_FILENAME);
-  const soulTemplate = await loadTemplate(DEFAULT_SOUL_FILENAME);
   const toolsTemplate = await loadTemplate(DEFAULT_TOOLS_FILENAME);
-  const identityTemplate = await loadTemplate(DEFAULT_IDENTITY_FILENAME);
-  const userTemplate = await loadTemplate(DEFAULT_USER_FILENAME);
-  const heartbeatTemplate = await loadTemplate(DEFAULT_HEARTBEAT_FILENAME);
   const skipOptionalBootstrapFiles = new Set(params?.skipOptionalBootstrapFiles ?? []);
   // When the workspace is already configured, skip optional bootstrap files to
   // prevent subagent spawns from recreating root-level SOUL.md, USER.md,
@@ -941,18 +965,25 @@ export async function ensureAgentWorkspace(params?: {
   const shouldWriteBootstrapFile = (fileName: string): boolean =>
     !OPTIONAL_BOOTSTRAP_FILENAMES.has(fileName) || !skipOptionalBootstrapFiles.has(fileName);
 
+  const loadOptionalTemplate = async (fileName: string): Promise<string | null> =>
+    shouldWriteBootstrapFile(fileName) ? await loadTemplateIfPresent(fileName) : null;
+
+  const soulTemplate = await loadOptionalTemplate(DEFAULT_SOUL_FILENAME);
+  const identityTemplate = await loadOptionalTemplate(DEFAULT_IDENTITY_FILENAME);
+  const userTemplate = await loadOptionalTemplate(DEFAULT_USER_FILENAME);
+  const heartbeatTemplate = await loadOptionalTemplate(DEFAULT_HEARTBEAT_FILENAME);
+
   await writeFileIfMissing(agentsPath, agentsTemplate);
-  if (shouldWriteBootstrapFile(DEFAULT_SOUL_FILENAME)) {
+  if (soulTemplate !== null) {
     await writeFileIfMissing(soulPath, soulTemplate);
   }
   await writeFileIfMissing(toolsPath, toolsTemplate);
-  const identityPathCreated = shouldWriteBootstrapFile(DEFAULT_IDENTITY_FILENAME)
-    ? await writeFileIfMissing(identityPath, identityTemplate)
-    : false;
-  if (shouldWriteBootstrapFile(DEFAULT_USER_FILENAME)) {
+  const identityPathCreated =
+    identityTemplate !== null ? await writeFileIfMissing(identityPath, identityTemplate) : false;
+  if (userTemplate !== null) {
     await writeFileIfMissing(userPath, userTemplate);
   }
-  if (shouldWriteBootstrapFile(DEFAULT_HEARTBEAT_FILENAME)) {
+  if (heartbeatTemplate !== null) {
     await writeFileIfMissing(heartbeatPath, heartbeatTemplate);
   }
 
