@@ -3,20 +3,20 @@
 Build metadata for this checkout. Regenerated at packaging time; if any value here
 disagrees with `git` in your working copy, trust `git`.
 
-| Field                    | Value                                                                                                                                 |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
-| Project                  | `quiet-core-bot`                                                                                                                      |
-| Product name             | Quiet Core bot                                                                                                                        |
-| Version (`package.json`) | `0.1.0`                                                                                                                               |
-| Git branch               | `master`                                                                                                                              |
-| Git commit               | `f29ceed49fea28898b1ccefc1f59ca4e4612cb1a` (`f29ceed4`)                                                                               |
-| Commit date              | `2026-09-25 14:54:51 +0800`                                                                                                           |
-| Commit subject           | `refactor(rebrand): finish P5 brand, state-dir anchoring, and copy sweep`                                                             |
-| Repository status        | independent repository; the pre-rebrand `quiet-core-bot` history is not carried over                                                        |
+| Field                    | Value                                                                                                                                              |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Project                  | `quiet-core-bot`                                                                                                                                   |
+| Product name             | Quiet Core bot                                                                                                                                     |
+| Version (`package.json`) | `0.1.1`                                                                                                                                            |
+| Git branch               | `master`                                                                                                                                           |
+| Git commit               | `f29ceed49fea28898b1ccefc1f59ca4e4612cb1a` (`f29ceed4`)                                                                                            |
+| Commit date              | `2026-09-25 14:54:51 +0800`                                                                                                                        |
+| Commit subject           | `refactor(rebrand): finish P5 brand, state-dir anchoring, and copy sweep`                                                                          |
+| Repository status        | independent repository; the pre-rebrand `quiet-core-bot` history is not carried over                                                               |
 | Upstream remote          | _(none configured in this checkout)_ — this project started from the upstream quiet-core-bot codebase: https://github.com/liuda1999/Quiet-Core-bot |
-| Package manager          | `pnpm@11.2.2` (see `packageManager` in `package.json`)                                                                                |
-| Node engine              | `>=22.19.0` (Node 24 recommended)                                                                                                     |
-| Build machine            | Windows 10/11, `x64`, Node `v24.16.0`, pnpm **not installed** locally (invoke via `npx pnpm`)                                         |
+| Package manager          | `pnpm@11.2.2` (see `packageManager` in `package.json`)                                                                                             |
+| Node engine              | `>=22.19.0` (Node 24 recommended)                                                                                                                  |
+| Build machine            | Windows 10/11, `x64`, Node `v24.16.0`, pnpm **not installed** locally (invoke via `npx pnpm`)                                                      |
 
 ## Rebrand notes
 

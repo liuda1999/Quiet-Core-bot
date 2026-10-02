@@ -605,7 +605,8 @@ describe("package artifact reuse", () => {
       INCLUDE_OPENWEBUI: "${{ inputs.include_openwebui }}",
       INCLUDE_RELEASE_PATH_SUITES: "${{ inputs.include_release_path_suites }}",
       LANES: "${{ inputs.docker_lanes }}",
-      QUIET_CORE_UPGRADE_SURVIVOR_BASELINE_SPEC: "${{ inputs.published_upgrade_survivor_baseline }}",
+      QUIET_CORE_UPGRADE_SURVIVOR_BASELINE_SPEC:
+        "${{ inputs.published_upgrade_survivor_baseline }}",
       QUIET_CORE_UPGRADE_SURVIVOR_BASELINE_SPECS:
         "${{ inputs.published_upgrade_survivor_baselines }}",
       QUIET_CORE_UPGRADE_SURVIVOR_SCENARIOS: "${{ inputs.published_upgrade_survivor_scenarios }}",
@@ -675,7 +676,9 @@ describe("package artifact reuse", () => {
 
     expect(pullHelper).toContain("QUIET_CORE_DOCKER_PULL_ATTEMPTS");
     expect(pullHelper).toContain("QUIET_CORE_DOCKER_PULL_TIMEOUT_SECONDS");
-    expect(pullHelper).toContain('timeout_seconds="${QUIET_CORE_DOCKER_PULL_TIMEOUT_SECONDS:-180}"');
+    expect(pullHelper).toContain(
+      'timeout_seconds="${QUIET_CORE_DOCKER_PULL_TIMEOUT_SECONDS:-180}"',
+    );
     expect(pullHelper).toContain(
       'retry_delay_seconds="${QUIET_CORE_DOCKER_PULL_RETRY_DELAY_SECONDS:-5}"',
     );
@@ -1083,7 +1086,9 @@ describe("package artifact reuse", () => {
     expect(build).toContain(
       'DOCKER_COMMAND_TIMEOUT="${DOCKER_COMMAND_TIMEOUT:-${QUIET_CORE_LIVE_DOCKER_PULL_TIMEOUT:-600s}}"',
     );
-    expect(build).toContain('LIVE_IMAGE_PULL_ATTEMPTS="${QUIET_CORE_LIVE_DOCKER_PULL_ATTEMPTS:-3}"');
+    expect(build).toContain(
+      'LIVE_IMAGE_PULL_ATTEMPTS="${QUIET_CORE_LIVE_DOCKER_PULL_ATTEMPTS:-3}"',
+    );
     expect(build).toContain('docker_e2e_docker_cmd pull "$LIVE_IMAGE_NAME"');
     expect(build).not.toContain('docker pull "$LIVE_IMAGE_NAME"');
     expect(stage).toContain(
@@ -1097,7 +1102,9 @@ describe("package artifact reuse", () => {
 
     expect(script).toContain("quiet_core_bot_live_acp_bind_load_factory_api_key_from_profile");
     expect(script).not.toContain('source "$PROFILE_FILE"');
-    expect(script.indexOf("quiet_core_bot_live_acp_bind_load_factory_api_key_from_profile")).toBeLessThan(
+    expect(
+      script.indexOf("quiet_core_bot_live_acp_bind_load_factory_api_key_from_profile"),
+    ).toBeLessThan(
       script.indexOf('if [[ "$ACP_AGENT" == "droid" && -z "${FACTORY_API_KEY:-}" ]]; then'),
     );
     expect(script).toContain(
@@ -1228,7 +1235,9 @@ describe("package artifact reuse", () => {
       'if [[ "$credentials" == *",opencode,"* ]]; then',
       "require_any OpenCode OPENCODE_API_KEY OPENCODE_ZEN_API_KEY",
     ]);
-    expect(reusableWorkflow.match(/QUIET_CORE_LIVE_CLI_BACKEND_AUTH=subscription/g)).toHaveLength(2);
+    expect(reusableWorkflow.match(/QUIET_CORE_LIVE_CLI_BACKEND_AUTH=subscription/g)).toHaveLength(
+      2,
+    );
     expect(
       reusableWorkflow.match(
         /if \[\[ -n "\$\{QUIET_CORE_CLAUDE_CREDENTIALS_JSON:-\}" \|\| -n "\$\{CLAUDE_CODE_OAUTH_TOKEN:-\}" \]\]; then/g,
@@ -1790,7 +1799,9 @@ describe("package artifact reuse", () => {
     expect(windowsWorkflow).not.toContain("default: latest");
     expect(windowsWorkflow).toContain("expected_installer_digests:");
     expect(windowsWorkflow).toContain("expected_installer_digests must contain exactly");
-    expect(windowsWorkflow).toContain("must be an explicit quiet-core-bot-windows-node release tag");
+    expect(windowsWorkflow).toContain(
+      "must be an explicit quiet-core-bot-windows-node release tag",
+    );
     expect(windowsWorkflow).toContain("$installerPatterns = @(");
     expect(windowsWorkflow).toContain("Every matched installer is signature-checked");
     expect(windowsWorkflow).toContain("Get-ChildItem -LiteralPath dist -File");
@@ -1864,7 +1875,10 @@ describe("package artifact reuse", () => {
     const clawHubWorkflow = readFileSync(".github/workflows/plugin-clawhub-release.yml", "utf8");
     const clawHubNewWorkflow = readFileSync(".github/workflows/plugin-clawhub-new.yml", "utf8");
     const pluginNpmWorkflow = readFileSync(".github/workflows/plugin-npm-release.yml", "utf8");
-    const openclawNpmWorkflow = readFileSync(".github/workflows/quiet-core-bot-npm-release.yml", "utf8");
+    const openclawNpmWorkflow = readFileSync(
+      ".github/workflows/quiet-core-bot-npm-release.yml",
+      "utf8",
+    );
     const fastPretagScript = readFileSync("scripts/release-fast-pretag-check.sh", "utf8");
     const pluginPretagPackScript = readFileSync(
       "scripts/plugin-release-pretag-pack-check.ts",
@@ -2021,8 +2035,10 @@ describe("package artifact reuse", () => {
       "already has a public GitHub release page without complete postpublish evidence",
     );
     expect(releaseWorkflow).toContain("registry tarball");
-    expect(releaseWorkflow).toContain("openclawNpmTarball");
-    expect(releaseWorkflow).not.toContain('npm view "quiet-core-bot@${release_version}" dist.tarball');
+    expect(releaseWorkflow).toContain("quiet-core-botNpmTarball");
+    expect(releaseWorkflow).not.toContain(
+      'npm view "quiet-core-bot@${release_version}" dist.tarball',
+    );
     expect(releaseWorkflow).toContain("release SHA");
     expect(clawHubReleasePlanScript).toContain("not awaited by this proof");
     expect(releaseWorkflow).toContain("wait_for_job_success");
@@ -2129,7 +2145,9 @@ describe("package artifact reuse", () => {
     expect(clawHubNewWorkflow).toContain("verify_bootstrap_clawhub_package:");
     expect(clawHubNewWorkflow).toContain("Verify bootstrap ClawHub package and trusted publisher");
     expect(clawHubNewWorkflow).toContain("/trusted-publisher");
-    expect(clawHubNewWorkflow).toContain('trustedPublisher?.repository !== "liuda1999/quiet-core-bot"');
+    expect(clawHubNewWorkflow).toContain(
+      'trustedPublisher?.repository !== "liuda1999/quiet-core-bot"',
+    );
     expect(openclawNpmWorkflow).toContain("environment: npm-release");
     expect(releaseWorkflow).toContain("default: from-validation");
     expect(releaseWorkflow).toContain('--release-publish-branch "${CHILD_WORKFLOW_REF}"');
@@ -2160,7 +2178,9 @@ describe("package artifact reuse", () => {
   it("keeps release workflow setup and timeout budgets bounded", () => {
     const fullRelease = readWorkflow(FULL_RELEASE_VALIDATION_WORKFLOW);
     const releaseChecks = readWorkflow(RELEASE_CHECKS_WORKFLOW);
-    const crossOs = readWorkflow(".github/workflows/quiet-core-bot-cross-os-release-checks-reusable.yml");
+    const crossOs = readWorkflow(
+      ".github/workflows/quiet-core-bot-cross-os-release-checks-reusable.yml",
+    );
     const liveE2e = readWorkflow(LIVE_E2E_WORKFLOW);
     const releaseWorkflowPaths = [
       FULL_RELEASE_VALIDATION_WORKFLOW,

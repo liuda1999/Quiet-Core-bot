@@ -342,9 +342,9 @@ describe("Parallels smoke model selection", () => {
     expect(parseMacosSmokeArgs(["--host-port", "65535"]).hostPort).toBe(65535);
     expect(parseLinuxSmokeArgs(["--host-port", "65535"]).hostPort).toBe(65535);
     expect(parseWindowsSmokeArgs(["--host-port", "65535"]).hostPort).toBe(65535);
-    expect(parseNpmUpdateSmokeArgs(["--", "--package-spec", "quiet-core-bot@2026.5.1"]).packageSpec).toBe(
-      "quiet-core-bot@2026.5.1",
-    );
+    expect(
+      parseNpmUpdateSmokeArgs(["--", "--package-spec", "quiet-core-bot@2026.5.1"]).packageSpec,
+    ).toBe("quiet-core-bot@2026.5.1");
     expect(
       parseNpmUpdateSmokeArgs([
         "--package-spec",
@@ -606,7 +606,13 @@ describe("Parallels smoke model selection", () => {
         runCommand: (command, args, options) => {
           userConfigPath = args.at(-1) ?? "";
           expect(command).toBe("npm");
-          expect(args).toEqual(["view", "quiet-core-bot", "version", "--userconfig", userConfigPath]);
+          expect(args).toEqual([
+            "view",
+            "quiet-core-bot",
+            "version",
+            "--userconfig",
+            userConfigPath,
+          ]);
           expect(options).toEqual({ quiet: true });
           expect(statSync(userConfigPath).isFile()).toBe(true);
           return { status: 0, stderr: "", stdout: "2026.6.1\n" };
@@ -1468,7 +1474,9 @@ if (isPrlctl) {
 
     expect(script).toContain("guestPowerShellBackground");
     expect(script).toContain("runWindowsBackgroundPowerShell");
-    expect(transports).toContain("Join-Path (Join-Path $env:WINDIR 'Temp\\\\quiet-core-bot-parallels')");
+    expect(transports).toContain(
+      "Join-Path (Join-Path $env:WINDIR 'Temp\\\\quiet-core-bot-parallels')",
+    );
     expect(transports).toContain("icacls.exe $runDir /inheritance:r");
     expect(transports).toContain("__QUIET_CORE_BACKGROUND_DONE__");
     expect(transports).toContain("__QUIET_CORE_BACKGROUND_EXIT__");
@@ -1773,7 +1781,10 @@ setInterval(() => {}, 1000);
   it.runIf(process.platform !== "win32")(
     "lets timed streaming host command descendants drain before force kill",
     async () => {
-      const tempDir = makeTempDir(tempDirs, "quiet-core-bot-parallels-streaming-host-command-drain-");
+      const tempDir = makeTempDir(
+        tempDirs,
+        "quiet-core-bot-parallels-streaming-host-command-drain-",
+      );
       const readyFile = join(tempDir, "ready");
       const drainFile = join(tempDir, "drained");
       const logPath = join(tempDir, "stream.log");
@@ -1819,7 +1830,10 @@ setInterval(() => {}, 1000);
   it.runIf(process.platform !== "win32")(
     "reaps externally signaled streaming host command descendants before re-raising",
     async () => {
-      const tempDir = makeTempDir(tempDirs, "quiet-core-bot-parallels-streaming-host-command-signal-");
+      const tempDir = makeTempDir(
+        tempDirs,
+        "quiet-core-bot-parallels-streaming-host-command-signal-",
+      );
       const runnerPath = join(tempDir, "runner.mjs");
       const readyPath = join(tempDir, "ready");
       const grandchildPidPath = join(tempDir, "grandchild.pid");
@@ -2175,7 +2189,7 @@ setInterval(() => {}, 1000);
     expect(powershell).toContain("delete selectedModelEntry.agentRuntime");
     expect(powershell).toContain("delete providerEntry.agentRuntime");
     expect(powershell).toContain("Resolve-QuietCoreCommand");
-    expect(powershell).toContain("npm\\node_modules\\openclaw\\quiet-core-bot.mjs");
+    expect(powershell).toContain("npm\\node_modules\\quiet-core-bot\\quiet-core-bot.mjs");
     expect(powershell).toContain("$ErrorActionPreference = 'Continue'");
     expect(powershell).toContain("$PSNativeCommandUseErrorActionPreference = $false");
     expect(windows).toContain("windowsQuietCoreResolver");

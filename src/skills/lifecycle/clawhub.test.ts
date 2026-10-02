@@ -481,9 +481,9 @@ describe("skills-clawhub", () => {
 
   it("persists the source URL from server-resolved verification provenance", async () => {
     const workspaceDir = await tempDirs.make("quiet-core-bot-skills-source-");
-    const sourceUrl = "https://github.com/openclaw/skills/tree/main/agentreceipt";
+    const sourceUrl = "https://github.com/quiet-core-bot/skills/tree/main/agentreceipt";
     const verifiedSourceUrl =
-      "https://github.com/openclaw/skills/tree/0123456789abcdef0123456789abcdef01234567/agentreceipt";
+      "https://github.com/quiet-core-bot/skills/tree/0123456789abcdef0123456789abcdef01234567/agentreceipt";
     fetchClawHubSkillDetailMock.mockResolvedValueOnce({
       skill: {
         slug: "agentreceipt",
@@ -577,7 +577,7 @@ describe("skills-clawhub", () => {
         commit: "0123456789abcdef0123456789abcdef01234567",
       }),
     ).toBe(
-      "https://github.com/openclaw/skills/tree/0123456789abcdef0123456789abcdef01234567/agentreceipt",
+      "https://github.com/quiet-core-bot/skills/tree/0123456789abcdef0123456789abcdef01234567/agentreceipt",
     );
     expect(
       readVerifiedClawHubSkillSourceUrl({
@@ -985,7 +985,9 @@ describe("skills-clawhub", () => {
 
   describe("legacy tracked slugs remain updatable", () => {
     async function createLegacyTrackedSkillFixture(slug: string) {
-      const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-skills-clawhub-"));
+      const workspaceDir = await fs.mkdtemp(
+        path.join(os.tmpdir(), "quiet-core-bot-skills-clawhub-"),
+      );
       const skillDir = path.join(workspaceDir, "skills", slug);
       await fs.mkdir(path.join(skillDir, ".clawhub"), { recursive: true });
       await fs.mkdir(path.join(workspaceDir, ".clawhub"), { recursive: true });
@@ -1161,7 +1163,9 @@ describe("skills-clawhub", () => {
     });
 
     it("still rejects an untracked Unicode slug passed to update", async () => {
-      const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-skills-clawhub-"));
+      const workspaceDir = await fs.mkdtemp(
+        path.join(os.tmpdir(), "quiet-core-bot-skills-clawhub-"),
+      );
 
       try {
         await expect(

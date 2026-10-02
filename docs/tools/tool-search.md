@@ -18,12 +18,12 @@ not depend on `tools.toolSearch`.
 
 When enabled for Quiet Core bot runs, the model receives one `tool_search_code` tool
 by default. That tool runs a short JavaScript body in an isolated Node
-subprocess with an `quiet-core-bot.tools` bridge:
+subprocess with a `tools` bridge:
 
 ```js
-const hits = await quiet-core-bot.tools.search("create a GitHub issue");
-const tool = await quiet-core-bot.tools.describe(hits[0].id);
-return await quiet-core-bot.tools.call(tool.id, {
+const hits = await tools.search("create a GitHub issue");
+const tool = await tools.describe(hits[0].id);
+return await tools.call(tool.id, {
   title: "Crash on startup",
   body: "Steps to reproduce...",
 });
@@ -54,7 +54,7 @@ run:
 
 At execution time every real tool call returns to Quiet Core bot. The isolated Node
 runtime does not hold plugin implementations, MCP client objects, or secrets.
-`quiet-core-bot.tools.call(...)` crosses the bridge back into the Gateway, where the
+`tools.call(...)` crosses the bridge back into the Gateway, where the
 normal policy, approval, hook, logging, and result handling still apply.
 
 ## Modes
@@ -109,29 +109,29 @@ client-provided app tools.
 
 ## API
 
-`quiet-core-bot.tools.search(query, options?)`
+`tools.search(query, options?)`
 
 Searches the effective catalog for the current run. Results are compact and safe
 to put back into prompt context.
 
 ```js
-const hits = await quiet-core-bot.tools.search("calendar event", { limit: 5 });
+const hits = await tools.search("calendar event", { limit: 5 });
 ```
 
-`quiet-core-bot.tools.describe(id)`
+`tools.describe(id)`
 
 Loads full metadata for one search result, including the exact input schema.
 
 ```js
-const calendarCreate = await quiet-core-bot.tools.describe("mcp:calendar:create_event");
+const calendarCreate = await tools.describe("mcp:calendar:create_event");
 ```
 
-`quiet-core-bot.tools.call(id, args)`
+`tools.call(id, args)`
 
 Calls a selected tool through Quiet Core bot.
 
 ```js
-await quiet-core-bot.tools.call(calendarCreate.id, {
+await tools.call(calendarCreate.id, {
   summary: "Planning",
   start: "2026-05-09T14:00:00Z",
 });
@@ -168,9 +168,9 @@ after async continuations.
 The runtime exposes only:
 
 - `console.log`, `console.warn`, and `console.error`
-- `quiet-core-bot.tools.search`
-- `quiet-core-bot.tools.describe`
-- `quiet-core-bot.tools.call`
+- `tools.search`
+- `tools.describe`
+- `tools.call`
 
 Normal Quiet Core bot behavior still applies to final calls:
 

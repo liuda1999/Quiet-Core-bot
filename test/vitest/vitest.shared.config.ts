@@ -17,6 +17,16 @@ import {
 import { loadVitestExperimentalConfig } from "./vitest.performance-config.ts";
 import { shouldPrintVitestThrottle } from "./vitest.system-load.ts";
 
+// Bound native thread pools for the whole Vitest run. Rust-based addons loaded by
+// tests (rolldown via tsdown and similar) size their rayon/tokio pools from the
+// host CPU count; spawning that many native threads inside the Vitest process
+// aborts the run with a native access violation (0xC0000005 on Windows). Set the
+// budget on the main process env so every worker inherits it (worker-thread writes
+// stay thread-local and native `getenv()` cannot see them). "1" matches the repo
+// runner's default native worker budget; an explicit env override still wins.
+process.env.RAYON_NUM_THREADS ??= "1";
+process.env.TOKIO_WORKER_THREADS ??= "1";
+
 type VitestHostInfo = {
   cpuCount?: number;
   loadAverage1m?: number;

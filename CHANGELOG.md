@@ -2,6 +2,32 @@
 
 Docs: https://github.com/liuda1999/Quiet-Core-bot
 
+## 0.1.1
+
+### 亮点
+
+- **网关可自愈：** 配置变更触发的自重启不再在无控制台环境下卡死，网关在 9 秒内自动恢复。
+- **任务状态口径统一：** 「执行失败」与「投递失败」彻底分离，无渠道时的投递失败不再把成功执行计入 issues。
+- **全新克隆可启动：** 补齐工作区模板，`onboard` / `setup` 不再因缺少模板中止。
+- **开箱可用：** 记忆检索默认走 FTS 关键词检索，不再因未安装 ollama 而 fail-closed。
+- **工具面收敛：** 移除本发行版永远无法调用的 `x_search` / `code_execution`。
+
+### 修复
+
+- **网关自愈（daemon）：** 交接脚本改用 cmd 原生命令（`schtasks /Query`、`ping -n`）做状态探测与等待，替代无控制台时会永久挂住的 `powershell | findstr`，消除网关停摆需人工拉起的问题；保留重试上限与「恰好一个终止标记」收尾语义。
+- **任务与投递（cron/tasks）：** `CronRunLogEntry` 新增可选 `errorKind`，`errorKind=delivery-target` 时任务恢复与实时台账判为成功，运行日志仍保留投递失败证据；command 任务的投递失败同样转发 `applyJobResult`；`message` 的 dry-run payload 回显正文、broadcast dry-run 不再谎报 succeeded、渠道解析失败不再新建空会话。
+- **工作区模板（workspace）：** `.gitignore` 的 `IDENTITY.md` / `USER.md` 规则锚定仓库根，补齐 `docs/reference/templates/IDENTITY.md` 与 `USER.md`；可选引导文件模板缺失时跳过而非硬失败。
+- **CLI 语义（cli）：** `--channel` 帮助枚举由真实可用渠道推导；帮助横幅提交号运行时回填；`channels add` 非 TTY 明确报错并退出非 0；`channels status` 网关不可达时退出码非 0；TUI 非交互终端明确拒绝且不提交孤立的 user 消息；`cron` 命令族统一「位置参数 + `--id` 兼容」。
+- **记忆检索（onboarding）：** 非嵌入类认证下显式写入 `agents.defaults.memorySearch.provider = "none"`，并在 doctor / embeddings 侧提示如何开启语义检索。
+- **权限提示（gateway）：** 1008 关闭时输出 `devices list` / `devices approve` 修复指引。
+- **工具面（tools）：** 移除无工具工厂与注册的 `x_search` / `code_execution` 相关目录条目、行为集合与展示配置；保留 `tools.web.x_search` 的 legacy schema、secrets 兜底与 doctor 迁移以兼容老配置。
+- **扩展与构建（extensions/build）：** qa-lab 私有入口改为惰性加载 + 可诊断降级；安全审计不再仅凭参数量阈值把用户显式配置的本地默认主模型判为 critical；修正 bundled 插件清单生成器仍匹配旧清单名的正则；`@matrix-org/matrix-sdk-crypto-nodejs` 停用安装期原生构建，插件按需加载并具备运行时自愈。
+- **测试与开发体验：** 收敛 Vitest 原生线程池（`RAYON_NUM_THREADS` / `TOKIO_WORKER_THREADS`），消除 Windows 下原生访问违规（`0xC0000005`）导致的测试进程崩溃；修正 Windows 路径分隔符导致的会话导出模板用例回退读真实 vendor 文件。
+
+### 品牌
+
+- 清理测试断言与 IRC 渠道占位符中的旧名残留（统一为 `quiet-core-bot` / `#quiet-core-bot`）；协议字段、状态目录与 `QUIET_CORE_*` 环境变量前缀保持兼容不变。
+
 ## Rebrand to `quiet-core-bot`
 
 This completes the rebrand that the independence note below introduces:

@@ -8,7 +8,9 @@ import { describe, expect, it } from "vitest";
 
 describe("normalizeTranscriptForMatch", () => {
   it("normalizes punctuation and common Quiet Core bot live transcription variants", () => {
-    expect(normalizeTranscriptForMatch("Open-Claw integration OK")).toBe("quiet-core-botintegrationok");
+    expect(normalizeTranscriptForMatch("Quiet Core bot integration OK")).toBe(
+      "quietcorebotintegrationok",
+    );
     expect(normalizeTranscriptForMatch("Testing OpenFlaw realtime transcription")).toMatch(
       /open(?:claw|flaw)/,
     );

@@ -219,7 +219,8 @@ describe("skills verify CLI", () => {
       tag: undefined,
       baseUrl: "https://clawhub.ai",
     });
-    const payload = JSON.parse(mocks.runtimeStdout.at(-1) ?? "{}") as { openclaw?: { resolution?: { source?: string; selector?: string } };
+    const payload = JSON.parse(mocks.runtimeStdout.at(-1) ?? "{}") as {
+      openclaw?: { resolution?: { source?: string; selector?: string } };
     };
     expect(payload.openclaw?.resolution).toMatchObject({
       source: "registry",
@@ -270,7 +271,7 @@ describe("skills verify CLI", () => {
   it("surfaces only server-verified source provenance in verify JSON", async () => {
     const sourceUrl = "https://github.com/openclaw/skills/tree/main/agentreceipt";
     const verifiedSourceUrl =
-      "https://github.com/openclaw/skills/tree/0123456789abcdef0123456789abcdef01234567/agentreceipt";
+      "https://github.com/quiet-core-bot/skills/tree/0123456789abcdef0123456789abcdef01234567/agentreceipt";
     mocks.fetchClawHubSkillVerificationMock.mockResolvedValueOnce({
       schema: "clawhub.skill.verify.v1",
       ok: true,
@@ -296,7 +297,8 @@ describe("skills verify CLI", () => {
 
     await runCommand(["skills", "verify", "agentreceipt"]);
 
-    const payload = JSON.parse(mocks.runtimeStdout.at(-1) ?? "{}") as { openclaw?: { verifiedSourceUrl?: string };
+    const payload = JSON.parse(mocks.runtimeStdout.at(-1) ?? "{}") as {
+      openclaw?: { verifiedSourceUrl?: string };
     };
     expect(payload.openclaw?.verifiedSourceUrl).toBe(verifiedSourceUrl);
     expect(mocks.defaultRuntime.exit).not.toHaveBeenCalled();
@@ -324,7 +326,8 @@ describe("skills verify CLI", () => {
 
     await runCommand(["skills", "verify", "agentreceipt"]);
 
-    const payload = JSON.parse(mocks.runtimeStdout.at(-1) ?? "{}") as { openclaw?: { verifiedSourceUrl?: string };
+    const payload = JSON.parse(mocks.runtimeStdout.at(-1) ?? "{}") as {
+      openclaw?: { verifiedSourceUrl?: string };
     };
     expect(payload.openclaw?.verifiedSourceUrl).toBeUndefined();
     expect(mocks.defaultRuntime.exit).not.toHaveBeenCalled();

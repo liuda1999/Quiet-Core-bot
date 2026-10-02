@@ -1841,7 +1841,7 @@ describe("agent event handler", () => {
         name: "tool_search_code",
         toolCallId: "tool-search-node-1",
         args: {
-          code: 'return await quiet-core-bot.tools.call("quiet-core-bot:core:exec", { command: "echo hi" });',
+          code: 'return await tools.call("quiet-core-bot:core:exec", { command: "echo hi" });',
         },
       },
     });

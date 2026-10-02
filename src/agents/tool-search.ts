@@ -249,7 +249,7 @@ function settleBridge(message) {
 }
 
 function buildModelScriptSource(code) {
-  return "(async (openclaw, console) => {\n" + code + "\n})(openclaw, console)";
+  return "(async (tools, console) => {\n" + code + "\n})(tools, console)";
 }
 
 function buildControllerSource() {
@@ -303,15 +303,13 @@ function buildControllerSource() {
     "  warn: (...items) => logs.push(items.map(formatLogItem)),\n" +
     "  error: (...items) => logs.push(items.map(formatLogItem)),\n" +
     "});\n" +
-    "const openclaw = Object.freeze({\n" +
-    "  tools: Object.freeze({\n" +
-    "    search: (query, options) => bridge('search', [query, options]),\n" +
-    "    describe: (id) => bridge('describe', [id]),\n" +
-    "    call: (id, input) => bridge('call', [id, input]),\n" +
-    "  }),\n" +
+    "const tools = Object.freeze({\n" +
+    "  search: (query, options) => bridge('search', [query, options]),\n" +
+    "  describe: (id) => bridge('describe', [id]),\n" +
+    "  call: (id, input) => bridge('call', [id, input]),\n" +
     "});\n" +
     "return Object.freeze({\n" +
-    "  openclaw,\n" +
+    "  tools,\n" +
     "  console,\n" +
     "  isBridgeIdle,\n" +
     "  waitForBridgeIdle,\n" +
@@ -357,7 +355,7 @@ async function runModelCode(code, timeoutMs) {
   });
   Object.defineProperties(sandbox, {
     console: { value: controller.console, enumerable: true },
-    openclaw: { value: controller.openclaw, enumerable: true },
+    tools: { value: controller.tools, enumerable: true },
   });
   activeController = controller;
   const pumpTimer = setInterval(() => pumpController(controller), 1);
@@ -1597,7 +1595,7 @@ function formatUnknownToolIdError(
   ).slice(0, 3);
   const recoveryText =
     options.recoverySurface === "code-mode"
-      ? "Use quiet-core-bot.tools.search to find a tool, quiet-core-bot.tools.describe to inspect it, then quiet-core-bot.tools.call with the exact id or name."
+      ? "Use tools.search to find a tool, tools.describe to inspect it, then tools.call with the exact id or name."
       : options.recoverySurface === "tools"
         ? "Use tools.search to find a tool, tools.describe to inspect it, then tools.call with the exact id or name."
         : "Use tool_search to find a tool, tool_describe to inspect it, then tool_call with the exact id or name.";
@@ -2265,11 +2263,11 @@ export function createToolSearchTools(ctx: ToolSearchToolContext): AnyAgentTool[
       name: TOOL_SEARCH_CODE_MODE_TOOL_NAME,
       label: "Tool Search Code",
       description:
-        "Run JavaScript in an isolated Node subprocess with quiet-core-bot.tools.search, quiet-core-bot.tools.describe, and quiet-core-bot.tools.call for large tool catalogs.",
+        "Run JavaScript in an isolated Node subprocess with tools.search, tools.describe, and tools.call for large tool catalogs.",
       parameters: Type.Object({
         code: Type.String({
           description:
-            "JavaScript body for an async function. Use return to return the final value. The quiet-core-bot.tools bridge is available.",
+            "JavaScript body for an async function. Use return to return the final value. The tools bridge is available.",
         }),
       }),
       execute: async (

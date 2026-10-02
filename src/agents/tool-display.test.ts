@@ -11,7 +11,7 @@ describe("tool display details", () => {
   it("summarizes tool-search code targets from described tool ids", () => {
     expect(
       resolveToolSearchCodeDisplayTarget({
-        code: "const tool = await quiet-core-bot.tools.describe('quiet-core-bot:core:exec'); return await quiet-core-bot.tools.call(tool.id, { command: 'echo hi' });",
+        code: "const tool = await tools.describe('quiet-core-bot:core:exec'); return await tools.call(tool.id, { command: 'echo hi' });",
       }),
     ).toEqual({
       toolName: "quiet-core-bot:core:exec",
@@ -25,7 +25,7 @@ describe("tool display details", () => {
   it("normalizes direct tool-search catalog ids to native display names and args", () => {
     expect(
       resolveToolSearchCodeDisplayTarget({
-        code: 'return await quiet-core-bot.tools.call("quiet-core-bot:core:exec", { command: "echo hi" });',
+        code: 'return await tools.call("quiet-core-bot:core:exec", { command: "echo hi" });',
       }),
     ).toEqual({
       toolName: "quiet-core-bot:core:exec",
@@ -39,7 +39,7 @@ describe("tool display details", () => {
   it("preserves JS numeric literals in tool-search call args", () => {
     expect(
       resolveToolSearchCodeDisplayTarget({
-        code: 'return await quiet-core-bot.tools.call("web_search", { query: "Quiet Core bot", count: 1e3, limit: +3, threshold: .5 });',
+        code: 'return await tools.call("web_search", { query: "Quiet Core bot", count: 1e3, limit: +3, threshold: .5 });',
       })?.displayArgs,
     ).toEqual({
       query: "Quiet Core bot",

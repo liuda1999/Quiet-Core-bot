@@ -11,15 +11,15 @@ describe("shared/assistant-identity-values", () => {
 
   it("trims values and preserves strings within the limit", () => {
     expect(coerceIdentityValue("  QuietCore  ", 20)).toBe("QuietCore");
-    expect(coerceIdentityValue("  QuietCore  ", 8)).toBe("QuietCore");
+    expect(coerceIdentityValue("  QuietCore  ", 9)).toBe("QuietCore");
   });
 
   it("truncates overlong trimmed values at the exact limit", () => {
-    expect(coerceIdentityValue("  QuietCore Assistant  ", 8)).toBe("QuietCore");
+    expect(coerceIdentityValue("  QuietCore Assistant  ", 9)).toBe("QuietCore");
   });
 
   it("returns an empty string when truncating to a zero-length limit", () => {
     expect(coerceIdentityValue("  QuietCore  ", 0)).toBe("");
-    expect(coerceIdentityValue("  QuietCore  ", -1)).toBe("OpenCla");
+    expect(coerceIdentityValue("  QuietCore  ", -1)).toBe("QuietCor");
   });
 });

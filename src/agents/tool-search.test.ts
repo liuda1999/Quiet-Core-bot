@@ -138,9 +138,9 @@ describe("Tool Search", () => {
     });
     const result = await runtimeCodeTool.execute("call-1", {
       code: `
-        const hits = await openclaw.tools.search("ticket", { limit: 1 });
-        const described = await openclaw.tools.describe(hits[0].id);
-        return await openclaw.tools.call(described.id, { value: "ship" });
+        const hits = await tools.search("ticket", { limit: 1 });
+        const described = await tools.describe(hits[0].id);
+        return await tools.call(described.id, { value: "ship" });
       `,
     });
 
@@ -930,7 +930,7 @@ describe("Tool Search", () => {
       config: {},
     });
     await runtimeCodeTool.execute("call-hooks", {
-      code: `return await quiet-core-bot.tools.call("fake_hooked", { value: "ok" });`,
+      code: `return await tools.call("fake_hooked", { value: "ok" });`,
     });
     const targetCall = mockCall(vi.mocked(target.execute));
     expect(targetCall[0]).toBe("tool_search_code:call-hooks:fake_hooked:1");
@@ -985,8 +985,8 @@ describe("Tool Search", () => {
     });
     await runtimeCodeTool.execute("call-repeated", {
       code: `
-        await quiet-core-bot.tools.call("fake_repeated", { value: "one" });
-        return await quiet-core-bot.tools.call("fake_repeated", { value: "two" });
+        await tools.call("fake_repeated", { value: "one" });
+        return await tools.call("fake_repeated", { value: "two" });
       `,
     });
 
@@ -1003,7 +1003,7 @@ describe("Tool Search", () => {
     expect(secondCall[3]).toBeUndefined();
     expect(secondCall[4]).toBeUndefined();
     await runtimeCodeTool.execute("call-repeated-again", {
-      code: `return await quiet-core-bot.tools.call("fake_repeated", { value: "three" });`,
+      code: `return await tools.call("fake_repeated", { value: "three" });`,
     });
 
     const thirdCall = mockCall(vi.mocked(target.execute), 2);
@@ -1040,7 +1040,7 @@ describe("Tool Search", () => {
     await runtimeCodeTool.execute(
       "call-lifecycle",
       {
-        code: `return await quiet-core-bot.tools.call("fake_lifecycle", { value: "ok" });`,
+        code: `return await tools.call("fake_lifecycle", { value: "ok" });`,
       },
       undefined,
       onUpdate,
@@ -1195,7 +1195,7 @@ describe("Tool Search", () => {
     });
     const result = await runtimeCodeTool.execute("call-fire-and-forget", {
       code: `
-        quiet-core-bot.tools.call("fake_fire_and_forget", { value: "late" });
+        tools.call("fake_fire_and_forget", { value: "late" });
         return "done";
       `,
     });
@@ -1236,7 +1236,7 @@ describe("Tool Search", () => {
     const resultPromise = runtimeCodeTool
       .execute("call-started-bridge", {
         code: `
-          quiet-core-bot.tools.call("fake_then_started", { value: "started" }).then(() => {});
+          tools.call("fake_then_started", { value: "started" }).then(() => {});
           return "done";
         `,
       })
@@ -1283,7 +1283,7 @@ describe("Tool Search", () => {
     ).rejects.toThrow();
     await expect(
       runtimeCodeTool.execute("call-bridge-escape", {
-        code: `return quiet-core-bot.tools.call.constructor.constructor("return process")();`,
+        code: `return tools.call.constructor.constructor("return process")();`,
       }),
     ).rejects.toThrow();
   });
@@ -1342,7 +1342,9 @@ describe("Tool Search", () => {
         id: "file_write",
         args: {},
       }),
-    ).rejects.toThrow("Did you mean: openclaw:first-plugin:write, openclaw:second-plugin:write?");
+    ).rejects.toThrow(
+      "Did you mean: quiet-core-bot:first-plugin:write, quiet-core-bot:second-plugin:write?",
+    );
   });
 
   it("keeps raw Tool Search recovery guidance when no suggestion matches", async () => {
@@ -1393,10 +1395,10 @@ describe("Tool Search", () => {
 
     await expect(
       runtimeCodeTool.execute("call-code-guessed-file-write", {
-        code: `return await quiet-core-bot.tools.call("file_write", { path: "memory/2026-05-22.md" });`,
+        code: `return await tools.call("file_write", { path: "memory/2026-05-22.md" });`,
       }),
     ).rejects.toThrow(
-      "Unknown tool id: file_write. Did you mean: write? Use quiet-core-bot.tools.search to find a tool, quiet-core-bot.tools.describe to inspect it, then quiet-core-bot.tools.call with the exact id or name.",
+      "Unknown tool id: file_write. Did you mean: write? Use tools.search to find a tool, tools.describe to inspect it, then tools.call with the exact id or name.",
     );
     expect(writeTool.execute).not.toHaveBeenCalled();
   });
@@ -1418,10 +1420,10 @@ describe("Tool Search", () => {
 
     await expect(
       runtimeCodeTool.execute("call-missing-tool", {
-        code: `return await quiet-core-bot.tools.call("missing_tool", {});`,
+        code: `return await tools.call("missing_tool", {});`,
       }),
     ).rejects.toThrow(
-      "Unknown tool id: missing_tool. Use quiet-core-bot.tools.search to find a tool, quiet-core-bot.tools.describe to inspect it, then quiet-core-bot.tools.call with the exact id or name.",
+      "Unknown tool id: missing_tool. Use tools.search to find a tool, tools.describe to inspect it, then tools.call with the exact id or name.",
     );
   });
 
@@ -1445,7 +1447,7 @@ describe("Tool Search", () => {
     await expect(
       runtimeCodeTool.execute("call-bridge-result-escape", {
         code: `
-          const hits = await quiet-core-bot.tools.search("bridge result", { limit: 1 });
+          const hits = await tools.search("bridge result", { limit: 1 });
           return hits.constructor.constructor("return process")();
         `,
       }),
@@ -1514,7 +1516,7 @@ describe("Tool Search", () => {
     await expect(
       runtimeCodeTool.execute("call-timeout", {
         code: `
-            await quiet-core-bot.tools.search("timeout", { limit: 1 });
+            await tools.search("timeout", { limit: 1 });
             while (true) {}
           `,
       }),
@@ -1572,7 +1574,7 @@ describe("Tool Search", () => {
 
     await expect(
       runtimeCodeTool.execute("call-abort-timeout", {
-        code: `return await quiet-core-bot.tools.call("fake_abort_on_timeout", { value: "wait" });`,
+        code: `return await tools.call("fake_abort_on_timeout", { value: "wait" });`,
       }),
     ).rejects.toThrow("tool_search_code timed out");
     if (!observedSignal) {
