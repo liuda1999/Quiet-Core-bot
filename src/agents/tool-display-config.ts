@@ -426,11 +426,6 @@ export const TOOL_DISPLAY_CONFIG: ToolDisplayConfig = {
       title: "Web Fetch",
       detailKeys: ["url", "extractMode", "maxChars"],
     },
-    code_execution: {
-      emoji: "🧮",
-      title: "Code Execution",
-      detailKeys: ["task"],
-    },
     message: {
       emoji: "✉️",
       title: "Message",

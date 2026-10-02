@@ -110,7 +110,6 @@ const REPLAY_SAFE_TOOL_NAMES = new Set([
   "update_plan",
   "web_fetch",
   "web_search",
-  "x_search",
 ]);
 
 const BROWSER_READ_ONLY_ACTIONS = new Set(["console", "profiles", "snapshot", "status", "tabs"]);

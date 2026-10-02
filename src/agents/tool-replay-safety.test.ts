@@ -24,11 +24,11 @@ describe("agent tool replay safety", () => {
   });
 
   it("accepts opted-in extension tools only for audited names", () => {
-    const xSearch = { name: "x_search" };
+    const webFetch = { name: "web_fetch" };
     const vendorWidget = { name: "vendor_widget" };
     const declaredReplaySafe = () => true;
 
-    expect(isAgentToolReplaySafe(xSearch, { declaredReplaySafe })).toBe(true);
+    expect(isAgentToolReplaySafe(webFetch, { declaredReplaySafe })).toBe(true);
     expect(isAgentToolReplaySafe(vendorWidget, { declaredReplaySafe })).toBe(false);
   });
 

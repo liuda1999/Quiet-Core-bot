@@ -12,7 +12,6 @@ const UNCONDITIONALLY_REPLAY_SAFE_TOOL_NAMES = new Set([
   "ls",
   "web_search",
   "web_fetch",
-  "x_search",
   "memory_get",
   "sessions_list",
   "sessions_history",

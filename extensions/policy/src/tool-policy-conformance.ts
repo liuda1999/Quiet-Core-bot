@@ -1,10 +1,8 @@
 // Policy plugin module implements tool policy conformance behavior.
 export const POLICY_TOOL_GROUPS: Record<string, readonly string[]> = {
   "group:quiet-core-bot": [
-    "code_execution",
     "web_search",
     "web_fetch",
-    "x_search",
     "memory_search",
     "memory_get",
     "sessions_list",
@@ -29,8 +27,8 @@ export const POLICY_TOOL_GROUPS: Record<string, readonly string[]> = {
     "tts",
   ],
   "group:fs": ["read", "write", "edit", "apply_patch"],
-  "group:runtime": ["exec", "process", "code_execution"],
-  "group:web": ["web_search", "web_fetch", "x_search"],
+  "group:runtime": ["exec", "process"],
+  "group:web": ["web_search", "web_fetch"],
   "group:memory": ["memory_search", "memory_get"],
   "group:sessions": [
     "sessions_list",

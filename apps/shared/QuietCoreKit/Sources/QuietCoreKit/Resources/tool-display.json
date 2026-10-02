@@ -608,13 +608,6 @@
         "maxChars"
       ]
     },
-    "code_execution": {
-      "emoji": "🧮",
-      "title": "Code Execution",
-      "detailKeys": [
-        "task"
-      ]
-    },
     "message": {
       "emoji": "✉️",
       "title": "Message",

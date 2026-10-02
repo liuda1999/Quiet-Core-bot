@@ -22,7 +22,7 @@ function requirePolicyAllow(profile: Parameters<typeof resolveCoreToolProfilePol
 }
 
 describe("tool-catalog", () => {
-  it("includes code_execution, web_search, x_search, web_fetch, and update_plan in the coding profile policy", () => {
+  it("includes web_search, web_fetch, and update_plan in the coding profile policy", () => {
     const policy = requireCoreToolProfilePolicy("coding");
     expect(policy.allow).toEqual([
       "read",
@@ -31,10 +31,8 @@ describe("tool-catalog", () => {
       "apply_patch",
       "exec",
       "process",
-      "code_execution",
       "web_search",
       "web_fetch",
-      "x_search",
       "memory_search",
       "memory_get",
       "sessions_list",

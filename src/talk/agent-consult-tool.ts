@@ -75,7 +75,6 @@ const SAFE_READ_ONLY_TOOLS = [
   "read",
   "web_search",
   "web_fetch",
-  "x_search",
   "memory_search",
   "memory_get",
 ] as const;

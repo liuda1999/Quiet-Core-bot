@@ -140,7 +140,6 @@ describe("realtime voice agent consult runtime", () => {
       "read",
       "web_search",
       "web_fetch",
-      "x_search",
       "memory_search",
       "memory_get",
     ]);

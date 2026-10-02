@@ -12,15 +12,7 @@ import { isPathInside } from "../infra/path-guards.js";
 
 const SAFE_SEARCH_TOOL_IDS = new Set(["search", "web_search", "memory_search"]);
 const TRUSTED_SAFE_TOOL_ALIASES = new Set(["search"]);
-const EXEC_CAPABLE_TOOL_IDS = new Set([
-  "exec",
-  "spawn",
-  "shell",
-  "bash",
-  "process",
-  "code_execution",
-  "nodes",
-]);
+const EXEC_CAPABLE_TOOL_IDS = new Set(["exec", "spawn", "shell", "bash", "process", "nodes"]);
 const CONTROL_PLANE_TOOL_IDS = new Set([
   "cron",
   "gateway",
