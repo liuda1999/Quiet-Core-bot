@@ -1,5 +1,6 @@
 // CLI channel option formatter backed by generated startup metadata when available.
 import { uniqueStrings } from "@quiet-core/normalization-core/string-normalization";
+import { listBundledChannelCatalogEntries } from "../channels/bundled-channel-catalog-read.js";
 import { readCliStartupMetadata } from "./startup-metadata.js";
 
 function dedupe(values: string[]): string[] {
@@ -7,6 +8,7 @@ function dedupe(values: string[]): string[] {
 }
 
 let precomputedChannelOptions: string[] | null | undefined;
+let liveChannelOptions: string[] | undefined;
 
 function loadPrecomputedChannelOptions(): string[] | null {
   if (precomputedChannelOptions !== undefined) {
@@ -27,9 +29,26 @@ function loadPrecomputedChannelOptions(): string[] | null {
   return null;
 }
 
+function loadLiveChannelOptions(): string[] {
+  // Metadata can be missing or stale (source checkout before `pnpm build`); fall
+  // back to the live bundled catalog so help never renders an empty channel enum.
+  if (liveChannelOptions !== undefined) {
+    return liveChannelOptions;
+  }
+  try {
+    liveChannelOptions = dedupe(listBundledChannelCatalogEntries().map((entry) => entry.id));
+  } catch {
+    liveChannelOptions = [];
+  }
+  return liveChannelOptions;
+}
+
 export function resolveCliChannelOptions(): string[] {
   const precomputed = loadPrecomputedChannelOptions();
-  return precomputed ?? [];
+  if (precomputed && precomputed.length > 0) {
+    return precomputed;
+  }
+  return loadLiveChannelOptions();
 }
 
 export function formatCliChannelOptions(extra: string[] = []): string {
@@ -40,6 +59,7 @@ export function formatCliChannelOptions(extra: string[] = []): string {
 export const testing = {
   resetPrecomputedChannelOptionsForTests(): void {
     precomputedChannelOptions = undefined;
+    liveChannelOptions = undefined;
   },
 };
 export { testing as __testing };

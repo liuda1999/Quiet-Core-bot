@@ -11,8 +11,10 @@ import {
   canSubmitTuiChatMessage,
   createDeferredTuiFinish,
   drainAndStopTuiSafely,
+  guardTuiInteractiveTerminal,
   installTuiTerminalLossExitHandler,
   isIgnorableTuiStopError,
+  isTuiInteractiveTerminal,
   isTuiTerminalLossError,
   resolveCodexCliBin,
   resolveCtrlCAction,
@@ -30,6 +32,7 @@ import {
   resolveTuiSessionKey,
   scheduleProcessExitAfterTuiReturn,
   stopTuiSafely,
+  TUI_REQUIRES_TTY_MESSAGE,
 } from "./tui.js";
 
 describe("resolveFinalAssistantText", () => {
@@ -596,6 +599,75 @@ describe("TUI shutdown safety", () => {
       "quiet-core-bot tui forcing process exit after return\n",
     );
     expect(exit).toHaveBeenCalledWith(0);
+  });
+});
+
+describe("TUI interactive terminal guard", () => {
+  it("allows startup when stdin is a TTY", () => {
+    expect(isTuiInteractiveTerminal({ isTTY: true })).toBe(true);
+    const writeError = vi.fn();
+    const exit = vi.fn();
+
+    expect(guardTuiInteractiveTerminal({ input: { isTTY: true }, writeError, exit })).toBe(false);
+    expect(writeError).not.toHaveBeenCalled();
+    expect(exit).not.toHaveBeenCalled();
+  });
+
+  it("treats a missing isTTY as non-interactive", () => {
+    expect(isTuiInteractiveTerminal({})).toBe(false);
+  });
+
+  it("non-TTY: aborts before submitting the --message (no orphan user turn)", () => {
+    const submitted: string[] = [];
+    const submitMessage = (text: string) => submitted.push(text);
+
+    const blocked = guardTuiInteractiveTerminal({
+      input: { isTTY: false },
+      writeError: () => {},
+      exit: () => {},
+    });
+    if (!blocked) {
+      submitMessage("hello from tui test");
+    }
+
+    expect(blocked).toBe(true);
+    expect(submitted).toEqual([]);
+  });
+
+  it("non-TTY: prints the hint and exits non-zero", () => {
+    const writeError = vi.fn();
+    const exit = vi.fn();
+
+    const blocked = guardTuiInteractiveTerminal({
+      input: { isTTY: false },
+      writeError,
+      exit,
+    });
+
+    expect(blocked).toBe(true);
+    expect(exit).toHaveBeenCalledWith(1);
+    expect(writeError).toHaveBeenCalledTimes(1);
+    const hint = writeError.mock.calls[0]?.[0] as string;
+    expect(hint).toContain("interactive terminal");
+    expect(hint).toContain("quiet-core-bot agent --message");
+    expect(TUI_REQUIRES_TTY_MESSAGE).toContain("interactive terminal");
+  });
+
+  it("defaults to process.stdin.isTTY (setTTY)", () => {
+    const original = Object.getOwnPropertyDescriptor(process.stdin, "isTTY");
+    try {
+      Object.defineProperty(process.stdin, "isTTY", { value: false, configurable: true });
+      expect(guardTuiInteractiveTerminal({ writeError: vi.fn(), exit: vi.fn() })).toBe(true);
+
+      Object.defineProperty(process.stdin, "isTTY", { value: true, configurable: true });
+      expect(guardTuiInteractiveTerminal({ writeError: vi.fn(), exit: vi.fn() })).toBe(false);
+    } finally {
+      if (original) {
+        Object.defineProperty(process.stdin, "isTTY", original);
+      } else {
+        delete (process.stdin as { isTTY?: boolean }).isTTY;
+      }
+    }
   });
 });
 

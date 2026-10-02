@@ -4,6 +4,7 @@ import { buildProgram } from "./program.js";
 import {
   configureCommand,
   ensureConfigReady,
+  guardTuiInteractiveTerminal,
   runCrestodian,
   runTui,
   runtime,
@@ -81,6 +82,20 @@ describe("cli program (smoke)", () => {
     expect(runtime.error).toHaveBeenCalledWith('warning: invalid --timeout-ms "nope"; ignoring');
     const options = firstMockArg(runTui) as { timeoutMs?: number };
     expect(options?.timeoutMs).toBeUndefined();
+  });
+
+  it("blocks tui startup without an interactive terminal", async () => {
+    guardTuiInteractiveTerminal.mockImplementationOnce(
+      (params: { writeError: (text: string) => void; exit: (code: number) => void }) => {
+        params.writeError("no interactive terminal");
+        params.exit(1);
+        return true;
+      },
+    );
+
+    await expect(runProgram(["tui", "--message", "hi"])).rejects.toThrow("exit");
+    expect(runtime.exit).toHaveBeenCalledWith(1);
+    expect(runTui).not.toHaveBeenCalled();
   });
 
   it("rejects partial tui history limits", async () => {

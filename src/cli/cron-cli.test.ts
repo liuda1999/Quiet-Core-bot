@@ -847,6 +847,37 @@ describe("cron cli", () => {
     );
   });
 
+  it("cron runs accepts the id positionally and via --id", async () => {
+    await runCronCommand(["cron", "runs", "job-1"]);
+    expect(callGatewayFromCli.mock.calls.find((call) => call[0] === "cron.runs")?.[2]).toEqual({
+      id: "job-1",
+      limit: 50,
+    });
+
+    await runCronCommand(["cron", "runs", "--id", "job-1"]);
+    expect(callGatewayFromCli.mock.calls.find((call) => call[0] === "cron.runs")?.[2]).toEqual({
+      id: "job-1",
+      limit: 50,
+    });
+  });
+
+  it("cron get accepts the id positionally and via --id", async () => {
+    await runCronCommand(["cron", "get", "job-1"]);
+    expect(callGatewayFromCli.mock.calls.find((call) => call[0] === "cron.get")?.[2]).toEqual({
+      id: "job-1",
+    });
+
+    await runCronCommand(["cron", "get", "--id", "job-1"]);
+    expect(callGatewayFromCli.mock.calls.find((call) => call[0] === "cron.get")?.[2]).toEqual({
+      id: "job-1",
+    });
+  });
+
+  it("requires a cron runs id when neither form is provided", async () => {
+    await expectCronCommandExit(["cron", "runs"]);
+    expectRuntimeErrorContaining("Cron job id is required");
+  });
+
   it("paginates cron show lookups", async () => {
     resetGatewayMock();
     callGatewayFromCli.mockImplementation(
@@ -963,6 +994,28 @@ describe("cron cli", () => {
     expect(output.params?.name).toBe("No agent JSON");
     expect(output.params?.payload?.kind).toBe("agentTurn");
     expect(output.params?.payload?.message).toBe("hello");
+  });
+
+  it("keeps cron add --json stdout a single parseable JSON document", async () => {
+    await runCronCommand([
+      "cron",
+      "add",
+      "--name",
+      "No agent JSON strict",
+      "--cron",
+      "* * * * *",
+      "--message",
+      "hello",
+      "--json",
+    ]);
+
+    // The human hint must stay off stdout so the whole stdout parses as one JSON document.
+    const stdout = stdoutText().trim();
+    expect(stdout).not.toContain("No --agent specified");
+    const output = JSON.parse(stdout) as { ok?: unknown; params?: { name?: unknown } };
+    expect(output.ok).toBe(true);
+    expect(output.params?.name).toBe("No agent JSON strict");
+    expect(runtimeErrorMessages().join("\n")).toContain("No --agent specified");
   });
 
   it("warns when --agent is blank on cron add with --message", async () => {

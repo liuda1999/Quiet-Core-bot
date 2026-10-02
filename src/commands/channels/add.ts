@@ -24,9 +24,13 @@ import { createClackPrompter } from "../../wizard/clack-prompter.js";
 import { WizardCancelledError } from "../../wizard/prompts.js";
 import { applyAgentBindings, describeBinding } from "../agents.bindings.js";
 import type { ChannelChoice } from "../onboard-types.js";
-import { applyAccountName, applyChannelAccountConfig } from "./add-mutators.js";
+import {
+  applyAccountName,
+  applyBundledChannelRequiredDefaults,
+  applyChannelAccountConfig,
+} from "./add-mutators.js";
 import { channelLabel } from "./runtime-label.js";
-import { requireValidConfigFileSnapshot, shouldUseWizard } from "./shared.js";
+import { hasInteractiveTty, requireValidConfigFileSnapshot, shouldUseWizard } from "./shared.js";
 
 type ChannelSetupPluginInstallModule = typeof import("../channel-setup/plugin-install.js");
 type OnboardChannelsModule = typeof import("../onboard-channels.js");
@@ -158,6 +162,13 @@ async function channelsAddCommandImpl(
 
   const useWizard = shouldUseWizard(params);
   if (useWizard) {
+    if (!hasInteractiveTty()) {
+      runtime.error(
+        "Channel setup needs an interactive terminal. Re-run with --channel <name> and its setup flags, or see `quiet-core-bot channels add --help`.",
+      );
+      runtime.exit(1);
+      return;
+    }
     const [{ buildAgentSummaries }, onboardChannels] = await Promise.all([
       import("../agents.config.js"),
       loadOnboardChannels(),
@@ -429,6 +440,8 @@ async function channelsAddCommandImpl(
     input,
     plugin,
   });
+  // Persist schema-required defaults so the written channel section stays valid.
+  nextConfig = applyBundledChannelRequiredDefaults({ cfg: nextConfig, channel });
   await plugin.lifecycle?.onAccountConfigChanged?.({
     prevCfg: prevConfig,
     nextCfg: nextConfig,

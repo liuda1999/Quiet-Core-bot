@@ -698,6 +698,73 @@ describe("capability cli", () => {
     expect(ids).toContain("image.describe");
   });
 
+  it("marks undeclared model capabilities as unknown in model list", async () => {
+    mocks.loadModelCatalog.mockResolvedValueOnce([
+      {
+        provider: "custom-local",
+        id: "qwen3-local",
+        name: "qwen3-local",
+        api: "openai-responses",
+        contextWindow: 128000,
+        reasoning: false,
+        input: ["text"],
+      },
+      {
+        provider: "custom-local",
+        id: "declared-text-only",
+        name: "declared-text-only",
+        reasoning: false,
+        input: ["text"],
+      },
+    ] as never);
+    mocks.getRuntimeConfigSourceSnapshot.mockReturnValueOnce({
+      models: {
+        providers: {
+          "custom-local": {
+            models: [
+              { id: "qwen3-local" },
+              { id: "declared-text-only", reasoning: false, input: ["text"] },
+            ],
+          },
+        },
+      },
+    } as never);
+
+    await runRegisteredCli({
+      register: registerCapabilityCli as (program: Command) => void,
+      argv: ["infer", "model", "list", "--json"],
+    });
+
+    expect(firstJsonOutput()).toEqual([
+      expect.objectContaining({ id: "qwen3-local", reasoning: null, input: null }),
+      expect.objectContaining({ id: "declared-text-only", reasoning: false, input: ["text"] }),
+    ]);
+  });
+
+  it("renders undeclared model capabilities as text in model list", async () => {
+    mocks.loadModelCatalog.mockResolvedValueOnce([
+      {
+        provider: "custom-local",
+        id: "qwen3-local",
+        name: "qwen3-local",
+        reasoning: false,
+        input: ["text"],
+      },
+    ] as never);
+    mocks.getRuntimeConfigSourceSnapshot.mockReturnValueOnce({
+      models: { providers: { "custom-local": { models: [{ id: "qwen3-local" }] } } },
+    } as never);
+
+    await runRegisteredCli({
+      register: registerCapabilityCli as (program: Command) => void,
+      argv: ["infer", "model", "list"],
+    });
+
+    const logged = mocks.runtime.log.mock.calls.map((call) => String(call[0] ?? "")).join("\n");
+    expect(logged).toContain('"reasoning":"undeclared"');
+    expect(logged).toContain('"input":"undeclared"');
+  });
+
   it("defaults model run to local transport", async () => {
     await runRegisteredCli({
       register: registerCapabilityCli as (program: Command) => void,
@@ -835,7 +902,10 @@ describe("capability cli", () => {
   });
 
   it("passes image files to gateway model probes as attachments", async () => {
-    const tempInput = path.join(os.tmpdir(), `quiet-core-bot-model-run-gateway-image-${Date.now()}.png`);
+    const tempInput = path.join(
+      os.tmpdir(),
+      `quiet-core-bot-model-run-gateway-image-${Date.now()}.png`,
+    );
     await fs.writeFile(tempInput, Buffer.from(PNG_1X1_BASE64, "base64"));
 
     await runRegisteredCli({
@@ -2620,7 +2690,7 @@ describe("capability cli", () => {
       argv: ["capability", "embedding", "create", "--text", "hello", "--json"],
     });
 
-    expect(firstEmbeddingProviderCall()?.provider).toBe("auto");
+    expect(firstEmbeddingProviderCall()?.provider).toBe("openai");
     expect(firstEmbeddingProviderCall()?.fallback).toBe("none");
     expect(firstJsonOutput()?.capability).toBe("embedding.create");
     expect(firstJsonOutput()?.provider).toBe("openai");
@@ -2676,6 +2746,126 @@ describe("capability cli", () => {
     expect(firstEmbeddingProviderCall()?.provider).toBe("openai");
     expect(firstEmbeddingProviderCall()?.fallback).toBe("none");
     expect(firstEmbeddingProviderCall()?.model).toBe("text-embedding-3-large");
+  });
+
+  it("prefers the configured memorySearch provider during auto resolution", async () => {
+    mocks.resolveMemorySearchConfig.mockReturnValue({ provider: "ollama" } as never);
+    mocks.listMemoryEmbeddingProviders.mockReturnValue([
+      { id: "ollama", defaultModel: "nomic-embed-text", transport: "remote" },
+      { id: "openai", defaultModel: "text-embedding-3-small", transport: "remote" },
+    ] as never);
+
+    await runRegisteredCli({
+      register: registerCapabilityCli as (program: Command) => void,
+      argv: ["capability", "embedding", "create", "--text", "hello", "--json"],
+    });
+
+    expect(firstEmbeddingProviderCall()?.provider).toBe("ollama");
+    expect(firstEmbeddingProviderCall()?.fallback).toBe("none");
+  });
+
+  it("fails auto embedding creation with the available provider list when none is usable", async () => {
+    mocks.listMemoryEmbeddingProviders.mockReturnValue([] as never);
+    mocks.listEmbeddingProviders.mockReturnValue([] as never);
+    mocks.resolveMemorySearchConfig.mockReturnValue({ provider: "none" } as never);
+
+    await expect(
+      runRegisteredCli({
+        register: registerCapabilityCli as (program: Command) => void,
+        argv: ["capability", "embedding", "create", "--text", "hello", "--json"],
+      }),
+    ).rejects.toThrow("exit 1");
+
+    expectRuntimeErrorContains("No memory embedding provider is available for embedding creation.");
+    expectRuntimeErrorContains("Current agents.defaults.memorySearch.provider: none");
+    expectRuntimeErrorContains("Available embedding providers: none");
+    expect(mocks.createEmbeddingProvider).not.toHaveBeenCalled();
+  });
+
+  it("lists available providers and the current memorySearch provider when auto embedding creation fails", async () => {
+    mocks.loadConfig.mockReturnValue({});
+    mocks.resolveMemorySearchConfig.mockReturnValue({ provider: "none" } as never);
+    mocks.listMemoryEmbeddingProviders.mockReturnValue([
+      { id: "openai-compatible", defaultModel: "text-embedding-bge-m3", transport: "remote" },
+      { id: "local", defaultModel: "local-gguf", transport: "local" },
+    ] as never);
+    mocks.createEmbeddingProvider.mockRejectedValueOnce(
+      new Error(
+        "openai-compatible embeddings: missing remote.baseUrl. Set it to your OpenAI-compatible embeddings server, for example http://127.0.0.1:11434/v1.",
+      ),
+    );
+
+    await expect(
+      runRegisteredCli({
+        register: registerCapabilityCli as (program: Command) => void,
+        argv: ["capability", "embedding", "create", "--text", "hello", "--json"],
+      }),
+    ).rejects.toThrow("exit 1");
+
+    expect(firstEmbeddingProviderCall()?.provider).toBe("openai-compatible");
+    expectRuntimeErrorContains(
+      "embedding.create failed while auto-selecting an embedding provider.",
+    );
+    expectRuntimeErrorContains("missing remote.baseUrl");
+    expectRuntimeErrorContains("Current agents.defaults.memorySearch.provider: none");
+    expectRuntimeErrorContains("Available embedding providers:");
+    expectRuntimeErrorContains("- openai-compatible (configured: false, selected: false)");
+    expectRuntimeErrorContains("- local (configured: false, selected: false)");
+    expectRuntimeErrorContains("--provider none");
+    expect(mocks.runtime.writeJson).not.toHaveBeenCalled();
+  });
+
+  it("does not wrap explicit-provider embedding failures in auto guidance", async () => {
+    mocks.loadConfig.mockReturnValue({});
+    mocks.resolveMemorySearchConfig.mockReturnValue({ provider: "none" } as never);
+    mocks.createEmbeddingProvider.mockRejectedValueOnce(
+      new Error("openai-compatible embeddings: missing remote.baseUrl."),
+    );
+
+    await expect(
+      runRegisteredCli({
+        register: registerCapabilityCli as (program: Command) => void,
+        argv: [
+          "capability",
+          "embedding",
+          "create",
+          "--provider",
+          "openai-compatible",
+          "--text",
+          "hello",
+          "--json",
+        ],
+      }),
+    ).rejects.toThrow("exit 1");
+
+    expectRuntimeErrorContains("missing remote.baseUrl");
+    expect(runtimeErrorMessages().join("\n")).not.toContain("Available embedding providers:");
+  });
+
+  it("treats --provider none as FTS-only success with enablement guidance", async () => {
+    await runRegisteredCli({
+      register: registerCapabilityCli as (program: Command) => void,
+      argv: [
+        "capability",
+        "embedding",
+        "create",
+        "--provider",
+        "none",
+        "--text",
+        "hello",
+        "--json",
+      ],
+    });
+
+    expect(mocks.createEmbeddingProvider).not.toHaveBeenCalled();
+    const output = firstJsonOutput();
+    expect(output?.ok).toBe(true);
+    expect(output?.capability).toBe("embedding.create");
+    expect(output?.provider).toBe("none");
+    expect(String(output?.note)).toContain("FTS-only mode");
+    expect(String(output?.note)).toContain(
+      "agents.defaults.memorySearch.provider openai-compatible",
+    );
   });
 
   it("cleans provider auth profiles and usage stats on logout", async () => {
@@ -2922,6 +3112,65 @@ describe("capability cli", () => {
     ]);
   });
 
+  it("fails audio providers with guidance when no audio provider is available", async () => {
+    mocks.buildMediaUnderstandingRegistry.mockReturnValueOnce(new Map());
+
+    await expect(
+      runRegisteredCli({
+        register: registerCapabilityCli as (program: Command) => void,
+        argv: ["infer", "audio", "providers", "--json"],
+      }),
+    ).rejects.toThrow("exit 1");
+    expectRuntimeErrorContains("No audio transcription providers are available");
+    expectRuntimeErrorContains("tools.media.audio.models");
+  });
+
+  it("fails web search with guidance when no provider is available", async () => {
+    const webSearchRuntime = await import("../web-search/runtime.js");
+    vi.mocked(webSearchRuntime.listWebSearchProviders).mockReturnValueOnce([]);
+
+    await expect(
+      runRegisteredCli({
+        register: registerCapabilityCli as (program: Command) => void,
+        argv: ["infer", "web", "search", "--query", "ping", "--json"],
+      }),
+    ).rejects.toThrow("exit 1");
+    expectRuntimeErrorContains("web.search is unavailable");
+    expectRuntimeErrorContains("tools.web.search");
+  });
+
+  it("fails web fetch with guidance when no provider is available", async () => {
+    const webFetchRuntime = await import("../web-fetch/runtime.js");
+    vi.mocked(webFetchRuntime.resolveWebFetchDefinition).mockReturnValueOnce(null);
+
+    await expect(
+      runRegisteredCli({
+        register: registerCapabilityCli as (program: Command) => void,
+        argv: ["infer", "web", "fetch", "--url", "https://example.com", "--json"],
+      }),
+    ).rejects.toThrow("exit 1");
+    expectRuntimeErrorContains("web.fetch is unavailable");
+    expectRuntimeErrorContains("tools.web.fetch");
+  });
+
+  it("surfaces TTS conversion failures with enablement guidance", async () => {
+    mocks.textToSpeech.mockResolvedValueOnce({
+      success: false,
+      error: "provider not configured",
+      attempts: [],
+    } as never);
+
+    await expect(
+      runRegisteredCli({
+        register: registerCapabilityCli as (program: Command) => void,
+        argv: ["infer", "tts", "convert", "--text", "hello", "--json"],
+      }),
+    ).rejects.toThrow("exit 1");
+    expectRuntimeErrorContains("TTS conversion failed");
+    expectRuntimeErrorContains("provider not configured");
+    expectRuntimeErrorContains("messages.tts.enabled");
+  });
+
   it("resolves plugin web search SecretRefs before running infer web search", async () => {
     const unresolvedConfig = {
       tools: { web: { search: { provider: "tavily", enabled: true } } },
@@ -2958,6 +3207,9 @@ describe("capability cli", () => {
       diagnostics: [],
     });
     const webSearchRuntime = await import("../web-search/runtime.js");
+    vi.mocked(webSearchRuntime.listWebSearchProviders).mockReturnValueOnce([
+      { id: "tavily" },
+    ] as never);
     vi.mocked(webSearchRuntime.runWebSearch).mockResolvedValueOnce({
       provider: "tavily",
       result: { results: [] },

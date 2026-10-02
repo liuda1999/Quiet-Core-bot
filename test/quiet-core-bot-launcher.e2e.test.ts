@@ -43,7 +43,11 @@ async function addSourceTreeMarker(fixtureRoot: string): Promise<void> {
 }
 
 async function addGitMarker(fixtureRoot: string): Promise<void> {
-  await fs.writeFile(path.join(fixtureRoot, ".git"), "gitdir: .git/worktrees/quiet-core-bot\n", "utf8");
+  await fs.writeFile(
+    path.join(fixtureRoot, ".git"),
+    "gitdir: .git/worktrees/quiet-core-bot\n",
+    "utf8",
+  );
 }
 
 async function addCompileCacheProbe(fixtureRoot: string): Promise<void> {
@@ -473,6 +477,30 @@ describe("quiet-core-bot launcher", () => {
 
     expect(result.status).toBe(0);
     expect(result.stdout).toBe("PRECOMPUTED help\n");
+  });
+
+  it("resolves the baked banner commit placeholder to the launch-time commit", async () => {
+    const fixtureRoot = await makeLauncherFixture(fixtureRoots);
+    await fs.writeFile(
+      path.join(fixtureRoot, "dist", "cli-startup-metadata.json"),
+      JSON.stringify({
+        rootHelpText: "Quiet Core bot 0.1.0 (__QUIET_CORE_BANNER_COMMIT__)\n",
+      }),
+      "utf8",
+    );
+
+    const result = spawnSync(
+      process.execPath,
+      [path.join(fixtureRoot, "quiet-core-bot.mjs"), "--help"],
+      {
+        cwd: fixtureRoot,
+        env: launcherEnv({ GIT_COMMIT: "abc1234" }),
+        encoding: "utf8",
+      },
+    );
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toBe("Quiet Core bot 0.1.0 (abc1234)\n");
   });
 
   it.each([

@@ -49,7 +49,18 @@ export function registerTuiCli(program: Command) {
         if (historyLimit === undefined) {
           throw new Error("--history-limit must be a positive integer.");
         }
-        const { runTui } = await import("../tui/tui.js");
+        const { guardTuiInteractiveTerminal, runTui } = await import("../tui/tui.js");
+        // Refuse to start without an interactive terminal: the TUI cannot render
+        // or read raw input, and --message would be submitted then dropped,
+        // leaving an orphaned user turn. Exit non-zero before sending anything.
+        if (
+          guardTuiInteractiveTerminal({
+            writeError: (text) => defaultRuntime.error(text),
+            exit: (code) => defaultRuntime.exit(code),
+          })
+        ) {
+          return;
+        }
         await runTui({
           local: isLocal,
           url: opts.url as string | undefined,

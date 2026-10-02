@@ -116,6 +116,7 @@ const IMAGE_OUTPUT_FORMATS = ["png", "jpeg", "webp"] as const;
 const IMAGE_BACKGROUNDS = ["transparent", "opaque", "auto"] as const;
 const LOCAL_MODEL_RUN_SYSTEM_PROMPT = "You are a personal assistant running inside Quiet Core bot.";
 const HEIC_MODEL_RUN_MIMES = new Set(["image/heic", "image/heif"]);
+const FTS_ONLY_EMBEDDING_PROVIDER = "none";
 
 type CapabilityMetadata = {
   id: string;
@@ -135,6 +136,7 @@ type CapabilityEnvelope = {
   inputs?: Array<Record<string, unknown>>;
   outputs: Array<Record<string, unknown>>;
   ignoredOverrides?: Array<Record<string, unknown>>;
+  note?: string;
   error?: string;
 };
 
@@ -464,6 +466,7 @@ function formatEnvelopeForText(value: unknown): string {
       ? [`ignoredOverrides: ${JSON.stringify(envelope.ignoredOverrides)}`]
       : []),
     `outputs: ${String(envelope.outputs.length)}`,
+    ...(envelope.note ? [envelope.note] : []),
   ];
   for (const output of envelope.outputs) {
     const pathValue = typeof output.path === "string" ? output.path : undefined;
@@ -482,6 +485,93 @@ function formatEnvelopeForText(value: unknown): string {
 function providerSummaryText(value: unknown): string {
   const providers = value as Array<Record<string, unknown>>;
   return providers.map((entry) => JSON.stringify(entry)).join("\n");
+}
+
+type DeclaredModelCapabilities = {
+  reasoning: boolean;
+  input: boolean;
+};
+
+/**
+ * Indexes which capabilities each configured model explicitly declares.
+ * Runtime config materializes defaults (reasoning=false, input=["text"]) before
+ * the catalog reads it, so the pre-default source snapshot is the only place
+ * that still distinguishes "undeclared" from an explicit false/text-only value.
+ */
+function buildDeclaredModelCapabilityIndex(
+  sourceConfig: QuietCoreConfig | null | undefined,
+): Map<string, DeclaredModelCapabilities> {
+  const index = new Map<string, DeclaredModelCapabilities>();
+  const providers = sourceConfig?.models?.providers;
+  if (!providers || typeof providers !== "object") {
+    return index;
+  }
+  for (const [providerRaw, provider] of Object.entries(providers)) {
+    if (!Array.isArray(provider?.models)) {
+      continue;
+    }
+    const providerId = normalizeLowercaseStringOrEmpty(providerRaw);
+    for (const model of provider.models) {
+      const id = normalizeLowercaseStringOrEmpty(model?.id);
+      if (!id) {
+        continue;
+      }
+      index.set(`${providerId}/${id}`, {
+        reasoning: typeof model?.reasoning === "boolean",
+        input: Array.isArray(model?.input),
+      });
+    }
+  }
+  return index;
+}
+
+/**
+ * Replaces fabricated capability defaults with `null` when the authored config
+ * never declared them, so `infer model list` stops reporting unknown abilities
+ * as real ones. Explicit `false`/`["text"]` declarations and inferred
+ * capabilities (for example reasoning=true from a compat heuristic) are kept.
+ */
+function markUndeclaredModelCapabilities(
+  entries: unknown,
+  sourceConfig: QuietCoreConfig | null | undefined,
+): unknown {
+  const index = buildDeclaredModelCapabilityIndex(sourceConfig);
+  if (index.size === 0 || !Array.isArray(entries)) {
+    return entries;
+  }
+  return entries.map((raw) => {
+    const entry = raw as { provider?: unknown; id?: unknown; reasoning?: unknown; input?: unknown };
+    const key = `${normalizeLowercaseStringOrEmpty(entry.provider)}/${normalizeLowercaseStringOrEmpty(entry.id)}`;
+    const declared = index.get(key);
+    if (!declared) {
+      return raw;
+    }
+    const next = { ...(raw as Record<string, unknown>) };
+    if (!declared.reasoning && entry.reasoning !== true) {
+      next.reasoning = null;
+    }
+    const input = Array.isArray(entry.input) ? entry.input : undefined;
+    if (!declared.input && (!input || (input.length === 1 && input[0] === "text"))) {
+      next.input = null;
+    }
+    return next;
+  });
+}
+
+function modelListText(value: unknown): string {
+  const entries = Array.isArray(value) ? value : [];
+  return entries
+    .map((raw) => {
+      const entry = { ...(raw as Record<string, unknown>) };
+      if (entry.reasoning === null) {
+        entry.reasoning = "undeclared";
+      }
+      if (entry.input === null) {
+        entry.input = "undeclared";
+      }
+      return JSON.stringify(entry);
+    })
+    .join("\n");
 }
 
 function hasOwnKeys(value: unknown): boolean {
@@ -1482,7 +1572,10 @@ async function runTtsConvert(params: {
     disableFallback: hasExplicitSelection,
   });
   if (!result.success || !result.audioPath) {
-    throw new Error(result.error ?? "TTS conversion failed");
+    const detail = result.error ? ` (${result.error})` : "";
+    throw new Error(
+      `TTS conversion failed${detail}. TTS may be disabled or no provider/voice is configured. Enable it with \`infer tts enable\` (or set \`messages.tts.enabled = true\`), configure a provider (\`messages.tts.provider\`) and its credentials, then retry. Run \`infer tts providers --json\` to inspect providers and \`infer tts status\` for the effective settings.`,
+    );
   }
   let outputPath = result.audioPath;
   if (params.output) {
@@ -1968,22 +2061,39 @@ async function runWebSearchCommand(params: { query: string; provider?: string; l
       : {}),
     config: rawConfig,
   });
-  const result = await runWebSearch({
-    config: cfg,
-    providerId: params.provider,
-    args: {
-      query: params.query,
-      count: params.limit,
-      limit: params.limit,
-    },
-  });
+  if (!params.provider?.trim()) {
+    const providers = listWebSearchProviders({ config: cfg });
+    if (providers.length === 0) {
+      throw new Error(
+        'web.search is unavailable: no web_search provider is installed or enabled. Enable one by setting `tools.web.search.enabled = true` and `tools.web.search.provider` (for example "tavily" or "exa") plus its API key, or pass --provider <id>. Run `infer web providers --json` to list providers and whether each is configured.',
+      );
+    }
+  }
+  let searchResult: Awaited<ReturnType<typeof runWebSearch>>;
+  try {
+    searchResult = await runWebSearch({
+      config: cfg,
+      providerId: params.provider,
+      args: {
+        query: params.query,
+        count: params.limit,
+        limit: params.limit,
+      },
+    });
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    throw new Error(
+      `web.search failed: ${detail} Enable web search by setting \`tools.web.search.enabled = true\` and \`tools.web.search.provider\` plus its API key, or pass --provider <id>. Run \`infer web providers --json\` to inspect provider availability.`,
+      { cause: error },
+    );
+  }
   return {
     ok: true,
     capability: "web.search",
     transport: "local" as const,
-    provider: result.provider,
+    provider: searchResult.provider,
     attempts: [],
-    outputs: [{ result: result.result }],
+    outputs: [{ result: searchResult.result }],
   } satisfies CapabilityEnvelope;
 }
 
@@ -2009,7 +2119,9 @@ async function runWebFetchCommand(params: { url: string; provider?: string; form
     providerId: params.provider,
   });
   if (!resolved) {
-    throw new Error("web.fetch is disabled or no provider is available.");
+    throw new Error(
+      'web.fetch is unavailable: `tools.web.fetch` is disabled or no fetch provider is configured. Enable one by setting `tools.web.fetch.enabled = true` and `tools.web.fetch.provider` (for example "firecrawl") plus its API key, or pass --provider <id>. Run `infer web providers --json` to list providers and whether each is configured.',
+    );
   }
   const result = await resolved.definition.execute({
     url: params.url,
@@ -2025,6 +2137,217 @@ async function runWebFetchCommand(params: { url: string; provider?: string; form
   } satisfies CapabilityEnvelope;
 }
 
+type EmbeddingProviderCandidate = {
+  id: string;
+  autoSelectPriority?: number;
+};
+
+function collectEmbeddingProviderCandidates(params: {
+  cfg: QuietCoreConfig;
+  configuredProvider?: string;
+}): EmbeddingProviderCandidate[] {
+  const candidates = new Map<string, EmbeddingProviderCandidate>();
+  for (const provider of listMemoryEmbeddingProviders()) {
+    candidates.set(provider.id, {
+      id: provider.id,
+      autoSelectPriority: provider.autoSelectPriority,
+    });
+  }
+  for (const provider of listEmbeddingProviders(params.cfg)) {
+    if (!candidates.has(provider.id)) {
+      candidates.set(provider.id, { id: provider.id, autoSelectPriority: undefined });
+    }
+  }
+  const configuredProvider = params.configuredProvider;
+  if (
+    configuredProvider &&
+    configuredProvider !== "auto" &&
+    configuredProvider !== FTS_ONLY_EMBEDDING_PROVIDER &&
+    !candidates.has(configuredProvider)
+  ) {
+    candidates.set(configuredProvider, { id: configuredProvider, autoSelectPriority: undefined });
+  }
+  return Array.from(candidates.values());
+}
+
+function resolveAutoEmbeddingProviderId(params: {
+  configuredProvider?: string;
+  candidates: EmbeddingProviderCandidate[];
+}): string | undefined {
+  const usable = params.candidates.filter(
+    (candidate) => candidate.id !== "auto" && candidate.id !== FTS_ONLY_EMBEDDING_PROVIDER,
+  );
+  if (
+    params.configuredProvider &&
+    usable.some((candidate) => candidate.id === params.configuredProvider)
+  ) {
+    return params.configuredProvider;
+  }
+  const prioritized = usable
+    .filter((candidate) => typeof candidate.autoSelectPriority === "number")
+    .toSorted((a, b) => (a.autoSelectPriority ?? 0) - (b.autoSelectPriority ?? 0));
+  return prioritized[0]?.id ?? usable[0]?.id;
+}
+
+function buildNoEmbeddingProviderError(params: {
+  configuredProvider?: string;
+  candidates: EmbeddingProviderCandidate[];
+}): Error {
+  const available = params.candidates.length
+    ? params.candidates.map((candidate) => candidate.id).join(", ")
+    : "none";
+  return new Error(
+    [
+      "No memory embedding provider is available for embedding creation.",
+      `Current agents.defaults.memorySearch.provider: ${params.configuredProvider ?? "unset"}`,
+      `Available embedding providers: ${available}`,
+      "",
+      "Fix (pick one):",
+      "- Configure an OpenAI-compatible embeddings endpoint: quiet-core-bot config set agents.defaults.memorySearch.provider openai-compatible",
+      "- Use local GGUF embeddings: quiet-core-bot config set agents.defaults.memorySearch.provider local",
+      "- Or pass an explicit provider: quiet-core-bot infer embedding create --provider <id> --text <text>",
+      "",
+      "List embedding providers: quiet-core-bot infer embedding providers",
+    ].join("\n"),
+  );
+}
+
+function buildFtsOnlyEmbeddingEnvelope(): CapabilityEnvelope {
+  return {
+    ok: true,
+    capability: "embedding.create",
+    transport: "local",
+    provider: FTS_ONLY_EMBEDDING_PROVIDER,
+    attempts: [],
+    outputs: [],
+    note: [
+      "Semantic search is disabled; memory search runs in FTS-only mode (keyword search, no embeddings).",
+      "To enable semantic search, pick one:",
+      "- Configure an OpenAI-compatible embeddings endpoint: quiet-core-bot config set agents.defaults.memorySearch.provider openai-compatible",
+      "- Use local GGUF embeddings: quiet-core-bot config set agents.defaults.memorySearch.provider local",
+      "- Or pass an explicit provider: quiet-core-bot infer embedding create --provider <id> --text <text>",
+    ].join("\n"),
+  };
+}
+
+type MemoryEmbeddingProviderState = {
+  available: true;
+  configured: boolean;
+  selected: boolean;
+  id: string;
+  defaultModel?: string;
+  transport?: "local" | "remote";
+  autoSelectPriority?: number;
+};
+
+/**
+ * Enumerates memory embedding providers with the same source set and
+ * configured/selected state used by `infer embedding providers`, so error
+ * guidance and the providers listing never drift apart.
+ */
+function buildMemoryEmbeddingProviderStates(cfg: QuietCoreConfig): {
+  providers: MemoryEmbeddingProviderState[];
+  selectedProvider?: string;
+} {
+  const agentId = resolveDefaultAgentId(cfg);
+  const resolvedMemory = resolveMemorySearchConfig(cfg, agentId);
+  const selectedProvider = resolvedMemory?.provider;
+  const providers = new Map<
+    string,
+    {
+      id: string;
+      defaultModel?: string;
+      transport?: "local" | "remote";
+      autoSelectPriority?: number;
+    }
+  >(
+    listMemoryEmbeddingProviders().map((provider) => [
+      provider.id,
+      {
+        id: provider.id,
+        defaultModel: provider.defaultModel,
+        transport: provider.transport,
+        autoSelectPriority: provider.autoSelectPriority,
+      },
+    ]),
+  );
+  for (const provider of listEmbeddingProviders(cfg)) {
+    if (providers.has(provider.id)) {
+      continue;
+    }
+    providers.set(provider.id, {
+      id: provider.id,
+      defaultModel: provider.defaultModel,
+      transport: provider.transport,
+      autoSelectPriority: undefined,
+    });
+  }
+  if (selectedProvider && !providers.has(selectedProvider)) {
+    providers.set(selectedProvider, {
+      id: selectedProvider,
+      defaultModel: resolvedMemory?.model || undefined,
+      transport: providerHasGenericConfig({ cfg, providerId: selectedProvider })
+        ? "remote"
+        : undefined,
+      autoSelectPriority: undefined,
+    });
+  }
+  return {
+    selectedProvider,
+    providers: Array.from(providers.values()).map((provider) => ({
+      available: true,
+      configured:
+        provider.id === selectedProvider ||
+        providerHasGenericConfig({ cfg, providerId: provider.id }),
+      selected: provider.id === selectedProvider,
+      id: provider.id,
+      defaultModel: provider.defaultModel,
+      transport: provider.transport,
+      autoSelectPriority: provider.autoSelectPriority,
+    })),
+  };
+}
+
+/**
+ * Wraps an auto-selection embedding failure so the message lists the available
+ * providers, the current memorySearch provider, and actionable next steps.
+ * Only used for `--provider`-less (auto) requests; explicit providers keep
+ * their existing error behavior.
+ */
+function buildAutoEmbeddingCreateError(params: {
+  cfg: QuietCoreConfig;
+  configuredProvider?: string;
+  cause: unknown;
+}): Error {
+  const detail = params.cause instanceof Error ? params.cause.message : String(params.cause);
+  const available = buildMemoryEmbeddingProviderStates(params.cfg).providers;
+  const providerLines = available.length
+    ? available.map(
+        (provider) =>
+          `- ${provider.id} (configured: ${provider.configured}, selected: ${provider.selected})`,
+      )
+    : ["- none"];
+  return new Error(
+    [
+      "embedding.create failed while auto-selecting an embedding provider.",
+      `Underlying error: ${detail}`,
+      `Current agents.defaults.memorySearch.provider: ${params.configuredProvider ?? "unset"}`,
+      "",
+      "Available embedding providers:",
+      ...providerLines,
+      "",
+      "Fix (pick one):",
+      "- Configure the selected provider's credentials, then retry. For openai-compatible also set its remote.baseUrl and remote.apiKey: quiet-core-bot config set agents.defaults.memorySearch.provider <id>",
+      "- Use local GGUF embeddings: quiet-core-bot config set agents.defaults.memorySearch.provider local",
+      "- Or pass an explicit provider: quiet-core-bot infer embedding create --provider <id> --text <text>",
+      "- Keyword-only search is also valid: quiet-core-bot infer embedding create --provider none --text <text> returns FTS-only semantics (no embeddings).",
+      "",
+      "List embedding providers: quiet-core-bot infer embedding providers",
+    ].join("\n"),
+    { cause: params.cause },
+  );
+}
+
 async function runMemoryEmbeddingCreate(params: {
   texts: string[];
   provider?: string;
@@ -2035,16 +2358,45 @@ async function runMemoryEmbeddingCreate(params: {
     targetIds: getMemoryEmbeddingCommandSecretTargetIds(),
   });
   const modelRef = resolveModelRefOverride(params.model);
-  const requestedProvider = normalizeOptionalString(params.provider) || modelRef.provider || "auto";
-  const result = await createEmbeddingProvider({
-    config: cfg,
-    agentDir: resolveAgentDir(cfg, resolveDefaultAgentId(cfg)),
-    provider: requestedProvider,
-    fallback: "none",
-    model: modelRef.model ?? "",
-  });
+  const explicitProvider = normalizeOptionalString(params.provider) || modelRef.provider;
+  if (explicitProvider === FTS_ONLY_EMBEDDING_PROVIDER) {
+    return buildFtsOnlyEmbeddingEnvelope();
+  }
+  const isAutoSelection = !explicitProvider;
+  let configuredProvider: string | undefined;
+  let requestedProvider = explicitProvider ?? "auto";
+  if (requestedProvider === "auto") {
+    configuredProvider = normalizeOptionalString(
+      resolveMemorySearchConfig(cfg, resolveDefaultAgentId(cfg))?.provider,
+    );
+    const candidates = collectEmbeddingProviderCandidates({ cfg, configuredProvider });
+    const resolved = resolveAutoEmbeddingProviderId({ configuredProvider, candidates });
+    if (!resolved) {
+      throw buildNoEmbeddingProviderError({ configuredProvider, candidates });
+    }
+    requestedProvider = resolved;
+  }
+  let result: Awaited<ReturnType<typeof createEmbeddingProvider>>;
+  try {
+    result = await createEmbeddingProvider({
+      config: cfg,
+      agentDir: resolveAgentDir(cfg, resolveDefaultAgentId(cfg)),
+      provider: requestedProvider,
+      fallback: "none",
+      model: modelRef.model ?? "",
+    });
+  } catch (error) {
+    if (isAutoSelection) {
+      throw buildAutoEmbeddingCreateError({ cfg, configuredProvider, cause: error });
+    }
+    throw error;
+  }
   if (!result.provider) {
-    throw new Error(result.providerUnavailableReason ?? "No embedding provider available.");
+    const reason = result.providerUnavailableReason ?? "No embedding provider available.";
+    if (isAutoSelection) {
+      throw buildAutoEmbeddingCreateError({ cfg, configuredProvider, cause: reason });
+    }
+    throw new Error(reason);
   }
   const embeddings = await result.provider.embedBatch(params.texts);
   return {
@@ -2155,8 +2507,10 @@ export function registerCapabilityCli(program: Command) {
     .option("--json", "Output JSON", false)
     .action(async (opts) => {
       await runCommandWithRuntime(defaultRuntime, async () => {
-        const result = await loadModelCatalog({ config: getRuntimeConfig() });
-        emitJsonOrText(defaultRuntime, Boolean(opts.json), result, providerSummaryText);
+        const cfg = getRuntimeConfig();
+        const result = await loadModelCatalog({ config: cfg });
+        const annotated = markUndeclaredModelCapabilities(result, getRuntimeConfigSourceSnapshot());
+        emitJsonOrText(defaultRuntime, Boolean(opts.json), annotated, modelListText);
       });
     });
 
@@ -2446,6 +2800,11 @@ export function registerCapabilityCli(program: Command) {
             capabilities: provider.capabilities,
             defaultModels: provider.defaultModels,
           }));
+        if (providers.length === 0) {
+          throw new Error(
+            'No audio transcription providers are available. The media-understanding registry returned no provider that advertises the "audio" capability, so `infer audio transcribe` cannot run. Configure `tools.media.audio.models` (or install/enable an audio-capable provider plugin) and its API key, then rerun `infer audio providers`.',
+          );
+        }
         emitJsonOrText(defaultRuntime, Boolean(opts.json), providers, providerSummaryText);
       });
     });
@@ -2841,55 +3200,7 @@ export function registerCapabilityCli(program: Command) {
     .action(async (opts) => {
       await runCommandWithRuntime(defaultRuntime, async () => {
         const cfg = getRuntimeConfig();
-        const agentId = resolveDefaultAgentId(cfg);
-        const resolvedMemory = resolveMemorySearchConfig(cfg, agentId);
-        const selectedProvider = resolvedMemory?.provider;
-        const providers = new Map(
-          listMemoryEmbeddingProviders().map((provider) => [
-            provider.id,
-            {
-              id: provider.id,
-              defaultModel: provider.defaultModel,
-              transport: provider.transport,
-              autoSelectPriority: provider.autoSelectPriority,
-            },
-          ]),
-        );
-        for (const provider of listEmbeddingProviders(cfg)) {
-          if (providers.has(provider.id)) {
-            continue;
-          }
-          providers.set(provider.id, {
-            id: provider.id,
-            defaultModel: provider.defaultModel,
-            transport: provider.transport,
-            autoSelectPriority: undefined,
-          });
-        }
-        if (selectedProvider && !providers.has(selectedProvider)) {
-          providers.set(selectedProvider, {
-            id: selectedProvider,
-            defaultModel: resolvedMemory?.model || undefined,
-            transport: providerHasGenericConfig({ cfg, providerId: selectedProvider })
-              ? "remote"
-              : undefined,
-            autoSelectPriority: undefined,
-          });
-        }
-        const result = Array.from(providers.values()).map((provider) => ({
-          available: true,
-          configured:
-            provider.id === selectedProvider ||
-            providerHasGenericConfig({
-              cfg,
-              providerId: provider.id,
-            }),
-          selected: provider.id === selectedProvider,
-          id: provider.id,
-          defaultModel: provider.defaultModel,
-          transport: provider.transport,
-          autoSelectPriority: provider.autoSelectPriority,
-        }));
+        const result = buildMemoryEmbeddingProviderStates(cfg).providers;
         emitJsonOrText(defaultRuntime, Boolean(opts.json), result, providerSummaryText);
       });
     });

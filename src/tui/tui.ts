@@ -85,7 +85,9 @@ const QUIET_CORE_CLI_WRAPPER_PATH = fileURLToPath(
 const QUIET_CORE_RUN_NODE_SCRIPT_PATH = fileURLToPath(
   new URL("../../scripts/run-node.mjs", import.meta.url),
 );
-const QUIET_CORE_DIST_ENTRY_JS_PATH = fileURLToPath(new URL("../../dist/entry.js", import.meta.url));
+const QUIET_CORE_DIST_ENTRY_JS_PATH = fileURLToPath(
+  new URL("../../dist/entry.js", import.meta.url),
+);
 const QUIET_CORE_DIST_ENTRY_MJS_PATH = fileURLToPath(
   new URL("../../dist/entry.mjs", import.meta.url),
 );
@@ -524,6 +526,45 @@ function resolveEmptySessionInfoDefaults(config: QuietCoreConfig): SessionInfo {
   return {
     verboseLevel: config.agents?.defaults?.verboseDefault,
   };
+}
+
+/** Hint shown when the TUI is invoked without an interactive terminal. */
+export const TUI_REQUIRES_TTY_MESSAGE = [
+  "The terminal UI needs an interactive terminal, but standard input is not a TTY.",
+  "Run it from a real terminal instead, or use a non-interactive command such as:",
+  '  quiet-core-bot agent --message "..."',
+].join("\n");
+
+/** Whether stdin can drive the TUI's raw-mode input loop. */
+export function isTuiInteractiveTerminal(input: { isTTY?: boolean } = process.stdin): boolean {
+  return input.isTTY === true;
+}
+
+/**
+ * Blocks TUI startup when stdin is not a TTY. Without a terminal the render
+ * loop cannot run, so an accepted `--message` would be submitted and then
+ * dropped, leaving an orphaned user turn in the session transcript.
+ * Returns true when startup was blocked and the caller must not submit anything.
+ */
+export function guardTuiInteractiveTerminal(
+  params: {
+    input?: { isTTY?: boolean };
+    writeError?: (text: string) => void;
+    exit?: (code: number) => void;
+  } = {},
+): boolean {
+  if (isTuiInteractiveTerminal(params.input ?? process.stdin)) {
+    return false;
+  }
+  const writeError =
+    params.writeError ??
+    ((text: string) => {
+      process.stderr.write(`${text}\n`);
+    });
+  const exit = params.exit ?? ((code: number) => process.exit(code));
+  writeError(TUI_REQUIRES_TTY_MESSAGE);
+  exit(1);
+  return true;
 }
 
 export async function runTui(opts: RunTuiOptions): Promise<TuiResult> {

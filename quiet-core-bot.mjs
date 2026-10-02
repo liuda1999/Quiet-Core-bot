@@ -564,6 +564,20 @@ const loadPrecomputedHelpText = (key, subkey) => {
   }
 };
 
+// Pre-generated help bakes this marker instead of the build commit; resolve it
+// at launch so launcher `--help` banners match `--version`.
+const LAUNCHER_BANNER_COMMIT_PLACEHOLDER = "__QUIET_CORE_BANNER_COMMIT__";
+
+const restoreLauncherBannerCommit = (helpText) => {
+  if (!helpText.includes(LAUNCHER_BANNER_COMMIT_PLACEHOLDER)) {
+    return helpText;
+  }
+  return helpText.replaceAll(
+    LAUNCHER_BANNER_COMMIT_PLACEHOLDER,
+    resolveLauncherCommit() ?? "unknown",
+  );
+};
+
 function tryOutputLauncherVersion(argv) {
   try {
     if (normalizeLauncherMetadataValue(process.env.QUIET_CORE_CONTAINER)) {
@@ -724,7 +738,7 @@ const tryOutputBareRootHelp = async () => {
   }
   const precomputed = loadPrecomputedHelpText("rootHelpText");
   if (precomputed) {
-    process.stdout.write(precomputed);
+    process.stdout.write(restoreLauncherBannerCommit(precomputed));
     return true;
   }
   for (const specifier of ["./dist/cli/program/root-help.js", "./dist/cli/program/root-help.mjs"]) {
@@ -759,7 +773,7 @@ const tryOutputPrecomputedCommandHelp = () => {
   if (!precomputed) {
     return false;
   }
-  process.stdout.write(precomputed);
+  process.stdout.write(restoreLauncherBannerCommit(precomputed));
   return true;
 };
 

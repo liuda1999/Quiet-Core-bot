@@ -190,11 +190,25 @@ export function formatGatewayChannelsStatusLines(payload: Record<string, unknown
     }
   }
 
+  let renderedAccountCount = 0;
   for (const channelId of Object.keys(accountPayloads).toSorted()) {
     const accounts = accountPayloads[channelId];
     if (accounts && accounts.length > 0) {
-      lines.push(...accountLines(channelId, accounts));
+      const rendered = accountLines(channelId, accounts);
+      renderedAccountCount += rendered.length;
+      lines.push(...rendered);
     }
+  }
+
+  // Make the zero-channel case explicit instead of printing only the gateway banner.
+  if (renderedAccountCount === 0) {
+    lines.push(
+      theme.muted(
+        `No channels are configured yet. Run ${formatCliCommand(
+          "quiet-core-bot channels list --all",
+        )} to see available channels, then ${formatCliCommand("quiet-core-bot channels add")} to set one up.`,
+      ),
+    );
   }
 
   lines.push("");
@@ -269,6 +283,7 @@ export async function channelsStatusCommand(
     );
     const cfg = await requireValidConfigSnapshot(runtime);
     if (!cfg) {
+      runtime.exit(1);
       return;
     }
     const { resolvedConfig } = await resolveCommandConfigWithSecrets({
@@ -296,6 +311,7 @@ export async function channelsStatusCommand(
           env: process.env,
         }).filter((channelId) => !requestedChannel || channelId === requestedChannel),
       });
+      runtime.exit(1);
       return;
     }
     runtime.log(
@@ -310,5 +326,7 @@ export async function channelsStatusCommand(
         )
       ).join("\n"),
     );
+    // Gateway unreachable is a failure for scripted checks even though config-only output is printed.
+    runtime.exit(1);
   }
 }

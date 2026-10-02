@@ -14,10 +14,14 @@ import { formatErrorMessage } from "../infra/errors.js";
 import { logWarn } from "../logger.js";
 import {
   getEmbeddingProvider as getGenericEmbeddingProvider,
+  listEmbeddingProviders,
   type EmbeddingProvider as GenericEmbeddingProvider,
   type EmbeddingProviderAdapter as GenericEmbeddingProviderAdapter,
 } from "../plugins/embedding-provider-runtime.js";
-import { getMemoryEmbeddingProvider } from "../plugins/memory-embedding-provider-runtime.js";
+import {
+  getMemoryEmbeddingProvider,
+  listMemoryEmbeddingProviders,
+} from "../plugins/memory-embedding-provider-runtime.js";
 import type {
   MemoryEmbeddingProvider,
   MemoryEmbeddingProviderAdapter,
@@ -120,6 +124,22 @@ function resolveEmbeddingProviderRemoteConfig(remote: MemorySearchEmbeddingConfi
     : undefined;
 }
 
+function formatUnknownEmbeddingProviderMessage(providerId: string, cfg: QuietCoreConfig): string {
+  const available = Array.from(
+    new Set([
+      ...listMemoryEmbeddingProviders(cfg).map((provider) => provider.id),
+      ...listEmbeddingProviders(cfg).map((provider) => provider.id),
+    ]),
+  );
+  return [
+    `Unknown memory embedding provider: ${providerId}.`,
+    `Configured agents.defaults.memorySearch.provider: ${providerId}.`,
+    `Available embedding providers: ${available.length ? available.join(", ") : "none"}.`,
+    "Set agents.defaults.memorySearch.provider to an available provider (or install the provider plugin) and retry.",
+    "List embedding providers: quiet-core-bot infer embedding providers",
+  ].join(" ");
+}
+
 async function createConfiguredEmbeddingProvider(params: {
   cfg: QuietCoreConfig;
   agentDir: string;
@@ -175,7 +195,7 @@ async function createConfiguredEmbeddingProvider(params: {
 
   const genericAdapter = getGenericEmbeddingProvider(providerId, params.cfg);
   if (!genericAdapter) {
-    throw new Error(`Unknown memory embedding provider: ${providerId}`);
+    throw new Error(formatUnknownEmbeddingProviderMessage(providerId, params.cfg));
   }
   const provider = await createWithGenericAdapter(genericAdapter);
   if (!provider) {

@@ -143,3 +143,11 @@ export function buildChannelAccountLine(
 export function shouldUseWizard(params?: { hasFlags?: boolean }) {
   return params?.hasFlags === false;
 }
+
+/** Return true when both stdin and stdout are interactive TTYs. */
+export function hasInteractiveTty(
+  input: { isTTY?: boolean } = process.stdin,
+  output: { isTTY?: boolean } = process.stdout,
+): boolean {
+  return input.isTTY === true && output.isTTY === true;
+}

@@ -1,5 +1,18 @@
 // Cached startup metadata readers for precomputed root and subcommand help text.
+import { resolveCommitHash } from "../infra/git-commit.js";
 import { readCliStartupMetadata } from "./startup-metadata.js";
+
+// Marker baked into pre-generated help in place of the build commit; resolved
+// here so `--help` banners always match `quiet-core-bot --version`.
+const BANNER_COMMIT_PLACEHOLDER = "__QUIET_CORE_BANNER_COMMIT__";
+
+function restoreBannerCommit(helpText: string): string {
+  if (!helpText.includes(BANNER_COMMIT_PLACEHOLDER)) {
+    return helpText;
+  }
+  const commit = resolveCommitHash({ moduleUrl: import.meta.url }) ?? "unknown";
+  return helpText.replaceAll(BANNER_COMMIT_PLACEHOLDER, commit);
+}
 
 export type PrecomputedSubcommandHelpName =
   | "doctor"
@@ -80,7 +93,7 @@ export function outputPrecomputedRootHelpText(): boolean {
   if (!rootHelpText) {
     return false;
   }
-  process.stdout.write(rootHelpText);
+  process.stdout.write(restoreBannerCommit(rootHelpText));
   return true;
 }
 
@@ -95,7 +108,7 @@ export function outputPrecomputedBrowserHelpText(): boolean {
   if (!browserHelpText) {
     return false;
   }
-  process.stdout.write(browserHelpText);
+  process.stdout.write(restoreBannerCommit(browserHelpText));
   return true;
 }
 
@@ -110,7 +123,7 @@ export function outputPrecomputedSecretsHelpText(): boolean {
   if (!secretsHelpText) {
     return false;
   }
-  process.stdout.write(secretsHelpText);
+  process.stdout.write(restoreBannerCommit(secretsHelpText));
   return true;
 }
 
@@ -125,7 +138,7 @@ export function outputPrecomputedNodesHelpText(): boolean {
   if (!nodesHelpText) {
     return false;
   }
-  process.stdout.write(nodesHelpText);
+  process.stdout.write(restoreBannerCommit(nodesHelpText));
   return true;
 }
 
@@ -134,7 +147,7 @@ export function outputPrecomputedSubcommandHelpText(commandName: string): boolea
   if (!helpText) {
     return false;
   }
-  process.stdout.write(helpText);
+  process.stdout.write(restoreBannerCommit(helpText));
   return true;
 }
 
@@ -166,3 +179,15 @@ function setPrecomputedSubcommandHelpText(
     [commandName]: value,
   };
 }
+
+export const testing = {
+  restoreBannerCommit,
+  resetPrecomputedHelpTextForTests(): void {
+    precomputedRootHelpText = undefined;
+    precomputedBrowserHelpText = undefined;
+    precomputedSecretsHelpText = undefined;
+    precomputedNodesHelpText = undefined;
+    precomputedSubcommandHelpText = undefined;
+  },
+};
+export { testing as __testing };

@@ -130,6 +130,21 @@ export async function loadCronJobForShow(
   throw new Error("cron.list pagination exceeded maximum pages while looking up cron job");
 }
 
+// Cron id-taking subcommands accept the id positionally or via --id for consistency
+// across the command family while keeping the previous --id-only form working.
+function resolveCronJobId(id: unknown, idOption: unknown): string {
+  const positional = typeof id === "string" ? id.trim() : "";
+  const flagged = typeof idOption === "string" ? idOption.trim() : "";
+  if (positional && flagged && positional !== flagged) {
+    throw new Error("Pass the cron job id either positionally or with --id, not both.");
+  }
+  const resolved = positional || flagged;
+  if (!resolved) {
+    throw new Error("Cron job id is required. Pass it positionally or with --id <id>.");
+  }
+  return resolved;
+}
+
 function registerCronToggleCommand(params: {
   cron: Command;
   name: "enable" | "disable";
@@ -140,11 +155,13 @@ function registerCronToggleCommand(params: {
     params.cron
       .command(params.name)
       .description(params.description)
-      .argument("<id>", "Job id")
+      .argument("[id]", "Job id")
+      .option("--id <id>", "Job id (alternative to the positional argument)")
       .action(async (id, opts) => {
         try {
+          const jobId = resolveCronJobId(id, opts.id);
           const res = await callGatewayFromCli("cron.update", opts, {
-            id,
+            id: jobId,
             patch: { enabled: params.enabled },
           });
           printCronJson(res);
@@ -163,11 +180,13 @@ export function registerCronSimpleCommands(cron: Command) {
       .alias("remove")
       .alias("delete")
       .description("Remove a cron job")
-      .argument("<id>", "Job id")
+      .argument("[id]", "Job id")
+      .option("--id <id>", "Job id (alternative to the positional argument)")
       .option("--json", "Output JSON", false)
       .action(async (id, opts) => {
         try {
-          const res = await callGatewayFromCli("cron.remove", opts, { id });
+          const jobId = resolveCronJobId(id, opts.id);
+          const res = await callGatewayFromCli("cron.remove", opts, { id: jobId });
           printCronJson(res);
         } catch (err) {
           handleCronCliError(err);
@@ -192,10 +211,12 @@ export function registerCronSimpleCommands(cron: Command) {
     cron
       .command("get")
       .description("Get a cron job as JSON")
-      .argument("<id>", "Job id")
+      .argument("[id]", "Job id")
+      .option("--id <id>", "Job id (alternative to the positional argument)")
       .action(async (id, opts) => {
         try {
-          const res = await callGatewayFromCli("cron.get", opts, { id: String(id) });
+          const jobId = resolveCronJobId(id, opts.id);
+          const res = await callGatewayFromCli("cron.get", opts, { id: jobId });
           printCronJson(res);
         } catch (err) {
           handleCronCliError(err);
@@ -207,13 +228,15 @@ export function registerCronSimpleCommands(cron: Command) {
     cron
       .command("show")
       .description("Show a cron job")
-      .argument("<id>", "Job id or exact name")
+      .argument("[id]", "Job id or exact name")
+      .option("--id <id>", "Job id (alternative to the positional argument)")
       .option("--json", "Output JSON", false)
       .action(async (id, opts) => {
         try {
-          const { job, deliveryPreview } = await loadCronJobForShow(opts, String(id));
+          const jobId = resolveCronJobId(id, opts.id);
+          const { job, deliveryPreview } = await loadCronJobForShow(opts, jobId);
           if (!job) {
-            throw new Error(`cron job not found: ${String(id)}`);
+            throw new Error(`cron job not found: ${jobId}`);
           }
           if (opts.json) {
             printCronJson(enrichCronJsonWithStatus(job));
@@ -230,18 +253,19 @@ export function registerCronSimpleCommands(cron: Command) {
     cron
       .command("runs")
       .description("Show cron run history")
-      .requiredOption("--id <id>", "Job id")
+      .argument("[id]", "Job id")
+      .option("--id <id>", "Job id (alternative to the positional argument)")
       .option("--run-id <runId>", "Filter by cron run id")
       .option("--limit <n>", "Max entries (default 50)", "50")
-      .action(async (opts) => {
+      .action(async (id, opts) => {
         try {
           const limit = parseStrictPositiveInteger(opts.limit ?? "50");
           if (limit === undefined) {
             throw new Error("Invalid --limit (must be a positive integer).");
           }
-          const id = String(opts.id);
+          const jobId = resolveCronJobId(id, opts.id);
           const res = await callGatewayFromCli("cron.runs", opts, {
-            id,
+            id: jobId,
             ...(typeof opts.runId === "string" && opts.runId.trim() ? { runId: opts.runId } : {}),
             limit,
           });
@@ -256,7 +280,8 @@ export function registerCronSimpleCommands(cron: Command) {
     cron
       .command("run")
       .description("Run a cron job now (debug)")
-      .argument("<id>", "Job id")
+      .argument("[id]", "Job id")
+      .option("--id <id>", "Job id (alternative to the positional argument)")
       .option("--due", "Run only when due (default behavior in older versions)", false)
       .option("--wait", "Wait for the queued run to finish", false)
       .option(
@@ -271,6 +296,7 @@ export function registerCronSimpleCommands(cron: Command) {
       )
       .action(async (id, opts, command) => {
         try {
+          const jobId = resolveCronJobId(id, opts.id);
           let waitTimeoutMs = 0;
           let pollIntervalMs = 0;
           if (opts.wait) {
@@ -281,7 +307,7 @@ export function registerCronSimpleCommands(cron: Command) {
             opts.timeout = "600000";
           }
           const res = await callGatewayFromCli("cron.run", opts, {
-            id,
+            id: jobId,
             mode: opts.due ? "due" : "force",
           });
           const result = res as CronRunCommandResult | undefined;
@@ -291,7 +317,7 @@ export function registerCronSimpleCommands(cron: Command) {
             }
             const run = await waitForCronRunCompletion({
               opts,
-              jobId: String(id),
+              jobId,
               runId: result.runId,
               timeoutMs: waitTimeoutMs,
               pollIntervalMs,

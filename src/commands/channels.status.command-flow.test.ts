@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { GatewaySecretRefUnavailableError } from "../gateway/credentials.js";
 import { DEFAULT_ACCOUNT_ID } from "../routing/session-key.js";
 import { channelsStatusCommand } from "./channels/status.js";
-import { createCapturingTestRuntime } from "./test-runtime-config-helpers.js";
+import { createCapturingTestRuntime, createTestRuntime } from "./test-runtime-config-helpers.js";
 
 const resolveDefaultAccountId = () => DEFAULT_ACCOUNT_ID;
 
@@ -437,5 +437,48 @@ describe("channelsStatusCommand SecretRef fallback flow", () => {
 
     expect(mocks.callGateway).not.toHaveBeenCalled();
     expect(mocks.requireValidConfigSnapshot).not.toHaveBeenCalled();
+  });
+
+  it("exits non-zero when the gateway is unreachable", async () => {
+    mocks.callGateway.mockRejectedValue(new Error("gateway closed"));
+    mocks.requireValidConfigSnapshot.mockResolvedValue({ secretResolved: false, channels: {} });
+    mocks.resolveCommandConfigWithSecrets.mockResolvedValue({
+      resolvedConfig: { secretResolved: false, channels: {} },
+      effectiveConfig: { secretResolved: false, channels: {} },
+      diagnostics: [],
+    });
+    const runtime = createTestRuntime();
+
+    await channelsStatusCommand({ probe: false }, runtime as never);
+
+    expect(runtime.error).toHaveBeenCalled();
+    expect(runtime.exit).toHaveBeenCalledWith(1);
+  });
+
+  it("exits non-zero when the gateway is unreachable in JSON mode", async () => {
+    mocks.callGateway.mockRejectedValue(new Error("gateway closed"));
+    mocks.requireValidConfigSnapshot.mockResolvedValue({ secretResolved: false, channels: {} });
+    mocks.resolveCommandConfigWithSecrets.mockResolvedValue({
+      resolvedConfig: { secretResolved: false, channels: {} },
+      effectiveConfig: { secretResolved: false, channels: {} },
+      diagnostics: [],
+    });
+    const runtime = createTestRuntime();
+
+    await channelsStatusCommand({ json: true, probe: false }, runtime as never);
+
+    expect(runtime.exit).toHaveBeenCalledWith(1);
+  });
+
+  it("explains zero configured channels and points to list --all and add", async () => {
+    mocks.callGateway.mockResolvedValue({ channels: {}, channelAccounts: {} });
+    const { runtime, logs } = createCapturingTestRuntime();
+
+    await channelsStatusCommand({ probe: false }, runtime as never);
+
+    const joined = logs.join("\n");
+    expect(joined).toContain("No channels are configured yet.");
+    expect(joined).toContain("channels list --all");
+    expect(joined).toContain("channels add");
   });
 });

@@ -1,10 +1,10 @@
 // Channels add tests cover guided setup, plugin install paths, and channel account config writes.
-import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { getBundledChannelSetupPlugin } from "../channels/plugins/bundled.js";
 import type { ChannelPluginCatalogEntry } from "../channels/plugins/catalog.js";
 import type { ChannelPlugin } from "../channels/plugins/types.js";
-import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import type { PluginInstallRecord } from "../config/types.plugins.js";
+import type { QuietCoreConfig } from "../config/types.quiet-core-bot.js";
 import { resetPluginRuntimeStateForTest, setActivePluginRegistry } from "../plugins/runtime.js";
 import { DEFAULT_ACCOUNT_ID } from "../routing/session-key.js";
 import { createChannelTestPluginBase, createTestRegistry } from "../test-utils/channel-plugins.js";
@@ -105,6 +105,33 @@ vi.mock("./onboard-channels.js", async () => {
 });
 
 const runtime = createTestRuntime();
+
+let restoreProcessTty: (() => void) | undefined;
+
+function setProcessTty(value: boolean): void {
+  restoreProcessTty?.();
+  const stdinDescriptor = Object.getOwnPropertyDescriptor(process.stdin, "isTTY");
+  const stdoutDescriptor = Object.getOwnPropertyDescriptor(process.stdout, "isTTY");
+  Object.defineProperty(process.stdin, "isTTY", { configurable: true, value });
+  Object.defineProperty(process.stdout, "isTTY", { configurable: true, value });
+  restoreProcessTty = () => {
+    if (stdinDescriptor) {
+      Object.defineProperty(process.stdin, "isTTY", stdinDescriptor);
+    } else {
+      Reflect.deleteProperty(process.stdin, "isTTY");
+    }
+    if (stdoutDescriptor) {
+      Object.defineProperty(process.stdout, "isTTY", stdoutDescriptor);
+    } else {
+      Reflect.deleteProperty(process.stdout, "isTTY");
+    }
+    restoreProcessTty = undefined;
+  };
+}
+
+afterEach(() => {
+  restoreProcessTty?.();
+});
 
 type MockCallSource = {
   mock: {
@@ -456,6 +483,7 @@ describe("channelsAddCommand", () => {
       sourceConfig: config,
       config,
     });
+    setProcessTty(true);
 
     await channelsAddCommand({}, runtime, { hasFlags: false });
 
@@ -478,11 +506,30 @@ describe("channelsAddCommand", () => {
       config: { channels: {} },
     });
     channelWizardMocks.setupChannels.mockRejectedValue(new WizardCancelledError());
+    setProcessTty(true);
 
     await channelsAddCommand({}, runtime, { hasFlags: false });
 
     expect(runtime.exit).toHaveBeenCalledWith(1);
     expect(runtime.error).not.toHaveBeenCalled();
+    expect(configMocks.writeConfigFile).not.toHaveBeenCalled();
+  });
+
+  it("rejects guided channel setup without an interactive terminal", async () => {
+    configMocks.readConfigFileSnapshot.mockResolvedValue({
+      ...baseConfigSnapshot,
+      sourceConfig: { channels: {} },
+      config: { channels: {} },
+    });
+    setProcessTty(false);
+
+    await channelsAddCommand({}, runtime, { hasFlags: false });
+
+    expect(runtime.exit).toHaveBeenCalledWith(1);
+    expect(runtime.error).toHaveBeenCalledTimes(1);
+    expect(String(runtime.error.mock.calls[0]?.[0])).toContain("interactive terminal");
+    // The guard must short-circuit before any prompt, so no pending interaction leaks.
+    expect(channelWizardMocks.prompter.intro).not.toHaveBeenCalled();
     expect(configMocks.writeConfigFile).not.toHaveBeenCalled();
   });
 
@@ -578,6 +625,8 @@ describe("channelsAddCommand", () => {
       baseUrl: "https://cloud.example.com/",
       botSecret: "shared-secret",
       botSecretFile: undefined,
+      dmPolicy: "pairing",
+      groupPolicy: "allowlist",
     });
 
     configMocks.writeConfigFile.mockClear();
@@ -1153,9 +1202,13 @@ describe("channelsAddCommand", () => {
     expect(requireRecord(hookCall.cfg, "hook config").channels).toEqual({
       signal: {
         enabled: true,
+        dmPolicy: "pairing",
+        groupPolicy: "allowlist",
         accounts: {
           ops: {
             account: "+15550001",
+            dmPolicy: "pairing",
+            groupPolicy: "allowlist",
           },
         },
       },
@@ -1175,5 +1228,37 @@ describe("channelsAddCommand", () => {
     expect(runtime.error).toHaveBeenCalledWith(
       'Channel signal post-setup warning for "ops": hook failed',
     );
+  });
+
+  it("persists bundled channel schema required defaults for a default account", async () => {
+    const plugin = {
+      ...createChannelTestPluginBase({ id: "signal", label: "Signal" }),
+      setup: {
+        applyAccountConfig: ({ cfg, input }: ApplyAccountConfigParams) => ({
+          ...cfg,
+          channels: {
+            ...cfg.channels,
+            signal: {
+              enabled: true,
+              account: input.signalNumber,
+            },
+          },
+        }),
+      },
+    } as ChannelPlugin;
+    setActivePluginRegistry(createTestRegistry([{ pluginId: "signal", plugin, source: "test" }]));
+    configMocks.readConfigFileSnapshot.mockResolvedValue({ ...baseConfigSnapshot });
+
+    await channelsAddCommand({ channel: "signal", signalNumber: "+15555550123" }, runtime, {
+      hasFlags: true,
+    });
+
+    expect(writtenChannel("signal")).toEqual({
+      enabled: true,
+      account: "+15555550123",
+      dmPolicy: "pairing",
+      groupPolicy: "allowlist",
+    });
+    expect(runtime.exit).not.toHaveBeenCalled();
   });
 });
