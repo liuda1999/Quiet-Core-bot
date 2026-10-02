@@ -30,6 +30,8 @@ export type CronEvent = {
   durationMs?: number;
   status?: CronRunStatus;
   error?: string;
+  /** Execution-error classifier (e.g. `delivery-target`) forwarded into the run log. */
+  errorKind?: CronRunOutcome["errorKind"];
   summary?: string;
   diagnostics?: CronRunDiagnostics;
   delivered?: boolean;

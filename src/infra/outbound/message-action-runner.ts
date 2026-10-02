@@ -76,7 +76,11 @@ import {
 } from "./message-action-threading.js";
 import { maybeApplyTtsToMessageActionSendPayload } from "./message-action-tts.js";
 import { resolveOutboundMessageGatewayOptions } from "./message-gateway-options.js";
-import type { MessagePollResult, MessageSendResult } from "./message.js";
+import {
+  resolveOutboundSendPreflight,
+  type MessagePollResult,
+  type MessageSendResult,
+} from "./message.js";
 import {
   applyCrossContextDecoration,
   buildCrossContextDecoration,
@@ -160,6 +164,8 @@ export type MessageActionRunResult =
           ok: boolean;
           error?: string;
           sentBeforeError?: true;
+          /** Marks would-send / skipped entries produced by a dry run. */
+          dryRun?: true;
           payload?: unknown;
           result?: MessageSendResult;
         }>;
@@ -692,6 +698,10 @@ async function handleBroadcastAction(
   if (rawTargets.length === 0) {
     throw new Error("Broadcast requires at least one target in --targets.");
   }
+  // Dry-run may arrive via the CLI params rather than the runner input; honor
+  // both so dry runs never report as a completed broadcast.
+  const dryRun = Boolean(input.dryRun ?? readBooleanParam(params, "dryRun"));
+  const broadcastAccountId = readStringParam(params, "accountId") ?? input.defaultAccountId;
   const channelHint = readStringParam(params, "channel");
   const targetChannels =
     channelHint && normalizeOptionalLowercaseString(channelHint) !== "all"
@@ -709,6 +719,7 @@ async function handleBroadcastAction(
     ok: boolean;
     error?: string;
     sentBeforeError?: true;
+    dryRun?: true;
     payload?: unknown;
     result?: MessageSendResult;
   }> = [];
@@ -723,6 +734,18 @@ async function handleBroadcastAction(
           channel: targetChannel,
           input: target,
         });
+        // A dry run must surface the same missing channel config a real send
+        // would fail with instead of optimistically reporting success.
+        if (dryRun) {
+          const preflight = await resolveOutboundSendPreflight({
+            cfg: input.cfg,
+            channel: targetChannel,
+            accountId: broadcastAccountId,
+          });
+          if (!preflight.ok) {
+            throw preflight.error;
+          }
+        }
         const sendResult = await runMessageAction({
           ...input,
           action: "send",
@@ -736,6 +759,7 @@ async function handleBroadcastAction(
           channel: targetChannel,
           to: resolved.to,
           ok: true,
+          ...(dryRun ? { dryRun: true as const } : {}),
           payload: sendResult.kind === "send" ? sendResult.payload : undefined,
           result: sendResult.kind === "send" ? sendResult.sendResult : undefined,
         });
@@ -748,6 +772,7 @@ async function handleBroadcastAction(
           to: target,
           ok: false,
           error: formatErrorMessage(err),
+          ...(dryRun ? { dryRun: true as const } : {}),
           ...(err &&
           typeof err === "object" &&
           (err as { sentBeforeError?: unknown }).sentBeforeError === true
@@ -761,9 +786,9 @@ async function handleBroadcastAction(
     kind: "broadcast",
     channel: targetChannels[0] ?? normalizeOptionalLowercaseString(channelHint) ?? "unknown",
     action: "broadcast",
-    handledBy: input.dryRun ? "dry-run" : "core",
+    handledBy: dryRun ? "dry-run" : "core",
     payload: { results },
-    dryRun: Boolean(input.dryRun),
+    dryRun,
   };
 }
 
@@ -1056,6 +1081,12 @@ async function handleSendAction(ctx: ResolvedActionContext): Promise<MessageActi
     toolContext: input.toolContext,
     matchesToolContextTarget: getChannelPlugin(channel)?.threading?.matchesToolContextTarget,
   });
+  // A channel that fails resolution or config validation must not leave an
+  // orphan outbound session entry, so gate session bookkeeping on the same
+  // preflight a real send depends on.
+  const sessionEntryAllowed = dryRun
+    ? true
+    : (await resolveOutboundSendPreflight({ cfg, channel, accountId })).ok;
   const { resolvedThreadId, outboundRoute } = await prepareOutboundMirrorRoute({
     cfg,
     channel,
@@ -1066,6 +1097,7 @@ async function handleSendAction(ctx: ResolvedActionContext): Promise<MessageActi
     agentId,
     currentSessionKey: input.sessionKey,
     dryRun,
+    sessionEntryAllowed,
     resolvedTarget,
     resolveAutoThreadId: getChannelPlugin(channel)?.threading?.resolveAutoThreadId,
     resolveReplyTransport: getChannelPlugin(channel)?.threading?.resolveReplyTransport,

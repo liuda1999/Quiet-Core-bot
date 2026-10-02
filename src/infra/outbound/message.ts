@@ -97,6 +97,8 @@ export type MessageSendResult = {
   channel: string;
   to: string;
   via: "direct" | "gateway";
+  /** Effective message body, reported alongside media so dry runs are inspectable. */
+  message: string;
   mediaUrl: string | null;
   mediaUrls?: string[];
   result?: OutboundDeliveryResult | { messageId: string };
@@ -185,6 +187,47 @@ function resolveRequiredPlugin(channel: string, cfg: QuietCoreConfig) {
     throw new Error(`Unknown channel: ${channel}`);
   }
   return plugin;
+}
+
+/**
+ * Non-throwing channel preflight: resolves the outbound plugin and checks its
+ * configured state without dispatching. Callers use it to skip session
+ * bookkeeping for undeliverable channels and to report dry-run validation
+ * errors, matching what a real send would surface.
+ */
+export async function resolveOutboundSendPreflight(params: {
+  cfg: QuietCoreConfig;
+  channel: string;
+  accountId?: string | null;
+}): Promise<{ ok: true } | { ok: false; error: Error }> {
+  const plugin = resolveOutboundChannelPlugin({ channel: params.channel, cfg: params.cfg });
+  if (!plugin) {
+    return { ok: false, error: new Error(`Unknown channel: ${params.channel}`) };
+  }
+  const isConfigured = plugin.config.isConfigured;
+  if (!isConfigured) {
+    return { ok: true };
+  }
+  try {
+    const account = plugin.config.resolveAccount(params.cfg, params.accountId ?? null);
+    if (await isConfigured(account, params.cfg)) {
+      return { ok: true };
+    }
+    const accountId =
+      (typeof params.accountId === "string" && params.accountId.trim()) ||
+      plugin.config.defaultAccountId?.(params.cfg)?.trim() ||
+      "default";
+    const label = plugin.meta.label || plugin.id || params.channel;
+    // Prefer a plugin-provided reason; otherwise report the same class of
+    // "not configured" detail a real send would fail with.
+    const reason = plugin.config.unconfiguredReason?.(account, params.cfg)?.trim();
+    return {
+      ok: false,
+      error: new Error(reason || `${label} is not configured for account "${accountId}".`),
+    };
+  } catch (error) {
+    return { ok: false, error: error instanceof Error ? error : new Error(String(error)) };
+  }
 }
 
 function payloadRequiresDurablePayloadTransport(payload: ReplyPayload): boolean {
@@ -335,6 +378,7 @@ export async function sendMessage(params: MessageSendParams): Promise<MessageSen
       channel,
       to: params.to,
       via: deliveryMode === "gateway" ? "gateway" : "direct",
+      message: mirrorText,
       mediaUrl: primaryMediaUrl,
       mediaUrls: mirrorMediaUrls.length ? mirrorMediaUrls : undefined,
       dryRun: true,
@@ -411,6 +455,7 @@ export async function sendMessage(params: MessageSendParams): Promise<MessageSen
       channel,
       to: params.to,
       via: "direct",
+      message: mirrorText,
       mediaUrl: primaryMediaUrl,
       mediaUrls: mirrorMediaUrls.length ? mirrorMediaUrls : undefined,
       result: results.at(-1),
@@ -448,6 +493,7 @@ export async function sendMessage(params: MessageSendParams): Promise<MessageSen
     channel,
     to: params.to,
     via: "gateway",
+    message: mirrorText,
     mediaUrl: primaryMediaUrl,
     mediaUrls: mirrorMediaUrls.length ? mirrorMediaUrls : undefined,
     result,

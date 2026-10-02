@@ -97,6 +97,9 @@ export function parseCronRunLogEntryObject(
   if (typeof entryObj.delivered === "boolean") {
     entry.delivered = entryObj.delivered;
   }
+  if (entryObj.errorKind === "delivery-target") {
+    entry.errorKind = entryObj.errorKind;
+  }
   if (
     entryObj.deliveryStatus === "delivered" ||
     entryObj.deliveryStatus === "not-delivered" ||

@@ -173,6 +173,8 @@ export async function prepareOutboundMirrorRoute(params: {
   agentId?: string;
   currentSessionKey?: string;
   dryRun?: boolean;
+  /** When false, resolve the route but skip the session meta write. */
+  sessionEntryAllowed?: boolean;
   resolvedTarget?: ResolvedMessagingTarget;
   resolveAutoThreadId?: ResolveAutoThreadId;
   resolveReplyTransport?: ResolveReplyTransport;
@@ -214,7 +216,7 @@ export async function prepareOutboundMirrorRoute(params: {
           threadId: resolvedThreadId,
         })
       : null;
-  if (outboundRoute && params.agentId && !params.dryRun) {
+  if (outboundRoute && params.agentId && !params.dryRun && params.sessionEntryAllowed !== false) {
     await params.ensureOutboundSessionEntry({
       cfg: params.cfg,
       channel: params.channel,

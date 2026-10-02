@@ -458,6 +458,50 @@ describe("sendMessage", () => {
     }
   });
 
+  it("reports the message body symmetrically with media on dry runs", async () => {
+    const textOnly = await sendMessage({
+      cfg: {},
+      channel: "forum",
+      to: "123456",
+      content: "UNIQUE_BODY_MARKER",
+      dryRun: true,
+    });
+    expectRecordFields(
+      textOnly,
+      {
+        channel: "forum",
+        to: "123456",
+        via: "direct",
+        message: "UNIQUE_BODY_MARKER",
+        mediaUrl: null,
+        mediaUrls: undefined,
+        dryRun: true,
+      },
+      "dry-run text send result",
+    );
+
+    const withMedia = await sendMessage({
+      cfg: {},
+      channel: "forum",
+      to: "123456",
+      content: "UNIQUE_BODY_MARKER",
+      mediaUrl: "https://example.com/a.png",
+      dryRun: true,
+    });
+    expectRecordFields(
+      withMedia,
+      {
+        message: "UNIQUE_BODY_MARKER",
+        mediaUrl: "https://example.com/a.png",
+        mediaUrls: ["https://example.com/a.png"],
+        dryRun: true,
+      },
+      "dry-run media send result",
+    );
+
+    expect(mocks.deliverOutboundPayloads).not.toHaveBeenCalled();
+  });
+
   it("does not load registries while resolving outbound plugins", async () => {
     const forumPlugin = {
       outbound: { deliveryMode: "direct", sendText: vi.fn() },

@@ -12,7 +12,7 @@ import {
 } from "../../tasks/detached-task-runtime.js";
 import { resolveCronAgentSessionKey } from "../isolated-agent/session-key.js";
 import { createCronExecutionId } from "../run-id.js";
-import type { CronJob, CronRunStatus } from "../types.js";
+import type { CronJob, CronRunOutcome, CronRunStatus } from "../types.js";
 import { normalizeCronRunErrorText, timeoutErrorMessage } from "./execution-errors.js";
 import type { CronServiceState } from "./state.js";
 import { CRON_TASK_RUNNING_PROGRESS_SUMMARY } from "./task-ledger.js";
@@ -106,6 +106,7 @@ export function tryFinishCronTaskRun(
     taskRunId?: string;
     status: CronRunStatus;
     error?: unknown;
+    errorKind?: CronRunOutcome["errorKind"];
     endedAt: number;
     summary?: string;
   },
@@ -114,7 +115,11 @@ export function tryFinishCronTaskRun(
     return;
   }
   try {
-    if (result.status === "ok" || result.status === "skipped") {
+    // A `delivery-target` error is an execution success whose outbound send
+    // failed; the run log keeps the delivery error for observability while the
+    // task ledger reports a completed run (mirrors timer.ts applyJobResult).
+    const deliveryOnlyFailure = result.status === "error" && result.errorKind === "delivery-target";
+    if (result.status === "ok" || result.status === "skipped" || deliveryOnlyFailure) {
       completeTaskRunByRunId({
         runId: result.taskRunId,
         runtime: "cron",

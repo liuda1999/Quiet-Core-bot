@@ -247,23 +247,23 @@ export function formatMessageCliText(result: MessageActionRunResult): string[] {
   const width = getTerminalTableWidth();
   const opts: FormatOpts = { width };
 
-  if (result.dryRun) {
-    return [muted(`[dry-run] would run ${result.action} via ${result.channel}`)];
-  }
-
   if (result.kind === "broadcast") {
     const results = result.payload.results ?? [];
+    const dryRun = result.dryRun;
     const rows = results.map((entry) => ({
       Channel: resolveChannelLabel(entry.channel),
       Target: shortenText(formatTargetDisplay({ channel: entry.channel, target: entry.to }), 36),
-      Status: entry.ok ? "ok" : "error",
+      // Dry runs report would-send/skipped intent instead of a delivered status.
+      Status: entry.ok ? (dryRun ? "would send" : "ok") : dryRun ? "skipped" : "error",
       Error: entry.ok ? "" : shortenText(entry.error ?? "unknown error", 48),
     }));
-    const okCount = results.filter((entry) => entry.ok).length;
+    const sendCount = results.filter((entry) => entry.ok).length;
     const total = results.length;
-    const headingLine = ok(
-      `✅ Broadcast complete (${okCount}/${total} succeeded, ${total - okCount} failed)`,
-    );
+    const headingLine = dryRun
+      ? muted(
+          `[dry-run] Broadcast would send to ${sendCount}/${total} target(s); nothing was sent.`,
+        )
+      : ok(`✅ Broadcast complete (${sendCount}/${total} succeeded, ${total - sendCount} failed)`);
     return [
       headingLine,
       renderTable({
@@ -277,6 +277,10 @@ export function formatMessageCliText(result: MessageActionRunResult): string[] {
         rows: rows.slice(0, 50),
       }).trimEnd(),
     ];
+  }
+
+  if (result.dryRun) {
+    return [muted(`[dry-run] would run ${result.action} via ${result.channel}`)];
   }
 
   if (result.kind === "send") {

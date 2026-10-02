@@ -357,8 +357,18 @@ function isTimeoutCronError(error: string | undefined): boolean {
   return error === "cron: job execution timed out";
 }
 
-function mapCronTerminalStatus(status: unknown, error?: string): CronTerminalRecovery["status"] {
+function mapCronTerminalStatus(
+  status: unknown,
+  error?: string,
+  errorKind?: CronRunLogEntry["errorKind"],
+): CronTerminalRecovery["status"] {
   if (status === "ok" || status === "skipped") {
+    return "succeeded";
+  }
+  // A `delivery-target` error means the agent turn completed and only the
+  // outbound send failed (e.g. no configured channel). Mirror the cron service
+  // fold (see timer.ts applyJobResult) so the task ledger reports success.
+  if (errorKind === "delivery-target") {
     return "succeeded";
   }
   return isTimeoutCronError(error) ? "timed_out" : "failed";
@@ -416,7 +426,7 @@ function resolveCronRunLogRecovery(
       : undefined;
   const endedAt = durationMs === undefined ? entry.ts : execution.startedAt + durationMs;
   return {
-    status: mapCronTerminalStatus(entry.status, entry.error),
+    status: mapCronTerminalStatus(entry.status, entry.error, entry.errorKind),
     endedAt,
     lastEventAt: endedAt,
     ...(entry.error !== undefined ? { error: entry.error } : {}),

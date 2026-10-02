@@ -12,6 +12,7 @@ import {
 } from "./detached-task-runtime.js";
 import {
   getInspectableActiveTaskRestartBlockers,
+  getInspectableTaskRegistrySummary,
   getTaskRegistryMaintenanceDiagnostics,
   previewTaskRegistryMaintenance,
   reconcileInspectableTasks,
@@ -501,6 +502,85 @@ describe("task-registry maintenance issue #60299", () => {
     expect(storedTask.status).toBe("succeeded");
     expect(storedTask.endedAt).toBe(startedAt + 1250);
     expect(storedTask.terminalSummary).toBe("done");
+  });
+
+  it("recovers a delivery-only cron failure as succeeded without counting an issue", async () => {
+    const startedAt = Date.now() - 60 * 60_000;
+    const task = makeStaleTask({
+      runtime: "cron",
+      sourceId: "cron-job-delivery-only",
+      runId: `cron:cron-job-delivery-only:${startedAt}`,
+      startedAt,
+      lastEventAt: startedAt,
+    });
+
+    const { currentTasks } = createTaskRegistryMaintenanceHarness({
+      tasks: [task],
+      cronRunLogEntries: {
+        "cron-job-delivery-only": [
+          {
+            ts: startedAt + 900,
+            jobId: "cron-job-delivery-only",
+            action: "finished",
+            // The agent turn completed; only the outbound announce failed.
+            status: "error",
+            errorKind: "delivery-target",
+            error: "no configured messaging channel for announce delivery",
+            deliveryStatus: "not-delivered",
+            deliveryError: "no configured messaging channel for announce delivery",
+            runAtMs: startedAt,
+            durationMs: 900,
+          },
+        ],
+      },
+    });
+
+    const reconciledTasks = reconcileInspectableTasks();
+    expect(reconciledTasks).toHaveLength(1);
+    expect(reconciledTasks[0]?.status).toBe("succeeded");
+    // The delivery failure stays visible on the run log, not as a task issue.
+    expect(getInspectableTaskRegistrySummary(reconciledTasks).failures).toBe(0);
+    expectMaintenanceCounts(previewTaskRegistryMaintenance(), { reconciled: 0, recovered: 1 });
+    expectMaintenanceCounts(await runTaskRegistryMaintenance(), { reconciled: 0, recovered: 1 });
+    const storedTask = requireTaskRecord(currentTasks, task.taskId);
+    expect(storedTask.status).toBe("succeeded");
+    expect(storedTask.endedAt).toBe(startedAt + 900);
+  });
+
+  it("keeps a genuine cron execution failure as failed and counted as an issue", async () => {
+    const startedAt = Date.now() - 60 * 60_000;
+    const task = makeStaleTask({
+      runtime: "cron",
+      sourceId: "cron-job-hard-error",
+      runId: `cron:cron-job-hard-error:${startedAt}`,
+      startedAt,
+      lastEventAt: startedAt,
+    });
+
+    const { currentTasks } = createTaskRegistryMaintenanceHarness({
+      tasks: [task],
+      cronRunLogEntries: {
+        "cron-job-hard-error": [
+          {
+            ts: startedAt + 400,
+            jobId: "cron-job-hard-error",
+            action: "finished",
+            status: "error",
+            error: "boom: agent run failed",
+            runAtMs: startedAt,
+            durationMs: 400,
+          },
+        ],
+      },
+    });
+
+    const reconciledTasks = reconcileInspectableTasks();
+    expect(reconciledTasks[0]?.status).toBe("failed");
+    expect(getInspectableTaskRegistrySummary(reconciledTasks).failures).toBe(1);
+    expectMaintenanceCounts(await runTaskRegistryMaintenance(), { reconciled: 0, recovered: 1 });
+    const storedTask = requireTaskRecord(currentTasks, task.taskId);
+    expect(storedTask.status).toBe("failed");
+    expect(storedTask.error).toBe("boom: agent run failed");
   });
 
   it("does not recover cron tasks from malformed run id timestamps", async () => {

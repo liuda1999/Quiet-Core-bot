@@ -145,4 +145,32 @@ describe("cron run log errorReason", () => {
     expect(page.entries).toHaveLength(1);
     expect(page.entries[0]?.errorReason).toBe("timeout");
   });
+
+  it("round-trips delivery-target errorKind while keeping the failure observable", async () => {
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "cron-run-log-"));
+    const storePath = path.join(dir, "jobs.json");
+    await appendCronRunLog({
+      storePath,
+      entry: {
+        ts: 1,
+        jobId: "job-1",
+        action: "finished",
+        // The execution succeeded; only the outbound announce failed. The raw
+        // error status and delivery error are preserved for `cron runs`.
+        status: "error",
+        error: "no configured messaging channel for announce delivery",
+        errorKind: "delivery-target",
+        deliveryStatus: "not-delivered",
+        deliveryError: "no configured messaging channel for announce delivery",
+      },
+    });
+
+    const page = await readCronRunLogEntriesPage({ storePath, jobId: "job-1", limit: 10 });
+    expect(page.entries[0]?.errorKind).toBe("delivery-target");
+    expect(page.entries[0]?.status).toBe("error");
+    expect(page.entries[0]?.deliveryStatus).toBe("not-delivered");
+    expect(page.entries[0]?.deliveryError).toBe(
+      "no configured messaging channel for announce delivery",
+    );
+  });
 });

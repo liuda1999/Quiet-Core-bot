@@ -5,6 +5,7 @@ import type {
   CronDeliveryTrace,
   CronFailureNotificationDelivery,
   CronRunDiagnostics,
+  CronRunOutcome,
   CronRunStatus,
   CronRunTelemetry,
 } from "./types.js";
@@ -16,6 +17,12 @@ export type CronRunLogEntry = {
   action: "finished";
   status?: CronRunStatus;
   error?: string;
+  /**
+   * Execution-error classifier retained for observability. A `delivery-target`
+   * row means the agent turn succeeded and only the outbound send failed, so
+   * task recovery folds it into a successful terminal status.
+   */
+  errorKind?: CronRunOutcome["errorKind"];
   errorReason?: FailoverReason;
   summary?: string;
   diagnostics?: CronRunDiagnostics;

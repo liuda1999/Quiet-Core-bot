@@ -739,7 +739,16 @@ function tryFinishManualTaskRun(
     return;
   }
   try {
-    if (params.coreResult.status === "ok" || params.coreResult.status === "skipped") {
+    // A `delivery-target` error is an execution success whose outbound send
+    // failed; the run log keeps the delivery error for observability while the
+    // task ledger reports a completed run (mirrors timer.ts applyJobResult).
+    const deliveryOnlyFailure =
+      params.coreResult.status === "error" && params.coreResult.errorKind === "delivery-target";
+    if (
+      params.coreResult.status === "ok" ||
+      params.coreResult.status === "skipped" ||
+      deliveryOnlyFailure
+    ) {
       completeTaskRunByRunId({
         runId: params.taskRunId,
         runtime: "cron",
@@ -962,6 +971,7 @@ async function finishPreparedManualRun(
         job,
         status: coreResult.status,
         error: coreResult.error,
+        errorKind: coreResult.errorKind,
         summary: coreResult.summary,
         diagnostics: coreResult.diagnostics,
         delivered: job.state.lastDelivered,
