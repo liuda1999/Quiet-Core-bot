@@ -43,10 +43,12 @@
         "strong",
         "span",
         "iframe",
+        "h1",
         "h2",
         "h3",
         "picture",
         "source",
+        "sub",
         "Tooltip",
         "Check",
       ],
@@ -56,5 +58,11 @@
     "MD040": false,
     "MD041": false,
     "MD046": false,
+
+    // Table pipe alignment is owned by oxfmt (`pnpm format:docs:check`), which pads
+    // columns by display width. MD060 counts characters, so for tables containing
+    // full-width CJK characters the two rules cannot both be satisfied; the
+    // formatter wins.
+    "MD060": false,
   },
 }

@@ -45,7 +45,7 @@ or an explicit manual dispatch.
 | `ios-build`                        | Xcode project generation plus the iOS app simulator build                                                 | iOS app, shared app kit, or Swabble changes         |
 | `android`                          | Android unit tests for both flavors plus one debug APK build                                              | Android-relevant changes                            |
 | `test-performance-agent`           | Daily Codex slow-test optimization after trusted activity                                                 | Main CI success or manual dispatch                  |
-| `quiet-core-bot-performance`             | Daily/on-demand Kova runtime performance reports with mock-provider, deep-profile, and GPT 5.5 live lanes | Scheduled and manual dispatch                       |
+| `quiet-core-bot-performance`       | Daily/on-demand Kova runtime performance reports with mock-provider, deep-profile, and GPT 5.5 live lanes | Scheduled and manual dispatch                       |
 
 ## Fail-fast order
 
@@ -140,8 +140,8 @@ gh workflow run full-release-validation.yml --ref main -f ref=<branch-or-sha>
 | `blacksmith-8vcpu-ubuntu-2404`  | Retained heavy Linux Node suites, boundary/extension-heavy `check-additional-*` shards, and `android`                                                                                                                                                                                |
 | `blacksmith-16vcpu-ubuntu-2404` | `build-artifacts`, `check-lint` (CPU-sensitive enough that 8 vCPU cost more than they saved); install-smoke Docker builds (32-vCPU queue time cost more than it saved)                                                                                                               |
 | `blacksmith-8vcpu-windows-2025` | `checks-windows`                                                                                                                                                                                                                                                                     |
-| `blacksmith-6vcpu-macos-15`     | `macos-node` on `liuda1999/quiet-core-bot`; forks fall back to `macos-15`                                                                                                                                                                                                                   |
-| `blacksmith-12vcpu-macos-26`    | `macos-swift` and `ios-build` on `liuda1999/quiet-core-bot`; forks fall back to `macos-26`                                                                                                                                                                                                  |
+| `blacksmith-6vcpu-macos-15`     | `macos-node` on `liuda1999/quiet-core-bot`; forks fall back to `macos-15`                                                                                                                                                                                                            |
+| `blacksmith-12vcpu-macos-26`    | `macos-swift` and `ios-build` on `liuda1999/quiet-core-bot`; forks fall back to `macos-26`                                                                                                                                                                                           |
 
 ## Runner registration budget
 
