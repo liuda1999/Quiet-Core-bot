@@ -73,8 +73,11 @@ jobs:
     runs-on: ubuntu-24.04
     permissions:
       contents: read
+    outputs:
+      has_dockerhub: ${{ steps.check.outputs.has_dockerhub }}
     steps:
       - name: Validate Docker Hub publish credentials
+        id: check
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -82,9 +85,11 @@ jobs:
         run: |
           set -euo pipefail
           if [[ -z "${DOCKERHUB_USERNAME}" || -z "${DOCKERHUB_TOKEN}" ]]; then
-            echo "::error::Docker Hub publishing requires DOCKERHUB_USERNAME and DOCKERHUB_TOKEN secrets."
-            exit 1
+            echo "has_dockerhub=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::DOCKERHUB_USERNAME and DOCKERHUB_TOKEN are not configured; skipping Docker image publishing."
+            exit 0
           fi
+          echo "has_dockerhub=true" >> "$GITHUB_OUTPUT"
           echo "Docker Hub publishing configured for ${DOCKERHUB_IMAGE}."
 
   # KEEP THIS WORKFLOW ON GITHUB-HOSTED RUNNERS.
@@ -92,7 +97,7 @@ jobs:
   # Build amd64 image. Default and slim tags point to the same slim runtime.
   build-amd64:
     needs: [approve_manual_backfill, validate_publish_config]
-    if: ${{ always() && needs.validate_publish_config.result == 'success' && (github.event_name != 'workflow_dispatch' || needs.approve_manual_backfill.result == 'success') }}
+    if: ${{ always() && needs.validate_publish_config.result == 'success' && needs.validate_publish_config.outputs.has_dockerhub == 'true' && (github.event_name != 'workflow_dispatch' || needs.approve_manual_backfill.result == 'success') }}
     # WARNING: DO NOT REVERT THIS TO A BLACKSMITH RUNNER WITHOUT RE-VALIDATING TAG BACKFILLS.
     runs-on: ubuntu-24.04
     permissions:
@@ -313,7 +318,7 @@ jobs:
   # Build arm64 image. Default and slim tags point to the same slim runtime.
   build-arm64:
     needs: [approve_manual_backfill, validate_publish_config]
-    if: ${{ always() && needs.validate_publish_config.result == 'success' && (github.event_name != 'workflow_dispatch' || needs.approve_manual_backfill.result == 'success') }}
+    if: ${{ always() && needs.validate_publish_config.result == 'success' && needs.validate_publish_config.outputs.has_dockerhub == 'true' && (github.event_name != 'workflow_dispatch' || needs.approve_manual_backfill.result == 'success') }}
     # WARNING: DO NOT REVERT THIS TO A BLACKSMITH RUNNER WITHOUT RE-VALIDATING TAG BACKFILLS.
     runs-on: ubuntu-24.04-arm
     permissions:
@@ -534,7 +539,7 @@ jobs:
   # Create multi-platform manifests
   create-manifest:
     needs: [approve_manual_backfill, validate_publish_config, build-amd64, build-arm64]
-    if: ${{ always() && needs.validate_publish_config.result == 'success' && needs.build-amd64.result == 'success' && needs.build-arm64.result == 'success' && (github.event_name != 'workflow_dispatch' || needs.approve_manual_backfill.result == 'success') }}
+    if: ${{ always() && needs.validate_publish_config.result == 'success' && needs.validate_publish_config.outputs.has_dockerhub == 'true' && needs.build-amd64.result == 'success' && needs.build-arm64.result == 'success' && (github.event_name != 'workflow_dispatch' || needs.approve_manual_backfill.result == 'success') }}
     # WARNING: DO NOT REVERT THIS TO A BLACKSMITH RUNNER WITHOUT RE-VALIDATING TAG BACKFILLS.
     runs-on: ubuntu-24.04
     permissions:

@@ -33,6 +33,7 @@ jobs:
     outputs:
       has_locales: ${{ steps.plan.outputs.has_locales }}
       locales_json: ${{ steps.plan.outputs.locales_json }}
+      has_translation_secrets: ${{ steps.translation-secrets.outputs.present }}
     steps:
       - name: Checkout
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
@@ -40,6 +41,20 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
           submodules: false
+
+      - name: Detect translation provider secrets
+        id: translation-secrets
+        env:
+          OPENAI_API_KEY: ${{ secrets.QUIET_CORE_DOCS_I18N_OPENAI_API_KEY || secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -n "${OPENAI_API_KEY:-}" ] || [ -n "${ANTHROPIC_API_KEY:-}" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No translation provider secret configured; skipping control UI locale refresh."
+          fi
 
       - name: Plan locale matrix
         id: plan
@@ -102,7 +117,7 @@ jobs:
 
   refresh:
     needs: plan
-    if: github.repository == 'liuda1999/Quiet-Core-bot' && needs.plan.outputs.has_locales == 'true'
+    if: github.repository == 'liuda1999/Quiet-Core-bot' && needs.plan.outputs.has_locales == 'true' && needs.plan.outputs.has_translation_secrets == 'true'
     strategy:
       fail-fast: false
       max-parallel: 4

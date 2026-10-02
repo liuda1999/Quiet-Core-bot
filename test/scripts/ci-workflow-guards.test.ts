@@ -803,14 +803,12 @@ describe("ci workflow guards", () => {
     expect(runStep.run.match(/test\/scripts\/ci-workflow-guards\.test\.ts/g)?.length).toBe(2);
   });
 
-  it("keeps push docs validation ClawHub-backed", () => {
+  it("keeps push docs validation self-contained", () => {
     const workflow = readFileSync(".github/workflows/docs.yml", "utf8");
 
-    expect(workflow).toContain("repository: quiet-core-bot/clawhub");
-    expect(workflow).toContain("path: clawhub-source");
-    expect(workflow).toContain(
-      "QUIET_CORE_DOCS_SYNC_CLAWHUB_REPO: ${{ github.workspace }}/clawhub-source",
-    );
+    expect(workflow).toContain("run: pnpm check:docs");
+    expect(workflow).not.toContain("clawhub-source");
+    expect(workflow).not.toContain("QUIET_CORE_DOCS_SYNC_CLAWHUB_REPO");
   });
 
   it("keeps network CodeQL off unrelated source-only refactors", () => {

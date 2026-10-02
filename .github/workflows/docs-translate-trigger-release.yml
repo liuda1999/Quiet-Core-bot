@@ -11,10 +11,17 @@ permissions:
 jobs:
   dispatch-translate:
     runs-on: ubuntu-latest
+    env:
+      QUIET_CORE_DOCS_SYNC_TOKEN: ${{ secrets.QUIET_CORE_DOCS_SYNC_TOKEN }}
     steps:
+      - name: Skip translation dispatch without token
+        if: env.QUIET_CORE_DOCS_SYNC_TOKEN == ''
+        run: echo "QUIET_CORE_DOCS_SYNC_TOKEN is not configured; skipping translation dispatch."
+
       - name: Trigger translation coordinator in publish repo
+        if: env.QUIET_CORE_DOCS_SYNC_TOKEN != ''
         env:
-          GH_TOKEN: ${{ secrets.QUIET_CORE_DOCS_SYNC_TOKEN }}
+          GH_TOKEN: ${{ env.QUIET_CORE_DOCS_SYNC_TOKEN }}
           RELEASE_TAG: ${{ github.event.release.tag_name }}
         run: |
           set -euo pipefail
