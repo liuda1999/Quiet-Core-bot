@@ -12,7 +12,7 @@ Dashboard workboard for agent-owned issues and sessions.
 ## Distribution
 
 - Package: `@quiet-core/workboard`
-- Install route: included in Quiet Core bot
+- Install route: included in QuietCore
 
 ## Surface
 

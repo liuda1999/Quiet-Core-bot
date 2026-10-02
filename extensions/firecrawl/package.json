@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/firecrawl-plugin",
-  "version": "2026.6.11",
+  "version": "0.1.0",
   "description": "QuietCore Firecrawl plugin.",
   "repository": {
     "type": "git",
@@ -24,10 +24,10 @@
       "minHostVersion": ">=2026.6.8"
     },
     "compat": {
-      "pluginApi": ">=2026.6.11"
+      "pluginApi": ">=0.1.0"
     },
     "build": {
-      "openclawVersion": "2026.6.11",
+      "openclawVersion": "0.1.0",
       "bundledDist": false
     },
     "release": {

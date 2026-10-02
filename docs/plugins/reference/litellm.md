@@ -1,5 +1,5 @@
 ---
-summary: "Adds LiteLLM model provider support to Quiet Core bot."
+summary: "Adds LiteLLM model provider support to QuietCore."
 read_when:
   - You are installing, configuring, or auditing the litellm plugin
 title: "LiteLLM plugin"
@@ -7,12 +7,12 @@ title: "LiteLLM plugin"
 
 # LiteLLM plugin
 
-Adds LiteLLM model provider support to Quiet Core bot.
+Adds LiteLLM model provider support to QuietCore.
 
 ## Distribution
 
 - Package: `@quiet-core/litellm-provider`
-- Install route: included in Quiet Core bot
+- Install route: included in QuietCore
 
 ## Surface
 

@@ -2,6 +2,7 @@
 // tool context fallback, or configured plugin accounts.
 import { listChannelPlugins } from "../../channels/plugins/index.js";
 import type { ChannelPlugin } from "../../channels/plugins/types.plugin.js";
+import { formatCliCommand } from "../../cli/command-format.js";
 import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import {
   type OfficialExternalPluginRepairHint,
@@ -245,7 +246,11 @@ export async function resolveMessageChannelSelection(params: {
         };
       }
       if (!isKnownChannel(normalized)) {
-        throw new Error(`Unknown channel: ${normalized}`);
+        throw new Error(
+          `Unknown channel: ${normalized}. Run \`${formatCliCommand(
+            "quiet-core-bot channels list --all",
+          )}\` to see configured and installable channels.`,
+        );
       }
       const repairHint = isConfiguredChannel(params.cfg, normalized)
         ? resolveMissingOfficialExternalChannelPluginRepairHint({

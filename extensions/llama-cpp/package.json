@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/llama-cpp-provider",
-  "version": "2026.6.11",
+  "version": "0.1.0",
   "description": "QuietCore llama.cpp embedding provider plugin",
   "repository": {
     "type": "git",
@@ -23,10 +23,10 @@
       "minHostVersion": ">=2026.6.2"
     },
     "compat": {
-      "pluginApi": ">=2026.6.11"
+      "pluginApi": ">=0.1.0"
     },
     "build": {
-      "openclawVersion": "2026.6.11"
+      "openclawVersion": "0.1.0"
     },
     "release": {
       "bundleRuntimeDependencies": false,

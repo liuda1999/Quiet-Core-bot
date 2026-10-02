@@ -1,12 +1,12 @@
 {
   "name": "@quiet-core/matrix",
-  "version": "2026.6.11",
+  "version": "0.1.0",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
       "name": "@quiet-core/matrix",
-      "version": "2026.6.11",
+      "version": "0.1.0",
       "dependencies": {
         "@matrix-org/matrix-sdk-crypto-nodejs": "0.6.0",
         "@matrix-org/matrix-sdk-crypto-wasm": "18.3.0",
@@ -18,7 +18,7 @@
         "zod": "4.4.3"
       },
       "peerDependencies": {
-        "quiet-core-bot": ">=2026.6.11"
+        "quiet-core-bot": ">=0.1.0"
       },
       "peerDependenciesMeta": {
         "quiet-core-bot": {

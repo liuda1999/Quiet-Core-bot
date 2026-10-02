@@ -1,4 +1,5 @@
 // Irc tests cover setup plugin behavior.
+import { readFileSync } from "node:fs";
 import {
   expectStopPendingUntilAbort,
   startAccountAndTrackLifecycle,
@@ -354,6 +355,31 @@ describe("irc setup", () => {
     });
   });
 
+  it("declares non-interactive add options that satisfy required host/nick validation", () => {
+    const manifest = JSON.parse(
+      readFileSync(new URL("../package.json", import.meta.url), "utf8"),
+    ) as {
+      "quiet-core-bot"?: { channel?: { cliAddOptions?: Array<{ flags: string }> } };
+    };
+    const flags =
+      manifest["quiet-core-bot"]?.channel?.cliAddOptions?.map((option) => option.flags) ?? [];
+    const optionKeys = flags.map((flag) => flag.match(/^--([a-z0-9-]+)/u)?.[1]);
+
+    expect(optionKeys).toContain("host");
+    expect(optionKeys).toContain("nick");
+
+    const validateInput = ircSetupAdapter.validateInput;
+    expect(validateInput).toBeTypeOf("function");
+    if (!validateInput) {
+      throw new Error("Expected IRC setup validateInput");
+    }
+    expect(
+      validateInput({
+        input: { host: "irc.example.net", nick: "quiet-core-bot-probe" },
+      } as never),
+    ).toBeNull();
+  });
+
   it("configures host and nick via setup prompts", async () => {
     const prompter = createTestWizardPrompter({
       text: vi.fn(async ({ message }: { message: string }) => {
@@ -405,7 +431,10 @@ describe("irc setup", () => {
     expect(result.cfg.channels?.irc?.tls).toBe(true);
     expect(result.cfg.channels?.irc?.channels).toEqual(["#quiet-core-bot", "#ops"]);
     expect(result.cfg.channels?.irc?.groupPolicy).toBe("allowlist");
-    expect(Object.keys(result.cfg.channels?.irc?.groups ?? {})).toEqual(["#quiet-core-bot", "#ops"]);
+    expect(Object.keys(result.cfg.channels?.irc?.groups ?? {})).toEqual([
+      "#quiet-core-bot",
+      "#ops",
+    ]);
   });
 
   it("rejects partial IRC setup wizard ports", async () => {

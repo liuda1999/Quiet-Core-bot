@@ -12,7 +12,7 @@ Experimental Canvas control and A2UI rendering surfaces for paired nodes.
 ## Distribution
 
 - Package: `@quiet-core/canvas-plugin`
-- Install route: included in Quiet Core bot
+- Install route: included in QuietCore
 
 ## Surface
 

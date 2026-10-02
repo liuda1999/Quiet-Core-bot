@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/raft",
-  "version": "2026.6.11",
+  "version": "0.1.0",
   "description": "QuietCore Raft channel plugin for Raft CLI wake bridges.",
   "repository": {
     "type": "git",
@@ -15,7 +15,7 @@
     "quiet-core-bot": "workspace:*"
   },
   "peerDependencies": {
-    "quiet-core-bot": ">=2026.6.11"
+    "quiet-core-bot": ">=0.1.0"
   },
   "peerDependenciesMeta": {
     "quiet-core-bot": {
@@ -33,10 +33,10 @@
       "minHostVersion": ">=2026.6.8"
     },
     "compat": {
-      "pluginApi": ">=2026.6.11"
+      "pluginApi": ">=0.1.0"
     },
     "build": {
-      "openclawVersion": "2026.6.11"
+      "openclawVersion": "0.1.0"
     },
     "channel": {
       "id": "raft",

@@ -243,7 +243,7 @@ function detectQaEvidenceArtifactContentType(filePath: string): string {
 
 async function startQaGatewayLoop(params: { state: QaBusState; baseUrl: string }) {
   const runtime = createQaRunnerRuntime();
-  setQaChannelRuntime(runtime);
+  await setQaChannelRuntime(runtime);
   const cfg = createQaLabConfig(params.baseUrl);
   const account = qaChannelPlugin.config.resolveAccount(cfg, "default");
   const abort = new AbortController();

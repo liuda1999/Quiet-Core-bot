@@ -1,5 +1,5 @@
 ---
-summary: "Adds Copilot Proxy model provider support to Quiet Core bot."
+summary: "Adds Copilot Proxy model provider support to QuietCore."
 read_when:
   - You are installing, configuring, or auditing the copilot-proxy plugin
 title: "Copilot Proxy plugin"
@@ -7,12 +7,12 @@ title: "Copilot Proxy plugin"
 
 # Copilot Proxy plugin
 
-Adds Copilot Proxy model provider support to Quiet Core bot.
+Adds Copilot Proxy model provider support to QuietCore.
 
 ## Distribution
 
 - Package: `@quiet-core/copilot-proxy`
-- Install route: included in Quiet Core bot
+- Install route: included in QuietCore
 
 ## Surface
 

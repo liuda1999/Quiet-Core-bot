@@ -1,5 +1,5 @@
 ---
-summary: "Adds SGLang model provider support to Quiet Core bot."
+summary: "Adds SGLang model provider support to QuietCore."
 read_when:
   - You are installing, configuring, or auditing the sglang plugin
 title: "SGLang plugin"
@@ -7,12 +7,12 @@ title: "SGLang plugin"
 
 # SGLang plugin
 
-Adds SGLang model provider support to Quiet Core bot.
+Adds SGLang model provider support to QuietCore.
 
 ## Distribution
 
 - Package: `@quiet-core/sglang-provider`
-- Install route: included in Quiet Core bot
+- Install route: included in QuietCore
 
 ## Surface
 

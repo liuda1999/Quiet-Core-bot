@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/memory-core",
-  "version": "2026.6.11",
+  "version": "0.1.0",
   "private": true,
   "description": "QuietCore core memory search plugin",
   "type": "module",
@@ -14,7 +14,7 @@
     "quiet-core-bot": "workspace:*"
   },
   "peerDependencies": {
-    "quiet-core-bot": ">=2026.6.11"
+    "quiet-core-bot": ">=0.1.0"
   },
   "peerDependenciesMeta": {
     "quiet-core-bot": {

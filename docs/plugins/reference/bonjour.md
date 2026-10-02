@@ -1,5 +1,5 @@
 ---
-summary: "Advertise the local Quiet Core bot gateway over Bonjour/mDNS."
+summary: "Advertise the local QuietCore gateway over Bonjour/mDNS."
 read_when:
   - You are installing, configuring, or auditing the bonjour plugin
 title: "Bonjour plugin"
@@ -7,12 +7,12 @@ title: "Bonjour plugin"
 
 # Bonjour plugin
 
-Advertise the local Quiet Core bot gateway over Bonjour/mDNS.
+Advertise the local QuietCore gateway over Bonjour/mDNS.
 
 ## Distribution
 
 - Package: `@quiet-core/bonjour`
-- Install route: included in Quiet Core bot
+- Install route: included in QuietCore
 
 ## Surface
 

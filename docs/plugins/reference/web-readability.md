@@ -12,7 +12,7 @@ Extract readable article content from local HTML web fetch responses.
 ## Distribution
 
 - Package: `@quiet-core/web-readability-plugin`
-- Install route: included in Quiet Core bot
+- Install route: included in QuietCore
 
 ## Surface
 

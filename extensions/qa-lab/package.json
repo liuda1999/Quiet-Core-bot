@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/qa-lab",
-  "version": "2026.6.11",
+  "version": "0.1.0",
   "private": true,
   "description": "QuietCore QA lab plugin with private debugger UI and scenario runner",
   "type": "module",
@@ -17,7 +17,7 @@
     "quiet-core-bot": "workspace:*"
   },
   "peerDependencies": {
-    "quiet-core-bot": ">=2026.6.11"
+    "quiet-core-bot": ">=0.1.0"
   },
   "peerDependenciesMeta": {
     "quiet-core-bot": {
@@ -29,7 +29,7 @@
       "./index.ts"
     ],
     "compat": {
-      "pluginApi": ">=2026.6.11"
+      "pluginApi": ">=0.1.0"
     }
   }
 }

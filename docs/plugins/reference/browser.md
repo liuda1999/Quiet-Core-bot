@@ -12,7 +12,7 @@ Adds agent-callable tools.
 ## Distribution
 
 - Package: `@quiet-core/browser-plugin`
-- Install route: included in Quiet Core bot
+- Install route: included in QuietCore
 
 ## Surface
 

@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/signal",
-  "version": "2026.6.11",
+  "version": "0.1.0",
   "description": "QuietCore Signal channel plugin",
   "type": "module",
   "dependencies": {
@@ -47,10 +47,10 @@
       "allowInvalidConfigRecovery": true
     },
     "compat": {
-      "pluginApi": ">=2026.6.11"
+      "pluginApi": ">=0.1.0"
     },
     "build": {
-      "openclawVersion": "2026.6.11",
+      "openclawVersion": "0.1.0",
       "bundledDist": false
     },
     "release": {

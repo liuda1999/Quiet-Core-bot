@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/lobster",
-  "version": "2026.6.11",
+  "version": "0.1.0",
   "description": "Lobster workflow tool plugin for typed pipelines and resumable approvals.",
   "repository": {
     "type": "git",
@@ -24,10 +24,10 @@
       "minHostVersion": ">=2026.4.25"
     },
     "compat": {
-      "pluginApi": ">=2026.6.11"
+      "pluginApi": ">=0.1.0"
     },
     "build": {
-      "openclawVersion": "2026.6.11"
+      "openclawVersion": "0.1.0"
     },
     "release": {
       "publishToClawHub": true,

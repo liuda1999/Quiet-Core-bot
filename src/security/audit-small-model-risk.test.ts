@@ -120,4 +120,64 @@ describe("security audit small-model risk findings", () => {
     expect(finding.detail).toContain("No web/browser tools detected");
     expect(finding.detail).not.toContain("web=[web_search");
   });
+
+  const localProviderConfig = {
+    baseUrl: "http://192.168.0.108:23456/v1",
+    models: [],
+  };
+
+  it("does not flag a user-selected local 27B default primary as critical", () => {
+    const finding = requireFirstSmallModelFinding(
+      collectSmallModelRiskFindings({
+        cfg: {
+          agents: {
+            defaults: {
+              model: { primary: "custom-192-168-0-108-23456/Qwen3.8-27B-UD-Q6_K_M.gguf" },
+            },
+          },
+          models: {
+            providers: { "custom-192-168-0-108-23456": localProviderConfig },
+          },
+          tools: { web: { search: { enabled: true }, fetch: { enabled: true } } },
+          browser: { enabled: true },
+        } satisfies QuietCoreConfig,
+        env: {},
+      }),
+      "local 27B default primary",
+    );
+
+    expect(finding.checkId).toBe("models.small_params");
+    expect(finding.severity).not.toBe("critical");
+    expect(finding.severity).toBe("info");
+    expect(finding.detail).toContain("Qwen3.8-27B-UD-Q6_K_M.gguf");
+    expect(finding.detail).toContain("paramB=27B");
+    expect(finding.detail).toContain("<= 300");
+    expect(finding.detail).toContain("agents.defaults.model.primary");
+    expect(finding.detail).toContain("info(local default)");
+  });
+
+  it("still flags a genuinely tiny 1B local default primary as critical", () => {
+    const finding = requireFirstSmallModelFinding(
+      collectSmallModelRiskFindings({
+        cfg: {
+          agents: {
+            defaults: {
+              model: { primary: "custom-192-168-0-108-23456/tiny-1b.gguf" },
+            },
+          },
+          models: {
+            providers: { "custom-192-168-0-108-23456": localProviderConfig },
+          },
+          tools: { web: { search: { enabled: true }, fetch: { enabled: true } } },
+          browser: { enabled: true },
+        } satisfies QuietCoreConfig,
+        env: {},
+      }),
+      "local 1B default primary",
+    );
+
+    expect(finding.severity).toBe("critical");
+    expect(finding.detail).toContain("paramB=1B");
+    expect(finding.detail).toContain("tiny-1b.gguf");
+  });
 });

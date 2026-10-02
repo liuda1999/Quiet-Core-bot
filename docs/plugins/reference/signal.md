@@ -1,5 +1,5 @@
 ---
-summary: "Adds the Signal channel surface for sending and receiving Quiet Core bot messages."
+summary: "Adds the Signal channel surface for sending and receiving QuietCore messages."
 read_when:
   - You are installing, configuring, or auditing the signal plugin
 title: "Signal plugin"
@@ -7,7 +7,7 @@ title: "Signal plugin"
 
 # Signal plugin
 
-Adds the Signal channel surface for sending and receiving Quiet Core bot messages.
+Adds the Signal channel surface for sending and receiving QuietCore messages.
 
 ## Distribution
 

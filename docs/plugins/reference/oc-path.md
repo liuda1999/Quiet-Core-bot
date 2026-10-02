@@ -12,7 +12,7 @@ Adds the quiet-core-bot path CLI for oc:// workspace file addressing.
 ## Distribution
 
 - Package: `@quiet-core/oc-path`
-- Install route: included in Quiet Core bot
+- Install route: included in QuietCore
 
 ## Surface
 

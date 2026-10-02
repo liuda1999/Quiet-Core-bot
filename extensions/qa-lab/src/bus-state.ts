@@ -1,6 +1,5 @@
 // Qa Lab plugin module implements bus state behavior.
 import { randomUUID } from "node:crypto";
-import { sanitizeQaBusToolCalls } from "quiet-core-bot/plugin-sdk/qa-channel-protocol";
 import {
   buildQaBusSnapshot,
   cloneMessage,
@@ -11,6 +10,7 @@ import {
   searchQaBusMessages,
 } from "./bus-queries.js";
 import { createQaBusWaiterStore } from "./bus-waiters.js";
+import { getQaChannelProtocolModule } from "./qa-channel-protocol-loader.js";
 import type {
   QaBusAttachment,
   QaBusConversation,
@@ -121,7 +121,13 @@ export function createQaBusState() {
     toolCalls?: QaBusToolCall[];
   }): QaBusMessage => {
     const conversation = ensureConversation(params.conversation);
-    const toolCalls = sanitizeQaBusToolCalls(params.toolCalls);
+    // Tool-call redaction lives in the private QA protocol surface; only resolve
+    // it when tool calls are actually present so tool-call free messages never
+    // depend on the private build.
+    const toolCalls =
+      params.toolCalls === undefined
+        ? undefined
+        : getQaChannelProtocolModule().sanitizeQaBusToolCalls(params.toolCalls);
     const message: QaBusMessage = {
       id: randomUUID(),
       accountId: params.accountId,

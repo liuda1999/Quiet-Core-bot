@@ -12,7 +12,7 @@ OpenProse VM skill pack with a /prose slash command.
 ## Distribution
 
 - Package: `@quiet-core/open-prose`
-- Install route: included in Quiet Core bot
+- Install route: included in QuietCore
 
 ## Surface
 

@@ -1,7 +1,7 @@
 ---
-summary: "Generated index of Quiet Core bot plugin reference pages"
+summary: "Generated index of QuietCore plugin reference pages"
 read_when:
-  - You need a reference page for a specific Quiet Core bot plugin
+  - You need a reference page for a specific QuietCore plugin
   - You are auditing plugin docs coverage
 title: "Plugin reference"
 ---
@@ -15,5 +15,5 @@ This page is generated from `extensions/*/package.json` and
 pnpm plugins:inventory:gen
 ```
 
-Use [Plugin inventory](/plugins/plugin-inventory) to browse all 129
+Use [Plugin inventory](/plugins/plugin-inventory) to browse all 49
 generated plugin reference pages by distribution, package, and description.

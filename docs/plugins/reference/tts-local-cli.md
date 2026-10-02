@@ -12,7 +12,7 @@ Adds text-to-speech provider support.
 ## Distribution
 
 - Package: `@quiet-core/tts-local-cli`
-- Install route: included in Quiet Core bot
+- Install route: included in QuietCore
 
 ## Surface
 

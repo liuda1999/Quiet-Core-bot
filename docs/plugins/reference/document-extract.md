@@ -12,7 +12,7 @@ Extract text and fallback page images from local document attachments.
 ## Distribution
 
 - Package: `@quiet-core/document-extract-plugin`
-- Install route: included in Quiet Core bot
+- Install route: included in QuietCore
 
 ## Surface
 

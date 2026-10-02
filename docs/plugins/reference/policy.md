@@ -12,7 +12,7 @@ Adds policy-backed doctor checks for workspace conformance.
 ## Distribution
 
 - Package: `@quiet-core/policy`
-- Install route: included in Quiet Core bot
+- Install route: included in QuietCore
 
 ## Surface
 

@@ -1,4 +1,5 @@
 // Summarizes extra security audit findings for user-facing output.
+import { isPrivateOrLoopbackIpAddress } from "@quiet-core/net-policy/ip";
 import {
   resolveConfiguredToolPolicies,
   resolveProviderToolPolicy,
@@ -23,7 +24,24 @@ export type SecurityAuditFinding = {
   remediation?: string;
 };
 
+// Broad heuristic threshold for flagging candidate small models. At this size the
+// parameter count alone is not enough to justify a blocking finding for a
+// user-selected local default, so severity is decided per entry below.
 const SMALL_MODEL_PARAM_B_MAX = 300;
+// Genuinely tiny models stay blocking even when they are the user's explicitly
+// configured local default, because they cannot be trusted with web/browser tools.
+const TINY_MODEL_PARAM_B_MAX = 10;
+// Well-known local runtimes that may not appear in models.providers.
+const LOCAL_PROVIDER_IDS = new Set([
+  "ollama",
+  "lmstudio",
+  "llama-cpp",
+  "llamacpp",
+  "llama.cpp",
+  "vllm",
+  "localai",
+  "text-generation-webui",
+]);
 
 function summarizeGroupPolicy(cfg: QuietCoreConfig): {
   open: number;
@@ -57,6 +75,47 @@ function summarizeGroupPolicy(cfg: QuietCoreConfig): {
 function extractAgentIdFromSource(source: string): string | null {
   const match = source.match(/^agents\.list\.([^.]*)\./);
   return match?.[1] ?? null;
+}
+
+function normalizeHostname(hostname: string): string {
+  return hostname
+    .trim()
+    .toLowerCase()
+    .replace(/\.+$/, "")
+    .replace(/^\[(.*)\]$/, "$1");
+}
+
+function isLocalProviderBaseUrl(baseUrl: string | undefined): boolean {
+  if (!baseUrl) {
+    return false;
+  }
+  let hostname: string;
+  try {
+    hostname = new URL(baseUrl.trim()).hostname;
+  } catch {
+    return false;
+  }
+  const normalized = normalizeHostname(hostname);
+  return normalized === "localhost" || isPrivateOrLoopbackIpAddress(normalized);
+}
+
+/** Returns whether a model provider resolves to a self-hosted/local endpoint. */
+function isLocalProvider(cfg: QuietCoreConfig, provider: string | undefined): boolean {
+  if (typeof provider !== "string") {
+    return false;
+  }
+  const normalized = provider.trim().toLowerCase();
+  if (!normalized) {
+    return false;
+  }
+  if (LOCAL_PROVIDER_IDS.has(normalized)) {
+    return true;
+  }
+  const entry = cfg.models?.providers?.[provider] ?? cfg.models?.providers?.[normalized];
+  if (!entry) {
+    return false;
+  }
+  return Boolean(entry.localService) || isLocalProviderBaseUrl(entry.baseUrl);
 }
 
 function resolveToolPolicies(params: {
@@ -173,7 +232,7 @@ export function collectSmallModelRiskFindings(params: {
     return findings;
   }
 
-  let hasUnsafe = false;
+  let hasBlockingUnsafe = false;
   const modelLines: string[] = [];
   const exposureSet = new Set<string>();
   for (const entry of smallModels) {
@@ -215,12 +274,19 @@ export function collectSmallModelRiskFindings(params: {
     const sandboxLabel = sandboxMode === "all" ? "sandbox=all" : `sandbox=${sandboxMode}`;
     const exposureLabel = exposed.length > 0 ? ` web=[${exposed.join(", ")}]` : " web=[off]";
     const safe = exposed.length === 0;
-    if (!safe) {
-      hasUnsafe = true;
+    // A user-selected default primary on a local provider is not blocking from
+    // the broad <=SMALL_MODEL_PARAM_B_MAX heuristic alone; only genuinely tiny
+    // models keep the critical signal.
+    const userSelectedLocalDefault =
+      entry.source === "agents.defaults.model.primary" &&
+      isLocalProvider(params.cfg, modelRef?.provider);
+    const downgraded = !safe && userSelectedLocalDefault && entry.paramB > TINY_MODEL_PARAM_B_MAX;
+    if (!safe && !downgraded) {
+      hasBlockingUnsafe = true;
     }
-    const statusLabel = safe ? "ok" : "unsafe";
+    const statusLabel = safe ? "ok" : downgraded ? "info(local default)" : "unsafe";
     modelLines.push(
-      `- ${entry.id} (${entry.paramB}B) @ ${entry.source} (${statusLabel}; ${sandboxLabel};${exposureLabel})`,
+      `- ${entry.id} (paramB=${entry.paramB}B parsed from this model id) @ ${entry.source} (${statusLabel}; ${sandboxLabel};${exposureLabel})`,
     );
   }
 
@@ -232,12 +298,15 @@ export function collectSmallModelRiskFindings(params: {
 
   findings.push({
     checkId: "models.small_params",
-    severity: hasUnsafe ? "critical" : "info",
+    severity: hasBlockingUnsafe ? "critical" : "info",
     title: "Small models require sandboxing and web tools disabled",
     detail:
-      `Small models (<=${SMALL_MODEL_PARAM_B_MAX}B params) detected:\n` +
+      `Small model candidates (paramB <= ${SMALL_MODEL_PARAM_B_MAX}, inferred from the model id) detected:\n` +
       modelLines.join("\n") +
       `\n` +
+      `Severity rule: a model that is the explicitly configured default primary ` +
+      `(agents.defaults.model.primary) on a local provider is downgraded to info unless ` +
+      `it is <= ${TINY_MODEL_PARAM_B_MAX}B.\n` +
       exposureDetail +
       `\n` +
       "Small models are not recommended for untrusted inputs.",

@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/vllm-provider",
-  "version": "2026.6.11",
+  "version": "0.1.0",
   "private": true,
   "description": "QuietCore vLLM provider plugin",
   "type": "module",

@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/document-extract-plugin",
-  "version": "2026.6.11",
+  "version": "0.1.0",
   "private": true,
   "description": "QuietCore local document extraction plugin",
   "type": "module",

@@ -1,5 +1,5 @@
 ---
-summary: "Quiet Core bot admin HTTP RPC endpoint."
+summary: "QuietCore admin HTTP RPC endpoint."
 read_when:
   - You are installing, configuring, or auditing the admin-http-rpc plugin
 title: "Admin Http Rpc plugin"
@@ -7,12 +7,12 @@ title: "Admin Http Rpc plugin"
 
 # Admin Http Rpc plugin
 
-Quiet Core bot admin HTTP RPC endpoint.
+QuietCore admin HTTP RPC endpoint.
 
 ## Distribution
 
 - Package: `@quiet-core/admin-http-rpc`
-- Install route: included in Quiet Core bot
+- Install route: included in QuietCore
 
 ## Surface
 

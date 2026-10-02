@@ -1,5 +1,5 @@
 ---
-summary: "Adds vLLM model provider support to Quiet Core bot."
+summary: "Adds vLLM model provider support to QuietCore."
 read_when:
   - You are installing, configuring, or auditing the vllm plugin
 title: "vLLM plugin"
@@ -7,12 +7,12 @@ title: "vLLM plugin"
 
 # vLLM plugin
 
-Adds vLLM model provider support to Quiet Core bot.
+Adds vLLM model provider support to QuietCore.
 
 ## Distribution
 
 - Package: `@quiet-core/vllm-provider`
-- Install route: included in Quiet Core bot
+- Install route: included in QuietCore
 
 ## Surface
 

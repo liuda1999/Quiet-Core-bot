@@ -1,12 +1,12 @@
 {
   "name": "@quiet-core/memory-lancedb",
-  "version": "2026.6.11",
+  "version": "0.1.0",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
       "name": "@quiet-core/memory-lancedb",
-      "version": "2026.6.11",
+      "version": "0.1.0",
       "dependencies": {
         "@lancedb/lancedb": "0.30.0",
         "apache-arrow": "21.1.0",

@@ -12,7 +12,7 @@ Generic JSON-only LLM tool for structured tasks callable from workflows.
 ## Distribution
 
 - Package: `@quiet-core/llm-task`
-- Install route: included in Quiet Core bot
+- Install route: included in QuietCore
 
 ## Surface
 

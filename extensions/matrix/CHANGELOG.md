@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.0
+
+### Changes
+
+- Version alignment with core QuietCore release numbers.
+
 ## 2026.6.11
 
 ### Changes

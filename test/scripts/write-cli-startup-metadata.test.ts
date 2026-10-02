@@ -605,4 +605,76 @@ describe("write-cli-startup-metadata", () => {
     };
     expect(regenerated.commitSignature).toBe(written.commitSignature);
   });
+
+  // Regression: help advertised channels this distribution cannot load
+  // (telegram/whatsapp/...). Channel options now come from the bundled
+  // extension manifests plus the official external channel catalog.
+  it("lists only real channels and defers the banner commit to runtime", async () => {
+    const tempRoot = createTempDir("quiet-core-bot-startup-metadata-channels-");
+    const distDir = path.join(tempRoot, "dist");
+    const extensionsDir = path.join(tempRoot, "extensions");
+    const outputPath = path.join(distDir, "cli-startup-metadata.json");
+    const banner = "Quiet Core bot 0.1.0 (abc1234)\n";
+
+    mkdirSync(distDir, { recursive: true });
+    mkdirSync(path.join(extensionsDir, "irc"), { recursive: true });
+    writeFileSync(
+      path.join(extensionsDir, "irc", "package.json"),
+      JSON.stringify({
+        "quiet-core-bot": { channel: { id: "irc", order: 30, label: "IRC" } },
+      }),
+      "utf8",
+    );
+
+    await writeCliStartupMetadata({
+      distDir,
+      outputPath,
+      extensionsDir,
+      renderBundledRootHelpText: async () => {
+        throw new Error("dist root help unavailable");
+      },
+      renderSourceRootHelpText: () => `${banner}\nUsage: quiet-core-bot\n`,
+      renderSourceBrowserHelpText: () => `${banner}Usage: quiet-core-bot browser\n`,
+      renderSourceSecretsHelpText: () => "Usage: quiet-core-bot secrets\n",
+      renderSourceNodesHelpText: () => "Usage: quiet-core-bot nodes\n",
+      renderSourceSubcommandHelpTextRecord: () => ({
+        doctor: `${banner}Usage: quiet-core-bot doctor\n`,
+        gateway: "Usage: quiet-core-bot gateway\n",
+        models: "Usage: quiet-core-bot models\n",
+        plugins: "Usage: quiet-core-bot plugins\n",
+        sessions: "Usage: quiet-core-bot sessions\n",
+        tasks: "Usage: quiet-core-bot tasks\n",
+      }),
+    });
+
+    const written = JSON.parse(readFileSync(outputPath, "utf8")) as {
+      browserHelpText: string;
+      channelOptions: string[];
+      rootHelpText: string;
+      secretsHelpText: string;
+      subcommandHelpText: Record<string, string>;
+    };
+
+    for (const unavailable of [
+      "telegram",
+      "whatsapp",
+      "discord",
+      "googlechat",
+      "slack",
+      "imessage",
+    ]) {
+      expect(written.channelOptions).not.toContain(unavailable);
+    }
+    expect(written.channelOptions).toContain("irc");
+    expect(written.channelOptions).toContain("matrix");
+
+    const placeholder = "__QUIET_CORE_BANNER_COMMIT__";
+    expect(written.rootHelpText).toContain(`(${placeholder})`);
+    expect(written.rootHelpText).not.toContain("abc1234");
+    expect(written.browserHelpText).not.toContain("abc1234");
+    expect(written.subcommandHelpText.doctor).toContain(`(${placeholder})`);
+    expect(written.subcommandHelpText.doctor).not.toContain("abc1234");
+    // Help text without a banner is written verbatim.
+    expect(written.secretsHelpText).toBe("Usage: quiet-core-bot secrets\n");
+  });
 });

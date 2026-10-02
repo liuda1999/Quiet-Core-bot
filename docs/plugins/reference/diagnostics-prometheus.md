@@ -1,5 +1,5 @@
 ---
-summary: "Quiet Core bot diagnostics Prometheus exporter for runtime metrics."
+summary: "QuietCore diagnostics Prometheus exporter for runtime metrics."
 read_when:
   - You are installing, configuring, or auditing the diagnostics-prometheus plugin
 title: "Diagnostics Prometheus plugin"
@@ -7,7 +7,7 @@ title: "Diagnostics Prometheus plugin"
 
 # Diagnostics Prometheus plugin
 
-Quiet Core bot diagnostics Prometheus exporter for runtime metrics.
+QuietCore diagnostics Prometheus exporter for runtime metrics.
 
 ## Distribution
 

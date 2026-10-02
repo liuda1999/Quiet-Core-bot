@@ -1,5 +1,5 @@
 ---
-summary: "Quiet Core bot Raft channel plugin for secure CLI wake bridges."
+summary: "QuietCore Raft channel plugin for secure CLI wake bridges."
 read_when:
   - You are installing, configuring, or auditing the raft plugin
 title: "Raft plugin"
@@ -7,7 +7,7 @@ title: "Raft plugin"
 
 # Raft plugin
 
-Quiet Core bot Raft channel plugin for secure CLI wake bridges.
+QuietCore Raft channel plugin for secure CLI wake bridges.
 
 ## Distribution
 

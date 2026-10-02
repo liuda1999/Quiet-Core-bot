@@ -2,6 +2,11 @@
 import { MAX_TIMER_TIMEOUT_MS } from "quiet-core-bot/plugin-sdk/number-runtime";
 import { describe, expect, it, vi } from "vitest";
 import { createQaBusState } from "./bus-state.js";
+import { loadQaChannelProtocolModule } from "./qa-channel-protocol-loader.js";
+
+// Tool-call sanitization goes through the private QA protocol surface; resolve
+// it before the synchronous message assertions below run.
+await loadQaChannelProtocolModule();
 
 describe("qa-bus state", () => {
   it("records inbound and outbound traffic in cursor order", () => {

@@ -1,5 +1,5 @@
 ---
-summary: "Quiet Core bot Nostr channel plugin for NIP-04 encrypted direct messages."
+summary: "QuietCore Nostr channel plugin for NIP-04 encrypted direct messages."
 read_when:
   - You are installing, configuring, or auditing the nostr plugin
 title: "Nostr plugin"
@@ -7,7 +7,7 @@ title: "Nostr plugin"
 
 # Nostr plugin
 
-Quiet Core bot Nostr channel plugin for NIP-04 encrypted direct messages.
+QuietCore Nostr channel plugin for NIP-04 encrypted direct messages.
 
 ## Distribution
 

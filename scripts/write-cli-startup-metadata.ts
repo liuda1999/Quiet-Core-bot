@@ -41,16 +41,19 @@ const PRECOMPUTED_SUBCOMMAND_HELP_COMMANDS = [
   "sessions",
   "tasks",
 ] as const;
-const CORE_CHANNEL_ORDER = [
-  "telegram",
-  "whatsapp",
-  "discord",
-  "irc",
-  "googlechat",
-  "slack",
-  "signal",
-  "imessage",
-] as const;
+// Real available channels come from the bundled extension manifests plus the
+// official external channel catalog. The previous hardcoded upstream list
+// advertised channels this distribution cannot load or install.
+const OFFICIAL_EXTERNAL_CHANNEL_CATALOG_FILE = path.join(
+  scriptDir,
+  "lib",
+  "official-external-channel-catalog.json",
+);
+const DEFAULT_CHANNEL_ORDER = Number.MAX_SAFE_INTEGER;
+// Baked help keeps the banner layout but defers the commit to runtime so
+// `--help` and `--version` cannot disagree. Mirrored in src/cli/root-help-metadata.ts.
+const BANNER_COMMIT_PLACEHOLDER = "__QUIET_CORE_BANNER_COMMIT__";
+const BANNER_COMMIT_PATTERN = /(Quiet Core bot [^\n(]*?\()([0-9a-fA-F]{7,40}|unknown)(\))/u;
 const generatorSignature = createHash("sha1").update(readFileSync(scriptPath)).digest("hex");
 
 /**
@@ -321,9 +324,10 @@ function resolveSubcommandHelpSourceSignature(sourceRootDir: string = rootDir): 
   return hash.digest("hex");
 }
 
-export function readBundledChannelCatalog(
-  extensionsDirOverride: string = extensionsDir,
-): BundledChannelCatalog {
+function readBundledChannelEntries(extensionsDirOverride: string = extensionsDir): {
+  entries: ExtensionChannelEntry[];
+  signature: string;
+} {
   const entries: ExtensionChannelEntry[] = [];
   const signature = createHash("sha1");
   for (const dirEntry of readdirSync(extensionsDirOverride, { withFileTypes: true })) {
@@ -350,22 +354,99 @@ export function readBundledChannelCatalog(
       const orderRaw = parsed["quiet-core-bot"]?.channel?.order;
       const labelRaw = parsed["quiet-core-bot"]?.channel?.label;
       entries.push({
-        id: id.trim(),
-        order: typeof orderRaw === "number" ? orderRaw : 999,
+        id: id.trim().toLowerCase(),
+        order: typeof orderRaw === "number" ? orderRaw : DEFAULT_CHANNEL_ORDER,
         label: typeof labelRaw === "string" ? labelRaw : id.trim(),
       });
     } catch {
       // Ignore malformed or missing extension package manifests.
     }
   }
+  return { entries, signature: signature.digest("hex") };
+}
+
+export function readBundledChannelCatalog(
+  extensionsDirOverride: string = extensionsDir,
+): BundledChannelCatalog {
+  const { entries, signature } = readBundledChannelEntries(extensionsDirOverride);
   return {
     ids: entries
       .toSorted((a, b) =>
         a.order === b.order ? a.label.localeCompare(b.label) : a.order - b.order,
       )
       .map((entry) => entry.id),
-    signature: signature.digest("hex"),
+    signature,
   };
+}
+
+type ChannelCatalogEntry = {
+  id: string;
+  order: number;
+};
+
+function readOfficialExternalChannelEntries(
+  catalogPath: string = OFFICIAL_EXTERNAL_CHANNEL_CATALOG_FILE,
+): { entries: ChannelCatalogEntry[]; signature: string } {
+  const signature = createHash("sha1");
+  try {
+    const raw = readFileSync(catalogPath, "utf8");
+    signature.update(raw);
+    const parsed = JSON.parse(raw) as { entries?: unknown };
+    const rawEntries = Array.isArray(parsed.entries) ? parsed.entries : [];
+    const entries: ChannelCatalogEntry[] = [];
+    for (const rawEntry of rawEntries) {
+      const channel = (
+        rawEntry as {
+          "quiet-core-bot"?: { channel?: { id?: unknown; order?: unknown } };
+        }
+      )?.["quiet-core-bot"]?.channel;
+      const id = typeof channel?.id === "string" ? channel.id.trim().toLowerCase() : "";
+      if (!id) {
+        continue;
+      }
+      entries.push({
+        id,
+        order:
+          typeof channel?.order === "number" && Number.isFinite(channel.order)
+            ? channel.order
+            : DEFAULT_CHANNEL_ORDER,
+      });
+    }
+    return { entries, signature: signature.digest("hex") };
+  } catch {
+    return { entries: [], signature: signature.digest("hex") };
+  }
+}
+
+function resolveChannelOptions(params: {
+  extensionsDirOverride: string;
+  officialCatalogPath?: string;
+}): { ids: string[]; signature: string } {
+  const bundled = readBundledChannelEntries(params.extensionsDirOverride);
+  const official = readOfficialExternalChannelEntries(
+    params.officialCatalogPath ?? OFFICIAL_EXTERNAL_CHANNEL_CATALOG_FILE,
+  );
+  const merged = new Map<string, ChannelCatalogEntry>();
+  for (const entry of official.entries) {
+    merged.set(entry.id, entry);
+  }
+  for (const entry of bundled.entries) {
+    // Bundled package manifests win over the installable catalog for the same id.
+    merged.set(entry.id, { id: entry.id, order: entry.order });
+  }
+  const ids = [...merged.values()]
+    .toSorted((a, b) => a.order - b.order || a.id.localeCompare(b.id))
+    .map((entry) => entry.id);
+  const signature = createHash("sha1")
+    .update(bundled.signature)
+    .update("\0")
+    .update(official.signature)
+    .digest("hex");
+  return { ids, signature };
+}
+
+function deferBannerCommitToRuntime(helpText: string): string {
+  return helpText.replace(BANNER_COMMIT_PATTERN, `$1${BANNER_COMMIT_PLACEHOLDER}$3`);
 }
 
 function createIsolatedRootHelpRenderContext(
@@ -824,7 +905,15 @@ export async function writeCliStartupMetadata(options?: {
   const resolvedOutputPath = options?.outputPath ?? outputPath;
   const resolvedExtensionsDir = options?.extensionsDir ?? extensionsDir;
   const resolvedSourceRootDir = options?.sourceRootDir ?? rootDir;
-  const channelCatalog = readBundledChannelCatalog(resolvedExtensionsDir);
+  const channelCatalog = resolveChannelOptions({
+    extensionsDirOverride: resolvedExtensionsDir,
+    officialCatalogPath: path.join(
+      resolvedSourceRootDir,
+      "scripts",
+      "lib",
+      "official-external-channel-catalog.json",
+    ),
+  });
   const bundleIdentity = resolveRootHelpBundleIdentity(resolvedDistDir);
   const browserHelpSourceSignature = resolveBrowserHelpSourceSignature(resolvedSourceRootDir);
   const secretsHelpSourceSignature = resolveSecretsHelpSourceSignature(resolvedSourceRootDir);
@@ -834,7 +923,7 @@ export async function writeCliStartupMetadata(options?: {
   const renderContext = createIsolatedRootHelpRenderContext(
     existsSync(bundledPluginsDir) ? bundledPluginsDir : resolvedExtensionsDir,
   );
-  const channelOptions = dedupe([...CORE_CHANNEL_ORDER, ...channelCatalog.ids]);
+  const channelOptions = dedupe(channelCatalog.ids);
   const commitSignature = resolveBuildCommitSignature(resolvedDistDir);
 
   try {
@@ -929,6 +1018,13 @@ export async function writeCliStartupMetadata(options?: {
     nodesHelpTextPromise,
     subcommandHelpTextPromise,
   ]);
+  // Swap the baked commit for a placeholder; runtime output resolves it.
+  const bakedSubcommandHelpText = Object.fromEntries(
+    PRECOMPUTED_SUBCOMMAND_HELP_COMMANDS.map((commandName) => [
+      commandName,
+      deferBannerCommitToRuntime(subcommandHelpText[commandName]),
+    ]),
+  ) as PrecomputedSubcommandHelpText;
 
   mkdirSync(resolvedDistDir, { recursive: true });
   writeFileSync(
@@ -945,11 +1041,11 @@ export async function writeCliStartupMetadata(options?: {
         secretsHelpSourceSignature,
         nodesHelpSourceSignature,
         subcommandHelpSourceSignature,
-        browserHelpText,
-        secretsHelpText,
-        nodesHelpText,
-        subcommandHelpText,
-        rootHelpText,
+        browserHelpText: deferBannerCommitToRuntime(browserHelpText),
+        secretsHelpText: deferBannerCommitToRuntime(secretsHelpText),
+        nodesHelpText: deferBannerCommitToRuntime(nodesHelpText),
+        subcommandHelpText: bakedSubcommandHelpText,
+        rootHelpText: deferBannerCommitToRuntime(rootHelpText),
       },
       null,
       2,

@@ -1,12 +1,12 @@
 {
   "name": "@quiet-core/diffs",
-  "version": "2026.6.11",
+  "version": "0.1.0",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
       "name": "@quiet-core/diffs",
-      "version": "2026.6.11",
+      "version": "0.1.0",
       "dependencies": {
         "@pierre/diffs": "1.2.4",
         "@pierre/theme": "1.0.3",

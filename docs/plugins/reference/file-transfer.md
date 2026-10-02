@@ -12,7 +12,7 @@ Fetch, list, and write files on paired nodes via dedicated node commands. Bypass
 ## Distribution
 
 - Package: `@quiet-core/file-transfer`
-- Install route: included in Quiet Core bot
+- Install route: included in QuietCore
 
 ## Surface
 

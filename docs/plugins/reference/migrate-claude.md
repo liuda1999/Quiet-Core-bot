@@ -1,5 +1,5 @@
 ---
-summary: "Imports Claude Code and Claude Desktop instructions, MCP servers, skills, and safe configuration into Quiet Core bot."
+summary: "Imports Claude Code and Claude Desktop instructions, MCP servers, skills, and safe configuration into QuietCore."
 read_when:
   - You are installing, configuring, or auditing the migrate-claude plugin
 title: "Migrate Claude plugin"
@@ -7,12 +7,12 @@ title: "Migrate Claude plugin"
 
 # Migrate Claude plugin
 
-Imports Claude Code and Claude Desktop instructions, MCP servers, skills, and safe configuration into Quiet Core bot.
+Imports Claude Code and Claude Desktop instructions, MCP servers, skills, and safe configuration into QuietCore.
 
 ## Distribution
 
 - Package: `@quiet-core/migrate-claude`
-- Install route: included in Quiet Core bot
+- Install route: included in QuietCore
 
 ## Surface
 
