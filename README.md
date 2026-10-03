@@ -95,7 +95,7 @@
 ├── ui/               # Web 控制台（Control UI，Lit + Vite）
 ├── extensions/       # 内置插件（各渠道、模型供应商、加密、诊断等）
 ├── packages/         # 工作区子包（llm-core、media-core、terminal-core、plugin-sdk 等）
-├── apps/             # 原生客户端：macOS / iOS / Android / Windows / watchOS
+├── apps/             # 原生客户端与共享库：macOS / macOS-MLX-TTS / iOS / Android / swabble / shared
 ├── docs/             # 项目文档（Markdown）
 ├── scripts/          # 构建、测试、发布、安装等工程脚本
 ├── test/             # 测试基础设施与全局配置
@@ -106,11 +106,12 @@
 
 构建产物（不纳入版本库）：
 
-| 产物               | 说明                                                       |
-| ------------------ | ---------------------------------------------------------- |
-| `dist/`            | 服务端与 CLI 的打包产物（`dist/index.js` 为 CLI/网关入口） |
-| `dist/control-ui/` | 由 `ui/` 构建出的 Web 控制台静态资源（网关按请求实时提供） |
-| `dist/extensions/` | 内置插件的运行期产物与资源                                 |
+| 产物               | 说明                                                         |
+| ------------------ | ------------------------------------------------------------ |
+| `dist/`            | 服务端与 CLI 的打包产物（`dist/index.js` 为 CLI/网关入口）   |
+| `dist/control-ui/` | 由 `ui/` 构建出的 Web 控制台静态资源（网关按请求实时提供）   |
+| `dist/extensions/` | 内置插件的运行期产物与资源                                   |
+| `dist-runtime/`    | 内置插件运行期 overlay（含 SDK 别名与 Windows 兼容软链回退） |
 
 ---
 
@@ -152,25 +153,30 @@
 
 ## 六、快速开始（推荐）
 
+> **注意：npm 包尚未发布**（`registry.npmjs.org` 上查无 `quiet-core-bot`），因此当前请先从源码构建再运行（见 [七、从源码构建与部署](#七从源码构建与部署)）。
+
 ```bash
-# 1) 全局安装（任选其一）
-npm install -g quiet-core-bot@latest
-# 或：pnpm add -g quiet-core-bot@latest
+# 1) 首次：从源码构建
+git clone https://github.com/liuda1999/Quiet-Core-bot.git
+cd Quiet-Core-bot
+corepack enable && pnpm install
+pnpm build
 
 # 2) 运行引导向导：依次完成网关、工作区、渠道、技能配置
-quiet-core-bot onboard
+node dist/index.js onboard
 
 # 3) 安装并启动常驻服务（launchd / systemd / Windows 计划任务）
-quiet-core-bot onboard --install-daemon
+node dist/index.js onboard --install-daemon
 ```
 
 向导结束后：
 
 ```bash
-quiet-core-bot gateway status     # 查看网关状态
-quiet-core-bot dashboard          # 打开 Web 控制台（自动带上访问令牌）
+node dist/index.js gateway status     # 查看网关状态
+node dist/index.js dashboard          # 打开 Web 控制台（自动带上访问令牌）
 ```
 
+> 若已把 CLI 链接到全局（`npm link` 或 `pnpm link -g`），上述 `node dist/index.js` 均可简写为 `quiet-core-bot`。
 > 首次连接需要**设备配对**（pairing）。控制台顶部会给出配对命令或二维码：`quiet-core-bot devices list`。
 
 ---
