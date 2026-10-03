@@ -33,16 +33,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Checkout ClawHub docs source
-        if: env.QUIET_CORE_DOCS_SYNC_TOKEN != ''
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
-        with:
-          repository: quiet-core-bot/clawhub
-          path: clawhub-source
-          fetch-depth: 1
-          persist-credentials: false
-          token: ${{ env.QUIET_CORE_DOCS_SYNC_TOKEN || github.token }}
-
       - name: Setup Node
         if: env.QUIET_CORE_DOCS_SYNC_TOKEN != ''
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
@@ -70,14 +60,13 @@ jobs:
       - name: Sync docs into publish repo
         if: env.QUIET_CORE_DOCS_SYNC_TOKEN != ''
         run: |
-          clawhub_sha="$(git -C "$GITHUB_WORKSPACE/clawhub-source" rev-parse HEAD)"
+          # This fork does not mirror ClawHub docs (no accessible ClawHub source
+          # repository), so the publish sync covers this repository's docs only.
           node scripts/docs-sync-publish.mjs \
             --target "$GITHUB_WORKSPACE/publish" \
             --source-repo "$GITHUB_REPOSITORY" \
             --source-sha "$GITHUB_SHA" \
-            --clawhub-repo "$GITHUB_WORKSPACE/clawhub-source" \
-            --clawhub-source-repo "quiet-core-bot/clawhub" \
-            --clawhub-source-sha "$clawhub_sha"
+            --skip-clawhub
 
       - name: Install docs MDX checker dependency
         if: env.QUIET_CORE_DOCS_SYNC_TOKEN != ''

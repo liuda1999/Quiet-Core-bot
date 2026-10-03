@@ -82,7 +82,7 @@
   - [8.6 补遗：错误处理架构](#86-补遗错误处理架构)
   - [8.7 补遗：Daemon 运行状态](#87-补遗daemon-运行状态)
   - [8.8 补遗：特性开关与实验功能](#88-补遗特性开关与实验功能)
-  - [8.9 补遗：运行时 OPENCLAW\_\* 环境变量](#89-补遗运行时-openclaw_-环境变量)
+  - [8.9 补遗：运行时 QUIET_CORE\_\* 环境变量](#89-补遗运行时-quiet_core_-环境变量)
   - [8.10 补遗：工作区 .env 安全黑名单](#810-补遗工作区-env-安全黑名单)
   - [8.11 补遗：quiet-core-bot.json 配置 schema 索引](#811-补遗quiet-core-botjson-配置-schema-索引)
   - [8.12 补遗：config env 注入管线](#812-补遗config-env-注入管线)
@@ -4603,7 +4603,7 @@ Start it with: quiet-core-bot proxy start --host 127.0.0.1 --port 18888
 
 ---
 
-### 8.9 补遗：运行时 OPENCLAW\_\* 环境变量
+### 8.9 补遗：运行时 QUIET_CORE\_\* 环境变量
 
 `.env.example` 仅是"快速上手"子集；源码中尚有 45 个 `QUIET_CORE_*` 运行时变量未被文档第 8.1 节收录。证据来源：`src/infra/dotenv.ts:97-170`（`BLOCKED_WORKSPACE_DOTENV_KEYS`，这些变量因安全敏感性被显式列入工作区 `.env` 黑名单，反证它们都是真实存在的运行时控制变量）、`src/config/future-version-guard.ts:7-8`、`src/hooks/bundled-dir.ts:7`、`src/wizard/i18n/index.ts:53`、`src/logging/env-log-level.ts`、`src/gateway/call.ts`、`src/gateway/connection-details.ts`、`src/entry.ts`、`src/extensionAPI.ts`、`src/media-understanding/runner.ts` 等。
 

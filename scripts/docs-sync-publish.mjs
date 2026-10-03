@@ -187,6 +187,7 @@ export function parseArgs(argv) {
     clawhubSourceRepo:
       process.env.QUIET_CORE_DOCS_SYNC_CLAWHUB_SOURCE_REPO || DEFAULT_CLAWHUB_SOURCE_REPO,
     clawhubSourceSha: process.env.QUIET_CORE_DOCS_SYNC_CLAWHUB_SOURCE_SHA || "",
+    skipClawhub: false,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -215,6 +216,9 @@ export function parseArgs(argv) {
       case "--clawhub-source-sha":
         args.clawhubSourceSha = readOptionValue(argv, index, part);
         index += 1;
+        break;
+      case "--skip-clawhub":
+        args.skipClawhub = true;
         break;
       default:
         throw new Error(`unknown arg: ${part}`);
@@ -694,6 +698,7 @@ function syncDocsTree(targetRoot, options = {}) {
     repoPath: options.clawhubRepo,
     sourceRepo: options.clawhubSourceRepo,
     sourceSha: options.clawhubSourceSha,
+    required: options.clawhubRequired !== false,
   });
   pruneOrphanLocaleDocs(targetDocsDir);
   repairGeneratedLocaleDocs(targetDocsDir);
@@ -737,11 +742,14 @@ function main() {
     throw new Error(`target does not exist: ${targetRoot}`);
   }
 
-  const clawhubRepo = resolveClawHubRepoPath(args.clawhubRepo);
+  const clawhubRepo = resolveClawHubRepoPath(args.clawhubRepo, {
+    required: args.skipClawhub !== true,
+  });
   const sources = syncDocsTree(targetRoot, {
     clawhubRepo,
     clawhubSourceRepo: args.clawhubSourceRepo,
     clawhubSourceSha: args.clawhubSourceSha,
+    clawhubRequired: args.skipClawhub !== true,
   });
   syncSupportFiles(targetRoot);
   writeSyncMetadata(targetRoot, args, sources);

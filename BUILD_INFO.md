@@ -8,10 +8,10 @@ disagrees with `git` in your working copy, trust `git`.
 | Project                  | `quiet-core-bot`                                                                                                                                   |
 | Product name             | Quiet Core bot                                                                                                                                     |
 | Version (`package.json`) | `0.1.2`                                                                                                                                            |
-| Git branch               | `master`                                                                                                                                           |
-| Git commit               | `f29ceed49fea28898b1ccefc1f59ca4e4612cb1a` (`f29ceed4`)                                                                                            |
-| Commit date              | `2026-09-25 14:54:51 +0800`                                                                                                                        |
-| Commit subject           | `refactor(rebrand): finish P5 brand, state-dir anchoring, and copy sweep`                                                                          |
+| Git branch               | `main`                                                                                                                                             |
+| Git commit               | `677c768f106d9417d18116c09e59275c7576a0df` (`677c768f`)                                                                                            |
+| Commit date              | `2026-10-03`                                                                                                                                       |
+| Commit subject           | `docs(build-info): 修正 BUILD_INFO 中两处与仓库现状不符的描述`                                                                                     |
 | Repository status        | independent repository; the pre-rebrand `quiet-core-bot` history is not carried over                                                               |
 | Upstream remote          | _(none configured in this checkout)_ — this project started from the upstream quiet-core-bot codebase: https://github.com/liuda1999/Quiet-Core-bot |
 | Package manager          | `pnpm@11.2.2` (see `packageManager` in `package.json`)                                                                                             |
