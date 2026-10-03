@@ -5,9 +5,9 @@
   "description": "QuietCore persistent wiki plugin",
   "type": "module",
   "dependencies": {
-    "typebox": "1.1.39",
-    "yaml": "2.9.0",
-    "zod": "4.4.3"
+    "typebox": "1.3.34",
+    "yaml": "2.9.1",
+    "zod": "4.6.5"
   },
   "devDependencies": {
     "@quiet-core/plugin-sdk": "workspace:*",
