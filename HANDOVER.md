@@ -36,13 +36,13 @@
 | 项目名      | Quiet Core bot（`package.json` 名 `quiet-core-bot`；仓库 `liuda1999/Quiet-Core-bot`） |
 | 当前版本    | `0.1.2`（`package.json`）                                                             |
 | 当前分支    | `main`                                                                                |
-| HEAD        | `9e5036a9eff34dbd6b0cad61bb24d5ae6a1bd095`                                            |
+| HEAD        | `878363e2`（本轮提交；父提交 `9e5036a9`）                                             |
 | 最新 tag    | `v0.1.2`；历史 tag：`v0.1.1`、`v0.1.0`                                                |
 | remote      | `origin` = https://github.com/liuda1999/Quiet-Core-bot.git（**唯一** remote）         |
-| **工作区**  | **不干净：43 个已修改文件尚未提交**（详见 §1.1、§3）                                  |
+| **工作区**  | **干净**：§1.1 的 43 项改动已于 `878363e2` 提交并推送到 `origin/main`                 |
 | Node / pnpm | Node `>=22.19.0`（本机 `v24.16.0`）；pnpm `11.2.2`（本机已安装）                      |
 
-### 1.1 未提交改动清单（43 项 = 19 + 19 + 5）
+### 1.1 本轮改动清单（43 项 = 19 + 19 + 5，已随 `878363e2` 提交）
 
 **A. 源头修复（5 项）**
 
@@ -155,7 +155,7 @@
 
 | 优先级 | 事项                                                | 说明                                                               |
 | ------ | --------------------------------------------------- | ------------------------------------------------------------------ |
-| **P0** | 提交并推送 §1.1 的 43 个改动                        | 改动已验证（含 §2.4 两个用例修复），可直接提交                     |
+| ~~P0~~ | **已完成**：§1.1 的 43 个改动已提交并推送           | `878363e2` → `origin/main`；见 §1                                  |
 | ~~P1~~ | **已完成**：§2.4 两个继承失败用例已修复             | 由「跳过 + 记录」改为「测试内注入 + 取消 `it.skip`」，生产代码未改 |
 | **P2** | 远端 7 个 dependabot PR（#27–#33）待人工评审/合并   | 基于当前历史 `a7c35b00` / `b09f3120`，是**可合并**的依赖升级 PR    |
 | **P2** | 环境相关：`web_search` 工具在本环境不可用           | 依赖联网搜索的定时任务会超时；改用本地能力或其它工具               |
@@ -348,8 +348,8 @@ pnpm format:check    # oxfmt
 
 | 级别 | 事项                                                                   | 说明                                                                                                                                                                  |
 | ---- | ---------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| P0   | 43 个改动未提交                                                        | 见 §1.1 与 §3；改动已完成实测                                                                                                                                         |
 | P1   | `ui/src/ui/chat/chat-responsive.browser.test.ts` 在 `pnpm test` 中挂起 | 该文件启动多个 chromium 页面后不结束，使 `core-unit-ui` 分片永不完成，**其后的分片不会被调度**；单独运行同样挂起。与代码改动无关（Playwright 浏览器测试），需单独排查 |
+| P2   | 本机全量测试基线大面积失败                                             | 见 §10：失败集中在 Windows 文件权限 / owner-only 临时文件 / symlink / POSIX 路径 / plugin-contract 等平台与环境敏感用例；`git stash` 基线对照证实非本轮引入           |
 | P2   | 远端 7 个 dependabot PR（#27–#33）待处理                               | 基于当前历史（`a7c35b00` / `b09f3120`），是**可合并的依赖升级 PR**，需人工评审/合并                                                                                   |
 | P2   | 环境相关：`web_search` 工具在本环境不可用                              | 依赖联网搜索的定时任务会超时；改用本地能力或其它工具                                                                                                                  |
 | P3   | `docs-sync-publish.yml` 的 publish 目标仍为上游仓库                    | 该工作流在未配置 token 时整体跳过；配置 token 前需先把 publish 目标改到自有仓库                                                                                       |
@@ -364,7 +364,7 @@ pnpm format:check    # oxfmt
 ## 12. 交接检查清单
 
 - [ ] 确认工作区指向 **`E:\Quiet-Core-bot`**，且 `Test-Path e:\OpenClaw` 为 `False`（不要再引用旧路径）
-- [ ] `git -C E:\Quiet-Core-bot status --short` 能看到 §1.1 的 43 项改动
+- [ ] `git -C E:\Quiet-Core-bot status --short` 为空（§1.1 的 43 项改动已随 `878363e2` 提交）
 - [ ] `bash scripts/handover/check-env.sh` 无 `[ MISS ]`
 - [ ] `pnpm install && pnpm build` 成功，`node dist/index.js --version` 显示 `0.1.2`
 - [ ] `node dist/index.js gateway start` 后 `gateway status` 为 running，`health` 返回 `ok`
@@ -372,7 +372,7 @@ pnpm format:check    # oxfmt
 - [ ] 新增日志中**不再出现** `stopReason=stop` 的 ERROR 行；`%TEMP%\quiet-core-bot\*.log` 无真实 ERROR
 - [ ] `node --import tsx scripts/control-ui-i18n.ts check` 退出码 0
 - [ ] 浏览器打开 Control UI → 新建会话，四个起始选项为 §2.2 的新文案
-- [ ] 按 §3 的 P0 提交并推送（B/C 与 A 同提交）
+- [ ] 确认 §1.1 的 43 项改动已推送到 `origin/main`（`878363e2`）
 - [ ] `pnpm test` 前先确认 `ui/src/ui/chat/chat-responsive.browser.test.ts` 已排除（否则 `core-unit-ui` 分片挂起，后续分片不运行；见 §11）
 - [ ] `.env` 权限 600；未把 `~/.quiet-core-bot/` 纳入版本库
 - [ ] `pnpm check:docs` 通过
