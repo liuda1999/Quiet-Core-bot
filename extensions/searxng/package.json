@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/searxng-plugin",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "QuietCore SearXNG plugin",
   "type": "module",
   "devDependencies": {
@@ -21,7 +21,7 @@
       "pluginApi": ">=0.1.0"
     },
     "build": {
-      "openclawVersion": "0.1.0",
+      "openclawVersion": "0.1.2",
       "bundledDist": false
     },
     "release": {

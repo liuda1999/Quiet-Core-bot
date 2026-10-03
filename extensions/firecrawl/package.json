@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/firecrawl-plugin",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "QuietCore Firecrawl plugin.",
   "repository": {
     "type": "git",
@@ -27,7 +27,7 @@
       "pluginApi": ">=0.1.0"
     },
     "build": {
-      "openclawVersion": "0.1.0",
+      "openclawVersion": "0.1.2",
       "bundledDist": false
     },
     "release": {

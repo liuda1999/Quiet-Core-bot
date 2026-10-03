@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/canvas-plugin",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "private": true,
   "description": "QuietCore Canvas plugin",
   "type": "module",

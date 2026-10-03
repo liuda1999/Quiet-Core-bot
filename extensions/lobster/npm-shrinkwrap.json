@@ -1,12 +1,12 @@
 {
   "name": "@quiet-core/lobster",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
       "name": "@quiet-core/lobster",
-      "version": "0.1.0",
+      "version": "0.1.2",
       "dependencies": {
         "@clawdbot/lobster": "2026.5.22",
         "typebox": "1.1.39"

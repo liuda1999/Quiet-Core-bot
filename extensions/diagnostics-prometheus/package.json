@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/diagnostics-prometheus",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "QuietCore diagnostics Prometheus exporter for runtime metrics.",
   "repository": {
     "type": "git",
@@ -24,7 +24,7 @@
       "pluginApi": ">=0.1.0"
     },
     "build": {
-      "openclawVersion": "0.1.0"
+      "openclawVersion": "0.1.2"
     },
     "release": {
       "publishToClawHub": true,

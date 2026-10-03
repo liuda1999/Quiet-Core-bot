@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/qa-lab",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "private": true,
   "description": "QuietCore QA lab plugin with private debugger UI and scenario runner",
   "type": "module",

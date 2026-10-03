@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/litellm-provider",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "private": true,
   "description": "QuietCore LiteLLM provider plugin",
   "type": "module",
