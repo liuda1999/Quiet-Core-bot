@@ -2638,13 +2638,6 @@
       "kind": "html-text",
       "name": "text",
       "path": "ui/src/ui/views/cron.ts",
-      "text": "Run if due"
-    },
-    {
-      "count": 1,
-      "kind": "html-text",
-      "name": "text",
-      "path": "ui/src/ui/views/cron.ts",
       "text": "Use lightweight bootstrap context for this agent job."
     },
     {

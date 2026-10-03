@@ -40,6 +40,14 @@ const configIoMocks = vi.hoisted(() => ({
 const pluginRegistryMocks = vi.hoisted(() => ({
   ensurePluginRegistryLoaded: vi.fn(),
 }));
+const harnessActivationMocks = vi.hoisted(() => ({
+  resolveManifestActivationPlan: vi.fn(),
+}));
+const providerOwnerMocks = vi.hoisted(() => ({
+  resolveOwningPluginIdsForProviderRef: vi.fn(),
+  resolveBundledProviderCompatPluginIds: vi.fn(),
+  resolveActivatableProviderOwnerPluginIds: vi.fn(),
+}));
 
 vi.mock("../config/io.js", () => ({
   getRuntimeConfig: configIoMocks.loadConfig,
@@ -50,6 +58,30 @@ vi.mock("../config/io.js", () => ({
 vi.mock("../plugins/runtime/runtime-registry-loader.js", () => ({
   ensurePluginRegistryLoaded: pluginRegistryMocks.ensurePluginRegistryLoaded,
 }));
+
+// The manifest activation planner walks installed plugin manifests, which do not
+// exist in a temp-home test. Override only that export so the harness-plugin path
+// is exercised deterministically; every other export keeps its real behaviour.
+vi.mock("../plugins/activation-planner.js", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../plugins/activation-planner.js")>();
+  return {
+    ...actual,
+    resolveManifestActivationPlan: harnessActivationMocks.resolveManifestActivationPlan,
+  };
+});
+
+// Provider-owner plugin ids come from the installed manifest registry, which is empty
+// in a temp-home test. Override only these three lookups; other exports stay real.
+vi.mock("../plugins/providers.js", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../plugins/providers.js")>();
+  return {
+    ...actual,
+    resolveOwningPluginIdsForProviderRef: providerOwnerMocks.resolveOwningPluginIdsForProviderRef,
+    resolveBundledProviderCompatPluginIds: providerOwnerMocks.resolveBundledProviderCompatPluginIds,
+    resolveActivatableProviderOwnerPluginIds:
+      providerOwnerMocks.resolveActivatableProviderOwnerPluginIds,
+  };
+});
 
 vi.mock("../agents/auth-profiles/store.js", () => {
   const createEmptyStore = () => ({ version: 1, profiles: {} });
@@ -383,6 +415,39 @@ beforeEach(() => {
     snapshot: { valid: false, resolved: {} as QuietCoreConfig },
     writeOptions: {},
   });
+  harnessActivationMocks.resolveManifestActivationPlan.mockImplementation(
+    ({
+      trigger,
+      config,
+    }: {
+      trigger: { kind: "agentHarness"; runtime: string };
+      config?: QuietCoreConfig;
+    }) => {
+      const pluginId = trigger.runtime;
+      const allow = config?.plugins?.allow ?? [];
+      if (
+        config?.plugins?.entries?.[pluginId]?.enabled === false ||
+        (allow.length > 0 && !allow.includes(pluginId))
+      ) {
+        return { entries: [] };
+      }
+      return {
+        entries:
+          pluginId === "codex" || pluginId === "copilot" ? [{ pluginId, origin: "bundled" }] : [],
+      };
+    },
+  );
+  providerOwnerMocks.resolveOwningPluginIdsForProviderRef.mockImplementation(
+    ({ provider }: { provider: string }) => (provider === "openai" ? ["openai"] : undefined),
+  );
+  providerOwnerMocks.resolveBundledProviderCompatPluginIds.mockImplementation(
+    ({ onlyPluginIds }: { onlyPluginIds?: readonly string[] }) =>
+      (onlyPluginIds ?? []).filter((pluginId) => pluginId === "openai"),
+  );
+  providerOwnerMocks.resolveActivatableProviderOwnerPluginIds.mockImplementation(
+    ({ pluginIds }: { pluginIds: readonly string[] }) =>
+      pluginIds.filter((pluginId) => pluginId === "memory-core"),
+  );
 });
 
 describe("agentCommand", () => {

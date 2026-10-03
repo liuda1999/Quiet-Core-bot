@@ -69,6 +69,23 @@ describe("ensureSelectedAgentHarnessPlugin", () => {
     );
     vi.resetModules();
     ({ ensureSelectedAgentHarnessPlugin } = await import("./runtime-plugin.js"));
+    // CLI-backend ownership is resolved from the plugin setup registry, which is empty
+    // in a temp-home unit test. Inject a deterministic claude-cli -> anthropic binding
+    // so the CLI-alias short-circuit is exercised without depending on installed plugins.
+    const { testing: cliBackendsTesting } = await import("../cli-backends.js");
+    cliBackendsTesting.setDepsForTest({
+      resolvePluginSetupCliBackend: ({ backend }) =>
+        backend.trim().toLowerCase() === "claude-cli"
+          ? {
+              pluginId: "claude-cli",
+              backend: {
+                id: "claude-cli",
+                modelProvider: "anthropic",
+                config: { command: "claude" },
+              },
+            }
+          : undefined,
+    });
   });
 
   it("loads Codex and the provider owner when an explicit runtime override forces the Codex harness", async () => {

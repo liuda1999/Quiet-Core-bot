@@ -19,8 +19,8 @@ export type ChatWelcomeProps = {
 
 const WELCOME_SUGGESTION_KEYS = [
   "chat.welcome.suggestions.whatCanYouDo",
-  "chat.welcome.suggestions.summarizeRecentSessions",
-  "chat.welcome.suggestions.configureChannel",
+  "chat.welcome.suggestions.createLocalCronJob",
+  "chat.welcome.suggestions.summarizeWorkspaceFiles",
   "chat.welcome.suggestions.checkSystemHealth",
 ];
 

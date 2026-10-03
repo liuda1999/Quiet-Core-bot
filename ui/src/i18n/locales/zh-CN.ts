@@ -2186,8 +2186,8 @@ export const zh_CN: TranslationMap = {
       hintAfterShortcut: "查看命令",
       suggestions: {
         whatCanYouDo: "你能做什么？",
-        summarizeRecentSessions: "总结我最近的会话",
-        configureChannel: "帮我配置一个频道",
+        createLocalCronJob: "创建一个本地定时任务",
+        summarizeWorkspaceFiles: "总结我的工作区文件",
         checkSystemHealth: "检查系统健康状况",
       },
     },

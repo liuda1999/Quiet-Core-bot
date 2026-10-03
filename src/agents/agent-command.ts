@@ -141,6 +141,16 @@ import { ensureAgentWorkspace } from "./workspace.js";
 
 const log = createSubsystemLogger("agents/agent-command");
 
+/**
+ * Stop reasons that describe a normal end of a run: `end_turn` / `stop` finish the
+ * turn, and tool-call reasons merely hand control back to the next loop iteration.
+ * These must not be logged as anomalies.
+ */
+const NORMAL_RUN_STOP_REASONS = new Set(["end_turn", "stop", "tool_use", "toolUse", "tool_calls"]);
+
+/** Stop reasons that mean the run failed rather than ended early by design. */
+const FAILED_RUN_STOP_REASONS = new Set(["error", "timeout"]);
+
 function hasExactConfiguredProviderModel(params: {
   cfg: QuietCoreConfig;
   provider: string;
@@ -257,7 +267,8 @@ function applyAgentRunAbortMetadata<T extends { meta: object }>(
 type AcpManagerRuntime = typeof import("../acp/control-plane/manager.js");
 type AcpPolicyRuntime = typeof import("../acp/policy.js");
 type AcpRuntimeErrorsRuntime = typeof import("../acp/runtime/errors.js");
-type AcpSessionIdentifiersRuntime = typeof import("@quiet-core/acp-core/runtime/session-identifiers");
+type AcpSessionIdentifiersRuntime =
+  typeof import("@quiet-core/acp-core/runtime/session-identifiers");
 type DeliveryRuntime = typeof import("./command/delivery.runtime.js");
 type SessionStoreRuntime = typeof import("./command/session-store.runtime.js");
 type CliCompactionRuntime = typeof import("./command/cli-compaction.js");
@@ -1716,8 +1727,13 @@ async function agentCommandInternal(
       }
       attemptLifecycleState.lifecycleEnded = true;
       const stopReason = runResult.meta.stopReason;
-      if (stopReason && stopReason !== "end_turn") {
-        console.error(`[agent] run ${runId} ended with stopReason=${stopReason}`);
+      if (stopReason && !NORMAL_RUN_STOP_REASONS.has(stopReason)) {
+        const message = `[agent] run ${runId} ended with stopReason=${stopReason}`;
+        if (FAILED_RUN_STOP_REASONS.has(stopReason)) {
+          log.error(message);
+        } else {
+          log.warn(message);
+        }
       }
       emitAgentEvent({
         runId,

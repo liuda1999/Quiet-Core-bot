@@ -2235,8 +2235,8 @@ export const it: TranslationMap = {
       hintAfterShortcut: "for commands",
       suggestions: {
         whatCanYouDo: "What can you do?",
-        summarizeRecentSessions: "Summarize my recent sessions",
-        configureChannel: "Help me configure a channel",
+        createLocalCronJob: "Create a local scheduled task",
+        summarizeWorkspaceFiles: "Summarize my workspace files",
         checkSystemHealth: "Check system health",
       },
     },
