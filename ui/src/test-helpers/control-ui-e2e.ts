@@ -111,7 +111,15 @@ export function canRunPlaywrightChromium(chromiumExecutablePath: string): boolea
   if (!existsSync(chromiumExecutablePath)) {
     return false;
   }
-  return spawnSync(chromiumExecutablePath, ["--version"], { stdio: "ignore" }).status === 0;
+  // Bound the probe: on some hosts `chrome --version` never exits (the launch is forwarded
+  // to an existing browser session), and this runs during module evaluation, so an unbounded
+  // spawnSync blocks the whole Vitest worker instead of skipping the browser suite.
+  const probe = spawnSync(chromiumExecutablePath, ["--version"], {
+    stdio: "ignore",
+    timeout: 5000,
+    windowsHide: true,
+  });
+  return probe.status === 0;
 }
 
 export async function startControlUiE2eServer(): Promise<ControlUiE2eServer> {

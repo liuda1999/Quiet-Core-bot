@@ -39,12 +39,12 @@
 | HEAD        | `878363e2`（本轮提交；父提交 `9e5036a9`）                                             |
 | 最新 tag    | `v0.1.2`；历史 tag：`v0.1.1`、`v0.1.0`                                                |
 | remote      | `origin` = https://github.com/liuda1999/Quiet-Core-bot.git（**唯一** remote）         |
-| **工作区**  | **干净**：§1.1 的 43 项改动已于 `878363e2` 提交并推送到 `origin/main`                 |
+| **工作区**  | **干净**：本轮 44 项改动均已提交并推送到 `origin/main`                                |
 | Node / pnpm | Node `>=22.19.0`（本机 `v24.16.0`）；pnpm `11.2.2`（本机已安装）                      |
 
-### 1.1 本轮改动清单（43 项 = 19 + 19 + 5，已随 `878363e2` 提交）
+### 1.1 本轮改动清单（44 项 = 19 + 19 + 6）
 
-**A. 源头修复（5 项）**
+**A. 源头修复（6 项）**
 
 | 文件                                        | 改动                                                                             |
 | ------------------------------------------- | -------------------------------------------------------------------------------- |
@@ -52,6 +52,7 @@
 | `src/commands/agent.test.ts`                | 取消 §2.4 用例的 `it.skip`，并在本文件内局部 mock 激活计划 / provider owner 解析 |
 | `src/agents/harness/runtime-plugin.test.ts` | 通过 `cli-backends` 测试注入，使 CLI 别名短路可确定性验证（§2.4）                |
 | `ui/src/ui/chat/chat-welcome.ts`            | 新会话默认起始选项键名替换（§2.2）                                               |
+| `ui/src/test-helpers/control-ui-e2e.ts`     | 浏览器可用性探测加 5s 超时，修复 UI 分片挂起（§11）                              |
 | `HANDOVER.md`                               | 本交接文档                                                                       |
 
 **B. Web UI 多语言（19 项）**：`ui/src/i18n/locales/*.ts`（ar、de、en、es、fa、fr、id、it、ja-JP、ko、nl、pl、pt-BR、th、tr、uk、vi、zh-CN、zh-TW）
@@ -327,7 +328,7 @@ pnpm format:check    # oxfmt
   - core-unit-fast：3 failed / 10739 passed；core-unit-support：3 / 382；core-support-boundary：2 / 96；core-contracts：150 / 644；core-bundled：5 / 178；agentic：687 / 21990；auto-reply：44 / 2833；extensions：408 / 9126。
   - 失败集中在**平台/环境敏感**用例：Windows 文件权限与 owner-only 临时文件、symlink、System32 解压、POSIX `/tmp` 路径，以及需要完整 CI 环境 / 已安装插件的 plugin-contract 与 bundled 用例。
 - **已用 `git stash` 基线对照排除「本轮引入」**：如 `src/plugins/contracts/session-attachments.contract.test.ts` 在 HEAD（stash 后）同样 3 项失败，与工作区一致；所有失败用例的文件与其生产源码**均不在 §1.1 改动集内**。
-- **`pnpm test` 全量入口在本机会卡住**：`core-unit-ui` 分片的 `ui/src/ui/chat/chat-responsive.browser.test.ts` 运行后不结束（§11），导致该分片永不完成、后续分片不被调度 → 需逐分片运行或排除该文件。
+- **`pnpm test` 全量入口曾在本机卡住（已修复）**：根因是 `canRunPlaywrightChromium()` 用**无超时的同步 `spawnSync(chrome, ["--version"])`**，在部分主机上该调用不退出 → 模块求值阻塞 → `core-unit-ui` 分片永不完成。已加 5s 超时，超时即视为不可用并 `describe.skip`；修复后 `unit-ui` 分片复跑通过（33 passed / 1 skipped），`pnpm test` 可继续调度后续分片。
 - **`pnpm check:docs` 在本机无法运行**：`format-docs` 传给 oxfmt 的文件列表超过 Windows 命令行长度上限（`The command line is too long.`），属平台限制，与内容无关。
 
 ### 10.1 已修复：原两个继承失败用例
@@ -346,16 +347,16 @@ pnpm format:check    # oxfmt
 
 ## 11. 已知问题与风险
 
-| 级别 | 事项                                                                   | 说明                                                                                                                                                                  |
-| ---- | ---------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| P1   | `ui/src/ui/chat/chat-responsive.browser.test.ts` 在 `pnpm test` 中挂起 | 该文件启动多个 chromium 页面后不结束，使 `core-unit-ui` 分片永不完成，**其后的分片不会被调度**；单独运行同样挂起。与代码改动无关（Playwright 浏览器测试），需单独排查 |
-| P2   | 本机全量测试基线大面积失败                                             | 见 §10：失败集中在 Windows 文件权限 / owner-only 临时文件 / symlink / POSIX 路径 / plugin-contract 等平台与环境敏感用例；`git stash` 基线对照证实非本轮引入           |
-| P2   | 远端 7 个 dependabot PR（#27–#33）待处理                               | 基于当前历史（`a7c35b00` / `b09f3120`），是**可合并的依赖升级 PR**，需人工评审/合并                                                                                   |
-| P2   | 环境相关：`web_search` 工具在本环境不可用                              | 依赖联网搜索的定时任务会超时；改用本地能力或其它工具                                                                                                                  |
-| P3   | `docs-sync-publish.yml` 的 publish 目标仍为上游仓库                    | 该工作流在未配置 token 时整体跳过；配置 token 前需先把 publish 目标改到自有仓库                                                                                       |
-| P3   | 插件版本统一为 `0.1.0`                                                 | 与上游日历版本规范不符，故插件 NPM 发布改为手动触发                                                                                                                   |
-| P3   | 表格对齐规则 MD060 已关闭                                              | oxfmt 按显示宽度对齐、MD060 按字符数计算，含全角 CJK 的表格无法同时满足，以格式化器为准（见 `config/markdownlint-cli2.jsonc` 注释）                                   |
-| P3   | `wiki.get` 调用未加启用门控                                            | 见 §2.3；`memory-wiki` 默认关闭时 wiki 预览显示内联错误而非隐藏入口                                                                                                   |
+| 级别   | 事项                                                                               | 说明                                                                                                                                                        |
+| ------ | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ~~P1~~ | **已修复**：`ui/src/ui/chat/chat-responsive.browser.test.ts` 在 `pnpm test` 中挂起 | 根因是 `canRunPlaywrightChromium()` 无超时的同步 `spawnSync`；已加 5s 超时，探测超时即 `describe.skip`。`unit-ui` 分片复跑通过（33 passed / 1 skipped）     |
+| P2     | 本机全量测试基线大面积失败                                                         | 见 §10：失败集中在 Windows 文件权限 / owner-only 临时文件 / symlink / POSIX 路径 / plugin-contract 等平台与环境敏感用例；`git stash` 基线对照证实非本轮引入 |
+| P2     | 远端 7 个 dependabot PR（#27–#33）待处理                                           | 基于当前历史（`a7c35b00` / `b09f3120`），是**可合并的依赖升级 PR**，需人工评审/合并                                                                         |
+| P2     | 环境相关：`web_search` 工具在本环境不可用                                          | 依赖联网搜索的定时任务会超时；改用本地能力或其它工具                                                                                                        |
+| P3     | `docs-sync-publish.yml` 的 publish 目标仍为上游仓库                                | 该工作流在未配置 token 时整体跳过；配置 token 前需先把 publish 目标改到自有仓库                                                                             |
+| P3     | 插件版本统一为 `0.1.0`                                                             | 与上游日历版本规范不符，故插件 NPM 发布改为手动触发                                                                                                         |
+| P3     | 表格对齐规则 MD060 已关闭                                                          | oxfmt 按显示宽度对齐、MD060 按字符数计算，含全角 CJK 的表格无法同时满足，以格式化器为准（见 `config/markdownlint-cli2.jsonc` 注释）                         |
+| P3     | `wiki.get` 调用未加启用门控                                                        | 见 §2.3；`memory-wiki` 默认关闭时 wiki 预览显示内联错误而非隐藏入口                                                                                         |
 
 安全注意：仓库内**不含任何真实密钥**（已扫描）；运行后生成的 `~/.quiet-core-bot/` 含网关 token 与 provider 凭据引用，**禁止入库**；`docker-compose.yml` 默认发布到 `0.0.0.0`，对外暴露前请改绑 `127.0.0.1` + 反向代理。
 
@@ -372,8 +373,8 @@ pnpm format:check    # oxfmt
 - [ ] 新增日志中**不再出现** `stopReason=stop` 的 ERROR 行；`%TEMP%\quiet-core-bot\*.log` 无真实 ERROR
 - [ ] `node --import tsx scripts/control-ui-i18n.ts check` 退出码 0
 - [ ] 浏览器打开 Control UI → 新建会话，四个起始选项为 §2.2 的新文案
-- [ ] 确认 §1.1 的 43 项改动已推送到 `origin/main`（`878363e2`）
-- [ ] `pnpm test` 前先确认 `ui/src/ui/chat/chat-responsive.browser.test.ts` 已排除（否则 `core-unit-ui` 分片挂起，后续分片不运行；见 §11）
+- [ ] 确认 §1.1 的 44 项改动已推送到 `origin/main`
+- [ ] `pnpm test` 可直接运行（`unit-ui` 分片的浏览器探测已加超时，不再挂起）
 - [ ] `.env` 权限 600；未把 `~/.quiet-core-bot/` 纳入版本库
 - [ ] `pnpm check:docs` 通过
 
