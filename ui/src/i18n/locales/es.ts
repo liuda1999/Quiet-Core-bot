@@ -2243,6 +2243,215 @@ export const es: TranslationMap = {
         checkSystemHealth: "Check system health",
       },
     },
+    slashCommandCategories: {
+      session: "Sesión",
+      model: "Model",
+      tools: "Tools",
+      agents: "Agents",
+    },
+    slashCommands: {
+      help: {
+        description: "Show available commands.",
+      },
+      commands: {
+        description: "List all slash commands.",
+      },
+      tools: {
+        description: "List available runtime tools.",
+      },
+      skill: {
+        description: "Run a skill by name.",
+      },
+      status: {
+        description: "Show current status.",
+      },
+      goal: {
+        description: "Show or control the current goal.",
+      },
+      diagnostics: {
+        description: "Explain Gateway diagnostics and Codex feedback upload options.",
+      },
+      crestodian: {
+        description: "Run the Crestodian setup and repair helper.",
+      },
+      tasks: {
+        description: "List background tasks for this session.",
+      },
+      allowlist: {
+        description: "List/add/remove allowlist entries.",
+      },
+      approve: {
+        description: "Approve or deny exec requests.",
+      },
+      context: {
+        description: "Explain how context is built and used.",
+      },
+      btw: {
+        description: "Ask a side question without changing future session context.",
+      },
+      "export-session": {
+        description: "Export current session to HTML file with full system prompt.",
+      },
+      "export-trajectory": {
+        description: "Export a JSONL trajectory bundle for the active session.",
+      },
+      tts: {
+        description: "Control text-to-speech (TTS).",
+      },
+      whoami: {
+        description: "Show your sender id.",
+      },
+      session: {
+        description: "Manage session-level settings (for example /session idle).",
+      },
+      subagents: {
+        description: "Inspect subagent runs for this session.",
+      },
+      acp: {
+        description: "Manage ACP sessions and runtime options.",
+      },
+      focus: {
+        description: "Bind this thread or topic/conversation to a session target.",
+      },
+      unfocus: {
+        description: "Remove the current thread or topic/conversation binding.",
+      },
+      agents: {
+        description: "List thread-bound agents for this session.",
+      },
+      steer: {
+        description: "Send guidance to the active run in this session.",
+      },
+      usage: {
+        description: "Usage footer or cost summary.",
+      },
+      stop: {
+        description: "Stop the current run.",
+      },
+      restart: {
+        description: "Restart Quiet Core bot.",
+      },
+      activation: {
+        description: "Set group activation mode.",
+      },
+      send: {
+        description: "Set send policy.",
+      },
+      reset: {
+        description: "Reset the current session.",
+      },
+      new: {
+        description: "Start a new session.",
+      },
+      name: {
+        description: "Name or rename the current session.",
+      },
+      compact: {
+        description: "Compact the session context.",
+      },
+      think: {
+        description: "Set thinking level.",
+      },
+      verbose: {
+        description: "Toggle verbose mode.",
+      },
+      trace: {
+        description: "Toggle plugin trace lines.",
+      },
+      fast: {
+        description: "Toggle fast mode.",
+      },
+      reasoning: {
+        description: "Toggle reasoning visibility.",
+      },
+      elevated: {
+        description: "Toggle elevated mode.",
+      },
+      exec: {
+        description: "Set exec defaults for this session.",
+      },
+      model: {
+        description: "Show or set the model.",
+      },
+      models: {
+        description: "List model providers/models.",
+      },
+      queue: {
+        description: "Adjust queue settings.",
+      },
+      canvas: {
+        description:
+          "Present HTML on connected node canvases, navigate/eval/snapshot, and debug canvas host URLs.",
+      },
+      diagram_maker: {
+        description:
+          "Create SVG/HTML or Excalidraw diagrams for concepts, architecture, flows, and whiteboards.",
+      },
+      diffs: {
+        description:
+          "Use the diffs tool to produce real, shareable diffs instead of plain-text diffs.",
+      },
+      healthcheck: {
+        description:
+          "Audit/harden hosts: SSH, firewall, updates, exposure, backups, disk encryption, gateway.",
+      },
+      mcporter: {
+        description:
+          "List, configure, authenticate, call, and inspect MCP servers/tools with mcporter.",
+      },
+      meme_maker: {
+        description:
+          "Search meme templates, suggest formats, and generate local or hosted image memes.",
+      },
+      node_connect: {
+        description:
+          "Diagnose Android, iOS, or macOS node pairing, QR/setup code, route, auth, and connection.",
+      },
+      node_inspect_debugger: {
+        description:
+          "Debug Node.js with node inspect, --inspect, breakpoints, CDP, heap, and CPU profiles.",
+      },
+      obsidian_vault_maintainer: {
+        description:
+          "Maintain an Obsidian-friendly memory wiki vault with wikilinks and frontmatter.",
+      },
+      skill_creator: {
+        description:
+          "Create, edit, audit, tidy, validate, or restructure AgentSkills and SKILL.md files.",
+      },
+      spike: {
+        description:
+          "Run throwaway prototypes to validate feasibility, compare approaches, and report a verdict.",
+      },
+      taskflow: {
+        description:
+          "Coordinate multi-step detached tasks as one durable TaskFlow job with owner context and state.",
+      },
+      taskflow_inbox_triage: {
+        description:
+          "Example TaskFlow pattern for inbox triage, intent routing, waiting on replies, and summaries.",
+      },
+      weather: {
+        description:
+          "Current weather and forecasts with web_fetch, falling back to wttr.in for locations and rain.",
+      },
+      wiki_maintainer: {
+        description:
+          "Maintain the memory wiki vault with deterministic pages, managed blocks, and sources.",
+      },
+      pair: {
+        description: "Generate setup codes and approve device pairing requests.",
+      },
+      phone: {
+        description: "Arm/disarm high-risk phone node commands (camera/screen/writes).",
+      },
+      voice: {
+        description: "List/set Talk provider voices (affects iOS Talk playback).",
+      },
+      workboard: {
+        description: "List, create, inspect, and dispatch Workboard cards.",
+      },
+    },
     runControls: {
       newSession: "New session",
       export: "Exportar",

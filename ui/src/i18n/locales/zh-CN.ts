@@ -2191,6 +2191,208 @@ export const zh_CN: TranslationMap = {
         checkSystemHealth: "检查系统健康状况",
       },
     },
+    slashCommandCategories: {
+      session: "会话",
+      model: "模型",
+      tools: "工具",
+      agents: "智能体",
+    },
+    slashCommands: {
+      help: {
+        description: "列出全部可用命令、所属分类与用法示例，快速了解当前能做什么。",
+      },
+      commands: {
+        description: "输出完整的命令目录，包含每条命令的参数与说明。",
+      },
+      tools: {
+        description: "列出当前会话可用的运行时工具；可用 compact / verbose 控制详细程度。",
+      },
+      skill: {
+        description:
+          "按名称运行一个技能（用法：/skill <技能名> [输入]）；不带名称时列出全部可用技能。",
+      },
+      status: {
+        description: "显示当前状态：版本、运行时长、所用模型与会话概况。",
+      },
+      goal: {
+        description: "查看或控制当前会话的持久目标（开始 / 查看状态 / 暂停 / 恢复 / 清除）。",
+      },
+      diagnostics: {
+        description: "说明网关诊断项与 Codex 反馈上传选项，并给出可用命令。",
+      },
+      crestodian: {
+        description: "运行 Crestodian 安装与修复助手，用于首次配置或故障修复。",
+      },
+      tasks: {
+        description: "列出当前会话的后台任务及其进度。",
+      },
+      allowlist: {
+        description: "查看、新增或删除允许名单（allowlist）条目。",
+      },
+      approve: {
+        description: "批准或拒绝待处理的命令执行（exec）请求。",
+      },
+      context: {
+        description: "说明上下文是如何构建与使用的：包含哪些内容、如何压缩。",
+      },
+      btw: {
+        description: "就当前话题问一个旁支问题，答案不会写入后续会话上下文。",
+      },
+      "export-session": {
+        description: "把当前会话（含完整系统提示词）导出为 HTML 文件。",
+      },
+      "export-trajectory": {
+        description: "把当前会话的执行轨迹导出为 JSONL 包，便于回放与排查问题。",
+      },
+      tts: {
+        description: "控制文本转语音：查看或切换语音、语速等设置。",
+      },
+      whoami: {
+        description: "显示你的发送者 ID，用于权限与配对排查。",
+      },
+      session: {
+        description: "管理会话级设置，例如 /session idle 查看空闲超时。",
+      },
+      subagents: {
+        description: "查看当前会话的子智能体（subagent）运行情况。",
+      },
+      acp: {
+        description: "管理 ACP 会话与运行时选项（Claude Code、Codex、Gemini 等编码代理）。",
+      },
+      focus: {
+        description: "把当前线程（Discord）或话题/会话（Telegram）绑定到指定会话目标。",
+      },
+      unfocus: {
+        description: "解除当前线程（Discord）或话题/会话（Telegram）的绑定。",
+      },
+      agents: {
+        description: "列出本会话已绑定的智能体。",
+      },
+      steer: {
+        description: "向当前正在运行的会话注入一条引导消息，不打断本次运行。",
+      },
+      usage: {
+        description: "显示用量页脚或费用汇总（token 消耗等）。",
+      },
+      stop: {
+        description: "中止当前正在运行的对话。",
+      },
+      restart: {
+        description: "重启 Quiet Core bot 网关服务。",
+      },
+      activation: {
+        description: "设置群组激活模式，例如始终响应或仅被 @ 时响应。",
+      },
+      send: {
+        description: "设置发送策略，例如是否允许主动发送消息。",
+      },
+      reset: {
+        description: "原地重置当前会话；可附加 soft 参数以保留部分状态。",
+      },
+      new: {
+        description: "归档当前会话并开启一个新会话。",
+      },
+      name: {
+        description: "为当前会话命名或重命名。",
+      },
+      compact: {
+        description: "压缩当前会话上下文以释放 token 空间，可附一段说明。",
+      },
+      think: {
+        description: "设置思考等级（off / low / medium / high 等，取决于所选模型）。",
+      },
+      verbose: {
+        description: "切换详细模式（off / on / full），控制过程输出的多少。",
+      },
+      trace: {
+        description: "切换插件跟踪日志行，便于排查插件行为。",
+      },
+      fast: {
+        description: "切换快速模式：on / off / auto / status。",
+      },
+      reasoning: {
+        description: "切换推理过程的可见性。",
+      },
+      elevated: {
+        description: "切换提权模式，授予超出常规沙箱的权限。",
+      },
+      exec: {
+        description: "设置本会话的命令执行默认值：主机、安全策略、审批方式与目标节点。",
+      },
+      model: {
+        description: "查看或切换当前使用的模型。",
+      },
+      models: {
+        description: "列出可用的模型供应商与模型。",
+      },
+      queue: {
+        description: "调整消息排队设置：模式、去抖、队列上限与丢弃策略。",
+      },
+      canvas: {
+        description:
+          "在已连接的 QuietCore 节点画布上展示 HTML，并支持导航、求值、截图与画布宿主调试。",
+      },
+      diagram_maker: {
+        description: "为概念、架构、流程与白板生成图示（SVG/HTML 或 Excalidraw）。",
+      },
+      diffs: {
+        description: "用 diffs 工具生成真实可分享的差异（查看器链接或文件产物），替代纯文本 diff。",
+      },
+      healthcheck: {
+        description:
+          "审计并加固 Quiet Core bot 主机：SSH、防火墙、更新、暴露面、备份、磁盘加密与网关等。",
+      },
+      mcporter: {
+        description:
+          "通过 mcporter 列出、配置、鉴权、调用与检查 MCP 服务器和工具（HTTP 或 stdio）。",
+      },
+      meme_maker: {
+        description: "搜索表情包模板、推荐格式，并生成本地或托管的图片表情包。",
+      },
+      node_connect: {
+        description:
+          "诊断 Quiet Core bot 的 Android / iOS / macOS 节点配对、二维码与设置码、路由、鉴权与连接问题。",
+      },
+      node_inspect_debugger: {
+        description: "用 node inspect / --inspect、断点、CDP、堆快照与 CPU 档案调试 Node.js。",
+      },
+      obsidian_vault_maintainer: {
+        description:
+          "维护兼容 Obsidian 的记忆 wiki 仓库，含 wikilink、frontmatter 与官方 Obsidian 规范。",
+      },
+      skill_creator: {
+        description: "创建、编辑、审计、整理、校验或重构 AgentSkills 与 SKILL.md 文件。",
+      },
+      spike: {
+        description: "运行一次性原型以验证可行性、对比方案并给出结论。",
+      },
+      taskflow: {
+        description:
+          "把多步分离的任务编排为一个可持久化的 TaskFlow 作业，含归属上下文、状态、等待与恢复。",
+      },
+      taskflow_inbox_triage: {
+        description: "TaskFlow 的收件箱分诊示例模式：意图路由、等待回复与后续汇总。",
+      },
+      weather: {
+        description:
+          "查询当前天气与预报（使用 web_fetch，必要时回退到 wttr.in），支持地点、降雨与温度等。",
+      },
+      wiki_maintainer: {
+        description: "维护 QuietCore 记忆 wiki 仓库：确定性页面、受管区块与可溯源内容。",
+      },
+      pair: {
+        description: "生成设备配对设置码，并批准待处理的配对请求。",
+      },
+      phone: {
+        description: "启用或停用高风险手机节点命令（摄像头 / 屏幕 / 写入）。",
+      },
+      voice: {
+        description: "列出或设置 Talk 语音提供方的音色（影响 iOS Talk 播放）。",
+      },
+      workboard: {
+        description: "列出、创建、查看并派发 Workboard 卡片。",
+      },
+    },
     runControls: {
       newSession: "新会话",
       export: "导出",

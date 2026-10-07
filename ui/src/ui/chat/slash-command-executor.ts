@@ -34,6 +34,7 @@ import type {
   SessionsPatchResult,
 } from "../types.ts";
 import { generateUUID } from "../uuid.ts";
+import { slashCommandDescription } from "./slash-command-labels.ts";
 import { SLASH_COMMANDS } from "./slash-commands.ts";
 import { formatCompactTokenCount } from "./token-format.ts";
 
@@ -141,7 +142,7 @@ function executeHelp(): SlashCommandResult {
     }
     const argStr = cmd.args ? ` ${cmd.args}` : "";
     const local = cmd.executeLocal ? "" : " *(agent)*";
-    lines.push(`\`/${cmd.name}${argStr}\` — ${cmd.description}${local}`);
+    lines.push(`\`/${cmd.name}${argStr}\` — ${slashCommandDescription(cmd)}${local}`);
   }
 
   lines.push("\nType `/` to open the command menu.");

@@ -156,12 +156,12 @@
     "settingsLabels.modelsPanel.testConnection",
     "settingsLabels.modelsPanel.title"
   ],
-  "generatedAt": "2026-10-03T03:15:10.801Z",
+  "generatedAt": "2026-10-07T15:53:53.545Z",
   "locale": "zh-CN",
   "model": "claude-opus-4-8",
   "provider": "anthropic",
-  "sourceHash": "e42d94d8b6be5e62b771dcdc69f05f880f6b95e01e31ab662e4511c7b5b2741c",
-  "totalKeys": 2047,
-  "translatedKeys": 1892,
+  "sourceHash": "9f18dc76a8d0e1412f1935e91d577a7f968cbf3a2ba63be11418bb183dbdf551",
+  "totalKeys": 2113,
+  "translatedKeys": 1958,
   "workflow": 1
 }

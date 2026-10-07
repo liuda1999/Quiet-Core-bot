@@ -47,7 +47,10 @@ import { getOrCreateSessionCacheValue } from "../chat/session-cache.ts";
 import { renderSideResult } from "../chat/side-result-render.ts";
 import type { ChatSideResult } from "../chat/side-result.ts";
 import {
-  CATEGORY_LABELS,
+  slashCommandCategoryLabel,
+  slashCommandDescription,
+} from "../chat/slash-command-labels.ts";
+import {
   SLASH_COMMANDS,
   getHiddenCommandCount,
   getSlashCommandCompletions,
@@ -1781,7 +1784,7 @@ function getActiveSlashMenuOptionLabel(): string {
     return "";
   }
   const command = `/${cmd.name}${cmd.args ? ` ${cmd.args}` : ""}`;
-  return `${command} ${cmd.description}`;
+  return `${command} ${slashCommandDescription(cmd)}`;
 }
 
 function tokenEstimate(draft: string): string | null {
@@ -1920,7 +1923,7 @@ function renderSlashMenu(
       >
         <div class="slash-menu-group">
           <div class="slash-menu-group__label">
-            /${vs.slashMenuCommand.name} ${vs.slashMenuCommand.description}
+            /${vs.slashMenuCommand.name} ${slashCommandDescription(vs.slashMenuCommand)}
           </div>
           ${vs.slashMenuArgItems.map(
             (arg, i) => html`
@@ -1975,7 +1978,7 @@ function renderSlashMenu(
   for (const [cat, entries] of grouped) {
     sections.push(html`
       <div class="slash-menu-group">
-        <div class="slash-menu-group__label">${CATEGORY_LABELS[cat]}</div>
+        <div class="slash-menu-group__label">${slashCommandCategoryLabel(cat)}</div>
         ${entries.map(
           ({ cmd, globalIdx }) => html`
             <div
@@ -1994,7 +1997,7 @@ function renderSlashMenu(
               ${cmd.icon ? html`<span class="slash-menu-icon">${icons[cmd.icon]}</span>` : nothing}
               <span class="slash-menu-name">/${cmd.name}</span>
               ${cmd.args ? html`<span class="slash-menu-args">${cmd.args}</span>` : nothing}
-              <span class="slash-menu-desc">${cmd.description}</span>
+              <span class="slash-menu-desc">${slashCommandDescription(cmd)}</span>
               ${cmd.argOptions?.length
                 ? html`<span class="slash-menu-badge">${cmd.argOptions.length} options</span>`
                 : cmd.executeLocal && !cmd.args
