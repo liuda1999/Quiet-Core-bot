@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/clickclack",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "QuietCore ClickClack channel plugin",
   "type": "module",
   "exports": {
@@ -56,7 +56,7 @@
       "pluginApi": ">=0.1.0"
     },
     "build": {
-      "openclawVersion": "0.1.2",
+      "openclawVersion": "0.1.3",
       "bundledDist": false
     },
     "release": {

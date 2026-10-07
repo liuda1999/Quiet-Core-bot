@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/browser-plugin",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "description": "QuietCore browser tool plugin",
   "type": "module",

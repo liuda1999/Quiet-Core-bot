@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/webhooks",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "description": "QuietCore webhook bridge plugin",
   "type": "module",

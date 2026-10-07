@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/bonjour",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "QuietCore Bonjour/mDNS gateway discovery",
   "type": "module",
   "dependencies": {

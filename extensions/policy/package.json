@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/policy",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "description": "QuietCore policy doctor checks for workspace conformance",
   "type": "module",

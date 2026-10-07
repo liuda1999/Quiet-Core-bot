@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/memory-lancedb",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "QuietCore LanceDB-backed long-term memory plugin with auto-recall, auto-capture, and vector search.",
   "repository": {
     "type": "git",
@@ -29,7 +29,7 @@
       "pluginApi": ">=0.1.0"
     },
     "build": {
-      "openclawVersion": "0.1.2"
+      "openclawVersion": "0.1.3"
     },
     "release": {
       "bundleRuntimeDependencies": false,

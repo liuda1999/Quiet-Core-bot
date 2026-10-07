@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/diagnostics-otel",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "QuietCore diagnostics OpenTelemetry exporter for metrics, traces, and logs.",
   "repository": {
     "type": "git",
@@ -37,7 +37,7 @@
       "pluginApi": ">=0.1.0"
     },
     "build": {
-      "openclawVersion": "0.1.2"
+      "openclawVersion": "0.1.3"
     },
     "release": {
       "publishToClawHub": true,

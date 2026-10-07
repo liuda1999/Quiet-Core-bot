@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/tlon",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "QuietCore Tlon/Urbit channel plugin for chat workflows.",
   "repository": {
     "type": "git",
@@ -76,7 +76,7 @@
       "pluginApi": ">=0.1.0"
     },
     "build": {
-      "openclawVersion": "0.1.2"
+      "openclawVersion": "0.1.3"
     },
     "release": {
       "bundleRuntimeDependencies": false,

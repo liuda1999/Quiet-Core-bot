@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/nostr",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "QuietCore Nostr channel plugin for NIP-04 encrypted direct messages.",
   "repository": {
     "type": "git",
@@ -57,7 +57,7 @@
       "pluginApi": ">=0.1.0"
     },
     "build": {
-      "openclawVersion": "0.1.2"
+      "openclawVersion": "0.1.3"
     },
     "release": {
       "publishToClawHub": true,

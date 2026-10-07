@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/migrate-hermes",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "description": "Hermes to QuietCore migration provider",
   "type": "module",

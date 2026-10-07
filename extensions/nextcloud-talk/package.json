@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/nextcloud-talk",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "QuietCore Nextcloud Talk channel plugin for conversations.",
   "repository": {
     "type": "git",
@@ -47,7 +47,7 @@
       "pluginApi": ">=0.1.0"
     },
     "build": {
-      "openclawVersion": "0.1.2"
+      "openclawVersion": "0.1.3"
     },
     "release": {
       "publishToClawHub": true,

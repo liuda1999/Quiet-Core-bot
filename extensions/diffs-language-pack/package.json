@@ -1,6 +1,6 @@
 {
   "name": "@quiet-core/diffs-language-pack",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "QuietCore diffs viewer syntax highlighting language pack",
   "repository": {
     "type": "git",
@@ -28,7 +28,7 @@
       "build": "node ../../scripts/build-diffs-viewer-runtime.mjs full"
     },
     "build": {
-      "openclawVersion": "0.1.2",
+      "openclawVersion": "0.1.3",
       "staticAssets": [
         {
           "source": "./assets/viewer-runtime.js",
