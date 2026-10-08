@@ -3,6 +3,7 @@
 > 面向对象：接管本项目的**其他智能体 / 开发者**。
 > 目标：读完本文即可接手上一次未完成的收尾工作，并在本机继续部署与开发。
 > 生成时间：**2026-10-03**（第二轮更新：§2.4 两个继承失败用例已修复、改动重启复测通过；此前 2026-09-24 的打包快照版已作废）。
+> 最新修订：**2026-10-08**（第三轮：修复所有 `/` 命令派发中止，版本 `0.1.2` → `0.1.3` 并发布；见 §1.4）。
 > 编写语言：中文；代码、命令、路径、变量名保持原文。
 
 ---
@@ -34,12 +35,12 @@
 | 项          | 值                                                                                    |
 | ----------- | ------------------------------------------------------------------------------------- |
 | 项目名      | Quiet Core bot（`package.json` 名 `quiet-core-bot`；仓库 `liuda1999/Quiet-Core-bot`） |
-| 当前版本    | `0.1.2`（`package.json`）                                                             |
+| 当前版本    | `0.1.3`（`package.json`）                                                             |
 | 当前分支    | `main`                                                                                |
-| HEAD        | `878363e2`（本轮提交；父提交 `9e5036a9`）                                             |
-| 最新 tag    | `v0.1.2`；历史 tag：`v0.1.1`、`v0.1.0`                                                |
+| HEAD        | `ce1ec218`（0.1.3 发布提交；父提交 `05e08a20`）                                       |
+| 最新 tag    | `v0.1.3`；历史 tag：`v0.1.2`、`v0.1.1`、`v0.1.0`                                      |
 | remote      | `origin` = https://github.com/liuda1999/Quiet-Core-bot.git（**唯一** remote）         |
-| **工作区**  | **干净**：本轮 44 项改动均已提交并推送到 `origin/main`                                |
+| **工作区**  | **干净**：0.1.3 修复与版本同步已随 `ce1ec218` 提交并推送到 `origin/main`              |
 | Node / pnpm | Node `>=22.19.0`（本机 `v24.16.0`）；pnpm `11.2.2`（本机已安装）                      |
 
 ### 1.1 本轮改动清单（44 项 = 19 + 19 + 6）
@@ -65,7 +66,7 @@
 
 ### 1.2 历史结构（重要，避免误判）
 
-- 本仓库自 `0.1.0` 起为**独立新历史**：`main` 只有 **15 个提交**，根提交为 `a7c35b00`（一次性导入整棵树，无父提交）。
+- 本仓库自 `0.1.0` 起为**独立新历史**：`main` 只有 **22 个提交**，根提交为 `a7c35b00`（一次性导入整棵树，无父提交）。
 - `v0.1.0` 标签指向**旧历史**的合并提交 `150d05a`，它**不是 `main` 的祖先**（没有任何分支包含它）。
 - 因此 `git diff v0.1.0..HEAD` 会显示约 **9,700 个文件**的差异——这是历史结构造成的，**不代表当前树内容缺失**。
 - 旧历史仍可通过 `v0.1.0` 标签访问；如需对照请显式使用 `v0.1.0`，不要用 `HEAD~N` 推测。
@@ -75,9 +76,18 @@
 
 - 网关以 **Windows 计划任务（schtasks）** 托管，服务定义文件 `~/.quiet-core-bot/gateway.cmd`；
   `quiet-core-bot gateway start|stop|restart|status` 可用。
-- `health` 正常：`Gateway event loop: ok`。`status` 显示 `Git: main @ <sha>` 与 `app 0.1.2`。
+- `health` 正常：`Gateway event loop: ok`。`status` 显示 `Git: main @ <sha>` 与 `app 0.1.3`。
 - CLI 全矩阵、agent 单轮对话、Shell/文件工具调用、多轮上下文、cron 增删改查 + 立即执行、`infer model run` 均已跑通。
 - Control UI（`ui/`）已构建到 `dist/control-ui`，浏览器端到端可用（§2.2、§2.3）。
+
+### 1.4 第三轮（2026-10-08）：0.1.3 修复与发布
+
+- **问题**：Web 控制台里绝大多数 `/` 命令（例如 `/SKILL`）执行后无反应或报错，日志 `outcome=error`、无任何回复。
+- **根因**：`src/plugin-sdk/anthropic-cli.ts` 在模块加载阶段解析可选插件 `anthropic` 的公共接口（`anthropic/api.js`）；本发行版未随附该插件，导入即抛 `Unable to resolve bundled plugin public surface anthropic/api.js`，使所有经服务端处理的 `/` 命令派发中止。
+- **修复**：改为惰性 + 容错加载（与仓库其它 facade 一致）；插件缺失时回退 backend id `claude-cli`、`isClaudeCliProvider` 返回 `false`。
+- **验证**：重启网关后重放 62 条 `/` 命令，`outcome=error` 0 条，40 条返回真实回复（修复前为 0 条）；另外 22 条经审批放行后复测，18 条确认有真实回复，其余属需参数 / 会话迁移 / 空操作等预期行为。
+- **发布**：版本 `0.1.2` → `0.1.3`，`plugins:sync` 同步 52 个扩展包；提交 `ce1ec218`，tag `v0.1.3`，GitHub Release 已发布。
+- **备注**：斜杠命令菜单、命令面板与 `/help` 输出新增详细中文描述。
 
 ---
 
@@ -296,7 +306,7 @@ node --import tsx scripts/control-ui-i18n.ts sync --write
 | 安装依赖   | `pnpm install`（CI 用 `--frozen-lockfile`）                                                                                                   |
 | 运行时构建 | `pnpm build` → `dist/`（本机实测约 95 s）                                                                                                     |
 | Control UI | `pnpm ui:build` → `dist/control-ui`                                                                                                           |
-| 版本 / tag | 应用版本 `0.1.x`，tag `v0.1.x`；`v0.1.2` 的 Release 已发布                                                                                    |
+| 版本 / tag | 应用版本 `0.1.x`，tag `v0.1.x`；`v0.1.3` 的 Release 已发布                                                                                    |
 | 构建产物   | `dist/`、`dist-runtime/` **不入库**；`BUILD_INFO.md` 为人工维护的构建/仓库元数据                                                              |
 | CI         | `.github/workflows/` 共 **50 个**；push 到 `main` 触发 CodeQL、ClawSweeper Dispatch、Docs、QuietCore Stable Main Closeout、Workflow Sanity 等 |
 
@@ -365,9 +375,9 @@ pnpm format:check    # oxfmt
 ## 12. 交接检查清单
 
 - [ ] 确认工作区指向 **`E:\Quiet-Core-bot`**，且 `Test-Path e:\OpenClaw` 为 `False`（不要再引用旧路径）
-- [ ] `git -C E:\Quiet-Core-bot status --short` 为空（§1.1 的 43 项改动已随 `878363e2` 提交）
+- [ ] `git -C E:\Quiet-Core-bot status --short` 为空（0.1.3 修复与版本同步已随 `ce1ec218` 提交）
 - [ ] `bash scripts/handover/check-env.sh` 无 `[ MISS ]`
-- [ ] `pnpm install && pnpm build` 成功，`node dist/index.js --version` 显示 `0.1.2`
+- [ ] `pnpm install && pnpm build` 成功，`node dist/index.js --version` 显示 `0.1.3`
 - [ ] `node dist/index.js gateway start` 后 `gateway status` 为 running，`health` 返回 `ok`
 - [ ] `node dist/index.js agent --agent main --message "Reply with exactly: OK"` 得到模型回复
 - [ ] 新增日志中**不再出现** `stopReason=stop` 的 ERROR 行；`%TEMP%\quiet-core-bot\*.log` 无真实 ERROR
@@ -382,4 +392,4 @@ pnpm format:check    # oxfmt
 
 ## 13. 建议优先阅读
 
-1. 本文（尤其 §0、§1、§3）→ 2. `BUILD_INFO.md` → 3. `AGENTS.md`（仓库智能体硬性规范，改代码前必读）→ 4. `README.md` → 5. `docs/start/getting-started.md` → 6. `package.json` 的 `scripts` → 7. `CHANGELOG.md`（`0.1.1` / `0.1.2` 两节说明近期修复）。
+1. 本文（尤其 §0、§1、§3）→ 2. `BUILD_INFO.md` → 3. `AGENTS.md`（仓库智能体硬性规范，改代码前必读）→ 4. `README.md` → 5. `docs/start/getting-started.md` → 6. `package.json` 的 `scripts` → 7. `CHANGELOG.md`（`0.1.1` / `0.1.2` / `0.1.3` 三节说明近期修复）。

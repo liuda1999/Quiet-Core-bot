@@ -2,6 +2,21 @@
 
 Docs: https://github.com/liuda1999/Quiet-Core-bot
 
+## 0.1.3
+
+### 亮点
+
+- **斜杠命令全面恢复：** 修复因可选插件缺失导致所有经服务端处理的 `/` 命令派发中止的问题。
+
+### 修复
+
+- **斜杠命令派发（plugin-sdk）：** `src/plugin-sdk/anthropic-cli.ts` 在模块加载阶段即解析可选插件 `anthropic` 的公共接口（`anthropic/api.js`），本发行版未随附该插件时导入即抛 `Unable to resolve bundled plugin public surface anthropic/api.js`，使所有经服务端处理的 `/` 命令在派发途中止（日志 `outcome=error`，没有任何回复）。现改为惰性 + 容错加载：插件缺失时回退 backend id `claude-cli`、`isClaudeCliProvider` 返回 `false`，不再让可选插件拖垮命令链路。重启网关后重放 62 条 `/` 命令，`outcome=error` 为 0 条。
+
+### 其它
+
+- **Web UI 本地化：** 斜杠命令菜单、命令面板与 `/help` 输出新增详细中文描述（其余语言按 i18n 规则回退英文）。
+- **版本统一：** 核心与 52 个扩展包版本统一升级至 `0.1.3`。
+
 ## 0.1.2
 
 ### 亮点

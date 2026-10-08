@@ -9,7 +9,7 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT License"></a>
-  <a href="https://github.com/liuda1999/Quiet-Core-bot/releases"><img src="https://img.shields.io/badge/Release-v0.1.2-2ea44f?style=for-the-badge" alt="Release"></a>
+  <a href="https://github.com/liuda1999/Quiet-Core-bot/releases"><img src="https://img.shields.io/badge/Release-v0.1.3-2ea44f?style=for-the-badge" alt="Release"></a>
   <a href="https://github.com/liuda1999/Quiet-Core-bot"><img src="https://img.shields.io/badge/Repository-GitHub-181717?style=for-the-badge&logo=github" alt="GitHub"></a>
 </p>
 
@@ -489,5 +489,5 @@ Get-ScheduledTask -TaskName "Quiet Core Gateway" | Get-ScheduledTaskInfo
 ---
 
 <p align="center">
-  <sub>仓库：<a href="https://github.com/liuda1999/Quiet-Core-bot">liuda1999/Quiet-Core-bot</a> · 版本：v0.1.2</sub>
+  <sub>仓库：<a href="https://github.com/liuda1999/Quiet-Core-bot">liuda1999/Quiet-Core-bot</a> · 版本：v0.1.3</sub>
 </p>
