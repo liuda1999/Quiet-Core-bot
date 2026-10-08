@@ -7,10 +7,10 @@ read_when:
 title: "Nix"
 ---
 
-Install Quiet Core bot declaratively with **[nix-openclaw](https://github.com/openclaw/nix-openclaw)** - the first-party, batteries-included Home Manager module.
+Install Quiet Core bot declaratively with **[nix-openclaw](https://github.com/liuda1999/nix-openclaw)** - the first-party, batteries-included Home Manager module.
 
 <Info>
-The [nix-openclaw](https://github.com/openclaw/nix-openclaw) repo is the source of truth for Nix installation. This page is a quick overview.
+The [nix-openclaw](https://github.com/liuda1999/nix-openclaw) repo is the source of truth for Nix installation. This page is a quick overview.
 </Info>
 
 ## What you get
@@ -46,7 +46,7 @@ The [nix-openclaw](https://github.com/openclaw/nix-openclaw) repo is the source 
   </Step>
 </Steps>
 
-See the [nix-openclaw README](https://github.com/openclaw/nix-openclaw) for full module options and examples.
+See the [nix-openclaw README](https://github.com/liuda1999/nix-openclaw) for full module options and examples.
 
 ## Nix-mode runtime behavior
 
@@ -68,7 +68,7 @@ defaults write ai.quiet-core-bot.mac quiet-core-bot.nixMode -bool true
 
 - Auto-install and self-mutation flows are disabled
 - `quiet-core-bot.json` is treated as immutable. Startup-derived defaults stay runtime-only, and config writers such as setup, onboarding, mutating `quiet-core-bot update`, plugin install/update/uninstall/enable, `doctor --fix`, `doctor --generate-gateway-token`, and `quiet-core-bot config set` refuse to edit the file.
-- Agents should edit the Nix source instead. For nix-openclaw, use the agent-first [Quick Start](https://github.com/openclaw/nix-openclaw#quick-start) and set config under `programs.quiet-core-bot.config` or `instances.<name>.config`.
+- Agents should edit the Nix source instead. For nix-openclaw, use the agent-first [Quick Start](https://github.com/liuda1999/nix-openclaw#quick-start) and set config under `programs.quiet-core-bot.config` or `instances.<name>.config`.
 - Missing dependencies surface Nix-specific remediation messages
 - UI surfaces a read-only Nix mode banner
 
@@ -76,11 +76,11 @@ defaults write ai.quiet-core-bot.mac quiet-core-bot.nixMode -bool true
 
 Quiet Core bot reads JSON5 config from `QUIET_CORE_CONFIG_PATH` and stores mutable data in `QUIET_CORE_STATE_DIR`. When running under Nix, set these explicitly to Nix-managed locations so runtime state and config stay out of the immutable store.
 
-| Variable                 | Default                                                 |
-| ------------------------ | ------------------------------------------------------- |
-| `QUIET_CORE_HOME`        | `HOME` / `USERPROFILE` / `os.homedir()`                 |
-| `QUIET_CORE_STATE_DIR`   | `~/.quiet-core-bot`                                     |
-| `QUIET_CORE_CONFIG_PATH` | `$github.com/openclaw/nix-openclaw/quiet-core-bot.json` |
+| Variable                 | Default                                                  |
+| ------------------------ | -------------------------------------------------------- |
+| `QUIET_CORE_HOME`        | `HOME` / `USERPROFILE` / `os.homedir()`                  |
+| `QUIET_CORE_STATE_DIR`   | `~/.quiet-core-bot`                                      |
+| `QUIET_CORE_CONFIG_PATH` | `$github.com/liuda1999/nix-openclaw/quiet-core-bot.json` |
 
 ### Service PATH discovery
 
@@ -97,7 +97,7 @@ This applies to both macOS launchd and Linux systemd service environments.
 ## Related
 
 <CardGroup cols={2}>
-  <Card title="nix-openclaw" href="https://github.com/openclaw/nix-openclaw" icon="arrow-up-right-from-square">
+  <Card title="nix-openclaw" href="https://github.com/liuda1999/nix-openclaw" icon="arrow-up-right-from-square">
     Source-of-truth Home Manager module and full setup guide.
   </Card>
   <Card title="Setup wizard" href="/start/wizard" icon="wand-magic-sparkles">

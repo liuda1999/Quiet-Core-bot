@@ -239,7 +239,7 @@ describe("config io write", () => {
       });
 
       await expect(io.writeConfigFile({ gateway: { mode: "local", port: 19001 } })).rejects.toThrow(
-        "Agent-first Nix setup: https://github.com/openclaw/nix-openclaw#quick-start",
+        "Agent-first Nix setup: https://github.com/liuda1999/nix-openclaw#quick-start",
       );
 
       await expect(fs.readFile(configPath, "utf-8")).resolves.toBe(initialRaw);

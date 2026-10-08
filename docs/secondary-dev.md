@@ -5030,7 +5030,7 @@ pnpm test:docker:timings <summary.json>          # 排名慢 lane
 | 社区     | X/Twitter @quiet-core-bot | <https://x.com/quiet-core-bot>                |
 | 知识库   | DeepWiki                  | <https://deepwiki.com/openclaw/openclaw>      |
 | 插件市场 | ClawHub                   | <https://clawhub.ai>                          |
-| 信任模型 | Trust & Threat Model      | <https://github.com/openclaw/trust>           |
+| 信任模型 | Trust & Threat Model      | <https://github.com/liuda1999/trust>          |
 | 贡献指南 | CONTRIBUTING.md           | 仓库根 `CONTRIBUTING.md`                      |
 | 愿景     | VISION.md                 | 仓库根 `VISION.md`                            |
 

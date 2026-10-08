@@ -87,7 +87,10 @@ describe("release candidate checklist", () => {
       secondValue: string,
       prefix = requiredArgs,
     ): [string, string[]] => [flag, [...prefix, flag, firstValue, flag, secondValue]];
-    const duplicateFlag = (flag: string): [string, string[]] => [flag, [...requiredArgs, flag, flag]];
+    const duplicateFlag = (flag: string): [string, string[]] => [
+      flag,
+      [...requiredArgs, flag, flag],
+    ];
     const duplicateCases = [
       duplicateOption("--tag", "v2026.5.14-beta.3", "v2026.5.14-beta.4", []),
       duplicateOption("--workflow-ref", "release/a", "release/b"),
@@ -260,7 +263,7 @@ describe("release candidate checklist", () => {
         tag_name: "v0.6.3",
         draft: false,
         prerelease: false,
-        html_url: "https://github.com/openclaw/openclaw-windows-node/releases/tag/v0.6.3",
+        html_url: "https://github.com/liuda1999/openclaw-windows-node/releases/tag/v0.6.3",
         assets,
       });
     });
@@ -273,7 +276,7 @@ describe("release candidate checklist", () => {
       }),
     ).resolves.toEqual({
       tag: "v0.6.3",
-      url: "https://github.com/openclaw/openclaw-windows-node/releases/tag/v0.6.3",
+      url: "https://github.com/liuda1999/openclaw-windows-node/releases/tag/v0.6.3",
       assets,
     });
   });
@@ -320,7 +323,7 @@ describe("release candidate checklist", () => {
         tag_name: "v0.6.3",
         draft: false,
         prerelease: false,
-        html_url: "https://github.com/openclaw/openclaw-windows-node/releases/tag/v0.6.3",
+        html_url: "https://github.com/liuda1999/openclaw-windows-node/releases/tag/v0.6.3",
         assets: [
           {
             name: "QuietCoreCompanion-Setup-x64.exe",

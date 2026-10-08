@@ -55,7 +55,7 @@ terminal/WebSocket output, while file logs require `logging.level: "debug"` or
 `"trace"` in config. See [Gateway logging](/gateway/logging).
 
 <Note>
-In Nix mode (`QUIET_CORE_NIX_MODE=1`), mutating `quiet-core-bot update` runs are disabled. Update the Nix source or flake input for this install instead; for nix-openclaw, use the agent-first [Quick Start](https://github.com/openclaw/nix-openclaw#quick-start). `quiet-core-bot update status` and `quiet-core-bot update --dry-run` remain read-only.
+In Nix mode (`QUIET_CORE_NIX_MODE=1`), mutating `quiet-core-bot update` runs are disabled. Update the Nix source or flake input for this install instead; for nix-openclaw, use the agent-first [Quick Start](https://github.com/liuda1999/nix-openclaw#quick-start). `quiet-core-bot update status` and `quiet-core-bot update --dry-run` remain read-only.
 </Note>
 
 <Note>

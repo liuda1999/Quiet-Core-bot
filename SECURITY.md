@@ -16,8 +16,8 @@ Report vulnerabilities directly to the repository where the issue lives:
 - **macOS desktop app** — [liuda1999/quiet-core-bot](https://github.com/liuda1999/Quiet-Core-bot) (apps/macos)
 - **iOS app** — [liuda1999/quiet-core-bot](https://github.com/liuda1999/Quiet-Core-bot) (apps/ios)
 - **Android app** — [liuda1999/quiet-core-bot](https://github.com/liuda1999/Quiet-Core-bot) (apps/android)
-- **ClawHub** — [quiet-core-bot/clawhub](https://github.com/openclaw/clawhub)
-- **Trust and threat model** — [quiet-core-bot/trust](https://github.com/openclaw/trust)
+- **ClawHub** — [quiet-core-bot/clawhub](https://github.com/liuda1999/clawhub)
+- **Trust and threat model** — [quiet-core-bot/trust](https://github.com/liuda1999/trust)
 
 For issues that don't fit a specific repo, or if you're unsure, email **[security@myaiapphub.cn](mailto:security@myaiapphub.cn)** and we'll route it.
 

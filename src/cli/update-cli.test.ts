@@ -111,7 +111,7 @@ vi.mock("../config/config.js", () => ({
         [
           "Config is managed by Nix (`QUIET_CORE_NIX_MODE=1`), so Quiet Core bot treats quiet-core-bot.json as immutable.",
           "Do not run setup, onboarding, quiet-core-bot update, plugin install/update/uninstall/enable, doctor repair/token-generation, or config set against this file.",
-          "Agent-first Nix setup: https://github.com/openclaw/nix-openclaw#quick-start",
+          "Agent-first Nix setup: https://github.com/liuda1999/nix-openclaw#quick-start",
           "Quiet Core bot Nix overview: https://github.com/liuda1999/Quiet-Core-bot/install/nix",
         ].join("\n"),
       );
@@ -943,7 +943,9 @@ describe("update-cli", () => {
       await expect(updateCommand({ yes: true })).rejects.toThrow("QUIET_CORE_NIX_MODE=1");
     });
 
-    expect(launchdUpdateCleanupMocks.disableCurrentQuietCoreUpdateLaunchdJob).toHaveBeenCalledOnce();
+    expect(
+      launchdUpdateCleanupMocks.disableCurrentQuietCoreUpdateLaunchdJob,
+    ).toHaveBeenCalledOnce();
     expect(runGatewayUpdate).not.toHaveBeenCalled();
     expect(replaceConfigFile).not.toHaveBeenCalled();
     expect(updateNpmInstalledPlugins).not.toHaveBeenCalled();
@@ -4520,7 +4522,9 @@ describe("update-cli", () => {
 
     expect(replaceConfigFile).not.toHaveBeenCalled();
     expect(runCommandWithTimeout).not.toHaveBeenCalled();
-    expect(launchdUpdateCleanupMocks.disableCurrentQuietCoreUpdateLaunchdJob).not.toHaveBeenCalled();
+    expect(
+      launchdUpdateCleanupMocks.disableCurrentQuietCoreUpdateLaunchdJob,
+    ).not.toHaveBeenCalled();
     expect(defaultRuntime.exit).toHaveBeenCalledWith(1);
   });
 

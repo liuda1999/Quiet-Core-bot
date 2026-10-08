@@ -297,7 +297,7 @@ Control and automate Home Assistant devices via natural language.
   <img src="/assets/showcase/homeassistant.png" alt="Home Assistant skill on ClawHub" />
 </Card>
 
-<Card title="Nix packaging" icon="snowflake" href="https://github.com/openclaw/nix-openclaw">
+<Card title="Nix packaging" icon="snowflake" href="https://github.com/liuda1999/nix-openclaw">
   **@quiet-core-bot** • `nix` `packaging` `deployment`
 
 Batteries-included nixified Quiet Core bot configuration for reproducible deployments.

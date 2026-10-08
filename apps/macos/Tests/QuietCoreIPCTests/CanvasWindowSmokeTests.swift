@@ -61,7 +61,7 @@ struct CanvasWindowSmokeTests {
 
         let oldTarget = "http://127.0.0.1:18789/__quiet_core__/a2ui/?platform=macos"
         let currentTarget = "http://127.0.0.1:18790/__quiet_core__/a2ui/?platform=macos"
-        let userTarget = "https://github.com/openclaw/openclaw"
+        let userTarget = "https://github.com/liuda1999/Quiet-Core-bot"
 
         #expect(controller.shouldAutoNavigateToA2UI(lastAutoTarget: nil, candidateTarget: currentTarget) == true)
 

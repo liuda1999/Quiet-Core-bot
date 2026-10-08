@@ -1013,7 +1013,7 @@ describe("skills cli commands", () => {
       path: "agentreceipt",
     };
     const verifiedSourceUrl =
-      "https://github.com/openclaw/skills/tree/0123456789abcdef0123456789abcdef01234567/agentreceipt";
+      "https://github.com/liuda1999/skills/tree/0123456789abcdef0123456789abcdef01234567/agentreceipt";
     readVerifiedClawHubSkillSourceUrlMock.mockReturnValueOnce(verifiedSourceUrl);
     fetchClawHubSkillVerificationMock.mockResolvedValueOnce({
       schema: "clawhub.skill.verify.v1",
@@ -1039,7 +1039,8 @@ describe("skills cli commands", () => {
     await runCommand(["skills", "verify", "agentreceipt"]);
 
     expect(readVerifiedClawHubSkillSourceUrlMock).toHaveBeenCalledWith(provenance);
-    const payload = JSON.parse(runtimeStdout.at(-1) ?? "{}") as { openclaw?: { verifiedSourceUrl?: string };
+    const payload = JSON.parse(runtimeStdout.at(-1) ?? "{}") as {
+      openclaw?: { verifiedSourceUrl?: string };
     };
     expect(payload.openclaw?.verifiedSourceUrl).toBe(verifiedSourceUrl);
     expect(defaultRuntime.exit).not.toHaveBeenCalled();

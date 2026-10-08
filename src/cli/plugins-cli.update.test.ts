@@ -545,7 +545,7 @@ describe("plugins cli update", () => {
       label: "git",
       record: {
         source: "git",
-        spec: "https://github.com/openclaw/voice-call.git",
+        spec: "https://github.com/liuda1999/voice-call.git",
         installPath: "/tmp/voice-call",
       },
     },

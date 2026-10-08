@@ -47,7 +47,9 @@ const buildClawPackSummary = ({
 });
 
 async function buildNpmPackArtifact(fixture) {
-  const packRoot = await fs.promises.mkdtemp(path.join(os.tmpdir(), "quiet-core-bot-clawhub-fixture-"));
+  const packRoot = await fs.promises.mkdtemp(
+    path.join(os.tmpdir(), "quiet-core-bot-clawhub-fixture-"),
+  );
   try {
     const packageDir = path.join(packRoot, "package");
     await fs.promises.mkdir(packageDir, { recursive: true });
@@ -241,7 +243,7 @@ export default definePluginEntry({
           },
           verification: {
             tier: "source-linked",
-            sourceRepo: "https://github.com/openclaw/kitchen-sink",
+            sourceRepo: "https://github.com/liuda1999/kitchen-sink",
             hasProvenance: false,
             scanStatus: "passed",
           },

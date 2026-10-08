@@ -886,7 +886,7 @@ alerts, and OTP handling observable and prevents repeated host alerts.
 - [`scripts/quiet-core-bot-npm-release-check.ts`](https://github.com/liuda1999/Quiet-Core-bot/blob/main/scripts/quiet-core-bot-npm-release-check.ts)
 
 Maintainers use the private release docs in
-[`quiet-core-bot/maintainers/release/README.md`](https://github.com/openclaw/maintainers/blob/main/release/README.md)
+[`quiet-core-bot/maintainers/release/README.md`](https://github.com/liuda1999/maintainers/blob/main/release/README.md)
 for the actual runbook.
 
 ## Related

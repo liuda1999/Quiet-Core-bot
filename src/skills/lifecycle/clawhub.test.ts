@@ -601,12 +601,12 @@ describe("skills-clawhub", () => {
         displayName: "AgentReceipt",
         createdAt: 1,
         updatedAt: 2,
-        sourceUrl: "https://github.com/openclaw/skills/tree/latest/agentreceipt",
+        sourceUrl: "https://github.com/liuda1999/skills/tree/latest/agentreceipt",
       },
       latestVersion: {
         version: "1.0.0",
         createdAt: 3,
-        sourceUrl: "https://github.com/openclaw/skills/tree/latest/agentreceipt",
+        sourceUrl: "https://github.com/liuda1999/skills/tree/latest/agentreceipt",
       },
     });
     fetchClawHubSkillVerificationMock.mockRejectedValueOnce(new Error("verification down"));
@@ -655,7 +655,7 @@ describe("skills-clawhub", () => {
       artifact: { sourceFingerprint: "source-fp" },
       provenance: {
         source: "unavailable",
-        url: "https://github.com/openclaw/skills/tree/unverified/agentreceipt",
+        url: "https://github.com/liuda1999/skills/tree/unverified/agentreceipt",
       },
       security: { status: "clean" },
       signature: { status: "unsigned" },

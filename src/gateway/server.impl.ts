@@ -449,7 +449,7 @@ function formatRuntimeGatewayAuthTokenWarning(): string {
   return [
     base,
     "In Nix mode, set gateway.auth.token in your Nix-managed Quiet Core bot config and rebuild.",
-    "For the first-party Nix flow, see https://github.com/openclaw/nix-openclaw#quick-start and https://github.com/liuda1999/Quiet-Core-bot/install/nix.",
+    "For the first-party Nix flow, see https://github.com/liuda1999/nix-openclaw#quick-start and https://github.com/liuda1999/Quiet-Core-bot/install/nix.",
   ].join(" ");
 }
 

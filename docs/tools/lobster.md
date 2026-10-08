@@ -172,7 +172,7 @@ Notes:
 
 Bundled Lobster workflows run in-process; no separate `lobster` binary is required. The embedded runner ships with the Lobster plugin.
 
-If you need the standalone Lobster CLI for development or external pipelines, install it from the [Lobster repo](https://github.com/openclaw/lobster) and ensure `lobster` is on `PATH`.
+If you need the standalone Lobster CLI for development or external pipelines, install it from the [Lobster repo](https://github.com/liuda1999/lobster) and ensure `lobster` is on `PATH`.
 
 ## Enable the tool
 

@@ -12,7 +12,7 @@ Thanks for helping make Quiet Core bot more secure. This threat model is a livin
 
 ### Add a threat
 
-Spotted an attack vector or risk we haven't covered? Open an issue on [quiet-core-bot/trust](https://github.com/openclaw/trust/issues) and describe it in your own words. You don't need to know any frameworks or fill in every field - just describe the scenario.
+Spotted an attack vector or risk we haven't covered? Open an issue on [quiet-core-bot/trust](https://github.com/liuda1999/trust/issues) and describe it in your own words. You don't need to know any frameworks or fill in every field - just describe the scenario.
 
 **Helpful to include (but not required):**
 
@@ -88,7 +88,7 @@ If you're unsure about the risk level, just describe the impact and we'll assess
 ## Contact
 
 - **Security vulnerabilities:** See our [Trust page](https://trust.myaiapphub.cn) for reporting instructions
-- **Threat model questions:** Open an issue on [quiet-core-bot/trust](https://github.com/openclaw/trust/issues)
+- **Threat model questions:** Open an issue on [quiet-core-bot/trust](https://github.com/liuda1999/trust/issues)
 - **General chat:** Discord #security channel
 
 ## Recognition

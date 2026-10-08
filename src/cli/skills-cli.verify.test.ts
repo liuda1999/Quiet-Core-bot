@@ -269,7 +269,7 @@ describe("skills verify CLI", () => {
   });
 
   it("surfaces only server-verified source provenance in verify JSON", async () => {
-    const sourceUrl = "https://github.com/openclaw/skills/tree/main/agentreceipt";
+    const sourceUrl = "https://github.com/liuda1999/skills/tree/main/agentreceipt";
     const verifiedSourceUrl =
       "https://github.com/quiet-core-bot/skills/tree/0123456789abcdef0123456789abcdef01234567/agentreceipt";
     mocks.fetchClawHubSkillVerificationMock.mockResolvedValueOnce({
@@ -318,7 +318,7 @@ describe("skills verify CLI", () => {
       artifact: { sourceFingerprint: "source-fp" },
       provenance: {
         source: "unavailable",
-        url: "https://github.com/openclaw/skills/tree/unverified/agentreceipt",
+        url: "https://github.com/liuda1999/skills/tree/unverified/agentreceipt",
       },
       security: { status: "clean" },
       signature: { status: "unsigned" },

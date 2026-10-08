@@ -3,13 +3,13 @@ name: gitcrawl
 description: "GitHub archive: issue/PR search, sync freshness, duplicate clusters, gh-shim PR status, and Gitcrawl repo work."
 metadata:
   quiet-core-bot:
-    homepage: https://github.com/openclaw/gitcrawl
+    homepage: https://github.com/liuda1999/gitcrawl
     requires:
       bins:
         - gitcrawl
     install:
       - kind: go
-        module: github.com/openclaw/gitcrawl/cmd/gitcrawl@latest
+        module: github.com/liuda1999/gitcrawl/cmd/gitcrawl@latest
         bins:
           - gitcrawl
 ---

@@ -9,7 +9,7 @@ sidebarTitle: "Config"
 Config helpers for non-interactive edits in `quiet-core-bot.json`: get/set/patch/unset/file/schema/validate values by path and print the active config file. Run without a subcommand to open the configure wizard (same as `quiet-core-bot configure`).
 
 <Note>
-When `QUIET_CORE_NIX_MODE=1`, Quiet Core bot treats `quiet-core-bot.json` as immutable. Read-only commands such as `config get`, `config file`, `config schema`, and `config validate` still work, but config writers refuse. Agents should edit the Nix source for the install instead; for the first-party nix-openclaw distribution, use [nix-openclaw Quick Start](https://github.com/openclaw/nix-openclaw#quick-start) and set values under `programs.quiet-core-bot.config` or `instances.<name>.config`.
+When `QUIET_CORE_NIX_MODE=1`, Quiet Core bot treats `quiet-core-bot.json` as immutable. Read-only commands such as `config get`, `config file`, `config schema`, and `config validate` still work, but config writers refuse. Agents should edit the Nix source for the install instead; for the first-party nix-openclaw distribution, use [nix-openclaw Quick Start](https://github.com/liuda1999/nix-openclaw#quick-start) and set values under `programs.quiet-core-bot.config` or `instances.<name>.config`.
 </Note>
 
 ## Root options

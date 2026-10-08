@@ -5,7 +5,7 @@ read_when:
 title: "Secure file operations"
 ---
 
-Quiet Core bot uses [`@openclaw/fs-safe`](https://github.com/openclaw/fs-safe) for security-sensitive local file operations: root-bounded reads/writes, atomic replacement, archive extraction, temp workspaces, JSON state, and secret-file handling.
+Quiet Core bot uses [`@openclaw/fs-safe`](https://github.com/liuda1999/fs-safe) for security-sensitive local file operations: root-bounded reads/writes, atomic replacement, archive extraction, temp workspaces, JSON state, and secret-file handling.
 
 The goal is a consistent **library guardrail** for trusted Quiet Core bot code that receives untrusted path names. It is not a sandbox. Host filesystem permissions, OS users, containers, and the agent/tool policy still define the real blast radius.
 
