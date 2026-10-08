@@ -364,7 +364,9 @@ const buildMissingEntryErrorMessage = async () => {
   lines.push(
     "For pinned GitHub installs, use `npm install -g github:<owner>/<repo>#<ref>` instead of a raw `/archive/<ref>.tar.gz` URL.",
   );
-  lines.push("For releases, use `npm install -g quiet-core-bot@latest`.");
+  lines.push(
+    "For releases, use the installer with `--install-method git` (the `quiet-core-bot` npm package is not published yet).",
+  );
   return lines.join("\n");
 };
 

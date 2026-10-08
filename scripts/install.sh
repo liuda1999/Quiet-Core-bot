@@ -2793,6 +2793,10 @@ install_quiet-core-bot() {
         fi
     fi
 
+    if ! resolve_quiet_core_bot_bin &> /dev/null; then
+        return 1
+    fi
+
     ensure_quiet_core_bot_bin_link || true
 
     ui_success "QuietCore installed"
@@ -3145,8 +3149,18 @@ main() {
         # Step 4: npm permissions (Linux)
         fix_npm_permissions
 
-        # Step 5: QuietCore
-        install_quiet-core-bot
+        # Step 5: QuietCore — fall back to a git-checkout install when the npm
+        # package is unavailable (e.g. not published to the registry yet).
+        if ! install_quiet-core-bot; then
+            ui_warn "npm install of 'quiet-core-bot' failed (the package is not published to npm yet); falling back to a git-checkout install."
+            INSTALL_METHOD="git"
+            local fallback_repo_dir="$GIT_DIR"
+            if [[ -n "$detected_checkout" ]]; then
+                fallback_repo_dir="$detected_checkout"
+            fi
+            final_git_dir="$fallback_repo_dir"
+            install_quiet_core_bot_from_git "$fallback_repo_dir"
+        fi
     fi
 
     ui_stage "Finalizing setup"

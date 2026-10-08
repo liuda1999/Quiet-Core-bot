@@ -2472,7 +2472,7 @@ describe("update-cli", () => {
     const errors = vi.mocked(defaultRuntime.error).mock.calls.map((call) => String(call[0]));
     expect(errors.join("\n")).toContain("Node ");
     expect(errors.join("\n")).toContain(
-      "Bare `npm i -g openclaw` can silently install an older compatible release.",
+      "Bare `npm i -g quiet-core-bot` can silently install an older compatible release.",
     );
   });
 

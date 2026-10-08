@@ -996,11 +996,15 @@ install_quiet-core-bot() {
     if ! env -u NPM_CONFIG_BEFORE -u npm_config_before -u NPM_CONFIG_MIN_RELEASE_AGE -u npm_config_min_release_age -u npm_config_min-release-age "$(npm_bin)" install -g --prefix "$(node_dir)" "${npm_args[@]}" "quiet-core-bot@latest"; then
       log "npm install quiet-core-bot@latest failed; retrying quiet-core-bot@next"
       emit_json "{\"event\":\"step\",\"name\":\"quiet-core-bot\",\"status\":\"retry\",\"version\":\"next\"}"
-      env -u NPM_CONFIG_BEFORE -u npm_config_before -u NPM_CONFIG_MIN_RELEASE_AGE -u npm_config_min_release_age -u npm_config_min-release-age "$(npm_bin)" install -g --prefix "$(node_dir)" "${npm_args[@]}" "quiet-core-bot@next"
+      if ! env -u NPM_CONFIG_BEFORE -u npm_config_before -u NPM_CONFIG_MIN_RELEASE_AGE -u npm_config_min_release_age -u npm_config_min-release-age "$(npm_bin)" install -g --prefix "$(node_dir)" "${npm_args[@]}" "quiet-core-bot@next"; then
+        return 1
+      fi
       requested="next"
     fi
   else
-    env -u NPM_CONFIG_BEFORE -u npm_config_before -u NPM_CONFIG_MIN_RELEASE_AGE -u npm_config_min_release_age -u npm_config_min-release-age "$(npm_bin)" install -g --prefix "$(node_dir)" "${npm_args[@]}" "quiet-core-bot@${requested}"
+    if ! env -u NPM_CONFIG_BEFORE -u npm_config_before -u NPM_CONFIG_MIN_RELEASE_AGE -u npm_config_min_release_age -u npm_config_min-release-age "$(npm_bin)" install -g --prefix "$(node_dir)" "${npm_args[@]}" "quiet-core-bot@${requested}"; then
+      return 1
+    fi
   fi
 
   mkdir -p "${PREFIX}/bin"
@@ -1196,7 +1200,11 @@ main() {
     if [[ "$SET_NPM_PREFIX" -eq 1 ]]; then
       fix_npm_prefix_if_needed
     fi
-    install_quiet-core-bot
+    if ! install_quiet-core-bot; then
+      log "npm install of 'quiet-core-bot' failed (the package is not published to npm yet); falling back to a git-checkout install."
+      INSTALL_METHOD="git"
+      install_quiet_core_bot_from_git "$GIT_DIR"
+    fi
   else
     fail "Unknown install method: ${INSTALL_METHOD} (use npm or git)"
   fi

@@ -33,8 +33,8 @@ import { assertUpstreamUpdateAllowed } from "../../config/independent-build-guar
 import { formatConfigIssueLines } from "../../config/issue-format.js";
 import { asResolvedSourceConfig, asRuntimeConfig } from "../../config/materialize.js";
 import { CONFIG_PATH, resolveIncludeRoots } from "../../config/paths.js";
-import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import type { PluginInstallRecord } from "../../config/types.plugins.js";
+import type { QuietCoreConfig } from "../../config/types.quiet-core-bot.js";
 import {
   GATEWAY_SERVICE_KIND,
   GATEWAY_SERVICE_MARKER,
@@ -172,7 +172,8 @@ const POST_CORE_UPDATE_ENV = "QUIET_CORE_UPDATE_POST_CORE";
 const POST_CORE_UPDATE_CHANNEL_ENV = "QUIET_CORE_UPDATE_POST_CORE_CHANNEL";
 const POST_CORE_UPDATE_REQUESTED_CHANNEL_ENV = "QUIET_CORE_UPDATE_POST_CORE_REQUESTED_CHANNEL";
 const POST_CORE_UPDATE_RESULT_PATH_ENV = "QUIET_CORE_UPDATE_POST_CORE_RESULT_PATH";
-const POST_CORE_UPDATE_INSTALL_RECORDS_PATH_ENV = "QUIET_CORE_UPDATE_POST_CORE_INSTALL_RECORDS_PATH";
+const POST_CORE_UPDATE_INSTALL_RECORDS_PATH_ENV =
+  "QUIET_CORE_UPDATE_POST_CORE_INSTALL_RECORDS_PATH";
 const POST_CORE_UPDATE_STARTED_AT_ENV = "QUIET_CORE_UPDATE_POST_CORE_STARTED_AT_MS";
 const POST_CORE_UPDATE_RESULT_POLL_MS = 100;
 const PRE_UPDATE_CONFIG_SNAPSHOT_MAX_AGE_MS = 6 * 60 * 60 * 1000;
@@ -1094,8 +1095,8 @@ async function resolvePackageRuntimePreflightError(params: {
     runtime.nodeRunner
       ? "Upgrade the Node runtime that owns the managed Gateway service, then rerun `quiet-core-bot update`."
       : "Upgrade Node to 22.19+ or Node 24, then rerun `quiet-core-bot update`.",
-    "Bare `npm i -g openclaw` can silently install an older compatible release.",
-    "After upgrading Node, use `npm i -g quiet-core-bot@latest`.",
+    "Bare `npm i -g quiet-core-bot` can silently install an older compatible release.",
+    "After upgrading Node, use `npm i -g quiet-core-bot@latest` (note: the `quiet-core-bot` npm package is not published yet — prefer the installer with `--install-method git` or a source build).",
   ].join("\n");
 }
 
@@ -3320,7 +3321,9 @@ async function updateCommandInternal(opts: UpdateCommandOptions): Promise<void> 
     updateInstallKind === "git" ? DEFAULT_GIT_CHANNEL : DEFAULT_PACKAGE_CHANNEL;
   const channel = requestedChannel ?? storedChannel ?? defaultChannel;
   const devTargetRef =
-    channel === "dev" ? process.env.QUIET_CORE_UPDATE_DEV_TARGET_REF?.trim() || undefined : undefined;
+    channel === "dev"
+      ? process.env.QUIET_CORE_UPDATE_DEV_TARGET_REF?.trim() || undefined
+      : undefined;
 
   const explicitTag = normalizeTag(opts.tag);
   let tag = explicitTag ?? channelToNpmTag(channel);
@@ -3759,7 +3762,7 @@ async function updateCommandInternal(opts: UpdateCommandOptions): Promise<void> 
       );
       defaultRuntime.log(
         theme.muted(
-          `Examples: \`${replaceCliName("npm i -g quiet-core-bot@latest", CLI_NAME)}\` or \`${replaceCliName("pnpm add -g quiet-core-bot@latest", CLI_NAME)}\``,
+          `Examples: install via the installer with \`--install-method git\`, or build from source (the \`quiet-core-bot\` npm package is not published yet)`,
         ),
       );
     }

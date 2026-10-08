@@ -1493,7 +1493,13 @@ function Main {
         }
         $npmInstallResults = @(Install-QuietCore)
         if (-not (Test-BooleanSuccessResult -Results $npmInstallResults)) {
-            return (Fail-Install)
+            Write-Host "[!] npm install of 'quiet-core-bot' failed (the package is not published to npm yet); falling back to a git-checkout install." -ForegroundColor Yellow
+            $InstallMethod = "git"
+            $finalGitDir = $GitDir
+            $gitInstallResults = @(Install-QuietCoreFromGit -RepoDir $GitDir -SkipUpdate:$NoGitUpdate)
+            if (-not (Test-BooleanSuccessResult -Results $gitInstallResults)) {
+                return (Fail-Install)
+            }
         }
     }
 
