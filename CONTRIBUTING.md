@@ -199,7 +199,7 @@ If you're an experienced contributor who wants to help shape Quiet Core bot's di
 
 Being a maintainer is a responsibility, not an honorary title. We expect active, consistent involvement — triaging issues, reviewing PRs, and helping move the project forward.
 
-Still interested? Email contributing@openclaw.ai with:
+Still interested? Open an issue on the [Quiet Core bot repository](https://github.com/liuda1999/Quiet-Core-bot/issues) with:
 
 - Links to your PRs on Quiet Core bot (if you don't have any, start there first)
 - Links to open source projects you maintain or actively contribute to
@@ -220,10 +220,10 @@ We take security reports seriously. Report vulnerabilities directly to the repos
 - **macOS desktop app** — [liuda1999/quiet-core-bot](https://github.com/liuda1999/Quiet-Core-bot) (apps/macos)
 - **iOS app** — [liuda1999/quiet-core-bot](https://github.com/liuda1999/Quiet-Core-bot) (apps/ios)
 - **Android app** — [liuda1999/quiet-core-bot](https://github.com/liuda1999/Quiet-Core-bot) (apps/android)
-- **ClawHub** — [quiet-core-bot/clawhub](https://github.com/openclaw/clawhub)
-- **Trust and threat model** — [quiet-core-bot/trust](https://github.com/openclaw/trust)
+- **ClawHub** — [liuda1999/Quiet-Core-bot](https://github.com/liuda1999/Quiet-Core-bot)
+- **Trust and threat model** — [liuda1999/Quiet-Core-bot SECURITY.md](https://github.com/liuda1999/Quiet-Core-bot/blob/main/SECURITY.md)
 
-For issues that don't fit a specific repo, or if you're unsure, email **security@openclaw.ai** and we'll route it.
+For issues that don't fit a specific repo, or if you're unsure, open a [security advisory](https://github.com/liuda1999/Quiet-Core-bot/security/advisories) and we'll route it.
 
 ### Required in Reports
 
