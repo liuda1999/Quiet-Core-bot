@@ -59,7 +59,7 @@ update **without** changing your persisted channel:
 
 ```bash
 # Install a specific version
-quiet-core-bot update --tag 2026.4.1-beta.1
+quiet-core-bot update --tag 0.1.3-beta.1
 
 # Install from the beta dist-tag (one-off, does not persist)
 quiet-core-bot update --tag beta
@@ -68,7 +68,7 @@ quiet-core-bot update --tag beta
 quiet-core-bot update --channel dev
 
 # Install a specific npm package spec
-quiet-core-bot update --tag quiet-core-bot@2026.4.1-beta.1
+quiet-core-bot update --tag quiet-core-bot@0.1.3-beta.1
 
 # Install from GitHub main once without persisting the channel
 quiet-core-bot update --tag main
@@ -96,7 +96,7 @@ Preview what `quiet-core-bot update` would do without making changes:
 ```bash
 quiet-core-bot update --dry-run
 quiet-core-bot update --channel beta --dry-run
-quiet-core-bot update --tag 2026.4.1-beta.1 --dry-run
+quiet-core-bot update --tag 0.1.3-beta.1 --dry-run
 quiet-core-bot update --dry-run --json
 ```
 

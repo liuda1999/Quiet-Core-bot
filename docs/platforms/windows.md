@@ -18,13 +18,13 @@ most Linux-compatible Gateway runtime.
 Windows Hub is the native WinUI companion app for Windows 10 20H2+ and Windows 11. It installs without administrator privileges and is published with signed
 x64 and ARM64 installers on Quiet Core bot releases.
 
-Download the latest stable installer from the [Quiet Core bot releases page](https://github.com/liuda1999/Quiet-Core-bot/releases):
+Download the latest stable installer from the [Quiet Core bot releases page](https://github.com/liuda1999/Quiet-Core-bot/releases). Look for the `QuietCoreCompanion-Setup-*` assets on the latest release:
 
-- [QuietCoreCompanion-Setup-x64.exe](https://github.com/liuda1999/Quiet-Core-bot/releases/download/v2026.6.5/QuietCoreCompanion-Setup-x64.exe)
-- [QuietCoreCompanion-Setup-arm64.exe](https://github.com/liuda1999/Quiet-Core-bot/releases/download/v2026.6.5/QuietCoreCompanion-Setup-arm64.exe)
-- [Checksums](https://github.com/liuda1999/Quiet-Core-bot/releases/download/v2026.6.5/QuietCoreCompanion-SHA256SUMS.txt)
+- `QuietCoreCompanion-Setup-x64.exe`
+- `QuietCoreCompanion-Setup-arm64.exe`
+- `QuietCoreCompanion-SHA256SUMS.txt` (checksums)
 
-If a download link above returns a 404, visit the [releases page](https://github.com/liuda1999/Quiet-Core-bot/releases) and look for the `QuietCoreCompanion-Setup-*` assets on the latest release.
+If the latest release does not include Windows Hub assets, check older releases or use the [PowerShell installer](#native-windows-cli-and-gateway) below.
 
 After install, launch **Quiet Core bot Companion** from the Start menu or the system
 tray. The installer also adds shortcuts for Gateway Setup, Chat, Settings,

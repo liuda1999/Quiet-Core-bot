@@ -54,8 +54,8 @@ Docker is **optional**. Use it only if you want a containerized gateway or to va
     Use `ghcr.io/liuda1999/quiet-core-bot` or `liuda1999/quiet-core-bot`. Avoid community
     Docker Hub mirrors because Quiet Core bot does not control their release timing,
     rebuilds, or retention policy. Common official tags: `main`, `latest`,
-    `<version>` (e.g. `2026.2.26`), and beta versions such as
-    `2026.2.26-beta.1`. Beta tags do not move `latest` or `main`.
+    `<version>` (e.g. `0.1.3`), and beta versions such as
+    `0.1.3-beta.1`. Beta tags do not move `latest` or `main`.
 
   </Step>
 

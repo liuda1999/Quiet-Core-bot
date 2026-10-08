@@ -1,6 +1,6 @@
 # Quiet Core bot 二次开发技术文档
 
-> 版本 2026.6.11 · 文档生成日期 2026-08-03 · 基于 Quiet Core bot 源码 v2026.6.11（MIT, TypeScript ESM, Node 22.19+/24, pnpm 11.2.2, SQLite/Kysely, Lit/Vite UI）
+> 版本 0.1.3 · 文档生成日期 2026-08-03 · 基于 Quiet Core bot 源码 v0.1.3（MIT, TypeScript ESM, Node 22.19+/24, pnpm 11.2.2, SQLite/Kysely, Lit/Vite UI）
 > 深度审计补充：本文档经 6 类审计（功能/内部节点/配置/数据/执行流程/UI）补充，增补内容已作为"补遗"小节分散并入对应正文章节。
 > 结构复核修订 2026-09-19：对照源码逐目录核验后更新——3.1 顶层概览补入 `.agents/`、`deploy/`、`packages/`；3.2 src/ 目录树补全至实际 67 个子目录；3.3 extensions/ 由 10 个更正为 139 个（按 manifest 分六类）；3.4 ui/ 补入 config/docs/test-helpers/types 与规模数据；3.5 apps/ 补入 `shared/`、`macos-mlx-tts/`；3.6 docs/ 补全至 30 个子目录；3.7 scripts/ 补全 18 个子目录；3.8 skills/ 由 12 个更正为 52 个；3.10/3.11 同步更新；补遗 4.5 新增 14 个原未记录模块并修正文件计数；补遗 7.7 更正 C.1 误报（realtime-talk.ts 等文件实际存在）并更新各规模计数。
 > 二次开发能力增补 2026-09-21：新增 exec 审批 CLI（`quiet-core-bot approvals pending|approve|deny`）与 CLI 轮次挂起正反馈、托管出网代理不可达的可操作文案、独立发行版更新守卫（`QUIET_CORE_INDEPENDENT_BUILD`）、provider 归属头改为 opt-in（`QUIET_CORE_PROVIDER_ATTRIBUTION`）、`tools.loopDetection` 默认开启、`config set|unset` 放行 size-drop 守卫。相应修订 §2.6、§3.2、§3.11、§4.4、§5.4.2、§5.9.2、§6.5、§8.8、§8.9、§8.11。
@@ -106,7 +106,7 @@
 - 文档：<https://github.com/liuda1999/Quiet-Core-bot>
 - 仓库：<https://github.com/liuda1999/Quiet-Core-bot>
 - Discord：<https://discord.gg/clawd>
-- 当前版本：**2026.6.11**
+- 当前版本：**0.1.3**
 - 许可证：**MIT**（Copyright (c) 2026 Quiet Core bot Foundation）
 
 #### 1.1.1 本仓库定位：裁剪版独立发行版
@@ -427,12 +427,12 @@ Docker 镜像默认以非 root 用户 `node` 运行，内置 `/healthz`（livene
 
 ## 3. 项目目录结构
 
-本章对 Quiet Core bot（v2026.6.11）源码树进行递归遍历，产出带中文职责注解的二级目录树。遍历范围为 `src/`、`extensions/`、`ui/`、`apps/`、`docs/`、`scripts/`、`skills/`、`config/`、`patches/`、`qa/`、`security/`、`git-hooks/`、`.github/`、`.vscode/` 等一级目录；已排除 `node_modules`、`dist`、`.git`、`pnpm-lock.yaml`、`npm-shrinkwrap.json`。
+本章对 Quiet Core bot（v0.1.3）源码树进行递归遍历，产出带中文职责注解的二级目录树。遍历范围为 `src/`、`extensions/`、`ui/`、`apps/`、`docs/`、`scripts/`、`skills/`、`config/`、`patches/`、`qa/`、`security/`、`git-hooks/`、`.github/`、`.vscode/` 等一级目录；已排除 `node_modules`、`dist`、`.git`、`pnpm-lock.yaml`、`npm-shrinkwrap.json`。
 
 ### 3.1 顶层目录概览
 
 ```
-quiet-core-bot-2026.6.11/
+quiet-core-bot-0.1.3/
 ├── src/                          # 核心 TypeScript 源码（CLI 运行时、网关、Agent、渠道、插件系统等，67 个子目录）
 ├── extensions/                   # 内置插件目录（139 个：channel / provider / tool / 能力 / 诊断等，见 3.3）
 ├── packages/                     # workspace 共享库包（21 个：gateway-protocol / plugin-sdk / acp-core / llm-core 等）
@@ -1254,7 +1254,7 @@ flowchart TB
 
 ### 4.4 模块职责说明表
 
-下表汇总 `src/` 核心模块与 `ui/` 关键文件的职责与关键导出。位置均相对于项目根目录 `quiet-core-bot-2026.6.11/`。
+下表汇总 `src/` 核心模块与 `ui/` 关键文件的职责与关键导出。位置均相对于项目根目录 `quiet-core-bot-0.1.3/`。
 
 #### src/ 核心模块
 
@@ -1311,7 +1311,7 @@ flowchart TB
 4. **新增 UI 视图**在 `ui/src/ui/views/` 下新增渲染模块并在 `app-render.ts` 的 Tab 分发中接入，状态逻辑放到 `ui/src/ui/controllers/`。
 5. **修改 Gateway 协议**需同步 `packages/gateway-protocol`（协议版本、client-info、connect-error-details）与 `ui/src/ui/gateway.ts`（浏览器客户端）。
 
-> 审计对象：`quiet-core-bot-2026.6.11/src/` 全量导出节点、关键私有方法、中间件/AOP、服务/单例/工厂
+> 审计对象：`quiet-core-bot-0.1.3/src/` 全量导出节点、关键私有方法、中间件/AOP、服务/单例/工厂
 > 对比基线：`docs/secondary-dev.md` 第 4.4 节（模块职责说明表）与第 5 章（核心功能与业务流程）
 > 审计日期：2026-08-03
 > 审计方法：Grep 扫描 `export class/function/const/interface/type/enum`、`private async`、`middleware/use/hook`、`class .*Service|Manager|Registry|Factory|Provider|Store` 等模式，逐符号在 secondary-dev.md 中回查覆盖度
@@ -1717,7 +1717,7 @@ sequenceDiagram
 | TUI 交互     | `runTui`                                               | `src/tui/tui.ts`                                                          |
 | 插件加载     | `loadQuietCorePlugins`                                 | `src/plugins/loader.ts`                                                   |
 
-> 注：本章所有函数名、文件路径均来自 `quiet-core-bot-2026.6.11` 源码实际符号，未做臆造；如需查看具体实现细节，按上表路径在仓库中检索即可。
+> 注：本章所有函数名、文件路径均来自 `quiet-core-bot-0.1.3` 源码实际符号，未做臆造；如需查看具体实现细节，按上表路径在仓库中检索即可。
 
 ### 5.4 补遗：完整 CLI 命令入口清单
 
