@@ -222,7 +222,7 @@ See [Plugins](/tools/plugin).
 
 ### Automatic dependency install
 
-When you install Quiet Core bot globally with `npm install -g quiet-core-bot`, the acpx
+When you install Quiet Core bot globally via npm (`npm install -g quiet-core-bot` — note: the npm package is **not published yet**), the acpx
 runtime dependencies (platform-specific binaries) are installed automatically
 via a postinstall hook. If the automatic install fails, the gateway still starts
 normally and reports the missing dependency through `quiet-core-bot acp doctor`.

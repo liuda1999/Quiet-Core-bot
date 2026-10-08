@@ -59,7 +59,7 @@
 
 | 能力         | 说明                                                                                                                                    |
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
-| 多渠道接入   | 用 Telegram / WhatsApp / Slack / Discord / 飞书 / 微信 等任意渠道与助理对话，每个会话独立路由                                           |
+| 多渠道接入   | 用 Matrix / Signal / IRC / Mattermost / 微信 / 企业微信 等渠道与助理对话，每个会话独立路由                                              |
 | 本地优先     | 网关、会话、记忆、工作区默认落在本机 `~/.quiet-core-bot`，数据不出本机（除非你主动调用外部 API）                                        |
 | 多模型供应商 | 支持 OpenAI 兼容、OpenAI Responses、Anthropic 兼容、本地推理（Ollama / vLLM / LM Studio / llama.cpp）等，可在 Web 控制台或 CLI 动态增删 |
 | 工具与技能   | 内置 exec 执行、浏览器自动化、网页抓取与搜索、媒体处理、TTS/语音、画布（Canvas）、定时任务（cron）等                                    |
@@ -75,15 +75,21 @@
 
 文本在各渠道均可用；媒体与表情回应视渠道而定。完整清单见 `quiet-core-bot channels list --all`。
 
-- **Telegram**（grammY，支持群组）· **WhatsApp**（Baileys，需二维码配对）
-- **Slack**（Bolt SDK）· **Discord**（Bot API + Gateway）· **Microsoft Teams**（Bot Framework）
-- **Signal**（signal-cli）· **IRC** · **SMS**（Twilio）
-- **iMessage**（macOS 原生桥接）· **Google Chat** · **Feishu / 飞书**
-- **Matrix** · **Mattermost** · **Nextcloud Talk** · **Synology Chat** · **Nostr** · **Tlon**（Urbit）
-- **LINE** · **QQ Bot** · **Twitch** · **WeChat / 微信** · **Zalo / Zalo Personal / Zalo ClawBot** · **Yuanbao**
+**内置渠道（随仓库附带）：**
+
+- **Matrix**（plugin）· **Mattermost**（plugin）· **Nextcloud Talk**（self-hosted）· **Synology Chat**（Webhook）
+- **Signal**（signal-cli）· **IRC**（Server + Nick）· **Nostr**（NIP-04 私信）· **Tlon**（Urbit）
+- **Raft**（CLI 唤醒桥）· **ClickClack**
+
+**外部渠道插件（首次连接时按需下载）：**
+
+- **WeCom / 企业微信** · **微信（Weixin）** · **Yuanbao / 元宝** · **Zalo ClawBot**
+
+**内置 Web 聊天：**
+
 - **WebChat**（Gateway 内置 WebSocket 聊天界面）
 
-> 最快的上手渠道通常是 **Telegram**（只需一个 Bot Token）；WhatsApp 需要扫码配对。
+> 最快的上手渠道通常是 **WebChat**（无需第三方凭据）；Matrix / Signal / IRC 等请按各自文档配置。
 
 ---
 

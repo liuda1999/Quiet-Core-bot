@@ -25,7 +25,7 @@ title: "Quiet Core bot"
 > _"EXFOLIATE! EXFOLIATE!"_ — A space lobster, probably
 
 <p align="center">
-  <strong>Any OS gateway for AI agents across Discord, Google Chat, iMessage, Matrix, Microsoft Teams, Signal, Slack, Telegram, WhatsApp, Zalo, and more.</strong><br />
+  <strong>Any OS gateway for AI agents across Matrix, Signal, IRC, Mattermost, Nextcloud Talk, Synology Chat, Nostr, Tlon, WeChat (Weixin), WeCom, and more.</strong><br />
   Send a message, get an agent response from your pocket. Run one Gateway across built-in channels, bundled channel plugins, WebChat, and mobile nodes.
 </p>
 
@@ -43,7 +43,7 @@ title: "Quiet Core bot"
 
 ## What is Quiet Core bot?
 
-Quiet Core bot is a **self-hosted gateway** that connects your favorite chat apps and channel surfaces — built-in channels plus bundled or external channel plugins such as Discord, Google Chat, iMessage, Matrix, Microsoft Teams, Signal, Slack, Telegram, WhatsApp, Zalo, and more — to AI coding agents. You run a single Gateway process on your own machine (or a server), and it becomes the bridge between your messaging apps and an always-available AI assistant.
+Quiet Core bot is a **self-hosted gateway** that connects your favorite chat apps and channel surfaces — built-in channels plus bundled or external channel plugins such as Matrix, Signal, IRC, Mattermost, Nextcloud Talk, Synology Chat, Nostr, Tlon, WeChat (Weixin), WeCom, and more — to AI coding agents. You run a single Gateway process on your own machine (or a server), and it becomes the bridge between your messaging apps and an always-available AI assistant.
 
 **Who is it for?** Developers and power users who want a personal AI assistant they can message from anywhere — without giving up control of their data or relying on a hosted service.
 
@@ -74,10 +74,10 @@ The Gateway is the single source of truth for sessions, routing, and channel con
 
 <Columns>
   <Card title="Multi-channel gateway" icon="network" href="/channels">
-    Discord, iMessage, Signal, Slack, Telegram, WhatsApp, WebChat, and more with a single Gateway process.
+    Matrix, Signal, IRC, Mattermost, Nextcloud Talk, WebChat, and more with a single Gateway process.
   </Card>
   <Card title="Plugin channels" icon="plug" href="/tools/plugin">
-    Bundled plugins add Matrix, Nostr, Twitch, Zalo, and more in normal current releases.
+    Bundled plugins add Matrix, Nostr, Tlon, Raft, and ClickClack; external plugins add WeCom, Yuanbao, Weixin, and Zalo ClawBot.
   </Card>
   <Card title="Multi-agent routing" icon="route" href="/concepts/multi-agent">
     Isolated sessions per agent, workspace, or sender.
@@ -98,8 +98,11 @@ The Gateway is the single source of truth for sessions, routing, and channel con
 <Steps>
   <Step title="Install Quiet Core bot">
     ```bash
-    npm install -g quiet-core-bot@latest
+    curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --install-method git
     ```
+
+    > The npm package `quiet-core-bot` is **not published yet** (404 on the npm registry), so the installer's **default npm method fails**; the `--install-method git` flag above installs from the GitHub checkout instead. You can also build from source. See [Install](/install).
+
   </Step>
   <Step title="Onboard and install the service">
     ```bash
@@ -136,14 +139,14 @@ Open the browser Control UI after the Gateway starts.
 Config lives at `~/.quiet-core-bot/quiet-core-bot.json`.
 
 - If you **do nothing**, Quiet Core bot uses the bundled Quiet Core bot agent runtime with per-sender sessions.
-- If you want to lock it down, start with `channels.whatsapp.allowFrom` and (for groups) mention rules.
+- If you want to lock it down, start with `channels.signal.allowFrom` and (for groups) mention rules.
 
 Example:
 
 ```json5
 {
   channels: {
-    whatsapp: {
+    signal: {
       allowFrom: ["+15555550123"],
       groups: { "*": { requireMention: true } },
     },
@@ -164,8 +167,8 @@ Example:
   <Card title="Remote access" href="/gateway/remote" icon="globe">
     SSH and tailnet access patterns.
   </Card>
-  <Card title="Channels" href="/channels/telegram" icon="message-square">
-    Channel-specific setup for Feishu, Microsoft Teams, WhatsApp, Telegram, Discord, and more.
+  <Card title="Channels" href="/channels" icon="message-square">
+    Channel-specific setup for Matrix, Signal, IRC, Mattermost, Nextcloud Talk, and more.
   </Card>
   <Card title="Nodes" href="/nodes" icon="smartphone">
     iOS and Android nodes with pairing, Canvas, camera, and device actions.

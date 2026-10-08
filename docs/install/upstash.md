@@ -45,6 +45,8 @@ Inside the Box:
 sudo npm install -g quiet-core-bot
 ```
 
+> ⚠️ The npm package `quiet-core-bot` is **not published yet**, so this command fails. Build from source or run the installer with `--install-method git`.
+
 ## Run onboarding
 
 ```bash

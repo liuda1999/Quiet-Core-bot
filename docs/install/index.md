@@ -17,6 +17,10 @@ title: "Install"
 
 The fastest way to install. It detects your OS, installs Node if needed, installs Quiet Core bot, and launches onboarding.
 
+<Warning>
+The npm package `quiet-core-bot` is **not published yet**, so the installer's default **npm** method fails. Pass `--install-method git` (shown below) to install from the GitHub checkout, or build from source.
+</Warning>
+
 <Note>
 Windows desktop users can also install the native [Windows Hub](/platforms/windows#recommended-windows-hub) companion app, which includes setup, tray status, chat, node mode, and local MCP mode.
 </Note>
@@ -24,12 +28,12 @@ Windows desktop users can also install the native [Windows Hub](/platforms/windo
 <Tabs>
   <Tab title="macOS / Linux / WSL2">
     ```bash
-    curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash
+    curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --install-method git
     ```
   </Tab>
   <Tab title="Windows (PowerShell)">
     ```powershell
-    iwr -useb https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.ps1 | iex
+    & ([scriptblock]::Create((iwr -useb https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.ps1))) -InstallMethod git
     ```
   </Tab>
 </Tabs>
@@ -39,12 +43,12 @@ To install without running onboarding:
 <Tabs>
   <Tab title="macOS / Linux / WSL2">
     ```bash
-    curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --no-onboard
+    curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --install-method git --no-onboard
     ```
   </Tab>
   <Tab title="Windows (PowerShell)">
     ```powershell
-    & ([scriptblock]::Create((iwr -useb https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.ps1))) -NoOnboard
+    & ([scriptblock]::Create((iwr -useb https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.ps1))) -InstallMethod git -NoOnboard
     ```
   </Tab>
 </Tabs>
@@ -70,6 +74,10 @@ Already installed? Switch between package and git installs with
 [Updating](/install/updating#switch-between-npm-and-git-installs).
 
 ### npm, pnpm, or bun
+
+<Warning>
+**Not yet available:** the `quiet-core-bot` package is **not published to npm** (404 on the registry), so the `npm` / `pnpm` / `bun` global installs below fail until it is published. Use the installer script with `--install-method git`, or build from source.
+</Warning>
 
 If you already manage Node yourself:
 

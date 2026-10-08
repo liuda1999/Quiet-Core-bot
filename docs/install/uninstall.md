@@ -127,8 +127,7 @@ If you used a profile, delete the matching task name and the `gateway.cmd` /
 
 ### Normal install (install.sh / npm / pnpm / bun)
 
-If you used `https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh` or `install.ps1`, the CLI was installed with `npm install -g quiet-core-bot@latest`.
-Remove it with `npm rm -g quiet-core-bot` (or `pnpm remove -g` / `bun remove -g` if you installed that way).
+If you used `install.sh` / `install.ps1` with the default **npm** method, the CLI was installed globally via `npm install -g quiet-core-bot@latest`; remove it with `npm rm -g quiet-core-bot` (or `pnpm remove -g` / `bun remove -g` if you installed that way). If you installed with `--install-method git`, remove the git checkout instead (see [Source checkout](#source-checkout-git-clone) below).
 
 ### Source checkout (git clone)
 

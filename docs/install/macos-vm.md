@@ -141,6 +141,8 @@ npm install -g quiet-core-bot@latest
 quiet-core-bot onboard --install-daemon
 ```
 
+> ⚠️ The npm package `quiet-core-bot` is **not published yet**, so this command fails. Build from source or run the installer with `--install-method git`.
+
 Follow the onboarding prompts to set up your model provider (Anthropic, OpenAI, etc.).
 
 ---

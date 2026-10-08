@@ -217,6 +217,8 @@ Quiet Core bot 的 CLI/Gateway 在主流桌面操作系统上运行，并通过�
 
 #### 2.2.1 全局安装（推荐终端用户）
 
+> ⚠️ **npm 包 `quiet-core-bot` 尚未发布**（npm 注册表 404），下列 `npm` / `pnpm` 全局安装命令当前会失败。请改用安装脚本 `--install-method git`，或走 §2.2.2 源码开发安装。
+
 ```bash
 # 使用 npm
 npm install -g quiet-core-bot@latest
@@ -363,7 +365,7 @@ Docker 镜像默认以非 root 用户 `node` 运行，内置 `/healthz`（livene
 
 | 用途                     | 命令                                                                            | 说明                                                                                                |
 | ------------------------ | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| 全局安装                 | `npm install -g quiet-core-bot@latest`                                          | 安装最新发布版本                                                                                    |
+| 全局安装                 | `npm install -g quiet-core-bot@latest`                                          | 安装最新发布版本（**npm 包尚未发布，当前不可用**；请用安装脚本或源码构建）                          |
 | 引导安装                 | `quiet-core-bot onboard --install-daemon`                                       | 交互式引导并安装守护进程                                                                            |
 | 网关状态                 | `quiet-core-bot gateway status`                                                 | 查看网关运行状态                                                                                    |
 | 前台调试                 | `quiet-core-bot gateway --port 18789 --verbose`                                 | 前台运行并输出详细日志                                                                              |

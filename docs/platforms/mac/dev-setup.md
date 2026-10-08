@@ -55,6 +55,8 @@ Alternatively, install it manually:
 npm install -g quiet-core-bot@<version>
 ```
 
+> ⚠️ The npm package `quiet-core-bot` is **not published yet**, so this command fails. Build from source or run the installer with `--install-method git`.
+
 `pnpm add -g quiet-core-bot@<version>` and `bun add -g quiet-core-bot@<version>` also work.
 For the Gateway runtime, Node remains the recommended path.
 

@@ -15,7 +15,7 @@ Native Linux companion apps are planned. Contributions are welcome if you want t
 ## Beginner quick path (VPS)
 
 1. Install Node 24 (recommended; Node 22 LTS, currently `22.19+`, still works for compatibility)
-2. `npm i -g quiet-core-bot@latest`
+2. `npm i -g quiet-core-bot@latest` — ⚠️ **the npm package is not published yet**, so this fails; instead build from source or run the installer with `--install-method git`
 3. `quiet-core-bot onboard --install-daemon`
 4. From your laptop: `ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
 5. Open `http://127.0.0.1:18789/` and authenticate with the configured shared secret (token by default; password if you set `gateway.auth.mode: "password"`)

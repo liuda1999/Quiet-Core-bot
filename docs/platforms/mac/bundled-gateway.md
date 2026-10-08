@@ -20,6 +20,8 @@ Node 24 is the default runtime on the Mac. Node 22 LTS, currently `22.19+`, stil
 npm install -g quiet-core-bot@<version>
 ```
 
+> ⚠️ The npm package `quiet-core-bot` is **not published yet**, so this command fails. Build from source or run the installer with `--install-method git`.
+
 The macOS app's **Install CLI** button runs the same global install flow the app
 uses internally: it prefers npm first, then pnpm, then bun if that is the only
 detected package manager. Node remains the recommended Gateway runtime.

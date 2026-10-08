@@ -29,7 +29,7 @@ Need to install Node? See [Node setup](/install/node).
     <Tabs>
       <Tab title="macOS / Linux">
         ```bash
-        curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash
+        curl -fsSL https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.sh | bash -s -- --install-method git
         ```
         <img
   src="/assets/install-script.svg"
@@ -39,13 +39,13 @@ Need to install Node? See [Node setup](/install/node).
       </Tab>
       <Tab title="Windows (PowerShell)">
         ```powershell
-        iwr -useb https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.ps1 | iex
+        & ([scriptblock]::Create((iwr -useb https://raw.githubusercontent.com/liuda1999/Quiet-Core-bot/main/scripts/install.ps1))) -InstallMethod git
         ```
       </Tab>
     </Tabs>
 
     <Note>
-    Other install methods (Docker, Nix, npm): [Install](/install).
+    The npm package `quiet-core-bot` is **not published yet**, so the installer's default **npm** method fails; the commands above use `--install-method git` (installs from the GitHub checkout). Other methods (Docker, Nix, source build): [Install](/install).
     </Note>
 
   </Step>
