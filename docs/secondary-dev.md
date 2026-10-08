@@ -5,6 +5,7 @@
 > 结构复核修订 2026-09-19：对照源码逐目录核验后更新——3.1 顶层概览补入 `.agents/`、`deploy/`、`packages/`；3.2 src/ 目录树补全至实际 67 个子目录；3.3 extensions/ 由 10 个更正为 139 个（按 manifest 分六类）；3.4 ui/ 补入 config/docs/test-helpers/types 与规模数据；3.5 apps/ 补入 `shared/`、`macos-mlx-tts/`；3.6 docs/ 补全至 30 个子目录；3.7 scripts/ 补全 18 个子目录；3.8 skills/ 由 12 个更正为 52 个；3.10/3.11 同步更新；补遗 4.5 新增 14 个原未记录模块并修正文件计数；补遗 7.7 更正 C.1 误报（realtime-talk.ts 等文件实际存在）并更新各规模计数。
 > 二次开发能力增补 2026-09-21：新增 exec 审批 CLI（`quiet-core-bot approvals pending|approve|deny`）与 CLI 轮次挂起正反馈、托管出网代理不可达的可操作文案、独立发行版更新守卫（`QUIET_CORE_INDEPENDENT_BUILD`）、provider 归属头改为 opt-in（`QUIET_CORE_PROVIDER_ATTRIBUTION`）、`tools.loopDetection` 默认开启、`config set|unset` 放行 size-drop 守卫。相应修订 §2.6、§3.2、§3.11、§4.4、§5.4.2、§5.9.2、§6.5、§8.8、§8.9、§8.11。
 > 裁剪版复核 2026-10-09：对照本仓库实际源码树重新核验 §3 结构与计数，修正此前沿用上游数据造成的偏差——3.1 顶层概览计数更新（src/ 68 个子目录、extensions/ 58 个、skills/ 28 个、docs/ 29 个子目录约 680 个 .md、scripts/ 19 个子目录约 812 个文件、根目录 tsconfig 7 个）并移除不存在的 `.vscode/`；3.3 插件清单重写为本仓库实有的 58 个（Channel 11 / LLM Provider 7 / 能力工具 21 / 平台诊断 15 / 内部库包 4）；3.4 ui/ 文件计数与样式清单更新；3.7 scripts/ 子目录补入 `handover/`；3.8 skills/ 更正为实有 28 个；3.10 移除 `.vscode/`；3.11 关键目录表同步；§5.5.3 头像处理模块由 `identity-avatar.ts` 更正为 `assistant-identity.ts`。
+> 引用核对 2026-10-09（§4/§5/§7/§9）：修正 `src/status/` 的 `status-queue`/`status-subagents`→`.runtime.ts`、`src/cron/service/wake-origin.ts`→`wake.ts`、`chat/` 文件数 77→78、`VoiceWakeOverlayController.swift`→拆分的 `+*.swift`、§9 契约 vitest config 路径笔误；移除/标注本仓库不存在的 `ui/src/ui/views/workboard.ts`、`views/skill-workshop.ts`、`controllers/workboard.ts`、`workboard.css`、`skill-workshop.css` 及 `navigation.ts` 中不存在 `skillWorkshop` 路由等（详见 §7.7 核对说明）。
 
 ## 目录
 
@@ -1173,7 +1174,6 @@ flowchart TB
         AgentsView[agents.ts<br/>Agent 面板]
         SkillsView[skills.ts<br/>技能管理]
         UsageView[usage.ts<br/>用量统计]
-        WorkboardView[workboard.ts<br/>工作板]
         ConfigView[config.ts<br/>配置编辑]
         LogsView[logs.ts<br/>日志查看]
         NodesView[nodes.ts<br/>节点管理]
@@ -1202,7 +1202,6 @@ flowchart TB
         LogsCtrl[logs.ts]
         ConfigCtrl[config.ts]
         SkillsCtrl[skills.ts]
-        WorkboardCtrl[workboard.ts]
         NodesCtrl[nodes.ts]
         DevicesCtrl[devices.ts]
         UsageCtrl[usage.ts]
@@ -1229,8 +1228,8 @@ flowchart TB
 **组件树说明**
 
 - **根组件 `QuietCoreApp`**（`ui/src/ui/app.ts`）继承 `LitElement`，使用 `@state` 装饰器管理视图状态；它将大量行为拆分到 `app-*.ts` 模块（lifecycle、gateway、settings、scroll、chat、channels、render、tool-stream、native-bridge），自身只做组合。
-- **`app-render.ts` 是渲染分发器**：根据当前 Tab 调用 `views/*` 中对应的渲染函数（overview、chat、channels、sessions、cron、mcp、agents、skills、usage、workboard、config、logs、nodes、dreaming、debug 等）。
-- **`controllers/` 是状态层**：每个控制器（chat、sessions、models、channels、agents、cron、logs、config、skills、workboard、nodes、devices、usage、health、presence）封装对应 Gateway 方法的调用与本地状态，组件通过控制器与 Gateway 交互而非直接 fetch。
+- **`app-render.ts` 是渲染分发器**：根据当前 Tab 调用 `views/*` 中对应的渲染函数（overview、chat、channels、sessions、cron、mcp、agents、skills、usage、config、logs、nodes、dreaming、debug 等）。
+- **`controllers/` 是状态层**：每个控制器（chat、sessions、models、channels、agents、cron、logs、config、skills、nodes、devices、usage、health、presence）封装对应 Gateway 方法的调用与本地状态，组件通过控制器与 Gateway 交互而非直接 fetch。
 - **`gateway.ts` 提供浏览器端 Gateway 客户端**：实现 WebSocket 连接、设备身份签名（`device-identity.ts`）、令牌存储（`device-auth.ts`）、连接错误细节解析（`ConnectErrorDetailCodes`）。
 - **`chat/` 子模块** 处理聊天界面细节：实时语音（`realtime-talk.ts` 及 webrtc/google-live/pcm-output 变体）、运行生命周期、输入历史、斜杠命令、工具卡片、会话消息缓存、草稿持久化、头像渲染。
 - **`components/` 通用组件**：`modal-dialog`、`file-preview-modal`、`dashboard-header`、`resizable-divider` 被多个视图复用。
@@ -1346,7 +1345,7 @@ flowchart TB
 | scripts                | `src/scripts/`                | `ci-changed-scope.test.ts`、`control-ui-i18n.test.ts`、`docs-link-audit.test.ts`、`sync-plugin-versions.test.ts`、`test-live-media.test.ts` 等                                                                                                                               | 源码侧脚本：CI 变更范围、Control UI i18n 报告、文档链接审计、插件版本同步、live 媒体测试（被根 `scripts/` 调用的 TS 逻辑载体）                                                                                                                                                                              |
 | sessions               | `src/sessions/`               | `classify-session-kind.ts`、`input-provenance.ts`、`model-overrides.ts`、`send-policy.ts`、`session-id-resolution.ts`、`session-chat-type.ts`、`level-overrides.ts`                                                                                                          | 会话策略（独立于 `agents/sessions` 与 `config/sessions`）：会话类型分类、输入来源、模型覆盖、发送策略、会话 ID 解析                                                                                                                                                                                         |
 | state                  | `src/state/`                  | `quiet-core-bot-state-schema.sql`、`quiet-core-bot-agent-schema.sql`、`quiet-core-bot-state-db.ts`                                                                                                                                                                           | SQLite 状态层：共享库/Agent 库 DDL、连接管理、schema 版本与迁移（第 6 章数据模型的物理载体）                                                                                                                                                                                                                |
-| status                 | `src/status/`                 | `status-message.ts`、`status-plugin-health.ts`、`status-queue.ts`、`status-subagents.ts`、`status-message.runtime.ts`、`fallback-notice-state.ts`、`agent-runtime-label.ts`                                                                                                  | 状态展示：状态消息生成、插件健康、队列/子 agent 状态、回退通知状态、Agent 运行时标签                                                                                                                                                                                                                        |
+| status                 | `src/status/`                 | `status-message.ts`、`status-plugin-health.ts`、`status-queue.runtime.ts`、`status-subagents.runtime.ts`、`status-message.runtime.ts`、`fallback-notice-state.ts`、`agent-runtime-label.ts`                                                                                  | 状态展示：状态消息生成、插件健康、队列/子 agent 状态、回退通知状态、Agent 运行时标签                                                                                                                                                                                                                        |
 | test-helpers           | `src/test-helpers/`           | `http.ts`、`ssrf.ts`、`temp-dir.ts`、`state-dir-env.ts`、`workspace.ts`、`windows-cmd-shim.ts`、`network-interfaces.ts`                                                                                                                                                      | 跨模块测试辅助：HTTP/SSRF/临时目录/状态目录环境/工作区/Windows 命令 shim                                                                                                                                                                                                                                    |
 | trajectory             | `src/trajectory/`             | `export.ts`、`metadata.ts`、`runtime-file.ts`、`cleanup.ts`、`command-export.ts`、`paths.ts`、`types.ts`                                                                                                                                                                     | 轨迹（trajectory）导出与清理：会话轨迹元数据、运行时文件、命令导出                                                                                                                                                                                                                                          |
 
@@ -2144,7 +2143,7 @@ sequenceDiagram
 - **子 agent 注册表**（`subagent-registry.runtime.ts`）：隔离 session 的子 agent 跟踪与回收。
 - **会话收割**（`session-cleanup.ts`、`src/cron/session-reaper.ts`）：隔离 session 执行完成后由 reaper 清理，避免 session store 膨胀。配置项 `cronConfig` 的 session retention 策略控制保留时长。
 - **失败告警投递**（`src/cron/service/failure-alerts.ts`）：`failureNotificationDeliveryFromJobState` 读取 `job.state.lastFailureNotificationDeliveryStatus`，按 `failureDestination` 配置发送失败通知，支持去重（`lastFailureAlertAtMs`）。
-- **唤醒来源投递**（`src/cron/service/wake-origin.ts`、`wake.ts`）：`CronWakeMode` = `next-heartbeat` / `now`，main-session job 可等待心跳唤醒。
+- **唤醒来源投递**（`src/cron/service/wake.ts`）：`CronWakeMode` = `next-heartbeat` / `now`，main-session job 可等待心跳唤醒。
 - **任务账本**（`src/cron/service/task-ledger.ts`、`task-runs.ts`）：cron run 结果写入 `task_runs` 表（`runtime`、`task_kind`、`owner_key`、`agent_id`、`run_id`、`status`、`delivery_status`、`terminal_outcome`）。
 - **错峰调度**（`src/cron/stagger.ts`）：`staggerMs` 在 cron 表达式基础上加确定性抖动窗口，避免多 job 同时刻触发。
 - **重启补偿**（`missedJobStaggerMs`、`maxMissedJobsPerRestart`）：Gateway 重启时检测错过的 job，按 `maxMissedJobsPerRestart` 限制立即执行数量，其余按 `missedJobStaggerMs` 逐步排程（参见 `CronServiceDeps` 第 76-92 行，issue #18892）。
@@ -2859,7 +2858,7 @@ flowchart TB
 
     subgraph Web["Web Control UI（ui/ · Lit）"]
         WebApp[QuietCoreApp<br/>app.ts]
-        WebApp --> WebViews["views/*<br/>overview/chat/channels/sessions/<br/>cron/mcp/agents/skills/usage/<br/>workboard/config/logs/nodes/<br/>dreaming/debug/..."]
+        WebApp --> WebViews["views/*<br/>overview/chat/channels/sessions/<br/>cron/mcp/agents/skills/usage/<br/>config/logs/nodes/<br/>dreaming/debug/..."]
     end
 
     subgraph TUI["TUI（src/tui/）"]
@@ -2900,27 +2899,27 @@ flowchart TB
 
 Web Control UI 由根组件 `QuietCoreApp`（`ui/src/ui/app.ts`）通过 `app-render.ts` 按 Tab 分发到 `ui/src/ui/views/*` 渲染。默认由 Gateway 在 `http://127.0.0.1:18789/` 提供（`gateway.controlUi.basePath` 可覆盖），TLS 启用时为 `https://`。访问需通过 Gateway 认证（shared-secret token/password、Tailscale Serve 或 trusted-proxy）。
 
-| 视图名                   | 入口文件                             | Tab/路径   | 说明                                                                       |
-| ------------------------ | ------------------------------------ | ---------- | -------------------------------------------------------------------------- |
-| Overview 仪表盘          | `ui/src/ui/views/overview.ts`        | 概览 Tab   | 网关访问、健康、用量概览                                                   |
-| Chat 聊天                | `ui/src/ui/views/chat.ts`            | 聊天 Tab   | 主聊天界面，调用 `chat.history`/`chat.send`/`chat.inject`                  |
-| Channels 渠道            | `ui/src/ui/views/channels.ts`        | 渠道 Tab   | 渠道配置与状态（Discord/Telegram/Slack/Nostr/WhatsApp 等）                 |
-| Sessions 会话            | `ui/src/ui/views/sessions.ts`        | 会话 Tab   | 会话列表与检查点管理                                                       |
-| Cron 定时任务            | `ui/src/ui/views/cron.ts`            | 定时 Tab   | 定时任务 CRUD 与运行历史                                                   |
-| MCP 服务器               | `ui/src/ui/views/mcp.ts`             | MCP Tab    | MCP 服务器配置（transport/auth/launch/toolFilter/TLS）                     |
-| Agents 面板              | `ui/src/ui/views/agents.ts`          | Agents Tab | Agent 列表、文件管理、工具面板（Available Right Now / Tool Configuration） |
-| Skills 技能              | `ui/src/ui/views/skills.ts`          | Skills Tab | 技能搜索、安装、提案管理                                                   |
-| Usage 用量               | `ui/src/ui/views/usage.ts`           | 用量 Tab   | Token 用量与成本统计                                                       |
-| Workboard 工作板         | `ui/src/ui/views/workboard.ts`       | 工作板 Tab | 任务/流程工作板                                                            |
-| Config 配置              | `ui/src/ui/views/config.ts`          | 配置 Tab   | 配置编辑器（JSON5）                                                        |
-| Logs 日志                | `ui/src/ui/views/logs.ts`            | 日志 Tab   | 实时日志查看                                                               |
-| Nodes 节点               | `ui/src/ui/views/nodes.ts`           | 节点 Tab   | 节点/设备管理与配对                                                        |
-| Dreaming 记忆梦境        | `ui/src/ui/views/dreaming.ts`        | 记忆 Tab   | 记忆梦境诊断                                                               |
-| Debug 调试               | `ui/src/ui/views/debug.ts`           | 调试 Tab   | 调试面板                                                                   |
-| Command Palette 命令面板 | `ui/src/ui/views/command-palette.ts` | 全局浮层   | 命令快速调用                                                               |
-| Login Gate 登录门        | `ui/src/ui/views/login-gate.ts`      | 认证前置   | 共享密钥登录                                                               |
-| Exec Approval 执行审批   | `ui/src/ui/views/exec-approval.ts`   | 审批浮层   | 执行/插件审批决策                                                          |
-| Connect Command 连接命令 | `ui/src/ui/views/connect-command.ts` | 连接浮层   | 连接命令展示                                                               |
+| 视图名                   | 入口文件                                                      | Tab/路径   | 说明                                                                       |
+| ------------------------ | ------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------- |
+| Overview 仪表盘          | `ui/src/ui/views/overview.ts`                                 | 概览 Tab   | 网关访问、健康、用量概览                                                   |
+| Chat 聊天                | `ui/src/ui/views/chat.ts`                                     | 聊天 Tab   | 主聊天界面，调用 `chat.history`/`chat.send`/`chat.inject`                  |
+| Channels 渠道            | `ui/src/ui/views/channels.ts`                                 | 渠道 Tab   | 渠道配置与状态（Discord/Telegram/Slack/Nostr/WhatsApp 等）                 |
+| Sessions 会话            | `ui/src/ui/views/sessions.ts`                                 | 会话 Tab   | 会话列表与检查点管理                                                       |
+| Cron 定时任务            | `ui/src/ui/views/cron.ts`                                     | 定时 Tab   | 定时任务 CRUD 与运行历史                                                   |
+| MCP 服务器               | `ui/src/ui/views/mcp.ts`                                      | MCP Tab    | MCP 服务器配置（transport/auth/launch/toolFilter/TLS）                     |
+| Agents 面板              | `ui/src/ui/views/agents.ts`                                   | Agents Tab | Agent 列表、文件管理、工具面板（Available Right Now / Tool Configuration） |
+| Skills 技能              | `ui/src/ui/views/skills.ts`                                   | Skills Tab | 技能搜索、安装、提案管理                                                   |
+| Usage 用量               | `ui/src/ui/views/usage.ts`                                    | 用量 Tab   | Token 用量与成本统计                                                       |
+| Workboard 工作板         | 无独立视图文件（逻辑见 `app-render.ts`、`views/sessions.ts`） | 工作板 Tab | 任务/流程工作板（本仓库无 `views/workboard.ts`）                           |
+| Config 配置              | `ui/src/ui/views/config.ts`                                   | 配置 Tab   | 配置编辑器（JSON5）                                                        |
+| Logs 日志                | `ui/src/ui/views/logs.ts`                                     | 日志 Tab   | 实时日志查看                                                               |
+| Nodes 节点               | `ui/src/ui/views/nodes.ts`                                    | 节点 Tab   | 节点/设备管理与配对                                                        |
+| Dreaming 记忆梦境        | `ui/src/ui/views/dreaming.ts`                                 | 记忆 Tab   | 记忆梦境诊断                                                               |
+| Debug 调试               | `ui/src/ui/views/debug.ts`                                    | 调试 Tab   | 调试面板                                                                   |
+| Command Palette 命令面板 | `ui/src/ui/views/command-palette.ts`                          | 全局浮层   | 命令快速调用                                                               |
+| Login Gate 登录门        | `ui/src/ui/views/login-gate.ts`                               | 认证前置   | 共享密钥登录                                                               |
+| Exec Approval 执行审批   | `ui/src/ui/views/exec-approval.ts`                            | 审批浮层   | 执行/插件审批决策                                                          |
+| Connect Command 连接命令 | `ui/src/ui/views/connect-command.ts`                          | 连接浮层   | 连接命令展示                                                               |
 
 #### 7.2.2 TUI 视图
 
@@ -2971,23 +2970,23 @@ TUI（`quiet-core-bot tui`）支持 Gateway 模式（连接远端 `--url ws://<h
 
 控制器封装对应 Gateway 方法的调用与本地状态，组件通过控制器与 Gateway 交互而非直接 fetch。
 
-| 控制器    | 文件           | 对接 Gateway 方法                                                  |
-| --------- | -------------- | ------------------------------------------------------------------ |
-| Chat      | `chat.ts`      | `chat.history`/`chat.send`/`chat.abort`/`chat.inject`              |
-| Sessions  | `sessions.ts`  | `sessions.list`/`sessions.create`/`sessions.send`/`sessions.abort` |
-| Models    | `models.ts`    | `models.list`/`models.authStatus`                                  |
-| Channels  | `channels.ts`  | `channels.status`/`channels.start`/`channels.stop`                 |
-| Agents    | `agents.ts`    | `agents.list`/`agents.create`/`agents.files.*`                     |
-| Cron      | `cron.ts`      | `cron.list`/`cron.add`/`cron.update`/`cron.run`                    |
-| Logs      | `logs.ts`      | `logs.tail`                                                        |
-| Config    | `config.ts`    | `config.get`/`config.set`/`config.apply`                           |
-| Skills    | `skills.ts`    | `skills.search`/`skills.install`/`skills.proposals.*`              |
-| Workboard | `workboard.ts` | `tasks.list`/`tasks.cancel`                                        |
-| Nodes     | `nodes.ts`     | `node.list`/`node.pair.*`                                          |
-| Devices   | `devices.ts`   | `device.pair.*`/`device.token.*`                                   |
-| Usage     | `usage.ts`     | `usage.status`/`usage.cost`                                        |
-| Health    | `health.ts`    | `health`/`status`                                                  |
-| Presence  | `presence.ts`  | `system-presence`                                                  |
+| 控制器    | 文件                                    | 对接 Gateway 方法                                                  |
+| --------- | --------------------------------------- | ------------------------------------------------------------------ |
+| Chat      | `chat.ts`                               | `chat.history`/`chat.send`/`chat.abort`/`chat.inject`              |
+| Sessions  | `sessions.ts`                           | `sessions.list`/`sessions.create`/`sessions.send`/`sessions.abort` |
+| Models    | `models.ts`                             | `models.list`/`models.authStatus`                                  |
+| Channels  | `channels.ts`                           | `channels.status`/`channels.start`/`channels.stop`                 |
+| Agents    | `agents.ts`                             | `agents.list`/`agents.create`/`agents.files.*`                     |
+| Cron      | `cron.ts`                               | `cron.list`/`cron.add`/`cron.update`/`cron.run`                    |
+| Logs      | `logs.ts`                               | `logs.tail`                                                        |
+| Config    | `config.ts`                             | `config.get`/`config.set`/`config.apply`                           |
+| Skills    | `skills.ts`                             | `skills.search`/`skills.install`/`skills.proposals.*`              |
+| Workboard | 无独立控制器（本仓库无 `workboard.ts`） | `tasks.list`/`tasks.cancel`                                        |
+| Nodes     | `nodes.ts`                              | `node.list`/`node.pair.*`                                          |
+| Devices   | `devices.ts`                            | `device.pair.*`/`device.token.*`                                   |
+| Usage     | `usage.ts`                              | `usage.status`/`usage.cost`                                        |
+| Health    | `health.ts`                             | `health`/`status`                                                  |
+| Presence  | `presence.ts`                           | `system-presence`                                                  |
 
 ##### 聊天子模块（`ui/src/ui/chat/`）
 
@@ -3099,6 +3098,8 @@ TUI 通过配置项与斜杠命令定制显示：
 
 ### 7.7 补遗：界面与交互补遗
 
+> **核对说明（2026-10-09）**：本节补遗基于早期 Control UI 布局快照整理，与本仓库当前 `ui/src/ui/` 存在差异。经逐文件核验，以下引用在本仓库中**不存在**：`ui/src/ui/views/workboard.ts`、`ui/src/ui/views/skill-workshop.ts`、`controllers/workboard.ts`、`ui/src/styles/workboard.css`、`ui/src/styles/skill-workshop.css`，以及 `renderWorkboardEmptyState` / `renderWorkshopEmptyState` / `resolveBoardEmptyState` 等符号；`ui/src/ui/navigation.ts` 的 `TAB_PATHS` 中亦无 `skillWorkshop` 路由。工作板/技能工作坊在本仓库为非独立文件实现（逻辑散见于 `app-render.ts`、`views/sessions.ts`、`controllers/skill-workshop.ts` 与 i18n 词条）。阅读本节时请以仓库实际文件为准。
+
 #### 遗漏的组件
 
 ##### A. Web Control UI 视图与路由遗漏(对应 7.2.1)
@@ -3107,32 +3108,31 @@ TUI 通过配置项与斜杠命令定制显示：
 
 ###### A.1 遗漏的独立视图文件
 
-| 视图名                        | 路径                                               | Tab/路径                                   | 用途                          |
-| ----------------------------- | -------------------------------------------------- | ------------------------------------------ | ----------------------------- |
-| Activity 活动                 | `ui/src/ui/views/activity.ts`                      | `/activity`(control 组)                    | 活动事件流                    |
-| Instances 实例                | `ui/src/ui/views/instances.ts`                     | `/instances`(control 组)                   | 网关实例管理                  |
-| Skill Workshop 技能工作坊     | `ui/src/ui/views/skill-workshop.ts`                | `/skills/workshop`(skillWorkshop,agent 组) | 技能开发工作坊(含 EmptyState) |
-| Markdown Sidebar              | `ui/src/ui/views/markdown-sidebar.ts`              | —                                          | Markdown 侧边栏预览           |
-| Nodes Exec Approvals          | `ui/src/ui/views/nodes-exec-approvals.ts`          | —                                          | 节点执行审批视图              |
-| Gateway URL Confirmation      | `ui/src/ui/views/gateway-url-confirmation.ts`      | —                                          | 网关 URL 确认弹层             |
-| Dreaming Restart Confirmation | `ui/src/ui/views/dreaming-restart-confirmation.ts` | —                                          | 梦境重启确认弹层              |
-| Channel Config Extras         | `ui/src/ui/views/channel-config-extras.ts`         | —                                          | 渠道配置扩展字段              |
+| 视图名                        | 路径                                                 | Tab/路径                 | 用途                |
+| ----------------------------- | ---------------------------------------------------- | ------------------------ | ------------------- |
+| Activity 活动                 | `ui/src/ui/views/activity.ts`                        | `/activity`(control 组)  | 活动事件流          |
+| Instances 实例                | `ui/src/ui/views/instances.ts`                       | `/instances`(control 组) | 网关实例管理        |
+| Skill Workshop 技能工作坊     | 无独立视图文件（仅 `controllers/skill-workshop.ts`） | —（本仓库无此路由）      | 技能开发工作坊      |
+| Markdown Sidebar              | `ui/src/ui/views/markdown-sidebar.ts`                | —                        | Markdown 侧边栏预览 |
+| Nodes Exec Approvals          | `ui/src/ui/views/nodes-exec-approvals.ts`            | —                        | 节点执行审批视图    |
+| Gateway URL Confirmation      | `ui/src/ui/views/gateway-url-confirmation.ts`        | —                        | 网关 URL 确认弹层   |
+| Dreaming Restart Confirmation | `ui/src/ui/views/dreaming-restart-confirmation.ts`   | —                        | 梦境重启确认弹层    |
+| Channel Config Extras         | `ui/src/ui/views/channel-config-extras.ts`           | —                        | 渠道配置扩展字段    |
 
 ###### A.2 遗漏的路由(对应 `navigation.ts` 中的 `TAB_PATHS`)
 
 文档 7.2.1 节列出的视图未覆盖以下 8 个 Tab 路由,这些是 `SETTINGS_TABS` 与 `TAB_GROUPS` 中实际存在的:
 
-| Tab              | 路径               | 分组     | 说明                       |
-| ---------------- | ------------------ | -------- | -------------------------- |
-| `activity`       | `/activity`        | control  | 活动事件                   |
-| `instances`      | `/instances`       | control  | 网关实例                   |
-| `skillWorkshop`  | `/skills/workshop` | agent    | 技能工作坊                 |
-| `communications` | `/communications`  | settings | 通信设置                   |
-| `appearance`     | `/appearance`      | settings | 外观设置                   |
-| `automation`     | `/automation`      | settings | 自动化设置                 |
-| `infrastructure` | `/infrastructure`  | settings | 基础设施设置               |
-| `aiAgents`       | `/ai-agents`       | settings | AI Agents 设置             |
-| `dreams`         | `/dreams`(别名)    | agent    | 梦境别名(指向 `/dreaming`) |
+| Tab              | 路径              | 分组     | 说明                       |
+| ---------------- | ----------------- | -------- | -------------------------- |
+| `activity`       | `/activity`       | control  | 活动事件                   |
+| `instances`      | `/instances`      | control  | 网关实例                   |
+| `communications` | `/communications` | settings | 通信设置                   |
+| `appearance`     | `/appearance`     | settings | 外观设置                   |
+| `automation`     | `/automation`     | settings | 自动化设置                 |
+| `infrastructure` | `/infrastructure` | settings | 基础设施设置               |
+| `aiAgents`       | `/ai-agents`      | settings | AI Agents 设置             |
+| `dreams`         | `/dreams`(别名)   | agent    | 梦境别名(指向 `/dreaming`) |
 
 > 关键文件:`ui/src/ui/navigation.ts` 定义 `TAB_GROUPS`(chat/control/agent/settings)、`SETTINGS_TABS`、`TAB_PATHS`、`PATH_ALIASES`、`tabFromPath()`、`pathForTab()`、`iconForTab()`、`titleForTab()`。第 7 章未引用此文件,导致路由表缺失。
 
@@ -3180,7 +3180,7 @@ TUI 通过配置项与斜杠命令定制显示：
 
 ##### C. Web 聊天子模块遗漏(对应 7.3.1)
 
-第 7.3.1 节「聊天子模块」表列出 8 项,但实际 `ui/src/ui/chat/` 下有 77 个文件;实时语音除主入口 `realtime-talk.ts` 外另有 8 个变体文件。
+第 7.3.1 节「聊天子模块」表列出 8 项,但实际 `ui/src/ui/chat/` 下有 78 个文件;实时语音除主入口 `realtime-talk.ts` 外另有 8 个变体文件。
 
 ###### C.1 原审计更正（2026-09-19 结构复核）
 
@@ -3194,43 +3194,43 @@ TUI 通过配置项与斜杠命令定制显示：
 | ToolCards `tool-cards.ts`                      | ✅ 存在于 `chat/tool-cards.ts`（附 node 测试）                                                                                                                                                                                                                                                                                                                                                                                |
 | SessionMessageCache `session-message-cache.ts` | ✅ 存在于 `chat/session-message-cache.ts`（附测试）                                                                                                                                                                                                                                                                                                                                                                           |
 
-另核验补充 `chat/` 下原表遗漏的子模块：`role-normalizer.ts`、`run-controls.ts`、`search-match.ts`、`session-cache.ts`、`session-controls.ts`、`side-result.ts`、`side-result-render.ts`、`sidebar-session-picker`、`slash-command-executor.ts`、`status-indicators.ts`、`stream-reconciliation.ts`、`stream-text.ts`、`token-format.ts`、`tool-expansion-state.ts`、`tool-helpers.ts`、`tool-message-refs.ts`、`user-message-content.ts`。`chat/` 目录实际共 **77 个文件**（原审计称"30+ 文件"系低估）。
+另核验补充 `chat/` 下原表遗漏的子模块：`role-normalizer.ts`、`run-controls.ts`、`search-match.ts`、`session-cache.ts`、`session-controls.ts`、`side-result.ts`、`side-result-render.ts`、`sidebar-session-picker`、`slash-command-executor.ts`、`status-indicators.ts`、`stream-reconciliation.ts`、`stream-text.ts`、`token-format.ts`、`tool-expansion-state.ts`、`tool-helpers.ts`、`tool-message-refs.ts`、`user-message-content.ts`。`chat/` 目录实际共 **78 个文件**（原审计称"30+ 文件"系低估）。
 
 ###### C.2 遗漏的实际聊天子模块
 
-| 子模块                      | 文件                             | 用途                         |
-| --------------------------- | -------------------------------- | ---------------------------- |
-| Chat Welcome                | `chat-welcome.ts`                | 欢迎页                       |
-| Chat Sidebar Raw            | `chat-sidebar-raw.ts`            | 侧边栏原始数据               |
-| Chat Queue                  | `chat-queue.ts`                  | 消息队列                     |
-| Chat Avatar                 | `chat-avatar.ts`                 | 头像(文档已列,确认存在)      |
-| Build Chat Items            | `build-chat-items.ts`            | 聊天项构建                   |
-| Attachment Support          | `attachment-support.ts`          | 附件支持                     |
-| Attachment Payload Store    | `attachment-payload-store.ts`    | 附件载荷存储                 |
-| Heartbeat Display           | `heartbeat-display.ts`           | 心跳显示                     |
-| Grouped Render              | `grouped-render.ts`              | 分组渲染(含删除确认 popover) |
-| Export                      | `export.ts`                      | 聊天导出                     |
-| Deleted Messages            | `deleted-messages.ts`            | 已删消息                     |
-| Copy As Markdown            | `copy-as-markdown.ts`            | 复制为 Markdown              |
-| Context Notice              | `context-notice.ts`              | 上下文提示                   |
-| Constants                   | `constants.ts`                   | 常量                         |
-| Composer Persistence        | `composer-persistence.ts`        | 草稿持久化(文档已列,确认)    |
-| Clipboard                   | `clipboard.ts`                   | 剪贴板                       |
-| Message Normalizer          | `message-normalizer.ts`          | 消息归一化                   |
-| Message Extract             | `message-extract.ts`             | 消息提取                     |
-| Input History               | `input-history.ts`               | 输入历史(文档已列,确认)      |
-| History Merge               | `history-merge.ts`               | 历史合并                     |
-| History Limits              | `history-limits.ts`              | 历史限制                     |
-| Realtime Talk Catalog       | `realtime-talk-catalog.ts`       | 实时语音目录                 |
-| Realtime Talk Audio         | `realtime-talk-audio.ts`         | 实时语音音频                 |
-| Pinned Summary              | `pinned-summary.ts`              | 置顶摘要                     |
-| Pinned Messages             | `pinned-messages.ts`             | 置顶消息                     |
-| Realtime Talk Gateway Relay | `realtime-talk-gateway-relay.ts` | 网关中继                     |
-| Realtime Talk Conversation  | `realtime-talk-conversation.ts`  | 会话管理                     |
-| Realtime Talk PCM Output    | `realtime-talk-pcm-output.ts`    | PCM 输出                     |
-| Realtime Talk Google Live   | `realtime-talk-google-live.ts`   | Google Live 变体             |
-| Realtime Talk WebRTC        | `realtime-talk-webrtc.ts`        | WebRTC 变体                  |
-| Realtime Talk Shared        | `realtime-talk-shared.ts`        | 共享逻辑                     |
+| 子模块                      | 文件                                                         | 用途                         |
+| --------------------------- | ------------------------------------------------------------ | ---------------------------- |
+| Chat Welcome                | `chat-welcome.ts`                                            | 欢迎页                       |
+| Chat Sidebar Raw            | `chat-sidebar-raw.ts`                                        | 侧边栏原始数据               |
+| Chat Queue                  | `chat-queue.ts`                                              | 消息队列                     |
+| Chat Avatar                 | `chat-avatar.ts`                                             | 头像(文档已列,确认存在)      |
+| Build Chat Items            | `build-chat-items.ts`                                        | 聊天项构建                   |
+| Attachment Support          | `attachment-support.ts`                                      | 附件支持                     |
+| Attachment Payload Store    | `attachment-payload-store.ts`                                | 附件载荷存储                 |
+| Heartbeat Display           | `heartbeat-display.ts`                                       | 心跳显示                     |
+| Grouped Render              | `grouped-render.ts`                                          | 分组渲染(含删除确认 popover) |
+| Export                      | `export.ts`                                                  | 聊天导出                     |
+| Deleted Messages            | `deleted-messages.ts`                                        | 已删消息                     |
+| Copy As Markdown            | `copy-as-markdown.ts`                                        | 复制为 Markdown              |
+| Context Notice              | `context-notice.ts`                                          | 上下文提示                   |
+| Constants                   | `constants.ts`                                               | 常量                         |
+| Composer Persistence        | `composer-persistence.ts`                                    | 草稿持久化(文档已列,确认)    |
+| Clipboard                   | `clipboard.ts`                                               | 剪贴板                       |
+| Message Normalizer          | `message-normalizer.ts`                                      | 消息归一化                   |
+| Message Extract             | `message-extract.ts`                                         | 消息提取                     |
+| Input History               | `input-history.ts`                                           | 输入历史(文档已列,确认)      |
+| History Merge               | `history-merge.ts`（本仓库仅存测试 `history-merge.test.ts`） | 历史合并                     |
+| History Limits              | `history-limits.ts`                                          | 历史限制                     |
+| Realtime Talk Catalog       | `realtime-talk-catalog.ts`                                   | 实时语音目录                 |
+| Realtime Talk Audio         | `realtime-talk-audio.ts`                                     | 实时语音音频                 |
+| Pinned Summary              | `pinned-summary.ts`                                          | 置顶摘要                     |
+| Pinned Messages             | `pinned-messages.ts`                                         | 置顶消息                     |
+| Realtime Talk Gateway Relay | `realtime-talk-gateway-relay.ts`                             | 网关中继                     |
+| Realtime Talk Conversation  | `realtime-talk-conversation.ts`                              | 会话管理                     |
+| Realtime Talk PCM Output    | `realtime-talk-pcm-output.ts`                                | PCM 输出                     |
+| Realtime Talk Google Live   | `realtime-talk-google-live.ts`                               | Google Live 变体             |
+| Realtime Talk WebRTC        | `realtime-talk-webrtc.ts`                                    | WebRTC 变体                  |
+| Realtime Talk Shared        | `realtime-talk-shared.ts`                                    | 共享逻辑                     |
 
 ##### D. Web 辅助模块遗漏(对应 7.3.1)
 
@@ -3417,7 +3417,7 @@ TUI 通过配置项与斜杠命令定制显示：
 | ------------------------------- | --------------------------------------------------------------- | --------------------------------------------- |
 | Voice Wake Overlay View         | `VoiceWakeOverlayView.swift`                                    | Voice Wake 覆盖视图                           |
 | Voice Wake Overlay Text Views   | `VoiceWakeOverlayTextViews.swift`                               | 文本视图(TranscriptTextView/VibrantLabelView) |
-| Voice Wake Overlay Controller   | `VoiceWakeOverlayController.swift`                              | 覆盖控制器                                    |
+| Voice Wake Overlay Controller   | `VoiceWakeOverlayController+Session/Window/Testing.swift`       | 覆盖控制器（拆分为多个扩展文件）              |
 | Voice Wake Runtime              | `VoiceWakeRuntime.swift`(`VoiceWakeRuntime.shared`)             | 运行时                                        |
 | Voice Wake Forwarder            | `VoiceWakeForwarder.swift`                                      | 转发器                                        |
 | Voice Wake Helpers              | `VoiceWakeHelpers.swift`                                        | 辅助                                          |
@@ -3735,39 +3735,39 @@ TUI 通过配置项与斜杠命令定制显示：
 
 ##### 状态实现总览
 
-| 状态类型                    | 实现位置                                                                                                                                                                                                      | 说明                                       |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| loading(加载中)             | `app-polling.ts`(轮询)、各控制器的 `isLoading` 字段、`lazy-view.ts`(懒加载)                                                                                                                                   | 通过控制器状态字段驱动;无统一 loading 组件 |
-| empty(空数据)               | `workboard.ts`(`renderWorkboardEmptyState`)、`usage.ts`(`renderUsageEmptyState`)、`skill-workshop.ts`(`renderWorkshopEmptyState`、`resolveBoardEmptyState`)、`workboard.css`(`workboard-health__item--empty`) | 部分视图有专门 EmptyState 渲染函数         |
-| error(错误)                 | `connect-error.ts`(`ConnectErrorDetailCodes`)、`scope-errors.ts`、`gateway.ts`(`AUTH_TOKEN_MISMATCH`/`AUTH_DEVICE_TOKEN_MISMATCH`)                                                                            | 连接错误有详细码;视图错误未统一            |
-| permission denied(权限拒绝) | `control-ui-auth.ts`、`device-auth.ts`、`exec-approval.ts`、`nodes-exec-approvals.ts`                                                                                                                         | 认证/执行审批类有处理                      |
-| offline(离线)               | `app-render.helpers.ts`(class `sidebar-connection-status--offline`)、`config.ts`、`nodes.ts`(`connected`/`offline`)、i18n `common.offline`、`mcp.test.ts`("disables save actions while offline")              | 侧边栏显示在线/离线;离线时禁用保存         |
+| 状态类型                    | 实现位置                                                                                                                                                                                         | 说明                                       |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------ |
+| loading(加载中)             | `app-polling.ts`(轮询)、各控制器的 `isLoading` 字段、`lazy-view.ts`(懒加载)                                                                                                                      | 通过控制器状态字段驱动;无统一 loading 组件 |
+| empty(空数据)               | `usage.ts`(`renderUsageEmptyState`)（本仓库无 `workboard.ts`/`skill-workshop.ts`/`workboard.css`）                                                                                               | 仅 Usage 视图有专门 EmptyState 渲染函数    |
+| error(错误)                 | `connect-error.ts`(`ConnectErrorDetailCodes`)、`scope-errors.ts`、`gateway.ts`(`AUTH_TOKEN_MISMATCH`/`AUTH_DEVICE_TOKEN_MISMATCH`)                                                               | 连接错误有详细码;视图错误未统一            |
+| permission denied(权限拒绝) | `control-ui-auth.ts`、`device-auth.ts`、`exec-approval.ts`、`nodes-exec-approvals.ts`                                                                                                            | 认证/执行审批类有处理                      |
+| offline(离线)               | `app-render.helpers.ts`(class `sidebar-connection-status--offline`)、`config.ts`、`nodes.ts`(`connected`/`offline`)、i18n `common.offline`、`mcp.test.ts`("disables save actions while offline") | 侧边栏显示在线/离线;离线时禁用保存         |
 
 ##### 页面 × 状态矩阵(✅ 有实现 / ❌ 无专门实现 / ⚠️ 部分)
 
-| 页面/视图       | loading | empty                          | error            | permission       | offline                      |
-| --------------- | ------- | ------------------------------ | ---------------- | ---------------- | ---------------------------- |
-| Overview        | ⚠️ 轮询 | ❌                             | ⚠️ Health 错误   | ❌               | ⚠️ 侧边栏                    |
-| Chat            | ⚠️ 流式 | ❌                             | ⚠️ connect-error | ❌               | ✅ 离线草稿(`app-lifecycle`) |
-| Channels        | ⚠️      | ❌                             | ⚠️               | ❌               | ⚠️                           |
-| Sessions        | ⚠️      | ❌                             | ⚠️               | ❌               | ⚠️                           |
-| Cron            | ⚠️      | ❌                             | ⚠️               | ❌               | ⚠️                           |
-| MCP             | ⚠️      | ❌                             | ⚠️               | ❌               | ✅ 离线禁用保存              |
-| Agents          | ⚠️      | ❌                             | ⚠️               | ❌               | ⚠️                           |
-| Skills          | ⚠️      | ❌                             | ⚠️               | ❌               | ⚠️                           |
-| Skill Workshop  | ⚠️      | ✅ `renderWorkshopEmptyState`  | ⚠️               | ❌               | ⚠️                           |
-| Usage           | ⚠️      | ✅ `renderUsageEmptyState`     | ⚠️               | ❌               | ⚠️                           |
-| Workboard       | ⚠️      | ✅ `renderWorkboardEmptyState` | ⚠️               | ❌               | ⚠️                           |
-| Config          | ⚠️      | ❌                             | ⚠️               | ❌               | ✅ 显示 connected/offline    |
-| Logs            | ⚠️ tail | ❌                             | ⚠️               | ❌               | ⚠️                           |
-| Nodes           | ⚠️      | ❌                             | ⚠️               | ⚠️ exec-approval | ✅ 显示 connected/offline    |
-| Instances       | ⚠️      | ❌                             | ⚠️               | ❌               | ⚠️                           |
-| Activity        | ⚠️      | ❌                             | ⚠️               | ❌               | ⚠️                           |
-| Dreaming        | ⚠️      | ❌                             | ⚠️               | ❌               | ⚠️                           |
-| Debug           | ⚠️      | ❌                             | ⚠️               | ❌               | ⚠️                           |
-| Login Gate      | ❌      | ❌                             | ✅ connect-error | ✅ 认证          | ❌                           |
-| Exec Approval   | ❌      | ❌                             | ⚠️               | ✅               | ❌                           |
-| Command Palette | ❌      | ❌                             | ❌               | ❌               | ❌                           |
+| 页面/视图       | loading | empty                      | error            | permission       | offline                      |
+| --------------- | ------- | -------------------------- | ---------------- | ---------------- | ---------------------------- |
+| Overview        | ⚠️ 轮询 | ❌                         | ⚠️ Health 错误   | ❌               | ⚠️ 侧边栏                    |
+| Chat            | ⚠️ 流式 | ❌                         | ⚠️ connect-error | ❌               | ✅ 离线草稿(`app-lifecycle`) |
+| Channels        | ⚠️      | ❌                         | ⚠️               | ❌               | ⚠️                           |
+| Sessions        | ⚠️      | ❌                         | ⚠️               | ❌               | ⚠️                           |
+| Cron            | ⚠️      | ❌                         | ⚠️               | ❌               | ⚠️                           |
+| MCP             | ⚠️      | ❌                         | ⚠️               | ❌               | ✅ 离线禁用保存              |
+| Agents          | ⚠️      | ❌                         | ⚠️               | ❌               | ⚠️                           |
+| Skills          | ⚠️      | ❌                         | ⚠️               | ❌               | ⚠️                           |
+| Skill Workshop  | ⚠️      | ❌                         | ⚠️               | ❌               | ⚠️                           |
+| Usage           | ⚠️      | ✅ `renderUsageEmptyState` | ⚠️               | ❌               | ⚠️                           |
+| Workboard       | ⚠️      | ❌                         | ⚠️               | ❌               | ⚠️                           |
+| Config          | ⚠️      | ❌                         | ⚠️               | ❌               | ✅ 显示 connected/offline    |
+| Logs            | ⚠️ tail | ❌                         | ⚠️               | ❌               | ⚠️                           |
+| Nodes           | ⚠️      | ❌                         | ⚠️               | ⚠️ exec-approval | ✅ 显示 connected/offline    |
+| Instances       | ⚠️      | ❌                         | ⚠️               | ❌               | ⚠️                           |
+| Activity        | ⚠️      | ❌                         | ⚠️               | ❌               | ⚠️                           |
+| Dreaming        | ⚠️      | ❌                         | ⚠️               | ❌               | ⚠️                           |
+| Debug           | ⚠️      | ❌                         | ⚠️               | ❌               | ⚠️                           |
+| Login Gate      | ❌      | ❌                         | ✅ connect-error | ✅ 认证          | ❌                           |
+| Exec Approval   | ❌      | ❌                         | ⚠️               | ✅               | ❌                           |
+| Command Palette | ❌      | ❌                         | ❌               | ❌               | ❌                           |
 
 > **关键发现**:loading 状态分散在各控制器无统一规范;empty 状态仅 3 个视图实现;error 状态仅有连接错误码,视图错误处理不统一;permission 状态仅在认证/审批类页面;offline 状态在侧边栏与部分视图有显示,但离线行为(禁用保存等)未文档化。
 
@@ -3812,25 +3812,23 @@ TUI 通过配置项与斜杠命令定制显示：
 
 #### 主题/样式定制遗漏(对应 7.5.1)
 
-第 7.5.1 节仅提及 `ui/src/styles/base.css` 与 `ui/src/styles/chat.css`,实际 `ui/src/styles/` 下有 13 个 CSS 文件。
+第 7.5.1 节仅提及 `ui/src/styles/base.css` 与 `ui/src/styles/chat.css`,实际 `ui/src/styles/` 下有 11 个 CSS 文件。
 
 ##### 完整 CSS 文件清单
 
-| 文件                    | 用途                                                            | 文档是否覆盖 |
-| ----------------------- | --------------------------------------------------------------- | ------------ |
-| `base.css`              | 基础变量与重置                                                  | ✅           |
-| `chat.css`              | 聊天样式                                                        | ✅           |
-| `layout.css`            | 布局(shell 容器、sidebar、topbar)                               | ❌           |
-| `layout.mobile.css`     | 移动端布局(nav-drawer 折叠态)                                   | ❌           |
-| `components.css`        | 通用组件(btn、data-table、markdown-preview、code-mirror 等)     | ❌           |
-| `workboard.css`         | 工作板(含 `--workboard-control-*`、`--workboard-health-*` 变量) | ❌           |
-| `usage.css`             | 用量(含 `--bar-max-width`)                                      | ❌           |
-| `skill-workshop.css`    | 技能工作坊(sw-btn、sw-today)                                    | ❌           |
-| `config.css`            | 配置编辑器                                                      | ❌           |
-| `config-quick.css`      | 快速配置(qs-row、qs-preset)                                     | ❌           |
-| `cron-quick-create.css` | Cron 快速创建(cqc-preset)                                       | ❌           |
-| `dreams.css`            | 梦境                                                            | ❌           |
-| `activity.css`          | 活动                                                            | ❌           |
+| 文件                    | 用途                                                        | 文档是否覆盖 |
+| ----------------------- | ----------------------------------------------------------- | ------------ |
+| `base.css`              | 基础变量与重置                                              | ✅           |
+| `chat.css`              | 聊天样式                                                    | ✅           |
+| `layout.css`            | 布局(shell 容器、sidebar、topbar)                           | ❌           |
+| `layout.mobile.css`     | 移动端布局(nav-drawer 折叠态)                               | ❌           |
+| `components.css`        | 通用组件(btn、data-table、markdown-preview、code-mirror 等) | ❌           |
+| `usage.css`             | 用量(含 `--bar-max-width`)                                  | ❌           |
+| `config.css`            | 配置编辑器                                                  | ❌           |
+| `config-quick.css`      | 快速配置(qs-row、qs-preset)                                 | ❌           |
+| `cron-quick-create.css` | Cron 快速创建(cqc-preset)                                   | ❌           |
+| `dreams.css`            | 梦境                                                        | ❌           |
+| `activity.css`          | 活动                                                        | ❌           |
 
 ##### CSS 变量补充
 
@@ -3838,7 +3836,6 @@ TUI 通过配置项与斜杠命令定制显示：
 
 - **颜色族**(`custom-theme.ts`):`background`、`foreground`、`card`、`card-foreground`、`popover`、`popover-foreground`、`primary`、`primary-foreground`、`secondary`、`secondary-foreground`、`muted`、`muted-foreground`、`accent`、`accent-foreground`、`destructive`、`destructive-foreground`、`border`、`border-strong`、`input`、`ring`、`bg`、`bg-elevated`、`panel`、`info`、`warn`、`danger` 等(每族有 light/dark 变体)
 - **布局变量**(`layout.css`):`--shell-pad`、`--shell-gap`、`--shell-nav-width`、`--shell-nav-rail-width`、`--shell-topbar-height`、`--shell-focus-duration`、`--shell-focus-ease`
-- **工作板变量**(`workboard.css`):`--workboard-control-height`、`--workboard-control-radius`、`--workboard-control-bg`、`--workboard-control-border`、`--workboard-health-color`、`--workboard-health-highlight-color`
 - **Markdown/CodeMirror**(`components.css`):`--md-preview-serif`、`--md-preview-document-bg`、`--cm-bg`、`--cm-border`、`--cm-code-bg`、`--cm-inline-code-bg`
 
 ##### 主题切换机制补充
@@ -4893,19 +4890,19 @@ flowchart LR
 
 根 `vitest.config.ts` 转发到 `test/vitest/vitest.config.ts`，后者通过 `rootVitestProjects` 数组声明 **75+ 个 project shard**。测试分层（按粒度从快到慢）：
 
-| 层级                 | 代表 config                                                                                               | 命令                                                                                 | 说明                                                  |
-| -------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------- |
-| **unit（fast）**     | `vitest.unit-fast.config.ts`、`vitest.unit-fast-fake-timers.config.ts`                                    | `pnpm test:unit:fast`                                                                | 最快单测；默认 unit lane 跳过 seam/smoke              |
-| **unit**             | `vitest.unit.config.ts`                                                                                   | `pnpm test:unit`、`pnpm test:fast`、`pnpm test:coverage`                             | 全量单测 + 覆盖率                                     |
-| **boundary / infra** | `vitest.boundary.config.ts`、`vitest.infra.config.ts`                                                     | `pnpm check:architecture`                                                            | import 边界、基础设施                                 |
-| **contracts**        | `vitest.contracts-channel-surface/config/registry/session.config.ts`、`vitest.contracts-plugin.config.ts` | `pnpm test:contracts`、`pnpm test:contracts:channels`、`pnpm test:contracts:plugins` | channel/provider/plugin 契约（单 worker）             |
-| **bundled**          | `vitest.bundled.config.ts`                                                                                | `pnpm test:bundled`                                                                  | 内置插件集成                                          |
-| **gateway**          | `vitest.gateway-core/client/methods/server.config.ts`                                                     | `pnpm test:gateway`                                                                  | Gateway 分片（`QUIET_CORE_GATEWAY_PROJECT_SHARDS=1`） |
-| **agents**           | `vitest.agents-core/embedded-agent/support/tools.config.ts`                                               | —                                                                                    | Agent 运行时                                          |
-| **extension shards** | `vitest.extension-<name>.config.ts`（discord/telegram/slack/whatsapp/feishu/...）                         | `pnpm test:extensions`、`pnpm test:extension <id>`                                   | 每个 channel/provider 独立 shard                      |
-| **e2e**              | `vitest.e2e.config.ts`、`vitest.ui-e2e.config.ts`                                                         | `pnpm test:e2e`、`pnpm test:ui:e2e`                                                  | 端到端 + Playwright UI                                |
-| **live**             | `vitest.live.config.ts`（via `scripts/test-live.mjs`）                                                    | `pnpm test:live`                                                                     | 真实 provider/channel（需凭据）                       |
-| **docker**           | `scripts/test-docker-all.mjs` + `scripts/e2e/*-docker.sh`                                                 | `pnpm test:docker:all`、`pnpm test:docker:<lane>`                                    | Docker E2E 分片                                       |
+| 层级                 | 代表 config                                                                                                 | 命令                                                                                 | 说明                                                  |
+| -------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------- |
+| **unit（fast）**     | `vitest.unit-fast.config.ts`、`vitest.unit-fast-fake-timers.config.ts`                                      | `pnpm test:unit:fast`                                                                | 最快单测；默认 unit lane 跳过 seam/smoke              |
+| **unit**             | `vitest.unit.config.ts`                                                                                     | `pnpm test:unit`、`pnpm test:fast`、`pnpm test:coverage`                             | 全量单测 + 覆盖率                                     |
+| **boundary / infra** | `vitest.boundary.config.ts`、`vitest.infra.config.ts`                                                       | `pnpm check:architecture`                                                            | import 边界、基础设施                                 |
+| **contracts**        | `vitest.contracts-channel-{surface,config,registry,session}.config.ts`、`vitest.contracts-plugin.config.ts` | `pnpm test:contracts`、`pnpm test:contracts:channels`、`pnpm test:contracts:plugins` | channel/provider/plugin 契约（单 worker）             |
+| **bundled**          | `vitest.bundled.config.ts`                                                                                  | `pnpm test:bundled`                                                                  | 内置插件集成                                          |
+| **gateway**          | `vitest.gateway-core/client/methods/server.config.ts`                                                       | `pnpm test:gateway`                                                                  | Gateway 分片（`QUIET_CORE_GATEWAY_PROJECT_SHARDS=1`） |
+| **agents**           | `vitest.agents-core/embedded-agent/support/tools.config.ts`                                                 | —                                                                                    | Agent 运行时                                          |
+| **extension shards** | `vitest.extension-<name>.config.ts`（discord/telegram/slack/whatsapp/feishu/...）                           | `pnpm test:extensions`、`pnpm test:extension <id>`                                   | 每个 channel/provider 独立 shard                      |
+| **e2e**              | `vitest.e2e.config.ts`、`vitest.ui-e2e.config.ts`                                                           | `pnpm test:e2e`、`pnpm test:ui:e2e`                                                  | 端到端 + Playwright UI                                |
+| **live**             | `vitest.live.config.ts`（via `scripts/test-live.mjs`）                                                      | `pnpm test:live`                                                                     | 真实 provider/channel（需凭据）                       |
+| **docker**           | `scripts/test-docker-all.mjs` + `scripts/e2e/*-docker.sh`                                                   | `pnpm test:docker:all`、`pnpm test:docker:<lane>`                                    | Docker E2E 分片                                       |
 
 智能路由命令：
 
